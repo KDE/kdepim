@@ -104,6 +104,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( editContact( const QString& ) ) );
   connect( mViewManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
+  connect( mViewManager, SIGNAL( urlDropped( const KURL& ) ),
+           mXXPortManager, SLOT( importVCard( const KURL& ) ) );
 
   connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
            this, SLOT( extensionModified( const KABC::Addressee::List& ) ) );

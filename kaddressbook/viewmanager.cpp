@@ -364,10 +364,10 @@ void ViewManager::dropped( QDropEvent *e )
       QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
       if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ) ) == KMessageBox::Yes ) {
         for ( ; it != urls.end(); ++it )
-          emit urlDropped( *it, false );
+          emit urlDropped( *it );
       }
     } else if ( c == 1 )
-      emit urlDropped( *it, true );
+      emit urlDropped( *it );
   } else if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::Addressee addr;
     KABC::VCardConverter converter;

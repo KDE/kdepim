@@ -103,7 +103,7 @@ class ViewManager : public QWidget
     /**
       Emitted whenever a url is dragged on a view.
      */
-    void urlDropped( const KURL&, bool );
+    void urlDropped( const KURL& );
 
   private slots:
     void setActiveView( const QString &name );
