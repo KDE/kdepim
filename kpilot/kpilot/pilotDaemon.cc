@@ -693,17 +693,23 @@ static QDict<QString> *conduitNameMap = 0L;
 
 static void fillConduitNameMap()
 {
-	if (!conduitNameMap)
+	if ( !conduitNameMap )
 	{
 		conduitNameMap = new QDict<QString>;
-		// Fill with internal settings.
-		conduitNameMap->insert(CSL1("internal_fileinstall"),new QString(i18n("File Installer")));
-		conduitNameMap->insert(CSL1("internal_kroupware"),new QString(i18n("Kroupware")));
-
 		conduitNameMap->setAutoDelete(true);
 	}
+	conduitNameMap->clear();
 
 	QStringList l = KPilotSettings::installedConduits();
+	// Fill with internal settings.
+	if ( l.find( CSL1("internal_fileinstall") ) != l.end() ) {
+		conduitNameMap->insert( CSL1("internal_fileinstall"),
+		                        new QString(i18n("File Installer")) );
+	}
+	if ( l.find( CSL1("internal_kroupware") ) != l.end() ) {
+		conduitNameMap->insert( CSL1("internal_kroupware"),
+		                        new QString(i18n("Kroupware")) );
+	}
 
 	QStringList::ConstIterator end = l.end();
 	for (QStringList::ConstIterator i = l.begin(); i != end; ++i)
@@ -720,7 +726,7 @@ static void fillConduitNameMap()
 			{
 				readableName = o->name();
 			}
-			conduitNameMap->insert(*i,new QString(readableName));
+			conduitNameMap->insert( *i, new QString(readableName) );
 		}
 	}
 }
