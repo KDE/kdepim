@@ -91,6 +91,7 @@ if test "$HAVE_PISOCK" = "1" ; then
 	{ if (PILOT_LINK_VERSION==0) {
 	    if ((PILOT_LINK_MAJOR==9) && (PILOT_LINK_MINOR>=5)) return (0);
 	    if ((PILOT_LINK_MAJOR==10) || (PILOT_LINK_MAJOR==11)) return (0);
+	    if ((PILOT_LINK_MAJOR==12)) return(0);
 	  }
 	  return (1);
 	}
