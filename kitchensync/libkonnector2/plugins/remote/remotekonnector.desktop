@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-Library=libremotekonnector
+
+Name=Remote Konnector
+Group=Test
+Vendor=KDE Team
+Id=remotekonnector
+
+X-KDE-ResourceFamily=konnector
+X-KDE-ResourceType=remote

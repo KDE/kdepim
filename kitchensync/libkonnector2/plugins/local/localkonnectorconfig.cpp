@@ -46,6 +46,7 @@ LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
   topLayout->addWidget( new QLabel( i18n("Calendar file:"), this ) );
 
   mCalendarFile = new KURLRequester( this );
+  mCalendarFile->setMode( KFile::File | KFile::LocalOnly );
   topLayout->addWidget( mCalendarFile );
 
   QPushButton *button =
@@ -58,6 +59,7 @@ LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
   topLayout->addWidget( new QLabel( i18n("Address book file:"), this ) );
 
   mAddressBookFile = new KURLRequester( this );
+  mAddressBookFile->setMode( KFile::File | KFile::LocalOnly );
   topLayout->addWidget( mAddressBookFile );
 
   button = new QPushButton( i18n("Select From Existing Resources..."), this );
