@@ -84,7 +84,9 @@ namespace KitchenSync {
     public slots:
         virtual void slotProgress(ManipulatorPart */*part*/, int /*syncStatus*/, int /*progress*/  ) {};
         virtual void slotPartActivated( ManipulatorPart */*part*/ ) { };
+        virtual void slotSyncPartActivated( ManipulatorPart */*part*/ ) { };
         virtual void slotConfigOk() { };
+        virtual void slotKonnectorChanged( const QString &/*udi*/ ) { };
     private:
         KSyncMainWindow *m_window;
     };

@@ -48,6 +48,7 @@ class Konnector;
 namespace KitchenSync {
     // no idea why we have this window
     enum SyncStatus {SYNC_START=0, SYNC_SYNC, SYNC_STOP };
+    enum KonnectorMode { KONNECTOR_ONLINE=0,  KONNECTOR_OFFLINE };
     class KSyncMainWindow : public KParts::MainWindow {
        Q_OBJECT
     public:
@@ -69,6 +70,9 @@ namespace KitchenSync {
         Konnector *m_konnector;
         QString m_currentId;
         QString m_ids;
+    signals:
+        void konnectorChanged( const QString & );
+        void konnectorStateChanged( const QString &,  int mode );
    private slots:
         void initPlugins();
         void slotSync();
