@@ -20,6 +20,7 @@
     with any edition of Qt, and distribute the resulting executable,    
     without including the source code for Qt in the source distribution.
 */
+
 #ifndef IMPORTDIALOG_H
 #define IMPORTDIALOG_H
 

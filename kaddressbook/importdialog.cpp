@@ -31,130 +31,119 @@
 #include <kabc/phonenumber.h>
 #include <kabc/address.h>
 
-ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
-                                         QWidget *parent)
-        : KImportDialog(parent), mDocument(doc)
+ContactImportDialog::ContactImportDialog( KABC::AddressBook *doc, QWidget *parent )
+  : KImportDialog( parent ), mDocument( doc )
 {
-    mCustomList.setAutoDelete( true );
+  mCustomList.setAutoDelete( true );
 
-    mFormattedName = new KImportColumn(this, KABC::Addressee::formattedNameLabel());
-    mLastName = new KImportColumn(this, KABC::Addressee::familyNameLabel(), 1);
-    mFirstName = new KImportColumn(this, KABC::Addressee::givenNameLabel(), 1);
-    mAdditionalName = new KImportColumn(this, KABC::Addressee::additionalNameLabel());
-    mNamePrefix = new KImportColumn(this, KABC::Addressee::prefixLabel());
-    mNameSuffix = new KImportColumn(this, KABC::Addressee::suffixLabel());
-    mNickName = new KImportColumn(this, KABC::Addressee::nickNameLabel());
-    mBirthday = new KImportColumn(this, KABC::Addressee::birthdayLabel());
+  mFormattedName = new KImportColumn( this, KABC::Addressee::formattedNameLabel() );
+  mLastName = new KImportColumn( this, KABC::Addressee::familyNameLabel(), 1 );
+  mFirstName = new KImportColumn( this, KABC::Addressee::givenNameLabel(), 1 );
+  mAdditionalName = new KImportColumn( this, KABC::Addressee::additionalNameLabel() );
+  mNamePrefix = new KImportColumn( this, KABC::Addressee::prefixLabel() );
+  mNameSuffix = new KImportColumn( this, KABC::Addressee::suffixLabel() );
+  mNickName = new KImportColumn( this, KABC::Addressee::nickNameLabel() );
+  mBirthday = new KImportColumn( this, KABC::Addressee::birthdayLabel() );
 
-    mAddressHomeStreet = new KImportColumn(this, KABC::Addressee::homeAddressStreetLabel());
-    mAddressHomeCity = new KImportColumn(this, KABC::Addressee::homeAddressLocalityLabel());
-    mAddressHomeState = new KImportColumn(this, KABC::Addressee::homeAddressRegionLabel());
-    mAddressHomeZip = new KImportColumn(this, KABC::Addressee::homeAddressPostalCodeLabel());
-    mAddressHomeCountry = new KImportColumn(this, KABC::Addressee::homeAddressCountryLabel());
-    mAddressHomeLabel = new KImportColumn(this, KABC::Addressee::homeAddressLabelLabel());
+  mAddressHomeStreet = new KImportColumn( this, KABC::Addressee::homeAddressStreetLabel() );
+  mAddressHomeCity = new KImportColumn( this, KABC::Addressee::homeAddressLocalityLabel() );
+  mAddressHomeState = new KImportColumn( this, KABC::Addressee::homeAddressRegionLabel() );
+  mAddressHomeZip = new KImportColumn( this, KABC::Addressee::homeAddressPostalCodeLabel() );
+  mAddressHomeCountry = new KImportColumn( this, KABC::Addressee::homeAddressCountryLabel() );
+  mAddressHomeLabel = new KImportColumn( this, KABC::Addressee::homeAddressLabelLabel() );
 
-    mAddressBusinessStreet = new KImportColumn(this, KABC::Addressee::businessAddressStreetLabel());
-    mAddressBusinessCity = new KImportColumn(this, KABC::Addressee::businessAddressLocalityLabel());
-    mAddressBusinessState = new KImportColumn(this, KABC::Addressee::businessAddressRegionLabel());
-    mAddressBusinessZip = new KImportColumn(this, KABC::Addressee::businessAddressPostalCodeLabel());
-    mAddressBusinessCountry = new KImportColumn(this, KABC::Addressee::businessAddressCountryLabel());
-    mAddressBusinessLabel = new KImportColumn(this, KABC::Addressee::businessAddressLabelLabel());
+  mAddressBusinessStreet = new KImportColumn( this, KABC::Addressee::businessAddressStreetLabel() );
+  mAddressBusinessCity = new KImportColumn( this, KABC::Addressee::businessAddressLocalityLabel() );
+  mAddressBusinessState = new KImportColumn( this, KABC::Addressee::businessAddressRegionLabel() );
+  mAddressBusinessZip = new KImportColumn( this, KABC::Addressee::businessAddressPostalCodeLabel() );
+  mAddressBusinessCountry = new KImportColumn( this, KABC::Addressee::businessAddressCountryLabel() );
+  mAddressBusinessLabel = new KImportColumn( this, KABC::Addressee::businessAddressLabelLabel() );
 
-    mPhoneHome = new KImportColumn(this, KABC::Addressee::homePhoneLabel());
-    mPhoneBusiness = new KImportColumn(this, KABC::Addressee::businessPhoneLabel());
-    mPhoneMobile = new KImportColumn(this, KABC::Addressee::mobilePhoneLabel());
-    mFaxHome = new KImportColumn(this, KABC::Addressee::homeFaxLabel());
-    mFaxBusiness = new KImportColumn(this, KABC::Addressee::businessFaxLabel());
-    mCarPhone = new KImportColumn(this, KABC::Addressee::carPhoneLabel());
-    mIsdn = new KImportColumn(this, KABC::Addressee::isdnLabel());
-    mPager = new KImportColumn(this, KABC::Addressee::pagerLabel());
-    mEmail = new KImportColumn(this, KABC::Addressee::emailLabel());
-    mMailClient = new KImportColumn(this, KABC::Addressee::mailerLabel());
-    mJobTitle = new KImportColumn(this, KABC::Addressee::titleLabel());
-    mRole = new KImportColumn(this, KABC::Addressee::roleLabel());
-    mCompany = new KImportColumn(this, KABC::Addressee::organizationLabel());
-    mNote = new KImportColumn(this, KABC::Addressee::noteLabel());
-    mUrl = new KImportColumn(this, KABC::Addressee::urlLabel());
+  mPhoneHome = new KImportColumn( this, KABC::Addressee::homePhoneLabel() );
+  mPhoneBusiness = new KImportColumn( this, KABC::Addressee::businessPhoneLabel() );
+  mPhoneMobile = new KImportColumn( this, KABC::Addressee::mobilePhoneLabel() );
+  mFaxHome = new KImportColumn( this, KABC::Addressee::homeFaxLabel() );
+  mFaxBusiness = new KImportColumn( this, KABC::Addressee::businessFaxLabel() );
+  mCarPhone = new KImportColumn( this, KABC::Addressee::carPhoneLabel() );
+  mIsdn = new KImportColumn( this, KABC::Addressee::isdnLabel() );
+  mPager = new KImportColumn( this, KABC::Addressee::pagerLabel() );
+  mEmail = new KImportColumn( this, KABC::Addressee::emailLabel() );
+  mMailClient = new KImportColumn( this, KABC::Addressee::mailerLabel() );
+  mJobTitle = new KImportColumn( this, KABC::Addressee::titleLabel() );
+  mRole = new KImportColumn( this, KABC::Addressee::roleLabel() );
+  mCompany = new KImportColumn( this, KABC::Addressee::organizationLabel() );
+  mNote = new KImportColumn( this, KABC::Addressee::noteLabel() );
+  mUrl = new KImportColumn( this, KABC::Addressee::urlLabel() );
 
-    KABC::Field::List fields = mDocument->fields( KABC::Field::CustomCategory );
-    KABC::Field::List::Iterator it;
+  KABC::Field::List fields = mDocument->fields( KABC::Field::CustomCategory );
+  KABC::Field::List::Iterator it;
 
-    for ( it = fields.begin(); it != fields.end(); ++it ) {
-      KImportColumn *column = new KImportColumn( this, (*it)->label() );
-      mCustomList.append( column );
-    }
+  for ( it = fields.begin(); it != fields.end(); ++it ) {
+    KImportColumn *column = new KImportColumn( this, (*it)->label() );
+    mCustomList.append( column );
+  }
 
-    registerColumns();
+  registerColumns();
 }
 
 void ContactImportDialog::convertRow()
 {
   KABC::Addressee a;
-  a.setFormattedName(mFormattedName->convert());
-  a.setGivenName(mFirstName->convert());
-  a.setFamilyName(mLastName->convert());
-  a.setAdditionalName(mAdditionalName->convert());
-  a.setPrefix(mNamePrefix->convert());
-  a.setSuffix(mNameSuffix->convert());
-  a.setNickName(mNickName->convert());
+  a.setFormattedName( mFormattedName->convert() );
+  a.setGivenName( mFirstName->convert() );
+  a.setFamilyName( mLastName->convert() );
+  a.setAdditionalName( mAdditionalName->convert() );
+  a.setPrefix( mNamePrefix->convert() );
+  a.setSuffix( mNameSuffix->convert() );
+  a.setNickName( mNickName->convert() );
   a.setBirthday( QDateTime::fromString( mBirthday->convert(), Qt::ISODate ) );
-  a.insertEmail(mEmail->convert(), true);
-  a.setRole(mRole->convert());
-  a.setTitle(mJobTitle->convert());
-  a.setMailer(mMailClient->convert());
-  a.setUrl(mUrl->convert());
+  if ( !mEmail->convert().isEmpty() )
+    a.insertEmail( mEmail->convert(), true );
+  a.setRole( mRole->convert() );
+  a.setTitle( mJobTitle->convert() );
+  a.setMailer( mMailClient->convert() );
+  a.setUrl( mUrl->convert() );
+  a.setOrganization( mCompany->convert() );
+  a.setNote( mNote->convert() );
 
-  KABC::PhoneNumber p(mPhoneBusiness->convert(), KABC::PhoneNumber::Work);
-  a.insertPhoneNumber(p);
-  
-  p.setNumber(mPhoneHome->convert());
-  p.setType(KABC::PhoneNumber::Home);
-  a.insertPhoneNumber(p);
-  
-  p.setNumber(mPhoneMobile->convert());
-  p.setType(KABC::PhoneNumber::Cell);
-  a.insertPhoneNumber(p);
-  
-  p.setNumber(mFaxHome->convert());
-  p.setType(KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax);
-  a.insertPhoneNumber(p);
-  
-  p.setNumber(mFaxBusiness->convert());
-  p.setType(KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax);
-  a.insertPhoneNumber(p);
+  QMap<KImportColumn*, int> columnMap;
+  columnMap.insert( mPhoneHome, KABC::PhoneNumber::Home );
+  columnMap.insert( mPhoneBusiness, KABC::PhoneNumber::Work );
+  columnMap.insert( mPhoneMobile, KABC::PhoneNumber::Cell );
+  columnMap.insert( mFaxHome, KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
+  columnMap.insert( mFaxBusiness, KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
+  columnMap.insert( mCarPhone, KABC::PhoneNumber::Car );
+  columnMap.insert( mIsdn, KABC::PhoneNumber::Isdn );
+  columnMap.insert( mPager, KABC::PhoneNumber::Pager );
 
-  p.setNumber(mCarPhone->convert());
-  p.setType(KABC::PhoneNumber::Car);
-  a.insertPhoneNumber(p);
+  QMap<KImportColumn*, int>::Iterator phoneIt;
+  for ( phoneIt = columnMap.begin(); phoneIt != columnMap.end(); ++phoneIt ) {
+    QString number = phoneIt.key()->convert();
+    if ( !number.isEmpty() ) {
+      KABC::PhoneNumber p( number, phoneIt.data() );
+      a.insertPhoneNumber( p );
+    }
+  }
 
-  p.setNumber(mIsdn->convert());
-  p.setType(KABC::PhoneNumber::Isdn);
-  a.insertPhoneNumber(p);
-
-  p.setNumber(mPager->convert());
-  p.setType(KABC::PhoneNumber::Pager);
-  a.insertPhoneNumber(p);
+  KABC::Address addrHome( KABC::Address::Home );
+  addrHome.setStreet( mAddressHomeStreet->convert() );
+  addrHome.setLocality( mAddressHomeCity->convert() );
+  addrHome.setRegion( mAddressHomeState->convert() );
+  addrHome.setPostalCode( mAddressHomeZip->convert() );
+  addrHome.setCountry( mAddressHomeCountry->convert() );
+  addrHome.setLabel( mAddressHomeLabel->convert() );
+  if ( !addrHome.isEmpty() )
+    a.insertAddress( addrHome );
   
-  a.setOrganization(mCompany->convert());
-  a.setNote(mNote->convert());
-  
-  KABC::Address addrHome(KABC::Address::Home);
-  addrHome.setStreet(mAddressHomeStreet->convert());
-  addrHome.setLocality(mAddressHomeCity->convert());
-  addrHome.setRegion(mAddressHomeState->convert());
-  addrHome.setPostalCode(mAddressHomeZip->convert());
-  addrHome.setCountry(mAddressHomeCountry->convert());
-  addrHome.setLabel(mAddressHomeLabel->convert());
-  a.insertAddress(addrHome);
-  
-  KABC::Address addrWork(KABC::Address::Work);
-  addrWork.setStreet(mAddressBusinessStreet->convert());
-  addrWork.setLocality(mAddressBusinessCity->convert());
-  addrWork.setRegion(mAddressBusinessState->convert());
-  addrWork.setPostalCode(mAddressBusinessZip->convert());
-  addrWork.setCountry(mAddressBusinessCountry->convert());
-  addrWork.setLabel(mAddressBusinessLabel->convert());
-  a.insertAddress(addrWork);
+  KABC::Address addrWork( KABC::Address::Work );
+  addrWork.setStreet( mAddressBusinessStreet->convert() );
+  addrWork.setLocality( mAddressBusinessCity->convert() );
+  addrWork.setRegion( mAddressBusinessState->convert() );
+  addrWork.setPostalCode( mAddressBusinessZip->convert() );
+  addrWork.setCountry( mAddressBusinessCountry->convert() );
+  addrWork.setLabel( mAddressBusinessLabel->convert() );
+  if ( !addrWork.isEmpty() )
+    a.insertAddress( addrWork );
 
   KABC::Field::List fields = mDocument->fields( KABC::Field::CustomCategory );
   KABC::Field::List::Iterator it;
@@ -165,6 +154,5 @@ void ContactImportDialog::convertRow()
     ++counter;
   }
   
-  mDocument->insertAddressee(a);
+  mDocument->insertAddressee( a );
 }
-
