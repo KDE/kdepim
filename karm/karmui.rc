@@ -8,6 +8,7 @@
 		<text>&amp;Clock</text>
 		<Action name="start" />
 		<Action name="stop" />
+		<Action name="stopAll" />
 	</Menu>
 	<Menu name="task" >
 		<text>&amp;Task</text>
@@ -27,6 +28,11 @@
 	<Action name="edit_task" />
 </ToolBar>
 <Menu name="task_popup">
+	<Action name="start" />
+	<Action name="stop" />
+	<Action name="stopAll" />
+	<Separator />
+	<Action name="new_task" />
 	<Action name="new_sub_task" />
 	<Action name="delete_task" />
 	<Action name="edit_task" />

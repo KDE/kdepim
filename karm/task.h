@@ -7,16 +7,16 @@
 #include <qlistview.h>
 #include <qptrvector.h>
 #include <qpixmap.h>
-#include "karm.h"
-#include "loging.h"
+#include "taskview.h"
+#include "logging.h"
 
 class QFile;
 class QTimer;
-class Loging;
+class Logging;
 
 /**
-	Encapsulates a task.
-*/
+ * Store information about each task.
+ */
 
 class Task :public QObject, public QListViewItem
 {
@@ -24,9 +24,12 @@ Q_OBJECT
 
 public:
 	/** constructor */
-	Task(const QString& taskame, long minutes, long sessionTime, QListView *parent = 0);
-	Task(const QString& taskame, long minutes, long sessionTime, QListViewItem *parent = 0);
-  void init(const QString& taskame, long minutes, long sessionTime);
+	Task(const QString& taskame, long minutes, long sessionTime, 
+	     DesktopListType desktops, QListView *parent = 0);
+	Task(const QString& taskame, long minutes, long sessionTime, 
+	     DesktopListType desktops, QListViewItem *parent = 0);
+	void init(const QString& taskame, long minutes, long sessionTime, 
+		  DesktopListType desktops);
 
 	/**increments the total task time
 	* @param minutes to increment by
@@ -43,6 +46,7 @@ public:
 	*/
 	void setTotalTime ( long minutes );
 	void setSessionTime ( long minutes );
+	void setDesktopList ( DesktopListType dl );
 
 	/** returns the total time accumulated by the task
 	* @return total time in minutes
@@ -52,6 +56,10 @@ public:
 
 	long sessionTime() const
 		{ return _sessionTime; };
+
+	DesktopListType getDesktops() {
+	  return _desktops;
+	}
 
 	/** sets the name of the task
 	* @param name	a pointer to the name. A deep copy will be made.
@@ -68,24 +76,29 @@ public:
 	 */
 	inline void update() {
 		setText(0, _name);
-		setText(1, Karm::formatTime(_sessionTime));
-		setText(2, Karm::formatTime(_totalTime));
+		setText(1, TaskView::formatTime(_sessionTime));
+		setText(2, TaskView::formatTime(_totalTime));
 	}
 
-  void setRunning(bool on);
-  bool isRunning() const;
+	void resetSessionTime();
+
+	void setRunning(bool on);
+	bool isRunning() const;
 
 protected slots:
   void updateActiveIcon();
 
 private:
+  void noNegativeTimes();
+
   QString _name;
   long _totalTime;
   long _sessionTime;
+  DesktopListType _desktops;
   QTimer *_timer;
   int _i;
   static QPtrVector<QPixmap> *icons;
-  Loging *_loging;
+  Logging *_logging;
 
 };
 

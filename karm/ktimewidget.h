@@ -5,7 +5,11 @@
 class QLineEdit;
 class KarmLineEdit;
 
-class KArmTimeWidget :public QWidget 
+/**
+ * Widget used for entering minutes and seconds with validation.
+ */
+
+class KArmTimeWidget : public QWidget 
 {
 public:
 	KArmTimeWidget( QWidget* parent = 0, const char* name = 0 );

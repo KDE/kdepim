@@ -1,7 +1,32 @@
-* right now times can be negative - does that make any sense?
-* right now one can adjust subtask *and* task times which has the effect
-  that times won't add up any more - does that make sense?
-* add a log
+* times can be negative - does that make any sense?
+* one can adjust subtask *and* task times which has the effect that times
+  won't add up any more - does that make sense?
 * add notes to logentries
 * the BUGS file contains nonsense
 * add better screenshot to http://pim.kde.org/components/karm.php
+* KarmWindow::makeMenus -> export KAction?
+* KarmWindow::contextMenuRequest QPopupMenu should be static!
+* connect( ..contextMenu einordnen
+* mainwindow: move tray signals into tray.cpp
+* formatTime has nothing to do in TaskView?
+* "#ifndef header"s are inconsistent
+* Willi:
+--------
+  * If one starts karm and installs some desktop tracking tasks nothing
+    happens. One has to restart karm in order to have them work.
+
+  * The tracker functionality should be split out into a separate file/class.
+    mainwindow.cpp is IMHO long enough as is.
+
+  * Willi said he'd push:
+
+    // If all available desktops are checked, disable auto tracking,
+    // since it makes no sense to track for every desktop.
+    if (dl.size() == (unsigned int)desktopCount)
+      dl.clear();
+
+    from TaskView::editTask into addtaskdialog.
+
+  * The runtime warnings still need to be fixed.
+
+* app is crashing when leaving through the "x" on the upper right in the window.

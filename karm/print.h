@@ -5,19 +5,23 @@
 #undef GrayScale // X11 headers
 #include <kprinter.h>
 #include <qpainter.h>
-#include "karm.h"
+#include "taskview.h"
+
+/**
+ * Provide printing capabilities.
+ */
 
 class MyPrinter :public KPrinter
 {
 public:
-  MyPrinter(const Karm *karm);
+  MyPrinter(const TaskView *taskView);
   void print();
   void printLine(QString total, QString session, QString name, QPainter &, int);
   void printTask(QListViewItem *item, QPainter &,int level);  
   int calculateReqNameWidth(QListViewItem *item, QFontMetrics &metrics, int level);
   
 private:
-  const Karm *_karm;
+  const TaskView *_taskView;
 
   int xMargin, yMargin;
   int yoff;

@@ -5,24 +5,24 @@
 #include <kiconloader.h>
 #include <qtimer.h>
 #include"task.h"
-#include"loging.h"
+#include"logging.h"
 
 
 QPtrVector<QPixmap> *Task::icons = 0;
 
-Task::Task(const QString& taskName, long minutes, long sessionTime, QListView *parent)
+Task::Task(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops, QListView *parent)
 	: QObject(), QListViewItem(parent)
 {
-  init(taskName, minutes, sessionTime);
+  init(taskName, minutes, sessionTime, desktops);
 };
 
-Task::Task(const QString& taskName, long minutes, long sessionTime, QListViewItem *parent)
+Task::Task(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops, QListViewItem *parent)
   :QObject(), QListViewItem(parent)
 {
-  init(taskName, minutes, sessionTime);
+  init(taskName, minutes, sessionTime, desktops);
 }
 
-void Task::init(const QString& taskName, long minutes, long sessionTime)
+void Task::init(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops)
 {
   if (icons == 0) {
     icons = new QPtrVector<QPixmap>(8);
@@ -36,12 +36,14 @@ void Task::init(const QString& taskName, long minutes, long sessionTime)
   }
 
   // is this the right place?
-  _loging = Loging::instance();
+  _logging = Logging::instance();
 
   _name = taskName.stripWhiteSpace();
   _totalTime = minutes;
   _sessionTime = sessionTime;
+  noNegativeTimes();
   _timer = new QTimer(this);
+  _desktops = desktops;
   connect(_timer, SIGNAL(timeout()), this, SLOT(updateActiveIcon()));
   setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
   update();
@@ -54,7 +56,7 @@ void Task::setRunning(bool on)
   if (on) {
     if (!_timer->isActive()) {
       _timer->start(1000);
-      _loging->start(this);
+      _logging->start(this);
       _i=7;
       updateActiveIcon();
     }
@@ -62,7 +64,7 @@ void Task::setRunning(bool on)
   else {
     if (_timer->isActive()) {
       _timer->stop();
-      _loging->stop(this);
+      _logging->stop(this);
       setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
     }
   }
@@ -82,22 +84,29 @@ void Task::setName( const QString& name )
 void Task::setTotalTime ( long minutes )
 {
   _totalTime = minutes;
-  _loging->newTotalTime( this, minutes);
+  noNegativeTimes();
+  _logging->newTotalTime( this, _totalTime );
   update();
 }
 
 void Task::setSessionTime ( long minutes )
 {
   _sessionTime = minutes;
-  _loging->newSessionTime( this, minutes);
+  noNegativeTimes();
+  _logging->newSessionTime( this, _sessionTime );
   update();
 }
 
+void Task::setDesktopList ( DesktopListType desktopList )
+{
+  _desktops = desktopList;
+}
 
 void Task::incrementTime( long minutes )
 {
   _totalTime += minutes;
   _sessionTime += minutes;
+  noNegativeTimes();
   update();
 }
 
@@ -105,6 +114,7 @@ void Task::decrementTime(long minutes)
 {
   _totalTime -= minutes;
   _sessionTime -= minutes;
+  noNegativeTimes();
   update();
 }
 
@@ -113,6 +123,22 @@ void Task::updateActiveIcon()
 {
   _i = (_i+1) % 8;
   setPixmap(1, *(*icons)[_i]);
+}
+
+void Task::resetSessionTime()
+{
+    setTotalTime( _totalTime - _sessionTime );
+    setSessionTime( 0 );
+    noNegativeTimes();
+    update();
+}
+
+void Task::noNegativeTimes()
+{
+  if ( _totalTime < 0 )
+      _totalTime = 0;
+  if ( _sessionTime < 0 )
+      _sessionTime = 0;
 }
 
 #include "task.moc"
