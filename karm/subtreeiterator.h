@@ -8,14 +8,14 @@
  * \version $Header$
  */
 
-#include <iterator>
+// #include <iterator> // include if inheriting from iterator
 #include <vector>
 
 // class QListView;
 // class QListViewItem;
 
 template <typename VIEW, typename ITEM>
-class SubtreeIterator : public std::iterator <std::forward_iterator_tag, ITEM>
+class SubtreeIterator /* this isn't working */ /* : public std::iterator <std::forward_iterator_tag, ITEM> */
 {
 public:
     SubtreeIterator();

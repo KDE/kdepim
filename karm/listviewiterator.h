@@ -8,12 +8,12 @@
  * \version $Header$
  */
 
-#include <iterator>
+// #include <iterator> // include if inheriting from iterator
 
 class QListViewItemIterator;
 
 template <typename VIEW, typename ITEM>
-class ListViewIterator : public std::iterator <std::bidirectional_iterator_tag, ITEM>
+class ListViewIterator /* this isn't working */ /* : public std::iterator <std::bidirectional_iterator_tag, ITEM> */
 {
 public:
     ListViewIterator();

@@ -1,5 +1,6 @@
 #include <numeric>
 #include <functional>
+#include <algorithm>
 #include <qptrstack.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -237,7 +238,7 @@ void Karm::stopAllTimers()
 void Karm::resetSessionTimeForAllTasks()
 {
     typedef ListViewIterator<Karm, Task> AllIter;
-    for_each( AllIter( this ), AllIter(), std::mem_fun( &Task::resetSessionTime ) );
+    std::for_each( AllIter( this ), AllIter(), std::mem_fun( &Task::resetSessionTime ) );
 
     emit( sessionTimeChanged() );
 }
@@ -421,7 +422,7 @@ void callAccumulateParentTotals( Task* task )
 void Karm::updateParents( QListViewItem*, long, long )
 {
     typedef ListViewIterator<Karm, Task> AllIter;
-    for_each( AllIter( this ), AllIter(), callAccumulateParentTotals );
+    std::for_each( AllIter( this ), AllIter(), callAccumulateParentTotals );
 }
 
 void Karm::deleteTask()
