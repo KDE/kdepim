@@ -21,6 +21,14 @@
 </author>
 
 <author>
+<firstname>Mark</firstname>
+<surname>Bucciarelli</surname>
+<affiliation>
+<address><email>mark@hubcapconsulting.com</email></address>
+</affiliation>
+</author>
+
+<author>
 <firstname>Sirtaj</firstname>
 <othername>Singh</othername>
 <surname>Kang</surname>
@@ -43,8 +51,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2003-20-03</date>
-<releaseinfo>1.30.00</releaseinfo>
+<date>2004-07-05</date>
+<releaseinfo>1.4.0</releaseinfo>
 
 <abstract><para>&karm; tracks time spent on various tasks.</para></abstract>
 
@@ -112,6 +120,52 @@ features.</para>
 <para>Multiple tasks can now be timed simultaneously.</para>
 
 <para>Tasks can be saved and are restored at the next use.</para>
+
+</sect1>
+
+<sect1 id="timers"><title>The Timers</title>
+
+<para>&karm; maintains two different counters for each task: the session time
+and the total time.  For example, to track hours logged this week and this
+month, reset the session time at the beginning of the work week and reset all
+times at the beginning of each month.</para>
+
+<para>In the default configuration, &karm; displays four time columns for
+each task:</para>
+
+<variablelist>
+
+<varlistentry> <term><guilabel>Session Time</guilabel></term>
+<listitem><para>The time logged for the task since the session
+began.</para></listitem> </varlistentry> 
+
+<varlistentry> <term><guilabel>Total Session Time</guilabel></term>
+<listitem><para>The time logged for this task and all it's subtasks since the
+session began.</para></listitem> </varlistentry> 
+
+<varlistentry> <term><guilabel>Time</guilabel></term> <listitem><para>The time
+logged for the task since all times were reset.</para></listitem>
+</varlistentry> 
+
+<varlistentry> <term><guilabel>Total Time</guilabel></term>
+<listitem><para>The time logged for this task and all it's subtasks since all
+times were reset.</para></listitem> </varlistentry> 
+
+</variablelist>
+
+<para>To start a new session, select
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Start New Session</guimenuitem>
+</menuchoice>
+</para>
+
+<para>To reset all times, select
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Reset All Times</guimenuitem>
+</menuchoice>
+</para>
 
 </sect1>
 
@@ -236,7 +290,7 @@ task or all tasks to the &kde; clipboard</para>
 <guimenuitem>Copy History to Clipboard</guimenuitem>
 </menuchoice></term>
 <listitem>
-<para><action>Copies </action> daily session times for a 
+<para><action>Copies </action> daily times for a 
 given period to the &kde; clipboard</para>
 </listitem>
 </varlistentry>
@@ -447,18 +501,33 @@ enabled and the autosave interval.</para> </listitem>
 &karm;
 </para>
 
-<para>
-Program copyright 1997-2000 Sirtaj Singh Kang <email>taj@kde.org</email>.</para>
+<para> Program copyright: </para>
 
-<para>Contributors</para>
 <itemizedlist>
+
+<listitem><para>1997-2000 Sirtaj Singh Kang
+<email>taj@kde.org</email>.</para>  </listitem> 
+
+<listitem><para>2001-2002 Tomas Pospisek
+<email>tpo_deb@sourcepole.ch</email></para></listitem>
+
+<listitem><para>2003-2004 Mark
+Bucciarelli<email>mark@hubcapconsulting.com</email></para></listitem>
+
+</itemizedlist>
+
+<para>Contributors (in alphabetical order)</para>
+<itemizedlist>
+<listitem><para>Allen Winter<email>winterz@verizon.net</email></para></listitem>
+<listitem><para>David Faure<email>faure@kde.org</email></para></listitem>
 <listitem><para>Espen Sand <email>espen@kde.org</email></para></listitem>
+<listitem><para>Gioele Barabucci <email>gioele@gioelebarabucci.com</email></para></listitem>
+<listitem><para>Jan Schaumann <email>jschauma@netmeister.org</email></para></listitem>
 <listitem><para>Jesper Pedersen <email>blackie@ifad.dk</email></para></listitem>
 <listitem><para>Kalle Dalheimer <email>kalle@kde.org</email></para></listitem>
 <listitem><para>Klar&auml;lvdalens Datakonsult AB</para></listitem>
+<listitem><para>Mark Bucciarelli <email>mark@hubcapconsulting.com</email></para></listitem>
 <listitem><para>Tomas Pospisek <email>tpo_deb@sourcepole.ch</email></para></listitem>
-<listitem><para>Gioele Barabucci <email>gioele@gioelebarabucci.com</email></para></listitem>
-<listitem><para>Jan Schaumann <email>jschauma@netmeister.org</email></para></listitem>
 </itemizedlist>
 
 <para>&karm; was inspired by Harald Tveit Alvestrand's very useful
