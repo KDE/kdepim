@@ -10,6 +10,7 @@ kleopatra_SOURCES = \
 	customactions.cpp \
 	aboutdata.cpp \
 	main.cpp certmanager.cpp \
+	hierarchyanalyser.cpp \
 	certificatewizard.ui certificatewizardimpl.cpp \
 	certificateinfowidget.ui certificateinfowidgetimpl.cpp \
 	crlview.cpp storedtransferjob.cpp certlistview.cpp
