@@ -1,7 +1,16 @@
 [Desktop Entry]
 Type=Service
 Comment=
+Comment[xx]=xx
 Name=OrganizerPart
+Name[de]=KOrganizer-Komponente
+Name[en_GB]=OrganiserPart
+Name[fr]=Composant de calendrier
+Name[hr]=Organizer komponenta
+Name[ja]=Organizeパート
+Name[pt_BR]=Componente do KOrganizer
+Name[ro]=Componentă organizator
+Name[sv]=Organizerdel
 Icon=korganizer
 ServiceTypes=KitchenSync/Manipulator
 X-KDE-Library=liborganizerpart

@@ -2,3 +2,12 @@
 Type=ServiceType
 X-KDE-ServiceType=KitchenSync/Manipulator
 Name=KitchenSync Manipulator
+Name[da]=KitchenSync-manipulator
+Name[el]=KitchenSync διαχειριστής
+Name[es]=Manipulador KitchenSync
+Name[fi]=KitchenSync muokkaaja
+Name[fr]=Utilitaire pour KitchenSync
+Name[hu]=KitchenSync-kezelő
+Name[ja]=KitchenSync マニピュレータ
+Name[pt_BR]=Manipulador KitchenSync
+Name[sv]=Kitchensync-hantering

@@ -1,7 +1,19 @@
 [Desktop Entry]
 Type=Service
 Comment=
+Comment[xx]=xx
 Name=OverView Part
+Name[af]=oorsig deel
+Name[da]=OverView-del
+Name[es]=Parte OverView
+Name[fr]=Composant d'aperçu
+Name[hr]=OverView komponenta
+Name[hu]=OverView objektum
+Name[ja]=概観パート
+Name[mt]=Parti ta' sommarju
+Name[pt_BR]=Componente do OverView
+Name[ro]=Componetă vedere de ansamblu
+Name[sv]=Översiktsdel
 Icon=
 ServiceTypes=KitchenSync/Manipulator
 X-KDE-Library=liboverviewpart
