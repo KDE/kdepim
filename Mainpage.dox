@@ -6,6 +6,9 @@
         * or read the mailing lists for any additions and/or modifications
         * to the API.
         *
+	* <table width="100%">
+	* <tr><th>Applications</th><th>Libraries</th></tr>
+	* <tr><td valign="top">
         * - <a href="certmanager/html/index.html"><b>certmanager</b></a>
         *   (<a href="certmanager/html/classes.html">classes</a>)\n
         *   <i>KDE Key Manager.</i>
@@ -53,12 +56,8 @@
         * - <a href="kpilot/kpilot/html/index.html"><b>kpilot</b></a>
         *   (<a href="kpilot/kpilot/html/classes.html">classes</a>)\n
         *   <i>Synchronizes data with your PalmOS-based handheld.</i>
-        * - <a href="kpilot/lib/html/index.html"><b>kpilot library</b></a>
-        *   (<a href="kpilot/lib/html/classes.html">classes</a>)\n
-        *   <i>KPilot Library.</i>
-        * - <a href="ksync/html/index.html"><b>ksync</b></a>
-        *   (<a href="ksync/html/classes.html">classes</a>)\n
-        *   <i>A generic library for syncing collections of data entries.</i>
+	* </td>
+	* <td valign="top">
         * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>
         *   <i>A library for general purpose email handling.</i>
         * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
@@ -83,10 +82,14 @@
         * - <a href="libkpimidentities/html/index.html"><b>libkpimidentities</b></a>
         *   (<a href="libkpimidentities/html/classes.html">classes</a>)\n
         *   <i>A library for managing identities.</i>
+        * - <a href="kpilot/lib/html/index.html"><b>kpilot library</b></a>
+        *   (<a href="kpilot/lib/html/classes.html">classes</a>)\n
+        *   <i>KPilot Library.</i>
+        * - <a href="ksync/html/index.html"><b>ksync</b></a>
+        *   (<a href="ksync/html/classes.html">classes</a>)\n
+        *   <i>A generic library for syncing collections of data entries.</i>
+	* </td>
+	* </tr></table>
         *
-        * More information can be found at the
-        * <a href="http://pim.kde.org/index.php">KDE-PIM web site</a>
-        * or at the
-        * <a href="http://developer.kde.org/index.php">KDE Developer's corner</a>.
         *
         */
