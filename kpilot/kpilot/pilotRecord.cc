@@ -80,6 +80,11 @@ void PilotRecord::setData(const char* data, int len)
     fLen = len;
     }
 
+bool PilotRecord::isArchived() const
+{
+	return getAttrib() & dlpRecAttrArchived ;
+}
+
 bool PilotRecord::isDeleted() const
 {
 	return getAttrib() & dlpRecAttrDeleted ;
@@ -105,6 +110,9 @@ void PilotRecord::makeSecret()
 
 
 // $Log$
+// Revision 1.6  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.5  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

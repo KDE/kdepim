@@ -69,6 +69,7 @@ public:
 	//
 	bool isDeleted() const;
 	bool isSecret() const;
+	bool isArchived() const;
 	void makeDeleted() ;
 	void makeSecret() ;
 
@@ -82,6 +83,9 @@ public:
 
 
 // $Log$
+// Revision 1.7  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.6  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
