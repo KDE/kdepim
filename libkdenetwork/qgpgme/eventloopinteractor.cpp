@@ -35,6 +35,9 @@ using namespace GpgME;
 QGpgME::EventLoopInteractor::EventLoopInteractor( QObject * parent, const char * name )
  : QObject( parent, name ), GpgME::EventLoopInteractor()
 {
+  if ( !parent )
+    if ( qApp )
+      connect( qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
   mSelf = this;
 }
 
@@ -51,7 +54,7 @@ QGpgME::EventLoopInteractor * QGpgME::EventLoopInteractor::instance() {
       qWarning( "QGpgME::EventLoopInteractor: Need a QApplication object before calling instance()!" );
     else
 #endif
-      (void)new EventLoopInteractor( qApp, "QGpgME::EventLoopInteractor::instance()" );
+      (void)new EventLoopInteractor( 0, "QGpgME::EventLoopInteractor::instance()" );
   return mSelf;
 }
 
