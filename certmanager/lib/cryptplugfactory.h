@@ -38,11 +38,6 @@
 
 #include <kleo/cryptobackend.h>
 
-class CryptPlugWrapper;
-class CryptPlugWrapperList;
-
-class KConfig;
-
 namespace Kleo {
   class BackendConfigWidget;
 }
@@ -84,6 +79,9 @@ namespace Kleo {
 } // namespace Kleo
 
 #ifndef LIBKLEOPATRA_NO_COMPAT
+class CryptPlugWrapper;
+class CryptPlugWrapperList;
+
 namespace KMail {
 
   class CryptPlugFactory : public Kleo::CryptPlugFactory {

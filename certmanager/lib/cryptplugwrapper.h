@@ -29,7 +29,9 @@
 #ifndef cryptplugwrapper_h
 #define cryptplugwrapper_h
 
+#include "cryptplug.h"
 
+#ifndef LIBKLEOPATRA_NO_COMPAT
 
 /*
  *
@@ -47,7 +49,6 @@
 #include <kdemacros.h>
 
 #include <kleo/cryptobackend.h>
-#include "cryptplug.h"
 
 #include <qdatetime.h>
 
@@ -430,7 +431,6 @@ class CryptPlugWrapper;
 
   \see signMessage, encryptMessage, encryptAndSignMessage
 */
-#ifndef LIBKLEOPATRA_NO_COMPAT
 class StructuringInfoWrapper {
 public:
   StructuringInfoWrapper( CryptPlugWrapper* wrapper );
@@ -443,7 +443,6 @@ private:
   bool _initDone;
   CryptPlugWrapper* _wrapper;
 };
-#endif
 
 
 
@@ -759,7 +758,6 @@ public:
     const char* bugURL();
 
 
-#ifndef LIBKLEOPATRA_NO_COMPAT
     /*! \ingroup groupConfigSign
     \brief Sets the algorithm used for signing.
     */
@@ -1540,7 +1538,6 @@ public:
     CertificateInfoList listKeys(const QString& pattern = QString::null,
                                  bool remote = false,
                                  bool *truncated = 0 );
-#endif // LIBKLEOPATRA_NO_COMPAT
 
     Kleo::KeyListJob * keyListJob( bool remote=false, bool includeSigs=false, bool validate=true ) const;
     Kleo::EncryptJob * encryptJob( bool armor=false, bool textmode=false ) const;
@@ -1561,9 +1558,7 @@ public:
 
     GpgME::ImportResult importCertificate( const char* data, size_t length );
 
-#ifndef LIBKLEOPATRA_NO_COMPAT
     CryptPlug * cryptPlug() const { return _cp; }
-#endif
 
 private:
     QString    _name;
@@ -1579,5 +1574,7 @@ private:
     Config * _config;
     QGpgMECryptoConfig * _cryptoConfig;
 };
+
+#endif // !LIBKLEOPATRA_NO_COMPAT
 
 #endif // cryptplugwrapper_h
