@@ -40,14 +40,14 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
 
-#include <libkcal/calendar.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/calendarresources.h>
+#include "libkcal/calendar.h"
+#include "libkcal/calendarlocal.h"
+#include "libkcal/calendarresources.h"
 #include <kstandarddirs.h>
 
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
-#include <pilotDateEntry.h>
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+#include "pilotDateEntry.h"
 
 #include "vcal-conduitbase.moc"
 #include "vcalconduitSettings.h"
