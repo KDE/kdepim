@@ -1,6 +1,27 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-03-28  Adriaan de Groot
+* Added a "reset daemon" button. Added whatsthis help to toolbar.
+* Added a "suppress confirm" option to the notes conduit, partly
+  for 71122.
+* Suppressed some more warnings. Fixed little buglets. Put off
+  testing 71122 as long as possible.
+
+2004-03-26  Adriaan de Groot
+* Another day, another fix from Jörn.
+* Backported the fix for backup settings being ignored from Sebastian V.
+  (Actually, just used his original patch, which didn't use kcfgXT.
+* Prevent sync when screen locked, as a security measure.
+* Still haven't tested 69595 or 71122. Ugh.
+
+2004-03-24  Adriaan de Groot
+* 71122 has been top of the list for over a week - not getting around to
+  it at all. Fixes elsewhere; working on getting a Linux machine up and
+  running to be able to run POSE with a null-modem pseudo-device.
+* Another patch from Jörn; arr, it's a learning experience!
+* Removed logging weirdness in the fileinstall action.
+
 2004-03-19  Adriaan de Groot
 * Discovered that the daemon's DCOP interface disappears after one
   HotSync. Man, that's weird. Removed QString(CSL1()) constructs -
