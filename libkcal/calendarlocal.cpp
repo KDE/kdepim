@@ -709,8 +709,7 @@ QPtrList<Event> CalendarLocal::rawEvents()
 void CalendarLocal::addJournal(Journal *journal)
 {
   if (journal->dtStart().isValid())
-    kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << en
-dl;
+    kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
   else
     kdDebug(5800) << "Adding Journal without a DTSTART" << endl;
 
