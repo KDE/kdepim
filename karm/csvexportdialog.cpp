@@ -86,12 +86,12 @@ ReportCriteria CSVExportDialog::reportCriteria()
   QString t = grpTimeFormat->selected()->text(); 
   rc.decimalMinutes = ( t == i18n( "Decimal" ) );
 
-  QString d = grpDelimiter->selected()->text(); 
-  if      ( d == i18n( "Comma" ) )     rc.delimiter = ",";
-  else if ( d == i18n( "Tab" ) )       rc.delimiter = "\t";
-  else if ( d == i18n( "Semicolon" ) ) rc.delimiter = ";";
-  else if ( d == i18n( "Space" ) )     rc.delimiter = " ";
-  else if ( d == i18n( "Other:" ) )     rc.delimiter = txtOther->text();
+  QString d = grpDelimiter->selected()->name(); 
+  if      ( d == i18n( "radioComma" ) )     rc.delimiter = ",";
+  else if ( d == i18n( "radioTab" ) )       rc.delimiter = "\t";
+  else if ( d == i18n( "radioSemicolon" ) ) rc.delimiter = ";";
+  else if ( d == i18n( "radioSpace" ) )     rc.delimiter = " ";
+  else if ( d == i18n( "radioOther" ) )     rc.delimiter = txtOther->text();
   else {
     kdDebug(5970) 
       << "*** CSVExportDialog::reportCriteria: Unexpected delimiter choice '" 
