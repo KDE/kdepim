@@ -60,7 +60,7 @@ class Syncer
       synced data, which cannot be resolved automatically. The UI does not
       necessarily have to be interactive.
     */
-    Syncer(SyncUi *ui=0, SyncAlgorithm *iface= 0 );
+    Syncer( SyncUi *ui=0, SyncAlgorithm *iface= 0 );
     virtual ~Syncer();
 
     /**

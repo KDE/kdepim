@@ -87,7 +87,7 @@ void Syncer::syncAllToTarget( Syncee *target, bool writeback )
     syncee = mSyncees.next();
   }
 
-  target->writeLog();
+  target->saveLog();
 
   if ( writeback ) {
     for ( Syncee *syncee = mSyncees.first(); syncee;
