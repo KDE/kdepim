@@ -272,6 +272,7 @@ bool KolabBase::loadAttribute( QDomElement& element )
 
 bool KolabBase::saveAttributes( QDomElement& element ) const
 {
+  writeString( element, "producer-id", producerID() );
   writeString( element, "uid", uid() );
   writeString( element, "body", body() );
   writeString( element, "categories", categories() );

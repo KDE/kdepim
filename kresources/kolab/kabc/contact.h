@@ -217,6 +217,8 @@ private:
   QByteArray loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
   QByteArray loadSoundFromAddressee( const KABC::Sound& sound );
 
+  QString producerID() const;
+
   QString mGivenName;
   QString mMiddleNames;
   QString mLastName;

@@ -1102,3 +1102,9 @@ QByteArray Kolab::Contact::loadSoundFromAddressee( const KABC::Sound& sound )
     data = sound.data();
   return data;
 }
+
+QString Kolab::Contact::producerID() const
+{
+  // TODO: When KAB has the version number in a header file, don't hardcode
+  return "KAddressBook 3.3, Kolab resource";
+}

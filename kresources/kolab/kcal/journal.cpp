@@ -34,6 +34,7 @@
 #include "journal.h"
 
 #include <libkcal/journal.h>
+#include <korganizer/version.h>
 #include <kdebug.h>
 
 using namespace Kolab;
@@ -174,4 +175,9 @@ void Journal::setFields( const KCal::Journal* journal )
   // Set our own fields
   setSummary( journal->summary() );
   setStartDate( localToUTC( journal->dtStart() ) );
+}
+
+QString Journal::producerID() const
+{
+  return QString( "KOrganizer " ) + korgVersion + ", Kolab resource";
 }

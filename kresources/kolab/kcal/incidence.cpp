@@ -35,6 +35,7 @@
 
 #include <libkcal/journal.h>
 #include <libkdepim/email.h>
+#include <korganizer/version.h>
 #include <kdebug.h>
 
 using namespace Kolab;
@@ -306,13 +307,13 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   // Save the base class elements
   KolabBase::saveAttributes( element );
 
-  writeString( element, "summary", summary() );
-  writeString( element, "location", location() );
-  saveEmailAttribute( element, organizer(), "organizer" );
   if ( mFloatingStatus == HasTime )
     writeString( element, "start-date", dateTimeToString( startDate() ) );
   else
     writeString( element, "start-date", dateToString( startDate().date() ) );
+  writeString( element, "summary", summary() );
+  writeString( element, "location", location() );
+  saveEmailAttribute( element, organizer(), "organizer" );
   if ( !mRecurrence.cycle.isEmpty() )
     saveRecurrence( element );
   saveAttendees( element );
@@ -620,6 +621,11 @@ void Incidence::saveTo( KCal::Incidence* incidence )
 
     incidence->setExDates( mRecurrence.exclusions );
   }
+}
+
+QString Incidence::producerID() const
+{
+  return QString( "KOrganizer " ) + korgVersion + ", Kolab resource";
 }
 
 // Unhandled KCal::Incidence fields:

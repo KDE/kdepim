@@ -34,6 +34,7 @@
 #include "note.h"
 
 #include <libkcal/journal.h>
+#include <knotes/version.h>
 #include <kdebug.h>
 
 using namespace Kolab;
@@ -179,4 +180,9 @@ void Note::saveTo( KCal::Journal* journal )
 
   // TODO: background and foreground
   journal->setSummary( summary() );
+}
+
+QString Note::producerID() const
+{
+  return QString( "KNotes %s, Kolab resource" ).arg( "KNOTES_VERSION" );
 }

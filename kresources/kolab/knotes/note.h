@@ -95,6 +95,8 @@ protected:
   // Save all known fields into this ical incidence
   void saveTo( KCal::Incidence* ) const;
 
+  QString producerID() const;
+
   QString mSummary;
   QColor mBackgroundColor;
   QColor mForegroundColor;

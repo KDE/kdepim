@@ -122,6 +122,8 @@ protected:
   void loadRecurrence( const QDomElement& element );
   void saveRecurrence( QDomElement& element ) const;
 
+  QString producerID() const;
+
   QString mSummary;
   QString mLocation;
   Email mOrganizer;
