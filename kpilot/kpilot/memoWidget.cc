@@ -226,13 +226,9 @@ void MemoWidget::initialize()
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Unpacked app info." << endl;
-#endif
 
 	for (int i = 0; i < 15; i++)
 	{
-		fMemoAppInfo.category.name[i][7] = 0;
-
-#ifdef DEBUG
 		DEBUGKPILOT << fname
 			<< ": Category #"
 			<< i
@@ -241,8 +237,8 @@ void MemoWidget::initialize()
 			<< " and name "
 			<< (fMemoAppInfo.category.name[i][0] ? "*" : "-")
 			<< fMemoAppInfo.category.name[i] << endl;
-#endif
 	}
+#endif
 
 	populateCategories(fCatList, &fMemoAppInfo.category);
 
@@ -606,6 +602,9 @@ void MemoWidget::slotExportMemo()
 }
 
 // $Log$
+// Revision 1.40  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.39  2001/09/30 16:59:22  adridg
 // Cleaned up preHotSync
 //
