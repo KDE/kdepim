@@ -1,3 +1,3 @@
-debian/tmp/usr/lib/libkgantt.la
-debian/tmp/usr/lib/libkgantt.so.*
+debian/tmp/usr/lib/libkdgantt.la
+debian/tmp/usr/lib/libkdgantt.so.*
 debian/tmp/usr/share/apps/kgantt
