@@ -77,7 +77,7 @@ QDateTime Event::dtEnd() const
 
   kdDebug(5800) << "Warning! Event '" << summary()
             << "' does have neither end date nor duration." << endl;
-  return QDateTime();
+  return dtStart();
 }
 
 QString Event::dtEndTimeStr() const
