@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,8 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   mSortByThreadChangeDate( false ),
   mDelayedCenter( -1 ),
   mActiveItem( 0 ),
-  mShowingFolder( false )
+  mShowingFolder( false ),
+  mInitDone( false )
 {
   mPaintInfo.subCol    = addColumn( i18n("Subject"), 310 );
   mPaintInfo.senderCol = addColumn( i18n("From"), 115 );
@@ -98,13 +99,12 @@ KNHeaderView::~KNHeaderView()
 
 void KNHeaderView::readConfig()
 {
-  static bool initDone = false;
-  if ( !initDone ) {
-    initDone = true;
+  if ( !mInitDone ) {
     KConfig *conf = knGlobals.config();
     conf->setGroup( "HeaderView" );
     mSortByThreadChangeDate = conf->readBoolEntry( "sortByThreadChangeDate", false );
     restoreLayout( conf, "HeaderView" );
+    mInitDone = true;
   }
 
   KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
@@ -208,7 +208,7 @@ void KNHeaderView::setSorting( int column, bool ascending )
 {
   if ( column == mSortCol ) {
     mSortAsc = ascending;
-    if ( column == mPaintInfo.dateCol && ascending )
+    if ( mInitDone && column == mPaintInfo.dateCol && ascending )
       mSortByThreadChangeDate = !mSortByThreadChangeDate;
   } else {
     mSortCol = column;
