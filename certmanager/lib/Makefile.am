@@ -1,6 +1,6 @@
 INCLUDES = -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
 
-SUBDIRS = kleo backends ui . tests
+SUBDIRS = pics kleo backends ui . tests
 
 lib_LTLIBRARIES = libkleopatra.la
 
