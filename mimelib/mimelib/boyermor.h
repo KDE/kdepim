@@ -8,7 +8,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-//
+// 
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -50,9 +50,9 @@
 class DW_EXPORT DwBoyerMoore {
 
 public:
-
-    DwBoyerMoore(const char* aCstr, bool cs=true);
-    DwBoyerMoore(const DwString& aStr, bool cs=true);
+    
+    DwBoyerMoore(const char* aCstr);
+    DwBoyerMoore(const DwString& aStr);
     DwBoyerMoore(const DwBoyerMoore& other);
     //. Constructs a {\tt DwBoyerMoore} object for searching for a particular
     //. string.
@@ -61,8 +61,8 @@ public:
 
     const DwBoyerMoore & operator=( const DwBoyerMoore & other );
 
-    void Assign(const char* aCstr, bool cs=true);
-    void Assign(const DwString& aStr, bool cs=true);
+    void Assign(const char* aCstr);
+    void Assign(const DwString& aStr);
     //. Sets the string to search for.
 
     size_t FindIn(const DwString& aStr, size_t aPos) const;
@@ -76,9 +76,8 @@ private:
     size_t mPatLen;
     char* mPat;
     unsigned char mSkipAmt[256];
-    bool mCS;
 
-    void _Assign(const char* aPat, size_t aPatLen, bool cs);
+    void _Assign(const char* aPat, size_t aPatLen);
 };
 
 #endif
