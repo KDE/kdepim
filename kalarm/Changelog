@@ -2,6 +2,7 @@ KAlarm
 
 === Version 1.0.7 --- 17 Apr 2004 ===
 Fix scheduleCommand() and scheduleEmail() DCOP handling.
+Make KAlarm build for "./configure --without-arts".
 
 === Version 1.0.6 (KDE 3.2.2) --- 26 Mar 2004 ===
 Make the Quit menu item in main window quit the program.
