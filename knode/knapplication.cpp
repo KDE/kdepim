@@ -23,6 +23,7 @@
 #include "knapplication.h"
 #include "knconvert.h"
 #include "knglobals.h"
+#include "knmainwidget.h"
 #include "knapplication.moc"
 
 
@@ -72,7 +73,7 @@ int KNApplication::newInstance()
   }
 
   // process URLs...
-  KNMainWindow *mainWin = static_cast<KNMainWindow*>(mainWidget());
+  KNMainWidget *mainWin = static_cast<KNMainWidget*>(mainWidget());
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   if (args->count()>0) {
     KURL url=args->url(0);    // we take only one URL
