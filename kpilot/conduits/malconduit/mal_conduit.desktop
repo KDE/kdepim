@@ -38,6 +38,7 @@ Name[tr]=MAL (AvantGo) Kanalı
 Name[uk]=Акведук MAL (AvantGo)
 Name[xx]=xxMAL (AvantGo) Conduitxx
 Name[zh_CN]=MAL (AvantGo) 管道
+Comment=Syncronize AvantGo (or generally a MAL server's content) to the handheld. This allows you to view web-pages offline on the handheld, like your cinema or TV schedule, or any other web page.
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=conduit_mal
