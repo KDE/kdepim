@@ -26,8 +26,12 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <errno.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#ifdef __FreeBSD__
+#include <sys/uio.h>
+#endif
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
