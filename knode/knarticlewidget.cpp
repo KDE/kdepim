@@ -1238,6 +1238,12 @@ void KNArticleWidget::collectionRemoved(KNArticleCollection *c)
 }
 
 
+void KNArticleWidget::cleanup()
+{
+  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+    i->setArticle(0); //delete orphant articles => avoid crash in destructor
+}
+
 //=============================================================================================================
 
 

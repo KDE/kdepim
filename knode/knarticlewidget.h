@@ -143,6 +143,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     static void articleRemoved(KNArticle *a);
     static void articleChanged(KNArticle *a);
     static void collectionRemoved(KNArticleCollection *c);
+    static void cleanup();
 
   protected:
     static QList<KNArticleWidget> i_nstances;

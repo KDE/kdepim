@@ -340,6 +340,9 @@ articles.\nDo you want to continue anyway?"))
   if(!a_rtFactory->closeComposeWindows())
     return false;
 
+  //cleanup article-views
+  KNArticleWidget::cleanup();
+
   //expire & compact
   KNConfig::Cleanup *conf=c_fgManager->cleanup();
   KNCleanUp *cup=0;
