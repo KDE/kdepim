@@ -1607,16 +1607,28 @@ codes:</para>
 
 <variablelist>
 <varlistentry>
-<term>%c</term><listitem>The alarm's command string will be substituted.</listitem>
+<term>%c</term>
+<listitem>
+<para>The alarm's command string will be substituted.</para>
+</listitem>
 </varlistentry>
 <varlistentry>
-<term>%w</term><listitem>The alarm's command string will be substituted, with a <literal>sleep</literal> appended.</listitem>
+<term>%w</term>
+<listitem>
+<para>The alarm's command string will be substituted, with a <literal>sleep</literal> appended.</para>
+</listitem>
 </varlistentry>
 <varlistentry>
-<term>%C</term><listitem>A temporary command file containing the alarm's command string will be created, and the command to execute the file will be substituted.</listitem>
+<term>%C</term>
+<listitem>
+<para>A temporary command file containing the alarm's command string will be created, and the command to execute the file will be substituted.</para>
+</listitem>
 </varlistentry>
 <varlistentry>
-<term>%W</term><listitem>A temporary command file containing the alarm's command string will be created with a <literal>sleep</literal> appended, and the command to execute the file will be substituted.</listitem>
+<term>%W</term>
+<listitem>
+<para>A temporary command file containing the alarm's command string will be created with a <literal>sleep</literal> appended, and the command to execute the file will be substituted.</para>
+</listitem>
 </varlistentry>
 </variablelist>
 
