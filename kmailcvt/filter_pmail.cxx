@@ -79,7 +79,7 @@ void FilterPMail::import(FilterInfo *info)
 }
 
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc)(QString) )
+void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc)(const QString&) )
 {
    QStringList files = dir.entryList(mask, QDir::Files, QDir::Name);
    kdDebug() << "Mask is " << mask << " count is " << files.count() << endl;

@@ -33,7 +33,7 @@ public:
 
 protected:
   /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-  void processFiles(const QString& mask,  void(FilterPMail::* workFunc)(QString) );
+  void processFiles(const QString& mask,  void(FilterPMail::* workFunc)(const QString&) );
   /** this function imports one *.CNM message */
   void importNewMessage(const QString& file);
   /** this function imports one mail folder file (*.PMM) */
