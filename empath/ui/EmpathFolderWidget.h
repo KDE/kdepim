@@ -40,6 +40,7 @@
 #include "EmpathMailbox.h"
 #include "EmpathFolderListItem.h"
 #include "EmpathURL.h"
+#include "EmpathJob.h"
 #include "Empath.h"
 
 class EmpathFolderWidget : public EmpathListView
@@ -72,7 +73,8 @@ class EmpathFolderWidget : public EmpathListView
         void s_linkChanged(QListViewItem *);
         void s_startDrag(const QList<QListViewItem> &);
         
-        void s_jobFinished(EmpathJobInfo);
+        void s_jobFinished(EmpathRemoveFolderJob) { s_update(); }
+        void s_jobFinished(EmpathCreateFolderJob) { s_update(); }
 
     signals:
 

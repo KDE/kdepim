@@ -70,6 +70,7 @@ EmpathMailboxMaildir::init()
     loadConfig();
 }
 
+#if 0
     void
 EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
 {
@@ -207,6 +208,7 @@ EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
             break;
     }
 }
+#endif
 
     void
 EmpathMailboxMaildir::sync(const EmpathURL & url)

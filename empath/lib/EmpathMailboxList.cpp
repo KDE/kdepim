@@ -38,8 +38,8 @@
 #include "EmpathConfig.h"
 #include "EmpathMailbox.h"
 #include "EmpathMailboxList.h"
-#include "EmpathMailboxPOP3.h"
-#include "EmpathMailboxIMAP4.h"
+//#include "EmpathMailboxPOP3.h"
+//#include "EmpathMailboxIMAP4.h"
 #include "EmpathMailboxMaildir.h"
 #include "EmpathDefines.h"
 
@@ -172,6 +172,7 @@ EmpathMailboxList::createNew(EmpathMailbox::Type t)
             m = new EmpathMailboxMaildir(uniqueName());
             break;
 
+#if 0
         case EmpathMailbox::POP3:
             m = new EmpathMailboxPOP3(uniqueName());
             break;
@@ -179,6 +180,7 @@ EmpathMailboxList::createNew(EmpathMailbox::Type t)
         case EmpathMailbox::IMAP4:
             m = new EmpathMailboxIMAP4(uniqueName());
             break;
+#endif
 
         default:
             break;

@@ -35,7 +35,6 @@
 #include <qcache.h>
 
 // Local includes
-#include "EmpathJobInfo.h"
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 #include "EmpathMailboxList.h"
@@ -53,6 +52,7 @@ class EmpathMailSender;
 class EmpathFolder;
 class EmpathTask;
 class EmpathComposer;
+class EmpathJobScheduler;
 
 /**
  * Empath is the controller class for Empath's kernel.
@@ -158,12 +158,17 @@ class Empath : public QObject
         void filter(const EmpathURL &);
         
         /**
-         * Pointer to the system-wide mailbox list.
+         * The system-wide mailbox list.
          *
          * @short A shortcut to the mailbox list
          * @return A reference to the mailbox list
          */
         EmpathMailboxList & mailboxList() { return mailboxList_; }
+
+        /**
+         * Pointer to the job scheduler
+         */
+        EmpathJobScheduler * jobScheduler() { return jobScheduler_; }
         
         /**
          * @internal
@@ -229,7 +234,7 @@ class Empath : public QObject
         QString generateUnique();
         void cacheMessage(const EmpathURL &, RMM::RMessage);
         
-        void jobFinished(EmpathJobInfo);
+//        void jobFinished(EmpathJob);
 
         EmpathViewFactory & viewFactory();
 
@@ -294,72 +299,57 @@ class Empath : public QObject
         ///////////////////////////////////////////////////////////////////
         // Async methods.
         
-        void createFolder(const EmpathURL &, QString extraInfo = QString::null);
-        void removeFolder(const EmpathURL &, QString extraInfo = QString::null);
+        EmpathJobID createFolder(const EmpathURL &);
+        EmpathJobID removeFolder(const EmpathURL &);
 
         void saveMessage(const EmpathURL &, QWidget *);
         
         /**
          * Ask for a message to be copied from one folder to another.
          */
-        void copy(
-            const EmpathURL &,
-            const EmpathURL &,
-            QString extraInfo = QString::null);
+        EmpathJobID copy(const EmpathURL & src, const EmpathURL & dest);
          
         /**
          * Ask for a message to be moved from one folder to another.
          */
-        void move(const EmpathURL &, const EmpathURL &,
-            QString extraInfo = QString::null);
+        EmpathJobID move(const EmpathURL & src, const EmpathURL & dest);
         
         /**
          * Ask for a message to be retrieved.
          */
-        void retrieve(const EmpathURL &, QString extraInfo = QString::null);
+        EmpathJobID retrieve(const EmpathURL & messageURL);
         
         /**
          * Write a new message to the specified folder.
          */
-        void write(
-            const EmpathURL & folder,
-            RMM::RMessage & msg,
-            QString extraInfo = QString::null);
+        EmpathJobID write(RMM::RMessage & msg, const EmpathURL & folder);
         
         /**
-         * Remove given message (or folder if no message id present in URL).
+         * Remove given message.
          */
-        void remove(
-            const EmpathURL &,
-            QString extraInfo = QString::null);
+        EmpathJobID remove(const EmpathURL & messageURL);
         
         /**
          * Remove messages. The mailbox and folder are given in the URL.
          * The QStringList is used to pass the message ids.
          */
-        void remove(
-             const EmpathURL &,
-             const QStringList &,
-             QString extraInfo = QString::null);
+        EmpathJobID remove(const EmpathURL & folder, const QStringList & ids);
        
         /**
          * Mark a message with a particular status (Read, Marked, ...)
          */
-        void mark(
-            const EmpathURL &,
-            RMM::MessageStatus,
-            QString extraInfo = QString::null);
+        EmpathJobID mark(const EmpathURL & messageURL, RMM::MessageStatus);
         
         /**
          * Mark many messages with a particular status.
          * The mailbox and folder to use are given in the URL. The QStringList
          * is used to pass the message ids.
          */
-        void mark(
-            const EmpathURL &,
-            const QStringList &,
-            RMM::MessageStatus,
-            QString extraInfo = QString::null);
+        EmpathJobID mark(
+            const EmpathURL & folder,
+            const QStringList & ids,
+            RMM::MessageStatus
+        );
 
         //////////////////////////////////////////////////////////////////
         // Request user interaction to alter configuration.
@@ -412,8 +402,6 @@ class Empath : public QObject
 //        void s_messageReadyForSave(bool, const EmpathURL &, QString);
         
     signals:
-
-        void jobComplete(EmpathJobInfo);
 
         /**
          * EmpathMessageListWidget connects to this to be notified when
@@ -488,8 +476,6 @@ class Empath : public QObject
         
     private:
 
-        void _queueJob(const EmpathURL & mailboxURL, EmpathJobInfo &);
-
         EmpathURL inbox_, outbox_, sent_, drafts_, trash_;
     
         void _saveHostName();
@@ -500,6 +486,7 @@ class Empath : public QObject
         
         EmpathMailSender        * mailSender_;
         EmpathComposer          * composer_;
+        EmpathJobScheduler      * jobScheduler_;
 
         QString                 hostName_;
         pid_t                   processID_;

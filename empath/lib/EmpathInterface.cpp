@@ -66,25 +66,25 @@ EmpathInterface::EmpathInterface()
     fnDict_.insert("QString draftsURL()", new int(EmpathFnDraftsURL));
     fnDict_.insert("QString trashURL()", new int(EmpathFnTrashURL));
     fnDict_.insert("QByteArray message(QString)", new int(EmpathFnMessage));
-    fnDict_.insert("void queue(QByteArray)", new int(EmpathFnQueue));
-    fnDict_.insert("void send(QByteArray)", new int(EmpathFnSend));
-    fnDict_.insert("void sendQueued()", new int(EmpathFnSendQueued));
-    fnDict_.insert("void checkMail()", new int(EmpathFnCheckMail));
-    fnDict_.insert("void compose(QString)", new int(EmpathFnCompose));
-    fnDict_.insert("void reply(QString)", new int(EmpathFnReply));
-    fnDict_.insert("void replyAll(QString)", new int(EmpathFnReplyAll));
-    fnDict_.insert("void forward(QString)", new int(EmpathFnForward));
-    fnDict_.insert("void bounce(QString)", new int(EmpathFnBounce));
-    fnDict_.insert("void createFolder(QString)", new int(EmpathFnCreateFolder));
-    fnDict_.insert("void removeFolder(QString)", new int(EmpathFnRemoveFolder));
-    fnDict_.insert("void copy(QString, QString)", new int(EmpathFnCopy));
-    fnDict_.insert("void move(QString, QString)", new int(EmpathFnMove));
-    fnDict_.insert("void retrieve(QString)", new int(EmpathFnRetrieve));
-    fnDict_.insert("void write(QString, QByteArray)", new int(EmpathFnWrite));
-    fnDict_.insert("void remove(QString)", new int(EmpathFnRemove));
-    fnDict_.insert("void remove(QString, QStringList)", new int(EmpathFnRemoveMany));
-    fnDict_.insert("void mark(QString, int)", new int(EmpathFnMark));
-    fnDict_.insert("void mark(QString, QStringList, int)", new int(EmpathFnMarkMany));
+    fnDict_.insert("unsigned int queue(QByteArray)", new int(EmpathFnQueue));
+    fnDict_.insert("unsigned int send(QByteArray)", new int(EmpathFnSend));
+    fnDict_.insert("unsigned int sendQueued()", new int(EmpathFnSendQueued));
+    fnDict_.insert("unsigned int checkMail()", new int(EmpathFnCheckMail));
+    fnDict_.insert("unsigned int compose(QString)", new int(EmpathFnCompose));
+    fnDict_.insert("unsigned int reply(QString)", new int(EmpathFnReply));
+    fnDict_.insert("unsigned int replyAll(QString)", new int(EmpathFnReplyAll));
+    fnDict_.insert("unsigned int forward(QString)", new int(EmpathFnForward));
+    fnDict_.insert("unsigned int bounce(QString)", new int(EmpathFnBounce));
+    fnDict_.insert("unsigned int createFolder(QString)", new int(EmpathFnCreateFolder));
+    fnDict_.insert("unsigned int removeFolder(QString)", new int(EmpathFnRemoveFolder));
+    fnDict_.insert("unsigned int copy(QString, QString)", new int(EmpathFnCopy));
+    fnDict_.insert("unsigned int move(QString, QString)", new int(EmpathFnMove));
+    fnDict_.insert("unsigned int retrieve(QString)", new int(EmpathFnRetrieve));
+    fnDict_.insert("unsigned int write(QByteArray, QString)", new int(EmpathFnWrite));
+    fnDict_.insert("unsigned int remove(QString)", new int(EmpathFnRemove));
+    fnDict_.insert("unsigned int remove(QString, QStringList)", new int(EmpathFnRemoveMany));
+    fnDict_.insert("unsigned int mark(QString, int)", new int(EmpathFnMark));
+    fnDict_.insert("unsigned int mark(QString, QStringList, int)", new int(EmpathFnMarkMany));
 }
 
     bool
@@ -219,7 +219,7 @@ EmpathInterface::process(
                 replyType = "void";
                 QString arg;
                 inStream >> arg;
-                empath->createFolder(EmpathURL(arg));
+                outStream << empath->createFolder(EmpathURL(arg));
             }
             break;
 
@@ -228,7 +228,7 @@ EmpathInterface::process(
                 replyType = "void";
                 QString arg;
                 inStream >> arg;
-                empath->removeFolder(EmpathURL(arg));
+                outStream << empath->removeFolder(EmpathURL(arg));
             }
             break;
 
@@ -238,7 +238,7 @@ EmpathInterface::process(
                 QString arg1, arg2;
                 inStream >> arg1;
                 inStream >> arg2;
-                empath->copy(EmpathURL(arg1), EmpathURL(arg2));
+                outStream << empath->copy(EmpathURL(arg1), EmpathURL(arg2));
             }
             break;
 
@@ -248,7 +248,7 @@ EmpathInterface::process(
                 QString arg1, arg2;
                 inStream >> arg1;
                 inStream >> arg2;
-                empath->move(EmpathURL(arg1), EmpathURL(arg2));
+                outStream << empath->move(EmpathURL(arg1), EmpathURL(arg2));
             }
             break;
 
@@ -257,7 +257,7 @@ EmpathInterface::process(
                 replyType = "void";
                 QString arg;
                 inStream >> arg;
-                empath->retrieve(EmpathURL(arg));
+                outStream << empath->retrieve(EmpathURL(arg));
             }
             break;
 
@@ -269,7 +269,7 @@ EmpathInterface::process(
                 inStream >> arg1;
                 inStream >> arg2;
                 RMM::RMessage msg(QCString(arg2.data()));
-                empath->write(EmpathURL(arg1), msg);
+                outStream << empath->write(msg, EmpathURL(arg1));
             }
             break;
 
@@ -278,7 +278,7 @@ EmpathInterface::process(
                 replyType = "void";
                 QString arg;
                 inStream >> arg;
-                empath->remove(EmpathURL(arg));
+                outStream << empath->remove(EmpathURL(arg));
             }
             break;
 
@@ -289,7 +289,7 @@ EmpathInterface::process(
                 QStringList arg2;
                 inStream >> arg1;
                 inStream >> arg2;
-                empath->remove(EmpathURL(arg1), arg2);
+                outStream << empath->remove(EmpathURL(arg1), arg2);
             }
             break;
 
@@ -300,7 +300,7 @@ EmpathInterface::process(
                 int arg2;
                 inStream >> arg1;
                 inStream >> arg2;
-                empath->mark(EmpathURL(arg1), RMM::MessageStatus(arg2));
+                outStream << empath->mark(EmpathURL(arg1), RMM::MessageStatus(arg2));
             }
             break;
 
@@ -313,7 +313,7 @@ EmpathInterface::process(
                 inStream >> arg1;
                 inStream >> arg2;
                 inStream >> arg3;
-                empath->mark(EmpathURL(arg1), arg2, RMM::MessageStatus(arg3));
+                outStream << empath->mark(EmpathURL(arg1), arg2, RMM::MessageStatus(arg3));
             }
             break;
 

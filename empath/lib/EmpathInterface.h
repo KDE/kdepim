@@ -24,25 +24,25 @@ class EmpathInterface : virtual public DCOPObject
         virtual QString draftsURL() = 0;
         virtual QString trashURL() = 0;
         virtual QByteArray message(QString url) = 0;
-        virtual void queue(QByteArray message) = 0;
-        virtual void send(QByteArray message) = 0;
-        virtual void sendQueued() = 0;
-        virtual void checkMail() = 0;
-        virtual void compose(QString recipient) = 0;
-        virtual void reply(QString url) = 0;
-        virtual void replyAll(QString url) = 0;
-        virtual void forward(QString url) = 0;
-        virtual void bounce(QString url) = 0;
-        virtual void createFolder(QString path) = 0;
-        virtual void removeFolder(QString path) = 0;
-        virtual void copy(QString urlFrom, QString urlTo) = 0;
-        virtual void move(QString urlFrom, QString urlTo) = 0;
-        virtual void retrieve(QString urlFrom) = 0;
-        virtual void write(QString urlFolder, QByteArray message) = 0;
-        virtual void remove(QString urlID) = 0;
-        virtual void remove(QString urlFolder, QStringList idList) = 0;
-        virtual void mark(QString urlID, int status) = 0;
-        virtual void mark(QString urlFolder, QStringList idList, int status) = 0;
+        virtual unsigned int queue(QByteArray message) = 0;
+        virtual unsigned int send(QByteArray message) = 0;
+        virtual unsigned int sendQueued() = 0;
+        virtual unsigned int checkMail() = 0;
+        virtual unsigned int compose(QString recipient) = 0;
+        virtual unsigned int reply(QString url) = 0;
+        virtual unsigned int replyAll(QString url) = 0;
+        virtual unsigned int forward(QString url) = 0;
+        virtual unsigned int bounce(QString url) = 0;
+        virtual unsigned int createFolder(QString path) = 0;
+        virtual unsigned int removeFolder(QString path) = 0;
+        virtual unsigned int copy(QString urlFrom, QString urlTo) = 0;
+        virtual unsigned int move(QString urlFrom, QString urlTo) = 0;
+        virtual unsigned int retrieve(QString urlFrom) = 0;
+        virtual unsigned int write(QByteArray message, QString urlFolder) = 0;
+        virtual unsigned int remove(QString urlID) = 0;
+        virtual unsigned int remove(QString urlFolder, QStringList idList) = 0;
+        virtual unsigned int mark(QString urlID, int status) = 0;
+        virtual unsigned int mark(QString urlFolder, QStringList idList, int status) = 0;
 
     private:
 

@@ -35,6 +35,7 @@
 #include <kconfig.h>
 
 // Local includes
+#include "EmpathJobScheduler.h"
 #include "EmpathComposer.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
@@ -46,9 +47,9 @@
 EmpathComposer::EmpathComposer()
     :   QObject()
 {
-    QObject::connect(
-        empath, SIGNAL(jobComplete(EmpathJobInfo)),
-        SLOT(s_jobComplete(EmpathJobInfo)));
+//    QObject::connect(
+//        empath->jobScheduler(), SIGNAL(retrieveComplete(EmpathRetrieveJob)),
+//        this,                   SLOT(s_retrieveJobComplete(EmpathRetrieveJob)));
 }
 
 EmpathComposer::~EmpathComposer()
@@ -154,18 +155,11 @@ EmpathComposer::newComposeForm(const QString & recipient)
     void
 EmpathComposer::newComposeForm(ComposeType t, const EmpathURL & url)
 {
-    int id = 0;
     EmpathComposeForm composeForm;
 
     composeForm.setComposeType(t);
     
-    // find an unused id, if everything is allright this shouldn't take too long.
-    while (jobs_.contains(id))
-        id++;
-    
-    jobs_.insert(id, composeForm); 
-    
-    empath->retrieve(url, "Composer: " + QString::number(id));
+    jobList_.insert(empath->retrieve(url), composeForm); 
 }
 
     void
@@ -212,33 +206,34 @@ EmpathComposer::bugReport()
 }
  
     void
-EmpathComposer::s_jobComplete(EmpathJobInfo ji)
+EmpathComposer::s_retrieveJobComplete(EmpathRetrieveJob j)
 {
-    if (!ji.success() || ji.xinfo().left(8) != "Composer")
+    if (!(jobList_.contains(j.id())))
         return;
 
-    RMM::RMessage m(empath->message(ji.from()));
+    if (!j.success())
+        return;
+
+    RMM::RMessage m(empath->message(j.url()));
     
     if (!m) {
         empathDebug(
             "Couldn't get supposedly retrieved message `" +
-            ji.from().asString() + "'");
+            j.url().asString() + "'");
         return;
     }
  
-    int id = ji.xinfo().remove(0, 10).toInt();
+    switch (jobList_[j.id()].composeType()) {
 
-    switch (jobs_[id].composeType()) {
-
-        case ComposeReply:              _reply(id, m);      break; 
-        case ComposeReplyAll:           _reply(id, m);      break;
-        case ComposeForward:            _forward(id, m);    break; 
-        case ComposeBounce:             _bounce(id, m);     break;
-        case ComposeNormal: default:                        break;
+        case ComposeReply:              _reply(j.id(), m);      break; 
+        case ComposeReplyAll:           _reply(j.id(), m);      break;
+        case ComposeForward:            _forward(j.id(), m);    break; 
+        case ComposeBounce:             _bounce(j.id(), m);     break;
+        case ComposeNormal: default:                            break;
     }
 
-    EmpathComposeForm composeForm(jobs_[id]);
-    jobs_.remove(id);
+    EmpathComposeForm composeForm(jobList_[j.id()]);
+    jobList_.remove(j.id());
     _initVisibleHeaders(composeForm);
     emit(composeFormComplete(composeForm));
 }
@@ -268,11 +263,11 @@ EmpathComposer::_initVisibleHeaders(EmpathComposeForm & composeForm)
 }
 
    void
-EmpathComposer::_reply(int id, RMM::RMessage message)
+EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
 {
     empathDebug("Replying");
  
-    EmpathComposeForm composeForm(jobs_[id]);
+    EmpathComposeForm composeForm(jobList_[id]);
     QCString to, cc;
     // FIXME: This should be kcmemailrc (or whatever it's called now).
     KConfig * c(KGlobal::config());
@@ -297,7 +292,7 @@ EmpathComposer::_reply(int id, RMM::RMessage message)
         
         if (message.envelope().has(RMM::HeaderCc)) 
 
-            for (uint i = 0; i < message.envelope().cc().count(); i++) {
+            for (unsigned int i = 0; i < message.envelope().cc().count(); i++) {
                 if (i > 0)
                     cc += ", ";
                 if (cc.length() > 70)
@@ -373,15 +368,15 @@ EmpathComposer::_reply(int id, RMM::RMessage message)
         }
     }
 
-    jobs_.replace(id, composeForm);
+    jobList_.replace(id, composeForm);
 }
     
     void
-EmpathComposer::_forward(int id, RMM::RMessage message)
+EmpathComposer::_forward(EmpathJobID id, RMM::RMessage message)
 {
     empathDebug("Forwarding");
     
-    EmpathComposeForm composeForm(jobs_[id]);
+    EmpathComposeForm composeForm(jobList_[id]);
     QCString s;
 
     // Fill in the subject.
@@ -405,11 +400,11 @@ EmpathComposer::_forward(int id, RMM::RMessage message)
         // TODO
     } 
 
-    jobs_.replace(id, composeForm);
+    jobList_.replace(id, composeForm);
 }
 
     void
-EmpathComposer::_bounce(int, RMM::RMessage /* m */)
+EmpathComposer::_bounce(EmpathJobID, RMM::RMessage /* m */)
 {
     // TODO
 }

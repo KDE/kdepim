@@ -321,7 +321,7 @@ EmpathFolderWidget::s_newFolder()
     if (currentItem() != 0)
         setOpen(currentItem(), true);
 
-    empath->createFolder(newFolderURL, "FolderWidget");
+    empath->createFolder(newFolderURL);
 }
 
     void
@@ -340,7 +340,7 @@ EmpathFolderWidget::s_removeFolder()
             i18n("Cancel"));
 
     if (c == KMessageBox::Yes)
-        empath->remove(popupMenuOver->url(), QString::null);
+        empath->removeFolder(popupMenuOver->url());
 }
 
     void
@@ -557,18 +557,5 @@ EmpathFolderWidget::startAutoScroll()
 EmpathFolderWidget::stopAutoScroll()
 {
 }
-
-    void
-EmpathFolderWidget::s_jobFinished(EmpathJobInfo i)
-{
-    if (i.xinfo() == "FolderWidget") {
-
-        if ((i.type() == RemoveFolder) || (i.type() == CreateFolder)) {
-
-            s_update();
-        }
-    }
-}
-    
 
 // vim:ts=4:sw=4:tw=78

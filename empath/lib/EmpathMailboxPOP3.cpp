@@ -104,10 +104,9 @@ EmpathMailboxPOP3::alreadyHave()
 }
 
     void
-EmpathMailboxPOP3::_enqueue(
-    EmpathPOPCommand::Type t, int i, EmpathJobInfo & ji)
+EmpathMailboxPOP3::_enqueue(EmpathPOPCommand::Type t, int i)
 {
-    commandQueue_.enqueue(new EmpathPOPCommand(t, i, ji));
+    commandQueue_.enqueue(new EmpathPOPCommand(t, i));
     
     if (commandQueue_.count() == 1)
         _nextCommand();
@@ -135,70 +134,9 @@ EmpathMailboxPOP3::_nextCommand()
     void
 EmpathMailboxPOP3::s_checkMail()
 {
-    EmpathJobInfo ji;
-    _enqueue(EmpathPOPCommand::Index, -1, ji);
+    _enqueue(EmpathPOPCommand::Index, -1);
 }
 
-    void
-EmpathMailboxPOP3::_runJob(EmpathJobInfo & jobInfo)
-{
-    switch (jobInfo.type()) {
-
-        case RetrieveMessage:
-            {
-                QString inID = jobInfo.from().messageID();
-                
-                int messageIndex = inID.toInt();
-
-                _enqueue(EmpathPOPCommand::Get, messageIndex, jobInfo);
-
-            }
-            break;
-            
-        case WriteMessage:
-            {
-                empathDebug("This mailbox is READ ONLY !");
-                jobInfo.done(false);
-            }
-            break;
-
-        case MarkMessage:
-            {
-                jobInfo.done(false);
-            }
-            break;
-
-        case RemoveMessage:
-            {
-                // STUB
-                jobInfo.done(false);
-            }
-            break;
-
-        case CreateFolder:
-            {
-                jobInfo.done(false);
-            }
-            break;
-
-        case RemoveFolder:
-            {
-                jobInfo.done(false);
-            }
-            break;
-
-        case CopyMessage:
-        case MoveMessage:
-            empathDebug("Derived classes don't handle copy / move.");
-            empathDebug("The intelligence behind this is in EmpathMailbox.");
-            break;
-
-        default:
-            empathDebug("Invalid job info");
-            break;
-    }
-}
-    
     bool
 EmpathMailboxPOP3::newMail() const
 {
@@ -248,7 +186,7 @@ EmpathMailboxPOP3::s_jobFinished(int id)
             
         case EmpathPOPCommand::Stat:
             // STUB
-            commandQueue_.head()->jobInfo().done(false);
+//            commandQueue_.head()->jobInfo().done(false);
             break;
         
         case EmpathPOPCommand::Index:
@@ -262,24 +200,24 @@ EmpathMailboxPOP3::s_jobFinished(int id)
                     empath->filter(messageURL);
                 }
 
-                commandQueue_.head()->jobInfo().done(true);
+//                commandQueue_.head()->jobInfo().done(true);
             }
             break;
         
         case EmpathPOPCommand::Get:
             {
                 QCString data = commandQueue_.head()->data();
-                EmpathURL from = commandQueue_.head()->jobInfo().from();
+                EmpathURL from;// = commandQueue_.head()->jobInfo().from();
 
                 empath->cacheMessage(from, RMM::RMessage(data));
 
-                commandQueue_.head()->jobInfo().done(true);
+//                commandQueue_.head()->jobInfo().done(true);
             }
             
             break;
         
         case EmpathPOPCommand::Remove:
-            commandQueue_.head()->jobInfo().done(true);
+//            commandQueue_.head()->jobInfo().done(true);
             break;
         
         default:
@@ -544,11 +482,9 @@ EmpathMailboxPOP3::setLogging(bool policy)
 /////////////////////////////// COMMANDS /////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-EmpathPOPCommand::EmpathPOPCommand(
-    EmpathPOPCommand::Type t, int n, EmpathJobInfo & ji)
+EmpathPOPCommand::EmpathPOPCommand(EmpathPOPCommand::Type t, int n)
     :   type_(t),
-        msgNo_(n),
-        jobInfo_(ji)
+        msgNo_(n)
 {
     switch (t) {
         
@@ -586,12 +522,6 @@ EmpathPOPCommand::type()
 EmpathPOPCommand::messageNumber()
 {
     return msgNo_;
-}
-
-    EmpathJobInfo
-EmpathPOPCommand::jobInfo()
-{
-    return jobInfo_;
 }
 
     QCString &

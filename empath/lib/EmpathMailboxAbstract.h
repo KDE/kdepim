@@ -46,11 +46,6 @@ loadConfig();
     virtual void
 sync(const EmpathURL &);
         
-protected:
-
-    virtual void
-_runJob(EmpathJobInfo &);
-    
 public slots:
 
 virtual void s_checkMail();

@@ -127,50 +127,6 @@ EmpathMailbox::folder(const EmpathURL & url)
 }
 
     void
-EmpathMailbox::queueJob(EmpathJobInfo & jobInfo)
-{
-    empathDebug("Queuing a new job");
-
-    switch(jobInfo.type()) {
-        case RetrieveMessage:   empathDebug("Type: RetrieveMessage"); break;
-        case CopyMessage:       empathDebug("Type: CopyMessage"); break;
-        case WriteMessage:      empathDebug("Type: WriteMessage"); break;
-        case MoveMessage:       empathDebug("Type: MoveMessage"); break;
-        case RemoveMessage:     empathDebug("Type: RemoveMessage"); break;
-        case MarkMessage:       empathDebug("Type: MarkMessage"); break;
-        case IgnoreMessage:     empathDebug("Type: IgnoreMessage"); break;
-        case ForwardMessage:    empathDebug("Type: ForwardMessage"); break;
-        case CreateFolder:      empathDebug("Type: CreateFolder"); break;
-        case RemoveFolder:      empathDebug("Type: RemoveFolder"); break;
-        default: empathDebug("Unknown type"); break;
-    }
-
-    empathDebug("From: " + jobInfo.from().asString());
-    empathDebug("To: " + jobInfo.to().asString());
-
-
-    _enqueue(jobInfo);
-}
-
-    void
-EmpathMailbox::_enqueue(EmpathJobInfo & jobInfo)
-{
-    queue_.enqueue(new EmpathJobInfo(jobInfo));
-    _runQueue();
-}
-
-    void
-EmpathMailbox::_runQueue()
-{
-    while (queue_.count() != 0) {
-        EmpathJobInfo * jobInfo = queue_.dequeue();
-        _runJob(*jobInfo);
-        delete jobInfo;
-        jobInfo = 0;
-    }
-}
-
-    void
 EmpathMailbox::_connectUp()
 {
     QObject::connect(

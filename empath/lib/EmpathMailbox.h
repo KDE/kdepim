@@ -32,7 +32,6 @@
 #include <qtimer.h>
 
 // Local includes
-#include "EmpathJobInfo.h"
 #include "EmpathDefines.h"
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
@@ -75,10 +74,6 @@ class EmpathMailbox : public QObject
         bool operator == (const EmpathMailbox & other) const
         { return id_ == other.id_; }
 
-        // Async methods
-
-        void queueJob(EmpathJobInfo &);
-
         // Pure virtuals.
 
         /**
@@ -100,10 +95,6 @@ class EmpathMailbox : public QObject
          */
         virtual void sync(const EmpathURL &) = 0;
        
-    protected:
-
-        virtual void _runJob(EmpathJobInfo &) = 0;
-
     public slots:
 
         virtual void s_checkMail()   = 0;
@@ -223,10 +214,6 @@ class EmpathMailbox : public QObject
     private:
 
         void _connectUp();
-        void _enqueue(EmpathJobInfo &);
-
-        EmpathJobQueue queue_;
-        
         void _runQueue();
 };
 

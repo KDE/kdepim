@@ -35,7 +35,7 @@
 // Local includes
 #include "EmpathURL.h"
 #include "EmpathEnum.h"
-#include "EmpathJobInfo.h"
+#include "EmpathJob.h"
 #include "EmpathComposeForm.h"
 #include <RMM_Message.h>
 
@@ -94,13 +94,13 @@ class EmpathComposer : public QObject
         
     protected slots:
 
-        void s_jobComplete(EmpathJobInfo);
+        void s_retrieveJobComplete(EmpathRetrieveJob);
    
     private:
         
-        void _reply     (int id, RMM::RMessage);
-        void _forward   (int id, RMM::RMessage);
-        void _bounce    (int id, RMM::RMessage);
+        void _reply     (EmpathJobID, RMM::RMessage);
+        void _forward   (EmpathJobID, RMM::RMessage);
+        void _bounce    (EmpathJobID, RMM::RMessage);
 
         void _initVisibleHeaders(EmpathComposeForm &);
         
@@ -109,7 +109,7 @@ class EmpathComposer : public QObject
 
         QCString _signature();
         
-        QMap<int, EmpathComposeForm> jobs_;
+        QMap<EmpathJobID, EmpathComposeForm> jobList_;
        
         QCString referenceHeaders_;
 

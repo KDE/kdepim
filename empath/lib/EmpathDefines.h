@@ -45,6 +45,8 @@
 
 #endif
 
+typedef unsigned int EmpathJobID;
+
 #endif // included this file
 
 // vim:ts=4:sw=4:tw=78

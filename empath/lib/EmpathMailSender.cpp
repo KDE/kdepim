@@ -67,7 +67,7 @@ EmpathMailSender::send(RMM::RMessage message)
     EmpathURL queueURL(c->readEntry(FOLDER_OUTBOX));
     c->setGroup(GROUP_SENDING);
 
-    empath->write(queueURL, message, "message->pending");
+    empath->write(message, queueURL);
 }
 
     void
@@ -82,7 +82,7 @@ EmpathMailSender::queue(RMM::RMessage message)
     
     using namespace ::std;
 
-    empath->write(queueURL, message, "message->queue");
+    empath->write(message, queueURL);
 }
 
     void
@@ -123,7 +123,7 @@ EmpathMailSender::_startNextSend()
     
     url.setMessageID(*id);
 
-    empath->retrieve(url, "message->send");
+    empath->retrieve(url);
 }
 
     void
@@ -143,7 +143,7 @@ EmpathMailSender::sendCompleted(const QString & id, bool)
     EmpathURL url(queueURL);
     url.setMessageID(id);
 
-//    empath->copy(url, sentURL, "queue->sent");
+    empath->copy(url, sentURL);
 }
 
     void

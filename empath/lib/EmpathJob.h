@@ -34,138 +34,325 @@
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
 
-class EmpathJobPrivate
-{
-    public:
-
-        bool success();
-
-        ActionType type();
-        EmpathURL folder();
-        EmpathURL from();
-        EmpathURL to();
-        QString xinfo();
-        QStringList IDList();
-        RMM::RMessage message();
-        QString messageID();
-        RMM::MessageStatus status();
-
-        void run();
-        
-        void done(bool ok);
-        
-        const char * className() const { return "EmpathJobPrivate"; }
-
-    protected:
-        
-        void setType(ActionType t);
-        void setMessageURL(const EmpathURL &);
-        void setFolder(const EmpathURL &);
-        void setSourceFolder(const EmpathURL &);
-        void setDestinationFolder(const EmpathURL &);
-        void setMessageIDList(const QString & s);
-        void setMessage(RMM::RMessage &);
-        void setMessageStatus(RMM::RMessage &);
-        bool success(const QString & id);
-        void setSuccess(const QString & id, bool b);
-        void setSuccessMap(QMap<QString, bool> map);
-
-    private:
-
-        ActionType type;
-        EmpathURL messageURL;
-        EmpathURL folder;
-        EmpathURL source;
-        EmpathURL destination;
-        QString xinfo;
-        QStringList IDList;
-        QString messageID;
-        RMM::RMessage message;
-        QMap<QString, bool> successMap;
-        RMM::MessageStatus status;
-        bool generalSuccess;
-};
-
 class EmpathJob
 {
     public:
 
-            static EmpathJob *
-        copy(
-            const EmpathURL & from,
-            const EmpathURL & to,
-            const QString & extraInfo
-        );
+        EmpathJob(ActionType t);
 
-            static EmpathJob *
-        move(
-            const EmpathURL & from,
-            const EmpathURL & to,
-            const QString & extraInfo
-        );
+        virtual ~EmpathJob()
+        {
+            // Empty.
+        }
 
-            static EmpathJob *
-        write(
-            RMM::RMessage & msg,
-            const EmpathURL & folder,
-            const QString & extraInfo
-        );
+        bool success() const { return success_; }
 
-            static EmpathJob *
-        remove(
-            const EmpathURL & url,
-            const QString & extraInfo
-        );
- 
-            static EmpathJob *
-        remove(
-            const EmpathURL & folder,
-            const QStringList & messageIDList,
-            const QString & extraInfo
-        );
+        virtual void run() = 0;
 
-            static EmpathJob *
-        mark(
-            const EmpathURL & folder,
-            const QStringList & messageIDList,
-            RMM::MessageStatus status,
-            const QString & extraInfo
-        );
+        void done(bool ok);
 
-            static EmpathJob *
-        mark(
-            const EmpathURL & url,
-            RMM::MessageStatus status,
-            const QString & extraInfo
-        );
+        EmpathJobID id() const { return id_; }
 
-            static EmpathJob *
-        createFolder(
-            const EmpathURL & url,
-            const QString & extraInfo
-        );
+        const char * className() const { return "EmpathJob"; }
 
-            static EmpathJob *
-        removeFolder(
-            const EmpathURL & url,
-            const QString & extraInfo
-        );
+    protected:
 
-            static EmpathJob *
-        retrieve(
-            const EmpathURL & url,
-            const QString & extraInfo
-        );
+        ActionType type() const { return type_; }
+        void setSuccess(bool ok) { success_ = ok; }
 
-       
+    private:
+
+        static EmpathJobID ID_;
+
+        EmpathJob();
+        EmpathJobID id_;
+        ActionType type_;
+        bool success_;
+};
+
+
+
+class EmpathSingleJob : public EmpathJob
+{
+    public:
+
+        EmpathSingleJob(ActionType t)
+            : EmpathJob(t)
+        {
+            // Empty.
+        }
+
+        virtual ~EmpathSingleJob()
+        {
+            // Empty.
+        }
+
+        virtual void run() = 0;
+        
+        const char * className() const { return "EmpathSingleJob"; }
+};
+
+class EmpathMultiJob : public EmpathJob
+{
+    public:
+
+        EmpathMultiJob(ActionType t)
+            : EmpathJob(t)
+        {
+            // Empty.
+        }
+
+        virtual ~EmpathMultiJob()
+        {
+            // Empty.
+        }
+
+        const char * className() const { return "EmpathMultiJob"; }
+};
+
+class EmpathWriteJob : public EmpathSingleJob
+{
+    public:
+
+        EmpathWriteJob(RMM::RMessage & message, const EmpathURL & folder)
+          : EmpathSingleJob(WriteMessage),
+            message_(message),
+            folder_(folder)
+        {
+            // Empty.
+        }
+
+        virtual ~EmpathWriteJob()
+        {
+            // Empty
+        }
+
+        virtual void run();
+
+        RMM::RMessage message() const { return message_; }
+        EmpathURL folder() const { return folder_; }
+
+    private:
+
+        RMM::RMessage message_;
+        EmpathURL folder_;
+};
+
+class EmpathCopyJob : public EmpathMultiJob
+{
+    public:
+
+        EmpathCopyJob(const EmpathURL & source, const EmpathURL & destination)
+          : EmpathMultiJob(CopyMessage),
+            source_(source),
+            destination_(destination)
+        {
+            // Empty.
+        }
+
+        virtual ~EmpathCopyJob()
+        {
+            // Empty
+        }
+
+        virtual void run();
+        
+        EmpathURL source() const { return source_; }
+        EmpathURL destination() const { return destination_; }
+
+    private:
+
+        EmpathURL source_;
+        EmpathURL destination_;
+};
+
+class EmpathMoveJob : public EmpathMultiJob
+{
+    public:
+
+        EmpathMoveJob(const EmpathURL & source, const EmpathURL & destination)
+          : EmpathMultiJob(MoveMessage),
+            source_(source),
+            destination_(destination)
+        {
+            // Empty.
+        }
+        
+        virtual ~EmpathMoveJob()
+        {
+            // Empty
+        }
+
+        virtual void run();
+        
+        EmpathURL source() const { return source_; }
+        EmpathURL destination() const { return destination_; }
+
     private:
         
-        EmpathJob();
-        virtual ~EmpathJob();
+        EmpathURL source_;
+        EmpathURL destination_;
+};
 
-        void _runQueue();
+class EmpathRemoveJob : public EmpathSingleJob
+{
+    public:
 
-        QQueue<EmpathJobPrivate> subJobQueue_;
+        EmpathRemoveJob(const EmpathURL & folder, const QStringList & IDList)
+          : EmpathSingleJob(RemoveMessage),
+            folder_(folder),
+            IDList_(IDList)
+        {
+            // Empty.
+        }
+
+        EmpathRemoveJob(const EmpathURL & url)
+          : EmpathSingleJob(RemoveMessage),
+            url_(url)
+        {
+            // Empty.
+        }
+        
+        virtual ~EmpathRemoveJob()
+        {
+            // Empty
+        }
+        virtual void run();
+
+        QMap<QString, bool> successMap() const { return successMap_; }
+        EmpathURL url() const { return url_; }
+        EmpathURL folder() const { return folder_; }
+        QStringList IDList() const { return IDList_; }
+
+    private:
+
+        QMap<QString, bool> successMap_;
+        EmpathURL url_;
+        EmpathURL folder_;
+        QStringList IDList_;
+};
+
+class EmpathRetrieveJob : public EmpathSingleJob
+{
+    public:
+
+        EmpathRetrieveJob(const EmpathURL & url)
+          : EmpathSingleJob(RetrieveMessage),
+            url_(url)
+        {
+            // Empty.
+        }
+        
+        virtual ~EmpathRetrieveJob()
+        {
+            // Empty
+        }
+
+        virtual void run();
+        
+        EmpathURL url() const { return url_; }
+
+    private:
+
+        EmpathURL url_;
+};
+
+class EmpathMarkJob : public EmpathSingleJob
+{
+    public:
+
+        EmpathMarkJob(
+            const EmpathURL & folder,
+            const QStringList & IDList,
+            RMM::MessageStatus flags
+        )
+          : EmpathSingleJob(MarkMessage),
+            folder_(folder),
+            IDList_(IDList),
+            flags_(flags)
+        {
+            // Empty.
+        }
+        
+        EmpathMarkJob(
+            const EmpathURL & url,
+            RMM::MessageStatus flags
+        )
+          : EmpathSingleJob(MarkMessage),
+            url_(url),
+            flags_(flags)
+        {
+            // Empty.
+        }
+
+        virtual ~EmpathMarkJob()
+        {
+            // Empty
+        }
+
+        virtual void run();
+
+        QMap<QString, bool> successMap() const { return successMap_; }
+        EmpathURL url() const { return url_; }
+        RMM::MessageStatus flags() const { return flags_; }
+
+    private:
+
+        QMap<QString, bool> successMap_;
+        EmpathURL url_;
+        EmpathURL folder_;
+        QStringList IDList_;
+        RMM::MessageStatus flags_;
+};
+
+class EmpathCreateFolderJob : public EmpathSingleJob
+{
+    public:
+
+        EmpathCreateFolderJob(const EmpathURL & folder)
+          : EmpathSingleJob(CreateFolder),
+            folder_(folder)
+        {
+            // Empty.
+        }
+
+        virtual ~EmpathCreateFolderJob()
+        {
+            // Empty
+        }
+
+        virtual void run();
+
+        EmpathURL folder() const { return folder_; }
+
+    private:
+
+        EmpathURL folder_;
+};
+
+class EmpathRemoveFolderJob : public EmpathSingleJob
+{
+    public:
+
+        EmpathRemoveFolderJob(const EmpathURL & folder)
+          : EmpathSingleJob(CreateFolder),
+            folder_(folder)
+        {
+            // Empty.
+        }
+
+        virtual ~EmpathRemoveFolderJob()
+        {
+            // Empty
+        }
+
+        virtual void run();
+
+        EmpathURL folder() const { return folder_; }
+
+    private:
+
+        EmpathURL folder_;
 };
 
 #endif

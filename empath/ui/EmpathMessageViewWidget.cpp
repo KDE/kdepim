@@ -47,16 +47,13 @@
 #include <RMM_BodyPart.h>
 #include <RMM_ContentType.h>
 
-unsigned int EmpathMessageViewWidget::ID_ = 0;
-
 EmpathMessageViewWidget::EmpathMessageViewWidget
     (const EmpathURL & url, QWidget *parent)
     :   QWidget(parent, "MessageViewWidget"),
         url_(url),
-        viewingSource_(false)
+        viewingSource_(false),
+        requestID_(-1)
 {
-    id_ = ID_++;
-
     structureWidget_ =
         new EmpathMessageStructureWidget(0, "structureWidget");
     
@@ -76,9 +73,10 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
 //    QObject::connect(messageWidget_, SIGNAL(URLSelected(QString, int)),
 //            SLOT(s_URLSelected(QString, int)));
 
-    QObject::connect(
-        empath, SIGNAL(jobComplete(EmpathJobInfo)),
-        this,   SLOT(s_jobComplete(EmpathJobInfo)));
+    // FIXME
+//    QObject::connect(
+//        empath->jobScheduler(), SIGNAL(jobComplete(EmpathRetrieveJob)),
+//        this,   SLOT(s_jobComplete(EmpathRetrieveJob)));
     
     QObject::connect(
         structureWidget_,    SIGNAL(partChanged(RMM::RBodyPart)),
@@ -93,20 +91,21 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
 }
 
     void
-EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
+EmpathMessageViewWidget::s_retrieveComplete(EmpathRetrieveJob j)
 {
-    empathDebug("My id is: `view" + QString().setNum(id_) + "'");
-
-    if (!ji.success() || (ji.xinfo() != ("view" + QString().setNum(id_))))
+    if (requestID_ != j.id())
         return;
 
-    url_ = ji.from();
+    if (!j.success())
+        return;
 
-    RMM::RMessage m(empath->message(ji.from()));
+    url_ = j.url();
+
+    RMM::RMessage m(empath->message(j.url()));
     
     if (!m) {
         empathDebug("Couldn't get supposedly retrieved message from \"" +
-            ji.from().asString() + "\"");
+            j.url().asString() + "\"");
         return;
     }
 
@@ -220,9 +219,8 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
     void
 EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
-    empathDebug("");
     url_ = url;
-    empath->retrieve(url_, "view" + QString().setNum(id_));
+    requestID_ = empath->retrieve(url_);
 }
 
     void

@@ -130,10 +130,4 @@ EmpathMailboxIMAP4::init()
     empathDebug("init() called");
 }
 
-    void
-EmpathMailboxIMAP4::_runJob(EmpathJobInfo &)
-{
-    // STUB
-}
-
 // vim:ts=4:sw=4:tw=78

@@ -168,15 +168,31 @@ EmpathIndexRecord::niceDate(bool twelveHour)
     QDataStream &
 operator << (QDataStream & s, EmpathIndexRecord & rec)
 {
-    s   << rec.id_
-        << (Q_UINT8)rec.tagged_
-        << rec.subject_
-        << rec.sender_
-        << rec.date_
-        << (Q_UINT8)rec.status_
-        << rec.size_
-        << rec.messageId_
-        << rec.parentMessageId_;
+    if (rec.id_.isEmpty() || rec.subject_.isEmpty()) {
+        qDebug("Writing this record would crash Qt");
+        return s;
+    }
+
+    s   << rec.id_;
+
+    s   << (Q_UINT8)rec.tagged_;
+
+    if (rec.subject_.isNull())
+        rec.subject_ = QString::fromUtf8("");
+
+    s   << rec.subject_;
+
+    s   << rec.sender_;
+
+    s   << rec.date_;
+
+    s   << (Q_UINT8)rec.status_;
+
+    s   << rec.size_;
+
+    s   << rec.messageId_;
+
+    s   << rec.parentMessageId_;
 
     return s;
 }
