@@ -41,35 +41,17 @@
 //#include <kaboutdata.h>
 #include <kurlrequester.h>
 
-#include "korganizertodoConduit.h"
+#include "korganizerConduit.h"
 #include "todo-factory.h"
 
 
 
 ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n,
 	const QStringList & a) :
-	ConduitConfig(w,n,a)
+	VCalWidgetSetup(w,n,a)
 {
 	FUNCTIONSETUP;
-
-	fConfigWidget = new ToDoWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,ToDoConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-
-	// This is a little hack to force the config dialog to the
-	// correct size, since the designer dialog is so small.
-	//
-	//
-//	QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
-//	fConfigWidget->resize(s);
-//	fConfigWidget->setMinimumSize(s);
-
-	fConfigWidget->fCalendarFile->setMode( KFile::File | KFile::LocalOnly );
-
-	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All files (*.*)");
+	fConfigWidget->tabWidget->setTabLabel(fConfigWidget->tabWidget->page(0), i18n("ToDo File"));
 }
 
 ToDoWidgetSetup::~ToDoWidgetSetup()
@@ -77,54 +59,3 @@ ToDoWidgetSetup::~ToDoWidgetSetup()
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void ToDoWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig, ToDoConduitFactory::group);
-
-	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile, fConfigWidget->fCalendarFile->url());
-	fConfig->writeEntry(VCalConduitFactoryBase::archive, fConfigWidget->fArchive->isChecked());
-	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
-		fConfigWidget->conflictResolution->id(fConfigWidget->conflictResolution->selected()));
-	fConfig->writeEntry(VCalConduitFactoryBase::calendarType,
-		fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected()));
-
-	int act=fConfigWidget->syncAction->id(fConfigWidget->syncAction->selected())+1;
-	if (act>SYNC_MAX)
-	{
-		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, act-SYNC_MAX);
-	}
-	else
-	{
-		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, 0);
-		fConfig->writeEntry(VCalConduitFactoryBase::syncAction, act);
-	}
-}
-
-/* virtual */ void ToDoWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-
-	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,ToDoConduitFactory::group);
-
-	fConfigWidget->fCalendarFile->setURL( fConfig->readEntry(VCalConduitFactoryBase::calendarFile,QString::null));
-	fConfigWidget->fArchive->setChecked( fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
-	fConfigWidget->conflictResolution->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));
-	fConfigWidget->fSyncDestination->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0));
-
-	int nextAction=fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction, 0);
-	if (nextAction)
-	{
-		fConfigWidget->syncAction->setButton( SYNC_MAX+nextAction-1);
-	}
-	else
-	{
-		fConfigWidget->syncAction->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::syncAction, SYNC_FAST)-1);
-	}
-
-}

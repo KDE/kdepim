@@ -30,23 +30,16 @@
 */
 
 #include "plugin.h"
+#include "vcal-setup.h"
+#include "todo-factory.h"
 
-class ToDoWidget;
-
-class ToDoWidgetSetup : public ConduitConfig
+class ToDoWidgetSetup : public VCalWidgetSetup
 {
 Q_OBJECT
 public:
 	ToDoWidgetSetup(QWidget *,const char *,const QStringList &);
 	virtual ~ToDoWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-private:
-	ToDoWidget *fConfigWidget;
+	virtual QString configGroup() const { return ToDoConduitFactory::group; };
 } ;
 
 #endif

@@ -79,7 +79,7 @@ VCalWidgetSetup::~VCalWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,VCalConduitFactory::group);
+	KConfigGroupSaver s(fConfig,configGroup() );
 
 	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile, fConfigWidget->fCalendarFile->url());
 	fConfig->writeEntry(VCalConduitFactoryBase::archive, fConfigWidget->fArchive->isChecked());
@@ -106,7 +106,7 @@ VCalWidgetSetup::~VCalWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,VCalConduitFactory::group);
+	KConfigGroupSaver s(fConfig, configGroup());
 	fConfigWidget->fCalendarFile->setURL( fConfig->readEntry(VCalConduitFactoryBase::calendarFile,QString::null));
 	fConfigWidget->fArchive->setChecked( fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
 	fConfigWidget->conflictResolution->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));

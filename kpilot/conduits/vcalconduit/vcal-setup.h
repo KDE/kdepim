@@ -30,6 +30,7 @@
 */
 
 #include "plugin.h"
+#include "vcal-factory.h"
 
 class VCalWidget;
 
@@ -41,11 +42,10 @@ public:
 	virtual ~VCalWidgetSetup();
 
 	virtual void readSettings();
+	virtual QString configGroup() const { return VCalConduitFactory::group; };
 
 protected:
 	virtual void commitChanges();
-
-private:
 	VCalWidget *fConfigWidget;
 } ;
 
