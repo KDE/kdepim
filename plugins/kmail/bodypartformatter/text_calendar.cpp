@@ -215,6 +215,24 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return mail( incidence, callback );
     }
 
+    bool handleAcceptConditionally( const QString& iCal, KMail::Callback& callback ) const
+    {
+      const QString receiver = callback.receiver();
+      if ( receiver.isEmpty() )
+        // Must be some error. Still return true though, since we did handle it
+        return true;
+
+      // First, save it for KOrganizer to handle
+      saveFile( receiver, iCal, "tentative" );
+
+      // Now produce the return message
+      ICalFormat format;
+      Incidence* incidence = icalToString( iCal, format );
+      if( !incidence ) return false;
+      setStatusOnMyself( incidence, Attendee::Tentative, receiver );
+      return mail( incidence, callback );
+    }
+
     bool handleDecline( const QString& iCal, KMail::Callback& callback ) const
     {
       // Produce a decline message
@@ -232,6 +250,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       if ( path == "accept" )
         return handleAccept( iCal, c );
+      if ( path == "accept_conditionally" )
+        return handleAcceptConditionally( iCal, c );
       if ( path == "decline" )
         return handleDecline( iCal, c );
       if ( path == "reply" || path == "cancel" )
