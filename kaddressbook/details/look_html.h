@@ -28,6 +28,8 @@
 
 #include "look_basic.h"
 
+class QColor;
+
 namespace KABC { class Addressee; }
 class KTextBrowser;
 
@@ -53,6 +55,8 @@ class KABHtmlView : public KABBasicLook
 
   private:
     KTextBrowser *mTextBrowser;
+    QColor mBaseColor;
+    QColor mTextColor;
 };
 
 class KABHtmlViewFactory : public KABLookFactory

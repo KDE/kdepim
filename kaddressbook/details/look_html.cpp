@@ -44,6 +44,12 @@ KABHtmlView::KABHtmlView( QWidget *parent, const char *name )
   QStyleSheet *sheet = mTextBrowser->styleSheet();
   QStyleSheetItem *link = sheet->item( "a" );
   link->setColor( KGlobalSettings::linkColor() );
+
+  int h,s,v;
+  mBaseColor = KGlobalSettings::alternateBackgroundColor();
+  mBaseColor.hsv( &h, &s, &v );
+  mBaseColor.setHsv( h, int( s * ( 10 / 6.0 ) ), int( v * ( 93 / 99.0 ) ) );
+  mTextColor = KGlobalSettings::textColor();
 }
 
 KABHtmlView::~KABHtmlView()
@@ -118,27 +124,28 @@ void KABHtmlView::setAddressee( const KABC::Addressee &addr )
 
   QString strAddr = QString::fromLatin1(
   "<html>"
-  "<body bgcolor=\"#ffffff\">"
+  "<body text=\"%1\" bgcolor=\"%2\">"
   "<table>"
   "<tr>"
   "<td rowspan=\"3\" align=\"right\" valign=\"top\">"
   "<img src=\"myimage\" width=\"50\" height=\"70\">"
   "</td>"
-  "<td align=\"left\"><font size=\"+2\"><b>%1</b></font></td>"   // name
+  "<td align=\"left\"><font size=\"+2\"><b>%3</b></font></td>"   // name
   "</tr>"
   "<tr>"
-  "<td align=\"left\">%2</td>"          // role
+  "<td align=\"left\">%4</td>"          // role
   "</tr>"
   "<tr>"
-  "<td align=\"left\">%3</td>"          // organization
+  "<td align=\"left\">%5</td>"          // organization
   "</tr>"
   "<tr><td colspan=\"2\">&nbsp;</td></tr>"
-  "%4"                                  // dynamic part
-  "%5"
+  "%6"                                  // dynamic part
+  "%7"
   "</table>"
   "</body>"
-  "</html>").arg( name ).arg( addr.role() ).arg( addr.organization() )
-  .arg( dynamicPart ).arg( notes );
+  "</html>").arg( mTextColor.name() ).arg( mBaseColor.name() ).arg( name )
+  .arg( addr.role() ).arg( addr.organization() ).arg( dynamicPart ).arg( notes );
+
 
   KABC::Picture picture = addr.photo();
   if ( picture.isIntern() && !picture.data().isNull() )
