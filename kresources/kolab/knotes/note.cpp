@@ -55,7 +55,7 @@ QString Note::journalToXML( KCal::Journal* journal )
   return note.saveXML();
 }
 
-Note::Note( KCal::Journal* journal )
+Note::Note( KCal::Journal* journal ) : mRichText( false )
 {
   if ( journal )
     setFields( journal );
@@ -95,6 +95,16 @@ QColor Note::foregroundColor() const
   return mForegroundColor;
 }
 
+void Note::setRichText( bool richText )
+{
+  mRichText = richText;
+}
+
+bool Note::richText() const
+{
+  return mRichText;
+}
+
 bool Note::loadAttribute( QDomElement& element )
 {
   QString tagName = element.tagName();
@@ -105,6 +115,8 @@ bool Note::loadAttribute( QDomElement& element )
     setForegroundColor( stringToColor( element.text() ) );
   else if ( tagName == "background-color" )
     setBackgroundColor( stringToColor( element.text() ) );
+  else if ( tagName == "knotes-richtext" )
+    mRichText = ( element.text() == "true" );
   else
     return KolabBase::loadAttribute( element );
 
@@ -118,14 +130,10 @@ bool Note::saveAttributes( QDomElement& element ) const
   KolabBase::saveAttributes( element );
 
   // Save the elements
-#if 0
-  QDomComment c = element.ownerDocument().createComment( "Note specific attributes" );
-  element.appendChild( c );
-#endif
-
   writeString( element, "summary", summary() );
   writeString( element, "foreground-color", colorToString( foregroundColor() ) );
   writeString( element, "background-color", colorToString( backgroundColor() ) );
+  writeString( element, "knotes-richtext", mRichText ? "true" : "false" );
 
   return true;
 }
@@ -172,6 +180,9 @@ void Note::setFields( const KCal::Journal* journal )
 
   // TODO: background and foreground
   setSummary( journal->summary() );
+  setBackgroundColor( journal->customProperty( "KNotes", "BgColor" ) );
+  setForegroundColor( journal->customProperty( "KNotes", "FgColor" ) );
+  setRichText( journal->customProperty( "KNotes", "RichText" ) == "true" );
 }
 
 void Note::saveTo( KCal::Journal* journal )
@@ -180,6 +191,12 @@ void Note::saveTo( KCal::Journal* journal )
 
   // TODO: background and foreground
   journal->setSummary( summary() );
+  journal->setCustomProperty( "KNotes", "FgColor",
+                              colorToString( foregroundColor() ) );
+  journal->setCustomProperty( "KNotes", "BgColor",
+                              colorToString( backgroundColor() ) );
+  journal->setCustomProperty( "KNotes", "RichText",
+                              richText() ? "true" : "false" );
 }
 
 QString Note::productID() const
