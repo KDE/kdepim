@@ -55,9 +55,6 @@ class KNSourceViewWindow : public KTextBrowser {
     KNSourceViewWindow(const QString &htmlCode);
     ~KNSourceViewWindow();
 
-  protected:
-    void viewportMouseReleaseEvent(QMouseEvent *e); // automatic copy
-
 };
 
 
@@ -108,8 +105,10 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
 
     KSelectAction* setCharsetAction()   { return a_ctSetCharset; }
     KAction* setCharsetKeyboardAction() { return a_ctSetCharsetKeyb; }
+    void setText( const QString& text ) { KTextBrowser::setText( text ); } // shadowed by the overridden one
 
   public slots:
+    virtual void setText( const QString& text, const QString& context ); // overridden to scroll to top
     void slotKeyUp();
     void slotKeyDown();
     void slotKeyPrior();
@@ -122,7 +121,6 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void keyPressEvent(QKeyEvent *e);
     bool eventFilter(QObject *, QEvent *);
     void viewportMousePressEvent(QMouseEvent *e); // RMB for links
-    void viewportMouseReleaseEvent(QMouseEvent *e); // automatic copy
     bool canDecode8BitText(const QCString &charset);
     QString toHtmlString(const QString &line, bool parseURLs=false, bool beautification=false, bool allowRot13=false);
     void openURL(const QString &url);

@@ -100,17 +100,6 @@ KNSourceViewWindow::~KNSourceViewWindow()
 }
 
 
-void KNSourceViewWindow::viewportMouseReleaseEvent(QMouseEvent *e)
-{
-  QTextBrowser::viewportMouseReleaseEvent(e);
-
-  if (e->button()==LeftButton) {
-    if(hasSelectedText() && !selectedText().isEmpty())
-      copy();
-  }
-}
-
-
 //=============================================================================================================
 
 
@@ -165,6 +154,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctPrint             = KStdAction::print(this, SLOT(slotPrint()), a_ctions);
   a_ctSelAll            = KStdAction::selectAll(this, SLOT(slotSelectAll()), a_ctions);
   a_ctCopy              = KStdAction::copy(this, SLOT(copy()), a_ctions);
+  connect( this, SIGNAL( copyAvailable( bool )), a_ctCopy, SLOT( setEnabled( bool )) );
 
   a_ctReply             = new KAction(i18n("&Followup to Newsgroup..."),"message_reply", Key_R , this,
                           SLOT(slotReply()), a_ctions, "article_postReply");
@@ -226,6 +216,11 @@ KNArticleWidget::~KNArticleWidget()
   delete f_actory;
 }
 
+void KNArticleWidget::setText( const QString& text, const QString& context )
+{
+  KTextBrowser::setText( text, context );
+  setContentsPos( 0, 0 );
+}
 
 bool KNArticleWidget::scrollingDownPossible()
 {
@@ -307,20 +302,6 @@ void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
       b_odyPopup->popup(e->globalPos());
 
   QTextBrowser::viewportMousePressEvent(e);
-}
-
-
-void KNArticleWidget::viewportMouseReleaseEvent(QMouseEvent *e)
-{
-  QTextBrowser::viewportMouseReleaseEvent(e);
-
-  if (e->button()==LeftButton) {
-    if(hasSelectedText() && !selectedText().isEmpty()) {
-      copy();
-      a_ctCopy->setEnabled(true);
-    } else
-      a_ctCopy->setEnabled(false);
-  }
 }
 
 
@@ -1466,7 +1447,6 @@ void KNArticleWidget::slotSelectAll()
 {
   kdDebug(5003) << "KNArticleWidget::slotSelectAll()" << endl;
   selectAll();
-  a_ctCopy->setEnabled(true);
 }
 
 
