@@ -22,20 +22,23 @@ static const char *id=
 	"$Id$";
 
 
+#include "options.h"
+
 #include <sys/types.h>
 #include <sys/socket.h> 
 #include <ctype.h>
+#include <iostream.h>
 
 #include <qdir.h>
 #include <qtextstream.h>
 
-#include <iostream.h>
 #include <kapp.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <ksock.h>
 #include <kiconloader.h>
 #include <kdebug.h>
+#include <kaboutdata.h>
 
 #include "conduitApp.h"
 #include "pi-source.h"
@@ -55,7 +58,7 @@ extern time_t parsedate(char * p);
 // belong in the class interface]
 //
 //
-void showMessage(QString message)
+void showMessage(QString &message)
 { 
   KMessageBox::error(0L, message, i18n("Error retrieving mail"));
 }
@@ -1519,11 +1522,10 @@ int PopMailConduit::doUnixStyle()
 	FUNCTIONSETUP;
 
 	QPixmap *p=new QPixmap;
-	*p = KGlobal::iconLoader()->loadIcon("kbiff", KIcon::Desktop);
+	*p = KGlobal::iconLoader()->loadIcon("kmail", KIcon::Desktop);
 	return p;
 }
 
-#include <kaboutdata.h>
 
 int main(int argc, char* argv[])
 {
