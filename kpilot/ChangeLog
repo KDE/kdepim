@@ -1,6 +1,23 @@
 KPilot Developer's notes for september 30th 2001
 ================================================
 
+2001-09-30  Adriaan de Groot
+
+Last minute sneak-it-in-for-the-alpha things. More code and layout cleanup,
+although the big commit changing to tabs & the KPilot style was yesterday.
+Fixed some minor display bugs, made preHotSync more useful, normalized
+some strings. The kpilot/Icons/ directory now contains only those icons
+actually needed and used, and they're all in PNG format. Saves lots of space,
+in the sense that the KPilot binary is 300k smaller now than it was, due to
+dumping XPMs.
+
+I added a private-d-ptr to kpilot.h, but haven't moved all the data
+members there. For an app it doesn't matter so much, but this will reduce
+the amount of recompiling and who knows what the plugin API will look like
+eventually.
+
+The conduit configuration is different -- again -- and easier to understand.
+
 2001-09-27  Adriaan de Groot
 * Added FUNCTIONSETUP everywhere.
 * Replaced email addresses with kde-pim@kde.org or groot@kde.org.
