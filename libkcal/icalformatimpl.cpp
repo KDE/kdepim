@@ -1719,7 +1719,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
       KMessageBox::information(mTopWidget,
 			       i18n("This calendar is an iTIP transaction of type \"%1\".")
 			       .arg(methodType),
-                               i18n("KOrganizer: iTIP Transaction"));
+                               i18n("%1: iTIP Transaction").arg(CalFormat::application()));
     delete methodType;
   }
 #endif
@@ -1734,7 +1734,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
 	KMessageBox::information(mTopWidget,
 			     i18n("This vCalendar file was not created by KOrganizer\n"
 				     "or any other product we support. Loading anyway..."),
-                             i18n("KOrganizer: Unknown vCalendar Vendor"));
+                             i18n("%1: Unknown vCalendar Vendor").arg(CalFormat::application()));
     deleteStr(s);
   }
 #endif
@@ -1773,7 +1773,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
 			     i18n("This vCalendar file has version %1.\n"
 			          "We only support %2.")
                              .arg(s).arg(_VCAL_VERSION),
-                             i18n("KOrganizer: Unknown vCalendar Version"));
+                             i18n("%1: Unknown vCalendar Version").arg(CalFormat::application()));
     deleteStr(s);
   }
 #endif

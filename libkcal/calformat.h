@@ -88,6 +88,11 @@ class CalFormat {
     */
     ErrorFormat *exception();
 
+    /** Set the application name for use in unique IDs and error messages */
+    static void setApplication(const QString&);
+    /** Return the application name used in unique IDs and error messages */
+    static const QString& application()  { return mApplication; }
+
     /** Create a unique id string. */
     static QString createUniqueId();
   
@@ -108,6 +113,8 @@ class CalFormat {
     QPtrList<Event> mTodosRelate;            // todos with relations
     
     ErrorFormat *mException;
+
+    static QString mApplication;   // name of application for unique ID strings
 };
 
 }

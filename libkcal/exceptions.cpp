@@ -22,6 +22,7 @@
 
 #include <klocale.h>
 
+#include "calformat.h"
 #include "exceptions.h"
 
 using namespace KCal;
@@ -37,7 +38,7 @@ Exception::~Exception()
 
 QString Exception::message()
 {
-  if (mMessage.isEmpty()) return i18n("KOrganizer Error");
+  if (mMessage.isEmpty()) return i18n("%1 Error").arg(CalFormat::application());
   else return mMessage;
 }
     

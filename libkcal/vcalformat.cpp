@@ -1635,7 +1635,7 @@ void VCalFormat::populate(VObject *vcal)
       KMessageBox::information(mTopWidget,
 			       i18n("This calendar is an iTIP transaction of type \"%1\".")
 			       .arg(methodType),
-                               i18n("KOrganizer: iTIP Transaction"));
+                               i18n("%1: iTIP Transaction").arg(application()));
     delete methodType;
   }
 
@@ -1647,7 +1647,7 @@ void VCalFormat::populate(VObject *vcal)
 	KMessageBox::information(mTopWidget,
 			     i18n("This vCalendar file was not created by KOrganizer\n"
 				     "or any other product we support. Loading anyway..."),
-                             i18n("KOrganizer: Unknown vCalendar Vendor"));
+                             i18n("%1: Unknown vCalendar Vendor").arg(application()));
     deleteStr(s);
   }
 
@@ -1660,7 +1660,7 @@ void VCalFormat::populate(VObject *vcal)
 			     i18n("This vCalendar file has version %1.\n"
 			          "We only support %2.")
                              .arg(s).arg(_VCAL_VERSION),
-                             i18n("KOrganizer: Unknown vCalendar Version"));
+                             i18n("%1: Unknown vCalendar Version").arg(application()));
     deleteStr(s);
   }
 
@@ -1720,7 +1720,7 @@ void VCalFormat::populate(VObject *vcal)
 				      "duplicate UIDs\n"
 				      "and change them MANUALLY to be unique "
 				      "if you find any.\n").arg(tmpStr),
-				 i18n("KOrganizer: Possible Duplicate Event"));
+				 i18n("%1: Possible Duplicate Event").arg(application()));
 #endif
 	  goto SKIP;
 	}
@@ -1735,7 +1735,7 @@ void VCalFormat::populate(VObject *vcal)
 				      "duplicate UIDs\n"
 				      "and change them MANUALLY to be unique "
 				      "if you find any.\n").arg(tmpStr),
-				 i18n("KOrganizer: Possible Duplicate Event"));
+				 i18n("%1: Possible Duplicate Event").arg(application()));
 
 #endif
 	  goto SKIP;

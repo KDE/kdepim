@@ -28,6 +28,9 @@
 
 using namespace KCal;
 
+QString CalFormat::mApplication = "libkcal";
+
+
 CalFormat::CalFormat(Calendar *cal)
 {
   mCalendar = cal;
@@ -70,12 +73,18 @@ ErrorFormat *CalFormat::exception()
   return mException;
 }
 
+void CalFormat::setApplication(const QString& application)
+{
+  mApplication = application;
+}
+
 QString CalFormat::createUniqueId()
 {
   int hashTime = QTime::currentTime().hour() + 
                  QTime::currentTime().minute() + QTime::currentTime().second() +
                  QTime::currentTime().msec();
-  QString uidStr = QString("KOrganizer-%1.%2")
+  QString uidStr = QString("%1-%2.%3")
+                           .arg(mApplication)
                            .arg(KApplication::random())
                            .arg(hashTime);
   return uidStr;
