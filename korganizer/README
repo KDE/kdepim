@@ -16,6 +16,7 @@ QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
     - Don't show todos more than once in what's next view.
     - Include todos in print output of month view (#53291).
     - Don't restrict maximum size of search dialog (#54912).
+    - Make cancel button of template selection dialog work (#54852).
 
 * Official 3.1 release (January 2003)
 
