@@ -2264,7 +2264,7 @@ FetchArticleIdDlg::FetchArticleIdDlg(QWidget *parent, const char */*name*/ )
   QHBox *page = makeHBoxMainWidget();
 
   QLabel *label = new QLabel(i18n("&Message-ID:"),page);
-  KLineEdit *edit = new KLineEdit(page);
+  edit = new KLineEdit(page);
   label->setBuddy(edit);
   edit->setFocus();
   enableButtonOK( false );
