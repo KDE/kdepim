@@ -7,9 +7,8 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/features \
           -I$(top_srcdir)/kaddressbook/views \
           -I$(top_srcdir)/kaddressbook/printing \
-          -I$(top_srcdir) $(all_includes) \
-		  -I$(top_srcdir)/libkdepim
-
+          -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
+	  $(all_includes)
 
 bin_PROGRAMS = kaddressbook
 
