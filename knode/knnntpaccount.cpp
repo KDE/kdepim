@@ -100,7 +100,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   i_ntervalChecking=conf.readBoolEntry("intervalChecking", false);
   c_heckInterval=conf.readNumEntry("checkInterval", 10);
   KNServerInfo::readConf(&conf);
-  
+
   startTimer();
 
   i_dentity=new KNConfig::Identity(false);
@@ -124,9 +124,9 @@ void KNNntpAccount::saveInfo()
   QString dir(path());
   if (dir.isNull())
     return;
-    
+
   KSimpleConfig conf(dir+"info");
-  
+
   conf.writeEntry("name", n_ame);
   //conf.writeEntry("unsentCnt", u_nsentCount);
   conf.writeEntry("fetchDescriptions", f_etchDescriptions);
@@ -198,7 +198,7 @@ void KNNntpAccount::startTimer()
 {
   if ( (i_ntervalChecking == true) && (c_heckInterval > 0) )
   {
-    a_ccountIntervalChecking->installTimer();     
+    a_ccountIntervalChecking->installTimer();
   }
   else
   {

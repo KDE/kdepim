@@ -100,7 +100,10 @@ class KNComposer : public KMainWindow  {
     // ask for a filename, handle network urls
     void insertFile(bool clear=false, bool box=false);
 
-    //internal classes
+    QPopupMenu * popupMenu( const QString& name );
+    int listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord);
+
+//internal classes
     class ComposerView;
     class Editor;
     class AttachmentView;
@@ -109,7 +112,7 @@ class KNComposer : public KMainWindow  {
 
     //GUI
     ComposerView *v_iew;
-    QPopupMenu *a_ttPopup, *e_ditPopup;
+    QPopupMenu *a_ttPopup;
 
     //Data
     composerResult r_esult;
@@ -130,6 +133,7 @@ class KNComposer : public KMainWindow  {
 
     //Attachments
     QPtrList<KNAttachment> d_elAttList;
+    QPtrList<KAction> m_listAction;
     bool a_ttChanged;
 
   //------------------------------ <Actions> -----------------------------
@@ -233,7 +237,7 @@ public:
 class KNComposer::ComposerView  : public QSplitter {
 
   public:
-    ComposerView(QWidget *p=0, const char *n=0);
+    ComposerView(KNComposer *_composer, const char *n=0);
     ~ComposerView();
 
     void setMessageMode(KNComposer::MessageMode mode);
@@ -275,7 +279,7 @@ class KNComposer::Editor : public KEdit {
   Q_OBJECT
 
   public:
-    Editor(QWidget *parent=0, char *name=0);
+    Editor(KNComposer *_composer, QWidget *parent=0, char *name=0);
     ~Editor();
     QStringList processedText();
 
@@ -288,6 +292,14 @@ class KNComposer::Editor : public KEdit {
     void slotAddBox();
     void slotRemoveBox();
     void slotRot13();
+    void slotCorrectWord();
+
+protected slots:
+    void slotSpellStarted( KSpell *);
+    void slotSpellDone(const QString &);
+    void slotSpellFinished();
+    void slotMisspelling (const QString &, const QStringList &lst, unsigned int);
+
 
   signals:
     void sigDragEnterEvent(QDragEnterEvent *);
@@ -298,6 +310,10 @@ class KNComposer::Editor : public KEdit {
     // DND handling
     virtual void dragEnterEvent(QDragEnterEvent *);
     virtual void dropEvent(QDropEvent *);
+    virtual void contentsContextMenuEvent( QContextMenuEvent *e );
+private:
+    KNComposer *m_composer;
+    KSpell *spell;
 
 };
 

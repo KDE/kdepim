@@ -65,7 +65,7 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     QString path();
     /** returns true when the user accepted */
     bool editProperties(QWidget *parent);
-    
+
     // news interval checking
     void startTimer();
 
@@ -82,7 +82,7 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
     void setLastNewFetch(QDate date)  { l_astNewFetch = date; }
     void setUseDiskCache(bool b)      { u_seDiskCache=b; }
-    void setCheckInterval(int c);    
+    void setCheckInterval(int c);
     void setIntervalChecking(bool b)  { i_ntervalChecking=b; }
 
   protected:
@@ -99,9 +99,9 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     /** is interval checking enabled */
     bool i_ntervalChecking;
     int c_heckInterval;
-       
+
     /** helper class for news interval checking, manages the QTimer */
-    KNNntpAccountIntervalChecking *a_ccountIntervalChecking;    
+    KNNntpAccountIntervalChecking *a_ccountIntervalChecking;
 
 };
 

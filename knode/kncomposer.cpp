@@ -44,6 +44,8 @@ using KRecentAddress::RecentAddresses;
 #include <kprocess.h>
 #include <kqcstringsplitter.h>
 #include <syntaxhighlighter.h>
+#include <qcursor.h>
+
 using Syntaxhighlighter::DictSpellChecker;
 using Syntaxhighlighter::SpellChecker;
 #include <kapplication.h>
@@ -119,6 +121,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     mSpellingFilter = 0;
     spellLineEdit = false;
     d_elAttList.setAutoDelete(true);
+    m_listAction.setAutoDelete( true );
 
   // activate dnd of attachments...
   setAcceptDrops(true);
@@ -268,14 +271,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ccel=new KAccel(this);
   a_ctSetCharsetKeyb->plugAccel(a_ccel);
 
-  createGUI("kncomposerui.rc");
+  createGUI("kncomposerui.rc",  false);
 
   //---------------------------------- </Actions> ----------------------------------------
 
-  //editor popup
-  e_ditPopup=static_cast<QPopupMenu*> (factory()->container("edit", this));
-  if(!e_ditPopup) e_ditPopup = new QPopupMenu();
-  v_iew->e_dit->installRBPopup(e_ditPopup);
 
   //attachment popup
   a_ttPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
@@ -346,6 +345,31 @@ KNComposer::~KNComposer()
   KConfig *conf = KGlobal::config();
   conf->setGroup("composerWindow_options");
   saveMainWindowSettings(conf);
+}
+
+int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord)
+{
+    createGUI("kncomposerui.rc",  false);
+
+    unplugActionList("spell_result" );
+    m_listAction.clear();
+    if ( !lst.contains( selectWord ) )
+    {
+        QStringList::ConstIterator it = lst.begin();
+        for ( ; it != lst.end() ; ++it )
+        {
+            if ( !(*it).isEmpty() ) // in case of removed subtypes or placeholders
+            {
+                KAction * act = new KAction( *it );
+
+                connect( act, SIGNAL(activated()), v_iew->e_dit, SLOT(slotCorrectWord()) );
+                m_listAction.append( act );
+            }
+        }
+    }
+    if ( m_listAction.count()>0 )
+        plugActionList("spell_result", m_listAction );
+    return m_listAction.count();
 }
 
 void KNComposer::slotUndo()
@@ -1321,9 +1345,6 @@ void KNComposer::slotNewToolbarConfig()
 {
   createGUI("kncomposerui.rc");
 
-  e_ditPopup=static_cast<QPopupMenu*> (factory()->container("edit", this));
-  if(!e_ditPopup) e_ditPopup = new QPopupMenu();
-  v_iew->e_dit->installRBPopup(e_ditPopup);
   a_ttPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
   if(!a_ttPopup) a_ttPopup = new QPopupMenu();
 
@@ -1515,7 +1536,8 @@ void KNComposer::slotSpellDone(const QString &newtext)
 {
     a_ctExternalEditor->setEnabled(true);
     a_ctSpellCheck->setEnabled(true);
-    v_iew->e_dit->spellcheck_stop();
+    if ( !spellLineEdit )
+        v_iew->e_dit->spellcheck_stop();
 
     int dlgResult = s_pellChecker->dlgResult();
     if ( dlgResult == KS_CANCEL )
@@ -1617,11 +1639,20 @@ void KNComposer::dropEvent(QDropEvent *ev)
   slotDropEvent(ev);
 }
 
+QPopupMenu * KNComposer::popupMenu( const QString& name )
+{
+    Q_ASSERT(factory());
+    if ( factory() )
+        return ((QPopupMenu*)factory()->container( name, this ));
+    return 0L;
+}
+
+
 //=====================================================================================
 
 
-KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
-  : QSplitter(QSplitter::Vertical, p, n), a_ttWidget(0), a_ttView(0), v_iewOpen(false)
+KNComposer::ComposerView::ComposerView(KNComposer *composer, const char *n)
+  : QSplitter(QSplitter::Vertical, composer, n), a_ttWidget(0), a_ttView(0), v_iewOpen(false)
 {
   QWidget *main=new QWidget(this);
 
@@ -1666,7 +1697,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
           parent(), SLOT(slotSubjectChanged(const QString&)));
 
   //Editor
-  e_dit=new Editor(main);
+  e_dit=new Editor(composer, main);
   e_dit->setMinimumHeight(50);
 
   KConfig *config = kapp->config();
@@ -1839,15 +1870,18 @@ void KNComposer::ComposerView::hideExternalNotification()
 //=====================================================================================
 
 
-KNComposer::Editor::Editor(QWidget *parent, char *name)
-  : KEdit(parent, name)
+KNComposer::Editor::Editor(KNComposer *_composer, QWidget *parent, char *name)
+    : KEdit(parent, name), m_composer( _composer )
 {
   setOverwriteEnabled(true);
+  spell = 0L;
 }
 
 
 KNComposer::Editor::~Editor()
-{}
+{
+    delete spell;
+}
 
 
 // expand tabs to avoid the "tab-damage",
@@ -1968,7 +2002,7 @@ void KNComposer::Editor::slotRemoveQuotes()
 
 void KNComposer::Editor::slotAddBox()
 {
-  if (hasMarkedText()) {
+    if (hasMarkedText()) {
     QString s = markedText();
     s.prepend(",----[  ]\n");
     s.replace(QRegExp("\n"),"\n| ");
@@ -2070,6 +2104,88 @@ void KNComposer::Editor::dropEvent(QDropEvent *ev)
     KEdit::dropEvent(ev);
 }
 
+#include <qcursor.h>
+void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
+{
+    QString selectWord = selectWordUnderCursor();
+    QPopupMenu* popup = 0L;
+    if ( selectWord.isEmpty())
+    {
+        popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
+        if ( popup )
+            popup->popup(QCursor::pos());
+    }
+    else
+    {
+        spell = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
+        QStringList l = SpellChecker::personalWords();
+        for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
+            spell->addPersonal( *it );
+        }
+        connect(spell, SIGNAL(death()), this, SLOT(slotSpellFinished()));
+        connect(spell, SIGNAL(done(const QString&)), this, SLOT(slotSpellDone(const QString&)));
+        connect(spell, SIGNAL(misspelling (const QString &, const QStringList &, unsigned int)),
+                this, SLOT(slotMisspelling (const QString &, const QStringList &, unsigned int)));
+    }
+}
+
+void KNComposer::Editor::slotSpellStarted( KSpell *)
+{
+    spell->check( selectWordUnderCursor(),false );
+}
+
+
+void KNComposer::Editor::slotSpellDone(const QString &/*newtext*/)
+{
+    spell->cleanUp();
+}
+
+void KNComposer::Editor::slotSpellFinished()
+{
+  KSpell::spellStatus status=spell->status();
+  delete spell;
+  spell=0;
+
+  if(status==KSpell::Error) {
+    KMessageBox::error(this, i18n("ISpell could not be started.\n"
+    "Please make sure you have ISpell properly configured and in your PATH."));
+  }
+  else if(status==KSpell::Crashed) {
+
+    KMessageBox::error(this, i18n("ISpell seems to have crashed."));
+  }
+}
+
+void KNComposer::Editor::slotMisspelling (const QString &, const QStringList &lst, unsigned int)
+{
+    int countAction = m_composer->listOfResultOfCheckWord( lst , selectWordUnderCursor());
+    if ( countAction>0 )
+    {
+        QPopupMenu* popup = m_composer ? m_composer->popupMenu( "edit_with_spell" ): 0;
+        if ( popup )
+            popup->popup(QCursor::pos());
+    }
+    else
+    {
+        QPopupMenu* popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
+        if ( popup )
+            popup->popup(QCursor::pos());
+    }
+}
+
+void KNComposer::Editor::slotCorrectWord()
+{
+    removeSelectedText();
+    KAction * act = (KAction *)(sender());
+    int line, col;
+    getCursorPosition(&line,&col);
+
+
+
+    insertAt( act->text(), line, col );
+
+    //insert( act->text() );
+}
 
 //=====================================================================================
 

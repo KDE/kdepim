@@ -10,6 +10,7 @@
     <Action name="net_stop"/>
     <Separator/>
     <Action name="file_quit"/>
+
   </Menu>
   <Menu noMerge="1" name="edit"><text>&amp;Edit</text>
     <Action name="edit_copy"/>
