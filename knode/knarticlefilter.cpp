@@ -76,7 +76,8 @@ KNArticleFilter::~KNArticleFilter()
 bool KNArticleFilter::loadInfo()
 {
   if (i_d!=-1) {
-    QString fname(locateLocal("data","knode/") + QString("filters/%1.fltr").arg(i_d));
+    QString fname(locate("data",QString( "knode/filters/%1.fltr" ).arg(i_d) ) );
+
     if (fname.isNull())
       return false;
     KSimpleConfig conf(fname,true);
@@ -95,7 +96,8 @@ bool KNArticleFilter::loadInfo()
 
 void KNArticleFilter::load()
 {
-  QString fname(locateLocal("data","knode/") + QString("filters/%1.fltr").arg(i_d));
+  QString fname(locate("data",QString( "knode/filters/%1.fltr").arg(i_d) ) );
+
   if (fname.isNull())
     return;
   KSimpleConfig conf(fname,true);
