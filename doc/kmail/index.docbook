@@ -63,8 +63,9 @@ the <link linkend="secGettingStarted">Getting Started</link> section first so th
 should be possible with keys. &kmail; supports all the standard keys
 like <keycap>TAB</keycap> (switch between panes). The trick is: <keycap>cursor left</keycap>/<keycap>cursor right</keycap>
 always jumps to the previous/next message, but when you hold down
-<keycap>Ctrl</keycap>, you can use <keycap>cursor left</keycap>/<keycap>cursor right</keycap> to navigate in the Folders pane
-or in the Headers pane (depending on what has the focus).</para></listitem>
+<keycap>Ctrl</keycap>, you can use <keycap>cursor left</keycap>/<keycap>cursor right</keycap> to navigate in the 
+Folders pane and <keycap>cursor up</keycap>/<keycap>cursor down</keycap> to navigate in the 
+Headers pane. Use <keycap>space</keycap> to select the folder you navigated to.</para></listitem>
 
 <listitem><para>When you're writing a new mail and you're in the <guilabel>To:</guilabel> field, only type
 the first few characters of the receiver's address, then press <keycombo><keycap>Ctrl</keycap><keycap>T</keycap></keycombo> to get a list 
@@ -307,16 +308,22 @@ also use the following key shortcuts to skip through your messages without
 having to use the mouse:
 <itemizedlist>
 <listitem>
-<para><keycap>N</keycap> or the <keycap>left arrow</keycap> key - Next message</para>
+	<para><keycap>N</keycap> or the <keycap>left arrow</keycap> key - Next message</para>
 </listitem>
 <listitem>
-<para><keycap>P</keycap> or the <keycap>right arrow</keycap> key - Previous message</para>
+	<para><keycap>P</keycap> or the <keycap>right arrow</keycap> key - Previous message</para>
 </listitem>
 <listitem>
-<para><keycap>+</keycap> - Next unread message</para>
+	<para><keycap>+</keycap> - Next unread message</para>
 </listitem>
 <listitem>
-<para><keycap>-</keycap> - Previous unread message</para>
+	<para><keycap>-</keycap> - Previous unread message</para>
+</listitem>
+<listitem>
+	<para><keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> - Goto next folder with unread messages</para>
+</listitem>
+<listitem>
+	<para><keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> - Goto previous folder with unread messages</para>
 </listitem>
 </itemizedlist>
 </para>
@@ -521,11 +528,13 @@ folders. This can be done by choosing <guilabel>transfer</guilabel>. But there a
 other actions a filter can start:</para>
 
 <itemizedlist>
+	<listitem><para><guilabel>transfer</guilabel> will move the message to another folder.</para></listitem>
 	<listitem><para><guilabel>set identity</guilabel> will set <emphasis>your</emphasis> identity if
 		you reply to this message</para></listitem>
 	<listitem><para><guilabel>set transport</guilabel> will set the method of transport (e.g. <acronym>SMTP</acronym>)
 		if you reply to the message.</para></listitem>
-	<listitem><para><guilabel>transfer</guilabel> will move the message to another folder.</para></listitem>
+	<listitem><para><guilabel>set Reply-To</guilabel> will modify the Reply-To field of this message.
+		This can be useful for mailing lists that automatically set a Reply-To which you don't like.</para></listitem>
 	<listitem><para><guilabel>forward to</guilabel> will forward the message to another email address.</para></listitem>
 	<listitem><para><guilabel>execute</guilabel> will execute a program, but will not modify the message.
 		Specify the full path to any program you want to execute. &kmail; will block
@@ -1723,6 +1732,14 @@ header of the outgoing mail.</para>
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term>Wordwrap</term>
+<listitem>
+<para>Toggle the automatic wordwrap. It may be useful to turn it off if you want to
+paste long lines that shouldn't wrap.</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 </para>
 </sect2>
@@ -1851,18 +1868,21 @@ Mailreader window</link>.
  receive mails via <acronym>IMAP</acronym> by using fetchmail:
  <itemizedlist>
    <listitem><para>Create a file <filename>~/.fetchmailrc</filename> which contains the following lines:
-   <screen>
-poll &lt;your-mail-server&gt;
+   <screen>poll &lt;your-mail-server&gt;
 proto IMAP
 user &lt;your-username&gt;
-pass &lt;your-password&gt;
-    </screen>
-    </para></listitem>
+pass &lt;your-password&gt;</screen>
+   If your mail username and your local username differ you have to add
+the following entry:
+   <screen>is &lt;local-username&gt;</screen>
+   </para></listitem>
    <listitem><para>Execute <command>chmod 700 ~/.fetchmailrc</command></para></listitem>
    <listitem><para>Create a local account in &kmail;</para></listitem>
    <listitem><para>Enter <userinput>fetchmail</userinput> in the field <guilabel>Precommand</guilabel> 
    (That's not necessary if you have a permanent connection to the net. In that case you're 
-   better off leaving fetchmail running as a daemon.)
+   better off leaving fetchmail running as a daemon. This also has the advantage that you won't
+   have to add your password to <filename>~/.fetchmailrc</filename>, you will be asked for it
+   when the daemon starts.)
    </para></listitem>
    <listitem><para>Check your mail</para></listitem>
  </itemizedlist>
