@@ -1,8 +1,14 @@
-kdepim (2.0-20001010-0) unstable; urgency=low
+kdepim (2.0-20001016-0) unstable; urgency=low
+
+  * KDE 2.0
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 16 Sep 2000 15:00:00 -0700
+
+kdepim (2.0-20001011-0) unstable; urgency=low
  
   * KDE 2.0 RC2
  
- -- Ivan E. Moore II <rkrusty@debian.org>  Tue, 10 Sep 2000 00:00:00 -0700
+ -- Ivan E. Moore II <rkrusty@debian.org>  Thu, 12 Sep 2000 06:00:00 -0700
                                                                                 
 kdepim (2.0-20001006-0) unstable; urgency=low
  
