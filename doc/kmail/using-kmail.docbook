@@ -1495,7 +1495,8 @@ messages you definitely should mark the <guilabel>Classify messages using the
 anti-spam tools</guilabel> option; if you want messages detected as 
 spam to be moved into a certain folder, please select the appropriate folder and 
 mark the <guilabel>Move detected spam messages to the selected folder</guilabel> 
-option.
+option; if messages detected as spam should additionally be marked as read,
+then mark the <guilabel>Additionally mark detected spam messages as read</guilabel> option.
 </para>
 
 <para>If you want to be able to manually mark messages as spam or non-spam 
