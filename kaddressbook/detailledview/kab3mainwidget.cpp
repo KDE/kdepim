@@ -252,7 +252,7 @@ void Kab3MainWidget::slotMakeSearchIndex()
     }
     patterns.sort();
     avail=!patterns.isEmpty();
-    leSearch->setText(avail ? QString("") : i18n("No items to search)"));
+    leSearch->setText(avail ? QString("") : i18n("No items to search"));
     leSearch->setEnabled(avail);
     leSearch->setCursor(avail ? arrowCursor : forbiddenCursor);
     // ----- put it's contents in the completion object:

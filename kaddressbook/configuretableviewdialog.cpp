@@ -99,7 +99,7 @@ void LookAndFeelPage::initGUI()
   mBackgroundName = new KURLRequester(this, "mBackgroundName");
   mBackgroundName->setMode(KFile::File | KFile::ExistingOnly |
                            KFile::LocalOnly);
-  mBackgroundName->setFilter("*.png *.jpg *.xpm|Image Files\n*|All Files");
+  mBackgroundName->setFilter(i18n("*.png *.jpg *.xpm|Image Files\n*|All Files"));
   backgroundLayout->addWidget(mBackgroundName);
       
   // ToolTip Checkbox

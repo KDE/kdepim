@@ -174,8 +174,8 @@ void LDAPSearchDialogImpl::rereadConfig()
       resultListView->addColumn( Attributes::instance()->fieldToName( (*field)[i] ) );
 #endif
     
-    resultListView->addColumn( "Full Name" );
-    resultListView->addColumn( "Email" );
+    resultListView->addColumn( i18n("Full Name") );
+    resultListView->addColumn( i18n("Email") );
 
     resultListView->clear();
   }

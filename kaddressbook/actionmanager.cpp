@@ -245,13 +245,13 @@ void ActionManager::updateEditMenu()
     if (undo->isEmpty())
         mActionUndo->setText( i18n( "Undo" ) );
     else
-        mActionUndo->setText( i18n( "Undo" ) + " " + undo->top()->name() );
+        mActionUndo->setText( i18n( "Undo %1" ).arg(undo->top()->name()) );
     mActionUndo->setEnabled( !undo->isEmpty() );
 
     if (!redo->top())
         mActionRedo->setText( i18n( "Redo" ) );
     else
-        mActionRedo->setText( i18n( "Redo" ) + " " + redo->top()->name() );
+        mActionRedo->setText( i18n( "Redo %1" ).arg(redo->top()->name()) );
     mActionRedo->setEnabled( !redo->isEmpty() );
 }
 

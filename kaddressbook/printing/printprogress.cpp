@@ -19,6 +19,7 @@
 #include <qprogressbar.h>
 #include <kapplication.h>
 #include <kdialog.h>
+#include <klocale.h>
 #include <kdebug.h>
 #include "printprogress.h"
 
@@ -40,7 +41,7 @@ namespace KABPrinting {
     void PrintProgress::addMessage(const QString &msg)
     {
         messages.append(msg);
-        QString head=QString("<qt><b>Progress:</b><ul>");
+        QString head=QString("<qt><b>") + i18n("Progress") + QString(":</b><ul>");
         QString foot=QString("</ul></qt>");
         QString body;
         QStringList::Iterator it;
@@ -58,3 +59,5 @@ namespace KABPrinting {
         kapp->processEvents();
     }
 }
+
+#include "printprogress.moc"

@@ -289,7 +289,7 @@ namespace KABPrinting {
 
     QString DetailledPrintStyleFactory::description()
     {
-        return i18n("Detailled Style");
+        return i18n("Detailed Style");
     }
 
 }

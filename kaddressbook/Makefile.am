@@ -61,7 +61,8 @@ partdir   = $(kde_datadir)/kaddressbook
 part_DATA = kaddressbook_part.rc
 
 messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kaddressbook.pot
+	$(EXTRACTRC) *.rc *.ui */*.ui >> rc.cpp
+	$(XGETTEXT) *.cpp */*.cpp -o $(podir)/kaddressbook.pot
 
 srcdoc:
 	$(mkinstalldirs) $(SRCDOC_DEST)
