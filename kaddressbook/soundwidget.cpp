@@ -1,25 +1,25 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2003 - 2004 Tobias Koenig <tokoe@kde.org>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <kabc/sound.h>
 #include <kaudioplayer.h>
@@ -56,13 +56,15 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
 
   mSoundUrl = new KURLRequester( this );
   topLayout->addWidget( mSoundUrl, 0, 2 );
-  
+
   mUseSoundUrl = new QCheckBox( i18n( "Store as URL" ), this );
   mUseSoundUrl->setEnabled( false );
   topLayout->addWidget( mUseSoundUrl, 1, 2 );
 
   connect( mSoundUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
+  connect( mSoundUrl, SIGNAL( textChanged( const QString& ) ),
+           SLOT( urlChanged( const QString& ) ) );
   connect( mUseSoundUrl, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );
   connect( mUseSoundUrl, SIGNAL( toggled( bool ) ),
@@ -158,9 +160,16 @@ void SoundWidget::loadSound()
 
 void SoundWidget::updateGUI()
 {
-  if ( !mReadOnly )
-    mUseSoundUrl->setEnabled( true );  
-  mPlayButton->setEnabled( true );
+  mUseSoundUrl->setEnabled( !mReadOnly );
+}
+
+void SoundWidget::urlChanged( const QString &url )
+{
+  if ( !mUseSoundUrl->isChecked() ) {
+    bool state = !url.isEmpty();
+    mPlayButton->setEnabled( state );
+    mUseSoundUrl->setEnabled( state && !mSound.isIntern() );
+  }
 }
 
 #include "soundwidget.moc"
