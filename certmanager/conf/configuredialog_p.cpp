@@ -42,7 +42,7 @@ static const char s_dirserv_groupName[] = "LDAP";
 static const char s_dirserv_entryName[] = "LDAP Server";
 
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget * parent, const char * name )
-    : ConfigModule( parent, name )
+    : KCModule( parent, name )
 {
   QVBoxLayout* lay = new QVBoxLayout( this );
   mWidget = new DirectoryServicesConfigurationDialogImpl( this );
@@ -97,11 +97,6 @@ void DirectoryServicesConfigurationPage::defaults()
     }
 #endif
     mWidget->clear(); // the default is an empty list.
-}
-
-QString DirectoryServicesConfigurationPage::helpAnchor() const
-{
-  return QString::fromLatin1( "configure-directoryservices" );
 }
 
 extern "C"

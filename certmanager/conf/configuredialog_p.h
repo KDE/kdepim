@@ -39,25 +39,6 @@
 
 #include <kcmodule.h>
 
-class ConfigModule : public KCModule {
-  Q_OBJECT
-public:
-  ConfigModule( QWidget * parent=0, const char * name=0 )
-     : KCModule ( parent, name )
-     { }
-  virtual ~ConfigModule() {}
-
-  virtual void load() = 0;
-  virtual void save() = 0;
-  virtual void defaults() {}
-
-  /// Should return the help anchor for this page or tab
-  virtual QString helpAnchor() const = 0;
-
-};
-
-// If we want to use tabs (QTabWidget), see kmail-HEAD's ConfigModuleWithTabs
-
 class DirectoryServicesConfigurationDialogImpl;
 namespace Kleo {
   class CryptoConfig;
@@ -67,7 +48,7 @@ namespace Kleo {
 /**
  * DirectoryServicesConfigurationPage
  */
-class DirectoryServicesConfigurationPage : public ConfigModule {
+class DirectoryServicesConfigurationPage : public KCModule {
   Q_OBJECT
 public:
   DirectoryServicesConfigurationPage( QWidget * parent=0, const char * name=0 );
@@ -75,8 +56,6 @@ public:
   virtual void load();
   virtual void save();
   virtual void defaults();
-
-  virtual QString helpAnchor() const;
 
 private:
   Kleo::CryptoConfigEntry* configEntry();

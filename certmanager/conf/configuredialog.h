@@ -44,8 +44,6 @@ public:
   ConfigureDialog( QWidget *parent=0, const char *name=0, bool modal=true );
   ~ConfigureDialog();
 
-signals:
-  void configChanged( void );
 protected:
   void hideEvent( QHideEvent *i );
 
