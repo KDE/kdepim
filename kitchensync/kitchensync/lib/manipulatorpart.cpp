@@ -24,17 +24,17 @@
 
 #include "manipulatorpart.h"
 
-#include "mainwindow.h"
+#include "core.h"
 
 using namespace KSync;
 
-ManipulatorPart::ManipulatorPart(QObject *parent, const char *name )
+ManipulatorPart::ManipulatorPart( QObject *parent, const char *name )
   : KParts::Part(parent, name )
 {
     m_window = 0;
 
-    if ( parent && parent->inherits("KSync::KSyncMainWindow") )
-        m_window = static_cast<KSyncMainWindow*>(parent);
+    if ( parent && parent->inherits("KSync::Core") )
+        m_window = static_cast<KSync::Core *>( parent );
 }
 
 ManipulatorPart::~ManipulatorPart()
@@ -66,7 +66,7 @@ bool ManipulatorPart::canSync() const
     return false;
 }
 
-QWidget* ManipulatorPart::configWidget()
+QWidget *ManipulatorPart::configWidget()
 {
     return 0;
 }
@@ -76,12 +76,12 @@ void ManipulatorPart::sync( const Syncee::PtrList& , Syncee::PtrList& )
     done();
 }
 
-KSyncMainWindow* ManipulatorPart::core()
+Core* ManipulatorPart::core()
 {
     return m_window;
 }
 
-KSyncMainWindow* ManipulatorPart::core() const
+Core* ManipulatorPart::core() const
 {
     return m_window;
 }

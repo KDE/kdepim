@@ -34,12 +34,11 @@
 #include <error.h>
 #include <progress.h>
 
-//#include "mainwindow.h"
 #include "profile.h"
 
 namespace KSync {
 
-class KSyncMainWindow;
+class Core;
 
 enum SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
 
@@ -140,8 +139,8 @@ class ManipulatorPart : public KParts::Part
     /**
      * @return access to the shell
      */
-    KSyncMainWindow *core();
-    KSyncMainWindow *core() const;
+    Core *core();
+    Core *core() const;
 
     /**
      * call this whenever you make progress
@@ -203,7 +202,7 @@ class ManipulatorPart : public KParts::Part
     virtual void slotConfigOk();
 
   private:
-    KSyncMainWindow *m_window;
+    Core *m_window;
     int m_prog;
     int m_stat;
 };

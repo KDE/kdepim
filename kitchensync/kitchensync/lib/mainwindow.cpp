@@ -77,9 +77,8 @@ kdbgstream operator<<( kdbgstream str, const Notify& no )
 
 }
 
-KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
-  :
-  KParts::MainWindow( widget, name, f )
+KSyncMainWindow::KSyncMainWindow( QWidget *widget, const char *name, WFlags f )
+  : Core( widget, name, f )
 {
 
   m_konnectorManager = 0;
