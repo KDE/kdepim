@@ -119,7 +119,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   if ( !_lock )
   {
     KMessageBox::information(0,
-        i18n("Another program is currently using this file.  "
+        i18n("Another program is currently using this file. "
           "Access will be read-only."));
   }
 

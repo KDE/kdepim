@@ -286,7 +286,7 @@ void MainWindow::makeMenus()
   new KAction( i18n("Import &Legacy Flat File..."), 0,
       _taskView, SLOT(loadFromFlatFile()), actionCollection(),
       "import_flatfile");
-  new KAction( i18n("Export to CSV File ..."), 0,
+  new KAction( i18n("Export to CSV File..."), 0,
       _taskView, SLOT(exportcsvFile()), actionCollection(),
       "export_csvfile");
   /*
