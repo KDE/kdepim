@@ -141,7 +141,9 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
   QStringList logclients;
   // Get config object
   Kleo::CryptoConfig* cconfig = Kleo::CryptoBackendFactory::instance()->config();
-  Q_ASSERT( cconfig );
+  if ( !cconfig )
+    return;
+  //Q_ASSERT( cconfig );
   KConfig* config = kapp->config();
   config->setGroup("WatchGnuPG");
   QStringList comps = cconfig->componentList();
