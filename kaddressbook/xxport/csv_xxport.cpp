@@ -30,7 +30,7 @@
 #include <ktempfile.h>
 #include <kurl.h>
 
-#include "importdialog.h"
+#include "csvimportdialog.h"
 
 #include "csv_xxport.h"
 
@@ -95,8 +95,7 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
 
 KABC::AddresseeList CSVXXPort::importContacts( const QString& ) const
 {
-  ContactImportDialog dlg( addressBook(), parentWidget() );
-
+  CSVImportDialog dlg( addressBook(), parentWidget() );
   if ( dlg.exec() )
     return dlg.contacts();
   else

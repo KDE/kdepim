@@ -6,7 +6,7 @@ kde_module_LTLIBRARIES = libkaddrbk_csv_xxport.la libkaddrbk_vcard_xxport.la \
 	libkaddrbk_gnokii_xxport.la libkaddrbk_opera_xxport.la \
 	libkaddrbk_pab_xxport.la 
 
-noinst_HEADERS = importdialog.h
+noinst_HEADERS = csvimportdialog.h
 
 servicedir  = $(kde_servicesdir)/kaddressbook
 service_DATA = csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop \
@@ -18,7 +18,7 @@ AM_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
 
 XXLIBS = $(top_builddir)/kaddressbook/libkaddressbook.la $(top_builddir)/libkdepim/libkdepim.la
 
-libkaddrbk_csv_xxport_la_SOURCES = csv_xxport.cpp importdialog.cpp
+libkaddrbk_csv_xxport_la_SOURCES = csv_xxport.cpp csvimportdialog.cpp
 libkaddrbk_csv_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_vcard_xxport_la_SOURCES = vcard_xxport.cpp
