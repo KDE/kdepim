@@ -37,9 +37,9 @@ clean: debian-clean
 debian-clean:
 	dh_testdir
 	-rm -f debian/libical* debian/debiandirs
-	#if test -d CVS; then \
-	#  $(MAKE) -f admin/Makefile.common cvs-clean ;\
-	#fi
+	if test -d CVS; then \
+	  $(MAKE) -f admin/Makefile.common cvs-clean ;\
+	fi
 	-$(MAKE) distclean
 
 binary-indep: build
@@ -52,10 +52,6 @@ binary-arch: build
 	dh_clean -k
 	dh_installdirs -a
 	$(MAKE) install DESTDIR=$(tmp)/
-	cp debian/*.override $(tmp)/usr/share/lintian/overrides/
-	for i in `ls $(tmp)/usr/share/lintian/overrides/`; do \
-	  mv $(tmp)/usr/share/lintian/overrides/$$i $(tmp)/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
-	done
 	for i in `find debian/ -type l -name "common"`; do \
 		rm $$i ;\
 		ln -s ../common $$i ;\

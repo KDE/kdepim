@@ -1,3 +1,15 @@
+kdepim (4:2.2.2-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Wed, 07 Nov 2001 19:38:00 -0700
+
+kdepim (4:2.2.1-1.5) unstable; urgency=low
+
+  * Don't search for auto* as it hoses things
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 08 Oct 2001 19:38:00 -0700
+
 kdepim (4:2.2.1-1.4) unstable; urgency=low
 
   * fix configure

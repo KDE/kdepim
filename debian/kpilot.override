@@ -1,4 +1,3 @@
-kpilot: menu-item-contains-unknown-tag kderemove /usr/lib/menu/kpilot:7
 kpilot: link-to-undocumented-manpage usr/share/man/man1/kpilot.1.gz
 kpilot: link-to-undocumented-manpage usr/share/man/man1/kpilotDaemon.1.gz
 kpilot: link-to-undocumented-manpage usr/share/man/man1/pilotListener.1.gz
