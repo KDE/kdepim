@@ -30,7 +30,7 @@ indicating that a sync is under way.
 
 
 <para>
-To define the type of sync &kpilot; will perform next, you can use the main
+To which type of sync &kpilot; will perform next, you can use the main
 application
 <link linkend="menu-file">
 <menuchoice>
@@ -38,14 +38,14 @@ application
 </menuchoice>
 menu</link>,
 or right click the &kpilot; daemon icon located in the system tray,
-and select one of the menu items under the 
+and select one of the menu items under the
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
 sub menu.
 <tip><para>
 If you hover over the &kpilot; daemon icon, a tooltip will appear showing you
-what is the type of sync &kpilot; will perform next.
+what the type of sync &kpilot; will perform next.
 </para></tip>
 
 </para>
@@ -74,7 +74,7 @@ takes the longest time to complete.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Backup</guilabel>: copy all the data from the &handheld; to the 
+<guilabel>Backup</guilabel>: copy all the data from the &handheld; to the
 <acronym>PC</acronym>.
 </para></listitem>
 
@@ -95,7 +95,7 @@ data entered on the &handheld; since the last backup.
 <para>
 Alternatively, you can change the default syncing behavior of &kpilot; by
 choosing the most suitable option in the <link linkend="page-hotsync">HotSync
-configure dialog</link>. 
+configure dialog</link>.
 
 <note><para>
 To configure the conduits or the sync process, you do not need to open the main
@@ -114,25 +114,25 @@ menu item is available on the &kpilot; daemon pop-up menu as well.
 <para>
 On every backup, &kpilot; stores a copy of all your &handheld; data under the
 <filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/User Name/</filename>
-folder, allowing you to restore that copy later, if needed. The 
+folder, allowing you to restore that copy later, if needed. The
 <filename class="directory">$KDEHOME</filename> environment variable
-(typically <filename class="directory">/home/Login Name/.kde/</filename>) 
+(typically <filename class="directory">/home/Login Name/.kde/</filename>)
 points to the folder that contains your configuration and data for the &kde;
 applications.</para>
 
 <para>
 It is a good idea to backup your data often. To perform a backup, you can click
-the 
+the
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 <guimenuitem>Backup</guimenuitem>
 </menuchoice>
-on the &kpilot; daemon icon pop-up menu or the 
+on the &kpilot; daemon icon pop-up menu or the
 <menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Backup</guimenuitem>
 </menuchoice>
-menu item on the main &kpilot; application menu in order 
+menu item on the main &kpilot; application menu in order
 to make the next sync a backup. Then, just press the &HotSync; button.
 </para>
 
@@ -154,17 +154,17 @@ data entered on the &handheld; since the last backup.
 <para>
 The data saved on the last backup is located on the <filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/User Name/</filename>
 folder. The <filename class="directory">$KDEHOME</filename> environment variable
-(typically <filename class="directory">/home/Login Name/.kde/</filename>) 
+(typically <filename class="directory">/home/Login Name/.kde/</filename>)
 points to the folder that contains your configuration and data for the &kde;
 applications.</para>
 
 <para>
 The most common use for the restore functionality is to recover from a hardware
 or software failure on the device.
-The restore function can only be accessed from the 
+The restore function can only be accessed from the
 main &kpilot; application, and not from the &kpilot; daemon, as
-restoring the data is not a common operation. In order 
-to restore the data at the next sync, click the 
+restoring the data is not a common operation. In order
+to restore the data at the next sync, click the
 <menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Restore</guimenuitem>
@@ -184,7 +184,7 @@ There are three ways to sync your &handheld;, <guilabel>HotSync</guilabel>,
 </para>
 
 <para>
-When you press the &HotSync; button on your &handheld;, &kpilot;'s will run the 
+When you press the &HotSync; button on your &handheld;, &kpilot;'s will run the
 default sync operation (usually a <guilabel>HotSync</guilabel>). You can select
 the default sync operation in the <link linkend="page-hotsync">HotSync
 configure dialog</link>. Alternatively, you can click one of the sync options on
@@ -192,7 +192,7 @@ the main &kpilot; application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
-menu or on the &kpilot; daemon pop-up 
+menu or on the &kpilot; daemon pop-up
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
@@ -205,7 +205,7 @@ The main &kpilot; application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
-menu items or the &kpilot; daemon pop-up 
+menu items or the &kpilot; daemon pop-up
 <menuchoice>
 <guisubmenu>Next Sync</guisubmenu>
 </menuchoice>
@@ -283,7 +283,7 @@ menu only.
 <title>Syncing your &handheld; Data Using Conduits</title>
 
 <para>
-Conduits are programs that interface your &handheld; data with 
+Conduits are programs that interface your &handheld; data with
 <acronym>PC</acronym> applications or sync your &handheld; data with files
 that can be used by <acronym>PC</acronym> applications.
 </para>
@@ -293,7 +293,7 @@ Conduits can be set up by selecting
 <menuchoice>
 <guimenu>Settings</guimenu>
 <guimenuitem>Configure KPilot...</guimenuitem>
-</menuchoice>, or using the daemon pop up menu and clicking the 
+</menuchoice>, or using the daemon pop up menu and clicking the
 <guimenuitem>Configure KPilot...</guimenuitem>
 menu item.
 </para>
@@ -315,7 +315,7 @@ by clicking on the check box to the left of the conduit's name.
 Conduits can have an extensive configuration of
 their own, and may be supplied by third parties.
 Most of the conduits require some initial configuration, so it is strongly
-recommended to check the 
+recommended to check the
 <link linkend="config-conduits">section detailing the default conduits
 configuration</link> before using them.
 </para>
@@ -327,7 +327,7 @@ The default conduits are the following:
 
 
 <variablelist>
-	
+
 <varlistentry>
 <term><guilabel>KNotes / Memos</guilabel></term>
 <listitem><para>
@@ -349,7 +349,7 @@ Sets the &handheld;'s time to that of the desktop machine.
 Useful for keeping the clock of the &handheld; accurate.
 </para></listitem>
 </varlistentry>
-       
+
 <varlistentry>
 <term><guilabel>Calendar (KOrganizer)</guilabel></term>
 <listitem><para>
@@ -379,7 +379,7 @@ Synchronizes the Address application with &kaddressbook; or with a vCard file of
 your choice.
 </para></listitem>
 </varlistentry>
-       
+
 <varlistentry>
 <term><guilabel>System Information</guilabel></term>
 <listitem><para>
