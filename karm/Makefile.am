@@ -19,13 +19,8 @@ noinst_HEADERS = adddlg.h karm.h task.h toolicons.h top.h kaccelmenuwatch.h \
 
 KDE_ICON = karm
 
-appsdir = 
-
 rcdir = $(kde_datadir)/karm
 rc_DATA = karmui.rc
-
-lnk_DATA = support/karm.desktop
-lnkdir = $(kde_appsdir)/Utilities/More
 
 install-data-local: uninstall.desktop
 	$(mkinstalldirs) $(kde_appsdir)/Utilities

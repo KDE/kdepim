@@ -1,4 +1,5 @@
 EXTRA_DIST = karm.desktop newtask.dlg
 
-datadir = $(kde_datadir)/karm
+lnkdir = $(kde_appsdir)/Utilities/More
+lnk_DATA = karm.desktop
 
