@@ -34,7 +34,7 @@ QPixmap* OrganizerPart::pixmap()
 }
 QWidget* OrganizerPart::widget()
 {
-  kdDebug() << "widget \n";
+  kdDebug(5222) << "widget \n";
   if(m_widget==0 ){
     m_widget = new QWidget();
     m_widget->setBackgroundColor(Qt::green);
@@ -44,7 +44,7 @@ QWidget* OrganizerPart::widget()
 QWidget* OrganizerPart::configWidget()
 {
   //  if( m_config == 0 ){ cause of the reparent ;)
-    kdDebug() << "configWidget \n" ;
+    kdDebug(5222) << "configWidget \n" ;
     m_config = new QWidget();
     m_config->setBackgroundColor( Qt::green );
     //}

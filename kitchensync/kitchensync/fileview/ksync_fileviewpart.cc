@@ -39,7 +39,7 @@ QWidget* FileviewPart::widget() {
 }
 
 QWidget* FileviewPart::configWidget() {
-    kdDebug() << "configWidget \n" ;
+    kdDebug(5223) << "configWidget \n" ;
     m_config = new QWidget();
     m_config->setBackgroundColor( Qt::blue );
     return m_config;

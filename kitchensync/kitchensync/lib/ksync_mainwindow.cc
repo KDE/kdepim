@@ -86,7 +86,7 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   resize(600,400);
   m_parts.setAutoDelete( true );
 
-  kdDebug() << "Init konnector" << endl;
+  kdDebug(5210) << "Init konnector" << endl;
   initKonnector();
   initPlugins();
 
@@ -146,7 +146,7 @@ void KSyncMainWindow::addModPart(ManipulatorPart *part)
   if( part->partIsVisible() )
   {
     int pos = -1;
-    kdDebug() << "before part insert \n"  ;
+    kdDebug(5210) << "before part insert \n"  ;
     m_stack->addWidget( part->widget(), id );
     if( part->type() == QString::fromLatin1("Overview") ){ // Overview is special for us ;)
       m_stack->raiseWidget(id );
@@ -170,20 +170,20 @@ void KSyncMainWindow::initSystray( void ) {
 
 void KSyncMainWindow::slotSync()
 {
-    kdDebug() << "slotSync " << endl;
+    kdDebug(5210) << "slotSync " << endl;
     if (m_currentId.isEmpty() ) {
-        kdDebug() << "Current Id empty" << endl;
+        kdDebug(5210) << "Current Id empty" << endl;
         return; // QMessageBox
     }
     if (!m_profile.caps().supportsPushSync() ) {
-        kdDebug() << "Can not push" << endl;
+        kdDebug(5210) << "Can not push" << endl;
         return; // pop up
     }
     if (!m_profile.isConfigured() ) {
-        kdDebug() << "Not configured" << endl;
+        kdDebug(5210) << "Not configured" << endl;
         return; // pop up
     }
-    kdDebug() << "Ok starting sync" << endl;
+    kdDebug(5210) << "Ok starting sync" << endl;
     m_konnector->startSync( m_currentId );
 }
 void KSyncMainWindow::slotBackup() {
@@ -250,7 +250,7 @@ QMap<QString,QString> KSyncMainWindow::ids() const
 }
 void KSyncMainWindow::initKonnector()
 {
-    kdDebug() << "init konnector" << endl;
+    kdDebug(5210) << "init konnector" << endl;
     m_konnector = new Konnector(this,  "Konnector");
     connect(m_konnector,SIGNAL(wantsToSync(const QString&, QPtrList<KSyncEntry> ) ),
             this, SLOT(slotSync( const QString&,  QPtrList<KSyncEntry>) ) );
@@ -265,10 +265,10 @@ void KSyncMainWindow::initKonnector()
     QValueList<KDevice> device;
     device = m_konnector->query();
     for(QValueList<KDevice>::Iterator it = device.begin(); it != device.end(); ++it ){
-        kdDebug() << "Identify "  << (*it).identify() << endl;
-        kdDebug() << "Group " << (*it).group() << endl;
-        kdDebug() << "Vendor " << (*it).vendor() << endl;
-        kdDebug() << "UNIX " << (*it).id() << endl;
+        kdDebug(5210) << "Identify "  << (*it).identify() << endl;
+        kdDebug(5210) << "Group " << (*it).group() << endl;
+        kdDebug(5210) << "Vendor " << (*it).vendor() << endl;
+        kdDebug(5210) << "UNIX " << (*it).id() << endl;
         if ( (*it).id() == QString::fromLatin1("Opie-1") ) {
             QString tmp = m_konnector->registerKonnector( (*it) );
             if ( !tmp.isEmpty() ) { // loaded successfull
@@ -282,14 +282,22 @@ void KSyncMainWindow::initKonnector()
 // do we need to change the Konnector first?
 // raise overview and then pipe informations
 void KSyncMainWindow::slotSync( const QString &udi,
-                                QPtrList<KSyncEntry> )
+                                QPtrList<KSyncEntry> lis)
 {
-    kdDebug() << "Some data arrived Yeah baby" << endl;
+    kdDebug(5210) << "Some data arrived Yeah baby" << endl;
+    kdDebug(5210) << "Lis got "  << lis.count() << "elements" << endl;
+    KSyncEntry *entry=0;
+    for ( entry = lis.first(); entry != 0; entry = lis.next() ) {
+        kdDebug() << "Type is " << entry->type() << endl;
+    }
+    // pass them through all widgets
+
+    m_konnector->write( udi, lis );
 }
 void KSyncMainWindow::slotStateChanged( const QString &udi,
                                         bool connected )
 {
-    kdDebug() << "State changed" << connected << endl;
+    kdDebug(5210) << "State changed" << connected << endl;
     if ( !connected )
         statusBar()->message(i18n("Not connected") );
     else
@@ -325,7 +333,7 @@ void KSyncMainWindow::setupKonnector( const KDevice& udi,  const QString &id )
         cap.setSupportsPushSync( conf->readBoolEntry("push") );
         // device specific later
         config = true;
-        kdDebug() << "Config true" << endl;
+        kdDebug(5210) << "Config true" << endl;
         m_konnector->setCapabilities( m_currentId,  cap );
     }
     m_profile = Profile(udi, cap, "Opie-1",  config); // hard code for now

@@ -119,7 +119,7 @@ PartBar::PartBar(QWidget *parent, const char *name, WFlags f)
 }
 
 PartBarItem * PartBar::insertItem( ManipulatorPart *part, int pos ) {
-  kdDebug() << part->name() << "\n" << part->description() << "\n";
+  kdDebug(5210) << part->name() << "\n" << part->description() << "\n";
   PartBarItem *item = new PartBarItem( this , part );
   m_listBox->insertItem( item, pos );
   return item;

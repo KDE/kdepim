@@ -10,7 +10,7 @@
 // TypeORAppName||%%||KonnectorId||%%||KDEID
 KonnectorUIDHelper::KonnectorUIDHelper( const QString &dir )
 {
-    kdDebug() << "new KonnectorUIDHelper " << dir <<endl;
+    kdDebug(5201) << "new KonnectorUIDHelper " << dir <<endl;
     m_config = new KConfig( dir + "/konnector-ids.conf");
     m_config->setGroup("uids");
     QString string = m_config->readEntry( "ids" );
@@ -28,7 +28,7 @@ KonnectorUIDHelper::~KonnectorUIDHelper()
 }
 QString KonnectorUIDHelper::konnectorId( const QString &appName,  const QString &kdeId, const QString &defaultId )
 {
-    kdDebug() << "IdHelper: KonnectorIdAppName: " << appName << " KDE Id: " << kdeId << " defaultId " << defaultId << endl;
+    kdDebug(5201) << "IdHelper: KonnectorIdAppName: " << appName << " KDE Id: " << kdeId << " defaultId " << defaultId << endl;
     QMap<QString,  QValueList<Kontainer> >::Iterator it;
     it = m_ids.find( appName );
     if ( it != m_ids.end() ) {
@@ -36,7 +36,7 @@ QString KonnectorUIDHelper::konnectorId( const QString &appName,  const QString 
         QValueList<Kontainer>::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( kdeId.stripWhiteSpace() == (*it).second().stripWhiteSpace() ) {
-                kdDebug() << "it.first = " << (*it).first() << endl;
+                kdDebug(5201) << "it.first = " << (*it).first() << endl;
                 return (*it).first();
             }
         }
@@ -45,7 +45,7 @@ QString KonnectorUIDHelper::konnectorId( const QString &appName,  const QString 
 }
 QString KonnectorUIDHelper::kdeId( const QString &appName,  const QString &konnectorId, const QString &defaultId )
 {
-    kdDebug() << "kdeId: AppName: " << appName  << " konnectorId " << konnectorId << endl;
+    kdDebug(5201) << "kdeId: AppName: " << appName  << " konnectorId " << konnectorId << endl;
     QMap<QString,  QValueList<Kontainer> >::Iterator it;
     it = m_ids.find( appName );
     if ( it != m_ids.end() ) {
@@ -53,7 +53,7 @@ QString KonnectorUIDHelper::kdeId( const QString &appName,  const QString &konne
         QValueList<Kontainer>::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( konnectorId.stripWhiteSpace() == (*it).first().stripWhiteSpace() ) {
-                kdDebug() << "it.second " << (*it).second() << endl;
+                kdDebug(5201) << "it.second " << (*it).second() << endl;
                 return (*it).second();
             }
         }
@@ -64,16 +64,16 @@ void KonnectorUIDHelper::addId( const QString& appName,
                                 const QString& konnectorId,
                                 const QString& kdeId )
 {
-    kdDebug() << "addId " << appName << "  konId "  << konnectorId << " kdeId " << kdeId << endl;
+    kdDebug(5201) << "addId " << appName << "  konId "  << konnectorId << " kdeId " << kdeId << endl;
     QMap<QString,  QValueList<Kontainer> >::Iterator it;
     it = m_ids.find( appName );
     if ( it == m_ids.end() ) {
-        kdDebug() << "First insert" << endl;
+        kdDebug(5201) << "First insert" << endl;
         QValueList<Kontainer> kontainer;
         kontainer.append( Kontainer( konnectorId,  kdeId ) );
         m_ids.replace( appName,  kontainer );
     }else{
-        kdDebug() << "Already inserted" << endl;
+        kdDebug(5201) << "Already inserted" << endl;
         QValueList<Kontainer> kontainer = it.data();
         Kontainer kont( konnectorId,  kdeId );
         kontainer.remove( kont );

@@ -150,7 +150,7 @@ bool OpieSocket::startSync()
 }
 bool OpieSocket::isConnected()
 {
-    if( d->mode == d->CALL || d->mode == d->NOOP || d->mode == d->CONNECTED ){
+    if( d->connected || d->mode == d->CALL || d->mode == d->NOOP || d->mode == d->CONNECTED ){
 	return true;
     }else{
 	return false;
@@ -158,10 +158,25 @@ bool OpieSocket::isConnected()
 }
 QByteArray OpieSocket::retrFile(const QString &path )
 {
-    if( d->mode == d->NOOP ){
-    //stop the timer
-
+    QByteArray array;
+    if( isConnected() ) {
+        QString file;
+        KURL url;
+        url.setProtocol("ftp" );
+        url.setUser( d->user );
+        url.setPass( d->pass );
+        url.setHost( d->dest );
+        url.setPort( 4242 );
+        url.setPath( path );
+        if (  KIO::NetAccess::download( url,  file ) ) {
+            QFile file2( file );
+            if ( file2.open( IO_ReadOnly ) ) {
+                array = file2.readAll();
+            }
+        }
+        KIO::NetAccess::removeTempFile( file );
     }
+    return array;
 }
 bool OpieSocket::insertFile( const QString &fileName )
 {
@@ -192,6 +207,7 @@ void OpieSocket::write(const QString &path, const QByteArray &array )
     }
     temp.unlink();
 }
+// write back to my iPAQ
 void OpieSocket::write(QPtrList<KSyncEntry> lis)
 {
 // ok the list
@@ -205,7 +221,7 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
     url.setHost( d->dest );
     url.setPort( 4242 );
     //url.setPath( path );
-    for ( entry = lis.first(); entry != 0; lis.next() ) {
+    for ( entry = lis.first(); entry != 0; entry = lis.next() ) {
         // convert to XML
         if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
             KAlendarSyncEntry* cal = (KAlendarSyncEntry*) entry;
@@ -213,6 +229,21 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
             OpieHelper::ToDo todo( d->edit,  d->helper, d->meta );
             QByteArray todos = todo.fromKDE( cal );
             QByteArray events = dateb.fromKDE( cal );
+            KTempFile todoFile( locateLocal("tmp",  "opie-todolist"),  "new");
+            QFile *file = todoFile.file();
+            file->writeBlock( todos );
+            todoFile.close();
+            url.setPath(d->path + "/Applications/todolist/todolist.xml");
+            KIO::NetAccess::upload( todoFile.name(),  url );
+            todoFile.unlink();
+            KTempFile eventFile( locateLocal("tmp",  "opie-datebook"),  "new");
+            file = eventFile.file();
+            file->writeBlock( events );
+            eventFile.close();
+            url.setPath( d->path + "/Applications/datebook/datebook.xml" );
+            KIO::NetAccess::upload( eventFile.name(),  url );
+            eventFile.unlink();
+            // wrote the todos and events to a tempfile and upload
             // Events + Todo
             if ( d->meta ) { // save the bytearray
                 QFile aFile(QDir::homeDirPath()+ "/.kitchensync/meta/" + d->partnerId + "/todolist.xml" );
@@ -253,6 +284,9 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
         }
     }
     // OpieHelper::CategoryEdit write back
+    QTextStream stream( d->socket );
+    stream << "call QPE/System stopSync()" << endl;
+    d->isSyncing = false; // do it in the write back later on
     lis.clear();
 }
 void OpieSocket::write(QValueList<KOperations> )
@@ -460,9 +494,8 @@ void OpieSocket::manageCall(const QString &line )
             // come back to the normal mode
             // emit signal
             emit sync( d->m_sync );
-            stream << "call QPE/System stopSync()" << endl;
-            d->isSyncing = false; // do it in the write back later on
             d->mode = d->NOOP;
+            d->m_sync.clear();
 	    break;
 	}
 	case d->DESKTOPS:{
@@ -518,6 +551,7 @@ void OpieSocket::newPartner()
         url.setPath(d->path + "/Settings/meinPartner");
         KIO::NetAccess::upload( fileN,  url );
     }
+    QFile::remove( fileN );
 }
 void OpieSocket::readPartner( const QString &fileName )
 {

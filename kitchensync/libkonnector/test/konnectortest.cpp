@@ -38,9 +38,9 @@ int main(int argc, char *argv[] )
   QValueList<KDevice> device;
   device = konnector->query();
   for(QValueList<KDevice>::Iterator it = device.begin(); it != device.end(); ++it ){
-    kdDebug() << "KDevice: " <<  (*it).identify() << endl;
+    kdDebug(5201) << "KDevice: " <<  (*it).identify() << endl;
     QString outp = konnector->registerKonnector( (*it) );
-    kdDebug() << "UID " <<  outp;
+    kdDebug(5202) << "UID " <<  outp;
     Kapabilities caps = konnector->capabilities( outp );
     caps.setUser("ich" );
     caps.setPassword("doesntmatter");
@@ -51,7 +51,7 @@ int main(int argc, char *argv[] )
     konnector->setCapabilities( outp, caps );
     konnector->startSync( outp );
     if(outp.isEmpty() ){
-      qWarning("couldn't load" );
+      kdDebug(5202) << "couldn't load" << endl;
     }
   }
   return a.exec();

@@ -77,7 +77,7 @@ int main(int argc,  char* argv[] )
   KUniqueApplication::addCmdLineOptions();
 
   if( !KUniqueApplication::start() ){
-    kdDebug() << "Could not start" << endl;
+    kdDebug(5210) << "Could not start" << endl;
     exit(0 );
   };
   KUniqueApplication a;
@@ -88,7 +88,7 @@ int main(int argc,  char* argv[] )
   mainwindow->show();
 //  QWidget *wid = new KitchenSync::OverviewWidget();
 //  wid->show();
-  kdDebug() << "exec now " << endl;
+  kdDebug(5210) << "exec now " << endl;
   a.exec();
 
 }

@@ -277,12 +277,12 @@ Kapabilities &Kapabilities::operator=(const Kapabilities &rhs )
 /*
 void Kapabilities::dump()const
 {
-    kdDebug() << "Needs Net " << m_needsNet << endl;
-    kdDebug() << "Can Push " << m_push << endl;
-    kdDebug() << "Needs Conn " << m_needConnection << endl;
-    kdDebug() << "ListDir" <<  m_listdir << endl;
-    kdDebug() << "Needs IP" << m_needsIp << endl;
-    kdDebug() << "Needs SRC " << m_needsSrcIp << endl;
+    kdDebug(5201) << "Needs Net " << m_needsNet << endl;
+    kdDebug(5201) << "Can Push " << m_push << endl;
+    kdDebug(5201) << "Needs Conn " << m_needConnection << endl;
+    kdDebug(5201) << "ListDir" <<  m_listdir << endl;
+    kdDebug(5201) << "Needs IP" << m_needsIp << endl;
+    kdDebug(5201) << "Needs SRC " << m_needsSrcIp << endl;
 
 }
 */
