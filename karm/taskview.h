@@ -104,7 +104,7 @@ class TaskView : public KListView
      * list view.  
      */
     void deleteTask(bool markingascomplete=false);
-    void addCommentToTask();
+//    void addCommentToTask();
     void markTaskAsComplete();
 
     /** Subtracts time from all active tasks, and does not log event. */ 

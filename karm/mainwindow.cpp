@@ -97,10 +97,12 @@ void MainWindow::slotSelectionChanged()
   actionStop->setEnabled(item && item->isRunning());
 }
 
-void MainWindow::timeLoggingChanged(bool on)
-{
-  actionAddComment->setEnabled( on );
-}
+// This is _old_ code, but shows how to enable/disable add comment menu item.
+// We'll need this kind of logic when comments are implemented.
+//void MainWindow::timeLoggingChanged(bool on)
+//{
+//  actionAddComment->setEnabled( on );
+//}
 
 void MainWindow::save()
 {
@@ -248,13 +250,13 @@ void MainWindow::makeMenus()
       _taskView,
       SLOT( editTask() ), actionCollection(),
       "edit_task");
-  actionAddComment = new KAction( i18n("&Add Comment..."),
-      QString::fromLatin1("document"),
-      CTRL+ALT+Key_E,
-      _taskView,
-      SLOT( addCommentToTask() ),
-      actionCollection(),
-      "add_comment_to_task");
+//  actionAddComment = new KAction( i18n("&Add Comment..."),
+//      QString::fromLatin1("document"),
+//      CTRL+ALT+Key_E,
+//      _taskView,
+//      SLOT( addCommentToTask() ),
+//      actionCollection(),
+//      "add_comment_to_task");
   actionMarkAsComplete = new KAction( i18n("&Mark as Complete..."),
       QString::fromLatin1("document"),
       CTRL+Key_M,
@@ -331,12 +333,12 @@ void MainWindow::makeMenus()
   actionEdit->setWhatsThis( i18n("This will bring up a dialog box where you "
                                  "may edit the parameters for the selected "
                                  "task."));
-  actionAddComment->setToolTip( i18n("Add a comment to a task") );
-  actionAddComment->setWhatsThis( i18n("This will bring up a dialog box where "
-                                       "you can add a comment to a task. The "
-                                       "comment can for instance add information on what you "
-                                       "are currently doing. The comment will "
-                                       "be logged in the log file."));
+  //actionAddComment->setToolTip( i18n("Add a comment to a task") );
+  //actionAddComment->setWhatsThis( i18n("This will bring up a dialog box where "
+  //                                     "you can add a comment to a task. The "
+  //                                     "comment can for instance add information on what you "
+  //                                     "are currently doing. The comment will "
+  //                                     "be logged in the log file."));
   actionClipTotals->setToolTip(i18n("Copy task totals to clipboard"));
   actionClipHistory->setToolTip(i18n("Copy time card history to clipboard."));
 

@@ -401,19 +401,19 @@ void TaskView::editTask()
   delete dialog;
 }
 
-void TaskView::addCommentToTask()
-{
-  Task *task = current_item();
-  if (!task)
-    return;
+//void TaskView::addCommentToTask()
+//{
+//  Task *task = current_item();
+//  if (!task)
+//    return;
 
-  bool ok;
-  QString comment = KLineEditDlg::getText(i18n("Comment"),
-                       i18n("Log comment for task '%1':").arg(task->name()),
-                       QString(), &ok, this);
-  if ( ok )
-    task->addComment( comment, _storage );
-}
+//  bool ok;
+//  QString comment = KLineEditDlg::getText(i18n("Comment"),
+//                       i18n("Log comment for task '%1':").arg(task->name()),
+//                       QString(), &ok, this);
+//  if ( ok )
+//    task->addComment( comment, _storage );
+//}
 
 
 void TaskView::deleteTask(bool markingascomplete)

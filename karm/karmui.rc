@@ -21,7 +21,7 @@
     <Action name="new_sub_task" />
     <Action name="delete_task" />
     <Action name="edit_task" />
-    <Action name="add_comment_to_task" />
+//    <Action name="add_comment_to_task" />
     <Action name="mark_as_complete" />
   </Menu>
 </MenuBar>
@@ -33,7 +33,7 @@
   <Action name="new_sub_task" />
   <Action name="delete_task" />
   <Action name="edit_task" />
-  <Action name="add_comment_to_task" />
+//  <Action name="add_comment_to_task" />
 </ToolBar>
 <Menu name="task_popup">
   <Action name="start" />
@@ -44,7 +44,7 @@
   <Action name="new_sub_task" />
   <Action name="delete_task" />
   <Action name="edit_task" />
-  <Action name="add_comment_to_task" />
+//  <Action name="add_comment_to_task" />
   <Separator />
   <Action name="clip_totals" />
   <Action name="clip_history" />

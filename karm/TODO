@@ -32,8 +32,8 @@
 Mark - 3.2
 --------------------------
 
-  * 2003-09-26: Decide on a page width and ltrim task descriptions.  Use
-    either 7pt Courier in KEdit to figure this out.
+  * 2003-09-26: Decide on a page width and then rtrim task descriptions.
+    7pt Courier in Kate?
 
   * 2003-09-26: Add totals table across entire date range.
 
@@ -41,11 +41,6 @@ Mark - 3.2
 
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
-
-  * 2003-09-24: Add comments to report (or put it off to 3.3).  Need to stamp
-    comments with datetime entered so the history report can associate
-    comments with the proper week.  Note that the original code only allowed
-    you to add comments to a task you were timing.
 
   * 2003-09-24: UPDATE DOCS!!
 
@@ -65,8 +60,6 @@ Mark - 3.2
   * 2003-08-15: If Cornelius accepts my comment patch, use the COMMENT
     attribute to store comments, not the VTODO DESCRIPTION.
       - KarmStorage::addComment()
-
-  * 2003-09-03: Review all strings and attempt to minimize i18n work.
 
   * 2003-09-17: Run through Valgrind.
 
@@ -89,6 +82,11 @@ Mark - 3.3
   * 2003-09-26: Don't print rows for tasks with zero hours???  How to keep
     hierary?
 
+  * 2003-09-24: Add comments to report.
+      1. Only activate menu choice when task(s) are active
+      2. Append comment to VEVENTs description
+      3. Make sure wrapping works according to iCalendar spec.
+      4. Handle multiple comments against same VEVENT.
 
 
 Wishlist:
