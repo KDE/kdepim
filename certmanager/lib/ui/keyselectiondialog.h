@@ -51,7 +51,7 @@
 
 #include <kdialogbase.h>
 
-#include <qvaluevector.h>
+#include <vector>
 
 class QCheckBox;
 class QPixmap;
@@ -77,12 +77,6 @@ namespace Kleo {
     Q_OBJECT
   public:
 
-    enum TrustCheckMode {
-      NoExpensiveTrustCheck,
-      AllowExpensiveTrustCheck,
-      ForceTrustCheck
-    };
-
     enum KeyUsage {
       PublicKeys = 1,
       SecretKeys = 2,
@@ -98,10 +92,10 @@ namespace Kleo {
     KeySelectionDialog( const QString & title,
                         const QString & text=QString::null,
                         const Kleo::CryptoBackend * backend=0,
-			const QValueVector<GpgME::Key> & selectedKeys=QValueVector<GpgME::Key>(),
-			bool rememberChoice=false,
+			const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
+			bool rememberChoice=false,
                         QWidget * parent=0, const char * name=0,
                         bool modal=true );
     ~KeySelectionDialog();
@@ -111,7 +105,7 @@ namespace Kleo {
     const GpgME::Key & selectedKey() const;
  
     /** Returns a list of selected key IDs. */
-    const QValueVector<GpgME::Key> & selectedKeys() const { return mSelectedKeys; }
+    const std::vector<GpgME::Key> & selectedKeys() const { return mSelectedKeys; }
 
     bool rememberSelection() const;
 
@@ -149,7 +143,7 @@ namespace Kleo {
     Kleo::KeyListView * mKeyListView;
     const Kleo::CryptoBackend * mBackend;
     QCheckBox * mRememberCB;
-    QValueVector<GpgME::Key> mSelectedKeys;
+    std::vector<GpgME::Key> mSelectedKeys;
     unsigned int mKeyUsage;
     QTimer * mCheckSelectionTimer;
     QTimer * mStartSearchTimer;

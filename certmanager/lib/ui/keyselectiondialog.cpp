@@ -88,7 +88,6 @@
 //#include <qdatetime.h>
 #include <qpopupmenu.h>
 #include <qregexp.h>
-#include <qvaluevector.h>
 
 #include <string.h>
 
@@ -116,6 +115,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
        !( keyUsage & Kleo::KeySelectionDialog::PublicKeys ) &&
        !key.isSecret() )
     return false;
+
   if ( keyUsage & Kleo::KeySelectionDialog::PublicKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::SecretKeys ) &&
        key.isSecret() )
@@ -139,8 +139,8 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
   return true;
 }
 
-static bool checkKeyUsage( const QValueVector<GpgME::Key> & keys, unsigned int keyUsage ) {
-  for ( QValueVector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it )
+static bool checkKeyUsage( const std::vector<GpgME::Key> & keys, unsigned int keyUsage ) {
+  for ( std::vector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it )
     if ( !checkKeyUsage( *it, keyUsage ) )
       return false;
   return true;
@@ -236,10 +236,10 @@ static const int sCheckSelectionDelay = 250;
 Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      const QString & text,
 					      const CryptoBackend * backend,
-					      const QValueVector<GpgME::Key> & selectedKeys,
-					      bool rememberChoice,
+					      const std::vector<GpgME::Key> & selectedKeys,
 					      unsigned int keyUsage,
 					      bool extendedSelection,
+					      bool rememberChoice,
 					      QWidget * parent, const char * name,
 					      bool modal )
   : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
@@ -701,7 +701,7 @@ void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend * 
   ++mListJobCount;
 }
 
-static void selectKeys( Kleo::KeyListView * klv, const QValueVector<GpgME::Key> & selectedKeys ) {
+static void selectKeys( Kleo::KeyListView * klv, const std::vector<GpgME::Key> & selectedKeys ) {
   if ( selectedKeys.empty() )
     return;
   int selectedKeysCount = selectedKeys.size();
@@ -709,7 +709,7 @@ static void selectKeys( Kleo::KeyListView * klv, const QValueVector<GpgME::Key> 
     const char * fpr = item->key().subkey(0).fingerprint();
     if ( !fpr || !*fpr )
       continue;
-    for ( QValueVector<GpgME::Key>::const_iterator it = selectedKeys.begin() ; it != selectedKeys.end() ; ++it )
+    for ( std::vector<GpgME::Key>::const_iterator it = selectedKeys.begin() ; it != selectedKeys.end() ; ++it )
       if ( qstrcmp( fpr, it->subkey(0).fingerprint() ) == 0 ) {
 	item->setSelected( true );
 	if ( --selectedKeysCount <= 0 )
@@ -786,7 +786,7 @@ void Kleo::KeySelectionDialog::slotCheckSelection( KeyListViewItem * item ) {
   disconnectSignals();
 
   KeyIDList newKeyIdList;
-  QValueList<QListViewItem*> keysToBeChecked;
+  std::vector<QListViewItem*> keysToBeChecked;
 
     bool keysAllowed = true;
     enum { UNKNOWN, SELECTED, DESELECTED } userAction = UNKNOWN;

@@ -40,6 +40,8 @@
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 
+#include <vector>
+
 int main( int argc, char ** argv ) {
   KAboutData aboutData( "test_keyselectiondialog", "KeySelectionDialog Test", "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
@@ -47,13 +49,13 @@ int main( int argc, char ** argv ) {
   
   Kleo::KeySelectionDialog dlg( "Kleo::KeySelectionDialog Test",
 				"Please select a key:",
-				0, QValueVector<GpgME::Key>(), true,
-				Kleo::KeySelectionDialog::AllKeys, true );
+				0, std::vector<GpgME::Key>(),
+				Kleo::KeySelectionDialog::AllKeys, true, true );
 
   if ( dlg.exec() == QDialog::Accepted ) {
     qDebug( "accepted; selected key: %s\nselected _keys_:",
 	    dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() : "<null>" );
-    for ( QValueVector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin() ; it != dlg.selectedKeys().end() ; ++it )
+    for ( std::vector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin() ; it != dlg.selectedKeys().end() ; ++it )
       qDebug( "%s", it->userID(0).id() ? it->userID(0).id() : "<null>" );
   } else {
     qDebug( "rejected" );
