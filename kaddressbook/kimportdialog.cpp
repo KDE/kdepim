@@ -572,7 +572,8 @@ void KImportDialog::applyConverter()
   readFile( 0 );
   
   pDialog.show();
-  for( uint i = 0; i < mData.count() && !pDialog.wasCancelled(); ++i ) {
+  for( uint i = 1; i < mData.count() && !pDialog.wasCancelled(); ++i ) {
+    // i starts with 1 to skip header line
     mCurrentRow = i;
     progress->setValue(i);
     if (i % 5 == 0)  // try to avoid constantly processing events
@@ -628,7 +629,11 @@ void KImportDialog::setData( uint row, uint col, const QString &value )
     rowVector->resize( col + 1 );
   }
   
-  rowVector->at( col ) = val;
+  KImportColumn *c = mColumnDict.find( col );
+  if ( c )
+  	rowVector->at( col ) = c->preview( val, findFormat(col) );
+  else
+    rowVector->at( col ) = val;
 }
 
 QString KImportDialog::data( uint row, uint col )
