@@ -80,7 +80,7 @@ KABC::ResourceKolab::ResourceKolab( const KConfig *config )
     Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
     mCachedSubresource( QString::null ), mLocked( false )
 {
-  setType( "kolab" );
+  setType( "imap" );
 }
 
 KABC::ResourceKolab::~ResourceKolab()

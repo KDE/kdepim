@@ -68,7 +68,7 @@ ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceCalendar( config ), ResourceKolabBase( "ResourceKolab-libkcal" ),
     mOpen( false )
 {
-  setType( "kolab" );
+  setType( "imap" );
   connect( &mResourceChangedTimer, SIGNAL( timeout() ),
            this, SLOT( slotEmitResourceChanged() ) );
 }
