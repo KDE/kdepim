@@ -1,7 +1,7 @@
 /* This file is part of the KDE libraries
 
    Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
-   
+
    Taken in large parts from the kate highlighting list view kateschema.cpp:
    Copyright (C) 2001-2003 Christoph Cullmann <cullmann@kde.org>
    Copyright (C) 2002, 2003 Anders Lund <anders.lund@lund.tdcadsl.dk>
@@ -42,7 +42,7 @@ FolderListView::FolderListView( QWidget *parent, const QValueList<Property> &typ
     : KListView( parent )
 {
   setEnabledTypes( types );
-  
+
   connect( this, SIGNAL(mouseButtonPressed(int, QListViewItem*, const QPoint&, int)),
            this, SLOT(slotMousePressed(int, QListViewItem*, const QPoint&, int)) );
   connect( this, SIGNAL(spacePressed(QListViewItem*)),
@@ -57,7 +57,7 @@ kdDebug() << "FolderListView::setEnabledTypes" << endl;
   if ( !mTypes.contains( FolderName ) ) mTypes.prepend( FolderName );
   mColumnMap[FolderName] = addColumn( i18n("Folder") );
   mTypeMap[mColumnMap[FolderName]] = FolderName;
-  
+
 
   if ( mTypes.contains( Event ) ) {
     mColumnMap[Event] = addColumn( i18n("Short column header meaning default for new events", "Events") );
@@ -102,7 +102,7 @@ void FolderListView::showPopupMenu( FolderListItem *i, const QPoint &globalPos )
   id = m.insertItem( i18n("&Enabled"), this, SLOT(slotPopupHandler(int)), 0, FolderName );
   m.setItemChecked( id, i->isOn() );
   m.insertSeparator();
-  
+
   if ( ( folder.type & KPIM::FolderLister::Event ) && (mTypes.contains( Event ) ) ) {
     id = m.insertItem( i18n("Default for new &events"), this, SLOT(slotPopupHandler(int)), 0, Event );
     m.setItemChecked( id, i->isDefault( Event ) );
@@ -124,10 +124,10 @@ void FolderListView::showPopupMenu( FolderListItem *i, const QPoint &globalPos )
     m.setItemChecked( id, i->isDefault( All ) );
   }
   if ( ( folder.type == KPIM::FolderLister::Unknown ) && (mTypes.contains( Unknown ) ) ) {
-    id = m.insertItem( i18n("Default for &unknown new &items"), this, SLOT(slotPopupHandler(int)), 0, Unknown );
+    id = m.insertItem( i18n("Default for &unknown new items"), this, SLOT(slotPopupHandler(int)), 0, Unknown );
     m.setItemChecked( id, i->isDefault( Unknown ) );
   }
-  
+
   m.exec( globalPos );
 }
 
@@ -266,7 +266,7 @@ void FolderListItem::paintCell( QPainter *p, const QColorGroup &cg, int col, int
     case FolderListView::Unknown:
     {
       if ( !typeSupported( prop ) ) break;
-      
+
       int x = 0;
       int y = (height() - BoxSize) / 2;
 
@@ -276,7 +276,7 @@ void FolderListItem::paintCell( QPainter *p, const QColorGroup &cg, int col, int
         p->setPen( QPen( lv->palette().color( QPalette::Disabled, QColorGroup::Text ), 1 ) );
 
       p->drawEllipse( x+marg, y+2, BoxSize-4, BoxSize-4 );
-      
+
       if ( isDefault( prop ) ) {
         if ( isEnabled() )
           p->setBrush( cg.text() );
