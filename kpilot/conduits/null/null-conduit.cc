@@ -45,6 +45,8 @@ static const char *null_conduit_id=
 // then Qt, then KDE, then local includes.
 //
 //
+#include <time.h>
+
 #include <kconfig.h>
 #include <kdebug.h>
 
@@ -104,6 +106,9 @@ void NullConduit::exec()
 
 
 // $Log$
+// Revision 1.22  2001/12/18 07:43:25  adridg
+// Actually do a (null) sync
+//
 // Revision 1.21  2001/04/26 19:19:26  adridg
 // [GUI] i18n updates and QToolTips
 //

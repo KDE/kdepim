@@ -50,6 +50,9 @@ protected:
 };
 
 // $Log$
+// Revision 1.9  2001/12/18 07:43:25  adridg
+// Actually do a (null) sync
+//
 // Revision 1.8  2001/04/01 17:31:11  adridg
 // --enable-final and #include fixes
 //
