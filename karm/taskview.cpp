@@ -182,7 +182,25 @@ void TaskView::loadFromFlatFile()
 
 void TaskView::save()
 {
-  _storage->save(this);
+
+  // Stop then start all timers so history entries are written.  This is
+  // inefficient if more than one task running, but it is correct.  It is
+  // inefficient because the iCalendar file is saved every time a task's
+  // setRunning(false, ...) is called.  For a big ics file, this could be a
+  // drag.  However, it does ensure that the data will be consistent.  And
+  // if the most common use case is that one task is running most of the time,
+  // it won't make any difference.
+  for (unsigned int i = 0; i < activeTasks.count(); i++) 
+  {
+    activeTasks.at(i)->setRunning(false, _storage);
+    activeTasks.at(i)->setRunning(true, _storage);
+  }
+
+  // If there was an active task, the iCal file has already been saved.
+  if (activeTasks.count() == 0)
+  {
+    _storage->save(this);
+  }
 }
 
 void TaskView::startCurrentTimer()

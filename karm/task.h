@@ -178,7 +178,8 @@ class Task : public QObject, public QListViewItem
       bool isRunning() const;
     //@}
 
-    bool parseIncidence(KCal::Incidence*, long&, QString&, DesktopList&);
+    bool parseIncidence(KCal::Incidence*, long& minutes, 
+        long& sessionMinutes, QString& name, DesktopList& desktops);
 
     /**
      *  Load the todo passed in with this tasks info.
@@ -228,27 +229,35 @@ class Task : public QObject, public QListViewItem
     void updateActiveIcon();
 
   private:
+
     /** The iCal unique ID of the Todo for this task. */
     QString _uid;
+
     /** The comment associated with this Task. */
     QString _comment;
+
     int _percentcomplete;
 
     long totalTimeInSeconds() const      { return _totalTime * 60; }
+
     /** if the time or session time is negative set them to zero */
     void noNegativeTimes();
+
     /** initialize a task */
     void init( const QString& taskame, long minutes, long sessionTime, 
                DesktopList desktops);
 
 
     QString _name;
+
     /** Last time this task was started. */
     QDateTime _lastStart;
+
     //@{ totals of the whole subtree including self
       long _totalTime;
       long _totalSessionTime;
     //@}
+
     //@{ times spend on the task itself
       long _time;
       long _sessionTime;

@@ -43,7 +43,7 @@ Task::Task( KCal::Todo* todo, TaskView* parent )
   long sessionTime = 0;
   DesktopList desktops;
 
-  parseIncidence( todo, minutes, name, desktops );
+  parseIncidence( todo, minutes, sessionTime, name, desktops );
   init( name, minutes, sessionTime, desktops );
 }
 
@@ -70,6 +70,9 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
       icons->insert(i,icon);
     }
   }
+
+  //kdDebug() << "Task::init(" << taskName << ", " << minutes << ", "
+  //  << sessionTime << ", desktops)" << endl;
 
   _name = taskName.stripWhiteSpace();
   _lastStart = QDateTime::currentDateTime();
@@ -295,6 +298,8 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
   todo->setCustomProperty( kapp->instanceName(),
       QCString( "totalTaskTime" ), QString::number( _time ) );
   todo->setCustomProperty( kapp->instanceName(),
+      QCString( "totalSessionTime" ), QString::number( _sessionTime) );
+  todo->setCustomProperty( kapp->instanceName(),
       QCString( "desktopList" ), getDesktopStr() );
 
   KEMailSettings settings;
@@ -306,7 +311,7 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
 }
 
 bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
-    QString& name, DesktopList& desktops )
+    long& sessionMinutes, QString& name, DesktopList& desktops )
 {
   bool ok = false;
 
@@ -320,9 +325,15 @@ bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
   if ( !ok )
     minutes = 0;
 
+  ok = false;
+  sessionMinutes = incident->customProperty( kapp->instanceName(),
+      QCString( "totalSessionTime" )).toInt( &ok );
+  if ( !ok )
+    sessionMinutes = 0;
+
   QString desktopList = incident->customProperty( kapp->instanceName(),
       QCString( "desktopList" ) );
-  QStringList desktopStrList = QStringList::split( QString::fromLatin1( "\\," ),
+  QStringList desktopStrList = QStringList::split(QString::fromLatin1("\\,"),
       desktopList );
   desktops.clear();
 
