@@ -48,6 +48,7 @@
 #include <kresources/configwidget.h>
 
 #include "webdavhandler.h"
+#include "kcalsloxprefs.h"
 
 #include "kcalresourceslox.h"
 
@@ -56,19 +57,19 @@ using namespace KCal;
 KCalResourceSlox::KCalResourceSlox( const KConfig *config )
   : ResourceCached( config )
 {
+  init();
+
   if ( config ) {
     readConfig( config );
   }
-
-  init();
 }
 
 KCalResourceSlox::KCalResourceSlox( const KURL &url )
   : ResourceCached( 0 )
 {
-  mDownloadUrl = url;
-
   init();
+
+  mPrefs->setUrl( url.url() );
 }
 
 KCalResourceSlox::~KCalResourceSlox()
@@ -84,6 +85,8 @@ KCalResourceSlox::~KCalResourceSlox()
 
 void KCalResourceSlox::init()
 {
+  mPrefs = new SloxPrefs;
+
   mLoadEventsJob = 0;
   mLoadTodosJob = 0;
   mUploadJob = 0;
@@ -95,18 +98,9 @@ void KCalResourceSlox::init()
   mLock = new KABC::LockNull( true );
 }
 
-void KCalResourceSlox::readConfig( const KConfig *config )
+void KCalResourceSlox::readConfig( const KConfig * )
 {
-  QString url = config->readEntry( "DownloadUrl" );
-  mDownloadUrl = KURL( url );
-
-  url = config->readEntry( "UploadUrl" );
-  mUploadUrl = KURL( url );
-
-  mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
-
-  mLastEventSync = config->readDateTimeEntry( "LastEventSync" );
-  mLastTodoSync = config->readDateTimeEntry( "LastEventSync" );
+  mPrefs->readConfig();
 }
 
 void KCalResourceSlox::writeConfig( KConfig *config )
@@ -115,13 +109,7 @@ void KCalResourceSlox::writeConfig( KConfig *config )
 
   ResourceCalendar::writeConfig( config );
 
-  config->writeEntry( "DownloadUrl", mDownloadUrl.url() );
-  config->writeEntry( "UploadUrl", mUploadUrl.url() );
-
-  config->writeEntry( "ReloadPolicy", mReloadPolicy );
-
-  config->writeEntry( "LastEventSync", mLastEventSync );
-  config->writeEntry( "LastTodoSync", mLastTodoSync );
+  mPrefs->writeConfig();
 }
 
 QString KCalResourceSlox::cacheFile()
@@ -164,7 +152,7 @@ bool KCalResourceSlox::load()
 
   mCalendar.load( cacheFile() );
 
-  QString p = mDownloadUrl.protocol();
+  QString p = KURL( mPrefs->url() ).protocol();
   if ( p != "http" && p != "https" && p != "webdav" && p != "webdavs" ) {
     mErrorMessage = i18n("Non-http protcol: '%1'").arg( p );
     kdDebug() << mErrorMessage << endl;
@@ -186,13 +174,14 @@ QString KCalResourceSlox::errorMessage()
 
 void KCalResourceSlox::requestEvents()
 {
-  QString url = mDownloadUrl.url() + "/servlet/webdav.calendar/";
+  QString url = mPrefs->url() + "/servlet/webdav.calendar/";
 
-  QString lastsync;
-  if ( mLastEventSync.isValid() ) {
-    lastsync = WebdavHandler::qDateTimeToSlox( mLastEventSync.addDays( -1 ) );
-  } else {
-    lastsync = "0";
+  QString lastsync = "0";
+  if ( mPrefs->useLastSync() ) {
+    QDateTime dt = mPrefs->lastEventSync();
+    if ( dt.isValid() ) {
+      lastsync = WebdavHandler::qDateTimeToSlox( dt.addDays( -1 ) );
+    }
   }
 
   QDomDocument doc;
@@ -210,18 +199,19 @@ void KCalResourceSlox::requestEvents()
   connect( mLoadEventsJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
 
-  mLastEventSync = QDateTime::currentDateTime();
+  mPrefs->setLastEventSync( QDateTime::currentDateTime() );
 }
 
 void KCalResourceSlox::requestTodos()
 {
-  QString url = mDownloadUrl.url() + "/servlet/webdav.tasks/";
+  QString url = mPrefs->url() + "/servlet/webdav.tasks/";
 
-  QString lastsync;
-  if ( mLastEventSync.isValid() ) {
-    lastsync = WebdavHandler::qDateTimeToSlox( mLastTodoSync.addDays( -1 ) );
-  } else {
-    lastsync = "0";
+  QString lastsync = "0";
+  if ( mPrefs->useLastSync() ) {
+    QDateTime dt = mPrefs->lastTodoSync();
+    if ( dt.isValid() ) {
+      lastsync = WebdavHandler::qDateTimeToSlox( dt.addDays( -1 ) );
+    }
   }
 
   QDomDocument doc;
@@ -239,7 +229,7 @@ void KCalResourceSlox::requestTodos()
   connect( mLoadEventsJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
 
-  mLastTodoSync = QDateTime::currentDateTime();
+  mPrefs->setLastTodoSync( QDateTime::currentDateTime() );
 }
 
 void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
@@ -251,7 +241,9 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
     QDomElement memberElement = n.toElement();
     if ( memberElement.tagName() == "member" ) {
       QString member = memberElement.text();
-      Attendee *a = new Attendee( member, member + "@" );
+      
+      QString email = member + "@" + KURL( mPrefs->url() ).host();
+      Attendee *a = new Attendee( member, email );
       a->setUid( member );
       incidence->addAttendee( a );
     } else {
@@ -566,9 +558,7 @@ void KCalResourceSlox::update( IncidenceBase * )
 void KCalResourceSlox::dump() const
 {
   ResourceCalendar::dump();
-  kdDebug(5800) << "  DownloadUrl: " << mDownloadUrl.url() << endl;
-  kdDebug(5800) << "  UploadUrl: " << mUploadUrl.url() << endl;
-  kdDebug(5800) << "  ReloadPolicy: " << mReloadPolicy << endl;
+  kdDebug(5800) << "  Url: " << mPrefs->url() << endl;
 }
 
 #include "kcalresourceslox.moc"

@@ -22,12 +22,14 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qcheckbox.h>
 
 #include <klocale.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
 
 #include "kcalresourceslox.h"
+#include "kcalsloxprefs.h"
 
 #include "kcalresourcesloxconfig.h"
 
@@ -44,6 +46,10 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
   mDownloadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mDownloadUrl, 1, 1 );
+
+  mLastSyncCheck = new QCheckBox( i18n("Only load data since last sync"),
+                                  this );
+  mainLayout->addMultiCellWidget( mLastSyncCheck, 2, 2, 0, 1 );
 
 #if 0
   // FIXME: Post 3.2: i18n("Upload to:") ( bug 67330 )
@@ -66,7 +72,8 @@ void KCalResourceSloxConfig::loadSettings( KRES::Resource *resource )
 {
   KCalResourceSlox *res = static_cast<KCalResourceSlox *>( resource );
   if ( res ) {
-    mDownloadUrl->setURL( res->downloadUrl().url() );
+    mDownloadUrl->setURL( res->prefs()->url() );
+    mLastSyncCheck->setChecked( res->prefs()->useLastSync() );
 #if 0
     mUploadUrl->setURL( res->uploadUrl().url() );
     kdDebug() << "ANOTER RELOAD POLICY: " << res->reloadPolicy() << endl;
@@ -81,7 +88,8 @@ void KCalResourceSloxConfig::saveSettings( KRES::Resource *resource )
 {
   KCalResourceSlox *res = static_cast<KCalResourceSlox*>( resource );
   if ( res ) {
-    res->setDownloadUrl( mDownloadUrl->url() );
+    res->prefs()->setUrl( mDownloadUrl->url() );
+    res->prefs()->setUseLastSync( mLastSyncCheck->isChecked() );
 #if 0
     res->setUploadUrl( mUploadUrl->url() );
     res->setReloadPolicy( mReloadGroup->selectedId() );

@@ -43,6 +43,10 @@ class Job;
 class DavJob;
 }
 
+namespace KCal {
+class SloxPrefs;
+}
+
 /**
   This class provides a calendar stored as a remote file.
 */
@@ -70,6 +74,8 @@ class KCalResourceSlox : public KCal::ResourceCached
     void readConfig( const KConfig *config );
     void writeConfig( KConfig *config );
 
+    KCal::SloxPrefs *prefs() const { return mPrefs; }
+
     /**
       Return name of file used as cache for remote file.
     */
@@ -86,9 +92,6 @@ class KCalResourceSlox : public KCal::ResourceCached
     void dump() const;
 
     QString errorMessage();
-
-    void setDownloadUrl( const KURL &u ) { mDownloadUrl = u; }
-    KURL downloadUrl() const { return mDownloadUrl; }
 
   protected slots:
     void slotLoadEventsResult( KIO::Job * );
@@ -123,12 +126,7 @@ class KCalResourceSlox : public KCal::ResourceCached
   private:
     void init();
 
-    KURL mDownloadUrl;
-    KURL mUploadUrl;
-
-    int mReloadPolicy;
-
-    KCal::ICalFormat mFormat;
+    KCal::SloxPrefs *mPrefs;
 
     bool mOpen;
 
@@ -136,9 +134,6 @@ class KCalResourceSlox : public KCal::ResourceCached
     KIO::DavJob *mLoadTodosJob;
     KIO::FileCopyJob *mUploadJob;
 
-    QDateTime mLastEventSync;
-    QDateTime mLastTodoSync;
-    
     KABC::Lock *mLock;
 
     QString mErrorMessage;

@@ -4,7 +4,7 @@ INCLUDES = -I$(top_srcdir) $(all_includes)
 lib_LTLIBRARIES = libkabc_slox.la libkcal_slox.la
 
 libkcal_slox_la_SOURCES = kcalresourceslox.cpp kcalresourcesloxconfig.cpp \
-                          webdavhandler.cpp
+                          webdavhandler.cpp kcalsloxprefs.kcfgc
 libkcal_slox_la_LDFLAGS = $(all_libraries)
 libkcal_slox_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la
 

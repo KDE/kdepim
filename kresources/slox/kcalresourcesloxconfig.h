@@ -20,15 +20,15 @@
 #ifndef KCALRESOURCESLOXCONFIG_H
 #define KCALRESOURCESLOXCONFIG_H
 
-#include <qradiobutton.h>
-#include <qbuttongroup.h>
 #include <kurlrequester.h>
 
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
+class QCheckBox;
+
 /**
-  Configuration widget for remote resource.
+  Configuration widget for SLOX resource.
   
   @see KCalResourceSlox
 */
@@ -44,12 +44,7 @@ class KCalResourceSloxConfig : public KRES::ConfigWidget
 
   private:
     KURLRequester *mDownloadUrl;
-    KURLRequester *mUploadUrl;
-
-    QButtonGroup *mReloadGroup;
-
-    class Private;
-    Private *d;
+    QCheckBox *mLastSyncCheck;
 };
 
 #endif
