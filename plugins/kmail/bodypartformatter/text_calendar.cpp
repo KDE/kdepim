@@ -600,7 +600,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( !path.isEmpty() ) {
         if ( path == "accept" )
           return i18n("Accept incidence");
-        // This doesn't do anything so far
         if ( path == "accept_conditionally" )
           return i18n( "Accept incidence conditionally" );
         if ( path == "decline" )
