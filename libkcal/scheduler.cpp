@@ -382,6 +382,16 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
       else if ( to )
         to->updated();
     }
+    if ( to ) {
+      // for VTODO a REPLY can be used to update the completion status of 
+      // a task. see RFC2446 3.4.3
+      Todo *update = dynamic_cast<Todo*> ( incidence );
+      Q_ASSERT( update );
+      if ( update && ( to->percentComplete() != update->percentComplete() ) ) {
+        to->setPercentComplete( update->percentComplete() );
+        to->updated();
+      }
+    }
   } else
     kdError(5800) << "No incidence for scheduling\n";
   if (ret) deleteTransaction(incidence);
