@@ -134,7 +134,7 @@ void ResourceOpenGroupware::doClose()
 {
   kdDebug() << "ResourceOpenGroupware::doClose()" << endl;
 
-  mDownloadJob->kill();
+  if ( mDownloadJob ) mDownloadJob->kill();
 }
 
 bool ResourceOpenGroupware::load()
