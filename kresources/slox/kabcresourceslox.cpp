@@ -170,7 +170,7 @@ bool ResourceSlox::asyncLoad()
 
   kdDebug() << "REQUEST CONTACTS: \n" << doc.toString( 2 ) << endl;
 
-  mDownloadJob = KIO::davPropFind( url, doc, "0" );
+  mDownloadJob = KIO::davPropFind( url, doc, "0", false );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotResult( KIO::Job * ) ) );
   connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
