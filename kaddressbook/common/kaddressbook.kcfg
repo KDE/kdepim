@@ -23,7 +23,7 @@
       <tooltip>%N: Fax Number</tooltip>
       <default>kdeprintfax --phone %N</default>
     </entry>
-    <entry type="StringList" name="CustomCategories">
+    <entry type="StringList" name="CustomCategories" key="Custom Categories">
     </entry>
   </group>
 
