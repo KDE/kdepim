@@ -306,6 +306,14 @@ void KAddressBook::importCSV()
 
   dialog->exec();
 
+  KABC::Resource *resource = KABC::ResourceSelectDialog::getResource( mDocument,
+                                                                      this );
+  KABC::AddressBook::Iterator it;
+  for ( it = mDocument->begin(); it != mDocument->end(); ++it ) {
+    if ( (*it).resource() == 0 )
+      (*it).setResource( resource );
+  }
+
   mViewManager->refresh();
 
   delete dialog;
