@@ -17,7 +17,6 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qtimer.h>
-#include <qregexp.h>
 
 #include <kseparator.h>
 #include <kiconloader.h>

@@ -26,7 +26,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <qgrid.h>
 #include <qlayout.h>
 #include <kmessagebox.h>
 #include <klocale.h>

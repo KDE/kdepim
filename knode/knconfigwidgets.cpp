@@ -16,7 +16,6 @@
 
 
 #include <qvbox.h>
-#include <qcheckbox.h>
 #include <qpainter.h>
 #include <qwhatsthis.h>
 
@@ -31,7 +30,6 @@
 #include <kscoringeditor.h>
 #include <kspell.h>
 #include <kcombobox.h>
-#include <kpgp.h>
 #include <kpgpui.h>
 
 #include "knaccountmanager.h"

@@ -19,7 +19,6 @@
 #include "pablib.hxx"
 
 #include <kfiledialog.h>
-#include <klocale.h>
 
 filter_pab::filter_pab() : filter(i18n("Import MS Exchange Personal Address Book (.PAB)"),"Hans Dijkema")
 {}

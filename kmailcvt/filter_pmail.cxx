@@ -22,7 +22,6 @@
 #include <dirent.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <kdirlister.h>
 #include <qregexp.h>
 
 #include "filter_pmail.hxx"

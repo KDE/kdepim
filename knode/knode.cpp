@@ -21,8 +21,6 @@
 #include <kmessagebox.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
-#include <kaccel.h>
-#include <kstdaccel.h>
 #include <kstdaction.h>
 #include <kdebug.h>
 #include <kmenubar.h>

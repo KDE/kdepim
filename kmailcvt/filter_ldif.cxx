@@ -18,7 +18,6 @@
 #include <iostream.h>
 #include <stdlib.h>
 
-#include <qtextstream.h>
 
 #include <kfiledialog.h>
 #include <klocale.h>
