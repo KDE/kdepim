@@ -1,4 +1,5 @@
-/*  This file is part of the KDE libraries
+/*
+    This file is part of KAddressBook.
     Copyright (C) 2003 Helge Deller <deller@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -24,196 +25,187 @@
  *  The thumbnails are used e.g. by Konqueror or in the file selection
  *  dialog.
  *
- *  $Id$
  */
 
+#include <qdatetime.h>
 #include <qfile.h>
 #include <qpixmap.h>
 #include <qimage.h>
 #include <qtextstream.h>
-#include <qdatetime.h>
 
-#include <kstandarddirs.h>
-#include <kpixmapsplitter.h>
-#include <kabc/vcardconverter.h>
 #include <kabc/ldifconverter.h>
+#include <kabc/vcardconverter.h>
+#include <kpixmapsplitter.h>
+#include <kstandarddirs.h>
 
 #include "ldifvcardcreator.h"
 
 extern "C"
 {
-    ThumbCreator *new_creator()
-    {
-        return new VCard_LDIFCreator;
-    }
+  ThumbCreator *new_creator()
+  {
+    return new VCard_LDIFCreator;
+  }
 };
 
 VCard_LDIFCreator::VCard_LDIFCreator()
-    : m_splitter(0)
+  : mSplitter( 0 )
 {
 }
 
 VCard_LDIFCreator::~VCard_LDIFCreator()
 {
-    delete m_splitter;
+  delete mSplitter;
 }
 
 bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImage &img)
 {
-    if ( !m_splitter )
-    {
-        m_splitter = new KPixmapSplitter;
-        QString pixmap = locate( "data", "konqueror/pics/thumbnailfont_7x4.png" );
-        if ( !pixmap.isEmpty() )
-        {
-            // FIXME: make font/glyphsize configurable...
-            m_splitter->setPixmap( QPixmap( pixmap ));
-            m_splitter->setItemSize( QSize( 4, 7 ));
-        }
+  if ( !mSplitter ) {
+    mSplitter = new KPixmapSplitter;
+    QString pixmap = locate( "data", "konqueror/pics/thumbnailfont_7x4.png" );
+    if ( !pixmap.isEmpty() ) {
+      // FIXME: make font/glyphsize configurable...
+      mSplitter->setPixmap( QPixmap( pixmap ) );
+      mSplitter->setItemSize( QSize( 4, 7 ) );
     }
+  }
 
-    // determine some sizes...
-    // example: width: 60, height: 64
-    QSize pixmapSize( width, height );
-    if (height * 3 > width * 4)
-        pixmapSize.setHeight( width * 4 / 3 );
-    else
-        pixmapSize.setWidth( height * 3 / 4 );
+  // determine some sizes...
+  // example: width: 60, height: 64
+  QSize pixmapSize( width, height );
+  if (height * 3 > width * 4)
+    pixmapSize.setHeight( width * 4 / 3 );
+  else
+    pixmapSize.setWidth( height * 3 / 4 );
 
-    if ( pixmapSize != m_pixmap.size() )
-        m_pixmap.resize( pixmapSize );
+  if ( pixmapSize != mPixmap.size() )
+    mPixmap.resize( pixmapSize );
     
-    // one pixel for the rectangle, the rest. whitespace
-    int xborder = 1 + pixmapSize.width()/16;  // minimum x-border
-    int yborder = 1 + pixmapSize.height()/16; // minimum y-border
+  // one pixel for the rectangle, the rest. whitespace
+  int xborder = 1 + pixmapSize.width()/16;  // minimum x-border
+  int yborder = 1 + pixmapSize.height()/16; // minimum y-border
 
-    QSize chSize = m_splitter->itemSize(); // the size of one char
-    int xOffset = chSize.width();
-    int yOffset = chSize.height();
+  QSize chSize = mSplitter->itemSize(); // the size of one char
+  int xOffset = chSize.width();
+  int yOffset = chSize.height();
 
-    // calculate a better border so that the text is centered
-    int canvasWidth  = pixmapSize.width()  - 2*xborder;
-    int canvasHeight = pixmapSize.height() -  2*yborder;
-    int numCharsPerLine = (int) (canvasWidth / chSize.width());
-    int numLines = (int) (canvasHeight / chSize.height());
+  // calculate a better border so that the text is centered
+  int canvasWidth = pixmapSize.width() - 2 * xborder;
+  int canvasHeight = pixmapSize.height() -  2 * yborder;
+  int numCharsPerLine = (int) (canvasWidth / chSize.width());
+  int numLines = (int) (canvasHeight / chSize.height());
 
-    // create text-preview
-    QFile file( path );
-    if ( !file.open( IO_ReadOnly ))
-	return false;
+  // create text-preview
+  QFile file( path );
+  if ( !file.open( IO_ReadOnly ) )
+    return false;
 
-    // read the file
-    QTextStream t( &file );
-    t.setEncoding( QTextStream::Latin1 );
-    QString contents = t.read();
-    file.close();
+  // read the file
+  QTextStream t( &file );
+  t.setEncoding( QTextStream::Latin1 );
+  QString contents = t.read();
+  file.close();
 
-    // convert the file contents to a KABC::Addressee address
-    bool ok;
-    KABC::Addressee addr;
-    KABC::VCardConverter converter;
-    ok = converter.vCardToAddressee( contents, addr, KABC::VCardConverter::v3_0 );
-    if (!ok) {
-      KABC::AddresseeList addrList;
-      ok = KABC::LDIFConverter::LDIFToAddressee( contents, addrList );
-      if (ok) addr = addrList[0];
+  // convert the file contents to a KABC::Addressee address
+  bool ok;
+  KABC::Addressee addr;
+  KABC::VCardConverter converter;
+  ok = converter.vCardToAddressee( contents, addr, KABC::VCardConverter::v3_0 );
+  if (!ok) {
+    KABC::AddresseeList addrList;
+    ok = KABC::LDIFConverter::LDIFToAddressee( contents, addrList );
+    if ( ok )
+      addr = addrList[ 0 ];
+  }
+
+  if ( !ok )
+    return false;
+
+  // prepare the text to show
+  QString text, info;
+
+  info = addr.formattedName().simplifyWhiteSpace();
+  if ( !info.isEmpty() )
+    text += info + "\n";
+  else
+    text += QString( addr.givenName() + " " + addr.familyName() ).stripWhiteSpace() + "\n";
+
+  info = addr.organization().simplifyWhiteSpace();
+  if ( !info.isEmpty() )
+    text += info + "\n";
+
+  QString pn = addr.phoneNumber( KABC::PhoneNumber::Pref ).number();
+  if ( !pn.isEmpty() )
+    text += pn + "\n";
+
+  pn = addr.phoneNumber( KABC::PhoneNumber::Work ).number();
+  if ( !pn.isEmpty() )
+    text += pn + "\n";
+
+  pn = addr.phoneNumber( KABC::PhoneNumber::Home ).number();
+  if ( !pn.isEmpty() )
+    text += pn + "\n";
+
+  // render the information
+  mPixmap.fill( QColor( 245, 245, 245 ) ); // light-grey background
+  QRect rect;
+  int rest = mPixmap.width() - (numCharsPerLine * chSize.width());
+  xborder = QMAX( xborder, rest / 2 ); // center horizontally
+  rest = mPixmap.height() - (numLines * chSize.height());
+  yborder = QMAX( yborder, rest / 2 ); // center vertically
+  // end centering
+
+  int x = xborder, y = yborder; // where to paint the characters
+  int posNewLine  = mPixmap.width() - (chSize.width() + xborder);
+  int posLastLine = mPixmap.height() - (chSize.height() + yborder);
+  bool newLine = false;
+  Q_ASSERT( posNewLine > 0 );
+  const QPixmap *fontPixmap = &(mSplitter->pixmap());
+
+  for ( uint i = 0; i < text.length(); i++ ) {
+    if ( x > posNewLine || newLine ) {  // start a new line?
+      x = xborder;
+      y += yOffset;
+
+      if ( y > posLastLine ) // more text than space
+        break;
+
+      // after starting a new line, we also jump to the next
+      // physical newline in the file if we don't come from one
+      if ( !newLine ) {
+        int pos = text.find( '\n', i );
+        if ( pos > (int) i )
+          i = pos +1;
+      }
+
+      newLine = false;
     }
 
-    if (!ok)
-	return false;
-
-    // prepare the text to show
-    QString text, info;
-
-    info = addr.formattedName().simplifyWhiteSpace();
-    if (!info.isEmpty())
-	text += info + "\n";
-    else
-	text += QString(addr.givenName() + " " + addr.familyName()).stripWhiteSpace() + "\n";
-
-    info = addr.organization().simplifyWhiteSpace();
-    if (!info.isEmpty())
-	text += info + "\n";
-
-    QString pn = addr.phoneNumber(KABC::PhoneNumber::Pref).number();
-    if (!pn.isEmpty())
-	text += pn + "\n";
-    pn = addr.phoneNumber(KABC::PhoneNumber::Work).number();
-    if (!pn.isEmpty())
-	text += pn + "\n";
-    pn = addr.phoneNumber(KABC::PhoneNumber::Home).number();
-    if (!pn.isEmpty())
-	text += pn + "\n";
-
-    // render the information
-    m_pixmap.fill( QColor( 245, 245, 245 ) ); // light-grey background
-    QRect rect;
-    int rest = m_pixmap.width() - (numCharsPerLine * chSize.width());
-    xborder = QMAX( xborder, rest/2); // center horizontally
-    rest = m_pixmap.height() - (numLines * chSize.height());
-    yborder = QMAX( yborder, rest/2); // center vertically
-    // end centering
-
-    int x = xborder, y = yborder; // where to paint the characters
-    int posNewLine  = m_pixmap.width() - (chSize.width() + xborder);
-    int posLastLine = m_pixmap.height() - (chSize.height() + yborder);
-    bool newLine = false;
-    Q_ASSERT( posNewLine > 0 );
-    const QPixmap *fontPixmap = &(m_splitter->pixmap());
-
-    for ( uint i = 0; i < text.length(); i++ )
-    {
-	if ( x > posNewLine || newLine ) // start a new line?
-	{
-	    x = xborder;
-	    y += yOffset;
-
-	    if ( y > posLastLine ) // more text than space
-		break;
-
-	    // after starting a new line, we also jump to the next
-	    // physical newline in the file if we don't come from one
-	    if ( !newLine )
-	    {
-		int pos = text.find( '\n', i );
-		if ( pos > (int) i )
-		i = pos +1;
-	    }
-
-	    newLine = false;
-	}
-
-	// check for newlines in the text (unix,dos)
-	QChar ch = text.at( i );
-	if ( ch == '\n' )
-	{
-	    newLine = true;
-	    continue;
-	}
-	else if ( ch == '\r' && text.at(i+1) == '\n' )
-	{
-	    newLine = true;
-	    i++; // skip the next character (\n) as well
-	    continue;
-	}
-
-	rect = m_splitter->coordinates( ch );
-	if ( !rect.isEmpty() )
-	{
-	    bitBlt( &m_pixmap, QPoint(x,y), fontPixmap, rect, Qt::CopyROP );
-	}
-
-	x += xOffset; // next character
+    // check for newlines in the text (unix,dos)
+    QChar ch = text.at( i );
+    if ( ch == '\n' ) {
+      newLine = true;
+      continue;
+    } else if ( ch == '\r' && text.at(i+1) == '\n' ) {
+      newLine = true;
+      i++; // skip the next character (\n) as well
+      continue;
     }
 
-    if (ok)
-	img = m_pixmap.convertToImage();
+    rect = mSplitter->coordinates( ch );
+    if ( !rect.isEmpty() )
+      bitBlt( &mPixmap, QPoint(x,y), fontPixmap, rect, Qt::CopyROP );
 
-    return ok;
+    x += xOffset; // next character
+  }
+
+  if ( ok )
+    img = mPixmap.convertToImage();
+
+  return ok;
 }
 
 ThumbCreator::Flags VCard_LDIFCreator::flags() const
 {
-    return (Flags)(DrawFrame | BlendIcon);
+  return (Flags)(DrawFrame | BlendIcon);
 }
-

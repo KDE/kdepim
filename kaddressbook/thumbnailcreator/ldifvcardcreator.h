@@ -1,4 +1,5 @@
-/*  This file is part of the KDE libraries
+/*
+    This file is part of KAddressBook.
     Copyright (C) 2003 Helge Deller <deller@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -18,7 +19,7 @@
 */
 
 #ifndef VCARD_LDIFCREATOR_H
-#define VCARD_LDIFCREATOR_H "$Id$"
+#define VCARD_LDIFCREATOR_H
 
 #include <qpixmap.h>
 #include <kio/thumbcreator.h>
@@ -27,15 +28,15 @@ class KPixmapSplitter;
 
 class VCard_LDIFCreator : public ThumbCreator
 {
-public:
+  public:
     VCard_LDIFCreator();
     virtual ~VCard_LDIFCreator();
     virtual bool create(const QString &path, int width, int height, QImage &img);
     virtual Flags flags() const;
 
-private:
-    KPixmapSplitter *m_splitter;
-    QPixmap m_pixmap;
+  private:
+    KPixmapSplitter *mSplitter;
+    QPixmap mPixmap;
 };
 
 #endif
