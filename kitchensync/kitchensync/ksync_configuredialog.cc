@@ -10,7 +10,7 @@ using namespace KitchenSync;
  
 ConfigureDialog::ConfigureDialog( QWidget *parent, 
 				  const char *name,
-				  bool modal )
+				  bool modal ) 
   : KDialogBase( IconList,
 		 i18n("Configure KitchenSync"),
 		 Ok|Cancel,
@@ -43,6 +43,9 @@ void ConfigureDialog::slotCancel() {
 }
 
 
+void ConfigureDialog::addWidget() {
+  
+}
 
 void ConfigureDialog::setup() {
 }

@@ -18,6 +18,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kicontheme.h>
+#include <kiconloader.h>
 
 #include <manipulatorpart.h>
 
@@ -26,11 +27,9 @@ using namespace KitchenSync;
 OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     : QWidget( parent, name, fl ) {
 
-  QPixmap image0( "../kitchensync.png"  );
   if ( !name )
     setName( "overviewWidget" );
-  resize( 731, 593 ); 
-  setCaption( i18n( "Overview" ) );
+  setCaption( i18n( "KitchenSync - Overview" ) );
   
   deviceName = new QLabel( this, "deviceName" );
   deviceName->setGeometry( QRect( 20, 20, 280, 40 ) ); 
@@ -44,7 +43,7 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
 
   deviceLogo = new QLabel( this, "deviceLogo" );
   deviceLogo->setGeometry( QRect( width()-180, 20, 120, 120 ) ); 
-  deviceLogo->setPixmap( image0 );
+  //deviceLogo->setPixmap( image0 );
   //deviceLogo->setScaledContents( TRUE );
 
   Line = new QFrame( this, "Line" );
@@ -55,8 +54,10 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
   Line->setFrameShape( QFrame::HLine );
 
   
-  //progressWindow->setMovie(KGlobal::iconLoader()->loadAnimated("working", KIcon::Standard, 15));;
+  QLabel *aniIcon = new QLabel( this);
+  //aniIcon->setMovie(KGlobal::iconLoader()->loadMovie("image", KIcon::NoGroup, 32));
   
+
   sv = new QScrollView( this );
   sv->setResizePolicy(QScrollView::AutoOneFit);
   sv->setHScrollBarMode( QScrollView::AlwaysOff );
@@ -66,19 +67,20 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
   sv->show();
 }
 
+
 void OverviewWidget::showList(QPtrList<ManipulatorPart> list) {
-  
+    
   QVBox* progressLayout = new QVBox( sv->viewport() );
-  
+   
   ManipulatorPart* currentPart;
   for (currentPart = list.first(); currentPart != 0; currentPart = list.next()) {
-    
-    QPixmap *image = currentPart->pixmap();
-    QString text = currentPart->name();
-    
-    NewProgress *test = new NewProgress(*image, text, progressLayout);
-    
-    sv->addChild(test);
+  
+      QPixmap *image = currentPart->pixmap();
+      QString text = currentPart->name();
+      
+      NewProgress *test = new NewProgress(*image, text, progressLayout);
+      
+      sv->addChild(test);
   }
 }
 
@@ -111,7 +113,7 @@ NewProgress::NewProgress( QPixmap &icon,
   progressLabel->setAlignment( int( QLabel::AlignTop | QLabel::AlignLeft ) );
   
   statusLabel = new QLabel ( this, "statusLabel" );
-  statusLabel->setGeometry( QRect ( 20, 0, 20, 20) );
+  statusLabel->setGeometry( QRect ( 450, 0, 20, 20) );
 }
 
 void NewProgress::setProgressItemPix(QPixmap image) {
@@ -122,8 +124,19 @@ void NewProgress::setProgressLabel(QString text) {
   progressLabel->setText( i18n(text) );
 }
 
-void NewProgress::setStatusLabel(QPixmap image) {
-  progressItemPix->setPixmap( image );
+void NewProgress::setStatusLabel(int status) {
+  
+  QPixmap workingIcon( " " );
+  QPixmap doneIcon(" ");
+  if (status=0) {
+    progressItemPix->setPixmap( workingIcon );
+  } else {
+    progressItemPix->setPixmap( doneIcon );
+  }
+}
+
+void NewProgress::timerEvent(QTimerEvent *) {
+  progressItemPix->setMovie(KGlobal::iconLoader()->loadMovie("image", KIcon::NoGroup, 32));
 }
 
 NewProgress::~NewProgress() {
