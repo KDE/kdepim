@@ -531,6 +531,36 @@ available in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 <filename>kdenetwork/kmail/mailcomposerIface.h</filename>.</para></answer>
 </qandaentry>
 
+    <qandaentry id="faq-decrypt-on-read">
+      <!-- ideally, this should be in the documentation of the  -->
+      <!-- reader window, but oops, there's no documentation of -->
+      <!-- the reader window >:-(           (mmutz)             -->
+      <question>
+	<para>
+	  How do I enable permanent decryption of read messages?
+	</para>
+      </question>
+      <answer>
+	<para>
+	  The global reversal of encryption is considered extremely
+	  insecure. Shared access to messages for multiple persons
+	  should be implemented using semantic solutions (&eg; by
+	  defining roles like <quote>department
+	  manager</quote>).
+	</para>
+	<para>
+	  In case it is imperative to use it in the insecure mode, it
+	  has to be manually enabled in the file
+	  <filename>$KDEHOME/share/config/kmailrc</filename> by adding
+	  the following directive in the <literal>[Reader]</literal>
+	  group:
+	  <programlisting>
+	    store-displayed-messages-unencrypted=true
+	  </programlisting>
+	</para>
+      </answer>
+    </qandaentry>
+
 </qandaset>
 
 </chapter>
