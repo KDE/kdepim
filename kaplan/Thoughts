@@ -4,6 +4,7 @@
 * Note: Lines starting with a "s" are my comments - Simon
 * Note: Lines starting with a % are my comments - Don
 * Note: Lines starting with a "g" are my comments - Guenter
+* Note: Lines starting with a "m" are my comments - Matthias Kretz
 
 Misc:
 =====
@@ -12,6 +13,11 @@ d - Configuration Merge
 d Idea: The KOffice way of life: Offer a method that adds a given wiget of a
 d predefined type as page in a KDialogBase or offer a pointer to a KDialogBase
 d -> requires a kaplan part or an external lib per part
+
+m I believe this is a more general problem. Please take a look at
+m kdegraphics/kview/kpreferences{dialog,module}.{h,cpp}. I'd like to generalize
+m these classes and include them into kdelibs (the same configuration merge is
+m being done in Kate, Noatun, Kopete, KView and probably more).
 
 d - Merged Foldertree View
 d Idea: Let the part send a description of their folders and reaction to calls
