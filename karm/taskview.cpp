@@ -13,7 +13,6 @@
 #include <kdebug.h>
 #include <klocale.h>            // i18n
 #include <kfiledialog.h>
-#include <klineeditdlg.h>
 #include <kmessagebox.h>
 
 #include "desktoptracker.h"
