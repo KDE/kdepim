@@ -12,9 +12,6 @@
             <height>471</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>Form1</string>
-    </property>
     <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -206,9 +203,6 @@
                                 <property name="text">
                                     <string>Sa&amp;ve password</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+V</string>
-                                </property>
                             </widget>
                             <widget class="QLayoutWidget" row="0" column="1">
                                 <property name="name">
@@ -311,9 +305,6 @@
                         <property name="text">
                             <string>&amp;Use settings of box</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+U</string>
-                        </property>
                         <property name="checked">
                             <bool>true</bool>
                         </property>
@@ -381,9 +372,6 @@
                                 <property name="text">
                                     <string>Show &amp;Passive Popup</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+P</string>
-                                </property>
                             </widget>
                             <widget class="QCheckBox">
                                 <property name="name">
@@ -394,9 +382,6 @@
                                 </property>
                                 <property name="text">
                                     <string>Add &amp;date to Passive Popup</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+D</string>
                                 </property>
                             </widget>
                         </vbox>

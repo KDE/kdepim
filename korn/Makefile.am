@@ -54,7 +54,6 @@ noinst_HEADERS = \
   boxcontainer.h \
   boxcontaineritem.h \
   dcopdrop.h \
-  dcopdropcfg.h \
   dcopdropif.h \
   dockeditem.h \
   dropdlg.h \

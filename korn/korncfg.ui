@@ -46,9 +46,6 @@
                         <property name="text">
                             <string>&amp;Edit</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+E</string>
-                        </property>
                     </widget>
                 </vbox>
             </widget>
@@ -84,9 +81,6 @@
                                 <property name="text">
                                     <string>&amp;Horizontal</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+H</string>
-                                </property>
                             </widget>
                             <widget class="QRadioButton">
                                 <property name="name">
@@ -95,9 +89,6 @@
                                 <property name="text">
                                     <string>&amp;Vertical</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+V</string>
-                                </property>
                             </widget>
                             <widget class="QRadioButton">
                                 <property name="name">
@@ -105,9 +96,6 @@
                                 </property>
                                 <property name="text">
                                     <string>&amp;Docked</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+D</string>
                                 </property>
                             </widget>
                         </vbox>
@@ -120,7 +108,7 @@
 <customwidgets>
     <customwidget>
         <class>KEditListBoxManager</class>
-        <header location="local">/home/kdedev/kde/kdepim/korn/keditlistboxman.h</header>
+        <header location="local">keditlistboxman.h</header>
         <sizehint>
             <width>-1</width>
             <height>-1</height>
