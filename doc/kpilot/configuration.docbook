@@ -1606,6 +1606,7 @@ the &handheld; MobileLink or AGConnect applications, so this page is disabled.</
 <para>
 This conduit allows you to send mail using a transport.
 The configuration of the Mail Conduit is fairly simple.
+</para>
 <screenshot>
 <screeninfo>Setting up the Mail Conduit</screeninfo>
 <mediaobject>
@@ -1614,6 +1615,7 @@ The configuration of the Mail Conduit is fairly simple.
 <caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
 </mediaobject>
 </screenshot>
+<para>
 There are two tabs in the setup dialog for the Mail Conduit,
 one for Sending mail and one for the credits of the mail conduit.
 </para>
