@@ -44,8 +44,9 @@ EmpathJob::EmpathJob(ActionType t)
 
 EmpathJob::EmpathJob(const EmpathJob & other)
     :
+    QObject(),
 #ifdef USE_QPTHREAD
-    QpThread(other),
+    QpThread(),
 #endif
     id_(other.id_),
     type_(other.type_),
