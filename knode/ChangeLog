@@ -1,4 +1,4 @@
-changes between 0.1.13 and 0.2
+changes between 0.1.13 and 0.3
 - ported to KDE2, new style guide compilant XML-GUI
 - multithreaded network-code
 - correct MIME-handling including multipart-messages
@@ -31,6 +31,8 @@ changes between 0.1.13 and 0.2
   including custom names and format options.
 - improved font & color configuration,
   default colors adapt to all color schemes (including inverse ones)
+- markup like *word* _word_ and /word/ is supported now
+- you can use netscape instead of konqueror for links
 - vastly improved new documentation (with screenshots)
   written by Stephan Johach
 - implemented search functionality for newsgroups
@@ -174,6 +176,3 @@ changes between 0.1.1 and 0.1.5 :
 changes between 0.1 and 0.1.1 :
 - the menu-item "View->show Threads" behaves now like it should
 - the mailto- and references-links in the message view work now
-
-
-
