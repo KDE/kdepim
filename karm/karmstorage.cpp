@@ -116,12 +116,12 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   m->setStandardResource(l);
 
   // Claim ownership of iCalendar file if no one else has.
-  QString email = _calendar->getEmail();
-  QString owner = _calendar->getOwner();
-  if ( email.isEmpty() && owner.isEmpty() )
+  KCal::Person owner = _calendar->getOwner();
+  if ( owner.isEmpty() )
   {
-    _calendar->setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
-    _calendar->setOwner( settings.getSetting( KEMailSettings::RealName ) );
+    _calendar->setOwner( KCal::Person( 
+          settings.getSetting( KEMailSettings::RealName ), 
+          settings.getSetting( KEMailSettings::EmailAddress ) ) );
   }
 
   // Get lock.  If no lock, allow read-only access to data.

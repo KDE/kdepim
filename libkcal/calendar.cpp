@@ -65,8 +65,7 @@ void Calendar::init()
 //  srandom(time(0));
 
   // user information...
-  setOwner(i18n("Unknown Name"));
-  setEmail(i18n("unknown@nowhere"));
+  setOwner( Person( i18n("Unknown Name"), i18n("unknown@nowhere") ) );
 
 #if 0
   tmpStr = KOPrefs::instance()->mTimeZone;
@@ -111,18 +110,14 @@ Calendar::~Calendar()
   delete mDefaultFilter;
 }
 
-const QString &Calendar::getOwner() const
+const Person &Calendar::getOwner() const
 {
   return mOwner;
 }
 
-void Calendar::setOwner(const QString &os)
+void Calendar::setOwner( const Person &owner )
 {
-  int i;
-  mOwner = os;
-  i = mOwner.find(',');
-  if (i != -1)
-    mOwner = mOwner.left(i);
+  mOwner = owner;
 
   setModified( true );
 }
@@ -153,18 +148,6 @@ void Calendar::setLocalTime()
 bool Calendar::isLocalTime() const
 {
   return mLocalTime;
-}
-
-const QString &Calendar::getEmail()
-{
-  return mOwnerEmail;
-}
-
-void Calendar::setEmail(const QString &e)
-{
-  mOwnerEmail = e;
-
-  setModified( true );
 }
 
 void Calendar::setFilter(CalFilter *filter)

@@ -33,6 +33,7 @@
 #include "todo.h"
 #include "journal.h"
 #include "kcalversion.h"
+#include "person.h"
 
 #define _TIME_ZONE "-0500" /* hardcoded, overridden in config file. */
 
@@ -82,19 +83,11 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Return the owner of the calendar's full name.
     */
-    const QString &getOwner() const;
+    const Person &getOwner() const;
     /**
       Set the owner of the calendar. Should be owner's full name.
     */
-    void setOwner( const QString &os );
-    /**
-      Return the email address of the calendar owner.
-    */
-    const QString &getEmail();
-    /**
-      Set the email address of the calendar owner.
-    */
-    void setEmail( const QString & );
+    void setOwner( const Person &owner );
   
     /**
       Set time zone id (see /usr/share/zoneinfo/zone.tab for list of legal
@@ -361,8 +354,7 @@ class Calendar : public QObject, public CustomProperties,
   private:
     void init();
   
-    QString mOwner;        // who the calendar belongs to
-    QString mOwnerEmail;   // email address of the owner
+    Person mOwner;         // who the calendar belongs to
     int mTimeZone;         // timezone OFFSET from GMT (MINUTES)
     bool mLocalTime;       // use local time, not UTC or a time zone
 

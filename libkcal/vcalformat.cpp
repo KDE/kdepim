@@ -689,8 +689,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     anEvent->setOrganizer( s = fakeCString(vObjectUStringZValue(vo) ) );
     deleteStr(s);
   } else {
-    // TODO: Use the common name, too!
-    anEvent->setOrganizer( mCalendar->getEmail());
+    anEvent->setOrganizer( mCalendar->getOwner() );
   }
 
   // attendees.
@@ -914,11 +913,11 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // organizer
   // if our extension property for the event's ORGANIZER exists, add it.
   if ((vo = isAPropertyOf(vevent, ICOrganizerProp)) != 0) {
+    // FIXME:  Also use the full name, not just the email address
     anEvent->setOrganizer( s = fakeCString(vObjectUStringZValue(vo) ) );
     deleteStr(s);
   } else {
-    // @TODO: Use the common name?
-    anEvent->setOrganizer( mCalendar->getEmail() );
+    anEvent->setOrganizer( mCalendar->getOwner() );
   }
 
   // deal with attendees.
