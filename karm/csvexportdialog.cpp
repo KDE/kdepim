@@ -18,10 +18,11 @@
  *      Boston, MA  02111-1307  USA.
  *
  */
-#include <kdebug.h>
 #include <kdateedit.h>
+#include <kdebug.h>
+#include <kglobal.h>
 #include <klineedit.h>
-#include <klocale.h>            // i18n
+#include <klocale.h>
 #include <kpushbutton.h>
 #include <kurlrequester.h>
 #include <qbuttongroup.h>
@@ -48,7 +49,15 @@ CSVExportDialog::CSVExportDialog( ReportCriteria::REPORTTYPE rt,
       break;
     default:
       break;
+
   }
+
+  // If decimal symbol is a comma, then default field seperator to semi-colon.
+  // In France and Germany, one-and-a-half is written as 1,5 not 1.5
+  QString d = KGlobal::locale()->decimalSymbol();
+  if ( "," == d ) CSVExportDialogBase::radioSemicolon->setChecked(true);
+  else CSVExportDialogBase::radioComma->setChecked(true);
+
 }
 
 void CSVExportDialog::enableExportButton()

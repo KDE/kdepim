@@ -1,6 +1,5 @@
 
 ############ Autoconf-generated variables  ###################
-AM_CPPFLAGS = -DQT_NO_CAST_ASCII
 INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim -I$(top_srcdir) $(all_includes)
 
 bin_PROGRAMS = karm
