@@ -278,7 +278,7 @@ Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry( const 
 {
     Kleo::CryptoConfigEntry* entry = mConfig->entry( componentName, groupName, entryName );
     if ( !entry ) {
-        KMessageBox::error( this, i18n( "Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName ) );
+        KMessageBox::error( this, i18n( "Backend error: gpgconf does not seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName ) );
         return 0;
     }
     if( entry->argType() != argType || entry->isList() != isList ) {
