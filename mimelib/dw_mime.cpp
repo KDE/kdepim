@@ -307,11 +307,14 @@ int DwSubtypeStrToEnum(const DwString& aStr)
         else if (DwStrcasecmp(aStr, "rfc822") == 0) {
             type = DwMime::kSubtypeRfc822;
         }
-	else if (DwStrcasecmp(aStr, "report") == 0) {
-	    type = DwMime::kSubtypeReport;
-	}
+        else if (DwStrcasecmp(aStr, "report") == 0) {
+          type = DwMime::kSubtypeReport;
+        }
         else if (DwStrcasecmp(aStr, "rtf") == 0) {
             type = DwMime::kSubtypeRtf;
+        }
+        else if (DwStrcasecmp(aStr, "related") == 0) {
+            type = DwMime::kSubtypeRelated;
         }
         break;
     case 'S':
@@ -393,14 +396,17 @@ void DwSubtypeEnumToStr(int aEnum, DwString& aStr)
         aStr = "Parallel";
         break;
     case DwMime::kSubtypeReport:
-	aStr = "report";
-	break;
+        aStr = "report";
+        break;
+    case DwMime::kSubtypeRelated:
+        aStr = "Related";
+        break;
     case DwMime::kSubtypeRfc822:
         aStr = "Rfc822";
         break;
     case DwMime::kSubtypeDispositionNotification:
-	aStr = "disposition-notification";
-	break;
+        aStr = "disposition-notification";
+        break;
     case DwMime::kSubtypePartial:
         aStr = "Partial";
         break;

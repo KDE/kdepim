@@ -91,6 +91,7 @@ enum {
     kSubtypeSigned,
     kSubtypeEncrypted,
     kSubtypeReport,
+    kSubtypeRelated,
     // Message
     kSubtypeRfc822,
     kSubtypeDispositionNotification,
