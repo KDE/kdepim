@@ -305,6 +305,30 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mKeyUsage( keyUsage ),
     mCurrentContextMenuItem( 0 )
 {
+  init( rememberChoice, extendedSelection, text, QString::null );
+}
+
+Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
+					      const QString & text,
+					      const QString & initialQuery,
+					      unsigned int keyUsage,
+					      bool extendedSelection,
+					      bool rememberChoice,
+					      QWidget * parent, const char * name,
+					      bool modal )
+  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
+    mOpenPGPBackend( 0 ),
+    mSMIMEBackend( 0 ),
+    mRememberCB( 0 ),
+    mKeyUsage( keyUsage ),
+    mSearchText( initialQuery ),
+    mCurrentContextMenuItem( 0 )
+{
+  init( rememberChoice, extendedSelection, text, initialQuery );
+}
+
+void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection,
+				     const QString & text, const QString & initialQuery ) {
   if ( mKeyUsage & OpenPGPKeys )
     mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
   if ( mKeyUsage & SMIMEKeys )
@@ -330,6 +354,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 
   QHBoxLayout * hlay = new QHBoxLayout( topLayout ); // inherits spacing
   QLineEdit * le = new QLineEdit( page );
+  le->setText( initialQuery );
   hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
   hlay->addWidget( le, 1 );
   mHideInvalidKeys = new QCheckBox( i18n("Hide &invalid keys"), page );

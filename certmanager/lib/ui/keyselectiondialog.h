@@ -89,6 +89,14 @@ namespace Kleo {
 			bool rememberChoice=false,
                         QWidget * parent=0, const char * name=0,
                         bool modal=true );
+    KeySelectionDialog( const QString & title,
+                        const QString & text,
+			const QString & initialPattern,
+                        unsigned int keyUsage=AllKeys,
+                        bool extendedSelection=false,
+			bool rememberChoice=false,
+                        QWidget * parent=0, const char * name=0,
+                        bool modal=true );
     ~KeySelectionDialog();
 
     /** Returns the key ID of the selected key in single selection mode.
@@ -140,6 +148,8 @@ namespace Kleo {
 
     void startKeyListJobForBackend( const Kleo::CryptoBackend::Protocol *, const std::vector<GpgME::Key> &, bool );
     void startValidatingKeyListing();
+
+    void init( bool, bool, const QString &, const QString & );
 
   private:
     Kleo::KeyListView * mKeyListView;

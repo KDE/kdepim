@@ -116,6 +116,9 @@ namespace Kleo {
     unsigned int allowedKeys() const;
     void setAllowedKeys( unsigned int allowed );
 
+    void setInitialQuery( const QString & s ) { mInitialQuery = s; }
+    const QString & initialQuery() const { return mInitialQuery; }
+
   private:
     void startKeyListJob( const QStringList & fingerprints );
     void updateKeys();
@@ -132,7 +135,7 @@ namespace Kleo {
     QLabel * mLabel;
     QPushButton * mEraseButton;
     QPushButton * mDialogButton;
-    QString mDialogCaption, mDialogMessage;
+    QString mDialogCaption, mDialogMessage, mInitialQuery;
     bool mMulti;
     unsigned int mKeyUsage;
     int mJobs;

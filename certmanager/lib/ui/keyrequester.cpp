@@ -324,12 +324,17 @@ void Kleo::KeyRequester::slotKeyListResult( const GpgME::KeyListResult & res ) {
 
 
 void Kleo::KeyRequester::slotDialogButtonClicked() {
-  KeySelectionDialog dlg( mDialogCaption, mDialogMessage, mKeys, mKeyUsage, mMulti );
-  if ( dlg.exec() == QDialog::Accepted )
+  KeySelectionDialog * dlg = mKeys.empty()
+    ? new KeySelectionDialog( mDialogCaption, mDialogMessage, mInitialQuery, mKeyUsage, mMulti )
+    : new KeySelectionDialog( mDialogCaption, mDialogCaption, mKeys, mKeyUsage, mMulti ) ;
+
+  if ( dlg->exec() == QDialog::Accepted )
     if ( mMulti )
-      setKeys( dlg.selectedKeys() );
+      setKeys( dlg->selectedKeys() );
     else
-      setKey( dlg.selectedKey() );
+      setKey( dlg->selectedKey() );
+
+  delete dlg;
 }
 
 void Kleo::KeyRequester::slotEraseButtonClicked() {
