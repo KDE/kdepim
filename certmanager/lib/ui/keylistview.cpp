@@ -298,10 +298,13 @@ void Kleo::KeyListView::slotRefreshKey( const GpgME::Key & key ) {
   const char * fpr = key.subkey(0).fingerprint();
   if ( !fpr )
     return;
-  for ( KeyListViewItem * item = firstChild() ; item ; item = item->nextSibling() )
-    if ( qstrcmp( fpr, item->key().subkey(0).fingerprint() ) == 0 ) {
-      item->setKey ( key );
-      return;
+  for ( QListViewItemIterator it( this ) ; it.current() ; ++it )
+    if ( ( it.current()->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI ) {
+      KeyListViewItem * item = static_cast<KeyListViewItem*>( it.current() );
+      if ( qstrcmp( fpr, item->key().subkey(0).fingerprint() ) == 0 ) {
+	item->setKey ( key );
+	return;
+      }
     }
   // none found -> add it
   slotAddKey( key );
