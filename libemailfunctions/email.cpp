@@ -766,8 +766,10 @@ QString KPIM::normalizedAddress( const QString & displayName,
     return addrSpec;
   else if ( comment.isEmpty() )
     return displayName + " <" + addrSpec + ">";
-  else if ( displayName.isEmpty() )
-    return comment + " <" + addrSpec + ">";
+  else if ( displayName.isEmpty() ) {
+    QString commentStr = comment;
+    return "\"" + commentStr.replace('"', "") + "\" <" + addrSpec + ">";
+  }
   else
     return displayName + " (" + comment + ") <" + addrSpec + ">";
 }
