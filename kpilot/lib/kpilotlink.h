@@ -122,7 +122,8 @@ public:
 		DeviceOpen,
 		AcceptedDevice,
 		SyncDone,
-		PilotLinkError
+		PilotLinkError,
+		WorkaroundUSB
 		} LinkStatus;
 
 	LinkStatus status() const { return fLinkStatus; } ;
@@ -237,12 +238,30 @@ public:
 	*/
 	void reset(const QString &pilotPath);
 
+	
+	/**
+	* Special-cases. Call this after a reset to set device-
+	* specific workarounds; the only one currently known
+	* is the Zire 31/72 T5 quirk of doing a non-HotSync
+	* connect when it's switched on.
+	*/
+	void setWorkarounds(bool usb)
+	{
+		fWorkaroundUSB = usb;
+	} ;
+	
 	/**
 	* sets an additional device, which should be tried as fallback
 	* usefull for hotplug enviroments
 	*/
 	void setTempDevice( const QString &device );
 
+private:
+	bool fWorkaroundUSB;
+	QTimer *fWorkaroundUSBTimer;
+
+private slots:
+	void workaroundUSB();
 
 public slots:
 	/**

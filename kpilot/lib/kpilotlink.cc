@@ -110,7 +110,7 @@ private:
 	{
 #ifdef DEBUG
 		FUNCTIONSETUP;
-		DEBUGDAEMON << "Bound devices: "
+		DEBUGDAEMON << fname << "Bound devices: "
 			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(", ") : CSL1("<none>")) << endl;
 #endif
 	}
@@ -124,6 +124,8 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name, const QSt
 	fLinkStatus(Init),
 	fTickleDone(true),
 	fTickleThread(0L),
+	fWorkaroundUSB(false),
+	fWorkaroundUSBTimer(0L),
 	fPilotPath(QString::null),
 	fRetries(0),
 	fOpenTimer(0L),
@@ -152,6 +154,7 @@ KPilotDeviceLink::~KPilotDeviceLink()
 {
 	FUNCTIONSETUP;
 	close();
+	KPILOT_DELETE(fWorkaroundUSBTimer);
 	KPILOT_DELETE(fPilotSysInfo);
 	KPILOT_DELETE(fPilotUser);
 }
@@ -160,6 +163,7 @@ void KPilotDeviceLink::close()
 {
 	FUNCTIONSETUP;
 
+	KPILOT_DELETE(fWorkaroundUSBTimer);
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
 	fSocketNotifierActive=false;
@@ -209,6 +213,16 @@ void KPilotDeviceLink::reset(const QString & dP)
 	reset();
 }
 
+static inline void startOpenTimer(KPilotDeviceLink *dev, QTimer *&t)
+{
+	if ( !t ){
+		t = new QTimer(dev);
+		QObject::connect(t, SIGNAL(timeout()),
+			dev, SLOT(openDevice()));
+	}
+	t->start(1000, false);
+}
+
 void KPilotDeviceLink::reset()
 {
 	FUNCTIONSETUP;
@@ -219,10 +233,7 @@ void KPilotDeviceLink::reset()
 	checkDevice();
 
 	// Timer already deleted by close() call.
-	fOpenTimer = new QTimer(this);
-	QObject::connect(fOpenTimer, SIGNAL(timeout()),
-		this, SLOT(openDevice()));
-	fOpenTimer->start(1000, false);
+	startOpenTimer(this,fOpenTimer);
 
 	fLinkStatus = WaitingForDevice;
 }
@@ -291,12 +302,7 @@ void KPilotDeviceLink::openDevice()
 
 		if (fLinkStatus != PilotLinkError)
 		{
-			if ( !fOpenTimer ){
-				fOpenTimer = new QTimer(this);
-				QObject::connect(fOpenTimer, SIGNAL(timeout()),
-					this, SLOT(openDevice()));
-			}
-			fOpenTimer->start(1000, false);
+			startOpenTimer(this,fOpenTimer);
 		}
 	}
 }
@@ -403,6 +409,22 @@ bool KPilotDeviceLink::open(QString device)
 		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
 			this, SLOT(acceptDevice()));
 		fSocketNotifierActive=true;
+		
+		if (fWorkaroundUSB)
+		{
+#ifdef DEBUG
+			DEBUGDAEMON << fname << ": Adding Z31 workaround." << endl;
+#endif
+			// Special case for Zire 31, 72, Tungsten T5,
+			// all of which may make a non-HotSync connection
+			// to the PC. Must detect this and bail quickly.
+			//
+			fWorkaroundUSBTimer = new QTimer(this);
+			connect(fWorkaroundUSBTimer,SIGNAL(timeout()),
+				this,SLOT(workaroundUSB()));
+			fWorkaroundUSBTimer->start(5000,true);
+		}
+		
 		return true;
 	}
 	else
@@ -539,6 +561,8 @@ void KPilotDeviceLink::acceptDevice()
 		return;
 	}
 
+	KPILOT_DELETE(fWorkaroundUSBTimer);
+
 	emit logProgress(QString::null,10);
 
 	fCurrentPilotSocket = pi_accept(fPilotMasterSocket, 0, 0);
@@ -638,6 +662,32 @@ void KPilotDeviceLink::acceptDevice()
 
 	emit logProgress(QString::null, 100);
 	emit deviceReady( this );
+}
+
+void KPilotDeviceLink::workaroundUSB()
+{
+	FUNCTIONSETUP;
+	
+	Q_ASSERT((fLinkStatus == DeviceOpen) || (fLinkStatus == WorkaroundUSB));
+	if (fLinkStatus == DeviceOpen)
+	{
+		reset();
+	}
+	fLinkStatus = WorkaroundUSB;
+	
+	if (!QFile::exists(fRealPilotPath))
+	{
+		// Fake connection has vanished again.
+		// Resume polling for regular connection.
+		startOpenTimer(this,fOpenTimer);
+		return;
+	}
+	if (fOpenTimer)
+	{
+		fOpenTimer->stop();
+	}
+	KPILOT_DELETE(fWorkaroundUSBTimer);
+	QTimer::singleShot(1000,this,SLOT(workaroundUSB()));
 }
 
 bool KPilotDeviceLink::tickle() const
@@ -897,6 +947,9 @@ QString KPilotDeviceLink::statusString() const
 		break;
 	case PilotLinkError:
 		s.append(QString::fromLatin1("PilotLinkError"));
+		break;
+	case WorkaroundUSB:
+		s.append(CSL1("WorkaroundUSB"));
 		break;
 	}
 

@@ -481,7 +481,21 @@ void PilotDaemon::showTray()
 			<< endl;
 #endif
 
-		fPilotLink->reset( KPilotSettings::pilotDevice());
+		fPilotLink->reset( KPilotSettings::pilotDevice() );
+#ifdef DEBUG
+		DEBUGDAEMON << fname
+			<< ": Using workarounds "
+			<< KPilotSettings::workarounds()
+			<< endl;
+#endif
+		if ( KPilotSettings::workarounds() == KPilotSettings::eWorkaroundUSB )
+		{
+#ifdef DEBUG
+			DEBUGDAEMON << fname
+				<< ": Using Zire31 USB workaround." << endl;
+#endif
+			fPilotLink->setWorkarounds(true);
+		}
 	}
 
 	if (KPilotSettings::dockDaemon())

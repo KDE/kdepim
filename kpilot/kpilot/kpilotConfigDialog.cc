@@ -99,6 +99,7 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 	CM(fPilotSpeed, SIGNAL(activated(int)));
 	CM(fPilotEncoding, SIGNAL(textChanged(const QString &)));
 	CM(fUserName, SIGNAL(textChanged(const QString &)));
+	CM(fWorkaround, SIGNAL(activated(int)));
 #undef CM
 
 	fConduitName = i18n("Device");
@@ -117,6 +118,22 @@ void DeviceConfigPage::load()
 	getEncoding();
 	fConfigWidget->fUserName->setText(KPilotSettings::userName());
 
+	switch(KPilotSettings::workarounds())
+	{
+	case KPilotSettings::eWorkaroundNone :
+		fConfigWidget->fWorkaround->setCurrentItem(0);
+		break;
+	case KPilotSettings::eWorkaroundUSB :
+		fConfigWidget->fWorkaround->setCurrentItem(1);
+		break;
+	default:
+		kdWarning() << k_funcinfo 
+			<< ": Unknown workaround number "
+			<< (int) KPilotSettings::workarounds()
+			<< endl;
+		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
+		fConfigWidget->fWorkaround->setCurrentItem(0);
+	}
 	unmodified();
 }
 
@@ -154,6 +171,18 @@ void DeviceConfigPage::load()
 	setEncoding();
 	KPilotSettings::setUserName(fConfigWidget->fUserName->text());
 
+	switch(fConfigWidget->fWorkaround->currentItem())
+	{
+	case 0 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone); break;
+	case 1 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB); break;
+	default :
+		kdWarning() << k_funcinfo 
+			<< ": Unknown workaround number "
+			<< fConfigWidget->fWorkaround->currentItem()
+			<< endl;
+		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
+			
+	}
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
 	unmodified();

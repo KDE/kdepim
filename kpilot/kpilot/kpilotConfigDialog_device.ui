@@ -57,6 +57,31 @@
                 <string>&lt;qt&gt;Select the speed of the serial connection to your handheld here. This has no meaning for USB devices. For an older model, choose 9600. Newer models may be able to handle speeds up to the maximum listed, 115200. You can experiment with the connection speed: the manual suggests starting at a speed of 19200 and trying faster speeds to see if they work.&lt;/qt&gt;</string>
             </property>
         </widget>
+        <widget class="QLineEdit" row="4" column="1" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>fUserName</cstring>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
+            </property>
+        </widget>
+        <spacer row="5" column="2">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>90</height>
+                </size>
+            </property>
+        </spacer>
         <widget class="QComboBox" row="1" column="1">
             <item>
                 <property name="text">
@@ -90,7 +115,7 @@
                 <string>&lt;qt&gt;Select the speed of the serial connection to your handheld here. This has no meaning for USB devices. For an older model, choose 9600. Newer models may be able to handle speeds up to the maximum listed, 115200. You can experiment with the connection speed: the manual suggests starting at a speed of 19200 and trying faster speeds to see if they work.&lt;/qt&gt;</string>
             </property>
         </widget>
-        <widget class="QLabel" row="2" column="0">
+        <widget class="QLabel" row="3" column="0">
             <property name="name">
                 <cstring>textLabel1</cstring>
             </property>
@@ -104,18 +129,7 @@
                 <string>&lt;qt&gt;PalmOS devices are available in many different languages. If your device uses a different encoding than ISO-latin1 (ISO8859-1), select the correct encoding here, in order to display special characters correctly.&lt;/qt&gt;</string>
             </property>
         </widget>
-        <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>fPilotEncoding</cstring>
-            </property>
-            <property name="editable">
-                <bool>true</bool>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;PalmOS devices are available in many different languages. If your device uses a different encoding than ISO-latin1 (ISO8859-1), select the correct encoding here, in order to display special characters correctly.&lt;/qt&gt;</string>
-            </property>
-        </widget>
-        <widget class="QLabel" row="3" column="0">
+        <widget class="QLabel" row="4" column="0">
             <property name="name">
                 <cstring>TextLabel2</cstring>
             </property>
@@ -129,31 +143,46 @@
                 <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
             </property>
         </widget>
-        <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
+        <widget class="QComboBox" row="3" column="1" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>fUserName</cstring>
+                <cstring>fPilotEncoding</cstring>
+            </property>
+            <property name="editable">
+                <bool>true</bool>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
+                <string>&lt;qt&gt;PalmOS devices are available in many different languages. If your device uses a different encoding than ISO-latin1 (ISO8859-1), select the correct encoding here, in order to display special characters correctly.&lt;/qt&gt;</string>
             </property>
         </widget>
-        <spacer row="4" column="2">
+        <widget class="QLabel" row="2" column="0">
             <property name="name">
-                <cstring>spacer1</cstring>
+                <cstring>textLabel1_2</cstring>
             </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
+            <property name="text">
+                <string>&amp;Workarounds:</string>
             </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
+            <property name="buddy" stdset="0">
+                <cstring>fWorkaround</cstring>
             </property>
-            <property name="sizeHint">
-                <size>
-                    <width>20</width>
-                    <height>140</height>
-                </size>
+        </widget>
+        <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
+            <item>
+                <property name="text">
+                    <string>None</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Zire 31, 72, Tungsten T5</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>fWorkaround</cstring>
             </property>
-        </spacer>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Workarounds enable special handling for specific devices. Most devices do not need special handling. However, the Zire&tm; 31, Zire 72 and Tungsten T5 &lt;i&gt;do&lt;/i&gt; have special needs, so if you are connecting such a device, please select the workaround for them.&lt;/qt&gt;</string>
+            </property>
+        </widget>
     </grid>
 </widget>
 <layoutdefaults spacing="6" margin="0"/>

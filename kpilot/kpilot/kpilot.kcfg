@@ -42,6 +42,15 @@
         </label>
         <default></default>
     </entry>
+    <entry name="Workarounds" type="Enum">
+        <choices>
+          <choice name="eWorkaroundNone"/>
+          <choice name="eWorkaroundUSB"/>
+        </choices>
+        <label></label>
+        <default>eWorkaroundNone</default>
+    </entry>
+    
     <entry name="LogFileName" type="String">
         <label>
         </label>
