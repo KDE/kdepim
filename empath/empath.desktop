@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Empath Mail Client
+Exec=empath
+Icon=empath.xpm
+DocPath=empath/index.html
+Comment=Mailer
+Terminal=0
+Type=Application
