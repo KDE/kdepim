@@ -252,7 +252,7 @@
                             <cstring>textLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>If you change the same entry on the PC and on the handheld, the conduit somehow needs to decide which of the two modifications is the correct one. Here you can select the default action if an event was modified on both sides. &lt;p&gt;Conflict resolution is not meant to resolve double-schedulling conflicts, e.g. if you have two meetings at the same time, the conduit will not warn you!&lt;/p&gt;</string>
+                            <string>If you change the same entry on the PC and on the handheld, the conduit somehow needs to decide which of the two modifications is the correct one. Here you can select the default action if an event was modified on both sides. &lt;p&gt;Conflict resolution is not meant to resolve double-scheduling conflicts, e.g. if you have two meetings at the same time, the conduit will not warn you!&lt;/p&gt;</string>
                         </property>
                     </widget>
                 </grid>
