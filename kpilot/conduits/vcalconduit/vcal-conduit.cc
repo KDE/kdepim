@@ -103,14 +103,12 @@
 #include "conduitApp.h"
 #endif
 
+#ifndef __VCC_H__
 #include "vcc.h"
+#endif
 
 static const char *id=
 	"$Id$";
-
-
-// globals
-bool first = TRUE;
 
 
 int main(int argc, char* argv[])
@@ -147,9 +145,12 @@ VCalConduit::~VCalConduit()
 }
 
 
+//////////////////////////////////////////////////////////////////////////
+
+
 void VCalConduit::doBackup()
 {
-	FUNCTIONSETUP;
+  FUNCTIONSETUP;
   PilotRecord* rec;
   int index = 0;
 
@@ -158,15 +159,10 @@ void VCalConduit::doBackup()
 		noCalendarError(i18n("VCal Conduit"));
 		exit(ConduitMisconfigured);
 	}
-	first = firstTime();
 		
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Performing full backup"
-			<< endl;
-	}
-#endif
+	DEBUGCONDUIT << __FUNCTION__
+		     << ": Performing full backup"
+		     << endl;
 
 	// Get ALL entries from Pilot
 	//
@@ -185,7 +181,10 @@ void VCalConduit::doBackup()
 	}
 
 	saveVCal();
-}
+} // void VCalConduit::doBackup()
+
+
+//////////////////////////////////////////////////////////////////////////
 
 
 void VCalConduit::doSync()
@@ -195,13 +194,10 @@ void VCalConduit::doSync()
    PilotRecord* rec;
 	int recordcount=0;
 
-	if (!getCalendar(VCalSetup::VCalGroup))
-	{
-		kdError() << __FUNCTION__ << ": No calendar to sync with."
-			<< endl;
-		return;
+	if (!getCalendar(VCalSetup::VCalGroup)) {
+	  noCalendarError(i18n("VCal Conduit"));
+	  exit(ConduitMisconfigured);
 	}
-	first = firstTime();
 
 	// get only MODIFIED entries from Pilot, compared with 
 	// the above (doBackup), which gets ALL entries
@@ -224,7 +220,7 @@ void VCalConduit::doSync()
 			} 
 			else 
 			{
-				kdWarning() << __FUNCTION__
+			  kdWarning(CONDUIT_AREA) << __FUNCTION__
 					<< "weird! we asked for a modified "
 					   "record and got one that wasn't"
 					<< endl;
@@ -233,15 +229,11 @@ void VCalConduit::doSync()
 		delete rec;
 	}
    
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Read a total of "
-			<< recordcount
-			<< " record from the pilot."
-			<< endl;
-	}
-#endif
+	DEBUGCONDUIT << __FUNCTION__
+			      << ": Read a total of "
+			      << recordcount
+			      << " modified records from the pilot."
+			      << endl;
 
    // now, all the stuff that was modified/new on the pilot should be
    // added to the vCalendar.  We now need to add stuff to the pilot
@@ -250,7 +242,11 @@ void VCalConduit::doSync()
    
    // now we save the vCalendar.
    saveVCal();
-}
+} // void VCalConduit::doSync()
+
+
+//////////////////////////////////////////////////////////////////////////
+
 
 void VCalConduit::repeatForever(
 	PilotDateEntry *dateEntry,
@@ -273,21 +269,29 @@ void VCalConduit::repeatForever(
 
 	dateEntry->setRepeatFrequency(rFreq);
 	dateEntry->setRepeatForever();
-	kdWarning() << __FUNCTION__
+	kdWarning(CONDUIT_AREA) << __FUNCTION__
 		<< ": repeat duration is forever for "
 		<< s
 		<< endl;
-}
+} 
+// void VCalConduit::repeatForever(PilotDateEntry *dateEntry,	int
+// rFreq, VObject *vevent)
+
+
+
+//////////////////////////////////////////////////////////////////////////
+
 
 void VCalConduit::repeatUntil(
 	PilotDateEntry *dateEntry,
-	struct tm *start,
+	const struct tm *start,
 	int rFreq,
 	int rDuration,
 	PeriodConstants period)
 {
 	FUNCTIONSETUP;
-	time_t end_time = mktime(start);
+	struct tm rStart = *start;
+	time_t end_time = mktime(&rStart);
 	struct tm rEnd = *start;
 
 	switch(period)
@@ -317,12 +321,14 @@ void VCalConduit::repeatUntil(
 		dateEntry->setRepeatEnd(rEnd);
 		break;
 	default:
-		kdWarning() << __FUNCTION__
+		kdWarning(CONDUIT_AREA) << __FUNCTION__
 			<< ": Unknown repeat period "
 			<< (int) period
 			<< endl;
 	}
 }
+// void VCalConduit::repeatUntil(PilotDateEntry *dateEntry, struct tm
+// start, int rFreq, int rDuration, PeriodConstants period)
 
 /*****************************************************************************/
 
@@ -330,57 +336,39 @@ void VCalConduit::repeatUntil(
  * Given a pilot record, check to see what needs to be done to the
  * analogous vobject to bring things into sync.
  */
-void VCalConduit::updateVObject(PilotRecord *rec)
-{
-	FUNCTIONSETUP;
+void VCalConduit::updateVObject(PilotRecord *rec) {
+  FUNCTIONSETUP;
 
-  VObject *vevent;
-  VObject *vo;
   QDateTime todaysDate = QDateTime::currentDateTime();
-  QString tmpStr;
-  QString numStr;
+  //QString tmpStr;
+  //QString numStr;
   PilotDateEntry dateEntry(rec);
   
-  vevent = findEntryInCalendar(rec->getID(), VCEventProp);
+  VObject *vevent = findEntryInCalendar(rec->getID(), VCEventProp);
   if (!vevent) {
     // no event was found, so we need to add one with some initial info
+    DEBUGCONDUIT << __FUNCTION__ << ": creating new vCalendar event"
+		 << endl;
     vevent = addProp(calendar(), VCEventProp);
     
-	addDateProperty(vevent,VCDCreatedProp,todaysDate);
+    addDateProperty(vevent, VCDCreatedProp, todaysDate);
 
-    numStr.sprintf("KPilot - %d",rec->getID());
+    QString numStr;
+    numStr.sprintf("KPilot - %ld", rec->getID());
     addPropValue(vevent, VCUniqueStringProp, numStr.latin1());
     addPropValue(vevent, VCSequenceProp, "1");
-	addDateProperty(vevent,VCLastModifiedProp,todaysDate);
+    addDateProperty(vevent,VCLastModifiedProp,todaysDate);
     
     addPropValue(vevent, VCPriorityProp, "0");
     addPropValue(vevent, VCTranspProp, "0");
     addPropValue(vevent, VCRelatedToProp, "0");
-    addPropValue(vevent, KPilotIdProp, numStr.setNum(dateEntry.getID()).latin1());
+    addPropValue(vevent, KPilotIdProp,
+		 numStr.setNum(dateEntry.getID()).latin1());
     addPropValue(vevent, KPilotStatusProp, "0");
   }
   
   // determine whether the vobject has been modified since the last sync
-  bool vcalRecModified = true ;
-  vo = isAPropertyOf(vevent, KPilotStatusProp);
-  if (vo)
-  {
-	const wchar_t *vp = 0;
-	const char *s = 0;
-	int status = 1;
-
-  	vp = vObjectUStringZValue(vo);
-	if (vp)
-	{
-		s = fakeCString(vp);
-	}
-	if (s)
-	{
-		status=atol(s);
-	}
-
-	vcalRecModified = (status==1);
-  }
+  bool vcalRecModified = (getStatus(vevent) != 0);
   
   if (vcalRecModified) {
     // we don't want to modify the vobject with pilot info, because it has
@@ -391,64 +379,56 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   // otherwise, the vObject hasn't been touched.  Updated it with the
   // info from the PilotRec.
   
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Updating start time"
-			<< endl;
-	}
-#endif
+  setVcalStartEndTimes(vevent, dateEntry);
+  setVcalAlarms(vevent, dateEntry);
+  setVcalRecurrence(vevent, dateEntry);
+  setVcalExceptions(vevent, dateEntry);
+
+  setSummary(vevent, dateEntry.getDescription());
+  setNote(vevent, dateEntry.getNote());
+  setSecret(vevent, (rec->getAttrib() & dlpRecAttrSecret));
+  setStatus(vevent, 0);
+  
+} // void VCalConduit::updateVObject(PilotRecord *rec)
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+void VCalConduit::setVcalStartEndTimes(VObject *vevent,
+				       const PilotDateEntry &dateEntry) {
+  FUNCTIONSETUP;
 
   // START TIME //
-  vo = isAPropertyOf(vevent, VCDTstartProp);
+  VObject *vo = isAPropertyOf(vevent, VCDTstartProp);
   
   // check whether the event is an event or an appointment.  See dateEntry
   // structure for more info.
   if (!dateEntry.getEvent()) {
     // the event doesn't "float"
-	if (vo)
-	{
-		setDateProperty(vo,dateEntry.getEventStart_p());
-	}
-	else 
-	{
-		addDateProperty(vevent, VCDTstartProp, 
-			dateEntry.getEventStart_p());
-	}
+    if (vo)
+      setDateProperty(vo,dateEntry.getEventStart_p());
+    else 
+      addDateProperty(vevent, VCDTstartProp, 
+		      dateEntry.getEventStart_p());
   } else {
     // the event floats
-	if (vo)
-	{
-		setDateProperty(vo,dateEntry.getEventStart_p(),true);
-	}
-	else
-	{
-		addDateProperty(vevent, VCDTstartProp,
-			dateEntry.getEventStart_p(),true);
-	}
-}
+    if (vo)
+      setDateProperty(vo,dateEntry.getEventStart_p(),true);
+    else
+      addDateProperty(vevent, VCDTstartProp,
+		      dateEntry.getEventStart_p(),true);
+  }
 
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Updating end time"
-			<< endl;
-	}
-#endif
-  
   // END TIME //
   vo = isAPropertyOf(vevent, VCDTendProp);
   
   // Patch by Heiko
-  //
-  //
   bool multiDay = ( (dateEntry.getRepeatType() == repeatDaily) &&
-		dateEntry.getEvent() );
-
+		    dateEntry.getEvent() );
+  
   if (multiDay) {
-  	// I honestly don't know what was supposed to go here
-	//
-	//
+    // I honestly don't know what was supposed to go here
   }
 
   QDateTime endDT;
@@ -472,32 +452,27 @@ void VCalConduit::updateVObject(PilotRecord *rec)
       
 
   if (vo)
-  {
-	setDateProperty(vo,endDT,dateEntry.getEvent());
-  }
+    setDateProperty(vo, endDT, dateEntry.getEvent());
   else 
-  {
-	// we don't want to add it if it isn't there already, or if the
-	// event isn't multiday/floating.
-	// it is deprecated to have both DTSTART and DTEND set to 000000 for
-	// their times.
-	if (!dateEntry.getEvent() || multiDay)
-	{
-		addDateProperty(vevent, VCDTendProp,
-			endDT,dateEntry.getEvent());
-	}
-  }
+    /* We don't want to add it if it isn't there already, or if the
+       event isn't multiday/floating.  It is deprecated to have both
+       DTSTART and DTEND set to 000000 for their times. */
+    if (!dateEntry.getEvent() || multiDay)
+      addDateProperty(vevent, VCDTendProp, endDT, dateEntry.getEvent());
+} 
+// void VCalConduit::setVcalStartEndTimes(VObject *vevent,
+// PilotDateEntry *dateEntry)
 
-  
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Updating alarms"
-			<< endl;
-	}
-#endif
-  // ALARM(s) //
-  vo = isAPropertyOf(vevent, VCDAlarmProp);
+
+//////////////////////////////////////////////////////////////////////////
+
+
+void VCalConduit::setVcalAlarms(VObject *vevent, 
+				const PilotDateEntry &dateEntry) {
+  FUNCTIONSETUP;
+
+  VObject *vo = isAPropertyOf(vevent, VCDAlarmProp);
+
   if (dateEntry.getAlarm()) {
     QDateTime alarmDT;
     alarmDT.setDate(QDate(1900+dateEntry.getEventStart().tm_year,
@@ -506,115 +481,100 @@ void VCalConduit::updateVObject(PilotRecord *rec)
     alarmDT.setTime(QTime(dateEntry.getEventStart().tm_hour,
 			  dateEntry.getEventStart().tm_min,
 			  dateEntry.getEventStart().tm_sec));
-
+    
     int advanceUnits = dateEntry.getAdvanceUnits();
-	switch(advanceUnits)
-	{
-	case advMinutes : advanceUnits = 1; break;
-	case advHours : advanceUnits = 60; break;
-	case advDays : advanceUnits = 60*24; break;
-	default :
-		kdDebug() << fname << ": Unknown advance units "
-			<< advanceUnits
-			<< endl;
-		advanceUnits=1;
-	}
+    switch(advanceUnits) {
+    case advMinutes: advanceUnits = 1; break;
+    case advHours: advanceUnits = 60; break;
+    case advDays: advanceUnits = 60*24; break;
+    default:
+      DEBUGCONDUIT << __FUNCTION__ 
+		   << ": Unknown advance units "
+		   << advanceUnits
+		   << endl;
+      advanceUnits=1;
+    }
 
     alarmDT = alarmDT.addSecs(60*advanceUnits*-(dateEntry.getAdvance()));
 
     if (vo) {
       vo = isAPropertyOf(vo, VCRunTimeProp);
-      setDateProperty(vo,alarmDT);
+      setDateProperty(vo, alarmDT);
     } else {
       vo = addProp(vevent, VCDAlarmProp);
       addDateProperty(vo, VCRunTimeProp, alarmDT);
       addPropValue(vo, VCRepeatCountProp, "1");
       addPropValue(vo, VCDisplayStringProp, "beep!");
     }
+  } else if (vo)
+    addProp(vo, KPilotSkipProp);
+}
+// void VCalConduit::setVcalAlarms(VObject *vevent, PilotDateEntry
+// *dateEntry)
 
-  } else {
-    if (vo)
-      {
-      addProp(vo, KPilotSkipProp);
-      }
-  }
-   
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Updating recurrence"
-			<< endl;
-	}
-#endif
-  // RECURRENCE(S) //
-  vo = isAPropertyOf(vevent, VCRRuleProp);
-  // pilot entries that repeat daily are not what we consider daily
-  // repeating events in vCalendar/KOrganizer.  It is actually a multi-day
-  // appointment.  We need to convert it to multi-day (done above).
+
+//////////////////////////////////////////////////////////////////////////
+
+
+/* Pilot entries that repeat daily are not what we consider daily
+   repeating events in vCalendar/KOrganizer.  It is actually a multi-day
+   appointment and handled by setVcalStartEndTimes(). */
+void VCalConduit::setVcalRecurrence(VObject *vevent, 
+				    const PilotDateEntry &dateEntry) {
+  FUNCTIONSETUP;
+
+  const char *dayname[] = {"SU ", "MO ", "TU ", "WE ", "TH ", "FR ",
+			   "SA "};
+
+  VObject *vo = isAPropertyOf(vevent, VCRRuleProp);
+
   if (dateEntry.getRepeatType() != repeatNone &&
-		!multiDay) {
-    tmpStr = "";
+      !((dateEntry.getRepeatType() == repeatDaily) &&
+	dateEntry.getEvent())) {
+    QString tmpStr("");
     switch(dateEntry.getRepeatType()) {
-	case repeatDaily:
-		tmpStr.sprintf("D%i ", dateEntry.getRepeatFrequency());
-		break;
+    case repeatDaily:
+      tmpStr.sprintf("D%i ", dateEntry.getRepeatFrequency());
+      break;
     case repeatWeekly:
-	{
+      {
 	const int *days = dateEntry.getRepeatDays();
 
-	DEBUGCONDUIT << fname
-		<< ": Got repeat-weekly entry, by-days="
-		<< days[0] << " "
-		<< days[1] << " "
-		<< days[2] << " "
-		<< days[4] << " "
-		<< days[5] << " "
-		<< days[6] << " "
-		<< endl;
+	DEBUGCONDUIT << __FUNCTION__
+		     << ": Got repeat-weekly entry, by-days="
+		     << days[0] << " "
+		     << days[1] << " "
+		     << days[2] << " "
+		     << days[4] << " "
+		     << days[5] << " "
+		     << days[6] << " "
+		     << endl;
 
-      tmpStr.sprintf("W%i ", dateEntry.getRepeatFrequency());
-      if (days[0]) tmpStr.append("SU ");
-      if (days[1]) tmpStr.append("MO ");
-      if (days[2]) tmpStr.append("TU ");
-      if (days[3]) tmpStr.append("WE ");
-      if (days[4]) tmpStr.append("TH ");
-      if (days[5]) tmpStr.append("FR ");
-      if (days[6]) tmpStr.append("SA ");
+	tmpStr.sprintf("W%i ", dateEntry.getRepeatFrequency());
+	for (int i = 0; i < 7; i++)
+	  if (days[i]) tmpStr.append(dayname[i]);
+      }
       break;
-    }
-    case repeatMonthlyByDay: {
-      tmpStr.sprintf("MP%i %d+ ",dateEntry.getRepeatFrequency(),
+    case repeatMonthlyByDay: 
+      tmpStr.sprintf("MP%i %d+ ", dateEntry.getRepeatFrequency(),
 		     (dateEntry.getRepeatDay() / 7) + 1);
-      int day = dateEntry.getRepeatDay() % 7;
-      if (day == 0)
-	tmpStr.append("SU ");
-      else if (day == 1)
-	tmpStr.append("MO ");
-      else if (day == 2)
-	tmpStr.append("TU ");
-      else if (day == 3)
-	tmpStr.append("WE ");
-      else if (day == 4)
-	tmpStr.append("TH ");
-      else if (day == 5)
-	tmpStr.append("FR ");
-      else if (day == 6)
-	tmpStr.append("SA ");
+      tmpStr.append(dayname[dateEntry.getRepeatDay() % 7]);
       break;
-    }
     case repeatMonthlyByDate:
-      tmpStr.sprintf("MD%i ",dateEntry.getRepeatFrequency());
+      tmpStr.sprintf("MD%i ", dateEntry.getRepeatFrequency());
       break;
     case repeatYearly:
-      tmpStr.sprintf("YD%i ",dateEntry.getRepeatFrequency());
+      tmpStr.sprintf("YD%i ", dateEntry.getRepeatFrequency());
       break;
     case repeatNone:
-      kdDebug() << fname << ": argh! we think it repeats, "
-      	<< "but dateEntry has repeatNone!\n";
+      DEBUGCONDUIT << __FUNCTION__
+		   << ": argh! we think it repeats, "
+		   << "but dateEntry has repeatNone!\n";
       break;
     default:
       break;
     }
+
     if (dateEntry.getRepeatForever())
       tmpStr += "#0";
     else 
@@ -625,790 +585,674 @@ void VCalConduit::updateVObject(PilotRecord *rec)
       setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
     else
       addPropValue(vevent, VCRRuleProp,tmpStr.latin1());
-  } else {
-    if (vo)
-      addProp(vo, KPilotSkipProp);
-  }
+  } else if (vo)
+    addProp(vo, KPilotSkipProp);
+}
+// void VCalConduit::setVcalRecurrence(VObject *vevent, PilotDateEntry
+// *dateEntry)
 
 
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Updating exceptions"
-			<< endl;
-	}
-#endif
-  // EXCEPTION(S) //
-	if (multiDay && dateEntry.getExceptionCount())
-	{
-		kdDebug() << fname
-			<< ": WARNING Exceptions ignored for multi-day event "
-			<< dateEntry.getDescription()
-			<< endl ;
-	}
-  vo = isAPropertyOf(vevent, VCExDateProp);
-  tmpStr = QString::null ;
+//////////////////////////////////////////////////////////////////////////
+
+
+void VCalConduit::setVcalExceptions(VObject *vevent, 
+				    const PilotDateEntry &dateEntry) {
+  FUNCTIONSETUP;
+
+  if (((dateEntry.getRepeatType() == repeatDaily) &&
+       dateEntry.getEvent()) && dateEntry.getExceptionCount())
+    DEBUGCONDUIT << __FUNCTION__
+		 << ": WARNING Exceptions ignored for multi-day event "
+		 << dateEntry.getDescription()
+		 << endl ;
+
+  VObject *vo = isAPropertyOf(vevent, VCExDateProp);
+  QString tmpStr("");
   if (dateEntry.getExceptionCount()) {
     for (int i = 0; i < dateEntry.getExceptionCount(); i++) {
       tmpStr += TmToISO(dateEntry.getExceptions()[i]);
       tmpStr += ";";
     }
-    tmpStr.truncate(tmpStr.length()-1);
+    tmpStr.truncate(tmpStr.length() - 1);
     if (vo)
       setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
     else
       addPropValue(vevent, VCExDateProp, tmpStr.latin1());
-  } else {
-    if (vo)
-      addProp(vo, KPilotSkipProp);
-  }
-
-
-	// The remainder of the updates are in individual methods
-	//
-	//
-	setSummary(vevent,dateEntry.getDescription());
-	setNote(vevent,dateEntry.getNote());
-	setSecret(vevent,(rec->getAttrib() & dlpRecAttrSecret));
-	setStatus(vevent,0);
-
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Done updating"
-			<< endl;
-	}
-#endif
+  } else if (vo)
+    addProp(vo, KPilotSkipProp);
 }
+
+
+//////////////////////////////////////////////////////////////////////////
 
 
 void VCalConduit::doLocalSync()
 {
-	FUNCTIONSETUP;
+  FUNCTIONSETUP;
 
-	bool LocalOverridesPilot=false;
-	VObjectIterator i;
-	VObject *vevent = 0L;
-	VObject *vo;
-	char *s;
-	int status;
-	recordid_t id;
-	PilotRecord *pRec;
-	PilotDateEntry *dateEntry;
+  DEBUGCONDUIT << __FUNCTION__ 
+	       << ": Performing local sync."
+	       << endl;
 
-	// The first time we run the conduit
-	// questions are asked about the disposition of all
-	// unknown vCal entries; in later syncs we will assume
-	// they should be deleted *except* if "Local Overrides
-	// Pilot" is off. The first time, then, ask the questions
-	// and delete the records that need deleting; afterwards
-	// don't ask questions and delete according to the override
-	// flag.
-	//
-	//
-	if (first)
-	{
-		LocalOverridesPilot=true;
-#ifdef DEBUG
-		kdDebug() << fname
-			<< ": This is the first time the vcal conduit is run"
-			<< endl;
-#endif
-	}
-	else
-	{
-		// We need one of KPilot's global 
-		// settings.
-		//
-		KConfig& config=KPilotConfig::getConfig();
-		LocalOverridesPilot=config.readNumEntry("OverwriteRemote",0);
-	}
+  VObjectIterator i;
+  initPropIterator(&i, calendar());
 
-#ifdef DEBUG
-	{
-		kdDebug() << fname << ": Performing local sync."
-			<< endl;
-	}
-  
-	{
-		kdDebug() << fname << ": Getting timezone."
-			<< endl;
-	}
-#endif
+  int recordcount = 0;
 
-	fTimeZone = getTimeZone();
+  // go through the whole vCalendar.  If the event has the dirty
+  // (modified) flag set, make a new pilot record and add it.  we only
+  // take events that have KPilotStatusProp as a property.  If this
+  // property isn't present, ignore the event.
 
-  
-#ifdef DEBUG
-	{
-		kdDebug() << fname << ": Initializing iterator."
-			<< endl;
-	}
-#endif
-	initPropIterator(&i, calendar());
-  
-	int recordcount=0;
+  /* Since the calendar is a singly linked list, we need a pointer to
+     the previous item. */
+  VObject *previousEvent = 0;
 
-	  // go through the whole vCalendar.  If the event has the 
-	  // dirty (modified)
-	  // flag set, make a new pilot record and add it.
-	  // we only take events that have KPilotStatusProp as a property.  If
-	  // this property isn't present, ignore the event.
-	  //
-	  //
-	while (moreIteration(&i)) 
-	{
-		recordcount++;
-		vevent = nextVObject(&i);
-		vo = isAPropertyOf(vevent, KPilotStatusProp);
+  while (moreIteration(&i)) {
+    recordcount++;
+    VObject *vevent = nextVObject(&i);
 
-#ifdef DEBUG
-		{
-			kdDebug() << fname
-				<< ": Read the following calendar entry:"
-				<< endl;
-			printVObject(stderr,vevent);
-		}
-#endif
-    
-    if (vo && (strcmp(vObjectName(vevent), VCEventProp) == 0)) {
-	s = fakeCString(vObjectUStringZValue(vo));
-	DEBUGCONDUIT << fname
-		<< ": Got KPilotStatusProp="
-		<< s
-		<< endl;
+    if (getStatus(vevent) != 2 &&
+	(strcmp(vObjectName(vevent), VCEventProp) == 0)) {
+      // the calendar entry is an event and has a KPilotStatus field
 
-	status = atoi(s);
-	deleteStr(s);
-      
-      if (status == 1) {
+      recordid_t id;
+      if (getStatus(vevent) == 1) {
 	// the event has been modified, need to write it to the pilot
 	// we read the pilotID.
 	
-	vo = isAPropertyOf(vevent, KPilotIdProp);
-	id = atoi(s = fakeCString(vObjectUStringZValue(vo)));
-	deleteStr(s);
+	id = getRecordID(vevent);
 	
-	// if id != 0, this is a modified event,
-	// otherwise it is new.
+	// if id != 0, this is a modified event, otherwise it is new.
 
+	PilotDateEntry *dateEntry = 0L;
+	
 	if (id != 0) {
-	  pRec = readRecordById(id);
+	  PilotRecord *pRec = readRecordById(id);
 	  // if this fails, somehow the record got deleted from the pilot
 	  // but we were never informed! bad pilot. naughty pilot.
-	  ASSERT(pRec);
-	  if (!pRec) {
-	  }
-	  
-	  if (!pRec) {
+
+	  if (pRec)
+	    // If the record was deleted on the pilot, recreate it.
+	    dateEntry = new PilotDateEntry(pRec);
+	  else {
 	    dateEntry = new PilotDateEntry();
 	    id = 0;
-	  } else {
-	    dateEntry = new PilotDateEntry(pRec);
 	  }
-	} else {
+	} else
 	  dateEntry = new PilotDateEntry();
-	}
-	
-	// START TIME //
-	int event=0;
-	struct tm end,start;
-	
-	if ((vo = isAPropertyOf(vevent, VCDTstartProp)) != 0L) {
-	  char *s = fakeCString(vObjectUStringZValue(vo));
-	  start = ISOToTm(QString(s));
-	  deleteStr(s);
-	  
-	  if (start.tm_hour == 0 &&
-	      start.tm_min == 0 &&
-	      start.tm_sec == 0)
-	    event = 1; // the event floats
-	  
-	  dateEntry->setEventStart(start);
-	  
-	}
-	
-	// TIMELESS EVENT? //
-	dateEntry->setEvent(event);
 
-	// END TIME //
-	if ((vo = isAPropertyOf(vevent, VCDTendProp)) != 0L) {
-	  char *s = fakeCString(vObjectUStringZValue(vo));
-	  end = ISOToTm(QString(s));
-	  deleteStr(s);
-	  dateEntry->setEventEnd(end);
-	} else {
-	  // if the event has no DTend, get it from start time.
-	  dateEntry->setEventEnd(start);
-	}
-
-	// ALARM(s) //
-	if ((vo = isAPropertyOf(vevent, VCDAlarmProp))) {
-	  VObject *a = 0L, *b = 0L;
-	  if ((a = isAPropertyOf(vo, VCRunTimeProp)) &&
-	      (b = isAPropertyOf(vevent, VCDTstartProp))) {
-	      dateEntry->setAlarm(1);
-	      QDate tmpDate;
-	      QTime tmpTime;
-	      int year, month, day, hour, minute, second;
-	      
-	      QString tmpStr = fakeCString(vObjectUStringZValue(a));
-	      year = tmpStr.left(4).toInt();
-	      month = tmpStr.mid(4,2).toInt();
-	      day = tmpStr.mid(6,2).toInt();
-	      hour = tmpStr.mid(9,2).toInt();
-	      minute = tmpStr.mid(11,2).toInt();
-	      second = tmpStr.mid(13,2).toInt();
-	      tmpDate.setYMD(year, month, day);
-	      tmpTime.setHMS(hour, minute, second);
-	      
-	      ASSERT(tmpDate.isValid());
-	      ASSERT(tmpTime.isValid());
-	      QDateTime tmpDT(tmpDate, tmpTime);
-	      // correct for GMT if string is in Zulu format
-	      if (tmpStr.right(1) == QString("Z"))
-		tmpDT = tmpDT.addSecs(60*fTimeZone);
-
-	      tmpStr = fakeCString(vObjectUStringZValue(b));
-	      year = tmpStr.left(4).toInt();
-	      month = tmpStr.mid(4,2).toInt();
-	      day = tmpStr.mid(6,2).toInt();
-	      hour = tmpStr.mid(9,2).toInt();
-	      minute = tmpStr.mid(11,2).toInt();
-	      second = tmpStr.mid(13,2).toInt();
-	      tmpDate.setYMD(year, month, day);
-	      tmpTime.setHMS(hour, minute, second);
-	      
-	      ASSERT(tmpDate.isValid());
-	      ASSERT(tmpTime.isValid());
-	      QDateTime tmpDT2(tmpDate, tmpTime);
-	      // correct for GMT if string is in Zulu format
-	      if (tmpStr.right(1) == QString("Z"))
-		tmpDT2 = tmpDT2.addSecs(60*fTimeZone);
-
-	      int diffSecs = tmpDT.secsTo(tmpDT2);
-	      if (diffSecs > 60*60*24) {
-		dateEntry->setAdvanceUnits(advDays);
-		dateEntry->setAdvance((int) diffSecs/(60*60*24));
-	      } else if (diffSecs > 60*60) {
-		dateEntry->setAdvanceUnits(advHours);
-		dateEntry->setAdvance((int) diffSecs/(60*60));
-	      } else {
-		dateEntry->setAdvanceUnits(advMinutes);
-		dateEntry->setAdvance((int) diffSecs/60);
-	      }
-	  } else {
-	    dateEntry->setAlarm(0);
-	  }
-	} else {
-	  dateEntry->setAlarm(0);
-	}
+	setStartEndTimes(dateEntry, vevent);
+	setAlarms(dateEntry, vevent);
 
 	// RECURRENCE(S) //
-	// first we have a 'fake type of recurrence' when a multi-day
-	// even it passed to the pilot, it is converted to an event
-	// which recurs daily a number of times.
-	QDateTime tmpDtStart(QDate(1900 + dateEntry->getEventStart().tm_year,
-				   dateEntry->getEventStart().tm_mon + 1,
-				   dateEntry->getEventStart().tm_mday),
-			     QTime(dateEntry->getEventStart().tm_hour,
-				   dateEntry->getEventStart().tm_min,
-				   dateEntry->getEventStart().tm_sec));
-	QDateTime tmpDtEnd(QDate(1900 + dateEntry->getEventEnd().tm_year,
-				 dateEntry->getEventEnd().tm_mon + 1,
-				 dateEntry->getEventEnd().tm_mday),
-			   QTime(dateEntry->getEventEnd().tm_hour,
-				 dateEntry->getEventEnd().tm_min,
-				 dateEntry->getEventEnd().tm_sec));
-
-	if (tmpDtStart.daysTo(tmpDtEnd) &&
-		dateEntry->getEventStart().tm_hour == 0 &&
-		dateEntry->getEventStart().tm_min == 0 &&
-		dateEntry->getEventStart().tm_sec == 0)
 	{
-	  // multi day event
-	  dateEntry->setRepeatType(repeatDaily);
-	  dateEntry->setRepeatFrequency(1);
-	  dateEntry->setRepeatEnd(dateEntry->getEventEnd());
-		if (isAPropertyOf(vevent, VCExDateProp) != 0L) 
-		{
-			char *s=0L;
-			vo = isAPropertyOf(vevent, VCSummaryProp);
-			if (vo) s = fakeCString(vObjectUStringZValue(vo)) ;
+	  // first we have a 'fake type of recurrence' when a multi-day
+	  // even it passed to the pilot, it is converted to an event
+	  // which recurs daily a number of times.
 
-			kdDebug() << fname
-				<< ": WARNING: exceptions ignored "
-				   "for multi-day event "
-				<< s
-				<< endl ;
-		}
-	  struct tm thing = dateEntry->getEventEnd();
+	  struct tm start = getStartTime(vevent);
+	  QDateTime tmpDtStart = tmToQDateTime(start);
+	  struct tm end = getEndTime(vevent);
+	  QDateTime tmpDtEnd = tmToQDateTime(end);
+
+	  if (tmpDtEnd.isValid())
+	    if (tmpDtStart.daysTo(tmpDtEnd) > 0 &&
+		start.tm_hour == 0 && start.tm_min == 0 && 
+		start.tm_sec == 0) {
+	      // multi day event
+	      DEBUGCONDUIT << __FUNCTION__
+			   << ": multi-day event from "
+			   << tmpDtStart.toString() << " to " 
+			   << tmpDtEnd.toString() << endl;
+	      dateEntry->setRepeatType(repeatDaily);
+	      dateEntry->setRepeatFrequency(1);
+	      dateEntry->setRepeatEnd(end);
+	      if (isAPropertyOf(vevent, VCExDateProp) != 0L)
+		DEBUGCONDUIT << __FUNCTION__
+			     << ": WARNING: exceptions ignored "
+			     << "for multi-day event "
+			     << getSummary(vevent)
+			     << endl ;
+	    }
 	}
 
-	// the following block of code is adapted from calobject.cpp
-	// in korganizer. Make sure to update this section if that changes.
-	if ((vo = isAPropertyOf(vevent, VCRRuleProp)) != 0L) {
-	  QString tmpStr(s = fakeCString(vObjectUStringZValue(vo)));
-	  deleteStr(s);
-	  tmpStr.simplifyWhiteSpace();
-	  tmpStr = tmpStr.upper();
-	  
-	  /********************************* DAILY **************************/
-	  if (tmpStr.left(1) == "D") {
-	    dateEntry->setRepeatType(repeatDaily);
-	    int index = tmpStr.find(' ');
-	    int rFreq = tmpStr.mid(1, (index-1)).toInt();
-	    index = tmpStr.findRev(' ') + 1; // advance to last field
-	    if (tmpStr.mid(index,1) == "#") index++;
-	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
-	      dateEntry->setRepeatFrequency(rFreq);
-	      dateEntry->setRepeatEnd(rEndDate);
-	    } else {
-	      int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	      if (rDuration == 0) { 
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever();
-	      } else {
-		// we could calculate an end date here, but too lazy right now.
-		// pilot doesn't understand concept of repeat n times.
-		// repeatForever(dateEntry,rFreq,vevent);
-		repeatUntil(dateEntry,&start,rFreq,rDuration,DailyPeriod);
-	      }
-	    }
-	  }
-	  /********************************* WEEKLY **************************/
-	  else if (tmpStr.left(1) == "W") {
-	    dateEntry->setRepeatType(repeatWeekly);
-	    int index = tmpStr.find(' ');
-	    int last = tmpStr.findRev(' ') + 1;
-	    int rFreq = tmpStr.mid(1, (index-1)).toInt();
-	    index += 1; // advance to beginning of stuff after freq
-	    QBitArray qba(7);
-	    QString dayStr;
-	    if (index == last) {
-	      QDate tmpDate(1900 + dateEntry->getEventStart().tm_year,
-			    dateEntry->getEventStart().tm_mon + 1,
-			    dateEntry->getEventStart().tm_mday);
-	      qba.setBit(tmpDate.dayOfWeek() - 1);
-	    } else {
-	      while (index < last) {
-		dayStr = tmpStr.mid(index, 3);
-		int dayNum = numFromDay(dayStr);
-		qba.setBit(dayNum);
-		index += 3; // advance to next day, or possibly "#"
-	      }
-	    }
-	    dateEntry->setRepeatDays(qba);
-	    index = last; if (tmpStr.mid(index,1) == "#") index++;
-	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
-	      dateEntry->setRepeatFrequency(rFreq);
-	      dateEntry->setRepeatEnd(rEndDate);
-	    } else {
-	      int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	      if (rDuration == 0) {
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever();
-	      } else {
-		repeatUntil(dateEntry,&start,rFreq,rDuration,WeeklyPeriod);
-	      }
-	    }
-	  }
-	  /********************* MONTHLY-BY-POS ***************************/
-	  else if (tmpStr.left(2) == "MP") {
-	    dateEntry->setRepeatType(repeatMonthlyByDay);
-	    int index = tmpStr.find(' ');
-	    int last = tmpStr.findRev(' ') + 1;
-	    int rFreq = tmpStr.mid(2, (index-1)).toInt();
-	    index += 1; // advance to beginning of stuff after freq
-	    short tmpPos;
-	    if (index == last) {
-	      QDate tmpDate(1900 + dateEntry->getEventStart().tm_year,
-			    dateEntry->getEventStart().tm_mon + 1,
-			    dateEntry->getEventStart().tm_mday);
-	      tmpPos = tmpDate.day()/7 + 1;
-	      if (tmpPos == 5)
-		tmpPos = -1;
-	      int rd = 7 * (tmpPos - 1) + tmpDate.dayOfWeek() - 1;
-	      dateEntry->setRepeatDay((DayOfMonthType) rd);
-	    } else {
-	      while (index < last) {
-		tmpPos = tmpStr.mid(index, 1).toShort();
-		index += 1;
-		if (tmpStr.mid(index,1) == "-")
-		  // convert tmpPos to negative
-		  tmpPos = 0 - tmpPos;
-		index += 2; // advance to day(s)
-		int dayNum = 0;
-		while (numFromDay(tmpStr.mid(index,3)) >= 0) {
-		  if (!dayNum) // pilot can only handle 1 day in month-by-pos
-		    dayNum = numFromDay(tmpStr.mid(index,3));
-		  index += 3; // advance to next day, or possibly pos / "#"
-		}
-		int rd = 7 * (tmpPos - 1) + dayNum;
-		dateEntry->setRepeatDay((DayOfMonthType) rd);
-	      }
-	    }
-	    index = last; if (tmpStr.mid(index,1) == "#") index++;
-	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
-	      dateEntry->setRepeatFrequency(rFreq);
-	      dateEntry->setRepeatEnd(rEndDate);
-	    } else {
-	      int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	      if (rDuration == 0) {
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever();
-	      } else {
-			repeatUntil(dateEntry,&start,rFreq,rDuration,
-				MonthlyByPosPeriod);
-	      }
-	    }
-	    
-	  }
-	  /********************* MONTHLY-BY-DAY ***************************/
-	  else if (tmpStr.left(2) == "MD") {
-	    // the date to repeat on is the date of the event implicitly.
-	    dateEntry->setRepeatType(repeatMonthlyByDate);
-	    int index = tmpStr.find(' ');
-	    int last = tmpStr.findRev(' ') + 1;
-	    int rFreq = tmpStr.mid(2, (index-1)).toInt();
-	    index += 1;
-	    short tmpDay; // we aren't doing anything with this right now
-	    if (index == last) {
-	      tmpDay = dateEntry->getEventStart().tm_mday;
-	    } else {
-	      while (index < last) {
-		int index2 = tmpStr.find(' ', index);
-		tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-		index = index2-1;
-		if (tmpStr.mid(index, 1) == "-")
-		  tmpDay = 0 - tmpDay;
-		index += 2; // advance the index;
-	      } // while != #
-	    }
-	    index = last; if (tmpStr.mid(index,1) == "#") index++;
-	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
-	      dateEntry->setRepeatFrequency(rFreq);
-	      dateEntry->setRepeatEnd(rEndDate);
-	    } else {
-	      int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	      if (rDuration == 0) {
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever();
-	      } else {
-			repeatUntil(dateEntry,&start,rFreq,rDuration,
-				MonthlyByDayPeriod);
-	      }
-	    }
-	  }
-	  /*********************** YEARLY-BY-DAY ***************************/
-	  else if (tmpStr.left(2) == "YD") {
-	    dateEntry->setRepeatType(repeatYearly);
-	    int index = tmpStr.find(' ');
-	    int last = tmpStr.findRev(' ') + 1;
-	    int rFreq = tmpStr.mid(2, (index-1)).toInt();
-	    index += 1;
-	    short tmpDay; // not currently used
-	    if (index == last) {
-	      // blah, not doing anything with tmpDay
-	    } else {
-	      while (index < last) {
-		int index2 = tmpStr.find(' ', index);
-		tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-		index = index2+1;
-	      } // while != #
-	    }
-	    index = last; if (tmpStr.mid(index,1) == "#") index++;
-	    if (tmpStr.find('T', index) != -1) {
-	      struct tm rEndDate = (ISOToTm(tmpStr.mid(index, tmpStr.length() - index).latin1()));
-	      dateEntry->setRepeatFrequency(rFreq);
-	      dateEntry->setRepeatEnd(rEndDate);
-	    } else {
-	      int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-	      if (rDuration == 0) {
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever();
-	      } else {
-			repeatUntil(dateEntry,&start,rFreq,rDuration,
-				YearlyByDayPeriod);
-	      }
-	    }
-	  }
-	} // recurs
-
+	// and now the real recurring events
+	setRepetition(dateEntry, getRepetition(vevent));
+	
 	// EXCEPTION(S) //
-	if ((vo = isAPropertyOf(vevent, VCExDateProp)) != 0L) {
-	  struct tm *tmList = 0;
-	  s = fakeCString(vObjectUStringZValue(vo));
-	  QString tmpStr(s);
-	  deleteStr(s);
-	  int index = 0, index2 = 0, count = 0;
-	  struct tm extm;
-	  while ((index2 = tmpStr.find(',', index)) != -1) {
-	    ++count;
-	    tmList = (struct tm *) realloc(tmList, sizeof(struct tm)*count);
-	    extm = ISOToTm(tmpStr.mid(index, (index2-index)));
-	    tmList[count-1] = extm;
-	    index = index2 + 1;
-	  }
-	  ++count;
-	  tmList = (struct tm *) realloc(tmList, sizeof(struct tm)*count);
-	  extm = ISOToTm(tmpStr.mid(index, (tmpStr.length()-index)));
-	  tmList[count-1] = extm;
-	  dateEntry->setExceptionCount(count);
-	  dateEntry->setExceptions(tmList);
+	{
+	  int count;
+	  struct tm *exceptionList = getExceptionDates(vevent, &count);
+	  if (exceptionList) {
+	    dateEntry->setExceptionCount(count);
+	    dateEntry->setExceptions(exceptionList);
+	  } else
+	    dateEntry->setExceptionCount(0);
 	}
 
 	// SUMMARY //
-	// what we call summary pilot calls description.
-	if ((vo = isAPropertyOf(vevent, VCSummaryProp)) != 0L) {
-		const char *s2 = fakeCString(vObjectUStringZValue(vo));
-		QString s = QString::fromUtf8(s2);
-		dateEntry->setDescription(s.latin1());
-
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": Fake CString = "
-			<< s2
-			<< "    "
-			<< charExpansion(s2)
-			<< endl;
-		DEBUGCONDUIT << fname
-			<< ": QString = "
-			<< s
-			<< endl;
-		DEBUGCONDUIT << fname
-			<< ": Latin1 = "
-			<< s.latin1()
-			<< "    "
-			<< charExpansion(s.latin1())
-			<< endl;
-#endif
-		deleteStr(s2);
-	} else {
-		char *s2 = (char *) malloc(2);
-		s2[0] = 0;
-		dateEntry->setDescription(s2);
-		free(s2);
-	}
+	dateEntry->setDescription(getSummary(vevent).latin1());
 
 	// DESCRIPTION //
-	// what we call description pilot puts as a separate note
-	if ((vo = isAPropertyOf(vevent, VCDescriptionProp)) != 0L) {
-		const char *s3 = fakeCString(vObjectUStringZValue(vo));
-		QString s = QString::fromUtf8(s3);
-		dateEntry->setNote(s.latin1());
-		deleteStr(s3);
-	} 
+	dateEntry->setNote(getDescription(vevent).latin1());
 
 	// put the pilotRec in the database...
-	pRec=dateEntry->pack();
-	pRec->setAttrib(dateEntry->getAttrib() & ~dlpRecAttrDirty);
-	id = writeRecord(pRec);
-
-	delete(dateEntry);
-	delete(pRec);
-
-	// write the id we got from writeRecord back to the vObject
-	if (id > 0) 
 	{
-	  QString tmpStr;
-	  tmpStr.setNum(id);
-	  vo = isAPropertyOf(vevent, KPilotIdProp);
-	  // give it an id.
-	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
-	  vo = isAPropertyOf(vevent, KPilotStatusProp);
-	  tmpStr = "0"; // no longer a modified event.
-	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
+	  PilotRecord *pRec = dateEntry->pack();
+	  pRec->setAttrib(dateEntry->getAttrib() & ~dlpRecAttrDirty);
+	  id = writeRecord(pRec);
+	  ::free(pRec);
+	}
+
+	delete dateEntry;
+
+	if (id > 0) {
+	  // Writing succeeded. Write the id we got from writeRecord
+	  // back to the vObject.
+	  setNumProperty(vevent, KPilotIdProp, id);
 	} 
-	else 
-	{
-	}
       }
-	setNumProperty(vevent,KPilotStatusProp,0);
+      // Clear the 'modified' flag.
+      setNumProperty(vevent, KPilotStatusProp, 0);
     }
+    previousEvent = vevent;
   }
 
-#ifdef DEBUG
-	{
-		kdDebug() << fname
-			<< ": Read "
-			<< recordcount
-			<< " records total."
-			<< endl;
-	}
-#endif
+  DEBUGCONDUIT << __FUNCTION__ << ": Read " << recordcount
+			<< " records total." << endl;
+  
+  KConfig& config = KPilotConfig::getConfig(VCalSetup::VCalGroup);
+  bool DeleteOnPilot = config.readBoolEntry("DeleteOnPilot", true);
 
-  // anything that is left on the pilot but that is not found in the
-  // vCalendar has to be deleted.  We know this because we have added
-  // everything to the vCalendar from the pilot that had the modified
-  // flag set, and we have added everything to the pilot from the vCalendar
-  // that had the modified flag set.
-  //
-  // insertall flag will be set in the future in the config file 
-  // so that this behaviour can be overridden.
-  //
-	  // We don't set insertall - it's based on the first and the local 
-	  // override flag. Still construct the delete list no matter what,
-	  // just don't do anything if local override is set to false.
-	  //
-	  //
+  if (firstTime())
+    firstSyncCopy(DeleteOnPilot);
+
+  if (DeleteOnPilot)
+    deleteFromPilot(VCEventProp);
+
+  setFirstTime(config, false);
+} // void VCalConduit::doLocalSync()
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+struct tm *VCalConduit::getExceptionDates(VObject *vevent, int *n) {
+  FUNCTIONSETUP;
+  struct tm *tmList = 0;
+  int count = 0;
+  VObject *vo = isAPropertyOf(vevent, VCExDateProp);
+  if (vo) {
+    char *s = fakeCString(vObjectUStringZValue(vo));
+    QString tmpStr(s);
+    deleteStr(s);
+    int index = 0, index2 = 0;
+    struct tm extm;
+    while ((index2 = tmpStr.find(',', index)) != -1) {
+      ++count;
+      tmList = (struct tm *) realloc(tmList, sizeof(struct
+						    tm)*count);
+      if (tmList == 0L)
+	kdFatal(CONDUIT_AREA) << __FUNCTION__
+			      << ": realloc() failed!"
+			      << endl;
+      extm = ISOToTm(tmpStr.mid(index, (index2-index)));
+      tmList[count-1] = extm;
+      index = index2 + 1;
+    }
+    ++count;
+    tmList = (struct tm *) realloc(tmList, sizeof(struct tm)*count);
+    if (tmList == 0L)
+      kdFatal(CONDUIT_AREA) << __FUNCTION__
+			    << ": realloc() failed!" << endl;
+    extm = ISOToTm(tmpStr.mid(index, (tmpStr.length()-index)));
+    tmList[count-1] = extm;
+  }
+  if (n) *n = count;
+  return tmList;
+} // struct tm *VCalConduit::getExceptionDates(const VObject *vevent, int *n)
+
+
+//////////////////////////////////////////////////////////////////////////
+
+void VCalConduit::firstSyncCopy(bool DeleteOnPilot) {
+  FUNCTIONSETUP;
+
+  bool insertall = false, skipall = false;
+
+  /* Build a list of records in the pilot calendar that are not
+     found in the vcal and thus probably have been deleted. */
+  
+  // Get all entries from Pilot
   PilotRecord *rec;
-  int index=0, response, insertall=0;
-  QValueList<int> deletedList;
-  
-  
-  //  Get all entries from Pilot
-  while ((rec = readRecordByIndex(index++)) != 0) 
-  {
-	DEBUGCONDUIT << fname
-		<< ": Got record "
-		<< index-1
-		<< " @"
-		<< (int) rec
-		<< endl;
-
-    dateEntry = new PilotDateEntry(rec); // convert to date structure
-
-	if (dateEntry)
-	{
-		DEBUGCONDUIT << fname
-			<< ": Created date entry @"
-			<< (int) dateEntry
-			<< " with id "
-			<< rec->getID()
-			<< endl;
-	}
-	else
-	{
-		kdWarning() << __FUNCTION__
-			<< ": No dateentry!"
-			<< endl;
-		continue;
-	}
-
-    vevent = findEntryInCalendar(rec->getID(), VCEventProp);
-    if (vevent == 0L) 
-    {
-		DEBUGCONDUIT << fname
-			<< ": Entry not found in calendar."
-			<< endl;
-
-
-      if ( !first ) 
-      {
-
-		// In this case we want it entered into the vcalendar
-		if (!LocalOverridesPilot) {
-			DEBUGCONDUIT << fname
-				<< ": !LocalOverridesPilot so updating object."
-				<< endl;
-				
-	   	 	updateVObject(rec);
-		}
-		else
-		{
-			DEBUGCONDUIT << fname
-				<< ": Scheduling this entry for deletion."
-				<< endl;
-
-		// add event to list of pilot events to delete
-		deletedList.append(rec->getID());
-		}
-      } 
-      else 
-      { 
-	if (insertall == 0) {
-		DEBUGCONDUIT << fname
-			<< ": Questioning event disposition."
-			<< endl;
-
-		QString text = i18n("This is the first time that "
-			"you have done a HotSync\n"
-			"with the vCalendar conduit. "
-			"There is an appointment\n"
-			"in the PalmPilot which is not "
-			"in the vCalendar (KOrganizer).\n\n");
-		text += i18n("Appointment: %1.\n\n"
-			"What must be done with this appointment?")
-			.arg(dateEntry->getDescription());
-
-		response = QMessageBox::information(0, 
-			i18n("KPilot vCalendar Conduit"), 
-			text, 
-			i18n("&Insert"),i18n("&Delete"), i18n("Insert &All")
-			,0);
-
-		DEBUGCONDUIT << fname 
-			<< ": Event disposition "
-			<< response
-			<< endl;
-
-		switch(response) 
-		{
-		case 1:
-			deletedList.append(rec->getID());
-			break;
-		case 2 :
-			insertall = 1;
-			updateVObject(rec);
-			break;
-
-		// Default is to insert this single entry
-		// and ask again later.
-		//
-		//
-		default : 
-			updateVObject(rec);
-			break;
-		}
-	} else {
-	  // all records are to be inserted.
+  int index = 0;
+  while ((rec = readRecordByIndex(index++)) != 0) {
+    PilotDateEntry *dateEntry = new PilotDateEntry(rec);
+    
+    if (!dateEntry) {
+      kdError(CONDUIT_AREA) << __FUNCTION__
+			    << ": Conversion to PilotDateEntry failed"
+			    << endl;
+      continue;
+    }
+    
+    VObject *vevent = findEntryInCalendar(rec->getID(),
+					  VCEventProp);
+    if (vevent == 0L) {
+      DEBUGCONDUIT << __FUNCTION__
+		   << ": Entry found on pilot but not in vcalendar."
+		   << endl;
+      
+      // First hot-sync, ask user how to treat this event.
+      if (!insertall && !skipall) {
+	DEBUGCONDUIT << __FUNCTION__
+		     << ": Questioning event disposition."
+		     << endl;
+	
+	QString text = i18n("This is the first time that "
+			    "you have done a HotSync\n"
+			    "with the vCalendar conduit. "
+			    "There is an appointment\n"
+			    "in the PalmPilot which is not "
+			    "in the vCalendar (KOrganizer).\n\n");
+	text += i18n("Appointment: %1.\n\n"
+		     "What must be done with this appointment?")
+	  .arg(dateEntry->getDescription());
+	
+	int response =
+	  QMessageBox::information(0, 
+				   i18n("KPilot vCalendar Conduit"), 
+				   text, 
+				   i18n("&Insert"), 
+				   DeleteOnPilot ? i18n("&Delete") : 
+				   i18n("&Skip"),
+				   i18n("Insert &All"),
+				   0);
+	
+	DEBUGCONDUIT << __FUNCTION__ 
+		     << ": Event disposition "
+		     << response
+		     << endl;
+	
+	switch (response) {
+	case 0:
+	default: 
+	  /* Default is to insert this single entry and ask again
+	     later. */
 	  updateVObject(rec);
+	  break;
+	case 1:
+	  // Skip this item, deletion is handled by deleteFromPilot().
+	  break;
+	case 2:
+	  insertall = true;
+	  skipall = false;
+	  updateVObject(rec);
+	  break;
+	} // switch (response)
+      } else if (insertall) {
+	// all records are to be inserted.
+	updateVObject(rec);
+      }
+    } // if (!vevent)
+    delete rec;
+  } // while ((rec = readRecordByIndex(index++)) != 0)
+} // void VCalConduit::processDeleted()
+
+
+//////////////////////////////////////////////////////////////////////////
+
+struct VCalConduit::eventRepetition
+VCalConduit::getRepetition(VObject *vevent) {
+  FUNCTIONSETUP;
+
+  struct eventRepetition r;
+  VObject *vo = isAPropertyOf(vevent, VCRRuleProp);
+  if (vo) {
+    r.startDate = getStartTime(vevent);
+    char *s = fakeCString(vObjectUStringZValue(vo));
+    QString tmpStr(s);
+    deleteStr(s);
+    tmpStr.simplifyWhiteSpace();
+    tmpStr = tmpStr.upper();
+
+    int start = 0;
+    if (tmpStr.left(1) == "D") {
+      DEBUGCONDUIT << __FUNCTION__ << ": repeat daily" << endl;
+      r.type = ::repeatDaily;
+      start = 1;
+    } else if (tmpStr.left(1) == "W") {
+      DEBUGCONDUIT << __FUNCTION__ << ": repeat weekly" << endl;
+      r.type = ::repeatWeekly;
+      start = 1;
+    } else if (tmpStr.left(2) == "MP") {
+      DEBUGCONDUIT << __FUNCTION__ << ": repeat monthly by day" << endl;
+      r.type = ::repeatMonthlyByDay;
+      start = 2;
+    } else if (tmpStr.left(2) == "MD") {
+      DEBUGCONDUIT << __FUNCTION__ << ": repeat monthly by date" << endl;
+      r.type = ::repeatMonthlyByDate;
+      start = 2;
+    } else if (tmpStr.left(2) == "YD") {
+      DEBUGCONDUIT << __FUNCTION__ << ": repeat yearly" << endl;
+      r.type = ::repeatYearly;
+      start = 2;
+    } else
+      r.type = ::repeatNone;
+
+    int index = tmpStr.find(' ');
+    int last = tmpStr.findRev(' ') + 1;
+
+    r.freq = tmpStr.mid(start, (index - 1)).toInt();
+    index++; // advance to beginning of stuff after freq
+
+    r.hasEndDate = false;
+
+    switch (r.type) {
+
+    case ::repeatDaily:
+      index = last; // advance to last field
+      if (tmpStr.mid(index, 1) == "#") index++;
+      if (tmpStr.find('T', index) != -1) {
+	r.endDate = ISOToTm(tmpStr.mid(index, tmpStr.length() -
+				       index).latin1());
+	r.hasEndDate = true;
+      } else
+	r.duration =
+	  tmpStr.mid(index, tmpStr.length() - index).toInt();
+      break;
+
+    case ::repeatWeekly:
+      if (index == last) {
+	QDate tmpDate(1900 + r.startDate.tm_year,
+		      r.startDate.tm_mon + 1,
+		      r.startDate.tm_mday);
+	r.weekdays.setBit(tmpDate.dayOfWeek() - 1);
+      } else {
+	while (index < last) {
+	  QString dayStr = tmpStr.mid(index, 3);
+	  int dayNum = numFromDay(dayStr);
+	  r.weekdays.setBit(dayNum);
+	  index += 3; // advance to next day, or possibly "#"
 	}
       }
+      index = last; 
+      if (tmpStr.mid(index,1) == "#") index++;
+      if (tmpStr.find('T', index) != -1) {
+	// repeat until a given date
+	r.endDate = 
+	  ISOToTm(tmpStr.mid(index, tmpStr.length() -
+			     index).latin1());
+	r.hasEndDate = true;
+      } else
+	// repeat a given number of times
+	r.duration = tmpStr.mid(index, tmpStr.length() - index).toInt();
+      break;
+
+    case ::repeatMonthlyByDay:
+      if (index == last) {
+	QDate tmpDate(1900 + r.startDate.tm_year,
+		      r.startDate.tm_mon + 1,
+		      r.startDate.tm_mday);
+	short tmpPos = tmpDate.day() / 7 + 1;
+	if (tmpPos == 5) tmpPos = -1;
+	r.repeatDay =
+	  (DayOfMonthType) (7 * (tmpPos - 1) + 
+			    tmpDate.dayOfWeek() - 1);
+      } else {
+	while (index < last) {
+	  short tmpPos = tmpStr.mid(index, 1).toShort();
+	  index++;
+	  if (tmpStr.mid(index,1) == "-")
+	    // convert tmpPos to negative
+	    tmpPos = -tmpPos;
+	  index += 2; // advance to day(s)
+	  int dayNum = 0;
+	  while (numFromDay(tmpStr.mid(index, 3)) >= 0) {
+	    if (!dayNum) // pilot can only handle 1 day in month-by-pos
+	      dayNum = numFromDay(tmpStr.mid(index, 3));
+	    index += 3; // advance to next day, or possibly pos / "#"
+	  }
+	  r.repeatDay = (DayOfMonthType) (7 * (tmpPos - 1) + dayNum);
+	}
+      }
+      index = last; 
+      if (tmpStr.mid(index,1) == "#") index++;
+      if (tmpStr.find('T', index) != -1) {
+	r.endDate = ISOToTm(tmpStr.mid(index, tmpStr.length() -
+				       index).latin1());
+	r.hasEndDate = true;
+      } else
+	r.duration = tmpStr.mid(index, tmpStr.length() -
+				index).toInt();
+      break;
+
+    case ::repeatMonthlyByDate:
+    case ::repeatYearly:
+      //if (index != last) // +++ ???
+      //while (index < last)
+      //  index = tmpStr.find(' ', index) + 1;
+      index = last;
+      if (tmpStr.mid(index,1) == "#") index++;
+      if (tmpStr.find('T', index) != -1) {
+	r.endDate = ISOToTm(tmpStr.mid(index, tmpStr.length() -
+				       index).latin1());
+	r.hasEndDate = true;
+      } else
+	r.duration = tmpStr.mid(index, tmpStr.length() -
+				index).toInt();
+      break;
+      
+    case ::repeatNone:
+      break;
+
+    default:
+      kdError(CONDUIT_AREA) << __FUNCTION__
+			    << ": unknown repetition type!"
+			    << endl;
+      break;
     }
-    delete rec;
-    rec = 0L;
-  }
-  
-	if (LocalOverridesPilot)
-	{
-#ifdef DEBUG
-		{
-			kdDebug() << fname << ": Deleting records from pilot."
-				<< endl;
-		}
-#endif
 
-		QValueList<int>::Iterator it;
-		for (it = deletedList.begin(); it != deletedList.end(); ++it)
-		{
-			rec = readRecordById(*it);
-			rec->setAttrib(~dlpRecAttrDeleted);
-			writeRecord(rec);
-			delete rec;
-		}
-	}
-	else
-	{
-#ifdef DEBUG
-		{
-			kdDebug() << fname << ": Leaving records in pilot, "
-				"even those not found in organizer."
-				<< endl;
-		}
-#endif
-	}
+  } else
+    r.type = ::repeatNone;
 
-	deletedList.clear();
-  
-	KConfig& config = KPilotConfig::getConfig(VCalSetup::VCalGroup);
-	setFirstTime(config,false);
+  return r;
 }
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+void VCalConduit::setRepetition(PilotDateEntry *dateEntry,
+				const eventRepetition &er) {
+  FUNCTIONSETUP;
+  PeriodConstants period;
+
+  dateEntry->setRepeatType(er.type);
+
+  if (er.type != repeatNone) {
+    DEBUGCONDUIT << __FUNCTION__
+		 << ": type " << er.type
+		 << ", freq " << er.freq
+		 << ", hasEndDate " << er.hasEndDate
+		 << ", duration " << er.duration
+		 << ", repeatDay" << er.repeatDay
+		 << endl;
+
+    switch (er.type) {
+    case repeatDaily:
+      period = DailyPeriod;
+      break;
+    case repeatWeekly:
+      dateEntry->setRepeatDays(er.weekdays);
+      period = WeeklyPeriod;
+      break;
+    case repeatMonthlyByDay:
+      dateEntry->setRepeatDay(er.repeatDay);
+      period = MonthlyByPosPeriod;
+      break;
+    case repeatMonthlyByDate:
+      period = MonthlyByDayPeriod;
+      break;
+    case repeatYearly:
+      period = YearlyByDayPeriod;
+      break;
+    default:
+      kdError(CONDUIT_AREA) << __FUNCTION__
+			    << ": unknown repetition type "
+			    << er.type << endl;
+      break;
+    }
+
+    if (er.hasEndDate) {
+      dateEntry->setRepeatFrequency(er.freq);
+      dateEntry->setRepeatEnd(er.endDate);
+    } else if (er.duration == 0) {
+      dateEntry->setRepeatFrequency(er.freq);
+      dateEntry->setRepeatForever();
+    } else 
+      repeatUntil(dateEntry, &er.startDate, er.freq, er.duration,
+		  period);
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+struct tm VCalConduit::getStartTime(VObject *vevent) {
+  FUNCTIONSETUP;
+
+  struct tm start;
+  VObject *vo = isAPropertyOf(vevent, VCDTstartProp);
+  if (vo) {
+    char *s = fakeCString(vObjectUStringZValue(vo));
+    start = ISOToTm(QString(s));
+    deleteStr(s);
+  } else
+    memset(&start, 0, sizeof(start));
+  return start;
+} // struct tm VCalConduit::getStartTime(const VObject *vevent)
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+struct tm VCalConduit::getEndTime(VObject *vevent) {
+  FUNCTIONSETUP;
+
+  struct tm end;
+  VObject *vo = isAPropertyOf(vevent, VCDTendProp);
+  if (vo) {
+    char *s = fakeCString(vObjectUStringZValue(vo));
+    end = ISOToTm(QString(s));
+    deleteStr(s);
+  } else
+    memset(&end, 0, sizeof(end));
+  return end;
+} // struct tm VCalConduit::getEndTime(const VObject *vevent)
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+void VCalConduit::setStartEndTimes(PilotDateEntry *dateEntry,
+				   VObject *vevent) {
+  FUNCTIONSETUP;
+
+  int timeless_event = 0;
+  struct tm start, end;
+  
+  if (getDateProperty(&start, vevent, VCDTstartProp)) {
+    if (start.tm_hour == 0 &&
+	start.tm_min == 0 &&
+	start.tm_sec == 0)
+      timeless_event = 1; // the event floats    
+    dateEntry->setEventStart(start);
+  }
+	  
+  dateEntry->setEvent(timeless_event);
+
+  if (getDateProperty(&end, vevent, VCDTendProp)) 
+    dateEntry->setEventEnd(end);
+  else 
+    // if the event has no DTend, get it from start time.
+    dateEntry->setEventEnd(start);
+} // void VCalConduit::setStartEndTimes(PilotDateEntry *dateEntry, const VObject *vevent)
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+void VCalConduit::setAlarms(PilotDateEntry *dateEntry, VObject
+			    *vevent) const {
+  FUNCTIONSETUP;
+
+  // ALARM(s) //
+  VObject *vo;
+  if ((vo = isAPropertyOf(vevent, VCDAlarmProp))) {
+    VObject *a = 0L, *b = 0L;
+    if ((a = isAPropertyOf(vo, VCRunTimeProp)) &&
+	(b = isAPropertyOf(vevent, VCDTstartProp))) {
+      dateEntry->setAlarm(1);
+      QDate tmpDate;
+      QTime tmpTime;
+      int year, month, day, hour, minute, second;
+      
+      QString tmpStr = fakeCString(vObjectUStringZValue(a));
+      year = tmpStr.left(4).toInt();
+      month = tmpStr.mid(4,2).toInt();
+      day = tmpStr.mid(6,2).toInt();
+      hour = tmpStr.mid(9,2).toInt();
+      minute = tmpStr.mid(11,2).toInt();
+      second = tmpStr.mid(13,2).toInt();
+      tmpDate.setYMD(year, month, day);
+      tmpTime.setHMS(hour, minute, second);
+	      
+      ASSERT(tmpDate.isValid());
+      ASSERT(tmpTime.isValid());
+      QDateTime tmpDT(tmpDate, tmpTime);
+      // correct for GMT if string is in Zulu format
+      if (tmpStr.right(1) == QString("Z"))
+	tmpDT = tmpDT.addSecs(60 * fTimeZone);
+      
+      tmpStr = fakeCString(vObjectUStringZValue(b));
+      year = tmpStr.left(4).toInt();
+      month = tmpStr.mid(4,2).toInt();
+      day = tmpStr.mid(6,2).toInt();
+      hour = tmpStr.mid(9,2).toInt();
+      minute = tmpStr.mid(11,2).toInt();
+      second = tmpStr.mid(13,2).toInt();
+      tmpDate.setYMD(year, month, day);
+      tmpTime.setHMS(hour, minute, second);
+      
+      ASSERT(tmpDate.isValid());
+      ASSERT(tmpTime.isValid());
+      QDateTime tmpDT2(tmpDate, tmpTime);
+      // correct for GMT if string is in Zulu format
+      if (tmpStr.right(1) == QString("Z"))
+	tmpDT2 = tmpDT2.addSecs(60*fTimeZone);
+      
+      int diffSecs = tmpDT.secsTo(tmpDT2);
+      if (diffSecs > 60*60*24) {
+	dateEntry->setAdvanceUnits(advDays);
+	dateEntry->setAdvance((int) diffSecs/(60*60*24));
+      } else if (diffSecs > 60*60) {
+	dateEntry->setAdvanceUnits(advHours);
+	dateEntry->setAdvance((int) diffSecs/(60*60));
+      } else {
+	dateEntry->setAdvanceUnits(advMinutes);
+	dateEntry->setAdvance((int) diffSecs/60);
+      }
+    } else
+      dateEntry->setAlarm(0);
+  } else 
+    dateEntry->setAlarm(0);
+} // void VCalConduit::setAlarms(PilotDateEntry *dateEntry, const VObject *vevent) const
+
+
+//////////////////////////////////////////////////////////////////////////
 
 /* put up the about / setup dialog. */
 QWidget* VCalConduit::aboutAndSetup()
@@ -1417,13 +1261,19 @@ QWidget* VCalConduit::aboutAndSetup()
 }
 
 
+//////////////////////////////////////////////////////////////////////////
+
+
 void mimeError(char *s)
 {
-	kdWarning() << __FUNCTION__
+	kdWarning(CONDUIT_AREA) << __FUNCTION__
 		<< ": "
 		<< s
 		<< endl;
 }
+
+
+//////////////////////////////////////////////////////////////////////////
 
 /* virtual */ void VCalConduit::doTest()
 {
@@ -1436,6 +1286,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.40  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.39  2001/04/23 21:26:02  adridg
 // Some testing and i18n() fixups, 8-bit char fixes
 //

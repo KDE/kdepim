@@ -1,4 +1,4 @@
-/* vcal-setup.h			VCal Conduit
+/* vcal-setup.h		-*- C++ -*-	VCal Conduit
 **
 ** Copyright (C) 1998-2001 Dan Pilone
 **
@@ -28,14 +28,14 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-
-
 #ifndef __VCAL_SETUP_H
 #define __VCAL_SETUP_H
 
 class QLineEdit;
 class QCheckBox;
 class QPushButton;
+class QGridLayout;
+class QLabel;
 
 #include "gsetupDialog.h"
 
@@ -44,35 +44,42 @@ class VCalSetupPage : public setupDialogPage
 	Q_OBJECT
 
 public:
-	VCalSetupPage(setupDialog *,KConfig&);
-
+	VCalSetupPage(setupDialog *, KConfig&);
+	virtual ~VCalSetupPage();
 	virtual int commitChanges(KConfig&);
 
 public slots:
 	void slotBrowse();
 
 private:
-	QLineEdit* fCalendarFile;
-	QCheckBox* fPromptYesNo;
-	QPushButton *fBrowseButton;
-} ;
-
-
+  QLineEdit *fCalendarFile;
+  QCheckBox *fPromptFirstTime;
+  QPushButton *fBrowseButton;
+  QCheckBox *fDeleteOnPilot;
+  QGridLayout *grid;
+  QLabel* FileLabel;
+};
 
 
 class VCalSetup : public setupDialog
 {
   Q_OBJECT
 
-friend class VCalConduit;
+  //friend class VCalConduit;
 public:
-	VCalSetup(QWidget *parent=0L);
+  VCalSetup(QWidget *parent=0L);
+  virtual ~VCalSetup();
+  static const QString VCalGroup;
 
-protected:
-	static const QString VCalGroup;
+private:
+  VCalSetupPage *sPage;
+  setupInfoPage *iPage;
 };
 
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.6  2001/02/07 15:46:32  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

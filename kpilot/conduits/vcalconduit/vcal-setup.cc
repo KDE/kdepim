@@ -90,56 +90,65 @@
 
 #include "vcal-setup.moc"
 
-VCalSetupPage::VCalSetupPage(setupDialog *parent,KConfig& config) :
+VCalSetupPage::VCalSetupPage(setupDialog *parent, KConfig& config) :
 	setupDialogPage(i18n("Calendar"),parent)
 {
-	FUNCTIONSETUP;
+  FUNCTIONSETUP;
 
-	QGridLayout *grid=new QGridLayout(this,2,3,SPACING);
+  grid = new QGridLayout(this, 2, 4, SPACING);
+  
+  FileLabel =
+    new QLabel(i18n("Calendar File:"), this);
 
-
-	QLabel* currentLabel;
-
-
-	currentLabel = new QLabel(i18n("Calendar File:"),
-			    this);
-
-	fCalendarFile = new QLineEdit(this);
-	fCalendarFile->setText(config.readEntry("CalFile", ""));
-	fCalendarFile->resize(200, fCalendarFile->height());
-
-	fBrowseButton = new QPushButton(i18n("Browse"), this);
-	fBrowseButton->adjustSize();
-	connect(fBrowseButton, SIGNAL(clicked()), this, SLOT(slotBrowse()));
-
-
-	grid->addWidget(currentLabel,0,0);
-	grid->addWidget(fCalendarFile,0,1);
-	grid->addWidget(fBrowseButton,0,2);
-
-	fPromptYesNo = new QCheckBox(i18n("&Prompt before changing data."), 
-		this);
-	fPromptYesNo->adjustSize();
-	fPromptYesNo->setChecked(config.readBoolEntry("FirstTime", TRUE));
-
-	grid->addWidget(fPromptYesNo,1,1);
+  fCalendarFile = new QLineEdit(this);
+  fCalendarFile->setText(config.readEntry("CalFile", ""));
+  fCalendarFile->resize(200, fCalendarFile->height());
+  
+  fBrowseButton = new QPushButton(i18n("Browse"), this);
+  fBrowseButton->adjustSize();
+  connect(fBrowseButton, SIGNAL(clicked()), this, SLOT(slotBrowse()));
+    
+  grid->addWidget(FileLabel, 0, 0);
+  grid->addWidget(fCalendarFile, 0, 1);
+  grid->addWidget(fBrowseButton, 0, 2);
+  
+  fPromptFirstTime = new QCheckBox(i18n("&Prompt before changing data."), 
+				   this);
+  fPromptFirstTime->adjustSize();
+  fPromptFirstTime->setChecked(config.readBoolEntry("FirstTime", TRUE));
+  
+  grid->addWidget(fPromptFirstTime, 1, 1);
+  
+  fDeleteOnPilot =
+    new QCheckBox(i18n("Delete locally deleted records on pilot"),
+		  this);
+  fDeleteOnPilot->adjustSize();
+  fDeleteOnPilot->setChecked(config.readBoolEntry("DeleteOnPilot", true));
+  grid->addWidget(fDeleteOnPilot, 2, 1);
 }
+
+
+VCalSetupPage::~VCalSetupPage()
+{
+  delete fCalendarFile;
+  delete fPromptFirstTime;
+  delete fBrowseButton;
+  delete fDeleteOnPilot;
+  delete FileLabel;
+  delete grid;
+}
+
 
 int VCalSetupPage::commitChanges(KConfig& config)
 {
-	FUNCTIONSETUP;
+  FUNCTIONSETUP;
 
-	config.writeEntry("CalFile", fCalendarFile->text());
-	if (fPromptYesNo->isChecked())
-	{
-		config.writeEntry("FirstTime", "true");
-	}
-	else
-	{
-		config.writeEntry("FirstTime", "false");
-	}
-
-	return 0;
+  config.writeEntry("CalFile", fCalendarFile->text());
+  config.writeEntry("FirstTime", 
+		    fPromptFirstTime->isChecked() ? "true" : "false");
+  config.writeEntry("DeleteOnPilot",
+		    fDeleteOnPilot->isChecked() ? "true" : "false");
+  return 0;
 }
 
 
@@ -158,18 +167,28 @@ void VCalSetupPage::slotBrowse()
 /* static */ const QString VCalSetup::VCalGroup("vcalOptions");
 
 VCalSetup::VCalSetup(QWidget *parent) :
-	setupDialog(parent,VCalGroup)
+	setupDialog(parent, VCalGroup)
 {
 	FUNCTIONSETUP;
-	KConfig& config=KPilotConfig::getConfig(VCalGroup);
-	addPage(new VCalSetupPage(this,config));
-	addPage(new setupInfoPage(this));
+	KConfig& config = KPilotConfig::getConfig(VCalGroup);
+	sPage = new VCalSetupPage(this, config);
+	if (sPage) addPage(sPage);
+	iPage = new setupInfoPage(this);
+	if (iPage) addPage(iPage);
 
 	setupDialog::setupWidget();
 }
 
+VCalSetup::~VCalSetup() {
+  delete sPage;
+  delete iPage;
+}
+
 
 // $Log$
+// Revision 1.13  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.12  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

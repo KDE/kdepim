@@ -42,10 +42,13 @@
 #include "vcalBase.h"
 #endif
 
+#ifndef QBITARRAY_H
+#include <qbitarray.h>
+#endif
+
 class PilotRecord;
 class PilotDateEntry;
 class VObject;
-
 	
 class VCalConduit : public VCalBaseConduit
 {
@@ -67,6 +70,61 @@ protected:
 	void updateVObject(PilotRecord *rec);
 
 private:
+	struct tm getStartTime(VObject *vevent);
+	struct tm getEndTime(VObject *vevent);
+	void setAlarms(PilotDateEntry *dateEntry, VObject
+		       *vevent) const;
+	void firstSyncCopy(bool DeleteOnPilot);
+
+	/** Copy the start and end times from @arg *vevent to @arg
+	 *dateEntry. */
+	void setStartEndTimes(PilotDateEntry *dateEntry,
+			      VObject *vevent);
+
+	static void setVcalStartEndTimes(VObject *vevent, 
+					 const PilotDateEntry &dateEntry);
+	static void setVcalAlarms(VObject *vevent, 
+				  const PilotDateEntry &dateEntry);
+	static void setVcalRecurrence(VObject *vevent, 
+				      const PilotDateEntry &dateEntry);
+	static void setVcalExceptions(VObject *vevent, 
+				      const PilotDateEntry &dateEntry);
+
+	struct eventRepetition {
+	  enum ::repeatTypes type;
+	  int freq;
+	  bool hasEndDate;
+	  struct tm startDate, endDate;
+	  int duration; // 0 means forever
+	  QBitArray weekdays;
+	  DayOfMonthType repeatDay; // for monthlyByPos
+	  
+	  eventRepetition() {
+	    type = ::repeatNone;
+	    weekdays = QBitArray(7);
+	  }
+
+	  eventRepetition(const eventRepetition &e) {
+	    type = e.type;
+	    freq = e.freq;
+	    hasEndDate = e.hasEndDate;
+	    startDate = e.startDate;
+	    endDate = e.endDate;
+	    duration = e.duration;
+	    weekdays = e.weekdays;
+	    repeatDay = e.repeatDay;
+	  }
+	};
+
+	eventRepetition getRepetition(VObject *vevent);
+	void setRepetition(PilotDateEntry *dateEntry, 
+			   const eventRepetition &er);
+
+	/** Get the list of exceptions for a repeating event. The
+	    result is an array of struct tm and should be free()d
+	    after use. The number of exceptions is written to @arg
+	    *n. */
+	struct tm *getExceptionDates(VObject *vevent, int *n);
 
 	/**
 	* Set the event to repeat forever, with repeat
@@ -98,16 +156,19 @@ private:
 	* This function contains code by Dag Nygren.
 	*/
 	void repeatUntil(PilotDateEntry *dateEntry,
-		struct tm *start,
-		int rFreq,
-		int rDuration,
-		PeriodConstants period);
+			 const struct tm *start,
+			 int rFreq,
+			 int rDuration,
+			 PeriodConstants period);
 };
 
 #endif
 
 
 // $Log$
+// Revision 1.15  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.14  2001/03/10 18:26:04  adridg
 // Refactored vcal conduit and todo conduit
 //

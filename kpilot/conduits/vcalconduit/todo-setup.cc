@@ -106,14 +106,10 @@ TodoSetup::TodoSetup(QWidget *parent)
 int TodoSetupPage::commitChanges(KConfig& config)
 {
 	config.writeEntry("CalFile", fCalendarFile->text());
-	if (fPromptYesNo->isChecked())
-	{
-		config.writeEntry("FirstTime", "true");
-	}
-	else
-	{
-		config.writeEntry("FirstTime", "false");
-	}
+	config.writeEntry("FirstTime", 
+			  fPromptFirstTime->isChecked() ? "true" : "false");
+	config.writeEntry("DeleteOnPilot",
+			  fDeleteOnPilot->isChecked() ? "true" : "false");
 
 	return 0;
 }
@@ -131,38 +127,53 @@ void TodoSetupPage::slotBrowse()
 TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig& config) :
 	setupDialogPage(i18n("ToDo File"),parent)
 {
-	FUNCTIONSETUP;
+  FUNCTIONSETUP;
 
-	QGridLayout *grid=new QGridLayout(this,2,3,SPACING);
+  grid = new QGridLayout(this, 2, 3, SPACING);
 
-  QLabel* currentLabel;
-
-
-  currentLabel = new QLabel(i18n("Calendar File:"),
+  fCalFileLabel = new QLabel(i18n("Calendar File:"),
 			    this);
-  currentLabel->adjustSize();
+  fCalFileLabel->adjustSize();
+  grid->addWidget(fCalFileLabel, 0, 0);
   
   fCalendarFile = new QLineEdit(this);
   fCalendarFile->setText(config.readEntry("CalFile", ""));
   fCalendarFile->resize(200, fCalendarFile->height());
+  grid->addWidget(fCalendarFile, 0, 1);
 
   fBrowseButton = new QPushButton(i18n("Browse"), this);
   fBrowseButton->adjustSize();
   connect(fBrowseButton, SIGNAL(clicked()), this, SLOT(slotBrowse()));
-  
-	grid->addWidget(currentLabel,0,0);
-	grid->addWidget(fCalendarFile,0,1);
-	grid->addWidget(fBrowseButton,0,2);
+  grid->addWidget(fBrowseButton, 0, 2);
 
-  fPromptYesNo = new QCheckBox(i18n("&Prompt before changing data."), this);
-  fPromptYesNo->adjustSize();
-  fPromptYesNo->setChecked(config.readBoolEntry("FirstTime", TRUE));
+  fPromptFirstTime =
+    new QCheckBox(i18n("&Prompt before changing data."), this);
+  fPromptFirstTime->adjustSize();
+  fPromptFirstTime->setChecked(config.readBoolEntry("FirstTime", TRUE));
+  grid->addWidget(fPromptFirstTime, 1, 1);
 
-	grid->addWidget(fPromptYesNo,1,1);
+  fDeleteOnPilot = 
+    new QCheckBox(i18n("Delete locally deleted records on pilot"),
+		  this);
+  fDeleteOnPilot->adjustSize();
+  fDeleteOnPilot->setChecked(config.readBoolEntry("DeleteOnPilot", true));
+  grid->addWidget(fDeleteOnPilot, 2, 1);
+}
+
+TodoSetupPage::~TodoSetupPage() {
+  delete fCalendarFile;
+  delete fPromptFirstTime;
+  delete fDeleteOnPilot;
+  delete fBrowseButton;
+  delete fCalFileLabel;
+  delete grid;
 }
 
 
 // $Log$
+// Revision 1.1  2001/04/16 13:36:20  adridg
+// Moved todoconduit
+//
 // Revision 1.13  2001/04/01 17:32:05  adridg
 // Fiddling around with date properties
 //

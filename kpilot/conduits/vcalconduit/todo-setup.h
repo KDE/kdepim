@@ -36,7 +36,8 @@
 class QLineEdit;
 class QCheckBox;
 class QPushButton;
-
+class QGridLayout;
+class QLabel;
 
 class TodoSetupPage : public setupDialogPage
 {
@@ -44,6 +45,7 @@ class TodoSetupPage : public setupDialogPage
 
 public:
 	TodoSetupPage(setupDialog *,KConfig&);
+	virtual ~TodoSetupPage();
 
 	virtual int commitChanges(KConfig&);
 
@@ -52,8 +54,11 @@ public slots:
 
 private:
 	QLineEdit* fCalendarFile;
-	QCheckBox* fPromptYesNo;
+	QCheckBox* fPromptFirstTime;
+	QCheckBox* fDeleteOnPilot;
 	QPushButton *fBrowseButton;
+	QLabel* fCalFileLabel;
+	QGridLayout* grid;
 } ;
 
 
@@ -73,6 +78,9 @@ protected:
 
 
 // $Log$
+// Revision 1.1  2001/04/16 13:36:20  adridg
+// Moved todoconduit
+//
 // Revision 1.6  2001/02/07 15:46:32  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //
