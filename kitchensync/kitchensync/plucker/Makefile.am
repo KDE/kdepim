@@ -39,3 +39,5 @@ libksync_pluckerpart_la_SOURCES = pluckerpart.cpp pluckerinterface.skel \
 
 METASOURCES = AUTO
 
+kspluckerconfigwidget.lo: kspluckerconfigwidget.ui.h
+
