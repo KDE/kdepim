@@ -697,6 +697,8 @@ class DisplayedHeadersWidget : public BaseWidget {
     DisplayedHeadersWidget(DisplayedHeaders *d, QWidget *p=0, const char *n=0);
     ~DisplayedHeadersWidget();
 
+    void apply();
+
   protected:
 
      class HdrItem : public QListBoxText {

@@ -1237,8 +1237,17 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
 
 KNConfig::DisplayedHeadersWidget::~DisplayedHeadersWidget()
 {
-  if(s_ave)
+}
+
+
+
+void KNConfig::DisplayedHeadersWidget::apply()
+{
+  if(s_ave) {
+    d_ata->setDirty(true);
     d_ata->save();
+  }
+  s_ave = false;
 }
 
 
