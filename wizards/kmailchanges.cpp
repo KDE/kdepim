@@ -110,6 +110,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       KEMailSettings es;
       es.setSetting( KEMailSettings::RealName, KolabConfig::self()->realName() );
       es.setSetting( KEMailSettings::EmailAddress, email );
+      es.setSetting( KEMailSettings::ClientProgram, "kontact" );
 
       KPIM::IdentityManager identityManager;
       if ( !identityManager.allEmails().contains( email ) ) {
