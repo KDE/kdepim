@@ -1,6 +1,13 @@
 KPilot Developer's notes for may 25th 2002
 ==========================================
 
+2002-05-21  Adriaan de Groot
+* Renamed PilotDatabase::cleanUpDatabase() to cleanup(), this
+  affected the Serial and Local reimplementations and also the
+  abbrowser conduit, which is the only conduit to do the right
+  thing and cleanup the database after a sync.
+* Added missing close and delete on the databases for plugins.
+
 2002-05-19  Adriaan de Groot
 * Time to take a good hard look at the conduits individually.
   We'll start with the notes conduit, since it only does one-

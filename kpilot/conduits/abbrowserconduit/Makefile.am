@@ -22,7 +22,7 @@ libabbrowserconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
 libabbrowserconduit_la_LIBADD = ../../lib/libkpilot.la
 # You may want to enable debugging like this on systems with broken kdelibs
 #
-# libabbrowserconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
+libabbrowserconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
 
 testdcop_SOURCES = testAbbrowserDCOP.cc contactentry.cpp
 testdcop_LDFLAGS = $(all_libraries) $(KDE_RPATH)
