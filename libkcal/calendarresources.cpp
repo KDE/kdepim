@@ -275,18 +275,18 @@ void CalendarResources::deleteTodo(Todo *todo)
 
 QPtrList<Todo> CalendarResources::rawTodos()
 {
-  kdDebug(5800) << "CalendarResources::rawTodos()" << endl;
+//  kdDebug(5800) << "CalendarResources::rawTodos()" << endl;
 
   QPtrList<Todo> result;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    kdDebug(5800) << "Getting raw todos from '" << (*it)->resourceName()
-                  << "'" << endl;
+//    kdDebug(5800) << "Getting raw todos from '" << (*it)->resourceName()
+//                  << "'" << endl;
     QPtrList<Todo> todos = (*it)->rawTodos();
     Todo *todo;
     for ( todo = todos.first(); todo; todo = todos.next() ) {
-      kdDebug(5800) << "Adding todo to result" << endl;
+//      kdDebug(5800) << "Adding todo to result" << endl;
       result.append( todo );
       mResourceMap[todo] = *it;
     }
