@@ -60,6 +60,8 @@ namespace {
   public:
     Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const { 
 
+       if ( !writer ) return AsIcon;
+
        VCardConverter vcc;
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return AsIcon;
