@@ -17,6 +17,7 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qtimer.h>
+#include <qregexp3.h>
 
 #include <kseparator.h>
 #include <kiconloader.h>
@@ -308,13 +309,16 @@ void KNGroupBrowser::slotItemDoubleClicked(QListViewItem *it)
 void KNGroupBrowser::slotFilter(const QString &txt)
 {
   QString filtertxt = txt.lower();
+  QRegExp3 reg(filtertxt, false, false);
   CheckItem *cit=0;
 
   bool notCheckSub = !subCB->isChecked();
   bool notCheckNew = !newCB->isChecked();
   bool notCheckStr = (filtertxt.isEmpty());
 
-  bool doIncrementalUpdate = (incrementalFilter && (filtertxt.left(lastFilter.length())==lastFilter));
+  bool isRegexp = filtertxt.contains(QRegExp("[^a-z0-9\\-.]"));
+
+  bool doIncrementalUpdate = (!isRegexp && incrementalFilter && (filtertxt.left(lastFilter.length())==lastFilter));
 
   if (doIncrementalUpdate) {
     QSortedList<KNGroupInfo> *tempList = new QSortedList<KNGroupInfo>();
@@ -335,7 +339,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
       if ((notCheckSub||g->subscribed)&&
           (notCheckNew||g->newGroup)&&
-          (notCheckStr||(g->name.find(filtertxt)!=-1)))
+          (notCheckStr||(isRegexp? (reg.search(g->name,0) != -1):(g->name.find(filtertxt)!=-1))))
         matchList->append(g);
     }
   }
@@ -352,7 +356,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
   }
 
   lastFilter = filtertxt;
-  incrementalFilter = true;
+  incrementalFilter = !isRegexp;
 
   leftLabel->setText(i18n("Groups on %1: (%2 displayed)").arg(a_ccount->name()).arg(matchList->count()));
 
