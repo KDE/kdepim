@@ -46,8 +46,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2002-02-05</date>
-<releaseinfo>2.20.00</releaseinfo>
+<date>2003-09-18</date>
+<releaseinfo>3.0</releaseinfo>
 
 <abstract><para>&knotes; is a sticky notes application for the
 desktop.</para></abstract>
@@ -82,74 +82,195 @@ defaults. </para>
 
 </chapter>
 
-<chapter id="configuration">
-<title>Configuration</title>
-
-<sect1 id="configuring-display">
-<title>Configuring the Display in &knotes;</title>
-
-<para>To configure the display:</para>
-
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the panel icon.</para></step>
-<step><para>Select <guimenuitem>Preferences...</guimenuitem></para>
-<para>The &knotes; <guilabel>&knotes; Defaults</guilabel> dialog will
-open.</para> </step>
-<step><para>Choose the <guiicon>Display</guiicon> icon from the three icons at
-the left.</para></step>
-</procedure>
-
-<para>The following choices are available:</para>
+<chapter id="using-knotes">
+<title>Using &knotes;</title>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Text Color</guilabel></term>
+<term>Creating a new note:</term>
+<listitem>
+<para>To create a new note &RMB; click on the &knotes; panel
+icon and select <guimenuitem>New Note</guimenuitem> or using the
+shortcut <keycombo
+action="simul">&Alt;&Shift;<keycap>N</keycap></keycombo>.</para>
+<para>You can create a new note containing the contents of the 
+clipboard by selecting <guimenuitem>New Note From
+Clipboard</guimenuitem> or using the shortcut <keycombo
+action="simul">&Alt;&Shift;<keycap>C</keycap></keycombo>.</para>
+
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Writing your note:</term>
+<listitem>
+<para>To write your note, simply type the note in the space provided.
+Normal keyboard and mouse editing functions are supported. 
+<mousebutton>Right</mousebutton> clicking in the editing space provides the
+following menu options:</para>
+
+<itemizedlist>
+<listitem><para><guimenuitem>Undo</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Redo</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Cut</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Copy</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Paste</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Clear</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Select All</guimenuitem></para></listitem>
+</itemizedlist>
+<para>Text may be selected by holding down the &LMB; and moving the
+mouse, or by holding down the &Shift; key and using the
+<keycap>arrow</keycap> keys.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Inserting the date:</term>
+<listitem>
+<para>To insert the current date in the Note &RMB; click on the title
+bar of the note and select <guimenuitem>Insert
+Date</guimenuitem>.</para>
+<para>The current date and time will be inserted at the cursor
+position in the text of the note.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Renaming a note:</term>
+<listitem>
+<para>To rename a note &RMB; click on the note title bar and select
+<guimenuitem>Rename...</guimenuitem>.</para>
+<para>Type the new name of the note in the dialog that appears.  To
+accept the new name, press the <guibutton>OK</guibutton> button.  To
+exit the dialog without renaming the note, press the
+<guibutton>Cancel</guibutton> button.  To clear what you have typed
+and start over, click the <guibutton>Clear</guibutton> button.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Mailing a note:</term>
+<listitem>
+<para>To mail a note &RMB; click on the note title bar and select
+<guimenuitem>Mail...</guimenuitem>.</para> 
+<para>What happens next depends on how you configured the Mail action in the
+<guilabel>Preferences...</guilabel> dialog.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Printing a note:</term>
+<listitem>
+<para>To print a note &RMB; click on the note title bar and select
+<guimenuitem>Print</guimenuitem>.</para>
+<para>A standard &kde; print dialog will open.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Deleting a note:</term>
+<listitem>
+<para>To delete a note &RMB; click on the note title bar and select
+<guimenuitem>Delete</guimenuitem>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Hiding a note:</term>
+<listitem>
+<para>To hide a note, click the <guiicon>X</guiicon> in the upper
+right corner of the title bar of the note.  The note will no longer be
+displayed on the screen.  The note itself will not be deleted.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Displaying notes:</term>
+<listitem>
+<para>When you start &knotes;, all notes will display on the screen.  If you
+hide a note and later want to display it, &LMB; on the &knotes; panel
+icon and select the note you wish to display.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Desktop functions:</term>
+<listitem>
+<para>To send a note to a specific desktop, &RMB; click on the title
+bar of the note and select <guisubmenu>To Desktop</guisubmenu>.
+Choose the desktop desired, or alternatively, <guimenuitem>All
+desktops</guimenuitem></para> 
+<para>To make the note remain on top of other windows &RMB; click on
+the title bar of the note and select <guimenuitem>Always On
+Top</guimenuitem>.</para> 
+<para>To return the note to more normal window behavior, simply repeat
+this process.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Quitting &knotes;</term>
+<listitem>
+<para>To quit &knotes; &RMB; click on the panel icon and select
+<guimenuitem>Quit</guimenuitem>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</chapter>
+
+<chapter id="configuration">
+<title>Configuration</title>
+
+<sect1 id="defaults">
+<title>Configuring &knotes; Default Settings</title>
+
+<para>To configure &knotes; &RMB; click on the panel icon. Select
+<guimenuitem>Configure KNotes...</guimenuitem> The &knotes;
+<guilabel>KNotes Defaults</guilabel> dialog will open.</para>
+
+<variablelist>
+<title>The <guilabel>Display</guilabel> Section</title>
+<varlistentry>
+<term><guilabel>Text color:</guilabel></term>
 <listitem><para>The color square shows the current text color.  By clicking this
 color square you open the standard &kde; color selection
 dialog.</para></listitem> 
 </varlistentry>
 <varlistentry>
-<term><guilabel>Background Color</guilabel></term>
+<term><guilabel>Background color:</guilabel></term>
 <listitem><para>The color square shows the current background color.  By
 clicking this color square you open the standard &kde; color selection
 dialog.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Default Width</guilabel></term>
+<term><guilabel>Default width:</guilabel></term>
 <listitem><para>The width of the note in pixels.  Edit this number as
 desired.</para></listitem> 
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Default Height</guilabel></term>
+<term><guilabel>Default height:</guilabel></term>
 <listitem><para>The height of the note in pixels.  Edit this number as
 desired.</para></listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>Show note in taskbar</guilabel></term>
+<listitem><para>By default, &knotes; notes do not show an entry in the
+taskbar for each note.  If you prefer they do so, enable this
+option.</para>
+</listitem>
+</varlistentry>
 </variablelist>
 
-</sect1>
-
-<sect1 id="configuring-editor">
-<title>Configuring the Editor in &knotes;</title>
-<para>To customize the editor:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the panel
-icon.</para></step>
-<step><para>Select <guimenuitem>Preferences...</guimenuitem></para>
-<para>The &knotes; <guilabel>&knotes; Defaults</guilabel> dialog will
-open.</para></step> 
-<step><para>Choose the <guiicon>Editor</guiicon> icon from the three
-icons at the left.</para></step>
-</procedure>
-
-<para>The following choices are available:</para>
-
 <variablelist>
+<title>The <guilabel>Editor</guilabel> Section</title>
 <varlistentry>
 <term><guilabel>Tab Size</guilabel></term>
-<listitem><para>This is the size of the tab in spaces.  Edit this number as
-desired.</para></listitem>
+<listitem><para>This is the size of the indent produced by the &Tab;
+key  in spaces.  Edit this number as desired.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Auto Indent</guilabel></term>
@@ -158,7 +279,7 @@ on.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Edit Rich Text</guilabel></term>
+<term><guilabel>Rich Text</guilabel></term>
 <listitem>
 <para>Not yet implemented</para>
 </listitem>
@@ -184,24 +305,8 @@ dialog.</para></listitem>
 </varlistentry>
 </variablelist>
 
-</sect1>
-
-<sect1 id="configuring-actions">
-<title>Configuring Actions in &knotes;</title>
-
-<para>To configure actions in &knotes;:</para>
-<procedure><step><para>Right-click on the &knotes; panel
-icon.</para></step><step>
-<para>Select <guimenuitem>Preferences...</guimenuitem></para>
-<para>The &knotes; <guilabel>Defaults - KNotes</guilabel> dialog will
-open.</para></step>
-<step><para>Choose the <guiicon>Actions</guiicon> icon from the three icons at the
-left.</para></step>
-</procedure>
-
-<para>The following choices are available:</para>
-
 <variablelist>
+<title>The <guilabel>Actions</guilabel> Section</title>
 <varlistentry>
 <term><guilabel>Mail Action</guilabel></term>
 <listitem><para>Type a mail command and any required command line switches in
@@ -211,188 +316,12 @@ the filename of the note body to the mail command.</para>
 </listitem>
 </varlistentry>
 
-<!-- 
-<varlistentry>
-<term><guilabel>Print</guilabel></term>
-<listitem><para>Type a printing command and any required command line switches
-in this box.</para>
-<para>Use the following variables in the command line:</para>
-<para><token>%p</token> is the printer name.</para>
-<para><token>%t</token> is the title.</para>
-<para><token>%f</token> is the filename of the note body.</para>
-</listitem>
-</varlistentry> -->
-
 </variablelist>
 
 </sect1>
 
-</chapter>
-
-<chapter id="using-knotes">
-<title>Using &knotes;</title>
-
-<sect1 id="create-new-note">
-<title>Creating a New Note</title>
-
-<para>To create a new note:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the &knotes; panel
-icon.</para></step>
-<step><para>Select <guimenuitem>New Note</guimenuitem>.</para></step>
-</procedure>
-
-</sect1>
-
-<sect1 id="typing-the-note">
-<title>Writing Your Note</title>
-
-<para>To write your note, simply type the note in the space provided.  Normal
-keyboard and mouse editing functions are supported.</para> 
-
-<para><mousebutton>Right</mousebutton> clicking in the editing space provides the
-following menu options:</para>
-
-<itemizedlist>
-<listitem><para><guimenuitem>Undo</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Redo</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Cut</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Copy</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Paste</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Clear</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Select All</guimenuitem></para></listitem>
-</itemizedlist>
-
-<para>Text may be selected by holding down the <mousebutton>left</mousebutton>
-mouse button and moving the mouse, or by holding down the &Shift;
-key and using the <keycap>arrow</keycap> keys.</para>
-
-</sect1>
-
-<sect1 id="inserting-the-date">
-<title>Inserting the Date</title>
-
-<para>To insert the current date in the Note:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the title bar of the note.</para></step> 
-<step><para>Select <guimenuitem>Insert Date</guimenuitem>.</para></step>
-</procedure>
-
-<para>The current date and time will be inserted at the cursor position in the
-text of the note.</para>
-
-</sect1>
-
-<sect1 id="renaming-a-note">
-<title>Renaming a Note</title>
-
-<para>To rename a note:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the note title
-bar.</para></step>
-<step><para>Select <guimenuitem>Rename</guimenuitem>.</para></step>
-</procedure>
-
-<para>Type the new name of the note in the dialog that appears.  To accept the
-new name, press the <guibutton>OK</guibutton> button.  To exit the dialog
-without renaming the note, press the <guibutton>Cancel</guibutton> button.  To
-clear what you have typed and start over, click the <guibutton>Clear</guibutton>
-button.</para>
-
-</sect1>
-<sect1 id="mailing-a-note">
-<title>Mailing a Note</title>
-
-<para>To mail a note:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the note title
-bar.</para></step>
-<step><para>Select <guimenuitem>Mail</guimenuitem>.</para></step>
-</procedure>
-
-<para>What happens next depends on how you configured the Mail action in the
-<guilabel>Preferences...</guilabel> dialog.</para>
-
-</sect1>
-
-<sect1 id="printing-a-note">
-<title>Printing a Note</title>
-
-<para>To print a note:</para>
-
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the note title
-bar.</para></step>
-<step><para>Select <guimenuitem>Print</guimenuitem>.</para></step>
-</procedure>
-<!-- 
-<para>What happens next depends on how you configured the Print action in the
-<guilabel>Preferences...</guilabel> dialog.</para> -->
-
-<para>A standard &kde; print dialog will open.</para>
-
-</sect1>
-
-
-<sect1 id="deleting-a-note">
-<title>Deleting a Note</title>
-<para>To delete a note:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the note title
-bar.</para></step>
-<step><para>Select <guimenuitem>Delete</guimenuitem>.</para></step>
-</procedure>
-</sect1>
-
-<sect1 id="hiding-a-note">
-<title>Hiding a Note</title>
-
-<para>To hide a note, click the <guiicon>X</guiicon> in the upper right corner
-of the title bar of the note.  The note will no longer be displayed on the
-screen.  The note itself will not be deleted.</para>
-
-</sect1>
-
-<sect1 id="displaying-notes">
-<title>Displaying Notes</title>
-
-<para>When you start &knotes;, all notes will display on the screen.  If you
-hide a note and later want to display it:</para>
-
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the &knotes; panel icon.</para></step>
-<step><para>Select <guimenuitem>Notes</guimenuitem>.</para></step>
-<step><para>Choose the note you want to display.</para></step>
-</procedure>
-
-</sect1>
-
-<sect1 id="desktop-functions">
-<title>Desktop Functions</title>
-
-<para>To send a note to a specific desktop:</para>
-
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the title bar of the
-note.</para></step>
-<step><para>Select <guimenuitem>To Desktop</guimenuitem></para></step>
-<step><para>Choose the desktop desired, or alternatively,
-<guimenuitem>All desktops</guimenuitem></para></step> </procedure>
-
-<para>To make the note remain on top of other windows:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the title bar of the
-note.</para></step>
-<step><para>Select <guimenuitem>Always On Top</guimenuitem>.</para></step>
-</procedure>
-
-<para>To return the note to more normal window behavior, simply repeat this
-process.</para> 
-
-</sect1>
-
 <sect1 id="customizing-display">
-<title>Customizing a Note Display</title>
+<title>Customizing a Single Note Display</title>
 
 <para>You can customize each note independently of the global
 settings.  The settings you can customize are identical to those
@@ -401,28 +330,10 @@ section, but they will apply only to the note you are changing.  Any
 other open notes, and any new notes you create, will use the default
 settings.</para>
 
-<para>To customize a note display:</para>
-
-<procedure>
-<step><para><guimenuitem>Right</guimenuitem> click on the note
-title bar.</para></step>
-<step><para>Select <guimenuitem>Note Preferences...</guimenuitem>.</para>
-<para>The <guilabel>Local Settings</guilabel> dialog will
-open.</para></step>
-<step><para>Choose the <guiicon>Display</guiicon> icon from the three icons at
-the left.</para></step>
-</procedure>
-
-</sect1>
-
-<sect1 id="quit-knotes">
-<title>Quitting &knotes;</title>
-<para>To quit &knotes;:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the panel
-icon.</para></step>
-<step><para>Select <guimenuitem>Quit</guimenuitem>.</para></step>
-</procedure>
+<para>To customize a single note display &RMB; click on the note title
+bar and select <guimenuitem>Preferences...</guimenuitem>.</para>
+<para>The <guilabel>Local Settings</guilabel> dialog will open,
+allowing you to configure the note.</para>
 </sect1>
 
 </chapter>
@@ -445,7 +356,9 @@ icon.</para></step>
 <email>holmegm@earthlink.net</email></para>
 
 <para>Documentation updated 2001 by Fabian Del Santo
-<email>linuxgnu@yahoo.com.au</email>.</para>
+<email>linuxgnu@yahoo.com.au</email> and 2003 by &Lauri.Watts;
+&Lauri.Watts.mail;.</para>
+
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
@@ -453,34 +366,6 @@ icon.</para></step>
 &underGPL;
 
 </chapter>
-
-<appendix id="installation">
-<title>Installation</title>
-
-<sect1 id="getting-knotes">
-<title>How to obtain &knotes;</title>
-
-&install.intro.documentation;
-
-</sect1>
-
-<sect1 id="requirements">
-<title>Requirements</title>
-
-<para>In order to print or mail notes, you need to have helper
-applications installed, such as <command>a2ps</command> and &kmail;.
-You will need to configure &knotes; to use these helper applications.
-</para>
-
-</sect1>
-
-<sect1 id="compilation">
-<title>Compilation and Installation</title>
-
-&install.compile.documentation;
-
-</sect1>
-</appendix>
 
 &documentation.index; 
 
