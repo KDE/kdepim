@@ -49,7 +49,7 @@ namespace Kleo {
     CryptPlugFactory();
     ~CryptPlugFactory();
   public:
-    static const CryptPlugFactory * instance();
+    static CryptPlugFactory * instance();
 
 #ifndef LIBKLEOPATRA_NO_COMPAT
     CryptPlugWrapper * active() const;
@@ -63,8 +63,8 @@ namespace Kleo {
     CryptPlugWrapperList & list() const { return *mCryptPlugWrapperList; }
 #endif
 
-  private:
     void scanForBackends();
+  private:
     void loadFromConfig( KConfig * );
 
   private:

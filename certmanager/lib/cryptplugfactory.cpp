@@ -52,8 +52,6 @@ Kleo::CryptPlugFactory::CryptPlugFactory()
   mCryptPlugWrapperList = new CryptPlugWrapperList();
   loadFromConfig( kapp->config() );
   mCryptPlugWrapperList->setAutoDelete( true );
-  if ( mCryptPlugWrapperList->isEmpty() )
-    scanForBackends();
 }
 
 Kleo::CryptPlugFactory::~CryptPlugFactory() {
@@ -63,7 +61,7 @@ Kleo::CryptPlugFactory::~CryptPlugFactory() {
   mCryptPlugWrapperList = 0;
 }
 
-const Kleo::CryptPlugFactory * Kleo::CryptPlugFactory::instance() {
+Kleo::CryptPlugFactory * Kleo::CryptPlugFactory::instance() {
   if ( !mSelf )
     mSelf = new CryptPlugFactory();
   return mSelf;
@@ -96,8 +94,7 @@ CryptPlugWrapper * Kleo::CryptPlugFactory::openpgp() const {
 
 
 void Kleo::CryptPlugFactory::scanForBackends() {
-  CryptPlugWrapper::InitStatus initStatus;
-  QString errorMsg;
+  mCryptPlugWrapperList->clear();
 
   static const struct {
     const char * displayName;
@@ -122,6 +119,9 @@ void Kleo::CryptPlugFactory::scanForBackends() {
     CryptPlugWrapper * w =
       new CryptPlugWrapper( cryptPlugs[i].displayName, cryptPlugs[i].libName,
 			    QString::null, cryptPlugs[i].active );
+
+    CryptPlugWrapper::InitStatus initStatus;
+    QString errorMsg;
     if ( !w->initialize( &initStatus, &errorMsg ) ) {
       KMessageBox::queuedMessageBox( 0, KMessageBox::Error, i18n( cryptPlugs[i].errorMsg ) );
       delete w; w = 0;
@@ -175,6 +175,11 @@ void Kleo::CryptPlugFactory::loadFromConfig( KConfig * config ) {
   mCryptPlugWrapperList->clear();
 
   KConfigGroupSaver saver( config, "General" );
+
+  if ( !config->hasKey( "crypt-plug-count" ) ) {
+    scanForBackends();
+    return;
+  }
 
   const int numPlugins = config->readNumEntry( "crypt-plug-count", 0 );
 
