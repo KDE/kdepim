@@ -1,11 +1,123 @@
 ChangeLog for KNotes
 ====================
 
-2004/03/14  Dominique Devriese <devriese@kde.org>
+2004/03/31  Michael Brade <brade@kde.org>
 
-	* backport to KDE_3_2_BRANCH: fixed #72888, #73404, #75558: much
-	more robust conversion of old config files, now hopefully
-	absolutely no black notes anymore
+    * hmm, wasn't such a good idea to set a default desktop in KConfig XT - only
+      changes will actually be saved and thus every new note that is not moved
+      to a different desktop after creation appeared on the desktop KNotes was
+      started on. Fixed.
+
+2004/03/24  Michael Brade <brade@kde.org>
+
+    * fixed #71685: again a libical bug, it did not encode '\' at all so it was
+      possible to write control sequences in KNotes, e.g. \n.
+
+2004/03/23  Michael Brade <brade@kde.org>
+
+    * thanks to Luboš for his function that removes sm from the client
+      leader KNotes is not managed anymore by KWin (again) and is now
+      thus able to restore its notes properly on login with manually saved
+      sessions.
+    * fixed 75341: implemented support for the "strike out" text property,
+      not enabled in KDE 3.2.x yet due to feature and string freeze
+
+2004/03/21  Michael Brade <brade@kde.org>
+
+    * fixed Tab key handling in RT mode: do not give away focus to the font
+      combo box (in fact, not to anything)
+
+2004/03/19  Michael Brade <brade@kde.org>
+
+    * fixed updating the icon in the notes menu after a color change
+    * fixed change of font family in richt text mode
+    * fixed updating of font and font size combo box
+    * fixed bug that made the html source show up in a text note when switching
+      from rich text to plain text and then restarting KNotes
+    * make KNotes interpret the text as rich text when switching from pain text
+      to rich text
+    * moved the rich text -> plain text conversion to KNoteEdit
+    * finally switched rich text toolbar to XMLGUI as well
+    * fixed #60841: include the title as subject by default when mailing a note
+    * make mailing a note possible again at all - KMail now needs --body and not
+      --msg as argument
+    * convert rich text notes to plain text before emailing them
+    * fixed #75793: notes should not resize in RT mode, moved to the bottom of
+      the note
+
+2004/03/17  Michael Brade <brade@kde.org>
+
+    * set an appropriate caption icon for the config dialog
+    * make the config dialogs non-modal, put the nodeId as widget name so that
+      we can cache the dialog and open more than one at once
+    * fixed #72657: Show note in taskbar did not work properly due to
+      KWin not preserving NET::SkipTaskbar for hidden windows
+    * fixed a bug that changes in the note default configuration will
+      never be used (use KStandardDirs::saveLocation() instead of
+      KStandardDirs::findResource())
+
+2004/03/16  Tobias Koenig <tokoe@kde.org>
+
+    * fixed bug that removed/added notes are/aren't visible in the LMB menu,
+      we need to keep the KXMLGUIFactory around if the menu is to be changed
+      later
+
+2004/03/16  Michael Brade <brade@kde.org>
+
+    * completely rewrote the config dialog, make it inherit KConfigDialog
+    * ported KNotes to KConfig XT, had to change the config file format:
+      removed "state" entry and added "KeepAbove", "KeepBelow", "ShowInTaskbar"
+
+2004/03/15  Michael Brade <brade@kde.org>
+
+    * removed const from KNotesApp::slotPreferences to make it possible to
+      set KNotesApp as parent of the config dialog -> fixes jumping to another
+      desktop when opening the config dialog
+
+2004/03/11  Michael Brade <brade@kde.org>
+
+    * massive internal improvements, no hacks anymore, only beautiful and
+      clean code left :-)
+    * KNotesApp provides the GUI for managing the KNote objects and KNote is the
+      only class dealing with the display of a particular note including config
+      file handling
+    * no attachments anymore - notes carry their uid and that is the config file
+      name anyway. Dunno why I introduced the attachments at all in the first
+      place...
+    * KNotes is now "network-enabled" regarding config files: it now only uses
+      KIO::NetAccess for the file handling.
+
+2004/03/09  Michael Brade <brade@kde.org>
+
+    * fixed #68127: notes are not really deleted if deleting is the last
+      action before quitting KNotes
+    * fixed #72888, #73404, #75558: much more robust conversion of old config
+      files, now hopefully absolutely no black notes anymore
+
+    (Backport to KDE 3.2 by Dominique Devriese)
+
+2004/03/08  Michael Brade <brade@kde.org>
+
+    * new version: 3.1
+
+2004/03/06  Michael Brade <brade@kde.org>
+
+    * fixed #74469: RMB menu locks whole desktop if opened on a modified note
+    * fixed #75507, #76126: handle (load) tabs correctly, fix in libical
+    * removed hack for the fix for #57367
+
+2004/02/24  Michael Brade <brade@kde.org>
+
+    * finished rich text mode, now using actions
+
+2004/01/18  Laurent Montel <montel@kde.org>
+
+    * if launching KNotes agin when already running, make it create a new note
+
+2004/01/11  Michael Brade <brade@kde.org>
+
+    * fixed MMB click on note title to put note really back
+    * started conversion to using actions in rich text mode (finally!)
 
 2003/10/21  Michael Brade <brade@kde.org>
 
