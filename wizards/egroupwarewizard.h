@@ -33,6 +33,8 @@ class KDE_EXPORT EGroupwareWizard : public KConfigWizard
     EGroupwareWizard();
     ~EGroupwareWizard();
 
+    QString validate();
+
     void usrReadConfig();
     void usrWriteConfig();
 
@@ -41,6 +43,7 @@ class KDE_EXPORT EGroupwareWizard : public KConfigWizard
     KLineEdit *mDomainEdit;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
+    KLineEdit *mXMLRPC;
     QCheckBox *mUseSSLConnectionCheck;
 };
 

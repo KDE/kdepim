@@ -12,7 +12,7 @@
     </entry>
     <entry name="Domain" type="String">
       <label>Domain name</label>
-      <default></default>
+      <default>default</default>
     </entry>
     <entry name="User" type="String">
       <label>User name</label>
@@ -21,6 +21,10 @@
     <entry name="Password" type="Password">
       <label>User password</label>
       <default></default>
+    </entry>
+    <entry name="xmlrpc_location" type="String">
+        <label>XMLRPC location on server</label>
+        <default>egroupware/xmlrpc.php</default>
     </entry>
     <entry name="UseSSLConnection" type="Bool">
       <label>Use SSL connection</label>

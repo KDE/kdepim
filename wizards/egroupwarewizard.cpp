@@ -32,13 +32,15 @@
 
 #include <klineedit.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qwhatsthis.h>
 
 
-static QString createURL( const QString &server, bool useSSL )
+static QString createURL( const QString &server, bool useSSL, const QString &location )
 {
   KURL url;
 
@@ -48,7 +50,7 @@ static QString createURL( const QString &server, bool useSSL )
     url.setProtocol( "http" );
 
   url.setHost( server );
-  url.setPath( "/egroupware/xmlrpc.php" );
+  url.setPath( "/" + location );
 
   return url.url();
 }
@@ -68,7 +70,7 @@ class CreateEGroupwareKabcResource : public KConfigPropagator::Change
       KRES::Manager<KABC::Resource> manager( "contact" );
       manager.readConfig();
 
-      QString url = createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection() );
+      QString url = createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection(), EGroupwareConfig::self()->xmlrpc_location() );
 
       KABC::ResourceXMLRPC *resource = new KABC::ResourceXMLRPC( url, EGroupwareConfig::self()->domain(),
                                                                  EGroupwareConfig::self()->user(),
@@ -102,7 +104,7 @@ class ChangeEGroupwareKabcResource : public KConfigPropagator::Change
           KABC::ResourceXMLRPC *resource = static_cast<KABC::ResourceXMLRPC*>( *it );
 
           resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(),
-                                     EGroupwareConfig::self()->useSSLConnection() ) );
+          EGroupwareConfig::self()->useSSLConnection(), EGroupwareConfig::self()->xmlrpc_location() ) );
           resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
           resource->prefs()->setUser( EGroupwareConfig::self()->user() );
           resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
@@ -135,7 +137,7 @@ class CreateEGroupwareKcalResource : public KConfigPropagator::Change
 
       KCal::ResourceXMLRPC *resource = new KCal::ResourceXMLRPC();
       resource->setResourceName( i18n( "eGroupware" ) );
-      resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection() ) );
+      resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection(), EGroupwareConfig::self()->xmlrpc_location() ) );
       resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
       resource->prefs()->setUser( EGroupwareConfig::self()->user() );
       resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
@@ -166,7 +168,7 @@ class ChangeEGroupwareKcalResource : public KConfigPropagator::Change
           KCal::ResourceXMLRPC *resource = static_cast<KCal::ResourceXMLRPC*>( *it );
 
           resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(),
-                                     EGroupwareConfig::self()->useSSLConnection() ) );
+          EGroupwareConfig::self()->useSSLConnection(), EGroupwareConfig::self()->xmlrpc_location() ) );
           resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
           resource->prefs()->setUser( EGroupwareConfig::self()->user() );
           resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
@@ -197,11 +199,11 @@ class CreateEGroupwareKnotesResource : public KConfigPropagator::Change
       KRES::Manager<ResourceNotes> manager( "notes" );
       manager.readConfig();
 
-      QString url = createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection() );
+      QString url = createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection(), EGroupwareConfig::self()->xmlrpc_location() );
 
       KNotes::ResourceXMLRPC *resource = new KNotes::ResourceXMLRPC();
       resource->setResourceName( i18n( "eGroupware" ) );
-      resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection() ) );
+      resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(), EGroupwareConfig::self()->useSSLConnection(), EGroupwareConfig::self()->xmlrpc_location() ) );
       resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
       resource->prefs()->setUser( EGroupwareConfig::self()->user() );
       resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
@@ -232,7 +234,7 @@ class ChangeEGroupwareKnotesResource : public KConfigPropagator::Change
           KNotes::ResourceXMLRPC *resource = static_cast<KNotes::ResourceXMLRPC*>( *it );
 
           resource->prefs()->setUrl( createURL( EGroupwareConfig::self()->server(),
-                                     EGroupwareConfig::self()->useSSLConnection() ) );
+          EGroupwareConfig::self()->useSSLConnection(), EGroupwareConfig::self()->xmlrpc_location() ) );
           resource->prefs()->setDomain( EGroupwareConfig::self()->domain() );
           resource->prefs()->setUser( EGroupwareConfig::self()->user() );
           resource->prefs()->setPassword( EGroupwareConfig::self()->password() );
@@ -304,40 +306,67 @@ EGroupwareWizard::EGroupwareWizard() : KConfigWizard( new EGroupwarePropagator )
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );
 
-  QLabel *label = new QLabel( i18n( "Server name:" ), page );
+  QLabel *label = new QLabel( i18n( "&Server name:" ), page );
   topLayout->addWidget( label, 0, 0 );
   mServerEdit = new KLineEdit( page );
+  label->setBuddy( mServerEdit );
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n( "Domain name:" ), page );
+  label = new QLabel( i18n( "&Domain name:" ), page );
   topLayout->addWidget( label, 1, 0 );
   mDomainEdit = new KLineEdit( page );
+  label->setBuddy( mDomainEdit );
   topLayout->addWidget( mDomainEdit, 1, 1 );
 
-  label = new QLabel( i18n( "User name:" ), page );
+  label = new QLabel( i18n( "&User name:" ), page );
   topLayout->addWidget( label, 2, 0 );
   mUserEdit = new KLineEdit( page );
+  label->setBuddy( mUserEdit );
   topLayout->addWidget( mUserEdit, 2, 1 );
 
-  label = new QLabel( i18n( "Password:" ), page );
+  label = new QLabel( i18n( "&Password:" ), page );
   topLayout->addWidget( label, 3, 0 );
   mPasswordEdit = new KLineEdit( page );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
+  label->setBuddy( mPasswordEdit );
   topLayout->addWidget( mPasswordEdit, 3, 1 );
 
-  mUseSSLConnectionCheck = new QCheckBox( i18n( "Use SSL connection" ), page );
-  topLayout->addMultiCellWidget( mUseSSLConnectionCheck, 4, 4, 0, 1 );
+  label = new QLabel( i18n( "&Location xmlrpc.php on server:" ), page );
+  topLayout->addWidget( label, 4, 0 );
+  mXMLRPC = new KLineEdit( page );
+  mXMLRPC->setMinimumWidth( 175 );
+  label->setBuddy( mXMLRPC );
+  topLayout->addWidget( mXMLRPC, 4, 1 );
+  QWhatsThis::add( label, i18n( "Some servers may not have the xmlrpc.php file in the 'egroupware' folder of the server. With this option it is possible to eventually change the path to that file. For most servers, the default value is OK." ) );
 
-  topLayout->setRowStretch( 5, 1 );
+  mUseSSLConnectionCheck = new QCheckBox( i18n( "Use SS&L connection" ), page );
+  topLayout->addMultiCellWidget( mUseSSLConnectionCheck, 5, 5, 0, 1 );
+
+  topLayout->setRowStretch( 6, 1 );
 
   setupRulesPage();
   setupChangesPage();
 
-  resize( 400, 300 );
+  resize( sizeHint() );
 }
 
 EGroupwareWizard::~EGroupwareWizard()
 {
+}
+
+QString EGroupwareWizard::validate()
+{
+  if( !mXMLRPC->text().endsWith( "xmlrpc.php" ) )
+    return i18n( "Invalid path to xmlrpc.php entered." );
+
+  if( mServerEdit->text().isEmpty() ||
+      mDomainEdit->text().isEmpty() ||
+      mUserEdit->text().isEmpty() ||
+      mPasswordEdit->text().isEmpty() ||
+      mXMLRPC->text().isEmpty() )
+    return i18n( "Please fill in all fields." );
+
+  return QString::null;
 }
 
 void EGroupwareWizard::usrReadConfig()
@@ -346,6 +375,7 @@ void EGroupwareWizard::usrReadConfig()
   mDomainEdit->setText( EGroupwareConfig::self()->domain() );
   mUserEdit->setText( EGroupwareConfig::self()->user() );
   mPasswordEdit->setText( EGroupwareConfig::self()->password() );
+  mXMLRPC->setText( EGroupwareConfig::self()->xmlrpc_location() );
   mUseSSLConnectionCheck->setChecked( EGroupwareConfig::self()->useSSLConnection() );
 }
 
@@ -355,5 +385,6 @@ void EGroupwareWizard::usrWriteConfig()
   EGroupwareConfig::self()->setDomain( mDomainEdit->text() );
   EGroupwareConfig::self()->setUser( mUserEdit->text() );
   EGroupwareConfig::self()->setPassword( mPasswordEdit->text() );
+  EGroupwareConfig::self()->setXmlrpc_location( mXMLRPC->text() );
   EGroupwareConfig::self()->setUseSSLConnection( mUseSSLConnectionCheck->isChecked() );
 }
