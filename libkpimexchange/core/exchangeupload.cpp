@@ -43,6 +43,7 @@ extern "C" {
 #include <libkcal/incidence.h>
 #include <libkcal/event.h>
 
+#include "exchangeclient.h"
 #include "exchangeprogress.h"
 #include "exchangeupload.h"
 #include "exchangeaccount.h"
@@ -87,9 +88,11 @@ void ExchangeUpload::findUid( QString const& uid )
 
 void ExchangeUpload::slotFindUidResult( KIO::Job * job )
 {
+  kdDebug() << "slotFindUidResult()" << endl;
   if ( job->error() ) {
+    kdDebug() << "Error: " << job->error() << endl;
     job->showErrorDialog( 0L );
-    emit finished( this );
+    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString() );
     return;
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
@@ -140,12 +143,13 @@ void ExchangeUpload::tryExist()
 
 void ExchangeUpload::slotPropFindResult( KIO::Job *job )
 {
+  kdDebug() << "slotPropFindResult()" << endl;
   int error = job->error(); 
-  // kdDebug() << "PROPFIND error: " << error << endl;
+  kdDebug() << "PROPFIND error: " << error << ":" << job->errorString() << endl;
   if ( error && error != KIO::ERR_DOES_NOT_EXIST )
   {
     job->showErrorDialog( 0L );
-    emit finished( this );
+    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(error) + ":" + job->errorString() );
     return;
   }
 
@@ -212,7 +216,7 @@ void ExchangeUpload::startUpload( KURL& url )
   KCal::Event* event = static_cast<KCal::Event *>( m_currentUpload );
   if ( ! event ) {
     kdDebug() << "ERROR: trying to upload a non-Event Incidence" << endl;
-    emit finished( this );
+    emit finished( this, ExchangeClient::NonEventError, "The incidence that is to be uploaded to the exchange server is not of type KCal::Event" );
     return;
   }
 
@@ -295,10 +299,29 @@ void ExchangeUpload::startUpload( KURL& url )
 
 void ExchangeUpload::slotPatchResult( KIO::Job* job )
 {
-  // kdDebug() << "Patch result" << endl;
+  kdDebug() << "slotPropPatchResult()" << endl;
+  if ( job->error() ) {
+    job->showErrorDialog( 0L );
+    kdDebug() << "Error: " << job->error() << endl;
+    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString() );
+    return;
+  }
+//  kdDebug() << "Patch result" << endl;
   QDomDocument response = static_cast<KIO::DavJob *>( job )->response();
-  // kdDebug() << response.toString() << endl;
-  emit finished( this );
+//  kdDebug() << response.toString() << endl;
+
+  // Either we have a "201 Created" (if a new event has been created) or 
+  // we have a "200 OK" (if an existing event has been altered), 
+  // or else an error has occured ;)
+  QDomElement status = response.documentElement().namedItem( "response" ).namedItem( "status" ).toElement();
+  QDomElement propstat = response.documentElement().namedItem( "response" ).namedItem( "propstat" ).namedItem( "status" ).toElement();
+  kdDebug() << "status: " << status.text() << endl;
+  kdDebug() << "propstat: " << propstat.text() << endl;
+  if ( ! ( status.text().contains( "201" ) || 
+           propstat.text().contains( "200" ) ) )
+    emit finished( this, ExchangeClient::EventWriteError, "Upload error response: \n" + response.toString() ); 
+  else 
+    emit finished( this, ExchangeClient::ResultOK, QString::null );
 }
 
 #include "exchangeupload.moc"

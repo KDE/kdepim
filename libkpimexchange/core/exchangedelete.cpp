@@ -33,6 +33,7 @@
 #include <kio/davjob.h>
 #include <kio/http.h>
 
+#include "exchangeclient.h"
 #include "exchangeprogress.h"
 #include "exchangedelete.h"
 #include "exchangeaccount.h"
@@ -80,7 +81,7 @@ void ExchangeDelete::slotFindUidResult( KIO::Job * job )
 {
   if ( job->error() ) {
     job->showErrorDialog( 0L );
-    emit finished( this );
+    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString() );
     return;
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
@@ -89,7 +90,7 @@ void ExchangeDelete::slotFindUidResult( KIO::Job * job )
   QDomElement hrefElement = item.namedItem( "href" ).toElement();
   if ( item.isNull() || hrefElement.isNull() ) {
     // Not found
-    emit finished( this );
+    emit finished( this, ExchangeClient::DeleteUnknownEventError, "UID of event to be deleted not found on server\n"+response.toString() );
     return;
   }
   // Found the appointment's URL
@@ -112,10 +113,10 @@ void ExchangeDelete::slotDeleteResult( KIO::Job* job )
   kdDebug() << "Finished Delete" << endl;
   if ( job->error() ) {
     job->showErrorDialog( 0L );
-    emit finished( this );
+    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString() );
     return;
   }
-  emit finished( this );
+  emit finished( this, ExchangeClient::ResultOK, QString::null );
 }
 
 #include "exchangedelete.moc"

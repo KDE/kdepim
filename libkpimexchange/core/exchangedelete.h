@@ -43,7 +43,7 @@ class ExchangeDelete : public QObject {
     void slotFindUidResult( KIO::Job * );
 
   signals:
-    void finished( ExchangeDelete* worker );
+    void finished( ExchangeDelete* worker, int result, const QString& moreInfo );
 
   private:
     void findUidSingleMaster( QString const& uid );

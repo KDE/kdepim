@@ -54,10 +54,12 @@ extern "C" {
   #include <ical.h>
 }
 
+#include "exchangeclient.h"
 #include "exchangeaccount.h"
-#include "exchangedownload.h"
 #include "exchangeprogress.h"
 #include "utils.h"
+
+#include "exchangedownload.h"
 
 using namespace KPIM;
 
@@ -120,9 +122,9 @@ QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end 
 void ExchangeDownload::slotSearchResult( KIO::Job *job )
 {
   if ( job->error() ) {
-    kdDebug() << "Error result for search: " << job->error() << endl;
+    kdError() << "Error result for search: " << job->error() << endl;
     job->showErrorDialog( 0L );
-    decreaseDownloads();
+    finishUp( ExchangeClient::CommunicationError, job );
     return;
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
@@ -137,8 +139,9 @@ void ExchangeDownload::slotSearchResult( KIO::Job *job )
 void ExchangeDownload::slotMasterResult( KIO::Job *job )
 {
   if ( job->error() ) {
+    kdError() << "Error result for Master search: " << job->error() << endl;
     job->showErrorDialog( 0L );
-    decreaseDownloads();
+    finishUp( ExchangeClient::CommunicationError, job );
     return;
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
@@ -152,6 +155,7 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
 
 void ExchangeDownload::handleAppointments( const QDomDocument& response, bool recurrence ) {
   //kdDebug() << "Entering handleAppointments" << endl;
+  int successCount = 0;
   for( QDomElement item = response.documentElement().firstChild().toElement();
        !item.isNull();
        item = item.nextSibling().toElement() )
@@ -165,13 +169,13 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
       QDomElement prop = propstat.namedItem( "prop" ).toElement();
       if ( prop.isNull() )
       {
-        kdDebug() << "Error: no <prop> in response" << endl;
+        kdError() << "Error: no <prop> in response" << endl;
 	continue;
       }
 
       QDomElement instancetypeElement = prop.namedItem( "instancetype" ).toElement();
       if ( instancetypeElement.isNull() ) {
-        kdDebug() << "Error: no instance type in Exchange server reply" << endl;
+        kdError() << "Error: no instance type in Exchange server reply" << endl;
         continue;
       }
       int instanceType = instancetypeElement.text().toInt();
@@ -180,20 +184,21 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
       if ( recurrence && instanceType > 0 ) {
         QDomElement uidElement = prop.namedItem( "uid" ).toElement();
         if ( uidElement.isNull() ) {
-          kdDebug() << "Error: no uid in Exchange server reply" << endl;
+          kdError() << "Error: no uid in Exchange server reply" << endl;
           continue;
         }
         QString uid = uidElement.text();
         if ( ! m_uids.contains( uid ) ) {
           m_uids[uid] = 1;
           handleRecurrence(uid);
+          successCount++;
         }
         continue;
       }
 
       QDomElement hrefElement = prop.namedItem( "href" ).toElement();
       if ( hrefElement.isNull() ) {
-        kdDebug() << "Error: no href in Exchange server reply" << endl;
+        kdError() << "Error: no href in Exchange server reply" << endl;
         continue;
       }
       QString href = hrefElement.text();
@@ -203,7 +208,11 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
       kdDebug() << "Getting appointment from url: " << url.prettyURL() << endl;
       
       readAppointment( url );
+      successCount++;
     }
+  }
+  if ( !successCount ) {
+    finishUp( ExchangeClient::ServerResponseError, "WebDAV server response:\n" + response.toString() );
   }
 }  
 
@@ -275,17 +284,17 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 {
   kdDebug() << "slotPropFindResult" << endl;
 
-  QDomDocument response = static_cast<KIO::DavJob *>( job )->response();
-//  kdDebug() << "Response: " << endl;
-//  kdDebug() << response.toString() << endl;
-
   int error = job->error(); 
   if ( error )
   {
     job->showErrorDialog( 0L );
-    decreaseDownloads();
+    finishUp( ExchangeClient::CommunicationError, job );
     return;
   }
+
+  QDomDocument response = static_cast<KIO::DavJob *>( job )->response();
+//  kdDebug() << "Response: " << endl;
+//  kdDebug() << response.toString() << endl;
 
   QDomElement prop = response.documentElement().namedItem( "response" ).namedItem( "propstat" ).namedItem( "prop" ).toElement();
  
@@ -293,8 +302,8 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 
   QDomElement uidElement = prop.namedItem( "uid" ).toElement();
   if ( uidElement.isNull() ) {
-    kdDebug() << "Error: no uid in Exchange server reply" << endl;
-    decreaseDownloads();
+    kdError() << "Error: no uid in Exchange server reply" << endl;
+    finishUp( ExchangeClient::IllegalAppointmentError, "WebDAV server response:\n" + response.toString() );
     return;
   }
   event->setUid( QString::fromUtf8( uidElement.text() ) );
@@ -335,9 +344,6 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 
     // event->addAttendee( a );
   }
-
-
-    //void addAttendee(Attendee *a, bool doupdate=true );
 
   QString readonly = prop.namedItem( "isreadonly" ).toElement().text();
   event->setReadOnly( readonly != "0" );
@@ -387,7 +393,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     // Timezone should be handled automatically 
     // because we used mFormat->setTimeZone() earlier
     if ( ! mFormat->fromString( event->recurrence(), rrule ) ) {
-      kdDebug() << "ERROR parsing rrule " << rrule << endl;
+      kdError() << "ERROR parsing rrule " << rrule << endl;
     }
   }
 
@@ -425,7 +431,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     case 1: event->setSecrecy( KCal::Incidence::SecrecyPrivate ); break;
     case 2: event->setSecrecy( KCal::Incidence::SecrecyPrivate ); break;
     case 3: event->setSecrecy( KCal::Incidence::SecrecyConfidential ); break;
-    default: kdDebug() << "Unknown sensitivity: " << sensitivity << endl;
+    default: kdWarning() << "Unknown sensitivity: " << sensitivity << endl;
   }
   kdDebug() << "Got sensitivity: " << sensitivity << endl;
 
@@ -467,7 +473,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // Grrrrrrr.
   KCal::Event* oldEvent = mCalendar->event( event->uid() );
   if ( oldEvent ) {
-    kdDebug() << "Already got his event, keeping old version..." << endl;
+    kdWarning() << "Already got his event, keeping old version..." << endl;
     // This doesn't work
     // *oldEvent = *event;
   } else {
@@ -490,14 +496,26 @@ void ExchangeDownload::decreaseDownloads()
   emit finishDownload();
   if ( mDownloadsBusy == 0 ) {
     kdDebug() << "All downloads finished" << endl;
-    mCalendar->setModified( true );
-    if ( mProgress ) {
-      disconnect( this, 0, mProgress, 0 );
-      disconnect( mProgress, 0, this, 0 );
-      mProgress->delayedDestruct();
-    }
-    emit finished( this );
+    finishUp( ExchangeClient::ResultOK );
   }
+}
+
+void ExchangeDownload::finishUp( int result, const QString& moreInfo )
+{
+  mCalendar->setModified( true );
+  // Disconnect from progress bar
+  if ( mProgress ) {
+    disconnect( this, 0, mProgress, 0 );
+    disconnect( mProgress, 0, this, 0 );
+    mProgress->delayedDestruct();
+  }
+
+  emit finished( this, result, moreInfo );
+}
+
+void ExchangeDownload::finishUp( int result, KIO::Job* job )
+{
+  finishUp( result, QString("WebDAV job error code = ") + QString::number( job->error() ) + ";\n" + "\"" + job->errorString() + "\"" );
 }
 
 #include "exchangedownload.moc"

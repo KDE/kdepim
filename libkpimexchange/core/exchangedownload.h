@@ -47,7 +47,7 @@ class ExchangeDownload : public QObject {
     void startDownload();
     void finishDownload();
 
-    void finished( ExchangeDownload* );
+    void finished( ExchangeDownload*, int result, const QString& moreInfo );
 
   private slots:
     void slotSearchResult( KIO::Job *job );
@@ -58,6 +58,8 @@ class ExchangeDownload : public QObject {
     void handleAppointments( const QDomDocument &, bool recurrence );
     void readAppointment( const KURL& url );
     void handleRecurrence( QString uid );
+    void finishUp( int result, const QString& moreInfo=QString::null );
+    void finishUp( int result, KIO::Job* job );
 
     void increaseDownloads();
     void decreaseDownloads();

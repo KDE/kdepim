@@ -45,7 +45,7 @@ class ExchangeUpload : public QObject {
   signals:
     void startDownload();
     void finishDownload();
-    void finished( ExchangeUpload* worker );
+    void finished( ExchangeUpload* worker, int result, const QString& moreInfo );
 
   private:
     void tryExist();

@@ -63,11 +63,23 @@ class ExchangeClient : public QObject {
     QString timeZoneId();
         
     // synchronous functions
-    enum { ResultOK, UnknownError };
+    enum { 
+      ResultOK,  /** No problem */
+      UnknownError, /** Something else happened */
+      CommunicationError, /** IO Error, the server could not be reached or returned an HTTP error */
+      ServerResponseError,  /** Server did not give a useful response. For download, this
+                                means that a SEARCH did not result in anything like an appointment */
+      IllegalAppointmentError, /** Reading appointment data from server response failed */
+      NonEventError, /** The Incidence that is to be uplaoded to the server is not an Event */
+      EventWriteError, /** When writing an event to the server, an error occured */
+      DeleteUnknownEventError /** The event to be deleted does not exist on the server */
+    };
 
     int downloadSynchronous( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress=false);
     int uploadSynchronous( KCal::Event* event );
     int removeSynchronous( KCal::Event* event );
+
+    QString detailedErrorString();
 
   public slots:
     // Asynchronous functions, wait for "finished" signals for result
@@ -77,21 +89,20 @@ class ExchangeClient : public QObject {
     void test();
 
   private slots:
-    void slotDownloadFinished( ExchangeDownload* worker );
-    void slotUploadFinished( ExchangeUpload* worker );
-    void slotRemoveFinished( ExchangeDelete* worker );
-    void slotSyncFinished( int result );
+    void slotDownloadFinished( ExchangeDownload* worker, int result, const QString& moreInfo );
+    void slotUploadFinished( ExchangeUpload* worker, int result, const QString& moreInfo );
+    void slotRemoveFinished( ExchangeDelete* worker, int result, const QString& moreInfo );
+    void slotSyncFinished( int result, const QString& moreInfo );
 
   signals:
     // Useful for progress dialogs, shows how much still needs to be done.
+    // Not used right now, since ExchangeDownload provides its own progress dialog
     void startDownload();
     void finishDownload();
 
-    // Don't rely on the result for now - it's probably lying everything's OK
-    // even when it isn't
-    void uploadFinished( int result );
-    void downloadFinished( int result );
-    void removeFinished( int result );
+    void uploadFinished( int result, const QString& moreInfo );
+    void downloadFinished( int result, const QString& moreInfo );
+    void removeFinished( int result, const QString& moreInfo );
 
   private:
     void test2();
@@ -100,6 +111,7 @@ class ExchangeClient : public QObject {
    
     int mClientState;
     int mSyncResult;
+    QString mDetailedErrorString;
     QWidget* mWindow;
     ExchangeAccount* mAccount;
     QString mTimeZoneId;
