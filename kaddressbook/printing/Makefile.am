@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libprinter.la
 
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I$(top_srcdir)/kaddressbook/details
 
 libprinter_la_METASOURCES = AUTO
 

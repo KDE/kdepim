@@ -18,9 +18,9 @@
 #define DETAILLEDSTYLE_H
 
 #include <kabc/addressee.h>
+
 #include "printstyle.h"
-// this is bad style, but we do not have another common library by now:
-#include "../kabentrypainter.h"
+#include "kabentrypainter.h"
 
 class AppearancePage;
 

@@ -1,72 +1,57 @@
-INCLUDES= -I./printing -I$(top_srcdir) -I./detailledview $(all_includes)
+INCLUDES= -I./details -I./features -I./printing -I./views  \
+	-I$(top_srcdir) $(all_includes)
 
-SUBDIRS = printing . pics csv-templates
+SUBDIRS = details features printing views . pics csv-templates
 
 SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
 
 bin_PROGRAMS = kaddressbook
 
 kaddressbook_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kaddressbook_LDADD   = libkaddressbookpart.la
+kaddressbook_LDADD   = libkaddressbookpart.la 
 kaddressbook_SOURCES = main.cpp 
 
 kde_module_LTLIBRARIES = libkaddressbookpart.la
 
 libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
-libkaddressbookpart_la_LIBADD  = ./printing/libprinter.la \
-	$(top_builddir)/libkdepim/libkdepim.la \
+libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
+	./details/libdetails.la \
+	./features/libfeatures.la \
+	./printing/libprinter.la \
+	./views/libviews.la \
 	$(LIB_KPARTS) $(LIB_KFILE) \
 	-lkabc -lkdeprint
 
-libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
-  undo.cpp kaddressbookview.cpp kabprefs.cpp \
-  undocmds.cpp contactlistview.cpp \
-  addhostdialog.ui selectfieldswidget.cpp \
-  kaddressbook_part.cpp kaddressbookmain.cpp kaddressbooktableview.cpp \
-  importdialog.cpp kaddressbookiconview.cpp configureviewdialog.cpp \
-  kabentrypainter.cpp \
-  ldapoptionswidget.ui ldapoptionswidgetimpl.cpp \
-  ldapsearchdialog.ui ldapsearchdialogimpl.cpp \
-  prefsdialog.cpp viewwrapper.cpp addviewdialog.cpp \
-  viewmanager.cpp \
-  featuredistributionlistbase.ui featuredistributionlist.cpp \
-  featuredistributionlistview.cpp \
-  jumpbuttonbar.cpp configuretableviewdialog.cpp addresseeutil.cpp \
-  cardview.cpp kaddressbookcardview.cpp addresseeeditorwidget.cpp \
-  addresseeeditordialog.cpp configurecardviewdialog.cpp \
-  nameeditdialog.cpp addresseditwidget.cpp emaileditwidget.cpp \
-  phoneeditwidget.cpp \
-  kaddressbookprinter.cpp \
-  filtereditdialog.cpp filtereditwidget.cpp filter.cpp \
-  filterselectionwidget.cpp configureviewfilterpage.cpp \
-  actionmanager.cpp \
-  incsearchwidget.cpp addresseeconfig.cpp \
-  detailsviewcontainer.cpp detailsviewcontainer_base.ui look_basic.cpp \
-  look_details.cpp
+libkaddressbookpart_la_SOURCES = \
+ actionmanager.cpp addhostdialog.ui addresseditwidget.cpp addresseeconfig.cpp \
+ addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
+ addviewdialog.cpp configureviewdialog.cpp configureviewfilterpage.cpp \
+ emaileditwidget.cpp filter.cpp filtereditdialog.cpp filtereditwidget.cpp \
+ filterselectionwidget.cpp importdialog.cpp incsearchwidget.cpp \
+ jumpbuttonbar.cpp kabprefs.cpp kaddressbook.cpp \
+ kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
+ kaddressbookprinter.cpp kaddressbookview.cpp ldapoptionswidget.ui \
+ ldapoptionswidgetimpl.cpp ldapsearchdialog.ui ldapsearchdialogimpl.cpp \
+ nameeditdialog.cpp phoneeditwidget.cpp prefsdialog.cpp selectfieldswidget.cpp \
+ undo.cpp undocmds.cpp viewmanager.cpp viewwrapper.cpp
 
 kaddressbook_METASOURCES = AUTO
 
-noinst_HEADERS = kaddressbook.h undo.h kaddressbookview.h undocmds.h \
-  contactlistview.h kabprefs.h \
-  kaddressbook_part.h selectfieldswidget.h \
-  kaddressbookmain.h kaddressbooktableview.h importdialog.h \
-  kaddressbookiconview.h configureviewdialog.h \
-  ldapsearchdialogimpl.h ldapoptionswidgetimpl.h \
-  prefsdialog.h viewwrapper.h addviewdialog.h viewmanager.h \
-  jumpbuttonbar.h configuretableviewdialog.h addresseeutil.h \
-  cardview.h kaddressbookcardview.h addresseeeditorwidget.h \
-  addresseeeditordialog.h configurecardviewdialog.h \
-  kaddressbookprinter.h typecombo.h \
-  nameeditdialog.h addresseditwidget.h emaileditwidget.h phoneeditwidget.h \
-  actionmanager.h featuredistributionlist.h featuredistributionlistview.h \
-  filtereditdialog.h filtereditwidget.h filter.h filterselectionwidget.h \
-  configureviewfilterpage.h kabentrypainter.h addresseeconfig.h \
-  detailsviewcontainer.h global.h look_basic.h look_details.h
+noinst_HEADERS = \
+ actionmanager.h addresseditwidget.h addresseeconfig.h addresseeeditordialog.h \
+ addresseeeditorwidget.h addresseeutil.h addviewdialog.h configureviewdialog.h \
+ configureviewfilterpage.h emaileditwidget.h filter.h filtereditdialog.h \
+ filtereditwidget.h filterselectionwidget.h importdialog.h incsearchwidget.h \
+ jumpbuttonbar.h kabprefs.h kaddressbook.h kaddressbook_part.h \
+ kaddressbookmain.h kaddressbookprinter.h kaddressbookview.h \
+ ldapsearchdialogimpl.h ldapoptionswidgetimpl.h nameeditdialog.h \
+ phoneeditwidget.h prefsdialog.h selectfieldswidget.h typecombo.h undo.h \
+ undocmds.h viewmanager.h viewwrapper.h
 
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = kaddressbookui.rc
 
-partdir   = $(kde_datadir)/kaddressbook
+partdir = $(kde_datadir)/kaddressbook
 part_DATA = kaddressbook_part.rc
 
 messages: rc.cpp
@@ -81,5 +66,3 @@ appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kaddressbook.desktop
 
 KDE_ICON = kaddressbook
-
-kaddressbook.lo: printing/printingwizard_base.h
