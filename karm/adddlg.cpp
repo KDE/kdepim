@@ -53,7 +53,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
 	lay1->addLayout(lay2);
 	
 	// The name of the widget
-  QLabel *label = new QLabel( i18n("Task name:"), page, "name" );
+  QLabel *label = new QLabel( i18n("Task &name:"), page, "name" );
   lay2->addWidget( label );
 	lay2->addSpacing(5);
 	
@@ -62,11 +62,12 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
   
   _name->setMinimumWidth(fontMetrics().maxWidth()*15);
   lay2->addWidget( _name );
+  label->setBuddy( _name );
 
 
 	// The "Edit Absolut" radio button
 	lay1->addSpacing(10);lay1->addStretch(1);	
-	_absoluteRB = new QRadioButton( i18n( "Edit absolute" ), page, "_absoluteRB" );
+	_absoluteRB = new QRadioButton( i18n( "Edit &absolute" ), page, "_absoluteRB" );
 	lay1->addWidget( _absoluteRB );
 	connect( _absoluteRB, SIGNAL( clicked() ), this, SLOT(slotAbsolutePressed()) );
 	
@@ -79,24 +80,26 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
 	lay5->addLayout(lay3);
 	
 	// Total Time
-  _totalLA = new QLabel( i18n("Total:"), page, "time" );
+  _totalLA = new QLabel( i18n("&Total:"), page, "time" );
   lay3->addWidget( _totalLA, 0, 0 );
 
 	_totalTW = new KTimeWidget( page, "_totalTW" );
 	lay3->addWidget( _totalTW, 0, 1 );
+  _totalLA->setBuddy( _totalTW );
 	
 
 	// Session
-  _sessionLA = new QLabel( i18n("Session time:"), page, "session time" );
+  _sessionLA = new QLabel( i18n("&Session time:"), page, "session time" );
   lay3->addWidget( _sessionLA, 1, 0 );
 
 	_sessionTW = new KTimeWidget( page, "_sessionTW" );
   lay3->addWidget( _sessionTW, 1, 1 );
+  _sessionLA->setBuddy( _sessionTW );
 
 
 	// The "Edit relative" radio button
 	lay1->addSpacing(10);lay1->addStretch(1);
-	_relativeRB = new QRadioButton( i18n( "Edit relative (Apply to both session and total)" ), page, "_relativeRB" );
+	_relativeRB = new QRadioButton( i18n( "Edit &relative (Apply to both session and total)" ), page, "_relativeRB" );
 	lay1->addWidget( _relativeRB );
 	connect( _relativeRB, SIGNAL( clicked() ), this, SLOT(slotRelativePressed()) );
 	
