@@ -62,7 +62,7 @@ void MobileMain::setupActions()
 
   new KAction(i18n("Connect"),0,this,SIGNAL(modemConnect()),
               actionCollection(),"modem_connect");
-  new KAction(i18n("Disonnect"),0,this,SIGNAL(modemDisconnect()),
+  new KAction(i18n("Disconnect"),0,this,SIGNAL(modemDisconnect()),
               actionCollection(),"modem_disconnect");
 
   createGUI("kandymobileui.rc");

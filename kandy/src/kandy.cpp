@@ -125,7 +125,7 @@ void Kandy::setupActions()
 
   mConnectAction = new KAction(i18n("Connect"),0,this,SLOT(modemConnect()),
                                actionCollection(),"modem_connect");
-  mDisconnectAction = new KAction(i18n("Disonnect"),0,this,
+  mDisconnectAction = new KAction(i18n("Disconnect"),0,this,
                                   SLOT(modemDisconnect()),actionCollection(),
                                   "modem_disconnect");
 
