@@ -265,12 +265,6 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 	return text;
 }
 
-bool PilotDateEntry::setCategory(const QString &label)
-{
-	FUNCTIONSETUP;
-	PILOTAPPCATEGORY_SETCATEGORY(fAppInfo,label)
-}
-
 QString PilotDateEntry::getCategoryLabel() const
 {
 	return codec()->toUnicode(fAppInfo.category.name[getCat()]);

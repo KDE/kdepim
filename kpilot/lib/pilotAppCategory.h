@@ -38,6 +38,7 @@
 // #include <pi-macros.h>
 
 #include <qstring.h>
+#include <pi-appinfo.h>
 
 #include "pilotRecord.h"
 
@@ -149,29 +150,26 @@ public:
 		{ if (pilotCodec) return pilotCodec; else return setupPilotCodec(QString::null); } ;
 	static QTextCodec *setupPilotCodec(const QString &);
 	static QString codecName();
+
+
+public:
+	bool setCat(struct CategoryAppInfo &info,const QString &label);
+
+#ifdef DEBUG
+	static void dumpCategories(const struct CategoryAppInfo &info)
+	{
+		FUNCTIONSETUP;
+		DEBUGCONDUIT << fname << " lastUniqueId"
+			<< info.lastUniqueID << endl;
+		for (int i = 0; i < 16; i++)
+		{
+			if (!info.name[i][0]) continue;
+			DEBUGCONDUIT << fname << " cat " << i << " =" <<
+				info.name[i] << endl;
+		}
+	}
+#endif
 };
 
-
-/*
-** Lacking templates, we need to do this with a macro. Since the
-** AppInfo for each class may be different, this needs to get
-** expanded in a context where the type of the AppInfo is known.
-*/
-
-#define PILOTAPPCATEGORY_SETCATEGORY(appinfo,label) \
-	int emptyAvailable = -1; \
-	if (label.isEmpty()) { setCat(0); return true; } \
-	for (int catId = 1; catId < 16; catId++) { \
-		QString aCat; \
-		if (!appinfo.category.name[catId][0]) { \
-			emptyAvailable=catId; continue; \
-		} \
-		aCat = codec()->toUnicode(appinfo.category.name[catId]); \
-		if (label == aCat) { setCat(catId); return true; } \
-	} \
-	if (emptyAvailable<0) return false; \
-	strncpy(appinfo.category.name[emptyAvailable], codec()->fromUnicode(label), 16); \
-	setCat(emptyAvailable); \
-	return true;
 
 #endif

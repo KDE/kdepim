@@ -131,7 +131,7 @@ public:
   }
 
   QString getCategoryLabel() const;
-  bool setCategory(const QString &label);
+  inline bool setCategory(const QString &label) { return setCat(fAppInfo.category,label); } ;
   static const int APP_BUFFER_SIZE;
 
 protected:

@@ -123,7 +123,7 @@ public:
 	*  to the category list
 	*  @return false if category labels are full
 	*/
-	bool setCategory(const QString &label);
+	inline bool setCategory(const QString &label) { return setCat(fAppInfo.category,label); } ;
 
 
 	/** @param checkCustom4 flag if true, checks the entryCustom4 field

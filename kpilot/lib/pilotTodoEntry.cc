@@ -142,11 +142,6 @@ QString PilotTodoEntry::getTextRepresentation(bool richText)
 	return text;
 }
 
-bool PilotTodoEntry::setCategory(const QString &label)
-{
-	PILOTAPPCATEGORY_SETCATEGORY(fAppInfo,label)
-}
-
 QString PilotTodoEntry::getCategoryLabel() const
 {
 	return codec()->toUnicode(fAppInfo.category.name[getCat()]);

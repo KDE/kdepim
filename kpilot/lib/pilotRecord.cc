@@ -192,3 +192,23 @@ void PilotRecord::setData(const char *data, int len)
 {
 	return codec()->name();
 }
+
+bool PilotAppCategory::setCat(struct CategoryAppInfo &info,const QString &label)
+{
+	int emptyAvailable = -1;
+	if (label.isEmpty()) { setCat(0); return true; }
+	for (int catId = 1; catId < 16; catId++) 
+	{
+		QString aCat;
+		if (!info.name[catId][0]) 
+		{
+			emptyAvailable=catId; continue;
+		}
+		aCat = codec()->toUnicode(info.name[catId]);
+		if (label == aCat) { setCat(catId); return true; }
+	}
+	if (emptyAvailable<0) return false;
+	strlcpy(info.name[emptyAvailable], codec()->fromUnicode(label), 16);
+	setCat(emptyAvailable);
+	return true;
+}

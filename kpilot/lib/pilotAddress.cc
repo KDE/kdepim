@@ -240,11 +240,6 @@ QString PilotAddress::getTextRepresentation(bool richText)
 	return text;
 }
 
-bool PilotAddress::setCategory(const QString &label)
-{
-	PILOTAPPCATEGORY_SETCATEGORY(fAppInfo,label)
-}
-
 QString PilotAddress::getCategoryLabel() const
 {
 	int cat(getCat());
