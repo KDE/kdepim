@@ -2,13 +2,11 @@ KDE_CXXFLAGS = -DKPARTS_VERSION
 
 INCLUDES = $(all_includes) \
   -I$(top_srcdir)/empath/lib \
-  -I$(top_srcdir)/empath/ui \
-  -I$(top_srcdir)/librmm
+  -I$(top_srcdir)/empath/ui
 
 lib_LTLIBRARIES = libEmpathView.la
 
-libEmpathView_la_LDFLAGS = \
-	$(all_libraries) -version-info 1:0:0 -module -DKPARTS_VERSION
+libEmpathView_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 libEmpathView_la_LIBADD = \
 	$(LIB_KPARTS) \

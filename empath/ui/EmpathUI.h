@@ -67,7 +67,7 @@ class EmpathUI : public QObject
         void s_setup(Empath::SetupType, QWidget *);
         void s_configureMailbox(const EmpathURL &, QWidget *);
         void s_getSaveName(const EmpathURL &, QWidget *);
-        void s_newComposer(EmpathComposeForm);
+        void s_newComposer(const EmpathComposeForm &);
         void s_showFolder(const EmpathURL &, unsigned int id);
 
     signals:

@@ -40,6 +40,7 @@
 #include "Empath.h"
 #include "EmpathUI.h"
 #include "EmpathMainWindow.h"
+#include "EmpathComposeWindow.h"
 #include "EmpathMailbox.h"
 
 EmpathUI * EmpathUI::instance_ = 0L;
@@ -58,10 +59,11 @@ EmpathUI::~EmpathUI()
 }
 
     void    
-EmpathUI::s_newComposer(EmpathComposeForm)
+EmpathUI::s_newComposer(const EmpathComposeForm & form)
 {
-    empathDebug("STUB");
-//    (new EmpathComposeWindow(composeForm))->show();
+    EmpathComposeWindow * w = new EmpathComposeWindow;
+
+    w->setComposeForm(form);
 }
 
     void
@@ -136,8 +138,8 @@ EmpathUI::_connectUp()
         this,   SLOT(s_getSaveName(const EmpathURL &, QWidget *)));
     
     QObject::connect(
-        empath, SIGNAL(newComposer(EmpathComposeForm)),
-        this,   SLOT(s_newComposer(EmpathComposeForm)));
+        empath, SIGNAL(newComposer(const EmpathComposeForm &)),
+        this,   SLOT(s_newComposer(const EmpathComposeForm &)));
     
     QObject::connect(
         empath, SIGNAL(configureMailbox(const EmpathURL &, QWidget *)),

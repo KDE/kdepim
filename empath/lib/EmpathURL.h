@@ -83,6 +83,8 @@ class EmpathURL
         bool operator == (const EmpathURL & b) const;
         bool operator == (const QString & s) const;
 
+        bool operator < (const EmpathURL &) const;
+
         virtual ~EmpathURL();
 
         QString mailboxName() const;

@@ -20,35 +20,18 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATH_FOLDER_COMBO_H
-#define EMPATH_FOLDER_COMBO_H
-
-// Qt includes
-#include <qcombobox.h>
-
 // Local includes
-#include "EmpathURL.h"
+#include "EmpathHeaderBodyWidget.h"
 
-class EmpathFolderCombo : public QComboBox
+EmpathHeaderBodyWidget::EmpathHeaderBodyWidget(QWidget * parent)
+    :   QWidget(parent)
 {
-    Q_OBJECT
+    // Empty.
+}
 
-    public:
+EmpathHeaderBodyWidget::~EmpathHeaderBodyWidget()
+{
+    // Empty.
+}
 
-        EmpathFolderCombo(QWidget * parent);
-        virtual ~EmpathFolderCombo();
-
-        void activate(const EmpathURL &);
-
-    protected slots:
-
-        void s_update();
-        void s_activated(const QString &);
-
-    signals:
-
-        void folderSelected(const EmpathURL &);
-};
-
-#endif
 // vim:ts=4:sw=4:tw=78

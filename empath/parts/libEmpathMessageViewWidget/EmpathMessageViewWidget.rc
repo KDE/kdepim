@@ -1,5 +1,5 @@
-<!DOCTYPE kpartgui>
-<kpartgui name="EmpathMessageViewWidget">
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="EmpathMessageViewWidget" version="1">
 <MenuBar>
     <Menu name="message"><text>&amp;Message</text>
         <Action name="messageCompose"/>

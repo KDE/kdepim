@@ -44,7 +44,9 @@ class EmpathAttachmentEditDialog : public KDialog
         EmpathAttachmentEditDialog(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathAttachmentEditDialog();
 
-        EmpathAttachmentSpec attachmentSpec();
+        EmpathAttachmentSpec spec();
+
+        void setSpec(const EmpathAttachmentSpec &);
         
         void browse() { s_browse(); }
         

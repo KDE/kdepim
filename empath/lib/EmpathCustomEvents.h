@@ -27,6 +27,7 @@
 #include <rmm/Message.h>
 #include "EmpathURL.h"
 #include "EmpathIndex.h"
+#include "EmpathDefines.h"
 
 enum EmpathCustomEventType {
 
@@ -46,6 +47,7 @@ class EmpathIndexReadEvent : public QCustomEvent
     public:
 
         EmpathIndexReadEvent(
+                EmpathJobID     id,
                 EmpathIndex     * index,
                 EmpathURL       folder,
                 bool            success
@@ -56,9 +58,11 @@ class EmpathIndexReadEvent : public QCustomEvent
         EmpathIndex * index() { return index_; }
         EmpathURL folder() const { return folder_; }
         bool success() const { return success_; }
+        EmpathJobID id() const { return id_; }
 
     private:
 
+        EmpathJobID id_;
         EmpathIndex * index_;
         EmpathURL folder_;
         bool success_;
@@ -69,6 +73,7 @@ class EmpathMessageWrittenEvent : public QCustomEvent
     public:
 
         EmpathMessageWrittenEvent(
+                EmpathJobID     id,
                 QString         messageID,
                 RMM::Message    message,
                 EmpathURL       folder,
@@ -81,9 +86,11 @@ class EmpathMessageWrittenEvent : public QCustomEvent
         RMM::Message message();
         EmpathURL folder() const { return folder_; }
         bool success() const { return success_; }
+        EmpathJobID id() const { return id_; }
 
     private:
 
+        EmpathJobID id_;
         QString messageID_;
         RMM::Message message_;
         EmpathURL folder_;
@@ -95,6 +102,7 @@ class EmpathMessageCopiedEvent : public QCustomEvent
     public:
 
         EmpathMessageCopiedEvent(
+                EmpathJobID id,
                 EmpathURL   source,
                 EmpathURL   destination,
                 bool        success
@@ -105,9 +113,11 @@ class EmpathMessageCopiedEvent : public QCustomEvent
         EmpathURL source() const { return source_; }
         EmpathURL destination() const { return destination_; }
         bool success() const { return success_; }
+        EmpathJobID id() const { return id_; }
 
     private:
 
+        EmpathJobID id_;
         EmpathURL source_;
         EmpathURL destination_;
         bool success_;
@@ -119,6 +129,7 @@ class EmpathMessageMovedEvent : public QCustomEvent
     public:
 
         EmpathMessageMovedEvent(
+                EmpathJobID id,
                 EmpathURL   source,
                 EmpathURL   destination,
                 bool        success
@@ -129,9 +140,11 @@ class EmpathMessageMovedEvent : public QCustomEvent
         EmpathURL source() const { return source_; }
         EmpathURL destination() const { return destination_; }
         bool success() const { return success_; }
+        EmpathJobID id() const { return id_; }
 
     private:
 
+        EmpathJobID id_;
         EmpathURL source_;
         EmpathURL destination_;
         bool success_;
@@ -143,8 +156,9 @@ class EmpathMessageRetrievedEvent : public QCustomEvent
     public:
 
         EmpathMessageRetrievedEvent(
-                EmpathURL url,
-                RMM::Message message,
+                EmpathJobID     id,
+                EmpathURL       url,
+                RMM::Message    message,
                 bool success
         );
 
@@ -153,9 +167,11 @@ class EmpathMessageRetrievedEvent : public QCustomEvent
         EmpathURL url() const { return url_; }
         RMM::Message message() const { return message_; }
         bool success() const { return success_; }
+        EmpathJobID id() const { return id_; }
 
     private:
 
+        EmpathJobID id_;
         EmpathURL url_;
         RMM::Message message_;
         bool success_;
@@ -165,13 +181,15 @@ class EmpathMessageMarkedEvent : public QCustomEvent
 {
     public:
 
-        EmpathMessageMarkedEvent(bool success);
+        EmpathMessageMarkedEvent(EmpathJobID id, bool success);
         ~EmpathMessageMarkedEvent();
 
         bool success() const { return success_; }
+        EmpathJobID id() const { return id_; }
 
     private:
 
+        EmpathJobID id_;
         bool success_;
 };
 
@@ -181,17 +199,20 @@ class EmpathFolderCreatedEvent : public QCustomEvent
     public:
 
         EmpathFolderCreatedEvent(
-                EmpathURL url,
-                bool success
+                EmpathJobID id,
+                EmpathURL   url,
+                bool        success
         );
 
         ~EmpathFolderCreatedEvent();
 
         EmpathURL url() const { return url_; }
         bool success() const { return success_; }
+        EmpathJobID id() const { return id_; }
 
     private:
 
+        EmpathJobID id_;
         EmpathURL url_;
         bool success_;
 };
@@ -202,17 +223,20 @@ class EmpathFolderRemovedEvent : public QCustomEvent
     public:
 
         EmpathFolderRemovedEvent(
-                EmpathURL url,
-                bool success
+                EmpathJobID id,
+                EmpathURL   url,
+                bool        success
         );
 
         ~EmpathFolderRemovedEvent();
 
         EmpathURL url() const { return url_; }
         bool success() const { return success_; }
+        EmpathJobID id() const { return id_; }
 
     private:
 
+        EmpathJobID id_;
         EmpathURL url_;
         bool success_;
 };

@@ -109,7 +109,7 @@ EmpathMessageViewPart::EmpathMessageViewPart(
                     EmpathMessageViewPartFactory::instance())),
             0,
             w,
-            SLOT(reply()),
+            SLOT(s_reply()),
             actionCollection(),
             "messageReply");
 
@@ -120,7 +120,7 @@ EmpathMessageViewPart::EmpathMessageViewPart(
                     EmpathMessageViewPartFactory::instance())),
             0,
             w,
-            SLOT(replyAll()),
+            SLOT(s_replyAll()),
             actionCollection(),
             "messageReplyAll");
 
@@ -131,7 +131,7 @@ EmpathMessageViewPart::EmpathMessageViewPart(
                     EmpathMessageViewPartFactory::instance())),
             0,
             w,
-            SLOT(forward()),
+            SLOT(s_forward()),
             actionCollection(),
             "messageForward");
 
@@ -180,6 +180,24 @@ EmpathMessageViewWidget::setMessage(const EmpathURL & url)
     textView_->setXML(QString("Waiting for " + url.asString()));
     waitingForURL_ = url;
     empath->retrieve(url, this);
+}
+
+    void
+EmpathMessageViewWidget::s_reply()
+{
+    empathDebug("STUB");
+}
+
+    void
+EmpathMessageViewWidget::s_replyAll()
+{
+    empathDebug("STUB");
+}
+
+    void
+EmpathMessageViewWidget::s_forward()
+{
+    empathDebug("STUB");
 }
 
     bool

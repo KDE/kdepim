@@ -17,11 +17,11 @@ On a SuSE Linux system:
 
 You can stop delivery to your mbox spool like this:
    
-   su -c '/etc/rc.d/init.d/sendmail stop'
+   su -c 'rcsendmail stop'
   
 You can restart delivery with this:
 
-   su -c '/etc/rc.d/init.d/sendmail start'
+   su -c 'rcsendmail start'
 
 -----------------------------------------------------------------------------
 

@@ -201,8 +201,8 @@ class EmpathMessageListWidget : public EmpathListView
         bool thread_;
  
         // Order dependency
-        bool filling_;
         bool hideRead_;
+        bool filling_;
         // End order dependency
 
         EmpathURL waitingForIndex_;

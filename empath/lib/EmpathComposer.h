@@ -83,17 +83,15 @@ class EmpathComposer : public QObject
         EmpathComposer();
         ~EmpathComposer();
 
+        bool event(QEvent *);
+
     signals:
 
         /**
          * Signals that a composeform is ready to be handled by the composer
          * UI.
          */
-        void composeFormComplete(EmpathComposeForm);
-
-    protected slots:
-
-        void s_retrieveJobFinished(EmpathRetrieveJob);
+        void composeFormComplete(const EmpathComposeForm &);
 
     private:
 

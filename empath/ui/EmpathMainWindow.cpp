@@ -28,6 +28,7 @@
 #include <qwidgetstack.h>
 
 // KDE includes
+#include <kapp.h>
 #include <kconfig.h>
 #include <klocale.h>
 #include <kiconloader.h>
@@ -110,6 +111,7 @@ EmpathMainWindow::EmpathMainWindow()
     setCentralWidget(view_->widget());
     createGUI(view_);
 
+    toolBar()->insertSeparator();
     EmpathFolderCombo * fc = new EmpathFolderCombo(toolBar());
     toolBar()->insertWidget(0, 200, fc);
 
@@ -132,17 +134,17 @@ EmpathMainWindow::~EmpathMainWindow()
     void
 EmpathMainWindow::s_newTask(EmpathTask * t)
 {
-    new EmpathProgressIndicator(t, progressStack_);
+    (void) new EmpathProgressIndicator(t, progressStack_);
     progressStack_->show();
 }
 
     void
-EmpathMainWindow::s_toolbarMoved(BarPosition pos)
+EmpathMainWindow::s_toolbarMoved(int pos)
 {
     KConfig * c = KGlobal::config();
     
     c->setGroup("Display");
-    c->writeEntry("MainWindowToolbarPos", (int)pos);
+    c->writeEntry("MainWindowToolbarPos", pos);
 }
 
     void
@@ -169,6 +171,11 @@ EmpathMainWindow::s_settings()
     EmpathSettingsDialog::run();
 }
 
+    void
+EmpathMainWindow::quit()
+{
+    kapp->quit();
+}
 
 // --------------------------------------------------------------------------
 

@@ -42,8 +42,8 @@
  
 EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     :   EmpathListView      (parent, "EmpathMessageListWidget"),
-        hideRead_           (false),
         actionCollection_   (0),
+        hideRead_           (false),
         filling_            (false)
 {
     _init();
@@ -76,6 +76,8 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     _connectUp();
 
     _restoreColumnSizes();
+
+    setSorting(sortColumn_, sortAscending_);
 }
 
 EmpathMessageListWidget::~EmpathMessageListWidget()
@@ -86,6 +88,13 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
     void
 EmpathMessageListWidget::_init()
 {
+    KConfig * c = KGlobal::config();
+    
+    c->setGroup("EmpathMessageListWidget");
+ 
+    hideRead_   = c->readBoolEntry("HideRead",  false);
+    thread_     = c->readBoolEntry("Thread",    true);
+
     EmpathMessageListItem::initStatic();
 
     px_unread_      = BarIcon("tree-unread");
@@ -94,9 +103,9 @@ EmpathMessageListWidget::_init()
     px_attachments_ = BarIcon("tree-attachments");
     px_replied_     = BarIcon("tree-replied");
 
-    threadMenu_ = new QPopupMenu(this);
-    messageMenu_ = new QPopupMenu(this);
-    multipleMessageMenu_ = new QPopupMenu(this);
+    threadMenu_             = new QPopupMenu(this);
+    messageMenu_            = new QPopupMenu(this);
+    multipleMessageMenu_    = new QPopupMenu(this);
 }
 
     void
@@ -418,6 +427,8 @@ EmpathMessageListWidget::s_toggleHideRead()
     c->setGroup("EmpathMessageListWidget");
  
     c->writeEntry("HideRead", hideRead_);
+
+    c->sync();
 }
 
     void
@@ -430,6 +441,8 @@ EmpathMessageListWidget::s_toggleThread()
     c->setGroup("EmpathMessageListWidget");
  
     c->writeEntry("Thread", thread_);
+
+    c->sync();
 }
 
     void

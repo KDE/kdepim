@@ -24,7 +24,9 @@
 #include <qpixmap.h>
 
 // KDE includes
-#include <kglobal.h>
+#include <kapp.h>
+#include <kiconloader.h>
+#include <kmimetype.h>
 
 // Local includes
 #include "EmpathAttachmentListItem.h"
@@ -47,7 +49,7 @@ EmpathAttachmentListItem::setup()
 {    
     widthChanged();
     
-    int th = QFontMetrics(KGlobal::generalFont()).height();
+    int th = QFontMetrics(kapp->font()).height();
     
     if (!pixmap(0))
         setHeight(th);
@@ -67,12 +69,11 @@ EmpathAttachmentListItem::setSpec(const EmpathAttachmentSpec & s)
 {
     spec_ = s;
 
-#if 0
-FIXME: Need to use KMimeType here.
-    setPixmap(0, empathIcon("mime-" + RMM::mimeTypeToIconName(
-                RMM::mimeTypeStr2Enum(spec_.type().ascii()),
-                RMM::mimeSubTypeStr2Enum(spec_.subType().ascii()))));
-#endif
+    QString mimeType = spec_.type() + spec_.subType();
+
+    // Apparently KMimeType::mimeType() never returns NULL.
+
+    setPixmap(0, KMimeType::mimeType(mimeType)->pixmap(KIcon::Small));
 
     setText(0, spec_.filename());
     setText(1, spec_.type());

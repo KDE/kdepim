@@ -24,16 +24,22 @@
 #include "EmpathEnvelopeWidget.h"
 #include "EmpathHeaderSpecWidget.h"
 
-EmpathEnvelopeWidget::EmpathEnvelopeWidget(
-        const QMap<QString, QString> & envelope,
-        QWidget * parent
-)
+EmpathEnvelopeWidget::EmpathEnvelopeWidget(QWidget * parent)
     :
         QVBox(parent, "EmpathEnvelopeWidget"),
         maxSizeColOne_(0)
 {
     setSpacing(2);
+}
 
+EmpathEnvelopeWidget::~EmpathEnvelopeWidget()
+{
+    // Empty.
+}
+
+    void
+EmpathEnvelopeWidget::setHeaders(const QMap<QString, QString> & envelope)
+{
     QMap<QString, QString>::ConstIterator it(envelope.begin());
 
     for (; it != envelope.end(); ++it) 
@@ -42,11 +48,6 @@ EmpathEnvelopeWidget::EmpathEnvelopeWidget(
     _lineUpHeaders();
 
     setFocusProxy(headerSpecList_.getFirst());
-}
-
-EmpathEnvelopeWidget::~EmpathEnvelopeWidget()
-{
-    // Empty.
 }
 
     QMap<QString, QString>

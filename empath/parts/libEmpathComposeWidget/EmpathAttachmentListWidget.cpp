@@ -108,7 +108,8 @@ EmpathAttachmentListWidget::attachments()
 
         while (i != 0) {
 
-            l.append((static_cast<EmpathAttachmentListItem *>(i))->spec());
+            l.append(
+                (static_cast<EmpathAttachmentListItem *>(i))->spec());
             i = i->nextSibling();
         }
     }
@@ -119,14 +120,37 @@ EmpathAttachmentListWidget::attachments()
     void
 EmpathAttachmentListWidget::_initActions()
 {
-    actionCollection_ = new QActionCollection(this, "actionCollection");
+    actionCollection_ = new KActionCollection(this, "actionCollection");
 
-    ac_attachmentAdd = new KAction(i18n("&Add"), 0, 
-                    this, SLOT(s_attachmentAdd()), actionCollection(), "attachmentAdd");
-    ac_attachmentEdit = new KAction(i18n("&Edit"), 0, 
-                    this, SLOT(s_attachmentEdit()), actionCollection(), "attachmentEdit");
-    ac_attachmentRemove = new KAction(i18n("&Remove"), 0, 
-                    this, SLOT(s_attachmentRemove()), actionCollection(), "attachmentRemove");
+    ac_attachmentAdd = new KAction
+        (
+         i18n("&Add"),
+         0, 
+         this,
+         SLOT(s_attachmentAdd()),
+         actionCollection(),
+         "attachmentAdd"
+        );
+
+    ac_attachmentEdit = new KAction
+        (
+         i18n("&Edit"),
+         0, 
+         this,
+         SLOT(s_attachmentEdit()),
+         actionCollection(),
+         "attachmentEdit"
+        );
+
+    ac_attachmentRemove = new KAction
+        (
+         i18n("&Remove"), 
+         0, 
+         this, 
+         SLOT(s_attachmentRemove()), 
+         actionCollection(), 
+         "attachmentRemove"
+        );
 }
 
 // vim:ts=4:sw=4:tw=78

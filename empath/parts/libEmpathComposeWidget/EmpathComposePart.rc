@@ -1,0 +1,32 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="EmpathComposePart" version="1">
+<MenuBar>
+    <Menu name="message"><text>&amp;Message</text>
+        <Action name="messageSendNow"/>
+        <Action name="messageSendLater"/>
+        <Action name="messagePostpone"/>
+        <Separator/>
+        <Action name="messageConfirmDelivery"/>
+        <Action name="messageConfirmReading"/>
+        <Action name="messageEncrypt"/>
+        <Action name="messageDigitalSign"/>
+        <Action name="messageSign"/>
+    </Menu>
+
+    <Separator />
+    <Merge />
+</MenuBar>
+
+<ToolBar name="mainToolBar" fullWidth="false">
+    <Action name="messageSendNow"/>
+    <Action name="messageSendLater"/>
+    <Action name="messagePostpone"/>
+    <Separator/>
+    <Action name="messageConfirmDelivery"/>
+    <Action name="messageConfirmReading"/>
+    <Action name="messageEncrypt"/>
+    <Action name="messageDigitalSign"/>
+    <Action name="messageSign"/>
+</ToolBar>
+</kpartgui>
+

@@ -257,7 +257,8 @@ void EmpathReadIndexJob::run()
 
     if (parent())
         postEvent(
-                parent(), new EmpathIndexReadEvent(index_, folder_, success()));
+            parent(),
+            new EmpathIndexReadEvent(id(), index_, folder_, success()));
 
     empathDebug("finished");
 }
@@ -272,7 +273,8 @@ void EmpathWriteJob::run()
     }
 
     if (parent())
-        postEvent(parent(), new EmpathMessageWrittenEvent(messageID_, message_, folder_, success()));
+        postEvent(parent(),
+            new EmpathMessageWrittenEvent(id(), messageID_, message_, folder_, success()));
 }
 
 void EmpathCopyJob::run()
@@ -300,7 +302,7 @@ void EmpathCopyJob::run()
 
     if (parent())
         postEvent(parent(),
-                new EmpathMessageCopiedEvent(source_, destination_, success()));
+                new EmpathMessageCopiedEvent(id(), source_, destination_, success()));
 }
 
 void EmpathMoveJob::run()
@@ -335,7 +337,7 @@ void EmpathMoveJob::run()
 
     if (parent())
         postEvent(parent(),
-                new EmpathMessageMovedEvent(source_, destination_, success()));
+            new EmpathMessageMovedEvent(id(), source_, destination_, success()));
 }
 
 void EmpathRemoveJob::run()
@@ -383,7 +385,7 @@ void EmpathRetrieveJob::run()
 
     if (parent())
         postEvent(parent(),
-                new EmpathMessageRetrievedEvent(url_, message_, success()));
+            new EmpathMessageRetrievedEvent(id(), url_, message_, success()));
 }
 
 void EmpathMarkJob::run()
@@ -399,7 +401,8 @@ void EmpathCreateFolderJob::run()
         setSuccess(m->createFolder(folder_));
 
     if (parent())
-        postEvent(parent(), new EmpathFolderCreatedEvent(folder_, success()));
+        postEvent(parent(),
+            new EmpathFolderCreatedEvent(id(), folder_, success()));
 
 }
 
@@ -411,7 +414,8 @@ void EmpathRemoveFolderJob::run()
         setSuccess(m->removeFolder(folder_));
 
     if (parent())
-        postEvent(parent(), new EmpathFolderRemovedEvent(folder_, success()));
+        postEvent(parent(),
+            new EmpathFolderRemovedEvent(id(), folder_, success()));
 }
 
 // vim:ts=4:sw=4:tw=78

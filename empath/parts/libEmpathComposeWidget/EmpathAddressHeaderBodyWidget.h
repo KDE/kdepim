@@ -20,34 +20,32 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATH_FOLDER_COMBO_H
-#define EMPATH_FOLDER_COMBO_H
+#ifndef EMPATH_ADDRESS_HEADER_BODY_WIDGET_H
+#define EMPATH_ADDRESS_HEADER_BODY_WIDGET_H
 
-// Qt includes
-#include <qcombobox.h>
+#include "EmpathHeaderBodyWidget.h"
 
-// Local includes
-#include "EmpathURL.h"
+class KLineEdit;
 
-class EmpathFolderCombo : public QComboBox
+class EmpathAddressHeaderBodyWidget : public EmpathHeaderBodyWidget
 {
     Q_OBJECT
-
+    
     public:
+    
+        EmpathAddressHeaderBodyWidget(QWidget * parent = 0);
+        virtual ~EmpathAddressHeaderBodyWidget();
 
-        EmpathFolderCombo(QWidget * parent);
-        virtual ~EmpathFolderCombo();
-
-        void activate(const EmpathURL &);
+        QString text() const;
+        void setText(const QString &);
 
     protected slots:
 
-        void s_update();
-        void s_activated(const QString &);
+        void s_browseClicked();
 
-    signals:
+    private:
 
-        void folderSelected(const EmpathURL &);
+        KLineEdit   * le_address_;
 };
 
 #endif

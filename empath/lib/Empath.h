@@ -454,7 +454,7 @@ class Empath : public QObject
          * All the info about the message is kept in the composeform.
          * Usually connected to a slot in the UI module.
          */
-        void newComposer(EmpathComposeForm);
+        void newComposer(const EmpathComposeForm &);
        /**
          * Signals that the settings should be provided for
          * review. In other words, bring up the settings dialog.

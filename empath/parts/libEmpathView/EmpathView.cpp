@@ -146,7 +146,7 @@ EmpathViewPart::_initActions()
         
     (void) new KAction(
         i18n("&Reply"),
-        "empath_messageReply",
+        "empath_message_reply",
         Key_R,
         this,
         SLOT(s_messageReply()),
@@ -176,7 +176,7 @@ EmpathViewPart::_initActions()
         
     (void) new KAction(
         i18n("&Delete"),
-        "empath_message_delete",
+        "remove",
         Key_D,
         this,
         SLOT(s_messageDelete()),
@@ -256,7 +256,7 @@ EmpathViewPart::_initActions()
         
     (void) new KAction(
         i18n("&Expand"),
-        "empath_thread_expand",
+        "viewmag+",
         0,
         this,
         SLOT(s_threadExpand()),
@@ -266,7 +266,7 @@ EmpathViewPart::_initActions()
         
     (void) new KAction(
         i18n("&Collapse"),
-        "empath_thread_collapse",
+        "viewmag-",
         0,
         this,
         SLOT(s_threadCollapse()),
@@ -276,7 +276,7 @@ EmpathViewPart::_initActions()
         
     (void) new KAction(
         i18n("&Previous"),
-        "empath_go_previous",
+        "previous",
         CTRL+Key_P,
         this,
         SLOT(s_goPrevious()),
@@ -286,7 +286,7 @@ EmpathViewPart::_initActions()
         
     (void) new KAction(
         i18n("&Next"),
-        "empath_go_next",
+        "next",
         CTRL+Key_N,
         this,
         SLOT(s_goNext()),
@@ -296,7 +296,7 @@ EmpathViewPart::_initActions()
         
     (void) new KAction(
         i18n("Next &Unread"),
-        "empath_go_next_unread",
+        "next",
         Key_N,
         this,
         SLOT(s_goNextUnread()),
@@ -366,137 +366,164 @@ EmpathViewPart::s_showFolder(const EmpathURL & url)
     void
 EmpathViewPart::s_messageView()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empathDebug("STUB");
 }
 
     void
 EmpathViewPart::s_messageCompose()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empath->s_compose();
 }
 
     void
 EmpathViewPart::s_messageReply()
 {
     EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empath->s_reply(firstSelected);
 }
 
     void
 EmpathViewPart::s_messageReplyAll()
 {
     EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empath->s_replyAll(firstSelected);
 }
 
     void
 EmpathViewPart::s_messageForward()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empathDebug("STUB");
+//    EmpathURLList l(widget_->messageListWidget_->selection());
+//    empath->s_forward(l);
 }
 
     void
 EmpathViewPart::s_messageDelete()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empathDebug("STUB");
+//    EmpathURLList l(widget_->messageListWidget_->selection());
+// empath->remove(l);
 }
 
     void
 EmpathViewPart::s_messageBounce()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empathDebug("STUB");
+//    EmpathURLList l(widget_->messageListWidget_->selection());
+//    empath->s_bounce(l);
 }
 
     void
 EmpathViewPart::s_messageSaveAs()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empathDebug("STUB");
+//    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+//    empath->saveMessage(firstSelected, this);
 }
 
     void
 EmpathViewPart::s_messageCopyTo()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+//    EmpathURLList l(widget_->messageListWidget_->selection());
+
+    empathDebug("STUB");
+
+//    EmpathURL dest; // = what ?
+//    EmpathJobID id = empath->copy(firstSelected, dest, this);
 }
 
     void
 EmpathViewPart::s_messageMoveTo()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+//    EmpathURLList l(widget_->messageListWidget_->selection());
+
+    empathDebug("STUB");
+
+//    EmpathURL dest; // = what ?
+//    EmpathJobID id = empath->copy(each url, dest, this);
 }
 
     void
 EmpathViewPart::s_messageMarkMany()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empathDebug("STUB");
 }
 
     void
 EmpathViewPart::s_messagePrint()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empathDebug("STUB");
+//    empath->print(widget_->messageListWidget_->selection());
 }
 
     void
 EmpathViewPart::s_messageFilter()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    empathDebug("STUB");
+//    empath->filter(widget_->messageListWidget_->selection());
 }
 
     void
 EmpathViewPart::s_threadExpand()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    widget_->messageListWidget_->s_threadExpand();
 }
 
     void
 EmpathViewPart::s_threadCollapse()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    widget_->messageListWidget_->s_threadCollapse();
 }
 
     void
 EmpathViewPart::s_goPrevious()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    widget_->messageListWidget_->s_goPrevious();
 }
 
     void
 EmpathViewPart::s_goNext()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    widget_->messageListWidget_->s_goNext();
 }
 
     void
 EmpathViewPart::s_goNextUnread()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+    widget_->messageListWidget_->s_goNextUnread();
 }
 
     void
 EmpathViewPart::s_messageMark()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+//    EmpathURLList l(widget_->messageListWidget_->selection());
+    empathDebug("STUB");
 }
 
     void
 EmpathViewPart::s_messageMarkRead()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+//    EmpathURLList l(widget_->messageListWidget_->selection());
+    empathDebug("STUB");
 }
 
     void
 EmpathViewPart::s_messageMarkReplied()
 {
-    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+//    EmpathURLList l(widget_->messageListWidget_->selection());
+    empathDebug("STUB");
 }
 
     void
 EmpathViewPart::s_toggleHideRead()
 {
+    widget_->messageListWidget_->s_toggleHideRead();
 }
 
     void
 EmpathViewPart::s_toggleThread()
 {
+    widget_->messageListWidget_->s_toggleThread();
 }
 
 

@@ -20,6 +20,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef EMPATH_EDITOR_PROCESS_H
+#define EMPATH_EDITOR_PROCESS_H
+
 // Qt includes
 #include <qcstring.h>
 #include <qobject.h>
@@ -77,4 +80,5 @@ class EmpathEditorProcess : public QObject
         QString pidStr_, startupSecondsStr_, hostName_;
 };
 
+#endif
 // vim:ts=4:sw=4:tw=78

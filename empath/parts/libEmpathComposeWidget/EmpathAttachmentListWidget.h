@@ -27,7 +27,7 @@
 #include "EmpathListView.h"
 #include "EmpathAttachmentSpec.h"
 
-class QActionCollection;
+class KActionCollection;
 
 class KAction;
 
@@ -47,7 +47,7 @@ class EmpathAttachmentListWidget : public EmpathListView
 
         void use(EmpathAttachmentSpecList l);
 
-        QActionCollection * actionCollection() { return actionCollection_; }
+        KActionCollection * actionCollection() { return actionCollection_; }
 
     protected slots:
     
@@ -59,7 +59,7 @@ class EmpathAttachmentListWidget : public EmpathListView
 
         void _initActions();
 
-        QActionCollection * actionCollection_;
+        KActionCollection * actionCollection_;
 
         KAction * ac_attachmentAdd;
         KAction * ac_attachmentEdit;

@@ -53,18 +53,11 @@ class EmpathMessageViewWidget : public QWidget
 
         void setMessage(const EmpathURL &);
 
-#if 0
-        void reply();
-        void replyAll();
-        void forward();
-        void bounce();
-        void remove();
-        void save();
-        void copy();
-        void move();
-        void print();
-        void filter();
-#endif
+    protected slots:
+
+        void s_reply();
+        void s_replyAll();
+        void s_forward();
 
     protected:
 

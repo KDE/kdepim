@@ -8,15 +8,17 @@ Description:
   but is intended for testing the various modules and will not
   necessarily continue to exist as a standalone client.
 
+  Read DESIGN for developer information.
+
 Requirements:
 
   * A working copy of kdelibs from KDE's HEAD branch.
+  * kdelibs must be compiled with --enable-mt !
   
   You can either:
 
   o Get a snapshot via ftp.
-  o Get a local copy of the sources via cvsup.
-  o Use your CVS access (if you have it) to get a local copy.
+  o Use your CVS or cvsup access to get a local copy.
 
   See the KDE homepage for details:
   
@@ -32,7 +34,6 @@ Contributing:
   * Architectural
     - Error reporting
     - Identify inefficient models / paradigms.
-    - Work out how threading support can be built in.
  
   * Implementation
     - Adding new features.
@@ -40,8 +41,6 @@ Contributing:
     - Clean up over-complex, dangerous, sloppy or ill-conceived code.
     - Identify and plug memory leaks.
     - Identify and plug security holes.
-    - Implement multi-threading support
-    - Implement a DCOP interface.
 
     Note: Programmers and designers may read DESIGN for a useful
     introduction to the system architecture. Information on developing
@@ -80,10 +79,6 @@ Contact information:
 
   KDE-PIM project:
 
-    Home page:
- 
-      http://without.netpedia.net
-    
     Mailing list:
     
       Address for messages:

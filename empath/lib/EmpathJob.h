@@ -53,7 +53,7 @@ class EmpathJob : public QThread
 
         bool success() const { return success_; }
 
-        int id() const { return id_; }
+        EmpathJobID id() const { return id_; }
 
         int tag() const { return tag_; }
 
@@ -71,7 +71,7 @@ class EmpathJob : public QThread
         int                 tag_;
         ActionType          type_;
         bool                success_;
-        int                 id_;
+        EmpathJobID         id_;
 };
 
 class EmpathReadIndexJob : public EmpathJob
@@ -80,7 +80,7 @@ class EmpathReadIndexJob : public EmpathJob
 
         EmpathReadIndexJob(
             QObject * parent,
-            int i,
+            EmpathJobID i,
             const EmpathURL & folder
         );
 

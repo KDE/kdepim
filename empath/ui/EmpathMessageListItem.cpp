@@ -274,10 +274,10 @@ EmpathMessageListItem::paintCell(
 EmpathMessageListItem::initStatic()
 {
     px_unread_      = new QPixmap(BarIcon("empath_tree"));
-    px_read_        = new QPixmap(BarIcon("empath_tree-read"));
-    px_marked_      = new QPixmap(BarIcon("empath_tree-marked"));
-    px_replied_     = new QPixmap(BarIcon("empath_tree-replied"));
-    px_attachments_ = new QPixmap(BarIcon("empath_tree-attachments"));
+    px_read_        = new QPixmap(BarIcon("empath_tree_read"));
+    px_marked_      = new QPixmap(BarIcon("empath_tree_marked"));
+    px_replied_     = new QPixmap(BarIcon("empath_tree_replied"));
+    px_attachments_ = new QPixmap(BarIcon("empath_tree_attachments"));
 
     KConfig * c(KGlobal::config());
     c->setGroup("EmpathMessageListWidget");

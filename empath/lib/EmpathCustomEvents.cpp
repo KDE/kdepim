@@ -23,11 +23,13 @@
 #include "EmpathCustomEvents.h"
 
 EmpathIndexReadEvent::EmpathIndexReadEvent(
+        EmpathJobID     id,
         EmpathIndex     * index,
         EmpathURL       folder,
         bool            success
 )
     :   QCustomEvent(EmpathIndexReadEventT),
+        id_(id),
         index_(index),
         folder_(folder),
         success_(success)
@@ -40,12 +42,14 @@ EmpathIndexReadEvent::~EmpathIndexReadEvent()
 
 
 EmpathMessageWrittenEvent::EmpathMessageWrittenEvent(
+        EmpathJobID    id,
         QString         messageID,
         RMM::Message    message,
         EmpathURL       folder,
         bool            success
 )
     :   QCustomEvent(EmpathMessageWrittenEventT),
+        id_(id),
         messageID_(messageID),
         message_(message),
         folder_(folder),
@@ -58,11 +62,13 @@ EmpathMessageWrittenEvent::~EmpathMessageWrittenEvent()
 }
 
 EmpathMessageCopiedEvent::EmpathMessageCopiedEvent(
+        EmpathJobID id,
         EmpathURL   source,
         EmpathURL   destination,
         bool        success
 )
     :   QCustomEvent(EmpathMessageCopiedEventT),
+        id_(id),
         source_(source),
         destination_(destination),
         success_(success)
@@ -74,11 +80,13 @@ EmpathMessageCopiedEvent::~EmpathMessageCopiedEvent()
 }
 
 EmpathMessageMovedEvent::EmpathMessageMovedEvent(
+        EmpathJobID id,
         EmpathURL   source,
         EmpathURL   destination,
         bool        success
 )
     :   QCustomEvent(EmpathMessageMovedEventT),
+        id_(id),
         source_(source),
         destination_(destination),
         success_(success)
@@ -90,11 +98,13 @@ EmpathMessageMovedEvent::~EmpathMessageMovedEvent()
 }
 
 EmpathMessageRetrievedEvent::EmpathMessageRetrievedEvent(
-        EmpathURL url,
-        RMM::Message message,
+        EmpathJobID   id,
+        EmpathURL     url,
+        RMM::Message  message,
         bool success
 )
     :   QCustomEvent(EmpathMessageRetrievedEventT),
+        id_(id),
         url_(url),
         message_(message),
         success_(success)
@@ -105,8 +115,12 @@ EmpathMessageRetrievedEvent::~EmpathMessageRetrievedEvent()
 {
 }
 
-EmpathMessageMarkedEvent::EmpathMessageMarkedEvent(bool success)
+EmpathMessageMarkedEvent::EmpathMessageMarkedEvent(
+        EmpathJobID id,
+        bool        success
+)
     :   QCustomEvent(EmpathMessageMarkedEventT),
+        id_(id),
         success_(success)
 {
 }
@@ -116,10 +130,12 @@ EmpathMessageMarkedEvent::~EmpathMessageMarkedEvent()
 }
 
 EmpathFolderCreatedEvent::EmpathFolderCreatedEvent(
-        EmpathURL url,
-        bool success
+        EmpathJobID id,
+        EmpathURL   url,
+        bool        success
 )
     :   QCustomEvent(EmpathFolderCreatedEventT),
+        id_(id),
         url_(url),
         success_(success)
 {
@@ -130,10 +146,12 @@ EmpathFolderCreatedEvent::~EmpathFolderCreatedEvent()
 }
 
 EmpathFolderRemovedEvent::EmpathFolderRemovedEvent(
-        EmpathURL url,
-        bool success
+        EmpathJobID id,
+        EmpathURL   url,
+        bool        success
 )
     :   QCustomEvent(EmpathFolderRemovedEventT),
+        id_(id),
         url_(url),
         success_(success)
 {

@@ -34,6 +34,7 @@
 #include "EmpathJobScheduler.h"
 #include "EmpathComposer.h"
 #include "Empath.h"
+#include "EmpathCustomEvents.h"
 #include "EmpathQuotedText.h"
 #include <rmm/DateTime.h>
 #include <rmm/Token.h>
@@ -46,8 +47,8 @@ EmpathComposer::EmpathComposer()
     :   QObject()
 {
     QObject::connect(
-        this,   SIGNAL(composeFormComplete(EmpathComposeForm)),
-        empath, SIGNAL(newComposer(EmpathComposeForm)));
+        this,   SIGNAL(composeFormComplete(const EmpathComposeForm &)),
+        empath, SIGNAL(newComposer(const EmpathComposeForm &)));
 }
 
 EmpathComposer::~EmpathComposer()
@@ -139,37 +140,83 @@ EmpathComposer::newComposeForm(
 
     EmpathJobID id = empath->retrieve(url, this);
 
-    jobList_.insert(id, composeForm); 
+    jobList_[id] = composeForm;
 }
 
-    void
-EmpathComposer::s_retrieveJobFinished(EmpathRetrieveJob j)
+    bool
+EmpathComposer::event(QEvent * e)
 {
-    if (!(jobList_.contains(j.id()))) {
-        empathDebug(QString::fromUtf8("jobList does not contain a job with id ") + QString::number(j.id()));
-        return;
+    empathDebug("event");
+
+    switch (e->type()) {
+
+        case EmpathMessageRetrievedEventT:
+            {
+                empathDebug("EmpathMessageRetrievedEventT");
+
+                EmpathMessageRetrievedEvent * ev =
+                    static_cast<EmpathMessageRetrievedEvent *>(e);
+
+                if (!ev->success())
+                {
+                    empathDebug("Retrieve job failed");
+                    return true;
+                }
+
+                EmpathJobID id(ev->id());
+
+                if (!(jobList_.contains(id)))
+                {
+                    empathDebug(QString::fromUtf8("I'm not waiting for ") +
+                        ev->url().asString());
+                    return true;
+                }
+
+                if (!ev->success())
+                {
+                    empathDebug(QString::fromUtf8("job was unsuccessful"));
+                    return true;
+                }
+
+                RMM::Message m = ev->message();
+
+                EmpathComposeForm form(jobList_[id]);
+
+                switch (form.composeType())
+                {
+                    case EmpathComposeForm::Reply:
+                        _reply(id, m);
+                        break; 
+
+                    case EmpathComposeForm::ReplyAll:
+                        _reply(id, m);
+                        break;
+
+                    case EmpathComposeForm::Forward:
+                        _forward(id, m);
+                        break; 
+
+                    case EmpathComposeForm::Bounce:
+                        _bounce(id, m);
+                        break;
+
+                    case EmpathComposeForm::Normal:
+                    default:
+                        break;
+                }
+
+                jobList_.remove(id);
+                _initVisibleHeaders(form);
+                emit(composeFormComplete(form));
+            }
+            return true;
+            break;
+
+        default:
+            break;
     }
 
-    if (!j.success()) {
-        empathDebug(QString::fromUtf8("job was unsuccessful"));
-        return;
-    }
-
-    RMM::Message m(j.message());
-
-    switch (jobList_[j.id()].composeType()) {
-
-        case EmpathComposeForm::Reply:      _reply(j.id(), m);      break; 
-        case EmpathComposeForm::ReplyAll:   _reply(j.id(), m);      break;
-        case EmpathComposeForm::Forward:    _forward(j.id(), m);    break; 
-        case EmpathComposeForm::Bounce:     _bounce(j.id(), m);     break;
-        case EmpathComposeForm::Normal:     default:                break;
-    }
-
-    EmpathComposeForm composeForm(jobList_[j.id()]);
-    jobList_.remove(j.id());
-    _initVisibleHeaders(composeForm);
-    emit(composeFormComplete(composeForm));
+    return QObject::event(e);
 }
 
     void

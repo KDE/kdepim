@@ -32,7 +32,6 @@ class QWidgetStack;
 class KProgress;
 class EmpathTask;
 class EmpathMainWidget;
-enum BarPosition {};
 
 class EmpathMainWindow : public KParts::MainWindow
 {
@@ -45,9 +44,10 @@ class EmpathMainWindow : public KParts::MainWindow
     
     protected slots:
 
-        void s_toolbarMoved(BarPosition);
+        void s_toolbarMoved(int barPosition);
         void s_newTask(EmpathTask *);
         void s_settings();
+        void quit();
 
     private:
     

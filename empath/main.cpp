@@ -42,12 +42,6 @@ static const char* VERSION="0.0.1";
     int
 main(int argc, char ** argv)
 {
-    // Don't do anything if we're being run as root.
-    if (getuid() == 0 || geteuid() == 0) {
-        fprintf(stderr, "DO NOT RUN GUI APPS AS ROOT !\n");
-        return 1;
-    }    
-
     KAboutData aboutData(
         "empath",
         I18N_NOOP("Empath"),
@@ -115,11 +109,17 @@ main(int argc, char ** argv)
     // Enter the event loop.
     int retval = app.exec();
     
+    cerr << "Empath application exec finished. Calling shutdown." << endl;
+
     // Clean up.
     empath->shutdown();
 
+    cerr << "Restoring umask." << endl;
+
     // Restore umask.
     umask(prev_umask);
+
+    cerr << "Finished. Returning retval of " retval << "." << endl;
 
     return retval;
 }

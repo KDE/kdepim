@@ -2,27 +2,30 @@ KDE_CXXFLAGS = -DQT_NO_ASCII_CAST -DKPARTS_VERSION
 
 INCLUDES = $(all_includes) \
   -I$(top_srcdir)/empath/lib \
-  -I$(top_srcdir)/empath/ui/libEmpathListView
+  -I$(top_srcdir)/empath/ui \
+  -I$(top_srcdir)/librmm
 
-lib_LTLIBRARIES = libEmpathComposeWidget.la
+lib_LTLIBRARIES = libEmpathComposePart.la
 
-libEmpathComposeWidget_la_LDFLAGS = \
-	$(all_libraries) -version-info 1:0:0 -module -DKPARTS_VERSION
+libEmpathComposePart_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
-libEmpathComposeWidget_la_LIBADD = \
+libEmpathComposePart_la_LIBADD = \
 	$(LIB_KPARTS) $(LIB_KDEUI) $(LIB_KDECORE) \
-  $(top_builddir)/empath/ui/libEmpathListView/libEmpathListView.la
+  $(top_builddir)/empath/ui/libempathui.la
 
 METASOURCES = AUTO
 
-libEmpathComposeWidget_la_SOURCES = \
+libEmpathComposePart_la_SOURCES = \
 EmpathAttachmentEditDialog.cpp \
 EmpathAttachmentListItem.cpp \
 EmpathAttachmentListWidget.cpp \
 EmpathComposeWidget.cpp \
 EmpathEditorProcess.cpp \
 EmpathEnvelopeWidget.cpp \
-EmpathHeaderSpecWidget.cpp
+EmpathHeaderSpecWidget.cpp \
+EmpathHeaderBodyWidget.cpp \
+EmpathAddressHeaderBodyWidget.cpp \
+EmpathTextHeaderBodyWidget.cpp
 
 noinst_HEADERS = \
 EmpathAttachmentEditDialog.h \
@@ -32,12 +35,14 @@ EmpathComposeWidget.h \
 EmpathEditorProcess.h \
 EmpathEnvelopeWidget.h \
 EmpathHeaderBodyWidget.h \
+EmpathTextHeaderBodyWidget.h \
+EmpathAddressHeaderBodyWidget.h \
 EmpathHeaderSpecWidget.h
 
 servicedir = $(kde_servicesdir)
-service_DATA = EmpathComposeWidget.desktop
+service_DATA = EmpathComposePart.desktop
 
-rcdir = $(kde_datadir)/EmpathComposeWidget
-rc_DATA = EmpathComposeWidget.rc
+rcdir = $(kde_datadir)/EmpathComposePart
+rc_DATA = EmpathComposePart.rc
 
 EXTRA_DIST = $(top_srcdir)/empath/lib/EmpathComposeForm.h

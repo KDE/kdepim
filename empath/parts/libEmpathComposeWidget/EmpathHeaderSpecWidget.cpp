@@ -25,7 +25,9 @@
 
 // Local includes
 #include "EmpathHeaderSpecWidget.h"
-#include "EmpathHeaderBodyWidget.h"
+#include "EmpathAddressHeaderBodyWidget.h"
+#include "EmpathTextHeaderBodyWidget.h"
+#include "EmpathDefines.h"
 
 EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
         const QString & headerName,
@@ -34,9 +36,13 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 )
     :
         QHBox(parent, "EmpathHeaderSpecWidget"),
+        headerNameWidget_(0),
+        headerBodyWidget_(0),
         headerName_(headerName),
         headerBody_(headerBody)
 {
+    headerNameWidget_ = new QLabel(this);
+
     if (
         (0 == stricmp(headerName.utf8(), "To")) ||
         (0 == stricmp(headerName.utf8(), "Cc")) ||
@@ -46,6 +52,8 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
     else
         headerBodyWidget_ = new EmpathTextHeaderBodyWidget(this);
 
+    empathDebug("headerName: " + headerName);
+    empathDebug("headerBody: " + headerBody);
     headerNameWidget_->setText(headerName_ + ": ");
     headerBodyWidget_->setText(headerBody_);
     

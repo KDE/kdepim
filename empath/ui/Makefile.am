@@ -9,11 +9,11 @@ INCLUDES = \
 
 lib_LTLIBRARIES = libempathui.la
 
-libempathui_la_LDFLAGS = -lqt-mt $(all_libraries) \
+libempathui_la_LDFLAGS = $(all_libraries) $(LIB_KDEUI) \
     -version-info 1:0:0 -module -no-undefined
 
 rcdir = $(kde_datadir)/empath
-rc_DATA = EmpathMainWindow.rc
+rc_DATA = EmpathMainWindow.rc EmpathComposeWindow.rc
 
 libempathui_la_LIBADD = \
 	$(top_builddir)/empath/ui/settings/libEmpathSettingsDialog.la \
@@ -30,6 +30,8 @@ EmpathFolderListItem.cpp \
 EmpathFolderListWidget.cpp \
 EmpathListView.cpp \
 EmpathMainWindow.cpp \
+EmpathComposeWindow.cpp \
+EmpathComposePart.cpp \
 EmpathMessageListItem.cpp \
 EmpathMessageListWidget.cpp \
 EmpathMessageMarkDialog.cpp \

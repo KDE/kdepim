@@ -13,14 +13,11 @@
   clearer. You should hopefully end up with the impression that the design
   is actually quite simple !
 
-  ** NOTE The design is changing slightly to use threads. Because Empath
-          was designed to do as much stuff async as possible, this does
-          not have a huge impact on the general structure, but watch out !
-
 ===============================================================================
               Contents 
 -------------------------------------------------------------------------------
 
+  Components
   The Kernel
     Introduction
     URLs
@@ -37,6 +34,52 @@
     Sending Mail
     Kernel Summary
   The User Interface
+
+===============================================================================
+              Components
+-------------------------------------------------------------------------------
+
+  Empath consists of several components.
+
+  librmm
+         librmm is an RFC822 message handling library. librmm is
+         implemented using Qt only, which means that no extra memory is
+         wasted using STL, special string classes etc. librmm is extremely
+         efficient and easy to use. It is designed in a style similar to
+         DOM and uses transparent lazy parsing.
+
+  libempathkernel
+         libempathkernel is a shared library which provides a set of core
+         services including URL handling, job management, composition
+         forms, filters, mailbox handling, mail sending and folder
+         management. It is fully multi-threaded, allowing implementations
+         to keep the GUI updated at all times.
+
+  libempathui
+         libempathui is a shared library which provides a set of reusable
+         widgets which may be used as-is or inherited to add extra
+         functionality or custom behaviour. libempathui also provides a set
+         of configuration dialogs.
+
+  EmpathComposePart
+         EmpathComposePart is a kpart which provides widgets for handling
+         text editing using a KTextEditor part or an external editor and
+         managing attachments.
+
+  EmpathMessageViewPart
+         EmpathMessageViewPart is a kpart which provides a rich text view
+         of messages via HTMLPart and handles viewing of attachments.
+
+  EmpathView
+         EmpathView is a kpart which encapsulates a folder view, a message
+         list and a message viewer. EmpathView makes it easy to create the
+         standard mail client interface by wrapping the basic components up
+         together.
+
+  Empath can also be used as a complete standalone mail client. At the
+  moment this is mainly for testing purposes, but if the Empath components
+  are not used elsewhere, it is possible that the standalone client will be
+  brought to maturity and maintained as a client in its own right.
 
 ===============================================================================
               The Kernel 

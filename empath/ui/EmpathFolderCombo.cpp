@@ -31,6 +31,7 @@ EmpathFolderCombo::EmpathFolderCombo(QWidget * parent)
     :   QComboBox(parent, "EmpathFolderCombo")
 {
     connect(empath, SIGNAL(updateFolderLists()), this, SLOT(s_update()));
+
     connect(this, SIGNAL(activated(const QString &)),
             this, SLOT(s_activated(const QString &)));
 }
@@ -43,9 +44,7 @@ EmpathFolderCombo::~EmpathFolderCombo()
     void
 EmpathFolderCombo::s_update()
 {
-    qDebug("Count: %d", count());
     clear();
-    qDebug("Count: %d", count());
 
     EmpathMailboxListIterator mit(*(empath->mailboxList()));
 
@@ -62,15 +61,29 @@ EmpathFolderCombo::s_update()
             }
         }
     }
-
-    qDebug("Count: %d", count());
 }
 
     void
 EmpathFolderCombo::s_activated(const QString & s)
 {
-    empathDebug(s);
+    empathDebug("Activated: " + s);
     emit(folderSelected(EmpathURL("empath://" + s + "/")));
+}
+
+    void
+EmpathFolderCombo::activate(const EmpathURL & url)
+{
+    for (int i = 0; i < count(); i++)
+    {
+        if (url == QString("empath://" + text(i) + "/"))
+        {
+            setCurrentItem(i);
+            emit(folderSelected(url));
+            return;
+        }
+    }
+
+    empathDebug("Can't find item " + url.asString());
 }
 
 // vim:ts=4:sw=4:tw=78

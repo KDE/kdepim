@@ -20,34 +20,38 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATH_FOLDER_COMBO_H
-#define EMPATH_FOLDER_COMBO_H
+#ifndef EMPATH_COMPOSE_WINDOW_H
+#define EMPATH_COMPOSE_WINDOW_H
 
-// Qt includes
-#include <qcombobox.h>
+// KDE includes
+#include <kparts/mainwindow.h>
+#include <kparts/part.h>
 
 // Local includes
-#include "EmpathURL.h"
+#include "EmpathComposeForm.h"
 
-class EmpathFolderCombo : public QComboBox
+class EmpathComposePart;
+
+class EmpathComposeWindow : public KParts::MainWindow
 {
     Q_OBJECT
 
     public:
+        
+        EmpathComposeWindow();
+        virtual ~EmpathComposeWindow();
 
-        EmpathFolderCombo(QWidget * parent);
-        virtual ~EmpathFolderCombo();
-
-        void activate(const EmpathURL &);
-
+        void setComposeForm(const EmpathComposeForm &);
+    
     protected slots:
 
-        void s_update();
-        void s_activated(const QString &);
+        void s_toolbarMoved(int barPosition);
 
-    signals:
+    private:
+    
+        void _initActions();
 
-        void folderSelected(const EmpathURL &);
+        EmpathComposePart * view_;
 };
 
 #endif

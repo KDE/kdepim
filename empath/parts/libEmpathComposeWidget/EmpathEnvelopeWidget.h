@@ -47,12 +47,11 @@ class EmpathEnvelopeWidget : public QVBox
          * Constructor. An 'envelope' containing the headers should be 
          * given. 
          */
-        EmpathEnvelopeWidget(
-            const QMap<QString, QString> & env,
-            QWidget * parent = 0
-        );
+        EmpathEnvelopeWidget(QWidget * parent = 0);
 
         virtual ~EmpathEnvelopeWidget();
+
+        void setHeaders(const QMap<QString, QString> &);
 
         /** 
          * Retrieve the headers when the user has finished composing.

@@ -236,4 +236,10 @@ EmpathURL::_stripSlashes(const QString & s) const
     return stripped;
 }
 
+    bool
+EmpathURL::operator < (const EmpathURL & other) const
+{
+    return asString() < other.asString();
+}
+
 // vim:ts=4:sw=4:tw=78

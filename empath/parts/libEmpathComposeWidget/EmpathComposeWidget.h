@@ -26,15 +26,24 @@
 // Qt includes
 #include <qwidget.h>
 
-// Local includes
-#include "EmpathComposeForm.h"
+// KDE includes
+#include <kparts/part.h>
+#include <klibloader.h>
 
-class QMultiLineEdit;
+// Local includes
+#include "EmpathComposePart.h"
+
 class QSplitter;
-class QActionCollection;
+class KActionCollection;
 
 class EmpathEnvelopeWidget;
 class EmpathAttachmentListWidget;
+
+namespace KTextEditor
+{
+    class Document;
+    class View;
+}
 
 /**
  * The container for the various widgets used when composing.
@@ -49,17 +58,27 @@ class EmpathComposeWidget : public QWidget
          * Pass a compose form in, so we've got something
          * to work with.
          */
-        EmpathComposeWidget(EmpathComposeForm, QWidget * parent);
+        EmpathComposeWidget(QWidget * parent);
 
         ~EmpathComposeWidget();
 
-        EmpathComposeForm composeForm();
+        void setForm(const EmpathComposeForm &);
 
-        QActionCollection * actionCollection() { return actionCollection_; }
+        EmpathComposeForm form();
+
+        KActionCollection * actionCollection() { return actionCollection_; }
         
     protected slots:
         
         void s_editorDone(bool ok, QCString text);
+
+        void s_sendNow();
+        void s_sendLater();
+        void s_postpone();
+        void s_confirmDelivery();
+        void s_encrypt();
+        void s_digitallySign();
+        void s_sign();
         
     private:
 
@@ -68,10 +87,50 @@ class EmpathComposeWidget : public QWidget
         EmpathComposeForm composeForm_;
         
         EmpathEnvelopeWidget        * envelopeWidget_;
-        QMultiLineEdit              * editorWidget_;
+        KTextEditor::Document       * editorPart_;
+        KTextEditor::View           * editorView_;
         EmpathAttachmentListWidget  * attachmentWidget_;
 
-        QActionCollection * actionCollection_;
+        KActionCollection * actionCollection_;
+};
+
+class EmpathComposePartFactory : public KLibFactory
+{
+    Q_OBJECT
+
+    public:
+
+        EmpathComposePartFactory();
+        virtual ~EmpathComposePartFactory();
+
+        virtual QObject * create(
+            QObject * parent = 0,
+            const char * name = 0,
+            const char * classname = "QObject",
+            const QStringList & args = QStringList());
+
+        static KInstance * instance();
+
+    private:
+
+        static KInstance * instance_;
+};
+
+class MyEmpathComposePart : public EmpathComposePart
+{
+    Q_OBJECT
+
+    public:
+
+        MyEmpathComposePart(QWidget * parent = 0, const char * name = 0);
+        virtual ~MyEmpathComposePart();
+
+        void setForm(const EmpathComposeForm &);
+
+    private:
+
+        void _initActions();
+        EmpathComposeWidget * widget_;
 };
 
 #endif
