@@ -21,24 +21,28 @@
 */
 
 // Qt includes
+#include <qlayout.h>
+#include <qlabel.h>
 #include <qpopupmenu.h>
 #include <qwidgetstack.h>
 
 // KDE includes
 #include <kconfig.h>
+#include <klocale.h>
+#include <kiconloader.h>
 #include <kglobal.h>
 #include <kaction.h>
 #include <kstdaction.h>
+#include <kprogress.h>
+#include <kparts/factory.h>
 
 // Local includes
-#include "EmpathTask.h"
 #include "EmpathMainWindow.h"
-#include "EmpathMainWidget.h"
-#include "EmpathProgressIndicator.h"
+#include "EmpathTask.h"
 #include "Empath.h"
 
 EmpathMainWindow::EmpathMainWindow()
-    :   KParts::MainWindow("MainWindow")
+    :   KParts::MainWindow("EmpathMainWindow")
 {
     // Resize to previous size.
    
@@ -63,13 +67,31 @@ EmpathMainWindow::EmpathMainWindow()
 
     setXMLFile("EmpathMainWindow.rc");
 
-    _setupActions();
+    _initActions();
 
-    mainWidget_ = new EmpathMainWidget(this);
-    setView(mainWidget_);
+    KLibFactory * browserFactory =
+        KLibLoader::self()->factory("libEmpathBrowser");
 
-    createGUI(mainWidget_->messageListWidget());
-    createGUI(mainWidget_->messageViewWidget());
+    if (0 != browserFactory) {
+
+        browser_ =
+            static_cast<KParts::ReadWritePart *>
+                (
+                    browserFactory->create(
+                        this,
+                        "empath browser part",
+                        "KParts::ReadWritePart"
+                    )
+                );
+
+    } else {
+        
+        empathDebug("Argh. Can't load browser part.");
+        return;
+    }
+
+    setView(browser_->widget());
+    createGUI(browser_);
 
     show();
 }
@@ -101,7 +123,7 @@ EmpathMainWindow::s_toolbarMoved(BarPosition pos)
 }
 
     void
-EmpathMainWindow::_setupActions()
+EmpathMainWindow::_initActions()
 {
     KStdAction::preferences(
         this,
@@ -116,6 +138,73 @@ EmpathMainWindow::_setupActions()
         actionCollection(),
         "saveSettings"
     );
+}
+
+// --------------------------------------------------------------------------
+
+EmpathProgressIndicator::EmpathProgressIndicator
+    (EmpathTask * t, QWidgetStack * parent)
+    :   QWidget(parent, "ProgressIndicator")
+{
+    parent->addWidget(this, (int)this);
+
+    QHBoxLayout * layout = new QHBoxLayout(this, 0, 6);
+
+    progress_ =
+        new KProgress(t->pos(), t->max(), 0, KProgress::Horizontal, this);
+
+    progress_->setFixedWidth(120);
+
+    QLabel * l = new QLabel(t->name(), this);
+
+    layout->addWidget(progress_);
+    layout->addWidget(l);
+    layout->addStretch(10);
+
+    QObject::connect(
+        t,          SIGNAL(posChanged(int)),
+        progress_,  SLOT(setValue(int))
+    );
+
+    QObject::connect(
+        t,          SIGNAL(maxChanged(int)),
+        SLOT(s_setMaxValue(int))
+    );
+
+    QObject::connect(
+        t,          SIGNAL(addOne()),
+        this,       SLOT(s_incValue())
+    );
+
+    QObject::connect(
+        t,          SIGNAL(finished()),
+        this,       SLOT(s_finished())
+    );
+
+    show();
+}
+
+EmpathProgressIndicator::~EmpathProgressIndicator()
+{
+    // Empty.
+}
+
+    void
+EmpathProgressIndicator::s_setMaxValue(int v)
+{
+    progress_->setRange(progress_->minValue(), v);
+}
+
+    void
+EmpathProgressIndicator::s_incValue()
+{
+    progress_->advance(1);
+}
+
+    void
+EmpathProgressIndicator::s_finished()
+{
+    delete this;
 }
 
 // vim:ts=4:sw=4:tw=78

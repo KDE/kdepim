@@ -1,7 +1,7 @@
 ## kdebase/Makefile.am
 ## (C) 1997 Stephan Kulow
 
-SUBDIRS = ldif vCard rmm kab2 abbrowser empath korganizer
+SUBDIRS = ldif vCard rmm kab2 abbrowser empath korganizer twister
 
 AUTOMAKE_OPTIONS = foreign 1.4
 DISTCLEANFILES = inst-apps

@@ -25,10 +25,11 @@
 
 // KDE includes
 #include <kparts/mainwindow.h>
+#include <kparts/part.h>
 
 class QPopupMenu;
 class QWidgetStack;
-
+class KProgress;
 class EmpathTask;
 class EmpathMainWidget;
 enum BarPosition {};
@@ -49,12 +50,33 @@ class EmpathMainWindow : public KParts::MainWindow
 
     private:
     
-        void _setupActions();
+        void _initActions();
 
-        EmpathMainWidget * mainWidget_;
+        KParts::ReadWritePart * browser_;
 
         QWidgetStack * progressStack_;
 };
+
+class EmpathProgressIndicator : public QWidget
+{
+    Q_OBJECT
+
+    public:
+
+        EmpathProgressIndicator(EmpathTask *, QWidgetStack * parent);
+        virtual ~EmpathProgressIndicator();
+
+    protected slots:
+
+        void s_setMaxValue(int);
+        void s_incValue();
+        void s_finished();
+
+    private:
+        
+        KProgress * progress_;
+};
+
 
 #endif
 // vim:ts=4:sw=4:tw=78
