@@ -21,9 +21,6 @@
             <verstretch>0</verstretch>
         </sizepolicy>
     </property>
-    <property name="caption">
-        <string>Form2</string>
-    </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -208,9 +205,6 @@
                         <property name="text">
                             <string>Convert &amp;bookmarks</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+B</string>
-                        </property>
                         <property name="checked">
                             <bool>true</bool>
                         </property>
@@ -242,9 +236,6 @@
                         <property name="text">
                             <string>&amp;Inline tags in text</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+I</string>
-                        </property>
                         <property name="checked">
                             <bool>true</bool>
                         </property>
@@ -270,9 +261,6 @@
                         <property name="text">
                             <string>&amp;Tags at end of text</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+T</string>
-                        </property>
                         <property name="whatsThis" stdset="0">
                             <string>Check this box to convert tags of the form &lt;bookmarkname&gt; at the end of the text to bookmarks. The text inside the tag ("bookmarkname") will be searched in the text, and whenever found, a bookmark will be set there. The endtags &lt;...&gt; will then be removed from the end of the text.</string>
                         </property>
@@ -283,9 +271,6 @@
                         </property>
                         <property name="text">
                             <string>Regular &amp;expressions in .bmk file</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+E</string>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;Check this box to use regular expressions in a file to search the text for bookmarks. The file should have the same name as the text file, but should end in .bmk instead of .txt (for instance, the regular expression file for textname.txt should be textname.bmk). See the documentation for a description of the format of the bmk file.&lt;/qt&gt;</string>
