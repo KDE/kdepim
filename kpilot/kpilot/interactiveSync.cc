@@ -27,8 +27,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-#include <config.h>
-
 static const char *interactivesync_id =
 	"$Id$";
 
