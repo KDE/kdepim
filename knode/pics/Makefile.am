@@ -9,4 +9,4 @@ picsdir = $(kde_datadir)/knode/pics
 
 EXTRA_DIST = $(pics_DATA)
 knodeicondir = $(kde_datadir)/knode/icons
-knodeicon_ICON = AUTO
+knodeicon_ICON = message_reply
