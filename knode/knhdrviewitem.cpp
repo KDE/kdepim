@@ -40,28 +40,43 @@ KNHdrViewItem::~KNHdrViewItem()
 }
 
 
-QString KNHdrViewItem::key(int col, bool) const
+int KNHdrViewItem::compare(QListViewItem *i, int col, bool) const
 {
-  if ((col==2)||(col==3)) {   // score, lines
-    QString tmpString;
-    return tmpString.sprintf("%08d",text(col).toInt());
+  KNArticle *otherArticle = static_cast<KNHdrViewItem*>(i)->art;
+  int diff = 0;
+  time_t date1=0, date2=0;
+
+  switch (col) {
+    case 0:
+    case 1:
+       return text(col).localeAwareCompare(i->text(col));
+
+    case 2:
+       if(art->type()==KMime::Base::ATremote) {
+         diff = static_cast<KNRemoteArticle*>(art)->score() - static_cast<KNRemoteArticle*>(otherArticle)->score();
+         return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
+       } else
+         return 0;
+
+    case 3:
+       diff = art->lines()->numberOfLines() - otherArticle->lines()->numberOfLines();
+       return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
+
+    case 4:
+       date1 = art->date()->unixTime();
+       date2 = otherArticle->date()->unixTime();
+       if(art->type()==KMime::Base::ATremote && static_cast<KNListView*>(listView())->sortByThreadChangeDate()) {
+         if(static_cast<KNRemoteArticle*>(art)->subThreadChangeDate() > date1)
+           date1 = static_cast<KNRemoteArticle*>(art)->subThreadChangeDate();
+         if(static_cast<KNRemoteArticle*>(otherArticle)->subThreadChangeDate() > date2)
+           date2 = static_cast<KNRemoteArticle*>(otherArticle)->subThreadChangeDate();
+       }
+       diff = date1 - date2;
+       return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
+
+    default:
+       return 0;
   }
-  if(col==4) {
-    time_t date = art->date()->unixTime();
-
-    if(static_cast<KNListView*>(listView())->sortByThreadChangeDate() &&
-       (static_cast<KNRemoteArticle*>(art)->subThreadChangeDate() > date)) {
-      date = static_cast<KNRemoteArticle*>(art)->subThreadChangeDate();
-    }
-
-    return QString::number((uint)date).rightJustify(15, '0');
-  }
-  return text(col);
-}
-
-int KNHdrViewItem::compare(QListViewItem *i, int col, bool ascending) const
-{
-  return key(col, ascending).localeAwareCompare(i->key(col, ascending));
 }
 
 
