@@ -2,6 +2,7 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" 
 "dtd/kdex.dtd" [
  <!ENTITY kappname "&kaddressbook;">
+ <!ENTITY package "kdepim">
  <!ENTITY % addindex "IGNORE">
  <!ENTITY % English "INCLUDE" > <!-- change language only here -->  
 ]>
@@ -11,10 +12,10 @@
 <title>The &kaddressbook; Handbook</title>
 <authorgroup>
 <author>
-<firstname>Don</firstname>
-<surname>Sanders</surname>
+<firstname>Tobias</firstname>
+<surname>Koenig</surname>
 <affiliation>
-<address><email>dsanders@kde.org</email></address>
+<address><email>tokoe@kde.org</email></address>
 </affiliation>
 </author>
 <author>
@@ -25,11 +26,18 @@
 </address>
 </affiliation>
 </author>
+<author>
+<firstname>Don</firstname>
+<surname>Sanders</surname>
+<affiliation>
+<address><email>dsanders@kde.org</email></address>
+</affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2001-06-01</date>
-<releaseinfo>0.02.00</releaseinfo>
+<date>2003-03-03</date>
+<releaseinfo>0.03.00</releaseinfo>
 
 <legalnotice>
 &FDLNotice;
@@ -49,111 +57,786 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<sect1 id="features">
-<title>Features</title>
-
 <para>
-The documentation for &kaddressbook; was not complete at the time you
-installed this application.  If you have any questions, please direct
-them to the appropriate &kde; mailing list. 
+&kaddressbook; is the main address book application for &kde;. It
+enables you to manage your contacts efficient and comfortable.
+Since it is based on the kabc library, it supports so called resources,
+which can be used to load and save contacts at many different locations
+like the local file system, but also in LDAP servers and SQL databases.
 </para>
 
 <para>
-For &kaddressbook; this is probably 
+The user interface is similar to MS Outlook and it supports different views
+for different representations of the contacts data.
+Furthermore it provides an incremental search over all fields and a jump button
+bar for quick access of single entries.
+Since the underlying kabc library uses the vCard format (specified in RFC
+2426) as default storage medium, &kaddressbook; mainly reflects the supported
+entry fields in its graphical user interface.
 </para>
-
-</sect1>
 </chapter>
 
-<chapter id="using-pab">
+<chapter id="using-kaddressbook">
 <title>Using &kaddressbook;</title>
 
-<para></para>
+<sect1 id="getting-started">
+<title>Getting Started</title>
 
-</chapter>
+<para>
+After you have started &kaddressbook; (using the panel menu, or by typing
+<command>kaddressbook</command> at the command prompt) the &kaddressbook; main window
+shows up:</para>
 
-<chapter id="ldap">
-<title>Accessing address data on LDAP servers with &kaddressbook;</title>
-<para>&kaddressbook; can be used to import address information from LDAP servers into the local addressbook by using the LDAP search dialog.</para>
-    <para>To configure (a number) of LDAP servers, open the
-configuration dialog
-(<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-KAddressBook...</guimenuitem></menuchoice>), select LDAP, and use
-<guibutton>Add Host</guibutton> to configure (a number) of
-servers. Then move the servers to the "LDAP servers to search" list
-and press <guibutton>OK</guibutton> to close the dialog.
+<screenshot>
+<screeninfo>Starting &kaddressbook;</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="mainwin.png" format="PNG"/></imageobject>
+<textobject><phrase>The &kaddressbook; main window.</phrase></textobject>
+<caption><para>The &kaddressbook; main window.</para></caption>
+</mediaobject>
+</screenshot>
+</sect1>
+
+<sect1 id="configure-resources">
+<title>Configure Resources</title>
+<para>&kaddressbook; can use multiple resources for loading and storing
+its contacts. After starting &kaddressbook; the first time, you have
+a default resource installed, that saves all contacts in a vCard file
+under $HOME/.kde/share/apps/kabc/std.vcf. But you can add more resources,
+by using the Resource Configure Dialog, which is available in
+<application>kcontrol</application> under
+<guilabel>KDE Components</guilabel>-><guilabel>Address Book</guilabel>:</para>
+
+<screenshot>
+<screeninfo>The Resource Configure Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="resourcedlg.png" format="PNG"/></imageobject>
+<textobject><phrase>The Resource Configure Dialog.</phrase></textobject>
+<caption><para>The Resource Configure Dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>When you click the <guibutton>Add...</guibutton> a dialog will appear,
+where you can select the resource type. At the moment there are three types
+available:</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>file</guilabel></term>
+<listitem><para>All contacts will be stored in one file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>dir</guilabel></term>
+<listitem><para>Every contact will be stored in its own file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>ldap</guilabel></term>
+<listitem><para>All contacts will be stored on a LDAP server.</para></listitem>
+</varlistentry>
+</variablelist>
+
+<para>After selecting the type, another dialog appears, where you can
+configure the resource specific settings.</para>
+<para>The <guilabel>file</guilabel> and <guilabel>dir</guilabel> resource
+supports different formats for storing the contacts:</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>vCard</guilabel></term>
+<listitem><para>The contacts will be stored in the vCard format, like
+specified in RFC 2426.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>binary</guilabel></term>
+<listitem><para>The contacts will be stored in a binary format. That
+increases performance during loading and saving, but is not portable like
+the vCard format.</para></listitem>
+</varlistentry>
+</variablelist>
+
+<para>&kaddressbook; needs a standard resource, where all contacts should be
+saved if no other resource is specified. For this reason, after starting
+&kaddressbook; the first time, there is already a resource available.
+If you want to use another resource as standard resource, use the
+<guibutton>Use as Standard</guibutton> for selecting it. The new standard
+resource must be read-write able and active, otherwise you can't select it.
 </para>
-<para>On the main toolbar in &kaddressbook; a button with a picture of
+</sect1>
+
+<sect1 id="managing-contacts">
+<title>Managing Contacts</title>
+<para>To create or edit contacts, &kaddressbook; offers a dialog, where you
+can input all data, that are also available in a vCard.
+</para>
+
+<screenshot>
+<screeninfo>The Contact Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="contactdlg.png" format="PNG"/></imageobject>
+<textobject><phrase>The Contact Dialog.</phrase></textobject>
+<caption><para>The Contact Dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+<sect2 id="managing-contacts-automatic-nameparsing">
+<title>Automatic Name Parsing</title>
+<para>
+&kaddressbook; tries to provide an easy name input by automatic name parsing.
+For proper working it's sometimes necessary to add custom name prefixes, suffixes
+or inclusions in the <link linkend="preferences-address-book-contact">configure dialog</link>.
+Nevertheless no algorithm is perfect, and so it may happens, that it parses your
+name input wrong. In this case, you can disable the automatic name parsing in
+the name edit dialog, that is available by clicking the <guibutton>Name...</guibutton>
+in the contact dialog. If you wish to disable the parsing for all new contacts,
+disable automatic name parsing globally in the <link linkend="preferences-address-book-general">configure dialog</link>.
+</para>
+</sect2>
+
+<sect2 id="managing-contacts-formattedname">
+<title>Formatted Name</title>
+<para>
+The formatted name of a contact is used by other programs to represent it.
+&kaddressbook; offers three predefined types of formatted names:
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>SimpleName</guilabel></term>
+<listitem><para>&lt;given name&gt; &lt;family name&gt;</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>FullName</guilabel></term>
+<listitem><para>&lt;prefix&gt; &lt;given name&gt; &lt;additional name&gt;
+&lt;family name&gt; &lt;suffix&gt;</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>ReverseName</guilabel></term>
+<listitem><para>&lt;family name&gt;, &lt;given name&gt;</para></listitem>
+</varlistentry>
+</variablelist>
+
+<para>
+If the above types doesn't fit your needs, you can select the
+<guilabel>Custom</guilabel> name type, where you can add your own formatted
+name. This configuration can be done in the name edit dialog. To specify a
+default formatted name type for new contacts, use the <link linkend="preferences-address-book-contact">configure dialog</link>.
+</para>
+</sect2>
+</sect1>
+
+<sect1 id="using-views">
+<title>Using Views</title>
+<para>
+In this version &kaddressbook; offers different so called views, that
+represent the contacts in different ways:
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Table View</guilabel></term>
+<listitem><para>All contacts are listed in a table. They can be sorted by
+clicking at the column header of the table.
+The columns of the table depend on the fields, which were selected in
+the view configure dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Icon View</guilabel></term>
+<listitem><para>The contacts are listed as icons in a view. If the
+contact contains a photo or logo, then it's used in the view, otherwise
+an default icon is used.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Card View</guilabel></term>
+<listitem><para>All contacts are presented in form of cards. The cards
+contains the formatted name as title. The body of the card depends on
+what fields were selected in the view configure dialog.</para></listitem>
+</varlistentry>
+</variablelist>
+
+<screenshot>
+<screeninfo>The View Configure Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="vieweditdlg.png" format="PNG"/></imageobject>
+<textobject><phrase>The View Configure Dialog.</phrase></textobject>
+<caption><para>The View Configure Dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>The <guilabel>Selected Fields</guilabel> page offers you the possebility
+to select what parts of a contact should be shown in the view. In the
+<guilabel>Default Filter</guilabel> page you can setup what
+<link linkend="using-filters">filter</link> should be used by the view.</para>
+</sect1>
+
+<sect1 id="using-filters">
+<title>Using Filters</title>
+<para>
+You can setup filters in &kaddressbook;, which depend on the categories, a
+contact belongs to. For example you can create a filter that matches all
+contacts, which belongs to the categories 'Family' and 'Friends'. But
+you can also an filter that matches all contacts, which belongs not to
+these categories. To manage filters, use the filter configure dialog:
+</para>
+
+<screenshot>
+<screeninfo>The Filter Configure Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="filtereditdlg.png" format="PNG"/></imageobject>
+<textobject><phrase>The Filter Configure Dialog.</phrase></textobject>
+<caption><para>The Filter Configure Dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+Filters can be used in views to reduce the number of represented contacts.
+In the <link linkend="using-filters">view configure dialog</link> you can
+specify what filter should be used by a view as default.
+</para>
+</sect1>
+
+<sect1 id="using-extensions">
+<title>Using Extensions</title>
+<para>
+Extensions are implemented as plugins in &kaddressbook;, so 3rd-party
+developers can provide more of them.
+At the moment we have already three extensions:
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Contact Editor</guilabel></term>
+<listitem><para>It's the same like the contact edit dialog, but as
+extension it can be used for fast editing a contact.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Location of Contact</guilabel></term>
+<listitem><para>This extension takes a postal address of a contact and
+loads a map service from the internet (like www.map24.de) with these
+data. The result is shown in a html view.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Distribution List Manager</guilabel></term>
+<listitem><para>This extension provides easy managing of distribution
+lists. Just create a new list and select a contact in the view. After
+clicking <guibutton>Add contact</guibutton>, the selected contact is part
+of the distribution list. A simpler way is to drag a contact from the
+view and drop it over the distribution list manager.</para></listitem>
+</varlistentry>
+</variablelist>
+
+<screenshot>
+<screeninfo>The main window with distribtuion list extension.</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="extension.png" format="PNG"/></imageobject>
+<textobject><phrase>The main window with distribtuion list extension.</phrase></textobject>
+<caption><para>The main window with distribtuion list extension.</para></caption>
+</mediaobject>
+</screenshot>
+</sect1>
+
+<sect1 id="import-and-export">
+<title>Import and Export</title>
+<para>Not implemented yet, documentation will follow later.</para>
+</sect1>
+
+<sect1 id="ldap-queries">
+<title>LDAP queries</title>
+<para>
+&kaddressbook; can be used to import address information from LDAP servers
+into the local addressbook by using the LDAP search dialog.
+</para>
+<para>
+To configure (a number) of LDAP servers, use the
+<link linkend="preferences-ldap-lookup">configuration dialog.</link>
+</para>
+<para>
+On the main toolbar in &kaddressbook; a button with a picture of
 a magnifying glass over a book is available. Use this button to open
 the LDAP search dialog. The dialog itself is pretty straight
 forward. Just type in parts of a name, email address or phonenumber
-and press the <guibutton>Search</guibutton> button.</para> 
-<para>When the
-    results display in the listbox, it is possible to select one or more
-    address(es) and use the <guibutton>Add Selected</guibutton> to import the
-    selected address(es) to the local addressbook, or click the
-    <guibutton>Mail to Selected</guibutton> to invoke the mail program
-    and write an email to the selected recipients.
+and press the <guibutton>Search</guibutton> button.
+</para> 
+<para>When the results display in the listbox, it is possible to select
+one or more address(es) and use the <guibutton>Add Selected</guibutton> to
+import the selected address(es) to the local addressbook, or click the
+<guibutton>Mail to Selected</guibutton> to invoke the mail program
+and write an email to the selected recipients.
 </para>
-<para>The <guibutton>Recursive search</guibutton> checkbox is by
+<para>
+The <guibutton>Recursive search</guibutton> checkbox is by
 default enabled. This will make the LDAP query consider all objects
 below the base DN of each server. If you only want to consider objects
 one level below the base, uncheck this checkbox. If in doubt, leave it
-checked.</para>
+checked.
+</para>
+</sect1>
+
+<sect1 id="preferences">
+<title>Preferences</title>
+
+<para>You can modify many aspects of &kaddressbook;'s behavior in the
+preferences dialog. The dialog can be opened via
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+KAddressBook</guimenuitem></menuchoice> or the the toolbar icon.</para>
+
+<screenshot>
+<screeninfo>Configuring &kaddressbook;</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conf.png" format="PNG"/></imageobject>
+<textobject><phrase>The preferences dialog.</phrase></textobject>
+<caption><para>The preferences dialog.</para></caption>
+</mediaobject>
+</screenshot>
+
+<sect2 id="preferences-address-book">
+<title>The <guilabel>Address Book</guilabel> Page</title>
+
+<sect3 id="preferences-address-book-general">
+<title>The <guilabel>General</guilabel> Tab</title>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Honor KDE single click</guilabel></term>
+<listitem><para>If checked, &kaddressbook; pays attention to the
+KDE single click option.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Automatic Name Parsing for new addresses</guilabel></term>
+<listitem><para>If checked, the <link linkend="managing-contacts-automatic-nameparsing">automatic name parsing</link>
+feature is used for new addresses.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Extensions</guilabel></term>
+<listitem><para>In this list view you can enable and disable the single
+extensions and configure their settings.</para></listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="preferences-address-book-contact">
+<title>The <guilabel>Contact</guilabel> Tab</title>
+<para>&kaddressbook; can automatically parse a name into its parts. To make
+sure this works in many cases, you can add here additional name parts
+identifier like prefixes, suffixes and inclusions.
+</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Prefixes</guilabel></term>
+<listitem><para>Here you can manage name prefixes like 'Prof.' or
+'Dr.'.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Inclusions</guilabel></term>
+<listitem><para>Here you can manage name inclusions like 'van' or
+'von', which are often part of dutch or german names.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Suffixes</guilabel></term>
+<listitem><para>Here you can manage name suffixes like 'Sr.' or
+'Jr.'.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Default Formatted Name</guilabel></term>
+<listitem><para>Here you can select the default type of formatted names, that
+should be used for new contacts.</para></listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+</sect2>
+
+<sect2 id="preferences-ldap-lookup">
+<title>The <guilabel>LDAP Lookup</guilabel> Page</title>
+
+<para>On this page you can configure LDAP servers, that should be used
+for <link linkend="ldap-queries">ldap queries</link> in &kaddressbook;.</para>
+
+<para>Use <guibutton>Add Host...</guibutton> to add and setting up a new server.
+You can include and exclude servers by selecting or deselecting the check box
+in the server list. Press <guibutton>OK</guibutton> to close the dialog.
+</para>
+</sect2>
+</sect1>
 </chapter>
 
-<chapter id="questions-answers-and-tips">
-<title>Questions, Answers, and Tips</title>
+<chapter id="command-references">
+<title>Command References</title>
 
-<sect1 id="question-1">
-<title>Question 1</title>
+<sect1 id="file-menu">
+<title>The <guimenu>File</guimenu> Menu</title>
 
-<para>The answer</para>
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Print</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Prints the currently selected contacts</action>.</para></listitem>
+</varlistentry>
 
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Mail</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens the preferred mail program with the currently
+selected contacts as recipients</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Mail vCard</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens the preferred mail program with the currently
+selected contacts as vCards attached</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>New Contact</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens the contact editor for adding a new contact</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Edit Contact</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens the contact editor for editing the currently
+selected contact</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Save</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Saves the changed contacts</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guisubmenu>Import</guisubmenu>
+</menuchoice></term>
+<listitem><para><action>Lists all available import modules</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guisubmenu>Export</guisubmenu>
+</menuchoice></term>
+<listitem><para><action>Lists all available export modules</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Quit</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Quits</action> &kaddressbook;.</para></listitem>
+</varlistentry>
+</variablelist>
 </sect1>
 
+<sect1 id="edit-menu">
+<title>The <guimenu>Edit</guimenu> Menu</title>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Undo</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Undos the last change</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;&Shift;<keycap>Z</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Redo</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Redos the last change</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>X</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Cut</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Cuts the currently selected contacts</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Copy</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Copys the currently selected contacts to the
+clipboard</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Paste</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Paste the clipboard content into the address book, if
+it is in a valid format</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul"><keycap>Delete</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Delete Contact</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Deletes all currently selected contacts</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Select All</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Selects all contacts</action>.</para></listitem>
+</varlistentry>
+</variablelist>
+</sect1>
+
+<sect1 id="view-menu">
+<title>The <guimenu>View</guimenu> Menu</title>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
+<guisubmenu>Select View</guisubmenu>
+</menuchoice></term>
+<listitem><para><action>Lists all available views</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Add View</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens a <link linkend="using-views">dialog</link> for
+creating a new view</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Modify View...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens a <link linkend="using-views">dialog</link> where
+you can modify the settings of the current view</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Delete View</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Deletes the current view</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Refresh View</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Refreshes the current view</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
+<guisubmenu>Select Filter</guisubmenu>
+</menuchoice></term>
+<listitem><para><action>Lists all available filters</action>.</para></listitem>
+</varlistentry>
+</variablelist>
+</sect1>
+
+<sect1 id="settings-menu">
+<title>The <guimenu>Settings</guimenu> Menu</title>
+<para>This menu provides options for configuring &kaddressbook;, changing its
+appearance, shortcuts and standard behavior.</para>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guisubmenu>Toolbars</guisubmenu>
+</menuchoice></term>
+<listitem><para><action>Toggles the toolbars on/off</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guisubmenu>Show Extension Bar</guisubmenu>
+</menuchoice></term>
+<listitem><para><action>Selects what extension should be shown in the
+extension bar at the bottom of the main window</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Jump Bar</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Toggles the Jump Bar on/off</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Details</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Toggles the Details Page on/off</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Edit Filter</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens a <link linkend="using-filters">dialog</link> where
+you can edit the filters</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens a dialog for changing the key bindings.</action>
+Using this option you can change the standard key shortcut for &kaddressbook;'s commands
+or create new ones.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens a dialog for configuring the toolbar.</action> You
+can add and remove toolbuttons for &kaddressbook;'s commands with this option.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure KAddressBook...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Opens the <link linkend="preferences">preferences dialog</link>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect1>
+
+<sect1 id="help-menu">
+<title>The <guimenu>Help</guimenu> Menu</title>
+&help.menu.documentation;
+</sect1>
 </chapter>
 
-<appendix id="installation">
-<title>Installation</title>
+<chapter id="command-line">
+<title>Command Line Options</title>
+<para>&kaddressbook; supports some command line arguments, which can be
+used influence the starting behaviour:</para>
 
-<para>
-</para>
+<variablelist>
+<varlistentry>
+<term><command>kaddressbook</command> <option>-a, --addr &lt;email&gt;</option></term>
+<listitem><para>Shows contact editor with given email address.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>kaddressbook</command> <option>--uid &lt;uid&gt;</option></term>
+<listitem><para>Shows contact editor with given uid.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>kaddressbook</command> <option>--editor-only</option></term>
+<listitem><para>Launches in editor only mode.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>kaddressbook</command> <option>--new-contact</option></term>
+<listitem><para>Launches editor for the new contact.</para></listitem>
+</varlistentry>
+</variablelist>
 
-<sect1 id="how-to-obtain-pab">
-<title>How to obtain &kaddressbook;</title>
+<para>&kaddressbook; also supports all other command line options common to
+&kde; and &Qt; programs. You can get a list of these options with
+<userinput><option>--help</option></userinput>,
+<userinput><option>--help-kde</option></userinput> and
+<userinput><option>--help-qt</option></userinput></para>
+</chapter>
 
-<para>
-</para>
+<chapter id="credits">
+<title>Credits and License</title>
 
-</sect1>
+<para>&kaddressbook; - The &kde; Address Book</para>
 
-<sect1 id="requirements">
-<title>Requirements</title>
+<para>Copyright (c) 1997-2003, The KDE-PIM Team</para>
 
-<para>
-</para>
+<para>&kaddressbook; was originally written in 1997 by Don Sanders
+<email>dsanders@kde.org</email>. Currently it is
+maintained by Tobias Koenig <email>tokoe@kde.org</email>.</para>
 
-</sect1>
-
-<sect1 id="compilation-and-installation">
-<title>Compilation and Installation</title>
-
-<para>Compiling &kaddressbook; is very easy. The following should do it:
-<screen>
-&percnt; ./configure
-&percnt; make
-&percnt; make install
-</screen>
-</para>
-
-<para>That should do it! Should you run into any problems, please report them
-to the author at <email>dsanders@kde.org</email></para>
-
-&underFDL;
-
-</sect1>
-</appendix>
-
+&underFDL;               <!-- FDL: do not remove -->
+</chapter>
 </book>
 
