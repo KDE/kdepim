@@ -80,20 +80,20 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
 
   button = new QPushButton( i18n("Microsoft Exchange"), this );
-  layout->addMultiCellWidget( button, 6, 6, 0, 3 );
+  layout->addMultiCellWidget( button, 7, 7, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardExchange() ) );
 
 
   QFrame *frame = new QFrame( this );
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-  layout->addMultiCellWidget( frame, 7, 7, 0, 3 );
+  layout->addMultiCellWidget( frame, 8, 8, 0, 3 );
 
   QPushButton *cancelButton = new KPushButton( KStdGuiItem::close(), this );
-  layout->addWidget( cancelButton, 8, 3 );
+  layout->addWidget( cancelButton, 9, 3 );
 
   connect( cancelButton, SIGNAL( clicked() ), this, SIGNAL( cancel() ) );
 
-  layout->setRowStretch( 7, 1 );
+  layout->setRowStretch( 8, 1 );
 
   KAcceleratorManager::manage( this );
 }
