@@ -544,7 +544,7 @@ void AddresseeEditorWidget::categoryButtonClicked()
   // Show the category dialog
   if (mCategoryDialog == 0)
   {
-    mCategoryDialog = new CategorySelectDialog( KABPrefs::instance(), this );
+    mCategoryDialog = new KPIM::CategorySelectDialog( KABPrefs::instance(), this );
     connect(mCategoryDialog, SIGNAL(categoriesSelected(const QStringList &)),
             SLOT(categoriesSelected(const QStringList &)));
     connect(mCategoryDialog, SIGNAL(editCategories()),
@@ -566,7 +566,7 @@ void AddresseeEditorWidget::editCategories()
 {
   if (mCategoryEditDialog == 0)
   {
-    mCategoryEditDialog = new CategoryEditDialog( KABPrefs::instance(), this );
+    mCategoryEditDialog = new KPIM::CategoryEditDialog( KABPrefs::instance(), this );
     connect(mCategoryEditDialog, SIGNAL(categoryConfigChanged()),
             SLOT(categoryButtonClicked()));
   }

@@ -41,8 +41,12 @@ class KDateEdit;
 class EmailWidget;
 class AddressEditWidget;
 class PhoneEditWidget;
-class CategorySelectDialog;
-class CategoryEditDialog;
+
+namespace KPIM
+{
+  class CategorySelectDialog;
+  class CategoryEditDialog;
+}
 
 namespace KABC { class AddressBook; }
 
@@ -98,8 +102,8 @@ class AddresseeEditorWidget : public QWidget
     
     // GUI
     QTabWidget *mTabWidget;
-    CategorySelectDialog *mCategoryDialog;
-    CategoryEditDialog *mCategoryEditDialog;
+    KPIM::CategorySelectDialog *mCategoryDialog;
+    KPIM::CategoryEditDialog *mCategoryEditDialog;
     
     // Tab1
     KLineEdit *mNameEdit;
