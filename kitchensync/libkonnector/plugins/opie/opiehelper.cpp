@@ -100,7 +100,7 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
 	file.close();
 	return;
     }
-    KABC::Addressbook *abook = new KABC::Addressbook( );
+    KABC::AddressBook *abook = new KABC::AddressBook( );
     QDomElement docElem = doc.documentElement( );
     QDomNode n =  docElem.firstChild();
     while(!n.isNull() ){
@@ -113,7 +113,7 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
 		    QDomElement el = no.toElement();
 		    if(!el.isNull() ){
 			kdDebug() << "Contacts: " << el.tagName() << endl;
-			KABC::Addresse adr;
+			KABC::Addressee adr;
 			adr.setUid(el.attribute("Uid" ) );
 			adr.setFamilyName(el.attribute("LastName" ) );
 			adr.setGivenName(el.attribute("FirstName" ) );
