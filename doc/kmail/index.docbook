@@ -115,7 +115,7 @@ settings in the <guilabel>Identity</guilabel> and <guilabel>Network</guilabel> t
 
 <para>The settings in the <guilabel>Identity</guilabel> tab are 
 fairly straightforward. Fill in the <guilabel>Name</guilabel> field
-with your full name (e.g. "John Doe")
+with your full name (e.g. <userinput>John Doe</userinput>)
 and the <guilabel>Organization</guilabel> field (optional) with the appropriate
 information.</para>
 
@@ -645,11 +645,15 @@ should know about are discussed there.</para>
 <sect2 id="secpgppreconditions">
 <title>PGP Preconditions</title>
 
+<para>&kmail; expects that your PGP binary is called <command>pgp</command>.
+In case of GnuPG, it expects the binary to be called <command>gpg</command>. If that's
+not the case for you, just make a symlink.</para>
+
 <para>If you haven't done so, you have to generate a key pair (secret and public
 key) for your identity. You must do this at the command line (use <userinput>pgp -kg</userinput>).
 &kmail; has no internal support for pgp's key generation at this time. The
 identity (normally your name followed by your email address within brackets,
-such as "John Doe &lt;john@example.com&gt;") and your passphrase are important for
+such as <userinput>John Doe &lt;john@example.com&gt;</userinput>) and your passphrase are important for
 the co-operation between &kmail; and pgp.</para>
 
 </sect2>
@@ -1822,8 +1826,8 @@ menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</
 will prefer version 5.x if both versions are installed. There is no
 way for the user to force &kmail; to use version 2.x in this case. There
 are patches for PGP6 and GnuPG support at <ulink url="http://devel-home.kde.org/~kmail/">&kmail;'s
-homepage</ulink>. If the GPG patch is applied, and GPG *and* PGP are installed, &kmail;
-will prefer GPG. Here is no way to force &kmail; to use PGP.</para>
+homepage</ulink>. If the GnuPG patch is applied, and GnuPG <emphasis>and</emphasis> PGP are installed, &kmail;
+will prefer GnuPG. Here is no way to force &kmail; to use PGP.</para>
 <para>&kmail; 1.1.x: This has at least the improvements from the patches above.</para></answer>
 </qandaentry>
 
