@@ -1,0 +1,1 @@
+SUBDIRS=imap-kabc
