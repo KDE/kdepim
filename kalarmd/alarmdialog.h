@@ -63,9 +63,7 @@ class AlarmDialog : public KDialogBase {
   private:
     KOEventViewer *mEventViewer;
 
-    QPtrList<Event> mEvents;
-
-    QPtrList<Todo> mTodos;
+    QPtrList<Incidence> mIncidences;
   
     QSpinBox *mSuspendSpin;
 };

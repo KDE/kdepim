@@ -476,31 +476,18 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       }
 
       if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
-	Event *event = calendar->event( eventID );
-        if (!event) {
-	  Todo *todo = calendar->todo( eventID );
-	  if(!todo) {
+        Incidence *incidence = calendar->event( eventID );
+        if (!incidence) {
+	  incidence = calendar->todo( eventID );
+	  if(!incidence) {
 	    return false;
 	  }
-	  CalendarLocal cal;
-	  cal.addTodo( new Todo( *todo ) );
-
-	  kdDebug() << "--- DCOP send: handleEvent(): " << todo->summary() << endl;
-	  
-	  ICalFormat format;
-	  
-	  AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
-	  stub.handleEvent( format.toString( &cal ) );
-	  if ( !stub.ok() ) {
-	    kdDebug(5900) << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
-	  }
-	  return true;
 	}
 	
-        kdDebug() << "--- DCOP send: handleEvent(): " << event->summary() << endl;
+        kdDebug() << "--- DCOP send: handleEvent(): " << incidence->summary() << endl;
 
         CalendarLocal cal;
-        cal.addEvent( new Event( *event ) );
+        cal.addIncidence( incidence->clone() );
 
         ICalFormat format;
 
