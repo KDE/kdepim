@@ -100,7 +100,7 @@
 
 
 
-extern int debug_level;
+extern KDE_EXPORT int debug_level;
 
 #ifdef DEBUG
 #ifdef __GNUC__
@@ -195,12 +195,12 @@ QString rtExpand(const QString &s, bool richText=true);
 /**
  * Convert a struct tm from the pilot-link package to a QDateTime
  */
-QDateTime readTm(const struct tm &t);
+KDE_EXPORT QDateTime readTm(const struct tm &t);
 /**
  * Convert a QDateTime to a struct tm for use with the pilot-link package
  */
-struct tm writeTm(const QDateTime &dt);
-struct tm writeTm(const QDate &dt);
+KDE_EXPORT struct tm writeTm(const QDateTime &dt);
+KDE_EXPORT struct tm writeTm(const QDate &dt);
 
 
 // Some layout macros

@@ -43,7 +43,7 @@ class QSocketNotifier;
 class KPilotUser;
 class SyncAction;
 
-class SyncAction : public QObject
+class KDE_EXPORT SyncAction : public QObject
 {
 Q_OBJECT
 

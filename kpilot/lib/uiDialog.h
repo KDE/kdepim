@@ -37,7 +37,7 @@ class QTabWidget;
 class QPushButton;
 class KAboutData;
 
-class UIDialog : public KDialogBase
+class KDE_EXPORT UIDialog : public KDialogBase
 {
 Q_OBJECT
 public:

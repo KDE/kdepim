@@ -33,7 +33,7 @@
 #include "pilotAppCategory.h"
 
 
-class PilotMemo : public PilotAppCategory
+class KDE_EXPORT PilotMemo : public PilotAppCategory
 {
 public:
 	PilotMemo(void) : PilotAppCategory() { } ;

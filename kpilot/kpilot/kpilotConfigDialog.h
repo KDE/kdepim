@@ -74,7 +74,7 @@ private:
 } ;
 
 
-class SyncConfigPage : public ConfigPage
+class KDE_EXPORT SyncConfigPage : public ConfigPage
 {
 public:
 	SyncConfigPage( QWidget *, const char * );

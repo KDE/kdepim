@@ -42,7 +42,7 @@
 
 
 
-class PilotDateEntry : public PilotAppCategory
+class KDE_EXPORT PilotDateEntry : public PilotAppCategory
 {
 public:
   PilotDateEntry(struct AppointmentAppInfo &appInfo);

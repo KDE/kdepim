@@ -41,7 +41,7 @@ struct pi_buffer_t;
 #include <pi-file.h>
 
 
-class PilotRecord
+class KDE_EXPORT PilotRecord
 {
 public:
 	// This constructor makes a copy of the data buffer
