@@ -37,7 +37,7 @@ class PVDaemonIface : virtual public DCOPObject
 
     virtual ASYNC getAllEntries(const QStringList& categories) = 0;
 
-    virtual ASYNC setChanges(const QByteArray& array) = 0;
+    virtual ASYNC setChanges(const QString& optionalCode, const QByteArray& array) = 0;
 
     virtual ASYNC setAllEntries(const QByteArray& array) = 0;
 
