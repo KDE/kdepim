@@ -14,6 +14,8 @@ libkdgantt_la_SOURCES = \
 			KDSizingControl.cpp		\
 			KDXMLTools.cpp			\
 			itemAttributeDialog.ui
+libkdgantt_la_LDFLAGS = $(all_libraries) -no-undefined
+libkdgantt_la_LIBADD = $(LIB_KDEUI)
 
 noinst_HEADERS =	\
 			KDGanttViewSubwidgets.h		\
