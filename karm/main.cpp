@@ -10,7 +10,7 @@
 
 namespace
 {
-  const char* description = I18N_NOOP("KDE Time tracker tool.");
+  const char* description = I18N_NOOP("KDE Time tracker tool");
 
   void cleanup( int )
   {

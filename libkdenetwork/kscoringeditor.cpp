@@ -186,7 +186,7 @@ SingleActionWidget::SingleActionWidget(KScoringManager *m,QWidget *p, const char
   stack = new QWidgetStack(this);
   topL->addWidget(stack);
 
-  dummyLabel = new QLabel(i18n("Select an action:"), stack);
+  dummyLabel = new QLabel(i18n("Select an action."), stack);
   stack->addWidget(dummyLabel);
 
   // init widget stack and the types combo box
@@ -563,6 +563,11 @@ RuleListWidget::RuleListWidget(KScoringManager *m, bool standalone, QWidget *p, 
   QHBoxLayout *btnL = new QHBoxLayout(topL,KDialog::spacingHint());
 
   editRule=0L;
+  newRule = new QPushButton(this);
+  newRule->setPixmap( BarIcon( "filenew", KIcon::SizeSmall ) );
+  QToolTip::add(newRule,i18n("New rule")),
+  btnL->addWidget(newRule);
+  connect(newRule, SIGNAL(clicked()), this, SLOT(slotNewRule()));
   // if we're standalone, we need an additional edit button
   if (standalone) {
     editRule = new QPushButton(this);
@@ -571,11 +576,6 @@ RuleListWidget::RuleListWidget(KScoringManager *m, bool standalone, QWidget *p, 
     btnL->addWidget(editRule);
     connect(editRule,SIGNAL(clicked()),this,SLOT(slotEditRule()));
   }
-  newRule = new QPushButton(this);
-  newRule->setPixmap( BarIcon( "filenew", KIcon::SizeSmall ) );
-  QToolTip::add(newRule,i18n("New rule")),
-  btnL->addWidget(newRule);
-  connect(newRule, SIGNAL(clicked()), this, SLOT(slotNewRule()));
   delRule = new QPushButton(this);
   delRule->setPixmap( BarIcon( "editdelete", KIcon::SizeSmall ) );
   QToolTip::add(delRule,i18n("Remove rule"));

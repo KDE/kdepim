@@ -55,7 +55,7 @@ using namespace KHE;
 
 
 DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
-	: KDialogBase(parent, "RecordEditor",false,i18n("Edit Record..."),
+	: KDialogBase(parent, "RecordEditor",false,i18n("Edit Record"),
 				Ok|Cancel), rec(r), nr(n)
 {
 //	fWidget=new DBRecordEditorBase(this);
@@ -67,7 +67,7 @@ DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
 	fillWidgets();
 }
 
- 
+
 DBRecordEditor::~DBRecordEditor()
 {
 	KPILOT_DELETE( fBuffer );
@@ -93,7 +93,7 @@ void DBRecordEditor::slotOk()
 		if ( fRecordDataIf->isModified() )
 		{
 #ifdef DEBUG
-			DEBUGKPILOT << "record data changed, new Length of record: " << 
+			DEBUGKPILOT << "record data changed, new Length of record: " <<
 				fRecordDataIf->dataSize() << endl;
 #endif
 			// take over data
@@ -208,7 +208,7 @@ void DBRecordEditor::initWidgets()
 		fRecordData = tmpW;
 		fRecordDataIf = 0;
 	}
- 
+
 	DBRecordEditorBaseLayout->addMultiCellWidget( fRecordData, 2, 2, 0, 3 );
 #endif
 
@@ -239,7 +239,7 @@ void DBRecordEditor::fillWidgets()
 		fRecordDataIf->setMaxDataSize( 4096 );
 		fRecordDataIf->setReadOnly( false );
 		// We are managing the buffer ourselves:
-		fRecordDataIf->setAutoDelete( false ); 
+		fRecordDataIf->setAutoDelete( false );
 	}
 #endif
 }

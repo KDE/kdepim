@@ -89,7 +89,7 @@ void GenericDBWidget::setupWidget()
 	fDBInfo->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)3, (QSizePolicy::SizeType)0, 0, 0, fDBInfo->sizePolicy().hasHeightForWidth() ) );
 	fDBInfo->setReadOnly( TRUE );
 	g1->addWidget( fDBInfo, 0, 0 );
-	fDBInfoButton = new KPushButton( i18n( "General Database &Information..." ), this );
+	fDBInfoButton = new KPushButton( i18n( "General Database &Information" ), this );
 	g1->addWidget( fDBInfoButton, 1, 0 );
 	fAppInfoButton = new KPushButton( i18n( "&Application Info Block (Categories etc.)" ), this );
 	g1->addWidget( fAppInfoButton, 2, 0 );
@@ -107,7 +107,7 @@ void GenericDBWidget::setupWidget()
 
 	fAddRecord = new KPushButton( i18n("&Add..."), this );
 	g2->addWidget( fAddRecord, 1, 0 );
-	fEditRecord = new KPushButton( i18n("&Edit"), this );
+	fEditRecord = new KPushButton( i18n("&Edit..."), this );
 	g2->addWidget( fEditRecord, 1, 1 );
 	fDeleteRecord = new KPushButton( i18n("&Delete"), this );
 	g2->addWidget( fDeleteRecord, 1, 2 );
@@ -172,9 +172,9 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 
 	if (fDB) KPILOT_DELETE(fDB);
 	currentDB=dbname;
-	
+
 	if (!shown) return;
-	
+
 	if (dbname.endsWith(".pdb") || dbname.endsWith(".PDB"))
 	{
 		// We are dealing with a database

@@ -305,13 +305,13 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete"), this);
-  connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
-  topL->addWidget(d_elBtn, 1,1);
-
   e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), this);
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
-  topL->addWidget(e_ditBtn, 2,1);
+  topL->addWidget(e_ditBtn, 1,1);
+
+  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
+  topL->addWidget(d_elBtn, 2,1);
 
   s_ubBtn=new QPushButton(i18n("&Subscribe..."), this);
   connect(s_ubBtn, SIGNAL(clicked()), this, SLOT(slotSubBtnClicked()));
@@ -340,7 +340,7 @@ void KNConfig::NntpAccountListWidget::load()
 {
   l_box->clear();
   for(KNNntpAccount *a=a_ccManager->first(); a; a=a_ccManager->next())
-    slotAddItem(a);  
+    slotAddItem(a);
 }
 
 
@@ -530,7 +530,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   topL->addMultiCellWidget(i_nterval, 9,9, 0,3);
 
   c_heckInterval=new KIntSpinBox(1,10000,1,1,10,page);
-  c_heckIntervalLabel=new QLabel(c_heckInterval, i18n("Check inter&val"), page);
+  c_heckIntervalLabel=new QLabel(c_heckInterval, i18n("Check inter&val:"), page);
   c_heckInterval->setSuffix(i18n(" min") );
   c_heckInterval->setValue(a->checkInterval());
   c_heckIntervalLabel->setBuddy(c_heckInterval);
@@ -663,7 +663,7 @@ void KNConfig::SmtpAccountWidget::load()
   s_erver->setText(s_erverInfo->server());
   p_ort->setText(QString::number(s_erverInfo->port()));
   h_old->setValue(s_erverInfo->hold());
-  t_imeout->setValue(s_erverInfo->timeout());  
+  t_imeout->setValue(s_erverInfo->timeout());
 }
 
 void KNConfig::SmtpAccountWidget::save()
@@ -1047,7 +1047,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   connect(u_nreadCB,         SIGNAL(toggled(bool)),     SLOT(slotEmitChanged()));
   connect(c_ollCacheSize,    SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
   connect(a_rtCacheSize,     SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-  
+
   load();
 }
 
@@ -1276,7 +1276,7 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   connect(o_penAttCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(a_ltAttCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   connect(b_rowserCommand, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
-  
+
   load();
 }
 
@@ -1301,7 +1301,7 @@ void KNConfig::ReadNewsViewerWidget::load()
   b_rowserCommand->setText(d_ata->b_rowserCommand);
   b_rowserCommand->setEnabled(d_ata->b_rowser==ReadNewsViewer::BTother);
   c_hooseBrowser->setEnabled(d_ata->b_rowser==ReadNewsViewer::BTother);
-}  
+}
 
 
 void KNConfig::ReadNewsViewerWidget::save()
@@ -1401,7 +1401,7 @@ void KNConfig::DisplayedHeadersWidget::load()
 {
   l_box->clear();
   for(KNDisplayedHeader *h = d_ata->h_drList.first(); h; h = d_ata->h_drList.next())
-    l_box->insertItem(generateItem(h));  
+    l_box->insertItem(generateItem(h));
 }
 
 void KNConfig::DisplayedHeadersWidget::save()
@@ -1708,17 +1708,17 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn,1,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete"), this);
-  connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
-  topL->addWidget(d_elBtn,2,1);
-
   e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), this);
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
-  topL->addWidget(e_ditBtn,3,1);
+  topL->addWidget(e_ditBtn,2,1);
 
   c_opyBtn=new QPushButton(i18n("Co&py..."), this);
   connect(c_opyBtn, SIGNAL(clicked()), this, SLOT(slotCopyBtnClicked()));
-  topL->addWidget(c_opyBtn,4,1);
+  topL->addWidget(c_opyBtn,3,1);
+
+  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
+  topL->addWidget(d_elBtn,4,1);
 
   // == Menu ====================================================
 
@@ -1767,7 +1767,7 @@ void KNConfig::FilterListWidget::load()
 {
   f_lb->clear();
   m_lb->clear();
-  f_ilManager->startConfig(this);  
+  f_ilManager->startConfig(this);
 }
 
 void KNConfig::FilterListWidget::save()
@@ -2006,7 +2006,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   ggbL->addMultiCellWidget(g_enMIdCB, 4,4, 0,1);
   h_ost=new KLineEdit(ggb);
   h_ost->setEnabled(false);
-  h_ostL=new QLabel(h_ost, i18n("Ho&stname:"), ggb);
+  h_ostL=new QLabel(h_ost, i18n("Ho&st name:"), ggb);
   h_ostL->setEnabled(false);
   ggbL->addWidget(h_ostL, 5,0);
   ggbL->addWidget(h_ost, 5,1);
@@ -2067,7 +2067,7 @@ void KNConfig::PostNewsTechnicalWidget::load()
 
   l_box->clear();
   for(XHeaders::Iterator it=d_ata->x_headers.begin(); it!=d_ata->x_headers.end(); ++it)
-    l_box->insertItem((*it).header());  
+    l_box->insertItem((*it).header());
 }
 
 void KNConfig::PostNewsTechnicalWidget::save()
@@ -2378,7 +2378,7 @@ KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
   c_onf = new Kpgp::Config(this,"knode pgp config",false);
   topLayout->addWidget(c_onf);
   connect(c_onf, SIGNAL(changed()), SLOT(slotEmitChanged()));
-  
+
   QGroupBox *optBox = new QGroupBox(i18n("KNode Specific Options"), this);
   topLayout->addWidget(optBox);
   QBoxLayout *groupL = new QVBoxLayout(optBox, KDialog::spacingHint());
@@ -2387,7 +2387,7 @@ KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
   groupL->addWidget(a_utoCheckSigCB);
   connect(a_utoCheckSigCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
   topLayout->addStretch(1);
-  
+
   load();
 }
 
@@ -2417,7 +2417,7 @@ void KNConfig::PrivacyWidget::save()
 //==============================================================================================================
 
 
-KNConfig::CleanupWidget::CleanupWidget(QWidget *p, const char *n) 
+KNConfig::CleanupWidget::CleanupWidget(QWidget *p, const char *n)
   : BaseWidget(p, n), d_ata(knGlobals.configManager()->cleanup())
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
@@ -2508,7 +2508,7 @@ void KNConfig::CleanupWidget::load()
   f_olderDays->setValue(d_ata->c_ompactInterval);
   g_roupDays->setValue(d_ata->e_xpireInterval);
   r_eadDays->setValue(d_ata->r_eadMaxAge);
-  u_nreadDays->setValue(d_ata->u_nreadMaxAge);  
+  u_nreadDays->setValue(d_ata->u_nreadMaxAge);
 }
 
 

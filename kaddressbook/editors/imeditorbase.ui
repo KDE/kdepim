@@ -76,7 +76,7 @@
                         <cstring>btnAdd</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Add</string>
+                        <string>&amp;Add...</string>
                     </property>
                 </widget>
                 <widget class="KPushButton">
@@ -84,7 +84,7 @@
                         <cstring>btnEdit</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Edit</string>
+                        <string>&amp;Edit...</string>
                     </property>
                 </widget>
                 <widget class="KPushButton">

@@ -171,7 +171,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   q_uicksearch->setStretchableWidget(s_earchLineEdit);
   lbl->setBuddy(s_earchLineEdit);
   connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
-  
+
   vlay->addWidget(q_uicksearch);
   vlay->addWidget(h_drView);
 
@@ -619,7 +619,7 @@ void KNMainWidget::initActions()
   a_ctNavReadThrough->plugAccel(a_ccel);
 
   //collection-view - accounts
-  a_ctAccProperties         = new KAction(i18n("Account &Properties..."), "configure", 0, this,
+  a_ctAccProperties         = new KAction(i18n("Account &Properties"), "configure", 0, this,
                               SLOT(slotAccProperties()), actionCollection(), "account_properties");
   a_ctAccRename             = new KAction(i18n("&Rename Account"), "text", 0, this,
                               SLOT(slotAccRename()), actionCollection(), "account_rename");
@@ -637,7 +637,7 @@ void KNMainWidget::initActions()
                               SLOT(slotAccPostNewArticle()), actionCollection(), "article_postNew");
 
   //collection-view - groups
-  a_ctGrpProperties         = new KAction(i18n("Group &Properties..."), "configure", 0, this,
+  a_ctGrpProperties         = new KAction(i18n("Group &Properties"), "configure", 0, this,
                               SLOT(slotGrpProperties()), actionCollection(), "group_properties");
   a_ctGrpRename             = new KAction(i18n("Rename &Group"), "text", 0, this,
                               SLOT(slotGrpRename()), actionCollection(), "group_rename");
@@ -704,7 +704,7 @@ void KNMainWidget::initActions()
   a_ctArtFilterKeyb->plugAccel(a_ccel);
   a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
-  a_ctArtFind               = new KAction(i18n("F&ind in Article..."),KStdAccel::shortcut(KStdAccel::Find) , this,
+  a_ctArtFind               = new KAction(i18n("F&ind in Article..."),"find", KStdAccel::shortcut(KStdAccel::Find) , this,
                               SLOT(slotArtFind()), actionCollection(), "find_in_article");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::shortcut(KStdAccel::Reload), this,
                               SLOT(slotArtRefreshList()), actionCollection(), "view_Refresh");
@@ -2322,6 +2322,7 @@ FetchArticleIdDlg::FetchArticleIdDlg(QWidget *parent, const char */*name*/ )
   label->setBuddy(edit);
   edit->setFocus();
   enableButtonOK( false );
+  setButtonOKText(i18n("&Fetch"));
   connect( edit, SIGNAL(textChanged( const QString & )), this, SLOT(slotTextChanged(const QString & )));
   KNHelper::restoreWindowSize("fetchArticleWithID", this, QSize(325,66));
 }

@@ -39,7 +39,7 @@
 #include "kandyprefs.h"
 
 static const char description[] =
-    I18N_NOOP("Communicating with your mobile phone.");
+    I18N_NOOP("Communicating with your mobile phone");
 
 static const char version[] = "0.3";
 

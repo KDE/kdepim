@@ -705,13 +705,13 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
     QPopupMenu * zoomPopupMenu = new QPopupMenu(this);
     myPopupMenu->insertItem (tr("Zoom"),zoomPopupMenu, 1);
     zoomPopupMenu->insertItem( tr("Zoom to 100%"),this, SLOT(setSettings(int)),0 ,21,21 );
-    zoomPopupMenu->insertItem( tr("Zoom to fit"),this, SLOT(setSettings(int)),0 ,20,20 );
-    zoomPopupMenu->insertItem( tr("Zoom in (x 2)"),this, SLOT(setSettings(int)),0 ,22,22 );
-    zoomPopupMenu->insertItem( tr("Zoom in (x 6)"),this, SLOT(setSettings(int)),0 ,24,24 );
-    zoomPopupMenu->insertItem( tr("Zoom in (x 12)"),this, SLOT(setSettings(int)),0 ,26,26 );
-    zoomPopupMenu->insertItem( tr("Zoom out (x 1/2)"),this, SLOT(setSettings(int)),0 ,23,23 );
-    zoomPopupMenu->insertItem( tr("Zoom out (x 1/6)"),this, SLOT(setSettings(int)),0 ,25,25 );
-    zoomPopupMenu->insertItem( tr("Zoom out (x 1/12)"),this, SLOT(setSettings(int)),0 ,27,27 );
+    zoomPopupMenu->insertItem( tr("Zoom to Fit"),this, SLOT(setSettings(int)),0 ,20,20 );
+    zoomPopupMenu->insertItem( tr("Zoom In (x 2)"),this, SLOT(setSettings(int)),0 ,22,22 );
+    zoomPopupMenu->insertItem( tr("Zoom In (x 6)"),this, SLOT(setSettings(int)),0 ,24,24 );
+    zoomPopupMenu->insertItem( tr("Zoom In (x 12)"),this, SLOT(setSettings(int)),0 ,26,26 );
+    zoomPopupMenu->insertItem( tr("Zoom Out (x 1/2)"),this, SLOT(setSettings(int)),0 ,23,23 );
+    zoomPopupMenu->insertItem( tr("Zoom Out (x 1/6)"),this, SLOT(setSettings(int)),0 ,25,25 );
+    zoomPopupMenu->insertItem( tr("Zoom Out (x 1/12)"),this, SLOT(setSettings(int)),0 ,27,27 );
     scalePopupMenu = new QPopupMenu(this);
     myPopupMenu->insertItem (tr("Scale"),scalePopupMenu, 2);
     scalePopupMenu->insertItem( tr("Minute"),this, SLOT(setSettings(int)),0 ,1,1 );
@@ -735,9 +735,9 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
 
     gridPopupMenu = new QPopupMenu(this);
     myPopupMenu->insertItem (tr("Grid"),gridPopupMenu,5);
-    gridPopupMenu->insertItem( tr("Show minor grid"),this, SLOT(setSettings(int)),0 ,10,10 );
-    gridPopupMenu->insertItem( tr("Show major grid"),this, SLOT(setSettings(int)),0 ,11,11 );
-    gridPopupMenu->insertItem( tr("Show no grid"),this, SLOT(setSettings(int)),0 ,12,12 );
+    gridPopupMenu->insertItem( tr("Show Minor Grid"),this, SLOT(setSettings(int)),0 ,10,10 );
+    gridPopupMenu->insertItem( tr("Show Major Grid"),this, SLOT(setSettings(int)),0 ,11,11 );
+    gridPopupMenu->insertItem( tr("Show No Grid"),this, SLOT(setSettings(int)),0 ,12,12 );
     myPopupMenu->insertItem( tr("Print"),this, SLOT(setSettings(int)),0 ,30,30 );
     connect(myPopupMenu, SIGNAL (  aboutToShow () ) , this, SLOT( preparePopupMenu() )) ;
     flagZoomToFit = false;
@@ -768,7 +768,7 @@ void  KDTimeHeaderWidget::preparePopupMenu()
     myPopupMenu->setItemVisible ( 4, flagShowYear );
     myPopupMenu->setItemVisible ( 5, flagShowGrid);
     myPopupMenu->setItemVisible ( 30, flagShowPrint );
-    myPopupMenu->changeItem( 1, tr ("Zoom  ") + "(" +QString::number( zoomFactor(), 'f',3) +")" );
+    myPopupMenu->changeItem( 1, tr ("Zoom ") + "(" +QString::number( zoomFactor(), 'f',3) +")" );
     int i = 0;
     int id;
     while ( ( id = scalePopupMenu->idAt( i++ )) >= 0 ) {

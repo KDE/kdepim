@@ -38,7 +38,7 @@ KNFilterConfigWidget::KNFilterConfigWidget(QWidget *parent, const char *name ) :
   QLabel *l = new QLabel(i18n("The following placeholders are supported:\n%MYNAME=own name, %MYEMAIL=own email address"),sf);
   sfL->addWidget(l);
   sfL->addStretch(1);
-  addTab(sf, i18n("Subject + &From"));
+  addTab(sf, i18n("Subject && &From"));
 
   idW=new QWidget(this);
   QVBoxLayout *idL=new QVBoxLayout(idW, 8,5);
@@ -51,7 +51,7 @@ KNFilterConfigWidget::KNFilterConfigWidget(QWidget *parent, const char *name ) :
 
   status=new KNStatusFilterWidget(this);
   addTab(status, i18n("&Status"));
-    
+
   add=new QWidget(this);
   QVBoxLayout *addL=new QVBoxLayout(add, 8,5);
   score=new KNRangeFilterWidget(i18n("Score"), -99999, 99999, add);
@@ -62,7 +62,7 @@ KNFilterConfigWidget::KNFilterConfigWidget(QWidget *parent, const char *name ) :
   addL->addWidget(lines);
   addL->addStretch(1);
   addTab(add, i18n("&Additional"));
-} 
+}
 
 
 KNFilterConfigWidget::~KNFilterConfigWidget()

@@ -262,7 +262,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
                                     SLOT(slotRemoveAttachment()), actionCollection(), "remove_attachment");
 
-  a_ctAttachmentProperties  = new KAction(i18n("&Properties..."), 0, this,
+  a_ctAttachmentProperties  = new KAction(i18n("&Properties"), 0, this,
                                           SLOT(slotAttachmentProperties()), actionCollection(), "attachment_properties");
 
   //options menu
@@ -1223,8 +1223,7 @@ void KNComposer::slotToggleWordWrap()
 
 void KNComposer::slotUndoRewrap()
 {
-  if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written."),
-                                         QString::null, QString::null) == KMessageBox::Continue) {
+  if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written.")) == KMessageBox::Continue) {
     v_iew->e_dit->setText(u_nwraped);
     slotAppendSig();
   }
@@ -1900,7 +1899,7 @@ void KNComposer::ComposerView::showAttachmentView()
             parent(), SLOT(slotAttachmentEdit(QListViewItem*)));
 
     //buttons
-    a_ttAddBtn=new QPushButton(i18n("A&dd"),a_ttWidget);
+    a_ttAddBtn=new QPushButton(i18n("A&dd..."),a_ttWidget);
     connect(a_ttAddBtn, SIGNAL(clicked()), parent(), SLOT(slotAttachFile()));
     topL->addWidget(a_ttAddBtn, 0,1);
 

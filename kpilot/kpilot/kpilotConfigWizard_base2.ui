@@ -84,7 +84,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                         <cstring>fProbeButton</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Automatically Detect Handheld &amp;&amp; User Name...</string>
+                        <string>&amp;Automatically Detect Handheld &amp;&amp; User Name</string>
                     </property>
                     <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Click this button to open the detection dialog. The wizard will try to automatically find and display the correct device and user name for your handheld. If the wizard cannot retrieve this information, check if you have write permission for the device.&lt;/qt&gt;</string>

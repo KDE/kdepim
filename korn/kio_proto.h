@@ -64,17 +64,17 @@ public:
 	/*
 	 * @return: the name of the protocol used by the configuration
 	 */
-	virtual QString configName() const { return "not specified"; } 
+	virtual QString configName() const { return "not specified"; }
 
 	virtual bool connectionBased() const { return false; }
-	
+
 	/*
 	 * The next four functions return the [capebilities] of a protocol.
 	 * fullMessage means that by downloaden, the whole message is downloaded.
 	 * if it is false, only the headers should be downloaded.
 	 */
-	virtual bool  canReadSubjects() const { return false; } 
-	virtual bool  canDeleteMail() const { return false; } 
+	virtual bool  canReadSubjects() const { return false; }
+	virtual bool  canDeleteMail() const { return false; }
 	virtual bool  canReadMail() const { return false; }
 	virtual bool  fullMessage() const { return false; }
 
@@ -99,7 +99,7 @@ public:
 	virtual QString usernameName() const { return i18n( "Username:" ); }
 	virtual QString mailboxName() const { return i18n( "Mailbox:" ); }
 	virtual QString passwordName() const { return i18n( "Password:" ); }
-	virtual QString savePasswordName() const { return i18n( "Save Password:" ); }
+	virtual QString savePasswordName() const { return i18n( "Save password" ); }
 	virtual QString authName() const { return i18n( "Authentication:" ); }
 
 	/*

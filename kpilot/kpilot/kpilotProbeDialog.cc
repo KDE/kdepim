@@ -87,7 +87,7 @@ and the module can't be unloaded.
 
 
 ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
-	KDialogBase(parent, n, true, i18n("Autodetecting Your Handheld"), KDialogBase::Ok|KDialogBase::Cancel|KDialogBase::User1, KDialogBase::Cancel, true, i18n("Restart detection...")),
+	KDialogBase(parent, n, true, i18n("Autodetecting Your Handheld"), KDialogBase::Ok|KDialogBase::Cancel|KDialogBase::User1, KDialogBase::Cancel, true, i18n("Restart Detection")),
 	mDetected(false), mUserName(""), mDevice(""), mUID(0)
 {
 	QVBox *mainWidget = makeVBoxMainWidget();

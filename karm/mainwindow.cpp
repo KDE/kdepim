@@ -266,7 +266,7 @@ void MainWindow::makeMenus()
 //      SLOT( addCommentToTask() ),
 //      actionCollection(),
 //      "add_comment_to_task");
-  actionMarkAsComplete = new KAction( i18n("&Mark as Complete..."),
+  actionMarkAsComplete = new KAction( i18n("&Mark as Complete"),
       QString::fromLatin1("document"),
       CTRL+Key_M,
       _taskView,

@@ -36,9 +36,9 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
   setIcon(SmallIcon("knode"));
   QGroupBox *bg=new QGroupBox(this);
 
-  startBtn=new QPushButton(i18n("Sta&rt Search"), bg);
+  startBtn=new QPushButton(SmallIcon("mail_find"),i18n("Sea&rch"), bg);
   startBtn->setDefault(true);
-  newBtn=new QPushButton(i18n("&New Search"), bg);
+  newBtn=new QPushButton(SmallIcon("editclear"),i18n("C&lear"), bg);
   closeBtn=new KPushButton(KStdGuiItem::close(), bg);
 
   completeThreads=new QCheckBox(i18n("Sho&w complete threads"),this);

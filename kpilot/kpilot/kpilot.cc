@@ -919,10 +919,11 @@ static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 sorry:
 	if (!ret)
 	{
-		KMessageBox::sorry(parent,i18n("Wizard Not Available"),
+		KMessageBox::sorry(parent,
 			i18n("The library containing the configuration wizard for KPilot "
 				"could not be loaded, and the wizard is not available. "
-				"Please try to use the regular configuration dialog."));
+				"Please try to use the regular configuration dialog."),
+				i18n("Wizard Not Available"));
 	}
 
 	if (ret)

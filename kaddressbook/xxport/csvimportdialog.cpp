@@ -446,8 +446,8 @@ void CSVImportDialog::initGUI()
   mTable->horizontalHeader()->hide();
   layout->addMultiCellWidget( mTable, 5, 5, 0, 4 );
 
-  setButtonText( User1, i18n( "Apply Template" ) );
-  setButtonText( User2, i18n( "Save Template" ) );
+  setButtonText( User1, i18n( "Apply Template..." ) );
+  setButtonText( User2, i18n( "Save Template..." ) );
 
   enableButtonOK( false );
   actionButton( User1 )->setEnabled( false );

@@ -175,7 +175,7 @@ void KCMKabCustomFields::deleteFile()
 
 void KCMKabCustomFields::importFile()
 {
-  KURL src = KFileDialog::getOpenFileName( QDir::homeDirPath(), i18n("*.ui|Designer files"),
+  KURL src = KFileDialog::getOpenFileName( QDir::homeDirPath(), i18n("*.ui|Designer Files"),
                                               this, i18n("Import Page") );
   KURL dest = kabLocalDir() + "contacteditorpages/";
   dest.setFileName(src.fileName());
@@ -320,7 +320,7 @@ void KCMKabCustomFields::initGUI()
   mDeleteButton = new QPushButton( i18n( "Delete Page" ), this);
   mDeleteButton->setEnabled( false );
   hbox->addWidget( mDeleteButton );
-  mImportButton = new QPushButton( i18n( "Import Page" ), this);
+  mImportButton = new QPushButton( i18n( "Import Page..." ), this);
   hbox->addWidget( mImportButton );
   mDesignerButton = new QPushButton( i18n( "Edit with Qt Designer..." ), this );
   hbox->addWidget( mDesignerButton );
@@ -341,7 +341,7 @@ void KCMKabCustomFields::updatePreview( QListViewItem *item )
                                  "<tr><td align=\"right\"><b>%5</b></td><td>%6</td></tr>"
                                  "<tr><td align=\"right\"><b>%7</b></td><td>%8</td></tr>"
                                  "</table></qt>" )
-                                .arg( i18n( "vCard Key:" ) )
+                                .arg( i18n( "vCard key:" ) )
                                 .arg( item->text( 0 ).replace("X_","X-") )
                                 .arg( i18n( "Type:" ) )
                                 .arg( item->text( 1 ) )

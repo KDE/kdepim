@@ -984,7 +984,7 @@ void KABCore::initActions()
   KAction *action;
 
   // file menu
-  mActionMail = new KAction( i18n( "&Send Email to Contact" ), "mail_send", 0,
+  mActionMail = new KAction( i18n( "&Send Email to Contact..." ), "mail_send", 0,
                              this, SLOT( sendMail() ), actionCollection(), "file_mail" );
   action = KStdAction::print( this, SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
