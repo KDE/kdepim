@@ -58,7 +58,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
     return;
 
   QString sig;
-  KNLocalArticle *art=newArticle(0, sig);
+  KNLocalArticle *art=newArticle(0, sig, knGlobals.cfgManager->postNewsTechnical()->charset());
   if(!art)
     return;
 
@@ -78,8 +78,14 @@ void KNArticleFactory::createPosting(KNGroup *g)
   if(!g)
     return;
 
+  QCString chset;
+  if (g->useCharset())
+    chset = g->defaultCharset();
+  else
+    chset = knGlobals.cfgManager->postNewsTechnical()->charset();
+
   QString sig;
-  KNLocalArticle *art=newArticle(g, sig);
+  KNLocalArticle *art=newArticle(g, sig, chset);
 
   if(!art)
     return;
@@ -101,10 +107,20 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   if(!a)
     return;
 
-  //create new article
   KNGroup *g=static_cast<KNGroup*>(a->collection());
+
+  QCString chset;
+  if (knGlobals.cfgManager->postNewsTechnical()->useOwnCharset()) {
+    if (g->useCharset())
+      chset = g->defaultCharset();
+    else
+      chset = knGlobals.cfgManager->postNewsTechnical()->charset();
+  } else
+    chset = a->contentType()->charset();
+
+  //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(g, sig);
+  KNLocalArticle *art=newArticle(g, sig, chset);
   if(!art)
     return;
 
@@ -204,7 +220,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     notRewraped=quoted;     // store the original text in here, the user can request it in the composer
     quoted=attribution;
 
-    quoted += rewrapStringList(text, knGlobals.cfgManager->postNewsComposer()->maxLineLength(), '>', incSig, false);
+    quoted += rewrapStringList(text, knGlobals.cfgManager->postNewsComposer()->maxLineLength(), '>', !incSig, false);
   }
 
   //-------------------------- </Body> -----------------------------
@@ -222,15 +238,20 @@ void KNArticleFactory::createForward(KNArticle *a)
   if(!a)
     return;
 
+  QCString chset;
+  if (knGlobals.cfgManager->postNewsTechnical()->useOwnCharset())
+    chset = knGlobals.cfgManager->postNewsTechnical()->charset();
+  else
+    chset = a->contentType()->charset();
+
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(0, sig);
+  KNLocalArticle *art=newArticle(0, sig, chset);
   if(!art)
     return;
 
   art->setDoPost(false);
   art->setDoMail(true);
-
 
   //------------------------- <Headers> ----------------------------
 
@@ -305,13 +326,11 @@ void KNArticleFactory::createCancel(KNArticle *a)
   grp=knGlobals.grpManager->group(a->newsgroups()->firstGroup(), nntp);
 
   QString sig;
-  KNLocalArticle *art=newArticle(grp, sig, false);
+  KNLocalArticle *art=newArticle(grp, sig, "us-ascii", false);
   if(!art)
     return;
 
   //init
-  art->contentType()->setCharset("US-ASCII");
-  art->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
   art->setDoPost(true);
   art->setDoMail(false);
 
@@ -349,6 +368,9 @@ void KNArticleFactory::createCancel(KNArticle *a)
 
 void KNArticleFactory::createSupersede(KNArticle *a)
 {
+  if (!a)
+    return;
+
   if(!cancelAllowed(a))
     return;
 
@@ -378,7 +400,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
   //new article
   QString sig;
-  KNLocalArticle *art=newArticle(grp, sig);
+  KNLocalArticle *art=newArticle(grp, sig, a->contentType()->charset());
   if(!art)
     return;
 
@@ -421,7 +443,7 @@ void KNArticleFactory::createMail(KNHeaders::AddressField *address)
 {
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(0, sig);
+  KNLocalArticle *art=newArticle(0, sig, knGlobals.cfgManager->postNewsTechnical()->charset());
   if(!art)
     return;
 
@@ -689,7 +711,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, bool withXHeaders)
+KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, QCString defChset, bool withXHeaders)
 {
   KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
 
@@ -767,11 +789,13 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, bool with
   //Mime
   KNHeaders::ContentType *type=art->contentType();
   type->setMimeType("text/plain");
-  if(g && g->useCharset())
-    type->setCharset(g->defaultCharset());
+
+  type->setCharset(defChset);
+
+  if (defChset.lower()=="us-ascii")
+    art->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
   else
-    type->setCharset(pnt->charset());
-  art->contentTransferEncoding()->setCte((KNHeaders::contentEncoding)(pnt->encoding()));
+    art->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KNHeaders::CE8Bit : KNHeaders::CEquPr);
 
   //X-Headers
   if(withXHeaders) {

@@ -56,7 +56,6 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   : QSplitter(w, name), l_ongView(true), b_lockui(false), s_electedAccount(0), s_electedGroup(0),
     s_electedFolder(0), s_electedArticle(0), a_ctions(w->actionCollection())
 {
-
   //------------------------------- <CONFIG> ----------------------------------
   c_fgManager=new KNConfigManager();
   knGlobals.cfgManager=c_fgManager;
@@ -173,11 +172,6 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   for (acc=knGlobals.accManager->first(); acc; acc=knGlobals.accManager->next())
     if( acc->wasOpen() && acc->listItem() )
       acc->listItem()->setOpen(true);
-
-  //set the keyboard focus indicator on the first item in the Collection View
-  if(c_olView->firstChild())
-    c_olView->setActive(c_olView->firstChild(),true);
-  c_olView->setFocus();
 }
 
 

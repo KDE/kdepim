@@ -1743,7 +1743,10 @@ void KNAttachment::setMimeType(const QString &s)
   }
   else {
     f_b64=false;
-    setCte(knGlobals.cfgManager->postNewsTechnical()->encoding());
+    if (knGlobals.cfgManager->postNewsTechnical()->allow8BitBody())
+      setCte(KNHeaders::CE8Bit);
+    else
+      setCte(KNHeaders::CEquPr);
   }
 }
 

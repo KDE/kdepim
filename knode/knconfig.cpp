@@ -691,12 +691,16 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
     "iso-2022-jp,iso-2022-jp-2,iso-2022-kr,euc-jp,euc-kr,Big5,gb2312");
 
   c_harset=conf->readEntry("Charset").latin1();
-  if (c_harset.isEmpty())
+  if (c_harset.isEmpty()) {
     c_harset=findComposerCharset(KGlobal::charsets()->charsetForLocale());
+    if (c_harset.isEmpty())
+      c_harset="iso-8859-1";  // shit
+  }
 
   h_ostname=conf->readEntry("MIdhost").latin1();
-  e_ncoding=conf->readNumEntry("Encoding",1);
-  a_llow8Bit=conf->readBoolEntry("allow8bitChars", false);
+  a_llow8BitBody=conf->readBoolEntry("8BitEncoding",true);
+  u_seOwnCharset=conf->readBoolEntry("UseOwnCharset",true);
+  a_llow8BitHeaders=conf->readBoolEntry("allow8bitChars", false);
   g_enerateMID=conf->readBoolEntry("generateMId", false);
   d_ontIncludeUA=conf->readBoolEntry("dontIncludeUA", false);
 
@@ -728,8 +732,9 @@ void KNConfig::PostNewsTechnical::save()
 
   conf->writeEntry("ComposerCharsets", c_omposerCharsets);
   conf->writeEntry("Charset", QString::fromLatin1(c_harset));
-  conf->writeEntry("Encoding", e_ncoding);
-  conf->writeEntry("allow8bitChars", a_llow8Bit);
+  conf->writeEntry("8BitEncoding", a_llow8BitBody);
+  conf->writeEntry("UseOwnCharset", u_seOwnCharset);
+  conf->writeEntry("allow8bitChars", a_llow8BitHeaders);
   conf->writeEntry("generateMId", g_enerateMID);
   conf->writeEntry("MIdhost", QString::fromLatin1(h_ostname));
   conf->writeEntry("dontIncludeUA", d_ontIncludeUA);
@@ -754,10 +759,25 @@ void KNConfig::PostNewsTechnical::save()
 
 int KNConfig::PostNewsTechnical::indexForCharset(const QCString &str)
 {
-  int i = c_omposerCharsets.findIndex(QString(str));
-  if (i==-1) {
-    i = c_omposerCharsets.findIndex(QString(c_harset));
-    if (i==-1)
+  int i=0;
+  bool found=false;
+  for ( QStringList::Iterator it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
+    if ((*it).lower() == str.lower().data()) {
+      found = true;
+      break;
+    }
+    i++;
+  }
+  if (!found) {
+    i=0;
+    for ( QStringList::Iterator it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
+      if ((*it).lower() == c_harset.lower().data()) {
+        found = true;
+        break;
+      }
+      i++;
+    }
+    if (!found)
       i=0;
   }
   return i;

@@ -77,7 +77,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void processJob(KNJobData *j); //reimplemented from KNJobConsumer
 
     //article generation
-    KNLocalArticle* newArticle(KNGroup *g, QString &sig, bool withXHeaders=true);
+    KNLocalArticle* newArticle(KNGroup *g, QString &sig, QCString defChset, bool withXHeaders=true);
 
     //cancel & supersede
     bool cancelAllowed(KNArticle *a);

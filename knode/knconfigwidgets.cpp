@@ -1501,7 +1501,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   // ==== General =============================================================
 
   QGroupBox *ggb=new QGroupBox(i18n("General"), this);
-  QGridLayout *ggbL=new QGridLayout(ggb, 6,2, 8,5);
+  QGridLayout *ggbL=new QGridLayout(ggb, 7,2, 8,5);
   topL->addWidget(ggb);
 
   ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
@@ -1511,25 +1511,27 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   ggbL->addWidget(c_harset, 1,1);
 
   e_ncoding=new QComboBox(ggb);
-  e_ncoding->insertItem("7 bit");
-  e_ncoding->insertItem("8 bit");
-  e_ncoding->insertItem("quoted-printable");
+  e_ncoding->insertItem("Allow 8-bit");
+  e_ncoding->insertItem("7-bit (Quoted-Printable)");
   ggbL->addWidget(new QLabel(e_ncoding, i18n("Enco&ding"), ggb), 2,0);
   ggbL->addWidget(e_ncoding, 2,1);
 
+  u_seOwnCSCB=new QCheckBox(i18n("Use o&wn default charset when replying"), ggb);
+  ggbL->addMultiCellWidget(u_seOwnCSCB, 3,3, 0,1);
+
   a_llow8bitCB=new QCheckBox(i18n("Don't encode &8-bit characters in the header"), ggb);
   connect(a_llow8bitCB, SIGNAL(toggled(bool)), this, SLOT(slotHeadEncToggled(bool)));
-  ggbL->addMultiCellWidget(a_llow8bitCB, 3,3, 0,1);
+  ggbL->addMultiCellWidget(a_llow8bitCB, 4,4, 0,1);
 
   g_enMIdCB=new QCheckBox(i18n("&Generate Message-Id"), ggb);
   connect(g_enMIdCB, SIGNAL(toggled(bool)), this, SLOT(slotGenMIdCBToggled(bool)));
-  ggbL->addMultiCellWidget(g_enMIdCB, 4,4, 0,1);
+  ggbL->addMultiCellWidget(g_enMIdCB, 5,5, 0,1);
   h_ost=new QLineEdit(ggb);
   h_ost->setEnabled(false);
   h_ostL=new QLabel(h_ost, i18n("Ho&stname:"), ggb);
   h_ostL->setEnabled(false);
-  ggbL->addWidget(h_ostL, 5,0);
-  ggbL->addWidget(h_ost, 5,1);
+  ggbL->addWidget(h_ostL, 6,0);
+  ggbL->addWidget(h_ost, 6,1);
   ggbL->setColStretch(1,1);
 
   // ==== X-Headers =============================================================
@@ -1564,18 +1566,18 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   xgbL->setColStretch(0,1);
 
   //init
-  a_llow8bitCB->blockSignals(true); //avoid warning message on startup
-  a_llow8bitCB->setChecked(d->a_llow8Bit);
-  a_llow8bitCB->blockSignals(false);
-  i_ncUaCB->setChecked(d->d_ontIncludeUA);
-  g_enMIdCB->setChecked(d->g_enerateMID);
   c_harset->setCurrentItem(d->indexForCharset(d->charset()));
-  e_ncoding->setCurrentItem(d->e_ncoding);
+  e_ncoding->setCurrentItem(d->a_llow8BitBody? 0:1);
+  u_seOwnCSCB->setChecked(d->u_seOwnCharset);
+  a_llow8bitCB->blockSignals(true); //avoid warning message on startup
+  a_llow8bitCB->setChecked(d->a_llow8BitHeaders);
+  a_llow8bitCB->blockSignals(false);
+  g_enMIdCB->setChecked(d->g_enerateMID);
   h_ost->setText(d->h_ostname);
+  i_ncUaCB->setChecked(d->d_ontIncludeUA);
 
   for(XHeaders::Iterator it=d->x_headers.begin(); it!=d->x_headers.end(); ++it)
     l_box->insertItem((*it).header());
-
   slotSelectionChanged();
 }
 
@@ -1590,9 +1592,10 @@ void KNConfig::PostNewsTechnicalWidget::apply()
   if(!d_irty)
     return;
 
-  d_ata->e_ncoding=e_ncoding->currentItem();
   d_ata->c_harset=c_harset->currentText().latin1();
-  d_ata->a_llow8Bit=a_llow8bitCB->isChecked();
+  d_ata->a_llow8BitBody=(e_ncoding->currentItem()==0);
+  d_ata->u_seOwnCharset=u_seOwnCSCB->isChecked();
+  d_ata->a_llow8BitHeaders=a_llow8bitCB->isChecked();
   d_ata->g_enerateMID=g_enMIdCB->isChecked();
   d_ata->h_ostname=h_ost->text().latin1();
   d_ata->d_ontIncludeUA=i_ncUaCB->isChecked();

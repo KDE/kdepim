@@ -692,8 +692,9 @@ class PostNewsTechnical : public Base {
     QCString findComposerCharset(QCString cs);
     QCString findComposerCharset(QFont::CharSet cs);
 
-    int encoding()              { return e_ncoding; }
-    bool allow8BitHeaders()     { return a_llow8Bit; }
+    bool allow8BitBody()        { return a_llow8BitBody; }
+    bool useOwnCharset()        { return u_seOwnCharset; }
+    bool allow8BitHeaders()     { return a_llow8BitHeaders; }
     bool generateMessageID()    { return g_enerateMID; }
     QCString hostname()         { return h_ostname; }
     XHeaders& xHeaders()        { return x_headers; }
@@ -704,9 +705,9 @@ class PostNewsTechnical : public Base {
               h_ostname;
     QStringList c_omposerCharsets;
 
-    int       e_ncoding;
-
-    bool      a_llow8Bit,
+    bool      a_llow8BitBody,
+              u_seOwnCharset,
+              a_llow8BitHeaders,
               g_enerateMID,
               d_ontIncludeUA;
 
@@ -729,7 +730,8 @@ class PostNewsTechnicalWidget : public BaseWidget {
   protected:
     QComboBox   *c_harset,
                 *e_ncoding;
-    QCheckBox   *a_llow8bitCB,
+    QCheckBox   *u_seOwnCSCB,
+                *a_llow8bitCB,
                 *g_enMIdCB,
                 *i_ncUaCB;
     QListBox    *l_box;

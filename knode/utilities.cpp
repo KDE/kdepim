@@ -91,6 +91,18 @@ QString rot13(const QString &s)
 }
 
 
+// **** us-ascii check **********************************************************
+
+bool isUsAscii(const QString &s)
+{
+  for (uint i=0; i<s.length(); i++)
+    if (s.at(i).latin1()<=0)    // c==0: non-latin1, c<0: non-us-ascii
+      return false;
+
+  return true;
+}
+
+
 // **** text rewraping *********************************************************
 
 int findBreakPos(const QString &text, int start)

@@ -52,7 +52,8 @@
 
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit)
     : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
-      e_xternalEdited(false), e_xternalEditor(0), e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
+      n_eeds8Bit(true), v_alidated(false), e_xternalEdited(false), e_xternalEditor(0), e_ditorTempfile(0),
+      s_pellChecker(0), a_ttChanged(false)
 {
   d_elAttList.setAutoDelete(true);
     
@@ -72,9 +73,9 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   sb->insertItem(QString::null, 3,0);                 // column
   sb->setItemAlignment (3,AlignCenter | AlignVCenter);
   sb->insertItem(QString::null, 4,0);                 // column
-  sb->setItemAlignment (5,AlignCenter | AlignVCenter);
+  sb->setItemAlignment (4,AlignCenter | AlignVCenter);
   sb->insertItem(QString::null, 5,0);                 // line
-  sb->setItemAlignment (6,AlignCenter | AlignVCenter);
+  sb->setItemAlignment (5,AlignCenter | AlignVCenter);
   connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
 
@@ -307,12 +308,17 @@ void KNComposer::setMessageMode(MessageMode mode)
 
 bool KNComposer::hasValidData()
 {
+  v_alidated=false;
+  n_eeds8Bit=false;
+
   // header checks
 
   if (v_iew->s_ubject->text().isEmpty()) {
     KMessageBox::sorry(this, i18n("Please enter a subject!"));
     return false;
   }
+  if (!n_eeds8Bit && !isUsAscii(v_iew->s_ubject->text()))
+    n_eeds8Bit=true;
 
   if (m_ode != mail) {
     if (v_iew->g_roups->text().isEmpty()) {
@@ -350,11 +356,14 @@ bool KNComposer::hasValidData()
         return false;
   }
 
-  if (m_ode != news)
+  if (m_ode != news) {
     if (v_iew->t_o->text().isEmpty() ) {
       KMessageBox::sorry(this, i18n("Please enter the mail-address!"));
       return false;
     }
+    if (!n_eeds8Bit && !isUsAscii(v_iew->t_o->text()))
+      n_eeds8Bit=true;
+  }
 
   //GNKSA body checks
   bool empty = true;
@@ -366,9 +375,17 @@ bool KNComposer::hasValidData()
 
   for(int i=0; i<v_iew->e_dit->numLines(); i++) {
     line=v_iew->e_dit->textLine(i);
+
+    if (!n_eeds8Bit && !isUsAscii(line))
+      n_eeds8Bit=true;
+
     if (line == "-- ") {   // signature text
       for (int j=i+1; j<v_iew->e_dit->numLines(); j++) {
-        line=v_iew->e_dit->textLine(i);
+        line=v_iew->e_dit->textLine(j);
+
+        if (!n_eeds8Bit && !isUsAscii(line))
+          n_eeds8Bit=true;
+
         sigLength++;
         if(line.length()>80) {
           longLine = true;
@@ -387,6 +404,11 @@ bool KNComposer::hasValidData()
       longLine = true;
       break;
     }
+  }
+
+  if (n_eeds8Bit && (c_harset.lower()=="us-ascii")) {
+    KMessageBox::sorry(this, i18n("Your message contains characters that aren't included\nin the \"us-ascii\" character set, please choose\na suitable character set in the \"Options\" menu!"));
+    return false;
   }
 
   if (empty) {
@@ -419,6 +441,7 @@ bool KNComposer::hasValidData()
        KMessageBox::information(this, i18n("Your signature exceeds the widely accepted limit of 4 lines.\nPlease consider to shorten your signature,\notherwise you will probably annoy your readers"),
                                 QString::null,"longSignatureWarning");
 
+  v_alidated=true;
   return true;
 }
 
@@ -479,16 +502,32 @@ void KNComposer::applyChanges()
     text=new KNMimeContent();
     KNHeaders::ContentType *type=text->contentType();
     KNHeaders::CTEncoding *enc=text->contentTransferEncoding();
-    KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
     type->setMimeType("text/plain");
-    enc->setCte((KNHeaders::contentEncoding)(pnt->encoding())); //default encoding for textual contents
     enc->setDecoded(true);
     text->assemble();
     a_rticle->addContent(text, true);
   }
 
   //set text
-  text->contentType()->setCharset(c_harset);
+  KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
+  if (v_alidated) {
+    if (n_eeds8Bit) {
+      text->contentType()->setCharset(c_harset);
+      if (pnt->allow8BitBody())
+        text->contentTransferEncoding()->setCte(KNHeaders::CE8Bit);
+      else
+        text->contentTransferEncoding()->setCte(KNHeaders::CEquPr);
+    } else {
+      text->contentType()->setCharset("us-ascii");   // fall back to us-ascii
+      text->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
+    }
+  } else {             // save as draft
+    text->contentType()->setCharset(c_harset);
+    if (c_harset.lower()=="us-ascii")
+      text->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
+    else
+      text->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KNHeaders::CE8Bit : KNHeaders::CEquPr);
+  }
 
   //auto-wrapped lines in v_iew->e_dit don't get an "\n", so we have to
   //assemble the text line by line

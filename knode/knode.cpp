@@ -31,6 +31,7 @@
 
 #include "knode.h"
 #include "knodeview.h"
+#include "knlistview.h"
 #include "utilities.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -170,6 +171,17 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   applyMainWindowSettings(conf);
   a_ctWinToggleToolbar->setChecked(!toolBar()->isHidden());
   a_ctWinToggleStatusbar->setChecked(!statusBar()->isHidden());
+
+  // set the keyboard focus indicator on the first item in the Collection View
+  // we do this here because everything needs to be properly setup when we
+  // call setActive()
+  if(v_iew->collectionView()->firstChild()) {
+    QListViewItem *i = v_iew->collectionView()->firstChild();
+    bool open = i->isOpen();
+    v_iew->collectionView()->setActive(i,true);
+    i->setOpen(open);
+  }
+  v_iew->collectionView()->setFocus();
 
   if(firstStart()) {  // open the config dialog on the first start
     show();              // the settings dialog must appear in front of the main window!

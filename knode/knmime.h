@@ -496,7 +496,6 @@ class KNAttachment {
     void attach(KNMimeContent *c);
     void detach(KNMimeContent *c);
 
-
   protected:
     KNMimeContent *c_ontent;
     QCString m_imeType;

@@ -90,7 +90,9 @@ class KNComposer : public KMainWindow  {
     QString s_ignature, u_nwraped;
     QCString c_harset;
     MessageMode m_ode;
-    bool d_oneSuccess;
+    bool d_oneSuccess,
+         n_eeds8Bit,    // false: fall back to us-ascii
+         v_alidated;    // hasValidData was run and found no problems, n_eeds8Bit is valid
 
     //edit
     bool e_xternalEdited;
