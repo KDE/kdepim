@@ -1,0 +1,11 @@
+# Code generation options for kconfig_compiler
+File=kolab.kcfg
+ClassName=KolabConfig
+Singleton=true
+Mutators=true
+#Inherits=KPimPrefs
+#IncludeFiles=libkdepim/kpimprefs.h
+MemberVariables=public
+GlobalEnums=true
+ItemAccessors=true
+SetUserTexts=true

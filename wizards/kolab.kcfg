@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+
+  <kcfgfile name="kolabrc"/>
+
+  <group name="General">
+    <entry name="Server" type="String">
+      <label>Kolab server name</label>
+      <default></default>
+    </entry>
+    <entry name="User" type="String">
+      <label>Kolab user name</label>
+      <default></default>
+    </entry>
+    <entry name="Password" type="Password">
+      <label>Kolab user password</label>
+      <default></default>
+    </entry>
+    <entry name="SavePassword" type="Bool">
+      <label>Save Password</label>
+      <default>false</default>
+    </entry>
+  </group>
+
+  <propagation source="kolabrc/General/User"
+               target="korganizerrc/Freebusy/FreeBusyPublishUser" />
+  <propagation source="kolabrc/General/Password"
+               target="korganizerrc/Freebusy/FreeBusyPublishPassword"
+               hidevalue="true" />
+  <propagation source="kolabrc/General/SavePassword"
+               target="korganizerrc/Freebusy/FreeBusyPublishSavePassword" />
+
+</kcfg>
