@@ -388,7 +388,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
     mContacts( list )
 {
   QFrame *page = plainPage();
-  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );  
+  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Do you want to import this contact in your address book?" ), page );
   QFont font = label->font();
@@ -401,7 +401,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
   mView->setVScrollBarMode( QScrollView::Auto );
   layout->addWidget( mView );
 
-  setButtonText( Apply, i18n( "Import all..." ) );
+  setButtonText( Apply, i18n( "Import All..." ) );
 
   mIt = mContacts.begin();
 
@@ -475,7 +475,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
   mOtherBox = new QCheckBox( i18n( "Other fields" ), page );
   layout->addWidget( mOtherBox );
 
-  mEncryptionKeys = new QCheckBox( i18n( "Encryption Keys" ), page );
+  mEncryptionKeys = new QCheckBox( i18n( "Encryption keys" ), page );
   layout->addWidget( mEncryptionKeys );
 
   KConfig config( "kaddressbookrc" );

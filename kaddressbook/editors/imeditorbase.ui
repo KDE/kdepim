@@ -22,7 +22,7 @@
         <widget class="KListView">
             <column>
                 <property name="text">
-                    <string>Protocol</string>
+                    <string>Protocol:</string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>
@@ -33,7 +33,7 @@
             </column>
             <column>
                 <property name="text">
-                    <string>Address</string>
+                    <string>Address:</string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>
@@ -44,7 +44,7 @@
             </column>
             <column>
                 <property name="text">
-                    <string>Context</string>
+                    <string>Context:</string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>
