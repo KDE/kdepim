@@ -54,6 +54,7 @@ TimeConduit::TimeConduit(KPilotDeviceLink * o,
 #ifdef DEBUG
 	DEBUGCONDUIT<<Time_conduit_id<<endl;
 #endif
+	fConduitName=i18n("Time");
 }
 
 
@@ -86,7 +87,7 @@ void TimeConduit::readConfig()
 
 	readConfig();
 
-	switch (fDirection) 
+	switch (fDirection)
 	{
 		case DIR_PCToPalm:
 			emit logMessage(i18n("Setting the clock on the handheld"));

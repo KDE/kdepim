@@ -102,6 +102,7 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QS
 #ifdef DEBUG
   DEBUGCONDUIT<<abbrowser_conduit_id<<endl;
 #endif
+  fConduitName=i18n("Addressbook");
 }
 
 

@@ -46,6 +46,7 @@ TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
 	FUNCTIONSETUP;
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,TimeConduitFactory::about());
 	fWidget=fConfigWidget;
+	fConduitName=i18n("Time");
 }
 
 void TimeWidgetConfig::commit(KConfig *fConfig)
@@ -70,6 +71,7 @@ TimeWidgetSetup::TimeWidgetSetup(QWidget *w, const char *n,
 	FUNCTIONSETUP;
 
 	fConfigBase = new TimeWidgetConfig(widget(),"ConfigWidget");
+	fConduitName=i18n("Time");
 }
 
 TimeWidgetSetup::~TimeWidgetSetup()
