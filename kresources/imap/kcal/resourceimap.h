@@ -157,7 +157,11 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
     */
     virtual QStringList subresources() const;
 
-  public slots:
+    // Listen to KMail changes in the amount of sub resources
+    void subresourceAdded( const QString& type, const QString& id );
+    void subresourceDeleted( const QString& type, const QString& id );
+
+public slots:
     /**
       (De-)activate a subresource.
     */

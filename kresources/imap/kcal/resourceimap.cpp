@@ -540,6 +540,18 @@ void ResourceIMAP::setSubresourceActive( const QString& subresource,
 {
 }
 
+void ResourceIMAP::subresourceAdded( const QString& type, const QString& )
+{
+  // TODO: Optimize this
+  slotRefresh( type );
+}
+
+void ResourceIMAP::subresourceDeleted( const QString& type, const QString& )
+{
+  // TODO: Optimize this
+  slotRefresh( type );
+}
+
 void ResourceIMAP::setTimeZoneId( const QString& tzid )
 {
   mCalendar.setTimeZoneId( tzid );
