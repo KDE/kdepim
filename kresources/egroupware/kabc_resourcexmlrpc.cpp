@@ -202,7 +202,7 @@ bool ResourceXMLRPC::asyncLoad()
 
   QMap<QString, QVariant> args;
   args.insert( "start", "1" );
-  args.insert( "limit", "50" );
+  args.insert( "limit", "" );
   args.insert( "fields", QVariant( fieldsMap ) );
   args.insert( "query", "" );
   args.insert( "filter", "" );
