@@ -164,7 +164,7 @@ QWidget *PairEditorWidget::createSyncOptionTab()
   QLabel *label = new QLabel( "<h2><b>" + i18n( "Conflicts &amp; Near Duplicates" ) + "</b></h2>", widget );
   layout->addWidget( label );
 
-  QVBoxLayout *groupLayout = new QVBoxLayout( widget, KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *groupLayout = new QVBoxLayout( 0, KDialog::marginHint(), KDialog::spacingHint() );
 
   QButtonGroup *group = new QButtonGroup( 1, Qt::Horizontal, widget );
   group->setRadioButtonExclusive( true );
