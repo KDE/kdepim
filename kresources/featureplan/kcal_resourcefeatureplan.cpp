@@ -88,7 +88,7 @@ bool ResourceFeaturePlan::doLoad()
     Category::List categories = features->categoryList();
 
     KCal::Todo *masterTodo = new KCal::Todo;
-    masterTodo->setSummary( "Feature Plan" );
+    masterTodo->setSummary( i18n("Feature Plan") );
     mCalendar.addTodo( masterTodo );
 
     insertCategories( categories, masterTodo );
