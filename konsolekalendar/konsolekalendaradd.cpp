@@ -52,7 +52,7 @@ bool KonsoleKalendarAdd::addEvent()
   Event *event = new Event();
 
   event->setDtStart( m_variables->getStartDate() );
-  event->setDtEnd( m_variables->getStartDate() );
+  event->setDtEnd( m_variables->getEndDate() );
   event->setDescription( m_variables->getDescription() );
   event->setSummary( m_variables->getSummary() );
 
