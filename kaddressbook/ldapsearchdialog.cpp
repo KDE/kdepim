@@ -282,13 +282,13 @@ void LDAPSearchDialog::slotSetScope( bool rec )
 QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr )
 {
   if ( attr == i18n( "Name" ) ) {
-    QString result( "|(cn=%1*)(sn=%2*)" );
+    QString result( "|(cn=*%1*)(sn=*%2*)" );
 
     result = result.arg( query ).arg( query );
 
     return result;
   } else {
-    QString result( "%1=%2*" );
+    QString result( "%1=*%2*" );
 
     if ( attr == i18n( "Email" ) ) {
       result = result.arg( "mail" ).arg( query );
