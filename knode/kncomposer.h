@@ -22,6 +22,7 @@
 #include <kmainwindow.h>
 #include <kdialogbase.h>
 #include <keditcl.h>
+#include <qlineedit.h>
 
 class QGroupBox;
 
@@ -116,7 +117,7 @@ class KNComposer : public KMainWindow  {
     KToggleAction *a_ctPGPsign,
                   *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap;
     KSelectAction *a_ctSetCharset;
-
+    bool spellLineEdit;
   protected slots:
     void slotSendNow();
     void slotSendLater();
@@ -176,6 +177,8 @@ class KNComposer : public KMainWindow  {
     void slotCopy();
     void slotPaste();
     void slotSelectAll();
+    void slotMisspelling(const QString &text, const QStringList &lst, unsigned int pos);
+    void slotCorrected (const QString &oldWord, const QString &newWord, unsigned int pos);
 
   protected:
 
@@ -186,6 +189,17 @@ class KNComposer : public KMainWindow  {
   signals:
     void composerDone(KNComposer*);
 
+};
+
+class KNLineEditSpell : public QLineEdit
+{
+    Q_OBJECT
+public:
+    KNLineEditSpell(QWidget * parent, const char * name = 0);
+    void highLightWord( unsigned int length, unsigned int pos );
+    void spellCheckDone( const QString &s );
+    void spellCheckerMisspelling( const QString &text, const QStringList &, unsigned int pos);
+    void spellCheckerCorrected( const QString &old, const QString &corr, unsigned int pos);
 };
 
 
@@ -204,9 +218,11 @@ class KNComposer::ComposerView  : public QSplitter {
     QLabel      *l_to,
                 *l_groups,
                 *l_fup2;
-    KLineEdit   *s_ubject,
-                *g_roups,
+    KNLineEditSpell *s_ubject;
+
+    KLineEdit   *g_roups,
                 *t_o;
+
     KComboBox   *f_up2;
     QPushButton *g_roupsBtn,
                 *t_oBtn;

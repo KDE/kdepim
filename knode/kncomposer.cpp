@@ -59,13 +59,46 @@ using Syntaxhighlighter::SpellChecker;
 #include <spellingfilter.h>
 
 
+KNLineEditSpell::KNLineEditSpell(QWidget * parent, const char * name)
+    :QLineEdit( parent,name )
+{
+}
+
+void KNLineEditSpell::highLightWord( unsigned int length, unsigned int pos )
+{
+    setSelection ( pos, length );
+}
+
+void KNLineEditSpell::spellCheckDone( const QString &s )
+{
+    if( s != text() )
+	setText( s );
+}
+
+void KNLineEditSpell::spellCheckerMisspelling( const QString &_text, const QStringList &, unsigned int pos)
+{
+     highLightWord( _text.length(),pos );
+}
+
+void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &corr, unsigned int pos)
+{
+    if( old!= corr )
+    {
+        setSelection ( pos, old.length() );
+        insert( corr );
+        setSelection ( pos, corr.length() );
+    }
+}
+
+
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
     : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
       e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
 {
     mSpellingFilter = 0;
-  d_elAttList.setAutoDelete(true);
+    spellLineEdit = false;
+    d_elAttList.setAutoDelete(true);
 
   // activate dnd of attachments...
   setAcceptDrops(true);
@@ -1184,7 +1217,7 @@ void KNComposer::slotSpellcheck()
 {
   if(s_pellChecker)    // in progress...
     return;
-
+  spellLineEdit = !spellLineEdit;
   a_ctExternalEditor->setEnabled(false);
   a_ctSpellCheck->setEnabled(false);
 
@@ -1196,9 +1229,27 @@ void KNComposer::slotSpellcheck()
   connect(s_pellChecker, SIGNAL(death()), this, SLOT(slotSpellFinished()));
   connect(s_pellChecker, SIGNAL(done(const QString&)), this, SLOT(slotSpellDone(const QString&)));
   connect(s_pellChecker, SIGNAL(misspelling (const QString &, const QStringList &, unsigned int)),
-          v_iew->e_dit, SLOT(misspelling (const QString &, const QStringList &, unsigned int)));
+          this, SLOT(slotMisspelling (const QString &, const QStringList &, unsigned int)));
   connect(s_pellChecker, SIGNAL(corrected (const QString &, const QString &, unsigned int)),
-          v_iew->e_dit, SLOT(corrected (const QString &, const QString &, unsigned int)));
+          this, SLOT(slotCorrected (const QString &, const QString &, unsigned int)));
+}
+
+
+void KNComposer::slotMisspelling(const QString &text, const QStringList &lst, unsigned int pos)
+{
+     if( spellLineEdit )
+         v_iew->s_ubject->spellCheckerMisspelling( text, lst, pos);
+     else
+         v_iew->e_dit->misspelling(text, lst, pos);
+
+}
+
+void KNComposer::slotCorrected (const QString &oldWord, const QString &newWord, unsigned int pos)
+{
+    if( spellLineEdit )
+        v_iew->s_ubject->spellCheckerCorrected( oldWord, newWord, pos);
+    else
+        v_iew->e_dit->corrected(oldWord, newWord, pos);
 }
 
 void KNComposer::slotUpdateStatusBar()
@@ -1402,47 +1453,64 @@ void KNComposer::slotAttachmentRemove(QListViewItem *)
 
 void KNComposer::slotSpellStarted( KSpell *)
 {
-  v_iew->e_dit->spellcheck_start();
-  s_pellChecker->setProgressResolution(2);
+    if( !spellLineEdit )
+    {
+        v_iew->e_dit->spellcheck_start();
+        s_pellChecker->setProgressResolution(2);
 
-  // read the quote indicator from the preferences
-  KConfig *config=KGlobal::config();
-  KConfigGroupSaver saver(config, "READNEWS");
-  QString quotePrefix;
-  quotePrefix = config->readEntry("quoteCharacters",">");
+        // read the quote indicator from the preferences
+        KConfig *config=KGlobal::config();
+        KConfigGroupSaver saver(config, "READNEWS");
+        QString quotePrefix;
+        quotePrefix = config->readEntry("quoteCharacters",">");
 //todo fixme
 //quotePrefix = mComposer->msg()->formatString(quotePrefix);
 
-  kdDebug() << "spelling: new SpellingFilter with prefix=\"" << quotePrefix << "\"" << endl;
-  mSpellingFilter = new SpellingFilter(v_iew->e_dit->text(), quotePrefix, SpellingFilter::FilterUrls,
-    SpellingFilter::FilterEmailAddresses);
+        kdDebug() << "spelling: new SpellingFilter with prefix=\"" << quotePrefix << "\"" << endl;
+        mSpellingFilter = new SpellingFilter(v_iew->e_dit->text(), quotePrefix, SpellingFilter::FilterUrls,
+                                             SpellingFilter::FilterEmailAddresses);
 
-  s_pellChecker->check(mSpellingFilter->filteredText());
+        s_pellChecker->check(mSpellingFilter->filteredText());
+    }
+    else
+        s_pellChecker->check( v_iew->s_ubject->text());
 }
 
 void KNComposer::slotSpellDone(const QString &newtext)
 {
-  a_ctExternalEditor->setEnabled(true);
-  a_ctSpellCheck->setEnabled(true);
-  v_iew->e_dit->spellcheck_stop();
+    a_ctExternalEditor->setEnabled(true);
+    a_ctSpellCheck->setEnabled(true);
+    v_iew->e_dit->spellcheck_stop();
 
-  int dlgResult = s_pellChecker->dlgResult();
-  if ( dlgResult == KS_CANCEL )
-  {
+    int dlgResult = s_pellChecker->dlgResult();
+    if ( dlgResult == KS_CANCEL )
+    {
+        if( spellLineEdit)
+        {
+            //stop spell check
+            spellLineEdit = false;
+            if( newtext != v_iew->s_ubject->text() )
+                v_iew->s_ubject->setText( newtext );
+        }
+        else
+        {
+            kdDebug() << "spelling: canceled - restoring text from SpellingFilter" << endl;
+            kdDebug()<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText()<<endl;
+            v_iew->e_dit->setText(mSpellingFilter->originalText());
 
-      kdDebug() << "spelling: canceled - restoring text from SpellingFilter" << endl;
-      kdDebug()<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText()<<endl;
-    v_iew->e_dit->setText(mSpellingFilter->originalText());
+            //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
+        }
+    }
+    s_pellChecker->cleanUp();
+    DictSpellChecker::dictionaryChanged();
 
-    //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
-  }
-  s_pellChecker->cleanUp();
-  DictSpellChecker::dictionaryChanged();
+    delete s_pellChecker;
+    s_pellChecker=0;
+    delete mSpellingFilter;
+    mSpellingFilter = 0;
 
-  delete s_pellChecker;
-  s_pellChecker=0;
-  delete mSpellingFilter;
-  mSpellingFilter = 0;
+    if( spellLineEdit )
+        slotSpellcheck();
 }
 
 
@@ -1454,6 +1522,10 @@ void KNComposer::slotSpellFinished()
   delete s_pellChecker;
   s_pellChecker=0;
 
+  kdDebug() << "spelling: delete SpellingFilter" << endl;
+  delete mSpellingFilter;
+  mSpellingFilter = 0;
+
   if(status==KSpell::Error) {
     KMessageBox::error(this, i18n("ISpell could not be started.\n"
     "Please make sure you have ISpell properly configured and in your PATH."));
@@ -1462,29 +1534,13 @@ void KNComposer::slotSpellFinished()
     v_iew->e_dit->spellcheck_stop();
     KMessageBox::error(this, i18n("ISpell seems to have crashed."));
   }
-}
-#if 0
-//-----------------------------------------------------------------------------
-void KNComposer::slotSpellResult(const QString &)
-{
-  v_iew->e_dit->spellcheck_stop();
-
-  int dlgResult = s_pellChecker->dlgResult();
-  if ( dlgResult == KS_CANCEL )
+  else
   {
-
-      kdDebug() << "spelling: canceled - restoring text from SpellingFilter" << endl;
-      kdDebug()<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText()<<endl;
-    v_iew->e_dit->setText(mSpellingFilter->originalText());
-
-    //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
+      if( spellLineEdit )
+          slotSpellcheck();
   }
-  s_pellChecker->cleanUp();
-  DictSpellChecker::dictionaryChanged();
-
-  //emit v_iew->e_dit->spellcheck_done( dlgResult );
 }
-#endif
+
 
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {
@@ -1571,7 +1627,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   hdrL->addMultiCellWidget(f_up2, 2,2, 1,2);
 
   //subject
-  s_ubject=new KLineEdit(hdrFrame);
+  s_ubject=new KNLineEditSpell(hdrFrame);
   QLabel *l=new QLabel(s_ubject, i18n("S&ubject:"), hdrFrame);
   hdrL->addWidget(l, 3,0);
   hdrL->addMultiCellWidget(s_ubject, 3,3, 1,2);
