@@ -48,7 +48,62 @@
 #include "knhdrviewitem.h"
 #include "knnetaccess.h"
 #include "knpgp.h"
+#include "knnntpaccount.h"
 
+
+
+KNArticleCache::KNArticleCache()
+{
+  m_emCacheSize=0;
+}
+
+
+KNArticleCache::~KNArticleCache()
+{
+}
+
+
+void KNArticleCache::add(KNArticle *a)
+{
+  KNConfig::Cache *c=knGlobals.cfgManager->cache();
+  int ma=c->memoryMaxArticles();
+  int mkb=c->memoryMaxKBytes();
+
+  m_emCache.append(a);
+  m_emCacheSize+=a->storageSize();
+
+  while( ((int)m_emCache.count() > ma || m_emCacheSize/1024 > mkb) && m_emCache.count() > 1 )
+    remove(m_emCache.first());
+
+  kdDebug(5003) << "KNArticleCache::add() : "
+                << m_emCache.count() << " articles in cache, "
+                << m_emCacheSize <<" bytes used" << endl;
+}
+
+
+void KNArticleCache::remove(KNArticle *a)
+{
+  if(m_emCache.removeRef(a)) {
+    m_emCacheSize-=a->storageSize();
+    a->KNMimeContent::clear();
+    if(a->listItem())
+      a->updateListItem();
+    kdDebug(5003) << "KNArticleCache::remove() : 1 article removed" << endl;
+  }
+}
+
+
+void KNArticleCache::clearMemoryCache()
+{
+}
+
+
+void KNArticleCache::clearDiskCache()
+{
+}
+
+
+//===============================================================================
 
 
 KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(0,0)
@@ -395,6 +450,133 @@ void KNArticleManager::verifyPGPSignature(KNArticle* a)
 }
 
 
+bool KNArticleManager::load(KNArticle *a)
+{
+  if(!a || a->isLocked() )
+    return false;
+  if(a->hasContent())
+    return true;
+
+  if(a->type()==KNMimeBase::ATlocal) {
+    KNFolder *f=static_cast<KNFolder*>(a->collection());
+    if( f && f->loadArticle( static_cast<KNLocalArticle*>(a) ) )
+      c_ache.add(a);
+    else
+      return false;
+  }
+  else
+    loadForDisplay(a); // ok, this is not very pretty - gotta fix it some time ;-)
+  return true;
+}
+
+
+void KNArticleManager::loadForDisplay(KNArticle *a)
+{
+  if(!a || a->isLocked() || a->hasContent())
+    return;
+
+  if(a->type()==KNMimeBase::ATremote) {
+    KNGroup *g=static_cast<KNGroup*>(a->collection());
+    if(g)
+      emitJob( new KNJobData(KNJobData::JTfetchArticle, this, g->account(), a) );
+  }
+  else { // local article
+    KNFolder *f=static_cast<KNFolder*>(a->collection());
+    if( !f || !f->loadArticle( static_cast<KNLocalArticle*>(a) ) )
+      KNArticleWidget::articleLoadError( a, i18n("Cannot load the article(s) from the mbox-file!") );
+    else {
+      c_ache.add(a);
+      KNArticleWidget::articleChanged(a);
+    }
+  }
+}
+
+
+void KNArticleManager::saveInFolder(KNRemoteArticle::List &l, KNFolder *f)
+{
+  if(!f) return;
+
+  KNRemoteArticle *rem;
+  KNLocalArticle *loc;
+  KNLocalArticle::List l2;
+
+  for(rem=l.first(); rem; rem=l.next()) {
+    if(!rem->hasContent())
+      continue;
+    loc=new KNLocalArticle(0);
+    loc->setEditDisabled(true);
+    loc->setContent(rem->encodedContent());
+    loc->parse();
+    l2.append(loc);
+  }
+
+  if(!l2.isEmpty()) {
+    if(!f->saveArticles(&l2)) {
+      for(KNLocalArticle *a=l2.first(); a; a=l2.next()) {
+        if(a->isOrphant())
+          delete a; // ok, this is ugly; we simply delete orphant articles
+        else
+          a->KNMimeContent::clear(); // no need to keep them in memory
+      }
+      KNHelper::displayInternalFileError();
+    }
+    else {
+      for(KNLocalArticle *a=l2.first(); a; a=l2.next())
+        a->KNMimeContent::clear(); // no need to keep them in memory
+    }
+  }
+}
+
+
+void KNArticleManager::saveInFolder(KNLocalArticle::List &l, KNFolder *f)
+{
+  if(!f) return;
+  for(KNLocalArticle *a=l.first(); a; a=l.next()) {
+    if(a->hasContent() && a->isOrphant())
+      c_ache.add(a); // this is a new article
+  }
+
+  if(!f->saveArticles(&l)) {
+    for(KNLocalArticle *a=l.first(); a; a=l.next())
+      if(a->isOrphant())
+        delete a; // ok, this is ugly; we simply delete orphant articles
+    KNHelper::displayInternalFileError();
+  }
+}
+
+
+bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
+{
+  if(ask) {
+    QStringList lst;
+    for(KNLocalArticle *a=l.first(); a; a=l.next()) {
+      if(a->isLocked())
+        continue;
+      if(a->subject()->isEmpty())
+        lst << i18n("no subject");
+      else
+        lst << a->subject()->asUnicodeString();
+    }
+    if( KMessageBox::No == KMessageBox::questionYesNoList(
+      knGlobals.topWidget, i18n("Do you really want to delete these articles?"), lst) )
+      return false;
+  }
+
+  for(KNLocalArticle *a=l.first(); a; a=l.next())
+    c_ache.remove(a);
+
+  KNFolder *f=static_cast<KNFolder*>(l.first()->collection());
+  if(f)
+    f->removeArticles(&l, true);
+  else {
+    for(KNLocalArticle *a=l.first(); a; a=l.next())
+      delete a;
+  }
+
+  return true;
+}
+
+
 void KNArticleManager::setAllRead(bool r)
 {
   if(!g_roup)
@@ -550,35 +732,22 @@ void KNArticleManager::setScore(KNRemoteArticle::List &l, int score)
 }
 
 
-void KNArticleManager::moveToFolder(KNRemoteArticle::List &l, KNFolder *f)
+void KNArticleManager::processJob(KNJobData *j)
 {
-  if(!f) return;
-
-  KNRemoteArticle *rem;
-  KNLocalArticle *loc;
-  KNLocalArticle::List l2;
-
-  for(rem=l.first(); rem; rem=l.next()) {
-    if(!rem->hasContent())
-      continue;
-    loc=new KNLocalArticle(0);
-    loc->setEditDisabled(true);
-    loc->setContent(rem->encodedContent());
-    loc->parse();
-    l2.append(loc);
+  if(j->type()==KNJobData::JTfetchArticle && !j->canceled()) {
+    if(j->success()) {
+      KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
+      KNArticleWidget::articleChanged(a);
+      if(!a->isOrphant()) //orphant articles are deleted by the displaying widget
+        c_ache.add(a);
+      if(a->listItem())
+        a->updateListItem();
+    }
+    else
+      KNArticleWidget::articleLoadError(static_cast<KNRemoteArticle*>(j->data()), j->errorString());
   }
 
-  if(!l2.isEmpty())
-    if(!f->saveArticles(&l2))
-      KNHelper::displayInternalFileError();
-}
-
-
-void KNArticleManager::moveToFolder(KNLocalArticle::List &l, KNFolder *f)
-{
-  if(!f) return;
-  if(!f->saveArticles(&l))
-    KNHelper::displayInternalFileError();
+  delete j;
 }
 
 

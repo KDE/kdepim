@@ -377,7 +377,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
     a_ccount(a)
 {
   QFrame* page=addPage(i18n("Ser&ver"));
-  QGridLayout *topL=new QGridLayout(page, 11, 3, 5);
+  QGridLayout *topL=new QGridLayout(page, 12, 3, 5);
 
   n_ame=new QLineEdit(page);
   QLabel *l=new QLabel(n_ame,i18n("&Name:"),page);
@@ -416,22 +416,27 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   f_etchDes->setChecked(a->fetchDescriptions());
   topL->addMultiCellWidget(f_etchDes, 5,5, 0,3);
 
+  /*u_seDiskCache=new QCheckBox(i18n("&Cache articles on disk"), page);
+  u_seDiskCache->setChecked(a->useDiskCache());
+  topL->addMultiCellWidget(u_seDiskCache, 6,6, 0,3);*/
+
+
   a_uth=new QCheckBox(i18n("Server requires &authentication"), page);
   connect(a_uth, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
-  topL->addMultiCellWidget(a_uth, 6,6, 0,3);
+  topL->addMultiCellWidget(a_uth, 7,7, 0,3);
 
   u_ser=new QLineEdit(page);
   u_serLabel=new QLabel(u_ser,i18n("&User:"), page);
   u_ser->setText(a->user());
-  topL->addWidget(u_serLabel, 7,0);
-  topL->addMultiCellWidget(u_ser, 7,7, 1,2);
+  topL->addWidget(u_serLabel, 8,0);
+  topL->addMultiCellWidget(u_ser, 8,8, 1,2);
 
   p_ass=new QLineEdit(page);
   p_assLabel=new QLabel(p_ass, i18n("Pass&word:"), page);
   p_ass->setEchoMode(QLineEdit::Password);
   p_ass->setText(a->pass());
-  topL->addWidget(p_assLabel, 8,0);
-  topL->addMultiCellWidget(p_ass, 8,8, 1,2);
+  topL->addWidget(p_assLabel, 9,0);
+  topL->addMultiCellWidget(p_ass, 9,9, 1,2);
 
   slotAuthChecked(a->needsLogon());
 
@@ -467,6 +472,7 @@ void KNConfig::NntpAccountConfDialog::slotOk()
   a_ccount->setHold(h_old->value());
   a_ccount->setTimeout(t_imeout->value());
   a_ccount->setFetchDescriptions(f_etchDes->isChecked());
+  //a_ccount->setUseDiskCache(u_seDiskCache->isChecked());
   a_ccount->setNeedsLogon(a_uth->isChecked());
   a_ccount->setUser(u_ser->text());
   a_ccount->setPass(p_ass->text());
@@ -2208,6 +2214,82 @@ void KNConfig::CleanupWidget::slotFolderCBtoggled(bool b)
   f_olderDaysL->setEnabled(b);
   f_olderDays->setEnabled(b);
 }
+
+
+//==============================================================================================================
+
+
+KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
+  : BaseWidget(p, n), d_ata(d)
+{
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  // memory
+  QGroupBox *memGB=new QGroupBox(i18n("Memory cache"), this);
+  topL->addWidget(memGB);
+  QGridLayout *memL=new QGridLayout(memGB, 3,2, 8,5);
+  memL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  memL->addWidget(new QLabel(i18n("max articles to keep"), memGB), 1,0);
+  m_emMaxArt=new KIntSpinBox(0, 99999, 1, 1, 10, memGB);
+  memL->addWidget(m_emMaxArt, 1,1);
+
+  memL->addWidget(new QLabel(i18n("max memory usage"), memGB), 2,0);
+  m_emMaxKB=new KIntSpinBox(0, 99999, 1, 1, 10, memGB);
+  m_emMaxKB->setSuffix(" KB");
+  memL->addWidget(m_emMaxKB, 2,1);
+
+  memL->setColStretch(0,1);
+
+
+  /*
+  // disk
+  QGroupBox *diskGB=new QGroupBox(i18n("Disk cache"), this);
+  topL->addWidget(diskGB);
+  QGridLayout *diskL=new QGridLayout(diskGB, 3,2, 8,5);
+  diskL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  d_iskMaxArtL=new QLabel(i18n("max articles to keep"), diskGB);
+  diskL->addWidget(d_iskMaxArtL, 2,0);
+  d_iskMaxArt=new KIntSpinBox(0, 99999, 1, 1, 10, diskGB);
+  diskL->addWidget(d_iskMaxArt, 2,1);
+
+  d_iskMaxKBL=new QLabel(i18n("max disk usage"), diskGB);
+  diskL->addWidget(d_iskMaxKBL, 3,0);
+  d_iskMaxKB=new KIntSpinBox(0, 99999, 1, 1, 10, diskGB);
+  d_iskMaxKB->setSuffix(" KB");
+  diskL->addWidget(d_iskMaxKB, 3,1);
+
+  diskL->setColStretch(0,1);
+  */
+
+  topL->addStretch(1);
+
+
+  // init
+  m_emMaxArt->setValue(d->memoryMaxArticles());
+  m_emMaxKB->setValue(d->memoryMaxKBytes());
+  /*d_iskMaxArt->setValue(d->diskMaxArticles());
+  d_iskMaxKB->setValue(d->diskMaxKBytes());*/
+}
+
+
+KNConfig::CacheWidget::~CacheWidget()
+{
+}
+
+
+void KNConfig::CacheWidget::apply()
+{
+  d_ata->m_emMaxArt=m_emMaxArt->value();
+  d_ata->m_emMaxKB=m_emMaxKB->value();
+
+  /*d_ata->d_iskMaxArt=d_iskMaxArt->value();
+  d_ata->d_iskMaxKB=d_iskMaxKB->value(); */
+
+  d_ata->save();
+}
+
 
 
 //------------------------

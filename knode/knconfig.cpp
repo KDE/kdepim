@@ -1162,3 +1162,43 @@ void KNConfig::Cleanup::setLastCompactDate()
   c->setGroup("EXPIRE");
   c->writeEntry("lastCompact", QDateTime::currentDateTime());
 }
+
+
+
+//==============================================================================================================
+
+
+
+KNConfig::Cache::Cache()
+{
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("CACHE");
+
+  m_emMaxArt=conf->readNumEntry("memMaxArt", 1000);
+  m_emMaxKB=conf->readNumEntry("memMaxKB", 1024);
+
+  d_iskMaxArt=conf->readNumEntry("diskMaxArt", 1000);
+  d_iskMaxKB=conf->readNumEntry("diskMaxKB", 1024);
+}
+
+
+KNConfig::Cache::~Cache()
+{
+}
+
+
+void KNConfig::Cache::save()
+{
+  kdDebug(5003) << "KNConfig::Cache::save()" << endl;
+
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("CACHE");
+
+  conf->writeEntry("memMaxArt", m_emMaxArt);
+  conf->writeEntry("memMaxKB", m_emMaxKB);
+
+  conf->writeEntry("diskMaxArt", d_iskMaxArt);
+  conf->writeEntry("diskMaxKB", d_iskMaxKB);
+
+}
+

@@ -1234,6 +1234,21 @@ int KNMimeContent::size()
 }
 
 
+int KNMimeContent::storageSize()
+{
+  int s=h_ead.length();
+
+  if(!c_ontents)
+    s+=b_ody.length();
+  else {
+    for(KNMimeContent *c=c_ontents->first(); c; c=c_ontents->next())
+      s+=c->storageSize();
+  }
+
+  return s;
+}
+
+
 int KNMimeContent::lineCount()
 {
   int ret=0;
@@ -1941,6 +1956,7 @@ void KNAttachment::attach(KNMimeContent *c)
 {
   if(i_sAttached || !l_oadHelper)
     return;
+
 
   c_ontent=new KNMimeContent();
  	QFile *file = l_oadHelper->getFile();

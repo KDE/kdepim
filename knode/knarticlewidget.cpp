@@ -762,11 +762,13 @@ void KNArticleWidget::setArticle(KNArticle *a)
   if(!a)
     showBlankPage();
   else {
-    //kdDebug(5003) << "KNArticleWidget::setArticle() : " << a->messageID()->as7BitString(false) << endl;
     if(a->hasContent()) //article is already loaded => just show it
       createHtmlPage();
-    else if(!a->isLocked()) {
+    else {
+      knGlobals.artManager->loadForDisplay(a_rticle);
+    /*if(!a->isLocked()) {
       if(a->type()==KNMimeBase::ATremote) {//ok, this is a remote-article => fetch it from the server
+        knGlobals.artManager->loadArticle(a_rticle);
         KNGroup *g=static_cast<KNGroup*>(a->collection());
         emitJob( new KNJobData( KNJobData::JTfetchArticle, this, g->account(), a_rticle ) );
       }
@@ -777,7 +779,7 @@ void KNArticleWidget::setArticle(KNArticle *a)
           showErrorMessage(i18n("Cannot load the article from the mbox-file!"));
         else
           createHtmlPage();
-      }
+      }*/
     }
   }
 }
@@ -785,10 +787,9 @@ void KNArticleWidget::setArticle(KNArticle *a)
 
 void KNArticleWidget::processJob(KNJobData *j)
 {
-  KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
-
-  if (j->type()==KNJobData::JTfetchSource) {
-    if (!j->canceled()) {
+  if(j->type()==KNJobData::JTfetchSource) {
+    KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
+    if(!j->canceled()) {
       QString html;
       if (!j->success())
         html= i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>")+j->errorString();
@@ -797,22 +798,11 @@ void KNArticleWidget::processJob(KNJobData *j)
 
       new KNSourceViewWindow(html);
     }
+    delete j;
     delete a;
-  } else {
-    if(j->canceled()) {
-      articleChanged(a);
-    }
-    else {
-      if(j->success()) {
-        a->updateListItem();
-        articleChanged(a);
-      }
-      else if(a_rticle==a)
-        showErrorMessage(j->errorString());
-    }
   }
-
-  delete j;
+  else
+    delete j;
 }
 
 
@@ -1551,6 +1541,14 @@ void KNArticleWidget::articleChanged(KNArticle *a)
   for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
     if(a==i->article())
       i->updateContents();
+}
+
+
+void KNArticleWidget::articleLoadError(KNArticle *a, const QString &error)
+{
+  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+    if(a==i->article())
+      i->showErrorMessage(error);
 }
 
 

@@ -46,18 +46,21 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     bool fetchDescriptions()          { return f_etchDescriptions; }
     QDate lastNewFetch()              { return l_astNewFetch; }
     bool wasOpen()                    { return w_asOpen; }
+    bool useDiskCache()               { return u_seDiskCache; }
     KNConfig::Identity* identity()    { return i_dentity; }
+
 
     //set
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
     void setLastNewFetch(QDate date)  { l_astNewFetch = date; }
+    void setUseDiskCache(bool b)      { u_seDiskCache=b; }
   
   protected:
     KNConfig::Identity *i_dentity;    // server specific identity
     bool f_etchDescriptions;          // use an additional "list newsgroups" command to fetch the newsgroup descriptions
     QDate l_astNewFetch;              // last use of "newgroups"
     bool w_asOpen;                    // was the server open in the listview on the last shutdown?
-
+    bool u_seDiskCache;               // cache fetched articles on disk
 };
 
 #endif

@@ -31,6 +31,7 @@
 #include "knaccountmanager.h"
 #include "kngroup.h"
 #include "knfoldermanager.h"
+#include "knarticlemanager.h"
 #include "knfolder.h"
 #include "kncomposer.h"
 #include "knnntpaccount.h"
@@ -39,8 +40,8 @@
 #include "resource.h"
 
 
-KNArticleFactory::KNArticleFactory(KNFolderManager *fm, KNGroupManager *gm, QObject *p, const char *n)
-  : QObject(p, n), KNJobConsumer(), f_olManager(fm), g_rpManager(gm), s_endErrDlg(0)
+KNArticleFactory::KNArticleFactory(QObject *p, const char *n)
+  : QObject(p, n), s_endErrDlg(0)
 {
   c_ompList.setAutoDelete(true);
 }
@@ -329,21 +330,21 @@ void KNArticleFactory::createCancel(KNArticle *a)
   }
 
   KNGroup *grp;
-  KNNntpAccount *nntp;
+  KNNntpAccount *nntp=0;
 
   if(a->type()==KNMimeBase::ATremote)
     nntp=(static_cast<KNGroup*>(a->collection()))->account();
   else {
-    KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
-    la->setCanceled(true);
-    la->updateListItem();
-    nntp=knGlobals.accManager->account(la->serverId());
     if(!nntp)
       nntp=knGlobals.accManager->first();
     if(!nntp) {
       KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news-account configured!"));
       return;
     }
+    KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
+    la->setCanceled(true);
+    la->updateListItem();
+    nntp=knGlobals.accManager->account(la->serverId());
   }
 
   grp=knGlobals.grpManager->group(a->newsgroups()->firstGroup(), nntp);
@@ -513,7 +514,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     KNNntpAccount *acc=knGlobals.accManager->account(a->serverId());
     if(acc) {
       KNHeaders::Newsgroups *grps=a->newsgroups();
-      KNGroup *grp=g_rpManager->group(grps->firstGroup(), acc);
+      KNGroup *grp=knGlobals.grpManager->group(grps->firstGroup(), acc);
       if (grp && grp->identity() && grp->identity()->hasSignature())
         id=grp->identity();
       else if (acc->identity() && acc->identity()->hasSignature())
@@ -529,7 +530,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
 }
 
 
-void KNArticleFactory::saveArticles(KNLocalArticle::List *l, KNFolder *f)
+/*void KNArticleFactory::saveArticles(KNLocalArticle::List &l, KNFolder *f)
 {
   if(!f->saveArticles(l)) {
     KNHelper::displayInternalFileError();
@@ -568,7 +569,7 @@ bool KNArticleFactory::deleteArticles(KNLocalArticle::List *l, bool ask)
       delete a;
   }
   return true;
-}
+}*/
 
 
 void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
@@ -591,7 +592,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
   }
 
   if(!now) {
-    saveArticles(&unsent, f_olManager->outbox());
+    knGlobals.artManager->saveInFolder(unsent, knGlobals.folManager->outbox());
     return;
   }
 
@@ -602,8 +603,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
       continue;
 
     if(!a->hasContent()) {
-      KNFolder *f=static_cast<KNFolder*>(a->collection());
-      if(!f->loadArticle(a)) {
+      if(!knGlobals.artManager->load(a)) {
         showSendErrorDialog();
         s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Unable to load article!"));
         continue;
@@ -627,7 +627,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
 void KNArticleFactory::sendOutbox()
 {
   KNLocalArticle::List lst;
-  KNFolder *ob=f_olManager->outbox();
+  KNFolder *ob=knGlobals.folManager->outbox();
 
   if(!ob->loadHdrs()) {
     KMessageBox::error(knGlobals.topWidget, i18n("Unable to load the outbox-folder!"));
@@ -707,8 +707,8 @@ void KNArticleFactory::processJob(KNJobData *j)
     delete j; //unlock article
 
     //sending of this article failed => move it to the "Outbox-Folder"
-    if(art->collection()!=f_olManager->outbox())
-      saveArticles(&lst, f_olManager->outbox());
+    if(art->collection()!=knGlobals.folManager->outbox())
+      knGlobals.artManager->saveInFolder(lst, knGlobals.folManager->outbox());
   }
   else {
 
@@ -735,11 +735,15 @@ void KNArticleFactory::processJob(KNJobData *j)
     };
 
     //article has been sent successfully => move it to the "Sent-folder"
-    if(!f_olManager->sent()->saveArticles(&lst)) {
+
+    knGlobals.artManager->saveInFolder(lst, knGlobals.folManager->sent());
+    /*if(!knGlobals.folManager->sent()->saveArticles(&lst)) {
+      displayInternalFileError();
       KNHelper::displayInternalFileError();
       if(art->collection()==0)
         delete art;
-    }
+    } */
+
   }
 }
 
@@ -977,15 +981,15 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
 
     case KNComposer::CRsave :
       com->applyChanges();
-      saveArticles(&lst, f_olManager->drafts());
+      knGlobals.artManager->saveInFolder(lst, knGlobals.folManager->drafts());
     break;
 
     case KNComposer::CRdelAsk:
-      delCom=deleteArticles(&lst, true);
+      delCom=knGlobals.artManager->deleteArticles(lst, true);
     break;
 
     case KNComposer::CRdel:
-      delCom=deleteArticles(&lst, false);
+      delCom=knGlobals.artManager->deleteArticles(lst, false);
     break;
 
     case KNComposer::CRcancel:

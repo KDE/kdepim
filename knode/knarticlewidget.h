@@ -191,6 +191,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     static void configChanged();
     static void articleRemoved(KNArticle *a);
     static void articleChanged(KNArticle *a);
+    static void articleLoadError(KNArticle *a, const QString &error);
     static void collectionRemoved(KNArticleCollection *c);
     static void cleanup();
 

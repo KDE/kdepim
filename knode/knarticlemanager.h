@@ -20,6 +20,7 @@
 #include <qlist.h>
 
 #include "knmime.h"
+#include "knjobdata.h"
 
 class QListViewItem;
 class KNArticle;
@@ -34,7 +35,26 @@ class KNFilterManager;
 class KNSearchDialog;
 
 
-class KNArticleManager : public QObject {
+class KNArticleCache {
+
+  public:
+    KNArticleCache();
+    ~KNArticleCache();
+
+    void add(KNArticle *a);
+    void remove(KNArticle *a);
+
+    void clearMemoryCache();
+    void clearDiskCache();
+
+  protected:
+    QList<KNArticle> m_emCache;
+    int m_emCacheSize;
+
+};
+
+
+class KNArticleManager : public QObject, public KNJobConsumer {
 
   Q_OBJECT
 
@@ -72,20 +92,26 @@ class KNArticleManager : public QObject {
     //pgp signature check
     void verifyPGPSignature(KNArticle* a);
 
+    //article loading
+    bool load(KNArticle *a);
+    void loadForDisplay(KNArticle *a);
+
+    //article storage
+    void saveInFolder(KNRemoteArticle::List &l, KNFolder *f);
+    void saveInFolder(KNLocalArticle::List &l, KNFolder *f);
+    bool deleteArticles(KNLocalArticle::List &l, bool ask=true);
+
     //article handling
     void setAllRead(bool r=true);
     void setRead(KNRemoteArticle::List &l, bool r=true, bool handleXPosts=true);
-
-
     void toggleWatched(KNRemoteArticle::List &l);
     void toggleIgnored(KNRemoteArticle::List &l);
     void setScore(KNRemoteArticle::List &l, int score=-1);
 
-    void moveToFolder(KNRemoteArticle::List &l, KNFolder *f);
-    void moveToFolder(KNLocalArticle::List &l, KNFolder *f);
 
 
   protected:  
+    void processJob(KNJobData *j);
     void createHdrItem(KNRemoteArticle *a);
     void createThread(KNRemoteArticle *a);
 
@@ -97,6 +123,8 @@ class KNArticleManager : public QObject {
     KNSearchDialog *s_earchDlg;
     QList<KTempFile> t_empFiles;
     bool s_howThreads;
+
+    KNArticleCache c_ache;
 
   public slots:
     void slotFilterChanged(KNArticleFilter *f);

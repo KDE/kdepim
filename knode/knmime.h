@@ -172,6 +172,7 @@ class KNMimeContent : public KNMimeBase {
 
     //content access
     int size();
+    int storageSize();
     int lineCount();
     QCString body()       { return b_ody; }
     QCString encodedContent(bool useCrLf=false);

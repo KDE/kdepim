@@ -46,7 +46,9 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   f_etchDescriptions = conf.readBoolEntry("fetchDescriptions", true);
   l_astNewFetch = conf.readDateTimeEntry("lastNewFetch").date();
   w_asOpen = conf.readBoolEntry("listItemOpen", false);
+  u_seDiskCache = conf.readBoolEntry("useDiskCache", false);
   KNServerInfo::readConf(&conf);
+
 
   i_dentity=new KNConfig::Identity(false);
   i_dentity->loadConfig(&conf);
@@ -76,8 +78,10 @@ void KNNntpAccount::saveInfo()
   //conf.writeEntry("unsentCnt", u_nsentCount);
   conf.writeEntry("fetchDescriptions", f_etchDescriptions);
   conf.writeEntry("lastNewFetch", QDateTime(l_astNewFetch));
-  if (l_istItem)
+  if(l_istItem)
     conf.writeEntry("listItemOpen", l_istItem->isOpen());
+  conf.writeEntry("useDiskCache", u_seDiskCache);
+
   KNServerInfo::saveConf(&conf);      // save not KNNntpAccount specific settings
 
   if(i_dentity)

@@ -238,7 +238,8 @@ class NntpAccountConfDialog : public KDialogBase  {
     KIntSpinBox *h_old,
                 *t_imeout;
     QCheckBox   *f_etchDes,
-                *a_uth;
+                *a_uth,
+                *u_seDiskCache;
     KNConfig::IdentityWidget* i_dWidget;
 
     KNNntpAccount *a_ccount;
@@ -1060,6 +1061,62 @@ class CleanupWidget : public BaseWidget {
     void slotFolderCBtoggled(bool b);
 
 };
+
+
+class Cache : public Base {
+
+  friend class CacheWidget;
+
+  public:
+    Cache();
+    ~Cache();
+
+    void save();
+
+    // memory-cache
+    int memoryMaxArticles()   { return m_emMaxArt; }
+    int memoryMaxKBytes()     { return m_emMaxKB; }
+
+    // disk-cache
+    int diskMaxArticles()     { return d_iskMaxArt; }
+    int diskMaxKBytes()       { return d_iskMaxKB; }
+
+
+  protected:
+    int m_emMaxArt,
+        m_emMaxKB,
+        d_iskMaxArt,
+        d_iskMaxKB;
+
+};
+
+
+class CacheWidget : public BaseWidget  {
+
+
+  Q_OBJECT
+
+  public:
+    CacheWidget(Cache *d, QWidget *p=0, const char *n=0);
+    ~CacheWidget();
+
+    void apply();
+
+
+  protected:
+    KIntSpinBox *m_emMaxArt,
+                *m_emMaxKB,
+                *d_iskMaxArt,
+                *d_iskMaxKB;
+
+    QLabel      *d_iskMaxArtL,
+                *d_iskMaxKBL;
+
+    Cache *d_ata;
+
+
+};
+
 
 }; //KNConfig
 

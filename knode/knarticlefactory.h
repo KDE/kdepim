@@ -30,8 +30,6 @@ class KNGroup;
 class KNFolder;
 class KNComposer;
 class KNSendErrorDialog;
-class KNGroupManager;
-class KNFolderManager;
 class KNNntpAccount;
 
 namespace KNConfig {
@@ -46,7 +44,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
   public:
     enum replyType { RTgroup, RTmail, RTboth };
 
-    KNArticleFactory(KNFolderManager *fm, KNGroupManager *gm, QObject *p=0, const char *n=0);
+    KNArticleFactory(QObject *p=0, const char *n=0);
     ~KNArticleFactory();
 
     //factory methods
@@ -60,8 +58,8 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
     //article handling
     void edit(KNLocalArticle *a);
-    void saveArticles(KNLocalArticle::List *l, KNFolder *f);
-    bool deleteArticles(KNLocalArticle::List *l, bool ask=true);
+    /*void saveArticles(KNLocalArticle::List *l, KNFolder *f);
+    bool deleteArticles(KNLocalArticle::List *l, bool ask=true);*/
     void sendArticles(KNLocalArticle::List *l, bool now=true);
     void sendOutbox();
 
@@ -86,8 +84,6 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void showSendErrorDialog();
 
     QList<KNComposer> c_ompList;
-    KNFolderManager *f_olManager;
-    KNGroupManager *g_rpManager;
     KNSendErrorDialog *s_endErrDlg;
 
   protected slots:

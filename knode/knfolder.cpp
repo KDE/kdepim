@@ -350,20 +350,23 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 
   int addCnt=0;
   bool ret=true;
+  bool clear=false;
   QTextStream ts(&m_boxFile);
   ts.setEncoding(QTextStream::Latin1);
   DynData dynamic;
 
   for(KNLocalArticle *a=l->first(); a; a=l->next()) {
 
+    clear=false;
     if(a->id()==-1 || a->collection()!=this) {
       if(a->id()!=-1) {
         KNFolder *oldFolder=static_cast<KNFolder*>(a->collection());
         if(!a->hasContent())
-          if(!oldFolder->loadArticle(a)) {
+          if( !( clear=oldFolder->loadArticle(a) ) ) {
             ret=false;
             continue;
           }
+
         KNLocalArticle::List l;
         l.append(a);
         oldFolder->removeArticles(&l, false);
@@ -416,6 +419,9 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
       kdError(5003) << "KNFolder::saveArticle() : article not in folder!" << endl;
       ret=false;
     }
+
+    if(clear)
+      a->KNMimeContent::clear();
   }
 
   closeFiles();
@@ -462,9 +468,7 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
     //delete article
     a_rticles.remove(positions[idx], del, false);
     delCnt++;
-    if(del)
-       delete a;
-    else
+    if(!del)
       a->setId(-1);
   }
 

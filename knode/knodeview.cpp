@@ -168,7 +168,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   knGlobals.accManager=a_ccManager;
 
   //Article Factory
-  a_rtFactory=new KNArticleFactory(f_olManager, g_rpManager);
+  a_rtFactory=new KNArticleFactory();
   knGlobals.artFactory=a_rtFactory;
 
   // Score Manager
@@ -934,12 +934,12 @@ void KNodeView::slotCollectionViewDrop(const char *type, QListViewItem *i)
     if(f_olManager->currentFolder()) {
       KNLocalArticle::List l;
       getSelectedArticles(l);
-      a_rtManager->moveToFolder(l, dest);
+      a_rtManager->saveInFolder(l, dest);
     }
     else if(g_rpManager->currentGroup()) {
       KNRemoteArticle::List l;
       getSelectedArticles(l);
-      a_rtManager->moveToFolder(l, dest);
+      a_rtManager->saveInFolder(l, dest);
     }
   }
 
@@ -1556,7 +1556,7 @@ void KNodeView::slotArtDelete()
       lst.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
 
   if(!lst.isEmpty())
-    a_rtFactory->deleteArticles(&lst);
+    a_rtManager->deleteArticles(lst);
 
   if(h_drView->currentItem())
     h_drView->setActive(h_drView->currentItem(),true);
