@@ -10,7 +10,7 @@ soapdebug_SOURCES = soapdebug.cpp
 
 noinst_LTLIBRARIES = libgwsoap.la
 
-CPPFLAGS = -DDEBUG
+AM_CPPFLAGS = -DDEBUG
 
 libgwsoap_la_SOURCES = contactconverter.cpp gwconverter.cpp incidenceconverter.cpp \
                        groupwiseserver.cpp \
