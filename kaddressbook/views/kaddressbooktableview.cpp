@@ -189,10 +189,6 @@ void KAddressBookTableView::readConfig(KConfig *config)
 
 void KAddressBookTableView::refresh(QString uid)
 {
-  // For now just repopulate. In reality this method should
-  // check the value of uid, and if valid iterate through
-  // the listview to find the entry, then tell it to refresh.
-
   if (uid.isNull()) {
     // Clear the list view
     QString currentUID, nextUID;
@@ -210,7 +206,7 @@ void KAddressBookTableView::refresh(QString uid)
     KABC::Addressee::List addresseeList = addressees();
     KABC::Addressee::List::Iterator it;
     for (it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
-      ContactListViewItem *item = new ContactListViewItem(*it, mListView, 
+      ContactListViewItem *item = new ContactListViewItem(*it, mListView,
                                         core()->addressBook(), fields());
       if ( (*it).uid() == currentUID )
         currentItem = item;
