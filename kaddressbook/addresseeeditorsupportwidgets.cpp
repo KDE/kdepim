@@ -815,8 +815,13 @@ void AddressEditDialog::fillCombo(KComboBox *combo)
     ""
   };
   
+  QStringList countries;
   for (int i =0; sCountry[i] != ""; ++i )
-    combo->insertItem(sCountry[i]);
+    countries.append( sCountry[i] );
+
+  countries.sort();
+  
+  combo->insertStringList( countries );
 }
     
 #include "addresseeeditorsupportwidgets.moc"
