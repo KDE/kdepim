@@ -381,11 +381,9 @@ void AddresseeEditorWidget::load()
   bool block = signalsBlocked();
   blockSignals(true); 
 
-  // delete all entries from mFormattedNameBox, otherwise name parsing
-  // won't work in QuickEdit mode
-  mFormattedNameBox->clear();
-
   mNameEdit->setText(mAddressee.assembledName());
+  mFormattedNameBox->setCurrentText(mAddressee.formattedName());
+
   mRoleEdit->setText(mAddressee.role());
   mOrgEdit->setText(mAddressee.organization());
   mURLEdit->setURL(mAddressee.url());
