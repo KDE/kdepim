@@ -219,8 +219,12 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
 
   mFoundIssuer = false;
 
+  // gpgsm / dirmngr / LDAP / whoever doesn't support looking up
+  // external keys by fingerprint. Furthermore, since we actually got
+  // a chain-id set on the key, we know that we have the issuer's cert
+  // in the local keyring, so just use local keylisting.
   Kleo::KeyListJob * job =
-    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mExternal );
+    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( false );
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
