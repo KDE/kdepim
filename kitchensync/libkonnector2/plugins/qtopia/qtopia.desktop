@@ -6,12 +6,16 @@ X-KDE-Library=libqtopiakonnector
 
 Name=Qtopia Konnector
 Name[cs]=Qtopia konektor
+Name[cy]=Kysylltydd Qtopia
 Name[de]=Qtopia-Konnector
 Name[fi]=Qtopia-Konnector
+Name[hi]=क्यूटोपिया कनेक्टर
 Name[hu]=Qtopia konnektor
 Name[nso]=Mokgomaganyi wa Qtopia
 Name[pl]=Łącznik Qtopia
 Name[pt]=Konnector para o Qtopia
+Name[sl]=Konektor Qtopia
+Name[ta]=Qடோப்பியா Kஇனைப்பான்
 Name[xx]=xxQtopia Konnectorxx
 Group= PDA
 Vendor = Holger 'zecke' Freyther

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=IMAP
+Name[ta]=அஞ்சல்
 X-KDE-Library=kabc_imap
 Type=Service
 ServiceTypes=KResources/Plugin
