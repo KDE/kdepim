@@ -34,6 +34,7 @@
 #define TRAY_H
 
 #include <ksystemtray.h>
+#include <qpixmap.h>
 
 class KWatchGnuPGMainWindow;
 
@@ -42,6 +43,12 @@ class KWatchGnuPGTray : public KSystemTray {
 public:
   KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin );
   virtual ~KWatchGnuPGTray();
+
+public slots:
+  void setAttention( bool att );
+private:
+  QPixmap mNormalPix;
+  QPixmap mAttentionPix;
 };
 
 #endif /* TRAY_H */

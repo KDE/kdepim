@@ -121,7 +121,14 @@ void KWatchGnuPGMainWindow::slotReceivedStdout( KProcess* /*proc*/, char* buf, i
   if( !isVisible() ) {
 	// Change tray icon to show something happened
 	// PENDING(steffen) 
+	mSysTray->setAttention(true);
   }
+}
+
+void KWatchGnuPGMainWindow::show()
+{
+  mSysTray->setAttention(false);
+  KMainWindow::show();
 }
 
 void KWatchGnuPGMainWindow::slotQuit()

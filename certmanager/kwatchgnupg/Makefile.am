@@ -19,7 +19,7 @@ kwatchgnupg_LDADD   = ../conf/libconf.la ../lib/libkleopatra.la $(LIB_KUTILS) $(
 #rc_DATA = kwatchgnupgui.rc
 
 
-pics_DATA = kwatchgnupg.png
+pics_DATA = kwatchgnupg.png kwatchgnupg2.png
 
 picsdir = $(kde_datadir)/kwatchgnupg/pics
 

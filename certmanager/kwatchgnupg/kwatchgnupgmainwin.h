@@ -36,7 +36,7 @@
 #include <kmainwindow.h>
 
 class KProcess;
-class KSystemTray;
+class KWatchGnuPGTray;
 class QTextEdit;
 
 class KWatchGnuPGMainWindow : public KMainWindow {
@@ -47,6 +47,7 @@ public slots:
   void slotWatcherExited( KProcess* proc );
   void slotReceivedStdout( KProcess *proc, char *buffer, int buflen);
   void slotQuit();
+  virtual void show();
 protected:
   virtual bool queryClose();
 private:
@@ -56,7 +57,7 @@ private:
   KProcess* mWatcher;
 
   QTextEdit* mCentralWidget;
-  KSystemTray* mSysTray;
+  KWatchGnuPGTray* mSysTray;
 };
 
 #endif /* KWATCHGNUPGMAINWIN_H */

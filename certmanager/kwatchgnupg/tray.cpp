@@ -45,13 +45,22 @@ KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
   kdDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
 
   KGlobal::iconLoader()->addAppDir( "kwatchgnupg" );
-  setPixmap( loadIcon("kwatchgnupg") );
+  
+  mNormalPix = loadIcon("kwatchgnupg");
+  mAttentionPix = loadIcon("kwatchgnupg2");
 
+  setPixmap( mNormalPix );
   QToolTip::add( this, i18n("KWatchGnuPG Log Viewer") );
 }
 
 KWatchGnuPGTray::~KWatchGnuPGTray()
 {
+}
+
+void KWatchGnuPGTray::setAttention( bool att )
+{
+  if( att ) setPixmap( mAttentionPix );
+  else setPixmap( mNormalPix );
 }
 
 #include "tray.moc"
