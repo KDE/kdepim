@@ -168,16 +168,20 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 {
 	FUNCTIONSETUP;
 
-	if (e->button() == RightButton)
+	switch (e->button()) 
 	{
-		KPopupMenu *menu = contextMenu();
-
-		contextMenuAboutToShow(menu);
-		menu->popup(e->globalPos());
-	}
-	else
-	{
-		KSystemTray::mousePressEvent(e);
+		case RightButton: 
+			{
+				KPopupMenu *menu = contextMenu();
+				contextMenuAboutToShow(menu);
+				menu->popup(e->globalPos());
+			}
+			break;
+		case LeftButton:
+			if (daemon) daemon->slotRunKPilot();
+			break;
+		default:
+			KSystemTray::mousePressEvent(e);
 	}
 }
 
@@ -417,7 +421,7 @@ void PilotDaemon::showTray()
 	}
 
 	KPilotConfigSettings & config = KPilotConfig::getConfig();
-	// config.reparseConfiguration();
+	config.reparseConfiguration();
 
 	getPilotSpeed(config);
 
@@ -908,6 +912,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.62  2002/06/24 19:29:11  adridg
+// Allow daemon RW access to config file
+//
 // Revision 1.61  2002/06/08 09:17:07  adridg
 // Added tooltip for daemon
 //
