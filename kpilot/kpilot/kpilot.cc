@@ -69,6 +69,7 @@ static const char *kpilot_id =
 #include "kpilotConfigWizard.h"
 
 #include "pilotComponent.h"
+#include "pilotDatabase.h"
 
 #include "addressWidget.h"
 #include "memoWidget.h"
