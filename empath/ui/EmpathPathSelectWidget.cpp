@@ -81,8 +81,7 @@ EmpathFileSelectWidget::s_browse()
     void
 EmpathDirSelectWidget::s_browse()
 {
-    QString s =
-        KFileDialog::getDirectory(le_path_->text(), this);
+    QString s = KFileDialog::getExistingDirectory(le_path_->text(), this);
     
     if (!s.isEmpty())
         le_path_->setText(s);

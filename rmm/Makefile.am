@@ -1,5 +1,4 @@
-KDE_CXXFLAGS=$(USE_RTTI)
-
+INCLUDES=$(all_includes)
 lib_LTLIBRARIES = librmm.la
 
 librmm_la_SOURCES = \
@@ -25,3 +24,49 @@ RParameterList.cpp \
 RText.cpp \
 RToken.cpp \
 RUtilities.cpp
+
+include_HEADERS = \
+RMM_Address.h \
+RMM_AddressList.h \
+RMM_AddressList_generated.h \
+RMM_Address_generated.h \
+RMM_BodyPart.h \
+RMM_BodyPart_generated.h \
+RMM_ContentType.h \
+RMM_ContentType_generated.h \
+RMM_Cte.h \
+RMM_Cte_generated.h \
+RMM_DateTime.h \
+RMM_DateTime_generated.h \
+RMM_Defines.h \
+RMM_DispositionType.h \
+RMM_DispositionType_generated.h \
+RMM_Entity.h \
+RMM_Enum.h \
+RMM_Envelope.h \
+RMM_Envelope_generated.h \
+RMM_Header.h \
+RMM_HeaderBody.h \
+RMM_HeaderBody_generated.h \
+RMM_HeaderList.h \
+RMM_Header_generated.h \
+RMM_Mailbox.h \
+RMM_Mailbox_generated.h \
+RMM_Mechanism.h \
+RMM_Mechanism_generated.h \
+RMM_Message.h \
+RMM_MessageComponent.h \
+RMM_MessageID.h \
+RMM_MessageID_generated.h \
+RMM_Message_generated.h \
+RMM_MimeType.h \
+RMM_MimeType_generated.h \
+RMM_Parameter.h \
+RMM_ParameterList.h \
+RMM_ParameterList_generated.h \
+RMM_Parameter_generated.h \
+RMM_Text.h \
+RMM_Text_generated.h \
+RMM_Token.h \
+RMM_Utility.h
+
