@@ -31,10 +31,17 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *popmail_conduit_id=
+#include "options.h"
+#include "popmail-conduit.h"
+
+extern "C"
+{
+
+long version_conduit_popmail = KPILOT_PLUGIN_API;
+static const char *id_conduit_popmail =
 	"$Id$";
 
-#include "options.h"
+}
 
 #include <qsocket.h>
 #include <qregexp.h>
@@ -70,7 +77,6 @@ static const char *popmail_conduit_id=
 #include "pilotAppCategory.h"
 #include "pilotSerialDatabase.h"
 
-#include "popmail-conduit.h"
 #include "popmailSettings.h"
 #include "setupDialog.h"
 
@@ -94,7 +100,7 @@ PopMailConduit::PopMailConduit(KPilotDeviceLink *d,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT<<popmail_conduit_id<<endl;
+	DEBUGCONDUIT << id_conduit_popmail << endl;
 #endif
 	fConduitName=i18n("KMail");
 }
@@ -418,7 +424,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 /* virtual */ bool PopMailConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<popmail_conduit_id<<endl;
+	DEBUGCONDUIT << id_conduit_popmail << endl;
 
 
 	if (isTest())

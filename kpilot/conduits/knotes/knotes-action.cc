@@ -52,6 +52,13 @@
 #include "knotes-action.moc"
 #include "knotesconduitSettings.h"
 
+extern "C"
+{
+
+long version_conduit_knotes = KPILOT_PLUGIN_API;
+const char *id_conduit_knotes = "$Id:$" ;
+
+}
 
 typedef QString KNoteID_t;
 typedef const QString &KNoteID_pt;

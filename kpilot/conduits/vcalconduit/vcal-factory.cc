@@ -130,7 +130,7 @@ VCalConduitSettings* VCalConduitFactory::config()
 			return 0L;
 		}
 	}
-	else 
+	else
 	if (qstrcmp(c,"SyncAction")==0)
 	{
 		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);

@@ -71,63 +71,6 @@ protected:
 	void writeMessageToFile(FILE* sendf, struct Mail& theMail);
 	QString getKMailOutbox() const;
 
-#if 0
-	// Local mail -> Pilot
-	//
-	//
-	int retrieveIncoming(int mode);
-	int doPopQuery();
-	int doUnixStyle();
-
-
-  // Taken from pilot-mail.c in pilot-link.0.8.7 by Kenneth Albanowski
-  int getpopchar(int socket);
-  int getpopstring(int socket, char * buf);
-  int getpopresult(int socket, char * buf);
-
-	// Helper functions for the POP mail handler
-	//
-	//
-	typedef enum { POP_DELE=16 } retrieveFlags ;
-	void retrievePOPMessages(KSocket *,
-		int const msgcount,
-		int const flags,
-		char *buffer, int const buffer_size);
-
-	static char* skipspace(char * c);
-	static void header(struct Mail * m, char * t);
-
-	/**
-	* This function skips blank lines in the
-	* input file; the first non-blank line
-	* is returned in buf. size is the size of
-	* buf in bytes; lines longer than size will
-	* be truncated (this is like fgets()).
-	* @return Number of blank lines skipped
-	*/
-	static int skipBlanks(FILE *,char *buf,int size);
-
-	/**
-	* Reads a file, using a buffer buf of size
-	* size, and interprets this as mail headers.
-	* The headers are placed in the struct Mail *.
-	* If expectFrom is non-zero, requires a leading
-	* "From address" line, as per standard UNIX mailbox
-	* style.
-	* @return 0 if the headers are bad (specifically,
-	* if a required From line is missing)
-	* @return <0 the number of header lines read,
-	* if the message ends during the headers
-	* return >0 the number of header lines read if
-	* the message continues normally.
-	*/
-	static int readHeaders(FILE *,char *buf,int size,
-		struct Mail *,int expectFrom);
-	static int readBody(FILE *,char *buf,int size);
-
-private:
-	PilotDatabase *fDatabase;
-#endif
 };
 
 #endif

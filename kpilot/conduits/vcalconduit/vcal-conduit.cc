@@ -27,9 +27,17 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *vcalconduit_id = "$Id$";
+#include "options.h"
+#include "vcal-conduit.moc"
 
-#include <options.h>
+extern "C"
+{
+
+long version_conduit_vcal = KPILOT_PLUGIN_API;
+const char *id_conduit_vcal = "$Id$";
+
+}
+
 #include <unistd.h>
 
 #include <qdatetime.h>
@@ -41,25 +49,14 @@ static const char *vcalconduit_id = "$Id$";
 #include <libkcal/calendarlocal.h>
 
 
-/*
-** KDE 2.2 uses class KORecurrence in a different header file.
-*/
-#ifdef KDE2
-#include <korecurrence.h>
-#define Recurrence_t KCal::KORecurrence
-#define DateList_t QDateList
-#define DateListIterator_t QDateListIterator
-#else
 #include <libkcal/recurrence.h>
 #define Recurrence_t KCal::Recurrence
 #define DateList_t KCal::DateList
 #define DateListIterator_t KCal::DateList::ConstIterator
-#endif
 
 #include <pilotSerialDatabase.h>
 #include <pilotLocalDatabase.h>
 
-#include "vcal-conduit.moc"
 
 
 
@@ -177,10 +174,10 @@ VCalConduit::VCalConduit(KPilotDeviceLink *d,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT << vcalconduit_id << endl;
+	DEBUGCONDUIT << id_conduit_vcal << endl;
 #endif
 	fConduitName=i18n("Calendar");
-	(void) vcalconduit_id;
+	(void) id_conduit_vcal;
 }
 
 
