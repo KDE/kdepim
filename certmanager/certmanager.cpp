@@ -73,13 +73,13 @@
 #include <kdebug.h>
 #include <kdialogbase.h>
 #include <kkeydialog.h>
+#include <kdcopservicestarter.h>
 
 // Qt
 #include <qfontmetrics.h>
 
 // other
 #include <assert.h>
-#include <kdcopservicestarter.h>
 
 namespace {
   class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
