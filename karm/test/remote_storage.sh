@@ -18,16 +18,15 @@ if [ -e $TESTFILE_LOCAL ]; then rm $TESTFILE_LOCAL; fi
 
 touch $TESTFILE_LOCAL
 
-karm $TESTFILE & 
-
-# Make sure karm opens up.  This can take a while the first time.
-sleep 3
-
 python __httpd.py $PORT &
 
 sleep 2
 
 HTTPD_PID=`ps -C "python __httpd.py" -o pid=`
+
+karm $TESTFILE & 
+
+sleep 2
 
 DCOPID=`dcop | grep karm`
 
