@@ -230,7 +230,7 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
   actPrint = KStdAction::print(this, SLOT(slotPrint()), &actionCollection);
   actPrint->setEnabled(false);
   actSelAll =  KStdAction::selectAll(this, SLOT(slotSelectAll()), &actionCollection);
-  actSelAll->setEnabled(false);
+  //actSelAll->setEnabled(false);
   actCopy = KStdAction::copy(this, SLOT(copy()), &actionCollection);
   actCopy->setEnabled(false);
 
