@@ -15,6 +15,7 @@ libprinter_la_SOURCES = \
 	rbs_appearance.ui \
 	selectionpage.cpp \
 	stylepage.cpp
+libprinter_la_COMPILE_FIRST = $(top_builddir)/kaddressbook/kabprefs_base.h
 
 EXTRA_DIST = \
 	detailledstyle.cpp detailledstyle.h kabentrypainter.h \
