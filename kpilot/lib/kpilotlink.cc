@@ -76,6 +76,8 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
+	fPilotUser(0L),
+	fPilotSysInfo(0L),
 	fSocketNotifierActive(false),
 	fPilotMasterSocket(-1),
 	fCurrentPilotSocket(-1)
@@ -100,6 +102,8 @@ KPilotDeviceLink::~KPilotDeviceLink()
 	FUNCTIONSETUP;
 	close();
 	fDeviceLink = 0L;
+	KPILOT_DELETE(fPilotSysInfo);
+	KPILOT_DELETE(fPilotUser);
 }
 
 KPilotDeviceLink *KPilotDeviceLink::init(QObject * parent, const char *name)
@@ -489,6 +493,7 @@ void KPilotDeviceLink::acceptDevice()
 
 	emit logProgress(QString::null, 30);
 
+        KPILOT_DELETE(fPilotSysInfo);
 	fPilotSysInfo = new KPilotSysInfo;
 	if (dlp_ReadSysInfo(fCurrentPilotSocket, fPilotSysInfo->sysInfo()) < 0)
 	{
@@ -513,6 +518,7 @@ void KPilotDeviceLink::acceptDevice()
 	fPilotSysInfo->boundsCheck();
 
 	emit logProgress(QString::null, 60);
+        KPILOT_DELETE(fPilotUser);
 	fPilotUser = new KPilotUser;
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
@@ -716,6 +722,8 @@ void KPilotDeviceLink::finishSync()
 	dlp_WriteUserInfo(pilotSocket(),getPilotUser()->pilotUser());
 	addSyncLogEntry(i18n("End of HotSync\n"));
 	dlp_EndOfSync(pilotSocket(), 0);
+	KPILOT_DELETE(fPilotSysInfo);
+	KPILOT_DELETE(fPilotUser);
 }
 
 int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
