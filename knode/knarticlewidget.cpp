@@ -864,9 +864,9 @@ void KNArticleWidget::createHtmlPage()
       if(!hb) continue; //header not found
 
       if(dh->hasName()) {
-        html += QString("<tr><td align=right>%1%2:%3</td><td width=\"100%\">")
+        html += QString("<tr><td align=right>") + i18n("%1%2:%3")
         .arg(dh->nameOpenTag()).arg(toHtmlString(dh->translatedName()))
-        .arg(dh->nameCloseTag());
+        .arg(dh->nameCloseTag()) + QString("</td><td width=\"100%\">");
       }
       else
         html+="<tr><td colspan=2>";
