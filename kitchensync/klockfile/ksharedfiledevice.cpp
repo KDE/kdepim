@@ -71,7 +71,7 @@ bool KSharedFileDevice::open( int mode )
 	}
       }else{
 	kapp->dcopClient()->call( "kded", "ksharedfile",
-				  "writeUnlockFile(Qtring)",
+				  "writeUnlockFile(QString)",
 				  data, replyType, replyData);
 	return false;
       }
