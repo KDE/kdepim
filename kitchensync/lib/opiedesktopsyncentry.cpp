@@ -60,7 +60,7 @@ QString OpieDesktopSyncEntry::timestamp()
 }
 void OpieDesktopSyncEntry::setTimestamp(const QString & )
 {
-    
+
 }
 bool OpieDesktopSyncEntry::equals(KSyncEntry *entr )
 {
@@ -68,7 +68,7 @@ bool OpieDesktopSyncEntry::equals(KSyncEntry *entr )
     OpieDesktopSyncEntry *entry = (OpieDesktopSyncEntry*)entr;
 	if( m_name == entry->m_name && m_id == entry->m_id && m_category == entry->m_category && m_file == entry->m_file)
 	    return true;
-    }	
+    }
     return false;
 }
 

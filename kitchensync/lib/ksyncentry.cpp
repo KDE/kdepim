@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
     Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -29,4 +29,17 @@ KSyncEntry::~KSyncEntry()
 {
 
 }
-
+void KSyncEntry::insertId( const QString &type,
+                           const QString &konnectorId,
+                           const QString &kdeId )
+{
+    QMap<QString,  QValueList<Kontainer > >::Iterator it;
+    it = m_maps.find( type );
+    if ( it == m_maps.end() ) { // not inserted yet anything
+        QValueList<Kontainer > list;
+        list.append( Kontainer(konnectorId,  kdeId) );
+        m_maps.replace( type, list);
+    }else {
+        it.data().append(Kontainer( konnectorId,  kdeId) );
+    }
+}
