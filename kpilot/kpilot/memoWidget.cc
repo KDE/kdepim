@@ -419,6 +419,8 @@ MemoWidget::updateWidget()
 	}
 
 	fTextWidget->clear();
+
+	slotUpdateButtons();
 }
 
 void
