@@ -40,6 +40,9 @@
 #include "setupDialog.h"
 #include "pilotMemo.h"
 
+
+#include	"md5wrap.h"
+
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
 //
@@ -69,6 +72,120 @@ int main(int argc, char* argv[])
 }
 
 
+NotesSettings::NotesSettings(const QString &configPath,
+	const QString &notesdir,
+	KConfig& c) :
+	cP(configPath)
+{
+	EFUNCTIONSETUP;
+
+	DEBUGCONDUIT << fname
+		<< ": Reading note from "
+		<< configPath
+		<< " in dir "
+		<< notesdir
+		<< endl;
+
+	c.setGroup("KPilot");
+	id = c.readNumEntry("pilotID",0);
+	checksum = c.readEntry("checksum",QString::null);
+	csValid = !(checksum.isNull());
+
+	c.setGroup("Data");
+	nN = c.readEntry("name");
+
+	QString notedata = notesdir + "/." +  nN + "_data";
+	if (QFile::exists(notedata))
+	{
+		DEBUGCONDUIT << fname 
+			<< ": Data for note in " 
+			<< notedata 
+			<< endl;
+		dP = notedata;
+	}
+	else
+	{
+		kdWarning() << fname
+			<< ": No data file for note?"
+			<< endl;
+	}
+
+}
+
+QString NotesSettings::computeCheckSum() const
+{
+	EFUNCTIONSETUP;
+
+	if (dP.isEmpty()) return 0;
+
+	QFile f(dP);
+	if (!f.open(IO_ReadOnly))
+	{
+		kdWarning() << fname
+			<< ": Couldn't open file."
+			<< endl;
+		return QString::null;
+	}
+
+	unsigned char data[PilotMemo::MAX_MEMO_LEN];
+	int r = f.readBlock((char *)data,(int) PilotMemo::MAX_MEMO_LEN);
+	if (r<1)
+	{
+		kdWarning() << fname
+			<< ": Couldn't read notes file."
+			<< endl;
+		return QString::null;
+	}
+
+	QString s;
+	MD5Context md5context;
+	md5context.update(data,r);
+	s=md5context.finalize();
+
+	return s;
+}
+
+int NotesSettings::readNotesData(char *text)
+{
+	EFUNCTIONSETUP;
+
+	// Check that the data can actually fit into a memo.
+	// If it does, read it all.
+	//
+	QFile f(dataPath());
+	int filesize = f.size();
+
+	if (filesize > PilotMemo::MAX_MEMO_LEN) 
+	{
+		kdWarning() << fname
+			<< ": Notes file is too large ("
+			<< filesize
+			<< " bytes) -- truncated to "
+			<< (int) PilotMemo::MAX_MEMO_LEN
+			<< endl;
+		filesize = PilotMemo::MAX_MEMO_LEN;
+	}
+		
+	if (!f.open(IO_ReadOnly)) 
+	{
+		kdWarning() << fname
+			<< ": Couldn't read notes file."
+			<< endl;
+		return 0;
+	}
+
+	memset(text,0,PilotMemo::MAX_MEMO_LEN+1);
+	int len = f.readBlock(text,filesize);
+
+	DEBUGCONDUIT << fname
+		<< ": Read "
+		<< len
+		<< " bytes from note "
+		<< dataPath()
+		<< endl;
+
+	return len;
+}
 
 static NotesMap
 collectNotes()
@@ -98,7 +215,6 @@ collectNotes()
 		QString notename,notedata ;
 		KSimpleConfig *c = 0L;
 		int version ;
-		unsigned long pilotID ;
 
 #ifdef DEBUG
 		if (debug_level & SYNC_TEDIOUS)
@@ -110,36 +226,19 @@ collectNotes()
 		
 		c->setGroup("General");
 		version = c->readNumEntry("version",1);
-		c->setGroup("KPilot");
-		pilotID = c->readNumEntry("pilotID",0);
-
-		if (version<2) goto EndNote;
-#ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
+		if (version<2)
 		{
-		kdDebug() << fname << ": Note has version " << version << endl;
-		kdDebug() << fname << ": Note has pilotID " << pilotID << endl;
+			kdWarning() << fname
+				<< ": Skipping old-style KNote"
+				<< *i
+				<< endl;
+			goto EndNote;
 		}
-#endif
 
-		c->setGroup("Data");
-		notename = c->readEntry("name");
-		notedata = "." +  notename + "_data";
-		if (notedir.exists(notedata))
-		{
-#ifdef DEBUG
-			if (debug_level & SYNC_TEDIOUS)
-			{
-			kdDebug() << fname << ": Data for note in " 
-				<< notedata << endl;
-			}
-#endif
-			NotesSettings n(notename,
-				notedir.absFilePath(*i),
-				notedir.absFilePath(notedata),
-				pilotID);
-			m.insert(*i,n);
-		}
+		NotesSettings n(notedir.absFilePath(*i),
+			notedir.absPath(),
+			*c);
+		m.insert(*i,n);
 		
 EndNote:
 		delete c;
@@ -271,68 +370,75 @@ KNotesConduit::doSync()
 
 }
 
+
+bool KNotesConduit::addNewNote(NotesSettings& s)
+{
+	FUNCTIONSETUP;
+
+	// We know that this is a new memo (no pilot id)
+	char text[PilotMemo::MAX_MEMO_LEN+1];
+	if (!s.readNotesData(text))
+	{
+		return false;
+	}
+
+	PilotMemo *memo = new PilotMemo(text,0,0,0);
+	PilotRecord *rec = memo->pack();
+	unsigned long id = writeRecord(rec);
+
+	KSimpleConfig *c = new KSimpleConfig(s.configPath());
+	c->setGroup("KPilot");
+	c->writeEntry("pilotID",id);
+	c->writeEntry("checksum",s.computeCheckSum());
+
+	s.setId(id);
+
+	delete c;
+	delete rec;
+	delete memo;
+
+	return true;
+}
+
+bool KNotesConduit::changeNote(NotesSettings& s)
+{
+	FUNCTIONSETUP;
+
+	char text[PilotMemo::MAX_MEMO_LEN+1];
+	if (!s.readNotesData(text))
+	{
+		return false;
+	}
+
+	return false;
+}
+
+
 int KNotesConduit::notesToPilot(NotesMap& m)
 {
 	FUNCTIONSETUP;
-	NotesMap::ConstIterator i;
-	PilotRecord *rec;
-	PilotMemo *memo;
+	NotesMap::Iterator i;
 	int count=0;
 
-#ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
-	{
-		kdDebug() << fname
-			<< ": Adding new memos to pilot"
-			<< endl;
-	}
-#endif
+	DEBUGCONDUIT << fname
+		<< ": Adding new memos to pilot"
+		<< endl;
 
 
 	for (i=m.begin(); i!=m.end(); ++i)
 	{
-		const NotesSettings& s=(*i);
-		unsigned long id;
+		NotesSettings& s=(*i);
 
-		if (!s.isNew()) continue;
-
-		// We know that this is a new memo (no pilot id)
-		// Check that the data can actually fit into a memo.
-		// If it does, read it all.
-		//
-		QFile f(s.dataPath());
-
-		if (f.size()>PilotMemo::MAX_MEMO_LEN) continue;
-		if (!f.open(IO_ReadOnly)) continue;
-
-		char *text = new char[f.size()+16];
-		int len = f.readBlock(text,f.size());
-		text[len]=0;
-
-#ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
+		if (s.isNew()) 
 		{
-			kdDebug() << fname
-				<< ": Read "
-				<< len
-				<< " bytes from note "
-				<< s.dataPath()
-				<< endl;
+			addNewNote(s);
+			count++;
 		}
-#endif
-		memo = new PilotMemo(text,0,0,0);
-		rec = memo->pack();
-		id = writeRecord(rec);
-
-		KSimpleConfig *c = new KSimpleConfig(s.configPath());
-		c->setGroup("KPilot");
-		c->writeEntry("pilotID",id);
-
-		delete c;
-		delete rec;
-		delete memo;
-
-		count++;
+		if (s.isChanged()) 
+		{
+			changeNote(s);
+			count++;
+		}
 	}
 
 	return count;
@@ -577,6 +683,31 @@ int KNotesConduit::pilotToNotes(NotesMap& m)
 	}
 
 // we also need to tell knotes that things have changed in the dirs it owns
+	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
+	if (!dcopptr)
+	{
+		kdWarning() << fname
+			<< ": Can't get DCOP client."
+			<< endl;
+		return count;
+	}
+
+	QByteArray data;
+	if (dcopptr -> send("knotes",
+		"KNotesIface",
+		"rereadNotesDir()",
+		data))
+	{
+		DEBUGCONDUIT << fname
+			<< ": DCOP to KNotes succesful."
+			<< endl;
+	}
+	else
+	{
+		kdWarning() << fname
+			<< ": Couln't tell KNotes about new notes."
+			<< endl;
+	}
 
 	return count;
 }
@@ -654,12 +785,19 @@ KNotesConduit::doTest()
 				<< " not in Pilot"
 				<< endl;
 		}
+		DEBUGCONDUIT << fname
+			<< ": Checksum = "
+			<< (*i).computeCheckSum()
+			<< endl;
 	}
 
 	(void) id;
 }
 
 // $Log$
+// Revision 1.5  2000/12/22 07:47:04  adridg
+// Added DCOP support to conduitApp. Breaks binary compatibility.
+//
 // Revision 1.4  2000/12/05 07:44:01  adridg
 // Cleanup
 //
