@@ -26,6 +26,7 @@ namespace KSync {
         KonnectorProfile( const KonnectorProfile& );
         ~KonnectorProfile();
         bool operator==( const KonnectorProfile& );
+        bool operator==( const KonnectorProfile& )const;
         KonnectorProfile &operator=( const KonnectorProfile& );
 
         QString uid()const;

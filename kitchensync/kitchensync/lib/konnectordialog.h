@@ -3,9 +3,12 @@
 #ifndef KSYNC_KONNECTOR_DIALOG_H_CONFIG
 #define KSYNC_KONNECTOR_DIALOG_H_CONFIG
 
+#include <qptrlist.h>
+
 #include <kdialogbase.h>
 
 #include <konnectorprofile.h>
+#include <konnectorcheckitem.h>
 
 class KonnectorProfileListBase;
 namespace KSync {
@@ -36,11 +39,6 @@ namespace KSync {
         KonnectorProfile::ValueList toLoad() const;
 
         /**
-         * new devices to load
-         */
-        KonnectorProfile::ValueList newToLoad() const;
-
-        /**
          * all devices
          */
         KonnectorProfile::ValueList devices() const;
@@ -50,11 +48,16 @@ namespace KSync {
          */
         KonnectorProfile::ValueList removed() const;
 
+    protected slots:
+        virtual void slotRemove();
+        virtual void slotAdd();
+
     private:
         KonnectorProfile::ValueList m_list;
         KonnectorManager* m_manager;
         /** KonnectoCheckItem -> KonnectorProfile::ValueList */
-        KonnectorProfile::ValueList list2list()const;
+        QPtrList<KonnectorCheckItem> list2list()const;
+        KonnectorProfile::ValueList list()const;
         void initListView();
         KonnectorProfileListBase *m_base;
 

@@ -12,7 +12,9 @@ libkitchensyncui_la_SOURCES = partbar.cc manipulatorpart.cc \
     konnectorprofilefilemanager.cpp \
     konnectorprofilelistviewbase.ui \
     konnectordialog.cpp \
-    konnectorcheckitem.cpp
+    konnectorcheckitem.cpp \
+    konnectorprofilewizardintro.ui \
+    konnectorwizard.cpp konnectorwizardoutro.ui
 libkitchensyncui_la_LDFLAGS = $(all_libraries) -no-undefined 
 libkitchensyncui_la_LIBADD = $(LIB_KPARTS) $(top_builddir)/kitchensync/libkonnector/libkonnector.la
 

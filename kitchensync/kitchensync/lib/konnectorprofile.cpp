@@ -32,6 +32,14 @@ bool KonnectorProfile::operator==( const KonnectorProfile& other ) {
 
     return true;
 }
+bool KonnectorProfile::operator==( const KonnectorProfile& other ) const{
+    if (m_uid != other.m_uid ) return false;
+    if (m_udi != other.m_udi ) return false;
+    if (m_name != other.m_name ) return false;
+    //if (!(m_dev == other.m_dev) ) return false; fixme const
+
+    return true;
+}
 KonnectorProfile &KonnectorProfile::operator=( const KonnectorProfile& other ) {
     m_name = other.m_name;
     m_icon = other.m_icon;
