@@ -11,12 +11,6 @@ DISTCLEANFILES = dummy.cpp
 dummy.cpp:
 	touch dummy.cpp
 
-check_PROGRAMS = testalarmdlg
-
-testalarmdlg_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-testalarmdlg_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
-testalarmdlg_SOURCES = testalarmdlg.cpp alarmdialog.cpp koeventviewer.cpp
-
 bin_PROGRAMS = kalarmd
 
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
@@ -27,8 +21,7 @@ kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
         alarmdaemoniface.skel
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
-	guiapp.h alarmguiiface.h \
-        adcalendarbase.h adcalendar.h adcalendar_gui.h \
+	alarmguiiface.h adcalendarbase.h adcalendar.h adcalendar_gui.h \
 	adconfigdatabase.h adconfigdatarw.h clientinfo.h
 
 METASOURCES = AUTO
