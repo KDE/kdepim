@@ -1,6 +1,5 @@
-#ifndef CONFIGURECARDVIEWDIALOG_H
-#define CONFIGURECARDVIEWDIALOG_H
-
+#ifndef CONFIGUREVIEWDIALOG_H
+#define CONFIGUREVIEWDIALOG_H
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -24,55 +23,52 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "configureviewdialog.h"
 
-class QString;
-class QWidget;
-class QCheckBox;
-class KConfig;
+#include <kdialogbase.h>
+
+class SelectFieldsWidget;
+class ConfigureViewFilterPage;
 
 namespace KABC { class AddressBook; }
 
-class CardViewLookAndFeelPage;
-
-/** Configure dialog for the card view. This dialog inherits from the
-* standard view dialog in order to add a custom page for the card
-* view.
+/** This dialog is the base class for all view configuration dialogs. The 
+* author of a view may wish to inherit from this dialog and add config pages
+* that add custom config options. The default implementation of this dialog
+* is to show a page with the select fields widget. For simple views this may
+* be sufficient.
+*
+* This dialog is based on an IconList version of KDialogBase. See the 
+* KDialogBase documentation for more information on adding pages.
 */
-class ConfigureCardViewDialog : public ConfigureViewDialog
+class ConfigureViewDialog : public KDialogBase
 {
-  public:
-    ConfigureCardViewDialog(const QString &viewName, KABC::AddressBook *doc,
-                             QWidget *parent, const char *name);
-    virtual ~ConfigureCardViewDialog();
+    Q_OBJECT
     
+  public:
+    ConfigureViewDialog(const QString &viewName, KABC::AddressBook *document,
+                        QWidget *parent, const char *name);
+    virtual ~ConfigureViewDialog();
+    
+    /** Reads the configuration from the config object and sets the values
+    * in the GUI. If this method is overloaded, be sure to call the base
+    * class's method.
+    *
+    * Do not change the group of the config object in this method.
+    */
     virtual void readConfig(KConfig *config);
+    
+    /** Writes the configuration from the GUI to the config object. If this
+    * method is overloaded, be sure to call the base class's method.
+    *
+    * Do not change the group of the config object in this method.
+    */
     virtual void writeConfig(KConfig *config);
-    
-  private:
-    void initGUI();
-    
-    CardViewLookAndFeelPage *mPage;
-};
-
-/** Internal class. It is only defined here for moc
-*/
-class CardViewLookAndFeelPage : public QWidget
-{
-  public:
-    CardViewLookAndFeelPage(QWidget *parent, const char *name);
-    ~CardViewLookAndFeelPage() {}
-    
-    void readConfig(KConfig *config);
-    void writeConfig(KConfig *config);
  
   private:
-    void initGUI();
+    void initGUI( KABC::AddressBook * );
     
-    QCheckBox *mLabelsBox;
-    QCheckBox *mBordersBox;
-    QCheckBox *mSeparatorsBox;
-    QCheckBox *mEmptyFieldsBox;
+    SelectFieldsWidget *mSelectFieldsWidget;
+    ConfigureViewFilterPage *mFilterPage;
 };
 
 #endif
