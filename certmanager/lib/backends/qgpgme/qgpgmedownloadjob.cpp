@@ -65,7 +65,7 @@ Kleo::QGpgMEDownloadJob::~QGpgMEDownloadJob() {
   if ( mPatterns )
     for ( const char* * it = mPatterns ; *it ; ++it )
       free( (void*)*it );
-  delete mPatterns; mPatterns = 0;
+  delete[] mPatterns; mPatterns = 0;
 
   delete mKeyData; mKeyData = 0;
   delete mKeyDataDataProvider; mKeyDataDataProvider = 0;

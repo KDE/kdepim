@@ -62,7 +62,7 @@ Kleo::QGpgMEKeyListJob::~QGpgMEKeyListJob() {
   if ( mPatterns )
     for ( const char* * it = mPatterns ; *it ; ++it )
       free( (void*)*it );
-  delete mPatterns; mPatterns = 0;
+  delete[] mPatterns; mPatterns = 0;
 }
 
 GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
