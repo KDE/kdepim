@@ -20,6 +20,7 @@
 #include <kmenubar.h>
 #include <ktoolbar.h>
 #include <kmessagebox.h>
+#include <kemailsettings.h>
 
 #include "event.h"
 #include "calendarlocal.h"
@@ -113,6 +114,10 @@ void TaskView::load()
 void TaskView::loadFromKCalFormat()
 {
   KCal::CalendarLocal cal;
+  KEMailSettings settings;
+  cal.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
+  cal.setOwner( settings.getSetting( KEMailSettings::RealName ) );
+
   bool loadOk = cal.load( _preferences->loadFile() );
   if ( !loadOk ) {
     kdDebug() << "Failed to load the calendar!!!" << endl;
@@ -371,6 +376,9 @@ void TaskView::save()
 void TaskView::saveToKCalFormat()
 {
   KCal::CalendarLocal cal;
+  KEMailSettings settings;
+  cal.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
+  cal.setOwner( settings.getSetting( KEMailSettings::RealName ) );
 
   for ( QListViewItem* child = firstChild(); child; child = child->nextSibling() ) {
     writeTaskToCalendar( cal, static_cast<Task*>( child ), 1 );

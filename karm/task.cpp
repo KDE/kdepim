@@ -7,6 +7,7 @@
 #include <qdatetime.h>
 #include <qcstring.h>
 #include "kapplication.h"
+#include "kemailsettings.h"
 #include "kdebug.h"
 #include "event.h"
 #include "task.h"
@@ -156,6 +157,8 @@ KCal::Event* Task::asEvent( int level )
   event->setCustomProperty( kapp->instanceName(), QCString( "durationInMinutes" ), QString::number( totalTime() ) );
   event->setCustomProperty( kapp->instanceName(), QCString( "desktopList" ), getDesktopStr() );
   event->setCustomProperty( kapp->instanceName(), QCString( "level" ), QString::number( level ) );
+  KEMailSettings settings;
+  event->setOrganizer( settings.getSetting( KEMailSettings::RealName ) );
   return event;
 }
 
