@@ -36,8 +36,14 @@
 // then Qt, then KDE, then local includes.
 //
 //
+#ifndef STREAM_H
 #include <stream.h>
+#endif
+
+#ifndef TIME_H
 #include <time.h>
+#endif
+
 
 #ifndef QDIR_H
 #include <qdir.h>
@@ -75,6 +81,10 @@
 #include <kdebug.h>
 #endif
 
+#ifndef _KPROCESS_H
+#include <kprocess.h>
+#endif
+
 
 #ifndef _PILOT_EXPENSE_H_
 #include <pi-expense.h>
@@ -108,18 +118,41 @@
 #include "pilotRecord.h"
 #endif
 
-#define DATESIZE 10
-#include <kdb/connection.h>
-#include <kdb/dbengine.h>
-#include <pi-expense.h>
-#include <stdlib.h>
-#include <qcstring.h>
-#include <qobject.h>
-#include <qdatetime.h>
-#include <qtextstream.h>
-#include <stdio.h>
-#include <string.h>
 
+#ifndef _PILOT_EXPENSE_H
+#include <pi-expense.h>
+#endif
+
+#ifndef _STDLIB_H
+#include <stdlib.h>
+#endif
+
+#ifndef _QCSTRING_H
+#include <qcstring.h>
+#endif
+
+#ifndef _QOBJECT_H
+#include <qobject.h>
+#endif
+
+#ifndef _QDATETIME_H
+#include <qdatetime.h>
+#endif
+
+#ifndef _QTEXTSTREAM_H
+#include <qtextstream.h>
+#endif
+
+#ifndef _STDIO_H
+#include <stdio.h>
+#endif
+
+#ifndef _STRING_H
+#include <string.h>
+#endif
+
+
+#define DATESIZE 10
 /*  This was copied out of the pilot-link package.  
 *  I just like it here for quick reference. 
 struct Expense {  
@@ -294,47 +327,35 @@ ExpenseConduit::doSync()
 	QString mCSVname=config.readEntry("CSVFileName");
 	
 	PilotRecord* rec;
-    	KDB::Connection* dbconn;
     
+	KShellProcess proc;
         int recordcount=0;
 	int index=0;
+	int syscall=0;
 
 // Now let's open databases
 
 	if (mDBType=="1")
 	{
+		
 		DEBUGCONDUIT << fname << " Postgres database requested" << endl;
-		QString mDBDType="Postgres";
-		int port=5432;
-		dbconn = DBENGINE->addConnection(mDBDType, mDBsrv, port, mDBlogin);     
-		dbconn->setPassword(mDBpasswd);
-     		dbconn->setUser(mDBlogin);
-		DEBUGCONDUIT << fname << " Host: " << dbconn->host() << endl;
-		DEBUGCONDUIT << fname << "  " << dbconn->prettyPrint() << endl;
-		dbconn->openDatabase(mDBnm);
-		dbconn->open();
-		if (dbconn->isConnected())
-		{
-			DEBUGCONDUIT << fname << "Connected" << endl;
-		}	
+// next three lines just for debug purposes - Remove for final creates a dump of table.		
+		char sqlcmd[300];
+		sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"select * from %s;\" %s >testpg.txt",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),mDBnm.latin1());
+		proc.clearArguments();
+		proc << sqlcmd;
+		proc.start(KShellProcess::Block, KShellProcess::NoCommunication);
+		while (proc.isRunning())
+			{
+			DEBUGCONDUIT << fname << " " << proc.pid() << " still running" << endl;
+			}
+		DEBUGCONDUIT << fname << proc.args() << endl;
+		DEBUGCONDUIT << fname << sqlcmd << endl;
 	}
 
 	if (mDBType=="2")
 	{
-		DEBUGCONDUIT << "MySQL database requested" << endl;
-		QString mDBDType="Postgres";
-		int port=3306;
-		dbconn = DBENGINE->addConnection(mDBDType, mDBsrv, port, mDBlogin);     
-		dbconn->setPassword(mDBpasswd);
-	     	dbconn->setUser(mDBlogin);
-		DEBUGCONDUIT << fname << " Host: " << dbconn->host() << endl;
-		DEBUGCONDUIT << fname << "  " << dbconn->prettyPrint() << endl;
-		dbconn->openDatabase(mDBnm);
-		dbconn->open();
-		if (dbconn->isConnected())
-		{
-			DEBUGCONDUIT << fname << "Connected" << endl;
-		}	
+		DEBUGCONDUIT << fname << "MySQL database requested" << endl;
 	}
 
 // Now let's read records
@@ -424,26 +445,51 @@ ExpenseConduit::doSync()
 	
 			if (mDBType=="0")
 			{
-				DEBUGCONDUIT << fname << "No database requested" << endl;
+				DEBUGCONDUIT << fname << " No database requested" << endl;
 
 			}
 
 			if (mDBType=="1")
 			{
-				DEBUGCONDUIT << fname << "MySQL database requested" << endl;
+				DEBUGCONDUIT << fname << " Postgres database requested" << endl;
+			int tmpyr=e.date.tm_year+1900;
+                                char dtstng[DATESIZE];
+                                int tmpday=e.date.tm_mday;
+                                int tmpmon=e.date.tm_mon+1;
+                                sprintf(dtstng,"%d-%d-%d",tmpyr,tmpmon,tmpday);
+			QString tmpnotes=e.note;
+                        QString tmpnotes2=tmpnotes.simplifyWhiteSpace();
+			const char* nmsg=tmpnotes2.latin1();
 
+			QString tmpatt=e.attendees;
+                        QString tmpatt2=tmpatt.simplifyWhiteSpace();
+                        const char* amesg=tmpatt2.latin1();
+			const char* etmsg=get_entry_type(e.type);
+			const char* epmsg=get_pay_type(e.payment);
+			char sqlcmd[400];
+			sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"INSERT INTO \"%s\" (\"fldTdate\", \"fldAmount\", \"fldPType\", \"fldVName\", \"fldEType\", \"fldLocation\", \"fldAttendees\", \"fldNotes\") VALUES ('%s', '%s', '%s',
+ '%s', '%s', '%s', '%s', '%s');\" %s",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),dtstng,e.amount,epmsg,e.vendor,etmsg,e.city,amesg,nmsg,mDBnm.latin1());
+			DEBUGCONDUIT << fname << " " << sqlcmd << endl;
+			proc.clearArguments();
+			proc << sqlcmd;
+			syscall=proc.start(KShellProcess::Block, KShellProcess::NoCommunication);
+			while (proc.isRunning())
+			{
+			DEBUGCONDUIT << fname << " " << proc.pid() << " still running" << endl;
+			}
+			DEBUGCONDUIT << fname << " " << syscall << endl;
 			}
 
 			if (mDBType=="2")
 			{
-				DEBUGCONDUIT << fname << "PostgreSQL database requested" << endl;
+				DEBUGCONDUIT << fname << " MySQL database requested" << endl;
 
 			}
 
 // REMEMBER to CLOSE database			
 
 		}
-	DEBUGCONDUIT << fname << "Records: " << recordcount << endl;
+	DEBUGCONDUIT << fname << " Records: " << recordcount << endl;
 	}
 }
 
@@ -478,6 +524,11 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.9  2001/03/18 02:00:42  molnarc
+//
+// Added connect code for postgres and mysql. Just wondering if anyone
+// ever tested kdb.
+//
 // Revision 1.8  2001/03/17 01:25:56  molnarc
 //
 // start of db work

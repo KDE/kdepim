@@ -10,14 +10,14 @@
 /* -------------------------------------------------------- 
   Table structure for table "tblPalmExp" 
 -------------------------------------------------------- */
-CREATE TABLE "tblPalmExp" (
-   "fldTdate" date NOT NULL,
-   "fldAmount" money,
-   "fldPType" text,
-   "fldVName" text,
-   "fldEType" text,
-   "fldLocation" text,
-   "fldAttendees" text,
-   "fldNotes" text
+CREATE TABLE "tblpalmexp" (
+   "fldtdate" date NOT NULL,
+   "fldamount" money,
+   "fldptype" text,
+   "fldvname" text,
+   "fldetype" text,
+   "fldlocation" text,
+   "fldattendees" text,
+   "fldnotes" text
 );
-CREATE  INDEX "tblPalmExp_fldTdate_key" ON "tblPalmExp" ("fldTdate");
+CREATE  INDEX "tblpalmexp_fldtdate_key" ON "tblpalmexp" ("fldtdate");
