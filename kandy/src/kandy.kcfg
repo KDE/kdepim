@@ -8,10 +8,156 @@
       <label>Serial device</label>
       <default>/dev/ttyS1</default>
     </entry>
+    <entry type="String" key="Lock Directory">
+      <label>Lock directory</label>
+      <default>/var/lock</default>
+    </entry>
     <entry type="Bool" name="StartupModem">
       <label>Open modem on startup</label>
       <default>false</default>
     </entry>
+    <entry type="Bool" name="AutoSetClock">
+      <label>Auto-set clock of mobile on connection</label>
+      <default>true</default>
+    </entry>
+  </group>
+
+  <group name="Addressbook">
+    <entry type="Bool" name="ExcludeHome">
+      <label>Exclude home numbers</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="ExcludeWork">
+      <label>Exclude work numbers</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="ExcludeMessaging">
+      <label>Exclude messaging numbers</label>
+      <default>true</default>
+    </entry>
+    <entry type="Bool" name="ExcludeFax">
+      <label>Exclude fax numbers</label>
+      <default>true</default>
+    </entry>
+    <entry type="Bool" name="ExcludeCell">
+      <label>Exclude cell numbers</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="ExcludeVideo">
+      <label>Exclude video phone numbers</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="ExcludeMailbox">
+      <label>Exclude mailbox numbers</label>
+      <default>true</default>
+    </entry>
+    <entry type="Bool" name="ExcludeModem">
+      <label>Exclude modem numbers</label>
+      <default>true</default>
+    </entry>
+    <entry type="Bool" name="ExcludeCar">
+      <label>Exclude car phone numbers</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="ExcludeISDN">
+      <label>Exclude ISDN numbers</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="ExcludePager">
+      <label>Exclude pager numbers</label>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" name="UseHomeSuff">
+      <label>Use home suffix</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="UseWorkSuff">
+      <label>Use work suffix</label>
+      <default>true</default>
+    </entry>
+    <entry type="Bool" name="UseMessagingSuff">
+      <label>Use messaging suffix</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="UseFaxSuff">
+      <label>Use fax suffix</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="UseCellSuff">
+      <label>Use mobile suffix</label>
+      <default>true</default>
+    </entry>
+    <entry type="Bool" name="UseVideoSuff">
+      <label>Use video suffix</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="UseMailboxSuff">
+      <label>Use mailbox suffix</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="UseModemSuff">
+      <label>Use modem suffix</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="UseCarSuff">
+      <label>Use car suffix</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="UseISDNSuff">
+      <label>Use ISDN suffix</label>
+      <default>false</default>
+    </entry>
+    <entry type="Bool" name="UsePagerSuff">
+      <label>Use pager suffix</label>
+      <default>false</default>
+    </entry>
+
+    <entry type="String" name="HomeSuff">
+      <label>Home suffix</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="WorkSuff">
+      <label>Work suffix</label>
+      <default>"\"0B\""</default>
+    </entry>
+    <entry type="String" name="MessagingSuff">
+      <label>Messaging suffix</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="FaxSuff">
+      <label>Fax suffix</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="CellSuff">
+      <label>Cell suffix</label>
+      <default>"\"17\""</default>
+    </entry>
+    <entry type="String" name="VideoSuff">
+      <label>Video suffix</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="MailboxSuff">
+      <label>Mailbox suffix</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="ModemSuff">
+      <label>Modem suffix</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="CarSuff">
+      <label>Car suffix</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="ISDNSuff">
+      <label>ISDN suffix</label>
+      <default></default>
+    </entry>
+    <entry type="String" name="PagerSuff">
+      <label>Pager suffix</label>
+      <default></default>
+    </entry>
+
   </group>
 
   <group name="Windows">
