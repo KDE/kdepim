@@ -86,14 +86,14 @@ void Widget::addProgress( ManipulatorPart* part, const Progress& prog) {
 void Widget::syncProgress( ManipulatorPart* part, int status, int percent )  {
 
     OverViewProgressEntry* it;
-/*
-    for ( it = m_messageList.first(); it; m_messageList.next() )  {
+
+    for ( it = m_messageList.first(); it; it = m_messageList.next() )  {
         if ( QString::compare( it->name(), part->type() ) == 0 ) {
             it->setProgress( status );
             return;
         }
     }
-*/
+
     OverViewProgressEntry* test = new OverViewProgressEntry( m_ab, "test" );
     m_messageList.append( test );
 
