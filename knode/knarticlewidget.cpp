@@ -634,6 +634,15 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   QString msg="<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>")+errMsg+"</qt>";
   setText(msg);
 
+  // mark article as read, typically the article is expired on the server, so its
+  // impossible to read it later anyway.
+  if(knGlobals.cfgManager->readNewsGeneral()->autoMark() &&
+     a_rticle && a_rticle->type()==KNMimeBase::ATremote && !a_rticle->isOrphant()) {
+    KNRemoteArticle::List l;
+    l.append((static_cast<KNRemoteArticle*>(a_rticle)));
+    knGlobals.artManager->setRead(l, true);
+  }
+
   a_rticle=0;
   delete a_tt;
   a_tt=0;
