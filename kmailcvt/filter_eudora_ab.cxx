@@ -86,6 +86,7 @@ FILE   *F;
                       keys[i],(emails[i]=="") ? KAB_NIL : emails[i],
                       KAB_NIL,KAB_NIL,KAB_NIL,
                       (names[i]=="") ? KAB_NIL : names[i],
+                      KAB_NIL,
                       KAB_NIL,KAB_NIL,
                       KAB_NIL,KAB_NIL,
                       KAB_NIL,

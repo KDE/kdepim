@@ -79,7 +79,7 @@ class kmail
     kmail();
    ~kmail();
   public:
-    bool kmailStart(filterInfo */*info*/) { return true; }
+    bool kmailStart(filterInfo *info) { return true; }
     bool kmailMessage(filterInfo *info,char *folder,char *msg,unsigned long & added);
     bool kmailFolder(filterInfo *info,char *folder,FILE *_folder);
     void kmailStop(filterInfo *info);
@@ -103,7 +103,7 @@ class kab
                     QString givenname, QString email=KAB_NIL,
                     QString title=KAB_NIL,
                     QString firstName=KAB_NIL,QString additionalName=KAB_NIL,
-                    QString lastName=KAB_NIL,
+                    QString lastName=KAB_NIL, QString nickname=KAB_NIL,
                     QString adress=KAB_NIL,QString town=KAB_NIL,
                     QString state=KAB_NIL,QString zip=KAB_NIL,
                     QString country=KAB_NIL,

@@ -31,7 +31,7 @@ class filter_ldif : public filter
     void initCodeTable();
   public:
     void import(filterInfo *info);
-    bool convert(const char *filename, filterInfo *info);
+    bool convert(const QString &filename, filterInfo *info);
     QString decodeBase64(QString aStr);
 };
 

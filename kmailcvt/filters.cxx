@@ -105,7 +105,7 @@ void filterInfo::current(QString current)
 
 void  filterInfo::current(float percent)
 {
-int p=(int) (percent+0.5);
+  int p=(int) (percent+0.5);
   if (percent<0) { _done_current->reset(); }
   _done_current->setProgress(p);
   procEvents();
@@ -113,7 +113,7 @@ int p=(int) (percent+0.5);
 
 void  filterInfo::overall(float percent)
 {
-int p=(int) (percent+0.5);
+  int p=(int) (percent+0.5);
   if (percent<0) { _done_overall->reset(); }
   _done_overall->setProgress(p);
 }
@@ -151,7 +151,7 @@ void filterInfo::alert(QString conversion, QString message)
 
 void filterInfo::adjWidth(QWidget *q)
 {
-int w=_parent->width()-20;
+ int w=_parent->width()-20;
   q->resize(w,q->height());
 }
 
@@ -201,20 +201,18 @@ filter::~filter()
 
 QString filter::name(void)
 {
-return myName;
+  return myName;
 }
 
 QString filter::author(void)
 {
-return myAuthor;
+  return myAuthor;
 }
 
 void filter::import(filterInfo *info)
 {
-QString c,m;
-  c=i18n("class filter");
-  m=i18n("no import function implemented");
-  info->alert(c,m);
+  info->alert(  i18n("class filter"),
+		i18n("no import function implemented") );
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -234,7 +232,7 @@ filters::filters(filterInfo *i,QWidget *_parent,char *name) : QComboBox(_parent,
 
 filters::~filters()
 {
-int i;
+  int i;
   for(i=0;i<F.len();i++) {
     delete F[i];
   }
@@ -254,17 +252,11 @@ void filters::import(void)
 
 QString filters::getFilters(void)
 {
-int i;
-QString f="";
-  for(i=0;i<F.len();i++) {
-    f+="  - ";
-    f+=F[i]->name();
-    f+=" (";
-    f+=F[i]->author();
-    f+=") ";
-    f+="\n";
-  }
-return f;
+  int i;
+  QString f;
+  for(i=0;i<F.len();i++)
+    f += QString(" - %1 ( %2 ) \n").arg(F[i]->name()).arg(F[i]->author());
+  return f;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -286,36 +278,40 @@ bool  kmail::kmailMessage(filterInfo *info,char *folder,char *_msg,unsigned long
 {
 #ifdef KMAILCVT_DCOP
 
-QString folderName(folder);
-QString msg(_msg);
-int     result;
-  result=dcopAddMessage(folderName,msg);
-  if (result==-1) { QString msg;
+  QString folderName(folder);
+  QString msg(_msg);
+  
+  int result=dcopAddMessage(folderName,msg);
+  
+  if (result==-1) {
     msg=i18n("Cannot make folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
   }
-  else if (result==-2) { QString msg;
-    msg.sprintf(" '%s' ",folder);
+  
+  if (result==-2) {
     msg=i18n("Cannot add message to folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
   }
-  else if (result==-3) { QString msg;
+  
+  if (result==-3) {
     msg=i18n("FATAL: Unable to start KMail for DCOP communication.\n"
              "       Make sure 'kmail' is in your path.");
     info->alert(cap,msg);
     return false;
   }
-  else if (result==0) { QString msg;
+  
+  if (result==0) {
     msg=i18n("Error while adding message to folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
   }
 
-  if (result>0) { added+=1; }//fprintf(stderr,"added+1\n"); }
+  if (result>0) 
+    { added+=1; }//fprintf(stderr,"added+1\n"); }
 
-return true;
+  return true;
 
 #else
 
@@ -348,10 +344,12 @@ void kmail::kmailStop(filterInfo *info)
   info->log("kmail has adopted the (new) folders and messages");
 }
 
-bool kmail::kmailFolder(filterInfo *info,char */*folder*/,FILE */*fldr*/)
+bool kmail::kmailFolder(filterInfo *info,char *folder, FILE *fldr)
 {
+  Q_UNUSED(folder);
+  Q_UNUSED(fldr);
   info->alert(cap,"kmailFolder: Not implemented yet");
-return false;
+  return false;
 //return kmailMessage(info,folder,fldr);
 }
 
@@ -379,13 +377,13 @@ bool kab::kabStart(filterInfo *info)
   if ( !mTicket ) {
      info->alert(cap,i18n("Unable to store imported data in address book."));
      return false;
-  } else {
-     return true;
   }
+  return true;
 }
 
-void kab::kabStop(filterInfo */*info*/)
+void kab::kabStop(filterInfo *info)
 {
+  Q_UNUSED(info);
   mAddressBook->save( mTicket );
 }
 
@@ -401,6 +399,7 @@ bool kab::kabAddress(filterInfo *_info,QString adrbookname,
                       QString givenname, QString email,
                       QString title,QString firstname,
                       QString additionalname,QString lastname,
+		      QString nickname,
                       QString address,QString town,
                       QString /*state*/,QString zip,QString country,
                       QString organization,QString department,
@@ -438,6 +437,7 @@ bool kab::kabAddress(filterInfo *_info,QString adrbookname,
   if ( checkStr( firstname ) ) a.setGivenName ( firstname );
   if ( checkStr( additionalname ) ) a.setAdditionalName( additionalname );
   if ( checkStr( lastname ) ) a.setFamilyName( lastname );
+  if ( checkStr( nickname ) ) a.setNickName( nickname );
 
   KABC::Address addr;
   
@@ -451,8 +451,8 @@ bool kab::kabAddress(filterInfo *_info,QString adrbookname,
 
   if ( checkStr( organization ) ) a.setOrganization( organization );
 
-  if ( checkStr( department ) ) note.append( "Department: " + department + "\n" );
-  if ( checkStr( subDep ) ) note.append( "Sub Department: " + subDep + "\n" );
+  if ( checkStr( department ) ) a.insertCustom("KADDRESSBOOK", "X-Department", department);
+  if ( checkStr( subDep ) ) a.insertCustom("KADDRESSBOOK", "X-Office", subDep);
   if ( checkStr( job ) ) note.append( job + "\n" );
 
   if ( checkStr( tel ) )
