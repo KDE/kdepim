@@ -44,6 +44,12 @@ k_dcop:
     virtual int numNotes( QString deviceName ) = 0;
     virtual QString readNote( QString deviceName, int index ) = 0;
     virtual bool storeNote( QString deviceName, int index, QString note ) = 0;
+
+    /*
+     * DCOP functions for the devices:/ kioslave
+     */
+k_dcop:
+    virtual QStringList kio_devices_deviceInfo(QString deviceName) = 0;
 };
 
 #endif // _KMOBILEIFACE_H_

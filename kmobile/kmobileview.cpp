@@ -350,4 +350,48 @@ bool KMobileView::storeNote( QString deviceName, int index, QString note )
    return true;
 }
 
+
+
+/*
+ * DCOP Implementation for the devices:/ kioslave
+ */
+
+/*
+ * returns the information for the given deviceName for usage in the
+ * the devices kioslave. The QStringList returned is comparable to the
+ * format of /etc/fstab file. Please refer to the devices kioslave for
+ * further information. 
+ * If deviceName is empty, this functions returns information for all 
+ * active mobile devices.
+ * (function is only used by the devices kioslave - don't use elsewhere !)
+ */
+QStringList KMobileView::kio_devices_deviceInfo(QString deviceName)
+{
+   QStringList mobiles = deviceNames();
+   if (mobiles.count() == 0)
+	return mobiles;
+
+   QStringList mountList;
+   for ( QStringList::Iterator it = mobiles.begin(); it != mobiles.end(); ++it ) {
+	QString name = *it;
+
+	if (deviceName.isEmpty())
+		mountList << name; 
+	else
+		if (deviceName!=name)
+			continue;
+
+	mountList << name;
+	mountList << " ";
+	mountList << QString("mobile:/%1").arg(name); // KIO::encodeFileName()
+	mountList << "mobile/device";
+	mountList << "true"; // mountState
+	mountList << "---";
+	if (!deviceName.isEmpty())
+		break;
+   }
+   return mountList;
+}
+
+
 #include "kmobileview.moc"

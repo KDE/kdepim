@@ -62,6 +62,9 @@ public:
     QString readNote( QString deviceName, int index );
     bool storeNote( QString deviceName, int index, QString note );
 
+    /* devices kioslave support: */
+    QStringList kio_devices_deviceInfo(QString deviceName);
+
 public:
     void saveAll();
     void restoreAll();
