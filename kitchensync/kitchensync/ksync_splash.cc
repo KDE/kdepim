@@ -1,21 +1,20 @@
 /*
-† † This file is part of the OPIE Project
-† † Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>
-† †                2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+† † † †This file is part of the OPIE Project
+† † † †Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>
+† †                   2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+† † † † † †
 
-
-
- †             =.            
+† † † † † † † †=.            
 † † † † † † †.=l.            
 † † † † † †.>+-=
-†_;:, † † .> † †:=|.         This library is free software; you can 
+†_;:, † † .> † †:=|.         This program is free software; you can 
 .> <`_, † > †. † <=          redistribute it and/or  modify it under
-:`=1 )Y*s>-.-- † :           the terms of the GNU Library General Public
+:`=1 )Y*s>-.-- † :           the terms of the GNU General Public
 .="- .-=="i, † † .._         License as published by the Free Software
 †- . † .-<_> † † .<>         Foundation; either version 2 of the License,
 † † †._= =} † † † :          or (at your option) any later version.
 † † .%`+i> † † † _;_.        
-† † .i_,=:_. † † †-<s.       This library is distributed in the hope that  
+† † .i_,=:_. † † †-<s.       This program is distributed in the hope that  
 † † †+ †. †-:. † † † =       it will be useful,  but WITHOUT ANY WARRANTY;
 † † : .. † †.:, † † . . .    without even the implied warranty of
 † † =_ † † † †+ † † =;=|`    MERCHANTABILITY or FITNESS FOR A
@@ -33,48 +32,31 @@
 */
 
 
+#include <qcursor.h>
 
-#ifndef KSYNC_CONFIGUREDIALOG
-#define KSYNC_CONFIGUREDIALOG
+#include <kapplication.h>
+#include <kstandarddirs.h>
 
-#include <kdialogbase.h>
+#include "ksync_splash.h"
 
-namespace KitchenSync {
+using namespace KitchenSync;
 
-  class ConfigureDialog : public KDialogBase {
-    Q_OBJECT
-    
-      public:
-    ConfigureDialog( QWidget *parent=0, const char *name=0, bool modal=true );
-    ~ConfigureDialog();
-    virtual void show();
-    void addWidget(QWidget*,const QString&, QPixmap*);
+Splash::Splash()
+  : QWidget( 0, "splash", WStyle_NoBorderEx | WStyle_Customize | WDestructiveClose )
+{
+  QPixmap splash;
+  splash.load(locate("appdata", "pics/startlogo.png") );
+  setBackgroundPixmap(splash  );
+  // find the correct screen and geometry
+  QRect desk= QApplication::desktop()->screenGeometry(QApplication::desktop()->screenNumber(QCursor::pos() ) );
+  setGeometry(desk.center().x()-splash.width()/2,
+	      desk.center().y()-splash.height()/2,
+	      splash.width(),
+	      splash.height() );
+  show(); // just to be sure
+}
 
-  signals:
-    void ok( );
-
-    protected slots:
-     virtual void slotOk();
-     virtual void slotCancel();
-     
-  protected:
-     /**
-      * Plugin sensitive. 
-      */
-     void apply(bool);
-  private:
-     /**
-      * load and registers the plugins
-      */
-     void setup();
-     
-     /**
-      * unload the plugins
-      */
-     void unload();
-     
-  };
-  
+Splash::~Splash()
+{
 
 };
-#endif

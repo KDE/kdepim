@@ -22,6 +22,7 @@ OrganizerPart::OrganizerPart(QWidget *parent, const char *name,
   setInstance(OrganizerPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("korganizer", KIcon::Desktop, 48 );
   m_widget=0;
+  m_config=0;
 }
 OrganizerPart::~OrganizerPart()
 {
@@ -42,10 +43,11 @@ QWidget* OrganizerPart::widget()
 }
 QWidget* OrganizerPart::configWidget()
 {
-  kdDebug() << "configWidget \n" ;
-  m_config = new QWidget();
-  m_config->setBackgroundColor( Qt::green );
-  
+  //  if( m_config == 0 ){ cause of the reparent ;)
+    kdDebug() << "configWidget \n" ;
+    m_config = new QWidget();
+    m_config->setBackgroundColor( Qt::green );
+    //}
   return m_config;
 };
 

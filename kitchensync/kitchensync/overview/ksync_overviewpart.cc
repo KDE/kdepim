@@ -9,16 +9,18 @@
 #include "overviewwidget.h"
 #include "ksync_overviewpart.h"
 
-//typedef KGenericFactory< KitchenSync::OverviewPart> OverviewPartFactory;
-//K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory );
+typedef KGenericFactory< KitchenSync::OverviewPart> OverviewPartFactory;
+K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory );
 
 using namespace KitchenSync ;
 
-OverviewPart::OverviewPart(QWidget *parent, const char *name, const QStringList & )
+OverviewPart::OverviewPart(QWidget *parent, const char *name,
+			   QObject *par, const char *na,const QStringList & )
   : KitchenSync::ManipulatorPart( parent, name ) {
   // setInstance(OverviewPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("kcmsystem", KIcon::Desktop, 48 );
   m_widget=0;
+  m_config = 0;
 }
 
 OverviewPart::~OverviewPart() {
@@ -36,10 +38,10 @@ QWidget* OverviewPart::widget() {
 }
 
 QWidget* OverviewPart::configWidget() {
-
-  m_config = new QWidget();
-  m_config->setBackgroundColor( Qt::red );
-
+  // if(m_config == 0 ){
+    m_config = new QWidget();
+    m_config->setBackgroundColor( Qt::red );
+    //}
   return m_config;
 };
 

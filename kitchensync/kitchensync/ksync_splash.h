@@ -1,21 +1,20 @@
 /*
-† † This file is part of the OPIE Project
-† † Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>
-† †                2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+† † † †This file is part of the OPIE Project
+† † † †Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>
+† †                   2002 Maximilian Reiﬂ <harlekin@handhelds.org>
+† † † † † †
 
-
-
- †             =.            
+† † † † † † † †=.            
 † † † † † † †.=l.            
 † † † † † †.>+-=
-†_;:, † † .> † †:=|.         This library is free software; you can 
+†_;:, † † .> † †:=|.         This program is free software; you can 
 .> <`_, † > †. † <=          redistribute it and/or  modify it under
-:`=1 )Y*s>-.-- † :           the terms of the GNU Library General Public
+:`=1 )Y*s>-.-- † :           the terms of the GNU General Public
 .="- .-=="i, † † .._         License as published by the Free Software
 †- . † .-<_> † † .<>         Foundation; either version 2 of the License,
 † † †._= =} † † † :          or (at your option) any later version.
 † † .%`+i> † † † _;_.        
-† † .i_,=:_. † † †-<s.       This library is distributed in the hope that  
+† † .i_,=:_. † † †-<s.       This program is distributed in the hope that  
 † † †+ †. †-:. † † † =       it will be useful,  but WITHOUT ANY WARRANTY;
 † † : .. † †.:, † † . . .    without even the implied warranty of
 † † =_ † † † †+ † † =;=|`    MERCHANTABILITY or FITNESS FOR A
@@ -33,48 +32,18 @@
 */
 
 
+#ifndef KSyncSplash_h
+#define KSyncSplash_h
 
-#ifndef KSYNC_CONFIGUREDIALOG
-#define KSYNC_CONFIGUREDIALOG
-
-#include <kdialogbase.h>
+#include <qwidget.h>
 
 namespace KitchenSync {
 
-  class ConfigureDialog : public KDialogBase {
-    Q_OBJECT
-    
-      public:
-    ConfigureDialog( QWidget *parent=0, const char *name=0, bool modal=true );
-    ~ConfigureDialog();
-    virtual void show();
-    void addWidget(QWidget*,const QString&, QPixmap*);
-
-  signals:
-    void ok( );
-
-    protected slots:
-     virtual void slotOk();
-     virtual void slotCancel();
-     
-  protected:
-     /**
-      * Plugin sensitive. 
-      */
-     void apply(bool);
-  private:
-     /**
-      * load and registers the plugins
-      */
-     void setup();
-     
-     /**
-      * unload the plugins
-      */
-     void unload();
-     
+  class Splash : public QWidget{
+  public:
+    Splash();
+    ~Splash();
   };
-  
-
 };
+
 #endif
