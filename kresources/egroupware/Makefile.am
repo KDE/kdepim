@@ -16,7 +16,7 @@ libkabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cp
                             kabc_egroupwareprefs.kcfgc
 libkabc_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc $(top_builddir)/libkdepim/libkdepim.la \
-                           $(top_builddir)/kaddressbook/libkabcommon.la
+                           $(top_builddir)/kaddressbook/common/libkabcommon.la
 
 libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp xmlrpciface.cpp uidmapper.cpp \
                             kcal_egroupwareprefs.kcfgc
