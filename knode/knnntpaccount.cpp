@@ -83,6 +83,7 @@ KNNntpAccount::KNNntpAccount()
 KNNntpAccount::~KNNntpAccount()
 {
   delete a_ccountIntervalChecking;
+  delete i_dentity;
 }
 
 
