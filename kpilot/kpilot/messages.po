@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-07-25 01:24+0200\n"
+"POT-Creation-Date: 2000-07-26 01:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"Copyright (C) 1998-2000 Dan Pilone"
+"Copyright (C) 1998-2000 Dan Pilone, Adriaan de Groot"
 msgstr ""
 
 #: kpilot.cc:691
@@ -123,160 +123,160 @@ msgstr ""
 msgid "and many others."
 msgstr ""
 
-#: kpilotlink.cc:147
+#: kpilotlink.cc:149
 msgid "Sync Status"
 msgstr ""
 
-#: kpilotlink.cc:186
+#: kpilotlink.cc:188
 msgid "Cannot create socket for communicating with the Pilot"
 msgstr ""
 
-#: kpilotlink.cc:188 kpilotlink.cc:191 kpilotlink.cc:212 kpilotlink.cc:216
+#: kpilotlink.cc:190 kpilotlink.cc:193 kpilotlink.cc:214 kpilotlink.cc:218
 msgid "Error Initializing"
 msgstr ""
 
-#: kpilotlink.cc:192
+#: kpilotlink.cc:194
 msgid "Cannot create socket."
 msgstr ""
 
-#: kpilotlink.cc:210
+#: kpilotlink.cc:212
 msgid "Cannot connect socket to Pilot (check Pilot path)"
 msgstr ""
 
-#: kpilotlink.cc:217
+#: kpilotlink.cc:219
 msgid "Cannot connect to pilot (check pilot path)."
 msgstr ""
 
-#: kpilotlink.cc:485 kpilotlink.cc:490
+#: kpilotlink.cc:487 kpilotlink.cc:492
 msgid "Replace all data on pilot with local data?"
 msgstr ""
 
-#: kpilotlink.cc:486 kpilotlink.cc:489
+#: kpilotlink.cc:488 kpilotlink.cc:491
 msgid "Full Restore"
 msgstr ""
 
-#: kpilotlink.cc:595
+#: kpilotlink.cc:597
 msgid "Restoring databases to Palm Pilot. Slow sync required."
 msgstr ""
 
-#: kpilotlink.cc:708
+#: kpilotlink.cc:710
 msgid "Backing up Palm Pilot... Slow sync required."
 msgstr ""
 
-#: kpilotlink.cc:718
+#: kpilotlink.cc:720
 msgid ""
 "Exiting on cancel.\n"
 "<B>Not</B> all the data was backed up."
 msgstr ""
 
-#: kpilotlink.cc:720 kpilotlink.cc:722 kpilotlink.cc:745 kpilotlink.cc:1305
-#: kpilotlink.cc:1308
+#: kpilotlink.cc:722 kpilotlink.cc:724 kpilotlink.cc:747 kpilotlink.cc:1307
+#: kpilotlink.cc:1310
 msgid "Backup"
 msgstr ""
 
-#: kpilotlink.cc:723
+#: kpilotlink.cc:725
 msgid ""
 "Exiting on canel.\n"
 " All Data NOT backed up"
 msgstr ""
 
-#: kpilotlink.cc:742 kpilotlink.cc:746 kpilotlink.cc:1308
+#: kpilotlink.cc:744 kpilotlink.cc:748 kpilotlink.cc:1310
 msgid "Could not backup data!"
 msgstr ""
 
-#: kpilotlink.cc:743
+#: kpilotlink.cc:745
 msgid "Backup failed"
 msgstr ""
 
-#: kpilotlink.cc:801
+#: kpilotlink.cc:803
 msgid "Installing Files"
 msgstr ""
 
-#: kpilotlink.cc:802
+#: kpilotlink.cc:804
 msgid "Percentage of files installed:"
 msgstr ""
 
-#: kpilotlink.cc:804
+#: kpilotlink.cc:806
 msgid "Installing files..."
 msgstr ""
 
-#: kpilotlink.cc:847
+#: kpilotlink.cc:849
 msgid "Unable to open file &quot;%1&quot;!"
 msgstr ""
 
-#: kpilotlink.cc:851
+#: kpilotlink.cc:853
 msgid "Missing File"
 msgstr ""
 
-#: kpilotlink.cc:853
+#: kpilotlink.cc:855
 msgid "Unable to open file: "
 msgstr ""
 
-#: kpilotlink.cc:856 kpilotlink.cc:870
+#: kpilotlink.cc:858 kpilotlink.cc:872
 msgid "Missing file?"
 msgstr ""
 
-#: kpilotlink.cc:867
+#: kpilotlink.cc:869
 msgid "Cannot install file on Pilot"
 msgstr ""
 
-#: kpilotlink.cc:868
+#: kpilotlink.cc:870
 msgid "Install File Error"
 msgstr ""
 
-#: kpilotlink.cc:962
+#: kpilotlink.cc:964
 msgid "Waiting to Sync"
 msgstr ""
 
-#: kpilotlink.cc:963
+#: kpilotlink.cc:965
 msgid "Reading user information..."
 msgstr ""
 
-#: kpilotlink.cc:1005
+#: kpilotlink.cc:1007
 msgid "Hot-Sync started."
 msgstr ""
 
-#: kpilotlink.cc:1006
+#: kpilotlink.cc:1008
 msgid "Sync started with KPilot-v3.2\n"
 msgstr ""
 
-#: kpilotlink.cc:1202
+#: kpilotlink.cc:1204
 msgid "Could not backup data for database &quot;%1&quot;"
 msgstr ""
 
-#: kpilotlink.cc:1207 kpilotlink.cc:1210
+#: kpilotlink.cc:1209 kpilotlink.cc:1212
 msgid "Backup for Sync"
 msgstr ""
 
-#: kpilotlink.cc:1211
+#: kpilotlink.cc:1213
 msgid "Could not backup data for database "
 msgstr ""
 
-#: kpilotlink.cc:1296
+#: kpilotlink.cc:1298
 msgid "No previous copy.  Copying data from pilot..."
 msgstr ""
 
-#: kpilotlink.cc:1303
+#: kpilotlink.cc:1305
 msgid "Could not create local copy of database &quot;%1&quot;"
 msgstr ""
 
-#: kpilotlink.cc:1318
+#: kpilotlink.cc:1320
 msgid "Hot-Syncing Pilot. Looking for modified data..."
 msgstr ""
 
-#: kpilotlink.cc:1325
+#: kpilotlink.cc:1327
 msgid "Cannot find database &quot;%1&quot;"
 msgstr ""
 
-#: kpilotlink.cc:1329
+#: kpilotlink.cc:1331
 msgid "Error Syncing Database"
 msgstr ""
 
-#: kpilotlink.cc:1334
+#: kpilotlink.cc:1336
 msgid "Error syncing."
 msgstr ""
 
-#: kpilotlink.cc:1417
+#: kpilotlink.cc:1419
 msgid ""
 "The Palm Pilot thinks the user name is &quot;%1&quot;, however KPilot says "
 "you are &quot;%2&quot;.\n"
@@ -284,7 +284,7 @@ msgid ""
 "&quot;%1&quot;? (Otherwise I'll use &quot;%2&quot; for now)"
 msgstr ""
 
-#: kpilotlink.cc:1427
+#: kpilotlink.cc:1429
 msgid "Pilot User Changed"
 msgstr ""
 
@@ -597,54 +597,54 @@ msgstr ""
 msgid "Custom 4:"
 msgstr ""
 
-#: conduitSetup.cc:45
+#: conduitSetup.cc:47
 msgid "External Conduit Setup"
 msgstr ""
 
-#: conduitSetup.cc:49
+#: conduitSetup.cc:51
 msgid "Available Conduits:"
 msgstr ""
 
-#: conduitSetup.cc:56
+#: conduitSetup.cc:58
 msgid "Installed Conduits:"
 msgstr ""
 
-#: conduitSetup.cc:89
+#: conduitSetup.cc:91
 msgid "Done"
 msgstr ""
 
-#: conduitSetup.cc:115
+#: conduitSetup.cc:117
 msgid "Install"
 msgstr ""
 
-#: conduitSetup.cc:126
+#: conduitSetup.cc:128
 msgid "Uninstall"
 msgstr ""
 
-#: conduitSetup.cc:138
+#: conduitSetup.cc:140
 msgid "Setup"
 msgstr ""
 
-#: conduitSetup.cc:263
+#: conduitSetup.cc:269
 msgid "The conduit "
 msgstr ""
 
-#: conduitSetup.cc:265
+#: conduitSetup.cc:271
 msgid ""
 " did not identify what database it supports. \n"
 "Please check with the conduits author to correct it."
 msgstr ""
 
-#: conduitSetup.cc:268
+#: conduitSetup.cc:274
 msgid "Conduit error."
 msgstr ""
 
-#: conduitSetup.cc:390
+#: conduitSetup.cc:396
 msgid ""
 "A conduit is already being set up.\n"
 "Please complete that setup before starting another."
 msgstr ""
 
-#: conduitSetup.cc:392
+#: conduitSetup.cc:398
 msgid "Setup already in progress"
 msgstr ""
