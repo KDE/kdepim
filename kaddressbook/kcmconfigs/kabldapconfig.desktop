@@ -3,6 +3,7 @@ Encoding=UTF-8
 Icon=find
 Type=Service
 ServiceTypes=KCModule
+DocPath=kaddressbook/preferences.html#preferences-ldap-lookup
 
 X-KDE-ModuleType=Library
 X-KDE-Library=kabldapconfig
