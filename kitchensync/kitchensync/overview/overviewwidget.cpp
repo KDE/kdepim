@@ -89,7 +89,7 @@ void Widget::syncProgress( ManipulatorPart* part, int status, int percent )  {
     OverViewProgressEntry* test = new OverViewProgressEntry( m_ab, "test" );
     m_messageList.append( test );
 
-    if ( part->name() )  {
+    if ( !part->name().isEmpty() )  {
         test->setText( part->name() );
     }
     if ( part->pixmap() ) {

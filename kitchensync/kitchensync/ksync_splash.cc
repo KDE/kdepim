@@ -42,7 +42,7 @@
 using namespace KSync;
 
 Splash::Splash()
-  : QWidget( 0, "splash", WStyle_NoBorderEx | WStyle_Customize | WDestructiveClose )
+  : QWidget( 0, "splash", WStyle_Splash | WStyle_Customize | WDestructiveClose )
 {
   QPixmap splash;
   splash.load(locate("appdata", "pics/startlogo.png") );

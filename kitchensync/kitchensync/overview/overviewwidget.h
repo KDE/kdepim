@@ -45,7 +45,7 @@ namespace OverView {
         QLabel* m_profile;
         QLabel* m_logo;
 	QVBoxLayout* m_layout;
-	QList<OverViewProgressEntry> m_messageList;
+	QPtrList<OverViewProgressEntry> m_messageList;
 	QSplitter *m_split;
 	QWidget* m_ab;
         QTextEdit* m_edit;

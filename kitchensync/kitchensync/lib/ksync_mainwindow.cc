@@ -257,7 +257,7 @@ void KSyncMainWindow::slotBackup() {
     QString path = KFileDialog::getSaveFileName(
                           QDir::homeDirPath(), i18n("*.xml|Backup files"), this,
                           i18n("Please enter a filename to backup the data"));
-    if (path)
+    if (!path.isEmpty() )
     {
       // Check if .xml added. If not, add it.
       QFileInfo fi(path);
@@ -289,7 +289,7 @@ void KSyncMainWindow::slotRestore() {
     QString path = KFileDialog::getOpenFileName(
                            QDir::homeDirPath(), "*.xml|Backup files", this,
                            i18n("Please choose a backup file to restore the data"));
-    if (!path)
+    if (path.isEmpty() )
       return;
 
     KonnectorProfile prof = konnectorProfile();
