@@ -241,6 +241,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     void disableChangeNotification();
 
     void clearChange( Incidence * );
+    void clearChange( const QString &uid );
 
     void clearChanges();
 

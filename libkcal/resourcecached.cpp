@@ -534,9 +534,30 @@ bool ResourceCached::hasChanges() const
 
 void ResourceCached::clearChange( Incidence *incidence )
 {
-  mAddedIncidences.remove( incidence );
-  mChangedIncidences.remove( incidence );
-  mDeletedIncidences.remove( incidence );
+  clearChange( incidence->uid() );
+}
+
+void ResourceCached::clearChange( const QString &uid )
+{
+  QMap<Incidence*, bool>::Iterator it;
+
+  for ( it = mAddedIncidences.begin(); it != mAddedIncidences.end(); ++it )
+    if ( it.key()->uid() == uid ) {
+      mAddedIncidences.remove( it );
+      break;
+    }
+
+  for ( it = mChangedIncidences.begin(); it != mChangedIncidences.end(); ++it )
+    if ( it.key()->uid() == uid ) {
+      mChangedIncidences.remove( it );
+      break;
+    }
+
+  for ( it = mDeletedIncidences.begin(); it != mDeletedIncidences.end(); ++it )
+    if ( it.key()->uid() == uid ) {
+      mDeletedIncidences.remove( it );
+      break;
+    }
 }
 
 void ResourceCached::enableChangeNotification()
