@@ -1,7 +1,7 @@
 <!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>KPilotConfigWidget</class>
 <comment>A tabWidget for configuring
-KPilot's settings. Use Qt2 designer only!</comment>
+KPilot's settings.!</comment>
 <author>David Bishop</author>
 <widget class="QWidget">
     <property name="name">
@@ -11,7 +11,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>387</width>
+            <width>385</width>
             <height>310</height>
         </rect>
     </property>
@@ -435,17 +435,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QRadioButton" row="1" column="0">
-                                <property name="name">
-                                    <cstring>fCompanyDisplay</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Show as "&amp;Company, last"</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by company name, last name.&lt;/qt&gt;</string>
-                                </property>
-                            </widget>
                             <widget class="QRadioButton" row="0" column="0">
                                 <property name="name">
                                     <cstring>fNormalDisplay</cstring>
@@ -455,6 +444,17 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by last name, first name.&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fCompanyDisplay</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Show as "&amp;Company, last"</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by company name, last name.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="Line" row="2" column="0">
@@ -477,9 +477,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property name="text">
                                     <string>&amp;Use key field</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>false</bool>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Combine all entries with the same last name.&lt;/qt&gt;</string>
