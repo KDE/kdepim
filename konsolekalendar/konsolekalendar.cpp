@@ -55,28 +55,6 @@ KonsoleKalendar::~KonsoleKalendar()
 {
 }
 
-bool KonsoleKalendar::openCalendar()
-{
-  // Obsolette to be removed	
-	
-  /*if( !m_Calendar->load( m_variables->getCalendarFile() ) ) {
-    kdDebug() << "konsolekalendar.cpp::openCalendar() | Can't open file: " << m_variables->getCalendarFile() << endl;
-    return false;
-  } else {
-    kdDebug() << "konsolekalendar.cpp::openCalendar() | Successfully opened file: " << m_variables->getCalendarFile() << endl;
-    m_variables->setCalendar( m_Calendar );
-    return true;
-  }*/
-  return true;  // to shut up compiler warning
-}
-
-void KonsoleKalendar::closeCalendar()
-{
-  //m_Calendar->close();
-  //m_variables->getCalendarResources()->close();
-  //delete m_Calendar;
-}
-
 void KonsoleKalendar::importCalendar()
 {
   KonsoleKalendarAdd add( m_variables );
@@ -154,11 +132,11 @@ bool KonsoleKalendar::showInstance()
 	  status = printEventList ( &ts, &sortedList );
 	} else if( m_variables->isUID() ) {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | view events by uid list" << endl;
-	  event = m_Calendar->event( m_variables->getUID() );
+	  event = m_variables->getCalendar()->event( m_variables->getUID() );
 	  status = printEvent ( &ts, event );
 	} else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | view raw events within date range list" << endl;
-	  eventList = new Event::List ( ((CalendarLocal *) m_variables->getCalendarResources())->rawEvents( 
+	  eventList = new Event::List ( m_variables->getCalendar()->rawEvents( 
 					  m_variables->getStartDateTime().date(),
 					  m_variables->getEndDateTime().date(),
 					  true ) );
@@ -173,7 +151,7 @@ bool KonsoleKalendar::showInstance()
 	if( m_variables->getAll() ) {
 	  // TODO: this is broken since the date on last() may not be last date (this is the case for me)
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | HTML view all events sorted list" << endl;
-	  eventList = new Event::List ( m_Calendar->rawEvents( ) );
+	  eventList = new Event::List ( m_variables->getCalendar()->rawEvents( ) );
 	  firstdate = eventList->first()->dtStart().date();
 	  lastdate = eventList->last()->dtStart().date();
 	  delete eventList;
@@ -309,8 +287,8 @@ bool KonsoleKalendar::isEvent( QDateTime startdate, QDateTime enddate, QString s
  
   bool found = false;
   
-  Event::List eventList( ((CalendarLocal *) m_variables->getCalendarResources())->
-			                    rawEventsForDate( startdate.date(), true ));
+  Event::List eventList( m_variables->getCalendar()->
+			 rawEventsForDate( startdate.date(), true ));
   for ( it =  eventList.begin(); it != eventList.end(); ++it ) {
     e = *it;
     if ( e->dtEnd()==enddate && e->summary()==summary ) {

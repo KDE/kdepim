@@ -56,6 +56,7 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_export_type = TEXT_KONSOLEKALENDAR;
   m_bIsExportFile = false;
   m_bIsDefault = false;
+  m_bIsCalendarResources = false;
 }
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
@@ -314,10 +315,16 @@ bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource 
 return true;
 }
 
+bool KonsoleKalendarVariables::isCalendarResources()
+{
+  return m_bIsCalendarResources;	
+}
+
 void KonsoleKalendarVariables::setCalendarResources( CalendarResources *resource )
 {
   m_resource = resource;
   setCalendar( ((CalendarLocal *)m_resource) );
+  m_bIsCalendarResources = true;
 }
 
 CalendarResources *KonsoleKalendarVariables::getCalendarResources()

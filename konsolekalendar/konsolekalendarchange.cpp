@@ -69,7 +69,12 @@ bool KonsoleKalendarChange::changeEvent()
        if( m_variables->isDescription() )
 	 event->setDescription( m_variables->getDescription() );
        m_variables->getCalendar()->addEvent( event );
-       m_variables->getCalendar()->save();
+       
+       if( !m_variables->isCalendarResources() ){
+         m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+       } else {
+         m_variables->getCalendar()->save();	    
+       }
      }
     status = true;
   }

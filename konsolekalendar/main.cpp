@@ -67,16 +67,16 @@ static KCmdLineOptions options[] =
   { "help", I18N_NOOP("Print this help and exit"), 0 },
   { "verbose", I18N_NOOP("Print helpful runtime messages"), 0 },
   { "dry-run", I18N_NOOP("Print what would have been done, but do not execute"), 0 },
-  //{ "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use"), 0 },
-  //{ "make-default", I18N_NOOP("Make calendar file as default resource (You should know what you are doing!)"), 0 },
+  { "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use"), 0 },
+
 
   { ":", I18N_NOOP(" Major operation modes:"), 0 },
   { "view", I18N_NOOP("  Print calendar events in specified export format"), 0 },
   { "add", I18N_NOOP("  Insert an event into the calendar"), 0 },
   { "change", I18N_NOOP("  Modify an existing calendar event"), 0 },
   { "delete", I18N_NOOP("  Remove an existing calendar event"), 0 },
-  //{ "import <import-file>", I18N_NOOP("  Import this calendar to main calendar"), 0 },
-  // { "create", I18N_NOOP("  Create new calendar file if one does not exist"), 0 },
+  { "import <import-file>", I18N_NOOP("  Import this calendar to main calendar"), 0 },
+  { "create", I18N_NOOP("  Create new calendar file if one does not exist"), 0 },
 
   { ":", I18N_NOOP(" Operation modifiers:"), 0 },
   { "next", I18N_NOOP("  View next activity in calendar"), 0 },
@@ -237,16 +237,6 @@ int main(int argc, char *argv[])
   }
 
   /*
-   *   Makes calendar as default resource
-   *
-   */
-  /*if ( args->isSet("make-default") ) {
-     variables.setDefault( true );
-     kdDebug() << "main | parse options | Set calendar as default (needs --file to work)" << endl;
-  }*/
-	
-	
-  /*
    *  Switch on Add (Insert Entry)
    *
    */
@@ -283,13 +273,13 @@ int main(int argc, char *argv[])
    *  Switch on Create
    *
    */
-  /*if ( args->isSet("create") ) {
+  if ( args->isSet("create") ) {
     view=false;
     create=true;
 
     kdDebug() << "main | parse options | Calendar File: (Create)" << endl;
     
-  }*/
+  }
 
 
   /*
@@ -443,36 +433,31 @@ int main(int argc, char *argv[])
     variables.setAll( false );
   }
 
-  /*if ( args->isSet("import") ) {
+  if ( args->isSet("import") ) {
     importFile = true;
     option = args->getOption("import");
     variables.setImportFile( option );
 
     kdDebug() << "main | parse options | importing file from: (" << option << ")" << endl;
-  }*/
+  }
 
-
- /*if ( args->isSet("file") ) {
+ KonsoleKalendar *konsolekalendar = new KonsoleKalendar( &variables );
+	
+ if ( args->isSet("file") ) {
     calendarFile = true;
     option = args->getOption("file");
     variables.setCalendarFile( option );
-    
-
- }*/
-
-  
-  KonsoleKalendar *konsolekalendar = new KonsoleKalendar( &variables );
-  
+ 
   /*
    * All modes need to know if the calendar file exists
    * This must be done before we get to opening biz
    */
    
-  /*QFile fileExists( variables.getCalendarFile() );
+  QFile fileExists( variables.getCalendarFile() );
   bool exists = fileExists.exists();
   fileExists.close();
 
-  if ( calendarFile && create ) {
+  if ( create ) {
 
     kdDebug() << "main | createcalendar | check if calendar file already exists" << endl;
 
@@ -487,46 +472,30 @@ int main(int argc, char *argv[])
       kdError() << i18n("Unable to create calendar: ").local8Bit() << variables.getCalendarFile() << endl;
       return(1);
     }
-   }*/
+   }
 
+   if ( !exists ){	 
+     cout << i18n("Calendar file not found").local8Bit() << option.local8Bit() << endl;
+     cout << i18n("Try --create to create new calendar file").local8Bit() << endl;
+     return(1);
+   }
+ }
 
-  CalendarResources *calendarResource = new CalendarResources(); 
-  variables.setCalendarResources( calendarResource );
-  ResourceCalendar *defaultResource = NULL; 
-  /*
-   * File must be there when we open it;)
-   *
-   * NO NEEDED ANYMORE WE CAN'T DO ANYTHING
-   */
-   
-  /*if ( args->isSet("file") ) {
-    defaultResource = new ResourceLocal( option );
-    
-    defaultResource->setResourceName( option );
-    variables.addCalendarResources( defaultResource );
-    
-    kdDebug() << "main | parse options | using calendar at: (" << variables.getCalendarFile() << ")" << endl;
-
-  } else {
-	  
-     KConfig cfg( locateLocal( "config", "korganizerrc" ) );
-	  
-     bool success = variables.loadCalendarResources( &cfg );
-
-     if( success == true ) {	  
-      CalendarResourceManager *manager = variables.getCalendarResources()->resourceManager();	     
-      kdDebug() << "main | CalendarResources used by Konsolekalendar:" << endl;
-      CalendarResourceManager::Iterator it;
-     
-      for( it = manager->begin(); it != manager->end(); ++it ) {
-        (*it)->dump();
-      }
-     } else {
-       kdDebug() << "Can't find default calendar!" << endl;	     
-       return(-1);
-     }
-     
-   }*/
+  CalendarResources *calendarResource = NULL; 
+  CalendarLocal *localCalendar = NULL;
+ 
+ /*
+  * Should we use local calendar or resource? 
+  */
+	
+ if( args->isSet("file") ) {
+  localCalendar = new CalendarLocal();
+  localCalendar->load( variables.getCalendarFile() );
+  variables.setCalendar( localCalendar  );   
+ } else {
+  calendarResource = new CalendarResources();	 
+  variables.setCalendarResources( calendarResource );	 
+ }
 
   /***************************************************************************
    * Glorious date/time checking and setting code                            *
@@ -644,18 +613,6 @@ int main(int argc, char *argv[])
    */
   QString prodId = "-//K Desktop Environment//NONSGML %1 %2//EN";
   CalFormat::setApplication( progDisplay, prodId.arg( progDisplay).arg( progVersion ) );
-
-  /*
-   * Calendar file must exist for all (non-create) modes.
-   * Do we really need this (Winterz??)
-   */
-    /*kdDebug() << "main | modework | check if calendar file exists" << endl;
-    if( ! exists ) {
-      kdError() << i18n("No such calendar: ").local8Bit() << variables.getCalendarFile() << endl;
-      return(1);
-    }
-    kdDebug() << "main | modework | yes calendar file exists" << endl;
-    */
     
   /*
    * Opens calendar file so we can use it;)
@@ -664,11 +621,6 @@ int main(int argc, char *argv[])
    *
    * Adds it to konsolekalendarvariables also..
    */
-  kdDebug() << "main | modework | checking if ResourceManager is full or empty" << endl;	
-	
-  if( !variables.getCalendarResourceManager()->isEmpty() ) {
-    kdDebug() << "main | modework | We have calendar" << endl;		  
-
 
     if( importFile ) {
       konsolekalendar->importCalendar();
@@ -718,22 +670,15 @@ int main(int argc, char *argv[])
       }
     }
 
-    // konsolekalendar->closeCalendar();
-
-  } else {
-
-    kdError() << i18n("Cannot open specified calendar file: ").local8Bit() << variables.getCalendarFile() << endl;
-    return(1);
-
-  }
-
   delete konsolekalendar;
 	
   if( calendarFile ){
-    delete defaultResource;   
+    localCalendar->close();
+    delete localCalendar;   
+  } else {
+    calendarResource->close();
+    delete calendarResource;
   }
-	
-  delete calendarResource;
 	
   kdDebug() << "main | exiting" << endl;
 

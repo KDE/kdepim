@@ -57,7 +57,12 @@ bool KonsoleKalendarDelete::deleteEvent()
       }
 
       m_variables->getCalendar()->deleteEvent( event );
-      m_variables->getCalendar()->save();
+      
+      if( !m_variables->isCalendarResources() ){
+        m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+      } else {
+        m_variables->getCalendar()->save();	    
+      }
     }
     status = true;
   }

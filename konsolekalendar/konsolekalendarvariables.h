@@ -151,6 +151,11 @@ class KonsoleKalendarVariables
    int getExportType();
 
    /**
+    * Do we use CalendarResources or LocalCalendar 
+    */
+   bool isCalendarResources();
+   
+   /**
     * Add to Calendar Resources
     */
    CalendarResourceManager *getCalendarResourceManager();
@@ -205,6 +210,7 @@ class KonsoleKalendarVariables
    QString m_exportFile;
    bool m_bIsExportFile;
    bool m_bIsDefault;
+   bool m_bIsCalendarResources;
    // New resource stuff will over-ride old pne
    CalendarResources *m_resource;
    // We can use this from everywhere

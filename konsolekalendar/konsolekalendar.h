@@ -48,16 +48,6 @@ class KonsoleKalendar
     bool showInstance();
 
    /**
-    *  Opens calendar file (now in our machine future from others)
-    */
-   bool openCalendar();
-
-   /**
-    * Closes calendar.
-    */
-   void closeCalendar();
-
-   /**
     * Imports calendar file
     */
 
