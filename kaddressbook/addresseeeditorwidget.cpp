@@ -530,8 +530,10 @@ void AddresseeEditorWidget::load()
   mPhoneEditWidget->setPhoneNumbers( mAddressee.phoneNumbers() );
   mAddressEditWidget->setAddresses( mAddressee, mAddressee.addresses() );
   mBirthdayPicker->setDate( mAddressee.birthday().date() );
-  mAnniversaryPicker->setDate( QDate::fromString( mAddressee.custom(
-                               "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate) );
+
+  QString anniversaryStr = mAddressee.custom( "KADDRESSBOOK", "X-Anniversary" );
+  QDate anniversary = (anniversaryStr.isEmpty() ? QDate() : QDate::fromString( anniversaryStr, Qt::ISODate ));
+  mAnniversaryPicker->setDate( anniversary );
   mNicknameEdit->setText( mAddressee.nickName() );
   mCategoryEdit->setText( mAddressee.categories().join( "," ) );
 

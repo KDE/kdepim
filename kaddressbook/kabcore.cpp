@@ -976,11 +976,7 @@ void KABCore::initGUI()
 
   mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
 
-  QHBoxLayout *hbox = new QHBoxLayout( mWidget, 0, 0 );
-
   mDetailsSplitter = new QSplitter( mWidget );
-  hbox->addWidget( mDetailsSplitter );
-
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
 
@@ -1012,7 +1008,7 @@ void KABCore::initGUI()
   detailsLayout->addWidget( mJumpButtonBar );
   detailsLayout->setStretchFactor( mJumpButtonBar, 1 );
 
-  topLayout->setStretchFactor( hbox, 1 );
+  topLayout->setStretchFactor( mDetailsSplitter, 1 );
 
   mXXPortManager = new XXPortManager( this, mWidget );
 
@@ -1080,7 +1076,7 @@ void KABCore::initActions()
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
 
-  mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact In..." ), "", 0,
+  mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact In..." ), "kaddressbook", 0,
                                       this, SLOT( storeContactIn() ),
                                       actionCollection(), "edit_store_in" );
   mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );

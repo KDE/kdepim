@@ -57,7 +57,8 @@ void SecrecyWidget::setReadOnly( bool readOnly )
 
 void SecrecyWidget::setSecrecy( const KABC::Secrecy &secrecy )
 {
-  mSecrecyCombo->setCurrentItem( secrecy.type() );
+  if ( secrecy.type() != KABC::Secrecy::Invalid )
+    mSecrecyCombo->setCurrentItem( secrecy.type() );
 }
 
 KABC::Secrecy SecrecyWidget::secrecy() const
