@@ -45,7 +45,7 @@ AC_DEFUN([KDE_CHECK_GNOKII],
   AC_CHECK_LIB(gnokii, gn_cfg_read,
        [ LIB_GNOKII="-lgnokii $LIB_BLUETOOTH" ],
        [
-    	AC_CHECK_LIB(gnokii, gn_cfg_read,
+    	AC_CHECK_LIB(gnokii, gn_cfg_get,
        	[ LIB_GNOKII="-lgnokii -lintl $LIB_BLUETOOTH" ],
        	[], $all_libraries -lintl -lXpm -lX11 $LIB_BLUETOOTH )
        ],
