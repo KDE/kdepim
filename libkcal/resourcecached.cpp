@@ -397,6 +397,7 @@ void ResourceCached::calendarIncidenceChanged( Incidence *i )
 
   QMap<Incidence *,bool>::ConstIterator it;
   it = mChangedIncidences.find( i );
+  // FIXME: If you modify an added incidence, there's no need to add it to mChangedIncidences!
   if ( it == mChangedIncidences.end() ) {
     mChangedIncidences.insert( i, true );
   }
