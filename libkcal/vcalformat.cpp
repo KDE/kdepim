@@ -35,7 +35,9 @@
 
 #include "vcc.h"
 #include "vobject.h"
-
+extern "C" {
+#include "icaltime.h"
+}
 #include "vcaldrag.h"
 #include "calendar.h"
 
@@ -96,8 +98,6 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
 
   //  addPropValue(vcal,VCLocationProp, "0.0");
   addPropValue(vcal,VCProdIdProp, productId().latin1());
-  tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   // TODO STUFF
@@ -173,8 +173,6 @@ QString VCalFormat::toString( Calendar *calendar )
   VObject *vcal = newVObject(VCCalProp);
 
   addPropValue( vcal, VCProdIdProp, CalFormat::productId().latin1() );
-  QString tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue( vcal, VCTimeZoneProp, tmpStr.local8Bit() );
   addPropValue( vcal, VCVersionProp, _VCAL_VERSION );
 
   // TODO: Use all data.
@@ -1382,6 +1380,14 @@ QString VCalFormat::qDateToISO(const QDate &qd)
 
 }
 
+/* Return the offset of the named zone as seconds. tt is a time
+   indicating the date for which you want the offset */
+int vcaltime_utc_offset( QDateTime ictt, QString tzid )
+{
+  struct icaltimetype tt = icaltime_from_timet( ictt.toTime_t(), false );
+  return icaltime_utc_offset( tt, tzid.latin1() );
+}
+
 QString VCalFormat::qDateTimeToISO(const QDateTime &qdt, bool zulu)
 {
   QString tmpStr;
@@ -1390,16 +1396,17 @@ QString VCalFormat::qDateTimeToISO(const QDateTime &qdt, bool zulu)
   Q_ASSERT(qdt.time().isValid());
   if (zulu) {
     QDateTime tmpDT(qdt);
-    tmpDT = tmpDT.addSecs(60*(-mCalendar->getTimeZone())); // correct to GMT.
-    tmpStr.sprintf("%.2d%.2d%.2dT%.2d%.2d%.2dZ",
-		   tmpDT.date().year(), tmpDT.date().month(),
-		   tmpDT.date().day(), tmpDT.time().hour(),
-		   tmpDT.time().minute(), tmpDT.time().second());
+    // correct to GMT:
+    tmpDT = tmpDT.addSecs(-vcaltime_utc_offset( tmpDT, mCalendar->timeZoneId())); 
+    tmpStr.sprintf( "%.2d%.2d%.2dT%.2d%.2d%.2dZ",
+                    tmpDT.date().year(), tmpDT.date().month(),
+                    tmpDT.date().day(), tmpDT.time().hour(),
+                    tmpDT.time().minute(), tmpDT.time().second());
   } else {
-    tmpStr.sprintf("%.2d%.2d%.2dT%.2d%.2d%.2d",
-		   qdt.date().year(), qdt.date().month(),
-		   qdt.date().day(), qdt.time().hour(),
-		   qdt.time().minute(), qdt.time().second());
+    tmpStr.sprintf( "%.2d%.2d%.2dT%.2d%.2d%.2d",
+                    qdt.date().year(), qdt.date().month(),
+                    qdt.date().day(), qdt.time().hour(),
+                    qdt.time().minute(), qdt.time().second());
   }
   return tmpStr;
 }
@@ -1425,8 +1432,9 @@ QDateTime VCalFormat::ISOToQDateTime(const QString & dtStr)
   Q_ASSERT(tmpTime.isValid());
   QDateTime tmpDT(tmpDate, tmpTime);
   // correct for GMT if string is in Zulu format
-  if (dtStr.at(dtStr.length()-1) == 'Z')
-    tmpDT = tmpDT.addSecs(60*mCalendar->getTimeZone());
+  if (dtStr.at(dtStr.length()-1) == 'Z') {
+    tmpDT = tmpDT.addSecs(vcaltime_utc_offset( tmpDT, mCalendar->timeZoneId())); 
+  }
   return tmpDT;
 }
 
@@ -1480,13 +1488,14 @@ void VCalFormat::populate(VObject *vcal)
     deleteStr(s);
   }
 
-  // set the time zone
+#if 0
+  // set the time zone (this is a property of the view, so just discard!)
   if ((curVO = isAPropertyOf(vcal, VCTimeZoneProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
     mCalendar->setTimeZone(s);
     deleteStr(s);
   }
-
+#endif
 
   // Store all events with a relatedTo property in a list for post-processing
   mEventsRelate.clear();
