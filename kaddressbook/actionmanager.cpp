@@ -363,10 +363,14 @@ void ActionManager::quickToolsAction()
 
 void ActionManager::setFilterNames(const QStringList& list)
 {
+    QString current = mActionSelectFilter->currentText();
+
     QStringList items;
     items.append(i18n("None"));
     items+=list;
     mActionSelectFilter->setItems(items);
+
+    setCurrentFilterName( current );
 }
 
 void ActionManager::slotFilterActivated(int index)
@@ -379,9 +383,9 @@ void ActionManager::setCurrentFilterName(const QString& name)
     QStringList items=mActionSelectFilter->items();
     int index=items.findIndex(name);
     if(index!=-1)
-    {
         setCurrentFilter(index);
-    }
+    else
+        setCurrentFilter( 0 ); // default
 }
 
 void ActionManager::setCurrentFilter(int index)

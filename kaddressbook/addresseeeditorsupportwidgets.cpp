@@ -60,6 +60,7 @@ EmailEditWidget::EmailEditWidget(QWidget *parent, const char *name)
   topLayout->addWidget(label, 0, 0);
 
   mEmailEdit = new KLineEdit(this);
+  connect(mEmailEdit, SIGNAL( textChanged(const QString &) ), SLOT( textChanged(const QString&) ) );
   connect(mEmailEdit, SIGNAL( textChanged(const QString &) ), SIGNAL( modified() ) );
   topLayout->addWidget(mEmailEdit, 0, 1);
 
@@ -111,6 +112,14 @@ void EmailEditWidget::edit()
     mEmailEdit->setText( mEmailList[ 0 ] );
     emit modified();
   }
+}
+
+void EmailEditWidget::textChanged( const QString &text )
+{
+  if ( mEmailList.count() > 0 )
+    mEmailList.remove( mEmailList.begin() );
+
+  mEmailList.prepend( text );
 }
 
 /////////////////////////////////////

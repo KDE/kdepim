@@ -266,6 +266,7 @@ class EmailEditWidget : public QWidget
     
   private slots:
     void edit();
+    void textChanged(const QString&);
 
   private:
     KLineEdit *mEmailEdit;
