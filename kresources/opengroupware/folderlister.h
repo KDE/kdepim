@@ -27,6 +27,7 @@
 #include <qvaluelist.h>
 #include <qstring.h>
 #include <qobject.h>
+#include <qdom.h>
 
 namespace KIO {
 class DavJob;
@@ -54,10 +55,12 @@ class FolderLister : public QObject
     };
 
     enum Type { AddressBook, Calendar };
+    enum FolderType { ContactsFolder, CalendarFolder, TasksFolder, 
+                      JournalsFolder, Folder, Unknown };
   
     FolderLister( Type );
   
-    void retrieveFolders( const KURL & );
+    virtual void retrieveFolders( const KURL & );
   
     void setFolders( const Entry::List & );
     Entry::List folders() const { return mFolders; }
@@ -67,7 +70,7 @@ class FolderLister : public QObject
 
     void setWriteDestinationId( const QString & );
     QString writeDestinationId() const { return mWriteDestinationId; }
-        
+
     void readConfig( const KConfig * );
     void writeConfig( KConfig * );
     
@@ -76,6 +79,13 @@ class FolderLister : public QObject
 
   protected slots:
     void slotListJobResult( KIO::Job * );
+
+  protected:
+    virtual KURL adjustUrl( const KURL &u );
+    virtual FolderType getFolderType( const QDomNode &folderNode );
+    virtual Entry::List defaultFolders();
+    KURL getUrl() const { return mUrl; }
+    Type getType() const { return mType; }
 
   private:
     Type mType;

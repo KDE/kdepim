@@ -116,26 +116,75 @@ void FolderLister::writeConfig( KConfig *config )
   config->writeEntry( "WriteDestinationId", mWriteDestinationId );
 }
 
+KURL FolderLister::adjustUrl( const KURL &u )
+{
+  KURL url = u;
+  if ( mType == Calendar ) {
+    url.addPath( "Groups" );
+  } else {
+    url.addPath( "public" );
+  }
+  return url;
+}
+
 void FolderLister::retrieveFolders( const KURL &u )
 {
   mUrl = u;
 
   QDomDocument props = WebdavHandler::createAllPropsRequest();
 
-  kdDebug(7000) << "FolderLister::retrieveFolders: " << mUrl.prettyURL() << endl;
+  kdDebug(7000) << "FolderLister::retrieveFolders: " << getUrl().prettyURL() << endl;
   kdDebug(7000) << "props: " << props.toString() << endl;
 
-  KURL url = mUrl;
-  if ( mType == Calendar ) {
-    url.addPath( "Groups" );
-  } else {
-    url.addPath( "public" );
-  }
+  KURL url( adjustUrl( getUrl() ) );
 
   mListEventsJob = KIO::davPropFind( url, props, "1", false );
 
+  kdDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" << url.prettyURL() << endl;
   connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotListJobResult( KIO::Job * ) ) );
+}
+
+FolderLister::Entry::List FolderLister::defaultFolders()
+{
+  Entry::List newFolders;
+
+  // Personal calendar/addressbook
+  Entry personal;
+  KURL url = getUrl();
+  url.setUser( QString::null );
+  url.setPass( QString::null );
+  if ( mType == Calendar ) {
+    personal.name = i18n("Personal Calendar");
+    personal.id = url.url();
+  } else {
+    personal.name = i18n("Personal Addressbook");
+    url.addPath( "Contacts" );
+    personal.id = url.url();
+  }
+  newFolders.append( personal );
+  return newFolders;
+}
+
+FolderLister::FolderType FolderLister::getFolderType( const QDomNode &folderNode )
+{
+  QDomNode n4;
+  for( n4 = folderNode.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
+    QDomElement e = n4.toElement();
+        
+    if ( e.tagName() == "resourcetype" ) {
+      if ( !e.namedItem( "vevent-collection" ).isNull() )
+        return CalendarFolder;
+      if ( !e.namedItem( "vtodo-collection" ).isNull() )
+        return TasksFolder;
+      if ( !e.namedItem( "vcard-collection" ).isNull() )
+        return ContactsFolder;
+      if ( !e.namedItem( "collection" ).isNull() ) 
+        return Folder;
+    }
+  }
+  return Unknown;
+
 }
 
 void FolderLister::slotListJobResult( KIO::Job *job )
@@ -147,31 +196,19 @@ void FolderLister::slotListJobResult( KIO::Job *job )
   } else {
     QDomDocument doc = mListEventsJob->response();
 
-    kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    kdDebug() << " Doc: " << doc.toString() << endl;
 
     bool firstRetrieve = mFolders.isEmpty();
 
-    Entry::List newFolders;
+    Entry::List newFolders( defaultFolders() );
 
-    // Personal calendar/addressbook
-    Entry personal;
-    KURL url = mUrl;
-    url.setUser( QString::null );
-    url.setPass( QString::null );
-    if ( mType == Calendar ) {
-      personal.name = i18n("Personal Calendar");
-      personal.id = url.url();
-    } else {
-      personal.name = i18n("Personal Addressbook");
-      url.addPath( "Contacts" );
-      personal.id = url.url();
+    for ( Entry::List::Iterator it = newFolders.begin(); it != newFolders.end(); ++it ) {
+      if ( firstRetrieve ) {
+        (*it).active = true;
+      } else {
+        (*it).active = isActive( (*it).id );
+      }
     }
-    if ( firstRetrieve ) {
-      personal.active = true;
-    } else {
-      personal.active = isActive( personal.id );
-    }
-    newFolders.append( personal );
 
     QDomElement docElement = doc.documentElement();
     QDomNode n;
@@ -184,26 +221,19 @@ void FolderLister::slotListJobResult( KIO::Job *job )
       QDomNode n3 = n2.namedItem( "prop" );
 
       QString displayName;
-      bool isFolder = false;
-      bool isEventFolder = false;
-      bool isContactFolder = false;
-      bool isTodoFolder = false;
+      
+      FolderType type = getFolderType( n3 );
 
       QDomNode n4;
       for( n4 = n3.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
         QDomElement e = n4.toElement();
-        
         if ( e.tagName() == "displayname" ) displayName = e.text();
-        if ( e.tagName() == "resourcetype" ) {
-          isFolder = !e.namedItem( "collection" ).isNull();
-          isEventFolder = !e.namedItem( "vevent-collection" ).isNull();
-          isTodoFolder = !e.namedItem( "vtodo-collection" ).isNull();
-          isContactFolder = !e.namedItem( "vcard-collection" ).isNull();
-        }
       }
 
-      if ( ( isFolder && mType == Calendar ) ||
-           ( isContactFolder && mType == AddressBook ) ) {
+      if ( ( mType == Calendar && 
+              ( type == CalendarFolder || type == TasksFolder || 
+                type == JournalsFolder ) ) ||
+           ( type == ContactsFolder && mType == AddressBook ) ) {
         QDomNode n6 = n.namedItem( "href" );
         QDomElement e2 = n6.toElement();
         QString href = e2.text();
