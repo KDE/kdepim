@@ -20,9 +20,9 @@
 */
 
 #include "kcal_resourceblogging.h"
-#include "kcal_resourcegroupwarebaseconfig.h"
+#include "kcal_resourcebloggingconfig.h"
 
 using namespace KCal;
 
-typedef KRES::PluginFactory< ResourceBlogging, ResourceGroupwareBaseConfig > BloggingFactory;
+typedef KRES::PluginFactory< ResourceBlogging, ResourceBloggingConfig > BloggingFactory;
 K_EXPORT_COMPONENT_FACTORY( kcal_blogging, BloggingFactory )

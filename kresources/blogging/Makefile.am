@@ -6,7 +6,7 @@ kde_module_LTLIBRARIES = kcal_blogging.la
 libkcal_blogging_la_SOURCES = API_Blog.cpp API_Blogger.cpp xmlrpcjob.cpp \
   bloggingglobals.cpp \
   bloggingcalendaradaptor.cpp \
-  kcal_resourceblogging.cpp 
+  kcal_resourceblogging.cpp kcal_resourcebloggingconfig.cpp
 libkcal_blogging_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
   -version-info 1:0:0 -no-undefined
 libkcal_blogging_la_LIBADD = \

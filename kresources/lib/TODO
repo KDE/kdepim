@@ -29,6 +29,7 @@ kresources/newexchange:
    server to delete the data from the server
 -) Journal upload not working
 
+
 kresources/groupdav:
 ====================
 -) recurrences on ogo
