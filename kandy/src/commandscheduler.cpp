@@ -40,7 +40,7 @@ void CommandScheduler::execute(const QString &command)
 
 void CommandScheduler::executeId(const QString &id)
 {
-  QList<ATCommand> *cmds = mCommandSet.commandList();
+  QPtrList<ATCommand> *cmds = mCommandSet.commandList();
 
   for(uint i=0;i<cmds->count();++i) {
     if (cmds->at(i)->id() == id) {

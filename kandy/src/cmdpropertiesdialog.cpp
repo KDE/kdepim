@@ -60,7 +60,7 @@ void CmdPropertiesDialog::readCommand()
   mStringEdit->setText(mCmd->cmdString());
   mHexCheck->setChecked(mCmd->hexOutput());
 
-  QList<ATParameter> parameters = mCmd->parameters();
+  QPtrList<ATParameter> parameters = mCmd->parameters();
   for(int i=(int)parameters.count()-1;i>=0;--i) {
     ATParameter *p = parameters.at(i);
     new ParameterItem(p,mParameterList);

@@ -3,7 +3,7 @@
 // $Id$
 // (C) 2000 by Cornelius Schumacher
 
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qdict.h>
 #include <qcolor.h>
 
@@ -120,8 +120,8 @@ class KPrefs {
     KPrefs();
 
   private:
-//    QDict<QList<KPrefsItem> > mGroups;
-    QList<KPrefsItem> mItems;
+//    QDict<QPtrList<KPrefsItem> > mGroups;
+    QPtrList<KPrefsItem> mItems;
 };
 
 #endif

@@ -180,7 +180,7 @@ QString ATCommand::resultField(int index)
 }
 
 
-QList<QStringList> *ATCommand::resultFields()
+QPtrList<QStringList> *ATCommand::resultFields()
 {
    return &mResultFieldsList;
 }
@@ -195,7 +195,7 @@ void ATCommand::clearParameters()
   mParameters.clear();
 }
 
-QList<ATParameter> ATCommand::parameters()
+QPtrList<ATParameter> ATCommand::parameters()
 {
   return mParameters;
 }

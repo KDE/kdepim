@@ -4,7 +4,7 @@
 
 #include <qstring.h>
 #include <qstringlist.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 class ATParameter {
   public:
@@ -56,11 +56,11 @@ class ATCommand {
     void setResultString(const QString &);
     QString resultString();
     QString resultField(int index);
-    QList<QStringList> *resultFields();
+    QPtrList<QStringList> *resultFields();
 
     void addParameter(ATParameter *);
     void clearParameters();
-    QList<ATParameter> parameters();
+    QPtrList<ATParameter> parameters();
 
     void setParameter(int index,const QString &value);
     void setParameter(int index,int value);
@@ -79,9 +79,9 @@ class ATCommand {
     bool mHexOutput;
 
     QString mResultString;
-    QList<QStringList> mResultFieldsList;
+    QPtrList<QStringList> mResultFieldsList;
 
-    QList<ATParameter> mParameters;
+    QPtrList<ATParameter> mParameters;
 
     bool mAutoDelete;
 };

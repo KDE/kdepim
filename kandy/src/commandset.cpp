@@ -115,7 +115,7 @@ void CommandSet::saveCommand(ATCommand *command,QDomDocument *doc,
   c.setAttribute("hexoutput",command->hexOutput() ? "y" : "n");
   parent->appendChild(c);
   
-  QList<ATParameter> paras = command->parameters();
+  QPtrList<ATParameter> paras = command->parameters();
   for(uint i=0;i<paras.count();++i) {
     saveParameter(paras.at(i),doc,&c);
   }

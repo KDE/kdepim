@@ -3,7 +3,7 @@
 // $Id$
 
 #include <qobject.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "atcommand.h"
 #include "commandset.h"
@@ -43,7 +43,7 @@ class CommandScheduler : public QObject {
 
     ATCommand *mLastCommand;
 
-    QList<ATCommand> mCommandQueue;
+    QPtrList<ATCommand> mCommandQueue;
 
     enum State { WAITING, PROCESSING };
     State mState;

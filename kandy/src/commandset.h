@@ -26,7 +26,7 @@ class CommandSet {
     
     void clear();
     
-    QList<ATCommand> *commandList() { return &mList; }
+    QPtrList<ATCommand> *commandList() { return &mList; }
     
   protected:
     void loadCommand(ATCommand *,QDomElement *c);
@@ -34,7 +34,7 @@ class CommandSet {
     void saveParameter(ATParameter *p, QDomDocument *doc,QDomElement *parent);
   
   private:
-    QList<ATCommand> mList;
+    QPtrList<ATCommand> mList;
 };
 
 #endif

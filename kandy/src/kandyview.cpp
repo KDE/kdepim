@@ -146,7 +146,7 @@ void KandyView::executeCommand()
   CommandItem *item = (CommandItem *)(mCommandList->currentItem());
   if (item) {
     ATCommand *cmd = item->command();
-    QList<ATParameter> paraList = cmd->parameters();
+    QPtrList<ATParameter> paraList = cmd->parameters();
     for(uint i=0;i<paraList.count();++i) {
       ATParameter *p = paraList.at(i);
       if (p->userInput()) {
@@ -181,7 +181,7 @@ bool KandyView::loadFile(const QString& filename)
 
   if (!mScheduler->loadProfile(filename)) return false;
 
-  QList<ATCommand> *cmds = mScheduler->commandSet()->commandList();
+  QPtrList<ATCommand> *cmds = mScheduler->commandSet()->commandList();
 
   for(uint i=0;i<cmds->count();++i) {
     new CommandItem(mCommandList,cmds->at(i));

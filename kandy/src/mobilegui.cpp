@@ -88,9 +88,9 @@ class AddressSyncer {
       mCommonEntries.setAutoDelete(true);
     }
   
-    QList<SyncEntryKab> mKabEntries;
-    QList<SyncEntryMobile> mMobileEntries;
-    QList<SyncEntryCommon> mCommonEntries; 
+    QPtrList<SyncEntryKab> mKabEntries;
+    QPtrList<SyncEntryMobile> mMobileEntries;
+    QPtrList<SyncEntryCommon> mCommonEntries; 
 };
 
 
@@ -403,7 +403,7 @@ void MobileGui::fillPhonebook(ATCommand *cmd)
 
   mSyncer->mMobileEntries.clear();
     
-  QList<QStringList> *list = cmd->resultFields();
+  QPtrList<QStringList> *list = cmd->resultFields();
   
   QStringList *fields = list->first();
   while(fields) {
