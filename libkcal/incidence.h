@@ -346,12 +346,14 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase
     QStringList resources() const;
 
     /**
-      Set the incidences priority, 0 is undefined, 1 highest (decreasing order).
+      Set the incidences priority. The priority has to be a value between 0 and
+      9, 0 is undefined, 1 the highest, 9 the lowest priority (decreasing
+      order).
     */
     void setPriority( int priority );
     /**
-      Return priority. The priority is a number between 1 and 5. 1 is highest
-      priority.
+      Return priority. The priority is a number between 1 and 9. 1 is highest
+      priority. If the priority is undefined 0 is returned.
     */
     int priority() const;
 
