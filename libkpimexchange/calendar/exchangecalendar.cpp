@@ -176,19 +176,7 @@ Alarm::List ExchangeCalendar::alarms( const QDateTime &from, const QDateTime &to
   kdDebug(5800) << "ExchangeCalendar::alarms(" << from.toString() << " - " << to.toString() << ")\n";
   return mCache->alarms( from, to );
 }
-/*
-void ExchangeCalendar::appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                                  const QDateTime &from, const QDateTime &to )
-{
-  return mCache->appendAlarms( alarms, incidence, from, to ); 
-}
 
-void ExchangeCalendar::appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
-                                  const QDateTime &from, const QDateTime &to )
-{
-   return mCache->appendRecurringAlarms( alarms, incidence, from, to ); 
-}
-*/
 /****************************** PROTECTED METHODS ****************************/
 
 // after changes are made to an event, this should be called.
