@@ -555,10 +555,10 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 
   if ( mTruncated > 0 )
     KMessageBox::information( this,
-			      i18n("One backend returned truncated output.\n"
-				   "Not all available keys are shown",
-			           "%n backends returned truncated output.\n"
-				   "Not all available keys are shown",
+			      i18n("<qt>One backend returned truncated output.<br>"
+				   "Not all available keys are shown</qt>",
+			           "<qt>%n backends returned truncated output.<br>"
+				   "Not all available keys are shown</qt>",
 				   mTruncated),
 			      i18n("Key List Result") );
 
