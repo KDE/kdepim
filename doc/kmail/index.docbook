@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>07/11/2000</date>
+<date>11/11/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -1006,7 +1006,8 @@ To work around this, replace each instance of the control character with
 <literal remap="tt">From aaa@aaa Mon Jan 01 00:00:00 1997</literal>. This <literal remap="tt">From:</literal>
 line should be the first
 line of every message, before the <literal remap="tt">Received:</literal> and other headers. Make sure to use
-a text editor that lets you save the files in Unix format.</para>
+a text editor that lets you save the files in Unix format or create new folders in Pegasus
+that are in Unix format and copy your mails there.</para>
 </listitem>
 </varlistentry>
 
@@ -1856,6 +1857,15 @@ Mailreader window</link>.
  of features etc. Here's a real problem: &kmail; will not delete some temporary files if it crashes. In this
  case, you should <command>cd</command> to <filename class="directory">~/.kde/share/apps/kmail/tmp/</filename>
  and delete all the files and folders there.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Can I use &kmail; and procmail?</para></question>
+ <answer><para>Yes, but it's important to do it the right way or you might lose mail.
+ Do <emphasis>not</emphasis> let procmail sort the mail to <filename class="directory">~/Mail</filename>,
+ but to some other directory which you then access by &kmail; as a <guilabel>Local Mailbox</guilabel>.
+ I.e. you have to add another account in the <guilabel>Network</guilabel> tab of the
+ Configuration dialog.</para></answer>
 </qandaentry>
 
 <qandaentry>
