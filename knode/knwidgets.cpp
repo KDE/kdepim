@@ -112,7 +112,7 @@ KNProgress::KNProgress (int desiredHeight, int maxValue, int value, QWidget *par
   setRange(0, maxValue);
   setValue(value);
   setFixedWidth(110);
-  setFrameStyle(QFrame::Box | QFrame::Raised);
+  setFrameStyle(QFrame::Box);
   setLineWidth(1);
   setBackgroundMode(QWidget::PaletteBackground);
   disableProgressBar();
