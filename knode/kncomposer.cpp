@@ -832,7 +832,7 @@ void KNComposer::slotSignArticle()
   if(!ok) // no suitable codec found => try local settings and hope the best ;-)
     codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset(),ok);
 
-  pgp->setMessage(codec->fromUnicode(text));
+  pgp->setMessage(codec->fromUnicode(text),codec->name());
   pgp->setUser(article()->from()->email());
   kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
   if (!pgp->sign(article()->from()->email()))
