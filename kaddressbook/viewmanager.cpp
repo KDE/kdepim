@@ -385,6 +385,10 @@ void ViewManager::dropped( QDropEvent *e )
 {
   kdDebug(5720) << "ViewManager::dropped: got a drop event" << endl;
 
+  // don't allow drops from our own drags
+  if ( e->source() == this )
+    return;
+
   QString clipText, vcards;
   KURL::List urls;
 
