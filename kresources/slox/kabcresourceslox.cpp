@@ -171,7 +171,7 @@ bool ResourceSlox::asyncLoad()
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Downloading contacts") );
   connect( mProgress,
-           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelDownload() ) );
 
   return true;
