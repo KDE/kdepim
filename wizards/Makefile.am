@@ -1,10 +1,11 @@
 METASOURCES = AUTO
 
-INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
+INCLUDES = -I$(top_srcdir)/libemailfunctions -I$(top_srcdir)/libkdepim \
+           -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
            -I$(top_srcdir)/knotes \
            -I$(top_srcdir)/certmanager/lib \
-	   -I$(top_builddir)/kresources/groupwise \
+           -I$(top_builddir)/kresources/groupwise \
            $(all_includes)
 
 bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard \
