@@ -2141,7 +2141,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   } else {
     mLoadedProductId = QString::fromUtf8(icalproperty_get_prodid(p));
     mCalendarVersion = CalFormat::calendarVersion(mLoadedProductId.latin1());
-    kdDebug(5800) << "VCALENDAR prodid: '" << mLoadedProductId << "'" << endl;
+//    kdDebug(5800) << "VCALENDAR prodid: '" << mLoadedProductId << "'" << endl;
 
     delete mCompat;
     mCompat = CompatFactory::createCompat( mLoadedProductId );
@@ -2167,7 +2167,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     return false;
   } else {
     const char *version = icalproperty_get_version(p);
-    kdDebug(5800) << "VCALENDAR version: '" << version << "'" << endl;
+//    kdDebug(5800) << "VCALENDAR version: '" << version << "'" << endl;
 
     if (strcmp(version,"1.0") == 0) {
       kdDebug(5800) << "Expected iCalendar, got vCalendar" << endl;

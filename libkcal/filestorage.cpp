@@ -78,7 +78,7 @@ bool FileStorage::open()
 
 bool FileStorage::load()
 {
-  kdDebug(5800) << "FileStorage::load(): '" << mFileName << "'" << endl;
+//  kdDebug(5800) << "FileStorage::load(): '" << mFileName << "'" << endl;
 
   // do we want to silently accept this, or make some noise?  Dunno...
   // it is a semantical thing vs. a practical thing.

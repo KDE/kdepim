@@ -247,6 +247,8 @@ class CalendarResources : public Calendar,
     void signalResourceModified( ResourceCalendar * );
     void signalResourceDeleted( ResourceCalendar * );
 
+    void signalErrorMessage( const QString & );
+
   protected:
     /**
       The observer interface. So far not implemented.

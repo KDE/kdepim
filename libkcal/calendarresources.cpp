@@ -94,7 +94,7 @@ void CalendarResources::init()
 
 CalendarResources::~CalendarResources()
 {
-  kdDebug(5800) << "CalendarResources::destructor" << endl;
+//  kdDebug(5800) << "CalendarResources::destructor" << endl;
 
   close();
 
@@ -113,7 +113,7 @@ void CalendarResources::load()
   if ( !mManager->standardResource() ) {
     kdDebug(5800) << "Warning! No standard resource yet." << endl;
   }
-	
+
   // set the timezone for all resources. Otherwise we'll have those terrible tz troubles ;-((
   CalendarResourceManager::Iterator i1;
   for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
@@ -124,9 +124,22 @@ void CalendarResources::load()
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     kdDebug(5800) << "Opening resource " + (*it)->resourceName() << endl;
-    bool result = (*it)->open();
-    result = (*it)->load();
-    // Really should remove resource if open not successful
+    bool success = (*it)->open();
+    if ( success ) {
+      success = (*it)->load();
+    }
+    if ( !success ) {
+      QString err = (*it)->errorMessage();
+      kdDebug() << "Error loading resource: " << err << endl;
+      if ( !err.isEmpty() ) {
+        QString msg = i18n("Error while loading %1:\n")
+                      .arg( (*it)->resourceName() );
+        msg += err;
+        emit signalErrorMessage( msg );
+      }
+    }
+
+    // FIXME: Really should remove resource if open not successful
     connectResource( *it );
   }
 
