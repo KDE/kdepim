@@ -53,7 +53,7 @@ int main(int argc,  char* argv[] )
 //  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KAboutData aboutData("kitchensync",I18N_NOOP("KitchenSync"),
-		       "0.0 pre Alpha",
+		       "0.0.6-1",
 		       I18N_NOOP("Synchronize Data with KDE"),
 		       KAboutData::License_GPL,
 		       "(c) 2001-2002 Holger Freyther\n(c) 2002 Maximilian Reiss",
