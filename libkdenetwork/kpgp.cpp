@@ -110,7 +110,7 @@ Module::readConfig()
   storePass = config->readBoolEntry("storePass", false);
   showEncryptionResult = config->readBoolEntry("showEncryptionResult", true);
   mShowKeyApprovalDlg = config->readBoolEntry( "showKeysForApproval", true );
-  pgpType = (Module::PGPType) config->readNumEntry("pgpType", tOff);
+  pgpType = (Module::PGPType) config->readNumEntry("pgpType", tAuto);
   flagEncryptToSelf = config->readBoolEntry("encryptToSelf", true);
 }
 
@@ -1433,17 +1433,17 @@ Module::assignPGPBase(void)
         kdDebug(5100) << "Kpgp: assign pgp - auto" << endl;
       default:
         kdDebug(5100) << "Kpgp: assign pgp - default" << endl;
-        if(havePGP5)
-        {
-          kdDebug(5100) << "Kpgp: pgpBase is pgp 5" << endl;
-          pgp = new Base5();
-          pgpType = tPGP5;
-        }
-        else if (haveGpg)
+        if (haveGpg)
         {
           kdDebug(5100) << "Kpgp: pgpBase is gpg " << endl;
           pgp = new BaseG();
           pgpType = tGPG;
+        }
+        else if(havePGP5)
+        {
+          kdDebug(5100) << "Kpgp: pgpBase is pgp 5" << endl;
+          pgp = new Base5();
+          pgpType = tPGP5;
         }
         else
         {
