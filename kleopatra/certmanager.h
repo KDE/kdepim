@@ -17,8 +17,10 @@ public:
 		 QWidget* parent = 0, const char* name = 0);
 
     const CryptPlugWrapper::CertificateInfoList& certList() const { return _certList; }
-    
-protected:
+
+    bool isRemote() const { return _remote; }
+
+    int importCertificateWithFingerprint( const QString& fingerprint );
 
 protected slots:
     void loadCertificates();

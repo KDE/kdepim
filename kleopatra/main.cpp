@@ -55,7 +55,7 @@ int main( int argc, char** argv )
         return -2;
     }
     CertManager* manager = new CertManager( args->isSet("external"), 
-					    QString::fromLocal8Bit(args->getOption("query")));
+					    QString::fromLocal8Bit(args->getOption("query")) );
     args->clear();
     manager->show();   
   

@@ -25,20 +25,24 @@
 
 #include "certificateinfowidget.h"
 #include <cryptplugwrapper.h>
+
 class QListViewItem;
 class CertManager;
 
 class CertificateInfoWidgetImpl : public CertificateInfoWidget {
   Q_OBJECT
 public:
-  CertificateInfoWidgetImpl( CertManager* manager, QWidget* parent = 0, const char* name = 0);
+  CertificateInfoWidgetImpl( CertManager* manager, bool external,
+			     QWidget* parent = 0, const char* name = 0);
 
   void setCert( const CryptPlugWrapper::CertificateInfo& info );
 protected slots:
   void slotShowInfo( QListViewItem* );
   void slotShowCertPathDetails( QListViewItem* ); 
+  void slotImportCertificate();
 private:
-  CertManager* _manager; 
+  CertManager* _manager;
+  CryptPlugWrapper::CertificateInfo _info;
 };
 
 #endif // CERTIFICATEINFOWIDGETIMPL_H

@@ -23,17 +23,20 @@
 #include <qlistview.h>
 #include <qtextedit.h>
 #include <qheader.h>
+#include <qpushbutton.h>
 
 #include <klocale.h>
 #include <kdialogbase.h>
+#include <kmessagebox.h>
 
 #include "certificateinfowidgetimpl.h"
 #include "certmanager.h"
 
-CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager, 
+CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager, bool external,
 						      QWidget* parent, const char* name )
   : CertificateInfoWidget( parent, name ), _manager(manager)
 {
+  if( !external ) importButton->hide();
   listView->setColumnWidthMode( 1, QListView::Manual );
   listView->setResizeMode( QListView::LastColumn );
   QFontMetrics fm = fontMetrics();
@@ -52,12 +55,15 @@ CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( CertManager* manager,
 	   this, SLOT( slotShowCertPathDetails( QListViewItem* ) ) );
   connect( pathView, SIGNAL( returnPressed( QListViewItem* ) ),
 	   this, SLOT( slotShowCertPathDetails( QListViewItem* ) ) );
+  connect( importButton, SIGNAL( clicked() ),
+	   this, SLOT( slotImportCertificate() ) );
 }
 
 void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo& info )
 {
   listView->clear();
   pathView->clear();
+  _info = info;
 
   // These will show in the opposite order
   new QListViewItem( listView, i18n("Fingerprint"), info.fingerprint );
@@ -142,12 +148,20 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( QListViewItem* item )
     if( (*it).userid[0] == item->text(0) ) {
       KDialogBase* dialog = new KDialogBase( this, "dialog", true, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
 
-      CertificateInfoWidgetImpl* top = new CertificateInfoWidgetImpl( _manager, dialog );
+      CertificateInfoWidgetImpl* top = new CertificateInfoWidgetImpl( _manager, _manager->isRemote(), dialog );
       dialog->setMainWidget( top );
       top->setCert( *it ); 
       dialog->exec();
       delete dialog;
     }
+  }
+}
+
+void CertificateInfoWidgetImpl::slotImportCertificate()
+{
+  if( !_manager ) return;
+  if( _manager->importCertificateWithFingerprint( _info.fingerprint ) ) {
+    KMessageBox::error( this, i18n("Error importing certificate"), i18n("Import error") );
   }
 }
 #include "certificateinfowidgetimpl.moc"

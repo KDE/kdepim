@@ -40,7 +40,8 @@ static const int ID_COMBO    = 3;
 static const int ID_LABEL    = 10;
 
 
-CertManager::CertManager( bool remote, const QString& query, QWidget* parent, const char* name ) :
+CertManager::CertManager( bool remote, const QString& query, 
+			  QWidget* parent, const char* name ) :
     KMainWindow( parent, name ),
     gpgsmProc( 0 ), _certBox(0), _remote( remote )
 {
@@ -368,6 +369,14 @@ void CertManager::importCRLFromFile()
 void CertManager::importCRLFromLDAP()
 {
   qDebug("Not Yet Implemented");
+}
+
+int CertManager::importCertificateWithFingerprint( const QString& fingerprint )
+{
+  qDebug("Importing certificate with fpr %s", fingerprint.latin1() );
+  int retval = pWrapper->importCertificate( fingerprint );
+  if( !isRemote() ) loadCertificates();
+  return retval;
 }
 
 #include "certmanager.moc"

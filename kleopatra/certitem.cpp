@@ -1,4 +1,3 @@
-#include "certitem.h"
 #include <qvbox.h>
 #include <qlabel.h>
 #include <qframe.h>
@@ -7,6 +6,8 @@
 #include <kdialogbase.h>
 
 #include "agent.h"
+#include "certitem.h"
+#include "certmanager.h"
 
 #include "certificateinfowidgetimpl.h"
 
@@ -71,7 +72,7 @@ void CertItem::display()
 {
   KDialogBase* dialog = new KDialogBase( listView(), "dialog", true, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
 
-  CertificateInfoWidgetImpl* top = new CertificateInfoWidgetImpl( _manager, dialog );
+  CertificateInfoWidgetImpl* top = new CertificateInfoWidgetImpl( _manager, _manager->isRemote(), dialog );
   dialog->setMainWidget( top );
   top->setCert( _info ); 
 #if 0

@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>600</width>
-            <height>480</height>
+            <width>475</width>
+            <height>398</height>
         </rect>
     </property>
     <property name="caption">
@@ -65,7 +65,7 @@
                         <cstring>unnamed</cstring>
                     </property>
                     <property name="margin">
-                        <number>11</number>
+                        <number>0</number>
                     </property>
                     <property name="spacing">
                         <number>6</number>
@@ -154,6 +154,41 @@
                     </widget>
                 </vbox>
             </widget>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout2</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>Spacer2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>importButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Import</string>
+                    </property>
+                </widget>
+            </hbox>
         </widget>
     </vbox>
 </widget>
