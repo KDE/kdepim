@@ -101,7 +101,6 @@ bool KonsoleKalendarAdd::addEvent()
     } else {
       m_variables->getCalendar()->save();
     }
-    delete event;
   }
 
   kdDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;
