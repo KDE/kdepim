@@ -64,6 +64,19 @@ bool KNArticleWindow::raiseWindowForArticle(KNArticle *art)
 }
 
 
+bool KNArticleWindow::raiseWindowForArticle(const QCString &mid)
+{
+  bool ret=false;
+  for(KNArticleWindow *i=instances.first(); i; i=instances.next())
+    if(i->artW->article()->messageID()->as7BitString(false)==mid) {
+      KWin::setActiveWindow(i->winId());
+      ret = true;
+      break;
+    }
+  return ret;
+}
+
+
 //==================================================================================
 
 KNArticleWindow::KNArticleWindow(KNArticle *art)

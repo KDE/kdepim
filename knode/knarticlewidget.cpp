@@ -43,6 +43,7 @@
 #include "knarticlewidget.h"
 #include "knglobals.h"
 #include "knarticlemanager.h"
+#include "knarticlewindow.h"
 #include "knfoldermanager.h"
 #include "knarticlefactory.h"
 #include "knconfigmanager.h"
@@ -124,8 +125,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctSetCharsetKeyb = new KAction(i18n("Charset"), Key_C, this,
                                    SLOT(slotSetCharsetKeyboard()), a_ctions, "set_charset_keyboard");
 
-  overrideCS=QFont::ISO_8859_1;
-  forceCS=false;
+  o_verrideCS=QFont::ISO_8859_1;
+  f_orceCS=false;
 
   //timer
   t_imer=new QTimer(this);
@@ -143,6 +144,9 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
 
 KNArticleWidget::~KNArticleWidget()
 {
+  if(a_rticle && a_rticle->isOrphant())
+    delete a_rticle; //don't leak orphant articles
+
   i_nstances.removeRef(this);
   delete a_tt;
   delete a_ttPopup;
@@ -539,6 +543,9 @@ void KNArticleWidget::updateContents()
 
 void KNArticleWidget::setArticle(KNArticle *a)
 {
+  if(a_rticle && a_rticle->isOrphant())
+    delete a_rticle; //don't leak orphant articles
+
   a_rticle=a;
   h_tmlDone=false;
   r_ot13=false;
@@ -604,10 +611,10 @@ void KNArticleWidget::createHtmlPage()
     return;
   }
 
-  if ((forceCS!=a_rticle->forceDefaultCS())||
-      (forceCS && (a_rticle->defaultCharset()!=overrideCS))) {
-    a_rticle->setDefaultCharset(overrideCS);
-    a_rticle->setForceDefaultCS(forceCS);
+  if ((f_orceCS!=a_rticle->forceDefaultCS())||
+      (f_orceCS && (a_rticle->defaultCharset()!=o_verrideCS))) {
+    a_rticle->setDefaultCharset(o_verrideCS);
+    a_rticle->setForceDefaultCS(f_orceCS);
   }
 
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
@@ -918,7 +925,9 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   if((button==LeftButton)||(button==MidButton)) {
     KNGroup *g;
     KNRemoteArticle *a;
-    
+    KNArticleWindow *awin;
+    QCString refMid;
+
     switch(type) {
       case ATauthor:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
@@ -927,13 +936,23 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       case ATreference:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : reference " << target << endl;
         g=static_cast<KNGroup*>(a_rticle->collection());
-        a=g->byMessageId(a_rticle->references()->at(target.toInt()));
-        if(a)
-          setArticle(a);
-        else
-          showErrorMessage(i18n("Article %1 not found in group %2")
-                                .arg(a_rticle->references()->at(target.toInt()))
-                                .arg(g->groupname()));
+        refMid=a_rticle->references()->at(target.toInt());
+        if(!KNArticleWindow::raiseWindowForArticle(refMid)) { //article not yet opened
+          a=g->byMessageId(refMid);
+          if(a) {
+            //article found in KNGroup
+            awin=new KNArticleWindow(a);
+            awin->show();
+          }
+          else {
+            //article not in local group => create a new (orphant) article.
+            //It will be deleted by the displaying widget/window
+            a=new KNRemoteArticle(g);
+            a->messageID()->from7BitString(refMid, QFont::Latin1, false);
+            awin=new KNArticleWindow(a);
+            awin->show();
+          }
+        }
       break;
       case ATattachment:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : attachment " << target << endl;
@@ -1138,16 +1157,16 @@ void KNArticleWidget::slotSetCharset(const QString &s)
     return;
 
   if (s == i18n("Automatic")) {
-    forceCS=false;
-    overrideCS=QFont::ISO_8859_1;
+    f_orceCS=false;
+    o_verrideCS=QFont::ISO_8859_1;
   } else {
-    forceCS=true;
-    overrideCS=KGlobal::charsets()->charsetForEncoding(s);
+    f_orceCS=true;
+    o_verrideCS=KGlobal::charsets()->charsetForEncoding(s);
   }
 
   if (a_rticle && a_rticle->hasContent()) {
-    a_rticle->setDefaultCharset(overrideCS);  // the article will choose the correct default,
-    a_rticle->setForceDefaultCS(forceCS);     // when we disable the overdrive
+    a_rticle->setDefaultCharset(o_verrideCS);  // the article will choose the correct default,
+    a_rticle->setForceDefaultCS(f_orceCS);     // when we disable the overdrive
     createHtmlPage();
   }
 }
@@ -1165,10 +1184,11 @@ void KNArticleWidget::slotSetCharsetKeyboard()
 
 void KNArticleWidget::slotTimeout()
 {
-  KNRemoteArticle::List l;
-  l.append((static_cast<KNRemoteArticle*>(a_rticle)));
-
-  knGlobals.artManager->setRead(&l, true);
+  if(a_rticle && a_rticle->type()==KNMimeBase::ATremote && !a_rticle->isOrphant()) {
+    KNRemoteArticle::List l;
+    l.append((static_cast<KNRemoteArticle*>(a_rticle)));
+    knGlobals.artManager->setRead(&l, true);
+  }
 }
 
 

@@ -90,8 +90,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     QList<KNMimeContent> *a_tt;
     bool h_tmlDone, f_ullHdrs, r_ot13;
     QTimer *t_imer;
-    QFont::CharSet overrideCS;
-    bool forceCS;
+    QFont::CharSet o_verrideCS;
+    bool f_orceCS;
       
     KPopupMenu *u_rlPopup, *a_ttPopup;
     QPopupMenu *b_odyPopup;
@@ -111,7 +111,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
             *a_ctVerify,
             *a_ctSupersede,
             *a_ctSetCharsetKeyb;
-    KToggleAction *a_ctToggleFullHdrs, *a_ctToggleRot13;
+    KToggleAction *a_ctToggleFullHdrs,
+                  *a_ctToggleRot13;
     KSelectAction *a_ctSetCharset;
 
   protected slots:

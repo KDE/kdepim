@@ -272,7 +272,9 @@ class KNArticle : public KNMimeContent, public KNJobItem {
     //article-collection
     KNArticleCollection* collection()           { return c_ol; }
     void setCollection(KNArticleCollection *c)  { c_ol=c; }
-    
+    bool isOrphant()                            { return (i_d==-1); }
+
+    //charset-handling
     virtual void setForceDefaultCS(bool b);
 
   protected:
