@@ -49,6 +49,7 @@ Plugin::Plugin(Kaplan::Core *core, QObject *parent, const char *name)
 
 Plugin::~Plugin()
 {
+        delete d->dcopClient;
 	delete d;
 }
 
