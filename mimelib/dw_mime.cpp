@@ -331,6 +331,9 @@ int DwSubtypeStrToEnum(const DwString& aStr)
         else if (DwStrcasecmp(aStr, "x-pkcs7-mime") == 0) {
             type = DwMime::kSubtypePkcs7Mime;
         }
+        if (DwStrcasecmp(aStr, "x-diff") == 0) {
+            type = DwMime::kSubtypeXDiff;
+        }
         break;
     }
     return type;
@@ -364,6 +367,9 @@ void DwSubtypeEnumToStr(int aEnum, DwString& aStr)
         break;
     case DwMime::kSubtypeXVCard:
         aStr = "X-VCard";
+        break;
+    case DwMime::kSubtypeXDiff:
+        aStr = "X-Diff";
         break;
     case DwMime::kSubtypeRtf:
         aStr = "RTF";

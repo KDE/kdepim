@@ -82,6 +82,7 @@ enum {
     kSubtypeXVCard,
     kSubtypeVCal,
     kSubtypeRtf,
+    kSubtypeXDiff,
     // Multipart
     kSubtypeMixed,
     kSubtypeAlternative,
