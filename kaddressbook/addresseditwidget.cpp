@@ -442,6 +442,9 @@ void AddressEditDialog::updateAddressEdits()
 
   mPreferredCheckBox->setChecked( a.type() & KABC::Address::Pref );
 
+  if ( a.isEmpty() )
+    mCountryCombo->setCurrentText( KGlobal::locale()->twoAlphaToCountryName( KGlobal::locale()->country() ) );
+
   mStreetTextEdit->setFocus();
 
   mChanged = tmp;
