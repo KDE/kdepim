@@ -84,8 +84,10 @@ bool KNotesIMAP::ResourceIMAP::populate( const QStringList &lst, const QString& 
   mSilent = true;
   for ( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     KCal::Journal* journal = parseJournal( *it );
-    if( journal )
+    if( journal ) {
       addNote( journal, resource );
+      mManager->registerNote( this, journal );
+    }
   }
   mSilent = silent;
   return true;
@@ -136,7 +138,7 @@ bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal,
                                         const QString& subresource )
 {
   kdDebug(5500) << "KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )\n";
-
+  
   mCalendar.addJournal( journal );
   journal->registerObserver( this );
 
