@@ -51,11 +51,11 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   filterEdit=new KLineEdit(page);
   QLabel *l=new QLabel(filterEdit,i18n("S&earch:"), page);
-  noTreeCB=new QCheckBox(i18n("disable &tree view"), page);
+  noTreeCB=new QCheckBox(i18n("Disable &tree view"), page);
   noTreeCB->setChecked(false);
-  subCB=new QCheckBox(i18n("&subscribed only"), page);
+  subCB=new QCheckBox(i18n("&Subscribed only"), page);
   subCB->setChecked(false);
-  newCB=new QCheckBox(i18n("&new only"), page);
+  newCB=new QCheckBox(i18n("&New only"), page);
   if (!newCBact)
     newCB->hide();
   newCB->setChecked(false);

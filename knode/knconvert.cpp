@@ -78,7 +78,7 @@ now done automatically by KNode. If you want to, a backup of your existing data 
 will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   w1L->addMultiCellWidget(l1, 0,0, 0,2);
 
-  c_reateBkup=new QCheckBox(i18n("create backup of old data"), w_1);
+  c_reateBkup=new QCheckBox(i18n("Create backup of old data"), w_1);
   w1L->addMultiCellWidget(c_reateBkup, 2,2, 0,2);
   connect(c_reateBkup, SIGNAL(toggled(bool)), this, SLOT(slotCreateBkupToggled(bool)));
 

@@ -93,23 +93,23 @@ EmpathFolderListWidget::EmpathFolderListWidget(QWidget * parent)
 
     ////////
     
-    otherPopup_.insertItem(i18n("Set up accounts"),
+    otherPopup_.insertItem(i18n("Set up Accounts"),
         this, SLOT(s_setUpAccounts()));
     
     ////////
     
-    folderPopup_.insertItem(i18n("New subfolder"),
+    folderPopup_.insertItem(i18n("New Subfolder"),
         this, SLOT(s_newFolder()));
     
-    folderPopup_.insertItem(i18n("Remove folder"),
+    folderPopup_.insertItem(i18n("Remove Folder"),
         this, SLOT(s_removeFolder()));
     
     /////////
     
-    mailboxPopup_.insertItem(i18n("New folder"),
+    mailboxPopup_.insertItem(i18n("New Folder"),
         this, SLOT(s_newFolder()));
     
-    mailboxPopup_.insertItem(i18n("Check mail"),
+    mailboxPopup_.insertItem(i18n("Check Mail"),
         this, SLOT(s_mailboxCheck()));
     
     mailboxPopup_.insertSeparator();

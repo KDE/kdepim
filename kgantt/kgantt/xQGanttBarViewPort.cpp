@@ -152,7 +152,7 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
  
   pix = _iconloader->loadIcon("viewmag.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag.png not found !\n");
-  zoomMenu->insertItem(pix, i18n("Zoom all"), this, SLOT(zoomAll()) );
+  zoomMenu->insertItem(pix, i18n("Zoom All"), this, SLOT(zoomAll()) );
   zoomMenu->insertSeparator();
 
   pix = _iconloader->loadIcon("viewmag+.png", KIcon::Toolbar , 16 );
@@ -191,7 +191,7 @@ xQGanttBarViewPort::initMenu()
 
   QPixmap pix = _iconloader->loadIcon("ganttSelect.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("ganttSelect.png not found !\n");
-  _selectMenu->insertItem(pix, i18n("Select mode"), this, SLOT(setSelect()));
+  _selectMenu->insertItem(pix, i18n("Select Mode"), this, SLOT(setSelect()));
 
   _selectMenu->insertSeparator();
 
@@ -214,7 +214,7 @@ xQGanttBarViewPort::initMenu()
 
   pix = _iconloader->loadIcon("viewmag.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag.png not found !\n");
-  _zoomMenu->insertItem(i18n("Zoom mode"), this, SLOT(setZoom()) );
+  _zoomMenu->insertItem(i18n("Zoom Mode"), this, SLOT(setZoom()) );
 
   _zoomMenu->insertSeparator();
 
@@ -233,13 +233,13 @@ xQGanttBarViewPort::initMenu()
 
   pix = _iconloader->loadIcon("move.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("move.png not found !\n");
-  _menu->insertItem(pix, i18n("Move mode"), this, SLOT(setMove()) );
+  _menu->insertItem(pix, i18n("Move Mode"), this, SLOT(setMove()) );
 
   _menu->insertSeparator();
 
   pix = _iconloader->loadIcon("configure.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("configure.png not found !\n");
-  _menu->insertItem(pix, i18n("Configure gantt"), _parent, SLOT(showConfig()));
+  _menu->insertItem(pix, i18n("Configure Gantt"), _parent, SLOT(showConfig()));
 
 }
 

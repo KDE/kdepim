@@ -902,7 +902,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   m_arkSecs->setSuffix(i18n(" sec"));
   m_arkCrossCB=new QCheckBox(i18n("Mark c&rossposted articles as read"), hgb);
 
-  s_martScrollingCB=new QCheckBox(i18n("Smart Scrolli&ng"), lgb);
+  s_martScrollingCB=new QCheckBox(i18n("Smart scrolli&ng"), lgb);
   e_xpThrCB=new QCheckBox(i18n("Show &whole thread on expanding"), lgb);
   d_efaultExpandCB=new QCheckBox(i18n("Default to e&xpanded threads"), lgb);
   s_coreCB=new QCheckBox(i18n("Show article &score"), lgb);
@@ -2332,7 +2332,7 @@ KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
   // memory
-  QGroupBox *memGB=new QGroupBox(i18n("Memory cache"), this);
+  QGroupBox *memGB=new QGroupBox(i18n("Memory Cache"), this);
   topL->addWidget(memGB);
   QGridLayout *memL=new QGridLayout(memGB, 3,2, 8,5);
   memL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
@@ -2350,7 +2350,7 @@ KNConfig::CacheWidget::CacheWidget(Cache *d, QWidget *p, const char *n)
 
 
   // disk
-  QGroupBox *diskGB=new QGroupBox(i18n("Disk cache"), this);
+  QGroupBox *diskGB=new QGroupBox(i18n("Disk Cache"), this);
   topL->addWidget(diskGB);
   QGridLayout *diskL=new QGridLayout(diskGB, 3,2, 8,5);
   diskL->addRowSpacing(0, fontMetrics().lineSpacing()-4);

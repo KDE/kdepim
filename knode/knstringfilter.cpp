@@ -111,7 +111,7 @@ KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent
   
   fString=new KLineEdit(this);
   
-  regExp=new QCheckBox(i18n("regular expression"), this);
+  regExp=new QCheckBox(i18n("Regular expression"), this);
   
   QGridLayout *topL=new QGridLayout(this, 3,3, 8,5 );
   topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);

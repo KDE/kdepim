@@ -98,10 +98,10 @@ KNStatusFilterWidget::KNStatusFilterWidget(QWidget *parent) :
   QButtonGroup(0, parent)
 {
   setFrameStyle(NoFrame);
-  enR=new QCheckBox(i18n("is read"), this);
-  enN=new QCheckBox(i18n("is new"), this);
-  enUS=new QCheckBox(i18n("has unread followups"), this);
-  enNS=new QCheckBox(i18n("has new followups"), this);
+  enR=new QCheckBox(i18n("Is read"), this);
+  enN=new QCheckBox(i18n("Is new"), this);
+  enUS=new QCheckBox(i18n("Has unread followups"), this);
+  enNS=new QCheckBox(i18n("Has new followups"), this);
   
   rCom=new TFCombo(this);
   nCom=new TFCombo(this);

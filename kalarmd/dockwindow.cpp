@@ -72,9 +72,9 @@ AlarmDockWindow::AlarmDockWindow(AlarmGui *ag, QWidget *parent, const char *name
   // Set up the context menu
   mAlarmsEnabledId = contextMenu()->insertItem(i18n("Alarms Enabled"),
                                               this, SLOT(toggleAlarmsEnabled()));
-  mAutostartDaemonId = contextMenu()->insertItem(i18n("Start alarm daemon automatically at login"),
+  mAutostartDaemonId = contextMenu()->insertItem(i18n("Start Alarm Daemon Automatically at Login"),
                                                 this, SLOT(toggleDaemonAutostart()));
-  mAutostartGuiId = contextMenu()->insertItem(i18n("Display this tray icon at login"),
+  mAutostartGuiId = contextMenu()->insertItem(i18n("Display this Tray Icon at Login"),
                                                 this, SLOT(toggleGuiAutostart()));
   contextMenu()->setItemChecked(mAutostartDaemonId, mAlarmGui->autostartDaemon());
   contextMenu()->setItemChecked(mAutostartGuiId, mAutostartGui);
@@ -117,7 +117,7 @@ void AlarmDockWindow::updateMenuClients()
     ClientList::Iterator client;
     for ( client = clients.begin();  client != clients.end();  ++client )
     {
-      int id = menu->insertItem(i18n("Click starts %1").arg((*client).title),
+      int id = menu->insertItem(i18n("Click Starts %1").arg((*client).title),
                                 this, SLOT(selectClient(int)), 0, -1, index);
       menu->setItemParameter(id, index);    // set parameter for selectClient()
       menu->setItemChecked(id, ((*client).appName == mAlarmGui->defaultClient()));
