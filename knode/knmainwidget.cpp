@@ -133,7 +133,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   c_olView->addColumn(i18n("Unread"),48);
   c_olView->setColumnAlignment(1,AlignCenter);
   c_olView->setColumnAlignment(2,AlignCenter);
-  c_olView->setType( 1 );
   c_olView->setAlternateBackground(QColor());
 
   connect(c_olDock, SIGNAL(iMBeingClosed()), SLOT(slotGroupDockHidden()));
@@ -181,7 +180,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   h_drView->addColumn(i18n("Score"),42);
   h_drView->addColumn(i18n("Lines"),42);
   h_drView->addColumn(i18n("Date"),102);
-  h_drView->setType( 2 );
 
   connect(h_drDock, SIGNAL(iMBeingClosed()), SLOT(slotHeaderDockHidden()));
   connect(h_drDock, SIGNAL(hasUndocked()), SLOT(slotHeaderDockHidden()));
@@ -1411,12 +1409,9 @@ void KNMainWidget::slotNetworkActive(bool b)
 
 void KNMainWidget::slotCheckDockWidgetStatus()
 {
-  a_ctToggleGroupView->setChecked( c_olDock->isVisible() );
-  a_ctToggleGroupView->setEnabled(  c_olDock->isDockBackPossible() );
-  a_ctToggleHeaderView->setChecked( h_drDock->isVisible() );
-  a_ctToggleHeaderView->setEnabled( h_drDock->isDockBackPossible() );
-  a_ctToggleArticleViewer->setChecked(a_rtDock->isVisible() );
-  a_ctToggleArticleViewer->setEnabled( a_rtDock->isDockBackPossible() );
+  a_ctToggleGroupView->setChecked(c_olDock->isVisible());
+  a_ctToggleHeaderView->setChecked(h_drDock->isVisible());
+  a_ctToggleArticleViewer->setChecked(a_rtDock->isVisible());
 }
 
 
@@ -2244,8 +2239,8 @@ void KNMainWidget::slotToggleGroupView()
 
 void KNMainWidget::slotToggleHeaderView()
 {
-    h_drDock->changeHideShowState();
-    slotCheckDockWidgetStatus();
+  h_drDock->changeHideShowState();
+  slotCheckDockWidgetStatus();
 }
 
 
