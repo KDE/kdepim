@@ -22,12 +22,16 @@
 #include "resourceremoteconfig.h"
 #include "resourceremote.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KCal;
 
 extern "C"
 {
   void *init_kcal_remote()
   {
+    KGlobal::locale()->insertCatalogue( "kres_remote" );
     return new KRES::PluginFactory<ResourceRemote,ResourceRemoteConfig>();
   }
 }

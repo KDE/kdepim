@@ -29,6 +29,8 @@
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kstringhandler.h>
+#include <kglobal.h>
+#include <klocale.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendar.h>
@@ -46,6 +48,7 @@
 #include "resourceexchange.h"
 #include "resourceexchangeconfig.h"
 
+
 using namespace KCal;
 using namespace KPIM;
 
@@ -53,6 +56,7 @@ extern "C"
 {
   void* init_resourcecalendarexchange()
   {
+    KGlobal::locale()->insertCatalogue( "kres_exchange" );
     return new KRES::PluginFactory<ResourceExchange,ResourceExchangeConfig>();
   }
 }
@@ -292,7 +296,7 @@ Event *ResourceExchange::event( const QString &uid )
 
   // FIXME: Look in exchange server for uid!
   Event *event = 0;
-  if ( mCache ) 
+  if ( mCache )
 	event = mCache->event( uid );
   return event;
 }
@@ -450,7 +454,7 @@ Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
 
   // Events are safely in the cache now, return them from cache
   Event::List events;
-  if ( mCache ) 
+  if ( mCache )
 	events = mCache->rawEventsForDate( qd, sorted );
   // kdDebug() << "Found " << events.count() << " events." << endl;
   return events;

@@ -21,12 +21,16 @@
 #include "kcalresourcesloxconfig.h"
 #include "kcalresourceslox.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KCal;
 
 extern "C"
 {
   void *init_kcal_slox()
   {
+    KGlobal::locale()->insertCatalogue( "kabc_slox" );
     return new KRES::PluginFactory<KCalResourceSlox,KCalResourceSloxConfig>();
   }
 }

@@ -21,12 +21,16 @@
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KABC;
 
 extern "C"
 {
   void *init_kabc_xmlrpc()
   {
+    KGlobal::locale()->insertCatalogue( "kres_xmlrpc" );
     return new KRES::PluginFactory<ResourceXMLRPC, ResourceXMLRPCConfig>();
   }
 }

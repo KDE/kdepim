@@ -21,12 +21,16 @@
 #include "knotes_resourcexmlrpc.h"
 #include "knotes_resourcexmlrpcconfig.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KNotes;
 
 extern "C"
 {
   void *init_knotes_xmlrpc()
   {
+    KGlobal::locale()->insertCatalogue( "kres_xmlrpc" );
     return new KRES::PluginFactory<ResourceXMLRPC, ResourceXMLRPCConfig>();
   }
 }

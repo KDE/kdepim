@@ -31,6 +31,9 @@
 
 #include "resourceimap.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 class IMAPFactory : public KRES::PluginFactoryBase
 {
   public:
@@ -49,8 +52,7 @@ extern "C"
 {
   void *init_knotes_imap()
   {
+    KGlobal::locale()->insertCatalogue( "kres_imap" );
     return ( new IMAPFactory() );
   }
 }
-
-

@@ -177,7 +177,7 @@ bool KCalResourceSlox::doLoad()
 
   QString p = KURL( mPrefs->url() ).protocol();
   if ( p != "http" && p != "https" && p != "webdav" && p != "webdavs" ) {
-    QString err = i18n("Non-http protcol: '%1'").arg( p );
+    QString err = i18n("Non-http protocol: '%1'").arg( p );
     kdDebug() << "KCalResourceSlox::load(): " << err << endl;
     loadError( err );
     return false;
@@ -329,7 +329,7 @@ void KCalResourceSlox::uploadIncidences()
                   << mUploadedIncidence->type() << endl;
       return;
     }
-    
+
     QDomElement remove = WebdavHandler::addElement( doc, pu, "D:remove" );
     QDomElement prop = WebdavHandler::addElement( doc, remove, "D:prop" );
     WebdavHandler::addSloxElement( doc, prop, "S:sloxid", sloxId );
@@ -375,7 +375,7 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
 {
   WebdavHandler::addSloxElement( doc, parent, "S:title",
                                  incidence->summary() );
-  
+
   WebdavHandler::addSloxElement( doc, parent, "S:description",
                                  incidence->description() );
 
@@ -399,12 +399,12 @@ void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
 {
   WebdavHandler::addSloxElement( doc, parent, "S:begins",
       WebdavHandler::qDateTimeToSlox( event->dtStart(), timeZoneId() ) );
-  
+
   WebdavHandler::addSloxElement( doc, parent, "S:ends",
       WebdavHandler::qDateTimeToSlox( event->dtEnd(), timeZoneId() ) );
-  
+
   WebdavHandler::addSloxElement( doc, parent, "S:location", event->location() );
-  
+
   // FIXME: FLoating events
 }
 
@@ -416,7 +416,7 @@ void KCalResourceSlox::createTodoAttributes( QDomDocument &doc,
     WebdavHandler::addSloxElement( doc, parent, "S:startdate",
         WebdavHandler::qDateTimeToSlox( todo->dtStart(), timeZoneId() ) );
   }
-  
+
   if ( todo->hasDueDate() ) {
     WebdavHandler::addSloxElement( doc, parent, "S:deadline",
         WebdavHandler::qDateTimeToSlox( todo->dtDue(), timeZoneId() ) );
@@ -439,7 +439,7 @@ void KCalResourceSlox::createTodoAttributes( QDomDocument &doc,
       break;
   }
   WebdavHandler::addSloxElement( doc, parent, "S:priority", txt );
-  
+
   WebdavHandler::addSloxElement( doc, parent, "S:status",
                                  QString::number( todo->percentComplete() ) );
 }
@@ -486,7 +486,7 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
                                                 Incidence *incidence )
 {
   QString tag = e.tagName();
-  QString text = QString::fromUtf8( e.text().latin1() );
+  QString text = e.text();
   if ( text.isEmpty() ) return;
 
   if ( tag == "title" ) {
@@ -500,7 +500,7 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
       Alarm::List alarms = incidence->alarms();
       Alarm *alarm;
       if ( alarms.isEmpty() ) alarm = incidence->newAlarm();
-      else alarm = alarms.first(); 
+      else alarm = alarms.first();
       if ( alarm->type() == Alarm::Invalid ) {
         alarm->setType( Alarm::Display );
       }
@@ -517,7 +517,7 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
                                             Event *event )
 {
   QString tag = e.tagName();
-  QString text = QString::fromUtf8( e.text().latin1() );
+  QString text = e.text();
   if ( text.isEmpty() ) return;
 
   if ( tag == "begins" ) {
@@ -542,7 +542,7 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
                                            Todo *todo )
 {
   QString tag = e.tagName();
-  QString text = QString::fromUtf8( e.text().latin1() );
+  QString text = e.text();
   if ( text.isEmpty() ) return;
 
   if ( tag == "startdate" ) {
@@ -637,9 +637,9 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
     }
 
     enableChangeNotification();
-    
+
     clearChanges();
-    
+
     if ( changed ) emit resourceChanged( this );
 
     emit resourceLoaded( this );
@@ -711,7 +711,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
     enableChangeNotification();
 
     clearChanges();
-    
+
     if ( changed ) emit resourceChanged( this );
 
     emit resourceLoaded( this );
@@ -847,7 +847,7 @@ bool KCalResourceSlox::confirmSave()
   if ( !hasChanges() ) return true;
 
   ConfirmSaveDialog dlg( resourceName(), 0 );
-  
+
   dlg.addIncidences( addedIncidences(), i18n("Added") );
   dlg.addIncidences( changedIncidences(), i18n("Changed") );
   dlg.addIncidences( deletedIncidences(), i18n("Deleted") );

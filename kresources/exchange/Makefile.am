@@ -18,3 +18,6 @@ resourcecalendarexchange_la_LIBADD= -lkresources \
 
 servicedir = $(kde_servicesdir)/kresources/kcal
 service_DATA= exchange.desktop
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/kres_exchange.pot

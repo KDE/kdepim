@@ -342,7 +342,7 @@ void ResourceXMLRPC::addContactFinished( const QValueList<QVariant> &list,
 void ResourceXMLRPC::fault( int error, const QString &errorMsg,
                             const QVariant& )
 {
-  QString msg = i18n( "<qt>Server send error %1: <b>%2</b></qt>" ).arg( error ).arg( errorMsg );
+  QString msg = i18n( "<qt>Server sent error %1: <b>%2</b></qt>" ).arg( error ).arg( errorMsg );
   addressBook()->error( msg );
 
   exit_loop();
@@ -697,7 +697,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
 
     if ( cfIt.key() == "freebusy_url" ) {
       KConfig config( locateLocal( "data", "korganizer/freebusyurls" ) );
-      config.setGroup( addr.preferredEmail() );  
+      config.setGroup( addr.preferredEmail() );
       config.writeEntry( "url", args[ cfIt.key() ].toString() );
       config.sync();
     } else

@@ -26,6 +26,9 @@
 #include "resourceimapconfig.h"
 #include "resourceimap.h"
 
+#include <kglobal.h>
+#include <klocale.h>
+
 using namespace KCal;
 
 
@@ -33,6 +36,7 @@ extern "C"
 {
   void *init_kcal_imap()
   {
+    KGlobal::locale()->insertCatalogue( "kres_imap" );
     return new KRES::PluginFactory<ResourceIMAP,ResourceIMAPConfig>();
   }
 }
