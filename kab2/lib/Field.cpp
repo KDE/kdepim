@@ -26,6 +26,19 @@ Field::Field()
   // Empty.
 }
 
+Field::Field(const QString & name)
+  : name_(name)
+{
+  // Empty.
+}
+
+Field::Field(const QString & name, const QString & value)
+  : name_(name)
+{
+  setValue(value);
+}
+
+
 Field::~Field()
 {
   // Empty.
@@ -50,6 +63,8 @@ Field::operator = (const Field & f)
   type_     = f.type_;
   subType_  = f.subType_;
   value_    = f.value_;
+
+  return *this;
 }
 
   bool
@@ -92,6 +107,25 @@ Field::value() const
   return value_;
 }
 
+  QString
+Field::stringValue() const
+{
+  QString ret;
+
+  if
+    (
+     (type_.isEmpty() || type_ == "text") &&
+     (subType_.isEmpty() || subType_ == "unicode")
+    )
+  {
+    QString ret;
+    QDataStream str(value_, IO_ReadOnly);
+    str >> ret;
+  }
+
+  return ret;
+}
+
   void
 Field::setName(const QString & s)
 {
@@ -115,16 +149,27 @@ Field::setValue(const QByteArray & a)
 {
   value_ = a;
 }
+
+  void
+Field::setValue(const QString & s)
+{
+  QDataStream str(value_, IO_WriteOnly);
+  str << s;
+}
   
   QDataStream &
 operator << (QDataStream & str, const Field & f)
 {
   str << f.name_ << f.type_ << f.subType_ << f.value_;
+
+  return str;
 }
 
   QDataStream &
 operator >> (QDataStream & str, Field & f)
 {
   str >> f.name_ >> f.type_ >> f.subType_ >> f.value_;
+
+  return str;
 }
 

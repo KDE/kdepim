@@ -1,12 +1,16 @@
-INCLUDES  = -I$(top_srcdir)/kab2/lib $(all_includes)
-LDFLAGS   = -L$(top_builddir)/kab2/lib $(all_libraries) $(KDE_RPATH)
-LDADD = -lKAddressBook -lkdecore -lqt
+INCLUDES            = -I$(top_srcdir)/kab2/lib $(all_includes)
 
-bin_PROGRAMS = kab_server
+bin_PROGRAMS        = kab_server
 
-KAddressBookInterface_DIR = $(top_srcdir)/kab2/lib
-kab_server_SOURCES = KAddressBook.cpp KAddressBookInterface.skel main.cpp
+kab_server_LDADD    = $(top_builddir)/kab2/lib/libKAddressBook.la $(LIB_KDECORE)
 
-servicetypedir = $(kde_servicetypesdir)
-servicetype_DATA = kab_server.desktop
+kab_server_SOURCES  = \
+  KAddressBookServer.cpp \
+  KAddressBookServerInterface.skel \
+  main.cpp
+
+METASOURCES         = AUTO
+
+servicetypedir      = $(kde_servicetypesdir)
+servicetype_DATA    = kab_server.desktop
 

@@ -194,6 +194,8 @@ operator << (QDataStream & str, const Entity & e)
       <<  e.name_
       <<  e.fieldList_
       <<  e.memberList_;
+
+  return str;
 }
 
   QDataStream &
@@ -205,6 +207,8 @@ operator >> (QDataStream & str, Entity & e)
       >>  e.memberList_;
 
   e.dirty_ = false;
+
+  return str;
 }
 
   void

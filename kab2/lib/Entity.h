@@ -74,11 +74,13 @@ class Entity
 
   private:
 
+    bool dirty_;
+
     QString id_, name_;
     FieldList fieldList_;
     QStringList memberList_;
-
-    bool dirty_;
 };
+
+typedef QValueList<Entity> EntityList;
 
 #endif

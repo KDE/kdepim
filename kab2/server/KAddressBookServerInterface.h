@@ -18,52 +18,39 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef KADDRESSBOOK_INTERFACE_H
-#define KADDRESSBOOK_INTERFACE_H
+#ifndef KADDRESSBOOK_SERVER_INTERFACE_H
+#define KADDRESSBOOK_SERVER_INTERFACE_H
 
 #include <qstring.h>
 #include <qstringlist.h>
 #include <dcopobject.h>
 
-#include <Entity.h>
+#include <kuniqueapp.h>
 
-class KAddressBook : virtual public DCOPObject
+class KAddressBook;
+
+class KAddressBookServer : public KUniqueApplication
 {
-  K_DCOP
+	K_DCOP
 
-  public:
+	public:
 
-    KAddressBook(QString name, QString path);
-    virtual ~KAddressBook();
+		KAddressBookServer();
+		virtual ~KAddressBookServer();
 
-  k_dcop:
+	k_dcop:
 
-    virtual QString name();
-    virtual QString path();
-    virtual Entity  entity(QString);
-    virtual QString insert(Entity);
-    virtual bool    remove(QString);
-    virtual bool    replace(Entity);
-    virtual bool    contains(QString);
+		QStringList list();
+    bool remove(QString);
+    bool create(QString, QString);
 
-    virtual QStringList entityList();
+	private:
 
-  private:
+    void _readConfig();
+    void _writeConfig();
 
-    void      _init();
-    void      _checkDirs();
-    void      _initIndex();
-
-    Entity *  _readEntity(const QString & filename);
-    bool      _writeEntity(Entity &);
-    bool      _removeEntity(const QString & id);
-
-    QString   _generateUniqueID();
-
-    QStringList index_;
-    QString uniquePartOne_;
-    QString name_;
-    QString path_;
+		QList<KAddressBook> addressBookList_;
 };
 
 #endif
+

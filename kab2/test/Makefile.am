@@ -1,8 +1,23 @@
-INCLUDES = $(all_includes) -I../lib
+INCLUDES = -I$(top_srcdir)/kab2/lib -I$(top_srcdir)/kab2/server $(all_includes)
 
-bin_PROGRAMS = test
+bin_PROGRAMS = test addentries testparser
 
-test_SOURCES = test.cpp
-test_LDADD = -L../lib $(all_libraries) -lkab2 -lkdecore -lqt
+test_SOURCES        = test.cpp
+addentries_SOURCES  = addentries.cpp
+testparser_SOURCES  = testparser.cpp
 
+test_LDADD = \
+  $(all_libraries) \
+  $(top_builddir)/kab2/lib/libKAddressBook.la \
+  $(LIB_KDECORE)
+
+addentries_LDADD = \
+  $(all_libraries) \
+  $(top_builddir)/kab2/lib/libKAddressBook.la \
+  $(LIB_KDECORE)
+
+testparser_LDADD = \
+  $(all_libraries) \
+  $(top_builddir)/kab2/lib/libKAddressBook.la \
+  $(LIB_KDECORE)
 

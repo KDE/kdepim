@@ -34,6 +34,8 @@ class Field
   public:
     
     Field();
+    Field(const QString & name);
+    Field(const QString & name, const QString & value);
     Field(const Field &);
     virtual ~Field();
 
@@ -44,11 +46,13 @@ class Field
     virtual QString     type()    const;
     virtual QString     subType() const;
     virtual QByteArray  value()   const;
+    virtual QString     stringValue() const;
 
     virtual void setName    (const QString &);
     virtual void setType    (const QString &);
     virtual void setSubType (const QString &);
     virtual void setValue   (const QByteArray &);
+    virtual void setValue   (const QString &);
     
     friend QDataStream & operator << (QDataStream &, const Field &);
     friend QDataStream & operator >> (QDataStream &, Field &);

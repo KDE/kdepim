@@ -1,100 +1,132 @@
-#include <iostream>
 #include <qstring.h>
 #include <qcstring.h>
+#include <qlistview.h>
+#include <qdatetime.h>
 
+#include <dcopclient.h>
 #include <kapp.h>
+#include <kcmdlineargs.h>
 
-#include <Kab2.h>
-#include <KabEntity.h>
+#include "KAddressBookInterface.h"
+#include "KAddressBookInterface_stub.h"
+#include "Entity.h"
+#include "Field.h"
 
   int
 main(int argc, char ** argv)
 {
-  new KApplication(argc, argv, "test");
+	KCmdLineArgs::init(argc, argv, "testing kab", "testing kab", "testing kab");
 
-  QString urlStr(argv[1]);
+  KApplication * app = new KApplication;
 
-  KURL url(urlStr);
+	DCOPClient * client = new DCOPClient;
 
-  KAB::Kab2 * ab = KAB::Kab2::create();
+	if (!client->attach())
+    qFatal("Can't attach to DCOP");
 
-  if (ab == 0) {
-    cerr << "Kab2 object is 0!" << endl;
-    exit(1);
+  QStringList addressBookList;
+
+  {
+    QByteArray args, retVal;
+    QCString retType;
+
+    bool ok =
+      client->call
+      (
+       "KAddressBookServer",
+       "KAddressBookServer",
+       "list()",
+       args,
+       retType,
+       retVal
+      );
+
+    if (!ok)
+      qFatal("Can't talk to KAddressBook server");
+
+    QDataStream str(retVal, IO_ReadOnly);
+
+    str >> addressBookList;
   }
 
-  cerr << "Initialised kab2 library" << endl;
+  QStringList::ConstIterator it(addressBookList.begin());
 
-  QList<KAB::AddressBookClient> addressBookList = ab->addressBookList();
+  QListView * lv = new QListView;
 
-  cerr << addressBookList.count() << " addressbook(s) available" << endl;
+  lv->setRootIsDecorated(true);
 
-  if (addressBookList.count() == 0) {
-    exit(0);
-  }
+  lv->addColumn("Name");
+  lv->addColumn("Value");
+  lv->addColumn("Type");
+  lv->addColumn("Subtype");
 
-  QListIterator<KAB::AddressBookClient> it(addressBookList);
+  QTime begin;
+  begin.start();
+  int count;
 
-  for (; it.current(); ++it) {
-    cerr << "AddressBook: " << it.current()->name() << endl;
-  
-    cerr << "  Key list:" << endl;
+  for (; it != addressBookList.end(); ++it)
+  {
+    KAddressBook_stub * ab =
+      new KAddressBook_stub("KAddressBookServer", (*it).latin1());
 
-    QStrList l = it.current()->allKeys();
+    QListViewItem * abItem = new QListViewItem(lv, ab->name());
 
-    QStrListIterator sit(l);
+    QStringList el(ab->entityList());
 
-    for (; sit.current(); ++sit) {
-      cerr << "  Key:  " << sit.current() << endl;
+    count = el.count();
+
+    for (QStringList::ConstIterator eit(el.begin()); eit != el.end(); ++eit)
+    {
+      QString entityID = *eit;
+
+      Entity e(ab->entity(entityID));
+
+      if (e.isNull())
+      {
+        qDebug("Entity not found");
+        continue;
+      }
+
+      QListViewItem * entityItem = new QListViewItem(abItem, e.name());
+
+      FieldList fl(e.fieldList());
+
+      for (FieldList::ConstIterator fit(fl.begin()); fit != fl.end(); ++fit)
+      {
+        Field f(*fit);
+
+        QListViewItem * fieldItem = new QListViewItem(entityItem, f.name());
+
+        QByteArray val(f.value());
+
+        if
+          (
+           (f.type().isEmpty() || (f.type() == "text")) &&
+           (f.subType().isEmpty() || (f.subType() == "unicode"))
+          )
+        {
+          QString s;
+          QDataStream str(val, IO_ReadOnly);
+          str >> s;
+          fieldItem->setText(1, s);
+          fieldItem->setText(2, "text");
+          fieldItem->setText(3, "unicode");
+        }
+        else
+        {
+          fieldItem->setText(1, "Can't display");
+          fieldItem->setText(2, f.type());
+          fieldItem->setText(3, f.subType());
+        }
+      }
     }
   }
+  qDebug("Time to read %d entities: %d ms", count, begin.elapsed());
 
-  cerr << "Now creating a new entity" << endl;
+  app->setMainWidget(lv);
 
-  KAB::AddressBookClient * client = addressBookList.at(0);
+  lv->show();
 
-  KAB::Entity * e = new KAB::Entity;
-
-  char d[10] = "Test data";
-  
-  QString name = "This is a field name";
-  QByteArray data;
-  data.setRawData(d, 10);
-  QString mimeType = "text";
-  QString mimeSubType = "plain";
-
-  cerr << "Adding new field to entity with name \"" << name << "\"" << endl;
-  e->add(name, data, mimeType, mimeSubType);
-  
-  data.resetRawData(d, 10);
-  
-  cerr << "Asking client to write entity" << endl;
-  bool retval = client->write(e);
-  cerr << "Client returned " << (retval ? "OK" : "ERROR") << endl;
-  
-  cerr << "Key list for first addressbook is now:" << endl;
-  
-  QStrList l = client->allKeys();
-
-  cerr << "I have a string list with " << l.count() << " entries" << endl;
-
-  QStrListIterator sit(l);
-
-  for (; sit.current(); ++sit) {
-    cerr << "  Key:  " << sit.current() << endl;
-  }
-
-  if (l.count() != 0) {
-    QString key1 = l.at(0);
-    cerr << "Requesting entity with key \"" << key1 << "\"" << endl;
-    KAB::Entity * e = client->entity(key1);
-    if (e == 0) {
-      cerr << "Couldn't load entity with key \"" << key1 << "\"" << endl;
-      exit(0);
-    }
-    cerr << "Loaded an entity with name \"" << e->name() << "\"" << endl;
-  }
-
-  client->quit();
+  return app->exec();
 }
 

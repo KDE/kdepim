@@ -23,7 +23,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <iostream.h>
 
 // KDE includes
 #include <kuniqueapp.h>
@@ -32,31 +31,25 @@
 #include <kcmdlineargs.h>
 
 // Local includes
-#include "KAddressBookInterface.h"
+#include "KAddressBookServerInterface.h"
 
-static const char* description=I18N_NOOP("Kab, The KDE addressbook");
-static const char* VERSION="0.0.1";
+static const char * description = I18N_NOOP("KAB, The KDE addressbook");
+static const char * VERSION = "0.0.1";
 
   int
 main(int argc, char * argv[])
 {
-  // Don't do anything if we're being run as root.
-  if (getuid() == 0 || geteuid() == 0) {
-      cerr << "Please do not run this server as root (uid 0)" << endl;
-      return 1;
-  }    
-
   int prev_umask = umask(077);
 
   KAboutData aboutData(
-    "KAddressBook",
-    I18N_NOOP("KAddressBook"),
+    "KAddressBookServer",
+    I18N_NOOP("KAddressBook server"),
     VERSION,
     description,
     KAboutData::License_GPL,
-    "(c) 1999-2000, The KDE-PIM Team",
+    "(c) 1999-2001, The KDE-PIM Team",
     0,
-    "http://without.netpedia.net",
+    "http://www.geoid.clara.net/kde-pim/",
     "kde-pim@kde.org"
   );
 
@@ -64,17 +57,18 @@ main(int argc, char * argv[])
     "Rik Hemsley",
     I18N_NOOP("Design and coding"),
     "rik@kde.org",
-    "http://without.netpedia.net"
+    "http://www.geoid.clara.net/rik/"
   );
 
   KCmdLineArgs::init(argc, argv, &aboutData);
 
-  if (!KUniqueApplication::start())
+  if (!KAddressBookServer::start())
+	{
+		qDebug("KAB server is already running. Bye bye.");
     exit(1);
+	}
     
-  KUniqueApplication app;
-
-  int retval = app.exec();
+  int retval = (new KAddressBookServer)->exec();
 
   umask(prev_umask);
 

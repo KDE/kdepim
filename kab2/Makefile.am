@@ -1,1 +1,1 @@
-SUBDIRS = lib server
+SUBDIRS = lib server test
