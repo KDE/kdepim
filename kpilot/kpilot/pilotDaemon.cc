@@ -1,6 +1,7 @@
 /* pilotDaemon.cc			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2001-2004 by Adriaan de Groot
 **
 ** This is the KPilot Daemon, which does the actual communication with
 ** the Pilot and with the conduits.
@@ -169,10 +170,13 @@ void PilotDaemonTray::setupWidget()
 	menu->insertSeparator();
 
 	KPopupMenu *synctype = new KPopupMenu(menu,"sync_type_menu");
-#define MI(a) synctype->insertItem(SyncAction::syncModeName(SyncAction::a),(int)(SyncAction::a));
-	MI(eHotSync);
-	MI(eFastSync);
-	MI(eBackup);
+#define MI(a,b) synctype->insertItem( \
+		KGlobal::iconLoader()->loadIconSet(b,KIcon::Small,0,true), \
+		SyncAction::syncModeName(SyncAction::a), \
+		(int)(SyncAction::a));
+	MI(eHotSync,"hotsync");
+	MI(eFastSync,"fastsync");
+	MI(eBackup,"backup");
 #undef MI
 	connect(synctype,SIGNAL(activated(int)),daemon,SLOT(requestSync(int)));
 	menu->insertItem(i18n("Next &Sync"),synctype);
