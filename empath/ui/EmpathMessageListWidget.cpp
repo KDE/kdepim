@@ -1179,9 +1179,14 @@ EmpathMessageListWidget::_fillNormal()
     
     EmpathIndexRecord rec;
 
-    if (!rec.isNull())
-       if (!hideRead_ || !(rec.status() & RMM::Read))
-            _createListItem(rec, &t);
+    for (; it != index.end(); ++it) {
+
+        rec = f->index()->record(*it);
+
+        if (!rec.isNull())
+            if (!hideRead_ || !(rec.status() & RMM::Read))
+                _createListItem(rec, &t);
+    }
     
     t.done();
 }
