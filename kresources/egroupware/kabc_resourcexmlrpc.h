@@ -103,7 +103,6 @@ class ResourceXMLRPC : public Resource
 
     QString mSessionID;
     QString mKp3;
-    QString mLastAddUid;
 
     QMap<QString, QString> mUidMap;
     QMap<QString, int> mCategoryMap;

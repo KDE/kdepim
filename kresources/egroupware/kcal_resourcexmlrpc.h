@@ -239,7 +239,7 @@ class ResourceXMLRPC : public ResourceCalendar
 
     QString mSessionID;
     QString mKp3;
-    QString mLastAddUid;
+
     QMap<QString, QString> mEventUidMap;
     QMap<QString, QString> mTodoUidMap;
     QMap<QString, int> mEventCategoryMap;
