@@ -90,6 +90,12 @@ void CalendarResources::init()
   mStandardPolicy = new StandardDestinationPolicy( mManager );
   mAskPolicy = new AskDestinationPolicy( mManager );
   mDestinationPolicy = mStandardPolicy;
+
+  // Open all active resources
+  CalendarResourceManager::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    connectResource( *it );
+  }
 }
 
 CalendarResources::~CalendarResources()
@@ -114,7 +120,8 @@ void CalendarResources::load()
     kdDebug(5800) << "Warning! No standard resource yet." << endl;
   }
 
-  // set the timezone for all resources. Otherwise we'll have those terrible tz troubles ;-((
+  // set the timezone for all resources. Otherwise we'll have those terrible tz
+  // troubles ;-((
   CalendarResourceManager::Iterator i1;
   for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
     (*i1)->setTimeZoneId( timeZoneId() );
@@ -123,28 +130,47 @@ void CalendarResources::load()
   // Open all active resources
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    kdDebug(5800) << "Opening resource " + (*it)->resourceName() << endl;
-    bool success = (*it)->open();
-    if ( success ) {
-      success = (*it)->load();
-    }
-    if ( !success ) {
-      QString err = (*it)->errorMessage();
-      kdDebug() << "Error loading resource: " << err << endl;
-      if ( !err.isEmpty() ) {
-        QString msg = i18n("Error while loading %1:\n")
-                      .arg( (*it)->resourceName() );
-        msg += err;
-        emit signalErrorMessage( msg );
-      }
-      (*it)->setActive( false );
-      emit signalResourceModified( *it );
-    }
-
-    connectResource( *it );
+    loadResource( *it );
   }
 
   mOpen = true;
+}
+
+void CalendarResources::loadResource( ResourceCalendar *r )
+{
+  kdDebug(5800) << "Opening resource " + r->resourceName() << endl;
+
+  bool success = r->open();
+  if ( success ) {
+    success = r->load();
+  }
+  if ( !success ) {
+    slotLoadError( r, "" );
+    r->setActive( false );
+    emit signalResourceModified( r );
+  }
+}
+
+void CalendarResources::slotLoadError( ResourceCalendar *r, const QString &err )
+{
+  kdDebug() << "Error loading resource: " << err << endl;
+  if ( !err.isEmpty() ) {
+    QString msg = i18n("Error while loading %1:\n")
+                  .arg( r->resourceName() );
+    msg += err;
+    emit signalErrorMessage( msg );
+  }
+}
+
+void CalendarResources::slotSaveError( ResourceCalendar *r, const QString &err )
+{
+  kdDebug() << "Error loading resource: " << err << endl;
+  if ( !err.isEmpty() ) {
+    QString msg = i18n("Error while saving %1:\n")
+                  .arg( r->resourceName() );
+    msg += err;
+    emit signalErrorMessage( msg );
+  }
 }
 
 void CalendarResources::setStandardDestinationPolicy()

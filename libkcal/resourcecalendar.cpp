@@ -60,9 +60,4 @@ void ResourceCalendar::setSubresourceActive( const QString &, bool )
 {
 }
 
-QString ResourceCalendar::errorMessage()
-{
-  return QString::null;
-}
-
 #include "resourcecalendar.moc"

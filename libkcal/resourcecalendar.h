@@ -91,12 +91,6 @@ class ResourceCalendar : public KRES::Resource
     virtual bool save() = 0;
 
     /**
-      If a function fails (especially the load and save functions) this function
-      might give an error message with details about the failure.
-    */
-    virtual QString errorMessage();
-
-    /**
       Return true if a save operation is still in progress, otherwise return
       false.
     */
@@ -167,6 +161,14 @@ class ResourceCalendar : public KRES::Resource
       finished.
     */
     void resourceSaved( ResourceCalendar * );
+    /**
+      This signal is emitted when an error occurs during loading.
+    */
+    void resourceLoadError( ResourceCalendar *, const QString &error );
+    /**
+      This signal is emitted when an error occurs during saving.
+    */
+    void resourceSaveError( ResourceCalendar *, const QString &error );
 
     /**
      This signal is emitted when a subresource is added.

@@ -125,6 +125,12 @@ class CalendarResources : public Calendar,
     void load();
 
     /**
+      Open and load given resource. If an error occurs the function returns
+      false and an error signal is emitted.
+    */
+    void loadResource( ResourceCalendar * );
+
+    /**
       Return ResourceManager used by this calendar.
     */
     CalendarResourceManager *resourceManager() const
@@ -281,6 +287,10 @@ class CalendarResources : public Calendar,
 
     int incrementChangeCount( ResourceCalendar * );
     int decrementChangeCount( ResourceCalendar * );
+
+  protected slots:
+    void slotLoadError( ResourceCalendar *r, const QString &err );
+    void slotSaveError( ResourceCalendar *r, const QString &err );
 
   private:
     void init();
