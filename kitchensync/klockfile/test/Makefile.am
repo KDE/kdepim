@@ -22,11 +22,11 @@ LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 check_PROGRAMS = ksharedtest kshareddevicetest
 
-ksharedtest_LDADD += ../libksharedfile.la $(LIB_KDEUI) $(LIB_QT)
+ksharedtest_LDADD = ../libksharedfile.la $(LIB_KDEUI) $(LIB_QT)
 ksharedtest_SOURCES = main.cpp ksharedtest.ui
 ksharedtest_METASOURCES = AUTO
 
-kshareddevicetest_LDADD += ../libksharedfile.la $(LIB_KDEUI) $(LIB_QT)
+kshareddevicetest_LDADD = ../libksharedfile.la $(LIB_KDEUI) $(LIB_QT)
 kshareddevicetest_SOURCES =  kshareddevicetest.cpp
 
 METASOURCES = AUTO
