@@ -3454,7 +3454,10 @@ one on your system.</para></answer>
 <qandaentry>
 <question><para>My signature has two dashes above it. This makes me very sad.</para></question>
 <answer>
-<para>Separating the signature from the message body with two dashes and a space
+<para>
+<!-- TODO: update for 3.0: "\n - - \n" has to be in sig, other wise it will be
+added -->
+Separating the signature from the message body with two dashes and a space
 is a common and useful kind of standard. If you have strong feelings about this
 I suggest you modify the &kmail; source to remove that line.</para>
 </answer>
