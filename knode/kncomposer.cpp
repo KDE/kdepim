@@ -104,7 +104,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
   KStdAction::find(this, SLOT(slotFind()), actionCollection());
   KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
   KStdAction::replace(this, SLOT(slotReplace()), actionCollection());
-  actExternalEditor = new KAction(i18n("Start &External Editor"), 0, this, SLOT(slotExternalEditor()),
+  actExternalEditor = new KAction(i18n("Start &External Editor"), "run", 0, this, SLOT(slotExternalEditor()),
                                   actionCollection(), "external_editor");
   actSpellCheck = KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
     

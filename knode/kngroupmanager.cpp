@@ -200,9 +200,9 @@ KNGroupManager::KNGroupManager(KNFetchArticleManager *a, QObject * parent, const
   
   actProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotProperties()),
                               &actionCollection, "group_properties");
-  actLoadHdrs = new KAction(i18n("&Get New Articles"), 0, this, SLOT(slotLoadHdrs()),
+  actLoadHdrs = new KAction(i18n("&Get New Articles"), "mail_get" , 0, this, SLOT(slotLoadHdrs()),
                             &actionCollection, "group_dnlHeaders");
-  actExpire = new KAction(i18n("E&xpire Now"), 0, this, SLOT(slotExpire()),
+  actExpire = new KAction(i18n("E&xpire Now"), "wizard", 0, this, SLOT(slotExpire()),
                           &actionCollection, "group_expire");
   actResort = new KAction(i18n("Res&ort"), 0, this, SLOT(slotResort()),
                           &actionCollection, "group_resort");

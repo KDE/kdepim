@@ -72,9 +72,9 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
   items += i18n("By &Date");
   actSortSelect->setItems(items);
     
-  actNextArt = new KAction(i18n("&Next article"), Key_N , this, SLOT(slotNextArticle()),
+  actNextArt = new KAction(i18n("&Next article"), "next", Key_N , this, SLOT(slotNextArticle()),
                            &actionCollection, "go_nextArticle");
-  actPrevArt = new KAction(i18n("&Previous article"), Key_B , this, SLOT(slotPrevArticle()),
+  actPrevArt = new KAction(i18n("&Previous article"), "previous", Key_B , this, SLOT(slotPrevArticle()),
                            &actionCollection, "go_prevArticle");
   actNextUnreadArt = new KAction(i18n("Next unread &article"), "1rightarrow", ALT+Key_Space , this, SLOT(slotNextUnreadArticle()),
                                  &actionCollection, "go_nextUnreadArticle");
@@ -82,9 +82,9 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
                                &actionCollection, "go_readThrough");
   actNextUnreadThread =  new KAction(i18n("Next unread &thread"),"2rightarrow", CTRL+Key_Space , this, SLOT(slotNextUnreadThread()),
                                      &actionCollection, "go_nextUnreadThread");
-  actNextGroup = new KAction(i18n("Ne&xt group"), Key_Plus , this, SLOT(slotNextGroup()),
+  actNextGroup = new KAction(i18n("Ne&xt group"), "down", Key_Plus , this, SLOT(slotNextGroup()),
                              &actionCollection, "go_nextGroup");
-  actPrevGroup = new KAction(i18n("Pre&vious group"), Key_Minus , this, SLOT(slotPrevGroup()),
+  actPrevGroup = new KAction(i18n("Pre&vious group"), "up", Key_Minus , this, SLOT(slotPrevGroup()),
                              &actionCollection, "go_prevGroup");
   actToggleThread = new KAction(i18n("&Toggle Subthread"), Key_T, this, SLOT(slotToggleThread()),
                                 &actionCollection, "thread_toggle");

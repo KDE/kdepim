@@ -48,7 +48,7 @@ KNFolderManager::KNFolderManager(KNSavedArticleManager *a, KNListView *v,  QObje
   c_ount+=loadCustomFolders();
   showListItems();
     
-  actCompactFolder = new KAction(i18n("&Compact Folder"), 0, this, SLOT(slotCompactFolder()),
+  actCompactFolder = new KAction(i18n("&Compact Folder"), "wizard", 0, this, SLOT(slotCompactFolder()),
                                  &actionCollection, "folder_compact");
   actEmptyFolder = new KAction(i18n("&Empty Folder"), 0, this, SLOT(slotEmptyFolder()),
                                &actionCollection, "folder_empty");

@@ -365,7 +365,7 @@ void KNodeApp::initActions()
 
   acc=new KAccel(this);
   view->actReadThrough->plugAccel(acc);
-  actShowAllHdrs = new KToggleAction(i18n("Show &all headers"), 0 , this, SLOT(slotToggleShowAllHdrs()),
+  actShowAllHdrs = new KToggleAction(i18n("Show &all headers"), "text_block", 0 , this, SLOT(slotToggleShowAllHdrs()),
                                      actionCollection(), "view_showAllHdrs");
   actShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
 

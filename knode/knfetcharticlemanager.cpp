@@ -73,7 +73,7 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
   actRefresh = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this, SLOT(slotRefresh()),
                            &actionCollection, "view_Refresh");
   actRefresh->setEnabled(false);
-  actAllRead = new KAction(i18n("Mark all as &read"), 0, this, SLOT(slotAllRead()),
+  actAllRead = new KAction(i18n("Mark all as &read"), "goto", 0, this, SLOT(slotAllRead()),
                            &actionCollection, "group_allRead");
   actAllRead->setEnabled(false);
   actAllUnread = new KAction(i18n("Mark all as u&nread"), 0, this, SLOT(slotAllUnread()),
@@ -101,16 +101,16 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
   actThreadUnread = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this, SLOT(slotThreadUnread()),
                                 &actionCollection, "thread_unread");
   actThreadUnread->setEnabled(false);
-  actThreadSetScore = new KAction(i18n("Set &Score..."), Key_S , this, SLOT(slotThreadScore()),
+  actThreadSetScore = new KAction(i18n("Set &Score..."), "rotate", Key_S , this, SLOT(slotThreadScore()),
                                   &actionCollection, "thread_setScore");
   actThreadSetScore->setEnabled(false);
-  actThreadWatch = new KAction(i18n("&Watch"), Key_W , this, SLOT(slotThreadWatch()),
+  actThreadWatch = new KAction(i18n("&Watch"), "top", Key_W , this, SLOT(slotThreadWatch()),
                                &actionCollection, "thread_watch");
   actThreadWatch->setEnabled(false);
-  actThreadIgnore = new KAction(i18n("&Ignore"), Key_I , this, SLOT(slotThreadIgnore()),
+  actThreadIgnore = new KAction(i18n("&Ignore"), "bottom", Key_I , this, SLOT(slotThreadIgnore()),
                                 &actionCollection, "thread_ignore");
   actThreadIgnore->setEnabled(false);
-  actOwnWindow = new KAction(i18n("&Open in own window"), Key_O , this, SLOT(slotOwnWindow()),
+  actOwnWindow = new KAction(i18n("&Open in own window"), "viewmag+", Key_O , this, SLOT(slotOwnWindow()),
                              &actionCollection, "article_ownWindow");
   actOwnWindow->setEnabled(false);
   actSearch = new KAction(i18n("&Search..."),"find" , Key_F4 , this, SLOT(slotSearch()),

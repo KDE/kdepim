@@ -55,20 +55,20 @@ KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am
   comList=new QList<KNComposer>;
     
   readConfig();
-  
-  actSendOutbox = new KAction(i18n("Sen&d pending messages"), 0, this, SLOT(slotSendOutbox()),
+
+  actSendOutbox = new KAction(i18n("Sen&d pending messages"), "mail_send", 0, this, SLOT(slotSendOutbox()),
                               &actionCollection, "net_sendPending");
   actSendOutbox->setEnabled(false);
-  actEdit = new KAction(i18n("edit article","&Edit"), Key_E , this, SLOT(slotEdit()),
+  actEdit = new KAction(i18n("edit article","&Edit"), "signature", Key_E , this, SLOT(slotEdit()),
                         &actionCollection, "article_edit");
   actEdit->setEnabled(false);
-  actDelete = new KAction(i18n("&Delete"), Key_Delete , this, SLOT(slotDelete()),
+  actDelete = new KAction(i18n("&Delete"), "editdelete", Key_Delete, this, SLOT(slotDelete()),
                           &actionCollection, "article_delete");
   actDelete->setEnabled(false);
-  actSendNow = new KAction(i18n("Send &now"), 0 , this, SLOT(slotSendNow()),
+  actSendNow = new KAction(i18n("Send &now"),"mail_send", 0 , this, SLOT(slotSendNow()),
                            &actionCollection, "article_sendNow");
   actSendNow->setEnabled(false);
-  actSendLater = new KAction(i18n("Send &later"), 0 , this, SLOT(slotSendLater()),
+  actSendLater = new KAction(i18n("Send &later"), "queue", 0 , this, SLOT(slotSendLater()),
                              &actionCollection, "article_sendLater");
   actSendLater->setEnabled(false);
 }
