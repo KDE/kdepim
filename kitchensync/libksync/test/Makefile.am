@@ -16,18 +16,19 @@
 #    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 #    Boston, MA 02111-1307, USA.
 
-INCLUDES=  -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES=  -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir)/libkcal \
+  $(all_includes)
 check_PROGRAMS = todotest eventtest abtest
 
-todotest_LDADD = ../libksync.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
+todotest_LDADD = ../libksync2.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
 todotest_SOURCES =  todomain.cpp
 todotest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-eventtest_LDADD = ../libksync.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
+eventtest_LDADD = ../libksync2.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
 eventtest_SOURCES =  eventmain.cpp
 eventtest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-abtest_LDADD = ../libksync.la -lkabc $(LIB_KDEUI) $(LIB_QT)
+abtest_LDADD = ../libksync2.la -lkabc $(LIB_KDEUI) $(LIB_QT)
 abtest_SOURCES =  abmain.cpp
 abtest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
