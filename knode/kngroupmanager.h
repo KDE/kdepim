@@ -72,6 +72,7 @@ class KNGroupListData : public KNJobItem {
     QSortedList<KNGroupInfo> *groups;
     QDate fetchSince;
     bool getDescriptions;
+    QTextCodec *codecForDescriptions;
 
 };
 

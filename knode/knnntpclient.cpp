@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <qstrlist.h>
 #include <klocale.h>
+#include <qtextcodec.h>
 
 #include "knmime.h"
 #include "kngroup.h"
@@ -181,7 +182,10 @@ void KNNntpClient::doFetchGroups()
         while (*s == ' ' || *s == '\t') s++;    // go on to the description
 
         name = QString::fromUtf8(line);
-        description = QString::fromLocal8Bit(s);   // some countries use local 8 bit characters in the tag line
+        if (target->codecForDescriptions)          // some countries use local 8 bit characters in the tag line
+          description = target->codecForDescriptions->toUnicode(s);
+        else
+          description = QString::fromLocal8Bit(s);
         info.name = name;
 
         if ((pos=tempVector.bsearch(&info))!=-1)
@@ -291,7 +295,10 @@ void KNNntpClient::doCheckNewGroups()
 #endif
         } else {
           while (*s == ' ' || *s == '\t') s++;    // go on to the description
-          group->description = QString::fromLocal8Bit(s);   // some countries use local 8 bit characters in the tag line
+          if (target->codecForDescriptions)          // some countries use local 8 bit characters in the tag line
+            group->description = target->codecForDescriptions->toUnicode(s);
+          else
+            group->description = QString::fromLocal8Bit(s);
         }
       }
     }

@@ -26,6 +26,7 @@
 #include <kurl.h>
 #include <kiconloader.h>
 #include <kdebug.h>
+#include <kcharsets.h>
 
 #include "knode.h"
 #include "knarticlemanager.h"
@@ -85,6 +86,7 @@ bool KNGroupInfo::operator< (const KNGroupInfo &gi2)
 
 
 KNGroupListData::KNGroupListData()
+  : codecForDescriptions(0)
 {
   groups = new QSortedList<KNGroupInfo>;
   groups->setAutoDelete(true);
@@ -602,6 +604,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
   d->path = a->path();  
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
+  d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.cfgManager->postNewsTechnical()->charset());
 
   emitJob( new KNJobData(KNJobData::JTFetchGroups, this, a, d) );
 }
@@ -615,6 +618,7 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
   d->fetchSince = date;
+  d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.cfgManager->postNewsTechnical()->charset());
   
   emitJob( new KNJobData(KNJobData::JTCheckNewGroups, this, a, d) );
 }
