@@ -1,0 +1,18 @@
+Address
+AddressList
+BodyPart
+ContentDisposition
+ContentType
+Cte
+DateTime
+Entity MessageComponent
+Envelope
+Header
+HeaderBody MessageComponent
+Mailbox
+Mechanism
+MessageID
+MimeType
+Parameter
+ParameterList
+Text
