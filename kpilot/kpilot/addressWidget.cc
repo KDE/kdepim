@@ -272,6 +272,7 @@ void AddressWidget::setupWidget()
 		i18n("<qt>Add a new address to the address book.</qt>") :
 		i18n("<qt><i>Adding is disabled by the 'internal editors' setting.</i></qt>") ;
 	QWhatsThis::add(button, wt);
+	button->setEnabled(KPilotSettings::internalEditors());
 
 
 	fDeleteButton = new QPushButton(i18n("Delete Record"), this);

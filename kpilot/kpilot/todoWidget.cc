@@ -276,7 +276,11 @@ void TodoWidget::setupWidget()
 	button = new QPushButton(i18n("New Record..."), this);
 	grid->addWidget(button, 2, 1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
-	QWhatsThis::add(button, i18n("<qt>Add a new todo to the todo list.</qt>"));
+	wt = KPilotSettings::internalEditors() ?
+		i18n("<qt>Add a new todo to the todo list.</qt>") :
+		i18n("<qt><i>Adding new todos is disabled by the 'internal editors' setting.</i></qt>");
+	QWhatsThis::add(button, wt);
+	button->setEnabled(KPilotSettings::internalEditors());
 
 	fDeleteButton = new QPushButton(i18n("Delete Record"), this);
 	grid->addWidget(fDeleteButton, 3, 0);
