@@ -104,7 +104,7 @@ private:
 	{
 #ifdef DEBUG
 		DEBUGDAEMON << "Bound devices: "
-			<< mBoundDevices.join(", ").latin1() << endl;
+			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(", ") : CSL1("<none>")) << endl;
 #endif
 	}
 } ;
