@@ -85,7 +85,37 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
   setUid( addressee->uid() );
   setBody( addressee->note() );
   setCategories( addressee->categories().join( "," ) );
-  setLastModified( addressee->revision() );
+
+  // Set creation-time and last-modification-time
+  const QString creationString = addressee->custom( "KOLAB", "CreationDate" );
+  kdDebug(5006) << "Creation time string: " << creationString << endl;
+  QDateTime creationDate;
+  if ( creationString.isEmpty() ) {
+    creationDate = QDateTime::currentDateTime();
+    kdDebug(5006) << "Creation date set to current time\n";
+  }
+  else {
+    creationDate = stringToDateTime( creationString );
+    kdDebug(5006) << "Creation date loaded\n";
+  }
+  QDateTime modified = addressee->revision();
+  if ( !modified.isValid() )
+    modified = QDateTime::currentDateTime();
+  setLastModified( modified );
+  if ( modified < creationDate ) {
+    // It's not possible that the modification date is earlier than creation
+    creationDate = modified;
+    kdDebug(5006) << "Creation date set to modification date\n";
+  }
+  setCreationDate( creationDate );
+  const QString newCreationDate = dateTimeToString( creationDate );
+  if ( creationString != newCreationDate ) {
+    // We modified the creation date, so store it for future reference
+    const_cast<KABC::Addressee*>( addressee )
+      ->insertCustom( "KOLAB", "CreationDate", newCreationDate );
+    kdDebug(5006) << "Creation date modified. New one: " << newCreationDate << endl;
+  }
+
   switch( addressee->secrecy().type() ) {
   case KABC::Secrecy::Private:
     setSensitivity( Private );
@@ -106,6 +136,8 @@ void KolabBase::saveTo( KABC::Addressee* addressee ) const
   addressee->setNote( body() );
   addressee->setCategories( QStringList::split( ',', categories() ) );
   addressee->setRevision( lastModified() );
+  addressee->insertCustom( "KOLAB", "CreationDate",
+                           dateTimeToString( creationDate() ) );
 
   switch( sensitivity() ) {
   case Private:
