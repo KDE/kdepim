@@ -43,9 +43,6 @@
       <Action name="show_appointment"/>
       <Action name="edit_appointment"/>
       <Action name="mail_appointment"/>
-      <Action name="takeover_event"/>
-      <Separator/>
-      <Action name="takeover_calendar"/>
     </Menu>
     <Menu name="settings"><text>&amp;Settings</text>
       <Actionlist name="toolbartoggles" append="show_merge"/>
