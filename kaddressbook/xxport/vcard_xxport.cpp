@@ -204,19 +204,19 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
 
         QFile file( fileName );
 
-        if(file.open( IO_ReadOnly )) {
-	        QByteArray rawData = file.readAll();
-	        file.close();
-		if(rawData.size() > 0) {
-		        QString data = QString::fromUtf8( rawData.data(), rawData.size() );
-		        addrList += parseVCard( data );
-		}
+        if ( file.open( IO_ReadOnly ) ) {
+          QByteArray rawData = file.readAll();
+          file.close();
+          if ( rawData.size() > 0 ) {
+            QString data = QString::fromUtf8( rawData.data(), rawData.size() );
+            addrList += parseVCard( data );
+          }
 
-	        KIO::NetAccess::removeTempFile( fileName );
-	} else {
-        	QString text = i18n( "<qt>Unable to open the file <b>%1</b>.</qt>" );
-	        KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
-	}
+          KIO::NetAccess::removeTempFile( fileName );
+        } else {
+          QString text = i18n( "<qt>Unable to open the file <b>%1</b>.</qt>" );
+          KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
+        }
       } else {
         QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
         KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
@@ -358,7 +358,7 @@ KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addr
 
 void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Types type )
 {
-	QString fingerprint = addr.custom( "KADDRESSBOOK",
+  QString fingerprint = addr.custom( "KADDRESSBOOK",
                                      (type == KABC::Key::PGP ? "OPENPGPFP" : "SMIMEFP") );
   if ( fingerprint.isEmpty() )
     return;

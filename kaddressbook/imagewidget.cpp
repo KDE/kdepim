@@ -26,11 +26,11 @@
 #include <kdialog.h>
 #include <kglobalsettings.h>
 #include <kiconloader.h>
+#include <kimageio.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
-#include <kurlrequester.h>
-#include <kimageio.h>
 #include <kmessagebox.h>
+#include <kurlrequester.h>
 #include <libkdepim/kpixmapregionselectordialog.h>
 
 #include <qcheckbox.h>
@@ -241,15 +241,16 @@ QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
     pixmap = QPixmap( tempFile );
     KIO::NetAccess::removeTempFile( tempFile );
   }
-  if(pixmap.isNull()) {
-    //Image does not exist (any more)
-    KMessageBox::sorry( this, i18n( "This contact's image cannot be found."));
+
+  if ( pixmap.isNull() ) {
+    // image does not exist (any more)
+    KMessageBox::sorry( this, i18n( "This contact's image cannot be found." ) );
     return pixmap;
   }
-  QPixmap pixmap2 = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this );
-  if (!pixmap2.isNull()) 
-  {
-     pixmap=pixmap2;
+
+  QPixmap selectedPixmap = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this );
+  if ( !selectedPixmap.isNull() ) {
+     pixmap = selectedPixmap;
      mImageUrl->clear();
   }
 
