@@ -129,8 +129,6 @@ ical.h: $(COMBINEDHEADERS)
 	| egrep -v "#include.*\"ical"			\
 	| egrep -v "#include.*\"pvl\.h\"" > ical.h
 
-$(srcdir)/icallexer.c : icalyacc.h
-
 # parameters
 
 PARAMETERDEPS =	\
@@ -208,20 +206,20 @@ EXTRA_DIST =			\
 	icallexer.c		\
 	icalyacc.c
 
-$(srcdir)/icalattendee.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalcomponent.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-icalderivedparameter.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-icalderivedproperty.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-icalderivedvalue.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalduration.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icallangbind.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icallexer.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalmime.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalparameter.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalparser.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalproperty.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-icalrestriction.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icaltime.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalvalue.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalyacc.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalattendee.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalcomponent.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalderivedparameter.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalderivedproperty.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalderivedvalue.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalduration.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icallangbind.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icallexer.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalmime.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalparameter.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalparser.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalproperty.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalrestriction.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icaltime.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalvalue.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalyacc.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 
