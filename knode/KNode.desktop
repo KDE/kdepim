@@ -4,6 +4,7 @@ Type=Application
 Exec=knode -caption "%c" %i %m
 Icon=knode
 Terminal=0
+DocPath=knode/index.html
 Name=KNode
 Name[af]=knode
 Name[ar]=قارئ الأخبار
