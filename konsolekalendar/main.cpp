@@ -695,7 +695,8 @@ int main( int argc, char *argv[] )
   QDateTime startdatetime, enddatetime;
 
   // Handle case with either date or end-date unspecified
-  if ( ! args->isSet( "end-date" ) && args->isSet( "date" ) ) {
+  if ( ! args->isSet( "end-date" ) && ! args->isSet( "show-next" ) &&
+       args->isSet( "date" ) ) {
     enddate = startdate;
     kdDebug() << "main | datetimestamp | "
               << "setting enddate to startdate"

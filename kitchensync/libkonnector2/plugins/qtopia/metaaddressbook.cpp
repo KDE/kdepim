@@ -67,7 +67,7 @@ QString MetaAddressbook::string( KSync::AddressBookSyncEntry* entry) {
     number = adr.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
     str += number.number();
 
-    number = adr.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Cell );
+    number = adr.phoneNumber( KABC::PhoneNumber::Cell );
     str += number.number();
 
     /*

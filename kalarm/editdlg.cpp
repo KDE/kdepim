@@ -47,6 +47,7 @@
 #include <kmessagebox.h>
 #include <kurldrag.h>
 #include <kurlcompletion.h>
+#include <kwin.h>
 #include <kwinmodule.h>
 #include <kstandarddirs.h>
 #include <kstdguiitem.h>
@@ -142,22 +143,21 @@ EditAlarmDlg::EditAlarmDlg(bool Template, const QString& caption, QWidget* paren
 		QWhatsThis::add(box, i18n("Enter the name of the alarm template"));
 		box->setFixedHeight(box->sizeHint().height());
 	}
-	QTabWidget* tabs = new QTabWidget(mainWidget);
-	tabs->setMargin(marginHint() + marginKDE2);
+	mTabs = new QTabWidget(mainWidget);
+	mTabs->setMargin(marginHint() + marginKDE2);
 
-	QVBox* mainPageBox = new QVBox(tabs);
+	QVBox* mainPageBox = new QVBox(mTabs);
 	mainPageBox->setSpacing(spacingHint());
-	tabs->addTab(mainPageBox, i18n("&Alarm"));
+	mTabs->addTab(mainPageBox, i18n("&Alarm"));
 	mMainPageIndex = 0;
 	PageFrame* mainPage = new PageFrame(mainPageBox);
 	connect(mainPage, SIGNAL(shown()), SLOT(slotShowMainPage()));
 	QVBoxLayout* topLayout = new QVBoxLayout(mainPage, marginKDE2, spacingHint());
 
 	// Recurrence tab
-	QVBox* recurPage = new QVBox(tabs);
+	QVBox* recurPage = new QVBox(mTabs);
 	mainPageBox->setSpacing(spacingHint());
-	tabs->addTab(recurPage, i18n("&Recurrence"));
-	mRecurPageIndex = 1;
+	mTabs->addTab(recurPage, i18n("&Recurrence"));
 	mRecurrenceEdit = new RecurrenceEdit(readOnly, recurPage, "recurPage");
 	connect(mRecurrenceEdit, SIGNAL(shown()), SLOT(slotShowRecurrenceEdit()));
 	connect(mRecurrenceEdit, SIGNAL(typeChanged(int)), SLOT(slotRecurTypeChange(int)));
@@ -311,6 +311,12 @@ EditAlarmDlg::EditAlarmDlg(bool Template, const QString& caption, QWidget* paren
 
 	// Save the initial state of all controls so that we can later tell if they have changed
 	saveState(event);
+
+	// Note the current desktop so that the dialog can be shown on it.
+	// If a main window is visible, the dialog will by KDE default always appear on its
+	// desktop. If the user invokes the dialog via the system tray on a different desktop,
+	// that can cause confusion.
+	mDesktop = KWin::currentDesktop();
 }
 
 EditAlarmDlg::~EditAlarmDlg()
@@ -509,6 +515,9 @@ void EditAlarmDlg::initialise(const KAEvent* event)
 		mReadOnly = true;     // don't allow editing of existing command alarms in kiosk mode
 	setReadOnly();
 
+	mChanged           = false;
+	mOnlyDeferred      = false;
+	mExpiredRecurrence = false;
 	bool deferGroupVisible = false;
 	if (event)
 	{
@@ -559,8 +568,11 @@ void EditAlarmDlg::initialise(const KAEvent* event)
 				}
 			}
 			else
+			{
+				mExpiredRecurrence = recurs && event->mainExpired();
 				mTimeWidget->setDateTime(!event->mainExpired() ? event->mainDateTime()
 				                         : recurs ? DateTime() : event->deferDateTime());
+			}
 		}
 
 		setAction(event->action(), event->cleanText());
@@ -842,11 +854,18 @@ void EditAlarmDlg::saveState(const KAEvent* event)
 }
 
 /******************************************************************************
- * Check whether any of the controls other than the deferral time has changed
- * state since the dialog was first displayed.
+ * Check whether any of the controls has changed state since the dialog was
+ * first displayed.
+ * Reply = true if any non-deferral controls have changed, or if it's a new event.
+ *       = false if no non-deferral controls have changed. In this case,
+ *         mOnlyDeferred indicates whether deferral controls may have changed.
  */
 bool EditAlarmDlg::stateChanged() const
 {
+	mChanged      = true;
+	mOnlyDeferred = false;
+	if (!mSavedEvent)
+		return true;
 	QString textFileCommandMessage;
 	checkText(textFileCommandMessage, false);
 	if (mTemplate)
@@ -903,31 +922,22 @@ bool EditAlarmDlg::stateChanged() const
 		||  mSavedEmailBcc     != mEmailBcc->isChecked())
 			return true;
 	}
-	if (mSavedEvent->recurType() != KAEvent::NO_RECUR)
-	{
-		if (!mSavedEvent->recurrence())
-			return true;
-		KAEvent event;
-		event.setTime(mSavedEvent->startDateTime().dateTime());
-		mRecurrenceEdit->updateEvent(event, false);
-		if (!event.recurrence())
-			return true;
-		event.recurrence()->setFloats(mSavedEvent->startDateTime().isDateOnly());
-		if (*event.recurrence() != *mSavedEvent->recurrence()
-		||  event.exceptionDates() != mSavedEvent->exceptionDates()
-		||  event.exceptionDateTimes() != mSavedEvent->exceptionDateTimes())
-			return true;
-	}
+	if (mRecurrenceEdit->stateChanged())
+		return true;
+	if (mSavedEvent  &&  mSavedEvent->deferred())
+		mOnlyDeferred = true;
+	mChanged = false;
 	return false;
 }
 
 /******************************************************************************
  * Get the currently entered message data.
- * The data is returned in the supplied Event instance.
+ * The data is returned in the supplied KAEvent instance.
+ * Reply = false if the only change has been to an existing deferral.
  */
-void EditAlarmDlg::getEvent(KAEvent& event)
+bool EditAlarmDlg::getEvent(KAEvent& event)
 {
-	if (!mSavedEvent  ||  stateChanged())
+	if (mChanged)
 	{
 		// It's a new event, or the edit controls have changed
 		QDateTime dt;
@@ -981,19 +991,21 @@ void EditAlarmDlg::getEvent(KAEvent& event)
 		}
 		if (mTemplate)
 			event.setTemplate(mTemplateName->text(), mTemplateDefaultTime->isOn());
+		return true;
 	}
-	else
+
+	// Only the deferral time may have changed
+	event = *mSavedEvent;
+	if (mOnlyDeferred)
 	{
-		// Only the deferral time may have changed
-		event = *mSavedEvent;
-		if (mSavedEvent->deferred())
-		{
-			if (mDeferDateTime.isValid())
-				event.defer(mDeferDateTime, event.reminderDeferral(), false);
-			else
-				event.cancelDefer();
-		}
+		// Just modify the original event, to avoid expired recurring events
+		// being returned as rubbish.
+		if (mDeferDateTime.isValid())
+			event.defer(mDeferDateTime, event.reminderDeferral(), false);
+		else
+			event.cancelDefer();
 	}
+	return false;
 }
 
 /******************************************************************************
@@ -1040,6 +1052,7 @@ void EditAlarmDlg::showEvent(QShowEvent* se)
 			s = minimumSize();
 		resize(s);
 	}
+	KWin::setOnDesktop(winId(), mDesktop);    // ensure it displays on the desktop expected by the user
 	KDialog::showEvent(se);
 }
 
@@ -1065,8 +1078,17 @@ void EditAlarmDlg::resizeEvent(QResizeEvent* re)
 */
 void EditAlarmDlg::slotOk()
 {
+	if (!stateChanged())
+	{
+		// No changes have been made except possibly to an existing deferral
+		if (!mOnlyDeferred)
+			reject();
+		else
+			accept();
+		return;
+	}
 	if (mTimeWidget
-	&&  activePageIndex() == mRecurPageIndex  &&  mRecurrenceEdit->repeatType() == RecurrenceEdit::AT_LOGIN)
+	&&  mTabs->currentPageIndex() == mRecurPageIndex  &&  mRecurrenceEdit->repeatType() == RecurrenceEdit::AT_LOGIN)
 		mTimeWidget->setDateTime(mRecurrenceEdit->endDateTime());
 	bool timedRecurrence = mRecurrenceEdit->isTimedRepeatType();    // does it recur other than at login?
 	if (mTemplate)
@@ -1095,7 +1117,8 @@ void EditAlarmDlg::slotOk()
 		mAlarmDateTime = mTimeWidget->getDateTime(!timedRecurrence, false, &errWidget);
 		if (errWidget)
 		{
-			showPage(mMainPageIndex);
+			// It's more than just an existing deferral being changed, so the time matters
+			mTabs->setCurrentPage(mMainPageIndex);
 			errWidget->setFocus();
 			mTimeWidget->getDateTime();   // display the error message now
 			return;
@@ -1128,7 +1151,7 @@ void EditAlarmDlg::slotOk()
 		QWidget* errWidget = mRecurrenceEdit->checkData(mAlarmDateTime.dateTime(), errmsg);
 		if (errWidget)
 		{
-			showPage(mRecurPageIndex);
+			mTabs->setCurrentPage(mRecurPageIndex);
 			errWidget->setFocus();
 			KMessageBox::sorry(this, errmsg);
 			return;
@@ -1146,7 +1169,7 @@ void EditAlarmDlg::slotOk()
 				int minutes = event.longestRecurrenceInterval();
 				if (minutes  &&  reminder >= minutes)
 				{
-					showPage(mMainPageIndex);
+					mTabs->setCurrentPage(mMainPageIndex);
 					mReminder->setFocusOnCount();
 					KMessageBox::sorry(this, i18n("Reminder period must be less than the recurrence interval, unless '%1' is checked."
 					                             ).arg(Reminder::i18n_first_recurrence_only()));
@@ -1243,22 +1266,30 @@ void EditAlarmDlg::slotEditDeferral()
 {
 	if (!mTimeWidget)
 		return;
-	DateTime start = mTimeWidget->getDateTime();
+	bool limit = true;
+	DateTime start = mTimeWidget->getDateTime(true, !mExpiredRecurrence);
 	if (!start.isValid())
-		return;
+	{
+		if (!mExpiredRecurrence)
+			return;
+		limit = false;
+	}
 
 	bool deferred = mDeferDateTime.isValid();
 	DeferAlarmDlg deferDlg(i18n("Defer Alarm"), (deferred ? mDeferDateTime : DateTime(QDateTime::currentDateTime().addSecs(60))),
 	                       deferred, this, "deferDlg");
-	// Don't allow deferral past the next recurrence
-	int reminder = mReminder->minutes();
-	if (reminder)
+	if (limit)
 	{
-		DateTime remindTime = start.addMins(-reminder);
-		if (QDateTime::currentDateTime() < remindTime)
-			start = remindTime;
+		// Don't allow deferral past the next recurrence
+		int reminder = mReminder->minutes();
+		if (reminder)
+		{
+			DateTime remindTime = start.addMins(-reminder);
+			if (QDateTime::currentDateTime() < remindTime)
+				start = remindTime;
+		}
+		deferDlg.setLimit(start);
 	}
-	deferDlg.setLimit(start);
 	if (deferDlg.exec() == QDialog::Accepted)
 	{
 		mDeferDateTime = deferDlg.getDateTime();
@@ -1298,7 +1329,7 @@ void EditAlarmDlg::slotShowMainPage()
 */
 void EditAlarmDlg::slotShowRecurrenceEdit()
 {
-	mRecurPageIndex = activePageIndex();
+	mRecurPageIndex = mTabs->currentPageIndex();
 	if (!mReadOnly  &&  !mTemplate)
 	{
 		QDateTime now = QDateTime::currentDateTime();

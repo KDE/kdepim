@@ -119,6 +119,10 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
 
   // make sure that we check for config updates before doing anything else
   KMKernel::config();
+  // this shares the kmailrc parsing too (via KSharedConfig), and reads values from it
+  // so better do it here, than in some code where changing the group of config()
+  // would be unexpected
+  GlobalSettings::self();
 
   mGroupware = new KMGroupware( this );
 
@@ -418,7 +422,7 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
   if ( !to.isEmpty() ) msg->setTo(to);
   if ( !body.isEmpty() ) msg->setBody(body.utf8());
 
-  bool iCalHack = false;
+  bool iCalAutoSend = false;
   KConfigGroup options( config(), "Groupware" );
   if (  !attachData.isEmpty() ) {
     if ( attachName == "cal.ics" && attachType == "text" &&
@@ -430,7 +434,9 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
 			   QString( "text/calendar; method=%1; "
                                     "charset=\"utf-8\"" ).
 			   arg( attachParamValue ) );
-      iCalHack = true;
+
+      // Don't show the composer window, if the automatic sending is checked
+      iCalAutoSend = options.readBoolEntry( "AutomaticSending", true );
     } else {
       // Just do what we're told to do
       msgPart = new KMMessagePart;
@@ -450,14 +456,15 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
   }
 
   KMComposeWin *cWin = new KMComposeWin( msg );
-  if( iCalHack )
+  cWin->setAutoDelete( true );
+  if( iCalAutoSend )
     cWin->slotWordWrapToggled( false );
   else
     cWin->setCharset( "", true );
   if ( msgPart )
     cWin->addAttach(msgPart);
 
-  if ( hidden == 0 && !iCalHack ) {
+  if ( hidden == 0 && !iCalAutoSend ) {
     cWin->show();
     // Activate window - doing this instead of KWin::activateWindow(cWin->winId());
     // so that it also works when called from KMailApplication::newInstance()
@@ -465,8 +472,7 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
     KStartupInfo::setNewStartupId( cWin, kapp->startupId() );
 #endif
   } else {
-    // TODO: Delete the window
-    kdDebug(5006) << "Hidden send now window\n";
+    cWin->setAutoDeleteWindow( true );
     cWin->slotSendNow();
   }
 
@@ -498,6 +504,27 @@ DCOPRef KMKernel::openComposer(const QString &to, const QString &cc,
   }
 
   return DCOPRef(cWin);
+}
+
+DCOPRef KMKernel::newMessage()
+{
+  KMFolder *folder = 0;
+  KMMainWidget *widget = getKMMainWidget();
+  if ( widget && widget->folderTree() )
+    folder = widget->folderTree()->currentFolder();
+
+  KMComposeWin *win;
+  KMMessage *msg = new KMMessage;
+  if ( folder ) {
+    msg->initHeader( folder->identity() );
+    win = new KMComposeWin( msg, folder->identity() );
+  } else {
+    msg->initHeader();
+    win = new KMComposeWin( msg );
+  }
+  win->show();
+
+  return DCOPRef( win );
 }
 
 int KMKernel::viewMessage( const KURL & messageFile )
@@ -1019,13 +1046,13 @@ void KMKernel::init()
 #endif
 
   connect( the_folderMgr, SIGNAL( folderRemoved(KMFolder*) ),
-           this, SLOT( slotFolderRemoved(KMFolder*) ) );
+           this, SIGNAL( folderRemoved(KMFolder*) ) );
   connect( the_dimapFolderMgr, SIGNAL( folderRemoved(KMFolder*) ),
-           this, SLOT( slotFolderRemoved(KMFolder*) ) );
+           this, SIGNAL( folderRemoved(KMFolder*) ) );
   connect( the_imapFolderMgr, SIGNAL( folderRemoved(KMFolder*) ),
-           this, SLOT( slotFolderRemoved(KMFolder*) ) );
+           this, SIGNAL( folderRemoved(KMFolder*) ) );
   connect( the_searchFolderMgr, SIGNAL( folderRemoved(KMFolder*) ),
-           this, SLOT( slotFolderRemoved(KMFolder*) ) );
+           this, SIGNAL( folderRemoved(KMFolder*) ) );
 
   mBackgroundTasksTimer = new QTimer( this );
   connect( mBackgroundTasksTimer, SIGNAL( timeout() ), this, SLOT( slotRunBackgroundTasks() ) );
@@ -1503,10 +1530,13 @@ bool KMKernel::folderIsTrash(KMFolder * folder)
 {
   assert(folder);
   if (folder == the_trashFolder) return true;
-  if (folder->folderType() != KMFolderTypeImap) return false;
-  KMFolderImap *fi = static_cast<KMFolderImap*>(folder->storage());
-  if (fi->account() && fi->account()->trash() == folder->idString())
-    return true;
+  QStringList actList = acctMgr()->getAccounts(false);
+  QStringList::Iterator it( actList.begin() );
+  for( ; it != actList.end() ; ++it ) {
+    KMAccount* act = acctMgr()->findByName( *it );
+    if ( act && ( act->trash() == folder->idString() ) )
+      return true;
+  }
   return false;
 }
 
@@ -1670,11 +1700,6 @@ KMMainWidget *KMKernel::getKMMainWidget()
   }
   delete l;
   return 0;
-}
-
-void KMKernel::slotFolderRemoved( KMFolder * aFolder )
-{
-  if ( the_filterMgr ) the_filterMgr->folderRemoved( aFolder, 0 );
 }
 
 void KMKernel::slotRunBackgroundTasks() // called regularly by timer

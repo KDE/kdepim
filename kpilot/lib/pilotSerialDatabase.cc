@@ -234,18 +234,18 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 	// to the handheld (RecordIDs are only 3 bytes!!!). Under normal conditions
 	// this check should never yield true, so write out an error to indicate
 	// someone messed up full time...
-	if (newRecord->getID()>0xFFFFFF)
+	if (newRecord->id()>0xFFFFFF)
 	{
 		kdError() << k_funcinfo << "Encountered an invalid record id "
-			<<newRecord->getID()<<", resetting it to zero.";
+			<<newRecord->id()<<", resetting it to zero.";
 		newRecord->setID(0);
 	}
 	success =
 		dlp_WriteRecord(fDBSocket, getDBHandle(),
-		newRecord->getAttrib(), newRecord->getID(),
-		newRecord->getCat(), newRecord->getData(),
+		newRecord->getAttrib(), newRecord->id(),
+		newRecord->category(), newRecord->getData(),
 		newRecord->getLen(), &newid);
-	if ( (newRecord->getID() != newid) && (newid!=0) )
+	if ( (newRecord->id() != newid) && (newid!=0) )
 		newRecord->setID(newid);
 	return newid;
 }
@@ -366,4 +366,10 @@ int PilotSerialDatabase::deleteDatabase()
 	return dlp_DeleteDB(fDBSocket, 0, fDBName.latin1());
 }
 
+
+
+/* virtual */ PilotDatabase::DBType PilotSerialDatabase::dbType() const
+{
+	return eSerialDB;
+}
 

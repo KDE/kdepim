@@ -154,7 +154,7 @@ void PilotDaemonTray::setupWidget()
 	FUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir( CSL1("kpilot") );
-	icons[Normal] = loadIcon( CSL1("hotsync") );
+	icons[Normal] = loadIcon( CSL1("kpilot") );
 	icons[Busy] = loadIcon( CSL1("busysync") );
 	icons[NotListening] = loadIcon( CSL1("nosync") );
 

@@ -3,4 +3,6 @@
 	section="Apps/Tools"\
 	hints="KDE"\
 	title="KAddressbook"\
+	icon32x32="/usr/share/pixmaps/kaddressbook.xpm"\
+	icon16x16="/usr/share/pixmaps/kaddressbook-16.xpm"\
 	command="/usr/bin/kaddressbook"

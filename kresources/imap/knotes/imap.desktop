@@ -1,8 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=IMAP
-Name[hi]=आईएमएपी
-Name[xx]=xxIMAPxx
+Name[hi]=आईमैप
 X-KDE-Library=knotes_imap
 Type=Service
 ServiceTypes=KResources/Plugin

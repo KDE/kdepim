@@ -43,7 +43,6 @@ Comment[tr]=Konnector Tanımlamaları
 Comment[uk]=Визначення Konnector
 Comment[ven]=Dzithalutshedzo dza Konnector
 Comment[xh]=Iinkcazelo ze Konnector
-Comment[xx]=xxKonnector Definitionsxx
 Comment[zh_CN]=Konnector 定义
 Comment[zh_TW]=Kontour 定義
 Comment[zu]=Izincazelo ze-Konnector
@@ -56,7 +55,6 @@ Name[hu]=Konnektor
 Name[nso]=Mokgomaganyi
 Name[pl]=Łącznik
 Name[ta]=இணைப்பான்
-Name[xx]=xxKonnectorxx
 [PropertyDef::Group]
 Type=QString
 

@@ -35,7 +35,7 @@ static const KCmdLineOptions options[] =
 
 int main(int argc,char **argv)
 {
-  KAboutData aboutData( "sloxwizard",
+  KAboutData aboutData( "kdepimwizards",
                         I18N_NOOP( "SUSE LINUX Openexchange Server Configuration Wizard" ),
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
@@ -43,7 +43,7 @@ int main(int argc,char **argv)
 
   KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "kdepimwizards" );
+  KGlobal::locale()->insertCatalogue( "libkdepim" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

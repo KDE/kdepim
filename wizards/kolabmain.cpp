@@ -36,13 +36,15 @@ static const KCmdLineOptions options[] =
 
 int main(int argc,char **argv)
 {
-  KAboutData aboutData( "kolabwizard", I18N_NOOP( "Kolab Configuration Wizard" ), "0.1" );
+  // Work around KLocale bug (IMHO) (reported to Heiko Evermann BTW) which disables languages
+  // for which $appname.po doesn't exist. So we use kdepimwizards as appname.
+  KAboutData aboutData( "kdepimwizards", I18N_NOOP( "Kolab Configuration Wizard" ), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "kdepimwizards" );
+  KGlobal::locale()->insertCatalogue( "libkdepim" );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 

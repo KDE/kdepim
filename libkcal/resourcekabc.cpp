@@ -157,6 +157,7 @@ bool ResourceKABC::doLoad()
       ev->setDtEnd(birthdate);
       ev->setHasEndDate(true);
       ev->setFloats(true);
+      ev->setTransparency( Event::Transparent );
 
       ev->setSummary(summary);
 

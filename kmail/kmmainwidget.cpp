@@ -101,8 +101,9 @@ QPtrList<KMMainWidget>* KMMainWidget::s_mainWidgetList = 0;
 static KStaticDeleter<QPtrList<KMMainWidget> > mwlsd;
 
 //-----------------------------------------------------------------------------
-KMMainWidget::KMMainWidget(QWidget *parent, const char *name,
-			   KActionCollection *actionCollection, KConfig* config ) :
+KMMainWidget::KMMainWidget(QWidget *parent, const char *name, 
+                           KXMLGUIClient *aGUIClient,
+                           KActionCollection *actionCollection, KConfig* config ) :
     QWidget(parent, name),
     mQuickSearchLine( 0 )
 {
@@ -120,10 +121,12 @@ KMMainWidget::KMMainWidget(QWidget *parent, const char *name,
   mDestructed = false;
   mActionCollection = actionCollection;
   mTopLayout = new QVBoxLayout(this);
-  mFilterActions.setAutoDelete(true);
+  mFilterMenuActions.setAutoDelete(true);
+  mFilterTBarActions.setAutoDelete(false);
   mFilterCommands.setAutoDelete(true);
   mJob = 0;
   mConfig = config;
+  mGUIClient = aGUIClient;
 
   if( !s_mainWidgetList )
     mwlsd.setObject( s_mainWidgetList, new QPtrList<KMMainWidget>() );
@@ -358,7 +361,6 @@ void KMMainWidget::readConfig(void)
   // Re-activate panners
   if (mStartupDone)
   {
-
     // Update systray
     toggleSystemTray();
 
@@ -369,13 +371,9 @@ void KMMainWidget::readConfig(void)
       activatePanners();
     }
 
+    // reload foldertree
     mFolderTree->reload();
-    QListViewItem *qlvi = mFolderTree->indexOfFolder(mFolder);
-    if (qlvi!=0) {
-      mFolderTree->setCurrentItem(qlvi);
-      mFolderTree->setSelected(qlvi,TRUE);
-    }
-
+    mFolderTree->showFolder( mFolder );
 
     // sanders - New code
     mHeaders->setFolder(mFolder);
@@ -1028,8 +1026,15 @@ void KMMainWidget::slotRemoveFolder()
     }
     if (mFolder->folderType() == KMFolderTypeImap)
       kmkernel->imapFolderMgr()->remove(mFolder);
-    else if (mFolder->folderType() == KMFolderTypeCachedImap)
+    else if (mFolder->folderType() == KMFolderTypeCachedImap) {
+      // Deleted by user -> tell the account (see KMFolderCachedImap::listDirectory2)
+      KMFolderCachedImap* storage = static_cast<KMFolderCachedImap*>( mFolder->storage() );
+      KMAcctCachedImap* acct = storage->account();
+      if ( acct )
+        acct->addDeletedFolder( storage->imapPath() );
+
       kmkernel->dimapFolderMgr()->remove(mFolder);
+    }
     else if (mFolder->folderType() == KMFolderTypeSearch)
       kmkernel->searchFolderMgr()->remove(mFolder);
     else
@@ -1465,8 +1470,9 @@ void KMMainWidget::slotCopyMsg()
 void KMMainWidget::slotPrintMsg()
 {
   bool htmlOverride = mMsgView ? mMsgView->htmlOverride() : false;
-  KMCommand *command = new KMPrintCommand( this, mHeaders->currentMsg(),
-      htmlOverride );
+  KMCommand *command = 
+    new KMPrintCommand( this, mHeaders->currentMsg(),
+                        htmlOverride, mCodec );
   command->start();
 }
 
@@ -3139,35 +3145,34 @@ void KMMainWidget::slotIntro()
 
 void KMMainWidget::slotShowStartupFolder()
 {
-  if (mFolderTree) {
-    // add the folders
-    mFolderTree->reload();
-    // read the config
-    mFolderTree->readConfig();
-    // get rid of old-folders
-    mFolderTree->cleanupConfigFile();
-  }
-
   connect( kmkernel->filterMgr(), SIGNAL( filterListUpdated() ),
 	   this, SLOT( initializeFilterActions() ));
 
+  // plug shortcut filter actions now
+  initializeFilterActions();
+  
   QString newFeaturesMD5 = KMReaderWin::newFeaturesMD5();
   if ( kmkernel->firstStart() ||
        GlobalSettings::previousNewFeaturesMD5() != newFeaturesMD5 ) {
     GlobalSettings::setPreviousNewFeaturesMD5( newFeaturesMD5 );
     slotIntro();
-    return;
   }
 
   KMFolder* startup = 0;
-  if (!mStartupFolder.isEmpty()) {
+  if ( !mStartupFolder.isEmpty() ) {
     // find the startup-folder
-    startup = kmkernel->findFolderById(mStartupFolder);
+    startup = kmkernel->findFolderById( mStartupFolder );
   }
-  if (!startup)
+  if ( !startup )
     startup = kmkernel->inboxFolder();
-  mFolderTree->doFolderSelected(mFolderTree->indexOfFolder(startup));
-  mFolderTree->ensureItemVisible(mFolderTree->indexOfFolder(startup));
+
+  if ( mFolderTree ) 
+  {
+    mFolderTree->reload();
+    mFolderTree->showFolder( startup );
+    // get rid of old-folders
+    mFolderTree->cleanupConfigFile();
+  }
 }
 
 void KMMainWidget::slotShowTipOnStart()
@@ -3183,6 +3188,7 @@ void KMMainWidget::slotShowTip()
 //-----------------------------------------------------------------------------
 void KMMainWidget::slotChangeCaption(QListViewItem * i)
 {
+  if ( !i ) return;
   // set the caption to the current full path
   QStringList names;
   for ( QListViewItem * item = i ; item ; item = item->parent() )
@@ -3264,12 +3270,22 @@ void KMMainWidget::initializeFilterActions()
 {
   QString filterName, normalizedName;
   KMMetaFilterActionCommand *filterCommand;
-  KAction *filterAction;
-  mApplyFilterActionsMenu->popupMenu()->clear();
-  mFilterActions.clear();
+  KAction *filterAction = 0;
+  
+  if ( !mFilterTBarActions.isEmpty() ) {
+    if ( mGUIClient->factory() )
+      mGUIClient->unplugActionList( "toolbar_filter_actions" );
+    mFilterTBarActions.clear();
+  }
+  if ( !mFilterMenuActions.isEmpty() ) {
+    mApplyFilterActionsMenu->popupMenu()->clear();
+    if ( mGUIClient->factory() )
+      mGUIClient->unplugActionList( "menu_filter_actions" );
+    mFilterMenuActions.clear();
+  }
   mFilterCommands.clear();
   for ( QPtrListIterator<KMFilter> it(*kmkernel->filterMgr()) ;
-        it.current() ; ++it )
+        it.current() ; ++it ) {
     if (!(*it)->isEmpty() && (*it)->configureShortcut()) {
       filterName = QString("Filter %1").arg((*it)->name());
       normalizedName = filterName.replace(" ", "_");
@@ -3284,26 +3300,26 @@ void KMMainWidget::initializeFilterActions()
       filterAction = new KAction(as, icon, 0, filterCommand,
                                  SLOT(start()), actionCollection(),
                                  normalizedName.local8Bit());
-      mFilterActions.append(filterAction);
+      filterAction->plug( mApplyFilterActionsMenu->popupMenu() );
+      mFilterMenuActions.append(filterAction);
+      // FIXME
+      // uncomment the next if statement after the filter dialog supports
+      // separate activation of filters for the toolbar - currently 
+      // we better depend on whether an icon is defined, so the current
+      // IF statement is intermediate
+      // if ( (*it)->configureToolbar() )
+      if ( !(*it)->icon().isEmpty() )
+        mFilterTBarActions.append(filterAction);
     }
-
-  plugFilterActions(mApplyFilterActionsMenu->popupMenu());
+  }
+  if ( !mFilterMenuActions.isEmpty() && mGUIClient->factory() )
+    mGUIClient->plugActionList( "menu_filter_actions", mFilterMenuActions );
+  if ( !mFilterTBarActions.isEmpty() && mGUIClient->factory() )
+    mGUIClient->plugActionList( "toolbar_filter_actions", mFilterTBarActions );
 }
 
 
 //-----------------------------------------------------------------------------
-void KMMainWidget::plugFilterActions(QPopupMenu *menu)
-{
-  for (QPtrListIterator<KMFilter> it(*kmkernel->filterMgr()); it.current(); ++it)
-      if (!(*it)->isEmpty() && (*it)->configureShortcut()) {
-	  QString filterName = QString("Filter %1").arg((*it)->name());
-	  filterName = filterName.replace(" ","_");
-	  KAction *filterAction = action(filterName.local8Bit());
-	  if (filterAction && menu)
-	      filterAction->plug(menu);
-      }
-}
-
 void KMMainWidget::slotSubscriptionDialog()
 {
   if (!mFolder) return;
@@ -3363,7 +3379,6 @@ void KMMainWidget::slotAntiSpamWizard()
   AntiSpamWizard wiz( AntiSpamWizard::AntiSpam,
                       this, folderTree(), actionCollection() );
   wiz.exec();
-  emit modifiedToolBarConfig();
 }
 
 //-----------------------------------------------------------------------------
@@ -3372,7 +3387,6 @@ void KMMainWidget::slotAntiVirusWizard()
   AntiSpamWizard wiz( AntiSpamWizard::AntiVirus,
                       this, folderTree(), actionCollection() );
   wiz.exec();
-  //emit modifiedToolBarConfig();
 }
 
 //-----------------------------------------------------------------------------

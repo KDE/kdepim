@@ -96,7 +96,7 @@
     </entry>
     <entry name="SkipBackupDB" type="StringList">
         <label>Which databases not to backup.</label>
-        <default>[Arng],[PmDB],[lnch],[a86k],FATFS,ImgFile-Foto</default>
+        <default>[Arng],[PmDB],[lnch],[a86k],FATFS,ImgFile-Foto,Jpeg-Foto</default>
     </entry>
     <entry name="SkipRestoreDB" type="StringList">
         <label>

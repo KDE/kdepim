@@ -36,12 +36,6 @@
 
 #include "cryptplugfactory.h"
 #include "cryptplugwrapperlist.h"
-#include <backends/qgpgme/qgpgmebackend.h>
-#include <backends/kpgp/pgp2backend.h>
-#include <backends/kpgp/pgp5backend.h>
-#include <backends/kpgp/pgp6backend.h>
-#include <backends/kpgp/gpg1backend.h>
-#include <ui/backendconfigwidget.h>
 
 #include <kconfig.h>
 #include <klocale.h>

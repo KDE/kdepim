@@ -132,7 +132,7 @@ KNote::KNote( KXMLGUIBuilder* builder, QDomDocument buildDoc, Journal *j,
     setName( m_journal->summary() );      // don't worry, no signals are connected at this stage yet
 
     // create the note editor
-    m_editor = new KNoteEdit( this );
+    m_editor = new KNoteEdit( actionCollection(), this );
     m_editor->installEventFilter( this ); // receive events (for modified)
     m_editor->viewport()->installEventFilter( this );
 
@@ -224,9 +224,12 @@ KNote::KNote( KXMLGUIBuilder* builder, QDomDocument buildDoc, Journal *j,
         m_keepBelow->setChecked( false );
     }
 
-    // let KWin do the placement if the position is illegal
+    // let KWin do the placement if the position is illegal--at least 10 pixels
+    // of a note need to be visible
     const QPoint& position = m_config->position();
-    if ( kapp->desktop()->rect().intersects( QRect( position, QSize( width, height ) ) ) )
+    QRect desk = kapp->desktop()->rect();
+    desk.addCoords( 10, 10, -10, -10 );
+    if ( desk.intersects( QRect( position, QSize( width, height ) ) ) )
         move( position );           // do before calling show() to avoid flicker
 
     // read configuration settings...

@@ -107,36 +107,48 @@ static inline bool showKeyApprovalDialog() {
 
 static inline int encryptKeyNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-encr-key-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int signingKeyNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-sign-key-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int encryptRootCertNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-encr-root-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int signingRootCertNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-sign-root-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int encryptChainCertNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-encr-chaincert-near-expire-int", 14 );
   return kMax( 1, num );
 }
 
 static inline int signingChainCertNearExpiryWarningThresholdInDays() {
   const KConfigGroup composer( KMKernel::config(), "Composer" );
+  if ( ! composer.readBoolEntry( "crypto-warn-when-near-expire", true ) )
+    return -1;
   const int num = composer.readNumEntry( "crypto-warn-sign-chaincert-near-expire-int", 14 );
   return kMax( 1, num );
 }
@@ -415,8 +427,9 @@ void MessageComposer::readFromComposeWin()
   // we have to remember the Bcc because it might have been overwritten
   // by a custom header (therefore we can't use bcc() later) and because
   // mimelib removes addresses without domain part (therefore we can't use
-  // mReferenceMessage->bcc() later)
-  mBcc = mReferenceMessage->bcc();
+  // mReferenceMessage->bcc() later and also not now. So get the Bcc from
+  // the composer window.)
+  mBcc = mComposeWin->bcc();
   mTo = KPIM::splitEmailAddrList( mComposeWin->to().stripWhiteSpace() );
   mCc = KPIM::splitEmailAddrList( mComposeWin->cc().stripWhiteSpace() );
   mBccList = KPIM::splitEmailAddrList( mBcc.stripWhiteSpace() );

@@ -221,7 +221,7 @@ void DBRecordEditor::fillWidgets()
 	// FUNCTIONSETUP
 
 	fRecordIndex->setText(QString::number(nr));
-	fRecordID->setText(QString::number(rec->getID()));
+	fRecordID->setText(QString::number(rec->id()));
 
 	int att=rec->getAttrib();
 	fDirty->setChecked(att & dlpRecAttrDirty);

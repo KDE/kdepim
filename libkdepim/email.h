@@ -49,8 +49,20 @@ QCString getEmailAddr(const QString& aStr);
 /** Return email address and name from string. Examples:
  * "Stefan Taferner <taferner@kde.org>" returns "taferner@kde.org"
  * and "Stefan Taferner". "joe@nowhere.com" returns "joe@nowhere.com"
- * and "". Note that this only returns the first address. */
+ * and "". Note that this only returns the first address.
+ * Also note that the return value is TRUE if both the name and the
+ * mail are not empty: this does NOT tell you if mail contains a
+ * valid email address or just some rubbish.
+ */
 bool getNameAndMail(const QString& aStr, QString& name, QString& mail);
+
+/**
+ * Compare two email addresses. If matchName is false, it just checks
+ * the email address, and returns true if this matches. If matchName
+ * is true, both the name and the email must be the same.
+ */
+bool compareEmail( const QString& email1, const QString& email2,
+                   bool matchName );
 
 } // namespace
 

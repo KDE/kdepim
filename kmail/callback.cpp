@@ -65,6 +65,9 @@ bool Callback::mailICal( const QString& to, const QString iCal,
   msg->setTo( to );
   msg->setBody( iCal.utf8() );
   msg->setFrom( receiver() );
+  /* We want the triggering mail to be moved to the trash once this one
+   * has been sent successfully. Set a link header which accomplishes that. */
+  msg->link( mMsg, KMMsgStatusDeleted );
 
   KMComposeWin *cWin = new KMComposeWin(msg);
   // cWin->setCharset( "", true );
@@ -112,21 +115,17 @@ QString Callback::receiver() const
     // Only one receiver, so that has to be us
     mReceiver = mMsg->to();
   else {
-    bool found = false;
+    int found = 0;
     for( QStringList::Iterator it = addrs.begin(); it != addrs.end(); ++it ) {
       if( kmkernel->identityManager()->identityForAddress( *it ) !=
           KPIM::Identity::null ) {
 	// Ok, this could be us
-	if( found != 0 ) {
-	  // Whoops! Something is wrong here. Found more than one
-          found = false;
-          break;
-        } else
-          mReceiver = *it;
+        ++found;
+        mReceiver = *it;
       }
     }
 
-    if( !found ) {
+    if( found != 1 ) {
       bool ok;
       mReceiver =
         KInputDialog::getItem( i18n( "Select Address" ),

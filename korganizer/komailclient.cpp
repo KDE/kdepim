@@ -37,6 +37,8 @@
 #include <libkcal/event.h>
 #include <libkcal/todo.h>
 
+#include <libkdepim/email.h>
+
 #include "version.h"
 #include "koprefs.h"
 
@@ -55,12 +57,15 @@ bool KOMailClient::mailAttendees(IncidenceBase *incidence,const QString &attachm
   Attendee::List attendees = incidence->attendees();
   if (attendees.count() == 0) return false;
 
-  QString from = KOPrefs::instance()->email();
+  const QString from = incidence->organizer();
+  const QString organizerEmail = KPIM::getEmailAddr( incidence->organizer() );
   QStringList toList;
   for(uint i=0; i<attendees.count();++i) {
-    QString email = (*attendees.at(i))->email();
-    if( email != from )
-      // Don't send a mail to ourselves
+    const QString email = (*attendees.at(i))->email();
+    // In case we (as one of our identities) are the organizer we are sending this
+    // mail. We could also have added ourselves as an attendee, in which case we 
+    // don't want to send ourselves a notification mail.
+    if( organizerEmail !=  email )
       toList << email;
   }
   if( toList.count() == 0 )
@@ -254,7 +259,7 @@ int KOMailClient::kMailOpenComposer( const QString& arg0, const QString& arg1,
     //    << arg7 << " , " << arg8 << " , " << arg9
     //    << arg10<< " , " << arg11<< " , " << arg12
     //    << arg13<< " , " << arg14<< " )" << endl;
-    
+
     int result = 0;
 
     QByteArray data, replyData;

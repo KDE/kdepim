@@ -987,17 +987,16 @@ void KMHeaders::setFolder( KMFolder *aFolder, bool forceJumpToUnread )
         mItems.resize( 0 );
       }
     }
+
+    CREATE_TIMER(updateMsg);
+    START_TIMER(updateMsg);
+    updateMessageList(true, forceJumpToUnread);
+    END_TIMER(updateMsg);
+    SHOW_TIMER(updateMsg);
+    makeHeaderVisible();
   }
-
-  CREATE_TIMER(updateMsg);
-  START_TIMER(updateMsg);
-  updateMessageList(true, forceJumpToUnread);
-  END_TIMER(updateMsg);
-  SHOW_TIMER(updateMsg);
-  makeHeaderVisible();
-
-  if (mFolder)
-    setFolderInfoStatus();
+  /* Doesn't the below only need to be done when the folder changed? - till */
+  setFolderInfoStatus();
 
   QString colText = i18n( "Sender" );
   if (mFolder && (mFolder->whoField().lower() == "to"))
@@ -1351,9 +1350,13 @@ void KMHeaders::msgRemoved(int id, QString msgId, QString strippedSubjMD5)
   mImperfectlyThreadedList.removeRef(removedItem);
   delete removedItem;
   // we might have rethreaded it, in which case its current state will be lost
-  if ( curItem && curItem != removedItem ) {
-    setCurrentItem( curItem );
-    setSelectionAnchor( currentItem() );
+  if ( curItem ) {
+    if ( curItem != removedItem ) {
+      setCurrentItem( curItem );
+      setSelectionAnchor( currentItem() );
+    } else {
+      emit maybeDeleting();
+    }
   }
 
   /* restore signal */
@@ -1709,6 +1712,8 @@ void KMHeaders::finalizeMove( KMHeaderItem *item, int contentX, int contentY )
 //-----------------------------------------------------------------------------
 void KMHeaders::moveMsgToFolder ( KMFolder* destFolder, bool askForConfirmation )
 {
+  if ( destFolder == mFolder ) return; // Catch the noop case
+
   KMMessageList msgList = *selectedMsgs();
   if ( !destFolder && askForConfirmation &&    // messages shall be deleted
        KMessageBox::warningContinueCancel(this,
@@ -1737,6 +1742,8 @@ void KMHeaders::slotMoveCompleted( KMCommand *command )
   kdDebug(5006) << k_funcinfo << command->result() << endl;
   bool deleted = static_cast<KMMoveCommand *>( command )->destFolder() == 0;
   if ( command->result() == KMCommand::OK ) {
+    // make sure the current item is shown
+    makeHeaderVisible();
 #if 0 // enable after the message-freeze
     BroadcastStatus::instance()->setStatusMsg(
        deleted ? i18nTODO("Messages deleted successfully.") : i18nTODO("Messages moved successfully") );

@@ -374,7 +374,7 @@ void KOEventEditor::readEvent( Event *event, bool tmpl )
   mDetails->readEvent( event );
   mRecurrence->readIncidence( event );
   mAttachments->readIncidence( event );
-  if( mFreeBusy ) { 
+  if( mFreeBusy ) {
     mFreeBusy->readEvent( event );
     mFreeBusy->triggerReload();
   }

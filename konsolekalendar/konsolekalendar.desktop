@@ -14,7 +14,6 @@ Name[sr]=Конзолни календар
 Name[sr@Latn]=Konzolni kalendar
 Name[ta]=கான்சோல் நாள்காட்டி
 Name[uk]=Календар для консолі
-Name[xx]=xxKonsoleKalendarxx
 Exec=kdialog --sorry "konsolekalendar is a command-line only program.  Please read the handbook at help:/konsolekalendar for more info."
 Icon=konsolekalendar
 Type=Application

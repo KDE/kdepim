@@ -1,6 +1,25 @@
 KAlarm
 
-=== Version 1.1.3 --- 28 July 2004 ===
+=== Version 1.1.6 --- 30 September 2004 ===
+Prevent crash if kalarmui.rc is missing.
+Unsuppress Quit warning message box if default answer is Cancel quit.
+Prevent blind copy to self of email alarms via KMail when bcc is deselected.
+
+=== Version 1.1.5 --- 1 September 2004 ===
+Show erroneous control in alarm edit dialog when an error message is displayed.
+Make alarm edit dialog always appear on current desktop.
+Make weekly/monthly/yearly recurrences scheduled from command line correspond
+  correctly to the start date.
+Fix start date for monthly/yearly recurrences scheduled from the command line.
+Fix DCOP triggerEvent() call to not reschedule alarm if it isn't due yet.
+
+=== Version 1.1.4 --- 21 August 2004 ===
+Fix errors when altering or cancelling deferrals of expired recurrences.
+Fix message window size not fitting message (bug introduced in 1.1.3).
+Fix invisible widget taking keyboard focus when tabbing into time spinboxes.
+Prevent recurrence exceptions list taking keyboard focus if it's empty.
+
+=== Version 1.1.3 (KDE 3.3) --- 28 July 2004 ===
 Fix dialog sizing the first time KAlarm is run.
 
 === Version 1.1.2 (KDE 3.3 beta2) --- 11 July 2004 ===

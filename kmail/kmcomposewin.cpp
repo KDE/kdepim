@@ -39,6 +39,8 @@ using KPIM::AddressesDialog;
 using KPIM::MailListDrag;
 #include "recentaddresses.h"
 using KRecentAddress::RecentAddresses;
+#include "attachmentcollector.h"
+#include "objecttreeparser.h"
 
 #include <libkpimidentities/identitymanager.h>
 #include <libkpimidentities/identitycombo.h>
@@ -354,6 +356,14 @@ KMComposeWin::~KMComposeWin()
     it = mMapAtmLoadData.begin();
   }
   std::for_each( mComposedMessages.begin(), mComposedMessages.end(), Delete<KMMessage> );
+}
+
+void KMComposeWin::setAutoDeleteWindow( bool f )
+{
+  if ( f )
+    setWFlags( getWFlags() | WDestructiveClose );
+  else
+    setWFlags( getWFlags() & ~WDestructiveClose );
 }
 
 //-----------------------------------------------------------------------------
@@ -1514,6 +1524,58 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
 
   mDictionaryCombo->setCurrentByDictionary( ident.dictionary() );
 
+  partNode * root = partNode::fromMessage( mMsg );
+
+  KMail::ObjectTreeParser otp; // all defaults are ok
+  otp.parseObjectTree( root );
+
+  KMail::AttachmentCollector ac;
+  ac.setDiveIntoEncryptions( true );
+  ac.setDiveIntoSignatures( true );
+  ac.setDiveIntoMessages( false );
+
+  ac.collectAttachmentsFrom( root );
+
+  for ( std::vector<partNode*>::const_iterator it = ac.attachments().begin() ; it != ac.attachments().end() ; ++it )
+    addAttach( new KMMessagePart( (*it)->msgPart() ) );
+
+  kdDebug(5006) << endl << endl << "TEXTUAL CONTENT: " << endl << otp.textualContent() << endl;
+  mEditor->setText( otp.textualContent() );
+
+  mCharset = otp.textualContentCharset();
+  if ( mCharset.isEmpty() )
+    mCharset = mMsg->charset();
+  if ( mCharset.isEmpty() )
+    mCharset = mDefCharset;
+  setCharset( mCharset );
+
+  if ( partNode * n = root->findType( DwMime::kTypeText, DwMime::kSubtypeHtml ) )
+    if ( partNode * p = n->parentNode() )
+      if ( p->hasType( DwMime::kTypeMultipart ) &&
+           p->hasSubType( DwMime::kSubtypeAlternative ) )
+        if ( mMsg->headerField( "X-KMail-Markup" ) == "true" )
+          toggleMarkup( true );
+
+  /* Handle the special case of non-mime mails */
+  if ( mMsg->numBodyParts() == 0 ) {
+    mCharset=mMsg->charset();
+    if ( mCharset.isEmpty() ||  mCharset == "default" )
+      mCharset = mDefCharset;
+
+    QCString bodyDecoded = mMsg->bodyDecoded();
+
+    if( allowDecryption )
+      decryptOrStripOffCleartextSignature( bodyDecoded );
+
+    const QTextCodec *codec = KMMsgBase::codecForName(mCharset);
+    if (codec) {
+      mEditor->setText(codec->toUnicode(bodyDecoded));
+    } else
+      mEditor->setText(QString::fromLocal8Bit(bodyDecoded));
+  }
+
+
+#ifdef BROKEN_FOR_OPAQUE_SIGNED_OR_ENCRYPTED_MAILS
   const int num = mMsg->numBodyParts();
   kdDebug(5006) << "KMComposeWin::setMsg() mMsg->numBodyParts="
                 << mMsg->numBodyParts() << endl;
@@ -1603,6 +1665,7 @@ void KMComposeWin::setMsg(KMMessage* newMsg, bool mayAutoSign,
   }
 
   setCharset(mCharset);
+#endif // BROKEN_FOR_OPAQUE_SIGNED_OR_ENCRYPTED_MAILS
 
   if( mAutoSign && mayAutoSign ) {
     //
@@ -3072,7 +3135,7 @@ void KMComposeWin::slotContinueDoSend( bool sentOk )
 	if ( draftsFolder == 0 )
 	  // This is *NOT* supposed to be "imapDraftsFolder", because a
 	  // dIMAP folder works like a normal folder
-	  draftsFolder = kmkernel->imapFolderMgr()->findIdString( (*it)->drafts() );
+	  draftsFolder = kmkernel->dimapFolderMgr()->findIdString( (*it)->drafts() );
 	if ( draftsFolder == 0 )
 	  imapDraftsFolder = kmkernel->imapFolderMgr()->findIdString( (*it)->drafts() );
 	if ( !draftsFolder && !imapDraftsFolder ) {
@@ -3242,7 +3305,12 @@ void KMComposeWin::toggleMarkup(bool markup)
     int paraFrom, indexFrom, paraTo, indexTo;
     mEditor->getSelection ( &paraFrom, &indexFrom, &paraTo, &indexTo);
     mEditor->selectAll();
+    // save the buttonstates because setColor calls fontChanged
+    bool _bold = textBoldAction->isChecked();
+    bool _italic = textItalicAction->isChecked();
     mEditor->setColor(QColor(0,0,0));
+    textBoldAction->setChecked(_bold);
+    textItalicAction->setChecked(_italic);
     mEditor->setSelection ( paraFrom, indexFrom, paraTo, indexTo);
 
     mEditor->setTextFormat(Qt::RichText);
@@ -3559,6 +3627,7 @@ void KMComposeWin::slotSetAlwaysSend( bool bAlways )
 
 void KMComposeWin::slotListAction( const QString& style )
 {
+    toggleMarkup(true);
     if ( style == i18n( "Standard" ) )
        mEditor->setParagType( QStyleSheetItem::DisplayBlock, QStyleSheetItem::ListDisc );
     else if ( style == i18n( "Bulleted List (Disc)" ) )

@@ -101,11 +101,12 @@ public:
     _subject = rfcDecoder::encodeRFC2047String(_str).latin1();
   }
   /** 
-   * set a encoded subject
+   * set an encoded subject
+   * Whitespace is removed from begin and end
    */
   void setSubjectEncoded (const QCString & _str)
   {
-    _subject = _str.simplifyWhiteSpace();
+    _subject = _str.stripWhiteSpace();
   }
 
   /** 

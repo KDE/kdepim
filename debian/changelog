@@ -1,8 +1,69 @@
-kdepim (4:3.2.92-1) experimental; urgency=low
+kdepim (4:3.3.0-3) unstable; urgency=low
+
+  * Updates from KDE_3_3_BRANCH.
+    + Fixes konsolekalendar.  Closes: #269295.
+  * Move kleopatra to contrib for now, until GnuPG2 is in unstable.  In
+    the meantime, add a note to the package description on how to
+    install the package.  Closes: #269789.
+  * Move binary dependencies from kontact-plugins for korganizer and
+    kpilot to Recommends and Suggests, respectively.  Closes: #273402.
+  * kmailcvt Depends: kmail.  Closes: #268788.
+
+ -- Daniel Schepler <schepler@debian.org>  Sat, 25 Sep 2004 19:44:44 -0700
+
+kdepim (4:3.3.0-2) unstable; urgency=low
+
+  * Using automake1.7 doesn't fix the korganizer install problems; go to
+    automake1.9 and readd 03_automake1.8.diff and
+    04_korganizer_makefile.diff.
+  * New patch 05_lib_link.diff: Correct link lines for libkalarmd and
+    libkpilot so that they are linked against all necessary libraries.
+  * Include new fixes from KDE_3_3_BRANCH.
+
+ -- Daniel Schepler <schepler@debian.org>  Fri, 27 Aug 2004 07:25:15 -0700
+
+kdepim (4:3.3.0-1) unstable; urgency=low
 
   * New upstream release.
+  * Add German debconf translations, thanks to Erik Schanze.
+    Closes: #264825.
+  * Correct typo in kpilot.install which caused file conflicts.
+    Closes: #266311.
+  * Add Recommends: kdepim-kio-plugins to kmail for newimap, and also
+    move kdebase-kio-plugins there from Depends.  Closes: #266603.
+  * Use automake1.7 instead of 1.8 to work around problem in
+    korganizer/Makefile.am.
 
- -- Daniel Schepler <schepler@debian.org>  Mon,  2 Aug 2004 10:49:28 -0700
+ -- Daniel Schepler <schepler@debian.org>  Wed, 25 Aug 2004 00:09:09 -0400
+
+kdepim (4:3.2.92+3.3.0rc1-1) experimental; urgency=low
+
+  * New upstream release.
+    + New packages: kdepim-wizards, kitchensync, libkleopatra0[-dev],
+      libkpimidentities1.
+    + Removed packages: libkdgantt0[-dev].
+    + Renamed kgpgcertmanager to kleopatra.
+  * Taking over maintainership, add myself to Uploaders.
+  * Build in gnokii support again.  Closes: #254643.
+  * Add Build-Depends on libgpgme11-dev for kmail.
+  * Make the *.install files a bit more robust by listing directories
+    clearly belonging to packages instead of listing each individual
+    file.
+  * Add kdepim-doc-html package for the benefit of non-KDE users.
+  * Expand package descriptions.  Closes: #209672, #209689, #209862,
+    #209997, #210088, #210094.
+  * Add menu icons.
+  * Add doc-base files for kdepim-doc and kdepim-doc-html.
+  * Write new manual pages for all binaries.
+
+ -- Daniel Schepler <schepler@debian.org>  Sat,  7 Aug 2004 23:20:22 -0700
+
+kdepim (4:3.2.3-1) unstable; urgency=high
+
+  * New upstream release.
+  * kmail Suggests: cryptplug. (Closes: #231797)
+
+ -- Christopher L Cheney <ccheney@debian.org>  Tue,  3 Aug 2004 23:00:00 -0500
 
 kdepim (4:3.2.2-2) unstable; urgency=high
 

@@ -128,6 +128,10 @@ public:
   void setUidValidity(const QString &validity) { mUidValidity = validity; }
   QString uidValidity() const { return mUidValidity; }
 
+  /** Forget which mails are considered locally present. Needed when uidvalidity
+   * changes. */
+  void clearUidMap() { uidMap.clear(); }
+
   /** The imap account associated with this folder */
   void setAccount(KMAcctCachedImap *acct);
   KMAcctCachedImap* account() const;
@@ -179,9 +183,6 @@ public:
 
   virtual int createIndexFromContents()
     { return KMFolderMaildir::createIndexFromContents(); }
-
-  // Mark for resync
-  void resync() { mResync = true; }
 
   //virtual void holdSyncs( bool hold ) { mHoldSyncs = hold; }
 
@@ -294,6 +295,7 @@ public slots:
 private slots:
   void serverSyncInternal();
   void slotIncreaseProgress();
+  void slotUpdateLastUid();
 
 signals:
   void folderComplete(KMFolderCachedImap *folder, bool success);
@@ -354,20 +356,35 @@ private:
   QValueList<KMFolderCachedImap*> mSubfoldersForSync;
   KMFolderCachedImap* mCurrentSubfolder;
 
-  /* Mapping uid ->index
-     Keep updated in addMsg, take and removeMsg */
+  /** Mapping uid -> index
+      Keep updated in addMsg, take and removeMsg. This is used to lookup
+      whether a mail is present locally or not.  */
   QMap<ulong,int> uidMap;
   bool uidMapDirty;
-  ulong mLastUid;
-  int uidWriteTimer;
   void reloadUidMap();
+  int uidWriteTimer;
+
+  /** This is the last uid that we have seen from the server on the last
+      sync. It is crucially important that this is correct at all times
+      and not bumped up permaturely, as it is the watermark which is used
+      to discern message which are not present locally, because they were
+      deleted locally and now need to be deleted from the server,
+      from those which are new and need to be downloaded. Sucessfull
+      downloading of all pending mail from the server sets this. Between
+      invocations it is stored on disk in the uidcache file. It must not
+      change during a sync. */
+  ulong mLastUid;
+  /** The highest id encountered while syncing. Once the sync process has
+      successfully downloaded all pending mail and deleted on the server
+      all messages that were removed locally, this will become the new
+      mLastUid. See above for details. */
+  ulong mTentativeHighestUid;
 
   int mUserRights;
   ACLList mACLList;
 
   bool mSilentUpload;
   bool mFolderRemoved;
-  bool mResync;
   //bool mHoldSyncs;
   bool mRecurse;
   bool mCreateInbox;

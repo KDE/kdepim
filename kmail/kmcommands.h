@@ -62,6 +62,9 @@ public slots:
   // Retrieve messages then calls execute
   void start();
 
+  // advance the progressbar, emitted by the folderjob
+  void slotProgress( unsigned long done, unsigned long total );
+
 signals:
   void messagesTransfered( KMCommand::Result result );
   /** Emitted when the command has completed.
@@ -275,17 +278,16 @@ private:
   virtual Result execute();
 };
 
-class KMShowMsgSrcCommand : public KMCommand
+class KMShowMsgSrcCommand
 {
-  Q_OBJECT
-
 public:
-  KMShowMsgSrcCommand( QWidget *parent, KMMessage *msg,
-		       bool fixedFont );
-  virtual Result execute();
+  KMShowMsgSrcCommand( KMMessage *msg, bool fixedFont );
+		       
+  void start();
 
 private:
   bool mFixedFont;
+  KMMessage *mMsg;
 };
 
 class KMSaveMsgCommand : public KMCommand
@@ -508,12 +510,14 @@ class KMPrintCommand : public KMCommand
   Q_OBJECT
 
 public:
-  KMPrintCommand( QWidget *parent, KMMessage *msg, bool htmlOverride=false );
+  KMPrintCommand( QWidget *parent, KMMessage *msg, 
+                  bool htmlOverride=false, const QTextCodec *codec = 0 );
 
 private:
   virtual Result execute();
 
   bool mHtmlOverride;
+  const QTextCodec *mCodec;
 };
 
 class KMSetStatusCommand : public KMCommand

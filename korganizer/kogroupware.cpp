@@ -43,6 +43,7 @@
 #include "koviewmanager.h"
 #include "kocore.h"
 
+#include <libkdepim/email.h>
 #include <ktnef/ktnefparser.h>
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefdefs.h>
@@ -106,17 +107,16 @@ KOGroupware::KOGroupware( CalendarView* view, KCal::Calendar* calendar )
   mCalendar = calendar;
 
   // Set up the dir watch of the three incoming dirs
-  const QString incomingDirName = locateLocal("data","korganizer/income");
   KDirWatch* watcher = KDirWatch::self();
-  watcher->addDir( incomingDirName + ".accepted" );
-  watcher->addDir( incomingDirName + ".cancel" );
-  watcher->addDir( incomingDirName + ".reply" );
+  watcher->addDir( locateLocal( "data", "korganizer/income.accepted/" ) );
+  watcher->addDir( locateLocal( "data", "korganizer/income.cancel/" ) );
+  watcher->addDir( locateLocal( "data", "korganizer/income.reply/" ) );
   connect( watcher, SIGNAL( dirty( const QString& ) ),
            this, SLOT( incomingDirChanged( const QString& ) ) );
   // Now set the ball rolling
-  incomingDirChanged( incomingDirName + ".accepted" );
-  incomingDirChanged( incomingDirName + ".cancel" );
-  incomingDirChanged( incomingDirName + ".reply" );
+  incomingDirChanged( locateLocal( "data", "korganizer/income.accepted/" ) );
+  incomingDirChanged( locateLocal( "data", "korganizer/income.cancel/" ) );
+  incomingDirChanged( locateLocal( "data", "korganizer/income.reply/" ) );
 }
 
 FreeBusyManager *KOGroupware::freeBusyManager()
@@ -133,11 +133,16 @@ FreeBusyManager *KOGroupware::freeBusyManager()
 
 void KOGroupware::incomingDirChanged( const QString& path )
 {
-  const QString incomingDirName = locateLocal("data","korganizer/income.");
-  if ( !path.startsWith( incomingDirName ) )
-    // Not our problem
+  const QString incomingDirName = locateLocal( "data","korganizer/" )
+                                  + "income.";
+  if ( !path.startsWith( incomingDirName ) ) {
+    kdDebug(5850) << "incomingDirChanged: Wrong dir " << path << endl;
     return;
-  const QString action = path.mid( incomingDirName.length() );
+  }
+  QString action = path.mid( incomingDirName.length() );
+  while ( action.length() > 0 && action[ action.length()-1 ] == '/' )
+    // Strip slashes at the end
+    action.truncate( action.length()-1 );
 
   // Handle accepted invitations
   QDir dir( path );
@@ -154,6 +159,7 @@ void KOGroupware::incomingDirChanged( const QString& path )
   }
   QTextStream t(&f);
   t.setEncoding( QTextStream::UnicodeUTF8 );
+  QString receiver = KPIM::getEmailAddr( t.readLine() );
   QString iCal = t.read();
 
   ScheduleMessage *message = mFormat.parseScheduleMessage( mCalendar, iCal );
@@ -174,9 +180,19 @@ void KOGroupware::incomingDirChanged( const QString& path )
   KCal::Incidence* incidence =
     dynamic_cast<KCal::Incidence*>( message->event() );
   KCal::MailScheduler scheduler( mCalendar );
-  if ( action.startsWith( "accepted" ) )
+  if ( action.startsWith( "accepted" ) ) {
+    // Find myself and set to answered and accepted
+    KCal::Attendee::List attendees = incidence->attendees();
+    KCal::Attendee::List::ConstIterator it;
+    for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+      if( (*it)->email() == receiver ) {
+        (*it)->setStatus( KCal::Attendee::Accepted );
+        (*it)->setRSVP(false);
+        break;
+      }
+    }
     scheduler.acceptTransaction( incidence, method, status );
-  else if ( action.startsWith( "cancel" ) )
+  } else if ( action.startsWith( "cancel" ) )
     // TODO: Could this be done like the others?
     mCalendar->deleteIncidence( incidence );
   else if ( action.startsWith( "reply" ) )

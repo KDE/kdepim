@@ -5,6 +5,7 @@ X-KDE-ServiceType=Komposer/Editor
 X-KDE-Derived=Komposer/Plugin
 Comment=Komposer Editor
 Comment[bg]=Писане на форматиран текст
+Comment[bs]=Komposer editor
 Comment[ca]=Compositor per a KDE
 Comment[da]=Komposer editor
 Comment[es]=Editor Komposer
@@ -15,17 +16,18 @@ Comment[hu]=Komposer
 Comment[it]=Komposer editor
 Comment[nb]=Komposer redigerer
 Comment[nl]=Komposer-editor
+Comment[nn]=Komposer redigerar
 Comment[pl]=Edytor Komposer
 Comment[pt]=Editor Kompositor
 Comment[pt_BR]=Editor de Mensagens
 Comment[ru]=Редактор Komposer
+Comment[sk]=Editor Komposer
 Comment[sl]=Urejevalnik Komposer
 Comment[sr]=Komposer едитор
 Comment[sr@Latn]=Komposer едитор
 Comment[sv]=Komposer editor
 Comment[ta]=கம்போசர் தொகுப்பான்
 Comment[tg]=Муҳаррири Komposer
-Comment[xx]=xxKomposer Editorxx
 Comment[zh_CN]=Komposer 编辑器
 
 [PropertyDef::X-Komposer-Weight]

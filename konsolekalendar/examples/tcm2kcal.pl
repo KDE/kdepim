@@ -16,7 +16,7 @@
 # Requirements:
 #   lynx
 #   konsolekalendar (from KDE).
-#   Bit-Vector and Date-Calc perl modules (from CPAN).
+#   Date-Calc perl module (from CPAN).
 #
 # Options: -d, delete entries from KDE calendar file
 #          -c, change entries in KDE calendar by re-writing movie titles in all caps.
@@ -26,15 +26,18 @@
 #                     default is current year
 #          -f <file>, where file is location of output KDE calendar
 #                     default is $HOME/.kde/share/apps/korganizer/tcm.ics
-#	   -w <konsolekaledar> where konsolekalendar is located
+#	   -w <konsolekalendar> where konsolekalendar is located
 
 use strict;
 use Env qw(HOME);
 use Getopt::Std;
-use Date::Calc qw(Today Month_to_Text Add_Delta_DHMS Add_Delta_Days);
+use Date::Calc qw(Today Month_to_Text
+                  Add_Delta_DHMS Add_Delta_Days
+                  Day_of_Week Day_of_Week_to_Text
+                  Month_to_Text);
 
 #location of konsolekalendar program
-my($konkal)="/usr/local/src/KDE3/CVS/kdepim/konsolekalendar/konsolekalendar";
+my($konkal)="/usr/bin/konsolekalendar";
 
 #location of new TCM KDE calendar
 my($cal)="$HOME/.kde/share/apps/korganizer/tcm.ics";
@@ -157,8 +160,26 @@ sub process() {
   }
 
   # format start datetime
-  my($date) = "$year-$month-$day";
+  my($date) = sprintf("%4d-%02d-%02d",$year,$month,$day);
   my($time) = sprintf("%02d:%02d",$hour,$min);
+  my($gdate) = sprintf("\"%s %02d %s %4d\"",
+                       Day_of_Week_to_Text(Day_of_Week($year,$month,$day)),
+                       $day,
+                       Month_to_Text($month),
+                       $year);
+  my($ghour) = $hour;
+  if( $ghour == 12 ) {
+    $ampm = "pm";
+  }
+  if( $ghour > 12 ) {
+    $ghour -= 12;
+    $ampm = "pm"
+  }
+  if( $ghour == 0 ) {
+    $ghour = 12;
+    $ampm = "am";
+  }
+  my($gtime) = sprintf("\"%02d:%02d %s\"",$ghour,$min,lc($ampm));
 
   ### Compute Movie End Datetime by adding Movie Duration to Start Datetime
 
@@ -170,23 +191,49 @@ sub process() {
   my(@d) = reverse(split(" ",$duration));
   $duration=$d[0];
   $duration =~ s/m\.$//g;
-  print "DURATION COMPUTATION ERROR\n" if( $duration < 1 || $duration > 300);
+  #print "DURATION COMPUTATION ERROR\n" if( $duration < 1 || $duration > 300);
 
   my($endyear,$endmonth,$endday,$endhh, $endmm, $endss) = Add_Delta_DHMS(
        $year,$month,$day,$hour,$min,0,
                     0,   0,    $duration, 0);
   # format end datetime
-  my($enddate) = "$endyear-$endmonth-$endday";
+  my($enddate) = sprintf("%4d-%02d-%02d",$endyear,$endmonth,$endday);
   my($endtime) = sprintf("%02d:%02d",$endhh,$endmm);
+  my($genddate) = sprintf("\"%s %02d %s %4d\"",
+                          Day_of_Week_to_Text(Day_of_Week($endyear,$endmonth,$endday)),
+                          $endday,
+                          Month_to_Text($endmonth),
+                          $endyear);
+  $ampm = "am";
+  if( $endhh == 12 ) {
+    $ampm = "pm";
+  }
+  if( $endhh > 12 ) {
+    $endhh -= 12;
+    $ampm = "pm";
+  }
+  if( $endhh == 0 ) {
+    $endhh = 12;
+    $ampm = "am";
+  }
+  my($gendtime) = sprintf("\"%02d:%02d %s\"",$endhh,$endmm,lc($ampm));
 
   # Derive Movie Title
   my($tmp) = split("[)]",$event);
   my($tmp2,$title) = split("^[0-9]*:[0-9][0-9][[:space:]]*[A,P]M",$tmp);
   $title=&rmleadwhite($title);
   $title=$title . ")";
+  if( $title =~ m/\([[:space:]]\)/ ) {
+    print "SKIPPING MOVIE WITHOUT A TITLE\n";
+    return;
+  }
 
-  # "Grep line"
-  my($UID)=&find_uid("$date,$time,$enddate,$endtime,$title");
+  my($gtitle) = "\"" . $title . "\"";
+
+  # "Grep line".
+  #  Due to events across multiple days, search for ending date/time only.
+#  my($UID)=&find_uid("$gdate,$gtime,$genddate,$gendtime,$gtitle");
+  my($UID)=&find_uid(",$genddate,$gendtime,$gtitle");
 
   # New Title for Change Mode
   $title=uc($title) if( $mode eq "--change" );
@@ -212,7 +259,7 @@ sub find_uid() {
   if( $mode ne "--add" ) {
     if( open(VIEW, "$konkal --view --all --export-type csv --file $cal |") ) {
       while($line=<VIEW>) {
-	if( index($line,$grepline) == 0) {
+	if( index($line,$grepline) >= 0) {
 	  my(@u) = reverse(split(",",$line));
 	  chomp($u[0]);
 	  $UID="--uid=$u[0]";

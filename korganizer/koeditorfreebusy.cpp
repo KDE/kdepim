@@ -153,17 +153,14 @@ KOEditorFreeBusy::KOEditorFreeBusy( int spacing, QWidget *parent,
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( spacing );
 
-  QString organizer = KOPrefs::instance()->email();
-  mOrganizerLabel = new QLabel( i18n("Organizer: %1").arg( organizer ), this );
-  mIsOrganizer = true; // Will be set later. This is just valgrind silencing
-  topLayout->addWidget( mOrganizerLabel );
-
   // Label for status summary information
   // Uses the tooltip palette to highlight it
+  mIsOrganizer = false; // Will be set later. This is just valgrind silencing
   mStatusSummaryLabel = new QLabel( this );
   mStatusSummaryLabel->setPalette( QToolTip::palette() );
   mStatusSummaryLabel->setFrameStyle( QFrame::Plain | QFrame::Box );
   mStatusSummaryLabel->setLineWidth( 1 );
+  mStatusSummaryLabel->hide(); // Will be unhidden later if you are organizer
   topLayout->addWidget( mStatusSummaryLabel );
 
   // The control panel for the gantt widget
@@ -312,17 +309,15 @@ bool KOEditorFreeBusy::updateEnabled() const
 void KOEditorFreeBusy::readEvent( Event *event )
 {
   setDateTimes( event->dtStart(), event->dtEnd() );
+  mIsOrganizer = KOPrefs::instance()->thatIsMe( event->organizer() );
+  updateStatusSummary();
 }
 
 
 void KOEditorFreeBusy::setDateTimes( QDateTime start, QDateTime end )
 {
-  mDtStart = start;
-  mDtEnd = end;
-
-  mGanttView->centerTimelineAfterShow( start );
-  mGanttView->clearBackgroundColor();
-  mGanttView->setIntervalBackgroundColor( start, end, Qt::magenta );
+ 
+  slotUpdateGanttView( start, end );
 }
 
 void KOEditorFreeBusy::slotScaleChanged( int newScale )
@@ -383,7 +378,9 @@ void KOEditorFreeBusy::slotInsertFreeBusy( KCal::FreeBusy *fb,
 */
 
 void KOEditorFreeBusy::slotUpdateGanttView( QDateTime dtFrom, QDateTime dtTo )
-{
+{ 
+  mDtStart = dtFrom;
+  mDtEnd = dtTo;
   bool block = mGanttView->getUpdateEnabled( );
   mGanttView->setUpdateEnabled( false );
   QDateTime horizonStart = QDateTime( dtFrom.addDays( -15 ).date() );
@@ -557,7 +554,6 @@ void KOEditorFreeBusy::updateStatusSummary()
         .arg( total ).arg( accepted ).arg( tentative ).arg( declined ) );
   } else {
     mStatusSummaryLabel->hide();
-    mStatusSummaryLabel->setText( "" );
   }
   mStatusSummaryLabel->adjustSize();
 }

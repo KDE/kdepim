@@ -81,7 +81,7 @@
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
-  if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys )
+  if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() )
       qDebug( "key is invalid - ignoring" );
     if ( key.isExpired() ) {
@@ -94,6 +94,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
       qDebug( "key is disabled" );
       return false;
     }
+  }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
        !key.canEncrypt() ) {
@@ -555,13 +556,12 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 
   if ( mTruncated > 0 )
     KMessageBox::information( this,
-			      i18n("One backend returned truncated output.\n"
-				   "Not all available keys are shown",
-			           "%n backends returned truncated output.\n"
-				   "Not all available keys are shown",
+			      i18n("<qt>One backend returned truncated output.<br>"
+				   "Not all available keys are shown</qt>",
+			           "<qt>%n backends returned truncated output.<br>"
+				   "Not all available keys are shown</qt>",
 				   mTruncated),
 			      i18n("Key List Result") );
-
   mKeyListView->flushKeys();
 
   this->setEnabled( true );

@@ -27,7 +27,6 @@
 #include <kurldrag.h>
 #include <kstdaction.h>
 #include <kcolordialog.h>
-#include <kxmlguiclient.h>
 
 #include "knoteedit.h"
 #include "knotebutton.h"
@@ -36,16 +35,13 @@ static const short SEP = 5;
 static const short ICON_SIZE = 10;
 
 
-KNoteEdit::KNoteEdit( QWidget *parent, const char *name )
+KNoteEdit::KNoteEdit( KActionCollection *actions, QWidget *parent, const char *name )
     : KTextEdit( parent, name )
 {
     setAcceptDrops( true );
     setWordWrap( WidgetWidth );
     setWrapPolicy( AtWhiteSpace );
     setLinkUnderline( true );
-
-    KXMLGUIClient* client = dynamic_cast<KXMLGUIClient*>(parent);
-    KActionCollection* actions = client->actionCollection();
 
     // create the actions for the RMB menu
     KAction* undo = KStdAction::undo( this, SLOT(undo()), actions );
@@ -206,7 +202,13 @@ void KNoteEdit::setTextFormat( TextFormat f )
     {
         QString t = text();
         KTextEdit::setTextFormat( f );
-        setText( t );
+        
+        // if the note contains html/xml source try to display it, otherwise
+        // get the modified text again and set it to preserve newlines
+        if ( QStyleSheet::mightBeRichText( t ) )
+            setText( t );
+        else
+            setText( text() );
 
         enableRichTextActions();
     }

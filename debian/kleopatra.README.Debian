@@ -1,0 +1,48 @@
+The following instructions for installing kleopatra were gotten from
+a message to the debian-qt-kde mailing list by Adeodato Simo.
+
+--
+
+these are, briefly, the steps I have followed to get some S/MIME
+support in KMail 3.3.
+
+  Wipe out all not needed packages:
+  # aptitude purge newpg gpgsm cryptplug cryptplug-dev libgpgme6 libgpgme-dev libksba0
+
+  Use packages provided by Matthias Urlichs <smurf@debian.org>:
+  # echo "deb http://smurf.noris.de/code/debian/ experimental smurf" \
+      >>/etc/apt/sources.list 
+
+  Install required packages
+  # apt-get update && apt-get install gnupg2 gnupg-agent dirmngr
+
+    NOTE 1: gnupg2 will *NOT* substitute your gpg command, it will
+    just provide /usr/bin/gpg2, which you needn't use, and some other
+    commands that the programs will use internally.
+
+    NOTE 2: the gnupg-agent package from smurf does NOT provide
+    /etc/X11/Xsession.d/90*gpg-agent.
+
+    NOTE 3: gnupg2 1.9.10+cvs-1 contains /usr/share/locale/locale.alias,
+    which is also in the locales package. you'll need dpkg
+    --force-overwrite.
+
+  ===> RECOMPILE gpgme0.4 <===
+  This is the sole cause for the error "this GPGME version was
+  compiled without S/MIME support. Now it will because of gnupg2
+  installed:
+  # apt-get source gpgme0.4 && cd gpgme0.4-0.9.0
+  # debuild && dpkg -i ../libgpgme11_0.9.0-1_i386.deb
+
+You should now see funky things in KMail -> Settings -> Configure
+KMail -> Security -> Crypto Backends -> Configure.
+
+I found this page useful:
+
+  http://jdurand.home.cern.ch/jdurand/cern_ca_and_mail/
+
+Kleopatra now works and KMail seems able to verify S/MIME messages.
+
+DISCLAIMER: I claim no deep knowledge of all of the above explained.
+
+ -- daniel <schepler@debian.org>, Sat Sep 25 16:58:08 2004

@@ -102,7 +102,9 @@ RecurrenceEdit::RecurrenceEdit(bool readOnly, QWidget* parent, const char* name)
 	  mMonthlyShown(false),
 	  mYearlyShown(false),
 	  noEmitTypeChanged(true),
-	  mReadOnly(readOnly)
+	  mReadOnly(readOnly),
+	  mSavedDays(7),
+	  mSavedMonths(12)
 {
 	QBoxLayout* layout;
 	QVBoxLayout* topLayout = new QVBoxLayout(this, marginKDE2, KDialog::spacingHint());
@@ -613,7 +615,7 @@ QWidget* RecurrenceEdit::checkData(const QDateTime& startDateTime, QString& erro
 {
 	if (mAtLoginButton->isOn())
 		return 0;
-	const_cast<RecurrenceEdit*>(this)->currStartDateTime = startDateTime;
+	const_cast<RecurrenceEdit*>(this)->mCurrStartDateTime = startDateTime;
 	if (mEndDateButton->isChecked())
 	{
 		QWidget* errWidget = 0;
@@ -897,7 +899,8 @@ void RecurrenceEdit::deleteException()
 }
 
 /******************************************************************************
- * Delete the currently highlighted exception date.
+ * Enable/disable the exception group buttons according to whether any item is
+ * selected in the exceptions listbox.
  */
 void RecurrenceEdit::enableExceptionButtons()
 {
@@ -907,6 +910,9 @@ void RecurrenceEdit::enableExceptionButtons()
 		mDeleteExceptionButton->setEnabled(enable);
 	if (mChangeExceptionButton)
 		mChangeExceptionButton->setEnabled(enable);
+
+	// Prevent the exceptions list box receiving keyboard focus is it's empty
+	mExceptionDateList->setFocusPolicy(mExceptionDateList->count() ? QWidget::WheelFocus : QWidget::NoFocus);
 }
 
 /******************************************************************************
@@ -961,14 +967,14 @@ DateTime RecurrenceEdit::endDateTime() const
  * Fetch which days of the week have been checked.
  * Reply = true if at least one day has been checked.
  */
-bool RecurrenceEdit::getCheckedDays(QBitArray& rDays) const
+bool RecurrenceEdit::getCheckedDays(QBitArray& days) const
 {
 	bool found = false;
-	rDays.fill(false);
+	days.fill(false);
 	for (int i = 0;  i < 7;  ++i)
 		if (mWeekRuleDayBox[i]->isChecked())
 		{
-			rDays.setBit(KAlarm::localeDayInWeek_to_weekDay(i) - 1, 1);
+			days.setBit(KAlarm::localeDayInWeek_to_weekDay(i) - 1, 1);
 			found = true;
 		}
 	return found;
@@ -977,11 +983,11 @@ bool RecurrenceEdit::getCheckedDays(QBitArray& rDays) const
 /******************************************************************************
  * Check/uncheck each day of the week according to the specified bits.
  */
-void RecurrenceEdit::setCheckedDays(QBitArray& rDays)
+void RecurrenceEdit::setCheckedDays(QBitArray& days)
 {
 	for (int i = 0;  i < 7;  ++i)
 	{
-		bool x = rDays.testBit(KAlarm::localeDayInWeek_to_weekDay(i) - 1);
+		bool x = days.testBit(KAlarm::localeDayInWeek_to_weekDay(i) - 1);
 		mWeekRuleDayBox[i]->setChecked(x);
 	}
 }
@@ -1005,11 +1011,22 @@ bool RecurrenceEdit::getCheckedMonths(QValueList<int>& months) const
 }
 
 /******************************************************************************
+ * Check/uncheck each month of the year according to the specified bits.
+ */
+void RecurrenceEdit::getCheckedMonths(QBitArray& months) const
+{
+	months.fill(false);
+	for (int i = 0;  i < 12;  ++i)
+		if (mYearRuleMonthBox[i]->isChecked()  &&  mYearRuleMonthBox[i]->isEnabled())
+			months.setBit(i, 1);
+}
+
+/******************************************************************************
  * Set all controls to their default values.
  */
 void RecurrenceEdit::setDefaults(const QDateTime& from)
 {
-	currStartDateTime = from;
+	mCurrStartDateTime = from;
 	QDate fromDate = from.date();
 	mNoEndDateButton->setChecked(true);
 
@@ -1042,6 +1059,8 @@ void RecurrenceEdit::setDefaults(const QDateTime& from)
 	noEmitTypeChanged = false;
 	rangeTypeClicked();
 	enableExceptionButtons();
+
+	saveState();
 }
 
 /******************************************************************************
@@ -1189,7 +1208,7 @@ void RecurrenceEdit::set(const KAEvent& event)
 	repeatDuration = event.remainingRecurrences();
 
 	// Get range information
-	QDateTime endtime = currStartDateTime;
+	QDateTime endtime = mCurrStartDateTime;
 	if (repeatDuration == -1)
 		mNoEndDateButton->setChecked(true);
 	else if (repeatDuration)
@@ -1219,6 +1238,8 @@ void RecurrenceEdit::set(const KAEvent& event)
 	enableExceptionButtons();
 
 	rangeTypeClicked();
+
+	saveState();
 }
 
 /******************************************************************************
@@ -1264,8 +1285,6 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
 		QBitArray rDays(7);
 		getCheckedDays(rDays);
 		event.setRecurWeekly(frequency, rDays, repeatCount, endDate);
-		if (adjustStart)
-			event.setFirstRecurrence();
 	}
 	else if (button == mMonthlyButton)
 	{
@@ -1280,12 +1299,6 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
 			pos.weeknum = (i <= 5) ? i : 5 - i;
 			QValueList<KAEvent::MonthPos> poses;
 			poses.append(pos);
-			if (adjustStart)
-			{
-				// Set the frequency to 1 to find the first possible occurrence
-				event.setRecurMonthlyByPos(1, poses, repeatCount, endDate);
-				event.setFirstRecurrence();
-			}
 			event.setRecurMonthlyByPos(frequency, poses, repeatCount, endDate);
 		}
 		else
@@ -1296,12 +1309,6 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
 				daynum = 31 - daynum;
 			QValueList<int> daynums;
 			daynums.append(daynum);
-			if (adjustStart)
-			{
-				// Set the frequency to 1 to find the first possible occurrence
-				event.setRecurMonthlyByDate(1, daynums, repeatCount, endDate);
-				event.setFirstRecurrence();
-			}
 			event.setRecurMonthlyByDate(frequency, daynums, repeatCount, endDate);
 		}
 	}
@@ -1321,12 +1328,6 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
 			pos.weeknum = (i <= 5) ? i : 5 - i;
 			QValueList<KAEvent::MonthPos> poses;
 			poses.append(pos);
-			if (adjustStart  &&  months.count())
-			{
-				// Set the frequency to 1 to find the first possible occurrence
-				event.setRecurAnnualByPos(1, poses, months, repeatCount, endDate);
-				event.setFirstRecurrence();
-			}
 			event.setRecurAnnualByPos(frequency, poses, months, repeatCount, endDate);
 		}
 /*		else if (mYearRuleDayButton->isChecked())
@@ -1335,12 +1336,6 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
 			int daynum = event.mainDate().dayOfYear();
 			QValueList<int> daynums;
 			daynums.append(daynum);
-			if (adjustStart)
-			{
-				// Set the frequency to 1 to find the first possible occurrence
-				event.setRecurAnnualByDay(1, daynums, repeatCount, endDate);
-				event.setFirstRecurrence();
-			}
 			event.setRecurAnnualByDay(frequency, daynums, repeatCount, endDate);
 		}*/
 		else
@@ -1349,12 +1344,6 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
 			if (daynum > 31)
 				daynum = 31 - daynum;
 			bool feb29 = (daynum == 29) && feb;
-			if (adjustStart  &&  months.count())
-			{
-				// Set the frequency to 1 to find the first possible occurrence
-				event.setRecurAnnualByDate(1, months, daynum, feb29, repeatCount, endDate);
-				event.setFirstRecurrence();
-			}
 			event.setRecurAnnualByDate(frequency, months, daynum, feb29, repeatCount, endDate);
 		}
 	}
@@ -1363,9 +1352,137 @@ void RecurrenceEdit::updateEvent(KAEvent& event, bool adjustStart)
 		event.setNoRecur();
 		return;
 	}
+	if (adjustStart)
+		event.setFirstRecurrence();
 
 	// Set up exceptions
 	event.setExceptionDates(mExceptionDates);
+}
+
+/******************************************************************************
+ * Save the state of all controls.
+ */
+void RecurrenceEdit::saveState()
+{
+	mSavedRuleButton = ruleButtonGroup->selected();
+	if (mSavedRuleButton == mSubDailyButton)
+	{
+		mSavedFrequency = mSubDayRecurFrequency->value();
+	}
+	else if (mSavedRuleButton == mDailyButton)
+	{
+		mSavedFrequency = mDayRecurFrequency->value();
+	}
+	else if (mSavedRuleButton == mWeeklyButton)
+	{
+		mSavedFrequency = mWeekRecurFrequency->value();
+		getCheckedDays(mSavedDays);
+	}
+	else if (mSavedRuleButton == mMonthlyButton)
+	{
+		mSavedFrequency = mMonthRecurFrequency->value();
+		mSavedDayOfMonthSelected = mMonthRuleOnNthDayButton->isChecked();
+		if (mSavedDayOfMonthSelected)
+			mSavedDayOfMonth = mMonthRuleNthDayEntry->currentItem();
+		else
+		{
+			mSavedWeekOfMonth    = mMonthRuleNthNumberEntry->currentItem();
+			mSavedWeekDayOfMonth = mMonthRuleNthTypeOfDayEntry->currentItem();
+		}
+	}
+	else if (mSavedRuleButton == mYearlyButton)
+	{
+		mSavedFrequency = mYearRecurFrequency->value();
+		mSavedDayOfMonthSelected = mYearRuleDayMonthButton->isChecked();
+		if (mSavedDayOfMonthSelected)
+			mSavedDayOfMonth = mYearRuleNthDayEntry->currentItem();
+		else
+		{
+			mSavedWeekOfMonth    = mYearRuleNthNumberEntry->currentItem();
+			mSavedWeekDayOfMonth = mYearRuleNthTypeOfDayEntry->currentItem();
+		}
+		getCheckedMonths(mSavedMonths);
+	}
+	mSavedRangeButton = mRangeButtonGroup->selected();
+	if (mSavedRangeButton == mRepeatCountButton)
+		mSavedRepeatCount = mRepeatCountEntry->value();
+	else if (mSavedRangeButton == mEndDateButton)
+		mSavedEndDateTime.set(QDateTime(mEndDateEdit->date(), mEndTimeEdit->time()), mEndAnyTimeCheckBox->isChecked());
+	mSavedExceptionDates = mExceptionDates;
+}
+
+/******************************************************************************
+ * Check whether any of the controls have changed state since initialisation.
+ */
+bool RecurrenceEdit::stateChanged() const
+{
+	if (mSavedRuleButton != ruleButtonGroup->selected()
+	||  mSavedRangeButton != mRangeButtonGroup->selected())
+		return true;
+	if (mSavedRuleButton == mSubDailyButton)
+	{
+		if (mSavedFrequency != mSubDayRecurFrequency->value())
+			return true;
+	}
+	else if (mSavedRuleButton == mDailyButton)
+	{
+		if (mSavedFrequency != mDayRecurFrequency->value())
+			return true;
+	}
+	else if (mSavedRuleButton == mWeeklyButton)
+	{
+		QBitArray days(7);
+		getCheckedDays(days);
+		if (mSavedFrequency != mWeekRecurFrequency->value()
+		||  mSavedDays != days)
+			return true;
+	}
+	else if (mSavedRuleButton == mMonthlyButton)
+	{
+		if (mSavedFrequency != mMonthRecurFrequency->value()
+		||  mSavedDayOfMonthSelected != mMonthRuleOnNthDayButton->isChecked())
+			return true;
+		if (mSavedDayOfMonthSelected)
+		{
+			if (mSavedDayOfMonth != mMonthRuleNthDayEntry->currentItem())
+				return true;
+		}
+		else
+		{
+			if (mSavedWeekOfMonth    != mMonthRuleNthNumberEntry->currentItem()
+			||  mSavedWeekDayOfMonth != mMonthRuleNthTypeOfDayEntry->currentItem())
+				return true;
+		}
+	}
+	else if (mSavedRuleButton == mYearlyButton)
+	{
+		QBitArray months(12);
+		getCheckedMonths(months);
+		if (mSavedFrequency != mYearRecurFrequency->value()
+		||  mSavedDayOfMonthSelected != mYearRuleDayMonthButton->isChecked()
+		||  mSavedMonths != months)
+			return true;
+		if (mSavedDayOfMonthSelected)
+		{
+			if (mSavedDayOfMonth != mYearRuleNthDayEntry->currentItem())
+				return true;
+		}
+		else
+		{
+			if (mSavedWeekOfMonth    != mYearRuleNthNumberEntry->currentItem()
+			||  mSavedWeekDayOfMonth != mYearRuleNthTypeOfDayEntry->currentItem())
+				return true;
+		}
+	}
+	if (mSavedRangeButton == mRepeatCountButton
+	&&  mSavedRepeatCount != mRepeatCountEntry->value())
+		return true;
+	if (mSavedRangeButton == mEndDateButton
+	&&  mSavedEndDateTime != DateTime(QDateTime(mEndDateEdit->date(), mEndTimeEdit->time()), mEndAnyTimeCheckBox->isChecked()))
+		return true;
+	if (mSavedExceptionDates != mExceptionDates)
+		return true;
+	return false;
 }
 
 /*=============================================================================

@@ -190,8 +190,11 @@ class ResourceCalendar : public KRES::Resource
     /**
      This signal is emitted when a subresource is added.
     */
-    void signalSubresourceAdded( ResourceCalendar *, const QString &,
-                                 const QString & );
+    void signalSubresourceAdded( ResourceCalendar *, const QString& type,
+                                 const QString& subresource, const QString& label );
+
+    void signalSubresourceAdded( ResourceCalendar *, const QString& type,
+                                 const QString& subresource );
 
     /**
      This signal is emitted when a subresource is removed.
@@ -281,6 +284,15 @@ class ResourceCalendar : public KRES::Resource
       Is this subresource active or not?
     */
     virtual bool subresourceActive( const QString& ) const { return true; }
+    
+    /**
+      What is the label for this subresource?
+     */
+    virtual const QString labelForSubresource( const QString& resource ) const
+    {
+       // the resource identifier is a sane fallback
+       return resource;
+    };
 
   public slots:
     /**

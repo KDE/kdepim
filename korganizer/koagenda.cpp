@@ -476,9 +476,8 @@ bool KOAgenda::eventFilter_key( QObject *, QKeyEvent *ke )
         if ( !mTypeAhead ) {
           mTypeAhead = true;
           emitNewEventForSelection();
-          return true;
         }
-        break;
+        return true;
     }
   }
   return false;
@@ -495,8 +494,8 @@ void KOAgenda::finishTypeAhead()
   if ( typeAheadReceiver() ) {
     for( QEvent *e = mTypeAheadEvents.first(); e;
          e = mTypeAheadEvents.next() ) {
-//      kdDebug() << "postEvent() " << int( typeAheadReceiver() ) << endl;
-      QApplication::postEvent( typeAheadReceiver(), e );
+//      kdDebug() << "sendEvent() " << int( typeAheadReceiver() ) << endl;
+      QApplication::sendEvent( typeAheadReceiver(), e );
     }
   }
   mTypeAheadEvents.clear();
@@ -1757,6 +1756,17 @@ void KOAgenda::selectItem(KOAgendaItem *item)
   mSelectedItem = item;
   mSelectedItem->select();
   emit incidenceSelected( mSelectedItem->incidence() );
+}
+
+void KOAgenda::selectItemByUID( const QString& uid )
+{
+  KOAgendaItem *item;
+  for ( item = mItems.first(); item != 0; item = mItems.next() ) {
+    if( item->incidence() && item->incidence()->uid() == uid ) {
+      selectItem( item );
+      break;
+    }
+  }
 }
 
 // This function seems never be called.

@@ -480,12 +480,9 @@ int KAlarmApp::newInstance()
 						USAGE(i18n("Invalid %1 parameter").arg(QString::fromLatin1("--interval")))
 					if (alarmNoTime  &&  recurType == KAEvent::MINUTELY)
 						USAGE(i18n("Invalid %1 parameter for date-only alarm").arg(QString::fromLatin1("--interval")))
-#ifdef SIMPLE_REP
-						USAGE(i18n("Invalid %1 and %2 parameters: repetition is longer than %3 interval").arg(QString::fromLatin1("--interval")).arg(QString::fromLatin1("--repeat")).arg(QString::fromLatin1("--recurrence")));
-#endif
 
 					// Convert the recurrence parameters into a KCal::Recurrence
-					KAEvent::setRecurrence(recurrence, recurType, repeatInterval, repeatCount, endTime);
+					KAEvent::setRecurrence(recurrence, recurType, repeatInterval, repeatCount, DateTime(alarmTime, alarmNoTime), endTime);
 				}
 				else
 				{
@@ -728,13 +725,20 @@ void KAlarmApp::quitIf(int exitCode, bool force)
 void KAlarmApp::doQuit(QWidget* parent)
 {
 	kdDebug(5950) << "KAlarmApp::doQuit()\n";
-	if (mDisableAlarmsIfStopped
-	&&  KMessageBox::warningYesNo(parent, i18n("Quitting will disable alarms\n"
-	                                           "(once any alarm message windows are closed)."),
-	                              QString::null, KStdGuiItem::quit(), KStdGuiItem::cancel(),
-	                              Preferences::QUIT_WARN
-	                             ) != KMessageBox::Yes)
-		return;
+	if (mDisableAlarmsIfStopped)
+	{
+		// KMessageBox::warningYesNo() is used here because its default is No (Cancel).
+		// But if the user checks the box "Don't ask again" and selects Cancel, this
+		// would effectively disable the Quit menu option, which is not a good idea.
+		// So first reinstate Quit warnings if necessary. 
+		Preferences::instance()->validateQuitWarn();    // reinstate Quit warnings if defaulted to Don't Quit
+		if (KMessageBox::warningYesNo(parent, i18n("Quitting will disable alarms\n"
+		                                           "(once any alarm message windows are closed)."),
+		                              QString::null, KStdGuiItem::quit(), KStdGuiItem::cancel(),
+		                              Preferences::QUIT_WARN
+		                             ) != KMessageBox::Yes)
+			return;
+	}
 	quitIf(0, true);
 }
 
@@ -1107,6 +1111,7 @@ bool KAlarmApp::scheduleEvent(KAEvent::Action action, const QString& text, const
 	if (mailAddresses.count())
 		event.setEmail(mailAddresses, mailSubject, mailAttachments);
 	event.setRecurrence(recurrence);
+	event.setFirstRecurrence();
 	if (display)
 	{
 		// Alarm is due for display already
@@ -1165,20 +1170,12 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 	KAEvent event(*kcalEvent);
 	switch (function)
 	{
-		case EVENT_TRIGGER:
-		{
-			// Only trigger one alarm from the event - we don't
-			// want multiple identical messages, for example.
-			KAAlarm alarm = event.firstAlarm();
-			if (alarm.valid())
-				execAlarm(event, alarm, true);
-			break;
-		}
 		case EVENT_CANCEL:
 			KAlarm::deleteEvent(event, true);
 			break;
 
-		case EVENT_HANDLE:
+		case EVENT_TRIGGER:    // handle it if it's due, else execute it regardless
+		case EVENT_HANDLE:     // handle it if it's due
 		{
 			QDateTime now = QDateTime::currentDateTime();
 			bool updateCalAndDisplay = false;
@@ -1314,10 +1311,22 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 			// any others. This ensures that the updated event is only saved once to the calendar.
 			if (displayAlarm.valid())
 				execAlarm(event, displayAlarm, true, !displayAlarm.repeatAtLogin());
-			else if (updateCalAndDisplay)
-				KAlarm::updateEvent(event, 0);     // update the window lists and calendar file
 			else
-				kdDebug(5950) << "KAlarmApp::handleEvent(): no action\n";
+			{
+				if (function == EVENT_TRIGGER)
+				{
+					// The alarm is to be executed regardless of whether it's due.
+					// Only trigger one alarm from the event - we don't want multiple
+					// identical messages, for example.
+					KAAlarm alarm = event.firstAlarm();
+					if (alarm.valid())
+						execAlarm(event, alarm, false);
+				}
+				if (updateCalAndDisplay)
+					KAlarm::updateEvent(event, 0);     // update the window lists and calendar file
+				else if (function != EVENT_TRIGGER)
+					kdDebug(5950) << "KAlarmApp::handleEvent(): no action\n";
+			}
 			break;
 		}
 	}

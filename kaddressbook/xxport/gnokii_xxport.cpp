@@ -712,7 +712,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 	Q_UNUSED(list);
 	KMessageBox::error(parentWidget(), i18n("Gnokii interface is not available.\n"
-		"Please ask your distributor to add gnokii during compile time."));
+		"Please ask your distributor to add gnokii at compile time."));
 
 #else
 	if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),

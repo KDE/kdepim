@@ -35,10 +35,12 @@
 #include "syncAction.h"
 #include "pilotDaemonDCOP.h"
 
-class PilotDaemon;
 class QPixmap;
 class QTimer;
 class KAboutApplication;
+class QPopupMenu;
+
+class PilotDaemon;
 class ActionQueue;
 class FileInstaller;
 class LoggerDCOP_stub;
@@ -65,6 +67,10 @@ public:
 
 protected:
 	void setupWidget();
+	/**
+	* Menu of sync types.
+	*/
+	QPopupMenu *fSyncTypeMenu;
 
 protected slots:
 	void slotShowAbout();
@@ -111,6 +117,7 @@ private:
 	* Timer for blinking.
 	*/
 	QTimer *fBlinkTimer;
+
 } ;
 
 class PilotDaemon : public QObject, virtual public PilotDaemonDCOP
@@ -147,7 +154,7 @@ public:
 	* setting in the config file)
 	*/
 	void showTray();
-	void addInstallFiles(const QStringList &);
+	virtual void addInstallFiles(const QStringList &);
 
 	// The next few functions are the DCOP interface.
 	// Some are also slots.

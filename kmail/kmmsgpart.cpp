@@ -57,6 +57,29 @@ KMMessagePart::~KMMessagePart()
 
 
 //-----------------------------------------------------------------------------
+void KMMessagePart::clear()
+{
+  mOriginalContentTypeStr = QCString();
+  mType = "text";
+  mSubtype = "plain";
+  mCte = "7bit";
+  mContentDescription = QCString();
+  mContentDisposition = QCString();
+  mBody.truncate( 0 );
+  mAdditionalCTypeParamStr = QCString();
+  mName = QString::null;
+  mParameterAttribute = QCString();
+  mParameterValue = QString::null;
+  mCharset = QCString();
+  mPartSpecifier = QString::null;
+  mBodyDecodedSize = 0;
+  mParent = 0;
+  mLoadHeaders = false;
+  mLoadPart = false;
+}
+
+
+//-----------------------------------------------------------------------------
 int KMMessagePart::decodedSize(void) const
 {
   if (mBodyDecodedSize < 0)
@@ -300,10 +323,10 @@ QCString KMMessagePart::bodyDecoded(void) const
       break;
     }
   }
-  result = result.replace( "\r\n", "\n" ); // CRLF -> LF conversion
-
   kdWarning( result.length() != (unsigned int)len, 5006 )
     << "KMMessagePart::bodyDecoded(): body is binary but used as text!" << endl;
+
+  result = result.replace( "\r\n", "\n" ); // CRLF -> LF conversion
 
   assert( mBodyDecodedSize < 0 || mBodyDecodedSize == len );
   if ( mBodyDecodedSize < 0 )
