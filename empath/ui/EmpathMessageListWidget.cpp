@@ -781,6 +781,8 @@ EmpathMessageListWidget::contentsMousePressEvent(QMouseEvent * e)
 {
 	empathDebug("MOUSE PRESS EVENT");
 	
+	QPoint pos = contentsToViewport(e->pos());
+	
 	// Ok, here's the method:
 	// 
 	// CASE 0:
@@ -825,7 +827,7 @@ EmpathMessageListWidget::contentsMousePressEvent(QMouseEvent * e)
 		return;
 	}
 	
-	QListViewItem * item = itemAt(e->pos());
+	QListViewItem * item = itemAt(pos);
 
 	if (!item) {
 		empathDebug("No item under cursor");
@@ -836,7 +838,7 @@ EmpathMessageListWidget::contentsMousePressEvent(QMouseEvent * e)
 	
 	if (e->button() == RightButton) {
 		empathDebug("CASE 1");
-		s_rightButtonPressed(itemAt(e->pos()), QCursor::pos(), 0); 
+		s_rightButtonPressed(itemAt(pos), QCursor::pos(), 0); 
 		return;
 	}
 	

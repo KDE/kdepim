@@ -60,21 +60,10 @@ EmpathAttachmentListWidget::addAttachment()
 {
 	empathDebug("addAttachment() called");
 
-	QString filename =
-		KFileDialog::getOpenFileName(
-			QString::null, QString::null,
-			this, i18n("Empath: Add Attachment").ascii());
-	
-	if (filename.isEmpty())
-		return;
-	
-	EmpathAttachmentSpec newSpec;
-	newSpec.setFilename(filename);
-	
 	EmpathAttachmentEditDialog * e =
 		new EmpathAttachmentEditDialog(this, "attachmentEditDialog");
 	
-	e->setSpec(newSpec);
+	e->browse();
 	
 	if (e->exec() != QDialog::Accepted)
 		return;

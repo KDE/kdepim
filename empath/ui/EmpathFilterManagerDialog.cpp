@@ -330,7 +330,7 @@ EmpathFilterManagerDialog::s_OK()
 	void
 EmpathFilterManagerDialog::s_help()
 {
-	empathInvokeHelp(QString::null, QString::null);
+	//empathInvokeHelp(QString::null, QString::null);
 }
 
 	void

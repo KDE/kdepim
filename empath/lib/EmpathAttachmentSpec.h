@@ -26,6 +26,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "RMM_Enum.h"
 
 class EmpathAttachmentSpec
 {
@@ -39,7 +40,7 @@ class EmpathAttachmentSpec
 		EmpathAttachmentSpec(
 				const QString & filename,
 				const QString & description,
-				const QString & encoding,
+				RMM::CteType	encoding,
 				const QString & type,
 				const QString & subType,
 				const QString & charset)
@@ -90,14 +91,14 @@ class EmpathAttachmentSpec
 		
 		QString filename()		const { return filename_;		}
 		QString description()	const { return description_;	}
-		QString encoding()		const { return encoding_;		}
+		RMM::CteType encoding()	const { return encoding_;		}
 		QString type()			const { return type_;			}
 		QString subType()		const { return subType_;		}
 		QString charset()		const { return charset_;		}
 		
 		void setFilename	(const QString & s) { filename_		= s; }
 		void setDescription	(const QString & s) { description_	= s; }
-		void setEncoding	(const QString & s) { encoding_		= s; }
+		void setEncoding	(RMM::CteType t)	{ encoding_		= t; }
 		void setType		(const QString & s) { type_			= s; }
 		void setSubType		(const QString & s) { subType_		= s; }
 		void setCharset		(const QString & s) { charset_		= s; }
@@ -108,7 +109,7 @@ class EmpathAttachmentSpec
 		
 		QString filename_;
 		QString description_;
-		QString encoding_;
+		RMM::CteType encoding_;
 		QString type_;
 		QString subType_;
 		QString charset_;

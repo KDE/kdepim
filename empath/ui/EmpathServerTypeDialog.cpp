@@ -172,19 +172,14 @@ EmpathServerTypeDialog::s_Cancel()
 	void
 EmpathServerTypeDialog::s_Help()
 {
-	empathInvokeHelp("","");
+	//empathInvokeHelp("","");
 }
 
 	EmpathMailbox::AccountType
 EmpathServerTypeDialog::accountType()
 {
-	if (rb_serverTypeMaildir_->isChecked())
-	return EmpathMailbox::Maildir;	
-	if (rb_serverTypePOP3_->isChecked())
-	return EmpathMailbox::POP3;
-	if (rb_serverTypeIMAP4_->isChecked())
-	return EmpathMailbox::IMAP4;
-	// Get out of gaol
-	return EmpathMailbox::Maildir;
+	return (
+		(EmpathMailbox::AccountType)
+		(buttonGroup_->id(buttonGroup_->selected())));
 }
 

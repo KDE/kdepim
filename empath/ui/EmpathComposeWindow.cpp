@@ -456,7 +456,7 @@ EmpathComposeWindow::s_messageCopyTo()
 	void
 EmpathComposeWindow::s_help()
 {
-	empathInvokeHelp("", "");
+	//empathInvokeHelp("", "");
 }
 
 	void

@@ -22,26 +22,24 @@
 # pragma implementation "EmpathUIUtils.h"
 #endif
 
+// Qt includes
+#include <qstring.h>
+
 // KDE includes
-#include <kiconloader.h>
-#include <kapp.h>
 #include <kglobal.h>
-#include <kconfig.h>
+#include <kiconloader.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
-#include "EmpathConfig.h"
-#include "Empath.h"
 
-	QPixmap
-empathMimeIcon(const QString & name)
+QPixmap empathMimeIcon(const QString & name)
 {
 	return KGlobal::iconLoader()->loadIcon(name);
 }
 
-	QPixmap
-empathIcon(const QString & name)
+QPixmap empathIcon(const QString & name)
 {
 	return KGlobal::iconLoader()->loadIcon(name);
 }
+
 

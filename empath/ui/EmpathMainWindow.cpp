@@ -26,6 +26,7 @@
 #include <qapplication.h>
 #include <qmsgbox.h>
 #include <qwidgetlist.h>
+#include <qfile.h>
 
 // KDE includes
 #include <klocale.h>
@@ -419,7 +420,7 @@ EmpathMainWindow::s_messageView()
 	void
 EmpathMainWindow::s_help()
 {
-	empathInvokeHelp("", "");
+	//empathInvokeHelp("", "");
 }
 
 	void

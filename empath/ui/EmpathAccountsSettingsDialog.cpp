@@ -420,7 +420,7 @@ EmpathAccountsSettingsDialog::s_OK()
 	void
 EmpathAccountsSettingsDialog::s_help()
 {
-	empathInvokeHelp(QString::null, QString::null);
+	//empathInvokeHelp(QString::null, QString::null);
 }
 
 	void

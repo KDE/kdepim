@@ -484,7 +484,7 @@ EmpathComposeSettingsDialog::s_OK()
 	void
 EmpathComposeSettingsDialog::s_help()
 {
-	empathInvokeHelp(QString::null, QString::null);
+	//empathInvokeHelp(QString::null, QString::null);
 }
 
 	void

@@ -240,7 +240,7 @@ EmpathConfigMaildirDialog::s_default()
 	void
 EmpathConfigMaildirDialog::s_help()
 {
-	empathInvokeHelp(QString::null, QString::null);
+	//empathInvokeHelp(QString::null, QString::null);
 }
 
 	void

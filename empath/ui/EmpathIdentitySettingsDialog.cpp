@@ -434,7 +434,7 @@ EmpathIdentitySettingsDialog::s_OK()
 	void
 EmpathIdentitySettingsDialog::s_help()
 {
-	empathInvokeHelp(QString::null, QString::null);
+	//empathInvokeHelp(QString::null, QString::null);
 }
 
 	void

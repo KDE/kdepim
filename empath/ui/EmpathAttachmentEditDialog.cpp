@@ -34,6 +34,111 @@
 #include "EmpathAttachmentEditDialog.h"
 #include "RikGroupBox.h"
 
+	const QString
+EmpathAttachmentEditDialog::charsetTypes_[] = { 
+	"us-ascii (English)",
+	"iso-8859-1 (Latin-1)",
+	"iso-8859-2 (Latin-2)",
+	"iso-8859-3 (Esperanto)",
+	"iso-8859-4 (Baltic)",
+	"iso-8859-5 (Cyrillic)",
+	"iso-8859-6 (Arabic)",
+	"iso-8859-7 (Greek)",
+	"iso-8859-8 (Hebrew)",
+	"iso-8859-9 (Turkish)",
+	"iso-8859-10 (Nordic)",
+	"KOI-8R (Russian)"
+};
+
+	const int
+EmpathAttachmentEditDialog::nChr = 12;
+
+	const QString
+EmpathAttachmentEditDialog::textSubTypes_[] = {
+	"Plain",
+	"RichText",
+	"HTML"
+};
+	const int
+EmpathAttachmentEditDialog::nTxt = 3;
+
+	const QString
+EmpathAttachmentEditDialog::messageSubTypes_[] = {
+	"RFC822",
+	"Digest",
+	"Parallel",
+	"Partial",
+	"External-Body"
+};	
+	const int
+EmpathAttachmentEditDialog::nMsg = 5;
+
+	const QString
+EmpathAttachmentEditDialog::applicationSubTypes_[] = {
+	"Octet-Stream",
+	"X-cpio",
+	"X-DVI",
+	"X-perl",
+	"X-tar",
+	"X-deb",
+	"X-rar-compressed",
+	"X-LaTeX",
+	"X-sh",
+	"X-shar",
+	"X-tar-gz",
+	"X-tcl",
+	"X-TeX",
+	"X-troff",
+	"X-zip",
+	"X-VRML"
+};
+
+	const int
+EmpathAttachmentEditDialog::nApp = 16;
+
+	const QString
+EmpathAttachmentEditDialog::imageSubTypes_[] = {
+	"JPEG",
+	"GIF",
+	"PNG",
+	"TIFF",
+	"X-XBitmap",
+	"X-XPixmap",
+	"X-CMU-Raster",
+	"X-Portable-Anymap",
+	"X-Portable-Bitmap",
+	"X-Portable-Graymap",
+	"X-Portable-Pixmap",
+	"X-RGB"
+};
+
+	const int
+EmpathAttachmentEditDialog::nImg = 12; 
+
+	const QString
+EmpathAttachmentEditDialog::videoSubTypes_[] = {
+	"MPEG",
+	"QuickTime",
+	"FLI",
+	"GL",
+	"X-SGI-Movie",
+	"X-MSVideo"
+};
+
+	const int
+EmpathAttachmentEditDialog::nVid = 6;
+
+	const QString
+EmpathAttachmentEditDialog::audioSubTypes_[] = {
+	"MIDI",
+	"ULAW",
+	"X-AIFF",
+	"X-WAV"
+};
+
+	const int
+EmpathAttachmentEditDialog::nAud = 4;
+
 EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
 		QWidget * parent,
 		const char * name)
@@ -109,9 +214,13 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
 	
 	pb_browse_->setPixmap(empathIcon("browse.png"));
 	pb_browse_->setFixedSize(h, h);
+	
+	QObject::connect(
+		pb_browse_,	SIGNAL(clicked()),
+		this,		SLOT(s_browse()));
 
 	bg_encoding_ =
-		new QButtonGroup(this, "bg_encoding");
+		new QButtonGroup(w_encoding_, "bg_encoding");
 	CHECK_PTR(bg_encoding_);
 
 	bg_encoding_->hide();
@@ -165,12 +274,15 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
 	rb_8bit_	->setChecked(false);
 	rb_7bit_	->setChecked(false);
 	rb_qp_		->setChecked(false);
-
-	bg_encoding_->insert(rb_base64_);
-	bg_encoding_->insert(rb_8bit_);
-	bg_encoding_->insert(rb_7bit_);
-	bg_encoding_->insert(rb_qp_);
 	
+	bg_encoding_->insert(rb_base64_,	RMM::CteTypeBase64);
+	bg_encoding_->insert(rb_8bit_,		RMM::CteType8bit);
+	bg_encoding_->insert(rb_7bit_,		RMM::CteType7bit);
+	bg_encoding_->insert(rb_qp_,		RMM::CteTypeQuotedPrintable);
+	
+	QObject::connect(
+		bg_encoding_, SIGNAL(clicked(int)),
+		this, SLOT(s_encodingChanged(int)));
 
 	l_type_		= new QLabel(i18n("Type"), w_main_, "l_type");
 	CHECK_PTR(l_type_);
@@ -208,20 +320,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
 	KQuickHelp::add(cb_charset_, i18n(
 			"Choose the character set that this attachment\n"
 			"will be specified to be using."));
-
-	cb_charset_->insertItem(i18n("us-ascii (English)"));
-	cb_charset_->insertItem(i18n("iso-8859-1 (Latin-1)"));
-	cb_charset_->insertItem(i18n("iso-8859-2 (Latin-2)"));
-	cb_charset_->insertItem(i18n("iso-8859-3 (Esperanto)"));
-	cb_charset_->insertItem(i18n("iso-8859-4 (Baltic)"));
-	cb_charset_->insertItem(i18n("iso-8859-5 (Cyrillic)"));
-	cb_charset_->insertItem(i18n("iso-8859-6 (Arabic)"));
-	cb_charset_->insertItem(i18n("iso-8859-7 (Greek)"));
-	cb_charset_->insertItem(i18n("iso-8859-8 (Hebrew)"));
-	cb_charset_->insertItem(i18n("iso-8859-9 (Turkish)"));
-	cb_charset_->insertItem(i18n("iso-8859-10 (Nordic)"));
-	cb_charset_->insertItem(i18n("KOI-8R (Russian)"));
-
+	
 	// Layouts
 
 	layout_				= new QGridLayout(this,			2, 1, 10, 10);
@@ -267,67 +366,39 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
 		cb_type_, SIGNAL(activated(int)),
 		this, SLOT(s_typeChanged(int)));
 	
-	textSubTypes_.append("Plain");
-	textSubTypes_.append("RichText");
-	textSubTypes_.append("HTML");
-	
-	messageSubTypes_.append("RFC822");
-	messageSubTypes_.append("Digest");
-	messageSubTypes_.append("Parallel");
-	messageSubTypes_.append("Partial");
-	messageSubTypes_.append("External-Body");
-	
-	applicationSubTypes_.append("Octet-Stream");
-	applicationSubTypes_.append("X-cpio");
-	applicationSubTypes_.append("X-DVI");
-	applicationSubTypes_.append("X-perl");
-	applicationSubTypes_.append("X-tar");
-	applicationSubTypes_.append("X-deb");
-	applicationSubTypes_.append("X-rar-compressed");
-	applicationSubTypes_.append("X-LaTeX");
-	applicationSubTypes_.append("X-sh");
-	applicationSubTypes_.append("X-shar");
-	applicationSubTypes_.append("X-tar-gz");
-	applicationSubTypes_.append("X-tcl");
-	applicationSubTypes_.append("X-TeX");
-	applicationSubTypes_.append("X-troff");
-	applicationSubTypes_.append("X-zip");
-	applicationSubTypes_.append("X-VRML");
-	
-	imageSubTypes_.append("JPEG");
-	imageSubTypes_.append("GIF");
-	imageSubTypes_.append("PNG");
-	imageSubTypes_.append("TIFF");
-	imageSubTypes_.append("X-XBitmap");
-	imageSubTypes_.append("X-XPixmap");
-	imageSubTypes_.append("X-CMU-Raster");
-	imageSubTypes_.append("X-Portable-Anymap");
-	imageSubTypes_.append("X-Portable-Bitmap");
-	imageSubTypes_.append("X-Portable-Graymap");
-	imageSubTypes_.append("X-Portable-Pixmap");
-	imageSubTypes_.append("X-RGB");
-	
-	videoSubTypes_.append("MPEG");
-	videoSubTypes_.append("QuickTime");
-	videoSubTypes_.append("FLI");
-	videoSubTypes_.append("GL");
-	videoSubTypes_.append("X-SGI-Movie");
-	videoSubTypes_.append("X-MSVideo");
-	
-	audioSubTypes_.append("MIDI");
-	audioSubTypes_.append("ULAW");
-	audioSubTypes_.append("X-AIFF");
-	audioSubTypes_.append("X-WAV");
-	
-	s_typeChanged(2);
-	cb_type_->setCurrentItem(2);
+	_init();
+
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
 }
 
 EmpathAttachmentEditDialog::~EmpathAttachmentEditDialog()
 {
 	empathDebug("dtor");
 }
-		
+
+	void
+EmpathAttachmentEditDialog::_init()
+{
+	le_filename_->setText(spec_.filename());
+	le_description_->setText(spec_.description());
+	
+	int i;
+	
+	i = 0; do txtST_.append(textSubTypes_		[i++]);	while (i != nTxt);
+	i = 0; do msgST_.append(messageSubTypes_	[i++]);	while (i != nMsg);
+	i = 0; do appST_.append(applicationSubTypes_[i++]);	while (i != nApp);
+	i = 0; do imgST_.append(imageSubTypes_		[i++]);	while (i != nImg);
+	i = 0; do vidST_.append(videoSubTypes_		[i++]);	while (i != nVid);
+	i = 0; do audST_.append(audioSubTypes_		[i++]);	while (i != nAud);
+	i = 0; do chrT_ .append(charsetTypes_		[i++]);	while (i != nChr);
+	
+	s_typeChanged(2);
+	cb_type_->setCurrentItem(2);
+	
+	bg_encoding_->setButton((int)(spec_.encoding()));
+}
+
 	void
 EmpathAttachmentEditDialog::s_OK()
 {
@@ -350,10 +421,23 @@ EmpathAttachmentEditDialog::s_browse()
 {
 	QString filename = KFileDialog::getOpenFileName();
 	
-	if (filename.isEmpty())
+	if (filename.isEmpty() || filename.at(filename.length() - 1) == '/')
 		return;
 
 	le_filename_->setText(filename);
+	
+	int lastSlash = filename.findRev('/');
+
+	if (lastSlash == -1) // eh ?
+		return;
+	
+	le_description_->setText(filename.mid(lastSlash + 1));
+}
+
+	void
+EmpathAttachmentEditDialog::s_encodingChanged(int i)
+{
+	spec_.setEncoding((RMM::CteType)i);
 }
 
 	void
@@ -364,27 +448,27 @@ EmpathAttachmentEditDialog::s_typeChanged(int idx)
 	switch (idx) {
 		
 		case 0:
-			cb_subType_->insertStringList(textSubTypes_);
+			cb_subType_->insertStringList(txtST_);
 			break;
 
 		case 1:
-			cb_subType_->insertStringList(messageSubTypes_);
+			cb_subType_->insertStringList(msgST_);
 			break;
 
 		case 2:
-			cb_subType_->insertStringList(applicationSubTypes_);
+			cb_subType_->insertStringList(appST_);
 			break;
 
 		case 3:
-			cb_subType_->insertStringList(imageSubTypes_);
+			cb_subType_->insertStringList(imgST_);
 			break;
 
 		case 4:
-			cb_subType_->insertStringList(videoSubTypes_);
+			cb_subType_->insertStringList(vidST_);
 			break;
 
 		case 5:
-			cb_subType_->insertStringList(audioSubTypes_);
+			cb_subType_->insertStringList(audST_);
 			break;
 
 		default:
@@ -395,26 +479,11 @@ EmpathAttachmentEditDialog::s_typeChanged(int idx)
 	EmpathAttachmentSpec
 EmpathAttachmentEditDialog::spec()
 {
-	QString encoding;
-	
-	if (rb_base64_->isChecked())
-		encoding = QString::fromLatin1("Base64");
-	
-	else if (rb_8bit_->isChecked())
-		encoding = QString::fromLatin1("8bit");
-	
-	else if (rb_7bit_->isChecked())
-		encoding = QString::fromLatin1("7bit");
-	
-	else if (rb_qp_->isChecked())
-		encoding = QString::fromLatin1("Quoted-Printable");
-	
-	spec_.setFilename(le_filename_->text());
-	spec_.setDescription(le_description_->text());
-	spec_.setEncoding(encoding);
-	spec_.setType(cb_type_->currentText());
-	spec_.setSubType(cb_subType_->currentText());
-	spec_.setCharset(cb_charset_->currentText());
+	spec_.setFilename		(le_filename_->text());
+	spec_.setDescription	(le_description_->text());
+	spec_.setType			(cb_type_->currentText());
+	spec_.setSubType		(cb_subType_->currentText());
+	spec_.setCharset		(cb_charset_->currentText());
 
 	return spec_;
 }
@@ -424,30 +493,12 @@ EmpathAttachmentEditDialog::setSpec(const EmpathAttachmentSpec & s)
 {
 	spec_ = s;
 	
-	switch (spec_.filename().at(0).latin1()) {
-
-		case '8':
-			rb_8bit_->setChecked(false);
-			break;
-			
-		case '7':
-			rb_7bit_->setChecked(false);
-			break;
-		
-		case 'Q':
-		case 'q':
-			rb_qp_->setChecked(false);
-			break;
-		
-		case 'B':
-		case 'b':
-		default:
-			rb_base64_->setChecked(true);
-			break;
-	}
+	bg_encoding_->setButton((int)(spec_.encoding()));
 	
 	le_filename_->setText(spec_.filename());
 	le_description_->setText(spec_.description());
+
+
 //	cb_type_->setCurrentItem(s.type_);
 //	cb_subType_->setCurrentItem(s.subType_);
 }

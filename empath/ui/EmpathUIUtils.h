@@ -25,15 +25,12 @@
 #ifndef EMPATHUIUTILS_H
 #define EMPATHUIUTILS_H
 
-// Qt includes
 #include <qstring.h>
-#include <qfont.h>
-#include <qcolor.h>
-
-// Local includes
-#include "EmpathUtilities.h"
+#include <kglobal.h>
+#include <kiconloader.h>
 
 QPixmap empathMimeIcon(const QString & name);
 QPixmap empathIcon(const QString & name);
 
 #endif
+

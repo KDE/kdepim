@@ -567,3 +567,10 @@ EmpathMessageHTMLWidget::s_popupMenu(QString s, const QPoint &)
 	popup_.exec(QCursor::pos());
 }
 
+	QCString
+EmpathMessageHTMLWidget::QColorToHTML(const QColor & c)
+{
+	static QCString s(6);
+	return s.sprintf("%02X%02X%02X", c.red(), c.green(), c.blue());
+}
+

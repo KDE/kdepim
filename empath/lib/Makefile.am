@@ -27,8 +27,8 @@ EmpathMaildir.cpp \
 EmpathMatcher.cpp \
 EmpathMessageList.cpp \
 EmpathURL.cpp \
-EmpathUtilities.cpp \
 EmpathSecurityProcess.cpp \
 EmpathTask.cpp \
 EmpathTaskTimer.cpp \
+EmpathUtilities.cpp \
 md5.cpp

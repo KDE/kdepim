@@ -1,8 +1,8 @@
 /*
 	Empath - Mailer for KDE
-
+	
 	Copyright (C) 1998 Rik Hemsley rik@kde.org
-
+	
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -23,58 +23,18 @@
 #endif
 
 // Qt includes
-#include <qregexp.h>
-
-// KDE includes
-#include <kapp.h>
+#include <qstring.h>
 
 // Local includes
 #include "EmpathUtilities.h"
 
 QString baseName(const QString & filename)
 {
-	return filename.right(filename.length() - filename.findRev('/') - 1);
+	return filename.mid(filename.findRev('/') + 1);
 }
 
-	QCString
-QColorToHTML(const QColor & col)
+bool stricmp(const QString & a, const QString & b)
 {
-	char colourAsString[6];
-
-	sprintf(colourAsString, "%02X%02X%02X",
-			col.red(), col.green(), col.blue());
-
-	return colourAsString;
-}
-
-	QCString
-quoteSeparators(const QCString & s, char separator)
-{
-	QCString tempString(s);
-
-	QCString quoted = "\\";
-	quoted += separator;
-
-	tempString.replace(QRegExp(&separator), quoted);
-	return tempString;
-}
-
-	QString
-empathDir()
-{
-	return kapp->kde_datadir() + "/empath/";
-}
-
-
-	void
-empathInvokeHelp(const QString & a, const QString & b)
-{
-	kapp->invokeHTMLHelp(a, b);
-}
-
-	const char *
-className()
-{
-	return "Empath General Debugging:";
+	return a.lower() == b.lower();
 }
 

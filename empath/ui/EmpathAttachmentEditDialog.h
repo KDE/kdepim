@@ -27,6 +27,8 @@
 
 // Qt includes
 #include <qdialog.h>
+#include <qcstring.h>
+#include <qstrlist.h>
 #include <qwidget.h>
 #include <qgroupbox.h>
 #include <qlabel.h>
@@ -55,6 +57,7 @@ class EmpathAttachmentEditDialog : public QDialog
 		
 		void setSpec(const EmpathAttachmentSpec & s);
 		EmpathAttachmentSpec spec();
+		void browse() { s_browse(); }
 		
 	protected slots:
 		
@@ -64,8 +67,12 @@ class EmpathAttachmentEditDialog : public QDialog
 		
 		void s_browse();
 		void s_typeChanged(int);
+		
+		void s_encodingChanged(int);
 
 	private:
+		
+		void	_init();
 
 		RikGroupBox		* rgb_main_;
 		RikGroupBox		* rgb_encoding_;
@@ -106,9 +113,17 @@ class EmpathAttachmentEditDialog : public QDialog
 
 		KButtonBox		* buttonBox_;
 		
-		QStringList	textSubTypes_,	messageSubTypes_,	applicationSubTypes_,
-					imageSubTypes_,	videoSubTypes_,		audioSubTypes_;
-					
+		static const QString textSubTypes_			[];
+		static const QString messageSubTypes_		[];
+		static const QString applicationSubTypes_	[];
+		static const QString imageSubTypes_			[];
+		static const QString videoSubTypes_			[];
+		static const QString audioSubTypes_			[];
+		static const QString charsetTypes_			[];
+		static const int nTxt, nMsg, nApp, nImg, nVid, nAud, nChr;
+		
+		QStringList txtST_, msgST_, appST_, imgST_, vidST_, audST_, chrT_;
+
 		EmpathAttachmentSpec spec_;
 };
 

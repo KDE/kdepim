@@ -24,6 +24,7 @@
 
 // Qt includes
 #include <qmessagebox.h>
+#include <qfile.h>
 
 // KDE includes
 #include <klocale.h>

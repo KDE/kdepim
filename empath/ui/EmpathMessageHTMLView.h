@@ -66,6 +66,7 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 		
 		bool busy_;
 		QPopupMenu popup_;
+		QCString QColorToHTML(const QColor &);
 };
 
 #endif

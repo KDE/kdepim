@@ -27,17 +27,9 @@
 
 // Qt includes
 #include <qstring.h>
-#include <qcolor.h>
-#include <qfile.h>
-
-// Local includes
-#include "EmpathDefines.h"
 
 QString baseName(const QString & filename);
-QCString QColorToHTML(const QColor & col);
-QCString quoteSeparators(const QCString & s, char separator);
-QString empathDir();
-void empathInvokeHelp(const QString & a, const QString & b);
-const char * className();
+bool stricmp(const QString & a, const QString & b);
 
 #endif
+

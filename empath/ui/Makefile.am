@@ -5,7 +5,6 @@ noinst_LIBRARIES = libempathui.a
 libempathui_a_METASOURCES = USE_AUTOMOC
 
 libempathui_a_SOURCES = \
-EmpathAboutBox.cpp \
 EmpathAccountsSettingsDialog.cpp \
 EmpathAddressSelectionWidget.cpp \
 EmpathAttachmentEditDialog.cpp \

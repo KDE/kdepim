@@ -30,7 +30,6 @@
 
 // Local includes
 #include "Empath.h"
-#include "EmpathUIUtils.h"
 #include "EmpathURL.h"
 
 class RMessage;

@@ -33,6 +33,7 @@
 #include <kapp.h>
 #include <kquickhelp.h>
 #include <kfontdialog.h>
+#include <kstddirs.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
@@ -492,9 +493,7 @@ EmpathDisplaySettingsDialog::loadData()
 		c->readNumEntry(EmpathConfig::KEY_MARK_AS_READ_TIME, 2));
 	
 	// Fill in the icon set combo.
-	QDir d(empathDir() + "/pics/");
-	
-	d.setFilter(QDir::Dirs | QDir::Readable);
+
 	cb_iconSet_->clear();
 	
 	QString s = c->readEntry(EmpathConfig::KEY_ICON_SET, "standard");
@@ -503,7 +502,7 @@ EmpathDisplaySettingsDialog::loadData()
 	bool found = false;
 	int index = 0;
 	
-	QStringList el = d.entryList();
+	QStringList el(KGlobal::dirs()->findDirs("pics", ""));
 
 	for (QStringList::ConstIterator it = el.begin(); it != el.end() ; ++it) {
 		
@@ -536,7 +535,7 @@ EmpathDisplaySettingsDialog::s_OK()
 	void
 EmpathDisplaySettingsDialog::s_help()
 {
-	empathInvokeHelp(QString::null, QString::null);
+	//empathInvokeHelp(QString::null, QString::null);
 }
 
 	void
