@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&knotes;">
-  <!ENTITY package "kdeutils">
+  <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
@@ -46,8 +46,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2001-01-27</date>
-<releaseinfo>1.01.00</releaseinfo>
+<date>2002-02-05</date>
+<releaseinfo>2.20.00</releaseinfo>
 
 <abstract><para>&knotes; is a sticky notes application for the
 desktop.</para></abstract>
@@ -68,22 +68,24 @@ desktop.</para></abstract>
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&knotes; is a program that lets you write the computer equivalent
-of sticky notes.  The notes are saved automatically when you exit the
-program, and they display when you open the program. </para>
+<para>&knotes; is a program that lets you write the computer
+equivalent of sticky notes.  The notes are saved automatically when
+you exit the program, and they display when you open the
+program. </para>
 
-<para>You may print and mail your notes if you configure &knotes; to use helper
-applications. </para>
+<para>You may print and mail your notes if you configure &knotes; to
+use helper applications. </para>
 
-<para>Display features of notes such as color and font may be customized for
-each note.  You may also customize the defaults. </para>
+<para>Display features of notes such as color and font may be
+customized for each note.  You may also customize the
+defaults. </para>
 
 </chapter>
 
 <chapter id="configuration">
 <title>Configuration</title>
 
-<sect1 id="ConfiguringDisplay">
+<sect1 id="configuring-display">
 <title>Configuring the Display in &knotes;</title>
 
 <para>To configure the display:</para>
@@ -91,7 +93,7 @@ each note.  You may also customize the defaults. </para>
 <procedure>
 <step><para><mousebutton>Right</mousebutton> click on the panel icon.</para></step>
 <step><para>Select <guimenuitem>Preferences...</guimenuitem></para>
-<para>The &knotes; <guilabel>Defaults - KNotes</guilabel> dialog will
+<para>The &knotes; <guilabel>&knotes; Defaults</guilabel> dialog will
 open.</para> </step>
 <step><para>Choose the <guiicon>Display</guiicon> icon from the three icons at
 the left.</para></step>
@@ -114,13 +116,13 @@ dialog.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Note Width</guilabel></term>
+<term><guilabel>Default Width</guilabel></term>
 <listitem><para>The width of the note in pixels.  Edit this number as
 desired.</para></listitem> 
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Note Height</guilabel></term>
+<term><guilabel>Default Height</guilabel></term>
 <listitem><para>The height of the note in pixels.  Edit this number as
 desired.</para></listitem>
 </varlistentry>
@@ -135,7 +137,7 @@ desired.</para></listitem>
 <step><para><mousebutton>Right</mousebutton> click on the panel
 icon.</para></step>
 <step><para>Select <guimenuitem>Preferences...</guimenuitem></para>
-<para>The &knotes; <guilabel>Defaults - KNotes</guilabel> dialog will
+<para>The &knotes; <guilabel>&knotes; Defaults</guilabel> dialog will
 open.</para></step> 
 <step><para>Choose the <guiicon>Editor</guiicon> icon from the three
 icons at the left.</para></step>
@@ -154,6 +156,14 @@ desired.</para></listitem>
 <listitem><para>This is a check box.  If selected, auto-indenting is
 on.</para></listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>Edit Rich Text</guilabel></term>
+<listitem>
+<para>Not yet implemented</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term><guilabel>Current Font: Click to Change</guilabel></term>
 <listitem><para>Click this button to open the standard &kde; font selection
@@ -188,6 +198,7 @@ the filename of the note body to the mail command.</para>
 </listitem>
 </varlistentry>
 
+<!-- LW: Removed for KDE 3.0. May be back?
 <varlistentry>
 <term><guilabel>Print</guilabel></term>
 <listitem><para>Type a printing command and any required command line switches
@@ -197,7 +208,8 @@ in this box.</para>
 <para><token>%t</token> is the title.</para>
 <para><token>%f</token> is the filename of the note body.</para>
 </listitem>
-</varlistentry>
+</varlistentry> -->
+
 </variablelist>
 
 </sect1>
@@ -234,7 +246,6 @@ following menu options:</para>
 <listitem><para><guimenuitem>Cut</guimenuitem></para></listitem>
 <listitem><para><guimenuitem>Copy</guimenuitem></para></listitem>
 <listitem><para><guimenuitem>Paste</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Paste special...</guimenuitem></para></listitem>
 <listitem><para><guimenuitem>Clear</guimenuitem></para></listitem>
 <listitem><para><guimenuitem>Select All</guimenuitem></para></listitem>
 </itemizedlist>
@@ -368,6 +379,14 @@ process.</para>
 <sect1 id="customizing-display">
 <title>Customizing a Note Display</title>
 
+<para>You can customize each note independently of the global
+settings.  The settings you can customize are identical to those
+described in the <link linkend="configuration">Configuration</link>
+section, but they will apply only to the note you are changing.  Any
+other open notes, and any new notes you create, will use the default
+settings.</para>
+
+
 <para>To customize a note display:</para>
 
 <procedure>
@@ -379,106 +398,6 @@ open.</para></step>
 <step><para>Choose the <guiicon>Display</guiicon> icon from the three icons at
 the left.</para></step>
 </procedure>
-
-<para>The following choices are available:</para>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Text Color</guilabel></term>
-<listitem><para>The color square shows the current text color.  By
-clicking this color square you open the standard &kde; color selection
-dialog.</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Background Color</guilabel></term>
-<listitem><para>The color square shows the current text color.</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Note Width</guilabel></term>
-<listitem><para>The width of the note in pixels.  Edit this number as
-desired.</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Note Height</guilabel></term>
-<listitem><para>The height of the note in pixels.  Edit this number as
-desired.</para></listitem>
-</varlistentry>
-</variablelist>
-
-</sect1>
-
-<sect1 id="customizing-editor">
-<title>Customizing a Note Editor</title>
-
-<para>To customize a note editor:</para>
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the title bar of the
-note.</para></step>
-<step><para>Select <guimenuitem>Note preferences...</guimenuitem></para>
-<para>The <guilabel>Local Settings - Knotes</guilabel> dialog will
-open.</para></step>
-<step><para>Choose the <guiicon>Editor</guiicon> icon from the three icons at
-the left.</para></step>
-</procedure>
-
-<para>The following choices are available:</para>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Tab Size</guilabel></term>
-<listitem><para>This is the size of the tab in spaces.  Edit this number as
-desired.</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Auto Indent</guilabel></term>
-<listitem><para>This is a check box.  If selected, auto-indenting is
-on.</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Current Font: Click to Change</guilabel></term>
-<listitem><para>Click this button to open the standard &kde; font selection
-dialog.</para></listitem>
-</varlistentry>
-</variablelist>
-
-</sect1>
-
-<sect1 id="customizing-actions">
-<title>Customizing a Note Actions</title>
-<para>To customize a note actions:</para>
-
-<procedure>
-<step><para><mousebutton>Right</mousebutton> click on the title bar of the
-note.</para></step>
-<step><para>Select <guimenuitem>Note preferences...</guimenuitem></para>
-<para>The <guilabel>Local Settings - Knotes</guilabel> dialog will
-open.</para></step>
-<step><para>Choose the <guiicon>Action</guiicon> icon from the three icons at
-the left.</para></step>
-</procedure>
-
-<para>The following choices are available</para>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Mail Action</guilabel></term>
-<listitem><para>Type a mail command and any required command line switches in
-this box.</para> <para>By using <token>%f</token> in the command
-line you can pass the filename of the note body to the mail
-command.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Print Action</guilabel></term>
-<listitem><para>Type a printing command and any required command line switches
-in this box.</para>
-<para>Use the following variables in the command line:</para>
-<para><token>%p</token> is the printer name.</para>
-<para><token>%t</token> is the title.</para>
-<para><token>%f</token> is the filename of the note body.</para>
-</listitem>
-</varlistentry>
-</variablelist>
 
 </sect1>
 
