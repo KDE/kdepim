@@ -19,6 +19,7 @@
 */
 
 #include "mkdatepicker.h"
+#include "mkdatepicker.moc"
 #include <kglobal.h>
 #include <kapplication.h>
 #include <klocale.h>
