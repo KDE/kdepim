@@ -41,7 +41,7 @@
 
 class EmpathMessageListPart;
 class EmpathMessageListItem;
-class QActionCollection;
+class KActionCollection;
 class KInstance;
 class KAction;
 class KToggleAction;
@@ -65,7 +65,7 @@ class EmpathMessageListWidget : public EmpathListView
         QString     firstSelected();
         QStringList selection();
         
-        QActionCollection * actionCollection() { return actionCollection_; }
+        KActionCollection * actionCollection() { return actionCollection_; }
         
         void setIndex(const QDict<EmpathIndexRecord> &);
  
@@ -186,7 +186,7 @@ class EmpathMessageListWidget : public EmpathListView
         QPopupMenu  messageMarkMenu_;
         QPopupMenu  threadMenu_;
  
-        QActionCollection * actionCollection_;
+        KActionCollection * actionCollection_;
 
         QPixmap px_unread_, px_read_, px_marked_, px_attachments_, px_replied_;
         
