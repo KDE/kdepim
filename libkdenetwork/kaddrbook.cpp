@@ -16,6 +16,7 @@
 #include <kabc/distributionlist.h>
 #include <kabc/vcardconverter.h>
 #include <dcopref.h>
+#include <dcopclient.h> 
 
 #include <qregexp.h>
 
@@ -24,7 +25,15 @@ void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QW
   //QString email = KMMessage::getEmailAddr(addr);
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
   KABC::Addressee::List addresseeList = addressBook->findByEmail(email);
-  kapp->startServiceByDesktopName( "kaddressbook" );
+  if ( kapp->dcopClient()->isApplicationRegistered( "kaddressbook" ) ){
+    //make sure kaddressbook is loaded, otherwise showContactEditor
+    //won't work as desired, see bug #87233
+    DCOPRef call ( "kaddressbook", "kaddressbook" );
+    call.send( "newInstance()" );
+  }
+  else
+    kapp->startServiceByDesktopName( "kaddressbook" );
+    
   DCOPRef call( "kaddressbook", "KAddressBookIface" );
   if( !addresseeList.isEmpty() ) {
     call.send( "showContactEditor(QString)", addresseeList.first().uid() );
@@ -65,7 +74,8 @@ void KAddrBookExternal::addEmail( const QString& addr, QWidget *parent) {
   } else {
     QString text = i18n("<qt>The email address <b>%1</b> is already in your "
                         "addressbook.</qt>").arg( addr );
-    KMessageBox::information( parent, text );
+    KMessageBox::information( parent, text, QString::null,
+                              "alreadyInAddressBook" );
   }
 }
 
