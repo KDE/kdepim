@@ -41,6 +41,7 @@
 #include <gpgmepp/context.h>
 #include <gpgmepp/signingresult.h>
 #include <gpgmepp/data.h>
+#include <gpgmepp/key.h>
 
 #include <assert.h>
 

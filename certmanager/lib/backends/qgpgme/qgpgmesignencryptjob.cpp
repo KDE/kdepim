@@ -42,6 +42,7 @@
 #include <gpgmepp/signingresult.h>
 #include <gpgmepp/encryptionresult.h>
 #include <gpgmepp/data.h>
+#include <gpgmepp/key.h>
 
 #include <assert.h>
 
