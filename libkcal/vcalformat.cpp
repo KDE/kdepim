@@ -1090,6 +1090,10 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       int rFreq = tmpStr.mid(2, (index-1)).toInt();
       index += 1;
       short tmpDay;
+      // We have to set monthly by day now (using dummy values), because the 
+      // addMonthlyDay calls check for that type of recurrence, and if the 
+      // recurrence isn't yet set to monthly, addMonthlyDay doesn't do anything
+      anEvent->recurrence()->setMonthly( Recurrence::rMonthlyDay, rFreq, -1 );
       if( index == last ) {
 	// e.g. MD1 #0
 	tmpDay = anEvent->dtStart().date().day();
