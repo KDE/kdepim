@@ -6,20 +6,20 @@
   <kcfgfile name="kaddressbookrc"/>
 
   <group name="General">
-    <entry type="Bool" key="AutomaticNameParsing">
+    <entry type="Bool" name="AutomaticNameParsing">
       <label>Automatic name parsing for new addressees</label>
       <whatsthis></whatsthis>
       <default>true</default>
     </entry>
-    <entry type="Int" key="CurrentIncSearchField">
+    <entry type="Int" name="CurrentIncSearchField">
       <default>0</default>
     </entry>
-    <entry type="String" key="PhoneHookApplication">
+    <entry type="String" name="PhoneHookApplication">
       <label>Phone</label>
       <whatsthis></whatsthis>
       <tooltip>%N: Phone Number</tooltip>
     </entry>
-    <entry type="String" key="FaxHookApplication">
+    <entry type="String" name="FaxHookApplication">
       <label>Fax</label>
       <whatsthis></whatsthis>
       <tooltip>%N: Fax Number</tooltip>
@@ -28,7 +28,7 @@
   </group>
 
   <group name="Views">
-    <entry type="Bool" key="HonorSingleClick">
+    <entry type="Bool" name="HonorSingleClick">
       <label>Honor KDE single click</label>
       <whatsthis></whatsthis>
       <default>false</default>
@@ -54,14 +54,14 @@
     </entry>
   </group>
 
-  <group name="Extensions_General">
-    <entry type="String" key="CurrentExtension">
+  <group name="ExtensionsGeneral">
+    <entry type="String" name="CurrentExtension">
       <default>resourceselection</default>
     </entry>
   </group>
 
   <group name="Filters">
-    <entry type="Int" key="CurrentFilter">
+    <entry type="Int" name="CurrentFilter">
       <default>0</default>
     </entry>
   </group>

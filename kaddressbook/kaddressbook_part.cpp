@@ -34,6 +34,7 @@
 #include <kstatusbar.h>
 
 #include "kabcore.h"
+#include "kabprefs.h"
 #include "kaddressbookiface.h"
 
 #include "kaddressbook_part.h"
@@ -78,6 +79,9 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
 KAddressbookPart::~KAddressbookPart()
 {
   mCore->save();
+  mCore->saveSettings();
+
+  KABPrefs::instance()->writeConfig();
   closeURL();
 }
 
