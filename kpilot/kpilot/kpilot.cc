@@ -1047,6 +1047,7 @@ int main(int argc, char **argv)
 	about.addCredit("Preston Brown", I18N_NOOP("VCal conduit"));
 	about.addCredit("Greg Stern", I18N_NOOP("Abbrowser conduit"));
 	about.addCredit("Chris Molnar", I18N_NOOP("Expenses conduit"));
+	about.addCredit("Jörn Ahrens", I18N_NOOP("Notepad conduit, Bugfixer"));
 	about.addCredit("Heiko Purnhagen", I18N_NOOP("Bugfixer"));
 	about.addCredit("Jörg Habenicht", I18N_NOOP("Bugfixer"));
 	about.addCredit("Martin Junius",
@@ -1056,8 +1057,6 @@ int main(int argc, char **argv)
 		I18N_NOOP(".ui files"));
 	about.addCredit("Aaron J. Seigo",
 		I18N_NOOP("Bugfixer, coolness"));
-	about.addCredit("Jörn Ahrens",
-		I18N_NOOP("Visual improvements"));
 
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot");
