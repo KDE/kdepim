@@ -51,7 +51,6 @@ public:
 
 	// Pilot Component Methods:
 	void initialize();
-	void preHotSync(char* command);
 	void postHotSync();
 
 
@@ -90,6 +89,9 @@ public slots:
 
 
 // $Log$
+// Revision 1.15  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.14  2001/09/06 22:33:43  adridg
 // Cruft cleanup
 //

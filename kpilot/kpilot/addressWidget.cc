@@ -111,7 +111,8 @@ static const char *addresswidget_id =
 AddressWidget::AddressWidget(QWidget * parent,
 	const QString & path) :
 	PilotComponent(parent, "component_address", path), 
-	fAddrInfo(0)
+	fAddrInfo(0),
+	fPendingAddresses(0)
 {
 	FUNCTIONSETUP;
 
@@ -207,9 +208,31 @@ void AddressWidget::initialize()
 	updateWidget();
 }
 
-void AddressWidget::preHotSync(char *)
+/* virtual */ bool AddressWidget::preHotSync(QString &s)
 {
 	FUNCTIONSETUP;
+
+	if (fPendingAddresses)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": fPendingAddress="
+			<< fPendingAddresses
+			<< endl;
+#endif
+
+#if KDE_VERSION<220
+		s = i18n("There are still %1 address editing windows open.")
+			.arg(QString::number(fPendingAddresses);
+#else
+		s = i18n("There is still an address editing window open.",
+			"There are still %n address editing windows open.",
+			fPendingAddresses);
+#endif
+		return false;
+	}
+
+	return true;
 }
 
 void AddressWidget::postHotSync()
@@ -457,7 +480,11 @@ void AddressWidget::slotEditRecord()
 
 	connect(editor, SIGNAL(recordChangeComplete(PilotAddress *)),
 		this, SLOT(slotUpdateRecord(PilotAddress *)));
+	connect(editor, SIGNAL(cancelClicked()),
+		this, SLOT(slotEditCancelled()));
 	editor->show();
+
+	fPendingAddresses++;
 }
 
 void AddressWidget::slotCreateNewRecord()
@@ -490,7 +517,11 @@ void AddressWidget::slotCreateNewRecord()
 
 	connect(editor, SIGNAL(recordChangeComplete(PilotAddress *)),
 		this, SLOT(slotAddRecord(PilotAddress *)));
+	connect(editor, SIGNAL(cancelClicked()),
+		this, SLOT(slotEditCancelled()));
 	editor->show();
+
+	fPendingAddresses++;
 }
 
 void AddressWidget::slotAddRecord(PilotAddress * address)
@@ -514,6 +545,8 @@ void AddressWidget::slotAddRecord(PilotAddress * address)
 
 	fListBox->setCurrentItem(k);	// Show the newest one
 	fListBox->setBottomItem(k);
+
+	fPendingAddresses--;
 }
 
 void AddressWidget::slotUpdateRecord(PilotAddress * address)
@@ -528,6 +561,15 @@ void AddressWidget::slotUpdateRecord(PilotAddress * address)
 	fListBox->setCurrentItem(currentRecord);
 
 	emit(recordChanged(address));
+
+	fPendingAddresses--;
+}
+
+void AddressWidget::slotEditCancelled()
+{
+	FUNCTIONSETUP;
+
+	fPendingAddresses--;
 }
 
 void AddressWidget::slotDeleteRecord()
@@ -733,6 +775,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.40  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.39  2001/09/23 21:44:56  adridg
 // Myriad small changes
 //

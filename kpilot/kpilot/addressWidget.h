@@ -58,8 +58,8 @@ public:
 
 	// Pilot Component Methods:
 	void initialize();
-	void preHotSync(char*);
-	void postHotSync();
+	virtual bool preHotSync(QString &);
+	virtual void postHotSync();
 
 public slots:
 	/**
@@ -70,6 +70,7 @@ public slots:
 	void slotEditRecord();
 	void slotCreateNewRecord();
 	void slotDeleteRecord();
+	void slotEditCancelled();
 
 	void slotUpdateButtons();	// Enable/disable buttons
 
@@ -129,6 +130,13 @@ private:
 	QListBox             *fListBox;
 	QPushButton	     *fEditButton,*fDeleteButton;
 
+protected:
+	/**
+	* Keep track of how many open address editing windows there
+	* are. You can't sync when there are open windows.
+	*/
+	int fPendingAddresses;
+
 public:
 	typedef enum { PhoneNumberLength=16 } Constants ;
 };
@@ -141,6 +149,9 @@ public:
 
 
 // $Log$
+// Revision 1.20  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.19  2001/09/23 21:44:56  adridg
 // Myriad small changes
 //

@@ -177,11 +177,6 @@ void FileInstallWidget::slotAddFile()
 	}
 }
 
-void FileInstallWidget::preHotSync(char *command)
-{
-	FUNCTIONSETUP;
-}
-
 void FileInstallWidget::postHotSync()
 {
 	FUNCTIONSETUP;
@@ -199,6 +194,9 @@ void FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.19  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.18  2001/09/06 22:33:43  adridg
 // Cruft cleanup
 //

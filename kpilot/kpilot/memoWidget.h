@@ -64,7 +64,6 @@ public:
   
 	// Pilot Component Methods:
 	void initialize();
-	void preHotSync(char*);
 	void postHotSync();
   
 	typedef enum { 
@@ -111,6 +110,9 @@ private:
 
 
 // $Log$
+// Revision 1.17  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.16  2001/09/24 10:43:19  cschumac
 // Compile fixes.
 //

@@ -261,11 +261,6 @@ void MemoWidget::initialize()
 	updateWidget();
 }
 
-void MemoWidget::preHotSync(char *)
-{
-	FUNCTIONSETUP;
-}
-
 void MemoWidget::postHotSync()
 {
 	FUNCTIONSETUP;
@@ -611,6 +606,9 @@ void MemoWidget::slotExportMemo()
 }
 
 // $Log$
+// Revision 1.38  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.37  2001/09/23 18:30:15  adridg
 // Adjusted widget for new config
 //
