@@ -55,6 +55,7 @@ FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
   QStringList::Iterator iter;
   for ( iter = cats.begin(); iter != cats.end(); ++iter )
     mCategoriesView->insertItem( new QCheckListItem( mCategoriesView, (*iter), QCheckListItem::CheckBox ) );
+  filterNameTextChanged( mNameEdit->text());
 }
 
 FilterEditDialog::~FilterEditDialog()
@@ -123,6 +124,7 @@ void FilterEditDialog::initGUI()
   mNameEdit = new KLineEdit( page );
   topLayout->addWidget( label, 0, 0 );
   topLayout->addWidget( mNameEdit, 0, 1 );
+  connect (mNameEdit, SIGNAL(textChanged ( const QString & )), this, SLOT(filterNameTextChanged( const QString&)));
 
   mCategoriesView = new KListView( page );
   mCategoriesView->addColumn( i18n( "Categories" ) );
@@ -145,6 +147,11 @@ void FilterEditDialog::initGUI()
   gbLayout->addWidget( radio );
 
   topLayout->addMultiCellWidget( mMatchRuleGroup, 2, 2, 0, 1 );
+}
+
+void FilterEditDialog::filterNameTextChanged( const QString&text)
+{
+    enableButtonOK( !text.isEmpty());
 }
 
 FilterDialog::FilterDialog(QWidget *parent, const char *name)
