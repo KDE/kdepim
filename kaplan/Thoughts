@@ -1,6 +1,7 @@
 * Note: Lines starting with a d are my comments - Daniel
 * Note: Lines starting with a # are my comments - Cornelius
 * Note: Lines starting with a "z" are my comments - Zack :)
+* Note: Lines starting with a "s" are my comments - Simon
 
 Misc:
 =====
@@ -98,6 +99,14 @@ d their application using the native protocol (DCOP, Corba, etc).
 
 # Are you sure that DCOP is too slow for in-process communications? I thought it
 # would handle this special case efficiently.
+
+s It is only efficient in the sense that it won't do a roundtrip to the server but
+s dispatch locally. What remains is the datastream marshalling. Not necessarily
+s ueberfast. But I think the point is a different one: It is simply not as intuitive
+s to use as C++. Yes, DCOPRef already helps a lot for simple calls, but it stops
+s being intuitive (and fast) when using DCOP signals/slots (causing roundtrips) .
+s I have the impression that DCOP was used to work around an implementation detail
+s of certain applications.
 
 d Yes, but of course one should always prefer in-process IPC if possible. DCOP 
 d currently _works_ for kaplan, but that's all about it. It isn't exactly elegant.
