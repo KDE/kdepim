@@ -166,7 +166,7 @@ bool MALConduit::skip()
 
 	if (skip()) 
 	{
-		emit logMessage(i18n("Skipping MAL sync, because last synchronization has not been ago long enough."));
+		emit logMessage(i18n("Skipping MAL sync, because last synchronization was not long enough ago."));
 		emit syncDone(this);
 		return;
 	}
@@ -225,4 +225,7 @@ void MALConduit::printLogMessage(QString msg)
 
 
 // $Log$
+// Revision 1.1  2002/08/15 23:07:37  kainhofe
+// First official version of the malconduit
+//
 

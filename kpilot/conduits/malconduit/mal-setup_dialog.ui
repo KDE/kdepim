@@ -75,7 +75,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;every sync  </string>
+                                    <string>&amp;Every sync</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>
@@ -86,7 +86,7 @@
                                     <cstring>RadioButton1_2</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>once per &amp;hour</string>
+                                    <string>Once per &amp;hour</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
@@ -94,7 +94,7 @@
                                     <cstring>RadioButton1_3</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>once a &amp;day</string>
+                                    <string>Once a &amp;day</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="3" column="0">
@@ -102,7 +102,7 @@
                                     <cstring>RadioButton1_4</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>once a &amp;week</string>
+                                    <string>Once a &amp;week</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="4" column="0">
@@ -110,7 +110,7 @@
                                     <cstring>RadioButton1_5</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>once a &amp;month</string>
+                                    <string>Once a &amp;month</string>
                                 </property>
                             </widget>
                         </grid>
@@ -170,7 +170,7 @@
                                     <cstring>RadioButton8</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;no proxy</string>
+                                    <string>&amp;No proxy</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>
@@ -181,7 +181,7 @@
                                     <cstring>RadioButton8_2</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;http proxy</string>
+                                    <string>&amp;HTTP proxy</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">

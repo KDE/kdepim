@@ -77,7 +77,7 @@ MALConduitFactory::MALConduitFactory(QObject *p, const char *n) :
 	fAbout = new KAboutData("MALconduit",
 		I18N_NOOP("MAL Syncronization Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Syncronizes the content from MAL Servers like AvantGo or to the Handheld"),
+		I18N_NOOP("Syncronizes the content from MAL Servers like AvantGo to the Handheld"),
 		KAboutData::License_GPL,
 		"(C) 2002, Reinhold Kainhofer");
 	fAbout->addAuthor("Reinhold Kainhofer",
@@ -87,7 +87,7 @@ MALConduitFactory::MALConduitFactory(QObject *p, const char *n) :
 	fAbout->addAuthor("Tom Whittaker",
 		I18N_NOOP("Author of syncmal"), "tom@tomw.org", "http://www.tomw.org/");
 	fAbout->addAuthor("AvantGo, Inc.",
-		I18N_NOOP("authors of the malsync library (C) 1997-1999"), "www.avantgo.comreinhold@kainhofer.com", "http://www.avantgo.com/");
+		I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "www.avantgo.comreinhold@kainhofer.com", "http://www.avantgo.com/");
 }
 
 MALConduitFactory::~MALConduitFactory()
@@ -151,3 +151,6 @@ MALConduitFactory::~MALConduitFactory()
 
 
 // $Log$
+// Revision 1.1  2002/08/15 23:07:37  kainhofe
+// First official version of the malconduit
+//
