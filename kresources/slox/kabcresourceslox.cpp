@@ -29,6 +29,7 @@
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
 #include <libkdepim/kpimprefs.h>
+#include <libkdepim/progressmanager.h>
 #include <kio/davjob.h>
 
 #include "webdavhandler.h"
@@ -71,6 +72,7 @@ void ResourceSlox::init()
   setType( "slox" );
 
   mDownloadJob = 0;
+  mProgress = 0;
 }
 
 void ResourceSlox::initSlox()
@@ -169,6 +171,14 @@ bool ResourceSlox::asyncLoad()
   mDownloadJob = KIO::davPropFind( url, doc, "0" );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+           SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
+
+  mProgress = KPIM::ProgressManager::instance()->createProgressItem(
+      "sloxkabcdownload", i18n("Downloading contacts") );
+  connect( mProgress,
+           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SLOT( cancelDownload() ) );
 
   return true;
 }
@@ -224,6 +234,8 @@ void ResourceSlox::slotResult( KIO::Job *job )
   }
 
   mDownloadJob = 0;
+  mProgress->setComplete();
+  mProgress = 0;
 
   emit loadingFinished( this );
 }
@@ -297,6 +309,25 @@ void ResourceSlox::insertAddressee( const Addressee& addr )
 void ResourceSlox::removeAddressee( const Addressee& addr )
 {
   Q_UNUSED( addr );
+}
+
+void ResourceSlox::slotProgress( KIO::Job *job, unsigned long percent )
+{
+#if 0
+  kdDebug() << "PROGRESS: " << int( job ) << ": " << percent << endl;
+#else
+  Q_UNUSED( job );
+  Q_UNUSED( percent );
+#endif
+  if ( mProgress ) mProgress->setProgress( percent );
+}
+
+void ResourceSlox::cancelDownload()
+{
+  if ( mDownloadJob ) mDownloadJob->kill();
+  mDownloadJob = 0;
+  if ( mProgress ) mProgress->setComplete();
+  mProgress = 0;
 }
 
 #include "kabcresourceslox.moc"

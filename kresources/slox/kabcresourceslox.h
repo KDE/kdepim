@@ -32,6 +32,10 @@ class DavJob;
 class Job;
 }
 
+namespace KPIM {
+class ProgressItem;
+}
+
 class KConfig;
 
 namespace KABC {
@@ -74,11 +78,15 @@ class ResourceSlox : public Resource
 
   protected slots:
     void slotResult( KIO::Job *job );
+    void slotProgress( KIO::Job *job, unsigned long percent );
+
+    void cancelDownload();
 
   private:
     SloxPrefs *mPrefs;
 
     KIO::DavJob *mDownloadJob;
+    KPIM::ProgressItem *mProgress;
 
     WebdavHandler mWebdavHandler;
 };
