@@ -309,7 +309,7 @@ error:
 					"object for ResourceCalendar"<<endl;
 				return false;
 			}
-			rescal->readConfig();
+			// rescal->readConfig();
 			rescal->load();
 			break;
 		default:
