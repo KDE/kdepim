@@ -1,0 +1,21 @@
+<!DOCTYPE kpartgui ><kpartgui name="kwatchgnupg" version="1" >
+<MenuBar>
+	<Menu name="file" >
+		<text>&amp;File</text>
+		<Action name="clear_log"/>
+		<Action name="print"/>
+		<Separator/>
+		<Action name="close"/>
+		<Action name="quit"/>
+	</Menu>
+	<Menu name="settings">
+		<text>&amp;Settings</text>
+		<Action name="configure"/>
+	</Menu>
+</MenuBar>
+<!--
+<ToolBar alreadyVisited="1" position="Top" iconText="IconOnly" noMerge="1" name="mainToolBar" >
+  <text>Main Toolbar</text>
+</ToolBar>
+-->
+</kpartgui>

@@ -35,29 +35,40 @@
 
 #include <kmainwindow.h>
 
-class KProcess;
 class KWatchGnuPGTray;
+class KWatchGnuPGConfig;
+class KProcIO;
 class QTextEdit;
 
 class KWatchGnuPGMainWindow : public KMainWindow {
   Q_OBJECT
 public:
   KWatchGnuPGMainWindow( QWidget* parent = 0, const char* name = 0 );
+  virtual ~KWatchGnuPGMainWindow();
 public slots:
-  void slotWatcherExited( KProcess* proc );
-  void slotReceivedStdout( KProcess *proc, char *buffer, int buflen);
+  void slotWatcherExited();
+  void slotReadStdout();
+
   void slotQuit();
+  void slotClear();
+
+  void slotConfigure();
+
+  void slotReadConfig();
+
   virtual void show();
 protected:
   virtual bool queryClose();
 private:
+  void createActions();
   void startWatcher();
   void setGnuPGConfig();
 
-  KProcess* mWatcher;
+  KProcIO* mWatcher;
 
   QTextEdit* mCentralWidget;
   KWatchGnuPGTray* mSysTray;
+  KWatchGnuPGConfig* mConfig;
 };
 
 #endif /* KWATCHGNUPGMAINWIN_H */

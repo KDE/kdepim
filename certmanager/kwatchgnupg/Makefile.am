@@ -6,6 +6,7 @@ bin_PROGRAMS = kwatchgnupg
 
 kwatchgnupg_SOURCES = \
 	kwatchgnupgmainwin.cpp \
+	kwatchgnupgconfig.cpp \
 	aboutdata.cpp \
 	tray.cpp \
 	main.cpp
@@ -15,8 +16,8 @@ METASOURCES = AUTO
 kwatchgnupg_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kwatchgnupg_LDADD   = ../conf/libconf.la ../lib/libkleopatra.la $(LIB_KUTILS) $(LIB_KABC)
 
-#rcdir = $(kde_datadir)/kwatchgnupg
-#rc_DATA = kwatchgnupgui.rc
+rcdir = $(kde_datadir)/kwatchgnupg
+rc_DATA = kwatchgnupgui.rc
 
 
 pics_DATA = kwatchgnupg.png kwatchgnupg2.png
