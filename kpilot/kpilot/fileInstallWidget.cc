@@ -90,6 +90,8 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 		("<qt>Choose a file to add to the list of files to install.</qt>"));
 
 	fIconView = new KIconView(this);
+	connect(fIconView, SIGNAL(dropped(QDropEvent *, const QValueList<QIconDragItem> &)),
+		this, SLOT(slotDropEvent(QDropEvent *, const QValueList<QIconDragItem> &)));
 	grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
 	QWhatsThis::add(fIconView,
 		i18n
@@ -144,6 +146,12 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 	}
 
 	fInstaller->addFiles(files, this );
+}
+
+void FileInstallWidget::slotDropEvent(QDropEvent * drop, const QValueList<QIconDragItem> & lst)
+{
+	FUNCTIONSETUP;
+	dropEvent(drop);
 }
 
 void FileInstallWidget::slotClearButton()

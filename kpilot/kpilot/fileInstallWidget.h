@@ -38,11 +38,13 @@
 
 class QMultiLineEdit;
 class QPushButton;
+class QIconDragItem;
 
 class KIconView;
 
 class KPilotInstaller;
 class FileInstaller;
+
 
 class FileInstallWidget : public PilotComponent
 {
@@ -81,6 +83,8 @@ private:
 protected slots:
 	void slotClearButton();
 	void slotAddFile();
+
+	void slotDropEvent(QDropEvent * drop, const QValueList<QIconDragItem> & lst);
 
 public slots:
 	void refreshFileInstallList();
