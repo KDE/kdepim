@@ -501,7 +501,8 @@ void KABCore::incrementalSearch( const QString& text, bool search )
       list.sortByField( field );
       KABC::AddresseeList::Iterator it;
       for ( it = list.begin(); it != list.end(); ++it ) {
-        if ( field->value( *it ).startsWith( text, false ) ) {
+        if ( (search && field->value( *it ).find( text, 0, false ) != -1) ||
+             (!search && field->value( *it).startsWith( text, false)) ) {
           mViewManager->setSelected( (*it).uid(), true );
           return;
         }
@@ -509,10 +510,10 @@ void KABCore::incrementalSearch( const QString& text, bool search )
     } else {
       KABC::AddresseeList::Iterator it;
       for ( it = list.begin(); it != list.end(); ++it ) {
-        KABC::Field::List fieldList = mIncSearchWidget->fields();
+        KABC::Field::List fieldList = KABC::Field::allFields();
         KABC::Field::List::ConstIterator fieldIt;
         for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-          if ( (*fieldIt)->value( *it ).startsWith( text, false ) ) {
+          if ( (*fieldIt)->value( *it ).find( text, 0, false ) != -1 ) {
             mViewManager->setSelected( (*it).uid(), true );
             return;
           }
