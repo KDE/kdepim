@@ -82,6 +82,9 @@ MainWindow::MainWindow()
 
   _taskView->load();
 
+  if ( _taskView->isReadOnly() )
+      stateChanged( QString::fromLatin1( "readonly" ) ); // disable many actions
+
   // Everything that uses Preferences has been created now, we can let it
   // emit its signals
   _preferences->emitSignals();
@@ -92,6 +95,8 @@ MainWindow::MainWindow()
 void MainWindow::slotSelectionChanged()
 {
   Task* item= _taskView->current_item();
+  if ( _taskView->isReadOnly() )
+      item = 0; // don't enable any of those actions if the storage is readonly
   actionDelete->setEnabled(item);
   actionEdit->setEnabled(item);
   actionStart->setEnabled(item && !item->isRunning());

@@ -149,7 +149,7 @@ class KarmStorage
      *    taskName,subtaskName,..,sessionTime,time,totalSessionTime,totalTime
      * the number of subtasks is determined at runtime.
      */
-    QString KarmStorage::exportcsvFile(TaskView* taskview,
+    QString exportcsvFile(TaskView* taskview,
         const QString& filename);
 
     /*
@@ -271,6 +271,11 @@ class KarmStorage
 
     /** Return a list of start/stop events for the given date range. */
     QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to);
+
+    /**
+     * @return true if the storage is readonly. Only known after load().
+     */
+    bool isReadOnly() const { return !_lock; }
 
   private:
     static KarmStorage                *_instance;

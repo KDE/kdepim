@@ -314,6 +314,8 @@ void TaskView::stopCurrentTimer()
 
 void TaskView::changeTimer(QListViewItem *)
 {
+  if ( isReadOnly() )
+    return;
   Task *task = current_item();
 
   if ( task != 0 && activeTasks.findRef(task) == -1 )

@@ -65,6 +65,7 @@ KarmStorage *KarmStorage::instance()
 KarmStorage::KarmStorage()
 {
   _calendar = 0;
+  _lock = 0;
 }
 
 QString KarmStorage::load (TaskView* view, const Preferences* preferences)

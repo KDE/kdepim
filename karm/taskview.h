@@ -75,6 +75,9 @@ class TaskView : public KListView
     /** Return preferences user selected on settings dialog. **/
     Preferences *preferences();
 
+    /** Return true if storage is readonly */
+    bool isReadOnly() const { return _storage->isReadOnly(); }
+
   public slots:
     /** Save to persistent storage. */
     void save();
