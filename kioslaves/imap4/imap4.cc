@@ -699,7 +699,13 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
       closeConnection();
       return FALSE;
     }
-    waitForResponse(600);
+    if (!waitForResponse(600))
+    {
+      error(ERR_SERVER_TIMEOUT, myHost);
+      setState(ISTATE_CONNECT);
+      closeConnection();
+      return FALSE;
+    }
     readBufferLen = read(readBuffer, IMAP_BUFFER - 1);
     if (readBufferLen == 0)
     {
