@@ -80,6 +80,8 @@
         *   <i>A PGP abstraction layer.</i>
         * - <a href="libkpimexchange/html/index.html"><b>libkpimexchange</b></a>
         *   <i></i>
+        * - <a href="libkpimidentities/html/index.html"><b>libkpimidentities</b></a>
+        *   <i>A library for managing identities.</i>
         *
         * More information can be found at the
         * <a href="http://pim.kde.org/index.php">KDE-PIM web site</a>
