@@ -238,7 +238,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
           line += ":0:";
           line += it.current()->outputString();
         } else {                       // unset option
-          line += ":16:0";
+          line += ":16:";
         }
         line += '\n';
         QCString line8bit = line.latin1(); // latin1 is correct here, it's all escaped (and KProcIO uses latin1 when reading).
