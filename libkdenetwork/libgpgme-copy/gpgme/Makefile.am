@@ -42,7 +42,7 @@ libgpgme_real_la_SOURCES =						\
 
 libgpgme_la_SOURCES = ath-compat.c fakes.c
 
-AM_CPPFLAGS = $(assuan_cppflags) -I$(srcdir)/../../libgpg-error-copy
+AM_CPPFLAGS = $(assuan_cppflags) -I$(srcdir)/../../libgpg-error-copy -I../../libgpg-error-copy
 
 libgpgme_la_LIBADD = libgpgme-real.la ../../libgpg-error-copy/libgpg-error.la $(assuan_libobjs)
 

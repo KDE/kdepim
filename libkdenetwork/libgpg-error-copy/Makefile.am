@@ -20,11 +20,11 @@
 # We distribute the generated sources err-sources.h and err-codes.h,
 # because they are needed to build the po directory, and they don't
 # depend on the configuration anyway. 
-EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
-	mkerrnos.awk errnos.in mkerrcodes1.awk mkerrcodes2.awk \
-	err-sources.h err-codes.h gpg-error-config.in gpg-error.m4
+#EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
+#	mkerrnos.awk errnos.in mkerrcodes1.awk mkerrcodes2.awk \
+#	err-sources.h err-codes.h gpg-error.m4
 #BUILT_SOURCES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h
-#CLEANFILES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h
+CLEANFILES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h gpg-error.h mkerrcodes.h mkerrcodes
 
 #bin_SCRIPTS = gpg-error-config
 #m4datadir = $(datadir)/aclocal
@@ -40,20 +40,48 @@ libgpg_error_la_SOURCES = strsource.c strerror.c code-to-errno.c code-from-errno
 
 #libgpg_error_la_LIBADD = @LTLIBINTL@
 
-strsource.lo: err-sources.h err-codes.h
-code-to-errno.lo: code-to-errno.h
-code-from-errno.lo: code-from-errno.h
+#We don't need the gpg-error command-line tool
+
+# Dependencies on generated files.
+strsource.lo: err-sources.h gpg-error.h
+strerror.lo: err-codes.h gpg-error.h
+code-to-errno.lo: code-to-errno.h gpg-error.h
+code-from-errno.lo: code-from-errno.h gpg-error.h
 
 err-sources.h: mkstrtable.awk err-sources.h.in
-	$(AWK) -f $(srcdir)/mkstrtable.awk $(srcdir)/err-sources.h.in >$@
+	$(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=3 \
+                $(srcdir)/err-sources.h.in >$@
+
+#We don't need err-sources-sym.h, err-codes-sym.h, errnos-sym.h.
+# since those are for the gpg-error binary
 
 err-codes.h: mkstrtable.awk err-codes.h.in
-	$(AWK) -f $(srcdir)/mkstrtable.awk $(srcdir)/err-codes.h.in >$@
+	$(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=3 \
+                $(srcdir)/err-codes.h.in >$@
 
 code-to-errno.h: mkerrnos.awk errnos.in
 	$(AWK) -f $(srcdir)/mkerrnos.awk $(srcdir)/errnos.in >$@
 
-code-from-errno.h: mkerrcodes1.awk errnos.in
+# It is correct to use $(CPP).  We want the host's idea of the error codes.
+mkerrcodes.h: mkerrcodes.awk
 	$(AWK) -f $(srcdir)/mkerrcodes1.awk $(srcdir)/errnos.in \
-	| $(CPP) - | grep GPG_ERR_ | sort -n \
-	| $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
+        | $(CPP) - | grep GPG_ERR_ | $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
+
+# It is correct to use $(CC_FOR_BUILD) here.  We want to run the
+# program at build time.
+# DF: we have no such thing in KDE. Using $(CC) instead.
+mkerrcodes: mkerrcodes.c mkerrcodes.h
+	$(CC) -I. -I$(srcdir) -o $@ $<
+
+code-from-errno.h: mkerrcodes
+	./$< | $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
+
+gpg-error.h: mkheader.awk \
+                 err-sources.h.in err-codes.h.in errnos.in gpg-error.h.in
+	$(AWK) -f $(srcdir)/mkheader.awk \
+                $(srcdir)/err-sources.h.in \
+                $(srcdir)/err-codes.h.in \
+                $(srcdir)/errnos.in \
+                $(srcdir)/gpg-error.h.in > $@
+
+# Removed all dependencies on Makefiles, since for us Makefile is in builddir.
