@@ -31,6 +31,24 @@ GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mType( type )
 {
 }
 
+KIO::TransferJob *GroupwareUploadItem::createUploadNewJob(
+      GroupwareDataAdaptor *adaptor, const KURL &url )
+{
+  return createUploadJob( adaptor, adaptNewItemUrl( adaptor, url ) );
+}
+
+KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor, const KURL &url ) {
+  if ( adaptor ) {
+    QString path( adaptor->defaultNewItemName( this ) );
+    KURL u( url );
+    if ( path.isEmpty() ) return u;
+    else {
+      u.addPath( path );
+      return u;
+    }
+  } else return url;
+}
+
 KIO::TransferJob *GroupwareUploadItem::createUploadJob( GroupwareDataAdaptor *adaptor, const KURL &url )
 {
   Q_ASSERT( adaptor );
@@ -68,6 +86,7 @@ KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url, Groupw
     return item->createUploadJob( this, url );
   else return 0;
 }
+
 KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url, GroupwareUploadItem *item )
 {
   if ( item )

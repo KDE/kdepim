@@ -52,8 +52,7 @@ void OGoAddressBookAdaptor::adaptUploadUrl( KURL &url )
 {
 kdDebug()<<"OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
   url = WebdavHandler::toDAV( url );
-  url = WebdavHandler::toDAV( url );
-  url.setPath( url.path() + "/new.vcf" );
+//   url.setPath( url.path() + "/new.vcf" );
 // url.addPath( "new.vcf" );
 kdDebug()<<"after OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
 }

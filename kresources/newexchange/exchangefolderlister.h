@@ -22,17 +22,18 @@
 #ifndef KCAL_EXCHANGEFOLDERLISTER_H
 #define KCAL_EXCHANGEFOLDERLISTER_H
 
-#include <folderlister.h>
+#include <davfolderlister.h>
 
 namespace KPIM {
 
-class ExchangeFolderLister : public FolderLister
+class ExchangeFolderLister : public DavFolderLister
 {
     Q_OBJECT
   public:
     ExchangeFolderLister( Type type );
 
   protected:
+    virtual KIO::Job *createJob( const KURL &url );
     virtual FolderType getFolderType( const QDomNode &folderNode );
     virtual bool getFolderHasSubs( const QDomNode &folderNode );
 

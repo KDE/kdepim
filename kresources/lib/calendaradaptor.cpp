@@ -168,13 +168,14 @@ KPIM::GroupwareUploadItem *CalendarAdaptor::newUploadItem( KCal::Incidence*it,
   return new CalendarUploadItem( this, it, type );
 }
 
-void CalendarAdaptor::uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
+void CalendarAdaptor::uploadFinished( KIO::TransferJob */*trfjob*/, KPIM::GroupwareUploadItem *item )
 {
 //   OGoGlobals::uploadFinished( this, trfjob, item );
   Incidence *inc = resource()->incidence( item->uid() );
   if ( inc ) {
 //     resource()->disableChangeNotification();
-    resource()->deleteIncidence( inc );
+    // FIXME: This doesn't really work, as it tries to delete the incidence from the Server...
+//     resource()->deleteIncidence( inc );
 /*    inc->setCustomProperty( identifier(), "storagelocation",
                idMapper()->remoteId( item->uid() ) );*/
 //    resource()->addIncidence( inc );

@@ -37,8 +37,8 @@ class OGoCalendarAdaptor : public CalendarAdaptor
   public:
     OGoCalendarAdaptor();
 
-    void adaptDownloadUrl( KURL &url );
-    void adaptUploadUrl( KURL &url );
+    void customAdaptDownloadUrl( KURL &url );
+    void customAdaptUploadUrl( KURL &url );
     QCString identifier() const { return "KCalResourceOpengroupware"; }
 
     QString extractFingerprint( KIO::TransferJob *job,
@@ -51,6 +51,7 @@ class OGoCalendarAdaptor : public CalendarAdaptor
       QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
     KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems );
+    QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.ics"; }
 };
 
 };

@@ -30,8 +30,12 @@
 
 KIO::TransferJob *OGoGlobals::createDownloadItemJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
 {
+kdDebug()<<"OGoGlobals::createDownloadItemJob, url="<<url.url()<<endl;
   KIO::TransferJob *job = KIO::get( url, false, false );
-  job->addMetaData( "accept", adaptor->mimeType() );
+  if ( adaptor ) {
+    QString mt = adaptor->mimeType();
+    job->addMetaData( "accept", mt );
+  }
   job->addMetaData( "PropagateHttpHeader", "true" );
   return job;
 }

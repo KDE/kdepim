@@ -49,6 +49,7 @@ class OGoAddressBookAdaptor : public AddressBookAdaptor
     KABC::Addressee::List parseData( KIO::TransferJob *job, const QString &rawText );
     KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems );
+    QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.vcf"; }
 };
 
 }

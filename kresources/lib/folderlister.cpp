@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -21,15 +22,11 @@
 */
 
 #include "folderlister.h"
-#include "webdavhandler.h"
 
-#include <kio/davjob.h>
 #include <kio/job.h>
 
 #include <kdebug.h>
 #include <kconfig.h>
-
-#include <qdom.h>
 
 using namespace KPIM;
 
@@ -44,7 +41,12 @@ kdDebug()<<"FolderLister::adjustUrl( url="<<u.url()<<")"<<endl;
   KURL url( u );
   url.setPass( mPassword );
   url.setUser( mUser );
-  return WebdavHandler::toDAV( url );
+  return customAdjustUrl( url );
+}
+
+KURL FolderLister::customAdjustUrl( const KURL &u )
+{
+  return u;
 }
 
 void FolderLister::setFolders( const FolderLister::Entry::List &folders )
@@ -125,20 +127,6 @@ void FolderLister::writeConfig( KConfig *config )
   config->writeEntry( "WriteDestinationId", mWriteDestinationId );
 }
 
-KIO::DavJob *FolderLister::createJob( const KURL &url )
-{
-  QDomDocument doc;
-  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
-  QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
-  WebdavHandler::addDavElement( doc, prop, "displayname" );
-  WebdavHandler::addDavElement( doc, prop, "resourcetype" );
-  WebdavHandler::addDavElement( doc, prop, "hassubs" );
-
-  kdDebug(7000) << "props: " << doc.toString() << endl;
-  return KIO::davPropFind( url, doc, "1", false );
-}
-
-
 void FolderLister::retrieveFolders( const KURL &u )
 {
 kdDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
@@ -186,53 +174,22 @@ FolderLister::Entry::List FolderLister::defaultFolders()
   return newFolders;
 }
 
-void FolderLister::interpretFolderResult( KIO::Job *job )
+void FolderLister::processFolderResult( const QString &href, const QString &displayName, FolderType type )
 {
-  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>( job );
-  Q_ASSERT( davjob );
-  if ( !davjob ) return;
+  if ( ( mType == Calendar &&
+          ( type == CalendarFolder || type == TasksFolder ||
+            type == JournalsFolder ) ) ||
+       ( type == ContactsFolder && mType == AddressBook ) ) {
 
-  QDomDocument doc = davjob->response();
-  kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    if ( !href.isEmpty() && !displayName.isEmpty() ) {
+      Entry entry;
+      entry.id = href;
+      entry.name = displayName;
+      entry.active = isActive( entry.id );
 
-  QDomElement docElement = doc.documentElement();
-  QDomNode n;
-  for( n = docElement.firstChild(); !n.isNull();
-    n = n.nextSibling() ) {
-
-    QDomElement ee1 = n.toElement();
-
-    QDomNode n2 = n.namedItem( "propstat" );
-    QDomNode n3 = n2.namedItem( "prop" );
-
-    QString href = n.namedItem( "href" ).toElement().text();
-    QString displayName = n3.namedItem( "displayname" ).toElement().text();
-
-    FolderType type = getFolderType( n3 );
-
-    if ( ( mType == Calendar &&
-            ( type == CalendarFolder || type == TasksFolder ||
-              type == JournalsFolder ) ) ||
-         ( type == ContactsFolder && mType == AddressBook ) ) {
-
-      if ( !href.isEmpty() && !displayName.isEmpty() ) {
-        Entry entry;
-        entry.id = href;
-        entry.name = displayName;
-        entry.active = isActive( entry.id );
-
-        mFolders.append( entry );
-      }
-      kdDebug(7000) << "FOLDER: " << displayName << endl;
+      mFolders.append( entry );
     }
-    if ( getFolderHasSubs( n3 ) ) {
-kdDebug()<<"folder has Subitems!"<<endl;
-      doRetrieveFolder( href );
-    } else {
-      KURL u( href );
-kdDebug()<<"Not descending into "<< href<<", adding path "<<u.path(-1)<<" to the list of processed URLS"<<endl;
-      mProcessedUrls.append( u.path(-1) );
-    }
+    kdDebug(7000) << "FOLDER: " << displayName << endl;
   }
 }
 

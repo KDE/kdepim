@@ -29,10 +29,11 @@
 
 using namespace KPIM;
 
-ExchangeFolderLister::ExchangeFolderLister( Type type ) : FolderLister( type )
+ExchangeFolderLister::ExchangeFolderLister( Type type ) : DavFolderLister( type )
 {
 }
-KIO::DavJob *FolderLister::createJob( const KURL &url )
+
+KIO::Job *ExchangeFolderLister::createJob( const KURL &url )
 {
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );

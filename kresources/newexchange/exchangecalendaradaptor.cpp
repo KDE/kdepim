@@ -166,6 +166,12 @@ void ExchangeDelete::findUidSingleMaster( QString const& uid )
 
 */
 
+
+QString ExchangeCalendarAdaptor::defaultNewItemName( KPIM::GroupwareUploadItem *item ) {
+  if ( item ) return item->uid()+".EML";
+  else return QString::null;
+}
+
 KPIM::GroupwareUploadItem *ExchangeCalendarAdaptor::newUploadItem( KCal::Incidence*it,
            KPIM::GroupwareUploadItem::UploadType type )
 {

@@ -60,8 +60,9 @@ class GroupwareUploadItem
 
     virtual QString data() const { return mData; }
     virtual void setData( const QString &data ) { mData = data; }
+    virtual KURL adaptNewItemUrl( GroupwareDataAdaptor *adaptor, const KURL &url );
 
-    virtual KIO::TransferJob *createUploadNewJob( GroupwareDataAdaptor *adaptor, const KURL &url ) { return createUploadJob( adaptor, url ); }
+    virtual KIO::TransferJob *createUploadNewJob( GroupwareDataAdaptor *adaptor, const KURL &url );
     virtual KIO::TransferJob *createUploadJob( GroupwareDataAdaptor *adaptor, const KURL &url );
   private:
     KURL mUrl;
@@ -163,12 +164,18 @@ class GroupwareDataAdaptor
 
     void setUserPassword( KURL &url );
 
-    /** Adapt the url for downloading. Reimplement this method if you want
+    /** Adapt the url for downloading. Sets the username and password and calls 
+        customAdaptDownloadUrl, which you can reimplement for custom adaptions. */
+    virtual void adaptDownloadUrl( KURL &url ) { setUserPassword( url ); customAdaptDownloadUrl( url );}
+    /** Adapt the url for uploading. Sets the username and password and calls 
+        customAdaptUploadUrl, which you can reimplement for custom adaptions. */
+    virtual void adaptUploadUrl( KURL &url ) { setUserPassword( url ); customAdaptUploadUrl( url );}
+    /** Apply custom adaptions to the url for downloading. Reimplement this method if you want
         to use webdav:// instead of http:// URLs. */
-    virtual void adaptDownloadUrl( KURL &/*url*/ ) {}
-    /** Adapt the url for downloading. Reimplement this method if you want
+    virtual void customAdaptDownloadUrl( KURL &/*url*/ ) {}
+    /** Apply custom adaptions to the url for uploading. Reimplement this method if you want
         to use webdav:// instead of http:// URLs. */
-    virtual void adaptUploadUrl( KURL &/*url*/ ) {}
+    virtual void customAdaptUploadUrl( KURL &/*url*/ ) {}
     /** Return the mime-type expected by the resource. */
     virtual QString mimeType() const = 0;
     /** Identifier of the Resource. Used for the custom fields where
@@ -217,6 +224,8 @@ class GroupwareDataAdaptor
         QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload,
         const QString &entry, const QString &newFingerprint,
         KPIM::GroupwareJob::ContentType type );
+    /** Return the default file name for a new item. */
+    virtual QString defaultNewItemName( GroupwareUploadItem */*item*/ ) { return QString::null; }
 
   private:
     FolderLister *mFolderLister;

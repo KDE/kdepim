@@ -38,15 +38,16 @@ OGoCalendarAdaptor::OGoCalendarAdaptor()
 {
 }
 
-void OGoCalendarAdaptor::adaptDownloadUrl( KURL &url )
+void OGoCalendarAdaptor::customAdaptDownloadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
 }
 
-void OGoCalendarAdaptor::adaptUploadUrl( KURL &url )
+void OGoCalendarAdaptor::customAdaptUploadUrl( KURL &url )
 {
   url = WebdavHandler::toDAV( url );
-  url.setPath( url.path() + "/new.ics" );
+  // FIXME: Find a good place where we can obtain the path for a new item
+//  url.setPath( url.path() + "/new.ics" );
 }
 
 QString OGoCalendarAdaptor::extractFingerprint( KIO::TransferJob *job,

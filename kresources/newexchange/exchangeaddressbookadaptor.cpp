@@ -49,15 +49,6 @@ KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadJob( KPIM::Groupwar
   return job;
 }
 
-KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
-{
-  KURL url( baseurl );
-  url.addPath( uid() + ".EML" );
-  kdDebug() << "Upload Job's URL: " << url.url() << endl;
-  return createUploadJob( adaptor, url );
-}
-
-
 ExchangeAddressBookAdaptor::ExchangeAddressBookAdaptor() : AddressBookAdaptor()
 {
 }
@@ -134,6 +125,12 @@ KIO::Job *ExchangeAddressBookAdaptor::createRemoveItemsJob( const KURL &uploadur
 {
   return ExchangeGlobals::createRemoveItemsJob( uploadurl, deletedItems );
 }
+
+QString ExchangeAddressBookAdaptor::defaultNewItemName( KPIM::GroupwareUploadItem *item ) {
+  if ( item ) return item->uid()+".EML";
+  else return QString::null;
+}
+
 
 KPIM::GroupwareUploadItem *ExchangeAddressBookAdaptor::newUploadItem( KABC::Addressee addr,
            KPIM::GroupwareUploadItem::UploadType type )

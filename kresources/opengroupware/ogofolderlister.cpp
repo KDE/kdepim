@@ -28,7 +28,7 @@
 
 using namespace KPIM;
 
-OGoFolderLister::OGoFolderLister( FolderLister::Type type ) : FolderLister( type )
+OGoFolderLister::OGoFolderLister( FolderLister::Type type ) : DavFolderLister( type )
 {
 }
 

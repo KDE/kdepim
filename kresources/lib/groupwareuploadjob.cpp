@@ -22,7 +22,6 @@
 
 #include "groupwareuploadjob.h"
 
-#include "webdavhandler.h"
 #include "folderlister.h"
 #include "groupwaredataadaptor.h"
 
@@ -69,7 +68,8 @@ void GroupwareUploadJob::deleteItem()
     kdDebug(7000) << " Deleting " << mDeletedItems.size() << " items from the server " << endl;
 
     KURL url( mBaseUrl );
-    url = WebdavHandler::toDAV( url );
+    
+    adaptor()->adaptUploadUrl( url );
 
     // TODO: What to do with servers that don't allow you to remove all incidences at once?
     mDeletionJob = adaptor()->createRemoveItemsJob( url, mDeletedItems );
@@ -131,7 +131,7 @@ void GroupwareUploadJob::uploadItem()
     }
     KURL url( mBaseUrl );
     url.setPath( remote );
-    adaptor()->setUserPassword( url );
+    adaptor()->adaptUploadUrl( url );
 kdDebug()<<"uploading to url="<<url.url()<<endl;
     mUploadJob = adaptor()->createUploadJob( url, item );
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
@@ -176,7 +176,6 @@ void GroupwareUploadJob::uploadNewItem()
     QString uid = item->uid();
 
     KURL url( adaptor()->folderLister()->writeDestinationId() );
-    adaptor()->setUserPassword( url );
     adaptor()->adaptUploadUrl( url );
     kdDebug(5800) << "Put new URL: " << url.url() << endl;
 

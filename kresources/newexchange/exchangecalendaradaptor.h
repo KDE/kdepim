@@ -70,6 +70,7 @@ class ExchangeCalendarAdaptor : public CalendarAdaptor
            KPIM::GroupwareUploadItem::UploadType type );
     KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
            KPIM::GroupwareUploadItem::List deletedItems );
+    QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
 };
 
 };

@@ -22,11 +22,12 @@
 #ifndef KCAL_OGOFOLDERLISTER_H
 #define KCAL_OGOFOLDERLISTER_H
 
-#include "folderlister.h"
+#include "davfolderlister.h"
+#include <qdom.h>
 
 namespace KPIM {
 
-class OGoFolderLister : public FolderLister
+class OGoFolderLister : public DavFolderLister
 {
     Q_OBJECT
   public:

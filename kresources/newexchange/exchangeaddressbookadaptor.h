@@ -36,8 +36,6 @@ class ExchangeAddressBookUploadItem : public KPIM::GroupwareUploadItem
   public:
     ExchangeAddressBookUploadItem( AddressBookAdaptor *adaptor, KABC::Addressee addr, UploadType type );
     virtual ~ExchangeAddressBookUploadItem() {}
-    virtual KIO::TransferJob *createUploadNewJob(
-            KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl );
     virtual KIO::TransferJob *createUploadJob(
             KPIM::GroupwareDataAdaptor *adaptor, const KURL &url );
 
@@ -68,6 +66,7 @@ class ExchangeAddressBookAdaptor : public AddressBookAdaptor
        KPIM::GroupwareUploadItem::List deletedItems );
     KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
            KPIM::GroupwareUploadItem::UploadType type );
+    QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
 };
 
 };

@@ -22,7 +22,6 @@
 
 #include "groupwaredownloadjob.h"
 
-#include "webdavhandler.h"
 #include "folderlister.h"
 #include "groupwaredataadaptor.h"
 
@@ -137,8 +136,6 @@ void GroupwareDownloadJob::downloadItem()
     mItemsForDownload.remove( it.key() );
 
     KURL url( href );
-//    url.setProtocol( "webdav" );
-    adaptor()->setUserPassword( url );
     adaptor()->adaptDownloadUrl( url );
 
     mJobData = QString::null;

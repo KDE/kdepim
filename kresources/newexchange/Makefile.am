@@ -1,6 +1,6 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim \
-           -I$(top_srcdir)/kresources/opengroupware \
-					 -I$(top_builddir)/kresources/opengroupware $(all_includes)
+           -I$(top_srcdir)/kresources/lib \
+					 -I$(top_builddir)/kresources/lib $(all_includes)
 
 lib_LTLIBRARIES = libkabc_newexchange.la libkcal_newexchange.la 
 noinst_LTLIBRARIES = libknewexchange.la
@@ -12,7 +12,7 @@ libkcal_newexchange_la_SOURCES = exchangecalendaradaptor.cpp kcal_resourceexchan
 libkcal_newexchange_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
                                -version-info 1:0:0 -no-undefined
 libkcal_newexchange_la_LIBADD = \
-  libknewexchange.la ../opengroupware/libkgroupwarebase.la \
+  libknewexchange.la ../lib/libkgroupwaredav.la \
   $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la 
 
 libkabc_newexchange_la_SOURCES = kabc_resourceexchange.cpp exchangeaddressbookadaptor.cpp \
@@ -20,7 +20,7 @@ libkabc_newexchange_la_SOURCES = kabc_resourceexchange.cpp exchangeaddressbookad
 libkabc_newexchange_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
                                -version-info 1:0:0 -no-undefined
 libkabc_newexchange_la_LIBADD = \
-  libknewexchange.la ../opengroupware/libkgroupwarebase.la \
+  libknewexchange.la ../lib/libkgroupwaredav.la \
   $(top_builddir)/libkdepim/libkdepim.la \
   -lkabc
 
