@@ -68,7 +68,6 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
 
 KNFolderManager::~KNFolderManager()
 {
-  syncFolders();
 }
 
 

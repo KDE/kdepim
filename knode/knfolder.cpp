@@ -66,8 +66,6 @@ KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNCollect
 
 KNFolder::~KNFolder()
 {
-  if(i_ndexDirty)
-    syncIndex();
   closeFiles();
 }
 

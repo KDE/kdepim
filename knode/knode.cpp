@@ -164,9 +164,6 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
 
 KNMainWindow::~KNMainWindow()
 {
-  KConfig *conf = KGlobal::config();
-  conf->setGroup("mainWindow_options");
-  saveMainWindowSettings(conf);
   delete a_ccel;
 }
 
@@ -320,8 +317,13 @@ bool KNMainWindow::queryClose()
 {
   if(b_lockInput)
     return false;
-  if(!v_iew->cleanup())
+  if(!v_iew->requestShutdown())
     return false;
+
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("mainWindow_options");
+  saveMainWindowSettings(conf);
+  v_iew->prepareShutdown();
 
   return true;
 }

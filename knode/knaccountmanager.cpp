@@ -58,11 +58,15 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * 
 
 KNAccountManager::~KNAccountManager()
 {
-  for(KNNntpAccount *a=accList->first(); a; a=accList->next())
-    a->saveInfo();
-
   delete accList;
   delete s_mtp;
+}
+
+
+void KNAccountManager::prepareShutdown()
+{
+  for(KNNntpAccount *a=accList->first(); a; a=accList->next())
+    a->saveInfo();
 }
 
 

@@ -137,7 +137,6 @@ KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(
 KNArticleManager::~KNArticleManager()
 {
   delete s_earchDlg;
-  deleteTempFiles();
 }
 
 
@@ -185,13 +184,27 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
 QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 {
   QString path;
+  KTempFile* tmpFile;
   KNHeaders::Base *pathHdr=c->getHeaderByType("X-KNode-Tempfile");  // check for existing temp file
 
   if(pathHdr) {
-    return pathHdr->asUnicodeString();
+    path = pathHdr->asUnicodeString();
+    bool found=false;
+
+    // lets see if the tempfile-path is still valid...
+    for (tmpFile=t_empFiles.first(); tmpFile; tmpFile=t_empFiles.next())
+      if (tmpFile->name()==path) {
+        found = true;
+        break;
+      }
+
+    if (found)
+      return path;
+    else
+      c->removeHeader("X-KNode-Tempfile");
   }
 
-  KTempFile* tmpFile=new KTempFile();
+  tmpFile=new KTempFile();
   if (tmpFile->status()!=0) {
     displayTempFileError();
     delete tmpFile;

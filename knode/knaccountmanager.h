@@ -32,6 +32,8 @@ class KNAccountManager : public QObject
   public:
     KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent=0, const char * name=0);
     ~KNAccountManager();
+
+    void prepareShutdown();
     
     void setCurrentAccount(KNNntpAccount *a);
     

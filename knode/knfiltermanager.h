@@ -62,6 +62,8 @@ class KNFilterManager : public QObject
     void readOptions();
     void saveOptions();
 
+    void prepareShutdown();
+
     KNArticleFilter* currentFilter()        { return currFilter; }
       
     void startConfig(KNConfig::FilterListWidget *fs);

@@ -245,7 +245,6 @@ KNGroupManager::KNGroupManager(KNArticleManager *a, QObject * parent, const char
 
 KNGroupManager::~KNGroupManager()
 {
-  syncGroups();
   delete g_List;
 }
 

@@ -92,27 +92,29 @@ KNFilterManager::KNFilterManager(KNFilterSelectAction *a, KAction *keybA, QObjec
 
 KNFilterManager::~KNFilterManager()
 {
-  if (currFilter) {
-    KConfig *conf=KGlobal::config();
-    conf->setGroup("READNEWS");
-    conf->writeEntry("lastFilterID", currFilter->id());
-  }
 }
 
 
 
 void KNFilterManager::readOptions()
 {
-
 }
 
 
 
 void KNFilterManager::saveOptions()
 {
-
 }
 
+
+void KNFilterManager::prepareShutdown()
+{
+  if (currFilter) {
+    KConfig *conf=KGlobal::config();
+    conf->setGroup("READNEWS");
+    conf->writeEntry("lastFilterID", currFilter->id());
+  }
+}
 
 
 void KNFilterManager::loadFilters()

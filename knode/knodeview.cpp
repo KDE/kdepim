@@ -177,8 +177,6 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 
 KNodeView::~KNodeView()
 {
-  saveOptions();
-
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
 
   delete n_etAccess;
@@ -204,7 +202,6 @@ KNodeView::~KNodeView()
 
   delete c_fgManager;
   kdDebug(5003) << "KNodeView::~KNodeView() : Config deleted" << endl;
-
 }
 
 
@@ -328,8 +325,10 @@ void KNodeView::saveOptions()
 }
 
 
-bool KNodeView::cleanup()
+bool KNodeView::requestShutdown()
 {
+  kdDebug(5003) << "KNodeView::requestShutdown()" << endl;
+
   if( a_rtFactory->jobsPending() &&
       KMessageBox::No==KMessageBox::warningYesNo(knGlobals.top, i18n(
 "KNode is currently sending articles. If you quit now you might loose these \
@@ -339,6 +338,14 @@ articles.\nDo you want to continue anyway?"))
 
   if(!a_rtFactory->closeComposeWindows())
     return false;
+
+  return true;
+}
+
+
+void KNodeView::prepareShutdown()
+{
+  kdDebug(5003) << "KNodeView::prepareShutdown()" << endl;
 
   //cleanup article-views
   KNArticleWidget::cleanup();
@@ -367,7 +374,12 @@ articles.\nDo you want to continue anyway?"))
   if(cup)
     delete cup;
 
-  return true;
+  saveOptions();
+  a_rtManager->deleteTempFiles();
+  g_rpManager->syncGroups();
+  f_olManager->syncFolders();
+  f_ilManager->prepareShutdown();
+  a_ccManager->prepareShutdown();
 }
 
 
