@@ -104,7 +104,7 @@ public:
 		fDCOP(0L),
 		fKNotes(0L),
 		fTimer(0L),
-		fDatabase(0L),
+		// fDatabase(0L),
 		fCounter(0)
 	{ } ;
 
@@ -120,7 +120,7 @@ public:
 	// The timer for invoking process() to do some more work.
 	QTimer *fTimer;
 	// The database we're working with (MemoDB)
-	PilotSerialDatabase *fDatabase;
+	// PilotSerialDatabase *fDatabase;
 	// Some counter that needs to be preserved between calls to
 	// process(). Typically used to note hom much work is done.
 	int fCounter;
@@ -160,7 +160,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 
 	KPILOT_DELETE(fP->fTimer);
 	KPILOT_DELETE(fP->fKNotes);
-	KPILOT_DELETE(fP->fDatabase);
+	// KPILOT_DELETE(fP->fDatabase);
 	KPILOT_DELETE(fP);
 }
 
@@ -175,7 +175,8 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
 
 	fP->fNotes = fP->fKNotes->notes();
-	fP->fDatabase = new PilotSerialDatabase(pilotSocket(),"MemoDB",this,"MemoDB");
+	
+	openDatabases("MemoDB");
 
 	if (isTest())
 	{
@@ -228,20 +229,35 @@ void KNotesAction::listNotes()
 {
 	switch(fStatus)
 	{
-	case Init: 
-		getAppInfo(); 
+	case Init:
+		getAppInfo();
 		getConfigInfo();
 		break;
-	case ModifiedNotesToPilot : 
-		modifyNoteOnPilot(); 
+	case ModifiedNotesToPilot :
+		if (modifyNoteOnPilot())
+		{
+			resetIndexes();
+			fStatus = NewNotesToPilot;
+		}
 		break;
-	case NewNotesToPilot : 
-		addNewNoteToPilot(); 
+	case NewNotesToPilot :
+		if (addNewNoteToPilot())
+		{
+			resetIndexes();
+			fStatus = MemosToKNotes;
+			fDatabase->resetDBIndex();
+		}
 		break;
-	case Cleanup : 
-		cleanupMemos(); 
+	case MemosToKNotes :
+		if (syncMemoToKNotes())
+		{
+			fStatus=Cleanup;
+		}
 		break;
-	default : 
+	case Cleanup :
+		cleanupMemos();
+		break;
+	default :
 		fP->fTimer->stop();
 		emit syncDone(this);
 	}
@@ -292,7 +308,7 @@ void KNotesAction::getAppInfo()
 
 
 	unsigned char buffer[PilotDatabase::MAX_APPINFO_SIZE];
-	int appInfoSize = fP->fDatabase->readAppBlock(buffer,PilotDatabase::MAX_APPINFO_SIZE);
+	int appInfoSize = fDatabase->readAppBlock(buffer,PilotDatabase::MAX_APPINFO_SIZE);
 	struct MemoAppInfo memoInfo;
 
 	if (appInfoSize<0)
@@ -309,7 +325,7 @@ void KNotesAction::getAppInfo()
 }
 
 
-void KNotesAction::modifyNoteOnPilot()
+bool KNotesAction::modifyNoteOnPilot()
 {
 	FUNCTIONSETUP;
 
@@ -321,11 +337,17 @@ void KNotesAction::modifyNoteOnPilot()
 				"Modified %n memos.",
 				fP->fCounter));
 		}
-
-		resetIndexes();
-		fStatus = NewNotesToPilot;
-		return;
+		return true;
 	}
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Checking note "
+		<< fP->fIndex.key()
+		<< " with name "
+		<< fP->fIndex.data()
+		<< endl;
+#endif
 
 	if (fP->fKNotes->isModified("kpilot",fP->fIndex.key()))
 	{
@@ -352,7 +374,7 @@ void KNotesAction::modifyNoteOnPilot()
 			PilotRecord *r = a->pack();
 			r->setID(nm.memo());
 
-			int newid = fP->fDatabase->writeRecord(r);
+			int newid = fDatabase->writeRecord(r);
 
 			if (newid != nm.memo())
 			{
@@ -365,12 +387,19 @@ void KNotesAction::modifyNoteOnPilot()
 					<< endl;
 			}
 		}
+		else
+		{
+			kdWarning() << ": Modified note unknown to Pilot" << endl;
+		}
+
+		fP->fCounter++;
 	}
 
 	++(fP->fIndex);
+	return false;
 }
 
-void KNotesAction::addNewNoteToPilot()
+bool KNotesAction::addNewNoteToPilot()
 {
 	FUNCTIONSETUP;
 
@@ -382,10 +411,7 @@ void KNotesAction::addNewNoteToPilot()
 				"Added %n new memos.",
 				fP->fCounter));
 		}
-
-		resetIndexes();
-		fStatus = Cleanup;
-		return;
+		return true;
 	}
 
 	if (fP->fKNotes->isNew("kpilot",fP->fIndex.key()))
@@ -407,18 +433,54 @@ void KNotesAction::addNewNoteToPilot()
 		PilotMemo *a = new PilotMemo((void *)(const_cast<char *>(c)));
 		PilotRecord *r = a->pack();
 
-		int newid = fP->fDatabase->writeRecord(r);
+		int newid = fDatabase->writeRecord(r);
 
 		fP->fIdList.append(NoteAndMemo(fP->fIndex.key(),newid));
 
 		delete r;
 		delete a;
-		
+
 		fP->fCounter++;
 	}
 
 	++(fP->fIndex);
+	return false;
 }
+
+bool KNotesAction::syncMemoToKNotes()
+{
+	FUNCTIONSETUP;
+
+	PilotRecord *rec = fDatabase->readNextModifiedRec();
+	if (!rec)
+	{
+		return true;
+	}
+	
+	PilotMemo *memo = new PilotMemo(rec);
+	NoteAndMemo m = NoteAndMemo::findMemo(fP->fIdList,memo->id());
+
+	if (m.valid())
+	{
+		// We knew about the note already, but it
+		// has changed on the Pilot.
+		//
+		//
+		fP->fKNotes->setName(m.note(),memo->shortTitle());
+		fP->fKNotes->setText(m.note(),memo->text());
+	}
+	else
+	{
+		int i = fP->fKNotes->newNote(memo->shortTitle(),memo->text());
+		fP->fIdList.append(NoteAndMemo(i,memo->id()));
+	}
+
+	if (memo) delete memo;
+	if (rec) delete rec;
+	
+	return false;
+}
+
 
 void KNotesAction::cleanupMemos()
 {
@@ -468,6 +530,14 @@ void KNotesAction::cleanupMemos()
 
 
 // $Log$
+// Revision 1.9  2002/05/15 17:15:33  gioele
+// kapp.h -> kapplication.h
+// I have removed KDE_VERSION checks because all that files included "options.h"
+// which #includes <kapplication.h> (which is present also in KDE_2).
+// BTW you can't have KDE_VERSION defined if you do not include
+// - <kapplication.h>: KDE3 + KDE2 compatible
+// - <kdeversion.h>: KDE3 only compatible
+//
 // Revision 1.8  2002/02/23 20:57:40  adridg
 // #ifdef DEBUG stuff
 //

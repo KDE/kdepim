@@ -88,7 +88,7 @@ public:
 	/**
 	* Accessor functions for the application info block.
 	*/
-	int appInfoSize() const 
+	int appInfoSize() const
 		{ if (isDBOpen()) return fAppLen; else return -1; } ;
 	char *appInfo() { return fAppInfo; } ;
 
@@ -116,6 +116,7 @@ private:
 	*/
 public:
 	static void setDBPath(const QString &);
+	static const QString *getDBPath() { return fPathBase; } ;
 private:
 	static QString *fPathBase;
 };
@@ -123,6 +124,9 @@ private:
 
 
 // $Log$
+// Revision 1.2  2002/01/21 23:14:03  adridg
+// Old code removed; extra abstractions added; utility extended
+//
 // Revision 1.1  2001/10/10 22:01:24  adridg
 // Moved from ../kpilot/, shared files
 //

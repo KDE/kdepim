@@ -1,3 +1,18 @@
+KPilot Developer's notes for may 25th 2002
+==========================================
+
+2002-05-19  Adriaan de Groot
+* Time to take a good hard look at the conduits individually.
+  We'll start with the notes conduit, since it only does one-
+  way syncing. I suspect this will chime in some more testing
+  instrumentation in the base classes for conduits, too.
+* Changed lots of bitconstants to hex, for clarity.
+* Added a FlagLocal to plugin.h with the intent that you can
+  then try to sync two _local_ databases -- so you don't even
+  need a Pilot for testing.
+* The KNotes conduit now tries to do something sensible with 
+  getting notes back to the Pilot, but fails.
+
 KPilot Developer's notes for may 18th 2002
 ==========================================
 

@@ -43,6 +43,7 @@ public:
 	enum Status { Init,
 		ModifiedNotesToPilot,
 		NewNotesToPilot,
+		MemosToKNotes,
 		Cleanup,
 		Done } ;
 	virtual QString statusString() const;
@@ -59,11 +60,15 @@ protected:
 	/**
 	* For actual processing. These are called by process
 	* and it is critical that fP->fIndex is set properly.
+	*
+	* Each returns true when it is completely finished processing,
+	* if it returns a bool. Void functions need only be called once.
 	*/
 	void getAppInfo();
 	void getConfigInfo();
-	void modifyNoteOnPilot();
-	void addNewNoteToPilot();
+	bool modifyNoteOnPilot();
+	bool addNewNoteToPilot();
+	bool syncMemoToKNotes();
 	void cleanupMemos();
 
 	void resetIndexes();
@@ -80,6 +85,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.4  2002/01/20 22:42:43  adridg
+// CVS_SILENT: Administrative
+//
 // Revision 1.3  2001/12/20 22:55:44  adridg
 // Making conduits save their configuration and doing syncs
 //

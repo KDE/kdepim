@@ -197,7 +197,7 @@ void LogWidget::addMessage(const QString & s)
 	}
 
 	t.append(s);
-	t.append("<br/>");
+	t.append("<br>");
 
 #ifdef KDE2
 	fLog->setText(t);
@@ -226,7 +226,7 @@ void LogWidget::addError(const QString & s)
 
 	t.append("<i>");
 	t.append(s);
-	t.append("</i></qt>");
+	t.append("</i><br></qt>");
 
 	addMessage(t);
 }
@@ -363,6 +363,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.22  2002/05/18 23:28:19  adridg
+// Compile fixes
+//
 // Revision 1.21  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //

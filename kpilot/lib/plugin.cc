@@ -66,8 +66,8 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	const QStringList &args) :
 	SyncAction(p,name),
 	fConfig(0L),
-	fTest(args.contains("test")),
-	fBackup(args.contains("backup")),
+	fTest(args.contains("--test")),
+	fBackup(args.contains("--backup")),
 	fDatabase(0L),
 	fLocalDatabase(0L)
 {
@@ -88,7 +88,7 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	FUNCTIONSETUP;
 }
 
-bool ConduitAction::openDatabases(const char *name)
+bool ConduitAction::openDatabases_(const char *name)
 {
 	FUNCTIONSETUP;
 
@@ -123,6 +123,42 @@ bool ConduitAction::openDatabases(const char *name)
 	return (fDatabase && fLocalDatabase);
 }
 
+bool ConduitAction::openDatabases_(const char *dbName,const char *localPath)
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGCONDUIT << ": Doing local test mode for " << dbName << endl;
+#endif
+	fDatabase = new PilotLocalDatabase(dbName,localPath);
+	fLocalDatabase= new PilotLocalDatabase(dbName); // From default
+	if (!fLocalDatabase || !fDatabase)
+	{
+		const QString *where2 = PilotLocalDatabase::getDBPath();
+
+		kdWarning() << k_funcinfo
+			<< ": Could not open both local copies of \""
+			<< dbName
+			<< "\"" << endl
+			<< "Using \""
+			<< (where2 ? *where2 : QString("<null>"))
+			<< "\" and \""
+			<< (localPath ? localPath : "<null>")
+			<< "\""
+			<< endl;
+	}
+	return (fDatabase && fLocalDatabase);
+}
+
+bool ConduitAction::openDatabases(const char *dbName)
+{
+	/*
+	** We should look into the --local flag passed
+	** to the conduit and act accordingly, but until
+	** that is implemented ..
+	*/
+	
+	return openDatabases_(dbName);
+}
 
 int PluginUtility::findHandle(const QStringList &a)
 {
@@ -172,6 +208,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.7  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.6.2.2  2002/05/09 22:29:33  adridg
 // Various small things not important for the release
 //

@@ -92,19 +92,28 @@ protected:
 	bool isTest() const { return fTest; } ;
 	bool isBackup() const { return fBackup; } ;
 
+	KConfig *fConfig;
+	PilotDatabase *fDatabase,*fLocalDatabase;
+
+	bool openDatabases(const char *dbName);
+	
+private:
+	bool fTest;	// Do some kind of test run on the pilot
+	bool fBackup;	// Do a backup of the database
+
 	/**
 	* Open both the local copy of database @p dbName
 	* and the version on the Pilot. Return true only
 	* if both opens succeed.
 	*/
-	bool openDatabases(const char *dbName);
+	bool openDatabases_(const char *dbName);
 
-	KConfig *fConfig;
-	PilotDatabase *fDatabase,*fLocalDatabase;
-
-private:
-	bool fTest;
-	bool fBackup;
+	/**
+	* Open both databases, but get the fDatabase not from
+	* the Pilot, but from a local database in an alternate
+	* directory. For testing only.
+	*/
+	bool openDatabases_(const char *dbName,const char *localPath);
 } ;
 
 class PluginUtility
@@ -172,6 +181,9 @@ public:
 */
 
 // $Log$
+// Revision 1.5  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.4.2.1  2002/05/09 22:29:33  adridg
 // Various small things not important for the release
 //

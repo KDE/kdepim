@@ -113,15 +113,20 @@ public:
 		Test=0,
 		Backup=1,
 		Restore=2,
-		HotSync=4,
+		HotSync=4,         // Normal operation
+		                   // 8 still available
 		// These are optional (mixins)
 		//
 		//
-		WithUserCheck=32,
-		WithInstaller=64,
-		WithConduits=128,
+		                   // 16 still available
+		WithUserCheck=0x20,
+		WithInstaller=0x40,
+		WithConduits=0x80,
 		// These are misc. flags you can set
-		FlagTest=16384,
+		FlagLocal=0x1000,
+		                   // 8192 still available
+		FlagTest=0x4000,
+		                   // 32768 still available
 		// These are masks you can use to select
 		// the bits coding the action, mixins (With*)
 		// and misc. flags.
@@ -207,6 +212,9 @@ protected:
 
 
 // $Log$
+// Revision 1.3  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.2.2.2  2002/04/13 11:33:38  adridg
 // Make test mode for conduits independent of test mode for hotsync (needed to make kpilotTest sane)
 //

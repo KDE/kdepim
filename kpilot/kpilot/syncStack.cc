@@ -114,14 +114,18 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	switch(fMode && SyncStack::ActionMask)
 	{
 	case SyncStack::Backup :
-		l.append("backup");
+		l.append("--backup");
 		break;
 	default:
 		;
 	}
 	if (fMode & SyncStack::FlagTest)
 	{
-		l.append("test");
+		l.append("--test");
+	}
+	if (fMode & SyncStack::FlagLocal)
+	{
+		l.append("--local");
 	}
 
 
@@ -337,6 +341,9 @@ void SyncStack::actionCompleted(SyncAction *b)
 }
 
 // $Log$
+// Revision 1.6  2002/05/18 23:28:19  adridg
+// Compile fixes
+//
 // Revision 1.5  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //
