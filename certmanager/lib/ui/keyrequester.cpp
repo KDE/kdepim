@@ -214,7 +214,7 @@ void Kleo::KeyRequester::updateKeys() {
   QToolTip::add( mLabel, toolTipText );
 }
 
-static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
+static void showKeyListErrorKR( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
 			    "the keys from the backend:</p>"
@@ -261,7 +261,7 @@ void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
         !( mKeyUsage & Kleo::KeySelectionDialog::PublicKeys ) );
 
   if ( err )
-    return showKeyListError( this, err );
+    return showKeyListErrorKR( this, err );
 
   mEraseButton->setEnabled( false );
   mDialogButton->setEnabled( false );
@@ -274,7 +274,7 @@ void Kleo::KeyRequester::slotNextKey( const GpgME::Key & key ) {
 
 void Kleo::KeyRequester::slotKeyListResult( const GpgME::KeyListResult & res ) {
   if ( res.error() )
-    showKeyListError( this, res.error() );
+    showKeyListErrorKR( this, res.error() );
 
   mEraseButton->setEnabled( true );
   mDialogButton->setEnabled( true );
@@ -316,8 +316,9 @@ bool Kleo::KeyRequester::isMultipleKeysEnabled() const {
 void Kleo::KeyRequester::setMultipleKeysEnabled( bool multi ) {
   if ( multi == mMulti ) return;
 
+  std::vector<GpgME::Key>::iterator it = mKeys.begin();
   if ( !multi && mKeys.size() > 1 )
-    mKeys.erase( ++mKeys.begin(), mKeys.end() );
+    mKeys.erase( ++it, mKeys.end() );
 
   mMulti = multi;
   updateKeys();
