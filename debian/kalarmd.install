@@ -1,6 +1,6 @@
 debian/tmp/usr/bin/kalarmd
-debian/tmp/usr/bin/simplekalarmd
 debian/tmp/usr/bin/korgac
+debian/tmp/usr/bin/simplealarmdaemon
 debian/tmp/usr/lib/libkalarmd.la
 debian/tmp/usr/lib/libkalarmd.so.*
 debian/tmp/usr/share/applnk/.hidden/kalarmd.desktop
