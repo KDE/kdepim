@@ -10,7 +10,8 @@ QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
 
 * Official 3.0.3 release (August 2002)
 
-  - Minor bug fixes.
+  - Fixed problem caused by Qt 3.0.5 that made context menus in todo and list
+    view inaccessible.
 
 * Official 3.0.2 release (June 2002)
 
