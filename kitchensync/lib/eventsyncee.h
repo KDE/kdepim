@@ -14,11 +14,13 @@ namespace KSync {
             IncidenceTemplate<KCal::Event>( ev ) {
 
         };
+        SyncEntry* clone();
 
     };
     class EventSyncee : public SyncTemplate<EventSyncEntry> {
     public:
         EventSyncee();
+        Syncee* clone();
         QString type() const;
     };
 };

@@ -1,0 +1,602 @@
+==4012== valgrind-1.0pre6, a memory error detector for x86 GNU/Linux.
+==4012== Copyright (C) 2000-2002, and GNU GPL'd, by Julian Seward.
+==4012== Estimated CPU clock rate is 400 MHz
+==4012== For more details, rerun with: -v
+==4012== 
+==4012== Syscall param write(buf) contains uninitialised or unaddressable byte(s)
+==4012==    at 0x41230D14: __libc_write (in /lib/libc.so.6)
+==4012==    by 0x41127241: _IceTransSocketWrite (in /usr/X11R6/lib/libICE.so.6.3)
+==4012==    by 0x411280ED: _IceTransWrite (in /usr/X11R6/lib/libICE.so.6.3)
+==4012==    by 0x4111EA8C: _IceWrite (in /usr/X11R6/lib/libICE.so.6.3)
+==4012==    Address 0x45737957 is 3 bytes inside a block of size 1024 alloc'd
+==4012==    at 0x4004521B: malloc (vg_clientfuncs.c:100)
+==4012==    by 0x4111B5E0: IceOpenConnection (in /usr/X11R6/lib/libICE.so.6.3)
+==4012==    by 0x4110F31A: SmcOpenConnection (in /usr/X11R6/lib/libSM.so.6.0)
+==4012==    by 0x40BC3730: (within /usr/local/qt3-laptop/lib/libqt-mt.so.3.0.6)
+dcopclient: Welcome to the todo syncee/syncentry test suite
+dcopclient: 
+dcopclient: Todo 0 libkcal-1130699144.78 libkcal-1130699144.78
+dcopclient: Todo 0 Summary :Test summary 0
+dcopclient: Todo 0 State: -1
+dcopclient: Cloned sum: libkcal-1130699144.78Test summary 0
+dcopclient: ClonedTest summary 0
+dcopclient: Todo 1 libkcal-1237370282.433 libkcal-1237370282.433
+dcopclient: Todo 1 Summary :Test summary 1
+dcopclient: Todo 1 State: -1
+dcopclient: Cloned sum: libkcal-1237370282.433Test summary 1
+dcopclient: ClonedTest summary 1
+dcopclient: Todo 2 libkcal-342485479.505 libkcal-342485479.505
+dcopclient: Todo 2 Summary :Test summary 2
+dcopclient: Todo 2 State: -1
+dcopclient: Cloned sum: libkcal-342485479.505Test summary 2
+dcopclient: ClonedTest summary 2
+dcopclient: Todo 3 libkcal-446235746.578 libkcal-446235746.578
+dcopclient: Todo 3 Summary :Test summary 3
+dcopclient: Todo 3 State: -1
+dcopclient: Cloned sum: libkcal-446235746.578Test summary 3
+dcopclient: ClonedTest summary 3
+dcopclient: Todo 4 libkcal-278369122.650 libkcal-278369122.650
+dcopclient: Todo 4 Summary :Test summary 4
+dcopclient: Todo 4 State: -1
+dcopclient: Cloned sum: libkcal-278369122.650Test summary 4
+dcopclient: ClonedTest summary 4
+dcopclient: Todo 5 libkcal-501016755.721 libkcal-501016755.721
+dcopclient: Todo 5 Summary :Test summary 5
+dcopclient: Todo 5 State: -1
+dcopclient: Cloned sum: libkcal-501016755.721Test summary 5
+dcopclient: ClonedTest summary 5
+dcopclient: Todo 6 libkcal-411930956.810 libkcal-411930956.810
+dcopclient: Todo 6 Summary :Test summary 6
+dcopclient: Todo 6 State: -1
+dcopclient: Cloned sum: libkcal-411930956.810Test summary 6
+dcopclient: ClonedTest summary 6
+dcopclient: Todo 7 libkcal-1194253493.882 libkcal-1194253493.882
+dcopclient: Todo 7 Summary :Test summary 7
+dcopclient: Todo 7 State: -1
+dcopclient: Cloned sum: libkcal-1194253493.882Test summary 7
+dcopclient: ClonedTest summary 7
+dcopclient: Todo 8 libkcal-1882444603.954 libkcal-1882444603.954
+dcopclient: Todo 8 Summary :Test summary 8
+dcopclient: Todo 8 State: -1
+dcopclient: Cloned sum: libkcal-1882444603.954Test summary 8
+dcopclient: ClonedTest summary 8
+dcopclient: Todo 9 libkcal-1314336549.1026 libkcal-1314336549.1026
+dcopclient: Todo 9 Summary :Test summary 9
+dcopclient: Todo 9 State: -1
+dcopclient: Cloned sum: libkcal-1314336549.1026Test summary 9
+dcopclient: ClonedTest summary 9
+dcopclient: Todo 10 libkcal-545030736.102 libkcal-545030736.102
+dcopclient: Todo 10 Summary :Test summary 10
+dcopclient: Todo 10 State: -1
+dcopclient: Cloned sum: libkcal-545030736.102Test summary 10
+dcopclient: ClonedTest summary 10
+dcopclient: Testing now the firstEntry / nextEntry iteratoren
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-1130699144.78
+dcopclient: Test summary 0
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-1237370282.433
+dcopclient: Test summary 1
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-342485479.505
+dcopclient: Test summary 2
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-446235746.578
+dcopclient: Test summary 3
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-278369122.650
+dcopclient: Test summary 4
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-501016755.721
+dcopclient: Test summary 5
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-411930956.810
+dcopclient: Test summary 6
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-1194253493.882
+dcopclient: Test summary 7
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-1882444603.954
+dcopclient: Test summary 8
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-1314336549.1026
+dcopclient: Test summary 9
+dcopclient: -1
+dcopclient: -------------
+dcopclient: TodoSyncEntry TodoSyncee
+dcopclient: libkcal-545030736.102
+dcopclient: Test summary 10
+dcopclient: -1
+dcopclient: -------------
+dcopclient: Now cloning the SYncee 
+dcopclient: Summary Test summary 0
+dcopclient: Id libkcal-1130699144.78
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 1
+dcopclient: Id libkcal-1237370282.433
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 2
+dcopclient: Id libkcal-342485479.505
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 3
+dcopclient: Id libkcal-446235746.578
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 4
+dcopclient: Id libkcal-278369122.650
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 5
+dcopclient: Id libkcal-501016755.721
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 6
+dcopclient: Id libkcal-411930956.810
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 7
+dcopclient: Id libkcal-1194253493.882
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 8
+dcopclient: Id libkcal-1882444603.954
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 9
+dcopclient: Id libkcal-1314336549.1026
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+dcopclient: Summary Test summary 10
+dcopclient: Id libkcal-545030736.102
+dcopclient: TypeTodoSyncEntry
+dcopclient: ------
+Mutex destroy failure: Das Gerät oder die Ressource ist belegt
+==4012== discard syms in /usr/local/kde3-laptop/lib/kde3/plugins/styles/keramik.so due to munmap()
+==4012== discard 208 (2439 -> 34771) translations in range 0x464DC000 .. 0x46508FFF
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x41183A44: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029548 is 64 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid write of size 4
+==4012==    at 0x41183A49: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029548 is 64 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x41183A54: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x4302955C is 84 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x41183A70: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029540 is 56 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B84A: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x41183A7B: __gconv_release_step (in /lib/libc.so.6)
+==4012==    Address 0x4597E9A0 is 4 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B27A: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B871: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E99C is 0 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B28D: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B871: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E938 is 4 bytes inside a block of size 53 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4118B373: do_release_all (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid write of size 4
+==4012==    at 0x4118B2B3: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B871: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E938 is 4 bytes inside a block of size 53 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4118B373: do_release_all (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B871: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x41183A7B: __gconv_release_step (in /lib/libc.so.6)
+==4012==    Address 0x4597E9A0 is 4 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B84A: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x456C71B4 is 4 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B852: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x456C71B8 is 8 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B27A: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B863: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    Address 0x456C71B0 is 0 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B2C0: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B863: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    Address 0x456BE654 is 4 bytes inside a block of size 52 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4118B373: do_release_all (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B27A: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B892: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E99C is 0 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B892: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x41183A7B: __gconv_release_step (in /lib/libc.so.6)
+==4012==    Address 0x4597E9A4 is 8 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B27A: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B8B3: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E99C is 0 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid write of size 4
+==4012==    at 0x41183A7B: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029540 is 56 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x41183A44: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029510 is 8 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid write of size 4
+==4012==    at 0x41183A49: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029510 is 8 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x41183A54: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029524 is 28 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x41183A70: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029508 is 0 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B84A: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x41183A7B: __gconv_release_step (in /lib/libc.so.6)
+==4012==    Address 0x4597E9A0 is 4 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B27A: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B871: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E99C is 0 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B2C0: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B871: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E938 is 4 bytes inside a block of size 53 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4118B373: do_release_all (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B871: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x41183A7B: __gconv_release_step (in /lib/libc.so.6)
+==4012==    Address 0x4597E9A0 is 4 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B84A: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x456C71B4 is 4 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B852: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x456C71B8 is 8 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B27A: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B863: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    Address 0x456C71B0 is 0 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B28D: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B863: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    Address 0x456BE654 is 4 bytes inside a block of size 52 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4118B373: do_release_all (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid write of size 4
+==4012==    at 0x4118B2B3: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B863: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B886: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    Address 0x456BE654 is 4 bytes inside a block of size 52 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4118B373: do_release_all (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B915: tdestroy_recurse (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B27A: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B892: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E99C is 0 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4123B892: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x41183A7B: __gconv_release_step (in /lib/libc.so.6)
+==4012==    Address 0x4597E9A4 is 8 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid read of size 4
+==4012==    at 0x4118B27A: do_release_shlib (in /lib/libc.so.6)
+==4012==    by 0x4123B8B3: trecurse (in /lib/libc.so.6)
+==4012==    by 0x4123B8E8: __twalk (in /lib/libc.so.6)
+==4012==    by 0x4118B32F: __gconv_release_shlib (in /lib/libc.so.6)
+==4012==    Address 0x4597E99C is 0 bytes inside a block of size 16 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x4123B934: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+==4012==    by 0x4118B3A9: free_mem (in /lib/libc.so.6)
+==4012== 
+==4012== Invalid write of size 4
+==4012==    at 0x41183A7B: __gconv_release_step (in /lib/libc.so.6)
+==4012==    by 0x4118472A: __gconv_close_transform (in /lib/libc.so.6)
+==4012==    by 0x411836FD: __gconv_close (in /lib/libc.so.6)
+==4012==    by 0x4118FE8B: _nl_free_domain_conv (in /lib/libc.so.6)
+==4012==    Address 0x43029508 is 0 bytes inside a block of size 112 free'd
+==4012==    at 0x400454E2: free (vg_clientfuncs.c:171)
+==4012==    by 0x41183A15: free_derivation (in /lib/libc.so.6)
+==4012==    by 0x4123B92B: tdestroy_recurse (in /lib/libc.so.6)
+==4012==    by 0x4123B962: __tdestroy (in /lib/libc.so.6)
+valgrind's libpthread.so: libc_internal_tsd_get: dubious key 2
+valgrind's libpthread.so: libc_internal_tsd_set: dubious key 2
+valgrind's libpthread.so: libc_internal_tsd_get: dubious key 2
+==4012== 
+==4012== ERROR SUMMARY: 39 errors from 35 contexts (suppressed: 61 from 7)
+==4012== malloc/free: in use at exit: 377958 bytes in 13626 blocks.
+==4012== malloc/free: 96085 allocs, 82460 frees, 2964368 bytes allocated.
+==4012== For counts of detected errors, rerun with: -v
+==4012== searching for pointers to 13626 not-freed blocks.
+==4012== checked 22987888 bytes.
+==4012== 
+==4012== definitely lost: 483 bytes in 15 blocks.
+==4012== possibly lost:   0 bytes in 0 blocks.
+==4012== still reachable: 377475 bytes in 13611 blocks.
+==4012== 
+==4012== 4 bytes in 1 blocks are definitely lost in loss record 6 of 202
+==4012==    at 0x4004521B: malloc (vg_clientfuncs.c:100)
+==4012==    by 0x409A63A7: ProcessProtocolReply (in /usr/local/kde3-laptop/lib/libDCOP.so.4.1.0)
+==4012==    by 0x409A676E: _KDE_IceProcessCoreMessage (in /usr/local/kde3-laptop/lib/libDCOP.so.4.1.0)
+==4012==    by 0x409A289E: KDE_IceProcessMessages (in /usr/local/kde3-laptop/lib/libDCOP.so.4.1.0)
+==4012== 
+==4012== 4 bytes in 1 blocks are definitely lost in loss record 11 of 202
+==4012==    at 0x4004521B: malloc (vg_clientfuncs.c:100)
+==4012==    by 0x409A63FA: ProcessProtocolReply (in /usr/local/kde3-laptop/lib/libDCOP.so.4.1.0)
+==4012==    by 0x409A676E: _KDE_IceProcessCoreMessage (in /usr/local/kde3-laptop/lib/libDCOP.so.4.1.0)
+==4012==    by 0x409A289E: KDE_IceProcessMessages (in /usr/local/kde3-laptop/lib/libDCOP.so.4.1.0)
+==4012== 
+==4012== 64 bytes in 2 blocks are definitely lost in loss record 107 of 202
+==4012==    at 0x4004531B: __builtin_new (vg_clientfuncs.c:126)
+==4012==    by 0x40C09D68: (within /usr/local/qt3-laptop/lib/libqt-mt.so.3.0.6)
+==4012==    by 0x40C46B87: (within /usr/local/qt3-laptop/lib/libqt-mt.so.3.0.6)
+==4012==    by 0x40C45E32: (within /usr/local/qt3-laptop/lib/libqt-mt.so.3.0.6)
+==4012== 
+==4012== 195 bytes in 10 blocks are definitely lost in loss record 137 of 202
+==4012==    at 0x4004521B: malloc (vg_clientfuncs.c:100)
+==4012==    by 0x410A6E8D: resolve_name (in /usr/X11R6/lib/libX11.so.6.2)
+==4012==    by 0x410A782B: _XlcLocaleDirName (in /usr/X11R6/lib/libX11.so.6.2)
+==4012==    by 0x410A0FF1: _XDynamicOpenIM (in /usr/X11R6/lib/libX11.so.6.2)
+==4012== 
+==4012== 216 bytes in 1 blocks are definitely lost in loss record 140 of 202
+==4012==    at 0x4004521B: malloc (vg_clientfuncs.c:100)
+==4012==    by 0x45C9F5A0: _XimOpenIM (in /usr/X11R6/lib/X11/locale/common/ximcp.so.2)
+==4012==    by 0x410A106B: _XDynamicOpenIM (in /usr/X11R6/lib/libX11.so.6.2)
+==4012==    by 0x45C9EE9D: _XimRegisterIMInstantiateCallback (in /usr/X11R6/lib/X11/locale/common/ximcp.so.2)
+==4012== 
+==4012== LEAK SUMMARY:
+==4012==    definitely lost: 483 bytes in 15 blocks.
+==4012==    possibly lost:   0 bytes in 0 blocks.
+==4012==    still reachable: 377475 bytes in 13611 blocks.
+==4012== Reachable blocks (those to which a pointer was found) are not shown.
+==4012== To see them, rerun with: --show-reachable=yes
+==4012== 

@@ -27,8 +27,9 @@ namespace KSync {
     class TodoSyncee : public SyncTemplate<TodoSyncEntry> {
 
     public:
-        TodoSyncee() : SyncTemplate<TodoSyncEntry>() {};
-        QString type() const { return QString::fromLatin1("TodoSyncee"); }
+        TodoSyncee();
+        QString type() const;
+        Syncee* clone();
     };
 
 };

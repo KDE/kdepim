@@ -1,3 +1,6 @@
+
+SUBDIRS = .  test
+
 INCLUDES = -I$(top_srcdir)/libkcal $(all_includes)
 
 lib_LTLIBRARIES   = libksync.la

@@ -4,6 +4,8 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
+#include <kdebug.h>
+
 #include "syncer.h"
 
 /**
@@ -24,12 +26,12 @@ namespace KSync {
          */
         QString type() const { return QString::fromLatin1("SyncTemplate"); }
         Syncee* clone() {
-            SyncTemplate* temp = new SyncTemplate();
+            SyncTemplate* temp = new SyncTemplate<Entry>();
             temp->setSyncMode( syncMode() );
 	    temp->setFirstSync( firstSync() );
             Entry* entry;
             for ( entry = mList.first(); entry != 0; entry = mList.next() ) {
-                temp->addEntry( entry->clone() );
+                temp->addEntry( (Entry*)entry->clone() );
             }
             return temp;
         };
@@ -51,9 +53,12 @@ namespace KSync {
             return find(SyncEntry::Removed );
         }
         void addEntry( SyncEntry* entry ) {
+            kdDebug() << "addEntry " << entry->type() << endl;
             Entry* tempEntry = dynamic_cast<Entry*> ( entry );
-            if ( tempEntry == 0l )
+            if ( tempEntry == 0l ) {
+                kdDebug() << "could not cast" << endl;
                 return;
+            };
             tempEntry->setSyncee( this );
             if ( tempEntry->state() != SyncEntry::Undefined ) {
                 if (hasChanged( tempEntry ) )

@@ -101,8 +101,9 @@ void Syncee::replaceEntry(SyncEntry *oldEntry, SyncEntry *newEntry)
 
 bool Syncee::hasChanged(SyncEntry *entry)
 {
-  if ( entry->timestamp().isEmpty() ) return true;
+  if ( entry->timestamp().isEmpty() ) return false; // sure -zecke
 
+  if (!mStatusLog ) return false;
   mStatusLog->setGroup(entry->id());
   QString timestamp = mStatusLog->readEntry("Timestamp");
 
@@ -130,6 +131,7 @@ bool Syncee::save()
 
 void Syncee::writeLog()
 {
+  if (!mStatusLog ) return;
   for (SyncEntry *entry = firstEntry();entry;entry = nextEntry()) {
     mStatusLog->setGroup(entry->id());
     mStatusLog->writeEntry("Name",entry->name());

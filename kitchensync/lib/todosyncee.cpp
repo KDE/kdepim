@@ -51,3 +51,20 @@ bool TodoSyncEntry::equals(SyncEntry* entry ) {
     if (mTodo->lastModified() != todoEntry->todo()->lastModified() ) return false;
     return true;
 }
+/// Syncee
+TodoSyncee::TodoSyncee()
+    : SyncTemplate<TodoSyncEntry>() {
+};
+QString TodoSyncee::type() const {
+    return QString::fromLatin1("TodoSyncee");
+}
+Syncee* TodoSyncee::clone() {
+    TodoSyncee* temp = new TodoSyncee();
+    temp->setSyncMode( syncMode() );
+    temp->setFirstSync( firstSync() );
+    TodoSyncEntry* entry;
+    for ( entry = mList.first(); entry != 0; entry = mList.next() ) {
+        temp->addEntry( entry->clone() );
+    }
+    return temp;
+}

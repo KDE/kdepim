@@ -37,7 +37,7 @@ namespace KSync {
             return true;
         }
         SyncEntry* clone() {
-            return new IncidenceTemplate( *this );
+            return new IncidenceTemplate<Entry>( *this );
         }
     private:
         Entry* mIncidence;
