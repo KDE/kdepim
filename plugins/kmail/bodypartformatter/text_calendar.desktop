@@ -1,0 +1,9 @@
+[Misc]
+Encoding=UTF-8
+Name=Application Octetstream
+Name[da]=Program oktetstrøm
+Comment=A bodypart formatter plugin for text/calendar
+
+[Plugin]
+Type=text/calendar
+X-KDE-Library=libkmail_bodypartformatter_text_calendar
