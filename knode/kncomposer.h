@@ -96,7 +96,6 @@ class KNComposer : public KMainWindow  {
     QString s_ignature, u_nwraped;
     QCString c_harset;
     MessageMode m_ode;
-    bool d_oSign;
     bool d_oneSuccess,
          n_eeds8Bit,    // false: fall back to us-ascii
          v_alidated,    // hasValidData was run and found no problems, n_eeds8Bit is valid
@@ -133,7 +132,6 @@ class KNComposer : public KMainWindow  {
     void slotInsertFile();
     void slotInsertFileBoxed();
     void slotAttachFile();
-    void slotSignArticle();
     void slotRemoveAttachment();
     void slotAttachmentProperties();
     void slotToggleDoPost();

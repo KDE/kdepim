@@ -56,7 +56,7 @@
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
     : KMainWindow(0,"composerWindow"), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
-      e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false), d_oSign(false)
+      e_ditorTempfile(0), s_pellChecker(0), a_ttChanged(false)
 {
   d_elAttList.setAutoDelete(true);
 
@@ -132,7 +132,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   KStdAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
 
   //attach menu
-  new KAction(i18n("Append &Signature"), "signature", 0 , this, SLOT(slotAppendSig()),
+  new KAction(i18n("Append &Signature"), 0 , this, SLOT(slotAppendSig()),
                    actionCollection(), "append_signature");
 
   new KAction(i18n("&Insert File..."), 0, this, SLOT(slotInsertFile()),
@@ -145,7 +145,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
                    actionCollection(), "attach_file");
 
   a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"), 
-		   "signature", this, SLOT(slotSignArticle()),
+		   "signature", 0, 
                    actionCollection(), "sign_article");
 
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
@@ -584,7 +584,7 @@ bool KNComposer::applyChanges()
     tmp = v_iew->e_dit->text();
 
   // Sign article if needed
-  if ( d_oSign ) {
+  if ( a_ctPGPsign->isChecked() ) {
       // first get the signing key
       QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
       KNNntpAccount *acc = knGlobals.accManager->account( a_rticle->serverId() );
@@ -887,11 +887,6 @@ void KNComposer::slotRemoveAttachment()
 
     a_ttChanged=true;
   }
-}
-
-void KNComposer::slotSignArticle()
-{
-    d_oSign = a_ctPGPsign->isChecked();
 }
 
 void KNComposer::slotAttachmentProperties()
