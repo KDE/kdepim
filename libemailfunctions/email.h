@@ -103,18 +103,31 @@ KDE_EXPORT EmailParseResult splitAddress( const QString & address,
                                QString & addrSpec,
                                QString & comment );
 
-/** Validate email address.
- * Testframework in kdepim/libemailfunctions/tests. */
+/** Validates an email address in the form of "Joe User" <joe@kde.org>.
+    Returns AddressOk if no error was encountered. Otherwise an appropriate
+    error code is returned.
 
+    @param aStr         a single email address,
+                          example: Joe User (comment1) <joe.user@kde.org>
+    @return             AddressOk if no error was encountered. Otherwise an
+                          appropriate error code is returned.
+*/
 KDE_EXPORT EmailParseResult isValidEmailAddress( const QString& aStr );
 
 /** Translate the enum errorcodes from emailParseResult
  * into i18n'd strings that can be used for msg boxes. */
 KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
 
-/** Check for a simple email address and if it is valid
- * this is used for fields where only a "pure" email
- * is allowed, i,e emails in form xxx@yyy.tld */
+/** Validates an email address in the form of joe@kde.org.
+    Returns true if no error was encountered.
+    This method should be used when the input field should not
+    allow a "full" email address with comments and other special
+    cases that normally are valid in an email address.
+
+    @param aStr         a single email address,
+                          example: joe.user@kde.org
+    @return             true if no error was encountered. 
+*/
 KDE_EXPORT bool isValidSimpleEmailAddress( const QString& aStr );
 
 /** Returns a i18n string to be used in msgboxes 
