@@ -1,0 +1,10 @@
+LDAPString Entity
+AttrTypeAndValue Entity
+NameComponent Entity
+Dn Entity
+DnSpec Entity
+ValueSpec Entity
+AttrValSpec Entity
+VersionSpec Entity
+LdifAttrValRec Entity
+LdifContent Entity
