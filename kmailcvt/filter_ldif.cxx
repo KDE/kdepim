@@ -24,20 +24,29 @@
 #include <stdlib.h>
 
 
-filter_ldif::filter_ldif() : filter(i18n("Import Netscape LDIF Adress Book (.LDIF)"),"Oliver Strutynski")
+filter_ldif::filter_ldif() : filter(i18n("Import Netscape LDIF Adress Book 1(.LDIF)"),"Oliver Strutynski")
 {}
 
 filter_ldif::~filter_ldif()
 {}
 
 void filter_ldif::import(filterInfo *info) {
-   const char* file;
+	 QString _file;
+	 char     file[1024];
+   char     dir[1024];
+   QWidget *parent=info->parent();
+   cout << parent << "\n";
 
-   // Removed file selection!!
+   sprintf(dir,getenv("HOME"));
 
-   file="/home/olistrut/test1.ldif";
+   _file=KFileDialog::getOpenFileName(dir,"*.ldif *.LDIF *.Ldif",parent);
+   if (_file.length()==0) {
+     info->alert(name(),i18n("No Adressbook choosen"));
+     return;
+   }
+	 strcpy(file,_file.latin1());
 
-   QString from=i18n("from: "),to=i18n("to: ");
+	 QString from=i18n("from: "),to=i18n("to: ");
    from+="\t"; from+=file;
    to+="\t"; to+=i18n("the K Address Book");
    info->from(from);
@@ -52,141 +61,130 @@ void filter_ldif::import(filterInfo *info) {
 }
 
 
-#define STRCPY(a,b)	a=b
-#define STRLEN(a)	a.length()
-
 bool filter_ldif::convert(const char *filename, filterInfo *info) {
-   //bool ret;
-   QString caption;
-   caption=i18n("Import Netscape LDIF Personal Adressbook (.LDIF)");
+		QString caption;
+		caption=i18n("Import Netscape LDIF Personal Adressbook (.LDIF)");
 
-   if (!kabStart(info)) {
-     info->alert(caption,"Error starting KAB");
-     return false;
-   }
+		if (!kabStart(info)) {
+			info->alert(caption,"Error starting KAB");
+			return false;
+		}
 
-   // cout << "Converting file..." << filename << "\n";
-   QFile f(filename);
+		QFile f(filename);
 
-   QString firstName="", email="", lastName="";
-   QString title=""; QString givenName=""; QString comment="";
-   QString organization=""; QString homepage=""; QString locality="";
-   QString street=""; QString zipCode=""; QString phone="";
-   QString fax=""; QString country=""; QString mobile=""; QString state="";
-   QString department=""; QString empty="";
+		QString firstName="", email="", lastName="";
+		QString title=""; QString givenName=""; QString comment="";
+		QString organization=""; QString homepage=""; QString locality="";
+		QString street=""; QString zipCode=""; QString phone="";
+		QString fax=""; QString country=""; QString mobile=""; QString state="";
+		QString department=""; QString empty="";
 
-   // Initializing code table for base64 decoding
-   initCodeTable();
+		// Initializing code table for base64 decoding
+		initCodeTable();
 
-   if ( f.open(IO_ReadOnly) ) {
-       QTextStream t( &f );
-       QString s;
-       QString fieldname;
+		if ( f.open(IO_ReadOnly) ) {
+			QTextStream t( &f );
+      QString s;
+      QString fieldname;
 
-       // We need this for calculating progress
-       uint fileSize = f.size();
-       uint bytesProcessed = 0;
+      // We need this for calculating progress
+      uint fileSize = f.size();
+      uint bytesProcessed = 0;
 
-       // Set to true if data currently read is part of
-       // a list of names. Lists will be ignored.
-       bool isGroup=false;
+      // Set to true if data currently read is part of
+      // a list of names. Lists will be ignored.
+      bool isGroup=false;
 
-       while ( !t.eof() ) {
-	   s = t.readLine();
-	   bytesProcessed += s.length();
-	   if (s.isEmpty()) {
-		// Newline: Write data
-		if (!isGroup) {
-			kabAddress(info,i18n("Netscape Addressbook"), givenName, email, title,firstName,empty,lastName,
-		           	street, locality, state, zipCode, country, organization, department,
-			   	empty, empty, phone, fax, mobile, empty, homepage, empty,
-			   	comment,empty);
+      while ( !t.eof() ) {
+				s = t.readLine();
+				bytesProcessed += s.length();
+				if (s.isEmpty()) {
+					// Newline: Write data
+					if (!isGroup) {
+  					kabAddress(	info,i18n("Netscape Addressbook"), givenName, email, title,firstName,empty,lastName,
+												street, locality, state, zipCode, country, organization, department,
+												empty, empty, phone, fax, mobile, empty, homepage, empty,
+												comment,empty);
 
-			STRCPY(firstName,""); STRCPY(email,""); STRCPY(lastName,""); STRCPY(title,"");
-			STRCPY(givenName,""); STRCPY(comment,""); STRCPY(organization,""); STRCPY(homepage,"");
-			STRCPY(locality,""); STRCPY(street,""); STRCPY(zipCode,""); STRCPY(phone,"");
-			STRCPY(fax,""); STRCPY(country,""); STRCPY(mobile,""); STRCPY(state,""); STRCPY(department,"");
-   		} else {
-			info->log("Warning: List data is being ignored.");
-   		}
-		isGroup=false;
-	   } else {
+  					firstName=""; email=""; lastName=""; title="";
+  					givenName=""; comment=""; organization=""; homepage="";
+  					locality=""; street=""; zipCode=""; phone="";
+  					fax=""; country=""; mobile=""; state=""; department="";
+		   		} else {
+						info->log("Warning: List data is being ignored.");
+		   		}
+					isGroup=false;
+	   		} else {
+    			int position = s.find("::");
+    			if (position != -1) {
+    				// String is BASE64 encoded
+    				fieldname = s.left(position);
+    				s = decodeBase64(s.mid(position+3, s.length()-position-2));
+    			} else {
+    				position = s.find(":");
+    				fieldname = s.left(position);
+    				// Convert Utf8 string to unicode so special characters are preserved
+	    	    // We need this since we are reading normal strings from the file
+	    			// which are not converted automatically
+	    			s = QString::fromUtf8(s.mid(position+2, s.length()-position-2).latin1());
+  	  		}
 
-		int position = s.find("::");
-		if (position != -1) {
-			// String is BASE64 encoded
-			fieldname = s.left(position);
-			s = decodeBase64(s.mid(position+3, s.length()-position));
+      		if (fieldname == "givenname") {
+     				firstName=s;
+         	} else if (fieldname == "sn") {
+     				lastName=s;
+	        } else if (fieldname == "mail") {
+	     			email=s;
+	       	} else if (fieldname == "title") {
+	     			title=s;
+	       	} else if (fieldname == "cn") {
+	     			givenName=s;
+	       	} else if (fieldname == "o") {
+	     			organization=s;
+	       	} else if (fieldname == "description") {
+	     			comment=s;
+	       	} else if (fieldname == "homeurl") {
+  	   			homepage=s;
+	       	} else if (fieldname == "homephone") {
+  	 				if (phone.length() > 0) { info->log("Discarding Phone Number "+s); }
+  	  			phone=s;
+	       	} else if (fieldname == "telephonenumber") {
+	     			if (phone.length() > 0) { info->log("Discarding Phone Number "+s); }
+	     			phone=s;
+	       	} else if (fieldname == "postalcode") {
+	     			zipCode=s;
+	       	} else if (fieldname == "facsimiletelephonenumber") {
+	     			fax=s;
+	       	} else if (fieldname == "streetaddress") {
+    				street=s;
+      		} else if (fieldname == "locality") {
+    				locality=s;
+      		} else if (fieldname == "countryname") {
+	   				country=s;
+      		} else if (fieldname == "cellphone") {
+    				mobile=s;
+      		} else if (fieldname == "st") {
+	 	 				state=s;
+      		} else if (fieldname == "ou") {
+    				department=s;
+      		} else if (fieldname == "objectclass") {
+    				if (s == "groupOfNames") { isGroup = true; }
+	     		}
+  	  		// update progress information
+    			info->current((float)bytesProcessed/fileSize*100);
+    			info->overall((float)bytesProcessed/fileSize*100);
+    		}
+			}
+     	f.close();
 		} else {
-			position = s.find(":");
-			fieldname = s.left(position);
-			// Convert Utf8 string to unicode so special characters are preserved
-			//s = QString::fromUtf8(s.mid(position+2, s.length()-position));
-                        // This seems not neccesary because s is already QString
-			s = s.mid(position+2); //, s.length()-position));
+			char msg[1024];
+			sprintf(msg,i18n("Can't open '%s' for reading").latin1(),filename);
+      info->alert(caption,msg);
+      return false;
 		}
 
-		if (s.length()>1023) {
-	          s=s.left(1023);
-                  info->log("Warning: Truncating entry: "+fieldname+" - "+s);
-		}
-
-		if (fieldname == "givenname") {
-			STRCPY(firstName,s);
-   		} else if (fieldname == "sn") {
-			STRCPY(lastName, s);
-   		} else if (fieldname == "mail") {
-			STRCPY(email, s);
-   		} else if (fieldname == "title") {
-			STRCPY(title, s);
-   		} else if (fieldname == "cn") {
-			STRCPY(givenName, s);
-   		} else if (fieldname == "o") {
-			STRCPY(organization, s);
-   		} else if (fieldname == "description") {
-			STRCPY(comment, s);
-   		} else if (fieldname == "homeurl") {
-			STRCPY(homepage, s);
-   		} else if (fieldname == "homephone") {
-			if (STRLEN(phone) > 0) { info->log("Discarding Phone Number "+s); }
-			STRCPY(phone, s);
-   		} else if (fieldname == "telephonenumber") {
-			if (STRLEN(phone) > 0) { info->log("Discarding Phone Number "+s); }
-			STRCPY(phone, s);
-   		} else if (fieldname == "postalcode") {
-			STRCPY(zipCode, s);
-   		} else if (fieldname == "facsimiletelephonenumber") {
-			STRCPY(fax, s);
-   		} else if (fieldname == "streetaddress") {
-			STRCPY(street, s);
-   		} else if (fieldname == "locality") {
-			STRCPY(locality, s);
-   		} else if (fieldname == "countryname") {
-			STRCPY(country, s);
-   		} else if (fieldname == "cellphone") {
-			STRCPY(mobile, s);
-   		} else if (fieldname == "st") {
-			STRCPY(state, s);
-   		} else if (fieldname == "ou") {
-			STRCPY(department, s);
-   		} else if (fieldname == "objectclass") {
-			if (s == "groupOfNames") { isGroup = true; }
-   		}
-		// update progress information
-		info->current((float)bytesProcessed/fileSize*100);
-		info->overall((float)bytesProcessed/fileSize*100);
-	   }
-       }
-       f.close();
-   } else {
-     char msg[1024];
-     sprintf(msg,i18n("Can't open '%s' for reading").latin1(),filename);
-     info->alert(caption,msg);
-     return false;
-   }
-
-   kabStop(info);
-   return true;
+    kabStop(info);
+   	return true;
 }
 
 
@@ -238,7 +236,7 @@ QString filter_ldif::decodeBase64(QString input)
 
     // Remove any linefeeds, tabs and multiple space from decoded string and
     // convert to unicode.
-    //result = QString::fromUtf8(result.simplifyWhiteSpace());
+    result = QString::fromUtf8(result.latin1());
     result = result.simplifyWhiteSpace();
     return result;
 }
@@ -247,7 +245,6 @@ QString filter_ldif::decodeBase64(QString input)
 /* Initialize lookup */
 void filter_ldif::initCodeTable() {
     // chars for 0..63
-    //const char* alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     for (int i=0; i<256; i++) codes[i] = -1;
     for (int i = 'A'; i <= 'Z'; i++) codes[i] = (int)(i - 'A');
     for (int i = 'a'; i <= 'z'; i++) codes[i] = (int)(26 + i - 'a');
