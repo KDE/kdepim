@@ -17,11 +17,19 @@
 <address><email>dsanders@kde.org</email></address>
 </affiliation>
 </author>
+<author>
+<firstname>Steffen</firstname>
+<surname>Hansen</surname>
+<affiliation>
+<address><email>hansen@kde.org</email>
+</address>
+</affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
 <date>2001-06-01</date>
-<releaseinfo>0.01.00</releaseinfo>
+<releaseinfo>0.02.00</releaseinfo>
 
 <legalnotice>
 &FDLNotice;
@@ -62,6 +70,36 @@ For &kaddressbook; this is probably
 
 <para></para>
 
+</chapter>
+
+<chapter id="ldap">
+<title>Accessing address data on LDAP servers with &kaddressbook;</title>
+<para>&kaddressbook; can be used to import address information from LDAP servers into the local addressbook by using the LDAP search dialog.</para>
+    <para>To configure (a number) of LDAP servers, open the
+configuration dialog
+(<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+KAddressBook...</guimenuitem></menuchoice>), select LDAP, and use
+<guibutton>Add Host</guibutton> to configure (a number) of
+servers. Then move the servers to the "LDAP servers to search" list
+and press <guibutton>OK</guibutton> to close the dialog.
+</para>
+<para>On the main toolbar in &kaddressbook; a button with a picture of
+a magnifying glass over a book is available. Use this button to open
+the LDAP search dialog. The dialog itself is pretty straight
+forward. Just type in parts of a name, email address or phonenumber
+and press the <guibutton>Search</guibutton> button.</para> 
+<para>When the
+    results display in the listbox, it is possible to select one or more
+    address(es) and use the <guibutton>Add Selected</guibutton> to import the
+    selected address(es) to the local addressbook, or click the
+    <guibutton>Mail to Selected</guibutton> to invoke the mail program
+    and write an email to the selected recipients.
+</para>
+<para>The <guibutton>Recursive search</guibutton> checkbox is by
+default enabled. This will make the LDAP query consider all objects
+below the base DN of each server. If you only want to consider objects
+one level below the base, uncheck this checkbox. If in doubt, leave it
+checked.</para>
 </chapter>
 
 <chapter id="questions-answers-and-tips">
