@@ -49,9 +49,12 @@ class NameEditDialog : public KDialogBase
     QString prefix() const;
     QString suffix() const;
     QString additionalName() const;
+
+    bool changed() const;
    
   protected slots:
     void parseBoxChanged(bool);
+    void modified();
 
   private:
     KComboBox *mSuffixCombo;
@@ -62,6 +65,7 @@ class NameEditDialog : public KDialogBase
     QCheckBox *mParseBox;
 
     AddresseeConfig mAddresseeConfig;
+    bool mChanged;
 };
 
 #endif

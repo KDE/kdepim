@@ -592,22 +592,24 @@ void AddresseeEditorWidget::nameButtonClicked()
   
   if (dialog.exec())
   {
-    mAddressee.setFamilyName(dialog.familyName());
-    mAddressee.setGivenName(dialog.givenName());
-    mAddressee.setPrefix(dialog.prefix());
-    mAddressee.setSuffix(dialog.suffix());
-    mAddressee.setAdditionalName(dialog.additionalName());
+    if ( dialog.changed() ) {
+      mAddressee.setFamilyName(dialog.familyName());
+      mAddressee.setGivenName(dialog.givenName());
+      mAddressee.setPrefix(dialog.prefix());
+      mAddressee.setSuffix(dialog.suffix());
+      mAddressee.setAdditionalName(dialog.additionalName());
 
-    // Update the name edit.
-    bool block = mNameEdit->signalsBlocked();
-    mNameEdit->blockSignals( true );
-    mNameEdit->setText( mAddressee.assembledName() );
-    mNameEdit->blockSignals( block );
+      // Update the name edit.
+      bool block = mNameEdit->signalsBlocked();
+      mNameEdit->blockSignals( true );
+      mNameEdit->setText( mAddressee.assembledName() );
+      mNameEdit->blockSignals( block );
 
-    // Update the combo box.
-    nameBoxChanged();
+      // Update the combo box.
+      nameBoxChanged();
     
-    emitModified();
+      emitModified();
+    }
   }
 }
 

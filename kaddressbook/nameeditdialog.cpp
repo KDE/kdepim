@@ -127,6 +127,14 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
   mParseBox->setChecked( mAddresseeConfig.automaticNameParsing() );
 
   KAcceleratorManager::manage( this );
+
+  connect( mPrefixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mGivenNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mAdditionalNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mFamilyNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mSuffixCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+
+  mChanged = false;
 }
     
 NameEditDialog::~NameEditDialog() 
@@ -158,9 +166,19 @@ QString NameEditDialog::additionalName() const
   return mAdditionalNameEdit->text();
 }
 
+bool NameEditDialog::changed() const
+{
+  return mChanged;
+}
+
 void NameEditDialog::parseBoxChanged( bool value )
 {
   mAddresseeConfig.setAutomaticNameParsing( value );
+}
+
+void NameEditDialog::modified()
+{
+  mChanged = true;
 }
 
 #include "nameeditdialog.moc"
