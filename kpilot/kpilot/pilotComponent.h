@@ -40,6 +40,7 @@ class QString;
 class PilotComponent : public QWidget
 {
 Q_OBJECT
+friend class KPilotInstaller;
 
 public:
 	PilotComponent(QWidget* parent,
@@ -47,25 +48,25 @@ public:
 		const QString& dbPath);
 
 	/**
-	* Called when the component is shown in kpilot. It should 
+	* Called when the component is shown in kpilot. It should
 	* load the database and populate the widgets.
 	*/
 	virtual void showComponent() {}
 	/**
-	* Called when the component is hidden in kpilot. It should 
+	* Called when the component is hidden in kpilot. It should
 	* unload the databases and clean up to save memory. This method
 	* can be called even if the component is not visible.
 	* If there are some editing dlgs open, this needs to be deferred
 	* until they are all closed. Then, one can explicitly call hideComponent().
 	*/
 	virtual void hideComponent() {}
-	
+
 	/**
 	* Set the shown variable to true or false, then call showComponent
 	* or hideComponent.
 	*/
 	void showKPilotComponent( bool toShow );
-	
+
 
 	/**
 	* Get ready for a hotsync -- write any unflushed records
@@ -87,6 +88,7 @@ public:
 	* Reload data (possibly changed by the hotsync) etc. etc.
 	*/
 	virtual void postHotSync() { } ;
+
 
 protected:
 	/**
@@ -119,6 +121,7 @@ protected:
 	void populateCategories(QComboBox *,
 		CategoryAppInfo *info=0);
 
+	void setDBPath(const QString &path) { fDBPath = path; } ;
 	const QString& dbPath() const { return fDBPath; } ;
 	void markDBDirty(const QString db);
 

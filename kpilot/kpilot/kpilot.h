@@ -101,6 +101,7 @@ public slots:
 	void slotHotSyncRequested();
 	void slotListSyncRequested();
 	void slotFastSyncRequested();
+	void slotFullSyncRequested();
 
 
 	/**
@@ -139,6 +140,11 @@ protected:
 	bool componentPreSync();
 	void setupSync(int kind,const QString& msg);
 	void componentPostSync();
+	/**
+	* Run after a configuration change to force
+	* the viewers to re-load data.
+	*/
+	void componentUpdate();
 
 	void initIcons();
 	void initMenu();

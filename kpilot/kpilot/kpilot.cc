@@ -430,6 +430,14 @@ void KPilotInstaller::slotFastSyncRequested()
 		i18n("Please press the HotSync button."));
 }
 
+void KPilotInstaller::slotFullSyncRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(SyncAction::eFullSync,
+		i18n("Next sync will be a Full Sync. ") +
+		i18n("Please press the HotSync button."));
+}
+
 void KPilotInstaller::slotListSyncRequested()
 {
 	FUNCTIONSETUP;
@@ -927,10 +935,61 @@ sorry:
 	return ret;
 }
 
+void KPilotInstaller::componentUpdate()
+{
+	FUNCTIONSETUP;
+
+	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
+	bool dbPathChanged = false;
+
+	for (fP->list().first();
+		fP->list().current();
+		fP->list().next())
+	{
+// TODO_RK: update the current component to use the new settings
+//			fP->list().current()->initialize();
+		PilotComponent *p = fP->list().current();
+		if (p && (p->dbPath() != defaultDBPath))
+		{
+			dbPathChanged = true;
+			p->setDBPath(defaultDBPath);
+		}
+	}
+
+	if (!dbPathChanged) // done if the username didn't change
+	{
+		return;
+	}
+
+	// Otherwise, need to re-load the databases
+	//
+	if (fLogWidget)
+	{
+		fLogWidget->logMessage(i18n("Changed user name to `%1'.")
+			.arg(KPilotSettings::userName()));
+		fManagingWidget->showPage(0);
+		slotAboutToShowComponent(fLogWidget);
+	}
+	else
+	{
+		int ix = fManagingWidget->activePageIndex();
+		PilotComponent *component = 0L;
+		if (ix>=0)
+		{
+			component = fP->list().at(ix);
+		}
+		if (component)
+		{
+			component->hideComponent(); // Throw away current data
+			component->showComponent(); // Reload
+		}
+	}
+}
+
 /* virtual DCOP */ ASYNC KPilotInstaller::configureWizard()
 {
 	FUNCTIONSETUP;
-   
+
 	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
 	{
 		if (fLogWidget)
@@ -944,14 +1003,7 @@ sorry:
 
 	if (runWizard(getDaemon(),this))
 	{
-		// Update each installed component.
-		for (fP->list().first();
-			fP->list().current();
-			fP->list().next())
-		{
-			// TODO_RK: update the current component to use the new settings
-//			fP->list().current()->initialize();
-		}
+		componentUpdate();
 	}
 
 	fConfigureKPilotDialogInUse = false;
@@ -974,14 +1026,7 @@ sorry:
 	fConfigureKPilotDialogInUse = true;
 	if (runConfigure(getDaemon(),this))
 	{
-		// Update each installed component.
-		for (fP->list().first();
-			fP->list().current();
-			fP->list().next())
-		{
-			// TODO_RK: update the current component to use the new settings
-//			fP->list().current()->initialize();
-		}
+		componentUpdate();
 	}
 
 	fConfigureKPilotDialogInUse = false;
