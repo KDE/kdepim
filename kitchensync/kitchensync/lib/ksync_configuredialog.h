@@ -13,8 +13,11 @@ namespace KitchenSync {
     ConfigureDialog( QWidget *parent=0, const char *name=0, bool modal=true );
     ~ConfigureDialog();
     virtual void show();
-    void addWidget();
-   
+    void addWidget(QWidget*,const QString&, QPixmap*);
+
+  signals:
+    void ok( );
+
     protected slots:
      virtual void slotOk();
      virtual void slotCancel();
@@ -28,12 +31,12 @@ namespace KitchenSync {
      /**
       * load and registers the plugins
       */
-     void ConfigureDialog::setup();
+     void setup();
      
      /**
       * unload the plugins
       */
-     void ConfigureDialog::unload();
+     void unload();
      
   };
   

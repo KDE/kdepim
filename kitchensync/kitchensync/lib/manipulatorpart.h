@@ -28,7 +28,7 @@ namespace KitchenSync {
      virtual QString description()const { return QString::null; };
      virtual QPixmap *pixmap() { return 0l; };
      virtual bool partIsVisible()const { return false; }
-     virtual QWidget *configWidget() const{ return 0l; };
+     virtual QWidget *configWidget(){ return 0l; };
     public slots:
      virtual void slotConfigOk() { };
      virtual void syncEntries( const QPtrList<KSyncEntry> & ){ };     

@@ -5,6 +5,7 @@
 
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kdebug.h>
 #include <klistbox.h>
 
 #include "partbar.h"
@@ -17,7 +18,7 @@ PartBarItem::PartBarItem( PartBar *parent, ManipulatorPart *part )
   m_Part = part;
   m_Pixmap = m_Part->pixmap();
   setCustomHighlighting( true );
-  setText( part->description() ); 
+  setText( part->name() ); 
   //tooltip(part->description() );
 }
 
@@ -81,8 +82,10 @@ PartBar::PartBar(QWidget *parent, const char *name, WFlags f)
 }
 
 PartBarItem * PartBar::insertItem( ManipulatorPart *part) {
-  PartBarItem *item = new PartBarItem( this, part );
-  return item;
+  kdDebug() << part->name() << "\n" << part->description() << "\n";
+  PartBarItem *item = new PartBarItem( this , part );
+  m_listBox->insertItem( item );
+  return item;   
 }
 
 void PartBar::setListBox(KListBox *view) {

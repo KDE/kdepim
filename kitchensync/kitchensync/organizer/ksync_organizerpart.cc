@@ -2,6 +2,7 @@
 #include <qobject.h>
 #include <qwidget.h>
 
+#include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kgenericfactory.h>
@@ -31,6 +32,7 @@ QPixmap* OrganizerPart::pixmap()
 }
 QWidget* OrganizerPart::widget()
 {
+  kdDebug() << "widget \n";
   if(m_widget==0 ){
     m_widget = new QWidget();
     m_widget->setBackgroundColor(Qt::green);
@@ -39,8 +41,10 @@ QWidget* OrganizerPart::widget()
 }
 QWidget* OrganizerPart::configWidget()
 {
+  kdDebug() << "configWidget \n" ;
   m_config = new QWidget();
-  m_config->setBackgroundColor( Qt::red );
+  m_config->setBackgroundColor( Qt::green );
+  
   return m_config;
 };
 

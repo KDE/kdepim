@@ -1,4 +1,6 @@
-
+#include <qlayout.h>
+#include <qvbox.h>
+#include <qpoint.h>
 #include <config.h>
 #include <klocale.h>
 #include <kapplication.h>
@@ -27,24 +29,28 @@ ConfigureDialog::~ConfigureDialog() {
 }
 
 void ConfigureDialog::show() {
-  if( !isVisible() )
+  if( !isVisible() ) {
     setup();
+  }
   KDialogBase::show();
 }
 
 void ConfigureDialog::slotOk() {
   apply( true );
   accept();
+  emit ok();
 }
 
 
 void ConfigureDialog::slotCancel() {
   apply( false );
+  reject();
 }
 
 
-void ConfigureDialog::addWidget() {
-  
+void ConfigureDialog::addWidget(QWidget* widget, const QString &name, QPixmap* pixmap) {
+  QFrame *frame = addPage(name, name, *pixmap);
+  widget->reparent(frame, QPoint(0,0));
 }
 
 void ConfigureDialog::setup() {
