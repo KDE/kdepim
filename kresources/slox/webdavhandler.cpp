@@ -37,9 +37,6 @@
 
 #include <qfile.h>
 
-#ifdef Q_OS_FREEBSD
-#define MAXINT INT_MAX
-#endif
 
 SloxItem::SloxItem()
   : status( Invalid )
@@ -162,9 +159,9 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
 
   if (preEpoch) {
     dt.setTime_t( 0, Qt::UTC );
-    if (ticks > MAXINT) {
-      dt = dt.addSecs(-MAXINT);
-      ticks -= MAXINT;
+    if (ticks > INT_MAX) {
+      dt = dt.addSecs(-INT_MAX);
+      ticks -= INT_MAX;
     }
     dt = dt.addSecs(-((long) ticks));
   }
