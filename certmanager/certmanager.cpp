@@ -74,6 +74,8 @@
 #include <kdebug.h>
 #include <kdialogbase.h>
 #include <kkeydialog.h>
+#include <ktempfile.h>
+#include <kio/job.h>
 
 // Qt
 #include <qfontmetrics.h>
@@ -128,7 +130,10 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
     mLineEditAction( 0 ),
     mComboAction( 0 ),
     mFindAction( 0 ),
-    mRemote( remote )
+    mImportCertFromFileAction( 0 ),
+    mImportCRLFromFileAction( 0 ),
+    mRemote( remote ),
+    mDirMngrFound( false )
 {
   createStatusBar();
   createActions();
@@ -191,24 +196,24 @@ void CertManager::createActions() {
 
   // Import Certificates
   // Import from file
-  (void)new KAction( i18n("Certificate..."), QIconSet(),
+  mImportCertFromFileAction = new KAction( i18n("Certificate..."), QIconSet(),
                                              0, this,
                                              SLOT(slotImportCertFromFile()),
                                              actionCollection(),
                                              "importCertFromFile" );
   // CRLs
   // Import from file
-  KAction* importCRLFromFile = new KAction( i18n("CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
+  mImportCRLFromFileAction = new KAction( i18n("CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
 
   QString dirmngr = KStandardDirs::findExe( "gpgsm" );
-  bool dirMngrFound = !dirmngr.isEmpty();
-  importCRLFromFile->setEnabled( dirMngrFound );
+  mDirMngrFound = !dirmngr.isEmpty();
+  updateImportActions( true );
 
   // View CRLs
   KAction* viewCRLs = new KAction( i18n("CRL Cache..."), QIconSet(), 0, this, SLOT( slotViewCRLs() ),
 				   actionCollection(), "viewCRLs");
-  viewCRLs->setEnabled( dirMngrFound ); // we also need dirmngr for this
+  viewCRLs->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
   // Toolbar
   KToolBar * _toolbar = toolBar( "mainToolBar" );
@@ -231,6 +236,11 @@ void CertManager::createActions() {
 
   KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
   createStandardStatusBarAction();
+}
+
+void CertManager::updateImportActions( bool enable ) {
+  mImportCRLFromFileAction->setEnabled( mDirMngrFound && enable );
+  mImportCertFromFileAction->setEnabled( enable );
 }
 
 void CertManager::slotEditKeybindings() {
@@ -331,7 +341,7 @@ void CertManager::newCertificate()
 */
 void CertManager::quit()
 {
-  kapp->deref();
+  close();
 }
 
 /**
@@ -361,30 +371,48 @@ void CertManager::extendCertificate()
 
 
 /**
-   This slot is invoke dwhen the user selects Certificates/Import/From File.
+   This slot is invoked when the user selects Certificates/Import/From File.
 */
 void CertManager::slotImportCertFromFile()
 {
-  slotImportCertFromFile( KFileDialog::getOpenFileName( QString::null, QString::null, this,
-							i18n( "Select Certificate File" ) ) );
+  slotImportCertFromFile( KFileDialog::getOpenURL( QString::null, QString::null, this,
+                                                   i18n( "Select Certificate File" ) ) );
 }
 
-void CertManager::slotImportCertFromFile( const QString & certFilename )
+void CertManager::slotImportCertFromFile( const KURL & certURL )
 {
-  if ( certFilename.isEmpty() )
+  if ( !certURL.isValid() ) // empty or malformed
     return;
 
-  QFile f( certFilename );
-  if( !f.open( IO_ReadOnly ) ) {
-    KMessageBox::error( this,
-			i18n( "<qt><p>An error occurred while trying to import "
-			      "certificate file <b>%1</b>:</p>"
-			      "<p><b>%1</b></p></qt>" ).arg( certFilename ).arg( i18n("File does not exist or can't be read") ),
-			i18n( "Certificate Manager Error" ) );
+  // Prevent two simultaneous imports
+  updateImportActions( false );
+
+  KIO::TransferJob* importJob = KIO::get( certURL );
+  importJob->setWindow( this );
+  connect( importJob, SIGNAL(data(KIO::Job*,const QByteArray&)),
+           SLOT(slotImportData(KIO::Job*,const QByteArray&)) );
+  connect( importJob, SIGNAL(result(KIO::Job*)), SLOT(slotImportResult(KIO::Job*)) );
+}
+
+void CertManager::slotImportData( KIO::Job*, const QByteArray& data ) {
+  // check for end-of-data marker:
+  if ( data.size() == 0 )
+    return;
+  unsigned int oldSize = mImportData.size();
+  mImportData.resize( oldSize + data.size(), QGArray::SpeedOptim );
+  memcpy( mImportData.data() + oldSize, data.data(), data.size() );
+}
+
+void CertManager::slotImportResult( KIO::Job* job )
+{
+  if ( job->error() ) {
+    job->showErrorDialog();
+    updateImportActions( true );
+    mImportData.resize( 0 );
     return;
   }
-
-  startCertificateImport( f.readAll() );
+  startCertificateImport( mImportData );
+  updateImportActions( true );
 }
 
 static void showCertificateDownloadError( QWidget * parent, const GpgME::Error & err ) {
@@ -439,13 +467,16 @@ void CertManager::startCertificateImport( const QByteArray & keyData ) {
 	   SLOT(slotCertificateImportResult(const GpgME::ImportResult&)) );
 
   const GpgME::Error err = job->start( keyData );
-  if ( err )
+  if ( err ) {
     showCertificateImportError( this, err );
+    mImportData.resize( 0 );
+  }
   else
     (void)new Kleo::ProgressDialog( job, i18n("Importing Certificate"), this );
 }
 
 void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res ) {
+  mImportData.resize( 0 );
   if ( res.error() ) {
     showCertificateImportError( this, res.error() );
     return;
@@ -503,29 +534,65 @@ void CertManager::slotDirmngrExited() {
       KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Error" ) );
 
     delete mDirmngrProc; mDirmngrProc = 0;
+    if ( !mImportCRLTempFile.isEmpty() )
+      QFile::remove( mImportCRLTempFile );
+    updateImportActions( true );
 }
 
 /**
    This slot will import CRLs from a file.
 */
 void CertManager::importCRLFromFile() {
-  QString filename = KFileDialog::getOpenFileName( QString::null,
-						       QString::null,
-						       this,
-						       i18n( "Select CRL File" ) );
-
-  if ( !filename.isEmpty() ) {
-    mDirmngrProc = new KProcess();
-    *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
-    mErrorbuffer = QString::null;
-    connect( mDirmngrProc, SIGNAL(processExited(KProcess*)),
-	     this, SLOT(slotDirmngrExited()) );
-    connect( mDirmngrProc, SIGNAL(receivedStderr(KProcess*,char*,int) ),
-	     this, SLOT(slotStderr(KProcess*,char*,int)) );
-    if( !mDirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
-      KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
-      delete mDirmngrProc; mDirmngrProc = 0;
+  KURL url = KFileDialog::getOpenURL( QString::null,
+                                      QString::null,
+                                      this,
+                                      i18n( "Select CRL File" ) );
+  updateImportActions( false );
+  if ( url.isValid() ) {
+    if ( url.isLocalFile() ) {
+      startImportCRL( url.path(), false );
+      updateImportActions( true );
+    } else {
+      KTempFile tempFile;
+      KURL destURL;
+      destURL.setPath( tempFile.name() );
+      KIO::Job* copyJob = KIO::file_copy( url, destURL, 0600, true, false );
+      copyJob->setWindow( this );
+      connect( copyJob, SIGNAL( result( KIO::Job * ) ),
+               SLOT( slotImportCRLJobFinished( KIO::Job * ) ) );
     }
+  }
+}
+
+void CertManager::slotImportCRLJobFinished( KIO::Job *job )
+{
+  KIO::FileCopyJob* fcjob = static_cast<KIO::FileCopyJob*>( job );
+  QString tempFilePath = fcjob->destURL().path();
+  if ( job->error() ) {
+    job->showErrorDialog();
+    QFile::remove( tempFilePath ); // unlink tempfile
+    updateImportActions( true );
+    return;
+  }
+  startImportCRL( tempFilePath, true );
+}
+
+void CertManager::startImportCRL( const QString& filename, bool isTempFile )
+{
+  mImportCRLTempFile = isTempFile ? filename : QString::null;
+  mDirmngrProc = new KProcess();
+  *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
+  mErrorbuffer = QString::null;
+  connect( mDirmngrProc, SIGNAL(processExited(KProcess*)),
+           this, SLOT(slotDirmngrExited()) );
+  connect( mDirmngrProc, SIGNAL(receivedStderr(KProcess*,char*,int) ),
+           this, SLOT(slotStderr(KProcess*,char*,int)) );
+  if( !mDirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
+    KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
+    delete mDirmngrProc; mDirmngrProc = 0;
+    updateImportActions( true );
+    if ( isTempFile )
+      QFile::remove( mImportCRLTempFile ); // unlink tempfile
   }
 }
 

@@ -47,6 +47,9 @@ namespace Kleo {
   class ProgressBar;
 }
 
+namespace KIO {
+  class Job;
+}
 class KProcess;
 class KToolBar;
 class KAction;
@@ -56,6 +59,7 @@ class CRLView;
 class LineEditAction;
 class ComboAction;
 
+class KURL;
 class QFile;
 class QStringList;
 class QLabel;
@@ -76,8 +80,6 @@ public:
 
     bool isRemote() const { return mRemote; }
 
-    void startCertificateImport( const QByteArray & keyData );
-
 private slots:
     void slotStartCertificateDownload( const QString & fingerprint );
     void slotStartCertificateListing();
@@ -88,7 +90,9 @@ private slots:
     void slotDeleteCertificate();
 
     void slotImportCertFromFile();
-    void slotImportCertFromFile( const QString & filename );
+    void slotImportCertFromFile( const KURL & filename );
+    void slotImportData( KIO::Job*,const QByteArray& );
+    void slotImportResult( KIO::Job* );
 
     void slotCertificateImportResult( const GpgME::ImportResult & result );
     void slotCertificateDownloadResult( const GpgME::Error & error, const QByteArray & keyData );
@@ -97,6 +101,7 @@ private slots:
 
     void importCRLFromFile();
     void importCRLFromLDAP();
+    void slotImportCRLJobFinished( KIO::Job * );
 
     void slotDirmngrExited();
     void slotStderr( KProcess*, char*, int );
@@ -116,6 +121,9 @@ private:
     void createStatusBar();
     void createActions();
     void updateStatusBarLabels();
+    void updateImportActions( bool enable );
+    void startCertificateImport( const QByteArray & keyData );
+    void startImportCRL( const QString& fileName, bool isTempFile );
 
 private:
     Kleo::KeyListView * mKeyListView;
@@ -130,8 +138,13 @@ private:
     LineEditAction * mLineEditAction;
     ComboAction * mComboAction;
     KAction * mFindAction;
+    KAction * mImportCertFromFileAction;
+    KAction * mImportCRLFromFileAction;
 
+    QByteArray mImportData;
+    QString mImportCRLTempFile;
     bool     mRemote;
+    bool     mDirMngrFound;
 };
 
 #endif // _CERTMANAGER_H_
