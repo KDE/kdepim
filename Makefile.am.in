@@ -26,7 +26,7 @@ cvs-local:
 	cd  libical && \
         $(ACLOCAL) && \
         $(AUTOHEADER) && \
-        automake && \
+        $(AUTOMAKE) && \
         $(AUTOCONF)
 
 cvs-dist-local:
