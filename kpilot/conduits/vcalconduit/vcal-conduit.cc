@@ -1722,6 +1722,7 @@ VObject* VCalConduit::findEntryInCalendar(unsigned int id)
 					<< endl;
 				continue;
 			}
+#if 0
 			else
 			{
 				DEBUGCONDUIT << fname
@@ -1729,6 +1730,7 @@ VObject* VCalConduit::findEntryInCalendar(unsigned int id)
 					<< s
 					<< endl;
 			}
+#endif
 
 			if(strtoul(s, 0L, 0) == id) 
 			{
@@ -1824,6 +1826,9 @@ int VCalConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.22  2001/01/15 14:50:50  bero
+// Fix build
+//
 // Revision 1.21  2001/01/08 22:27:12  adridg
 // Fixed QFile::encodeName stupidity
 //
