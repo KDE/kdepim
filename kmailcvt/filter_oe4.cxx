@@ -29,7 +29,7 @@
 #include <dirent.h>
 #include <klocale.h>
 
-filter_oe4::filter_oe4() : filter(i18n("Import folders from Outlook Express 4"),"Stephan B. Nedregard/Hans Dijkema")
+filter_oe4::filter_oe4() : filter(i18n("Import Folders From Outlook Express 4"),"Stephan B. Nedregard/Hans Dijkema")
 {
   CAP=i18n("Import Outlook Express 4");
 }

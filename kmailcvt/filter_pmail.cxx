@@ -28,7 +28,7 @@
 
 
 filter_pmail::filter_pmail() :
-   filter(i18n("Import folders from Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),"Holger Schurig")
+   filter(i18n("Import Folders From Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),"Holger Schurig")
 {
   CAP=i18n("Import Pegasus-Mail");
 }

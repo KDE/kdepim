@@ -30,7 +30,7 @@
 #include <klocale.h>
 
 
-filter_oe5::filter_oe5() : filter(i18n("Import folders from Outlook Express 5"),"Stephan B. Nedregard/Hans Dijkema")
+filter_oe5::filter_oe5() : filter(i18n("Import Folders From Outlook Express 5"),"Stephan B. Nedregard/Hans Dijkema")
 {
   CAP=i18n("Import Outlook Express 5");
 }

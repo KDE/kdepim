@@ -52,7 +52,7 @@ filterInfo::filterInfo(QWidget *parent,char */*name*/)
    grid1->addMultiCellWidget(_done_current,3,3,0,4);
 
    _current=new QLabel(this);
-   _current->setText(i18n("current:"));
+   _current->setText(i18n("Current:"));
    grid1->addMultiCellWidget(_current,2,2,0,4);
    _to=new QLabel(this);
    _to->setText(i18n("Destination:"));

@@ -27,9 +27,9 @@
 #define CTRL_C	3
 
 
-filter_eudora_ab::filter_eudora_ab() : filter(i18n("Import filter for the Eudora Light Addressbook"),"Hans Dijkema")
+filter_eudora_ab::filter_eudora_ab() : filter(i18n("Import Filter for the Eudora Light Addressbook"),"Hans Dijkema")
 {
-  CAP=i18n("Import filter for the Eudora Light Addressbook");
+  CAP=i18n("Import Filter for the Eudora Light Addressbook");
   LINES=0;
   printf("name\n");
 }

@@ -31,7 +31,7 @@
 
 
 filter_plain::filter_plain() :
-   filter(i18n("Import plain text emails"),"Laurence Anderson")
+   filter(i18n("Import Plain Text Emails"),"Laurence Anderson")
 {
 }
 
