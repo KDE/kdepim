@@ -46,7 +46,7 @@ namespace GpgME {
 
       KeyGen    = 0x080,
       KeyList   = 0x100,
-      TrustList = 0x200,// gpgme_trustlist_result_t, but nevertheless...
+      TrustList = 0x200 // gpgme_trustlist_result_t, but nevertheless...
     };
 
     Private( gpgme_ctx_t c=0 )
