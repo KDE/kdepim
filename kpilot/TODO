@@ -1,19 +1,26 @@
 This is a TODO file. Open issues are marked with a *, partly resolved issues
 are marked with a +, ignored issues get an o, and resolved issues a -.
+Issues are sorted by status. Check the ChangeLog for details on how an
+issue is resolved.
 
 * Handle real devfs better (regular USB support seems OK now).
 * Handle difference between pi_bind() "no such file" error and others.
 * Look into possible buffer overflows in pi_socket structure.
-+ Replace gsetupDialog with files that follow the class naming convention,
-  that subclass from KDialogBase, and provide better support for making
-  dialogs based on Qt designer widgets.
-- Add behavior to the new .ui-based config dialog.
-* Make daemon able to sync more than once in a run.
+* Add a validator ensuring path lengths are kept < 14 chars for 
+  pilot-link <= 0.9.5
 * Make pi_install_file amenable to use in a GUI program.
 * Port conduits to new setup.
 * Add malsync conduit.
 * baseConduit.cc needs lots of attention due to changed architecture,
   as does conduitApp.cc.
-* Replace conduitSetup with a .ui based solution.
-* Document in fileInstaller.h that fileNames does not include dir name.
-* Remove more old code from hotSync.cc
+* Fix local database & do regression testing
++ Make daemon able to sync more than once in a run.
++ Close device at end of sync.
+
+- Replace conduitSetup with a .ui based solution.
+- Document in fileInstaller.h that fileNames does not include dir name.
+- Remove more old code from hotSync.cc
+- Replace gsetupDialog with files that follow the class naming convention,
+  that subclass from KDialogBase, and provide better support for making
+  dialogs based on Qt designer widgets.
+- Add behavior to the new .ui-based config dialog.

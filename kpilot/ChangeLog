@@ -7,6 +7,23 @@ doesn't gum up your Pilot hopelessly. This is KPilot 4.2.9, and it
 works with KDE 2.1, 2.2 and 3.0. Whether or not it reaches the
 distro's I don't know.
 
+2001-10-10  Adriaan de Groot
+
+* Actually add new KNotes to the memo pad. This means conduit syncing is 
+  actually coming closer. Works from kpilotTest.
+* Renamed --test --list in kpilotTest, added option --notest to force a
+  conduit to *really* run (may be hazardous!) from the tester.
+* Moved many things into lib/ -- whatever is shared between KPilot and
+  conduits, basically.
+* Wow! There's stuff in PilotAddress I'd never noticed before that deserves 
+  to be moved to a superclass -- like setCategory. Kudos to Greg.
+* Updated the TODO list.
+* Added a nicer credits section in the about page of dialogs.
+
+2001-10-09  Adriaan de Groot
+
+* nothing! Fixed old compile issues on KDE 2.2 iob Solaris.
+
 2001-10-08  Adriaan de Groot
 
 * Added lots of things in lib/ to enforce some kind of uniformity on
