@@ -1,5 +1,5 @@
 Source: kdepim-cvs
-Build-Depends: autoconf, kdelibs3-dev-cvs, debhelper, libpisock-dev, pilot-link,libjpeg62-dev, libpng2-dev, libqt2.1-dev, zlib1g-dev, xlib6g-dev, jade, docboook, gettext, bison, libc6-dev
+Build-Depends: autoconf, kdelibs3-dev-cvs, debhelper, libpisock-dev, pilot-link,libjpeg62-dev, libpng2-dev, libqt2.1-dev, zlib1g-dev, xlib6g-dev, jade, sgml-base, docboook, gettext, bison, libc6-dev
 Section: utils
 Priority: optional
 Maintainer: Stephan Kulow <coolo@kde.org>
@@ -19,6 +19,6 @@ Description: KDE Personal Information Management Applications
 Package: kdepim-dev-cvs
 Architecture: any
 Section: devel
-Depends: kdepim-cvs (= ${Source-Version}), libqt2.1-dev
+Depends: kdepim-cvs (= ${Source-Version}), libqt2.1-dev, kdelibs3-dev-cvs
 Description: Personal Information Management (development files)
  Development files for KDE related Personal Information Management apps
