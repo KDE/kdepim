@@ -15,10 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kapplication.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-#include <krun.h>
 
 #include <dcopclient.h>
 #include <dcopref.h>

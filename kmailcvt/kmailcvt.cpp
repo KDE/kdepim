@@ -16,11 +16,6 @@
  ***************************************************************************/
 
 #include "kmailcvt.h"
-#include <kaboutdialog.h>
-#include <klocale.h>
-#include <kapplication.h>
-#include <qlayout.h>
-#include <kaboutdata.h>
 #include <kaboutapplication.h>
 #include <qpushbutton.h>
 

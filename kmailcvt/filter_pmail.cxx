@@ -20,7 +20,6 @@
 #include <kfiledialog.h>
 #include <qregexp.h>
 #include <ktempfile.h>
-#include <qfileinfo.h>
 #include <kdebug.h>
 
 #include "filter_pmail.hxx"

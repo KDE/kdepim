@@ -20,12 +20,6 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <kdirlister.h>
-#include <qregexp.h>
-#include <libgen.h>
-#include <qdir.h>
-#include <qfile.h>
-#include <qdatastream.h>
 #include <ktempfile.h>
 #include <kdebug.h>
 

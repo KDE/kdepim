@@ -18,10 +18,7 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <kdirlister.h>
-#include <qregexp.h>
 #include <libgen.h>
-#include <qdir.h>
 
 #include "filter_plain.hxx"
 
