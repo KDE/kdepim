@@ -1,246 +1,30 @@
 if /bin/false ; then
 
+dnl
 dnl Configure.in.in for the JPilotPlugin proxy conduit for KPilot.
 dnl
 dnl Copyright (C) 2000,2001 Adriaan de Groot
 dnl Copyright (C) 2002 Reinhold Kainhofer
+dnl Copyright (C) 2002 Jeremy Huddleston
 dnl
 dnl This file is released under the terms of the Gnu General Public
 dnl Licence (GPL) Version 2.
 
 dnl
-dnl Check to see if gtk header and library are available
-dnl Also check for jpilot??
-dnl
-
-dnl
 dnl Questions and comments can be sent to reinhold@kainhofer.com
 dnl
 
-dnl Check for the headers first. The first test is the somewhat-
-dnl sophisticated one AC uses, and incorporates all the extra-includes
-dnl and whatnot stuff.
-dnl
-HAVE_GTK=0
-HAVE_GDK=0
-HAVE_GLIB=0
-HAVE_GDBM=0
-HAVE_JPILOT=0
 
-kpilot_save_cflags="$CPPFLAGS"
-kpilot_save_ldflags="$LDFLAGS"
+        AM_PATH_GLIB(1.2.5,,AC_MSG_WARN([
+*** GLib is required to build the JPilotPluginProxy conduit. Please
+*** make sure you have the GLib development headers installed. The
+*** latest version of GLib is always available at http://www.gtk.org/.]))
+        AM_PATH_GTK(1.2.5,,AC_MSG_WARN([
+*** GTK+ is required to build the JPilotPluginProxy conduit. Please
+*** make sure you have the GTK+ development headers installed. The
+*** latest version of GTK+ is always available at http://www.gtk.org/.]))
 
+CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
+LDFLAGS="$LDFLAGS $GTK_LIBS"
 
-
-
-dnl
-dnl First check for GTK, then for gdk, then for glib, and finally for gdbm
-dnl
-
-
-
-dnl ********************************************************************************
-dnl *                                       GLIB                                 
-dnl ********************************************************************************
-
-CPPFLAGS="$CPPFLAGS $all_includes"
-LDFLAGS="$LDFLAGS $all_libraries"
-
-
-GLIB_LIB=""
-GLIB_INCLUDE=""
-
-AC_CHECK_HEADER(glib.h,[HAVE_GLIB=1], )
-
-dnl Warn if no headers found. Maybe this should be collected at the end
-dnl of the build as well, like other this-won't-be-built messages?
-
-if  test "$HAVE_GLIB" = "0" ; then
-	AC_MSG_CHECKING([for glib.h alternate])
-	for i in /usr/local/include /usr/include/glib-2.0 /usr/include/glib-1.2 /vol/gnome/support/include /usr/include/glib  ; do
-		test -f $i/glib.h && HAVE_GLIB=1
-		test -f $i/glib.h && GLIB_INCLUDE="-I$i"
-	done
-
-
-	if test "$HAVE_GLIB" = "0" ; then
-		AC_MSG_WARN([JPilotPluginProxy: no glib headers found.])
-	else
-		AC_MSG_RESULT([found])
-	fi
 fi
-
-
-dnl Search the library
-
-CPPFLAGS="$kpilot_save_cflags  $all_includes $GLIB_INCLUDE"
-LDFLAGS="$kpilot_save_ldflags  $all_libraries"
-
-if test "$HAVE_GLIB" = "1" ; then
-	HAVE_GLIB=0
-	AC_CHECK_LIB(glib, g_free,
-			[GLIB_LIB="-lglib"
-			HAVE_GLIB=1],[],[])
-
-	for i in /usr/local/glib /usr/local/lib /usr/local/lib /vol/kde/support/lib ; do
-		if test "$HAVE_GLIB" = "0" ; then
-			CPPFLAGS="$kpilot_save_cflags  $all_includes $GLIB_INCLUDE"
-			LDFLAGS="$kpilot_save_ldflags  $all_libraries -L$i -R$i"
-
-			unset ac_cv_lib_glib_g_free
-			AC_CHECK_LIB(glib, g_free,
-				[GLIB_LIB="-L$i -R$i -lglib"
-				HAVE_GLIB=1],[],[])
-		fi
-	done
-fi
-
-if test "$HAVE_GLIB" = "0" ; then
-	AC_MSG_WARN([JPilotPluginProxy: glib library or header files not found])
-	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot/conduits/JPilotPluginProxy"
-fi
-
-AC_SUBST(GLIB_LIB)
-AC_SUBST(GLIB_INCLUDE)
-
-
-dnl ********************************************************************************
-dnl *                                       GTK                                 
-dnl ********************************************************************************
-
-CPPFLAGS="$CPPFLAGS $all_includes"
-LDFLAGS="$LDFLAGS $all_libraries"
-
-
-GTK_LIB=""
-GTK_INCLUDE=""
-
-AC_CHECK_HEADER(gtk/gtk.h,[HAVE_GTK=1], )
-
-dnl Warn if no headers found. Maybe this should be collected at the end
-dnl of the build as well, like other this-won't-be-built messages?
-
-if  test "$HAVE_GTK" = "0" ; then
-	AC_MSG_CHECKING([for gtk.h alternate])
-	for i in /usr/local/include  /vol/gnome/support/include  ; do
-		test -f $i/gtk/gtk.h && HAVE_GTK=1
-		test -f $i/gtk/gtk.h && GTK_INCLUDE="-I$i"
-	done
-
-
-	if test "$HAVE_GTK" = "0" ; then
-		AC_MSG_WARN([JPilotPluginProxy: no gtk headers found.])
-	else
-		AC_MSG_RESULT([found])
-	fi
-fi
-
-
-dnl Search the library
-
-CPPFLAGS="$kpilot_save_cflags  $all_includes $GTK_INCLUDE"
-LDFLAGS="$kpilot_save_ldflags  $all_libraries"
-
-if test "$HAVE_GTK" = "1" ; then
-	AC_CHECK_LIB(gtk, gtk_main,
-			[GLIB_LIB="-lgtk"
-			HAVE_GTK=1],[],[])
-
-	for i in /usr/local/glib /usr/local/lib /usr/lib /vol/kde/support/lib ; do
-		if test "$HAVE_GTK" = "0" ; then
-			CPPFLAGS="$kpilot_save_cflags  $all_includes $GTK_INCLUDE"
-			LDFLAGS="$kpilot_save_ldflags  $all_libraries -L$i -R$i"
-
-			unset ac_cv_lib_gtk_gtk_main
-			AC_CHECK_LIB(gtk, gtk_main,
-				[GTK_LIB="-L$i -R$i -lgtk"
-				HAVE_GTK=1],[],[])
-		fi
-	done
-fi
-
-if test "$HAVE_GTK" = "0" ; then
-	AC_MSG_WARN([JPilotPluginProxy: gtk library or header files not found])
-	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot/conduits/JPilotPluginProxy"
-fi
-
-AC_SUBST(GTK_LIB)
-AC_SUBST(GTK_INCLUDE)
-
-
-dnl ********************************************************************************
-dnl *                                       GDK                                 
-dnl ********************************************************************************
-
-CPPFLAGS="$CPPFLAGS $all_includes"
-LDFLAGS="$LDFLAGS $all_libraries"
-
-
-GTK_LIB=""
-GTK_INCLUDE=""
-
-AC_CHECK_HEADER(gtk/gtk.h,[HAVE_GTK=1], )
-
-dnl Warn if no headers found. Maybe this should be collected at the end
-dnl of the build as well, like other this-won't-be-built messages?
-
-if  test "$HAVE_GTK" = "0" ; then
-	AC_MSG_CHECKING([for gtk.h alternate])
-	for i in /usr/local/include  /vol/gnome/support/include  ; do
-		test -f $i/gtk/gtk.h && HAVE_GTK=1
-		test -f $i/gtk/gtk.h && GTK_INCLUDE="-I$i"
-	done
-
-
-	if test "$HAVE_GTK" = "0" ; then
-		AC_MSG_WARN([JPilotPluginProxy: no gtk headers found.])
-	else
-		AC_MSG_RESULT([found])
-	fi
-fi
-
-
-dnl Search the library
-
-CPPFLAGS="$kpilot_save_cflags  $all_includes $GTK_INCLUDE"
-LDFLAGS="$kpilot_save_ldflags  $all_libraries"
-
-if test "$HAVE_GTK" = "1" ; then
-	AC_CHECK_LIB(gtk, gtk_main,
-			[GLIB_LIB="-lgtk"
-			HAVE_GTK=1],[],[])
-
-	for i in /usr/local/glib /usr/local/lib /usr/lib /vol/kde/support/lib ; do
-		if test "$HAVE_GTK" = "0" ; then
-			CPPFLAGS="$kpilot_save_cflags  $all_includes $GTK_INCLUDE"
-			LDFLAGS="$kpilot_save_ldflags  $all_libraries -L$i -R$i"
-
-			unset ac_cv_lib_gtk_gtk_main
-			AC_CHECK_LIB(gtk, gtk_main,
-				[GTK_LIB="-L$i -R$i -lgtk"
-				HAVE_GTK=1],[],[])
-		fi
-	done
-fi
-
-if test "$HAVE_GTK" = "0" ; then
-	AC_MSG_WARN([JPilotPluginProxy: gtk library or header files not found])
-	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot/conduits/JPilotPluginProxy"
-fi
-
-AC_SUBST(GTK_LIB)
-AC_SUBST(GTK_INCLUDE)
-
-
-
-
-
-
-
-
-CPPFLAGS="$kpilot_save_cflags"
-LDFLAGS="$kpilot_save_ldflags"
-unset kpilot_save_cflags
-fi
-
-unset kpilot_save_ldflags
