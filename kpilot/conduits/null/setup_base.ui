@@ -1,0 +1,174 @@
+<!DOCTYPE UI><UI>
+<class>NullWidget</class>
+<comment>A tabWidget for configuring
+the Null-conduit settings.</comment>
+<author>Adriaan de Groot</author>
+<widget>
+    <class>QWidget</class>
+    <property stdset="1">
+        <name>name</name>
+        <cstring>Form1</cstring>
+    </property>
+    <property stdset="1">
+        <name>geometry</name>
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>429</width>
+            <height>261</height>
+        </rect>
+    </property>
+    <property stdset="1">
+        <name>sizePolicy</name>
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+        </sizepolicy>
+    </property>
+    <property stdset="1">
+        <name>baseSize</name>
+        <size>
+            <width>570</width>
+            <height>270</height>
+        </size>
+    </property>
+    <property stdset="1">
+        <name>caption</name>
+        <string>Null-Conduit Options</string>
+    </property>
+    <property>
+        <name>layoutMargin</name>
+    </property>
+    <property>
+        <name>layoutSpacing</name>
+    </property>
+    <grid>
+        <property stdset="1">
+            <name>margin</name>
+            <number>11</number>
+        </property>
+        <property stdset="1">
+            <name>spacing</name>
+            <number>6</number>
+        </property>
+        <widget row="0"  column="0" >
+            <class>QTabWidget</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>tabWidget</cstring>
+            </property>
+            <property stdset="1">
+                <name>sizePolicy</name>
+                <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>7</vsizetype>
+                </sizepolicy>
+            </property>
+            <property>
+                <name>layoutMargin</name>
+            </property>
+            <widget>
+                <class>QWidget</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>Widget2</cstring>
+                </property>
+                <attribute>
+                    <name>title</name>
+                    <string>General</string>
+                </attribute>
+                <grid>
+                    <property stdset="1">
+                        <name>margin</name>
+                        <number>11</number>
+                    </property>
+                    <property stdset="1">
+                        <name>spacing</name>
+                        <number>6</number>
+                    </property>
+                    <widget row="0"  column="1" >
+                        <class>QLineEdit</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fLogMessage</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>KPilot was here!</string>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>Enter the message to add to the Sync Log on your Pilot here.</string>
+                        </property>
+                    </widget>
+                    <widget row="0"  column="0" >
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>TextLabel1_2</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;Log Message:</string>
+                        </property>
+                        <property>
+                            <name>buddy</name>
+                            <cstring>fLogMessage</cstring>
+                        </property>
+                    </widget>
+                    <widget row="1"  column="0" >
+                        <class>QLabel</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>TextLabel2_2</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>text</name>
+                            <string>&amp;Databases:</string>
+                        </property>
+                        <property>
+                            <name>buddy</name>
+                            <cstring>fDatabases</cstring>
+                        </property>
+                    </widget>
+                    <widget row="1"  column="1" >
+                        <class>QLineEdit</class>
+                        <property stdset="1">
+                            <name>name</name>
+                            <cstring>fDatabases</cstring>
+                        </property>
+                        <property>
+                            <name>toolTip</name>
+                            <string>The Null-conduit can be attached to several databases, effectively preventing them from Syncing. Enter the database names here.</string>
+                        </property>
+                    </widget>
+                    <spacer row="2"  column="1" >
+                        <property>
+                            <name>name</name>
+                            <cstring>Spacer4</cstring>
+                        </property>
+                        <property stdset="1">
+                            <name>orientation</name>
+                            <enum>Vertical</enum>
+                        </property>
+                        <property stdset="1">
+                            <name>sizeType</name>
+                            <enum>Expanding</enum>
+                        </property>
+                        <property>
+                            <name>sizeHint</name>
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<tabstops>
+    <tabstop>tabWidget</tabstop>
+</tabstops>
+</UI>
