@@ -1,1 +1,1 @@
-SUBDIRS = dummy local remote qtopia kabc kcal
+SUBDIRS = local remote qtopia kabc kcal
