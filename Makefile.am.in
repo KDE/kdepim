@@ -18,7 +18,7 @@ COMPILE_AFTER_libksieve = kmail
 COMPILE_BEFORE_libkcal = libical
 COMPILE_BEFORE_kontact = kaddressbook knotes korganizer
 COMPILE_BEFORE_libkpimexchange = kalarmd libkdepim
-COMPILE_BEFORE_kalarm = kalarmd
+COMPILE_BEFORE_kalarm = kalarmd libkdepim
 
 AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
