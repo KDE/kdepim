@@ -993,9 +993,9 @@ for details.</para>
 <varlistentry>
 <term><menuchoice><guimenuitem>New Alarm...</guimenuitem></menuchoice></term>
 <listitem><para><action>Opens the alarm edit dialog to create a
-new alarm.</action>
-<link linkend="alarm-edit-dialog">alarm edit dialog</link>
-</para>
+new alarm.</action></para>
+<para>See <link linkend="alarm-edit-dialog">The alarm edit dialog</link>
+for details.</para>
 </listitem>
 </varlistentry>
 
