@@ -14,6 +14,7 @@ namespace OpieHelper {
     public:
         DateBook( CategoryEdit* edit = 0,
                   KonnectorUIDHelper* helper = 0,
+                  const QString &tz = QString::null,
                   bool meta = FALSE );
         ~DateBook();
         QPtrList<KCal::Event> toKDE( const QString & fileName );

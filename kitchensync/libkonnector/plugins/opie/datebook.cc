@@ -34,8 +34,9 @@ int week ( const QDate &start ) {
 
 DateBook::DateBook( CategoryEdit* edit,
                     KonnectorUIDHelper* helper,
+                    const QString& tz,
                     bool meta )
-    : Base( edit,  helper,  meta )
+    : Base( edit,  helper,  tz, meta )
 {
 
 

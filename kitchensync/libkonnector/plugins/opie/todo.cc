@@ -17,8 +17,10 @@ using namespace OpieHelper;
 
 
 ToDo::ToDo( CategoryEdit* edit,
-            KonnectorUIDHelper* helper,  bool meta)
-    : Base( edit,  helper,  meta )
+            KonnectorUIDHelper* helper,
+            const QString &tz,
+            bool meta)
+    : Base( edit,  helper,  tz,  meta )
 {
 }
 ToDo::~ToDo()

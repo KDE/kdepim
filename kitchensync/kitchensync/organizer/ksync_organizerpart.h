@@ -41,7 +41,7 @@ namespace KitchenSync {
     QWidget *m_widget;
     OrganizerDialogBase *m_config;
     bool m_evo:1;
-    bool m_configured;
+    bool m_configured:1;
     QString m_path;
     KConfig *m_conf;
   };

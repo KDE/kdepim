@@ -7,11 +7,13 @@ using namespace OpieHelper;
 
 Base::Base( CategoryEdit* edit,
             KonnectorUIDHelper* helper,
+            const QString &tz,
             bool metaSyncing )
 {
     m_metaSyncing = metaSyncing;
     m_edit = edit;
     m_helper = helper;
+    m_tz = tz;
 }
 Base::~Base()
 {
@@ -20,7 +22,10 @@ Base::~Base()
 QDateTime Base::fromUTC( time_t time )
 {
    struct tm *lt;
-
+   // set tz
+   QString real_TZ = QString::fromLocal8Bit( getenv("TZ") );
+   setenv( "TZ", m_tz, true );
+// let's set the tz
 #if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
     _tzset();
 #else
@@ -31,13 +36,18 @@ QDateTime Base::fromUTC( time_t time )
     dt.setDate( QDate( lt->tm_year + 1900, lt->tm_mon + 1, lt->tm_mday ) );
     dt.setTime( QTime( lt->tm_hour, lt->tm_min, lt->tm_sec ) );
     kdDebug() << "From " << time << " To " << dt.toString() << endl;
+    // unset tz
+    unsetenv("TZ");
+    setenv("TZ",  real_TZ, true );
+    // done
     return dt;
 }
 time_t Base::toUTC( const QDateTime& dt )
 {
     time_t tmp;
     struct tm *lt;
-
+    QString real_TZ = QString::fromLocal8Bit( getenv("TZ") );
+    setenv( "TZ", m_tz, true );
 #if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
     _tzset();
 #else
@@ -62,6 +72,8 @@ time_t Base::toUTC( const QDateTime& dt )
     lt->tm_isdst = -1;
     // keep tm_zone and tm_gmtoff
     tmp = mktime( lt );
+    unsetenv("TZ");
+    setenv("TZ",  real_TZ, true );
     return tmp;
 }
 bool Base::isMetaSyncingEnabled()const
@@ -160,4 +172,5 @@ int Base::newId()
         if ( id > 0 )
             id = -1;
     }
+    return id;
 }

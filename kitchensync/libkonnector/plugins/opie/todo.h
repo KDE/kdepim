@@ -20,6 +20,7 @@ namespace OpieHelper {
     public:
         ToDo( CategoryEdit* edit = 0,
               KonnectorUIDHelper* helper= 0,
+              const QString& tz = QString::null,
               bool meta = FALSE);
         ~ToDo();
 

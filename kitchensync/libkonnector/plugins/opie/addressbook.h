@@ -14,6 +14,7 @@ namespace OpieHelper {
     public:
         AddressBook( CategoryEdit* edit = 0,
                      KonnectorUIDHelper* helper = 0,
+                     const QString &tz = QString::null,
                      bool metaSyncing = FALSE );
         ~AddressBook();
         KAddressbookSyncEntry* toKDE( const QString &fileName );

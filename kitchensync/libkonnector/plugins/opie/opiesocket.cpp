@@ -59,10 +59,16 @@ public:
     QValueList<OpieCategories> m_categories;
     QString partnerId;
     QStringList files;
+    QString tz;
     // helper
     KonnectorUIDHelper *helper;
     OpieHelper::CategoryEdit *edit;
 };
+
+namespace {
+    void parseTZ( const QString& fileName,  QString &tz );
+};
+
 
 OpieSocket::OpieSocket(QObject *obj, const char *name )
     : QObject( obj, name )
@@ -232,8 +238,8 @@ void OpieSocket::write(KSyncEntryList lis)
         if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
 //            kdDebug(5202) << "KAlendarSyncEntry " << endl;
             KAlendarSyncEntry* cal = (KAlendarSyncEntry*) entry;
-            OpieHelper::DateBook dateb( d->edit,  d->helper,  d->meta );
-            OpieHelper::ToDo todo( d->edit,  d->helper, d->meta );
+            OpieHelper::DateBook dateb( d->edit,  d->helper,  d->tz, d->meta );
+            OpieHelper::ToDo todo( d->edit,  d->helper, d->tz,  d->meta );
             QByteArray todos = todo.fromKDE( cal );
             QByteArray events = dateb.fromKDE( cal );
             KTempFile todoFile( locateLocal("tmp",  "opie-todolist"),  "new");
@@ -267,7 +273,7 @@ void OpieSocket::write(KSyncEntryList lis)
                 kdDebug( 5202 ) << "No Metasyncing" << endl;
         }else if ( entry->type() == QString::fromLatin1("KAddressbookSyncEntry") ) {
             KAddressbookSyncEntry* ab = (KAddressbookSyncEntry*) entry;
-            OpieHelper::AddressBook abook( d->edit,  d->helper,  d->meta );
+            OpieHelper::AddressBook abook( d->edit,  d->helper, d->tz, d->meta );
             QByteArray book = abook.fromKDE( ab );
             KTempFile file(locateLocal("tmp", "opie-konn-address"), "new" );
             QFile *fi  = file.file();
@@ -517,6 +523,13 @@ void OpieSocket::manageCall(const QString &line )
                 d->first = false;
 
             d->helper = new KonnectorUIDHelper(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId);
+            url.setPath(d->path + "/Settings/locale.conf");
+            if (KIO::NetAccess::download( url,  tmpFileName ) ) {
+                parseTZ( tmpFileName,  d->tz );
+                KIO::NetAccess::removeTempFile( tmpFileName );
+            }else
+                d->tz = "America/New_York";
+
 	    kdDebug(5202) << "desktops entries" << endl;
 	    stream << "call QPE/System getAllDocLinks()\r\n";
 	    d->getMode = d->ABOOK;
@@ -627,8 +640,8 @@ void OpieSocket::doCal()
     KCal::CalendarLocal *calLoc = new KCal::CalendarLocal();
     calEntry->setCalendar( calLoc );
 
-    OpieHelper::ToDo todoDB( d->edit, d->helper,  d->meta );
-    OpieHelper::DateBook dateDB( d->edit, d->helper,  d->meta );
+    OpieHelper::ToDo todoDB( d->edit, d->helper,  d->tz,  d->meta );
+    OpieHelper::DateBook dateDB( d->edit, d->helper,  d->tz, d->meta );
     QPtrList<KCal::Todo> todoList = todoDB.toKDE( todo );
     QPtrList<KCal::Event> dateList = dateDB.toKDE( tmpFileName );
     calEntry->setSyncMode( KSyncEntry::SYNC_NORMAL );
@@ -712,7 +725,7 @@ void OpieSocket::doAddressbook()
     kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
     kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
     kdDebug(5202)  << item.timeString() << endl;
-    OpieHelper::AddressBook book( d->edit,  d->helper,  d->meta );
+    OpieHelper::AddressBook book( d->edit,  d->helper,  d->tz, d->meta );
     KAddressbookSyncEntry *entry = book.toKDE( tmpFileName );
     if ( d->meta ) {
         entry->setSyncMode( KSyncEntry::SYNC_META );
@@ -740,4 +753,27 @@ void OpieSocket::doAddressbook()
     d->m_sync.append( entry  );
     KIO::NetAccess::removeTempFile( tmpFileName );
 }
+
+namespace {
+    void parseTZ( const QString &fileName,  QString &tz )
+    {
+        QFile file( fileName );
+        if (file.open(IO_ReadOnly ) ) {
+            QTextStream stream( &file );
+            QString line;
+            while ( !stream.atEnd() ) {
+                line = stream.readLine();
+                if ( line.startsWith("Timezone = ") ) {
+                    tz = line.mid(11 );
+                }
+            }
+            if ( tz.isEmpty() )
+                tz = "America/New_York";
+        }else
+            tz = "America/New_York";
+
+    }
+
+};
+
 #include "opiesocket.moc"

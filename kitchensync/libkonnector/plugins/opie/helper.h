@@ -21,6 +21,7 @@ namespace OpieHelper {
     public:
         Base( CategoryEdit* edit =0,
               KonnectorUIDHelper* helper = 0,
+              const QString &tz = QString::null,
               bool metaSyncing = FALSE);
         virtual ~Base();
     protected:
@@ -44,6 +45,7 @@ namespace OpieHelper {
         KonnectorUIDHelper *m_helper;
         QValueList<Kontainer> m_kde2opie;
         bool m_metaSyncing : 1;
+        QString m_tz;
     private:
         class BasePrivate;
         BasePrivate *baseD;
