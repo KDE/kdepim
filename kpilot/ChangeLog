@@ -34,6 +34,22 @@ KPilot Developer's notes for March 2nd, 2003
 
 TODO: Update libkcal files.
 
+2003-3-2 Reinhold Kainhofer
+* the DOC conduit now also finds the correct sync direction
+  if the user only wants PC->PDA or only PDA->PC sync.
+	Also, if a text was deleted on one side, it is also deleted
+	on the other end
+* The resolution dialog of the DOC conduit now uses a QScrollView
+  instead of a QTable for the list of conflicting texts
+* In the DOC conduit, regular expressions as bookmark names work
+  now. E.g. a bookmark search string of "return (\S+);" and a 
+	bookmark name of "RetVal: $1" or "RetVal: \1" replaces all $i or 
+	\i by the i-th subexpression of the match.
+* DOC databases are now also kept locally if the user set this option
+  (installDatabases has the addidtional argument not to delete
+	the files)
+
+
 2003-2-27  Adriaan de Groot
 * Merged Reinhold's print-conduit-id patch from HEAD.
 * Continued updating the documentation. Ripped out the revision
