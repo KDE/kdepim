@@ -146,10 +146,6 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
 
   mEmailListBox = new QListBox( page );
 
-  QStringList items = list;
-  items.remove( "" );  // remove all empty entries
-  mEmailListBox->insertStringList( items );
-
   // Make sure there is room for the scrollbar
   mEmailListBox->setMinimumHeight( mEmailListBox->sizeHint().height() + 30 );
   connect( mEmailListBox, SIGNAL( highlighted( int ) ),
@@ -170,12 +166,17 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
 
   topLayout->activate();
 
+  QStringList items = list;
+  if ( items.remove( "" ) > 0 )
+    mChanged = true;
+  else
+    mChanged = false;
+  mEmailListBox->insertStringList( items );
+
   // set default state
   selectionChanged( -1 );
 
   KAcceleratorManager::manage( this );
-
-  mChanged = false;
 }
 
 EmailEditDialog::~EmailEditDialog()
