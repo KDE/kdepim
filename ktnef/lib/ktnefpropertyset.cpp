@@ -85,8 +85,8 @@ QString KTNEFPropertySet::findNamedProp(const QString& name, const QString& fall
     }
   }
   return fallback;
-};
-        
+}
+
 
 QMap<int,KTNEFProperty*>& KTNEFPropertySet::properties()
 {
