@@ -67,7 +67,6 @@ MainWindow::MainWindow()
   connect( _preferences, SIGNAL( timeLogging(bool) ),
            this, SLOT( timeLoggingChanged(bool) ));
 
-  _preferences->load();
   loadGeometry();
 
   // Setup context menu request handling

@@ -87,6 +87,8 @@ Preferences::Preferences()
              SLOT(hideOnCloseCheckBoxChanged() ));
     connect( _doIdleDetectionW, SIGNAL( clicked() ), this,
              SLOT( idleDetectCheckBoxChanged() ));
+
+    load();
 }
 
 Preferences *Preferences::instance()
