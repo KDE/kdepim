@@ -20,14 +20,14 @@
 #include "browserwidget.h"
 #include "entry.h"
 
-Pab::Pab()
+Pab::Pab() : KMainWindow(0)
 {
   setCaption( i18n( "Address Book Browser" ));
   document = new ContactEntryList();
   view = new PabWidget( document, this, "Abbrowser" );
 
-  // tell the KTMainWindow that this is indeed the main widget
-  setView(view);
+  // tell the KMainWindow that this is indeed the main widget
+  setCentralWidget(view);
 
   // create a popup menu -- in this case, the File menu
   QPopupMenu* p = new QPopupMenu;
@@ -101,7 +101,7 @@ Pab::Pab()
   toolBar()->setFullSize(true);
   
   // we do want a status bar
-  enableStatusBar();
+  statusBar()->show();
   connect( kapp, SIGNAL( aboutToQuit() ), this, SLOT( saveConfig() ) );
   resize( sizeHint() );
   readConfig();

@@ -6,7 +6,7 @@
 #endif 
 
 #include <kapp.h>
-#include <ktmainwindow.h>
+#include <kmainwindow.h>
  
 class ContactEntry;
 class ContactEntryList;
@@ -20,7 +20,7 @@ class PabWidget;
  * @author Don Sanders <dsanders@kde.org>
  * @version 0.1
  */
-class Pab : public KTMainWindow
+class Pab : public KMainWindow
 {
 	Q_OBJECT
 public:
