@@ -21,6 +21,7 @@
 
 #include "email.h"
 #include <kdebug.h>
+#include <klocale.h>
 
 //-----------------------------------------------------------------------------
 QStringList KPIM::splitEmailAddrList(const QString& aStr)
@@ -92,6 +93,193 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
 
   return list;
 }
+
+//-----------------------------------------------------------------------------
+KPIM::emailParseResult KPIM::isValidEmailAddress( const QString& aStr )
+{
+  // If we are passed an empty string bail right away no need to process further 
+  // and waste resources
+  if ( aStr.isEmpty() ) {
+    return AddressEmpty;
+  }
+
+  // count how many @'s are in the string that is passed to us
+  // if 0 or > 1 take action
+  // at this point to many @'s cannot bail out right away since
+  // @ is allowed in qoutes, so we use a bool to keep track
+  // and then make a judgement further down in the parser
+  // FIXME count only @ not in double quotes
+
+  bool tooManyAtsFlag = false;
+
+  int atCount = aStr.contains('@');
+  if ( atCount > 1 ) {
+    tooManyAtsFlag = true;;
+  } else if ( atCount == 0 ) {
+	  return TooFewAts;
+  }
+
+  // The main parser, try and catch all weird and wonderful
+  // mistakes users and/or machines can create
+
+  enum { TopLevel, InComment, InAngleAddress } context = TopLevel;
+  bool inQuotedString = false;
+  int commentLevel = 0;
+
+  unsigned int strlen = aStr.length();
+
+  for ( unsigned int index=0; index < strlen; index++ ) {
+    switch ( context ) {
+    case TopLevel : {
+      switch ( aStr[index] ) {
+        case '"' : 
+          if ( inQuotedString ) {
+            inQuotedString = false;
+            } else if ( !inQuotedString ) {
+              inQuotedString = true;
+            }
+            break;
+        case '(' : 
+          if ( !inQuotedString ) {
+            context = InComment;
+            commentLevel = 1;
+          }
+                 break;
+        case '<' : 
+          if ( !inQuotedString ) {
+            context = InAngleAddress;
+          }
+          break;
+        case '\\' : // quoted character
+          ++index; // skip the '\'
+          if ( ++index > strlen )
+            return UnexpectedEnd;
+          break;
+        case ',' : 
+          if ( !inQuotedString )
+            return UnexpectedComma;
+          break;
+        case ')' : 
+          if ( !inQuotedString )
+            return UnbalancedParens;
+          break;
+        case '>' : 
+          if ( !inQuotedString )
+            return UnopenedAngleAddr;
+          break;
+        case '@' : 
+          if ( !inQuotedString ) {
+            if ( index == 0 ) {  // Missing local part
+              return MissingLocalPart;
+            } else if( index == strlen-1 ) {
+              return MissingDomainPart;
+              break;
+              } 
+            } else if ( inQuotedString ) {
+              --atCount;
+              if ( atCount == 1 ) {
+                tooManyAtsFlag = false;
+              }
+            }
+            break;
+      } 
+      break; 
+    }
+    case InComment : {
+      switch ( aStr[index] ) {
+        case '(' : ++commentLevel;
+          break;
+        case ')' : --commentLevel;
+          if ( commentLevel == 0 ) {
+            context = TopLevel;
+          }
+          break;
+        case '\\' : // quoted character
+          ++index; // skip the '\'
+          if ( ++index > strlen )
+            return UnexpectedEnd;
+            break;
+        }
+        break;
+    }
+
+    case InAngleAddress : {
+      switch ( aStr[index] ) {
+        case '"' : inQuotedString = !inQuotedString;
+          break;
+        case '>' : 
+          if ( !inQuotedString ) {
+            context = TopLevel;
+            break;
+          }
+          break;
+      case '\\' : // quoted character
+        ++index; // skip the '\'
+        if ( ++index > strlen )
+          return UnexpectedEnd;
+          break;
+        }
+      break;
+    }
+    }
+  }
+  if ( context == InComment )
+    return UnbalancedParens;
+ 
+  if ( context == TopLevel && !tooManyAtsFlag ) {
+    return AddressOk;
+  }
+
+  if ( context == InAngleAddress )
+    return UnclosedAngleAddr;
+
+  if ( tooManyAtsFlag ) {
+    return TooManyAts;
+  }
+} 
+
+//-----------------------------------------------------------------------------
+QString KPIM::emailParseResultToString( emailParseResult errorCode )
+{
+  switch ( errorCode ) {
+    case TooManyAts : 
+      return i18n("The email address you entered is not valid because it "
+                "contains more than one <emph>@</emph>: "
+                "you will not create valid messages if you do not "
+                "change your address.");
+    case TooFewAts : 
+      return i18n("The email address you entered is not valid because it "
+                "does not contain a <emph>@</emph>: "
+                "you will not create valid messages if you do not "
+                "change your address.");
+    case AddressEmpty : 
+      return i18n("You have to enter something in the email address field.");
+    case MissingLocalPart : 
+      return i18n("The email address you entered is not valid because it "
+                "does not contain a local part.");
+    case MissingDomainPart : 
+      return i18n("The email address you entered is not valid because it "
+                "does not contain a domain part.");
+    case UnbalancedParens : 
+      return i18n("The email address you entered is not valid because it "
+                "contains unclosed comments/brackets.");
+    case AddressOk : 
+      return i18n("The email address you entered is valid.");
+    case UnclosedAngleAddr : 
+      return i18n("The email address you entered is not valid because it "
+                "contains an unclosed anglebracket.");
+    case UnopenedAngleAddr : 
+      return i18n("The email address you entered is not valid because it "
+                "contains an unopened anglebracket.");
+    case UnexpectedEnd : 
+      return i18n("The email address you entered is not valid because it ended "
+                "unexpectadly, this probably means you have used an escaping type "
+                "character like an <emph>\</emph> as the last character in your email "
+                "address.");
+  }
+  return i18n("Unknown problem with email address");
+}
+
 
 //-----------------------------------------------------------------------------
 QCString KPIM::getEmailAddr(const QString& aStr)

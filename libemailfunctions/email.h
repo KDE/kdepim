@@ -31,6 +31,22 @@ namespace KPIM {
 /** Split a comma separated list of email addresses. */
 QStringList splitEmailAddrList(const QString& aStr);
 
+
+/** Validate email address.
+ * Testframework in kdepim/libemailfunctions/tests. */
+enum emailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
+                            UnbalancedQuote, UnbalancedParens,
+                            UnclosedAngleAddr, UnopenedAngleAddr,
+                            UnexpectedComma, MissingDomainPart,
+                            TooManyAts, TooFewAts,
+                            MissingLocalPart };
+
+emailParseResult isValidEmailAddress( const QString& aStr );
+
+/** Translate the enum errorcodes from emailParseResult
+ * into i18n'd strings that can be used for msg boxes. */
+QString emailParseResultToString( emailParseResult errorCode );
+
 /** Return email address from string. Examples:
  * "Stefan Taferner <taferner@kde.org>" returns "taferner@kde.org"
  * "joe@nowhere.com" returns "joe@nowhere.com". Note that this only
