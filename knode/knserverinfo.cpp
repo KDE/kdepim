@@ -75,7 +75,14 @@ Wallet* KNServerInfo::openWallet()
 {
   QString networkWallet = Wallet::NetworkWallet();
   Wallet* wallet = Wallet::openWallet(networkWallet);
-  if ( !wallet->hasFolder("knode") )
+  if ( !wallet ) {
+    KMessageBox::error( 0, i18n("The wallet couldn't be opened "
+                                "This error is most probably caused "
+                                "by providing a wrong password.") );
+    return 0;
+  }
+
+  if ( wallet && !wallet->hasFolder("knode") )
     wallet->createFolder("knode");
   wallet->setFolder("knode");
   return wallet;
@@ -94,7 +101,7 @@ void KNServerInfo::saveConf(KConfig *conf)
     conf->writeEntry("needsLogon", n_eedsLogon);
     conf->writeEntry("user", u_ser);
     Wallet* wallet = openWallet();
-    if ( wallet->writePassword( s_erver, p_ass ) ) {
+    if ( !wallet || wallet->writePassword( s_erver, p_ass ) ) {
       KMessageBox::information( 0, i18n( "KWallet isn't running. We strongly recommend using "
                                         "KWallet for managing your password" ) );
       conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
