@@ -45,6 +45,7 @@ class KLineEdit;
 class KSqueezedTextLabel;
 
 class AddressEditWidget;
+class AddresseeLineEdit;
 class EmailEditWidget;
 class KeyWidget;
 class PhoneEditWidget;
@@ -148,10 +149,10 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     KLineEdit *mDepartmentEdit;
     KLineEdit *mOfficeEdit;
     KLineEdit *mProfessionEdit;
-    KLineEdit *mManagerEdit;
-    KLineEdit *mAssistantEdit;
+    AddresseeLineEdit *mManagerEdit;
+    AddresseeLineEdit *mAssistantEdit;
     KLineEdit *mNicknameEdit;
-    KLineEdit *mSpouseEdit;
+    AddresseeLineEdit *mSpouseEdit;
     KDateEdit *mBirthdayPicker;
     KDateEdit *mAnniversaryPicker;
     QTextEdit *mNoteEdit;

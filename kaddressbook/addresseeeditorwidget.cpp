@@ -54,6 +54,7 @@
 #include <libkdepim/kdateedit.h>
 
 #include "addresseditwidget.h"
+#include "addresseelineedit.h"
 #include "advancedcustomfields.h"
 #include "core.h"
 #include "emaileditwidget.h"
@@ -324,7 +325,7 @@ void AddresseeEditorWidget::setupTab2()
   
   label = new QLabel( i18n( "Manager\'s name:" ), tab2 );
   layout->addWidget( label, 0, 3 );
-  mManagerEdit = new KLineEdit( tab2 );
+  mManagerEdit = new AddresseeLineEdit( tab2 );
   connect( mManagerEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mManagerEdit );
@@ -332,7 +333,7 @@ void AddresseeEditorWidget::setupTab2()
   
   label = new QLabel( i18n( "Assistant's name:" ), tab2 );
   layout->addWidget( label, 1, 3 );
-  mAssistantEdit = new KLineEdit( tab2 );
+  mAssistantEdit = new AddresseeLineEdit( tab2 );
   connect( mAssistantEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mAssistantEdit );
@@ -359,7 +360,7 @@ void AddresseeEditorWidget::setupTab2()
 
   label = new QLabel( i18n( "Spouse's name:" ), tab2 );
   layout->addWidget( label, 5, 1 );
-  mSpouseEdit = new KLineEdit( tab2 );
+  mSpouseEdit = new AddresseeLineEdit( tab2 );
   connect( mSpouseEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mSpouseEdit );
