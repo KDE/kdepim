@@ -220,10 +220,8 @@ class KNComposer::Editor : public KEdit {
 
   public:
     Editor(QWidget *parent=0, char *name=0);
-    ~Editor();
-    QString textLine(int line) const;
-
-    virtual bool eventFilter(QObject*, QEvent* e);
+    ~Editor();    
+    QStringList processedText();
 
   public slots:
     void slotPasteAsQuotation();

@@ -400,47 +400,47 @@ bool KNComposer::hasValidData()
   }
 
   //GNKSA body checks
+  bool firstLine = true;
   bool empty = true;
   bool longLine = false;
   bool hasAttributionLine = false;
   int sigLength = 0;
   int notQuoted = 0;
-  int textLines = 0;
-  QString line;
-
-  for(int i=0; i<v_iew->e_dit->numLines(); i++) {
-    line=v_iew->e_dit->textLine(i);
-
-    if (!n_eeds8Bit && !KMime::isUsAscii(line))
+  int textLines = 0;  
+  QStringList text = v_iew->e_dit->processedText();
+  
+  for (QStringList::Iterator it = text.begin(); it != text.end(); ++it) {
+  
+    if (!n_eeds8Bit && !KMime::isUsAscii(*it))
       n_eeds8Bit=true;
 
-    if (line == "-- ") {   // signature text
-      for (int j=i+1; j<v_iew->e_dit->numLines(); j++) {
-        line=v_iew->e_dit->textLine(j);
+    if (*it == "-- ") {   // signature text
+      for (++it; it != text.end(); ++it) {        
 
-        if (!n_eeds8Bit && !KMime::isUsAscii(line))
+        if (!n_eeds8Bit && !KMime::isUsAscii(*it))
           n_eeds8Bit=true;
 
         sigLength++;
-        if(line.length()>80) {
-          longLine = true;
-          break;
+        if((*it).length()>80) {
+          longLine = true;          
         }
       }
       break;
     }
-    if(!line.isEmpty()) {
+    
+    if(!(*it).isEmpty()) {
       empty = false;
       textLines++;
-      if (line[0]!='>') {
+      if ((*it)[0]!='>') {
         notQuoted++;
-        if (i==0) hasAttributionLine = true;
+        if (firstLine) hasAttributionLine = true;
       }
     }
-    if(line.length()>80) {
-      longLine = true;
-      break;
+    if((*it).length()>80) {
+      longLine = true;      
     }
+    
+    firstLine = false;
   }
 
   if (n_eeds8Bit && (c_harset.lower()=="us-ascii")) {
@@ -466,7 +466,7 @@ bool KNComposer::hasValidData()
     }
   }
 
-  if ( longLine && ( (v_iew->e_dit->wordWrap() == QMultiLineEdit::NoWrap) ) )
+  if (longLine)
     if (!(KMessageBox::warningYesNo( this, 
           i18n("Your article contains lines longer than 80 characters.\n"
 	       "Do you want to re-edit the article or send it anyway?"),
@@ -602,29 +602,13 @@ bool KNComposer::applyChanges()
     else
       text->contentTransferEncoding()->setCte(pnt->allow8BitBody()? KMime::Headers::CE8Bit : KMime::Headers::CEquPr);
   }
-
-  //auto-wrapped lines in v_iew->e_dit don't get an "\n", so we have to
+  
   //assemble the text line by line
-  QString tmp = QString::null;
-  if ( v_iew->e_dit->wordWrap() != QMultiLineEdit::NoWrap ) {
-      QString line;
-      int num_lines = v_iew->e_dit->numLines();
-      for (int i = 0; i < num_lines; ++i) {
-          int lastLine = 0;
-          line = v_iew->e_dit->textLine(i);
-          for (int j = 0; j < (int)line.length(); ++j) {
-              if (v_iew->e_dit->lineOfChar(i, j) > lastLine) {
-                  lastLine = v_iew->e_dit->lineOfChar(i, j);
-                  tmp += '\n';
-              }
-              tmp += line[j];
-          }
-	  tmp += '\n';
-      }
-  }
-  if ( tmp == QString::null)
-    tmp = v_iew->e_dit->text();
-
+  QString tmp;
+  QStringList textLines = v_iew->e_dit->processedText();
+  for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it)    
+    tmp += *it + "\n";
+  
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
       // first get the signing key
@@ -641,16 +625,16 @@ bool KNComposer::applyChanges()
       // now try to sign the article
       if (!signingKey.isEmpty()) {
           QString tmpText = tmp;
-	  Kpgp::Block block;
+          Kpgp::Block block;
           bool ok=true;
           QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
           if(!ok) // no suitable codec found => try local settings and hope the best ;-)
               codec=KGlobal::locale()->codecForEncoding();
 
-	  block.setText( codec->fromUnicode(tmpText) );
+          block.setText( codec->fromUnicode(tmpText) );
           kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
-	  if( block.clearsign( signingKey, codec->name() ) == Kpgp::Ok ) {
-	      QCString result = block.text();
+          if( block.clearsign( signingKey, codec->name() ) == Kpgp::Ok ) {
+              QCString result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           }
       }     
@@ -968,10 +952,11 @@ void KNComposer::slotToggleDoMail()
       if (!s.contains(i18n("<posted & mailed>")))
         v_iew->e_dit->insertAt(i18n("<posted & mailed>\n\n"),0,0);
       QString tmp;
-      for(int i=0; i < v_iew->e_dit->numLines(); i++) {
-        if (v_iew->e_dit->textLine(i) == "-- ")   // try to be smart, don't include the signature,
-          break;                                  // kmail will append one, too.
-        tmp+=v_iew->e_dit->textLine(i)+"\n";
+      QStringList textLines = v_iew->e_dit->processedText();
+      for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it) {
+        if (*it == "-- ")   // try to be smart, don't include the signature,
+          break;            // kmail will append one, too.
+        tmp+=*it+"\n";
       }
       knGlobals.artFactory->sendMailExternal(v_iew->t_o->text(), v_iew->s_ubject->text(), tmp);
       a_ctDoMail->setChecked(false); //revert
@@ -1059,10 +1044,12 @@ void KNComposer::slotExternalEditor()
   QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
 
   QString tmp;
-  for(int i=0; i < v_iew->e_dit->numLines(); i++) {
-     tmp+=v_iew->e_dit->textLine(i);
-     if (i+1 < v_iew->e_dit->numLines())
-       tmp+="\n";
+  QStringList textLines = v_iew->e_dit->processedText();
+  for (QStringList::Iterator it = textLines.begin(); it != textLines.end();) {
+    tmp += *it;
+    ++it;
+    if (it != textLines.end())
+      tmp+="\n";
   }
 
   QCString local = codec->fromUnicode(tmp);
@@ -1630,29 +1617,59 @@ void KNComposer::ComposerView::hideExternalNotification()
 KNComposer::Editor::Editor(QWidget *parent, char *name)
   : KEdit(parent, name)
 {
-  setOverwriteEnabled(true);
-  installEventFilter(this);
+  setOverwriteEnabled(true);  
 }
 
 
 KNComposer::Editor::~Editor()
-{
-  removeEventFilter(this);
-}
+{}
 
 
-// expand tabs to avoid the "tab-damage"
-QString KNComposer::Editor::textLine(int line) const
+// expand tabs to avoid the "tab-damage",
+// auto-wraped paragraphs have to split (code taken from KEdit::saveText)
+QStringList KNComposer::Editor::processedText()
 {
-  QString temp=KEdit::textLine(line);
+  QStringList ret;
+  int lines = numLines()-1;
+  if (lines < 0)
+    return ret;
+
+  if (wordWrap() == NoWrap) {
+    for (int i = 0; i <= lines; i++)
+      ret.append(textLine(i));    
+  } else {
+    for (int i = 0; i <= lines; i++) {
+      int lines_in_parag = linesOfParagraph(i);
+
+      if (lines_in_parag == 1) {
+        ret.append(textLine(i));
+      } else {
+        QString parag_text = textLine(i);
+        int pos = 0;
+        int last_pos = 0;
+        int current_line = 0;       
+        while (current_line+1 < lines_in_parag) {
+          while (lineOfChar(i, pos) == current_line) pos++;            
+          ret.append(parag_text.mid(last_pos, pos - last_pos - 1));
+          current_line++;
+          last_pos = pos;         
+        }
+        // add last line
+        ret.append(parag_text.mid(pos));
+      }
+    }
+  }
+  
   QString replacement;
   int tabPos;
-
-  while((tabPos=temp.find('\t'))!=-1) {
-    replacement.fill(QChar(' '), 8-(tabPos%8));
-    temp.replace(tabPos, 1, replacement);
+  for (QStringList::Iterator it = ret.begin(); it != ret.end(); ++it ) {
+    while ((tabPos=(*it).find('\t'))!=-1) {
+      replacement.fill(QChar(' '), 8-(tabPos%8));
+      (*it).replace(tabPos, 1, replacement);
+    }
   }
-  return temp;
+
+  return ret;
 }
 
 
@@ -1686,14 +1703,14 @@ void KNComposer::Editor::slotReplace()
 void KNComposer::Editor::slotAddQuotes()
 {
   if (hasMarkedText()) {
-    QString s = markedText();
-    s.prepend("> ");
+    QString s = markedText();    
+    s.prepend("> ");    
     s.replace(QRegExp("\n"),"\n> ");
     insert(s);
   } else {
     int l = currentLine();
     int c = currentColumn();
-    QString s = KEdit::textLine(l);
+    QString s = textLine(l);
     s.prepend("> ");
     insertLine(s,l);
     removeLine(l+1);
@@ -1713,7 +1730,7 @@ void KNComposer::Editor::slotRemoveQuotes()
   } else {
     int l = currentLine();
     int c = currentColumn();
-    QString s = KEdit::textLine(l);
+    QString s = textLine(l);
     if (s.left(2) == "> ") {
       s.remove(0,2);
       insertLine(s,l);
@@ -1735,7 +1752,7 @@ void KNComposer::Editor::slotAddBox()
   } else {
     int l = currentLine();
     int c = currentColumn();
-    QString s = QString::fromLatin1(",----[  ]\n| %1\n`----").arg(KEdit::textLine(l));
+    QString s = QString::fromLatin1(",----[  ]\n| %1\n`----").arg(textLine(l));
     insertLine(s,l);
     removeLine(l+3);
     setCursorPosition(l+1,c+2);
@@ -1757,7 +1774,7 @@ void KNComposer::Editor::slotRemoveBox()
     int l = currentLine();
     int c = currentColumn();
 
-    QString s = KEdit::textLine(l);   // test if we are in a box
+    QString s = textLine(l);   // test if we are in a box
     if (!((s.left(2) == "| ")||(s.left(5)==",----")||(s.left(5)=="`----")))
       return;
 
@@ -1765,13 +1782,13 @@ void KNComposer::Editor::slotRemoveBox()
 
     // find & remove box begin
     int x = l;
-    while ((x>=0)&&(KEdit::textLine(x).left(5)!=",----"))
+    while ((x>=0)&&(textLine(x).left(5)!=",----"))
       x--;
-    if ((x>=0)&&(KEdit::textLine(x).left(5)==",----")) {
+    if ((x>=0)&&(textLine(x).left(5)==",----")) {
       removeLine(x);
       l--;
       for (int i=x;i<=l;i++) {     // remove quotation
-        s = KEdit::textLine(i);
+        s = textLine(i);
         if (s.left(2) == "| ") {
           s.remove(0,2);
           insertLine(s,i);
@@ -1782,12 +1799,12 @@ void KNComposer::Editor::slotRemoveBox()
 
     // find & remove box end
     x = l;
-    while ((x<numLines())&&(KEdit::textLine(x).left(5)!="`----"))
+    while ((x<numLines())&&(textLine(x).left(5)!="`----"))
       x++;
-    if ((x<numLines())&&(KEdit::textLine(x).left(5)=="`----")) {
+    if ((x<numLines())&&(textLine(x).left(5)=="`----")) {
       removeLine(x);
       for (int i=l+1;i<x;i++) {     // remove quotation
-        s = KEdit::textLine(i);
+        s = textLine(i);
         if (s.left(2) == "| ") {
           s.remove(0,2);
           insertLine(s,i);
@@ -1808,20 +1825,6 @@ void KNComposer::Editor::slotRot13()
 {
   if (hasMarkedText())
     insert(KNHelper::rot13(markedText()));
-}
-
-
-// don't use Tab for focus handling
-bool KNComposer::Editor::eventFilter(QObject* o, QEvent* e)
-{
-  if (e->type() == QEvent::KeyPress) {
-    QKeyEvent *k = static_cast<QKeyEvent*>(e);
-    if (k->key()==Key_Tab) {
-      insert("\t");
-      return true;
-    }
-  }
-  return KEdit::eventFilter( o, e );
 }
 
 
