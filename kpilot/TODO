@@ -14,6 +14,13 @@ General TODO
 * Fix local database & do regression testing
 * How *do* you sync KNotes with the memo pad? This is hard.
 * Make the address book conduit use libkab (or whatever it's called now).
+* base classes for project manager conduits
+* add ListMaker conduit
+* add Progect conduit
+* add ShadowPlan conduit
+* add BrainForest conduit
+* add JPilot plugin proxy to use JPilog plugins with KPilot
+* Update the Conduit howto
 + Make daemon able to sync more than once in a run.
 + Close device at end of sync.
 + Port conduits to new setup.
