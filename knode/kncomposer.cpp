@@ -676,8 +676,11 @@ void KNComposer::slotSetType(int i)
         v_iew->e_dit->insertLine("",1);
     }
   } else {
-    if (v_iew->e_dit->textLine(0)==i18n("<posted & mailed>"))
+    if (v_iew->e_dit->textLine(0)==i18n("<posted & mailed>")) {
       v_iew->e_dit->removeLine(0);
+      if (v_iew->e_dit->textLine(0).isEmpty())
+        v_iew->e_dit->removeLine(0);
+    }
   }
 
   slotUpdateStatusBar();
