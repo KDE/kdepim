@@ -182,6 +182,12 @@ class AddressBook : public QObject
     Iterator find( const Addressee & );
 
     /**
+      Find the entry specified by an unique id. Returns an empty Addressee
+      object, if the address book does not contain an entry with this id.
+    */
+    Addressee findByUid( const QString & );
+
+    /**
       Find all entries with the specified name in the address book. Returns
       an empty list, if no entries couldn't be found.
     */
@@ -191,6 +197,10 @@ class AddressBook : public QObject
       Returns an empty list, if no entries couldn't be found.
     */
     Addressee::List findByEmail( const QString & );
+    /**
+      Find all entries wich have the specified category in the address book.
+      Returns an empty list, if no entries couldn't be found.
+    */
     Addressee::List findByCategory( const QString & );
 
     /**

@@ -131,6 +131,17 @@ AddressBook::Iterator AddressBook::find( const Addressee &a )
   return end();
 }
 
+Addressee AddressBook::findByUid( const QString &uid )
+{
+  Iterator it;
+  for ( it = begin(); it != end(); ++it ) {
+    if ( uid == (*it).uid() ) {
+      return *it;
+    }
+  }
+  return Addressee();
+}
+
 Addressee::List AddressBook::findByName( const QString &name )
 {
   Addressee::List results;
