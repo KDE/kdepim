@@ -32,4 +32,4 @@ messages: rc.cpp
 srcdoc:
 	kdoc -a -p -H -d $(HOME)/web/src/karm karm *.h -lkdecore -lkdeui -lqt
 
-include $(top_srcdir)/admin/Doxyfile.am
+include ../admin/Doxyfile.am
