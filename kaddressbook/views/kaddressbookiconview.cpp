@@ -46,7 +46,7 @@ class IconViewFactory : public ViewFactory
       return new KAddressBookIconView( core, parent, name );
     }
 
-    QString type() const { return "Icon"; }
+    QString type() const { return I18N_NOOP("Icon"); }
     
     QString description() const { return i18n( "Icons represent contacts. Very simple view." ); }
 };

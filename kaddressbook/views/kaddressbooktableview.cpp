@@ -42,7 +42,7 @@ class TableViewFactory : public ViewFactory
       return new KAddressBookTableView( core, parent, name );
     }
 
-    QString type() const { return "Table"; }
+    QString type() const { return I18N_NOOP("Table"); }
 
     QString description() const { return i18n( "A listing of contacts in a table. Each cell of "
                                   "the table holds a field of the contact." ); }

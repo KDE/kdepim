@@ -47,7 +47,7 @@ class CardViewFactory : public ViewFactory
       return new KAddressBookCardView( core, parent, name );
     }
 
-    QString type() const { return "Card"; }
+    QString type() const { return I18N_NOOP("Card"); }
     
     QString description() const { return i18n( "Rolodex style cards represent contacts." ); }
     
