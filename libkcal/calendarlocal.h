@@ -46,7 +46,13 @@ class CalendarLocal : public Calendar
   
     /**
       Loads a calendar on disk in vCalendar or iCalendar format into the current
-      calendar. Any information already present is lost.
+      calendar. Incidences already present are preserved. If an event of the
+      file to be loaded has the same unique id as an incidence already present
+      the new incidence is ignored.
+      
+      To load a CalendarLocal object from a file without preserving existing
+      incidences call close() before load().
+
       @return true, if successful, false on error.
       @param fileName the name of the calendar on disk.
     */
