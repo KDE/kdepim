@@ -51,19 +51,9 @@ filterInfo::~filterInfo()
 {
 }
 
-void  filterInfo::from(const char *from)
-{
-  _dlg->_from->setText(from);
-}
-
 void filterInfo::from(QString from)
 {
   _dlg->_from->setText(from);
-}
-
-void  filterInfo::to(const char *to)
-{
-  _dlg->_to->setText(to);
 }
 
 void filterInfo::to(QString to)
@@ -71,16 +61,10 @@ void filterInfo::to(QString to)
   _dlg->_to->setText(to);
 }
 
-void  filterInfo::current(const char *current)
-{
-  _dlg->_current->setText(current);
-}
-
 void filterInfo::current(QString current)
 {
   _dlg->_current->setText(current);
 }
-
 
 void  filterInfo::current(float percent)
 {
@@ -95,14 +79,6 @@ void  filterInfo::overall(float percent)
   int p=(int) (percent+0.5);
   if (percent<0) { _dlg->_done_overall->reset(); }
   _dlg->_done_overall->setProgress(p);
-}
-
-void filterInfo::log(const char *toLog)
-{
-  _dlg->_log->insertItem(toLog);
-  _dlg->_log->setCurrentItem(_dlg->_log->count()-1);
-  _dlg->_log->centerCurrentItem();
-  kapp->processEvents(50);
 }
 
 void filterInfo::log(QString toLog)
@@ -134,25 +110,7 @@ void filterInfo::alert(QString conversion, QString message)
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-filter::filter(const char *_name, const char *_author)
-{
-  myName=_name;
-  myAuthor=_author;
-}
-
-filter::filter(QString _name, const char *_author)
-{
-  myName=_name;
-  myAuthor=_author;
-}
-
 filter::filter(QString _name, QString _author)
-{
-  myName=_name;
-  myAuthor=_author;
-}
-
-filter::filter(const char *_name, QString _author)
 {
   myName=_name;
   myAuthor=_author;

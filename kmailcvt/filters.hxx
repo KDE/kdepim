@@ -44,15 +44,11 @@ class filterInfo
     filterInfo(KImportPageDlg *dlg, QWidget *parent);
    ~filterInfo();
   public:
-    void  from(const char *from);
     void  from(QString from);
-    void  to(const char *to);
     void  to(QString to);
-    void  current(const char *current);
     void  current(QString current);
     void  current(float percent=-0.3);
     void  overall(float percent=-0.3);
-    void  log(const char *toLog);
     void  log(QString toLog);
     void  clear(void);
     void  alert(QString c,QString m);
@@ -111,10 +107,7 @@ class filter : public kmail, public kab
      QString myName;
      QString myAuthor;
    public:
-     filter(const char *name,const char *author);
      filter(QString name,QString author);
-     filter(QString name,const char *author);
-     filter(const char *name,QString author);
      virtual ~filter();
    public:
      virtual void import(filterInfo *i);
