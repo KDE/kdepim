@@ -7,6 +7,9 @@ libemailfunctions_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:
 ## to link it explicitly to the libraries that it uses.
 libemailfunctions_la_LIBADD = $(LIB_QT) $(LIB_KDECORE)
 
+emailfunctionsincludedir = $(includedir)/libemailfunctions
+emailfunctionsinclude_HEADERS = idmapper.h
+
 METASOURCES = AUTO
 
 # No messages target. Those files are part of libkdepim.pot.
