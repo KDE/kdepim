@@ -19,8 +19,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -716,10 +716,19 @@ void VCalConduit::doTest()
 
 	int pilotindex = 0;
 	PilotRecord *r  = 0L;
+	int recordCount = 0;
 	while ((r = fDatabase->readRecordByIndex(pilotindex++)))
 	{
-		changeRecord(r,0L);
+		addRecord(r);
+		recordCount++;
 	}
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Added " << recordCount << " records." << endl;
+#endif
+
 	fP->updateIncidences();
+	cleanup();
 }
 

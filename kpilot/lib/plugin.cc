@@ -22,8 +22,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -206,7 +206,7 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 		return false;
 	}
 
-	fDatabase = new PilotLocalDatabase(dbName,localPath);
+	fDatabase = new PilotLocalDatabase(localPath,dbName);
 	fLocalDatabase= new PilotLocalDatabase(dbName); // From default
 	if (!fLocalDatabase || !fDatabase)
 	{
@@ -226,20 +226,48 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 			<< endl;
 #endif
 	}
+#ifdef DEBUG
+	if (fLocalDatabase)
+	{
+		DEBUGCONDUIT << fname
+			<< ": Opened local database "
+			<< fLocalDatabase->dbPathName()
+			<< (fLocalDatabase->isDBOpen() ? " OK" : "")
+			<< endl;
+	}
+	if (fDatabase)
+	{
+		DEBUGCONDUIT << fname
+			<< ": Opened database "
+			<< fDatabase->dbPathName()
+			<< (fDatabase->isDBOpen() ? " OK" : "")
+			<< endl;
+	}
+#endif
+
 	return (fDatabase && fLocalDatabase);
 }
 
 bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 {
+	FUNCTIONSETUP;
+	
 	/*
 	** We should look into the --local flag passed
 	** to the conduit and act accordingly, but until
 	** that is implemented ..
 	*/
-
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Mode="
+		<< (isTest() ? "test " : "")
+		<< (isLocal() ? "local " : "")
+		<< endl ;
+#endif
+		
 	if (isTest() && isLocal())
 	{
-		return openDatabases_(dbName,QString::null);
+		return openDatabases_(dbName,CSL1("/tmp/"));
 	}
 	else
 	{
