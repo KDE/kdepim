@@ -183,8 +183,8 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
 
-  if( rc != 0 ) // Can it really be non-0, when gpg-config --list-components worked?
-    kdWarning(5150) << k_funcinfo << ":" << strerror( rc ) << endl;
+  if( rc != 0 ) // can happen when using the wrong version of gpg...
+    kdWarning(5150) << "Running 'gpgconf --list-options " << mName << "' failed. " << strerror( rc ) << ", but try that command to see the real output" << endl;
   else {
     if ( mCurrentGroup && !mCurrentGroup->mEntries.isEmpty() ) // only add non-empty groups
       mGroups.insert( mCurrentGroupName, mCurrentGroup );
