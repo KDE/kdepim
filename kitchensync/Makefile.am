@@ -1,4 +1,4 @@
-SUBDIRS = libksync klockfile libkonnector2 kitchensync devicemimetypes
+SUBDIRS = libksync klockfile libkonnector2 kitchensync devicemimetypes multisynk
 
 include ../admin/Doxyfile.am
 
