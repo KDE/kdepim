@@ -127,6 +127,8 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
     kdDebug(5800) << "Error" << endl;
     return false; // error
   }
+  
+  return false;
 }
 
 bool VCalFormat::fromString( Calendar *calendar, const QString &text )
@@ -590,9 +592,9 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     addPropValue(vevent, VCResourcesProp, tmpStr.local8Bit());
 
   // alarm stuff
-  Alarm::List::ConstIterator it;
-  for ( it = anEvent->alarms().begin(); it != anEvent->alarms().end(); ++it ) {
-    Alarm *alarm = *it;
+  Alarm::List::ConstIterator it2;
+  for ( it2 = anEvent->alarms().begin(); it2 != anEvent->alarms().end(); ++it2 ) {
+    Alarm *alarm = *it2;
     if (alarm->enabled()) {
       VObject *a = addProp(vevent, VCDAlarmProp);
       tmpStr = qDateTimeToISO(alarm->time());
