@@ -64,7 +64,7 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.1.0";
+static const char progVersion[] = "1.3.0";
 static const char description[] = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
