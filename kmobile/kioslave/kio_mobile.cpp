@@ -221,7 +221,8 @@ void KMobileProtocol::listRoot()
   for (unsigned int i=0; i<dirs; i++) {
 
 	QString dirname = deviceNames[i];
-        createDirEntry(entry, dirname, "mobile:/"+dirname, "mobile/device");
+        createDirEntry(entry, dirname, "mobile:/"+dirname, 
+			KMOBILE_MIMETYPE_DEVICE_KONQUEROR(dirname));
         listEntry(entry, false);
 
 	processedSize(i+1);
@@ -238,11 +239,11 @@ QString KMobileProtocol::folderMimeType(int cap)
 {
   QString mimetype;
   switch (cap) {
-    case KMobileDevice::hasAddressBook:	mimetype = "mobile/addressbook";
+    case KMobileDevice::hasAddressBook:	mimetype = KMOBILE_MIMETYPE_INODE "addressbook";
 					break;
-    case KMobileDevice::hasCalendar:	mimetype = "mobile/calendar";
+    case KMobileDevice::hasCalendar:	mimetype = KMOBILE_MIMETYPE_INODE "calendar";
 					break;
-    case KMobileDevice::hasNotes:	mimetype = "mobile/notes";
+    case KMobileDevice::hasNotes:	mimetype = KMOBILE_MIMETYPE_INODE "notes";
 					break;
     case KMobileDevice::hasFileStorage:
     default:				mimetype = "inode/directory";

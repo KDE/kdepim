@@ -1,9 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Contacts in Mobile Device
+Comment[be]=Кантакты ў мабільнай прыладзе
+Comment[sv]=Kontakter i mobilenhet
 Icon=kaddressbook
 Type=MimeType
-MimeType=mobile/addressbook
+MimeType=inode/addressbook
 Patterns=
 
 X-KDE-AutoEmbed=true

@@ -1,9 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Mobile Device
+Comment[be]=Мабільная прылада
+Comment[sv]=Mobilenhet
 Icon=kmobile
 Type=MimeType
-MimeType=mobile/device
+MimeType=kdedevice/mobiledevice
 Patterns=
 
 X-KDE-AutoEmbed=true

@@ -1,9 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Calendar in Mobile Device
+Comment[be]=Каляндар у мабільнай прыладзе
+Comment[sv]=Kalender i mobilenhet
 Icon=korganizer
 Type=MimeType
-MimeType=mobile/calendar
+MimeType=inode/calendar
 Patterns=
 
 X-KDE-AutoEmbed=true

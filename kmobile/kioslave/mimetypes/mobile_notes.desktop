@@ -1,9 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Notes in Mobile Device
+Comment[be]=Нататкі ў мабільнай прыладзе
+Comment[sv]=Anteckning i mobilenhet
 Icon=knotes
 Type=MimeType
-MimeType=mobile/notes
+MimeType=inode/notes
 Patterns=
 
 X-KDE-AutoEmbed=true
