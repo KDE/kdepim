@@ -68,11 +68,11 @@ alarms, or you can select existing alarms for modification or
 deletion. You can also optionally view expired alarms.</para>
 
 <para>When setting up or modifying an alarm, you may either type in
-the alarm message text, specify a text file to display, specify a
-command to execute, or enter an email to send. You can also choose the
-colour of the alarm message, whether it should repeat, whether to play
-a sound, and whether the alarm should be cancelled if it can't be
-triggered at its scheduled time.</para>
+the alarm message text, specify a text or image file to display,
+specify a command to execute, or enter an email to send. You can also
+choose the colour of the alarm message, whether it should repeat,
+whether to play a sound, and whether the alarm should be cancelled if
+it can't be triggered at its scheduled time.</para>
 
 <para>Alarms may also be scheduled from the command line, or via &DCOP;
 calls from programs.</para>
@@ -346,9 +346,9 @@ specific font for the message, uncheck
 
 <listitem>
 <para><guilabel>File</guilabel> to enter the name or &URL; of a text
-file whose contents are to be displayed in the alarm message. Use the
-button beside the edit box to display a file selection dialog. Set
-options as for text alarms above.</para>
+or image file whose contents are to be displayed in the alarm message.
+Use the button beside the edit box to display a file selection dialog.
+Set options as for text alarms above.</para>
 </listitem>
 
 <listitem>
@@ -1055,8 +1055,8 @@ time.</para>
 </row>
 <row>
   <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of a text file whose contents are
-  to form the alarm message. <option>--exec</option> and
+  <entry>Specify the name or &URL; of a text or image file whose
+  contents are to form the alarm message. <option>--exec</option> and
   <option>--mail</option> cannot be specified, and
   <replaceable>message</replaceable> must not be present with this
   option.</entry>
@@ -2111,7 +2111,7 @@ arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder &lt;&lt; repeatType &lt;
 <refnamediv>
 <refname>scheduleFile</refname>
 <refpurpose>schedule a new alarm which displays the contents of a
-text file.</refpurpose>
+text or image file.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
@@ -2130,8 +2130,8 @@ bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDate
 <varlistentry>
 <term><parameter>URL</parameter></term>
 <listitem>
-<para>Specifies the name or &URL; of a text file whose contents are to
-be displayed in the message to be scheduled.</para>
+<para>Specifies the name or &URL; of a text or image file whose
+contents are to be displayed in the message to be scheduled.</para>
 </listitem>
 </varlistentry>
 
@@ -2220,8 +2220,9 @@ Specify -1 to repeat the alarm indefinitely.</para>
 <refsect1>
 <title>Description</title>
 <para><function>scheduleFile()</function> is a &DCOP; call to schedule
-the specified text file for display at the specified date and time.
-Apart from specifying a file name or &URL;, its usage is identical to
+the specified text or image file for display at the specified date and
+time. Apart from specifying a file name or &URL;, its usage is
+identical to
 <link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
 - see the description of that function for further details.</para>
 </refsect1>
