@@ -1,0 +1,143 @@
+Design
+------
+
+A ContactEntry object is used to store the current state of an address book
+entry, and emits a changed() signal whenever it is modified. A ContactDialog
+object provides an editable view of the data stored in the ContactEntry
+object. It is possible for different widgets in the ContactDialog to view
+the same ContactEntry field simultaneously, the changed() signal is used
+to ensure these widgets are kept synchronized.
+
+Several helper widgets (ContactComboBox, ContactLineEdit, 
+ContactMultiLineEdit, NameValueSheet, NameValueFrame) and 
+dialogs (AddressDialog, NameDialog, NewFieldDialog) assist the
+ContactDialog.
+
+Files
+----
+contactentry.xxx     Defines the ContactEntry class and helper dialog
+                     classes.
+namevalue.xxx        Defines the various widget helper classes.
+contact.xxx          Defines the ContactDialog class.
+datepickerdialog.xxx A very slightly modifed version of kabs
+                     datepicker dialog.
+
+Using
+-----
+You'll need some code like the following to use my Address Book Entry Editor.
+
+<pre>
+ ContactEntry *ce;
+...
+
+ ce = new ContactEntry( "entry.txt" );
+ ContactDialog *test = new ContactDialog( this, "Kontact - Editor", ce );
+ connect( test, SIGNAL( applyButtonPressed() ), this, SLOT( saveEntry() ));
+ test->show();
+...
+
+void myClass::saveEntry() 
+{
+  ce->save( "entry.txt" );
+}
+</pre>
+
+General Issues
+--------------
+I've just coded a tabbed dialog, which doesn't have a menubar etc. I'm
+not sure whether a menubar etc. are beneficial.
+
+Have yet to test the dialog under different themes and fonts.
+
+The license is the GPL, (not that I think it's perfect)
+
+Unicode support, I'm concerned about the
+QString* foo = { "a", "b", "c" };
+... i18n( foo[i] ) ...
+potential problem. 
+
+When naming of classes I went along with this contact theme as I couldn't 
+think of anything better.
+
+ContactEntry Issues
+-------------------
+I tried to use vCard names when choosing names for keys, but wasn't really able to do a decent job. There is going to be a lot of work translating 
+ContactEntry fields into proper vCard names.
+
+Haven't thought about if/how my stuff will be integrated with kab.
+
+Before the main Address Book view can be created I need a persistance 
+supporting class for storing a list of address book entries. There are some
+efficiency issues that need to be addressed (like I don't really want to 
+load all the address book entries into ram, not that it would matter much
+in the short term).
+
+I haven't allow blank fields. This probably was a bad idea. What if I want
+custom fields to appear in all Address Book Entry Editor views.
+
+Only support storing of QString values, what about proper handling of date
+types?
+
+When saving records are terminated with a line that just contains [EOR] which
+is safe (but does allow saving of multi line fields). Since the saving is
+just temporary this shouldn't matter too much.
+
+No types are associated with stored values. Might be useful for
+things like date, might not be that useful though. Would like to support
+sorting entries by data.
+
+No "This is the mailing address" checkbox, I don't know what this is for.
+
+No categories section, I'm still thinking about the whole grouping thing,
+which this seemed to be related to.
+
+No private checkbox. Thought it might be awhile before public address book
+entries are supported.
+
+ContactDialog Issues
+--------------------
+The set of Name titles and suffixes are hardcoded. I'm not sure how much
+of a problem this is for other locales.
+
+The dialog window is not sized properly until after it is shown. This can 
+cause the window manager to misposition the window.
+
+I wonder if this dialog should be modal or not.
+
+Maybe tab1 should be completely redesigned making use a QGridLayout,
+addMultiCellWidget and alignment.
+
+I haven't spent much time on the keyboard accelerators.
+
+NameValueSheet
+--------------
+Can't resize columns( can't in outlook '98 or '99 either actually )
+
+Multi cell selection isn't supported.
+
+Hilighting of currently selected cell isn't supported
+
+Horizontal scrolling is disabled (individual edit boxes will still scroll)
+
+Only ascii characters can be used for the name of custom fields. Should be
+easy to fix.
+
+Sorting of custom fields is case sensitive
+
+NameValueFrame
+--------------
+The name/value header is bit big in the vertical direction.
+
+ContactLineEdit/ContactMultiLineEdit
+------------------------------------
+Use the name of the widget as the ContactEntry key is a bit quirky.
+
+AddressDialog
+-------------
+Have to check the list of countries. (Deutschland ??)
+
+The address dialog tries to guess which country the user lives in based
+on what language the speak. Best I could think of.
+
+Don Sanders
+July 11, 1999

@@ -24,7 +24,7 @@
 #include <qstring.h>
 #include <qlist.h>
 
-#include <Enum.h>
+#include <VCardEnum.h>
 #include <Entity.h>
 #include <ContentLine.h>
 
@@ -46,6 +46,8 @@ class VCard : public Entity
 	ContentLine * contentLine(const QCString &);
 	
 	QCString group() { parse(); return group_; }
+	
+	QList<ContentLine>	contentLineList() { parse(); return contentLineList_; }
 	
 	private:
 

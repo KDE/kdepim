@@ -52,7 +52,7 @@
 #include <ContentLine.h>
 
 #include <Entity.h>
-#include <Enum.h>
+#include <VCardEnum.h>
 #include <VCardDefines.h>
 
 using namespace VCARD;

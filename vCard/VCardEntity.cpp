@@ -76,11 +76,11 @@ VCardEntity::_parse()
 	vDebug("parse");
 	QCString s(strRep_);
 	
-	int i = s.find(QRegExp("BEGIN:VCARD"));
+	int i = s.find(QRegExp("BEGIN:VCARD", false));
 	
 	while (i != -1) {
 		
-		i = s.find(QRegExp("BEGIN:VCARD"), 11);
+		i = s.find(QRegExp("BEGIN:VCARD", false), 11);
 		
 		QCString cardStr(s.left(i));
 		
@@ -103,7 +103,7 @@ VCardEntity::_assemble()
 		strRep_ += it.current()->asString() + "\r\n"; // One CRLF for luck.
 }
 
-	const VCardList &
+	VCardList &
 VCardEntity::cardList()
 {
 	parse();

@@ -92,7 +92,7 @@ Dn::_parse()
 		while (encoded[0] == ' ')
 			encoded.remove(0, 1);
 		
-		decodeBase64(encoded);
+//		decodeBase64(encoded);
 	}
 	
 	QStrList l;

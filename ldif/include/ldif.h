@@ -20,6 +20,8 @@
 
 #include <qcstring.h>
 #include <qlist.h>
+#include <qshared.h>
+#include <ksharedptr.h>
 
 #ifndef LDIF_H
 #define LDIF_H
@@ -365,10 +367,45 @@ class LdifContent : public Entity
 		LdifAttrValRecList attrValRecList_;
 };
 
-const char * B64 =
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-QCString	encodeBase64	(const char *, unsigned long, unsigned long &);
-char *		decodeBase64	(const QCString &, unsigned long &);
+class CharBuf : public QShared
+{
+	public:
+
+		CharBuf()
+			:	QShared()
+		{
+			count = 1;
+			ptr_ = 0;
+		}
+	
+		CharBuf(char * s)
+			:	QShared()
+		{
+			count = 1;
+			ptr_ = s;
+		}
+	
+		~CharBuf()
+		{
+			delete [] ptr_;
+		}
+	
+		const char * data()
+		{
+			return ptr_;
+		}
+		
+	private:
+
+		char *ptr_;
+};
+
+typedef KSharedPtr<CharBuf> CharPtr;
+CharPtr encodeBase64 (const char *, unsigned long, unsigned long &);
+CharPtr decodeBase64 (const char *, unsigned long, unsigned long &);
+
+CharPtr encodeQP (const char *, unsigned long, unsigned long &);
+CharPtr decodeQP (const char *, unsigned long, unsigned long &);
 
 }
 

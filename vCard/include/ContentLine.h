@@ -23,10 +23,10 @@
 
 #include <qlist.h>
 
-#include <Enum.h>
-#include <Entity.h>
-#include <Param.h>
-#include <Value.h>
+#include "VCardEnum.h"
+#include "Entity.h"
+#include "Param.h"
+#include "Value.h"
 
 namespace VCARD
 {

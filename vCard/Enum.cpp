@@ -21,7 +21,7 @@
 #include <qcstring.h>
 #include <ctype.h>
 
-#include <Enum.h>
+#include <VCardEnum.h>
 
 using namespace VCARD;
 

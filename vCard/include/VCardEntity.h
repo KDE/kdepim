@@ -38,7 +38,7 @@ class VCardEntity : public Entity
 
 #include "VCardEntity-generated.h"
 	
-	const QList<VCard> & cardList();
+	VCardList & cardList();
 	
 	void setCardList(const QList<VCard> &);
 	

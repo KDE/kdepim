@@ -77,4 +77,9 @@ AC_OUTPUT( \
 Makefile \
 vCard/Makefile \
 ldif/Makefile \
+abui_test/Makefile \
+ab_test/Makefile \
+abui_test/test/Makefile \
+ab_test/filters/Makefile \
+ab_test/filters/vcard/Makefile \
 )

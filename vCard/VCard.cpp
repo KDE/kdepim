@@ -91,7 +91,9 @@ VCard::_parse()
 	}
 	
 	// Get the first line
-	QCString beginLine = l.at(0);
+	QCString beginLine = QCString(l.at(0)).stripWhiteSpace();
+	
+	vDebug("Begin line == \"" + beginLine + "\"");
 	
 	// Remove extra blank lines
 	while (QCString(l.last()).isEmpty())
@@ -124,12 +126,12 @@ VCard::_parse()
 		firstPart	= firstPart.right(firstPart.length() - split - 1);
 	}
 	
-	if (stricmp(firstPart, "BEGIN") != 0) { // No BEGIN !
+	if (strnicmp(firstPart, "BEGIN", 5) != 0) { // No BEGIN !
 		vDebug("No BEGIN");
 		return;
 	}
 	
-	if (stricmp(valuePart, "VCARD") != 0) { // Not a vcard !
+	if (strnicmp(valuePart, "VCARD", 5) != 0) { // Not a vcard !
 		vDebug("No VCARD");
 		return;
 	}
@@ -139,12 +141,40 @@ VCard::_parse()
 	// 
 	vDebug("Content lines");
 	
+	// Handle folded lines.
+	
+	QStrList refolded;
+	
 	QStrListIterator it(l);
+
+	QCString cur;
 	
 	for (; it.current(); ++it) {
+	
+		cur = it.current();
 		
-		vDebug("New contentline using \"" + QCString(it.current()) + "\"");
-		ContentLine * cl = new ContentLine(it.current());
+		++it;
+		
+		while (
+			it.current()			&&
+			it.current()[0] == ' '	&&
+			strlen(it.current()) != 1)
+		{
+			cur += it.current() + 1;
+			++it;
+		}
+		
+		--it;
+		
+		refolded.append(cur);
+	}
+
+	QStrListIterator it2(refolded);
+
+	for (; it2.current(); ++it2) {
+		
+		vDebug("New contentline using \"" + QCString(it2.current()) + "\"");
+		ContentLine * cl = new ContentLine(it2.current());
 
 		cl->parse();
 		

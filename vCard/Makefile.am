@@ -1,5 +1,8 @@
 INCLUDES= -I include -I include/generated $(all_includes)
 
-noinst_LIBRARIES = libvcard.a
+lib_LTLIBRARIES = libvcard.la
 
-libvcard_a_SOURCES = vCard.cpp
+libvcard_la_SOURCES = vCard.cpp
+
+test: test.o libvcard.a
+	$(CXX) -o test test.cpp libvcard.a $(all_libraries) -lqt $(INCLUDES)
