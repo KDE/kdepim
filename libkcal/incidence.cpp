@@ -74,13 +74,14 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 
 Incidence::~Incidence()
 {
-  List::ConstIterator it;
-  for ( it = mRelations.begin(); it != mRelations.end(); ++it ) {
-    if ( (*it)->relatedTo() == this ) (*it)->setRelatedTo( 0 );
-  }
-  if ( relatedTo() ) relatedTo()->removeRelation( this );
-
-  delete mRecurrence;
+    Incidence::List Relations = mRelations;
+    List::ConstIterator it;
+    for ( it = Relations.begin(); it != Relations.end(); ++it ) {
+        if ( (*it)->relatedTo() == this ) (*it)->setRelatedTo( 0 );
+    }
+    if ( relatedTo() ) relatedTo()->removeRelation( this );
+    
+    delete mRecurrence;
 }
 
 // A string comparison that considers that null and empty are the same
