@@ -46,6 +46,7 @@
 #include <qrect.h>
 #include <qtooltip.h>
 #include <qapplication.h>
+#include <kdialog.h>
 
 KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
 {
@@ -2257,7 +2258,7 @@ void KDLegendWidget::clearLegend ( )
     myLegend->setFont( font() );
     scroll->addChild(  myLegend );
     scroll->setResizePolicy( QScrollView::AutoOneFit );
-    myLegend->layout()->setMargin( 11 );
+    myLegend->layout()->setMargin( KDialog::marginHint() );
     myLegend->setFrameStyle( QFrame::NoFrame );
     scroll->setMaximumHeight( legendSizeHint().height() );
 }
