@@ -20,6 +20,8 @@
 #ifndef KABC_RESOURCEGROUPWISE_H
 #define KABC_RESOURCEGROUPWISE_H
 
+#include "soap/groupwiseserver.h"
+
 #include <kabcresourcecached.h>
 
 #include <libkdepim/progressmanager.h>
@@ -49,7 +51,14 @@ class ResourceGroupwise : public ResourceCached
     void readConfig( const KConfig * );
     void writeConfig( KConfig * );
 
+    void readAddressBooks();
+    void writeAddressBooks();
+
+    void retrieveAddressBooks();
+
     GroupwisePrefs *prefs() const { return mPrefs; }
+
+    GroupWise::AddressBook::List addressBooks() const { return mAddressBooks; }
 
     bool doOpen();
     void doClose();
@@ -77,6 +86,7 @@ class ResourceGroupwise : public ResourceCached
 
   private:
     GroupwisePrefs *mPrefs;
+    GroupWise::AddressBook::List mAddressBooks;
 
     GroupwiseServer *mServer;
 

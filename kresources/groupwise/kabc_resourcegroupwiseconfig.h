@@ -62,7 +62,6 @@ class ResourceGroupwiseConfig : public KRES::ConfigWidget
     KListView *mAddressBookView;
     KComboBox *mAddressBookBox;
 
-    GroupWise::AddressBook::List mAddressBookList;
     QStringList mWriteAddressBookIds;
 
     ResourceGroupwise *mResource;

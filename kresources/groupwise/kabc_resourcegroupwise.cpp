@@ -26,7 +26,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "soap/groupwiseserver.h"
 #include "kabc_groupwiseprefs.h"
 
 #include "kabc_resourcegroupwise.h"
@@ -98,13 +97,91 @@ ResourceGroupwise::~ResourceGroupwise()
 void ResourceGroupwise::readConfig( const KConfig * )
 {
   mPrefs->readConfig();
+
+  readAddressBooks();
 }
 
 void ResourceGroupwise::writeConfig( KConfig *config )
 {
   Resource::writeConfig( config );
 
+  writeAddressBooks();
+
   mPrefs->writeConfig();
+}
+
+void ResourceGroupwise::readAddressBooks()
+{
+  QStringList ids = prefs()->ids();
+  QStringList names = prefs()->names();
+  QStringList personals = prefs()->personals();
+  QStringList frequents = prefs()->frequents();
+
+  if ( ids.count() != names.count() || ids.count() != personals.count() ||
+    ids.count() != frequents.count() ) {
+    kdError() << "Corrupt addressbook configuration" << endl;
+    return;
+  }
+
+  mAddressBooks.clear();
+
+  for( uint i = 0; i < ids.count(); ++i ) {
+    GroupWise::AddressBook ab;
+    ab.id = ids[ i ];
+    ab.name = names[ i ];
+    ab.isPersonal = personals[ i ] == "1";
+    ab.isFrequentContacts = frequents[ i ] == "1";
+    
+    mAddressBooks.append( ab );
+  }
+}
+
+void ResourceGroupwise::writeAddressBooks()
+{
+  QStringList ids;
+  QStringList names;
+  QStringList personals;
+  QStringList frequents;
+  GroupWise::AddressBook::List::ConstIterator it;
+  for( it = mAddressBooks.begin(); it != mAddressBooks.end(); ++it ) {
+    ids.append( (*it).id );
+    names.append( (*it).name );
+    personals.append( (*it).isPersonal ? "1" : "0" );
+    frequents.append( (*it).isFrequentContacts ? "1" : "0" );
+  }
+  prefs()->setIds( ids );
+  prefs()->setNames( names );
+  prefs()->setPersonals( personals );
+  prefs()->setFrequents( frequents );
+}
+
+void ResourceGroupwise::retrieveAddressBooks()
+{
+  bool firstRetrieve = mAddressBooks.isEmpty();
+
+  GroupwiseServer server( prefs()->url(),
+                          prefs()->user(),
+                          prefs()->password(), this );
+
+  server.login();
+  mAddressBooks = server.addressBookList();
+  server.logout();
+
+  if ( firstRetrieve ) {
+    QStringList reads;
+    QString write; 
+    
+    GroupWise::AddressBook::List::ConstIterator it;
+    for( it = mAddressBooks.begin(); it != mAddressBooks.end(); ++it ) {
+      if ( (*it).isPersonal ) {
+        reads.append( (*it).id );
+        if ( write.isEmpty() ) write = (*it).id;
+      }
+    }
+    
+    prefs()->setReadAddressBooks( reads );
+    prefs()->setWriteAddressBook( write );
+  }
 }
 
 Ticket *ResourceGroupwise::requestSaveTicket()
@@ -148,6 +225,12 @@ bool ResourceGroupwise::asyncLoad()
 
   mAddrMap.clear();
   loadCache();
+
+  if ( addressBooks().isEmpty() ) {
+    kdDebug() << "Retrieving default addressbook list." << endl;
+    retrieveAddressBooks();
+    writeAddressBooks();
+  }
 
   KURL url( prefs()->url() );
   if ( url.protocol() == "http" ) url.setProtocol( "groupwise" );

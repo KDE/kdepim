@@ -118,7 +118,6 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *res )
   mUser->setText( mResource->prefs()->user() );
   mPassword->setText( mResource->prefs()->password() );
 
-  loadAddressBookSettings();
   updateAddressBookView();
 }
 
@@ -147,13 +146,7 @@ void ResourceGroupwiseConfig::updateAddressBookList()
 {
   saveServerSettings( mResource );
 
-  GroupwiseServer server( mResource->prefs()->url(),
-                          mResource->prefs()->user(),
-                          mResource->prefs()->password(), this );
-
-  server.login();
-  mAddressBookList = server.addressBookList();
-  server.logout();
+  mResource->retrieveAddressBooks();
 
   updateAddressBookView();
 }
@@ -176,48 +169,6 @@ void ResourceGroupwiseConfig::saveAddressBookSettings()
 
   mResource->prefs()->setReadAddressBooks( selectedRead );
   mResource->prefs()->setWriteAddressBook( selectedWrite );
-
-  QStringList ids;
-  QStringList names;
-  QStringList personals;
-  QStringList frequents;
-  GroupWise::AddressBook::List::ConstIterator it;
-  for( it = mAddressBookList.begin(); it != mAddressBookList.end(); ++it ) {
-    ids.append( (*it).id );
-    names.append( (*it).name );
-    personals.append( (*it).isPersonal ? "1" : "0" );
-    frequents.append( (*it).isFrequentContacts ? "1" : "0" );
-  }
-  mResource->prefs()->setIds( ids );
-  mResource->prefs()->setNames( names );
-  mResource->prefs()->setPersonals( personals );
-  mResource->prefs()->setFrequents( frequents );
-}
-
-void ResourceGroupwiseConfig::loadAddressBookSettings()
-{
-  QStringList ids = mResource->prefs()->ids();
-  QStringList names = mResource->prefs()->names();
-  QStringList personals = mResource->prefs()->personals();
-  QStringList frequents = mResource->prefs()->frequents();
-
-  if ( ids.count() != names.count() || ids.count() != personals.count() ||
-    ids.count() != frequents.count() ) {
-    kdError() << "Corrupt addressbook configuration" << endl;
-    return;
-  }
-
-  mAddressBookList.clear();
-
-  for( uint i = 0; i < ids.count(); ++i ) {
-    GroupWise::AddressBook ab;
-    ab.id = ids[ i ];
-    ab.name = names[ i ];
-    ab.isPersonal = personals[ i ] == "1";
-    ab.isFrequentContacts = frequents[ i ] == "1";
-    
-    mAddressBookList.append( ab );
-  }
 }
 
 void ResourceGroupwiseConfig::updateAddressBookView()
@@ -231,8 +182,9 @@ void ResourceGroupwiseConfig::updateAddressBookView()
 
   QStringList selectedRead = mResource->prefs()->readAddressBooks();
 
+  GroupWise::AddressBook::List addressBooks = mResource->addressBooks();
   GroupWise::AddressBook::List::ConstIterator abIt;
-  for ( abIt = mAddressBookList.begin(); abIt != mAddressBookList.end(); ++abIt ) {
+  for ( abIt = addressBooks.begin(); abIt != addressBooks.end(); ++abIt ) {
     AddressBookItem *item = new AddressBookItem( mAddressBookView, *abIt );
     if ( selectedRead.find( (*abIt).id ) != selectedRead.end() )
       item->setOn( true );
