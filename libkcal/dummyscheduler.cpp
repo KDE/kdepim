@@ -26,6 +26,7 @@
 #include <qtextstream.h>
 
 #include <kdebug.h>
+#include <kstandarddirs.h>
 
 #include "event.h"
 #include "icalformat.h"
@@ -116,4 +117,10 @@ QPtrList<ScheduleMessage> DummyScheduler::retrieveTransactions()
   }
 
   return messageList;
+}
+
+QString DummyScheduler::freeBusyDir()
+{
+  // the dummy scheduler should never handle freebusy stuff - so it's hardcoded
+  return QString("");
 }

@@ -111,6 +111,9 @@ class Scheduler {
     static QString translatedMethodName(Method);
 
     virtual bool deleteTransaction(IncidenceBase *incidence);
+    
+    /** Returns the directory where the free-busy information is stored */
+    virtual QString freeBusyDir() = 0;
 
   protected:
 

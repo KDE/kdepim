@@ -41,6 +41,8 @@ class DummyScheduler : public Scheduler {
     bool performTransaction(IncidenceBase *incidence,Method method,const QString &recipients);
     QPtrList<ScheduleMessage> retrieveTransactions();
 
+    virtual QString freeBusyDir();
+  
   protected:
     bool saveMessage(const QString &);
 };

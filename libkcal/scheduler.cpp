@@ -309,8 +309,7 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
 {
   FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
 
-  QString freeBusyDirName = locateLocal("appdata","freebusy");
-  kdDebug() << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDirName << endl;
+  kdDebug() << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDir() << endl;
 
   QString from;
   if(method == Scheduler::Publish) {
@@ -321,18 +320,18 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
     from = attendee->email();
   }
 
-  QDir freeBusyDir(freeBusyDirName);
-  if (!freeBusyDir.exists()) {
-    kdDebug() << "Directory " << freeBusyDirName << " does not exist!" << endl;
-    kdDebug() << "Creating directory: " << freeBusyDirName << endl;
+  QDir freeBusyDirectory(freeBusyDir());
+  if (!freeBusyDirectory.exists()) {
+    kdDebug() << "Directory " << freeBusyDir() << " does not exist!" << endl;
+    kdDebug() << "Creating directory: " << freeBusyDir() << endl;
     
-    if(!freeBusyDir.mkdir(freeBusyDirName, TRUE)) {
-      kdDebug() << "Could not create directory: " << freeBusyDirName << endl;
+    if(!freeBusyDirectory.mkdir(freeBusyDir(), true)) {
+      kdDebug() << "Could not create directory: " << freeBusyDir() << endl;
       return false;
     }
   }
 
-  QString filename(freeBusyDirName);
+  QString filename(freeBusyDir());
   filename += "/";
   filename += from;
   filename += ".ifb";
@@ -356,3 +355,4 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
   deleteTransaction(incidence);
   return true;
 }
+
