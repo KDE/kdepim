@@ -94,7 +94,10 @@ class CardViewItemList : public QPtrList<CardViewItem>
     }
 
   private:
-    //int find( const CardViewItem * ) { qDebug("DON'T USE CardViewItemList::find( item )! Use findRef( item )!"); }
+    /*int find( const CardViewItem * ) 
+    { 
+      qDebug("DON'T USE CardViewItemList::find( item )! Use findRef( item )!"); 
+    }*/
 };
 
 //////////////////////////////////////
@@ -322,18 +325,18 @@ void CardViewItem::paintCard(QPainter *p, QColorGroup &cg)
       label = trimString((*iter)->first, labelWidth, fm);
       p->drawText(labelXPos, yPos, label + ":");
     }
-    cln = 0;
-    while ( tmp = value.section('\n',cln,cln) )
+
+    for (cln=0; cln <= maxLines; cln++)
     {
-      p->drawText( valueXPos, yPos, trimString( tmp, valueWidth, fm ) );
-      yPos += fh;
-      cln ++;
-      if ( cln > maxLines )
-        break;
+      tmp = value.section('\n',cln,cln);
+      if ( tmp ) p->drawText( valueXPos, yPos + cln*fh, trimString( tmp, valueWidth, fm ) );
+      else break;
     }
 
-    yPos += 2;
+    if ( cln == 0 ) cln = 1;
+    yPos += cln * fh + 2;
   }
+
   // if we are the current item and the view has focus, draw focus rect
   if ( mView->currentItem() == this && mView->hasFocus() )
   {
