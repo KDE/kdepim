@@ -38,7 +38,7 @@ class KProcess;
 
 class ConduitConfigWidget;
 
-class ConduitConfigDialog : public UIDialog 
+class ConduitConfigDialog : public UIDialog
 {
 Q_OBJECT
 public:
@@ -49,11 +49,9 @@ protected:
 	virtual void commitChanges();
 
 	void fillLists();
-	QString findExecPath(const QListViewItem * p) const;
 
 	void warnNoExec(const QListViewItem *);
 	void warnNoLibrary(const QListViewItem *);
-	void warnSetupRunning();
 
 protected slots:
 	void selected(QListViewItem *);
@@ -61,15 +59,15 @@ protected slots:
 	void disableConduit();
 
 	void configureConduit();
-	void setupDone(KProcess *);
 
 private:
 	ConduitConfigWidget *fConfigWidget;
-	KProcess *conduitSetup;
-	QStringList conduitPaths;
 } ;
 
 // $Log$
+// Revision 1.2  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.1  2001/10/04 16:53:57  adridg
 // New files for newstyle config
 //

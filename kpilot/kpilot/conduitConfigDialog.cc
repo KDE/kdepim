@@ -55,8 +55,7 @@ static const char *conduitconfigdialog_id =
 #define CONDUIT_NAME    (0)
 #define CONDUIT_COMMENT (1)
 #define CONDUIT_DESKTOP (2)
-#define CONDUIT_EXEC    (3)
-#define CONDUIT_LIBRARY (4)
+#define CONDUIT_LIBRARY (3)
 
 class ConduitTip : public QToolTip
 {
@@ -116,8 +115,7 @@ ConduitTip::~ConduitTip()
 
 
 ConduitConfigDialog::ConduitConfigDialog(QWidget * w, const char *n,
-	bool m) : UIDialog(w, n, m),
-	conduitSetup(0L)
+	bool m) : UIDialog(w, n, m)
 {
 	FUNCTIONSETUP;
 
@@ -181,7 +179,7 @@ void ConduitConfigDialog::fillLists()
 	KServiceTypeProfile::OfferList offers =
 		KServiceTypeProfile::offers("KPilotConduit");
 
-	// Now actually fill the two list boxes, just make 
+	// Now actually fill the two list boxes, just make
 	// sure that nothing gets listed in both.
 	//
 	//
@@ -198,13 +196,20 @@ void ConduitConfigDialog::fillLists()
 
 		QListViewItem *p = 0L;
 
+		if (!o->exec().isEmpty())
+		{
+			kdWarning() << k_funcinfo
+				<< ": Old-style conduit found "
+				<< o->name()
+				<< endl;
+		}
+
 		if (potentiallyInstalled.contains(o->desktopEntryName()) == 0)
 		{
 			p = new QListViewItem(fConfigWidget->available,
 				o->name(),
 				o->comment(),
 				o->desktopEntryName(),
-				o->exec(),
 				o->library());
 		}
 		else
@@ -213,7 +218,6 @@ void ConduitConfigDialog::fillLists()
 				o->name(),
 				o->comment(),
 				o->desktopEntryName(),
-				o->exec(),
 				o->library());
 		}
 
@@ -225,7 +229,7 @@ void ConduitConfigDialog::selected(QListViewItem *p)
 {
 	FUNCTIONSETUP;
 
-	if (!p) 
+	if (!p)
 	{
 		fConfigWidget->configButton->setEnabled(false);
 		fConfigWidget->enableButton->setEnabled(false);
@@ -288,187 +292,88 @@ void ConduitConfigDialog::configureConduit()
 	if (!p)
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Executed NULL conduit?" << endl;
-#endif
-		return;
-	}
-
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Executing conduit " 
-		<< p->text(CONDUIT_NAME) << endl;
-#endif
-
-	QString execPath = findExecPath(p);
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Exec path=" << execPath << endl;
-#endif
-
-	if (execPath.isNull())
-	{
-		if (p->text(CONDUIT_LIBRARY).isEmpty())
-		{
-			warnNoExec(p);
-			return;
-		}
-		else
-		{
-			const char *library = p->text(CONDUIT_LIBRARY);
-
-			KLibFactory *f = KLibLoader::self()->
-				factory(library);
-			if (!f)
-			{
-				DEBUGKPILOT << fname
-					<< ": No conduit library "
-					<< library
-					<< " found."
-					<< endl;
-				warnNoLibrary(p);
-				return;
-			}
-
-			QStringList a;
-			a.append("modal");
-
-			QObject *o = f->create(this, 0L, "ConduitConfig",a);
-
-
-			if (!o)
-			{
-				DEBUGKPILOT << fname
-					<< ": Can't create object."
-					<< endl;
-
-				KLibLoader::self()->unloadLibrary(
-					library);
-				warnNoLibrary(p);
-				return;
-			}
-
-			ConduitConfig *d = dynamic_cast<ConduitConfig *>(o);
-
-			if (!d)
-			{
-				DEBUGKPILOT << fname
-					<< ": Can't cast to dialog."
-					<< endl;
-				delete o;
-				KLibLoader::self()->unloadLibrary(
-					library);
-				warnNoLibrary(p);
-				return;
-			}
-
-			d->setConfig(&KPilotConfig::getConfig());
-			d->readSettings();
-			d->exec();
-
-			delete d;
-			KLibLoader::self()->unloadLibrary(
-				library);
-
-			return;
-		}
-	}
-
-	if (conduitSetup)
-	{
-		warnSetupRunning();
-		return;
-	}
-
-	conduitSetup = new KProcess;
-	*conduitSetup << execPath << "--setup";
-	*conduitSetup << "-geometry"
-		<< QString("+%1+%2").arg(x() + 20).arg(y() + 20);
-#ifdef DEBUG
-	if (debug_level)
-	{
-		*conduitSetup << "--debug" << QString::number(debug_level);
-	}
-#endif
-
-	connect(conduitSetup,
-		SIGNAL(processExited(KProcess *)),
-		this, SLOT(setupDone(KProcess *)));
-	if (!conduitSetup->start(KProcess::NotifyOnExit))
-	{
-		kdWarning() << k_funcinfo
-			<< ": Could not start process for conduit setup!"
+		DEBUGKPILOT << fname
+			<< ": Executed NULL conduit?"
 			<< endl;
+#endif
+		return;
+	}
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Executing conduit "
+		<< p->text(CONDUIT_NAME)
+		<< endl;
+#endif
+
+	if (p->text(CONDUIT_LIBRARY).isEmpty())
+	{
 		warnNoExec(p);
-		delete conduitSetup;
-
-		conduitSetup = 0L;
-	}
-}
-
-/* slot */ void ConduitConfigDialog::setupDone(KProcess * p)
-{
-	FUNCTIONSETUP;
-
-	if (p != conduitSetup)
-	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname << ": Process other than setup exited?"
-			<< endl;
-#endif
 		return;
 	}
 
-	delete p;
+	const char *library = p->text(CONDUIT_LIBRARY);
 
-	conduitSetup = 0L;
-}
-
-
-QString ConduitConfigDialog::findExecPath(const QListViewItem * p) const
-{
-	FUNCTIONSETUP;
-
-	QString currentConduit(QString::null);
-
-	if (p->text(CONDUIT_EXEC).isEmpty()) return QString::null;
-
-	if (conduitPaths.isEmpty())
+	KLibFactory *f = KLibLoader::self()->
+		factory(library);
+	if (!f)
 	{
-		currentConduit = KGlobal::dirs()->findResource("exe",
-			p->text(CONDUIT_EXEC));
-		if (currentConduit.isNull())
-		{
-			currentConduit = p->text(CONDUIT_EXEC);
-		}
-	}
-	else
-	{
-		// Look in all the resource dirs for conduits
-		// for this particular conduit.
-		//
-		//
-		QStringList::ConstIterator i;
-
-		currentConduit = QString::null;
-		for (i = conduitPaths.begin(); i != conduitPaths.end(); ++i)
-		{
-			if (QFile::exists((*i) + '/' + p->text(CONDUIT_EXEC)))
-			{
-				currentConduit =
-					(*i) + '/' + p->text(CONDUIT_EXEC);
-				break;
-			}
-		}
+		DEBUGKPILOT << fname
+			<< ": No conduit library "
+			<< library
+			<< " found."
+			<< endl;
+		warnNoLibrary(p);
+		return;
 	}
 
-	return currentConduit;
+	QStringList a;
+	a.append("modal");
+
+	QObject *o = f->create(this, 0L, "ConduitConfig",a);
+
+
+	if (!o)
+	{
+		DEBUGKPILOT << fname
+			<< ": Can't create object."
+			<< endl;
+
+		KLibLoader::self()->unloadLibrary(
+			library);
+		warnNoLibrary(p);
+		return;
+	}
+
+	ConduitConfig *d = dynamic_cast<ConduitConfig *>(o);
+
+	if (!d)
+	{
+		DEBUGKPILOT << fname
+			<< ": Can't cast to dialog."
+			<< endl;
+		delete o;
+		KLibLoader::self()->unloadLibrary(
+			library);
+		warnNoLibrary(p);
+		return;
+	}
+
+	d->setConfig(&KPilotConfig::getConfig());
+	d->readSettings();
+	d->exec();
+
+	delete d;
+	KLibLoader::self()->unloadLibrary(
+		library);
 }
+
 
 void ConduitConfigDialog::warnNoExec(const QListViewItem * p)
 {
 	FUNCTIONSETUP;
 
-	QString msg = i18n("<qt>No executable or library could be "
+	QString msg = i18n("<qt>No library could be "
 		"found for the conduit %1. This means that the "
 		"conduit was not installed properly.</qt>")
 		.arg(p->text(CONDUIT_NAME));
@@ -491,22 +396,6 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 	KMessageBox::error(this, msg, i18n("Conduit error"));
 }
-
-void ConduitConfigDialog::warnSetupRunning()
-{
-	FUNCTIONSETUP;
-
-	QString msg = i18n("A conduit is already being set up. "
-		"Please complete that action before setting "
-		"up another conduit.");
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": " << msg << endl;
-#endif
-
-	KMessageBox::error(this, msg, i18n("Conduit Setup error"));
-}
-
 
 /* virtual */ void ConduitConfigDialog::commitChanges()
 {
@@ -531,6 +420,9 @@ void ConduitConfigDialog::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.4  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.3  2001/10/19 14:03:04  adridg
 // Qt3 include fixes
 //
