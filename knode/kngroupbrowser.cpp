@@ -17,6 +17,7 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qtimer.h>
+#include <qapplication.h>
 
 #include <kseparator.h>
 #include <kiconloader.h>
@@ -70,8 +71,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   pmGroup=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::group);
   pmNew=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::redBall);
-  pmRight=BarIcon("forward");
-  pmLeft=BarIcon("back");
+  pmRight=BarIcon( QApplication::reverseLayout()? "back": "forward");
+  pmLeft=BarIcon(  QApplication::reverseLayout() ? "forward" : "back");
 
   arrowBtn1=new QPushButton(page);
   arrowBtn1->setEnabled(false);
