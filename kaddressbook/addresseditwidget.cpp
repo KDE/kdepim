@@ -53,9 +53,11 @@
 #include "addresseditwidget.h"
 
 
-AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
+AddressEditWidget::AddressEditWidget( const KABC::Addressee* contact, 
+                                      QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
+  mAddressee = contact;
   QBoxLayout *layout = new QVBoxLayout( this, 4, 2 );
   layout->setSpacing( KDialog::spacingHint() );
 
@@ -151,9 +153,8 @@ void AddressEditWidget::updateAddressEdit()
 
   if ( it != mAddressList.end() ) {
     KABC::Address a = *it;
-
     if ( !a.isEmpty() ) {
-      QString text;
+/*      QString text;
       if ( !a.street().isEmpty() )
         text += a.street() + "\n";
 
@@ -172,7 +173,17 @@ void AddressEditWidget::updateAddressEdit()
 
       text += a.extended();
 
-      mAddressTextEdit->setText(text);
+      mAddressTextEdit->setText(text);*/
+      if ( a.type() & KABC::Address::Work ) {
+	mAddressTextEdit->setText(a.formattedAddress(
+	        mAddressee->realName()
+	      , mAddressee->organization()
+	      ));
+      } else {
+	mAddressTextEdit->setText(a.formattedAddress(
+	        mAddressee->realName()
+	      ));
+      }
     }
   }
 
