@@ -215,9 +215,6 @@ bool AbbrowserConduit::_saveAddressBook()
 #endif
 	
 	if (!abChanged) return true;
-//	return (dynamic_cast<KABC::StdAddressBook*>(aBook)->save());
-//	KABC::Ticket* ticket=aBook->requestSaveTicket();
-//	return (aBook) && (aBook->save(ticket) );
 	return (aBook) && (aBook->saveAll());
 }
 
@@ -259,6 +256,7 @@ void AbbrowserConduit::_setAppInfo()
 
 QString AbbrowserConduit::getOtherField(const KABC::Addressee&abEntry) 
 {
+	FUNCTIONSETUP;
 	switch (ePilotOther)
 	{
 		case eOtherPhone:
@@ -285,88 +283,51 @@ QString AbbrowserConduit::getOtherField(const KABC::Addressee&abEntry)
 
 void AbbrowserConduit::setOtherField(KABC::Addressee&abEntry, QString nr) 
 {
-FUNCTIONSETUP;
+//FUNCTIONSETUP;
 	KABC::PhoneNumber phone;
-	KABC::PhoneNumber phone1("asdf", 0);
-#ifdef DEBUG
-	DEBUGCONDUIT<<"PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
 	switch (ePilotOther)
 	{
 		case eOtherPhone:
 			phone=abEntry.phoneNumber(0);
-#ifdef DEBUG
-	DEBUGCONDUIT<<"OtherPhone: "<<abEntry.phoneNumber(0).type()<<", created with 0: "<<phone1.type()<<endl;
-	DEBUGCONDUIT<<"eOtherPhone: PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
 			phone.setNumber(nr);
 			abEntry.insertPhoneNumber(phone);
 			break;
 		case eAssistant:
-#ifdef DEBUG
-	DEBUGCONDUIT<<"Assistant's Name"<<endl;
-#endif
 			abEntry.insertCustom("KADDRESSBOOK", "AssistantsName", nr);
 		case eBusinessFax:
-#ifdef DEBUG
-	DEBUGCONDUIT<<"eBusinessFax: PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
 			phone=abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work);
 			phone.setNumber(nr);
 			abEntry.insertPhoneNumber(phone);
 			break;
 		case eCarPhone:
 			phone=abEntry.phoneNumber(KABC::PhoneNumber::Car);
-#ifdef DEBUG
-	DEBUGCONDUIT<<"eCarPhone: PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
 			phone.setNumber(nr);
 			abEntry.insertPhoneNumber(phone);
 			break;
 		case eEmail2:
-#ifdef DEBUG
-	DEBUGCONDUIT<<"email2 "<<nr<<endl;
-#endif
 			return abEntry.insertEmail(nr);
 		case eHomeFax:
 			phone=abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home);
-#ifdef DEBUG
-	DEBUGCONDUIT<<"eHomeFax: PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
 			phone.setNumber(nr);
 			abEntry.insertPhoneNumber(phone);
 			break;
 		case eTelex:
 			phone=abEntry.phoneNumber(KABC::PhoneNumber::Bbs);
-#ifdef DEBUG
-	DEBUGCONDUIT<<"eTelex: PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
 			phone.setNumber(nr);
 			abEntry.insertPhoneNumber(phone);
 			break;
 		case eTTYTTDPhone:
 			phone=abEntry.phoneNumber(KABC::PhoneNumber::Pcs);
-#ifdef DEBUG
-	DEBUGCONDUIT<<"eTTYTTDPhone: PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
 			phone.setNumber(nr);
 			abEntry.insertPhoneNumber(phone);
 			break;
 	}
-#ifdef DEBUG
-	DEBUGCONDUIT<<"PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
 }
 
 
 KABC::PhoneNumber AbbrowserConduit::getFax(const KABC::Addressee &abEntry)
 {
-	FUNCTIONSETUP;
-	KABC::PhoneNumber phone=abEntry.phoneNumber(KABC::PhoneNumber::Fax | (fPilotFaxHome)?(KABC::PhoneNumber::Home):(KABC::PhoneNumber::Work));
-#ifdef DEBUG
-	DEBUGCONDUIT<<"PhoneNumber: "<<phone.number().latin1()<<", type="<<phone.type()<<endl;
-#endif
-	return abEntry.phoneNumber(KABC::PhoneNumber::Fax | (fPilotFaxHome)?(KABC::PhoneNumber::Home):(KABC::PhoneNumber::Work));
+	return abEntry.phoneNumber(KABC::PhoneNumber::Fax | ( (fPilotFaxHome)?(KABC::PhoneNumber::Home):(KABC::PhoneNumber::Work)) );
 }
 
 
@@ -545,11 +506,11 @@ void AbbrowserConduit::syncPalmRecToPC()
 		if (!r->isDeleted() || (fArchive && archiveRecord))
 		{
 			e=_addToPC(r);
-			if (fArchive && !e.isEmpty() ) 
-			{
-				e.insertCustom(appString, flagString, QString::number(SYNCDEL));
-				aBook->insertAddressee(e);
-			}
+//			if (fArchive && !e.isEmpty() ) 
+//			{
+//				e.insertCustom(appString, flagString, QString::number(SYNCDEL));
+//				aBook->insertAddressee(e);
+//			}
 		}
 	}
 	else
@@ -584,11 +545,8 @@ void AbbrowserConduit::syncPalmRecToPC()
 
 void AbbrowserConduit::syncPCRecToPalm()
 {
-QTimer::singleShot(0,this,SLOT(cleanup()));
-return;
 	FUNCTIONSETUP;
-//QTimer::singleShot(0, this, SLOT(cleanup()));
-//return;
+	
 	if (abiter==aBook->end() || (*abiter).isEmpty()) {
 		pilotindex=0;
 		QTimer::singleShot(0,this,SLOT(syncDeletedRecord()));
@@ -1478,8 +1436,8 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 //	KABC::PhoneNumber phone;
 
 #ifdef DEBUG
-	DEBUGCONDUIT<<endl<<"************************************************************************"<<"Smartly merging:"<<endl;
-	showAdresses(pilotAddress, backupAddress, abEntry);
+//	DEBUGCONDUIT<<endl<<"************************************************************************"<<"Smartly merging:"<<endl;
+//	showAdresses(pilotAddress, backupAddress, abEntry);
 #endif
 
 	res=_smartMergeEntry(abEntry.familyName(), backupAddress, pilotAddress, (int)entryLastname, thisName, i18n("last name"), mergedStr);
@@ -1519,8 +1477,8 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	else if (!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM4", mergedStr);
 
 #ifdef DEBUG
-	DEBUGCONDUIT<<endl<<endl<<"After personal fields:"<<endl<<endl;
-	showAdresses(pilotAddress, backupAddress, abEntry);
+//	DEBUGCONDUIT<<endl<<endl<<"After personal fields:"<<endl<<endl;
+//	showAdresses(pilotAddress, backupAddress, abEntry);
 #endif
 
 	res=_smartMergePhone(abEntry, backupAddress, pilotAddress, PilotAddress::eWork, abEntry.phoneNumber(KABC::PhoneNumber::Work), thisName, i18n("work phone"));
@@ -1561,8 +1519,8 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	
 
 #ifdef DEBUG
-	DEBUGCONDUIT<<endl<<endl<<"After phone fields:"<<endl<<endl;
-	showAdresses(pilotAddress, backupAddress, abEntry);
+//	DEBUGCONDUIT<<endl<<endl<<"After phone fields:"<<endl<<endl;
+//	showAdresses(pilotAddress, backupAddress, abEntry);
 #endif
 	
 	
@@ -1598,8 +1556,8 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 
 
 #ifdef DEBUG
-	DEBUGCONDUIT<<endl<<endl<<"After merge fields:"<<endl<<endl;
-	showAdresses(pilotAddress, backupAddress, abEntry);
+//	DEBUGCONDUIT<<endl<<endl<<"After merge fields:"<<endl<<endl;
+//	showAdresses(pilotAddress, backupAddress, abEntry);
 #endif
 	
 	outPilotAddress = pilotAddress;
@@ -1976,6 +1934,9 @@ int AbbrowserConduit::_getCatId(int catIndex) const
 
 
 // $Log$
+// Revision 1.42  2002/08/16 18:54:06  kainhofe
+// Tried to fix the conduit, but KABC has changed so much that the conduit was totaly broken again. I will not touch the conduit any more until KABC is really solid and doesn't change any more!!!!
+//
 // Revision 1.41  2002/08/15 21:40:14  kainhofe
 // some more work in the addressbook conduit. Does not yet work
 //
