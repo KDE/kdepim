@@ -187,7 +187,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 		if (l.count()>0)
 		{
 			count=1;
-			s.append("<br><b>Credits:</b> ");
+			s.append(i18n("<br><b>Credits:</b> "));
 			for (i=l.begin(); i!=l.end(); ++i)
 			{
 				s.append(QString("%1 (<i>%2</i>)%3")
@@ -285,6 +285,11 @@ void UIDialog::setTabWidget(QTabWidget * w)
 }
 
 // $Log$
+// Revision 1.8  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.7  2002/07/08 15:33:52  binner
 // CVS_SILENT Style guide fix
 //
