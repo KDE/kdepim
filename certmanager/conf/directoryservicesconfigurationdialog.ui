@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>487</width>
-            <height>405</height>
+            <height>411</height>
         </rect>
     </property>
     <property name="caption">
@@ -76,8 +76,33 @@
                     <bool>true</bool>
                 </property>
             </column>
+            <column>
+                <property name="text">
+                    <string>User Name</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Password</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
             <property name="name">
                 <cstring>x500LV</cstring>
+            </property>
+            <property name="allColumnsShowFocus">
+                <bool>true</bool>
             </property>
             <property name="toolTip" stdset="0">
                 <string>Select Directory Services to Use Here</string>

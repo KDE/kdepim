@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>AddDirectoryServiceDialog</class>
 <widget class="QDialog">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>279</width>
-            <height>163</height>
+            <width>389</width>
+            <height>257</height>
         </rect>
     </property>
     <property name="caption">
@@ -25,6 +25,22 @@
         <property name="spacing">
             <number>6</number>
         </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>serverNameLA</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Server name:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>serverNameED</cstring>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="2" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>descriptionED</cstring>
+            </property>
+        </widget>
         <widget class="QLineEdit" row="1" column="1" rowspan="1" colspan="3">
             <property name="name">
                 <cstring>portED</cstring>
@@ -38,9 +54,106 @@
                 <cstring>serverNameED</cstring>
             </property>
         </widget>
-        <widget class="QLineEdit" row="2" column="1" rowspan="1" colspan="3">
+        <widget class="QLabel" row="3" column="0">
             <property name="name">
-                <cstring>descriptionED</cstring>
+                <cstring>usernameLA</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;User name (optional):</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>usernameED</cstring>
+            </property>
+        </widget>
+        <spacer row="5" column="3">
+            <property name="name">
+                <cstring>spacer23</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>60</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLabel" row="4" column="0">
+            <property name="name">
+                <cstring>passwordLA</cstring>
+            </property>
+            <property name="text">
+                <string>Pass&amp;word (optional):</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>passwordED</cstring>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="8" column="2">
+            <property name="name">
+                <cstring>PushButton3</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;OK</string>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="8" column="3">
+            <property name="name">
+                <cstring>PushButton4</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Cancel</string>
+            </property>
+        </widget>
+        <widget class="Line" row="6" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>line1</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <spacer row="7" column="0" rowspan="2" colspan="2">
+            <property name="name">
+                <cstring>spacer21</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>260</width>
+                    <height>21</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>usernameED</cstring>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="4" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>passwordED</cstring>
+            </property>
+            <property name="echoMode">
+                <enum>Password</enum>
             </property>
         </widget>
         <widget class="QLabel" row="2" column="0">
@@ -65,84 +178,6 @@
                 <cstring>portED</cstring>
             </property>
         </widget>
-        <widget class="QLabel" row="0" column="0">
-            <property name="name">
-                <cstring>serverNameLA</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Server name:</string>
-            </property>
-            <property name="buddy" stdset="0">
-                <cstring>serverNameED</cstring>
-            </property>
-        </widget>
-        <spacer row="3" column="3">
-            <property name="name">
-                <cstring>spacer23</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>20</width>
-                    <height>20</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QPushButton" row="5" column="3">
-            <property name="name">
-                <cstring>PushButton4</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Cancel</string>
-            </property>
-        </widget>
-        <widget class="QPushButton" row="5" column="2">
-            <property name="name">
-                <cstring>PushButton3</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;OK</string>
-            </property>
-            <property name="default">
-                <bool>true</bool>
-            </property>
-        </widget>
-        <spacer row="5" column="0" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>spacer21</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>110</width>
-                    <height>21</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="Line" row="4" column="0" rowspan="1" colspan="4">
-            <property name="name">
-                <cstring>line1</cstring>
-            </property>
-            <property name="frameShape">
-                <enum>HLine</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-        </widget>
     </grid>
 </widget>
 <connections>
@@ -163,6 +198,8 @@
     <tabstop>serverNameED</tabstop>
     <tabstop>portED</tabstop>
     <tabstop>descriptionED</tabstop>
+    <tabstop>usernameED</tabstop>
+    <tabstop>passwordED</tabstop>
     <tabstop>PushButton3</tabstop>
     <tabstop>PushButton4</tabstop>
 </tabstops>

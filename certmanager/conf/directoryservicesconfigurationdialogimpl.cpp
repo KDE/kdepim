@@ -41,6 +41,30 @@
 #include <qbuttongroup.h>
 #include <kdebug.h>
 
+class QX500ListViewItem : public QListViewItem
+{
+public:
+  QX500ListViewItem( QListView* lv, QListViewItem* prev,
+                     const QString& serverName,
+                     const QString& portNumber,
+                     const QString& dn,
+                     const QString& username,
+                     const QString& password )
+    : QListViewItem( lv, prev, serverName, portNumber, dn, username ) {
+    setPassword( password );
+  }
+
+  void setPassword( const QString& pass ) {
+    mPassword = pass;
+    setText( 4, pass.isEmpty() ? QString::null : QString::fromLatin1( "******" ) );
+  }
+
+  const QString& password() const { return mPassword; }
+
+private:
+  QString mPassword;
+};
+
 /*
  *  Constructs a DirectoryServicesConfigurationDialogImpl which is a child of 'parent', with the
  *  name 'name' and widget flags set to 'f'
@@ -95,10 +119,17 @@ void DirectoryServicesConfigurationDialogImpl::slotServiceSelected( QListViewIte
     dlg->serverNameED->setText( item->text( 0 ) );
     dlg->portED->setText( item->text( 1 ) );
     dlg->descriptionED->setText( item->text( 2 ) );
+    dlg->usernameED->setText( item->text( 3 ) );
+    QString pass = static_cast<QX500ListViewItem *>( item )->password();
+    dlg->passwordED->setText( pass );
+
     if( dlg->exec() == QDialog::Accepted ) {
         item->setText( 0, dlg->serverNameED->text() );
         item->setText( 1, dlg->portED->text() );
         item->setText( 2, dlg->descriptionED->text() );
+        item->setText( 3, dlg->usernameED->text() );
+        static_cast<QX500ListViewItem *>( item )->setPassword( dlg->passwordED->text() );
+        emit changed();
     }
     delete dlg;
 }
@@ -111,10 +142,12 @@ void DirectoryServicesConfigurationDialogImpl::slotAddService()
 {
     AddDirectoryServiceDialogImpl* dlg = new AddDirectoryServiceDialogImpl( this );
     if( dlg->exec() == QDialog::Accepted ) {
-        (void)new QListViewItem( x500LV, x500LV->lastItem(),
-                                 dlg->serverNameED->text(),
-                                 dlg->portED->text(),
-                                 dlg->descriptionED->text() );
+        (void)new QX500ListViewItem( x500LV, x500LV->lastItem(),
+                                     dlg->serverNameED->text(),
+                                     dlg->portED->text(),
+                                     dlg->descriptionED->text(),
+                                     dlg->usernameED->text(),
+                                     dlg->passwordED->text() );
         emit changed();
     }
 }
@@ -141,10 +174,12 @@ void DirectoryServicesConfigurationDialogImpl::setInitialServices( const KURL::L
     x500LV->clear();
     for( KURL::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
         QString dn = KURL::decode_string( (*it).query().mid( 1 ) ); // decode query and skip leading '?'
-        (void)new QListViewItem( x500LV, x500LV->lastItem(),
-                                 (*it).host(),
-                                 QString::number( (*it).port() ),
-                                 dn );
+        (void)new QX500ListViewItem( x500LV, x500LV->lastItem(),
+                                     (*it).host(),
+                                     QString::number( (*it).port() ),
+                                     dn,
+                                     (*it).user(),
+                                     (*it).pass());
     }
 }
 
@@ -159,6 +194,8 @@ KURL::List DirectoryServicesConfigurationDialogImpl::urlList() const
         url.setHost( item->text( 0 ) );
         url.setPort( item->text( 1 ).toInt() );
         url.setQuery( item->text( 2 ) );
+        url.setUser( item->text( 3 ) );
+        url.setPass( static_cast<QX500ListViewItem *>( item )->password() );
         kdDebug() << url << endl;
         lst << url;
     }
