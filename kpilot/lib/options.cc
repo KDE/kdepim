@@ -138,7 +138,13 @@ QString charExpansion(const char *s)
 	return t;
 }
 
-DEBUGSTREAM & operator << (DEBUGSTREAM & o, const QSize & s)
+ostream & operator << (ostream & o, const QSize & s)
+{
+	o << s.width() << "x" << s.height();
+	return o;
+}
+
+kdbgstream & operator << (kdbgstream & o, const QSize & s)
 {
 	o << s.width() << "x" << s.height();
 	return o;
@@ -158,6 +164,9 @@ int const fname = ((int) options_id);
 
 
 // $Log$
+// Revision 1.1  2001/10/08 21:56:02  adridg
+// Start of making a separate KPilot lib
+//
 // Revision 1.18  2001/09/29 16:26:18  adridg
 // The big layout change
 //

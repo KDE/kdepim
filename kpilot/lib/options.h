@@ -119,7 +119,7 @@
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.3.0a"
+#define KPILOT_VERSION	"4.3.0b"
 
 #ifdef DEBUG
 // * KPilot debugging code looks like:
@@ -171,7 +171,8 @@ QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
 class QSize;
-DEBUGSTREAM& operator << (DEBUGSTREAM&,const QSize &) ;
+ostream& operator << (ostream&,const QSize &) ;
+kdbgstream& operator << (kdbgstream&,const QSize &);
 
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
@@ -187,7 +188,7 @@ DEBUGSTREAM& operator << (DEBUGSTREAM&,const QSize &) ;
 //
 // fname gets a weird type that is
 // incompatible with kdWarning() and kdError(), leading to warnings
-// if you mix them. Use __FUNCTION__ instead.
+// if you mix them. Use k_funcinfo instead.
 //
 //
 #define FUNCTIONSETUP
@@ -213,6 +214,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.5  2002/01/15 22:43:35  adridg
+// Backport to 2.2.2
+//
 // Revision 1.4  2002/01/14 12:49:27  adridg
 // CVS_SILENT: Avoid compile warnings
 //
