@@ -50,7 +50,7 @@ static const about_data authors[] = {
   { "Kalle Dalheimer", I18N_NOOP("Original Author"), "kalle@kde.org", 0 },
   { "Jesper Petersen", I18N_NOOP("Original Author"), "blackie@kde.org", 0 },
 };
- 
+
 
 static const about_data credits[] = {
   { "David Faure",
@@ -72,7 +72,7 @@ static const about_data credits[] = {
 
 
 AboutData::AboutData()
-  : KAboutData( "kgpgcertmanager", I18N_NOOP("KGpgCertManager"),
+  : KAboutData( "kleopatra", I18N_NOOP("Kleopatra"),
 		kleopatra_version, description, License_GPL,
 		"(c) 2002 Steffen Hansen, Jesper Pedersen,\n"
 		"Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n\n"

@@ -1,7 +1,7 @@
 /*
     configuredialog.cpp
 
-    This file is part of kgpgcertmanager
+    This file is part of kleopatra
     Copyright (C) 2000 Espen Sand, espen@kde.org
     Copyright (C) 2001-2002 Marc Mutz <mutz@kde.org>
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -46,7 +46,7 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal 
   KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
   showButton( User1, true );
 
-  addModule ( "kgpgcertmanager_config_dirserv", false );
+  addModule ( "kleopatra_config_dirserv", false );
 
   // We store the size of the dialog on hide, because otherwise
   // the KCMultiDialog starts with the size of the first kcm, not

@@ -1,7 +1,7 @@
 /*
     configuredialog_p.cpp
 
-    This file is part of kgpgcertmanager
+    This file is part of kleopatra
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
@@ -169,10 +169,10 @@ void DirectoryServicesConfigurationPage::defaults()
 
 extern "C"
 {
-  KCModule *create_kgpgcertmanager_config_dirserv( QWidget *parent, const char * )
+  KCModule *create_kleopatra_config_dirserv( QWidget *parent, const char * )
   {
     DirectoryServicesConfigurationPage *page =
-      new DirectoryServicesConfigurationPage( parent, "kgpgcertmanager_config_dirserv" );
+      new DirectoryServicesConfigurationPage( parent, "kleopatra_config_dirserv" );
     return page;
   }
 }

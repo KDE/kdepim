@@ -1,7 +1,7 @@
 /*
     configuredialog_p.h
 
-    This file is part of kgpgcertmanager
+    This file is part of kleopatra
     Copyright (C) 2000 Espen Sand, espen@kde.org
     Copyright (C) 2001-2002 Marc Mutz <mutz@kde.org>
     Copyright (c) 2004 Klarälvdalens Datakonsult AB

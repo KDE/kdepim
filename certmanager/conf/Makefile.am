@@ -2,14 +2,14 @@ AM_CPPFLAGS = -DLIBKLEOPATRA_NO_COMPAT -I$(srcdir)/../lib -I$(srcdir)/../lib/ui 
 
 METASOURCES = AUTO
 
-# the stuff that gets compiled into kgpgcertmanager
+# the stuff that gets compiled into kleopatra
 noinst_LTLIBRARIES = libconf.la
 libconf_la_SOURCES = configuredialog.cpp
 
-kde_module_LTLIBRARIES = kcm_kgpgcertmanager.la
+kde_module_LTLIBRARIES = kcm_kleopatra.la
 
-kcm_kgpgcertmanager_la_SOURCES = configuredialog_p.cpp
-kcm_kgpgcertmanager_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
-kcm_kgpgcertmanager_la_LIBADD = ../lib/libkleopatra.la $(LIB_KDEUI)
+kcm_kleopatra_la_SOURCES = configuredialog_p.cpp
+kcm_kleopatra_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
+kcm_kleopatra_la_LIBADD = ../lib/libkleopatra.la $(LIB_KDEUI)
 
-kde_services_DATA = kgpgcertmanager_config_dirserv.desktop
+kde_services_DATA = kleopatra_config_dirserv.desktop
