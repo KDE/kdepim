@@ -55,6 +55,30 @@ using namespace KMime::Types;
 
 namespace KMime {
 
+namespace Types {
+
+  QString AddrSpec::asString() const {
+    bool needsQuotes = false;
+    QString result;
+    for ( unsigned int i = 0 ; i < localPart.length() ; ++i ) {
+      const char ch = localPart[i].latin1();
+      if ( ch == '.' || isAText( ch ) )
+	result += ch;
+      else {
+	needsQuotes = true;
+	if ( ch == '\\' || ch == '"' )
+	  result += '\\';
+	result += ch;
+      }
+    }
+    if ( needsQuotes )
+      return '"' + result + "\"@" + domain;
+    else
+      return result + '@' + domain;
+  }
+
+};
+
 namespace HeaderParsing {
 
 // parse the encoded-word (scursor points to after the initial '=')
@@ -1008,7 +1032,7 @@ bool parseAddress( const char* & scursor, const char * const send,
 }
 
 bool parseAddressList( const char* & scursor, const char * const send,
-		       QValueList<Address> & result, bool isCRLF ) {
+		       AddressList & result, bool isCRLF ) {
   while ( scursor != send ) {
     eatCFWS( scursor, send, isCRLF );
     // end of header: this is OK.

@@ -53,19 +53,23 @@ namespace Types {
   };
 
   struct AddrSpec {
+    QString asString() const;
     QString localPart;
     QString domain;
   };
+  typedef QValueList<AddrSpec> AddrSpecList;
 
   struct Mailbox {
     QString displayName;
     AddrSpec addrSpec;
   };
+  typedef QValueList<Mailbox> MailboxList;
 
   struct Address {
     QString displayName;
-    QValueList<Mailbox> mailboxList;
+    MailboxList mailboxList;
   };
+  typedef QValueList<Address> AddressList;
 
   struct DateTime {
     time_t time;            // secs since 1.1.1970, 0:00 UTC/GMT
@@ -156,7 +160,7 @@ namespace HeaderParsing {
   bool parseAddress( const char* & scursor, const char * const send,
 		     Types::Address & result, bool isCRLF=false );
   bool parseAddressList( const char* & scursor, const char * const send,
-			 QValueList<Types::Address> & result, bool isCRLF=false );
+			 Types::AddressList & result, bool isCRLF=false );
 
   bool parseParameter( const char* & scursor, const char * const send,
 		       QPair<QString,Types::QStringOrQPair> & result,
