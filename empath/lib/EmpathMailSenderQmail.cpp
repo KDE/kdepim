@@ -151,8 +151,9 @@ EmpathMailSenderQmail::qmailReceivedStderr(KProcess *, char * buf, int)
 EmpathMailSenderQmail::saveConfig()
 {
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_SENDING);
-    c->writeEntry(EmpathConfig::S_QMAIL, qmailLocation_);
+    using namespace EmpathConfig;
+    c->setGroup(GROUP_SENDING);
+    c->writeEntry(S_QMAIL, qmailLocation_);
 }
 
     void

@@ -224,11 +224,14 @@ EmpathMailSender::update()
     impl_ = 0L;
     
     KConfig * c = KGlobal::config();
-    c->setGroup(EmpathConfig::GROUP_GENERAL);
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_GENERAL);
     
     OutgoingServerType st =
         (OutgoingServerType)
-        (c->readUnsignedNumEntry(EmpathConfig::S_TYPE));
+        (c->readUnsignedNumEntry(S_TYPE));
     
     switch (st) {
         
