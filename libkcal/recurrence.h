@@ -300,6 +300,9 @@ class Recurrence
     /** Returns the default method for handling yearly recurrences of February 29th. */
     static Feb29Type setFeb29YearlyTypeDefault()  { return mFeb29YearlyDefaultType; }
 
+    /** Upper date limit for recurrences */
+    static const QDate MAX_DATE;
+
     /**
       Debug output.
     */
@@ -368,6 +371,7 @@ class Recurrence
     QDate getLastDateInMonth(const QDate& latestDate) const;
     QDate getFirstDateInYear(const QDate& earliestDate) const;
     QDate getLastDateInYear(const QDate& latestDate) const;
+    int   maxMonthlyIterations() const;
 
   private:
     // Prohibit copying

@@ -32,6 +32,7 @@
 
 using namespace KCal;
 
+const QDate Recurrence::MAX_DATE(3000, 1, 1);   // Maximum date = 1-Jan-3000
 Recurrence::Feb29Type Recurrence::mFeb29YearlyDefaultType = Recurrence::rMar1;
 
 
@@ -1167,10 +1168,23 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
       // Check for the first later day in the current month
       if (!notThisMonth)
         nextDate = getFirstDateInMonth(earliestDate);
-      if (!nextDate.isValid()  &&  earliestDate.day() > 1) {
-        // Check for a day in the next scheduled month
-        int months = startMonth - 1 + monthsAhead + rFreq;
-        nextDate = getFirstDateInMonth(QDate(startYear + months/12, months%12 + 1, 1));
+      if (!nextDate.isValid()) {
+        /* Check for a day in the next scheduled month.
+         * The next check may fail if, for example, it's the 31st day of the month
+         * or the 5th Monday, and the month being checked is February or a 30-day month,
+         * so limit the number of iterations.
+         */
+        int maxIterations = maxMonthlyIterations();
+		QDate end = (rDuration >= 0) ? endDate() : MAX_DATE;
+        int maxMonthsAhead = (end.year() - startYear)*12 + end.month() - startMonth;
+		monthsAhead += rFreq;
+        for (int i = 0;  i < maxIterations && monthsAhead <= maxMonthsAhead;  ++i) {
+          int months = startMonth - 1 + monthsAhead;
+          nextDate = getFirstDateInMonth(QDate(startYear + months/12, months%12 + 1, 1));
+          if (nextDate.isValid())
+            break;
+          monthsAhead += rFreq;
+        }
       }
       break;
     }
@@ -1187,11 +1201,12 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
       // Check for a date in the next scheduled year
       if (!nextDate.isValid()) {
         startYear += yearsAhead + rFreq;
-        // The only valid reason for failure after the next check is that it only recurs
-        // in a leap year. Since certain leap year recurrences could potentially never
-        // actually occur (e.g. recurring on the 366th day of the year every 4 years,
-        // starting in a non-leap year), limit the iterations to 8 (to allow for possible
-        // century non-leap years).
+        /* The only valid reason for failure after the next check is that it only recurs
+         * in a leap year. Since certain leap year recurrences could potentially never
+         * actually occur (e.g. recurring on the 366th day of the year every 4 years,
+         * starting in a non-leap year), limit the iterations to 8 (to allow for possible
+         * century non-leap years).
+         */
         for (int i = 0;  i < 8;  ++i) {
           nextDate = getFirstDateInYear(QDate(startYear, 1, 1));
           if (nextDate.isValid())
@@ -1267,12 +1282,22 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
       // Check for the last earlier day in the current month
       if (!notThisMonth)
         prevDate = getLastDateInMonth(latestDate);
-      if (!prevDate.isValid()  &&  latestDate.day() < latestDate.daysInMonth()) {
-        // Check for a day in the previous scheduled month
+      if (!prevDate.isValid()) {
+        /* Check for a day in the previous scheduled month
+         * The next check may fail if, for example, it's the 31st day of the month
+         * or the 5th Monday, and the month being checked is February or a 30-day month,
+         * so limit the number of iterations.
+         */
         if (!notThisMonth)
           monthsAhead -= rFreq;
-        int months = startMonth + monthsAhead;   // get the month after the one that recurs
-        prevDate = getLastDateInMonth(QDate(startYear + months/12, months%12 + 1, 1).addDays(-1));
+        int maxIterations = maxMonthlyIterations();
+        for (int i = 0;  i < maxIterations && monthsAhead >= 0;  ++i) {
+          int months = startMonth + monthsAhead;   // get the zero-based month after the one that recurs
+          prevDate = getLastDateInMonth(QDate(startYear + months/12, months%12 + 1, 1).addDays(-1));
+          if (prevDate.isValid())
+            break;
+          monthsAhead -= rFreq;
+        }
       }
       break;
     }
@@ -1286,11 +1311,22 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
       // Check for the first later date in the current year
       if (!notThisYear)
         prevDate = getLastDateInYear(latestDate);
-      if (!prevDate.isValid()  &&  latestDate.dayOfYear() < latestDate.daysInYear()) {
+      if (!prevDate.isValid()) {
         // Check for a date in the next scheduled year
         if (!notThisYear)
           yearsAhead -= rFreq;
-        prevDate = getLastDateInYear(QDate(startYear + yearsAhead, 12, 31));
+        /* The only valid reason for failure after the next check is that it only recurs
+         * in a leap year. Since certain leap year recurrences could potentially never
+         * actually occur (e.g. recurring on the 366th day of the year every 4 years,
+         * starting in a non-leap year), limit the iterations to 8 (to allow for possible
+         * century non-leap years).
+         */
+        for (int i = 0;  i < 8 && yearsAhead >= 0;  ++i) {
+          prevDate = getLastDateInYear(QDate(startYear + yearsAhead, 12, 31));
+          if (prevDate.isValid())
+            break;
+          yearsAhead -= rFreq;
+        }
       }
       break;
     }
@@ -1315,6 +1351,47 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
   return prevDate;
 }
 
+int Recurrence::maxMonthlyIterations() const
+{
+  /* Find the maximum number of iterations which may be needed to reach the
+   * next actual occurrence of a monthly recurrence.
+   * More than one iteration may be needed if, for example, it's the 31st day of
+   * the month or the 5th Monday, and the month being checked is February or a
+   * 30-day month.
+   * The following recurrences may never occur:
+   * - For rMonthlyDay: if the frequency is a whole number of years.
+   * - For rMonthlyPos: if the frequency is an even whole number of years.
+   * The maximum number of iterations needed, assuming that it does actually occur,
+   * was found empirically and is:
+   * - For rMonthlyDay: 6, or 8 if the frequency is a whole number of years. 
+   * - For rMonthlyPos: 364 if frequency is a multiple of 7 years
+   *                    7 if frequency is a multiple of 4 years
+   *                    14 if frequency is a multiple of 2 years
+   *                    28 if frequency is a multiple of 1 year
+   *                    25 otherwise, except for certain special cases.
+   */
+  if (recurs == rMonthlyDay)
+    return (rFreq % 12) ? 6 : 8;
+  if (rFreq % 12 == 0) {
+    // Some of these frequencies may never occur
+    return (rFreq % 84 == 0) ? 364
+         : (rFreq % 48 == 0) ? 7
+         : (rFreq % 24 == 0) ? 14 : 28;
+  }
+  // All other frequencies will occur sometime
+  if (rFreq > 120)
+    return 364;    // frequencies of > 10 years will soon hit the date limit
+  switch (rFreq) {
+	case 23:   return 50;
+	case 46:   return 38;
+	case 56:   return 138;
+	case 66:   return 36;
+	case 89:   return 54;
+	case 112:  return 253;
+	default:   return 25;
+  }
+}
+ 
 void Recurrence::setDailySub(short type, int freq, int duration)
 {
   mUseCachedEndDT = false;
