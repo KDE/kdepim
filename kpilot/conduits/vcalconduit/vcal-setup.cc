@@ -66,6 +66,8 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n,
 
 	fConfigWidget->fCalendarFile->setMode( KFile::File | KFile::LocalOnly );
 	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)");
+
+	fConduitName=i18n("Calendar");
 }
 
 VCalWidgetSetup::~VCalWidgetSetup()

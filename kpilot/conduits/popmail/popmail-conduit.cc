@@ -281,6 +281,7 @@ PopMailConduit::PopMailConduit(KPilotDeviceLink *d,
 #ifdef DEBUG
 	DEBUGCONDUIT<<popmail_conduit_id<<endl;
 #endif
+	fConduitName=i18n("POP/Mail");
 }
 
 PopMailConduit::~PopMailConduit()

@@ -80,6 +80,7 @@ DOCConduit::DOCConduit(KPilotDeviceLink * o,
 #ifdef DEBUG
 	DEBUGCONDUIT<<doc_conduit_id<<endl;
 #endif
+	fConduitName=i18n("DOC");
 }
 
 

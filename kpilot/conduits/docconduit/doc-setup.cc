@@ -55,6 +55,8 @@ ConduitConfig(w, n, a)
 
 	fConfigWidget->tabWidget->adjustSize();
 	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+
+	fConduitName=i18n("DOC");
 }
 
 DOCWidgetSetup::~DOCWidgetSetup()

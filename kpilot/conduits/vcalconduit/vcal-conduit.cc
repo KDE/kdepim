@@ -167,6 +167,7 @@ VCalConduit::VCalConduit(KPilotDeviceLink *d,
 #ifdef DEBUG
 	DEBUGCONDUIT<<vcalconduit_id<<endl;
 #endif
+	fConduitName=i18n("Calendar");
 }
 
 

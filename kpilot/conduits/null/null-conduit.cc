@@ -69,6 +69,7 @@ NullConduit::NullConduit(KPilotDeviceLink *d,
 #ifdef DEBUG
 	DEBUGCONDUIT<<null_conduit_id<<endl;
 #endif
+	fConduitName=i18n("Null");
 }
 
 NullConduit::~NullConduit()
@@ -91,7 +92,7 @@ NullConduit::~NullConduit()
 	}
 
 	fConfig->setGroup(NullConduitFactory::group);
-	
+
 	bool r = fConfig->readBoolEntry(NullConduitFactory::failImmediately);
 	if (r)
 	{

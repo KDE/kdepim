@@ -159,6 +159,7 @@ PopmailWidgetSetup::PopmailWidgetSetup(QWidget *w, const char *n,
 	addAboutPage(false,PopmailConduitFactory::about());
 
 	t->adjustSize();
+	fConduitName=i18n("POP/Mail");
 }
 
 PopmailWidgetSetup::~PopmailWidgetSetup()

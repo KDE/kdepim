@@ -52,6 +52,7 @@ ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n,
 {
 	FUNCTIONSETUP;
 	fConfigWidget->tabWidget->setTabLabel(fConfigWidget->tabWidget->page(0), i18n("ToDo File"));
+	fConduitName = i18n("To-do");
 }
 
 ToDoWidgetSetup::~ToDoWidgetSetup()

@@ -63,6 +63,7 @@ MALWidgetSetup::MALWidgetSetup(QWidget *w, const char *n,
 
 	fConfigWidget->tabWidget->adjustSize();
 	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+	fConduitName=i18n("MAL");
 }
 
 MALWidgetSetup::~MALWidgetSetup()

@@ -93,6 +93,7 @@ MALConduit::MALConduit(KPilotDeviceLink * o,
 #ifdef DEBUG
 	DEBUGCONDUIT<<MAL_conduit_id<<endl;
 #endif
+	fConduitName=i18n("MAL");
 }
 
 

@@ -49,6 +49,7 @@ KNotesConfigBase::KNotesConfigBase(QWidget *w, const char *n) :
 	fConfigWidget = new KNotesWidget(w);
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,KNotesConduitFactory::about());
 	fWidget = fConfigWidget;
+	fConduitName=i18n("KNotes");
 }
 
 void KNotesConfigBase::commit(KConfig *fConfig)
@@ -73,6 +74,7 @@ KNotesWidgetSetup::KNotesWidgetSetup(QWidget *w, const char *n,
 {
 	FUNCTIONSETUP;
 	fConfigBase = new KNotesConfigBase(widget(),"KNotesConfig");
+	fConduitName=i18n("KNotes");
 }
 
 KNotesWidgetSetup::~KNotesWidgetSetup()

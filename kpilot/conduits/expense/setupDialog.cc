@@ -86,6 +86,7 @@ ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n,
 	fConfigWidget->setMinimumSize(s);
 
 	(void) setupDialog_id;
+	fConduitName=i18n("Expense");
 }
 
 ExpenseWidgetSetup::~ExpenseWidgetSetup()

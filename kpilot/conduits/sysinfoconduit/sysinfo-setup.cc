@@ -106,6 +106,7 @@ SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
 		this,SLOT(modified()));
 	QObject::connect(fConfigWidget->fOutputType,SIGNAL(clicked(int)),
 		this,SLOT(modified()));
+	fConduitName=i18n("SysInfo");
 }
 
 void SysInfoWidgetConfig::commit(KConfig *fConfig)
@@ -192,6 +193,7 @@ SysInfoWidgetSetup::SysInfoWidgetSetup(QWidget *w, const char *n,
 	FUNCTIONSETUP;
 
 	fConfigBase = new SysInfoWidgetConfig(widget(),"ConfigWidget");
+	fConduitName = i18n("SysInfo");
 }
 
 SysInfoWidgetSetup::~SysInfoWidgetSetup()

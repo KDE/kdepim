@@ -196,6 +196,7 @@ ExpenseConduit::ExpenseConduit(KPilotDeviceLink *d,
 #ifdef DEBUG
 	DEBUGCONDUIT<<expense_id<<endl;
 #endif
+	fConduitName=i18n("Expense");
 }
 
 ExpenseConduit::~ExpenseConduit()

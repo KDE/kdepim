@@ -158,6 +158,7 @@ SysInfoConduit::SysInfoConduit(KPilotDeviceLink * o,
 #ifdef DEBUG
 	DEBUGCONDUIT<<SysInfo_conduit_id<<endl;
 #endif
+	fConduitName=i18n("SysInfo");
 }
 
 
