@@ -39,7 +39,7 @@ class ExportWebDialog : public KDialogBase
     void slotDataReq(KIO::Job *,QByteArray &data);
 
   protected slots:
- 
+    void slotOutputFileChanged(const QString &);
   signals:
 
   protected:

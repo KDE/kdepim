@@ -96,8 +96,14 @@ void ExportWebDialog::setupGeneralPage()
   QPushButton *browseButton = new QPushButton(i18n("Browse"),outputFileLayout);
   QObject::connect(browseButton, SIGNAL(clicked()),
                    this, SLOT(browseOutputFile()));
-  
+  connect(mOutputFileEdit, SIGNAL(textChanged ( const QString & )),this,SLOT(slotOutputFileChanged(const QString &)));
+  enableButton(KDialogBase::User1,!mOutputFileEdit->text().isEmpty());
   topLayout->addStretch(1);
+}
+
+void ExportWebDialog::slotOutputFileChanged(const QString &text)
+{
+  enableButton(KDialogBase::User1,!text.isEmpty());
 }
 
 void ExportWebDialog::setupTodoPage()
