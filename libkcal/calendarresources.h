@@ -25,8 +25,11 @@
 #include <qmap.h>
 
 #include "calendar.h"
+#include "resourcecalendar.h"
 
 #include <kresources/resourcemanager.h>
+
+class QWidget;
 
 namespace KCal {
 
@@ -67,10 +70,14 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     class AskDestinationPolicy : public DestinationPolicy
     {
       public:
-        AskDestinationPolicy( CalendarResourceManager *manager )
-          : DestinationPolicy( manager ) {}
+        AskDestinationPolicy( CalendarResourceManager *manager,
+                              QWidget *parent = 0 )
+          : DestinationPolicy( manager ), mParent( parent ) {}
 
         ResourceCalendar *destination( Incidence * );
+    
+      private:
+        QWidget *mParent;
     };
 
     /** constructs a new calendar that uses the ResourceManager for "calendar" */

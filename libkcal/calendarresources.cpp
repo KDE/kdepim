@@ -37,6 +37,7 @@
 #include "filestorage.h"
 
 #include <kresources/resourcemanager.h>
+#include <kresources/resourceselectdialog.h>
 
 #include "resourcecalendar.h"
 #include "resourcelocal.h"
@@ -52,7 +53,17 @@ ResourceCalendar *CalendarResources::StandardDestinationPolicy::destination( Inc
 
 ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence * )
 {
-  return 0;
+  QPtrList<KRES::Resource> list;
+
+  CalendarResourceManager::ActiveIterator it;
+  for( it = resourceManager()->activeBegin();
+       it != resourceManager()->activeEnd(); ++it ) {
+    list.append( *it );
+  }
+  
+  KRES::Resource *r;
+  r = KRES::ResourceSelectDialog::getResource( list, mParent );
+  return static_cast<ResourceCalendar *>( r );
 }
 
 CalendarResources::CalendarResources()
