@@ -38,7 +38,7 @@ class KSyncView : public QWidget
     /** Destructor for the main view */
     ~KSyncView();
 
-    enum { TypeCalendar=0, TypeBookmarks=1 };
+    enum { TypeCalendar, TypeBookmarks, TypeAddressBook };
 
     /** contains the implementation for printing functionality */
     void print(QPrinter *pPrinter);

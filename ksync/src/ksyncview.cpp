@@ -18,6 +18,7 @@
 #include <ksyncer.h>
 #include <calendarsyncee.h>
 #include <bookmarksyncee.h>
+#include <addressbooksyncee.h>
 #include <ksyncuikde.h>
 
 #include "ksync.h"
@@ -51,6 +52,7 @@ KSyncView::KSyncView(QWidget *parent, const char *name) :
   mTypeCombo = new QComboBox(this);
   mTypeCombo->insertItem(i18n("Calendar"),TypeCalendar);
   mTypeCombo->insertItem(i18n("Bookmarks"),TypeBookmarks);
+  mTypeCombo->insertItem(i18n("Addressbook"),TypeAddressBook);
   mCurrentType = mTypeCombo->currentItem();
   connect(mTypeCombo,SIGNAL(activated(int)),SLOT(reloadSyncees()));
 
@@ -181,6 +183,9 @@ KSyncee *KSyncView::createSyncee(const KURL &url)
   switch (mTypeCombo->currentItem()) {
     case TypeBookmarks:
       syncee = new BookmarkSyncee();
+      break;
+    case TypeAddressBook:
+      syncee = new AddressBookSyncee();
       break;
     case TypeCalendar:
     default:

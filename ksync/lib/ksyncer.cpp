@@ -71,6 +71,8 @@ void KSyncee::replaceEntry(KSyncEntry *oldEntry,KSyncEntry *newEntry)
 
 bool KSyncee::hasChanged(KSyncEntry *entry)
 {
+  if ( entry->timestamp().isEmpty() ) return true;
+
   mStatusLog->setGroup(entry->id());
   QString timestamp = mStatusLog->readEntry("Timestamp");
 

@@ -11,7 +11,7 @@ class KSyncUi;
 class KSyncee;
 
 /**
-  @short An entry of a dataset ,which is to be synced.
+  @short An entry of a dataset which is to be synced.
   @author Cornelius Schumacher
   @see Ksyncee, KSyncer
   
@@ -46,6 +46,9 @@ class KSyncEntry
       to another KSyncee data set, the timestamp has to be the same on both
       entries. If the user has changed the entry in one data set the timestamp
       has to be different.
+      
+      Return QString::null, if there is no timestamp available. This means that
+      the user has to manually select which entry is the new one.
     */
     virtual QString timestamp() = 0;
     /**
