@@ -38,6 +38,8 @@ class Ticket;
 
 namespace KPIM {
 class AddresseeView;
+class CategoryEditDialog;
+class CategorySelectDialog;
 }
 
 class KAboutData;
@@ -315,6 +317,9 @@ class KABCore : public KAB::Core
     void configurationChanged();
     void addressBookChanged();
 
+    void categoriesSelected( const QStringList& );
+    void editCategories();
+
   private:
     void initGUI();
     void initActions();
@@ -334,6 +339,8 @@ class KABCore : public KAB::Core
     FilterSelectionWidget *mFilterSelectionWidget;
     IncSearchWidget *mIncSearchWidget;
     KPIM::AddresseeView *mDetails;
+    KPIM::CategorySelectDialog *mCategorySelectDialog;
+    KPIM::CategoryEditDialog *mCategoryEditDialog;
     QWidget *mDetailsPage;
     QSplitter *mDetailsSplitter;
     QSplitter *mExtensionBarSplitter;

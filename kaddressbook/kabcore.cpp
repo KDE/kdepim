@@ -49,6 +49,7 @@
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
 #include <libkdepim/addresseeview.h>
+#include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
 
 #include "addresseeutil.h"
@@ -71,8 +72,8 @@
 KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
-    mExtensionManager( 0 ), mLdapSearchDialog( 0 ),
-    mReadWrite( readWrite ), mModified( false )
+    mExtensionManager( 0 ), mCategorySelectDialog( 0 ), mCategoryEditDialog( 0 ),
+    mLdapSearchDialog( 0 ), mReadWrite( readWrite ), mModified( false )
 {
   mWidget = new QWidget( parent, name );
 
@@ -458,44 +459,6 @@ void KABCore::setWhoAmI()
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
   if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ) ) == KMessageBox::Yes )
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
-}
-
-void KABCore::setCategories()
-{
-  KPIM::CategorySelectDialog dlg( KABPrefs::instance(), mWidget, "", true );
-  if ( !dlg.exec() )
-    return;
-
-  bool merge = false;
-  QString msg = i18n( "Merge with existing categories?" );
-  if ( KMessageBox::questionYesNo( mWidget, msg ) == KMessageBox::Yes )
-    merge = true;
-
-  QStringList categories = dlg.selectedCategories();
-
-  QStringList uids = mViewManager->selectedUids();
-  QStringList::Iterator it;
-  for ( it = uids.begin(); it != uids.end(); ++it ) {
-    KABC::Addressee addr = mAddressBook->findByUid( *it );
-    if ( !addr.isEmpty() ) {
-      if ( !merge )
-        addr.setCategories( categories );
-      else {
-        QStringList addrCategories = addr.categories();
-        QStringList::Iterator catIt;
-        for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-          if ( !addrCategories.contains( *catIt ) )
-            addrCategories.append( *catIt );
-        }
-        addr.setCategories( addrCategories );
-      }
-
-      mAddressBook->insertAddressee( addr );
-    }
-  }
-
-  if ( uids.count() > 0 )
-    setModified( true );
 }
 
 void KABCore::setSearchFields( const KABC::Field::List &fields )
@@ -1023,6 +986,67 @@ void KABCore::updateActionMenu()
     mActionRedo->setText( i18n( "Redo %1" ).arg( redo->top()->name() ) );
 
   mActionRedo->setEnabled( !redo->isEmpty() );
+}
+
+void KABCore::setCategories()
+{
+  // Show the category dialog
+  if ( mCategorySelectDialog == 0 ) {
+    mCategorySelectDialog = new KPIM::CategorySelectDialog( KABPrefs::instance(), mWidget );
+    connect( mCategorySelectDialog, SIGNAL( categoriesSelected( const QStringList& ) ),
+             SLOT( categoriesSelected( const QStringList& ) ) );
+    connect( mCategorySelectDialog, SIGNAL( editCategories() ), SLOT( editCategories() ) );
+  }
+
+  QStringList selected = mCategorySelectDialog->selectedCategories();
+  mCategorySelectDialog->setCategories();
+  mCategorySelectDialog->setSelected( selected );
+  mCategorySelectDialog->show();
+  mCategorySelectDialog->raise();
+}
+
+void KABCore::categoriesSelected( const QStringList &categories )
+{
+  bool merge = false;
+  QString msg = i18n( "Merge with existing categories?" );
+  if ( KMessageBox::questionYesNo( mWidget, msg ) == KMessageBox::Yes )
+    merge = true;
+
+  QStringList uids = mViewManager->selectedUids();
+  QStringList::ConstIterator it;
+  for ( it = uids.begin(); it != uids.end(); ++it ) {
+    KABC::Addressee addr = mAddressBook->findByUid( *it );
+    if ( !addr.isEmpty() ) {
+      if ( !merge )
+        addr.setCategories( categories );
+      else {
+        QStringList addrCategories = addr.categories();
+        QStringList::ConstIterator catIt;
+        for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
+          if ( !addrCategories.contains( *catIt ) )
+            addrCategories.append( *catIt );
+        }
+        addr.setCategories( addrCategories );
+      }
+
+      mAddressBook->insertAddressee( addr );
+    }
+  }
+
+  if ( uids.count() > 0 )
+    setModified( true );
+}
+
+void KABCore::editCategories()
+{
+  if ( mCategoryEditDialog == 0 ) {
+    mCategoryEditDialog = new KPIM::CategoryEditDialog( KABPrefs::instance(), mWidget );
+    connect( mCategoryEditDialog, SIGNAL( categoryConfigChanged() ),
+             SLOT( setCategories() ) );
+  }
+  
+  mCategoryEditDialog->show();
+  mCategoryEditDialog->raise();
 }
 
 #include "kabcore.moc"
