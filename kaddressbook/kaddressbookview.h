@@ -33,6 +33,7 @@
 #include "filter.h"
 #include "viewconfigurewidget.h"
 
+class KABCore;
 class KConfig;
 
 class QDropEvent;
@@ -144,6 +145,13 @@ class KAddressBookView : public QWidget
      */
     KABC::AddressBook *addressBook() const;
 
+
+    /**
+      Sets the KABCore class, this is an interim solution, which will be 
+      abolished as soon as the interfaces are ready.
+     */
+    void setCore( KABCore *core );
+
   public slots:
     /**
       Must be overloaded in subclasses to refresh the view.
@@ -160,6 +168,15 @@ class KAddressBookView : public QWidget
       is equal to QString::null, then all addressees should be selected.
      */
     virtual void setSelected( QString uid = QString::null, bool selected = true ) = 0;
+
+    /**
+      Call this slot to popup a rmb menu.
+
+      @param point The position where the menu shall appear
+      @param uids The uid list of affected contacts. If the list is empty, all 
+                  selected contacts will used.
+     */
+    void popup( const QPoint &point, const QStringList &uids = QStringList() );
 
   signals:
     /**
@@ -233,6 +250,7 @@ class KAddressBookView : public QWidget
     KABC::Field::List mFieldList;
     
     QWidget *mViewWidget;
+    KABCore *mCore;
 };
 
 class ViewFactory : public KLibFactory

@@ -60,6 +60,7 @@ class KAddressBookIconView : public KAddressBookView
   protected slots:
     void addresseeExecuted(QIconViewItem *item);
     void addresseeSelected();
+    void rmbClicked( QIconViewItem*, const QPoint& );
   
   private:
     AddresseeIconView *mIconView;

@@ -56,14 +56,21 @@ friend class ContactListView;
     virtual void reconstructListView();
 
   protected slots:
-    /** Called whenever the user selects an addressee in the list view.
+    /**
+      Called whenever the user selects an addressee in the list view.
     */
     void addresseeSelected();
 
-    /** Called whenever the user executes an addressee. In terms of the
-    * list view, this is probably a double click
+    /**
+      Called whenever the user executes an addressee. In terms of the
+      list view, this is probably a double click
     */
     void addresseeExecuted(QListViewItem*);
+
+    /**
+      RBM menu called.
+     */
+    void rmbClicked( KListView*, QListViewItem*, const QPoint& );
 
   private:
     QVBoxLayout *mainLayout;

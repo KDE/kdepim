@@ -175,6 +175,8 @@ KAddressBookCardView::KAddressBookCardView( KABC::AddressBook *ab,
             this, SIGNAL(dropped(QDropEvent*)));
     connect(mCardView, SIGNAL(startAddresseeDrag()),
             this, SIGNAL(startDrag()));
+    connect( mCardView, SIGNAL( contextMenuRequested( CardViewItem*, const QPoint& ) ),
+             this, SLOT( rmbClicked( CardViewItem*, const QPoint& ) ) );
 }
 
 KAddressBookCardView::~KAddressBookCardView()
@@ -375,6 +377,11 @@ void KAddressBookCardView::addresseeSelected()
     if (!found)
         emit selected(QString::null);
 
+}
+
+void KAddressBookCardView::rmbClicked( CardViewItem*, const QPoint &point )
+{
+  popup( point );
 }
 
 #include "kaddressbookcardview.moc"

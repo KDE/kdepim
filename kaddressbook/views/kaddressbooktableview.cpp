@@ -110,6 +110,8 @@ void KAddressBookTableView::reconstructListView()
           SIGNAL(startDrag()));
   connect(mListView, SIGNAL(addresseeDropped(QDropEvent*)), this,
           SIGNAL(dropped(QDropEvent*)));
+  connect( mListView, SIGNAL( contextMenu( KListView*, QListViewItem*, const QPoint& ) ),
+           this, SLOT( rmbClicked( KListView*, QListViewItem*, const QPoint& ) ) );
 
   if (KABPrefs::instance()->mHonorSingleClick)
     connect(mListView, SIGNAL(executed(QListViewItem*)),
@@ -293,6 +295,11 @@ void KAddressBookTableView::addresseeExecuted(QListViewItem *item)
     {
         emit executed(QString::null);
     }
+}
+
+void KAddressBookTableView::rmbClicked( KListView*, QListViewItem*, const QPoint &point )
+{
+  popup( point );
 }
 
 #include "kaddressbooktableview.moc"

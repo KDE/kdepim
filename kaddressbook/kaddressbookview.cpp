@@ -23,6 +23,7 @@
 
 #include <qapplication.h>
 #include <qlayout.h>
+#include <qpopupmenu.h>
 
 #include <kabc/addressbook.h>
 #include <kabc/distributionlistdialog.h>
@@ -30,13 +31,14 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include "kabcore.h"
 #include "viewmanager.h"
 
 #include "kaddressbookview.h"
 
 KAddressBookView::KAddressBookView( KABC::AddressBook *ab, QWidget *parent,
                                     const char *name )
-    : QWidget( parent, name ), mAddressBook( ab ), mFieldList()
+    : QWidget( parent, name ), mAddressBook( ab ), mFieldList(), mCore( 0 )
 {
   initGUI();
 }
@@ -141,6 +143,49 @@ const QString &KAddressBookView::defaultFilterName() const
 KABC::AddressBook *KAddressBookView::addressBook() const
 {
   return mAddressBook;
+}
+
+void KAddressBookView::setCore( KABCore *core )
+{
+  mCore = core;
+}
+
+void KAddressBookView::popup( const QPoint &point, const QStringList &uids )
+{
+  if ( !mCore ) {
+    kdDebug(5720) << "No kabcore set!" << endl;
+    return;
+  }
+
+  QPopupMenu menu( this );
+  menu.insertItem( i18n( "Edit" ), 1 );
+  menu.insertItem( i18n( "Delete" ), 2 );
+
+  if ( uids.count() == 0 ) {
+    switch ( menu.exec( point ) ) {
+      case 1:
+        mCore->editContact();
+        break;
+      case 2:
+        mCore->deleteContacts();
+        break;
+      default:
+        kdDebug(5720) << "Unknown popup menu item" << endl;
+        break;
+    }
+  } else {
+    switch ( menu.exec( point ) ) {
+      case 1:
+        mCore->editContact( uids[ 0 ] );
+        break;
+      case 2:
+        mCore->deleteContacts( uids );
+        break;
+      default:
+        kdDebug(5720) << "Unknown popup menu item" << endl;
+        break;
+    }
+  }
 }
 
 QWidget *KAddressBookView::viewWidget()

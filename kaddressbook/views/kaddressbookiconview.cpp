@@ -164,6 +164,8 @@ KAddressBookIconView::KAddressBookIconView( KABC::AddressBook *ab,
             this, SIGNAL(dropped(QDropEvent*)));
     connect(mIconView, SIGNAL(startAddresseeDrag()),
             this, SIGNAL(startDrag()));
+    connect( mIconView, SIGNAL( contextMenuRequested( QIconViewItem*, const QPoint& ) ),
+             this, SLOT( rmbClicked( QIconViewItem*, const QPoint& ) ) );
 }
 
 KAddressBookIconView::~KAddressBookIconView()
@@ -298,6 +300,11 @@ void KAddressBookIconView::addresseeSelected()
     
     if (!found)
         emit selected(QString::null);
+}
+
+void KAddressBookIconView::rmbClicked( QIconViewItem*, const QPoint &point )
+{
+  popup( point );
 }
 
 #include "kaddressbookiconview.moc"

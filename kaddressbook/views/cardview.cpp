@@ -1104,6 +1104,12 @@ void CardView::contentsMousePressEvent(QMouseEvent *e)
   // Always emit the selection
   emit clicked(item);
 
+  // The RMB click
+  if ( e->button() & Qt::RightButton ) {
+    emit contextMenuRequested( item, mapToGlobal( e->pos() ) );
+    return;
+  }
+
   // Check the selection type and update accordingly
   if (d->mSelectionMode == CardView::Single)
   {
@@ -1181,7 +1187,6 @@ void CardView::contentsMousePressEvent(QMouseEvent *e)
       emit selectionChanged();
     }
   }
-
 }
 
 void CardView::contentsMouseReleaseEvent(QMouseEvent *e)
@@ -1425,6 +1430,10 @@ void CardView::keyPressEvent( QKeyEvent *e )
     case Key_Enter:
     emit returnPressed( d->mCurrentItem );
     emit executed( d->mCurrentItem );
+    break;
+    case Key_Menu:
+    emit contextMenuRequested( d->mCurrentItem, viewport()->mapToGlobal( 
+                               itemRect(d->mCurrentItem).center() ) );
     break;
     default:
     if ( (e->state() & ControlButton) && e->key() == Key_A )

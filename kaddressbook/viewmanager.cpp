@@ -187,6 +187,7 @@ void ViewManager::setActiveView( const QString &name )
       mViewDict.insert( name, view );
       mViewWidgetStack->addWidget( view );
       view->readConfig( config );
+      view->setCore( mCore );
 
       // The manager just relays the signals
       connect( view, SIGNAL( selected( const QString& ) ),

@@ -62,7 +62,8 @@ class KAddressBookCardView : public KAddressBookView
   protected slots:
     void addresseeExecuted(CardViewItem *item);
     void addresseeSelected();
-  
+    void rmbClicked( CardViewItem*, const QPoint& );
+
   private:
     AddresseeCardView *mCardView;
     bool mShowEmptyFields;

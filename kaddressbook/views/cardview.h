@@ -403,6 +403,10 @@ class CardView : public QScrollView
     */
     void returnPressed( CardViewItem * );
 
+    /** Emitted when the context menu is requested in some way.
+    */
+    void contextMenuRequested( CardViewItem*, const QPoint& );
+
   protected:
     /** Determines which cards intersect that region and tells them to paint
     * themselves.
