@@ -137,7 +137,7 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
 	     this, SLOT( slotSetValuesFromWhoAmI() ) );
 
     for ( unsigned int i = 0 ; i < numKeyLengths ; ++i )
-      keyLengthCB->insertItem( i18n("%1 bits").arg( keyLengths[i] ) );
+      keyLengthCB->insertItem( i18n("%n bit", "%n bits", keyLengths[i] ) );
 }
 
 static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list ) {
