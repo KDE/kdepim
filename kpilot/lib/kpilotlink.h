@@ -78,6 +78,15 @@ struct db
 
 #define pi_mktag(c1,c2,c3,c4) (((c1)<<24)|((c2)<<16)|((c3)<<8)|(c4))
 
+/**
+ * Convert a struct tm from the pilot-link package to a QDateTime
+ */
+QDateTime readTm(const struct tm &t);
+/**
+ * Convert a QDateTime to a struct tm for use with the pilot-link package
+ */
+struct tm writeTm(const QDateTime &dt);
+
 
 class KPilotDeviceLink : public QObject
 {
@@ -317,12 +326,26 @@ public:
 	* local file @p path.
 	*/
 	bool retrieveDatabase(const QString &path, struct DBInfo *db);
+	
+public:
+	/**
+	 * Get the time from the handheld device into a QDateTime
+	 */
+	QDateTime getTime();
+	/**
+	 * Set the time on the handheld to the give QDateTime
+	 */
+	bool setTime(const QDateTime&time);
+	
 } ;
 
 bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.6  2002/07/05 00:15:22  kainhofe
+// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
+//
 // Revision 1.5  2002/05/03 17:21:51  kainhofe
 // Added a method findDatabase to KPilotDeviceLink to look up a single db on the palm
 //

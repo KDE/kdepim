@@ -54,6 +54,31 @@ static const char *kpilotlink_id = "$Id$";
 
 
 
+QDateTime readTm(const struct tm &t)
+{
+	QDateTime dt;
+	dt.setDate(QDate(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday));
+	dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
+	return dt;
+ }
+ 
+ struct tm writeTm(const QDateTime &dt)
+ {
+ 	struct tm t;
+ 	t.tm_wday = 0; // unimplemented
+	t.tm_yday = 0; // unimplemented
+	t.tm_isdst = 0; // unimplemented
+ 
+	t.tm_year = dt.date().year() - 1900;
+	t.tm_mon = dt.date().month() - 1;
+	t.tm_mday = dt.date().day();
+	t.tm_hour = dt.time().hour();
+	t.tm_min = dt.time().minute();
+	t.tm_sec = dt.time().second();
+	return t;
+ }
+
+
 KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
 
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
@@ -361,6 +386,7 @@ errInit:
 
 	fStatus = PilotLinkError;
 	emit logError(msg);
+	return false;
 }
 
 void KPilotDeviceLink::acceptDevice()
@@ -670,6 +696,25 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 }
 
 
+QDateTime KPilotDeviceLink::getTime()
+{
+	QDateTime time;
+	time_t palmtime;
+	if (dlp_GetSysDateTime(pilotSocket(), &palmtime)) 
+	{
+		time.setTime_t(palmtime);
+	}
+	return time;
+}
+
+
+bool KPilotDeviceLink::setTime(const QDateTime&time)
+{
+	struct tm time_tm=writeTm(time);
+	time_t pctime=mktime(&time_tm);
+	return dlp_SetSysDateTime(pilotSocket(), pctime);
+}
+
 
 bool operator < (const db & a, const db & b) {
 	if (a.creator == b.creator)
@@ -687,6 +732,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.15  2002/07/20 22:08:19  mhunter
+// Hot-Sync -> HotSync
+//
 // Revision 1.14  2002/07/05 00:15:22  kainhofe
 // Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
 //
