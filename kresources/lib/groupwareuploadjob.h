@@ -97,8 +97,6 @@ class GroupwareUploadJob : public GroupwareJob
     KIO::TransferJob *mUploadJob;
     KIO::Job *mDeletionJob;
     KPIM::ProgressItem *mUploadProgress;
-
-    KURL mCurrentPutUrl;
 };
 
 }
