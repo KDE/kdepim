@@ -50,17 +50,18 @@ class NamePartWidget : public QWidget
 
   private slots:
     void add();
+    void edit();
     void remove();
 
     void selectionChanged( QListBoxItem* );
-    void textChanged( const QString& );
 
   private:
-    KLineEdit *mEdit;
-
     QListBox *mBox;
     QPushButton *mAddButton;
+    QPushButton *mEditButton;
     QPushButton *mRemoveButton;
+
+    QString mTitle;
 };
 
 class AddresseeWidget : public QWidget

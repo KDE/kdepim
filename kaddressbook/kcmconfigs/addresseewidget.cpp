@@ -23,6 +23,7 @@
 
 #include <qcstring.h>
 #include <qgroupbox.h>
+#include <qinputdialog.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlistbox.h>
@@ -41,7 +42,7 @@
 
 NamePartWidget::NamePartWidget( const QString &title, QWidget *parent,
                                 const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent, name ), mTitle( title )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
 
@@ -55,18 +56,14 @@ NamePartWidget::NamePartWidget( const QString &title, QWidget *parent,
   groupLayout->addWidget( mBox, 0, 0 );
 
   KButtonBox *bbox = new KButtonBox( group, Qt::Vertical );
-  mAddButton = bbox->addButton( i18n( "Add" ), this,  SLOT( add() ) );
-  mAddButton->setEnabled( false );
+  mAddButton = bbox->addButton( i18n( "Add..." ), this,  SLOT( add() ) );
+  mEditButton = bbox->addButton( i18n( "Edit..." ), this,  SLOT( edit() ) );
+  mEditButton->setEnabled( false );
   mRemoveButton = bbox->addButton( i18n( "Remove" ), this,  SLOT( remove() ) );
   mRemoveButton->setEnabled( false );
   bbox->layout();
   groupLayout->addWidget( bbox, 0, 1 );
 
-  mEdit = new KLineEdit( group );
-  connect( mEdit, SIGNAL( textChanged( const QString& ) ),
-           SLOT( textChanged( const QString& ) ) );
-  connect( mEdit, SIGNAL( returnPressed() ), SLOT( add() ) );
-  groupLayout->addMultiCellWidget( mEdit, 1, 1, 0, 1 );
   layout->addWidget( group );
 }
 
@@ -91,12 +88,30 @@ QStringList NamePartWidget::nameParts() const
 
 void NamePartWidget::add()
 {
-  if ( !mEdit->text().isEmpty() ) {
-    mBox->insertItem( mEdit->text() );
+  bool ok;
+
+  QString namePart = QInputDialog::getText( i18n( "New" ), mTitle, QLineEdit::Normal,
+                                            QString::null, &ok );
+  if ( ok && !namePart.isEmpty() ) {
+    mBox->insertItem( namePart );
     emit modified();
   }
+}
 
-  mEdit->setText( "" );
+void NamePartWidget::edit()
+{
+  bool ok;
+
+  int index = mBox->currentItem();
+  if ( index == -1 )
+    return;
+
+  QString namePart = QInputDialog::getText( i18n( "Edit" ), mTitle, QLineEdit::Normal,
+                                            mBox->text( index ), &ok );
+  if ( ok && !namePart.isEmpty() ) {
+    mBox->changeItem( namePart, index );
+    emit modified();
+  }
 }
 
 void NamePartWidget::remove()
@@ -110,13 +125,10 @@ void NamePartWidget::remove()
 
 void NamePartWidget::selectionChanged( QListBoxItem *item )
 {
+  mEditButton->setEnabled( item != 0 );
   mRemoveButton->setEnabled( item != 0 );
 }
 
-void NamePartWidget::textChanged( const QString& text )
-{
-  mAddButton->setEnabled( !text.isEmpty() );
-}
 
 
 AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
