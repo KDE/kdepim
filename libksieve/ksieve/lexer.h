@@ -45,7 +45,7 @@ namespace KSieve {
       IncludeComments = 0,
       IgnoreComments = 1,
       IncludeLineFeeds = 0,
-      IgnoreLineFeeds = 2,
+      IgnoreLineFeeds = 2
     };
 
     Lexer( const char * scursor, const char * send, int options=0 );
