@@ -159,7 +159,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 bool KABC::ResourceKolab::load()
 {
   mUidMap.clear();
-  //mAddrMap.clear();
+  mAddrMap.clear();
 
   bool rc = true;
   Kolab::ResourceMap::ConstIterator itR;
@@ -263,7 +263,7 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
   KABC::Addressee addr = Contact::xmlToAddressee( contact );
   addr.setResource( this );
   addr.setChanged( false );
-  //mAddrMap.insert( addr.uid(), addr );
+  mAddrMap.insert( addr.uid(), addr );
   mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
 
   addressBook()->emitAddressBookChanged();
@@ -283,7 +283,7 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
   const bool silent = mSilent;
   mSilent = true;
 
-  //mAddrMap.remove( uid );
+  mAddrMap.remove( uid );
   mUidMap.remove( uid );
   addressBook()->emitAddressBookChanged();
 
@@ -351,7 +351,7 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
   if ( !uids.isEmpty() ) {
     QStringList::ConstIterator it;
     for ( it = uids.begin(); it != uids.end(); ++it ) {
-      //mAddrMap.remove( *it );
+      mAddrMap.remove( *it );
       mUidMap.remove( *it );
     }
 
