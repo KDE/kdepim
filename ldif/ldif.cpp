@@ -103,14 +103,16 @@ qpdec[] = {
 };
 
 
-	CharPtr
+	QByteArray
 LDIF::decodeBase64(const char * s, unsigned long srcl, unsigned long & len)
 {
+  QByteArray a;
 	register char c;
 	register unsigned long e(0);
 	len = 0;
 	unsigned const char * src = (unsigned const char *)s;
-	char * ret = new char[srcl + (srcl / 4 + 1)];
+  int retsize = srcl + (srcl / 4 + 1);
+  char * ret = new char[retsize];
 	register char *d = ret;
 	while (srcl--) { // Critical loop
 		c = *src++;
@@ -118,9 +120,9 @@ LDIF::decodeBase64(const char * s, unsigned long srcl, unsigned long & len)
 		if (dec == -1) continue;
 		if (c == '=') {
 			switch (e++) {
-				case 3: e = 0;								break;
-				case 2: if (*src == '=')					break;
-				default: delete [] ret; ret = 0; return 0;	break;
+				case 3:   e = 0;            break;
+				case 2:   if (*src == '=')  break;
+				default:  return a;         break;
 			}
 			continue;
 		}
@@ -134,15 +136,15 @@ LDIF::decodeBase64(const char * s, unsigned long srcl, unsigned long & len)
 		++e;
 	}
 	len = d - (char *)ret;
-	CharBuf * sret = new CharBuf(ret);
-	CharPtr sharedRet(sret);
-	return sharedRet;
+  a.setRawData(ret, retsize);
+	return a;
 }
 
 
-	CharPtr
+	QByteArray
 LDIF::encodeBase64(const char * src, unsigned long srcl, unsigned long & destl)
 {
+  QByteArray a;
 	register const unsigned char *s = (unsigned char *)src;
 	register unsigned long i = ((srcl + 2) / 3) * 4;
 	destl = i += 2 * ((i / 60) + 1);
@@ -160,16 +162,17 @@ LDIF::encodeBase64(const char * src, unsigned long srcl, unsigned long & destl)
 		s += 3;
 	}
 	*d = '\r'; *++d = '\n'; *++d = '\0';
-	CharBuf * sret = new CharBuf(ret);
-	CharPtr sharedRet(sret);
-	return sharedRet;
+  a.setRawData(ret, destl);
+	return a;
 }
 
-	CharPtr
+	QByteArray
 LDIF::decodeQP(const char * src, unsigned long srcl, unsigned long & len)
 {
+  QByteArray a;
 	cerr << "decode \"" << src << "\"" << endl;
-	char * ret = new char[srcl + 1];
+  int retsize = srcl + 1;
+	char * ret = new char[retsize];
 	char * d = ret;
 	char * s = d;
 	char c, e;
@@ -188,7 +191,7 @@ LDIF::decodeQP(const char * src, unsigned long srcl, unsigned long & len)
 				
 				if (c == '\r') { s = d; if (*src == '\n') ++src; break; }
 				
-				if (!(qpdec[c] & 1)) return 0;
+				if (!(qpdec[c] & 1)) return a;
 				
 				if (qpdec[c] & 8) e = c - '0';
 			
@@ -196,7 +199,7 @@ LDIF::decodeQP(const char * src, unsigned long srcl, unsigned long & len)
 				
 				c = *src++;
 				
-				if (!(qpdec[c] & 1)) return 0;
+				if (!(qpdec[c] & 1)) return a;
 					
 				if (qpdec[c] & 8) c -= '0';
 			
@@ -216,19 +219,20 @@ LDIF::decodeQP(const char * src, unsigned long srcl, unsigned long & len)
 
 	*d = '\0';
 	len = d - ret;
-	CharBuf * sret = new CharBuf(ret);
-	CharPtr sharedRet(sret);
-	return sharedRet;
+	a.setRawData(ret, retsize);
+	return a;
 }
 
-	CharPtr
+	QByteArray
 LDIF::encodeQP(const char * src, unsigned long srcl, unsigned long & len)
 {
+  QByteArray a;
 	cerr << "encode \"" << src << "\"" << endl;
 	const char * hex = "0123456789ABCDEF";
 	
 	unsigned long lp(0);
-	char * ret = new char [3 * srcl + (6 * srcl) / 75 + 3];
+	int retsize = 3 * srcl + (6 * srcl) / 75 + 3;
+	char * ret = new char [retsize];
 	char * d = ret;
 	char c;
 	
@@ -283,8 +287,7 @@ LDIF::encodeQP(const char * src, unsigned long srcl, unsigned long & len)
 	
 	*d = '\0';
 	len = d - ret;
-	CharBuf * sret = new CharBuf(ret);
-	CharPtr sharedRet(sret);
-	return sharedRet;
+  a.setRawData(ret, retsize);
+	return a;
 }
 

@@ -1,5 +1,4 @@
 INCLUDES = $(all_includes)
-SUBDIRS = test
 
 lib_LTLIBRARIES = libkabui.la
 

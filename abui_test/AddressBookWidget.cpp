@@ -2,6 +2,7 @@
 #include <kapp.h>
 #include <klocale.h>
 #include <kglobal.h>
+#include <kmenubar.h>
 #include <kiconloader.h>
 #include "AddressBookWidget.h"
 
@@ -17,7 +18,7 @@ AddressBookDialog::AddressBookDialog(ContactEntry * e, const char * name = 0)
  
     // Toolbar.
 
-	toolBar()->insertButton(Icon("exit.xpm"), 0, SIGNAL(clicked()),
+  	toolBar()->insertButton(BarIcon("exit.xpm"), 0, SIGNAL(clicked()),
 			kapp, SLOT(quit()), true, i18n("E&xit"));
     
     // Main widget.

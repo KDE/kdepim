@@ -367,45 +367,11 @@ class LdifContent : public Entity
 		LdifAttrValRecList attrValRecList_;
 };
 
-class CharBuf : public QShared
-{
-	public:
+QByteArray encodeBase64 (const char *, unsigned long, unsigned long &);
+QByteArray decodeBase64 (const char *, unsigned long, unsigned long &);
 
-		CharBuf()
-			:	QShared()
-		{
-			count = 1;
-			ptr_ = 0;
-		}
-	
-		CharBuf(char * s)
-			:	QShared()
-		{
-			count = 1;
-			ptr_ = s;
-		}
-	
-		~CharBuf()
-		{
-			delete [] ptr_;
-		}
-	
-		const char * data()
-		{
-			return ptr_;
-		}
-		
-	private:
-
-		char *ptr_;
-};
-
-typedef KSharedPtr<CharBuf> CharPtr;
-CharPtr encodeBase64 (const char *, unsigned long, unsigned long &);
-CharPtr decodeBase64 (const char *, unsigned long, unsigned long &);
-
-CharPtr encodeQP (const char *, unsigned long, unsigned long &);
-CharPtr decodeQP (const char *, unsigned long, unsigned long &);
+QByteArray encodeQP (const char *, unsigned long, unsigned long &);
+QByteArray decodeQP (const char *, unsigned long, unsigned long &);
 
 }
 

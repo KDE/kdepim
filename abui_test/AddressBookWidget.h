@@ -2,6 +2,7 @@
 #include <kbuttonbox.h>
 #include <qpushbutton.h>
 #include "contact.h"
+#include <qlayout.h>
 
 class AddressBookDialog : public KTMainWindow
 {

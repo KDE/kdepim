@@ -77,9 +77,18 @@ AC_OUTPUT( \
 Makefile \
 vCard/Makefile \
 ldif/Makefile \
+kab2/Makefile \
+idl/Makefile \
+corba/Makefile \
 abui_test/Makefile \
-ab_test/Makefile \
+kab2/test/Makefile \
+kab2/server/Makefile \
+kab2/lib/Makefile \
+kab2/filters/Makefile \
+kab2/backends/Makefile \
+corba/kab/Makefile \
 abui_test/test/Makefile \
-ab_test/filters/Makefile \
-ab_test/filters/vcard/Makefile \
+kab2/filters/vcard/Makefile \
+kab2/backends/gdbm/Makefile \
+corba/kab/server/Makefile \
 )
