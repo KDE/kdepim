@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Skeleton Device
+Comment=Mobile Skeleton Device
+Type=Service
+ServiceTypes=kmobile/device
+X-KDE-Library=libkmobile_skeleton
+Icon=unknown.png

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Digital Camera (xxxx)
+Comment=This driver supports many digital cameras via the xxxx library
+Type=Service
+ServiceTypes=kmobile/device
+X-KDE-Library=libkmobile_digicam
+Icon=camera.png

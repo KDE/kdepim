@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Mobile Phone or Organizer (gammu)
+Comment=This driver supports many NOKIA and other mobile phones via the gammu library
+Type=Service
+ServiceTypes=kmobile/device
+X-KDE-Library=libkmobile_gammu
+Icon=phone.png

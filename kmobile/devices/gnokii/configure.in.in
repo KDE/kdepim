@@ -1,0 +1,12 @@
+# $Id$
+
+# check for libgnokii (Nokia mobile phone library)
+AC_CHECK_HEADERS(gnokii.h)dnl
+AC_HAVE_XPM
+AC_CHECK_LIB(gnokii, gn_cfg_read, 
+	[ LIB_GNOKII="-lgnokii"; KMOBILE_GNOKIIDIR="gnokii" ], 
+	[ AC_MSG_WARN([libgnokii (http://www.gnokii.org) is missing. The KDE Addressbook mobile phone import/export filter will not be available.]) ], 
+	$all_libraries -lXpm -lX11 )
+AC_SUBST(LIB_GNOKII)
+AC_SUBST(KMOBILE_GNOKIIDIR)
+

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Mobile Phone or Organizer (gnokii)
+Comment=This driver supports many NOKIA and other mobile phones via the gnokii library
+Type=Service
+ServiceTypes=kmobile/device
+X-KDE-Library=libkmobile_gnokii
+Icon=phone.png
