@@ -24,6 +24,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qtooltip.h>
 
 #include <kbuttonbox.h>
 #include <kdialog.h>
@@ -39,6 +40,7 @@ LocationConfigWidget::LocationConfigWidget( ViewManager *vm, QWidget *parent,
 {
   QGridLayout *layout = new QGridLayout( this, 3, 3, KDialog::marginHint(),
                                          KDialog::spacingHint() );
+  layout->setColStretch( 1, 1 );
 
   mListView = new KListView( this );
   mListView->addColumn( i18n( "Name" ) );
@@ -48,8 +50,8 @@ LocationConfigWidget::LocationConfigWidget( ViewManager *vm, QWidget *parent,
 
   KButtonBox *bbox = new KButtonBox( this, Qt::Vertical );
   mAddButton = bbox->addButton( i18n( "Add" ), this, SLOT( add() ) );
-  mEditButton =   bbox->addButton( i18n( "Edit" ), this, SLOT( edit() ) );
-  mRemoveButton =   bbox->addButton( i18n( "Remove" ), this, SLOT( remove() ) );
+  mEditButton = bbox->addButton( i18n( "Edit" ), this, SLOT( edit() ) );
+  mRemoveButton = bbox->addButton( i18n( "Remove" ), this, SLOT( remove() ) );
   bbox->layout();
   layout->addWidget( bbox, 0, 2 );
 
@@ -66,6 +68,13 @@ LocationConfigWidget::LocationConfigWidget( ViewManager *vm, QWidget *parent,
   mURLEdit = new KLineEdit( this );
   label->setBuddy( mURLEdit );
   layout->addMultiCellWidget( mURLEdit, 2, 2, 1, 2 );
+  QToolTip::add( mURLEdit, i18n( "<ul> <li>%s: Street</li>"
+                                 "<li>%r: Region</li>"
+                                 "<li>%l: Location</li>"
+                                 "<li>%z: Zip Code</li>"
+                                 "<li>%c: Country ISO Code</li> </ul>" ) );
+
+  resize( 500, 300 );
 }
 
 LocationConfigWidget::~LocationConfigWidget()
@@ -79,7 +88,7 @@ void LocationConfigWidget::restoreSettings( KConfig *cfg )
   QMap<QString, QString> map = cfg->entryMap( cfg->group() );
 
   if ( map.empty() ) // add a default
-    map.insert( "map24", "http://map24.de/map24/index.php3?street0=%s&zip0=%z&city0=%l&country0=%c&force_maptype=RELOAD" );
+    map.insert( "map24", "http://map24.de/map24/index.php3?street0=%s&zip0=%z&city0=%l&country0=%c&force_maptype=RELOAD&gcf=1" );
 
   QMap<QString, QString>::Iterator it;
   for ( it = map.begin(); it != map.end(); ++it )
