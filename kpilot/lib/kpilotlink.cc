@@ -478,6 +478,7 @@ void KPilotDeviceLink::acceptDevice()
 		emit logError(i18n("Can't accept Pilot (%1)").arg(s));
 
 		fStatus = PilotLinkError;
+		close();
 		return;
 	}
 
@@ -487,49 +488,13 @@ void KPilotDeviceLink::acceptDevice()
 		kdError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
+		emit logError(TODO_I18N("Can't accept Pilot (%1)")
+			.arg(TODO_I18N("already connected")));
+		close();
 		return;
 	}
 
 	emit logProgress(QString::null, 30);
-
-	fPilotUser = new KPilotUser;
-
-	/* Ask the pilot who it is.  And see if it's who we think it is. */
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Reading user info @"
-		<< (int) fPilotUser << endl;
-	DEBUGDAEMON << fname << ": Buffer @"
-		<< (int) fPilotUser->pilotUser() << endl;
-#endif
-
-	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
-	fPilotUser->boundsCheck();
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Read user name " << fPilotUser->getUserName() << endl;
-#endif
-
-	emit logProgress(i18n("Checking last PC..."), 60);
-
-	/* Tell user (via Pilot) that we are starting things up */
-	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
-	{
-		DEBUGDAEMON << k_funcinfo
-			<< ": dlp_OpenConduit returned " << ret << endl;
-
-#if 0
-		fStatus = SyncDone;
-		emit logMessage(i18n
-			("Exiting on cancel. All data not restored."));
-		return;
-#endif
-		emit logError(i18n("Could not read user information from the Pilot. "
-			"Perhaps you have a password set on the device?"));
-	}
-	fStatus = AcceptedDevice;
-
-	emit logProgress(QString::null,70);
 
 	struct SysInfo sys_info;
 	if (dlp_ReadSysInfo(fCurrentPilotSocket,&sys_info) < 0)
@@ -552,6 +517,45 @@ void KPilotDeviceLink::acceptDevice()
 			<< endl;
 	}
 #endif
+	
+	emit logProgress(QString::null, 60);
+	fPilotUser = new KPilotUser;
+
+	/* Ask the pilot who it is.  And see if it's who we think it is. */
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Reading user info @"
+		<< (int) fPilotUser << endl;
+	DEBUGDAEMON << fname << ": Buffer @"
+		<< (int) fPilotUser->pilotUser() << endl;
+#endif
+
+	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
+	fPilotUser->boundsCheck();
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Read user name " << fPilotUser->getUserName() << endl;
+#endif
+
+	emit logProgress(i18n("Checking last PC..."), 90);
+
+	/* Tell user (via Pilot) that we are starting things up */
+	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
+	{
+		DEBUGDAEMON << k_funcinfo
+			<< ": dlp_OpenConduit returned " << ret << endl;
+
+#if 0
+		fStatus = SyncDone;
+		emit logMessage(i18n
+			("Exiting on cancel. All data not restored."));
+		return;
+#endif
+		emit logError(i18n("Could not read user information from the Pilot. "
+			"Perhaps you have a password set on the device?"));
+	}
+	fStatus = AcceptedDevice;
+
 
 	emit logProgress(QString::null, 100);
 	emit deviceReady();
