@@ -44,6 +44,7 @@ using namespace Kolab;
 static const char* s_pictureAttachmentName = "kolab-picture.png";
 static const char* s_logoAttachmentName = "kolab-logo.png";
 static const char* s_soundAttachmentName = "sound";
+static const char* s_unhandledTagAppName = "KOLABUNHANDLED"; // no hyphens in appnames!
 
 // saving (addressee->xml)
 Contact::Contact( const KABC::Addressee* addr )
@@ -468,18 +469,9 @@ void Contact::saveEmailAttributes( QDomElement& element ) const
 void Contact::loadCustomAttributes( QDomElement& element )
 {
   Custom custom;
-  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    if ( n.isElement() ) {
-      const QDomElement e = n.toElement();
-      const QString tagName = e.tagName();
-      if ( tagName == "app" )
-        custom.app = e.text();
-      else if ( tagName == "name" )
-        custom.name = e.text();
-      else if ( tagName == "value" )
-        custom.value = e.text();
-    }
-  }
+  custom.app = element.attribute( "app" );
+  custom.name = element.attribute( "name" );
+  custom.value = element.attribute( "value" );
   mCustomList.append( custom );
 }
 
@@ -487,11 +479,17 @@ void Contact::saveCustomAttributes( QDomElement& element ) const
 {
   QValueList<Custom>::ConstIterator it = mCustomList.begin();
   for ( ; it != mCustomList.end(); ++it ) {
-    QDomElement e = element.ownerDocument().createElement( "x-custom" );
-    element.appendChild( e );
-    writeString( e, "app", (*it).app );
-    writeString( e, "name", (*it).name );
-    writeString( e, "value", (*it).value );
+    Q_ASSERT( !(*it).name.isEmpty() ) );
+    if ( (*it).app == s_unhandledTagAppName ) {
+      writeString( element, (*it).name, (*it).value );
+    } else {
+      // Let's use attributes so that other tag-preserving-code doesn't need sub-elements
+      QDomElement e = element.ownerDocument().createElement( "x-custom" );
+      element.appendChild( e );
+      e.setAttribute( "app", (*it).app );
+      e.setAttribute( "name", (*it).name );
+      e.setAttribute( "value", (*it).value );
+    }
   }
 }
 
@@ -692,9 +690,15 @@ bool Contact::loadXML( const QDomDocument& document )
       continue;
     if ( n.isElement() ) {
       QDomElement e = n.toElement();
-      if ( !loadAttribute( e ) )
-        // TODO: Unhandled tag - save for later storage
-        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+      if ( !loadAttribute( e ) ) {
+        // Unhandled tag - save for later storage
+        kdDebug() << "Saving unhandled tag " << e.tagName() << endl;
+        Custom c;
+        c.app = s_unhandledTagAppName;
+        c.name = e.tagName();
+        c.value = e.text();
+        mCustomList.append( c );
+      }
     } else
       kdDebug() << "Node is not a comment or an element???" << endl;
   }
@@ -1042,6 +1046,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
     QString app = (*it).app.isEmpty() ? QString::fromLatin1( "KADDRESSBOOK" ) : (*it).app;
     addressee->insertCustom( app, (*it).name, (*it).value );
   }
+  //kdDebug(5006) << addressee->customs() << endl;
 }
 
 QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
@@ -1105,6 +1110,7 @@ QByteArray Kolab::Contact::loadSoundFromAddressee( const KABC::Sound& sound )
 
 QString Kolab::Contact::productID() const
 {
-  // TODO: When KAB has the version number in a header file, don't hardcode
+  // TODO: When KAB has the version number in a header file, don't hardcode (Bo)
+  // Or we could use Addressee::productID? (David)
   return "KAddressBook 3.3, Kolab resource";
 }

@@ -280,12 +280,13 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     sernum = 0;
   }
 
-  bool rc = kmailUpdate( subResource, sernum, xml, s_attachmentMimeType, addr.uid() /*subject*/,
+  bool rc = kmailUpdate( subResource, sernum, xml, s_attachmentMimeType, uid /*subject*/,
                          att.attachmentURLs, att.attachmentMimeTypes, att.attachmentNames,
                          att.deletedAttachments );
   if ( !rc )
     kdDebug(5650) << "kmailUpdate returned false!" << endl;
   if ( rc ) {
+    kdDebug(5650) << "kmailUpdate returned, now sernum=" << sernum << " for uid=" << uid << endl;
     mUidMap[ uid ] = StorageReference( subResource, sernum );
     // This is ugly, but it's faster than doing
     // mAddrMap.find(addr.uid()), which would give the same :-(
