@@ -1174,11 +1174,11 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
          * or the 5th Monday, and the month being checked is February or a 30-day month,
          * so limit the number of iterations.
          */
-        int maxIterations = maxMonthlyIterations();
 		QDate end = (rDuration >= 0) ? endDate() : MAX_DATE;
         int maxMonthsAhead = (end.year() - startYear)*12 + end.month() - startMonth;
 		monthsAhead += rFreq;
-        for (int i = 0;  i < maxIterations && monthsAhead <= maxMonthsAhead;  ++i) {
+        int maxIter = maxIterations();
+        for (int i = 0;  i < maxIter && monthsAhead <= maxMonthsAhead;  ++i) {
           int months = startMonth - 1 + monthsAhead;
           nextDate = getFirstDateInMonth(QDate(startYear + months/12, months%12 + 1, 1));
           if (nextDate.isValid())
@@ -1200,14 +1200,15 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
         nextDate = getFirstDateInYear(earliestDate);
       // Check for a date in the next scheduled year
       if (!nextDate.isValid()) {
-        startYear += yearsAhead + rFreq;
-        /* The only valid reason for failure after the next check is that it only recurs
-         * in a leap year. Since certain leap year recurrences could potentially never
-         * actually occur (e.g. recurring on the 366th day of the year every 4 years,
-         * starting in a non-leap year), limit the iterations to 8 (to allow for possible
-         * century non-leap years).
+        /* Check for a date in the next scheduled year.
+         * The next check may fail if, for example, it's the 29th of February or the 5th
+		 * Monday, so limit the number of iterations.
          */
-        for (int i = 0;  i < 8;  ++i) {
+		QDate end = (rDuration >= 0) ? endDate() : MAX_DATE;
+        int maxYear = end.year();
+        startYear += yearsAhead + rFreq;
+        int maxIter = maxIterations();
+        for (int i = 0;  i < maxIter && startYear <= maxYear;  ++i) {
           nextDate = getFirstDateInYear(QDate(startYear, 1, 1));
           if (nextDate.isValid())
             break;
@@ -1283,15 +1284,15 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
       if (!notThisMonth)
         prevDate = getLastDateInMonth(latestDate);
       if (!prevDate.isValid()) {
-        /* Check for a day in the previous scheduled month
+        /* Check for a day in the previous scheduled month.
          * The next check may fail if, for example, it's the 31st day of the month
          * or the 5th Monday, and the month being checked is February or a 30-day month,
          * so limit the number of iterations.
          */
         if (!notThisMonth)
           monthsAhead -= rFreq;
-        int maxIterations = maxMonthlyIterations();
-        for (int i = 0;  i < maxIterations && monthsAhead >= 0;  ++i) {
+        int maxIter = maxIterations();
+        for (int i = 0;  i < maxIter && monthsAhead >= 0;  ++i) {
           int months = startMonth + monthsAhead;   // get the zero-based month after the one that recurs
           prevDate = getLastDateInMonth(QDate(startYear + months/12, months%12 + 1, 1).addDays(-1));
           if (prevDate.isValid())
@@ -1308,20 +1309,18 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
       int yearsAhead = latestDate.year() - startYear;
       int notThisYear = yearsAhead % rFreq;   // zero if this year is a recurring year
       yearsAhead -= notThisYear;              // latest year which recurred
-      // Check for the first later date in the current year
+      // Check for the last earlier date in the current year
       if (!notThisYear)
         prevDate = getLastDateInYear(latestDate);
       if (!prevDate.isValid()) {
-        // Check for a date in the next scheduled year
+        /* Check for a date in the previous scheduled year.
+         * The next check may fail if, for example, it's the 29th of February or the 5th
+		 * Monday, so limit the number of iterations.
+         */
         if (!notThisYear)
           yearsAhead -= rFreq;
-        /* The only valid reason for failure after the next check is that it only recurs
-         * in a leap year. Since certain leap year recurrences could potentially never
-         * actually occur (e.g. recurring on the 366th day of the year every 4 years,
-         * starting in a non-leap year), limit the iterations to 8 (to allow for possible
-         * century non-leap years).
-         */
-        for (int i = 0;  i < 8 && yearsAhead >= 0;  ++i) {
+        int maxIter = maxIterations();
+        for (int i = 0;  i < maxIter && yearsAhead >= 0;  ++i) {
           prevDate = getLastDateInYear(QDate(startYear + yearsAhead, 12, 31));
           if (prevDate.isValid())
             break;
@@ -1351,47 +1350,61 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
   return prevDate;
 }
 
-int Recurrence::maxMonthlyIterations() const
+int Recurrence::maxIterations() const
 {
   /* Find the maximum number of iterations which may be needed to reach the
-   * next actual occurrence of a monthly recurrence.
-   * More than one iteration may be needed if, for example, it's the 31st day of
-   * the month or the 5th Monday, and the month being checked is February or a
-   * 30-day month.
+   * next actual occurrence of a monthly or yearly recurrence.
+   * More than one iteration may be needed if, for example, it's the 29th February,
+   * the 31st day of the month or the 5th Monday, and the month being checked is
+   * February or a 30-day month.
    * The following recurrences may never occur:
    * - For rMonthlyDay: if the frequency is a whole number of years.
    * - For rMonthlyPos: if the frequency is an even whole number of years.
+   * - For rYearlyDay, rYearlyMonth: if the frequeny is a multiple of 4 years.
+   * - For rYearlyPos: if the frequency is an even number of years.
    * The maximum number of iterations needed, assuming that it does actually occur,
-   * was found empirically and is:
-   * - For rMonthlyDay: 6, or 8 if the frequency is a whole number of years. 
-   * - For rMonthlyPos: 364 if frequency is a multiple of 7 years
-   *                    7 if frequency is a multiple of 4 years
-   *                    14 if frequency is a multiple of 2 years
-   *                    28 if frequency is a multiple of 1 year
-   *                    25 otherwise, except for certain special cases.
+   * was found empirically.
    */
-  if (recurs == rMonthlyDay)
-    return (rFreq % 12) ? 6 : 8;
-  if (rFreq % 12 == 0) {
-    // Some of these frequencies may never occur
-    return (rFreq % 84 == 0) ? 364
-         : (rFreq % 48 == 0) ? 7
-         : (rFreq % 24 == 0) ? 14 : 28;
+  switch (recurs) {
+    case rMonthlyDay:
+      return (rFreq % 12) ? 6 : 8;
+
+    case rMonthlyPos:
+      if (rFreq % 12 == 0) {
+        // Some of these frequencies may never occur
+        return (rFreq % 84 == 0) ? 364         // frequency = multiple of 7 years
+             : (rFreq % 48 == 0) ? 7           // frequency = multiple of 4 years
+             : (rFreq % 24 == 0) ? 14 : 28;    // frequency = multiple of 2 or 1 year
+      }
+      // All other frequencies will occur sometime
+      if (rFreq > 120)
+        return 364;    // frequencies of > 10 years will hit the date limit first
+      switch (rFreq) {
+        case 23:   return 50;
+        case 46:   return 38;
+        case 56:   return 138;
+        case 66:   return 36;
+        case 89:   return 54;
+        case 112:  return 253;
+        default:   return 25;       // most frequencies will need < 25 iterations
+      }
+
+    case rYearlyMonth:
+    case rYearlyDay:
+      return 8;          // only 29th Feb or day 366 will need more than one iteration
+
+    case rYearlyPos:
+      if (rFreq % 7 == 0)
+        return 364;    // frequencies of a multiple of 7 years will hit the date limit first
+      if (rFreq % 2 == 0) {
+        // Some of these frequencies may never occur
+        return (rFreq % 4 == 0) ? 7 : 14;    // frequency = even number of years
+      }
+      return 28;
   }
-  // All other frequencies will occur sometime
-  if (rFreq > 120)
-    return 364;    // frequencies of > 10 years will soon hit the date limit
-  switch (rFreq) {
-	case 23:   return 50;
-	case 46:   return 38;
-	case 56:   return 138;
-	case 66:   return 36;
-	case 89:   return 54;
-	case 112:  return 253;
-	default:   return 25;
-  }
+  return 1;
 }
- 
+
 void Recurrence::setDailySub(short type, int freq, int duration)
 {
   mUseCachedEndDT = false;
