@@ -383,8 +383,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       // Add the groupware URLs
       html += "<br>&nbsp;<br>&nbsp;<br>";
       html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
-      if( sMethod == "request" || sMethod == "update" ||
-          sMethod == "publish" ) {
+      if( sMethod == "request" || sMethod == "update" ) {
         // Accept
         html += "<a href=\"" +
                 bodyPart->makeLink( "accept" ) + "\"><b>";
@@ -412,7 +411,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
           html += i18n("[Check my calendar...]" );
         }
 #endif
-      } else if( sMethod == "reply" ) {
+      } else if( sMethod == "reply" || sMethod == "publish" ) {
         // Enter this into my calendar
         html += "<a href=\"" +
                 bodyPart->makeLink( "reply" ) + "\"><b>";
@@ -420,6 +419,12 @@ class Formatter : public KMail::Interface::BodyPartFormatter
           html += i18n( "[Enter this into my calendar]" );
         else
           html += i18n( "[Enter this into my task list]" );
+        // Throw away
+        html += "<a href=\"" +
+                bodyPart->makeLink( "ignore" ) +
+                "\"><b>";
+        html += i18n( "Throw away", "[Throw Away]" );
+        html += "</b></a></td><td> &nbsp; </td><td>";
       } else if( sMethod == "cancel" ) {
         // Cancel event from my calendar
         html += "<a href=\"" +
@@ -593,6 +598,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return mail( incidence, callback );
     }
 
+    bool handleIgnore( const QString&, KMail::Callback& c ) const
+    {
+      // simply move the message to trash
+      ( new KMDeleteMsgCommand( c.getMsg()->parent(), c.getMsg() ) )->start();
+      return true;
+    }
+
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path, KMail::Callback& c ) const
     {
@@ -602,6 +614,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return handleAccept( iCal, c );
       if ( path == "accept_conditionally" )
         return handleAcceptConditionally( iCal, c );
+      if ( path == "ignore" )
+        return handleIgnore( iCal, c );
       if ( path == "decline" )
         return handleDecline( iCal, c );
       if ( path == "reply" || path == "cancel" )
@@ -627,6 +641,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n("Accept incidence");
         if ( path == "accept_conditionally" )
           return i18n( "Accept incidence conditionally" );
+        if ( path == "ignore" )
+          return i18n( "Throw mail away" );
         if ( path == "decline" )
           return i18n( "Decline incidence" );
         if ( path == "check_calendar" )
