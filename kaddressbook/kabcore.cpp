@@ -26,7 +26,6 @@
 #include <qfile.h>
 #include <qlayout.h>
 #include <qregexp.h>
-#include <qstatusbar.h>
 #include <qvbox.h>
 
 #include <kabc/addresseelist.h>
@@ -51,6 +50,7 @@
 #include <kprotocolinfo.h>
 #include <kresources/selectdialog.h>
 #include <kstandarddirs.h>
+#include <kstatusbar.h>
 #include <kstdguiitem.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
@@ -294,12 +294,12 @@ KAboutData *KABCore::createAboutData()
   return about;
 }
 
-void KABCore::setStatusBar( QStatusBar *statusBar )
+void KABCore::setStatusBar( KStatusBar *statusBar )
 {
   mStatusBar = statusBar;
 }
 
-QStatusBar *KABCore::statusBar() const
+KStatusBar *KABCore::statusBar() const
 {
   return mStatusBar;
 }
@@ -859,8 +859,8 @@ void KABCore::print()
 
 void KABCore::detailsHighlighted( const QString &msg )
 {
-  if ( statusBar() )
-    statusBar()->message( msg );
+  if ( mStatusBar )
+    mStatusBar->changeItem( msg, 1 );
 }
 
 void KABCore::showContactsAddress( const QString &addrUid )

@@ -46,11 +46,11 @@ class KAboutData;
 class KAction;
 class KActionCollection;
 class KConfig;
+class KStatusBar;
 class KToggleAction;
 class KXMLGUIClient;
 
 class QSplitter;
-class QStatusBar;
 
 class AddresseeEditorDialog;
 class ExtensionManager;
@@ -128,9 +128,9 @@ class KABCore : public KAB::Core
 
     static KAboutData *createAboutData();
 
-    void setStatusBar( QStatusBar *statusBar );
+    void setStatusBar( KStatusBar *statusBar );
 
-    QStatusBar *statusBar() const;
+    KStatusBar *statusBar() const;
 
     KAB::SearchManager *searchManager() const { return mSearchManager; }
 
@@ -353,7 +353,7 @@ class KABCore : public KAB::Core
 
     QWidget *mWidget;
     KABC::AddressBook *mAddressBook;
-    QStatusBar *mStatusBar;
+    KStatusBar *mStatusBar;
 
     ViewManager *mViewManager;
     ExtensionManager *mExtensionManager;
