@@ -568,12 +568,15 @@ void KSyncMainWindow::switchProfile( KonnectorProfile& prof ) {
 
     KonnectorProfile ole = m_konprof->current();
 
+
     if (prof.udi().isEmpty() ) {
         QString udi =m_konnector->load( prof.device() );
         prof.setUdi( udi );
         m_konnector->setCapabilities( udi, prof.kapabilities() );
     }
     m_konprof->setCurrent( prof );
+    m_konBar->setState( m_konnector->isConnected( prof.udi() ) );
+    m_tray->setState( m_konnector->isConnected( prof.udi() ) );
 
     emit konnectorChanged( ole.udi() );
     emit konnectorChanged( ole );
