@@ -1185,8 +1185,20 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
       if (!notThisYear)
         nextDate = getFirstDateInYear(earliestDate);
       // Check for a date in the next scheduled year
-      if (!nextDate.isValid()  &&  earliestDate.dayOfYear() > 1)
-        nextDate = getFirstDateInYear(QDate(startYear + yearsAhead + rFreq, 1, 1));
+      if (!nextDate.isValid()) {
+        startYear += yearsAhead + rFreq;
+        // The only valid reason for failure after the next check is that it only recurs
+        // in a leap year. Since certain leap year recurrences could potentially never
+        // actually occur (e.g. recurring on the 366th day of the year every 4 years,
+        // starting in a non-leap year), limit the iterations to 8 (to allow for possible
+        // century non-leap years).
+        for (int i = 0;  i < 8;  ++i) {
+          nextDate = getFirstDateInYear(QDate(startYear, 1, 1));
+          if (nextDate.isValid())
+            break;
+          startYear += rFreq;
+        }
+      }
       break;
     }
     case rNone:
