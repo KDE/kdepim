@@ -19,9 +19,13 @@ noinst_HEADERS = cryptowidget.h imeditorwidget.h imaddresswidget.h
 
 METASOURCES = AUTO
 
+SUBDIRS = protocols icons
 servicedir  = $(kde_servicesdir)/kaddressbook
-service_DATA = cryptosettings.desktop imaddresseditor.desktop
+service_DATA = cryptosettings.desktop imaddresseditor.desktop 
 
-libkaddrbk_instantmessaging_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
+servicetypedir = $(kde_servicetypesdir)
+servicetype_DATA = kaddressbookimprotocol.desktop
+
+libkaddrbk_instantmessaging_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -lkutils
 libkaddrbk_instantmessaging_la_SOURCES = imeditorwidget.cpp imeditorbase.ui imaddressbase.ui imaddresswidget.cpp
 libkaddrbk_instantmessaging_la_LIBADD = ../interfaces/libkabinterfaces.la

@@ -32,7 +32,9 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kplugininfo.h>
 #include <kpushbutton.h>
+#include <ktrader.h>
 
 #include "imaddresswidget.h"
 #include "imeditorwidget.h"
@@ -57,7 +59,7 @@ QString IMEditorWidgetFactory::pageIdentifier() const
 
 /*===========================================================================*/
 
-IMAddressLVI::IMAddressLVI( KListView *parent, IMProtocol protocol, QString address, IMContext context/*, bool inVCard */) : KListViewItem( parent )
+IMAddressLVI::IMAddressLVI( KListView *parent, KPluginInfo *protocol, QString address, IMContext context ) : KListViewItem( parent )
 {
 	//mInVCard = inVCard;
 
@@ -69,21 +71,7 @@ IMAddressLVI::IMAddressLVI( KListView *parent, IMProtocol protocol, QString addr
 	// set context
 	setContext( context );
 
-	// set indicator that this field is saved in the vCard
-	//if ( inVCard )
-	//	setPixmap( 0, SmallIcon( QString::fromLatin1( "ok" ) ) );
 }
-
-/*
-void IMAddressLVI::setInVCard( bool inVCard )
-{
-	if ( inVCard )
-		setPixmap( 0, SmallIcon( QString::fromLatin1( "ok" ) ) );
-	else
-		setPixmap( 0, QPixmap() );
-	mInVCard = inVCard;
-}
-*/
 
 void IMAddressLVI::setAddress( const QString &address )
 {
@@ -108,61 +96,14 @@ void IMAddressLVI::setContext( IMContext context )
 	}
 }
 
-void IMAddressLVI::setProtocol( IMProtocol protocol )
+void IMAddressLVI::setProtocol( KPluginInfo *protocol )
 {
 	mProtocol = protocol;
-	QString protoName;
-	QPixmap protoIcon;
-
-	switch ( protocol )
-	{
-	case AIM:
-		protoName =  QString::fromLatin1( "AIM" );
-		protoIcon =  SmallIcon(QString::fromLatin1("aim_protocol") );
-		break;
-	case GaduGadu:
-		protoName =  QString::fromLatin1( "Gadu-Gadu" );
-		protoIcon =  SmallIcon(QString::fromLatin1("gadu_protocol") );
-		break;
-	case Jabber:
-		protoName =  QString::fromLatin1( "Jabber" );
-		protoIcon =  SmallIcon(QString::fromLatin1("jabber_protocol") );
-		break;
-	case ICQ:
-		protoName =  QString::fromLatin1( "ICQ" );
-		protoIcon =  SmallIcon(QString::fromLatin1("icq_protocol") );
-		break;
-	case IRC:
-		protoName =  QString::fromLatin1( "IRC" );
-		protoIcon =  SmallIcon(QString::fromLatin1("irc_protocol") );
-		break;
-	case MSN:
-		protoName =  QString::fromLatin1( "MSN" );
-		protoIcon =  SmallIcon(QString::fromLatin1("msn_protocol") );
-		break;
-	case SMS:
-		protoName =  QString::fromLatin1( "SMS" );
-		protoIcon =  SmallIcon(QString::fromLatin1("sms_protocol") );
-		break;
-	case Yahoo:
-		protoName =  QString::fromLatin1( "Yahoo" );
-		protoIcon =  SmallIcon(QString::fromLatin1("yahoo_protocol") );
-		break;
-	default:
-		protoName =  i18n( "Unknown" );
-	}
-	setPixmap( 0, protoIcon );
-	setText( 0, protoName );
+	setPixmap( 0,  SmallIcon( mProtocol->icon() ) );
+	setText( 0, mProtocol->name() );
 }
 
-/*
-bool IMAddressLVI::inVCard() const
-{
-	return mInVCard;
-}
-*/
-
-IMProtocol IMAddressLVI::protocol() const
+KPluginInfo * IMAddressLVI::protocol() const
 {
 	return mProtocol;
 }
@@ -201,6 +142,14 @@ IMEditorWidget::IMEditorWidget( KABC::AddressBook *ab, QWidget *parent, const ch
 	// Disabled pending implementation
 	mWidget->btnUp->setEnabled( false );
 	mWidget->btnDown->setEnabled( false );
+	
+	mProtocols = KPluginInfo::fromServices( KTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
+	//kdDebug ( 5720 ) << " found " << mProtocols.count() << " protocols " << endl;
+}
+
+QValueList<KPluginInfo *> IMEditorWidget::availableProtocols() const
+{
+	return mProtocols;
 }
 
 void IMEditorWidget::loadContact( KABC::Addressee *addr )
@@ -218,18 +167,18 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 		{
 			if ( name == QString::fromLatin1( "All" ) )
 			{
-				// Get the protocol from the custom field
-				// by chopping the 'messaging/' prefix from the custom field app name
-				QString protocolName = app.right( app.length() - 10 );
-
-				IMProtocol protocol = protocolFromString( protocolName );
-
-				QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
-				QStringList::iterator end = addresses.end();
-				for ( QStringList::iterator it = addresses.begin(); it != end; ++it )
+				KPluginInfo *protocol = protocolFromString( app );
+				if ( protocol )
 				{
-					new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
+					QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
+					QStringList::iterator end = addresses.end();
+					for ( QStringList::iterator it = addresses.begin(); it != end; ++it )
+					{
+						new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
+					}
 				}
+				else 
+					kdDebug( 5720 ) << k_funcinfo << " no protocol found for: " << app << endl;
 			}
 		}
 	}
@@ -239,7 +188,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 {
 	// for each changed protocol, write a new custom field containing the current set of
 	// addresses
-	QValueList<IMProtocol>::iterator protocolIt;
+	QValueList<KPluginInfo *>::iterator protocolIt;
 	for ( protocolIt = mChangedProtocols.begin(); protocolIt != mChangedProtocols.end(); ++protocolIt )
 	{
 		QStringList lst;
@@ -255,15 +204,15 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 		//kdDebug( 0 ) << QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ) <<
 		//						QString::fromLatin1("All") <<
 		//					lst.join( QChar( 0xE000 ) ) << endl;
-		if ( lst.count() > 0 )
-			addr->insertCustom( QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ),
-							QString::fromLatin1("All"),
-							lst.join( QChar( 0xE000 ) ) );
+		QString addrBookField;
+		if ( !lst.isEmpty() )
+		{
+			addrBookField = ( *protocolIt )->property( "X-KDE-InstantMessagingKABCField" ).toString();
+			addr->insertCustom( addrBookField, QString::fromLatin1( "All" ), lst.join( QChar( 0xE000 ) ) );
+		}
 		else
-			addr->removeCustom( QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ),
-								QString::fromLatin1("All") );
+			addr->removeCustom( addrBookField, QString::fromLatin1("All") );
 	}
-
 }
 
 void IMEditorWidget::setReadOnly( bool readOnly )
@@ -277,7 +226,6 @@ void IMEditorWidget::setReadOnly( bool readOnly )
 
 void IMEditorWidget::slotUpdateButtons()
 {
-
 	if ( !mReadOnly && mWidget->lvAddresses->selectedItem() )
 	{
 		//mWidget->btnAdd->setEnabled( true );
@@ -295,32 +243,19 @@ void IMEditorWidget::slotUpdateButtons()
 void IMEditorWidget::slotAdd()
 {
 	KDialogBase *addDialog = new KDialogBase( this, "addaddress", true, i18n("Add Address"), KDialogBase::Ok|KDialogBase::Cancel );
-	IMAddressWidget *addressWid = new IMAddressWidget( addDialog );
+	IMAddressWidget *addressWid = new IMAddressWidget( addDialog, mProtocols );
 	addDialog->setMainWidget( addressWid );
 	if ( addDialog->exec() == QDialog::Accepted )
 	{
-		/*
-		// disable vcard flag on each other item
-		if ( addressWid->inVCard() )
-		{
-			QListViewItemIterator it( mWidget->lvAddresses );
-			while ( it.current() )
-			{
-				(static_cast<IMAddressLVI*>(*it))->setInVCard( false );
-				++it;
-			}
-		}
-		*/
-
 		// add the new item
-		new IMAddressLVI( mWidget->lvAddresses, addressWid->protocol(), addressWid->address(), addressWid->context()/*, addressWid->inVCard()*/ );
+		new IMAddressLVI( mWidget->lvAddresses, addressWid->protocol(), addressWid->address(), addressWid->context() );
 		if ( mChangedProtocols.find( addressWid->protocol() ) == mChangedProtocols.end() )
 			mChangedProtocols.append( addressWid->protocol() );
 		mWidget->lvAddresses->sort();
 
 		setModified( true );
 	}
-        delete addDialog;
+	delete addDialog;
 }
 
 void IMEditorWidget::slotEdit()
@@ -328,25 +263,13 @@ void IMEditorWidget::slotEdit()
 	if ( IMAddressLVI *current = static_cast<IMAddressLVI*>(mWidget->lvAddresses->selectedItem() ) )
 	{
 		KDialogBase *editDialog = new KDialogBase( this, "editaddress", true, i18n("Edit Address"), KDialogBase::Ok|KDialogBase::Cancel );
-		IMAddressWidget *addressWid = new IMAddressWidget( editDialog, current->protocol(), current->address(), current->context()/*, current->inVCard()*/ ) ;
+		IMAddressWidget *addressWid = new IMAddressWidget( editDialog, mProtocols, current->protocol(), current->address(), current->context() ) ;
 
 		editDialog->setMainWidget( addressWid );
 
 		if ( editDialog->exec() == QDialog::Accepted )
 		{
-			/*
-			if ( addressWid->inVCard() )
-			{
-				QListViewItemIterator it( mWidget->lvAddresses );
-				while ( it.current() )
-				{
-					(static_cast<IMAddressLVI*>(*it))->setInVCard( false );
-					++it;
-				}
-			}
-			*/
 			current->setAddress( addressWid->address() );
-			//current->setInVCard( addressWid->inVCard() );
 			current->setContext( addressWid->context() );
 
 			// the entry for the protocol of the current address has changed
@@ -373,70 +296,29 @@ void IMEditorWidget::slotDelete()
 	{
 		IMAddressLVI * current = static_cast<IMAddressLVI*>( mWidget->lvAddresses->selectedItem() );
 		if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
+		{
 			mChangedProtocols.append( current->protocol() );
+			//kdDebug ( 0 ) << " changed protocols:  " << mProtocols.count() << endl;
+		}
 		delete current;
 
 		setModified( true );
 	}
 }
 
-IMProtocol IMEditorWidget::protocolFromString( QString protocolName )
+KPluginInfo * IMEditorWidget::protocolFromString( QString fieldValue )
 {
-	IMProtocol protocol = Unknown;
-
-	if ( protocolName == QString::fromLatin1( "aim") )
-		protocol = AIM;
-	else if ( protocolName == QString::fromLatin1( "gadu") )
-		protocol = GaduGadu;
-	else if ( protocolName == QString::fromLatin1( "xmpp") )
-		protocol = Jabber;
-	else if ( protocolName == QString::fromLatin1( "icq") )
-		protocol = ICQ;
-	else if ( protocolName == QString::fromLatin1( "irc") )
-		protocol = IRC;
-	else if ( protocolName == QString::fromLatin1( "msn") )
-		protocol = MSN;
-	else if ( protocolName == QString::fromLatin1( "sms") )
-		protocol = SMS;
-	else if ( protocolName == QString::fromLatin1( "yahoo") )
-		protocol = Yahoo;
-
-	return protocol;
-}
-
-QString IMEditorWidget::protocolToString( IMProtocol protocol )
-{
-	QString protocolName;
-	switch ( protocol )
+	QValueList<KPluginInfo *>::ConstIterator it;
+	KPluginInfo * protocol = 0;
+	for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
 	{
-	case AIM:
-		protocolName = QString::fromLatin1( "aim" );
-		break;
-	case GaduGadu:
-		protocolName = QString::fromLatin1( "gadu" );
-		break;
-	case Jabber:
-		protocolName = QString::fromLatin1( "xmpp" );
-		break;
-	case ICQ:
-		protocolName = QString::fromLatin1( "icq" );
-		break;
-	case IRC:
-		protocolName = QString::fromLatin1( "irc" );
-		break;
-	case MSN:
-		protocolName = QString::fromLatin1( "msn" );
-		break;
-	case SMS:
-		protocolName = QString::fromLatin1( "sms" );
-		break;
-	case Yahoo:
-		protocolName = QString::fromLatin1( "yahoo" );
-		break;
-	case Unknown:
-		break;
+		if ( ( (*it)->property( "X-KDE-InstantMessagingKABCField" ).toString() == fieldValue ) )
+		{
+			protocol = *it;
+			break;
+		}
 	}
-	return protocolName;
+	return protocol;
 }
 
 void IMEditorWidget::splitField( const QString &str, QString &app, QString &name, QString &value )

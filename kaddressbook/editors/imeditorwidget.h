@@ -27,13 +27,14 @@
 #ifndef IMEDITORWIDGET_H
 #define IMEDITORWIDGET_H
 
-#include "contacteditorwidget.h"
+#include <qvaluelist.h>
 #include <klistview.h>
+
+#include "contacteditorwidget.h"
 #include "imeditorbase.h"
 
 class AddressWidget;
-
-enum IMProtocol { AIM, GaduGadu, Jabber, ICQ, IRC, MSN, SMS, Yahoo, Unknown };
+class KPluginInfo;
 
 enum IMContext { Any, Home, Work };
 
@@ -54,6 +55,7 @@ class IMEditorWidget : public KAB::ContactEditorWidget
 		void loadContact( KABC::Addressee *addr );
 		void storeContact( KABC::Addressee *addr );
 		void setReadOnly( bool readOnly );
+		QValueList<KPluginInfo *> availableProtocols() const;
 	protected slots:
 		void slotUpdateButtons();
 		void slotAdd();
@@ -64,14 +66,16 @@ class IMEditorWidget : public KAB::ContactEditorWidget
 		 * Helper method to split the contents of an addressbook field up
 		 */
 		static void splitField( const QString &str, QString &app, QString &name, QString &value );
-		static IMProtocol protocolFromString( const QString protocolName );
-		static QString protocolToString( const IMProtocol protocol );
+		/**
+		 * Find a protocol that matches the KABC key, or 0 if none found
+		 */
+		KPluginInfo * protocolFromString( const QString fieldValue );
 	private:
 		bool mReadOnly;
 		IMEditorBase *mWidget;
 		// Used to track changed protocols to reduce KABC writes
-		QValueList<IMProtocol> mChangedProtocols;
-
+		QValueList<KPluginInfo *> mChangedProtocols;
+		QValueList<KPluginInfo *> mProtocols;
 };
 
 /**
@@ -82,20 +86,18 @@ class IMEditorWidget : public KAB::ContactEditorWidget
 class IMAddressLVI : public KListViewItem
 {
 	public:
-		IMAddressLVI( KListView *parent, IMProtocol protocol, QString address, IMContext context/*, bool inVCard*/ );
-		//void setInVCard( bool inVCard );
+		IMAddressLVI( KListView *parent, KPluginInfo * protocol, QString address, IMContext context );
 		void setAddress( const QString &address );
-		void setProtocol( IMProtocol protocol );
+		void setProtocol( KPluginInfo * protocol );
 		void setContext( IMContext context );
 		void activate();
-		IMProtocol protocol() const;
+		KPluginInfo * protocol() const;
 		QString address() const;
 		IMContext context() const;
-  //bool inVCard() const;
 	private:
-		IMProtocol mProtocol;
+		KPluginInfo * mProtocol;
 		IMContext mContext;
-		//bool mInVCard;
+		
 };
 
 /**

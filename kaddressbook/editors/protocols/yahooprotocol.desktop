@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Icon=yahoo_protocol
+ServiceTypes=KABC/IMProtocol,KPluginInfo
+X-KDE-InstantMessagingKABCField=messaging/yahoo
+Comment=Yahoo Protocol
+Name=Yahoo
+

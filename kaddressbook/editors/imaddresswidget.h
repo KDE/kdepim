@@ -26,20 +26,22 @@
 #ifndef IMADDRESSWIDGET_H
 #define IMADDRESSWIDGET_H
 
-#include "imaddressbase.h"
+#include <qvaluelist.h>
 
+#include "imaddressbase.h"
 #include "imeditorwidget.h"
+
+class KPluginInfo;
 
 class IMAddressWidget : public IMAddressBase
 {
 public:
-	// VCard support disabled pending standard vcard IM address storage
-	IMAddressWidget( QWidget *parent );
-	IMAddressWidget( QWidget *parent, const IMProtocol& protocol, const QString& address, const IMContext& context/*, bool inVCard*/ );
-	IMProtocol protocol();
+	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols);
+	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols, KPluginInfo *protocol, const QString& address, const IMContext& context );
+	KPluginInfo * protocol();
 	IMContext context();
 	QString address();
-	//bool inVCard();
+	QValueList<KPluginInfo *> mProtocols;
 protected:
 	/**
 	 * Populate combobox with protocols

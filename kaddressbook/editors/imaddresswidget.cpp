@@ -29,63 +29,29 @@
 
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <kplugininfo.h>
 
 #include "imaddresswidget.h"
 
-IMAddressWidget::IMAddressWidget( QWidget *parent ) : IMAddressBase( parent )
+IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols ) : IMAddressBase( parent )
 {
+	mProtocols = protocols;
 	populateProtocols();
 }
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, const IMProtocol& protocol, const QString& address, const IMContext& context/*, bool inVCard*/ ) : IMAddressBase( parent )
+IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols, KPluginInfo *protocol, const QString& address, const IMContext& context ) : IMAddressBase( parent )
 {
+	mProtocols = protocols;
 	populateProtocols();
-	cmbProtocol->setCurrentItem( (int)protocol );
+	cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );
 	cmbContext->setCurrentItem( (int)context );
 	edtAddress->setText( address );
-	//chkVCard->setChecked( inVCard );
 }
 
-IMProtocol IMAddressWidget::protocol()
+KPluginInfo * IMAddressWidget::protocol()
 {
-	IMProtocol protocol = Unknown;
-	if ( cmbProtocol->currentItem() )
-	{
-		int protocolIndex = cmbProtocol->currentItem();
-		
-		// get the protocol corresponding to the selected item
-		switch ( protocolIndex )
-		{
-		case 0:
-			protocol = AIM;
-			break;
-		case 1:
-			protocol = GaduGadu;
-			break;
-		case 2:
-			protocol = Jabber;
-			break;
-		case 3:
-			protocol = ICQ;
-			break;
-		case 4:
-			protocol = IRC;
-			break;
-		case 5:
-			protocol = MSN;
-			break;
-		case 6:
-			protocol = SMS;
-			break;
-		case 7:
-			protocol = Yahoo;
-			break;
-		default:
-			protocol = Unknown;
-			kdDebug( 5720 ) << k_funcinfo << "Unknown protocol selected! Check populateProtocol()" << endl;
-		}
-	}
-	return protocol;
+	int protocolIndex = cmbProtocol->currentItem();
+	return mProtocols[ protocolIndex ];
 }
 
 IMContext IMAddressWidget::context()
@@ -116,23 +82,11 @@ QString IMAddressWidget::address()
 	return edtAddress->text();
 }
 
-/*
-bool IMAddressWidget::inVCard()
-{
-	return chkVCard->isChecked();
-}
-*/
-
 void IMAddressWidget::populateProtocols()
 {
 	// insert the protocols in order
-	cmbProtocol->insertItem( SmallIcon(QString::fromLatin1("aim_protocol") ), QString::fromLatin1("AIM") );
-	cmbProtocol->insertItem( SmallIcon(QString::fromLatin1("gadu_protocol") ), QString::fromLatin1("Gadu-Gadu") );
-	cmbProtocol->insertItem( SmallIcon(QString::fromLatin1("jabber_protocol") ), QString::fromLatin1("Jabber") );
-	cmbProtocol->insertItem( SmallIcon(QString::fromLatin1("icq_protocol") ), QString::fromLatin1("ICQ") );
-	cmbProtocol->insertItem( SmallIcon(QString::fromLatin1("irc_protocol") ), QString::fromLatin1("IRC") );
-	cmbProtocol->insertItem( SmallIcon(QString::fromLatin1("msn_protocol") ), QString::fromLatin1("MSN") );
-	cmbProtocol->insertItem( SmallIcon(QString::fromLatin1("sms_protocol") ), QString::fromLatin1("SMS") );
-	cmbProtocol->insertItem( SmallIcon(QString::fromLatin1("yahoo_protocol") ), QString::fromLatin1("Yahoo") );
+	QValueList<KPluginInfo *>::ConstIterator it;
+	for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
+		cmbProtocol->insertItem( SmallIcon( (*it)->icon() ), (*it)->name() );
 }
 
