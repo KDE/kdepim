@@ -783,7 +783,7 @@ QString PilotDaemon::syncTypeString(int i) const
 			mode |= ActionQueue::FlagHHToPC;
 			break;
 		}
-		if (c.getInternalEditors() && !(mode | ActionQueue::FlagHHToPC) )
+		if (c.getInternalEditors() && !(mode & ActionQueue::FlagHHToPC) )
 		{
 			fSyncStack->addAction(new InternalEditorAction(fPilotLink, mode));
 		}

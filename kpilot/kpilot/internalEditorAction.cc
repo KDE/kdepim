@@ -57,7 +57,7 @@ void InternalEditorAction::syncDirtyDB()
 	{
 		fInternalEditorSyncStatus=eSyncDirtyDB;
 		dirtyDBs=KPilotConfig::getConfig().getDirtyDatabases();
-		emit logMessage(i18n("Databases with changed records: %s").arg(dirtyDBs.join(", ")));
+		emit logMessage(i18n("Databases with changed records: %1").arg(dirtyDBs.join(", ")));
 		dbIter=dirtyDBs.begin();
 	}
 	if (dbIter==dirtyDBs.end())
@@ -82,7 +82,7 @@ void InternalEditorAction::syncFlagsChangedDB()
 	{
 		fInternalEditorSyncStatus=eSyncFlagsChangedDB;
 		dirtyDBs=KPilotConfig::getConfig().getFlagsChangedDatabases();
-		emit logMessage(i18n("Databases with changed flags: %s").arg(dirtyDBs.join(", ")));
+		emit logMessage(i18n("Databases with changed flags: %1").arg(dirtyDBs.join(", ")));
 		dbIter=dirtyDBs.begin();
 	}
 	if (dbIter==dirtyDBs.end())
@@ -107,7 +107,7 @@ void InternalEditorAction::syncAppBlockChangedDB()
 	{
 		fInternalEditorSyncStatus=eSyncAppBlockChangedDB;
 		dirtyDBs=KPilotConfig::getConfig().getAppBlockChangedDatabases();
-		emit logMessage(i18n("Databases with changed AppBlock: %s").arg(dirtyDBs.join(", ")));
+		emit logMessage(i18n("Databases with changed AppBlock: %1").arg(dirtyDBs.join(", ")));
 		dbIter=dirtyDBs.begin();
 	}
 	if (dbIter==dirtyDBs.end())
