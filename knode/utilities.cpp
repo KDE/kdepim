@@ -102,17 +102,16 @@ void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize
 
 
 
-QString encryptStr(const QString& aStr)
+QCString encryptStr(const QCString& aStr)
 {
   uint i,len = aStr.length();
-  QString result;
+  QCString result;
 
   for (i=0; i<len; i++)
   {
-    // FIXME probably doesn't work like expected with non-ascii strings
-    unsigned char val = aStr[i].latin1() - ' ';
+    unsigned char val = aStr[i] - ' ';
     val = (255-' ') - val;
-    result += QChar(val + ' ');
+    result += (val + ' ');
   }
 
   return result;
@@ -120,7 +119,7 @@ QString encryptStr(const QString& aStr)
 
 
 
-QString decryptStr(const QString& aStr)
+QCString decryptStr(const QCString& aStr)
 {
   return encryptStr(aStr);
 }

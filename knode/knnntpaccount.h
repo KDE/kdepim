@@ -31,6 +31,8 @@ class KNNntpAccount : public KNCollection, public KNServerInfo {
 		
 		collectionType type()							{ return CTnntpAccount; }		
 									
+		// trys to read information, returns false if it fails to do so
+		bool readInfo(const QString &confPath);
 		void saveInfo();		
 		void syncInfo();
 		QString path();

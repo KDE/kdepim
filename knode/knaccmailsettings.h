@@ -23,6 +23,7 @@
 
 class QLineEdit;
 class QSpinBox;
+class KNServerInfo;
 
 class KNAccMailSettings : public KNSettingsWidget  {
 	
@@ -35,8 +36,9 @@ class KNAccMailSettings : public KNSettingsWidget  {
 	protected:
 		void init();
 		
-		QLineEdit *smtp;
-		QSpinBox *sPort;
+		KNServerInfo *serverInfo;
+		QLineEdit *s_erver, *p_ort;
+    QSpinBox *h_old, *t_imeout;
 };
 
 #endif

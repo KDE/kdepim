@@ -36,12 +36,13 @@
 #include "knaccnewssettings.h"
 #include "kncollectionviewitem.h"
 #include "knglobals.h"
+#include "knode.h"
 #include "utilities.h"
 #include "knaccountmanager.h"
 
 
 KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
-  : QObject(parent, name), gManager(gm), set(0), lastId(0), view(v)
+  : QObject(parent, name), gManager(gm), set(0), view(v)
 {
 	accList=new QList<KNNntpAccount>;
 	accList->setAutoDelete(true);
@@ -78,9 +79,8 @@ KNAccountManager::~KNAccountManager()
 void KNAccountManager::readConfig()
 {
 	KConfig *conf=KGlobal::config();
-	conf->setGroup("SERVER");
-	s_mtp->setServer((conf->readEntry("Smtp","")).latin1());
-	s_mtp->setPort(conf->readNumEntry("sPort", 25));	
+	conf->setGroup("MAILSERVER");
+	s_mtp->readConf(conf);
 }
 
 
@@ -95,38 +95,30 @@ void KNAccountManager::saveYourself()
 
 void KNAccountManager::loadAccounts()
 {
-	QString dir(KGlobal::dirs()->saveLocation("appdata"));
-	if (dir==QString::null) {
-		displayInternalFileError();
-		return;
-	}
-	QDir d(dir);
-	int id;
-	KNNntpAccount *a;
+  QString dir(KGlobal::dirs()->saveLocation("appdata"));
+  if (dir==QString::null) {
+    displayInternalFileError();
+    return;
+  }
+  QDir d(dir);
+  KNNntpAccount *a;
 	
-	QStringList entries(d.entryList("nntp.*", QDir::Dirs));
+  QStringList entries(d.entryList("nntp.*", QDir::Dirs));
 
-  QStringList::Iterator it;
-	for(it = entries.begin(); it != entries.end(); it++) {
-		KSimpleConfig conf(dir+(*it)+"/info");
-		id=conf.readNumEntry("id", -1);
-  	if(id!=-1) {
-  		a=new KNNntpAccount();
-  		a->setId(id);
-  		if(lastId<id) lastId=id;
-  		a->setName(conf.readEntry("name", "unknown"));
-  		a->setServer(conf.readEntry("server", "localhost").local8Bit());
-  		a->setPort(conf.readNumEntry("port", 119));
-  		a->setUser(conf.readEntry("user").local8Bit());
-  		a->setPass(decryptStr(conf.readEntry("pass")).local8Bit());
-  		a->setUnsentCount(conf.readNumEntry("unsentCnt", 0));
-  		accList->append(a);
-  		KNCollectionViewItem* cvit=new KNCollectionViewItem(view);
-  		a->setListItem(cvit);
-  		cvit->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTnntp));
-  		gManager->loadGroups(a);
-  	}
-  }	
+  QStringList::Iterator it;	
+  for(it = entries.begin(); it != entries.end(); it++) {
+    a=new KNNntpAccount();
+    if (a->readInfo(dir+(*it)+"/info")) {
+      accList->append(a);
+      KNCollectionViewItem* cvit=new KNCollectionViewItem(view);
+      a->setListItem(cvit);
+      cvit->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTnntp));
+      gManager->loadGroups(a);
+    } else {
+      delete a;
+      qDebug("Unable to load account %s!",(*it).local8Bit().data());
+    }
+  }
 }
 
 
@@ -177,18 +169,32 @@ void KNAccountManager::startConfig(KNAccNewsSettings *s)
 
 
 
-void KNAccountManager::newAccount()
+void KNAccountManager::newAccount(KNAccNewsConfDialog *dlg)
 {
 	KNNntpAccount *a=new KNNntpAccount();
-	a->setId(++lastId);
+	
+	// find a unused id for the new account...
+	QString dir(KGlobal::dirs()->saveLocation("appdata"));
+  if (dir==QString::null) {
+    displayInternalFileError();
+    return;
+  }
+  QDir d(dir);
+  QStringList entries(d.entryList("nntp.*", QDir::Dirs));
+
+  int id = 1;
+  while (entries.findIndex(QString("nntp.%1").arg(id))!=-1)
+    ++id;
+	
+	a->setId(id);
 		
-	QString dir(KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(a->id())));
+	dir = KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(a->id()));
 	if (dir!=QString::null) {
 		accList->append(a);
-		applySettings(a);
-		set->addItem(a);
+		applySettings(a,dlg);
+		if (set) set->addItem(a);
 		KNCollectionViewItem *it = new KNCollectionViewItem(view);
-  	it->setPixmap(0, UserIcon("server"));
+  	it->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTnntp));
   	a->setListItem(it);
 	}
 	else {
@@ -199,21 +205,19 @@ void KNAccountManager::newAccount()
 
 
 
-void KNAccountManager::applySettings(KNNntpAccount *a)
+void KNAccountManager::applySettings(KNNntpAccount *a, KNAccNewsConfDialog *dlg)
 {
-	a->setName(set->name());
-	a->setServer(set->server().local8Bit());
-	a->setPort(a->port());
-	if(set->logonNeeded()) {
-		a->setUser(set->user().local8Bit());
-		a->setPass(set->pass().local8Bit());
-	}
-	else {
-		a->setUser("");
-		a->setPass("");
-	}	
+	a->setName(dlg->name());
+	a->setServer(dlg->server().local8Bit());
+	a->setPort(dlg->port());
+	a->setHold(dlg->hold());
+	a->setTimeout(dlg->timeout());
+	a->setNeedsLogon(dlg->logonNeeded());
+	a->setUser(dlg->user().local8Bit());
+	a->setPass(dlg->pass().local8Bit());
 	a->saveInfo();
 	a->updateListItem();
+	if (set) set->updateItem(a);
 }
 
 
@@ -266,14 +270,21 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
 
 void KNAccountManager::endConfig()
 {
-	set=0;
+  set = 0;
 }
 
 
 
 void KNAccountManager::slotProperties()
 {
-  #warning FIXME: stub (open conf dialog and show account properties)
+  if (c_urrentAccount) {
+    KNAccNewsConfDialog *confDlg = new KNAccNewsConfDialog(c_urrentAccount,knGlobals.top);
+
+    if (confDlg->exec())
+      applySettings(c_urrentAccount, confDlg);
+
+    delete confDlg;
+  }
 }
   	
 

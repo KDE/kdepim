@@ -78,14 +78,14 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   // Accounts / News
   list.clear();
   list << i18n("Accounts") << i18n(" News");
-  frame = addHBoxPage(list, i18n("News"), UserIcon("group"));
+  frame = addHBoxPage(list, i18n("Newsgroups Servers"), UserIcon("group"));
   
   widgets.append(new  KNAccNewsSettings(frame, knGlobals.accManager));
   
   // Accounts / Mail
   list.clear();
   list << i18n("Accounts") << i18n(" Mail");
-  frame = addHBoxPage(list, i18n("Mail"), UserIcon("accmail"));
+  frame = addHBoxPage(list, i18n("Mail Server"), UserIcon("accmail"));
   widgets.append(new KNAccMailSettings(frame));
   
   // Read News / General

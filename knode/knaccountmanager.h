@@ -24,6 +24,7 @@
 #include <kaction.h>
 
 class KNAccNewsSettings;
+class KNAccNewsConfDialog;
 class KNGroupManager;
 class KNListView;
 class KNNntpAccount;
@@ -45,8 +46,8 @@ class KNAccountManager : public QObject
 		
 		void startConfig(KNAccNewsSettings *s);
 		
-		void newAccount();
-		void applySettings(KNNntpAccount *a);
+		void newAccount(KNAccNewsConfDialog *dlg);
+		void applySettings(KNNntpAccount *a, KNAccNewsConfDialog *dlg);
 		void removeAccount(KNNntpAccount *a=0);
 		void endConfig();
 		
@@ -65,7 +66,6 @@ class KNAccountManager : public QObject
 		KNServerInfo *s_mtp;
 		
 		KNAccNewsSettings *set;
-		int lastId;
 		KNListView *view;		
 		KAction *actProperties, *actSubscribe, *actLoadHdrs, *actDelete, *actPostNewArticle;
 		KActionCollection actionCollection;

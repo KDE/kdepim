@@ -26,32 +26,48 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <knumvalidator.h>
 
+#include "knserverinfo.h"
 #include "knaccmailsettings.h"
 
 
 KNAccMailSettings::KNAccMailSettings(QWidget *p) : KNSettingsWidget(p)
 {
-	QGroupBox *sgb=new QGroupBox(i18n("SMTP"), this);
-	QLabel *l1, *l2;
-	smtp=new QLineEdit(sgb);
-	sPort=new QSpinBox(0, 99999, 1, sgb);
-	l1=new QLabel(i18n("Server"), sgb);
-	l2=new QLabel(i18n("Port"), sgb);
-		
-	QVBoxLayout *topL=new QVBoxLayout(this, 10);
-	QGridLayout *sgbL=new QGridLayout(sgb, 2,3, 20,10);
+  QGridLayout *topL=new QGridLayout(this, 5, 3, 5);
+
+  QLabel *l=new QLabel(i18n("Server:"), this);	
+  topL->addWidget(l, 0,0);
+  s_erver=new QLineEdit(this);	
+  topL->addMultiCellWidget(s_erver, 0, 0, 1, 2);
 	
-	topL->addWidget(sgb);
-	topL->addStretch(1);
-	sgbL->addWidget(l1, 0,0);
-	sgbL->addMultiCellWidget(smtp, 0,0, 1,2);
-	sgbL->addWidget(l2, 1,0);
-	sgbL->addWidget(sPort, 1,1);
-  sgbL->setColStretch(2,1);
-  topL->setResizeMode(QLayout::Minimum);
+  l=new QLabel(i18n("Port:"), this);	
+  topL->addWidget(l, 1,0);
+  p_ort=new QLineEdit(this);	
+  p_ort->setValidator(new KIntValidator(0,65536,this));
+  topL->addWidget(p_ort, 1,1);
+
+  l = new QLabel(i18n("Hold connection for:"), this);
+  topL->addWidget(l,2,0);
+  h_old = new QSpinBox(0,300,5,this);
+  topL->addWidget(h_old,2,1);
+  l = new QLabel(i18n("secs"),this);
+  topL->addWidget(l,2,2);
+
+  l = new QLabel(i18n("Timeout:"), this);
+  topL->addWidget(l,3,0);
+  t_imeout = new QSpinBox(0,300,5,this);
+  topL->addWidget(t_imeout,3,1);
+  l = new QLabel(i18n("secs"),this);
+  topL->addWidget(l,3,2);
+
+  topL->setColStretch(2,1);
+//  topL->setResizeMode(QLayout::Minimum);
   topL->activate();
-	
+
+  serverInfo=new KNServerInfo();
+	serverInfo->setType(KNServerInfo::STsmtp);
+  	
   init();	
 }
 
@@ -59,27 +75,35 @@ KNAccMailSettings::KNAccMailSettings(QWidget *p) : KNSettingsWidget(p)
 
 KNAccMailSettings::~KNAccMailSettings()
 {
+  delete serverInfo;
 }
 
 
 
 void KNAccMailSettings::init()
 {
-	KConfig *conf=KGlobal::config();
-	conf->setGroup("SERVER");
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("MAILSERVER");
+  serverInfo->readConf(conf);
 	
-	smtp->setText(conf->readEntry("Smtp",""));
-	sPort->setValue(conf->readNumEntry("sPort",25));
+  s_erver->setText(serverInfo->server());
+  p_ort->setText(QString::number(serverInfo->port()));	
+  h_old->setValue(serverInfo->hold());
+  t_imeout->setValue(serverInfo->timeout());
 }
 
 
 
 void KNAccMailSettings::apply()
 {
-	KConfig *conf=KGlobal::config();
-	conf->setGroup("SERVER");
-	conf->writeEntry("Smtp", smtp->text());
-	conf->writeEntry("sPort", sPort->value());
+  serverInfo->setServer(s_erver->text().local8Bit());
+  serverInfo->setPort(p_ort->text().toInt());
+  serverInfo->setHold(h_old->value());
+  serverInfo->setTimeout(t_imeout->value());
+
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("MAILSERVER");
+  serverInfo->saveConf(conf);
 }
 
 

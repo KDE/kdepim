@@ -36,6 +36,23 @@ KNNntpAccount::~KNNntpAccount()
 
 
 
+// trys to read information, returns false if it fails to do so
+bool KNNntpAccount::readInfo(const QString &confPath)
+{
+  KSimpleConfig conf(confPath);
+
+  n_ame = conf.readEntry("name");
+  u_nsentCount = conf.readNumEntry("unsentCnt", 0);
+
+  KNServerInfo::readConf(&conf);
+  return true;
+  if (n_ame.isEmpty() || s_erver.isEmpty() || i_d == -1)
+    return false;
+  else
+    return true;
+}
+
+
 void KNNntpAccount::saveInfo()
 {
 	QString dir(path());
@@ -44,13 +61,9 @@ void KNNntpAccount::saveInfo()
 		
 	KSimpleConfig conf(dir+"info");
 	
-	conf.writeEntry("id", i_d);
 	conf.writeEntry("name", n_ame);
-	conf.writeEntry("server", QString(s_erver));
-	conf.writeEntry("port", p_ort);
-	conf.writeEntry("user", QString(u_ser));
-	conf.writeEntry("pass", QString(encryptStr(p_ass)));
 	conf.writeEntry("unsentCnt", u_nsentCount);
+	KNServerInfo::saveConf(&conf);      // save not KNNntpAccount specific settings
 }
 
 

@@ -16,85 +16,62 @@
  ***************************************************************************/
 
 
-#include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qframe.h>
+#include <qwidget.h>
+#include <qgroupbox.h>
 
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <kiconloader.h>
+#include <knumvalidator.h>
 
 #include "knnntpaccount.h"
-#include "knaccnewssettings.h"
 #include "knlistbox.h"
 #include "knaccountmanager.h"
+#include "utilities.h"
+#include "knaccnewssettings.h"
 
 
 KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am)
-	: KNSettingsWidget(p)
+	: KNSettingsWidget(p), aManager(am), pm(UserIcon("server"))
 {
-	QGroupBox *gb=new QGroupBox(i18n("Accounts"), this);
-	QLabel *l1, *l2, *l3, *l4, *l5;
-	lb=new KNListBox(gb);
-	lb->setFocusPolicy(NoFocus);
-	addBtn=new QPushButton(i18n("Add"), gb);
-	delBtn=new QPushButton(i18n("Delete"), gb);
-			
-	n_ame=new QLineEdit(this);
-	s_erver=new QLineEdit(this);
-	p_ort=new QSpinBox(0, 99999, 1, this);
-	u_ser=new QLineEdit(this);
-	p_ass=new QLineEdit(this);
-	p_ass->setEchoMode(QLineEdit::Password);
-	okBtn=new QPushButton(i18n("Ok"), this);
-	logonCB=new QCheckBox(i18n("logon required"), this);
-	l1=new QLabel(i18n("Name"), this);
-	l2=new QLabel(i18n("Server"), this);
-	l3=new QLabel(i18n("Port"), this);
-	l4=new QLabel(i18n("User"), this);
-	l5=new QLabel(i18n("Pass"), this);
-  	
-	QVBoxLayout *topL=new QVBoxLayout(this, 10);
-	QGridLayout *gbL=new QGridLayout(gb, 3,2, 20,10);
-	QGridLayout *serL=new QGridLayout(6,4, 5);
+  QGridLayout *topL=new QGridLayout(this, 5,2, 5, 5);
+
+  // account listbox
+  lb=new KNListBox(this);
+  connect(lb, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
+  connect(lb, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
+  topL->addMultiCellWidget(lb, 0,3, 0,0);
+
+  // info box
+	QGroupBox *gb = new QGroupBox(2,Qt::Horizontal,QString::null,this);
+	topL->addWidget(gb,4,0);
 	
-	topL->addWidget(gb, 1);
-	topL->addLayout(serL);
-	gbL->addMultiCellWidget(lb, 0,2, 0,0);
-	gbL->addWidget(addBtn, 0,1);
-	gbL->addWidget(delBtn, 1,1);
-	gbL->setRowStretch(2, 1);
-	gbL->setColStretch(0, 1);
-	serL->addWidget(l1, 0,0);
-	serL->addMultiCellWidget(n_ame, 0,0, 1,2);
-	serL->addWidget(okBtn, 0,3);
-	serL->addWidget(l2, 1,0);
-	serL->addMultiCellWidget(s_erver, 1,1, 1,2);
-	serL->addWidget(l3, 2,0);
-	serL->addWidget(p_ort, 2,1);
-	serL->addMultiCellWidget(logonCB, 3,3, 0,3);
-	serL->addWidget(l4, 4,0);
-	serL->addMultiCellWidget(u_ser, 4,4, 1,2);
-	serL->addWidget(l5, 5,0);
-	serL->addMultiCellWidget(p_ass, 5,5, 1,2);
-	serL->setColStretch(2,1);
-	topL->setResizeMode(QLayout::Minimum);
-	topL->activate();
+  serverInfo = new QLabel(gb);
+  portInfo = new QLabel(gb);
+
+	// buttons
+  addBtn=new QPushButton(i18n("&Add"), this);
+  connect(addBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
+  topL->addWidget(addBtn, 0,1);
 	
-	connect(lb, SIGNAL(highlighted(int)), this, SLOT(slotItemSelected(int)));
-	connect(addBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
-	connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
-	connect(okBtn, SIGNAL(clicked()), this, SLOT(slotOkBtnClicked()));
-	connect(logonCB, SIGNAL(toggled(bool)), this, SLOT(slotLogonChecked(bool)));
+  delBtn=new QPushButton(i18n("&Delete"), this);
+  connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
+  topL->addWidget(delBtn, 1,1);
 	
-	pm=UserIcon("server");
-	aManager=am;
-	am->startConfig(this);
-	currentItem=-1;
-	enableEdit(false);
-	slotItemSelected(-1);	
+  editBtn=new QPushButton(i18n("&Edit"), this);
+  connect(editBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
+  topL->addWidget(editBtn, 2,1);
+		
+  topL->setRowStretch(3,1);   // stretch the server listbox
+  topL->activate();	
+
+  slotSelectionChanged();     // disable Delete & Edit initially
+	aManager->startConfig(this);
 }
 
 
@@ -124,101 +101,179 @@ void KNAccNewsSettings::removeItem(KNNntpAccount *a)
 			lb->removeItem(i);
 			break;
 		}
-	}	
-}
-
-
-
-void KNAccNewsSettings::enableEdit(bool b)
-{
-	n_ame->clear();
-	s_erver->clear();
-	p_ort->setValue(119);
-	u_ser->clear();
-	p_ass->clear();
-	
-	if(n_ame->isEnabled()!=b) {
-		n_ame->setEnabled(b);
-		p_ort->setEnabled(b);
-		okBtn->setEnabled(b);
-		logonCB->setEnabled(b);
-		u_ser->setEnabled(logonCB->isChecked());
-		p_ass->setEnabled(logonCB->isChecked());
-		if(!b) {
-			logonCB->setChecked(false);
-			currentItem=-1;
-			lb->clearSelection();
-		}
 	}
 }
 
 
+
+// the settings dialog is not modal!
+void KNAccNewsSettings::updateItem(KNNntpAccount *a)
+{
+  KNLBoxItem *it;
+  for(uint i=0; i<lb->count(); i++) {
+    it=lb->itemAt(i);
+    if(it && it->data()==a) {
+      it=new KNLBoxItem(a->name(), a, &pm);
+      lb->changeItem(it, i);
+      break;
+    }
+  }
+}
+
+
+
+void KNAccNewsSettings::slotSelectionChanged()
+{
+  delBtn->setEnabled(lb->currentItem()!=-1);
+  editBtn->setEnabled(lb->currentItem()!=-1);
+
+  KNLBoxItem *it = lb->itemAt(lb->currentItem());
+  if (it) {
+    KNNntpAccount *a = static_cast<KNNntpAccount*>(it->data());
+    serverInfo->setText(i18n("Server: %1").arg(a->server().data()));
+    portInfo->setText(i18n("Port: %1").arg(a->port()));
+  } else {
+    serverInfo->setText(i18n("Server: "));
+    portInfo->setText(i18n("Port: "));
+  }
+}
+
+
+
 void KNAccNewsSettings::slotItemSelected(int id)
 {
-	currentItem=id;
-	KNNntpAccount *a;
-	s_erver->setEnabled(false);
-	if(id==-1) enableEdit(false);
-	else {
-		enableEdit(true);
-		a=(KNNntpAccount*)lb->itemAt(id)->data();
-		n_ame->setText(a->name());
-		s_erver->setText(a->server());
-		p_ort->setValue(a->port());
-		logonCB->setChecked(a->needsLogon());
-		u_ser->setText(a->user());
-		p_ass->setText(a->pass());
-	}		
+  slotEditBtnClicked();
 }
 
 
 
 void KNAccNewsSettings::slotAddBtnClicked()
 {
-	enableEdit(true);
-	s_erver->setEnabled(true);
-	currentItem=-1;
-	p_ort->setValue(119);
+  KNAccNewsConfDialog *confDlg = new KNAccNewsConfDialog(0,this);
+
+  if (confDlg->exec())
+  	aManager->newAccount(confDlg);
+
+  delete confDlg;
 }
 
 
 
 void KNAccNewsSettings::slotDelBtnClicked()
 {
-	if (currentItem < 0)
-		return;
-	KNNntpAccount *a;
-	a=(KNNntpAccount*)(lb->itemAt(currentItem)->data());
-	aManager->removeAccount(a);
-	enableEdit(false);		
+  KNLBoxItem *it = lb->itemAt(lb->currentItem());
+
+  if (it)
+    aManager->removeAccount(static_cast<KNNntpAccount*>(it->data()));
 }
 
 
 
-void KNAccNewsSettings::slotOkBtnClicked()
+void KNAccNewsSettings::slotEditBtnClicked()
 {
-	KNLBoxItem *it;
-	KNNntpAccount *a;
-	if(currentItem==-1) {
-		aManager->newAccount();
-		s_erver->setEnabled(false);
-	}		
-	else {
-		a=(KNNntpAccount*)lb->itemAt(currentItem)->data();
-		aManager->applySettings(a);
-		it=new KNLBoxItem(a->name(), a, &pm);
-		lb->changeItem(it, currentItem);
-	}
-	enableEdit(false);
+  KNLBoxItem *it = lb->itemAt(lb->currentItem());
+
+  if (it) {
+    KNNntpAccount *a = static_cast<KNNntpAccount*>(it->data());
+    KNAccNewsConfDialog *confDlg = new KNAccNewsConfDialog(a,this);
+
+    if (confDlg->exec())
+      aManager->applySettings(a, confDlg);  // calls KNAccNewsSettings::updateItem() for us ;-)
+
+    delete confDlg;
+  }
+}
+
+
+//===============================================================================
+
+
+KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *acc, QWidget *parent, const char *name)
+  : KDialogBase(Plain, (acc)? i18n("Properties of %1").arg(acc->name()) : i18n("New Server"),
+	              Ok|Cancel|Help, Ok, parent, name)
+{
+  QFrame* page=plainPage();
+  QGridLayout *topL=new QGridLayout(page, 9, 3, 5);
+
+  QLabel *l=new QLabel(i18n("Name:"),page);	
+  topL->addWidget(l, 0,0);	
+  n_ame=new QLineEdit(page);
+  if (acc) n_ame->setText(acc->name());
+  topL->addMultiCellWidget(n_ame, 0, 0, 1, 2);	
+
+  l=new QLabel(i18n("Server:"), page);	
+  topL->addWidget(l, 1,0);
+  s_erver=new QLineEdit(page);	
+  if (acc) {
+    s_erver->setText(acc->server());
+    s_erver->setEnabled(false);
+  }
+  topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
+	
+  l=new QLabel(i18n("Port:"), page);	
+  topL->addWidget(l, 2,0);
+  p_ort=new QLineEdit(page);	
+  p_ort->setValidator(new KIntValidator(0,65536,this));
+  p_ort->setText((acc)? QString::number(acc->port()):"119");	
+  topL->addWidget(p_ort, 2,1);
+
+  l = new QLabel(i18n("Hold connection for:"), page);
+  topL->addWidget(l,3,0);
+  h_old = new QSpinBox(5,1800,5,page);
+  h_old->setValue((acc)? acc->hold():300);
+  topL->addWidget(h_old,3,1);
+  l = new QLabel(i18n("secs"),page);
+  topL->addWidget(l,3,2);
+
+  l = new QLabel(i18n("Timeout:"), page);
+  topL->addWidget(l,4,0);
+  t_imeout = new QSpinBox(5,600,5,page);
+  t_imeout->setValue((acc)? acc->timeout():60);
+  topL->addWidget(t_imeout,4,1);
+  l = new QLabel(i18n("secs"),page);
+  topL->addWidget(l,4,2);
+
+  authCB=new QCheckBox(i18n("Server requires &authentication"), page);
+  connect(authCB, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
+  topL->addMultiCellWidget(authCB, 5,5, 0,3);
+
+  l=new QLabel(i18n("User:"), page);
+  topL->addWidget(l, 6,0);
+  u_ser=new QLineEdit(page);
+  if (acc) u_ser->setText(acc->user());
+  topL->addMultiCellWidget(u_ser, 6,6, 1,2);
+	
+  l=new QLabel(i18n("Password:"), page);
+  topL->addWidget(l, 7,0);
+  p_ass=new QLineEdit(page);
+  p_ass->setEchoMode(QLineEdit::Password);
+  if (acc) p_ass->setText(acc->pass());		
+  topL->addMultiCellWidget(p_ass, 7,7, 1,2);
+
+  slotAuthChecked((acc)? acc->needsLogon():false);
+
+  topL->setColStretch(2, 1);
+	topL->activate();
+	
+	restoreWindowSize("accNewsPropDLG", this, sizeHint());
 }
 
 
 
-void KNAccNewsSettings::slotLogonChecked(bool b)
+KNAccNewsConfDialog::~KNAccNewsConfDialog()
 {
+  saveWindowSize("accNewsPropDLG", size());
+}
+
+
+
+void KNAccNewsConfDialog::slotAuthChecked(bool b)
+{
+  authCB->setChecked(b);
 	u_ser->setEnabled(b);
 	p_ass->setEnabled(b);
 }
+
 
 //--------------------------------
 
