@@ -95,7 +95,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   new KAction(i18n("Send &Later"), "queue", 0, this,
     SLOT(slotSendLater()), actionCollection(), "send_later");
 
-  new KAction(i18n("Save As &Draft"),"filesave", 0 , this,
+  new KAction(i18n("Save as &Draft"),"filesave", 0 , this,
     SLOT(slotSaveAsDraft()), actionCollection(), "save_as_draft");
 
   new KAction(i18n("D&elete"),"editdelete", 0 , this,

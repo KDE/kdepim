@@ -615,7 +615,7 @@ void KNMainWindow::initActions()
                               SLOT(slotFolNew()), actionCollection(), "folder_new");
   a_ctFolNewChild           = new KAction(i18n("New &Subfolder"), "folder_new", 0, this,
                               SLOT(slotFolNewChild()), actionCollection(), "folder_newChild");
-  a_ctFolDelete             = new KAction(i18n("&Delete Folder"), "editdelete", 0, this,
+  a_ctFolDelete             = new KAction(i18n("&Delete Folder..."), "editdelete", 0, this,
                               SLOT(slotFolDelete()), actionCollection(), "folder_delete");
   a_ctFolRename             = new KAction(i18n("&Rename Folder"), "text", 0, this,
                               SLOT(slotFolRename()), actionCollection(), "folder_rename");
@@ -623,11 +623,11 @@ void KNMainWindow::initActions()
                               SLOT(slotFolCompact()), actionCollection(), "folder_compact");
   a_ctFolCompactAll         = new KAction(i18n("Co&mpact All Folders"), 0, this,
                               SLOT(slotFolCompactAll()), actionCollection(), "folder_compact_all");
-  a_ctFolEmpty              = new KAction(i18n("&Empty Folder"), 0, this,
+  a_ctFolEmpty              = new KAction(i18n("&Empty Folder..."), 0, this,
                               SLOT(slotFolEmpty()), actionCollection(), "folder_empty");
-  a_ctFolMboxImport         = new KAction(i18n("&Import MBox Folder"), 0, this,
+  a_ctFolMboxImport         = new KAction(i18n("&Import MBox Folder..."), 0, this,
                               SLOT(slotFolMBoxImport()), actionCollection(), "folder_MboxImport");
-  a_ctFolMboxExport         = new KAction(i18n("E&xport as MBox Folder"), 0, this,
+  a_ctFolMboxExport         = new KAction(i18n("E&xport as MBox Folder..."), 0, this,
                               SLOT(slotFolMBoxExport()), actionCollection(), "folder_MboxExport");
 
   //header-view - list-handling
@@ -680,7 +680,7 @@ void KNMainWindow::initActions()
   // scoring
   a_ctScoresEdit            = new KAction(i18n("&Edit Scoring Rules..."), "edit", CTRL+Key_E, this,
                               SLOT(slotScoreEdit()), actionCollection(), "scoreedit");
-  a_ctReScore               = new KAction(i18n("Recalculate &Scores..."), 0, this,
+  a_ctReScore               = new KAction(i18n("Recalculate &Scores"), 0, this,
                               SLOT(slotReScore()),actionCollection(),"rescore");
   a_ctScoreLower            = new KAction(i18n("&Lower Score for Author..."), CTRL+Key_L, this,
                               SLOT(slotScoreLower()), actionCollection(), "scorelower");
