@@ -27,6 +27,9 @@
 
 <qandaset id="faq-set">
 
+<!-- fixme: how to use old kmail mail data: copy files from
+~/Mail (incl. hidden ones) to the new ~/Mail directory -->
+
 <qandaentry>
 <question><para>Why are my filters not applied to incoming messages of IMAP accounts?</para></question>
 <answer>
