@@ -1,5 +1,5 @@
 #!/bin/sh
-trap "rm -f dcopidlng.stderr.$$"
+trap "rm -f dcopidlng.stderr.$$" 0 1 2 15
 LIBDIR=`dirname $0`
 perl -I"$LIBDIR" "$LIBDIR/kalyptus" --allow_k_dcop_accessors -f dcopidl $1 2>dcopidlng.stderr.$$
 RET=$?
