@@ -658,7 +658,10 @@ void KPilotInstaller::optionsConfigureToolbars()
 {
 	FUNCTIONSETUP;
 	// use the standard toolbar editor
+#if KDE_VERSION >= 0x030100
+	// This was added in KDE 3.1
 	saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+#endif
 	KEditToolbar dlg(actionCollection());
 	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
 	dlg.exec();
@@ -668,7 +671,9 @@ void KPilotInstaller::slotNewToolbarConfig()
 {
 	// recreate our GUI
 	createGUI();
+#if KDE_VERSION >= 0x030100
 	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+#endif
 }
 
 void KPilotInstaller::slotConfigureKPilot()
