@@ -33,10 +33,10 @@ using namespace KSync;
 Syncee::Syncee( uint size )
   : mStatusLog( 0 ), mSupport( size )
 {
-    mSyncMode = MetaLess;
-    mFirstSync = false;
-    mSupport.fill( true );
-    kdDebug(5230) << "Size is " << size << " " << mSupport.size() << endl;
+  mSyncMode = MetaLess;
+  mFirstSync = false;
+  mSupport.fill( true );
+  kdDebug(5230) << "Size is " << size << " " << mSupport.size() << endl;
 }
 
 Syncee::~Syncee()
@@ -44,14 +44,14 @@ Syncee::~Syncee()
   delete mStatusLog;
 }
 
-void Syncee::setFilename( const QString &filename )
+void Syncee::setIdentifier( const QString &i )
 {
-  mFilename = filename;
+  mIdentifier = i;
 }
 
-QString Syncee::filename()
+QString Syncee::identifier()
 {
-  return mFilename;
+  return mIdentifier;
 }
 
 SyncEntry *Syncee::findEntry( const QString &id )
@@ -59,8 +59,8 @@ SyncEntry *Syncee::findEntry( const QString &id )
   kdDebug(5231) << "Syncee::findEntry() '" << id << "'" << endl;
 
   SyncEntry *entry = firstEntry();
-  while (entry) {
-    if (entry->id() == id) return entry;
+  while ( entry ) {
+    if ( entry->id() == id ) return entry;
     entry = nextEntry();
   }
 
@@ -69,8 +69,8 @@ SyncEntry *Syncee::findEntry( const QString &id )
 
 void Syncee::replaceEntry( SyncEntry *oldEntry, SyncEntry *newEntry )
 {
-  removeEntry(oldEntry);
-  addEntry(newEntry);
+  removeEntry( oldEntry );
+  addEntry( newEntry );
 }
 
 bool Syncee::hasChanged( SyncEntry *entry )
@@ -78,11 +78,11 @@ bool Syncee::hasChanged( SyncEntry *entry )
   if ( entry->state() != SyncEntry::Undefined ) return true;
   if ( entry->timestamp().isEmpty() ) return false; // sure -zecke
 
-  if (!mStatusLog ) return false;
-  mStatusLog->setGroup(entry->id());
-  QString timestamp = mStatusLog->readEntry("Timestamp");
+  if ( !mStatusLog ) return false;
+  mStatusLog->setGroup( entry->id() );
+  QString timestamp = mStatusLog->readEntry( "Timestamp" );
 
-  return (timestamp != entry->timestamp());
+  return ( timestamp != entry->timestamp() );
 }
 
 bool Syncee::loadLog()
@@ -113,7 +113,7 @@ void Syncee::writeLog()
 
 QString Syncee::statusLogName()
 {
-  QString name = filename();
+  QString name = identifier();
 
   name.replace(QRegExp("/"),"_");
   name.replace(QRegExp(":"),"_");
@@ -123,96 +123,94 @@ QString Syncee::statusLogName()
   return name;
 }
 
-int Syncee::modificationState( SyncEntry* entry ) const
+int Syncee::modificationState( SyncEntry *entry ) const
 {
-    return entry->state();
+  return entry->state();
 }
 
 int Syncee::syncMode() const
 {
-    return mSyncMode;
+  return mSyncMode;
 }
 
 void Syncee::setSyncMode( int mode )
 {
-    mSyncMode = mode;
+  mSyncMode = mode;
 }
 
 bool Syncee::firstSync() const
 {
-    return mFirstSync;
+  return mFirstSync;
 }
 
 void Syncee::setFirstSync( bool first )
 {
-    mFirstSync = first;
+  mFirstSync = first;
 }
 
 void Syncee::insertId( const QString &type,
                        const QString &konnectorId,
                        const QString &kdeId )
 {
-    QMap<QString,  Kontainer::ValueList>::Iterator it;
-    it = mMaps.find( type );
-    if ( it == mMaps.end() ) { // not inserted yet anything
-        Kontainer::ValueList list;
-        list.append( Kontainer(konnectorId,  kdeId) );
-        mMaps.replace( type, list);
-    } else {
-        it.data().append(Kontainer( konnectorId,  kdeId) );
-    }
+  QMap<QString,  Kontainer::ValueList>::Iterator it;
+  it = mMaps.find( type );
+  if ( it == mMaps.end() ) { // not inserted yet anything
+    Kontainer::ValueList list;
+    list.append( Kontainer(konnectorId,  kdeId) );
+    mMaps.replace( type, list);
+  } else {
+    it.data().append(Kontainer( konnectorId,  kdeId) );
+  }
 }
 
 Kontainer::ValueList Syncee::ids( const QString &type ) const
 {
-    Kontainer::ValueList id;
-    QMap<QString,  Kontainer::ValueList >::ConstIterator it;
-    it = mMaps.find( type );
-    if ( it != mMaps.end() )
-        id = it.data();
-    return id;
+  Kontainer::ValueList id;
+  QMap<QString,  Kontainer::ValueList >::ConstIterator it;
+  it = mMaps.find( type );
+  if ( it != mMaps.end() ) id = it.data();
+  return id;
 }
 
 QMap<QString, Kontainer::ValueList> Syncee::ids() const
 {
-    return mMaps;
+  return mMaps;
 }
 
 bool Syncee::trustIdsOnFirstSync() const
 {
-    return false;
+  return false;
 }
 
 QString Syncee::newId() const
 {
-    return QString::null;
+  return QString::null;
 }
 
 void Syncee::setSupports( const QBitArray& ar )
 {
-    mSupport = ar;
-    mSupport.detach();
-    kdDebug(5230) << "setSupports count is " << ar.size() << endl;
+  mSupport = ar;
+  mSupport.detach();
+  kdDebug(5230) << "setSupports count is " << ar.size() << endl;
 }
 
 QBitArray Syncee::bitArray() const
 {
-    return mSupport;
+  return mSupport;
 }
 
 bool Syncee::isSupported( uint attr ) const
 {
-    if ( attr >= mSupport.size() )
-        return false;
-    return mSupport.testBit( attr );
+  if ( attr >= mSupport.size() ) return false;
+  return mSupport.testBit( attr );
 }
 
 void Syncee::setSource( const QString& str )
 {
-    mName = str;
+  mName = str;
 }
 
 QString Syncee::source() const
 {
-    return mName;
+  return mName;
 }

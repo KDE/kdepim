@@ -26,19 +26,19 @@
 
 using namespace KSync;
 
-SyncEntry::SyncEntry( Syncee *sync ) :
-  mSyncee( sync )
+SyncEntry::SyncEntry( Syncee *sync )
+  : mSyncee( sync )
 {
-    mState = Undefined;
-    mSyncState = Undefined;
+  mState = Undefined;
+  mSyncState = Undefined;
 }
 
 SyncEntry::SyncEntry( const SyncEntry &ent )
 {
-    kdDebug(5230) << "SyncEntry copy c'tor " << endl;
-    mState = ent.mState;
-    mSyncee = ent.mSyncee;
-    mSyncState = ent.mSyncState;
+  kdDebug(5230) << "SyncEntry copy c'tor " << endl;
+  mState = ent.mState;
+  mSyncee = ent.mSyncee;
+  mSyncState = ent.mSyncState;
 }
 
 SyncEntry::~SyncEntry()
@@ -52,48 +52,48 @@ void SyncEntry::setSyncee( Syncee *syncee )
 
 int SyncEntry::match( SyncEntry* /*entry*/ )
 {
-    return -2;
+  return -2;
 }
 
 int SyncEntry::compareTo(SyncEntry* /*entry*/ )
 {
-    return -2;
+  return -2;
 }
 
 int SyncEntry::state() const
 {
-    return mState;
+  return mState;
 }
 
 bool SyncEntry::wasAdded() const
 {
-    return ( mState == Added );
+  return ( mState == Added );
 }
 
 bool SyncEntry::wasModified() const
 {
-    return ( mState == Modified );
+  return ( mState == Modified );
 }
 
 bool SyncEntry::wasRemoved() const
 {
-    return ( mState == Removed );
+  return ( mState == Removed );
 }
 
 void SyncEntry::setState( int state )
 {
-    kdDebug(5230) << "State is " << state << endl;
-    mState = state;
+  kdDebug(5230) << "State is " << state << endl;
+  mState = state;
 }
 
 void SyncEntry::setSyncState( int state )
 {
-    mSyncState = state;
+  mSyncState = state;
 }
 
 int SyncEntry::syncState() const
 {
-    return mSyncState;
+  return mSyncState;
 }
 
 Syncee *SyncEntry::syncee()
@@ -106,7 +106,7 @@ void SyncEntry::setId( const QString& )
 {
 }
 
-bool SyncEntry::mergeWith( SyncEntry* )
+bool SyncEntry::mergeWith( SyncEntry * )
 {
-    return false;
+  return false;
 }

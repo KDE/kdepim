@@ -115,13 +115,13 @@ class Syncee
     void replaceEntry(SyncEntry *oldEntry, SyncEntry *newEntry);
 
     /**
-      Set the filename, the data set is read from and written to.
+      Set the identifier which can be used to uniquely identify this Syncee.
     */
-    void setFilename(const QString &);
+    void setIdentifier( const QString & );
     /**
-      Return the filename, the data set is read from and written to.
+      Return the identifier.
     */
-    QString filename();
+    QString identifier();
 
     /**
       Return the name of a config file, which is used to store status
@@ -281,10 +281,10 @@ class Syncee
     virtual bool trustIdsOnFirstSync() const;
 
   private:
-    QMap<QString,  Kontainer::ValueList > mMaps;
+    QMap<QString,Kontainer::ValueList> mMaps;
     int mSyncMode;
     bool mFirstSync : 1;
-    QString mFilename;
+    QString mIdentifier;
     KSimpleConfig *mStatusLog;
     QBitArray mSupport;
     QString mName;

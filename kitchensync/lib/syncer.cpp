@@ -30,14 +30,14 @@
 
 using namespace KSync;
 
-Syncer::Syncer( SyncUi *ui, SyncAlgorithm *iface )
+Syncer::Syncer( SyncUi *ui, SyncAlgorithm *algorithm )
 {
 //  mSyncees.setAutoDelete(true); this leads to crashes
   if ( !ui ) mUi = new SyncUi();
   else mUi = ui;
 
-  if ( !iface ) mAlgorithm = new StandardSync( mUi );
-  else mAlgorithm = iface;
+  if ( !algorithm ) mAlgorithm = new StandardSync( mUi );
+  else mAlgorithm = algorithm;
 }
 
 Syncer::~Syncer()
@@ -66,14 +66,14 @@ void Syncer::sync()
   }
 
   Syncee *syncee = mSyncees.first();
-  while (syncee != target) {
-    syncToTarget(syncee,target);
+  while ( syncee != target ) {
+    syncToTarget( syncee, target );
     syncee = mSyncees.next();
   }
   target->saveLog();
   syncee = mSyncees.first();
-  while (syncee != target) {
-    syncToTarget(target,syncee,true);
+  while ( syncee != target ) {
+    syncToTarget( target, syncee, true );
     syncee->saveLog();
     syncee = mSyncees.next();
   }
@@ -102,9 +102,9 @@ void Syncer::syncToTarget( Syncee *source, Syncee *target, bool override )
   mAlgorithm->syncToTarget( source, target, override );
 }
 
-void Syncer::setSyncAlgorithm( SyncAlgorithm *iface )
+void Syncer::setSyncAlgorithm( SyncAlgorithm *algorithm )
 {
-  if ( !iface ) return;
+  if ( !algorithm ) return;
   delete mAlgorithm;
-  mAlgorithm = iface;
+  mAlgorithm = algorithm;
 }

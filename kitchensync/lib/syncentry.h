@@ -45,18 +45,17 @@ class SyncEntry
 {
   public:
     typedef QPtrList<SyncEntry> PtrList;
-    enum Equalness { Different =-1, Equal=0,  EqualButModifiedThis=1,
-                     EqualButModifiedOther=2, EqualButModifiedBoth=3 };
+    enum Equalness { Different = -1, Equal = 0, EqualButModifiedThis = 1,
+                     EqualButModifiedOther = 2, EqualButModifiedBoth = 3 };
 
-    enum Status { Undefined =-1, Added = 0, Modified=1, Removed=2 };
+    enum Status { Undefined = -1, Added = 0, Modified=1, Removed=2 };
 
     /**
-      This is the basic c'tor of a Syncee.
-      Every SyncEntry should have a parent Syncee
-      where it belongs to.
+      This is the basic constructor of a SyncEntry.
+      Every SyncEntry should have a parent Syncee where it belongs to.
     */
     SyncEntry( Syncee* parent = 0 );
-    SyncEntry( const SyncEntry& );
+    SyncEntry( const SyncEntry & );
     virtual ~SyncEntry();
 
     /**
@@ -187,6 +186,7 @@ class SyncEntry
     int mState;
     int mSyncState;
     Syncee *mSyncee;
+
     class SyncEntryPrivate;
     SyncEntryPrivate *d;
 };

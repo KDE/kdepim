@@ -237,6 +237,8 @@ void SyncerPart::slotSynceesRead( Konnector *k, const SynceeList &syncees )
 void SyncerPart::trySync()
 {
   if ( mKonnectorCount == mProcessedKonnectors.count() ) {
+    logMessage( i18n("Performing Sync") );
+
     mCalendarSyncer.sync();
     mAddressBookSyncer.sync();
 
