@@ -588,6 +588,283 @@ list.</para>
 
 </sect3>
 
+      <sect3 id="folders-properties-acl">
+	<title>Access Control tab (&imap; only)</title>
+
+	<para>
+	  Here you can manage the access control lists (&acl;s) of
+	  &imap; folders.
+	</para>
+
+	<para>
+	  The currently active &acl; is shown in the list. It consists
+	  of pairs of <guilabel>User Id</guilabel>s and the
+	  <guilabel>Permissions</guilabel> granted to users identified
+	  by that <guilabel>User Id</guilabel>.<!--
+	  --><footnote>
+	    <para>
+	      Note that a single <guilabel>User Id</guilabel> might
+	      refer to more than one user. Depending on the &imap;
+	      server and it's configuration, there may be User Ids
+	      that correspond to groups of users, anonymous users, or
+	      any user. Consult the manual of your specific &imap;
+	      server implementation for more information.
+	    </para>
+	  </footnote>
+	  &acl;s are settable per-folder.
+	</para>
+
+	<para>
+	  &imap; defines a lot of fine-grained permissions that you
+	  can grant or deny other users. For the sake of clarity,
+	  &kmail; will present them as the following five categories
+	  that you can choose from:
+	</para>
+
+	<variablelist>
+
+	  <varlistentry id="folders-properties-acl-none">
+	    <term>
+	      <guilabel>None</guilabel>
+	      </term>
+	    <listitem>
+	      <para>
+		Grants the users identified by <guilabel>User
+		Id</guilabel> no rights at all. This is also the
+		default for users not explicitly (or implicitly, as a
+		group) listed in the &acl;. These users will not see
+		this folder in the list of &imap; folders presented to
+		them by their mail clients.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry id="folders-properties-acl-read">
+	    <term>
+	      <guilabel>Read</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		Grants the users identified by <guilabel>User
+		Id</guilabel> reading rights for this folder. This
+		also includes the ability for their mail clients to
+		mark mails as read and store this information on the
+		server.<!-- --><footnote>
+		  <para>
+		    Every user has it's own list of read mail, so none
+		    of your unread mails will suddenly be marked as
+		    read just because someone else has already read them.
+		  </para>
+		</footnote>
+	      </para>
+	      <para>
+		These users will see this folder in the list of &imap;
+		folders presented to them by their mail clients.
+	      </para>
+	      <para>
+		Use this to create a shared folder that others can
+		read, but not modify.
+	      </para>
+	      <informalexample>
+		<para>
+		  If you were the editor of a company's news letter,
+		  you could create a folder for the purpose of
+		  distributing the news letter, grant everyone reading
+		  rights, and save the letter to this folder instead
+		  of sending it out by email to a catch-all address.
+		</para>
+	      </informalexample>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry id="folders-properties-acl-append">
+	    <term>
+	      <guilabel>Append</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		(also known as <guilabel>Post</guilabel>)
+	      </para>
+	      <para>
+		Grants the users identified by <guilabel>User
+		Id</guilabel> reading (see above) and posting rights
+		for this folder.
+	      </para>
+	      <para>
+		Use this to create a shared folder that others can
+		read and post messages to, but can not otherwise
+		modify.
+	      </para>
+	      <informalexample>
+		<para>
+		  If you wanted to create a company-wide discussion
+		  forum, instead of using a web-based form or a
+		  separate company-private usenet server, you could
+		  create a bunch of folders (one per topic), and grant
+		  everyone reading and posting rights. Instead of
+		  posting to an &nntp; server or writing their
+		  messages into a web form, people would just write
+		  emails and store them in the folder suiting the
+		  topic of the message.
+		</para>
+	      </informalexample>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry id="folders-properties-acl-write">
+	    <term>
+	      <guilabel>Write</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		Grants the users identified by <guilabel>User
+		Id</guilabel> reading, posting (see above), and
+		writing rights for this folder.
+	      </para>
+	      <para>
+		The right to write to a folder includes deleting of
+		messages, creating subfolders, and storing other
+		attributes than read/unread on the server (&eg;
+		answered).
+	      </para>
+	      <para>
+		Use this to create a shared folder that everyone has
+		(almost, see <xref linkend="folders-properties-acl-all"/>)
+		the same rights for.
+	      </para>
+	      <informalexample>
+		<para>
+		  In the <xref
+		  linkend="folders-properties-acl-append"/> example,
+		  you could assign write rights to a group of people
+		  acting as moderators, which would then be able to
+		  remove off-topic posts, and create sub-topic-folders
+		  for high-traffic folders.
+		</para>
+	      </informalexample>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry id="folders-properties-acl-all">
+	    <term>
+	      <guilabel>All</guilabel>
+	    </term>
+	    <listitem>
+	      <para>
+		Grants the users identified by <guilabel>User
+		Id</guilabel> reading, posting, writing (see above),
+		as well as administration rights, &ie; the right to
+		modify the &acl; of this folder.
+	      </para>
+	      <para>
+		This is the default set of rights for the owner of a
+		folder.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	</variablelist>
+
+	<para>
+	  <xref linkend="table-acl-summary"/> summarizes the &imap;
+	  &acl; rights associated with each permission level.
+	</para>
+
+	<table id="table-acl-summary">
+	  <title>
+	    &acl; Rights Summary
+	  </title>
+	  <tgroup cols="6">
+	    <thead>
+	      <row>
+		<entry>&acl; right</entry>
+		<entry><xref linkend="folders-properties-acl-none"/></entry>
+		<entry><xref linkend="folders-properties-acl-read"/></entry>
+		<entry><xref linkend="folders-properties-acl-append"/></entry>
+		<entry><xref linkend="folders-properties-acl-write"/></entry>
+		<entry><xref linkend="folders-properties-acl-all"/></entry>
+	      </row>
+	    </thead>
+	    <!--tfoot/-->
+	    <tbody>
+	      <row>
+		<entry>Lookup</entry>
+		<entry></entry>
+		<entry>x</entry>
+		<entry>x</entry>
+		<entry>x</entry>
+		<entry>x</entry>
+	      </row>
+	      <row>
+		<entry>Read</entry>
+		<entry></entry>
+		<entry>x</entry>
+		<entry>x</entry>
+		<entry>x</entry>
+		<entry>x</entry>
+	      </row>
+	      <row>
+		<entry>Store Seen</entry>
+		<entry></entry>
+		<entry>x</entry>
+		<entry>x</entry>
+		<entry>x</entry>
+		<entry>x</entry>
+	      </row>
+	      <row>
+		<entry>Insert</entry>
+		<entry></entry>
+		<entry></entry>
+		<entry>x</entry>
+		<entry>x</entry>
+		<entry>x</entry>
+	      </row>
+	      <row>
+		<entry>Post</entry>
+		<entry></entry>
+		<entry></entry>
+		<entry>x</entry>
+		<entry>x</entry>
+		<entry>x</entry>
+	      </row>
+	      <row>
+		<entry>Write Flags</entry>
+		<entry></entry>
+		<entry></entry>
+		<entry></entry>
+		<entry>x</entry>
+		<entry>x</entry>
+	      </row>
+	      <row>
+		<entry>Create</entry>
+		<entry></entry>
+		<entry></entry>
+		<entry></entry>
+		<entry>x</entry>
+		<entry>x</entry>
+	      </row>
+	      <row>
+		<entry>Delete</entry>
+		<entry></entry>
+		<entry></entry>
+		<entry></entry>
+		<entry>x</entry>
+		<entry>x</entry>
+	      </row>
+	      <row>
+		<entry>Administer</entry>
+		<entry></entry>
+		<entry></entry>
+		<entry></entry>
+		<entry></entry>
+		<entry>x</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	</table>
+
+      </sect3>
+
 </sect2>
 
 <sect2 id="folders-format">

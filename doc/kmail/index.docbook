@@ -16,7 +16,9 @@
   <!ENTITY gpg "<application>GPG</application>">
   <!ENTITY gpgsm "<application>GpgSM</application>">
   <!ENTITY mdn "<acronym>MDN</acronym>">
+  <!ENTITY acl "<acronym>ACL</acronym>">
   <!ENTITY imap "<acronym>IMAP</acronym>">
+  <!ENTITY nntp "<acronym>NNTP</acronym>">
   <!ENTITY openpgp "<acronym>OpenPGP</acronym>">
   <!ENTITY smime "<acronym>S/MIME</acronym>">
 ]>
