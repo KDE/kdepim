@@ -82,7 +82,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 		syncInfoList::Iterator it;
 		int nr=0;
 		DEBUGCONDUIT<<"We're having "<<(*syncInfo).size()<<" entries in the database list"<<endl;
-		for (it=syncInfo->begin(); it!=syncInfo->end(); it++) {
+		for (it=syncInfo->begin(); it!=syncInfo->end(); ++it ) {
 			docSyncInfo si=(*it);
 			conflictEntry cE;
 			cE.index=nr;
@@ -115,7 +115,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			bgroup->insert(cE.info);
 
 			conflictEntries.append(cE);
-			nr++;
+			++nr;
 		}
 	} else {
 		kdWarning()<<"The list of text files is not available to the resolution "
@@ -145,7 +145,7 @@ ResolutionDialog::~ResolutionDialog()
 /* virtual slot */ void ResolutionDialog::slotOk() {
 	FUNCTIONSETUP;
 	QValueList<conflictEntry>::Iterator ceIt;
-	for (ceIt=conflictEntries.begin(); ceIt!=conflictEntries.end(); ceIt++) {
+	for (ceIt=conflictEntries.begin(); ceIt!=conflictEntries.end(); ++ceIt) {
 		(*syncInfo)[(*ceIt).index].direction=(eSyncDirectionEnum)((*ceIt).resolution->currentItem());
 	}
 	KDialogBase::slotOk();

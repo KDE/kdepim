@@ -145,7 +145,7 @@ NotepadActionThread::NotepadActionThread(QObject *parent, int pilotSocket) :
 	QValueList<recordid_t> vl = db->idList();
 	QValueList<recordid_t>::iterator it;
 	struct NotePad a;
-	for(it = vl.begin(); it != vl.end(); it++) {
+	for ( it = vl.begin(); it != vl.end(); ++it ) {
 		PilotRecord *pr = db->readRecordById(*it);
 		if(pr) {
 			unpack_NotePad(&a, (unsigned char*)pr->getData(), pr->getLen());
@@ -220,7 +220,7 @@ int NotepadActionThread::unpackNotePad(struct NotePad *a, unsigned char *buffer,
 			buffer += strlen( a->name ) + 1;
 				
 			if( (strlen( a->name ) + 1)%2 == 1)
-				buffer++;
+				++buffer;
 				
 		}
 		else {
@@ -271,12 +271,12 @@ void NotepadActionThread::saveImage(struct NotePad *n)
 	int x = 0;	
 	int y = 0;
 	int pos = 0;
-	for(i=0; i<n->body.dataLen/2; i++)
+	for(i=0; i<n->body.dataLen/2; ++i)
 	{
 		datapoints += n->data[i].repeat;
-		for(j=0; j<n->data[i].repeat; j++)
+		for(j=0; j<n->data[i].repeat; ++j)
 		{
-			for(k=0; k<8; k++)
+			for(k=0; k<8; ++k)
 			{
 				y = pos / 160;
 				x = pos % 160;
@@ -285,15 +285,15 @@ void NotepadActionThread::saveImage(struct NotePad *n)
 					image.setPixel(x,y,1);
 				else
 		    		image.setPixel(x,y,0);
-				pos++;
+				++pos;
 			}
 		}
 	}
 	QString imgname = QString("%1/%2.png").arg(NotepadConduitSettings::outputDirectory()).arg(n->name);
 	DEBUGCONDUIT << fname << ": Notepad " << imgname << endl;
 	if(!image.save(imgname, "PNG", -1))
-		notSaved++;
+		++notSaved;
 	else
-		saved++;
+		++saved;
 }
 

@@ -470,7 +470,7 @@ void DOCConduit::syncNextTXT()
 	QFileInfo fl(dr, fn );
 	QString txtfilename=fl.absFilePath();
 	QString pdbfilename;
-	dociterator++;
+	++dociterator;
 
 	DBInfo dbinfo;
 	// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
@@ -528,7 +528,7 @@ void DOCConduit::checkPDBFiles() {
 	QDir dr(DOCConduitSettings::pDBDirectory());
 	QFileInfo fl(dr, fn );
 	QString pdbfilename=fl.absFilePath();
-	dociterator++;
+	++dociterator;
 
 	//  Get the doc title and check if it has already been synced (in the synced docs list of in fDBNames to be synced)
 	// If the doc title doesn't appear in either list, install it to the Handheld, and add it to the list of dbs to be synced.
@@ -587,7 +587,7 @@ void DOCConduit::checkDeletedDocs()
 void DOCConduit::resolve() {
 	FUNCTIONSETUP;
 
-	for (fSyncInfoListIterator=fSyncInfoList.begin(); fSyncInfoListIterator!=fSyncInfoList.end(); fSyncInfoListIterator++) {
+	for (fSyncInfoListIterator=fSyncInfoList.begin(); fSyncInfoListIterator!=fSyncInfoList.end(); ++fSyncInfoListIterator) {
 		// Walk through each database and apply the conflictResolution option.
 		// the remaining conflicts will be resolved in the resolution dialog
 		if ((*fSyncInfoListIterator).direction==eSyncConflict){
@@ -657,7 +657,7 @@ void DOCConduit::syncDatabases() {
 	}
 
 	docSyncInfo sinfo=(*fSyncInfoListIterator);
-	fSyncInfoListIterator++;
+	++fSyncInfoListIterator;
 
 	switch (sinfo.direction) {
 		case eSyncConflict:
