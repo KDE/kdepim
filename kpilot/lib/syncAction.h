@@ -50,7 +50,7 @@ public:
 	SyncAction(KPilotDeviceLink *p,
 		const char *name=0L);
 	~SyncAction();
-	
+
 	typedef enum { Error=-1 } Status;
 
 	int status() const { return fActionStatus; } ;
@@ -84,7 +84,7 @@ signals:
 	void logMessage(const QString &);
 	void logError(const QString &);
 	void logProgress(const QString &,int);
-	
+
 	/**
 	* It might not be safe to emit syncDone() from exec().
 	* So instead, call delayDone() to wait for the main event
@@ -96,7 +96,7 @@ signals:
 	*/
 protected slots:
 	void delayedDoneSlot();
-	
+
 protected:
 	bool delayDone();
 
@@ -146,7 +146,7 @@ public:
 		eDelete,
 		eCROffset=-1
 	};
-	
+
 protected:
 	QTimer *fTickleTimer;
 	unsigned fTickleCount,fTickleTimeout;
