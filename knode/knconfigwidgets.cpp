@@ -102,8 +102,6 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addMultiCellWidget(s_igFile, 5, 5, 0, 2);
 
   s_ig = new KLineEdit(this);
-  connect(s_ig,SIGNAL(textChanged ( const QString & )),
-          this,SLOT(textFileNameChanged(const QString &)));
 
   f_ileName = new QLabel(s_ig, i18n("Signature &File:"), this);
   topL->addWidget(f_ileName, 6, 0 );
@@ -134,7 +132,8 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->setColStretch(1,1);
   topL->setRowStretch(6,1);
   topL->setResizeMode(QLayout::Minimum);
-
+  connect(s_ig,SIGNAL(textChanged ( const QString & )),
+          this,SLOT(textFileNameChanged(const QString &)));
   slotSignatureType(d_ata->useSigFile()? 0:1);
 }
 
