@@ -93,8 +93,8 @@ void KNProtocolClient::waitForWork()
   timeval tv;
   int selectRet;
 
+  int holdTime = 1000 * account.hold();
   while (true) {
-    int holdTime = 2 * account.hold();
     if (isConnected()) {  // we are connected, hold the connection for xx secs
       FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
@@ -102,7 +102,7 @@ void KNProtocolClient::waitForWork()
       FD_ZERO(&fdsE);
       FD_SET(tcpSocket, &fdsE);
       tv.tv_sec = 0;
-      tv.tv_usec = 500;
+      tv.tv_usec = 1000;
       --holdTime;
       selectRet = KSocks::self()->select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
       if (selectRet == 0) {
@@ -111,11 +111,13 @@ void KNProtocolClient::waitForWork()
           qDebug("knode: KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
 #endif
           closeConnection();               // nothing happend...
+          holdTime = 1000 * account.hold();
         } else {
           if ( mTerminate ) {
             closeConnection();
             return;
           }
+          continue;
         }
       } else {
         if (((selectRet > 0)&&(!FD_ISSET(fdPipeIn,&fdsR)))||(selectRet == -1)) {
@@ -130,7 +132,7 @@ void KNProtocolClient::waitForWork()
     struct timeval timeout;
     do {
       timeout.tv_sec = 0;
-      timeout.tv_usec = 500;
+      timeout.tv_usec = 1000;
       FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
       if (mTerminate)
