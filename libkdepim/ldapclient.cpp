@@ -321,6 +321,7 @@ LdapSearch::LdapSearch()
 
 void LdapSearch::readConfig()
 {
+  //kdDebug(5300) << "LdapClient::readConfig()" << endl;
   cancelSearch();
   QValueList< LdapClient* >::Iterator it;
   for ( it = mClients.begin(); it != mClients.end(); ++it )
@@ -338,8 +339,10 @@ void LdapSearch::readConfig()
       LdapClient* ldapClient = new LdapClient( j, this );
 
       QString host =  config.readEntry( QString( "SelectedHost%1" ).arg( j ), "" ).stripWhiteSpace();
-      if ( !host.isEmpty() )
+      if ( !host.isEmpty() ){
         ldapClient->setHost( host );
+        mNoLDAPLookup = false;
+      }
 
       QString port = QString::number( config.readUnsignedNumEntry( QString( "SelectedPort%1" ).arg( j ) ) );
       if ( !port.isEmpty() )
@@ -384,6 +387,7 @@ void LdapSearch::readConfig()
 
 void LdapSearch::slotFileChanged( const QString& file )
 {
+  //kdDebug(5300) << "LdapClient::slotFileChanged( " << file << " )" << endl;
   if ( file == mConfigFile )
     readConfig();
 }
