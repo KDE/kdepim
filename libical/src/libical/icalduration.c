@@ -61,15 +61,18 @@ struct icaldurationtype icaldurationtype_from_int(int t)
             t = -t;
         }
 
-        dur.weeks = (t - used) / (60 * 60 * 24 * 7);
-        used += dur.weeks * (60 * 60 * 24 * 7);
-        dur.days = (t - used) / (60 * 60 * 24);
-        used += dur.days * (60 * 60 * 24);
-        dur.hours = (t - used) / (60 * 60);
-        used += dur.hours * (60 * 60);
-        dur.minutes = (t - used) / (60);
-        used += dur.minutes * (60);
-        dur.seconds = (t - used);
+        if (t % (60 * 60 * 24 * 7) == 0) {
+            dur.weeks = t / (60 * 60 * 24 * 7);
+        } else {
+            used += dur.weeks * (60 * 60 * 24 * 7);
+            dur.days = (t - used) / (60 * 60 * 24);
+            used += dur.days * (60 * 60 * 24);
+            dur.hours = (t - used) / (60 * 60);
+            used += dur.hours * (60 * 60);
+            dur.minutes = (t - used) / (60);
+            used += dur.minutes * (60);
+            dur.seconds = (t - used);
+        }
  
         return dur;
 }
