@@ -1825,7 +1825,7 @@ bool IMAP4Protocol::makeLogin ()
 void
 IMAP4Protocol::parseWriteLine (const QString & aStr)
 {
-  kdDebug(7116) << "Writing: " << aStr << endl;
+  //kdDebug(7116) << "Writing: " << aStr << endl;
   QCString writer = aStr.utf8();
   int len = writer.length();
 

@@ -1419,7 +1419,7 @@ int imapParser::parseLoop ()
 
   if (!parseReadLine(result.data)) return -1;
 
-  kdDebug(7116) << result.cstr(); // includes \n
+  //kdDebug(7116) << result.cstr(); // includes \n
 
   if (result.data.isEmpty())
     return 0;
