@@ -186,7 +186,10 @@ bool ResourceKABC::load()
       kdDebug() << "imported " << birthdate.toString() << endl;
     }
 
-    QDateTime anniversary = QDate::fromString( (*it).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+		QString anniversary_string = (*it).custom( "KADDRESSBOOK", "X-Anniversary" );
+		if (anniversary_string.isEmpty() )
+			continue;
+    QDateTime anniversary = QDate::fromString( anniversary_string, Qt::ISODate );
     if ( !anniversary.isValid() )
       continue;
 
