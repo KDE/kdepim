@@ -34,6 +34,7 @@
 #include <kcharsets.h>
 #include <kaction.h>
 #include <kapplication.h>
+#include <kpgpblock.h>
 
 #include "resource.h"
 #include "knarticlewidget.h"
@@ -1000,31 +1001,83 @@ void KNArticleWidget::createHtmlPage()
     KNpgp *pgp = knGlobals.pgp;
 
     if (knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs() || ra->isPgpSigned()) {
-      pgp->setMessage(ra->body());
+      pgp->setMessageForDecryption( ra->body() );
+      QPtrList<Kpgp::Block> pgpBlocks = pgp->pgpBlocks();
+      // Only the first OpenPGP block is verified (if there is one)
+      Kpgp::Block* pgpBlock = pgpBlocks.first();
+      if( pgpBlock && ( pgpBlock->type() == Kpgp::ClearsignedBlock ) )
+        pgpBlock->verify();
+      else
+        pgpBlock = 0;
       html += "<p>";
-      if (!pgp->isSigned()) {
+      if( !pgpBlock || !pgpBlock->isSigned() ) {
         if (!knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs())
           html += "<b>" + i18n("Cannot find a signature in this message!") + "</b>";
       }
       else {
-        QString sig;
-        if (pgp->goodSignature())
-          sig = i18n("Message was signed by");
-        else
-          sig = i18n("Warning: Bad signature from");
-
-        QString sdata=pgp->signedBy();
-        QString signer = sdata;
-
-        if (sdata.contains(QRegExp("unknown key ID")))
+        QString signer = pgpBlock->signatureUserId();
+        QCString signerKey = pgpBlock->signatureKeyId();
+        html += "<b>";
+        if( signer.isEmpty() )
         {
-          sdata.replace(QRegExp("unknown key ID"), i18n("unknown key ID"));
-          html += QString("<b>%1 %2</b><br>").arg(sig).arg(toHtmlString(sdata,false,false,false));
+          html += i18n( "Message was signed with unknown key 0x%1." )
+                  .arg( signerKey );
+          html += "<br />";
+          html += i18n( "The validity of the signature can't be verified." );
         }
         else {
-          html += QString("<b>%1 <a href=\"mailto:%2\">%3</a></b><br>")
-                     .arg(sig).arg(signer).arg(toHtmlString(sdata,false,false,false));
+          // determine the validity of the key
+          Kpgp::Validity keyTrust;
+          if( !signerKey.isEmpty() )
+            keyTrust = pgp->keyTrust( signerKey );
+          else
+            // This is needed for the PGP 6 support because PGP 6 doesn't
+            // print the key id of the signing key if the key is known.
+            keyTrust = pgp->keyTrust( signer );
+
+          // HTMLize the signer's user id and create mailto: link
+          signer = toHtmlString( signer, false, false, false );
+          signer = "<a href=\"mailto:" + signer + "\">" + signer + "</a>";
+
+          if( !signerKey.isEmpty() )
+            html += i18n( "Message was signed by %1 (Key ID: 0x%2)." )
+                    .arg( signer )
+                    .arg( signerKey );
+          else
+            html += i18n( "Message was signed by %1." ).arg( signer );
+          html += "<br />";
+
+          if( pgpBlock->goodSignature() )
+          {
+            switch( keyTrust )
+            {
+            case Kpgp::KPGP_VALIDITY_UNKNOWN:
+              html += i18n( "The signature is valid, but the key's "
+                            "validity is unknown." );
+                break;
+            case Kpgp::KPGP_VALIDITY_MARGINAL:
+              html += i18n( "The signature is valid and the key is "
+                            "marginally trusted." );
+              break;
+            case Kpgp::KPGP_VALIDITY_FULL:
+              html += i18n( "The signature is valid and the key is "
+                            "fully trusted." );
+              break;
+            case Kpgp::KPGP_VALIDITY_ULTIMATE:
+              html += i18n( "The signature is valid and the key is "
+                            "ultimately trusted." );
+              break;
+            default:
+              html += i18n( "The signature is valid, but the key is "
+                            "untrusted." );
+            }
+          }
+          else // bad signature
+          {
+            html += i18n("Warning: The signature is bad.");
+          }
         }
+        html += "</b><br>";
       }
       html += "</p>";
     }
