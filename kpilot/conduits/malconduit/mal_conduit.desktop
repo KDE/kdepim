@@ -2,6 +2,12 @@
 Encoding=UTF-8
 Type=Service
 Name=MAL (AvantGo) Conduit
+Name[cs]=Propojení s AvantGo
+Name[es]=Canal MAL (AvantGo)
+Name[fi]=MAL (AvantGo) yhdyskäytävä
+Name[fr]=MAL (AvantGo) Canal
+Name[he]=ממשק AvantGo) MAL)
+Name[sv]=MAL (AvantGo)-kanal
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=libmalconduit

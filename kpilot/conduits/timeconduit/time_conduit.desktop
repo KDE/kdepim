@@ -2,6 +2,17 @@
 Encoding=UTF-8
 Type=Service
 Name=Time Synchronization Conduit
+Name[af]=tyd sinkronisasie pad
+Name[cs]=Propojení pro synchronizaci času
+Name[el]=Σύνδεσμος συγχρονισμού ώρας
+Name[en_GB]=Time Synchronisation Conduit
+Name[es]=Canal de sincronización horaria
+Name[fi]=Aikasynkronointiyhdyskäytävä
+Name[fr]=Canal de synchronisation de temps
+Name[he]=ממשק סינכרון שעה
+Name[hu]=Időszinkronizálási csatoló
+Name[mt]=Għodda biex tissinkronizza ħin
+Name[sv]=Tidssynkroniseringskanal
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=libtimeconduit
