@@ -24,7 +24,7 @@ int main( int argc, char *argv[] )
   KAboutData aboutData( "karm", I18N_NOOP("KArm"),
       KARM_VERSION, description, KAboutData::License_GPL,
       "(c) 1997-2000, Sirtaj Singh Kang, Espen Sand, Jesper Pedersen,\n"
-      "Kalle Dalheimer, Klar‰lvdalens Datakonsult AB,\n"
+      "Kalle Dalheimer, Klar√§lvdalens Datakonsult AB,\n"
       "Tomas Pospisek, Sourcepole");
 
   aboutData.addAuthor( "Tomas Pospisek", I18N_NOOP("Current Maintainer"),
