@@ -34,15 +34,11 @@
 
 
 
-#include <qapplication.h>
-#include <qfontmetrics.h>
 #include <qpainter.h>
 #include <qdrawutil.h>
 
-#include <kglobal.h>
 #include <kiconloader.h>
 #include <kdebug.h>
-#include <klistbox.h>
 
 #include "manipulatorpart.h"
 #include "partbar.h"

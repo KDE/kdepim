@@ -35,11 +35,8 @@
 
 
 #include <qlayout.h>
-#include <qvbox.h>
-#include <qpoint.h>
 #include <config.h>
 #include <klocale.h>
-#include <kapplication.h>
 
 #include "ksync_configuredialog.h"
 

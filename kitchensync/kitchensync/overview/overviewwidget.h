@@ -4,7 +4,7 @@
 #include <qwidget.h>
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "overviewprogressentry.h"
 

@@ -1,5 +1,4 @@
 #include <qcheckbox.h>
-#include <qlayout.h>
 
 #include <klocale.h>
 

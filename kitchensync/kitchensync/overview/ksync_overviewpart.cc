@@ -1,11 +1,6 @@
-#include <qobject.h>
-#include <qwidget.h>
 
-#include <kaboutdata.h>
-#include <kglobal.h>
 #include <kiconloader.h>
 #include <kparts/genericfactory.h>
-#include <kparts/componentfactory.h>
 
 #include <konnectormanager.h>
 #include <konnectorinfo.h>

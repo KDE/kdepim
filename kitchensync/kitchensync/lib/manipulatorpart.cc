@@ -34,8 +34,6 @@
 
 
 #include <kdebug.h>
-#include <qobject.h>
-#include <qwidget.h>
 
 #include "manipulatorpart.h"
 

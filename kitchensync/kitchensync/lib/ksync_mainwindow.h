@@ -43,9 +43,9 @@
 
 #include <manipulatorpart.h>
 #include <ksync_systemtray.h>
-#include <profilemanager.h>
-#include <konnectorprofilemanager.h>
-#include <manpartservice.h>
+#include "profilemanager.h"
+#include "konnectorprofilemanager.h"
+#include "manpartservice.h"
 
 class PartBar;
 class QHBox;

@@ -2,8 +2,8 @@
 #ifndef KSYNC_PROFILE_WIZARD_CHOOSER_IMPL_H
 #define KSYNC_PROFILE_WIZARD_CHOOSER_IMPL_H
 
-#include <profilewizardchooser.h>
-#include <manpartservice.h>
+#include "profilewizardchooser.h"
+#include "manpartservice.h"
 
 namespace KSync {
     class ProfileWizardChooserImpl : public ProfileWizardChooser {

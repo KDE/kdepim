@@ -4,11 +4,9 @@
 #include <klistview.h>
 #include <kpushbutton.h>
 
-#include <konnectormanager.h>
 
 #include "konnectordialog.h"
 #include "konnectorprofilelistviewbase.h"
-#include "konnectorcheckitem.h"
 #include "konnectorwizard.h"
 
 using namespace KSync;

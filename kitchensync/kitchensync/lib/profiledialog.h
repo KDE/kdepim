@@ -4,7 +4,7 @@
 #include <kdialogbase.h>
 
 #include <ksync_profile.h>
-#include <manpartservice.h>
+#include "manpartservice.h"
 
 class ProfileListBase;
 namespace KSync {

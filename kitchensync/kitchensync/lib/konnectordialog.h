@@ -7,8 +7,8 @@
 
 #include <kdialogbase.h>
 
-#include <konnectorprofile.h>
-#include <konnectorcheckitem.h>
+#include "konnectorprofile.h"
+#include "konnectorcheckitem.h"
 
 class KonnectorProfileListBase;
 namespace KSync {

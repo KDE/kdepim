@@ -5,7 +5,7 @@
 #include <kwizard.h>
 
 #include <ksync_profile.h>
-#include <manpartservice.h>
+#include "manpartservice.h"
 
 class ProfileWizardIntro;
 namespace KSync {

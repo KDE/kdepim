@@ -32,7 +32,6 @@
 */
 
 
-#include <qcursor.h>
 
 #include <kapplication.h>
 #include <kstandarddirs.h>

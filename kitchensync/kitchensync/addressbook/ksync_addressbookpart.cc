@@ -1,22 +1,12 @@
 
-#include <qcheckbox.h>
-#include <qdir.h>
-#include <qlineedit.h>
 
-#include <kaboutdata.h>
-#include <kapplication.h>
-#include <kconfig.h>
 #include <kdebug.h>
 #include <kiconloader.h>
-#include <kglobal.h>
 #include <kmessagebox.h>
-#include <kstdguiitem.h>
-#include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 #include <kurlrequester.h>
 
 #include <kabc/stdaddressbook.h>
-#include <kabc/resourcefile.h>
 
 #include <kparts/genericfactory.h>
 
@@ -25,7 +15,6 @@
 
 #include <addressbooksyncee.h>
 
-#include "addressbookbase.h"
 #include "ksync_addressbookpart.h"
 
 typedef KParts::GenericFactory< KSync::AddressBookPart> AddressBookPartFactory;

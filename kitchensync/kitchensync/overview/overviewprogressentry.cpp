@@ -1,5 +1,4 @@
 #include <kiconloader.h>
-#include <kglobal.h>
 
 #include <qimage.h>
 

@@ -1,21 +1,11 @@
 
-#include <qdir.h>
-#include <qobject.h>
-#include <qwidget.h>
-#include <qlineedit.h>
 #include <qcheckbox.h>
-#include <qdatetime.h>
 
-#include <kapplication.h>
-#include <kconfig.h>
 #include <ksimpleconfig.h>
 #include <kdebug.h>
-#include <kglobal.h>
 #include <kiconloader.h>
-#include <kstdguiitem.h>
 #include <kmessagebox.h>
 #include <kparts/genericfactory.h>
-#include <kparts/componentfactory.h>
 
 #include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
@@ -24,12 +14,8 @@
 #include <todosyncee.h>
 #include <syncer.h>
 
-#include "organizerbase.h"
 #include <ksync_mainwindow.h>
-#include <ksync_profile.h>
-#include <konnectorprofile.h>
 #include "ksync_organizerpart.h"
-#include <qptrlist.h>
 
 //#include "ksync_return.h"
 //#include "ksync_sync.h"

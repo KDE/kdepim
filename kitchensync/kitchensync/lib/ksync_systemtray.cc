@@ -27,13 +27,8 @@
 */
 
 
-#include <qpixmap.h>
-#include <qpoint.h>
-#include <qcursor.h>
 
 #include <kdebug.h>
-#include <kpopupmenu.h>
-#include <kglobal.h>
 #include <kiconloader.h>
 
 #include "ksync_systemtray.h"

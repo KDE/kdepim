@@ -4,7 +4,7 @@
 
 #include <qlistview.h>
 
-#include <konnectorprofile.h>
+#include "konnectorprofile.h"
 
 namespace KSync {
 

@@ -4,7 +4,7 @@
 
 #include <qlistview.h>
 
-#include <manpartservice.h>
+#include "manpartservice.h"
 
 namespace KSync {
     class ProfileCheckItem : public QCheckListItem {

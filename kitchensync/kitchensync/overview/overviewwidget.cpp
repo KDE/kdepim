@@ -1,24 +1,16 @@
 #include <qdatetime.h>
-#include <qhbox.h>
 #include <qvbox.h>
 #include <qtextedit.h>
 #include <qsplitter.h>
 
-#include <kiconloader.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
 
 #include <error.h>
 #include <progress.h>
-#include <konnectorinfo.h>
 
-#include <ksync_profile.h>
-#include <konnectorprofile.h>
 #include <manipulatorpart.h>
-#include <ksync_profile.h>
 
 #include "overviewwidget.h"
-#include "overviewprogressentry.h"
 
 using namespace KSync;
 using namespace KSync::OverView;

@@ -27,21 +27,10 @@
 */
 
 
-#include <qapplication.h>
-#include <qvbox.h>
-#include <qptrlist.h>
 #include <qwidgetstack.h>
-#include <qsize.h>
-#include <qdir.h>
 
-#include <kaction.h>
-#include <kapplication.h>
-#include <kconfig.h>
 #include <klocale.h>
-#include <kmenubar.h>
-#include <ktrader.h>
 #include <kstatusbar.h>
-#include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -52,16 +41,12 @@
 #include <syncer.h>
 #include <syncuikde.h>
 
-#include <kapabilities.h>
-#include <kdevice.h>
 #include <konnectormanager.h>
 #include <error.h>
 #include <progress.h>
 
 #include "syncconfig.h"
-#include "ksync_configpart.h"
 #include "ksync_configuredialog.h"
-#include "manipulatorpart.h"
 #include "partbar.h"
 #include "profiledialog.h"
 

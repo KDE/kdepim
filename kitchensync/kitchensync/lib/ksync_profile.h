@@ -7,7 +7,7 @@
 #include <kapabilities.h>
 #include <kdevice.h>
 
-#include <manpartservice.h>
+#include "manpartservice.h"
 
 namespace KSync {
 

@@ -2,7 +2,7 @@
 #ifndef KSYNC_KONNECTOR_PROFILE_FILE_MANAGER_H
 #define KSYNC_KONNECTOR_PROFILE_FILE_MANAGER_H
 
-#include <konnectorprofile.h>
+#include "konnectorprofile.h"
 
 namespace KSync{
 

@@ -34,14 +34,10 @@
 #include <qcheckbox.h>
 #include <qgroupbox.h>
 #include <qlabel.h>
-#include <qvbox.h>
 #include <qlayout.h>
 #include <qlineedit.h>
-#include <qframe.h>
 //#include <qspacer.h>
 #include <qcombobox.h>
-#include <qlistview.h>
-#include <qpushbutton.h>
 
 #include <klocale.h>
 
