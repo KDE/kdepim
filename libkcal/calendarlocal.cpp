@@ -169,7 +169,7 @@ void CalendarLocal::deleteAllTodos()
   for( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
     notifyIncidenceDeleted( *it );
   }
-  
+
   mTodoList.setAutoDelete( true );
   mTodoList.clear();
   mTodoList.setAutoDelete( false );
@@ -242,9 +242,9 @@ void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
 //                  << "': " << alarm->time().toString() << " - " << alarm->enabled() << endl;
     if ( (*it)->enabled() ) {
       if ( (*it)->time() >= from && (*it)->time() <= to ) {
-        kdDebug(5800) << "CalendarLocal::appendAlarms() '"
-                      << incidence->summary() << "': "
-                      << (*it)->time().toString() << endl;
+//         kdDebug(5800) << "CalendarLocal::appendAlarms() '"
+//                       << incidence->summary() << "': "
+//                       << (*it)->time().toString() << endl;
         alarms.append( *it );
       }
     }
@@ -507,7 +507,7 @@ void CalendarLocal::deleteAllJournals()
   for( it = mJournalList.begin(); it != mJournalList.end(); ++it ) {
     notifyIncidenceDeleted( *it );
   }
-  
+
   mJournalList.setAutoDelete( true );
   mJournalList.clear();
   mJournalList.setAutoDelete( false );
