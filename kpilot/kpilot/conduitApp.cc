@@ -27,6 +27,7 @@ static const char *id=
 #include <kcmdlineargs.h>
 #include <kapp.h>
 #include <kdebug.h>
+#include <dcopclient.h>
 
 #include "conduitApp.h"
 
@@ -166,6 +167,49 @@ ConduitApp::setConduit(BaseConduit* conduit)
 	fConduit = conduit;
 }
 
+// setup a conduit's DCOP stuff.
+//
+//
+bool
+ConduitApp::setupDCOP()
+{
+	EFUNCTIONSETUP;
+
+	// Can only happen if we call setupDCOP from somewhere
+	// before exec(). That would be very strange ....
+	//
+	if (!fApp)
+	{
+		kdError() << fname
+			<< "No KApplication object!"
+			<< endl;
+		return false;
+	}
+
+	DCOPClient *p = fApp->dcopClient();
+	if (!p)
+	{
+		kdError() << fname
+			<< "Couldn't get DCOP connection."
+			<< endl;
+		return false;
+	}
+
+	if (!p->attach())
+	{
+		// The DCOP docs say that KApplication
+		// has already displayed a warning message.
+		// So don't print one here.
+		
+		return false;
+	}
+
+	// Conduit's never serve requests so there's
+	// no need to register a name.
+
+	return true;
+}
+
 // exec() actually runs the conduit. This isn't strictly
 // true since under KDE1 setConduit() does a lot of work
 // which in KDE2 is transferred here.
@@ -217,7 +261,7 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 	return fMode;
 }
 
-int ConduitApp::exec()
+int ConduitApp::exec(bool withDCOP,bool withGUI)
 {
 	EFUNCTIONSETUP;
 
@@ -225,11 +269,23 @@ int ConduitApp::exec()
 
 	(void) getMode();
 
+	if (fMode == BaseConduit::Setup)
+	{
+		withGUI=true;
+	}
+
 	// Note that both styles and GUI are only in effect
 	// if we are going to do the setup dialog.
 	//
-	fApp=new KApplication(fMode==BaseConduit::Setup,
-		fMode==BaseConduit::Setup);
+	fApp=new KApplication(withGUI,withGUI);
+
+	if (withDCOP) 
+	{
+		if (!setupDCOP())
+		{
+			return 1;
+		}
+	}
 
 	switch(fMode)
 	{
@@ -270,6 +326,9 @@ int ConduitApp::exec()
 
 
 // $Log$
+// Revision 1.14  2000/12/21 00:42:50  adridg
+// Mostly debugging changes -- added EFUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
+//
 // Revision 1.13  2000/12/06 22:22:51  adridg
 // Debug updates
 //

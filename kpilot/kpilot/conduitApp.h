@@ -51,6 +51,7 @@ public:
 	*/
 	void setConduit(BaseConduit* conduit);
 
+
 	/**
 	* Add an additional author to the conduit's
 	* KAboutData. The constructor sets a number of 
@@ -93,7 +94,8 @@ public:
 	* Run the conduit app. This is probably the
 	* last thing main() does before returning.
 	*/
-	int exec();
+	int exec(bool withDCOP=false,bool withGUI=false);
+
 
 protected:
 	KAboutData *fAbout;
@@ -106,7 +108,13 @@ private:
 
 	int &fArgc;
 	char **fArgv;
+
+
+	bool setupDCOP();
 } ;
 
-// $Log:$
+// $Log$
+// Revision 1.9  2000/10/29 22:11:06  adridg
+// Added debug-merge feature to conduits
+//
 #endif

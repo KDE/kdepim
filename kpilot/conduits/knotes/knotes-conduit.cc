@@ -31,6 +31,7 @@
 #include <kmessagebox.h>
 #include <ksimpleconfig.h>
 #include <kconfig.h>
+#include <dcopclient.h>
 #include <kdebug.h>
 
 #include "conduitApp.h"
@@ -64,7 +65,7 @@ int main(int argc, char* argv[])
 
 	KNotesConduit conduit(a.getMode());
 	a.setConduit(&conduit);
-	return a.exec();
+	return a.exec(true /* with DCOP support */);
 }
 
 
@@ -94,7 +95,7 @@ collectNotes()
 
 	for (i=notes.begin() ; i !=notes.end(); ++i)
 	{
-		QString notedata ;
+		QString notename,notedata ;
 		KSimpleConfig *c = 0L;
 		int version ;
 		unsigned long pilotID ;
@@ -122,7 +123,8 @@ collectNotes()
 #endif
 
 		c->setGroup("Data");
-		notedata = "." + c->readEntry("name") + "_data";
+		notename = c->readEntry("name");
+		notedata = "." +  notename + "_data";
 		if (notedir.exists(notedata))
 		{
 #ifdef DEBUG
@@ -132,7 +134,8 @@ collectNotes()
 				<< notedata << endl;
 			}
 #endif
-			NotesSettings n(notedir.absFilePath(*i),
+			NotesSettings n(notename,
+				notedir.absFilePath(*i),
 				notedir.absFilePath(notedata),
 				pilotID);
 			m.insert(*i,n);
@@ -411,7 +414,8 @@ bool KNotesConduit::newMemo(NotesMap& m,unsigned long id,PilotMemo *memo)
 
 	if (success)
 	{
-		NotesSettings n(notedir.absFilePath(noteName),
+		NotesSettings n(noteName,
+			notedir.absFilePath(noteName),
 			notedir.absFilePath(dataName),
 			id);
 		m.insert(noteName,n);
@@ -600,7 +604,15 @@ KNotesConduit::dbInfo()
 /* virtual */ void
 KNotesConduit::doTest()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
+	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
+	if (!dcopptr)
+	{
+		kdWarning() << fname
+			<< ": Can't get DCOP client."
+			<< endl;
+		return;
+	}
 
 	NotesMap m = collectNotes();
 
@@ -608,20 +620,49 @@ KNotesConduit::doTest()
 	NotesMap::Iterator i;
 	for (i=m.begin(); i!=m.end(); ++i)
 	{
-		kdDebug() << fname 
-			<< ": Note "
-			<< (*i).configPath()
-			<< " "
-			<< (*i).dataPath()
-			<< " "
-			<< (*i).pilotID()
-			<< endl;
+		if ((*i).pilotID())
+		{
+			DEBUGCONDUIT << fname
+				<< ": Showing note " 
+				<< (*i).name()
+				<< endl;
+
+			QByteArray data;
+			QDataStream arg(data,IO_WriteOnly);
+			arg << (*i).name() ;
+			if (dcopptr -> send("knotes",
+				"KNotesIface",
+				"showNote(QString)",
+				data))
+			{
+				DEBUGCONDUIT << fname
+					<< ": DCOP send succesful"
+					<< endl;
+			}
+			else
+			{
+				kdWarning() << fname
+					<< ": DCOP send failed."
+					<< endl;
+			}
+		}
+		else
+		{
+			DEBUGCONDUIT << fname
+				<< ": Note "
+				<< (*i).name()
+				<< " not in Pilot"
+				<< endl;
+		}
 	}
 
 	(void) id;
 }
 
 // $Log$
+// Revision 1.4  2000/12/05 07:44:01  adridg
+// Cleanup
+//
 // Revision 1.1  2000/11/20 00:22:28  adridg
 // New KNotes conduit
 //
