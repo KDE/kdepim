@@ -51,7 +51,7 @@ class Konnector;
 
 namespace KitchenSync {
     // no idea why we have this window
-    enum SyncStatus {SYNC_START=0, SYNC_SYNC, SYNC_STOP };
+//    enum SyncStatus {SYNC_START=0, SYNC_SYNC, SYNC_STOP };
     enum KonnectorMode { KONNECTOR_ONLINE=0,  KONNECTOR_OFFLINE };
     class KSyncMainWindow : public KParts::MainWindow {
        Q_OBJECT

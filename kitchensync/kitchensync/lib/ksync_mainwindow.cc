@@ -28,6 +28,7 @@
 
 
 #include <qvbox.h>
+#include <qptrlist.h>
 #include <qwidgetstack.h>
 #include <qsize.h>
 
@@ -226,6 +227,7 @@ void KSyncMainWindow::slotConfigure() {
 
 void KSyncMainWindow::slotActivated(ManipulatorPart *part) {
   m_stack->raiseWidget(part->widget() );
+
   createGUI( part );
 }
 
@@ -284,6 +286,7 @@ void KSyncMainWindow::initKonnector()
 void KSyncMainWindow::slotSync( const QString &udi,
                                 QPtrList<KSyncEntry> lis)
 {
+    QPtrList<KSyncEntry> ret;
     kdDebug(5210) << "Some data arrived Yeah baby" << endl;
     kdDebug(5210) << "Lis got "  << lis.count() << "elements" << endl;
     KSyncEntry *entry=0;
@@ -291,8 +294,27 @@ void KSyncMainWindow::slotSync( const QString &udi,
         kdDebug() << "Type is " << entry->type() << endl;
     }
     // pass them through all widgets
-
-    m_konnector->write( udi, lis );
+    ManipulatorPart* part=0l;
+    ManipulatorPart* po=0l;
+    for ( part = m_parts.first(); part != 0; part = m_parts.next() ) {
+    // part is the activated part
+        // rather inefficent can QSignal be more direct? Request first?
+        // but this is rather brain dead
+        QPtrListIterator<ManipulatorPart> it(m_parts);
+        for ( ; it.current(); ++it ) {
+            it.current()->slotSyncPartActivated( part );
+            it.current()->slotProgress( part, SYNC_START,  0 );
+        }
+        part->processEntry( lis,  ret );
+        kdDebug(5210 ) << "processed " << part->name() << endl;
+        it.toFirst();
+        for ( ; it.current(); ++it ) {
+            it.current()->slotProgress( part, SYNC_DONE,  0 );
+        }
+    }
+    lis.setAutoDelete( TRUE );
+    lis.clear();
+    m_konnector->write( udi, ret );
 }
 void KSyncMainWindow::slotStateChanged( const QString &udi,
                                         bool connected )

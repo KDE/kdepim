@@ -43,6 +43,7 @@
 #include <qptrlist.h>
 #include <qstringlist.h>
 
+#include <kdebug.h>
 
 #include <ksyncentry.h>
 //#include "ksync_mainwindow.h"
@@ -50,6 +51,7 @@
 
 namespace KitchenSync {
     class KSyncMainWindow;
+    enum SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
     class ManipulatorPart : public KParts::Part {
         Q_OBJECT
     public:
@@ -73,8 +75,9 @@ namespace KitchenSync {
 
         virtual QWidget *configWidget(){ return 0l; };
 
-        virtual QPtrList<KSyncEntry> processEntry(QPtrList<KSyncEntry>* ) {
-            QPtrList<KSyncEntry> ent;  return ent;
+        // take items
+        virtual void processEntry(const QPtrList<KSyncEntry>&, QPtrList<KSyncEntry>& ) {
+            kdDebug(5220) << "ProcessEntries " << name() << endl;
         };
     signals:
         // 0 - 100
