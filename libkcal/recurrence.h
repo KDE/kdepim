@@ -259,8 +259,9 @@ class Recurrence
     void setYearly(int type, int freq, int duration);
     /** Sets an event to recur yearly ending at \a endDate. */
     void setYearly(int type, int freq, const QDate &endDate);
-    /** Sets an event to recur yearly on specified dates.
-     * The dates must be specified by calling addYearlyNum().
+    /** Sets an event to recur yearly on a set of months, on the same day of the
+     * month as the event start date.
+     * The months must be specified by calling addYearlyNum().
      * @var type the way recurrences of February 29th are to be handled in non-leap years.
      * @var freq the frequency to recur, e.g. 3 for every third year.
      * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
@@ -268,6 +269,15 @@ class Recurrence
     void setYearlyByDate(Feb29Type type, int freq, int duration);
     /** Sets an event to recur yearly ending at \a endDate. */
     void setYearlyByDate(Feb29Type type, int freq, const QDate &endDate);
+    /** Sets an event to recur yearly of a set of months, on the specified day of the month.
+     * The months must be specified by calling addYearlyNum().
+     * @var type the way recurrences of February 29th are to be handled in non-leap years.
+     * @var freq the frequency to recur, e.g. 3 for every third year.
+     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     */
+    void setYearlyByDate(int day, Feb29Type type, int freq, int duration);
+    /** Sets an event to recur yearly ending at \a endDate. */
+    void setYearlyByDate(int day, Feb29Type type, int freq, const QDate &endDate);
     /** Adds position of day or month in year.
      * N.B. for recursYearlyPos, addYearlyMonthPos() must also be called
      * to add positions within the month. */

@@ -129,6 +129,7 @@ bool Recurrence::operator==( const Recurrence& r2 ) const
       &&     rMonthPositions == r2.rMonthPositions;
     case rYearlyMonth:
       return rYearNums == r2.rYearNums
+      &&     rMonthDays == r2.rMonthDays
       &&     mFeb29YearlyType == r2.mFeb29YearlyType;
     case rYearlyDay:
       return rYearNums == r2.rYearNums;
@@ -603,7 +604,7 @@ void Recurrence::addMonthlyPos_(short _rPos, const QBitArray &_rDays)
 
 void Recurrence::addMonthlyDay(short _rDay)
 {
-  if (mRecurReadOnly || recurs != rMonthlyDay
+  if (mRecurReadOnly || (recurs != rMonthlyDay && recurs != rYearlyMonth)
   ||  _rDay == 0 || _rDay > 31 || _rDay < -31)   // invalid day number
     return;
   for (int* it = rMonthDays.first();  it;  it = rMonthDays.next()) {
@@ -650,20 +651,34 @@ void Recurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
 
 void Recurrence::setYearlyByDate(Feb29Type type, int _rFreq, int _rDuration)
 {
+  setYearlyByDate(0, type, _rFreq, _rDuration);
+}
+
+void Recurrence::setYearlyByDate(Feb29Type type, int _rFreq, const QDate &_rEndDate)
+{
+  setYearlyByDate(0, type, _rFreq, _rEndDate);
+}
+
+void Recurrence::setYearlyByDate(int day, Feb29Type type, int _rFreq, int _rDuration)
+{
   if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
     return;
   if (mCompatVersion < 310)
     mCompatDuration = (_rDuration > 0) ? _rDuration : 0;
   setYearly_(rYearlyMonth, type, _rFreq, _rDuration);
+  if (day)
+    addMonthlyDay(day);
 }
 
-void Recurrence::setYearlyByDate(Feb29Type type, int _rFreq, const QDate &_rEndDate)
+void Recurrence::setYearlyByDate(int day, Feb29Type type, int _rFreq, const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
   rEndDateTime.setDate(_rEndDate);
   rEndDateTime.setTime(mRecurStart.time());
   mCompatDuration = 0;
   setYearly_(rYearlyMonth, type, _rFreq, 0);
+  if (day)
+    addMonthlyDay(day);
 }
 
 void Recurrence::addYearlyMonthPos(short _rPos, const QBitArray &_rDays)
@@ -963,10 +978,14 @@ bool Recurrence::recursYearlyByMonth(const QDate &qd) const
 {
   QDate dStart = mRecurStart.date();
   int startDay = dStart.day();
+  if (rMonthDays.count())
+    startDay = *rMonthDays.getFirst();
   int qday     = qd.day();
   int qmonth   = qd.month();
   int qyear    = qd.year();
   bool match = (qday == startDay);
+  if (startDay < 0)
+    match = (qday == qd.daysInMonth() + startDay + 1);
   if (!match && startDay == 29 && dStart.month() == 2) {
     // It's a recurrence on February 29th
     switch (mFeb29YearlyType) {
@@ -1943,6 +1962,9 @@ ex:
  * Reply = total number of occurrences up to 'enddate', or 0 if error.
  * If 'func' = END_DATE_AND_COUNT or NEXT_AFTER_DATE, 'enddate' is updated to the
  * recurrence end date.
+ *
+ * WARNING: These methods currently do not cater for day of month < -28
+ *          (which would need different months to be treated differently).
  */
 struct Recurrence::YearlyMonthData {
     const Recurrence *recurrence;
@@ -1955,22 +1977,24 @@ struct Recurrence::YearlyMonthData {
     QValueList<int>   months;        // recurring months in non-leap years  1..12
     QValueList<int>   leapMonths;    // recurring months in leap years  1..12
   public:
-    YearlyMonthData(const Recurrence* r, const QDate &date)
-          : recurrence(r), year(date.year()), month(date.month()), day(date.day())
+    YearlyMonthData(const Recurrence* r, const QDate &date, int d)
+          : recurrence(r), year(date.year()), month(date.month()), day(d ? d : date.day())
           { feb29 = recurrence->getYearlyMonthMonths(day, months, leapMonths);
             leapyear = feb29 && QDate::leapYear(year);
           }
     const QValueList<int>* monthList() const
                          { return leapyear ? &leapMonths : &months; }
     const QValueList<int>* leapMonthList() const  { return &leapMonths; }
-    QDate            date() const  { return QDate(year, month, day); }
+    QDate            date() const  { if (day > 0) return QDate(year, month, day);
+                                     return QDate(year, month, QDate(year, month, 1).daysInMonth() + day + 1);
+                                   }
 };
 
 int Recurrence::yearlyMonthCalc(PeriodFunc func, QDate &enddate) const
 {
   if (rYearNums.isEmpty())
     return 0;
-  YearlyMonthData data(this, mRecurStart.date());
+  YearlyMonthData data(this, mRecurStart.date(), (rMonthDays.count() ? *rMonthDays.getFirst() : 0));
   switch (func) {
     case END_DATE_AND_COUNT:
       return yearlyMonthCalcEndDate(enddate, data);
@@ -2083,7 +2107,16 @@ int Recurrence::yearlyMonthCalcToDate(const QDate &enddate, YearlyMonthData &dat
   int endYear  = enddate.year();
   int endMonth = enddate.month();
   int endDay   = enddate.day();
-  if (endDay < data.day) {
+  if (data.day < 0) {
+    // The end day of the month is relative to the end of the month.
+    if (endDay < enddate.daysInMonth() + data.day + 1) {
+      if (--endMonth == 0) {
+        endMonth = 12;
+        --endYear;
+      }
+    }
+  }
+  else if (endDay < data.day) {
     /* The end day of the month is earlier than the recurrence day of the month.
      * If Feb 29th recurs and:
      * 1) it recurs on Feb 28th in non-leap years, don't adjust the end month
@@ -2160,7 +2193,16 @@ int Recurrence::yearlyMonthCalcNextAfter(QDate &enddate, YearlyMonthData &data) 
   int endDay   = enddate.day();
   bool mar1TooEarly = false;
   bool feb28ok      = false;
-  if (endDay < data.day) {
+  if (data.day < 0) {
+    // The end day of the month is relative to the end of the month.
+    if (endDay < enddate.daysInMonth() + data.day + 1) {
+      if (--endMonth == 0) {
+        endMonth = 12;
+        --endYear;
+      }
+    }
+  }
+  else if (endDay < data.day) {
     if (data.feb29 && mFeb29YearlyType == rMar1 && endMonth == 3)
       mar1TooEarly = true;
     if (data.feb29 && mFeb29YearlyType == rFeb28 && endMonth == 2 && endDay == 28)
