@@ -99,6 +99,7 @@ void KWatchGnuPGMainWindow::createActions()
   (void)KStdAction::close( this, SLOT(close()), actionCollection() );
   (void)KStdAction::quit( this, SLOT(slotQuit()), actionCollection() );
   (void)KStdAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
+   ( void )KStdAction::keyBindings(guiFactory(), SLOT(configureShortcuts()), actionCollection());
 #if 0
   (void)new KAction( i18n("Configure KWatchGnuPG..."), QString::fromLatin1("configure"),
 					 0, this, SLOT( slotConfigure() ),
