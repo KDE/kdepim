@@ -1,12 +1,13 @@
 Source: kdepim
 Build-Depends: autoconf, kdelibs3-dev, debhelper, libpisock-dev, pilot-link,libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlib6g-dev, jade, sgml-base, docboook, gettext, bison, libc6-dev
-Section: utils
+Section: non-US/main
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
 Standards-Version: 3.1.1
 
 Package: kdepim
 Architecture: any
+Section: non-US/main
 Replaces: kdepim-cvs
 Depends: ${shlibs:Depends}
 Conflicts: korganizer, kdepim-cvs
@@ -18,7 +19,7 @@ Description: KDE Personal Information Management Applications
 
 Package: kdepim-dev
 Architecture: any
-Section: devel
+Section: non-US/main
 Replaces: kdepim-dev-cvs
 Depends: kdepim (= ${Source-Version}), libqt2.2-dev, kdelibs3-dev
 Conflicts: kdepim-dev-cvs
