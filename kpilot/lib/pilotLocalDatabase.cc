@@ -74,7 +74,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 		else
 		{
 			fPathName = KGlobal::dirs()->saveLocation("data",
-				QString("kpilot/DBBackup/"));
+				CSL1("kpilot/DBBackup/"));
 		}
 		fixupDBName();
 		openDatabase();
@@ -106,7 +106,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	else
 	{
 		fPathName = KGlobal::dirs()->saveLocation("data",
-			QString("kpilot/DBBackup/"));
+			CSL1("kpilot/DBBackup/"));
 	}
 
 	fixupDBName();
@@ -131,7 +131,13 @@ PilotLocalDatabase::~PilotLocalDatabase()
 void PilotLocalDatabase::fixupDBName()
 {
 	FUNCTIONSETUP;
-	fDBName = fDBName.replace(QRegExp("/"), "_");
+#if QT_VERSION < 0x30100
+	fDBName = fDBName.replace(QRegExp(CSL1("/")),CSL1("_"));
+#else
+	// Actually, I don't know if this char-replace
+	// is more efficient than the QString one.
+	fDBName = fDBName.replace('/', CSL1("_"));
+#endif
 }
 
 bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags, int version) 
@@ -523,10 +529,11 @@ QString PilotLocalDatabase::dbPathName() const
 {
 	FUNCTIONSETUP;
 	QString tempName(fPathName);
-
-	if (!tempName.endsWith("/")) tempName += "/";
+	QString slash = CSL1("/");
+	
+	if (!tempName.endsWith(slash)) tempName += slash;
 	tempName += getDBName();
-	tempName += ".pdb";
+	tempName += CSL1(".pdb");
 	return tempName;
 }
 
@@ -581,7 +588,7 @@ void PilotLocalDatabase::closeDatabase()
 	}
 
 	QString tempName_ = dbPathName();
-	QString newName_ = tempName_ + ".bak";
+	QString newName_ = tempName_ + CSL1(".bak");
 	QCString tempName = QFile::encodeName(tempName_);
 	QCString newName = QFile::encodeName(newName_);
 

@@ -459,8 +459,10 @@ void KPilotDeviceLink::acceptDevice()
 
 		kdWarning() << "pi_listen: " << s << endl;
 
+		// Presumably, strerror() returns things in
+		// local8Bit and not latin1.
 		emit logError(i18n("Can't listen on Pilot socket (%1)").
-			arg(s));
+			arg(QString::fromLocal8Bit(s)));
 
 		close();
 		return;
@@ -475,7 +477,8 @@ void KPilotDeviceLink::acceptDevice()
 
 		kdWarning() << "pi_accept: " << s << endl;
 
-		emit logError(i18n("Can't accept Pilot (%1)").arg(s));
+		emit logError(i18n("Can't accept Pilot (%1)")
+			.arg(QString::fromLocal8Bit(s)));
 
 		fStatus = PilotLinkError;
 		close();
@@ -661,49 +664,49 @@ QString KPilotDeviceLink::deviceTypeString(int i) const
 	switch (i)
 	{
 	case None:
-		return QString("None");
+		return QString::fromLatin1("None");
 	case Serial:
-		return QString("Serial");
+		return QString::fromLatin1("Serial");
 	case OldStyleUSB:
-		return QString("OldStyleUSB");
+		return QString::fromLatin1("OldStyleUSB");
 	case DevFSUSB:
-		return QString("DevFSUSB");
+		return QString::fromLatin1("DevFSUSB");
 	default:
-		return QString("<unknown>");
+		return QString::fromLatin1("<unknown>");
 	}
 }
 
 QString KPilotDeviceLink::statusString() const
 {
 	FUNCTIONSETUP;
-	QString s("KPilotDeviceLink=");
+	QString s = QString::fromLatin1("KPilotDeviceLink=");
 
 
 	switch (fStatus)
 	{
 	case Init:
-		s.append("Init");
+		s.append(QString::fromLatin1("Init"));
 		break;
 	case WaitingForDevice:
-		s.append("WaitingForDevice");
+		s.append(QString::fromLatin1("WaitingForDevice"));
 		break;
 	case FoundDevice:
-		s.append("FoundDevice");
+		s.append(QString::fromLatin1("FoundDevice"));
 		break;
 	case CreatedSocket:
-		s.append("CreatedSocket");
+		s.append(QString::fromLatin1("CreatedSocket"));
 		break;
 	case DeviceOpen:
-		s.append("DeviceOpen");
+		s.append(QString::fromLatin1("DeviceOpen"));
 		break;
 	case AcceptedDevice:
-		s.append("AcceptedDevice");
+		s.append(QString::fromLatin1("AcceptedDevice"));
 		break;
 	case SyncDone:
-		s.append("SyncDone");
+		s.append(QString::fromLatin1("SyncDone"));
 		break;
 	case PilotLinkError:
-		s.append("PilotLinkError");
+		s.append(QString::fromLatin1("PilotLinkError"));
 		break;
 	}
 
@@ -731,10 +734,12 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 }
 
 // Find a database with the given name. Info about the DB is stored into dbinfo (e.g. to be used later on with retrieveDatabase).
-int KPilotDeviceLink::findDatabase(char*name, struct DBInfo*dbinfo, int index, long type, long creator) 
+int KPilotDeviceLink::findDatabase(const char *name, struct DBInfo *dbinfo,
+	int index, long type, long creator) 
 {
 	FUNCTIONSETUP;
-	return dlp_FindDBInfo(pilotSocket(), 0, index, name, type, creator, dbinfo);
+	return dlp_FindDBInfo(pilotSocket(), 0, index, 
+		const_cast<char *>(name), type, creator, dbinfo);
 }
 
 bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 
@@ -837,4 +842,3 @@ bool operator < (const db & a, const db & b) {
 
 	return a.maxblock < b.maxblock;
 }
-

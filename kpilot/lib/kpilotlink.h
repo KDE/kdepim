@@ -339,7 +339,8 @@ protected:
 	int openConduit();
 public:
 	int getNextDatabase(int index,struct DBInfo *);
-	int findDatabase(char*name, struct DBInfo*, int index=0, long type=0, long creator=0);
+	int findDatabase(const char *name, struct DBInfo*, 
+		int index=0, long type=0, long creator=0);
 
 	/**
 	* Retrieve the database indicated by DBInfo *db into the

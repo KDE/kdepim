@@ -66,8 +66,9 @@ PilotSerialDatabase::~PilotSerialDatabase()
 
 QString PilotSerialDatabase::dbPathName() const
 {
-	QString s("Pilot:");
-	s.append(fDBName);
+	QString s = CSL1("Pilot:");
+	// This latin1() is ok. Pilot database names are latin1.
+	s.append(QString::fromLatin1(fDBName));
 	return s;
 }
 
