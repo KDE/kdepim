@@ -107,4 +107,15 @@ KABC::Field *IncSearchWidget::currentField()const
     return mFieldList[ mFieldCombo->currentItem() - 1 ];
 }
 
+void IncSearchWidget::setCurrentItem( int pos )
+{
+  mFieldCombo->setCurrentItem( pos );
+  announceFieldChanged();
+}
+
+int IncSearchWidget::currentItem() const
+{
+  return mFieldCombo->currentItem();
+}
+
 #include "incsearchwidget.moc"

@@ -166,6 +166,8 @@ void KABCore::restoreSettings()
 
   mViewManager->restoreSettings();
   mExtensionManager->restoreSettings();
+
+  mIncSearchWidget->setCurrentItem( config()->readNumEntry( "IncSearchField", 0 ) );
 }
 
 void KABCore::saveSettings()
@@ -181,6 +183,8 @@ void KABCore::saveSettings()
 
   mExtensionManager->saveSettings();
   mViewManager->saveSettings();
+
+  config()->writeEntry( "IncSearchField", mIncSearchWidget->currentItem() );
 }
 
 KABC::AddressBook *KABCore::addressBook() const

@@ -44,7 +44,10 @@ class IncSearchWidget : public QWidget
     void setFields( const KABC::Field::List &list );
     KABC::Field::List fields() const;
 
-    KABC::Field *currentField()const;
+    KABC::Field *currentField() const;
+
+    void setCurrentItem( int pos );
+    int currentItem() const;
 
   signals:
     /**
