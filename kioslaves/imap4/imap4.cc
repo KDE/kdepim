@@ -1142,7 +1142,7 @@ IMAP4Protocol::special (const QByteArray & aData)
 {
   if (!makeLogin()) return;
 
-  kdDebug(7116) << "IMAP4Protocol::special" << endl;
+  //kdDebug(7116) << "IMAP4Protocol::special" << endl;
   QDataStream stream(aData, IO_ReadOnly);
 
   int tmp;
@@ -1510,7 +1510,7 @@ IMAP4Protocol::slave_status ()
 void
 IMAP4Protocol::dispatch (int command, const QByteArray & data)
 {
-  kdDebug(7116) << "IMAP4::dispatch - command=" << command << endl;
+  //kdDebug(7116) << "IMAP4::dispatch - command=" << command << endl;
   KIO::TCPSlaveBase::dispatch (command, data);
 }
 
@@ -1825,7 +1825,7 @@ bool IMAP4Protocol::makeLogin ()
 void
 IMAP4Protocol::parseWriteLine (const QString & aStr)
 {
-  //kdDebug(7116) << "Writing: " << aStr << endl;
+  kdDebug(7116) << "Writing: " << aStr << endl;
   QCString writer = aStr.utf8();
   int len = writer.length();
 
