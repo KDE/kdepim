@@ -2,17 +2,13 @@
 #include <kdebug.h>
 #include "doc-conflictdialog.h"
 #include "options.h"
-//#include "doc-conduit.h"
 
-//#include <qvariant.h>
 #include <qcombobox.h>
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qbuttongroup.h>
-//#include <qtooltip.h>
-//#include <qwhatsthis.h>
 #include <kmessagebox.h>
 #include <qtimer.h>
 
@@ -81,7 +77,6 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			cE.info = new QPushButton( i18n("More information..."), resolutionGroupBox );
 			resolutionGroupBoxLayout->addWidget(cE.info, cE.index, 2);
 			bgroup->insert(cE.info);
-//			connect(cE.info, SIGNAL(pressed()), this, SLOT(slotInfo(nr)));
 			
 			conflictEntries.append(cE);
 			nr++;
@@ -92,8 +87,6 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 
 
 	topLayout->addWidget( resolutionGroupBox );
-//	QSpacerItem* spacer = new QSpacerItem( 31, 250, QSizePolicy::Minimum, QSizePolicy::Expanding );
-//	topLayout->addItem( spacer );
 	topLayout->addStretch(10);
 
 

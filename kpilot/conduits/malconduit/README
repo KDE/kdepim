@@ -9,4 +9,4 @@ License: GPL, linking to libmal (MPL) is explicitely allowed
 Depends: The conduits needs libmal >=0.20 installed 
          (otherwise it will not be compiled). libmal 
          can be downloaded from
-         http://jasonday.home.att.net/code/libmal/libmal.html							
+         http://jasonday.home.att.net/code/libmal/							
