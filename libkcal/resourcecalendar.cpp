@@ -39,6 +39,22 @@ ResourceCalendar::~ResourceCalendar()
 {
 }
 
+QString ResourceCalendar::infoText() const
+{
+  QString txt;
+
+  txt += "<b>" + resourceName() + "</b>";
+  txt += "<br>";
+
+  KRES::Factory *factory = KRES::Factory::self( "calendar" );
+  QString t = factory->typeName( type() );
+  txt += i18n("Type: %1").arg( t );
+
+  addInfoText( txt );
+  
+  return txt;
+}
+
 void ResourceCalendar::writeConfig( KConfig* config )
 {
 //  kdDebug(5800) << "ResourceCalendar::writeConfig()" << endl;

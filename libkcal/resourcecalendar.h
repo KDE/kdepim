@@ -60,6 +60,12 @@ class ResourceCalendar : public KRES::Resource
     virtual void writeConfig( KConfig* config );
 
     /**
+      Return rich text with info about the resource. Adds standard info and
+      then calls addInfoText() to add info about concrete resources.
+    */
+    virtual QString infoText() const;
+
+    /**
       Load resource data. After calling this function all data is accessible by
       calling the incidence/event/todo/etc. accessor functions.
 
@@ -288,6 +294,11 @@ class ResourceCalendar : public KRES::Resource
       Do the actual saving of the resource data. Called by save().
     */
     virtual bool doSave() = 0;
+
+    /**
+      Add info text for concrete resources. Called by infoText().
+    */
+    virtual void addInfoText( QString & ) const {};
 
     /**
       A resource should call this function if a load error happens.

@@ -317,4 +317,10 @@ void ResourceRemote::dump() const
   kdDebug(5800) << "  ReloadPolicy: " << reloadPolicy() << endl;
 }
 
+void ResourceRemote::addInfoText( QString &txt ) const
+{
+  txt += "<br>";
+  txt += i18n("URL: %1").arg( mDownloadUrl.prettyURL() );
+}
+
 #include "resourceremote.moc"

@@ -264,6 +264,8 @@ class ResourceCached : public ResourceCalendar,
 
     void checkForAutomaticSave();
 
+    void addInfoText( QString & ) const;
+
   protected slots:
     void slotReload();
     void slotSave();

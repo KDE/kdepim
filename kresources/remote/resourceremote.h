@@ -105,6 +105,8 @@ class ResourceRemote : public ResourceCached
     bool doLoad();
     bool doSave();
 
+    void addInfoText( QString & ) const;
+
   private:
     void init();
 
