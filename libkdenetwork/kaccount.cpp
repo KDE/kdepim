@@ -40,16 +40,22 @@ KAccount::KAccount( const uint id, const QString &name, const Type type )
 
 void KAccount::writeConfig( KConfig &config, const QString &group )
 {
+  QString oldGroup = config.group();
   if (!group.isEmpty())
-    KConfigGroupSaver saver(&config, group);
+    config.setGroup(group);
   config.writeEntry("Id", mId);
   config.writeEntry("Name", mName);
+  if (!group.isEmpty()) // restore
+    config.setGroup(oldGroup);
 }
 
 void KAccount::readConfig( KConfig &config, const QString &group )
 {
+  QString oldGroup = config.group();
   if (!group.isEmpty())
-    KConfigGroupSaver saver(&config, group);
+    config.setGroup(group);
   mId = config.readUnsignedNumEntry("Id", 0);
   mName = config.readEntry("Name");
+  if (!group.isEmpty()) // restore
+    config.setGroup(oldGroup);
 }
