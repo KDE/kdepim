@@ -874,7 +874,7 @@ void KNGroup::scoreArticles(bool onlynew)
 
     //kdDebug(5003) << KNScorableArticle::notifyC->collection() << endl;
     if (KNScorableArticle::notifyC)
-      KNScorableArticle::notifyC->displayCollection();
+      KNScorableArticle::notifyC->displayCollection(knGlobals.topWidget);
   }
 }
 
