@@ -410,8 +410,12 @@ KPilot Developer's notes for January 30th, 2003
   the basic functionality works just fine!
 
 
-KPilot Developer's notes for January 15th, 2003
+KPilot Developer's notes for January 17th, 2003
 ===============================================
+
+2003-1-15  Adriaan de Groot
+* Back to BSD. Committed lots of header file changes. Did some fixing
+  for strlcpy() in 3_0_BRANCH for folks with KDE < 3.0.5a.
 
 2003-1-11  Adriaan de Groot
 * Weirdly, I can list the databases on the pilot just fine with kpilotTest,
