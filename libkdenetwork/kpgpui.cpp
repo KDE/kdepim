@@ -109,6 +109,8 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
 {
   QGroupBox * group;
   QLabel    * label;
+  QString     msg;
+
 
   QVBoxLayout *topLayout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
 
@@ -152,18 +154,44 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
   mpOptionsGroupBox->layout()->setSpacing( KDialog::spacingHint() );
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );
-  if( encrypt )
+  msg = i18n( "<qt><p>When this option is enabled, the passphrase of "
+	      "your private key will be remembered by the application "
+	      "as long as the application is running. Thus you will only "
+	      "have to enter the passphrase once. Be aware that this could "
+	      "be a potential security risk.</p></qt>" );
+  QWhatsThis::add( storePass, msg );
+  if( encrypt ) {
     encToSelf = new QCheckBox( i18n("Always encr&ypt to self"),
                                mpOptionsGroupBox );
+    msg = i18n( "<qt><p>When this option is enabled, the message/file "
+		"will not only be encrypted with the receiver's public key, "
+		"but with your key also. This will enable you to decrypt the "
+		"message/file at a later time. This is generally a good idea."
+		"</p></qt>" );
+    QWhatsThis::add( encToSelf, msg );
+  }
   else
     encToSelf = 0;
   showCipherText = new QCheckBox( i18n("&Show signed/encrypted text after "
                                        "composing"),
                                   mpOptionsGroupBox );
-  if( encrypt )
+  msg = i18n( "<qt><p>When this option is enabled, the signed/encrypted text "
+	      "will be shown in a seperate window, enabling you to know how "
+	      "it will look like before it is sent. This is a good idea when "
+	      "you are verifying that your encryption system works.</p></qt>" );
+  QWhatsThis::add( showCipherText, msg );
+  if( encrypt ) {
     showKeyApprovalDlg = new QCheckBox( i18n("Always show the encryption "
                                              "keys &for approval"),
                                         mpOptionsGroupBox );
+    msg = i18n( "<qt><p>When this option is enabled, the application will "
+		"always show you a list of public keys from which you can "
+		"choose the one it will use for encryption. If it is off, "
+		"the application will only show the dialog if it can not find "
+		"the right key or if there are several which could be used. "
+		"</p></qt>" );
+    QWhatsThis::add( showKeyApprovalDlg, msg );
+}
   else
     showKeyApprovalDlg = 0;
     
