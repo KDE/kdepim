@@ -757,12 +757,11 @@ void KSubscription::slotFilterTextChanged( const QString & text )
 //------------------------------------------------------------------------------
 void KSubscription::slotUpdateStatusLabel()
 {
-  QString matchingStr = QString::number( activeItemCount() );
   QString text;
   if (mLoading)
-    text = i18n("Loading...(%1 matching)").arg(matchingStr);
+    text = i18n("Loading...(%1 matching)").arg(activeItemCount());
   else
-    text = i18n("%1: (%2 matching)").arg(account()->name(), matchingStr);
+    text = i18n("%1: (1 matching)", "%1: (%n matching)", activeItemCount()).arg(account()->name());
 
   leftLabel->setText(text);
 }
