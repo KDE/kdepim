@@ -18,12 +18,68 @@
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <krun.h>
+#include <kio/netaccess.h>
 
 #include "knarticlemanager.h"
 #include "knglobals.h"
 #include "utilities.h"
 
-QStringList KNArticleManager::tempFiles;
+
+//===============================================================================
+
+KNSaveHelper::KNSaveHelper(QString saveName)
+  : s_aveName(saveName), file(0), tmpFile(0)
+{
+}
+
+
+KNSaveHelper::~KNSaveHelper()
+{
+  if (file) {       // local filesystem, just close the file
+    delete file;
+  } else
+    if (tmpFile) {      // network location, initiate transaction
+      tmpFile->close();
+      if (KIO::NetAccess::upload(tmpFile->name(),url) == false)
+        displayRemoteFileError();
+      tmpFile->unlink();   // delete temp file
+      delete tmpFile;
+    }
+}
+
+
+QFile* KNSaveHelper::getFile()
+{
+  url = KFileDialog::getSaveURL(s_aveName,"*");
+
+  if (url.isEmpty())
+    return 0;
+
+  if (url.isLocalFile()) {
+    file = new QFile(url.url());
+		if(!file->open(IO_WriteOnly)) {
+      displayExternalFileError();
+      delete file;
+      file = 0;
+    }
+    return file;
+  } else {
+    tmpFile = new KTempFile();
+    if (tmpFile->status()!=0) {
+      displayTempFileError();
+      delete tmpFile;
+      tmpFile = 0;
+      return 0;
+    }
+    return tmpFile->file();
+  }
+}
+
+
+//===============================================================================
+
+
+QList<KTempFile> KNArticleManager::tempFiles;
 
 
 KNArticleManager::KNArticleManager(KNListView *v)
@@ -42,11 +98,12 @@ KNArticleManager::~KNArticleManager()
 
 void KNArticleManager::deleteTempFiles()
 {
-  QStringList::Iterator it;
-  QCString cmd;
-  for(it=tempFiles.begin(); it!=tempFiles.end(); ++it) {
-    cmd="rm -f "+(*it).local8Bit();
-    system(cmd.data());
+  KTempFile *file;
+
+  while ((file = tempFiles.first())) {
+    file->unlink();                 // deletes file
+    tempFiles.removeFirst();
+    delete file;
   }
 }
 
@@ -54,47 +111,34 @@ void KNArticleManager::deleteTempFiles()
 
 void KNArticleManager::saveContentToFile(KNMimeContent *c)
 {
-	QString fName;
-	DwString data;
-	QFile f;
-	fName=KFileDialog::getSaveFileName(c->ctName().data(), 0, xTop, 0);
-	
-	if(!fName.isEmpty()) {
-		f.setName(fName);
-		if(f.open(IO_WriteOnly)) {
-			data=c->decodedData();
-			f.writeBlock(data.data(), data.size());
-			f.close();
-		}
-		else displayExternalFileError();
-	}	
+  KNSaveHelper helper(c->ctName().data());
+
+  QFile *file = helper.getFile();
+
+  if (file) {
+		DwString data=c->decodedData();
+		file->writeBlock(data.data(), data.size());
+	}
 }
 
 
 
 void KNArticleManager::saveArticleToFile(KNArticle *a)
 {
-	QString fName;
-	DwString tmp;
-	QFile f;
-		
-	fName=KFileDialog::getSaveFileName(a->subject().data(), 0, xTop, 0);
+  KNSaveHelper helper(a->subject().data());
+
+  QFile *file = helper.getFile();
 	
-	if(!fName.isEmpty()) {
-		tmp="";
+	if (file) {
+    DwString tmp = "";
 	  for(char *line=a->firstHeaderLine(); line; line=a->nextHeaderLine()) {
   		tmp+=line;
   		tmp+="\n";
   	}
   	tmp+="\n";
   	tmp+=a->mainContent()->decodedData();
-		f.setName(fName);
-		if(f.open(IO_WriteOnly)) {
-			f.writeBlock(tmp.data(), tmp.size());
-			f.close();
-		}
-		else displayExternalFileError();
-	}
+		file->writeBlock(tmp.data(), tmp.size());
+  }
 }
 
 
@@ -102,30 +146,29 @@ void KNArticleManager::saveArticleToFile(KNArticle *a)
 QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 {
   QString path;
-	QCString tmp;
-	DwString data;
-	QFile f;
-	
-	tmp=c->headerLine("X-KNode-Tempfile");
+
+	QCString tmp=c->headerLine("X-KNode-Tempfile");       // check for existing temp file
 	if(!tmp.isEmpty()) {
 	  path=QString(tmp);
 	  return path;
 	}
-	path="/tmp/"+KApplication::randomString(10);
-	path+=c->ctName();
-	tempFiles.append(path);
-	f.setName(path);
- 	if(f.open(IO_WriteOnly)) {
- 		data=c->decodedData();
- 		f.writeBlock(data.data(), data.size());
- 		f.close();
- 	  c->setHeader(KNArticleBase::HTxkntempfile, path.local8Bit());
- 	  return path;
- 	}
- 	else {
- 	  displayExternalFileError();
+
+  KTempFile* tmpFile = new KTempFile(QString::null,c->ctName());    // prefix null, real filename as suffix
+  if (tmpFile->status()!=0) {
+    displayTempFileError();
+    delete tmpFile;
     return QString::null;
-  }	
+  }
+
+  tempFiles.append(tmpFile);
+  QFile *f = tmpFile->file();
+	DwString data=c->decodedData();
+ 	f->writeBlock(data.data(), data.size());
+ 	tmpFile->close();
+  path = tmpFile->name();
+  c->setHeader(KNArticleBase::HTxkntempfile, path.local8Bit());
+
+  return path;
 }
 
 

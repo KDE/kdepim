@@ -134,16 +134,24 @@ void snyimpl()
 }
 
 
+void displayInternalFileError()
+{
+	KMessageBox::error(0, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\n!\nYou should close this application now,\nto avoid data loss!"));
+}
+
 void displayExternalFileError()
 {
 	KMessageBox::error(0, i18n("Unable to load/save file!"));
 }
 
 
-void displayInternalFileError()
+void displayRemoteFileError()
 {
-	KMessageBox::error(0, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\n!\nYou should close this application now,\nto avoid data loss!"));
+	KMessageBox::error(0, i18n("Unable to save remote file!"));
 }
 
 
-
+void displayTempFileError()
+{
+	KMessageBox::error(0, i18n("Unable to create temporary file!"));
+}

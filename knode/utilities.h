@@ -45,29 +45,9 @@ QString decryptStr(const QString& aStr);
 
 void snyimpl();
 
-void displayExternalFileError();   // use this for all external files
 void displayInternalFileError();	 // use this for all internal files
+void displayExternalFileError();   // use this for all external files
+void displayRemoteFileError();     // use this for remote files
+void displayTempFileError();       // use this for error on temporary files
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

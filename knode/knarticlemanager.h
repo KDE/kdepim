@@ -19,12 +19,41 @@
 #ifndef KNARTICLEMANAGER_H
 #define KNARTICLEMANAGER_H
 
-#include <qstringlist.h>
+#include <qlist.h>
+#include <kurl.h>
+#include <ktempfile.h>
 
 class KNListView;
 class KNArticleWidget;
 class KNMimeContent;
 class KNArticle;
+
+
+//===============================================================================
+
+
+// handles file saving for KNArticleManager => no duplicated code
+class KNSaveHelper {
+
+public:
+	
+	KNSaveHelper(QString saveName);
+	~KNSaveHelper();
+	
+	// returns a file open for writing
+	QFile* getFile();
+	
+private:
+
+  QString s_aveName;
+  KURL url;
+  QFile* file;
+  KTempFile* tmpFile;	
+};
+
+
+//===============================================================================
+
 
 class KNArticleManager {
 	
@@ -43,7 +72,7 @@ class KNArticleManager {
 	protected:	
 		KNListView *view;
 		KNArticleWidget *mainArtWidget;
-		static QStringList tempFiles;
+		static QList<KTempFile> tempFiles;		
 };
 
 #endif
