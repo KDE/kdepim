@@ -27,6 +27,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <korganizer/koprefs.h>
 
 extern "C" {
   #include <ical.h>
@@ -38,7 +39,6 @@ extern "C" {
 #include "calendar.h"
 #include "journal.h"
 #include "icalformat.h"
-
 #include "icalformatimpl.h"
 
 #define _ICAL_VERSION "2.0"
@@ -167,6 +167,52 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 //  addPropValue(vevent, VCTranspProp, tmpStr.local8Bit());
 
   return vevent;
+}
+
+icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Method method)
+{
+  kdDebug() << "icalformatimpl: writeFreeBusy: startDate: "
+    << freebusy->dtStart().toString("ddd MMMM d yyyy: h:m:s ap") << " End Date: " 
+    << freebusy->dtEnd().toString("ddd MMMM d yyyy: h:m:s ap") << endl;
+
+  icalcomponent *vfreebusy = icalcomponent_new(ICAL_VFREEBUSY_COMPONENT);
+
+  icalcomponent_add_property(vfreebusy,icalproperty_new_organizer(
+      ("MAILTO:" + freebusy->organizer()).local8Bit()));
+
+  if (freebusy->attendeeCount() != 0) {
+    QPtrList<Attendee> al = freebusy->attendees();
+    QPtrListIterator<Attendee> ai(al);
+    for (; ai.current(); ++ai) {
+      icalcomponent_add_property(vfreebusy,writeAttendee(ai.current()));
+    }
+  }
+
+  icalcomponent_add_property(vfreebusy,icalproperty_new_dtstamp(
+      writeICalDateTime(QDateTime::currentDateTime(),1)));
+  
+  icalcomponent_add_property(vfreebusy, icalproperty_new_dtstart(
+      writeICalDateTime(freebusy->dtStart(),1)));
+
+  icalcomponent_add_property(vfreebusy, icalproperty_new_dtend(
+      writeICalDateTime(freebusy->dtEnd(),1)));
+
+  if (method == Scheduler::Request) {
+    icalcomponent_add_property(vfreebusy,icalproperty_new_uid(
+       freebusy->uid().local8Bit()));
+  }
+
+  //Loops through all the periods in the freebusy object
+  QValueList<Period> list = freebusy->busyPeriods();
+  QValueList<Period>::Iterator it;
+  icalperiodtype period;
+  for (it = list.begin(); it!= list.end(); ++it) {
+    period.start = writeICalDateTime((*it).start(), 1);
+    period.end = writeICalDateTime((*it).end(), 1);
+    icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy(period) ); 
+  }
+
+  return vfreebusy;
 }
 
 icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
@@ -894,6 +940,64 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
   }
 
   return event;
+}
+
+FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
+{
+  FreeBusy *freebusy = new FreeBusy;
+
+  icalproperty *p = icalcomponent_get_first_property(vfreebusy,ICAL_ANY_PROPERTY);
+
+  const char *text;
+  int intvalue;
+  icaltimetype icaltime;
+  icalperiodtype icalperiod;
+  QDateTime period_start, period_end;
+
+  while (p) {
+    icalproperty_kind kind = icalproperty_isa(p);
+    switch (kind) {
+
+      case ICAL_UID_PROPERTY:  // unique id
+        text = icalproperty_get_uid(p);
+        freebusy->setUid(text);
+        break;
+
+      case ICAL_ORGANIZER_PROPERTY:  // organizer
+        text = icalproperty_get_organizer(p);
+        freebusy->setOrganizer(QString::fromLocal8Bit(text));
+        break;
+
+      case ICAL_ATTENDEE_PROPERTY:  // attendee
+        freebusy->addAttendee(readAttendee(p));
+        break;
+
+      case ICAL_DTSTART_PROPERTY:  // start date and time
+	icaltime = icalproperty_get_dtstart(p);
+        freebusy->setDtStart(readICalDateTime(icaltime));
+        break;
+
+      case ICAL_DTEND_PROPERTY:  // start End Date and Time
+	icaltime = icalproperty_get_dtend(p);
+        freebusy->setDtEnd(readICalDateTime(icaltime));
+        break;
+
+      case ICAL_FREEBUSY_PROPERTY:  //Any FreeBusy Times
+        icalperiod = icalproperty_get_freebusy(p);
+	period_start = readICalDateTime(icalperiod.start);
+	period_end = readICalDateTime(icalperiod.end);
+	freebusy->addPeriod(period_start, period_end);
+	break;
+
+      default:
+        kdDebug() << "ICALFormat::readIncidence(): Unknown property: " << kind
+                  << endl;
+      break;
+    }
+    p = icalcomponent_get_next_property(vfreebusy,ICAL_ANY_PROPERTY);
+  }
+
+  return freebusy;
 }
 
 Journal *ICalFormatImpl::readJournal(icalcomponent *vjournal)
@@ -1961,7 +2065,7 @@ void ICalFormatImpl::dumpIcalRecurrence(icalrecurrencetype r)
   }
 }
 
-icalcomponent *ICalFormatImpl::createScheduleComponent(Incidence *incidence,
+icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
                                                    Scheduler::Method method)
 {
   icalcomponent *message = createCalendarComponent();
@@ -2001,13 +2105,17 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(Incidence *incidence,
   icalcomponent_add_property(message,icalproperty_new_method(icalmethod));
 
   // TODO: check, if dynamic cast is required
-  if (incidence->type() == "Todo") {
+  if(incidence->type() == "ToDo") {
     Todo *todo = static_cast<Todo *>(incidence);
     icalcomponent_add_component(message,writeTodo(todo));
   }
-  if (incidence->type() == "Event") {
+  if(incidence->type() == "Event") {
     Event *event = static_cast<Event *>(incidence);
     icalcomponent_add_component(message,writeEvent(event));
+  }
+  if(incidence->type() == "FreeBusy") {
+    FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
+    icalcomponent_add_component(message,writeFreeBusy(freebusy, method));
   }
 
   return message;

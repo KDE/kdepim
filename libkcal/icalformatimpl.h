@@ -24,6 +24,7 @@
 #include <qstring.h>
 
 #include "scheduler.h"
+#include "freebusy.h"
 
 extern "C" {
   #include <ical.h>
@@ -45,6 +46,7 @@ class ICalFormatImpl {
 
     icalcomponent *writeTodo(Todo *todo);
     icalcomponent *writeEvent(Event *event);
+    icalcomponent *writeFreeBusy(FreeBusy *freebusy, Scheduler::Method method);
     icalcomponent *writeJournal(Journal *journal);
     void writeIncidence(icalcomponent *parent,Incidence *incidence);
     icalproperty *writeAttendee(Attendee *attendee);
@@ -54,6 +56,7 @@ class ICalFormatImpl {
     QString extractErrorProperty(icalcomponent *);    
     Todo *readTodo(icalcomponent *vtodo);
     Event *readEvent(icalcomponent *vevent);
+    FreeBusy *readFreeBusy(icalcomponent *vfreebusy);
     Journal *readJournal(icalcomponent *vjournal);
     Attendee *readAttendee(icalproperty *attendee);
     void readIncidence(icalcomponent *parent,Incidence *incidence);
@@ -68,7 +71,7 @@ class ICalFormatImpl {
     int readICalDuration(icaldurationtype);
     QString readUtf8Text(const char *);
     icalcomponent *createCalendarComponent();
-    icalcomponent *createScheduleComponent(Incidence *,Scheduler::Method);
+    icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);
 
   private:
     void dumpIcalRecurrence(icalrecurrencetype);

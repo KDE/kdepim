@@ -20,10 +20,15 @@
 
 // $Id$
 
+#include <qdir.h>
+#include <qfile.h>
+
 #include <klocale.h>
 #include <kdebug.h>
+#include <kstandarddirs.h>
 
 #include "event.h"
+#include "freebusy.h"
 #include "icalformat.h"
 #include "calendar.h"
 
@@ -31,9 +36,9 @@
 
 using namespace KCal;
 
-ScheduleMessage::ScheduleMessage(Incidence *event,int method,ScheduleMessage::Status status)
+ScheduleMessage::ScheduleMessage(IncidenceBase *incidence,int method,ScheduleMessage::Status status)
 {
-  mEvent = event;
+  mIncidence = incidence;
   mMethod = method;
   mStatus = status;
 }
@@ -64,12 +69,12 @@ Scheduler::~Scheduler()
 {
 }
 
-bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMessage::Status status)
+bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)
 {
   kdDebug() << "Scheduler::acceptTransaction " << endl;
   switch (method) {
     case Publish:
-      return acceptPublish(incidence, status);
+      return acceptPublish(incidence, status, method);
     case Request:
       return acceptRequest(incidence, status);
     case Add:
@@ -78,10 +83,8 @@ bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMes
       return acceptCancel(incidence, status);
     case Declinecounter:
       return acceptDeclineCounter(incidence, status);
-//    case FreeBusy:
-//      return acceptFreeBusy(incidence, status);
     case Reply:
-      return acceptReply(incidence, status);
+      return acceptReply(incidence, status, method);
     case Refresh:
       return acceptRefresh(incidence, status);
     case Counter:
@@ -118,17 +121,21 @@ QString Scheduler::methodName(Method method)
   }
 }
 
-bool Scheduler::deleteTransaction(Incidence *)
+bool Scheduler::deleteTransaction(IncidenceBase *)
 {
   return true;
 }
 
-bool Scheduler::acceptPublish(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptPublish(IncidenceBase *incidence,ScheduleMessage::Status status, Method method)
 {
+  if(incidence->type()=="FreeBusy") {
+    return acceptFreeBusy(incidence, method);
+  }
   switch (status) {
     case ScheduleMessage::PublishNew:
       if (!mCalendar->getEvent(incidence->uid())) {
-        mCalendar->addIncidence(incidence);
+	Incidence *inc = static_cast<Incidence *>(incidence);
+        mCalendar->addIncidence(inc);
         deleteTransaction(incidence);
       }
       return true;
@@ -142,13 +149,14 @@ bool Scheduler::acceptPublish(Incidence *incidence,ScheduleMessage::Status statu
   return false;
 }
 
-bool Scheduler::acceptRequest(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status status)
 {
+    Incidence *inc = static_cast<Incidence *>(incidence);
     switch (status) {
     case ScheduleMessage::Obsolete:
       return true;
     case ScheduleMessage::RequestNew:
-      mCalendar->addIncidence(incidence);
+      mCalendar->addIncidence(inc);
       deleteTransaction(incidence);
       return true;
     case ScheduleMessage::RequestUpdate:
@@ -157,7 +165,7 @@ bool Scheduler::acceptRequest(Incidence *incidence,ScheduleMessage::Status statu
       if (even) {
         mCalendar->deleteEvent(even);
       }
-      mCalendar->addIncidence(incidence);
+      mCalendar->addIncidence(inc);
       deleteTransaction(incidence);
       return true;
     default:
@@ -167,13 +175,13 @@ bool Scheduler::acceptRequest(Incidence *incidence,ScheduleMessage::Status statu
   return false;
 }
 
-bool Scheduler::acceptAdd(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status status)
 {
   deleteTransaction(incidence);
   return false;
 }
 
-bool Scheduler::acceptCancel(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status status)
 {
   bool ret = false;
   //get event in calendar
@@ -192,7 +200,7 @@ bool Scheduler::acceptCancel(Incidence *incidence,ScheduleMessage::Status status
   return ret;
 }
 
-bool Scheduler::acceptDeclineCounter(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptDeclineCounter(IncidenceBase *incidence,ScheduleMessage::Status status)
 {
   deleteTransaction(incidence);
   return false;
@@ -204,8 +212,11 @@ bool Scheduler::acceptDeclineCounter(Incidence *incidence,ScheduleMessage::Statu
 //  return false;
 //}
 
-bool Scheduler::acceptReply(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status status, Method method)
 {
+  if(incidence->type()=="FreeBusy") {
+    return acceptFreeBusy(incidence, method);
+  }
   bool ret = false;
   Event *ev = mCalendar->getEvent(incidence->uid());
   if (ev) {
@@ -233,16 +244,67 @@ bool Scheduler::acceptReply(Incidence *incidence,ScheduleMessage::Status status)
   return ret;
 }
 
-bool Scheduler::acceptRefresh(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptRefresh(IncidenceBase *incidence,ScheduleMessage::Status status)
 {
   // handled in korganizer's IncomingDialog
   deleteTransaction(incidence);
   return false;
 }
 
-bool Scheduler::acceptCounter(Incidence *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptCounter(IncidenceBase *incidence,ScheduleMessage::Status status)
 {
   deleteTransaction(incidence);
   return false;
 }
 
+bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
+{
+  FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
+
+  QString freeBusyDirName = locateLocal("appdata","freebusy");
+  kdDebug() << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDirName << endl;
+
+  QString from;
+  if(method == Scheduler::Publish) {
+    from = freebusy->organizer();
+  }
+  if((method == Scheduler::Reply) && (freebusy->attendeeCount() == 1)) {
+    Attendee *attendee = freebusy->attendees().first();
+    from = attendee->email();
+  }
+
+  QDir freeBusyDir(freeBusyDirName);
+  if (!freeBusyDir.exists()) {
+    kdDebug() << "Directory " << freeBusyDirName << " does not exist!" << endl;
+    kdDebug() << "Creating directory: " << freeBusyDirName << endl;
+    
+    if(!freeBusyDir.mkdir(freeBusyDirName, TRUE)) {
+      kdDebug() << "Could not create directory: " << freeBusyDirName << endl;
+      return false;
+    }
+  }
+
+  QString filename(freeBusyDirName);
+  filename += "/";
+  filename += from;
+  filename += ".ifb";
+  QFile f(filename);
+
+  kdDebug() << "acceptFreeBusy: filename" << filename << endl;
+
+  freebusy->clearAttendees();
+  freebusy->setOrganizer(from);
+
+  QString messageText = mFormat->createScheduleMessage(freebusy, Publish);
+
+  if (!f.open(IO_ReadWrite)) {
+   kdDebug() << "acceptFreeBusy: Can't open:" << filename << " for writing" << endl;
+   return false;
+  }
+  QTextStream t(&f);
+  t << messageText;
+  f.close();
+  
+  deleteTransaction(incidence);
+  return true;
+}

@@ -179,7 +179,7 @@ QString ICalFormat::toString()
   return QString::fromLocal8Bit( text );  
 }
 
-QString ICalFormat::createScheduleMessage(Incidence *incidence,
+QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
                                           Scheduler::Method method)
 {
   icalcomponent *message = mImpl->createScheduleComponent(incidence,method);
@@ -213,18 +213,26 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
   
   icalcomponent *c;
   
-  Incidence *incidence = 0;
+  IncidenceBase *incidence = 0;
   c = icalcomponent_get_first_component(message,ICAL_VEVENT_COMPONENT);
   if (c) {
     incidence = mImpl->readEvent(c);
-  } else {
-    c = icalcomponent_get_first_component(message,ICAL_VTODO_COMPONENT);
-    if (c) {
-      incidence = mImpl->readTodo(c);
-    }
+  } 
+  
+  c = icalcomponent_get_first_component(message,ICAL_VTODO_COMPONENT);
+  if (c) {
+    incidence = mImpl->readTodo(c);
   }
 
-  if (!incidence) return 0;
+  c = icalcomponent_get_first_component(message,ICAL_VFREEBUSY_COMPONENT);
+  if (c) {
+    incidence = mImpl->readFreeBusy(c);
+  }
+
+  if (!incidence) {
+    kdDebug() << "ICalFormat:parseScheduleMessage: object is not a freebusy, event or todo" << endl;
+    return 0;
+  }
 
   kdDebug(5800) << "ICalFormat::parseScheduleMessage() getting method..." << endl;
 

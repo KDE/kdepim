@@ -39,12 +39,12 @@ IMIPScheduler::~IMIPScheduler()
 {
 }
 
-bool IMIPScheduler::publish (Event *incidence,const QString &recipients)
+bool IMIPScheduler::publish (IncidenceBase *incidence,const QString &recipients)
 {
   return false;
 }
 
-bool IMIPScheduler::performTransaction(Event *incidence,Method method)
+bool IMIPScheduler::performTransaction(IncidenceBase *incidence,Method method)
 {
   mFormat->createScheduleMessage(incidence,method);
 

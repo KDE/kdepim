@@ -26,8 +26,10 @@
 
 #include <qdatetime.h>
 #include <qvaluelist.h>
+#include <qptrlist.h>
 
 #include "period.h"
+#include "calendar.h"
 
 #include "incidencebase.h"
 
@@ -40,13 +42,30 @@ class FreeBusy : public IncidenceBase
 {
   public:
     FreeBusy();
+    FreeBusy(QDateTime start, QDateTime end);
+    FreeBusy(Calendar *calendar, const QDateTime &start, const QDateTime &end);
+    FreeBusy(QValueList<Period> busyPeriods);
+
     ~FreeBusy();
     
-    void addBusyPeriod( const Period & );
+    QCString type() const { return "FreeBusy"; }
+
+    QDateTime dtEnd();
+    bool setDtEnd(QDateTime end);
+
     QValueList<Period> busyPeriods() const;
+
+    void addPeriod(QDateTime start, QDateTime end);
+    void sortList();
     
   private:
-    QValueList<Period> mBusyPeriods;    
+
+    //This is used for creating a freebusy object for the current user
+    bool addLocalPeriod(QDateTime start, QDateTime end);
+
+    QDateTime mDtEnd;
+    QValueList<Period> mBusyPeriods;
+    Calendar *mCalendar;
 };
 
 }

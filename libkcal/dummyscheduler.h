@@ -37,8 +37,8 @@ class DummyScheduler : public Scheduler {
     DummyScheduler(Calendar *);
     virtual ~DummyScheduler();
     
-    bool publish (Event *incidence,const QString &recipients);
-    bool performTransaction(Event *incidence,Method method);
+    bool publish (IncidenceBase *incidence,const QString &recipients);
+    bool performTransaction(IncidenceBase *incidence,Method method);
     QPtrList<ScheduleMessage> retrieveTransactions();
 
   protected:

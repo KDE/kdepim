@@ -67,7 +67,7 @@ class ICalFormat : public CalFormat {
     QString toString();
   
     /** Create a scheduling message for event \a e using method \m */
-    QString createScheduleMessage(Incidence *e,Scheduler::Method m);
+    QString createScheduleMessage(IncidenceBase *e,Scheduler::Method m);
     /** Parse scheduling message provided as string \s */
     ScheduleMessage *parseScheduleMessage(const QString &s);
     

@@ -28,7 +28,7 @@
 
 namespace KCal {
 
-class Incidence;
+class IncidenceBase;
 class Event;
 class Calendar;
 class ICalFormat;
@@ -49,11 +49,11 @@ class ScheduleMessage {
       Create a scheduling message with method as defined in Scheduler::Method
       and a status.
     */
-    ScheduleMessage(Incidence *,int method,Status status);
+    ScheduleMessage(IncidenceBase *,int method,Status status);
     ~ScheduleMessage() {};
     
     /** Return event associated with this message. */
-    Incidence *event() { return mEvent; }
+    IncidenceBase *event() { return mIncidence; }
     /** Return iTIP method associated with this message. */
     int method() { return mMethod; }
     /** Return status of this message. */
@@ -65,7 +65,7 @@ class ScheduleMessage {
     static QString statusName(Status status);
 
   private:
-    Incidence *mEvent;
+    IncidenceBase *mIncidence;
     int mMethod;
     Status mStatus;
     QString mError;
@@ -87,10 +87,10 @@ class Scheduler {
     virtual ~Scheduler();
     
     /** iTIP publish action */
-    virtual bool publish (Event *incidence,const QString &recipients) = 0;
+    virtual bool publish (IncidenceBase *incidence,const QString &recipients) = 0;
     /** Perform iTIP transaction on incidence. The method is specified as the
     method argumanet and can be any valid iTIP method. */
-    virtual bool performTransaction(Event *incidence,Method method) = 0;
+    virtual bool performTransaction(IncidenceBase *incidence,Method method) = 0;
     /** Retrieve incoming iTIP transactions */
     virtual QPtrList<ScheduleMessage> retrieveTransactions() = 0;
 
@@ -100,24 +100,24 @@ class Scheduler {
       iTIP message with the current calendar and specifies the action to be
       taken for this incidence.
     */
-    bool acceptTransaction(Incidence *,Method method,ScheduleMessage::Status status);
+    bool acceptTransaction(IncidenceBase *,Method method,ScheduleMessage::Status status);
 
     /** Return a human-readable name for a iTIP method. */
     static QString methodName(Method);
 
-    virtual bool deleteTransaction(Incidence *incidence);
+    virtual bool deleteTransaction(IncidenceBase *incidence);
 
   protected:
 
-    bool acceptPublish(Incidence *,ScheduleMessage::Status status);
-    bool acceptRequest(Incidence *,ScheduleMessage::Status status);
-    bool acceptAdd(Incidence *,ScheduleMessage::Status status);
-    bool acceptCancel(Incidence *,ScheduleMessage::Status status);
-    bool acceptDeclineCounter(Incidence *,ScheduleMessage::Status status);
-//    bool acceptFreeBusy(Incidence *,ScheduleMessage::Status status);
-    bool acceptReply(Incidence *,ScheduleMessage::Status status);
-    bool acceptRefresh(Incidence *,ScheduleMessage::Status status);
-    bool acceptCounter(Incidence *,ScheduleMessage::Status status);
+    bool acceptPublish(IncidenceBase *,ScheduleMessage::Status status, Method method);
+    bool acceptRequest(IncidenceBase *,ScheduleMessage::Status status);
+    bool acceptAdd(IncidenceBase *,ScheduleMessage::Status status);
+    bool acceptCancel(IncidenceBase *,ScheduleMessage::Status status);
+    bool acceptDeclineCounter(IncidenceBase *,ScheduleMessage::Status status);
+    bool acceptReply(IncidenceBase *,ScheduleMessage::Status status, Method method);
+    bool acceptRefresh(IncidenceBase *,ScheduleMessage::Status status);
+    bool acceptCounter(IncidenceBase *,ScheduleMessage::Status status);
+    bool acceptFreeBusy(IncidenceBase *,Method method);
 
     Calendar *mCalendar;
     ICalFormat *mFormat;

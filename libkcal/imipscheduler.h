@@ -39,8 +39,8 @@ class IMIPScheduler : public Scheduler {
     IMIPScheduler(Calendar *);
     virtual ~IMIPScheduler();
     
-    bool publish (Event *incidence,const QString &recipients);
-    bool performTransaction(Event *incidence,Method method);
+    bool publish (IncidenceBase *incidence,const QString &recipients);
+    bool performTransaction(IncidenceBase *incidence,Method method);
     QPtrList<ScheduleMessage> retrieveTransactions();
 };
 
