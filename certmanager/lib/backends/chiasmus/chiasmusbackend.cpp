@@ -416,9 +416,24 @@ bool Kleo::ChiasmusBackend::checkForChiasmus( QString * reason ) const {
   const QFileInfo fi( KShell::tildeExpand( chiasmus ) );
   if ( !fi.isExecutable() ) {
     if ( reason )
-      *reason = i18n( "\"%1\" is not executable." ).arg( chiasmus );
+      *reason = i18n( "File \"%1\" does not exist or is not executable." ).arg( chiasmus );
     return false;
   }
+
+  const CryptoConfigEntry * useWrapper = config()->entry( "Chiasmus", "General", "use-chiasmuswrapper" );
+  assert( useWrapper ); assert( useWrapper->argType() == CryptoConfigEntry::ArgType_None );
+  if ( useWrapper->boolValue() == true ) {
+    const CryptoConfigEntry * wrapperPath = config()->entry( "Chiasmus", "General", "chiasmuswrapper-path" );
+    assert( wrapperPath ); assert( wrapperPath->argType() == CryptoConfigEntry::ArgType_Path );
+    const QString wrapper = wrapperPath->urlValue().path();
+    const QFileInfo wfi( KShell::tildeExpand( wrapper ) );
+    if ( !wfi.isExecutable() ) {
+      if ( reason )
+        *reason = i18n( "File \"%1\" does not exist or is not executable." ).arg( wrapper );
+      return false;
+    }
+  }
+
   // FIXME: more checks?
   return true;
 }

@@ -41,7 +41,8 @@
 /*
   This data structure uses C99 designated initializers. This is why
   it's in a .c file, and not in a .cpp file. If your compiler doesn't
-  like this, just don't compile Chiasmus support :) Sorry.
+  like this, just don't compile Chiasmus support, or live without the
+  wrapper option :) Sorry.
 */
 
 #ifdef PATH
@@ -70,28 +71,18 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
   },
 #ifdef HAVE_C99_INITIALIZERS
   {
-    "booltest", "Bool test",
+    "use-chiasmuswrapper", I18N_NOOP( "Use Chiasmus wrapper" ),
     Level_Expert, ArgType_None,
-    { .boolean = { 1, 31 } },
-    0, 0, 0
-  },
-  {
-    "inttest", "Int test",
-    Level_Expert, ArgType_Int,
-    { .integer = 111 },
-    0, 0, 0
-  },
-  { "uinttest", "UInt test",
-    Level_Expert, ArgType_UInt,
-    { .unsigned_integer = 112 },
-    0, 0, 0
-  },
-  { "stringtest", "String test",
-    Level_Expert, ArgType_String,
-    { .string = "Hello World!" },
-    0, 0, 0
+    { .boolean = { 1, 1 } },
+    0, 0, 1
   },
 #endif /* HAVE_C99_INITIALIZERS */
+  {
+    "chiasmuswrapper-path", I18N_NOOP( "Path to Chiasmus wrapper executable" ),
+    Level_Expert, ArgType_Path,
+    { PATH "/usr/local/bin/chiasmus-wrapper" },
+    0, 0, 1
+  },
 };
 const unsigned int kleo_chiasmus_config_entries_dim
   = sizeof kleo_chiasmus_config_entries / sizeof *kleo_chiasmus_config_entries ;
