@@ -24,6 +24,7 @@
 
 #include "syncee.h"
 
+#include <libkdepim/addresseediffalgo.h>
 #include <libkdepim/kabcresourcenull.h>
 
 #include <kapplication.h>
@@ -105,6 +106,17 @@ QString AddressBookSyncEntry::resource() const
 void AddressBookSyncEntry::setResource( const QString &str )
 {
   m_res = str;
+}
+
+KPIM::DiffAlgo* AddressBookSyncEntry::diffAlgo( SyncEntry *syncEntry, SyncEntry *targetEntry )
+{
+  AddressBookSyncEntry *abSyncEntry = dynamic_cast<AddressBookSyncEntry*>( syncEntry );
+  AddressBookSyncEntry *abTargetEntry = dynamic_cast<AddressBookSyncEntry*>( targetEntry );
+
+  if ( !abSyncEntry || !abTargetEntry )
+    return 0;
+
+  return new KPIM::AddresseeDiffAlgo( abSyncEntry->addressee(), abTargetEntry->addressee() );
 }
 
 /*

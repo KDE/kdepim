@@ -51,6 +51,8 @@ class AddressBookSyncEntry : public SyncEntry
     QString resource() const;
     void setResource( const QString &str );
 
+    KPIM::DiffAlgo* diffAlgo( SyncEntry*, SyncEntry* );
+
   private:
     KABC::Addressee mAddressee;
     QString m_res;

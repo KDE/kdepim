@@ -25,6 +25,10 @@
 #include <qstring.h>
 #include <qptrlist.h>
 
+namespace KPIM {
+class DiffAlgo;
+}
+
 namespace KSync {
 
 class Syncee;
@@ -192,6 +196,12 @@ class SyncEntry
     void setDontSync( bool );
 
     bool dontSync() const;
+
+    /**
+      Returns the diffing algorithm which is used to present the differences between
+      the two SyncEntries when a conflict occurs.
+     */
+    virtual KPIM::DiffAlgo* diffAlgo( SyncEntry*, SyncEntry* );
 
   private:
     int mState;

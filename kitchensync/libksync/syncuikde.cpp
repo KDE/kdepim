@@ -23,6 +23,7 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 
+#include "conflictdialog.h"
 #include "syncer.h"
 #include "syncee.h"
 
@@ -41,28 +42,13 @@ SyncUiKde::~SyncUiKde()
 
 SyncEntry *SyncUiKde::deconflict( SyncEntry *syncEntry, SyncEntry *targetEntry )
 {
-#if 0
-  if ( syncEntry->wasModified() && targetEntry->wasModified() )
-    return changedChanged( syncEntry, targetEntry );
-  else if ( syncEntry->wasRemoved() && targetEntry->wasModified() )
-    return deletedChanged( syncEntry, targetEntry );
-#endif
-
   /* fallback */
-  QString text = i18n("Which entry do you want to take precedence?\n");
-  text += i18n( "Entry 1: '%1' from source '%2'\n" ).arg( syncEntry->name() )
-          .arg( syncEntry->syncee()->source() );
-  text += i18n( "Entry 2: '%1' from source '%2'\n" ).arg( targetEntry->name() )
-          .arg( targetEntry->syncee()->source() );
+  ConflictDialog dlg( syncEntry, targetEntry, mParent );
+  int result = dlg.exec();
 
-  int result = KMessageBox::questionYesNoCancel( mParent,text,
-                                                 i18n("Resolve Conflict"),
-                                                 i18n("Entry 1"),
-                                                 i18n("Entry 2") );
-
-  if ( result == KMessageBox::Yes ) {
+  if ( result == KDialogBase::User2 ) {
     return syncEntry;
-  } else if ( result == KMessageBox::No ) {
+  } else if ( result == KDialogBase::User1 ) {
     return targetEntry;
   }
 

@@ -121,3 +121,8 @@ bool SyncEntry::dontSync() const
 {
   return mDontSync;
 }
+
+KPIM::DiffAlgo* SyncEntry::diffAlgo( SyncEntry*, SyncEntry* )
+{
+  return 0;
+}
