@@ -775,21 +775,24 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 
 QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
 {
-  bool cont=true;
-  QPtrList<DBInfo>dbs;
-  int index=0;
-  while (cont)
-  {
-    DBInfo*dbi=new DBInfo();
-    if (dlp_ReadDBList(pilotSocket(), cardno, flags, index, dbi)<0) {
-      KPILOT_DELETE(dbi);
-      cont=false;
-    } else {
-      index=dbi->index+1;
-      dbs.append(dbi);
-    }
-  }
-  return dbs;
+	bool cont=true;
+	QPtrList<DBInfo>dbs;
+	int index=0;
+	while (cont)
+	{
+		DBInfo*dbi=new DBInfo();
+		if (dlp_ReadDBList(pilotSocket(), cardno, flags, index, dbi)<0) 
+		{
+			KPILOT_DELETE(dbi);
+			cont=false;
+		} 
+		else 
+		{
+			index=dbi->index+1;
+			dbs.append(dbi);
+		}
+	}
+	return dbs;
 }
 
 KPilotCard *KPilotDeviceLink::getCardInfo(int card)
@@ -797,8 +800,11 @@ KPilotCard *KPilotDeviceLink::getCardInfo(int card)
 	KPilotCard *cardinfo=new KPilotCard();
 	if (dlp_ReadStorageInfo(pilotSocket(), card, cardinfo->cardInfo())<0)
 	{
-	  KPILOT_DELETE(cardinfo);
-	  return 0L;
+		kdWarning() << k_funcinfo << ": Couldn't get info for card "
+			<< card << endl;
+
+		KPILOT_DELETE(cardinfo);
+		return 0L;
 	};
 	return cardinfo;
 }
