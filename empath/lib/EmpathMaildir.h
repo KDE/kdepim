@@ -80,7 +80,7 @@ class EmpathMaildir : public QObject
         bool removeMessage (const QString &);
         bool removeMessage (const QStringList &);
         
-        void sync(const EmpathURL & url, bool ignoreMtime = false);
+        void sync(bool ignoreMtime = false);
         
     protected slots:
         
@@ -93,20 +93,21 @@ class EmpathMaildir : public QObject
         void        _markNewMailAsSeen();
         void        _markAsSeen(const QString &);
         void        _clearTmp();
-        bool        _setupDirs();
+        bool        _checkDirs();
         QString     _generateFlagsString(RMM::MessageStatus);
+        bool        _touched(EmpathFolder *);
+        void        _tagOrAdd(EmpathFolder *);
+        void        _removeUntagged(EmpathFolder *);
        
+        QDateTime    mtime_;
+        
+        QTimer       timer_;
+
         // Order dependency
         QString      path_;
         EmpathURL    url_;
         QString      basePath_;
         // End order dependency
-        
-        QDir d;
-        
-        QDateTime    mtime_;
-        
-        QTimer       timer_; // Check for modification every so often.
 };
 
 typedef QList<EmpathMaildir> EmpathMaildirList;

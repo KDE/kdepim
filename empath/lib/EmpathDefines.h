@@ -30,6 +30,8 @@ static const int        EMPATH_VERSION_MAJOR    = 0;
 static const int        EMPATH_VERSION_MINOR    = 8;
 static const int        EMPATH_VERSION_RELEASE    = 1;
 
+#define returnIfFalse(b) if (!((b))) { return; }
+
 #ifndef NDEBUG
 #include <iostream>
 # ifdef __GNUG__

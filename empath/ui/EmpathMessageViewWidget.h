@@ -18,23 +18,17 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMessageViewWidget.h"
-#endif
-
 #ifndef EMPATHMESSAGEVIEWWIDGET_H
 #define EMPATHMESSAGEVIEWWIDGET_H
 
 // Qt includes
 #include <qpopupmenu.h>
-#include <qscrollbar.h>
 #include <qlayout.h>
 
 // KDE includes
 #include <ktmainwindow.h>
 #include <kapp.h>
 #include <kstdaccel.h>
-#include <khtml.h>
 
 // Local includes
 #include "EmpathMessageStructureWidget.h"
@@ -51,16 +45,11 @@ class EmpathMessageViewWidget : public QWidget
     public:
         
         EmpathMessageViewWidget(
-                const EmpathURL & url,
-                QWidget * parent = 0L,
-                const char * name = 0L);
+            const EmpathURL & url,
+            QWidget * parent = 0,
+            const char * name = 0);
         
         ~EmpathMessageViewWidget();
-        
-        /**
-         * Tell the internal widget to start parsing
-         */
-        void resizeEvent(QResizeEvent * e);
         
     public slots:
 
@@ -71,9 +60,6 @@ class EmpathMessageViewWidget : public QWidget
 
     protected slots:
         
-        void s_docChanged();
-        void s_hScrollbarSetValue(int);
-        void s_vScrollbarSetValue(int);
         void s_URLSelected(QString, int);
         void s_clipClicked();
         void s_retrieveComplete(bool, const EmpathURL &, QString);
@@ -84,13 +70,9 @@ class EmpathMessageViewWidget : public QWidget
 
         EmpathMessageStructureWidget * structureWidget_;
         EmpathMessageHTMLWidget      * messageWidget_;
-        QGridLayout                  * mainLayout_;
-        QScrollBar                   * verticalScrollBar_;
-        QScrollBar                   * horizontalScrollBar_;
         EmpathHeaderViewWidget       * headerViewWidget_;
 
         EmpathURL   url_;
-        int         scrollbarSize_;
         bool        viewingSource_;
 };
 

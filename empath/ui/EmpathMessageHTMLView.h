@@ -33,14 +33,14 @@
 // KDE includes
 #include <ktmainwindow.h>
 #include <kstdaccel.h>
-#include <khtml.h>
+#include <khtmlview.h>
 
 // Local includes
 #include <RMM_Message.h>
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 
-class EmpathMessageHTMLWidget : public KHTMLWidget
+class EmpathMessageHTMLWidget : public KHTMLView
 {
     Q_OBJECT
 

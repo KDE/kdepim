@@ -56,8 +56,6 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
 {
     path_ = basePath + "/" + url.folderPath();
     
-    empathDebug("ctor - path_ == " + path_);
-    
     QObject::connect(&timer_, SIGNAL(timeout()),
         this, SLOT(s_timerBeeped()));
     
@@ -66,141 +64,37 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
 
 EmpathMaildir::~EmpathMaildir()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
-EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
+EmpathMaildir::init()
 {
-    empath->s_infoMessage(
-        i18n("Reading mailbox") + " " + url_.asString());
+    _checkDirs();           kapp->processEvents();
+    _clearTmp();            kapp->processEvents();
+    _markNewMailAsSeen();   kapp->processEvents();
     
-    // First make sure any new mail that has arrived goes into cur.
+    sync(true);
+}
+    void
+EmpathMaildir::sync(bool force)
+{
+    empath->s_infoMessage(i18n("Reading") + ": " + url_.asString());
+
+    EmpathFolder * f(empath->folder(url_));
+
+    returnIfFalse(f);
+
     _markNewMailAsSeen();
+   
+    if (!force)
+        returnIfFalse(_touched(f));
     
-    // Get a pointer to the folder related to us.
-    EmpathFolder * f(empath->folder(url));
-    
-    if (f == 0) {
-        empathDebug("sync: Couldn't find folder !");
-        return;
-    }
-    
-    if (!ignoreMtime) {
-    
-        // Check the mtime of cur. If it's not changed, we can return now.
-        QFileInfo fiDir(path_ + "/cur/");
-        QFileInfo fiIndex(path_ + "/.empathIndex");
-        
-        if (fiDir.lastModified() < fiIndex.lastModified()) {
-            empath->s_infoMessage(
-                i18n("Finished reading mailbox") + " " + url_.asString());
-            return;
-        }
-    }
+    _tagOrAdd(f);
 
-    EmpathTask * t(empath->addTask(i18n("Reading mailbox")));
-    CHECK_PTR(t);
-
-    // Get the dir listing.
-    QDir d(path_ + "/cur/",
-        QString::null, QDir::Name | QDir::IgnoreCase,
-        QDir::NoSymLinks | QDir::Files);
-
-    QStringList fileList(d.entryList());
-    empathDebug("There are " +
-        QString().setNum(fileList.count()) + " files in cur");
-    
-    // Look through the file list.
-    // 
-    // Any files that we don't recognise must be parsed and added to the
-    // folder's message list.
-    // 
-    // Any files that have disappeared (are in the message list but not in the
-    // dir entry list) must be removed from the message list.
-    
-    QStringList::ConstIterator it(fileList.begin());
-    
-    t->setMax(fileList.count());
-    
-    QCString s;
-    QRegExp re_flags(":2,[A-Za-z]*$");
-    
-    for (; it != fileList.end(); ++it) {
-        
-        s = (*it).ascii();
-    
-        RMM::MessageStatus status(RMM::MessageStatus(0));
-        
-        int i = s.find(re_flags);
-        QCString flags;
-        
-        if (i != -1) {
-            
-            flags = s.right(s.length() - i - 3);
-            
-            status = (RMM::MessageStatus)
-                (   (flags.contains('S') ? RMM::Read    : 0)    |
-                    (flags.contains('R') ? RMM::Replied : 0)    |
-                    (flags.contains('F') ? RMM::Marked  : 0));
-        }
-        
-        // Remove the flags from the end of the filename.
-        s.replace(re_flags, QString::null);
-        
-        EmpathIndexRecord * rec = f->index().record(s);
-        
-        // If the record exists, we tag it to say it's still here. Later, we'll
-        // look for all untagged records. In this way, we'll be able to
-        // efficiently find all records that no longer have a matching file,
-        // and therefore which have disappeared.
-        
-        if (rec) {
-        
-            rec->tag(true);
-            rec->setStatus(status);
-        
-        } else {    
-            
-            RMM::RMessage m(_messageData(s));
-            
-            EmpathIndexRecord ir(s, m);
-            
-            ir.tag(true);
-            ir.setStatus(status);
-            
-            f->index().insert(s, ir);
-            f->itemCome(s);
-        }
-        
-        t->doneOne();
-    }
-    
-    // Now go through the index, looking for untagged records.
-    // Anything that wasn't tagged is no longer in the dir, and has been
-    // deleted or moved. We therefore remove it from the index.
-    
-    QStrList l(f->index().allKeys());
-    QStrListIterator iit(l);
-    
-    for (; iit.current(); ++iit) {
-        
-        EmpathIndexRecord * i = f->index().record(iit.current());
-        
-        if (i == 0)
-            continue;
-
-        if (!i->isTagged()) {
-            
-            f->itemGone(iit.current());
-            f->index().remove(iit.current());
-        }
-    }
-    
-    t->done();
-    
-    empath->s_infoMessage(
-        i18n("Finished reading mailbox") + " " + url_.asString());
+    _removeUntagged(f);
+   
+    empath->s_infoMessage(i18n("Read") + ": " + url_.asString());
 }
 
     bool
@@ -208,19 +102,21 @@ EmpathMaildir::mark(const QString & id, RMM::MessageStatus msgStat)
 {
     QRegExp re_flags(":2,[A-Za-z]*$");
     QDir d(path_ + "/cur/", id + "*");
+ 
+    QString statusFlags;
+
+    statusFlags += msgStat & RMM::Read    ? "S" : "";
+    statusFlags += msgStat & RMM::Marked  ? "F" : "";
+    statusFlags += msgStat & RMM::Trashed ? "T" : "";
+    statusFlags += msgStat & RMM::Replied ? "R" : "";
     
     if (d.count() != 1) {
-        empathDebug("Couldn't mark message");
+        empath->s_infoMessage(i18n("Couldn't mark message") +
+            " [" + id + "] with flags " + statusFlags);
         return false;
     }
     
     QString filename(d[0]);
-    
-    QString statusFlags;
-    statusFlags +=  (msgStat & RMM::Read    ? "S" : "");
-    statusFlags +=  (msgStat & RMM::Marked  ? "F" : "");
-    statusFlags +=  (msgStat & RMM::Trashed ? "T" : "");
-    statusFlags +=  (msgStat & RMM::Replied ? "R" : "");
     
     QString newFilename(filename);
     
@@ -232,17 +128,16 @@ EmpathMaildir::mark(const QString & id, RMM::MessageStatus msgStat)
     bool retval =
         d.rename(path_ + "/cur/" + filename, path_ + "/cur/" + newFilename);
     
-    if (!retval) {
-        empathDebug("Couldn't mark message");
-    }
-
+    if (!retval)
+        empath->s_infoMessage(i18n("Couldn't mark message") +
+           " [" + id + "] with flags " + statusFlags);
+    
     return retval;
 }
 
     bool
 EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
 {
-    empathDebug("mark many");
     bool retval = true;
     
     EmpathTask * t(empath->addTask(i18n("Marking messages")));
@@ -263,7 +158,6 @@ EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
     QString
 EmpathMaildir::writeMessage(RMM::RMessage & m)
 {
-    empathDebug("writeMessage called");
     return _write(m);
 }
 
@@ -285,8 +179,6 @@ EmpathMaildir::message(const QString & id)
     bool
 EmpathMaildir::removeMessage(const QString & id)
 {
-    empathDebug("Removing message with id \"" + id + "\"");
-    
     QDir d(path_ + "/cur/", id + "*");
 
     if (d.count() != 1) return false;
@@ -333,7 +225,7 @@ EmpathMaildir::removeMessage(const QStringList & l)
 EmpathMaildir::_messageData(const QString & filename)
 {
     if (filename.length() == 0) {
-        empathDebug("WARNING: Must supply filename !");
+        empathDebug("Must supply filename !");
         return "";
     }
 
@@ -343,9 +235,7 @@ EmpathMaildir::_messageData(const QString & filename)
     QDir cur(path_ + "/cur/", filename + "*");
     
     if (cur.count() != 1) {
-        empathDebug("There appears to be no file with the base name \"" +
-                filename + "\"");
-        empathDebug("Can't exactly match the filename, giving up.");
+        empathDebug("Can't match the filename, giving up.");
         return "";
     }
     
@@ -356,15 +246,11 @@ EmpathMaildir::_messageData(const QString & filename)
         return "";
     }
 
-    Q_UINT32 buflen = 32768;            // 1k block should be OK.
+    Q_UINT32 buflen = 32768;
     char * buf = new char[buflen];
     QCString messageBuffer;
     
-    while (!f.atEnd()) { // && (f.status() & IO_Ok)) {
-        
-        // On advice of Trolls, just in case I'm writing to this file
-        // at the same time, I flush the file's buffers.
-        f.flush();
+    while (!f.atEnd()) {
         
         int bytesRead = f.readBlock(buf, buflen);
 
@@ -385,59 +271,15 @@ EmpathMaildir::_messageData(const QString & filename)
     return messageBuffer;
 }
 
-    void
-EmpathMaildir::init()
-{
-    empathDebug("init() called");
-    
-    d.setPath(path_);
 
-    if (!d.exists())
-        if (!d.mkdir(path_)) {
-            empathDebug("Couldn't create " + path_);
-        }
-
-    // Go to our dir.
-    if (!d.cd(path_)) {
-        empathDebug("Can't cd to " + path_);
-    }
-    
-    // Make sure our directory structure is sane.
-    _setupDirs();
-    
-    kapp->processEvents();
-    
-    // Clear out any temporary files. (see maildir(5))
-    _clearTmp();
-    
-    // Last op may have taken some time.
-    kapp->processEvents();
-    
-    // Mark all new mail as seen by this client. (see maildir(5))
-    _markNewMailAsSeen();
-    
-    // Last op may have taken some time.
-    kapp->processEvents();
-    
-    // Tell the index to sync up with what's stored.
-    sync(url_);
-}
     void
 EmpathMaildir::_markNewMailAsSeen()
 {
-    empathDebug("markNewMailsAsSeen() called");
-    
-    // Get all mails in 'new' and move them to 'cur' - thus
-    // marking them as seen by this MUA.
-
-    empathDebug("Moving all mails in 'new' to 'cur'");
-    
     QDir dn(path_ + "/new");
+
     dn.setFilter(QDir::Files | QDir::NoSymLinks | QDir::Writable);
     
     QStringList l = dn.entryList();
-    empathDebug("There are " +
-        QString().setNum(l.count()) + " messages to rename");
     
     for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
         _markAsSeen(*it);
@@ -446,39 +288,19 @@ EmpathMaildir::_markNewMailAsSeen()
     void
 EmpathMaildir::_markAsSeen(const QString & name)
 {
-    QString oldName =
-        path_ + "/new/" + name;
+    QString oldName = path_ + "/new/" + name;
 
-    QString newName =
-        path_ + "/cur/" + name + ":2,";
+    QString newName = path_ + "/cur/" + name + ":2,";
             
-    empathDebug("Marking \"" + oldName + "\" as seen by MUA");
-
-    // FIXME Use Qt to move the file
-    if (::rename(oldName.ascii(), newName.ascii()) != 0) {
-        empathDebug(
-                "Couldn't rename \"" + oldName +
-                "\" to \"" + newName + "\"");
-        perror("Ouch");
-    }
+    if (::rename(oldName.ascii(), newName.ascii()) != 0)
+        perror("rename");
 }
 
     void
 EmpathMaildir::_clearTmp()
 {
-    // Clear out all files in tmp.
-    // Hopefully this is done in a pretty secure fashion.. don't delete
-    // anything that's not a file (that means leave symlinks alone too).
-    //
-    // From maildir(5):
-    // 'The reader is also expected to look through the tmp directory and
-    // to clean up any old files found there. A file in tmp may be safely
-    // removed if it has not been accessed in 36 hours.'
-    
-    empathDebug("_clearTmp() called");
-    
     QDate now = QDate::currentDate();
-    QDateTime aTime; // Used for each file's atime.
+    QDateTime aTime;
     
     QDir d(path_ + "/tmp/");
     
@@ -493,14 +315,12 @@ EmpathMaildir::_clearTmp()
     
     for (; it.current(); ++it) {
         
-        aTime = it.current()->lastRead(); // atime of file
+        aTime = it.current()->lastRead();
         
-        // use 48 hours as it's easier and no less safe.
         if (aTime.daysTo(now) < 2) {
             
-            empathDebug(
-                    "Deleting \"" +
-                    QString(it.current()->filePath()) + "\"");
+            empathDebug("Deleting \"" +
+                QString(it.current()->filePath()) + "\"");
 
             d.remove(it.current()->filePath(), false);
         }
@@ -508,7 +328,7 @@ EmpathMaildir::_clearTmp()
 }
 
     bool
-EmpathMaildir::_setupDirs()
+EmpathMaildir::_checkDirs()
 {
     QDir d(path_);
     
@@ -538,101 +358,37 @@ EmpathMaildir::_setupDirs()
     QString
 EmpathMaildir::_write(RMM::RMessage & msg)
 {
-    empathDebug("_write() called");
+    // See docs for how this shit works.
+    // I can't be bothered to maintain the comments.
 
-    // Here's the procedure for writing a new mail to the user's Maildir.
-    // This procedure follows the advice of D. J. Bernstein, in the
-    // documentation provided with qmail.
-    // 
-    // * Generate a unique filename for this file.
-    // 
-    // * Get the full path for the filename.
-    // 
-    // * Stat the (full) filename. We need to get ENOENT to be sure the filename
-    //   is available for use.
-    // 
-    // * Do a last check to see if the filename has become available.
-    // 
-    // * If it's still not available, give up.
-    // 
-    // * Dump the message to the file.
-    // 
-    // * Flush all output to the file.
-    // 
-    // * Try to close the file.
-    // 
-    // * Try to link file to the 'new' dir.
-    // 
-    // At this point, if we didn't hit trouble, the message is DELIVERED.
-    // 
-    // Mark message as read by MUA by moving to cur.
-    // Hand back the filename.
-    
+    QString canonName   = empath->generateUnique();
+    QString flags       = _generateFlagsString(msg.status());
+    QString path        = path_ + "/tmp/" + canonName;
 
-    // Generate a unique filename for this file.
-    QString canonName = empath->generateUnique();
-
-    // Generate the flags for this filename
-    QString flags = _generateFlagsString(msg.status());
-    
-    // Get the full path for the filename.
-    QString path = path_ + "/tmp/" + canonName;
-    
-    // This is the file we'll be writing to.
     QFile f(path);
-
-    // Stat the filename. If we don't get ENOENT (error - no such entry)
-    // then that filename's already taken. There is no good reason why
-    // this should be so.
-    // TODO: Perhaps we could 'fix' this so that if we can't get a unique
-    // filename, we simply increment a number (our process ID, or the
-    // date, or our sequence number) and try again ?
-    // 
-    empathDebug("stat()ing " + path);
     
     if (f.exists()) {
         
-        empathDebug("Couldn't get a free filename for writing mail file - timing out for 2 seconds.");
-
-        // D. J. Bernstein explains that in this particular circumstance,
-        // we should sleep for a couple of seconds and try again. I sleep
-        // using usleep, a few times, instead. This allows me to process
-        // any app events without stalling the interface.
-
         for (int i = 0 ; i < 20 ; i++) {
             usleep(100);
             kapp->processEvents();
         }
     
-        // If it's still there. Give up.
-        // FIXME: We need to tell the user that we couldn't write their file.
-
         if (f.exists())
             return QString::null;
     }
 
     if (!f.open(IO_WriteOnly)) {
-        empathDebug("Couldn't open mail file in ~/Maildir/tmp/ for writing. This is odd, since we could stat it as being ENOENT - must be permissions problem");
+        empathDebug("Couldn't open file for writing.");
         return QString::null;
     }
 
-    empathDebug(
-            "Opened output file \"" + path + "\" OK");
-    
-    // This DataStream will be used to write the data to, which will
-    // hit the file later.
     QDataStream outputStream(&f);
-    
-    // Dump the whole message at once to the stream which is attached
-    // to the file.
-    empathDebug("Writing message to output stream");
+
     outputStream.writeRawBytes(msg.asString(), msg.asString().length());
 
-    // Flush all output to the file.
-    empathDebug("Flushing output stream");
     f.flush();
 
-    // If flush() failed, give up.
     if (f.status() != IO_Ok) {
         empathDebug("Couldn't flush() file");
         f.close();
@@ -640,12 +396,8 @@ EmpathMaildir::_write(RMM::RMessage & msg)
         return QString::null;
     }
 
-    // Try to close the file. Should close OK since we fsync()ed it,
-    // but this might be over NFS, which could go down any second.
-    
     f.close();
-
-    // If close() failed, give up.
+   
     if (f.status() != IO_Ok) {
         empathDebug("Couldn't close() file");
         f.close();
@@ -653,35 +405,18 @@ EmpathMaildir::_write(RMM::RMessage & msg)
         return QString::null;
     }
 
-    empathDebug("Trying to link \"" + path +
-        "\" to \"" + path_ + "/new/" + canonName);
-    
-    // Try to link file to the 'new' dir.
-    
-    // FIXME Does Qt link yet ?
-    
     QString linkTarget(path_ + "/new/" + canonName);
     
-    empathDebug(path.ascii());
-    empathDebug(linkTarget.ascii());
-    
     if (::link(path.ascii(), linkTarget.ascii()) != 0) {
-        empathDebug("Couldn't successfully link mail file - giving up");
+        empathDebug("Couldn't successfully link file - giving up");
         perror("link");
         f.close();
         f.remove();
         return QString::null;
     }
     
-    // Got here = DELIVERED ! Wow.
-    
-    empathDebug("Delivery completed :)");
-    
     _markAsSeen(canonName);
     
-    empathDebug("Finished writing new mail. Delivery and marking as seen successful.");
-
-    // Hand back the filename. The path to the file is not relevant.
     return canonName;
 }
 
@@ -702,8 +437,126 @@ EmpathMaildir::_generateFlagsString(RMM::MessageStatus s)
 EmpathMaildir::s_timerBeeped()
 {
     timer_.stop();
-    sync(url_);
+    sync();
     timer_.start(30000, true);
+}
+
+    bool
+EmpathMaildir::_touched(EmpathFolder * f)
+{
+    QFileInfo fiDir(path_ + "/cur/");
+    QFileInfo fiIndex(f->indexFileName());
+    
+    if (fiDir.lastModified() < fiIndex.lastModified()) {
+        empathDebug("Not modified");
+        return false;
+    }
+
+    return true;
+}
+
+    void
+EmpathMaildir::_tagOrAdd(EmpathFolder * f)
+{
+    EmpathTask * t(empath->addTask(i18n("Scanning")));
+
+    QDir d(
+        path_ + "/cur/",
+        QString::null,
+        QDir::Name | QDir::IgnoreCase,
+        QDir::NoSymLinks | QDir::Files
+        );
+
+    QStringList fileList(d.entryList());
+
+    empathDebug("There are " +
+        QString().setNum(fileList.count()) + " files in cur");
+    
+    QStringList::ConstIterator it(fileList.begin());
+    
+    t->setMax(fileList.count());
+    
+    QCString s;
+    QRegExp re_flags(":2,[A-Za-z]*$");
+
+    for (; it != fileList.end(); ++it) {
+        
+        s = (*it).ascii();
+    
+        RMM::MessageStatus status(RMM::MessageStatus(0));
+        
+        int i = s.find(re_flags);
+        QCString flags;
+        
+        if (i != -1) {
+            
+            flags = s.right(s.length() - i - 3);
+            
+            status = (RMM::MessageStatus)
+                (   (flags.contains('S') ? RMM::Read    : 0)    |
+                    (flags.contains('R') ? RMM::Replied : 0)    |
+                    (flags.contains('F') ? RMM::Marked  : 0));
+        }
+        
+        s.replace(re_flags, QString::null);
+        
+        EmpathIndexRecord * rec = f->index().record(s);
+        
+        if (rec != 0) {
+        
+            rec->tag(true);
+            rec->setStatus(status);
+        
+        } else {
+ 
+            RMM::RMessage m(_messageData(s));
+ 
+            EmpathIndexRecord ir(s, m);
+            
+            ir.tag(true);
+            ir.setStatus(status);
+            
+            f->index().insert(s, ir);
+            f->itemCome(s);
+        }
+        
+        t->doneOne();
+    }
+    
+    t->done();
+}
+
+    void
+EmpathMaildir::_removeUntagged(EmpathFolder * f)
+{
+    EmpathTask * t(empath->addTask(i18n("Clearing")));
+
+    QStrList l(f->index().allKeys());
+    
+    t->setMax(l.count());
+
+    QStrListIterator iit(l);
+    
+    for (; iit.current(); ++iit) {
+        
+        t->doneOne();
+        
+        EmpathIndexRecord * i = f->index().record(iit.current());
+        
+        if (i == 0) {
+
+            empathDebug("Can't find record, but I'd called allKeys !");
+            continue;
+        }
+
+        if (!i->isTagged()) {
+            
+            f->itemGone(iit.current());
+            f->index().remove(iit.current());
+        }
+    }
+    
+    t->done();
 }
 
 // vim:ts=4:sw=4:tw=78

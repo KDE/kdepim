@@ -58,7 +58,12 @@ EmpathIndex::setFolder(const EmpathURL & folder)
     EmpathIndexRecord *
 EmpathIndex::record(const QCString & key)
 {
-    if (!dbf_) return 0;
+    empathDebug(QString(key));
+
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return 0;
+    }
     
     datum k;
     k.dptr  = const_cast<char *>(key.data());
@@ -66,8 +71,10 @@ EmpathIndex::record(const QCString & key)
     
     datum out = gdbm_fetch(dbf_, k);
 
-    if (out.dptr == NULL)
+    if (out.dptr == NULL) {
+        empathDebug("does not exist");
         return 0;
+    }
     
     QByteArray a;
     a.setRawData(out.dptr, out.dsize);
@@ -85,8 +92,14 @@ EmpathIndex::record(const QCString & key)
     Q_UINT32
 EmpathIndex::countUnread()
 {
+    return 0;
     empathDebug("");
-    if (!dbf_) return 0;
+
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return 0;
+    }
+
     Q_UINT32 count;
 
     datum key = gdbm_firstkey(dbf_);
@@ -95,8 +108,11 @@ EmpathIndex::countUnread()
     
     while (key.dptr) {
 
-        datum nextkey = gdbm_nextkey(dbf_, key);
-        
+        // We could do this much more efficiently by having
+        // a single byte at the start of each value datum,
+        // and using that to store the status. This would
+        // require a little work in other methods, namely
+        // ignoring the first byte.
 #if 0
         a.setRawData(key.dptr, key.dsize);
 
@@ -110,7 +126,7 @@ EmpathIndex::countUnread()
 #endif
             ++count;
         
-        key = nextkey;
+        key = gdbm_nextkey(dbf_, key);
     }
     
     empathDebug("done");
@@ -120,8 +136,14 @@ EmpathIndex::countUnread()
     Q_UINT32
 EmpathIndex::count()
 {
+    return 0;
     empathDebug("");
-    if (!dbf_) return 0;
+    
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return 0;
+    }
+
     Q_UINT32 count;
     
     datum key = gdbm_firstkey(dbf_);
@@ -130,9 +152,8 @@ EmpathIndex::count()
     
     while (key.dptr) {
 
-        datum nextkey = gdbm_nextkey(dbf_, key);
         ++count;
-        key = nextkey;
+        key = gdbm_nextkey(dbf_, key);
     }
     
     return count;
@@ -144,7 +165,12 @@ EmpathIndex::count()
 EmpathIndex::sync()
 {
     empathDebug("");
-    if (!dbf_) return;
+    
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return;
+    }
+
     EmpathFolder * f = empath->folder(folder_);
     
     if (!f) {
@@ -159,7 +185,11 @@ EmpathIndex::sync()
 EmpathIndex::_close()
 {
     empathDebug("");
-    if (!dbf_) return;
+    
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return;
+    }
     
     gdbm_close(dbf_);
 }
@@ -183,19 +213,22 @@ EmpathIndex::allKeys()
     empathDebug("");
     
     QStrList l;   
-    if (!dbf_) return l;
+
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return l;
+    }
+
  
     datum key = gdbm_firstkey(dbf_);
 
     while (key.dptr) {
         
-        datum nextkey = gdbm_nextkey(dbf_, key);
-        
-        QCString s(key.dptr,key.dsize);
+        QCString s(key.dptr,key.dsize + 1);
         
         l.append(s);
         
-        key = nextkey;
+        key = gdbm_nextkey(dbf_, key);
     }
   
     return l;
@@ -204,7 +237,13 @@ EmpathIndex::allKeys()
     bool
 EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
 {
-    if (!dbf_) return false;
+    empathDebug(key);
+
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return false;
+    }
+
 
     datum k;
     k.dptr  = key.data();
@@ -227,8 +266,13 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
     bool
 EmpathIndex::remove(const QCString & key)
 {  
-    empathDebug("");
-    if (!dbf_) return false;
+    empathDebug(QString(key));
+
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return false;
+    }
+
 
     datum k;
     
@@ -242,15 +286,19 @@ EmpathIndex::remove(const QCString & key)
 EmpathIndex::clear()
 {
     empathDebug("");
-    if (!dbf_) return;
+
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return;
+    }
+
     
     datum key = gdbm_firstkey(dbf_);
 
     while (key.dptr) {
         
-        datum nextkey = gdbm_nextkey(dbf_, key);
         gdbm_delete(dbf_, key);
-        key = nextkey;
+        key = gdbm_nextkey(dbf_, key);
     }
 
 }

@@ -35,6 +35,7 @@
 #include <kapp.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <khtml.h>
 
 // Local includes
 #include "EmpathMessageHTMLView.h"
@@ -47,9 +48,9 @@
 
 
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
-        QWidget            *    _parent,
-        const char        *    _name)
-    :    KHTMLWidget(_parent, _name),
+        QWidget     *   _parent,
+        const char  *   _name)
+    :   KHTMLView(_parent, _name),
         busy_(false)
 {
     empathDebug("ctor");
@@ -88,7 +89,7 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
     bool
 EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
 {
-    empathDebug("show() called");
+    empathDebug("");
     
     if (busy_) return false;
     busy_ = true;
@@ -103,30 +104,26 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
     QFont f =
         config->readFontEntry(
             EmpathConfig::KEY_FIXED_FONT, &defaultFixed);
-
-    setFixedFont(f.family());
     
+
     int fs = f.pointSize();
-    
     int fsizes[7] = { fs, fs, fs, fs, fs, fs, fs };
-    setFontSizes(fsizes);
-    
-    setStandardFont(KGlobal::generalFont().family());
-
-    setURLCursor(KCursor::handCursor());
-    setFocusPolicy(QWidget::StrongFocus);
-    
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
-    
-    setDefaultBGColor(
+
+    KHTMLWidget * w = getKHTMLWidget();
+    w->setFixedFont(f.family());
+    w->setFontSizes(fsizes);
+    w->setStandardFont(KGlobal::generalFont().family());
+    w->setURLCursor(KCursor::handCursor());
+    w->setFocusPolicy(QWidget::StrongFocus);
+    w->setDefaultBGColor(
         kapp->palette().color(QPalette::Normal, QColorGroup::Base));
-    setDefaultTextColors(
+    w->setDefaultTextColors(
         kapp->palette().color(QPalette::Normal, QColorGroup::Text),
         c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),
         c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR));
-    
-    setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
+    w->setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
 
     if (s.isEmpty()) {
         write(
@@ -146,16 +143,26 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
 
     if (markup) {
         
+        QColor bgcol =
+            kapp->palette().color(QPalette::Normal, QColorGroup::Base);
+
+        QString bg = QColorToHTML(bgcol);
+
         QString html(s);
+        
         toHTML(html);
-        write(
-            "<HTML><BODY BGCOLOR=" +
-            QColorToHTML(
-                kapp->palette().color(QPalette::Normal, QColorGroup::Base)) +
-            "><PRE>" +
-            html +
-            "</PRE></BODY></HTML>");
+        
+        write("<HTML><BODY BGCOLOR="+bg+"><PRE>"+html+"</PRE></BODY></HTML>");
     
+        QFile f("/tmp/message.html");
+        f.open(IO_WriteOnly);
+        QTextStream t(&f);
+        
+        t << "<HTML><BODY BGCOLOR=" << bg << "><PRE>" <<
+            html << "</PRE></BODY></HTML>";
+        
+        f.close();
+
     } else {
         
         empathDebug("No markup required");
@@ -176,20 +183,18 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
     KConfig * config(KGlobal::config());
     config->setGroup(EmpathConfig::GROUP_DISPLAY);
 
-    QColor quote1, quote2;
     QColor color1(Qt::darkBlue);
     QColor color2(Qt::darkGreen);
 
-    quote1 = config->readColorEntry(
-        EmpathConfig::KEY_QUOTE_COLOUR_ONE, &color1);
+    QColor quote1(config->readColorEntry(
+        EmpathConfig::KEY_QUOTE_COLOUR_ONE, &color1));
 
-    quote2 = config->readColorEntry(
-        EmpathConfig::KEY_QUOTE_COLOUR_TWO, &color2);
+    QColor quote2(config->readColorEntry(
+        EmpathConfig::KEY_QUOTE_COLOUR_TWO, &color2));
 
-    QString quoteOne = QColorToHTML(quote1).ascii();
-    QString quoteTwo = QColorToHTML(quote2).ascii();
+    QCString quoteOne = QColorToHTML(quote1).ascii();
+    QCString quoteTwo = QColorToHTML(quote2).ascii();
     
-    // Will this work with Qt-2.0's QString ?
     register char * buf = new char[32768]; // 32k buffer. Will be reused.
     QCString outStr;
     
@@ -198,9 +203,9 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
         return;
     }
 
-    register char * pos = (char *)str.data();    // Index into source string.
-    char * start = pos;                            // Start of source string.
-    register char * end = start + str.length();    // End of source string.
+    register char * pos = (char *)str.data();   // Index into source string.
+    char * start = pos;                         // Start of source string.
+    register char * end = start + str.length(); // End of source string.
     
     if (start == end) {
         delete [] buf;
@@ -429,8 +434,8 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     
                     while (
                         startAddress        >= start    &&
-                        pos - startAddress    < 128        &&
-                        *startAddress        != '\"')
+                        pos - startAddress  < 128       &&
+                        *startAddress       != '\"')
                         --startAddress;
 
                     ++startAddress;
@@ -442,15 +447,15 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     startAddress = pos - 1;
 
                     while (
-                        startAddress         >=    start    &&
-                        pos - startAddress    <    128        &&
-                        *startAddress        !=    '<'        &&
-                        *startAddress        !=    '>'        &&
-                        *startAddress        !=    '"'        &&
-                        *startAddress        !=    ','        &&
-                        *startAddress        !=    ' '        &&
-                        *startAddress        !=    '\t'    &&
-                        *startAddress        !=    '\n'    &&
+                        startAddress        >=  start   &&
+                        pos - startAddress  <   128     &&
+                        *startAddress       !=  '<'     &&
+                        *startAddress       !=  '>'     &&
+                        *startAddress       !=  '"'     &&
+                        *startAddress       !=  ','     &&
+                        *startAddress       !=  ' '     &&
+                        *startAddress       !=  '\t'    &&
+                        *startAddress       !=  '\n'    &&
                         (isalnum(*startAddress)    || ispunct(*startAddress)))
                     {
                         --startAddress;
@@ -465,18 +470,18 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                 endAddress = pos + 1;
 
                 while (
-                    endAddress - pos    < (int)end         &&
-                    endAddress - pos    < 128            &&
-                    *endAddress            != '\0'            &&
-                    *endAddress            != ' '            &&
-                    *endAddress            != '\n'            &&
-                    *endAddress            != '\r'            &&
-                    *endAddress            != '>'            &&
-                    *endAddress            != '<'            &&
-                    *endAddress            != '@'            &&
-                    *endAddress            != '"'            &&
-                    *endAddress            != ','            &&
-                    *endAddress            != '\t')
+                    endAddress - pos    < (int)end  &&
+                    endAddress - pos    < 128       &&
+                    *endAddress         != '\0'     &&
+                    *endAddress         != ' '      &&
+                    *endAddress         != '\n'     &&
+                    *endAddress         != '\r'     &&
+                    *endAddress         != '>'      &&
+                    *endAddress         != '<'      &&
+                    *endAddress         != '@'      &&
+                    *endAddress         != '"'      &&
+                    *endAddress         != ','      &&
+                    *endAddress         != '\t')
                     ++endAddress;
                 
                 if (startAddress == pos - 1 || endAddress == pos + 1) {
@@ -529,7 +534,8 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
     ASSERT(buf != 0);
     delete [] buf;
     buf = 0;
-    str = outStr;
+    _str = outStr;
+
 }
 
     void
@@ -547,10 +553,11 @@ EmpathMessageHTMLWidget::s_popupMenu(QString s, const QPoint &)
             i18n("New message to"), empath, SLOT(s_compose()));
     }
     
-    if (s.left(7) == "http://"    ||
-        s.left(6) == "ftp://"    ||
-        s.left(8) == "https://"    ||
-        s.left(9) == "gopher://") {
+    if (s.left(7) == "http://"      ||
+        s.left(6) == "ftp://"       ||
+        s.left(8) == "https://"     ||
+        s.left(9) == "gopher://")
+    {
         
         popup_.insertItem(empathIcon("mini-view.png"), i18n("Browse"),
             parent(), SLOT(s_URLSelected()));

@@ -62,11 +62,11 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
     
     QString legalName = url.folderPath().replace(QRegExp("/"), "_");
     
-    QString fileName = resDir + "/" + legalName;
+    indexFileName_ = resDir + "/" + legalName;
     
-    empathDebug("fileName: " + fileName);
+    empathDebug("Index filename: " + indexFileName_);
 
-    index_.setFilename(fileName);
+    index_.setFilename(indexFileName_);
     
     QObject::connect(this, SIGNAL(countUpdated(int, int)),
         empath->mailbox(url_), SLOT(s_countUpdated(int, int)));

@@ -18,10 +18,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMessageViewWidget.h"
-#endif
-
 // Qt includes
 #include <qstrlist.h>
 
@@ -54,64 +50,22 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
         new EmpathMessageStructureWidget(0, "structureWidget");
     CHECK_PTR(structureWidget_);
     
-    connect(
-        structureWidget_,    SIGNAL(partChanged(RMM::RBodyPart *)),
-        this,                SLOT(s_partChanged(RMM::RBodyPart *)));
-
-
-    mainLayout_ = new QGridLayout(this, 3, 2, 0, 0);
-    CHECK_PTR(mainLayout_);
+    QVBoxLayout * layout = new QVBoxLayout(this);
+    CHECK_PTR(layout);
     
-    mainLayout_->setColStretch(0, 1);
-    mainLayout_->setColStretch(1, 0);
-    mainLayout_->setRowStretch(0, 1);
-    mainLayout_->setRowStretch(1, 10);
-    mainLayout_->setRowStretch(2, 0);
+    layout->setAutoAdd(true);
+    
+    headerViewWidget_ =
+        new EmpathHeaderViewWidget(this, "headerViewWidget");
+    CHECK_PTR(headerViewWidget_);
     
     messageWidget_ = new EmpathMessageHTMLWidget(this, "messageWidget");
     CHECK_PTR(messageWidget_);
     
-    verticalScrollBar_ = new QScrollBar(QScrollBar::Vertical, this, "hScBar");
-    CHECK_PTR(verticalScrollBar_);
-
-    scrollbarSize_ = verticalScrollBar_->sizeHint().width();
-    
-    verticalScrollBar_->setFixedWidth(scrollbarSize_);
-    
-    horizontalScrollBar_ =
-        new QScrollBar(QScrollBar::Horizontal, this, "hScBar");
-    CHECK_PTR(horizontalScrollBar_);
-    
-    horizontalScrollBar_->setFixedHeight(scrollbarSize_);
-    
-    headerViewWidget_ =
-        new EmpathHeaderViewWidget(this, "headerViewWidget");
-    
     QObject::connect(
-        headerViewWidget_,    SIGNAL(clipClicked()),
-        this,                SLOT(s_clipClicked()));
+        headerViewWidget_,  SIGNAL(clipClicked()),
+        this,               SLOT(s_clipClicked()));
     
-
-    mainLayout_->addMultiCellWidget(headerViewWidget_,    0, 0, 0, 1);
-    mainLayout_->addWidget(messageWidget_,                1, 0);
-    mainLayout_->addWidget(verticalScrollBar_,            1, 1);
-    mainLayout_->addWidget(horizontalScrollBar_,        2, 0);
-    
-    QObject::connect(messageWidget_, SIGNAL(scrollVert(int)),
-            SLOT(s_vScrollbarSetValue(int)));
-    
-    QObject::connect(messageWidget_, SIGNAL(scrollHorz(int)),
-            SLOT(s_hScrollbarSetValue(int)));
-    
-    QObject::connect(verticalScrollBar_, SIGNAL(valueChanged(int)),
-            messageWidget_, SLOT(slotScrollVert(int)));
-    
-    QObject::connect(horizontalScrollBar_, SIGNAL(valueChanged(int)),
-            messageWidget_, SLOT(slotScrollHorz(int)));
-    
-    QObject::connect(
-        messageWidget_, SIGNAL(documentChanged()), SLOT(s_docChanged()));
-
     QObject::connect(messageWidget_, SIGNAL(URLSelected(QString, int)),
             SLOT(s_URLSelected(QString, int)));
 
@@ -119,8 +73,12 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
         empath, SIGNAL(retrieveComplete(bool, const EmpathURL &, QString)),
         this,   SLOT(s_retrieveComplete(bool, const EmpathURL &, QString)));
     
-    mainLayout_->activate();
-    QWidget::show();    
+    QObject::connect(
+        structureWidget_,    SIGNAL(partChanged(RMM::RBodyPart *)),
+        this,                SLOT(s_partChanged(RMM::RBodyPart *)));
+   
+    layout->activate();
+    show();    
 }
 
     void
@@ -269,72 +227,11 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
 }
 
     void
-EmpathMessageViewWidget::resizeEvent(QResizeEvent *)
-{
-//    empathDebug("");
-//    s_docChanged();
-//    QWidget::resize(e->size());
-}
-
-    void
-EmpathMessageViewWidget::s_docChanged()
-{
-    empathDebug("");
-    return;
-    // Hide scrollbars if they're not necessary
-
-    int docHeight    = messageWidget_->docHeight();
-    int docWidth    = messageWidget_->docWidth();
-    
-    int h = messageWidget_->height();
-    int w = messageWidget_->width();
-
-
-    if (docHeight > h || verticalScrollBar_->value() != 0) {
-        verticalScrollBar_->show();
-        verticalScrollBar_->setFixedWidth(scrollbarSize_);
-    } else {
-        verticalScrollBar_->hide();
-        verticalScrollBar_->setFixedWidth(0);
-    }
-    
-    if (docWidth > w || horizontalScrollBar_->value() != 0) {
-        horizontalScrollBar_->show();
-        horizontalScrollBar_->setFixedHeight(scrollbarSize_);
-    } else {
-        horizontalScrollBar_->hide();
-        horizontalScrollBar_->setFixedHeight(0);
-    }
-    
-    if (docHeight > h) {
-        verticalScrollBar_->setRange(0,        docHeight - h);
-        verticalScrollBar_->setSteps(12,    messageWidget_->height() - 24);
-    }
-    
-    if (docWidth > w) {
-        horizontalScrollBar_->setRange(0,    docWidth - w);
-        horizontalScrollBar_->setSteps(12,    messageWidget_->width() - 24);
-    }
-}
-
-    void
 EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
     empathDebug("setMessage() called with \"" + url.asString() + "\"");
     url_ = url;
     empath->retrieve(url_, "view");
-}
-
-    void
-EmpathMessageViewWidget::s_vScrollbarSetValue(int val)
-{
-    verticalScrollBar_->setValue(val);
-}
-
-    void
-EmpathMessageViewWidget::s_hScrollbarSetValue(int val)
-{
-    horizontalScrollBar_->setValue(val);
 }
 
     void

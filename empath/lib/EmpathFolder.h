@@ -133,6 +133,8 @@ class EmpathFolder : public QObject
          */
         void itemCome(const QString & s) { emit(itemArrived(s));    }
         
+        QString indexFileName() { return indexFileName_; }
+        
     protected slots:
         
         /**
@@ -168,6 +170,7 @@ class EmpathFolder : public QObject
         QString     pixmapName_;
         EmpathIndex index_;
         EmpathURL   url_;
+        QString     indexFileName_;
 };
 
 #endif

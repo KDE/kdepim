@@ -529,9 +529,6 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
     empath->s_infoMessage(
         i18n("Reading mailbox") + " " + url.asString());
     
-    // Ask the folder we were showing to drop its index.
-    // Thanks to Waldo's dandy zone allocator, a few 128K blocks might
-    // just get passed back to the OS here.
     EmpathFolder * oldFolder = empath->folder(url_);
     
     if (oldFolder != 0) {
@@ -547,6 +544,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
     
     url_ = url;
     
+    empathDebug("calling empath->folder(" + url_.asString() + ")");
     EmpathFolder * f = empath->folder(url_);
     
     QObject::connect(
@@ -1107,10 +1105,14 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 
     EmpathTask * t(empath->addTask(i18n("Sorting messages")));
     CHECK_PTR(t);
+    
+    setSorting(-1);
 
     t->setMax(f->messageCount());
     
     QStrList l(f->index().allKeys());
+    
+    empathDebug("There are " + QString().setNum(l.count()) + " keys");
 
     QStrListIterator it(l);
 
@@ -1128,6 +1130,7 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
         setStatus(newItem, rec->status());
         
         t->doneOne();
+        kapp->processEvents();
     }
     
     setSorting(
@@ -1147,8 +1150,6 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
 {
     setRootIsDecorated(true);
     
-    // Start by putting everything into our list. This takes care of sorting so
-    // hopefully threading will be simpler.
     
     EmpathTask * t(empath->addTask(i18n("Sorting messages")));
     CHECK_PTR(t);
@@ -1172,18 +1173,23 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
     
     QListIterator<EmpathIndexRecord> mit(masterList_);
     
-    sortType_ = KGlobal::config()->
-        readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
+    setSorting(-1);
+
     
-    setSorting(
-        KGlobal::config()->
-        readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
     
     for (; mit.current(); ++mit) {
 
         addItem(mit.current());
         t->doneOne();
+        kapp->processEvents();
     }
+    
+    sortType_ = KGlobal::config()->
+        readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
+
+    setSorting(
+        KGlobal::config()->
+        readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
     
     t->done();
 

@@ -106,7 +106,7 @@ EmpathMailboxMaildir::sync(const EmpathURL & url)
     
     for (; it.current(); ++it) {
         if (it.current()->url() == url)
-            it.current()->sync(url);
+            it.current()->sync();
     }
 }
     
