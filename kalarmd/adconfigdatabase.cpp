@@ -1,5 +1,5 @@
 /*
-    Calendar and client access for KDE Alarm Daemon.
+    Alarm Daemon config and client data file access.
 
     This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
@@ -19,9 +19,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-
-//#include <unistd.h>
-//#include <stdlib.h>
 
 #include <qdatetime.h>
 

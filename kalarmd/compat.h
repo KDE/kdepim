@@ -1,5 +1,5 @@
 /*
-    Calendar access for KDE Alarm Daemon and KDE Alarm Daemon GUI.
+    KDE2 compatibility for KDE Alarm Daemon and KDE Alarm Daemon GUI.
 
     This file is part of the KDE alarm daemon.
     Copyright (c) 2001 David Jarvie <software@astrojar.org.uk>
