@@ -121,7 +121,7 @@ void MobileMain::dropEvent(QDropEvent *event)
 
 void MobileMain::optionsConfigureKeys()
 {
-    KKeyDialog::configureKeys(actionCollection(),"kandymobileui.rc");
+    KKeyDialog::configure( actionCollection(), this );
 }
 
 void MobileMain::optionsConfigureToolbars()

@@ -228,7 +228,7 @@ void Kandy::filePrint()
 
 void Kandy::optionsConfigureKeys()
 {
-    KKeyDialog::configureKeys(actionCollection(), "kandyui.rc");
+    KKeyDialog::configure( actionCollection(), this );
 }
 
 void Kandy::optionsConfigureToolbars()
