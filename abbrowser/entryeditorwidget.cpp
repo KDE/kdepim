@@ -156,7 +156,7 @@ void ContactDialog::setupTab1()
   filler3->setMinimumWidth( 1 );
   tab1lay->addWidget( filler3, 3, 2 );
 
-  QLabel *lWebPage = new QLabel( "&Web page:", tab1 );  
+  QLabel *lWebPage = new QLabel( "&Web page:", tab1 );
   QLineEdit *leWebPage = new ContactLineEdit( tab1, "WEBPAGE", ce );
   lWebPage->setBuddy( leWebPage );
   tab1lay->addWidget( lWebPage, 3, 3 );
@@ -327,7 +327,7 @@ void ContactDialog::setupTab2()
     label[row] = new QLabel( sLabel[row], v3 );
     lay3->addWidget( label[row] );
     size = size.expandedTo( label[row]->sizeHint() );
-    QLineEdit *ed = new ContactLineEdit( v3, entryField[row].ascii(), ce ); 
+    QLineEdit *ed = new ContactLineEdit( v3, entryField[row].ascii(), ce );
     ed->setMaximumSize( ed->sizeHint() );
     lay3->addWidget( ed, 0 );
     label[row]->setBuddy( ed );
@@ -898,6 +898,7 @@ NameDialog::NameDialog( QWidget *parent, ContactEntry *ce, bool modal )
   hb->activate();
   connect( pbOk, SIGNAL( clicked() ), this, SLOT( NameOk() ));
   connect( pbCancel, SIGNAL( clicked()), this, SLOT( reject() ));
+  leFirst->setFocus();
 }
 
 void NameDialog::polish()
