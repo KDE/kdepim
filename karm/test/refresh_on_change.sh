@@ -1,21 +1,10 @@
 #!/bin/sh
 
+
+source __lib.sh
+
 TESTFILE="/tmp/testkarm.ics"
-TESTTODO="testtodo"
-
-# Start with clean environment
-# If runscripts sees output on stderr, it thinks script failed.
-DCOPID=`dcop | grep karm 2>/dev/null`
-if [ -n $DCOPID ]; then dcop $DCOPID KarmDCOPIface quit; fi;
-if [ -e $TESTFILE ]; then rm $TESTFILE; fi
-
-karm $TESTFILE & 
-
-# Make sure karm opens up.  This can take a while the first time.
-sleep 3
-
-DCOPID=`dcop | grep karm`
-#echo "$0: DCOPID = $DCOPID"
+set_up
 
 TODO_NAME=$0
 TODO_UID=abc-123
@@ -44,14 +33,12 @@ END:VCALENDAR
 endl
 
 # wait so FAM and KDirWatcher tell karm and karm refreshes view
-sleep 5
+sleep 2
 
 RVAL=`dcop $DCOPID KarmDCOPIface hastodo $TODO_NAME`
 #echo "RVAL = $RVAL"
 
-# clean up
-if [ -n $DCOPID ]; then dcop $DCOPID KarmDCOPIface quit; fi;
-if [ -e $TESTFILE ]; then rm $TESTFILE; fi
+tear_down
 
 # check that todo was found
 if [ "$RVAL" == "$TODO_UID" ]; then 
