@@ -1,0 +1,4 @@
+The directory libical contains version 0.23 of libical with a few minor
+modifications to let it compile in the kdepim module. You can get the original
+distribution from http://www.softwarestudio.org/download. More information about
+libical can be found at http://www.softwarestudio.org/libical.
