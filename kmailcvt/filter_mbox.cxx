@@ -15,18 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktempfile.h>
 #include <kdebug.h>
 
-#ifndef MAX_LINE
-#define MAX_LINE 4096
-#endif
-
 #include "filter_mbox.hxx"
+
 
 FilterMBox::FilterMBox() :
 Filter(	i18n("Import mbox Files (UNIX, Evolution)"),

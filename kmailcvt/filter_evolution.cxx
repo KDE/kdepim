@@ -25,10 +25,6 @@
 #include <kfiledialog.h>
 #include <ktempfile.h>
 
-#ifndef MAX_LINE
-#define MAX_LINE 4096
-#endif
-
 
 /** Default constructor. */
 FilterEvolution::FilterEvolution(void) : 

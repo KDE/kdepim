@@ -15,19 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktempfile.h>
 #include <kdebug.h>
-#include <qdatetime.h>
 
 #include "filter_opera.hxx"
 
-#ifndef MAX_LINE
-#define MAX_LINE 4096
-#endif
 
 FilterOpera::FilterOpera() :
 Filter(	i18n("Import Opera Emails"),
