@@ -67,6 +67,12 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 {
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,NullConduitFactory::about());
 	fWidget=fConfigWidget;
+	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
+		this,SLOT(modified()));
+	QObject::connect(fConfigWidget->fDatabases,SIGNAL(textChanged(const QString&)),
+		this,SLOT(modified()));
+	QObject::connect(fConfigWidget->fFailImmediately,SIGNAL(toggled(bool)),
+		this,SLOT(modified()));
 }
 
 /* virtual */ void NullConduitConfig::commit(KConfig *fConfig)
@@ -102,6 +108,8 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		fConfig->readEntry(NullConduitFactory::message,i18n("KPilot was here!")));
 	fConfigWidget->fDatabases->setText(
 		fConfig->readEntry(NullConduitFactory::databases));
+	fConfigWidget->fFailImmediately->setChecked(
+		fConfig->readBoolEntry(NullConduitFactory::failImmediately,false));
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -113,6 +121,8 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		<< fConfigWidget->fDatabases->text()
 		<< endl;
 #endif
+
+	fModified=false;
 }
 
 /* static */ const char * const NullConduitFactory::group = "Null-conduit";

@@ -1,6 +1,33 @@
 TODO LIST (Moved again to the file TODO)
 
 
+KPilot Developer's notes for May 15th, 2003
+===========================================
+
+2003-5-9  Adriaan de Groot
+* Fixed up some config issues in the NULL conduit.
+
+2003-5-5  Adriaan de Groot
+* plugin.{h,cc} Added a maybeSave() function for the new conduit config
+  style. Removed some unused variables.
+* conduitConfigDialog.{h,cc} Using maybeSave() to save or cancel selection
+  changes.
+
+2003-5-3  Adriaan de Groot
+* Spent lots of time panicing my system and causing fatal exceptions
+  on my Pilot by playing with pilot-link 0.11.7 and FreeBSD's USB
+  stack.
+* kpilotlink.cc Suppress printing the "accidentally in acceptDevice" 
+  more than once. Try to escape from the infinite socketnotifier loop.
+
+
+2003-5-2  Adriaan de Groot
+* Aiming for bi-weekly notes this month again.
+* Looks like I reverted the PRETTY_FUNCTION printing.
+* I'm working from an everything-HEAD-except vcal and abbrowser
+  checkout, because the new resources framework breaks everything.
+* Next KPilot tarballs will be 4.4.0 (HEAD) release.
+
 KPilot Developer's notes for April 30th, 2003
 =============================================
 
