@@ -260,9 +260,11 @@ void CalendarResources::deleteTodo(Todo *todo)
 {
   kdDebug(5800) << "CalendarResources::deleteTodo" << endl;
 
+  Q_ASSERT(todo);
+  
   if ( mResourceMap.find(todo)!=mResourceMap.end() ) {
-    mResourceMap.remove( todo );
     mResourceMap[todo]->deleteTodo( todo );
+    mResourceMap.remove( todo );
   } else {
     CalendarResourceManager::ActiveIterator it;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
