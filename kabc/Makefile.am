@@ -13,6 +13,11 @@ libkabc_la_SOURCES = \
   vcardformatimpl.cpp addresseedialog.cpp distributionlist.cpp \
   distributionlisteditor.cpp
 
+kabcincludedir = $(includedir)/kabc
+kabcinclude_HEADERS = address.h addressbook.h addressee.h addresseedialog.h \
+  distributionlist.h distributionlisteditor.h format.h geo.h phonenumber.h \
+  simpleformat.h stdaddressbook.h timezone.h vcardformat.h
+
 METASOURCES = AUTO
 
 bin_PROGRAMS = kab2kabc
