@@ -5,11 +5,11 @@
 #ifndef SSK_KACCELMENUWATCH_H
 #define SSK_KACCELMENUWATCH_H
 
-#include<qobject.h>
-#include<qpopupmenu.h>
-#include<qlist.h>
+#include <qobject.h>
+#include <qpopupmenu.h>
+#include <qptrlist.h>
 
-#include<kaccel.h>
+#include <kaccel.h>
 
 /**
 * Easy updating of menu accels when changing a @ref KAccel object.
@@ -51,8 +51,8 @@ private:
 	} AccelItem;
 
 	KAccel		 *_accel;
-	QList<AccelItem> _accList;
-	QList<QPopupMenu> _menuList;
+	QPtrList<AccelItem> _accList;
+	QPtrList<QPopupMenu> _menuList;
 
 	QPopupMenu	*_menu;
 

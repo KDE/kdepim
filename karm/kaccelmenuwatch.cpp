@@ -5,8 +5,8 @@
 * Generated:	Thu Jan  7 15:05:26 EST 1999
 */
 
-#include<assert.h>
-#include"kaccelmenuwatch.h"
+#include <assert.h>
+#include "kaccelmenuwatch.h"
 
 KAccelMenuWatch::KAccelMenuWatch( KAccel *accel, QObject *parent )
 	: QObject( parent ),
@@ -26,7 +26,7 @@ void KAccelMenuWatch::setMenu( QPopupMenu *menu )
 
 	if ( !_menuList.findRef( menu ) ) {
 		_menuList.append( menu );
-		connect( menu, SIGNAL(destroyed()), 
+		connect( menu, SIGNAL(destroyed()),
 			this, SLOT(removeDeadMenu()) );
 	}
 
@@ -49,13 +49,13 @@ void KAccelMenuWatch::updateMenus()
 {
 	assert( _accel != 0 );
 
-	QListIterator<AccelItem> iter( _accList );
+	QPtrListIterator<AccelItem> iter( _accList );
 	AccelItem *item;
 
 	for( ; (item = iter.current()) ; ++iter ) {
 		switch( item->type ) {
 			case StringAccel:
-				_accel->changeMenuAccel( item->menu, 
+				_accel->changeMenuAccel( item->menu,
 					item->itemId,
 					item->action );
 				break;
@@ -81,7 +81,7 @@ void KAccelMenuWatch::removeDeadMenu()
 	}
 
 	// remove all accels
-	
+
 	AccelItem *accel;
 	for ( accel = _accList.first(); accel; accel = _accList.next() ) {
 
@@ -92,15 +92,15 @@ loop:
 			goto loop;
 		}
 	}
-	
-	
+
+
 	// remove from menu list
 	_menuList.remove( sdr );
 
 	return;
 }
 
-KAccelMenuWatch::AccelItem *KAccelMenuWatch::newAccelItem( QPopupMenu *, 
+KAccelMenuWatch::AccelItem *KAccelMenuWatch::newAccelItem( QPopupMenu *,
 		int itemId, AccelType type )
 {
 	AccelItem *item = new AccelItem;

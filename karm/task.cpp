@@ -7,9 +7,9 @@
 #include"task.h"
 
 
-QVector<QPixmap> *Task::icons = 0;
+QPtrVector<QPixmap> *Task::icons = 0;
 
-Task::Task(const QString& taskName, long minutes, long sessionTime, QListView *parent) 
+Task::Task(const QString& taskName, long minutes, long sessionTime, QListView *parent)
 	: QObject(), QListViewItem(parent)
 {
   init(taskName, minutes, sessionTime);
@@ -24,7 +24,7 @@ Task::Task(const QString& taskName, long minutes, long sessionTime, QListViewIte
 void Task::init(const QString& taskName, long minutes, long sessionTime)
 {
   if (icons == 0) {
-    icons = new QVector<QPixmap>(8);
+    icons = new QPtrVector<QPixmap>(8);
     for (int i=0; i<8; i++) {
       QPixmap *icon = new QPixmap();
       QString name;
@@ -33,8 +33,8 @@ void Task::init(const QString& taskName, long minutes, long sessionTime)
       icons->insert(i,icon);
     }
   }
-  
-	_name = taskName.stripWhiteSpace(); 
+
+	_name = taskName.stripWhiteSpace();
 	_totalTime = minutes;
   _sessionTime = sessionTime;
   _timer = new QTimer(this);
@@ -62,7 +62,7 @@ void Task::setRunning(bool on)
   }
 }
 
-void Task::setName( const QString& name ) 
+void Task::setName( const QString& name )
 {
 	_name = name;
 	update();

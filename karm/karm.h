@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <qsplitter.h>
 #include <qlistview.h>
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qtextstream.h>
 
 class KMenuBar;
@@ -27,7 +27,7 @@ private: // member variables
     
     Preferences *_preferences;
   
-    QList<Task> activeTasks;
+    QPtrList<Task> activeTasks;
 
 public:
     Karm( QWidget *parent = 0, const char *name = 0 );	

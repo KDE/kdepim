@@ -2,10 +2,10 @@
 #define ssk_karm_h
 
 #include <qstring.h>
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qobject.h>
 #include <qlistview.h>
-#include <qvector.h>
+#include <qptrvector.h>
 #include <qpixmap.h>
 #include "karm.h"
 
@@ -26,7 +26,7 @@ private:
   long _sessionTime;
   QTimer *_timer;
   int _i;
-  static QVector<QPixmap> *icons;
+  static QPtrVector<QPixmap> *icons;
 
 public:
 	/** constructor */
