@@ -2035,7 +2035,7 @@ void obtain_signature_information( gpgme_ctx_t ctx,
     convert(BAD_POLICY);
     convert(SYS_ERROR);
 #undef convert
-    if( !sumPlug )
+    if( sumGPGME && !sumPlug )
       sumPlug = SigStat_NUMERICAL_CODE | sumGPGME;
     this_info.sigStatusFlags = sumPlug;
 
