@@ -1,5 +1,6 @@
 <!DOCTYPE UI><UI>
 <class>DisplaySettingsForm</class>
+<include location="global">kcolorbtn.h</include>
 <widget>
     <class>QWidget</class>
     <property stdset="1">
