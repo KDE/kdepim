@@ -3,26 +3,35 @@ TODO LIST (Moved again to the file TODO)
 KPilot Developer's notes for June 15th, 2003
 ============================================
 
+2003-6-15  Adriaan de Groot
+* Yay, father's day. Which includes me. Mira drew me a wonderful card.
+* Fixed some TL problems in debug output, and added documentation.
+
+2003-6-14  Adriaan de Groot
+* Fixed the conduit config dialog's repaint and behavior problems by
+  ditching the .ui file and implementing it by hand again. I'll look
+  into a switch back to .ui later.
+
 2003-6-12  Reinhold Kainhofer
 * Tracked down why the handheld crashes with Invalid UniqueID error
-  message (bugs #59313 and #51216). RecordIDs are supposed to be 3 
-  bytes, and the handheld will crash if they are longer. For some 
-  reason, several entries in the calendar or the addressbook were 
-  assigned longer Record IDs, so I added a check for invalid values 
-  before sending them to the handheld. This fixes the symptoms (i.e. 
-  these crashes won't appear in the future again, and new valid ids 
-  will be assigned), but there is still another bug that assigned 
+  message (bugs #59313 and #51216). RecordIDs are supposed to be 3
+  bytes, and the handheld will crash if they are longer. For some
+  reason, several entries in the calendar or the addressbook were
+  assigned longer Record IDs, so I added a check for invalid values
+  before sending them to the handheld. This fixes the symptoms (i.e.
+  these crashes won't appear in the future again, and new valid ids
+  will be assigned), but there is still another bug that assigned
   the wrong values in the first place...
-	
-2003-6-9   Reinhold Kainhofer	
-* Fixed crash from bug #59315. I used the value of a char as a char*, 
-  in the code for extension cards in the sysinfo conduit. pilot-link 
-	doesn't detect my Clie's memory stick as extension card so this code
-	was never executed on my machine, and I didn't detect the bug myself.
-	
+
+2003-6-9   Reinhold Kainhofer
+* Fixed crash from bug #59315. I used the value of a char as a char*,
+  in the code for extension cards in the sysinfo conduit. pilot-link
+  doesn't detect my Clie's memory stick as extension card so this code
+  was never executed on my machine, and I didn't detect the bug myself.
+
 2003-6-1   Reinhold Kainhofer
 * Fixed several (possible  and really occuring) null pointer crashes
-* Submited most of the items in our TODO list as bugs or wishes on 
+* Submited most of the items in our TODO list as bugs or wishes on
   bugs.kde.org
 
 2003-5-31  Reinhold Kainhofer
