@@ -184,7 +184,7 @@ void Kleo::KeyListView::slotUpdateTimeout() {
     return;
 
   const bool wasUpdatesEnabled = isUpdatesEnabled();
-  if ( !wasUpdatesEnabled )
+  if ( wasUpdatesEnabled )
     setUpdatesEnabled( false );
   kdDebug( 5150 ) << "Kleo::KeyListView::slotUpdateTimeout(): processing "
 		  << d->keyBuffer.size() << " items en block" << endl;
