@@ -172,20 +172,20 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   for ( QStringList::Iterator it = tmpStrList.begin();
         it != tmpStrList.end();
         ++it )
-    addPropValue(vevent, VCAttachProp, (*it).local8Bit());
+    addPropValue(vevent, VCAttachProp, (*it).utf8());
 
   // resources
   tmpStrList = anEvent->resources();
   tmpStr = tmpStrList.join(";");
   if (!tmpStr.isEmpty())
-    addPropValue(vevent, VCResourcesProp, tmpStr.local8Bit());
+    addPropValue(vevent, VCResourcesProp, tmpStr.utf8());
 
 #endif
 
 // TODO: transparency
   // transparency
 //  tmpStr.sprintf("%i",anEvent->getTransparency());
-//  addPropValue(vevent, VCTranspProp, tmpStr.local8Bit());
+//  addPropValue(vevent, VCTranspProp, tmpStr.utf8());
 
   return vevent;
 }
@@ -202,7 +202,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   icalcomponent *vfreebusy = icalcomponent_new(ICAL_VFREEBUSY_COMPONENT);
 
   icalcomponent_add_property(vfreebusy,icalproperty_new_organizer(
-      ("MAILTO:" + freebusy->organizer()).local8Bit()));
+      ("MAILTO:" + freebusy->organizer()).utf8()));
 
   if (freebusy->attendeeCount() != 0) {
     QPtrList<Attendee> al = freebusy->attendees();
@@ -223,7 +223,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
 
   if (method == Scheduler::Request) {
     icalcomponent_add_property(vfreebusy,icalproperty_new_uid(
-       freebusy->uid().local8Bit()));
+       freebusy->uid().utf8()));
   }
 
   //Loops through all the periods in the freebusy object
@@ -256,7 +256,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // unique id
   icalcomponent_add_property(parent,icalproperty_new_uid(
-      incidence->uid().local8Bit()));
+      incidence->uid().utf8()));
 
   // revision
   icalcomponent_add_property(parent,icalproperty_new_sequence(
@@ -271,7 +271,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // organizer stuff
   icalcomponent_add_property(parent,icalproperty_new_organizer(
-      ("MAILTO:" + incidence->organizer()).local8Bit()));
+      ("MAILTO:" + incidence->organizer()).utf8()));
 
   // attendees
   if (incidence->attendeeCount() != 0) {
@@ -285,24 +285,24 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // description
   if (!incidence->description().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_description(
-        incidence->description().local8Bit()));
+        incidence->description().utf8()));
   }
 
   // summary
   if (!incidence->summary().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_summary(
-        incidence->summary().local8Bit()));
+        incidence->summary().utf8()));
   }
 
   // location
   if (!incidence->location().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_location(
-        incidence->location().local8Bit()));
+        incidence->location().utf8()));
   }
 
 // TODO:
   // status
-//  addPropValue(parent, VCStatusProp, incidence->getStatusStr().local8Bit());
+//  addPropValue(parent, VCStatusProp, incidence->getStatusStr().utf8());
 
   // secrecy
   const char *classStr;
@@ -328,7 +328,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   QStringList categories = incidence->categories();
   QStringList::Iterator it;
   for(it = categories.begin(); it != categories.end(); ++it ) {
-    icalcomponent_add_property(parent,icalproperty_new_categories((*it).local8Bit()));
+    icalcomponent_add_property(parent,icalproperty_new_categories((*it).utf8()));
   }
 // TODO: Ensure correct concatenation of categories properties.
 
@@ -360,15 +360,15 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // related event
   if (incidence->relatedTo()) {
     icalcomponent_add_property(parent,icalproperty_new_relatedto(
-        incidence->relatedTo()->uid().local8Bit()));
+        incidence->relatedTo()->uid().utf8()));
   }
 
   // pilot sync stuff
   icalproperty *p =
-      icalproperty_new_x((QString::number(incidence->pilotId())).local8Bit());
+      icalproperty_new_x((QString::number(incidence->pilotId())).utf8());
   icalproperty_set_x_name(p,"X-PILOTID");
   icalcomponent_add_property(parent,p);
-  p = icalproperty_new_x((QString::number(incidence->syncStatus())).local8Bit());
+  p = icalproperty_new_x((QString::number(incidence->syncStatus())).utf8());
   icalproperty_set_x_name(p,"X-PILOTSTAT");
   icalcomponent_add_property(parent,p);
 
@@ -408,10 +408,10 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
 icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
 {
-  icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().local8Bit());
+  icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().utf8());
 
   if (!attendee->name().isEmpty()) {
-    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name().local8Bit()));
+    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name().utf8()));
   }
 
 
@@ -464,9 +464,9 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
   icalproperty_add_parameter(p,icalparameter_new_role(role));
 
   if (!attendee->uid().isEmpty()) {
-  icalparameter* icalparameter_uid = icalparameter_new_x(attendee->uid());
-  icalparameter_set_xname(icalparameter_uid,"X-UID");
-  icalproperty_add_parameter(p,icalparameter_uid);
+    icalparameter* icalparameter_uid = icalparameter_new_x(attendee->uid().utf8());
+    icalparameter_set_xname(icalparameter_uid,"X-UID");
+    icalproperty_add_parameter(p,icalparameter_uid);
   }
 
   return p;
@@ -495,28 +495,13 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
     case Recurrence::rMinutely:
       r.freq = ICAL_MINUTELY_RECURRENCE;
       datetime = true;
-#if 0
-      tmpStr.sprintf("M%i ",anEvent->rFreq);
-//      if (anEvent->rDuration > 0)
-//      tmpStr += "#";
-#endif
       break;
     case Recurrence::rHourly:
       r.freq = ICAL_HOURLY_RECURRENCE;
       datetime = true;
-#if 0
-      tmpStr.sprintf("H%i ",anEvent->rFreq);
-//      if (anEvent->rDuration > 0)
-//      tmpStr += "#";
-#endif
       break;
     case Recurrence::rDaily:
       r.freq = ICAL_DAILY_RECURRENCE;
-#if 0
-      tmpStr.sprintf("D%i ",anEvent->rFreq);
-//      if (anEvent->rDuration > 0)
-//      tmpStr += "#";
-#endif
       break;
     case Recurrence::rWeekly:
       r.freq = ICAL_WEEKLY_RECURRENCE;
@@ -528,13 +513,6 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
         }
       }
 //      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
-#if 0
-      tmpStr.sprintf("W%i ",anEvent->rFreq);
-      for (i = 0; i < 7; i++) {
-        if (anEvent->rDays.testBit(i))
-          tmpStr += dayFromNum(i);
-      }
-#endif
       break;
     case Recurrence::rMonthlyPos:
       r.freq = ICAL_MONTHLY_RECURRENCE;
@@ -553,26 +531,6 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
         }
       }
 //      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
-#if 0
-      tmpStr.sprintf("MP%i ", anEvent->rFreq);
-      // write out all rMonthPos's
-      tmpPositions = anEvent->rMonthPositions;
-      for (tmpPos = tmpPositions.first();
-           tmpPos;
-           tmpPos = tmpPositions.next()) {
-
-        tmpStr2.sprintf("%i", tmpPos->rPos);
-        if (tmpPos->negative)
-          tmpStr2 += "- ";
-        else
-          tmpStr2 += "+ ";
-        tmpStr += tmpStr2;
-        for (i = 0; i < 7; i++) {
-          if (tmpPos->rDays.testBit(i))
-            tmpStr += dayFromNum(i);
-        }
-      } // loop for all rMonthPos's
-#endif
       break;
     case Recurrence::rMonthlyDay:
       r.freq = ICAL_MONTHLY_RECURRENCE;
@@ -584,17 +542,6 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
         r.by_month_day[index++] = icalrecurrencetype_day_position(*tmpDay*8);//*tmpDay);
       }
 //      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
-#if 0
-      tmpStr.sprintf("MD%i ", anEvent->rFreq);
-      // write out all rMonthDays;
-      tmpDays = anEvent->rMonthDays;
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
-        tmpStr += tmpStr2;
-      }
-#endif
       break;
     case Recurrence::rYearlyMonth:
     case Recurrence::rYearlyPos:
@@ -607,17 +554,6 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
         r.by_month[index++] = *tmpDay;
       }
 //      r.by_set_pos[index] = ICAL_RECURRENCE_ARRAY_MAX;
-#if 0
-      tmpStr.sprintf("YM%i ", anEvent->rFreq);
-      // write out all the rYearNums;
-      tmpDays = anEvent->rYearNums;
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
-        tmpStr += tmpStr2;
-      }
-#endif
       if (recur->doesRecur() == Recurrence::rYearlyPos) {
         tmpPositions = recur->monthPositions();
         for (tmpPos = tmpPositions.first();
@@ -633,26 +569,6 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
           }
         }
 //        r.by_day[index2] = ICAL_RECURRENCE_ARRAY_MAX;
-#if 0
-        tmpStr.sprintf("MP%i ", anEvent->rFreq);
-        // write out all rMonthPos's
-        tmpPositions = anEvent->rMonthPositions;
-        for (tmpPos = tmpPositions.first();
-             tmpPos;
-             tmpPos = tmpPositions.next()) {
-
-          tmpStr2.sprintf("%i", tmpPos->rPos);
-          if (tmpPos->negative)
-            tmpStr2 += "- ";
-          else
-            tmpStr2 += "+ ";
-          tmpStr += tmpStr2;
-          for (i = 0; i < 7; i++) {
-            if (tmpPos->rDays.testBit(i))
-              tmpStr += dayFromNum(i);
-          }
-        } // loop for all rMonthPos's
-#endif
       }
       break;
     case Recurrence::rYearlyDay:
@@ -665,17 +581,6 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
         r.by_year_day[index++] = *tmpDay;
       }
 //      r.by_year_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
-#if 0
-      tmpStr.sprintf("YD%i ", anEvent->rFreq);
-      // write out all the rYearNums;
-      tmpDays = anEvent->rYearNums;
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
-        tmpStr += tmpStr2;
-      }
-#endif
       break;
     default:
       r.freq = ICAL_NO_RECURRENCE;
@@ -707,98 +612,6 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 #endif
 
   return icalproperty_new_rrule(r);
-
-#if 0
-    // some more variables
-    QPtrList<Event::rMonthPos> tmpPositions;
-    QPtrList<int> tmpDays;
-    int *tmpDay;
-    Event::rMonthPos *tmpPos;
-    QString tmpStr2;
-
-    switch(anEvent->doesRecur()) {
-    case Event::rDaily:
-      tmpStr.sprintf("D%i ",anEvent->rFreq);
-//      if (anEvent->rDuration > 0)
-//      tmpStr += "#";
-      break;
-    case Event::rWeekly:
-      tmpStr.sprintf("W%i ",anEvent->rFreq);
-      for (int i = 0; i < 7; i++) {
-        if (anEvent->rDays.testBit(i))
-          tmpStr += dayFromNum(i);
-      }
-      break;
-    case Event::rMonthlyPos:
-      tmpStr.sprintf("MP%i ", anEvent->rFreq);
-      // write out all rMonthPos's
-      tmpPositions = anEvent->rMonthPositions;
-      for (tmpPos = tmpPositions.first();
-           tmpPos;
-           tmpPos = tmpPositions.next()) {
-
-        tmpStr2.sprintf("%i", tmpPos->rPos);
-        if (tmpPos->negative)
-          tmpStr2 += "- ";
-        else
-          tmpStr2 += "+ ";
-        tmpStr += tmpStr2;
-        for (int i = 0; i < 7; i++) {
-          if (tmpPos->rDays.testBit(i))
-            tmpStr += dayFromNum(i);
-        }
-      } // loop for all rMonthPos's
-      break;
-    case Event::rMonthlyDay:
-      tmpStr.sprintf("MD%i ", anEvent->rFreq);
-      // write out all rMonthDays;
-      tmpDays = anEvent->rMonthDays;
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
-        tmpStr += tmpStr2;
-      }
-      break;
-    case Event::rYearlyMonth:
-      tmpStr.sprintf("YM%i ", anEvent->rFreq);
-      // write out all the rYearNums;
-      tmpDays = anEvent->rYearNums;
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
-        tmpStr += tmpStr2;
-      }
-      break;
-    case Event::rYearlyDay:
-      tmpStr.sprintf("YD%i ", anEvent->rFreq);
-      // write out all the rYearNums;
-      tmpDays = anEvent->rYearNums;
-      for (tmpDay = tmpDays.first();
-           tmpDay;
-           tmpDay = tmpDays.next()) {
-        tmpStr2.sprintf("%i ", *tmpDay);
-        tmpStr += tmpStr2;
-      }
-      break;
-    default:
-      kdDebug(5800) << "ERROR, it should never get here in eventToVEvent!" << endl;
-      break;
-    } // switch
-
-    if (anEvent->rDuration > 0) {
-      tmpStr2.sprintf("#%i",anEvent->rDuration);
-      tmpStr += tmpStr2;
-    } else if (anEvent->rDuration == -1) {
-      tmpStr += "#0"; // defined as repeat forever
-    } else {
-      tmpStr += qDateTimeToISO(anEvent->rEndDate, FALSE);
-    }
-    addPropValue(vevent,VCRRuleProp, tmpStr.local8Bit());
-
-  } // event repeats
-#endif
 }
 
 icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
@@ -822,13 +635,13 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
     icalattachtype_free(attach);
   } else if (!alarm->mailAddress().isEmpty()) {
     action = ICAL_ACTION_EMAIL;
-    icalcomponent_add_property(a,icalproperty_new_attendee(alarm->mailAddress()));
+    icalcomponent_add_property(a,icalproperty_new_attendee(alarm->mailAddress().utf8()));
     // TODO: multiple attendees can be specified
-    icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject()));
-    icalcomponent_add_property(a,icalproperty_new_description(alarm->text()));
+    icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject().utf8()));
+    icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
   } else {
     action = ICAL_ACTION_DISPLAY;
-    icalcomponent_add_property(a,icalproperty_new_description(alarm->text()));
+    icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
   }
   icalcomponent_add_property(a,icalproperty_new_action(action));
 
@@ -859,7 +672,6 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
   icalproperty *p = icalcomponent_get_first_property(vtodo,ICAL_ANY_PROPERTY);
 
-  const char *text;
 //  int intvalue;
   icaltimetype icaltime;
 
@@ -891,9 +703,8 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
         todo->setPercentComplete(icalproperty_get_percentcomplete(p));
         break;
 
-      case ICAL_RELATEDTO_PROPERTY:  // releated todo (parent)
-        text = icalproperty_get_relatedto(p);
-        todo->setRelatedToUid(text);
+      case ICAL_RELATEDTO_PROPERTY:  // related todo (parent)
+        todo->setRelatedToUid(from8Bit(icalproperty_get_relatedto(p)));
         mTodosRelate.append(todo);
         break;
 
@@ -923,7 +734,6 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 
   icalproperty *p = icalcomponent_get_first_property(vevent,ICAL_ANY_PROPERTY);
 
-  const char *text;
 //  int intvalue;
   icaltimetype icaltime;
 
@@ -1010,14 +820,13 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 #endif
 
       case ICAL_RELATEDTO_PROPERTY:  // releated event (parent)
-        text = icalproperty_get_relatedto(p);
-        event->setRelatedToUid(text);
+        event->setRelatedToUid(from8Bit(icalproperty_get_relatedto(p)));
         mEventsRelate.append(event);
         break;
 
       case ICAL_X_PROPERTY:
         if (strcmp(icalproperty_get_name(p),"X-MICROSOFT-CDO-ALLDAYEVENT") == 0) {
-	  text = icalproperty_get_value_as_string(p);
+	  const char *text = icalproperty_get_value_as_string(p);
 	  bool floats = (strcmp(text, "TRUE") == 0);
 	  kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
 	  event->setFloats(floats);
@@ -1056,7 +865,6 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
 
   icalproperty *p = icalcomponent_get_first_property(vfreebusy,ICAL_ANY_PROPERTY);
 
-  const char *text;
   icaltimetype icaltime;
   icalperiodtype icalperiod;
   QDateTime period_start, period_end;
@@ -1066,13 +874,11 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
     switch (kind) {
 
       case ICAL_UID_PROPERTY:  // unique id
-        text = icalproperty_get_uid(p);
-        freebusy->setUid(text);
+        freebusy->setUid(from8Bit(icalproperty_get_uid(p)));
         break;
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
-        text = icalproperty_get_organizer(p);
-        freebusy->setOrganizer(QString::fromLocal8Bit(text));
+        freebusy->setOrganizer(from8Bit(icalproperty_get_organizer(p)));
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
@@ -1120,13 +926,13 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 {
   icalparameter *p = 0;
 
-  QString email = QString::fromLocal8Bit(icalproperty_get_attendee(attendee));
+  QString email = from8Bit(icalproperty_get_attendee(attendee));
 
   QString name;
   QString uid = QString::null;
   p = icalproperty_get_first_parameter(attendee,ICAL_CN_PARAMETER);
   if (p) {
-    name = QString::fromLocal8Bit(icalparameter_get_cn(p));
+    name = from8Bit(icalparameter_get_cn(p));
   } else {
   }
 
@@ -1225,7 +1031,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_UID_PROPERTY:  // unique id
         text = icalproperty_get_uid(p);
-        incidence->setUid(text);
+        incidence->setUid(from8Bit(text));
         break;
 
       case ICAL_SEQUENCE_PROPERTY:  // sequence
@@ -1240,7 +1046,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
         text = icalproperty_get_organizer(p);
-        incidence->setOrganizer(QString::fromLocal8Bit(text));
+        incidence->setOrganizer(from8Bit(text));
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
@@ -1264,17 +1070,17 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_DESCRIPTION_PROPERTY:  // description
         text = icalproperty_get_description(p);
-        incidence->setDescription(QString::fromLocal8Bit(text));
+        incidence->setDescription(from8Bit(text));
         break;
 
       case ICAL_SUMMARY_PROPERTY:  // summary
         text = icalproperty_get_summary(p);
-        incidence->setSummary(QString::fromLocal8Bit(text));
+        incidence->setSummary(from8Bit(text));
         break;
 
       case ICAL_LOCATION_PROPERTY:  // location
         text = icalproperty_get_location(p);
-        incidence->setLocation(QString::fromLocal8Bit(text));
+        incidence->setLocation(from8Bit(text));
         break;
 
 #if 0
@@ -1294,7 +1100,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_CATEGORIES_PROPERTY:  // categories
         text = icalproperty_get_categories(p);
-        categories.append(QString::fromLocal8Bit(text));
+        categories.append(from8Bit(text));
         break;
 
       case ICAL_RRULE_PROPERTY:
@@ -1321,10 +1127,10 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
       case ICAL_X_PROPERTY:
         if (strcmp(icalproperty_get_name(p),"X-PILOTID") == 0) {
           text = icalproperty_get_value_as_string(p);
-          incidence->setPilotId(QString::fromLocal8Bit(text).toInt());
+          incidence->setPilotId(from8Bit(text).toInt());
         } else if (strcmp(icalproperty_get_name(p),"X-PILOTSTAT") == 0) {
           text = icalproperty_get_value_as_string(p);
-          incidence->setSyncStatus(QString::fromLocal8Bit(text).toInt());
+          incidence->setSyncStatus(from8Bit(text).toInt());
         }
         break;
 
@@ -1528,222 +1334,6 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       kdDebug(5800) << "Unknown type of recurrence: " << r.freq << endl;
       break;
   }
-
-#if 0
-  // repeat stuff
-  if ((vo = isAPropertyOf(vevent, VCRRuleProp)) != 0) {
-    QString tmpStr = (s = fakeCString(vObjectUStringZValue(vo)));
-    deleteStr(s);
-    tmpStr.simplifyWhiteSpace();
-    tmpStr = tmpStr.upper();
-
-    /********************************* DAILY ******************************/
-    if (tmpStr.left(1) == "D") {
-      int index = tmpStr.find(' ');
-      int rFreq = tmpStr.mid(1, (index-1)).toInt();
-      index = tmpStr.findRev(' ') + 1; // advance to last field
-      if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->setRecursDaily(rFreq, rEndDate);
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0) // VEvents set this to 0 forever, we use -1
-          anEvent->setRecursDaily(rFreq, -1);
-        else
-          anEvent->setRecursDaily(rFreq, rDuration);
-      }
-    }
-    /********************************* WEEKLY ******************************/
-    else if (tmpStr.left(1) == "W") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(1, (index-1)).toInt();
-      index += 1; // advance to beginning of stuff after freq
-      QBitArray qba(7);
-      QString dayStr;
-      if( index == last ) {
-        // e.g. W1 #0
-        qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
-      }
-      else {
-        // e.g. W1 SU #0
-        while (index < last) {
-          dayStr = tmpStr.mid(index, 3);
-          int dayNum = numFromDay(dayStr);
-          qba.setBit(dayNum);
-          index += 3; // advance to next day, or possibly "#"
-        }
-      }
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->setRecursWeekly(rFreq, qba, rEndDate);
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->setRecursWeekly(rFreq, qba, -1);
-        else
-          anEvent->setRecursWeekly(rFreq, qba, rDuration);
-      }
-    }
-    /**************************** MONTHLY-BY-POS ***************************/
-    else if (tmpStr.left(2) == "MP") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(2, (index-1)).toInt();
-      index += 1; // advance to beginning of stuff after freq
-      QBitArray qba(7);
-      short tmpPos;
-      if( index == last ) {
-        // e.g. MP1 #0
-        tmpPos = anEvent->dtStart().date().day()/7 + 1;
-        if( tmpPos == 5 )
-          tmpPos = -1;
-        qba.setBit(anEvent->dtStart().date().dayOfWeek() - 1);
-        anEvent->addRecursMonthlyPos(tmpPos, qba);
-      }
-      else {
-        // e.g. MP1 1+ SU #0
-        while (index < last) {
-          tmpPos = tmpStr.mid(index,1).toShort();
-          index += 1;
-          if (tmpStr.mid(index,1) == "-")
-            // convert tmpPos to negative
-            tmpPos = 0 - tmpPos;
-          index += 2; // advance to day(s)
-          while (numFromDay(tmpStr.mid(index,3)) >= 0) {
-            int dayNum = numFromDay(tmpStr.mid(index,3));
-            qba.setBit(dayNum);
-            index += 3; // advance to next day, or possibly pos or "#"
-          }
-          anEvent->addRecursMonthlyPos(tmpPos, qba);
-          qba.detach();
-          qba.fill(FALSE); // clear out
-        } // while != "#"
-      }
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() -
-                                                    index))).date();
-        anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, rEndDate);
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, -1);
-        else
-          anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, rDuration);
-      }
-    }
-
-    /**************************** MONTHLY-BY-DAY ***************************/
-    else if (tmpStr.left(2) == "MD") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(2, (index-1)).toInt();
-      index += 1;
-      short tmpDay;
-      if( index == last ) {
-        // e.g. MD1 #0
-        tmpDay = anEvent->dtStart().date().day();
-        anEvent->addRecursMonthlyDay(tmpDay);
-      }
-      else {
-        // e.g. MD1 3 #0
-        while (index < last) {
-          int index2 = tmpStr.find(' ', index);
-          tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-          index = index2-1;
-          if (tmpStr.mid(index, 1) == "-")
-            tmpDay = 0 - tmpDay;
-          index += 2; // advance the index;
-          anEvent->addRecursMonthlyDay(tmpDay);
-        } // while != #
-      }
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, rEndDate);
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, -1);
-        else
-          anEvent->setRecursMonthly(Event::rMonthlyDay, rFreq, rDuration);
-      }
-    }
-
-    /*********************** YEARLY-BY-MONTH *******************************/
-    else if (tmpStr.left(2) == "YM") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(2, (index-1)).toInt();
-      index += 1;
-      short tmpMonth;
-      if( index == last ) {
-        // e.g. YM1 #0
-        tmpMonth = anEvent->dtStart().date().month();
-        anEvent->addRecursYearlyNum(tmpMonth);
-      }
-      else {
-        // e.g. YM1 3 #0
-        while (index < last) {
-          int index2 = tmpStr.find(' ', index);
-          tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
-          index = index2+1;
-          anEvent->addRecursYearlyNum(tmpMonth);
-        } // while != #
-      }
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, rEndDate);
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, -1);
-        else
-          anEvent->setRecursYearly(Event::rYearlyMonth, rFreq, rDuration);
-      }
-    }
-
-    /*********************** YEARLY-BY-DAY *********************************/
-    else if (tmpStr.left(2) == "YD") {
-      int index = tmpStr.find(' ');
-      int last = tmpStr.findRev(' ') + 1;
-      int rFreq = tmpStr.mid(2, (index-1)).toInt();
-      index += 1;
-      short tmpDay;
-      if( index == last ) {
-        // e.g. YD1 #0
-        tmpDay = anEvent->dtStart().date().dayOfYear();
-        anEvent->addRecursYearlyNum(tmpDay);
-      }
-      else {
-        // e.g. YD1 123 #0
-        while (index < last) {
-          int index2 = tmpStr.find(' ', index);
-          tmpDay = tmpStr.mid(index, (index2-index)).toShort();
-          index = index2+1;
-          anEvent->addRecursYearlyNum(tmpDay);
-        } // while != #
-      }
-      index = last; if (tmpStr.mid(index,1) == "#") index++;
-      if (tmpStr.find('T', index) != -1) {
-        QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
-        anEvent->setRecursYearly(Event::rYearlyDay, rFreq, rEndDate);
-      } else {
-        int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
-        if (rDuration == 0)
-          anEvent->setRecursYearly(Event::rYearlyDay, rFreq, -1);
-        else
-          anEvent->setRecursYearly(Event::rYearlyDay, rFreq, rDuration);
-      }
-    } else {
-      kdDebug(5800) << "we don't understand this type of recurrence!" << endl;
-    } // if
-  } // repeats
-#endif
 }
 
 void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
@@ -1795,17 +1385,17 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 
       // Only in DISPLAY and EMAIL and PROCEDURE alarms
       case ICAL_DESCRIPTION_PROPERTY:
-        ialarm->setText(icalproperty_get_description(p));
+        ialarm->setText(from8Bit(icalproperty_get_description(p)));
         break;
 
       // Only in EMAIL alarm
       case ICAL_SUMMARY_PROPERTY:
-        ialarm->setMailSubject(icalproperty_get_summary(p));
+        ialarm->setMailSubject(from8Bit(icalproperty_get_summary(p)));
         break;
 
       // Only in EMAIL alarm
       case ICAL_ATTENDEE_PROPERTY:
-        ialarm->setMailAddress(icalproperty_get_attendee(p));
+        ialarm->setMailAddress(from8Bit(icalproperty_get_attendee(p)));
         // TODO: multiple attendees can be specified
         break;
 
@@ -1876,7 +1466,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   t.is_utc = 0;
 
   if ( mParent->utc() ) {
-    t = icaltime_as_utc(t,mParent->timeZoneId().local8Bit());
+    t = icaltime_as_utc(t,mParent->timeZoneId().utf8());
   }
 
   return t;
@@ -1895,7 +1485,7 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
 
   if (t.is_utc) {
 //    kdDebug(5800) << "--- Converting time to zone '" << cal->timeZoneId() << "'." << endl;
-    t = icaltime_as_zone(t,mParent->timeZoneId().local8Bit());
+    t = icaltime_as_zone(t,mParent->timeZoneId().utf8());
   }
 
   return QDateTime(QDate(t.year,t.month,t.day),
@@ -1950,7 +1540,7 @@ icalcomponent *ICalFormatImpl::createCalendarComponent()
   icalproperty *p;
 
   // Product Identifier
-  p = icalproperty_new_prodid(CalFormat::productId().local8Bit().data());
+  p = icalproperty_new_prodid(CalFormat::productId().utf8());
   icalcomponent_add_property(calendar,p);
 
   // TODO: Add time zone
@@ -1989,7 +1579,6 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 #endif
 
   icalproperty *p;
-  const char *prodid;
 
   p = icalcomponent_get_first_property(calendar,ICAL_PRODID_PROPERTY);
   if (!p) {
@@ -2000,16 +1589,15 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     mLoadedProductId = "";
     mCalendarVersion = 0;
   } else {
-    prodid = icalproperty_get_prodid(p);
-    kdDebug(5800) << "VCALENDAR prodid: '" << prodid << "'" << endl;
-    mLoadedProductId = prodid;
-    mCalendarVersion = CalFormat::calendarVersion(prodid);
+    mLoadedProductId = from8Bit(icalproperty_get_prodid(p));
+    mCalendarVersion = CalFormat::calendarVersion(mLoadedProductId);
+    kdDebug(5800) << "VCALENDAR prodid: '" << mLoadedProductId << "'" << endl;
   }
 
 // TODO: check for unknown PRODID
 #if 0
-  if (!calVersion
-  &&  strcmp(CalFormat::productId().local8Bit(), prodid) != 0) {
+  if (!mCalendarVersion
+  &&  CalFormat::productId() != mLoadedProductId) {
     // warn the user that we might have trouble reading non-known calendar.
     if (mEnableDialogs)
       KMessageBox::information(mTopWidget,
@@ -2310,4 +1898,103 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
   }
 
   return message;
+}
+
+/*
+ * Convert an input string from UTF8 if it is in UTF8 format, else
+ * from local 8-bit encoding.
+ */
+QString ICalFormatImpl::from8Bit(const char *text)
+{
+  if (isUtf8(text))
+    return QString::fromUtf8(text);
+  else
+    return QString::fromLocal8Bit(text);
+}
+
+/*
+ * Determine whether a string is in UTF8 format or not.
+ * Copied from kdecore/kconfigbase.cpp.
+ */
+bool ICalFormatImpl::isUtf8(const char *buf)
+{
+  int i, n;
+  register char c;
+  bool gotone = false;
+
+#define F 0   /* character never appears in text */
+#define T 1   /* character appears in plain ASCII text */
+#define I 2   /* character appears in ISO-8859 text */
+#define X 3   /* character appears in non-ISO extended ASCII (Mac, IBM PC) */
+
+  static const char text_chars[256] = {
+  /*                  BEL BS HT LF    FF CR    */
+        F, F, F, F, F, F, F, T, T, T, T, F, T, T, F, F,  /* 0x0X */
+        /*                              ESC          */
+        F, F, F, F, F, F, F, F, F, F, F, T, F, F, F, F,  /* 0x1X */
+        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x2X */
+        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x3X */
+        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x4X */
+        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x5X */
+        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x6X */
+        T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, F,  /* 0x7X */
+        /*            NEL                            */
+        X, X, X, X, X, T, X, X, X, X, X, X, X, X, X, X,  /* 0x8X */
+        X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,  /* 0x9X */
+        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xaX */
+        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xbX */
+        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xcX */
+        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xdX */
+        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,  /* 0xeX */
+        I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I   /* 0xfX */
+  };
+
+  /* *ulen = 0; */
+  for (i = 0; (c = buf[i]); i++) {
+    if ((c & 0x80) == 0) {        /* 0xxxxxxx is plain ASCII */
+      /*
+       * Even if the whole file is valid UTF-8 sequences,
+       * still reject it if it uses weird control characters.
+       */
+
+      if (text_chars[c] != T)
+        return false;
+
+    } else if ((c & 0x40) == 0) { /* 10xxxxxx never 1st byte */
+      return false;
+    } else {                           /* 11xxxxxx begins UTF-8 */
+      int following;
+
+      if ((c & 0x20) == 0) {             /* 110xxxxx */
+        following = 1;
+      } else if ((c & 0x10) == 0) {      /* 1110xxxx */
+        following = 2;
+      } else if ((c & 0x08) == 0) {      /* 11110xxx */
+        following = 3;
+      } else if ((c & 0x04) == 0) {      /* 111110xx */
+        following = 4;
+      } else if ((c & 0x02) == 0) {      /* 1111110x */
+        following = 5;
+      } else
+        return false;
+
+      for (n = 0; n < following; n++) {
+        i++;
+        if (!(c = buf[i]))
+          goto done;
+
+        if ((c & 0x80) == 0 || (c & 0x40))
+          return false;
+      }
+      gotone = true;
+    }
+  }
+done:
+  return gotone;   /* don't claim it's UTF-8 if it's all 7-bit */
+
+#undef F
+#undef T
+#undef I
+#undef X
+
 }
