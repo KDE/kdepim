@@ -50,6 +50,7 @@ static const char *kpilotlink_id = "$Id$";
 #include <qdatetime.h>
 #include <qsocketnotifier.h>
 #include <qthread.h>
+#include <qtextcodec.h>
 
 #include <kconfig.h>
 #include <kmessagebox.h>
@@ -58,6 +59,7 @@ static const char *kpilotlink_id = "$Id$";
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
 #include "pilotCard.h"
+#include "pilotAppCategory.h"
 
 #include "kpilotlink.moc"
 
@@ -832,7 +834,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
 #endif
 
 	dlp_AddSyncLogEntry(fCurrentPilotSocket,
-		const_cast < char *>(t.latin1()));
+		const_cast<char *>((const char *)PilotAppCategory::codec()->fromUnicode(entry)));
 	if (log)
 	{
 		emit logMessage(entry);
