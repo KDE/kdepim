@@ -1,3 +1,51 @@
+KPilot Developer's notes for november 18th 2001
+===============================================
+
+Kudos to Marko Hollomon for spotting a pointer error in the KPilot daemon
+and fixing it. The patch changes pilotDaemon.{h,cc}.
+
+Thanks too to Palle Girgensohn, who made an icon for the internal memo-
+viewer and the KNotes conduit. This looks really neat in the new IconView
+mode of the main KJanusWidget.
+
+Shuffling the DCOP interfaces and cleaning up the UI, by [ade]:
+
+* logWidget.{h,cc}
+  Made the splash more like a splash, removed some ugliness, moved the
+  progress bar into the SyncLog widget. 
+* kpilotDCOP.h
+  Removed the spurious filesChanged() call -- use KDirWatcher instead.
+* kpilot.{h,cc}
+  Removed the inheritance from kpilotDCOP.h, moved the DCOP interface to
+  LogWidget. Removed the status bar, since it's all in the LogWidget anyway.
+* pilotDaemon.cc
+  Renamed KPilotDCOP interface, removed filesChanged DCOP signal.
+* Makefile.am
+  Now logWidget requires kpilotDCOP, so moved that.
+
+Now that conduits are .so's, the conduitConfigDialog needs to have some
+strings changed to reflect that they're not executed anymore [ade].
+
+* conduitConfigDialog.{h,cc}
+  Added a warnNoLibrary function, moved warnings to Qt richtext.
+
+The FileInstallerWidget has some lousy strings with \n, and it needs 
+a KDirWatcher [ade].
+
+* fileInstallWidget.{h,cc}
+  Changed the i18n strings to remove \n's. The Watcher remains a TODO.
+
+Attacked the expense conduit, finally. Maybe *this* one won't run aground on
+things like fundamental API changes in the stuff it syncs against.
+
+* Makefile.am
+  Removed spurious LIBPISOCK_PATH, moved files around a little.
+* setupDialog.{h,cc}
+  Ported to UIDialog classes, layout fixups. This is the one conduit that
+  still uses hard-coded layouts. It's possible, see? This isn't really the
+  way to go, I'd much rather have David B. make dialogs with Qt designer.
+  Added a break; in ExpenseDBPage::slotPolicyChanged() to avoid warnings.
+
 KPilot Developer's notes for november 11th 2001
 ===============================================
 
