@@ -374,6 +374,7 @@ void KFolderTree::addUnreadColumn( const QString & name, int width )
 {
   mUnreadIndex = addColumn( name, width );
   setColumnAlignment( mUnreadIndex, qApp->reverseLayout() ? Qt::AlignLeft : Qt::AlignRight );
+  header()->adjustHeaderSize();
 }
 
 //-----------------------------------------------------------------------------
@@ -381,6 +382,7 @@ void KFolderTree::addTotalColumn( const QString & name, int width )
 {
   mTotalIndex = addColumn( name, width );
   setColumnAlignment( mTotalIndex, qApp->reverseLayout() ? Qt::AlignLeft : Qt::AlignRight );
+  header()->adjustHeaderSize();
 }
 
 //-----------------------------------------------------------------------------
@@ -391,7 +393,6 @@ void KFolderTree::removeUnreadColumn()
   if ( isTotalActive() && mTotalIndex > mUnreadIndex )
     mTotalIndex--;
   mUnreadIndex = -1;
-  header()->adjustHeaderSize();
 }
 
 //-----------------------------------------------------------------------------
