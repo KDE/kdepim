@@ -43,7 +43,7 @@ static const char* VERSION="0.0.1";
 main(int argc, char ** argv)
 {
     KAboutData aboutData( "empath", I18N_NOOP("Empath"),
-        VERSION, description, KAboutData::License_GPL,
+        VERSION, description, KAboutData::GPL,
         "(c) 1999-2000, The Empath Team");
     aboutData.addAuthor("Rik Hemsley",0, "rik@kde.org");
     aboutData.addAuthor("Wilco Greven",0, "j.w.greven@student.utwente.nl");
