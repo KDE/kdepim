@@ -41,7 +41,7 @@
 
 
 ConduitConfig::ConduitConfig(QWidget *parent=0L,
-	const char *name=0L,
+	const char *name,
 	const QStringList &args) : 
 	UIDialog(parent,name,PluginUtility::isModal(args)),
 	fConfig(0L)
@@ -56,7 +56,7 @@ ConduitConfig::ConduitConfig(QWidget *parent=0L,
 }
 
 ConduitAction::ConduitAction(KPilotDeviceLink *p,
-	const char *name=0L,
+	const char *name,
 	const QStringList &args) :
 	SyncAction(p,name),
 	fConfig(0L),
@@ -110,6 +110,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.3  2001/12/28 12:55:24  adridg
+// Fixed email addresses; added isBackup() to interface
+//
 // Revision 1.2  2001/10/17 08:46:08  adridg
 // Minor cleanups
 //

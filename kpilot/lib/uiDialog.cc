@@ -172,7 +172,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 		QValueList<KAboutPerson>::ConstIterator i;
 		s = i18n("<qt><b>Authors:</b> ");
 
-		int count=1;
+		unsigned int count=1;
 		for (i=l.begin(); i!=l.end(); ++i)
 		{
 			s.append(QString("%1 (<i>%2</i>)%3")
@@ -285,6 +285,9 @@ void UIDialog::setTabWidget(QTabWidget * w)
 }
 
 // $Log$
+// Revision 1.4  2001/11/11 22:10:02  adridg
+// Added validate()
+//
 // Revision 1.3  2001/10/19 08:48:30  adridg
 // Build fixes for qt3 and stupid typos
 //
