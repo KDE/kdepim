@@ -27,7 +27,7 @@ abbrowser_conduit_LDFLAGS = $(all_libraries) \
 abbrowser_conduit_LDADD   =  ../../kpilot/pilotAddress.o \
 	$(top_srcdir)/abbrowser/contactentry.o \
 	$(top_srcdir)/abbrowser/contactentry.moc.o \
-	-lconduit \
+	-lconduit -lpilotdb \
 	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
 	@LIBSOCKET@ -lpisock
 

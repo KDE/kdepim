@@ -19,7 +19,8 @@ popmail_conduit_LDFLAGS = $(all_libraries) \
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-popmail_conduit_LDADD   =  -lconduit \
+popmail_conduit_LDADD   =  \
+	-lconduit -lpilotdb \
 	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
 	@LIBSOCKET@ $(LIBPISOCK)
 

@@ -1,6 +1,7 @@
 INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH) \
 	-I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot
 METASOURCES = AUTO
+# KDE_OPTIONS = nofinal
 
 servicedir = $(kde_servicesdir)
 service_DATA = null-conduit.desktop
@@ -21,9 +22,10 @@ null_conduit_LDFLAGS = $(all_libraries) \
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-null_conduit_LDADD   =  -lconduit \
+null_conduit_LDADD   =  \
+	-lconduit -lpilotdb \
 	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
-	@LIBSOCKET@ -lpisock
+	@LIBSOCKET@ -lpisock -lconduit
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = null-conduit.h setupDialog.h
