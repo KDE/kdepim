@@ -28,7 +28,6 @@
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
 
-#include "konsolekalendar.h"
 #include "konsolekalendaradd.h"
 
 using namespace KCal;

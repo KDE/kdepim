@@ -51,39 +51,171 @@ class KonsoleKalendarVariables
     KonsoleKalendarVariables();
     ~KonsoleKalendarVariables();
 
+    /**
+     * Sets start date
+     * @param start start date
+     */
     void setStartDateTime( QDateTime start );
+
+    /**
+     * Get start date
+     * @return start date
+     */
     QDateTime getStartDateTime();
+
+    /**
+     * Is there start date?
+     * @return true if there is false is there isn't
+     */
     bool isStartDateTime();
 
+    /**
+     * Sets end date
+     * @param end enddate
+     */
     void setEndDateTime( QDateTime end );
+
+    /**
+     * Get end date
+     * @return end date
+     */
     QDateTime getEndDateTime();
+
+    /**
+     * Is there end date?
+     * @return true if there is false is there isn't
+     */
     bool isEndDateTime();
 
+    /**
+     * Sets the timezone from the user or system environment
+     */
+    void setTimeZoneId();
+    
+    /**
+     * Get timezone id string
+     * @return timezone id string
+     */
+    QString getTimeZoneId();
+
+    /**
+     * Is there a timezone set?
+     * @return true if there is false if there isn't
+     */
+     bool isTimeZoneId();
+
+    /**
+     * Sets the UID, the unique tag for VCard entry
+     * @param uid unique tag for VCard entry
+     */
     void setUID( QString uid );
+
+    /**
+     * Get UID, the unique tag for VCard entry
+     * @return UID number
+     */
     QString getUID();
+
+    /**
+     * Is there UID set?
+     * @return true there is UID false there isn't
+     */
     bool isUID();
 
+    /**
+     * Show only next activity and exit
+     * @param next true or false
+     */
     void setNext( bool next );
+
+    /**
+     * Should we show only next activity and exit?
+     * @param next true or false
+     */
     bool isNext();
 
+    /**
+     * Should program be more verbose?
+     * @param be verbose true or false
+     */
     void setVerbose( bool verbose );
+
+    /**
+     * Should program be more verbose?
+     * @return true it should and false it shoulndn't
+     */
     bool isVerbose();
 
+    /**
+     * Should we only try to run it and do nothing?
+     * @param dryrun false no and true just test it.
+     */
     void setDryRun( bool dryrun );
+
+    /**
+     * Is this program only in testing mode?
+     * @return true yes false no
+     */
     bool isDryRun();
 
+    /**
+    * Set calendar file (Kinda obsolete!)
+    * @param calendar Calendar files full path
+    */
     void setCalendarFile( QString calendar );
+
+    /**
+     * Returns fullpath to calendar file
+     * @return calendar file
+     */
     QString getCalendarFile();
 
+    /**
+    * Set file to import active calendar
+    * @param calendar Calendar file to import
+    */
     void setImportFile( QString calendar );
+
+    /**
+     * Return import filename
+     * @return File that should be imported
+     */
     QString getImportFile();
 
+    /**
+     * Add description
+     * @param description to happening
+     */
     void setDescription( QString description );
+
+    /**
+     * return description
+     * @return description of happening
+     */
     QString getDescription();
+
+    /**
+     * is there even a description?
+     * @return true is there is description false there isn't
+     */
     bool isDescription();
 
+    /**
+     * Add summary
+     * @param summary summary
+     */
     void setSummary( QString description );
+
+    /**
+     * Get summary
+     * @return summary
+     */
     QString getSummary();
+
+    /**
+     * Is there even a summary
+     * @return true there is false there isn't
+     */
     bool isSummary();
 
     void setAll( bool all );
@@ -176,19 +308,23 @@ class KonsoleKalendarVariables
   CalendarResources *getCalendarResources();
 
    
-  /*
+  /**
    * Loads calendar resources 
    */
   bool loadCalendarResources( KConfig *config ); 
-   
-   
+
+  void setDaysCount( int count );
+  int getDaysCount();
+  bool isDaysCount();
+
+
   private:
    int findNumber( const QString &str, int &pos, int &startpos );
    char findSeparator( const QString &str, int &pos, int &seppos );
    void skipWhiteSpace( const QString &str, int &pos );
 
-   bool m_bIsUID;
-   QString m_UID;
+   bool m_bIsTimeZoneId;
+   QString m_TimeZoneId;
    QDateTime m_startDateTime;
    QDateTime m_endDateTime;
    bool m_bIsStartDateTime;
@@ -198,6 +334,7 @@ class KonsoleKalendarVariables
    QString m_description;
    QString m_summary;
    QString m_export_file;
+   QString m_UID;
    bool m_bSummary;
    bool m_bNext;
    bool m_bVerbose;
@@ -205,8 +342,11 @@ class KonsoleKalendarVariables
    bool m_bAll;
    bool m_bDescription;
    bool m_bFloating;
+   bool m_bDaysCount;
+   bool m_bIsUID;
    int str_length;
    int m_export_type;
+   int m_daysCount;
    QString m_exportFile;
    bool m_bIsExportFile;
    bool m_bIsDefault;

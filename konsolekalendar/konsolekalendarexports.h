@@ -37,8 +37,8 @@ public:
    */
    
 
-  bool exportAsTxt( QTextStream *ts, Event *event );
-  bool exportAsCSV( QTextStream *ts, Event *event );
+  bool exportAsTxt( QTextStream *ts, Event *event, QDate date );
+  bool exportAsCSV( QTextStream *ts, Event *event, QDate date );
    
 
 private:

@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <stdio.h>
-
+#include <unistd.h>
 
 
 
@@ -42,6 +42,8 @@ using namespace std;
 
 KonsoleKalendarVariables::KonsoleKalendarVariables()
 {
+  m_TimeZoneId = "";
+  m_bIsTimeZoneId = false;
   m_bIsUID = false;
   m_bIsStartDateTime = false;
   m_bIsEndDateTime = false;
@@ -57,6 +59,36 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bIsExportFile = false;
   m_bIsDefault = false;
   m_bIsCalendarResources = false;
+}
+
+//The following function is taken from korganizer's KOPrefs::setTimeZoneIdDefault()
+void KonsoleKalendarVariables::setTimeZoneId()
+{
+  QString zone;
+
+  char zonefilebuf[100];
+  int len = readlink("/etc/localtime",zonefilebuf,100);
+  if (len > 0 && len < 100) {
+    zonefilebuf[len] = '\0';
+    zone = zonefilebuf;
+    zone = zone.mid(zone.find("zoneinfo/") + 9);
+  } else {
+    tzset();
+    zone = tzname[0];
+  }
+
+  m_bIsTimeZoneId = true;
+  m_TimeZoneId = zone;
+}
+
+QString KonsoleKalendarVariables::getTimeZoneId()
+{
+  return m_TimeZoneId;
+}
+
+bool KonsoleKalendarVariables::isTimeZoneId()
+{
+  return m_bIsTimeZoneId;
 }
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
@@ -277,6 +309,19 @@ void KonsoleKalendarVariables::setFloating(bool floating)
 bool KonsoleKalendarVariables::getFloating()
 {
   return m_bFloating;
+}
+
+void KonsoleKalendarVariables::setDaysCount( int count ){
+  m_daysCount = count;
+  m_bDaysCount = true;
+}
+
+int KonsoleKalendarVariables::getDaysCount(){
+  return m_daysCount;
+}
+
+bool KonsoleKalendarVariables::isDaysCount(){
+  return m_bDaysCount;
 }
 
 bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource )
