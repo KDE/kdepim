@@ -59,7 +59,7 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "0.9.8";
+static const char progVersion[] = "0.9.9";
 static const char description[] = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
@@ -68,6 +68,7 @@ static KCmdLineOptions options[] =
   { "verbose", I18N_NOOP("Print helpful runtime messages"), 0 },
   { "dry-run", I18N_NOOP("Print what would have been done, but do not execute"), 0 },
   { "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use"), 0 },
+  { "make-default", I18N_NOOP("Make calendar file as default resource (You should know what you are doing!)"), 0 },
 
   { ":", I18N_NOOP(" Major operation modes:"), 0 },
   { "view", I18N_NOOP("  Print calendar events in specified export format"), 0 },
@@ -235,6 +236,16 @@ int main(int argc, char *argv[])
     kdDebug() << "main | parse options | Mode: (Print events)" << endl;
   }
 
+  /*
+   *   Makes calendar as default resource
+   *
+   */
+  if ( args->isSet("make-default") ) {
+     variables.setDefault( true );
+     kdDebug() << "main | parse options | Set calendar as default (needs --file to work)" << endl;
+  }
+	
+	
   /*
    *  Switch on Add (Insert Entry)
    *
@@ -486,7 +497,7 @@ int main(int argc, char *argv[])
   if ( args->isSet("file") ) {
     defaultResource = new ResourceLocal( option );
     
-    defaultResource->setResourceName( i18n("Default KOrganizer resource") );
+    defaultResource->setResourceName( option );
     variables.addCalendarResources( defaultResource );
     
     kdDebug() << "main | parse options | using calendar at: (" << variables.getCalendarFile() << ")" << endl;

@@ -55,6 +55,7 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bFloating = true;
   m_export_type = TEXT_KONSOLEKALENDAR;
   m_bIsExportFile = false;
+  m_bIsDefault = false;
 }
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
@@ -224,6 +225,17 @@ bool KonsoleKalendarVariables::getAll()
   return m_bAll;
 }
 
+void KonsoleKalendarVariables::setDefault( bool def )
+{
+ m_bIsDefault = def;	
+}
+
+
+bool KonsoleKalendarVariables::isDefault()
+{
+  return m_bIsDefault;
+}
+
 void KonsoleKalendarVariables::setDescription(QString description)
 {
   m_bDescription = true;
@@ -271,14 +283,31 @@ bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource 
  if ( m_resource ) {
    // In current state we support only one calendar
    // that's a fact and we have to live with that!
-   CalendarResourceManager *manager = m_resource->resourceManager();	    
-   QStringList list = manager->resourceTypeNames();
+   kdDebug() << "konsoleKalendarvariables.cpp::addCalendarResources() | Add to calendar resource!" << endl;
+
+   CalendarResourceManager::ActiveIterator it;
+   CalendarResourceManager *manager = getCalendarResourceManager();
+   QString fileName = NULL;
 	 
-   kdDebug() << "Add to calendar resource!" << endl;
-   
+   for ( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+       kdDebug() << "Resource name: " + (*it)->resourceName() << endl;
+       
+       if( !strcmp( (*it)->resourceName().local8Bit(), getCalendarFile().local8Bit() ) ){   
+	kdDebug() << "konsoleKalendarvariables.cpp::addCalendarResources() | We allready have this resource" << endl;	       
+        return true;
+       }
+
+   }
+	 
    manager->add( resource );
+ 
+   if( isDefault() ) {
+    kdDebug() << "konsoleKalendarvariables.cpp::addCalendarResources() | Make it default" << endl;	   
+    manager->setStandardResource( resource );
+   }
+ 
  } else {
-  kdDebug() << "Cannot add to calendar resources (Not created!)" << endl;
+  kdDebug() << "konsoleKalendarvariables.cpp::addCalendarResources() | Cannot add to calendar resources (Not created!)" << endl;
   return false;
  }
 
@@ -304,14 +333,14 @@ CalendarResourceManager *KonsoleKalendarVariables::getCalendarResourceManager( )
 
 bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
 {
-	kdDebug() << "loading resources" << endl;  
+
 	if ( m_resource ) {
 
-	      kdDebug() << "loading resources" << endl;
+	      kdDebug() << "konsoleKalendarvariables.cpp::loadCalendarResources() | loading resources" << endl;
 		  
 		  CalendarResourceManager *manager = m_resource->resourceManager();
 		  
-		      if ( manager->isEmpty() ) {
+		      if ( manager->isEmpty() == true ) {
 			      
 			            config->setGroup("General");
 			            QString fileName = config->readPathEntry( "Active Calendar" );
@@ -324,7 +353,7 @@ bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
 					            resourceName = i18n("Active Calendar");
 				    }
 			      
-			            kdDebug() << "Using as default resource: '" << fileName << "'" << endl;
+			            kdDebug() << "konsoleKalendarvariables.cpp::loadCalendarResources() | Using as default resource: '" << fileName << "'" << endl;
 			      
 			      ResourceCalendar *defaultResource = new ResourceLocal( fileName );
 			      //defaultResource->setTimeZoneId);

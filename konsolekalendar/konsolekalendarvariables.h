@@ -96,7 +96,19 @@ class KonsoleKalendarVariables
     QDate parseDate( QString string );
     QTime parseTime( QString str );
 
-    /**
+   /**
+    * Set is calendar default resource
+    */ 
+
+   void setDefault( bool def );
+   
+   
+   /**
+    * Return if calendar is default resource 
+    */
+   bool isDefault();
+   
+   /**
      * Set calendar file for global use
      */
 
@@ -192,6 +204,7 @@ class KonsoleKalendarVariables
    int m_export_type;
    QString m_exportFile;
    bool m_bIsExportFile;
+   bool m_bIsDefault;
    // New resource stuff will over-ride old pne
    CalendarResources *m_resource;
    // We can use this from everywhere
