@@ -19,3 +19,14 @@ utf8_entities.diff:
 
   gSoap encodes utf8 characters as XML entities, but the server doesn't seem to
   be able to decode them. This patch makes gSoap send unencoded utf8 characters.
+
+type_typo.diff
+
+  Some intermediate versions of GroupWise have a typo in the protocol. This
+  patch works around it.
+
+socklen.diff:
+
+  Adriaan de Groot <groot@kde.org>: The attached patch is needed for me to get
+  kresources/groupwise/soap/stdsoap2.cpp to build -- it's the pretty usual
+  socklen_t type mixups (that are only serious on 64-bitters).
