@@ -75,6 +75,8 @@ protected:
   /** If only one of these is writable, return that. Otherwise return null. */
   QString findWritableResource( const QMap<QString, bool>& resources,
                                 const QString& type );
+  QString findWritableResource( const QStringList& resources,
+                                const QString& type );
 
   bool mSilent;
 

@@ -108,15 +108,23 @@ QString ResourceIMAPShared::findWritableResource( const QMap<QString, bool>& res
   QStringList possible;
   QMap<QString, bool>::ConstIterator it;
   for ( it = resources.begin(); it != resources.end(); ++it )
-    if ( it.data() ) {
-      // Ask KMail if this one is writable
-      if ( !kmailIsWritableFolder( type, it.key() ) )
-        // It wasn't
-        continue;
-
+    if ( it.data() )
       // Writable possibility
       possible << it.key();
-    }
+  return findWritableResource( possible, type );
+}
+
+QString ResourceIMAPShared::findWritableResource( const QStringList& resources,
+                                                  const QString& type )
+{
+  QStringList possible;
+  QStringList::ConstIterator it;
+  for ( it = resources.begin(); it != resources.end(); ++it ) {
+    // Ask KMail if this one is writable
+    if ( kmailIsWritableFolder( type, *it ) )
+      // Writable possibility
+      possible << *it;
+  }
 
   if ( possible.isEmpty() )
     // None found!!
