@@ -72,9 +72,8 @@ bool pab::convert(adr_t A,content_t ,content_t )
 {
 adr_t table;
 content_t start,stop,T;
-int N,n;
+int n, N = 0;
 
-   N=0;
    go(A);
    T=read();
 
