@@ -71,6 +71,7 @@
 #include <kio/passdlg.h>
 #include <klocale.h>
 #include <kmimetype.h>
+#include <kmdcodec.h>
 
 #define IMAP_PROTOCOL "newimap"
 #define IMAP_SSL_PROTOCOL "newimaps"
@@ -139,7 +140,7 @@ IMAP4Protocol::IMAP4Protocol (const QCString & pool, const QCString & app, bool 
   relayEnabled = false;
   readBufferLen = 0;
   cacheOutput = false;
-  findMimeType = false;
+  decodeContent = false;
   mTimeOfLastNoop = QDateTime();
   mHierarchyDelim.clear();
 }
@@ -155,13 +156,13 @@ IMAP4Protocol::get (const KURL & _url)
 {
   if (!makeLogin()) return;
   kdDebug(7116) << "IMAP4::get -  " << _url.prettyURL() << endl;
-  QString aBox, aSequence, aType, aSection, aValidity, aDelimiter;
+  QString aBox, aSequence, aType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aEnum =
-    parseURL (_url, aBox, aSection, aType, aSequence, aValidity, aDelimiter);
+    parseURL (_url, aBox, aSection, aType, aSequence, aValidity, aDelimiter, aInfo);
   if (aEnum != ITYPE_ATTACH)
     mimeType (getMimeType(aEnum));
-  else
-    findMimeType = true;
+  if (aInfo == "DECODE")
+    decodeContent = true;
 
   if (aSequence == "0:0" && getState() == ISTATE_SELECT)
   {
@@ -209,10 +210,10 @@ IMAP4Protocol::get (const KURL & _url)
     }
     else if (aUpper.find ("BODY.PEEK[") != -1)
     {
-      if (aUpper.find ("BODY.PEEK[]") != -1 &&
-          !hasCapability("IMAP4rev1")) {
-        // imap4 does not know BODY.PEEK[]
-        aSection.replace("BODY.PEEK[]", "RFC822.PEEK");
+      if (aUpper.find ("BODY.PEEK[]") != -1)
+      {
+        if (!hasCapability("IMAP4rev1")) // imap4 does not know BODY.PEEK[]
+          aSection.replace("BODY.PEEK[]", "RFC822.PEEK");
       }
       aSection.prepend("UID RFC822.SIZE INTERNALDATE FLAGS ");
     }
@@ -264,13 +265,37 @@ IMAP4Protocol::get (const KURL & _url)
       outputLine ("\r\n", 2);
     }
 
-    if (aEnum == ITYPE_MSG || aEnum == ITYPE_ATTACH)
-      relayEnabled = true;
+    if (aEnum == ITYPE_MSG || (aEnum == ITYPE_ATTACH && !decodeContent))
+      relayEnabled = true; // normal mode, relay data
 
     if (aSequence != "0:0")
     {
       if (getLastHandled())
         getLastHandled()->clear();
+
+      QString contentEncoding;
+      if (aEnum == ITYPE_ATTACH && decodeContent)
+      {
+        // get the MIME header and fill getLastHandled()
+        QString mySection = aSection;
+        mySection.replace("]", ".MIME]");
+        cmd = sendCommand (imapCommand::clientFetch (aSequence, mySection));
+        do
+        {
+          while (!parseLoop ());
+        }
+        while (!cmd->isComplete ());
+        completeQueue.removeRef (cmd);
+        // get the content encoding now because getLastHandled will be cleared
+        if (getLastHandled() && getLastHandled()->getHeader())
+          contentEncoding = getLastHandled()->getHeader()->getEncoding();
+
+        // from here on collect the data
+        // it is send to the client in flushOutput in one go
+        // needed to decode the content
+        cacheOutput = true;
+      }
+
       cmd = sendCommand (imapCommand::clientFetch (aSequence, aSection));
       int res;
       aUpper = aSection.upper();
@@ -310,9 +335,10 @@ IMAP4Protocol::get (const KURL & _url)
                 outputLineStr ("X-Flags: " +
                                QString::number(cache->getFlags ()) + "\r\n");
             } else cacheOutput = true;
-            if( lastone ) lastone->outputPart (*this);
+            if ( lastone && !decodeContent ) 
+              lastone->outputPart (*this);
             cacheOutput = false;
-            flushOutput();
+            flushOutput(contentEncoding);
           }
         }
       }
@@ -332,6 +358,7 @@ IMAP4Protocol::get (const KURL & _url)
 
   finished ();
   relayEnabled = false;
+  cacheOutput = false;
   kdDebug(7116) << "IMAP4::get -  finished" << endl;
 }
 
@@ -349,11 +376,11 @@ IMAP4Protocol::listDir (const KURL & _url)
     return;
   }
 
-  QString myBox, mySequence, myLType, mySection, myValidity, myDelimiter;
+  QString myBox, mySequence, myLType, mySection, myValidity, myDelimiter, myInfo;
   // parseURL with caching
   enum IMAP_TYPE myType =
     parseURL (_url, myBox, mySection, myLType, mySequence, myValidity,
-      myDelimiter, true);
+      myDelimiter, myInfo, true);
 
   if (!makeLogin()) return;
 
@@ -569,17 +596,19 @@ IMAP4Protocol::setHost (const QString & _host, int _port,
 void
 IMAP4Protocol::parseRelay (const QByteArray & buffer)
 {
-  if (findMimeType) {
-    // try to find the mimetype
-    QString mimetype = KMimeType::findByContent( buffer )->name();
-    kdDebug(7116) << "IMAP4::parseRelay - mimeType " << mimetype << endl;
-    mimeType(mimetype);
-    findMimeType = false;
-  }
-  if (relayEnabled)  {
+  if (relayEnabled) {
+    // relay data immediately
     data( buffer );
     mProcessedSize += buffer.size();
     processedSize( mProcessedSize );
+  } else if (cacheOutput)
+  {
+    // collect data
+    outputBuffer.open(IO_WriteOnly);
+    outputBuffer.at(outputBufferIndex);
+    outputBuffer.writeBlock(buffer, buffer.size());
+    outputBufferIndex += buffer.size();
+    outputBuffer.close();
   }
 }
 
@@ -692,9 +721,9 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
 {
   kdDebug(7116) << "IMAP4::put - " << _url.prettyURL() << endl;
 //  KIO::TCPSlaveBase::put(_url,permissions,overwrite,resume);
-  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter;
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aType =
-    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
 
   // see if it is a box
   if (aType != ITYPE_BOX && aType != ITYPE_DIR_AND_BOX)
@@ -819,10 +848,8 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
     parentUrl.setPath(path.left(slash) + ";TYPE=LIST");
     newBox = path.mid(slash + 1);
   }
-  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter;
-  parseURL(parentUrl, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
-/*  if (aBox[aBox.length () - 1] != '/')
-    aBox += "/"; */
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+  parseURL(parentUrl, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
   newBox = (newBox.isEmpty()) ? aBox : aBox + aDelimiter + newBox;
   imapCommand *cmd = doCommand (imapCommand::clientCreate(newBox));
 
@@ -835,7 +862,7 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
   completeQueue.removeRef (cmd);
 
   enum IMAP_TYPE type =
-    parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
+    parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
   if (type == ITYPE_BOX)
   {
     if (messageBox(QuestionYesNo,
@@ -865,12 +892,12 @@ void
 IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
 {
   kdDebug(7116) << "IMAP4::copy - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyURL() << " -> " << dest.prettyURL() << endl;
-  QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter;
-  QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter;
+  QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
+  QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
-    parseURL (src, sBox, sSection, sLType, sSequence, sValidity, sDelimiter);
+    parseURL (src, sBox, sSection, sLType, sSequence, sValidity, sDelimiter, sInfo);
   enum IMAP_TYPE dType =
-    parseURL (dest, dBox, dSection, dLType, dSequence, dValidity, dDelimiter);
+    parseURL (dest, dBox, dSection, dLType, dSequence, dValidity, dDelimiter, dInfo);
 
   // see if we have to create anything
   if (dType != ITYPE_BOX && dType != ITYPE_DIR_AND_BOX)
@@ -888,7 +915,7 @@ IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
       testDir.setPath ("/" + topDir);
       dType =
         parseURL (testDir, topDir, dSection, dLType, dSequence, dValidity,
-          dDelimiter);
+          dDelimiter, dInfo);
 
       kdDebug(7116) << "IMAP4::copy - checking this destination " << topDir << endl;
       // see if this is what the user wants
@@ -906,7 +933,7 @@ IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
         kdDebug(7116) << "IMAP4::copy - checking this destination " << topDir << endl;
         dType =
           parseURL (testDir, topDir, dSection, dLType, dSequence, dValidity,
-            dDelimiter);
+            dDelimiter, dInfo);
         if (dType != ITYPE_BOX && dType != ITYPE_DIR_AND_BOX)
         {
           // ok then we'll create a mailbox
@@ -971,9 +998,9 @@ void
 IMAP4Protocol::del (const KURL & _url, bool isFile)
 {
   kdDebug(7116) << "IMAP4::del - [" << (isFile ? "File" : "NoFile") << "] " << _url.prettyURL() << endl;
-  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter;
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aType =
-    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
 
   switch (aType)
   {
@@ -1127,8 +1154,8 @@ IMAP4Protocol::special (const QByteArray & aData)
     // unsubscribe
     KURL _url;
     stream >> _url;
-    QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter;
-    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
+    QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
     imapCommand *cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
     if (cmd->result () != "OK")
     {
@@ -1147,8 +1174,8 @@ IMAP4Protocol::special (const QByteArray & aData)
     // subscribe
     KURL _url;
     stream >> _url;
-    QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter;
-    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
+    QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
     imapCommand *cmd = doCommand(imapCommand::clientSubscribe(aBox));
     if (cmd->result () != "OK")
     {
@@ -1180,8 +1207,8 @@ IMAP4Protocol::special (const QByteArray & aData)
     QCString newFlags;
     stream >> _url >> newFlags;
 
-    QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter;
-    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
+    QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
     if (!assureBox(aBox, false)) return;
     imapCommand *cmd = doCommand (imapCommand::
                                   clientStore (aSequence, "-FLAGS.SILENT",
@@ -1220,8 +1247,8 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
   // All commands start with the URL to the box
   KURL _url;
   stream >> _url;
-  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter;
-  parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+  parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
 
   switch( command ) {
   case 'S': // SETACL
@@ -1314,12 +1341,12 @@ void
 IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
 {
   kdDebug(7116) << "IMAP4::rename - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyURL() << " -> " << dest.prettyURL() << endl;
-  QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter;
-  QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter;
+  QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
+  QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
-    parseURL (src, sBox, sSection, sLType, sSequence, sValidity, sDelimiter);
+    parseURL (src, sBox, sSection, sLType, sSequence, sValidity, sDelimiter, sInfo);
   enum IMAP_TYPE dType =
-    parseURL (dest, dBox, dSection, dLType, dSequence, dValidity, dDelimiter);
+    parseURL (dest, dBox, dSection, dLType, dSequence, dValidity, dDelimiter, dInfo);
 
   if (dType == ITYPE_UNKNOWN)
   {
@@ -1370,9 +1397,9 @@ void
 IMAP4Protocol::stat (const KURL & _url)
 {
   kdDebug(7116) << "IMAP4::stat - " << _url.prettyURL() << endl;
-  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter;
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aType =
-    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
 
   UDSEntry entry;
   UDSAtom atom;
@@ -1718,7 +1745,7 @@ IMAP4Protocol::getMimeType (enum IMAP_TYPE aType)
     return "message/rfc822";
     break;
 
-  // this should be handled by parseRelay
+  // this should be handled by flushOutput
   case ITYPE_ATTACH:
     return "application/octet-stream";
     break;
@@ -1909,13 +1936,13 @@ enum IMAP_TYPE
 IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
                          QString & _section, QString & _type, QString & _uid,
                          QString & _validity, QString & _hierarchyDelimiter,
-                         bool cache)
+                         QString & _info, bool cache)
 {
   enum IMAP_TYPE retVal;
   retVal = ITYPE_UNKNOWN;
   _hierarchyDelimiter = QString();
 
-  imapParser::parseURL (_url, _box, _section, _type, _uid, _validity);
+  imapParser::parseURL (_url, _box, _section, _type, _uid, _validity, _info);
 //  kdDebug(7116) << "URL: query - '" << KURL::decode_string(_url.query()) << "'" << endl;
 
   if (!_box.isEmpty ())
@@ -2060,13 +2087,31 @@ IMAP4Protocol::outputLine (const QCString & _str, int len)
   return 0;
 }
 
-void IMAP4Protocol::flushOutput()
+void IMAP4Protocol::flushOutput(QString contentEncoding)
 {
   // send out cached data to the application
   if (outputBufferIndex == 0L)
     return;
   outputCache.resize(outputBufferIndex);
-  data(outputCache);
+  if (decodeContent)
+  {
+    // get the coding from the MIME header
+    QByteArray decoded;
+    if (contentEncoding.find("quoted-printable", 0, false) == 0)
+      decoded = KCodecs::quotedPrintableDecode(outputCache);
+    else if (contentEncoding.find("base64", 0, false) == 0)
+      KCodecs::base64Decode(outputCache, decoded);
+    else
+      decoded = outputCache;
+
+    QString mimetype = KMimeType::findByContent( decoded )->name();
+    kdDebug(7116) << "IMAP4::flushOutput - mimeType " << mimetype << endl;
+    mimeType(mimetype);
+    decodeContent = false;
+    data( decoded );
+  } else {
+    data( outputCache );
+  }
   mProcessedSize += outputBufferIndex;
   processedSize( mProcessedSize );
   outputBufferIndex = 0L;

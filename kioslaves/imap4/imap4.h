@@ -63,14 +63,36 @@ public:
 
   virtual void setHost (const QString & _host, int _port, const QString & _user,
     const QString & _pass);
+  /**
+   * @brief get a message or part of a message
+   * the data is normally send as we get it from the server
+   * if you want the slave to decode the content (e.g. for attachments)
+   * then append an additional INFO=DECODE to the URL
+   */ 
   virtual void get (const KURL & _url);
+  /**
+   * @brief stat a mailbox, message, attachment
+   */
   virtual void stat (const KURL & _url);
   virtual void slave_status ();
+  /**
+   * @brief delete a mailbox
+   */
   virtual void del (const KURL & _url, bool isFile);
+  /**
+   * @brief Capabilites, NOOP, (Un)subscribe, Change status,
+   * Change ACL
+   */
   virtual void special (const QByteArray & data);
+  /**
+   * @brief list a directory/mailbox
+   */
   virtual void listDir (const KURL & _url);
   virtual void setSubURL (const KURL & _url);
   virtual void dispatch (int command, const QByteArray & data);
+  /**
+   * @brief create a mailbox
+   */
   virtual void mkdir (const KURL & url, int permissions);
   virtual void put (const KURL & url, int permissions, bool overwrite,
     bool resume);
@@ -104,7 +126,7 @@ public:
   virtual int outputLine (const QCString & _str, int len = -1);
 
   /** @brief send out cached data to the application */
-  virtual void flushOutput();
+  virtual void flushOutput(QString contentEncoding = QString::null);
 
 protected:
 
@@ -122,7 +144,8 @@ protected:
   enum IMAP_TYPE
   parseURL (const KURL & _url, QString & _box, QString & _section,
             QString & _type, QString & _uid, QString & _validity,
-            QString & _hierarchyDelimiter, bool cache = false);
+            QString & _hierarchyDelimiter, QString & _info,
+            bool cache = false); 
   QString getMimeType (enum IMAP_TYPE);
 
   bool makeLogin ();
@@ -144,7 +167,7 @@ private:
   int myPort;
   bool mySSL;
 
-  bool relayEnabled, cacheOutput, findMimeType;
+  bool relayEnabled, cacheOutput, decodeContent;
   QByteArray outputCache;
   QBuffer outputBuffer;
   Q_ULONG outputBufferIndex;

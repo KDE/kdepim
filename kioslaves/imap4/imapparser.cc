@@ -1508,7 +1508,7 @@ imapParser::parseWriteLine (const QString & str)
 
 void
 imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
-                      QString & _type, QString & _uid, QString & _validity)
+                      QString & _type, QString & _uid, QString & _validity, QString & _info)
 {
 //  kdDebug(7116) << "imapParser::parseURL - " << endl;
   QStringList parameters;
@@ -1537,6 +1537,8 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
       _uid = temp.right (temp.length () - 4);
     else if (temp.find ("uidvalidity=", 0, false) == 0)
       _validity = temp.right (temp.length () - 12);
+    else if (temp.find ("info=", 0, false) == 0)
+      _info = temp.right (temp.length () - 5);
   }
 //  kdDebug(7116) << "URL: section= " << _section << ", type= " << _type << ", uid= " << _uid << endl;
 //  kdDebug(7116) << "URL: user() " << _url.user() << endl;

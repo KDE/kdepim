@@ -365,7 +365,8 @@ public:
 
   /** extract the box,section,list type, uid, uidvalidity from an url */
   static void parseURL (const KURL & _url, QString & _box, QString & _section,
-                        QString & _type, QString & _uid, QString & _validity);
+                        QString & _type, QString & _uid, QString & _validity, 
+                        QString & _info);
 
 
  /** @brief return the last handled foo
