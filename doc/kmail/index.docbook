@@ -1895,7 +1895,7 @@ the following entry:
  <question><para>Are there any known bugs in &kmail;?</para></question>
  <answer><para>You can find a list of submitted bugs at <ulink url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>.
  Not all these bugs are "real", some are based on misunderstanding
- of features etc. Here's a real problem: &kmail; will not delete some temporary files if it crashes. In this
+ of features etc. Here's a real problem (only affects &kmail; before KDE 2.1): &kmail; will not delete some temporary files if it crashes. In this
  case, you should <command>cd</command> to <filename class="directory">~/.kde/share/apps/kmail/tmp/</filename>
  and delete all the files and folders there.</para></answer>
 </qandaentry>
