@@ -90,6 +90,7 @@ public:
 
   void setTimeZoneId( const QString& tzid );
 
+  bool deleteIncidence( KCal::Incidence* i );
 
   /// The ResourceKolabBase methods called by KMail
   bool fromKMailAddIncidence( const QString& type, const QString& subResource,
@@ -130,18 +131,16 @@ private:
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
 
+  bool addIncidence( KCal::Incidence* i, const QString& subresource,
+                     Q_UINT32 sernum );
+
   void addEvent( const QString& xml, const QString& subresource,
-                 Q_UINT32 sernum );
-  bool addEvent( KCal::Event* event, const QString& subresource,
                  Q_UINT32 sernum );
   void addTodo( const QString& xml, const QString& subresource,
                 Q_UINT32 sernum );
-  bool addTodo( KCal::Todo* todo, const QString& subresource,
-                 Q_UINT32 sernum );
   void addJournal( const QString& xml, const QString& subresource,
                    Q_UINT32 sernum );
-  bool addJournal( KCal::Journal* journal, const QString& subresource,
-                   Q_UINT32 sernum );
+
 
   bool loadAllEvents();
   bool loadAllTodos();
@@ -165,6 +164,9 @@ private:
 
   Kolab::ResourceMap* subResourceMap( const QString& contentsType );
 
+  bool sendKMailUpdate( KCal::IncidenceBase* incidence, const QString& _subresource,
+                        Q_UINT32 sernum );
+
 
   KCal::CalendarLocal mCalendar;
 
@@ -174,6 +176,9 @@ private:
   bool mOpen; // If the resource is open, this is true
   QDict<KCal::IncidenceBase> mPendingUpdates;
   QTimer mResourceChangedTimer;
+  QStringList mUidsPendingAdding;
+  QStringList mUidsPendingDeletion;
+  QStringList mUidsPendingUpdate;
 };
 
 }
