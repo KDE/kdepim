@@ -38,7 +38,6 @@
 #include <libkcal/icalformat.h>
 #include <libkcal/attendee.h>
 #include <libkcal/incidence.h>
-#include <libkcal/incidenceformatter.h>
 
 #include <kpimprefs.h> // for the timezone
 
@@ -65,15 +64,173 @@ using namespace KCal;
 
 namespace {
 
-class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
+static void vPartMicroParser( const QString& str, QString& s )
 {
-  public: 
-    KMInvitationFormatterHelper( KMail::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
-    virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
-  private:
-    KMail::Interface::BodyPart *mBodyPart;
-};
-    
+  QString line;
+  uint len = str.length();
+
+  for( uint i=0; i<len; ++i) {
+    if( str[i] == '\r' || str[i] == '\n' ) {
+      if( str[i] == '\r' )
+        ++i;
+      if( i+1 < len && str[i+1] == ' ' ) {
+        // Found a continuation line, skip it's leading blanc
+        ++i;
+      } else {
+        // Found a logical line end, process the line
+        if( line.startsWith( s ) ) {
+          s = line.mid( s.length() + 1 );
+          return;
+        }
+        line = "";
+      }
+    } else {
+      line += str[i];
+    }
+  }
+  s.truncate(0);
+}
+
+static void string2HTML( QString& str )
+{
+  str.replace( QChar( '&' ), "&amp;" );
+  str.replace( QChar( '<' ), "&lt;" );
+  str.replace( QChar( '>' ), "&gt;" );
+  str.replace( QChar( '\"' ), "&quot;" );
+  str.replace( "\\n", "<br>" );
+  str.replace( "\\,", "," );
+}
+
+static QString meetingDetails( Incidence* incidence, Event* event )
+{
+  // Meeting details are formatted into an HTML table
+
+  QString html;
+
+  QString sSummary = i18n( "Summary unspecified" );
+  if ( incidence ) {
+    if ( ! incidence->summary().isEmpty() ) {
+      sSummary = incidence->summary();
+      string2HTML( sSummary );
+    }
+  }
+
+  QString sLocation = i18n( "Location unspecified" );
+  if ( incidence ) {
+    if ( ! incidence->location().isEmpty() ) {
+      sLocation = incidence->location();
+      string2HTML( sLocation );
+    }
+  }
+
+  QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
+  html = QString("<div dir=\"%1\">\n").arg(dir);
+
+  html += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n";
+
+  // Meeting Summary Row
+  html += "<tr>";
+  html += "<td>" + i18n( "What:" ) + "</td>";
+  html += "<td>" + sSummary + "</td>";
+  html += "</tr>\n";
+
+  // Meeting Location Row
+  html += "<tr>";
+  html += "<td>" + i18n( "Where:" ) + "</td>";
+  html += "<td>" + sLocation + "</td>";
+  html += "</tr>\n";
+
+  // Meeting Start Time Row
+  html += "<tr>";
+  html += "<td>" + i18n( "Start Time:" ) + "</td>";
+  html += "<td>";
+  if ( ! event->doesFloat() ) {
+    html +=  i18n("%1: Start Date, %2: Start Time", "%1 %2")
+             .arg( event->dtStartDateStr(), event->dtStartTimeStr() );
+  } else {
+    html += i18n("%1: Start Date", "%1 (time unspecified)")
+            .arg( event->dtStartDateStr() );
+  }
+  html += "</td>";
+  html += "</tr>\n";
+
+  // Meeting End Time Row
+  html += "<tr>";
+  html += "<td>" + i18n( "End Time:" ) + "</td>";
+  html += "<td>";
+  if ( event->hasEndDate() ) {
+    if ( ! event->doesFloat() ) {
+      html +=  i18n("%1: End Date, %2: End Time", "%1 %2")
+               .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
+    } else {
+      html += i18n("%1: End Date", "%1 (time unspecified)")
+              .arg( event->dtEndDateStr() );
+    }
+  } else {
+    html += i18n( "Unspecified" );
+  }
+  html += "</td>";
+  html += "</tr>\n";
+
+  // Meeting Duration Row
+  if ( !event->doesFloat() && event->hasEndDate() ) {
+    html += "<tr>";
+    QTime sDuration, t;
+    int secs = event->dtStart().secsTo( event->dtEnd() );
+    t = sDuration.addSecs( secs );
+    html += "<td>" + i18n( "Duration:" ) + "</td>";
+    html += "<td>";
+    if ( t.hour() > 0 ) {
+      html += i18n( "1 hour ", "%n hours ", t.hour() );
+    }
+    if ( t.minute() > 0 ) {
+      html += i18n( "1 minute ", "%n minutes ",  t.minute() );
+    }
+    html += "</td>";
+    html += "</tr>\n";
+  }
+
+  html += "</table>\n";
+  html += "</div>\n";
+
+  return html;
+}
+
+static QString taskDetails( Incidence* incidence )
+{
+  // Task details are formatted into an HTML table
+
+  QString html;
+
+  QString sSummary = i18n( "Summary unspecified" );
+  QString sDescr = i18n( "Description unspecified" );
+  if ( incidence ) {
+    if ( ! incidence->summary().isEmpty() ) {
+      sSummary = incidence->summary();
+    }
+    if ( ! incidence->description().isEmpty() ) {
+      sDescr = incidence->description();
+    }
+  }
+  html = "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n";
+
+  // Task Summary Row
+  html += "<tr>";
+  html += "<td>" + i18n( "Summary:" ) + "</td>";
+  html += "<td>" + sSummary + "</td>";
+  html += "</tr>\n";
+
+  // Task Description Row
+  html += "<tr>";
+  html += "<td>" + i18n( "Description:" ) + "</td>";
+  html += "<td>" + sDescr + "</td>";
+  html += "</tr>\n";
+
+  html += "</table>\n";
+
+  return html;
+}
+
 class Formatter : public KMail::Interface::BodyPartFormatter
 {
   public:
@@ -83,12 +240,204 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       if ( !writer )
         // Guard against crashes in createReply()
         return Ok;
-      CalendarLocal cl( KPimPrefs::timezone() );
-      KMInvitationFormatterHelper helper( bodyPart );
-      
-      QString html = IncidenceFormatter::formatICalInvitation( bodyPart->asText(), &cl, &helper );
 
-      if ( html.isEmpty() ) return AsIcon;
+      const QString iCalendar = bodyPart->asText();
+      if ( iCalendar.isEmpty() ) return AsIcon;
+
+      CalendarLocal cl( KPimPrefs::timezone() );
+      ICalFormat format;
+      format.setTimeZone( cl.timeZoneId(), !cl.isLocalTime() );
+      format.fromString( &cl, iCalendar );
+
+      // Make a shallow copy of the event and task lists
+      if( cl.events().count() == 0 && cl.todos().count() == 0 ) {
+        kdDebug(5850) << "No iCal in this one\n";
+        return AsIcon;
+      }
+
+      // Parse the first event out of the vcal
+      // TODO: Is it legal to have several events/todos per mail part?
+      Incidence* incidence = 0;
+      Event* event = 0;
+      Todo* todo = 0;
+      if( cl.events().count() > 0 )
+        incidence = event = cl.events().first();
+      else
+        incidence = todo = cl.todos().first();
+
+      // TODO: Actually the scheduler needs to do this:
+      QString sMethod; // = incidence->method();
+      // TODO: This is a temporary workaround to get the method
+      sMethod = "METHOD";
+      vPartMicroParser( iCalendar, sMethod );
+      sMethod = sMethod.lower();
+
+      if ( sMethod.isEmpty() ) return AsIcon;
+
+      // First make the text of the message
+      QString html;
+/*
+      html += "<em>Hint for kdepim developers: This iCalendar attachement was "
+              "formatted by the new bodypartformatter plugin.</em><br>";
+*/
+      QString tableStyle = QString::fromLatin1(
+        "style=\""
+        "border: solid 1px; "
+        "margin: 0em;\"");
+      QString tableHead = QString::fromLatin1(
+        "<div align=\"center\">"
+        "<table width=\"80%\" cellpadding=\"1\" cellspacing=\"0\" %1>"
+        "<tr><td>").arg(tableStyle);
+
+      html += tableHead;
+
+      if( sMethod == "request" ) {
+        // FIXME: All these "if (event) ... else ..." constructions are ugly.
+        if( event ) {
+          html += i18n( "<h2>You have been invited to this meeting</h2>" );
+          html += meetingDetails( incidence, event );
+        } else {
+          html += i18n( "<h2>You have been assigned this task</h2>" );
+          html += taskDetails( incidence );
+        }
+      } else if( sMethod == "reply" ) {
+        Attendee::List attendees = incidence->attendees();
+        if( attendees.count() == 0 ) {
+          kdDebug(5850) << "No attendees in the iCal reply!\n";
+          return AsIcon;
+        }
+        if( attendees.count() != 1 )
+          kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
+                        << "but is " << attendees.count() << endl;
+        Attendee* attendee = *attendees.begin();
+
+        switch( attendee->status() ) {
+        case Attendee::Accepted:
+          if( event ) {
+            html += i18n( "<h2>Sender accepts this meeting invitation</h2>" );
+            html += meetingDetails( incidence, event );
+          } else {
+            html += i18n( "<h2>Sender accepts this task</h2>" );
+            html += taskDetails( incidence );
+          }
+          break;
+
+        case Attendee::Tentative:
+          if( event ) {
+            html += i18n( "<h2>Sender tentatively accepts this "
+                         "meeting invitation</h2>" );
+            html += meetingDetails( incidence, event );
+          } else {
+            html += i18n( "<h2>Sender tentatively accepts this task</h2>" );
+            html += taskDetails( incidence );
+          }
+          break;
+
+        case Attendee::Declined:
+          if( event ) {
+            html += i18n( "<h2>Sender declines this meeting invitation</h2>" );
+            html += meetingDetails( incidence, event );
+          } else {
+            html += i18n( "<h2>Sender declines this task</h2>" );
+            html += taskDetails( incidence );
+          }
+          break;
+
+        default:
+          if( event ) {
+            html += i18n( "<h2>Unknown response to this meeting invitation</h2>" );
+            html += meetingDetails( incidence, event );
+          } else {
+            html += i18n( "<h2>Unknown response to this task</h2>" );
+            html += taskDetails( incidence );
+          }
+        }
+      } else if( sMethod == "cancel" ) {
+        if( event ) {
+          html += i18n( "<h2>This meeting has been canceled</h2>" );
+          html += meetingDetails( incidence, event );
+        } else {
+          html += i18n( "<h2>This task was canceled</h2>" );
+          html += taskDetails( incidence );
+        }
+      } else if ( sMethod == "publish" ) {
+        if ( event ) {
+          html += i18n("<h2>This event has been published</h2>");
+          html += meetingDetails( incidence, event );
+        } else {
+          html += i18n("<h2>This task has been published</h2>");
+          html += taskDetails( incidence );
+        }
+      } else {
+        html += i18n("Error: iMIP message with unknown method: '%1'")
+                .arg( sMethod );
+      }
+
+#if 0
+      html += "<br>";
+      html += "<a href=\"" + bodyPart->makeLink( "accept" ) + "\"><b>";
+      html += i18n("[Enter this into my calendar]");
+      html += "</b></a>";
+#endif
+
+      // Add the groupware URLs
+      html += "<br>&nbsp;<br>&nbsp;<br>";
+      html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
+      if( sMethod == "request" || sMethod == "update" ||
+          sMethod == "publish" ) {
+        // Accept
+        html += "<a href=\"" +
+                bodyPart->makeLink( "accept" ) + "\"><b>";
+        html += i18n( "[Accept]" );
+        html += "</b></a></td><td> &nbsp; </td><td>";
+
+        // Accept conditionally
+        html += "<a href=\"" +
+                bodyPart->makeLink( "accept_conditionally" ) +
+                "\"><b>";
+        html += i18n( "Accept conditionally", "[Accept cond.]" );
+        html += "</b></a></td><td> &nbsp; </td><td>";
+
+        // Decline
+        html += "<a href=\"" +
+                bodyPart->makeLink( "decline" ) + "\"><b>";
+        html += i18n( "[Decline]" );
+#if 0
+        // TODO: Do this
+        if( event ) {
+          // Check my calendar...
+          html += "</b></a></td><td> &nbsp; </td><td>";
+          html += "<a href=\"" +
+                  bodyPart->makeLink( "check_calendar" ) + "\"><b>";
+          html += i18n("[Check my calendar...]" );
+        }
+#endif
+      } else if( sMethod == "reply" ) {
+        // Enter this into my calendar
+        html += "<a href=\"" +
+                bodyPart->makeLink( "reply" ) + "\"><b>";
+        if( event )
+          html += i18n( "[Enter this into my calendar]" );
+        else
+          html += i18n( "[Enter this into my task list]" );
+      } else if( sMethod == "cancel" ) {
+        // Cancel event from my calendar
+        html += "<a href=\"" +
+                bodyPart->makeLink( "cancel" ) + "\"><b>";
+        html += i18n( "[Remove this from my calendar]" );
+      }
+      html += "</b></a></td></tr></table>";
+
+      QString sDescr = incidence->description();
+      if( ( sMethod == "request" || sMethod == "cancel" ) &&
+          !sDescr.isEmpty() ) {
+        string2HTML( sDescr );
+        html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
+          + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td>";
+        html += sDescr + "</td></tr></table>";
+      }
+
+      html += "</td></tr></table><br></div>";
       writer->queue( html );
 
       return Ok;
@@ -180,7 +529,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         subject = i18n( "Answer: %1" ).arg( incidence->summary() );
       else
         subject = i18n( "Answer: Incidence with no summary" );
-      return callback.mailICal( incidence->organizer().fullName(), msg, subject );
+      return callback.mailICal( incidence->organizer(), msg, subject );
     }
 
     bool saveFile( const QString& receiver, const QString& iCal,
