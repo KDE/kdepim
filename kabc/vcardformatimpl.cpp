@@ -436,5 +436,11 @@ PhoneNumber VCardFormatImpl::readTelephoneValue( ContentLine *cl )
 
 QString VCardFormatImpl::readTextValue( ContentLine *cl )
 {
-  return QString::fromUtf8( cl->value()->asString() );
+  VCARD::Value *value = cl->value();
+  if ( value ) {
+    return QString::fromUtf8( value->asString() );
+  } else {
+    kdDebug() << "No value: " << cl->asString() << endl;
+    return QString::null;
+  }
 }

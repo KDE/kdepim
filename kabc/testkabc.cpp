@@ -14,7 +14,7 @@ int main(int argc,char **argv)
   KAboutData aboutData("testkabc",I18N_NOOP("TestKabc"),"0.1");
   KCmdLineArgs::init(argc,argv,&aboutData);
 
-  KApplication app;
+  KApplication app( false, false );
   
   AddressBook ab( new VCardFormat );
   

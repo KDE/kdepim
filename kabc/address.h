@@ -54,7 +54,7 @@ class Address
       work address at work
       pref preferred address
     */
-    enum { Dom = 1, Intl = 2, Postal = 4, Parcel = 8, Home = 16, Work = 32,
+    enum Type { Dom = 1, Intl = 2, Postal = 4, Parcel = 8, Home = 16, Work = 32,
            Pref = 64 };
 
     /**
