@@ -48,7 +48,7 @@ K_EXPORT_COMPONENT_FACTORY( libknodepart, KNodeFactory )
 
 KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
 		     QObject *parent, const char *name, const QStringList &)
-  : KParts::ReadOnlyPart(parent, name),
+  : KPIM::Part(parent, name),
   mParentWidget( parentWidget )
 {
   kdDebug(5003) << "KNodePart()" << endl;

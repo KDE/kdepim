@@ -48,7 +48,7 @@ K_EXPORT_COMPONENT_FACTORY( libkitchensyncpart, KitchenSyncFactory )
 KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, const char *,
                                   QObject *parent, const char *name,
                                   const QStringList & )
-  : KParts::ReadOnlyPart( parent, name )
+  : KPIM::Part( parent, name )
 {
   QString pname( name );
 

@@ -28,6 +28,7 @@
 
 #include <kurl.h>
 #include <kparts/factory.h>
+#include <libkdepim/part.h>
 
 class KInstance;
 class KAboutData;
@@ -39,7 +40,7 @@ class ActionManager;
 
 }
 
-class KitchenSyncPart: public KParts::ReadOnlyPart
+class KitchenSyncPart: public KPIM::Part
 {
     Q_OBJECT
   public:
