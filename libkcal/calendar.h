@@ -134,13 +134,7 @@ class Calendar : public QObject {
       Return calendar filter.
     */
     CalFilter *filter();
-  
-    /*
-     * returns a QString with the text of the holiday (if any) that falls
-     * on the specified date.
-     */
-    QString getHolidayForDate(const QDate &qd);
-    
+      
     /** returns the number of events that are present on the specified date. */
     virtual int numEvents(const QDate &qd) = 0;
   
@@ -171,9 +165,6 @@ class Calendar : public QObject {
     /** Enable/Disable dialogs shown by calendar class */  
     void showDialogs(bool d);
 
-    /** Set which holidays the calendar uses. @param h code of holiday (usually a country code) */
-    void setHoliday(const QString &h) { mHoliday = h; }
-  
   signals:
     /** emitted at regular intervals to indicate that the events in the
       list have triggered an alarm. */
@@ -205,9 +196,6 @@ class Calendar : public QObject {
     */
     virtual QList<Event> events(const QDate &start,const QDate &end,
                                   bool inclusive=false) = 0;
-
-    /** Read name of holidayfile from config object */
-    void readHolidayFileName();
   
     CalFormat *mFormat;
     CalFormat *mDndFormat;  // format used for drag and drop operations
@@ -216,8 +204,6 @@ class Calendar : public QObject {
   private:
     void init();
   
-    QString mHoliday;      // code for holiday
-    QString mHolidayfile;  // name of file defining holidays
     QString mOwner;        // who the calendar belongs to
     QString mOwnerEmail;   // email address of the owner
     int mTimeZone;         // timezone OFFSET from GMT (MINUTES)

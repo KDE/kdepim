@@ -36,16 +36,6 @@
 #include "calendar.h"
 #include "calendar.moc"
 
-extern "C" {
-  char *parse_holidays(const char *, int year, short force);
-  /** \internal */
-  struct holiday {
-    char            *string;        /* name of holiday, 0=not a holiday */
-    unsigned short  dup;            /* reference count */
-  };
-  extern struct holiday holiday[366];
-};
-
 using namespace KCal;
 
 /** \internal */
@@ -142,8 +132,6 @@ void Calendar::init()
   } else {
     setEmail(tmpStr);
   }
-
-  readHolidayFileName();
 
 #if 0
   tmpStr = KOPrefs::instance()->mTimeZone;
@@ -353,46 +341,12 @@ void Calendar::updateConfig()
     }
   }
 #endif
-  readHolidayFileName();
 
 // TODO: Fix time zone setting
 //  setTimeZone(KOPrefs::instance()->mTimeZone.latin1());
 
   if (updateFlag)
     emit calUpdated((Event *) 0L);
-}
-
-QString Calendar::getHolidayForDate(const QDate &qd)
-{
-  static int lastYear = 0;
-
-//  kdDebug() << "CalendarLocal::getHolidayForDate(): Holiday: " << holidays << endl;
-
-  if (mHolidayfile.isEmpty()) return (QString(""));
-
-  if ((lastYear == 0) || (qd.year() != lastYear)) {
-      lastYear = qd.year() - 1900; // silly parse_year takes 2 digit year...
-      parse_holidays(QFile::encodeName(mHolidayfile), lastYear, 0);
-  }
-
-  if (holiday[qd.dayOfYear()-1].string) {
-    QString holidayname = QString::fromLocal8Bit(holiday[qd.dayOfYear()-1].string);
-//    kdDebug() << "Holi name: " << holidayname << endl;
-    return(holidayname);
-  } else {
-//    kdDebug() << "No holiday" << endl;
-    return(QString(""));
-  }
-}
-
-void Calendar::readHolidayFileName()
-{
-  QString holidays(mHoliday);
-  if (holidays == "(none)") mHolidayfile = "";
-  holidays = holidays.prepend("holiday_");
-  mHolidayfile = locate("appdata",holidays);
-
-//  kdDebug() << "holifile: " << mHolidayfile << endl;
 }
 
 void Calendar::setFilter(CalFilter *filter)

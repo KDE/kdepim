@@ -1,4 +1,4 @@
-SUBDIRS=versit holidays
+SUBDIRS = versit
 
 INCLUDES = -I$(top_srcdir)/libical/src/libical \
   -I$(top_srcdir)/libical/src/libicalss -I$(top_builddir)/libical/src/libical \
@@ -19,17 +19,6 @@ libkcal_la_SOURCES = \
         koexceptions.cpp \
         scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
         calfilter.cpp \
-        scanholiday.c parseholiday.c \
         person.cpp
 
 METASOURCES = AUTO
-
-$(srcdir)/parseholiday.c: parseholiday.y
-	cd $(srcdir) && bison -p kcal -d -o parseholiday.c parseholiday.y
-
-$(srcdir)/parseholiday.h: parseholiday.y
-	cd $(srcdir) && bison -p kcal -d -o parseholiday.c parseholiday.y
-
-$(srcdir)/scanholiday.c: scanholiday.lex parseholiday.h
-	cd $(srcdir) && flex -Pkcal -B -oscanholiday.c scanholiday.lex
-
