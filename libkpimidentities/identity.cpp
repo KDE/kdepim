@@ -238,7 +238,7 @@ bool Identity::isNull() const {
     mTransport.isEmpty() && mDictionary.isEmpty() &&
     mPreferredCryptoMessageFormat == Kleo::AutoFormat &&
     mSignature.type() == Signature::Disabled &&
-    mXFace.isNull();
+    mXFace.isEmpty();
 }
 
 bool Identity::operator==( const Identity & other ) const {
@@ -293,6 +293,7 @@ Identity::Identity( const QString & id, const QString & fullName,
     mBcc( "" ), mVCardFile( "" ), mPGPEncryptionKey( "" ), mPGPSigningKey( "" ),
     mSMIMEEncryptionKey( "" ), mSMIMESigningKey( "" ), mFcc( "" ), mDrafts( "" ), mTransport( "" ),
     mDictionary( "" ),
+    mXFace( "" ), mXFaceEnabled( false ),
     mIsDefault( false ),
     mPreferredCryptoMessageFormat( Kleo::AutoFormat )
 {
