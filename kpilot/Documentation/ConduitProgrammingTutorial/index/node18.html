@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The KPilotDeviceLink class for communicating with the handheld</TITLE>
+<META NAME="description" CONTENT="The KPilotDeviceLink class for communicating with the handheld">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="next" HREF="node19.html">
+<LINK REL="previous" HREF="node17.html">
+<LINK REL="up" HREF="node16.html">
+<LINK REL="next" HREF="node19.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html288"
+  HREF="node19.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html284"
+  HREF="node16.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html278"
+  HREF="node17.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html286"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html289"
+  HREF="node19.html">The PilotDatabase classes for</A>
+<B> Up:</B> <A NAME="tex2html285"
+  HREF="node16.html">How the conduits work</A>
+<B> Previous:</B> <A NAME="tex2html279"
+  HREF="node17.html">The SyncAction base class</A>
+ &nbsp <B>  <A NAME="tex2html287"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00052000000000000000">
+The <FONT SIZE="-1"><EM><TT>KPilotDeviceLink</TT></EM></FONT> class for communicating with the handheld</A>
+</H2>
+For the communication with the handheld KPilot has a class 
+<FONT SIZE="-1"><EM><TT>KPilotDeviceLink</TT></EM></FONT>, and the ConduitAction class always stores an 
+instance of <FONT SIZE="-1"><EM><TT>KPilotDeviceLink</TT></EM></FONT> pointing to the current connection 
+in a variable called <FONT SIZE="-1"><TT>fHandle</TT></FONT>. The following list shows all members 
+of this class that you might need in your conduit:
+
+<P>
+
+<UL>
+<LI><FONT SIZE="-1"><TT>int getNextDatabase(int index,struct DBInfo *)</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Returns 
+    the database at position index and stores its information to the DBInfo 
+     variable, which can then be used in other functions.
+</LI>
+<LI><FONT SIZE="-1"><TT>int findDatabase(char*name, struct DBInfo*)</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Finds a 
+    database with a given name like "AddressDB" and stores its information 
+    to the <FONT SIZE="-1"><TT>DBInfo</TT></FONT> variable, which can then be used in other functions.
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>bool retrieveDatabase(const QString &amp;path, struct DBInfo *db)</TT></FONT>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Retrieve the database indicated by <FONT SIZE="-1"><TT>DBInfo *db</TT></FONT> into 
+    the local file path.
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>bool installFile(const QString &amp;, bool deleteFile=true)</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Installs the .prc 
+    or .pdb database from the PC to the handheld. Returns true on success.
+    If deleteFile is set true or left out, the local file is deleted after successfull installation.
+</LI>
+<LI><FONT SIZE="-1"><TT>int installFiles(const QStringList &amp;, bool deleteFiles=true)</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Installs 
+    several .prc or .pdb databases from the PC to the handheld. Returns 
+    the number of successfully installed databases. If deleteFiles is set true 
+    or left out, the local files are deleted after successfull installation.
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>static KPilotDeviceLink *link()</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... returns the current 
+    connection (only one can be open at the same time)
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>void tickle()</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Tickle the palm to reset the timeout. 
+    This is needed if you need to do a lengthy calculation or display a 
+    dialogbox where the user might not respond immediately.
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>KPilotUser *getPilotUser()</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Returns the user 
+    information as set on the handheld.
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>QDateTime getTime()</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Get the time from the handheld 
+    device into a <FONT SIZE="-1"><EM><TT>QDateTime</TT></EM></FONT>
+</LI>
+<LI><FONT SIZE="-1"><TT>bool setTime(const time_t &amp;pctime)</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Set the time 
+    on the handheld to the give <FONT SIZE="-1"><TT>time_t</TT></FONT> (<FONT SIZE="-1"><EM><TT>QDateTime</TT></EM></FONT> didn't 
+    work for me, so I implemented it with <FONT SIZE="-1"><TT>time_t</TT></FONT>)
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>unsigned long ROMversion()</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Get the version number 
+    from the handheld
+</LI>
+<LI><FONT SIZE="-1"><TT>unsigned long majorVersion()</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Get the major PalmOS 
+    version number (e.g. 3 for PalmOS 3.0 and 3.5, 4 for PalmOS 4.x etc.)
+
+<P>
+</LI>
+</UL>
+
+<P>
+If you want to modify a database on the handheld, you can work with a 
+PilotDatabase instance (see next subsection), which does all the 
+communication for you.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html288"
+  HREF="node19.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html284"
+  HREF="node16.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html278"
+  HREF="node17.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html286"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html289"
+  HREF="node19.html">The PilotDatabase classes for</A>
+<B> Up:</B> <A NAME="tex2html285"
+  HREF="node16.html">How the conduits work</A>
+<B> Previous:</B> <A NAME="tex2html279"
+  HREF="node17.html">The SyncAction base class</A>
+ &nbsp <B>  <A NAME="tex2html287"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>

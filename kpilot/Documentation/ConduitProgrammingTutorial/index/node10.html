@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Makefile.am and KDE build process</TITLE>
+<META NAME="description" CONTENT="Makefile.am and KDE build process">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="next" HREF="node11.html">
+<LINK REL="previous" HREF="node9.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node11.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html190"
+  HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html186"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html180"
+  HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html188"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html191"
+  HREF="node11.html">The conduit factory</A>
+<B> Up:</B> <A NAME="tex2html187"
+  HREF="node7.html">The general conduit framework</A>
+<B> Previous:</B> <A NAME="tex2html181"
+  HREF="node9.html">A conduit is a</A>
+ &nbsp <B>  <A NAME="tex2html189"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00033000000000000000">
+Makefile.am and KDE build process</A>
+</H2>
+
+<P>
+Before we delve into programming details, let us look a bit at the compilation framework.
+
+<P>
+If you develop your conduit inside the <FONT SIZE="-1"><TT>kdepim/kpilot/conduits</TT></FONT> directory of KDE's 
+CVS tree, all you need to do is to provide a Makefile.am in your conduit directory 
+(e.g. <FONT SIZE="-1"><TT>kdepim/kpilot/conduits/malconduit</TT></FONT>), and add the name of your 
+directory (<FONT SIZE="-1"><TT>malconduit</TT></FONT> in this example) to the variable <FONT SIZE="-1"><TT>SUBDIRS</TT></FONT> 
+in <FONT SIZE="-1"><TT>kdepim/kpilot/conduits/Makefile.am</TT></FONT>:
+<PRE>
+SUBDIRS = knotes expense null vcalconduit \
+          popmail timeconduit malconduit
+</PRE>
+<BR>
+<BR>
+
+<P>
+The <FONT SIZE="-1"><TT>Makefile.am</TT></FONT> in your conduit's directory will look similar to the following one 
+(taken from the malconduit). Since this is a tutorial on KPilot conduits, and not 
+on automake/conf, make and Makefiles, I will not explain it in detail. However, 
+it should be easy to adapt it to your conduit's needs:
+
+<P>
+<PRE>
+### Makefile for the AvantGo conduit
+###
+### The mal conduit is Copyright (C) 2002 by Reinhold Kainhofer
+
+
+INCLUDES= $(PISOCK_INCLUDE)  $(MAL_INCLUDE) \
+  -I$(top_srcdir)/kpilot/lib $(all_includes)
+METASOURCES = AUTO
+
+servicedir = $(kde_servicesdir)
+service_DATA = mal_conduit.desktop
+
+kde_module_LTLIBRARIES = libmalconduit.la
+
+libmalconduit_la_SOURCES = \
+        mal-factory.cc \
+        mal-setup.cc \
+        mal-conduit.cc \
+        mal-setup_dialog.ui
+libmalconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
+libmalconduit_la_LIBADD = -lkpilot $(MAL_LIB)
+</PRE>
+
+<P>
+Here is a short table of the variables used in <FONT SIZE="-1"><TT>Makefile.am</TT></FONT>:
+
+<P>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT"><FONT SIZE="-1"><TT>service_DATA</TT></FONT></TD>
+<TD ALIGN="LEFT">name of the desktop file of your conduit</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">(tells KDE which library it needs to load)</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><FONT SIZE="-1"><TT>kde_module_LTLIBRARIES</TT></FONT></TD>
+<TD ALIGN="LEFT">tell make which libraries to compile</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><FONT SIZE="-1"><TT>libraryname_SOURCES</TT></FONT></TD>
+<TD ALIGN="LEFT">a list of all source files to be compiled into</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">libraryname (where a . is replaced by a _)</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><FONT SIZE="-1"><TT>libraryname_LDFLAGS</TT></FONT></TD>
+<TD ALIGN="LEFT">linker flags when linking your conduit</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><FONT SIZE="-1"><TT>libraryname_LIBADD</TT></FONT></TD>
+<TD ALIGN="LEFT">additional libraries the conduit links to</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">(-lkpilot is the KPilot base library and</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">needs to be linked to every conduit)</TD>
+</TR>
+</TABLE>
+
+<P>
+<BR>
+<BR>
+
+<P>
+Both <FONT SIZE="-1"><TT>MAL_INCLUDE</TT></FONT> and <FONT SIZE="-1"><TT>MAL_LIB</TT></FONT> are special variables 
+pointing to the headers and the library of libmal, and are set by 
+<FONT SIZE="-1"><TT>configure.in.in</TT></FONT> (see below).
+
+<P>
+<BR>
+<BR>
+
+<P>
+If you have special library requirements (e.g. the malconduit needs libmal to work), 
+you need to add special configure checks to the autoconf file <FONT SIZE="-1"><TT>kdepim/kpilot/conduits/configure.in.in</TT></FONT> (for an 
+example, you should look at the checks the malconduit added to the file in CVS) 
+and include the directory only if the appropriate libraries and header files are installed. 
+One way to achieve this is to add the following line after your configure checks, which set 
+the variable <FONT SIZE="-1"><TT>HAVE_MAL</TT></FONT> to <FONT SIZE="-1"><TT>1</TT></FONT>. This automake command in 
+<FONT SIZE="-1"><TT>configure.in.in</TT></FONT> defines "<FONT SIZE="-1"><TT>include_malconduit</TT></FONT>" for use 
+in Makefile.am, if <FONT SIZE="-1"><TT>HAVE_MAL==1</TT></FONT>:
+<PRE>
+AM_CONDITIONAL(include_malconduit, test "$HAVE_MAL" = "1")
+</PRE>
+
+<P>
+You can then use "<FONT SIZE="-1"><TT>include_malconduit</TT></FONT>" in the KPilot conduit 
+directory's makefile <FONT SIZE="-1"><TT>kdepim/kpilot/conduits/Makefile.am</TT></FONT>:
+<PRE>
+MALSUBDIR=
+if include_malconduit
+    MALSUBDIR = malconduit
+endif
+
+SUBDIRS = knotes expense null vcalconduit popmail timeconduit $(MALSUBDIR)
+</PRE>
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html190"
+  HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html186"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html180"
+  HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html188"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html191"
+  HREF="node11.html">The conduit factory</A>
+<B> Up:</B> <A NAME="tex2html187"
+  HREF="node7.html">The general conduit framework</A>
+<B> Previous:</B> <A NAME="tex2html181"
+  HREF="node9.html">A conduit is a</A>
+ &nbsp <B>  <A NAME="tex2html189"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>

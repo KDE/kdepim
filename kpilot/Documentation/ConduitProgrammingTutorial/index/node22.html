@@ -1,0 +1,614 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>A per-file conduit: docconduit</TITLE>
+<META NAME="description" CONTENT="A per-file conduit: docconduit">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="next" HREF="node23.html">
+<LINK REL="previous" HREF="node21.html">
+<LINK REL="up" HREF="index.html">
+<LINK REL="next" HREF="node23.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html334"
+  HREF="node23.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html330"
+  HREF="index.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html324"
+  HREF="node21.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html332"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html335"
+  HREF="node23.html">A record-based conduit</A>
+<B> Up:</B> <A NAME="tex2html331"
+  HREF="index.html">KPilot conduit programming tutorial</A>
+<B> Previous:</B> <A NAME="tex2html325"
+  HREF="node21.html">A very simple conduit:</A>
+ &nbsp <B>  <A NAME="tex2html333"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00070000000000000000"></A><A NAME="SectionDatabasesConduit"></A>
+<BR>
+A per-file conduit: docconduit
+</H1>
+
+<P>
+The PalmDoc conduit of KPilot takes a directory of text files and syncronized them with PalmDOC databases on the handheld. These PalmDOC documents can be read with AportisDoc, TealReader, and modified with applications like QED. Optionally, the conduit can also keep local copies of the pdb handheld databases in a local directory.
+
+<P>
+The conduit just needs to find out if a document has changed either on the handheld or on the pc (or on both sides), and then copy the text either to or from the handheld. The docconduit has a class <FONT SIZE="-1"><EM><TT>DOCConverter</TT></EM></FONT> which does the actual conversion. You only have to set the local path to the text file, and give a pointer to an opened <FONT SIZE="-1"><EM><TT>PilotDatabase</TT></EM></FONT> (either <FONT SIZE="-1"><EM><TT>PilotLocalDatabase</TT></EM></FONT> or <FONT SIZE="-1"><EM><TT>PilotSerialDatabase</TT></EM></FONT>), and then call 
+<FONT SIZE="-1"><TT>docconverter.convertPDBtoDOC();</TT></FONT> or <FONT SIZE="-1"><TT>docconverter.convertDOCtoPDB();</TT></FONT>. I will not explain this class here, but rather the algorithm to determine the sync direction and the actual calls of the DOCConverter. 
+
+<P>
+The conduit has to find out 
+
+<UL>
+<LI>which PalmDoc databases on the handheld have been changed or edited (using the modified flag of the records inside the database)
+</LI>
+<LI>which text files on disk have changed (using an md5 checksum on the text)
+</LI>
+<LI>if a local copy is kept, if the local copy of a database has been changed or added (again using the modified flat of the records inside the database).
+</LI>
+</UL>
+
+<P>
+To assure a responsive user interface, we will once again use <TT>QTimer::singleShot(this, 0, SLOT(whatever()));</TT> for each of these steps.
+
+<P>
+The <FONT SIZE="-1"><TT>DOCConduit::exec()</TT></FONT> function is just the entry point and calls syncNextDB, which will go through all PalmDOC databases on the handheld and determine if any of them has been changed:
+
+<P>
+<PRE>
+/* virtual */ bool DOCConduit::exec() {
+  FUNCTIONSETUP;
+  readConfig();
+  dbnr=0;
+  QTimer::singleShot(0, this, SLOT(syncNextDB()));
+  return true;
+}
+</PRE>
+
+<P>
+syncNextDB then walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC. The function needsSync (which we will describe later), checks which files have actually changed or were added or deleted and so determines the sync direction. The docSyncInfo is just an internal structure to store all information about the text:
+
+<P>
+<PRE>
+void DOCConduit::syncNextDB() {
+  FUNCTIONSETUP;
+  DBInfo dbinfo;
+
+  if (eSyncDirection==eSyncPCToPDA || fHandle-&gt;findDatabase(NULL, &amp;dbinfo, dbnr, dbtype(), dbcreator() /*, cardno */ ) &lt; 0) {
+    // no more databases available, so check for PC-&gt;Palm sync
+    QTimer::singleShot(0, this, SLOT(syncNextDOC()));
+    return;
+  }
+  dbnr=dbinfo.index+1;
+  DEBUGCONDUIT&lt;&lt;"Next Palm database to sync: "&lt;&lt;dbinfo.name&lt;&lt;", Index="&lt;&lt;dbinfo.index&lt;&lt;endl;
+
+  // if creator and/or type don't match, go to next db
+  if (!isCorrectDBTypeCreator(dbinfo) || fDBNames.contains(dbinfo.name)) {
+    QTimer::singleShot(0, this, SLOT(syncNextDB()));
+    return;
+  }
+
+  QString docfilename=constructDOCFileName(dbinfo.name);
+  QString pdbfilename=constructPDBFileName(dbinfo.name);
+
+  docSyncInfo syncInfo(dbinfo.name, docfilename, pdbfilename, eSyncNone);
+  syncInfo.dbinfo=dbinfo;
+  needsSync(syncInfo);
+  fSyncInfoList.append(syncInfo);
+  fDBNames.append(dbinfo.name);
+  
+  QTimer::singleShot(0, this, SLOT(syncNextDB()));
+  return;
+}
+</PRE>
+
+<P>
+To go through all .txt files on disk, we use a QStringList::Iterator, again set the fields of the docSyncInfo for each text, and call <FONT SIZE="-1"><TT>needsSync</TT></FONT> to do the actual comparison of the local and handheld text to the versions of the previous sync. If a local copy of the pdb files should be kept, we proceed similar using the slot <FONT SIZE="-1"><TT>checkPDBFiles</TT></FONT>:
+
+<P>
+<PRE>
+void DOCConduit::syncNextDOC() {
+  FUNCTIONSETUP;
+  
+  if (eSyncDirection==eSyncPDAToPC  ) {
+    // We don't sync from PC to PDB, so start the conflict resolution and then the actual sync process
+    docnames.clear();
+    QTimer::singleShot(0, this, SLOT(checkPDBFiles()));
+    return;
+  }
+  
+  // if docnames isn't initialized, get a list of all *.txt files in fDOCDir
+  if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
+    docnames=QDir(fDOCDir, "*.txt").entryList() ;
+    dociterator=docnames.begin();
+  }
+  if (dociterator==docnames.end()) {
+    // no more databases available, so start the conflict resolution and then the actual sync proces
+    docnames.clear();
+    QTimer::singleShot(0, this, SLOT(checkPDBFiles()));
+    return;
+  }
+
+  QString fn=(*dociterator);
+
+  QDir dr(fDOCDir);
+  QFileInfo fl(dr, fn );
+  QString docfilename=fl.absFilePath();
+  QString pdbfilename;
+  dociterator++;
+  
+  DBInfo dbinfo;
+  // Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
+  // first fill everything with 0, so we won't have a buffer overflow.
+  memset(&amp;dbinfo.name[0], 0, 33);
+  strncpy(&amp;dbinfo.name[0], fl.baseName(TRUE), 30);
+
+  bool alreadySynced=fDBNames.contains(dbinfo.name);
+  if (!alreadySynced) {
+    docSyncInfo syncInfo(dbinfo.name, docfilename, pdbfilename, eSyncNone);
+    syncInfo.dbinfo=dbinfo;
+    needsSync(syncInfo);
+    fSyncInfoList.append(syncInfo);
+    fDBNames.append(dbinfo.name);
+  }
+  
+  QTimer::singleShot(0, this, SLOT(syncNextDOC()));
+  return;
+}
+
+
+/** This slot will only be used if fKeepPDBLocally to check if new doc databases have been copied to the pdb directory.
+ *  If so, install it to the handheld and sync it to the PC */
+void DOCConduit::checkPDBFiles() {
+  FUNCTIONSETUP;
+  
+  if (fLocalSync || !fKeepPDBLocally || eSyncDirection==eSyncPCToPDA )
+  {
+    // no more databases available, so check for PC-&gt;Palm sync
+    QTimer::singleShot(0, this, SLOT(resolve()));
+    return;
+  }
+  
+  // Walk through all files in the pdb directory and check if it has already been synced.
+  // if docnames isn't initialized, get a list of all *.pdb files in fPDBDir
+  if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
+    docnames=QDir(fPDBDir, "*.pdb").entryList() ;
+    dociterator=docnames.begin();
+  }
+  if (dociterator==docnames.end()) {
+    // no more databases available, so start the conflict resolution and then the actual sync proces
+    docnames.clear();
+    QTimer::singleShot(0, this, SLOT(resolve()));
+    return;
+  }
+
+  QString fn=(*dociterator);
+
+  QDir dr(fPDBDir);
+  QFileInfo fl(dr, fn );
+  QString pdbfilename=fl.absFilePath();
+  dociterator++;
+  
+  //  Get the doc title and check if it has already been synced (in the synced docs list of in fDBNames to be synced)
+  // If the doc title doesn't appear in either list, install it to the Handheld, and add it to the list of dbs to be synced.
+  QString dbname=fl.baseName(TRUE).left(30);
+  if (!fDBNames.contains(dbname) &amp;&amp; !fDBListSynced.contains(dbname)) {
+    if (fHandle-&gt;installFiles(pdbfilename )) {
+      DBInfo dbinfo;
+      // Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
+      // first fill everything with 0, so we won't have a buffer overflow.
+      memset(&amp;dbinfo.name[0], 0, 33);
+      strncpy(&amp;dbinfo.name[0], dbname, 30);
+
+      docSyncInfo syncInfo(dbinfo.name, constructDOCFileName(dbname), pdbfilename, eSyncNone);
+      syncInfo.dbinfo=dbinfo;
+      needsSync(syncInfo);
+      fSyncInfoList.append(syncInfo);
+      fDBNames.append(dbinfo.name);
+    } else {
+      DEBUGCONDUIT&lt;&lt;"Could not install database "&lt;&lt;dbname&lt;&lt;" ("&lt;&lt;pdbfilename&lt;&lt;") to the handheld"&lt;&lt;endl;
+    }
+  }
+  
+  QTimer::singleShot(0, this, SLOT(checkPDBFiles()));
+}
+</PRE>
+
+<P>
+After all databases have been identified, we possibly need to do some conflict resolution in the slot <FONT SIZE="-1"><TT>resolve()</TT></FONT>. The conflict resolution dialog just displays the list of databases and lets the user choose the sync direction for each database. When the user presses Ok, the direction field of each docSyncInfo object is set to the chosen value.
+
+<P>
+<PRE>
+void DOCConduit::resolve() {
+  FUNCTIONSETUP;
+  
+  for (fSyncInfoListIterator=fSyncInfoList.begin(); fSyncInfoListIterator!=fSyncInfoList.end(); fSyncInfoListIterator++) {
+    // Walk through each database and apply the conflictResolution option. 
+    // the remaining conflicts will be resolved in the resolution dialog
+    if ((*fSyncInfoListIterator).direction==eSyncConflict){
+      DEBUGCONDUIT&lt;&lt;"We have a conflict for "&lt;&lt;(*fSyncInfoListIterator).handheldDB&lt;&lt;", default="&lt;&lt;eConflictResolution&lt;&lt;endl;
+      switch (eConflictResolution)
+      {
+        case eSyncPDAToPC:
+          DEBUGCONDUIT&lt;&lt;"PDA overrides for database "&lt;&lt;(*fSyncInfoListIterator).handheldDB&lt;&lt;endl;
+          (*fSyncInfoListIterator).direction = eSyncPDAToPC;
+          break;
+        case eSyncPCToPDA:
+          DEBUGCONDUIT&lt;&lt;"PC overrides for database "&lt;&lt;(*fSyncInfoListIterator).handheldDB&lt;&lt;endl;
+          (*fSyncInfoListIterator).direction = eSyncPCToPDA;
+          break;
+        case eSyncNone:
+          DEBUGCONDUIT&lt;&lt;"No sync for database "&lt;&lt;(*fSyncInfoListIterator).handheldDB&lt;&lt;endl;
+          (*fSyncInfoListIterator).direction = eSyncNone;
+          break;
+        case eSyncDelete:
+        case eSyncConflict:
+        default:
+          DEBUGCONDUIT&lt;&lt;"Conflict remains due to default resolution setting for database "&lt;&lt;(*fSyncInfoListIterator).handheldDB&lt;&lt;endl;
+          break;
+      }
+    }
+  }
+  
+  // Show the conflict resolution dialog and ask for the action for each database
+  ResolutionDialog*dlg=new ResolutionDialog( 0,  i18n("Conflict Resolution"), &amp;fSyncInfoList , fHandle);
+  bool show=fAlwaysUseResolution || (dlg &amp;&amp; dlg-&gt;hasConflicts);
+  if (show) {
+    if (!dlg || !dlg-&gt;exec() ) {
+      KPILOT_DELETE(dlg)
+      emit logMessage(i18n("Sync aborted by user."));
+      QTimer::singleShot(0, this, SLOT(cleanup()));
+      return;
+    }
+  }
+  KPILOT_DELETE(dlg)
+  
+
+  // fDBNames will be filled with the names of the databases that are actually synced (not deleted), so I can write the list to the config file
+  fDBNames.clear();
+  fSyncInfoListIterator=fSyncInfoList.begin();
+  QTimer::singleShot(0,this, SLOT(syncDatabases()));
+  return;
+}
+</PRE>
+
+<P>
+Finally, the actual sync of the databases is done again with <FONT SIZE="-1"><TT>QTimer::singleShot</TT></FONT>s in the slot <FONT SIZE="-1"><TT>syncDatabases()</TT></FONT>. Each entry in the list is processed in one pass of <FONT SIZE="-1"><TT>syncDatabases</TT></FONT>, and then <FONT SIZE="-1"><TT>syncDatabases</TT></FONT> is again called using a <FONT SIZE="-1"><TT>QTimer::singleShot</TT></FONT>, until all databases have been synced.
+
+<P>
+<PRE>
+void DOCConduit::syncDatabases() {
+  FUNCTIONSETUP;
+  if (fSyncInfoListIterator==fSyncInfoList.end()) {
+    QTimer::singleShot(0, this, SLOT(cleanup()));
+    return;
+  }
+  
+  docSyncInfo sinfo=(*fSyncInfoListIterator);
+  fSyncInfoListIterator++;
+  
+  switch (sinfo.direction) {
+    case eSyncConflict:
+      DEBUGCONDUIT&lt;&lt;"Entry "&lt;&lt;sinfo.handheldDB&lt;&lt;"( docfilename: "&lt;&lt;sinfo.docfilename&lt;&lt;
+        ", pdbfilename: "&lt;&lt;sinfo.pdbfilename&lt;&lt;") had sync direction eSyncConflict!!!"&lt;&lt;endl;
+      break;
+    case eSyncDelete:
+    case eSyncPDAToPC:
+    case eSyncPCToPDA:
+      emit logMessage(i18n("Syncronizing text \"%1\"").arg(sinfo.handheldDB));
+      if (!doSync(sinfo)) {
+        // The sync could not be done, so inform the user (the error message should probably issued inside doSync)
+        DEBUGCONDUIT&lt;&lt;"There was some error syncing the text \""&lt;&lt;sinfo.handheldDB&lt;&lt;"\" with the file "&lt;&lt;sinfo.docfilename&lt;&lt;endl;
+      }
+      break;
+    case eSyncNone:
+//    case eSyncAll:
+      break;
+  }
+  if (sinfo.direction != eSyncDelete) fDBNames.append(sinfo.handheldDB);
+  
+  QTimer::singleShot(0,this, SLOT(syncDatabases()));
+  return;
+}
+</PRE>
+
+<P>
+The actual sync is done by the function <FONT SIZE="-1"><TT>doSync(docSyncInfo&amp;)</TT></FONT>, which first checks for deletion of the database as a special case. Otherwise, it uses the <FONT SIZE="-1"><EM><TT>DOCConverter</TT></EM></FONT> class to copy the text file to or from the handheld, and then recalculates the md5 checksum of the text file on disk and stores it in KPilot's config.
+
+<P>
+<PRE>
+bool DOCConduit::doSync(docSyncInfo &amp;sinfo) {
+  bool res=false;
+  
+  if (sinfo.direction==eSyncDelete) {
+    if (!sinfo.docfilename.isEmpty()) {
+      if (!QFile::remove(sinfo.docfilename)) {
+        kdWarning()&lt;&lt;i18n("Unable to delete the text file \"%1\" on the PC").arg(sinfo.docfilename)&lt;&lt;endl;
+      }
+      QString bmkfilename = sinfo.docfilename;
+      if (bmkfilename.endsWith(".txt")){
+        bmkfilename.remove(bmkfilename.length()-4, 4);
+      }
+      bmkfilename+=PDBBMK_SUFFIX;
+      if (!QFile::remove(bmkfilename)) {
+        DEBUGCONDUIT&lt;&lt;"Could not remove bookmarks file "&lt;&lt;bmkfilename&lt;&lt;" for database "&lt;&lt;sinfo.handheldDB&lt;&lt;endl;
+      }
+    }
+    if (!sinfo.pdbfilename.isEmpty() &amp;&amp; fKeepPDBLocally) {
+      PilotLocalDatabase*database=new PilotLocalDatabase(fPDBDir, sinfo.dbinfo.name, false);
+      if (database) {
+        if ( database-&gt;deleteDatabase() !=0 ) {
+          kdWarning()&lt;&lt;i18n("Unable to delete database \"%1\" on the PC").arg(sinfo.dbinfo.name)&lt;&lt;endl;
+        }
+        KPILOT_DELETE(database);
+      }
+    }
+    if (!fLocalSync) {
+      PilotDatabase *database=new PilotSerialDatabase(pilotSocket(), sinfo.dbinfo.name);
+      if ( database-&gt;deleteDatabase() !=0 ) {
+        kdWarning()&lt;&lt;i18n("Unable to delete database \"%1\" from the handheld").arg(sinfo.dbinfo.name)&lt;&lt;endl;
+      }
+      KPILOT_DELETE(database);
+    }
+    return true;
+  }
+  // preSyncAction should initialize the custom databases/files for the
+  // specific action chosen for this db and return a pointer to a docDBInfo
+  // instance which points either to a local database or a database on the handheld.
+  PilotDatabase *database = preSyncAction(sinfo);
+
+  if (database &amp;&amp; ( !database-&gt;isDBOpen() ) ) {
+    DEBUGCONDUIT&lt;&lt;"Database "&lt;&lt;sinfo.dbinfo.name&lt;&lt;" does not yet exist. Creating it:"&lt;&lt;endl;
+    if (!database-&gt;createDatabase(dbcreator(), dbtype()) ) {
+      DEBUGCONDUIT&lt;&lt;"Failed"&lt;&lt;endl;
+    }
+  }
+
+  if (database &amp;&amp; database-&gt;isDBOpen()) {
+    DOCConverter docconverter;
+    connect(&amp;docconverter, SIGNAL(logError(const QString &amp;)), SIGNAL(logError(const QString &amp;)));
+    connect(&amp;docconverter, SIGNAL(logMessage(const QString &amp;)), SIGNAL(logMessage(const QString &amp;)));
+
+    docconverter.setDOCpath(fDOCDir, sinfo.docfilename);
+    docconverter.setPDB(database);
+    docconverter.setBookmarkTypes(fBookmarks);
+    docconverter.setCompress(fCompress);
+
+    switch (sinfo.direction) {
+      case eSyncPDAToPC:
+        res = docconverter.convertPDBtoDOC();
+        break;
+      case eSyncPCToPDA:
+        res = docconverter.convertDOCtoPDB();
+        break;
+      default:
+        break;
+    }
+    
+    // Now calculate the md5 checksum of the PC text and write it to the config file
+    {
+      KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
+      KMD5 docmd5;
+      QFile docfile(docconverter.docFilename());
+      if (docfile.open(IO_ReadOnly)) {
+        docmd5.update(docfile);
+        QString thisDigest(docmd5.hexDigest().data());
+        fConfig-&gt;writeEntry(docconverter.docFilename(), thisDigest);
+        fConfig-&gt;sync();
+        DEBUGCONDUIT&lt;&lt;"MD5 Checksum of the text "&lt;&lt;sinfo.docfilename&lt;&lt;" is "&lt;&lt;thisDigest&lt;&lt;endl;
+      } else {
+        DEBUGCONDUIT&lt;&lt;"couldn't open file "&lt;&lt;docconverter.docFilename()&lt;&lt;" for reading!!!"&lt;&lt;endl;
+      }
+    }
+    
+    if (!postSyncAction(database, sinfo, res)) 
+      emit logError(i18n("Unable to install the locally created PalmDOC %1 to the handheld.").arg(sinfo.dbinfo.name));
+    if (!res)
+      emit logError(i18n("Conversion of PalmDOC \"%1\" failed.").arg(sinfo.dbinfo.name));
+//    disconnect(&amp;docconverter, SIGNAL(logError(const QString &amp;)), SIGNAL(logError(const QString &amp;)));
+//    disconnect(&amp;docconverter, SIGNAL(logMessage(const QString &amp;)), SIGNAL(logMessage(const QString &amp;)));
+//    KPILOT_DELETE(database);
+  }
+  else
+  {
+    emit logError(i18n("Unable to open or create the database %1").arg(sinfo.dbinfo.name));
+  }
+  return res;
+}
+</PRE>
+
+<P>
+After the sync is done, just call cleanup and emit the <FONT SIZE="-1"><TT>syncDone</TT></FONT> signal:
+
+<P>
+<PRE>
+void DOCConduit::cleanup() {
+  FUNCTIONSETUP;
+  
+  KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
+  fConfig-&gt;writeEntry(DOCConduitFactory::fDOCList, fDBNames);
+  fConfig-&gt;sync();
+
+  emit syncDone(this);
+}
+</PRE>
+
+<P>
+The worst part about the conduit is to find out which side has been changed (and how), and what needs to be done about this. The function <FONT SIZE="-1"><TT>needsSync</TT></FONT> does exactly this. If the database was not included in the last sync, it is new, so it will be synced from the side where it was added. 
+
+<P>
+First, we find out, how each of the two sides have changed.
+If the database was already included, check if it was changed using the function <FONT SIZE="-1"><TT>textChanged</TT></FONT> to compare the md5 checksum of the current text on disk with the checksum of the last sync (stored in kpilot's config). The handheld side is a bit trickier: A PalmDOC on the handheld contains of a header record, several text records, and finally several bookmark records. Each of these records can have the dirty flag set, so we first get the number of text records from the header record. Then we search for the index of the first changed record (i.e. dirty flag set) after the header record. If no text record (but a bookmark record) was changed, a config setting determines if the PalmDOC should still be considered as changed.
+
+<P>
+Finally, from the status of the two sides, determine the sync direction:
+
+<P>
+<PRE>
+bool DOCConduit::needsSync(docSyncInfo &amp;sinfo)
+{
+  FUNCTIONSETUP;
+  sinfo.direction = eSyncNone;
+  
+  PilotDatabase*docdb=openDOCDatabase(sinfo.dbinfo.name);
+  if (!fDBListSynced.contains(sinfo.handheldDB)) {
+    // the database wasn't included on last sync, so it has to be new.
+    DEBUGCONDUIT&lt;&lt;"Database "&lt;&lt;sinfo.dbinfo.name&lt;&lt;" wasn't included in the previous sync!"&lt;&lt;endl;
+
+    if (QFile::exists(sinfo.docfilename)) sinfo.fPCStatus=eStatNew;
+    else sinfo.fPCStatus=eStatDoesntExist;
+    if (docdb &amp;&amp; docdb-&gt;isDBOpen()) sinfo.fPalmStatus=eStatNew;
+    else sinfo.fPalmStatus=eStatDoesntExist;
+    KPILOT_DELETE(docdb);
+    
+    if (sinfo.fPCStatus==eStatNew &amp;&amp; sinfo.fPalmStatus==eStatNew) {
+      sinfo.direction=eSyncConflict;
+      return true;
+    };
+    if (sinfo.fPCStatus==eStatNew) {
+      sinfo.direction=eSyncPCToPDA;
+      return true;
+    }
+    if (sinfo.fPalmStatus==eStatNew) {
+      sinfo.direction=eSyncPCToPDA;
+      return true;
+    }
+    return true;
+  }
+  
+  // Text was included in the last sync, so if one side doesn't exist, it was deleted and needs to be deleted from the other side, too
+  if (!QFile::exists(sinfo.docfilename)) sinfo.fPCStatus=eStatDeleted;
+  else if(textChanged(sinfo.docfilename)) {
+    sinfo.fPCStatus=eStatChanged;
+    DEBUGCONDUIT&lt;&lt;"PC side has changed!"&lt;&lt;endl;
+    // TODO: Check for changed bookmarks on the PC side
+  } else {
+    DEBUGCONDUIT&lt;&lt;"PC side has NOT changed!"&lt;&lt;endl;
+  }
+  if (!docdb || !docdb-&gt;isDBOpen()) sinfo.fPalmStatus=eStatDeleted;
+  else {
+    PilotRecord *firstRec = docdb-&gt;readRecordByIndex(0);
+    PilotDOCHead docHeader(firstRec);
+    KPILOT_DELETE(firstRec);
+
+    int storyRecs = docHeader.numRecords;
+
+    // determine the index of the next modified record (does it lie beyond the actual text records?)
+    int modRecInd=-1;
+    PilotRecord*modRec=docdb-&gt;readNextModifiedRec(&amp;modRecInd);
+    DEBUGCONDUIT&lt;&lt;"Index of first changed record: "&lt;&lt;modRecInd&lt;&lt;endl;
+    
+    KPILOT_DELETE(modRec);
+    // if the header record was changed, find out which is the first changed real document record:
+    if (modRecInd==0) {
+      modRec=docdb-&gt;readNextModifiedRec(&amp;modRecInd);
+      DEBUGCONDUIT&lt;&lt;"Reread Index of first changed records: "&lt;&lt;modRecInd&lt;&lt;endl;
+      KPILOT_DELETE(modRec);
+    }
+  
+    // The record index starts with 0, so only a negative number means no modified record was found
+    if (modRecInd &gt;= 0) {
+//      sinfo.fPalmStatus=eStatBookmarksChanged;
+      DEBUGCONDUIT&lt;&lt;"Handheld side has changed!"&lt;&lt;endl;
+      if ((!fIgnoreBmkChangesOnly) || (modRecInd &lt;= storyRecs)) 
+        sinfo.fPalmStatus=eStatChanged;
+      DEBUGCONDUIT&lt;&lt;"PalmStatus="&lt;&lt;sinfo.fPalmStatus&lt;&lt;", condition="&lt;&lt;((!fIgnoreBmkChangesOnly) || (modRecInd &lt;= storyRecs))&lt;&lt;endl;
+    } else {
+      DEBUGCONDUIT&lt;&lt;"Handheld side has NOT changed!"&lt;&lt;endl;
+    }
+  }
+  KPILOT_DELETE(docdb);
+
+  if (sinfo.fPCStatus == eStatNone &amp;&amp; sinfo.fPalmStatus==eStatNone) {
+    DEBUGCONDUIT&lt;&lt;"Nothing has changed, not need for a sync."&lt;&lt;endl;
+    return false;
+  }
+  // if either is deleted, and the other is not changed, delete
+  if ( ((sinfo.fPCStatus == eStatDeleted) &amp;&amp; (sinfo.fPalmStatus!=eStatChanged)) ||
+       ((sinfo.fPalmStatus == eStatDeleted) &amp;&amp; (sinfo.fPCStatus!=eStatChanged)) ) {
+    DEBUGCONDUIT&lt;&lt;"Database was deleted on one side and not changed on the other -&gt; Delete it."&lt;&lt;endl;
+    sinfo.direction=eSyncDelete;
+    return true;
+  }
+  
+  // eStatDeleted (and both not changed) have already been treated, for all 
+  // other values in combination with eStatNone, just copy the texts.
+  if (sinfo.fPCStatus==eStatNone) {
+    DEBUGCONDUIT&lt;&lt;"PC side has changed!"&lt;&lt;endl;
+    sinfo.direction=eSyncPDAToPC;
+    return true;
+  }
+
+  if (sinfo.fPalmStatus==eStatNone) {
+    sinfo.direction=eSyncPCToPDA;
+    return true;
+  }
+  
+  // All other cases (deleted,changed), (changed, deleted), (changed,changed) create a conflict:
+  sinfo.direction=eSyncConflict;
+  return true;
+}
+</PRE>
+
+<P>
+These code pieces from the docconduit are supposed to give you an insight into how to structure a conduit. 
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html334"
+  HREF="node23.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html330"
+  HREF="index.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html324"
+  HREF="node21.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html332"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html335"
+  HREF="node23.html">A record-based conduit</A>
+<B> Up:</B> <A NAME="tex2html331"
+  HREF="index.html">KPilot conduit programming tutorial</A>
+<B> Previous:</B> <A NAME="tex2html325"
+  HREF="node21.html">A very simple conduit:</A>
+ &nbsp <B>  <A NAME="tex2html333"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>

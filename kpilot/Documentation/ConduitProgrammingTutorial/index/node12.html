@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Debugging conduits</TITLE>
+<META NAME="description" CONTENT="Debugging conduits">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="previous" HREF="node11.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node13.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html212"
+  HREF="node13.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html208"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html204"
+  HREF="node11.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html210"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html213"
+  HREF="node13.html">The Conduit Setup Dialog</A>
+<B> Up:</B> <A NAME="tex2html209"
+  HREF="node7.html">The general conduit framework</A>
+<B> Previous:</B> <A NAME="tex2html205"
+  HREF="node11.html">The conduit factory</A>
+ &nbsp <B>  <A NAME="tex2html211"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00035000000000000000">
+Debugging conduits</A>
+</H2>
+
+<P>
+Debugging KPilot conduits is not an easy task, as one cannot use a debugger 
+(because conduits are shared libraries and kpilotDaemon forks itself 
+in the background when it is started).
+
+<P>
+So printing debug output is the only way to get any information about what 
+the conduit is doing. If you don't configure kdepim it with <FONT SIZE="-1"><TT>-no-debug</TT></FONT>, or don't add 
+<FONT SIZE="-1"><TT>-NDEBUG</TT></FONT> in Makefile.am, then you can easily print out debug messages
+using the <FONT SIZE="-1"><TT>DEBUGCONDUIT</TT></FONT> stream. However, at the beginning of each 
+function where you want to use it, you need to add the macro <FONT SIZE="-1"><TT>FUNCTIONSETUP;</TT></FONT>, 
+which prints out a debug message with the current function name. Additionally, 
+it sets several variables like <FONT SIZE="-1"><TT>fname</TT></FONT> which holds the name of the current function.
+
+<P>
+As an example, the following code
+<PRE>
+void YourConduit::somefunction() {
+    FUNCTIONSETUP;
+    int i=5;
+#ifdef DEBUG
+    DEBUGCONDUIT&lt;&lt;fname&lt;&lt;": Value of i="&lt;&lt;i&lt;&lt;endl;
+#endif
+}
+</PRE>
+prints out the following debug message to stdout:
+<PRE>
+kpilotdaemon: somefunction: Value of i=5
+</PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>

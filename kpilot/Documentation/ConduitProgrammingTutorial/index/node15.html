@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Using the dialog template for your conduit</TITLE>
+<META NAME="description" CONTENT="Using the dialog template for your conduit">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="previous" HREF="node14.html">
+<LINK REL="up" HREF="node13.html">
+<LINK REL="next" HREF="node16.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html248"
+  HREF="node16.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html244"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html240"
+  HREF="node14.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html246"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html249"
+  HREF="node16.html">How the conduits work</A>
+<B> Up:</B> <A NAME="tex2html245"
+  HREF="node13.html">The Conduit Setup Dialog</A>
+<B> Previous:</B> <A NAME="tex2html241"
+  HREF="node14.html">The dialog template, using</A>
+ &nbsp <B>  <A NAME="tex2html247"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00042000000000000000">
+Using the dialog template for your conduit</A>
+</H2>
+
+<P>
+Now that we have the dialog template, we can include it in the configuration dialog box. 
+First, create a subclass of <FONT SIZE="-1"><EM><TT>ConduitConfig</TT></EM></FONT>, where we only have to implement the con- and 
+destructor as well as the methods
+
+<UL>
+<LI><FONT SIZE="-1"><TT>virtual void readSettings()</TT></FONT> 
+</LI>
+<LI><FONT SIZE="-1"><TT>virtual void commitChanges()</TT></FONT>
+</LI>
+</UL>
+This class <FONT SIZE="-1"><EM><TT>ConduitConfig</TT></EM></FONT> will do most of the work for us, all 
+that is left to us is to read the config settings from the config file 
+and set the values of the controls in the dialog (in the 
+<FONT SIZE="-1"><TT>readSettings()</TT></FONT> method). Also, when <FONT SIZE="-1"><TT>commitChanges()</TT></FONT> is 
+called, this means that the dialog was existed with the OK button, so 
+we need to read the new values from the controls and store them to the 
+configuration file.
+
+<P>
+The whole class declaration is:
+<PRE>
+class MALWidget;
+
+class MALWidgetSetup : public ConduitConfig 
+{
+Q_OBJECT
+public:
+    MALWidgetSetup(QWidget *,const char *,const QStringList &amp;);
+    virtual ~MALWidgetSetup() {};
+    virtual void readSettings();
+protected:
+    virtual void commitChanges();
+private:
+    MALWidget *fConfigWidget;
+} ;
+</PRE>
+
+<P>
+This class implements the dialog box itself, and our dialog template 
+will be inserted into this dialog by the constructor:
+<PRE>
+MALWidgetSetup::MALWidgetSetup(QWidget *w, const char *n,
+    const QStringList &amp; a) :
+    ConduitConfig(w,n,a)
+{
+    FUNCTIONSETUP;
+
+    fConfigWidget = new MALWidget(widget());
+    setTabWidget(fConfigWidget-&gt;tabWidget);
+    addAboutPage(false,MALConduitFactory::about());
+
+    fConfigWidget-&gt;tabWidget-&gt;adjustSize();
+    fConfigWidget-&gt;resize(fConfigWidget-&gt;tabWidget-&gt;size());
+}
+</PRE>
+
+<P>
+The first two lines create an instance of our dialog template and add it 
+as the tab widget to the dialog. Since we will have to set and read the 
+values of the controls in that tab widget, we need to store a pointer to 
+the instance in the variable <FONT SIZE="-1"><TT>fConfigWidget</TT></FONT> which is of the same type 
+(<FONT SIZE="-1"><TT>MALWidget</TT></FONT>) we assigned to our dialog template in QT Designer. The 
+third line of code adds the about page (which is created by the factory, 
+see last section) to the tab widget, while the last two line just adjust 
+the size of the dialog box and are not always needed.
+
+<P>
+As mentioned above, we only need to implement <FONT SIZE="-1"><TT>MALWidgetSetup::readSettings()</TT></FONT> 
+and <FONT SIZE="-1"><TT>MALWidgetSetup::commitChanges()</TT></FONT>. The <FONT SIZE="-1"><EM><TT>ConduitConfig</TT></EM></FONT> class 
+already stores an instance named fConfig to KPilot's configuration facility. 
+We only have to set the correct configuration group name (I suggest, you 
+store the name of the configuration group for you conduit in a <FONT SIZE="-1"><TT>static 
+char*</TT></FONT> variable of the conduit factory class), and then we can use the methods
+
+<UL>
+<LI><FONT SIZE="-1"><TT>fConfig-&gt;readNumEntry("entryname", <EM>defaultNumericValue)</EM></TT></FONT>
+</LI>
+<LI><FONT SIZE="-1"><TT>fConfig-&gt;readEntry("entryname", <EM>defaultstring)</EM></TT></FONT>
+</LI>
+<LI><FONT SIZE="-1"><TT>fConfig-&gt;readBoolEntry("entryname", <EM>defaultBoolValue)</EM></TT></FONT>
+</LI>
+</UL>
+to retrieve the settings from the configuration file. We then use the methods of the QT and KDE widgets to assign the text or value to the controls:
+
+<P>
+<PRE>
+/* virtual */ void MALWidgetSetup::readSettings()
+{
+    FUNCTIONSETUP;
+
+    if (!fConfig) return;
+    KConfigGroupSaver s(fConfig,MALConduitFactory::group());
+    
+    fConfigWidget-&gt;syncTime-&gt;setButton(fConfig-&gt;readNumEntry(MALConduitFactory::syncTime(), 0));
+    
+    // Proxy settings
+    fConfigWidget-&gt;proxyType-&gt;setButton(
+        fConfig-&gt;readNumEntry(MALConduitFactory::proxyType(), 0));
+    fConfigWidget-&gt;proxyServerName-&gt;setEditText(
+        fConfig-&gt;readEntry(MALConduitFactory::proxyServer(), ""));
+    int proxyPortNr=fConfig-&gt;readNumEntry(MALConduitFactory::proxyPort(), 0);
+    if (proxyPortNr&gt;0 &amp;&amp; proxyPortNr&lt;65536) 
+    {
+        fConfigWidget-&gt;proxyCustomPortCheck-&gt;setChecked(true);
+        fConfigWidget-&gt;proxyCustomPort-&gt;setEnabled(true);
+        fConfigWidget-&gt;proxyCustomPort-&gt;setValue(proxyPortNr);
+    }
+    fConfigWidget-&gt;proxyUserName-&gt;setText(fConfig-&gt;readEntry(
+        MALConduitFactory::proxyUser(), ""));
+    fConfigWidget-&gt;proxyPassword-&gt;setText(fConfig-&gt;readEntry(
+        MALConduitFactory::proxyPassword(), ""));
+}
+</PRE>
+
+<P>
+In this example, we don't store to the configuration file if a custom proxy port should be used. Instead, we just store a port number, and if the port number is 0 this means to use the default port. In this case, the custom port CheckBox needs to stay unchecked, and the port NumEntry control will stay disabled as it is in the dialog template. In all other cases, however, the custom port CheckBox should be checked, and the port NumEntry control will be enabled and filled with the correct custom port.
+
+<P>
+The KPilot user can then change all the settings in the dialogbox without any intervention from KPilot, so we don't need to write any code for that. Only the <FONT SIZE="-1"><TT>commitChanges()</TT></FONT> method remains to be done, which does the opposite of the readSettings() method. It reads the values of the controls and stores them to the configuration file. The <FONT SIZE="-1"><EM><TT>KConfig</TT></EM></FONT> class (the <FONT SIZE="-1"><TT>fConfig</TT></FONT> variable, resp.) has only one method <FONT SIZE="-1"><TT>KConfig::writeEntry("entryname", valueOfWhateverType)</TT></FONT> to write a value to the configuration file. However, this method has several overloaded implementations so that you can write numeric, string, boolean, date and many more variable types with the same syntax. First, we need to set the correct configuration group again, and then we just read each of the settings and write it out immediately using the <FONT SIZE="-1"><TT>writeEntry</TT></FONT> method:
+
+<P>
+<PRE>
+/* virtual */ void MALWidgetSetup::commitChanges()
+{
+    FUNCTIONSETUP;
+
+    if (!fConfig) return;
+    KConfigGroupSaver s(fConfig,MALConduitFactory::group());
+    
+    fConfig-&gt;writeEntry(MALConduitFactory::syncTime(),
+        fConfigWidget-&gt;syncTime-&gt;id(fConfigWidget-&gt;syncTime-&gt;selected()));
+    
+    // Proxy settings
+    fConfig-&gt;writeEntry(MALConduitFactory::proxyType(),
+        fConfigWidget-&gt;proxyType-&gt;id(fConfigWidget-&gt;proxyType-&gt;selected()));
+    fConfig-&gt;writeEntry(MALConduitFactory::proxyServer(), 
+        fConfigWidget-&gt;proxyServerName-&gt;currentText() );
+
+    if (fConfigWidget-&gt;proxyCustomPortCheck-&gt;isChecked() ) 
+    {
+        fConfig-&gt;writeEntry(MALConduitFactory::proxyPort(), 
+            fConfigWidget-&gt;proxyCustomPort-&gt;value());
+    }
+    else 
+    {
+        fConfig-&gt;writeEntry(MALConduitFactory::proxyPort(), 0);
+    }
+    fConfig-&gt;writeEntry(MALConduitFactory::proxyUser(), 
+        fConfigWidget-&gt;proxyUserName-&gt;text() );
+    fConfig-&gt;writeEntry(MALConduitFactory::proxyPassword(), 
+        fConfigWidget-&gt;proxyPassword-&gt;text() );
+}
+</PRE>
+
+<P>
+This was all that is needed to implement the configuration for your conduit. Simple, isn't it?
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html248"
+  HREF="node16.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html244"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html240"
+  HREF="node14.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html246"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html249"
+  HREF="node16.html">How the conduits work</A>
+<B> Up:</B> <A NAME="tex2html245"
+  HREF="node13.html">The Conduit Setup Dialog</A>
+<B> Previous:</B> <A NAME="tex2html241"
+  HREF="node14.html">The dialog template, using</A>
+ &nbsp <B>  <A NAME="tex2html247"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>

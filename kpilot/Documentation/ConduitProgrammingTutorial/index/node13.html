@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The Conduit Setup Dialog</TITLE>
+<META NAME="description" CONTENT="The Conduit Setup Dialog">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="next" HREF="node16.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="index.html">
+<LINK REL="next" HREF="node14.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html224"
+  HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html220"
+  HREF="index.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html214"
+  HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html222"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html225"
+  HREF="node14.html">The dialog template, using</A>
+<B> Up:</B> <A NAME="tex2html221"
+  HREF="index.html">KPilot conduit programming tutorial</A>
+<B> Previous:</B> <A NAME="tex2html215"
+  HREF="node12.html">Debugging conduits</A>
+ &nbsp <B>  <A NAME="tex2html223"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00040000000000000000"></A><A NAME="SetupSection"></A>
+<BR>
+The Conduit Setup Dialog
+</H1>
+
+<P>
+In this section I will shortly describe how you can implement a configuration dialog for your conduit. 
+There is nothing Palm- or KPilot-specific about this. All the configuration dialog does is to read the 
+configuration settings from the config file (using the <FONT SIZE="-1"><EM><TT>KConfig</TT></EM></FONT> class from kdelibs), and let 
+the user change them in the dialog. If the user exists the dialog by pressing OK, the new values are 
+read from the dialog controls and written back to the configuration file.
+
+<P>
+To provide a consistent experience to KPilot users, there already 
+exists a class <FONT SIZE="-1"><EM><TT>ConduitConfig</TT></EM></FONT> which is a subclass of <FONT SIZE="-1"><EM><TT>KDialog</TT></EM></FONT>. 
+This dialog does most of the basic work for you.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html226"
+  HREF="node14.html">The dialog template, using QT Designer</A>
+<LI><A NAME="tex2html227"
+  HREF="node15.html">Using the dialog template for your conduit</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>

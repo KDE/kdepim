@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>The SyncAction base class for conduits</TITLE>
+<META NAME="description" CONTENT="The SyncAction base class for conduits">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="next" HREF="node18.html">
+<LINK REL="previous" HREF="node16.html">
+<LINK REL="up" HREF="node16.html">
+<LINK REL="next" HREF="node18.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html276"
+  HREF="node18.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html272"
+  HREF="node16.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html266"
+  HREF="node16.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html274"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html277"
+  HREF="node18.html">The KPilotDeviceLink class for</A>
+<B> Up:</B> <A NAME="tex2html273"
+  HREF="node16.html">How the conduits work</A>
+<B> Previous:</B> <A NAME="tex2html267"
+  HREF="node16.html">How the conduits work</A>
+ &nbsp <B>  <A NAME="tex2html275"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00051000000000000000">
+The <FONT SIZE="-1"><EM><TT>SyncAction</TT></EM></FONT> base class for conduits</A>
+</H2>
+
+<P>
+All conduits are subclasses of <FONT SIZE="-1"><EM><TT>SyncAction</TT></EM></FONT>, which provides the following methods. The <FONT SIZE="-1"><TT>exec</TT></FONT> method is a pure virtual function and needs to be implemented by each conduit:
+
+<P>
+
+<UL>
+<LI><FONT SIZE="-1"><TT>virtual bool exec()=0</TT></FONT> ... This function starts the actual processing done
+     by the conduit. It should return false if the
+     processing cannot be initiated, f.ex. because 
+     some parameters were not set or a needed library
+     is missing. This will be reported to the user.
+     It should return true if processing is started
+     normally. If processing starts normally, it is
+     the <B>conduit's</B> responsibility to eventually
+     <FONT SIZE="-1"><TT>emit syncDone();</TT></FONT> if processing does not start
+     normally (ie. <FONT SIZE="-1"><TT>exec()</TT></FONT> returns false) then the
+     environment will deal with <FONT SIZE="-1"><TT>syncDone()</TT></FONT>.
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>void addSyncLogEntry(const QString &amp;e,bool suppress=false)</TT></FONT> ... Write a log entry to the pilot. Causes signal <FONT SIZE="-1"><TT>logEntry(const char *)</TT></FONT> to be emitted.
+</LI>
+<LI><FONT SIZE="-1"><TT>int pilotSocket()</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... returns the pilot socket (needed if you use your own functions to talk to the handheld. This is not recommended, but necessary in some cases)
+</LI>
+<LI><FONT SIZE="-1"><TT>int openConduit()</TT></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... Notify the handheld which conduit is running now.
+</LI>
+</UL>
+
+<P>
+In addition to these functions the class also has some signals you can emit to display log messages and to indicate that the conduit has finished and KPilot should go on with the next conduit: 
+<P>
+
+<UL>
+<LI><FONT SIZE="-1"><TT>void syncDone(SyncAction *)</TT></FONT> ... tell KPilot that the conduit has finished. Every conduit that returns true in its <FONT SIZE="-1"><TT>exec()</TT></FONT> method needs to emit this signal, otherwise KPilot will wait forever for the conduit to return.
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>void logMessage(const QString &amp;)</TT></FONT> ... Adds a message to KPilot's log, but not to the handheld's log.
+</LI>
+<LI><FONT SIZE="-1"><TT>void logError(const QString &amp;)</TT></FONT> ... Adds an error message to KPilot's log
+</LI>
+<LI><FONT SIZE="-1"><TT>void logProgress(const QString &amp;,int)</TT></FONT> ... Adds a log message and sets the progress bar to the given percentage.
+</LI>
+</UL>
+
+<P>
+If your conduit will have to ask the user some question, the handheld needs to be tickled to prevent a timeout while the message box or dialog window is shown. The <FONT SIZE="-1"><EM><TT>InteractiveAction</TT></EM></FONT> class (which is a subclass of <FONT SIZE="-1"><EM><TT>SyncAction</TT></EM></FONT>) can be used as a base class for your conduit in this case. Call <FONT SIZE="-1"><TT>startTickle()</TT></FONT> some time before showing a dialog to the user (we're assuming a local event loop here) so that while the dialog is up and the user is thinking, the pilot stays awake. Afterwards, call <FONT SIZE="-1"><TT>stopTickle()</TT></FONT>. The parameter to <FONT SIZE="-1"><TT>startTickle</TT></FONT> indicates the timeout, in seconds, before signal timeout is emitted. You can connect to that signal, to take down the user interface part if the user isn't reacting.
+In addition to <FONT SIZE="-1"><EM><TT>SyncAction</TT></EM></FONT>'s methods it adds the following methods:
+
+<P>
+
+<UL>
+<LI><FONT SIZE="-1"><TT>void tickle()</TT></FONT> ... Tickles the handheld to reset the timeout counter.
+</LI>
+<LI><FONT SIZE="-1"><TT>void startTickle(unsigned count=0)</TT></FONT> ... start a timer to tickle 
+the handheld in regular intervals
+</LI>
+<LI><FONT SIZE="-1"><TT>void stopTickle()</TT></FONT> ... stop the timer
+
+<P>
+</LI>
+<LI><FONT SIZE="-1"><TT>int questionYesNo(const QString &amp;question ,
+        const QString &amp;caption = QString::null,
+        const QString &amp;key = QString::null,
+        unsigned timeout = 20000)</TT></FONT> ... Ask a yes-no question of the user. 
+        This has a timeout so that you don't wait forever for inattentive users. 
+        It's much like <FONT SIZE="-1"><TT>KMessageBox::questionYesNo()</TT></FONT>, but with this extra 
+        timeout-on-no-answer feature. Returns a <FONT SIZE="-1"><TT>KDialogBase::ButtonCode</TT></FONT> 
+        value - Yes,No or Cancel on timeout. If there is a key set and the user 
+        indicates not to ask again, the selected answer (Yes or No) is 
+        remembered for future reference.
+</LI>
+</UL>
+
+<P>
+For conduits that sync one specific database (e.g. "AddressDB" or "TodoDB"), 
+there is the class <FONT SIZE="-1"><EM><TT>ConduitAction</TT></EM></FONT>, which is a child class of 
+<FONT SIZE="-1"><EM><TT>SyncAction</TT></EM></FONT>, and adds the following methods and members:
+
+<P>
+
+<UL>
+<LI><FONT SIZE="-1"><TT>PilotDatabase *fDatabase,*fLocalDatabase;</TT></FONT> ... Pointers to the 
+database on the handheld and the backup database on the harddisk. These are 
+set by openDatabases.
+</LI>
+<LI><FONT SIZE="-1"><TT>bool openDatabases(const char *dbName, bool*retrieved=0L)</TT></FONT> ... 
+opens the database named <FONT SIZE="-1"><TT>dbName</TT></FONT> on the handheld and the backup database 
+on the harddisk (in the directory <FONT SIZE="-1"><TT>$KDEHOME/share/apps/kpilot/DBBackup/PalmUserName/</TT></FONT>). 
+If the backup database does not exist, the current database from the palm is 
+fetched, and <FONT SIZE="-1"><TT>*retrieved</TT></FONT> is set to <FONT SIZE="-1"><TT>true</TT></FONT>.
+</LI>
+</UL> 
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html276"
+  HREF="node18.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html272"
+  HREF="node16.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html266"
+  HREF="node16.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html274"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html277"
+  HREF="node18.html">The KPilotDeviceLink class for</A>
+<B> Up:</B> <A NAME="tex2html273"
+  HREF="node16.html">How the conduits work</A>
+<B> Previous:</B> <A NAME="tex2html267"
+  HREF="node16.html">How the conduits work</A>
+ &nbsp <B>  <A NAME="tex2html275"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>

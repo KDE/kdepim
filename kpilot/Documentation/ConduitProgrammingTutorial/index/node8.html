@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>How conduits work in general</TITLE>
+<META NAME="description" CONTENT="How conduits work in general">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="next" HREF="node9.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="node7.html">
+<LINK REL="next" HREF="node9.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html166"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html162"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html156"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html164"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html167"
+  HREF="node9.html">A conduit is a</A>
+<B> Up:</B> <A NAME="tex2html163"
+  HREF="node7.html">The general conduit framework</A>
+<B> Previous:</B> <A NAME="tex2html157"
+  HREF="node7.html">The general conduit framework</A>
+ &nbsp <B>  <A NAME="tex2html165"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00031000000000000000">
+How conduits work in general</A>
+</H2>
+    KPilot is divided into three major components: the GUI, the
+syncing daemon, and the conduits.  When the GUI is started it attempts
+to make a connection to the syncing daemon.  If it can't it starts the
+daemon then makes the socket connection.  When the user hits the
+hot-sync button on the cradle the daemon checks to see if the GUI is
+connected.  If it is, the daemon notifies the GUI that a hot-sync has
+started.  The daemon then steps through all activated conduits and lets them
+do their sync. When the conduit is started it
+makes a connection back to the daemon and asks the daemon to read and
+write entries into the database.  When the conduit finishes it exits
+and the daemon continues on to the next conduit.  Once all the
+conduits have run the daemon alerts the GUI that it has
+finished and goes back to waiting for a sync to start. Note that the backup 
+of the Handheld is also done by a conduit, which is not visible to the user, though.
+
+<P>
+The basic conduit implements three important features:
+info/setup, backup, and normal hot-sync.  If the user clicks the setup 
+button in KPilot's conduit menu the conduit is started and requested
+to show a settings dialog.  If the conduit doesn't have any settings
+to adjust then it should simply display an about dialog.  When the
+dialog is closed the conduit will exit.  Next, if the user requested
+KPilot back up the pilot the conduit will be given the opportunity to
+grab everything off the pilot.  This is useful if this is the first
+time the conduit is being used.  For example if the user had never
+synced before this would be a good time to copy the data into the
+calendar, money database, etc.  Lastly, the conduit is requested to
+hot-sync whenever KPilot is hot-syncing with the pilot. 
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html166"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html162"
+  HREF="node7.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html156"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html164"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html167"
+  HREF="node9.html">A conduit is a</A>
+<B> Up:</B> <A NAME="tex2html163"
+  HREF="node7.html">The general conduit framework</A>
+<B> Previous:</B> <A NAME="tex2html157"
+  HREF="node7.html">The general conduit framework</A>
+ &nbsp <B>  <A NAME="tex2html165"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>

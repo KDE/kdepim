@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2K.1beta (1.48)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Using KitchenSync in your conduit</TITLE>
+<META NAME="description" CONTENT="Using KitchenSync in your conduit">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2K.1beta">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+<LINK REL="next" HREF="node25.html">
+<LINK REL="previous" HREF="node23.html">
+<LINK REL="up" HREF="index.html">
+<LINK REL="next" HREF="node25.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html358"
+  HREF="node25.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html354"
+  HREF="index.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html348"
+  HREF="node23.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html356"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html359"
+  HREF="node25.html">About this document ...</A>
+<B> Up:</B> <A NAME="tex2html355"
+  HREF="index.html">KPilot conduit programming tutorial</A>
+<B> Previous:</B> <A NAME="tex2html349"
+  HREF="node23.html">A record-based conduit</A>
+ &nbsp <B>  <A NAME="tex2html357"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00090000000000000000"></A> <A NAME="SectionKitchenSync"></A>
+<BR>
+Using KitchenSync in your conduit
+</H1>
+
+<P>
+Currently none of the KPilot conduits use the KitchenSync framework, which 
+is intended to be KDE's synchronization application of the future. Thus I cannot and will not 
+describe how to use it for your conduits. In the future, however, 
+KPilot will probably 's conduits will be ported to KitchenSync. For a quick overview over 
+KitchenSync see Cornelius Schumacher's original proposal at <A NAME="tex2html15"
+  HREF="http://pim.kde.org/development/ksync.php">http://pim.kde.org/development/ksync.php</A>.
+
+<P>
+Currently, the KitchenSync framework doesn't seem to be mature enough to replace KPilot's already very sophisticated conduits and their conflict resolution. 
+Some time ago I mailed Holger Freyther (one of the KitchenSync authors) about the current state of KitschenSync, and asked several important questions. His answer is printed below. In my eyes, KitchenSync is just lacking too many important features to be able to replace KPilot soon (or rather port KPilot to KitchenSync):
+
+<P>
+<PRE>
+Re: [Kitchensync] [Kde-pim] Some Kitchensync questions
+From:  Holger Freyther &lt;XXXXXX@XXXXX.XXX&gt;  (Opie)
+To: Reinhold Kainhofer &lt;reinhold@kainhofer.com&gt;
+Date: 05.10.2002 00:01
+
+
+On Wednesday 18 September 2002 19:57, Reinhold Kainhofer wrote:
+&gt; Hello,
+&gt; Yesterday night I took a quick look at the kitchensync sources to find out
+&gt; how kpilot might use it or how kpilot might need to be changed. Please
+&gt; forgive me if some questions might  be obvious or stupid, but I this is my
+&gt; first look at kitchensync/ksync, and I didn't have too much time. Just give
+&gt; me a hint on where to look. Additionally, it was very late at night, so my
+&gt; brain wasn't working properly any more ;-))
+&gt;
+&gt; My questions will of course be from a Palm/handheld syncing view, so they
+&gt; are quite specific concerning the current functionality of the conduits. I
+&gt; wouldn't like switching to something that - in theory - has a better and
+&gt; cleaner architecture, but for the next few years will provide less features
+&gt; than we currently have.
+
+Thats good! so then we find problems because you look at it from a different 
+point of view
+
+&gt; 1) Do I understand it right from the ksync proposal on pim.kde.org that
+&gt; kitchensync is the application that does all the communication with the
+&gt; "devices" (korganizer, palm, opie, kabc, local files etc.), while ksync is
+&gt; just the abstract library with the sync algorithm framework?
+
+It's a bit more.
+KitchenSync is the name of the whole framework (hmm deutsch oder englisch? ;)
+Konnector sind die Plugins, die Sachen vom Geraet holen, MetaDaten sammeln und 
+schreiben
+KSync ist 1. ein Kontainer und 2. Syncing Interface
+und KitchenSyncApp ist ne part
+
+
+&gt; 2) Do we have to ditch KPilot completely? So once again, once something in
+&gt; kpilot seems to get stable, the underlying infrastructure changes, and
+&gt; everything has to be completely rewritten from scratch.... That thought is
+&gt; not very comforting to me, no matter how big the advantages of a unified
+&gt; sync machinery seems.
+
+It would be a lost to just ditch KPilot. I would like to see a port of KPilot 
+to KitchenSync where we improve the framework.
+
+
+&gt; 3a) How can one sync the palm where you also have the backup record
+&gt; available, so you possibly know how the record looked like (on the pc and
+&gt; the palm side) after the previous sync
+
+The Palm Konnector would only have to care for the Palm side. There is 
+something called MetaSyncing. If it is enabled the PalmKonnector is demanded 
+to save the backend. Otherwise you do first syncs (just fetch it )
+
+&gt; 3b) How can one achieve a "smart merge", i.e. from the backup record the
+&gt; fields which have changed on the handheld and the pc are determined, and
+&gt; the fields are merged, instead of copying the whole record over.
+
+This is part of KSync. Currently we don't have it but it's planned including 
+intelligent conflict resolution.
+So what happens if the PC have a XYZ field but the Palm not. Now you change 
+anything on the palm and on the next sync you want the Palm to take advance 
+but not to lose the stuff in the other fields.
+So there needs to be this kind of merge. Fill the entry with all fields from 
+the other record with the same uid but do not overwrite
+And then there needs to be the smart merge. Which will also be part of the 
+KSync.
+But this is needed and will be added as soon as I find the time to do it. 
+
+
+&gt; 4) How can one use plugins that just copy something to the device and don't
+&gt; need any record-based sync and conflict resolution (e.g. using libmal to
+&gt; copy the AvantGo content to the palm).
+
+The KonnectorManager does allow you to either push QByteArrays or files behind 
+filenames to the device. 
+There is one short comming with it. It's asynchronus and currently no success 
+or failure is emmitted.
+But when taking in consideration that you want to fetch anything from the 
+device. You will need a special layer in Konnector which loads plugins for 
+Konnectors which allow some sort of getting stuff from the device.
+This is also varpoware
+
+
+&gt; 5) How about responsiveness of the front end? I realized there are no
+&gt; QTimer::singleShot to let qt process the queue between syncing two records.
+&gt; Or did I miss something?
+
+currenlty this is true. While we aim for ASYNC the syncing is currently 
+synchron. I first want to get it right.
+
+
+&gt; 6) How can one do the sync when you only know the changed records on one
+&gt; side, but not those that stayed the same? Especially when working with
+&gt; serial devices, minimizing the traffic is of very high priority, so I don't
+&gt; think we should always transfer the whole calendar/todo/addressbook
+&gt; database from and to the handheld (On windows to my surprise the sync of
+&gt; these needs only about 3 seconds. We have to compete with that ...).
+
+This is implementation detail of the Konnector again. I would store all the 
+records on my mighty PC
+
+
+&gt; 7) What if the device (i.e. Palm) does not support timestamps in any form
+&gt; for the records?
+
+This is a problem with Qtopia. QtopiaDesktop is using md5sums ( quite fast ) 
+for figuring changes.
+I've a copy of the files around and templates to do the diffing
+
+
+&gt; 8) How can one achieve archived records (i.e. marked as quasi-deleted from
+&gt; the palm and deleted after the sync, but they exist locally on the pc side.
+&gt; They are NO LONGER synced to the device. As an example take past events.
+&gt; You don't need them on the handheld any longer, but of course you don't
+&gt; want to loose the history on the PC.).
+
+Not thought of ;)
+A field inside the SyncEntry and the KonnectorPlugin needs to honor that
+
+
+&gt; 9) What if one side (handheld) does not support all features the pc side
+&gt; supports? I.e. the palm only has 5 phone/email fields, while you can have
+&gt; many more on the pc. The two addressbook items should still correspond and
+&gt; even be equal, although one side has less information available.
+
+see above about merging
+
+
+&gt; 10) Is there a daemon or does the whole app have to be in memory? (Sorry if
+&gt; this should be obvious, it was very late when I looked through the code and
+&gt; wrote down these questions)
+
+All in one for now
+
+
+&gt; 11) Is it possible to sync a list of todos where the order of the entries
+&gt; is important? (Needed for the Project Manager conduits). I realize that
+&gt; korganizer disregards the order of the todos currently, but other
+&gt; applications might use the ics file corretly (i.e. preserving the order)
+
+we're using Syncee's they should not sort
+
+
+I hope this helps
+
+regards Holger
+</PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+Reinhold Kainhofer
+2003-01-13
+</ADDRESS>
+</BODY>
+</HTML>
