@@ -44,7 +44,8 @@ kpilot_SOURCES	= \
 	dbSelectionDialog.cc dbSelection_base.ui \
 	pilotComponent.cc logWidget.cc memoWidget.cc \
 	addressWidget.cc addressEditor.cc \
-	dbviewerWidget.cc datebookWidget.cc \
+	dbviewerWidget.cc dbFlagsEditor.cc dbFlagsEditor_base.ui\
+	datebookWidget.cc \
 	todoWidget.cc todoEditor.cc \
 	fileInstaller.cc fileInstallWidget.cc \
 	listItems.cc \
@@ -79,9 +80,9 @@ kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-### libkhexedit_shared_la_LIBADD = $(LIB_KPRINTER) $(LIB_KPRINT) -lkdeprint
-### kpilot_LDADD		= $(LIB_KFILE) $(LIB_KPRINTER) $(LIB_KPRINT) -lkdeprint $(PISOCK_LIB) ../lib/libkpilot.la libkhexedit_shared.la
+### libkhexedit_shared_la_LIBADD = -lkdeprint
 kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
+### kpilot_LDADD		= $(LIB_KFILE) -lkdeprint $(PISOCK_LIB) ../lib/libkpilot.la libkhexedit_shared.la
 kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotConfig_LDADD      = $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la

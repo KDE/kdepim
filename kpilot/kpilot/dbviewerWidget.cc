@@ -52,6 +52,8 @@
 #include "pilotLocalDatabase.h"
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
+#include "dbFlagsEditor.h"
+#include "kpilotConfig.h"
 
 //#include "hexviewwidget.h"
 
@@ -74,7 +76,7 @@ void GenericDBWidget::setupWidget()
 	g->addWidget( fDBType, 1, 0 );
 	fDBType->insertItem( i18n( "All databases" ) );
 	fDBType->insertItem( i18n( "Only Applications (*.prc)" ) );
-	fDBType->insertItem( i18n( "Only Resources (*.pdb)" ) );
+	fDBType->insertItem( i18n( "Only Databases (*.pdb)" ) );
 
 	QGridLayout *g1 = new QGridLayout( 0, 1, 1);
 	fDBInfo = new KTextEdit( this );
@@ -216,16 +218,6 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 			<< ": Total " << currentRecord << " records" << endl;
 #endif
 
-/*		unsigned char*appBlock=new unsigned char[0xFFFF];
-		int len=fDB->readAppBlock(appBlock, 0xFFFF);
-		//CHexBuffer*fBuff=new CHexBuffer();
-		CHexBuffer*fBuff=fHexEdit->hexBuffer();
-		fBuff->assign((char*)appBlock, len);
-		fHexEdit->setBuffer(fBuff);
-		DEBUGKPILOT<<"fBuff.size="<<fBuff->size()<<endl;
-		DEBUGKPILOT<<"fBuff.count="<<fBuff->count()<<endl;
-		DEBUGKPILOT<<"len of appBlock="<<len<<endl;*/
-
 	}
 	else
 	{
@@ -310,6 +302,27 @@ void GenericDBWidget::slotEditRecord()
 {
 	FUNCTIONSETUP;
 // TODO:	if (editDlg->exec()) markDBDirty(getCurrentDB());
+/*		unsigned char*appBlock=new unsigned char[0xFFFF];
+		int len=fDB->readAppBlock(appBlock, 0xFFFF);
+		//CHexBuffer*fBuff=new CHexBuffer();
+		CHexBuffer*fBuff=fHexEdit->hexBuffer();
+		fBuff->assign((char*)appBlock, len);
+		fHexEdit->setBuffer(fBuff);
+		DEBUGKPILOT<<"fBuff.size="<<fBuff->size()<<endl;
+		DEBUGKPILOT<<"fBuff.count="<<fBuff->count()<<endl;
+		DEBUGKPILOT<<"len of appBlock="<<len<<endl;*/
+	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(fRecordList->selectedItem());
+	if (currRecItem)
+	{
+		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
+//		KDialogBase*dlg=new KDialogBase()
+		// TODO: Showw the record edit dialog
+	}
+	else
+	{
+		// Either nothing selected, or some error occured...
+		KMessageBox::information(this, i18n("You must select a record for editing."), i18n("No record selected"), i18n("Do not show this message again"));
+	}
 	KMessageBox::information(this, i18n("slotEditRecord on DB %1").arg(getCurrentDB()));
 }
 
@@ -324,7 +337,6 @@ void GenericDBWidget::slotShowAppInfo()
 {
 	FUNCTIONSETUP;
 	if (!fDB) return;
-
 // TODO:	if (editDlg->exec()) markDBDirty(getCurrentDB());
 	KMessageBox::information(this, i18n("slotShowApppInfo on DB %1").arg(getCurrentDB()));
 }
@@ -332,8 +344,23 @@ void GenericDBWidget::slotShowAppInfo()
 void GenericDBWidget::slotShowDBInfo()
 {
 	FUNCTIONSETUP;
-// TODO:	if (editDlg->exec()) markDBDirty(getCurrentDB());
-	KMessageBox::information(this, i18n("slotShowDBInfo on DB %1").arg(getCurrentDB()));
+	DBInfo db=fDB->getDBInfo();
+	DBFlagsEditor*dlg=new DBFlagsEditor(&db, this);
+	if (dlg->exec())
+	{
+#ifdef DEBUG
+		DEBUGKPILOT<<"OK pressed, assiging DBInfo, flags="<<
+			db.flags<<",  miscFlag="<<db.miscFlags<<endl;
+#endif
+		fDB->setDBInfo(db);
+
+		KPilotConfigSettings&c=KPilotConfig::getConfig();
+		c.setDatabaseGroup().addFlagsChangedDatabase(getCurrentDB());
+		c.sync();
+
+		slotSelected(fDBList->currentText());
+	}
+	KPILOT_DELETE(dlg);
 }
 
 void GenericDBWidget::enableWidgets(bool enable)

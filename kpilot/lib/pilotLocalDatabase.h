@@ -121,6 +121,7 @@ public:
 	char *appInfo() { return fAppInfo; } ;
 
 	struct DBInfo getDBInfo() const { return fDBInfo; }
+	void setDBInfo(struct DBInfo dbi) {fDBInfo=dbi; }
 
 protected:
 	// Changes any forward slashes to underscores
