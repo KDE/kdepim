@@ -74,7 +74,10 @@ class PilotAppCategory
 		}
 
     virtual ~PilotAppCategory(void) {}
-    
+
+      /** @return a PilotRecord that contains all of the info of the
+       *  subclass.  Remember to delete the PilotRecord when finished.
+       */
     virtual PilotRecord* pack()
         { 
 	int len = 0xffff; 
@@ -111,6 +114,9 @@ public:
 
 
 // $Log$
+// Revision 1.10  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.9  2001/04/04 21:19:38  stern
 // Added copy constructor and equals operator
 //
