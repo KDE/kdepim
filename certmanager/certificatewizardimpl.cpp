@@ -151,7 +151,10 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
 
     // Allow to select remote URLs
     storeUR->setMode( KFile::File );
-    //storeUR->fileDialog()->setOperationMode( KFileDialog::Saving );
+    // Bug in kdelibs-3.2's kfilefiltercombo.cpp: the '/' breaks the filter (no *.p10 file appears)
+    //const QString filter = QString("*.p10|") + i18n("S/MIME Certification Request (*.p10)").replace( "/", "\\/" );
+    const QString filter = QString("*.p10|") + i18n("SMIME Certification Request (*.p10)");
+    storeUR->setFilter( filter );
 
     connect( this, SIGNAL( helpClicked() ),
 	     this, SLOT( slotHelpClicked() ) );
