@@ -402,7 +402,7 @@ void KNNntpClient::doFetchNewHeaders()
     return;
 
   // no articles in selected range...
-  if (rep==240) {         // 240 No article(s) selected
+  if (rep==420) {         // 420 No article(s) selected
     target->setLastNr(last);
     return;
   } else if (rep!=224) {  // 224 success
