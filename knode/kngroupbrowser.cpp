@@ -28,6 +28,7 @@
 #include "knjobdata.h"
 #include "knode.h"
 #include "knglobals.h"
+#include "knconfigmanager.h"
 #include "knnntpaccount.h"
 #include "kngroupmanager.h"
 #include "kngroupbrowser.h"
@@ -64,8 +65,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   leftLabel->setFont(fnt);
   rightLabel->setFont(fnt);
 
-  pmGroup=UserIcon("group");
-  pmNew=UserIcon("redball");
+  pmGroup=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::group);
+  pmNew=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::redBall);
   pmRight=BarIcon("forward");
   pmLeft=BarIcon("back");
 

@@ -90,7 +90,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
 
   // Set up the folder bitmaps
   list << QString(" ")+i18n("Accounts");
-  setFolderIcon(list, UserIcon("server"));
+  setFolderIcon(list, UserIcon("server_big"));
 
   list.clear();
   list << QString(" ")+i18n("Reading News");
@@ -107,7 +107,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Accounts / News
   list.clear();
   list << QString(" ")+i18n("Accounts") << i18n(" News");
-  frame = addHBoxPage(list, i18n("Newsgroups Servers"), UserIcon("group"));
+  frame = addHBoxPage(list, i18n("Newsgroups Servers"), UserIcon("group_big"));
   w_idgets.append(new  KNConfig::NntpAccountListWidget(frame));
 
   // Accounts / Mail
