@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
     I18N_NOOP("(c) 2000-2003, The KMailCVT developers"));
   aboutData.addAuthor("Hans Dijkema",I18N_NOOP("Original author"), "kmailcvt@hum.org");
   aboutData.addAuthor("Laurence Anderson", I18N_NOOP("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
+  aboutData.addAuthor("Danny Kukawka", I18N_NOOP("New GUI & cleanups"), "danny.kukawka@web.de");
   aboutData.addCredit("Daniel Molkentin", I18N_NOOP("New GUI & cleanups"), "molkentin@kde.org");
 
   KCmdLineArgs::init( argc, argv, &aboutData );
