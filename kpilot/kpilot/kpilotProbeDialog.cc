@@ -252,7 +252,16 @@ void ProbeDialog::detect()
 void ProbeDialog::timeout()
 {
 	disconnectDevices();
-	if (!mDetected) fStatus->setText( i18n("Timeout reached, could not detect a handheld.") );
+	if (!mDetected) {
+		fStatus->setText( i18n("Timeout reached, could not detect a handheld.") );
+		KMessageBox::information ( this, i18n("<qt>A handheld could not be detected. Possible check the following things:</p>"
+			"<ul><li> Have you pressed the hotsync button on the handheld?\n"
+			"<li> Make sure the device is sits in the cradle.\n"
+			"<li> Make sure the cradle is correctly plugged in to the computer.\n"
+			"<li> Have you checked that your device is actually supported by kpilot (see http://www.kpilot.org).\n"
+			"</ul>"
+			), i18n("Automatic detection failed"), "AutoDetectionFailed");
+	}
 }
 
 void ProbeDialog::connection( KPilotDeviceLink*lnk)
