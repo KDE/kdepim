@@ -36,6 +36,7 @@
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kapp.h>
+#include <kaction.h>
 
 // Local includes
 #include "EmpathTask.h"
@@ -55,7 +56,7 @@ EmpathMainWindow::EmpathMainWindow()
     :    KTMainWindow("MainWindow")
 {
     // Resize to previous size.
-    
+   
     KConfig * c = KGlobal::config();
 
     using namespace EmpathConfig;
@@ -88,7 +89,7 @@ EmpathMainWindow::EmpathMainWindow()
 
     setView(mainWidget_, false);
     kapp->setMainWidget(this);
-    
+   
     _setupMenuBar();
     _setupToolBar();
     _setupStatusBar();
@@ -141,22 +142,14 @@ EmpathMainWindow::_setupToolBar()
     QObject::connect(tb, SIGNAL(moved(BarPosition)),
             this, SLOT(s_toolbarMoved(BarPosition)));
 
-    tb->insertButton(empathIcon("toolbar-compose"), 0, SIGNAL(clicked()),
-            this, SLOT(s_messageNew()), true, i18n("Compose"));
-    
-    tb->insertButton(empathIcon("toolbar-reply"), 0, SIGNAL(clicked()),
-            this, SLOT(s_messageReply()), true, i18n("Reply"));
-    
-    tb->insertButton(empathIcon("toolbar-forward"), 0, SIGNAL(clicked()),
-            this, SLOT(s_messageForward()), true, i18n("Forward"));
-    
+    messageListWidget_->messageCompose->plug(tb);
+    messageListWidget_->messageReply->plug(tb);
+    messageListWidget_->messageForward->plug(tb);
+
     tb->insertSeparator();
-    
-    tb->insertButton(empathIcon("toolbar-delete"), 0, SIGNAL(clicked()),
-            this, SLOT(s_messageDelete()), true, i18n("Delete"));
-    
-    tb->insertButton(empathIcon("toolbar-save"), 0, SIGNAL(clicked()),
-            this, SLOT(s_messageSaveAs()), true, i18n("Save"));
+
+    messageListWidget_->messageDelete->plug(tb);
+    messageListWidget_->messageSaveAs->plug(tb);
 }
 
     void

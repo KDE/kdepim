@@ -61,6 +61,12 @@ EmpathMainWindow::_setupMenuBar()
     
     messageMenu_->insertSeparator();
 
+    messageListWidget_->messageCompose->plug(messageMenu_);
+    messageListWidget_->messageReply->plug(messageMenu_);
+    messageListWidget_->messageReplyAll->plug(messageMenu_);
+    messageListWidget_->messageForward->plug(messageMenu_);
+    
+/*
     messageMenu_->insertItem(empathIcon("menu-compose"),
         i18n("&New"),
         this, SLOT(s_messageNew()));
@@ -76,11 +82,16 @@ EmpathMainWindow::_setupMenuBar()
     messageMenu_->insertItem(empathIcon("menu-forward"),
         i18n("&Forward"),
         this, SLOT(s_messageForward()));
+*/
 
     messageMenu_->insertItem(empathIcon("menu-bounce"),
         i18n("&Bounce"),
         this, SLOT(s_messageBounce()));
 
+    messageListWidget_->messageDelete->plug(messageMenu_);
+    messageListWidget_->messageSaveAs->plug(messageMenu_);
+
+/*
     messageMenu_->insertItem(empathIcon("menu-delete"),
         i18n("&Delete"),
         this, SLOT(s_messageDelete()));
@@ -88,6 +99,7 @@ EmpathMainWindow::_setupMenuBar()
     messageMenu_->insertItem(empathIcon("menu-save"),
         i18n("Save &As"),
         this, SLOT(s_messageSaveAs()));
+*/
     
     messageMenu_->insertItem(empathIcon("menu-copy"),
         i18n("&Copy to..."),

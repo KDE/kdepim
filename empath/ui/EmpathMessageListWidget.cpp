@@ -42,6 +42,7 @@
 #include <kapp.h>
 #include <kglobal.h>
 #include <kconfig.h>
+#include <kaction.h>
 
 // Local includes
 #include "EmpathMessageMarkDialog.h"
@@ -72,7 +73,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     
     setSorting(-1);
 
-    setMultiSelection(true);
+    setSelectionMode(QListView::Extended);
 
     addColumn(i18n("Subject"));
     addColumn(i18n("Sender"));
@@ -100,6 +101,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
         setColumnWidthMode(i, QListView::Manual);
     }
 
+    _initActions();
     _setupMessageMenu();
    
     QObject::connect(
@@ -302,6 +304,12 @@ EmpathMessageListWidget::s_messageMarkRead()
 EmpathMessageListWidget::s_messageMarkReplied()
 {
     markOne(RMM::Replied);
+}
+
+    void
+EmpathMessageListWidget::s_messageCompose()
+{
+    empath->s_compose();
 }
 
     void
@@ -574,6 +582,23 @@ EmpathMessageListWidget::s_headerClicked(int i)
 }
 
     void
+EmpathMessageListWidget::_initActions()
+{
+    messageCompose = new KAction(i18n("&Compose"), empathIconSet("compose"), 0, 
+                    this, SLOT(s_messageCompose()), this, "messageCompose");
+    messageReply = new KAction(i18n("&Reply"), empathIconSet("reply"), 0,
+                    this, SLOT(s_messageReply()), this, "messageReply");
+    messageReplyAll = new KAction(i18n("Reply to &All"), empathIconSet("reply"), 0,
+                    this, SLOT(s_messageReplyAll()), this, "messageReplyAll");
+    messageForward = new KAction(i18n("&Forward"), empathIconSet("forward"), 0,
+                    this, SLOT(s_messageForward()), this, "messageForward");
+    messageDelete = new KAction(i18n("&Delete"), empathIconSet("delete"), 0,
+                    this, SLOT(s_messageDelete()), this, "messageDelete");
+    messageSaveAs = new KAction(i18n("Save &As"), empathIconSet("save"), 0,
+                    this, SLOT(s_messageSaveAs()), this, "messageSaveAs");
+}
+
+    void
 EmpathMessageListWidget::_setupMessageMenu()
 {
     messageMenuItemView =
@@ -599,40 +624,18 @@ EmpathMessageListWidget::_setupMessageMenu()
         
     messageMenu_.insertSeparator();
 
-    messageMenuItemReply =
-    messageMenu_.insertItem(empathIcon("menu-reply"), i18n("Reply"),
-        this, SLOT(s_messageReply()));
+    messageReply->plug(&messageMenu_);
+    messageReplyAll->plug(&messageMenu_);
+    messageForward->plug(&messageMenu_);
+    messageDelete->plug(&messageMenu_);
+    messageSaveAs->plug(&messageMenu_);
 
-    messageMenuItemReplyAll =
-    messageMenu_.insertItem(empathIcon("menu-reply"),i18n("Reply to A&ll"),
-        this, SLOT(s_messageReplyAll()));
-
-    messageMenuItemForward =
-    messageMenu_.insertItem(empathIcon("menu-forward"), i18n("Forward"),
-        this, SLOT(s_messageForward()));
-
-    messageMenuItemDelete =
-    messageMenu_.insertItem(empathIcon("menu-delete"), i18n("Delete"),
-        this, SLOT(s_messageDelete()));
-
-    messageMenuItemSaveAs =
-    messageMenu_.insertItem(empathIcon("menu-save"), i18n("Save As"),
-        this, SLOT(s_messageSaveAs()));
-    
     multipleMessageMenu_.insertItem(i18n("Mark..."),
         this, SLOT(s_messageMarkMany()));
     
-    multipleMessageMenu_.insertItem(
-        empathIcon("menu-forward"), i18n("Forward"),
-        this, SLOT(s_messageForward()));
-
-    multipleMessageMenu_.insertItem(
-        empathIcon("menu-delete"), i18n("Delete"),
-        this, SLOT(s_messageDelete()));
-
-    multipleMessageMenu_.insertItem(
-        empathIcon("menu-save"), i18n("Save As"),
-        this, SLOT(s_messageSaveAs()));
+    messageForward->plug(&multipleMessageMenu_);
+    messageDelete->plug(&multipleMessageMenu_);
+    messageSaveAs->plug(&multipleMessageMenu_);
 
     threadMenu_.insertItem(i18n("Expand"),
         this, SLOT(s_expandThread()));

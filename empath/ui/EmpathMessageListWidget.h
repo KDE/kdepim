@@ -44,6 +44,8 @@
 #include "EmpathMessageListItem.h"
 #include "EmpathURL.h"
 
+class KAction;
+
 class EmpathFolder;
 class EmpathMessageListWidget;
 class EmpathMainWindow;
@@ -103,6 +105,21 @@ class EmpathMessageListWidget : public EmpathListView
 
         void listenTo(unsigned int);
 
+        // Message related actions
+        // TODO: move them to a better place, and use kparts.
+        KAction	* messageCompose;
+        KAction	* messageReply;
+        KAction	* messageReplyAll;
+        KAction	* messageForward;
+        KAction	* messageBounce;
+        KAction	* messageDelete;
+        KAction	* messageSaveAs;
+        KAction	* messageCopyTo;
+        KAction	* messageMoveTo;
+        KAction	* messagePrint;
+        KAction	* messageFilter;
+        KAction	* messageView;
+
     public slots:
 
         void s_messageDelete();
@@ -114,6 +131,7 @@ class EmpathMessageListWidget : public EmpathListView
         void s_messageMarkReplied();
         void s_messageMarkMany();
         void s_messageView();
+        void s_messageCompose();
         void s_messageReply();
         void s_messageReplyAll();
         void s_messageForward();
@@ -148,6 +166,8 @@ class EmpathMessageListWidget : public EmpathListView
         void _reconnectToFolder(const EmpathURL &);
 
         void _fillDisplay(bool);
+        
+        void _initActions();
         
         void _setupMessageMenu();
         
@@ -191,11 +211,6 @@ class EmpathMessageListWidget : public EmpathListView
         int messageMenuItemMarkRead;
         int messageMenuItemMarkReplied;
         int messageMenuItemView;
-        int messageMenuItemReply;
-        int messageMenuItemReplyAll;
-        int messageMenuItemForward;
-        int messageMenuItemDelete;
-        int messageMenuItemSaveAs;
 
         int sortColumn_;
         bool sortAscending_;

@@ -45,4 +45,11 @@ QPixmap empathIcon(const QString & name)
     return KGlobal::iconLoader()->loadIcon(name);
 }
 
+QIconSet empathIconSet(const QString & name)
+{
+    QIconSet iconSet(empathIcon("menu-" + name), QIconSet::Small);
+    iconSet.setPixmap(empathIcon("toolbar-" + name), QIconSet::Large);
+    return iconSet;
+}
+
 // vim:ts=4:sw=4:tw=78

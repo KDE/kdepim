@@ -28,14 +28,15 @@
 #define EMPATHMAINWINDOW_H
 
 // Qt includes
-#include <qpopupmenu.h>
 #include <qwidgetstack.h>
+#include <qpopupmenu.h>
 
 // KDE includes
 #include <ktmainwindow.h>
 #include <ktoolbar.h>
 #include <kprogress.h>
 #include <kapp.h>
+#include <kaction.h>
 
 // Local includes
 #include "EmpathDefines.h"
