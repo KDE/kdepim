@@ -19,52 +19,10 @@
 
 ## Process this file with automake to produce Makefile.in
 
-#EXTRA_DIST = gpgme-config.in gpgme.m4 mkstatus libgpgme.vers
-#BUILT_SOURCES = status-table.h
-#MOSTLYCLEANFILES = status-table.h
-#bin_SCRIPTS = gpgme-config
-#m4datadir = $(datadir)/aclocal
-#m4data_DATA = gpgme.m4
-#include_HEADERS = gpgme.h
+noinst_LTLIBRARIES = libgpgme-real.la libgpgme.la
 
-#if HAVE_PTHREAD
-#ltlib_gpgme_pthread = libgpgme-pthread.la
-#else
-#ltlib_gpgme_pthread =
-#endif
-#if HAVE_PTH
-#ltlib_gpgme_pth = libgpgme-pth.la
-#else
-#ltlib_gpgme_pth =
-#endif
-
-noinst_LTLIBRARIES = libgpgme-real.la libgpgme.la # $(ltlib_gpgme_pthread) $(ltlib_gpgme_pth)
-
-#if HAVE_LD_VERSION_SCRIPT
-#libgpgme_version_script_cmd = -Wl,--version-script=$(srcdir)/libgpgme.vers
-#else
-#libgpgme_version_script_cmd =
-#endif
-
-#if BUILD_ASSUAN
 assuan_cppflags = -I$(srcdir)/../assuan
 assuan_libobjs = ../assuan/libassuan.la
-#else
-#assuan_cppflags =
-#assuan_libobjs =
-#endif
-
-#if HAVE_DOSISH_SYSTEM
-#system_components = w32-util.c w32-sema.c w32-io.c
-#else
-#system_components = posix-util.c posix-sema.c posix-io.c
-#endif
-
-#if HAVE_GPGSM
-#gpgsm_components = engine-gpgsm.c
-#else
-#gpgsm_components =
-#endif
 
 libgpgme_real_la_SOURCES =						\
 	conversion.c get-env.c 	\
@@ -82,44 +40,11 @@ libgpgme_real_la_SOURCES =						\
 	engine-gpgsm.c \
 	debug.c gpgme.c version.c error.c
 
-# libgpgme_la_SOURCES = ath.h ath.c
-#if HAVE_PTH
-#ath_pth_src = ath-pth-compat.c
-#else
-#ath_pth_src =
-#endif
-#if HAVE_PTHREAD
-#ath_pthread_src = ath-pthread-compat.c
-#else
-  ath_pthread_src =
-#endif
-libgpgme_la_SOURCES = ath-compat.c fakes.c # $(ath_pth_src) $(ath_pthread_src)
-#libgpgme_pthread_la_SOURCES = ath.h ath-pthread.c
-#libgpgme_pth_la_SOURCES = ath.h ath-pth.c
+libgpgme_la_SOURCES = ath-compat.c fakes.c
 
 AM_CPPFLAGS = $(assuan_cppflags) -I$(srcdir)/../../libgpg-error-copy
 
-#libgpgme_la_LDFLAGS = $(libgpgme_version_script_cmd) -version-info \
-	#@LIBGPGME_LT_CURRENT@:@LIBGPGME_LT_REVISION@:@LIBGPGME_LT_AGE@
-#libgpgme_la_DEPENDENCIES = libgpgme-real.la $(assuan_libobjs) \
-	#@LTLIBOBJS@ $(srcdir)/libgpgme.vers
-libgpgme_la_LIBADD = libgpgme-real.la ../../libgpg-error-copy/libgpg-error.la $(assuan_libobjs) # @LTLIBOBJS@
-
-#libgpgme_pthread_la_LDFLAGS = $(libgpgme_version_script_cmd) -version-info \
-	#@LIBGPGME_LT_CURRENT@:@LIBGPGME_LT_REVISION@:@LIBGPGME_LT_AGE@
-#libgpgme_pthread_la_DEPENDENCIES = libgpgme-real.la $(assuan_libobjs) \
-	#@LTLIBOBJS@ $(srcdir)/libgpgme.vers
-#libgpgme_pthread_la_LIBADD = libgpgme-real.la $(assuan_libobjs) @LTLIBOBJS@ \
-	#-lpthread @GPG_ERROR_LIBS@
-#
-#libgpgme_pth_la_CPPFLAGS = $(AM_CPPFLAGS) @PTH_CPPFLAGS@
-#libgpgme_pth_la_LDFLAGS = @PTH_LDFLAGS@ \
-	#$(libgpgme_version_script_cmd) -version-info \
-	#@LIBGPGME_LT_CURRENT@:@LIBGPGME_LT_REVISION@:@LIBGPGME_LT_AGE@
-#libgpgme_pth_la_DEPENDENCIES = libgpgme-real.la $(assuan_libobjs) \
-	#@LTLIBOBJS@ $(srcdir)/libgpgme.vers
-#libgpgme_pth_la_LIBADD = libgpgme-real.la $(assuan_libobjs) @LTLIBOBJS@ \
-	#@PTH_LIBS@ @GPG_ERROR_LIBS@
+libgpgme_la_LIBADD = libgpgme-real.la ../../libgpg-error-copy/libgpg-error.la $(assuan_libobjs)
 
 status-table.h : $(srcdir)/gpgme.h
 	$(srcdir)/mkstatus < $(srcdir)/gpgme.h > status-table.h
