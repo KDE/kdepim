@@ -165,7 +165,7 @@ static float perc=0.0;
           status=-1;
         }
         else {
-          if(F->kmailMessage(INFO, (char *) FOLDER, QFile::encodeName(tmp->name()).data())) added++;
+          if(F->kmailMessage(INFO, (char *) FOLDER, tmp->name())) added++;
           mails += 1;
           status=-1; // skip to next message.
         }

@@ -61,7 +61,7 @@ class KMail
    ~KMail();
    
     bool kmailStart(FilterInfo *info) { return true; }
-    bool kmailMessage(FilterInfo *info,char *folder,char *msg);
+    bool kmailMessage(FilterInfo *info,QString folder,QString msgFile);
     void kmailStop(FilterInfo *info);
   private:
     QString cap;

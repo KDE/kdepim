@@ -18,12 +18,12 @@
 #include "filters.hxx"
 #include "kmailcvt.h"
 
-#include <stdlib.h>
+/*#include <stdlib.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
-#include <unistd.h>
+#include <unistd.h>*/
 
 #include <qlayout.h>
 #include <kmessagebox.h>
@@ -157,14 +157,13 @@ KMail::~KMail()
 {
 }
 
-bool KMail::kmailMessage(FilterInfo *info,char *folder,char *_msg)
+bool KMail::kmailMessage(FilterInfo *info,QString folderName,QString msgPath)
 {
-  QString folderName(folder);
-  QString msg(_msg);
+  QString msg;
   const QByteArray kmData;
   QByteArray kmRes;
   QDataStream kmArg(kmData,IO_WriteOnly);
-  KURL message(msg);
+  KURL message(msgPath);
   QCString type;
 
   kmArg << folderName << message;
@@ -186,15 +185,15 @@ bool KMail::kmailMessage(FilterInfo *info,char *folder,char *_msg)
   KmResult >> result;
     
   if (result==-1) {
-    msg=i18n("Cannot make folder %1 in KMail").arg(folder);
+    msg=i18n("Cannot make folder %1 in KMail").arg(folderName);
     info->alert(cap,msg);
     return false;
   } else if (result==-2) {
-    msg=i18n("Cannot add message to folder %1 in KMail").arg(folder);
+    msg=i18n("Cannot add message to folder %1 in KMail").arg(folderName);
     info->alert(cap,msg);
     return false;
   } else if (result==0) {
-    msg=i18n("Error while adding message to folder %1 in KMail").arg(folder);
+    msg=i18n("Error while adding message to folder %1 in KMail").arg(folderName);
     info->alert(cap,msg);
     return false;
   }

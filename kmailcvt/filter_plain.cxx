@@ -99,7 +99,7 @@ void FilterPlain::processFiles(QString filter)
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
 	inf->from(i18n("From: %1").arg(*mailFile));
 	inf->to(i18n("To: %1").arg(dir.dirName()));
-	kmailMessage((FilterInfo *) inf, (char *)dir.dirName().latin1(), (char *)dir.filePath(*mailFile).latin1());
+	kmailMessage((FilterInfo *) inf, dir.dirName(), dir.filePath(*mailFile));
         
 	inf->overall((((float) ++currentFile)/((float) totalFiles))*100.0);
    }

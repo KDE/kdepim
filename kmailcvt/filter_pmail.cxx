@@ -252,7 +252,7 @@ void FilterPMail::importMailFolder(const char *file)
          if (ch == 0x1a) {
             // close file, send it
             fclose(temp);
-            kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname);
+            kmailMessage((FilterInfo *) inf, folder, tempname);
             unlink(tempname);
             state = 0;
             break;
@@ -268,7 +268,7 @@ void FilterPMail::importMailFolder(const char *file)
    // did Folder end without 0x1a at the end?
    if (state != 0) {
       fclose(temp);
-      kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname);
+      kmailMessage((FilterInfo *) inf, folder, tempname);
       unlink(tempname);
    }
 
@@ -324,7 +324,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
          regexp.search(line) >= 0))                            // slower regexp
       {
          fclose(temp);
-         kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname);
+         kmailMessage((FilterInfo *) inf, folder, tempname);
          unlink(tempname);
          temp = NULL;
       }
@@ -345,7 +345,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
 
    if (temp) {
       fclose(temp);
-      kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname);
+      kmailMessage((FilterInfo *) inf, folder, tempname);
       unlink(tempname);
    }
 
