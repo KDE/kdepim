@@ -1,5 +1,5 @@
 /*
-    main.cpp
+    kwatchgnupgmainwin.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
@@ -153,6 +153,10 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
 							   config->readEntry("Socket", 
 												 WATCHGNUPGSOCKET ));
 		logclients << QString("%1 (%2)").arg(*it).arg(comp->description());
+	  }
+	  entry = group->entry("debug-level");
+	  if( entry ) {
+		entry->setStringValue( config->readEntry("LogLevel", "basic") );
 	  }
 	}
   }
