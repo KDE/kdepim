@@ -761,7 +761,8 @@ int main(int argc, char **argv)
 		I18N_NOOP(".ui files"));
 	about.addCredit("Aaron J. Seigo",
 		I18N_NOOP("Bugfixer, coolness"));
-
+	about.addCredit("Reinhold Kainhofer",
+		I18N_NOOP("VCal and Addressbook conduit ports, time conduit, AvantGo conduit"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
 
 
 	KCmdLineArgs::init(argc, argv, &about);
@@ -874,6 +875,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.76  2002/06/24 19:29:11  adridg
+// Allow daemon RW access to config file
+//
 // Revision 1.75  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //
