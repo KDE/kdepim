@@ -27,6 +27,11 @@
 
 #include "kablock.h"
 
+// sorry for this hack, but i need AddressBook::standardResource()
+#define protected public
+#include <kabc/addressbook.h>
+#include <kabc/resource.h>
+
 KABLock *KABLock::mSelf = 0;
 
 static KStaticDeleter<KABLock> kabLockDeleter;
@@ -70,6 +75,9 @@ bool KABLock::lock( KABC::Resource *resource )
 
 bool KABLock::unlock( KABC::Resource *resource )
 {
+  if ( resource == 0 )
+    resource = mAddressBook->standardResource();
+
   if ( mLocks.find( resource ) == mLocks.end() ) { // hmm, not good...
     return false;
   } else {

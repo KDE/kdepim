@@ -24,8 +24,11 @@
 #ifndef KABLOCK_H
 #define KABLOCK_H
 
-#include <kabc/addressbook.h>
-#include <kabc/resource.h>
+namespace KABC {
+class AddressBook;
+class Resource;
+class Ticket;
+}
 
 typedef struct {
   KABC::Ticket *ticket;
