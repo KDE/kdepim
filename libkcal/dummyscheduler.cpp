@@ -51,6 +51,13 @@ bool DummyScheduler::publish (IncidenceBase *incidence,const QString &recipients
   return saveMessage(messageText);
 }
 
+bool DummyScheduler::performTransaction(IncidenceBase *incidence,Method method,const QString &recipients)
+{
+  QString messageText = mFormat->createScheduleMessage(incidence,method);
+
+  return saveMessage(messageText);
+}
+
 bool DummyScheduler::performTransaction(IncidenceBase *incidence,Method method)
 {
   QString messageText = mFormat->createScheduleMessage(incidence,method);

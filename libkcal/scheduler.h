@@ -90,6 +90,10 @@ class Scheduler {
     /** Perform iTIP transaction on incidence. The method is specified as the
     method argumanet and can be any valid iTIP method. */
     virtual bool performTransaction(IncidenceBase *incidence,Method method) = 0;
+    /** Perform iTIP transaction on incidence to specified recipient(s). The 
+    method is specified as the method argumanet and can be any valid iTIP 
+    method. */
+    virtual bool performTransaction(IncidenceBase *incidence,Method method,const QString &recipients) = 0;
     /** Retrieve incoming iTIP transactions */
     virtual QPtrList<ScheduleMessage> retrieveTransactions() = 0;
 

@@ -38,6 +38,7 @@ class DummyScheduler : public Scheduler {
     
     bool publish (IncidenceBase *incidence,const QString &recipients);
     bool performTransaction(IncidenceBase *incidence,Method method);
+    bool performTransaction(IncidenceBase *incidence,Method method,const QString &recipients);
     QPtrList<ScheduleMessage> retrieveTransactions();
 
   protected:
