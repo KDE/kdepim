@@ -69,8 +69,6 @@ class KDE_EXPORT BookmarkSyncee : public Syncee
     BookmarkSyncEntry *firstEntry();
     BookmarkSyncEntry *nextEntry();
 
-//    BookmarkSyncEntry *findEntry( const QString &id );
-
     void addEntry( SyncEntry * );
     void removeEntry( SyncEntry * );
 

@@ -189,13 +189,6 @@ CalendarSyncEntry *CalendarSyncee::nextEntry()
   }
 }
 
-#if 0
-CalendarSyncEntry *CalendarSyncee::findEntry(const QString &id)
-{
-  Event *event = mCalendar->getEvent(id);
-  return createEntry(event);
-}
-#endif
 
 void CalendarSyncee::addEntry( SyncEntry *entry )
 {

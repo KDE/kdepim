@@ -177,13 +177,6 @@ AddressBookSyncEntry *AddressBookSyncee::nextEntry()
   return mEntries.next();
 }
 
-#if 0 // fix me later - zecke
-AddressBookSyncEntry *AddressBookSyncee::findEntry(const QString &id)
-{
-  Event *event = mEntries.find(id);
-  return createEntry(event);
-}
-#endif
 
 void AddressBookSyncee::addEntry( SyncEntry *entry )
 {

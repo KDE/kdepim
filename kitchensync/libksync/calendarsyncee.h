@@ -67,8 +67,6 @@ class KDE_EXPORT CalendarSyncee : public Syncee
     CalendarSyncEntry *firstEntry();
     CalendarSyncEntry *nextEntry();
 
-//    CalendarSyncEntry *findEntry( const QString &id );
-
     void addEntry( SyncEntry * );
     void removeEntry( SyncEntry * );
 

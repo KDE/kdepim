@@ -149,21 +149,6 @@ BookmarkSyncEntry *BookmarkSyncee::nextEntry()
   return createEntry( KBookmark( *( ++mBookmarkIterator ) ) );
 }
 
-#if 0
-BookmarkSyncEntry *BookmarkSyncee::findEntry( const QString &id )
-{
-  QValueList<QDomElement>::Iterator bmIt = mBookmarks.begin();
-  while ( bmIt != mBookmarks.end() ) {
-    if ( KBookmark( *bmIt ).url().url() == id ) {
-      return createEntry( KBookmark( *bmIt ) );
-    }
-    ++bmIt;
-  }
-
-  return 0;
-}
-#endif
-
 void BookmarkSyncee::addEntry( SyncEntry *entry )
 {
   BookmarkSyncEntry *bmEntry = dynamic_cast<BookmarkSyncEntry *>( entry );
