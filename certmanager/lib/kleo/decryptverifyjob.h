@@ -37,6 +37,8 @@
 
 #include <qcstring.h>
 
+#include <utility>
+
 namespace GpgME {
   class Error;
   class Key;
@@ -72,6 +74,10 @@ namespace Kleo {
        \a cipherText is the data to decrypt and later verify.
     */
     virtual GpgME::Error start( const QByteArray & cipherText ) = 0;
+
+    /** Synchronous equivalent of start() */
+    virtual std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
+      exec( const QByteArray & cipherText, QByteArray & plainText ) = 0;
 
   signals:
     void result( const GpgME::DecryptionResult & decryptionresult,
