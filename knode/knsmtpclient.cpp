@@ -117,9 +117,20 @@ bool KNSmtpClient::openConnection()
     //qDebug("knode: KNSmtpClient::openConnection(): can't detect hostname, using foo");
   }
 
-  if (!sendCommandWCheck(cmd,250))
+  int rep;
+  if (!sendCommand(cmd,rep))
+    return;
+
+  while (rep == 220) {  // some smtp servers send multiple "220 xxx" lines...
+    if (!getNextResponse(rep))
+      return false;
+  }
+
+  if (rep!=250) {
+    handleErrors();
     return false;
-    
+  }
+
   progressValue = 70;
   
   errorPrefix = oldPrefix;
