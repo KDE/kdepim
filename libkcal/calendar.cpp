@@ -39,7 +39,7 @@
 using namespace KCal;
 
 /** \internal */
-class AddIncidenceVisitor : public IncidenceVisitor {
+class AddIncidenceVisitor : public Incidence::Visitor {
   public:
     /** Add incidence to calendar \a calendar. */
     AddIncidenceVisitor(Calendar *calendar) : mCalendar(calendar) {}

@@ -12,9 +12,12 @@
 #include "attendee.h"
 #include "korecurrence.h"
 #include "koalarm.h"
-#include "incidencevisitor.h"
 
 namespace KCal {
+
+class Event;
+class Todo;
+class Journal;
 
 /**
   This class provides the base class common to all calendar components.
@@ -23,6 +26,39 @@ class Incidence : public QObject
 {
     Q_OBJECT
   public:
+    /**
+      This class provides the interface for a visitor of calendar components. It
+      serves as base class for concrete visitors, which implement certain actions on
+      calendar components. It allows to add functions, which operate on the concrete
+      types of calendar components, without changing the calendar component classes.
+    */
+    class Visitor  
+    {
+      public:
+        /** Destruct Incidence::Visitor */
+        virtual ~Visitor() {}
+
+        /**
+          Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
+          on an Event object.
+        */
+        virtual bool visit(Event *) { return false; }
+        /**
+          Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
+          on an Todo object.
+        */
+        virtual bool visit(Todo *) { return false; }
+        /**
+          Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
+          on an Journal object.
+        */
+        virtual bool visit(Journal *) { return false; }
+    
+      protected:
+        /** Constructor is protected to prevent direct creation of visitor base class. */
+        Visitor() {}
+    };
+
     /** enumeration for describing an event's secrecy. */
     enum { SecrecyPublic = 0, SecrecyPrivate = 1, SecrecyConfidential = 2 };
 
@@ -33,7 +69,7 @@ class Incidence : public QObject
     /**
       Accept IncidenceVisitor. This function has to be overridden by all child classes.
     */
-    virtual bool accept(IncidenceVisitor &) { return false; }
+    virtual bool accept(Visitor &) { return false; }
     
     virtual Incidence *clone() = 0;
     

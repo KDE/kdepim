@@ -48,7 +48,7 @@ class Event : public Incidence
     void setDuration(int seconds);
 
   private:
-    bool accept(IncidenceVisitor &v) { return v.visit(this); }
+    bool accept(Visitor &v) { return v.visit(this); }
 
     QDateTime mDtEnd;
     bool mHasEndDate;

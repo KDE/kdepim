@@ -84,7 +84,7 @@ class Todo : public Incidence
     bool hasCompletedDate() const;
     
   private:
-    bool accept(IncidenceVisitor &v) { return v.visit(this); }
+    bool accept(Visitor &v) { return v.visit(this); }
 
     QDateTime mDtDue;                     // due date of todo
 
