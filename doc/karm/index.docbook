@@ -37,14 +37,14 @@
 </authorgroup>
 
 <copyright>
-<year>2000-2002</year>
+<year>2000-2004</year>
 <holder>Jonathan Singer</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2002-10-07</date>
-<releaseinfo>1.00.00</releaseinfo>
+<date>2003-20-03</date>
+<releaseinfo>1.30.00</releaseinfo>
 
 <abstract><para>&karm; tracks time spent on various tasks.</para></abstract>
 
@@ -100,7 +100,11 @@ at the command line.</para>
 or press the <guiicon>Start</guiicon> button in the toolbar. To stop
 timing it, double-click it, choose <guimenuitem>Stop</guimenuitem> from
 the <guimenu>Clock</guimenu> menu or press the <guiicon>Stop</guiicon>
-button in the toolbar.</para>
+button in the toolbar. &karm; also now allows you to tie tasks to a 
+particular desktop and time them automatically.</para><para>A &karm; 
+icon also appears in the &kde; taskbar, indicating when timing has 
+started or stopped; right-click it to access some of &karm;'s 
+features.</para>
 
 <para>Multiple tasks can now be timed simultaneously.</para>
 
@@ -177,15 +181,60 @@ times</action></para>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>
-</shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>Reset Session Time</guimenuitem>
+<guimenuitem>Start New Session</guimenuitem>
 </menuchoice></term>
 <listitem>
-<para><action>Resets the total elapsed time for the current session to
-zero</action></para>
+<para><action>Resets </action>all session times to zero</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Reset All Times</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para><action>Resets </action>all times to zero</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Import Legacy Flat File</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para><action>Import </action>old style &karm; save files. (&karm; 
+now uses iCalendar-style save files.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Copy Totals to Clipboard</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para><action>Copies </action> the current total time for a 
+task or all tasks to the &kde; clipboard</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;&Alt;<keycap>C</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Copy History to Clipboard</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para><action>Copies </action> daily session times for a 
+given period to the &kde; clipboard</para>
 </listitem>
 </varlistentry>
 
@@ -224,12 +273,23 @@ zero</action></para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>&Esc;</keycap></shortcut>
 <guimenu>Clock</guimenu>
 <guimenuitem>Stop</guimenuitem>
 </menuchoice>
 </term>
-<listitem><para><action>Stops</action> timing the selected task</para></listitem>
+<listitem>
+<para><action>Stops</action> timing the selected task</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>&Esc;</keycap></shortcut>
+<guimenu>Clock</guimenu>
+<guimenuitem>Stop All Timers</guimenuitem>
+</menuchoice>
+</term>
+<listitem><para><action>Stops</action> timing all tasks</para></listitem>
 </varlistentry>
 </variablelist>
 </sect2>
@@ -296,7 +356,9 @@ zero</action></para>
 current task</para><para>There are two options for changing the time: Edit
 Absolute, in which the session and total names can be changed separately;
 and Edit Relative, in which a certain change is added to or subtracted from
-both the session and total times.</para>
+both the session and total times.</para><para>The Auto tracking option allows 
+timing to start and stop automatically when you switch to or from a particular 
+&kde; desktop.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -329,11 +391,12 @@ the keyboard shortcuts</para>
 <listitem><para><action>Opens</action> a dialog to allow the user to
 configure &karm;</para>
 
-<para>The dialog has two tabbed panes: <guilabel>Saving</guilabel>,
+<para>The dialog has three tabbed panes: <guilabel>Behavior </guilabel>, which 
+allows you to specify an alert for no activity and a warning message when you 
+delete a task,set, <guilabel>Display </guilabel>, which configures the fields 
+shown in the main window and <guilabel>Storage</guilabel>,
 which configures the location of the save file, whether autosaving is
-enabled and the autosave interval; and <guilabel>Idle
-Detection</guilabel> which, when set, pops up an alert when no activity
-has been detected for a specified amount of time.</para> </listitem>
+enabled and the autosave interval.</para> </listitem>
 </varlistentry>
 
 </variablelist>
@@ -399,7 +462,7 @@ Program copyright 1997-2000 Sirtaj Singh Kang <email>taj@kde.org</email>.</para>
 utility called <application>titrax</application>, the only failing of
 which is that it is based on the Xt toolkit.</para>
 
-<para>Documentation copyright 2000 Jonathan Singer
+<para>Documentation copyright 2000-2004 Jonathan Singer
 <email>jsinger@leeta.net</email> and Sirtaj Singh Kang
 <email>taj@kde.org</email>.</para>
 
