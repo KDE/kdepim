@@ -151,7 +151,10 @@ class Recurrence
     /** Sets the frequency of recurrence, in terms of the recurrence time period type. */
     void setFrequency(int freq);
 
-    /** Returns the total number of recurrences, including the initial occurrence. */
+    /**
+     * Returns the total number of recurrences, including the initial occurrence.
+     * The returned value is -1 if the event recurs infinitely.
+     */
     int duration() const;
     /** Sets the total number of times the event is to occur, including both the
      * first and last. */

@@ -106,7 +106,7 @@ bool Recurrence::operator==( const Recurrence& r2 ) const
   if ( recurs != r2.recurs
   ||   rFreq != r2.rFreq
   ||   rDuration != r2.rDuration
-  ||   !rDuration && rEndDateTime != r2.rEndDateTime
+  ||   ( !rDuration && rEndDateTime != r2.rEndDateTime )
   ||   mRecurStart != r2.mRecurStart
   ||   mFloats != r2.mFloats
   ||   mRecurReadOnly != r2.mRecurReadOnly )
@@ -1909,8 +1909,8 @@ class Recurrence::MonthlyData
 
 int Recurrence::monthlyCalc(PeriodFunc func, QDate &enddate) const
 {
-  if (recurs == rMonthlyPos && rMonthPositions.isEmpty()
-  ||  recurs == rMonthlyDay && rMonthDays.isEmpty())
+  if ( (recurs == rMonthlyPos && rMonthPositions.isEmpty() )
+       || ( recurs == rMonthlyDay && rMonthDays.isEmpty() ) )
     return 0;
 
   MonthlyData data(this, mRecurStart.date());
