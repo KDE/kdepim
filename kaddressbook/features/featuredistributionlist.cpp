@@ -1,31 +1,32 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
+/*
+    This file is part of KAddressBook.
     Copyright (c) 2002 Mirko Boehm <mirko@kde.org>
-                                                                        
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qlayout.h>
 #include <qcombobox.h>
 #include <qpushbutton.h>
 #include <qlistview.h>
 #include <qdragobject.h>
+#include <qtooltip.h>
 
 #include <kdialog.h>
 #include <klocale.h>
@@ -309,7 +310,7 @@ void FeatureDistributionList::initGUI()
 {
   setCaption( i18n( "Edit Distribution Lists" ) );
 
-  QGridLayout *layout = new QGridLayout( this, 1, 1, KDialog::marginHint(), KDialog::spacingHint() ); 
+  QGridLayout *layout = new QGridLayout( this, 1, 1, KDialog::marginHint(), KDialog::spacingHint() );
   QSpacerItem* spacer = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
   layout->addMultiCell( spacer, 3, 4, 2, 2 );
 
@@ -336,6 +337,7 @@ void FeatureDistributionList::initGUI()
 
   mLvAddressees = new FeatureDistributionListView( this );
   layout->addMultiCellWidget( mLvAddressees, 0, 4, 1, 1 );
+  QToolTip::add(mLvAddressees, i18n("Drag addressees here to add them to the distribution list."));
 
   resize( QSize(760, 500).expandedTo(sizeHint()) );
 
