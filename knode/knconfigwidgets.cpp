@@ -1372,7 +1372,7 @@ void KNConfig::DisplayedHeadersWidget::slotDelBtnClicked()
   if(l_box->currentItem()==-1)
     return;
 
-  if(KMessageBox::warningContinueCancel(this, i18n("Really delete this header?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Yes) {
+  if(KMessageBox::warningContinueCancel(this, i18n("Really delete this header?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Continue) {
     KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
     d_ata->remove(h);
     l_box->removeItem(l_box->currentItem());

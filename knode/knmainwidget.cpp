@@ -1847,7 +1847,7 @@ void KNMainWidget::slotFolDelete()
   if(f_olManager->currentFolder()->isStandardFolder())
     KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot delete a standard folder."));
 
-  else if( KMessageBox::Yes==KMessageBox::warningContinueCancel(knGlobals.topWidget,
+  else if( KMessageBox::Continue==KMessageBox::warningContinueCancel(knGlobals.topWidget,
       i18n("Do you really want to delete this folder and all its children?"),"",KGuiItem(i18n("&Delete"),"editdelete")) ) {
 
     if(!f_olManager->deleteFolder(f_olManager->currentFolder()))

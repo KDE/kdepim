@@ -154,7 +154,7 @@ void KeyWidget::removeKey()
 
   QString type = mKeyCombo->currentText();
   QString text = i18n( "<qt>Do you really want to remove the key <b>%1</b>?</qt>" );
-  if ( KMessageBox::warningContinueCancel( this, text.arg( type ), "", KGuiItem( i18n("&Delete"), "editdelete") ) == KMessageBox::No )
+  if ( KMessageBox::warningContinueCancel( this, text.arg( type ), "", KGuiItem( i18n("&Delete"), "editdelete") ) == KMessageBox::Cancel )
     return;
 
   mKeyList.remove( mKeyList.at( pos ) );
