@@ -346,7 +346,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   //read content
   m_boxFile.readLine(); //skip X-KNode-Overview
 
-  unsigned int size=a->endOffset()-m_boxFile.at();
+  unsigned int size=a->endOffset()-m_boxFile.at()-1;
   QCString buff(size+10);
   int readBytes=m_boxFile.readBlock(buff.data(), size);
   closeFiles();

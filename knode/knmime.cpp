@@ -990,6 +990,9 @@ void KNMimeContent::decodedText(QString &s, bool trimText)
       if (!s[i].isSpace())
         break;
     s.truncate(i+1);
+  } else {
+    if (s.right(1)=="\n")
+      s.truncate(s.length()-1);    // remove trailing new-line
   }
 }
 
@@ -1012,6 +1015,9 @@ void KNMimeContent::decodedText(QStringList &l, bool trimText)
       if (!unicode[i].isSpace())
         break;
     unicode.truncate(i+1);
+  } else {
+    if (unicode.right(1)=="\n")
+      unicode.truncate(unicode.length()-1);    // remove trailing new-line
   }
 
   l=QStringList::split('\n', unicode, true); //split the string at linebreaks

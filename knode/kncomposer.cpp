@@ -633,8 +633,6 @@ void KNComposer::initData(const QString &text, bool firstEdit)
   } else
     s = text;
 
-  if (!firstEdit && (s.right(1)=="\n"))
-      s.truncate(s.length()-1);    // remove new-line
   v_iew->e_dit->setText(s);
 
   // initialize the charset select action
