@@ -27,6 +27,11 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+/*
+** This file is based on the perlembed examples, from
+** http://search.cpan.org/dist/perl/pod/perlembed.pod
+*/
+
 #ifdef DEBUG
 #undef DEBUG
 #define DEBUG (1)
@@ -145,11 +150,21 @@ void PerlThread::run()
 
 	eval_pv(PerlConduitSettings::expression().latin1(),TRUE);
 
+	SV *retval = get_sv("a",FALSE);
+	if (retval)
+	{
+		fResult.setNum(SvIV(retval));
+	}
+	else
+	{
+		fResult = i18n("No value");
+	}
+
+
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Thread woken with " << SvIV(get_sv("a",FALSE)) << endl;
+	DEBUGCONDUIT << fname << ": Thread woken with " << fResult << endl;
 #endif
 
-	fResult.setNum(SvIV(get_sv("a",FALSE)));
 
 	perl_destruct(my_perl);
 	perl_free(my_perl);
