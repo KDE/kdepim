@@ -7,31 +7,21 @@
 
   <group name="$(conduit)-Conduit">
     <entry name="ConduitVersion"  type="UInt">
-        <label>
-        </label>
     </entry>
     <entry name="CalendarType"  type="Enum">
 				<choices>
 						<choice name="eCalendarResource"/>
 						<choice name="eCalendarLocal"/>
 				</choices>
-        <label>
-        </label>
         <default>eCalendarResource</default>
     </entry>
     <entry name="CalendarFile" key="CalFile"  type="Path">
-        <label>
-        </label>
         <default></default>
     </entry>
     <entry name="SyncArchived"  type="Bool">
-        <label>
-        </label>
         <default>true</default>
     </entry>
     <entry name="ConflictResolution"  type="Int">
-        <label>
-        </label>
         <default>0</default>
     </entry>		
   </group>

@@ -3,8 +3,6 @@
 <kcfg><kcfgfile name="kpilot_sysinfoconduitrc"/>
   <group name="General">
     <entry name="OutputFile" key="Output file" type="Path">
-        <label>
-        </label>
         <default>$HOME/kpilot-syslog.html</default>
     </entry>
     <entry name="OutputFormat" key="Output format" type="Enum">
@@ -13,13 +11,9 @@
 						<choice name="eSysInfoText"/>
 						<choice name="eSysInfoTemplate"/>
 				</choices>
-        <label>
-        </label>
         <default>eSysInfoHTML</default>
     </entry>
     <entry name="TemplateFile" key="Template file" type="Path">
-        <label>
-        </label>
         <default></default>
     </entry>
     <entry name="DebugInformation" key="Debug Information" type="Bool">
