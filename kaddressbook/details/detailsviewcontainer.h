@@ -3,10 +3,12 @@
 
 #include <qlist.h>
 
-#include "detailsviewcontainer_base.h"
 #include "look_basic.h"
 
-class ViewContainer : public DetailsViewContainerBase
+class QComboBox;
+class QWidgetStack;
+
+class ViewContainer : public QWidget
 {
     Q_OBJECT
 public:
@@ -42,6 +44,10 @@ protected:
     void registerLooks();
     /** A list of factories that produce looks. */
     QPtrList<KABLookFactory> m_lookFactories;
+
+private:
+    QComboBox *cbStyle;
+    QWidgetStack *frameDetails;
 };
 
 

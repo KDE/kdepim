@@ -205,7 +205,7 @@ void ActionManager::initReadOnlyActions()
                                        this, SLOT(quickToolsAction()),
                                        mACollection,
                                        "options_show_jump_bar");
-    mActionDetails = new KToggleAction(i18n("Show Details"), "details",
+    mActionDetails = new KToggleAction(i18n("Show Details"), 0,
                                        0, this, SLOT(quickToolsAction()),
                                        mACollection,
                                        "options_show_details");

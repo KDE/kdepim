@@ -1,6 +1,5 @@
 #ifndef UNDOCMDS_H
 #define UNDOCMDS_H
-// $Id$
 //
 // Commands for undo/redo functionality.
 

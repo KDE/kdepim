@@ -22,7 +22,6 @@
 */
 #ifndef KAddressbook_PART_H
 #define KAddressbook_PART_H
-// $Id$
 
 #include <kparts/browserextension.h>
 #include <kparts/factory.h>

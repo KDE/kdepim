@@ -5,7 +5,7 @@ INCLUDES = -I$(top_srcdir)/kaddressbook $(all_includes)
 libdetails_la_METASOURCES = AUTO
 
 libdetails_la_SOURCES = \
- detailsviewcontainer.cpp detailsviewcontainer_base.ui kabentrypainter.cpp \
+ detailsviewcontainer.cpp kabentrypainter.cpp \
  look_basic.cpp look_details.cpp
 
 noinst_HEADERS = \

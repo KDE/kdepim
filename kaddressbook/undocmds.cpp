@@ -1,5 +1,3 @@
-// $Id$
-
 #include <qtextstream.h>
 #include <qapplication.h>
 #include <qclipboard.h>

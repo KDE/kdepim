@@ -5,6 +5,7 @@
 #include <qframe.h>
 #include <qlayout.h>
 #include <qlabel.h>
+#include <qwidgetstack.h>
 
 #include <kdebug.h>
 #include <kapplication.h>
@@ -13,14 +14,38 @@
 #include "look_details.h"
 
 ViewContainer::ViewContainer(QWidget *parent, const char* name )
-    : DetailsViewContainerBase(parent, name),
+    : QWidget(parent, name),
       m_look(0)
 {
+    QBoxLayout *topLayout = new QVBoxLayout( this );
+    topLayout->setMargin( 3 );
+    topLayout->setSpacing( 3 );
+
+    QBoxLayout *styleLayout = new QHBoxLayout( topLayout );    
+
+    QLabel *tlStyle = new QLabel( i18n("Style:"), this );
+    styleLayout->addWidget( tlStyle );
+
+    cbStyle = new QComboBox( this );
+    styleLayout->addWidget( cbStyle );
+
+    QFrame *frameRuler = new QFrame( this );
+    frameRuler->setFrameShape( QFrame::HLine );
+    frameRuler->setFrameShadow( QFrame::Sunken );
+    topLayout->addWidget( frameRuler );
+
+    frameDetails = new QWidgetStack( this );
+    topLayout->addWidget( frameDetails, 1 );
+
     registerLooks();
-    // <HACK>: delete temporary widget (designer does not want to add a
-    // layout without it):
-    delete labelHack; labelHack=0;
-    // </HACK>
+
+#if 1
+    // Hide detailed view selection combo box, because we currently have
+    // only one. Reenable it when there are more detailed views.
+    tlStyle->hide();
+    cbStyle->hide();
+    frameRuler->hide();
+#endif
 }
 
 
@@ -60,9 +85,7 @@ void ViewContainer::slotStyleSelected(int index)
                   << "creating look "
                   << factory->description() << endl;
         m_look=factory->create();
-        // <HACK>:
-        frameDetails->layout()->add(m_look);
-        // </HACK>
+        frameDetails->raiseWidget( m_look );
         connect(m_look, SIGNAL(sendEmail(const QString&)), this,
                 SIGNAL(sendEmail(const QString&)));
         connect(m_look, SIGNAL(browse(const QString&)), this,
