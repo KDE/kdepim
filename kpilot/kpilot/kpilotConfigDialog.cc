@@ -85,18 +85,6 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConduitConfigB
 	CM(fPilotSpeed, SIGNAL(activated(int)));
 	CM(fPilotEncoding, SIGNAL(textChanged(const QString &)));
 	CM(fUserName, SIGNAL(textChanged(const QString &)));
-#if 0
-	CM(fStartDaemonAtLogin, SIGNAL(toggled(bool)));
-	CM(fKillDaemonOnExit, SIGNAL(toggled(bool)));
-	CM(fDockDaemon, SIGNAL(toggled(bool)));
-	CM(fQuitAfterSync, SIGNAL(toggled(bool)));
-
-	CM(fInternalEditors, SIGNAL(toggled(bool)));
-	CM(fUseSecret, SIGNAL(toggled(bool)));
-	CM(fAddressGroup, SIGNAL(clicked(int)));
-	CM(fUseKeyField, SIGNAL(toggled(bool)));
-
-#endif
 #undef CM
 
 	(void) kpilotconfigdialog_id;
@@ -113,35 +101,6 @@ void DeviceConfigPage::load()
 	getEncoding();
 	fConfigWidget->fUserName->setText(KPilotSettings::userName());
 
-#if 0
-	fConfigWidget->fStartDaemonAtLogin->setChecked(KPilotSettings::startDaemonAtLogin());
-	fConfigWidget->fDockDaemon->setChecked(KPilotSettings::dockDaemon());
-	fConfigWidget->fKillDaemonOnExit->setChecked(KPilotSettings::killDaemonAtExit());
-	fConfigWidget->fQuitAfterSync->setChecked(KPilotSettings::quitAfterSync());
-
-	/* Sync tab */
-	int synctype=KPilotSettings::syncType();
-	if (synctype < SyncAction::eSyncModeLastRadiobutton)
-		fConfigWidget->fSyncMode->setButton(synctype);
-	else
-	{
-		fConfigWidget->fSyncMode->setButton(SyncAction::eSyncModeLastRadiobutton);
-		fConfigWidget->fSpecialSync->setCurrentItem(synctype-SyncAction::eSyncModeLastRadiobutton);
-	}
-
-	fConfigWidget->fFullBackupCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
-	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
-
-	/* Viewers tab */
-	fConfigWidget->fInternalEditors->setChecked(KPilotSettings::internalEditors());
-	fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
-	fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
-	fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
-
-	/* Backup tab */
-	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB());
-	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB());
-#endif
 	unmodified();
 }
 
@@ -180,32 +139,6 @@ void DeviceConfigPage::load()
 	KPilotSettings::setPilotSpeed(fConfigWidget->fPilotSpeed->currentItem());
 	setEncoding();
 	KPilotSettings::setUserName(fConfigWidget->fUserName->text());
-
-#if 0
-	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
-	KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
-	KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
-	KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());
-
-	/* Sync tab */
-	int syncmode=fConfigWidget->fSyncMode->id(fConfigWidget->fSyncMode->selected());
-	if (syncmode==SyncAction::eSyncModeLastRadiobutton)
-		syncmode+=fConfigWidget->fSpecialSync->currentItem();
-	KPilotSettings::setSyncType(syncmode);
-	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
-	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
-
-	/* Viewers tab */
-	KPilotSettings::setInternalEditors( fConfigWidget->fInternalEditors->isChecked());
-	KPilotSettings::setShowSecrets(fConfigWidget->fUseSecret->isChecked());
-	KPilotSettings::setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
-		fConfigWidget->fAddressGroup->selected()));
-	KPilotSettings::setUseKeyField(fConfigWidget->fUseKeyField->isChecked());
-
-	/* Backup tab */
-	KPilotSettings::setSkipBackupDB(fConfigWidget->fBackupOnly->text());
-	KPilotSettings::setSkipRestoreDB(fConfigWidget->fSkipDB->text());
-#endif
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
@@ -301,7 +234,7 @@ void SyncConfigPage::load()
 	/* Backup tab */
 	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB());
 	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB());
-
+	fConfigWidget->fRunConduitsWithBackup->setChecked(KPilotSettings::runConduitsWithBackup());
 	unmodified();
 }
 
@@ -325,6 +258,7 @@ void SyncConfigPage::load()
 	/* Backup tab */
 	KPilotSettings::setSkipBackupDB(fConfigWidget->fBackupOnly->text());
 	KPilotSettings::setSkipRestoreDB(fConfigWidget->fSkipDB->text());
+	KPilotSettings::setRunConduitsWithBackup(fConfigWidget->fRunConduitsWithBackup->isChecked());
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();

@@ -11,7 +11,7 @@
             <x>0</x>
             <y>0</y>
             <width>593</width>
-            <height>316</height>
+            <height>322</height>
         </rect>
     </property>
     <property name="caption">
@@ -159,6 +159,9 @@
                                 <property name="text">
                                     <string>&amp;Normal sync, do a backup</string>
                                 </property>
+                                <property name="accel">
+                                    <string>Alt+N</string>
+                                </property>
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
@@ -175,6 +178,9 @@
                                 <property name="text">
                                     <string>&amp;Special sync:</string>
                                 </property>
+                                <property name="accel">
+                                    <string>Alt+S</string>
+                                </property>
                             </widget>
                         </grid>
                     </widget>
@@ -184,6 +190,9 @@
                         </property>
                         <property name="text">
                             <string>&amp;Do full backup when changing PCs</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+D</string>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>We really don't know what this does.</string>
@@ -202,7 +211,7 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QGroupBox" row="1" column="0">
+                    <widget class="QGroupBox" row="0" column="0">
                         <property name="name">
                             <cstring>GroupBox23</cstring>
                         </property>
@@ -282,10 +291,21 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>20</height>
+                                <height>120</height>
                             </size>
                         </property>
                     </spacer>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>fRunConduitsWithBackup</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Run &amp;Conduits during a backup</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+C</string>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
         </widget>
