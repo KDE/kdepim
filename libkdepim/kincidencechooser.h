@@ -30,7 +30,7 @@
 
 #include <libkcal/incidence.h>
 #include "htmldiffalgodisplay.h"
-#include "calendardiffalgo.h" 
+#include "calendardiffalgo.h"
 
 
 class QRadioButton;
@@ -49,7 +49,7 @@ class KIncidenceChooser : public KDialog
 public:
     enum mode { local, remote, newest, ask, both };
     /** Initialize dialog and pages */
-    KIncidenceChooser(QWidget *parent=0,char *name=0,bool modal=false);
+    KIncidenceChooser(QWidget *parent=0,char *name=0);
     ~KIncidenceChooser();
     //void setChooseText( QString );
     void setIncidence( KCal::Incidence*,KCal::Incidence*);
@@ -68,12 +68,12 @@ public:
     void takeBoth();
     void setLabels();
     void setSyncMode();
-    
+
  protected:
  private:
     KPIM::HTMLDiffAlgoDisplay* mDisplayDiff;
     KPIM::CalendarDiffAlgo* diff;
-    QTextBrowser* mTbL, *mTbN; 
+    QTextBrowser* mTbL, *mTbN;
     KCal::Incidence* choosedIncidence;
     KCal::Incidence* mInc1, *mInc2;
     QButtonGroup *mBg;

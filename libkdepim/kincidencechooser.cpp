@@ -32,7 +32,7 @@
 #include <qscrollview.h>
 #include <qtextbrowser.h>
 #include <qapplication.h>
- 
+
 
 #include <klocale.h>
 #include <kglobal.h>
@@ -42,15 +42,17 @@
 
 int KIncidenceChooser::chooseMode = KIncidenceChooser::ask ;
 
-KIncidenceChooser::KIncidenceChooser(QWidget *parent, char *name, bool modal) :
+KIncidenceChooser::KIncidenceChooser(QWidget *parent, char *name) :
     KDialog(parent,name,true)
 {
     KDialog *topFrame = this;
     QGridLayout *topLayout = new QGridLayout(topFrame,5,3);
     int iii = 0;
-    setCaption( i18n("Please choose incidence"));
+    setCaption( i18n("Conflict detected"));
     QLabel * lab;
-    lab = new QLabel ( i18n("NOTE: You have to resync to apply your changes to the server!"), topFrame); 
+    lab = new QLabel( i18n(
+                        "<qt>A conflict was detected. This probably means someone edited the same entry on the server while you changed it locally."
+                        "<br/>NOTE: You have to check mail again to apply your changes to the server!</qt>"), topFrame);
     topLayout->addMultiCellWidget(lab, iii,iii,0,2);
     ++iii;
     QHBox * b_box = new QHBox( topFrame );
@@ -61,40 +63,40 @@ KIncidenceChooser::KIncidenceChooser(QWidget *parent, char *name, bool modal) :
     button = new QPushButton( i18n("Take new"), b_box );
     connect ( button, SIGNAL( clicked()), this, SLOT (takeIncidence2() ) );
     button = new QPushButton( i18n("Take both"), b_box );
-    connect ( button, SIGNAL( clicked()), this, SLOT (takeBoth() ) ); 
+    connect ( button, SIGNAL( clicked()), this, SLOT (takeBoth() ) );
     topLayout->setSpacing(spacingHint());
-    topLayout->setMargin(marginHint());  
+    topLayout->setMargin(marginHint());
     // text is not translated, because text has to be set later
-    mInc1lab = new QLabel ( i18n("Local incidence"), topFrame); 
+    mInc1lab = new QLabel ( i18n("Local incidence"), topFrame);
     topLayout->addWidget(mInc1lab ,iii,0);
-    mInc1Sumlab = new QLabel ( i18n("Local incidence summary"), topFrame); 
+    mInc1Sumlab = new QLabel ( i18n("Local incidence summary"), topFrame);
     topLayout->addMultiCellWidget(mInc1Sumlab, iii,iii,1,2);
     ++iii;
     topLayout->addWidget( new QLabel ( i18n("Last modified:"), topFrame) ,iii,0);
-    mMod1lab = new QLabel ( "Set Last modified", topFrame); 
+    mMod1lab = new QLabel ( "Set Last modified", topFrame);
     topLayout->addWidget(mMod1lab,iii,1);
     showDetails1 = new QPushButton( i18n("Show details..."),topFrame );
-    connect ( showDetails1, SIGNAL( clicked()), this, SLOT (showIncidence1() ) ); 
+    connect ( showDetails1, SIGNAL( clicked()), this, SLOT (showIncidence1() ) );
     topLayout->addWidget(showDetails1,iii,2);
     ++iii;
 
-    mInc2lab = new QLabel ( "Local incidence", topFrame); 
+    mInc2lab = new QLabel ( "Local incidence", topFrame);
     topLayout->addWidget(mInc2lab,iii,0);
-    mInc2Sumlab = new QLabel ( "Local incidence summary", topFrame); 
+    mInc2Sumlab = new QLabel ( "Local incidence summary", topFrame);
     topLayout->addMultiCellWidget(mInc2Sumlab, iii,iii,1,2);
     ++iii;
     topLayout->addWidget( new QLabel ( i18n("Last modified:"), topFrame) ,iii,0);
-    mMod2lab = new QLabel ( "Set Last modified", topFrame); 
+    mMod2lab = new QLabel ( "Set Last modified", topFrame);
     topLayout->addWidget(mMod2lab,iii,1);
     showDetails2 = new QPushButton( i18n("Show details..."), topFrame);
-    connect ( showDetails2, SIGNAL( clicked()), this, SLOT (showIncidence2() ) ); 
+    connect ( showDetails2, SIGNAL( clicked()), this, SLOT (showIncidence2() ) );
     topLayout->addWidget(showDetails2,iii,2);
     ++iii;
     //
 #if 0
     // commented out for now, because the diff code has too many bugs
     diffBut = new QPushButton( i18n("Show differences"), topFrame );
-    connect ( diffBut, SIGNAL( clicked()), this, SLOT ( showDiff() ) ); 
+    connect ( diffBut, SIGNAL( clicked()), this, SLOT ( showDiff() ) );
     topLayout->addMultiCellWidget(diffBut, iii,iii,0,2);
     ++iii;
 #else
@@ -110,11 +112,11 @@ KIncidenceChooser::KIncidenceChooser(QWidget *parent, char *name, bool modal) :
     mBg->insert( new QRadioButton ( i18n("Take both on conflict"), mBg ), KIncidenceChooser::both );
     mBg->setButton ( chooseMode );
     mTbL = 0;
-    mTbN =  0; 
+    mTbN =  0;
     mDisplayDiff = 0;
-    choosedIncidence = 0; 
+    choosedIncidence = 0;
     button = new QPushButton( i18n("Apply this to all conflicts of this sync"), topFrame );
-    connect ( button, SIGNAL( clicked()), this, SLOT ( setSyncMode() ) ); 
+    connect ( button, SIGNAL( clicked()), this, SLOT ( setSyncMode() ) );
     topLayout->addMultiCellWidget(button, iii,iii,0,2);
 }
 
@@ -129,23 +131,23 @@ KIncidenceChooser::~KIncidenceChooser()
 }
 
 void KIncidenceChooser::setIncidence( KCal::Incidence* local ,KCal::Incidence* remote )
-{ 
+{
     mInc1 = local;
     mInc2 = remote;
     setLabels();
 
 }
 KCal::Incidence* KIncidenceChooser::getIncidence( )
-{ 
- 
+{
+
     KCal::Incidence* retval = choosedIncidence;
-    if ( chooseMode == KIncidenceChooser::local ) 
+    if ( chooseMode == KIncidenceChooser::local )
         retval = mInc1;
     else  if ( chooseMode == KIncidenceChooser::remote )
         retval = mInc2;
     else  if ( chooseMode == KIncidenceChooser::both ) {
         retval = 0;
-    } 
+    }
     else  if ( chooseMode == KIncidenceChooser::newest ) {
         if ( mInc1->lastModified() == mInc2->lastModified())
             retval = 0;
@@ -153,16 +155,16 @@ KCal::Incidence* KIncidenceChooser::getIncidence( )
             retval =  mInc1;
         else
             retval = mInc2;
-    } 
+    }
     return retval;
 }
-  
+
 void KIncidenceChooser::setSyncMode()
 {
-    chooseMode = mBg->selectedId (); 
+    chooseMode = mBg->selectedId ();
     if ( chooseMode != KIncidenceChooser::ask )
         QDialog::accept();
-        
+
 }
 void KIncidenceChooser::useGlobalMode()
 {
@@ -206,18 +208,18 @@ void KIncidenceChooser::setLabels()
     else if ( inc->type() == "Todo" ) {
         des->setText( i18n( "New Todo") );
         sum->setText( inc->summary().left( 30 ));
-        
+
     }
     else if ( inc->type() == "Journal" ) {
         des->setText( i18n( "New Journal") );
         sum->setText( inc->description().left( 30 ));
-        
+
     }
     mMod2lab->setText( KGlobal::locale()->formatDateTime(inc->lastModified() ));
 }
 
 void KIncidenceChooser::showIncidence1()
-{   
+{
     if ( mTbL ) {
         if ( mTbL->isVisible() ) {
             showDetails1->setText( i18n("Show details..."));
@@ -238,7 +240,7 @@ void KIncidenceChooser::showIncidence1()
     mTbL->raise();
 }
 void KIncidenceChooser::showDiff()
-{ 
+{
     if ( mDisplayDiff ) {
         mDisplayDiff->show();
         mDisplayDiff->raise();
@@ -249,7 +251,7 @@ void KIncidenceChooser::showDiff()
         mDisplayDiff->setCaption( i18n( "Differences of %1 and %2").arg( mInc1->summary().left( 20 ) ).arg( mInc2->summary().left( 20 ) ) );
     else
         mDisplayDiff->setCaption( i18n( "Differences of %1").arg( mInc1->summary().left( 20 ) ) );
-    
+
     diff = new KPIM::CalendarDiffAlgo( mInc1, mInc2);
     diff->setLeftSourceTitle(  i18n( "Local entry"));
     diff->setRightSourceTitle(i18n( "New (remote)  entry") );
@@ -259,7 +261,7 @@ void KIncidenceChooser::showDiff()
     mDisplayDiff->raise();
 }
 void KIncidenceChooser::showIncidence2()
-{    
+{
    if ( mTbN ) {
         if ( mTbN->isVisible() ) {
             showDetails2->setText( i18n("Show details..."));
