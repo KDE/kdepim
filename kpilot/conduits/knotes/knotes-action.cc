@@ -50,26 +50,29 @@
 #include "knotes-action.moc"
 
 
+typedef QString KNoteID_t;
+typedef const QString &KNoteID_pt;
+
 class NoteAndMemo
 {
 public:
-	NoteAndMemo() : noteId(-1),memoId(-1) { } ;
-	NoteAndMemo(int noteid,int memoid) : noteId(noteid),memoId(memoid) { } ;
+	NoteAndMemo() : noteId(),memoId(-1) { } ;
+	NoteAndMemo(KNoteID_pt noteid,int memoid) : noteId(noteid),memoId(memoid) { } ;
 
 	int memo() const { return memoId; } ;
-	int note() const { return noteId; } ;
-	bool valid() const { return (noteId>0) && (memoId>0); } ;
+	KNoteID_t note() const { return noteId; } ;
+	bool valid() const { return (!noteId.isEmpty()) && (memoId>0); } ;
 	QString toString() const { return CSL1("<%1,%2>").arg(noteId).arg(memoId); } ;
 
-	static NoteAndMemo findNote(const QValueList<NoteAndMemo> &,int note);
+	static NoteAndMemo findNote(const QValueList<NoteAndMemo> &,KNoteID_pt note);
 	static NoteAndMemo findMemo(const QValueList<NoteAndMemo> &,int memo);
 
 protected:
-	int noteId;
+	KNoteID_t noteId;
 	int memoId;
 } ;
 
-NoteAndMemo NoteAndMemo::findNote(const QValueList<NoteAndMemo> &l ,int note)
+NoteAndMemo NoteAndMemo::findNote(const QValueList<NoteAndMemo> &l ,KNoteID_pt note)
 {
 	FUNCTIONSETUP;
 
@@ -108,12 +111,13 @@ public:
 		fCounter(0)
 	{ } ;
 
-	// These are  the notes that we got from KNotes
-	QMap <int,QString> fNotes;
+	// This is the collection of  notes held by KNotes and
+        // returned by the notes() DCOP call.
+	QMap <KNoteID_t,QString> fNotes;
 	// This iterates through that list; it's in here because
 	// we use slots to process one item at a time and need
 	// to keep track of where we are between slot calls.
-	QMap <int,QString>::ConstIterator fIndex;
+	QMap <KNoteID_t,QString>::ConstIterator fIndex;
 	// The DCOP client for this application, and the KNotes stub.
 	DCOPClient *fDCOP;
 	KNotesIface_stub *fKNotes;
@@ -132,7 +136,7 @@ public:
 } ;
 
 
-/* static */ const char * const KNotesAction::noteIdsKey="NoteIds";
+/* static */ const char * const KNotesAction::noteIdsKey="KNoteIds";
 /* static */ const char * const KNotesAction::memoIdsKey="MemoIds";
 
 
@@ -162,7 +166,6 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	{
 		KPILOT_DELETE(fP->fTimer);
 		KPILOT_DELETE(fP->fKNotes);
-		// KPILOT_DELETE(fP->fDatabase);
 		KPILOT_DELETE(fP);
 	}
 }
@@ -227,7 +230,7 @@ void KNotesAction::listNotes()
 {
 	FUNCTIONSETUP;
 
-	QMap<int,QString>::ConstIterator i = fP->fNotes.begin();
+	QMap<KNoteID_t,QString>::ConstIterator i = fP->fNotes.begin();
 	while (i != fP->fNotes.end())
 	{
 #ifdef DEBUG
@@ -299,11 +302,12 @@ void KNotesAction::getConfigInfo()
 	{
 		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group);
 
-		QValueList<int> notes;
+		QValueList<KNoteID_t> notes;
 		QValueList<int> memos;
 
 
-		notes=fConfig->readIntListEntry(noteIdsKey);
+                // Make this match the type of KNoteID_t !
+		notes=fConfig->readListEntry(noteIdsKey);
 		memos=fConfig->readIntListEntry(memoIdsKey);
 
 		if (notes.count() != memos.count())
@@ -315,9 +319,12 @@ void KNotesAction::getConfigInfo()
 				<< memos.count()
 				<< ")"
 				<< endl;
+			notes.clear();
+			memos.clear();
+			fFirstSync = true;
 		}
 
-		QValueList<int>::ConstIterator iNotes = notes.begin();
+		QValueList<KNoteID_t>::ConstIterator iNotes = notes.begin();
 		QValueList<int>::ConstIterator iMemos = memos.begin();
 
 		while((iNotes != notes.end()) && (iMemos != memos.end()))
@@ -548,7 +555,7 @@ bool KNotesAction::syncMemoToKNotes()
 		}
 		else
 		{
-			int i = fP->fKNotes->newNote(memo->shortTitle(),memo->text());
+			KNoteID_t i = fP->fKNotes->newNote(memo->shortTitle(),memo->text());
 			fP->fIdList.append(NoteAndMemo(i,memo->id()));
 #ifdef DEBUG
 			DEBUGCONDUIT << fname << ": It's new with knote id " << i << endl;
@@ -586,7 +593,7 @@ void KNotesAction::cleanupMemos()
 
 		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group);
 
-		QValueList<int> notes;
+		QValueList<KNoteID_t> notes;
 		QValueList<int> memos;
 
 		for (QValueList<NoteAndMemo>::ConstIterator i =
