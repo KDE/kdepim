@@ -50,16 +50,7 @@
 
 #include "vcard_xxport.h"
 
-class VCardXXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new VCardXXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_vcard_xxport, VCardXXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_vcard_xxport, VCardXXPort )
 
 class VCardViewerDialog : public KDialogBase
 {

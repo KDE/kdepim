@@ -36,16 +36,7 @@
 
 #define CTRL_C 3
 
-class EudoraXXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new EudoraXXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_eudora_xxport, EudoraXXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_eudora_xxport, EudoraXXPort )
 
 EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

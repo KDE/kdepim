@@ -38,16 +38,7 @@
 
 #include "pab_xxport.h"
 
-class PABXXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new PABXXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_pab_xxport, PABXXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_pab_xxport, PABXXPort )
 
 PABXXPort::PABXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

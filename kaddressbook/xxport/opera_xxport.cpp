@@ -36,16 +36,7 @@
 
 #include "opera_xxport.h"
 
-class OperaXXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new OperaXXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_opera_xxport, OperaXXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_opera_xxport, OperaXXPort )
 
 OperaXXPort::OperaXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

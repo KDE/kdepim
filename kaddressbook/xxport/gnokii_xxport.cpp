@@ -75,16 +75,7 @@ extern "C" {
 static GNOKIIXXPort *this_filter;
 static KProgressDialog *m_progressDlg;
 
-class GNOKIIXXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new GNOKIIXXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_gnokii_xxport, GNOKIIXXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_gnokii_xxport, GNOKIIXXPort )
 
 GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

@@ -31,16 +31,7 @@
 
 #include "bookmark_xxport.h"
 
-class BookmarkXXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new BookmarkXXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_bookmark_xxport, BookmarkXXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_bookmark_xxport, BookmarkXXPort )
 
 BookmarkXXPort::BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

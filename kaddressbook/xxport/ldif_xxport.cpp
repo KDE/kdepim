@@ -48,16 +48,7 @@
 
 #include "ldif_xxport.h"
 
-class LDIFXXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new LDIFXXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_ldif_xxport, LDIFXXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_ldif_xxport, LDIFXXPort )
 
 LDIFXXPort::LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

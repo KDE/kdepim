@@ -34,16 +34,7 @@
 
 #include "csv_xxport.h"
 
-class CSVXXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new CSVXXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_csv_xxport, CSVXXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_csv_xxport, CSVXXPort )
 
 CSVXXPort::CSVXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

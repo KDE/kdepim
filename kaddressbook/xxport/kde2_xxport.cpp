@@ -37,16 +37,7 @@
 
 #include "kde2_xxport.h"
 
-class KDE2XXPortFactory : public KAB::XXPortFactory
-{
-  public:
-    KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new KDE2XXPort( ab, parent, name );
-    }
-};
-
-K_EXPORT_COMPONENT_FACTORY( libkaddrbk_kde2_xxport, KDE2XXPortFactory )
+K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_kde2_xxport, KDE2XXPort )
 
 KDE2XXPort::KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )
