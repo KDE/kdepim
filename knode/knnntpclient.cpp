@@ -398,7 +398,7 @@ void KNNntpClient::doFetchNewHeaders()
     
   //qDebug("knode: KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
   cmd.sprintf("xover %d-%d",last-toFetch+1,last);
-  if (sendCommand(cmd,rep))
+  if (!sendCommand(cmd,rep))
     return;
 
   // no articles in selected range...
