@@ -48,7 +48,10 @@
 
 #include <libkdepim/kdateedit.h>
 
-#include "addresseeeditorsupportwidgets.h"
+#include "nameeditdialog.h"
+#include "phoneeditwidget.h"
+#include "addresseditwidget.h"
+#include "emaileditwidget.h"
 #include "kabprefs.h"
 
 #include "addresseeeditorwidget.h"
