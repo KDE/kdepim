@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Journals as Blogs on a Server
+Name[xx]=xxJournals as Blogs on a Serverxx
+X-KDE-Library=kcal_blogging
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=blogging
