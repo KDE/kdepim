@@ -41,7 +41,7 @@ static const char *pilotTodoEntry_id = "$Id$";
 const int PilotTodoEntry::APP_BUFFER_SIZE = 0xffff;
 
 
-PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, void):PilotAppCategory(), fAppInfo(appInfo)
+PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo):PilotAppCategory(), fAppInfo(appInfo)
 {
 	FUNCTIONSETUP;
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
@@ -183,6 +183,9 @@ void PilotTodoEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.5  2002/07/09 22:46:51  kainhofe
+// todo entries now also use categories. Categories aren't successfully synced yet, but the infrastructure is there
+//
 // Revision 1.4  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //

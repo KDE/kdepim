@@ -56,7 +56,7 @@
 class PilotTodoEntry : public PilotAppCategory
 {
 public:
-	PilotTodoEntry(struct ToDoAppInfo &appInfo, void);
+	PilotTodoEntry(struct ToDoAppInfo &appInfo);
 	PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec);
   
   PilotTodoEntry(const PilotTodoEntry &e);
@@ -114,6 +114,9 @@ private:
 
 
 // $Log$
+// Revision 1.3  2002/07/09 22:46:51  kainhofe
+// todo entries now also use categories. Categories aren't successfully synced yet, but the infrastructure is there
+//
 // Revision 1.2  2001/12/28 12:55:24  adridg
 // Fixed email addresses; added isBackup() to interface
 //
