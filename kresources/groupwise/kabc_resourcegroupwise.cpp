@@ -145,10 +145,19 @@ bool ResourceGroupwise::asyncLoad()
   mAddrMap.clear();
   loadCache();
 
+#if 1
+  if ( !mServer->readAddressBooksSynchronous( mPrefs->readAddressBooks(), this ) ) {
+    kdError() << "ResourceGroupwise::asyncLoad() error" << endl;
+    return false;
+  }
+
+  loadFinished();
+#else
   if ( !mServer->readAddressBooks( mPrefs->readAddressBooks(), this ) ) {
     kdError() << "ResourceGroupwise::asyncLoad() error" << endl;
     return false;
   }
+#endif
 
   return true;
 }

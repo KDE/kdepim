@@ -157,11 +157,19 @@ bool ResourceGroupwise::doLoad()
 
   clearChanges();
 
-  if ( !mServer->readCalendar( &mCalendar, this ) ) {
+#if 1
+  if ( !mServer->readCalendarSynchronous( this ) ) {
     loadError( i18n("Unable to read calendar.") );
     return false;
   }
 
+  loadFinished();
+#else
+  if ( !mServer->readCalendar( this ) ) {
+    loadError( i18n("Unable to read calendar.") );
+    return false;
+  }
+#endif
   return true;
 }
 
@@ -176,9 +184,14 @@ void ResourceGroupwise::loadFinished()
 
 bool ResourceGroupwise::doSave()
 {
+  kdDebug() << "KCal::ResourceGroupwise::doSave()" << endl;
+
   saveCache();
 
-  if ( !hasChanges() ) return true;
+  if ( !hasChanges() ) {
+    kdDebug() << "No changes" << endl;
+    return true;
+  }
   
   if ( !confirmSave() ) return false;
 
@@ -222,6 +235,5 @@ KABC::Lock *ResourceGroupwise::lock()
 {
   return &mLock;
 }
-
 
 #include "kcal_resourcegroupwise.moc"
