@@ -10,19 +10,30 @@ changes between 0.4 and 0.6
 - support for customizable folders
 - DnD between folders and groups
 - convenient mbox-folder import/export
+- nice in-place renaming of accounts, folders and groups
+- new menu option that expire all groups of the current account
+  & a option that compacts all folders on demand
+- implemented "Smart Scrolling" (TM) in the listviews and in
+  the groupbrowser
 - Introduced a caching-mechanism that allows one to
   specify how much RAM may be used by the cached
   article bodies and headers.
-- basic KMail integration
+- optional integration of KMail and other external
+  mail programs
 - enabled forwarding of articles with attachments
 - proper handling of crossposts, crossposted articles
   are marked as read
+- full support for the Mail-Copies-To header
 - new expire-feature: delete article headers that
   aren't available on the server
 - new menu option: fetch an article by message-id
 - added option to retreive an article from groups.google.com
   if it's unavaiable on the local server
+- added placeholder for the group name in the attribution line
 - support for dynamically generated signatures
+- added option to place the cursor below the attribution line,
+  not above the signature (off by default)
+- files can now be attached to an article with Drag&Drop
 - added option to retreive the article source
 - enhanced dupe protection, utilizing the "recommened id" feature
   of newer inn's
@@ -30,6 +41,7 @@ changes between 0.4 and 0.6
 - articles are no fetched via article number instead of article-id
   to avoid problems with broken newsservers
 - support for IPv6 and SOCKS-proxies
+- trailing empty lines can be stripped from incoming articles
 - highlighting of "news:" and "mailto:" urls
 - highlight all email-addresses and msgids (and ask the user if its
   an address or a id)
@@ -37,7 +49,7 @@ changes between 0.4 and 0.6
 - its no possible to disable the fancy header decorations,
   saves space on small displays
 - the word wrap behaviour of the article widget is
-  no configurable
+  now configurable
 
 changes between 0.3.3 and 0.4
 - full support for non iso-8859-x charsets

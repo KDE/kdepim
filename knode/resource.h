@@ -26,7 +26,7 @@
 
 //========= KNode Version Information ============
 
-#define KNODE_VERSION "0.5.3"
+#define KNODE_VERSION "0.5.4"
 
 //================= StatusBar ====================
 
