@@ -4,7 +4,6 @@
 **
 ** This is the main program in KPilot.
 **
-** kátë, this is ÜTF-èïght-éncõdéd.
 */
 
 /*
@@ -255,7 +254,7 @@ void KPilotInstaller::setupWidget()
 
 	fManagingWidget = new KJanusWidget(this,"mainWidget",
 		KJanusWidget::IconList);
-	fManagingWidget->setMinimumSize(500, 330);
+	fManagingWidget->setMinimumSize(fManagingWidget->sizeHint());
 	fManagingWidget->show();
 	setCentralWidget(fManagingWidget);
 	connect( fManagingWidget, SIGNAL( aboutToShowPage ( QWidget* ) ),
@@ -265,6 +264,8 @@ void KPilotInstaller::setupWidget()
 	initMenu();
 	initComponents();
 
+	setMinimumSize(sizeHint() + QSize(10,60));
+	
 	createGUI(CSL1("kpilotui.rc"), false);
 #ifdef DEBUG
 	DEBUGKPILOT << fname
