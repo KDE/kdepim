@@ -18,4 +18,8 @@ conduit_time_la_SOURCES = \
 	time-setup_dialog.ui
 conduit_time_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 conduit_time_la_LIBADD = ../../lib/libkpilot.la $(LIB_KDEUI)
+conduit_time_la_COMPILE_FIRST = time-setup_dialog.ui
+
+time-setup.cc : time-setup_dialog.h
+
  

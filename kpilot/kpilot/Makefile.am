@@ -56,12 +56,28 @@ kpilot_SOURCES	= \
 	listItems.cc \
 	kroupware.cc
 
+kpilot_COMPILE_FIRST = dbFlagsEditor_base.ui \
+	kpilotConfigDialog_base.ui \
+	dbSelection_base.ui dbFlagsEditor_base.ui \
+	todoEditor_base.ui
+
+kpilot.cc : pilotDaemonDCOP_stub.h kpilotDCOP_skel.h logWidgetDCOP_skel.h
+
+kpilotConfigDialog.cc : kpilotConfigDialog_base.h
+
+dbSelectionDialog.cc : dbSelection_base.h
+
+dbFlagsEditor.cc : dbFlagsEditor_base.h
+
+todoEditor.cc : todoEditor_base.h
 
 kpilotDaemon_SOURCES = \
 	pilotDaemonDCOP.skel kpilotDCOP.stub logWidgetDCOP.stub \
 	pilotDaemon.cc kpilotConfig.cc \
 	hotSync.cc internalEditorAction.cc interactiveSync.cc syncStack.cc \
 	fileInstaller.cc kroupware.cc
+
+pilotDaemon.cc : pilotDaemonDCOP_skel.cc kpilotDCOP_stub.h logWidgetDCOP_stub.h
 
 kpilotTest_SOURCES = kpilotConfig.cc \
 	logWidget.cc pilotComponent.cc \
