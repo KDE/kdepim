@@ -23,6 +23,8 @@ namespace KSync {
         void setPassword( const QString& pass );
         void setSrcIP( const QString& );
         void setDestIP( const QString& );
+	void setModel( const QString& model, const QString& name );
+
         void startUp();
         void hangUP();
 
@@ -67,7 +69,6 @@ namespace KSync {
         void readAddressbook();
         void readDatebook();
         void readTodoList();
-        void readPartner();
 
         /* for processing the connection and authentication */
         void start(const QString& );

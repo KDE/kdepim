@@ -12,6 +12,7 @@
 #include <kabc/phonenumber.h>
 #include <kabc/address.h>
 
+#include "device.h"
 #include "addressbook.h"
 
 
@@ -20,8 +21,8 @@ using namespace OpieHelper;
 AddressBook::AddressBook( CategoryEdit *edit,
                           KSync::KonnectorUIDHelper* helper,
                           const QString &tz,
-                          bool meta )
-    : Base( edit,  helper,  tz,  meta )
+                          bool meta, Device *dev )
+    : Base( edit,  helper,  tz,  meta, dev )
 {
 }
 AddressBook::~AddressBook(){
@@ -29,6 +30,9 @@ AddressBook::~AddressBook(){
 KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 {
     KSync::AddressBookSyncee *syncee = new KSync::AddressBookSyncee();
+    if( device() )
+	syncee->setSupports( device()->supports( Device::Addressbook ) );
+	
     //return entry;
     QFile file( fileName );
     if( !file.open(IO_ReadOnly ) ){

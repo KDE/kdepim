@@ -25,7 +25,7 @@ namespace OpieHelper {
         DateBook( CategoryEdit* edit = 0,
                   KSync::KonnectorUIDHelper* helper = 0,
                   const QString &tz = QString::null,
-                  bool meta = FALSE );
+                  bool meta = FALSE, Device* dev = 0);
         ~DateBook();
         KSync::EventSyncee* toKDE( const QString & fileName );
         KTempFile* fromKDE( KSync::EventSyncee* syncee );

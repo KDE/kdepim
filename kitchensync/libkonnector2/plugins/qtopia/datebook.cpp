@@ -9,7 +9,7 @@
 
 #include <eventsyncee.h>
 
-
+#include "device.h"
 #include "datebook.h"
 
 using namespace OpieHelper;
@@ -35,8 +35,8 @@ int week ( const QDate &start ) {
 DateBook::DateBook( CategoryEdit* edit,
                     KSync::KonnectorUIDHelper* helper,
                     const QString& tz,
-                    bool meta )
-    : Base( edit,  helper,  tz, meta )
+                    bool meta, Device *dev )
+    : Base( edit,  helper,  tz, meta, dev )
 {
 }
 DateBook::~DateBook(){
@@ -187,6 +187,8 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
 {
 //    kdDebug(5229) << "To KDE " << endl;
     KSync::EventSyncee* syncee = new KSync::EventSyncee();
+    if( device() )
+	syncee->setSupports( device()->supports( Device::Calendar ) );
 
     QFile file( fileName );
     if ( file.open( IO_ReadOnly ) ) {

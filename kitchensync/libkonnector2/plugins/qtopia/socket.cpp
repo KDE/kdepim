@@ -18,6 +18,7 @@
 
 #include <idhelper.h>
 
+#include "device.h"
 #include "categoryedit.h"
 #include "opiecategories.h"
 #include "desktop.h"
@@ -60,8 +61,6 @@ public:
     };
     Private(){}
 
-    QString pass;
-    QString user;
     bool connected    : 1;
     bool startSync    : 1;
     bool isSyncing    : 1;
@@ -83,7 +82,7 @@ public:
     QString tz;
     OpieHelper::CategoryEdit* edit;
     KonnectorUIDHelper* helper;
-
+    OpieHelper::Device* device;
 };
 namespace {
     void parseTZ( const QString& fileName,  QString& tz );
@@ -107,21 +106,32 @@ QtopiaSocket::QtopiaSocket( QObject* obj, const char* name )
     d->helper  = 0;
     d->edit    = 0;
     d->first   = false;
+    d->device = new OpieHelper::Device;    
 }
 QtopiaSocket::~QtopiaSocket() {
+    delete d->device;
     delete d;
 }
 void QtopiaSocket::setUser( const QString& user ) {
-    d->user = user;
+    d->device->setUser( user );
 }
 void QtopiaSocket::setPassword( const QString& pass ) {
-    d->pass = pass;
+    d->device->setPassword( pass );
 }
 void QtopiaSocket::setSrcIP( const QString& src) {
     d->src = src;
 }
 void QtopiaSocket::setDestIP( const QString& dest) {
     d->dest = dest;
+}
+void QtopiaSocket::setModel( const QString& model, const QString& name ){
+    if( model == QString::fromLatin1("Sharp Zaurus ROM") ){
+	kdDebug(5225) << "Sharp Zaurus ROM match " << endl;
+	d->device->setDistribution( OpieHelper::Device::Zaurus );
+    }else
+	d->device->setDistribution( OpieHelper::Device::Opie );
+	
+    d->device->setMeta( name );
 }
 void QtopiaSocket::startUp() {
     kdDebug(5210) << "Start Up " << endl;
@@ -335,8 +345,8 @@ KURL QtopiaSocket::url( Type  t) {
 KURL QtopiaSocket::url( const QString& path ) {
     KURL url;
     url.setProtocol("ftp" );
-    url.setUser( d->user );
-    url.setPass( d->pass );
+    url.setUser( d->device->user() );
+    url.setPass( d->device->password() );
     url.setHost( d->dest );
     url.setPort( 4242 );
     url.setPath( path );
@@ -354,7 +364,7 @@ void QtopiaSocket::writeCategory() {
 }
 void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee) {
     emit prog(Progress(i18n("Writing AddressBook back to the device") ) );
-    OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->meta );
+    OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->meta, d->device );
     KTempFile* file = abDB.fromKDE( syncee );
     KURL uri = url( AddressBook );
 
@@ -370,7 +380,7 @@ void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee) {
     }
 }
 void QtopiaSocket::writeDatebook( EventSyncee* syncee) {
-    OpieHelper::DateBook dbDB(d->edit, d->helper, d->tz, d->meta );
+    OpieHelper::DateBook dbDB(d->edit, d->helper, d->tz, d->meta, d->device );
     KTempFile* file = dbDB.fromKDE( syncee );
     KURL uri = url( DateBook );
 
@@ -386,7 +396,7 @@ void QtopiaSocket::writeDatebook( EventSyncee* syncee) {
     }
 }
 void QtopiaSocket::writeTodoList( TodoSyncee* syncee) {
-    OpieHelper::ToDo toDB(d->edit, d->helper, d->tz, d->meta );
+    OpieHelper::ToDo toDB(d->edit, d->helper, d->tz, d->meta, d->device );
     KTempFile* file = toDB.fromKDE( syncee );
     KURL uri = url( TodoList );
 
@@ -410,7 +420,7 @@ void QtopiaSocket::readAddressbook() {
     }
 
     emit prog( StdProgress::converting(i18n("Addressbook") ) );
-    OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->meta );
+    OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->meta, d->device );
     KSync::AddressBookSyncee* syncee = abDB.toKDE( tempfile );
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
@@ -442,7 +452,7 @@ void QtopiaSocket::readDatebook() {
         return;
     }
     emit prog( StdProgress::converting(i18n("Datebook") ) );
-    OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta );
+    OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta, d->device );
     KSync::EventSyncee* syncee = dateDB.toKDE( tempfile );
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
@@ -475,7 +485,7 @@ void QtopiaSocket::readTodoList() {
         return;
     }
 
-    OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->meta );
+    OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->meta, d->device );
     KSync::TodoSyncee* syncee = toDB.toKDE( tempfile );
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
@@ -498,9 +508,6 @@ void QtopiaSocket::readTodoList() {
 
     KIO::NetAccess::removeTempFile( tempfile );
 }
-void QtopiaSocket::readPartner() {
-
-}
 
 void QtopiaSocket::start(const QString& line ) {
 
@@ -512,18 +519,21 @@ void QtopiaSocket::start(const QString& line ) {
         d->mode = d->Done;
         d->connected    = false;
         d->isConnecting = false;
-    }else{
+    }else{    
         /*
          * parse the uuid
-         * here
+         * here if not zaurus
          */
-        QStringList list = QStringList::split(";", line );
-        qWarning(list[1].latin1() );
-        QString uid = list[1];
-        uid = uid.mid(11, uid.length()-12 );
-        d->partnerId = uid;
-        initFiles();
-        stream << "USER " << d->user << endl;
+	if( d->device->distribution() == OpieHelper::Device::Zaurus ){
+	    d->partnerId = d->device->meta();
+	}else{
+            QStringList list = QStringList::split(";", line );
+    	    QString uid = list[1];
+            uid = uid.mid(11, uid.length()-12 );
+	    d->partnerId = uid;
+        }
+    	initFiles();
+        stream << "USER " << d->device->user() << endl;
         d->mode = d->User;
     }
 }
@@ -533,14 +543,14 @@ void QtopiaSocket::user( const QString& line) {
 //    emit prog( StdProgress::authentication() );
     QTextStream stream( d->socket );
     if ( line.left(3) != QString::fromLatin1("331") ) {
-        emit error( StdError::wrongUser( d->user ) );
+        emit error( StdError::wrongUser( d->device->user() ) );
         // wrong user name
         d->socket->close();
         d->mode = d->Done;
         d->connected    = false;
         d->isConnecting = false;
     }else{
-        stream << "PASS " << d->pass << endl;
+        stream << "PASS " << d->device->password() << endl;
         d->mode = d->Pass;
     }
 }

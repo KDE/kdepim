@@ -11,6 +11,7 @@
 
 #include <idhelper.h>
 
+#include "device.h"
 #include "opiecategories.h"
 #include "todo.h"
 
@@ -20,8 +21,8 @@ using namespace OpieHelper;
 ToDo::ToDo( CategoryEdit* edit,
             KSync::KonnectorUIDHelper* helper,
             const QString &tz,
-            bool meta)
-    : Base( edit,  helper,  tz,  meta )
+            bool meta, Device* dev)
+    : Base( edit,  helper,  tz,  meta, dev )
 {
 }
 ToDo::~ToDo(){
@@ -48,6 +49,8 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
 
     todo->setDescription(e.attribute("Description" ) );
     todo->setSummary( e.attribute("Summary") ); //opie only
+    if ( device() && device()->distribution() == Device::Zaurus )
+        todo->setSummary( e.attribute("Description").stripWhiteSpace().left(20) );
 
     setUid(todo,  e.attribute("Uid")  );
 
@@ -113,6 +116,8 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
 KSync::TodoSyncee* ToDo::toKDE( const QString &fileName )
 {
     KSync::TodoSyncee* syncee = new KSync::TodoSyncee();
+    if( device() )
+	syncee->setSupports( device()->supports( Device::Todolist ) );
 
     QFile file( fileName );
     if ( file.open( IO_ReadOnly ) ) {

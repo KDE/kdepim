@@ -23,7 +23,7 @@ namespace OpieHelper {
         int distribution()const;
         void setDistribution(int dis );
 
-        QBitArray supports( enum PIM );
+        QBitArray supports( enum PIM )const;
         QString meta()const;
         void setMeta(const QString& str );
 
@@ -33,9 +33,9 @@ namespace OpieHelper {
         void setPassword( const QString& );
 
     private:
-        QBitArray opieCal();
-        QBitArray opieTo();
-        QBitArray opieAddr();
+        QBitArray opieCal()const;
+        QBitArray opieTo()const;
+        QBitArray opieAddr()const;
         int m_model;
         QString m_meta;
         QString m_user;

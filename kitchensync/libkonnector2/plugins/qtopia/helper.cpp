@@ -4,6 +4,7 @@
 #include <kglobal.h>
 #include <kdebug.h>
 
+#include "device.h"
 #include "helper.h"
 
 using namespace OpieHelper;
@@ -11,12 +12,13 @@ using namespace OpieHelper;
 Base::Base( CategoryEdit* edit,
             KSync::KonnectorUIDHelper* helper,
             const QString &tz,
-            bool metaSyncing )
+            bool metaSyncing, Device* dev )
 {
     m_metaSyncing = metaSyncing;
     m_edit = edit;
     m_helper = helper;
     m_tz = tz;
+    m_device = dev;
 }
 Base::~Base()
 {
@@ -199,4 +201,7 @@ int Base::newId()
     }
     ids.insert( id, true );
     return id;
+}
+const Device* Base::device() {
+    return m_device;
 }

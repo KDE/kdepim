@@ -16,7 +16,7 @@ namespace OpieHelper {
         AddressBook( CategoryEdit* edit = 0,
                      KSync::KonnectorUIDHelper* helper = 0,
                      const QString &tz = QString::null,
-                     bool metaSyncing = FALSE );
+                     bool metaSyncing = FALSE , Device *dev = 0);
         ~AddressBook();
         KSync::AddressBookSyncee * toKDE( const QString &fileName );
         /* it must be deleted but not by this one here */

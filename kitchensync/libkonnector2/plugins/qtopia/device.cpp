@@ -21,7 +21,7 @@ int Device::distribution()const {
 void Device::setDistribution( int dist ) {
     m_model = dist;
 }
-QBitArray Device::supports( enum PIM pim) {
+QBitArray Device::supports( enum PIM pim) const{
     QBitArray ar;
     switch( pim ) {
     case Calendar:
@@ -36,7 +36,7 @@ QBitArray Device::supports( enum PIM pim) {
     }
     return ar;
 }
-QBitArray Device::opieCal() {
+QBitArray Device::opieCal() const{
     QBitArray ar( EventSyncee::DtEnd+1 );
     ar[EventSyncee::Organizer] = false;
     ar[EventSyncee::ReadOnly ] = false; // we do not support the read only attribute
@@ -47,7 +47,7 @@ QBitArray Device::opieCal() {
     ar[EventSyncee::CreatedDate ] = false;
     ar[EventSyncee::Revision ] = false;
     ar[EventSyncee::Description ] = true;
-    ar[EventSyncee::Summary] = ( m_model == Opie ); // if we're in opie mode we do support the summary!
+    ar[EventSyncee::Summary] = true; // ( m_model == Opie );  if we're in opie mode we do support the summary!
     ar[EventSyncee::Category ] = true;
     ar[EventSyncee::Relations ] = false;
     ar[EventSyncee::ExDates ] = false; // currently we do not support the Exception to Recurrence
@@ -62,7 +62,7 @@ QBitArray Device::opieCal() {
 
     return ar;
 }
-QBitArray Device::opieAddr() {
+QBitArray Device::opieAddr() const{
     QBitArray ar(AddressBookSyncee::Emails +1 );
 
     ar[AddressBookSyncee::FamilyName] = true;
@@ -110,6 +110,50 @@ QBitArray Device::opieAddr() {
     ar[AddressBookSyncee::Emails] = true;
     return ar;
 }
-QBitArray Device::opieTo() {
-
+QBitArray Device::opieTo() const{
+    QBitArray ar(TodoSyncee::Percent+1);
+    ar[TodoSyncee::Organizer] = false;
+    ar[TodoSyncee::ReadOnly] = false;
+    ar[TodoSyncee::DtStart] = ( m_model == Opie );
+    ar[TodoSyncee::Duration] = false;
+    ar[TodoSyncee::Float] = false; // check if DueDate less components...
+    ar[TodoSyncee::Attendee] = false;
+    ar[TodoSyncee::CreatedDate] = false;
+    ar[TodoSyncee::Revision] = false;
+    ar[TodoSyncee::Description] = true;
+    ar[TodoSyncee::Summary] = ( m_model == Opie );
+    ar[TodoSyncee::Category] = true;
+    ar[TodoSyncee::Relations] = false;
+    ar[TodoSyncee::ExDates] = false;
+    ar[TodoSyncee::Attachments] = false;
+    ar[TodoSyncee::Secrecy] = false;
+    ar[TodoSyncee::Priority] = true;
+    ar[TodoSyncee::Alarms] = false;
+    ar[TodoSyncee::Recurrence] = false;
+    ar[TodoSyncee::Location] = false;
+    ar[TodoSyncee::StartDate] = ( m_model == Opie );
+    ar[TodoSyncee::Completed] = true;
+    ar[TodoSyncee::Percent] = true;
+    return ar;
+}
+QString Device::user()const {
+    if(m_model == Opie )
+	return m_user;
+    else
+	return QString::fromLatin1("root");
+}
+void Device::setUser( const QString& str ){
+    m_user = str;
+}
+QString Device::password()const {
+    if(m_model == Opie )
+	return m_pass;
+    else
+	return QString::fromLatin1("Qtopia");
+}
+void Device::setMeta( const QString& str ){
+    m_meta = str;
+}
+QString Device::meta()const{
+    return m_meta;
 }

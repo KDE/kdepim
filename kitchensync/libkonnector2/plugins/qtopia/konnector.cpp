@@ -77,6 +77,7 @@ void QtopiaPlugin::setCapabilities( const KSync::Kapabilities& caps) {
     d->socket->setDestIP( caps.destIP() );
     d->socket->setUser( caps.user() );
     d->socket->setPassword( caps.password() );
+    d->socket->setModel( caps.currentModel(), caps.modelName() );
     d->socket->startUp();
 }
 bool QtopiaPlugin::startSync() {

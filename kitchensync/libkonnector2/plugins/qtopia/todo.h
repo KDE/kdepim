@@ -26,7 +26,7 @@ namespace OpieHelper {
         ToDo( CategoryEdit* edit = 0,
               KSync::KonnectorUIDHelper* helper= 0,
               const QString& tz = QString::null,
-              bool meta = FALSE);
+              bool meta = FALSE, Device* dev = 0);
         ~ToDo();
 
         KSync::TodoSyncee* toKDE( const QString &fileName );
