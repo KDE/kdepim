@@ -299,8 +299,14 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
       QCString( "totalTaskTime" ), QString::number( _time ) );
   todo->setCustomProperty( kapp->instanceName(),
       QCString( "totalSessionTime" ), QString::number( _sessionTime) );
-  todo->setCustomProperty( kapp->instanceName(),
-      QCString( "desktopList" ), getDesktopStr() );
+
+  kdDebug() << "Task::asTodo: getDesktopStr() = " << getDesktopStr() << endl;
+
+  if (getDesktopStr().isEmpty())
+    todo->removeCustomProperty(kapp->instanceName(), QCString("desktopList"));
+  else
+    todo->setCustomProperty( kapp->instanceName(),
+        QCString( "desktopList" ), getDesktopStr() );
 
   KEMailSettings settings;
   todo->setOrganizer( settings.getSetting( KEMailSettings::RealName ) );
