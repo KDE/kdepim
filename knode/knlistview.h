@@ -27,8 +27,10 @@ class KNListView;
 class KNLVItemBase : public QListViewItem  {
   
   public:
-    KNLVItemBase(KNListView *view);      // restricted to KNListView to prevent that the
-    KNLVItemBase(KNLVItemBase *item);    // static_cast in ~KNLVItemBase fails.
+  /** restricted to KNListView to prevent that the
+      static_cast in @ref ~KNLVItemBase fails. */
+    KNLVItemBase(KNListView *view);
+    KNLVItemBase(KNLVItemBase *item);
     ~KNLVItemBase();
 
     void setActive(bool b)  { a_ctive = b; };
@@ -78,8 +80,8 @@ class KNListView : public KListView  {
 
     void ensureItemVisibleWithMargin(const QListViewItem *i);
 
-    // outsideOk == accept drops of this type even if
-    //              the mouse cursor is not on top of an item
+    /** @param outsideOk accept drops of this type even if
+	the mouse cursor is not on top of an item */
     void addAcceptableDropMimetype(const char *mimeType, bool outsideOk);
 
   public slots:

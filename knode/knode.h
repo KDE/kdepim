@@ -68,16 +68,19 @@ class KNMainWindow : public KDockMainWindow
     void setCursorBusy(bool b=true);
     void blockUI(bool b=true);
     void disableAccels(bool b=true);
-    void secureProcessEvents();  // processEvents with some blocking
+    /** processEvents with some blocking */
+    void secureProcessEvents();
 
-    virtual QSize sizeHint() const;   // useful default value
+    /** useful default value */
+    virtual QSize sizeHint() const;
 
-    // handle URL given as command-line argument
+    /** handle URL given as command-line argument */
     void openURL(const KURL &url);
 
-    void configChanged();   // update fonts and colors
+    /** update fonts and colors */
+    void configChanged();
 
-    //access to GUI-elements
+    /** access to GUI-elements */
     KNListView*       collectionView()  { return c_olView; }
     KNListView*       headerView()      { return h_drView; }
     KNArticleWidget*  articleView()     { return a_rtView; }
@@ -87,7 +90,7 @@ class KNMainWindow : public KDockMainWindow
     void initActions();
     void initPopups();
 
-    //checks if run for the first time, sets some global defaults (email configuration)
+    /** checks if run for the first time, sets some global defaults (email configuration) */
     bool firstStart();
 
     void readOptions();
@@ -96,12 +99,12 @@ class KNMainWindow : public KDockMainWindow
     bool requestShutdown();
     void prepareShutdown();
 
-    //exit
+    /** exit */
     bool queryClose();
 
     virtual void showEvent(QShowEvent *);
 
-    //update appearance
+    /** update appearance */
     virtual void fontChange( const QFont & );
     virtual void paletteChange ( const QPalette & );
 

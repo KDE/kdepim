@@ -39,18 +39,18 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     KNGroup(KNCollection *p=0);
     ~KNGroup();
 
-    // type
+    /** type */
     collectionType type()               { return CTgroup; }
 
-    // list-item handling
+    /** list-item handling */
     void updateListItem();
 
-    // info
+    /** info */
     QString path();
     bool readInfo(const QString &confPath);
     void saveInfo();
 
-    // name
+    /** name */
     bool hasName()                          { return (!n_ame.isEmpty()); }
     const QString& name();
     const QString& groupname()              { return g_roupname; }
@@ -58,7 +58,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     const QString& description()            { return d_escription; }
     void setDescription(const QString &s)   { d_escription=s; }
 
-    // count + numbers
+    /** count + numbers */
     int newCount()                { return n_ewCount; }
     void setNewCount(int i)       { n_ewCount=i; }
     void incNewCount(int i=1)     { n_ewCount+=i; }
@@ -84,12 +84,12 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     int statThrWithNew();
     int statThrWithUnread();
 
-    // article access
+    /** article access */
     KNRemoteArticle* at(int i)          { return static_cast<KNRemoteArticle*> (KNArticleCollection::at(i)); }
     KNRemoteArticle* byId(int id)       { return static_cast<KNRemoteArticle*> (KNArticleCollection::byId(id)); }
     KNRemoteArticle* byMessageId(const QCString &mId)
                                         { return static_cast<KNRemoteArticle*> (KNArticleCollection::byMessageId(mId)); }
-    // load + save
+    /** load + save */
     bool loadHdrs();
     bool unloadHdrs(bool force=true);
     void insortNewHeaders(QStrList *hdrs, KNProtocolClient *client=0);
@@ -97,22 +97,22 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();
 
-    // mark articles with this id as read when we later load the headers / fetch new articles
+    /** mark articles with this id as read when we later load the headers / fetch new articles */
     void appendXPostID(const QString &id);
     void processXPostBuffer(bool deleteAfterwards);
 
-    // article handling
+    /** article handling */
     void updateThreadInfo();
     void reorganize();
     void scoreArticles(bool onlynew=true);
 
-    // locking
+    /** locking */
     bool isLocked()             { return l_ocked; }
     void setLocked(bool l)      { l_ocked=l; }
 
     QString prepareForExecution();
 
-    // charset-handling
+    /** charset-handling */
     const QCString defaultCharset()           { return d_efaultChSet; }
     void setDefaultCharset(const QCString &s) { d_efaultChSet=s; }
     bool useCharset()                         { return ( u_seCharset && !d_efaultChSet.isEmpty() ); }

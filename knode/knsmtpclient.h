@@ -29,12 +29,13 @@ class KNSmtpClient : public KNProtocolClient  {
     ~KNSmtpClient();
   
   protected:
-
-    virtual void processJob();         // examines the job and calls the suitable handling method
+    /** examines the job and calls the suitable handling method */
+    virtual void processJob();
   
     void doMail();
   
-    virtual bool openConnection();     // connect, handshake
+    /** connect, handshake */
+    virtual bool openConnection();
 
 };
 

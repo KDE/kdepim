@@ -36,7 +36,7 @@ class KTempFile;
 // utility classes
 //*****************************************************************************
 
-// clone of QSortedList...
+/** clone of QSortedList... */
 template<class type> class Q_EXPORT QSortedVector : public QVector<type>
 {
 public:
@@ -62,8 +62,8 @@ class KNFile : public QFile {
     ~KNFile();
     const QCString& readLine();
     const QCString& readLineWnewLine();
-    // searches for the string from the current file position
-    // returns -1 when the string wasn't found.
+    /** searches for the string from the current file position
+	returns -1 when the string wasn't found. */
     int findString(const char *s);
 
    protected:
@@ -85,7 +85,7 @@ public:
   KNSaveHelper(QString saveName, QWidget *parent);
   ~KNSaveHelper();
 
-  // returns a file open for writing
+  /** returns a file open for writing */
   QFile* getFile(QString dialogTitle);
 
 private:
@@ -110,12 +110,12 @@ public:
   KNLoadHelper(QWidget *parent);
   ~KNLoadHelper();
 
-  // opens a file dialog and returns a file open for reading
+  /** opens a file dialog and returns a file open for reading */
   KNFile* getFile(QString dialogTitle);
-  // trys to access the file specified by the url and returns
-  // a file open for reading
+  /** trys to access the file specified by the url and returns
+      a file open for reading */
   KNFile* setURL(KURL url);
-  // returns the file after getFile(QString) of setURL(url) was called
+  /** returns the file after getFile(QString) of setURL(url) was called */
   KNFile* getFile() { return f_ile; };
   KURL getURL()     { return u_rl; };
 
@@ -137,9 +137,9 @@ class KNHelper {
 
 public:
 
-  // list selection dialog, used instead of a popup menu
-  // when a select action is called via the keyboard.
-  // returns -1 when the user canceled the dialog.
+  /** list selection dialog, used instead of a popup menu
+      when a select action is called via the keyboard.
+      returns -1 when the user canceled the dialog. */
   static int selectDialog(QWidget *parent, const QString &caption, const QStringList &options, int initialValue);
 
   static void saveWindowSize(const QString &name, const QSize &s);
@@ -149,16 +149,20 @@ public:
   static const QString decryptStr(const QString& aStr);
   static QString rot13(const QString &s);
 
-  // checks whether s contains any non-us-ascii characters
+  /** checks whether s contains any non-us-ascii characters */
   static bool isUsAscii(const QString &s);
 
-  // used for rewarping a text when replying to a message or inserting a file into a box
+  /** used for rewarping a text when replying to a message or inserting a file into a box */
   static QString rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace);
 
-  static void displayInternalFileError(QWidget *w=0);   // use this for all internal files
-  static void displayExternalFileError(QWidget *w=0);   // use this for all external files
-  static void displayRemoteFileError(QWidget *w=0);     // use this for remote files
-  static void displayTempFileError(QWidget *w=0);       // use this for error on temporary files
+  /** use this for all internal files */
+  static void displayInternalFileError(QWidget *w=0);
+  /** use this for all external files */
+  static void displayExternalFileError(QWidget *w=0);
+  /** use this for remote files */
+  static void displayRemoteFileError(QWidget *w=0);
+  /** use this for error on temporary files */
+  static void displayTempFileError(QWidget *w=0);
 
 };
 

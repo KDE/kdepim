@@ -53,70 +53,70 @@ enum contentDisposition { CDinline,
 static const QCString Latin1("ISO-8859-1");
 
 
-/* Baseclass of all header-classes. It represents a
-   header-field as described in RFC-822.  */
+/** Baseclass of all header-classes. It represents a
+    header-field as described in RFC-822.  */
 class Base {
 
   public:
-    /* Create an empty header. */
+    /** Create an empty header. */
     Base()  { p_arent=0; e_ncCS=0; }
 
-    /* Create an empty header with a parent-content. */
+    /** Create an empty header with a parent-content. */
     Base(KNMimeContent *parent)  { p_arent=parent; e_ncCS=0; }
 
-    /* Destructor */
+    /** Destructor */
     virtual ~Base()  {}
 
-    /* Return the parent of this header. */
+    /** Return the parent of this header. */
     KNMimeContent* parent()  { return p_arent; }
 
-    /* Set the parent for this header. */
+    /** Set the parent for this header. */
     void setParent(KNMimeContent *p)  { p_arent=p; }
 
-    /* Parse the given string. Take care of RFC2047-encoded
-       strings. A default charset is given. If the last parameter
-       is true the default charset is used in any case */
+    /** Parse the given string. Take care of RFC2047-encoded
+	strings. A default charset is given. If the last parameter
+	is true the default charset is used in any case */
     virtual void from7BitString(const QCString&)  {}
 
-    /* Return the encoded header. The parameter specifies
-       wether the header-type should be included. */
+    /** Return the encoded header. The parameter specifies
+	whether the header-type should be included. */
     virtual QCString as7BitString(bool incType=true)  { (void)(incType); return QCString(); }
 
-    /* Return the charset that is used for RFC2047-encoding */
+    /** Return the charset that is used for RFC2047-encoding */
     QCString rfc2047Charset();
 
-    /* Set the charset for RFC2047-encoding */
+    /** Set the charset for RFC2047-encoding */
     void setRFC2047Charset(const QCString &cs);
 
-    /* Return the default charset */
+    /** Return the default charset */
     QCString defaultCS();
 
-    /* Return if the default charset is mandatory */
+    /** Return if the default charset is mandatory */
     bool forceCS();
 
-    /* Parse the given string and set the charset. */
+    /** Parse the given string and set the charset. */
     virtual void fromUnicodeString(const QString&, const QCString&)  {}
 
-    /* Return the decoded content of the header without
+    /** Return the decoded content of the header without
        the header-type. */
     virtual QString asUnicodeString()  { return QString(); }
 
-    /* Delete */
+    /** Delete */
     virtual void clear()  {}
 
-    /* Do we have data? */
+    /** Do we have data? */
     virtual bool isEmpty()  { return false; }
 
-    /* Return the type of this header (e.g. "From") */
+    /** Return the type of this header (e.g. "From") */
     virtual const char* type()  { return ""; }
 
-    /* Check if this header is of type t. */
+    /** Check if this header is of type t. */
     bool is(const char* t)  { return (strcasecmp(t, type())==0); }
 
-    /* Check if this header is a MIME header */
+    /** Check if this header is a MIME header */
     bool isMimeHeader()  { return (strncasecmp(type(), "Content-", 8)==0); }
 
-    /* Check if this header is a X-Header */
+    /** Check if this header is a X-Header */
     bool isXHeader()  { return (strncmp(type(), "X-", 2)==0); }
 
   protected:
@@ -129,8 +129,8 @@ class Base {
 typedef QList<Base> List;
 
 
-/* Represents an arbitrary header, that can contain
-   any header-field */
+/** Represents an arbitrary header, that can contain
+    any header-field */
 class Generic : public Base {
 
   public:
@@ -156,7 +156,7 @@ class Generic : public Base {
 };
 
 
-/* Represents a "Message-Id" header */
+/** Represents a "Message-Id" header */
 class MessageID : public Base {
 
   public:
@@ -182,7 +182,7 @@ class MessageID : public Base {
 };
 
 
-/* Represents a "Control" header */
+/** Represents a "Control" header */
 class Control : public Base {
 
   public:
@@ -208,7 +208,7 @@ class Control : public Base {
 };
 
 
-/* Represents a "Supersedes" header */
+/** Represents a "Supersedes" header */
 class Supersedes : public MessageID {
 
   public:
@@ -223,7 +223,7 @@ class Supersedes : public MessageID {
 };
 
 
-/* Represents a "Subject" header */
+/** Represents a "Subject" header */
 class Subject : public Base {
 
   public:
@@ -249,8 +249,8 @@ class Subject : public Base {
 };
 
 
-/* This class encapsulates an address-field, containing
-   an email-adress and a real name */
+/** This class encapsulates an address-field, containing
+    an email-adress and a real name */
 class AddressField : public Base {
 
   public:
@@ -286,7 +286,7 @@ class AddressField : public Base {
 typedef QList<AddressField> AddressList;
 
 
-/* Represent a "From" header */
+/** Represent a "From" header */
 class From : public AddressField {
 
   public:
@@ -300,7 +300,7 @@ class From : public AddressField {
 };
 
 
-/* Represents a "Reply-To" header */
+/** Represents a "Reply-To" header */
 class ReplyTo : public AddressField {
 
   public:
@@ -315,8 +315,8 @@ class ReplyTo : public AddressField {
 };
 
 
-/* Represents a "Mail-Copies-To" header */
-/* http://www.newsreaders.com/misc/mail-copies-to.html */
+/** Represents a "Mail-Copies-To" header
+    http://www.newsreaders.com/misc/mail-copies-to.html */
 class MailCopiesTo : public AddressField {
 
   public:
@@ -335,7 +335,7 @@ class MailCopiesTo : public AddressField {
 };
 
 
-/* Represents a "Organization" header */
+/** Represents a "Organization" header */
 class Organization : public Base {
 
   public:
@@ -359,7 +359,7 @@ class Organization : public Base {
 };
 
 
-/* Represents a "Date" header */
+/** Represents a "Date" header */
 class Date : public Base {
 
   public:
@@ -390,7 +390,7 @@ class Date : public Base {
 };
 
 
-/* Represents a "To" header */
+/** Represents a "To" header */
 class To : public Base {
 
   public:
@@ -418,7 +418,7 @@ class To : public Base {
 };
 
 
-/* Represents a "CC" header */
+/** Represents a "CC" header */
 class CC : public To {
 
   public:
@@ -433,7 +433,7 @@ class CC : public To {
 };
 
 
-/* Represents a "BCC" header */
+/** Represents a "BCC" header */
 class BCC : public To {
 
   public:
@@ -448,7 +448,7 @@ class BCC : public To {
 };
 
 
-/* Represents a "Newsgroups" header */
+/** Represents a "Newsgroups" header */
 class Newsgroups : public Base {
 
   public:
@@ -476,7 +476,7 @@ class Newsgroups : public Base {
 };
 
 
-/* Represents a "Followup-To" header */
+/** Represents a "Followup-To" header */
 class FollowUpTo : public Newsgroups {
 
   public:
@@ -491,7 +491,7 @@ class FollowUpTo : public Newsgroups {
 };
 
 
-/* Represents a "Lines" header */
+/** Represents a "Lines" header */
 class Lines : public Base {
 
   public:
@@ -519,7 +519,7 @@ class Lines : public Base {
 };
 
 
-/* Represents a "References" header */
+/** Represents a "References" header */
 class References : public Base {
 
   public:
@@ -550,7 +550,7 @@ class References : public Base {
 };
 
 
-/* Represents a "User-Agent" header */
+/** Represents a "User-Agent" header */
 class UserAgent : public Base {
 
   public:
@@ -574,7 +574,7 @@ class UserAgent : public Base {
 };
 
 
-/* Represents a "Content-Type" header */
+/** Represents a "Content-Type" header */
 class ContentType : public Base {
 
   public:
@@ -633,7 +633,7 @@ class ContentType : public Base {
 };
 
 
-/* Represents a "Content-Transfer-Encoding" header */
+/** Represents a "Content-Transfer-Encoding" header */
 class CTEncoding : public Base {
 
   public:
@@ -663,7 +663,7 @@ class CTEncoding : public Base {
 };
 
 
-/* Represents a "Content-Disposition" header */
+/** Represents a "Content-Disposition" header */
 class CDisposition : public Base {
 
   public:
@@ -694,7 +694,7 @@ class CDisposition : public Base {
 };
 
 
-/* Represents a "Content-Description" header */
+/** Represents a "Content-Description" header */
 class CDescription : public Base {
 
   public:

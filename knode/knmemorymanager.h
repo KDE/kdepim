@@ -29,13 +29,13 @@ class KNMemoryManager {
     KNMemoryManager();
     ~KNMemoryManager();
 
-    // Collection-Handling
+    /** Collection-Handling */
     void updateCacheEntry(KNArticleCollection *c);
     void removeCacheEntry(KNArticleCollection *c);
-    // try to free enough memory for this collection
+    /** try to free enough memory for this collection */
     void prepareLoad(KNArticleCollection *c);
 
-    // Article-Handling
+    /** Article-Handling */
     void updateCacheEntry(KNArticle *a);
     void removeCacheEntry(KNArticle *a);
 

@@ -38,25 +38,32 @@ class KNNetAccess : public QObject  {
     ~KNNetAccess();
 
     void addJob(KNJobData *job);
-    void stopJobsNntp(int type);         // type==0 => all jobs
-    void stopJobsSmtp(int type);         // type==0 => all jobs
+    /** type==0 => all jobs */
+    void stopJobsNntp(int type);
+    /** type==0 => all jobs */
+    void stopJobsSmtp(int type);
     void cancelAllJobs();
 
-    QString currentMsg()         { return currMsg; }      // current statusbar message
+    /** current statusbar message */
+    QString currentMsg()         { return currMsg; }
 
     pthread_mutex_t* nntpMutex() { return &nntp_Mutex; }
 
   protected:
-    void triggerAsyncThread(int pipeFd);     // passes a signal through the ipc-pipe to the net-thread
+    /** passes a signal through the ipc-pipe to the net-thread */
+    void triggerAsyncThread(int pipeFd);
     void startJobNntp();
     void startJobSmtp();
     void threadDoneNntp();
     void threadDoneSmtp();
 
-    QString currMsg;                       // stores the current status message,
-                                           // so that it can be restored by the mainwindow
-    QString unshownMsg, unshownByteCount;  // messages from the nntp-client have priority
-    int unshownProgress;                   // unshown messages get stored here
+    /** stores the current status message,
+	so that it can be restored by the mainwindow */
+    QString currMsg;
+    /** messages from the nntp-client have priority */
+    QString unshownMsg, unshownByteCount;
+    /** unshown messages get stored here */
+    int unshownProgress;
 
     KNNntpClient *nntpClient;
     KNSmtpClient *smtpClient;   

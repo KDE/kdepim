@@ -29,20 +29,20 @@ class KNJobConsumer {
     KNJobConsumer();
     virtual ~KNJobConsumer();
 
-    /* Send the job to KNNetAccess and append it to the
-       joblist*/
+    /** Send the job to KNNetAccess and append it to the
+	joblist */
     void emitJob(KNJobData *j);
 
-    /* Remove the job from the joblist and process it by
-       calling "processJob" */
+    /** Remove the job from the joblist and process it by
+	calling @ref processJob */
     void jobDone(KNJobData *j);
 
-    /* Returns TRUE if we are waiting for at least one job
-       to be completed */
+    /** Returns TRUE if we are waiting for at least one job
+	to be completed */
     bool jobsPending()  { return (j_obs.count()>0); }
 
   protected:
-    /* The actual work is done here */
+    /** The actual work is done here */
     virtual void processJob(KNJobData *j);
     QList<KNJobData> j_obs;
 

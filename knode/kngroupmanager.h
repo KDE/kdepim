@@ -32,8 +32,8 @@ class KNCleanUp;
 
 //=================================================================================
 
-// helper classes for the group selection dialog
-// contains info about a newsgroup (name, description)
+/** helper classes for the group selection dialog
+    contains info about a newsgroup (name, description) */
 
 class KNGroupInfo {
 
@@ -43,7 +43,8 @@ class KNGroupInfo {
     KNGroupInfo(const QString &n_ame, const QString &d_escription, bool n_ewGroup=false, bool s_ubscribed=false, KNGroup::Status s_tatus=KNGroup::unknown );
     ~KNGroupInfo();
 
-    QString name,description;      // group names will be utf-8 encoded in the future...
+    /** group names will be utf-8 encoded in the future... */
+    QString name,description;
     bool newGroup, subscribed;
     KNGroup::Status status;
 
@@ -116,12 +117,16 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void syncGroups();    
 
   public slots:
-    void slotLoadGroupList(KNNntpAccount *a);      // load group list from disk (if this fails: ask user if we should fetch the list)
-    void slotFetchGroupList(KNNntpAccount *a);     // fetch group list from server
-    void slotCheckForNewGroups(KNNntpAccount *a, QDate date);    // check for new groups (created after the given date)
+    /** load group list from disk (if this fails: ask user if we should fetch the list) */
+    void slotLoadGroupList(KNNntpAccount *a);
+    /** fetch group list from server */
+    void slotFetchGroupList(KNNntpAccount *a);
+    /** check for new groups (created after the given date) */
+    void slotCheckForNewGroups(KNNntpAccount *a, QDate date);
     
   protected:
-    void processJob(KNJobData *j); //reimplemented from KNJobConsumer
+    /** reimplemented from @ref KNJobConsumer */
+    void processJob(KNJobData *j);
     QList<KNGroup>  *g_List;
     KNGroup *c_urrentGroup;
     KNArticleManager *a_rticleMgr;

@@ -35,12 +35,13 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     
     collectionType type()             { return CTnntpAccount; }   
                   
-    // trys to read information, returns false if it fails to do so
+    /** trys to read information, returns false if it fails to do so */
     bool readInfo(const QString &confPath);
     void saveInfo();    
     //void syncInfo();
     QString path();
-    bool editProperties(QWidget *parent);   // returns true when the user accepted
+    /** returns true when the user accepted */
+    bool editProperties(QWidget *parent);
     
     //get
     bool fetchDescriptions()          { return f_etchDescriptions; }
@@ -55,11 +56,16 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     void setUseDiskCache(bool b)      { u_seDiskCache=b; }
   
   protected:
-    KNConfig::Identity *i_dentity;    // server specific identity
-    bool f_etchDescriptions;          // use an additional "list newsgroups" command to fetch the newsgroup descriptions
-    QDate l_astNewFetch;              // last use of "newgroups"
-    bool w_asOpen;                    // was the server open in the listview on the last shutdown?
-    bool u_seDiskCache;               // cache fetched articles on disk
+    /** server specific identity */
+    KNConfig::Identity *i_dentity;
+    /** use an additional "list newsgroups" command to fetch the newsgroup descriptions */
+    bool f_etchDescriptions;
+    /** last use of "newgroups" */
+    QDate l_astNewFetch;
+    /** was the server open in the listview on the last shutdown? */
+    bool w_asOpen;
+    /** cache fetched articles on disk */
+    bool u_seDiskCache;
 };
 
 #endif

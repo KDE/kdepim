@@ -49,52 +49,72 @@ class KNProtocolClient : public QObject  {
     void updatePercentage(int percent);
 
     int getProgressValue() const { return progressValue; };
-    int getByteCount() const { return byteCount; };       // bytes in&out for the current connection
+    /** bytes in&out for the current connection */
+    int getByteCount() const { return byteCount; };
     bool isInByteCountMode() const { return byteCountMode; };
   
   protected:
 
-    void waitForWork();         // main loop, maintains connection and waits for next job
-    virtual void processJob();  // examines the job and calls the suitable handling method
+    /** main loop, maintains connection and waits for next job */
+    void waitForWork();
+    /** examines the job and calls the suitable handling method */
+    virtual void processJob();
 
-    virtual bool openConnection();   // connect, handshake and authorization
+    /** connect, handshake and authorization */
+    virtual bool openConnection();
     bool isConnected()   { return (tcpSocket!=-1); };
-    virtual void closeConnection();  // sends QUIT-command and closes the socket
+    /** sends QUIT-command and closes the socket */
+    virtual void closeConnection();
 
-    virtual bool sendCommand(const QCString &cmd, int &rep);  // sends a command (one line), return code is written to rep
-    bool sendCommandWCheck(const QCString &cmd, int rep);  // checks return code and calls handleErrors() if necessary
-    bool sendMsg(const QCString &msg);     // sends a message (multiple lines)
+    /** sends a command (one line), return code is written to rep */
+    virtual bool sendCommand(const QCString &cmd, int &rep);
+    /** checks return code and calls handleErrors() if necessary */
+    bool sendCommandWCheck(const QCString &cmd, int rep);
+    /** sends a message (multiple lines) */
+    bool sendMsg(const QCString &msg);
 
-    bool getNextLine();                 // reads next complete line of input
-    char* getCurrentLine()  { return thisLine; };  // returns pointer to current line of input  
-    bool getMsg(QStrList &msg);         // receives a message (multiple lines)
-    bool getNextResponse(int &rep);     // reads next line and returns the response code
-    bool checkNextResponse(int rep);    // checks return code and calls handleErrors() if necessary
+    /** reads next complete line of input */
+    bool getNextLine();
+    /** returns pointer to current line of input */
+    char* getCurrentLine()  { return thisLine; };
+    /** receives a message (multiple lines) */
+    bool getMsg(QStrList &msg);
+    /** reads next line and returns the response code */
+    bool getNextResponse(int &rep);
+    /** checks return code and calls handleErrors() if necessary */
+    bool checkNextResponse(int rep);
 
-    virtual void handleErrors();         // interprets error code, generates error message and closes the connection
+    /** interprets error code, generates error message and closes the connection */
+    virtual void handleErrors();
 
     void sendSignal(threadSignal s);
 
     KNJobData *job;
     KNServerInfo account;
-    QString errorPrefix;     // handleErrors() adds this string to the error message
+    /** handleErrors() adds this string to the error message */
+    QString errorPrefix;
     int progressValue, predictedLines, doneLines;
     bool byteCountMode;
 
   private:
-
-    bool waitForRead();          // waits until socket is readable
-    bool waitForWrite();         // waits until socket is writeable
+    /** waits until socket is readable */
+    bool waitForRead();
+    /** waits until socket is writeable */
+    bool waitForWrite();
     void closeSocket();
-    bool sendStr(const QCString &str);   // sends str to the server
-    void clearPipe();            // removes start/stop signal
+    /** sends str to the server */
+    bool sendStr(const QCString &str);
+    /** removes start/stop signal */
+    void clearPipe();
 
     char *input;
     char *thisLine, *nextLine, *inputEnd;
     unsigned int inputSize;
-    int fdPipeIn,fdPipeOut;      //IPC-Pipes to/from async thread
+    /** IPC-Pipes to/from async thread */
+    int fdPipeIn,fdPipeOut;
     int tcpSocket;
-    int byteCount;     // bytes in&out for the current connection
+    /** bytes in&out for the current connection */
+    int byteCount;
     QTime timer;
 
 };

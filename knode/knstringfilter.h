@@ -37,8 +37,8 @@ class KNStringFilter {
     ~KNStringFilter() {}
 
     KNStringFilter& operator=(const KNStringFilter &sf);
-
-    void expand(KNGroup *g);  // replace placeholders
+    /** replace placeholders */
+    void expand(KNGroup *g);
           
     void load(KSimpleConfig *conf);
     void save(KSimpleConfig *conf);     
@@ -67,7 +67,8 @@ class KNStringFilterWidget : public QGroupBox  {
     void setFilter(KNStringFilter &f);
     void clear();
 
-    void setStartFocus();        // useablity hack for the search dialog
+    /** usablity hack for the search dialog */
+    void setStartFocus();
     
   protected:
     QCheckBox *regExp;

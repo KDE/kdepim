@@ -34,16 +34,17 @@ class KNpgp;
 class KNArticleWidget;
 
 
-// idea: Previously the manager classes were available
-//       via KNodeApp. Now they can be accessed directly,
-//       this removes many header dependencies.
-//       (knode.h isn't include everywhere)
+/** idea: Previously the manager classes were available
+    via KNodeApp. Now they can be accessed directly,
+    this removes many header dependencies.
+    (knode.h isn't include everywhere) */
 class KNGlobals {
 
   public:
-
-    QWidget               *topWidget;    // topWidget == top, used for message boxes,
-    KNMainWindow          *top;          // no need to include knode.h everywhere
+    /** topWidget == top, used for message boxes, */
+    QWidget               *topWidget;
+    /** no need to include knode.h everywhere */
+    KNMainWindow          *top;
     KNArticleWidget       *artWidget;
     KNConfigManager       *cfgManager;
     KNNetAccess           *netAccess;

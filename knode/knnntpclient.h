@@ -33,7 +33,8 @@ class KNNntpClient : public KNProtocolClient  {
     
   protected:
 
-    virtual void processJob();         // examines the job and calls the suitable handling method
+    /** examines the job and calls the suitable handling method */
+    virtual void processJob();
   
     void doLoadGroups();
     void doFetchGroups();
@@ -43,8 +44,10 @@ class KNNntpClient : public KNProtocolClient  {
     void doPostArticle();
     void doFetchSource();
 
-    virtual bool openConnection();     // connect, handshake
-    virtual bool sendCommand(const QCString &cmd, int &rep);  // authentication on demand
+    /** connect, handshake */
+    virtual bool openConnection();
+    /** authentication on demand */
+    virtual bool sendCommand(const QCString &cmd, int &rep);
     virtual void handleErrors();
     bool switchToGroup(const QString &newGroup);
 

@@ -47,7 +47,7 @@ class KNListBoxItem : public QListBoxItem  {
 //====================================================================================
 
 
-// a list box which ignores Enter, usefull for dialogs
+/** a list box which ignores Enter, usefull for dialogs */
 class KNDialogListBox : public QListBox
 {
    public:
@@ -73,8 +73,10 @@ class KNProgress : public KProgress
     KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent=0, const char *name=0);
     ~KNProgress();
 
-    void disableProgressBar();                                      // 0% and no text
-    void setProgressBar(int value,const QString& = QString::null);  // manual operation
+    /** 0% and no text */
+    void disableProgressBar();
+    /** manual operation */
+    void setProgressBar(int value,const QString& = QString::null);
     virtual QSize sizeHint() const;
 
   protected:
