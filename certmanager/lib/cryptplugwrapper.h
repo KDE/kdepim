@@ -56,6 +56,7 @@
 #include <qpair.h>
 #include <qstringlist.h>
 #include <qstring.h>
+#include <kdepimmacros.h>
 
 
 class KConfigBase;

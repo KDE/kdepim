@@ -34,7 +34,7 @@
 #include <ui/dnattributeorderconfigwidget.h>
 #include <kleo/dn.h>
 
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 #include <qlayout.h>
 

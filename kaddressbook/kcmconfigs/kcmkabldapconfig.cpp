@@ -32,6 +32,8 @@
 
 #include "kcmkabldapconfig.h"
 
+#include <kdepimmacros.h>
+
 extern "C"
 {
   KDE_EXPORT KCModule *create_kabldapconfig( QWidget *parent, const char * ) {

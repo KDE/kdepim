@@ -36,6 +36,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 
+#include <kdepimmacros.h>
 
 AppearanceConfigurationPage::AppearanceConfigurationPage( QWidget * parent, const char * name )
     : KCModule( parent, name )

@@ -912,6 +912,7 @@ void KABCore::print()
   if ( !printer.setup( mWidget, i18n("Print Addresses") ) )
     return;
 
+  printer.setDocName( i18n( "addressbook" ) );
   KABPrinting::PrintingWizard wizard( &printer, mAddressBook,
                                       mViewManager->selectedUids(), mWidget );
 

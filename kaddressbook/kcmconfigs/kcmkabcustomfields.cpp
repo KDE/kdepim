@@ -29,6 +29,8 @@
 
 #include <qregexp.h>
 
+#include <kdepimmacros.h>
+
 extern "C"
 {
   KDE_EXPORT KCModule *create_kabcustomfields( QWidget *parent, const char * ) {

@@ -56,6 +56,8 @@ using KABC::Addressee;
 #include "addresseeview.h"
 using KPIM::AddresseeView;
 
+#include <kdepimmacros.h>
+
 namespace {
 
   class Formatter : public KMail::Interface::BodyPartFormatter {

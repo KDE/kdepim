@@ -47,6 +47,8 @@
 #include <qcheckbox.h>
 #include <qlayout.h>
 
+#include <kdepimmacros.h>
+
 // For sync'ing kabldaprc
 class KABSynchronizer
 {

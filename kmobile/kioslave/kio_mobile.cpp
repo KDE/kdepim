@@ -33,6 +33,8 @@
 
 #include "kio_mobile.h"
 
+#include <kdepimmacros.h>
+
 using namespace KIO;
 
 #define KIO_MOBILE_DEBUG_AREA 7126

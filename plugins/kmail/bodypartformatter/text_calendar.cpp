@@ -63,6 +63,8 @@
 #include <qdir.h>
 #include <qtextstream.h>
 
+#include <kdepimmacros.h>
+
 using namespace KCal;
 
 namespace {

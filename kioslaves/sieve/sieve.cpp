@@ -46,6 +46,8 @@ extern "C" {
 using std::exit;
 #include <sys/stat.h>
 
+#include <kdepimmacros.h>
+
 static const int debugArea = 7122;
 
 static inline

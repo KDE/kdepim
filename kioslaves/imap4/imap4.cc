@@ -83,6 +83,8 @@ extern "C" {
 #include <kmimetype.h>
 #include <kmdcodec.h>
 
+#include "kdepimmacros.h"
+
 #define IMAP_PROTOCOL "imap"
 #define IMAP_SSL_PROTOCOL "imaps"
 
