@@ -23,7 +23,7 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
     setNextEnabled( personalDataPage, false );
     nameED->setFocus();
     // work around a QWizard bug
-    setFixedHeight( 300 );
+    //setFixedHeight( 300 );
 }
 
 /*
@@ -60,31 +60,38 @@ void CertificateWizardImpl::slotGenerateCertificate()
     certParms += "Key-Usage: Sign, Encrypt\n"; // PENDING(NN) Might want to make this user-configurable
     certParms += "name-dn: ";
     bool bFirst = true;
-    if( !countryED->text().isEmpty() ) {
+    if( !nameED->text().isEmpty() ) {
         if( !bFirst )
             certParms += ',';
-        certParms += "C=";
-        certParms += countryED->text();
+        certParms += "CN=";
+        certParms += nameED->text();
         bFirst = false;
     }
-    if( !organizationED->text().isEmpty() ) {
+    if( !locationED->text().isEmpty() ) {
         if( !bFirst )
             certParms += ',';
-        certParms += "O=";
-        certParms += countryED->text();
+        certParms += "L=";
+        certParms += locationED->text();
         bFirst = false;
     }
     if( !departmentED->text().isEmpty() ) {
         if( !bFirst )
             certParms += ',';
         certParms += "OU=";
-        certParms += countryED->text();
+        certParms += departmentED->text();
         bFirst = false;
     }
-    if( !nameED->text().isEmpty() ) {
+    if( !organizationED->text().isEmpty() ) {
         if( !bFirst )
             certParms += ',';
-        certParms += "CN=";
+        certParms += "O=";
+        certParms += organizationED->text();
+        bFirst = false;
+    }
+    if( !countryED->text().isEmpty() ) {
+        if( !bFirst )
+            certParms += ',';
+        certParms += "C=";
         certParms += countryED->text();
         bFirst = false;
     }

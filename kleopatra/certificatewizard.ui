@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>490</width>
-            <height>319</height>
+            <width>530</width>
+            <height>387</height>
         </rect>
     </property>
     <property name="caption">
@@ -83,9 +83,9 @@ The certificates can either be generated in a centralized or a decentralized man
             </widget>
             <widget class="QLayoutWidget">
                 <property name="name">
-                    <cstring>Layout18</cstring>
+                    <cstring>Layout3</cstring>
                 </property>
-                <grid>
+                <hbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
@@ -95,67 +95,7 @@ The certificates can either be generated in a centralized or a decentralized man
                     <property name="spacing">
                         <number>6</number>
                     </property>
-                    <widget class="QLineEdit" row="3" column="1">
-                        <property name="name">
-                            <cstring>countryED</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLineEdit" row="1" column="1">
-                        <property name="name">
-                            <cstring>organizationED</cstring>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Enter your organization here</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>Enter your organization (e.g., your company, your department, or your authority) here as it should appear on the certificate.</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="2" column="0">
-                        <property name="name">
-                            <cstring>departmentLA</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Department:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>departmentED</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="3" column="0">
-                        <property name="name">
-                            <cstring>countryLA</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Country code:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>countryED</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="4" column="0">
-                        <property name="name">
-                            <cstring>emailLA</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Email address:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>emailED</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="1" column="0">
-                        <property name="name">
-                            <cstring>organizationLA</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Organization:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>organizationED</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QLabel">
                         <property name="name">
                             <cstring>nameLA</cstring>
                         </property>
@@ -166,18 +106,7 @@ The certificates can either be generated in a centralized or a decentralized man
                             <cstring>nameED</cstring>
                         </property>
                     </widget>
-                    <widget class="QLineEdit" row="4" column="1">
-                        <property name="name">
-                            <cstring>emailED</cstring>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Enter your email address here</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>Enter the email address here which you want to use in connection with the certificate.</string>
-                        </property>
-                    </widget>
-                    <widget class="QLineEdit" row="0" column="1">
+                    <widget class="QLineEdit">
                         <property name="name">
                             <cstring>nameED</cstring>
                         </property>
@@ -188,12 +117,179 @@ The certificates can either be generated in a centralized or a decentralized man
                             <string>Enter your name here as it should be shown in the certificate.</string>
                         </property>
                     </widget>
-                    <widget class="QLineEdit" row="2" column="1">
+                </hbox>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout4</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>locationLA</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Location:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>locationED</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>locationED</cstring>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout5</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>organizationLA</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Organization:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>organizationED</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>organizationED</cstring>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Enter your organization here</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Enter your organization (e.g., your company, your department, or your authority) here as it should appear on the certificate.</string>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout6</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>departmentLA</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Department:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>departmentED</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit">
                         <property name="name">
                             <cstring>departmentED</cstring>
                         </property>
                     </widget>
-                </grid>
+                </hbox>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout7</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>countryLA</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Country code:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>countryED</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>countryED</cstring>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout8</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>emailLA</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Email address:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>emailED</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>emailED</cstring>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Enter your email address here</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Enter the email address here which you want to use in connection with the certificate.</string>
+                        </property>
+                    </widget>
+                </hbox>
             </widget>
         </vbox>
     </widget>
@@ -291,7 +387,7 @@ The certificates can either be generated in a centralized or a decentralized man
                         <number>6</number>
                     </property>
                     <spacer>
-                        <property name="name" stdset="0">
+                        <property name="name">
                             <cstring>Spacer13</cstring>
                         </property>
                         <property name="orientation">
@@ -299,12 +395,6 @@ The certificates can either be generated in a centralized or a decentralized man
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
                         </property>
                     </spacer>
                     <widget class="QPushButton">
@@ -322,7 +412,7 @@ The certificates can either be generated in a centralized or a decentralized man
                         </property>
                     </widget>
                     <spacer>
-                        <property name="name" stdset="0">
+                        <property name="name">
                             <cstring>Spacer12</cstring>
                         </property>
                         <property name="orientation">
@@ -330,12 +420,6 @@ The certificates can either be generated in a centralized or a decentralized man
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
                         </property>
                     </spacer>
                 </hbox>
@@ -385,38 +469,6 @@ If you want to change anything, press Back and make your changes. Otherwise pres
         </vbox>
     </widget>
 </widget>
-<customwidgets>
-    <customwidget>
-        <class>KURLRequester</class>
-        <header location="global">kurlrequester.h</header>
-        <sizehint>
-            <width>100</width>
-            <height>30</height>
-        </sizehint>
-        <container>0</container>
-        <sizepolicy>
-            <hordata>3</hordata>
-            <verdata>1</verdata>
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-        </sizepolicy>
-        <pixmap>image0</pixmap>
-        <signal>textChanged(const QString&amp;)</signal>
-        <signal>returnPressed()</signal>
-        <signal>returnPressed(const QString&amp;)</signal>
-        <signal>openFileDialog(KURLRequester*)</signal>
-        <signal>urlSelected(const QString&amp;)</signal>
-        <slot access="public" specifier="">setURL( const QString&amp; url )</slot>
-        <slot access="public" specifier="">setCaption( const QString&amp; caption )</slot>
-        <slot access="public" specifier="">clear()</slot>
-        <slot access="protected" specifier="">slotOpenDialog()</slot>
-    </customwidget>
-</customwidgets>
-<images>
-    <image name="image0">
-        <data format="XPM.GZ" length="4366">789c6dd7d96ee3c80e06e0fb7e8aa079d718702c59b22d1c9c8bec7176674f0673412d5e9238ab9338199c773f54f167613298b805e3435155146b91fbf75f2b57c7072bbf7efff1ba90c5ac5aa9a6f2b2f2ab7e9bcf3ffff8f3bf7ffdf899a62bedbf4eb692fefcedc7cfd162a55a397c7c685af058416991564927b834773b70153d0896d6ddc42d5d384b8bd625c183d4eebf0c2ed4a19d86ee6e12e2677065f1e524dae21fdd881f9bb30ee2a7d1161fc6cf128fa7d5e8d0ce1be62cb376de8407783e7223ff0737eeaf61e44ba7c1e2edc4ee2cf42f19ece35fb8ad9d42ff799ae7663e8f96f07c0d5ce37939dac6fb0a168fe7022ee075771e269f76e01ae3bf4587785ab811df31f712f477e646fba0752ff578b932c7f6398cfc64c38df84318f9ca96dbdaf934dac67f84f1fcdcb831df9b6ed4ff25daea599bfb09eeb7fcc4fb97318c781eb891cf89bb67f93f98fb09c66ba2adbf1cce915fe1467c0a1736bff2dcbadfeda33ef40a17585f891bf7dfba51cf5dd8eb71106dfb53cc8304e37d455bff276eecb70ace11df8fb6faad0597fda2df0d5e856b78c73c48cc720e7b3dfad1a13fb980f1bc3c72e3790b18fb813eddd8cfe179069a7fbf0cf102e7365f7cef46fb1e5ca0fd33dae6ef0cf67abe9b8b04f95ec3a8871cb9b1bf52d8e7f7d46dfdc925eccf63f9eaf30e42bd2883bd9e13b7b5f39db94810bf05fb7e9f9a05f35d96706ee71d8ddd187f126debe11e169cf709dc74cc0337de174fad8bccf3e1dbe8506f9ec239bc84bdde3d73cc67166deba10f0beab98cb6fa6fbb313f277083fc27e632b57c6923dace7fbbbf2a8a220b7e856be4fbe246fb2cba0afd5d9805eb8f0ee11ceb7f1d6eb03ebae632c5f350b43defb11bcfd3817bc8ff25da9eef0616cccfd06df1c2d1d67ee0c6f82318f34bd1180ff5a9503f0ee7bd6492583da88473b3ac9acb14e7e526ecf3f3097bffb76eecb7a5d9c7937737ce871eecf5d88fb6f90cfb41b4de62f3f51c6df3b5662e53e43b831b9cff1f6eaccfb9d9c727b4fbf8b2efc67aacdd88c7f815ea4d37d1167f0c37d87f8d1be75b385fcaac129c87af6e7b7fd11d8cfb3975e3bcf988b6f176dc785f3db9f1beeb9a6baf77e6c6ef95301f655d09ced347b8c1799a9b637c126de3bdb9f1fe5a837bf83d72eec679761d6df3137eaf54792598df37b8c17e1dba6dbef9d0ecf7cbc28df5397563ff1ec3a82f1fb8f17c9d68cb770fc67ae1b01eaaba6ed0df99dbf2a3237393a27ef76e9ce7e17d5e6bfff67cf4648eed75b4dd5fba117f05f7508f3d37f66b989fba69d2d2d6ff1decedebd156bf5d37ea79037b7e97d1a15dc2ef87a6e7a6e8b20eeec13e3f617e1bfdabf2f0be0ae7c138fcb51e2dda0f130b975ce9f56fdfb545593c373ce6094f79a6d72ddffded9ae8e79ee7fca0f73cc6f8929ff8995fb4ed895f79c16ffcce1fbce44ffee2555ed3f875dee0cae27953e3b6789b773476c8bbbcc7fb7cc0877cc4c73ce2133ee5333ee70bbe640af1a259bc684f577ccd37dce18453ee72c6b97ef7b8cf032eb82026629baf31cf48a8a48a6a6ab847639ad09466744b771adfa37b9ad3035fd0235bfd2aedff4aa39fe8995ee89516f416ae39bdd3072df5f3495fdaff6aecff96d6689d53daa04d5ae8d8edb5c523bdeb53a3b7b5971d8d1f225e347e97f6689f0e62df877444c7e18eb16634a2133afdd6ff199d6befdef7055dd2155dd30d7528d1fe979486fe3dff5baa39a12eface28a79ed634a13e0da8d0e891e8f4ebf3c6fe799f8e85dabe45a414ad141f482d8d7aace32e65f23d7f996afb8cde44ef943bb9d759c8b92b737d273cb4f973ff7bfef2a8f14ff22c2ff22a0b799377f9d0194bf45beb239ff2f52dff3b59d5b63559970ded719347b225dbb2d3ce705b7f19caeeb7fc27b227fb3a5bcf722087a8d1428ee438448fe4e41ff5bfe73539d53c97dc13963339970beacb32cced48b399c8a5e63f8cfdcff954aee43acca55e7ae736226f3497a174249154bac8bf964cd7f7b9d64eff93a773b9c43592214da5afd103294a2ec9d673d82f1bbafe4ec3d59442f765fb57b1be717511d71add94631ec7fda52bb59c10d91ea5557a0c1ffd560d69584ecb1997be7fcbdbf6a3133ed6ca8e75acf88d9360dcee448bfaf9bffffcf83fa357e320</data>
-    </image>
-</images>
 <connections>
     <connection>
         <sender>generatePB</sender>
@@ -445,6 +497,7 @@ If you want to change anything, press Back and make your changes. Otherwise pres
 </connections>
 <tabstops>
     <tabstop>nameED</tabstop>
+    <tabstop>locationED</tabstop>
     <tabstop>organizationED</tabstop>
     <tabstop>departmentED</tabstop>
     <tabstop>countryED</tabstop>
@@ -452,6 +505,8 @@ If you want to change anything, press Back and make your changes. Otherwise pres
     <tabstop>sendToCARB</tabstop>
     <tabstop>caEmailED</tabstop>
     <tabstop>certificateTE</tabstop>
+    <tabstop>storeUR</tabstop>
+    <tabstop>generatePB</tabstop>
 </tabstops>
 <slots>
     <slot access="protected">slotEmailAddressChanged(const QString&amp;)</slot>
