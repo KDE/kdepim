@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilotrc"/> 
-  <group name="Abbrowser-conduit">
+<kcfg><kcfgfile name="kpilot_addressconduitrc"/> 
+  <group name="General">
     <entry name="AddressbookType" key="Addressbook type" type="Enum">
 				<choices>
 						<choice name="eAbookResource"/>
@@ -11,7 +11,7 @@
         </label>
         <default>eAbookResource</default>
     </entry>
-    <entry name="FileName" type="String">
+    <entry name="FileName" type="Path">
         <label>
         </label>
         <default></default>

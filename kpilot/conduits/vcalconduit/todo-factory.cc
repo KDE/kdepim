@@ -88,8 +88,8 @@ ToDoConduitFactory::~ToDoConduitFactory()
 VCalConduitSettings* ToDoConduitFactory::config()
 {
 	if (!fConfig) {
-		fConfig = new VCalConduitSettings("todo");
-		fConfig->readConfig();
+ 		fConfig = new VCalConduitSettings("ToDo");
+ 		if (fConfig) fConfig->readConfig();
 	}
 	return fConfig;
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilotrc"/>
-<group name="Popmail-conduit">
+<kcfg><kcfgfile name="kpilot_mailconduitrc"/> 
+<group name="General">
   <entry name="SyncOutgoing" type="UInt">
     <label>Selects the way in which mail is sent: none (0), kmail (1).</label>
     <default>0</default>

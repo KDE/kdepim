@@ -1,6 +1,14 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-10  Reinhold Kainhofer
+* Split kpilot's configuration into several files, one for each conduit. 
+  Also wrote a kconf_update script so the old settings are preserved.
+  We still need to sort out the remaining settings written to kpilotrc.
+* Corrected all path variables in the .kcfg files from type String to Path
+* The configuration wizard now also sets the conduits' settings to sensitive
+  defaults for the chosen application (kde pim, kontact, evolution)
+
 2004-04-10  Adriaan de Groot
 * Move about in config dialog to sensible spot. Follow suggestions by Carlos
   to simplify the config dialog a bit. Default general setup to open, even

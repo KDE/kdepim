@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg><kcfgfile name="kpilotrc"/> 
-  <group name="DOC-conduit">
-    <entry name="TXTDirectory" key="TXT Directory" type="String"/>
-    <entry name="PDBDirectory" key="PDB Directory" type="String"/>
+<kcfg><kcfgfile name="kpilot_docconduitrc"/> 
+  <group name="General">
+    <entry name="TXTDirectory" key="TXT Directory" type="Path"/>
+    <entry name="PDBDirectory" key="PDB Directory" type="Path"/>
     <entry name="KeepPDBsLocally" key="Keep PDBs locally" type="Bool">
         <default>false</default>
     </entry>

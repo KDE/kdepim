@@ -89,6 +89,7 @@ void PopMailWidgetConfig::commit()
 {
 	FUNCTIONSETUP;
 
+	MailConduitSettings::self()->readConfig();
 #define WR(a,b,c) MailConduitSettings::set##a(fConfigWidget->b->c);
 	WR(SyncOutgoing,fSendMode,currentItem());
 	WR(EmailAddress,fEmailFrom,text());
@@ -102,6 +103,12 @@ void PopMailWidgetConfig::commit()
 void PopMailWidgetConfig::load()
 {
 	FUNCTIONSETUP;
+	MailConduitSettings::self()->config()->sync();
+	MailConduitSettings::self()->readConfig();
+/*kdWarning()<<"sendMode="<<MailConduitSettings::syncOutgoing()<<endl;
+kdWarning()<<"emailFrom="<<MailConduitSettings::emailAddress()<<endl;
+kdWarning()<<"signature="<<MailConduitSettings::signature()<<endl;*/
+
 
 #define RD(a,b,c) fConfigWidget->a->b(MailConduitSettings::c())
 	RD(fSendMode,setCurrentItem,syncOutgoing);
@@ -111,6 +118,7 @@ void PopMailWidgetConfig::load()
 
 	toggleSendMode(fConfigWidget->fSendMode->currentItem());
 
+	MailConduitSettings::self()->writeConfig();
 	unmodified();
 }
 

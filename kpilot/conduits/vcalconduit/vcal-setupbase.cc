@@ -67,6 +67,7 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 /* virtual */ void VCalWidgetSetupBase::commit()
 {
 	FUNCTIONSETUP;
+	config()->readConfig();
 
 	// General page
 #ifdef DEBUG
@@ -93,6 +94,7 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 /* virtual */ void VCalWidgetSetupBase::load()
 {
 	FUNCTIONSETUP;
+	config()->readConfig();
 
 	// General page
 	fConfigWidget->fSyncDestination->setButton( config()->calendarType());

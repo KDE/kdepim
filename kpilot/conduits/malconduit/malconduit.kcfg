@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
-<kcfg>
-  <group name="MAL-conduit">
+<kcfg><kcfgfile name="kpilot_malconduitrc"/> 
+  <group name="General">
     <entry name="LastMALSync" key="Last MAL Sync" type="DateTime">
 				<default>QDateTime( QDate(1970,1,1), QTime(0,0,0) )</default>
 		</entry>

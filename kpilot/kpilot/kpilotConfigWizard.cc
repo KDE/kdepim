@@ -48,6 +48,10 @@ static const char *conduitconfigdialog_id =
 #include "kpilotConfigWizard_base1.h"
 #include "kpilotConfigWizard_base2.h"
 #include "kpilotConfigWizard_base3.h"
+#include "kpilotConfigWizard_address.h"
+#include "kpilotConfigWizard_notes.h"
+#include "kpilotConfigWizard_vcal.h"
+
 
 #include "kpilotConfigWizard.moc"
 #include "kpilotProbeDialog.h"
@@ -105,9 +109,18 @@ void ConfigWizard::accept()
 	KPilotSettings::setSyncType(0);
 	KPilotSettings::setFullSyncOnPCChange( true );
 	KPilotSettings::setConflictResolution(0);
-
+	
+	KPilotWizard_vcalConfig*calendarConfig = new KPilotWizard_vcalConfig("Calendar");
+	KPilotWizard_vcalConfig*todoConfig = new KPilotWizard_vcalConfig("ToDo");
+	KPilotWizard_addressConfig*addressConfig = new KPilotWizard_addressConfig();
+	KPilotWizard_notesConfig*notesConfig = new KPilotWizard_notesConfig();
+	addressConfig->readConfig();
+	notesConfig->readConfig();
+	todoConfig->readConfig();
+	calendarConfig->readConfig();
+	
 	QStringList conduits = KPilotSettings::installedConduits();
-	// TODO: enable the right conduits
+	int version(0);
 #define APPEND_CONDUIT(a) if (!conduits.contains(a)) conduits.append(a)
 	QString applicationName(i18n("general KDE-PIM"));
 	APPEND_CONDUIT("internal_fileinstall");
@@ -116,10 +129,29 @@ void ConfigWizard::accept()
 	switch (app) {
 		case eAppEvolution:
 			applicationName=i18n("Gnome's PIM suite", "Evolution");
-			conduits.remove("knotes-conduit");
+
 			// TODO: Once the Evolution abook resource is finished, enable it...
 			conduits.remove("abbrowser_conduit");
-			// TODO: settings for conduits
+			// addressConfig->setDefaults();
+			// addressConfig->setAddressbookType( KPilotWizard_addressConfig::eAbookResource );
+			//// addressConfig->revertToDefault("ArchiveDeleted");
+			//// addressConfig->revertToDefault("ConflictResolution");
+
+			// nothing to do for knotes conduit yet (evolution doesn't have notes)
+			conduits.remove("knotes-conduit");
+
+			// the vcalconduits use the same config file, so set the correct groups
+			version = calendarConfig->conduitVersion();
+			calendarConfig->setDefaults();
+			calendarConfig->setCalendarType( KPilotWizard_vcalConfig::eCalendarLocal );
+			calendarConfig->setCalendarFile( "$HOME/evolution/local/Calendar/calendar.ics" );
+			calendarConfig->setConduitVersion( version );
+			version = todoConfig->conduitVersion();
+			todoConfig->setDefaults();
+			todoConfig->setCalendarType( KPilotWizard_vcalConfig::eCalendarLocal );
+			todoConfig->setCalendarFile( "$HOME/evolution/local/Tasks/tasks.ics" );
+			todoConfig->setConduitVersion( version );
+
 			KMessageBox::information(this, i18n("KPilot cannot yet synchronize the addressbook with Evolution, so the addressbook conduit was disabled.\nWhen syncing the calendar or todo list using KPilot please quit Evolution before the sync, otherwise you will lose data."), i18n("Restrictions with Evolution"));
 			break;
 		case eAppKontact:
@@ -128,9 +160,33 @@ void ConfigWizard::accept()
 		default:
 			APPEND_CONDUIT("knotes-conduit");
 			APPEND_CONDUIT("abbrowser_conduit");
-			// TODO: settings for conduits
+			// Set to the stdaddressbook, reset others to defaults
+			addressConfig->setAddressbookType( KPilotWizard_addressConfig::eAbookResource );
+			addressConfig->setArchiveDeleted( true );
+			addressConfig->setConflictResolution( -1 );
+			// nothing to do for knotes conduit yet
+			// notesConfig->set...
+			// the vcalconduits use the same config file, so set the correct groups
+			int version = calendarConfig->conduitVersion();
+			calendarConfig->setDefaults();
+			calendarConfig->setCalendarType( KPilotWizard_vcalConfig::eCalendarResource );
+			calendarConfig->setConduitVersion( version );
+			version = todoConfig->conduitVersion();
+			todoConfig->setDefaults();
+			todoConfig->setCalendarType( KPilotWizard_vcalConfig::eCalendarResource );
+			todoConfig->setConduitVersion( version );
 			break;
 	}
+	addressConfig->writeConfig();
+	notesConfig->writeConfig();
+	todoConfig->writeConfig();
+	calendarConfig->writeConfig();
+	
+	KPILOT_DELETE(addressConfig);
+	KPILOT_DELETE(notesConfig);
+	KPILOT_DELETE(todoConfig);
+	KPILOT_DELETE(calendarConfig);
+
 	KPilotSettings::setInstalledConduits( conduits );
 #undef APPEND_CONDUIT
 

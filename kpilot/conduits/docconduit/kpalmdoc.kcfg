@@ -2,8 +2,8 @@
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
 <kcfg><kcfgfile name="converterrc"/>
 	<group name="General">
-    <entry name="TXTFolder" key="TXT folder" type="String"/>
-    <entry name="PDBFolder" key="PDB folder" type="String"/>
+    <entry name="TXTFolder" key="TXT folder" type="Path"/>
+    <entry name="PDBFolder" key="PDB folder" type="Path"/>
     <entry name="SyncFolders" key="Sync folders" type="Bool">
         <default>false</default>
     </entry>
