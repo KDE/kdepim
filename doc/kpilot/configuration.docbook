@@ -928,6 +928,15 @@ confirmation.
 
 </variablelist>
 
+<note>
+<para>
+By default, the options &quot;delete knote&quot;
+and &quot;suppress delete-confirmation&quot; are
+turned <emphasis>off</emphasis>, so that notes will
+accumulate on your PC.
+</para>
+</note>
+
 </para>
 </sect2>
 
