@@ -36,8 +36,8 @@
 #include "journal.h"
 #include "filestorage.h"
 
-#include <kresources/resourcemanager.h>
-#include <kresources/resourceselectdialog.h>
+#include <kresources/manager.h>
+#include <kresources/selectdialog.h>
 
 #include "resourcecalendar.h"
 #include "resourcelocal.h"
@@ -63,7 +63,7 @@ ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidenc
   }
 
   KRES::Resource *r;
-  r = KRES::ResourceSelectDialog::getResource( list, mParent );
+  r = KRES::SelectDialog::getResource( list, mParent );
   return static_cast<ResourceCalendar *>( r );
 }
 

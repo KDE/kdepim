@@ -45,7 +45,7 @@
 #include "filestorage.h"
 #include "libkcal/alarm.h"
 
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 
 #include "resourcekabcconfig.h"
 
@@ -55,7 +55,7 @@ using namespace KCal;
 
 extern "C"
 {
-  KRES::ResourceConfigWidget *config_widget( QWidget *parent ) {
+  KRES::ConfigWidget *config_widget( QWidget *parent ) {
     return new ResourceKABCConfig( parent, "Configure addressbook birthdays" );
   }
 

@@ -32,7 +32,7 @@
 using namespace KCal;
 
 ResourceKABCConfig::ResourceKABCConfig( QWidget* parent,  const char* name )
-    : KRES::ResourceConfigWidget( parent, name )
+    : KRES::ConfigWidget( parent, name )
 {
   QGridLayout *topLayout = new QGridLayout(this, 2, 1);
 

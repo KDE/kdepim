@@ -23,21 +23,21 @@
 
 #include <kcmodule.h>
 
-#include <kresources/resourcesconfigpage.h>
+#include <kresources/configpage.h>
 
 class KCMCalendars : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  KCMCalendars( QWidget *parent = 0, const char *name = 0 );
+  public:
+    KCMCalendars( QWidget *parent = 0, const char *name = 0 );
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
-private:
-  KRES::ResourcesConfigPage *mConfigPage;
+  private:
+    KRES::ConfigPage *mConfigPage;
 };
 
 #endif

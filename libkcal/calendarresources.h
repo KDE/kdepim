@@ -27,7 +27,7 @@
 #include "calendar.h"
 #include "resourcecalendar.h"
 
-#include <kresources/resourcemanager.h>
+#include <kresources/manager.h>
 
 class QWidget;
 
@@ -224,7 +224,7 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
 
     bool mOpen;
 
-    KRES::ResourceManager<ResourceCalendar>* mManager;
+    KRES::Manager<ResourceCalendar>* mManager;
     QMap <Incidence*, ResourceCalendar*> mResourceMap;
 
     DestinationPolicy *mDestinationPolicy;

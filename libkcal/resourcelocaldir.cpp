@@ -39,7 +39,7 @@
 #include "journal.h"
 #include "filestorage.h"
 
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 
 #include "resourcelocaldirconfig.h"
 
@@ -49,7 +49,7 @@ using namespace KCal;
 
 extern "C"
 {
-  KRES::ResourceConfigWidget *config_widget( QWidget *parent ) {
+  KRES::ConfigWidget *config_widget( QWidget *parent ) {
     return new ResourceLocalDirConfig( parent, "Configure Dir-Based Calendar" );
   }
 

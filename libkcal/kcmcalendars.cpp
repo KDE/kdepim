@@ -20,7 +20,7 @@
 
 #include <qlayout.h>
 
-#include <kresources/resourcesconfigpage.h>
+#include <kresources/configpage.h>
 
 #include "kcmcalendars.h"
 
@@ -28,7 +28,7 @@ KCMCalendars::KCMCalendars( QWidget *parent, const char *name )
   : KCModule( parent, name )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
-  mConfigPage = new KRES::ResourcesConfigPage( "calendar", "kcalrc", this );
+  mConfigPage = new KRES::ConfigPage( "calendar", "kcalrc", this );
   layout->addWidget( mConfigPage );
   connect( mConfigPage, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
 }

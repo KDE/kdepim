@@ -33,7 +33,7 @@
 #include <libkcal/todo.h>
 #include <libkcal/journal.h>
 
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 #include <kresources/resource.h>
 
 #include "kmailicalIface_stub.h"
@@ -48,7 +48,7 @@ static const QCString dcopObjectId = "KMailICalIface";
 
 extern "C"
 {
-  KRES::ResourceConfigWidget *config_widget( QWidget *parent ) {
+  KRES::ConfigWidget *config_widget( QWidget *parent ) {
     return new ResourceIMAPConfig( parent, "Configure IMAP-Based Calendar" );
   }
 
@@ -467,7 +467,7 @@ void ResourceIMAP::update(IncidenceBase *incidencebase)
   mCurrentUID = incidencebase->uid();
   QString vCal = mFormat.createScheduleMessage( incidencebase, Scheduler::Request );
   mKMailIcalIfaceStub->deleteIncidence( type, mCurrentUID );
-  bool rc = mKMailIcalIfaceStub->addIncidence( "Journal", mCurrentUID, vCal );
+  mKMailIcalIfaceStub->addIncidence( "Journal", mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !mKMailIcalIfaceStub->ok() ) {

@@ -41,7 +41,7 @@
 #include "journal.h"
 #include "filestorage.h"
 
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 
 #include "resourceremoteconfig.h"
 
@@ -51,7 +51,7 @@ using namespace KCal;
 
 extern "C"
 {
-  KRES::ResourceConfigWidget *config_widget( QWidget *parent ) {
+  KRES::ConfigWidget *config_widget( QWidget *parent ) {
     return new ResourceRemoteConfig( parent, "Configure Remote Calendar" );
   }
 

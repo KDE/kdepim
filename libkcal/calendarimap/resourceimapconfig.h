@@ -23,11 +23,11 @@
 #define KCAL_ResourceIMAPConfig_H
 
 #include <kresources/resource.h>
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 
 namespace KCal {
 
-class ResourceIMAPConfig : public KRES::ResourceConfigWidget
+class ResourceIMAPConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

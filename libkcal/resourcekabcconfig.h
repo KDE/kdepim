@@ -27,11 +27,11 @@
 
 #include <krestrictedline.h>
 #include <kresources/resource.h>
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 
 namespace KCal {
 
-class ResourceKABCConfig : public KRES::ResourceConfigWidget
+class ResourceKABCConfig : public KRES::ConfigWidget
 {
     Q_OBJECT
   public:

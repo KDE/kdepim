@@ -27,11 +27,11 @@
 #include <kurlrequester.h>
 
 #include <kresources/resource.h>
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 
 namespace KCal {
 
-class ResourceLocalDirConfig : public KRES::ResourceConfigWidget
+class ResourceLocalDirConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:
