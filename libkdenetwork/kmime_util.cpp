@@ -658,13 +658,9 @@ DateFormatter::zone(time_t otime) const
   int hours = secs/3600;
   int mins  = (secs - hours*3600)/60;
 
-  if ( local->tm_isdst > 0 ) {
+  if ( local->tm_isdst > 0 )
       mDaylight = 1;
-      if ( neg )
-        --hours;
-      else
-        ++hours;
-  } else
+  else
       mDaylight = 0;
 
   ret.sprintf("%c%.2d%.2d",(neg)?'-':'+', hours, mins);
