@@ -290,6 +290,12 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 //-----------------------------------------------------------------------------
 bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
 {
+  // If we are passed an empty string bail right away no need to process further·
+  // and waste resources
+  if ( aStr.isEmpty() ) {
+    return false;
+  }
+
   int atChar = aStr.findRev( '@' );
   QString domainPart = aStr.mid( atChar + 1);
   QString localPart = aStr.left( atChar );
