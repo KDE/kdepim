@@ -71,9 +71,9 @@ namespace Kleo {
     MaxEncryptionPreference = AskWheneverPossible
   };
 
-  QString encryptionPreferenceToLabel( EncryptionPreference pref );
-  const char* encryptionPreferenceToString( EncryptionPreference pref );
-  EncryptionPreference stringToEncryptionPreference( const QString& str );
+  KDE_EXPORT QString encryptionPreferenceToLabel( EncryptionPreference pref );
+  KDE_EXPORT const char* encryptionPreferenceToString( EncryptionPreference pref );
+  KDE_EXPORT EncryptionPreference stringToEncryptionPreference( const QString& str );
 
   enum SigningPreference {
     UnknownSigningPreference = 0,
@@ -85,9 +85,9 @@ namespace Kleo {
     MaxSigningPreference = AskSigningWheneverPossible
   };
 
-  QString signingPreferenceToLabel( SigningPreference pref );
-  const char* signingPreferenceToString( SigningPreference pref );
-  SigningPreference stringToSigningPreference( const QString& str );
+  KDE_EXPORT QString signingPreferenceToLabel( SigningPreference pref ) KDE_EXPORT;
+  KDE_EXPORT const char* signingPreferenceToString( SigningPreference pref ) KDE_EXPORT;
+  KDE_EXPORT SigningPreference stringToSigningPreference( const QString& str );
 }
 
 #endif // __KLEO_CRYPTOBACKEND_H__

@@ -29,6 +29,8 @@
 #include <kconfig.h>
 #include <kurl.h>
 
+#include <kdepimmacros.h>
+
 #include "libkcal/calendarlocal.h"
 #include "libkcal/incidence.h"
 #include "libkcal/resourcecached.h"
@@ -47,7 +49,7 @@ class EGroupwarePrefs;
 /**
   This class provides access to php/eGroupware calendar via XML-RPC.
 */
-class ResourceXMLRPC : public ResourceCached
+class KDE_EXPORT ResourceXMLRPC : public ResourceCached
 {
   Q_OBJECT
 

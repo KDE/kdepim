@@ -26,12 +26,13 @@
 #include <qobject.h>
 #include <qstring.h>
 
+#include <kdepimmacros.h>
 #include <kurl.h>
 #include <kio/job.h>
 
 namespace KPIM {
 	
-class ExchangeAccount : public QObject
+class KDE_EXPORT ExchangeAccount : public QObject
 {
     Q_OBJECT
   public:

@@ -22,6 +22,7 @@
 #define KABC_RESOURCEXMLRPC_H
 
 #include <qmap.h>
+#include <kdepimmacros.h>
 
 #include "libkdepim/kabcresourcecached.h"
 
@@ -35,7 +36,7 @@ namespace KABC {
 
 class EGroupwarePrefs;
 
-class ResourceXMLRPC : public ResourceCached
+class KDE_EXPORT ResourceXMLRPC : public ResourceCached
 {
   Q_OBJECT
 

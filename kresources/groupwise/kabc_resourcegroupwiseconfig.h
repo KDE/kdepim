@@ -23,6 +23,7 @@
 #include "soap/groupwiseserver.h"
 
 #include <kresources/configwidget.h>
+#include <kdepimmacros.h>
 
 #include <qmap.h>
 
@@ -35,7 +36,7 @@ namespace KABC {
 
 class ResourceGroupwise;
 
-class ResourceGroupwiseConfig : public KRES::ConfigWidget
+class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

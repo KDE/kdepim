@@ -25,7 +25,7 @@
 #define VIEWCONFIGUREWIDGET_H
 
 #include <kdialogbase.h>
-
+#include <kdepimmacros.h>
 #include <qpixmap.h>
 
 #include "configurewidget.h"
@@ -45,7 +45,7 @@ class ViewConfigureFilterPage;
   is to show a page with the select fields widget. For simple views this may
   be sufficient.
 */
-class ViewConfigureWidget : public KAB::ConfigureWidget
+class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
 {
   Q_OBJECT
     

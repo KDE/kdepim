@@ -37,6 +37,7 @@
 
 #include <qtimer.h>
 
+#include <kdepimmacros.h>
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/resourcecalendar.h>
@@ -44,7 +45,7 @@
 
 namespace KCal {
   
-class ResourceKolab : public KCal::ResourceCalendar,
+class KDE_EXPORT ResourceKolab : public KCal::ResourceCalendar,
                       public KCal::IncidenceBase::Observer,
                       public Kolab::ResourceKolabBase
 {

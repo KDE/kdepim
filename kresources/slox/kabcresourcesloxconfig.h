@@ -21,13 +21,14 @@
 #define RESOURCESLOXCONFIG_H
 
 #include <kresources/configwidget.h>
+#include <kdepimmacros.h>
 
 class KLineEdit;
 class KURLRequester;
 
 namespace KABC {
 
-class ResourceSloxConfig : public KRES::ConfigWidget
+class KDE_EXPORT ResourceSloxConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

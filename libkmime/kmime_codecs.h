@@ -40,6 +40,7 @@
 #include <qcstring.h> // QByteArray
 
 #include <kdebug.h> // for kdFatal()
+#include <kdepimmacros.h>
 
 namespace KMime {
 
@@ -53,7 +54,7 @@ class Decoder;
     @short Codecs for common mail transfer encodings.
     @author Marc Mutz <mutz@kde.org>
 */
-class Codec {
+class KDE_EXPORT Codec {
 protected:
 
   static QAsciiDict<Codec>* all;

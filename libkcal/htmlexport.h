@@ -29,6 +29,8 @@
 #include <libkcal/calendar.h>
 #include <libkcal/htmlexportsettings.h>
 
+#include "libkcal_export.h"
+
 class QFile;
 class QTextStream;
 
@@ -37,7 +39,7 @@ namespace KCal {
 /**
   This class provides the functions to export a calendar as a HTML page.
 */
-class HtmlExport
+class KDE_EXPORT HtmlExport
 {
   public:
     /**

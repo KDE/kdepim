@@ -29,6 +29,7 @@
 
 #include <kabc/locknull.h>
 
+#include <kdepimmacros.h>
 #include <kconfig.h>
 
 namespace KCal {
@@ -36,7 +37,7 @@ namespace KCal {
 /**
   This class represents a featureplan (in KDE XML format)
 */
-class ResourceFeaturePlan : public ResourceCached
+class KDE_EXPORT ResourceFeaturePlan : public ResourceCached
 {
     Q_OBJECT
   public:

@@ -24,6 +24,8 @@
 #include <qwidget.h>
 #include <kio/job.h>
 
+#include <kdepimmacros.h>
+
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
 
@@ -31,7 +33,7 @@ namespace KPIM {
 
 class ExchangeAccount;
 
-class ExchangeUpload : public QObject {
+class KDE_EXPORT ExchangeUpload : public QObject {
     Q_OBJECT
   public:
     ExchangeUpload( KCal::Event* event, ExchangeAccount* account, const QString& timeZoneId, QWidget* window=0 );

@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_builddir)/libkdepim $(all_includes)
+INCLUDES = -I$(top_srcdir) $(all_includes)
 
 noinst_HEADERS = resourcekolabbase.h kolabbase.h subresource.h
 

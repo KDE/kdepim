@@ -30,6 +30,7 @@
 #include <kabc/locknull.h>
 #include <kio/job.h>
 #include <kconfig.h>
+#include <kdepimmacros.h>
 
 namespace KCal {
 
@@ -38,7 +39,7 @@ class GroupwisePrefsBase;
 /**
   This class provides a resource for accessing a Groupwise calendar.
 */
-class ResourceGroupwise : public ResourceCached
+class KDE_EXPORT ResourceGroupwise : public ResourceCached
 {
   Q_OBJECT
 

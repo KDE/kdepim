@@ -22,13 +22,14 @@
 #define RESOURCEXMLRPCCONFIG_H
 
 #include <kresources/configwidget.h>
+#include <kdepimmacros.h>
 
 class KLineEdit;
 class KURLRequester;
 
 namespace KABC {
 
-class ResourceXMLRPCConfig : public KRES::ConfigWidget
+class KDE_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

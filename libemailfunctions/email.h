@@ -25,6 +25,8 @@
 #include <qstringlist.h>
 #include <qcstring.h>
 
+#include <kdepimmacros.h>
+
 namespace KPIM {
 
 enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
@@ -36,7 +38,7 @@ enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
 
 // Helper functions
 /** Split a comma separated list of email addresses. */
-QStringList splitEmailAddrList(const QString& aStr);
+KDE_EXPORT QStringList splitEmailAddrList(const QString& aStr);
 
 /** Splits the given address into display name, email address and comment.
     Returns AddressOk if no error was encountered. Otherwise an appropriate
@@ -57,7 +59,7 @@ QStringList splitEmailAddrList(const QString& aStr);
     @return             AddressOk if no error was encountered. Otherwise an
                           appropriate error code is returned.
 */
-EmailParseResult splitAddress( const QCString & address,
+KDE_EXPORT EmailParseResult splitAddress( const QCString & address,
                                QCString & displayName,
                                QCString & addrSpec,
                                QCString & comment );
@@ -84,7 +86,7 @@ EmailParseResult splitAddress( const QCString & address,
     @return             AddressOk if no error was encountered. Otherwise an
                           appropriate error code is returned.
 */
-EmailParseResult splitAddress( const QString & address,
+KDE_EXPORT EmailParseResult splitAddress( const QString & address,
                                QString & displayName,
                                QString & addrSpec,
                                QString & comment );
@@ -92,16 +94,16 @@ EmailParseResult splitAddress( const QString & address,
 /** Validate email address.
  * Testframework in kdepim/libemailfunctions/tests. */
 
-EmailParseResult isValidEmailAddress( const QString& aStr );
+KDE_EXPORT EmailParseResult isValidEmailAddress( const QString& aStr );
 
 /** Translate the enum errorcodes from emailParseResult
  * into i18n'd strings that can be used for msg boxes. */
-QString emailParseResultToString( EmailParseResult errorCode );
+KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
 
 /** Check for a simple email address and if it is valid
  * this is used for fields where only a "pure" email
  * is allowed, i,e emails in form xxx@yyy.tld */
-bool isValidSimpleEmailAddress( const QString& aStr );
+KDE_EXPORT bool isValidSimpleEmailAddress( const QString& aStr );
 
 /** Returns the pure email address (addr-spec in RFC2822) of the given address
     (mailbox in RFC2822).
@@ -110,7 +112,7 @@ bool isValidSimpleEmailAddress( const QString& aStr );
     @return         the addr-spec of @address, i.e. joe.user@kde.org in the
                       example
 */
-QCString getEmailAddress( const QCString & address );
+KDE_EXPORT QCString getEmailAddress( const QCString & address );
 
 /** This is an overloaded member function, provided for convenience. It behaves
     essentially like the above function.
@@ -122,7 +124,7 @@ QCString getEmailAddress( const QCString & address );
     @return         the addr-spec of @address, i.e. joe.user@kde.org in the
                       example
 */
-QString getEmailAddress( const QString & address );
+KDE_EXPORT QString getEmailAddress( const QString & address );
 
 /** Returns the pure email address (addr-spec in RFC2822) of the first
     email address of a list of addresses.
@@ -131,7 +133,7 @@ QString getEmailAddress( const QString & address );
     @return         the addr-spec of @address, i.e. joe.user@kde.org in the
                       example
 */
-QCString getFirstEmailAddress( const QCString & addresses );
+KDE_EXPORT QCString getFirstEmailAddress( const QCString & addresses );
 
 /** This is an overloaded member function, provided for convenience. It behaves
     essentially like the above function.
@@ -143,7 +145,7 @@ QCString getFirstEmailAddress( const QCString & addresses );
     @return         the addr-spec of @address, i.e. joe.user@kde.org in the
                       example
 */
-QString getFirstEmailAddress( const QString & addresses );
+KDE_EXPORT QString getFirstEmailAddress( const QString & addresses );
 
 /** Return email address and name from string. Examples:
  * "Stefan Taferner <taferner@kde.org>" returns "taferner@kde.org"
@@ -153,14 +155,14 @@ QString getFirstEmailAddress( const QString & addresses );
  * mail are not empty: this does NOT tell you if mail contains a
  * valid email address or just some rubbish.
  */
-bool getNameAndMail(const QString& aStr, QString& name, QString& mail);
+KDE_EXPORT bool getNameAndMail(const QString& aStr, QString& name, QString& mail);
 
 /**
  * Compare two email addresses. If matchName is false, it just checks
  * the email address, and returns true if this matches. If matchName
  * is true, both the name and the email must be the same.
  */
-bool compareEmail( const QString& email1, const QString& email2,
+KDE_EXPORT bool compareEmail( const QString& email1, const QString& email2,
                    bool matchName );
 
 /** Returns a normalized address built from the given parts. The normalized
@@ -175,7 +177,7 @@ bool compareEmail( const QString& email1, const QString& email2,
     @param comment      a comment
     @return             a normalized address built from the given parts
  */
-QString normalizedAddress( const QString & displayName,
+KDE_EXPORT QString normalizedAddress( const QString & displayName,
                            const QString & addrSpec,
                            const QString & comment );
 
@@ -184,7 +186,7 @@ QString normalizedAddress( const QString & displayName,
     @param addrSpec  a pure 7-bit email address (addr-spec in RFC2822)
     @return          the email address with Unicode domain
  */
-QString decodeIDN( const QString & addrSpec );
+KDE_EXPORT QString decodeIDN( const QString & addrSpec );
 
 /** Encodes the domain part of the given addr-spec in punycode if it's an
     IDN.
@@ -192,7 +194,7 @@ QString decodeIDN( const QString & addrSpec );
     @param addrSpec  a pure email address with Unicode domain
     @return          the email address with domain in punycode
  */
-QString encodeIDN( const QString & addrSpec );
+KDE_EXPORT QString encodeIDN( const QString & addrSpec );
 
 /** Normalizes all email addresses in the given list and decodes all IDNs.
 
@@ -201,12 +203,12 @@ QString encodeIDN( const QString & addrSpec );
 
     @also
  */
-QString normalizeAddressesAndDecodeIDNs( const QString & addresses );
+KDE_EXPORT QString normalizeAddressesAndDecodeIDNs( const QString & addresses );
 
 /** Normalizes all email addresses in the given list and encodes all IDNs
     in punycode.
  */
-QString normalizeAddressesAndEncodeIDNs( const QString & str );
+KDE_EXPORT QString normalizeAddressesAndEncodeIDNs( const QString & str );
 
 } // namespace
 

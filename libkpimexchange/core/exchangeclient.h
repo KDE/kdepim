@@ -26,6 +26,8 @@
 #include <qhostaddress.h>
 #include <qptrlist.h>
 
+#include <kdepimmacros.h>
+
 namespace KCal { 
   class Event;
   class Calendar;
@@ -43,7 +45,7 @@ class ExchangeUpload;
 class ExchangeDelete;
 //class ExchangeMonitor;
 
-class ExchangeClient : public QObject {
+class KDE_EXPORT ExchangeClient : public QObject {
     Q_OBJECT
   public:
     ExchangeClient( ExchangeAccount* account, const QString& mTimeZoneId=QString::null );

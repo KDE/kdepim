@@ -28,12 +28,13 @@
 
 #include <kabc/addressbook.h>
 #include <klibloader.h>
+#include <kdepimmacros.h>
 
 #define KAB_CEW_PLUGIN_VERSION 1
 
 namespace KAB {
 
-class ContactEditorWidget : public QWidget
+class KDE_EXPORT ContactEditorWidget : public QWidget
 {
   Q_OBJECT
 

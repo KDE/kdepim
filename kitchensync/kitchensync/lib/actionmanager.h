@@ -25,6 +25,7 @@
 #include <qmap.h>
 
 #include <kdebug.h>
+#include <kdepimmacros.h>
 #include <kparts/mainwindow.h>
 
 #include <systemtray.h>

@@ -92,8 +92,8 @@ class KDE_EXPORT Identity
   // QValueList<Identity> and especially qHeapSort().
   friend class IdentityManager;
 
-  friend QDataStream & KPIM::operator<<( QDataStream & stream, const Identity & ident );
-  friend QDataStream & KPIM::operator>>( QDataStream & stream, Identity & ident );
+  friend QDataStream & operator<<( QDataStream & stream, const KPIM::Identity & ident );
+  friend QDataStream & operator>>( QDataStream & stream, KPIM::Identity & ident );
 
 public:
   typedef QValueList<Identity> List;
@@ -301,11 +301,11 @@ protected:
   Kleo::CryptoMessageFormat mPreferredCryptoMessageFormat;
 };
 
-QDataStream & operator<<( QDataStream & stream, const KPIM::Signature & sig );
-QDataStream & operator>>( QDataStream & stream, KPIM::Signature & sig );
+KDE_EXPORT QDataStream & operator<<( QDataStream & stream, const KPIM::Signature & sig );
+KDE_EXPORT QDataStream & operator>>( QDataStream & stream, KPIM::Signature & sig );
 
-QDataStream & operator<<( QDataStream & stream, const KPIM::Identity & ident );
-QDataStream & operator>>( QDataStream & stream, KPIM::Identity & ident );
+KDE_EXPORT QDataStream & operator<<( QDataStream & stream, const KPIM::Identity & ident );
+KDE_EXPORT QDataStream & operator>>( QDataStream & stream, KPIM::Identity & ident );
 
 } // namespace KPIM
 

@@ -26,8 +26,9 @@
 
 #include <dcopobject.h>
 #include <qstringlist.h>
+#include <kdepimmacros.h>
 
-class KAddressBookIface : virtual public DCOPObject
+class KDE_EXPORT KAddressBookIface : virtual public DCOPObject
 {
   K_DCOP
 

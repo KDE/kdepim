@@ -1,6 +1,5 @@
-SUBDIRS = pics
-
 INCLUDES = $(all_includes)
+SUBDIRS = pics
 
 lib_LTLIBRARIES = libkpgp.la
 

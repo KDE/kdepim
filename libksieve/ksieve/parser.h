@@ -33,6 +33,8 @@
 #ifndef __KSIEVE_PARSING_H__
 #define __KSIEVE_PARSING_H__
 
+#include <kdepimmacros.h>
+
 class QString;
 
 namespace KSieve {
@@ -43,7 +45,7 @@ namespace KSieve {
   /** @short Parser for the Sieve grammar.
       @author Marc Mutz <mutz@kde.org>
   **/
-  class Parser {
+  class KDE_EXPORT Parser {
   public:
 
     Parser( const char * scursor, const char * const send, int options=0 );

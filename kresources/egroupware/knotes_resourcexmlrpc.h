@@ -27,6 +27,7 @@
 
 #include <kconfig.h>
 #include <kurl.h>
+#include <kdepimmacros.h>
 
 #include "libkcal/calendarlocal.h"
 #include "libkcal/journal.h"
@@ -43,7 +44,7 @@ class EGroupwarePrefs;
 /**
   This class provides access to eGroupware notes via XML-RPC.
 */
-class ResourceXMLRPC : public ResourceNotes
+class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
 {
   Q_OBJECT
 

@@ -39,6 +39,7 @@
 #include <libkcal/calendarlocal.h>
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
+#include <kdepimmacros.h>
 
 
 namespace Kolab {
@@ -48,7 +49,7 @@ namespace Kolab {
  * addresses in an IMAP folder in KMail (or other conforming email
  * clients).
  */
-class ResourceKolab : public ResourceNotes,
+class KDE_EXPORT ResourceKolab : public ResourceNotes,
                       public KCal::IncidenceBase::Observer,
                       public ResourceKolabBase
 {

@@ -21,6 +21,7 @@
 #define KCALRESOURCESLOXCONFIG_H
 
 #include <kurlrequester.h>
+#include <kdepimmacros.h>
 
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
@@ -38,7 +39,7 @@ class ResourceCachedSaveConfig;
   
   @see KCalResourceSlox
 */
-class KCalResourceSloxConfig : public KRES::ConfigWidget
+class KDE_EXPORT KCalResourceSloxConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:

@@ -25,12 +25,12 @@
 #define KABPREFS_H
 
 #include <qstringlist.h>
-
+#include <kdepimmacros.h>
 #include "kabprefs_base.h"
 
 class KConfig;
 
-class KABPrefs : public KABPrefsBase
+class KDE_EXPORT KABPrefs : public KABPrefsBase
 {
   public:
     virtual ~KABPrefs();

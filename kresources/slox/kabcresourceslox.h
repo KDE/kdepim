@@ -23,6 +23,7 @@
 #include "webdavhandler.h"
 
 #include <kabc/resource.h>
+#include <kdepimmacros.h>
 
 #include <qmap.h>
 #include <qdom.h>
@@ -42,7 +43,7 @@ namespace KABC {
 
 class SloxPrefs;
 
-class ResourceSlox : public Resource
+class KDE_EXPORT ResourceSlox : public Resource
 {
     Q_OBJECT
   public:

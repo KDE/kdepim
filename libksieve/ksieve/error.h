@@ -35,13 +35,15 @@
 
 #include <qstring.h>
 
+#include <kdepimmacros.h>
+
 #ifdef None // X headers
 #  undef None
 #endif
 
 namespace KSieve {
 
-  class Error {
+  class KDE_EXPORT Error {
   public:
     enum Type {
       None = 0,

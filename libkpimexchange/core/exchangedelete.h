@@ -24,6 +24,7 @@
 #include <qwidget.h>
 
 #include <kio/job.h>
+#include <kdepimmacros.h>
 
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
@@ -32,7 +33,7 @@ namespace KPIM {
 
 class ExchangeAccount;
 
-class ExchangeDelete : public QObject {
+class KDE_EXPORT ExchangeDelete : public QObject {
     Q_OBJECT
   public:
     ExchangeDelete( KCal::Event* event, ExchangeAccount* account, QWidget* window=0 );

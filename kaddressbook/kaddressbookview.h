@@ -31,6 +31,7 @@
 
 #include <kabc/field.h>
 #include <klibloader.h>
+#include <kdepimmacros.h>
 
 #include "filter.h"
 #include "viewconfigurewidget.h"
@@ -52,7 +53,7 @@ namespace KABC { class AddressBook; }
 
   @author Mike Pilone <mpilone@slac.com>
  */
-class KAddressBookView : public QWidget
+class KDE_EXPORT KAddressBookView : public QWidget
 {
   Q_OBJECT
 
@@ -271,7 +272,7 @@ class KAddressBookView : public QWidget
     QWidget *mViewWidget;
 };
 
-class ViewFactory : public KLibFactory
+class KDE_EXPORT ViewFactory : public KLibFactory
 {
   public:
     virtual KAddressBookView *view( KAB::Core *core, QWidget *parent,

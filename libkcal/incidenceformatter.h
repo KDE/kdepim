@@ -31,7 +31,7 @@ class Calendar;
 class Incidence;
 class IncidenceBase;
 
-class InvitationFormatterHelper
+class LIBKCAL_EXPORT InvitationFormatterHelper
 {
   public:
     virtual QString generateLinkURL( const QString &id ) { return id; }

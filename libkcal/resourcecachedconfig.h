@@ -22,6 +22,7 @@
 #define KCAL_RESOURCECACHEDCONFIG_H
 
 #include <qwidget.h>
+#include <kdepimmacros.h>
 
 class QButtonGroup;
 class QSpinBox;
@@ -35,7 +36,7 @@ class ResourceCached;
   
   @see ResourceCached
 */
-class ResourceCachedReloadConfig : public QWidget
+class KDE_EXPORT ResourceCachedReloadConfig : public QWidget
 { 
     Q_OBJECT
   public:
@@ -61,7 +62,7 @@ class ResourceCachedReloadConfig : public QWidget
   
   @see ResourceCached
 */
-class ResourceCachedSaveConfig : public QWidget
+class KDE_EXPORT ResourceCachedSaveConfig : public QWidget
 { 
     Q_OBJECT
   public:

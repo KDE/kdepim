@@ -23,12 +23,13 @@
 #include <libkcal/incidence.h>
 
 #include <kdialogbase.h>
+#include <kdepimmacros.h>
 
 class KListView;
 
 namespace KCal {
 
-class ConfirmSaveDialog : public KDialogBase
+class KDE_EXPORT ConfirmSaveDialog : public KDialogBase
 {
   public:
     ConfirmSaveDialog( const QString &destination, QWidget *parent,

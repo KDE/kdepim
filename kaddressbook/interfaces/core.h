@@ -28,6 +28,7 @@
 
 #include <kabc/field.h>
 #include <kxmlguiclient.h>
+#include <kdepimmacros.h>
 
 namespace KABC {
 class AddressBook;
@@ -44,7 +45,7 @@ namespace KAB {
 
 class SearchManager;
 
-class Core : public QObject
+class KDE_EXPORT Core : public QObject
 {
   Q_OBJECT
 

@@ -28,6 +28,7 @@
 
 #include <kabc/addressbook.h>
 #include <klibloader.h>
+#include <kdepimmacros.h>
 
 #define KAB_EXTENSIONWIDGET_PLUGIN_VERSION 1
 
@@ -35,7 +36,7 @@ namespace KAB {
 class Core;
 class ConfigureWidget;
 
-class ExtensionWidget : public QWidget
+class KDE_EXPORT ExtensionWidget : public QWidget
 {
   Q_OBJECT
   

@@ -22,6 +22,7 @@
 #define KCAL_ATTACHMENT_H
 
 #include "listbase.h"
+#include "libkcal_export.h"
 
 #include <qstring.h>
 
@@ -30,7 +31,7 @@ namespace KCal {
 /**
   This class represents information related to an attachment.
 */
-class Attachment
+class KDE_EXPORT Attachment
 {
   public:
     typedef ListBase<Attachment> List;

@@ -28,6 +28,7 @@
 #include <kurl.h>
 #include <kconfig.h>
 #include <kdirwatch.h>
+#include <kdepimmacros.h>
 
 #include <libkdepim/progressmanager.h>
 
@@ -47,7 +48,7 @@ namespace KCal {
 /**
   This class provides a calendar stored as a remote file.
 */
-class ResourceRemote : public ResourceCached
+class KDE_EXPORT ResourceRemote : public ResourceCached
 {
     Q_OBJECT
 

@@ -30,6 +30,7 @@
 #include <kurl.h>
 #include <kconfig.h>
 #include <kdirwatch.h>
+#include <kdepimmacros.h>
 
 #include <libkcal/incidence.h>
 #include <libkcal/todo.h>
@@ -56,7 +57,7 @@ class SloxAccounts;
 /**
   This class provides a calendar stored as a remote file.
 */
-class KCalResourceSlox : public KCal::ResourceCached
+class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached
 {
     Q_OBJECT
 

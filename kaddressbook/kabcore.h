@@ -30,6 +30,7 @@
 #include <qwidget.h>
 
 #include "core.h"
+#include <kdepimmacros.h>
 
 namespace KABC {
 class AddressBook;
@@ -69,7 +70,7 @@ typedef struct {
   int counter;
 } ResourceMapEntry;
 
-class KABCore : public KAB::Core
+class KDE_EXPORT KABCore : public KAB::Core
 {
   Q_OBJECT
 

@@ -23,6 +23,7 @@
 #include "soap/groupwiseserver.h"
 
 #include <kabcresourcecached.h>
+#include <kdepimmacros.h>
 
 #include <libkdepim/progressmanager.h>
 
@@ -36,7 +37,7 @@ namespace KABC {
 
 class GroupwisePrefs;
 
-class ResourceGroupwise : public ResourceCached
+class KDE_EXPORT ResourceGroupwise : public ResourceCached
 {
   Q_OBJECT
 

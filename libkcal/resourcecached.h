@@ -34,13 +34,15 @@
 #include <qdatetime.h>
 #include <qtimer.h>
 
+#include <kdepimmacros.h>
+
 namespace KCal {
 
 /**
   This class provides a calendar resource using a local CalendarLocal object to
   cache the calendar data.
 */
-class ResourceCached : public ResourceCalendar,
+class KDE_EXPORT ResourceCached : public ResourceCalendar,
                        public KCal::Calendar::Observer
 {
     Q_OBJECT

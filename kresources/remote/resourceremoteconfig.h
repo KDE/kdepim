@@ -30,6 +30,8 @@
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
+#include <kdepimmacros.h>
+
 namespace KCal {
 
 class ResourceCachedReloadConfig;
@@ -40,7 +42,7 @@ class ResourceCachedSaveConfig;
   
   @see ResourceRemote
 */
-class ResourceRemoteConfig : public KRES::ConfigWidget
+class KDE_EXPORT ResourceRemoteConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:

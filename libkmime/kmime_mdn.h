@@ -35,6 +35,8 @@
 #include <qvaluelist.h>
 #include <qstring.h>
 
+#include <kdepimmacros.h>
+
 class QCString;
 
 namespace KMime {
@@ -176,7 +178,7 @@ namespace KMime {
 
     /** Main function. Generates the content of the
         message/disposition-notification body part. */
-    extern QCString dispositionNotificationBodyContent( const QString & finalRecipient,
+    KDE_EXPORT extern QCString dispositionNotificationBodyContent( const QString & finalRecipient,
 	       const QCString & originalRecipient,
 	       const QCString & originalMsgID,
 	       DispositionType disposition,
@@ -186,7 +188,7 @@ namespace KMime {
 				   =QValueList<DispositionModifier>(),
 	       const QString & special=QString::null );
 
-    extern QString descriptionFor( DispositionType d,
+    KDE_EXPORT extern QString descriptionFor( DispositionType d,
 				   const QValueList<DispositionModifier> & m
 				   =QValueList<DispositionModifier>() );
 

@@ -23,6 +23,7 @@
 #define RESOURCEFEATUREPLANCONFIG_H
 
 #include <kresources/configwidget.h>
+#include <kdepimmacros.h>
 
 class KLineEdit;
 class KURLRequester;
@@ -30,7 +31,7 @@ class QCheckBox;
 
 namespace KCal {
 
-class ResourceFeaturePlanConfig : public KRES::ConfigWidget
+class KDE_EXPORT ResourceFeaturePlanConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

@@ -29,13 +29,15 @@
 
 #include <kurl.h>
 
+#include <kdepimmacros.h>
+
 #include "xxport.h"
 
 namespace KAB {
 class Core;
 }
 
-class XXPortManager : public QObject
+class KDE_EXPORT XXPortManager : public QObject
 {
   Q_OBJECT
 

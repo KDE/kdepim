@@ -449,7 +449,7 @@ private:
 /*!
     \brief This class provides C++ access to the CRYPTPLUG API.
 */
-class CryptPlugWrapper : public Kleo::CryptoBackend::Protocol {
+class KDE_EXPORT CryptPlugWrapper : public Kleo::CryptoBackend::Protocol {
 public:
     static QString errorIdToText( int errId, bool & isPassphraseError );
 

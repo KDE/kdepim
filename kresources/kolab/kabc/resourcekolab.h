@@ -38,6 +38,7 @@
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
 #include <kmail/kmailicalIface.h>
+#include <kdepimmacros.h>
 
 namespace KABC {
 
@@ -48,7 +49,7 @@ namespace KABC {
  * addresses in an Kolab folder in KMail (or other conforming email
  * clients).
  */
-class ResourceKolab : public KPIM::ResourceABC,
+class KDE_EXPORT ResourceKolab : public KPIM::ResourceABC,
                      public Kolab::ResourceKolabBase
 {
   Q_OBJECT

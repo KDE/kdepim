@@ -23,11 +23,13 @@
 
 #include <qstring.h>
 
+#include "libkcal_export.h"
+
 class KConfig;
 
 namespace KCal {
 
-class FreeBusyUrlStore
+class LIBKCAL_EXPORT FreeBusyUrlStore
 {
   public:
     static FreeBusyUrlStore *self();

@@ -158,7 +158,7 @@ namespace Kleo {
   };
 
 
-  class EncryptionKeyRequester : public KeyRequester {
+  class KDE_EXPORT EncryptionKeyRequester : public KeyRequester {
     Q_OBJECT
   public:
     enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };
@@ -185,7 +185,7 @@ namespace Kleo {
   };
 
 
-  class SigningKeyRequester : public KeyRequester {
+  class KDE_EXPORT SigningKeyRequester : public KeyRequester {
     Q_OBJECT
   public:
     enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };

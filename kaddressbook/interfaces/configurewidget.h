@@ -27,6 +27,7 @@
 #include <qwidget.h>
 
 #include <kconfig.h>
+#include <kdepimmacros.h>
 
 namespace KABC {
 class AddressBook;
@@ -34,7 +35,7 @@ class AddressBook;
 
 namespace KAB {
 
-class ConfigureWidget : public QWidget
+class KDE_EXPORT ConfigureWidget : public QWidget
 {
   public:
     ConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
