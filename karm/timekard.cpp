@@ -47,7 +47,7 @@ QValueList<Week> TimeKard::weeksFromDateRange(const QDate& from,
   return weeks;
 }
 
-QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask = true)
+QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
 {
   QString retval;
   QString taskhdr, totalhdr;
