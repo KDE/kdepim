@@ -58,7 +58,7 @@ $Id$
 
 </authorgroup>
 
-<date>2002-07-27</date>
+<date>2002-09-06</date>
 <releaseinfo>1.04.02</releaseinfo>
 
 <copyright>
@@ -4014,6 +4014,21 @@ Unfortunately, although there exists a mail filter language (Sieve, defined
 in RFC3028), there is no standardized access protocol for installing or
 editing server-side Sieve scripts. If such a protocol becomes available in
 the future, &kmail; will most probaly include support for it.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>Using <application>PGP</application> or <application>GnuPG</application>
+is very slow or it blocks &kmail;.</para></question>
+<answer>
+<para>&kmail; accesses <application>PGP</application>/<application>GnuPG</application> 
+synchronously, &ie; it blocks while <application>PGP</application>/<application>GnuPG</application> 
+works. This means that you might want to disable automatic retrieval 
+of unknown keys from a keyserver to make &kmail; look more responsive.
+If you are using <application>GnuPG</application> 1.0.7 (recommend) or upgrade from an earlier 
+version, then make sure to run <command>gpg <option>--rebuild-keydb-caches</option></command> 
+once and <command>gpg <option>--check-trustdb</option></command> after every import or refresh. 
+Both will speed up <application>GnuPG</application> immensely.</para>
 </answer>
 </qandaentry>
 
