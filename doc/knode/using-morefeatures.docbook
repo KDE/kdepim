@@ -168,7 +168,7 @@ containing <emphasis>knode</emphasis> in the subject.</para>
 <sect3 id="killfiles">
 <title>Creating a Killfile</title>
 
-<para>&knode; offers viewing filters (<guilabel>all</guilable>,
+<para>&knode; offers viewing filters (<guilabel>all</guilabel>,
 <guilabel>unread only</guilabel>, <guilabel>my posts</guilabel>,
 &etc;) and scoring filters (threads and articles start with a score of
 zero and can be adjusted according to author, thread, &etc;).</para>
@@ -188,9 +188,9 @@ poster.</para>
 <title>Creating a Killfile</title>
 <step>
 <para>Go to
-<menuchioce><guimenu>Settings</guimenu><guimenuitem>Configure
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode</guimenuitem><guilabel>Reading
-News</guilabel><guilabel>Filters</guilabel>.</para>
+News</guilabel><guilabel>Filters</guilabel></menuchoice>.</para>
 </step>
 
 <step>
@@ -198,8 +198,8 @@ News</guilabel><guilabel>Filters</guilabel>.</para>
 <userinput>killfile on</userinput>. Be sure that <guilabel>Apply to single
 articles</guilabel> is set and then click on the
 <guilabel>Additional</guilabel> tab. Set score <quote>equal to or less than
-zero</quote> (<guilabel><=</guilabel>); then click the
-<guibutton<OK</guibutton> until you have exited the dialog.</para>
+zero</quote> (<guilabel>&lt;=</guilabel>); then click the
+<guibutton>OK</guibutton> until you have exited the dialog.</para>
 </step>
 
 <step>
@@ -216,7 +216,8 @@ ten (or as you wish). Save.</para>
 
 <step>
 <para>Go to the menu item
-<menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>killfile on.</guimenuitem></para>
+<menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu><guimenuitem>killfile on.</guimenuitem>
+</menuchoice></para>
 </step>
 </procedure>
 
@@ -225,7 +226,6 @@ disappear. To kill additional authors you only need repeat the
 <keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> part of
 these instructions.</para>
 
-</procedure>
 </sect3>
 
 </sect2> 
@@ -576,7 +576,7 @@ honor supersede messages, nor do they pass them on.</para>
 
 </sect3> 
 </sect2> 
-§
+
 <sect2 id="score-watch-ignore"> 
 <title>Score, watch, ignore</title>
  
