@@ -228,6 +228,17 @@ class GroupwisePropagator : public KConfigPropagator
         }
       }
 
+      class Writer : public CreateDisconnectedImapAccount::CustomWriter
+      {
+        public:
+          void writeFolder( KConfig &, int ) {}
+          void writeIds( int accountId, int transportId )
+          {
+            GroupwiseConfig::setKMailAccountId( accountId );
+            GroupwiseConfig::setKMailTransportId( transportId );
+          }
+      };
+
       if ( GroupwiseConfig::createEmailAccount() ) {
         CreateDisconnectedImapAccount *ca =
           new CreateDisconnectedImapAccount( i18n("GroupWise") );
@@ -243,6 +254,11 @@ class GroupwisePropagator : public KConfigPropagator
         ca->setEncryption( CreateDisconnectedImapAccount::TLS );
         ca->setAuthenticationSend( CreateDisconnectedImapAccount::LOGIN );
         ca->setSmtpPort( 25 );
+
+        ca->setExistingAccountId( GroupwiseConfig::kMailAccountId() );
+        ca->setExistingTransportId( GroupwiseConfig::kMailTransportId() );
+
+        ca->setCustomWriter( new Writer );
 
         changes.append( ca );
       }
@@ -325,7 +341,7 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   setupRulesPage();
   setupChangesPage();
 
-  resize( 400, 300 );
+  resize( 600, 400 );
 }
 
 GroupwiseWizard::~GroupwiseWizard()

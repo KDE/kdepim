@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -30,7 +31,8 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     class CustomWriter
     {
       public:
-        virtual void write( KConfig &, int accountId ) = 0;
+        virtual void writeFolder( KConfig &, int folderId ) = 0;
+        virtual void writeIds( int accountId, int transportId ) = 0;
     };
   
     CreateDisconnectedImapAccount( const QString &accountName );
@@ -60,6 +62,9 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
     void setSmtpPort( int );
 
+    void setExistingAccountId( int );
+    void setExistingTransportId( int );
+
     /**
       Set custom writer. CreateDisconnectedImapAccount takes ownerhsip of the
       object.
@@ -82,6 +87,9 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     Authentication mAuthenticationSend;
 
     int mSmtpPort;
+
+    int mExistingAccountId;
+    int mExistingTransportId;
 
     CustomWriter *mCustomWriter;
 };

@@ -48,8 +48,15 @@
     <entry key="KabcResource" type="String" >
       <label>Id of KABC resource</label>
     </entry>
+    <entry key="KMailAccountId" type="Int">
+      <label>Id of KMail account for receiving mail</label>
+      <default>-1</default>
+    </entry>
+    <entry key="KMailTransportId" type="Int">
+      <label>Id of KMail transport for sending mail</label>
+      <default>-1</default>
+    </entry>
   </group>
-  
 
   <group name="Constants">
     <entry name="EnableFreeBusy">

@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -34,6 +35,7 @@ CreateDisconnectedImapAccount::CreateDisconnectedImapAccount( const QString &acc
   : KConfigPropagator::Change( i18n("Create Disconnected IMAP Account for KMail") ),
     mAccountName( accountName ), mEnableSieve( false ), mEnableSavePassword( true ),
     mEncryption( None ), mAuthenticationSend( PLAIN ), mSmtpPort( 25 ),
+    mExistingAccountId( -1 ), mExistingTransportId( -1 ),
     mCustomWriter( 0 )
 {
 }
@@ -95,6 +97,16 @@ void CreateDisconnectedImapAccount::setSmtpPort( int port )
   mSmtpPort = port;
 }
 
+void CreateDisconnectedImapAccount::setExistingAccountId( int id )
+{
+  mExistingAccountId = id;
+}
+
+void CreateDisconnectedImapAccount::setExistingTransportId( int id )
+{
+  mExistingTransportId = id;
+}
+
 void CreateDisconnectedImapAccount::setCustomWriter(
   CreateDisconnectedImapAccount::CustomWriter *writer )
 {
@@ -107,14 +119,31 @@ void CreateDisconnectedImapAccount::apply()
 
   KConfig c( "kmailrc" );
   c.setGroup( "General" );
-  uint accCnt = c.readNumEntry( "accounts", 0 );
-  c.writeEntry( "accounts", accCnt + 1 );
-  uint transCnt = c.readNumEntry( "transports", 0 );
-  c.writeEntry( "transports", transCnt + 1 );
+  int accountId;
+  if ( mExistingAccountId < 0 ) {
+    uint accCnt = c.readNumEntry( "accounts", 0 );
+    accountId = accCnt + 1;
+    c.writeEntry( "accounts", accountId );
+  } else {
+    accountId = mExistingAccountId;
+  }
+  int transportId;
+  if ( mExistingTransportId < 0 ) {
+    uint transCnt = c.readNumEntry( "transports", 0 );
+    transportId = transCnt + 1;
+    c.writeEntry( "transports", transportId );
+  } else {
+    transportId = mExistingTransportId;
+  }
 
-  c.setGroup( QString("Account %1").arg( accCnt + 1) );
-  int uid = kapp->random();
-  c.writeEntry( "Folder", uid );
+  c.setGroup( QString("Account %1").arg( accountId ) );
+  int uid;
+  if ( mExistingAccountId < 0 ) {
+    uid = kapp->random();
+    c.writeEntry( "Folder", uid );
+  } else {
+    uid = c.readNumEntry( "Folder" );
+  }
   c.writeEntry( "Id", uid );
   c.writeEntry( "Type", "cachedimap");
   c.writeEntry( "auth", "*");
@@ -141,7 +170,7 @@ void CreateDisconnectedImapAccount::apply()
     c.writeEntry( "store-passwd", true );
   }
 
-  c.setGroup( QString("Transport %1").arg( transCnt + 1 ) );
+  c.setGroup( QString("Transport %1").arg( transportId ) );
   c.writeEntry( "name", mAccountName );
   c.writeEntry( "host", mServer );
   c.writeEntry( "type", "smtp" );
@@ -178,5 +207,8 @@ void CreateDisconnectedImapAccount::apply()
     identityManager.commit();
   }
 
-  if ( mCustomWriter ) mCustomWriter->write( c, uid );
+  if ( mCustomWriter ) {
+    mCustomWriter->writeFolder( c, uid );
+    mCustomWriter->writeIds( accountId, transportId );
+  }
 }
