@@ -1792,6 +1792,9 @@ void KNComposer::ComposerView::showAttachmentView()
     //connections
     connect(a_ttView, SIGNAL(currentChanged(QListViewItem*)),
             parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
+    connect(a_ttView, SIGNAL(clicked ( QListViewItem * )),
+            parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
+
     connect(a_ttView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
             parent(), SLOT(slotAttachmentPopup(QListViewItem*, const QPoint&, int)));
     connect(a_ttView, SIGNAL(delPressed(QListViewItem*)),
