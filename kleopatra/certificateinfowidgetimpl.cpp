@@ -30,6 +30,7 @@
 #include <klocale.h>
 #include <kdialogbase.h>
 #include <kmessagebox.h>
+#include <kdebug.h>
 
 #include "certificateinfowidgetimpl.h"
 #include "certmanager.h"
@@ -172,6 +173,24 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( QListViewItem* item )
 }
 
 
+static QString parseXMLInfo( const QString& info )
+{
+  QString result;
+  QDomDocument doc;
+  if( !doc.setContent( info ) ) {
+    kdDebug() << "xml parser error in CertificateInfoWidgetImpl::slotImportCertificate()" << endl;
+  }
+  QDomNode importinfo = doc.documentElement().namedItem("importResult");
+  result = "<p align=\"center\"><table border=\"1\"><tr><th>Name</th><th>Value</th></tr>";
+  for( QDomNode n = importinfo.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if( n.isElement() ) {
+      QDomElement elem = n.toElement();
+      result += "<tr><td>"+ elem.tagName() + "</td><td>" + elem.text().stripWhiteSpace() + "</td></tr>";
+    }
+  }
+  result += "</table></p>";
+  return result;
+}
 
 void CertificateInfoWidgetImpl::slotImportCertificate()
 {
@@ -179,14 +198,17 @@ void CertificateInfoWidgetImpl::slotImportCertificate()
   QApplication::setOverrideCursor( QCursor::WaitCursor );
   QString info;
   int retval = _manager->importCertificateWithFingerprint( _info.fingerprint, &info );
+  info = parseXMLInfo( info );
+  
   QApplication::restoreOverrideCursor();
 
   if( retval == -42 ) {
-    KMessageBox::error( this, i18n("Cryptplug returned success, but no certiftcate was imported.\nYou may need to import the issuer certificate %1 first.").arg( _info.issuer ), i18n("Import error") );    
+    KMessageBox::error( this, i18n("<qml>Cryptplug returned success, but no certiftcate was imported.<br>You may need to import the issuer certificate <b>%1</b> first.<br>Additional info:<br>%2</qml>").arg( _info.issuer ).arg(info),
+			i18n("Import error") );    
   } else if( retval ) {
-    KMessageBox::error( this, i18n("Error importing certificate.\nCryptPlug returned %1. Additional info: %2").arg(retval).arg( info ), i18n("Import error") );
+    KMessageBox::error( this, i18n("<qml>Error importing certificate.<br>CryptPlug returned %1. Additional info:<br>%2</qml>").arg(retval).arg( info ), i18n("Import error") );
   } else {
-    KMessageBox::information( this, i18n("Certificate %1 with fingerprint %2 is imported to the local database. Additional info: %3").arg(_info.userid[0]).arg(_info.fingerprint).arg( info ), i18n("Certificate Imported") );
+    KMessageBox::information( this, i18n("<qml>Certificate %1 with fingerprint <b>%2</b> is imported to the local database.<br>Additional info:<br>%3</qml>").arg(_info.userid[0]).arg(_info.fingerprint).arg( info ), i18n("Certificate Imported") );
     importButton->setEnabled( false );
   }
 }
