@@ -95,7 +95,7 @@ bool VCalFormat::save(const QString &fileName)
   vcal = newVObject(VCCalProp);
 
   //  addPropValue(vcal,VCLocationProp, "0.0");
-  addPropValue(vcal,VCProdIdProp, _PRODUCT_ID);
+  addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
   addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
@@ -170,7 +170,7 @@ VCalDrag *VCalFormat::createDrag(Event *selectedEv, QWidget *owner)
 
   vcal = newVObject(VCCalProp);
 
-  addPropValue(vcal,VCProdIdProp, _PRODUCT_ID);
+  addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
   addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
@@ -194,7 +194,7 @@ VCalDrag *VCalFormat::createDragTodo(Todo *selectedEv, QWidget *owner)
 
   vcal = newVObject(VCCalProp);
 
-  addPropValue(vcal,VCProdIdProp, _PRODUCT_ID);
+  addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
   addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
@@ -284,7 +284,7 @@ bool VCalFormat::copyEvent(Event *selectedEv)
   vcal = newVObject(VCCalProp);
 
   //  addPropValue(vcal,VCLocationProp, "0.0");
-  addPropValue(vcal,VCProdIdProp, _PRODUCT_ID);
+  addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
   addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
@@ -1642,7 +1642,7 @@ void VCalFormat::populate(VObject *vcal)
   // warn the user that we might have trouble reading non-known calendar.
   if ((curVO = isAPropertyOf(vcal, VCProdIdProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
-    if (strcmp(_PRODUCT_ID, s) != 0)
+    if (strcmp(productId().latin1(), s) != 0)
       if (mEnableDialogs)
 	KMessageBox::information(mTopWidget,
 			     i18n("This vCalendar file was not created by KOrganizer\n"

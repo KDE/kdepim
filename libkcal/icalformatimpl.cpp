@@ -1687,7 +1687,7 @@ icalcomponent *ICalFormatImpl::createCalendarComponent()
   icalproperty *p;
 
   // Product Identifier
-  p = icalproperty_new_prodid(const_cast<char *>(_PRODUCT_ID));
+  p = icalproperty_new_prodid(const_cast<char *>(CalFormat::productId().latin1()));
   icalcomponent_add_property(calendar,p);
 
   // TODO: Add time zone
@@ -1730,7 +1730,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   // warn the user that we might have trouble reading non-known calendar.
   if ((curVO = isAPropertyOf(vcal, VCProdIdProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
-    if (strcmp(_PRODUCT_ID, s) != 0)
+    if (strcmp(CalFormat::productId().latin1(), s) != 0)
       if (mEnableDialogs)
 	KMessageBox::information(mTopWidget,
 			     i18n("This vCalendar file was not created by KOrganizer\n"

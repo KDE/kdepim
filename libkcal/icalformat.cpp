@@ -170,7 +170,7 @@ VCalDrag *ICalFormat::createDrag(Event */*selectedEv*/, QWidget */*owner*/)
   
   vcal = newVObject(VCCalProp);
   
-  addPropValue(vcal,VCProdIdProp, _PRODUCT_ID);
+  addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
   addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
@@ -197,7 +197,7 @@ VCalDrag *ICalFormat::createDragTodo(Todo */*selectedEv*/, QWidget */*owner*/)
   
   vcal = newVObject(VCCalProp);
   
-  addPropValue(vcal,VCProdIdProp, _PRODUCT_ID);
+  addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
   addPropValue(vcal,VCTimeZoneProp, tmpStr.latin1());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
@@ -294,7 +294,7 @@ bool ICalFormat::copyEvent(Event */*selectedEv*/)
   vcal = newVObject(VCCalProp);
 
   //  addPropValue(vcal,VCLocationProp, "0.0");
-  addPropValue(vcal,VCProdIdProp, _PRODUCT_ID);
+  addPropValue(vcal,VCProdIdProp, productId());
   tmpStr = mCalendar->getTimeZoneStr();
   addPropValue(vcal,VCTimeZoneProp, tmpStr.ascii());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);

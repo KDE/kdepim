@@ -28,7 +28,8 @@
 
 using namespace KCal;
 
-QString CalFormat::mApplication = "libkcal";
+QString CalFormat::mApplication = QString::fromLatin1("libkcal");
+QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//NONSGML libkcal n.n//EN");
 
 
 CalFormat::CalFormat(Calendar *cal)
@@ -73,9 +74,10 @@ ErrorFormat *CalFormat::exception()
   return mException;
 }
 
-void CalFormat::setApplication(const QString& application)
+void CalFormat::setApplication(const QString& application, const QString& productID)
 {
   mApplication = application;
+  mProductId = productID;
 }
 
 QString CalFormat::createUniqueId()

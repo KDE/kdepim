@@ -27,8 +27,6 @@
 #include "exceptions.h"
 #include "event.h"
 
-#define _PRODUCT_ID "-//K Desktop Environment//NONSGML KOrganizer 2.2//EN"
-
 namespace KCal {
 
 class VCalDrag;
@@ -88,10 +86,14 @@ class CalFormat {
     */
     ErrorFormat *exception();
 
-    /** Set the application name for use in unique IDs and error messages */
-    static void setApplication(const QString&);
+    /** Set the application name for use in unique IDs and error messages,
+     *  and product ID for incidence PRODID property
+     */
+    static void setApplication(const QString& app, const QString& productID);
     /** Return the application name used in unique IDs and error messages */
     static const QString& application()  { return mApplication; }
+    /** Return the PRODID string for calendar files */
+    static const QString& productId()  { return mProductId; }
 
     /** Create a unique id string. */
     static QString createUniqueId();
@@ -115,6 +117,7 @@ class CalFormat {
     ErrorFormat *mException;
 
     static QString mApplication;   // name of application for unique ID strings
+    static QString mProductId;     // PRODID string for calendar file
 };
 
 }
