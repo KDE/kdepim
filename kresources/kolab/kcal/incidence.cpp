@@ -200,7 +200,10 @@ void Incidence::saveRecurrence( QDomElement& element ) const
     QDomText t = element.ownerDocument().createTextNode( mRecurrence.range );
     range.appendChild( t );
   }
-  // TODO exclusions
+  for( QValueList<QDate>::ConstIterator it = mRecurrence.exclusions.begin();
+       it != mRecurrence.exclusions.end(); ++it ) {
+    writeString( e, "exclusion", dateToString( *it ) );
+  }
 }
 
 void Incidence::loadRecurrence( const QDomElement& element )
@@ -438,7 +441,6 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
   } else {
     mRecurrence.rangeType = "none";
   }
-  // TODO exclusions
 }
 
 void Incidence::setFields( const KCal::Incidence* incidence )
@@ -483,8 +485,10 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     addAttendee( attendee );
   }
 
-  if ( incidence->doesRecur() )
+  if ( incidence->doesRecur() ) {
     setRecurrence( incidence->recurrence() );
+    mRecurrence.exclusions = incidence->exDates();
+  }
 }
 
 static QBitArray daysListToBitArray( const QStringList& days )
@@ -571,7 +575,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
       recur->setEndDate( stringToDate( mRecurrence.range ) );
     } // "none" is default since -1 is passed everywhere above
 
-    // TODO exceptions
+    incidence->setExDates( mRecurrence.exclusions );
   }
 }
 
