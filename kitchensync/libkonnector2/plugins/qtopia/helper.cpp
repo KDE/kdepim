@@ -179,15 +179,27 @@ QString Base::konnectorId( const QString &appName,  const QString &uid )
     }
     return id2;
 }
-QString Base::kdeId( const QString &appName,  const QString &uid )
+/*
+ * IntelliSync(tm) is completely broken in regards to assigning UID's
+ * it's always assigning the 0. So for us to work properly we need to rely
+ * on uids!
+ * We'll see if it equals '0' and then prolly assign a new uid
+ */
+QString Base::kdeId( const QString &appName,  const QString &_uid )
 {
+    QString uid = _uid;
+    if (_uid.stripWhiteSpace() == QString::fromLatin1("0") ) {
+        kdDebug() << "broken uid found!!! reassigning" << endl;
+        uid = QString::number( newId() );
+    }
+
     QString ret;
-    if ( m_helper == 0 ) {
+    if ( !m_helper )
         ret = QString::fromLatin1("Konnector-")  + uid;
-    }
-    else{ // only if meta
+
+    else // only if meta
         ret = m_helper->kdeId( appName, "Konnector-"+uid,  "Konnector-"+uid);
-    }
+
     return ret;
 }
 // code copyrighted by tt FIXME
