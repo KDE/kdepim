@@ -26,6 +26,7 @@
 #include <calendarsyncee.h>
 #include <addressbooksyncee.h>
 #include <bookmarksyncee.h>
+#include <synchistory.h>
 
 #include <kabc/vcardconverter.h>
 #include <libkcal/icalformat.h>
@@ -53,19 +54,22 @@ extern "C"
 RemoteKonnector::RemoteKonnector( const KConfig *config )
     : Konnector( config ), mConfigWidget( 0 )
 {
+  mAddressBook.addResource( new KABC::ResourceNull() );
   if ( config ) {
     mCalendarUrl = config->readPathEntry( "CalendarUrl" );
     mAddressBookUrl = config->readPathEntry( "AddressBookUrl" );
     mBookmarkUrl = config->readPathEntry( "BookmarkUrl" );
   }
 
-  mAddressBook.addResource( new KABC::ResourceNull() );
+  mMd5sumCal = generateMD5Sum( mCalendarUrl ) +    "_remotekonnector_cal.log";
+  mMd5sumBkm = generateMD5Sum( mBookmarkUrl ) +    "_remotekonnector_bkm.log";
+  mMd5sumAbk = generateMD5Sum( mAddressBookUrl ) + "_remotekonnector_abk.log";
 
   mAddressBookSyncee =	new AddressBookSyncee( &mAddressBook );
-  mAddressBookSyncee->setSource( i18n( "Remote" ) );
+  mAddressBookSyncee->setTitle( i18n( "Remote" ) );
   mCalendarSyncee = new CalendarSyncee( &mCalendar );
-  mCalendarSyncee->setSource( i18n( "Remote" ) );
-  
+  mCalendarSyncee->setTitle( i18n( "Remote" ) );
+
   mSyncees.append( mCalendarSyncee );
   mSyncees.append( mAddressBookSyncee );
   mSyncees.append( new BookmarkSyncee( &mBookmarkManager ) );
@@ -126,7 +130,7 @@ bool RemoteKonnector::readSyncees()
 
     ++mSynceeReadCount;
   }
-  
+
   if ( !mAddressBookUrl.isEmpty() ) {
     kdDebug() << "RemoteKonnector::readSyncees(): AddressBook: "
               << mAddressBookUrl << endl;
@@ -143,7 +147,7 @@ bool RemoteKonnector::readSyncees()
   }
 
   // TODO: Read Bookmarks
-  
+
   return true;
 }
 
@@ -172,7 +176,7 @@ void RemoteKonnector::slotCalendarReadResult( KIO::Job *job )
       emit synceeReadError( this );
     }
   }
-  
+
   finishRead();
 }
 
@@ -196,16 +200,23 @@ void RemoteKonnector::slotAddressBookReadResult( KIO::Job *job )
     for( it = a.begin(); it != a.end(); ++it ) {
       mAddressBook.insertAddressee( *it );
       KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
-      mAddressBookSyncee->addEntry( &entry );
+      mAddressBookSyncee->addEntry( entry.clone() );
     }
   }
-  
+
   finishRead();
 }
 
 void RemoteKonnector::finishRead()
 {
   if ( mSynceeReadCount > 0 ) return;
+
+
+  CalendarSyncHistory cHelper( mCalendarSyncee, storagePath()+"/"+mMd5sumCal );
+  cHelper.load();
+
+  AddressBookSyncHistory aHelper( mAddressBookSyncee, storagePath()+"/"+mMd5sumAbk);
+  aHelper.load();
 
   emit synceesRead( this );
 }
@@ -239,6 +250,7 @@ bool RemoteKonnector::writeSyncees()
   if ( !mCalendarUrl.isEmpty() ) {
     kdDebug() << "RemoteKonnector::writeSyncees(): calendar: " << mCalendarUrl
               << endl;
+    purgeRemovedEntries( mCalendarSyncee );
 
     ICalFormat ical;
     mCalendarData = ical.toString( &mCalendar );
@@ -252,10 +264,11 @@ bool RemoteKonnector::writeSyncees()
       ++mSynceeWriteCount;
     }
   }
-  
+
   if ( !mAddressBookUrl.isEmpty() ) {
     kdDebug() << "RemoteKonnector::writeSyncees(): AddressBook: "
               << mAddressBookUrl << endl;
+    purgeRemovedEntries( mAddressBookSyncee );
 
     mAddressBookData = "";
 
@@ -278,7 +291,7 @@ bool RemoteKonnector::writeSyncees()
   }
 
   // TODO: Write Bookmarks
-  
+
   return true;
 }
 
@@ -298,7 +311,7 @@ void RemoteKonnector::slotCalendarWriteResult( KIO::Job *job )
     job->showErrorDialog( 0 );
     emit synceeWriteError( this );
   }
-  
+
   finishWrite();
 }
 
@@ -318,13 +331,20 @@ void RemoteKonnector::slotAddressBookWriteResult( KIO::Job *job )
     job->showErrorDialog( 0 );
     emit synceeWriteError( this );
   }
-  
+
   finishWrite();
 }
 
 void RemoteKonnector::finishWrite()
 {
   if ( mSynceeWriteCount > 0 ) return;
+
+
+  CalendarSyncHistory cHelper( mCalendarSyncee, storagePath()+"/"+mMd5sumCal );
+  cHelper.save();
+
+  AddressBookSyncHistory aHelper( mAddressBookSyncee, storagePath()+"/"+mMd5sumAbk);
+  aHelper.save();
 
   emit synceesWritten( this );
 }

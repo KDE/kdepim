@@ -29,6 +29,7 @@
 #include <konnector.h>
 
 namespace KSync {
+class CalendarSyncee;
 
 /**
  * This plugin gets loaded by the KonnectorManager
@@ -36,7 +37,7 @@ namespace KSync {
  * we need to implement the interface to fully support it...
  */
 class DummyKonnector : public KSync::Konnector
-{ 
+{
     Q_OBJECT
   public:
     /**
@@ -76,8 +77,9 @@ class DummyKonnector : public KSync::Konnector
 
   private:
     KCal::CalendarLocal mCalendar;
-    
+
     SynceeList mSyncees;
+    CalendarSyncee *mCalSyncee;
 };
 
 }

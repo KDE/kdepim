@@ -26,6 +26,7 @@
 #include <calendarsyncee.h>
 #include <addressbooksyncee.h>
 #include <bookmarksyncee.h>
+#include <synchistory.h>
 
 #include <kabc/resourcefile.h>
 
@@ -55,11 +56,16 @@ LocalKonnector::LocalKonnector( const KConfig *config )
     mBookmarkFile = config->readPathEntry( "BookmarkFile" );
   }
 
-    mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );
-  mAddressBookSyncee->setSource( i18n( "Local" ) );
+  mMd5sumCal = generateMD5Sum( mCalendarFile ) + "_localkonnector_cal.log";
+  mMd5sumAbk = generateMD5Sum( mAddressBookFile ) + "_localkonnector_abk.log";
+  mMd5sumBkm = generateMD5Sum( mBookmarkFile ) + "_localkonnector_bkm.log";
+
+  mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );
+  mAddressBookSyncee->setTitle( i18n( "Local" ) );
+
   mCalendarSyncee = new CalendarSyncee( &mCalendar );
-  mCalendarSyncee->setSource( i18n( "Local" ) );
-  
+  mCalendarSyncee->setTitle( i18n( "Local" ) );
+
   mSyncees.append( mCalendarSyncee );
   mSyncees.append( mAddressBookSyncee );
   mSyncees.append( new BookmarkSyncee( &mBookmarkManager ) );
@@ -116,6 +122,10 @@ bool LocalKonnector::readSyncees()
       mCalendarSyncee->reset();
       mCalendarSyncee->setIdentifier( mCalendarFile );
       kdDebug() << "IDENTIFIER: " << mCalendarSyncee->identifier() << endl;
+
+      /* apply SyncInformation here this will also create the SyncEntries */
+      CalendarSyncHistory cHelper(  mCalendarSyncee, storagePath() + "/"+mMd5sumCal );
+      cHelper.load();
     } else {
       kdDebug() << "Read failed." << endl;
       return false;
@@ -136,12 +146,16 @@ bool LocalKonnector::readSyncees()
 
       mAddressBookSyncee->reset();
       mAddressBookSyncee->setIdentifier( mAddressBook.identifier() );
-  
+
       KABC::AddressBook::Iterator it;
       for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
         KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
-        mAddressBookSyncee->addEntry( &entry );
+        mAddressBookSyncee->addEntry( entry.clone() );
       }
+
+      /* let us apply Sync Information */
+      AddressBookSyncHistory aHelper( mAddressBookSyncee, storagePath() + "/"+mMd5sumAbk );
+      aHelper.load();
     }
 
   // TODO: Read Bookmarks
@@ -179,19 +193,26 @@ void LocalKonnector::download( const QString& )
 bool LocalKonnector::writeSyncees()
 {
   if ( !mCalendarFile.isEmpty() ) {
+    purgeRemovedEntries( mCalendarSyncee );
+
     if ( !mCalendar.save( mCalendarFile ) ) return false;
+    CalendarSyncHistory cHelper(  mCalendarSyncee, storagePath() + "/"+mMd5sumCal );
+    cHelper.save();
   }
 
-    if ( !mAddressBookFile.isEmpty() ) {
-      KABC::Ticket *ticket;
-      ticket = mAddressBook.requestSaveTicket( mAddressBookResourceFile );
-      if ( !ticket ) {
-        kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
-                    << "addressbook." << endl;
-        return false; 
-      }
-      if ( !mAddressBook.save( ticket ) ) return false;
+  if ( !mAddressBookFile.isEmpty() ) {
+    purgeRemovedEntries( mAddressBookSyncee );
+    KABC::Ticket *ticket;
+    ticket = mAddressBook.requestSaveTicket( mAddressBookResourceFile );
+    if ( !ticket ) {
+      kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
+                  << "addressbook." << endl;
+      return false;
     }
+    if ( !mAddressBook.save( ticket ) ) return false;
+    AddressBookSyncHistory aHelper( mAddressBookSyncee, storagePath() + "/"+mMd5sumAbk );
+    aHelper.save();
+  }
 
   // TODO: Write Bookmarks
 

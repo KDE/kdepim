@@ -22,6 +22,8 @@
 #include <kgenericfactory.h>
 #include <kdebug.h>
 
+#include <synchistory.h>
+
 #include <konnectorinfo.h>
 #include <kapabilities.h>
 
@@ -66,8 +68,13 @@ DummyKonnector::DummyKonnector( const KConfig *config )
   event->setSummary( "Another Event" );
   mCalendar.addEvent( event );
 
-  CalendarSyncee *calendarSyncee = new CalendarSyncee( &mCalendar );
-  mSyncees.append( calendarSyncee );  
+  mCalSyncee = new CalendarSyncee( &mCalendar );
+
+  /* apply sync information */
+  CalendarSyncHistory syncHistory( mCalSyncee, storagePath() + "/dummy-calendar.log" );
+  syncHistory.load();
+
+  mSyncees.append( mCalSyncee );
 }
 
 DummyKonnector::~DummyKonnector()
@@ -148,6 +155,11 @@ KSync::ConfigWidget *DummyKonnector::configWidget( QWidget*, const char* )
 
 bool DummyKonnector::writeSyncees()
 {
+
+  CalendarSyncHistory syncHistory( mCalSyncee, storagePath() + "/dummy-calendar.log" );
+  syncHistory.save();
+
+
   emit synceesWritten( this );
   return true;
 }

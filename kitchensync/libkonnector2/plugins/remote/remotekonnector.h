@@ -40,7 +40,7 @@ namespace KSync {
 class RemoteKonnectorConfig;
 
 class RemoteKonnector : public KSync::Konnector
-{ 
+{
     Q_OBJECT
   public:
     RemoteKonnector( const KConfig *config );
@@ -70,7 +70,7 @@ class RemoteKonnector : public KSync::Konnector
 
     void setCalendarUrl( const QString &f ) { mCalendarUrl = f; }
     QString calendarUrl() const { return mCalendarUrl; }
-    
+
     void setAddressBookUrl( const QString &f ) { mAddressBookUrl = f; }
     QString addressBookUrl() const { return mAddressBookUrl; }
 
@@ -97,19 +97,23 @@ class RemoteKonnector : public KSync::Konnector
     QString mAddressBookUrl;
     QString mBookmarkUrl;
 
+    QString mMd5sumCal;
+    QString mMd5sumBkm;
+    QString mMd5sumAbk;
+
     KCal::CalendarLocal mCalendar;
     KABC::AddressBook mAddressBook;
-    
+
     KSync::AddressBookSyncee *mAddressBookSyncee;
     KSync::CalendarSyncee *mCalendarSyncee;
-    
+
     class LocalBookmarkManager : public KBookmarkManager
     {
       public:
         LocalBookmarkManager() : KBookmarkManager() {}
     };
     LocalBookmarkManager mBookmarkManager;
-    
+
     SynceeList mSyncees;
 
     int mSynceeReadCount;

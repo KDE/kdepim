@@ -39,7 +39,7 @@ namespace KSync {
 class LocalKonnectorConfig;
 
 class LocalKonnector : public KSync::Konnector
-{ 
+{
     Q_OBJECT
   public:
     LocalKonnector( const KConfig *config );
@@ -72,7 +72,7 @@ class LocalKonnector : public KSync::Konnector
 
     void setCalendarFile( const QString &f ) { mCalendarFile = f; }
     QString calendarFile() const { return mCalendarFile; }
-    
+
     void setAddressBookFile( const QString &f ) { mAddressBookFile = f; }
     QString addressBookFile() const { return mAddressBookFile; }
 
@@ -85,20 +85,24 @@ class LocalKonnector : public KSync::Konnector
     QString mAddressBookFile;
     QString mBookmarkFile;
 
+    QString mMd5sumCal;
+    QString mMd5sumAbk;
+    QString mMd5sumBkm;
+
     KCal::CalendarLocal mCalendar;
     KABC::AddressBook mAddressBook;
     KABC::ResourceFile *mAddressBookResourceFile;
-    
+
     KSync::AddressBookSyncee *mAddressBookSyncee;
     KSync::CalendarSyncee *mCalendarSyncee;
-    
+
     class LocalBookmarkManager : public KBookmarkManager
     {
       public:
         LocalBookmarkManager() : KBookmarkManager() {}
     };
     LocalBookmarkManager mBookmarkManager;
-    
+
     SynceeList mSyncees;
 };
 

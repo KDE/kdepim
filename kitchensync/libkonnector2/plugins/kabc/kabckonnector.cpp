@@ -22,6 +22,8 @@
 #include <qtimer.h>
 
 #include <addressbooksyncee.h>
+#include <synchistory.h>
+
 
 #include <kabc/resource.h>
 #include <kabc/resourcefile.h>
@@ -51,6 +53,7 @@ KABCKonnector::KABCKonnector( const KConfig *config )
   if ( config ) {
     mResourceIdentifier = config->readEntry( "CurrentResource" );
   }
+  mMd5sum = generateMD5Sum( mResourceIdentifier ) + "_kabckonnector.log";
 
   mManager = new KRES::Manager<KABC::Resource>( "contact" );
   mManager->readConfig();
@@ -58,8 +61,8 @@ KABCKonnector::KABCKonnector( const KConfig *config )
   mAddressBook.addResource( new KABC::ResourceNull() );
 
   mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );
-  mAddressBookSyncee->setSource( i18n( "Address Book" ) );
-  
+  mAddressBookSyncee->setTitle( i18n( "Address Book" ) );
+
   mSyncees.append( mAddressBookSyncee );
 
   KRES::Manager<KABC::Resource>::ActiveIterator it;
@@ -155,6 +158,9 @@ bool KABCKonnector::writeSyncees()
   if ( !mResource )
     return false;
 
+
+  purgeRemovedEntries( mAddressBookSyncee );
+
   KABC::AddressBook::Iterator it;
   for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it )
     mResource->insertAddressee( *it );
@@ -174,6 +180,9 @@ bool KABCKonnector::writeSyncees()
     }
   }
 
+  AddressBookSyncHistory syncInfo(mAddressBookSyncee, storagePath()+"/"+mMd5sum );
+  syncInfo.save();
+
   emit synceesWritten( this );
 
   return true;
@@ -182,12 +191,15 @@ bool KABCKonnector::writeSyncees()
 void KABCKonnector::loadingFinished()
 {
   mAddressBookSyncee->reset();
-  
+
   KABC::Resource::Iterator it;
   for ( it = mResource->begin(); it != mResource->end(); ++it ) {
     KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
-    mAddressBookSyncee->addEntry( &entry );
+    mAddressBookSyncee->addEntry( entry.clone() );
   }
+
+  AddressBookSyncHistory syncInfo(mAddressBookSyncee, storagePath()+"/"+mMd5sum );
+  syncInfo.load();
 
   emit synceesRead( this );
 }

@@ -32,7 +32,7 @@ namespace KSync {
 class KCalKonnectorConfig;
 
 class KCalKonnector : public KSync::Konnector
-{ 
+{
   Q_OBJECT
 
   public:
@@ -69,6 +69,7 @@ class KCalKonnector : public KSync::Konnector
 
     KCalKonnectorConfig *mConfigWidget;
     QString mResourceIdentifier;
+    QString mMd5sum;
 
     KCal::CalendarResources *mCalendar;
     KCal::ResourceCalendar *mResource;

@@ -69,6 +69,7 @@ class KABCKonnector : public KSync::Konnector
   private:
     KABCKonnectorConfig *mConfigWidget;
     QString mResourceIdentifier;
+    QString mMd5sum;
 
     KABC::AddressBook mAddressBook;
     KABC::Resource *mResource;

@@ -25,6 +25,8 @@
 #include <kconfig.h>
 #include <kgenericfactory.h>
 #include <konnectorinfo.h>
+#include <synchistory.h>
+
 #include <libkcal/resourcecalendar.h>
 #include <libkdepim/kpimprefs.h>
 
@@ -49,6 +51,8 @@ KCalKonnector::KCalKonnector( const KConfig *config )
     mResourceIdentifier = config->readEntry( "CurrentResource" );
   }
 
+  mMd5sum = generateMD5Sum( mResourceIdentifier ) + "_kcalkonnector.log";
+
   mCalendar = new KCal::CalendarResources( KPimPrefs::timezone() );
 
   mResource = createResource( mResourceIdentifier );
@@ -61,9 +65,9 @@ KCalKonnector::KCalKonnector( const KConfig *config )
              SLOT( savingFinished() ) );
 
     mCalendarSyncee = new CalendarSyncee( mCalendar );
-    mCalendarSyncee->setSource( i18n( "Calendar" ) );
+    mCalendarSyncee->setTitle( i18n( "Calendar" ) );
     mCalendarSyncee->setIdentifier( "calendar" );
-  
+
     mSyncees.append( mCalendarSyncee );
   }
 }
@@ -145,6 +149,8 @@ bool KCalKonnector::writeSyncees()
   if ( mCalendar->resourceManager()->isEmpty() )
     return false;
 
+  /* remove the deleted entries before saving */
+  purgeRemovedEntries( mCalendarSyncee );
   KCal::CalendarResources::Ticket *ticket = mCalendar->requestSaveTicket( mResource );
   if ( !ticket ) {
     kdWarning() << "KCalKonnector::writeSyncees(). Couldn't get ticket for resource." << endl;
@@ -158,11 +164,15 @@ bool KCalKonnector::writeSyncees()
 
 void KCalKonnector::loadingFinished()
 {
+  CalendarSyncHistory helper( mCalendarSyncee, storagePath()+"/"+mMd5sum );
+  helper.load();
   emit synceesRead( this );
 }
 
 void KCalKonnector::savingFinished()
 {
+  CalendarSyncHistory helper( mCalendarSyncee, storagePath()+"/"+mMd5sum );
+  helper.save();
   emit synceesWritten( this );
 }
 
