@@ -19,17 +19,19 @@ $Id$
 * document "check what the server supports"
 * document "pipelining..."
 * more about the "create folder" dialog (e.g. Sender/Receiver)
-
-* better markup instead of 'quote'
+* Configure KMail: "page" or "tab", but no mix of both!
+ 
+* use better markup instead of 'quote'
 * fix my adverb vs. adjective mistakes
 * does the "lists.kde.org?..." link work correctly/completely again?
 
-* coherent wording for is section / tab / ...
-* message vs. mail vs. email -> using "message" everywhere
-* window vs. dialog
+* coherent wording for section / tab / ...
 * <menuchoice><guimenu>xxx , or is <guimenu>xxx enough?
 * <guiicon> vs. <guibutton>
 * spelling: homepage vs. home page, popup vs pop up, frontend vs front end
+
+* message vs. mail vs. email -> using "message" everywhere
+* window vs. dialog: a dialog is modal, a window is not (I think)
 
 * in KMail: kmail vs. KMail
 -->
@@ -2128,11 +2130,13 @@ with <quote>Re:</quote>.</para>
 <sect2 id="configure-composer-charset">
 <title>Charset</title>
 
-<para>Here you can manage the
-charsets available for your own messages. The charsets in this list appear in
-the composer's <menuchoice><guimenu>Options</guimenu><guimenuitem>Set
-Encoding</guimenuitem></menuchoice> menu.</para>
-<!--- fixme: does this work?? -->
+<para>Here you can manage the default charsets used for your own messages. 
+Every message you send will be checked if it's written in one of the listed
+charsets, starting at the top of the list. If it is, this charset will be used.
+If it isn't, a dialog will show up and tell you that you manually have to choose
+a charset using 
+<menuchoice><guimenu>Options</guimenu><guisubmenu>Set Encoding</guisubmenu></menuchoice>.
+</para>
 
 <para>If you select <guilabel>Keep original charset when replying
 or forwarding</guilabel>, the original message's charset
@@ -3042,7 +3046,6 @@ user does not exist. Some people use this option to <quote>reply</quote> to spam
 <listitem>
 <para>Lets you choose the character encoding to be used in the Message
 Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</para>
-<!-- fixme: does it? -->
 </listitem>
 </varlistentry>
 
@@ -3727,7 +3730,8 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
 </term>
 <listitem>
 <para>Set the charset encoding of this message. The chosen encoding will appear in the header of
-the outgoing mail.</para>
+the outgoing mail. You can use <guilabel>Auto</guilabel> for almost all
+cases, &kmail; will tell you if you need to select a different encoding manually.</para>
 </listitem>
 </varlistentry>
 
@@ -3971,7 +3975,7 @@ using &kcontrol;.</para>
 </qandaentry>
 
 <qandaentry>
-<question><para>How can I remve attachments from messages without removing
+<question><para>How can I remove attachments from messages without removing
 the message itself?</para></question>
 <answer>
 <para>This is currently not supported. As a workaround, move the
@@ -3980,6 +3984,13 @@ it in the composer, remove the attachments, save the message again to the
 drafts folder, move it back to its folder. The disadvantage of
 this workaround is that the date will be changed to the current date.
 Some other headers might also be changed.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>How can I make &kmail; to check for new messages at startup?</para></question>
+<answer>
+<para>Start &kmail; with <command>kmail <option>--check</option></command>.</para>
 </answer>
 </qandaentry>
 
@@ -4123,8 +4134,8 @@ messages.</para></question>
 To really remove deleted messages from disk, you have to compact
 your folders using <menuchoice><guimenu>File</guimenu><guimenuitem>Compact all 
 folders</guimenuitem></menuchoice> (by default this will also happen every time you exit
-&kmail;).</para>
-<!-- fixme?: doesn't work when leaving by session management?! -->
+&kmail; - note that it does not work when leaving &kmail; via &kde;'s session
+management).</para>
 </answer>
 </qandaentry>
 
@@ -4248,26 +4259,8 @@ before you attach them.</para>
 </answer>
 </qandaentry>
 
-<!-- fixme: doesn't exist anymore??
 <qandaentry>
-<question><para>How do I have to set up &kmail; to use (&ie; read and write)
-messages with non-Latin1 characters?</para></question>
-<answer><para>In the
-<guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> section of the
-<guilabel>Configure &kmail;...</guilabel> dialog, select the correct <guilabel>Character set</guilabel> for
-the message list and the folder list. 
-If <guilabel>unicode
-(iso10646-1)</guilabel> is available, you should choose it. In case messages are
-still not shown correctly, you can always try other settings from the
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Set
-Encoding</guimenuitem></menuchoice> menu.  For writing messages, go to
-<guilabel>Composer</guilabel>/<guilabel>Charset</guilabel> and configure the
-default charset you want to use for your own messages.</para></answer>
-</qandaentry>
--->
-
-<qandaentry>
-<question><para>Spellchecking doesn't recognize non-english
+<question><para>Spellchecking doesn't recognize non-English
 characters.</para></question>
 <answer><para>Before you can use spellchecking the first time, you have to
 configure it. You can do so in the composer window's menu
@@ -4560,7 +4553,7 @@ be accessible under &kmail;.</para>
 
 <para>If you have no subfolders, just copy all of the &Netscape;
 files to <filename class="directory">~/Mail</filename>, make sure
-that they are writeable (only by your user, of course), and restart
+that they are writable (only by your user, of course), and restart
 &kmail;: all of the messages will now appear in &kmail; folders.
 (Note that if you use a command like <command>cp
 <parameter>*</parameter> <parameter>~/Mail</parameter></command>, you
