@@ -49,12 +49,53 @@ class KandyPrefsDialog : public KPrefsDialog
 
   protected:
     void setupSerialTab();
+    void setupAddressbookTab();
     void setupWindowsTab();
  private:
     KPrefsWidString *serialDevice;
+    KPrefsWidString *lockDir;
     KPrefsWidBool *openOnStartup;
+    KPrefsWidBool *autoSetClock;
+    
+    KPrefsWidBool *excHome;
+    KPrefsWidBool *excWork;
+    KPrefsWidBool *excMsg;
+    KPrefsWidBool *excFax;
+    KPrefsWidBool *excCell;
+    KPrefsWidBool *excVideo;
+    KPrefsWidBool *excBbs;
+    KPrefsWidBool *excModem;
+    KPrefsWidBool *excCar;
+    KPrefsWidBool *excISDN;
+    KPrefsWidBool *excPager;
+    
+    KPrefsWidBool *useHomeSuff;
+    KPrefsWidBool *useWorkSuff;
+    KPrefsWidBool *useMessagingSuff;
+    KPrefsWidBool *useFaxSuff;
+    KPrefsWidBool *useCellSuff;
+    KPrefsWidBool *useVideoSuff;
+    KPrefsWidBool *useMailboxSuff;
+    KPrefsWidBool *useModemSuff;
+    KPrefsWidBool *useCarSuff;
+    KPrefsWidBool *useISDNSuff;
+    KPrefsWidBool *usePagerSuff;
+    
+    KPrefsWidString *HomeSuff;
+    KPrefsWidString *WorkSuff;
+    KPrefsWidString *MessagingSuff;
+    KPrefsWidString *FaxSuff;
+    KPrefsWidString *CellSuff;
+    KPrefsWidString *VideoSuff;
+    KPrefsWidString *MailboxSuff;
+    KPrefsWidString *ModemSuff;
+    KPrefsWidString *CarSuff;
+    KPrefsWidString *ISDNSuff;
+    KPrefsWidString *PagerSuff;
+    
     KPrefsWidBool *startupTerminal;
     KPrefsWidBool *startupMobile;
+    KPrefsWidString *DisplayWidth;
 };
 
 #endif
