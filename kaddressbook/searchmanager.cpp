@@ -40,8 +40,9 @@ SearchManager::SearchManager( KABC::AddressBook *ab,
                               QObject *parent, const char *name )
   : QObject( parent, name ),
     mAddressBook( ab ), mLastField( 0 ), mLastType( Contains ), 
-    mLastSingleSearch( true )
+    mJumpButtonField( 0 )
 {
+  mJumpButtonPatterns.append( "" );
 }
 
 void SearchManager::search( const QString &pattern, KABC::Field *field, Type type )
@@ -49,31 +50,46 @@ void SearchManager::search( const QString &pattern, KABC::Field *field, Type typ
   mLastPattern = pattern;
   mLastField = field;
   mLastType = type;
-  mLastSingleSearch = true;
 
+  KABC::Addressee::List allContacts;
   mContacts.clear();
-  doSearch( mLastPattern, mLastField, mLastType );
-  emit contactsUpdated();
-}
 
-void SearchManager::searchList( const QStringList &patterns, KABC::Field *field, Type type )
-{
-  mLastPatterns = patterns;
-  mLastField = field;
-  mLastType = type;
-  mLastSingleSearch = false;
+#if KDE_VERSION >= 319
+  KABC::AddresseeList list( mAddressBook->allAddressees() );
+  if ( field )
+    list.sortByField( field );
 
-  mContacts.clear();
+  allContacts = list;
+#else
+  KABC::AddressBook::Iterator abIt;
+  for ( abIt = mAddressBook->begin(); abIt != mAddressBook->end(); ++abIt )
+    allContacts.append( *abIt );
+#endif
+
   QStringList::ConstIterator it;
-  for ( it = patterns.begin(); it != patterns.end(); ++it )
-    doSearch( *it, mLastField, mLastType );
+  for ( it = mJumpButtonPatterns.begin(); it != mJumpButtonPatterns.end(); ++it )
+    doSearch( *it, mJumpButtonField, StartsWith, allContacts );
+
+  allContacts = mContacts;
+  mContacts.clear();
+
+  doSearch( mLastPattern, mLastField, mLastType, allContacts );
   emit contactsUpdated();
 }
 
-void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type type )
+void SearchManager::setJumpButtonFilter( const QStringList &patterns, KABC::Field *field )
+{
+  mJumpButtonPatterns = patterns;
+  mJumpButtonField = field;
+
+  search( mLastPattern, mLastField, mLastType );
+}
+
+void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type type,
+                              const KABC::Addressee::List &list )
 {
   if ( pattern.isEmpty() ) {
-    mContacts = mAddressBook->allAddressees();
+    mContacts = list;
     if ( mContacts.count() > 100 ) { // show only 100 contacts
       KABC::Addressee::List::Iterator it = mContacts.at( 100 );
       while ( it != mContacts.end() )
@@ -83,11 +99,8 @@ void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type t
     return;
   }
 
-#if KDE_VERSION >= 319
-  KABC::AddresseeList list( mAddressBook->allAddressees() );
   if ( field ) {
-    list.sortByField( field );
-    KABC::AddresseeList::Iterator it;
+    KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       if ( type == StartsWith && field->value( *it ).startsWith( pattern, false ) )
         mContacts.append( *it );
@@ -99,7 +112,7 @@ void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type t
         mContacts.append( *it );
     }
   } else {
-    KABC::AddresseeList::Iterator it;
+    KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       KABC::Field::List fieldList = KABC::Field::allFields();
       KABC::Field::List::ConstIterator fieldIt;
@@ -120,39 +133,6 @@ void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type t
       }
     }
   }
-#else
-  KABC::AddressBook::Iterator it;
-  for ( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
-    if ( field ) {
-      if ( type == StartsWith && field->value( *it ).startsWith( pattern, false ) )
-        mContacts.append( *it );
-      else if ( type == EndsWith && field->value( *it ).endsWith( pattern, false ) )
-        mContacts.append( *it );
-      else if ( type == Contains && field->value( *it ).find( pattern, 0, false ) != -1 )
-        mContacts.append( *it );
-      else if ( type == Equals && field->value( *it ).localeAwareCompare( pattern ) == 0 )
-        mContacts.append( *it );
-    } else {
-      KABC::Field::List fieldList = KABC::Field::allFields();
-      KABC::Field::List::ConstIterator fieldIt;
-      for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
-        if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, false ) ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, false ) ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == Contains && (*fieldIt)->value( *it ).find( pattern, 0, false ) != -1 ) {
-          mContacts.append( *it );
-          break;
-        } else if ( type == Equals && (*fieldIt)->value( *it ).localeAwareCompare( pattern ) == 0 ) {
-          mContacts.append( *it );
-          break;
-        }
-      }
-    }
-  }
-#endif
 }
 
 KABC::Addressee::List SearchManager::contacts() const
@@ -162,10 +142,7 @@ KABC::Addressee::List SearchManager::contacts() const
 
 void SearchManager::reload()
 {
-  if ( mLastSingleSearch )
-    search( mLastPattern, mLastField, mLastType );
-  else
-    searchList( mLastPatterns, mLastField, mLastType );
+  search( mLastPattern, mLastField, mLastType );
 }
 
 #include "searchmanager.moc"

@@ -46,11 +46,17 @@ class IncSearchWidget : public QWidget
 
   signals:
     /**
-      This signal is emmited whenever the text in the input
+      This signal is emitted whenever the text in the input
       widget is changed. You can get the sorting field by
       @ref currentField.
      */
     void doSearch( const QString& text );
+
+    /**
+      This signal is emitted whenever the 'Reset' button is
+      clicked.
+     */
+    void doReset();
 
   private slots:
     void announceDoSearch();

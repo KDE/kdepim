@@ -56,7 +56,8 @@ class SearchManager : public QObject
      */
     void search( const QString &pattern, KABC::Field *field, Type type = Contains );
 
-    void searchList( const QStringList &patterns, KABC::Field *field, Type type = Contains );
+
+    void setJumpButtonFilter( const QStringList &patterns, KABC::Field *field );
 
     /**
       Returns the contacts which matched the last search query.
@@ -76,7 +77,7 @@ class SearchManager : public QObject
     SearchManager( KABC::AddressBook *ab,
                    QObject *parent, const char *name = 0 );
 
-    void doSearch( const QString&, KABC::Field*, Type );
+    void doSearch( const QString&, KABC::Field*, Type, const KABC::Addressee::List& );
 
     KABC::Addressee::List mContacts;
     KABC::AddressBook *mAddressBook;
@@ -84,10 +85,11 @@ class SearchManager : public QObject
     static SearchManager *mSelf;
 
     QString mLastPattern;
-    QStringList mLastPatterns;
     KABC::Field *mLastField;
     Type mLastType;
-    bool mLastSingleSearch;
+
+    QStringList mJumpButtonPatterns;
+    KABC::Field *mJumpButtonField;
 };
 
 #endif

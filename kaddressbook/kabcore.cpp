@@ -106,8 +106,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   initGUI();
 
-  SearchManager::self();
-
   connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
            SLOT( addressBookChanged() ) );
   connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
@@ -133,6 +131,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( incrementalJumpButtonSearch( const QStringList& ) ) );
   connect( mViewManager, SIGNAL( sortFieldChanged() ),
            mJumpButtonBar, SLOT( updateButtons() ) );
+  connect( mIncSearchWidget, SIGNAL( doReset() ),
+           mJumpButtonBar, SLOT( reset() ) );
 
   connect( mDetails, SIGNAL( highlightedMessage( const QString& ) ),
            SLOT( detailsHighlighted( const QString& ) ) );
@@ -488,8 +488,7 @@ void KABCore::incrementalTextSearch( const QString& text )
 
 void KABCore::incrementalJumpButtonSearch( const QStringList& characters )
 {
-  SearchManager::self()->searchList( characters, mViewManager->currentSortField(), 
-                                     SearchManager::StartsWith );
+  SearchManager::self()->setJumpButtonFilter( characters, mViewManager->currentSortField() );
 }
 
 void KABCore::setModified()
@@ -804,6 +803,7 @@ void KABCore::configurationChanged()
 
 void KABCore::addressBookChanged()
 {
+  mJumpButtonBar->updateButtons();
   SearchManager::self()->reload();
 }
 

@@ -22,6 +22,7 @@
 */                                                                      
 
 #include <qapplication.h>
+#include <qbuttongroup.h>
 #include <qevent.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -58,8 +59,9 @@ JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
     setText( QString( "%1 - %2" ).arg( firstChar.upper() ).arg( lastChar.upper() ) );
   else
     setText( firstChar.upper() );
-}
 
+  setToggleType( QButton::Toggle );
+}
 
 JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name )
   : QWidget( parent, name ), mCore( core )
@@ -70,6 +72,12 @@ JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name
   layout->setAlignment( Qt::AlignTop );
   layout->setAutoAdd( true );
   layout->setResizeMode( QLayout::FreeResize );
+
+  mGroupBox = new QButtonGroup( 1, Qt::Horizontal, this );
+  mGroupBox->layout()->setSpacing( 0 );
+  mGroupBox->layout()->setMargin( 0 );
+  mGroupBox->setFrameStyle( QFrame::NoFrame );
+  mGroupBox->setExclusive( true );
 }
 
 JumpButtonBar::~JumpButtonBar()
@@ -84,6 +92,8 @@ QSizePolicy JumpButtonBar::sizePolicy() const
 
 void JumpButtonBar::updateButtons()
 {
+  int currentButton = mGroupBox->selectedId();
+
   // the easiest way to remove all buttons ;)
   mButtons.setAutoDelete( true );
   mButtons.clear();
@@ -123,14 +133,11 @@ void JumpButtonBar::updateButtons()
 
   sortListLocaleAware( characters );
 
-  bool state = isUpdatesEnabled();
-  setUpdatesEnabled( false );
-
   if ( characters.count() <= possibleButtons ) {
     // at first the easy case: all buttons fits in window
     for ( uint i = 0; i < characters.count(); ++i ) {
       JumpButton *button = new JumpButton( characters[ i ], QString::null,
-                                           characters[ i ], this );
+                                           characters[ i ], mGroupBox );
       connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
       mButtons.append( button );
       button->show();
@@ -150,7 +157,7 @@ void JumpButtonBar::updateButtons()
       if ( characters.count() - current <= possibleButtons - i ) {
         JumpButton *button = new JumpButton( characters[ current ],
                                              QString::null,
-                                             characters[ current ], this );
+                                             characters[ current ], mGroupBox );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();
@@ -162,7 +169,7 @@ void JumpButtonBar::updateButtons()
         for ( int j = current; j < pos + 1; ++j )
           range.append( characters[ j ] );
         JumpButton *button = new JumpButton( characters[ current ],
-                                             characters[ pos ], range, this );
+                                             characters[ pos ], range, mGroupBox );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();
@@ -171,8 +178,19 @@ void JumpButtonBar::updateButtons()
     }
   }
 
-  setUpdatesEnabled( state );
-  update();
+  if ( currentButton != -1 )
+    mGroupBox->setButton( currentButton );
+}
+
+void JumpButtonBar::reset()
+{
+  QButton *button = mGroupBox->selected();
+  if ( button )
+    button->toggle();
+
+  QStringList list;
+  list.append( "" );
+  emit jumpToLetter( list );
 }
 
 void JumpButtonBar::letterClicked()

@@ -29,6 +29,7 @@
 #include <qptrlist.h>
 #include <qstringlist.h>
 
+class QButtonGroup;
 class QResizeEvent;
 class QPushButton;
 
@@ -55,6 +56,7 @@ class JumpButtonBar : public QWidget
 
   public slots:
     void updateButtons();
+    void reset();
 
   signals:
     /**
@@ -73,6 +75,7 @@ class JumpButtonBar : public QWidget
 
     KAB::Core *mCore;
 
+    QButtonGroup *mGroupBox;
     QPtrList<QPushButton> mButtons;
 };
 
