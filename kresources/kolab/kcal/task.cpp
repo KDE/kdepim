@@ -57,7 +57,8 @@ QString Task::taskToXML( KCal::Todo* todo, const QString& tz )
 Task::Task( const QString& tz, KCal::Todo* task )
   : Incidence( tz ), mPriority( 3 ), mPercentCompleted( 100 ),
     mStatus( KCal::Incidence::StatusNone ),
-    mHasDueDate( false ), mHasCompletedDate( false )
+    mHasStartDate( false ), mHasDueDate( false ), 
+    mHasCompletedDate( false )
 {
   if ( task )
     setFields( task );
@@ -118,6 +119,16 @@ QDateTime Task::dueDate() const
   return mDueDate;
 }
 
+void Task::setHasStartDate( bool v )
+{
+  mHasStartDate = v;
+}
+
+bool Task::hasStartDate() const
+{
+  return mHasStartDate;
+}
+
 bool Task::hasDueDate() const
 {
   return mHasDueDate;
@@ -174,7 +185,10 @@ bool Task::loadAttribute( QDomElement& element )
     setParent( element.text() );
   else if ( tagName == "x-completed-date" )
     setCompletedDate( stringToDateTime( element.text() ) );
-  else
+  else if ( tagName == "start-date" ) {
+    setHasStartDate( true );
+    setStartDate( element.text() );
+  } else
     return Incidence::loadAttribute( element );
 
   // We handled this
@@ -237,6 +251,7 @@ bool Task::loadXML( const QDomDocument& document )
               top.tagName().ascii() );
     return false;
   }
+  setHasStartDate( false ); // todo's don't necessarily have one
 
   for ( QDomNode n = top.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     if ( n.isComment() )
@@ -250,6 +265,7 @@ bool Task::loadXML( const QDomDocument& document )
       kdDebug() << "Node is not a comment or an element???" << endl;
   }
 
+
   return true;
 }
 
@@ -259,6 +275,14 @@ QString Task::saveXML() const
   QDomElement element = document.createElement( "task" );
   element.setAttribute( "version", "1.0" );
   saveAttributes( element );
+  if ( !hasStartDate() ) {
+    // events and journals always have a start date, but tasks don't.
+    // Remove the entry done by the inherited save above, because we
+    // don't have one.
+    QDomNodeList l = element.elementsByTagName( "start-date" );
+    Q_ASSERT( l.count() == 1 );
+    element.removeChild( l.item( 0 ) );
+  }
   document.appendChild( element );
   return document.toString();
 }
@@ -270,6 +294,8 @@ void Task::setFields( const KCal::Todo* task )
   setPriority( task->priority() );
   setPercentCompleted( task->percentComplete() );
   setStatus( task->status() );
+  setHasStartDate( task->hasStartDate() );
+
   if ( task->hasDueDate() )
     setDueDate( localToUTC( task->dtDue() ) );
   else
@@ -292,6 +318,7 @@ void Task::saveTo( KCal::Todo* task )
   task->setPriority( priority() );
   task->setPercentComplete( percentCompleted() );
   task->setStatus( status() );
+  task->setHasStartDate( hasStartDate() );
   task->setHasDueDate( hasDueDate() );
   if ( hasDueDate() )
     task->setDtDue( utcToLocal( dueDate() ) );

@@ -80,6 +80,9 @@ public:
   virtual void setParent( const QString& parentUid );
   virtual QString parent() const;
 
+  virtual void setHasStartDate( bool );
+  virtual bool hasStartDate() const;
+
   virtual void setDueDate( const QDateTime& date );
   virtual QDateTime dueDate() const;
   virtual bool hasDueDate() const;
@@ -108,6 +111,8 @@ protected:
   int mPercentCompleted;
   KCal::Incidence::Status mStatus;
   QString mParent;
+
+  bool mHasStartDate;
 
   bool mHasDueDate;
   QDateTime mDueDate;
