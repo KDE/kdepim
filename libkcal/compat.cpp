@@ -28,21 +28,18 @@ using namespace KCal;
 
 Compat *CompatFactory::createCompat( const QString &productId )
 {
-  kdDebug(5800) << "CompatFactory::createCompat(): '" << productId << "'"
-                << endl;
+//  kdDebug(5800) << "CompatFactory::createCompat(): '" << productId << "'"
+//                << endl;
 
   Compat *compat = 0;
 
   int korg = productId.find( "KOrganizer" );
-  kdDebug() << "korg: " << korg << endl;
   if ( korg >= 0 ) {
     int versionStart = productId.find( " ", korg );
-    kdDebug() << "versionStart: " << versionStart << endl;
     if ( versionStart >= 0 ) {
       int versionStop = productId.find( QRegExp( "[ /]" ), versionStart + 1 );
-      kdDebug() << "versionStop: " << versionStop << endl;
       if ( versionStop >= 0 ) {
-        QString version = productId.mid( versionStart,
+        QString version = productId.mid( versionStart + 1,
                                          versionStop - versionStart );
         kdDebug(5800) << "Found KOrganizer version: " << version << endl;
         
