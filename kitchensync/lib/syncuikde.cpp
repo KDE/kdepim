@@ -82,5 +82,5 @@ SyncEntry* SyncUiKde::changedChanged( SyncEntry* syncEntry, SyncEntry* target ) 
 }
 void SyncUiKde::informBothDeleted( SyncEntry* syncEntry, SyncEntry* target ) {
     if (m_inform)
-        KMessageBox::information(mParent, i18n("The Entry with the id %1 was deleted on %2 and %3").arg( syncEntry->id() ).arg( syncEntry->syncee()->source() ).arg( target->syncee()->source() ) );
+        KMessageBox::information(mParent, i18n("The entry with the id %1 was deleted on %2 and %3").arg( syncEntry->id() ).arg( syncEntry->syncee()->source() ).arg( target->syncee()->source() ) );
 }

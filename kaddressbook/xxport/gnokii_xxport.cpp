@@ -82,7 +82,7 @@ extern "C"
 GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : XXPortObject( ab, parent, name )
 {
-	createImportAction( i18n( "Import from Nokia Mobile Phone..." ) );
+	createImportAction( i18n( "Import From Nokia Mobile Phone..." ) );
 	createExportAction( i18n( "Export to Nokia Mobile Phone..." ) );
 }
 

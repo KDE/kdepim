@@ -98,7 +98,7 @@ void CardViewLookNFeelPage::restoreSettings( KConfig *config )
   lbColors->insertItem( new ColorListItem( i18n("Text Color"),
         config->readColorEntry( "TextColor", &c ) ) );
   c = colorGroup().button();
-  lbColors->insertItem( new ColorListItem( i18n("Header, Border and Separator Color"),
+  lbColors->insertItem( new ColorListItem( i18n("Header, Border & Separator Color"),
         config->readColorEntry( "HeaderColor", &c ) ) );
   c = colorGroup().buttonText();
   lbColors->insertItem( new ColorListItem( i18n("Header Text Color"),
@@ -232,7 +232,7 @@ void CardViewLookNFeelPage::initGUI()
         ) );
   QWhatsThis::add( lMargin, QWhatsThis::textFor( sbMargin ) );
   QWhatsThis::add( sbSpacing, i18n(
-        "The Item Spacing decides the distance (in pixels) between the items and anything else: the view "
+        "The item spacing decides the distance (in pixels) between the items and anything else: the view "
         "borders, other items or column separators."
         ) );
   QWhatsThis::add( lSpacing, QWhatsThis::textFor( sbSpacing ) );
@@ -245,7 +245,7 @@ void CardViewLookNFeelPage::initGUI()
   QVBox *colorTab = new QVBox( this, "colortab" );
   colorTab->setSpacing( spacing );
   colorTab->setMargin( spacing );
-  cbEnableCustomColors = new QCheckBox( i18n("&Enable custom Colors"), colorTab );
+  cbEnableCustomColors = new QCheckBox( i18n("&Enable custom colors"), colorTab );
   connect( cbEnableCustomColors, SIGNAL(clicked()), this, SLOT(enableColors()) );
   lbColors = new ColorListBox( colorTab );
   tabs->addTab( colorTab, i18n("&Colors") );

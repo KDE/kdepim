@@ -221,7 +221,7 @@ void KSync::slotFileOpen()
   else
   {	
     KURL url=KFileDialog::getOpenURL(QString::null,
-        i18n("*|All files"), this, i18n("Open File"));
+        i18n("*|All Files"), this, i18n("Open File"));
     if(!url.isEmpty())
     {
       doc->openDocument(url);
@@ -267,7 +267,7 @@ void KSync::slotFileSaveAs()
   slotStatusMsg(i18n("Saving file with a new filename..."));
 
   KURL url=KFileDialog::getSaveURL(QDir::currentDirPath(),
-        i18n("*|All files"), this, i18n("Save As"));
+        i18n("*|All Files"), this, i18n("Save As"));
   if(!url.isEmpty())
   {
 //    doc->saveDocument(url);

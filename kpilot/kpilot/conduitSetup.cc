@@ -514,7 +514,7 @@ void CConduitSetup::writeInstalledConduits()
 			// Might not be correct in a caption,
 			// but this file is deprecated anyway.
 			KMessageBox::error(this, tmpMessage,
-				i18n("Conduit Error."));
+				i18n("Conduit Error"));
 		}
 		else if (strcmp(dbName, "<none>") == 0)
 		{

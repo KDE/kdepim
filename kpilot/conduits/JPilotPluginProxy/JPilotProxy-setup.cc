@@ -89,7 +89,7 @@ void JPilotProxyWidgetSetup::slotApply() {
 
 void JPilotProxyWidgetSetup::slotAddConduit() {
 	FUNCTIONSETUP;
-	QString fn=KFileDialog::getOpenFileName(0, i18n("*.so|JPilot plugins\n*.*|All files"), this);
+	QString fn=KFileDialog::getOpenFileName(0, i18n("*.so|JPilot Plugins\n*.*|All Files"), this);
 	if(fn.isEmpty()) return;
 	// TODO: check of the plugin has already been loaded...
 	if (	addConduit(fn, false)) {

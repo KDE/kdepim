@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.                                  
     Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>                   
                                                                         
@@ -100,7 +100,7 @@ MergeWidget::MergeWidget( KABCore *core, QWidget *parent, const char *name )
   connect( mContactView, SIGNAL( selectionChanged() ),
            SLOT( selectionContactViewChanged() ) );
 
-  mMergeAndRemoveButton = new QPushButton( i18n( "Merge and Remove" ), this );
+  mMergeAndRemoveButton = new QPushButton( i18n( "Merge && Remove" ), this );
   mMergeAndRemoveButton->setEnabled( false );
   topLayout->addWidget( mMergeAndRemoveButton, 0, 1 );
   connect( mMergeAndRemoveButton, SIGNAL( clicked() ), SLOT( mergeAndRemove() ) );

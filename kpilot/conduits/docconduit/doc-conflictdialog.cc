@@ -58,7 +58,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 	textLabel2->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
 	topLayout->addWidget(textLabel2);
 
-	resolutionGroupBox = new QGroupBox(i18n("DOC databases"), page );
+	resolutionGroupBox = new QGroupBox(i18n("DOC Databases"), page );
 	QVBoxLayout*playout = new QVBoxLayout(resolutionGroupBox);
 	QScrollView* sv = new QScrollView(resolutionGroupBox);
 	playout->addWidget(sv);
@@ -104,13 +104,13 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 				cE.resolution->sizePolicy().hasHeightForWidth() ) );
 			cE.resolution->clear();
 			cE.resolution->insertItem( i18n( "No Sync" ) );
-			cE.resolution->insertItem( i18n( "Sync handheld to PC" ) );
-			cE.resolution->insertItem( i18n( "Sync PC to handheld" ) );
-			cE.resolution->insertItem( i18n( "Delete both databases" ) );
+			cE.resolution->insertItem( i18n( "Sync Handheld to PC" ) );
+			cE.resolution->insertItem( i18n( "Sync PC to Handheld" ) );
+			cE.resolution->insertItem( i18n( "Delete Both Databases" ) );
 			cE.resolution->setCurrentItem((int)si.direction);
 			resolutionGroupBoxLayout->addWidget( cE.resolution, cE.index, 1);
 
-			cE.info = new QPushButton( i18n("More infos..."), big_box );
+			cE.info = new QPushButton( i18n("More Infos..."), big_box );
 			resolutionGroupBoxLayout->addWidget(cE.info, cE.index, 2);
 			bgroup->insert(cE.info);
 

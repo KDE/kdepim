@@ -65,7 +65,7 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n,
 //	fConfigWidget->setMinimumSize(s);
 
 	fConfigWidget->fCalendarFile->setMode( KFile::File | KFile::LocalOnly );
-	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All files (*.*)");
+	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)");
 }
 
 VCalWidgetSetup::~VCalWidgetSetup()

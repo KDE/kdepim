@@ -45,7 +45,7 @@
 
 XXPortSelectDialog::XXPortSelectDialog( KABCore *core, bool sort,
                                         QWidget* parent, const char* name )
-    : KDialogBase( Plain, i18n( "Choose which contacts to export" ), Help | Ok | Cancel,
+    : KDialogBase( Plain, i18n( "Choose Which Contacts to Export" ), Help | Ok | Cancel,
                    Ok, parent, name, true, true ), mCore( core ),
       mUseSorting( sort )
 {

@@ -46,19 +46,19 @@ Form1::Form1( QWidget* parent,  const char* name, WFlags fl )
 
     PushButton3 = new QPushButton( centralWidget(), "PushButton3" );
     PushButton3->setGeometry( QRect( 220, 60, 150, 29 ) ); 
-    PushButton3->setText( tr2i18n( "remove read lock" ) );
+    PushButton3->setText( tr2i18n( "Remove Read Lock" ) );
 
     PushButton2 = new QPushButton( centralWidget(), "PushButton2" );
-    PushButton2->setGeometry( QRect( 40, 100, 150, 29 ) ); 
-    PushButton2->setText( tr2i18n( "write lock" ) );
+    PushButton2->setGeometry( QRect( 40, 100, 150, 29 ) );
+    PushButton2->setText( tr2i18n( "Write Lock" ) );
 
     PushButton4 = new QPushButton( centralWidget(), "PushButton4" );
-    PushButton4->setGeometry( QRect( 220, 100, 150, 29 ) ); 
-    PushButton4->setText( tr2i18n( "remove write lock" ) );
+    PushButton4->setGeometry( QRect( 220, 100, 150, 29 ) );
+    PushButton4->setText( tr2i18n( "Remove Write Lock" ) );
 
     PushButton1 = new QPushButton( centralWidget(), "PushButton1" );
-    PushButton1->setGeometry( QRect( 40, 60, 150, 29 ) ); 
-    PushButton1->setText( tr2i18n( "read lock" ) );
+    PushButton1->setGeometry( QRect( 40, 60, 150, 29 ) );
+    PushButton1->setText( tr2i18n( "Read Lock" ) );
 
     // actions
     Action = new QAction( this, "Action" );

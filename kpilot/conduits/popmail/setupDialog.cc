@@ -375,7 +375,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 		methodGroup);
 	fReceivePOP=new QRadioButton(i18n("Use &POP3 server"),
 		methodGroup);
-	fReceiveUNIX=new QRadioButton(i18n("Use &UNIX Mailbox"),
+	fReceiveUNIX=new QRadioButton(i18n("Use &UNIX mailbox"),
 		methodGroup);
 
 	connect(fNoReceive,SIGNAL(clicked()),

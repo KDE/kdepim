@@ -82,7 +82,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   w1L->addMultiCellWidget(c_reateBkup, 2,2, 0,2);
   connect(c_reateBkup, SIGNAL(toggled(bool)), this, SLOT(slotCreateBkupToggled(bool)));
 
-  b_ackupPathLabel=new QLabel(i18n("save backup in:"), w_1);
+  b_ackupPathLabel=new QLabel(i18n("Save backup in:"), w_1);
   w1L->addWidget(b_ackupPathLabel, 3,0);
 
   b_ackupPath=new KLineEdit(QDir::homeDirPath()+QString("/knodedata-")+v_ersion+".tar.gz", w_1);

@@ -176,7 +176,7 @@ void KSyncMainWindow::initActions()
                      this, SLOT(slotConfigProf() ),
                      actionCollection(), "config_profile" );
 
-  (void)new KAction( i18n("Configure current Profile"),  "configure", 0,
+  (void)new KAction( i18n("Configure Current Profile"),  "configure", 0,
                      this, SLOT(slotConfigCur() ),
                      actionCollection(), "config_current" );
   m_konAct = new KSelectAction( i18n("Konnector"),

@@ -157,11 +157,11 @@ xQGanttBarViewPort::toolbar(QMainWindow* mw)
 
   pix = _iconloader->loadIcon("viewmag+.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag+.png not found !\n");
-  zoomMenu->insertItem(pix, i18n("Zoom in +"), this, SLOT(zoomIn()) );
+  zoomMenu->insertItem(pix, i18n("Zoom In +"), this, SLOT(zoomIn()) );
 
   pix = _iconloader->loadIcon("viewmag-.png", KIcon::Toolbar , 16 );
   if(pix.isNull()) printf("viewmag-.png not found !\n");
-  zoomMenu->insertItem(pix, i18n("Zoom out -"), this, SLOT(zoomOut()) );
+  zoomMenu->insertItem(pix, i18n("Zoom Out -"), this, SLOT(zoomOut()) );
   
   b = _toolbar->getButton(1);
   b->setDelayedPopup(zoomMenu);
