@@ -1,7 +1,7 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
+	libldif - LDAP LDIF parsing library
+
+	Copyright (C) 1998 Rik Hemsley rik@kde.org
 	
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,37 +18,60 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "VCardEntity.h"
-#endif
+#include "ldif.h"
 
-#ifndef  VCARDENTITY_H
-#define  VCARDENTITY_H
+using namespace LDIF;
 
-#include <qlist.h>
-#include <qcstring.h>
 
-#include <Entity.h>
-#include <VCard.h>
-
-namespace VCARD
+LDAPString::LDAPString()
+	:	Entity()
 {
-	
-typedef QList<VCard> VCardList;
-typedef QListIterator<VCard> VCardListIterator;
-
-class VCardEntity : public Entity
-{
-
-#include "VCardEntity-generated.h"
-	
-	const QList<VCard> & cardList();
-	
-	void setCardList(const QList<VCard> &);
-	
-	VCardList cardList_;
-};
-
 }
 
-#endif
+LDAPString::LDAPString(const LDAPString & x)
+	:	Entity(x)
+{
+}
+
+LDAPString::LDAPString(const QCString & s)
+	:	Entity(s)
+{
+}
+
+	LDAPString &
+LDAPString::operator = (LDAPString & x)
+{
+	if (*this == x) return *this;
+
+	Entity::operator = (x);
+	return *this;
+}
+
+	LDAPString &
+LDAPString::operator = (const QCString & s)
+{
+	Entity::operator = (s);
+	return *this;
+}
+
+	bool
+LDAPString::operator == (LDAPString & x)
+{
+	x.parse();
+	return false;
+}
+
+LDAPString::~LDAPString()
+{
+}
+
+	void
+LDAPString::_parse()
+{
+}
+
+	void
+LDAPString::_assemble()
+{
+}
+

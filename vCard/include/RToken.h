@@ -23,8 +23,8 @@
 # pragma interface "RToken.h"
 #endif
 
-#ifndef RMM_TOKEN_H
-#define RMM_TOKEN_H
+#ifndef RTOKEN_H
+#define RTOKEN_H
 
 #include <qstrlist.h>
 

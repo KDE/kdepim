@@ -1,0 +1,11 @@
+LDIF parser
+(c) 1999 Rik Hemsley
+This library is licensed under the GPL
+Written for the KDE project
+
+This parser works in a similar fashion to my vCard and Internet Mail Message
+parsing libraries which you'll find hanging around in CVS as pim/vCard and
+kdenonbeta/empath/rmm respectively.
+
+This is as of 4th July untested. Let me know if it works :)
+

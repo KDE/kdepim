@@ -102,13 +102,13 @@ VCardEntity::_parse()
 	void
 VCardEntity::_assemble()
 {
-	QListIterator<VCard> it(cardList_);
+	VCardListIterator it(cardList_);
 	
 	for (; it.current(); ++it)
 		strRep_ += it.current()->asString() + "\r\n"; // One CRLF for luck.
 }
 
-	const QList<VCard> &
+	const VCardList &
 VCardEntity::cardList()
 {
 	parse();
@@ -116,7 +116,7 @@ VCardEntity::cardList()
 }
 
 	void
-VCardEntity::setCardList(const QList<VCard> & l)
+VCardEntity::setCardList(const VCardList & l)
 {
 	parse();
 	cardList_ = l;
