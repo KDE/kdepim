@@ -44,6 +44,7 @@ class ICalFormatImpl {
 
     bool populate( Calendar *, icalfileset *fs);
 
+    icalcomponent *writeIncidence(Incidence *incidence);
     icalcomponent *writeTodo(Todo *todo);
     icalcomponent *writeEvent(Event *event);
     icalcomponent *writeFreeBusy(FreeBusy *freebusy,

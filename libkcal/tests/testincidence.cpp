@@ -5,6 +5,7 @@
 #include <kcmdlineargs.h>
 
 #include "event.h"
+#include "icalformat.h"
 
 using namespace KCal;
 
@@ -16,13 +17,12 @@ int main(int argc,char **argv)
 //  KApplication app( false, false );
   KApplication app;
 
-  Calendar *cal = new CalendarLocal;
-
   Event *event = new Event;
   
   event->setSummary("Test Event");
   
   Incidence *event2 = event->clone();
-  
-  kdDebug() << "Event2: " << event2->summary() << endl;
+
+  ICalFormat f;
+  kdDebug() << "EVENT2 START:" << f.toString( event2 ) << "EVENT2 END" << endl;
 }

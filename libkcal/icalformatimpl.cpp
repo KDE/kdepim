@@ -58,6 +58,29 @@ ICalFormatImpl::~ICalFormatImpl()
 {
 }
 
+class ToStringVisitor : public Incidence::Visitor
+{
+  public:
+    ToStringVisitor( ICalFormatImpl *impl ) : mImpl( impl ), mComponent( 0 ) {}
+
+    bool visit( Event *e ) { mComponent = mImpl->writeEvent( e ); return true; }
+    bool visit( Todo *e ) { mComponent = mImpl->writeTodo( e ); return true; }
+    bool visit( Journal *e ) { mComponent = mImpl->writeJournal( e ); return true; }
+
+    icalcomponent *component() { return mComponent; }
+    
+  private:
+    ICalFormatImpl *mImpl;
+    icalcomponent *mComponent;
+};
+
+icalcomponent *ICalFormatImpl::writeIncidence(Incidence *incidence)
+{
+  ToStringVisitor v( this );
+  incidence->accept(v);
+  return v.component();
+}
+
 icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
 {
   QString tmpStr;

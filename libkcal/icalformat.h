@@ -69,6 +69,10 @@ class ICalFormat : public CalFormat {
       Return calendar information as string.
     */
     QString toString( Calendar * );
+    /**
+      Return incidence as iCalendar formatted text.
+    */
+    QString toString( Incidence * );
   
     /** Create a scheduling message for event \a e using method \m */
     QString createScheduleMessage(IncidenceBase *e,Scheduler::Method m);

@@ -191,6 +191,19 @@ QString ICalFormat::toString( Calendar *cal )
   return QString::fromLocal8Bit( text );  
 }
 
+QString ICalFormat::toString( Incidence *incidence )
+{
+  icalcomponent *component;
+  
+  component = mImpl->writeIncidence( incidence );
+  
+  const char *text = icalcomponent_as_ical_string( component );
+  
+  icalcomponent_free( component );
+  
+  return QString::fromLocal8Bit( text );
+}
+
 QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
                                           Scheduler::Method method)
 {
