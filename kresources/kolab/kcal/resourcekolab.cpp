@@ -363,7 +363,7 @@ void ResourceKolab::addIncidence( const char* mimetype, const QString& data,
   else if ( mimetype == journalAttachmentMimeType )
     addJournal( data, subResource, sernum );
   else if ( mimetype == incidenceInlineMimeType ) {
-    Incidence *inc = mFormat.fromString( data.local8Bit() );
+    Incidence *inc = mFormat.fromString( data );
     addIncidence( inc, subResource, sernum );
   }
 }
@@ -696,7 +696,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
     else
       rc = false;
   } else {
-    Incidence *inc = mFormat.fromString( data.local8Bit() );
+    Incidence *inc = mFormat.fromString( data );
     if ( !inc )
       rc = false;
     else

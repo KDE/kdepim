@@ -167,7 +167,7 @@ KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subre
   if ( mimetype == attachmentMimeType )
     journal = Note::xmlToJournal( data );
   else 
-    journal = static_cast<KCal::Journal*>( formatter.fromString( data.local8Bit() ) );
+    journal = static_cast<KCal::Journal*>( formatter.fromString( data ) );
 
   Q_ASSERT( journal );
   if( journal && !mUidMap.contains( journal->uid() ) )
