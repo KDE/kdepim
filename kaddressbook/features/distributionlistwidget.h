@@ -97,6 +97,8 @@ class DistributionListView : public KListView
 
   public:
     DistributionListView( QWidget *parent, const char* name = 0 );
+	// aka using QListView::dropped; hack for the sake of gcc 2.95.x
+	void dropped(QDropEvent *e) { QListView::dropped(e); };
 
   protected:
     void dragEnterEvent( QDragEnterEvent *e );
