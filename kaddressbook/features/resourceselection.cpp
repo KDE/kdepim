@@ -207,6 +207,9 @@ void ResourceSelection::currentChanged( QListViewItem *item )
     mManager->change( resource );
 
     if ( resItem->checked() ) {
+      if ( !resource->addressBook() )
+        resource->setAddressBook( core()->addressBook() );
+
       if ( !resource->isOpen() )
         resource->open();
 
