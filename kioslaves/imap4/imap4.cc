@@ -190,6 +190,13 @@ IMAP4Protocol::get (const KURL & _url)
   else
 #endif
   {
+    // The "section" specified by the application can be:
+    // * empty (which means body, size and flags)
+    // * a known keyword, like STRUCTURE, ENVELOPE, HEADER, BODY.PEEK[...]
+    //        (in which case the slave has some logic to add the necessary items)
+    // * Otherwise, it specifies the exact data items to request. In this case, all
+    //        the logic is in the app.
+
     QString aUpper = aSection.upper();
     if (aUpper.find ("STRUCTURE") != -1)
     {
@@ -197,7 +204,7 @@ IMAP4Protocol::get (const KURL & _url)
     }
     else if (aUpper.find ("ENVELOPE") != -1)
     {
-      aSection = "UID ENVELOPE";
+      aSection = "UID RFC822.SIZE FLAGS ENVELOPE";
       if (hasCapability("IMAP4rev1")) {
         aSection += " BODY.PEEK[HEADER.FIELDS (REFERENCES)]";
       } else {
@@ -207,7 +214,7 @@ IMAP4Protocol::get (const KURL & _url)
     }
     else if (aUpper == "HEADER")
     {
-      aSection = "UID RFC822.HEADER";
+      aSection = "UID RFC822.HEADER RFC822.SIZE FLAGS";
     }
     else if (aUpper.find ("BODY.PEEK[") != -1)
     {
@@ -216,21 +223,14 @@ IMAP4Protocol::get (const KURL & _url)
         if (!hasCapability("IMAP4rev1")) // imap4 does not know BODY.PEEK[]
           aSection.replace("BODY.PEEK[]", "RFC822.PEEK");
       }
-      aSection.prepend("UID RFC822.SIZE INTERNALDATE FLAGS ");
+      aSection.prepend("UID RFC822.SIZE FLAGS ");
     }
-	else
+    else if (aSection.isEmpty())
     {
-      if (aSection.isEmpty())
-         aSection = "UID RFC822";
-      else if (aSection.startsWith("FLAGS") )
-         ; /*aSection = "UID FLAGS";*/
-      else
-         aSection = "UID BODY[" + aSection + "]";
+      aSection = "UID BODY[] RFC822.SIZE FLAGS";
     }
     if (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)
     {
-      if( !aSection.startsWith("FLAGS") ) aSection += " RFC822.SIZE INTERNALDATE FLAGS";
-
       // write the digest header
       outputLine
         ("Content-Type: multipart/digest; boundary=\"IMAPDIGEST\"\r\n", 55);
