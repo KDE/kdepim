@@ -205,7 +205,13 @@ void ResourceSelection::currentChanged( QListViewItem *item )
     resource->setActive( resItem->isOn() );
 
     mManager->change( resource );
-    resource->asyncLoad();
+
+    if ( resItem->checked() ) {
+      if ( !resource->isOpen() )
+        resource->open();
+
+      resource->asyncLoad();
+    }
 
     mLastResource = resource->identifier();
     updateView();
