@@ -116,8 +116,6 @@ NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
     MAL_LIB=
     MAL_RPATH=
     AC_MSG_RESULT(no (but first try gave $msg))
-    AC_MSG_WARN([KPILOT: MAL headers or library not found. AvantGo conduit will not be compiled.])
-    AC_MSG_WARN([KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/])
   else
     AC_DEFINE(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
 		dnl check which version we have (pre 0.40 or >=0.40):		
