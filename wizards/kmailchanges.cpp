@@ -120,6 +120,7 @@ void CreateDisconnectedImapAccount::apply()
   c.writeEntry( "auth", "*");
   c.writeEntry( "Name", mAccountName );
   c.writeEntry( "host", mServer );
+  c.writeEntry( "port", "993" );
 
   c.writeEntry( "login", mUser );
 
@@ -139,8 +140,6 @@ void CreateDisconnectedImapAccount::apply()
     c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
     c.writeEntry( "store-passwd", true );
   }
-  c.writeEntry( "port", "993" );
-
 
   c.setGroup( QString("Transport %1").arg( transCnt + 1 ) );
   c.writeEntry( "name", mAccountName );
