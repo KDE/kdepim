@@ -840,6 +840,13 @@ void KABCore::openConfigDialog()
 
 void KABCore::openLDAPDialog()
 {
+  if ( !KProtocolInfo::isKnownProtocol( KURL( "ldap://localhost" ) ) ) {
+    KMessageBox::error( mWidget, i18n( "Your KDE installation is missing LDAP "
+                                       "support, please ask your administrator or distributor for more information!" ),
+                        i18n( "No LDAP IO slave available" ) );
+    return;
+  }
+
   if ( !mLdapSearchDialog ) {
     mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, mWidget );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mViewManager,
@@ -1036,13 +1043,9 @@ void KABCore::initActions()
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   // misc
-  // only enable LDAP lookup if we can handle the protocol
-  if ( KProtocolInfo::isKnownProtocol( KURL( "ldap://localhost" ) ) ) {
-    action = new KAction( i18n( "&Lookup Addresses in Directory" ), "find", 0,
-                          this, SLOT( openLDAPDialog() ), actionCollection(),
-                          "ldap_lookup" );
-    action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
-  }
+  action = new KAction( i18n( "&Lookup Addresses in Directory" ), "find", 0,
+                        this, SLOT( openLDAPDialog() ), actionCollection(), "ldap_lookup" );
+  action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
   mActionWhoAmI = new KAction( i18n( "Set Who Am I" ), "personal", 0, this,
                                SLOT( setWhoAmI() ), actionCollection(),
