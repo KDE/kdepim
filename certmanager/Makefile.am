@@ -23,6 +23,8 @@ kleopatra_LDADD   = conf/libconf.la lib/libkleopatra.la $(LIB_KUTILS) $(LIB_KABC
 rcdir = $(kde_datadir)/kleopatra
 rc_DATA = kleopatraui.rc
 
+xdg_apps_DATA = kleopatra_import.desktop
+
 messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h -o $(podir)/kleopatra.pot
 
