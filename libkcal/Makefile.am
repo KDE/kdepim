@@ -12,6 +12,7 @@ libkcal_la_LIBADD  = $(LIB_QT) versit/libversit.la $(LIB_KFILE) \
                      $(top_builddir)/libical/src/libicalss/libicalss.la \
                      -lkresources
 
+libkcal_la_COMPILE_FIRST = $(top_builddir)/libical/src/libical/ical.h $(top_builddir)/libical/src/libicalss/icalss.h
 libkcal_la_SOURCES = \
         incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
         freebusy.cpp attendee.cpp attachment.cpp recurrence.cpp alarm.cpp \
