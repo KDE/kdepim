@@ -85,7 +85,5 @@ QDomDocument WebdavHandler::createAllPropsRequest()
   WebdavHandler::addDavElement(  doc, prop, "displayname" );
   WebdavHandler::addDavElement(  doc, prop, "resourcetype" );
   prop.appendChild( doc.createElementNS( "http://apache.org/dav/props/", "executable" ) );
-  prop.appendChild( doc.createElementNS(
-    "http://schemas.microsoft.com/exchange/", "outlookmessageclass" ) );
   return doc;
 }
