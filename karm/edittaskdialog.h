@@ -61,6 +61,9 @@ class EditTaskDialog : public KDialogBase
 
     void enterWhatsThis();
 
+  protected:
+    int getDesktopCount();
+
   private:
     QLineEdit* _name;
     KArmTimeWidget* _timeTW;

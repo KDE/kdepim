@@ -40,7 +40,7 @@
 
 #include "edittaskdialog.h"
 #include "ktimewidget.h"
-
+#include "kdebug.h"
 
 EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
                                 DesktopList* desktopList)
@@ -123,17 +123,27 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   _diffTW = new KArmTimeWidget( page, "_sessionAddTW" );
   lay4->addWidget( _diffTW );
 
-  {
-    KWinModule k(0, KWinModule::INFO_DESKTOP);
-    desktopCount = k.numberOfDesktops();
+  desktopCount = getDesktopCount();
+  
+  // If desktopList contains higher numbered desktops than desktopCount then
+  // delete thos from desktopList. This may be the case if the user has
+  // configured virtual desktops. The values in desktopList are sorted.
+  if (desktopList->size()>0) {
+    DesktopList::iterator rit = desktopList->begin();
+    while (*rit < desktopCount && rit!=desktopList->end()) {
+      ++rit;
+    }
+    desktopList->erase(rit, desktopList->end());
   }
 
   // The "Choose Desktop" checkbox
   lay1->addSpacing(10);
   lay1->addStretch(1);
+  
   _desktopCB = new QCheckBox(i18n("A&uto tracking"), page);
   _desktopCB->setEnabled(true);
   lay1->addWidget(_desktopCB);
+  
   QGroupBox* groupBox;
   {
     int lines = (int)(desktopCount/2);
@@ -153,11 +163,10 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
 
     lay6->addWidget(_deskBox[i]);
   }
-
   // check specified Desktop Check Boxes
   bool enableDesktops = false;
 
-  if ((desktopList!=0) && (desktopList->size()>0)) {
+  if (desktopList->size()>0) {
     DesktopList::iterator it = desktopList->begin();
     while (it != desktopList->end()) {
       _deskBox[*it]->setChecked(true);
@@ -166,12 +175,11 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
     enableDesktops = true;
   }
   // if some desktops were specified, then enable the parent box
-
   _desktopCB->setChecked(enableDesktops);
 
   for (int i=0; i<desktopCount; i++)
     _deskBox[i]->setEnabled(enableDesktops);
-
+  
   connect(_desktopCB, SIGNAL(clicked()), this, SLOT(slotAutoTrackingPressed()));
 
   KIconLoader loader;
@@ -225,6 +233,12 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
                          "session."));
   QWhatsThis::add( _diffTW, i18n( "Specify how much time to add or subtract "
                                   "to the overall and session time"));
+}
+
+int EditTaskDialog::getDesktopCount()
+{
+  KWinModule k(0, KWinModule::INFO_DESKTOP);
+  return k.numberOfDesktops();
 }
 
 void EditTaskDialog::enterWhatsThis() 

@@ -7,33 +7,9 @@
 * add mouse double-click action (start new timer, stop old) to "Configure
   Shortcuts" dialog.
 
-* Willi / desktop tracker:
---------------------------
-
-  * Willi said he'd push:
-
-    // If all available desktops are checked, disable auto tracking,
-    // since it makes no sense to track for every desktop.
-    if (dl.size() == (unsigned int)desktopCount)
-      dl.clear();
-
-    from TaskView::editTask into addtaskdialog.
-
-  * The runtime warnings still need to be fixed.
-
-  * the desktop tracker is not able to handle a changing number of
-    desktops (i.e. if we add or remove a desktop)
-
 Mark - 3.2
 --------------------------
 
-  * 2003-10-15: BUG: Fix auto-save!!  Write event every n minutes.
-
-  * 2003-09-17: BUG: entering a negative time increments total session time
-    (maybe only if session time is zero?)
-
-  * 2003-09-23: BUG: Auto-save should write events.
-  
   * 2003-09-24: UPDATE DOCS!!
   
   * 2003-10-24: Update ChangeLog.
@@ -42,6 +18,9 @@ Mark - 3.2
 
 Mark - 3.3
 --------------------------
+
+  * 2003-09-17: BUG: entering a negative time increments total session time
+    (maybe only if session time is zero?)
 
   * 2003-09-24: Change menu entry from KArm to Time Clock.
 
