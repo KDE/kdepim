@@ -552,7 +552,7 @@ void KPilotDeviceLink::tickle() const
 }
 
 
-int KPilotDeviceLink::installFiles(const QStringList & l)
+int KPilotDeviceLink::installFiles(const QStringList & l, const bool deleteFiles)
 {
 	FUNCTIONSETUP;
 
@@ -565,7 +565,7 @@ int KPilotDeviceLink::installFiles(const QStringList & l)
 		emit logProgress(QString::null,
 			(int) ((100.0 / l.count()) * (float) n));
 
-		if (installFile(*i))
+		if (installFile(*i, deleteFiles))
 			k++;
 		n++;
 	}
@@ -574,7 +574,7 @@ int KPilotDeviceLink::installFiles(const QStringList & l)
 	return k;
 }
 
-bool KPilotDeviceLink::installFile(const QString & f)
+bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 {
 	FUNCTIONSETUP;
 
@@ -610,7 +610,7 @@ bool KPilotDeviceLink::installFile(const QString & f)
 	}
 
 	pi_file_close(pf);
-	QFile::remove(f);
+	if (deleteFile) QFile::remove(f);
 
 	return true;
 }
@@ -823,6 +823,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.27  2002/12/13 16:26:09  kainhofe
+// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
+//
 // Revision 1.26  2002/09/03 06:52:03  adridg
 // Everyone ships pilot-link 0.9.5, must include support
 //

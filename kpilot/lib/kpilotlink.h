@@ -288,9 +288,9 @@ signals:
 ** File installation.
 */
 public:
-	int installFiles(const QStringList &);
+	int installFiles(const QStringList &, const bool deleteFiles=true);
 protected:
-	bool installFile(const QString &);
+	bool installFile(const QString &, const bool deleteFile=true);
 
  	/**
  	* Write a log entry to the pilot. Note that the library
@@ -379,6 +379,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.15  2002/12/13 16:26:09  kainhofe
+// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
+//
 // Revision 1.14  2002/11/27 21:29:07  adridg
 // See larger ChangeLog entry
 //
