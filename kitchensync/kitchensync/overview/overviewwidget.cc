@@ -14,6 +14,7 @@
 #include <qmovie.h>
 #include <qptrlist.h>
 #include <qvbox.h>
+#include <qhbox.h>
 
 #include <klocale.h>
 #include <kglobal.h>
@@ -32,27 +33,35 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
         setName( "overviewWidget" );
     //setCaption( i18n( "KitchenSync - Overview" ) );
 
-    deviceName = new QLabel( this, "deviceName" );
-    deviceName->setGeometry( QRect( 20, 20, 200, 40 ) );
+    QBoxLayout *box = new QVBoxLayout( this );
+
+    QHBox *topBox = new QHBox( this );
+    topBox->setSpacing( 200 );
+    topBox->setMinimumHeight( 130 );
+
+    QVBox *nameBox = new QVBox( topBox );
+
+    deviceName = new QLabel( nameBox, "deviceName" );
+    //  deviceName->setGeometry( QRect( 20, 20, 200, 40 ) );
     deviceName->setText( i18n( "<h2>Device</h2>" ) );
     deviceName->setAlignment( int( QLabel::WordBreak | QLabel::AlignTop ) );
 
-    nameField = new QLabel ( this, "namField" );
-    nameField->setGeometry( QRect( 20, 80, 200, 40 ) );
+    nameField = new QLabel ( nameBox, "namField" );
+    // nameField->setGeometry( QRect( 20, 80, 200, 40 ) );
     nameField->setText( i18n("Name") );
     nameField->setAlignment( int( QLabel::WordBreak | QLabel::AlignTop ) );
 
     QPixmap logo;
     logo.load(locate ("appdata", "pics/opie_logo.png" ) );
 
-    deviceLogo = new QLabel( this, "deviceLogo" );
-    deviceLogo->setGeometry( QRect( 360, 20, 120, 120 ) );
+    deviceLogo = new QLabel( topBox, "deviceLogo" );
+    //deviceLogo->setGeometry( QRect( 360, 20, 120, 120 ) );
     deviceLogo->setPixmap( logo );
     //deviceLogo->setScaledContents( TRUE );
 
 
     Line = new QFrame( this, "Line" );
-    Line->setGeometry( QRect( 0, 140, 611, 20 ) );
+    //Line->setGeometry( QRect( 0, 140, 611, 20 ) );
     Line->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)0, 0, 0,  Line->sizePolicy().hasHeightForWidth() ) );
     Line->setProperty( "frameShape", (int)QFrame::HLine );
     Line->setFrameShadow( QFrame::Sunken );
@@ -67,11 +76,16 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     sv = new QScrollView( this );
     sv->setResizePolicy(QScrollView::AutoOneFit);
     sv->setHScrollBarMode( QScrollView::AlwaysOff );
-    sv->setGeometry (QRect( 20, 160 , this->width()-100 , this->height()-260 ) );
+    //sv->setGeometry (QRect( 20, 160 , this->width()-100 , this->height()-260 ) );
+
     sv->setFrameShape(QFrame::NoFrame);
 
     sv->addChild(filler);
     sv->show();
+
+    box->addWidget( topBox );
+    box->addWidget( Line );
+    box->addWidget( sv );
 }
 
 
