@@ -8,8 +8,8 @@ kpiloticon_ICON = backup fastsync fullsync listsync restore
 
 KDE_ICON = kpilot kpilotDaemon
 
-kpilotdatadir = $(kde_datadir)/kpilot
-kpilotdata_DATA = kpilot-splash.png \
+kpilotdatadir = $(kde_datadir)/kpilot/icons
+kpilotdata_DATA = \
 	kpilot-bhotsync.png \
 	kpilot-knotes.png \
 	kpilot-address.png \
@@ -17,3 +17,5 @@ kpilotdata_DATA = kpilot-splash.png \
 	kpilot-db.png \
 	kpilot-calendar.png \
 	kpilot-todo.png
+kpilotpicsdir = $(kde_datadir)/kpilot/pics
+kpilotpics_DATA = kpilot-splash.png
