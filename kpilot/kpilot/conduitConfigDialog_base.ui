@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>ConduitConfigWidgetBase</class>
 <widget class="QWidget">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>621</width>
-            <height>279</height>
+            <width>643</width>
+            <height>370</height>
         </rect>
     </property>
     <property name="caption">
@@ -19,188 +19,206 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QListView" row="0" column="0">
-            <column>
-                <property name="text">
-                    <string>Conduit</string>
-                </property>
-                <property name="clickable">
-                    <bool>false</bool>
-                </property>
-                <property name="resizable">
-                    <bool>false</bool>
-                </property>
-            </column>
+        <widget class="QSplitter" row="0" column="0">
             <property name="name">
-                <cstring>fConduitList</cstring>
+                <cstring>splitter1</cstring>
             </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>5</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>1</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
+            <property name="orientation">
+                <enum>Horizontal</enum>
             </property>
-            <property name="frameShape">
-                <enum>StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="resizeMode">
-                <enum>AllColumns</enum>
-            </property>
-        </widget>
-        <widget class="QWidgetStack" row="0" column="1" rowspan="2" colspan="1">
-            <property name="name">
-                <cstring>fStack</cstring>
-            </property>
-            <widget class="QWidget">
+            <widget class="QLayoutWidget">
                 <property name="name">
-                    <cstring>page</cstring>
+                    <cstring>layout1</cstring>
                 </property>
-                <attribute name="id">
-                    <number>0</number>
-                </attribute>
-                <grid>
+                <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>0</number>
-                    </property>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QListView">
+                        <column>
+                            <property name="text">
+                                <string>Conduit</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>false</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>false</bool>
+                            </property>
+                        </column>
                         <property name="name">
-                            <cstring>textLabel1</cstring>
+                            <cstring>fConduitList</cstring>
                         </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>402</width>
-                                <height>162</height>
-                            </size>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>5</hsizetype>
+                                <vsizetype>3</vsizetype>
+                                <horstretch>1</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
                         </property>
                         <property name="frameShape">
-                            <enum>Box</enum>
+                            <enum>StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Sunken</enum>
+                        </property>
+                        <property name="resizeMode">
+                            <enum>AllColumns</enum>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel1_2</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
-                        </property>
-                        <property name="textFormat">
-                            <enum>RichText</enum>
+                            <string>&lt;qt&gt;Select a conduit in the list above to configure it. Checked conduits will be run during a HotSync.&lt;/qt&gt;</string>
                         </property>
                         <property name="alignment">
                             <set>WordBreak|AlignCenter</set>
                         </property>
                     </widget>
-                </grid>
+                </vbox>
             </widget>
-            <widget class="QWidget">
+            <widget class="QWidgetStack">
                 <property name="name">
-                    <cstring>page</cstring>
+                    <cstring>fStack</cstring>
                 </property>
-                <attribute name="id">
-                    <number>1</number>
-                </attribute>
-                <grid>
+                <widget class="QWidget">
                     <property name="name">
-                        <cstring>unnamed</cstring>
+                        <cstring>page</cstring>
                     </property>
-                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
+                    <attribute name="id">
+                        <number>0</number>
+                    </attribute>
+                    <grid>
                         <property name="name">
-                            <cstring>fOldStyleLabel</cstring>
+                            <cstring>unnamed</cstring>
                         </property>
-                        <property name="text">
-                            <string>This is an old-style conduit.
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>textLabel1</cstring>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>402</width>
+                                    <height>162</height>
+                                </size>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>RichText</enum>
+                            </property>
+                            <property name="alignment">
+                                <set>WordBreak|AlignCenter</set>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QWidget">
+                    <property name="name">
+                        <cstring>page</cstring>
+                    </property>
+                    <attribute name="id">
+                        <number>1</number>
+                    </attribute>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
+                            <property name="name">
+                                <cstring>fOldStyleLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>This is an old-style conduit.
 To configure it, click the
 configure button below.</string>
-                        </property>
-                        <property name="alignment">
-                            <set>AlignCenter</set>
-                        </property>
-                    </widget>
-                    <widget class="QPushButton" row="1" column="1">
-                        <property name="name">
-                            <cstring>fConfigureButton</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Configure ...</string>
-                        </property>
-                    </widget>
-                    <spacer row="1" column="2">
-                        <property name="name">
-                            <cstring>spacer1</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>121</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="1" column="0">
-                        <property name="name">
-                            <cstring>spacer2</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>101</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                </grid>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>page</cstring>
-                </property>
-                <attribute name="id">
-                    <number>2</number>
-                </attribute>
-                <grid>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignCenter</set>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton" row="1" column="1">
+                            <property name="name">
+                                <cstring>fConfigureButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Configure ...</string>
+                            </property>
+                        </widget>
+                        <spacer row="1" column="2">
+                            <property name="name">
+                                <cstring>spacer1</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>121</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <spacer row="1" column="0">
+                            <property name="name">
+                                <cstring>spacer2</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>101</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </grid>
+                </widget>
+                <widget class="QWidget">
                     <property name="name">
-                        <cstring>unnamed</cstring>
+                        <cstring>page</cstring>
                     </property>
-                    <widget class="QLabel" row="0" column="0">
+                    <attribute name="id">
+                        <number>2</number>
+                    </attribute>
+                    <grid>
                         <property name="name">
-                            <cstring>textLabel1_3</cstring>
+                            <cstring>unnamed</cstring>
                         </property>
-                        <property name="frameShape">
-                            <enum>Box</enum>
-                        </property>
-                        <property name="text">
-                            <string>&lt;p align="center"&gt;This conduit appears to be broken and cannot be configured.&lt;/p&gt;</string>
-                        </property>
-                        <property name="alignment">
-                            <set>WordBreak|AlignCenter</set>
-                        </property>
-                    </widget>
-                </grid>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>textLabel1_3</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>Box</enum>
+                            </property>
+                            <property name="text">
+                                <string>&lt;p align="center"&gt;This conduit appears to be broken and cannot be configured.&lt;/p&gt;</string>
+                            </property>
+                            <property name="alignment">
+                                <set>WordBreak|AlignCenter</set>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
             </widget>
-        </widget>
-        <widget class="QLabel" row="1" column="0">
-            <property name="name">
-                <cstring>textLabel1_2</cstring>
-            </property>
-            <property name="text">
-                <string>Select a conduit in the list above to configure it. Checked conduits will be run during a HotSync.</string>
-            </property>
-            <property name="alignment">
-                <set>WordBreak|AlignCenter</set>
-            </property>
         </widget>
     </grid>
 </widget>
