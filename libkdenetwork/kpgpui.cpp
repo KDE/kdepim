@@ -74,9 +74,9 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
   QVBoxLayout *vlay = new QVBoxLayout( rightArea, 0, spacingHint() );
 
   if (keyID.isNull())
-    label = new QLabel(i18n("Please enter your OpenPGP passphrase"),rightArea);
+    label = new QLabel(i18n("Please enter your OpenPGP passphrase:"),rightArea);
   else
-    label = new QLabel(i18n("Please enter the OpenPGP passphrase for\n\"%1\"").arg(keyID),
+    label = new QLabel(i18n("Please enter the OpenPGP passphrase for\n\"%1\":").arg(keyID),
                        rightArea);
   lineedit = new KPasswordEdit( rightArea );
   lineedit->setEchoMode(QLineEdit::Password);
@@ -1299,7 +1299,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   if( pgp->encryptToSelf() ) {
     mEncryptToSelf = 1;
     QHBox* hbox = new QHBox( bigvbox );
-    new QLabel( i18n("Your key(s):"), hbox );
+    new QLabel( i18n("Your keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( keyIDs[0].isEmpty() ) {
       keyidsL->setText( i18n("<none> means 'no key'", "<none>") );
@@ -1356,7 +1356,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     mAddressLabels.insert( i, addressL  );
 
     hbox = new QHBox( bigvbox );
-    new QLabel( i18n("Encryption key(s):"), hbox );
+    new QLabel( i18n("Encryption keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( (*kit).isEmpty() ) {
       keyidsL->setText( i18n("<none> means 'no key'", "<none>") );

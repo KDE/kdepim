@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.
     Copyright (c) 2002 Anders Lund <anders.lund@lund.tdcadsl.dk>
                        Tobias Koenig <tokoe@kde.org>
@@ -120,7 +120,7 @@ void StylePage::initGUI()
                                     "Choose the style that suits your needs below." ), this );
   topLayout->addMultiCellWidget( label, 0, 0, 0, 1 );
 
-  QButtonGroup *group = new QButtonGroup( i18n( "Sorting:" ), this );
+  QButtonGroup *group = new QButtonGroup( i18n( "Sorting" ), this );
   group->setColumnLayout( 0, Qt::Vertical );
   QGridLayout *sortLayout = new QGridLayout( group->layout(), 2, 2,
                                              KDialog::spacingHint() );
@@ -140,7 +140,7 @@ void StylePage::initGUI()
 
   topLayout->addWidget( group, 1, 0 );
 
-  group = new QButtonGroup( i18n( "Print style:" ), this );
+  group = new QButtonGroup( i18n( "Print Style" ), this );
   group->setColumnLayout( 0, Qt::Vertical );
   QVBoxLayout *styleLayout = new QVBoxLayout( group->layout(),
                                               KDialog::spacingHint() );
@@ -151,7 +151,7 @@ void StylePage::initGUI()
   mPreview = new QLabel( group );
   QFont font( mPreview->font() );
   font.setPointSize( 20 );
-  mPreview->setFont( font ); 
+  mPreview->setFont( font );
   mPreview->setScaledContents( true );
   mPreview->setAlignment( int( QLabel::WordBreak | QLabel::AlignCenter ) );
   styleLayout->addWidget( mPreview );

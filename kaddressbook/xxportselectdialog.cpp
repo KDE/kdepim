@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.
     Copyright (c) 2002 Anders Lund <anders.lund@lund.tdcadsl.dk>
                        Tobias Koenig <tokoe@kde.org>
@@ -178,7 +178,7 @@ void XXPortSelectDialog::initGUI()
   QLabel *label = new QLabel( i18n( "Which contacts do you want to export?" ), page );
   topLayout->addWidget( label );
 
-  mButtonGroup = new QButtonGroup( i18n( "Selection:" ), page );
+  mButtonGroup = new QButtonGroup( i18n( "Selection" ), page );
   mButtonGroup->setColumnLayout( 0, Qt::Vertical );
   mButtonGroup->layout()->setSpacing( KDialog::spacingHint() );
   mButtonGroup->layout()->setMargin( KDialog::marginHint() );
@@ -218,7 +218,7 @@ void XXPortSelectDialog::initGUI()
 
   topLayout->addWidget( mButtonGroup );
 
-  QButtonGroup *sortingGroup = new QButtonGroup( i18n( "Sorting:" ), page );
+  QButtonGroup *sortingGroup = new QButtonGroup( i18n( "Sorting" ), page );
   sortingGroup->setColumnLayout( 0, Qt::Vertical );
   QGridLayout *sortLayout = new QGridLayout( sortingGroup->layout(), 2, 2,
                                              KDialog::spacingHint() );
