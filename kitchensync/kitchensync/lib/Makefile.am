@@ -7,14 +7,7 @@ libkitchensyncui_la_SOURCES = partbar.cpp manipulatorpart.cpp \
     systemtray.cpp core.cpp actionmanager.cpp mainwindow.cpp kitchensync.cpp \
     profile.cpp \
     manpartservice.cpp profilemanager.cpp \
-    profilefilemanager.cpp konnectorprofile.cpp \
-    konnectorprofilemanager.cpp \
-    konnectorprofilefilemanager.cpp \
-    konnectorprofilelistviewbase.ui \
-    konnectordialog.cpp \
-    konnectorcheckitem.cpp \
-    konnectorprofilewizardintro.ui \
-    konnectorwizard.cpp konnectorwizardoutro.ui \
+    profilefilemanager.cpp \
     profilelistbase.ui profilewizardchooser.ui \
     profilewizardintro.ui profilecheckitem.cpp \
     profilewizardchooserimpl.cpp profilewizard.cpp \

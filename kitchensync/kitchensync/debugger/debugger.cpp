@@ -33,6 +33,7 @@
 #include <kmessagebox.h>
 #include <kdialog.h>
 #include <kdialogbase.h>
+#include <kresources/configdialog.h>
 
 #include <qlabel.h>
 #include <qlistview.h>
@@ -200,14 +201,12 @@ void Debugger::configureKonnector()
   if ( !k ) {
     KMessageBox::sorry( m_widget, i18n("Konnector isn't loaded" ) );
   } else {
-    KDialog *dialog = new KDialog( m_widget );
-    ConfigWidget *configWidget = k->configWidget( dialog );
-    if ( !configWidget ) {
+    KRES::ConfigDialog *dialog = new KRES::ConfigDialog( m_widget, "konnector",
+                                                         k );
+    if ( !dialog ) {
       KMessageBox::sorry( m_widget,
                           i18n("No configuration widget available.") );
     } else {
-      QVBoxLayout *dialogLayout = new QVBoxLayout( dialog );
-      dialogLayout->addWidget( configWidget );
       dialog->show();
     }
   }

@@ -36,8 +36,9 @@ class QtopiaKonnector : public Konnector
     QtopiaKonnector( const KConfig * );
     ~QtopiaKonnector();
 
+    void writeConfig( KConfig *cfg );
+
     Kapabilities capabilities();
-    void setCapabilities( const KSync::Kapabilities& );
 
     SynceeList syncees();
 
@@ -47,27 +48,43 @@ class QtopiaKonnector : public Konnector
     bool connectDevice();
     bool disconnectDevice();
 
-    KonnectorInfo info()const;
-    void download( const QString& );
+    KonnectorInfo info() const;
 
-    ConfigWidget* configWidget( const Kapabilities&, QWidget* parent, const char* name );
-    ConfigWidget* configWidget( QWidget* parent, const char* name );
+    void setDestinationIP( const QString &IP ) { mDestinationIP = IP; }
+    QString destinationIP() const { return mDestinationIP; }
+    
+    void setUserName( const QString &name ) { mUserName = name; }
+    QString userName() const { return mUserName; }
+    
+    void setPassword( const QString &password ) { mPassword = password; }
+    QString password() const { return mPassword; }
+    
+    void setModel( const QString &model ) { mModel = model; }
+    QString model() const { return mModel; }
+    
+    void setModelName( const QString &name ) { mModelName = name; }
+    QString modelName() const { return mModelName; }
 
   protected:
-    QString metaId()const;
-    QIconSet iconSet()const;
-    QString iconName()const;
-
-  private:
-    class Private;
-    /* for compiling purposes */
-    Private *d;
+    QString metaId() const;
+    QIconSet iconSet() const;
+    QString iconName() const;
 
   private slots:
-    void slotSync(SynceeList );
-    void slotError( const Error& );
-    void slotProg( const Progress& );
+    void slotSync( SynceeList );
+    void slotError( const Error & );
+    void slotProg( const Progress & );
 
+  private:
+    QString mDestinationIP;
+    QString mUserName;
+    QString mPassword;
+    QString mModel;
+    QString mModelName;
+
+    /* for compiling purposes */
+    class Private;
+    Private *d;
 };
 
 }

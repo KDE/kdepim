@@ -70,17 +70,6 @@ void Konnector::error( const Error& err )
     emit sig_error( this, err );
 }
 
-ConfigWidget *Konnector::configWidget( const Kapabilities&, QWidget *,
-                                       const char * )
-{
-    return 0;
-}
-
-ConfigWidget *Konnector::configWidget( QWidget *, const char * )
-{
-    return 0;
-}
-
 QStringList Konnector::builtIn() const
 {
     return QStringList();

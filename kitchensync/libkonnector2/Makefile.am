@@ -10,7 +10,6 @@ libkonnector_la_LIBADD = $(top_builddir)/kitchensync/lib/libksync2.la
 libkonnector_la_SOURCES = konnector.cpp kapabilities.cpp \
     kdevice.cpp konnectormanager.cpp \
     idhelper.cpp \
-    configwidget.cpp configpart.cpp \
     konnectorinfo.cpp notify.cpp \
     error.cpp progress.cpp stdprogress.cpp stderror.cpp
 

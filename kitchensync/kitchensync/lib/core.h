@@ -23,7 +23,6 @@
 
 #include "manipulatorpart.h"
 #include "profile.h"
-#include "konnectorprofile.h"
 
 #include <kdebug.h>
 
@@ -34,7 +33,6 @@ namespace KSync
 
 class ProfileManager;
 class KonnectorManager;
-class KonnectorProfileManager;
 class SyncUi;
 class SyncAlgorithm;
 
@@ -87,19 +85,6 @@ class Core : public QWidget
     void profileChanged( const Profile &oldProfile );
 
     /**
-     * This signal gets emitted whenever the Profile
-     * is changed.
-     * @param udi The old Konnector of the previously enabled profile
-     */
-    void konnectorChanged( Konnector * );
-
-    /**
-     * This signals gets emitted on KonnectorProfile switch.
-     * @param oldProf the old Profile
-     */
-    void konnectorChanged( const KonnectorProfile &oldProf );
-
-    /**
      * signal emitted when progress from the konnectorProgress arrived
      * @param konnector pointer to Konnector object
      * @param prog the Progress
@@ -111,14 +96,6 @@ class Core : public QWidget
      * @param err the error
      */
     void konnectorError( Konnector *konnector, const Error &err );
-
-    /**
-     * This signal gets emitted when the KonnectorManager
-     * downloaded a list of files
-     * @param konnector pointer to Konnector object
-     * @param lst The downloaded Syncee
-     */
-    void konnectorDownloaded( Konnector *, SynceeList lst );
 
     /**
      * Whenever the currently activated parts changed

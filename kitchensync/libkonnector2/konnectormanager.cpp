@@ -94,36 +94,6 @@ bool KonnectorManager::unload( Konnector *k )
     return m_konnectors.remove( k );
 }
 
-ConfigWidget *KonnectorManager::configWidget( Konnector *konnector,
-                                              QWidget *parent,
-                                              const char *name )
-{
-    if ( kapp->type() == QApplication::Tty ) return 0;
-
-    if ( !konnector ) return 0;
-
-    ConfigWidget *wid = konnector->configWidget( parent, name );
-    if ( !wid ) wid = new ConfigPart( konnector->capabilities(), parent, name );
-
-    return wid;
-}
-
-ConfigWidget *KonnectorManager::configWidget( Konnector *konnector,
-                                              const Kapabilities &caps,
-                                              QWidget *parent,
-                                              const char *name )
-{
-    if ( kapp->type() == QApplication::Tty ) return 0;
-
-    if ( !konnector ) return 0;
-
-    ConfigWidget *wid = konnector->configWidget( caps, parent, name );
-    if ( !wid ) wid = new ConfigPart( konnector->capabilities(), caps, parent, name );
-
-    return wid;
-}
-
-
 bool KonnectorManager::autoLoadFilter() const
 {
     return m_auto;

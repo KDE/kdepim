@@ -56,12 +56,6 @@ class KonnectorManager : public QObject, public KRES::Manager<Konnector>
     Konnector *load( const QString& deviceName );
     bool unload( Konnector * );
 
-    ConfigWidget *configWidget( Konnector *, QWidget *parent,
-                                const char *name );
-    ConfigWidget *configWidget( Konnector *,
-                                const Kapabilities &,
-                                QWidget *parent, const char *name );
-
     bool autoLoadFilter() const;
 
     /**

@@ -32,7 +32,6 @@
 #include <systemtray.h>
 
 #include "profilemanager.h"
-#include "konnectorprofilemanager.h"
 #include "manpartservice.h"
 #include "core.h"
 

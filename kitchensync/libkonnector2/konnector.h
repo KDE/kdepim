@@ -123,21 +123,6 @@ class Konnector : public KRES::Resource
       Return capabilities of the Konnector.
     */
     virtual Kapabilities capabilities() = 0;
-    /**
-      Set capabilities.
-      TODO: Shouldn't this be internally done by the implementation?
-    */
-    virtual void setCapabilities( const Kapabilities &kaps ) = 0;
-
-    /**
-      Start sync. By calling this function a synchronisation process is
-      initiated. As response to this function a list of Syncees is delivered by
-      the sync() signal.
-
-      @return False, if error occurred while trying to start syncing, otherwise
-              true.
-    */
-//    virtual bool startSync() = 0;
 
     /**
       Connect device. Return true, if device could be connected.
@@ -148,52 +133,27 @@ class Konnector : public KRES::Resource
     */
     virtual bool disconnectDevice() = 0;
 
+    bool isConnected() const;
+
     /**
       Return meta information about this Konnector.
     */
     virtual KonnectorInfo info() const = 0;
 
-    /**
-      Return configuration widget of this Konnector.
-    */
-    virtual ConfigWidget *configWidget( const Kapabilities &, QWidget *parent,
-                                        const char *name = 0 );
-    /**
-      Return configuration widget of this Konnector.
-    */
-    virtual ConfigWidget *configWidget( QWidget *parent, const char *name = 0 );
-
+    // Obsolete ?
     virtual void add( const QString &res );
     virtual void remove( const QString &res );
     virtual QStringList resources() const;
-
-    /**
-     * can be a file, a resource, a Syncee...
-     */
-    virtual void download( const QString &resource ) = 0;
-
     /**
      * the Syncees that are supported builtIn
      */
     virtual QStringList builtIn() const;
-    bool isConnected() const;
 
   protected:
     void progress( const Progress & );
     void error( const Error & );
 
-  protected:
-    /**
-      Write data contained in list of Syncee object back to device.
-    */
-//    virtual void write( Syncee::PtrList ) = 0;
-
   signals:
-    /**
-      This signal is emitted to provide the results to a startSync() call.
-    */
-//    void sync( Konnector *, Syncee::PtrList );
-
     void sig_progress( Konnector *, const Progress & );
     void sig_error( Konnector *, const Error & );
     void sig_downloaded( Konnector *, const SynceeList & );

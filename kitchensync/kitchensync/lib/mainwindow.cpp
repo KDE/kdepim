@@ -48,7 +48,6 @@
 #include "profiledialog.h"
 
 #include "konnectorbar.h"
-#include "konnectordialog.h"
 #include "kitchensync.h"
 #include "syncalgo.h"
 #include "actionmanager.h"
