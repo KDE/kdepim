@@ -228,7 +228,7 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
           }
       }
     } else {
-      result += "?B?"+QCString(KCodecs::base64Encode(QString::fromLatin1(encoded8Bit.mid(start,end-start).data())).latin1());
+      result += "?B?"+KCodecs::base64Encode(encoded8Bit.mid(start,end-start), false);
     }
 
     result +="?=";
@@ -874,14 +874,7 @@ QCString KNMimeContent::encodedContent(bool useCrLf)
     for(KNMimeContent *c=c_ontents->first(); c; c=c_ontents->next()) {
       if (c->contentTransferEncoding(true)->cte()==KNHeaders::CEuuenc) {
         convertFromUunec=true;
-        QCString data;
-
-        if(c->contentTransferEncoding(true)->decoded())
-          data=c->b_ody;
-        else
-          KCodecs::uudecode(c->b_ody, data);
-
-        KCodecs::base64Encode(data, c->b_ody, true);
+        c->b_ody = KCodecs::base64Encode(c->decodedContent(), true);
         c->b_ody.append("\n");
         c->contentTransferEncoding(true)->setCte(KNHeaders::CEbase64);
         c->contentTransferEncoding(true)->setDecoded(false);
@@ -910,9 +903,11 @@ QCString KNMimeContent::encodedContent(bool useCrLf)
     KNHeaders::CTEncoding *enc=contentTransferEncoding();
 
     if(enc->needToEncode()) {
-      if(enc->cte()==KNHeaders::CEquPr)
-        e+=KCodecs::quotedPrintableEncode(b_ody, false);
-      else {
+      if(enc->cte()==KNHeaders::CEquPr) {
+        QByteArray temp(b_ody.length());
+        memcpy(temp.data(), b_ody.data(), b_ody.length());
+        e+=KCodecs::quotedPrintableEncode(temp, false);
+      } else {
         e+=KCodecs::base64Encode(b_ody, true);
         e+="\n";
       }
@@ -942,25 +937,40 @@ QCString KNMimeContent::encodedContent(bool useCrLf)
 
 QByteArray KNMimeContent::decodedContent()
 {
-  QByteArray ret;
+  QByteArray temp, ret;
   KNHeaders::CTEncoding *ec=contentTransferEncoding();
-  if(ec->decoded())
-    ret=b_ody;
-  else {
+  bool removeTrailingNewline=false;
+
+  if (b_ody.length()==0)
+    return ret;
+
+  temp.resize(b_ody.length());
+  memcpy(temp.data(), b_ody.data(), b_ody.length());
+
+  if(ec->decoded()) {
+    ret = temp;
+    removeTrailingNewline=true;
+  } else {
     switch(ec->cte()) {
       case KNHeaders::CEbase64 :
-        KCodecs::base64Decode(b_ody, ret);
+        KCodecs::base64Decode(temp, ret);
       break;
       case KNHeaders::CEquPr :
         ret = KCodecs::quotedPrintableDecode(b_ody);
+        ret.resize(ret.size()-1);  // remove null-char
+        removeTrailingNewline=true;
       break;
       case KNHeaders::CEuuenc :
-        KCodecs::uudecode(b_ody, ret);
+        KCodecs::uudecode(temp, ret);
       break;
       default :
-        ret=b_ody;
+        ret = temp;
+        removeTrailingNewline=true;
     }
   }
+
+  if (removeTrailingNewline && (ret.size()>0) && (ret[ret.size()-1] == '\n'))
+    ret.resize(ret.size()-1);
 
   return ret;
 }
@@ -1195,7 +1205,7 @@ void KNMimeContent::changeEncoding(KNHeaders::contentEncoding e)
     }
 
     if(enc->cte()!=e) { // ok, we reencode the content using base64
-      KCodecs::base64Encode(decodedContent(), b_ody, true);
+      b_ody = KCodecs::base64Encode(decodedContent(), true);
       b_ody.append("\n");
       enc->setCte(e); //set encoding
       enc->setDecoded(false);
@@ -1402,12 +1412,14 @@ bool KNMimeContent::decodeText()
   switch(enc->cte()) {
     case KNHeaders::CEbase64 :
       b_ody=KCodecs::base64Decode(b_ody);
+      b_ody.append("\n");
     break;
     case KNHeaders::CEquPr :
       b_ody=KCodecs::quotedPrintableDecode(b_ody);
     break;
     case KNHeaders::CEuuenc :
       b_ody=KCodecs::uudecode(b_ody);
+      b_ody.append("\n");
     break;
     default :
     break;
@@ -2104,49 +2116,24 @@ void KNAttachment::attach(KNMimeContent *c)
   updateContentInfo();
   KNHeaders::ContentType *type=c_ontent->contentType();
   KNHeaders::CTEncoding *e=c_ontent->contentTransferEncoding();
+  QByteArray data(f_ile->size());
 
-  if(e_ncoding.cte()==KNHeaders::CEbase64 || !type->isText()) { //encode base64
+  int readBytes=f_ile->readBlock(data.data(), f_ile->size());
 
-    QByteArray buff(5710);
-    int readBytes=0;
-    QCString data( (f_ile->size()*4/3)+10 );
-    data.at(0)='\0';
-
-    while(!f_ile->atEnd()) {
-      // read 5700 bytes at once :
-      // 76 chars per line * 6 bit per char / 8 bit per byte => 57 bytes per line
-      // we append 100 lines in a row => encode 5700 bytes
-      buff.resize(5710);
-      readBytes=f_ile->readBlock(buff.data(), 5700);
-      if(readBytes<5700 && f_ile->status()!=IO_Ok) {
-        KNHelper::displayExternalFileError();
-        delete c_ontent;
-        c_ontent=0;
-        break;
-      }
-
-      buff.resize(readBytes);
-      data+=KCodecs::base64Encode(buff, true);
-      data+="\n";
-    }
-
-    c_ontent->b_ody=data;
-    e->setCte(KNHeaders::CEbase64);
-    e->setDecoded(false);
-  }
-  else { //do not encode text
-    QCString txt(f_ile->size()+10);
-    int readBytes=f_ile->readBlock(txt.data(), f_ile->size());
-
-    if(readBytes<(int)f_ile->size() && f_ile->status()!=IO_Ok) {
-      KNHelper::displayExternalFileError();
-      delete c_ontent;
-      c_ontent=0;
-    }
-    else {
-      txt[readBytes]='\0'; //terminate string
-      c_ontent->b_ody=txt+'\n';
-      c_ontent->contentTransferEncoding()->setDecoded(true);
+  if (readBytes<(int)f_ile->size() && f_ile->status()!=IO_Ok) {
+    KNHelper::displayExternalFileError();
+    delete c_ontent;
+    c_ontent=0;
+  } else {
+    if (e_ncoding.cte()==KNHeaders::CEbase64 || !type->isText()) { //encode base64
+      c_ontent->b_ody = KCodecs::base64Encode(data, true);
+      c_ontent->b_ody += '\n';
+      e->setCte(KNHeaders::CEbase64);
+      e->setDecoded(false);
+    } else  {
+      c_ontent->b_ody = QCString(data.data(), data.size()+1);
+      c_ontent->b_ody += '\n';
+      e->setDecoded(true);
     }
   }
 
