@@ -18,7 +18,6 @@
  */
 #include "mbox.h"
 
-#include <libkdepim/kdepimmacros.h>
 #include "readmbox.h"
 #include "stat.h"
 #include "urlinfo.h"
@@ -34,6 +33,8 @@
 #include <kio/global.h>
 
 #include <stdlib.h>
+
+#include "kdepimmacros.h"
 
 #include "mbox.h"
 
