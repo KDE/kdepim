@@ -1,0 +1,1093 @@
+<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+  <!ENTITY kpilot "<application>KPilot</application>">
+  <!ENTITY kappname "&kpilot;" -- this only *seems* redundant -->
+  <!ENTITY kpilotver "3.2.0">
+  <!ENTITY pilot "<application>Pilot</application>">
+  <!ENTITY using-kpilot SYSTEM "usage.docbook" -- level: chapter -->
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Application-Variable Entities V1.0//EN">
+  %ents;
+]>
+
+<!-- $Id$ -->
+
+<!-- For translations: leave id="" attributes for tags alone,
+     since they aren't visible to the user. Same for anchors.
+     This means that we don't have to worry about (mis)-
+     translating the ids and can refer to the same file#anchor
+     structure in every translation. -->
+
+<book lang="en">
+
+<bookinfo>
+<title>KPilot User's Guide</title>
+
+<authorgroup>
+<author>
+	<firstname>Adriaan</firstname>
+	<othername>de</othername>
+	<surname>Groot</surname>
+	<affiliation>
+		<address><email>adridg@cs.kun.nl</email></address>
+	</affiliation>
+</author>
+<author>
+	<firstname>Dan</firstname>
+	<surname>Pilone</surname>
+	<affiliation>
+		<address><email>pilone@slac.com</email></address>
+	</affiliation>
+</author>
+</authorgroup>
+
+<copyright>
+<year>1999-2000</year>
+<holder>Adriaan de Groot</holder>
+</copyright>
+
+<legalnotice>&FDLNotice;</legalnotice>
+
+<!-- Keep the date and the release info entity-free, i.e.
+     dont use &kpilotver; here -->
+
+<date>03/07/2000</date>
+<releaseinfo>3.2.0</releaseinfo>
+
+<abstract>
+<para>
+&kpilot; &kpilotver;
+is the latest version of the Desktop HotSync software for Unix.
+After several release and contributions from users &kpilot;, along with
+<application>KOrganizer</application>, has evolved into 
+a rather complete replacement for the
+Windows Desktop  provided by 3Com.  
+&kpilot; offers a few internal
+tools for viewing and manipulating data, and a convenient API for
+developing ways of sharing data with other applications.
+</para>
+</abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>KPilot</keyword>
+<keyword>kdepim</keyword>
+<keyword>palm pilot</keyword>
+<keyword>syncronisation</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>
+&kpilot; &kpilotver;
+is the latest version of the Desktop HotSync software for Unix.
+After several release and contributions from users &kpilot;, along with
+<application>KOrganizer</application>, has evolved into 
+a rather complete replacement for the
+Windows Desktop  provided by 3Com.  
+&kpilot; offers a few internal
+tools for viewing and manipulating data, and a convenient API for
+developing ways of sharing data with other applications.
+</para>
+
+<para>
+There are two web pages for &kpilot;: the 
+<ulink url="http://www.slac.com/pilone/kpilot_home/moreinfo.html">
+Official KPilot Home Page
+</ulink>
+and the
+<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-bugs.html">
+KPilot Bugs Page</ulink>.
+There is also a mailing list. Send mail to
+<email>majordomo@slac.com</email>
+with the following subject: <userinput>subscribe kpilot-list</userinput>.
+</para>
+
+<sect1 id="revhistory">
+<title>KPilot Revision History</title>
+
+<!-- Don't use &kpilotver; in the revision history either,
+     since it's sure to change there. -->
+
+<itemizedlist>
+<listitem>
+<para>
+New in 3.2.0 -
+&kpilot; has been polished sufficiently for
+a new public release.
+The infamous application-category bug has been
+squashed along with other bugs, see
+<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-release#RELEASE320">
+the buglist</ulink>.
+The documentation has been translated into
+German and partially into Dutch.
+</para>
+</listitem>
+<listitem>
+<para>
+New in 3.1.14 -
+New configuration options 
+<link linkend="dbspecial">Backup Only</link>
+and 
+<link linkend="dbspecial">Skip</link>
+have been added
+to avoid database corruption for some Handbase databases --
+and possibly other products as well.
+The documentation for &kpilot; -- in english only -- has been
+vastly expanded.
+</para>
+</listitem>
+
+<listitem>
+<para>
+New in 3.1.13 -
+You can now sync - experimentally - with UNIX style mailboxes.
+The popmail conduit will read a standard mailbox and copy it to the &pilot;.
+The UI has been improved and some issues with various OS distributions
+have been dealt with. See the buglist for more information.
+</para>
+</listitem>
+
+<listitem>
+<para>
+New in 3.1.12 -
+This release of KPilot has only been tested with KDE 1.0, 1.1 and
+1.1.1. Previous versions of KDE are no longer supported.
+KPilot 3.1.12 has a number of new features compared to 3.1b9.
+It also includes a large number of bug fixes.
+</para>
+
+<para>
+The most important new features are:
+<itemizedlist>
+<listitem>
+<para>
+	Now supports debugging output, just start KPilot
+	by hand from the command line with
+	<userinput>kpilot --debug 1023</userinput>
+	and you will get loads of debugging output.
+	Useful for reporting bugs.
+</para>
+</listitem>
+<listitem>
+<para>
+	Addresses can be sorted by company, name or by lastname, firstname.
+</para>
+</listitem>
+<listitem>
+<para>
+	A new (demonstration) conduit has been added that does nothing.
+	For programmers, mostly.
+</para>
+</listitem>
+<listitem>
+<para>
+	The UI has been cleaned up.
+</para>
+</listitem>
+</itemizedlist>
+</para>
+
+<para>
+The most important bugs that have been fixed are:
+<itemizedlist>
+<listitem>
+<para>
+	SMTP support
+</para>
+</listitem>
+<listitem>
+<para>
+	Daemon startup
+</para>
+</listitem>
+</itemizedlist>
+See the
+<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-bugs.html">
+bug list</ulink>
+for more information on these bugs.
+</para>
+
+
+<para>
+The number after <userinput>--debug</userinput>
+indicates what kind of messages
+you want to see; 1023 indicates <emphasis>all messages</emphasis>.
+The exact numbers you can use are as follows:
+<table id="debug">
+<title>Debug Values</title>
+<tgroup cols="2">
+<thead>
+<row><entry>Value</entry><entry>Meaning</entry></row>
+</thead>
+<tbody>
+<row><entry>1</entry><entry>List the name of *every* function called. 
+	Very tedious.
+</entry></row>
+<row><entry>2</entry><entry>Major UI operations (Creating windows).
+</entry></row>
+<row><entry>4</entry><entry>Minor UI operations (Adding visual elements).
+</entry></row>
+<row><entry>8</entry><entry>*All* UI operations (Filling list boxes).
+</entry></row>
+<row><entry>16</entry><entry>Major database operations.
+</entry></row>
+<row><entry>32</entry><entry>Minor database operations.
+</entry></row>
+<row><entry>64</entry><entry>All database operations.
+</entry></row>
+<row><entry>128</entry><entry>Major sync actions.
+</entry></row>
+<row><entry>256</entry><entry>Minor sync actions.
+</entry></row>
+<row><entry>512</entry><entry>All sync actions.
+</entry></row>
+</tbody>
+</tgroup>
+</table>
+Just add up the numbers of the kind of messages you want.
+</para>
+
+<para>
+Note that the debugging code hasn't spread to the whole of &kpilot; yet.
+The daemon and conduits do have some debugging output, which may also
+be useful
+if &kpilot; doesn't work perfectly on your system.
+</para>
+</listitem>
+
+<listitem>
+<para>
+New in 3.1.9 -
+This is the fourth release of &kpilot;.  The major change in this
+release is conduit support.  There are currently two included conduits, a
+KOrganizer conduit (vcal syncing) and a PopMail conduit (this fixes the
+email bug with &kpilot; 2.1).  Also fixed in this release is the
+Address/Memo &quot;off by one&quot; bug.  
+This release <emphasis>requires</emphasis> KDE Beta 4 or
+better.  
+</para>
+</listitem>
+
+</itemizedlist>
+
+
+</sect1>
+
+</chapter>
+
+
+<chapter id="installation">
+<title>Installation</title>
+
+<sect1 id="getting">
+<title>How to obtain KPilot</title>
+
+<para>
+&kpilot; is part of the KDE project,
+but must be obtained from either the
+<ulink url="http://www.slac.com/pilone/kpilot_home/moreinfo.html">
+Official KPilot Home Page
+</ulink>
+(Most official sources and binaries)
+or the
+<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-bugs.html">
+KPilot Bugs Page</ulink>
+(development sources and binaries).
+It is also available from the KDE CVS server under
+<filename>/home/kde/kpilot</filename>.
+</para>
+
+
+<para>
+A word about version numbers:
+&kpilot; 3.x versions
+(such as this &kpilotver; version)
+are for KDE 1.
+With the release of KDE 2
+KPilot 3.x will be obsolete
+and we will move to &kpilot; 4, which will have support
+for some of the new KDE functionality.
+&kpilot; 4.x will be available from a different CVS location,
+but from the same web pages.
+</para>
+
+</sect1>
+
+<sect1 id="requirements">
+<title>Requirements</title> 
+<para>
+In order to successfully use &kpilot;, you need KDE 1.1.
+&kpilot; 3.x is a KDE 1.x application. 
+It will not run under KDE 2.x.
+&kpilot; 4.x will run under KDE 2.
+</para>
+
+</sect1>
+
+<sect1 id="compilation">
+<title>Compilation and installation</title>
+
+<para>
+In order to compile and install &kpilot;
+on your system, type the following in the base
+directory of the &kpilot; distribution:
+<screen width="40">
+<prompt>$</prompt> <userinput>./configure</userinput>
+<prompt>$</prompt> <userinput>make</userinput>
+<prompt>$</prompt> <userinput>make install</userinput>
+</screen>
+</para>
+
+<para>Since &kpilot; uses 
+<application>autoconf </application>
+and 
+<application>automake </application>
+you should have not trouble compiling it.
+Should you run into problems please report them to the 
+&kpilot; mailing lists.</para>
+ 
+</sect1>
+
+
+
+
+
+<sect1 id="configuration">
+<title>Configuration</title>
+
+<para>  
+Once &kpilot; is installed it is rather easy to set up.  
+Run &kpilot; from either
+the panel menu or from the command prompt and it will prompt you with
+a dialog box asking you to configure it for the first time.  
+This configuration dialog can be requested later from the
+<guimenu>File</guimenu> menu or by starting &kpilot;
+from the shell
+as follows:
+<screen width="40">
+<prompt>$ </prompt> <userinput>kpilot --setup</userinput>
+</screen>
+In addition, if you upgrade &kpilot; and some new configuration
+options require your attention, this setup dialog will reappear.
+</para>
+
+<para>A full description of the setup dialog can be found 
+<link linkend="general">below</link>.</para>
+
+<para>
+Once
+&kpilot; is properly set up, pressing <guibutton>OK</guibutton>
+will bring up the main &kpilot;
+window.  
+The <emphasis>first</emphasis> thing you should do is 
+make a full backup
+of the &pilot;.  
+Do this by selecting 
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Backup</guimenuitem>
+</menuchoice>
+or the toolbar icon
+<guiicon>Full Backup
+<inlinemediaobject>
+<imageobject><imagedata fileref="toolbar_backup.png" format="PNG">
+</imageobject>
+</inlinemediaobject>
+</guiicon>.  
+When you do,
+the status bar will ask you to press the hot-sync button on the
+cradle.  
+Assuming everything is set up properly you should see the
+&pilot; begin to sync and a message box telling you what databases are
+being backed up.  This will back up your entire &pilot; into your local
+directory.  
+Note that this may take a little while, however a normal
+hot-sync is significantly faster.
+</para>
+
+<sect2 id="general">
+<title>General page</title>
+
+<para>
+This is a setup page that contains options pertaining to
+the &pilot; hardware and to you, the user.
+</para>
+
+<screenshot>
+<screeninfo>General page</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-general.png" format="png"></imageobject>
+<textobject><phrase>The General setup page</phrase></textobject>
+<caption><para>The General setup page</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Pilot Device</guilabel></term>
+<listitem>
+<para>
+This
+is the serial port that the cradle is connected to.  By default it is
+set to <filename>/dev/pilot</filename>
+which should be a symbolic link to the proper serial port.  
+<emphasis>Make sure the serial port has
+the correct permissions.</emphasis>
+It
+must be read/write by all if KPilot is intended to be used by a
+normal user!  This is done by doing a 
+<userinput>chmod 666 <replaceable>device</replaceable></userinput> where
+<replaceable>device</replaceable> is the correct serial port.
+See also the <link linkend="faq">FAQ</link>
+for more information about setting up the pilot device.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Speed</guilabel></term>
+<listitem>
+<para>
+This indicates the speed of the serial connection to the &pilot;.
+For an older model &pilot;, choose 9600. 
+Newer models may be able to handle speeds up to
+the maximum listed, 115200.
+You can experiment with the connection speed: the &pilot;
+manual suggests starting at a speed of 19200 and trying faster
+speeds to see if they work.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Pilot User</guilabel></term>
+<listitem>
+<para>
+This
+is the user name of the &pilot;.  By default this name is the same as
+your log on name.  When you first sync with the &pilot; &kpilot; will
+check to see if this name matches the one on the &pilot;.  If they do
+not, you are asked to pick which you will use.  If you pick the local
+name, the &pilot; will be changed to match.  This is also used to store
+the information synced from the &pilot;.  For example, if I were to
+hot-sync my &pilot; on your machine, it would store the data into a
+subdirectory named 'pilone'.
+</para>
+</listitem>
+</varlistentry>
+
+
+
+
+<varlistentry><term><guilabel>Sync Files</guilabel></term>
+<listitem>
+<para>
+When
+this is enabled any files dropped into the file install (either the
+icon docked on the panel or into the file installer widget in KPilot)
+will be installed on the pilot during the next hot-sync.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><guilabel>Local overrides Pilot</guilabel></term>
+<listitem>
+<para>
+When
+a record has been modified on both the Pilot and the local side, only
+one can be kept.  By default KPilot assumes the Pilot has the most
+recent information and will keep that.  By enabling this option
+KPilot assumes <emphasis>it</emphasis> has the
+most recent information and will overwrite the pilot's copy.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><guilabel>Start
+Hot-Sync Daemon at login</guilabel></term>
+<listitem>
+<para>
+ By
+enabling this a link to the daemon is placed in your autostart folder
+and will be started automatically.  Note that this is not normally
+needed if the daemon is docked in the panel.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><guilabel>Start
+KPilot at Hot-Sync</guilabel></term>
+<listitem>
+<para>
+ When the
+hot-sync button is pressed on the cradle (assuming the daemon is
+running) KPilot can sync without actually starting up the GUI. 
+However, by enabling this option the daemon will start up the KPilot
+GUI when the hot-sync begins.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show Daemon in KPanel</guilabel></term>
+<listitem>
+<para>
+This option lets the daemon place a little hot sync icon in
+the KPanel. This icon has a menu that can be brought up with
+the right mouse button, for performing hot syncs and the like.
+Without this option, the daemon is not visible to the user at all.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect2>
+
+<sect2 id="address">
+<title>
+Address page
+</title>
+
+<para>
+The address page contains settings specific to the
+<emphasis>built in</emphasis> address book.
+Note that this address book has nothing directly 
+to do with the KDE address book, your email address book,
+or anything else.
+Connections with those address books could be
+provided by conduits.
+</para>
+
+<screenshot>
+<screeninfo>Address page</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-address.png" format="png"></imageobject>
+<textobject><phrase>The Address setup page</phrase></textobject>
+<caption><para>The Address setup page</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Import Format</guilabel></term>
+<term><guilabel>Export Format</guilabel></term>
+<listitem>
+<para>
+&kpilot; can import and export the address database
+to or from a text  file.
+These two fields
+determine the format the file is written in (for export)
+or must have (for import).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Address display</guilabel></term>
+<listitem>
+<para>
+This set of radio buttons determines
+how addresses are displayed and sorted in the address book.
+This is similar to the setting in the &pilot; itself
+where addresses can be sorted based on company or on last name.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+Both the import and the export format
+are lists of field specifiers separated by some
+delimiter (usually a comma).
+Note that all fields must be separated
+by the same delimiter.
+For import formats:
+Field specifiers are three-character strings that
+begin with a %.
+Field specifiers
+%<replaceable>CC</replaceable>
+are used to indicate that in the imported data the
+data for the corresponding field is to be found there
+(as a string that does not contain the delimiter character).
+The following field specifiers are supported:
+</para>
+
+<table id="addressfmt">
+<title>Address Format Specifiers</title>
+<tgroup cols="2">
+<thead>
+<row><entry>Specifier</entry><entry>Field</entry></row>
+</thead>
+<tbody>
+<row><entry>%LN</entry><entry>Last name
+</entry></row>
+<row><entry>%FN</entry><entry>First name
+</entry></row>
+<row><entry>%CO</entry><entry>Company
+</entry></row>
+<row><entry>%P1,%P2,%P3,%P4,%P5</entry><entry>Phone numbers 1 through 5
+</entry></row>
+<row><entry>%AD</entry><entry>Address
+</entry></row>
+<row><entry>%CI</entry><entry>City
+</entry></row>
+<row><entry>%ST</entry><entry>State
+</entry></row>
+<row><entry>%ZI</entry><entry>Zip (Postal code)
+</entry></row>
+<row><entry>%CT</entry><entry>Country
+</entry></row>
+<row><entry>%TI</entry><entry>Title
+</entry></row>
+<row><entry>%C1,%C2,%C3,%C4</entry><entry>Custom fields
+</entry></row>
+</tbody>
+</tgroup>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</sect2>
+
+
+<sect2 id="dbspecial">
+<title>
+DB Specials page
+</title>
+
+<para>
+This page contains settings specific to
+the &pilot; databases &kpilot; works with.
+</para>
+
+<screenshot>
+<screeninfo>DB Specials page</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="setup-dbspecial.png" format="png">
+</imageobject>
+<textobject><phrase>The DB Setup page</phrase></textobject>
+<caption><para>The DB Setup page</para></caption>
+</mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Show secrets</guilabel></term>
+<listitem>
+<para>
+
+
+	in your &pilot; you can mark some records
+	as &quot;private.&quot; 
+	By default,
+	&kpilot; does not
+	display these records on the screen.
+	If you want to see them, turn this
+	option on.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Backup only</guilabel></term>
+<listitem>
+<para>
+	This text field can be used to list databases
+	that should not be synced, only backed up.
+	Note that you have to fill in the database creator,
+	not the name of the product, so for Handbase
+	databases you fill in 
+	<userinput>PmDB</userinput>.
+	Handbase in particular should be listed here,
+	since its databases are corrupted by a 
+	standard sync.
+	Multiple databases should be separated by commas.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term><guilabel>Skip</guilabel></term>
+<listitem>
+<para>
+	This text field lists databases that should not be backed up nor
+	synced, in the same format as the backup only field.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect2>
+
+<sect2 id="about">
+<title>
+About page
+</title>
+
+<para>
+The About page isn't really a configuration
+page at all. It just tells you what version of KPilot
+you're using and some information about the authors.
+This is useful information to include when
+you're 
+<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-bugs.html">
+reporting a bug
+</ulink>.
+</para>
+
+
+
+</sect2>
+</sect1>
+</chapter>
+
+<!-- Using KPilot should go here, but those docs are currently 
+     so lacking that we've cut them out here. 
+
+     They're now in (though maybe not in all translations).
+-->
+
+&using-kpilot;
+
+
+
+<chapter id="faq">
+<title>FAQ</title>
+
+<sect1 id="crash">
+<title>KPilot Crashes...</title>
+
+<para>
+This section answers questions of the most common sort:
+&kpilot; refuses to run at all.
+</para>
+
+
+<qandaset>
+
+<qandaentry>
+<question>
+<para>
+&kpilot; says &quot;Can't connect to pilot&quot;
+</para>
+</question>
+<answer>
+<para>
+This can have various causes. Check that:
+<itemizedlist>
+<listitem>
+<para>
+	The pilot device 
+	(usually <filename>/dev/pilot</filename>) exists and points
+	to the serial port the &pilot; is actually connected to.
+</para>
+<para>
+	To link the &pilot; device to the correct serial port,
+	you can either fill in 
+	<filename>/dev/ttyS<replaceable>n</replaceable></filename> 
+	in the <guilabel>Pilot Device</guilabel>
+	field in the
+	<link linkend="general">setup dialog</link> 
+	or (preferably) link 
+	<filename>/dev/pilot</filename> to 
+	<filename>/dev/ttyS<replaceable>n</replaceable></filename> 
+	with the following command (as root):
+	<userinput>
+	ln -s /dev/ttyS<replaceable>n</replaceable> /dev/pilot
+	</userinput>
+	Here <filename>/dev/ttyS<replaceable>n</replaceable></filename> 
+	is the name 
+	of the serial port; replace <replaceable>n</replaceable>
+	with the correct number (usually 0 or 1).
+</para>
+</listitem>
+<listitem>
+<para>
+	Check that you have permission to read and write to the serial port.
+	The permissions for the serial port should be such that you can write to
+	it. This is most easily done by running the following (as root):
+	<userinput>
+	chmod 666 /dev/ttyS<replaceable>n</replaceable>
+	</userinput>
+</para>
+</listitem>
+<listitem>
+<para>
+	Try starting the daemon by hand before starting &kpilot;.
+</para>
+</listitem>
+<listitem>
+<para>
+	(For Mandrake 7 systems) Check the system security level:
+	settings higher than 3 prevent some forms of inter-process
+	communication which are necessary for &kpilot; to
+	operate correctly.
+</para>
+
+<para>
+	(<emphasis>Mandrake security information 
+	courtesy of Jay Summett</emphasis>)
+	To set your MSEC (Mandrake SECurity) settings to not block the
+	&kpilot; socket (to localhost connect) you can login as root and
+	type 
+	<userinput>
+	/etc/security/msec/init.sh 3
+	</userinput>
+	Which will set your msec level to 3 (regular security).
+	For more information about the various security levels, etc, see:
+	<ulink url="http://www.linux-mandrake.com/userguide/en/reference/017.html#157">
+	the Mandrake reference guide</ulink>.
+</para>
+</listitem>
+</itemizedlist>
+</para>
+</answer>
+</qandaentry>
+					      
+</qandaset>
+
+</sect1>
+
+<sect1 id="database">
+<title>Database Questions</title>
+
+<para>
+This section answers questions commonly asked about
+particular databases and how they 
+interact with &kpilot;.
+</para>
+
+<qandaset>
+
+<qandaentry>
+<question>
+<para>
+Databases become corrupted after a sync
+</para>
+</question>
+<answer>
+<para>
+Certain databases (from third-party software manufacturers)
+appear not to follow the standard database layout.
+If you can find out what the creator id of the database is,
+you can add it to either the 
+<guilabel>Backup Only</guilabel> list or the 
+<guilabel>Skip</guilabel> list in the 
+<link linkend="dbspecial">settings dialog</link>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Is there a conduit for Netscape Calendar?
+</para>
+</question>
+<answer>
+<para>
+No, there isn't.
+Neither are there plans to include support or write a
+conduit for Netscape Calendar.
+</para>
+</answer>
+</qandaentry>
+
+
+</qandaset>
+
+</sect1>
+
+<sect1 id="hotsync">
+<title>
+Special Hotsync Questions
+</title>
+
+<para>
+This section lists questions about hotsync methods that differ
+from the &quot;usual&quot; direct serial link method.
+</para>
+
+<qandaset>
+
+<qandaentry>
+<question>
+<para>
+How do I do an infrared (IR) hotsync?
+</para>
+</question>
+<answer>
+<para>
+First of all your &pilot; has to actually support IR hotsyncs.
+This can be achieved through various means:
+PalmOS 3.3 and higher include support for it;
+there is an IR enhancements package for older
+PalmOS versions; IrLink from IsComplete apparently has the
+same capabilities.
+Check out the
+<ulink url="http://www.palm.com/">Palm</ulink>
+web pages for more information.
+</para>
+
+<para>
+Assuming your &pilot; now has IR hotsync support and it
+is setup to do IR hotsyncs (in the hotsync preferences on the &pilot;),
+we can turn our attention to the PC you will be syncing with.
+It needs an IR port. 
+For laptops, this is trivial, desktop PCs may require some
+extra hardware.
+</para>
+
+<para>
+Your linux kernel will need to support IR and the IRCOMM protocol.
+For stock RedHat systems, the following command should
+setup IR support (as root):
+<screen width="40">
+<prompt># </prompt><userinput>modprobe ircomm</userinput>
+</screen>
+Other distributions should follow the IR-HOWTO.
+Once IR support in the kernel has been activated,
+you need to make devices for the IR ports.
+The IR-HOWTO suggests (as root):
+<screen width="40">
+<prompt># </prompt><userinput>mknod /dev/ircomm0 60 64</userinput>
+<prompt># </prompt><userinput>chmod 666 /dev/ircomm0</userinput>
+</screen>
+Next we need to start some daemons for IR services:
+<screen width="40">
+<prompt># </prompt><userinput>irattach /dev/ttyS<replaceable>n</replaceable></userinput>
+<prompt># </prompt><userinput>irmanager -d 0</userinput>
+</screen>
+Here <filename>/dev/ttyS<replaceable>n</replaceable></filename>
+is the serial port
+the IR port is using. <replaceable>n</replaceable> could be 0, 1, or some other
+number depending on your hardware setup.
+Follow the instructions in the IR-HOWTO for assistance
+(for desktop machines, it's usually a setting in the BIOS).
+</para>
+
+<para>
+Once you've gotten this far, just make <filename>/dev/pilot</filename>
+point to <filename>/dev/ircomm0</filename>
+and you're ready!
+</para>
+</answer>
+</qandaentry>
+
+
+
+<qandaentry>
+<question>
+<para>Can I do a hot sync with my (USB) Handspring Visor?</para>
+</question>
+<answer>
+<para>
+Yes, you can.
+I don't have definitive information, but postings on the
+kpilot list have stated that you can point <filename>/dev/pilot</filename>
+to the USB device and everything will work fine.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>Is there any support for remote hot syncs?</para>
+</question>
+<answer>
+<para>
+No, not yet. There are no plans to include support for
+this in the KDE 1 version of KPilot.
+Maybe later.
+</para>
+</answer>
+</qandaentry>
+
+
+</qandaset>
+
+
+
+</sect1>
+</chapter>
+
+
+
+<chapter id="credits">
+
+<title>Credits and License</title>
+
+<para>
+&kpilot;
+Program copyright 1998-2000 by Dan Pilone
+<email>pilone@slac.com</email>
+</para>
+<para>
+Contributors:
+<itemizedlist>
+<listitem><para>Adriaan de Groot <email>adridg@cs.kun.nl</email></para>
+</listitem>
+<listitem><para>Preston Brown <email>pbrown@redhat.com</email></para>
+</listitem>
+<listitem><para>Conduits by: Herwin Jan Steehouwer,
+Kenneth Albanowski, Michael Kropfberger
+</para></listitem>
+<listitem><para>Patches by: Robert Ambrose, Scott Presnell,
+Dag Nygren, Chuck Robey, Jay Summet
+</para></listitem>
+</itemizedlist>
+</para>
+
+<para>
+Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
+</para>
+<para>
+Translations done by:
+<itemizedlist>
+<listitem>
+<para>Adriaan de Groot <email>adridg@cs.kun.nl</email> (.nl)</para>
+</listitem>
+<listitem>
+<para>Andreas Silberstorff 
+	<email>andreas.silberstorff@gmx.de</email> (.de)</para>
+</listitem>
+<listitem>
+<para>Nicolas Pettiaux <email>nicolas.pettiaux@linuxbe.org</email> (.fr)</para>
+</listitem>
+</itemizedlist>
+</para>
+
+&license-links;
+</chapter>
+
+<![ %addindex; [ &kdedocindex; ]]>
+</book>
+<!--
+Local Variables:
+sgml-minimize-attributes: nil
+sgml-general-insert-case: lower
+End:
+-->
