@@ -5,8 +5,8 @@ SUBDIRS=
 METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/korganizer/interfaces -I$(top_srcdir) \
-    -I$(top_srcdir)/libical/src/libical -I$(top_srcdir)/libical/src/libicalss \
-    -I$(top_builddir)/libical/src/libical -I$(top_builddir)/libical/src/libicalss \
+    -I$(top_srcdir)/libkcal/libical/src/libical -I$(top_srcdir)/libkcal/libical/src/libicalss \
+    -I$(top_builddir)/libkcal/libical/src/libical -I$(top_builddir)/libkcal/libical/src/libicalss \
     $(all_includes)
 
 #     -I$(top_srcdir)/libkdepim/resources -I$(top_srcdir)/libkdepim/resources/calendar
@@ -14,9 +14,9 @@ INCLUDES = -I$(top_srcdir)/korganizer/interfaces -I$(top_srcdir) \
 noinst_LTLIBRARIES = libkpimexchangecore.la
 
 libkpimexchangecore_la_SOURCES = exchangeclient.cpp exchangeaccount.cpp \
- 			   exchangedownload.cpp exchangeupload.cpp exchangedelete.cpp \
+			   exchangedownload.cpp exchangeupload.cpp exchangedelete.cpp \
 			   utils.cpp exchangeprogress.cpp exchangemonitor.cpp 
-                           
+
 #libkpimexchange_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0 -module
 #libkpimexchange_la_LIBADD = $(LIB_KIO) $(top_builddir)/libkcal/libkcal.la
 
