@@ -82,8 +82,8 @@ void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
 {
   ResourceRemote* res = static_cast<ResourceRemote*>( resource );
   if ( res ) {
-    res->setDownloadUrl( mDownloadUrl->url() );
-    res->setUploadUrl( mUploadUrl->url() );
+    res->setDownloadUrl( KURL( mDownloadUrl->url() ) );
+    res->setUploadUrl( KURL( mUploadUrl->url() ) );
     res->setReloadPolicy( mReloadGroup->selectedId() );
   } else {
     kdError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
