@@ -47,7 +47,7 @@ binary-arch: build
 	dh_clean -k
 	-rm -f debian/undocumented
 	make -C $(BUILDDIR) install DESTDIR=`pwd`/debian/tmp/
-	perl -w admin/debianrules
+	perl -w admin/debianrules cleanup
 	for i in `find debian/tmp/usr/bin | sed -e 's#^debian/tmp/usr/bin/##'  | grep -v "debian/tmp"`; do \
 	  echo "$$i.1" >> debian/undocumented ;\
 	done
