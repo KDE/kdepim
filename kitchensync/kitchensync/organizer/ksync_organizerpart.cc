@@ -5,20 +5,21 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kgenericfactory.h>
+#include <kparts/genericfactory.h>
 #include <kparts/componentfactory.h>
 
 #include "ksync_organizerpart.h"
 
-//typedef KGenericFactory< KitchenSync::OrganizerPart> OrganizerPartFactory;
-//K_EXPORT_COMPONENT_FACTORY( liborganizerpart, OrganizerPartFactory );
+typedef KParts::GenericFactory< KitchenSync::OrganizerPart> OrganizerPartFactory;
+K_EXPORT_COMPONENT_FACTORY( liborganizerpart, OrganizerPartFactory );
 
 using namespace KitchenSync ;
 
-OrganizerPart::OrganizerPart(QWidget *parent, const char *name, const QStringList & )
+OrganizerPart::OrganizerPart(QWidget *parent, const char *name,
+			     QObject *obj, const char *na, const QStringList & )
   : KitchenSync::ManipulatorPart( parent, name )
 {
-  // setInstance(OrganizerPartFactory::instance() );
+  setInstance(OrganizerPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("korganizer", KIcon::Desktop, 48 );
   m_widget=0;
 }
@@ -48,4 +49,8 @@ QWidget* OrganizerPart::configWidget()
   return m_config;
 };
 
+KAboutData *OrganizerPart::createAboutData()
+{
+  return new KAboutData("KSyncOrganizerPart", I18N_NOOP("Sync organizer part"), "0.0" );
+}
 //#include "ksync_organizerpart.moc"

@@ -6,13 +6,20 @@
 
 #include <manipulatorpart.h>
 
+class KAboutData;
+
 namespace KitchenSync {
 
   class OrganizerPart : public ManipulatorPart {
   Q_OBJECT
   public:
-    OrganizerPart(QWidget *parent, const char *name, const QStringList & = QStringList() );
+    OrganizerPart(QWidget *parent, const char *name,
+		  QObject *obj = 0, const char *na=0,
+		  const QStringList & = QStringList() );
     virtual ~OrganizerPart();
+
+    static KAboutData *createAboutData();
+
     QString type()const { return QString::fromLatin1("Organizer"); };
     int progress()const { return 0; };
     QString name()const { return i18n("Organizer" ); };

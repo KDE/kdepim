@@ -7,7 +7,7 @@
 
 using namespace KitchenSync;
 
-ManipulatorPart::ManipulatorPart(QWidget *parent, const char *name )
+ManipulatorPart::ManipulatorPart(QObject *parent, const char *name )
   : KParts::Part(parent, name )
 {
 
