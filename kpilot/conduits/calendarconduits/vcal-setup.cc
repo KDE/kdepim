@@ -32,6 +32,8 @@
 #include <qbuttongroup.h>
 #include <klocale.h>
 
+#include "uiDialog.h"
+
 #include "korganizerConduit.h"
 #include "vcal-factory.h"
 #include "vcal-setup.h"

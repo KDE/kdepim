@@ -39,6 +39,8 @@
 #include "abbrowser-setup.h"
 #include "abbrowserSettings.h"
 
+#include "uiDialog.h"
+
 AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
 	fConfigWidget(new AbbrowserWidget(w))

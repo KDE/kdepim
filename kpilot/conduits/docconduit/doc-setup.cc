@@ -42,6 +42,7 @@
 #include "doc-setup.h"
 #include "docconduitSettings.h"
 
+#include "uiDialog.h"
 
 DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	ConduitConfigBase(w, n),

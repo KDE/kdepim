@@ -31,6 +31,8 @@
 
 #include <qbuttongroup.h>
 
+#include "uiDialog.h"
+
 #include "korganizerConduit.h"
 #include "todo-factory.h"
 #include "todo-setup.h"
