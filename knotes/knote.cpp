@@ -216,9 +216,6 @@ KNote::KNote( KXMLGUIBuilder* builder, QDomDocument buildDoc, const QString& fil
 KNote::~KNote()
 {
     emit sigKilled( m_label->text() );
-
-    delete m_menu;
-    delete m_edit_menu;
 }
 
 

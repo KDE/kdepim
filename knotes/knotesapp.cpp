@@ -135,8 +135,6 @@ KNotesApp::~KNotesApp()
     disconnect();
     m_noteList.clear();
 
-    delete m_note_menu;
-    delete m_context_menu;
     delete factory;
 }
 
