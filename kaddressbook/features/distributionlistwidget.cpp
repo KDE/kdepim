@@ -192,11 +192,11 @@ void DistributionListWidget::createList()
   dlg.setCaption( i18n( "New Distribution List" ) );
   if ( !dlg.exec() )
     return;
+
   QString newName = dlg.text();
-  if (  mManager->listNames().contains(newName)!= 0)
-  {
-      KMessageBox::sorry(this, i18n("The name already exists"));
-      return;
+  if ( mManager->listNames().contains( newName ) != 0 ) {
+    KMessageBox::sorry( this, i18n( "The name already exists" ) );
+    return;
   }
   new KABC::DistributionList( mManager, newName );
 
@@ -214,14 +214,14 @@ void DistributionListWidget::editList()
   QString oldName = mNameCombo->currentText();
 
   KLineEditDlg dlg( i18n( "Please change name:" ), oldName, this );
-  dlg.setCaption( i18n("Distribution List") );
+  dlg.setCaption( i18n( "Distribution List" ) );
   if ( !dlg.exec() )
     return;
+
   QString newName = dlg.text();
-  if (  mManager->listNames().contains(newName)!= 0)
-  {
-      KMessageBox::sorry(this, i18n("The name already exists"));
-      return;
+  if (  mManager->listNames().contains( newName ) != 0 ) {
+    KMessageBox::sorry( this, i18n( "The name already exists" ) );
+    return;
   }
   KABC::DistributionList *list = mManager->list( oldName );
   list->setName( newName );
@@ -244,7 +244,7 @@ void DistributionListWidget::removeList()
   if ( result != KMessageBox::Continue )
     return;
 
-  delete mManager->list( mNameCombo->currentText() );
+  mManager->remove( mManager->list( mNameCombo->currentText() ) );
   mNameCombo->removeItem( mNameCombo->currentItem() );
 
   updateContactView();
