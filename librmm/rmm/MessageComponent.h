@@ -76,7 +76,7 @@ class MessageComponent {
         void assemble() 
             { parse(); if (!assembled_) { _assemble(); assembled_ = true; } }
 
-        virtual void createDefault()    = 0L;
+        virtual void createDefault() { };
 
         QCString asString() { assemble(); return strRep_; }
 
@@ -107,8 +107,8 @@ class MessageComponent {
         {
         }
 
-        virtual void _parse()       = 0L;
-        virtual void _assemble()    = 0L;
+        virtual void _parse() { };
+        virtual void _assemble() { };
 
         QCString            strRep_;
         bool                parsed_;
