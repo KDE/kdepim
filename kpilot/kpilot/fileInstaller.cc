@@ -114,7 +114,7 @@ void FileInstaller::clearPending()
 	KURL srcName(s);
 	KURL destDir(fDirName + CSL1("/") + srcName.filename());
 
-	return KIO::NetAccess::copy(srcName, destDir);
+	return KIO::NetAccess::copy(srcName, destDir, 0L);
 }
 
 
