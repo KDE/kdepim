@@ -35,9 +35,6 @@
 
 #include <plugin.h>
 
-#include <kapplication.h>
-#include <qdatetime.h>
-
 class MALConduit : public ConduitAction
 {
 Q_OBJECT

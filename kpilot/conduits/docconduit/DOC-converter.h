@@ -38,8 +38,6 @@
 
 #include <qptrlist.h>
 #include <qobject.h>
-#include "options.h"
-
 
 class PilotDatabase;
 
