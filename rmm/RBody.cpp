@@ -1,7 +1,7 @@
 /*
 	Empath - Mailer for KDE
 	
-	Copyright (C) 1998 Rik Hemsley rikkus@postmaster.co.uk
+	Copyright (C) 1998 Rik Hemsley rik@kde.org
 	
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 					This library relies on the Qt toolkit (http://www.troll.no).
 					Compliant with various RFCs. See docs for details.
 	
-	Copyright (C) 1998 Rik Hemsley <rikkus@postmaster.co.uk>
+	Copyright (C) 1998 Rik Hemsley <rik@kde.org>
 	
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public

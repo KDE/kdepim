@@ -1,10 +1,15 @@
 Things that need fixing:
 
-* Sending mail via seems a little flaky and there's no way to tell the user what's going on.
+* Sending mail via sendmail seems a little flaky and there's no way to tell the
+  user what's going on. ** This seems to work actually, just needs making better.
 
 * Using an external editor: This seems broken. Someone suggested instead of doing the weird thing with mapping KProcess * -> filename and then filename -> mtime, I just wrap everything into a class, like EmpathExternalEditorProcess. This should be a much cleaner implementation.
 
-* The tokeniser (RToken) is bugged. I have something like an out-by-one problem, and it manifests itself when there's quoted text ( "...." ). It doesn't seem to happen with comments ( (....) ), but maybe that's just luck.
+* The tokeniser (RToken) is bugged. I have something like an out-by-one problem,
+  and it manifests itself when there's quoted text ( "...." ). It doesn't seem to
+  happen with comments ( (....) ), but maybe that's just luck. ** This now seems
+  to work reasonably, though again there's another out-by-one that only shows up
+  occasionally, like when an address ends in '>'.
 
 * EmpathComposeWidget uses the fancy Netscape-alike thing where when you add
   headers, more widgets are created. What needs to happen is that when the user
@@ -20,7 +25,10 @@ Things that need fixing:
 
 Things that need redesigning:
 
-* Maildir indexing. This uses its own class for an index record. It needs to use EmpathMessageDescription, as the classes are virtually identical, save for one data member. Also, it needs to read the index as little as possible.
+* Maildir indexing. This uses its own class for an index record. It needs to use
+  EmpathMessageDescription, as the classes are virtually identical, save for one
+  data member. Also, it needs to read the index as little as possible. ** Working
+  on this. Redesigning it so it actually does the folder thing properly.
 
 * Talking to network can cause blocking. This is completely unacceptable. I WILL
   NOT release Empath with a user interface that stalls, whatever the reason.
@@ -32,6 +40,7 @@ Things that need redesigning:
 	+ QThread
 	+ External process
 	+ Completely non-blocking I/O and host lookup.
+	+ kioslaves
   
 	- QThread
 	  Probably not supported on all KDE platforms but perhaps the 'nicest' design.
@@ -46,4 +55,6 @@ Things that need redesigning:
 	  Supposedly a CPU hog, but I don't think people worry about that too much
 	  these days.
 
-
+	- kioslaves
+	  Probably the nicest solution. Avoids code duplication, and blocking.
+	  Means we also use the 'standard' mechanism for this.

@@ -1,4 +1,4 @@
-# (C) Address999 Rik Hemsley <rikkus@postmaster.co.uk>
+# (C) Address999 Rik Hemsley <rik@kde.org>
 # This file describes the various header fields that we know exist and can
 # handle. This file will be parsed to generate some code to handle these
 # fields.
@@ -9,7 +9,7 @@ xxx
 					This library relies on the Qt toolkit (http://www.troll.no).
 					Compliant with various RFCs. See docs for details.
 	
-	Copyright (C) 1998 Rik Hemsley <rikkus@postmaster.co.uk>
+	Copyright (C) 1998 Rik Hemsley <rik@kde.org>
 	
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public

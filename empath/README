@@ -1,22 +1,13 @@
 OI !
 
-Developers: Please read DEVELOPER_INFO as well as this.
-
 Currently working on: Making Maildir work properly, using a single dir as the base,
 i.e. ~/Maildir, and using separate Maildir type dirs for folders. This is the
 way it was meant to be. EmpathMailboxMaildir will now contain many EmpathMaildir,
 which will all have their own indices.
 
-NOTE WELL ! Started recently moving things to QCString. I've defined QCString as
-QString for Qt 1 compiles, of course.
+QCString stuff seems to be going ok now.
 
-I want to make anything that deals with messages into QCString. You probably know
-that it's ok to have 8-bit chars in messages, well it's not OK to have Unicode
-unless you use MIME encoding. Headers, I think, are supposed to be 7-bit
-us-ascii, though I've heard this isn't strictly held to, and don't know if it's
-even true. Anyway, we will use QCString for all operations that act upon messages.
-This means more work, but it means we don't use huge amounts of storage for
-messages and their parts.
+Also started using QValueLists where appropriate, including QStringList.
 
 Potential developers:
 
@@ -31,20 +22,9 @@ able to use Empath in their native language.
 
 * COMPILING WITH DIFFERENT QT VERSIONS *
 
-Note: I have changed things around so Empath _should_ compile with Qt 1.42 and KDE 1.1 libs again. This was done because Qt 2 doesn't seem to be stable enough for me to use as the main test platform just yet. Please remember to code _FOR_QT_2_ but make judicious use of #if QT_VERSION > 200 to select the 1.42 compatible version.
-
-Also: If you are using the kde-common admin stuff, it's looking for Qt 2. If you want to compile for 1.42 (recommended!) you should make a separate base dir for empath (the one with configure.in.in). Edit admin/acinclude.m4.in and add these lines before the closing square brace of KDE_USE_QT (line 559).
-kde_qt_minversion=142
-kde_qt_verstring="142"
-
-Also: Empath _will_crash_ if you have use a Qt2 version and then a Qt1.42 version.
-This is due to some stream functions reading/writing from ~/Maildir/.empathIndex.
-EmpathMaildirIndex is currently using QString, rather than QCString for its
-storage. This will change in the future but for now you are warned that if Empath
-crashes while trying to read your Maildir, do a quick rm ~/Maildir/.empathIndex
-before running.
-
-Also: You probably need to add -lkio to empath/Makefile.am for Qt 2 compile
+You can't now. Qt 2 has almost stabilised enough to be blameless when Empath dies.
+Also, there's extra stuff like QValueList, which is damn useful.
+Please use Qt 2pre !
 
 * GETTING STARTED *
 
@@ -81,8 +61,7 @@ Read Changelog and design_docs/*
 
 Note that the ChangeLog is now a little out of date, and the design_docs are too.
 The design_docs stuff is basically me just writing stuff down so that I understand
-what I'm doing. With five million things trying to fit into the space for 7, I
-get a little unfocussed.
+what I'm doing.
 
-Rik Hemsley <rik@rikkus.demon.co.uk>
+Rik Hemsley <rik@kde.org>
 

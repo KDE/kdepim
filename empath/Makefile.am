@@ -20,7 +20,9 @@ empath_SOURCES = \
 	EmpathComposeWidget.cpp \
 	EmpathComposeWindow.cpp \
 	EmpathConfigIMAP4Dialog.cpp \
-	EmpathConfigLocalDialog.cpp \
+	EmpathConfigMaildirDialog.cpp \
+	EmpathConfigMboxDialog.cpp \
+	EmpathConfigMMDFDialog.cpp \
 	EmpathConfigPOP3Dialog.cpp \
 	EmpathConfigPOP3General.cpp \
 	EmpathConfigPOP3LargeMsgs.cpp \
@@ -56,7 +58,6 @@ empath_SOURCES = \
 	EmpathMailbox.cpp \
 	EmpathMailboxIMAP4.cpp \
 	EmpathMailboxList.cpp \
-	EmpathMailboxLocal.cpp \
 	EmpathMailboxMMDF.cpp \
 	EmpathMailboxMaildir.cpp \
 	EmpathMailboxMbox.cpp \
@@ -109,7 +110,9 @@ noinst_HEADERS = \
 	EmpathComposeWidget.h \
 	EmpathComposeWindow.h \
 	EmpathConfigIMAP4Dialog.h \
-	EmpathConfigLocalDialog.h \
+	EmpathConfigMaildirDialog.h \
+	EmpathConfigMboxDialog.h \
+	EmpathConfigMMDFDialog.h \
 	EmpathConfigPOP3Dialog.h \
 	EmpathConfigPOP3General.h \
 	EmpathConfigPOP3LargeMsgs.h \
@@ -147,7 +150,6 @@ noinst_HEADERS = \
 	EmpathMailbox.h \
 	EmpathMailboxIMAP4.h \
 	EmpathMailboxList.h \
-	EmpathMailboxLocal.h \
 	EmpathMailboxMMDF.h \
 	EmpathMailboxMaildir.h \
 	EmpathMailboxMbox.h \
