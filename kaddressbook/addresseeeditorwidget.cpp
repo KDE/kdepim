@@ -422,7 +422,7 @@ void AddresseeEditorWidget::setupAdditionalTabs()
     QString pageTitle = manager->factory( i )->pageTitle();
 
     if ( pageIdentifier == "misc" )
-      pageTitle = i18n( "&Misc" );
+      pageTitle = i18n( "Misc" );
 
     ContactEditorTabPage *page = mTabPages[ pageIdentifier ];
     if ( page == 0 ) { // tab not yet available, create one
