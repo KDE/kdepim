@@ -18,8 +18,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2002-10-03</date>
-<releaseinfo>1.5</releaseinfo>
+<date>2004-02-21</date>
+<releaseinfo>1.6</releaseinfo>
 </chapterinfo>
 
 <title>Getting Started</title>
@@ -45,7 +45,7 @@ messages.</para>
 <guilabel>Identities</guilabel>, <guilabel>Network</guilabel>,
 <guilabel>Appearance</guilabel>, <guilabel>Composer</guilabel>, 
 <guilabel>Security</guilabel>, and
-<guilabel>Folders</guilabel>.</para>
+<guilabel>Misc</guilabel>.</para>
 
 <para>To begin sending and receiving messages you will only have to
 change some settings in the <guilabel>Identities</guilabel> and
@@ -56,10 +56,10 @@ change some settings in the <guilabel>Identities</guilabel> and
 
 <para>The settings in the <guilabel>Identities</guilabel> page are fairly
 straightforward. Select your default identity and click <guibutton>Modify</guibutton>.
-Fill in the <guilabel>Name</guilabel> field with your
+Fill in the <guilabel>Your name</guilabel> field with your
 full name (&eg; <userinput>John Doe</userinput>) and the
 <guilabel>Organization</guilabel> field (optional) with the appropriate
-information. Next, fill in the <guilabel>Email Address</guilabel> field with your
+information. Next, fill in the <guilabel>Email address</guilabel> field with your
 email address (&eg; <userinput>john@example.net</userinput>). If you are 
 using <application>PGP</application> or
 <application>GnuPG</application> you need to set your key in 
@@ -90,7 +90,7 @@ way to send messages. Using the <guibutton>Add...</guibutton>
 button you can choose between two different ways of sending messages:
 <guilabel>SMTP</guilabel> and
 <guilabel>Sendmail</guilabel>. &Sendmail; here
-means a local software installation - this has a
+means a local software installation -- this has a
 reputation of being difficult to set up, so if you do not already have a
 working &Sendmail; configuration, choose
 <guilabel>SMTP</guilabel> and fill in the <guilabel>Name</guilabel>
@@ -132,7 +132,7 @@ you want to use a local mailbox file, please see the <link linkend="faq-file-loc
 about file locking</link>.</para>
         
 <para>You will then be presented with
-the <guilabel>Add Account</guilabel> window. First, fill in the
+the <guilabel>Add account</guilabel> window. First, fill in the
 <guilabel>Name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Host</guilabel> should be filled in with the appropriate information
@@ -180,7 +180,7 @@ In</guimenuitem></menuchoice>.</para>
 
 <para>Select <guilabel>Enable interval mail checking</guilabel> if you want
 &kmail; to check for new messages automatically. The interval can be specified below
-under <guilabel>Check interval (minutes)</guilabel>.</para>
+under <guilabel>Check interval</guilabel>.</para>
 
 <para><guilabel>inbox</guilabel> is the default folder for incoming
 messages. If you want to change that for some reason, you can do so with
@@ -281,14 +281,4 @@ and recheck your settings at
 
 </sect1>
 
-<sect1 id="getting-started-authors">
-<title>Section Authors</title>
-
-<para>This section written by:
-Daniel Naber <email>daniel.naber@t-online.de</email> and
-David Rugge <email>davidrugge@mediaone.net</email>.</para>
-
-<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
-
-</sect1>
 </chapter>

@@ -69,8 +69,8 @@
 
 </authorgroup>
 
-<date>2002-10-03</date>
-<releaseinfo>1.5</releaseinfo>
+<date>2004-02-21</date>
+<releaseinfo>1.6</releaseinfo>
 
 <copyright>
 <year>1999</year>
@@ -78,6 +78,11 @@
 <year>2001</year>
 <year>2002</year>
 <holder>David Rugge</holder>
+</copyright>
+<copyright>
+<year>2003</year>
+<year>2004</year>
+<holder>Daniel Naber</holder>
 </copyright>
 
 <abstract>
@@ -122,17 +127,6 @@
 <title>Compilation and Installation</title>
 
 &install.compile.documentation;
-
-</sect1>
-
-<sect1 id="installation-authors">
-<title>Section Authors</title>
-
-<para>This section written by:
-Daniel Naber <email>daniel.naber@t-online.de</email> and
-David Rugge <email>davidrugge@mediaone.net</email>.</para>
-
-<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 </sect1>
 

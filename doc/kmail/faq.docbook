@@ -108,7 +108,7 @@ ultimate ownertrust. It is no longer implicitly done for you.</para>
 where <filename>$KDEHOME</filename> is typically <filename class="directory">~/.kde</filename>.
 The mails are saved in <filename class="directory">~/Mail</filename>. Note
 that some of the files are hidden, remember to also copy those if you
-want to make a backup of your mails.</para>
+want to backup or archive your mails.</para>
 </answer>
 </qandaentry>
 
@@ -538,14 +538,4 @@ available in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 
 </qandaset>
 
-<sect1 id="faq-authors">
-<title>Section Authors</title>
-
-<para>This section written by:
-Daniel Naber <email>daniel.naber@t-online.de</email> and
-David Rugge <email>davidrugge@mediaone.net</email>.</para>
-
-<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
-
-</sect1>
 </chapter>

@@ -9,17 +9,10 @@
 <email>daniel.naber@t-online.de</email>
 </address></affiliation>
 </author>
-<author>
-<firstname>David</firstname>
-<surname>Rugge</surname>
-<affiliation><address>
-<email>davidrugge@mediaone.net</email>
-</address></affiliation>
-</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2002-10-03</date>
-<releaseinfo>1.5</releaseinfo>
+<date>2004-02-21</date>
+<releaseinfo>1.6</releaseinfo>
 </chapterinfo>
 
 <title>Introduction</title>
@@ -51,25 +44,13 @@ in <filename class="directory">~/Mail</filename>
 
 </itemizedlist>
 
-<para>&kmail;'s homepage is at <ulink
-url="http://kmail.kde.org">http://kmail.kde.org</ulink>, an archive of the
-developer's mailing list is at <ulink
-url="http://lists.kde.org/?l=kde-kmail&amp;r=1&amp;w=2">lists.kde.org</ulink>.</para>
-
-<para>Please report bugs in &kmail; using
+<para>&kmail;'s homepage can be found at <ulink
+url="http://kmail.kde.org">http://kmail.kde.org</ulink>. There you will
+find useful links, &eg; to the user and developer mailing lists.
+Please report bugs in &kmail; using
 <menuchoice><guimenu>Help</guimenu><guimenuitem>Report
 Bug...</guimenuitem></menuchoice>.</para>
 
 <para>We hope you will enjoy &kmail;!</para>
 
-<sect1 id="intro-authors">
-<title>Section Authors</title>
-
-<para>This section written by:
-Daniel Naber <email>daniel.naber@t-online.de</email> and
-David Rugge <email>davidrugge@mediaone.net</email>.</para>
-
-<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
-
-</sect1>
 </chapter>

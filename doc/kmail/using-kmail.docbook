@@ -9,17 +9,10 @@
 <email>daniel.naber@t-online.de</email>
 </address></affiliation>
 </author>
-<author>
-<firstname>David</firstname>
-<surname>Rugge</surname>
-<affiliation><address>
-<email>davidrugge@mediaone.net</email>
-</address></affiliation>
-</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2002-10-03</date>
-<releaseinfo>1.5</releaseinfo>
+<date>2004-02-21</date>
+<releaseinfo>1.6</releaseinfo>
 </chapterinfo>
 
 <title>Using &kmail;</title>
@@ -121,10 +114,19 @@ at the bottom.</entry>
 <entry>Go to the previous folder with unread messages.</entry>
 </row>
 <row>
+<entry><keycombo action="simul">&Ctrl;<keycap>Up Arrow</keycap></keycombo></entry>
+<entry>Go to the next folder in the folder list (if the folder list has focus).</entry>
+</row>
+<row>
+<entry><keycombo action="simul">&Ctrl;<keycap>Down Arrow</keycap></keycombo></entry>
+<entry>Go to the previous folder in the folder list (if the folder list has focus).</entry>
+</row>
+<row>
 <entry><keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo></entry>
 <entry>Walk upwards in the list of folders. Use 
 <keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to actually
 enter the folder.</entry>
+<!-- TODO: or wait for timeout so the folder is selected? -->
 </row>
 <row>
 <entry><keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo></entry>
@@ -228,6 +230,10 @@ to attach.</para>
 composer window.</para> 
 </listitem>
 <listitem>
+<para>Drag a message from &kmail;'s Headers pane into the composer
+window. That message will then be attached.</para>
+</listitem>
+<listitem>
 <para>Select one of the options in the
 <menuchoice><guimenu>Attach</guimenu></menuchoice> menu.</para>
 </listitem>
@@ -239,12 +245,12 @@ pane at the bottom of the composer window. You can use the
 <guimenuitem>Save</guimenuitem> or <guimenuitem>Remove</guimenuitem>
 the attachment.</para>
 
-<para>Use the <guimenuitem>Properties...</guimenuitem> item to
+<para>Use the <guimenuitem>Properties</guimenuitem> item to
 open the <guilabel>Message Part Properties</guilabel> dialog.
-The first field contains the attachment's &MIME;-type. Just like the <guilabel>Name</guilabel>
+The first field contains the attachment's &MIME; type. Just like the <guilabel>Name</guilabel>
 field, it should be automatically filled with an appropriate value. Sometimes the
-&MIME;-type value may be wrong. You can then type in any &MIME;-type or
-choose from the list of common &MIME;-types. You can also select an encoding
+&MIME; type value may be wrong. You can then type in any &MIME; type or
+choose from the list of common &MIME; types. You can also select an encoding
 method for your file from the list of encoding options (normally, the default
 value works fine). Check the <guilabel>Suggest automatic display</guilabel> option 
 if you want to suggest to the recipient the automatic (inline) display of this part 
@@ -268,7 +274,13 @@ and configure <link linkend="configure-security-plugins">encryption plugins</lin
 <sect2 id="checking-the-spelling-of-your-message">
 <title>Checking the Spelling of your Message</title>
 
-<para>To check the spelling of your message, select
+<para>&kmail; will automatically check the spelling of your message
+and display unknown words using red color. If there are too many
+unknown words &kmail; will disable its checking. To select the language
+used for checking, select <menuchoice><guimenu>View</guimenu>
+<guimenuitem>Dictionary</guimenuitem></menuchoice>.</para>
+
+<para>To check the spelling of your message using a dialog, select
 <menuchoice><guimenu>Tools</guimenu>
 <guimenuitem>Spelling...</guimenuitem></menuchoice>. &kmail; uses 
 <ulink url="/kspell/">&kspell;</ulink> to
@@ -380,10 +392,13 @@ mailing list address in the <guilabel>To:</guilabel> field (&ie; it will ignore
 the <token>Reply-To</token> of the message). You can also click the
 <mousebutton>middle</mousebutton> mousebutton in the Folders pane to post to a
 mailing list that is associated with that folder.</para>
+<!-- TODO: "reply" in a folder that has a mailing list address
+always sends the reply the the mailing list, even if the mail
+was sent to one personally??? -->
 
 <para>The <guilabel>Old Message Expiry</guilabel> section lets you automatically
 delete old messages when you exit &kmail; (depending on your settings
-in &kmail;'s <guilabel>Folders</guilabel> configuration page) or
+in &kmail;'s <guilabel>Misc</guilabel> configuration page) or
 via <menuchoice><guimenu>File</guimenu><guisubmenu>Expire
 All Folders</guisubmenu></menuchoice>.
 <warning><para>Messages that are expired are deleted. They are <emphasis>not</emphasis> moved
@@ -408,11 +423,11 @@ folder to save your own sent messages.</para>
 format. <guilabel>mbox</guilabel> saves all messages of a folder to one file,
 whereas <guilabel>maildir</guilabel> saves each message to its own file.
 <guilabel>maildir</guilabel>, which is the default format, can be considered more
-robust, but it can be slower on some file systems. If you are unsure, you should
+robust, but it can be slower on some file systems. If you are unsure,
 choose <guilabel>maildir</guilabel>.</para>
 
 <para>Note that there is currently no feature in &kmail; that allows to convert
-between both formats automatically - but you can just move all messages from an old
+between both formats automatically -- but you can just move all messages from an old
 <guilabel>mbox</guilabel> folder to a new <guilabel>maildir</guilabel> folder or
 vice versa.</para>
 
@@ -441,7 +456,7 @@ done with or to the message if the search pattern matches. Read more
 about search patterns and filter actions in the following
 subsections.</para>
 
-<note><para> Filters are considered one after the other,
+<note><para>Filters are considered one after the other,
 starting with the first filter in the list. The first one whose
 pattern matches the given message gets executed. You can request that
 the remaining filters also be applied, but the default is to stop
@@ -469,8 +484,8 @@ most cases, all you have to do is select the folder where the message
 should be moved to. But you can, of course, edit the filter as you
 like.</para>
 
-<para>The interesting thing about this method is that creating a
-filter on mailing lists will try really hard to find a criterion that
+<para>When creating a filter on mailing list messages this method 
+will try really hard to find a criterion that
 uniquely identifies messages from that list. If it succeeds, the guessed
 name of the list is presented in the
 <menuchoice><guimenu>Tools</guimenu><guisubmenu>Create
@@ -526,7 +541,7 @@ all but two rules from screen and resets those two.</para>
 <varlistentry>
 <term><guilabel>Filter Actions</guilabel></term> <listitem><para>In
 this group you can edit the list of actions that is applied to all
-messages that match the defined search pattern. See <link
+messages that match the defined filter criteria. See <link
 linkend="filter-action">Filter Actions</link> below for a detailed
 description of each action type.</para>
 
@@ -634,6 +649,7 @@ if any).</para>
 <listitem>
 <para>Searches the header field that is given by that name.</para>
 </listitem>
+<!-- TODO: status -->
 </varlistentry>
 </variablelist>
 
@@ -643,7 +659,7 @@ if any).</para>
 <title>Filter Action</title>
 
 <para>The most common use of filters is to sort incoming messages to
-certain folders. This can be done by choosing <guilabel>move to
+certain folders. This can be done by choosing <guilabel>file into
 folder</guilabel>. Here is a list of all possible actions:</para>
 
 <variablelist>
@@ -680,6 +696,7 @@ message.</para>
 also as forwarded, replied, &etc;</para>
 </listitem>
 </varlistentry>
+<!-- TODO: send fake MDN? -->
 <varlistentry>
 <term><guilabel>set transport to</guilabel></term>
 <listitem>
@@ -701,6 +718,7 @@ which you do not like.</para>
 </varlistentry>
 <varlistentry>
 <term><guilabel>redirect to</guilabel></term>
+<!-- TODO: what's the difference to forward? -->
 <listitem><para>Will redirect the message to another email address.</para>
 </listitem>
 </varlistentry>
@@ -716,7 +734,7 @@ spam messages.</para></warning>
 <varlistentry>
 <term><guilabel>confirm delivery</guilabel></term>
 <listitem><para>Will try to return a message to the sender that
-indicates successful delivery of his message, if he requested that.</para> <para>This
+indicates successful delivery of his message, if the sender requested that.</para> <para>This
 action allows you to select who will get delivery receipts from
 you. Though you can globally enable the sending of delivery
 confirmations in the <guilabel>Configure &kmail;...</guilabel> dialog
@@ -774,7 +792,7 @@ lines.</para></warning>
 <varlistentry>
 <term><guilabel>remove header</guilabel></term>
 <listitem>
-<para>Will remove <emphasis>all</emphasis> header fields with the
+<para>Will remove all header fields with the
 given name from the message. This is useful mainly for removing bogus
 <quote>Reply-To:</quote> headers.</para>
 </listitem>
@@ -783,9 +801,9 @@ given name from the message. This is useful mainly for removing bogus
 <term><guilabel>add header</guilabel></term>
 <listitem>
 <para>If no such field is already present, will add a new header field
-with the given name and value to the message. If there is already a
-header field with that name, it is overwritten with the new (the
-given) value. If there are already multiple headers with the given
+with the given name and value to the message. If there already is a
+header field with that name, it is overwritten with the 
+given value. If there are already multiple headers with the given
 name (&eg; <quote>Received:</quote> headers), an arbitrary one of them is
 overwritten and the others are left unchanged. This is a known
 limitation. You may want to combine this filter with the
@@ -808,6 +826,7 @@ in the search string.</para><para>Analogous restrictions as in the
 <guilabel>add header</guilabel> action apply here, too.</para>
 </listitem>
 </varlistentry>
+<!-- TODO: play sound -->
 </variablelist>
 
 </sect2>
@@ -831,14 +850,14 @@ Mailing-List...</guimenuitem></menuchoice> can identify the mailing
 list (the name of the list should then appear in the menu item). In
 this case, this works and I am presented a filter that has
 <quote>X-Mailing-List <guilabel>equals</guilabel>
-&lt;kde@lists.netcentral.net&gt;</quote> preset. You select the
+&lt;kde@mail.kde.org&gt;</quote> preset. You select the
 desired destination folder from the folder pull-down menu in the
 <guilabel>Filter Action</guilabel> group and that's it!</para>
 
 <para>If that does not work, think of a unique way of identifying the
 messages you want to filter. The (almost) unique property of my &kde;
 List messages is that they always contain
-<quote>kde@lists.netcentral.net</quote> in the
+<quote>kde@mail.kde.org</quote> in the
 <guilabel>To:</guilabel> or <guilabel>CC:</guilabel> field. It is only
 almost unique, because this fails for cross-posted messages.</para>
 </step>
@@ -854,11 +873,11 @@ filter. It will appear as <guilabel>&lt;unknown&gt;</guilabel>.</para>
 <para>In the <guilabel> Filter Criteria</guilabel> area, select
 <guilabel>&lt;recipients&gt;</guilabel> from the first pull-down menu,
 <guilabel>contains</guilabel> from the second pull-down menu, and type
-<userinput>kde@lists.netcentral.net</userinput> in the text
+<userinput>kde@mail.kde.org</userinput> in the text
 field.</para>
 </step>
 <step>
-<para>Skip down to the <guilabel>Filter Actions</guilabel> section. Select <guilabel>move to
+<para>Skip down to the <guilabel>Filter Actions</guilabel> section. Select <guilabel>file into
 folder</guilabel> from the first pull-down menu. A new pull-down menu
 containing a list of folders will appear. Select the folder that you
 want the filtered messages to be transferred to. For this example, you would select
@@ -880,7 +899,7 @@ the filter you just created.</para>
 </step>
 <step>
 <para>Since you want to filter all messages that have
-<replaceable>kde@lists.netcentral.net</replaceable> in the
+<replaceable>kde@mail.kde.org</replaceable> in the
 <guilabel>To:</guilabel> or <guilabel>CC:</guilabel> field
 <emphasis>and</emphasis> that are from Fred, check the
 <guibutton>Match all of the following</guibutton> radio
@@ -901,6 +920,7 @@ that are from <userinput>fj@anywhere.com</userinput>.</para>
 </sect2>
 </sect1>
 
+<!-- dnaber update 2004-02-22 -->
 <sect1 id="popfilters">
 <title>Download Filters</title>
 
@@ -1432,15 +1452,4 @@ appropriate learn mode.
 
 </sect1>
 
-<sect1 id="using-kmail-authors">
-<title>Section Authors</title>
-
-<para>This section written by:
-Daniel Naber <email>daniel.naber@t-online.de</email>,
-David Rugge <email>davidrugge@mediaone.net</email> and
-Andreas Gungl <email>a.gungl@gmx.de</email>.</para>
-
-<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
-
-</sect1>
 </chapter>
