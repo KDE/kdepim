@@ -80,9 +80,9 @@ void VCalConduitPrivate::removeIncidence(KCal::Incidence *e)
 KCal::Incidence *VCalConduitPrivate::findIncidence(recordid_t id)
 {
 	KCal::Event::List::ConstIterator it;
-        for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
+	for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
 		KCal::Event *event = *it;
-                if ((recordid_t)event->pilotId() == id) return event;
+		if ((recordid_t)event->pilotId() == id) return event;
 	}
 	return 0L;
 }
@@ -96,7 +96,7 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 	QDateTime dt=readTm( entry->getEventStart() );
 
 	KCal::Event::List::ConstIterator it;
-        for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
+	for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
 		KCal::Event *event = *it;
 		if ( (event->dtStart() == dt) && (event->summary() == title) ) return event;
 	}
@@ -109,15 +109,14 @@ KCal::Incidence *VCalConduitPrivate::getNextIncidence()
 {
 	FUNCTIONSETUP;
 	if (reading) {
-                ++fAllEventsIterator;
-                if ( fAllEventsIterator == fAllEvents.end() ) return 0;
-        } else {
-	        reading=true;
-                fAllEventsIterator = fAllEvents.begin();
-		// Handle case of empty list.
-                if ( fAllEventsIterator == fAllEvents.end() ) return 0;
-        }
-        return *fAllEventsIterator;
+		++fAllEventsIterator;
+	} else {
+		reading=true;
+		fAllEventsIterator = fAllEvents.begin();
+	}
+	// At end of list, or empty list.
+	if ( fAllEventsIterator == fAllEvents.end() ) return 0;
+	return *fAllEventsIterator;
 }
 
 /** Find the next incidence in the list which ddoes not have the SYNCNONE flag set. The
@@ -366,7 +365,7 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	KCal::Alarm::List alms=e->alarms();
 	KCal::Alarm* alm=0;
 	KCal::Alarm::List::ConstIterator it;
-        for ( it = alms.begin(); it != alms.end(); ++it ) {
+	for ( it = alms.begin(); it != alms.end(); ++it ) {
 		if ((*it)->enabled()) alm=*it;
 	}
 
