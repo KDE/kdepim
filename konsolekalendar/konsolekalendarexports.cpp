@@ -218,8 +218,8 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
   //
   // startdate,starttime,enddate,endtime,summary,location,description,UID
 
-  QString delim = i18n( "," );
-  QString dquote = i18n( "\"" );
+  QString delim = i18n( "," );   // character to use as CSV field delimiter
+  QString dquote = i18n( "\"" ); // character to use to quote CSV fields
 
   if ( !event->doesFloat() ) {
     *ts <<          pF( date.toString("yyyy-MM-dd") )
@@ -233,9 +233,9 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
         << delim << pF( "" );
   }
 
-  *ts << delim << pF( event->summary() )
-      << delim << pF( event->location() )
-      << delim << pF( event->description() )
+  *ts << delim << pF( event->summary().replace( QChar('\n'), QChar(' ') ) )
+      << delim << pF( event->location().replace( QChar('\n'), QChar(' ') ) )
+      << delim << pF( event->description().replace( QChar('\n'), QChar(' ') ) )
       << delim << pF( event->uid() )
       << endl;
 
