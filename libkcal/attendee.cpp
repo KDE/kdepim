@@ -129,12 +129,12 @@ QString Attendee::roleStr() const
 
 void Attendee::setUid(QString uid)
 {
-mUid = uid;
+  mUid = uid;
 }
 
 QString Attendee::uid() const
 {
-return mUid;
+  return mUid;
 }
 
 QString Attendee::roleName( Attendee::Role r )
