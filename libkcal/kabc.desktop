@@ -3,7 +3,8 @@ Type=Service
 
 [Misc]
 Encoding=UTF-8
-Name=Birthdays from kaddressbook
+Name=Birthdays from KAddressBook
+Name[sv]=Födelsedagar från adressboken
 
 [Plugin]
 Type=birthdays
