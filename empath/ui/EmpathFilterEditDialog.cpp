@@ -213,7 +213,7 @@ EmpathFilterEditDialog::~EmpathFilterEditDialog()
 	void
 EmpathFilterEditDialog::s_OK()
 {
-	empathDebug("s_OK() called");
+	hide();
 	filter_->setURL(fcw_arrivesFolder_->selectedURL());
 	filter_->save();
 	accept();

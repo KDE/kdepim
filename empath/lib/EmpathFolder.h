@@ -82,6 +82,10 @@ class EmpathFolder : public QObject
 		RMessage * message(const EmpathURL & url);
 
 		bool mark(const EmpathURL &, RMM::MessageStatus);
+		
+	protected slots:
+		
+		void s_update() { update(); }
 
 	signals:
 

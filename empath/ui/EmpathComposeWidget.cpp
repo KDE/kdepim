@@ -38,6 +38,7 @@
 #include "EmpathComposeWidget.h"
 #include "EmpathHeaderEditWidget.h"
 #include "EmpathSubjectSpecWidget.h"
+#include "EmpathEditorProcess.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathMailSender.h"
@@ -127,118 +128,24 @@ EmpathComposeWidget::_init()
 {
 	switch (composeType_) {
 
-	// If we're just composing a new message, we drop out here.
-		case ComposeNormal:
-			empathDebug("Just a normal compose");
-			break;
-
-		case ComposeReply:
-			{
-				empathDebug("Replying");
-				
-				RMessage * m(empath->message(url_));
-				if (m == 0) return;
-				
-				RMessage message(*m);
-				
-				QString s;
-			   
-				// Find out who sent the message, and fill in 'To:'
-				s = message.envelope().firstSender().asString();
-
-				empathDebug("Replying to \"" + s + "\""); 
-				headerEditWidget_->setToText(s);
-				if (!s.isEmpty())
-					subjectSpecWidget_->setFocus();
-				
-				// Fill in the subject.
-				s = message.envelope().subject().asString();
-				empathDebug("Subject was \"" + s + "\""); 
-
-				if (s.isEmpty())
-					subjectSpecWidget_->setSubject(
-						i18n("Re: (no subject given)"));
-				else
-					if (s.find(QRegExp("^[Rr][Ee]:")) != -1)
-						subjectSpecWidget_->setSubject(s);
-					else
-						subjectSpecWidget_->setSubject("Re: " + s);
-				
-				// Now quote original message if we need to.
-				
-				KConfig * c(kapp->getConfig());
-				c->setGroup(EmpathConfig::GROUP_COMPOSE);
-				
-				empathDebug("Quoting original if necessary");
-
-				// Add the 'On (date) (name) wrote' bit
-					
-				if (c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE)) {
-
-					QString s(message.data());
-				
-					s.replace(QRegExp("\\n"), "\n> ");
+		case ComposeReply:		_reply();		break; 
+		case ComposeReplyAll:	_reply(true);	break; 
+		case ComposeForward:	_forward();		break; 
+		case ComposeNormal:		default:		break;
+	}
 	
-					QString thingyWrote =
-						c->readEntry(
-							EmpathConfig::KEY_PHRASE_REPLY_SENDER, "") + '\n';
-					
-					// Be careful here. We don't want to reveal people's
-					// email addresses.
-					if (message.envelope().has(RMM::HeaderFrom) &&
-						!message.envelope().from().at(0).phrase().isEmpty()) {
-						
-						thingyWrote.replace(QRegExp("\\%s"),
-							message.envelope().from().at(0).phrase());
+	if (composeType_ == ComposeForward) {
+		// Don't bother opening external editor
+		return;
+	}
+	
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 
-						if (message.envelope().has(RMM::HeaderDate))
-							thingyWrote.replace(QRegExp("\\%d"),
-								message.envelope().date().qdt().date().toString());
-						else
-							thingyWrote.replace(QRegExp("\\%d"),
-								i18n("An unknown date and time"));
-					
-						editorWidget_->setText('\n' + thingyWrote + s);
-					}
-				}
+	if (c->readBoolEntry(EmpathConfig::KEY_USE_EXTERNAL_EDITOR, false)) {
 
-				editorWidget_->setFocus();
-			}
-			break;
-
-		case ComposeReplyAll:
-			empathDebug("Replying to all");
-			break;
-
-		case ComposeForward:
-			{
-				empathDebug("Forwarding");
-				
-				RMessage * m(empath->message(url_));
-				if (m == 0) return;
-				
-				RMessage message(*m);
-				
-				QString s;
-			   
-				// Fill in the subject.
-				s = message.envelope().subject().asString();
-				empathDebug("Subject was \"" + s + "\""); 
-
-				if (s.isEmpty())
-					subjectSpecWidget_->setSubject(
-						i18n("Fwd: (no subject given)"));
-				else
-					if (s.find(QRegExp("^[Ff][Ww][Dd]:")) != -1)
-						subjectSpecWidget_->setSubject(s);
-					else
-						subjectSpecWidget_->setSubject("Fwd: " + s);
-			}
-			break;
-
-		default:
-			empathDebug("Uh ? don't know if I'm replying, forwarding or what");
-			break;
+		editorWidget_->setEnabled(false);
+		spawnExternalEditor(editorWidget_->text().ascii());
 	}
 }
 
@@ -356,7 +263,125 @@ EmpathComposeWidget::spawnExternalEditor(const QCString & text)
 {
 	empathDebug("spawnExternalEditor() called");
 	
-//	EmpathEditorProcess * p = new EmpathExternalEditorProcess;
-//	CHECK_PTR(p);
+	EmpathEditorProcess * p = new EmpathEditorProcess(text);
+	CHECK_PTR(p);
+	
+	QObject::connect(
+		p, 		SIGNAL(done(bool, QCString)),
+		this,	SLOT(s_editorDone(bool, QCString)));
+	
+	p->go();
+}
+
+	void
+EmpathComposeWidget::_reply(bool toAll)
+{
+	empathDebug("Replying");
+	
+	RMessage * m(empath->message(url_));
+	if (m == 0) return;
+	
+	RMessage message(*m);
+	
+	QString s;
+	
+	// Find out who sent the message, and fill in 'To:'
+	s = message.envelope().firstSender().asString();
+
+	empathDebug("Replying to \"" + s + "\""); 
+	headerEditWidget_->setToText(s);
+	if (!s.isEmpty())
+		subjectSpecWidget_->setFocus();
+	
+	// Fill in the subject.
+	s = message.envelope().subject().asString();
+	empathDebug("Subject was \"" + s + "\""); 
+
+	if (s.isEmpty())
+		subjectSpecWidget_->setSubject(
+			i18n("Re: (no subject given)"));
+	else
+		if (s.find(QRegExp("^[Rr][Ee]:")) != -1)
+			subjectSpecWidget_->setSubject(s);
+		else
+			subjectSpecWidget_->setSubject("Re: " + s);
+	
+	// Now quote original message if we need to.
+	
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
+	
+	empathDebug("Quoting original if necessary");
+
+	// Add the 'On (date) (name) wrote' bit
+		
+	if (c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE)) {
+
+		QString s(message.data());
+	
+		s.replace(QRegExp("\\n"), "\n> ");
+
+		QString thingyWrote =
+			c->readEntry(
+				EmpathConfig::KEY_PHRASE_REPLY_SENDER, "") + '\n';
+		
+		// Be careful here. We don't want to reveal people's
+		// email addresses.
+		if (message.envelope().has(RMM::HeaderFrom) &&
+			!message.envelope().from().at(0).phrase().isEmpty()) {
+			
+			thingyWrote.replace(QRegExp("\\%s"),
+				message.envelope().from().at(0).phrase());
+
+			if (message.envelope().has(RMM::HeaderDate))
+				thingyWrote.replace(QRegExp("\\%d"),
+					message.envelope().date().qdt().date().toString());
+			else
+				thingyWrote.replace(QRegExp("\\%d"),
+					i18n("An unknown date and time"));
+		
+			editorWidget_->setText('\n' + thingyWrote + s);
+		}
+	}
+
+	editorWidget_->setFocus();
+}
+
+	void
+EmpathComposeWidget::_forward()
+{
+	empathDebug("Forwarding");
+	
+	RMessage * m(empath->message(url_));
+	if (m == 0) return;
+	
+	RMessage message(*m);
+	
+	QString s;
+
+	// Fill in the subject.
+	s = message.envelope().subject().asString();
+	empathDebug("Subject was \"" + s + "\""); 
+
+	if (s.isEmpty())
+		subjectSpecWidget_->setSubject(
+			i18n("Fwd: (no subject given)"));
+	else
+		if (s.find(QRegExp("^[Ff][Ww][Dd]:")) != -1)
+			subjectSpecWidget_->setSubject(s);
+		else
+			subjectSpecWidget_->setSubject("Fwd: " + s);
+}
+
+	void
+EmpathComposeWidget::s_editorDone(bool ok, QCString text)
+{
+	if (!ok) {
+//		statusBar()->message(i18n("Message not modified by external editor"));
+		return;
+	}
+	
+	editorWidget_->setText(text);
+	editorWidget_->setEnabled(true);
 }
 

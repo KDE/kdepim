@@ -76,9 +76,13 @@ class EmpathComposeWidget : public QWidget
 		
 	protected slots:
 		
+		void	s_editorDone(bool ok, QCString text);
+		
 	private:
 
 		void	_init();
+		void	_reply(bool toAll = false);
+		void	_forward();
 		void	spawnExternalEditor(const QCString & text);
 
 		QMultiLineEdit					* editorWidget_;

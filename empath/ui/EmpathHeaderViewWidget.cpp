@@ -44,7 +44,7 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QStrList l;
-	c->readListEntry(EmpathConfig::KEY_SHOW_HEADERS, l, ';');
+	c->readListEntry(EmpathConfig::KEY_SHOW_HEADERS, l, ',');
 	
 	QStrListIterator it(l);
 	

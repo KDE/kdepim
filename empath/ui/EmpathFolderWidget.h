@@ -64,6 +64,7 @@ class EmpathFolderWidget : public QListView
 		void s_newFolder();
 		void s_removeFolder();
 		void s_setUpAccounts();
+		void s_openChanged();
 	
 	signals:
 

@@ -23,8 +23,14 @@
 #include <qstring.h>
 #include <qfontmetrics.h>
 #include <qpixmap.h>
+#include <qstringlist.h>
+
+// KDE includes
+#include <kconfig.h>
+#include <kapp.h>
 
 // Local includes
+#include "EmpathConfig.h"
 #include "EmpathFolderListItem.h"
 #include "EmpathFolder.h"
 #include "EmpathMailbox.h"
@@ -42,13 +48,24 @@ EmpathFolderListItem::EmpathFolderListItem(
 {
 	empathDebug("ctor with mailbox");
 
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	QStringList l = c->readListEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN, ',');
+	
+	QStringList::ConstIterator it(l.begin());
+	for (; it != l.end(); it++)
+		if (*it == url_.asString())
+			setOpen(true);
+
+
 	EmpathMailbox * m(empath->mailbox(url_));
 	
 	if (m == 0) {
 		empathDebug("Can't find the mailbox !!!!");
 		return;
 	}
-	connect(m, SIGNAL(countUpdated(int, int)),
+	QObject::connect(m, SIGNAL(countUpdated(int, int)),
 		this, SLOT(s_setCount(int, int)));
 	
 	setText(0, m->name());
@@ -67,15 +84,33 @@ EmpathFolderListItem::EmpathFolderListItem(
 {
 	empathDebug("ctor with folder \"" + url_.asString() + "\"");
 
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+
+	QStringList l = c->readListEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN);
+	
+	QStringList::ConstIterator it(l.begin());
+	for (; it != l.end(); it++)
+		if (*it == url_.asString())
+			setOpen(true);
+
+	EmpathMailbox * m(empath->mailbox(url_));
+	
 	EmpathFolder * f(empath->folder(url_));
 	
 	if (f == 0) {
 		empathDebug("Can't find the folder !!!!");
 		return;
 	}
-	connect(f, SIGNAL(countUpdated(int, int)),
-		this, SLOT(s_setCount(int, int)));
 
+	QObject::connect(
+		f,		SIGNAL(countUpdated(int, int)),
+		this,	SLOT(s_setCount(int, int)));
+	
+	QObject::connect(
+		this,	SIGNAL(update()),
+		f,		SLOT(s_update()));
+	
 	QString s = url_.folderPath();
 	if (s.right(1) == "/")
 		s = s.remove(s.length(), 1);
@@ -87,7 +122,6 @@ EmpathFolderListItem::EmpathFolderListItem(
 	setPixmap(0, empathIcon(f->pixmapName()));
 	setText(1, "...");
 	setText(2, "...");
-	f->update();
 //	setText(1, QString().setNum(f->unreadMessageCount()));
 //	setText(2, QString().setNum(f->messageCount()));
 }
@@ -140,5 +174,18 @@ EmpathFolderListItem::s_setCount(int unread, int read)
 {
 	setText(1, QString().setNum(unread));
 	setText(2, QString().setNum(read));
+}
+
+	void
+EmpathFolderListItem::setOpen(bool o)
+{
+	emit(opened());
+	QListViewItem::setOpen(o);
+}
+
+	void
+EmpathFolderListItem::s_update()
+{
+	emit(update());
 }
 

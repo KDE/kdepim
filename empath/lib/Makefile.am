@@ -7,6 +7,7 @@ libempath_a_METASOURCES = USE_AUTOMOC
 libempath_a_SOURCES = \
 Empath.cpp \
 EmpathConfig.cpp \
+EmpathEditorProcess.cpp \
 EmpathFilter.cpp \
 EmpathFilterEventHandler.cpp \
 EmpathFilterList.cpp \
@@ -27,6 +28,7 @@ EmpathMatcher.cpp \
 EmpathMessageList.cpp \
 EmpathURL.cpp \
 EmpathUtilities.cpp \
+EmpathSecurityProcess.cpp \
 EmpathTask.cpp \
 EmpathTaskTimer.cpp \
 md5.cpp

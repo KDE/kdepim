@@ -96,9 +96,6 @@ class EmpathSendingSettingsDialog : public QDialog
 		QLineEdit			* le_smtpServer_;
 
 		QCheckBox			* cb_copyOther_;
-		QCheckBox			* cb_copyFolder_;
-
-		QComboBox			* cmb_copyFolder_;
 		
 		QPushButton			* pb_sendmailBrowse_;
 		QPushButton			* pb_qmailBrowse_;
@@ -112,7 +109,6 @@ class EmpathSendingSettingsDialog : public QDialog
 		KNumericSpinBox		* sb_smtpPort_;
 		
 		EmpathAddressSelectionWidget	* asw_copyOther_;
-		EmpathFolderChooserWidget		* fcw_copyFolder_;
 
 		KButtonBox		* buttonBox_;
 		QPushButton		* pb_help_;

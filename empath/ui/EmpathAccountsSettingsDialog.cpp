@@ -407,6 +407,7 @@ EmpathAccountsSettingsDialog::s_removeAccount()
 	void
 EmpathAccountsSettingsDialog::s_OK()
 {
+	hide();
 	s_apply();
 	kapp->getConfig()->sync();
 	delete this;

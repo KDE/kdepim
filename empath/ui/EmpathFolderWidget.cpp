@@ -20,13 +20,17 @@
 
 // Qt includes
 #include <qdragobject.h>
+#include <qstringlist.h>
 
 // KDE includes
 #include <klocale.h>
 #include <klineeditdlg.h>
+#include <kconfig.h>
+#include <kapp.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
+#include "EmpathConfig.h"
 #include "EmpathConfigMaildirDialog.h"
 #include "EmpathConfigPOP3Dialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
@@ -124,6 +128,8 @@ EmpathFolderWidget::update()
 		if (!it.current()->isTagged()) {
 			itemList_.remove(it.current());
 			QListView::removeItem((QListViewItem *)it.current());
+		} else {
+			it.current()->s_update();
 		}
 
 	setUpdatesEnabled(true);
@@ -151,7 +157,11 @@ EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
 			new EmpathFolderListItem(this, mailbox.url());
 		CHECK_PTR(newItem);
 		newItem->tag(true);
-	
+		
+		QObject::connect(
+			newItem, SIGNAL(opened()),
+			this, SLOT(s_openChanged()));
+			
 		itemList_.append(newItem);
 	}
 	
@@ -192,6 +202,10 @@ EmpathFolderWidget::_addChildren(
 		CHECK_PTR(newItem);
 		newItem->tag(true);
 	
+		QObject::connect(
+			newItem, SIGNAL(opened()),
+			this, SLOT(s_openChanged()));
+
 		itemList_.append(newItem);
 	}
 
@@ -380,6 +394,10 @@ EmpathFolderWidget::s_newFolder()
 
 	EmpathFolderListItem * item =
 		new EmpathFolderListItem(popupMenuOver, newFolderURL);
+		
+	QObject::connect(
+		item, SIGNAL(opened()),
+		this, SLOT(s_openChanged()));
 	
 	itemList_.append(item);
 }
@@ -445,5 +463,22 @@ EmpathFolderWidget::find(const EmpathURL & url)
 		}
 	
 	return 0;
+}
+
+	void
+EmpathFolderWidget::s_openChanged()
+{
+	QStringList l;
+	
+	QListIterator<EmpathFolderListItem> it(itemList_);
+	
+	for (; it.current(); ++it) {
+		l.append(it.current()->url().asString());
+	}
+	
+	KConfig * c(kapp->getConfig());
+	c->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	c->writeEntry(EmpathConfig::KEY_FOLDER_ITEMS_OPEN, l, ',');
 }
 

@@ -226,9 +226,9 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 			"want to appear in the block above the message\n"
 			"you are reading. The default is:\n"
 			"From,Date,Subject\n"
-			"You must separate the header names by semicolons (;).\n"
+			"You must separate the header names by commas (,).\n"
 			"This is not case-sensitive, i.e. you can write\n"
-			"DATE and 'Date', 'date', 'DaTe' etc will all work\n"));
+			"DATE and 'Date', 'date', 'DaTe' etc will all work"));
 	
 	l_sortColumn_ =
 		new QLabel(i18n("Message sort column"), w_list_, "l_sortColumn");
@@ -261,7 +261,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	KQuickHelp::add(cb_sortAscending_, i18n(
 			"If you select this, the column you specified\n"
 			"above will be sorted ascending.\n"
-			"Guess what happens if you don't.\n"));
+			"Guess what happens if you don't."));
 	
 	cb_timer_ =
 		new QCheckBox(i18n("Mark messages as read after"), w_list_, "cb_timer");
@@ -272,7 +272,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	KQuickHelp::add(cb_timer_, i18n(
 			"If you check this, messages will be marked\n"
 			"as read after you've been looking at them for\n"
-			"the time specified\n"));
+			"the time specified"));
 	
 	sb_timer_ =
 		new QSpinBox(0, 60, 1, w_list_, "sb_timer");
@@ -284,7 +284,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	KQuickHelp::add(sb_timer_, i18n(
 			"If you check this, messages will be marked\n"
 			"as read after you've been looking at them for\n"
-			"the time specified\n"));
+			"the time specified"));
 
 /////////////////////////////////////////////////////////////////////////
 	
@@ -518,6 +518,7 @@ EmpathDisplaySettingsDialog::loadData()
 	void
 EmpathDisplaySettingsDialog::s_OK()
 {
+	hide();
 	if (!applied_)
 		s_apply();
 	kapp->getConfig()->sync();

@@ -47,10 +47,21 @@ class EmpathFolderListItem : public QObject, public QListViewItem
 		void tag(bool) { tagged_ = true; }
 		bool isTagged() { return tagged_; }
 		
+		void setOpen(bool o);
+		
+	signals:
+		
+		void opened();
+		void update();
+		
 	protected slots:
 
 		void s_setCount(int, int);
-		
+	
+	public slots:
+
+		void s_update();	
+	
 	private:
 	
 		EmpathURL url_;

@@ -7,6 +7,9 @@ Highest priority first.
 * Test sendmail and qmail sending. Queuing and sending is broken today. I'm
   working on it but I'd like help. Add user feedback.
 
+* Nail down the parser (rmm). It's still buggy when creating message parts
+  yourself and trying to put them together.
+  
 * kioslaves need to be worked in for POP, IMAP, and possibly SMTP (where a
   kioslave would have to be written !)
   
@@ -28,9 +31,36 @@ Highest priority first.
   e.g. user enters the to body, presses enter, changes Cc: to Reply-To: We then
   remember that they wanted Reply-To: next and next time when they press enter
   after To:, they get Reply-To:
+  
+* Make printing work. HTML view will do it itself, though a little weirdly.
+  Will there be a general KDE printing i/f ? Do I make stuff ps first ?
 
 ===============================================================================
 Little things I need to do. Highest priority first.
+
+* Make reply use Reply-To.
+
+* Make HTML view switch to source view (easy).
+
+* Sort out layout in filter dialogs.
+
+* Allow priority ordering in filter manager dialog.
+
+* Find out why sometimes when you select a message for the first time it isn't
+  shown.
+  
+* When you bring up the popup menu over the message list, the item is selected
+  but not shown. Need to allow it to be shown if it is clicked with the left
+  button immediately afterwards.
+  
+* Disable menu entries where appropriate.
+
+* Allow sort order in folder widget
+
+* Move 'Display Headers' from 'Message List' section to 'Message Viewing'
+  section in Display Settings dialog.
+
+* Find out why compose widget sometimes resizes to very small.
 
 * Make reply to all work.
 
@@ -40,11 +70,24 @@ Little things I need to do. Highest priority first.
 
 * Make forwarding work properly. If only one plain body part -> just
   add some text stating this is forwarded, else attach as message/rfc822 ?
+  
+* Use open folder icons when appropriate ?
 
-* Fix external editor.
+* Use inbox, outbox etc icons where appropriate ?
 
 * Make clicking on a URL work both in HTML view and about box.
 
 * Make From: bit in header view widget active as HTML label - basically need
   some way to be able to mail to or add to non-existant address book.
+  
+===============================================================================
+
+Bugs in Qt (possibly)
+
+* DnD doesn't work right. Me or Qt ? Probably me.
+
+* setUpdatesEnabled doesn't work.
+
+* setSelected(!isSelected) doesn't work in list view.
+
 

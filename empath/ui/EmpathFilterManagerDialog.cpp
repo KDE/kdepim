@@ -267,6 +267,7 @@ EmpathFilterManagerDialog::saveData()
 	void
 EmpathFilterManagerDialog::s_OK()
 {
+	hide();
 	s_apply();
 	kapp->getConfig()->sync();
 	delete this;

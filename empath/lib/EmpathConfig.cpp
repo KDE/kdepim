@@ -121,21 +121,6 @@ EmpathConfig::KEY_WRAP_LINES = "WrapLongLines";
 EmpathConfig::KEY_WRAP_COLUMN = "WrapColumn";
 
 	const QString
-EmpathConfig::KEY_CC_ME = "CCToMe";
-
-	const QString
-EmpathConfig::KEY_CC_OTHER = "CCToOther";
-
-	const QString
-EmpathConfig::KEY_CC_OTHER_ADDRESS = "CCOtherAddress";
-
-	const QString
-EmpathConfig::KEY_COPY_FOLDER = "CopyFolder";
-
-	const QString
-EmpathConfig::KEY_COPY_FOLDER_NAME = "CopyFolderName";
-
-	const QString
 EmpathConfig::KEY_SEND_POLICY = "SendWhen";
 
 	const QString
@@ -185,24 +170,6 @@ EmpathConfig::KEY_SMTP_SERVER_LOCATION = "SMTPServerLocation";
 
 	const QString
 EmpathConfig::KEY_SMTP_SERVER_PORT = "SMTPServerPort";
-
-	const QString
-EmpathConfig::KEY_LOCAL_MAILBOX_PATH = "MailboxPath";
-
-	const QString
-EmpathConfig::KEY_LOCAL_CHECK_FOR_NEW_MAIL = "CheckForNewMail";
-
-	const QString
-EmpathConfig::KEY_LOCAL_MAIL_CHECK_INTERVAL = "MailCheckInterval";
-
-	const QString
-EmpathConfig::KEY_LOCAL_AUTO_GET_NEW_MAIL = "AutoGetNewMail";
-
-	const QString
-EmpathConfig::KEY_LOCAL_SAVE_ALL_ADDRESSES = "SaveAllAddresses";
-
-	const QString
-EmpathConfig::KEY_LOCAL_NOTIFY = "Notify";
 
 	const QString
 EmpathConfig::KEY_POP3_SERVER_ADDRESS = "ServerAddress";
@@ -392,4 +359,17 @@ EmpathConfig::KEY_MARK_AS_READ = "MarkMessagesAsRead";
 
 	const QString
 EmpathConfig::KEY_MARK_AS_READ_TIME = "MarkMessagesAsReadAfterTime";
+
+	const QString
+EmpathConfig::KEY_FOLDER_ITEMS_OPEN = "FolderListItemsOpen";
 		
+	const QString
+EmpathConfig::KEY_CC_OTHER = "CopyOther";
+
+	const QString
+EmpathConfig::KEY_CC_OTHER_ADDRESS = "CopyOtherAddress";
+
+	const QString
+EmpathConfig::KEY_LOCAL_MAILBOX_PATH = "MailboxPath";
+
+

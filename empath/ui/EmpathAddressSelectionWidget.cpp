@@ -99,6 +99,6 @@ EmpathAddressSelectionWidget::s_lostFocus()
 EmpathAddressSelectionWidget::s_browseClicked()
 {
 	empathDebug("s_browseClicked() called");
-	KMsgBox(0, "Empath", i18n("Sorry, the addressbook isn't ready for use yet."), KMsgBox::EXCLAMATION, i18n("OK"));
+	KMsgBox::message(0, "Empath", i18n("Sorry, the addressbook isn't ready for use yet."), KMsgBox::EXCLAMATION, i18n("OK"));
 }
 

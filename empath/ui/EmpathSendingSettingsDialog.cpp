@@ -333,33 +333,6 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	
 	asw_copyOther_->setEnabled(false);
 	
-	cb_copyFolder_	=
-		new QCheckBox(i18n("Place a copy in &folder: "), w_copies_,
-				"cb_copyFolder");
-	CHECK_PTR(cb_copyFolder_);
-	
-	KQuickHelp::add(asw_copyOther_, i18n(
-			"This option allows you to keep a copy\n"
-			"of all outgoing messages in a folder.\n"
-			"It's very useful for being able to resend\n"
-			"messages that were lost along the way or\n"
-			"by the recipient, and to be able to quote\n"
-			"your own messages back to people. Handy\n"
-			"when people say 'you wrote this' and you\n"
-			"want to make sure you really did."));
-	
-	cb_copyFolder_->setFixedHeight(h);
-	cb_copyFolder_->setMinimumWidth(cb_copyFolder_->sizeHint().width());
-	
-	fcw_copyFolder_	=
-		new EmpathFolderChooserWidget(w_copies_, "fcw_copyFolder");
-	CHECK_PTR(fcw_copyFolder_);
-	
-	QObject::connect(fcw_copyFolder_, SIGNAL(toggled(bool)),
-			fcw_copyFolder_, SLOT(setEnabled(bool)));
-
-	fcw_copyFolder_->setEnabled(false);
-
 ///////////////////////////////////////////////////////////////////////////////
 // Button box
 
@@ -425,12 +398,11 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	serverGroupLayout_->setColStretch(3, 1);
 	serverGroupLayout_->setColStretch(4, 1);
 	
-	copiesGroupLayout_		= new QGridLayout(w_copies_,	2, 2, 0, 10);
+	copiesGroupLayout_		= new QGridLayout(w_copies_,	1, 2, 0, 10);
 	CHECK_PTR(copiesGroupLayout_);
 
 	copiesGroupLayout_->setColStretch(0, 1);
 	copiesGroupLayout_->setColStretch(1, 1);
-	copiesGroupLayout_->setColStretch(2, 0);
 
 	topLevelLayout_->addWidget(rgb_queuing_,	0, 0);
 	topLevelLayout_->addWidget(rgb_server_,		1, 0);
@@ -456,8 +428,6 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	
 	copiesGroupLayout_->addWidget(cb_copyOther_,			1, 0);
 	copiesGroupLayout_->addWidget(asw_copyOther_,			1, 1);
-	copiesGroupLayout_->addWidget(cb_copyFolder_,			2, 0);
-	copiesGroupLayout_->addWidget(fcw_copyFolder_,			2, 1);
 	
 	copiesGroupLayout_->activate();
 	
@@ -482,7 +452,9 @@ EmpathSendingSettingsDialog::saveData()
 		(rb_smtp_->isChecked()		? SMTP		: 0));
 	
 	CWE( EmpathConfig::KEY_OUTGOING_SERVER_TYPE,servType); 
+	
 	CWE( EmpathConfig::KEY_SENDMAIL_LOCATION,	le_sendmail_->text());
+	
 	CWE( EmpathConfig::KEY_QMAIL_LOCATION,		le_qmail_->text());
 	
 	CWE( EmpathConfig::KEY_SMTP_SERVER_LOCATION,le_smtpServer_->text());
@@ -490,11 +462,14 @@ EmpathSendingSettingsDialog::saveData()
 	CWE( EmpathConfig::KEY_SMTP_SERVER_PORT,	sb_smtpPort_->getValue());
 	
 	CWE( EmpathConfig::KEY_CC_OTHER,			cb_copyOther_->isChecked());
+	
 	CWE( EmpathConfig::KEY_CC_OTHER_ADDRESS,asw_copyOther_->selectedAddress());
 	
-	CWE( EmpathConfig::KEY_COPY_FOLDER,			cb_copyFolder_->isChecked());
-	CWE( EmpathConfig::KEY_COPY_FOLDER_NAME,fcw_copyFolder_->selectedURL().asString());
-	CWE( EmpathConfig::KEY_QUEUE_FOLDER,fcw_queueFolder_->selectedURL().asString());
+	CWE( EmpathConfig::KEY_QUEUE_FOLDER,
+		fcw_queueFolder_->selectedURL().asString());
+	
+	CWE( EmpathConfig::KEY_SENT_FOLDER,
+		fcw_sentFolder_->selectedURL().asString());
 	
 	empath->updateOutgoingServer();
 	
@@ -515,19 +490,29 @@ EmpathSendingSettingsDialog::loadData()
 	rb_qmail_->setChecked(		t == Qmail);
 	rb_smtp_->setChecked(		t == SMTP);
 	
-	le_sendmail_->setText(	c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION));
+	le_sendmail_->setText(
+		c->readEntry(EmpathConfig::KEY_SENDMAIL_LOCATION));
 	
-	le_qmail_->setText(		c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION));
+	le_qmail_->setText(
+		c->readEntry(EmpathConfig::KEY_QMAIL_LOCATION));
 	
-	le_smtpServer_->setText(c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION));
-	sb_smtpPort_->setValue(	c->readNumEntry(EmpathConfig::KEY_SMTP_SERVER_PORT));
+	le_smtpServer_->setText(
+		c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION));
 	
-	cb_copyOther_->setChecked(	c->readBoolEntry(EmpathConfig::KEY_CC_OTHER));
-	asw_copyOther_->setAddress(	c->readEntry(EmpathConfig::KEY_CC_OTHER_ADDRESS));
+	sb_smtpPort_->setValue(
+		c->readNumEntry(EmpathConfig::KEY_SMTP_SERVER_PORT));
 	
-	cb_copyFolder_->setChecked(	c->readBoolEntry(EmpathConfig::KEY_COPY_FOLDER));
-	fcw_copyFolder_->setURL(c->readEntry(EmpathConfig::KEY_COPY_FOLDER_NAME));
-	fcw_queueFolder_->setURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
+	cb_copyOther_->setChecked(
+		c->readBoolEntry(EmpathConfig::KEY_CC_OTHER));
+	
+	asw_copyOther_->setAddress(
+		c->readEntry(EmpathConfig::KEY_CC_OTHER_ADDRESS));
+	
+	fcw_queueFolder_->setURL(
+		c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
+	
+	fcw_sentFolder_->setURL(
+		c->readEntry(EmpathConfig::KEY_SENT_FOLDER));
 	
 	empath->updateOutgoingServer();
 }
@@ -535,6 +520,7 @@ EmpathSendingSettingsDialog::loadData()
 	void
 EmpathSendingSettingsDialog::s_OK()
 {
+	hide();
 	if (!applied_)
 		s_apply();
 	kapp->getConfig()->sync();
@@ -569,7 +555,6 @@ EmpathSendingSettingsDialog::s_default()
 {
 	le_sendmail_->setText("/usr/lib/sendmail");
 	le_qmail_->setText("/var/qmail/bin/qmail-inject");
-	cb_copyFolder_->setChecked(false);
 	cb_copyOther_->setChecked(false);
 	rb_smtp_->setChecked(false);
 	rb_qmail_->setChecked(false);

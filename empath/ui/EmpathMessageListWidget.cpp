@@ -635,6 +635,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	if (!c->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES, false)) {
 		setRootIsDecorated(false);
 		setUpdatesEnabled(false);
+		itemList_.clear();
 		for (; it.current(); ++it) {
 			EmpathMessageListItem * newItem =
 				new EmpathMessageListItem(this, *it.current());
@@ -680,6 +681,7 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	
 	setUpdatesEnabled(false);
 
+	itemList_.clear();
 	for (; mit.current(); ++mit) {
 		
 		empathDebug("in s_showFolder() mit.current()->status == " +
@@ -1107,6 +1109,7 @@ EmpathMessageListWidget::selectTagged()
 	for (; it.current(); ++it)
 		if (it.current()->status() & RMM::Marked)
 			it.current()->setSelected(true);
+	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
 	triggerUpdate();
@@ -1125,6 +1128,7 @@ EmpathMessageListWidget::selectRead()
 	for (; it.current(); ++it)
 		if (it.current()->status() & RMM::Read)
 			it.current()->setSelected(true);
+	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
 	triggerUpdate();
@@ -1140,6 +1144,7 @@ EmpathMessageListWidget::selectAll()
 	
 	for (; it.current(); ++it)
 		it.current()->setSelected(true);
+	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
 	triggerUpdate();
@@ -1157,6 +1162,7 @@ EmpathMessageListWidget::selectInvert()
 	
 	for (; it.current(); ++it)
 		it.current()->setSelected(!it.current()->isSelected());
+
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
 	triggerUpdate();

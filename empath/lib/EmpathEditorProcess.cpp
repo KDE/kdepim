@@ -18,24 +18,45 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// System includes
+#include <sys/stat.h>
+#include <unistd.h>
+
 // Qt includes
-#include <qstring.h>
+#include <qfile.h>
+#include <qfileinfo.h>
+
+// KDE includes
+#include <kapp.h>
+#include <kconfig.h>
 
 // Local includes
-#include "EmpathDefines.h"
-#include "EmpathConfig.h"
+#include "EmpathEditorProcess.h"
 
-EmpathEditorProcess::EmpathEditorProcess()
+EmpathEditorProcess::EmpathEditorProcess(const QCString & text)
+	:	QObject(),
+		text_(text)
 {
+	empathDebug("ctor");
+
+	QObject::connect(&p, SIGNAL(receivedStdout(KProcess *, char *, int)),
+			this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
+
+	QObject::connect(&p, SIGNAL(receivedStderr(KProcess *, char *, int)),
+			this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
+
+	QObject::connect(&p, SIGNAL(processExited(KProcess *)),
+		this, SLOT(s_composeFinished(KProcess *)));
 }
 
 EmpathEditorProcess::~EmpathEditorProcess()
 {
 	empathDebug("dtor");
+	p.kill();
 }
 
 	void
-EmpathEditorProcess::run()
+EmpathEditorProcess::go()
 {	
 	empathDebug("run() called");
 
@@ -56,8 +77,10 @@ EmpathEditorProcess::run()
 		empathDebug("Couldn't open the temporary file " + tempName);
 		return;
 	}
+	
+	fileName = QString(tempName);
 
-	f.writeBlock(text.data(), text.length());
+	f.writeBlock(text_.data(), text_.length());
 	f.flush();
 
 	// f doesn't own the file so I must ::close().
@@ -76,20 +99,10 @@ EmpathEditorProcess::run()
 	QString externalEditor =
 		config->readEntry(EmpathConfig::KEY_EXTERNAL_EDITOR);
 
-	KProcess * p = new KProcess;
-	*p	<< externalEditor
+	p	<< externalEditor
 		<< tempName;
 
-	QObject::connect(p, SIGNAL(receivedStdout(KProcess *, char *, int)),
-			this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
-
-	QObject::connect(p, SIGNAL(receivedStderr(KProcess *, char *, int)),
-			this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
-
-	QObject::connect(p, SIGNAL(processExited(KProcess *)),
-		this, SLOT(s_composeFinished(KProcess *)));
-
-	if (!p->start(KProcess::NotifyOnExit, KProcess::All)) {
+	if (!p.start(KProcess::NotifyOnExit, KProcess::All)) {
 		empathDebug("Couldn't start process");
 		return;
 	}
@@ -115,12 +128,13 @@ EmpathEditorProcess::s_composeFinished(KProcess * p)
 	QDateTime modTime = finfo.lastModified();
 
 	empathDebug("modification time on file == " + modTime.toString());
-	empathDebug("modification time I held  == " + myModTime.toString());
+	empathDebug("modification time I held  == " + myModTime_.toString());
 
-	if (myModTime == modTime) {
+	if (myModTime_ == modTime) {
 
 		// File was NOT modified.
 		empathDebug("The temporary file was NOT modified");
+		emit(done(false, ""));
 		return;
 	}
 
@@ -134,23 +148,22 @@ EmpathEditorProcess::s_composeFinished(KProcess * p)
 	if (!f.open(IO_ReadOnly)) {
 
 		empathDebug("Couldn't reopen the temporary file");
+		emit(done(false, ""));
 		return;
 	}
 	
-	text.resize(0);
-
 	char buf[1024];
 
 	while (!f.atEnd()) {
 		f.readBlock(buf, 1024);
-		text += buf;
+		text_ += buf;
 	}
 	
-	emit(finished(text));
+	emit(done(true, text_));
 }
 
 	void
-EmpathComposeWidget::s_debugExternalEditorOutput(
+EmpathEditorProcess::s_debugExternalEditorOutput(
 	KProcess * p, char * buffer, int buflen)
 {
 	empathDebug("Received: " + QString(buffer));

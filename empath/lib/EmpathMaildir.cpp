@@ -417,9 +417,6 @@ EmpathMaildir::init()
 	
 	// Tell the index to sync up with what's stored.
 	sync(url_);
-	
-	// Last op may have taken some time.
-	kapp->processEvents();
 }
 	void
 EmpathMaildir::_markNewMailAsSeen()

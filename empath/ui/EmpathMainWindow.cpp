@@ -161,8 +161,8 @@ EmpathMainWindow::setupStatusBar()
 EmpathMainWindow::queryExit()
 {
 	// FIXME: Check if the user wants to save changes
+	
 	s_fileQuit();
-
 
 	return false;
 }
@@ -187,6 +187,7 @@ EmpathMainWindow::s_fileQuit()
 {
 	empathDebug("s_fileQuit called");
 	// FIXME: Check if the user wants to save changes
+	hide();
 	delete this;
 }
 
@@ -273,7 +274,7 @@ EmpathMainWindow::s_messageSaveAs()
 	RMessage * m = _getFirstSelectedMessage();
 	
 	if (m == 0) {
-		KMsgBox(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
+		KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
 	
@@ -293,7 +294,7 @@ EmpathMainWindow::s_messageSaveAs()
 	if (!f.open(IO_WriteOnly)) {
 		// Warn user file cannot be opened.
 		empathDebug("Couldn't open file for writing");
-		KMsgBox(this, "Empath", i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
+		KMsgBox::message(this, "Empath", i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
 	empathDebug("Opened " + saveFilePath + " OK");
@@ -304,7 +305,7 @@ EmpathMainWindow::s_messageSaveAs()
 
 	f.close();
 		
-//	KMsgBox(this, "Empath", i18n("Message saved to") + QString(" ") + saveFilePath + QString(" ") + i18n("OK"), KMsgBox::INFORMATION, i18n("OK"));
+//	KMsgBox::message(this, "Empath", i18n("Message saved to") + QString(" ") + saveFilePath + QString(" ") + i18n("OK"), KMsgBox::INFORMATION, i18n("OK"));
 }
 
 	void
@@ -315,7 +316,7 @@ EmpathMainWindow::s_messageCopyTo()
 	RMessage * m(_getFirstSelectedMessage());
 	
 	if (m == 0) {
-		KMsgBox(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
+		KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
 	
@@ -345,7 +346,7 @@ EmpathMainWindow::s_messageMoveTo()
 	RMessage * m(_getFirstSelectedMessage());
 	
 	if (m == 0) {
-		KMsgBox(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
+		KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
 	

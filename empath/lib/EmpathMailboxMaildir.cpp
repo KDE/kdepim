@@ -188,6 +188,12 @@ EmpathMailboxMaildir::readConfig()
 	path_ = c->readEntry(EmpathConfig::KEY_LOCAL_MAILBOX_PATH);
 	if (path_.at(path_.length()) != '/') path_ += '/';
 	_recursiveReadFolders(path_);
+	
+	EmpathMaildirListIterator it(boxList_);
+	
+	for (; it.current(); ++it) {
+		it.current()->init();
+	}
 }
 
 	void
@@ -198,6 +204,11 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 	// through subdirs. Any subdir that has cur, tmp and new is a Maildir
 	// folder.
 
+	empathDebug("path == " + path_);
+	while (path_.at(path_.length() - 1) == '/')
+		path_.truncate(path_.length() - 1);
+	empathDebug("path == " + path_);
+	
 	QDir d(currentDir);
 	d.setFilter(QDir::Dirs);
 	
@@ -241,9 +252,12 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 		// This dir is itself a maildir folder.
 		
 		QString s(d.absPath());
+	
 		s.remove(0, path_.length());
+		s.remove(0, 1);
+		empathDebug("s == " + s);
 		empathDebug("Folder path is " + s);
-		
+
 		EmpathURL url(url_.mailboxName(), s, QString::null);
 		EmpathFolder * f = new EmpathFolder(url);
 		
@@ -256,8 +270,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 		
 		boxList_.append(m);
 		emit(updateFolderLists());
-		
-		m->init();
 	}
 }
 
@@ -378,9 +390,12 @@ EmpathMailboxMaildir::addFolder(const EmpathURL & id)
 	
 	EmpathMaildir * m = new EmpathMaildir(path_, id);
 	CHECK_PTR(m);
+	m->init();
 	
 	folderList_.append(f);
 	boxList_.append(m);
+	
+	emit(updateFolderLists());
 	
 	return true;
 }

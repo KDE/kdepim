@@ -37,6 +37,7 @@ class EmpathConfig
 		static const QString		GROUP_SENDING;
 		static const QString		GROUP_ACCOUNT;
 
+		// DISPLAY
 		static const QString		KEY_MAIN_WINDOW_TOOLBAR_POSITION;
 		static const QString		KEY_COMPOSE_WINDOW_TOOLBAR_POSITION;
 		static const QString		KEY_NUM_MAILBOXES;
@@ -64,11 +65,16 @@ class EmpathConfig
 		static const QString		KEY_MAIN_WINDOW_Y_SIZE;
 		static const QString		KEY_MAIN_WIDGET_V_SEP;
 		static const QString		KEY_MAIN_WIDGET_H_SEP;
+		static const QString		KEY_FOLDER_ITEMS_OPEN;
+		
+		// IDENTITY
 		static const QString		KEY_NAME;
 		static const QString		KEY_EMAIL;
 		static const QString		KEY_REPLY_TO;
 		static const QString		KEY_ORGANISATION;
 		static const QString		KEY_SIG_PATH;
+		
+		// COMPOSING
 		static const QString		KEY_PHRASE_REPLY_SENDER;
 		static const QString		KEY_PHRASE_REPLY_ALL;
 		static const QString		KEY_PHRASE_FORWARD;
@@ -80,18 +86,19 @@ class EmpathConfig
 		static const QString		KEY_ENCRYPT;
 		static const QString		KEY_WRAP_LINES;
 		static const QString		KEY_WRAP_COLUMN;
-		static const QString		KEY_CC_ME;
+		static const QString		KEY_USE_EXTERNAL_EDITOR;
+		static const QString		KEY_EXTERNAL_EDITOR;
+		
+		// SENDING
 		static const QString		KEY_CC_OTHER;
 		static const QString		KEY_CC_OTHER_ADDRESS;
-		static const QString		KEY_COPY_FOLDER;
-		static const QString		KEY_COPY_FOLDER_NAME;
 		static const QString		KEY_SEND_POLICY;
 		static const QString		KEY_QUEUE_FOLDER;
 		static const QString		KEY_SENT_FOLDER;
 		static const QString		KEY_TRASH_FOLDER;
 		static const QString		KEY_DRAFTS_FOLDER;
-		static const QString		KEY_USE_EXTERNAL_EDITOR;
-		static const QString		KEY_EXTERNAL_EDITOR;
+		
+		// ACCOUNTS
 		static const QString		KEY_ACCOUNT_TYPE;
 		static const QString		KEY_SERVER_ADDRESS;
 		static const QString		KEY_SERVER_PORT;
@@ -107,11 +114,8 @@ class EmpathConfig
 		static const QString		KEY_SMTP_SERVER_LOCATION;
 		static const QString		KEY_SMTP_SERVER_PORT;
 		static const QString		KEY_LOCAL_MAILBOX_PATH;
-		static const QString		KEY_LOCAL_CHECK_FOR_NEW_MAIL;
-		static const QString		KEY_LOCAL_MAIL_CHECK_INTERVAL;
-		static const QString		KEY_LOCAL_AUTO_GET_NEW_MAIL;
-		static const QString		KEY_LOCAL_SAVE_ALL_ADDRESSES;
-		static const QString		KEY_LOCAL_NOTIFY;
+		
+		// POP3
 		static const QString		KEY_POP3_SERVER_ADDRESS;
 		static const QString		KEY_POP3_SERVER_PORT;
 		static const QString		KEY_POP3_USERNAME;
@@ -131,6 +135,8 @@ class EmpathConfig
 		static const QString		KEY_POP3_SAVE_ALL_ADDRESSES;
 		static const QString		KEY_POP3_NOTIFY;
 		static const QString		KEY_POP3_RETRIEVE_IF_HAVE;
+		
+		// FILTERS
 		static const QString		KEY_FILTER_LIST;
 		static const QString		KEY_NUM_MATCH_EXPRS_FOR_FILTER;
 		static const QString		KEY_MATCH_EXPR_TYPE;
@@ -143,6 +149,7 @@ class EmpathConfig
 		static const QString		KEY_FILTER_FOLDER;
 		static const QString		KEY_FILTER_PRIORITY;
 
+		// DEFAULTS
 		static const bool			DEFAULT_UNDERLINE_LINKS;
 		static const QString		DEFAULT_SIG_FILE;
 		static const QString		DEFAULT_PHRASE_REPLY_TO_SEND;
