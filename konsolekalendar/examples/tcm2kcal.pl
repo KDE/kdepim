@@ -16,7 +16,7 @@
 # Requirements:
 #   lynx
 #   konsolekalendar (from KDE).
-#   Bit-Vector and Date-Calc perl modules (from CPAN).
+#   Date-Calc perl module (from CPAN).
 #
 # Options: -d, delete entries from KDE calendar file
 #          -c, change entries in KDE calendar by re-writing movie titles in all caps.
@@ -34,7 +34,7 @@ use Getopt::Std;
 use Date::Calc qw(Today Month_to_Text Add_Delta_DHMS Add_Delta_Days);
 
 #location of konsolekalendar program
-my($konkal)="/usr/local/src/KDE3/CVS/kdepim/konsolekalendar/konsolekalendar";
+my($konkal)="/usr/bin/konsolekalendar";
 
 #location of new TCM KDE calendar
 my($cal)="$HOME/.kde/share/apps/korganizer/tcm.ics";
@@ -157,7 +157,7 @@ sub process() {
   }
 
   # format start datetime
-  my($date) = "$year-$month-$day";
+  my($date) = sprintf("%4d-%02d-%02d",$year,$month,$day);
   my($time) = sprintf("%02d:%02d",$hour,$min);
 
   ### Compute Movie End Datetime by adding Movie Duration to Start Datetime
@@ -176,7 +176,7 @@ sub process() {
        $year,$month,$day,$hour,$min,0,
                     0,   0,    $duration, 0);
   # format end datetime
-  my($enddate) = "$endyear-$endmonth-$endday";
+  my($enddate) = sprintf("%4d-%02d-%02d",$endyear,$endmonth,$endday);
   my($endtime) = sprintf("%02d:%02d",$endhh,$endmm);
 
   # Derive Movie Title
