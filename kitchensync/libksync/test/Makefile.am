@@ -18,7 +18,7 @@
 
 INCLUDES=  -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir)/libkcal \
   $(all_includes)
-check_PROGRAMS = todotest eventtest abtest
+EXTRA_PROGRAMS = todotest eventtest abtest
 
 todotest_LDADD = ../libksync2.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
 todotest_SOURCES =  todomain.cpp

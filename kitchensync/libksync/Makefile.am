@@ -1,4 +1,4 @@
-SUBDIRS = . test
+SUBDIRS = . tests test
 
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkcal $(all_includes)
 
