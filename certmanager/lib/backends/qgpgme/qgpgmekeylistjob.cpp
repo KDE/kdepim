@@ -41,6 +41,7 @@
 #include <gpgmepp/key.h>
 #include <gpgmepp/context.h>
 #include <gpgmepp/keylistresult.h>
+#include <gpg-error.h>
 
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -53,6 +54,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+
 
 Kleo::QGpgMEKeyListJob::QGpgMEKeyListJob( GpgME::Context * context )
   : KeyListJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyListJob" ),
