@@ -368,7 +368,7 @@ Event *ICalFormat::pasteEvent(const QDate */*newDate*/,const QTime */*newTime*/)
 }
 
 
-QString ICalFormat::createScheduleMessage(Event *incidence,
+QString ICalFormat::createScheduleMessage(Incidence *incidence,
                                           Scheduler::Method method)
 {
   icalcomponent *message = mImpl->createScheduleComponent(incidence,method);

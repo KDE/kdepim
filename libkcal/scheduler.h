@@ -9,6 +9,7 @@
 
 namespace KCal {
 
+class Incidence;
 class Event;
 class Calendar;
 class ICalFormat;

@@ -53,7 +53,7 @@ class ICalFormat : public CalFormat {
     Event *pasteEvent(const QDate *, const QTime *newTime = 0L);
     
     /** Create a scheduling message for event \a e using method \m */
-    QString createScheduleMessage(Event *e,Scheduler::Method m);
+    QString createScheduleMessage(Incidence *e,Scheduler::Method m);
     /** Parse scheduling message provided as string \s */
     ScheduleMessage *parseScheduleMessage(const QString &s);
     
