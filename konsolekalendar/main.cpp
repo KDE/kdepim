@@ -81,6 +81,11 @@ int main(int argc, char *argv[])
 
 	QDate date = QDate::currentDate();
 	QTime time = QTime::currentTime();
+
+	bool view=true;
+	bool add=false;
+	bool change=false;
+	bool del=false;
 	
 	
   QString option;
@@ -93,7 +98,82 @@ int main(int argc, char *argv[])
   {
      variables.setVerbose(true);
   }
+  
+  /*
+   *  Switch on adding
+   *
+   */
+  if ( args->isSet("add") ) 
+  {
+    view=false;
+    add=true;
+	  
+    if(variables.isVerbose()) 
+    {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Add event" << endl;
+    }
+    
+	  
+  }
 
+  /*
+   *  Switch on adding
+   *
+   */
+  if ( args->isSet("change") ) 
+  {
+    view=false;
+    add=false;
+    change=true;
+	  
+    if(variables.isVerbose()) 
+    {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Change event" << endl;
+    }
+    
+	  
+  }
+
+  /*
+   *  Switch on deleting
+   *
+   */
+  if ( args->isSet("delete") ) 
+  {
+    view=false;
+    add=false;
+    change=false;
+    del=true;
+	  
+    if(variables.isVerbose()) 
+    {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Delete event" << endl;
+    }
+    
+	  
+  }
+	
+	
+	
+  /*
+   *  If there is description attached.
+   *
+   */
+  if ( args->isSet("description") ) 
+  {
+    option = args->getOption("description");
+  
+    if(variables.isVerbose()) 
+    {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Description: (" << option << ")" << endl;             
+    }
+
+    variables.setDescription(option);
+
+    //variables.setDate(date);
+  } 
+	
+	
   /*
    *  Show next happening and exit
    *
@@ -140,7 +220,7 @@ int main(int argc, char *argv[])
     }
 
     time = variables.parseTime(option);
-
+ 
     //variables.setDate(date);
   } 
 
@@ -293,10 +373,17 @@ int main(int argc, char *argv[])
 	   */  
 	konsolekalendar->openCalendar();
 
-	
+   if( view == true )
+   {
 	konsolekalendar->showInstance();
+   }
 
-  delete konsolekalendar;
+   if( add == true )
+   {
+	konsolekalendar->addEvent();   
+   }
+
+   delete konsolekalendar;
 
   if(variables.isVerbose()){
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | exiting" << endl;
