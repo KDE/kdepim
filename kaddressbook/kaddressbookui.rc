@@ -28,6 +28,7 @@
       <Action name="edit_paste"/>
       <Separator/>
       <Action name="edit_delete" append="edit_paste_merge"/>
+      <Action name="edit_select_all"/>
       <Action name="edit_set_categories"/>
       <Action name="edit_set_personal"/>
     </Menu>
