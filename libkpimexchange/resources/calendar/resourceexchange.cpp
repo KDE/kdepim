@@ -53,9 +53,17 @@ extern "C"
   }
 
   KRES::Resource *resource( const KConfig *config ) {
+    kdDebug() << "In researchExchange static resource() function" << endl;
     return new KCal::ResourceExchange( config );
   }
 }
+
+class ResourceExchange::EventInfo {
+public:
+  KCal::Event* event;
+  KURL url;
+  long updateWatch;
+};
 
 ResourceExchange::ResourceExchange( const KConfig *config )
   : ResourceCalendar( config )
@@ -65,6 +73,7 @@ ResourceExchange::ResourceExchange( const KConfig *config )
     mAccount = new ExchangeAccount( 
             config->readEntry( "ExchangeHost" ), 
             config->readEntry( "ExchangeAccount" ), 
+            config->readEntry( "ExchangeMailbox" ), 
             decryptStr( config->readEntry( "ExchangePassword" ) ) );
     mCachedSeconds = config->readNumEntry( "ExchangeCacheTimeout", 600 );
   } else {
@@ -84,6 +93,7 @@ void ResourceExchange::writeConfig( KConfig* config )
   ResourceCalendar::writeConfig( config );
   config->writeEntry( "ExchangeHost", mAccount->host() );
   config->writeEntry( "ExchangeAccount", mAccount->account() );
+  config->writeEntry( "ExchangeMailbox", mAccount->mailbox() );
   config->writeEntry( "ExchangePassword", encryptStr( mAccount->password() ) );
   config->writeEntry( "ExchangeCacheTimeout", mCachedSeconds );
 }
@@ -91,6 +101,11 @@ void ResourceExchange::writeConfig( KConfig* config )
 bool ResourceExchange::doOpen()
 {
   mClient = new ExchangeClient( mAccount );
+  connect( mClient, SIGNAL( downloadFinished( int, const QString& ) ),
+    this, SLOT( slotDownloadFinished( int, const QString& ) ) );
+  connect( mClient, SIGNAL( event( KCal::Event*, const KURL& ) ),
+    this, SLOT( downloadedEvent( KCal::Event*, const KURL& ) ) );
+
   kdDebug() << "Creating monitor" << endl;
   QHostAddress ip;
   ip.setAddress( "130.161.216.42" );
@@ -98,7 +113,7 @@ bool ResourceExchange::doOpen()
   connect( mMonitor, SIGNAL(notify( const QValueList<long>& , const QValueList<KURL>& )), this, SLOT(slotMonitorNotify( const QValueList<long>& , const QValueList<KURL>& )) );
   connect( mMonitor, SIGNAL(error(int , const QString&)), this, SLOT(slotMonitorError(int , const QString&)) );
 
-  mMonitor->addWatch( mAccount->calendarURL(), ExchangeMonitor::Update, 1 );
+  mMonitor->addWatch( mAccount->calendarURL(), ExchangeMonitor::UpdateNewMember, 1 );
 
   QWidgetList* widgets = QApplication::topLevelWidgets();
   if ( !widgets->isEmpty() )
@@ -120,6 +135,7 @@ bool ResourceExchange::doOpen()
 
 void ResourceExchange::doClose()
 {
+  kdDebug() << "ResourceExchange::doClose()" << endl;
   // delete mNewestDate;
   // delete mOldestDate;
   delete mDates; mDates = 0;
@@ -220,6 +236,38 @@ Event *ResourceExchange::event( const QString &uid )
 
   // FIXME: Look in exchange server for uid!
   return mCache->event( uid );
+}
+
+void ResourceExchange::subscribeEvents( const QDate& start, const QDate& end )
+{
+  kdDebug(5800) << "ResourceExchange::subscribeEvents()" << endl;
+  // FIXME: possible race condition if several subscribe events are run close 
+  // to each other
+  mClient->download( start, end, false );
+}
+
+void ResourceExchange::downloadedEvent( KCal::Event* event, const KURL& url )
+{
+  kdDebug() << "Downloaded event: " << event->summary() << " from url " << url.prettyURL() << endl;
+    // FIXME: add watches to the monitor for these events
+    // KURL url = 
+    //  mMonitor->addWatch( url, KPIM::ExchangeMonitor::Update, 0 );
+//    emit eventsAdded( events );
+}
+
+void ResourceExchange::slotDownloadFinished( int result, const QString& moreinfo )
+{
+  kdDebug() << "ResourceExchange::downloadFinished" << endl;
+
+  if ( result != KPIM::ExchangeClient::ResultOK ) {
+    // Do something useful with the error report
+    kdError() << "ResourceExchange::slotDownloadFinished(): error " << result << ": " << moreinfo << endl;
+  }
+}
+
+void ResourceExchange::unsubscribeEvents( const QDate& start, const QDate& end )
+{
+  kdDebug() << "ResourceExchange::unsubscribeEvents()" << endl;
 }
 
 void ResourceExchange::addTodo(Todo *todo)

@@ -21,6 +21,8 @@
 #define KPIM_EXCHANGECALENDAR_H
 
 #include <qmap.h>
+#include <qdict.h>
+
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
 
@@ -42,7 +44,7 @@ class CalFormat;
 /**
   This class provides a calendar stored on a Microsoft Exchange 2000 server
 */
-class ResourceExchange : public QObject, public ResourceCalendar, public IncidenceBase::Observer
+class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 {
   Q_OBJECT
 
@@ -111,6 +113,17 @@ class ResourceExchange : public QObject, public ResourceCalendar, public Inciden
     /** returns the number of events that are present on the specified date. */
     int numEvents(const QDate &qd);
   
+    virtual void subscribeEvents( const QDate& start, const QDate& end );
+
+    /**
+      Stop receiving event signals for the given period (inclusive). After this call,
+      the calendar resource will no longer send eventsAdded, eventsModified or
+      eventsDeleted signals for events falling completely in this period. The resource
+      MAY delete the Events objects. The application MUST NOT dereference pointers 
+      to the relevant Events after this call.
+    */
+    virtual void unsubscribeEvents( const QDate& start, const QDate& end );
+
     /**
       Add a todo to the todolist.
     */
@@ -201,12 +214,17 @@ class ResourceExchange : public QObject, public ResourceCalendar, public Inciden
   protected slots:
     void slotMonitorNotify( const QValueList<long>& IDs, const QValueList<KURL>& urls);
     void slotMonitorError( int errorCode, const QString& moreInfo );
+    void slotDownloadFinished( int result, const QString& moreinfo );
+    void downloadedEvent( KCal::Event*, const KURL& );
 
   private:
+    class EventInfo;
     KPIM::ExchangeAccount* mAccount;
     KPIM::ExchangeClient* mClient;
     KPIM::ExchangeMonitor* mMonitor;
     CalendarLocal* mCache;
+    QDict<EventInfo> mEventDict; // maps UIDS to EventInfo records
+    QIntDict<EventInfo> mWatchDict; // maps Watch IDs to EventInfo records 
     DateSet* mDates;
     QMap<Event, QDateTime>* mEventDates;
     QMap<QDate, QDateTime>* mCacheDates;
