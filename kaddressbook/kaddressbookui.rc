@@ -13,12 +13,14 @@
       
       <Menu name="file_import"><text>&amp;Import</text>
         <Action name="file_import_kde2"/>
-        <Action name="file_import_vcard"/>
+        <Action name="file_import_vcard21"/>
+        <Action name="file_import_vcard30"/>
         <Action name="file_import_csv"/>
       </Menu>
       
       <Menu name="file_export"><text>&amp;Export</text>
         <Action name="file_export_csv"/>
+        <Action name="file_export_vcard30"/>
       </Menu>
     </Menu>
     

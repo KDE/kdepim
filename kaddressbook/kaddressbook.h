@@ -5,6 +5,7 @@
 #include <qstring.h>
 #include <qdict.h>
 
+#include <kabc/vcardconverter.h>
 #include "kaddressbookiface.h"
 
 class ContactEntry;
@@ -95,11 +96,27 @@ class KAddressBook : public QWidget
 
     /** Import VCard 2.1 files
     */
-    void importVCard();
+    void importVCard21();
+
+    /** Import VCard 3.0 files
+    */
+    void importVCard30();
+
+    /** Import VCard files with given version
+    */
+    void importVCard( KABC::VCardConverter::Version );
 
     /** Export comma-seperated list of all addressbook entries.
     */
     void exportCSV();
+
+    /** Export VCard 3.0 files
+    */
+    void exportVCard30();
+
+    /** Export VCard files with given version
+    */
+    void exportVCard( KABC::VCardConverter::Version );
 
     /** Shows the edit dialog for the given uid. If the uid is QString::null,
     *  the method will try to find a selected addressee in the view.

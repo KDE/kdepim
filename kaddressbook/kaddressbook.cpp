@@ -4,6 +4,7 @@
  * Copyright (C) 1999 Don Sanders <dsanders@kde.org>
  */
 #include "kaddressbook.h"
+#include <kabc/vcardconverter.h>
 
 #include <qkeycode.h>
 #include <qregexp.h>
@@ -324,23 +325,33 @@ void KAddressBook::importCSV()
   emit modified( true );
 }
 
-void KAddressBook::importVCard()
+void KAddressBook::importVCard21()
+{
+  importVCard( KABC::VCardConverter::v2_1 );
+}
+
+void KAddressBook::importVCard30()
+{
+  importVCard( KABC::VCardConverter::v3_0 );
+}
+
+void KAddressBook::importVCard( KABC::VCardConverter::Version version )
 {
   QString fileName = KFileDialog::getOpenFileName(QString::null,
                                                   "*.vcf|vCards", 0,
                                                   i18n("Select vCard to Import"));
 
   if (!fileName.isEmpty()) {
-    KABC::VCard21Parser *parser = new KABC::VCard21Parser();
+    KABC::VCardConverter converter;
     KABC::Addressee a;
     QFile file(fileName);
 
     file.open( IO_ReadOnly );
     QByteArray rawData = file.readAll();
     QString data = QString::fromLatin1( rawData.data(), rawData.size() + 1 );
-    a = parser->readFromString( data);
+    bool ok = converter.VCardToAddressee( data, a, version );
 
-    if (!a.isEmpty()) {
+    if (!a.isEmpty() && ok) {
       // Add it to the document, then let the user edit it. We use a
       // PwNewCommand so the user can undo it.
       PwNewCommand *command = new PwNewCommand(mDocument, a);
@@ -405,6 +416,44 @@ void KAddressBook::exportCSV()
 
       t << "\n";
     }
+
+    outFile.close();
+  }
+}
+
+void KAddressBook::exportVCard30()
+{
+  exportVCard( KABC::VCardConverter::v3_0 );
+}
+
+void KAddressBook::exportVCard( KABC::VCardConverter::Version )
+{
+  KABC::Addressee a;
+
+  QStringList uids = viewManager()->selectedUids();
+  if ( uids.count() == 0 )
+    return;
+  else
+    a = mDocument->findByUid( uids[0] );
+
+  if ( a.isEmpty() )
+    return;
+
+  QString name = a.givenName() + "_" + a.familyName() + ".vcf";
+
+  QString fileName = KFileDialog::getSaveFileName( name );
+
+  QFile outFile(fileName);
+  if ( outFile.open(IO_WriteOnly) )
+  {    // file opened successfully
+    KABC::VCardConverter converter;
+    QString vcard;
+
+    converter.AddresseeToVCard( a, vcard );
+
+    QTextStream t( &outFile );        // use a text stream
+    t.setEncoding( QTextStream::UnicodeUTF8 );
+    t << vcard;
 
     outFile.close();
   }
