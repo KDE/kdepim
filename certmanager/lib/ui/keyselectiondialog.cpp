@@ -69,9 +69,9 @@
 #include <qlayout.h>
 #include <qlineedit.h>
 #include <qwhatsthis.h>
-//#include <qdatetime.h>
 #include <qpopupmenu.h>
 #include <qregexp.h>
+#include <qpushbutton.h>
 
 #include <algorithm>
 #include <iterator>
@@ -81,7 +81,7 @@
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
-  if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys )
+  if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() )
       qDebug( "key is invalid - ignoring" );
     if ( key.isExpired() ) {
@@ -94,6 +94,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
       qDebug( "key is disabled" );
       return false;
     }
+  }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
        !key.canEncrypt() ) {
@@ -228,7 +229,7 @@ namespace {
 
   QString ColumnStrategy::toolTip( const GpgME::Key & key, int ) const {
     const char * uid = key.userID(0).id();
-    const char * fpr = key.subkey(0).fingerprint();
+    const char * fpr = key.primaryFingerprint();
     const char * issuer = key.issuerName();
     const GpgME::Subkey subkey = key.subkey(0);
     const QString expiry = subkey.neverExpires() ? i18n("never") : time_t2string( subkey.expirationTime() ) ;
@@ -378,14 +379,13 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 			  "</p></qt>") );
   }
 
-  if ( extendedSelection )
-    connect( mCheckSelectionTimer, SIGNAL(timeout()),
-             SLOT(slotCheckSelection()) );
+  connect( mCheckSelectionTimer, SIGNAL(timeout()),
+	   SLOT(slotCheckSelection()) );
   connectSignals();
 
   connect( mKeyListView,
 	   SIGNAL(doubleClicked(Kleo::KeyListViewItem*,const QPoint&,int)),
-	   SLOT(accept()) );
+	   SLOT(slotTryOk()) );
   connect( mKeyListView,
 	   SIGNAL(contextMenu(Kleo::KeyListViewItem*,const QPoint&)),
            SLOT(slotRMB(Kleo::KeyListViewItem*,const QPoint&)) );
@@ -429,13 +429,13 @@ const GpgME::Key & Kleo::KeySelectionDialog::selectedKey() const {
 }
 
 QString Kleo::KeySelectionDialog::fingerprint() const {
-  return selectedKey().subkey(0).fingerprint();
+  return selectedKey().primaryFingerprint();
 }
 
 QStringList Kleo::KeySelectionDialog::fingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
-    if ( const char * fpr = it->subkey(0).fingerprint() )
+    if ( const char * fpr = it->primaryFingerprint() )
       result.push_back( fpr );
   return result;
 }
@@ -444,7 +444,7 @@ QStringList Kleo::KeySelectionDialog::pgpKeyFingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
     if ( it->protocol() == GpgME::Context::OpenPGP )
-      if ( const char * fpr = it->subkey(0).fingerprint() )
+      if ( const char * fpr = it->primaryFingerprint() )
         result.push_back( fpr );
   return result;
 }
@@ -453,7 +453,7 @@ QStringList Kleo::KeySelectionDialog::smimeFingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
     if ( it->protocol() == GpgME::Context::CMS )
-      if ( const char * fpr = it->subkey(0).fingerprint() )
+      if ( const char * fpr = it->primaryFingerprint() )
         result.push_back( fpr );
   return result;
 }
@@ -483,6 +483,8 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
   }
 }
 
+#ifndef __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
+#define __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
 static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
@@ -492,11 +494,12 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
 
   KMessageBox::error( parent, msg, i18n( "Key Listing Failed" ) );
 }
+#endif // __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
 
 namespace {
   struct ExtractFingerprint {
     QString operator()( const GpgME::Key & key ) {
-      return key.subkey(0).fingerprint();
+      return key.primaryFingerprint();
     }
   };
 }
@@ -527,22 +530,12 @@ void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend::P
 }
 
 static void selectKeys( Kleo::KeyListView * klv, const std::vector<GpgME::Key> & selectedKeys ) {
+  klv->clearSelection();
   if ( selectedKeys.empty() )
     return;
-  int selectedKeysCount = selectedKeys.size();
-  for ( Kleo::KeyListViewItem * item = klv->firstChild() ; item ; item = item->nextSibling() ) {
-    const char * fpr = item->key().subkey(0).fingerprint();
-    if ( !fpr || !*fpr )
-      continue;
-    for ( std::vector<GpgME::Key>::const_iterator it = selectedKeys.begin() ; it != selectedKeys.end() ; ++it )
-      if ( qstrcmp( fpr, it->subkey(0).fingerprint() ) == 0 ) {
-	item->setSelected( true );
-	if ( --selectedKeysCount <= 0 )
-	  return;
-	else
-	  break;
-      }
-  }
+  for ( std::vector<GpgME::Key>::const_iterator it = selectedKeys.begin() ; it != selectedKeys.end() ; ++it )
+    if ( Kleo::KeyListViewItem * item = klv->itemByFingerprint( it->primaryFingerprint() ) )
+      item->setSelected( true );
 }
 
 void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & res ) {
@@ -556,8 +549,11 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 
   if ( mTruncated > 0 )
     KMessageBox::information( this,
-			      i18n("%n backends returned truncated output.\n"
-				   "Not all available keys are shown"),
+			      i18n("<qt>One backend returned truncated output.<br>"
+				   "Not all available keys are shown</qt>",
+			           "<qt>%n backends returned truncated output.<br>"
+				   "Not all available keys are shown</qt>",
+				   mTruncated),
 			      i18n("Key List Result") );
 
   mKeyListView->flushKeys();
@@ -675,6 +671,11 @@ void Kleo::KeySelectionDialog::slotRecheckKey() {
 
   mKeysToCheck.clear();
   mKeysToCheck.push_back( mCurrentContextMenuItem->key() );
+}
+
+void Kleo::KeySelectionDialog::slotTryOk() {
+  if ( actionButton( Ok )->isEnabled() )
+    slotOk();
 }
 
 void Kleo::KeySelectionDialog::slotOk() {
