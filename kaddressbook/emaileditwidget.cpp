@@ -141,7 +141,6 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent, cons
   topLayout->addWidget(mAddButton, 0, 2);
 
   mEmailListBox = new QListBox( page );
-  mEmailListBox->insertStringList( list );
 
   // Make sure there is room for the scrollbar
   mEmailListBox->setMinimumHeight(mEmailListBox->sizeHint().height() + 30);
@@ -163,12 +162,17 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent, cons
 
   topLayout->activate();
   
+  QStringList items = list;
+  if ( items.remove( "" ) > 0 )
+    mChanged = true;
+  else
+    mChanged = false;
+  mEmailListBox->insertStringList( items );
+
   // set default state
   selectionChanged(-1);
 
   KAcceleratorManager::manage( this );
-
-  mChanged = false;
 }
 
 EmailEditDialog::~EmailEditDialog()

@@ -21,8 +21,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -72,15 +72,4 @@ private:
 	RestoreActionPrivate *fP;
 } ;
 
-
-// $Log$
-// Revision 1.3  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.2  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.1  2001/09/24 22:25:54  adridg
-// New SyncActions with support for interaction with the user
-//
 #endif

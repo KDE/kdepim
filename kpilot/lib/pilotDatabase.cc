@@ -19,8 +19,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -65,12 +65,3 @@ PilotDatabase::PilotDatabase(QObject *o,const char *n) :
 	}
 #endif
 }
-
-
-// $Log$
-// Revision 1.2  2001/10/11 10:13:27  cschumac
-// Compile fixes.
-//
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//

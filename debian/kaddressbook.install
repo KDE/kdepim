@@ -9,11 +9,6 @@ debian/tmp/usr/share/apps/kaddressbook/icons/crystalsvg/16x16/actions/ldap_looku
 debian/tmp/usr/share/apps/kaddressbook/icons/crystalsvg/16x16/actions/smallcal.png
 debian/tmp/usr/share/apps/kaddressbook/icons/crystalsvg/32x32/actions/gohome.png
 debian/tmp/usr/share/apps/kaddressbook/icons/crystalsvg/32x32/actions/homepage.png
-debian/tmp/usr/share/apps/kaddressbook/icons/locolor/16x16/actions/contact.png
-debian/tmp/usr/share/apps/kaddressbook/icons/locolor/16x16/actions/down.png
-debian/tmp/usr/share/apps/kaddressbook/icons/locolor/16x16/actions/group.png
-debian/tmp/usr/share/apps/kaddressbook/icons/locolor/16x16/actions/up.png
-debian/tmp/usr/share/apps/kaddressbook/icons/locolor/22x22/actions/page.png
 debian/tmp/usr/share/apps/kaddressbook/kaddressbook_part.rc
 debian/tmp/usr/share/apps/kaddressbook/kaddressbookui.rc
 debian/tmp/usr/share/apps/kaddressbook/printing/detailed-style.png

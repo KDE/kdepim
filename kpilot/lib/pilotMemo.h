@@ -20,8 +20,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -36,24 +36,25 @@
 class PilotMemo : public PilotAppCategory
 {
 public:
-	PilotMemo(void) : PilotAppCategory() { fText = NULL; fSize = 0; }
+	PilotMemo(void) : PilotAppCategory() { } ;
+	PilotMemo(const QString &s) : PilotAppCategory() { fText=s; } ;
 	PilotMemo(PilotRecord* rec);
-	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); }
+	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); } ;
 	PilotMemo(void *buf, int attr, recordid_t id, int category)
-		: PilotAppCategory(attr, id, category) { unpack(buf, 1); }
-	~PilotMemo() { if (fText) delete fText; if (fTitle) delete fTitle;}
+		: PilotAppCategory(attr, id, category) { unpack(buf, 1); } ;
+	~PilotMemo() { } ;
 
-	const char *text(void) const { return fText; }
-	void setText(const char* text) { unpack(text, 0); }
-	const char* getTitle(void) const { return fTitle; }
-	PilotRecord* pack() { return PilotAppCategory::pack(); }
+	QString text(void) const { return fText; } ;
+	void setText(const QString &text) { fText = text; } ;
+	QString getTitle(void) const ;
+	PilotRecord* pack() { return PilotAppCategory::pack(); } ;
 
 	typedef enum { MAX_MEMO_LEN=8192 } Constants ;
 
 	/**
 	* Return a "short but sensible" title. getTitle() returns the
 	* first line of the memo, which may be very long
-	* and inconvenient. sensibleTitle() returns about 30
+	* and inconvenient. sshortTitle() returns about 30
 	* characters.
 	*/
 	QString shortTitle() const;
@@ -69,31 +70,9 @@ protected:
 	void unpack(const void *, int = 0);
 
 private:
-	char *fText;
-	int fSize;
-	char* fTitle;
+	QString fText;
 
 	void *internalPack(unsigned char *);
 };
 
-
-
-
-
-// $Log$
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.10  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.9  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.8  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.7  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

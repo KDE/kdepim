@@ -20,8 +20,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -32,20 +32,20 @@
 
 #include <pi-file.h>
 
-class PilotRecord 
+class PilotRecord
 {
 public:
 	PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid);
 	PilotRecord(PilotRecord* orig);
-	~PilotRecord() { delete [] fData; }
+	~PilotRecord() { delete [] fData; fDeleted++; }
 
 	PilotRecord& operator=(PilotRecord& orig);
 
 	char* getData() const { return fData; }
 	int   getLen() const { return fLen; }
 	void setData(const char* data, int len);
-	int   getAttrib() const { return fAttrib; }
-	void  setAttrib(int attrib) { fAttrib = attrib; }
+	inline int   getAttrib() const { return fAttrib; }
+	inline void  setAttrib(int attrib) { fAttrib = attrib; }
 
 	int   getCat() const { return fCat; }
 	void  setCat(int cat) { fCat = cat; }
@@ -61,36 +61,21 @@ private:
 	unsigned long fID;
 
 public:
-	bool isDeleted() const;
-	bool isSecret() const;
-	bool isArchived() const;
-	void makeDeleted() ;
-	void makeSecret() ;
+	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
+	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
+	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
+	inline void makeDeleted() { fAttrib |= dlpRecAttrDeleted; } ;
+	inline void makeSecret() { fAttrib |= dlpRecAttrSecret; } ;
+
+	/**
+	* This is an interface for tracking down memory leaks
+	* in the use of PilotRecords (for those without valgrind).
+	* Count the number of allocations and deallocations.
+	*/
+public:
+	static void allocationInfo();
+private:
+	static int fAllocated,fDeleted;
 };
 
-
-
-// $Log$
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.9  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.8  2001/04/23 21:26:43  adridg
-// More convenience things
-//
-// Revision 1.7  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.6  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.5  2001/02/07 14:21:56  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.4  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

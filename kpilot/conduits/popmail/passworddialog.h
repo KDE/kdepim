@@ -23,12 +23,12 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #ifndef MRQPASSWD_H
@@ -39,7 +39,7 @@
 #endif
 
 #include <qdialog.h>
-#include <qlined.h>
+#include <qlineedit.h>
 
 class PasswordDialog : public QDialog
 {
@@ -55,11 +55,4 @@ private:
     QLineEdit *_w_password;      
 };
 
-
 #endif
-
-
-// $Log$
-// Revision 1.5  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//

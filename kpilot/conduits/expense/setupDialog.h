@@ -22,8 +22,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -70,26 +70,4 @@ private:
 	ExpenseWidget *fConfigWidget;
 } ;
 
-
-// $Log$
-// Revision 1.5  2001/12/08 16:29:41  mlaurent
-// Fix compilation.
-// Dirk could you recreate a tarball for kde3.0beta1
-// we can't compile it without these fix.
-// Thanks
-//
-// Revision 1.4  2001/12/02 22:03:07  adridg
-// Expense conduit finally works
-//
-// Revision 1.3  2001/11/25 22:03:44  adridg
-// Port expense conduit to new arch. Doesn't compile yet.
-//
-// Revision 1.2  2001/03/14 16:56:02  molnarc
-//
-// CJM - Added browse button on csv export tab.
-// CJM - Added database export tab and required information.
-//
-// Revision 1.1  2001/03/04 21:47:04  adridg
-// New expense conduit, non-functional but it compiles
-//
 #endif

@@ -19,8 +19,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -114,32 +114,3 @@ int main(int argc, char **argv)
 	/* NOTREACHED */
 	(void) config_id;
 }
-
-
-// $Log$
-// Revision 1.8  2001/12/29 15:40:47  adridg
-// Sanity checking and simplification
-//
-// Revision 1.7  2001/10/17 08:46:08  adridg
-// Minor cleanups
-//
-// Revision 1.6  2001/10/02 17:49:03  adridg
-// Use new-style conduit config
-//
-// Revision 1.5  2001/10/01 19:53:15  adridg
-// Added conduit config
-//
-// Revision 1.4  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.3  2001/09/23 21:42:35  adridg
-// Factored out debugging options
-//
-// Revision 1.2  2001/09/23 18:28:52  adridg
-// Adjusted tests to new .ui and config
-//
-// Revision 1.1  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//

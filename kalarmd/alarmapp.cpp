@@ -53,6 +53,15 @@ int AlarmApp::newInstance()
 
   KStartupInfo::appStarted();
 
+  /* Prevent the application being restored automatically by the session manager
+   * at session startup. Instead, the KDE autostart facility is used to start
+   * the application. This allows the user to configure whether or not it is to
+   * be started automatically, and also ensures that it is started in the correct
+   * phase of session startup, i.e. after clients have been restored by the
+   * session manager.
+   */
+  disableSessionManagement();
+
   // Check if we already have a running alarm daemon widget
   if (mAd) return 0;
 

@@ -814,6 +814,8 @@ void CalendarView::todoModified (Todo *event, int changed)
     temp->modified (changed);
 
   }
+  
+  mViewManager->updateView();
 }
 
 void CalendarView::appointment_show()

@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -31,42 +31,14 @@ static const char *kpilot_id =
 	"$Id$";
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
-
-#include <sys/types.h>
-#include <dirent.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
-
-#ifndef QFILE_H
 #include <qfile.h>
-#endif
-
-#ifndef QLIST_H
-#include <qlist.h>
-#endif
-
-#ifndef QSTRING_H
+#include <qptrlist.h>
 #include <qstring.h>
-#endif
-
-#ifndef QLISTBOX_H
-#include <qlistbox.h>
-#endif
-
-#ifndef QCOMBOBOX_H
-#include <qcombobox.h>
-#endif
-
 #include <qvbox.h>
+#include <qtimer.h>
+
 #include <kjanuswidget.h>
 
 #ifndef _KURL_H_
@@ -83,9 +55,6 @@ static const char *kpilot_id =
 #endif
 #ifndef _KWIN_H_
 #include <kwin.h>
-#endif
-#ifndef _KPROCESS_H_
-#include <kprocess.h>
 #endif
 #ifndef _KCOMBOBOX_H_
 #include <kcombobox.h>
@@ -117,12 +86,8 @@ static const char *kpilot_id =
 #ifndef _KUNIQUEAPP_H_
 #include <kuniqueapp.h>
 #endif
-#ifndef _KKDEYDIALOG_H_
 #include <kkeydialog.h>
-#endif
-#ifndef _KEDITTOOLBAR_H_
 #include <kedittoolbar.h>
-#endif
 
 #include <kprogress.h>
 
@@ -160,10 +125,11 @@ private:
 public:
 	ComponentList &list() { return fPilotComponentList; } ;
 } ;
-	
+
 KPilotInstaller::KPilotInstaller() :
 	KMainWindow(0),
-	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon", 
+	DCOPObject("KPilotIface"),
+	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon",
 		"KPilotDaemonIface")),
 	fP(new KPilotPrivate),
 	fMenuBar(0L),
@@ -173,13 +139,17 @@ KPilotInstaller::KPilotInstaller() :
 	fKillDaemonOnExit(false),
 	fDaemonWasRunning(true),
 	fStatus(Startup),
-	fFileInstallWidget(0L), 
+	fFileInstallWidget(0L),
 	fLogWidget(0L)
 {
 	FUNCTIONSETUP;
 
 	readConfig();
 	setupWidget();
+
+#ifdef DEBUG
+	PilotRecord::allocationInfo();
+#endif
 
 	/* NOTREACHED */
 	(void) kpilot_id;
@@ -190,6 +160,9 @@ KPilotInstaller::~KPilotInstaller()
 	FUNCTIONSETUP;
 	killDaemonIfNeeded();
 	delete fDaemonStub;
+#ifdef DEBUG
+	PilotRecord::allocationInfo();
+#endif
 }
 
 void KPilotInstaller::killDaemonIfNeeded()
@@ -197,12 +170,12 @@ void KPilotInstaller::killDaemonIfNeeded()
 	FUNCTIONSETUP;
 	if (fKillDaemonOnExit)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname << ": Killing daemon." << endl;
-#endif
-
 		if (!fDaemonWasRunning)
 		{
+#ifdef DEBUG
+			DEBUGKPILOT << fname << ": Killing daemon." << endl;
+#endif
+
 			getDaemon().quitNow();
 		}
 	}
@@ -225,8 +198,8 @@ void KPilotInstaller::startDaemonIfNeeded()
 	if ((s.isNull()) || (!getDaemon().ok()))
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname 
-			<< ": Daemon not responding, trying to start it." 
+		DEBUGKPILOT << fname
+			<< ": Daemon not responding, trying to start it."
 			<< endl;
 #endif
 		fDaemonWasRunning = false;
@@ -237,7 +210,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	}
 
 	if (!fDaemonWasRunning && KApplication::startServiceByDesktopName(
-		"kpilotdaemon",
+		CSL1("kpilotdaemon"),
 		QString::null, &daemonError, &daemonDCOP, &daemonPID
 #if (KDE_VERSION >= 220)
 			// Startup notification was added in 2.2
@@ -262,6 +235,8 @@ void KPilotInstaller::readConfig()
 
 	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	fKillDaemonOnExit = c.getKillDaemonOnExit();
+	
+	(void) PilotAppCategory::setupPilotCodec(c.getEncoding());
 }
 
 
@@ -272,8 +247,8 @@ void KPilotInstaller::setupWidget()
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Creating central widget." << endl;
 #endif
-
-	setCaption("KPilot");
+	
+	setCaption(CSL1("KPilot"));
 	setMinimumSize(500, 405);
 
 
@@ -287,12 +262,13 @@ void KPilotInstaller::setupWidget()
 	initMenu();
 	initComponents();
 
-	createGUI("kpilotui.rc", false);
+	createGUI(CSL1("kpilotui.rc"), false);
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Got XML from "
 		<< xmlFile() << " and " << localXMLFile() << endl;
 #endif
+	setAutoSaveSettings();
 }
 
 
@@ -315,27 +291,29 @@ void KPilotInstaller::initComponents()
 	w = getManagingWidget()->addVBoxPage(a,QString::null, \
 		(pixfile.isEmpty() ? QPixmap() : QPixmap(pixfile))) ;
 
-	ADDICONPAGE(i18n("HotSync"),"kpilot/kpilot-hotsync.png");
+	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/kpilot-hotsync.png"));
 	fLogWidget = new LogWidget(w);
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
 
 	
-	ADDICONPAGE(i18n("Memo Viewer"),"kpilot/kpilot-knotes.png");
+	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/kpilot-knotes.png"));
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
 
-	ADDICONPAGE(i18n("Address Viewer"),"kpilot/kpilot-address.png");
+	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/kpilot-address.png"));
 	addComponentPage(new AddressWidget(w,defaultDBPath),
 		i18n("Address Viewer"));
 
-	ADDICONPAGE(i18n("File Installer"),"kpilot/kpilot-fileinstaller.png");
+	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/kpilot-fileinstaller.png"));
 	fFileInstallWidget = new FileInstallWidget(
 		w,defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
 
 #undef ADDICONPAGE
 #undef VIEWICON
+
+	QTimer::singleShot(500,this,SLOT(initializeComponents()));
 }
 
 
@@ -399,12 +377,39 @@ void KPilotInstaller::slotHotSyncRequested()
 		i18n("Please press the HotSync button."));
 }
 
+#if 0
 void KPilotInstaller::slotFastSyncRequested()
 {
 	FUNCTIONSETUP;
 	setupSync(PilotDaemonDCOP::FastSync,
 		i18n("FastSyncing. ") +
 		i18n("Please press the HotSync button."));
+}
+#endif
+
+void KPilotInstaller::slotListSyncRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(PilotDaemonDCOP::Test,
+		QString::fromLatin1("Listing Pilot databases."));
+}
+
+/* virtual DCOP */ ASYNC KPilotInstaller::daemonStatus(int i)
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Received daemon message " << i << endl;
+#endif
+
+	switch(i)
+	{
+	case KPilotDCOP::EndOfHotSync :
+		componentPostSync();
+		break;
+	default :
+		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
+		break;
+	}
 }
 
 bool KPilotInstaller::componentPreSync()
@@ -434,6 +439,22 @@ bool KPilotInstaller::componentPreSync()
 		return false;
 	}
 	return true;
+}
+
+void KPilotInstaller::componentPostSync()
+{
+	FUNCTIONSETUP;
+
+	for (fP->list().first();
+		fP->list().current(); fP->list().next())
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Post-sync for builtin "
+			<< fP->list().current()->name() << endl;
+#endif
+		fP->list().current()->postHotSync();
+	}
 }
 
 void KPilotInstaller::setupSync(int kind, const QString & message)
@@ -471,16 +492,23 @@ void KPilotInstaller::initMenu()
 	KAction *p;
 
 	// File actions
-	p = new KAction(i18n("&HotSync"), "hotsync", 0,
+	p = new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
-	p = new KAction(i18n("&FastSync"), "fastsync", 0,
+#if 0
+	p = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_fastsync");
-	p = new KAction(i18n("&Backup"), "backup", 0,
+#endif
+#ifdef DEBUG
+	p = new KAction(TODO_I18N("List only"),CSL1("list"),0,
+		this,SLOT(slotListSyncRequested()),
+		actionCollection(), "file_list");
+#endif
+	p = new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
-	p = new KAction(i18n("&Restore"), "restore", 0,
+	p = new KAction(i18n("&Restore"), CSL1("restore"), 0,
 		this, SLOT(slotRestoreRequested()),
 		actionCollection(), "file_restore");
 	p = KStdAction::quit(this, SLOT(quit()), actionCollection());
@@ -488,16 +516,25 @@ void KPilotInstaller::initMenu()
 	// View actions
 
 	// Options actions
+#if KDE_VERSION >= 0x30180
+	createStandardStatusBarAction();
+#endif
+
+#if KDE_VERSION >= 0x30080
+	setStandardToolBarMenuEnabled(true);
+#else
 	m_toolbarAction =
 		KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
 		actionCollection());
+#endif
+
 	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
-	p = KStdAction::configureToolbars(this, SLOT(optionsConfigureKeys()),
+	p = KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
 		actionCollection());
 	p = KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 		actionCollection());
-	p = new KAction(i18n("C&onfigure Conduits..."), "configure", 0, this,
+	p = new KAction(i18n("C&onfigure Conduits..."), CSL1("configure"), 0, this,
 		SLOT(slotConfigureConduits()), actionCollection(),
 		"options_configure_conduits");
 }
@@ -510,6 +547,19 @@ void KPilotInstaller::fileInstalled(int)
 void KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
+
+	for (fP->list().first();
+		fP->list().current(); fP->list().next())
+	{
+		QString reason;
+		if (!fP->list().current()->preHotSync(reason))
+		{
+			kdWarning() << k_funcinfo
+				<< ": Couldn't save "
+				<< fP->list().current()->name()
+				<< endl;
+		}
+	}
 
 	killDaemonIfNeeded();
 	kapp->quit();
@@ -533,7 +583,6 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		<< (int) p << " called " << p->name("(none)") << endl;
 #endif
 
-	p->initialize();
 	fP->list().append(p);
 
 	// The first component added gets id 1, while the title
@@ -571,14 +620,31 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		p, SLOT(slotShowComponent()),
 		actionCollection(), actionname);
 
-	pt->setExclusiveGroup("view_menu");
+	pt->setExclusiveGroup(CSL1("view_menu"));
 
 	connect(p, SIGNAL(showComponent(PilotComponent *)),
 		this, SLOT(slotSelectComponent(PilotComponent *)));
 }
 
+/* slot */ void KPilotInstaller::initializeComponents()
+{
+	FUNCTIONSETUP;
+	
+	for (PilotComponent *p = fP->list().first();
+		p ; p = fP->list().next())
+	{
+		p->initialize();
+	}
+}
 
 
+#if KDE_VERSION >= 0x30080
+// Included in kdelibs in KDE 3.1, but we can't #ifdef slots,
+// so include a dummy implementation.
+void KPilotInstaller::optionsShowToolbar()
+{
+}
+#else
 void KPilotInstaller::optionsShowToolbar()
 {
 	FUNCTIONSETUP;
@@ -594,6 +660,7 @@ void KPilotInstaller::optionsShowToolbar()
 	kapp->processEvents();
 	resizeEvent(0);
 }
+#endif
 
 
 void KPilotInstaller::optionsConfigureKeys()
@@ -606,15 +673,23 @@ void KPilotInstaller::optionsConfigureToolbars()
 {
 	FUNCTIONSETUP;
 	// use the standard toolbar editor
+#if KDE_VERSION >= 0x030100
+	// This was added in KDE 3.1
+	saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+#endif
 	KEditToolbar dlg(actionCollection());
-
-	if (dlg.exec())
-	{
-		// recreate our GUI
-		createGUI();
-	}
+	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
+	dlg.exec();
 }
 
+void KPilotInstaller::slotNewToolbarConfig()
+{
+	// recreate our GUI
+	createGUI();
+#if KDE_VERSION >= 0x030180
+	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+#endif
+}
 
 void KPilotInstaller::slotConfigureKPilot()
 {
@@ -742,7 +817,7 @@ int main(int argc, char **argv)
 
 	KAboutData about("kpilot", I18N_NOOP("KPilot"),
 		KPILOT_VERSION,
-		"KPilot - Hot-sync software for unix\n\n",
+		"KPilot - HotSync software for KDE\n\n",
 		KAboutData::License_GPL, "(c) 1998-2000,2001, Dan Pilone");
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
@@ -868,177 +943,10 @@ int main(int argc, char **argv)
 	tp->startDaemonIfNeeded();
 
 	KGlobal::dirs()->addResourceType("pilotdbs",
-		"share/apps/kpilot/DBBackup");
+		CSL1("share/apps/kpilot/DBBackup"));
 	tp->show();
 	a.setMainWidget(tp);
 	return a.exec();
 }
 
 
-// $Log$
-// Revision 1.79  2002/08/15 21:51:00  kainhofe
-// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
-//
-// Revision 1.78  2002/08/13 11:57:37  mhunter
-// VCal -> vCal (name consistency)
-//
-// Revision 1.77  2002/08/12 13:07:07  kainhofe
-// Added myself to the credits page
-//
-// Revision 1.76  2002/06/24 19:29:11  adridg
-// Allow daemon RW access to config file
-//
-// Revision 1.75  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.74.2.1  2002/04/14 22:26:12  adridg
-// New TODO's for HEAD; cosmetic bugfix in logWidget; rectify misleading debug output when KPilot starts the daemon itself.
-//
-// Revision 1.74  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.73  2002/01/31 16:25:28  hollomon
-//
-// If we can't start the daemon. tell the user why not.
-//
-// Revision 1.72  2002/01/31 15:36:33  hollomon
-//
-// KPilotInstaller::startDaemonIfNeeded was trying to start the daemon
-// even if it found it running. Calculated fDaemonWasRunning then ignored
-// it.
-//
-// Revision 1.71  2002/01/26 15:00:01  adridg
-// An icon for the address viewer
-//
-// Revision 1.70  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.69  2002/01/23 08:35:54  adridg
-// Remove K-menu dependency
-//
-// Revision 1.68  2001/12/31 15:52:40  adridg
-// CVS_SILENT: Spit 'n polish
-//
-// Revision 1.67  2001/12/31 09:38:09  adridg
-// Splash patch by Aaron
-//
-// Revision 1.66  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.65  2001/11/11 22:10:38  adridg
-// Switched to KJanuswidget
-//
-// Revision 1.64  2001/10/17 08:46:08  adridg
-// Minor cleanups
-//
-// Revision 1.63  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.62  2001/09/30 16:58:45  adridg
-// Cleaned up preHotSync interface, removed extra includes, added private-d-ptr.
-//
-// Revision 1.61  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.60  2001/09/23 21:42:35  adridg
-// Factored out debugging options
-//
-// Revision 1.59  2001/09/23 18:25:50  adridg
-// New config architecture
-//
-// Revision 1.58  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.57  2001/09/07 20:48:13  adridg
-// Stripped away last crufty IPC, added logWidget
-//
-// Revision 1.56  2001/08/29 08:50:56  cschumac
-// Make KPilot compile.
-//
-// Revision 1.55  2001/08/27 22:54:27  adridg
-// Decruftifying; improve DCOP link between daemon & viewer
-//
-// Revision 1.54  2001/08/19 19:25:57  adridg
-// Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
-//
-// Revision 1.53  2001/06/13 21:32:35  adridg
-// Dead code removal and replacing complicated stuff w/ QWidgetStack
-//
-// Revision 1.52  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.51  2001/05/07 19:45:11  adridg
-// KToggle actions used now
-//
-// Revision 1.50  2001/04/26 21:59:00  adridg
-// CVS_SILENT B0rkage with previous commit
-//
-// Revision 1.49  2001/04/23 21:05:39  adridg
-// Fixed bug w/ absent conduit executables. Fixed resize bug.
-//
-// Revision 1.48  2001/04/23 06:30:38  adridg
-// XML UI updates
-//
-// Revision 1.47  2001/04/14 15:21:35  adridg
-// XML GUI and ToolTips
-//
-// Revision 1.46  2001/04/11 21:36:54  adridg
-// Added app icons
-//
-// Revision 1.45  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.44  2001/03/09 09:40:52  adridg
-// Large-scale #include cleanup; component resizing bug fixed
-//
-// Revision 1.43  2001/03/05 23:57:53  adridg
-// Added KPILOT_VERSION
-//
-// Revision 1.42  2001/03/04 22:22:29  adridg
-// DCOP cooperation between daemon & kpilot for d&d file install
-//
-// Revision 1.41  2001/03/02 13:07:18  adridg
-// Completed switch to KAction
-//
-// Revision 1.40  2001/03/01 01:02:48  adridg
-// Started changing to KAction
-//
-// Revision 1.39  2001/02/26 22:11:40  adridg
-// Removed useless getopt.h; fixes compile prob on Solaris
-//
-// Revision 1.38  2001/02/25 12:39:35  adridg
-// Fixed component names (src incompatible)
-//
-// Revision 1.37  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.36  2001/02/08 17:59:34  adridg
-// Removed spurious #ifdefs, and the #define that goes with it. Make KPilot exit consistently after user-requested setup actions.
-//
-// Revision 1.35  2001/02/08 13:17:19  adridg
-// Fixed crash when conduits run during a backup and exit after the
-// end of that backup (because the event loop is blocked by the backup
-// itself). Added better debugging error exit message (no i18n needed).
-//
-// Revision 1.34  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.33  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//
-// Revision 1.32  2001/02/05 19:16:32  adridg
-// Removing calls to exit() from internal functions
-//
-// Revision 1.31  2001/02/05 11:19:18  adridg
-// Reduced icon-loading code to hard-coded xpms
-//
-// Revision 1.30  2001/01/19 22:18:43  waba
-// KTMainWindow is obsolete. I hope it works because I can't test due to lack of
-// pilot. At least it compiles.
-//
-// Revision 1.29  2001/01/06 13:21:53  adridg
-// Updated version number
-//
-// Revision 1.28  2001/01/03 00:02:45  adridg
-// Added Heiko's FastSync
-//

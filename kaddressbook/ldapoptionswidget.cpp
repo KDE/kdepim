@@ -67,7 +67,7 @@ class LDAPItem : public QCheckListItem
     {
       setServer( server );
     }
-    
+
     void setServer( const LDAPServer &server )
     {
       mServer = server;
@@ -91,6 +91,7 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
 
   connect( mHostListView, SIGNAL( selectionChanged( QListViewItem* ) ),
            SLOT( slotSelectionChanged( QListViewItem* ) ) );
+  connect( mHostListView, SIGNAL(doubleClicked( QListViewItem *, const QPoint &, int )), this, SLOT(slotEditHost()));
 }
 
 LDAPOptionsWidget::~LDAPOptionsWidget()
@@ -209,7 +210,7 @@ void LDAPOptionsWidget::saveSettings()
 
 void LDAPOptionsWidget::initGUI()
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() ); 
+  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   QGroupBox *groupBox = new QGroupBox( i18n( "LDAP Servers" ), this );
   groupBox->setColumnLayout( 0, Qt::Vertical );

@@ -21,23 +21,23 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-#include "kpilotDCOP.h"
+#include "logWidgetDCOP.h"
 #include "pilotComponent.h"
 
 class QLabel;
-class QTextView;
+class QTextEdit;
 class QHBox;
 class KProgress;
 
-class LogWidget : public PilotComponent , public KPilotDCOP
+class LogWidget : public PilotComponent , public LoggerDCOP
 {
 Q_OBJECT
 
@@ -79,7 +79,7 @@ private:
 	bool saveFile(const QString &);
 
 private:
-	QTextView *fLog;
+	QTextEdit *fLog;
 	bool fShowTime;
 	QLabel *fSplash;
 	QLabel *fLabel;
@@ -87,17 +87,4 @@ private:
 	QHBox *fButtonBox;
 } ;
 
-// $Log$
-// Revision 1.8  2002/05/23 20:19:40  adridg
-// Add support for extra buttons to the logwidget; use it for reset in kpilottest
-//
-// Revision 1.7  2001/12/29 15:44:16  adridg
-// Missing progress slots
-//
-// Revision 1.6  2001/11/25 22:02:57  adridg
-// Save/clear the sync log
-//
-// Revision 1.5  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
 #endif

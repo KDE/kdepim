@@ -95,9 +95,6 @@ KOrganizer::KOrganizer( const char *name )
   mCalendarView = new CalendarView( this, "KOrganizer::CalendarView" );
   setCentralWidget(mCalendarView);
 
-  initActions();
-
-  mParts = KOCore::self()->loadParts( this );
 //  initViews();
 
   statusBar()->insertItem("",ID_GENERAL,10);
@@ -111,6 +108,10 @@ KOrganizer::KOrganizer( const char *name )
   statusBar()->setItemAlignment(ID_MESSAGES_IN,AlignRight);
   statusBar()->setItemAlignment(ID_MESSAGES_OUT,AlignRight);
   connect(statusBar(),SIGNAL(pressed(int)),SLOT(statusBarPressed(int)));
+
+  initActions();
+
+  mParts = KOCore::self()->loadParts( this );
 
   readSettings();
   mCalendarView->readSettings();
@@ -223,7 +224,7 @@ void KOrganizer::writeSettings()
 
   mRecent->saveEntries(config);
 
-  saveMainWindowSettings(config);
+  saveMainWindowSettings(config,"MainWindow");
 
   config->sync();
 }
@@ -528,7 +529,7 @@ void KOrganizer::initActions()
 
   KConfig *config = kapp->config();
 
-  applyMainWindowSettings(config);
+  applyMainWindowSettings(config,"MainWindow");
 
   config->setGroup("Settings");
   mFilterViewAction->setChecked(config->readBoolEntry("Filter Visible",false));

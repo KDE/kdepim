@@ -2,9 +2,13 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** This is a wrapper -- and base class -- for pilot-link's general
-** Pilot database structures. It serves as a base class for other
-** classes specialized for a particular database.
+** This is a wrapper for pilot-link's general
+** Pilot database structures. These records are
+*** just collections of bits. See PilotAppCategory
+** for interpreting the bits in a meaningful way.
+**
+** As a crufty hack, the non-inline parts of
+** PilotAppCategory live in this file as well.
 */
 
 /*
@@ -20,8 +24,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -31,20 +35,36 @@
 
 #include <string.h>
 
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
+#include <qtextcodec.h>
+
+// PilotAppCategory includes pilotRecord and we
+// provide its implementation here as well.
+//
+#include "pilotAppCategory.h"
+
 
 
 static const char *pilotRecord_id =
 	"$Id$";
 
+/* static */ int PilotRecord::fAllocated = 0;
+/* static */ int PilotRecord::fDeleted = 0;
+
+/* static */ void PilotRecord::allocationInfo()
+{
+#ifdef DEBUG
+	FUNCTIONSETUP;
+	DEBUGKPILOT << fname
+		<< ": Allocated " << fAllocated
+		<< "  Deleted " << fDeleted;
+#endif
+}
 
 PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	pi_uid_t uid) :
-	fData(0L), 
-	fLen(len), 
-	fAttrib(attrib), 
+	fData(0L),
+	fLen(len),
+	fAttrib(attrib),
 	fCat(cat),
 	fID(uid)
 {
@@ -52,6 +72,8 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	fData = new char[len];
 
 	memcpy(fData, data, len);
+
+	fAllocated++;
 	(void) pilotRecord_id;
 }
 
@@ -65,6 +87,8 @@ PilotRecord::PilotRecord(PilotRecord * orig)
 	fAttrib = orig->getAttrib();
 	fCat = orig->getCat();
 	fID = orig->getID();
+
+	fAllocated++;
 }
 
 PilotRecord & PilotRecord::operator = (PilotRecord & orig)
@@ -93,59 +117,47 @@ void PilotRecord::setData(const char *data, int len)
 	fLen = len;
 }
 
-bool PilotRecord::isArchived() const
-{
-	// FUNCTIONSETUP;
-	return getAttrib() & dlpRecAttrArchived;
-}
 
-bool PilotRecord::isDeleted() const
-{
-	// FUNCTIONSETUP;
-	return getAttrib() & dlpRecAttrDeleted;
-}
+/* static */ QTextCodec *PilotAppCategory::pilotCodec = 0L;
 
-bool PilotRecord::isSecret() const
-{
-	// FUNCTIONSETUP;
-	return getAttrib() & dlpRecAttrSecret;
-}
+static const char *latin1 = "ISO8859-1" ;
+// Other names of encodings are in the config dialog source
 
-
-void PilotRecord::makeDeleted()
+/* static */ QTextCodec *PilotAppCategory::createCodec(const char *p)
 {
 	FUNCTIONSETUP;
-	fAttrib |= dlpRecAttrDeleted;
+
+	if (!p) p=latin1;
+#ifdef DEBUG
+	DEBUGKPILOT << ": Creating codec for " << p << endl;
+#endif
+	QTextCodec *q = QTextCodec::codecForName(p);
+	if (!q) q = QTextCodec::codecForName(latin1);
+	pilotCodec = q;
+	return q;
 }
 
-
-
-void PilotRecord::makeSecret()
+/* static */ QTextCodec *PilotAppCategory::setupPilotCodec(const QString &s)
 {
 	FUNCTIONSETUP;
-	fAttrib |= dlpRecAttrSecret;
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Creating codec " << s << endl;
+#endif
+
+	const char *p = 0L;
+	// This latin1() is OK. The names of the encodings
+	// as shown in the table in the QTextCodec docs
+	// are all US-ASCII.
+	if (!s.isEmpty()) p=s.latin1();
+	
+	(void) PilotAppCategory::createCodec(p);
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Got codec " << codec()->name() << endl;
+#endif
+	return codec();
 }
 
-
-// $Log$
-// Revision 1.2  2002/02/10 22:21:33  adridg
-// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
-//
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.8  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.7  2001/04/23 21:26:43  adridg
-// More convenience things
-//
-// Revision 1.6  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.5  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.4  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

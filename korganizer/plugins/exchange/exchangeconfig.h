@@ -19,6 +19,9 @@
 #ifndef EXCHANGECONFIG_H
 #define EXCHANGECONFIG_H
 
+#include <qcheckbox.h>
+#include <qpushbutton.h>
+
 #include <kdialogbase.h>
 #include <klineedit.h>
 //#include <kpassdlg.h>
@@ -32,11 +35,9 @@ class ExchangeConfig : public KDialogBase
     ExchangeConfig(KPIM::ExchangeAccount* account, QWidget *parent=0);
     virtual ~ExchangeConfig();
 
-//  protected:
-//    void load();
-//    void save();
-
   protected slots:
+    void slotToggleAuto( bool on );
+    void slotFindClicked();
     void slotOk();
 
   private:
@@ -44,6 +45,9 @@ class ExchangeConfig : public KDialogBase
     KPIM::ExchangeAccount* mAccount;
     KLineEdit *m_host;
     KLineEdit *m_user;
+    QCheckBox *m_autoMailbox;
+    KLineEdit *m_mailbox;
+    QPushButton* m_tryFindMailbox;
     KLineEdit *m_password;
 };
 

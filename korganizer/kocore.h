@@ -78,7 +78,6 @@ class KOCore {
     bool mCalendarDecorationsLoaded;
     
     KOrg::CalendarDecoration *mHolidays;
-    bool mHolidaysLoaded;    
 
     KCalendarSystem *mCalendarSystem;
 };

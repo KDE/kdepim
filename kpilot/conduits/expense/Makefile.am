@@ -1,4 +1,5 @@
 ### Makefile for the Expense Conduit
+### 	conduits/expense
 ###
 ### The expense conduit is Copyright (C) 2001 by Chris Molnar
 
@@ -13,8 +14,8 @@ kde_module_LTLIBRARIES = libexpenseconduit.la
 
 libexpenseconduit_la_SOURCES = expenseConduit.ui setupDialog.cc \
 	expense.cc expense-factory.cc
-libexpenseconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
-libexpenseconduit_la_LIBADD  =  -lkpilot
+libexpenseconduit_la_LDFLAGS = $(KDE_RPATH) $(KDE_PLUGIN) $(all_libraries)
+libexpenseconduit_la_LIBADD  = ../../lib/libkpilot.la $(LIB_KIO)
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = expense.h setupDialog.h 

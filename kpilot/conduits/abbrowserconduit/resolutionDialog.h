@@ -20,8 +20,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -38,7 +38,12 @@ class ResolutionDlg : public KDialogBase
     Q_OBJECT
 
 public:
-	ResolutionDlg( QWidget* parent=0, KPilotDeviceLink*fH=0L, QString caption="", QString Text="", QStringList lst=QStringList(), QString remember="");
+	ResolutionDlg( QWidget* parent=0, 
+		KPilotDeviceLink*fH=0L, 
+		QString caption=QString::null, 
+		QString Text=QString::null, 
+		QStringList lst=QStringList(), 
+		QString remember=QString::null);
 	~ResolutionDlg();
 public slots:
 	void _tickle();

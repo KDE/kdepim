@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -34,36 +34,38 @@ static const char *pilotlocaldatabase_id =
 
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream.h>
+
+#include <iostream>
 
 #include <qstring.h>
 #include <qfile.h>
 #include <qregexp.h>
+#include <qdatetime.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 
 #include "pilotLocalDatabase.h"
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & path,
-	const QString & dbName,
+	const QString & dbName, bool useDefaultPath,
 	QObject *p, const char *n) :
 	PilotDatabase(p,n),
 	fPathName(path),
 	fDBName(dbName),
-	fAppInfo(0L), 
-	fAppLen(0), 
-	fNumRecords(0), 
-	fCurrentRecord(0), 
+	fAppInfo(0L),
+	fAppLen(0),
+	fNumRecords(0),
+	fCurrentRecord(0),
 	fPendingRec(-1)
 {
 	FUNCTIONSETUP;
 	fixupDBName();
 	openDatabase();
 
-	if (!isDBOpen())
+	if (!isDBOpen() && useDefaultPath)
 	{
 		if (fPathBase && !fPathBase->isEmpty())
 		{
@@ -72,10 +74,12 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 		else
 		{
 			fPathName = KGlobal::dirs()->saveLocation("data",
-				QString("kpilot/DBBackup/"));
+				CSL1("kpilot/DBBackup/"));
 		}
 		fixupDBName();
 		openDatabase();
+		if (!isDBOpen())
+			fPathName=path;
 	}
 
 	/* NOTREACHED */
@@ -87,14 +91,13 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	PilotDatabase(p,n),
 	fPathName(QString::null),
 	fDBName(dbName),
-	fAppInfo(0L), 
-	fAppLen(0), 
-	fNumRecords(0), 
-	fCurrentRecord(0), 
+	fAppInfo(0L),
+	fAppLen(0),
+	fNumRecords(0),
+	fCurrentRecord(0),
 	fPendingRec(-1)
 {
 	FUNCTIONSETUP;
-
 	if (fPathBase && !fPathBase->isEmpty())
 	{
 		fPathName = *fPathBase;
@@ -102,7 +105,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	else
 	{
 		fPathName = KGlobal::dirs()->saveLocation("data",
-			QString("kpilot/DBBackup/"));
+			CSL1("kpilot/DBBackup/"));
 	}
 
 	fixupDBName();
@@ -127,8 +130,86 @@ PilotLocalDatabase::~PilotLocalDatabase()
 void PilotLocalDatabase::fixupDBName()
 {
 	FUNCTIONSETUP;
-	fDBName = fDBName.replace(QRegExp("/"), "_");
+#if QT_VERSION < 0x30100
+	fDBName = fDBName.replace(QRegExp(CSL1("/")),CSL1("_"));
+#else
+	// Actually, I don't know if this char-replace
+	// is more efficient than the QString one.
+	fDBName = fDBName.replace('/', CSL1("_"));
+#endif
 }
+
+bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags, int version)
+{
+	FUNCTIONSETUP;
+
+	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
+	if (isDBOpen()) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Database "<<fDBName<<" already open. Cannot recreate it."<<endl;
+#endif
+		return true;
+	}
+
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Creating database "<<fDBName<<endl;
+#endif
+
+	// Database names seem to be latin1.
+	memcpy(&fDBInfo.name[0], fDBName.latin1(), 34*sizeof(char));
+	fDBInfo.creator=creator;
+	fDBInfo.type=type;
+	fDBInfo.more=0;
+	fDBInfo.flags=flags;
+	fDBInfo.miscFlags=0;
+	fDBInfo.version=version;
+	fDBInfo.modnum=0;
+	fDBInfo.index=0;
+
+#if QT_VERSION < 0x30100
+#define TODAY_T	epoch.secsTo(QDateTime::currentDateTime())
+	QDateTime epoch;
+	epoch.setTime_t((time_t)0);
+#else
+#define TODAY_T (QDateTime::currentDateTime()).toTime_t()
+#endif
+	fDBInfo.createDate=TODAY_T;
+	fDBInfo.modifyDate=TODAY_T;
+	fDBInfo.backupDate=TODAY_T;
+#undef TODAY_T
+
+
+	delete[] fAppInfo;
+	fAppInfo=0L;
+	fAppLen=0;
+
+	for (int i=0; i<fNumRecords; i++) {
+		KPILOT_DELETE(fRecords[i]);
+		fRecords[i]=NULL;
+	}
+	fNumRecords=0;
+	fCurrentRecord=0;
+	fPendingRec=0;
+
+	// TODO: Do I have to open it explicitely???
+	setDBOpen(true);
+	return true;
+}
+
+int PilotLocalDatabase::deleteDatabase()
+{
+	FUNCTIONSETUP;
+	if (isDBOpen()) closeDatabase();
+
+	QString dbpath=dbPathName();
+	QFile fl(dbpath);
+	if (QFile::remove(dbPathName()))
+		return 0;
+	else
+		return -1;
+}
+
+
 
 // Reads the application block info
 int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int)
@@ -163,22 +244,22 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 }
 
 
-	// returns the number of records in the database 
+// returns the number of records in the database
 int PilotLocalDatabase::recordCount()
 {
 	return fNumRecords;
 }
 
 
-// Returns a QValueList of all record ids in the database. 
+// Returns a QValueList of all record ids in the database.
 QValueList<recordid_t> PilotLocalDatabase::idList()
 {
 	int idlen=recordCount();
 	QValueList<recordid_t> idlist;
 	if (idlen<=0) return idlist;
-	
+
 	// now create the QValue list from the idarr:
-	for (int id=0; id<idlen; id++) 
+	for (int id=0; id<idlen; id++)
 	{
 		idlist.append(fRecords[id]->getID());
 	}
@@ -251,7 +332,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 }
 
 // Reads the next record from database that has the dirty flag set.
-PilotRecord *PilotLocalDatabase::readNextModifiedRec()
+PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
 
@@ -269,6 +350,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec()
 	if (fCurrentRecord == fNumRecords)
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord(fRecords[fCurrentRecord]);
+	if (ind) *ind=fCurrentRecord;
 
 	fPendingRec = fCurrentRecord;	// Record which one needs the new id
 	fCurrentRecord++;	// so we skip it next time
@@ -320,7 +402,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 //      flags = flags | dlpRecAttrDirty;
 
 	// Instead of making the app do it, assume that whenever a record is
-	// written to the database it is dirty.  (You can clean up the database with 
+	// written to the database it is dirty.  (You can clean up the database with
 	// resetSyncFlags().)  This will make things get copied twice during a hot-sync
 	// but shouldn't cause any other major headaches.
 	newRecord->setAttrib(newRecord->getAttrib() | dlpRecAttrDirty);
@@ -341,6 +423,52 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	fRecords[fNumRecords++] = new PilotRecord(newRecord);
 	return newRecord->getID();
 }
+
+// Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case
+int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
+{
+	FUNCTIONSETUP;
+	if (isDBOpen() == false)
+	{
+		kdError() << k_funcinfo <<": DB not open"<<endl;
+		return -1;
+	}
+
+	if (all)
+	{
+		for (int i=0; i<fNumRecords; i++)
+		{
+			delete fRecords[i];
+			fRecords[i]=0L;
+		}
+		fNumRecords=0;
+		fCurrentRecord=0;
+		fPendingRec=0;
+		return 0;
+	}
+	else
+	{
+		int i=0;
+		while ( (i<fNumRecords) && (fRecords[i]->getID()!=id) )
+			i++;
+		if (fRecords[i]->getID() == id)
+		{
+			delete fRecords[i];
+			for (int j=i+1; j<fNumRecords; j++)
+			{
+				fRecords[j-1]=fRecords[j];
+			}
+			fNumRecords--;
+		}
+		else
+		{
+			// Record with this id does not exist!
+			return -1;
+		}
+	}
+	return 0;
+}
+
 
 // Resets all records in the database to not dirty.
 int PilotLocalDatabase::resetSyncFlags()
@@ -411,10 +539,11 @@ QString PilotLocalDatabase::dbPathName() const
 {
 	FUNCTIONSETUP;
 	QString tempName(fPathName);
+	QString slash = CSL1("/");
 
-	if (!tempName.endsWith("/")) tempName += "/";
+	if (!tempName.endsWith(slash)) tempName += slash;
 	tempName += getDBName();
-	tempName += ".pdb";
+	tempName += CSL1(".pdb");
 	return tempName;
 }
 
@@ -462,15 +591,23 @@ void PilotLocalDatabase::closeDatabase()
 	int i;
 
 	if (isDBOpen() == false)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
+#endif
 		return;
+	}
 
 	QString tempName_ = dbPathName();
-	QString newName_ = tempName_ + ".bak";
+	QString newName_ = tempName_ + CSL1(".bak");
 	QCString tempName = QFile::encodeName(tempName_);
 	QCString newName = QFile::encodeName(newName_);
 
 	dbFile = pi_file_create(const_cast < char *>((const char *)newName),
 		&fDBInfo);
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Created temp file "<<newName<<" for the database file "<<dbPathName()<<endl;
+#endif
 
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 	for (i = 0; i < fNumRecords; i++)
@@ -512,59 +649,3 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 		*fPathBase = s;
 	}
 }
-
-// $Log$
-// Revision 1.6  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.5  2002/06/12 21:40:59  helio
-// Fixed debug message
-//
-// Revision 1.4  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.3  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.2.2.2  2002/05/07 13:38:43  adridg
-// Additional debugging to track down mis-set paths
-//
-// Revision 1.2.2.1  2002/04/11 12:48:23  adridg
-// Handle special case where no Pilot user name is set properly
-//
-// Revision 1.2  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.17  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.16  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.15  2001/09/24 10:43:19  cschumac
-// Compile fixes.
-//
-// Revision 1.14  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.13  2001/03/29 21:41:49  stern
-// Added local database support in the command line for conduits
-//
-// Revision 1.12  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.11  2001/02/27 15:40:48  adridg
-// Use QCString and QFile::encodeName where appropriate
-//
-// Revision 1.10  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.9  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.8  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

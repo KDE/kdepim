@@ -1,40 +1,48 @@
 #ifndef _ABBROWSER_CONDUIT_H
 #define _ABBROWSER_CONDUIT_H
-// abbrowser-conduit.cc
-//
-// Copyright (C) 2000,2001 by Dan Pilone
-// Copyright (C) 2000 Gregory Stern
-// Copyright (C) 2002 by Reinhold Kainhofer
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-// $Revision$
-//
+/* abbrowser-conduit.h                           KPilot
+**
+** Copyright (C) 2000,2001 by Dan Pilone
+** Copyright (C) 2000 Gregory Stern
+** Copyright (C) 2002-2003 by Reinhold Kainhofer
+**
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
+*/
 
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
-
-#include <plugin.h>
-
 #include <qmap.h>
-#include <qlist.h>
 
-#include <kapplication.h>
-#include <qdict.h>
-
-#include <pilotAddress.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+
+#include <pilotAddress.h>
+#include <plugin.h>
+
+
 
 #define SYNCNONE 0
 #define SYNCMOD 1
 #define SYNCDEL 3
-
 
 #define SYNC_FULL 1
 #define SYNC_FAST 0
@@ -48,13 +56,8 @@
 #define CHANGED_NORES 0x200
 #define CHANGED_DUPLICATE CHANGED_ADD|CHANGED_NORES|CHANGED_BOTH
 
-//#define ADD_BOTH CHANGED_BOTH|CHANGED_ADD
 
 using namespace KABC;
-
-//class DCOPClient;
-class PilotLocalDatabase;
-class PilotSerialDatabase;
 
 class AbbrowserConduit : public ConduitAction
 {
@@ -87,7 +90,10 @@ private:
 	
 	EConflictResolution getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &backupAddress, const PilotAddress & pilotAddress);
 	EConflictResolution getFieldResolution(const QString &entry, const QString &field, const QString &palm, const QString &backup, const QString &pc);
-	EConflictResolution ResolutionDialog(QString Title, QString Text, QStringList &lst, QString remember="", bool*rem=0L) const;
+	EConflictResolution ResolutionDialog(QString Title, 
+		QString Text, 
+		QStringList &lst, 
+		QString remember=QString::null, bool*rem=0L) const;
 
 	int _conflict(const QString &entry, const QString &field, const QString &pc, const QString &backup, 
 			const QString &palm, bool & mergeNeeded, QString & mergedStr);
@@ -225,61 +231,4 @@ private:
 	void showAdresses(PilotAddress & pilotAddress, const PilotAddress & backupAddress, KABC::Addressee & abEntry);
 } ;
 
-
-
-
-// $Log$
-// Revision 1.27  2002/10/05 13:59:29  kainhofe
-// duplication now works as conflict resolution. Removed the warning in the setup dialog.
-//
-// Revision 1.26  2002/09/12 13:58:20  kainhofe
-// some more fixes, still does not do any sync unless compiled with -NDO_DANGEROUS_ABOOK_SYNC . Most things work, except for several conflict resolution settings
-//
-// Revision 1.25  2002/08/23 22:59:29  kainhofe
-// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
-//
-// Revision 1.24  2002/08/16 18:54:06  kainhofe
-// Tried to fix the conduit, but KABC has changed so much that the conduit was totaly broken again. I will not touch the conduit any more until KABC is really solid and doesn't change any more!!!!
-//
-// Revision 1.23  2002/08/15 21:48:59  kainhofe
-// removed deprecated files (ContactEntry class and DCOP things)
-//
-// Revision 1.22  2002/08/15 21:40:14  kainhofe
-// some more work in the addressbook conduit. Does not yet work
-//
-// Revision 1.21  2002/07/23 00:52:02  kainhofe
-// Reorder the resolution methods
-//
-// Revision 1.20  2002/07/20 18:50:45  kainhofe
-// added a terrible hack to add new contacts to the addressbook. Need to fix kabc for this...
-//
-// Revision 1.19  2002/07/09 22:40:18  kainhofe
-// backup database fixes, prevent duplicate vcal entries, fixed the empty record that was inserted on the palm on every sync
-//
-// Revision 1.18  2002/07/01 23:25:46  kainhofe
-// implemented categories syncing, many things seem to work, but still every sync creates an empty zombie.
-//
-// Revision 1.17  2002/06/30 22:17:50  kainhofe
-// some cleanup. Changes from the palm are still not applied to the pc, pc->palm still disabled.
-//
-// Revision 1.16  2002/06/30 16:23:23  kainhofe
-// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
-//
-// Revision 1.15  2002/05/15 17:15:32  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.14  2002/04/16 18:22:12  adridg
-// Wishlist fix from David B: handle formatted names when syncing
-//
-// Revision 1.13  2001/12/10 22:10:17  adridg
-// Make the conduit compile, for Danimo, but it may not work
-//
-// Revision 1.12  2001/10/31 23:54:45  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
 #endif

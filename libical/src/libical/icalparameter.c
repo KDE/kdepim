@@ -257,7 +257,7 @@ icalparameter_as_ical_string (icalparameter* parameter)
     /* Now, copy the buffer to a tmp_buffer, which is safe to give to
        the caller without worring about de-allocating it. */
     
-    out_buf = icalmemory_tmp_buffer(strlen(buf));
+    out_buf = icalmemory_tmp_buffer(strlen(buf)+1);
     strcpy(out_buf, buf);
 
     icalmemory_free_buffer(buf);

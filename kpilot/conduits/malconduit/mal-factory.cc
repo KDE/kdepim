@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 **
 **
 ** Specific permission is granted for this code to be linked to libmal
@@ -86,12 +86,12 @@ MALConduitFactory::MALConduitFactory(QObject *p, const char *n) :
 		"(C) 2002, Reinhold Kainhofer");
 	fAbout->addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
-	fAbout->addAuthor("Jason Day",
+	fAbout->addCredit("Jason Day",
 		I18N_NOOP("Author of libmal and the JPilot AvantGo conduit"), "jasonday@worldnet.att.net");
-	fAbout->addAuthor("Tom Whittaker",
+	fAbout->addCredit("Tom Whittaker",
 		I18N_NOOP("Author of syncmal"), "tom@tomw.org", "http://www.tomw.org/");
-	fAbout->addAuthor("AvantGo, Inc.",
-		I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "www.avantgo.comreinhold@kainhofer.com", "http://www.avantgo.com/");
+	fAbout->addCredit("AvantGo, Inc.",
+		I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "", "http://www.avantgo.com/");
 }
 
 MALConduitFactory::~MALConduitFactory()
@@ -153,13 +153,3 @@ MALConduitFactory::~MALConduitFactory()
 	return 0L;
 }
 
-
-// $Log$
-// Revision 1.2  2002/08/17 22:31:20  mhunter
-// CVS_SILENT Corrected typographical errors
-//
-// When replying, please CC me - I'm not subscribed
-//
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//

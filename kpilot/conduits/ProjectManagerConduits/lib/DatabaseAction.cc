@@ -19,8 +19,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -126,6 +126,9 @@ int DBSettings::SyncTypeToId(int tt) {
 
 
 // $Log$
+// Revision 1.2  2002/04/07 20:19:48  cschumac
+// Compile fixes.
+//
 // Revision 1.1  2002/04/07 12:09:42  kainhofe
 // Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
 //

@@ -19,13 +19,15 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
+
+#include <config.h>
 
 static const char *interactivesync_id =
 	"$Id$";
@@ -47,14 +49,16 @@ static const char *interactivesync_id =
 #include <qfileinfo.h>
 #include <qtl.h>
 #include <qstyle.h>
+#include <qtextcodec.h>
 
 #include <kdialogbase.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 #include <kapplication.h>
 
 #include "pilotUser.h"
+#include "pilotAppCategory.h"
 #include "pilotLocalDatabase.h"
 #include "kpilotConfig.h"
 #include "kpilotlink.h"
@@ -83,9 +87,9 @@ CheckUser::~CheckUser()
 	config.resetGroup();
 
 	QString guiUserName = config.getUser();
-	const char *pilotUserName = fHandle->getPilotUser()->getUserName();
-	bool pilotUserEmpty = (!pilotUserName) || (!strlen(pilotUserName));
-
+	QString pilotUserName = PilotAppCategory::codec()->
+		toUnicode(fHandle->getPilotUser()->getUserName());
+	bool pilotUserEmpty = pilotUserName.isEmpty();
 	// 4 cases to handle:
 	//    guiUserName empty / not empty
 	//    pilotUserName empty / not empty
@@ -109,7 +113,7 @@ CheckUser::~CheckUser()
 			{
 				config.setUser(defaultUserName);
 				fHandle->getPilotUser()->
-					setUserName(defaultUserName.latin1());
+					setUserName(PilotAppCategory::codec()->fromUnicode(defaultUserName));
 			}
 
 		}
@@ -193,11 +197,11 @@ CheckUser::~CheckUser()
 	//
 	//
 	QString pathName = KGlobal::dirs()->saveLocation("data",
-		QString("kpilot/DBBackup/"));
+		CSL1("kpilot/DBBackup/"));
 	if (!guiUserName.isEmpty())
 	{
 		pathName.append(guiUserName);
-		pathName.append("/");
+		pathName.append(CSL1("/"));
 	}
 	PilotLocalDatabase::setDBPath(pathName);
 
@@ -222,7 +226,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	fP = new RestoreActionPrivate;
 	fP->fDatabaseDir = KGlobal::dirs()->saveLocation("data",
-		QString("kpilot/DBBackup/"));
+		CSL1("kpilot/DBBackup/"));
 }
 
 /* virtual */ bool RestoreAction::exec()
@@ -236,7 +240,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 #endif
 
 	QString dirname = fP->fDatabaseDir +
-		fHandle->getPilotUser()->getUserName() + "/";
+		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) + 
+		CSL1("/");
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Restoring user " << dirname << endl;
@@ -269,6 +274,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return false;
 	}
 
+	emit logProgress(i18n("Restoring %1...").arg(QString::null),1);
+	
 	for (unsigned int i = 0; i < dir.count(); i++)
 	{
 		QString s;
@@ -283,7 +290,12 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Adding " << s << " to restore list." << endl;
 #endif
 
-		qstrcpy(dbi.name, QFile::encodeName(dirname + s));
+#if KDE_VERSION < 306  /* 305 ok? */
+		strncpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name) - 1);
+		dbi.name[(sizeof(dbi.name) - 1)] = '\0';
+#else
+		strlcpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
+#endif
 
 		f = pi_file_open(dbi.name);
 		if (!f)
@@ -422,18 +434,21 @@ nextFile:
 	if (openConduit() < 0)
 	{
 		kdWarning() << k_funcinfo
-			<< ": Restore apparently cancelled." << endl;
+			<< ": Restore apparently canceled." << endl;
 		fStatus = Done;
 		emit syncDone(this);
 
 		return;
 	}
 
-	addSyncLogEntry(i18n("Restoring %1...").arg(dbi.name));
-
+	QFileInfo databaseInfo(QString::fromLatin1(dbi.name));
+	addSyncLogEntry(databaseInfo.fileName());
+	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
+		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
+	
 	pi_file *f =
-		pi_file_open(const_cast <
-		char *>((const char *)QFile::encodeName(dbi.name)));
+		pi_file_open( /* const_cast <
+		char *>((const char *)QFile::encodeName */ (dbi.name));
 	if (!f)
 	{
 		kdWarning() << k_funcinfo
@@ -466,14 +481,14 @@ nextFile:
 	switch (status())
 	{
 	case InstallingFiles:
-		s.append("Installing Files (");
+		s.append(CSL1("Installing Files ("));
 		s.append(QString::number(fP->fDBIndex));
-		s.append(")");
+		s.append(CSL1(")"));
 		break;
 	case GettingFileInfo:
-		s.append("Getting File Info (");
+		s.append(CSL1("Getting File Info ("));
 		s.append(QString::number(fP->fDBIndex));
-		s.append(")");
+		s.append(CSL1(")"));
 		break;
 	default:
 		return SyncAction::statusString();
@@ -483,48 +498,3 @@ nextFile:
 }
 
 
-// $Log$
-// Revision 1.13  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.12  2002/04/20 13:03:31  binner
-// CVS_SILENT Capitalisation fixes.
-//
-// Revision 1.11  2002/02/23 20:51:33  adridg
-// Handle errors to _get_info better.
-//
-// Revision 1.10  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.9  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.8  2001/12/31 09:37:27  adridg
-// Attempt to save the newly-set username
-//
-// Revision 1.7  2001/12/29 15:45:02  adridg
-// Lots of little changes for the syncstack
-//
-// Revision 1.6  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.5  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.4  2001/09/29 16:24:30  adridg
-// Layout + Typos
-//
-// Revision 1.3  2001/09/27 17:28:32  adridg
-// Conflict management
-//
-// Revision 1.2  2001/09/25 08:22:29  cschumac
-// Make it compile with Qt3.
-//
-// Revision 1.1  2001/09/24 22:25:54  adridg
-// New SyncActions with support for interaction with the user
-//

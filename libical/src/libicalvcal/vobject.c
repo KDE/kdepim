@@ -43,7 +43,7 @@ DFARS 252.227-7013 or 48 CFR 52.227-19, as applicable.
  */
 
 #ifndef	 MWERKS
-#include <malloc.h>
+#include <stdlib.h>
 #endif
 
 #include "vobject.h"
@@ -1247,9 +1247,10 @@ static void writeGroup(OFile *fp, VObject *o)
     char buf2[256];
     strcpy(buf1,NAME_OF(o));
     while ((o=isAPropertyOf(o,VCGroupingProp)) != 0) {
-	strcpy(buf2,STRINGZ_VALUE_OF(o));
-	strcat(buf2,".");
-	strcat(buf2,buf1);
+	strncpy(buf2,STRINGZ_VALUE_OF(o), sizeof(buf2));
+	buf2[sizeof(buf2)-1] = '\0';
+	strncat(buf2,".", sizeof(buf2)-strlen(buf2)-1);
+	strncat(buf2,buf1, sizeof(buf2)-strlen(buf2)-1);
 	strcpy(buf1,buf2);
 	}
     appendsOFile(fp,buf1);
