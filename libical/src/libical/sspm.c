@@ -948,7 +948,8 @@ void sspm_read_header(struct mime_impl *impl,struct sspm_header *header)
 		
 		assert(strlen(buf) < BUF_SIZE);
 		
-		strcpy(header_lines[current_line],buf);
+		strncpy(header_lines[current_line],buf,BUF_SIZE);
+		header_lines[current_line][BUF_SIZE-1] = '\0';
 		
 		break;
 	    }
