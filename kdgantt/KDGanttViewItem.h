@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2002-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -20,7 +20,7 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
@@ -69,8 +69,9 @@ protected:
                      KDGanttViewItem* after,
                      const QString& lvtext = QString::null,
                      const QString& name = QString::null );
-    bool shapeDefined;
-    bool isVisible;
+
+  //bool _isCalendar;
+    bool isVisibleInGanttView;
     void updateCanvasItems();
     int getCoordY();
     QDateTime myChildStartTime();
@@ -80,15 +81,13 @@ protected:
       * startLineBack, *endLineBack, *actualEnd ;
     KDCanvasPolygonItem* startShape,* midShape, *endShape,
       * startShapeBack,* midShapeBack, *endShapeBack;
-    KDGanttView* myGantView;
+    KDGanttView* myGanttView;
     KDCanvasText* textCanvas;
     QString textCanvasText;
     QDateTime myStartTime, myEndTime;
     bool isHighlighted, isEditable;
     int myItemSize;
     bool blockUpdating;
-    int _priority;
-    static QDict<KDGanttViewItem> sItemDict;
 
 public:
     virtual ~KDGanttViewItem();
@@ -96,6 +95,9 @@ public:
     Type type() const;
     void setEnabled( bool on );
     bool enabled () const;
+    virtual void setOpen( bool o );
+    void setItemVisible( bool on );
+    bool itemVisible () const;
     void setEditable( bool editable );
     bool editable() const;
     void setShowNoInformation( bool show );
@@ -126,6 +128,10 @@ public:
 
     void setHighlight( bool );
     bool highlight() const;
+
+    bool subitemIsCalendar() const;
+  //void setIsCalendar( bool );
+  //bool isCalendar( ) const;
 
     void setShapes( Shape start, Shape middle, Shape end );
     void shapes( Shape& start, Shape& middle, Shape& end ) const;
@@ -163,34 +169,42 @@ public:
     static KDGanttViewItem* createFromDomElement( KDGanttViewItem* parent,
                                                   KDGanttViewItem* previous,
                                                   QDomElement& element );
+private:
+    friend class KDGanttView;
+    friend class KDTimeTableWidget;
+    friend class KDTimeHeaderWidget;
+    friend class KDListView;
+    friend class KDGanttViewTaskLink;
+    friend class KDGanttViewTaskLinkGroup;
+    friend class KDGanttCanvasView;
+    friend class KDGanttViewItemDrag;
+    friend class itemAttributeDialog;
+
     static QString shapeToString( Shape shape );
     static Shape stringToShape( const QString& string );
     static QString typeToString( Type type );
 
-private:
-    // PENDING(lutz) Review these
-    friend class KDTimeTableWidget;
-    friend class KDTimeHeaderWidget;
-    friend class KDGanttViewTaskLink;
-    friend class KDGanttViewTaskLinkGroup;
-    friend class KDGanttCanvasView;
-
     Type myType;
     void initColorAndShapes(Type t);
+    void resetSubitemVisibility();
     virtual void showItem( bool show = true, int coordY = 0 );
     virtual void initItem();
     int computeHeight();
     void showSubItems();
     void showSubitemTree( int );
     void hideSubtree();
+    void setCallListViewOnSetOpen( bool call );
+    bool showNoCross();
     void createShape(KDCanvasPolygonItem* &,KDCanvasPolygonItem* &, Shape);
     void loadFromDomElement( QDomElement& element );
 
     //QFont myFont;
     QString myToolTipText,myWhatsThisText;
+    void paintBranches ( QPainter * p, const QColorGroup & cg, int w, int y, int h );
     bool _displaySubitemsAsGroup;
     bool _showNoInformation;
     bool _enabled;
+    bool _callListViewOnSetOpen;
     Shape myStartShape,myMiddleShape,myEndShape;
     QColor myStartColor,myMiddleColor,myEndColor;
     QColor myStartColorHL,myMiddleColorHL,myEndColorHL;
@@ -200,7 +214,9 @@ private:
     QPoint getTaskLinkStartCoord(QPoint);
     QPoint getTaskLinkEndCoord();
     QString _name;
-   
+    bool shapeDefined;
+    int _priority;
+    static QDict<KDGanttViewItem> sItemDict;
 };
 
 

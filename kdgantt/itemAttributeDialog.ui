@@ -8,14 +8,14 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>671</width>
-            <height>307</height>
+            <width>744</width>
+            <height>319</height>
         </rect>
     </property>
     <property name="caption">
         <string>Edit Item Attributes</string>
     </property>
-    <grid>
+    <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
@@ -25,7 +25,53 @@
         <property name="spacing">
             <number>6</number>
         </property>
-        <widget class="QLayoutWidget" row="2" column="0">
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout4</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>TextLabel1_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Item Name</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>itemName</cstring>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>Spacer2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>0</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
             <property name="name">
                 <cstring>Layout5</cstring>
             </property>
@@ -44,7 +90,7 @@
                         <cstring>TextLabel4</cstring>
                     </property>
                     <property name="text">
-                        <string>Shape type:</string>
+                        <string>ShapeType:</string>
                     </property>
                 </widget>
                 <widget class="QLabel" row="5" column="0">
@@ -52,7 +98,7 @@
                         <cstring>TextLabel8</cstring>
                     </property>
                     <property name="text">
-                        <string>Highlight color:</string>
+                        <string>Highlight Color:</string>
                     </property>
                 </widget>
                 <widget class="QTimeEdit" row="4" column="5">
@@ -73,7 +119,7 @@
                         <cstring>TextLabel5</cstring>
                     </property>
                     <property name="text">
-                        <string>Shape color:</string>
+                        <string>ShapeColor:</string>
                     </property>
                 </widget>
                 <widget class="QDateEdit" row="3" column="2">
@@ -327,9 +373,9 @@
                 </widget>
             </grid>
         </widget>
-        <spacer row="1" column="0">
+        <spacer>
             <property name="name">
-                <cstring>Spacer2</cstring>
+                <cstring>Spacer3</cstring>
             </property>
             <property name="orientation">
                 <enum>Vertical</enum>
@@ -339,28 +385,122 @@
             </property>
             <property name="sizeHint">
                 <size>
-                    <width>20</width>
-                    <height>20</height>
+                    <width>0</width>
+                    <height>16</height>
                 </size>
             </property>
         </spacer>
-        <widget class="QLayoutWidget" row="0" column="0">
+        <widget class="QLayoutWidget">
             <property name="name">
-                <cstring>layout33</cstring>
+                <cstring>Layout3</cstring>
             </property>
-            <grid>
+            <hbox>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QLabel" row="1" column="3">
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget">
                     <property name="name">
-                        <cstring>TextLabel9</cstring>
+                        <cstring>Layout1</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel7</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Displayed Text:</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>LineEdit1</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout2</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel9</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Text Color:</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignRight</set>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>ChangeText</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Change</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout8</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>PrioLabel</cstring>
                     </property>
                     <property name="text">
-                        <string>Text color:</string>
+                        <string>Priority:</string>
                     </property>
                 </widget>
-                <widget class="QSpinBox" row="2" column="1">
+                <widget class="QSpinBox">
                     <property name="name">
                         <cstring>PrioSpinBox</cstring>
                     </property>
@@ -371,49 +511,7 @@
                         <number>1</number>
                     </property>
                 </widget>
-                <widget class="QLineEdit" row="0" column="1" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>itemName</cstring>
-                    </property>
-                </widget>
-                <widget class="QLineEdit" row="1" column="1" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>LineEdit1</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>3</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="0" column="0">
-                    <property name="name">
-                        <cstring>TextLabel1_2</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Item name:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="1" column="0">
-                    <property name="name">
-                        <cstring>TextLabel7</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Displayed text:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="2" column="0">
-                    <property name="name">
-                        <cstring>PrioLabel</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Priority:</string>
-                    </property>
-                </widget>
-                <widget class="QSlider" row="2" column="2">
+                <widget class="QSlider">
                     <property name="name">
                         <cstring>PrioSlider</cstring>
                     </property>
@@ -427,15 +525,7 @@
                         <enum>Horizontal</enum>
                     </property>
                 </widget>
-                <widget class="QPushButton" row="1" column="4">
-                    <property name="name">
-                        <cstring>ChangeText</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Change</string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox" row="2" column="3" rowspan="1" colspan="2">
+                <widget class="QCheckBox">
                     <property name="name">
                         <cstring>CalBox</cstring>
                     </property>
@@ -443,9 +533,9 @@
                         <string>Display subitems as group</string>
                     </property>
                 </widget>
-            </grid>
+            </hbox>
         </widget>
-    </grid>
+    </vbox>
 </widget>
 <connections>
     <connection>
@@ -641,6 +731,7 @@
     <slot>PrioSpinBox_valueChanged( int val )</slot>
     <slot>CalBox_toggled( bool mode )</slot>
     <slot>PrioSlider_valueChanged( int val )</slot>
+    <slot returnType="KDGanttViewItem *">getItem()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

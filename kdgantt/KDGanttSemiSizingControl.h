@@ -1,5 +1,9 @@
+/* -*- Mode: C++ -*-
+   $Id$
+*/
+
 /****************************************************************************
-** Copyright (C) 2001-2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2001-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -15,27 +19,22 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
 **
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
-**
 **********************************************************************/
+#ifndef KDGANTTSEMISIZINGCONTROL_H
+#define KDGANTTSEMISIZINGCONTROL_H
 
-#ifndef KDSEMISIZINGCONTROL_H
-#define KDSEMISIZINGCONTROL_H
-
-#include "KDSizingControl.h"
+#include "KDGanttSizingControl.h"
 #include <qlayout.h>
 class QPushButton;
 class QBoxLayout;
 
-class KDSemiSizingControl : public KDSizingControl
+class KDGanttSemiSizingControl : public KDGanttSizingControl
 {
     Q_PROPERTY( ArrowPosition arrowPosition READ arrowPosition WRITE setArrowPosition )
     Q_ENUMS( ArrowPosition )
@@ -44,10 +43,10 @@ class KDSemiSizingControl : public KDSizingControl
 public:
     enum ArrowPosition { Before, After };
 
-    KDSemiSizingControl( QWidget* parent = 0, const char* name = 0 );
-    KDSemiSizingControl( Orientation orientation, QWidget* parent = 0,
+    KDGanttSemiSizingControl( QWidget* parent = 0, const char* name = 0 );
+    KDGanttSemiSizingControl( Orientation orientation, QWidget* parent = 0,
                            const char* name = 0 );
-    KDSemiSizingControl( ArrowPosition arrowPosition,
+    KDGanttSemiSizingControl( ArrowPosition arrowPosition,
                          Orientation orientation, QWidget* parent = 0,
                          const char* name = 0 );
 

@@ -1,5 +1,9 @@
+/* -*- Mode: C++ -*-
+   $Id$
+*/
+
 /****************************************************************************
-** Copyright (C) 2001-2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2001-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -15,19 +19,15 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
 **
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
-**
 **********************************************************************/
 
-#include "KDSemiSizingControl.h"
+#include "KDGanttSemiSizingControl.h"
 #include <qpushbutton.h>
 #include <qpointarray.h>
 #include <qpainter.h>
@@ -35,17 +35,17 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 /*!
-  \class KDSemiSizingControl KDSemiSizingControl.h
+  \class KDGanttSemiSizingControl KDGanttSemiSizingControl.h
   This class provides exactly one child widget with a button for
   minimizing and restoring. You can also specify a so-called minimize
   widget that will be shown in place of the child widget while the
   latter one is minimized. While the child widget is not minimized,
   the minimize widget will not be visible.
-  
+
   If you add more than one child widget (besides the minimize widget),
   only the last one added will be visible.
 */
-  
+
 
 /*!
   Constructs an empty semi sizing control with horizontal
@@ -58,10 +58,11 @@
   the base class.
 */
 
-KDSemiSizingControl::KDSemiSizingControl( QWidget* parent, 
+KDGanttSemiSizingControl::KDGanttSemiSizingControl( QWidget* parent,
                                           const char* name ) :
-    KDSizingControl( parent, name ), _orient( Horizontal ), _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
-{    
+    KDGanttSizingControl( parent, name ), _orient( Horizontal ), 
+    _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
+{
     init();
 }
 
@@ -78,10 +79,11 @@ KDSemiSizingControl::KDSemiSizingControl( QWidget* parent,
   the base class.
 */
 
-KDSemiSizingControl::KDSemiSizingControl( Orientation orientation, 
+KDGanttSemiSizingControl::KDGanttSemiSizingControl( Orientation orientation,
                                           QWidget* parent,
                                           const char* name ) :
-    KDSizingControl( parent, name ), _orient( orientation ), _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
+    KDGanttSizingControl( parent, name ), _orient( orientation ), 
+    _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
 }
@@ -100,11 +102,12 @@ KDSemiSizingControl::KDSemiSizingControl( Orientation orientation,
   the base class.
 */
 
-KDSemiSizingControl::KDSemiSizingControl( ArrowPosition arrowPosition,
-                                          Orientation orientation, 
+KDGanttSemiSizingControl::KDGanttSemiSizingControl( ArrowPosition arrowPosition,
+                                          Orientation orientation,
                                           QWidget* parent,
                                           const char* name ) :
-    KDSizingControl( parent, name ), _orient( orientation ), _arrowPos( arrowPosition ), _minimizedWidget(0), _maximizedWidget(0)
+    KDGanttSizingControl( parent, name ), _orient( orientation ), 
+    _arrowPos( arrowPosition ), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
 }
@@ -113,13 +116,13 @@ KDSemiSizingControl::KDSemiSizingControl( ArrowPosition arrowPosition,
 /*!
   Specifies the widget that should be shown while the child widget is
   minimized. This so-called minimize widget should be a child widget
-  of the KDSemiSizingControl.
+  of the KDGanttSemiSizingControl.
 
   \param widget the minimize widget
   \sa minimizedWidget()
 */
 
-void KDSemiSizingControl::setMinimizedWidget( QWidget* widget )
+void KDGanttSemiSizingControl::setMinimizedWidget( QWidget* widget )
 {
     _minimizedWidget = widget;
     if( _minimizedWidget ) _minimizedWidget->hide();
@@ -135,7 +138,7 @@ void KDSemiSizingControl::setMinimizedWidget( QWidget* widget )
   \sa setMinimizedWidget()
 */
 
-QWidget* KDSemiSizingControl::minimizedWidget() const
+QWidget* KDGanttSemiSizingControl::minimizedWidget() const
 {
     return _minimizedWidget;
 }
@@ -143,16 +146,16 @@ QWidget* KDSemiSizingControl::minimizedWidget() const
 /*!
   Specifies the widget that should be shown while the child widget is
   maximized. This so-called maximize widget should be a child widget
-  of the KDSemiSizingControl.
+  of the KDGanttSemiSizingControl.
 
   \param widget the minimize widget
   \sa maximizedWidget()
 */
 
-void KDSemiSizingControl::setMaximizedWidget( QWidget* widget )
+void KDGanttSemiSizingControl::setMaximizedWidget( QWidget* widget )
 {
     _maximizedWidget = widget;
-    if( _maximizedWidget ) _maximizedWidget->show();
+    //if( _maximizedWidget ) _maximizedWidget->show();
     setup();
 }
 
@@ -164,7 +167,7 @@ void KDSemiSizingControl::setMaximizedWidget( QWidget* widget )
   \sa setMaximizedWidget()
 */
 
-QWidget* KDSemiSizingControl::maximizedWidget() const
+QWidget* KDGanttSemiSizingControl::maximizedWidget() const
 {
     return _maximizedWidget;
 }
@@ -173,12 +176,12 @@ QWidget* KDSemiSizingControl::maximizedWidget() const
 
 /*!
   Sets the orientation of the simple sizing control.
-  
+
   \param orientation the new orientation
   \sa orientation()
 */
 
-void KDSemiSizingControl::setOrientation( Qt::Orientation orientation )
+void KDGanttSemiSizingControl::setOrientation( Qt::Orientation orientation )
 {
     if ( _orient != orientation ) {
         _orient = orientation;
@@ -193,7 +196,7 @@ void KDSemiSizingControl::setOrientation( Qt::Orientation orientation )
   \sa setOrientation()
 */
 
-Qt::Orientation KDSemiSizingControl::orientation() const
+Qt::Orientation KDGanttSemiSizingControl::orientation() const
 {
     return _orient;
 }
@@ -201,12 +204,12 @@ Qt::Orientation KDSemiSizingControl::orientation() const
 
 /*!
   Returns the position of the control arrow button.
-  
+
   \param arrowPosition the position of the control arrow button
   \sa arrowPosition()
 */
 
-void KDSemiSizingControl::setArrowPosition( ArrowPosition arrowPosition )
+void KDGanttSemiSizingControl::setArrowPosition( ArrowPosition arrowPosition )
 {
     if ( _arrowPos != arrowPosition ) {
         _arrowPos = arrowPosition;
@@ -217,44 +220,44 @@ void KDSemiSizingControl::setArrowPosition( ArrowPosition arrowPosition )
 
 /*!
   Returns the position of the control arrow button.
-  
+
   \return the position of the control arrow button
   \sa setArrowPosition()
 */
 
-KDSemiSizingControl::ArrowPosition KDSemiSizingControl::arrowPosition() const
+KDGanttSemiSizingControl::ArrowPosition KDGanttSemiSizingControl::arrowPosition() const
 {
     return _arrowPos;
 }
 
 
 /*!
-  \enum KDSemiSizingControl::ArrowPosition
-  
+  \enum KDGanttSemiSizingControl::ArrowPosition
+
   This enum is used for specifying whether the control arrow button
   should appear before (on top of, left of) or after (below, right of)
   the controlled widget.
 */
 
-void KDSemiSizingControl::init()
+void KDGanttSemiSizingControl::init()
 {
     _but = new QPushButton( this );
-    _but->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) ); 
+    _but->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     connect( _but, SIGNAL( clicked() ), this, SLOT(changeState()) );
     _layout = 0;
     QWhatsThis::add( _but, "Click on this button to show the \nlegend at the bottom of the widget");
     QToolTip::add( _but, "Show / hide legend");
 
-    
+
 }
 
-void KDSemiSizingControl::setup()
+void KDGanttSemiSizingControl::setup()
 {
     //-------------------------------------------------- Setup layout
     delete _layout;
-    QBoxLayout* butLayout; // _layout will delete me 
+    QBoxLayout* butLayout; // _layout will delete me
 
-    if ( _orient == Horizontal || isMinimized() ) 
+    if ( _orient == Horizontal || isMinimized() )
         _layout = new QHBoxLayout( this );
     else
         _layout = new QVBoxLayout( this );
@@ -263,7 +266,7 @@ void KDSemiSizingControl::setup()
         butLayout = new QHBoxLayout( _layout );
     else
         butLayout = new QVBoxLayout( _layout );
-    
+
 
 
     //---------------------------------------- Set the arrow on the button
@@ -332,12 +335,12 @@ void KDSemiSizingControl::setup()
 /*!
   Restores or minimizes the child widget. \a minimize() does exactly the
   opposite to this method.
-  
+
   \param restore true to restore, false to minimize
   \sa minimize()
 */
 
-void KDSemiSizingControl::restore( bool restore )
+void KDGanttSemiSizingControl::restore( bool restore )
 {
     if ( ! restore ) {
         minimize( true );
@@ -345,7 +348,7 @@ void KDSemiSizingControl::restore( bool restore )
     else {
         if( _maximizedWidget ) _maximizedWidget->show();
         if( _minimizedWidget ) _minimizedWidget->hide();
-        KDSizingControl::restore( restore );
+        KDGanttSizingControl::restore( restore );
         setup();
     }
 }
@@ -353,13 +356,13 @@ void KDSemiSizingControl::restore( bool restore )
 /*!
   Restores or minimizes the child widget. \a restore() does exactly the
   opposite to this method.
-  
+
   \param minimize true to minimize, false to restore
   \sa restore()
 
 */
 
-void KDSemiSizingControl::minimize( bool minimize )
+void KDGanttSemiSizingControl::minimize( bool minimize )
 {
     if ( ! minimize ) {
         restore( true );
@@ -367,12 +370,12 @@ void KDSemiSizingControl::minimize( bool minimize )
     else {
         if( _minimizedWidget ) _minimizedWidget->show();
 	if( _maximizedWidget ) _maximizedWidget->hide();
-        KDSizingControl::minimize( minimize );
+        KDGanttSizingControl::minimize( minimize );
         setup();
     }
 }
 
-QPixmap KDSemiSizingControl::pixmap( Direction direction ) {
+QPixmap KDGanttSemiSizingControl::pixmap( Direction direction ) {
     int s = 10;
     QPixmap pix( s, s );
     pix.fill( blue );
@@ -399,4 +402,7 @@ QPixmap KDSemiSizingControl::pixmap( Direction direction ) {
     pix.setMask( bit );
     return pix;
 }
-#include "KDSemiSizingControl.moc"
+
+#ifndef KDGANTT_MASTER_CVS
+#include "KDGanttSemiSizingControl.moc"
+#endif

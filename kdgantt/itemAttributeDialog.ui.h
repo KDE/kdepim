@@ -7,12 +7,13 @@
 *****************************************************************************/
 
 #include <qcolordialog.h>
-
-#include <klocale.h>
 void itemAttributeDialog::init( )
 {
+
     myItem = 0;
 }
+
+
 
 
 void itemAttributeDialog::ChangeText_clicked()
@@ -110,9 +111,12 @@ void itemAttributeDialog::resetTime( KDGanttViewItem * item )
 }
 
 void itemAttributeDialog::reset( KDGanttViewItem * item )
-{
-    if ( !item ) return;
+{ 
     myItem = 0;
+    if ( !item ) {
+	hide();
+	return;
+    }
     StartBox->setEnabled( true );
     switch( item->type() ) {
          case KDGanttViewItem::Event:
@@ -183,7 +187,7 @@ void itemAttributeDialog::reset( KDGanttViewItem * item )
 	  ;
 	}
     if (item->firstChild() && item->displaySubitemsAsGroup() ) {
-
+	
 	  DateEdit2->setEnabled( false );
 	  TimeEdit2->setEnabled( false );
 	  DateEdit3->setEnabled( false );
@@ -194,16 +198,16 @@ void itemAttributeDialog::reset( KDGanttViewItem * item )
 	  TimeEdit5->setEnabled( false );
 	  DateEdit1->setEnabled( false );
 	  TimeEdit1->setEnabled( false );
-
+	
       } else {
 	  DateEdit1->setEnabled( true );
-	  TimeEdit1->setEnabled( true );
+	  TimeEdit1->setEnabled( true );    
       }
      DateEdit1->setDate( item->startTime().date() );
     TimeEdit1->setTime( item->startTime().time() );
-    if ( item->pixmap() != 0 )
+    if ( item->pixmap() != 0 )	
 	setIcon( *(item->pixmap()) );
-    setCaption( i18n( "Properties of %1" ).arg( ((QListViewItem*)item)->text(0) ) );
+    setCaption( "Properties of " + ((QListViewItem*)item)->text(0) );
     itemName->setText(((QListViewItem*)item)->text(0) );
 
 //    DateEdit1->setRange(item->startTime().date().addYears(-10), item->endTime().date() );
@@ -307,7 +311,7 @@ void itemAttributeDialog::TimeEdit1_valueChanged( const QTime & )
     dt.setTime( TimeEdit1->time() );
     if ( dt.isValid() ) {
     myItem->setStartTime( dt );
-
+   
     resetTime( myItem );
 }
 }
@@ -461,7 +465,7 @@ void itemAttributeDialog::itemName_textChanged( const QString & )
 {
     if ( !myItem) return;
     ((QListViewItem*)myItem)->setText( 0, itemName->text() );
-    setCaption( i18n( "Properties of %1" ).arg( itemName->text() ) );
+    setCaption( "Properties of " + itemName->text() );
 }
 
 
@@ -469,7 +473,10 @@ void itemAttributeDialog::PrioSpinBox_valueChanged( int val )
 {
    if ( !myItem) return;
    myItem->setPriority( val );
+   PrioSlider->blockSignals( true );
    PrioSlider->setValue( val );
+   PrioSlider->blockSignals( false );
+   
 }
 
 
@@ -486,5 +493,13 @@ void itemAttributeDialog::PrioSlider_valueChanged( int val )
 {
 if ( !myItem) return;
    myItem->setPriority( val );
+   PrioSpinBox->blockSignals( true );
    PrioSpinBox->setValue( val );
+   PrioSpinBox->blockSignals( false );
+}
+
+
+KDGanttViewItem* itemAttributeDialog::getItem()
+{
+ return myItem;
 }

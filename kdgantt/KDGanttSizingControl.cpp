@@ -1,5 +1,9 @@
+/* -*- Mode: C++ -*-
+   $Id$
+*/
+
 /****************************************************************************
-** Copyright (C) 2001-2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2001-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -15,22 +19,18 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
 **
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
-**
 **********************************************************************/
 
-#include "KDSizingControl.h"
+#include "KDGanttSizingControl.h"
 
 /*!
-  \class KDSizingControl KDSizingControl.h
+  \class KDGanttSizingControl KDGanttSizingControl.h
   This class is a common-base class for all sizing controls in this
   library.
 
@@ -42,7 +42,7 @@
 */
 
 /*!
-  Constructs an empty KDSizing Control.
+  Constructs an empty KDGanttSizing Control.
 
   \param parent the parent widget. This parameter is passed to the
   base class.
@@ -51,7 +51,7 @@
 
 */
 
-KDSizingControl::KDSizingControl( QWidget* parent, const char* name, WFlags f )
+KDGanttSizingControl::KDGanttSizingControl( QWidget* parent, const char* name, WFlags f )
     :QWidget( parent, name, f ), _isMinimized( false )
 {
 }
@@ -65,7 +65,7 @@ KDSizingControl::KDSizingControl( QWidget* parent, const char* name, WFlags f )
   \sa minimize()
 */
 
-void KDSizingControl::restore( bool restore )
+void KDGanttSizingControl::restore( bool restore )
 {
     _isMinimized = !restore;
     if ( restore )
@@ -86,7 +86,7 @@ void KDSizingControl::restore( bool restore )
 
 */
 
-void KDSizingControl::minimize( bool minimize )
+void KDGanttSizingControl::minimize( bool minimize )
 {
     _isMinimized = minimize;
     if ( minimize )
@@ -100,7 +100,7 @@ void KDSizingControl::minimize( bool minimize )
   Returns whether the widget is minimized.
 */
 
-bool KDSizingControl::isMinimized() const
+bool KDGanttSizingControl::isMinimized() const
 {
     return _isMinimized;
 }
@@ -109,34 +109,37 @@ bool KDSizingControl::isMinimized() const
   Change state from either minimized to restored or visa versa.
 */
 
-void KDSizingControl::changeState()
+void KDGanttSizingControl::changeState()
 {
     restore(_isMinimized);
 }
 
 
 /*!
-  \fn void KDSizingControl::minimized(  KDSizingControl* )
+  \fn void KDGanttSizingControl::minimized(  KDGanttSizingControl* )
 
   This signal is emitted when the user hides a controlled widget. The
-  KDSizingControl pointer given as parameter is a pointer to the widget
+  KDGanttSizingControl pointer given as parameter is a pointer to the widget
   itself. Normally the sender should not know the receiver, but in this
-  case the receiver is likely the widget containing the KDSizingControl,
-  and when the KDSizingControl widget is minimized/restored it might want
+  case the receiver is likely the widget containing the KDGanttSizingControl,
+  and when the KDGanttSizingControl widget is minimized/restored it might want
   to change stretching for the widget. See the example
   test/semisizingcontrol
 */
 
 
 /*!
-  \fn void KDSizingControl::restored(  KDSizingControl* )
+  \fn void KDGanttSizingControl::restored(  KDGanttSizingControl* )
 
   This signal is emitted when the user unhides a controlled widget. The
-  KDSizingControl pointer given as parameter is a pointer to the widget
+  KDGanttSizingControl pointer given as parameter is a pointer to the widget
   itself. Normally the sender should not know the receiver, but in this
-  case the receiver is likely the widget containing the KDSizingControl,
-  and when the KDSizingControl widget is minimized/restored it might want
+  case the receiver is likely the widget containing the KDGanttSizingControl,
+  and when the KDGanttSizingControl widget is minimized/restored it might want
   to change stretching for the widget. See the example
   test/semisizingcontrol
 */
-#include "KDSizingControl.moc"
+
+#ifndef KDGANTT_MASTER_CVS
+#include "KDGanttSizingControl.moc"
+#endif

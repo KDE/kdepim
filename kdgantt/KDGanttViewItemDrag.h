@@ -1,5 +1,7 @@
+
+
 /****************************************************************************
-** Copyright (C) 2001-2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2002-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -15,45 +17,40 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
 **
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
-**
 **********************************************************************/
-
-#ifndef KDSIZINGCONTROL_H
-#define KDSIZINGCONTROL_H
+#ifndef KDGANTTVIEWITEMGRAG_H
+#define KDGANTTVIEWITEMGRAG_H
 
 #include <qwidget.h>
+#include <qcstring.h>
+#include <qdragobject.h>
 
-class KDSizingControl : public QWidget
+
+class KDGanttViewItem;
+
+class KDGanttViewItemDrag :public QStoredDrag
 {
-    Q_OBJECT
-
 public:
-    bool isMinimized() const;
+  KDGanttViewItemDrag(KDGanttViewItem* item, QWidget *source,  const char * name  ) ;
 
+  QByteArray encodedData( const char * c) const;
+  KDGanttViewItem* getItem();
+  static bool canDecode ( const QMimeSource * e );
+  static bool decode ( const QMimeSource * e, QString & );
 protected:
-    KDSizingControl( QWidget* parent = 0, const char* name = 0, WFlags f = 0 );
-
-public slots:
-    virtual void minimize( bool minimize );
-    virtual void restore( bool restore );
-    void changeState();
-
-signals:
-    void minimized( KDSizingControl* );
-    void restored( KDSizingControl* );
-
+  
 private:
-    bool _isMinimized;
+  QByteArray array;
+  KDGanttViewItem* myItem;
 };
+
+
 
 
 #endif

@@ -3,7 +3,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2001-2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2001-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -19,18 +19,14 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
 **
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
-**
 **********************************************************************/
-#include "KDMinimizeSplitter.h"
+#include "KDGanttMinimizeSplitter.h"
 #ifndef QT_NO_SPLITTER
 
 #include "qpainter.h"
@@ -52,7 +48,7 @@
 #include <qvaluelist.h>
 #include <qcursor.h>
 #ifndef KDGANTT_MASTER_CVS
-#include "KDMinimizeSplitter.moc"
+#include "KDGanttMinimizeSplitter.moc"
 #endif
 
 
@@ -63,8 +59,8 @@ static int mouseOffset;
 static int opaqueOldPos = -1; //### there's only one mouse, but this is a bit risky
 
 
-KDSplitterHandle::KDSplitterHandle( Qt::Orientation o,
-				  KDMinimizeSplitter *parent, const char * name )
+KDGanttSplitterHandle::KDGanttSplitterHandle( Qt::Orientation o,
+				  KDGanttMinimizeSplitter *parent, const char * name )
     : QWidget( parent, name ), _activeButton( 0 ), _collapsed( false )
 {
     s = parent;
@@ -72,16 +68,16 @@ KDSplitterHandle::KDSplitterHandle( Qt::Orientation o,
     setMouseTracking( true );
 }
 
-QSize KDSplitterHandle::sizeHint() const
+QSize KDGanttSplitterHandle::sizeHint() const
 {
     return QSize(8,8);
 }
 
-void KDSplitterHandle::setOrientation( Qt::Orientation o )
+void KDGanttSplitterHandle::setOrientation( Qt::Orientation o )
 {
     orient = o;
 #ifndef QT_NO_CURSOR
-    if ( o == KDMinimizeSplitter::Horizontal )
+    if ( o == KDGanttMinimizeSplitter::Horizontal )
 	setCursor( splitHCursor );
     else
 	setCursor( splitVCursor );
@@ -89,7 +85,7 @@ void KDSplitterHandle::setOrientation( Qt::Orientation o )
 }
 
 
-void KDSplitterHandle::mouseMoveEvent( QMouseEvent *e )
+void KDGanttSplitterHandle::mouseMoveEvent( QMouseEvent *e )
 {
     updateCursor( e->pos() );
     if ( !(e->state()&LeftButton) )
@@ -110,7 +106,7 @@ void KDSplitterHandle::mouseMoveEvent( QMouseEvent *e )
     _collapsed = false;
 }
 
-void KDSplitterHandle::mousePressEvent( QMouseEvent *e )
+void KDGanttSplitterHandle::mousePressEvent( QMouseEvent *e )
 {
     if ( e->button() == LeftButton ) {
         _activeButton = onButton( e->pos() );
@@ -121,13 +117,13 @@ void KDSplitterHandle::mousePressEvent( QMouseEvent *e )
     }
 }
 
-void KDSplitterHandle::updateCursor( const QPoint& p)
+void KDGanttSplitterHandle::updateCursor( const QPoint& p)
 {
     if ( onButton( p ) != 0 ) {
         setCursor( arrowCursor );
     }
     else {
-        if ( orient == KDMinimizeSplitter::Horizontal )
+        if ( orient == KDGanttMinimizeSplitter::Horizontal )
             setCursor( splitHCursor );
         else
             setCursor( splitVCursor );
@@ -135,7 +131,7 @@ void KDSplitterHandle::updateCursor( const QPoint& p)
 }
 
 
-void KDSplitterHandle::mouseReleaseEvent( QMouseEvent *e )
+void KDGanttSplitterHandle::mouseReleaseEvent( QMouseEvent *e )
 {
     if ( _activeButton != 0 ) {
         if ( onButton( e->pos() ) == _activeButton )
@@ -144,8 +140,8 @@ void KDSplitterHandle::mouseReleaseEvent( QMouseEvent *e )
             int min, max;
             if ( !_collapsed ) {
                 s->expandPos( id(), &min, &max );
-                if ( s->minimizeDirection() == KDMinimizeSplitter::Left
-                     || s->minimizeDirection() == KDMinimizeSplitter::Up ) {
+                if ( s->minimizeDirection() == KDGanttMinimizeSplitter::Left
+                     || s->minimizeDirection() == KDGanttMinimizeSplitter::Up ) {
                     pos = min;
                 }
                 else {
@@ -176,7 +172,7 @@ void KDSplitterHandle::mouseReleaseEvent( QMouseEvent *e )
     repaint();
 }
 
-int KDSplitterHandle::onButton( const QPoint& p )
+int KDGanttSplitterHandle::onButton( const QPoint& p )
 {
     QValueList<QPointArray> list = buttonRegions();
     int index = 1;
@@ -195,7 +191,7 @@ int KDSplitterHandle::onButton( const QPoint& p )
 }
 
 
-QValueList<QPointArray> KDSplitterHandle::buttonRegions()
+QValueList<QPointArray> KDGanttSplitterHandle::buttonRegions()
 {
     QValueList<QPointArray> list;
 
@@ -203,44 +199,44 @@ QValueList<QPointArray> KDSplitterHandle::buttonRegions()
     int voffset[] = { (int) -sw*3, (int) sw*3 };
     for ( int i = 0; i < 2; i++ ) {
         QPointArray arr;
-        if ( !_collapsed && s->minimizeDirection() == KDMinimizeSplitter::Right ||
-             _collapsed  && s->minimizeDirection() == KDMinimizeSplitter::Left) {
+        if ( !_collapsed && s->minimizeDirection() == KDGanttMinimizeSplitter::Right ||
+             _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Left) {
             int mid = height()/2 + voffset[i];
             arr.setPoints( 3,
-                           1, mid - sw + 2,
+                           1, mid - sw + 4,
                            sw-3, mid,
-                           1, mid + sw -2);
+                           1, mid + sw -4);
         }
-        else if ( !_collapsed &&  s->minimizeDirection() == KDMinimizeSplitter::Left ||
-                  _collapsed  && s->minimizeDirection() == KDMinimizeSplitter::Right ) {
+        else if ( !_collapsed &&  s->minimizeDirection() == KDGanttMinimizeSplitter::Left ||
+                  _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Right ) {
             int mid = height()/2 + voffset[i];
             arr.setPoints( 3,
-                           sw-4, mid - sw + 2,
+                           sw-4, mid - sw + 4,
                            0, mid,
-                           sw-4, mid + sw - 2);
+                           sw-4, mid + sw - 4);
         }
-        else if ( !_collapsed &&  s->minimizeDirection() == KDMinimizeSplitter::Up ||
-                  _collapsed  && s->minimizeDirection() == KDMinimizeSplitter::Down) {
+        else if ( !_collapsed &&  s->minimizeDirection() == KDGanttMinimizeSplitter::Up ||
+                  _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Down) {
             int mid = width()/2 + voffset[i];
             arr.setPoints( 3,
-                           mid - sw + 2, sw-4,
+                           mid - sw + 4, sw-4,
                            mid, 0,
-                           mid + sw - 2, sw-4 );
+                           mid + sw - 4, sw-4 );
         }
-        else if ( !_collapsed && s->minimizeDirection() == KDMinimizeSplitter::Down ||
-                  _collapsed  && s->minimizeDirection() == KDMinimizeSplitter::Up ) {
+        else if ( !_collapsed && s->minimizeDirection() == KDGanttMinimizeSplitter::Down ||
+                  _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Up ) {
             int mid = width()/2 + voffset[i];
             arr.setPoints( 3,
-                           mid - sw + 2, 1,
+                           mid - sw + 4, 1,
                            mid, sw-3,
-                           mid + sw -2, 1);
+                           mid + sw -4, 1);
         }
         list.append( arr );
     }
     return list;
 }
 
-void KDSplitterHandle::paintEvent( QPaintEvent * )
+void KDGanttSplitterHandle::paintEvent( QPaintEvent * )
 {
     QPixmap buffer( size() );
     QPainter p( &buffer );
@@ -276,14 +272,14 @@ void KDSplitterHandle::paintEvent( QPaintEvent * )
     }
 
     // Draw the lines between the arrows
-    if ( s->minimizeDirection() == KDMinimizeSplitter::Left ||
-         s->minimizeDirection() == KDMinimizeSplitter::Right ) {
+    if ( s->minimizeDirection() == KDGanttMinimizeSplitter::Left ||
+         s->minimizeDirection() == KDGanttMinimizeSplitter::Right ) {
         int mid = height()/2;
         p.drawLine ( 2, mid - sw, 2, mid + sw );
         p.drawLine ( 4, mid - sw, 4, mid + sw );
     }
-    else if ( s->minimizeDirection() == KDMinimizeSplitter::Up ||
-              s->minimizeDirection() == KDMinimizeSplitter::Down ) {
+    else if ( s->minimizeDirection() == KDGanttMinimizeSplitter::Up ||
+              s->minimizeDirection() == KDGanttMinimizeSplitter::Down ) {
         int mid = width()/2;
         p.drawLine( mid -sw, 2, mid +sw, 2 );
         p.drawLine( mid -sw, 4, mid +sw, 4 );
@@ -295,7 +291,7 @@ void KDSplitterHandle::paintEvent( QPaintEvent * )
 class QSplitterLayoutStruct
 {
 public:
-    KDMinimizeSplitter::ResizeMode mode;
+    KDGanttMinimizeSplitter::ResizeMode mode;
     QCOORD sizer;
     bool isSplitter;
     QWidget *wid;
@@ -311,14 +307,21 @@ public:
     bool firstShow;
 };
 
-void kdGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
+void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
                  int space, int spacer );
 #endif // DOXYGEN_SKIP_INTERNAL
 
 
 /*!
-  \class KDMinimizeSplitter KDMinimizeSplitter.h
-  \brief The KDMinimizeSplitter class implements a splitter widget with minimuze buttons.
+  \class KDGanttMinimizeSplitter KDGanttMinimizeSplitter.h
+  \brief The KDGanttMinimizeSplitter class implements a splitter
+  widget with minimize buttons.
+
+  This class (and its documentation) is largely a copy of Qt's
+  QSplitter; the copying was necessary because QSplitter is not
+  extensible at all. QSplitter and its documentation are licensed
+  according to the GPL and the Qt Professional License (if you hold
+  such a license) and are (C) Trolltech AS.
 
   A splitter lets the user control the size of child widgets by
   dragging the boundary between the children. Any number of widgets
@@ -327,29 +330,30 @@ void kdGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
   To show a QListBox, a QListView and a QTextEdit side by side:
 
   \code
-    KDMinimizeSplitter *split = new KDMinimizeSplitter( parent );
+    KDGanttMinimizeSplitter *split = new KDGanttMinimizeSplitter( parent );
     QListBox *lb = new QListBox( split );
     QListView *lv = new QListView( split );
     QTextEdit *ed = new QTextEdit( split );
   \endcode
 
-  In KDMinimizeSplitter the boundary can be either horizontal or vertical.  The
-  default is horizontal (the children are side by side) but you
-  can use setOrientation( QSplitter::Vertical ) to set it to vertical.
+  In KDGanttMinimizeSplitter, the boundary can be either horizontal or
+  vertical.  The default is horizontal (the children are side by side)
+  but you can use setOrientation( QSplitter::Vertical ) to set it to
+  vertical.
 
   Use setResizeMode() to specify
   that a widget should keep its size when the splitter is resized.
 
-  Although KDMinimizeSplitter normally resizes the children only at the end of a
-  resize operation, if you call setOpaqueResize( TRUE ) the
-  widgets are resized as often as possible.
+  Although KDGanttMinimizeSplitter normally resizes the children only
+  at the end of a resize operation, if you call setOpaqueResize( TRUE
+  ) the widgets are resized as often as possible.
 
   The initial distribution of size between the widgets is determined
   by the initial size of each widget. You can also use setSizes() to
   set the sizes of all the widgets. The function sizes() returns the
   sizes set by the user.
 
-  If you hide() a child its space will be distributed among the other
+  If you hide() a child, its space will be distributed among the other
   children. It will be reinstated when you show() it again. It is also
   possible to reorder the widgets within the splitter using
   moveToFirst() and moveToLast().
@@ -382,9 +386,7 @@ static QSize minSizeHint( const QWidget* w )
   Constructs a horizontal splitter with the \a parent and \a
   name arguments being passed on to the QFrame constructor.
 */
-
-
-KDMinimizeSplitter::KDMinimizeSplitter( QWidget *parent, const char *name )
+KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( QWidget *parent, const char *name )
     :QFrame(parent,name,WPaintUnclipped)
 {
 #if QT_VERSION >= 300
@@ -397,8 +399,7 @@ KDMinimizeSplitter::KDMinimizeSplitter( QWidget *parent, const char *name )
   Constructs a splitter with orientation \a o with the \a parent
   and \a name arguments being passed on to the QFrame constructor.
 */
-
-KDMinimizeSplitter::KDMinimizeSplitter( Orientation o, QWidget *parent, const char *name )
+KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( Orientation o, QWidget *parent, const char *name )
     :QFrame(parent,name,WPaintUnclipped)
 {
 #if QT_VERSION >= 300
@@ -410,8 +411,7 @@ KDMinimizeSplitter::KDMinimizeSplitter( Orientation o, QWidget *parent, const ch
 /*!
   Destroys the splitter and any children.
 */
-
-KDMinimizeSplitter::~KDMinimizeSplitter()
+KDGanttMinimizeSplitter::~KDGanttMinimizeSplitter()
 {
 #if QT_VERSION >= 300
     data->list.setAutoDelete( TRUE );
@@ -421,7 +421,7 @@ KDMinimizeSplitter::~KDMinimizeSplitter()
 
 
 #if QT_VERSION >= 300
-void KDMinimizeSplitter::init()
+void KDGanttMinimizeSplitter::init()
 {
     data = new QSplitterData;
     if ( orient == Horizontal )
@@ -434,15 +434,12 @@ void KDMinimizeSplitter::init()
 
 
 /*!
-  \property KDMinimizeSplitter::orientation
   \brief the orientation of the splitter
 
   By default the orientation is horizontal (the widgets are side by side).
   The possible orientations are Qt:Vertical and Qt::Horizontal (the default).
-
 */
-
-void KDMinimizeSplitter::setOrientation( Orientation o )
+void KDGanttMinimizeSplitter::setOrientation( Orientation o )
 {
 #if QT_VERSION >= 300
     if ( orient == o )
@@ -457,7 +454,7 @@ void KDMinimizeSplitter::setOrientation( Orientation o )
     QSplitterLayoutStruct *s = data->list.first();
     while ( s ) {
 	if ( s->isSplitter )
-	    ((KDSplitterHandle*)s->wid)->setOrientation( o );
+	    ((KDGanttSplitterHandle*)s->wid)->setOrientation( o );
 	s = data->list.next();  // ### next at end of loop, no iterator
     }
     recalc( isVisible() );
@@ -469,7 +466,7 @@ void KDMinimizeSplitter::setOrientation( Orientation o )
 /*!
   \reimp
 */
-void KDMinimizeSplitter::resizeEvent( QResizeEvent * )
+void KDGanttMinimizeSplitter::resizeEvent( QResizeEvent * )
 {
     doResize();
 }
@@ -484,17 +481,16 @@ void KDMinimizeSplitter::resizeEvent( QResizeEvent * )
   needed.  (If \a first is TRUE, then recalcId is very probably
   needed.)
 */
-
-QSplitterLayoutStruct *KDMinimizeSplitter::addWidget( QWidget *w, bool first )
+QSplitterLayoutStruct *KDGanttMinimizeSplitter::addWidget( QWidget *w, bool first )
 {
     QSplitterLayoutStruct *s;
-    KDSplitterHandle *newHandle = 0;
+    KDGanttSplitterHandle *newHandle = 0;
     if ( data->list.count() > 0 ) {
 	s = new QSplitterLayoutStruct;
 	s->mode = KeepSize;
-	QCString tmp = "qt_splithandle_";
+	QString tmp = "qt_splithandle_";
 	tmp += w->name();
-	newHandle = new KDSplitterHandle( orientation(), this, tmp );
+	newHandle = new KDGanttSplitterHandle( orientation(), this, tmp.latin1() );
 	s->wid = newHandle;
 	newHandle->setId(data->list.count());
 	s->isSplitter = TRUE;
@@ -526,8 +522,7 @@ QSplitterLayoutStruct *KDMinimizeSplitter::addWidget( QWidget *w, bool first )
   Tells the splitter that a child widget has been inserted or removed.
   The event is passed in \a c.
 */
-
-void KDMinimizeSplitter::childEvent( QChildEvent *c )
+void KDGanttMinimizeSplitter::childEvent( QChildEvent *c )
 {
     if ( c->type() == QEvent::ChildInserted ) {
 	if ( !c->child()->isWidgetType() )
@@ -574,8 +569,7 @@ void KDMinimizeSplitter::childEvent( QChildEvent *c )
   Shows a rubber band at position \a p. If \a p is negative, the
   rubber band is removed.
 */
-
-void KDMinimizeSplitter::setRubberband( int p )
+void KDGanttMinimizeSplitter::setRubberband( int p )
 {
     QPainter paint( this );
     paint.setPen( gray );
@@ -602,8 +596,7 @@ void KDMinimizeSplitter::setRubberband( int p )
 
 
 /*! \reimp */
-
-bool KDMinimizeSplitter::event( QEvent *e )
+bool KDGanttMinimizeSplitter::event( QEvent *e )
 {
     if ( e->type() == QEvent::LayoutHint || ( e->type() == QEvent::Show && data->firstShow ) ) {
 	recalc( isVisible() );
@@ -621,10 +614,7 @@ bool KDMinimizeSplitter::event( QEvent *e )
   \a w, \a h using painter \a p.
   \sa QStyle::drawPrimitive()
 */
-
-// ### Remove this in 4.0
-
-void KDMinimizeSplitter::drawSplitter( QPainter *p,
+void KDGanttMinimizeSplitter::drawSplitter( QPainter *p,
 			      QCOORD x, QCOORD y, QCOORD w, QCOORD h )
 {
     style().drawPrimitive(QStyle::PE_Splitter, p, QRect(x, y, w, h), colorGroup(),
@@ -636,10 +626,9 @@ void KDMinimizeSplitter::drawSplitter( QPainter *p,
 /*!
   Returns the id of the splitter to the right of or below the widget \a w,
   or 0 if there is no such splitter
-  (i.e. it is either not in this KDMinimizeSplitter or it is at the end).
+  (i.e. it is either not in this KDGanttMinimizeSplitter or it is at the end).
 */
-
-int KDMinimizeSplitter::idAfter( QWidget* w ) const
+int KDGanttMinimizeSplitter::idAfter( QWidget* w ) const
 {
     QSplitterLayoutStruct *s = data->list.first();
     bool seen_w = FALSE;
@@ -666,7 +655,7 @@ int KDMinimizeSplitter::idAfter( QWidget* w ) const
 
   \sa idAfter()
 */
-void KDMinimizeSplitter::moveSplitter( QCOORD p, int id )
+void KDGanttMinimizeSplitter::moveSplitter( QCOORD p, int id )
 {
     p = adjustPos( p, id );
 
@@ -686,7 +675,7 @@ void KDMinimizeSplitter::moveSplitter( QCOORD p, int id )
 }
 
 
-void KDMinimizeSplitter::setG( QWidget *w, int p, int s, bool isSplitter )
+void KDGanttMinimizeSplitter::setG( QWidget *w, int p, int s, bool isSplitter )
 {
     if ( orient == Horizontal ) {
 	if ( QApplication::reverseLayout() && orient == Horizontal && !isSplitter )
@@ -702,8 +691,7 @@ void KDMinimizeSplitter::setG( QWidget *w, int p, int s, bool isSplitter )
 
   \sa idAfter()
 */
-
-void KDMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
+void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
 {
     if( id < 0 )
 	return;
@@ -754,8 +742,7 @@ void KDMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
 
   \sa idAfter()
 */
-
-void KDMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
+void KDGanttMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
 {
     QSplitterLayoutStruct *s = id < int(data->list.count()) ?
 			       data->list.at(id) : 0;
@@ -807,7 +794,7 @@ void KDMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
 }
 
 
-void KDMinimizeSplitter::expandPos( int id, int*  min, int* max )
+void KDGanttMinimizeSplitter::expandPos( int id, int*  min, int* max )
 {
     QSplitterLayoutStruct *s = data->list.at(id-1);
     QWidget* w = s->wid;
@@ -830,7 +817,7 @@ void KDMinimizeSplitter::expandPos( int id, int*  min, int* max )
   \sa idAfter()
 */
 
-void KDMinimizeSplitter::getRange( int id, int *min, int *max )
+void KDGanttMinimizeSplitter::getRange( int id, int *min, int *max )
 {
     int minB = 0;	//before
     int maxB = 0;
@@ -886,7 +873,7 @@ void KDMinimizeSplitter::getRange( int id, int *min, int *max )
   \sa idAfter()
 */
 
-int KDMinimizeSplitter::adjustPos( int p, int id )
+int KDGanttMinimizeSplitter::adjustPos( int p, int id )
 {
     int min = 0;
     int max = 0;
@@ -897,7 +884,7 @@ int KDMinimizeSplitter::adjustPos( int p, int id )
 }
 
 
-void KDMinimizeSplitter::doResize()
+void KDGanttMinimizeSplitter::doResize()
 {
     QRect r = contentsRect();
     int i;
@@ -933,7 +920,7 @@ void KDMinimizeSplitter::doResize()
 	}
     }
 
-    kdGeomCalc( a, 0, n, pick( r.topLeft() ), pick( r.size() ), 0 );
+    kdganttGeomCalc( a, 0, n, pick( r.topLeft() ), pick( r.size() ), 0 );
 
     for ( i = 0; i< n; i++ ) {
 	QSplitterLayoutStruct *s = data->list.at(i);
@@ -943,7 +930,7 @@ void KDMinimizeSplitter::doResize()
 }
 
 
-void KDMinimizeSplitter::recalc( bool update )
+void KDGanttMinimizeSplitter::recalc( bool update )
 {
     int fi = 2*frameWidth();
     int maxl = fi;
@@ -991,11 +978,11 @@ void KDMinimizeSplitter::recalc( bool update )
 	}
     }
     if ( empty ) {
-        if ( parentWidget() != 0 && parentWidget()->inherits("KDMinimizeSplitter") ) {
+        if ( parentWidget() != 0 && parentWidget()->inherits("KDGanttMinimizeSplitter") ) {
             // nested splitters; be nice
             maxl = maxt = 0;
         } else {
-            // KDMinimizeSplitter with no children yet
+            // KDGanttMinimizeSplitter with no children yet
             maxl = QWIDGETSIZE_MAX;
         }
     } else {
@@ -1015,27 +1002,13 @@ void KDMinimizeSplitter::recalc( bool update )
 	doResize();
 }
 
-/*! \enum KDMinimizeSplitter::ResizeMode
-
-  This enum type describes how KDMinimizeSplitter will resize each of its child widgets.  The currently defined values are:
-
-  \value Stretch  the widget will be resized when the splitter
-  itself is resized.
-
-  \value KeepSize  KDMinimizeSplitter will try to keep this widget's size
-  unchanged.
-
-  \value FollowSizeHint  KDMinimizeSplitter will resize the widget when the
-  widget's size hint changes.
-*/
-
 /*!
   Sets resize mode of \a w to \a mode.
 
   \sa ResizeMode
 */
 
-void KDMinimizeSplitter::setResizeMode( QWidget *w, ResizeMode mode )
+void KDGanttMinimizeSplitter::setResizeMode( QWidget *w, ResizeMode mode )
 {
     processChildEvents();
     QSplitterLayoutStruct *s = data->list.first();
@@ -1057,7 +1030,7 @@ void KDMinimizeSplitter::setResizeMode( QWidget *w, ResizeMode mode )
   \sa setOpaqueResize()
 */
 
-bool KDMinimizeSplitter::opaqueResize() const
+bool KDGanttMinimizeSplitter::opaqueResize() const
 {
     return data->opaque;
 }
@@ -1071,7 +1044,7 @@ bool KDMinimizeSplitter::opaqueResize() const
   \sa opaqueResize()
 */
 
-void KDMinimizeSplitter::setOpaqueResize( bool on )
+void KDGanttMinimizeSplitter::setOpaqueResize( bool on )
 {
     data->opaque = on;
 }
@@ -1081,7 +1054,7 @@ void KDMinimizeSplitter::setOpaqueResize( bool on )
   Moves widget \a w to the leftmost/top position.
 */
 
-void KDMinimizeSplitter::moveToFirst( QWidget *w )
+void KDGanttMinimizeSplitter::moveToFirst( QWidget *w )
 {
     processChildEvents();
     bool found = FALSE;
@@ -1110,7 +1083,7 @@ void KDMinimizeSplitter::moveToFirst( QWidget *w )
   Moves widget \a w to the rightmost/bottom position.
 */
 
-void KDMinimizeSplitter::moveToLast( QWidget *w )
+void KDGanttMinimizeSplitter::moveToLast( QWidget *w )
 {
     processChildEvents();
     bool found = FALSE;
@@ -1135,20 +1108,20 @@ void KDMinimizeSplitter::moveToLast( QWidget *w )
 }
 
 
-void KDMinimizeSplitter::recalcId()
+void KDGanttMinimizeSplitter::recalcId()
 {
     int n = data->list.count();
     for ( int i = 0; i < n; i++ ) {
 	QSplitterLayoutStruct *s = data->list.at(i);
 	if ( s->isSplitter )
-	    ((KDSplitterHandle*)s->wid)->setId(i);
+	    ((KDGanttSplitterHandle*)s->wid)->setId(i);
     }
 }
 
 
 /*!\reimp
 */
-QSize KDMinimizeSplitter::sizeHint() const
+QSize KDGanttMinimizeSplitter::sizeHint() const
 {
     constPolish();
     int l = 0;
@@ -1178,7 +1151,7 @@ QSize KDMinimizeSplitter::sizeHint() const
 \reimp
 */
 
-QSize KDMinimizeSplitter::minimumSizeHint() const
+QSize KDGanttMinimizeSplitter::minimumSizeHint() const
 {
     constPolish();
     int l = 0;
@@ -1208,7 +1181,7 @@ QSize KDMinimizeSplitter::minimumSizeHint() const
   Calculates stretch parameters from current sizes
 */
 
-void KDMinimizeSplitter::storeSizes()
+void KDGanttMinimizeSplitter::storeSizes()
 {
     QSplitterLayoutStruct *s = data->list.first();
     while ( s ) {
@@ -1228,7 +1201,7 @@ void KDMinimizeSplitter::storeSizes()
   calling QWidget::hide() will not work.
 */
 
-void KDMinimizeSplitter::setHidden( QWidget *w, bool hide )
+void KDGanttMinimizeSplitter::setHidden( QWidget *w, bool hide )
 {
     if ( w == w1 ) {
 	w1show = !hide;
@@ -1236,7 +1209,7 @@ void KDMinimizeSplitter::setHidden( QWidget *w, bool hide )
 	w2show = !hide;
     } else {
 #ifdef QT_CHECK_RANGE
-	qWarning( "KDMinimizeSplitter::setHidden(), unknown widget" );
+	qWarning( "KDGanttMinimizeSplitter::setHidden(), unknown widget" );
 #endif
 	return;
     }
@@ -1252,7 +1225,7 @@ void KDMinimizeSplitter::setHidden( QWidget *w, bool hide )
   Returns the hidden status of \a w
 */
 
-bool KDMinimizeSplitter::isHidden( QWidget *w ) const
+bool KDGanttMinimizeSplitter::isHidden( QWidget *w ) const
 {
     if ( w == w1 )
 	return !w1show;
@@ -1260,7 +1233,7 @@ bool KDMinimizeSplitter::isHidden( QWidget *w ) const
 	return !w2show;
 #ifdef QT_CHECK_RANGE
     else
-	qWarning( "KDMinimizeSplitter::isHidden(), unknown widget" );
+	qWarning( "KDGanttMinimizeSplitter::isHidden(), unknown widget" );
 #endif
     return FALSE;
 }
@@ -1288,7 +1261,7 @@ bool KDMinimizeSplitter::isHidden( QWidget *w ) const
   \sa setSizes()
 */
 
-QValueList<int> KDMinimizeSplitter::sizes() const
+QValueList<int> KDGanttMinimizeSplitter::sizes() const
 {
     if ( !testWState(WState_Polished) ) {
 	QWidget* that = (QWidget*) this;
@@ -1319,7 +1292,7 @@ QValueList<int> KDMinimizeSplitter::sizes() const
   \sa sizes()
 */
 
-void KDMinimizeSplitter::setSizes( QValueList<int> list )
+void KDGanttMinimizeSplitter::setSizes( QValueList<int> list )
 {
     processChildEvents();
     QValueList<int>::Iterator it = list.begin();
@@ -1340,7 +1313,7 @@ void KDMinimizeSplitter::setSizes( QValueList<int> list )
   the splitter is consistent.
 */
 
-void KDMinimizeSplitter::processChildEvents()
+void KDGanttMinimizeSplitter::processChildEvents()
 {
     QApplication::sendPostedEvents( this, QEvent::ChildInserted );
 }
@@ -1350,7 +1323,7 @@ void KDMinimizeSplitter::processChildEvents()
   \reimp
 */
 
-void KDMinimizeSplitter::styleChange( QStyle& old )
+void KDGanttMinimizeSplitter::styleChange( QStyle& old )
 {
     int sw = style().pixelMetric(QStyle::PM_SplitterWidth, this);
     QSplitterLayoutStruct *s = data->list.first();
@@ -1368,11 +1341,11 @@ void KDMinimizeSplitter::styleChange( QStyle& old )
 /*!
   Specifies the direction of the minimize buttons.
   If the orientation of the splitter is horizontal then with
-  KDMinimizeSplitter::Left or KDMinimizeSplitter::Right should be used,
-  otherwise either KDMinimizeSplitter::Up or KDMinimizeSplitter::Down
+  KDGanttMinimizeSplitter::Left or KDGanttMinimizeSplitter::Right should be used,
+  otherwise either KDGanttMinimizeSplitter::Up or KDGanttMinimizeSplitter::Down
   should be used.
 */
-void KDMinimizeSplitter::setMinimizeDirection( Direction direction )
+void KDGanttMinimizeSplitter::setMinimizeDirection( Direction direction )
 {
     _direction = direction;
 }
@@ -1380,7 +1353,7 @@ void KDMinimizeSplitter::setMinimizeDirection( Direction direction )
 /*!
   Returns the direction of the minimize buttons.
 */
-KDMinimizeSplitter::Direction KDMinimizeSplitter::minimizeDirection() const
+KDGanttMinimizeSplitter::Direction KDGanttMinimizeSplitter::minimizeDirection() const
 {
     return _direction;
 }
@@ -1393,7 +1366,7 @@ static inline int toFixed( int i ) { return i * 256; }
 static inline int fRound( int i ) {
     return ( i % 256 < 128 ) ? i / 256 : 1 + i / 256;
 }
-void kdGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
+void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
 		int space, int spacer )
 {
     typedef int fixed;
@@ -1564,3 +1537,34 @@ void kdGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
 }
 
 #endif
+
+/*!
+  \enum KDGanttMinimizeSplitter::Direction
+
+  The values of this enumeration describe into which direction the
+  splitter will collapse its child widgets. By extension, it also
+  specifies the orientation of the splitter; collapsing to the left or
+  to the right results in a horizontal splitter, collapsing to the top
+  or bottom in a vertical splitter.
+*/
+
+/*!
+  \fn Orientation KDGanttMinimizeSplitter::orientation() const
+
+  Returns the orientation of the splitter.
+*/
+
+/*! \enum KDGanttMinimizeSplitter::ResizeMode
+
+  This enum type describes how KDGanttMinimizeSplitter will resize each of its child widgets.  The currently defined values are:
+
+  Stretch: the widget will be resized when the splitter
+  itself is resized.
+
+  KeepSize: KDGanttMinimizeSplitter will try to keep this widget's size
+  unchanged.
+
+  FollowSizeHint: KDGanttMinimizeSplitter will resize the widget when the
+  widget's size hint changes.
+*/
+

@@ -3,7 +3,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2001-2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2001-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -19,33 +19,27 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
 **
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
-**
 **********************************************************************/
-#ifndef KDMINIMIZESPLITTER_H
-#define KDMINIMIZESPLITTER_H
+#ifndef KDGANTTMINIMIZESPLITTER_H
+#define KDGANTTMINIMIZESPLITTER_H
 
 #ifndef QT_H
 #include "qframe.h"
 #include "qvaluelist.h"
-#include "KDSizingControl.h"
 #endif // QT_H
 
 #ifndef QT_NO_SPLITTER
 
-class KDSplitterHandle;
 class QSplitterData;
 class QSplitterLayoutStruct;
 
-class KDMinimizeSplitter : public QFrame
+class KDGanttMinimizeSplitter : public QFrame
 {
     Q_OBJECT
     Q_ENUMS( Direction )
@@ -56,9 +50,9 @@ public:
     enum ResizeMode { Stretch, KeepSize, FollowSizeHint };
     enum Direction { Left, Right, Up, Down };
 
-    KDMinimizeSplitter( QWidget* parent=0, const char* name=0 );
-    KDMinimizeSplitter( Orientation, QWidget* parent=0, const char* name=0 );
-    ~KDMinimizeSplitter();
+    KDGanttMinimizeSplitter( QWidget* parent=0, const char* name=0 );
+    KDGanttMinimizeSplitter( Orientation, QWidget* parent=0, const char* name=0 );
+    ~KDGanttMinimizeSplitter();
 
     virtual void setOrientation( Orientation );
     Orientation orientation() const { return orient; }
@@ -123,27 +117,31 @@ private:
     QSplitterData *data;
 #endif
 
+private:
     Orientation orient;
     Direction _direction;
-    friend class KDSplitterHandle;
+#ifndef DOXYGEN_SKIP_INTERNAL
+    friend class KDGanttSplitterHandle;
+#endif
 private:	// Disabled copy constructor and operator=
 #if defined(Q_DISABLE_COPY)
-    KDMinimizeSplitter( const KDMinimizeSplitter & );
-    KDMinimizeSplitter& operator=( const KDMinimizeSplitter & );
+    KDGanttMinimizeSplitter( const KDGanttMinimizeSplitter & );
+    KDGanttMinimizeSplitter& operator=( const KDGanttMinimizeSplitter & );
 #endif
 };
 
+#ifndef DOXYGEN_SKIP_INTERNAL
 // This class was continued from a verbatim copy of the
 // QSplitterHandle pertaining to the Qt Enterprise License and the
-// GPL. It has only been renamed to KDSplitterHandler in order to
+// GPL. It has only been renamed to KDGanttSplitterHandler in order to
 // avoid a symbol clash on some platforms.
-class KDSplitterHandle : public QWidget
+class KDGanttSplitterHandle : public QWidget
 {
     Q_OBJECT
 #if QT_VERSION >= 300
 public:
-    KDSplitterHandle( Qt::Orientation o,
-		       KDMinimizeSplitter *parent, const char* name=0 );
+    KDGanttSplitterHandle( Qt::Orientation o,
+		       KDGanttMinimizeSplitter *parent, const char* name=0 );
     void setOrientation( Qt::Orientation o );
     Qt::Orientation orientation() const { return orient; }
 
@@ -168,14 +166,14 @@ private:
     bool opaq;
     int myId;
 
-    KDMinimizeSplitter *s;
+    KDGanttMinimizeSplitter *s;
     int _activeButton;
     bool _collapsed;
     int _origPos;
 #endif
 };
-
+#endif
 
 #endif // QT_NO_SPLITTER
 
-#endif // KDMINIMIZESPLITTER_H
+#endif // KDGANTTMINIMIZESPLITTER_H

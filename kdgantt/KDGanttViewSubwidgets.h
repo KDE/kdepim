@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2002-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -20,15 +20,11 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
-**
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
 **
 **********************************************************************/
 
@@ -52,12 +48,14 @@
 #include <qlabel.h>
 #include <qbrush.h>
 #include <qvbox.h>
+#include <qdockwindow.h>
 
 #include "KDGanttView.h"
 #include "KDGanttViewTaskLink.h"
 #include "KDGanttViewTaskLinkGroup.h"
 #include "KDGanttViewSummaryItem.h"
-#include "KDSemiSizingControl.h"
+#include "KDGanttSemiSizingControl.h"
+#include "KDGanttViewItemDrag.h"
 
 #define Type_is_KDGanttGridItem 1
 #define Type_is_KDGanttViewItem 2
@@ -66,6 +64,7 @@
 class KDCanvasWhatsThis;
 class KDToolTip;
 class KDCanvasRectangle;
+class KDTimeHeaderToolTip;
 
 class KDTimeHeaderWidget : public QWidget
 {
@@ -93,6 +92,7 @@ public:
    */
 
    KDTimeHeaderWidget (QWidget* parent,KDGanttView* gant);
+  ~KDTimeHeaderWidget();
 
    QString getToolTipText(QPoint p);
    void zoomToFit();
@@ -153,8 +153,9 @@ public:
    void paintEvent(QPaintEvent *);
    int getCoordX(QDate);
    int getCoordX(QDateTime);
-   QDateTime getDateTimeForIndex(int coordX);
-   void setShowPopupMenu( bool show);
+   QDateTime getDateTimeForIndex(int coordX, bool local = true );
+   void setShowPopupMenu( bool show, bool showZoom, bool showScale,bool showTime,
+                          bool showYear,bool showGrid, bool showPrint);
    bool registerStartTime();
    bool registerEndTime();
    bool showPopupMenu() const;
@@ -167,58 +168,72 @@ public:
    void centerDateTime( const QDateTime& center );
 
 public slots:
-  void setSettings(int);
-  void checkWidth( int );
-  void addTickRight( int num = 1 );
-  void addTickLeft( int num = 1 );
+    void setSettings(int);
+    void checkWidth( int );
+    void addTickRight( int num = 1 );
+    void addTickLeft( int num = 1 );
+    void preparePopupMenu();
 signals:
-   void sizeChanged( int );
+    void sizeChanged( int );
 
 private:
-   friend class KDTimeTableWidget;
-   friend class KDGanttViewItem;
-   friend class KDGanttView;
+    friend class KDTimeTableWidget;
+    friend class KDGanttViewItem;
+    friend class KDGanttView;
+    virtual void mousePressEvent ( QMouseEvent * e );
+    virtual void mouseReleaseEvent ( QMouseEvent * e );
+    virtual void mouseDoubleClickEvent ( QMouseEvent * e );
+    virtual void mouseMoveEvent ( QMouseEvent * e );
+    double secsFromTo( QDateTime begin, QDateTime end );
+    void updateTimeTable();
+    void computeIntervals( int height );
+    bool getColumnColor(QColor& col,int coordLow, int coordHigh);
+    void moveTimeLineTo(int x);
+    //void  mousePressEvent ( QMouseEvent * ) ;
+    void resizeEvent ( QResizeEvent * ) ;
+    QValueList<int> majorTicks;
+    QValueList<QString> minorText;
+    QValueList<QString> majorText;
+    QDateTime myHorizonStart, myHorizonEnd, myRealEnd,myRealStart;
+    QDateTime myCenterDateTime;
+    void saveCenterDateTime();
+    Scale myScale,myRealScale,myMaxScale,myMinScale;
+    YearFormat myYearFormat;
+    HourFormat myHourFormat;
+    int myMinimumColumWidth;
+    bool flagShowMajorTicks, flagShowMinorTicks, flagShowPopupMenu;
+    bool flagShowZoom, flagShowScale ,flagShowTime ,flagShowYear;
+    bool flagShowGrid ,flagShowPrint;
+    bool flagStartTimeSet,flagEndTimeSet;
+    QColor myWeekendBackgroundColor;
+    int myWeekendDaysStart, myWeekendDaysEnd;
+    ColumnColorList ccList;
+    IntervalColorList icList;
+    int myMinorScaleCount,myMajorScaleCount;
+    int myRealMinorScaleCount,myRealMajorScaleCount;
+    bool flagDoNotRecomputeAfterChange,flagDoNotRepaintAfterChange;
+    QString getYear(QDate);
+    QString getHour(QTime);
+    QDateTime getEvenTimeDate(QDateTime ,Scale);
+    void computeRealScale(QDateTime start);
+    int myGridMinorWidth;
+    int myMajorGridHeight;
+    QPopupMenu * myPopupMenu, *scalePopupMenu, *timePopupMenu;
+    QPopupMenu * yearPopupMenu, *gridPopupMenu;
+    KDGanttView* myGanttView;
+    double myZoomFactor;
+    int myAutoScaleMinorTickcount;
+    bool flagZoomToFit;
+    int mySizeHint;
+    int myMinimumWidth;
+    int getTickTime();
+    KDTimeHeaderToolTip* myToolTip;
+    bool mouseDown;
+    int beginMouseDown;
+    int endMouseDown;
+    bool autoComputeTimeLine;
+    QPixmap paintPix;
 
-   double secsFromTo( QDateTime begin, QDateTime end );
-   void updateTimeTable();
-   void computeIntervals( int height );
-   bool getColumnColor(QColor& col,int coordLow, int coordHigh);
-   void moveTimeLineTo(int x);
-   void  mousePressEvent ( QMouseEvent * ) ;
-   void resizeEvent ( QResizeEvent * ) ;
-   QValueList<int> majorTicks;
-   QValueList<QString> minorText;
-   QValueList<QString> majorText;
-   QDateTime myHorizonStart, myHorizonEnd, myRealEnd,myRealStart;
-   QDateTime myCenterDateTime;
-   void saveCenterDateTime();
-   Scale myScale,myRealScale,myMaxScale,myMinScale;
-   YearFormat myYearFormat;
-   HourFormat myHourFormat;
-   int myMinimumColumWidth;
-   bool flagShowMajorTicks, flagShowMinorTicks, flagShowPopupMenu;
-   bool flagStartTimeSet,flagEndTimeSet;
-   QColor myWeekendBackgroundColor;
-   int myWeekendDaysStart, myWeekendDaysEnd;
-   ColumnColorList ccList;
-   IntervalColorList icList;
-   int myMinorScaleCount,myMajorScaleCount;
-   int myRealMinorScaleCount,myRealMajorScaleCount;
-   bool flagDoNotRecomputeAfterChange,flagDoNotRepaintAfterChange;
-   QString getYear(QDate);
-   QString getHour(QTime);
-   QDateTime getEvenTimeDate(QDateTime ,Scale);
-   void computeRealScale(QDateTime start);
-   int myGridMinorWidth;
-   int myMajorGridHeight;
-   QPopupMenu * myPopupMenu;
-   KDGanttView* myGanttView;
-   double myZoomFactor;
-   int myAutoScaleMinorTickcount;
-   bool flagZoomZoFit;
-   int mySizeHint;
-   int myMinimumWidth;
-  int getTickTime();
 };
 
 /* KDTimeTableWidget */
@@ -231,20 +246,20 @@ class KDTimeTableWidget : public QCanvas
 public:
    KDTimeTableWidget (QWidget* parent,KDGanttView* my);
 
-   void setBlockUpdating( bool block = true );
-   bool blockUpdating();
-   void inc_blockUpdating();
-   void dec_blockUpdating();
-   void setShowTaskLinks( bool show );
-   bool showTaskLinks();
-   QPtrList<KDGanttViewTaskLink>taskLinks();
-   void updateMyContent();
-   void removeItemFromTasklinks( KDGanttViewItem * );
-   void setHorBackgroundLines( int count, QBrush brush );
-   int horBackgroundLines( QBrush& brush );
+    void setBlockUpdating( bool block = true );
+    bool blockUpdating();
+    void inc_blockUpdating();
+    void dec_blockUpdating();
+    void setShowTaskLinks( bool show );
+    bool showTaskLinks();
+    QPtrList<KDGanttViewTaskLink>taskLinks();
+    void updateMyContent();
+    void removeItemFromTasklinks( KDGanttViewItem * );
+    void setHorBackgroundLines( int count, QBrush brush );
+    int horBackgroundLines( QBrush& brush );
 
-   void setNoInformationBrush( const QBrush& brush );
-   QBrush noInformationBrush() const;
+    void setNoInformationBrush( const QBrush& brush );
+    QBrush noInformationBrush() const;
 
 signals:
    void   heightComputed( int );
@@ -297,24 +312,29 @@ private:
 
 };
 
-class KDLegendWidget : public KDSemiSizingControl
+class KDLegendWidget : public KDGanttSemiSizingControl
 {
    Q_OBJECT
 
 public:
-  KDLegendWidget ( QWidget* parent, KDMinimizeSplitter* legendParent );
+  KDLegendWidget ( QWidget* parent, KDGanttMinimizeSplitter* legendParent );
   void showMe(bool);
   bool isShown();
   void addLegendItem( KDGanttViewItem::Shape shape, const QColor& shapeColor, const QString& text );
   void clearLegend();
   void setFont( QFont );
   void drawToPainter( QPainter *p );
+  void setAsDockwindow( bool dockwin );
+  bool asDockwindow();
+  QDockWindow* dockwindow();
   QSize legendSize();
   QSize legendSizeHint();
  private:
   QGroupBox * myLegend;
   QLabel* myLabel;
   QScrollView * scroll;
+  QDockWindow* dock;
+  KDGanttMinimizeSplitter* myLegendParent;
 };
 
 class KDGanttView;
@@ -324,17 +344,27 @@ class KDListView : public QListView
 
 public:
    KDListView (QWidget* parent,KDGanttView* gv );
-   KDGanttView* myGantView;
+   KDGanttView* myGanttView;
    void drawToPainter( QPainter *p );
    void setCalendarMode( bool mode );
   bool calendarMode() { return _calendarMode; };
   QString getWhatsThisText(QPoint p);
+  void setOpen ( QListViewItem * item, bool open );
+  void dragEnterEvent ( QDragEnterEvent * );
+  void dragMoveEvent ( QDragMoveEvent * );
+  void dragLeaveEvent ( QDragLeaveEvent * );
+  void dropEvent ( QDropEvent * );
+  QDragObject * dragObject ();
+  void startDrag ();
+  void paintemptyarea ( QPainter * p, const QRect & rect ){ QListView::paintEmptyArea( p, rect );};
 private slots:
   void dragItem( QListViewItem * );
  private:
    void resizeEvent ( QResizeEvent * ) ;
   void contentsMouseDoubleClickEvent ( QMouseEvent * e );
   bool _calendarMode;
+
+
 
 };
 
@@ -394,6 +424,8 @@ public:
 };
 
 
+class KDCanvasToolTip;
+
 class KDGanttCanvasView : public QCanvasView
 {
     Q_OBJECT
@@ -407,13 +439,18 @@ public:
     void resetCutPaste( KDGanttViewItem* );
     void setShowPopupMenu( bool show );
     bool showPopupMenu();
+    void cutItem (  KDGanttViewItem* );
+    void insertItemAsRoot( KDGanttViewItem* );
+    void insertItemAsChild( KDGanttViewItem* , KDGanttViewItem* );
+    void insertItemAfter( KDGanttViewItem* , KDGanttViewItem* );
 protected:
     friend class KDGanttView;
+    friend class KDListView;
     virtual void contentsMousePressEvent ( QMouseEvent * ) ;
     virtual void contentsMouseReleaseEvent ( QMouseEvent * );
     virtual void contentsMouseDoubleClickEvent ( QMouseEvent * );
     virtual void contentsMouseMoveEvent ( QMouseEvent * ) ;
-    virtual void viewportPaintEvent ( QPaintEvent * pe ); 
+    virtual void viewportPaintEvent ( QPaintEvent * pe );
     void resizeEvent ( QResizeEvent * ) ;
     void set_MouseTracking(bool on);
     KDGanttView* mySignalSender;
@@ -439,6 +476,8 @@ private slots:
   void newRootItem( int );
   void newChildItem( int );
 
+private:
+  KDCanvasToolTip* myToolTip;
 };
 
 class KDTimeHeaderToolTip :public QToolTip
@@ -522,6 +561,7 @@ private:
   QWidget* _wid;
   KDListView * _view;
 };
+
 
 
 #endif

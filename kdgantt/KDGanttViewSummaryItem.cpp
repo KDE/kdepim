@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2002-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -20,15 +20,11 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
-**
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
 **
 **********************************************************************/
 
@@ -49,17 +45,15 @@
   Constructs an empty Gantt item of type event.
 
   \param view the Gantt view to insert this item into
-  \param lvtext the text to show in the listview
+  \param lvtext the text to show in the list view
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-
 KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttView* view,
                                                 const QString& lvtext,
                                                 const QString& name ) :
     KDGanttViewItem( Summary, view, lvtext, name )
 {
-
   initItem();
 }
 
@@ -68,19 +62,16 @@ KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttView* view,
   Constructs an empty Gantt item of type event.
 
   \param parent a parent item under which this one goes
-  \param lvtext the text to show in the listview
+  \param lvtext the text to show in the list view
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-
 KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttViewItem* parent,
                                                 const QString& lvtext,
                                                 const QString& name ) :
     KDGanttViewItem( Summary, parent, lvtext, name )
 {
-
   initItem();
-
 }
 
 
@@ -89,20 +80,17 @@ KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttViewItem* parent,
 
   \param view the Gantt view to insert this item into
   \param after another item at the same level behind which this one should go
-  \param lvtext the text to show in the listview
+  \param lvtext the text to show in the list view
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-
 KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttView* view,
                                                 KDGanttViewItem* after,
                                                 const QString& lvtext,
                                                 const QString& name ) :
     KDGanttViewItem( Summary, view, after, lvtext, name )
 {
-
   initItem();
-
 }
 
 
@@ -111,11 +99,10 @@ KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttView* view,
 
   \param parent a parent item under which this one goes
   \param after another item at the same level behind which this one should go
-  \param lvtext the text to show in the listview
+  \param lvtext the text to show in the list view
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-
 KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttViewItem* parent,
                                                 KDGanttViewItem* after,
                                                 const QString& lvtext,
@@ -129,10 +116,8 @@ KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttViewItem* parent,
 
 
 /*!
-  The destructor.
-
+  The destructor. Does nothing for the moment.
 */
-
 KDGanttViewSummaryItem::~KDGanttViewSummaryItem()
 {
 
@@ -159,16 +144,15 @@ void KDGanttViewSummaryItem::setMiddleTime( const QDateTime& dateTime )
   if ( myStartTime > middleTime() )
       setStartTime( middleTime() );
   updateCanvasItems();
-
 }
 
 
 /*!
-  Returns the middle time of this summary item. If there is no middle time defined,
-  the start time is returned.
+  Returns the middle time of this summary item. If there is no middle
+  time defined, the start time is returned.
 
   \return the middle time of this summary item.
-  If there is no middle time defined,  the start time is returned.
+  If there is no middle time defined, the start time is returned.
 */
 QDateTime KDGanttViewSummaryItem::middleTime() const
 {
@@ -177,16 +161,15 @@ QDateTime KDGanttViewSummaryItem::middleTime() const
   return myStartTime;
 }
 
+
 /*!
-  Specifies the end time of this item.The parameter must be valid
+  Specifies the end time of this item. The parameter must be valid
   and non-null. If the parameter is invalid or null, no value is set.
   If the end time is less the mid time,
   the mid time is set to this end time automatically.
   \param end the end time
   \sa endTime(), setStartTime(), startTime()
-
 */
-
 void KDGanttViewSummaryItem::setEndTime( const QDateTime& end )
 {
   if (! end.isValid() ) {
@@ -199,6 +182,8 @@ void KDGanttViewSummaryItem::setEndTime( const QDateTime& end )
   else
     updateCanvasItems();
 }
+
+
 /*!
   Specifies the start time of this item. The parameter must be valid
   and non-null. If the parameter is invalid or null, no value is set.
@@ -208,7 +193,6 @@ void KDGanttViewSummaryItem::setEndTime( const QDateTime& end )
   \param start the start time
   \sa startTime(), setEndTime(), endTime()
 */
-
 void KDGanttViewSummaryItem::setStartTime( const QDateTime& start )
 {
   if (! start.isValid() ) {
@@ -233,7 +217,6 @@ void KDGanttViewSummaryItem::setStartTime( const QDateTime& start )
   \sa actualEndTime()
   startTime()
 */
-
 void KDGanttViewSummaryItem::setActualEndTime( const QDateTime& end )
 {
   if (!myActualEndTime) myActualEndTime = new QDateTime;
@@ -251,13 +234,14 @@ void KDGanttViewSummaryItem::setActualEndTime( const QDateTime& end )
   \sa setActualEndTime()
 
 */
-
 QDateTime KDGanttViewSummaryItem::actualEndTime() const
 {
   if(myActualEndTime)
     return *myActualEndTime;
   return myEndTime;
 }
+
+
 void KDGanttViewSummaryItem::hideMe()
 {
     startShape->hide();
@@ -278,13 +262,17 @@ void KDGanttViewSummaryItem::hideMe()
 // if coordY >0, this is taken as the middle y-coordinate
 void KDGanttViewSummaryItem::showItem( bool show, int coordY )
 {
-  isVisible = show;
+  isVisibleInGanttView = show;
   invalidateHeight () ;
   if (!show) {
     hideMe();
     return;
   }
-  float prio = ((float) ( _priority - 100 )) / 100.0;
+ if ( displaySubitemsAsGroup() && !parent() && !isOpen() ) {
+    hideMe();
+    return;
+  }
+  float prio = ((float) ( priority() - 100 )) / 100.0;
   startShape->setZ( prio + 0.0055 );
   midShape->setZ( prio + 0.004 );
   endShape->setZ( prio + 0.005 );
@@ -306,10 +294,10 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
     allY = coordY;
   else
     allY = getCoordY();
-  startX = myGantView->myTimeHeader->getCoordX(myStartTime);
-  endX = myGantView->myTimeHeader->getCoordX(myEndTime);
+  startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
+  endX = myGanttView->myTimeHeader->getCoordX(myEndTime);
   if (myMiddleTime)
-    midX = myGantView->myTimeHeader->getCoordX(*myMiddleTime);
+    midX = myGanttView->myTimeHeader->getCoordX(*myMiddleTime);
   else
     midX = endX;
 
@@ -349,7 +337,7 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
       actualEnd->hide();
     }
     else {
-      int actendX = myGantView->myTimeHeader->getCoordX(*myActualEndTime);
+      int actendX = myGanttView->myTimeHeader->getCoordX(*myActualEndTime);
       actualEnd->setPoints(actendX,allY-5,actendX,allY+5);
       actualEnd->show();
     }
@@ -374,12 +362,12 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
 }
 void KDGanttViewSummaryItem::initItem()
 {
-  isVisible = false;
+  isVisibleInGanttView = false;
   myActualEndTime = 0;
   myMiddleTime = 0;
   showItem(true);
-  myGantView->myTimeTable->updateMyContent();
-  // setDragEnabled( true );
-  // setDropEnabled( true );
+  myGanttView->myTimeTable->updateMyContent();
+  setDragEnabled( myGanttView->dragEnabled() );
+  setDropEnabled( myGanttView->dropEnabled() );
 }
 

@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2002-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -20,15 +20,11 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
-**
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
 **
 **********************************************************************/
 #ifndef KDGANTTVIEWTASKITEM_H
@@ -41,10 +37,10 @@ class QBrush;
 class KDGanttViewTaskItem : public KDGanttViewItem
 {
 public:
-    KDGanttViewTaskItem( KDGanttView* view, 
+    KDGanttViewTaskItem( KDGanttView* view,
                             const QString& lvtext = QString::null,
                             const QString& name = QString::null );
-    KDGanttViewTaskItem( KDGanttViewItem* parent, 
+    KDGanttViewTaskItem( KDGanttViewItem* parent,
                             const QString& lvtext = QString::null,
                             const QString& name = QString::null );
     KDGanttViewTaskItem( KDGanttView* view, KDGanttViewItem* after,
@@ -57,7 +53,7 @@ public:
 
     void setStartTime( const QDateTime& start );
     void setEndTime( const QDateTime& end );
- 
+
 private:
     void showItem( bool show = true, int coordY = 0 );
     void initItem();

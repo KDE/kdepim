@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2002-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -20,32 +20,31 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
-**
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
 **
 **********************************************************************/
 
 #include "KDGanttViewTaskLink.h"
 #include "KDGanttViewTaskLinkGroup.h"
 #include "KDGanttViewSubwidgets.h"
-#include "KDXMLTools.h"
+#include "KDGanttXMLTools.h"
 
 
 /*! \class KDGanttViewTaskLink KDGanttViewTaskLink.h
   This class represents a link between a number of Gantt chart items.
 
-  It always connects a source item with an target item. Task links can
+  It always connects source items with target items. Task links can
   be grouped into KDGanttViewTaskLinkGroup objects.
-  If a Ganttview item is deleted, it is removed from the fromList or from the toList.
-  If one of the lists becomes empty, the complete tasklink is deleted as well.
+  If a Gantt view item is deleted, it is removed from the fromList or
+  from the toList.
+  If one of the lists becomes empty, the complete task link is deleted
+  as well.
 */
+
 
 /*!
   Creates a task link that connects all items in the source item list from
@@ -54,7 +53,6 @@
   \param from the source items
   \param to the target items
 */
-
 KDGanttViewTaskLink::KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
                                           QPtrList<KDGanttViewItem> to )
 {
@@ -63,17 +61,18 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
   myGroup = 0;
   initTaskLink();
 }
+
+
 /*!
-  This is an overloaded member function, provided for convenience.
-  It behaves essentially like the above function.
+  \overload
+
   Creates a task link that connects two items.
   Note, that the from() and to() functions are returning a list,
-  in  this case containing only one item.
+  in this case containing only one item.
 
   \param from the source item
   \param to the target item
 */
-
 KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewItem*  from,
                                           KDGanttViewItem* to )
 {
@@ -106,8 +105,8 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
 }
 
 /*!
-  This is an overloaded member function, provided for convenience.
-  It behaves essentially like the above function.
+  \overload
+
   Creates a task link that connects two items and inserts the link
   directly into a link group.
   Note, that the from() and to() functions are returning a list,
@@ -129,6 +128,7 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
   setGroup(group);
 }
 
+
 KDGanttViewTaskLink::~KDGanttViewTaskLink( )
 {
   setGroup(0);
@@ -144,7 +144,10 @@ void KDGanttViewTaskLink::initTaskLink()
   horLineList = new QPtrList<KDCanvasLine>;
   verLineList = new QPtrList<KDCanvasLine>;
   topList = new QPtrList<KDCanvasPolygon>;
-  myTimeTable = fromList.getFirst()->myGantView->myTimeTable;
+  horLineList->setAutoDelete( true );
+  verLineList->setAutoDelete( true );
+  topList->setAutoDelete( true );
+  myTimeTable = fromList.getFirst()->myGanttView->myTimeTable;
   KDCanvasLine* horLine,*verLine;
   KDCanvasPolygon* top;
   unsigned int i, j;
@@ -174,8 +177,8 @@ void KDGanttViewTaskLink::initTaskLink()
   setHighlightColor(Qt::red );
   setColor(Qt::black);
   setVisible(true);
-
 }
+
 
 /*!
   Specifies whether this task link should be visible or not.
@@ -187,61 +190,69 @@ void KDGanttViewTaskLink::initTaskLink()
 
 void KDGanttViewTaskLink::setVisible( bool visible )
 {
+    showMe ( visible );
+    myTimeTable->updateMyContent();
+}
+void KDGanttViewTaskLink::showMe( bool visible )
+{
 
-  isvisible = visible;
-  /*
-  if (!isvisible || !fromItem->isVisible || !toItem->isVisible || !myTimeTable->taskLinksVisible) {
-    horLine->hide();
-    verLine->hide();
-    top->hide();
-    return;
-  }
-  */
-  int wid = 1;
-  QPen p;
-  QBrush b;
-  p.setWidth(wid);
-  b.setStyle(Qt::SolidPattern);
-  if (ishighlighted) {
-    b.setColor(myColorHL);
-    p.setColor(myColorHL);
+    isvisible = visible;
+    int wid = 1;
+    QPen p;
+    QBrush b;
+    p.setWidth(wid);
+    b.setStyle(Qt::SolidPattern);
+    if (ishighlighted) {
+        b.setColor(myColorHL);
+        p.setColor(myColorHL);
 
-  } else {
-    b.setColor(myColor);
-    p.setColor(myColor);
-  }
-  QPoint start, end;
-  QPtrListIterator<KDCanvasLine> horIt(*horLineList);
-  QPtrListIterator<KDCanvasLine> verIt(*verLineList);
-  QPtrListIterator<KDCanvasPolygon> topIt(*topList);
-  QPtrListIterator<KDGanttViewItem> fromIt(fromList);
-  QPtrListIterator<KDGanttViewItem> toIt(toList);
-  for ( ; fromIt.current(); ++fromIt ) {
-    toIt.toFirst();
-    for ( ; toIt.current(); ++toIt ) {
-      if (!isvisible || ! (*fromIt)->isVisible || !(*toIt)->isVisible || !myTimeTable->taskLinksVisible) {
-	(*horIt)->hide();
-	(*verIt)->hide();
-	(*topIt)->hide();
-      } else {
-	(*horIt)->setPen(p);
-	(*verIt)->setPen(p);
-	(*topIt)->setBrush(b);
-	end = (*toIt)->getTaskLinkEndCoord();
-	start = (*fromIt)->getTaskLinkStartCoord(end);
-	(*horIt)->setPoints(start.x(),start.y(),end.x()+wid,start.y());
-	(*verIt)->setPoints(end.x()+wid/2,start.y(),end.x()+wid/2,end.y()-2);
-	(*topIt)->move(end.x()+wid/2,end.y());
-	(*horIt)->show();
-	(*verIt)->show();
-	(*topIt)->show();
-	++horIt;
-	++verIt;
-	++topIt;
-
-      }
+    } else {
+        b.setColor(myColor);
+        p.setColor(myColor);
     }
-  }
+    QPoint start, end;
+    QPtrListIterator<KDCanvasLine> horIt(*horLineList);
+    QPtrListIterator<KDCanvasLine> verIt(*verLineList);
+    QPtrListIterator<KDCanvasPolygon> topIt(*topList);
+    QPtrListIterator<KDGanttViewItem> fromIt(fromList);
+    QPtrListIterator<KDGanttViewItem> toIt(toList);
+    for ( ; fromIt.current(); ++fromIt ) {
+        toIt.toFirst();
+        for ( ; toIt.current(); ++toIt ) {
+            if (!isvisible || ! (*fromIt)->isVisibleInGanttView || !(*toIt)->isVisibleInGanttView || !myTimeTable->taskLinksVisible) {
+                (*horIt)->hide();
+                (*verIt)->hide();
+                (*topIt)->hide();
+                ++horIt;
+                ++verIt;
+                ++topIt;
+            } else {
+                (*horIt)->setPen(p);
+                (*verIt)->setPen(p);
+                (*topIt)->setBrush(b);
+                end = (*toIt)->getTaskLinkEndCoord();
+                start = (*fromIt)->getTaskLinkStartCoord(end);
+                (*horIt)->setPoints(start.x(),start.y(),end.x()+wid,start.y());
+                (*verIt)->setPoints(end.x()+wid/2,start.y(),end.x()+wid/2,end.y()-2);
+                (*topIt)->move(end.x()+wid/2,end.y());
+                (*horIt)->show();
+                (*verIt)->show();
+                (*topIt)->show();
+                ++horIt;
+                ++verIt;
+                ++topIt;
+
+            }
+        }
+    }
+    while ( horIt.current() ) {
+        (*horIt)->hide();
+        (*verIt)->hide();
+        (*topIt)->hide();
+        ++horIt;
+        ++verIt;
+        ++topIt;
+    }
 }
 
 
@@ -251,13 +262,11 @@ void KDGanttViewTaskLink::setVisible( bool visible )
   \return true if the task link is visible
   \sa setVisible()
 */
-
 bool KDGanttViewTaskLink::isVisible() const
 {
 
     return isvisible;
 }
-
 
 
 /*!
@@ -267,7 +276,6 @@ bool KDGanttViewTaskLink::isVisible() const
   belong to any group.
   \sa KDGanttViewTaskLinkGroup
 */
-
 KDGanttViewTaskLinkGroup* KDGanttViewTaskLink::group()
 {
     return myGroup;
@@ -278,11 +286,10 @@ KDGanttViewTaskLinkGroup* KDGanttViewTaskLink::group()
   Inserts this task link in a group.
   If the parameter is 0, the task link is removed from any group
 
- \param the group, this task link has to be inserted
+  \param group the group, this task link has to be inserted
 
   \sa KDGanttViewTaskLinkGroup
 */
-
 void KDGanttViewTaskLink::setGroup(KDGanttViewTaskLinkGroup* group)
 {
 
@@ -304,7 +311,6 @@ void KDGanttViewTaskLink::setGroup(KDGanttViewTaskLinkGroup* group)
   \param highlight pass true in order to highlight this task link
   \sa highlight()
 */
-
 void KDGanttViewTaskLink::setHighlight( bool highlight )
 {
    ishighlighted =  highlight ;
@@ -320,7 +326,6 @@ void KDGanttViewTaskLink::setHighlight( bool highlight )
   \return true if the task link is highlighted
   \sa setHighlight()
 */
-
 bool KDGanttViewTaskLink::highlight() const
 {
     return ishighlighted;
@@ -333,7 +338,6 @@ bool KDGanttViewTaskLink::highlight() const
   \param color the color to draw this task link in
   \sa color()
 */
-
 void KDGanttViewTaskLink::setColor( const QColor& color )
 {
   myColor = color;
@@ -348,7 +352,6 @@ void KDGanttViewTaskLink::setColor( const QColor& color )
   \return the color in which this task link is drawn
   \sa setColor()
 */
-
 QColor KDGanttViewTaskLink::color() const
 {
     return myColor;
@@ -360,9 +363,7 @@ QColor KDGanttViewTaskLink::color() const
 
   \param color the highlight color to draw this task link in
   \sa highlightColor()
-
 */
-
 void KDGanttViewTaskLink::setHighlightColor( const QColor& color )
 {
   myColorHL = color;
@@ -376,9 +377,7 @@ void KDGanttViewTaskLink::setHighlightColor( const QColor& color )
 
   \return the highlight color in which this task link is drawn
   \sa setHighlightColor()
-
 */
-
 QColor KDGanttViewTaskLink::highlightColor() const
 {
     return myColorHL;
@@ -391,7 +390,6 @@ QColor KDGanttViewTaskLink::highlightColor() const
   \param text the tooltip text
   \sa tooltipText()
 */
-
 void KDGanttViewTaskLink::setTooltipText( const QString& text )
 {
    myToolTipText = text;
@@ -404,7 +402,6 @@ void KDGanttViewTaskLink::setTooltipText( const QString& text )
   \return the tooltip text of this task link
   \sa setTooltipText()
 */
-
 QString KDGanttViewTaskLink::tooltipText() const
 {
     return myToolTipText;
@@ -416,9 +413,7 @@ QString KDGanttViewTaskLink::tooltipText() const
 
   \param text the what's this text
   \sa whatsThisText()
-
 */
-
 void KDGanttViewTaskLink::setWhatsThisText( const QString& text )
 {
   myWhatsThisText = text;
@@ -431,9 +426,7 @@ void KDGanttViewTaskLink::setWhatsThisText( const QString& text )
 
   \return the what's this text of this task link
   \sa setWhatsThisText()
-
 */
-
 QString KDGanttViewTaskLink::whatsThisText() const
 {
   return myWhatsThisText;
@@ -450,6 +443,8 @@ QPtrList<KDGanttViewItem>  KDGanttViewTaskLink::from() const
 {
     return fromList;
 }
+
+
 /*!
   Removes a  KDGanttViewItem from the lists.
 
@@ -457,12 +452,17 @@ QPtrList<KDGanttViewItem>  KDGanttViewTaskLink::from() const
 */
 void KDGanttViewTaskLink::removeItemFromList( KDGanttViewItem* item )
 {
-  if (fromList.remove( item ))
-    ;
-  if ( toList.remove( item ))
-    ;
+    bool itemremoved = false;
+    if (fromList.remove( item )) {
+        itemremoved = true;
+    }
+    if ( toList.remove( item )) {
+        itemremoved = true;
+    }
+    if ( itemremoved ) {
+        setVisible( isvisible );
+    }
 }
-
 
 
 /*!
@@ -477,6 +477,12 @@ QPtrList<KDGanttViewItem> KDGanttViewTaskLink::to() const
 }
 
 
+/*!
+  Creates a DOM node that describes this task link.
+
+  \param doc the DOM document to which the node belongs
+  \param parentElement the element into which to insert this node
+*/
 void KDGanttViewTaskLink::createNode( QDomDocument& doc,
                                       QDomElement& parentElement )
 {
@@ -489,37 +495,43 @@ void KDGanttViewTaskLink::createNode( QDomDocument& doc,
     KDGanttViewItem* item;
     for( item = fromList.first(); item;
          item = fromList.next() )
-        KDXML::createStringNode( doc, fromItemsElement, "Item", item->name() );
+        KDGanttXML::createStringNode( doc, fromItemsElement, "Item", item->name() );
 
     QDomElement toItemsElement = doc.createElement( "ToItems" );
     taskLinkElement.appendChild( toItemsElement );
     QPtrList<KDGanttViewItem> toList = to();
     for( item = toList.first(); item;
          item = toList.next() )
-        KDXML::createStringNode( doc, toItemsElement, "Item", item->name() );
+        KDGanttXML::createStringNode( doc, toItemsElement, "Item", item->name() );
 
-    KDXML::createBoolNode( doc, taskLinkElement, "Highlight", highlight() );
-    KDXML::createColorNode( doc, taskLinkElement, "Color", color() );
-    KDXML::createColorNode( doc, taskLinkElement, "HighlightColor",
+    KDGanttXML::createBoolNode( doc, taskLinkElement, "Highlight", highlight() );
+    KDGanttXML::createColorNode( doc, taskLinkElement, "Color", color() );
+    KDGanttXML::createColorNode( doc, taskLinkElement, "HighlightColor",
                             highlightColor() );
-    KDXML::createStringNode( doc, taskLinkElement, "TooltipText",
+    KDGanttXML::createStringNode( doc, taskLinkElement, "TooltipText",
                              tooltipText() );
-    KDXML::createStringNode( doc, taskLinkElement, "WhatsThisText",
+    KDGanttXML::createStringNode( doc, taskLinkElement, "WhatsThisText",
                              whatsThisText() );
     if( group() )
-        KDXML::createStringNode( doc, taskLinkElement, "Group",
+        KDGanttXML::createStringNode( doc, taskLinkElement, "Group",
                                  group()->name() );
-    KDXML::createBoolNode( doc, taskLinkElement, "Visible",
+    KDGanttXML::createBoolNode( doc, taskLinkElement, "Visible",
                            isVisible() );
 }
 
 
+/*!
+  Creates a KDGanttViewTaskLink according to the specification in a DOM
+  element.
+
+  \param element the DOM element from which to read the specification
+  \return the newly created task link
+*/
 KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& element )
 {
     QDomNode node = element.firstChild();
     QStringList fromList, toList;
-    bool highlight = false;
-    bool visible = false;
+    bool highlight = false, visible = false;
     QColor color, highlightColor;
     QString tooltipText, whatsThisText, group;
     while( !node.isNull() ) {
@@ -534,7 +546,7 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
                         QString tagName = element.tagName();
                         if( tagName == "Item" ) {
                             QString value;
-                            if( KDXML::readStringNode( element, value ) )
+                            if( KDGanttXML::readStringNode( element, value ) )
                                 fromList << value;
                         } else {
                             qDebug( "Unrecognized tag name: %s", tagName.latin1() );
@@ -551,7 +563,7 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
                         QString tagName = element.tagName();
                         if( tagName == "Item" ) {
                             QString value;
-                            if( KDXML::readStringNode( element, value ) )
+                            if( KDGanttXML::readStringNode( element, value ) )
                                 toList << value;
                         } else {
                             qDebug( "Unrecognized tag name: %s", tagName.latin1() );
@@ -562,31 +574,31 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
                 }
             } else if( tagName == "Highlight" ) {
                 bool value;
-                if( KDXML::readBoolNode( element, value ) )
+                if( KDGanttXML::readBoolNode( element, value ) )
                     highlight = value;
             } else if( tagName == "Visible" ) {
                 bool value;
-                if( KDXML::readBoolNode( element, value ) )
+                if( KDGanttXML::readBoolNode( element, value ) )
                     visible = value;
             } else if( tagName == "Color" ) {
                 QColor value;
-                if( KDXML::readColorNode( element, value ) )
+                if( KDGanttXML::readColorNode( element, value ) )
                     color = value;
             } else if( tagName == "HighlightColor" ) {
                 QColor value;
-                if( KDXML::readColorNode( element, value ) )
+                if( KDGanttXML::readColorNode( element, value ) )
                     highlightColor = value;
             } else if( tagName == "TooltipText" ) {
                 QString value;
-                if( KDXML::readStringNode( element, value ) )
+                if( KDGanttXML::readStringNode( element, value ) )
                     tooltipText = value;
             } else if( tagName == "WhatsThisText" ) {
                 QString value;
-                if( KDXML::readStringNode( element, value ) )
+                if( KDGanttXML::readStringNode( element, value ) )
                     whatsThisText = value;
             } else if( tagName == "Group" ) {
                 QString value;
-                if( KDXML::readStringNode( element, value ) )
+                if( KDGanttXML::readStringNode( element, value ) )
                     group = value;
             } else {
                 qDebug( "Unrecognized tag name: %s", tagName.latin1() );

@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2002-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -20,20 +20,16 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
 **
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
-**
 **********************************************************************/
 
 #include "KDGanttViewTaskLinkGroup.h"
-#include "KDXMLTools.h"
+#include "KDGanttXMLTools.h"
 #include "KDGanttView.h"
 
 QDict<KDGanttViewTaskLinkGroup> KDGanttViewTaskLinkGroup::sGroupDict;
@@ -48,7 +44,6 @@ QDict<KDGanttViewTaskLinkGroup> KDGanttViewTaskLinkGroup::sGroupDict;
 /*!
   Constructs an empty task link group
 */
-
 KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup()
 {
 
@@ -59,11 +54,10 @@ KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup()
   Removes this task link group from the list of task link groups in the
   KDGanttView class.
 */
-
 KDGanttViewTaskLinkGroup::~KDGanttViewTaskLinkGroup()
 {
     if (!myTaskLinkList.isEmpty()) {
-        myTaskLinkList.first()->from().first()->myGantView->removeTaskLinkGroup(this);
+        myTaskLinkList.first()->from().first()->myGanttView->removeTaskLinkGroup(this);
     }
 }
 
@@ -76,7 +70,6 @@ KDGanttViewTaskLinkGroup::~KDGanttViewTaskLinkGroup()
 
   \param name the search name of this task link group
 */
-
 KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup( const QString& name )
 {
     sGroupDict.insert( name, this );
@@ -89,26 +82,24 @@ KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup( const QString& name )
   another group, it will be removed from it.
   This function is equivalent to  LINK->setGroup(this), where this is
   a pointer to this TaskLinkGroup.
-  \param  a pointer to the task link to add to this task link group
+  \param link a pointer to the task link to add to this task link group
   visible, and false to hide them
   \sa remove()
-
 */
-
 void KDGanttViewTaskLinkGroup::insert (KDGanttViewTaskLink* link)
 {
     link->setGroup(this);
 }
+
+
 /*!
   Removes a task link LINK from this group.
   You may remove a tasklink  LINK from its group with  LINK->setGroup(0).
 
-  \param a pointer to the task link to remove from this task link group
+  \param link a pointer to the task link to remove from this task link group
   \return true if the task link was a member of this group
   \sa insert()
-
 */
-
 bool KDGanttViewTaskLinkGroup::remove (KDGanttViewTaskLink* link)
 {
     KDGanttViewTaskLinkGroup* g = link->group();
@@ -121,12 +112,10 @@ bool KDGanttViewTaskLinkGroup::remove (KDGanttViewTaskLink* link)
 /*!
   Specifies whether the task links of this group should be visible or not.
 
-  \param visible pass true to make the task links of this group
+  \param show visible pass true to make the task links of this group
   visible, and false to hide them
   \sa isVisible()
-
 */
-
 void KDGanttViewTaskLinkGroup::setVisible( bool show )
 {
     isvisible = show;
@@ -142,9 +131,7 @@ void KDGanttViewTaskLinkGroup::setVisible( bool show )
 
   \return true if the task links of this group are visible
   \sa setVisible()
-
 */
-
 bool KDGanttViewTaskLinkGroup::visible() const
 {
     return isvisible;
@@ -158,9 +145,7 @@ bool KDGanttViewTaskLinkGroup::visible() const
   \param highlight pass true in order to highlight the task links in
   this group
   \sa highlight()
-
 */
-
 void KDGanttViewTaskLinkGroup::setHighlight( bool highlight )
 {
     ishighlighted=  highlight;
@@ -179,9 +164,7 @@ void KDGanttViewTaskLinkGroup::setHighlight( bool highlight )
 
   \return true if all the task links in this group are highlighted
   \sa setHighlight()
-
 */
-
 bool KDGanttViewTaskLinkGroup::highlight() const
 {
     return ishighlighted;
@@ -193,9 +176,7 @@ bool KDGanttViewTaskLinkGroup::highlight() const
 
   \param color the color to draw the task links in this group in
   \sa color()
-
 */
-
 void KDGanttViewTaskLinkGroup::setColor( const QColor& color )
 {
     myColor = color;
@@ -214,9 +195,7 @@ void KDGanttViewTaskLinkGroup::setColor( const QColor& color )
 
   \return the color in which the task links in this group are drawn
   \sa setColor()
-
 */
-
 QColor KDGanttViewTaskLinkGroup::color() const
 {
     return myColor;
@@ -228,10 +207,7 @@ QColor KDGanttViewTaskLinkGroup::color() const
 
   \param color the highlight color to draw the task links in this group in
   \sa color()
-
-
 */
-
 void KDGanttViewTaskLinkGroup::setHighlightColor( const QColor& color )
 {
 
@@ -251,9 +227,7 @@ void KDGanttViewTaskLinkGroup::setHighlightColor( const QColor& color )
   \return the highlight color in which the task links in this group
   are drawn
   \sa setColor()
-
 */
-
 QColor KDGanttViewTaskLinkGroup::highlightColor() const
 {
     return myColorHL;
@@ -263,24 +237,22 @@ QColor KDGanttViewTaskLinkGroup::highlightColor() const
 /*!
   Adds a task link LINK to this group. If the task link is already a member of
   another group, it will  not be removed from it.
-  \param  a pointer to the task link to add to this task link group
+  \param a pointer to the task link to add to this task link group
   visible, and false to hide them
   \sa removeItem()
-
 */
-
 void KDGanttViewTaskLinkGroup::insertItem (KDGanttViewTaskLink* link)
 {
     myTaskLinkList.append (link);
 }
+
+
 /*!
   Removes a task link LINK from this group.
 
   \param a pointer to the task link to remove from this task link group
   \sa insertItem()
-
 */
-
 void KDGanttViewTaskLinkGroup::removeItem (KDGanttViewTaskLink* link)
 {
     myTaskLinkList.remove(link);
@@ -294,35 +266,46 @@ void KDGanttViewTaskLinkGroup::removeItem (KDGanttViewTaskLink* link)
   \return the task link group with the specified name; 0 if no group
   with that name exists
 */
-
 KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::find( const QString& name )
 {
     return sGroupDict.find( name );
 }
 
 
+/*!
+  Creates a DOM node that describes this task link group.
+
+  \param doc the DOM document to which the node belongs
+  \param parentElement the element into which to insert this node
+*/
 void KDGanttViewTaskLinkGroup::createNode( QDomDocument& doc,
                                            QDomElement& parentElement )
 {
     QDomElement taskLinkGroupElement = doc.createElement( "TaskLink" );
     parentElement.appendChild( taskLinkGroupElement );
 
-    KDXML::createBoolNode( doc, taskLinkGroupElement, "Highlight",
+    KDGanttXML::createBoolNode( doc, taskLinkGroupElement, "Highlight",
                            highlight() );
-    KDXML::createColorNode( doc, taskLinkGroupElement, "Color", color() );
-    KDXML::createColorNode( doc, taskLinkGroupElement, "HighlightColor",
+    KDGanttXML::createColorNode( doc, taskLinkGroupElement, "Color", color() );
+    KDGanttXML::createColorNode( doc, taskLinkGroupElement, "HighlightColor",
                             highlightColor() );
-    KDXML::createBoolNode( doc, taskLinkGroupElement, "Visible",
+    KDGanttXML::createBoolNode( doc, taskLinkGroupElement, "Visible",
                            visible() );
-    KDXML::createStringNode( doc, taskLinkGroupElement, "Name", _name );
+    KDGanttXML::createStringNode( doc, taskLinkGroupElement, "Name", _name );
 }
 
 
+/*!
+  Creates a KDGanttViewTaskLinkGroup according to the specification in a DOM
+  element.
+
+  \param element the DOM element from which to read the specification
+  \return the newly created task link group
+*/
 KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::createFromDomElement( QDomElement& element )
 {
     QDomNode node = element.firstChild();
-    bool highlight = false;
-    bool visible = false;
+    bool highlight = false, visible = false;
     QColor color, highlightColor;
     QString name;
     while( !node.isNull() ) {
@@ -331,23 +314,23 @@ KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::createFromDomElement( QDomEl
             QString tagName = element.tagName();
             if( tagName == "Highlight" ) {
                 bool value;
-                if( KDXML::readBoolNode( element, value ) )
+                if( KDGanttXML::readBoolNode( element, value ) )
                     highlight = value;
             } else if( tagName == "Visible" ) {
                 bool value;
-                if( KDXML::readBoolNode( element, value ) )
+                if( KDGanttXML::readBoolNode( element, value ) )
                     visible = value;
             } else if( tagName == "Color" ) {
                 QColor value;
-                if( KDXML::readColorNode( element, value ) )
+                if( KDGanttXML::readColorNode( element, value ) )
                     color = value;
             } else if( tagName == "HighlightColor" ) {
                 QColor value;
-                if( KDXML::readColorNode( element, value ) )
+                if( KDGanttXML::readColorNode( element, value ) )
                     highlightColor = value;
             } else if( tagName == "Name" ) {
                 QString value;
-                if( KDXML::readStringNode( element, value ) )
+                if( KDGanttXML::readStringNode( element, value ) )
                     name = value;
             } else {
                 qDebug( "Unrecognized tag name: %s", tagName.latin1() );

@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2002 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2002-2003 Klarälvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KDGantt library.
 **
@@ -20,15 +20,11 @@
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
-** See http://www.klaralvdalens-datakonsult.se/Public/products/ for
+** See http://www.klaralvdalens-datakonsult.se/?page=products for
 **   information about KDGantt Commercial License Agreements.
 **
 ** Contact info@klaralvdalens-datakonsult.se if any conditions of this
 ** licensing are not clear to you.
-**
-** As a special exception, permission is given to link this program
-** with any edition of Qt, and distribute the resulting executable,
-** without including the source code for Qt in the source distribution.
 **
 **********************************************************************/
 
@@ -47,11 +43,10 @@
   Constructs an empty Gantt item of type event.
 
   \param view the Gantt view to insert this item into
-  \param lvtext the text to show in the listview
+  \param lvtext the text to show in the list view
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-
 KDGanttViewEventItem::KDGanttViewEventItem( KDGanttView* view,
                                             const QString& lvtext,
                                             const QString& name ) :
@@ -65,11 +60,10 @@ KDGanttViewEventItem::KDGanttViewEventItem( KDGanttView* view,
   Constructs an empty Gantt item of type event.
 
   \param parent a parent item under which this one goes
-  \param lvtext the text to show in the listview
+  \param lvtext the text to show in the list view
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-
 KDGanttViewEventItem::KDGanttViewEventItem( KDGanttViewItem* parent,
                                             const QString& lvtext,
                                             const QString& name ) :
@@ -85,11 +79,10 @@ KDGanttViewEventItem::KDGanttViewEventItem( KDGanttViewItem* parent,
 
   \param view the Gantt view to insert this item into
   \param after another item at the same level behind which this one should go
-  \param lvtext the text to show in the listview
+  \param lvtext the text to show in the list view
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-
 KDGanttViewEventItem::KDGanttViewEventItem( KDGanttView* view,
                                             KDGanttViewItem* after,
                                             const QString& lvtext,
@@ -106,11 +99,10 @@ KDGanttViewEventItem::KDGanttViewEventItem( KDGanttView* view,
 
   \param parent a parent item under which this one goes
   \param after another item at the same level behind which this one should go
-  \param lvtext the text to show in the listview
+  \param lvtext the text to show in the list view
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-
 KDGanttViewEventItem::KDGanttViewEventItem( KDGanttViewItem* parent,
                                             KDGanttViewItem* after,
                                             const QString& lvtext,
@@ -123,24 +115,22 @@ KDGanttViewEventItem::KDGanttViewEventItem( KDGanttViewItem* parent,
 
 
 /*!
-  The destructor.
+  The destructor. Nothing done here.
 */
-
 KDGanttViewEventItem::~KDGanttViewEventItem()
 {
 
 
 }
 /*!
-  Specifies the start time of this item.The parameter must be valid
+  Specifies the start time of this item. The parameter must be valid
   and non-null. If the parameter is invalid or null, no value is set.
-  If the start time is less the lead time,
+  If the start time is less than the lead time,
   the lead time is set to this start time automatically.
 
   \param start the start time
   \sa startTime()
 */
-
 void KDGanttViewEventItem::setStartTime( const QDateTime& start )
 {
   if (! start.isValid() ) {
@@ -160,7 +150,7 @@ void KDGanttViewEventItem::setStartTime( const QDateTime& start )
 /*!
   Specifies whether the event item should be shown with a lead time
   line, and if yes, when the lead time starts.
-  If the start time is less the lead time,
+  If the start time is less than the lead time,
   the start time is set to this lead time automatically.
 
   \param leadTimeStart the start time of the lead time; pass an
@@ -190,13 +180,14 @@ void KDGanttViewEventItem::setLeadTime( const QDateTime& leadTimeStart )
   otherwise returns an invalid QDateTime object
   \sa setLeadTime()
 */
-
 QDateTime KDGanttViewEventItem::leadTime() const
 {
   if(myLeadTime)
     return *myLeadTime;
   return myStartTime;
 }
+
+
 void KDGanttViewEventItem::hideMe()
 {
     startShape->hide();
@@ -205,15 +196,17 @@ void KDGanttViewEventItem::hideMe()
     startLineBack->hide();
     textCanvas->hide();
 }
+
+
 void KDGanttViewEventItem::showItem(bool show, int coordY)
 {
-  isVisible = show;
+  isVisibleInGanttView = show;
   invalidateHeight () ;
   if (!show) {
     hideMe();
     return;
   }
-  float prio = ((float) ( _priority - 100 )) / 100.0;
+  float prio = ((float) ( priority() - 100 )) / 100.0;
   startShape->setZ( prio + 0.0055 );
   startShapeBack->setZ( prio + 0.003 );
   startLine->setZ( prio + 0.0015  );
@@ -229,9 +222,9 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
     allY = coordY;
   else
     allY = getCoordY();
-  startX = myGantView->myTimeHeader->getCoordX(myStartTime);
+  startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
   if (myLeadTime) {
-    endX = myGantView->myTimeHeader->getCoordX(*myLeadTime);
+    endX = myGanttView->myTimeHeader->getCoordX(*myLeadTime);
     startLine->setPoints(startX,allY,endX,allY);
     startLine->show();
     startLineBack->setPoints(startX+1,allY,endX-1,allY);
@@ -250,12 +243,16 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
   if (textCanvas->text().isEmpty())
     textCanvas->hide();
 }
+
+
 void KDGanttViewEventItem::initItem()
 {
-  isVisible = false;
+  isVisibleInGanttView = false;
   myLeadTime = 0;
   showItem(true);
-  myGantView->myTimeTable->updateMyContent();
+  myGanttView->myTimeTable->updateMyContent();
+  setDragEnabled( myGanttView->dragEnabled() );
+  setDropEnabled( myGanttView->dropEnabled() );
 }
 
 
