@@ -208,8 +208,14 @@ void AlarmDaemon::resetMsgCal_(const QCString& appname, const QString& urlString
 {
   kdDebug(5900) << "AlarmDaemon::resetMsgCal_(" << urlString << ")\n";
 
-  reloadCal_(appname, urlString, true);
-  ADCalendar::clearEventsHandled(urlString);
+  if (!urlString.isEmpty())
+  {
+    reloadCal_(appname, urlString, true);
+    ADCalendar::clearEventsHandled(urlString);
+    ADCalendarBase* cal = getCalendar(urlString);
+    if (cal)
+      checkAlarms(cal, QDateTime(), QDateTime::currentDateTime());
+  }
 }
 
 /* Remove a calendar file from the list of monitored calendars */
@@ -445,6 +451,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         return false;
       }
 
+#if KDE_VERSION >= 290
       if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
         Event *event = calendar->getEvent( eventID );
         if (!event) return false;
@@ -463,6 +470,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         }
         return true;
       }
+#endif
 
       if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
       {
