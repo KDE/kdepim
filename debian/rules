@@ -12,11 +12,6 @@ ifeq ($(ARCH),alpha)
 else
   COMPILER_FLAGS=CXX=g++ CC=gcc
 endif
-ifeq ($(ARCH),hppa)
-  XINERAMA=
-else
-  XINERAMA=--with-xinerama
-endif
 ifeq ($(ARCH),i386)
   OBJPRELINK=--enable-objprelink
 endif
@@ -34,7 +29,7 @@ build-stamp:
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi
 	$(COMPILER_FLAGS) \
-	./configure $(configkdepim) $(XINERAMA) $(OBJPRELINK)
+	./configure $(configkdepim) $(OBJPRELINK)
 	$(MAKE)
 	touch build-stamp
 
