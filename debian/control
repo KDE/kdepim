@@ -1,234 +1,593 @@
-source: kdepim
-Section: x11
+Source: kdepim
+Section: kde
 Priority: optional
-Maintainer: Christopher L Cheney <ccheney@debian.org>
-Build-Depends: debhelper (>> 4.0.0), automake1.7, bison, byacc, flex, gawk, gettext, kdelibs4-dev, libfam-dev, libpisock-dev, libmal-dev, libqt3-mt-dev, libreadline4-dev, libtiff3g-dev, texinfo, xlibs-dev, zlib1g-dev
-Standards-Version: 3.5.6.0
+Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Christopher L Cheney <ccheney@debian.org>
+Build-Depends: automake1.7, bison, byacc, debhelper (>> 4.0.18), docbook-to-man, flex, gawk, gettext, gnokii, kdelibs4-dev, libbluetooth1-dev, libgtk1.2-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, sharutils, texinfo
+Build-Depends-Indep: doxygen, qt3-doc
+Standards-Version: 3.6.1.0
 
 Package: kdepim
+Section: kde
 Architecture: all
-Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kaddressbook (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version}), kontact (= ${Source-Version})
+Depends: kaddressbook (>= ${Source-Version}), kalarm (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), kdepim-kfile-plugins (>= ${Source-Version}), kdepim-kio-plugins (>= ${Source-Version}), kgpgcertmanager (>= ${Source-Version}), kmail (>= ${Source-Version}), kmailcvt (>= ${Source-Version}), knode (>= ${Source-Version}), knotes (>= ${Source-Version}), konsolekalendar (>= ${Source-Version}), kontact (>= ${Source-Version}), korganizer (>= ${Source-Version}), korn (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version}), ktnef (>= ${Source-Version}), libkcal2 (>= ${Source-Version}), libkdenetwork2 (>= ${Source-Version}), libkdepim1 (>= ${Source-Version}), libkdgantt0 (>= ${Source-Version}), libkgantt0 (>= ${Source-Version}), libkpimexchange1 (>= ${Source-Version}), libksieve0 (>= ${Source-Version}), libmimelib1 (>= ${Source-Version})
 Description: KDE Personal Information Management metapackage
- kdepim is a collection of Personal Information Management (PIM) tools for
- the K Desktop Enviromnent (KDE).
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ kdepim is a collection of Personal Information Management (PIM) tools for the
+ K Desktop Enviromnent (KDE).
 
 Package: kdepim-dev
 Section: devel
 Architecture: any
-Depends: kaddressbook (= ${Source-Version}), kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), kontact (= ${Source-Version}), kdepim-libs (= ${Source-Version}) 
-Description: KDE Personal Information Management (development files)
+Depends: kaddressbook (= ${Source-Version}), kalarm (= ${Source-Version}), kmail (= ${Source-Version}), knotes (= ${Source-Version}), kontact (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version}), ktnef (= ${Source-Version}), libkdenetwork2 (= ${Source-Version}), libkdepim1 (= ${Source-Version})
+Conflicts: libkdenetwork1 (<< 4:3.0.0), libkdenetwork2-dev (<< 4:3.2.0)
+Replaces: kmail (<< 4:3.2.0), knotes (<< 4:3.0.0), korganizer (<< 4:3.2.0), libkdenetwork1 (<< 4:3.0.0), libkdenetwork2-dev (<< 4:3.2.0)
+Description: KDE Personal Information Management [development]
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  This package contains development files needed to compile kdepim applications.
+ .
+ This package is part of the official KDE pim module.
+
+Package: kdepim-doc
+Section: doc
+Architecture: all
+Description: KDE Personal Information Management documentation
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ KDE core library documentation. You need this documentation to develop KDE PIM
+ applications.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kaddressbook
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
+Suggests: khelpcenter
+Replaces: kdebase (<< 4:3.0.0), kdebase-doc (<< 4:3.0.0)
 Description: KDE NG addressbook application
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  KDE next generation addressbook application.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kalarm
-Section: utils
+Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: KDE alarm message scheduler
- KDE personal alarm message, command and email scheduler.
-
-Package: kalarmd
-Section: utils
-Architecture: any
-Depends: ${shlibs:Depends}
-Conflicts: kalarm (<< 4:3.1.94)
-Replaces: kalarm (<< 4:3.1.94)
-Description: KDE alarm scheduler daemon
- KDE alarm scheduler daemon.
+Suggests: khelpcenter
+Description: KDE alarm message and command scheduler
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ KDE alarm message and command scheduler.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kandy
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
+Suggests: khelpcenter
 Description: KDE mobile phone utility
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  At the moment Kandy is more or less a terminal program with some special
- features to store commands and their parameters, but is also has a simple
- GUI to access the phone book of a mobile phone and it is able to save this
- phone book to the KDE address book.
+ features to store commands and their parameters, but is also has a simple GUI
+ to access the phone book of a mobile phone and it is able to save this phone
+ book to the KDE address book.
  .
  Kandy is aimed at mobile phones with integrated (GSM) modems.
+ .
+ This package is part of the official KDE pim module.
 
 Package: karm
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
+Suggests: khelpcenter
 Description: KDE time tracker tool
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  KArm is a time tracker for busy people who need to keep track of the amount of
  time they spend on various tasks.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kdepim-kfile-plugins
-Section: utils
+Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: KDE File dialog plugins for vcf files.
+Description: KDE File dialog plugins for vcf files
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  File dialog plugins for vcf files.
+ .
+ This package is part of the official KDE pim module.
 
-Package: kdepim-libs
-Section: utils
+Package: kdepim-kio-plugins
+Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: KDE PIM libraries
- KDE PIM libraries used by the other programs in kdepim 
+Description: KDE pim I/O Slaves
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ This package includes the pim kioslaves. This includes sieve.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kgpgcertmanager
 Section: net
 Architecture: any
 Depends: ${shlibs:Depends}
+Suggests: khelpcenter
 Description: KDE Certificate Manager
- Certificate manager used by kdenetwork for encrypted email
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ Certificate manager used by kdepim for encrypted email.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kmail
 Section: mail
 Architecture: any
 Depends: ${shlibs:Depends}, kdebase-kio-plugins
-Suggests: gnupg
-Provides: mail-reader, imap-client
+Suggests: gnupg, khelpcenter
+Provides: imap-client, mail-reader
 Description: KDE Email client
- Mail Client based on QT and KDE
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
  .
- Supports imap, mbox, maildir, pop3, pop3s, and OpenPGP
+ Mail Client based on QT and KDE.
+ .
+ Supports imap, mbox, maildir, pop3, pop3s, and OpenPGP.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kmailcvt
 Section: mail
 Architecture: any
 Depends: ${shlibs:Depends}
-Conflicts: kmail (<< 4:3.0.0)
 Replaces: kmail (<< 4:3.0.0)
 Description: KDE KMail addressbook converter
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  Converts addressbooks to KMail format.
+ .
+ This package is part of the official KDE pim module.
 
 Package: knode
 Section: news
 Architecture: any
 Depends: ${shlibs:Depends}
+Suggests: khelpcenter
 Provides: news-reader
 Description: KDE news reader
- News reader for KDE
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ News reader for KDE.
+ .
+ This package is part of the official KDE pim module.
 
 Package: knotes
-Section: utils
+Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
+Suggests: khelpcenter
 Description: KDE Notes
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  Sticky notes for KDE.
+ .
+ This package is part of the official KDE pim module.
+
+Package: konsolekalendar
+Section: kde
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggests: khelpcenter
+Replaces: korganizer (<< 4:3.2.0)
+Description: KDE konsole personal organizer
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ To support console-based calendaring with KDE, the konsolekalendar
+ complements the KDE KOrganizer with an according frontend to manage
+ appointments and your schedule on a text-based console.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kontact
-Section: mail
+Section: kde
 Architecture: any
-Depends: ${shlibs:Depends}, kmail, korganizer, knotes, kaddressbook
+Depends: ${shlibs:Depends}
+Recommends: kaddressbook, kmail, knode, knotes, korganizer
+Suggests: khelpcenter
 Description: KDE pim application
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  KDE next generation pim application.
+ .
+ This package is part of the official KDE pim module.
 
 Package: korganizer
-Section: x11
+Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
 Recommends: kghostview
+Suggests: khelpcenter
+Replaces: kalarm (<< 4:3.2.0)
 Description: KDE personal organizer
- A complete calendar and scheduling program. KOrganizer supports
- information interchange with other calendar applications through the
- industry standard vCalendar file format.
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
  .
- KOrganizer aims to be a complete program for organizing your
- appointments, contacts, projects, etc.  It is in the same spirit as
- similar programs like the now ubiquitous Microsoft Outlook, Starfish
- Internet Sidekick, Time & Chaos, etc. (all for the Microsoft Windows
- platform, of course.)  Best of all, It reads and writes the vCalendar
- file format NATIVELY (please see http://www.imc.org/pdi for more
- information), which is now an industry-wide personal data interchange
- format.  Because of this, you should be able to move from other modern
- PIMs to KOrganizer with relative ease.  Current users of the popular
- program ical should definitely take a look at KOrganizer and compare
+ A complete calendar and scheduling program. KOrganizer supports information
+ interchange with other calendar applications through the industry standard
+ vCalendar file format.
+ .
+ KOrganizer aims to be a complete program for organizing your appointments,
+ contacts, projects, etc. It is in the same spirit as similar programs like
+ the now ubiquitous Microsoft Outlook, Starfish Internet Sidekick,
+ Time & Chaos, etc. (all for the Microsoft Windows platform, of course.) Best
+ of all, It reads and writes the vCalendar file format NATIVELY (please see
+ http://www.imc.org/pdi for more information), which is now an industry-wide
+ personal data interchange format. Because of this, you should be able to move
+ from other modern PIMs to KOrganizer with relative ease. Current users of the
+ popular program ical should definitely take a look at KOrganizer and compare
  features.
  .
- KOrganizer also offers full synchronization with your Palm Pilot, if you
- have kpilot installed.
+ KOrganizer also offers full synchronization with your Palm Pilot, if you have
+ kpilot installed.
+ .
+ This package is part of the official KDE pim module.
 
-Package: konsolekalendar
-Section: utils
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: KDE konsole personal organizer
- To support console-based calendaring with KDE, the
- konsolekalendar complements the KDE KOrganizer with
- an according frontend to manage appointments and
- your schedule on a text-based console.
- 
 Package: korn
-Section: mail
+Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
+Suggests: khelpcenter
 Description: KDE mail checker
- Mail notifier for KDE
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ Mail notifier for KDE.
+ .
+ This package is part of the official KDE pim module.
 
 Package: kpilot
 Section: utils
 Architecture: any
-Depends: ${shlibs:Depends}
-Suggests: knotes, korganizer
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: khelpcenter, knotes, korganizer
+Replaces: korganizer (<< 4:3.0.0)
 Description: KDE Palm Pilot hot-sync tool
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  KDE Palm Pilot hot-sync tool.
+ .
+ This package is part of the official KDE pim module.
 
 Package: ksync
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: KDE Sync
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  KSync is a small application using libksync, which provides a GUI for selecting
- and syncing files, which contain data of the types, for which implementations of
- the libksync interfaces exist. It is able to sync data across networks by using
- the KDE ioslaves.
+ and syncing files, which contain data of the types, for which implementations
+ of the libksync interfaces exist. It is able to sync data across networks by
+ using the KDE ioslaves.
+ .
+ This package is part of the official KDE pim module.
 
 Package: ktnef
-Section: misc
+Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: KDE TNEF viewer
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  Viewer for Microsoft's TNEF format
+ .
+ This package is part of the official KDE pim module.
+
+Package: libkcal2
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: kdepim-libs (<< 4:3.2.0)
+Replaces: kdepim-libs (<< 4:3.2.0)
+Description: KDE calendaring library
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ This is the KDE calendaring library. It provides a C++ API for handling the
+ vCalendar and iCalendar formats.
+ .
+ This is the runtime package for programs that use the libkcal library.
+ .
+ This package is part of the official KDE pim module.
+
+Package: libkcal2-dev
+Section: libdevel
+Architecture: any
+Depends: libkcal2 (= ${Source-Version})
+Conflicts: kdepim-libs (<< 4:3.0.0)
+Replaces: kdepim-dev (<< 4:3.2.0), kdepim-libs (<< 4:3.0.0)
+Description: KDE calendaring library [development]
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ This is the KDE calendaring library. It provides a C++ API for handling the
+ vCalendar and iCalendar formats.
+ .
+ This is the development package which contains the headers for the libkcal
+ library.
+ .
+ This package is part of the official KDE pim module.
 
 Package: libkdenetwork2
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}
-Conflicts: libkdenetwork
-Provides: libkdenetwork
-Description: KDE Network (common libraries)
- This package contains libraries needed for network based KDE applications.
- This is mainly any common code that could be shared between apps.
+Replaces: kgpgcertmanager (<< 4:3.2.0), kmail (<< 4:3.2.0), knode (<< 4:3.2.0)
+Description: KDE Network library
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ This is the runtime package for programs that use the libkdenetwork library.
+ .
+ This package is part of the official KDE pim module.
 
-Package: libkdenetwork2-dev
-Section: devel
+Package: libkdepim1
+Section: libs
 Architecture: any
-Depends: libkdenetwork2 (=${Source-Version})
-Conflicts: libkdenetwork-dev, libkdenetwork1
-Provides: libkdenetwork-dev
-Replaces: libkdenetwork1
-Description: KDE Network (development files)
- This package contains development files needed for network based KDE
- applications. This is mainly any common code that could be shared between
- apps.
+Depends: ${shlibs:Depends}
+Conflicts: kdepim-libs (<< 4:3.2.0)
+Replaces: kdepim-libs (<< 4:3.2.0)
+Description: KDE PIM library
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ This is the runtime package for programs that use the libkdepim library.
+ .
+ This package is part of the official KDE pim module.
+
+Package: libkdgantt0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KD's gantt charting library
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ Klarälvdalens Datakonsult AB's gantt charting library.
+ .
+ This is the runtime package for programs that use the libkdgantt library.
+ .
+ This package is part of the official KDE pim module.
+
+Package: libkdgantt0-dev
+Section: libdevel
+Architecture: any
+Depends: libkdgantt0 (= ${Source-Version})
+Description: KD's gantt charting library [development]
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ Klarälvdalens Datakonsult AB's gantt charting library.
+ .
+ This is the development package which contains the headers for the libkdgantt
+ library.
+ .
+ This package is part of the official KDE pim module.
+
+Package: libkgantt0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: kdepim-libs (<< 4:3.2.0)
+Replaces: kdepim-libs (<< 4:3.2.0)
+Description: KDE gantt charting library
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ KDE gantt charting library.
+ .
+ This is the runtime package for programs that use the libkgantt library.
+ .
+ This package is part of the official KDE pim module.
+
+Package: libkgantt0-dev
+Section: libdevel
+Architecture: any
+Depends: libkgantt0 (= ${Source-Version})
+Conflicts: kdepim-libs (<< 4:3.0.0)
+Replaces: kdepim-dev (<< 4:3.2.0), kdepim-libs (<< 4:3.0.0)
+Description: KDE gantt charting library [development]
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ KDE gantt charting library.
+ .
+ This is the development package which contains the headers for the libkgantt
+ library.
+ .
+ This package is part of the official KDE pim module.
+
+Package: libkpimexchange1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Conflicts: kdepim-libs (<< 4:3.2.0)
+Replaces: kdepim-libs (<< 4:3.2.0)
+Description: KDE PIM Exchange library
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ KDE PIM Exchange library.
+ .
+ This is the runtime package for programs that use the libkpimexchange library. 
+ .
+ This package is part of the official KDE pim module.
+
+Package: libkpimexchange1-dev
+Section: libdevel
+Architecture: any
+Depends: libkpimexchange1 (= ${Source-Version})
+Replaces: kdepim-dev (<< 4:3.2.0)
+Description: KDE PIM Exchange library [development]
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ KDE PIM Exchange library.
+ .
+ This is the development package which contains the headers for the
+ libkpimexchange library.
+ .
+ This package is part of the official KDE pim module.
+
+Package: libksieve0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE mail/news message filtering library
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ KDE internet mail/usenet news message filtering library.
+ .
+ This is the runtime package for programs that use the libksieve library.
+ .
+ This package is part of the official KDE pim module.
+
+Package: libksieve0-dev
+Section: libdevel
+Architecture: any
+Depends: libksieve0 (= ${Source-Version})
+Description: KDE mail/news message filtering library [development]
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
+ KDE internet mail/usenet news message filtering library.
+ .
+ This is the development package which contains the headers for the libksieve
+ library.
+ .
+ This package is part of the official KDE pim module.
 
 Package: libmimelib1
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}
-Provides: libmimelib
-Conflicts: libmimelib
-Description: KDE network mime library
+Description: KDE mime library
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  This library is used by several KDE applications to handle mime types.
+ .
+ This package is part of the official KDE pim module.
 
 Package: libmimelib1-dev
-Section: devel
+Section: libdevel
 Architecture: any
-Depends: libmimelib1 (=${Source-Version})
-Provides: libmimelib-dev
-Conflicts: libmimelib-dev
-Description: KDE network mime library (development files)
+Depends: libmimelib1 (= ${Source-Version})
+Conflicts: libmimelib-dev (<< 4:3.0.0), libmimelib1 (<< 4:3.0.0)
+Replaces: libmimelib-dev (<< 4:3.0.0), libmimelib1 (<< 4:3.0.0)
+Description: KDE mime library [development]
+ KDE is a powerful Open Source graphical desktop environment for Unix
+ workstations. It combines ease of use, contemporary functionality, and
+ outstanding graphical design with the technological superiority of the Unix
+ operating system.
+ .
  This library is used by several KDE applications to handle mime types.
-
+ .
+ This package is part of the official KDE pim module.
