@@ -39,13 +39,25 @@
 using namespace KPIM;
 
 GroupwareUploadJob::GroupwareUploadJob( GroupwareDataAdaptor *adaptor )
-  : GroupwareJob( adaptor )
+  : GroupwareJob( adaptor ), mUploadJob(0), 
+    mDeletionJob(0), mUploadProgress(0)
 {
 }
 
 void GroupwareUploadJob::run()
 {
   deleteItem();
+  mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
+    KPIM::ProgressManager::getUniqueID(),
+    adaptor()->uploadProgressMessage() );
+  connect( mUploadProgress,
+    SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
+    SLOT( cancelSave() ) );
+
+  mUploadProgress->setTotalItems( mAddedItems.size() + mChangedItems.size() +
+                           ((mChangedItems.isEmpty())?0:1) );
+  mUploadProgress->updateProgress();
+
 }
 
 void GroupwareUploadJob::deleteItem()
@@ -89,14 +101,18 @@ void GroupwareUploadJob::slotDeletionResult( KIO::Job *job )
     delete (*it);  
   }
   mDeletedItems.clear();
-  uploadItem();
+  if ( mUploadProgress ) {
+    mUploadProgress->incCompletedItems();
+    mUploadProgress->updateProgress();
+  }
+  QTimer::singleShot( 0, this, SLOT( uploadItem() ) );
 }
 
 void GroupwareUploadJob::uploadItem()
 {
   kdDebug(5800)<<"GroupwareUploadJob::uploadItem()"<<endl;
   if ( mChangedItems.isEmpty() ) {
-    uploadNewItem();
+    QTimer::singleShot( 0, this, SLOT( uploadNewItem() ) );
   } else {
     kdDebug(5800)<<"We still have "<<mAddedItems.count()<<" changed items to upload"<<endl;
     GroupwareUploadItem *item = mChangedItems.front();
@@ -118,13 +134,6 @@ void GroupwareUploadJob::uploadItem()
     mUploadJob = adaptor()->createUploadJob( url, item );
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
       SLOT( slotUploadJobResult( KIO::Job * ) ) );
-
-    mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      KPIM::ProgressManager::getUniqueID(),
-      adaptor()->uploadProgressMessage() );
-    connect( mUploadProgress,
-      SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-      SLOT( cancelSave() ) );
   }
 }
 
@@ -174,13 +183,6 @@ void GroupwareUploadJob::uploadNewItem()
     
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
       SLOT( slotUploadNewJobResult( KIO::Job * ) ) );
-
-    mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      KPIM::ProgressManager::getUniqueID(),
-      adaptor()->uploadProgressMessage() );
-    connect( mUploadProgress,
-      SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-      SLOT( cancelSave() ) );
   } else {
     kdDebug(5800)<<"We are finished uploading all items. Setting progress to completed."<<endl;
     if ( mUploadProgress ) {
@@ -203,8 +205,6 @@ kdDebug(7000) << "   error!!!, string="<<job->errorString()<<endl;
   } else {
 //     TODO: Don't update the etag, but instead let the download job download that new
 //     item. Otherwise we won't know the url of the item!
-//     Actually, the remote URL can be extracted in updateFingerprintId, but
-//     that's not implemented yet. So don't call it at all as a quick hack!
     adaptor()->updateFingerprintId( trfjob, mAddedItems.front() );
     delete mAddedItems.front();
     mAddedItems.pop_front();

@@ -36,7 +36,8 @@
 using namespace KPIM;
 
 GroupwareDownloadJob::GroupwareDownloadJob( GroupwareDataAdaptor *adaptor )
-  : GroupwareJob( adaptor )
+  : GroupwareJob( adaptor ), mProgress(0), 
+    mDownloadJob(0), mListEventsJob(0)
 {
 }
 
