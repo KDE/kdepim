@@ -26,6 +26,15 @@
 #include <kseparator.h>
 #include <kiconloader.h>
 
+#include "knnetaccess.h"
+#include "knarticlewidget.h"
+#include "knodeview.h"
+#include "knfetcharticlemanager.h"
+#include "knsavedarticlemanager.h"
+#include "kngroupmanager.h"
+#include "knaccountmanager.h"
+#include "knfoldermanager.h"
+#include "knfiltermanager.h"
 #include "knode.h"
 #include "knaccnewssettings.h"
 #include "knaccmailsettings.h"
@@ -43,8 +52,8 @@
 #include "knsettingsdialog.h"
 
 
-KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), Ok|Cancel|Help, Ok,
-                                                   knGlobals.top, 0, true, true)
+KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), Ok|Apply|Cancel|Help, Ok,
+                                                   knGlobals.top, 0, false, true)
 {
   setShowIconsInTreeList(true);
   //  setRootIsDecorated(false);
@@ -128,28 +137,42 @@ KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), O
 
   restoreWindowSize("settingsDlg", this, sizeHint());
 }
-  
+
+
 KNSettingsDialog::~KNSettingsDialog()
 {
   saveWindowSize("settingsDlg", this->size());
 }
 
-  
-  
-void KNSettingsDialog::apply()
-{
-  KNSettingsWidget *sw;
-  for(unsigned int i=0; i<widgets.count(); i++) {
-    sw = widgets.at(i);
-    if(sw) sw->apply();
-  }
-}
-  
+
 void KNSettingsDialog::slotHelp()
 {
   qDebug("Remember to implement the help facilities");
 }
 
+
+void KNSettingsDialog::slotOk()
+{
+  slotApply();
+  KDialogBase::slotOk();
+}
+
+
+void KNSettingsDialog::slotApply()
+{
+  KNSettingsWidget *sw;
+  for(unsigned int i=0; i<widgets.count(); i++) {   // write config...
+    sw = widgets.at(i);
+    if(sw) sw->apply();
+  }
+
+	knGlobals.accManager->readConfig();                           // read changed config...
+	knGlobals.sArtManager->readConfig();
+	knGlobals.gManager->readConfig();
+	knGlobals.fArtManager->readConfig();
+	KNArticleWidget::readOptions();
+	KNArticleWidget::updateInstances();
+}
 
 //--------------------------------
 

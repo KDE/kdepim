@@ -31,10 +31,10 @@ class KNUserSettings : public KNSettingsWidget  {
 		KNUserSettings(QWidget *p);
 		virtual ~KNUserSettings();
 		
-		void init();
 		void apply();
 		
 	protected:
+		void init();	
 		KNUserWidget *uw;
 		KNUserEntry *user;
 		

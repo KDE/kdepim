@@ -36,10 +36,10 @@ class KNPostTechSettings : public KNSettingsWidget  {
 		KNPostTechSettings(QWidget *p);
 		~KNPostTechSettings();
 		
-		void init();
 		void apply();
 		
 	protected:
+    void init();
 		void enableEdit(bool e);
 		QComboBox *charset, *encoding;
 		QCheckBox *allow8bitCB, *genMIdCB;

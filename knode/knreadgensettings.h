@@ -32,10 +32,11 @@ class KNReadGenSettings : public KNSettingsWidget  {
 		KNReadGenSettings(QWidget *p);
 		~KNReadGenSettings();
 		
-		void init();
 		void apply();
 
 	protected:
+		void init();
+		
 		QCheckBox *autoCB, *markCB, *sigCB, *inlineCB, *openAttCB, *expCB, *altAttCB;
 		QSpinBox *markSecs, *maxFetch;
 		QComboBox *browser;		

@@ -32,6 +32,7 @@ class KAccel;
 class KAction;
 class KToggleAction;
 
+class KNSettingsDialog;
 class KNFetchArticleManager;
 class KNAccountManager;
 class KNGroupManager;
@@ -108,6 +109,7 @@ class KNodeApp : public KTMainWindow
    	KAccel *acc;
    	KNodeView *view;
     KNProgress *progBar;
+    KNSettingsDialog *setDialog;
 		
     KNNetAccess	*NAcc;
     KNAccountManager *AManager;
@@ -131,7 +133,8 @@ class KNodeApp : public KTMainWindow
   	void slotToggleStatusBar();
   	void slotConfKeys();
   	void slotConfToolbar();
-  	void slotSettings();  	
+  	void slotSettings();
+  	void slotSettingsFinished();
   	  	
   	//view-slots  	
 	 	void slotCollectionSelected(QListViewItem *it);

@@ -30,10 +30,11 @@ class KNAccMailSettings : public KNSettingsWidget  {
 		KNAccMailSettings(QWidget *p);
 		~KNAccMailSettings();
 		
-		void init();
 		void apply();
 		
 	protected:
+		void init();
+		
 		QLineEdit *smtp;
 		QSpinBox *sPort;
 };

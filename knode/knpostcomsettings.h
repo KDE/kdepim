@@ -32,10 +32,10 @@ class KNPostComSettings : public KNSettingsWidget  {
 		KNPostComSettings(QWidget *p);
 		~KNPostComSettings();
 		
-		void init();
 		void apply();
 		
 	protected:
+    void init();
 		QSpinBox *maxLen;
 		QCheckBox *ownSigCB, *fontCB, *authSigCB;
 		QLineEdit *intro, *quot;

@@ -37,12 +37,13 @@ class KNReadHdrSettings : public KNSettingsWidget  {
 		KNReadHdrSettings(QWidget *p);
 		~KNReadHdrSettings();
 		
-		void init();
 		void apply();
 		
 	protected:
+		void init();
 		void enableEdit(bool b);
 		void createCBs(QWidget *p, QCheckBox **ptrs);
+		
 		KNListBox *lb;
 		QLineEdit *name, *hdr;
 		QCheckBox *nameCB[4], *hdrCB[4];

@@ -134,6 +134,7 @@ QSize KNProgress::sizeHint() const
 
 
 KNodeApp::KNodeApp()
+  : setDialog()
 {
   knGlobals.top=this;
   kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
@@ -192,6 +193,7 @@ KNodeApp::~KNodeApp()
  	KNLVItemBase::clearIcons();
  	
   delete acc;
+  delete setDialog;
  	
  	delete NAcc;
  	qDebug("Net deleted\n");
@@ -476,23 +478,26 @@ void KNodeApp::slotConfToolbar()
 {
   #warning FIXME: stub  (open conf dialog and show toolbar config widget)
 }
-  	
+
 
 
 void KNodeApp::slotSettings()
 {
-	KNSettingsDialog *sdlg=new KNSettingsDialog();
-	if(sdlg->exec()) {
-	  sdlg->apply();
-	  AManager->readConfig();
-	  SAManager->readConfig();
-		GManager->readConfig();
-		FAManager->readConfig();
-		KNArticleWidget::readOptions();
-		KNArticleWidget::updateInstances();
-	}		
-	delete sdlg;
+  if (!setDialog) {
+    setDialog = new KNSettingsDialog();
+    connect(setDialog, SIGNAL(finished()), this, SLOT(slotSettingsFinished()));
+  }
+  setDialog->show();
 }
+
+
+
+void KNodeApp::slotSettingsFinished()
+{
+  setDialog->delayedDestruct();
+  setDialog=0;
+}
+
 
 
 //==================== VIEW-SLOTS ======================

@@ -33,10 +33,10 @@ class KNCleanupSettings : public KNSettingsWidget  {
 		KNCleanupSettings(QWidget *p);
 		~KNCleanupSettings();
 		
-		void init();
 		void apply();
 		
 	protected:
+  	void init();
 		QCheckBox *folderCB, *groupCB, *thrCB;
 		QSpinBox *folderDays, *groupDays, *readDays, *unreadDays;
 		

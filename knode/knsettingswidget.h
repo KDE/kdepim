@@ -30,11 +30,12 @@ class KNSettingsWidget : public QWidget  {
 		KNSettingsWidget(QWidget *parent);
 		virtual ~KNSettingsWidget();
 		
-		virtual void init() 	{}
-		virtual void apply()	{}
+		virtual void apply() {}
 		
-		QSize sizeHint()			{ return minimumSize(); }
-
+	protected:
+	
+		virtual void init()  {}		
+		
 };
 
 #endif

@@ -62,12 +62,16 @@ int main(int argc, char* argv[])
 	args->clear();
 	
 	KApplication app;
-	KNodeApp* knode = 0;
 
-	if (app.isRestored())
-		RESTORE(KNodeApp)
-  else {
-	 	knode = new KNodeApp;
+	if (app.isRestored()) {
+    int n = 1;
+    while (KTMainWindow::canBeRestored(n)){
+      if (KTMainWindow::classNameOfToplevel(n)=="KNodeApp")
+        (new KNodeApp)->restore(n);
+      n++;
+    }
+  } else {
+	 	KNodeApp* knode = new KNodeApp;
 	 	QObject::connect(&app, SIGNAL(saveYourself()), knode, SLOT(slotSaveYourself()));
    	knode->show();
   }

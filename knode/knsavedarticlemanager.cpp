@@ -821,12 +821,10 @@ void KNSavedArticleManager::mailToClicked(KNArticleWidget *aw)
 bool KNSavedArticleManager::closeComposeWindows()
 {
   KNComposer *comp;
-  QList<KNComposer> comList2 = *comList;  // copy it, because the close() call will modifiy the original
 
-  for ( comp=comList2.first(); comp != 0; comp=comList2.next() ) {
+  while ((comp=comList->first()))
     if (!comp->close())
       return false;
-  }
 
   return true;
 }

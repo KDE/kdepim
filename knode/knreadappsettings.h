@@ -36,10 +36,11 @@ class KNReadAppSettings : public KNSettingsWidget  {
 		KNReadAppSettings(QWidget *p);
 		~KNReadAppSettings();
 		
-		void init();
 		void apply();
 		
 	protected:
+  	void init();
+  	
 		QListBox *cList;
 		KColorButton *colBtn;
 		QComboBox *fntFam;
