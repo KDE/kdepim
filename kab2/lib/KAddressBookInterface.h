@@ -33,7 +33,7 @@ class KAddressBook : virtual public DCOPObject
 
   public:
 
-    KAddressBook(QCString name, QString path);
+    KAddressBook(QString name, QString path);
     virtual ~KAddressBook();
 
   k_dcop:

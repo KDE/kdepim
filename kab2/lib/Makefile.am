@@ -1,5 +1,8 @@
+KDE_CXXFLAGS = -DQT_NO_ASCII_CAST
+
 INCLUDES= -I$(top_srcdir)/kab2/include $(all_includes)
 
-lib_LTLIBRARIES = libkab2.la
+lib_LTLIBRARIES = libKAddressBook.la
 
-libkab2_la_SOURCES = Entity.cpp Field.cpp
+libKAddressBook_la_SOURCES = Entity.cpp Field.cpp
+
