@@ -48,16 +48,12 @@
 
 #include "plugin.moc"
 
-static QString unnamed()
-{
-	return i18n("Unnamed");
-}
-
 ConduitConfigBase::ConduitConfigBase(QWidget *parent,
 	const char *name) :
 	QObject(parent,name),
 	fModified(false),
-	fWidget(0L)
+	fWidget(0L),
+	fConduitName(i18n("Unnamed"))
 {
 	FUNCTIONSETUP;
 }
@@ -106,17 +102,12 @@ void ConduitConfigBase::load(KConfig *)
 	return true;
 }
 
-/* virtual */ QString ConduitConfigBase::conduitName() const
-{
-	FUNCTIONSETUP;
-	return unnamed();
-}
-
 ConduitConfig::ConduitConfig(QWidget *parent,
 	const char *name,
 	const QStringList &args) :
 	UIDialog(parent,name,PluginUtility::isModal(args)),
-	fConfig(0L)
+	fConfig(0L),
+	fConduitName(i18n("Unnamed"))
 {
 	FUNCTIONSETUP;
 }
@@ -125,11 +116,6 @@ ConduitConfig::ConduitConfig(QWidget *parent,
 /* virtual */ ConduitConfig::~ConduitConfig()
 {
 	FUNCTIONSETUP;
-}
-
-/* virtual */ QString ConduitConfig::conduitName() const
-{
-	return unnamed();
 }
 
 ConduitAction::ConduitAction(KPilotDeviceLink *p,
@@ -353,11 +339,6 @@ bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 	{
 		return openDatabases_(dbName, retrieved);
 	}
-}
-
-/* virtual */ QString ConduitAction::conduitName() const
-{
-	return unnamed();
 }
 
 int PluginUtility::findHandle(const QStringList &a)

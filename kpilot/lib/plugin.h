@@ -81,7 +81,7 @@ protected:
 	virtual QString maybeSaveText() const;
 
 public:
-	virtual QString conduitName() const;
+	QString conduitName() const { return fConduitName; } ;
 
 protected slots:
 	void modified();
@@ -89,6 +89,7 @@ protected slots:
 protected:
 	bool fModified;
 	QWidget *fWidget;
+	QString fConduitName;
 } ;
 
 /**
@@ -117,9 +118,10 @@ public:
 	// User-readable name of the conduit. Should match
 	// the other conduitName() methods in other classes
 	// in this file.
-	virtual QString conduitName() const;
+	QString conduitName() const { return fConduitName; } ;
 protected:
 	KConfig *fConfig;
+	QString fConduitName;
 } ;
 
 /**
@@ -143,7 +145,7 @@ public:
 
 	void setConfig(KConfig *c) { fConfig=c; } ;
 
-	virtual QString conduitName() const;
+	QString conduitName() const { return fConduitName; } ;
 protected:
 	bool isTest() const { return fTest; } ;
 	bool isBackup() const { return fBackup; } ;
@@ -180,6 +182,7 @@ protected:
 	int fSyncDirection; // Stores fast, full, PCToHH or HHToPC as sync directions.
 	eConflictResolution fConflictResolution;
 	bool fFirstSync;
+	QString fConduitName;
 
 private:
 	/**
