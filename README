@@ -22,6 +22,9 @@ What it is
 * kaddressbook: The KDE addressbook application.
 * kandy: sync phone book entries between your cell phone and computer
          ("kandy" comes from "Handy", the german word used for a cellular)
+* kmail: the KDE mail client
+* kmailcvt: tool for importing mail related data from other programs
+* knode: news client
 * korganizer: a calendar-of-events and todo-list manager
 * kpilot: to sync with your PalmPilot
 * kalarm: gui for setting up personal alarm/reminder messages
@@ -33,16 +36,26 @@ What it is
 * kfile-plugins: vCard KFIleItem plugin.
 * knotes: yellow notes application
 * konsolecalendar: Command line tool for accessing calendar files.
+* korn: mail checker
 
 There is also quite an amount of infrastructure in this package:
 
-* calendarsystem: library for handling of non-gregorian calendar systems 
+* calendarsystem: library for handling of non-gregorian calendar systems
+* libkdepim: Common code for different kdepim apps
+* libkdenetwork: Common code for apps previously being in the kdenetwork CVS
+                 module (KMail, KNode). This will be merged with libkdepim.
+* mimelib: MIME messages library
 * libical: a basic iCalendar protocol implementation, see RFCs 2245,2246
 * libkcal: C++ api for the iCalendar and vCalendar formats
 * libkpimexchange: connecting to Exchange2000 servers
 * kabc/frontend: A GUI frontend for libkabc, not intended for end users.
-* kgantt: lib to display and manage Gantt diagrams
+* kgantt: lib to display and manage Gantt diagrams used by the project view
+          plugin of KOrganizer
+* kdgantt: alternative lib for Gantt diagrams, used by the free/busy view of
+           KOrganizer (yes, we should decide for one of the Gantt libs)
 * ksync: library for syncing collections of data entries
+* kioslaves/sieve: Sieve kioslave
+* ktnef: handling of tnef data
 
 The following subdirectories have been moved to kdenonbeta/kdepim:
 
@@ -65,5 +78,8 @@ subscribe my@email.address
 
 If you ave questions questions relating to this module please post them on the
 mailing list (kde-pim@mail.kde.org).
+
+If you are interested in kmail development use the mailing list
+kmail@kde.org.
 
 $Id$
