@@ -388,9 +388,9 @@ bool KNMainWindow::queryClose()
 {
   if(b_lockInput)
     return false;
-  /*if (!SAManager->closeComposeWindows())
+  if(!v_iew->cleanup())
     return false;
-  cleanup();*/
+
   return true;
 }
 

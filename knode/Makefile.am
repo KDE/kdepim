@@ -30,6 +30,8 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knfoldermanager.cpp \
                   knfolder.cpp \
                   \
+                  kncleanup.cpp \
+                  \
                   knarticlemanager.cpp \
                   knheaders.cpp \
                   knmime.cpp \
@@ -88,6 +90,8 @@ noinst_HEADERS =  knconfigmanager.h \
                   \
                   knfoldermanager.h \
                   knfolder.h \
+                  \
+                  kncleanup.h \
                   \
                   knarticlemanager.h \
                   knheaders.h \

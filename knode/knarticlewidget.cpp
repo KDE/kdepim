@@ -477,7 +477,7 @@ void KNArticleWidget::setArticle(KNArticle *a)
   else {
   	if(a->hasContent()) //article is already loaded => just show it
   		createHtmlPage();
-  	else if(a->type()==KNMimeBase::ATremote) { //ok, this is a remote-article => fetch it from the server
+  	else if(a->type()==KNMimeBase::ATremote && !a->isLocked()) { //ok, this is a remote-article => fetch it from the server
   		KNGroup *g=static_cast<KNGroup*>(a->collection());
   		emitJob( new KNJobData(	KNJobData::JTfetchArticle, this, g->account(), a_rticle ) );
   	}
@@ -519,9 +519,13 @@ void KNArticleWidget::createHtmlPage()
 {
   kdDebug(5003) << "KNArticleWidget::createHtmlPage()" << endl;
 
-  if(!a_rticle || !a_rticle->hasContent()) {
-    kdDebug(5003) << "KNArticleWidget::createHtmlPage() : nothing to display - returning" << endl;
+  if(!a_rticle) {
     showBlankPage();
+    return;
+  }
+
+  if(!a_rticle->hasContent()) {
+    showErrorMessage(i18n("the article contains no data"));
     return;
   }
 

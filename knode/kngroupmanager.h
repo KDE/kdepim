@@ -28,7 +28,7 @@
 #include "knjobdata.h"
 
 class KNGroup;
-class KNPurgeProgressDialog;
+class KNCleanUp;
 class KNNntpAccount;
 class KNServerInfo;
 class KNArticleManager;
@@ -103,7 +103,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void setCurrentGroup(KNGroup *g);
     
     void checkAll(KNNntpAccount *a);
-    void expireAll(KNPurgeProgressDialog *dlg=0);
+    void expireAll(KNCleanUp *cup);
     void syncGroups();    
     void jobDone(KNJobData *j);     
   

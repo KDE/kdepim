@@ -35,6 +35,7 @@
 #include "utilities.h"
 #include "knfoldermanager.h"
 #include "knarticlemanager.h"
+#include "kncleanup.h"
 
 
 KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v), a_rtManager(a)
@@ -134,6 +135,15 @@ void emptyFolder(KNFolder *f)
 
 void KNFolderManager::showProperties(KNFolder *f)
 {
+}
+
+
+void KNFolderManager::compactAll(KNCleanUp *cup)
+{
+  for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
+    if(f->lockedArticles()==0)
+      cup->appendCollection(f);
+  }
 }
 
 

@@ -810,13 +810,15 @@ class Cleanup : public Base {
     void save();
 
     //expire
-    int maxAgeforRead()         { return r_eadMaxAge; }
-    int maxAgeforUnread()       { return u_nreadMaxAge; }
+    int maxAgeForRead()         { return r_eadMaxAge; }
+    int maxAgeForUnread()       { return u_nreadMaxAge; }
     bool preserveThreads()      { return p_reserveThr; }
     bool expireToday();
+    void setLastExpireDate();
 
     //compact
     bool compactToday();
+    void setLastCompactDate();
 
 
   protected:

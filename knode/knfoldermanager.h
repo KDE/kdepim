@@ -23,7 +23,7 @@
 
 
 class KNListView;
-//class KNPurgeProgressDialog;
+class KNCleanUp;
 class KNFolder;
 class KNArticleManager;
 class KNCleanupProgress;
@@ -52,6 +52,7 @@ class KNFolderManager
     void removeFolder(KNFolder *f);
     void emptyFolder(KNFolder *f);
     void showProperties(KNFolder *f);
+    void compactAll(KNCleanUp *cup);
 
     //unsent articles
     int unsentForAccount(int accId);

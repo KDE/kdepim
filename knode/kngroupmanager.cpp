@@ -36,7 +36,7 @@
 #include "kngroup.h"
 #include "kncollectionviewitem.h"
 #include "knnntpaccount.h"
-//#include "kncleanup.h"
+#include "kncleanup.h"
 #include "knnetaccess.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -279,35 +279,14 @@ KNGroup* KNGroupManager::group(const QCString &gName, const KNServerInfo *s)
 
 
 
-void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
+void KNGroupManager::expireAll(KNCleanUp *cup)
 {
-  /*KNCleanUp cup;
-
-  if (dlg) {
-    knGlobals.top->blockUI(true);
-    dlg->init(i18n("Deleting expired articles ..."), g_List->count());
-  }
-
   for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
-    if((var->locked()) || (var->loading()>0))
+    if((var->isLocked()) || (var->lockedArticles()>0))
       continue;
-    if(dlg) {
-      dlg->setInfo(var->groupname());
-      kapp->processEvents();
-    }
-    KNArticleWindow::closeAllWindowsForCollection(var);
-    cup.group(var);
-    kdDebug() << var->groupname() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
-    if(dlg) dlg->progress();
-  }
-  if (dlg) {
-    knGlobals.top->blockUI(false);
-    kapp->processEvents();
-  }
 
-  KConfig *c=KGlobal::config();
-  c->setGroup("EXPIRE");
-  c->writeEntry("lastExpire", QDateTime::currentDateTime());*/
+    cup->appendCollection(var);
+  }
 }
 
 
@@ -428,27 +407,26 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
 
 void KNGroupManager::expireGroupNow(KNGroup *g)
 {
-  /*if(!g) g=c_urrentGroup;
   if(!g) return;
 
-  if((g->locked()) || (g->loading()>0)) {
-    // add error message after 2.0!!!!!!!!!
+  if((g->isLocked()) || (g->lockedArticles()>0)) {
+    KMessageBox::sorry(knGlobals.topWidget,
+      i18n("This group cannot be expired because it is currently being updated.\n Please try again later."));
     return;
   }
 
   KNArticleWindow::closeAllWindowsForCollection(g);
 
-  KNCleanUp cup;
-  cup.group(g, true);
-  kdDebug(5003) << "KNExpire: " << g->groupname() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
+  KNCleanUp cup(knGlobals.cfgManager->cleanup());
+  cup.expireGroup(g, true);
 
-  if(cup.deleted()>0) {
-    g->updateListItem();
-    if(g==c_urrentGroup) {
-      if(g->loadHdrs()) aManager->showHdrs();
-      else aManager->setGroup(0);
-    }
-  }*/
+  g->updateListItem();
+  if(g==c_urrentGroup) {
+    if(g->loadHdrs())
+      a_rticleMgr->showHdrs();
+    else
+      a_rticleMgr->setGroup(0);
+  }
 }
 
 

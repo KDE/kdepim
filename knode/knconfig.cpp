@@ -687,12 +687,20 @@ bool KNConfig::Cleanup::expireToday()
   QDate today=QDate::currentDate();
   QDate lastExpDate=c->readDateTimeEntry("lastExpire").date();
 
-  if (lastExpDate==today) {
+  if(lastExpDate==today) {
     c->writeEntry("lastExpire", QDateTime::currentDateTime());  // important! otherwise lastExpDate will be at its default value (current date) forever
     return false;
   }
 
   return (lastExpDate.daysTo(today) >= e_xpireInterval);
+}
+
+
+void KNConfig::Cleanup::setLastExpireDate()
+{
+  KConfig *c=KGlobal::config();
+  c->setGroup("EXPIRE");
+  c->writeEntry("lastExpire", QDateTime::currentDateTime());
 }
 
 
@@ -713,4 +721,12 @@ bool KNConfig::Cleanup::compactToday()
   }
 
   return (lastComDate.daysTo(today) >= c_ompactInterval);
+}
+
+
+void KNConfig::Cleanup::setLastCompactDate()
+{
+  KConfig *c=KGlobal::config();
+  c->setGroup("EXPIRE");
+  c->writeEntry("lastCompact", QDateTime::currentDateTime());
 }

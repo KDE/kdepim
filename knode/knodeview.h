@@ -79,6 +79,8 @@ class KNodeView : public QSplitter
     void readOptions();
     void saveOptions();
 
+    bool cleanup();
+
     void blockUI(bool b=true)   { b_lockui=b; }
     void configChanged();   // switch between long & short group list, update fonts and colors
 

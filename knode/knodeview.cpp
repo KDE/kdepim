@@ -48,6 +48,7 @@
 #include "knfiltermanager.h"
 #include "knfoldermanager.h"
 #include "knfolder.h"
+#include "kncleanup.h"
 
 
 
@@ -287,6 +288,39 @@ void KNodeView::saveOptions()
   conf->writeEntry("sortAscending", h_drView->ascending());
   conf->writeEntry("account_sortCol", c_olView->sortColumn());
   conf->writeEntry("account_sortAscending", c_olView->ascending());
+}
+
+
+bool KNodeView::cleanup()
+{
+  if(!a_rtFactory->closeComposeWindows())
+    return false;
+
+  //expire & compact
+  KNConfig::Cleanup *conf=c_fgManager->cleanup();
+  KNCleanUp *cup=0;
+
+  if(conf->expireToday()) {
+    cup=new KNCleanUp(conf);
+    g_rpManager->expireAll(cup);
+    cup->start();
+    conf->setLastExpireDate();
+  }
+
+  if(conf->compactToday()) {
+    if(!cup)
+      cup=new KNCleanUp(conf);
+    else
+      cup->reset();
+    f_olManager->compactAll(cup);
+    cup->start();
+    conf->setLastCompactDate();
+  }
+
+  if(cup)
+    delete cup;
+
+  return true;
 }
 
 

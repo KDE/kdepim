@@ -19,27 +19,58 @@
 #ifndef KNCLEANUP_H
 #define KNCLEANUP_H
 
+#include <qsemimodal.h>
+#include <qlabel.h>
+#include <qprogressbar.h>
+
+class KNArticleCollection;
 class KNGroup;
 class KNFolder;
 
+namespace KNConfig {
+class Cleanup;
+};
+
 
 class KNCleanUp {
-  
+
   public:
-    KNCleanUp();
+    KNCleanUp(KNConfig::Cleanup *cfg);
     ~KNCleanUp();
-    
-    void group(KNGroup *g, bool withGUI=false);
-    void folder(KNFolder *f);
-    
-    int deleted()               { return delCnt; }
-    int left()                  { return leftCnt; }
-  
+
+    void appendCollection(KNArticleCollection *c)   { c_olList.append(c); }
+    void start();
+    void reset();
+
+    void expireGroup(KNGroup *g, bool showResult=false);
+    void compactFolder(KNFolder *f);
+
   protected:
-    int delCnt, leftCnt;
-    int rDays, uDays;
-    bool saveThr;
-    
+
+    class ProgressDialog : public QSemiModal  {
+
+      public:
+        ProgressDialog(int steps);
+        ~ProgressDialog();
+
+        void showMessage(const QString &s)  { m_sg->setText(s); }
+        void doProgress();
+
+      protected:
+        QLabel *m_sg;
+        QProgressBar *p_bar;
+
+        int s_teps, p_rogress;
+
+    };
+
+    ProgressDialog *d_lg;
+    QList<KNArticleCollection> c_olList;
+    KNConfig::Cleanup *c_onfig;
+
 };
+
+
+
 
 #endif

@@ -18,11 +18,11 @@
 #include <klocale.h>
 
 #include <kapp.h>
-//#include "knapplication.h"
+#include "knapplication.h"
 #include "resource.h"
 #include "knode.h"
 
-
+#define UNIQUE_APP
 
 static KCmdLineOptions knoptions[] =
 {
@@ -49,19 +49,21 @@ int main(int argc, char* argv[])
   aboutData.addCredit("Stephan Johach",0,"lucardus@onlinehome.de");
   aboutData.addCredit("Matthias Kalle Dalheimer",0,"kalle@kde.org");
 
-
-  //KCmdLineArgs::init( argc, argv, &aboutData );
-  //KUniqueApplication::addCmdLineOptions();
-	//KApplication::addCmdLineOptions();
-	/*
+#ifdef UNIQUE_APP
+  KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineArgs::addCmdLineOptions( knoptions );
+  KUniqueApplication::addCmdLineOptions();
 
   if (!KNApplication::start())
     return 0;
 
-  KNApplication app;*/
+  KNApplication app;
+  return app.exec();
+#elif
   KApplication app(argc, argv, "knode");
 	KNMainWindow *mainWin=new KNMainWindow();
 	mainWin->show();
   return app.exec();
+#endif
 }
 
