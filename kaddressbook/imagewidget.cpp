@@ -38,75 +38,43 @@
 
 #include "imagewidget.h"
 
-ImageWidget::ImageWidget( bool readOnly, QWidget *parent, const char *name )
+ImageWidget::ImageWidget( const QString &title, bool readOnly,
+                          QWidget *parent, const char *name )
   : QWidget( parent, name ), mReadOnly( readOnly )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 1, 2, KDialog::marginHint(),
+  QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(),
                                             KDialog::spacingHint() );
-
-  QGroupBox *photoBox = new QGroupBox( 0, Qt::Vertical, i18n( "Photo" ), this );
-  QGridLayout *boxLayout = new QGridLayout( photoBox->layout(), 3, 2,
+  QGroupBox *box = new QGroupBox( 0, Qt::Vertical, title, this );
+  QGridLayout *boxLayout = new QGridLayout( box->layout(), 3, 2,
                                             KDialog::spacingHint() );
   boxLayout->setRowStretch( 2, 1 );
 
-  mPhotoLabel = new QLabel( photoBox );
-  mPhotoLabel->setFixedSize( 50, 70 );
-  mPhotoLabel->setScaledContents( true );
-  mPhotoLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  boxLayout->addMultiCellWidget( mPhotoLabel, 0, 2, 0, 0, AlignTop );
+  mImageLabel = new QLabel( i18n( "Picture" ), box );
+  mImageLabel->setFixedSize( 50, 70 );
+  mImageLabel->setScaledContents( true );
+  mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  boxLayout->addMultiCellWidget( mImageLabel, 0, 2, 0, 0, AlignTop );
 
-  mPhotoUrl = new KURLRequester( photoBox );
-  mPhotoUrl->setFilter( KImageIO::pattern() );
-  mPhotoUrl->setEnabled( !mReadOnly );
-  boxLayout->addWidget( mPhotoUrl, 0, 1 );
-  
-  mUsePhotoUrl = new QCheckBox( i18n( "Store as URL" ), photoBox );
-  mUsePhotoUrl->setEnabled( false );
-  boxLayout->addWidget( mUsePhotoUrl, 1, 1 );
+  mImageUrl = new KURLRequester( box );
+  mImageUrl->setFilter( KImageIO::pattern() );
+  mImageUrl->setEnabled( !mReadOnly );
+  boxLayout->addWidget( mImageUrl, 0, 1 );
 
-  topLayout->addWidget( photoBox, 0, 0 );
+  mUseImageUrl = new QCheckBox( i18n( "Store as URL" ), box );
+  mUseImageUrl->setEnabled( false );
+  boxLayout->addWidget( mUseImageUrl, 1, 1 );
 
-  QGroupBox *logoBox = new QGroupBox( 0, Qt::Vertical, i18n( "Logo" ), this );
-  boxLayout = new QGridLayout( logoBox->layout(), 3, 2, KDialog::spacingHint() );
-  boxLayout->setRowStretch( 2, 1 );
+  topLayout->addWidget( box );
 
-  mLogoLabel = new QLabel( logoBox );
-  mLogoLabel->setFixedSize( 50, 70 );
-  mLogoLabel->setScaledContents( true );
-  mLogoLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  boxLayout->addMultiCellWidget( mLogoLabel, 0, 2, 0, 0, AlignTop );
-
-  mLogoUrl = new KURLRequester( logoBox );
-  mLogoUrl->setFilter( KImageIO::pattern() );
-  mLogoUrl->setEnabled( !mReadOnly );
-  boxLayout->addWidget( mLogoUrl, 0, 1 );
-  
-  mUseLogoUrl = new QCheckBox( i18n( "Store as URL" ), logoBox );
-  mUseLogoUrl->setEnabled( false );
-  boxLayout->addWidget( mUseLogoUrl, 1, 1 );
-
-  topLayout->addWidget( logoBox, 0, 1 );
-
-  connect( mPhotoUrl, SIGNAL( textChanged( const QString& ) ),
+  connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
-  connect( mPhotoUrl, SIGNAL( urlSelected( const QString& ) ),
-           SLOT( loadPhoto() ) );
-  connect( mPhotoUrl, SIGNAL( urlSelected( const QString& ) ),
+  connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
+           SLOT( loadImage() ) );
+  connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
            SIGNAL( changed() ) );
-  connect( mPhotoUrl, SIGNAL( urlSelected( const QString& ) ),
+  connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
            SLOT( updateGUI() ) );
-  connect( mUsePhotoUrl, SIGNAL( toggled( bool ) ),
-           SIGNAL( changed() ) );
-
-  connect( mLogoUrl, SIGNAL( textChanged( const QString& ) ),
-           SIGNAL( changed() ) );
-  connect( mLogoUrl, SIGNAL( urlSelected( const QString& ) ),
-           SLOT( loadLogo() ) );
-  connect( mLogoUrl, SIGNAL( urlSelected( const QString& ) ),
-           SIGNAL( changed() ) );
-  connect( mLogoUrl, SIGNAL( urlSelected( const QString& ) ),
-           SLOT( updateGUI() ) );
-  connect( mUseLogoUrl, SIGNAL( toggled( bool ) ),
+  connect( mUseImageUrl, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );
 }
 
@@ -114,32 +82,32 @@ ImageWidget::~ImageWidget()
 {
 }
 
-void ImageWidget::setPhoto( const KABC::Picture &photo )
+void ImageWidget::setImage( const KABC::Picture &photo )
 {
   bool blocked = signalsBlocked();
   blockSignals( true );
 
   if ( photo.isIntern() ) {
-    mPhotoLabel->setPixmap( photo.data() );
-    mUsePhotoUrl->setChecked( false );
+    mImageLabel->setPixmap( photo.data() );
+    mUseImageUrl->setChecked( false );
   } else {
-    mPhotoUrl->setURL( photo.url() );
+    mImageUrl->setURL( photo.url() );
     if ( !photo.url().isEmpty() )
-      mUsePhotoUrl->setChecked( true );
-    loadPhoto();
+      mUseImageUrl->setChecked( true );
+    loadImage();
   }
 
   blockSignals( blocked );
 }
 
-KABC::Picture ImageWidget::photo() const
+KABC::Picture ImageWidget::image() const
 {
   KABC::Picture photo;
 
-  if ( mUsePhotoUrl->isChecked() )
-    photo.setUrl( mPhotoUrl->url() );
+  if ( mUseImageUrl->isChecked() )
+    photo.setUrl( mImageUrl->url() );
   else {
-    QPixmap *px = mPhotoLabel->pixmap();
+    QPixmap *px = mImageLabel->pixmap();
     if ( px ) {
       if ( px->height() > px->width() )
         photo.setData( px->convertToImage().scaleHeight( 140 ) );
@@ -153,63 +121,15 @@ KABC::Picture ImageWidget::photo() const
   return photo;
 }
 
-void ImageWidget::setLogo( const KABC::Picture &logo )
+void ImageWidget::loadImage()
 {
-  bool blocked = signalsBlocked();
-  blockSignals( true );
-
-  if ( logo.isIntern() ) {
-    mLogoLabel->setPixmap( logo.data() );
-    mUseLogoUrl->setChecked( false );
-  } else {
-    mLogoUrl->setURL( logo.url() );
-    if ( !logo.url().isEmpty() )
-      mUseLogoUrl->setChecked( true );
-    loadLogo();
-  }
-
-  blockSignals( blocked );
-}
-
-KABC::Picture ImageWidget::logo() const
-{
-  KABC::Picture logo;
-
-  if ( mUseLogoUrl->isChecked() )
-    logo.setUrl( mLogoUrl->url() );
-  else {
-    QPixmap *px = mLogoLabel->pixmap();
-    if ( px ) {
-      if ( px->height() > px->width() )
-        logo.setData( px->convertToImage().scaleHeight( 140 ) );
-      else
-        logo.setData( px->convertToImage().scaleWidth( 100 ) );
-
-      logo.setType( "PNG" );
-    }
-  }
-
-  return logo;
-}
-
-void ImageWidget::loadPhoto()
-{
-  mPhotoLabel->setPixmap( loadPixmap( mPhotoUrl->url() ) );
-}
-
-void ImageWidget::loadLogo()
-{
-  mLogoLabel->setPixmap( loadPixmap( mLogoUrl->url() ) );
+  mImageLabel->setPixmap( loadPixmap( mImageUrl->url() ) );
 }
 
 void ImageWidget::updateGUI()
 {
-  KURLRequester *ptr = (KURLRequester*)sender();
-
-  if ( ptr == mPhotoUrl && !mReadOnly )
-    mUsePhotoUrl->setEnabled( true );
-  else if ( ptr == mLogoUrl && !mReadOnly )
-    mUseLogoUrl->setEnabled( true );
+  if ( !mReadOnly )
+    mUseImageUrl->setEnabled( true );
 }
 
 QPixmap ImageWidget::loadPixmap( const KURL &url )

@@ -462,10 +462,15 @@ void AddresseeEditorWidget::setupTab3()
 
   //////////////////////////////////////
   // Images
-  mImageWidget = new ImageWidget( mReadOnly, tab3 );
-  mImageWidget->setMinimumSize( mImageWidget->sizeHint() );
-  connect( mImageWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mImageWidget, 2, 2, 0, 1 );
+  mPhotoWidget = new ImageWidget( KABC::Addressee::photoLabel(), mReadOnly, tab3 );
+  mPhotoWidget->setMinimumSize( mPhotoWidget->sizeHint() );
+  connect( mPhotoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
+  layout->addWidget( mPhotoWidget, 2, 0 );
+
+  mLogoWidget = new ImageWidget( KABC::Addressee::logoLabel(), mReadOnly, tab3 );
+  mLogoWidget->setMinimumSize( mLogoWidget->sizeHint() );
+  connect( mLogoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
+  layout->addWidget( mLogoWidget, 2, 1 );
 
 /* FIXME: will be enabled again when kgpg support is in kdelibs
   //////////////////////////////////////
@@ -523,8 +528,8 @@ void AddresseeEditorWidget::load()
   mCategoryEdit->setText( mAddressee.categories().join( "," ) );
 
   mGeoWidget->setGeo( mAddressee.geo() );
-  mImageWidget->setPhoto( mAddressee.photo() );
-  mImageWidget->setLogo( mAddressee.logo() );
+  mPhotoWidget->setImage( mAddressee.photo() );
+  mLogoWidget->setImage( mAddressee.logo() );
 //  mKeyWidget->setKeys( mAddressee.keys() );
   mSecrecyWidget->setSecrecy( mAddressee.secrecy() );
   mSoundWidget->setSound( mAddressee.sound() );
@@ -561,8 +566,8 @@ void AddresseeEditorWidget::save()
   mAddressee.setCategories( QStringList::split( ",", mCategoryEdit->text() ) );
 
   mAddressee.setGeo( mGeoWidget->geo() );
-  mAddressee.setPhoto( mImageWidget->photo() );
-  mAddressee.setLogo( mImageWidget->logo() );
+  mAddressee.setPhoto( mPhotoWidget->image() );
+  mAddressee.setLogo( mLogoWidget->image() );
 //  mAddressee.setKeys( mKeyWidget->keys() );
   mAddressee.setSound( mSoundWidget->sound() );
   mAddressee.setSecrecy( mSecrecyWidget->secrecy() );

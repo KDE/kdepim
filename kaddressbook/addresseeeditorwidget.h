@@ -161,7 +161,8 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
 
     // Tab3
     GeoWidget *mGeoWidget;
-    ImageWidget *mImageWidget;
+    ImageWidget *mPhotoWidget;
+    ImageWidget *mLogoWidget;
     SoundWidget *mSoundWidget;
     KeyWidget *mKeyWidget;
 };

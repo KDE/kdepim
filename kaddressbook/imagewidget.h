@@ -39,47 +39,34 @@ class ImageWidget : public QWidget
   Q_OBJECT
 
   public:
-    ImageWidget( bool readOnly, QWidget *parent, const char *name = 0 );
+    ImageWidget( const QString &title, bool readOnly,
+                 QWidget *parent, const char *name = 0 );
     ~ImageWidget();
 
     /**
       Sets the photo object.
      */
-    void setPhoto( const KABC::Picture &photo );
+    void setImage( const KABC::Picture &photo );
 
     /**
       Returns a photo object.
      */
-    KABC::Picture photo() const;
-
-    /**
-      Sets the logo object.
-     */
-    void setLogo( const KABC::Picture &photo );
-
-    /**
-      Returns a logo object.
-     */
-    KABC::Picture logo() const;
+    KABC::Picture image() const;
 
   signals:
     void changed();
 
   private slots:
-    void loadPhoto();
-    void loadLogo();
+    void loadImage();
     void updateGUI();
 
   private:
     QPixmap loadPixmap( const KURL &url );
 
-    KURLRequester *mPhotoUrl;
-    KURLRequester *mLogoUrl;
+    KURLRequester *mImageUrl;
 
-    QCheckBox *mUsePhotoUrl;
-    QCheckBox *mUseLogoUrl;
-    QLabel *mPhotoLabel;
-    QLabel *mLogoLabel;
+    QCheckBox *mUseImageUrl;
+    QLabel *mImageLabel;
 
     bool mReadOnly;
 };
