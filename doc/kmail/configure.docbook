@@ -419,9 +419,9 @@ messages using this identity.</para>
 
 <note><para>You need to configure outgoing mail servers first, before
 you can choose them from the list. You can do this on the <link
-linkend="configure-network-sending"><guilabel>Sending</guilabel>
-tab</link> of the <link linkend="configure-network">
-<guilabel>Network</guilabel> page</link>.</para></note>
+linkend="configure-accounts-sending"><guilabel>Sending</guilabel>
+tab</link> of the <link linkend="configure-accounts">
+<guilabel>Accounts</guilabel> page</link>.</para></note>
 </listitem>
 </varlistentry>
 
@@ -493,11 +493,11 @@ text yourself.</para>
 
 </sect1>
 
-<sect1 id="configure-network">
-<title>Network Page</title>
+<sect1 id="configure-accounts">
+<title>Accounts Page</title>
 
 <para>You can find a quick introduction to the
-<guilabel>Network</guilabel> page in the <link
+<guilabel>Accounts</guilabel> page in the <link
 linkend="setting-up-your-account">Setting up your Account</link>
 section.</para>
 
@@ -510,7 +510,7 @@ and assign each one to different <link
 linkend="configure-identity">identities</link> or decide on a per-message
 basis.</para>
 
-<sect2 id="configure-network-sending">
+<sect2 id="configure-accounts-sending">
 <title>Sending</title>
 
 <para>The <guilabel>Sending</guilabel> tab allows you to define new
@@ -596,7 +596,7 @@ then messages you send to <replaceable>johndoe</replaceable> will be sent to
 
 </sect2>
 
-<sect2 id="configure-network-receiving">
+<sect2 id="configure-accounts-receiving">
 <title>Receiving</title>
 
 <para>For basic information, see <link
