@@ -131,7 +131,7 @@ QStringList SelectionPage::categories() const
 
   QListViewItemIterator it( mCategoriesView );
   for ( ; it.current(); ++it ) {
-    QCheckListItem qcli = dynamic_cast<QCheckListItem*>(it.current());
+    QCheckListItem *qcli = static_cast<QCheckListItem*>(it.current());
     if ( qcli->isOn() )
       list.append( it.current()->text( 0 ) );
   }
@@ -161,7 +161,7 @@ void SelectionPage::filterChanged( int )
 
 void SelectionPage::categoryClicked( QListViewItem *i )
 {
-  QCheckListItem qcli = dynamic_cast<QCheckListItem*>( i );
+  QCheckListItem *qcli = static_cast<QCheckListItem*>( i );
   if ( i && qcli->isOn() )
     mUseCategories->setChecked( true );
 }
