@@ -36,7 +36,7 @@
 #include <libkcal/resourcecachedconfig.h>
 
 #include "kcal_resourceopengroupware.h"
-#include "kcal_opengroupwareprefsbase.h"
+#include "kcal_groupwareprefs.h"
 
 #include "kcal_resourceopengroupwareconfig.h"
 

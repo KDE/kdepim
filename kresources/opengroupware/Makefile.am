@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/lib \
-		   -I$(top_builddir)/kresources/lib -I$(top_srcdir)/libkdepim $(all_includes)
+		   -I../lib -I$(top_srcdir)/libkdepim $(all_includes)
 
 lib_LTLIBRARIES = libkcal_opengroupware.la libkabc_opengroupware.la
 noinst_LTLIBRARIES = libkopengroupware.la
