@@ -473,7 +473,7 @@ void CertManager::slotRefreshKeysResult( const GpgME::Error & err ) {
   if ( err.isCanceled() )
     return;
   if ( err )
-    KMessageBox::error( this, i18n("An error occured while trying to refresh "
+    KMessageBox::error( this, i18n("An error occurred while trying to refresh "
 				   "keys:\n%1").arg( QString::fromLocal8Bit( err.asString() ) ),
 			i18n("Refreshing Keys Failed") );
 }
@@ -995,7 +995,7 @@ void CertManager::slotDeleteCertificate() {
 	   "Do you really want to delete these %n certificates and the %1 certificates they certified?",
 	   keys.size() ).arg( keysToDelete.size() - keys.size() )
     : i18n("Do you really want to delete this certificate?",
-	   "Do you really want to delted these $n certificates?", keys.size() ) ;
+	   "Do you really want to delete these %n certificates?", keys.size() ) ;
 
   if ( KMessageBox::warningContinueCancelList( this, msg, keyDisplayNames,
 					       i18n( "Delete Certificates" ),
