@@ -213,9 +213,13 @@ void KKioCfg::updateConfig()
 	KKioDrop *d = dynamic_cast<KKioDrop *>(drop());
 	assert( d != 0 );
 
-	d->setKioServer( _protoCombo->currentText(), _serverEdit->text(), _portEdit->text().toInt());
-	d->setUser( _userEdit->text(), _pwdEdit->text(), 
-			_mailboxEdit->text(), _authCombo->currentText() );
+	d->setKioServer( _protoCombo->currentText(),
+	                 _this_protocol->hasServer() ? _serverEdit->text() : "",
+			 _this_protocol->hasPort() ? _portEdit->text().toInt() : 0 );
+	d->setUser( _this_protocol->hasUsername() ? _userEdit->text() : "",
+	            _this_protocol->hasPassword() && _savePass->isChecked() ? _pwdEdit->text() : "", 
+		    _this_protocol->hasMailbox() ? _mailboxEdit->text() : "",
+		    _this_protocol->hasAuth() ? _authCombo->currentText() : "" );
 }
 
 void KKioCfg::addProtocol( KIO_Protocol * protocol )
