@@ -26,8 +26,7 @@ METASOURCES = AUTO
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kandy.pot
 
-kdelnkdir   = $(kde_appsdir)/Utilities/More
-kdelnk_DATA = kandy.desktop
+xdg_apps_DATA = kandy.desktop
 
 install-data-local: uninstall.desktop
 	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Utilities

@@ -38,8 +38,7 @@ kde_servicetypes_DATA = libkmobile.desktop
 
 METASOURCES = AUTO
 
-kdelnk_DATA = kmobile.desktop
-kdelnkdir   = $(kde_appsdir)/Utilities
+xdg_apps_DATA = kmobile.desktop
 
 rc_DATA = kmobileui.rc
 rcdir = $(kde_datadir)/kmobile

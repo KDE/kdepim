@@ -20,8 +20,7 @@ rc_DATA = ktnefui.rc
 #messages: rc.cpp
 #	$(XGETTEXT) -C -ki18n -x $(includedir)/kde.pot $(ktnef_SOURCES) && mv messages.po ../po/ktnef.pot
 
-kdelnkdir   = $(kde_appsdir)/Utilities
-kdelnk_DATA = ktnef.desktop
+xdg_apps_DATA = ktnef.desktop
 
 mime_DATA = ms-tnef.desktop
 mimedir = $(kde_mimedir)/application

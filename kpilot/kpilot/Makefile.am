@@ -89,9 +89,9 @@ kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la $(KHEX_LIB)
 kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la $(KHEX_LIB)
 kpilotConfig_LDADD      = $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 
-appsdir = $(kde_appsdir)/Utilities
+xdg_apps_DATA = kpilot.desktop  kpilotdaemon.desktop
+
 servicetypedir = $(kde_servicetypesdir)
-apps_DATA = kpilot.desktop  kpilotdaemon.desktop
 servicetype_DATA = kpilotconduit.desktop
 
 rcdir = $(kde_datadir)/kpilot

@@ -149,8 +149,7 @@ noinst_HEADERS =  knconfigmanager.h \
 
 knode_METASOURCES = AUTO
 
-appsdir = $(kde_appsdir)/Internet
-apps_DATA = KNode.desktop
+xdg_apps_DATA = KNode.desktop
 
 rcdir = $(kde_datadir)/knode
 rc_DATA = headers.rc knodeui.rc knreaderui.rc kncomposerui.rc

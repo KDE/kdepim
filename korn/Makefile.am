@@ -90,6 +90,4 @@ messages:
 
 KDE_ICON = korn
 
-appsdir = $(kde_appsdir)/Internet/More
-apps_DATA = KOrn.desktop
-
+xdg_apps_DATA = KOrn.desktop
