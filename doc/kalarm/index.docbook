@@ -1280,11 +1280,23 @@ client to be used to send email alarms:</para>
 
 <itemizedlist>
 <listitem><para><guilabel>KMail</guilabel>: When an email alarm is
-triggered, the email is added to &kmail;'s
-<filename>outbox</filename> folder, provided that &kmail; is running
-at the time. If it is not running, a &kmail; composer window is
-displayed filled in with the email details, to enable you to send the
-email manually.</para>
+triggered, the email is sent using KMail as follows:</para>
+
+<itemizedlist>
+<listitem><para>If &kmail; is running at the time and &kmail; is
+version 1.7 or later, the email is sent automatically.</para>
+</listitem>
+
+<listitem><para>If &kmail; is running at the time and &kmail; is an
+older version, the email is added to &kmail;'s
+<filename>outbox</filename> folder for later transmission.</para>
+</listitem>
+
+<listitem><para>If &kmail; is not running, a &kmail; composer window
+is displayed filled in with the email details, to enable you to send
+the email manually.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 
 <listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
@@ -1322,7 +1334,8 @@ Center.</para>
 <para><guilabel>Notify when remote emails are queued</guilabel>:
 Select this option to display a notification whenever an email alarm
 queues an email for sending to a remote system. This may be useful
-if, for example, you have a dial-up connection, so that you can
+if, for example, you have a dial-up connection, or email is queued in
+&kmail;'s <filename>outbox</filename> folder, so that you can
 ensure that you do whatever is needed to actually transmit
 the email.</para>
 </listitem>
