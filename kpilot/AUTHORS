@@ -1,15 +1,18 @@
 KPilot was written by Dan Pilone.  It is currently under
 active development by a worldwide group of contributors.
-Adriaan de Groot is currently the primary maintainer.
+Adriaan de Groot and Reinhold Kainhofe are currently the maintainer.
 
-o The vcal and todo conduit were written by Preston Brown.
+
+o The vcal and todo conduit were originally written by Preston Brown.
 o The popclient conduit was written by Michael Kropfberger.
 o The null conduit and KNotes conduit were written by Adriaan de Groot.
 o The XML GUI stuff was written by Martin Junius.
 o Philipp Hullmann fixed many bugs in the todo conduit.
 o David Bishop converted most of the UI to Qt Designer .ui.
-o Reinhold Kainhofer fixed the VCal conduits when it was really needed.
+o Reinhold Kainhofer fixed and extended the VCal conduits when it was really needed.
 o The addressbook conduit was rewritten by R. Kainhofer to use libkabc 
+o The time conduit, the MAL conduit (AvantGo) and the PalmDOC conduit 
+  were also written by R. Kainhofer
 o Aaron J. Seigo, Jorg Habenicht, and others contributed too.
 
 For more information, see the About box or:
@@ -18,3 +21,4 @@ http://www.slac.com/pilone/kpilot_home/
 -- Dan Pilone 5/30/99
 -- Adriaan de Groot April 14th 2001
 -- Adriaan de Groot January 20th 2002
+-- Reinhold Kainhofer, April 5th 2003
