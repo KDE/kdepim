@@ -97,6 +97,7 @@ public:
 	/* Viewers tab */
 	BoolProperty(InternalEditors)
 	BoolProperty(ShowSecrets)
+
 	// Address widget stuff goes in a different group
 	KPilotConfigSettings &setAddressGroup();
 	IntProperty(AddressDisplayMode)

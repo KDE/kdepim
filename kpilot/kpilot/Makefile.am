@@ -42,9 +42,10 @@ kpilot_SOURCES	= \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	conduitConfigDialog.cc \
 	dbSelectionDialog.cc dbSelection_base.ui \
-	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
-	addressEditor.cc \
+	pilotComponent.cc logWidget.cc memoWidget.cc \
+	addressWidget.cc addressEditor.cc \
 	dbviewerWidget.cc datebookWidget.cc \
+	todoWidget.cc todoEditor.cc \
 	fileInstaller.cc fileInstallWidget.cc \
 	listItems.cc \
 	kroupware.cc

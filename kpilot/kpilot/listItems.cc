@@ -1,6 +1,7 @@
 /* listItem.cc			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Modifications 2003 by Reinhold Kainhofer
 **
 ** Program description
 */
@@ -18,7 +19,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -32,14 +33,9 @@ static const char *listitems_id =
 #include "options.h"
 
 
-
-#ifndef _QSTRING_H
 #include <qstring.h>
-#endif
-#ifndef _QLISTBOX_H
 #include <qlistbox.h>
-#endif
-
+#include <qlistview.h>
 
 
 #ifndef _KPILOT_LISTITEMS_H
@@ -84,4 +80,52 @@ PilotListItem::~PilotListItem()
 	if (!(count & 0xff))
 		counts();
 #endif
+}
+
+
+
+
+#ifdef DEBUG
+/* static */ int PilotTodoListItem::crt = 0;
+/* static */ int PilotTodoListItem::del = 0;
+/* static */ int PilotTodoListItem::count = 0;
+
+/* static */ void PilotTodoListItem::counts()
+{
+	FUNCTIONSETUP;
+	DEBUGKPILOT << fname
+		<< ": created=" << crt << " deletions=" << del << endl;
+}
+#endif
+
+PilotTodoListItem::PilotTodoListItem(QListView * parent, const QString & text, int pilotid, void *r) :
+	QCheckListItem(parent, text, QCheckListItem::CheckBox),
+	fid(pilotid),
+	fr(r)
+{
+	// FUNCTIONSETUP;
+#ifdef DEBUG
+	crt++;
+	count++;
+	if (!(count & 0xff))
+		counts();
+#endif
+	(void) listitems_id;
+}
+
+PilotTodoListItem::~PilotTodoListItem()
+{
+	// FUNCTIONSETUP;
+#ifdef DEBUG
+	del++;
+	count++;
+	if (!(count & 0xff))
+		counts();
+#endif
+}
+
+virtual void PilotTodoListItem::stateChange ( bool on)
+{
+	// FUNCTIONSETUP;
+	QCheckListItem::stateChange(on);
 }

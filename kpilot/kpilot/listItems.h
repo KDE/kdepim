@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -31,14 +31,13 @@
 #ifndef _KPILOT_LISTITEMS_H
 #define _KPILOT_LISTITEMS_H
 
-#ifndef QLISTBOX_H
 #include <qlistbox.h>
-#endif
+#include <qlistview.h>
 
 class PilotListItem : public QListBoxText
 {
 public:
-	PilotListItem(const QString &text, int pilotid=0, void *r=0); 
+	PilotListItem(const QString &text, int pilotid=0, void *r=0);
 	virtual ~PilotListItem();
 	int id() const {return fid;};
 	const void *rec() const {return fr;};
@@ -53,6 +52,25 @@ public:
 	static void counts();
 private:
 	static int crt,del,bal,count;
+#endif
+};
+
+class PilotTodoListItem : public QCheckListItem
+{
+public:
+	PilotTodoListItem( QListView * parent, const QString & text, int pilotid=0, void *r=0);
+	virtual ~PilotTodoListItem();
+	int id() const {return fid;};
+	const void  *rec() const {return fr;};
+protected:
+	virtual void stateChange ( bool );
+	int fid;;
+	void *fr;
+#ifdef DEBUG
+public:
+	static void counts();
+private:
+	static int crt, del, bal, count;
 #endif
 };
 

@@ -72,6 +72,7 @@ static const char *kpilot_id =
 #include "logWidget.h"
 #include "dbviewerWidget.h"
 #include "datebookWidget.h"
+#include "todoWidget.h"
 
 #include "conduitConfigDialog.h"
 
@@ -302,6 +303,10 @@ void KPilotInstaller::initComponents()
 	ADDICONPAGE(i18n("Calendar Viewer"),CSL1("kpilot/kpilot-calendar.png"));
 	addComponentPage(new DatebookWidget(w,defaultDBPath),
 		i18n("Calendar Viewer"));
+
+	ADDICONPAGE(i18n("Todo Viewer"),CSL1("kpilot/kpilot-todo.png"));
+	addComponentPage(new TodoWidget(w,defaultDBPath),
+		i18n("Todo Viewer"));
 
 	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/kpilot-address.png"));
 	addComponentPage(new AddressWidget(w,defaultDBPath),
