@@ -49,13 +49,13 @@ static const char *setupDialog_id=
 
 #include <qcheckbox.h>
 #include <qdir.h>
-#include <qfiledlg.h>
 #include <qcombobox.h>
 
 #undef OLDSTYLE
 #ifdef OLDSTYLE
 #include <qlabel.h>
 #include <qwhatsthis.h>
+#include <qfiledlg.h>
 #include <qbttngrp.h>
 #include <qpushbutton.h>
 #include <qradiobt.h>
