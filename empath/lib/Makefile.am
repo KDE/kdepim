@@ -20,9 +20,7 @@ EmpathMailSenderSendmail.cpp \
 EmpathMailbox.cpp \
 EmpathMailboxIMAP4.cpp \
 EmpathMailboxList.cpp \
-EmpathMailboxMMDF.cpp \
 EmpathMailboxMaildir.cpp \
-EmpathMailboxMbox.cpp \
 EmpathMailboxPOP3.cpp \
 EmpathMaildir.cpp \
 EmpathMaildirIndex.cpp \

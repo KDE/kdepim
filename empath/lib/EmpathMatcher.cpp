@@ -138,8 +138,10 @@ EmpathMatcher::match(const EmpathURL & id)
 
 				RMessage * m(empath->message(id));
 				if (m == 0) return false;
+
+				RMessage message(*m);
 				
-				Q_UINT32 sizeOfMessage = m->size();
+				Q_UINT32 sizeOfMessage = message.size();
 
 				empathDebug("size of message is " +
 					QString().setNum(sizeOfMessage));
@@ -154,6 +156,8 @@ EmpathMatcher::match(const EmpathURL & id)
 				empathDebug("Matching message by body expr \"" + matchExpr_ + "\"");
 				RMessage * m(empath->message(id));
 				if (m == 0) return false;
+				
+				RMessage message(*m);
 				
 				QString s; // FIXME -- = m->firstPlainBodyPart ?
 				
@@ -170,7 +174,9 @@ EmpathMatcher::match(const EmpathURL & id)
 				RMessage * m(empath->message(id));
 				if (m == 0) return false;
 				
-				QString s = m->envelope().asString();
+				RMessage message(*m);
+				
+				QString s = message.envelope().asString();
 				QRegExp r(matchExpr_);
 				if (!r.isValid()) return false;
 				return (s.find(r) != -1);
@@ -182,7 +188,10 @@ EmpathMatcher::match(const EmpathURL & id)
 			{
 				RMessage * m(empath->message(id));
 				if (m == 0) return false;
-				return (m->type() == RBodyPart::Mime);
+				
+				RMessage message(*m);
+				
+				return (message.type() == RBodyPart::Mime);
 			}
 			break;
 			

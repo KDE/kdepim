@@ -35,8 +35,6 @@
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxIMAP4.h"
 #include "EmpathMailboxMaildir.h"
-#include "EmpathMailboxMMDF.h"
-#include "EmpathMailboxMbox.h"
 #include "EmpathDefines.h"
 #include "EmpathMessageList.h"
 #include "EmpathConfig.h"
@@ -179,20 +177,6 @@ EmpathMailboxList::readConfig()
 				CHECK_PTR(m);
 				break;
 			
-			case Mbox:
-				empathDebug("Adding new Mbox mailbox with name \"" +
-					QString(it.current()) + "\"");
-				m = new EmpathMailboxMbox(it.current());
-				CHECK_PTR(m);
-				break;
-	
-			case MMDF:
-				empathDebug("Adding new MMDF mailbox with name \"" +
-					QString(it.current()) + "\"");
-				m = new EmpathMailboxMMDF(it.current());
-				CHECK_PTR(m);
-				break;
-		
 			case POP3:
 				empathDebug("Adding new POP3 mailbox with name \"" +
 					QString(it.current()) + "\"");

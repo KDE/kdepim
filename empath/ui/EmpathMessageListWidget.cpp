@@ -34,7 +34,6 @@
 #include <kapp.h>
 
 // Local includes
-#include "HeapPtr.h"
 #include "EmpathMessageList.h"
 #include "EmpathMessageListWidget.h"
 #include "EmpathMessageSourceView.h"

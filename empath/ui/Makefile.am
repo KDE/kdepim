@@ -8,15 +8,11 @@ libempathui_a_SOURCES = \
 EmpathAboutBox.cpp \
 EmpathAccountsSettingsDialog.cpp \
 EmpathAddressSelectionWidget.cpp \
-EmpathAttachmentListWidget.cpp \
-EmpathAttachmentListItem.cpp \
 EmpathComposeSettingsDialog.cpp \
 EmpathComposeWidget.cpp \
 EmpathComposeWindow.cpp \
 EmpathConfigIMAP4Dialog.cpp \
-EmpathConfigMMDFDialog.cpp \
 EmpathConfigMaildirDialog.cpp \
-EmpathConfigMboxDialog.cpp \
 EmpathConfigPOP3Dialog.cpp \
 EmpathConfigPOP3General.cpp \
 EmpathConfigPOP3LargeMsgs.cpp \
@@ -54,7 +50,6 @@ EmpathMessageStructureItem.cpp \
 EmpathMessageViewWidget.cpp \
 EmpathMessageViewWindow.cpp \
 EmpathMessageWidget.cpp \
-EmpathNewsSettingsDialog.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathServerTypeDialog.cpp \
 EmpathSubjectSpecWidget.cpp \

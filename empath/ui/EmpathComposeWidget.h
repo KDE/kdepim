@@ -65,21 +65,14 @@ class EmpathComposeWidget : public QWidget
 		~EmpathComposeWidget();
 
 		/**
-		 * Creates a stringified version of the message we're editing - that
-		 * is the body only. The attachments are got with messageAttachments()
+		 * The message we're editing.
 		 */
-		QCString messageAsString();
+		RMessage message();
 
 		/**
 		 * Test if there are any attachments for this message.
 		 */
 		bool messageHasAttachments();
-		
-		/**
-		 * Get the attachment list. Check if there are attachments to be
-		 * clipped on the end first by using messageHasAttachments()
-		 */
-		QList<EmpathAttachmentSpec> messageAttachments();
 		
 	protected slots:
 		

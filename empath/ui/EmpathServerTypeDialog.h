@@ -66,8 +66,6 @@ class EmpathServerTypeDialog : public QDialog
 		QPushButton		* pb_Help_;
 		
 		QRadioButton	* rb_serverTypeMaildir_;
-		QRadioButton	* rb_serverTypeMbox_;
-		QRadioButton	* rb_serverTypeMMDF_;
 		QRadioButton	* rb_serverTypePOP3_;
 		QRadioButton	* rb_serverTypeIMAP4_;
 	

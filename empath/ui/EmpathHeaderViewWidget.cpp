@@ -1,6 +1,4 @@
 
-#include <iostream>
-
 // Qt includes
 #include <qstrlist.h>
 #include <qlabel.h>
@@ -68,8 +66,6 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 			continue;
 		
 		layout_->expand(layout_->numRows() + 1, 3);
-		cerr << "Expanded layout to " << QString().setNum(layout_->numCols())
-			<< ", " << QString().setNum(layout_->numRows()) << endl;
 		
 		QLabel * label = new QLabel(QString(h->headerName()) + ":", this);
 		label->show();
@@ -78,9 +74,7 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 			new QLabel(QString(h->headerBody()->asString()), this);
 		urlLabel->show();
 		
-		cerr << "Adding widget at row " << QString().setNum(layout_->numRows()) << endl;
 		layout_->addWidget(label, layout_->numRows() - 1, 0);
-		cerr << "Adding widget at row " << QString().setNum(layout_->numRows()) << endl;
 		layout_->addWidget(urlLabel, layout_->numRows() - 1, 1);
 	}
 	

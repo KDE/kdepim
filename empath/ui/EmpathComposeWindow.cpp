@@ -109,7 +109,7 @@ EmpathComposeWindow::s_fileSendMessage()
 {
 	empathDebug("s_fileSendMessage called");
 
-	RMessage outMessage(composeWidget_->messageAsString());
+	RMessage outMessage(composeWidget_->message());
 
 	empathDebug("Checking if message has attachments");
 	
@@ -126,7 +126,7 @@ EmpathComposeWindow::s_fileSendLater()
 {
 	empathDebug("s_fileSendLater called");
 	
-	RMessage outMessage(composeWidget_->messageAsString());
+	RMessage outMessage(composeWidget_->message());
 
 	empathDebug("Checking if message has attachments");
 	

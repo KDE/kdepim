@@ -26,7 +26,7 @@ enum WriteToDisk		{ Write, NoWrite };
 enum OutgoingServerType	{ Sendmail, Qmail, SMTP, QMTP };
 enum DialogRetval		{ OK, Cancel, Help, Defaults };
 enum FontStyle			{ Fixed, Variable };
-enum AccountType		{ Local, Maildir, MMDF, Mbox, POP3, IMAP4 };
+enum AccountType		{ Local, Maildir, POP3, IMAP4 };
 enum SendPolicy			{ SendNow, SendLater };
 enum SavePolicy			{ Forever, ThisSession, Never };
 enum LargeMessagePolicy	{ RetrieveMessage, LeaveOnServer, RetrieveHeader };

@@ -18,13 +18,15 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// Qt includes
+#include <qsmartptr.h>
+
 // KDE includes
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
 
 // Local includes
-#include "HeapPtr.h"
 #include "EmpathFilterEventHandler.h"
 #include "Empath.h"
 #include "EmpathConfig.h"
@@ -121,9 +123,9 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 				RMessage * r = empath->message(id);
 				if (r == 0) return;
 				
-				HeapPtr<RMessage> m(r);
+				RMessage message(*r);
 				
-				if (!mcf->writeMessage(*m)) return;
+				if (!mcf->writeMessage(message)) return;
 				
 				empath->remove(id);
 			}
@@ -144,9 +146,9 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 				RMessage * r = empath->message(id);
 				if (r == 0) return;
 				
-				HeapPtr<RMessage> m(r);
+				RMessage message(*r);
 				
-				mcf->writeMessage(*m);
+				mcf->writeMessage(message);
 			}
 		
 			break;

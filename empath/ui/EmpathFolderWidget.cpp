@@ -25,8 +25,6 @@
 // Local includes
 #include "EmpathUIUtils.h"
 #include "EmpathConfigMaildirDialog.h"
-#include "EmpathConfigMboxDialog.h"
-#include "EmpathConfigMMDFDialog.h"
 #include "EmpathConfigPOP3Dialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathFolderWidget.h"
@@ -34,8 +32,6 @@
 #include "EmpathFolderList.h"
 
 #include "EmpathMailboxMaildir.h"
-#include "EmpathMailboxMMDF.h"
-#include "EmpathMailboxMbox.h"
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxIMAP4.h"
 
@@ -278,22 +274,6 @@ EmpathFolderWidget::s_mailboxProperties()
 			}
 			break;
 
-		case MMDF:
-			{
-				EmpathConfigMMDFDialog configDialog(
-						(EmpathMailboxMMDF *)m, this, "configDialog");
-				dlg_retval = (DialogRetval)configDialog.exec();
-			}
-			break;
-		
-		case Mbox:
-			{
-				EmpathConfigMboxDialog configDialog(
-						(EmpathMailboxMbox *)m, this, "configDialog");
-				dlg_retval = (DialogRetval)configDialog.exec();
-			}
-			break;
-			
 		case POP3:
 			{
 				EmpathConfigPOP3Dialog configDialog(

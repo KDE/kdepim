@@ -30,15 +30,11 @@
 #include "RikGroupBox.h"
 #include "EmpathServerTypeDialog.h"
 #include "EmpathConfigMaildirDialog.h"
-#include "EmpathConfigMboxDialog.h"
-#include "EmpathConfigMMDFDialog.h"
 #include "EmpathConfigPOP3Dialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathMailboxList.h"
 #include "EmpathMailbox.h"
 #include "EmpathMailboxMaildir.h"
-#include "EmpathMailboxMbox.h"
-#include "EmpathMailboxMMDF.h"
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxIMAP4.h"
 #include "EmpathUtilities.h"
@@ -230,58 +226,6 @@ EmpathAccountsSettingsDialog::s_newAccount()
 			break;
 
 
-		case Mbox:
-			{
-				empathDebug("creating new Mbox mailbox");
-				tempMailbox = new EmpathMailboxMbox("Unnamed Mbox");
-				CHECK_PTR(tempMailbox);
-
-				KLineEditDlg led(
-					i18n("Mailbox name"), tempMailbox->name(), this);
-
-				if (!led.exec() || led.text().isEmpty()) return;
-
-				tempMailbox->setName(led.text());
-
-				EmpathConfigMboxDialog configDialog(
-						(EmpathMailboxMbox *)tempMailbox, this, "configDialog");
-
-				if (configDialog.exec() == Cancel) {
-					empathDebug("Deleting unwanted mailbox");
-					delete tempMailbox;
-					return;
-				}
-
-				empath->mailboxList().append(tempMailbox);
-			}
-			break;
-
-		case MMDF:
-			{
-				empathDebug("creating new MMDF mailbox");
-				tempMailbox = new EmpathMailboxMbox("Unnamed MMDF");
-				CHECK_PTR(tempMailbox);
-
-				KLineEditDlg led(
-					i18n("Mailbox name"), tempMailbox->name(), this);
-
-				if (!led.exec() || led.text().isEmpty()) return;
-
-				tempMailbox->setName(led.text());
-
-				EmpathConfigMMDFDialog configDialog(
-						(EmpathMailboxMMDF *)tempMailbox, this, "configDialog");
-
-				if (configDialog.exec() == Cancel) {
-					empathDebug("Deleting unwanted mailbox");
-					delete tempMailbox;
-					return;
-				}
-
-				empath->mailboxList().append(tempMailbox);
-			}
-			break;
-
 		case POP3:
 			{
 				empathDebug("creating new POP3 mailbox");
@@ -379,22 +323,6 @@ EmpathAccountsSettingsDialog::s_editAccount()
 			}
 		   break;
 
-		case MMDF:
-			{
-				EmpathConfigMMDFDialog configDialog(
-						(EmpathMailboxMMDF *)m, this, "configDialog");
-				dlg_retval = (DialogRetval)configDialog.exec();
-			}
-		   break;
-
-		case Mbox:
-			{
-				EmpathConfigMboxDialog configDialog(
-						(EmpathMailboxMbox *)m, this, "configDialog");
-				dlg_retval = (DialogRetval)configDialog.exec();
-			}
-		   break;
-
 	   	case POP3:
 		   {
 			   EmpathConfigPOP3Dialog configDialog(
@@ -448,8 +376,6 @@ EmpathAccountsSettingsDialog::updateMailboxList()
 		switch (m->type()) {
 
 			case Maildir:	accType = "Maildir";	break;
-			case MMDF:		accType = "MMDF";		break;
-			case Mbox:		accType = "Mbox";		break;
 			case POP3:		accType = "POP3";		break;
 			case IMAP4:		accType = "IMAP4";		break;
 

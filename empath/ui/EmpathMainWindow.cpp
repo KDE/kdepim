@@ -30,7 +30,6 @@
 
 // Local includes
 #include "EmpathUIUtils.h"
-#include "HeapPtr.h"
 #include "EmpathDefines.h"
 #include "EmpathMainWidget.h"
 #include "EmpathMainWindow.h"

@@ -20,6 +20,8 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kapp.h>
+#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathServerTypeDialog.h"
@@ -30,7 +32,7 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
 	:	QDialog(parent, name, true)
 {
 	empathDebug("ctor");
-	setCaption(i18n("Mailbox type"));
+	setCaption(i18n("Mailbox type - ") + kapp->getCaption());
 
 	buttonGroup_	= new QButtonGroup(this, "buttonGroup");
 	CHECK_PTR(buttonGroup_);
@@ -52,28 +54,42 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
 		new QRadioButton(i18n("Maildir"), w_type_, "rb_serverTypeMaildir");
 	CHECK_PTR(rb_serverTypeMaildir_);
 	
+	KQuickHelp::add(rb_serverTypeMaildir_, i18n(
+			"This type of mailbox is stored on your machine.\n"
+			"A Maildir is fast, safe, and easy to use from\n"
+			"other programs. Each message is stored as a\n"
+			"separate file.\n"));
+	
 	int h = rb_serverTypeMaildir_->sizeHint().height();
-	
-	
-	rb_serverTypeMbox_	=
-		new QRadioButton(i18n("Mbox"), w_type_, "rb_serverTypeMbox");
-	CHECK_PTR(rb_serverTypeMaildir_);
-	
-	rb_serverTypeMMDF_	=
-		new QRadioButton(i18n("MMDF"), w_type_, "rb_serverTypeMMDF");
-	CHECK_PTR(rb_serverTypeMMDF_);
 	
 	rb_serverTypePOP3_	=
 		new QRadioButton(i18n("POP3"), w_type_, "rb_serverTypePOP3");
 	CHECK_PTR(rb_serverTypePOP3_);
 	
+	KQuickHelp::add(rb_serverTypePOP3_, i18n(
+			"A POP3 mailbox is accessed over a network.\n"
+			"You can access one on your own machine if\n"
+			"you have a POP3 server program. POP3 mailboxes\n"
+			"are read-only. That is, you can only <b>get</b>\n"
+			"messages from them, you can't put mail back into\n"
+			"them.\n\n"
+			"POP3 is the most common mailbox format used by\n"
+			"ISPs (Internet Service Providers). It provides\n"
+			"a simple mechanism for retrieving messages.\n\n"
+			"Note that as 'mbox' format mailboxes are not\n"
+			"supported, using a local POP3 server is the only\n"
+			"way to retrieve mail from these boxes.\n"));
+	
 	rb_serverTypeIMAP4_	=
 		new QRadioButton(i18n("IMAP4"), w_type_, "rb_serverTypeIMAP4");
 	CHECK_PTR(rb_serverTypeIMAP4_);
+	
+	KQuickHelp::add(rb_serverTypeIMAP4_, i18n(
+			"An IMAP4 mailbox is accessed over a network.\n"
+			"You can access one on your own machine if you\n"
+			"have an IMAP4 server program."));
 
 	rb_serverTypeMaildir_->setFixedHeight(h);
-	rb_serverTypeMbox_->setFixedHeight(h);
-	rb_serverTypeMMDF_->setFixedHeight(h);
 	rb_serverTypePOP3_->setFixedHeight(h);
 	rb_serverTypeIMAP4_->setFixedHeight(h);
 	
@@ -87,8 +103,6 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
 			h * 10 + 20);
 
 	buttonGroup_->insert(rb_serverTypeMaildir_,	Maildir);
-	buttonGroup_->insert(rb_serverTypeMbox_,	Mbox);
-	buttonGroup_->insert(rb_serverTypeMMDF_,	MMDF);
 	buttonGroup_->insert(rb_serverTypePOP3_,	POP3);
 	buttonGroup_->insert(rb_serverTypeIMAP4_,	IMAP4);
 	
@@ -117,7 +131,7 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
 	topLevelLayout_		= new QGridLayout(this,		2, 1, 10, 10);
 	CHECK_PTR(topLevelLayout_);
 	
-	typeGroupLayout_	= new QGridLayout(w_type_,	5, 1, 0, 10);
+	typeGroupLayout_	= new QGridLayout(w_type_,	3, 1, 0, 10);
 	CHECK_PTR(typeGroupLayout_);
 	
 	topLevelLayout_->setRowStretch(0, 3);
@@ -127,10 +141,8 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
 	topLevelLayout_->addWidget(buttonBox_,	1, 0);
 
 	typeGroupLayout_->addWidget(rb_serverTypeMaildir_,	0, 0);
-	typeGroupLayout_->addWidget(rb_serverTypeMbox_,		1, 0);
-	typeGroupLayout_->addWidget(rb_serverTypeMMDF_,		2, 0);
-	typeGroupLayout_->addWidget(rb_serverTypePOP3_,		3, 0);
-	typeGroupLayout_->addWidget(rb_serverTypeIMAP4_,	4, 0);
+	typeGroupLayout_->addWidget(rb_serverTypePOP3_,		1, 0);
+	typeGroupLayout_->addWidget(rb_serverTypeIMAP4_,	2, 0);
 
 	typeGroupLayout_->activate();
 
@@ -163,10 +175,6 @@ EmpathServerTypeDialog::accountType()
 {
 	if (rb_serverTypeMaildir_->isChecked())
 	return Maildir;	
-	if (rb_serverTypeMbox_->isChecked())
-	return Mbox;	
-	if (rb_serverTypeMMDF_->isChecked())
-	return MMDF;	
 	if (rb_serverTypePOP3_->isChecked())
 	return POP3;
 	if (rb_serverTypeIMAP4_->isChecked())

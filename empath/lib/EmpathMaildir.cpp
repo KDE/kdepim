@@ -19,7 +19,6 @@
 */
 
 // System includes
-#include <iostream>
 #include <sys/file.h>
 #include <errno.h>
 #include <unistd.h>
@@ -62,7 +61,6 @@ EmpathMaildir::~EmpathMaildir()
 	void
 EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 {
-	cerr << "SYNC START" << endl;
 	empathDebug("sync(" + url.asString() + ") called");
 	QTime realBegin(QTime::currentTime());
 	
@@ -95,9 +93,7 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 		QString::null, QDir::Name | QDir::IgnoreCase,
 		QDir::NoSymLinks | QDir::Files);
 
-	cerr << "GETTING FILE LIST" << endl;
 	QStringList fileList(d.entryList());
-	cerr << "GOT FILE LIST" << endl;
 	empathDebug("There are " +
 		QString().setNum(fileList.count()) + " files in cur");
 	
@@ -120,8 +116,6 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 	
 	for (; it != fileList.end(); ++it) {
 		
-		cerr << ".";
-	
 		QTime now(QTime::currentTime());
 		
 		if (now.msecsTo(begin) > 100) {
@@ -192,7 +186,6 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 	// Anything that wasn't tagged is no longer in the dir, and has been
 	// deleted or moved. We therefore remove it from the index.
 	
-	cerr << "REMOVING UNTAGGED (GONE) RECORDS" << endl;
 	EmpathIndexIterator iit(f->messageList());
 	
 	for (; iit.current(); ++iit)
@@ -218,7 +211,6 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 	empathDebug("sync took " +
 		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
 	empathDebug("sync done");
-	cerr << "SYNC END" << endl;
 }
 
 	bool
@@ -719,7 +711,6 @@ EmpathMaildir::_generateFlagsString(RMM::MessageStatus s)
 	void
 EmpathMaildir::_readIndex()
 {
-	cerr << "READ INDEX START" << endl;
 	empathDebug("_readIndex() called");
 	QTime realBegin(QTime::currentTime());
 	QTime begin(realBegin);
@@ -788,13 +779,11 @@ EmpathMaildir::_readIndex()
 	
 	empathDebug("readIndex took " +
 		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
-	cerr << "READ INDEX END" << endl;
 }
 
 	void
 EmpathMaildir::_writeIndex()
 {
-	cerr << "WRITING INDEX" << endl;
 	empathDebug("_writeIndex() called");
 
 	// Get a pointer to the folder related to us.
@@ -827,6 +816,5 @@ EmpathMaildir::_writeIndex()
 	indexFile.close();
 	
 	mtime_ = QDateTime::currentDateTime();
-	cerr << "DONE WRITING INDEX" << endl;
 }
 

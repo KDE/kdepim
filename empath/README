@@ -1,5 +1,8 @@
 OI !
 
+NEW: Dropped mbox and MMDF support due to it being impossible to guarantee
+safety of messages.
+
 Potential developers:
 
 See TODO for what you can help with.

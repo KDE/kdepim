@@ -136,13 +136,15 @@ EmpathComposeWidget::_init()
 			{
 				empathDebug("Replying");
 				
-				RMessage * message(empath->message(url_));
-				if (message == 0) return;
+				RMessage * m(empath->message(url_));
+				if (m == 0) return;
+				
+				RMessage message(*m);
 				
 				QString s;
 			   
 				// Find out who sent the message, and fill in 'To:'
-				s = message->envelope().firstSender().asString();
+				s = message.envelope().firstSender().asString();
 
 				empathDebug("Replying to \"" + s + "\""); 
 				headerEditWidget_->setToText(s);
@@ -150,7 +152,7 @@ EmpathComposeWidget::_init()
 					subjectSpecWidget_->setFocus();
 				
 				// Fill in the subject.
-				s = message->envelope().subject().asString();
+				s = message.envelope().subject().asString();
 				empathDebug("Subject was \"" + s + "\""); 
 
 				if (s.isEmpty())
@@ -172,7 +174,7 @@ EmpathComposeWidget::_init()
 				if (c->readBoolEntry(EmpathConfig::KEY_AUTO_QUOTE)) {
 					empathDebug("It is necessary");
 				
-					QCString s(message->data());
+					QCString s(message.data());
 					empathDebug("original:");
 					empathDebug(s);
 					
@@ -196,13 +198,15 @@ EmpathComposeWidget::_init()
 			{
 				empathDebug("Forwarding");
 				
-				RMessage * message(empath->message(url_));
-				if (message == 0) return;
+				RMessage * m(empath->message(url_));
+				if (m == 0) return;
+				
+				RMessage message(*m);
 				
 				QString s;
 			   
 				// Fill in the subject.
-				s = message->envelope().subject().asString();
+				s = message.envelope().subject().asString();
 				empathDebug("Subject was \"" + s + "\""); 
 
 				if (s.isEmpty())
@@ -227,30 +231,34 @@ EmpathComposeWidget::~EmpathComposeWidget()
 	empathDebug("dtor");
 }
 
-	QCString
-EmpathComposeWidget::messageAsString()
+	RMessage
+EmpathComposeWidget::message()
 {
 	empathDebug("messageAsString() called");
 
-	QCString msgData;
-				
+	RMessage msg;
+	return msg;
+#if 0	
 	if (composeType_ == ComposeReply || composeType_ == ComposeReplyAll) {
 		
-		RMessage * message(empath->message(url_));
-		if (message == 0) {
+		RMessage * m(empath->message(url_));
+		
+		if (m == 0) {
 			msgData = "";
 			return msgData;
 		}
 		
+		RMessage message(*m);
+		
 		// If there is a references header in the message we're replying to,
 		// we add the message id of that message to the references list.
-		if (message->envelope().has(RMM::HeaderReferences)) {
+		if (message.envelope().has(RMM::HeaderReferences)) {
 			
-			msgData += RMM::headerNames[RMM::HeaderReferences];
+			msg.envelope().RMM::headerNames[RMM::HeaderReferences];
 			msgData += ": ";
-			msgData += message->envelope().references().asString();
+			msgData += message.envelope().references().asString();
 			msgData += " ";
-			msgData += message->envelope().messageID().asString();
+			msgData += message.envelope().messageID().asString();
 			msgData += "\n";
 			
 		} else {
@@ -259,7 +267,7 @@ EmpathComposeWidget::messageAsString()
 			// header.
 			msgData += RMM::headerNames[RMM::HeaderInReplyTo];
 			msgData += ": ";
-			msgData += message->envelope().messageID().asString();
+			msgData += message.envelope().messageID().asString();
 			msgData += "\n";
 		}
 	}
@@ -281,6 +289,7 @@ EmpathComposeWidget::messageAsString()
 	msgData +=	editorWidget_->text().ascii();
 
 	return msgData;
+#endif
 }
 
 	bool
@@ -289,13 +298,6 @@ EmpathComposeWidget::messageHasAttachments()
 	empathDebug("messageHasAttachments() called");
 //	return attachmentListWidget_->hasAttachments();
 	return false;
-}
-
-	QList<EmpathAttachmentSpec>
-EmpathComposeWidget::messageAttachments()
-{
-	empathDebug("messageAttachments() called");
-//	return attachmentListWidget_->attachmentList();
 }
 
 	void

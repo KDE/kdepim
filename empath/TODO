@@ -1,9 +1,7 @@
 Things you might want to VOLUNTEER for :)
 
 * Test sendmail sending. Add user feedback.
-
 * Test qmail sending. Add user feedback.
-
 * Implement simple (to one host) SMTP sending.
   
 * Using an external editor needs reorganising so that a class encapsulates the
@@ -29,11 +27,6 @@ Things you might want to VOLUNTEER for :)
 * Finish off doing the apply/revert stuff in the config dialogs. It's almost
   done, but just needs looking at and checking it really works properly.
   
-* mbox and MMDF handling. (Started but untested and unused as yet)
-
-* IMAP and news. IMAP should be via kio_imap, like POP will be. NNTP ? Will
-  there be an NNTP kioslave ?
-  
 * Come up with an intelligent solution to the password storage problem.
 
 * Find out if the reason that setUpdatesEnabled(false) on a QListView doesn't
@@ -53,3 +46,4 @@ Things you might want to VOLUNTEER for :)
   - Working on this
   
 * Drag and drop.
+
