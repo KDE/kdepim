@@ -292,7 +292,10 @@ bool KNMainWindow::firstStart()
 
   KConfig emailConf("emaildefaults");
 
-  emailConf.setGroup("UserInfo");
+  emailConf.setGroup("Defaults");
+  QString group = emailConf.readEntry("Profile","Default");
+
+  emailConf.setGroup(QString("PROFILE_%1").arg(group));
   KNConfig::Identity *id=knGlobals.cfgManager->identity();
   id->setName(emailConf.readEntry("FullName"));
   id->setEmail(emailConf.readEntry("EmailAddress").latin1());
@@ -300,9 +303,8 @@ bool KNMainWindow::firstStart()
   id->setReplyTo(emailConf.readEntry("ReplyAddr"));
   id->save();
 
-  emailConf.setGroup("ServerInfo");
   KNServerInfo *smtp=knGlobals.accManager->smtp();
-  smtp->setServer(emailConf.readEntry("Outgoing").latin1());
+  smtp->setServer(emailConf.readEntry("OutgoingServer").latin1());
   smtp->setPort(25);
   conf->setGroup("MAILSERVER");
   smtp->saveConf(conf);
