@@ -714,7 +714,12 @@ static bool isKDesktopLockRunning()
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 
 	// Can't tell, very weird, err on the side of safety.
-	if (!dcopptr || !dcopptr->isAttached()) return true;
+	if (!dcopptr || !dcopptr->isAttached())
+	{
+		kdWarning() << k_funcinfo << ": Could not make DCOP connection. "
+			<< "Assuming screensaver is active." << endl;
+		return true;
+	}
 
 	QByteArray data,returnValue;
 	QCString returnType;
@@ -722,7 +727,8 @@ static bool isKDesktopLockRunning()
 	if (!dcopptr->call("kdesktop","KScreensaverIface","isBlanked()",
 		data,returnType,returnValue,true))
 	{
-		kdWarning() << k_funcinfo << ": Check for screensaver failed." << endl;
+		kdWarning() << k_funcinfo << ": Check for screensaver failed."
+			<< "Assuming screensaver is active." << endl;
 		// Err on the side of safety again.
 		return true;
 	}
@@ -736,6 +742,8 @@ static bool isKDesktopLockRunning()
 	}
 	else
 	{
+		kdWarning() << k_funcinfo << ": Strange return value from screensaver. "
+			<< "Assuming screensaver is active." << endl;
 		// Err on the side of safety.
 		return true;
 	}
