@@ -7,10 +7,10 @@ Further Information</title>
 <anchor id="anc-knode-more-info"/> 
 <!-- TRANSLATORS! Please modify this chapter for your language specific needs --> 
 
-<para>In this paragraph we will offer you some more information
-resources which could be useful to you. Many of the below listed
-articles (for which <acronym>URL</acronym>s are given) are posted to
-news groups regularly. Some of those groups are also listed
+<para>In this section we will detail some additional information
+resources which could be useful to you.  Many of the articles listed
+below (for which <acronym>URL</acronym>s are given) are posted to
+news groups regularly; some of those groups are also listed
 here.</para>
  
 <sect1 id="infos-newsgroups"> 
@@ -28,13 +28,13 @@ here.</para>
 </simplelist> 
 
 <para>For beginners it is especially recommended to read these
-articles at least partially. Informed users have strong advantages in
-news groups. There are some more specialized news groups where
-<acronym>FAQ</acronym>s and introducing
+articles at least partially: informed users have strong advantages in
+news groups. There are some more-specialized news groups where
+<acronym>FAQ</acronym>s and introductory
 <glossterm>articles</glossterm> are posted frequently, &eg; the
 <glossterm>newsgroup</glossterm> de.comp.os.unix.linux.infos (german),
-which contains a lot of useful articles about the operating system
-&Linux;. Just have a look on the group list of your newsserver for
+which contains a lot of useful articles about the &Linux; operating system.
+Just have a look on the group list of your newsserver for
 it.</para>
 
 </sect1> 
@@ -48,7 +48,7 @@ it.</para>
 &ie; after successfully configuring &knode; you should post some
 articles to those groups to test your settings.</para>
 
-<para>Some groups support automatic replies thru email to enable you to
+<para>Some groups support automatic replies through email to enable you to
 test whether your entered identity is correct and mail-replies actually
 arrive in your mailbox.</para>
 
@@ -71,7 +71,7 @@ hints.</para>
 
 <para>These <acronym>URL</acronym>s are from the corresponding article
 in the <glossterm>newsgroup</glossterm>
-<emphasis>de.newusers.infos</emphasis> and have the same contents like
+<emphasis>de.newusers.infos</emphasis> and have the same contents as
 the articles posted there.</para>
 
 <simplelist> 
@@ -91,7 +91,7 @@ url="http://www.kirchwitz.de/~amk/dni/erste-schritte">http://www.kirchwitz.de/~a
 <member>Questions and answers from von de.newusers.questions: <ulink
 url="http://www.kirchwitz.de/~amk/dni/faq">http://www.kirchwitz.de/~amk/dni/faq</ulink>
 (german)</member> 
-<member>Seven thesises about behavior in the internet: <ulink
+<member>Seven theses about behavior in the internet: <ulink
 url="http://www.kirchwitz.de/~amk/dni/hoeflichkeit">http://www.kirchwitz.de/~amk/dni/hoeflichkeit</ulink>
 (german)</member> 
 <member>Introduction to the usenet: <ulink

@@ -11,10 +11,10 @@
 <guimenu>K</guimenu> Menu.</para>
  </question> 
 <answer> 
-<para>Does the entry <guisubmenu>Internet</guisubmenu> exist? If not,
-maybe you didn't install the kdenetwork package because your
-distribution possibly doesn't do this for you. If the entry is there,
-but you don't have an item<guimenuitem>KNode</guimenuitem> 
+<para>Does the <guisubmenu>Internet</guisubmenu>entry exist? If not,
+maybe the kdenetwork package isn't installed (perhaps because your
+distribution possibly doesn't do this for you); if the entry is there,
+but you do not have a <guimenuitem>KNode</guimenuitem> item
 in it, you should try to open a &konsole; and run &knode; from
 there. Type</para>
 
@@ -23,9 +23,9 @@ there. Type</para>
 </screen> 
 
 <para>If an error message appears that tells you that &knode; could
-not be started or found, please check whether the file
+not be started or found please check whether the file
 <filename>knode</filename> exists in <filename
-class="directory">$<envar>KDEDIR</envar>/bin</filename> and its
+class="directory">$<envar>KDEDIR</envar>/bin</filename> and that its
 permissions are correctly set.</para>
 </answer> 
 </qandaentry> 
@@ -38,24 +38,24 @@ disappears without &knode; being started.</para>
 </question> 
 <answer>
 <para>Try to start &knode; from the &konsole; (see previous question)
-and keep attention for the messages displayed there. If those don't
-look obvious to you, mark them with your mouse and copy it to the
-clipboard. Turn to a &kde; mailing list or use another news reader to
-ask for help in a &kde; news group.</para>
+and keep attention for the messages displayed there: if they do not
+make sense to you mark them with your mouse and copy it to the
+clipboard; then, ask for help on one of the &kde; mailing lists or
+&kde; news groups.</para>
 </answer> 
 </qandaentry> 
 
 <qandaentry> 
 <question> 
 <para>I need an important article, but &knode; doesn't have it any
-more. Where do I find this article?</para>
+more; where can I find this article?</para>
 </question> 
 <answer> 
 <para>You can find some extensive usenet archives at
 <ulink
 url="http://groups.google.com/usenet/">groups.google.com</ulink> or
-<ulink url="http://av.com">AltaVista</ulink>. They even contain
-several years of old articles.</para> 
+<ulink url="http://av.com">AltaVista</ulink>; they even contain
+articles that are several years old.</para> 
 </answer> 
 </qandaentry> 
 
@@ -71,36 +71,36 @@ window</guimenuitem>.</para>
 
 <qandaentry> 
 <question> 
-<para>My articles don't appear in the newsgroup.</para>
+<para>My articles do not appear in the newsgroup.</para>
 </question> 
 <answer> 
-<para>When you publish an article it may last some time until your
-news server has it. Wait several hours before you send the Article
+<para>When you publish an article it may be some time until your
+news server has it; wait several hours before you send the article
 again.</para> 
 </answer> 
 </qandaentry> 
 
 <qandaentry> 
 <question> 
-<para>I want to keep some article. How do I archive it?</para> 
+<para>I want to keep an article; how do I archive it?</para> 
 </question> 
 <answer> 
 <para>Choose the article in the article
-view.
+view and then use 
 <menuchoice><guimenu>File</guimenu><guimenuitem>Save</guimenuitem></menuchoice>
-opens a file dialog. You can save the article to a file now. Another
-possibility is to copy the article in a folder.</para>
+to open a file dialog; you can then save the article to a file. Another
+possibility is to copy the article to a folder.</para>
 </answer> 
 </qandaentry> 
 
 <qandaentry> 
 <question> 
-<para>Some set headers don't appear for several articles in the
-article window. Am I doing something wrong?</para> 
+<para>Some set headers do not appear for several articles in the
+article window; am I doing something wrong?</para> 
 </question> 
 <answer> 
 <para>This is not unusual because many headers are optional and often
-not contained in articles. In this case &knode; doesn't show those
+not contained in articles; in this case &knode; does not show those
 header lines.</para> 
 </answer> 
 </qandaentry> 
@@ -108,46 +108,46 @@ header lines.</para>
 <qandaentry> 
 <question> 
 <para>Sometimes I see an article which refers to other articles but
-&knode; does not show any references. Why is that?</para> 
+&knode; does not show any references; why is that?</para> 
 </question> 
 <answer> 
 <para>This happens when somebody posted an article in another news
-group and checked the option <guilabel>Followup To</guilabel>. This
-article is sent to your news group but the referring article is
-absent. In many cases the poster tells the reason for his choice to
-set a followup.</para>
+group and checked the option <guilabel>Followup To</guilabel>; the
+article in question is then sent to your news group, but the referring
+article is absent. In many cases the poster tells the reason for his
+choice to set a followup.</para>
 </answer> 
 </qandaentry> 
 
 <qandaentry> 
 <question> 
-<para>When I want to answer an article, an error message appears
-telling me that the external editor could not be started; but the
+<para>When I want to answer an article an error message appears
+telling me that the external editor could not be started, but the
 editor is correctly set.</para>
 </question> 
 <answer> 
 <para>Have a look whether you entered the place-holder for a filename
-after the editor command. If not, enter it. If you for example want to
+after the editor command; if not, enter it.  If you want, for example, to
 use &kedit; enter <userinput><command>kedit</command><token>
 %f</token></userinput></para>
-<para>If the <token>%f</token> is absent, your editor can not be
+<para>If the <token>%f</token> is absent, your editor cannot be
 run.</para>
 </answer>
 </qandaentry>
 
 <qandaentry> 
 <question>
-<para>Why can't I receive data from my local newsserver?</para>
+<para>Why can I not receive data from my local news server?</para>
 </question> 
 <answer> 
 <para>If you use &knode; together with with a local news server, you
-must make sure that this server is correctly set up and started. For
+must make sure that this server is correctly set up and started; for
 further details, please consult the documentation of your local news
 server.</para>
 <tip> 
 <para> 
 The availability of the local news server can easily be verified with
-the program <command>telnet</command>. Open a console and type:</para> 
+the <command>telnet</command> program: open a console and type:</para> 
  
 <screen>
 <prompt>%</prompt> <userinput><command>telnet</command> <parameter>localhost nntp</parameter></userinput>
@@ -164,22 +164,22 @@ Escape character is '^]'.
 </computeroutput>
 </screen>
 
-<para>You quit the <command>telnet</command> session with:</para>
+<para>You can quit the <command>telnet</command> session with:</para>
 
 <screen>
 <prompt>%</prompt> <userinput>quit</userinput>
 </screen>
 
-<para>If that should not work, there is either no local news server
-set up or the server was not started. In this case, please consult the
+<para>If that does not work there is either no local news server
+set up or the server was not started; in this case, please consult the
 documentation of your local news server.</para>
 </tip>
 
-<para>Further, you need of course a (dial-in) connection to a news
-server on the Internet. From there, &knode; or the local news server
-retrieves the articles. Your Internet provider should be able to give
-you information about which news servers you can use. You need this
-information in any case.</para>
+<para>If you are trying to connect to a news server on the Internet
+you need, of course, an open (dial-in) connection and to have set
+up &knode; to use your <acronym>ISP</acronym>'s news server; your
+<acronym>ISP</acronym> should be able to give you information about
+which news servers you can use.</para>
 </answer>
 </qandaentry>
 
