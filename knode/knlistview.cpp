@@ -93,16 +93,22 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   }
 
   if (width-xText-5 > 0) {
-    QString t = shortString(text(column),column,width-xText-5,p->fontMetrics());
-    p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  t);
+    int cntWidth = 0;
+    QString t2;
+    QFont f2;
     if (countUnreadInThread() > 0 && column==0 && !isOpen()) {
-      QString t2 = QString("   (%1)").arg(countUnreadInThread());
-      QFont orig=p->font();
-      QFont font=p->font();
-      font.setBold( true );
-      p->setFont(font);
-      QPen pen=p->pen();
-      if (isSelected()||a_ctive) {
+      t2 = QString("   (%1)").arg(countUnreadInThread());
+      f2 = p->font();
+      f2.setBold (true);
+      cntWidth = QFontMetrics(f2).width(t2, -1);
+    }
+    QString t = shortString(text(column),column,width-xText-cntWidth-5,p->fontMetrics());
+    p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  t);
+    if (cntWidth) {
+      QFont orig = p->font();
+      p->setFont( f2 );
+      QPen pen = p->pen();
+      if (isSelected() || a_ctive) {
         pen.setColor(cg.highlightedText());
       } else {
         pen.setColor(cg.link());
