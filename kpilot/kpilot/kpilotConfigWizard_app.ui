@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>355</width>
-            <height>293</height>
+            <width>462</width>
+            <height>404</height>
         </rect>
     </property>
     <vbox>
@@ -21,7 +21,7 @@
                 <cstring>textLabel6</cstring>
             </property>
             <property name="text">
-                <string>Finally, you can configure kpilot specifically for some PIM applications, like Kontact (KDE's integrated PIM application), the KDE-PIM suite of applications, or Evolution (Gnome's integrated PIM application).
+                <string>Finally, you can configure KPilot specifically for some PIM applications, like Kontact (KDE's integrated PIM application) or Evolution (GNOME's integrated PIM application).
 
 Press "Finish" to setup KPilot according to the settings in this configuration Wizard.</string>
             </property>
@@ -45,7 +45,7 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                         <cstring>radioButton6</cstring>
                     </property>
                     <property name="text">
-                        <string>General &amp;KDE-PIM suite</string>
+                        <string>&amp;KDE-PIM suite (Kontact)</string>
                     </property>
                     <property name="checked">
                         <bool>true</bool>
@@ -56,7 +56,7 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                         <cstring>radioButton8</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Evolution</string>
+                        <string>&amp;GNOME-PIM (Evolution)</string>
                     </property>
                 </widget>
                 <widget class="QRadioButton">

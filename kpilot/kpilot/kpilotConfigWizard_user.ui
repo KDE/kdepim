@@ -21,7 +21,7 @@
                 <cstring>textLabel1</cstring>
             </property>
             <property name="text">
-                <string>This wizard will help you configure kpilot.</string>
+                <string>This wizard will help you configure KPilot.</string>
             </property>
             <property name="alignment">
                 <set>WordBreak|AlignVCenter</set>
@@ -32,7 +32,7 @@
                 <cstring>textLabel5</cstring>
             </property>
             <property name="text">
-                <string>As a first step, we need to determine the username and how the handheld is connected to the computer.</string>
+                <string>As a first step, we need to determine the user name and how the handheld is connected to the computer.</string>
             </property>
             <property name="alignment">
                 <set>WordBreak|AlignVCenter</set>
@@ -43,7 +43,7 @@
                 <cstring>groupBox2</cstring>
             </property>
             <property name="title">
-                <string>Handheld &amp;&amp; Username</string>
+                <string>Handheld and User Name</string>
             </property>
             <property name="whatsThis" stdset="0">
                 <string>&lt;p&gt;You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.&lt;/p&gt;
@@ -84,7 +84,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                         <cstring>fProbeButton</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Automatically Detect Handheld &amp;&amp; Username</string>
+                        <string>&amp;Automatically Detect Handheld &amp;&amp; User Name</string>
                     </property>
                     <property name="whatsThis" stdset="0">
                         <string>&lt;qt&gt;Click this button to open the detection dialog. The wizard will try to automatically find and display the correct device and username for your handheld. If the wizard cannot retrieve this information, check if you have write permission for the device.&lt;/qt&gt;</string>
@@ -158,5 +158,11 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
         </spacer>
     </vbox>
 </widget>
+<tabstops>
+    <tabstop>fUserName</tabstop>
+    <tabstop>fDeviceName</tabstop>
+    <tabstop>fProbeButton</tabstop>
+    <tabstop>fPilotRunningPermanently</tabstop>
+</tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
