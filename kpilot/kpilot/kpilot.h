@@ -127,6 +127,18 @@ public:
 	*/
 	virtual ASYNC daemonStatus(int);
 
+	/**
+	* This is the DCOP interface from the daemon to KPilot
+	* to configure KPilot.
+	*/
+	virtual ASYNC configure();
+
+	/**
+	* This is the DCOP interface from the daemon to KPilot
+	* to configure conduits.
+	*/
+	virtual ASYNC configureConduits();
+
 protected:
 	void readConfig();
 
@@ -168,6 +180,10 @@ private:
 	 */
 	KToggleAction  *m_toolbarAction;
 	KToggleAction  *m_statusbarAction;
+
+	// Used to track if dialog is visible - needed for new DCOP calls
+	bool fConfigureConduitDialogInUse;
+	bool fConfigureKPilotDialogInUse;
 
 
 protected slots:

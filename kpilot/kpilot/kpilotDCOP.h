@@ -49,6 +49,18 @@ k_dcop:
 	* changes in its state.
 	*/
 	virtual ASYNC daemonStatus(int) = 0;
+
+	/**
+	* This is the method the daemon uses to popup
+	* the configure dialog.
+	*/
+	virtual ASYNC configure() = 0;
+
+	/**
+	* This is the method the daemon uses to popup
+	* the configure conduits dialog.
+	*/
+	virtual ASYNC configureConduits() = 0;
 } ;
 
 

@@ -156,6 +156,9 @@ KPilotInstaller::KPilotInstaller() :
 	readConfig();
 	setupWidget();
 
+	fConfigureKPilotDialogInUse = false;
+	fConfigureConduitDialogInUse = false;
+
 	/* NOTREACHED */
 	(void) kpilot_id;
 }
@@ -412,6 +415,28 @@ void KPilotInstaller::slotListSyncRequested()
 		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
 		break;
 	}
+}
+
+/* virtual DCOP */ ASYNC KPilotInstaller::configure()
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Daemon requested configure" << endl;
+#endif
+
+	if (!fConfigureKPilotDialogInUse)
+		slotConfigureKPilot();
+}
+
+/* virtual DCOP */ ASYNC KPilotInstaller::configureConduits()
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Daemon requested configure conduits" << endl;
+#endif
+
+	if (!fConfigureConduitDialogInUse)
+		slotConfigureConduits();
 }
 
 bool KPilotInstaller::componentPreSync()
@@ -675,6 +700,7 @@ void KPilotInstaller::slotConfigureKPilot()
 {
 	FUNCTIONSETUP;
 
+	fConfigureKPilotDialogInUse = true;
 	// Display the (modal) options page.
 	//
 	//
@@ -690,6 +716,7 @@ void KPilotInstaller::slotConfigureKPilot()
 		kdError() << k_funcinfo
 			<< ": Can't allocate KPilotOptions object" << endl;
 		getDaemon().requestSync(rememberedSync);
+		fConfigureKPilotDialogInUse = true;
 		return;
 	}
 
@@ -726,11 +753,14 @@ void KPilotInstaller::slotConfigureKPilot()
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Done with options." << endl;
 #endif
+	fConfigureKPilotDialogInUse = false;
 }
 
 void KPilotInstaller::slotConfigureConduits()
 {
 	FUNCTIONSETUP;
+
+	fConfigureConduitDialogInUse = true;
 
 	ConduitConfigDialog *conSetup = 0L;
 
@@ -742,6 +772,8 @@ void KPilotInstaller::slotConfigureConduits()
 		getDaemon().reloadSettings();
 	}
 	delete conSetup;
+
+	fConfigureConduitDialogInUse = false;
 }
 
 

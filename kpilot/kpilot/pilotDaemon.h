@@ -95,6 +95,13 @@ private:
 	int menuKPilotItem;
 
 	/**
+	* Remember which item in the context menu
+	* is "Configure Conduits" so we can enable / disable
+	* it as necessary.
+	*/
+	int menuConfigureConduitsItem;
+
+	/**
 	* Window for the "About KPilot" information.
 	*/
 	KAboutApplication *kap;
@@ -204,6 +211,10 @@ protected slots:
 	*/
 	void slotRunKPilot();
 
+	/**
+	* Run conduit configuration using "kpilot -c"
+	*/
+	void slotRunConduitConfig();
 
 	/**
 	* Provide access to KPilot's DCOP interface through a stub.

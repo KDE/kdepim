@@ -176,6 +176,9 @@ void PilotDaemonTray::setupWidget()
 	menuKPilotItem = menu->insertItem(i18n("Start &KPilot"), daemon,
 		SLOT(slotRunKPilot()));
 
+	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure Conduits..."),
+		daemon, SLOT(slotRunConduitConfig()));
+
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Finished getting icons" << endl;
 #endif
@@ -198,6 +201,7 @@ void PilotDaemonTray::enableRunKPilot(bool b)
 {
 	FUNCTIONSETUP;
 	contextMenu()->setItemEnabled(menuKPilotItem, b);
+	contextMenu()->setItemEnabled(menuConfigureConduitsItem, b);
 }
 
 
@@ -858,6 +862,16 @@ void PilotDaemon::slotRunKPilot()
 			<< kpilotDCOP << " (pid " << kpilotPID << ")" << endl;
 #endif
 	}
+}
+
+void PilotDaemon::slotRunConduitConfig()
+{
+	FUNCTIONSETUP;
+
+	KProcess *p = new KProcess;
+	*p << "kpilot" << "-c";
+
+	p->start();
 }
 
 void PilotDaemon::updateTrayStatus(const QString &s)
