@@ -1,6 +1,7 @@
 /*
     This file is part of KAddressBook.
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+                  2003 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -104,10 +105,15 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   defaultTypes << KABC::Address::Home;
   defaultTypes << KABC::Address::Work;
 
+  AddresseeConfig config( mAddressee );
+  QValueList<int> configList = config.noDefaultAddrTypes();
+  QValueList<int>::ConstIterator it;
+  for ( it = configList.begin(); it != configList.end(); ++it )
+    defaultTypes.remove( *it );
+
   // Insert default types.
   // Doing this for mPrefCombo is enough because the list is shared by all
   // combos.
-  QValueList<int>::ConstIterator it;
   for( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
     if ( !mTypeCombo->hasType( *it ) )
       mTypeCombo->insertType( list, *it, Address( *it ) );
@@ -135,6 +141,28 @@ void AddressEditWidget::edit()
   if ( dialog.exec() ) {
     if ( dialog.changed() ) {
       mAddressList = dialog.addresses();
+
+      bool hasHome = false, hasWork = false;
+      KABC::Address::List::Iterator it;
+      for ( it = mAddressList.begin(); it != mAddressList.end(); ++it ) {
+        if ( (*it).type() == KABC::Address::Home ) {
+          if ( !(*it).isEmpty() )
+            hasHome = true;
+        }
+        if ( (*it).type() == KABC::Address::Work ) {
+          if ( !(*it).isEmpty() )
+            hasWork = true;
+        }
+      }
+
+      AddresseeConfig config( mAddressee );
+      QValueList<int> configList;
+      if ( !hasHome )
+        configList << KABC::Address::Home;
+      if ( !hasWork )
+        configList << KABC::Address::Work;
+      config.setNoDefaultAddrTypes( configList );
+
       mTypeCombo->updateTypes();
       updateAddressEdit();
       emit modified();
@@ -243,7 +271,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mCountryCombo->setEditable( true );
   mCountryCombo->setDuplicatesEnabled( false );
   mCountryCombo->setAutoCompletion( true );
-  fillCountryCombo( mCountryCombo );
+  fillCountryCombo();
   label->setBuddy( mCountryCombo );
   topLayout->addWidget( mCountryCombo, 6, 1 );
 
@@ -284,7 +312,10 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   KAcceleratorManager::manage( this );
 
   mChanged = false;
-  mRemoveButton->setEnabled( mAddressList.count() > 0 );
+
+  bool state = (mAddressList.count() > 0);
+  mRemoveButton->setEnabled( state );
+  mChangeTypeButton->setEnabled( state );
 }
 
 AddressEditDialog::~AddressEditDialog()
@@ -298,48 +329,9 @@ KABC::Address::List AddressEditDialog::addresses()
   return mAddressList;
 }
 
-void AddressEditDialog::updateAddressEdits()
+bool AddressEditDialog::changed() const
 {
-  if ( mPreviousAddress )
-    saveAddress( *mPreviousAddress );
-
-  KABC::Address::List::Iterator it = mTypeCombo->selectedElement();
-  KABC::Address a = *it;
-  mPreviousAddress = &(*it);
-
-  bool tmp = mChanged;
-
-  mStreetTextEdit->setText( a.street() );
-  mRegionEdit->setText( a.region() );
-  mLocalityEdit->setText( a.locality() );
-  mPostalCodeEdit->setText( a.postalCode() );
-  mPOBoxEdit->setText( a.postOfficeBox() );
-  mCountryCombo->setCurrentText( a.country() );
-
-  mPreferredCheckBox->setChecked( a.type() & KABC::Address::Pref );
-
-  mStreetTextEdit->setFocus();
-
-  mChanged = tmp;
-}
-
-void AddressEditDialog::saveAddress( KABC::Address &addr )
-{
-  addr.setLocality( mLocalityEdit->text() );
-  addr.setRegion( mRegionEdit->text() );
-  addr.setPostalCode( mPostalCodeEdit->text() );
-  addr.setCountry( mCountryCombo->currentText() );
-  addr.setPostOfficeBox( mPOBoxEdit->text() );
-  addr.setStreet( mStreetTextEdit->text() );
-
-
-  if ( mPreferredCheckBox->isChecked() ) {
-    KABC::Address::List::Iterator it;
-    for ( it = mAddressList.begin(); it != mAddressList.end(); ++it )
-      (*it).setType( (*it).type() & ~( KABC::Address::Pref ) );
-  
-    addr.setType( addr.type() | KABC::Address::Pref );
-  }
+  return mChanged;
 }
 
 void AddressEditDialog::addAddress()
@@ -392,7 +384,56 @@ void AddressEditDialog::changeType()
   }
 }
 
-void AddressEditDialog::fillCountryCombo(KComboBox *combo)
+void AddressEditDialog::updateAddressEdits()
+{
+  if ( mPreviousAddress )
+    saveAddress( *mPreviousAddress );
+
+  KABC::Address::List::Iterator it = mTypeCombo->selectedElement();
+  KABC::Address a = *it;
+  mPreviousAddress = &(*it);
+
+  bool tmp = mChanged;
+
+  mStreetTextEdit->setText( a.street() );
+  mRegionEdit->setText( a.region() );
+  mLocalityEdit->setText( a.locality() );
+  mPostalCodeEdit->setText( a.postalCode() );
+  mPOBoxEdit->setText( a.postOfficeBox() );
+  mCountryCombo->setCurrentText( a.country() );
+
+  mPreferredCheckBox->setChecked( a.type() & KABC::Address::Pref );
+
+  mStreetTextEdit->setFocus();
+
+  mChanged = tmp;
+}
+
+void AddressEditDialog::modified()
+{
+  mChanged = true;
+}
+
+void AddressEditDialog::saveAddress( KABC::Address &addr )
+{
+  addr.setLocality( mLocalityEdit->text() );
+  addr.setRegion( mRegionEdit->text() );
+  addr.setPostalCode( mPostalCodeEdit->text() );
+  addr.setCountry( mCountryCombo->currentText() );
+  addr.setPostOfficeBox( mPOBoxEdit->text() );
+  addr.setStreet( mStreetTextEdit->text() );
+
+
+  if ( mPreferredCheckBox->isChecked() ) {
+    KABC::Address::List::Iterator it;
+    for ( it = mAddressList.begin(); it != mAddressList.end(); ++it )
+      (*it).setType( (*it).type() & ~( KABC::Address::Pref ) );
+  
+    addr.setType( addr.type() | KABC::Address::Pref );
+  }
+}
+
+void AddressEditDialog::fillCountryCombo()
 {
   QString country[] = {
     i18n( "Afghanistan" ), i18n( "Albania" ), i18n( "Algeria" ),
@@ -484,16 +525,6 @@ void AddressEditDialog::fillCountryCombo(KComboBox *combo)
   countries.sort();
 
   mCountryCombo->insertStringList( countries );
-}
-
-bool AddressEditDialog::changed() const
-{
-  return mChanged;
-}
-
-void AddressEditDialog::modified()
-{
-  mChanged = true;
 }
 
 

@@ -41,6 +41,9 @@ class AddresseeConfig
     void setAutomaticNameParsing( bool value );
     bool automaticNameParsing();
 
+    void setNoDefaultAddrTypes( const QValueList<int> &types );
+    QValueList<int> noDefaultAddrTypes() const;
+
     void remove();
 
   private:

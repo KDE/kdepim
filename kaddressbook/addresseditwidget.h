@@ -106,11 +106,8 @@ class AddressEditDialog : public KDialogBase
     void modified();
 
   private:
-    void fillCountryCombo( KComboBox *combo );
     void saveAddress( KABC::Address &addr );
-
-    KABC::Address::List mAddressList;
-    KABC::Address *mPreviousAddress;
+    void fillCountryCombo();
 
     AddressTypeCombo *mTypeCombo;
     QTextEdit *mStreetTextEdit;
@@ -123,6 +120,9 @@ class AddressEditDialog : public KDialogBase
 
     QPushButton *mRemoveButton;
     QPushButton *mChangeTypeButton;
+
+    KABC::Address::List mAddressList;
+    KABC::Address *mPreviousAddress;
     bool mChanged;
 };
 

@@ -62,6 +62,21 @@ bool AddresseeConfig::automaticNameParsing()
                                KABPrefs::instance()->mAutomaticNameParsing );
 }
 
+void AddresseeConfig::setNoDefaultAddrTypes( const QValueList<int> &types )
+{
+  KConfig config( "kaddressbook_addrconfig" );
+  config.setGroup( mAddressee.uid() );
+  config.writeEntry( "NoDefaultAddrTypes", types );
+  config.sync();
+}
+
+QValueList<int> AddresseeConfig::noDefaultAddrTypes() const
+{
+  KConfig config( "kaddressbook_addrconfig" );
+  config.setGroup( mAddressee.uid() );
+  return config.readIntListEntry( "NoDefaultAddrTypes" );
+}
+
 void AddresseeConfig::remove()
 {
   KConfig config( "kaddressbook_addrconfig" );
