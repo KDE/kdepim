@@ -29,6 +29,7 @@ public:
   const char* getTitle(void) const { return fTitle; }
   PilotRecord* pack() { return PilotAppCategory::pack(); }
   
+	typedef enum { MAX_MEMO_LEN=8192 } Constants ;
 protected:
   //     void *pack(int *i);
   void *pack(void *, int *);
