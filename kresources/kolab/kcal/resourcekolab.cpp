@@ -319,24 +319,26 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
                                   Q_UINT32 sernum )
 {
- 
+
   const QString &uid = incidence->uid();
   QString subResource = _subresource;
-  Kolab::ResourceMap &map = mEventSubResources;
+  Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
 
   const QString& type = incidence->type();
   if ( type == "Event" )
-    map = mEventSubResources;
+    map = &mEventSubResources;
   else if ( type == "Todo" )
-    map = mTodoSubResources;
+    map = &mTodoSubResources;
   else if ( type == "Journal" )
-    map = mJournalSubResources;
+    map = &mJournalSubResources;
+  else
+    kdWarning() << "unknown type " << type << endl;
 
   if ( !mSilent ) { /* We got this one from the user, tell KMail. */
     // Find out if this event was previously stored in KMail
     bool newIncidence = _subresource.isEmpty();
     if ( newIncidence ) {
-      subResource = findWritableResource( map );
+      subResource = findWritableResource( *map );
     }
     if ( subResource.isEmpty() )
       return false;
@@ -373,7 +375,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       incidence->registerObserver( this );
       if ( !subResource.isEmpty() && sernum != 0 ) {
         mUidMap[ uid ] = StorageReference( subResource, sernum );
-        incidence->setReadOnly( !map[ subResource ].writable() );
+        incidence->setReadOnly( !(*map)[ subResource ].writable() );
       }
     }
     /* Check if there are updates for this uid pending and if so process them. */
