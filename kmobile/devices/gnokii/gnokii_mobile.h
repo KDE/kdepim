@@ -48,6 +48,8 @@ public:
     // filename and path to gnokii-icon
     QString iconFileName() const;
 
+    QString deviceUniqueID();
+
     /*
      * Addressbook / Phonebook support
      */

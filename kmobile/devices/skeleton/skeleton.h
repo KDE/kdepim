@@ -48,6 +48,8 @@ public:
     // an appropiate Pixmap (e.g. a Palm Pilot or a Zaurus image).
     QString iconFileName() const;
 
+    QString deviceUniqueID();
+
     /*
      * Addressbook / Phonebook support
      */

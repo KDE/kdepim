@@ -85,6 +85,13 @@ bool KMobileSkeleton::isReadOnly()
   return true;
 }
 
+// return a unique ID, e.g. the IMEI number of phones, or a serial number
+// this String is used to have a unique identification for syncronisation.
+QString KMobileSkeleton::deviceUniqueID()
+{ 
+  return QString::fromLocal8Bit("SkElEtOn-123456789");
+}
+
 QString KMobileSkeleton::iconFileName() const
 {
   return "mobile_unknown"; /* KMOBILE_ICON_UNKNOWN */

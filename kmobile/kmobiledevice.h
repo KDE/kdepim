@@ -112,6 +112,12 @@ public:
     virtual QString revision() const;
 
     /**
+     * Returns an unique ID for the device, e.g. IMEI number on phones, or serial number.
+     * The returned String is used to have a unique identification for syncronisation.
+     */
+    virtual QString deviceUniqueID() = 0L;
+
+    /**
      * Returns true, if the device is connected via a slow connection.
      * Good examples for slow connections are serial or infrared ports.
      */

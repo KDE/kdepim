@@ -537,6 +537,13 @@ QString KMobileGnokii::iconFileName() const
   return "mobile_phone";
 }
 
+// return a unique ID, e.g. the IMEI number of phones, or a serial number
+// this String is used to have a unique identification for syncronisation.
+QString KMobileGnokii::deviceUniqueID()
+{ 
+  return QString::fromLocal8Bit(imei);
+}
+
 /*
  * Addressbook / Phonebook support
  */
