@@ -54,7 +54,9 @@
 // so DEBUG_CERR changes them into cerr again. Odd and disturbing.
 //
 #ifndef NDEBUG
+#ifndef DEBUG
 #define DEBUG
+#endif
 #endif
 
 #ifdef DEBUG_CERR
@@ -199,6 +201,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.3  2001/11/25 22:01:31  adridg
+// CVS_SILENT: administrative
+//
 // Revision 1.2  2001/10/16 21:45:21  adridg
 // Version number change.
 //
