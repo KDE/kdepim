@@ -157,6 +157,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     KLineEdit *mDepartmentEdit;
     KLineEdit *mOfficeEdit;
     KLineEdit *mProfessionEdit;
+    KLineEdit *mTitleEdit;
     KPIM::AddresseeLineEdit *mManagerEdit;
     KPIM::AddresseeLineEdit *mAssistantEdit;
     KLineEdit *mNicknameEdit;

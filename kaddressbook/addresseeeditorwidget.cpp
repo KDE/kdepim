@@ -357,6 +357,14 @@ void AddresseeEditorWidget::setupTab2()
   label->setBuddy( mAssistantEdit );
   layout->addMultiCellWidget( mAssistantEdit, 1, 1, 4, 5 );
 
+  label = new QLabel( i18n( "%1:" ).arg( KABC::Addressee::titleLabel() ), tab2 );
+  layout->addWidget( label, 2, 3 );
+  mTitleEdit = new KLineEdit( tab2 );
+  connect( mTitleEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( textChanged( const QString& ) ) );
+  label->setBuddy( mTitleEdit );
+  layout->addMultiCellWidget( mTitleEdit, 2, 2, 4, 5 );
+
   bar = new KSeparator( KSeparator::HLine, tab2 );
   layout->addMultiCellWidget( bar, 3, 3, 0, 5 );
 
@@ -547,6 +555,7 @@ void AddresseeEditorWidget::load()
   mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
   mOfficeEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Office" ) );
   mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
+  mTitleEdit->setText( mAddressee.title() );
 
   QDictIterator<ContactEditorTabPage> it( mTabPages );
   for ( ; it.current(); ++it )
@@ -613,6 +622,8 @@ void AddresseeEditorWidget::save()
                              mAnniversaryPicker->date().toString( Qt::ISODate ) );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-Anniversary" );
+
+  mAddressee.setTitle( mTitleEdit->text() );
 
   // Save the email addresses
   mAddressee.setEmails( mEmailWidget->emails() );
@@ -866,6 +877,7 @@ void AddresseeEditorWidget::setReadOnly( bool readOnly )
   mProfessionEdit->setReadOnly( readOnly );
   mManagerEdit->setReadOnly( readOnly );
   mAssistantEdit->setReadOnly( readOnly );
+  mTitleEdit->setReadOnly( readOnly );
   mNicknameEdit->setReadOnly( readOnly );
   mSpouseEdit->setReadOnly( readOnly );
   mBirthdayPicker->setEnabled( !readOnly );
