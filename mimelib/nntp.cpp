@@ -8,7 +8,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -111,10 +111,10 @@ int DwNntpClient::Article(int aArticleNum)
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdArticle;
     if (aArticleNum >= 0) {
-        sprintf(mSendBuffer, "ARTICLE %d\r\n", aArticleNum);
+        snprintf(mSendBuffer, SEND_BUFFER_SIZE, "ARTICLE %d\r\n", aArticleNum);
     }
     else {
-        strcpy(mSendBuffer, "ARTICLE\r\n");
+        strlcpy(mSendBuffer, "ARTICLE\r\n", SEND_BUFFER_SIZE);
     }
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
@@ -138,9 +138,9 @@ int DwNntpClient::Article(const char* aMsgId)
         // error!
         return mReplyCode;
     }
-    strcpy(mSendBuffer, "ARTICLE ");
-    strncat(mSendBuffer, aMsgId, 80);
-    strcat(mSendBuffer, "\r\n");
+    strlcpy(mSendBuffer, "ARTICLE ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aMsgId, SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, "\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -160,10 +160,10 @@ int DwNntpClient::Head(int aArticleNum)
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdHead;
     if (aArticleNum >= 0) {
-        sprintf(mSendBuffer, "HEAD %d\r\n", aArticleNum);
+        snprintf(mSendBuffer, SEND_BUFFER_SIZE, "HEAD %d\r\n", aArticleNum);
     }
     else {
-        strcpy(mSendBuffer, "HEAD\r\n");
+        strlcpy(mSendBuffer, "HEAD\r\n", SEND_BUFFER_SIZE);
     }
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
@@ -186,9 +186,9 @@ int DwNntpClient::Head(const char* aMsgId)
     if (!aMsgId || !*aMsgId) {
         return mReplyCode;
     }
-    strcpy(mSendBuffer, "HEAD ");
-    strncat(mSendBuffer, aMsgId, 80);
-    strcat(mSendBuffer, "\r\n");
+    strlcpy(mSendBuffer, "HEAD ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aMsgId, SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, "\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -208,10 +208,10 @@ int DwNntpClient::Body(int articleNum)
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdBody;
     if (articleNum >= 0) {
-        sprintf(mSendBuffer, "BODY %d\r\n", articleNum);
+        snprintf(mSendBuffer, SEND_BUFFER_SIZE, "BODY %d\r\n", articleNum);
     }
     else {
-        strcpy(mSendBuffer, "BODY\r\n");
+        strlcpy(mSendBuffer, "BODY\r\n", SEND_BUFFER_SIZE);
     }
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
@@ -234,9 +234,9 @@ int DwNntpClient::Body(const char* aMsgId)
     if (!aMsgId || !*aMsgId) {
         return mReplyCode;
     }
-    strcpy(mSendBuffer, "BODY ");
-    strncat(mSendBuffer, aMsgId, 80);
-    strcat(mSendBuffer, "\r\n");
+    strlcpy(mSendBuffer, "BODY ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aMsgId, SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, "\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -256,10 +256,10 @@ int DwNntpClient::Stat(int articleNum)
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdStat;
     if (articleNum >= 0) {
-        sprintf(mSendBuffer, "STAT %d\r\n", articleNum);
+        snprintf(mSendBuffer, SEND_BUFFER_SIZE, "STAT %d\r\n", articleNum);
     }
     else {
-        strcpy(mSendBuffer, "STAT\r\n");
+        strlcpy(mSendBuffer, "STAT\r\n", SEND_BUFFER_SIZE);
     }
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
@@ -279,9 +279,9 @@ int DwNntpClient::Stat(const char* aMsgId)
     if (!aMsgId || !*aMsgId) {
         return mReplyCode;
     }
-    strcpy(mSendBuffer, "STAT ");
-    strncat(mSendBuffer, aMsgId, 80);
-    strcat(mSendBuffer, "\r\n");
+    strlcpy(mSendBuffer, "STAT ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aMsgId, SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, "\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -300,9 +300,9 @@ int DwNntpClient::Group(const char* aNewsgroupName)
     if (!aNewsgroupName || !*aNewsgroupName) {
         return mReplyCode;
     }
-    strcpy(mSendBuffer, "GROUP ");
-    strncat(mSendBuffer, aNewsgroupName, SEND_BUFFER_SIZE-32);
-    strcat(mSendBuffer, "\r\n");
+    strlcpy(mSendBuffer, "GROUP ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aNewsgroupName, SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, "\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -318,7 +318,7 @@ int DwNntpClient::Help()
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdHelp;
-    strcpy(mSendBuffer, "HELP\r\n");
+    strlcpy(mSendBuffer, "HELP\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -337,7 +337,7 @@ int DwNntpClient::Last()
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdLast;
-    strcpy(mSendBuffer, "LAST\r\n");
+    strlcpy(mSendBuffer, "LAST\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -353,7 +353,7 @@ int DwNntpClient::List()
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdList;
-    strcpy(mSendBuffer, "LIST\r\n");
+    strlcpy(mSendBuffer, "LIST\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -373,18 +373,18 @@ int DwNntpClient::Newgroups(const char* aDate, const char* aTime,
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdNewgroups;
-    strcpy(mSendBuffer, "NEWGROUPS ");
-    strncat(mSendBuffer, aDate, 16);
-    strcat(mSendBuffer, " ");
-    strncat(mSendBuffer, aTime, 16);
+    strlcpy(mSendBuffer, "NEWGROUPS ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aDate, SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, " ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aTime, SEND_BUFFER_SIZE);
     if (aIsGmt) {
-        strcat(mSendBuffer, " GMT");
+        strlcat(mSendBuffer, " GMT", SEND_BUFFER_SIZE);
     }
     if (aDistribution) {
-        strcat(mSendBuffer, " ");
-        strncat(mSendBuffer, aDistribution, SEND_BUFFER_SIZE-64);
+        strlcat(mSendBuffer, " ", SEND_BUFFER_SIZE);
+        strlcat(mSendBuffer, aDistribution, SEND_BUFFER_SIZE);
     }
-    strcat(mSendBuffer, "\r\n");
+    strlcat(mSendBuffer, "\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -404,21 +404,20 @@ int DwNntpClient::Newnews(const char* aNewsgroups, const char* aDate,
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdNewnews;
-    strcpy(mSendBuffer, "NEWNEWS ");
-    strncat(mSendBuffer, aNewsgroups, SEND_BUFFER_SIZE-64);
-    strcat(mSendBuffer, " ");
-    strncat(mSendBuffer, aDate, 16);
-    strcat(mSendBuffer, " ");
-    strncat(mSendBuffer, aTime, 16);
+    strlcpy(mSendBuffer, "NEWNEWS ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aNewsgroups, SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, " ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aDate, SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, " ", SEND_BUFFER_SIZE);
+    strlcat(mSendBuffer, aTime, SEND_BUFFER_SIZE);
     if (aIsGmt) {
-        strcat(mSendBuffer, " GMT");
+        strlcat(mSendBuffer, " GMT", SEND_BUFFER_SIZE);
     }
     if (aDistribution) {
-        strcat(mSendBuffer, " ");
-        size_t n = strlen(mSendBuffer);
-        strncat(mSendBuffer, aDistribution, SEND_BUFFER_SIZE-n-4);
+        strlcat(mSendBuffer, " ", SEND_BUFFER_SIZE);
+        strlcat(mSendBuffer, aDistribution, SEND_BUFFER_SIZE);
     }
-    strcat(mSendBuffer, "\r\n");
+    strlcat(mSendBuffer, "\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -437,7 +436,7 @@ int DwNntpClient::Next()
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdNext;
-    strcpy(mSendBuffer, "NEXT\r\n");
+    strlcpy(mSendBuffer, "NEXT\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -453,7 +452,7 @@ int DwNntpClient::Post()
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdPost;
-    strcpy(mSendBuffer, "POST\r\n");
+    strlcpy(mSendBuffer, "POST\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -469,7 +468,7 @@ int DwNntpClient::Quit()
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdQuit;
-    strcpy(mSendBuffer, "QUIT\r\n");
+    strlcpy(mSendBuffer, "QUIT\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
@@ -485,7 +484,7 @@ int DwNntpClient::Slave()
     mReplyCode = 0;
     mStatusResponse = mTextResponse = "";
     mLastCommand = kCmdSlave;
-    strcpy(mSendBuffer, "SLAVE\r\n");
+    strlcpy(mSendBuffer, "SLAVE\r\n", SEND_BUFFER_SIZE);
     DBG_NNTP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);

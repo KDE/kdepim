@@ -54,8 +54,8 @@ DwUuencode::~DwUuencode()
 void DwUuencode::SetFileName(const char* aName)
 {
     size_t n = sizeof(mFileName);
-    strncpy(mFileName, aName, n);
-	mFileName[n-1] = 0;
+    strlcpy(mFileName, aName, n);
+    mFileName[n-1] = 0; // Superfluous
 }
 
 
@@ -125,12 +125,12 @@ void DwUuencode::Encode()
 
 	// Write the "begin" line
 
-	sprintf(ascBuf, "begin %o %s" DW_EOL, mMode, mFileName);
+	snprintf(ascBuf, ascSize, "begin %o %s" DW_EOL, mMode, mFileName);
 	ascPos = strlen(ascBuf);
 
 	// Encode the binary chars
 
-	while (1) {
+	while (ascPos < ascSize) {
 		int numBinChars = binLen - binPos;
 		numBinChars = (numBinChars <= 45) ? numBinChars : 45;
         ascBuf[ascPos++] = ENC(numBinChars);

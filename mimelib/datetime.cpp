@@ -315,7 +315,7 @@ void DwDateTime::Assemble()
     char sgn = (mZone < 0) ? '-' : '+';
     int z = (mZone < 0) ? -mZone : mZone;
     char buffer[80];
-    sprintf(buffer, "%s, %d %s %4d %02d:%02d:%02d %c%02d%02d",
+    snprintf(buffer, sizeof(buffer), "%s, %d %s %4d %02d:%02d:%02d %c%02d%02d",
         lWeekDay[dow], mDay, lMonth[(mMonth-1)%12], mYear,
         mHour, mMinute, mSecond, sgn, z/60%24, z%60);
     mString = buffer;

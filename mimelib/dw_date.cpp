@@ -688,7 +688,7 @@ int main()
         gmtime(&tt, &ptms);
         tms1 = *ptms;
         sgn = (zone1 >= 0) ? '+' : '-';
-        sprintf(buf, "%s, %2d %s %d %d%d:%d%d:%d%d %c%d%d%d%d",
+        snprintf(buf, sizeof(buf), "%s, %2d %s %d %d%d:%d%d:%d%d %c%d%d%d%d",
             wdays[tms1.tm_wday], tms1.tm_mday, months[tms1.tm_mon],
             tms1.tm_year+1900,
             tms1.tm_hour/10, tms1.tm_hour%10,
