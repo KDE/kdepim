@@ -103,6 +103,7 @@ void KSSLSocket::slotConnected()
 		{
 			d->kssl->reInitialize();
 		}
+		d->kssl->setPeerHost(host());
                 kdDebug() << "SOCKET STATUS: " << socketStatus() << endl;
 		int rc = d->kssl->connect( sockfd );
                 if ( rc <= 0 ) {
@@ -287,13 +288,12 @@ int KSSLSocket::verifyCertificate()
 			// A policy was already set so let's honor that.
 			permacache = d->cc->isPermanent(pc);
 		}
-#if 0
-// yes, not really secure, but there does not seem at least one server with a correct secure :/
+
 		if (!_IPmatchesCN && cp == KSSLCertificateCache::Accept)
 		{
 			cp = KSSLCertificateCache::Prompt;
 		}
-#endif
+
 		// Precondition: cp is one of Reject, Accept or Prompt
 		switch (cp)
 		{
