@@ -53,7 +53,7 @@ bool Event::operator==( const Event& e2 ) const
 {
     return
         static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(e2) &&
-        dtEnd() == e2.dtEnd() &&
+        ( !hasEndDate() || ( dtEnd() == e2.dtEnd() ) ) &&
         hasEndDate() == e2.hasEndDate() &&
         transparency() == e2.transparency();
 }
