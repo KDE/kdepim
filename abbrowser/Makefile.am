@@ -1,6 +1,6 @@
 KDE_ICON = abbrowser
 
-KDE_CXXFLAGS = -frtti
+KDE_CXXFLAGS = $(USE_RTTI)
 
 APPSDIR = $(kde_appsdir)/Utilities
 
