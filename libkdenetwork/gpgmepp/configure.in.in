@@ -133,6 +133,10 @@ KDEPIM_PATH_GPGME(0.4.5,[
 	GPGME_CFLAGS='-I$(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme -I$(top_srcdir)/libkdenetwork/libgpg-error-copy -I$(top_builddir)/libkdenetwork/libgpg-error-copy'
 	GPGME_LIBS='$(top_builddir)/libkdenetwork/libgpgme-copy/gpgme/libgpgme.la'
 	GPGME_LIBS_DEP='$(GPGME_LIBS)'
+	# All of this is in gpgme-copy
+	AC_DEFINE(HAVE_GPGME_KEYLIST_MODE_VALIDATE, 1, [Define to 1 if your gpgme supports GPGME_KEYLIST_MODE_VALIDATE])
+	AC_DEFINE(HAVE_GPGME_KEY_T_KEYLIST_MODE, 1, [Define to 1 if your gpgme's gpgme_key_t has the keylist_mode member])
+	AC_DEFINE(HAVE_GPGME_CANCEL, 1, [Define to 1 if your gpgme supports gpgme_cancel()])
 ])
 
 AC_SUBST(GPGME_LIBS_DEP)
