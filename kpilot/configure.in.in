@@ -22,9 +22,7 @@ dnl and whatnot stuff.
 dnl
 HAVE_PISOCK=0
 
-if test -z "$kde_extra_includes" ; then
-	# do nothing to CPPFLAGS
-else
+if test -n "$kde_extra_includes" ; then
 	kpilot_save_cflags="$CPPFLAGS"
 	# they're passed in with no leading -I (??)
 	CPPFLAGS="$kpilot_save_cflags -I$kde_extra_includes"
@@ -47,9 +45,7 @@ if  test "$HAVE_PISOCK" = "0" ; then
 	AC_MSG_WARN([KPILOT: no pilot-link headers found.])
 else
 	HAVE_PISOCK=0
-	if [ -z "$kde_extra_includes" ] ; then
-		# do nothing to CPPFLAGS
-	else
+	if test -n "$kde_extra_includes" ] ; then
 		kpilot_save_cflags="$CPPFLAGS"
 		# they're passed in with no leading -I (??)
 		CPPFLAGS="$kpilot_save_cflags -L$kde_extra_libs"
@@ -89,8 +85,6 @@ else
 	AC_SUBST(LIBPISOCK)
 fi
 
-if test -z "$kde_extra_includes" ; then
-	# do nothing to CPPFLAGS
-else
+if test -n "$kde_extra_includes" ; then
 	CPPFLAGS="$kpilot_save_cflags"
 fi
