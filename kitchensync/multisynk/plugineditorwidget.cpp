@@ -57,6 +57,9 @@ void PluginEditorWidget::set( KonnectorPair *pair, KSync::Konnector *konnector )
 
   fillTypeBox();
 
+  if ( !mKonnector )
+    typeChanged( mTypeBox->currentItem() );
+
   if ( mKonnector ) {
     QStringList types = mPair->manager()->resourceTypeNames();
     int pos = types.findIndex( mKonnector->type() );
@@ -85,8 +88,10 @@ void PluginEditorWidget::fillTypeBox()
 void PluginEditorWidget::typeChanged( int )
 {
   KSync::Konnector *konnector = mPair->manager()->createResource( currentType() );
-  if ( konnector )
+  if ( konnector ) {
+    konnector->initDefaultFilters();
     mKonnector = konnector;
+  }
 }
 
 void PluginEditorWidget::changeOptions()
