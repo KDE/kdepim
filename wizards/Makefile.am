@@ -97,7 +97,7 @@ noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h \
 
 kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg
 
-oessages: rc.cpp
+messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kdepimwizards.pot
 
 egroupwarewizard.lo: ../kresources/egroupware/kabc_egroupwareprefs.h ../kresources/egroupware/kcal_egroupwareprefs.h ../kresources/egroupware/knotes_egroupwareprefs.h
