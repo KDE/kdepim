@@ -131,7 +131,7 @@ RAddress::_assemble()
 
     } else {
         
-        strRep_ = mailboxList_.at(0)->asString();
+        strRep_ = (*mailboxList_.at(0)).asString();
     }
 }
 
