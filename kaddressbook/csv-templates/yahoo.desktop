@@ -7,7 +7,9 @@ QuoteType=0
 
 [Misc]
 Name=Yahoo! AddressBook
+Name[ar]=دفتر العناوين Yahoo!
 Name[be]=Адрасная кніга Yahoo!
+Name[br]=Karned chomlec'hioù Yahoo !
 Name[bs]=Yahoo! Adresar
 Name[ca]=Llibreta d'adreces Yahoo!
 Name[cs]=Kniha adres Yahoo!
@@ -40,7 +42,7 @@ Name[sv]=Yahoo!-adressbok
 Name[ta]=யாஹூ! முகவரிப் புத்தகம்
 Name[tg]=Китоби адресии Yahoo!
 Name[tr]=Yahoo! Adres Defteri
-Name[uk]=Адресна книга Yahoo!
+Name[uk]=Адресна книга Yahoo
 Name[uz]=Yahoo! манзиллар дафтари
 Name[xx]=xxYahoo! AddressBookxx
 Name[zh_CN]=Yahoo! 地址簿

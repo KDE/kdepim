@@ -12,3 +12,5 @@ linking=false
 moving=false
 Icon=remote
 Description=An ioslave for the Sieve mail filtering protocol
+Description[es]=Un ioslave para el protocolo de filtrado de correo Sieve
+Description[sv]=En I/O-slav för brevfiltreringsprotokollet Sieve
