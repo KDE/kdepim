@@ -16,19 +16,22 @@
 #ifndef KNCOLLECTIONTREE_H
 #define KNCOLLECTIONTREE_H
 
-#include "knlistview.h"
+#include <kfoldertree.h>
 
 class KNNntpAccount;
 class KNGroup;
 class KNFolder;
+class KNCollectionViewItem;
 
-class KNCollectionView : public KNListView {
+class KNCollectionView : public KFolderTree {
 
   Q_OBJECT
 
   public:
     KNCollectionView(QWidget *parent, const char *name = 0);
-    
+
+    void setActive(QListViewItem *item);
+
   public slots:
     void addAccount(KNNntpAccount* a);
     void removeAccount(KNNntpAccount* a);
@@ -45,6 +48,32 @@ class KNCollectionView : public KNListView {
     void updateFolder(KNFolder* f);
     void addPendingFolders();
     void reloadFolders();
+
+    // KMail like keyboard navigation
+    void decCurrentFolder();
+    void incCurrentFolder();
+    void selectCurrentFolder();
+
+  signals:
+    void folderDrop( QDropEvent *e, KNCollectionViewItem *item );
+
+    void focusChanged( QFocusEvent* );
+    void focusChangeRequest( QWidget* );
+
+  protected:
+    // dnd
+    virtual QDragObject* dragObject();
+    virtual void contentsDropEvent( QDropEvent *e );
+
+    bool eventFilter( QObject *, QEvent * );
+    void focusInEvent( QFocusEvent *e );
+    void focusOutEvent( QFocusEvent *e );
+
+  private:
+    QListViewItem *mActiveItem;
+
+  private slots:
+    void slotSizeChanged(int section, int, int newSize);
 
 };
 

@@ -32,6 +32,7 @@
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
+#include "knlistview.h"
 
 
 #define SORT_DEPTH 5
@@ -70,8 +71,8 @@ const QString& KNGroup::name()
 void KNGroup::updateListItem()
 {
   if(!l_istItem) return;
-  l_istItem->setNumber(1,c_ount);
-  l_istItem->setNumber(2,c_ount-r_eadCount-i_gnoreCount);
+  l_istItem->setTotalCount( c_ount );
+  l_istItem->setUnreadCount( c_ount - r_eadCount - i_gnoreCount );
 }
 
 
@@ -1096,5 +1097,3 @@ KNConfig::Cleanup * KNGroup::activeCleanupConfig()
     return cleanupConfig();
   return account()->activeCleanupConfig();
 }
-
-// kate: space-indent on; indent-width 2;

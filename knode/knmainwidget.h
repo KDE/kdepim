@@ -36,6 +36,7 @@ class KXMLGUIClient;
 
 class KNListView;
 class KNCollectionView;
+class KNCollectionViewItem;
 class KNProgress;
 class KNConfigManager;
 class KNAccountManager;
@@ -215,14 +216,12 @@ protected slots:
   void slotArticleSelectionChanged();
   void slotCollectionSelected(QListViewItem*);
   void slotCollectionRenamed(QListViewItem*);
-  void slotCollectionViewDrop(QDropEvent* e, QListViewItem* after);
+  void slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* after);
   void slotArticleRMB(KListView*, QListViewItem *i, const QPoint &p);
   void slotCollectionRMB(KListView*, QListViewItem *i, const QPoint &p);
   /** Open selected article in own composer/reader window */
   void slotOpenArticle(QListViewItem *item);
   void slotHdrViewSortingChanged(int i);
-
-  void slotReparented();
 
   //network slots
   void slotNetworkActive(bool b);

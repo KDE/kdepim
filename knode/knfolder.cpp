@@ -90,7 +90,7 @@ void KNFolder::updateListItem()
   if(l_istItem) {
     l_istItem->setText(0, n_ame);
     if (!isRootFolder())
-      l_istItem->setNumber(1, c_ount);
+      l_istItem->setTotalCount( c_ount );
   }
 }
 

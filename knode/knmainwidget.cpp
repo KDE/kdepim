@@ -124,15 +124,14 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   connect(c_olDock, SIGNAL(iMBeingClosed()), SLOT(slotGroupDockHidden()));
   connect(c_olDock, SIGNAL(hasUndocked()), SLOT(slotGroupDockHidden()));
   connect(c_olView, SIGNAL(focusChangeRequest(QWidget *)), SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
-  connect(c_olView, SIGNAL(itemSelected(QListViewItem*)),
+  connect(c_olView, SIGNAL(selectionChanged(QListViewItem*)),
           SLOT(slotCollectionSelected(QListViewItem*)));
   connect(c_olView, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)),
           SLOT(slotCollectionRMB(KListView*, QListViewItem*, const QPoint&)));
-  connect(c_olView, SIGNAL(dropped(QDropEvent*, QListViewItem*)),
-          SLOT(slotCollectionViewDrop(QDropEvent*, QListViewItem*)));
+  connect(c_olView, SIGNAL(folderDrop(QDropEvent*, KNCollectionViewItem*)),
+          SLOT(slotCollectionViewDrop(QDropEvent*, KNCollectionViewItem*)));
   connect(c_olView, SIGNAL(itemRenamed(QListViewItem*)),
           SLOT(slotCollectionRenamed(QListViewItem*)));
-  connect(c_olView, SIGNAL(reparented()), SLOT(slotReparented()));
 
   accel->connectItem( accel->insertItem(Key_Up), a_rtView, SLOT(slotKeyUp()) );
   accel->connectItem( accel->insertItem(Key_Down), a_rtView, SLOT(slotKeyDown()) );
@@ -259,7 +258,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   if( c_olView->firstChild() ) {
     QListViewItem *i = c_olView->firstChild();
     bool open = i->isOpen();
-    c_olView->setActive( i,true );
+    c_olView->setActive( i );
     i->setOpen( open );
   }
 
@@ -523,7 +522,7 @@ void KNMainWidget::openURL(const KURL &url)
 
       if (item) {
         c_olView->ensureItemVisible(item);
-        c_olView->setActive(item, true);
+        c_olView->setActive( item );
       }
     } else {
       QString groupname = url.url().mid( url.protocol().length()+1 );
@@ -601,7 +600,7 @@ void KNMainWidget::initActions()
                               SLOT(slotNavPrevArt()), actionCollection(), "go_prevArticle" );
   a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", ALT+Key_Space , this,
                               SLOT(slotNavNextUnreadArt()), actionCollection(), "go_nextUnreadArticle");
-  a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", CTRL+Key_Space , this,
+  a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", SHIFT+Key_Space , this,
                               SLOT(slotNavNextUnreadThread()), actionCollection(), "go_nextUnreadThread");
   a_ctNavNextGroup          = new KAction(i18n("Ne&xt Group"), "down", Key_Plus , this,
                               SLOT(slotNavNextGroup()), actionCollection(), "go_nextGroup");
@@ -610,6 +609,21 @@ void KNMainWidget::initActions()
   a_ctNavReadThrough        = new KAction(i18n("Read &Through Articles"), Key_Space , this,
                               SLOT(slotNavReadThrough()), actionCollection(), "go_readThrough");
   a_ctNavReadThrough->plugAccel(a_ccel);
+
+  QAccel *accel = new QAccel( this );
+  new KAction( i18n("Focus on Next Folder"), CTRL+Key_Right, c_olView,
+    SLOT(incCurrentFolder()), actionCollection(), "inc_current_folder" );
+  accel->connectItem(accel->insertItem(CTRL+Key_Right),
+    c_olView, SLOT(incCurrentFolder()));
+  new KAction( i18n("Focus on Previous Folder"), CTRL+Key_Left, c_olView,
+    SLOT(decCurrentFolder()), actionCollection(), "dec_current_folder" );
+  accel->connectItem(accel->insertItem(CTRL+Key_Left),
+    c_olView, SLOT(decCurrentFolder()));
+  new KAction( i18n("Select Folder with Focus"), CTRL+Key_Space, c_olView,
+    SLOT(selectCurrentFolder()), actionCollection(), "select_current_folder" );
+  accel->connectItem(accel->insertItem(CTRL+Key_Space),
+    c_olView, SLOT(selectCurrentFolder()));
+
 
   //collection-view - accounts
   a_ctAccProperties         = new KAction(i18n("Account &Properties"), "configure", 0, this,
@@ -871,7 +885,6 @@ void KNMainWidget::readOptions()
 
   sortCol = conf->readNumEntry("account_sortCol", 0);
   sortAsc = conf->readBoolEntry("account_sortAscending", true);
-  c_olView->setColAsc(sortCol, sortAsc);
   c_olView->setSorting(sortCol, sortAsc);
 
   resize(787,478);  // default optimized for 800x600
@@ -914,7 +927,7 @@ void KNMainWidget::saveOptions()
   conf->writeEntry("sortAscending", h_drView->ascending());
   conf->writeEntry("sortByThreadChangeDate", h_drView->sortByThreadChangeDate());
   conf->writeEntry("account_sortCol", c_olView->sortColumn());
-  conf->writeEntry("account_sortAscending", c_olView->ascending());
+  conf->writeEntry("account_sortAscending", c_olView->sortOrder() == Qt::Ascending ? true : false);
   conf->writeEntry("quicksearch", q_uicksearch->isShown());
   //saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
@@ -1271,7 +1284,7 @@ void KNMainWidget::slotCollectionRenamed(QListViewItem *i)
 }
 
 
-void KNMainWidget::slotCollectionViewDrop(QDropEvent* e, QListViewItem* after)
+void KNMainWidget::slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* after)
 {
   kdDebug(5003) << "KNMainWidget::slotCollectionViewDrop() : type = " << e->format(0) << endl;
 
@@ -1590,7 +1603,7 @@ void KNMainWidget::slotNavNextGroup()
 
   next=current;
   while(next) {
-    if(!next->isActive())
+    if(!next->isSelected())
       break;
     if(next->childCount()>0 && !next->isOpen()) {
       next->setOpen(true);
@@ -1601,7 +1614,7 @@ void KNMainWidget::slotNavNextGroup()
   }
 
   if (next)
-    c_olView->setActive(next, true);
+    c_olView->setActive( next );
 }
 
 
@@ -1616,13 +1629,13 @@ void KNMainWidget::slotNavPrevGroup()
 
   prev=current;
   while(prev) {
-    if(!prev->isActive())
+    if(!prev->isSelected())
       break;
     prev=static_cast<KNCollectionViewItem*>(prev->itemAbove());
   }
 
   if (prev)
-    c_olView->setActive(prev, true);
+    c_olView->setActive( prev );
 }
 
 
@@ -1800,7 +1813,7 @@ void KNMainWidget::slotFolNew()
   if (f) {
     f_olManager->setCurrentFolder(f);
     c_olView->ensureItemVisible(f->listItem());
-    c_olView->setActive(f->listItem(), true);
+    c_olView->setActive( f->listItem() );
     slotFolRename();
   }
 }
@@ -1815,7 +1828,7 @@ void KNMainWidget::slotFolNewChild()
     if (f) {
       f_olManager->setCurrentFolder(f);
       c_olView->ensureItemVisible(f->listItem());
-      c_olView->setActive(f->listItem(), true);
+      c_olView->setActive( f->listItem() );
       slotFolRename();
     }
   }
@@ -2320,11 +2333,6 @@ void FetchArticleIdDlg::slotTextChanged(const QString &_text )
     enableButtonOK( !_text.isEmpty() );
 }
 
-void KNMainWidget::slotReparented()
-{
-  if ( c_olView->parent() != c_olDock )
-    c_olDock->undock();
-}
 
 ////////////////////////////////////////////////////////////////////////
 //////////////////////// DCOP implementation

@@ -268,7 +268,7 @@ KNConfig::Appearance::Appearance()
   i_cons[posting]         = SmallIcon("filenew");
   i_cons[canceledPosting] = SmallIcon("editdelete");
   i_cons[savedRemote]     = SmallIcon("editcopy");
-  i_cons[nntp]            = UserIcon("server");
+  i_cons[nntp]            = SmallIcon("server");
   i_cons[group]           = UserIcon("group");
   i_cons[folder]          = SmallIcon("folder_cyan");
   i_cons[rootFolder]      = SmallIcon("folder");
