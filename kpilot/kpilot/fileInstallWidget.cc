@@ -75,19 +75,17 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 
 	QPushButton *abutton;
 
-	 abutton = clearButton= new QPushButton(i18n("Clear List"), this);
-
-	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
-	grid->addWidget(abutton, 3, 1);
-	QWhatsThis::add(abutton,
-		i18n
-		("<qt>Clear the list of files to install. No files will be installed.</qt>"));
-
 	abutton = addButton = new QPushButton(i18n("Add File..."), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
-	grid->addWidget(abutton, 4, 1);
+	grid->addWidget(abutton, 3, 1);
 	QWhatsThis::add(abutton,
 		i18n("<qt>Choose a file to add to the list of files to install.</qt>"));
+
+	abutton = clearButton= new QPushButton(i18n("Clear List"), this);
+	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
+	grid->addWidget(abutton, 4, 1);
+	QWhatsThis::add(abutton,
+		i18n("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
 	fIconView = new KIconView(this);
 	connect(fIconView, SIGNAL(dropped(QDropEvent *, const QValueList<QIconDragItem> &)),
