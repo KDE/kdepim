@@ -1,5 +1,5 @@
  /*
-    This file is part of libkcal.
+    This file is part of the libkcal IMAP resource.
 
     Copyright (c) 2003 Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
     Copyright (c) 2003 - 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
@@ -26,7 +26,6 @@
 #include <qstring.h>
 #include <qdatetime.h>
 
-#include <dcopobject.h>
 #include <kconfig.h>
 
 #include <libkcal/incidence.h>
@@ -34,9 +33,7 @@
 #include <libkcal/calendarlocal.h>
 
 #include "resourcecalendar.h"
-
-class DCOPClient;
-class KMailICalIface_stub;
+#include <resourceimapshared.h>
 
 namespace KCal {
 
@@ -44,15 +41,9 @@ namespace KCal {
   This class provides a calendar stored on an IMAP-server via kmail
 */
 class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
-                     virtual public DCOPObject
+                     public ResourceIMAPBase::ResourceIMAPShared
 {
   Q_OBJECT
-  K_DCOP
-
-  k_dcop:
-    virtual bool addIncidence( const QString& type, const QString& ical );
-    virtual void deleteIncidence( const QString& type, const QString& uid );
-    virtual void slotRefresh( const QString& type );
 
   public:
     ResourceIMAP( const KConfig * );
@@ -164,30 +155,25 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
     virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
     /** Append alarms of incidence in interval to list of alarms. */
 
-  protected slots:
-    void unregisteredFromDCOP( const QCString& );
+    virtual bool addIncidence( const QString& type, const QString& ical );
+    virtual void deleteIncidence( const QString& type, const QString& uid );
+    virtual void slotRefresh( const QString& type );
 
   private:
     void init();
     bool getIncidenceList( QStringList& lst, const QString& type );
-    bool connectKMailSignal( const QCString&, const QCString& ) const;
 
     bool loadAllEvents();
     bool loadAllTasks();
     bool loadAllJournals();
-
-    bool connectToKMail() const;
 
     KCal::Incidence* parseIncidence( const QString& str );
 
     QString mServer;
     ICalFormat mFormat;
     CalendarLocal mCalendar;
-    DCOPClient* mDCOPClient;
     bool mSilent;
     QString mCurrentUID;
-
-    mutable KMailICalIface_stub* mKMailIcalIfaceStub;
 };  
 
 }

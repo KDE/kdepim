@@ -30,11 +30,7 @@
     your version.
 */
 
-#include <dcopclient.h>
-
 #include <kabc/formatfactory.h>
-#include <kapp.h>
-#include <kdcopservicestarter.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -42,13 +38,9 @@
 
 #include <qstring.h>
 
-#include "kmailicalIface_stub.h"
-
 #include "resourceimap.h"
 #include <kmessagebox.h>
 
-
-static const QCString dcopObjectId = "KMailICalIface";
 
 class IMAPFactory : public KRES::PluginFactoryBase
 {
@@ -74,27 +66,16 @@ extern "C"
 
 
 KABC::ResourceIMAP::ResourceIMAP( const KConfig *config )
-  : DCOPObject("ResourceIMAP-KABC"), KABC::Resource( config ), mSilent( false )
+  : KABC::Resource( config ),
+    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-KABC" ),
+    mSilent( false )
 {
   FormatFactory *factory = FormatFactory::self();
   mFormat = factory->format( "vcard" );
-
-  mDCOPClient = new DCOPClient();
-  mDCOPClient->attach();
-  mDCOPClient->registerAs( "resourceimap-kabc", true );
-
-  // Make the connection to KMail ready
-  mKMailIcalIfaceStub = 0;
-  kapp->dcopClient()->setNotifications( true );
-  connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QCString& ) ),
-           this, SLOT( unregisteredFromDCOP( const QCString& ) ) );
 }
 
 KABC::ResourceIMAP::~ResourceIMAP()
 {
-  kapp->dcopClient()->setNotifications( false );
-  delete mKMailIcalIfaceStub;
-  delete mDCOPClient;
   delete mFormat;
 }
 
@@ -122,13 +103,8 @@ bool KABC::ResourceIMAP::load()
 {
   mAddrMap.clear();
 
-  if ( !connectToKMail() ) {
-    kdError() << "DCOP error during incidences(QString)\n";
-    return false;
-  }
-
-  QStringList lst = mKMailIcalIfaceStub->incidences( "Contact" );
-  if ( !mKMailIcalIfaceStub->ok() ) {
+  QStringList lst;
+  if ( !kmailIncidences( lst, "Contact" ) ) {
     kdError() << "Communication problem in ResourceIMAP::load()\n";
     return false;
   }
@@ -159,17 +135,13 @@ bool KABC::ResourceIMAP::save( Ticket* )
     return true;
 
   // Save in KMail
-  if( !connectToKMail() ) {
-    kdError() << "DCOP error during ResourceIMAP::save()\n";
-    return false;
-  }
-  mKMailIcalIfaceStub->update( "Contact", vCards );
+  bool rc = kmailUpdate( "Contact", vCards );
 
   // Mark all of them as read
   for( Iterator it = begin(); it != end(); ++it )
     (*it).setChanged( false );
 
-  return mKMailIcalIfaceStub->ok();
+  return rc;
 }
 
 void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
@@ -187,26 +159,22 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
         update = true;
     }
 
-    if ( !connectToKMail() ) {
-      kdError() << "DCOP error during "
-                << "ResourceIMAP::insertAddressee(const Addressee& addr)\n";
-    } else {
-      QString vCard = mConverter.createVCard( addr );
+    QString vCard = mConverter.createVCard( addr );
 
-      if( !update )
-        // Save the new addressee
-        mKMailIcalIfaceStub->addIncidence( "Contact", addr.uid(), vCard );
-      else
-        // Update existing addressee
-        mKMailIcalIfaceStub->update( "Contact", addr.uid(), vCard );
+    bool rc;
+    if( !update )
+      // Save the new addressee
+      rc = kmailAddIncidence( "Contact", addr.uid(), vCard );
+    else
+      // Update existing addressee
+      rc = kmailUpdate( "Contact", addr.uid(), vCard );
 
-      if( mKMailIcalIfaceStub->ok() )
+    if( rc )
         // This is ugly, but it's faster than doing
         // mAddrMap.find(addr.uid()), which would give the same :-(
         // Reason for this: The Changed attribute of Addressee should
         // be mutable
         const_cast<Addressee&>(addr).setChanged( false );
-    }
   }
 
   Resource::insertAddressee( addr );
@@ -214,14 +182,8 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
 
 void KABC::ResourceIMAP::removeAddressee( const Addressee& addr )
 {
-  if ( !mSilent ) {
-    if ( !connectToKMail() ) {
-      kdError() << "DCOP error during "
-                << "ResourceIMAP::removeAddressee(const Addressee& addr)\n";
-    } else {
-      mKMailIcalIfaceStub->deleteIncidence( "Contact", addr.uid() );
-    }
-  }
+  if ( !mSilent )
+    kmailDeleteIncidence( "Contact", addr.uid() );
 
   Resource::removeAddressee( addr );
 }
@@ -276,62 +238,6 @@ void KABC::ResourceIMAP::slotRefresh( const QString& type )
     addressBook()->emitAddressBookChanged();
 
     mSilent = silent;
-  }
-}
-
-/*
- * KMail connection code
- */
-bool KABC::ResourceIMAP::connectToKMail() const
-{
-  if ( !mKMailIcalIfaceStub ) {
-    QString error;
-    QCString dcopService;
-    int result = KDCOPServiceStarter::self()->
-      findServiceFor( "DCOP/ResourceBackend/IMAP", QString::null,
-                      QString::null, &error, &dcopService );
-    if ( result != 0 ) {
-      kdError() << "Couldn't connect to the IMAP resource backend\n";
-      // TODO: You might want to show "error" (if not empty) here, using e.g. KMessageBox
-      return false;
-    }
-
-    mKMailIcalIfaceStub = new KMailICalIface_stub( kapp->dcopClient(),
-                                                   dcopService, dcopObjectId );
-
-    // Attach to the KMail signals
-    if ( !connectKMailSignal( "incidenceAdded(QString,QString)",
-                              "addIncidence(QString,QString)" ) ) {
-      kdError() << "DCOP connection to incidenceAdded failed" << endl;
-    }
-    if ( !connectKMailSignal( "incidenceDeleted(QString,QString)",
-                              "deleteIncidence(QString,QString)" ) ) {
-      kdError() << "DCOP connection to incidenceDeleted failed" << endl;
-    }
-    if ( !connectKMailSignal( "signalRefresh(QString)",
-                              "slotRefresh(QString)" ) ) {
-      kdError() << "DCOP connection to signalRefresh failed" << endl;
-    }
-  }
-
-  return ( mKMailIcalIfaceStub != 0 );
-}
-
-bool KABC::ResourceIMAP::connectKMailSignal( const QCString& signal,
-					     const QCString& method ) const
-{
-  ResourceIMAP* _this = const_cast<ResourceIMAP*>( this );
-  return _this->connectDCOPSignal( "kmail", dcopObjectId, signal, method,
-                                   false );
-}
-
-void KABC::ResourceIMAP::unregisteredFromDCOP( const QCString& appId )
-{
-  if ( mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId ) {
-    // Delete the stub so that the next time we need the addressbook,
-    // we'll know that we need to start a new one.
-    delete mKMailIcalIfaceStub;
-    mKMailIcalIfaceStub = 0;
   }
 }
 

@@ -36,8 +36,8 @@
 #include <kabc/vcardconverter.h>
 #include <kabc/resource.h>
 #include <dcopobject.h>
+#include <resourceimapshared.h>
 
-class KMailICalIface_stub;
 
 namespace KABC {
 
@@ -48,15 +48,10 @@ namespace KABC {
  * addresses in an IMAP folder in KMail (or other conforming email
  * clients).
  */
-  class ResourceIMAP : public Resource, virtual public DCOPObject
+  class ResourceIMAP : public Resource,
+                       public ResourceIMAPBase::ResourceIMAPShared
 {
   Q_OBJECT
-  K_DCOP
-
-  k_dcop:
-    virtual bool addIncidence( const QString& type, const QString& ical );
-    virtual void deleteIncidence( const QString& type, const QString& uid );
-    virtual void slotRefresh( const QString& type );
 
 public:
   /**
@@ -109,14 +104,11 @@ public:
    */
   virtual void removeAddressee( const Addressee& addr );
 
-  protected slots:
-    void unregisteredFromDCOP( const QCString& );
+protected:
+  virtual bool addIncidence( const QString& type, const QString& ical );
+  virtual void deleteIncidence( const QString& type, const QString& uid );
+  virtual void slotRefresh( const QString& type );
 
-private:
-  bool connectKMailSignal( const QCString&, const QCString& ) const;
-  bool connectToKMail() const;
-
-  DCOPClient* mDCOPClient;
   bool mSilent;
 
   FormatPlugin* mFormat;
@@ -124,8 +116,6 @@ private:
   QCString mAppId;
 
   KABC::VCardConverter mConverter;
-
-  mutable KMailICalIface_stub* mKMailIcalIfaceStub;
 };
 
 }
