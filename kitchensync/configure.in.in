@@ -1,1 +1,1 @@
-#DO_NOT_COMPILE="$DO_NOT_COMPILE kitchensync"
+DO_NOT_COMPILE="$DO_NOT_COMPILE kitchensync"
