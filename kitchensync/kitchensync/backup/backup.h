@@ -67,6 +67,8 @@ class Backup : public ManipulatorPart
   protected:
     Konnector *currentKonnector();
 
+    void openKonnectors();
+
     void updateKonnectorList();
     void updateRestoreList();
 
@@ -74,11 +76,20 @@ class Backup : public ManipulatorPart
 
     QString topBackupDir() const;
 
+    void tryFinishBackup();
+    void tryFinishRestore();
+
+    QString backupFile( Konnector *k, Syncee *s );
+
   protected slots:
     void restoreBackup();
     void deleteBackup();
 
     void slotSynceesRead( Konnector *k, const SynceeList &syncees );
+    void slotSynceeReadError( Konnector *k );
+
+    void slotSynceesWritten( Konnector *k );
+    void slotSynceesWriteError( Konnector *k );
 
   private:
     QPixmap m_pixmap;
@@ -92,6 +103,8 @@ class Backup : public ManipulatorPart
     uint mKonnectorCount;
 
     QString mBackupDir;
+
+    bool mActive;
 };
 
 }

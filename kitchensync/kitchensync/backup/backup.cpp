@@ -94,7 +94,7 @@ class BackupItem : public QListViewItem
 
 Backup::Backup( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
-  : ManipulatorPart( parent, name ), m_widget( 0 )
+  : ManipulatorPart( parent, name ), m_widget( 0 ), mActive( false )
 {
   m_pixmap = KGlobal::iconLoader()->loadIcon("kcmdrkonqi", KIcon::Desktop, 48 );
 }
@@ -223,10 +223,173 @@ void Backup::logMessage( const QString &message )
 
 void Backup::actionSync()
 {
+  if ( mActive ) {
+    KMessageBox::sorry( m_widget, i18n("Already active.") );
+    return;
+  }
+
+  mActive = true;
+  
   logMessage( i18n("Starting backup") );
 
   createBackupDir();
 
+  openKonnectors();
+
+  Konnector *k;
+  for ( k = mOpenedKonnectors.first(); k; k = mOpenedKonnectors.next() ) {
+    logMessage( i18n("Request Syncees") );
+    if ( !k->readSyncees() ) {
+      logMessage( i18n("Request failed.") );
+    }
+  }
+
+  tryFinishBackup();
+}
+
+QString Backup::topBackupDir() const
+{
+  return "backup/";
+}
+
+void Backup::createBackupDir()
+{
+  QString date = QDateTime::currentDateTime().toString( ISODate );
+  mBackupDir = locateLocal( "appdata", topBackupDir() + date + "/", true );
+
+  kdDebug() << "DIRNAME: " << mBackupDir << endl;
+}
+
+QString Backup::backupFile( Konnector *k, Syncee *s )
+{
+  return mBackupDir + "/" + k->identifier() + "-" + s->type();
+}
+
+void Backup::slotSynceesRead( Konnector *k, const SynceeList &syncees )
+{
+  logMessage( i18n("Syncees read from '%1'").arg( k->resourceName() ) );
+
+  if ( syncees.count() == 0 ) {
+    logMessage( i18n("Syncee list is empty.") );
+  } else {
+    logMessage( i18n("Performing backup.") );
+  
+    SynceeList::ConstIterator it;
+    for( it = syncees.begin(); it != syncees.end(); ++it ) {
+      QString filename = backupFile( k, *it );
+      kdDebug() << "FILENAME: " << filename << endl;
+      QString type = (*it)->type();
+      if ( (*it)->writeBackup( filename ) ) {
+        logMessage( i18n("Wrote backup for %1.").arg( type ) );
+      } else {
+        logMessage( i18n("<b>Error:</b> Can't write backup for %1.")
+                    .arg( type ) );
+      }
+    }
+  }
+
+  tryFinishBackup();
+}
+
+void Backup::slotSynceeReadError( Konnector *k )
+{
+  logMessage( i18n("Error reading %1").arg( k->resourceName() ) );
+  
+  tryFinishBackup();
+}
+
+void Backup::tryFinishBackup()
+{
+  mKonnectorCount--;
+  if ( mKonnectorCount > 0 ) return;
+  
+  logMessage( i18n("Backup finished.") );
+
+  updateRestoreList();
+
+  mActive = false;
+}
+
+void Backup::restoreBackup()
+{
+  if ( mActive ) {
+    KMessageBox::sorry( m_widget, i18n("Already active.") );
+    return;
+  }
+
+  BackupItem *backupItem =
+    static_cast<BackupItem *>( mRestoreView->currentItem() );
+  
+  if ( !backupItem ) {
+    KMessageBox::sorry( m_widget, i18n("No backup selected.") );
+    return;
+  }
+
+  if ( backupItem->dirName().isEmpty() ) {
+    KMessageBox::sorry( m_widget, i18n("Selected backup is invalid.") );
+    return;
+  }
+
+  mActive = true;
+
+  logMessage( i18n("Restoring backup %1").arg( backupItem->dirName() ) );
+
+  openKonnectors();
+
+  mBackupDir = locateLocal( "appdata", topBackupDir() + backupItem->dirName() );
+
+  kdDebug() << "DIRNAME: " << mBackupDir << endl;
+
+  Konnector *k;
+  for ( k = mOpenedKonnectors.first(); k; k = mOpenedKonnectors.next() ) {
+    logMessage( i18n("Restoring %1.").arg( k->resourceName() ) );
+
+    SynceeList syncees = k->syncees();
+
+    SynceeList::ConstIterator it;
+    for( it = syncees.begin(); it != syncees.end(); ++it ) {
+      QString filename = backupFile( k, *it );
+      kdDebug() << "FILENAME: " << filename << endl;
+      QString type = (*it)->type();
+      if ( (*it)->restoreBackup( filename ) ) {
+        logMessage( i18n("Restored backup for %1.").arg( type ) );
+      } else {
+        logMessage( i18n("<b>Error:</b> Can't restore backup for %1.")
+                    .arg( type ) );
+      }
+      k->writeSyncees();
+    }
+  }
+
+  tryFinishRestore();
+}
+
+void Backup::slotSynceesWritten( Konnector *k )
+{
+  logMessage( i18n("Successfully written %1").arg( k->resourceName() ) );
+
+  tryFinishRestore();
+}
+
+void Backup::slotSynceesWriteError( Konnector *k )
+{
+  logMessage( i18n("Error writing %1").arg( k->resourceName() ) );
+  
+  tryFinishRestore();
+}
+
+void Backup::tryFinishRestore()
+{
+  --mKonnectorCount;
+  if ( mKonnectorCount > 0 ) return;
+  
+  logMessage( i18n("Restore finished.") );
+
+  mActive = false;
+}
+
+void Backup::openKonnectors()
+{
   mOpenedKonnectors.clear();
   mKonnectorCount = 0;
 
@@ -245,77 +408,6 @@ void Backup::actionSync()
     }
     ++it;
   }
-
-  Konnector *k;
-  for ( k = mOpenedKonnectors.first(); k; k = mOpenedKonnectors.next() ) {
-    logMessage( i18n("Request Syncees") );
-    if ( !k->readSyncees() ) {
-      logMessage( i18n("Request failed.") );
-    }
-  }
-}
-
-QString Backup::topBackupDir() const
-{
-  return "backup/";
-}
-
-void Backup::createBackupDir()
-{
-  QString date = QDateTime::currentDateTime().toString( ISODate );
-  mBackupDir = locateLocal( "appdata", topBackupDir() + date + "/", true );
-
-  kdDebug() << "DIRNAME: " << mBackupDir << endl;
-}
-
-void Backup::slotSynceesRead( Konnector *k, const SynceeList &syncees )
-{
-  logMessage( i18n("Syncees read from '%1'").arg( k->resourceName() ) );
-
-  if ( syncees.count() == 0 ) {
-    logMessage( i18n("Syncee list is empty.") );
-  } else {
-    logMessage( i18n("Performing backup.") );
-  
-    SynceeList::ConstIterator it;
-    for( it = syncees.begin(); it != syncees.end(); ++it ) {
-      QString filename = mBackupDir + "/" + k->identifier() + "-" +
-                         (*it)->type();
-      kdDebug() << "FILENAME: " << filename << endl;
-      QString type = (*it)->type();
-      if ( (*it)->writeBackup( filename ) ) {
-        logMessage( i18n("Wrote backup for %1.").arg( type ) );
-      } else {
-        logMessage( i18n("<b>Error:</b> Can't write backup for %1.")
-                    .arg( type ) );
-      }
-    }
-  }
-
-  mKonnectorCount--;
-
-  if ( mKonnectorCount == 0 ) {
-    logMessage( i18n("Backup finished.") );
-  }
-}
-
-void Backup::restoreBackup()
-{
-  BackupItem *backupItem =
-    static_cast<BackupItem *>( mRestoreView->currentItem() );
-  
-  if ( !backupItem ) {
-    KMessageBox::sorry( m_widget, i18n("No backup selected.") );
-    return;
-  }
-
-  if ( backupItem->dirName().isEmpty() ) {
-    KMessageBox::sorry( m_widget, i18n("Selected backup is invalid.") );
-    return;
-  }
-
-  logMessage( i18n("Restoring backup %1").arg( backupItem->dirName() ) );
-
 }
 
 void Backup::deleteBackup()

@@ -242,7 +242,7 @@ void SyncerPart::trySync()
     mCalendarSyncer.sync();
     mAddressBookSyncer.sync();
 
-    mProcessedKonnectors.clear();    
+    mProcessedKonnectors.clear();
     
     Konnector *konnector;
     for( konnector = mOpenedKonnectors.first(); konnector;
