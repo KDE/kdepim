@@ -91,7 +91,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="text">
-                                    <string>VCard &amp;file:</string>
+                                    <string>vCard &amp;file:</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Synchronize the handheld with an addressbook different from KDE's addressbook. You need to give the filename of the vcard file.&lt;/qt&gt;</string>
