@@ -35,6 +35,8 @@ Mark - 3.2
   * 2003-09-23: BUG: Auto-save should write events.
   
   * 2003-09-24: UPDATE DOCS!!
+  
+  * 2003-10-24: Update ChangeLog.
 
   * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
 
