@@ -57,6 +57,7 @@
 #include "addresseeutil.h"
 #include "addresseeeditorwidget.h"
 #include "filterselectionwidget.h"
+#include "featuredistributionlist.h"
 
 ////////////////////////////////////////
 // View Manager
@@ -491,12 +492,14 @@ void ViewManager::initGUI()
   // ----- create the quick edit widget as part of the features tabwidget
   //       (THIS WILL BE REMOVED!):
   mQuickEdit = new AddresseeEditorWidget( mFeatures, "mQuickEdit" );
-  mFeatures->addTab( mQuickEdit, i18n("QuickEdit") );
   connect( mQuickEdit, SIGNAL(modified()), SLOT(addresseeModified()) );
 
   connect( mJumpButtonBar, SIGNAL(jumpToLetter(const QChar &)),
             this, SLOT(jumpToLetter(const QChar &)) );
-
+  mFeatures->addTab( mQuickEdit, i18n("QuickEdit") );
+  mFeatDistList=new FeatureDistributionList(mDocument, mFeatures);
+  mFeatures->addTab(mFeatDistList, i18n("Distribution Lists..."));
+  connect(mFeatDistList, SIGNAL(modified()), SLOT(slotModified()));
   l->addWidget( mQSpltFeatures );
   l->setStretchFactor( mQSpltFeatures, 100 );
   l->addWidget( mJumpButtonBar );
@@ -676,6 +679,11 @@ void ViewManager::filterActivated(int index)
     mActiveView->setFilter( mCurrentFilter );
     mActiveView->refresh();
   }
+}
+
+void ViewManager::slotModified()
+{
+    modified();
 }
 
 #include "viewmanager.moc"

@@ -29,6 +29,8 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   ldapsearchdialog.ui ldapsearchdialogimpl.cpp \
   prefsdialog.cpp viewwrapper.cpp addviewdialog.cpp \
   viewmanager.cpp \
+  featuredistributionlistbase.ui featuredistributionlist.cpp \
+  featuredistributionlistview.cpp \
   jumpbuttonbar.cpp configuretableviewdialog.cpp addresseeutil.cpp \
   cardview.cpp kaddressbookcardview.cpp addresseeeditorwidget.cpp \
   addresseeeditordialog.cpp configurecardviewdialog.cpp \
@@ -56,7 +58,7 @@ noinst_HEADERS = kaddressbook.h undo.h kaddressbookview.h undocmds.h \
   addresseeeditordialog.h configurecardviewdialog.h \
   kaddressbookprinter.h typecombo.h \
   nameeditdialog.h addresseditwidget.h emaileditwidget.h phoneeditwidget.h \
-  actionmanager.h \
+  actionmanager.h featuredistributionlist.h featuredistributionlistview.h \
   filtereditdialog.h filtereditwidget.h filter.h filterselectionwidget.h \
   configureviewfilterpage.h kabentrypainter.h addresseeconfig.h \
   detailsviewcontainer.h global.h look_basic.h look_details.h

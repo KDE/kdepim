@@ -47,6 +47,7 @@ class ViewContainer;
 class KAddressBookView;
 class JumpButtonBar;
 class AddresseeEditorWidget;
+class FeatureDistributionList;
 
 /** The view manager manages the views and everything related to them. The
 * manager will load the views at startup and display a view when told to
@@ -186,7 +187,10 @@ class ViewManager : public QWidget
     */
     void filterActivated(int index);
 
-  protected slots:
+    /** The resource has been modified and needs to be saved. */
+    void slotModified();
+
+    protected slots:
     /** Handle events on the incremental search widget. */
     void incSearch(const QString& text, int field);
 
@@ -287,6 +291,7 @@ class ViewManager : public QWidget
     QSplitter *mQSpltDetails;
     QSplitter *mQSpltFeatures;
     QTabWidget *mFeatures;
+    FeatureDistributionList *mFeatDistList;
 };
 
 #endif
