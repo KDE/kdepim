@@ -30,11 +30,11 @@
 #include <knuminput.h>
 
 #include <kresources/resource.h>
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 
 namespace KCal {
 
-class ResourceExchangeConfig : public KRES::ResourceConfigWidget
+class ResourceExchangeConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

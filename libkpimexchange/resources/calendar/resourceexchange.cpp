@@ -33,7 +33,7 @@
 #include <libkcal/calendar.h>
 #include <libkcal/journal.h>
 
-#include <kresources/resourceconfigwidget.h>
+#include <kresources/configwidget.h>
 
 #include "dateset.h"
 #include "exchangeaccount.h"
@@ -48,7 +48,7 @@ using namespace KPIM;
 
 extern "C"
 {
-  KRES::ResourceConfigWidget *config_widget( QWidget *parent ) {
+  KRES::ConfigWidget *config_widget( QWidget *parent ) {
     return new KCal::ResourceExchangeConfig( parent, "Configure Exchange Calendar" );
   }
 

@@ -84,7 +84,7 @@ void ExchangeClient::test()
   KURL url( "webdav://mail.tbm.tudelft.nl/exchange/" );
 
 /*
-  KRES::ResourceManager<KCal::ResourceCalendar>* manager = new KRES::ResourceManager<KCal::ResourceCalendar>( "calendar" );
+  KRES::Manager<KCal::ResourceCalendar>* manager = new KRES::Manager<KCal::ResourceCalendar>( "calendar" );
   KCal::ResourceCalendar* resource = manager->standardResource();
 
   kdDebug(5800) << "Opening resource " + resource->resourceName() << endl;
