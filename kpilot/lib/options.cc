@@ -90,6 +90,7 @@ ostream & operator << (ostream & o, const QSize & s)
 	return o;
 }
 
+#if KDE_VERSION < 319
 kdbgstream & operator << (kdbgstream & o, const QSize & s)
 {
 	o << s.width() << "x" << s.height();
@@ -100,6 +101,7 @@ kndbgstream & operator << (kndbgstream & o, const QSize &)
 {
 	return o;
 }
+#endif
 
 static KCmdLineOptions debug_options_[] = {
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
@@ -112,59 +114,3 @@ KCmdLineOptions *debug_options = debug_options_;
 int const fname = ((int) options_id);
 
 
-// $Log$
-// Revision 1.6  2002/06/24 19:28:00  adridg
-// Trivial unused parameter fix
-//
-// Revision 1.5  2002/05/23 17:08:32  adridg
-// Some compile fixes for non-debug mode, and KNotes syncing fixes
-//
-// Revision 1.4  2002/02/02 11:46:03  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.3  2002/01/18 10:08:00  adridg
-// CVS_SILENT: Fixing my compile fixes again
-//
-// Revision 1.2  2002/01/16 22:24:16  adridg
-// Avoid lib incompatibility crashes
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-// Revision 1.18  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.17  2001/09/24 22:23:28  adridg
-// More generalized debugging handling, even on broken platforms
-//
-// Revision 1.16  2001/09/23 21:42:35  adridg
-// Factored out debugging options
-//
-// Revision 1.15  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//
-// Revision 1.14  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.13  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.12  2001/03/27 11:10:39  leitner
-// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
-// #ifdef DEBUG because qstringExpand etc. were not defined.
-//
-// Revision 1.11  2001/03/01 20:43:24  adridg
-// Some new (and harmless) debug functions
-//
-// Revision 1.10  2001/02/09 12:56:29  brianj
-// Fixed bug where variable "id" was renamed to "options_id" but
-// a couple of occurences were missed.
-//
-// Revision 1.9  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.8  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//
