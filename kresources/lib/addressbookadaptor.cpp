@@ -80,7 +80,10 @@ bool AddressBookAdaptor::localItemHasChanged( const QString &localId )
 void AddressBookAdaptor::deleteItem( const QString &localId )
 {
   KABC::Addressee a = mResource->findByUid( localId );
-  if ( !a.isEmpty() ) mResource->removeAddressee( a );
+  if ( !a.isEmpty() ) {
+    mResource->removeAddressee( a );
+    mResource->clearChange( a.uid() );
+  }
 }
 
 void AddressBookAdaptor::addItem( KABC::Addressee addr )
