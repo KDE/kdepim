@@ -37,7 +37,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-01-18</date>
+<date>2002-01-29</date>
 <releaseinfo>0.05.00</releaseinfo>
 
 <abstract>
@@ -98,6 +98,11 @@ displayed again later. An example of an alarm message:</para>
 </textobject>
 </mediaobject>
 </screenshot>
+
+<para>&kalarm; can run in either of two modes: 'continuous' (the
+default) where it runs from the &kde; system tray, or 'on-demand'
+where it runs as and when required (with the option of
+displaying an independent system tray icon).</para>
 
 <para>This document makes various references to the "alarm daemon".
 This is an application which runs in the background, checking
@@ -181,7 +186,8 @@ the range 1 minute to 99 hours) between repetitions. Check
 <guilabel>Repeat at login</guilabel> if you want the alarm to be
 displayed whenever you log in, in addition to its other scheduled
 times. (Note that an alarm repeated at login will also be displayed
-any time you restart or reset the alarm daemon.)</para>
+any time you enable alarms, or restart or reset the alarm
+daemon.)</para>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
 happens if the alarm can't be displayed at its scheduled time. Check
@@ -290,20 +296,24 @@ alarm message window.</para>
 <sect2>
 <title>Displaying &kalarm; in the system tray</title>
 
-<para>To display &kalarm; in the &kde; system tray when it is not
-currently displayed, select <menuchoice>
-<guimenu>View</guimenu><guimenuitem>Show System Tray Icon</guimenuitem>
-</menuchoice>. This menu option is available only if you are currently
-running the &kde;
-desktop.</para>
+<para>You must be running the &kde; desktop in order to display
+&kalarm; in the system tray. If &kalarm; is running in 'continuous'
+mode, the system tray icon is always displayed. These instructions
+apply only to 'on-demand' mode. (See
+<link linkend="preferences">Configuring default options</link> for a
+description of run modes.)</para>
 
-<para>To remove &kalarm; from the &kde; system tray when it is
-currently displayed, do one of the following:</para>
+<para>To display &kalarm; in the &kde; system tray, select <menuchoice>
+<guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
+</menuchoice>.</para>
+
+<para>To remove &kalarm; from the &kde; system tray, do one of the
+following:</para>
 
 <itemizedlist>
 <listitem>
 <para>Select <menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hide System Tray Icon</guimenuitem></menuchoice>.</para>
+<guimenuitem>Hide from System Tray</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
@@ -321,8 +331,16 @@ from the context menu.</para>
 <sect2 id="enable-disable">
 <title>Enabling/disabling alarm monitoring</title>
 
-<para>To enable alarm monitoring if monitoring is currently disabled,
-do one of the following:</para>
+<sect3>
+<title>Enabling alarm monitoring</title>
+
+<para>First, if &kalarm;'s run mode is 'continuous' and you have
+selected <guilabel>Disable alarms while not running</guilabel> in the
+Preferences dialog, you must ensure that &kalarm; is running in order
+for alarm monitoring to take place.</para>
+
+<para>Then if alarm monitoring is currently disabled, do one of the
+following:</para>
 
 <itemizedlist>
 <listitem>
@@ -340,11 +358,17 @@ from the context menu.</para>
 
 <para>The alarm daemon is started if necessary and alarms will be
 monitored for when they become due.</para>
-<warning><para>When the alarm daemon starts, this will affect any
-other applications which use the alarm daemon.</para></warning>
 
-<para>To disable alarm monitoring if monitoring is currently enabled,
-do one of the following:</para>
+<warning><para>Starting the alarm daemon will affect any other
+applications which use the alarm daemon.</para></warning>
+
+</sect3>
+
+<sect3>
+<title>Disabling alarm monitoring</title>
+
+<para>To disable alarm monitoring when it is currently enabled, do one
+of the following:</para>
 
 <itemizedlist>
 <listitem>
@@ -358,6 +382,12 @@ and choose
 <menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
+
+<listitem>
+<para>If &kalarm;'s run mode is 'continuous' and you have selected
+<guilabel>Disable alarms while not running</guilabel> in the
+Preferences dialog, quit &kalarm;.</para>
+</listitem>
 </itemizedlist>
 
 <para>The alarm daemon stops monitoring &kalarm;'s alarms. &kalarm;
@@ -368,9 +398,7 @@ simply stops monitoring &kalarm;'s alarms. So there will be no effect
 on the functioning of any other applications which use the alarm
 daemon.</para></note>
 
-<para>The above menu items change according to the current alarm
-monitoring status.</para>
-
+</sect3>
 </sect2>
 
 <sect2>
@@ -394,8 +422,27 @@ for a discussion about resetting the alarm daemon.</para>
 This displays the configuration dialog. Here, you can:</para>
 
 <itemizedlist>
-<listitem><para>Set the default font and background colour to use for
-alarm message display.</para>
+<listitem><para>Specify &kalarm;'s run mode. You can choose either to
+run it continuously in the &kde; system tray, or to run it only on
+demand. This selection does not affect the display of alarms when they
+become due, since it is the alarm daemon and not &kalarm; which
+monitors the alarm list. Running &kalarm; in the system tray makes the
+application more accessible and displays an alarm-enabled indication,
+but running an application continuously does consume some system
+resources. So if system performance is of concern, the 'on-demand'
+option may be preferable.</para>
+
+<para>When running in 'on-demand' mode, the system tray icon can still
+be displayed. The main difference in operation between the two modes
+is the effect of closing the system tray icon: in 'on-demand' mode,
+closing it has no effect on any &kalarm; windows, while in
+'continuous' mode, closing it also closes all &kalarm; main
+windows.</para>
+</listitem>
+
+<listitem><para>If you specified that &kalarm; should run in
+'continuous' mode, you can disable all alarms due for display while
+&kalarm; is not running.</para>
 </listitem>
 
 <listitem><para>Specify that the &kalarm; system tray icon should be
@@ -406,6 +453,10 @@ displayed at &kde; session login.</para>
 icon is updated to reflect whether alarms are currently being
 monitored. This involves checking whether the alarm daemon is
 running.</para>
+</listitem>
+
+<listitem><para>Set the default font and background colour to use for
+alarm message display.</para>
 </listitem>
 </itemizedlist>
 
@@ -424,13 +475,24 @@ This displays the alarm daemon configuration dialog.</para>
 <sect2>
 <title>Quitting the program</title>
 
-<para>To exit from &kalarm;, select <menuchoice>
-<guimenu>File</guimenu><guimenuitem>Quit</guimenuitem>
-</menuchoice>.</para>
+<para>Quit &kalarm; by closing all its windows and the system tray
+icon, or if it is running in 'continuous' mode, by closing any message
+windows and selecting
+<menuchoice><guimenuitem>Quit</guimenuitem></menuchoice> in the
+system tray icon context menu.</para>
 
-<tip><para>This has no effect on the alarm daemon, which if already
-active will continue to monitor scheduled alarms and request their
-display when they become due.</para></tip>
+<para><menuchoice><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem>
+</menuchoice> closes only the window concerned. The effect of the system
+tray icon context menu item
+<menuchoice><guimenuitem>Quit</guimenuitem></menuchoice> depends on
+the run mode: in 'on-demand' mode it hides the system tray icon, while
+in 'continuous' mode it quits the program.</para>
+
+<tip><para>Quitting &kalarm; has no effect on the alarm daemon, which
+if already active will continue to monitor scheduled alarms and
+request their display when they become due (unless you have selected
+<guilabel>Disable alarms while not running</guilabel> in the
+Preferences dialog).</para></tip>
 
 </sect2>
 </sect1>
@@ -485,10 +547,21 @@ includes options relating to the &kalarm; system tray icon.</para>
 </varlistentry>
 
 <varlistentry>
+<term><menuchoice><guimenuitem>Restore / Minimise</guimenuitem></menuchoice></term>
+<listitem><para><action>Restores or minimises the main &kalarm; window.</action></para>
+<para>This option is only available if the run mode is 'continuous'.
+(See <link linkend="preferences">Configuring default options</link>
+for a description of run modes.)</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><menuchoice><guimenuitem>Quit</guimenuitem></menuchoice></term>
 <listitem><para><action>Closes the &kalarm; system tray icon.</action></para>
-<para>This has no effect on other &kalarm; windows or on the
-monitoring of alarms by the alarm daemon.</para>
+<para>In 'continuous' run mode only, it also closes all &kalarm; main
+windows. It has no effect on the monitoring of alarms by the alarm
+daemon (unless you have selected <guilabel>Disable alarms while not
+running</guilabel> in the Preferences dialog).</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1263,11 +1336,11 @@ used with one of the other three options.</para>
 <para>What configuration files does &kalarm; use?</para>
 </question>
 <answer>
-<para>The file <filename>~/.kde2/share/config/kalarmrc</filename>
+<para>The file <filename>~/.kde/share/config/kalarmrc</filename>
 holds your &kalarm; preferences.</para>
 
 <para>The calendar file which stores your scheduled alarm messages is
-<filename>~/.kde2/share/apps/kalarm/calendar.ics</filename>, unless
+<filename>~/.kde/share/apps/kalarm/calendar.ics</filename>, unless
 a different calendar file is specified in the preferences file.</para>
 </answer>
 </qandaentry>
@@ -1277,10 +1350,10 @@ a different calendar file is specified in the preferences file.</para>
 <para>What configuration files does the alarm daemon use?</para>
 </question>
 <answer>
-<para>The file <filename>~/.kde2/share/config/kalarmdrc</filename>
+<para>The file <filename>~/.kde/share/config/kalarmdrc</filename>
 holds your alarm daemon preferences.</para>
 
-<para>The file <filename>~/.kde2/share/apps/kalarmd/clients</filename>
+<para>The file <filename>~/.kde/share/apps/kalarmd/clients</filename>
 holds details of client applications which have previously been
 registered with the alarm daemon, and their calendar files.</para>
 </answer>
@@ -1294,9 +1367,10 @@ daemon?</para>
 <answer>
 <para>&kalarm;'s application name is <application>kalarm</application>,
 and the alarm daemon's application name is
-<application>kalarmd</application>. In addition, there is a small
-application <application>kalarmautostart</application> whose function
-is to start &kalarm;'s system tray icon at login.</para>
+<application>kalarmd</application>. In addition, in the &kde;2 version
+only, there is a small application
+<application>kalarmautostart</application> whose function is to start
+&kalarm;'s system tray icon at login.</para>
 </answer>
 </qandaentry>
 
@@ -1419,7 +1493,7 @@ change to the directory which has been created.</para>
 &install.compile.documentation;
 
 <note><para>If you have more than one version of &kde; installed
-(e.g. KDE1 and KDE2), this may possibly install &kalarm; into the
+(e.g. &kde;1 and &kde;2), this may possibly install &kalarm; into the
 wrong &kde; directory. If necessary, you can give the &kde; directory
 as a parameter to
 <userinput><command>./configure</command></userinput> . For example,
@@ -1438,9 +1512,16 @@ installed.</para></important>
 <sect1 id="configuration">
 <title>Configuration</title>
 
-<para>No special configuration is required to set up &kalarm;. Once
-you have run &kalarm; for the first time, the alarm daemon will start
-every time you log in, in order to monitor scheduled alarms.</para>
+<para>No special configuration is required to set up &kalarm; to run
+on the &kde; desktop. Once you have run &kalarm; for the first time,
+the alarm daemon will start every time you log in, in order to monitor
+scheduled alarms.</para>
+
+<para>To run &kalarm; on a non-&kde; desktop, the main requirement is
+to ensure that the alarm daemon is run automatically whenever you log
+in. More detailed instructions are contained in the
+<filename>INSTALL</filename> file which is distributed with
+&kalarm;.</para>
 
 </sect1>
 
