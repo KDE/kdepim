@@ -195,9 +195,10 @@ void TaskView::deleteItemState( QListViewItem *item )
 
 void TaskView::closeStorage() { _storage->closeStorage( this ); }
 
-void TaskView::iCalFileModified(KCal::ResourceCalendar *rc)
+void TaskView::iCalFileModified(ResourceCalendar *rc)
 {
   kdDebug(5970) << "entering iCalFileModified" << endl;
+  stopAllTimers();
   kdDebug(5970) << rc->infoText() << endl;
   rc->dump();
   _storage->buildTaskView(rc,this);

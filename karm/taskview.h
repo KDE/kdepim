@@ -30,6 +30,8 @@ class Task;
 class KarmStorage;
 class HistoryEvent;
 
+using namespace KCal;
+
 /**
  * Container and interface for the tasks.
  */
@@ -183,7 +185,7 @@ class TaskView : public KListView
     void minuteUpdate();
     void itemStateChanged( QListViewItem *item );
     void deleteItemState( QListViewItem *item );
-    void iCalFileModified(KCal::ResourceCalendar *);
+    void iCalFileModified(ResourceCalendar *);
 };
 
 #endif // KARM_TASK_VIEW

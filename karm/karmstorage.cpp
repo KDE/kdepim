@@ -107,8 +107,8 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
   KCal::ResourceCalendar *l = new KCal::ResourceLocal( _icalfile );
-  QObject::connect (l, SIGNAL(resourceChanged(KCal::ResourceCalendar *)),
-  	            view, SLOT(iCalFileModified(KCal::ResourceCalendar *)));
+  QObject::connect (l, SIGNAL(resourceChanged(ResourceCalendar *)),
+  	            view, SLOT(iCalFileModified(ResourceCalendar *)));
   l->setTimeZoneId( KPimPrefs::timezone() );
   l->setResourceName( QString::fromLatin1("KArm") );
   l->open();
