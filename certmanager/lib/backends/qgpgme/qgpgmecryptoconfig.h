@@ -52,9 +52,8 @@ class QGpgMECryptoConfig : public QObject, public Kleo::CryptoConfig {
 public:
   /**
    * Constructor
-   * @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
    */
-  QGpgMECryptoConfig( bool showErrors = true );
+  QGpgMECryptoConfig();
   virtual ~QGpgMECryptoConfig();
 
   virtual QStringList componentList() const;
@@ -67,6 +66,7 @@ public:
 private slots:
   void slotCollectStdOut( KProcIO* proc );
 private:
+  /// @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
   void runGpgConf( bool showErrors );
 
 private:

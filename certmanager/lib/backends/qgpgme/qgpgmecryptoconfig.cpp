@@ -55,11 +55,10 @@ static bool s_duringClear = false;
 #define GPGCONF_FLAG_NOARG_DESC 64 // option with optional arg; special meaning if no arg set
 // Change size of mFlags bitfield if adding new values here
 
-QGpgMECryptoConfig::QGpgMECryptoConfig( bool showErrors )
+QGpgMECryptoConfig::QGpgMECryptoConfig()
  : mComponents( 7 ), mParsed( false )
 {
     mComponents.setAutoDelete( true );
-    runGpgConf( showErrors );
 }
 
 QGpgMECryptoConfig::~QGpgMECryptoConfig()
@@ -82,11 +81,17 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
   if ( !proc.start( KProcess::Block ) )
     rc = -1;
   else
-    rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
+    rc = ( proc.normalExit() ) ? proc.exitStatus() : -2 ;
 
   // handle errors, if any (and if requested)
   if ( showErrors && rc != 0 ) {
-    QString wmsg = i18n("<qt>Failed to execute gpgconf:<br>%1</qt>").arg( strerror(rc) );
+    QString wmsg = i18n("<qt>Failed to execute gpgconf:<br>%1</qt>");
+    if ( rc == -1 )
+        wmsg = wmsg.arg( i18n( "program not found" ) );
+    else if ( rc == -2 )
+        wmsg = wmsg.arg( i18n( "program cannot be executed" ) );
+    else
+        wmsg = wmsg.arg( strerror(rc) );
     kdWarning(5150) << wmsg << endl; // to see it from test_cryptoconfig.cpp
     KMessageBox::error(0, wmsg);
   }
@@ -112,7 +117,7 @@ void QGpgMECryptoConfig::slotCollectStdOut( KProcIO* proc )
 QStringList QGpgMECryptoConfig::componentList() const
 {
   if ( !mParsed )
-    const_cast<QGpgMECryptoConfig*>( this )->runGpgConf( false );
+    const_cast<QGpgMECryptoConfig*>( this )->runGpgConf( true );
   QDictIterator<QGpgMECryptoConfigComponent> it( mComponents );
   QStringList names;
   for( ; it.current(); ++it )
