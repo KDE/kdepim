@@ -630,7 +630,7 @@ void KNodeApp::jobDone(KNJobData *j)
 	switch(j->type()) {
 		case KNJobData::JTlistGroups:
 		case KNJobData::JTfetchNewHeaders:
-cd 			qDebug("KNodeApp::jobDone() : job sent to GManager");
+ 			qDebug("KNodeApp::jobDone() : job sent to GManager");
 			GManager->jobDone(j);
 		break;
 		case KNJobData::JTfetchArticle:
