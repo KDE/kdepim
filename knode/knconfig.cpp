@@ -59,6 +59,7 @@ void KNConfig::Identity::loadConfig(KConfigBase *c)
   r_eplyTo=c->readEntry("Reply-To");
   m_ailCopiesTo=c->readEntry("Mail-Copies-To");
   o_rga=c->readEntry("Org");
+  s_igningKey = c->readEntry("SigningKey").local8Bit();
   u_seSigFile=c->readBoolEntry("UseSigFile",false);
   u_seSigGenerator=c->readBoolEntry("UseSigGenerator",false);
   s_igPath=c->readEntry("sigFile");
@@ -73,6 +74,7 @@ void KNConfig::Identity::saveConfig(KConfigBase *c)
   c->writeEntry("Reply-To", r_eplyTo);
   c->writeEntry("Mail-Copies-To", m_ailCopiesTo);
   c->writeEntry("Org", o_rga);
+  c->writeEntry("SigningKey", QString(s_igningKey));
   c->writeEntry("UseSigFile", u_seSigFile);
   c->writeEntry("UseSigGenerator",u_seSigGenerator);
   c->writeEntry("sigFile", s_igPath);

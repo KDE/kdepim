@@ -17,7 +17,7 @@
 #include "knpgp.h"
 
 KNpgp::KNpgp()
-  : Kpgp()
+  : Kpgp::Module()
 {
 }
 

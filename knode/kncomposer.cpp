@@ -286,8 +286,8 @@ void KNComposer::setConfig(bool onlyFonts)
     v_iew->e_dit->setWrapColumnOrWidth(knGlobals.cfgManager->postNewsComposer()->maxLineLength());
     a_ctWordWrap->setChecked(knGlobals.cfgManager->postNewsComposer()->wordWrap());
 
-    Kpgp *pgp = Kpgp::getKpgp();
-    a_ctPGPsign->setEnabled(pgp->havePGP());
+    Kpgp::Module *pgp = Kpgp::Module::getKpgp();
+    a_ctPGPsign->setEnabled(pgp->usePGP());
   }
 
   QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
@@ -824,22 +824,44 @@ void KNComposer::slotRemoveAttachment()
 
 void KNComposer::slotSignArticle()
 {
-  QString text = v_iew->e_dit->text();
-  Kpgp *pgp = Kpgp::getKpgp();
-  bool ok=true;
-  QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
-  if(!ok) // no suitable codec found => try local settings and hope the best ;-)
-    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset(),ok);
+  // first get the signing key
+  QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
+  KNNntpAccount *acc = knGlobals.accManager->account( a_rticle->serverId() );
+  if ( acc )
+  {
+    KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
+    KNGroup *grp = knGlobals.grpManager->group( grps->firstGroup(), acc );
+    if ( grp && grp->identity() && grp->identity()->hasSigningKey() )
+      signingKey = grp->identity()->signingKey();
+    else if ( acc->identity() && acc->identity()->hasSigningKey() )
+      signingKey = acc->identity()->signingKey();
+  }
+  // now try to sign the article
+  if (!signingKey.isEmpty()) {
+    QString text = v_iew->e_dit->text();
+    Kpgp::Module *pgp = Kpgp::Module::getKpgp();
+    bool ok=true;
+    QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
+    if(!ok) // no suitable codec found => try local settings and hope the best ;-)
+      codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset(),ok);
 
-  pgp->setMessage(codec->fromUnicode(text),codec->name());
-  pgp->setUser(article()->from()->email());
-  kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
-  if (!pgp->sign(article()->from()->email()))
-    KMessageBox::error(this,i18n("Sorry, couldn't sign this message!\n\n%1").arg(pgp->lastErrorMsg()));
+    pgp->setMessage(codec->fromUnicode(text),codec->name());
+    kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
+    if (!pgp->sign(signingKey))
+      KMessageBox::error(this,i18n("Sorry, couldn't sign this message!\n\n%1").arg(pgp->lastErrorMsg()));
+    else {
+      QCString result = pgp->message();
+      v_iew->e_dit->setText( codec->toUnicode(result.data(), result.length()) );
+      v_iew->e_dit->setModified(true);
+    }
+  }
   else {
-    QCString result = pgp->message();
-    v_iew->e_dit->setText( codec->toUnicode(result.data(), result.length()) );
-    v_iew->e_dit->setModified(true);
+    KMessageBox::sorry( this, i18n("You haven't configured your prefered "
+                                   "signing key yet.\n\n"
+                                   "Please specify it either in the global "
+                                   "identity configuration\n"
+                                   "or in the account properties or in the "
+                                   "group properties!") );
   }
 }
 

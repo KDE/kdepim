@@ -20,7 +20,7 @@
 #include <kpgp.h>
 
 
-class KNpgp : public Kpgp
+class KNpgp : public Kpgp::Module
 {
 public:
   KNpgp();

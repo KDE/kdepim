@@ -18,6 +18,7 @@
 #include <qvbox.h>
 #include <qcheckbox.h>
 #include <qpainter.h>
+#include <qwhatsthis.h>
 
 #include <klocale.h>
 #include <knumvalidator.h>
@@ -30,6 +31,8 @@
 #include <kscoringeditor.h>
 #include <kspell.h>
 #include <kcombobox.h>
+#include <kpgp.h>
+#include <kpgpui.h>
 
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -48,7 +51,7 @@
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
 {
-  QGridLayout *topL=new QGridLayout(this,  10, 3, 5,5);
+  QGridLayout *topL=new QGridLayout(this,  11, 3, 5,5);
 
   n_ame=new KLineEdit(this);
   QLabel *l=new QLabel(n_ame, i18n("&Name:"), this);
@@ -75,10 +78,24 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   r_eplyTo->setText(d_ata->r_eplyTo);
 
   m_ailCopiesTo=new KLineEdit(this);
-  l=new QLabel(r_eplyTo, i18n("&Mail-Copies-To:"), this);
+  l=new QLabel(m_ailCopiesTo, i18n("&Mail-Copies-To:"), this);
   topL->addWidget(l, 4,0);
   topL->addMultiCellWidget(m_ailCopiesTo, 4,4, 1,2);
   m_ailCopiesTo->setText(d_ata->m_ailCopiesTo);
+
+  s_igningKey = new QLabel( this );
+  s_igningKey->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  s_igningKey->setText( d_ata->s_igningKey );
+  l=new QLabel( i18n("Signing Key:"), this );
+  QPushButton *c_hangeBtn = new QPushButton( i18n("Chan&ge..."), this );
+  connect( c_hangeBtn, SIGNAL(clicked()), 
+           this, SLOT(slotSigningKeyChange()) );
+  c_hangeBtn->setAutoDefault( false );
+  topL->addWidget( l, 5, 0 );
+  topL->addWidget( s_igningKey, 5, 1 );
+  topL->addWidget( c_hangeBtn, 5, 2 );
+  QWhatsThis::add( l, i18n("<qt><p>The OpenPGP key you choose here will be "
+                           "used to sign your articles.</p></qt>") );
 
   b_uttonGroup = new QButtonGroup(this);
   connect( b_uttonGroup, SIGNAL(clicked(int)),
@@ -88,38 +105,38 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 
   s_igFile = new QRadioButton( i18n("&Use a signature from file"), this );
   b_uttonGroup->insert(s_igFile, 0);
-  topL->addMultiCellWidget(s_igFile, 5, 5, 0, 2);
+  topL->addMultiCellWidget(s_igFile, 6, 6, 0, 2);
 
   s_ig = new KLineEdit(this);
 
   f_ileName = new QLabel(s_ig, i18n("Signature &File:"), this);
-  topL->addWidget(f_ileName, 6, 0 );
-  topL->addWidget(s_ig, 6, 1 );
+  topL->addWidget(f_ileName, 7, 0 );
+  topL->addWidget(s_ig, 7, 1 );
   s_ig->setText(d_ata->s_igPath);
 
   c_hooseBtn = new QPushButton( i18n("Choo&se..."), this);
   connect(c_hooseBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureChoose()));
-  topL->addWidget(c_hooseBtn, 6, 2 );
+  topL->addWidget(c_hooseBtn, 7, 2 );
   e_ditBtn = new QPushButton( i18n("&Edit File"), this);
   connect(e_ditBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureEdit()));
-  topL->addWidget(e_ditBtn, 7, 2);
+  topL->addWidget(e_ditBtn, 8, 2);
 
   s_igGenerator = new QCheckBox(i18n("&The file is a program"), this);
-  topL->addMultiCellWidget(s_igGenerator, 7, 7, 0, 1);
+  topL->addMultiCellWidget(s_igGenerator, 8, 8, 0, 1);
   s_igGenerator->setChecked(d_ata->useSigGenerator());
 
   s_igEdit = new QRadioButton( i18n("Specify signature &below"), this);
   b_uttonGroup->insert(s_igEdit, 1);
-  topL->addMultiCellWidget(s_igEdit, 8, 8, 0, 2);
+  topL->addMultiCellWidget(s_igEdit, 9, 9, 0, 2);
 
   s_igEditor = new QMultiLineEdit(this);
-  topL->addMultiCellWidget(s_igEditor, 9, 9, 0, 2);
+  topL->addMultiCellWidget(s_igEditor, 10, 10, 0, 2);
   s_igEditor->setText(d_ata->s_igText);
 
   topL->setColStretch(1,1);
-  topL->setRowStretch(6,1);
+  topL->setRowStretch(7,1);
   topL->setResizeMode(QLayout::Minimum);
   connect(s_ig,SIGNAL(textChanged ( const QString & )),
           this,SLOT(textFileNameChanged(const QString &)));
@@ -146,6 +163,7 @@ void KNConfig::IdentityWidget::apply()
   d_ata->e_mail=e_mail->text();
   d_ata->r_eplyTo=r_eplyTo->text();
   d_ata->m_ailCopiesTo=m_ailCopiesTo->text();
+  d_ata->s_igningKey = s_igningKey->text().local8Bit();
   d_ata->u_seSigFile=s_igFile->isChecked();
   d_ata->u_seSigGenerator=s_igGenerator->isChecked();
   d_ata->s_igPath=s_ig->text();
@@ -153,6 +171,20 @@ void KNConfig::IdentityWidget::apply()
 
   if(d_ata->isGlobal())
     d_ata->save();
+}
+
+
+void KNConfig::IdentityWidget::slotSigningKeyChange()
+{
+  Kpgp::Module *pgp;
+  
+  if ( !(pgp = Kpgp::Module::getKpgp()) )
+    return;
+
+  QCString keyID = pgp->selectDefaultKey();
+
+  if ( !keyID.isEmpty() )
+    s_igningKey->setText( keyID );
 }
 
 
@@ -2164,7 +2196,7 @@ KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
   : BaseWidget(p,n)
 {
   QBoxLayout *topLayout = new QVBoxLayout(this, 5);
-  c_onf = new KpgpConfig(this,"knode pgp config",false);
+  c_onf = new Kpgp::Config(this,"knode pgp config",false);
   topLayout->addWidget(c_onf);
   QGroupBox *optBox = new QGroupBox(i18n("KNode specific options"), this);
   topLayout->addWidget(optBox);

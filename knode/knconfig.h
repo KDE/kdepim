@@ -36,13 +36,15 @@ class QButtonGroup;
 
 class KScoringRule;
 class KScoringEditorWidget;
-class KpgpConfig;
 class KConfigBase;
 class KProcess;
 class KLineEdit;
 class KComboBox;
 class KIntSpinBox;
 class KSpellConfig;
+namespace Kpgp {
+  class Config;
+};
 
 class KNNntpAccount;
 class KNAccountManager;
@@ -126,6 +128,11 @@ Q_OBJECT
     QString orga()                    { return o_rga; }
     void setOrga(const QString &s)    { o_rga=s; }
 
+    // OpenPGP signing key
+    bool hasSigningKey()                  { return (!s_igningKey.isEmpty()); }
+    QCString signingKey()                 { return s_igningKey; }
+    void setSigningKey(const QCString &s) { s_igningKey=s;}
+
     //signature
     bool hasSignature()       { return ( (u_seSigFile && !s_igPath.isEmpty()) || !s_igText.isEmpty() ); }
     bool useSigFile()         { return u_seSigFile; }
@@ -147,6 +154,7 @@ Q_OBJECT
               s_igText,
               s_igContents,
               s_igPath;
+    QCString  s_igningKey;
     bool      u_seSigFile,
               u_seSigGenerator,
               g_lobal;
@@ -172,10 +180,12 @@ class IdentityWidget : public BaseWidget {
                     *r_eplyTo,
                     *m_ailCopiesTo,
                     *s_ig;
+    QLabel          *s_igningKey;
     QRadioButton    *s_igFile,
                     *s_igEdit;
     QCheckBox       *s_igGenerator;
-    QPushButton     *c_hooseBtn,
+    QPushButton     *c_hangeBtn,
+                    *c_hooseBtn,
                     *e_ditBtn;
     QMultiLineEdit  *s_igEditor;
     QButtonGroup    *b_uttonGroup;
@@ -183,6 +193,7 @@ class IdentityWidget : public BaseWidget {
     Identity        *d_ata;
 
   protected slots:
+    void slotSigningKeyChange();
     void slotSignatureType(int type);
     void slotSignatureChoose();
     void slotSignatureEdit();
@@ -1084,7 +1095,7 @@ class PrivacyWidget : public BaseWidget {
     void apply();   // overrides BaseWidget::apply()
 
   protected:
-    KpgpConfig *c_onf;
+    Kpgp::Config *c_onf;
     QCheckBox *a_utoCheckSigCB;
 };
 
