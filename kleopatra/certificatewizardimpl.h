@@ -18,6 +18,8 @@ protected slots:
     void slotGenerateCertificate();
     void slotEmailAddressChanged( const QString& text );
 
+    void slotHelpClicked();
+
 private:
     QByteArray _keyData;
 };

@@ -29,8 +29,9 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
     setNextEnabled( generatePage, false );
     setNextEnabled( personalDataPage, false );
     nameED->setFocus();
-    // work around a QWizard bug
-    //setFixedHeight( 300 );
+    
+    connect( this, SIGNAL( helpClicked() ),
+	     this, SLOT( slotHelpClicked() ) );
 }
 
 /*
@@ -128,5 +129,9 @@ void CertificateWizardImpl::slotGenerateCertificate()
     QApplication::restoreOverrideCursor();
 }
 
+void CertificateWizardImpl::slotHelpClicked()
+{
+  kapp->invokeHelp( "newcert" );
+}
 
 #include "certificatewizardimpl.moc"
