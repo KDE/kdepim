@@ -4,20 +4,20 @@ KPilot Developer's notes for June 15th, 2003
 ============================================
 
 2003-6-1   Reinhold Kainhofer
-* Fixed several (possible  and really occuring) null pointer crashes 
+* Fixed several (possible  and really occuring) null pointer crashes
 * Submited most of the items in our TODO list as bugs or wishes on 
   bugs.kde.org
 
 2003-5-31  Reinhold Kainhofer
 * Restructured the setup dialog of KPilot. Several per-conduit
   settings were moved to global settings. The conduits now have
-	isFullSync(), isFirstSync(), getSyncDirection(), and 
-	getConflictResolution() members for these settings. I think I fixed 
-	all conduits to use these new settings and didn't miss anything.
+  isFullSync(), isFirstSync(), getSyncDirection(), and
+  getConflictResolution() members for these settings. I think I fixed
+  all conduits to use these new settings and didn't miss anything.
 * The Backup works again (fast sync doesn't do a backup, hot sync
   does conduits and a fast backup, full sync does a full backup where
-	the modified flags are ignored). Also added a fast backup where 
-	only modified records are retrieved.
+  the modified flags are ignored). Also added a fast backup where
+  only modified records are retrieved.
 
 
 2003-6-1  Adriaan de Groot
@@ -26,7 +26,8 @@ KPilot Developer's notes for June 15th, 2003
 * Woo. After months of wrestling, I actually managed to run KPilotTest
   and list the contents of my m500. Sometimes, there is something
   to be said for Linux and a working USB stack. This means I have
-  limited testing hardware available again. 
+  limited testing hardware available again.
+* Minor fixups to make HEAD compile with 3.1.x again.
 
 2003-5-31  Adriaan de Groot
 * Updated my build environment to HEAD. This will leave some people
@@ -222,27 +223,27 @@ KPilot Developer's notes for March 26th, 2003
   resemble the one from the calendar/todo conduit
 * Addressbook conduit: Implemented the option to sync with an 
   arbitrary vcard file instead of only the standard addressbook.
-	This actually involved quite a lot of dealing with resources, 
-	factories etc., so I'm still looking for an easier way to 
-	obtain the addressbook from a single local vcard file.
+  This actually involved quite a lot of dealing with resources,
+  factories etc., so I'm still looking for an easier way to
+  obtain the addressbook from a single local vcard file.
 
 2003-3-23  Reinhold Kainhofer
-* Lot of work on the docconduit. Finished the KPalmDOC application. 
-  It converts text files to .pdb files that can be viewed as ebooks 
-	on the handheld. The user can either convert single text files 
-	to or from PalmDOC .pdb files, or choose a directory, where all 
-	*.txt or *.pdb files will be converted to another directory.
-  I created some icons by just putting the text mime-type icon  
-	behind the kpilot icon, so the icons don't look too well. All artists 
-	are welcome to improve them.
+* Lot of work on the docconduit. Finished the KPalmDOC application.
+  It converts text files to .pdb files that can be viewed as ebooks
+  on the handheld. The user can either convert single text files
+  to or from PalmDOC .pdb files, or choose a directory, where all
+  *.txt or *.pdb files will be converted to another directory.
+  I created some icons by just putting the text mime-type icon
+  behind the kpilot icon, so the icons don't look too well. All artists
+  are welcome to improve them.
 * Tried to implement a configure option for libmal, and use autoconf's
-  built-in functionality to detect libmal. Doesn't work yet, so I 
-	haven't commited it yet.
+  built-in functionality to detect libmal. Doesn't work yet, so I
+  haven't commited it yet.
 
 2003-3-23  Adriaan de Groot
 * More merging .. conduits today:
 * null/ There's a single string change, "Failure" -> "failure".
-* expense/ knotes/ Nothing changed - except the Makefile.am, 
+* expense/ knotes/ Nothing changed - except the Makefile.am,
   which breaks things in HEAD.
 * malconduit/ "" -> QString() for QString cleanness. Some authors
   should have been credits. There's still a spelling fix string
@@ -477,9 +478,9 @@ KPilot Developer's notes for February 7th, 2003
   title of the memo. This is the first step on making PilotMemo return
   everything in QString format suitable for any encoding. In order to
   change the encoding, add
-	Encoding=<name>
+        Encoding=<name>
   to the kpilotrc file in the top part (ie. after DeviceName).
-  
+
 2003-2-1  Adriaan de Groot
 * Some time spent tracking down double activations of slowShowMemo().
 * memoWidget.{h,cc} [BRANCH] Removed double initialization. Removed
@@ -522,7 +523,7 @@ KPilot Developer's notes for January 30th, 2003
 * Put together some scripts to do more automated building and testing
   in KDE 3.1 and 3.0 environments. This makes tarball delivery a _lot_
   easier.
-  
+
   
 2003-1-31  Adriaan de Groot
 * Let's do the time-warp again!
@@ -562,7 +563,7 @@ KPilot Developer's notes for January 30th, 2003
 
 
 2003-1-26  Adriaan de Groot
-* Ugh. Still sick with the flu. Hacking just a little, though. 
+* Ugh. Still sick with the flu. Hacking just a little, though.
   The Kroupware stuff in HEAD needs to be moved. Ugh, it's ugly.
   It needs to become a conduit of its own, but it's hard to tell
   just what it's doing.
@@ -625,7 +626,7 @@ KPilot Developer's notes for January 17th, 2003
   I haven't done in over a year. This will allow me access to a USB stack
   that can actually handle the m500, so I can do some more testing.
   Primary platform remains FreeBSD, though, for all-the-other-KDE-problems-
-  on-nonlinux. 
+  on-nonlinux.
 * Made a round of removing <iostream.h>, since it's already in options.h.
   Needed a "using namespace std;" in options to get stuff to work.
 
@@ -650,33 +651,33 @@ KPilot Developer's notes for December 30th, 2002
   so right now it doesn't work at all, but should be finished really
   soon now.
 * Add a method PilotDatabase::deleteDatabase() to delete the database.
-* Add a warning to the vcal conduit's setup dialog to clear any 
-  misconception about conflict resolution. Also changed "Pilot" to 
-	"handheld" at several places.
+* Add a warning to the vcal conduit's setup dialog to clear any
+  misconception about conflict resolution. Also changed "Pilot" to
+  "handheld" at several places.
 
 2002-12-15  Reinhold Kainhofer
-* Added a parameter "bool useDefaultPath=false" to 
+* Added a parameter "bool useDefaultPath=false" to
   PilotLocalDatabase::PilotLocalDatabase to prevent resetting
   the dbPathName to the default path (kpilot/DBBackup/UserName)
 
 2002-12-13  Reinhold Kainhofer
-* Initial import of the docconduit, which syncs text files on 
+* Initial import of the docconduit, which syncs text files on
   the desktop with PalmDOC databases (kind of e-book format for
-	the palm) on the handheld for use with AportisDoc, TealReader, 
-	QED, etc.
-* VCalConduit: yearly recurrence now works correctly (had wrong 
+  the palm) on the handheld for use with AportisDoc, TealReader,
+  QED, etc.
+* VCalConduit: yearly recurrence now works correctly (had wrong
   yearly recurrence type rYearlyDay instead of rYearlyMonth)
-* Addressbook conduit: _equal also compares the categories to 
+* Addressbook conduit: _equal also compares the categories to
   check if an item was changed
-* Added the new methods createDatabase(..) and deleteRecord(..) 
-  to the PilotDatabase classes. createDatabase creates a new 
-	database with given type and creator, and deleteRecord deletes 
-	either a single record or all records in the whole database
-* PilotDatabse::readNextModifiedRec has a new optional argument 
+* Added the new methods createDatabase(..) and deleteRecord(..)
+  to the PilotDatabase classes. createDatabase creates a new
+  database with given type and creator, and deleteRecord deletes
+  either a single record or all records in the whole database
+* PilotDatabse::readNextModifiedRec has a new optional argument
   of type int* which receives the index of the returned record.
-* PilotDatabase::findDatabase has optional arguments 
+* PilotDatabase::findDatabase has optional arguments
   int index=0, long type=0, long creator=0
-	 
+
 
 
 KPilot Developer's notes for november 10th, 2002
@@ -697,12 +698,12 @@ KPilot Developer's notes for november 10th, 2002
   on the installer during a Sync.
 * When installing files, the "done" message was printed at the
   beginning of the last file to be installed. Fixed.
-    
+
 2002-11-07  Adriaan de Groot
 * only call slotTextChanged() in the MemoWidget
   when switching memos, and only if the memo is changed.
-  This saves rewriting the database every time you hit a 
-  key in the memo edit box. 
+  This saves rewriting the database every time you hit a
+  key in the memo edit box.
 
 2002-11-06  Adriaan de Groot
 * Fix the KNotes conduit's name.
@@ -717,7 +718,7 @@ KPilot Developer's notes for november 10th, 2002
   popmail conduit, called "outboxFolder". Set it to the i18n'ed name
   of KMail's outbox. Damn KMail's DCOP interface / config. This
   should make it possible to send mail with KMail again.
-* Finally got a separate build tree of KPilot working. Can distribute 
+* Finally got a separate build tree of KPilot working. Can distribute
   sources again, now, assuming SLAC can suffer the bandwidth penalty.
 * Most of libkcal's header files aren't installed. Why? Is it really intended
   to be totally internal to the kdepim module in KDE's CVS?
@@ -837,7 +838,7 @@ KPilot Developer's notes for july 4th, 2002
 ===========================================
 
 2002-07-04  Reinhold Kainhofer
-* Added a function KPilotDeviceLink::tickle() which prevents a timeout 
+* Added a function KPilotDeviceLink::tickle() which prevents a timeout
   on the palm side if it is called with a timer (e.g. when a dialog is open)
 * Some more work on the addressbook conduit, which seems to be trickier
   than I had thought initially.
@@ -858,7 +859,7 @@ Moving on past 3.0.2 and trying to sort things out.
   Still fighting with the addressbook conduit. The Palm -> PC way already
   seems to work. Haven't committed anything yet to prevent breaking 
   compilation of the kdepim module with a conduit which won't work yet anyway.
-  
+
 
 KPilot Developer's notes for june 16th, 2002
 ============================================
@@ -1278,7 +1279,7 @@ thing you know, I'll be using KPilot to sync my Pilot. Ewwwww.
     OK, it at least copies new KNotes to the Pilot. That's enough for now.
 * conduits/popmail/*
   - Um, does this actually *do* anything? OK, config fixes, dcop fixes ...
-    and voila, a message shows up in the outbox of KMail. So let's call 
+    and voila, a message shows up in the outbox of KMail. So let's call
     sending via KMail a success and have a cup of tea.
 * conduits/vcalconduit/*
   - Now things get hairy / exciting. Let's start with the ToDo conduit:
