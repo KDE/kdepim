@@ -128,3 +128,5 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 }
 
 
+
+#include "vcal-setup.moc"
