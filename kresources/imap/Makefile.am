@@ -1,3 +1,2 @@
-SUBDIRS = shared kcal kabc
-# Removed from SUBDIRS for now: knotes
+SUBDIRS = shared kcal kabc knotes
 COMPILE_AFTER_shared = kcal kabc knotes
