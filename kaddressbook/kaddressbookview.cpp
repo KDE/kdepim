@@ -31,6 +31,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kabc/addressbook.h>
+#include <kabc/distributionlistdialog.h>
 
 ///////////////////////////////
 // KAddressBookView
@@ -83,7 +84,12 @@ QString KAddressBookView::selectedEmails()
       
       if (!a.isEmpty())
       {
-        email = a.fullEmail();
+        QString m = QString::null;
+
+        if ( a.emails().count() > 1 )
+          m = KABC::EmailSelector::getEmail( a.emails(), a.preferredEmail(), this );
+
+        email = a.fullEmail( m );
         
         if (!first)
           emailAddrs += ", ";

@@ -271,6 +271,7 @@ void ActionManager::addresseeSelected(bool selected)
 
 void ActionManager::modified(bool mod)
 {
+    mModified = mod;
     mActionSave->setEnabled(mod);
 }
 
@@ -396,6 +397,9 @@ void ActionManager::setCurrentFilter(int index)
     emit filterActivated(index-1);
 }
 
-
+bool ActionManager::isModified()
+{
+  return mModified;
+}
 
 #include "actionmanager.moc"

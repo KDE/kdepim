@@ -125,7 +125,7 @@ void LDAPSearchDialogImpl::rereadConfig()
   config->setGroup("LDAP");
   numHosts = config->readUnsignedNumEntry( "NumSelectedHosts"); 
   if (!numHosts) {
-    KMessageBox::error( this, i18n( "You must select an address before searching.\nYou can do this from the menu Settings/Configure KAddressBook." ) );
+    KMessageBox::error( this, i18n( "You must select a LDAP server before searching.\nYou can do this from the menu Settings/Configure KAddressBook." ) );
     bOK = false;
   } else {
     bOK = true;

@@ -34,6 +34,7 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
     virtual QString getNameByPhone( QString phone ) { return mWidget->getNameByPhone( phone ); }
     virtual void save() { mWidget->save(); }
     virtual void exit() { close(); }
+    virtual void closeWithSave();
     
 
   protected:

@@ -97,7 +97,7 @@ void KAddressBookMain::readProperties(KConfig *)
 
 void KAddressBookMain::initActions()
 {
-  KStdAction::quit(this, SLOT(close()), actionCollection());
+  KStdAction::quit(this, SLOT(closeWithSave()), actionCollection());
 
   KStdAction::preferences( mWidget, SLOT( configure() ), actionCollection());
   KStdAction::configureToolbars( this, SLOT( configureToolbars() ),
@@ -125,4 +125,18 @@ void KAddressBookMain::slotNewToolbarConfig()
 void KAddressBookMain::configureKeys()
 {
   KKeyDialog::configureKeys(actionCollection(),xmlFile(),true,this);
+}
+
+void KAddressBookMain::closeWithSave()
+{
+  if ( mActionManager->isModified() ) {
+    QString text = i18n( "The address book was modified. Do you want to save your changes?" );
+    int ret = KMessageBox::warningYesNoCancel( this, text );
+    if ( ret == KMessageBox::Yes )
+      save();
+    else if ( ret == KMessageBox::Cancel )
+      return;
+  }
+
+  close();
 }

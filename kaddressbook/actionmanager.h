@@ -48,6 +48,8 @@ class ActionManager : public QObject
 
     void setReadWrite(bool rw);
 
+    bool isModified();
+
   public slots:
     void initActionViewList();
 
@@ -114,6 +116,7 @@ signals:
     void destroyReadWriteActions();
 
     bool mReadWrite;
+    bool mModified;
 
     QString mActiveViewName;
 
