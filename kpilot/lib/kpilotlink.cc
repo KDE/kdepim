@@ -102,8 +102,10 @@ protected:
 private:
 	inline void showList() const
 	{
+#ifdef DEBUG
 		DEBUGDAEMON << "Bound devices: "
 			<< mBoundDevices.join(", ").latin1() << endl;
+#endif
 	}
 } ;
 
