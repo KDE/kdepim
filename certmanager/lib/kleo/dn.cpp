@@ -560,6 +560,6 @@ QString Kleo::DNAttributeMapper::name2label( const QString & s ) const {
 QStringList Kleo::DNAttributeMapper::names() const {
   QStringList result;
   for ( std::map<const char*,const char*,ltstr>::const_iterator it = d->map.begin() ; it != d->map.end() ; ++it )
-    result.push_back( i18n( it->second ) );
+    result.push_back( it->first );
   return result;
 }
