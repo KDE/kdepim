@@ -257,7 +257,7 @@ KSubscription::KSubscription( QWidget *parent, const QString &caption,
   groupView->addColumn(i18n("Name"));
   groupView->setAllColumnsShowFocus(true);
   if (descriptionColumn)
-    groupView->addColumn(i18n("Description"));
+    mDescrColumn = groupView->addColumn(i18n("Description"));
   else
     groupView->header()->setStretchEnabled(true, 0);
 

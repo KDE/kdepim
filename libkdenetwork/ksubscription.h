@@ -366,6 +366,9 @@ class KSubscription : public KDialogBase
 
     // remember last searchtext
     QString mLastText;
+
+    // remember description column
+    int mDescrColumn;
 };
 
 #endif
