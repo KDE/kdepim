@@ -11,7 +11,7 @@
             <x>0</x>
             <y>0</y>
             <width>461</width>
-            <height>405</height>
+            <height>409</height>
         </rect>
     </property>
     <property name="caption">
@@ -26,10 +26,13 @@
         </property>
         <widget class="QGroupBox">
             <property name="name">
-                <cstring>groupBox2</cstring>
+                <cstring>mCustomFieldsGroups</cstring>
             </property>
             <property name="title">
                 <string>KPilot's custom fields</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>On your handheld, each address also provides four custom fields for your personal use. KPilot can sync these either to birthdate, URL, IM address, or just store them as a custom field on your PC with no special meaning. In the last case, you can change the values here. Note, however, that for all other settings the values entered here will have no effect!</string>
             </property>
             <grid>
                 <property name="name">
@@ -37,7 +40,7 @@
                 </property>
                 <widget class="QLabel" row="3" column="0">
                     <property name="name">
-                        <cstring>textLabel1_3</cstring>
+                        <cstring>mCustom3Label</cstring>
                     </property>
                     <property name="text">
                         <string>Custom &amp;3:</string>
@@ -48,13 +51,13 @@
                 </widget>
                 <widget class="QLabel" row="4" column="0">
                     <property name="name">
-                        <cstring>textLabel1_2</cstring>
+                        <cstring>mCustom4Label</cstring>
                     </property>
                     <property name="text">
                         <string>Custom &amp;4:</string>
                     </property>
                     <property name="buddy" stdset="0">
-                        <cstring>X_CUSTOM4</cstring>
+                        <cstring>X_CUSTOM3</cstring>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="3" column="1">
@@ -77,7 +80,7 @@
                 </widget>
                 <widget class="QLabel" row="2" column="0">
                     <property name="name">
-                        <cstring>textLabel1_4</cstring>
+                        <cstring>mCustom2Label</cstring>
                     </property>
                     <property name="text">
                         <string>Custom &amp;2:</string>
@@ -88,7 +91,7 @@
                 </widget>
                 <widget class="QLabel" row="1" column="0">
                     <property name="name">
-                        <cstring>textLabel1</cstring>
+                        <cstring>mCustom1Label</cstring>
                     </property>
                     <property name="text">
                         <string>Custom &amp;1:</string>
@@ -112,10 +115,10 @@
                 </widget>
                 <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
                     <property name="name">
-                        <cstring>textLabel5</cstring>
+                        <cstring>mCustomFieldsExplanation</cstring>
                     </property>
                     <property name="text">
-                        <string>On your handheld, each address also provides four custom fields for your personal use. KPilot can sync these either to birthdate, URL, IM address, or just store them as a custom field on your PC with no special meaning. In the last case, you can change the values here. Note, however, that for all other settings the values entered here will have no effect!</string>
+                        <string>If you let KPilot sync the handheld's custom fields as custom fields on the PC, you can change the values here. Note, however, that for all other settings the values entered here will have no effect!</string>
                     </property>
                     <property name="alignment">
                         <set>WordBreak|AlignVCenter</set>
@@ -125,7 +128,7 @@
         </widget>
         <widget class="QGroupBox">
             <property name="name">
-                <cstring>groupBox1</cstring>
+                <cstring>mMetaSyncGroup</cstring>
             </property>
             <property name="enabled">
                 <bool>true</bool>
@@ -139,7 +142,7 @@
                 </property>
                 <widget class="QLabel" row="1" column="0">
                     <property name="name">
-                        <cstring>textLabel2</cstring>
+                        <cstring>mRecordIDLabel</cstring>
                     </property>
                     <property name="text">
                         <string>Record&amp;ID:</string>
@@ -150,7 +153,7 @@
                 </widget>
                 <widget class="QLabel" row="1" column="3">
                     <property name="name">
-                        <cstring>textLabel4</cstring>
+                        <cstring>mSyncFlagLabel</cstring>
                     </property>
                     <property name="text">
                         <string>Sync &amp;flag:</string>
@@ -195,10 +198,11 @@
                 </spacer>
                 <widget class="QLabel" row="0" column="0" rowspan="1" colspan="6">
                     <property name="name">
-                        <cstring>textLabel3</cstring>
+                        <cstring>mMetaSyncSettingsWarning</cstring>
                     </property>
                     <property name="text">
-                        <string>These values indicate the state of the record for KPilot, and connect an entry on the handheld with an entry on the PC. DO NOT MESS WITH THESE VALUES, or you can be pretty sure to lose some data when you next do a sync.</string>
+                        <string>These values indicate the state of the record for KPilot, and connect an entry on the handheld with an entry on the PC. 
+DO NOT MESS WITH THESE VALUES, or you can be pretty sure to lose some data when you next do a sync.</string>
                     </property>
                     <property name="alignment">
                         <set>WordBreak|AlignVCenter</set>
