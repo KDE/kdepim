@@ -368,7 +368,7 @@ void GenericDBWidget::slotShowAppInfo()
 		c.sync();
 	}
 	KPILOT_DELETE(dlg);
-	KPILOT_DELETE(appBlock);
+	delete[] appBlock;
 }
 
 void GenericDBWidget::slotShowDBInfo()
