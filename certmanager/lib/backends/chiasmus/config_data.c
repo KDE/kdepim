@@ -58,7 +58,7 @@
 
 const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
   {
-    "path", I18N_NOOP( "Path to executable" ),
+    "path", I18N_NOOP( "Path to Chiasmus executable" ),
     Level_Basic, ArgType_Path,
     { PATH "/usr/local/bin/chiasmus" }, /* in the absence of C99, we assume path is first in the union here */
     0, 0, 1
@@ -71,16 +71,16 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
   },
 #ifdef HAVE_C99_INITIALIZERS
   {
-    "use-chiasmuswrapper", I18N_NOOP( "Use Chiasmus wrapper" ),
+    "use-chiasmuswrapper", I18N_NOOP( "Use SymCryptRun as Chiasmus wrapper (recommended)" ),
     Level_Expert, ArgType_None,
     { .boolean = { 1, 1 } },
     0, 0, 1
   },
 #endif /* HAVE_C99_INITIALIZERS */
   {
-    "chiasmuswrapper-path", I18N_NOOP( "Path to Chiasmus wrapper executable" ),
+    "chiasmuswrapper-path", I18N_NOOP( "Path to SymCryptRun executable" ),
     Level_Expert, ArgType_Path,
-    { PATH "/usr/local/bin/chiasmus-wrapper" },
+    { PATH "/usr/local/bin/symcryptrun" },
     0, 0, 1
   },
 };
