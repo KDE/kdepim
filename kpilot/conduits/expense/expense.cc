@@ -36,7 +36,6 @@
 // then Qt, then KDE, then local includes.
 //
 //
-#include <iostream.h>
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -486,6 +485,9 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.24.4.1  2002/12/12 16:26:49  waba
+// Proper quoting
+//
 // Revision 1.25  2002/12/08 10:29:40  waba
 // CCMAIL: groot@kde.org
 // Fix quoting.

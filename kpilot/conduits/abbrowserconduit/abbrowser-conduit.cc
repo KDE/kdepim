@@ -26,7 +26,6 @@
 //
 #include <unistd.h>
 #include <assert.h>
-#include <iostream.h>
 #include <time.h>
 
 #include <qdir.h>
@@ -1951,6 +1950,9 @@ void AbbrowserConduit::_checkDelete(PilotRecord* r, PilotRecord *s)
 
 
 // $Log$
+// Revision 1.54.2.1  2002/12/20 19:56:08  kainhofe
+// Some bugfixes
+//
 // Revision 1.54  2002/10/10 13:44:41  kainhofe
 // This fixes several bugs:
 // -) conflict resolution now also works if you chose ignore on the last sync
