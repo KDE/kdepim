@@ -25,7 +25,7 @@
 #include "addressbooksyncee.h"
 
 #include <kabc/addressbook.h>
-#include <kabc/resourcefile.h>
+#include <libkdepim/kabcresourcenull.h>
 
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -70,11 +70,9 @@ int main( int argc, char **argv )
   SyncTestHelper helper( outputDir, true );
 
   KABC::AddressBook ab1;
-  KABC::Resource *res1 = new KABC::ResourceFile( "ab1" );
-  ab1.addResource( res1 );
+  ab1.addResource( new KABC::ResourceNull() );
   KABC::AddressBook ab2;
-  KABC::Resource *res2 = new KABC::ResourceFile( "ab2" );
-  ab2.addResource( res2 );
+  ab2.addResource( new KABC::ResourceNull() );
 
   Addressee a1;
   a1.setResource( 0 );

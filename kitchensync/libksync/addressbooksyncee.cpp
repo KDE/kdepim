@@ -24,6 +24,8 @@
 
 #include "syncee.h"
 
+#include <libkdepim/kabcresourcenull.h>
+
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kstaticdeleter.h>
@@ -244,6 +246,7 @@ AddressBookSyncee::AddressBookSyncee()
   : Syncee( AddressBookSyncee::Emails + 1 ) // set the support size
 {
   mAddressBook = new KABC::AddressBook;
+  mAddressBook->addResource( new KABC::ResourceNull() );
   mOwnAddressBook = true;
 
   mEntries.setAutoDelete( true );
