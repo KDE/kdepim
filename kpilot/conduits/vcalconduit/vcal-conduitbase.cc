@@ -261,10 +261,9 @@ there are two special cases: a full and a first sync.
 		<< endl;
 #endif
 
-	fCurrentDatabase = new PilotSerialDatabase(pilotSocket(), dbname(), this, dbname());
 	fBackupDatabase = new PilotLocalDatabase(dbname());
 	fCalendar = new KCal::CalendarLocal(tz);
-	if (!fCurrentDatabase || !fBackupDatabase || !fCalendar) goto error;
+	if ( !fBackupDatabase || !fCalendar) goto error;
 
 	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
 	if (!fBackupDatabase->isDBOpen() )
@@ -275,15 +274,23 @@ there are two special cases: a full and a first sync.
 		struct DBInfo dbinfo;
 		char nm[50];
 		strncpy(&nm[0], dbname().latin1(), sizeof(nm));
-		DEBUGCONDUIT << dbinfo.name<<endl;
-		fHandle->findDatabase(&nm[0], &dbinfo);
-		DEBUGCONDUIT << dbinfo.name<<endl;
+		if (fHandle->findDatabase(&nm[0], &dbinfo)<0 ) 
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT<<fname<<"Could not get DBInfo for "<<nm<<"! Exiting conduit"<<endl;
+#endif
+			goto error;
+		}
+		dbinfo.flags &= ~dlpDBFlagOpen;
 		if (!fHandle->retrieveDatabase(fBackupDatabase->dbPathName(), &dbinfo) ) goto error;
 		KPILOT_DELETE(fBackupDatabase);
 		fBackupDatabase = new PilotLocalDatabase(dbname());
 		if (!fBackupDatabase || !fBackupDatabase->isDBOpen()) goto error;
 		fFullSync=true;
 	}
+
+	fCurrentDatabase = new PilotSerialDatabase(pilotSocket(), dbname(), this, dbname());
+	if (!fCurrentDatabase ) goto error;
 
 	// Handle lots of error cases.
 	if (!fCurrentDatabase->isDBOpen() ||
@@ -674,6 +681,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.5  2002/05/14 23:07:49  kainhofe
+// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
+//
 // Revision 1.4  2002/05/03 19:19:57  kainhofe
 // Local timezone from KOrganizer is now used for the sync
 //
