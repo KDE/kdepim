@@ -2407,6 +2407,22 @@ organizer.</para></listitem>
 </para></listitem>
 </varlistentry>
 
+<varlistentry id="schedule-mail-freebusy">
+<term><menuchoice>
+<guimenu>Schedule</guimenu>
+<guimenuitem>Mail Free Busy Information</guimenuitem>
+</menuchoice></term>
+<listitem><para>Lets the user send hers Free Busy information to one or several users as an attached Free Busy message which can be read by KOrganizer.</para></listitem>
+</varlistentry>
+
+<varlistentry id="schedule-upload-freebusy">
+<term><menuchoice>
+<guimenu>Schedule</guimenu>
+<guimenuitem>Upload Free Busy Information</guimenuitem>
+</menuchoice></term>
+<listitem><para>Lets the user upload hers Free Busy information on to server. Other users will then be able to retrieve those information.</para></listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect2>
