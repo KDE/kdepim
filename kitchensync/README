@@ -1,0 +1,11 @@
+Developers, please check out the Documentation/ directory.
+In particular:
+
+Documentation/Architecture.docbook
+	is an XML docbook file explaining how KitchenSync is
+	structured and what its purpose is.
+Documentation/HOWTO-CODE.txt
+	tells you what the coding guidelines are. Like in most
+	of KDE, you're expected to stick to the code style that
+	you find in the project. I've documented the choices
+	made so you know what you're up against.

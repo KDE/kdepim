@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=SyncDaemon
+Comment=KitchenSync Daemon

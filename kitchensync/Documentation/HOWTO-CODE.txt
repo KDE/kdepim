@@ -1,0 +1,105 @@
+Coding Guidelines for KitchenSync
+=================================
+
+Of course we can wage war about what constitutes "good programming
+practice". And agreeing on indentation style is difficult as well.
+Below you can find the guidelines I try to stick to when writing
+KitchenSync, split into "C++ Source Code" and "Header Files".
+
+
+
+C++ Source Code
+===============
+
+There are coding guidelines for KDE somewhere. I think they say 
+indent with 4 spaces, { on same line, } on separate line. I disagree,
+so code I write -- and code I maintain -- slowly mutates to
+
+	* Indent with tabs
+	* { and } on separate lines
+	* C comments only for the GPL header and KDoc stuff
+	* C++ before the stuff they document, same indent level,
+	  with possibly two extra lines with just // to set the
+	  comment off from the code.
+
+Whether or not anyone else follows is irrelevant, and I do try to
+avoid gratuitous reformatting. Honest.
+
+What I might do every now and then to get stuff "into shape" (and 
+I'd really appreciate it if you did so too before sending me patches)
+is the following horrible invocation of indent:
+
+indent -kr \
+	--blank-lines-after-declarations \
+	--braces-after-if-line \
+	--dont-cuddle-else \
+	--dont-line-up-parentheses \
+	--honour-newlines \
+	--space-after-cast \
+	--brace-indent 0 \
+	--case-brace-indentation 0 \
+	--case-indentation 0 \
+	--continuation-indentation 8 \
+	--indent-level 8 \
+	--tab-size 8 \
+	--line-length 78
+
+This doesn't yield "perfect" code but it's close to my personal ideal.
+If this coding style gives you gas, just use your own favorite indent
+invocation to change it all back.
+
+NOTE: indent wreaks havoc with C++ class definitions in header files,
+so it's best not to touch those with it.
+
+O YEAH: C++ files are called .cc, simply because Dan started it way back...
+
+Header Files
+============
+
+One thing we *do* need to agree on is how to protect
+.h files from double-inclusion. In Qt and KDE there's:
+
+	#ifndef QTCLASS_H
+	#ifndef _KDECLASS_H
+
+so for KitchenSync the convention will be
+
+	#ifndef _FILENAME_H
+
+This is because the filename and the class don't always match up and not
+every file contains a class of interest.
+
+In KitchenSync, differently from KPilot, we don't wrap the #include
+in the matching #ifdef. This is because it adds clutter and most C
+compilers these days are smart. In particular, from the GNU cpp manpage:
+
+	The GNU C preprocessor is programmed to notice when a header file
+	uses this particular construct and handle it efficiently.  If a 
+	header file is contained entirely in a `#ifndef' conditional, then 
+	it records that fact.  If a subsequent `#include' specifies the same 
+	file, and the macro in the `#ifndef' is already defined, then the 
+	file is entirely skipped, without even reading it.
+
+This leaves the question: which includes? And how? And where?
+
+ALWAYS include config.h and lib/debug.h, as follows:
+
+#include <config.h>
+#include <lib/debug.h>
+
+(This applies to C++ files; in headers they are not needed).
+
+NEXT, include all the system headers you need, with <> syntax, then
+the Qt headers, then the KDE headers.
+
+NEXT, include the header files from lib, pilot-link, or other parts
+of KitchenSync, with <> syntax and relative paths from the KitchenSync
+root directory, eg. #include <pilot-link/include/pi-file.h>.
+
+NEXT, include local header files with "" syntax.
+
+LASTLY, include the .moc file, if any, for this .cc file.
+
+
+	Adriaan de Groot
+	June 15th 2001
