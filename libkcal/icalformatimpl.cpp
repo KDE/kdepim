@@ -194,7 +194,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
                                              Scheduler::Method method)
 {
 #if QT_VERSION >= 300
-  kdDebug() << "icalformatimpl: writeFreeBusy: startDate: "
+  kdDebug(5800) << "icalformatimpl: writeFreeBusy: startDate: "
     << freebusy->dtStart().toString("ddd MMMM d yyyy: h:m:s ap") << " End Date: "
     << freebusy->dtEnd().toString("ddd MMMM d yyyy: h:m:s ap") << endl;
 #endif
@@ -1095,7 +1095,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
         break;
 
       default:
-        kdDebug() << "ICALFormat::readIncidence(): Unknown property: " << kind
+        kdDebug(5800) << "ICALFormat::readIncidence(): Unknown property: " << kind
                   << endl;
       break;
     }
@@ -1830,7 +1830,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
         break;
     }
   } else {
-    kdDebug() << "No attachment found in alarm." << endl;
+    kdDebug(5800) << "No attachment found in alarm." << endl;
   }
 
   // TODO: check for consistency of alarm properties
