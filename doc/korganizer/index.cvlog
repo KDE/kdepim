@@ -1,0 +1,179 @@
+=== LinuxDoc conversion errors ===================
+-> Check if any important attributes have been left behind.
+    INPUT                     OUTPUT
+Line Tag                  Line Tag
+   7 `HTMLURL'               0 `<affiliation><address><email><ulink>'
+   8 `'                      0 `'
+! Check the authorname (<collab><collabname> instead of <author><name>?)
+ 118 `sec-file'              0 `secfile'
+! Reference changed: check if still unique
+ 118 `'                      0 `'
+! check if reference ID secfile was meant for a section (if not, change manually)
+ 120 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 140 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 149 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 162 `REF'                   0 `<link>'
+ 168 `REF'                   0 `<link>'
+ 178 `sec-edit'              0 `secedit'
+! Reference changed: check if still unique
+ 178 `'                      0 `'
+! check if reference ID secedit was meant for a section (if not, change manually)
+ 180 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 199 `sec-view'              0 `secview'
+! Reference changed: check if still unique
+ 199 `'                      0 `'
+! check if reference ID secview was meant for a section (if not, change manually)
+ 206 `REF'                   0 `<link>'
+ 208 `REF'                   0 `<link>'
+ 210 `REF'                   0 `<xref>'
+ 214 `REF'                   0 `<link>'
+ 216 `REF'                   0 `<link>'
+ 218 `REF'                   0 `<link>'
+ 225 `sec-action'            0 `secaction'
+! Reference changed: check if still unique
+ 225 `'                      0 `'
+! check if reference ID secaction was meant for a section (if not, change manually)
+ 249 `REF'                   0 `<link>'
+ 257 `sec-options'           0 `secoptions'
+! Reference changed: check if still unique
+ 257 `'                      0 `'
+! check if reference ID secoptions was meant for a section (if not, change manually)
+ 269 `REF'                   0 `<link>'
+ 275 `sec-help'              0 `sechelp'
+! Reference changed: check if still unique
+ 275 `'                      0 `'
+! check if reference ID sechelp was meant for a section (if not, change manually)
+ 293 `sec-datenav'           0 `secdatenav'
+! Reference changed: check if still unique
+ 293 `'                      0 `'
+! check if reference ID secdatenav was meant for a section (if not, change manually)
+ 295 `IMG'                   0 `<graphic>'
+ 297 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 315 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 315 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+-> Check if any important attributes have been left behind.
+    INPUT                     OUTPUT
+Line Tag                  Line Tag
+ 315 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 322 `sec-listview'          0 `seclistview'
+! Reference changed: check if still unique
+ 322 `'                      0 `'
+! check if reference ID seclistview was meant for a section (if not, change manually)
+ 339 `sec-dayview'           0 `secdayview'
+! Reference changed: check if still unique
+ 339 `'                      0 `'
+! check if reference ID secdayview was meant for a section (if not, change manually)
+ 350 `IMG'                   0 `<graphic>'
+ 359 `sec-weekview'          0 `secweekview'
+! Reference changed: check if still unique
+ 359 `'                      0 `'
+! check if reference ID secweekview was meant for a section (if not, change manually)
+ 361 `REF'                   0 `<link>'
+ 367 `sec-monthview'         0 `secmonthview'
+! Reference changed: check if still unique
+ 367 `'                      0 `'
+! check if reference ID secmonthview was meant for a section (if not, change manually)
+ 381 `sec-todolist'          0 `sectodolist'
+! Reference changed: check if still unique
+ 381 `'                      0 `'
+! check if reference ID sectodolist was meant for a section (if not, change manually)
+ 395 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 407 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 416 `sec-apptmntwin'        0 `secapptmntwin'
+! Reference changed: check if still unique
+ 416 `'                      0 `'
+! check if reference ID secapptmntwin was meant for a section (if not, change manually)
+ 428 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 428 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 428 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 428 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 446 `sec-apptgeneral'       0 `secapptgeneral'
+! Reference changed: check if still unique
+ 446 `'                      0 `'
+! check if reference ID secapptgeneral was meant for a section (if not, change manually)
+ 464 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 464 `REF'                   0 `<link>'
+ 502 `sec-details'           0 `secdetails'
+! Reference changed: check if still unique
+ 502 `'                      0 `'
+! check if reference ID secdetails was meant for a section (if not, change manually)
+ 511 `sec-apptrecurrence'    0 `secapptrecurrence'
+! Reference changed: check if still unique
+ 511 `'                      0 `'
+! check if reference ID secapptrecurrence was meant for a section (if not, change manually)
+ 517 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+-> Check if any important attributes have been left behind.
+    INPUT                     OUTPUT
+Line Tag                  Line Tag
+ 517 `REF'                   0 `<link>'
+ 522 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 522 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 530 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 534 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 537 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 544 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 544 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 558 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 558 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 572 `sec-search'            0 `secsearch'
+! Reference changed: check if still unique
+ 572 `'                      0 `'
+! check if reference ID secsearch was meant for a section (if not, change manually)
+ 577 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 588 `sec-optionsdlg'        0 `secoptionsdlg'
+! Reference changed: check if still unique
+ 588 `'                      0 `'
+! check if reference ID secoptionsdlg was meant for a section (if not, change manually)
+ 630 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 630 `REF'                   0 `<link>'
+ 648 `REF'                   0 `<link>'
+ 651 `REF'                   0 `<link>'
+ 651 `REF'                   0 `<link>'
+ 651 `REF'                   0 `<link>'
+ 656 `REF'                   0 `<link>'
+ 661 `REF'                   0 `<link>'
+ 683 `sec-print'             0 `secprint'
+! Reference changed: check if still unique
+ 683 `'                      0 `'
+! check if reference ID secprint was meant for a section (if not, change manually)
+ 699 `TT'                    0 `<literal remap="tt">'
+! Check and correct manually
+ 699 `REF'                   0 `<link>'
+ 718 `IMG'                   0 `<graphic>'
+ 726 `sec-qanda'             0 `secqanda'
+! Reference changed: check if still unique
+ 726 `'                      0 `'
+! check if reference ID secqanda was meant for a section (if not, change manually)
+ 729 `sec-thanks'            0 `secthanks'
+! Reference changed: check if still unique
+ 729 `'                      0 `'
+! check if reference ID secthanks was meant for a section (if not, change manually)
+=== NIF conversion errors ========================
+=== Finalising errors ===========================
