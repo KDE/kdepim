@@ -39,10 +39,8 @@ namespace KSync {
         void slotWrite( Syncee::PtrList );
         void slotWrite( KOperations::ValueList );
     signals:
-        void sync( const QString&, Syncee::PtrList );
         void backup();
         void restore();
-        void errorKonnector(const QString&, int, const QString& );
         void stateChanged( const QString&, bool );
 
     private:

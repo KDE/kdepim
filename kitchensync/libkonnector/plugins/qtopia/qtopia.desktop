@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KitchenSync/Konnector
+X-KDE-Library=libqtopiakonnector
+
+Name=Qtopia Konnector
+Group= PDA
+Vendor = Holger 'zecke' Freyther
+Id=Qtopia1.5

@@ -64,9 +64,9 @@ namespace KSync {
         void writeAddressbook( AddressBookSyncee*);
         void writeDatebook( EventSyncee* );
         void writeTodoList( TodoSyncee* );
-        Syncee* readAddressbook();
-        Syncee* readDatebook();
-        Syncee* readTodoList();
+        void readAddressbook();
+        void readDatebook();
+        void readTodoList();
         void readPartner();
 
         /* for processing the connection and authentication */
@@ -76,6 +76,16 @@ namespace KSync {
         void call( const QString& );
         void noop( const QString& );
 
+        void handshake( const QString& );
+        void download();
+        void initSync(const QString& );
+
+        void initFiles();
+        QString partnerIdPath()const;
+        void readTimeZones();
+
+        /* download relative from the home dir */
+        bool downloadFile( const QString& str,  QString& newDest);
 
     };
 };

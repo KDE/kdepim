@@ -1,13 +1,29 @@
 #include <qsocket.h>
 #include <qfile.h>
 #include <qdir.h>
+#include <qtimer.h>
 
 #include <kdebug.h>
+#include <klocale.h>
+#include <kglobal.h>
 #include <ktempfile.h>
 #include <kio/netaccess.h>
 #include <kfileitem.h>
+#include <kstandarddirs.h>
 #include <kurl.h>
 
+#include <addressbooksyncee.h>
+#include <eventsyncee.h>
+#include <todosyncee.h>
+
+#include <idhelper.h>
+
+#include "categoryedit.h"
+#include "opiecategories.h"
+#include "desktop.h"
+#include "datebook.h"
+#include "todo.h"
+#include "addressbook.h"
 
 #include "socket.h"
 
@@ -15,7 +31,7 @@ using namespace KSync;
 
 class QtopiaSocket::Private {
 public:
-    enum Call {
+    enum CallIt {
         NotStarted = 0,
         Handshake  = 0,
         ABook,
@@ -57,6 +73,8 @@ public:
     QString partnerId;
     QStringList files;
     QString tz;
+    OpieHelper::CategoryEdit* edit;
+    KonnectorUIDHelper* helper;
 
 };
 namespace {
@@ -77,9 +95,9 @@ QtopiaSocket::QtopiaSocket( QObject* obj, const char* name )
     d->startSync    = false;
     d->isSyncing    = false;
     d->isConnecting = false;
-    d->meta         = false;
-    //d->helper  = 0;
-    //d->edit    = 0;
+    d->meta         = true ;
+    d->helper  = 0;
+    d->edit    = 0;
     d->first   = false;
 }
 QtopiaSocket::~QtopiaSocket() {
@@ -147,12 +165,12 @@ bool QtopiaSocket::isConnected() {
     else
         return false;
 }
-QByteArray QtopiaSocket::retrFile( const QString& file ) {
+QByteArray QtopiaSocket::retrFile( const QString& fileName ) {
     QByteArray array;
 
     if( isConnected() ) {
         QString file;
-        KURL ur = url( file );
+        KURL ur = url( fileName );
         if (  KIO::NetAccess::download( ur,  file ) ) {
             QFile file2( file );
             if ( file2.open( IO_ReadOnly ) )
@@ -162,7 +180,7 @@ QByteArray QtopiaSocket::retrFile( const QString& file ) {
     }
     return array;
 }
-Syncee* QtopiaSocket::retrEntry( const QString& file ) {
+Syncee* QtopiaSocket::retrEntry( const QString&) {
     return 0l;
 }
 bool QtopiaSocket::insertFile( const QString& file) {
@@ -187,27 +205,45 @@ void QtopiaSocket::write( const QString& str, const QByteArray& array) {
 }
 void QtopiaSocket::write( Syncee::PtrList list) {
     Syncee *syncee;
+
+    /*
+     * For all Syncees we see if it
+     * is one of the Opie built in functionality
+     */
     for ( syncee = list.first(); syncee != 0l; syncee = list.next() ) {
         if ( syncee->type() == QString::fromLatin1("AddressBookSyncee") ) {
             AddressBookSyncee* abSyncee = dynamic_cast<AddressBookSyncee*>(syncee );
             writeAddressbook( abSyncee );
         }else if ( syncee->type() == QString::fromLatin1("EventSyncee") ) {
             EventSyncee* evSyncee = dynamic_cast<EventSyncee*>(syncee);
-            writeEvent( evSyncee );
+            writeDatebook( evSyncee );
         }else if ( syncee->type() == QString::fromLatin1("TodoSyncee") ) {
             TodoSyncee* toSyncee = dynamic_cast<TodoSyncee*>(syncee);
-            writeTodo( toSyncee );
+            writeTodoList( toSyncee );
         }
     }
+    /*
+     * so that a clear frees the Syncees
+     */
     list.setAutoDelete( true );
     list.clear();
 
+    /*
+     * write new category informations
+     */
     writeCategory();
     d->helper->save();
+
+    /*
+     * tell Opie/Qtopia that we're ready
+     */
     QTextStream stream( d->socket );
     stream << "call QPE/System stopSync()" << endl;
     d->isSyncing = false;
 }
+/*
+ * write back some Operations later ;)
+ */
 void QtopiaSocket::write( KOperations::ValueList ) {
 
 }
@@ -240,6 +276,8 @@ void QtopiaSocket::process() {
     while ( d->socket->canReadLine() ) {
         QTextStream stream( d->socket );
         QString line = d->socket->readLine();
+        kdDebug() << line << endl;
+        kdDebug() << d->mode << endl;
         switch( d->mode ) {
         case d->Start:
             start(line);
@@ -293,16 +331,14 @@ KURL QtopiaSocket::url( const QString& path ) {
 
     return url;
 }
+/*
+ * write the categories file
+ */
 void QtopiaSocket::writeCategory() {
     QString fileName = QDir::homeDirPath() + "/.kitchensync/meta/" +d->partnerId;
-    QFile file( fileName + "/categories.xml");
-    if ( file.open(IO_WriteOnly ) ) {
-        QByteArray array = d->edit->file();
-        file.writeBlock( array );
-        file.close();
-        KURL uri = url(  d->path + "/Settings/Categories.xml" );
-        KIO::NetAccess::upload( fileName + "/categories.xml",  uri );
-    }
+    d->edit->save( fileName );
+    KURL uri = url(  d->path + "/Settings/Categories.xml" );
+    KIO::NetAccess::upload( fileName + "/categories.xml",  uri );
 }
 void QtopiaSocket::writeAddressbook( AddressBookSyncee* ) {
 
@@ -313,13 +349,13 @@ void QtopiaSocket::writeDatebook( EventSyncee* ) {
 void QtopiaSocket::writeTodoList( TodoSyncee* ) {
 
 }
-Syncee* QtopiaSocket::readAddressbook() {
+void QtopiaSocket::readAddressbook() {
 
 }
-Syncee* QtopiaSocket::readDatebook() {
+void QtopiaSocket::readDatebook() {
 
 }
-Syncee* QtopiaSocket::readTodoList() {
+void QtopiaSocket::readTodoList() {
 
 }
 void QtopiaSocket::readPartner() {
@@ -328,29 +364,41 @@ void QtopiaSocket::readPartner() {
 
 void QtopiaSocket::start(const QString& line ) {
     QTextStream stream( d->socket );
-    if ( line.left(3) != QString::fromLatin1("220") {
+    if ( line.left(3) != QString::fromLatin1("220") ) {
         // something went wrong
         d->socket->close();
         d->mode = d->Done;
         d->connected    = false;
         d->isConnecting = false;
     }else{
+        /*
+         * parse the uuid
+         * here
+         */
+        QStringList list = QStringList::split(";", line );
+        qWarning(list[1] );
+        QString uid = list[1];
+        uid = uid.mid(11, uid.length()-12 );
+        d->partnerId = uid;
         stream << "USER " << d->user << endl;
+        d->mode = d->User;
     }
 }
+
 void QtopiaSocket::user( const QString& line) {
-        QTextStream stream( d->socket );
-        if ( line.left(3) != QString::fromLatin1("331") ) {
-            // wrong user name
-            d->socket->close();
-            d->mode = d->Done;
-            d->connected    = false;
-            d->isConnecting = false;
-        }else{
-            stream << "PASS " << d->pass << endl;
-        }
+    QTextStream stream( d->socket );
+    if ( line.left(3) != QString::fromLatin1("331") ) {
+        // wrong user name
+        d->socket->close();
+        d->mode = d->Done;
+        d->connected    = false;
+        d->isConnecting = false;
+    }else{
+        stream << "PASS " << d->pass << endl;
+        d->mode = d->Pass;
+    }
 }
-void QtopiaSocket::pass( const QString& ) {
+void QtopiaSocket::pass( const QString& line) {
     if ( line.left(3) != QString::fromLatin1("230") ) {
         // wrong password
         d->socket->close();
@@ -358,6 +406,7 @@ void QtopiaSocket::pass( const QString& ) {
         d->connected    = false;
         d->isConnecting = false;
     }else {
+        kdDebug() << "Konnected" << endl;
         d->mode = d->Noop;
         QTimer::singleShot(10000, this, SLOT(slotNOOP() ) );
         emit stateChanged( true );
@@ -369,13 +418,24 @@ void QtopiaSocket::call( const QString& line) {
         return;
 
     if ( line.startsWith("CALL QPE/Desktop docLinks(QString)") ) {
-
+        OpieHelper::Desktop desk( d->edit );
+        Syncee* sync = desk.toSyncee( line );
+        if ( sync )
+            d->m_sync.append( sync );
     }
     switch( d->getMode ) {
     case d->Handshake:
+        handshake(line);
+        break;
+    case d->ABook:
+        download();
+        break;
+    case d->Desktops:
+        initSync( line );
+        break;
     }
 }
-void QtopiaSocket::noop( const QString& line ) {
+void QtopiaSocket::noop( const QString&) {
     d->isConnecting = false;
     if (!d->startSync ) {
         d->mode = d->Noop;
@@ -383,5 +443,89 @@ void QtopiaSocket::noop( const QString& line ) {
     }else
         slotStartSync();
 }
+void QtopiaSocket::handshake( const QString& line) {
+    QTextStream stream( d->socket );
+    QStringList list = QStringList::split( QString::fromLatin1(" "), line );
+    d->path = list[3];
+    d->getMode = d->Desktops;
+    stream << "call QPE/System startSync(QString) KitchenSync" << endl;
+}
+void QtopiaSocket::download() {
+    readAddressbook();
+    readDatebook();
+    readTodoList();
 
+    /*
+     * we're all set now
+     * start sync
+     * and clear our list
+     */
+    emit sync( d->m_sync );
+    d->mode = d->Noop;
+    d->m_sync.clear();
+}
+void QtopiaSocket::initSync( const QString& ) {
+    QString tmpFileName;
+    downloadFile( "/Settings/Categories.xml", tmpFileName );
+
+    /* Category Edit */
+    delete d->edit;
+    d->edit = new OpieHelper::CategoryEdit( tmpFileName );
+    KIO::NetAccess::removeTempFile( tmpFileName );
+
+    /* KonnectorUIDHelper */
+    delete d->helper;
+    d->helper = new KonnectorUIDHelper( partnerIdPath() );
+
+    /* TimeZones */
+    readTimeZones();
+
+    /*
+     * now we can progress during sync
+     */
+    QTextStream stream( d->socket );
+    stream << "call QPE/System getAllDocLinks()" << endl;
+    d->getMode  = d->ABook;
+}
+void QtopiaSocket::initFiles() {
+    QDir di( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
+    /*
+     * if our meta path exists do not recreate it
+     */
+    if (di.exists()  )
+        return;
+
+    QDir dir;
+    dir.mkdir(QDir::homeDirPath() + "/.kitchensync");
+    dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta");
+    dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
+}
+QString QtopiaSocket::partnerIdPath()const {
+    QString str = QDir::homeDirPath();
+    str += "/.kitchensync/meta/";
+    str += d->partnerId;
+
+    return str;
+};
+void QtopiaSocket::readTimeZones() {
+    QString tmpFileName;
+    /* read the time zone from file */
+    if ( downloadFile("/Settings/locale.conf", tmpFileName ) ) {
+        QFile file( tmpFileName );
+        if ( file.open( IO_ReadOnly ) ) {
+            QTextStream stream ( &file );
+            QString line;
+            while ( !stream.atEnd() ) {
+                line = stream.readLine();
+                if ( line.startsWith("Timezone = ") )
+                    d->tz = line.mid(11);
+            }
+        }
+    }else
+        d->tz = "America/New_York";
+}
+bool QtopiaSocket::downloadFile( const QString& str, QString& dest ) {
+    KURL uri = url( d->path + str );
+    return KIO::NetAccess::download( uri, dest );
+}
 #include "socket.moc"

@@ -134,6 +134,9 @@ void QtopiaPlugin::slotWrite( const QString& str, const QByteArray& ar) {
 void QtopiaPlugin::slotWrite( Syncee::PtrList lst) {
     d->socket->write( lst );
 }
+void QtopiaPlugin::slotWrite( KOperations::ValueList ) {
+
+}
 
 /* private slots for communication here */
 void QtopiaPlugin::slotSync(Syncee::PtrList lst ) {
