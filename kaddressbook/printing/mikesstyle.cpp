@@ -44,6 +44,7 @@ namespace KABPrinting
         QFont mFont;
         QFont mBoldFont;
         QPainter p;
+        p.begin(wiz->printer());
         int yPos = 0;
         int spacingHint = 10;
         // Now do the actual printing
@@ -104,6 +105,14 @@ namespace KABPrinting
             p.restore();
             yPos += height;
         }
+        // print the tag line on the last page
+        p.save();
+        p.translate(0, metrics.height()-fm.height()-5);
+        paintTagLine(p, mFont);
+        p.restore();
+
+        // send to the printer
+        p.end();
     }
 
     QString MikesStyle::trimString(const QString &text, int width,
