@@ -35,6 +35,12 @@ RCte::RCte(const RCte & cte)
 	assembled_	= false;
 }
 
+RCte::RCte(const QCString & s)
+	:	RHeaderBody(s)
+{
+	rmmDebug("ctor with \"" + s + "\"");
+}
+
 RCte::~RCte()
 {
 	rmmDebug("dtor");
@@ -53,11 +59,19 @@ RCte::operator = (const RCte & cte)
 	return *this;
 }
 
+	RCte &
+RCte::operator = (const QCString & s)
+{
+	rmmDebug("operator = \"" + s + "\"");
+	RHeaderBody::operator = (s);
+	return *this;
+}
+
 	void
 RCte::parse()
 {
-	if (parsed_) return;
 	rmmDebug("parse() called");
+	if (parsed_) return;
 	rmmDebug("strRep_ = " + strRep_);
 	
 	mechanism_	= strRep_.stripWhiteSpace();
@@ -69,6 +83,7 @@ RCte::parse()
 	void
 RCte::assemble()
 {
+	parse();
 	if (assembled_) return;
 	rmmDebug("assemble() called");
 	strRep_ = mechanism_;
@@ -95,7 +110,6 @@ RCte::mechanism()
 	void
 RCte::setMechanism(const QCString & m)
 {
-	parse();
 	mechanism_ = m;
 	assembled_	= false;
 }

@@ -26,19 +26,32 @@
 #include <RMM_Token.h>
 
 RParameter::RParameter()
-{
-	rmmDebug("ctor");
-}
-
-RParameter::RParameter(const RParameter & p)
 	:	RMessageComponent()
 {
 	rmmDebug("ctor");
 }
 
+RParameter::RParameter(const RParameter & p)
+	:	RMessageComponent(p)
+{
+	rmmDebug("ctor");
+}
+
+RParameter::RParameter(const QCString & s)
+	:	RMessageComponent(s)
+{
+	rmmDebug("ctor with \"" + s + "\"");
+}
+
 RParameter::~RParameter()
 {
 	rmmDebug("dtor");
+}
+
+	RParameter &
+RParameter::operator = (const QCString & s)
+{
+	RMessageComponent::operator = (s);
 }
 
 	RParameter &
@@ -58,6 +71,7 @@ RParameter::operator = (const RParameter & p)
 	void
 RParameter::parse()   
 {
+	if (parsed_) return;
 	rmmDebug("parse() called");
 	
 	int split = strRep_.find('=');
@@ -69,13 +83,19 @@ RParameter::parse()
 	
 	attribute_	= strRep_.left(split).stripWhiteSpace();
 	value_		= strRep_.right(strRep_.length() - split - 1).stripWhiteSpace();
+	
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RParameter::assemble()
 {
+	parse();
+	if (assembled_) return;
 	rmmDebug("assemble() called");
 	strRep_ = attribute_ + "=" + value_;
+	assembled_ = true;
 }
 
 	void
@@ -87,12 +107,14 @@ RParameter::createDefault()
 	QCString
 RParameter::attribute()
 {
+	parse();
 	return attribute_;
 }
 
 	QCString
 RParameter::value()
 {
+	parse();
 	return value_;
 }
 
@@ -100,10 +122,12 @@ RParameter::value()
 RParameter::setAttribute(const QCString & attribute)
 {
 	attribute_ = attribute;
+	assembled_ = false;
 }
 	void
 RParameter::setValue(const QCString & value)	
 {
 	value_ = value;
+	assembled_ = false;
 }
 	

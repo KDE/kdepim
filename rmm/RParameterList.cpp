@@ -36,11 +36,20 @@ RParameterList::RParameterList()
 
 RParameterList::RParameterList(const RParameterList & l)
 	:	QList<RParameter>(),
-		RHeaderBody()
+		RHeaderBody(l)
 {
 	rmmDebug("ctor");
 	setAutoDelete(true);
 }
+
+RParameterList::RParameterList(const QCString & s)
+	:	QList<RParameter>(),
+		RHeaderBody(s)
+{
+	rmmDebug("ctor");
+	setAutoDelete(true);
+}
+
 
 RParameterList::~RParameterList()
 {
@@ -52,12 +61,15 @@ RParameterList::operator = (const RParameterList & l)
 {
 	if (this == &l) return *this;
 	QList<RParameter>::operator = (l);
+	assembled_ = false;
 	return *this;
 }
 
 	RParameterList &
 RParameterList::operator = (const QCString & s)
 {
+	strRep_ = s;
+	parsed_ = false;
 	return *this;
 }
 
@@ -66,25 +78,31 @@ RParameterList::parse()
 {
 	rmmDebug("parse() called");
 	rmmDebug("strRep_ = " + strRep_);
+	if (parsed_) return;
 
 	clear();
-
+	
 	QStrList l;
-	RTokenise(strRep_, ";", l);
+	RTokenise(strRep_, ";", l, true, false);
 	
 	QStrListIterator it(l);
 	
 	for (; it.current(); ++it) {
 		
-		RParameter * p = new RParameter(QCString(it.current()).stripWhiteSpace());
+		RParameter * p =
+			new RParameter(QCString(it.current()).stripWhiteSpace());
 		p->parse();
 		QList::append(p);
 	}
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RParameterList::assemble()
 {
+	parse();
+	if (assembled_) return;
 	rmmDebug("assemble() called");
 	bool firstTime = true;
 	
@@ -105,17 +123,12 @@ RParameterList::assemble()
 	}
 	
 	rmmDebug("assembled to: \"" + strRep_ + "\"");
+	assembled_ = true;
 }
 
 	void
 RParameterList::createDefault()
 {
 	rmmDebug("createDefault() called");
-}
-
-	QCString
-RParameterList::asString()
-{
-	return strRep_;
 }
 

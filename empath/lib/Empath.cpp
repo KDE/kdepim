@@ -48,6 +48,7 @@
 #include "EmpathMailSenderSMTP.h"
 #include "EmpathMessageDataCache.h"
 #include "EmpathFilterList.h"
+#include "EmpathTask.h"
 
 Empath * Empath::EMPATH = 0;
 
@@ -283,3 +284,11 @@ Empath::s_setupFilters()
 	emit(setupFilters());
 }
 
+	EmpathTask *
+Empath::addTask(const QString & name)
+{
+	EmpathTask * t = new EmpathTask(name);
+	CHECK_PTR(t);
+	emit(newTask(t));
+}
+	

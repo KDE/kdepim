@@ -24,12 +24,12 @@
 #include <qstring.h>
 #include <qlist.h>
 
-#include <RMM_BodyPart.h>
 #include <RMM_Entity.h>
 #include <RMM_MessageComponent.h>
 #include <RMM_Defines.h>
 #include <RMM_ContentType.h>
 #include <RMM_Cte.h>
+#include <RMM_BodyPart.h>
 
 class RMessage;
 class REntity;

@@ -626,7 +626,7 @@ REnvelope::parentMessageId()
 		//RMessageID !
 		QCString s = references().asString();
 		s = s.right(s.length() - s.findRev('<'));
-		m.set(s);
+		m = s;
 
 	} else if (has(RMM::HeaderInReplyTo)) {
 
@@ -634,7 +634,7 @@ REnvelope::parentMessageId()
 
 		RText t = inReplyTo();
 		rmmDebug("..");
-		m.set(t.asString());
+		m = t.asString();
 
 	} else {
 

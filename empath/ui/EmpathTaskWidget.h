@@ -26,27 +26,27 @@
 #include <qpushbutton.h>
 #include <qlabel.h>
 
+// Local includes
+#include "EmpathTask.h" 
+
 class EmpathTaskWidget : public QWidget
 {
 	Q_OBJECT
 		
 	public:
+		
+		static void addTask(EmpathTask *);
 	
-		EmpathTaskWidget(QWidget * parent = 0, const char * name = 0);
-		virtual ~EmpathTaskWidget();
+		virtual	~EmpathTaskWidget();
+		void	resizeEvent(QResizeEvent *);
 		
-		void manage(QWidget * w);
-		void resizeEvent(QResizeEvent *);
-		
-	protected slots:
-		
-		void s_done();
-	
 	private:
 		
-		QWidget			* statusWidget_;
-		QPushButton		* stopButton_;
-		QLabel			* tickLabel_;
+		EmpathTaskWidget();
+		
+		static EmpathTaskWidget * taskWidget_;
+		
+		void _addTask(EmpathTask *);
 };
 
 #endif

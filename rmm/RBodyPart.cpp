@@ -32,17 +32,20 @@ RBodyPart::RBodyPart()
 	:	REntity()
 {
 	rmmDebug("ctor");
+	body_ = new RBody();
 }
 
 RBodyPart::RBodyPart(const RBodyPart & part)
 	:	REntity(part)
 {
 	rmmDebug("ctor");
+	body_ = new RBody();
 }
 
 RBodyPart::~RBodyPart()
 {
 	rmmDebug("dtor");
+	delete body_;
 }
 
 	RBodyPart &
@@ -101,6 +104,61 @@ RBodyPart::parse()
 {
 	if (parsed_) return;
 	
+	// A body part consists of an envelope and a body.
+	// The body may, again, consist of multiple body parts.
+	
+	int endOfHeaders = strRep_.find(QRegExp("\n\n"));
+	
+	if (endOfHeaders == -1) {
+		rmmDebug("No end of headers ! - message is " +
+			QString().setNum(strRep_.length()) + " bytes long");
+		return;
+	}
+	
+	envelope_.set(strRep_.left(endOfHeaders));
+
+	rmmDebug("Looking to see if there's a Content-Type header");
+	// Now see if there's a Content-Type header in the envelope.
+	// If there is, we might be looking at a multipart message.
+	if (envelope_.has(RMM::HeaderContentType)) {
+		
+		rmmDebug("There's a Content-Type header");
+		
+		// It has the header.
+		RContentType contentType(envelope_.contentType());
+		
+		// If the header say multipart, we'll need to know the boundary.
+		if (contentType.type() == "multipart") {
+			
+			rmmDebug("This message is multipart");
+		
+			RParameterListIterator it(contentType.parameterList());
+			
+			for (; it.current(); ++it) {
+			
+				if (it.current()->attribute() == "boundary") {
+				
+					// We've found the boundary.
+					// The body needs the boundary, so it knows where to split.
+					// It also needs the content type header, so it knows what
+					// subtype the contentType has.
+					// It also needs the content-transfer-encoding, so that it
+					// can decode where necessary.
+					body_->setBoundary(it.current()->value());
+					body_->setContentType(contentType);
+					RCte cte(envelope_.contentTransferEncoding());
+					body_->setCTE(cte);
+					body_->setMultiPart(true);
+					break;
+				}
+			}
+		}
+	}
+
+	body_->set(strRep_.right(strRep_.length() - endOfHeaders));
+	body_->parse();
+	
+
 	parsed_		= true;
 	assembled_	= false;
 }

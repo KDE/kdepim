@@ -95,6 +95,10 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	parse();
 	end();
 	
+	QObject::connect(
+		this, SIGNAL(rightButtonPressed(const QPoint &)),
+		this, SLOT(s_rightButtonPressed(const QPoint &)));
+	
 	empathDebug("ctor finished");
 }
 

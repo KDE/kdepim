@@ -27,6 +27,9 @@
 #include <RMM_Entity.h>
 #include <RMM_Enum.h>
 #include <RMM_Defines.h>
+#include <RMM_Envelope.h>
+
+class RBody;
 
 class RBodyPart : public REntity {
 	
@@ -64,7 +67,8 @@ class RBodyPart : public REntity {
 
 	protected:
 
-		QByteArray			body_;
+		REnvelope			envelope_;
+		RBody *				body_;
 		RMM::CteType		encoding_;
 		RMM::MimeType		mimeType_;
 		RMM::MimeSubType	mimeSubType_;

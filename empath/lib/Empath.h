@@ -43,6 +43,7 @@ class EmpathFolder;
 class EmpathMailSender;
 class EmpathIndexRecord;
 class RMessage;
+class EmpathTask;
 
 /**
  * Empath is the main class for the app
@@ -137,6 +138,8 @@ class Empath : public QObject
 		 */
 		EmpathMailbox * mailbox(const EmpathURL &);
 		
+		EmpathTask * addTask(const QString & name);
+		
 		static Empath * EMPATH;
 		
 	public slots:
@@ -212,6 +215,8 @@ class Empath : public QObject
 		void setupComposing();
 		void setupAccounts();
 		void setupFilters();
+		
+		void newTask(EmpathTask *);
 		
 	private:
 	

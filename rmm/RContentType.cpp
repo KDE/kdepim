@@ -59,6 +59,8 @@ RContentType::operator = (const RContentType & ct)
 	void
 RContentType::parse()
 {
+	rmmDebug("parse() called");
+	rmmDebug("strRep_ == \"" + strRep_ + "\"");
 	if (parsed_) return;
 
 	QCString ts;
@@ -71,7 +73,7 @@ RContentType::parse()
 	else {
 	
 		ts = strRep_.left(i);
-		parameterList_ = strRep_.right(strRep_.length() - i + 1);
+		parameterList_ = strRep_.right(strRep_.length() - i - 1);
 		parameterList_.parse();
 	}
 	
@@ -92,6 +94,7 @@ RContentType::parse()
 	void
 RContentType::assemble()
 {
+	parse();
 	if (assembled_) return;
 	
 	strRep_ = type_ + "/" + subType_;
@@ -122,7 +125,6 @@ RContentType::createDefault()
 	void
 RContentType::setType(const QCString & t)
 {
-	parse();
 	type_ = t;
 	assembled_	= false;
 }
@@ -130,7 +132,6 @@ RContentType::setType(const QCString & t)
 	void
 RContentType::setSubType(const QCString & t)
 {
-	parse();
 	subType_ = t;
 	assembled_	= false;
 }
@@ -138,7 +139,6 @@ RContentType::setSubType(const QCString & t)
 	void
 RContentType::setParameterList(RParameterList & p)
 {
-	parse();
 	parameterList_ = p;
 	assembled_	= false;
 }

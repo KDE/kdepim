@@ -87,6 +87,8 @@ class RMM
 		enum HeaderDataType {
 			Address,
 			AddressList,
+			ContentType,
+			Cte,
 			DateTime,
 			DispositionType,
 			Mailbox,

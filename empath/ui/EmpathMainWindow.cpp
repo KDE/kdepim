@@ -42,7 +42,6 @@
 #include "EmpathMessageList.h"
 #include "EmpathFolderWidget.h"
 #include "EmpathAboutBox.h"
-#include "EmpathStatusWidget.h"
 #include "EmpathMessageSourceView.h"
 #include "EmpathConfig.h"
 #include "EmpathFindDialog.h"
@@ -65,11 +64,6 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
 	CHECK_PTR(mainWidget_);
 	
 	messageListWidget_ = mainWidget_->messageListWidget();
-	
-	statusWidget_	=
-		new EmpathStatusWidget(0, "statusWidget");
-	
-	CHECK_PTR(statusWidget_);
 	
 	setView(mainWidget_, false);
 
@@ -603,12 +597,6 @@ EmpathMainWindow::s_toolbarMoved(BarPosition pos)
 EmpathMainWindow::newMailArrived()
 {
 	messageListWidget_->update();
-}
-
-	EmpathStatusWidget *
-EmpathMainWindow::statusWidget()
-{
-	return statusWidget_;
 }
 
 	EmpathMessageListWidget *

@@ -33,12 +33,14 @@
 
 // KDE includes
 #include <kapp.h>
+#include <klocale.h>
 
 // Local includes
 #include "EmpathMaildir.h"
 #include "EmpathFolderList.h"
 #include "EmpathMessageList.h"
 #include "Empath.h"
+#include "EmpathTask.h"
 #include "EmpathMailbox.h"
 
 EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
@@ -61,6 +63,8 @@ EmpathMaildir::sync(const EmpathURL & url)
 {
 	empathDebug("sync(" + url.asString() + ") called");
 	QTime realBegin(QTime::currentTime());
+	
+//	EmpathTask * t(empath->addTask(i18n("Reading mailbox")));
 	
 	// First make sure any new mail that has arrived goes into cur.
 	_markNewMailAsSeen();
@@ -99,6 +103,8 @@ EmpathMaildir::sync(const EmpathURL & url)
 	// dir entry list) must be removed from the message list.
 	
 	QStringList::ConstIterator it(fileList.begin());
+	
+//	t->setMax(fileList.count());
 	
 	QString s;
 	QRegExp re_flags(":2,[A-Za-z]*$");
@@ -144,6 +150,8 @@ EmpathMaildir::sync(const EmpathURL & url)
 			
 			empathDebug("New message in index with id \"" + s + "\"");
 		}
+		
+//		t->doneOne();
 	}
 	
 	kapp->processEvents();
@@ -164,6 +172,10 @@ EmpathMaildir::sync(const EmpathURL & url)
 		}
 	
 	_writeIndex();
+	
+//	t->done();
+
+	
 	QTime end(QTime::currentTime());
 	empathDebug("sync took " +
 		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
@@ -643,6 +655,9 @@ EmpathMaildir::_readIndex()
 		empathDebug("Couldn't read index file \"" + indexFile.name() + "\"");
 		return;
 	}
+	
+	QFileInfo fi(indexFile);
+	mtime_ = fi.lastModified();
 		
 	// Get a pointer to the folder related to us.
 	EmpathFolder * f(empath->folder(url_));
@@ -667,6 +682,7 @@ EmpathMaildir::_readIndex()
 		}
 
 		r = new EmpathIndexRecord;
+		CHECK_PTR(r);
 		indexStream >> *r;
 	
 		int flagsStart = r->id().find(re_flags);
@@ -694,8 +710,6 @@ EmpathMaildir::_readIndex()
 
 	indexFile.close();
 	
-	QFileInfo fi(path_ + "/cur/");
-	mtime_ = fi.lastModified();
 	empathDebug("readIndex took " +
 		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
 }
@@ -709,7 +723,7 @@ EmpathMaildir::_writeIndex()
 	EmpathFolder * f(empath->folder(url_));
 	
 	if (f == 0) {
-		empathDebug("sync: Couldn't find folder !");
+		empathDebug("writeIndex: Couldn't find folder !");
 		return;
 	}
 	

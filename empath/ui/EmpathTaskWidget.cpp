@@ -26,22 +26,23 @@
 #include "EmpathDefines.h"
 #include "EmpathTaskWidget.h"
 
-EmpathTaskWidget::EmpathTaskWidget(QWidget * parent, const char * name)
-	:	QWidget(parent, name)
+EmpathTaskWidget * EmpathTaskWidget::taskWidget_ = 0;
+
+	void
+EmpathTaskWidget::addTask(EmpathTask * t)
+{
+	if (taskWidget_ == 0) {
+		taskWidget_ = new EmpathTaskWidget();
+		CHECK_PTR(taskWidget_);
+	}
+	
+	taskWidget_->_addTask(t);
+}
+
+EmpathTaskWidget::EmpathTaskWidget()
+	:	QWidget()
 {
 	empathDebug("ctor");
-	
-	tickLabel_ = new QLabel(this, "tickLabel");
-	CHECK_PTR(tickLabel_);
-	
-	tickLabel_->setPixmap(empathIcon("tick.xpm"));
-	
-	stopButton_ = new QPushButton(this, "stopButton");
-	CHECK_PTR(stopButton_);
-	
-	stopButton_->setPixmap(empathIcon("stop.xpm"));
-	
-	hide();
 }
 
 EmpathTaskWidget::~EmpathTaskWidget()
@@ -50,28 +51,13 @@ EmpathTaskWidget::~EmpathTaskWidget()
 }
 
 	void
-EmpathTaskWidget::manage(QWidget * w)
-{
-	statusWidget_ = w;
-	resizeEvent((QResizeEvent *)0);
-	QObject::connect(statusWidget_, SIGNAL(done()),
-		this, SLOT(s_done()));
-	show();
-}
-
-	void
 EmpathTaskWidget::resizeEvent(QResizeEvent * e)
 {
-	statusWidget_->move(0,0);
-	statusWidget_->resize(width() - 100, height());
-	tickLabel_->move(width() - 50, (height() / 2) - (tickLabel_->height() / 2));
-	stopButton_->move(width() - 50, (height() / 2) - (stopButton_->height() / 2));
 }
 
 	void
-EmpathTaskWidget::s_done()
+EmpathTaskWidget::_addTask(EmpathTask * t)
 {
-	stopButton_->setEnabled(false);
-	stopButton_->hide();
+	empathDebug("_addTask(" + t->name() + ") called");
 }
 

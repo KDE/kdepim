@@ -22,6 +22,9 @@
 #include <RMM_Header.h>
 #include <RMM_Address.h>
 #include <RMM_AddressList.h>
+#include <RMM_ContentType.h>
+#include <RMM_Cte.h>
+#include <RMM_AddressList.h>
 #include <RMM_DateTime.h>
 #include <RMM_DispositionType.h>
 #include <RMM_Mailbox.h>
@@ -135,8 +138,8 @@ RHeader::parse()
 	for (int i = 0; i <= 42; i++) {
 		if (!stricmp((headerName_), RMM::headerNames[i])) {
 			headerType_ = (RMM::HeaderType)i;
-			break;
 			rmmDebug("I'm of type " + QCString(RMM::headerNames[i]));
+			break;
 		}
 	}
 
@@ -148,6 +151,8 @@ RHeader::parse()
 	switch (RMM::headerTypesTable[headerType_]) {
 		case RMM::Address:			b = new RAddress;			break;
 		case RMM::AddressList:		b = new RAddressList;		break;
+		case RMM::ContentType:		b = new RContentType;		break;
+		case RMM::Cte:				b = new RCte;				break;
 		case RMM::DateTime:			b = new RDateTime;			break;
 		case RMM::DispositionType:	b = new RDispositionType;	break;
 		case RMM::Mailbox:			b = new RMailbox;			break;
@@ -160,7 +165,7 @@ RHeader::parse()
 
 	QCString hb = strRep_.right(strRep_.length() - split - 1);
 	hb = hb.stripWhiteSpace();
-	b->set(hb);
+	*b = hb;
 	b->parse();
 	headerBody_ = b;
 

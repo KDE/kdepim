@@ -39,7 +39,6 @@ class EmpathMessageListWidget;
 class EmpathMessageWidget;
 class EmpathComposeWindow;
 class EmpathAboutBox;
-class EmpathStatusWidget;
 class EmpathMainWidget;
 class RMessage;
 
@@ -59,7 +58,6 @@ class EmpathMainWindow : public KTMainWindow
 	
 		void newMailArrived();
 
-		EmpathStatusWidget		* statusWidget();
 		EmpathMessageListWidget	* messageListWidget();
 
 	protected slots:
@@ -134,7 +132,6 @@ class EmpathMainWindow : public KTMainWindow
 		EmpathSettingsDialog		* settingsDialog_;
 		EmpathComposeWindow			* composeWindow_;
 		EmpathAboutBox				* aboutBox_;
-		EmpathStatusWidget			* statusWidget_;
 
 		// Setup methods
 		void setupMenuBar();

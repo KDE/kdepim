@@ -36,11 +36,12 @@ class RParameter : public RMessageComponent {
 
 		RParameter();
 		RParameter(const RParameter & p);
-		RParameter(const QCString & s) : RMessageComponent(s) { }
+		RParameter(const QCString & s);
 
 		virtual ~RParameter();
 
 		RParameter & operator = (const RParameter &);
+		RParameter & operator = (const QCString &);
 
 		void parse();
 		void assemble();

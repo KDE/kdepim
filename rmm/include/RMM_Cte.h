@@ -40,8 +40,9 @@ class RCte : public RHeaderBody {
 
 		RCte();
 		RCte(const RCte & cte);
-		RCte(const QCString & s) : RHeaderBody(s) { }
-		RCte & operator = (const RCte & cte);
+		RCte(const QCString & s);
+		RCte & operator = (const RCte &);
+		RCte & operator = (const QCString &);
 
 		virtual ~RCte();
 

@@ -35,6 +35,8 @@
 #include "RMM_Message.h"
 #include "EmpathConfig.h"
 #include "EmpathTipOfTheDay.h"
+#include "EmpathTask.h"
+#include "EmpathTaskWidget.h"
 
 EmpathUI::EmpathUI()
 	: QObject()
@@ -68,6 +70,10 @@ EmpathUI::EmpathUI()
 	QObject::connect(
 		empath,	SIGNAL(setupFilters()),
 		this,	SLOT(s_setupFilters()));
+	
+	QObject::connect(
+		empath,	SIGNAL(newTask(EmpathTask *)),
+		this,	SLOT(s_newTask(EmpathTask *)));
 	
 	EmpathMainWindow * mainWindow = new EmpathMainWindow("mainWindow");
 	kapp->setMainWidget(mainWindow);
@@ -142,4 +148,10 @@ EmpathUI::s_setupFilters()
 	EmpathFilterManagerDialog::create();
 }
 
+	void
+EmpathUI::s_newTask(EmpathTask * t)
+{
+	empathDebug("s_newTask() called");
+	EmpathTaskWidget::addTask(t);
+}
 

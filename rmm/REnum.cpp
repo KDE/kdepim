@@ -97,9 +97,9 @@ RMM::headerTypesTable [] = {
 	DispositionType,	// HeaderContentDisposition
 	MessageID,			// HeaderContentID
 	Text,				// HeaderContentMD5
-	Text,				// HeaderContentType
+	ContentType,		// HeaderContentType
 	Text,				// HeaderControl
-	Text,				// HeaderContentTransferEncoding
+	Cte,				// HeaderContentTransferEncoding
 	DateTime,			// HeaderDate
 	Text,				// HeaderDistribution
 	Text,				// HeaderEncrypted

@@ -34,7 +34,7 @@ typedef QListIterator<RParameter> RParameterListIterator;
  * @short Simple encapsulation of a list of RParameter, which is also an
  * RHeaderBody.
  */
-class RParameterList : public QList<RParameter>, RHeaderBody {
+class RParameterList : public QList<RParameter>, public RHeaderBody {
 
 	public:
 
@@ -43,7 +43,6 @@ class RParameterList : public QList<RParameter>, RHeaderBody {
 		RParameterList(const QCString &);
 		RParameterList & operator = (const RParameterList &);
 		RParameterList & operator = (const QCString &);
-		QCString asString();
 
 		virtual ~RParameterList();
 
@@ -52,11 +51,6 @@ class RParameterList : public QList<RParameter>, RHeaderBody {
 		void createDefault();
 
 		const char * className() const { return "RParameterList"; }
-
-
-	private:
-
-		QCString strRep_;
 };
 
 #endif //RPARAMETERLIST_H

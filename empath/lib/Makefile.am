@@ -32,4 +32,5 @@ EmpathMessageList.cpp \
 EmpathTimeStamp.cpp \
 EmpathURL.cpp \
 EmpathUtilities.cpp \
+EmpathTask.cpp \
 md5.cpp

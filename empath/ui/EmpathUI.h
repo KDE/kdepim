@@ -30,6 +30,7 @@
 #include "EmpathURL.h"
 
 class RMessage;
+class EmpathTask;
 
 class EmpathUI : public QObject
 {
@@ -50,7 +51,9 @@ class EmpathUI : public QObject
 		void s_setupFilters();
 		
 		void s_newComposer(ComposeType, const EmpathURL &);
-	
+		
+		void s_newTask(EmpathTask *);
+		
 	private:
 	
 		void _showTipOfTheDay() const;

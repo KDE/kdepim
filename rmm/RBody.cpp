@@ -70,6 +70,7 @@ RBody::operator = (const RBody & body)
 	void
 RBody::parse()
 {
+	rmmDebug("parse() called");
 	if (parsed_) return;
 	
 	partList_.clear();
@@ -103,13 +104,7 @@ RBody::parse()
 		
 		RBodyPart * newPart = new RBodyPart(strRep_);
 		CHECK_PTR(newPart);
-/*		newPart->setEncoding(cte_);
-		newPart->setMimeType(mimeType_);
-		newPart->setMimeSubType(mimeSubType_);
-		newPart->setDescription(description_);
-		newPart->setDisposition(disposition_);
 		newPart->parse();
-*/		
 		return;
 	}
 	
@@ -140,12 +135,6 @@ RBody::parse()
 		// Looks like there's only one body part.
 		RBodyPart * newPart = new RBodyPart(strRep_.mid(oldi, i));
 		CHECK_PTR(newPart);
-/*		newPart->setEncoding(cte_);
-		newPart->setMimeType(mimeType_);
-		newPart->setMimeSubType(mimeSubType_);
-		newPart->setDescription(description_);
-		newPart->setDisposition(disposition_);
-*/
 		oldi = i + boundary_.length();
 		i = strRep_.find(boundary_, i + boundary_.length());
 	}
