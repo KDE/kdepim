@@ -3,7 +3,8 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/feat
 	  -I$(top_srcdir) -I$(top_builddir)/kaddressbook/printing \
 	  -I$(top_builddir)/kaddressbook/details $(all_includes) 
 
-SUBDIRS = details printing . views features kcmconfigs xxport pics csv-templates
+SUBDIRS = details printing . views features kcmconfigs xxport pics csv-templates \
+		thumbnailcreator
 
 SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
 

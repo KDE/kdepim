@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Electronic Business Card Files
+ServiceTypes=ThumbCreator
+MimeTypes=text/x-vcard,text/x-ldif
+X-KDE-Library=ldifvcardthumbnail
+CacheThumbnail=false
