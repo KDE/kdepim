@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>05/01/2001</date>
+<date>07/01/2001</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -1970,12 +1970,12 @@ too. This will remove all the messages in the trash folder whenever you exit &km
  programs. Still you should understand how these programs work and what might make them
  insecure. Important issues:</para>
  <itemizedlist>
+	 <listitem><para>You <emphasis>really</emphasis> should test if encryption works before you use it. &kmail; relies
+	  on PGP/GnuPG's error strings, which often change between different versions.</para></listitem>
 	 <listitem><para>Trusting a foreign public key without checking it is no good idea.</para></listitem>
 	 <listitem><para>As most other mail clients, &kmail; can encrypt your messages,
 	  but <emphasis>not</emphasis> your attachments. You have to encrypt them manually before 
 	  you attach them.</para></listitem>
-	 <listitem><para>You really should test if encryption works before you use it. &kmail; relies
-	  on PGP/GnuPG's error strings, which often change between different versions.</para></listitem>
 	 <listitem><para>There's a bug in &kmail; 1.1.99 (which comes with KDE 2.0 and 2.0.1) that
 	  makes PGP not work if you use a different language than English. You can work around
 	  it this way (&kmail; will still use your favourite language):</para>
