@@ -5,11 +5,21 @@
 # generated files (ie. leave out namespaces if there are none).
 #
 # Usage: doxyndex.sh <toplevel-apidocs-dir> <relative-html-output-directory>
+#
+# Typically, this means $(top_builddir)/apidocs and something like
+# libfoo/html for the output. For the top-level dig, set relative-html
+# to "." . In non-top directories, both <!-- menu --> and <!-- gmenu -->
+# are calculated and replaced. Top directories get an empty <!-- menu -->
+# if any.
 
 WRKDIR="$1/$2"
 TOPDIR=`echo "$2" | sed -e 's+[^/][^/]*/+../+g' -e 's+html$+..+'`
 echo "Postprocessing files in $WRKDIR ($TOPDIR)"
 
+# Special case top-level to have an empty MENU.
+if test "x$2" = "x." ; then
+MENU=""
+else
 MENU="<ul>"
 
 # This is a list of pairs, with / separators so we can use basename
@@ -32,12 +42,17 @@ do
 done
 
 MENU="$MENU</ul>"
+fi
+
+
+# Get the list of global Menu entries.
+GMENU=`cat "$1"/subdirs | sed -e s+@topdir@+$TOPDIR+ | tr -d '\n'`
 
 # Now substitute in the MENU in every file. This depends
-# on HTML_HEADER (ie. header.html) containing the <!-- menu --> comment.
-for i in "$WRKDIR"/*.html
-do
-	sed -e "s+<!-- menu -->+$MENU+" < "$i" > "$i.new"
-	mv "$i.new" "$i"
+# on HTML_HEADER (ie. header.html) containing the <!-- menu --> comment.  
+for i in "$WRKDIR"/*.html 
+do 
+	sed -e "s+<!-- menu -->+$MENU+" -e "s+<!-- gmenu -->+$GMENU+" < "$i" > "$i.new" 
+	mv "$i.new" "$i" 
 done
 

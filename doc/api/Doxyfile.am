@@ -125,14 +125,17 @@ apidox-am-toplevel-yes:
 	$(LN_S) $$common_dir $(top_builddir)/apidocs/common ;\
 	doxygen Doxyfile; \
 	rm -f Doxyfile
+	@echo "<ul>" > $(top_builddir)/apidocs/subdirs
 	@if test -n '$(SUBDIRS)' ; then \
 		list='$(SUBDIRS)' ; \
 		for subdir in $$list ; do \
 			if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
-				echo $$subdir ; \
+				echo "<li><a href=\"@topdir@/$$subdir/html\">$$subdir</a></li>" ; \
 			fi ; \
-		done | sort > $(top_builddir)/apidocs/subdirs ; \
+		done | sort >> $(top_builddir)/apidocs/subdirs ; \
 	fi
+	@echo "</ul>" >> $(top_builddir)/apidocs/subdirs
+	@sh $(top_srcdir)/doc/api/doxyndex.sh $(top_builddir)/apidocs .
 
 .PHONY: apidox-am-yes apidox-am-no install-data-local install-apidox install-apidox uninstall-local uninstall-apidox uninstall-apidox apidox apidox-am-toplevel-no apidox-am-toplevel-yes
 
