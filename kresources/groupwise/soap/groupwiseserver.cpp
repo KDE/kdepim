@@ -152,6 +152,10 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
 {
   kdDebug() << "GroupwiseServer::gSoapSendCallback()" << endl;
 
+  if ( !m_sock ) {
+    kdError() << "no open connection" << endl;
+    return -1;
+  }
   if ( !mError.isEmpty() ) {
     kdError() << "SSL is in error state." << endl;
     return -1;
@@ -187,6 +191,10 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *, char *s, size_t n )
 {
   kdDebug() << "GroupwiseServer::gSoapReceiveCallback()" << endl;
 
+  if ( !m_sock ) {
+    kdError() << "no open connection" << endl;
+    return -1;
+  }
   if ( !mError.isEmpty() ) {
     kdError() << "SSL is in error state." << endl;
     return 0;
