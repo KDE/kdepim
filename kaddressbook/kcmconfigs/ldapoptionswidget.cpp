@@ -28,6 +28,7 @@
 #include <qpushbutton.h>
 #include <qstring.h>
 
+#include <kabc/addresslineedit.h>
 #include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kconfig.h>
@@ -36,7 +37,6 @@
 
 #include "addhostdialog.h"
 #include "ldapoptionswidget.h"
-#include "viewmanager.h"
 
 class LDAPServer
 {
@@ -114,6 +114,8 @@ void LDAPOptionsWidget::slotAddHost()
   if ( dlg.exec() && !dlg.host().isEmpty() ) {
     LDAPServer server( dlg.host(), dlg.port(), dlg.baseDN() );
     new LDAPItem( mHostListView, server );
+
+    emit changed( true );
   }
 }
 
@@ -124,7 +126,7 @@ void LDAPOptionsWidget::slotEditHost()
     return;
 
   AddHostDialog dlg( this );
-  dlg.setCaption( i18n("Edit Host") );
+  dlg.setCaption( i18n( "Edit Host" ) );
 
   dlg.setHost( item->server().host() );
   dlg.setPort( item->server().port() );
@@ -133,6 +135,8 @@ void LDAPOptionsWidget::slotEditHost()
   if ( dlg.exec() && !dlg.host().isEmpty() ) {
     LDAPServer server( dlg.host(), dlg.port(), dlg.baseDN() );
     item->setServer( server );
+
+    emit changed( true );
   }
 }
 
@@ -146,11 +150,13 @@ void LDAPOptionsWidget::slotRemoveHost()
   delete item;
 
   slotSelectionChanged( mHostListView->currentItem() );
+
+  emit changed( true );
 }
 
 void LDAPOptionsWidget::restoreSettings()
 {
-  KConfig *config = ViewManager::config();
+  KConfig *config = KABC::AddressLineEdit::config();
   config->setGroup( "LDAP" );
 
   QString host;
@@ -174,11 +180,13 @@ void LDAPOptionsWidget::restoreSettings()
     server.setBaseDN( config->readEntry( QString( "Base%1" ).arg( i ) ) );
     new LDAPItem( mHostListView, server );
   }
+
+  emit changed( false );
 }
 
 void LDAPOptionsWidget::saveSettings()
 {
-  KConfig *config = ViewManager::config();
+  KConfig *config = KABC::AddressLineEdit::config();
   config->deleteGroup( "LDAP" );
 
   config->setGroup("LDAP");
@@ -207,6 +215,13 @@ void LDAPOptionsWidget::saveSettings()
   config->writeEntry( "NumSelectedHosts", selected );
   config->writeEntry( "NumHosts", unselected );
   config->sync();
+
+  emit changed( false );
+}
+
+void LDAPOptionsWidget::defaults()
+{
+  // add default configuration here
 }
 
 void LDAPOptionsWidget::initGUI()

@@ -33,6 +33,8 @@ class KConfig;
 class KABPrefs : public KPimPrefs
 {
   public:
+    ~KABPrefs();
+
     static KABPrefs *instance();
     
     bool mHonorSingleClick;
@@ -42,7 +44,6 @@ class KABPrefs : public KPimPrefs
     
   private:
     KABPrefs();
-    ~KABPrefs();
     
     static KABPrefs *sInstance;
 };

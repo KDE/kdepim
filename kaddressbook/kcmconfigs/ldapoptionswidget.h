@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressBook.
-    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,8 +39,12 @@ class LDAPOptionsWidget : public QWidget
 
     void restoreSettings();
     void saveSettings();
+    void defaults();
 
-  public slots:
+  signals:
+    void changed( bool );
+
+  private slots:
     void slotAddHost();
     void slotEditHost();
     void slotRemoveHost();
@@ -56,4 +60,4 @@ class LDAPOptionsWidget : public QWidget
     QPushButton* mRemoveButton;
 };
 
-#endif // LDAPOPTIONSWIDGET_H
+#endif

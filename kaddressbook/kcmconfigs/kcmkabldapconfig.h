@@ -1,6 +1,6 @@
 /*                                                                      
     This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
                                                                         
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,43 +21,33 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include <kconfig.h>
-#include <klocale.h>
-#include <kstaticdeleter.h>
+#ifndef KCMKABLDAPCONFIG_H
+#define KCMKABLDAPCONFIG_H
 
-#include "kabprefs.h"
+#include <kcmodule.h>
 
-KABPrefs *KABPrefs::sInstance = 0;
-static KStaticDeleter<KABPrefs> staticDeleter;
+#include <qwidget.h>
 
-KABPrefs::KABPrefs()
-  : KPimPrefs("kaddressbookrc")
+class KAboutData;
+class LDAPOptionsWidget;
+
+class KCMKabLdapConfig : public KCModule
 {
-  KPrefs::setCurrentGroup( "Views" );
-  addItemBool( "HonorSingleClick", &mHonorSingleClick, false );
+  Q_OBJECT
 
-  KPrefs::setCurrentGroup( "General" );
-  addItemBool( "AutomaticNameParsing", &mAutomaticNameParsing, true );
-}
+  public:
+    KCMKabLdapConfig( QWidget *parent = 0, const char *name = 0 );
 
-KABPrefs::~KABPrefs()
-{
-}
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    virtual const KAboutData* aboutData() const;
 
-KABPrefs *KABPrefs::instance()
-{
-  if ( !sInstance ) {
-    staticDeleter.setObject( sInstance, new KABPrefs() );
-    sInstance->readConfig();
-  }
+  signals:
+    void changed( bool );
 
-  return sInstance;
-}
+  private:
+    LDAPOptionsWidget *mConfigWidget;
+};
 
-void KABPrefs::setCategoryDefaults()
-{
-  mCustomCategories.clear();
-  
-  mCustomCategories << i18n( "Business" ) << i18n( "Family" ) << i18n( "School" )
-                    << i18n( "Customer" ) << i18n( "Friend" );
-}
+#endif

@@ -1,9 +1,6 @@
-#ifndef PREFSDIALOG_H
-#define PREFSDIALOG_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
                                                                         
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,65 +21,56 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#ifndef KCMKABCONFIG_H
+#define KCMKABCONFIG_H
 
+#include <kcmodule.h>
 
-#include <kdialogbase.h>
+#include <qwidget.h>
 
-class AddresseePage;
-class LDAPOptionsWidget;
+class ConfigureWidget;
+class KAboutData;
 class QCheckBox;
-class ViewPage;
 
-class PrefsDialog : public KDialogBase
+class KCMKabConfig : public KCModule
+{
+  Q_OBJECT
+
+  public:
+    KCMKabConfig( QWidget *parent = 0, const char *name = 0 );
+
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    virtual const KAboutData* aboutData() const;
+
+  signals:
+    void changed( bool );
+
+  private:
+    ConfigureWidget *mConfigWidget;
+};
+
+class ConfigureWidget : public QWidget
 {
   Q_OBJECT
   
   public:
-    PrefsDialog( QWidget * );
+    ConfigureWidget( QWidget *parent, const char *name = 0 );
     
-    void readConfig();
-    void writeConfig();
-  
+    void restoreSettings();
+    void saveSettings();
+    void defaults();
+
   signals:
-    /** Emitted whenever the configuration is changed (the user presses 
-    * ok or apply
-    */
-    void configChanged();
-    
-  protected:
-    void setupPages();
-  
-    void slotApply();
-    void slotOk();
-    
-  private:
-    AddresseePage *mAddresseePage;
-    LDAPOptionsWidget *mLdapWidget;
-    ViewPage *mViewPage;
-};
+    void changed( bool );
 
-class ViewPage : public QWidget
-{
-  public:
-    ViewPage( QWidget *parent = 0, const char *name = 0 );
-
-    void saveSettings();
-    void restoreSettings();
-
-  private:
-    QCheckBox *mViewsSingleClickBox;
-};
-
-class AddresseePage : public QWidget
-{
-  public:
-    AddresseePage( QWidget *parent = 0, const char *name = 0 );
-
-    void saveSettings();
-    void restoreSettings();
+  public slots:
+    void modified();
 
   private:
     QCheckBox *mNameParsing;
+    QCheckBox *mViewsSingleClickBox;
 };
 
 #endif

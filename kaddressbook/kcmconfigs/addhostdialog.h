@@ -46,6 +46,9 @@ class AddHostDialog : public KDialogBase
     int port() const;
     QString baseDN() const;
 
+  signals:
+    void changed( bool );
+
   private slots:
     void slotHostEditChanged( const QString& );
 

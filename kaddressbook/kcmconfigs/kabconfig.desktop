@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=kcmshell kabconfig
+Icon=kaddressbook
+Type=Application
+Terminal=0
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kabconfig
+X-KDE-FactoryName=kabconfig
+X-KDE-HasReadOnlyMode=false
+
+Name=Address Book Configuration
+Comment=Configure the address book
+Keywords=kaddressbook, configure, settings

@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=kcmshell kabldapconfig
+Icon=find
+Type=Application
+Terminal=0
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kabldapconfig
+X-KDE-FactoryName=kabldapconfig
+X-KDE-HasReadOnlyMode=false
+
+Name=Address Book LDAP Configuration
+Comment=Configure the address book LDAP settings
+Keywords=kaddressbook, configure, settings, LDAP

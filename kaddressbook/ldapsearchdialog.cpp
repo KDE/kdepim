@@ -18,21 +18,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include <qlistview.h>
-#include <qheader.h>
-#include <qlineedit.h>
 #include <qcheckbox.h>
-#include <qcombobox.h>
-#include <klocale.h>
-#include <kapplication.h>
-#include <kconfig.h>
-#include <kpushbutton.h>
-#include <kmessagebox.h>
-#include <qvaluelist.h> 
-#include <qapplication.h>
+#include <qgroupbox.h>
+#include <qheader.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qlistview.h>
+#include <qpushbutton.h>
 
-#include "ldapsearchdialogimpl.h"
+#include <kapplication.h>
+#include <kcombobox.h>
+#include <kconfig.h>
+#include <klineedit.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+
 #include "viewmanager.h"
+
+#include "ldapsearchdialog.h"
 
 static QString join( const KABC::LdapAttrValue& lst, const QString& sep )
 {
@@ -91,37 +94,73 @@ class ContactListItem : public QListViewItem
     }
 };
 
-LDAPSearchDialogImpl::LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* parent, const char* name, bool modal, WFlags fl )
-  : LDAPSearchDialog( parent, name, modal, fl ), mAddressBook( ab )
+LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
+                                            const char* name )
+  : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), User1 |
+                 User2 | User3 | Cancel, Cancel, parent, name, false, true ),
+    mAddressBook( ab )
 {
+  QFrame *page = plainPage();
+  QVBoxLayout *topLayout = new QVBoxLayout( page, marginHint(), spacingHint() );
+
+  QGroupBox *groupBox = new QGroupBox( i18n( "Search for Addresses in Directory" ),
+                                       page );
+  groupBox->setFrameShape( QGroupBox::Box );
+  groupBox->setFrameShadow( QGroupBox::Sunken );
+  groupBox->setColumnLayout( 0, Qt::Vertical );
+  QGridLayout *boxLayout = new QGridLayout( groupBox->layout(), 2,
+                                            5, spacingHint() );
+  boxLayout->setColStretch( 1, 1 );
+
+  QLabel *label = new QLabel( i18n( "Search for:" ), groupBox );
+  boxLayout->addWidget( label, 0, 0 );
+
+  mSearchEdit = new KLineEdit( groupBox );
+  boxLayout->addWidget( mSearchEdit, 0, 1 );
+  label->setBuddy( mSearchEdit );
+
+  label = new QLabel( i18n( "in" ), groupBox );
+  boxLayout->addWidget( label, 0, 2 );
+
+  mFilterCombo = new KComboBox( groupBox );
+  mFilterCombo->insertItem( i18n( "Name" ) );
+  mFilterCombo->insertItem( i18n( "Email" ) );
+  mFilterCombo->insertItem( i18n( "Phone Number" ) );
+  boxLayout->addWidget( mFilterCombo, 0, 3 );
+
+  mSearchButton = new QPushButton( i18n( "Search" ), groupBox );
+  boxLayout->addWidget( mSearchButton, 0, 4 );
+
+  mRecursiveCheckbox = new QCheckBox( i18n( "Recursive search" ), groupBox  );
+  mRecursiveCheckbox->setChecked( true );
+  boxLayout->addMultiCellWidget( mRecursiveCheckbox, 1, 1, 0, 4 );
+  
+  topLayout->addWidget( groupBox );
+
+  mResultListView = new QListView( page );
+  mResultListView->setSelectionMode( QListView::Multi );
+  mResultListView->setAllColumnsShowFocus( true );
+  mResultListView->setShowSortIndicator( true );
+  topLayout->addWidget( mResultListView );
+
+  resize( QSize( 600, 400).expandedTo( minimumSizeHint() ) );
+
+  setButtonText( User1, i18n( "Unselect All" ) );
+  setButtonText( User2, i18n( "Select All" ) );
+  setButtonText( User3, i18n( "Add Selected" ) );
+
   mNumHosts = 0;
   mIsOK = false;
 
-  filterCombo->insertItem( i18n( "Name" ) );
-  filterCombo->insertItem( i18n( "Email" ) );
-  filterCombo->insertItem( i18n( "Phone Number" ) );
- 
-  resultListView->setSelectionMode( QListView::Multi );
-  resultListView->setAllColumnsShowFocus( true );
-  resultListView->setShowSortIndicator( true );
-
-  connect( recursiveCheckbox, SIGNAL( toggled( bool ) ),
+  connect( mRecursiveCheckbox, SIGNAL( toggled( bool ) ),
 	   this, SLOT( slotSetScope( bool ) ) );
-  connect( addSelectedButton, SIGNAL( clicked() ),
-	   this, SLOT( slotAddSelectedContacts() ) );
-  connect( selectAllButton, SIGNAL( clicked() ),
-	   this, SLOT( slotSelectAll() ) );
-  connect( unselectAllButton, SIGNAL( clicked() ),
-	   this, SLOT( slotUnSelectAll() ) );
-  connect( mailToButton, SIGNAL( clicked() ),
-	   this, SLOT( slotSendMail() ) );
-  connect( searchButton, SIGNAL( clicked() ),
+  connect( mSearchButton, SIGNAL( clicked() ),
 	   this, SLOT( slotStartSearch() ) );
 
-  rereadConfig();
+  restoreSettings();
 }
 
-void LDAPSearchDialogImpl::rereadConfig()
+void LDAPSearchDialog::restoreSettings()
 {
   // Create one KABC::LdapClient per selected server and configure it.
 
@@ -173,49 +212,49 @@ void LDAPSearchDialogImpl::rereadConfig()
     }
 
 /** CHECKIT*/
-    while ( resultListView->header()->count() > 0 ) {
-      resultListView->removeColumn(0);
+    while ( mResultListView->header()->count() > 0 ) {
+      mResultListView->removeColumn(0);
     }
 
-    resultListView->addColumn( i18n( "Full Name" ) );
-    resultListView->addColumn( i18n( "Email" ) );
-    resultListView->addColumn( i18n( "Phone Number" ) );
-    resultListView->addColumn( i18n( "Mobile Number" ) );
-    resultListView->addColumn( i18n( "Fax Number" ) );
-    resultListView->addColumn( i18n( "Company" ) );
-    resultListView->addColumn( i18n( "Organization" ) );
-    resultListView->addColumn( i18n( "Street" ) );
-    resultListView->addColumn( i18n( "State" ) );
-    resultListView->addColumn( i18n( "Country" ) );
-    resultListView->addColumn( i18n( "Postal Code" ) );
-    resultListView->addColumn( i18n( "Postal Address" ) );
-    resultListView->addColumn( i18n( "Locality" ) );
-    resultListView->addColumn( i18n( "Department" ) );
-    resultListView->addColumn( i18n( "Description" ) );
-    resultListView->addColumn( i18n( "User ID" ) );
-    resultListView->addColumn( i18n( "Title" ) );
+    mResultListView->addColumn( i18n( "Full Name" ) );
+    mResultListView->addColumn( i18n( "Email" ) );
+    mResultListView->addColumn( i18n( "Phone Number" ) );
+    mResultListView->addColumn( i18n( "Mobile Number" ) );
+    mResultListView->addColumn( i18n( "Fax Number" ) );
+    mResultListView->addColumn( i18n( "Company" ) );
+    mResultListView->addColumn( i18n( "Organization" ) );
+    mResultListView->addColumn( i18n( "Street" ) );
+    mResultListView->addColumn( i18n( "State" ) );
+    mResultListView->addColumn( i18n( "Country" ) );
+    mResultListView->addColumn( i18n( "Postal Code" ) );
+    mResultListView->addColumn( i18n( "Postal Address" ) );
+    mResultListView->addColumn( i18n( "Locality" ) );
+    mResultListView->addColumn( i18n( "Department" ) );
+    mResultListView->addColumn( i18n( "Description" ) );
+    mResultListView->addColumn( i18n( "User ID" ) );
+    mResultListView->addColumn( i18n( "Title" ) );
 
-    resultListView->clear();
+    mResultListView->clear();
   }
 }
 
-LDAPSearchDialogImpl::~LDAPSearchDialogImpl()
+LDAPSearchDialog::~LDAPSearchDialog()
 {
 }
 
-void LDAPSearchDialogImpl::cancelQuery()
+void LDAPSearchDialog::cancelQuery()
 {
   for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     client->cancelQuery();
   }
 }
 
-void LDAPSearchDialogImpl::slotAddResult( const KABC::LdapObject& obj )
+void LDAPSearchDialog::slotAddResult( const KABC::LdapObject& obj )
 {
-  new ContactListItem( resultListView, obj.attrs );
+  new ContactListItem( mResultListView, obj.attrs );
 }
 
-void LDAPSearchDialogImpl::slotSetScope( bool rec )
+void LDAPSearchDialog::slotSetScope( bool rec )
 {
   for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     if ( rec )
@@ -225,7 +264,7 @@ void LDAPSearchDialogImpl::slotSetScope( bool rec )
   }
 }
 
-QString LDAPSearchDialogImpl::makeFilter( const QString& query, const QString& attr )
+QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr )
 {
   QString result;
 
@@ -247,34 +286,34 @@ QString LDAPSearchDialogImpl::makeFilter( const QString& query, const QString& a
   return result;
 }
 
-void LDAPSearchDialogImpl::slotStartSearch()
+void LDAPSearchDialog::slotStartSearch()
 {
   cancelQuery();
 
   QApplication::setOverrideCursor( Qt::waitCursor );
-  searchButton->setText( i18n( "Stop" ) );
+  mSearchButton->setText( i18n( "Stop" ) );
 
-  disconnect( searchButton, SIGNAL( clicked() ),
+  disconnect( mSearchButton, SIGNAL( clicked() ),
               this, SLOT( slotStartSearch() ) );
-  connect( searchButton, SIGNAL( clicked() ),
+  connect( mSearchButton, SIGNAL( clicked() ),
            this, SLOT( slotStopSearch() ) );
 
-  QString filter = makeFilter( searchEdit->text().stripWhiteSpace(), filterCombo->currentText() );
+  QString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText() );
 
    // loop in the list and run the KABC::LdapClients 
-  resultListView->clear();
+  mResultListView->clear();
   for( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     client->startQuery( filter );
   }
 }
 
-void LDAPSearchDialogImpl::slotStopSearch()
+void LDAPSearchDialog::slotStopSearch()
 {
   cancelQuery();
   slotSearchDone();
 }
 
-void LDAPSearchDialogImpl::slotSearchDone()
+void LDAPSearchDialog::slotSearchDone()
 {
   // If there are no more active clients, we are done.
   for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
@@ -282,30 +321,66 @@ void LDAPSearchDialogImpl::slotSearchDone()
       return;
   }
 
-  disconnect( searchButton, SIGNAL( clicked() ),
+  disconnect( mSearchButton, SIGNAL( clicked() ),
               this, SLOT( slotStopSearch() ) );
-  connect( searchButton, SIGNAL( clicked() ),
+  connect( mSearchButton, SIGNAL( clicked() ),
            this, SLOT( slotStartSearch() ) );
 
-  searchButton->setText( i18n( "Search" ) );
+  mSearchButton->setText( i18n( "Search" ) );
   QApplication::restoreOverrideCursor();
 }
 
-void LDAPSearchDialogImpl::slotError( const QString& error )
+void LDAPSearchDialog::slotError( const QString& error )
 {
   QApplication::restoreOverrideCursor();
   KMessageBox::error( this, error );
 }
 
-void LDAPSearchDialogImpl::closeEvent( QCloseEvent* e )
+void LDAPSearchDialog::closeEvent( QCloseEvent* e )
 {
   slotStopSearch();
   e->accept();
 }
 
-void LDAPSearchDialogImpl::slotAddSelectedContacts()
+/*!
+ * Returns a ", " separated list of email addresses that were
+ * checked by the user
+ */
+QString LDAPSearchDialog::selectedEMails() const
 {
-  ContactListItem* cli = static_cast<ContactListItem*>( resultListView->firstChild() );
+  QStringList result;
+  ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
+  while ( cli ) {
+    if ( cli->isSelected() ) {
+      QString email = QString::fromUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
+      if ( !email.isEmpty() ) {
+        QString name = QString::fromUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
+        if ( name.isEmpty() ) {
+          result << email;
+        } else {
+          result << name + " <" + email + ">";
+        }
+      }
+    }
+    cli = static_cast<ContactListItem*>( cli->nextSibling() );
+  }
+
+  return result.join( ", " );
+}
+
+void LDAPSearchDialog::slotUser1()
+{
+  mResultListView->selectAll( false );
+}
+
+void LDAPSearchDialog::slotUser2()
+{
+  mResultListView->selectAll( true );
+}
+
+void LDAPSearchDialog::slotUser3()
+{
+  ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
   while ( cli ) {
     if ( cli->isSelected() ) {
       KABC::Addressee addr;
@@ -334,7 +409,7 @@ void LDAPSearchDialogImpl::slotAddSelectedContacts()
 
       workAddr.setStreet(QString::fromUtf8( cli->mAttrs[ "street" ].first()) );
       workAddr.setLocality(QString::fromUtf8( cli->mAttrs[ "l" ].first()) );
-    workAddr.setRegion(QString::fromUtf8(  cli->mAttrs[ "address" ].first()));
+      workAddr.setRegion(QString::fromUtf8(  cli->mAttrs[ "address" ].first()));
       workAddr.setPostalCode(QString::fromUtf8( cli->mAttrs[ "postalCode" ].first()) );
       workAddr.setCountry(QString::fromUtf8( cli->mAttrs[ "co" ].first()) );
 
@@ -368,45 +443,4 @@ void LDAPSearchDialogImpl::slotAddSelectedContacts()
   emit addresseesAdded();
 }
 
-/*!
- * Returns a ", " separated list of email addresses that were
- * checked by the user
- */
-QString LDAPSearchDialogImpl::selectedEMails() const
-{
-  QStringList result;
-  ContactListItem* cli = static_cast<ContactListItem*>( resultListView->firstChild() );
-  while ( cli ) {
-    if ( cli->isSelected() ) {
-      QString email = QString::fromUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
-      if ( !email.isEmpty() ) {
-        QString name = QString::fromUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
-        if ( name.isEmpty() ) {
-          result << email;
-        } else {
-          result << name + " <" + email + ">";
-        }
-      }
-    }
-    cli = static_cast<ContactListItem*>( cli->nextSibling() );
-  }
-
-  return result.join( ", " );
-}
-
-void LDAPSearchDialogImpl::slotSendMail()
-{
-  kapp->invokeMailer( selectedEMails(), "" );
-}
-
-void LDAPSearchDialogImpl::slotSelectAll()
-{
-  resultListView->selectAll( true );
-}
-
-void LDAPSearchDialogImpl::slotUnSelectAll()
-{
-  resultListView->selectAll( false );
-}
-
-#include "ldapsearchdialogimpl.moc"
+#include "ldapsearchdialog.moc"

@@ -34,8 +34,8 @@
 
 class AddresseeEditorDialog;
 class IncSearchWidget;
-class LDAPSearchDialogImpl;
-class PrefsDialog;
+class KCMultiDialog;
+class LDAPSearchDialog;
 class ViewManager;
 
 namespace KABC {
@@ -240,10 +240,10 @@ class KAddressBook : public QWidget
     void parseEmailAddress( QString rawEmail, QString &fullName, QString &email );
 
     KABC::AddressBook *mAddressBook;
-    PrefsDialog *mPrefsDialog;
-    LDAPSearchDialogImpl *mLdapSearchDialog;
+    LDAPSearchDialog *mLdapSearchDialog;
+    KCMultiDialog *mConfigureDialog;
     ViewManager *mViewManager;
     QDict<AddresseeEditorDialog> mEditorDict;
 };
 
-#endif // KADDRESSBOOK_H
+#endif

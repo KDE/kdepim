@@ -23,6 +23,7 @@
 
 #include <qlayout.h>
 #include <qkeycode.h>
+#include <qptrlist.h>
 #include <qregexp.h>
 
 #include <kabc/field.h>
@@ -30,6 +31,7 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
 #include <kapplication.h>
+#include <kcmultidialog.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kfiledialog.h>
@@ -49,8 +51,7 @@
 #include "filtereditdialog.h"
 #include "filter.h"
 #include "importdialog.h"
-#include "ldapsearchdialogimpl.h"
-#include "prefsdialog.h"
+#include "ldapsearchdialog.h"
 #include "printing/printingwizard.h"
 #include "undo.h"
 #include "undocmds.h"
@@ -97,8 +98,19 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
   connect( mViewManager, SIGNAL( importVCard( const QString&, bool ) ),
            SLOT( importVCard( const QString&, bool ) ) );
 
-  mPrefsDialog = 0;
   mLdapSearchDialog = 0;
+  mConfigureDialog = 0;
+}
+
+KAddressBook::~KAddressBook()
+{
+  writeConfig();
+
+  delete mAddressBook;
+  mAddressBook = 0;
+
+  delete mConfigureDialog;
+  mConfigureDialog = 0;
 }
 
 ViewManager *KAddressBook::viewManager()
@@ -178,12 +190,22 @@ void KAddressBook::newAddressee()
 {
   AddresseeEditorDialog *dialog = 0;
 
-  KRES::ResourceManager<KRES::Resource> manager( "contact" );
-  QPtrList<KRES::Resource> resources = manager.resources( true );
-  kdDebug() << "newAddressee(): resources.count()=" << resources.count() << endl;
+  QPtrList<KABC::Resource> kabcResources = mAddressBook->resources();
 
-  KRES::Resource *res = KRES::ResourceSelectDialog::getResource( resources, this );
-  KABC::Resource *resource = static_cast<KABC::Resource*>( res );
+  QPtrList<KRES::Resource> kresResources;
+  QPtrListIterator<KABC::Resource> it( kabcResources );
+  KABC::Resource *resource;
+  while ( ( resource = it.current() ) != 0 ) {
+    ++it;
+    if ( !resource->readOnly() ) {
+      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
+      if ( res )
+        kresResources.append( res );
+    }
+  }
+
+  KRES::Resource *res = KRES::ResourceSelectDialog::getResource( kresResources, this );
+  resource = static_cast<KABC::Resource*>( res );
 
   if ( resource ) {
     KABC::Addressee addr;
@@ -240,13 +262,6 @@ void KAddressBook::readConfig()
 void KAddressBook::writeConfig()
 {
   mViewManager->writeConfig();
-}
-
-KAddressBook::~KAddressBook()
-{
-  writeConfig();
-
-  delete mAddressBook;
 }
 
 void KAddressBook::undo()
@@ -505,26 +520,29 @@ void KAddressBook::viewModified()
 }
 void KAddressBook::configure()
 {
-  if ( !mPrefsDialog ) {
-    mPrefsDialog = new PrefsDialog( this );
-    connect( mPrefsDialog, SIGNAL( configChanged() ), SLOT( configChanged() ) );
+
+  if ( !mConfigureDialog ) {
+    mConfigureDialog = new KCMultiDialog( this, "PIM" );
+    mConfigureDialog->addModule( "PIM/kabconfig.desktop" );
+    connect( mConfigureDialog, SIGNAL( applyClicked() ), SLOT( configChanged() ) );
+    connect( mConfigureDialog, SIGNAL( okClicked() ), SLOT( configChanged() ) );
   }
 
   // Save the current config so we do not loose anything if the user accepts
   writeConfig();
 
-  mPrefsDialog->show();
-  mPrefsDialog->raise();
+  mConfigureDialog->show();
+  mConfigureDialog->raise();
 }
 
 void KAddressBook::slotOpenLDAPDialog()
 {
   if ( !mLdapSearchDialog ) {
-    mLdapSearchDialog = new LDAPSearchDialogImpl( mAddressBook, this );
+    mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, this );
     connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mViewManager,
             SLOT( refresh() ) );
   } else
-    mLdapSearchDialog->rereadConfig();
+    mLdapSearchDialog->restoreSettings();
 
   if ( mLdapSearchDialog->isOK() )
     mLdapSearchDialog->exec();
