@@ -74,6 +74,9 @@ public:
 
 
 //----------------------------------------------------------------------------
+/**
+  Base class for other Action classes.
+ */
 class ActionBase {
  public:
   ActionBase();
