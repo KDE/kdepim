@@ -24,6 +24,10 @@
 #include <kcombobox.h>
 #include <kcolorcombo.h>
 #include <kiconloader.h>
+#include <kregexpeditorinterface.h>
+#include <ktrader.h>
+#include <kparts/componentfactory.h>
+
 
 #include <qlabel.h>
 #include <qpushbutton.h>
@@ -35,6 +39,7 @@
 #include <qwidgetstack.h>
 #include <qapplication.h>
 #include <qtimer.h>
+#include <qhbox.h>
 
 // works for both ListBox and ComboBox
 template <class T> static int setCurrentItem(T *box, const QString& s)
@@ -72,11 +77,17 @@ SingleConditionWidget::SingleConditionWidget(KScoringManager *m,QWidget *p, cons
   matches->insertStringList(KScoringExpression::conditionNames());
   QToolTip::add(matches,i18n("Select the type of match"));
   firstRow->addWidget(matches,1);
-  expr = new KLineEdit(this);
+  connect( matches, SIGNAL( activated( int ) ), SLOT( toggleRegExpButton( int ) ) );
+  QHBox *secondRow = new QHBox(this);
+  secondRow->setSpacing( 1 );
+  topL->addWidget( secondRow );
+  expr = new KLineEdit(secondRow);
   QToolTip::add(expr,i18n("The condition for the match"));
   // reserve space for at least 20 characters
   expr->setMinimumWidth(fontMetrics().maxWidth()*20);
-  topL->addWidget(expr);
+  regExpButton = new QPushButton( i18n("Edit..."), secondRow );
+  connect( regExpButton, SIGNAL( clicked() ), SLOT( showRegExpDialog() ) );
+
   // occupy at much width as possible
   setSizePolicy(QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed));
   setFrameStyle(Box | Sunken);
@@ -91,6 +102,7 @@ void SingleConditionWidget::setCondition(KScoringExpression *e)
   neg->setChecked(e->isNeg());
   headers->setCurrentText( e->getHeader() );
   setCurrentItem(matches,KScoringExpression::getNameForCondition(e->getCondition()));
+  toggleRegExpButton( matches->currentItem() );
   expr->setText(e->getExpression());
 }
 
@@ -109,6 +121,25 @@ void SingleConditionWidget::clear()
 {
   neg->setChecked(false);
   expr->clear();
+}
+
+void SingleConditionWidget::toggleRegExpButton( int selected )
+{
+  bool isRegExp = KScoringExpression::MATCH == selected &&
+      !KTrader::self()->query("KRegExpEditor/KRegExpEditor").isEmpty();
+  regExpButton->setEnabled( isRegExp );
+}
+
+void SingleConditionWidget::showRegExpDialog()
+{
+  QDialog *editorDialog = KParts::ComponentFactory::createInstanceFromQuery<QDialog>( "KRegExpEditor/KRegExpEditor" );
+  if ( editorDialog ) {
+    KRegExpEditorInterface *editor = static_cast<KRegExpEditorInterface *>( editorDialog->qt_cast( "KRegExpEditorInterface" ) );
+    Q_ASSERT( editor ); // This should not fail!
+    editor->setRegExp( expr->text() );
+    editorDialog->exec();
+    expr->setText( editor->regExp() );
+  }
 }
 
 //============================================================================

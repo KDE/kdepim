@@ -56,6 +56,11 @@ public:
   void setCondition(KScoringExpression*);
   KScoringExpression *createCondition() const;
   void clear();
+
+protected slots:
+  void toggleRegExpButton( int );
+  void showRegExpDialog();
+
 private:
   /** marks a condition as negated */
   QCheckBox *neg;
@@ -65,6 +70,8 @@ private:
   KComboBox *matches;
   /** the expression which will be matched */
   KLineEdit *expr;
+  /** the button to open the regexp-editor */
+  QPushButton *regExpButton;
 
   KScoringManager *manager;
 };
