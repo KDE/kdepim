@@ -239,7 +239,7 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a)
 		return;
 		
 	if(!QFileInfo(dir+"groups").exists()) {
-		if (KMessageBox::Yes==KMessageBox::questionYesNo(0,i18n("You don´t have any groups for this account.\nFetch now?")))
+		if (KMessageBox::Yes==KMessageBox::questionYesNo(0,i18n("You don't have any groups for this account.\nFetch now?")))
 	 	 	slotDialogNewList(a);
 	 	else return;
 	}

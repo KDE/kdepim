@@ -24,6 +24,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kapp.h>
+#include <kglobal.h>
 
 #include "knode.h"
 #include "knjobdata.h"
@@ -261,14 +262,14 @@ void KNNetAccess::slotThreadSignal(int i)
   			knGlobals.top->setStatusMsg(i18n(" Sending article ..."));
   		break;
   		case KNProtocolClient::TSjobStarted:
-      	knGlobals.progressBar->setProgressBar(10,"0 Bytes");
+      	knGlobals.progressBar->setProgressBar(10, i18n("0 Bytes"));
       break;
   		case KNProtocolClient::TSprogressUpdate:
   		  byteCount = nntpClient->getByteCount();
   		  if (byteCount < 1000)
-  		    tmp = QString::number(byteCount) + " Bytes";
+  		    tmp = i18n("%1 Bytes").arg(KGlobal::locale()->formatNumber(byteCount, 0);
   		  else
-  		    tmp = QString::number(byteCount/1000.0,'f',1)+ " kB";
+  		    tmp = i18n("%1 KB").arg(KGlobal::locale()->formatNumber(byteCount/1000.0, 1);
   		  knGlobals.progressBar->setProgressBar(nntpClient->getProgressValue(),tmp);
   		break;
   	};
@@ -288,7 +289,7 @@ void KNNetAccess::slotThreadSignal(int i)
   		    knGlobals.top->setStatusMsg(unshownMsg);
   		break;
   		case KNProtocolClient::TSjobStarted:
-      	unshownByteCount = "0 Bytes";
+      	unshownByteCount = i18n("0 Bytes");
       	unshownProgress = 10;
       	if (!currentNntpJob)
     		  knGlobals.progressBar->setProgressBar(unshownProgress,unshownByteCount);
@@ -296,9 +297,9 @@ void KNNetAccess::slotThreadSignal(int i)
 	  	case KNProtocolClient::TSprogressUpdate:
   	  	byteCount = smtpClient->getByteCount();
   		  if (byteCount < 1000)
-  		    unshownByteCount = QString::number(byteCount) + " Bytes";
+  		    unshownByteCount = i18n("%1 Bytes").arg(KGlobal::locale()->formatNumber(byteCount, 0);
   		  else
-  		    unshownByteCount = QString::number(byteCount/1000.0,'f',1)+ " kB";
+  		    unshownByteCount = i18n("%1 KB").arg(KGlobal::locale()->formatNumber(byteCount, 1);
   		  unshownProgress = smtpClient->getProgressValue();
  		   	if (!currentNntpJob)
     		  knGlobals.progressBar->setProgressBar(unshownProgress,unshownByteCount);

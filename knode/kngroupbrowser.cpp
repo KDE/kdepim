@@ -80,7 +80,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, KNNntpAccount *a) :
 
   helpBtn=new QPushButton(i18n("Help"), this);
   cancelBtn=new QPushButton(i18n("Cancel"), this);
-  okBtn=new QPushButton(i18n("Ok"), this);
+  okBtn=new QPushButton(i18n("OK"), this);
 
   //layout
   QVBoxLayout *topL, *arrL;

@@ -40,7 +40,7 @@ KNReadHdrSettings::KNReadHdrSettings(QWidget *p) : KNSettingsWidget(p)
 	delBtn=new QPushButton(i18n("Delete"), this);
 	upBtn=new QPushButton(i18n("Up"), this);
 	downBtn=new QPushButton(i18n("Down"), this);
-	okBtn=new QPushButton(i18n("Ok"), this);
+	okBtn=new QPushButton(i18n("OK"), this);
 	name=new QLineEdit(ngb);
 	name->setMaxLength(64);
 	hdr=new QLineEdit(hgb);
