@@ -40,6 +40,10 @@ class SloxItem
 class WebdavHandler
 {
   public:
+    WebdavHandler();
+
+    void log( const QString & );
+
     static QDomElement addDavElement( QDomDocument &, QDomNode &,
                                       const QString &tag );
     static QDomElement addSloxElement( QDomDocument &, QDomNode &,
@@ -50,6 +54,10 @@ class WebdavHandler
     static QString qDateTimeToSlox( const QDateTime &dt );
 
     static QValueList<SloxItem> getSloxItems( const QDomDocument &doc );
+
+  private:
+    QString mLogFile;
+    int mLogCount;
 };
 
 #endif

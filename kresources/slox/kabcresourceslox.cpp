@@ -139,6 +139,8 @@ void ResourceSlox::slotResult( KIO::Job *job )
 
     QDomDocument doc = mDownloadJob->response();
 
+    mWebdavHandler.log( doc.toString( 2 ) );
+
     QValueList<SloxItem> items = WebdavHandler::getSloxItems( doc );
 
     bool changed = false;
@@ -166,7 +168,7 @@ void ResourceSlox::slotResult( KIO::Job *job )
         a.setResource( this );
         a.setChanged( false );
 
-        mAddrMap.replace( item.uid, a );
+        mAddrMap.replace( a.uid(), a );
 
         changed = true;
       }
@@ -180,15 +182,53 @@ void ResourceSlox::slotResult( KIO::Job *job )
 
 void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
 {
-  if ( e.tagName() == "lastname" ) {
-    a.setFamilyName( e.text() );
-  } else if ( e.tagName() == "firstname" ) {
-    a.setGivenName( e.text() );
-  } else if ( e.tagName() == "email" ) {
-    a.insertEmail( e.text() );
-  } else if ( e.tagName() == "phone" ) {
-    a.insertPhoneNumber( PhoneNumber( e.text() ) );
+  // FIXME: Why is the text still UTF8 encoded?
+  QString text = QString::fromUtf8( e.text().latin1() );
+  if ( text.isEmpty() ) return;
+  QString tag = e.tagName();
+
+  if ( tag == "birthday" ) {
+    QDateTime dt = WebdavHandler::sloxToQDateTime( text );
+    a.setBirthday( dt.date() );
+  } else if ( tag == "position" ) {
+    a.setRole( text );
+  } else if ( tag == "salutation" ) {
+    a.setPrefix( text );
+  } else if ( tag == "title" ) {
+    a.setTitle( text );
+  } else if ( tag == "department" ) {
+    a.setOrganization( text );
+  } else if ( tag == "lastname" ) {
+    a.setFamilyName( text );
+  } else if ( tag == "firstname" ) {
+    a.setGivenName( text );
+  } else if ( tag == "email" ) {
+    a.insertEmail( text, true );
+  } else if ( tag == "phone" || tag == "phone2" ) {
+    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Work ) );
+  } else if ( tag == "mobile" || tag == "mobile2" ) {
+    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Cell |
+                                      PhoneNumber:: Work ) );
+  } else if ( tag == "fax" || tag == "fax2" ) {
+    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Fax |
+                                      PhoneNumber::Work ) );
+  } else if ( tag == "privatephone" || tag == "privatephone2" ) {
+    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Home ) );
+  } else if ( tag == "privatemobile" || tag == "privatemobile2" ) {
+    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Home |
+                                      PhoneNumber::Cell ) );
+  } else if ( tag == "privatefax" || tag == "privatefax2" ) {
+    a.insertPhoneNumber( PhoneNumber( text, PhoneNumber::Fax |
+                                      PhoneNumber::Home ) );
+  } else if ( tag == "comment" ) {
+    a.setNote( text );
+  } else if ( tag == "email2" || tag == "privateemail" ||
+              tag == "privateemail2" ) {
+    a.insertEmail( text );
+  } else if ( tag == "privateurl" ) {
+    a.setUrl( text );
   }
+  // FIXME: Read addresses
 }
 
 bool ResourceSlox::save( Ticket* )

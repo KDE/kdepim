@@ -91,8 +91,6 @@ void KCalResourceSlox::init()
   mOpen = false;
 
   mLock = new KABC::LockNull( true );
-
-  mLogCount = 0;
 }
 
 void KCalResourceSlox::readConfig( const KConfig *config )
@@ -104,8 +102,6 @@ void KCalResourceSlox::readConfig( const KConfig *config )
   mUploadUrl = KURL( url );
 
   mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
-
-  mLogFile = config->readEntry( "LogFile" );
 
   mLastEventSync = config->readDateTimeEntry( "LastEventSync" );
   mLastTodoSync = config->readDateTimeEntry( "LastEventSync" );
@@ -312,7 +308,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
     QDomDocument doc = mLoadTodosJob->response();
 
-    log( doc.toString( 2 ) );
+    mWebdavHandler.log( doc.toString( 2 ) );
 
     QValueList<SloxItem> items = WebdavHandler::getSloxItems( doc );
 
@@ -368,7 +364,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
     QDomDocument doc = mLoadEventsJob->response();
 
-    log( doc.toString( 2 ) );
+    mWebdavHandler.log( doc.toString( 2 ) );
 
     QValueList<SloxItem> items = WebdavHandler::getSloxItems( doc );
 
@@ -491,23 +487,6 @@ void KCalResourceSlox::dump() const
   kdDebug(5800) << "  DownloadUrl: " << mDownloadUrl.url() << endl;
   kdDebug(5800) << "  UploadUrl: " << mUploadUrl.url() << endl;
   kdDebug(5800) << "  ReloadPolicy: " << mReloadPolicy << endl;
-}
-
-void KCalResourceSlox::log( const QString &text )
-{
-  if ( mLogFile.isEmpty() ) return;
-
-  QString filename = mLogFile + "-" + QString::number( mLogCount );
-  QFile file( filename );
-  if ( !file.open( IO_WriteOnly ) ) {
-    kdWarning() << "Unable to open log file '" << filename << "'" << endl;
-    return;
-  }
-  
-  QCString textUtf8 = text.utf8();
-  file.writeBlock( textUtf8.data(), textUtf8.size() - 1 );
-  
-  if ( ++mLogCount > 5 ) mLogCount = 0;
 }
 
 #include "kcalresourceslox.moc"

@@ -20,10 +20,12 @@
 #ifndef KABC_RESOURCESLOX_H
 #define KABC_RESOURCESLOX_H
 
-#include <qmap.h>
-#include <qdom.h>
+#include "webdavhandler.h"
 
 #include <kabc/resource.h>
+
+#include <qmap.h>
+#include <qdom.h>
 
 namespace KIO {
 class DavJob;
@@ -83,6 +85,8 @@ class ResourceSlox : public Resource
     QString mPassword;
 
     KIO::DavJob *mDownloadJob;
+
+    WebdavHandler mWebdavHandler;
 };
 
 }

@@ -20,6 +20,8 @@
 #ifndef KCALRESOURCESLOX_H
 #define KCALRESOURCESLOX_H
 
+#include "webdavhandler.h"
+
 #include <qptrlist.h>
 #include <qstring.h>
 #include <qdatetime.h>
@@ -107,8 +109,6 @@ class KCalResourceSlox : public KCal::ResourceCached
     void requestEvents();
     void requestTodos();
  
-    void log( const QString & );
-
     void parseIncidenceAttribute( const QDomElement &e,
                                   KCal::Incidence *incidence );
     void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );
@@ -137,11 +137,7 @@ class KCalResourceSlox : public KCal::ResourceCached
 
     QString mErrorMessage;
 
-    QString mLogFile;
-    int mLogCount;
-
-    class Private;
-    Private *d;
+    WebdavHandler mWebdavHandler;
 };
 
 #endif

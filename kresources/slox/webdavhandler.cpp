@@ -21,10 +21,41 @@
 #include "webdavhandler.h"
 
 #include <kdebug.h>
+#include <kconfig.h>
+
+#include <qfile.h>
 
 SloxItem::SloxItem()
   : status( Invalid )
 {
+}
+
+WebdavHandler::WebdavHandler()
+  : mLogCount( 0 )
+{
+  KConfig cfg( "sloxrc" );
+
+  cfg.setGroup( "General" );
+  mLogFile = cfg.readEntry( "LogFile" );
+
+  kdDebug() << "LOG FILE: " << mLogFile << endl;
+}
+
+void WebdavHandler::log( const QString &text )
+{
+  if ( mLogFile.isEmpty() ) return;
+
+  QString filename = mLogFile + "-" + QString::number( mLogCount );
+  QFile file( filename );
+  if ( !file.open( IO_WriteOnly ) ) {
+    kdWarning() << "Unable to open log file '" << filename << "'" << endl;
+    return;
+  }
+  
+  QCString textUtf8 = text.utf8();
+  file.writeBlock( textUtf8.data(), textUtf8.size() - 1 );
+  
+  if ( ++mLogCount > 5 ) mLogCount = 0;
 }
 
 QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
