@@ -207,9 +207,9 @@ CertManager::CertManager( bool remote, const QString& query,
   _certBox = new CertBox( this, "certBox" );
   setCentralWidget( _certBox );
 
-  if( !query.isEmpty() )
-    _leAction->setText(query);    
-  loadCertificates();
+  _leAction->setText(query);
+  if ( !_remote || !query.isEmpty() )
+    loadCertificates();
 }
 
 bool CertManager::checkExec( const QStringList& args )
