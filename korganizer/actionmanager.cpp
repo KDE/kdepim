@@ -1085,6 +1085,7 @@ void ActionManager::configureDateTime()
   if (!proc->start()) {
       KMessageBox::sorry(mCalendarView->topLevelWidget(),
         i18n("Couldn't start control module for date and time format."));
+      delete proc;
   }
 }
 
