@@ -93,7 +93,7 @@ Pab::Pab() : KMainWindow(0)
 			  view, SLOT(clear()), // result
 			  true, i18n("Remove this entry"));      // tooltip text
   toolBar()->insertSeparator();
-  toolBar()->insertButton(BarIcon("filemail"),   // icon
+  toolBar()->insertButton(BarIcon("mail_send"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(sendMail()), // result
