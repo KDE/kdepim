@@ -706,7 +706,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	* and we can behave normally.
 	*/
 	if ((callstatus == DCOPStub::CallSucceeded) &&
-		(kpilotstatus != KPilotDCOP::Normal))
+		 (kpilotstatus != KPilotDCOP::WaitingForDaemon))
 	{
 		kdWarning() << k_funcinfo <<
 			": KPilot returned status " << kpilotstatus << endl;
