@@ -10,7 +10,7 @@ namespace KSync {
     class QtopiaPlugin : public KonnectorPlugin {
         Q_OBJECT
     public:
-        QtopiaPlugin( QObject*, const char*,  const QStringList );
+        QtopiaPlugin( QObject*, const char*,  const QStringList = QStringList() );
         ~QtopiaPlugin();
 
         Kapabilities capabilities();
@@ -27,10 +27,7 @@ namespace KSync {
         QString metaId()const;
         QIconSet iconSet()const;
         QString iconName()const;
-
-
-    public slots:
-        void slotWrite( const Syncee::PtrList& );
+        void write( Syncee::PtrList );
     signals:
         void backup();
         void restore();

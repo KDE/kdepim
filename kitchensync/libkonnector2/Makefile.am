@@ -18,5 +18,5 @@ servicetype_DATA = konnector.desktop
 servicetypedir = $(kde_servicetypesdir)
 
 METASOURCES = AUTO
-#SUBDIRS = .  plugins test
+SUBDIRS = .  plugins test
 include_HEADERS = koperations.h kapabilities.h kdevice.h konnectormanager.h konnectorplugin.h idhelper.h configpart.h error.h 

@@ -97,13 +97,14 @@ QString QtopiaPlugin::metaId()const {
 QIconSet QtopiaPlugin::iconSet()const {
     kdDebug(5224) << "iconSet" << endl;
     QPixmap logo;
-    logo.load( locate("appdata",  "pics/opie_logo.png" ) );
+    logo.load( locate("appdata",  "pics/opie.jpg" ) );
     return QIconSet( logo );
 }
 QString QtopiaPlugin::iconName()const {
-    return QString::fromLatin1("pics/opie_logo.png");
+    return QString::fromLatin1("pics/opie.jpg");
 }
-void QtopiaPlugin::slotWrite( const Syncee::PtrList& lst) {
+void QtopiaPlugin::write( Syncee::PtrList lst) {
+    kdDebug(5201) << " writing it now " << endl;
     d->socket->write( lst );
 }
 /* private slots for communication here */

@@ -78,15 +78,17 @@ public:
      */
     virtual QStringList builtIn()const;
     bool isConnected()const;
+    void doWrite( Syncee::PtrList );
 
 protected:
     void progress( const Progress& );
     void error( const Error& );
 
     //virtual QString metaId()const = 0;
-public slots:
+//public:
 //    virtual void slotWrite(const QString &, const QByteArray & ) = 0;
-    virtual void slotWrite(const Syncee::PtrList& ) = 0;
+protected:
+    virtual void write(Syncee::PtrList ) = 0;
 //    virtual void slotWrite(KOperations::ValueList ) = 0;
 signals:
     void sync(const UDI&,  Syncee::PtrList );

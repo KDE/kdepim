@@ -124,6 +124,7 @@ void QtopiaSocket::setDestIP( const QString& dest) {
     d->dest = dest;
 }
 void QtopiaSocket::startUp() {
+    kdDebug(5210) << "Start Up " << endl;
     delete d->socket;
     d->socket = new QSocket(this, "Qtopia Socket" );
 
@@ -146,16 +147,29 @@ void QtopiaSocket::startUp() {
     d->socket->connectToHost(d->dest, 4243 );
 }
 void QtopiaSocket::hangUP() {
-    if (!d->isSyncing ) {
-        emit error( Error(i18n("Can not disconnect now. Try again after syncing was finished") ) );
+    if (d->isSyncing ) {
+        emit error( Error(Error::CouldNotDisconnect, i18n("Can not disconnect now. Try again after syncing was finished") ) );
         return;
     }
+    /* now connect to some slots */
+    disconnect(d->socket, SIGNAL(error(int) ),
+            this, SLOT(slotError(int) ) );
+    disconnect(d->socket, SIGNAL(connected() ),
+            this, SLOT(slotConnected() ) );
+    disconnect(d->socket, SIGNAL(connectionClosed() ),
+            this, SLOT(slotClosed() ) );
+    disconnect(d->socket, SIGNAL(readyRead() ),
+            this, SLOT(process() ) );
     delete d->socket;
+    d->socket = 0;
     d->isSyncing = false;
     d->connected = false;
     d->startSync = false;
     d->isConnecting = false;
     d->categories.clear();
+    d->getMode = d->NotStarted;
+    d->mode = d->Start;
+    emit prog( Progress(i18n("Disconnected from the device.") ) );
 }
 void QtopiaSocket::setResources( const QStringList& list ) {
     d->files = list;
@@ -260,6 +274,7 @@ void QtopiaSocket::slotClosed() {
     emit error( StdError::connectionLost() );
 }
 void QtopiaSocket::slotNOOP() {
+    if (!d->socket ) return;
     QTextStream stream( d->socket );
     stream << "NOOP" << endl;
 }
@@ -284,6 +299,8 @@ void QtopiaSocket::process() {
             break;
         case d->Noop:
             noop(line);
+            break;
+        default:
             break;
         }
     }
@@ -420,7 +437,7 @@ void QtopiaSocket::readDatebook() {
         emit error( StdError::downloadError(i18n("Datebook") ) );
         return;
     }
-
+    emit prog( StdProgress::converting(i18n("Datebook") ) );
     OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta );
     KSync::EventSyncee* syncee = dateDB.toKDE( tempfile );
     if (!syncee ) {

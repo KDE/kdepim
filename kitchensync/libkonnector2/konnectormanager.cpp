@@ -2,6 +2,7 @@
 #include <qmap.h>
 
 #include <kapplication.h>
+#include <kdebug.h>
 #include <kparts/componentfactory.h>
 #include <kglobal.h>
 #include <kservice.h>
@@ -211,12 +212,17 @@ const Filter::PtrList KonnectorManager::filters() {
     return m_filAdded;
 }
 void KonnectorManager::write( const QString& udi, const Syncee::PtrList&  lst) {
+    kdDebug(5201) << "Write now " <<  udi << endl;
     KonnectorPlugin* plugin =pluginByUDI(udi);
     if (!plugin ) {
+        kdDebug(5201) << " Did not contain the plugin " << endl;
         emit error( udi, StdError::konnectorDoesNotExist(udi) );
         emit progress( udi, StdProgress::done() );
+        return;
     }
-    plugin->slotWrite( lst );
+    kdDebug(5201) << "Plugin is " << plugin << " " << plugin->info().name() << endl;
+    Syncee::PtrList list;
+    plugin->doWrite( list );
 }
 
 /*

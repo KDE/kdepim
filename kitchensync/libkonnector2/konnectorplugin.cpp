@@ -47,4 +47,7 @@ ConfigWidget* KonnectorPlugin::configWidget( QWidget*, const char* ) {
 QStringList KonnectorPlugin::builtIn()const{
     return QStringList();
 }
+void KonnectorPlugin::doWrite( Syncee::PtrList list ) {
+    write( list );
+}
 #include "konnectorplugin.moc"
