@@ -147,22 +147,24 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 		<< name << endl;
 #endif
 
-	fLocalDatabase = new PilotLocalDatabase(name, true);
+	KPILOT_DELETE(fLocalDatabase);
+	PilotLocalDatabase *localDB = new PilotLocalDatabase(name, true);
 
-	if (!fLocalDatabase)
+	if (!localDB)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Could not initialize object for local copy of database \""
 			<< name
 			<< "\"" << endl;
-			return false;
+		if (retrieved) *retrieved = false;
+		return false;
 	}
 
 	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
-	if (!fLocalDatabase->isDBOpen() )
+	if (!localDB->isDBOpen() )
 	{
-		QString dbpath(dynamic_cast<PilotLocalDatabase*>(fLocalDatabase)->dbPathName());
-		KPILOT_DELETE(fLocalDatabase);
+		QString dbpath(localDB->dbPathName());
+		KPILOT_DELETE(localDB);
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
@@ -174,22 +176,24 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 			DEBUGCONDUIT << fname
 				<< ": Could not get DBInfo for "<<name<<"! "<<endl;
 #endif
+			if (retrieved) *retrieved = false;
 			return false;
 		}
 #ifdef DEBUG
-			DEBUGCONDUIT << fname
-					<< ": Found Palm database: "<<dbinfo.name<<endl
-					<<"type = "<< dbinfo.type<<endl
-					<<"creator = "<< dbinfo.creator<<endl
-					<<"version = "<< dbinfo.version<<endl
-					<<"index = "<< dbinfo.index<<endl;
+		DEBUGCONDUIT << fname
+				<< ": Found Palm database: "<<dbinfo.name<<endl
+				<<"type = "<< dbinfo.type<<endl
+				<<"creator = "<< dbinfo.creator<<endl
+				<<"version = "<< dbinfo.version<<endl
+				<<"index = "<< dbinfo.index<<endl;
 #endif
 		dbinfo.flags &= ~dlpDBFlagOpen;
 
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
 		QString path(QFileInfo(dbpath).dir(TRUE).absPath());
-		if (!KStandardDirs::exists(path)) {
+		if (!KStandardDirs::exists(path))
+		{
 			KStandardDirs::makeDir(path);
 		}
 		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) )
@@ -197,18 +201,21 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 #ifdef DEBUG
 			DEBUGCONDUIT << fname << ": Could not retrieve database "<<name<<" from the handheld."<<endl;
 #endif
+			if (retrieved) *retrieved = false;
 			return false;
 		}
-		fLocalDatabase = new PilotLocalDatabase(name, true);
-		if (!fLocalDatabase || !fLocalDatabase->isDBOpen())
+		localDB = new PilotLocalDatabase(name, true);
+		if (!localDB || !localDB->isDBOpen())
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname << ": local backup of database "<<name<<" could not be initialized."<<endl;
 #endif
+			if (retrieved) *retrieved = false;
 			return false;
 		}
 		if (retrieved) *retrieved=true;
 	}
+	fLocalDatabase = localDB;
 
 	// These latin1()'s are ok, since database names are latin1-coded.
 	fDatabase = new PilotSerialDatabase(pilotSocket(), name /* On pilot */);
