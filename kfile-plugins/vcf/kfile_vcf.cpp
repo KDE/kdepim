@@ -17,6 +17,7 @@
  *
  */
 
+#include <kdebug.h>
 #include <config.h>
 #include "kfile_vcf.h"
 
@@ -24,7 +25,6 @@
 #include <klocale.h>
 #include <kgenericfactory.h>
 #include <kstringvalidator.h>
-#include <kdebug.h>
 
 #include <qdict.h>
 #include <qvalidator.h>
@@ -86,6 +86,8 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     buf_email[999] = '\0';
     char * myptr;
 
+    // FIXME: This is intensely inefficient!!!
+
     bool done=false;
     while (!done) {
 
@@ -109,13 +111,10 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
         }
 
         // are we done yet?
-        if (
-          ((strlen(buf_name) > 0) && (strlen(buf_email) > 0)) ||
-          (file.atEnd())
-          )
+        if ((strlen(buf_name) > 0 && strlen(buf_email) > 0) || file.atEnd())
             done = true;
 
-    };
+    }
 
 
     KFileMetaInfoGroup group = appendGroup(info, "Technical");
