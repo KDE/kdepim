@@ -101,18 +101,22 @@ FolderLister::Entry::List GroupwareDataAdaptor::defaultFolders()
 KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url,
                                                      GroupwareUploadItem *item )
 {
-  if ( item )
-    return item->createUploadJob( this, url );
-  else return 0;
+  if ( item ) {
+    KIO::TransferJob *job = item->createUploadJob( this, url );
+    setUidForJob( job, item->uid() );
+    return job;
+  } else return 0;
 }
 
 KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url,
                                                      GroupwareUploadItem *item )
 {
 kdDebug()<<"GroupwareDataAdaptor::createUploadNewJob, url=" << url.url() << endl;
-  if ( item )
-    return item->createUploadNewJob( this, url );
-  else return 0;
+  if ( item ) {
+    KIO::TransferJob *job = item->createUploadNewJob( this, url );
+    setUidForJob( job, item->uid() );
+    return job;
+  } else return 0;
 }
 
 void GroupwareDataAdaptor::processDownloadListItem( const QString &entry,
@@ -191,7 +195,7 @@ bool GroupwareDataAdaptor::interpretUploadJob( KIO::Job *job, const QString &/*j
     } else {
       // We don't know the local id here (and we don't want to extract it from
       // the idMapper, that's the task of the receiver
-      emit itemUploaded( QString::null, url.url() );
+      emit itemUploaded( uidFromJob( job ), url.url() );
     }
     return true;
   } else {
@@ -214,11 +218,31 @@ bool GroupwareDataAdaptor::interpretUploadNewJob( KIO::Job *job, const QString &
     } else {
       // We don't know the local id here (and we don't want to extract it from
       // the idMapper, that's the task of the receiver
-      emit itemUploadedNew( QString::null, url.url() );
+      emit itemUploadedNew( uidFromJob( job ), url.url() );
     }
     return true;
   } else {
     return false;
+  }
+}
+
+QString GroupwareDataAdaptor::uidFromJob( KIO::Job *job ) const
+{
+kdDebug()<<"GroupwareDataAdaptor::uidFromJob( "<<job<<")"<<endl;
+  if ( mJobUIDMap.contains( job ) ) {
+    kdDebug()<<"  Contained: "<< mJobUIDMap[job] << endl;
+    return mJobUIDMap[ job ];
+  } else {
+    return QString::null;
+  }
+}
+
+void GroupwareDataAdaptor::setUidForJob( KIO::Job *job, const QString &uid )
+{
+  if ( uid.isEmpty() ) {
+    mJobUIDMap.remove( job );
+  } else {
+    mJobUIDMap[ job ] = uid;
   }
 }
 

@@ -295,6 +295,9 @@ Q_OBJECT
     {
       return QString::null; 
     }
+    virtual QString uidFromJob( KIO::Job *job ) const;
+    virtual void setUidForJob( KIO::Job *job, const QString &uid );
+
 
     enum {
       GWResBatchCreate = 0x0001,
@@ -335,6 +338,7 @@ Q_OBJECT
     QString mUser;
     QString mPassword;
     KPIM::IdMapper *mIdMapper;
+    QMap<KIO::Job*,QString> mJobUIDMap;
 };
 
 }

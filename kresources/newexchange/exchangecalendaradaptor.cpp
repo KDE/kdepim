@@ -137,7 +137,7 @@ bool ExchangeCalendarAdaptor::interpretUploadJob( KIO::Job *job, const QString &
       KURL url( davjob->url() );
       // We don't know the local id here (and we don't want to extract it from
       // the idMapper, that's the task of the receiver
-      emit itemUploaded( QString::null, url.url() );
+      emit itemUploaded( uidFromJob( job ), url.url() );
     }
     return true;
   } else {
@@ -165,7 +165,7 @@ bool ExchangeCalendarAdaptor::interpretUploadNewJob( KIO::Job *job, const QStrin
       KURL url( davjob->url() );
       // We don't know the local id here (and we don't want to extract it from
       // the idMapper, that's the task of the receiver
-      emit itemUploadedNew( QString::null, url.url() );
+      emit itemUploadedNew( uidFromJob( job ), url.url() );
     }
     return true;
   } else {
