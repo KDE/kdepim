@@ -19,48 +19,39 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KPIM_GROUPWAREJOB_H
-#define KPIM_GROUPWAREJOB_H
 
-#include <qobject.h>
-#include <qstring.h>
+#include "groupwareresourcejob.h"
 
-namespace KPIM {
+#include <qtimer.h>
 
-class GroupwareDataAdaptor;
+using namespace KPIM;
 
-/**
-  This class provides a resource for accessing a Groupware kioslave-based
-  calendar.
-*/
-class GroupwareJob : public QObject
+GroupwareJob::GroupwareJob( GroupwareDataAdaptor *adaptor )
+  : mAdaptor( adaptor )
 {
-    Q_OBJECT
-  public:
-    GroupwareJob( GroupwareDataAdaptor *adaptor );
-
-    bool error() const;
-    QString errorString() const;
-
-    virtual void kill() = 0;
-
-  signals:
-    void result( KPIM::GroupwareJob * );
-
-  protected:
-    void success();
-    void error( const QString & );
-    GroupwareDataAdaptor *adaptor() { return mAdaptor; }
-    const GroupwareDataAdaptor *adaptor() const { return mAdaptor; }
-
-  protected slots:
-    virtual void run() = 0;
-
-  private:
-    QString mErrorString;
-    GroupwareDataAdaptor *mAdaptor;
-};
-
+  QTimer::singleShot( 0, this, SLOT( run() ) );
 }
 
-#endif
+bool GroupwareJob::error() const
+{
+  return !mErrorString.isNull();
+}
+
+QString GroupwareJob::errorString() const
+{
+  return mErrorString;
+}
+
+void GroupwareJob::success()
+{
+  mErrorString = QString::null;
+  emit( result( this ) );
+}
+
+void GroupwareJob::error( const QString &errorString )
+{
+  mErrorString = errorString;
+  emit( result( this ) );
+}
+
+#include "groupwareresourcejob.moc"
