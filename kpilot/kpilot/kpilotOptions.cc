@@ -759,6 +759,9 @@ int main(int argc, char **argv)
 		I18N_NOOP("KDE1 Maintainer"),
 		"adridg@cs.kun.nl",
 		"http://www.cs.kun.nl/~adridg/kpilot/");
+	a->addCredit("Gregory Stern",
+		     I18N_NOOP("Kab2 & Abbrowser Support"),
+		     "gstern@slac.com");
 	a->addCredit("Preston Brown",
 		I18N_NOOP("KOrganizer Support"),
 		"pbrown@kde.org");
@@ -788,6 +791,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.28  2001/04/23 06:30:38  adridg
+// XML UI updates
+//
 // Revision 1.27  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //
