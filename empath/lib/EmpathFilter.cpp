@@ -198,3 +198,4 @@ EmpathFilter::match(const EmpathURL & id)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathFilter.moc"

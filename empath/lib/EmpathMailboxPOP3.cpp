@@ -651,3 +651,4 @@ EmpathMailboxPOP3::index(const EmpathURL &)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathMailboxPOP3.moc"

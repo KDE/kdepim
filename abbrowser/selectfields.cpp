@@ -201,3 +201,4 @@ void SelectFields::addCustom()
   lbSelected->insertItem( item, i );
   leCustomField->clear();
 }
+#include "selectfields.moc"

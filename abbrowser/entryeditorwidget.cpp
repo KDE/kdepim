@@ -980,3 +980,4 @@ QString NewFieldDialog::value() const
 {
   return leValue->text();
 }
+#include "entryeditorwidget.moc"

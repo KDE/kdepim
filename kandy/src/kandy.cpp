@@ -304,3 +304,4 @@ bool Kandy::queryClose()
   }
 }
 
+#include "kandy.moc"

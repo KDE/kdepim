@@ -258,3 +258,4 @@ KAddressBookInterface::slotCommandComplete(KAB::Command * baseCommand)
   emitDCOPSignal(function, params);
 }
 
+#include "KAddressBookInterface.moc"

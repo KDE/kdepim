@@ -29,3 +29,4 @@ KGanttBarConfig::KGanttBarConfig(xQGanttBarView* barview,
 void KGanttBarConfig::changeBackground(const QColor& color) {
   _barview->viewport()->setBackgroundColor(color);
 }
+#include "KGanttBarConfig.moc"

@@ -558,3 +558,4 @@ EmpathView::~EmpathView()
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathView.moc"

@@ -499,3 +499,4 @@ EmpathComposer::_quote(QString & s)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathComposer.moc"

@@ -126,3 +126,4 @@ void ViewOptions::autUnderlineOff()
   ckManUnderline->setChecked( TRUE );
 }
 
+#include "viewoptions.moc"

@@ -432,3 +432,4 @@ EmpathMessageViewWidget::s_partChanged(RMM::BodyPart part)
 #endif
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathMessageViewWidget.moc"

@@ -376,3 +376,4 @@ EmpathAttachmentEditDialog::setSpec(const EmpathAttachmentSpec & s)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathAttachmentEditDialog.moc"

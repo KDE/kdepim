@@ -618,3 +618,4 @@ KGanttItem::ChangeAsString(Change c)
   return ret;
 
 }
+#include "KGanttItem.moc"

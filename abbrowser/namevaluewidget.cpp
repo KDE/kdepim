@@ -248,3 +248,4 @@ QString ContactComboBox::currentEntryField()
     return "";
 };
 
+#include "namevaluewidget.moc"

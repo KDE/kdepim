@@ -89,3 +89,4 @@ EmpathFolderChooserWidget::s_browse()
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathFolderChooserWidget.moc"

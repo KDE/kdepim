@@ -218,3 +218,4 @@ main(int argc, char ** argv)
   return app->exec();
 }
 
+#include "kab2test.moc"

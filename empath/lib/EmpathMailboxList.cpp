@@ -233,3 +233,4 @@ EmpathMailboxList::_append(EmpathMailbox * mailbox)
 
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathMailboxList.moc"

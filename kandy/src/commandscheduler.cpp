@@ -83,3 +83,4 @@ void CommandScheduler::nextCommand()
     sendCommand(mCommandQueue.first()->cmdString());
   }
 }
+#include "commandscheduler.moc"

@@ -104,3 +104,4 @@ EmpathComposeWidget::_initActions()
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathComposeWidget.moc"

@@ -247,3 +247,4 @@ EmpathMailSender::loadConfig()
 { impl_->loadConfig(); }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathMailSender.moc"

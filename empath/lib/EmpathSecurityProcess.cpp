@@ -174,3 +174,4 @@ EmpathSecurityProcess::_decrypt(
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathSecurityProcess.moc"

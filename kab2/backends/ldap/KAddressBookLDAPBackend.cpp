@@ -325,3 +325,4 @@ KAddressBookLDAPBackend::slotPoll()
 }
 
 
+#include "KAddressBookLDAPBackend.moc"

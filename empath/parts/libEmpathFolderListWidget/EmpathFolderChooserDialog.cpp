@@ -90,3 +90,4 @@ EmpathFolderChooserDialog::selected() const
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathFolderChooserDialog.moc"

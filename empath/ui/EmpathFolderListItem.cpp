@@ -194,3 +194,4 @@ EmpathFolderListItem::child(const QString & name)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathFolderListItem.moc"

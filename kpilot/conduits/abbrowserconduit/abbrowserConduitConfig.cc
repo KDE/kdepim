@@ -54,3 +54,4 @@ int AbbrowserConduitConfig::commitChanges(KConfig& c)
     c.writeEntry(PILOT_FAX_TYPE_ENTRY, fPilotFaxType->currentText());
     return 0;
     }
+#include "abbrowserConduitConfig.moc"

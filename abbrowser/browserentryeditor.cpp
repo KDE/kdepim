@@ -44,3 +44,4 @@ void PabNewContactDialog::accept()
   emit add( ce );
   ContactDialog::accept();
 }
+#include "browserentryeditor.moc"

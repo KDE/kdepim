@@ -339,3 +339,4 @@ void Pab::exportCSV()
     outFile.close();
   }
 }
+#include "abbrowser.moc"

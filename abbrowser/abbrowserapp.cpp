@@ -48,3 +48,4 @@ int AbBrowserApp::newInstance()
 
   return 0;
 }
+#include "abbrowserapp.moc"

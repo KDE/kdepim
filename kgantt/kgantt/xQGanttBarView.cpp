@@ -249,3 +249,4 @@ xQGanttBarView::hideConfig()
   if(_config)
     _config->hide();
 }
+#include "xQGanttBarView.moc"

@@ -587,3 +587,4 @@ EmpathMailboxIMAP4::_createIndexRecordFromFetchReply(const QStringList & l)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathMailboxIMAP4.moc"

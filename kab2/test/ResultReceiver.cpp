@@ -47,3 +47,4 @@ ResultReceiver::slotEntryComplete(int id, Entry e)
   emit(entryComplete(id, e));
 }
 
+#include "ResultReceiver.moc"

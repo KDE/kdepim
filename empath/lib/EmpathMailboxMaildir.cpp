@@ -521,3 +521,4 @@ EmpathMailboxMaildir::index(const EmpathURL & folder)
 
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathMailboxMaildir.moc"

@@ -1097,3 +1097,4 @@ xQGanttBarViewPort::textEdited()
     _itemTextEdit->hide();
   }
 }
+#include "xQGanttBarViewPort.moc"

@@ -407,3 +407,4 @@ Empath::_saveHostName()
 
 
 // vim:ts=4:sw=4:tw=78
+#include "Empath.moc"

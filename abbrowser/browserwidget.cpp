@@ -1248,3 +1248,4 @@ void PabListView::keyPressEvent( QKeyEvent *e )
   QListView::keyPressEvent( e );
 }
 
+#include "browserwidget.moc"

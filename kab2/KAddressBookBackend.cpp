@@ -115,3 +115,4 @@ KAddressBookBackend::_runQueue()
   qDebug("KAddressBookBackend::_runQueue(): done");
 }
 
+#include "KAddressBookBackend.moc"

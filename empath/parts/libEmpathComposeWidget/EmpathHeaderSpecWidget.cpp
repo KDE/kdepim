@@ -121,3 +121,4 @@ EmpathHeaderSpecWidget::keyPressEvent(QKeyEvent * e)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathHeaderSpecWidget.moc"

@@ -74,3 +74,4 @@ EmpathFolderCombo::s_activated(const QString & s)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathFolderCombo.moc"

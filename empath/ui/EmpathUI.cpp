@@ -172,3 +172,4 @@ EmpathUI::s_showFolder(const EmpathURL & url, unsigned int id)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathUI.moc"

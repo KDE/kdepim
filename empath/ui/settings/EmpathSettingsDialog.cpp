@@ -346,3 +346,4 @@ EmpathSettingsDialog::slotPreviewDepth2(const QColor & c)
 }
 
 // vim:ts=4:sw=4:tw=78
+#include "EmpathSettingsDialog.moc"

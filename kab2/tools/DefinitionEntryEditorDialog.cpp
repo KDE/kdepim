@@ -20,3 +20,4 @@ DefinitionEntryEditorDialog::~DefinitionEntryEditorDialog()
 {
 }
 
+#include "DefinitionEntryEditorDialog.moc"

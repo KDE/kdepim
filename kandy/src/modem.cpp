@@ -689,3 +689,4 @@ ushort Modem::calcCRC()
 
 	return c;
 }
+#include "modem.moc"

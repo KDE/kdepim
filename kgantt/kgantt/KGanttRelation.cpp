@@ -165,3 +165,4 @@ KGanttRelation::ChangeAsString(Change c)
   return ret;
 
 }
+#include "KGanttRelation.moc"

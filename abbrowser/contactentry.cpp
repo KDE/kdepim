@@ -458,3 +458,4 @@ void ContactEntry::Address::setCountry(const QString &v)
     {
     fParent->replaceValue(fPre + "Country", v);
     }
+#include "contactentry.moc"

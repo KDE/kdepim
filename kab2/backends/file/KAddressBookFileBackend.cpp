@@ -404,3 +404,4 @@ KAddressBookFileBackend::_removeEntry(const QString & id)
   return true;
 }
 
+#include "KAddressBookFileBackend.moc"

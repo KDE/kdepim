@@ -93,3 +93,4 @@ KGantt::dumpItems()
 
 
 
+#include "KGantt.moc"
