@@ -1632,7 +1632,7 @@ KNRemoteArticle::KNRemoteArticle(KNGroup *g)
   f_rom.setParent(this);
   r_eferences.setParent(this);
 
-  if (g->useCharset())
+  if (g && g->useCharset())
     d_efaultCS = cachedCharset( g->defaultCharset() );
   else
     d_efaultCS = cachedCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
@@ -1815,7 +1815,7 @@ void KNRemoteArticle::setForceDefaultCS(bool b)
 {
   if (!b) { // restore default
     KNGroup *g=static_cast<KNGroup*>(c_ol);
-    if (g->useCharset())
+    if (g && g->useCharset())
       d_efaultCS = cachedCharset( g->defaultCharset() );
     else
       d_efaultCS = cachedCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );

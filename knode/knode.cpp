@@ -418,55 +418,86 @@ void KNMainWindow::openURL(const KURL &url)
 {
   QString host = url.host();
   unsigned short int port = url.port();
-  KNNntpAccount *acc;
+  KNNntpAccount *acc=0;
 
-  // lets see if we already have an account for this host...
-  for(acc=a_ccManager->first(); acc; acc=a_ccManager->next())
-    if( acc->server()==host && (port==0 || acc->port()==port) )
-      break;
+  if (url.url().left(7) == "news://") {
 
-  if(!acc) {
-    acc=new KNNntpAccount();
-    acc->setName(host);
-    acc->setServer(host);
+    // lets see if we already have an account for this host...
+    for(acc=a_ccManager->first(); acc; acc=a_ccManager->next())
+      if( acc->server()==host && (port==0 || acc->port()==port) )
+        break;
 
-    if(port!=0)
-      acc->setPort(port);
+    if(!acc) {
+      acc=new KNNntpAccount();
+      acc->setName(host);
+      acc->setServer(host);
 
-    if(url.hasUser() && url.hasPass()) {
-      acc->setNeedsLogon(true);
-      acc->setUser(url.user());
-      acc->setPass(url.pass());
+      if(port!=0)
+        acc->setPort(port);
+
+      if(url.hasUser() && url.hasPass()) {
+        acc->setNeedsLogon(true);
+        acc->setUser(url.user());
+        acc->setPass(url.pass());
+      }
+
+      if(!a_ccManager->newAccount(acc))
+        return;
     }
-
-    if(!a_ccManager->newAccount(acc))
-      return;
+  } else {
+    if (url.url().left(5) == "news:") {
+      // TODO: make the default server configurable
+      acc=a_ccManager->first();
+    } else {
+      kdDebug(5003) << "KNMainWindow::openURL() URL is not a valid news URL" << endl;
+    }
   }
 
-  QString groupname=url.path(-1);
-  while(groupname.startsWith("/"))
-    groupname.remove(0,1);
+  if (acc) {
+    QString groupname=url.path(-1);
+    while(groupname.startsWith("/"))
+      groupname.remove(0,1);
 
-  QListViewItem *item=0;
-  if(groupname.isEmpty())
-    item=acc->listItem();
-  else {
-    KNGroup *grp= g_rpManager->group(groupname, acc);
+    bool isMID=(groupname.contains('@')>0);
 
-    if(!grp) {
-      KNGroupInfo inf(groupname, "");
-      g_rpManager->subscribeGroup(&inf, acc);
-      grp=g_rpManager->group(groupname, acc);
-      if(grp)
-        item=grp->listItem();
+    if (!isMID) {
+      QListViewItem *item=0;
+      if(groupname.isEmpty())
+        item=acc->listItem();
+      else {
+        KNGroup *grp= g_rpManager->group(groupname, acc);
+
+        if(!grp) {
+          KNGroupInfo inf(groupname, "");
+          g_rpManager->subscribeGroup(&inf, acc);
+          grp=g_rpManager->group(groupname, acc);
+          if(grp)
+            item=grp->listItem();
+        }
+        else
+          item=grp->listItem();
+      }
+
+      if (item) {
+        c_olView->ensureItemVisible(item);
+        c_olView->setActive(item, true);
+      }
+    } else {
+      KNGroup *g = g_rpManager->firstGroupOfAccount(acc);
+
+      if (g) {
+        if(!KNArticleWindow::raiseWindowForArticle(groupname.latin1())) { //article not yet opened
+          KNRemoteArticle *a=new KNRemoteArticle(g);
+          QString messageID = "<"+groupname+">";
+          a->messageID()->from7BitString(messageID.latin1());
+          KNArticleWindow *awin=new KNArticleWindow(a);
+          awin->show();
+        }
+      } else {
+        // TODO: fetch without group
+        kdDebug(5003) << "KNMainWindow::openURL() account has no groups" << endl;
+      }
     }
-    else
-      item=grp->listItem();
-  }
-
-  if (item) {
-    c_olView->ensureItemVisible(item);
-    c_olView->setActive(item, true);
   }
 }
 

@@ -361,6 +361,15 @@ KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 }
 
 
+KNGroup* KNGroupManager::firstGroupOfAccount(const KNServerInfo *s)
+{
+  for(KNGroup *var=g_List->first(); var; var=g_List->next())
+    if(var->account()==s) return var;
+
+  return 0;
+}
+
+
 void KNGroupManager::expireAll(KNCleanUp *cup)
 {
   for(KNGroup *var=g_List->first(); var; var=g_List->next()) {

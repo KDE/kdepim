@@ -95,6 +95,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     bool unloadHeaders(KNGroup *g, bool force=true);
 
     KNGroup* group(const QString &gName, const KNServerInfo *s);
+    KNGroup* firstGroupOfAccount(const KNServerInfo *s);
     KNGroup* currentGroup()               { return c_urrentGroup; }
     bool hasCurrentGroup()                { return (c_urrentGroup!=0); }
     void setCurrentGroup(KNGroup *g);

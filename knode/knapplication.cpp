@@ -85,10 +85,7 @@ int KNApplication::newInstance()
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   if (args->count()>0) {
     KURL url=args->url(0);    // we take only one URL
-    if( (url.protocol()=="news") && (url.hasHost()) )
-      mainWin->openURL(url);
-    else
-      kdDebug(5003) << "KNApplication::newInstance() : ignoring broken URL" << endl;
+    mainWin->openURL(url);
   }
 
   kdDebug(5003) << "KNApplication::newInstance() done" << endl;

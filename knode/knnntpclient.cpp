@@ -447,7 +447,7 @@ void KNNntpClient::doFetchArticle()
   progressValue = 100;
   predictedLines = target->lines()->numberOfLines()+10;
 
-  if (target->articleNumber() != -1) {
+  if (target->collection()) {
     QString groupName = static_cast<KNGroup*>(target->collection())->groupname();
     if (currentGroup != groupName) {
       cmd="GROUP ";
@@ -456,6 +456,9 @@ void KNNntpClient::doFetchArticle()
         return;
       currentGroup = groupName;
     }
+  }
+
+  if (target->articleNumber() != -1) {
     cmd.setNum(target->articleNumber());
     cmd.prepend("ARTICLE ");
   } else {
