@@ -169,7 +169,19 @@ EmpathMessageHTMLWidget::go()
 	}
 	
 	QCString messageHeaders = message->envelope().asString();
-	QCString messageBody = message->body().asString();
+	QCString messageBody = "";
+	
+	// Ok I'm going to try and get the viewable body parts now.
+	// To start with, I'll see if there's only one part. If so, I'll show it,
+	// if possible. Otherwise, I'll have to have a harder look and see what
+	// we're supposed to be showing. If we're looking at a
+	// multipart/alternative, I'll pick the 'best' of the possibilities.
+	
+	if (message->body().count() == 1)
+		messageBody = message->body().at(0)->data();
+	else {
+		// Multipart message
+	}
 	
 	// Markup and place headers of the message in the template.
 	replaceHeaderTagsByData(messageHeaders, htmlTemplate);
@@ -434,7 +446,12 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 	register char * pos = (char *)str.data();	// Index into source string.
 	char * start = pos;							// Start of source string.
 	register char * end = start + str.length();	// End of source string.
-	if (start == end) return;
+	
+	if (start == end) {
+		delete [] buf;
+		buf = 0;
+		return;
+	}
 
 	register char * bufpos = buf;
 	int numBufs = 1;
@@ -724,6 +741,7 @@ EmpathMessageHTMLWidget::toHTML(QCString & str) // This is black magic.
 	cerr << buf << endl;
 	outStr += buf;
 	delete [] buf;
+	buf = 0;
 	str = outStr.data();
 }
 

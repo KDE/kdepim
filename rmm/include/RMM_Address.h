@@ -40,6 +40,7 @@ class RAddress : public RHeaderBody {
 		RAddress(const RAddress &);
 		RAddress(const QCString & s);
 		virtual RAddress & operator = (const RAddress & a);
+		virtual RAddress & operator = (const QCString & s);
 
 		virtual ~RAddress();
 

@@ -30,10 +30,19 @@ RContentType::RContentType()
 }
 
 RContentType::RContentType(const RContentType & cte)
-	:	RHeaderBody(cte)
+	:	RHeaderBody(cte),
+		type_(cte.type_),
+		subType_(cte.subType_),
+		parameterList_(cte.parameterList_)
 {
 	rmmDebug("ctor");
 	assembled_	= false;
+}
+
+RContentType::RContentType(const QCString & s)
+	:	RHeaderBody(s)
+{
+	rmmDebug("ctor");
 }
 
 RContentType::~RContentType()
@@ -52,6 +61,9 @@ RContentType::operator = (const RContentType & ct)
 	parameterList_	= ct.parameterList_;
 	
 	RHeaderBody::operator = (ct);
+	
+	parsed_ = true;
+	assembled_ = false;
 
 	return *this;
 }
@@ -87,6 +99,8 @@ RContentType::parse()
 	type_		= ts.left(slash).stripWhiteSpace();
 	subType_	= ts.right(ts.length() - slash - 1).stripWhiteSpace();
 	
+	rmmDebug("type_ == " + type_);
+	rmmDebug("subType_ == " + subType_);
 	parsed_		= true;
 	assembled_	= false;
 }
@@ -147,6 +161,7 @@ RContentType::setParameterList(RParameterList & p)
 RContentType::type()
 {
 	parse();
+	rmmDebug("type() called. Type is \"" + type_ + "\"");
 	return type_;
 }
 

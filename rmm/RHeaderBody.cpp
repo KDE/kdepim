@@ -33,6 +33,12 @@ RHeaderBody::RHeaderBody(const RHeaderBody & headerBody)
 	rmmDebug("ctor");
 }
 
+RHeaderBody::RHeaderBody(const QCString & s)
+	:	RMessageComponent(s)
+{
+	rmmDebug("ctor");
+}
+
 	RHeaderBody &
 RHeaderBody::operator = (const RHeaderBody & hb)
 {
@@ -46,8 +52,32 @@ RHeaderBody::operator = (const RHeaderBody & hb)
 	return *this;
 }
 
+	RHeaderBody &
+RHeaderBody::operator = (const QCString & s)
+{
+	rmmDebug("operator =");
+	RMessageComponent::operator = (s);
+	return *this;
+}
+
+
 RHeaderBody::~RHeaderBody()
 {
 	rmmDebug("dtor");
 }
 
+	void
+RHeaderBody::parse()
+{
+}
+
+	void
+RHeaderBody::assemble()
+{
+}
+
+	void
+RHeaderBody::createDefault()
+{
+}
+	

@@ -37,10 +37,6 @@ Things you might want to VOLUNTEER for :)
   a folder is added. This is a symptom of the fact I'm calling 'update()' on
   the FolderWidget via a signal. Some more intelligence is necessary.
   
-* In the same vein as the above, need to sort out EmpathMaildir so that it
-  reads recursively to find its folders rather than writing them to the config.
-  -- Almost done. Note: Must prevent infinite recursion.
-  
 * mbox and MMDF handling. (Started but untested and unused as yet)
 
 * IMAP and news. IMAP should be via kio_imap, like POP will be. NNTP ? Will
@@ -62,6 +58,7 @@ Things you might want to VOLUNTEER for :)
   main window, or simply act as a dialog (non-modal, of course).
   We could just use the statusbar when there's only one task in the list. That
   would be cool.
+  - Working on this
   
 * Drag and drop.
 

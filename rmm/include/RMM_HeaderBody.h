@@ -35,22 +35,19 @@ class RHeaderBody : public RMessageComponent {
 		
 		RHeaderBody();
 		RHeaderBody(const RHeaderBody & headerBody);
-		RHeaderBody(const QCString & s) : RMessageComponent(s) { }
+		RHeaderBody(const QCString & s);
 
 		virtual ~RHeaderBody();
 
-		virtual void parse() 
-			{ rmmDebug("WARNING base class parse() called"); }
+		virtual void parse();
 
-		virtual void assemble()
-			{ rmmDebug("WARNING base class assemble() called"); }
+		virtual void assemble();
 
-		virtual void createDefault()
-			{ rmmDebug("WARNING base class createDefault() called"); }
+		virtual void createDefault();
 			
 		virtual RHeaderBody & operator = (const RHeaderBody & h);
+		virtual RHeaderBody & operator = (const QCString & s);
 
-		void set(const QCString & s) { RMessageComponent::set(s); }
 		QCString asString() { return RMessageComponent::asString(); }
 		
 		const char * className() const { return "RHeaderBody"; }

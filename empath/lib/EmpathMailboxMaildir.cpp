@@ -150,7 +150,7 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 	bool
 EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, RMessage & m)
 {
-	empathDebug("writeMessage called with message " + QString().setNum(m.id()));
+	empathDebug("writeMessage() called");
 	// FIXME: Write writeNewMail method !
 	QString s;// = writeNewMail(m);
 	
@@ -306,11 +306,11 @@ EmpathMailboxMaildir::envelopeOfMessage(const EmpathURL & id)
 	return m->envelopeOfMessage(id.messageID());
 }
 
-	RMessage::MessageType
+	RBodyPart::PartType
 EmpathMailboxMaildir::typeOfMessage(const EmpathURL & id)
 {	
 	EmpathMaildir * m = _box(id);
-	if (m == 0) return RMessage::BasicMessage;
+	if (m == 0) return RBodyPart::Basic;
 	return m->typeOfMessage(id.messageID());
 }
 

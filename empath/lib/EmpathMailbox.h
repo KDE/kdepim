@@ -113,7 +113,7 @@ class EmpathMailbox : public QObject
 		/**
 		 * @short Get the type of the message specified in the url.
 		 */
-		virtual RMessage::MessageType
+		virtual RBodyPart::PartType
 			typeOfMessage		(const EmpathURL &) = 0;
 		
 		/**

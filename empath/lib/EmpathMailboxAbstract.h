@@ -36,7 +36,7 @@ virtual bool writeMessage(const EmpathURL & folder, RMessage &);
 virtual Q_UINT32				sizeOfMessage		(const EmpathURL &);
 virtual QString					plainBodyOfMessage	(const EmpathURL &);
 virtual REnvelope *				envelopeOfMessage	(const EmpathURL &);
-virtual RMessage::MessageType	typeOfMessage		(const EmpathURL &);
+virtual RBodyPart::PartType		typeOfMessage		(const EmpathURL &);
 virtual RMessage *				message				(const EmpathURL &);
 virtual bool 					removeMessage		(const EmpathURL &);
 virtual bool					addFolder			(const EmpathURL &);

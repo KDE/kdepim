@@ -1112,7 +1112,7 @@ EmpathMailboxPOP3::envelopeOfMessage(const EmpathURL & _id)
 	*/
 }
 
-	RMessage::MessageType
+	RBodyPart::PartType
 EmpathMailboxPOP3::typeOfMessage(const EmpathURL & _id)
 {
 	/*
@@ -1121,7 +1121,7 @@ EmpathMailboxPOP3::typeOfMessage(const EmpathURL & _id)
 	RMessage * tempMessage = _getMessage(_id);
 	
 	if (tempMessage == 0)
-		return RMessage::BasicMessage;
+		return RBodyPart::Basic;
 	
 	return tempMessage->type();
 	*/

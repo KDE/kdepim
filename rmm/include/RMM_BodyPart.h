@@ -35,11 +35,18 @@ class RBodyPart : public REntity {
 	
 	public:
 	
+		enum PartType {
+			Basic,
+			Mime
+		};
+	
 		RBodyPart();
 		RBodyPart(const RBodyPart &);
-		RBodyPart(const QCString & s) : REntity(s) { }
+		RBodyPart(const QCString & s);
 
 		RBodyPart & operator = (const RBodyPart & part);
+		
+		QCString data();
 
 		virtual ~RBodyPart();
 		void parse();
@@ -48,6 +55,12 @@ class RBodyPart : public REntity {
 		
 		RMM::MimeType mimeType();
 		RMM::MimeSubType mimeSubType();
+		
+		REnvelope &			envelope();
+		QList<RBodyPart> &	body();
+		
+		void addPart(RBodyPart *);
+		void removePart(RBodyPart *);
 		
 		void setMimeType(RMM::MimeType);
 		void setMimeType(const QCString &);
@@ -62,19 +75,28 @@ class RBodyPart : public REntity {
 		
 		RMM::CteType encoding();
 		void setEncoding(RMM::CteType);
+		Q_UINT32	size();
+		
+		PartType	type();
 		
 		const char * className() const { return "RBodyPart"; }
 
 	protected:
+		
+		void				_update();
 
 		REnvelope			envelope_;
-		RBody *				body_;
+		QCString			data_;
+		QList<RBodyPart>	body_;
 		RMM::CteType		encoding_;
 		RMM::MimeType		mimeType_;
 		RMM::MimeSubType	mimeSubType_;
 		QCString			contentDescription_;
 		RMM::DispType		disposition_;
-
+		QCString			boundary_;
+		PartType			type_;
+		QCString			preamble_;
+		QCString			epilogue_;
 };
 
 typedef QList<RBodyPart>			RBodyPartList;

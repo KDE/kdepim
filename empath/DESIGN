@@ -75,8 +75,12 @@ This is done using the Empath object, of which there is only one.
 The macro 'empath' references the Empath object from anywhere within the system.
 Just include 'Empath.h' to get the macro defined.
 
-So, to get a pointer to a mailbox called 'arse', do this:
-EmpathMailbox * m(empath->mailbox("arse"));
+If you have a url like this:
+empath://arse/folder/anotherfolder/bigLongMEssageID.localhost
+
+You can get a pointer to the mailbox 'arse' that's reference in there like this:
+
+EmpathMailbox * m(empath->mailbox(url));
 
 Remember to check the pointer isn't 0.
 
@@ -159,9 +163,7 @@ The handler may then request that no further filters run.
 
 Move to folder does this:
 RMessage * m(empath->message(messageURL));
-// check for 0 here !
 EmpathFolder * f(empath->folder(destinationURL));
-// check for 0 again
 if (f->writeMessage(m));
 	empath->remove(messageURL);
 
@@ -170,8 +172,8 @@ If the write worked, remove the original message.
 
 Note that EmpathFolder::writeMessage() actually does this:
 
-EmpathMailbox * m = empath->mailbox(url_);
-return (m != 0 && m->writeMessage(url_, message));
+EmpathMailbox * m = empath->mailbox(url);
+return (m != 0 && m->writeMessage(url, message));
 
 That's it !
 

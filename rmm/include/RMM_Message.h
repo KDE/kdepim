@@ -24,74 +24,39 @@
 #include <RMM_Entity.h>
 #include <RMM_Envelope.h>
 #include <RMM_Body.h>
+#include <RMM_BodyPart.h>
 #include <RMM_Defines.h>
 #include <RMM_Enum.h>
 
-class RMessage : public REntity {
+class RMessage : public RBodyPart {
 
 	public:
 
-		enum MessageType {
-			BasicMessage,
-			MimeMessage
-		};
-		
 		RMessage();
 		RMessage(const RMessage &);
 		RMessage(const QCString & s);
 
 		virtual ~RMessage();
 
-		unsigned long int id() const { return id_; }
-
 		RMessage & operator = (const RMessage & message);
 		
-		bool operator == (RMessage & m)
-		{ return id_ == m.id_; }
-		
-		friend QDataStream & operator << (QDataStream & str, RMessage & m)
-		{ str << m.asString(); return str; }
+		friend QDataStream & operator << (QDataStream & str, RMessage & m);
 
 		QCString recipientListAsPlainString();
 
-		REnvelope	& envelope();
-		RBody		& body();
-
-		Q_UINT32 size();
-		
-		void set(const QCString & s)		{ REntity::set(s); }
-		QCString asString()			{ return REntity::asString(); }
-		
-		int			numberOfParts();
 		void		addPart(RBodyPart * bp);
 		void		removePart(RBodyPart * part);
-		
-		RBodyPart	part(int index);
-
-		MessageType	type();
 		
 		bool hasParentMessageID();
 
 		void setStatus(RMM::MessageStatus status);
 		RMM::MessageStatus status();
 
-		const char * className();
+		const char * className() const { return "RMessage"; }
 
-		void parse();
-		void assemble();
-		void createDefault();
-		
 	protected:
 		
-		void				_update();
-		MessageType			type_;
-
-		REnvelope			envelope_;
-		RBody				body_;
-		
 		RMM::MessageStatus	status_;
-		QCString			folder_;	
-		unsigned long int	id_;
 };
 
 #endif

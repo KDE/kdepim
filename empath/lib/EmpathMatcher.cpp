@@ -182,7 +182,7 @@ EmpathMatcher::match(const EmpathURL & id)
 			{
 				RMessage * m(empath->message(id));
 				if (m == 0) return false;
-				return (m->type() == RMessage::MimeMessage);
+				return (m->type() == RBodyPart::Mime);
 			}
 			break;
 			

@@ -32,20 +32,26 @@ RBodyPart::RBodyPart()
 	:	REntity()
 {
 	rmmDebug("ctor");
-	body_ = new RBody();
+	body_.setAutoDelete(true);
 }
 
 RBodyPart::RBodyPart(const RBodyPart & part)
 	:	REntity(part)
 {
 	rmmDebug("ctor");
-	body_ = new RBody();
+	body_.setAutoDelete(true);
+}
+
+RBodyPart::RBodyPart(const QCString & s)
+	:	REntity(s)
+{
+	rmmDebug("ctor");
+	body_.setAutoDelete(true);
 }
 
 RBodyPart::~RBodyPart()
 {
 	rmmDebug("dtor");
-	delete body_;
 }
 
 	RBodyPart &
@@ -103,6 +109,10 @@ RBodyPart::setMimeSubType(const QCString & s)
 RBodyPart::parse()
 {
 	if (parsed_) return;
+	rmmDebug("parse() called");
+	rmmDebug("=== RBodyPart parse start =====================================");
+	
+	body_.clear();
 	
 	// A body part consists of an envelope and a body.
 	// The body may, again, consist of multiple body parts.
@@ -115,52 +125,107 @@ RBodyPart::parse()
 		return;
 	}
 	
-	envelope_.set(strRep_.left(endOfHeaders));
+	envelope_	= strRep_.left(endOfHeaders);
+	data_		= strRep_.right(strRep_.length() - endOfHeaders);
 
 	rmmDebug("Looking to see if there's a Content-Type header");
 	// Now see if there's a Content-Type header in the envelope.
 	// If there is, we might be looking at a multipart message.
-	if (envelope_.has(RMM::HeaderContentType)) {
+	if (!envelope_.has(RMM::HeaderContentType)) {
 		
-		rmmDebug("There's a Content-Type header");
-		
-		// It has the header.
-		RContentType contentType(envelope_.contentType());
-		
-		// If the header say multipart, we'll need to know the boundary.
-		if (contentType.type() == "multipart") {
-			
-			rmmDebug("This message is multipart");
-		
-			RParameterListIterator it(contentType.parameterList());
-			
-			for (; it.current(); ++it) {
-			
-				if (it.current()->attribute() == "boundary") {
-				
-					// We've found the boundary.
-					// The body needs the boundary, so it knows where to split.
-					// It also needs the content type header, so it knows what
-					// subtype the contentType has.
-					// It also needs the content-transfer-encoding, so that it
-					// can decode where necessary.
-					body_->setBoundary(it.current()->value());
-					body_->setContentType(contentType);
-					RCte cte(envelope_.contentTransferEncoding());
-					body_->setCTE(cte);
-					body_->setMultiPart(true);
-					break;
-				}
-			}
-		}
+		parsed_		= true;
+		assembled_	= false;
+		rmmDebug("done parse");
+		rmmDebug("=== RBodyPart parse end   =================================");
+		return;
 	}
 
-	body_->set(strRep_.right(strRep_.length() - endOfHeaders));
-	body_->parse();
+	rmmDebug("There's a Content-Type header");
 	
+	RContentType contentType(envelope_.contentType());
+	
+	rmmDebug("contentType.type() == " + contentType.type());
+	
+	// If the header say multipart, we'll need to know the boundary.
+	if (contentType.type() == "multipart") {
+		
+		rmmDebug(" ==== This part is multipart ========================");
+	
+		RParameterListIterator it(contentType.parameterList());
+		
+		rmmDebug("Looking for boundary");
+		for (; it.current(); ++it) {
+		
+			if (it.current()->attribute() == "boundary")
+				boundary_ = it.current()->value();
+		}
+		
+		rmmDebug("boundary == \"" + boundary_ + "\"");
+		if (boundary_.at(0) == '\"') {
+			boundary_.remove(boundary_.length() - 1, 1);
+			boundary_.remove(0, 1);
+		}
+		
+		if (boundary_.isEmpty()) {
+			rmmDebug("The boundary is empty ! Get out ! Run away !");
+			parsed_		= true;
+			assembled_	= false;
+			rmmDebug("done parse");
+			rmmDebug("=== RBodyPart parse end   =============================");
+			return;
+		}
+
+		int i(strRep_.find(boundary_, endOfHeaders));
+
+		if (i == -1) {
+			// Let's just call it a plain text message.
+			rmmDebug("No boundary found in message. Assume plain ?");
+			parsed_		= true;
+			assembled_	= false;
+			rmmDebug("done parse");
+			rmmDebug("=== RBodyPart parse end   =============================");
+			return;
+		}
+
+		preamble_ = strRep_.mid(endOfHeaders, i - endOfHeaders);
+		rmmDebug("preamble == \"" + preamble_ + "\"");
+
+		int oldi(i + boundary_.length());
+		// Now do the rest of the parts.
+		i = strRep_.find(boundary_, i + boundary_.length());
+
+		while (i != -1) {
+
+			rmmDebug(" ==== Creating new part ========================");
+			RBodyPart * newPart = new RBodyPart(strRep_.mid(oldi, i - oldi));
+			CHECK_PTR(newPart);
+			body_.append(newPart);
+			rmmDebug(" ==== Parsing new part =========================");
+			newPart->parse();
+			oldi = i + boundary_.length();
+			i = strRep_.find(boundary_, i + boundary_.length());
+			rmmDebug(" ==== Created new part OK ======================");
+		}
+
+		// No more body parts. Anything that's left is the epilogue.
+
+		epilogue_ =
+			strRep_.right(strRep_.length() - i + boundary_.length());
+			
+	} else {
+
+		rmmDebug("This part is NOT multipart");	
+		RBodyPart * newPart =
+			new RBodyPart(strRep_.right(strRep_.length() - endOfHeaders));
+		CHECK_PTR(newPart);
+		body_.append(newPart);
+		newPart->parse();
+	}
 
 	parsed_		= true;
 	assembled_	= false;
+	rmmDebug("done parse");
+	rmmDebug("=== RBodyPart parse end   =====================================");
 }
 
 	void
@@ -169,11 +234,80 @@ RBodyPart::assemble()
 	parse();
 	if (assembled_) return;
 
+	rmmDebug("assemble() called");
+
+	strRep_ = envelope_.asString();
+	strRep_ += "\n\n";
+
+	if (body_.count() == 1) {
+		
+		strRep_ += body_.at(0)->asString();
+	
+	} else {
+		
+		QListIterator<RBodyPart> it(body_);
+		
+		for (; it.current(); ++it)
+			strRep_ += it.current()->asString();
+	}
+	
 	assembled_ = true;
 }
 
 	void
 RBodyPart::createDefault()
 {
+	envelope_.createDefault();
+}
+
+	REnvelope &
+RBodyPart::envelope()
+{
+	parse();
+	return envelope_;
+}
+
+	RBodyPartList &
+RBodyPart::body()
+{
+	parse();
+	return body_;
+}
+
+	Q_UINT32
+RBodyPart::size()
+{
+	return strRep_.length();
+}
+
+	void
+RBodyPart::_update()
+{
+//	type_ = (0 == 1) ? Basic : Mime;
+}
+
+	void
+RBodyPart::addPart(RBodyPart * bp)
+{
+	_update();
+}
+
+	void
+RBodyPart::removePart(RBodyPart * part)
+{
+	_update();
+}
+
+	RBodyPart::PartType
+RBodyPart::type()
+{
+	return type_;
+}
+
+	QCString
+RBodyPart::data()
+{
+	parse();
+	return data_;
 }
 

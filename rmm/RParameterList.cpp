@@ -35,7 +35,7 @@ RParameterList::RParameterList()
 }
 
 RParameterList::RParameterList(const RParameterList & l)
-	:	QList<RParameter>(),
+	:	QList<RParameter>(l),
 		RHeaderBody(l)
 {
 	rmmDebug("ctor");

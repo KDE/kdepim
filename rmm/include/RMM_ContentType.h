@@ -35,7 +35,7 @@ class RContentType : public RHeaderBody {
 
 		RContentType();
 		RContentType(const RContentType & ct);
-		RContentType(const QCString & s) : RHeaderBody(s) { }
+		RContentType(const QCString & s);
 		RContentType & operator = (const RContentType & ct);
 		
 //		friend QDataStream & operator >> (

@@ -38,8 +38,9 @@ class RMailbox : public RAddress {
 
 		RMailbox();
 		RMailbox(const RMailbox & m);
-		RMailbox(const QCString & s) : RAddress(s) { }
-		RMailbox & operator = (const RMailbox & m);
+		RMailbox(const QCString & s);
+		RMailbox & operator = (const RMailbox &);
+		RMailbox & operator = (const QCString &);
 		
 		friend QDataStream & operator >> (
 			QDataStream & s, RMailbox & mailbox);

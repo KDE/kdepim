@@ -37,8 +37,9 @@ class RGroup : public RAddress {
 
 		RGroup();
 		RGroup(const RGroup & group);
-		RGroup(const QCString & s) : RAddress(s) { }
+		RGroup(const QCString & s);
 		RGroup & operator = (const RGroup & group);
+		RGroup & operator = (const QCString & s);
 
 		friend QDataStream & operator >> (
 			QDataStream & s, RGroup & group);

@@ -84,6 +84,9 @@ RParameter::parse()
 	attribute_	= strRep_.left(split).stripWhiteSpace();
 	value_		= strRep_.right(strRep_.length() - split - 1).stripWhiteSpace();
 	
+	rmmDebug("attribute == \"" + attribute_ + "\"");
+	rmmDebug("value     == \"" + value_ + "\"");
+	
 	parsed_		= true;
 	assembled_	= false;
 }

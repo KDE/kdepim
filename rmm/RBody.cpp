@@ -42,6 +42,7 @@ RBody::RBody(const RBody & body)
 	:	RMessageComponent(body)
 {
 	rmmDebug("ctor");
+
 	partList_.setAutoDelete(true);
 	partList_	= body.partList_;
 	assembled_	= false;

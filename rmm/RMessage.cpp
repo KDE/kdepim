@@ -29,19 +29,19 @@
 #include <RMM_Body.h>
 
 RMessage::RMessage()
-	:	REntity()
+	:	RBodyPart()
 {
 	rmmDebug("ctor");
 }
 
 RMessage::RMessage(const RMessage & m)
-	:	REntity()
+	:	RBodyPart(m)
 {
 	rmmDebug("ctor");
 }
 
 RMessage::RMessage(const QCString & s)
-	:	REntity(s)
+	:	RBodyPart(s)
 {
 	rmmDebug("ctor");
 }
@@ -51,180 +51,21 @@ RMessage::~RMessage()
 	rmmDebug("dtor");
 }
 
-	RMessage &
-RMessage::operator = (const RMessage & m)
-{
-	rmmDebug("operator =");
-	if (this == &m) return *this;
-	envelope_ = m.envelope_;
-	body_ = m.body_;
-	REntity::operator = (m);
-	return *this;
-}
-
-	int
-RMessage::numberOfParts()
-{
-	parse();
-	return body_.numberOfParts();
-}
-
-	void
-RMessage::addPart(RBodyPart * bp)
-{
-	parse();
-	body_.addPart(bp);
-	_update();
-}
-
-	void
-RMessage::removePart(RBodyPart * part)
-{
-	parse();
-	body_.removePart(part);
-	_update();
-}
-
-	void
-RMessage::_update()
-{
-	type_ = (body_.numberOfParts() == 1) ? BasicMessage : MimeMessage;
-}
-
-	RMessage::MessageType
-RMessage::type()
-{
-	parse();
-	return type_;
-}
-
-	RBodyPart
-RMessage::part(int index)
-{
-	parse();
-	return body_.part(index);
-}
-
-	void
-RMessage::parse()
-{
-	rmmDebug("parse() called");
-	if (parsed_) return;
-	rmmDebug("strRep_ = " + strRep_);
-
-	int endOfHeaders = strRep_.find(QRegExp("\n\n"));
-	
-	if (endOfHeaders == -1) {
-		rmmDebug("No end of headers ! - message is " +
-			QString().setNum(strRep_.length()) + " bytes long");
-		return;
-	}
-	
-	envelope_.set(strRep_.left(endOfHeaders));
-
-	rmmDebug("Looking to see if there's a Content-Type header");
-	// Now see if there's a Content-Type header in the envelope.
-	// If there is, we might be looking at a multipart message.
-	if (envelope_.has(RMM::HeaderContentType)) {
-		
-		rmmDebug("There's a Content-Type header");
-		
-		// It has the header.
-		RContentType contentType(envelope_.contentType());
-		
-		// If the header say multipart, we'll need to know the boundary.
-		if (contentType.type() == "multipart") {
-			
-			rmmDebug("This message is multipart");
-		
-			RParameterListIterator it(contentType.parameterList());
-			
-			for (; it.current(); ++it) {
-			
-				if (it.current()->attribute() == "boundary") {
-				
-					// We've found the boundary.
-					// The body needs the boundary, so it knows where to split.
-					// It also needs the content type header, so it knows what
-					// subtype the contentType has.
-					// It also needs the content-transfer-encoding, so that it
-					// can decode where necessary.
-					body_.setBoundary(it.current()->value());
-					body_.setContentType(contentType);
-					RCte cte(envelope_.contentTransferEncoding());
-					body_.setCTE(cte);
-					body_.setMultiPart(true);
-					break;
-				}
-			}
-		}
-	}
-
-	body_.set(strRep_.right(strRep_.length() - endOfHeaders));
-	body_.parse();
-	
-	parsed_		= true;
-	assembled_	= false;
-}
-
-	void
-RMessage::assemble()
-{
-	parse();
-	if (assembled_) return;
-	rmmDebug("assemble() called");
-
-	_update();
-
-	strRep_ = envelope_.asString();
-
-	if (type_ == BasicMessage) {
-		
-		strRep_ += body_.asString();
-	
-	} else {
-		
-		strRep_ += body_.asString();
-	}
-	assembled_ = true;
-}
-
-	void
-RMessage::createDefault()
-{
-	envelope_.createDefault();
-	body_.createDefault();
-}
-
-	REnvelope &
-RMessage::envelope()
-{
-	parse();
-	return envelope_;
-}
-
-	RBody &
-RMessage::body()
-{
-	parse();
-	return body_;
-}
-
-	Q_UINT32
-RMessage::size()
-{
-	return strRep_.length();
-}
-
 	RMM::MessageStatus
 RMessage::status()
 {
 	return status_;
 }
 
-	const char *
-RMessage::className()
+	void
+RMessage::setStatus(RMM::MessageStatus s)
 {
-	return "RMessage";
+	status_ = s;
+}
+
+	QDataStream &
+operator << (QDataStream & str, RMessage & m)
+{
+	str << m.asString(); return str;
 }
 

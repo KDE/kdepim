@@ -29,7 +29,13 @@ RGroup::RGroup()
 }
 
 RGroup::RGroup(const RGroup & g)
-	:	RAddress()
+	:	RAddress(g)
+{
+	rmmDebug("ctor");
+}
+
+RGroup::RGroup(const QCString & s)
+	:	RAddress(s)
 {
 	rmmDebug("ctor");
 }
@@ -51,6 +57,17 @@ RGroup::operator = (const RGroup & g)
 	phrase_			= g.phrase_;
 	
 	RAddress::operator = (g);
+
+	assembled_	= false;
+	return *this;
+}
+
+	RGroup &
+RGroup::operator = (const QCString & s)
+{
+	rmmDebug("operator =");
+	
+	RAddress::operator = (s);
 
 	assembled_	= false;
 	return *this;

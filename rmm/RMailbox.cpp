@@ -30,7 +30,7 @@ RMailbox::RMailbox()
 }
 
 RMailbox::RMailbox(const RMailbox & mailbox)
-	:	RAddress(),
+	:	RAddress(mailbox),
 		phrase_		(mailbox.phrase_),
 		route_		(mailbox.route_),
 		localPart_	(mailbox.localPart_),
@@ -42,6 +42,12 @@ RMailbox::RMailbox(const RMailbox & mailbox)
 RMailbox::~RMailbox()
 {
 	rmmDebug("dtor");
+}
+
+RMailbox::RMailbox(const QCString & s)
+	:	RAddress(s)
+{
+	rmmDebug("ctor");
 }
 
 RMailbox & RMailbox::operator = (const RMailbox & mailbox)
@@ -59,6 +65,17 @@ RMailbox & RMailbox::operator = (const RMailbox & mailbox)
 	assembled_	= false;
 	return *this;
 }
+
+RMailbox & RMailbox::operator = (const QCString & s)
+{
+	rmmDebug("operator =");
+	
+	RAddress::operator = (s);
+	
+	assembled_	= false;
+	return *this;
+}
+
 
 	QDataStream &
 operator >> (QDataStream & s, RMailbox & mailbox)

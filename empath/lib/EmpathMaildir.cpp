@@ -191,12 +191,11 @@ EmpathMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
 	bool
 EmpathMaildir::writeMessage(RMessage & m)
 {
-	empathDebug("writeMessage called with message " + QString().setNum(m.id()));
+	empathDebug("writeMessage called");
 	QString s = _write(m);
 	
 	if (s.isEmpty()) return false;
 	
-//	m.setFilename(s);
 	return true;
 }
 
@@ -222,10 +221,10 @@ EmpathMaildir::envelopeOfMessage(const QString & id)
 	return e;
 }
 
-	RMessage::MessageType
+	RBodyPart::PartType
 EmpathMaildir::typeOfMessage(const QString & id)
 {
-	return RMessage::BasicMessage;
+	return RBodyPart::Basic;
 }
 
 	RMessage *
@@ -469,6 +468,8 @@ EmpathMaildir::_setupDirs()
 	QString
 EmpathMaildir::_write(RMessage & msg)
 {
+	empathDebug("_write() called");
+
 	// Here's the procedure for writing a new mail to the user's Maildir.
 	// This procedure follows the advice of D. J. Bernstein, in the
 	// documentation provided with qmail.
@@ -497,7 +498,6 @@ EmpathMaildir::_write(RMessage & msg)
 	// Mark message as read by MUA by moving to cur.
 	// Hand back the filename.
 	
-	empathDebug("Writing a new mail: " + QString().setNum(msg.id()));
 
 	// Generate a unique filename for this file.
 	QString canonName = _generateUnique();

@@ -61,7 +61,7 @@ class EmpathMaildir
 		REnvelope *				envelopeOfMessage		(const QString & id);
 		RMessage *				message					(const QString & id);
 		bool					removeMessage			(const QString & id);
-		RMessage::MessageType	typeOfMessage			(const QString & id);
+		RBodyPart::PartType		typeOfMessage			(const QString & id);
 		
 		const char * className() const { return "EmpathMaildir"; }
 		

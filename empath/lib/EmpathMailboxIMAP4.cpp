@@ -319,10 +319,10 @@ EmpathMailboxIMAP4::envelopeOfMessage(const EmpathURL & id)
 	return 0;
 }
 
-	RMessage::MessageType
+	RBodyPart::PartType
 EmpathMailboxIMAP4::typeOfMessage(const EmpathURL & id)
 {
-	return RMessage::BasicMessage;
+	return RBodyPart::Basic;
 }
 
 	void
