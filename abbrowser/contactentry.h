@@ -179,7 +179,7 @@ public:
   void setEmail(const QString &v)
 	    { replaceValue("emails", v + "\\e"); replaceValue("EMAIL", v); }
   void setNickname(const QString &v) { replaceValue("NICKNAME", v); }
-  void setNote(const QString &v) { replaceValue("X-Note", v); }
+  void setNote(const QString &v) { replaceValue("X-Notes", v); }
   void setBusinessPhone(const QString &v)
 	    { replaceValue("X-BusinessPhone", v); }
   void setHomePhone(const QString &v)
@@ -201,7 +201,8 @@ public:
   const QString &getLastName() const { return findRef("X-LastName"); }
   const QString &getMiddleName() const { return findRef("X-MiddleName"); }
   const QString &getNamePrefix() const { return findRef("X-Title"); }
-
+  const QString &getFullName() const { return findRef("fn"); }
+  
   const QString &getJobTitle() const { return findRef("ROLE"); }
   const QString &getCompany() const { return findRef("ORG"); }
   const QString &getEmail() const { return findRef("EMAIL"); }
@@ -292,7 +293,8 @@ private:
   /** For KPilot: if this contact !isNew(), then setModified() to true
    */
   void _setModified();
-
+  void _replace(const QString &key, const QString *item, bool internal);
+  
   QDict<QString> dict; // This unfortunately doesn't make a good base class
   // It's not derived from QOBject and the majority of methods are not virtual
 
