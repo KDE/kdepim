@@ -376,14 +376,16 @@ int CertManager::importCertificateWithFingerprint( const QString& fingerprint )
   bool truncated;
   qDebug("Importing certificate with fpr %s", fingerprint.latin1() );
   int retval = pWrapper->importCertificate( fingerprint );
+
+  qDebug("importCertificate() returned %d", retval );
   
-  CryptPlugWrapper::CertificateInfoList lst = pWrapper->listKeys( fingerprint, false, &truncated );
-  if( !retval ) return retval;
+  // values > 0 are "real" GPGME errors
+  if( retval > 0 ) return retval;
   if( haveCertificate( fingerprint ) ) {
     // It seems everyting went OK!
-    qDebug("Got cert with DN=%s", lst.first().userid[0].latin1() );
   } else {
     // Everything went OK, but the certificate wasn't imported
+    // retval was probably -1 here (= GPGME_EOF)
     retval = -42;
   }
   if( !isRemote() ) loadCertificates();

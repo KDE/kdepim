@@ -179,7 +179,7 @@ void CertificateInfoWidgetImpl::slotImportCertificate()
   } else if( retval ) {
     KMessageBox::error( this, i18n("Error importing certificate.\nCryptPlug returned %1.").arg(retval), i18n("Import error") );
   } else {
-    KMessageBox::information( this, i18n("Certificate %1 with fingerprint %2 is imported to the local databse.").arg(_info.userid[0]).arg(_info.fingerprint), i18n("Certificate Imported") );
+    KMessageBox::information( this, i18n("Certificate %1 with fingerprint %2 is imported to the local database.").arg(_info.userid[0]).arg(_info.fingerprint), i18n("Certificate Imported") );
     importButton->setEnabled( false );
   }
 }
