@@ -98,22 +98,6 @@ void DwEntityParser::Parse()
                 lineStart = pos;
                 isHeaderLine = DwFalse;
             }
-            // End of line marked by CRLF
-            else if (buf[pos] == '\r' && pos+1 < bufEnd
-                && buf[pos+1] == '\n') {
-                pos += 2;
-                if (!isHeaderLine) {
-                    pos = lineStart;
-                    break;
-                }
-                // Check for CR LF CR LF
-                else if (pos+1 < bufEnd && buf[pos] == '\r'
-                    && buf[pos+1] == '\n') {
-                    break;
-                }
-                lineStart = pos;
-                isHeaderLine = DwFalse;
-            }
             else if (buf[pos] == ':') {
                 isHeaderLine = DwTrue;
                 ++pos;
