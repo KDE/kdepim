@@ -38,18 +38,18 @@
 #include "pilotTodoEntry.h"
 
 static const char *pilotTodoEntry_id = "$Id$";
+const int PilotTodoEntry::APP_BUFFER_SIZE = 0xffff;
 
 
-PilotTodoEntry::PilotTodoEntry(void):PilotAppCategory()
+PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, void):PilotAppCategory(), fAppInfo(appInfo)
 {
 	FUNCTIONSETUP;
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 }
 
-
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotTodoEntry()
 */
-PilotTodoEntry::PilotTodoEntry(PilotRecord * rec):PilotAppCategory(rec)
+PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):PilotAppCategory(rec), fAppInfo(appInfo)
 {
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 	if (rec) 
@@ -61,7 +61,7 @@ PilotTodoEntry::PilotTodoEntry(PilotRecord * rec):PilotAppCategory(rec)
 }
 
 
-PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotAppCategory(e)
+PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotAppCategory(e), fAppInfo(e.fAppInfo)
 {
 	FUNCTIONSETUP;
 	::memcpy(&fTodoInfo, &e.fTodoInfo, sizeof(fTodoInfo));
@@ -94,6 +94,31 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 
 	return *this;
 }				// end of assignment operator
+
+bool PilotTodoEntry::setCategory(const char *label)
+{
+	FUNCTIONSETUP;
+	for (int catId = 0; catId < 16; catId++)
+	{
+		QString aCat = fAppInfo.category.name[catId];
+
+		if (label == aCat)
+		{
+			setCat(catId);
+			return true;
+		}
+		else
+			// if empty, then no more labels; add it 
+		if (aCat.isEmpty())
+		{
+			qstrncpy(fAppInfo.category.name[catId], label, 16);
+			setCat(catId);
+			return true;
+		}
+	}
+	// if got here, the category slots were full
+	return false;
+}
 
 void *PilotTodoEntry::pack(void *buf, int *len)
 {
@@ -158,6 +183,9 @@ void PilotTodoEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.4  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.3  2002/04/14 22:19:31  kainhofe
 // Added checks for ==NULL in the constructor
 //

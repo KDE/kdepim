@@ -56,9 +56,10 @@
 class PilotTodoEntry : public PilotAppCategory
 {
 public:
-  PilotTodoEntry(void);
+	PilotTodoEntry(struct ToDoAppInfo &appInfo, void);
+	PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec);
+  
   PilotTodoEntry(const PilotTodoEntry &e);
-  PilotTodoEntry(PilotRecord* rec);
   ~PilotTodoEntry() { free_ToDo(&fTodoInfo); }
 
   PilotTodoEntry& operator=(const PilotTodoEntry &e);
@@ -84,12 +85,23 @@ public:
   void  setNote(const char* note);
   const char* getNote() const { return fTodoInfo.note; }
   
+	const char *getCategoryLabel() const
+		{ return fAppInfo.category.name[getCat()]; }
+	/** If the label already exists, uses the id; if not, adds the label
+	*  to the category list
+	*  @return false if category labels are full
+	*/
+	bool setCategory(const char *label);
+
+	static const int APP_BUFFER_SIZE;
+
 protected:
   void *pack(void *, int *);
   void unpack(const void *, int = 0) { }
   
 private:
   struct ToDo fTodoInfo;
+	struct ToDoAppInfo &fAppInfo;
 };
 
 
@@ -102,6 +114,9 @@ private:
 
 
 // $Log$
+// Revision 1.2  2001/12/28 12:55:24  adridg
+// Fixed email addresses; added isBackup() to interface
+//
 // Revision 1.1  2001/12/27 23:08:30  adridg
 // Restored some deleted wrapper files
 //
