@@ -99,25 +99,6 @@ ExpenseConduitFactory::~ExpenseConduitFactory()
 		<< endl;
 #endif
 
-	if (qstrcmp(c,"ConduitConfig")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-
-		if (w)
-		{
-			return new ExpenseWidgetSetup(w,n,a);
-		}
-		else
-		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname
-				<< ": Couldn't cast parent to widget."
-				<< endl;
-#endif
-			return 0L;
-		}
-	}
-
 	if (qstrcmp(c,"SyncAction")==0)
 	{
 		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);

@@ -58,8 +58,6 @@ public:
 	NullConduitConfig(QWidget *parent=0L, const char *n=0L);
 	virtual void commit();
 	virtual void load();
-	static ConduitConfigBase *create(QWidget *p,const char *n)
-		{ return new NullConduitConfig(p,n); } ;
 protected:
 	NullWidget *fConfigWidget;
 } ;
@@ -175,26 +173,6 @@ NullConduitFactory::~NullConduitFactory()
 		}
 		else
 		{
-			return 0L;
-		}
-	}
-	else
-	if (qstrcmp(c,"ConduitConfig")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-
-		if (w)
-		{
-			return new ConduitConfigImplementation(w,n,a,
-				NullConduitConfig::create);
-		}
-		else
-		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname
-				<< ": Couldn't cast parent to widget."
-				<< endl;
-#endif
 			return 0L;
 		}
 	}

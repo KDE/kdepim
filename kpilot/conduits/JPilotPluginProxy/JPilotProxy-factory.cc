@@ -98,22 +98,9 @@ JPilotProxyConduitFactory::~JPilotProxyConduitFactory() {
 	const char *n, const char *c, const QStringList &a) {
 	FUNCTIONSETUP;
 
-		#ifdef DEBUG
+#ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Creating object of class "	<< c << endl;
-		#endif
-
-	if (qstrcmp(c,"ConduitConfig")==0) {
-		QWidget *w = dynamic_cast<QWidget *>(p);
-
-		if (w) {
-			return createSetupWidget(w,n,a);
-		} else {
-				#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": Couldn't cast parent to widget." << endl;
-				#endif
-			return 0L;
-		}
-	}
+#endif
 
 	if (qstrcmp(c,"SyncAction")==0) {
 		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
