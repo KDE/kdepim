@@ -1526,6 +1526,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         knGlobals.artFactory->createMail(a_rticle->from());
       break;
       case ATmsgid:
+        if (target.endsWith("/"))
+		          target.truncate(target.length()-1);
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : message-id " << target << endl;
 
         if (a_rticle->collection()->type()!=KNArticleCollection::CTgroup)  // we need a group for doing network stuff
