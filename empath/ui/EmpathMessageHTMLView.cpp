@@ -135,13 +135,8 @@ EmpathMessageHTMLWidget::go()
 				c->readColorEntry(KEY_TEXT_COLOUR),
 				c->readColorEntry(KEY_LINK_COLOUR),
 				c->readColorEntry(KEY_VISITED_LINK_COLOUR));
-	} else {
-#if QT_VERSION >= 200
+	} else
 		setDefaultTextColors(empathTextColour(), Qt::blue, Qt::darkCyan);
-#else
-		setDefaultTextColors(empathTextColour(), blue, darkCyan);
-#endif
-	}
 	
 	setUnderlineLinks(c->readBoolEntry(KEY_UNDERLINE_LINKS));
 	

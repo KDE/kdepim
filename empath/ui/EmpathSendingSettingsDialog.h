@@ -32,17 +32,15 @@
 #include <qpushbutton.h>
 #include <qbuttongroup.h>
 
-#ifdef EMPATH_QT_BUILD
-# include <qspinbox.h>
-#else
-# include <kspinbox.h>
-#endif
+// KDE includes
+#include <kspinbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
 
 class RikGroupBox;
-class Empath;
+class EmpathAddressSelectionWidget;
+class EmpathFolderChooserWidget;
 
 class EmpathSendingSettingsDialog : public QWidget
 {
@@ -50,15 +48,13 @@ class EmpathSendingSettingsDialog : public QWidget
 
 	public:
 		
-		EmpathSendingSettingsDialog(QWidget * parent = 0, const char * name = 0);
+		EmpathSendingSettingsDialog(
+			QWidget * parent = 0, const char * name = 0);
 
 		~EmpathSendingSettingsDialog() { empathDebug("dtor"); }
 
 		void saveData();
 		void loadData();
-
-	protected:
-
 
 	private:
 
@@ -75,7 +71,6 @@ class EmpathSendingSettingsDialog : public QWidget
 		QWidget				* w_server_;
 		QWidget				* w_copies_;
 
-		QLineEdit			* le_copyOther_;
 		QLineEdit			* le_sendmail_;
 		QLineEdit			* le_qmail_;
 		QLineEdit			* le_smtpServer_;
@@ -87,7 +82,6 @@ class EmpathSendingSettingsDialog : public QWidget
 
 		QComboBox			* cmb_copyFolder_;
 		
-		QPushButton			* pb_browseCopyOther_;
 		QPushButton			* pb_sendmailBrowse_;
 		QPushButton			* pb_qmailBrowse_;
 
@@ -98,14 +92,12 @@ class EmpathSendingSettingsDialog : public QWidget
 
 		QLabel				* l_smtpServerPort_;
 		QLabel				* l_qmtpServerPort_;
-		
-#ifdef EMPATH_QT_BUILD
-		QSpinBox			* sb_smtpPort_;
-		QSpinBox			* sb_qmtpPort_;
-#else
+
 		KNumericSpinBox		* sb_smtpPort_;
 		KNumericSpinBox		* sb_qmtpPort_;
-#endif
+		
+		EmpathAddressSelectionWidget	* asw_copyOther_;
+		EmpathFolderChooserWidget		* fcw_copyFolder_;
 };
 
 #endif

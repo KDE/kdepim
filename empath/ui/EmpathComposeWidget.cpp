@@ -83,9 +83,9 @@ EmpathComposeWidget::EmpathComposeWidget(
 
 	layout_->setColStretch(0, 7);
 
-	layout_->setRowStretch(0, 3);
-	layout_->setRowStretch(1, 1);
-	layout_->setRowStretch(2, 9);
+	layout_->setRowStretch(0, 0);
+	layout_->setRowStretch(1, 0);
+	layout_->setRowStretch(2, 10);
 
 
 	midLayout_ = new QGridLayout(1, 3, 10);

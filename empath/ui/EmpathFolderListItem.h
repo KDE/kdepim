@@ -43,11 +43,7 @@ class EmpathFolderListItem : public QObject, public QListViewItem
 		EmpathFolder & folder() const;
 		EmpathMailbox & mailbox() const;
 
-#if QT_VERSION >= 200
 		QString key(int, bool) const;
-#else
-		const char * key(int, bool) const;
-#endif
 
 		bool isFolderItem() const { return (type_ == Folder); }
 		

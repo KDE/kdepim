@@ -34,14 +34,8 @@
 #include <qlineedit.h>
 
 // KDE includes
-#ifdef EMPATH_QT_BUILD
-# include "buttonbox.h"
-# include <qspinbox.h>
-#else
-# include <kbuttonbox.h>
-# include <kspinbox.h>
-#endif
-
+#include <kbuttonbox.h>
+#include <kspinbox.h>
 
 class RikGroupBox;
 class EmpathMatcher;
@@ -98,11 +92,7 @@ class EmpathMatchPropertiesDialog : public QDialog
 
 		QComboBox		* cb_header_;
 
-#ifdef EMPATH_QT_BUILD
-		QSpinBox		* sb_size_;
-#else
 		KNumericSpinBox	* sb_size_;
-#endif
 		
 		int idx_size_, idx_exprBody_, idx_exprHeader_, idx_attached_, idx_all_;
 };

@@ -27,13 +27,6 @@
 // Qt includes
 #include <qstring.h>
 
-// KDE or not dependencies
-#ifdef EMPATH_QT_BUILD
-#define i18n(a) tr(a)
-#else
-// For i18n (alias KApplication::getKApplication->getLocale()->translate())
-#endif
-
 // Local includes
 #include "EmpathEnum.h"
 

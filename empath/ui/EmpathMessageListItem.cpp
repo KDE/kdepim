@@ -120,11 +120,7 @@ EmpathMessageListItem::setup()
 	setHeight(QMAX(ph, th) + 4);
 }
 
-#if QT_VERSION >= 200
 	QString
-#else
-	const char *
-#endif
 EmpathMessageListItem::key(int column, bool b) const
 {
 	static QString s;

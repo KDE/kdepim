@@ -21,10 +21,6 @@
 #ifndef RMM_DEFINES_H
 #define RMM_DEFINES_H
 
-#if QT_VERSION < 200
-#define QCString QString
-#endif
-
 #ifndef NDEBUG
 #include <qstring.h>
 #include <qregexp.h>

@@ -1,11 +1,10 @@
 INCLUDES= $(all_includes) -I ../rmm/include/
 
-lib_LTLIBRARIES = libempath.la
-libempath_la_LDFLAGS = -version-info 1:0
+noinst_LIBRARIES = libempath.a
 
-libempath_la_METASOURCES = USE_AUTOMOC
+libempath_a_METASOURCES = USE_AUTOMOC
 
-libempath_la_SOURCES = \
+libempath_a_SOURCES = \
 	EmpathFilter.cpp \
 	EmpathFilterEventHandler.cpp \
 	EmpathFilterList.cpp \

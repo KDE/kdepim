@@ -35,12 +35,7 @@
 #include <qspinbox.h>
 
 // KDE includes
-#ifdef EMPATH_QT_BUILD
-# include "buttonbox.h"
-#else
-# include <kbuttonbox.h>
-#endif
-
+#include <kbuttonbox.h>
 
 // Maildir includes
 #include "EmpathDefines.h"

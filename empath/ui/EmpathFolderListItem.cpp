@@ -86,11 +86,7 @@ EmpathFolderListItem::~EmpathFolderListItem()
 	empathDebug("dtor");
 }
 
-#if QT_VERSION >= 200
 	QString
-#else
-	const char *
-#endif
 EmpathFolderListItem::key(int column, bool) const
 {
 	QString tmpString;
@@ -107,10 +103,10 @@ EmpathFolderListItem::setup()
 	empathDebug("setup() called");
 	
 	widthChanged();
-	if (pixmap(0)->isNull()) return;
-	int ph = pixmap(0)->height();
-	int th = QFontMetrics(empathGeneralFont()).height();
-	setHeight(QMAX(ph, th) + 8);
+//	if (pixmap(0)->isNull()) return;
+//	int ph = pixmap(0)->height();
+//	int th = QFontMetrics(empathGeneralFont()).height();
+//	setHeight(QMAX(ph, th) + 8);
 }
 
 	EmpathFolder &

@@ -132,15 +132,10 @@ EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
 	idx_attached_	= bg_choices_->insert(rb_attached_);	
 	idx_all_		= bg_choices_->insert(rb_all_);	
 
-#ifdef EMPATH_QT_BUILD
-	sb_size_ = new QSpinBox(1, 1000, 1, w_choices_, "sb_size");
-	CHECK_PTR(sb_size_);
-#else
 	sb_size_ = new KNumericSpinBox(w_choices_, "sb_size");
 	CHECK_PTR(sb_size_);
 	sb_size_->setRange(1, 1000);
 	sb_size_->setEditable(true);
-#endif
 
 	sb_size_->setFixedWidth(sb_size_->sizeHint().height() * 3);
 
@@ -303,11 +298,7 @@ EmpathMatchPropertiesDialog::s_OK()
 		matcher_->setType(HasAttachments);
 	else if (rb_size_->isChecked()) {
 		matcher_->setType(Size);
-#ifdef EMPATH_QT_BUILD
-		matcher_->setSize(QString(sb_size_->text()).toInt());
-#else
 		matcher_->setSize(sb_size_->getValue());
-#endif
 	}
 	else if (rb_exprBody_->isChecked()) {
 		matcher_->setType(BodyExpr);

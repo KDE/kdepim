@@ -50,8 +50,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 	int h = headerBodyWidget_->sizeHint().height();
 	headerNameWidget_->setFixedHeight(h);
 	headerBodyWidget_->setFixedHeight(h);
-	pb_selectRecipients_->setFixedHeight(h);
-	pb_selectRecipients_->setFixedWidth(pb_selectRecipients_->sizeHint().width());
+	pb_selectRecipients_->setFixedSize(h, h);
 	
 	QObject::connect(headerBodyWidget_, SIGNAL(textChanged()),
 			this, SLOT(s_headerBodyChanged()));
@@ -64,7 +63,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 	
 	layout_->setColStretch(0, 3);
 	layout_->setColStretch(1, 7);
-	layout_->setColStretch(2, 1);
+	layout_->setColStretch(2, 0);
 
 	layout_->addWidget(headerNameWidget_, 0, 0);
 	layout_->addWidget(headerBodyWidget_, 0, 1);

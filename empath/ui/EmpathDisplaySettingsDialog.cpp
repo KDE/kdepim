@@ -435,20 +435,12 @@ EmpathDisplaySettingsDialog::loadData()
 	kcb_textColour_->setColor(
 		c->readColorEntry(KEY_TEXT_COLOUR, &col));
 	
-#if QT_VERSION >= 200
-		col = Qt::darkBlue;
-#else
-		col = darkBlue;
-#endif
+	col = Qt::darkBlue;
 
 	kcb_linkColour_->setColor(
 		c->readColorEntry(KEY_LINK_COLOUR, &col));
 
-#if QT_VERSION >= 200
-		col = Qt::darkCyan;
-#else
-		col = darkCyan;
-#endif
+	col = Qt::darkCyan;
 	
 	kcb_visitedLinkColour_->setColor(
 		c->readColorEntry(KEY_VISITED_LINK_COLOUR, &col));
@@ -462,7 +454,6 @@ EmpathDisplaySettingsDialog::loadData()
 	QString s = c->readEntry(KEY_ICON_SET, "standard");
 	empathDebug("Saved icon set was \"" + s + "\"");
 
-	
 	bool found = false;
 	int index = 0;
 	
@@ -478,10 +469,9 @@ EmpathDisplaySettingsDialog::loadData()
 		if (*it == s)
 			found = true;
 		else
-			++index;
-		
-		cb_iconSet_->insertItem(*it);
+			cb_iconSet_->insertItem(*it, index);
 	}
 	
-	if (found) cb_iconSet_->setCurrentItem(index);
+	if (found) cb_iconSet_->insertItem(s);
+	cb_iconSet_->setCurrentItem(cb_iconSet_->count() - 1);
 }	

@@ -1,9 +1,8 @@
 INCLUDES= -I include $(all_includes)
 
-lib_LTLIBRARIES = librmm.la
-librmm_la_LDFLAGS = -version-info 1:0
+noinst_LIBRARIES = librmm.a
 
-librmm_la_SOURCES = \
+librmm_a_SOURCES = \
 RAddress.cpp \
 RAddressList.cpp \
 RBody.cpp \

@@ -27,11 +27,7 @@
 #include <qlayout.h>
 
 // KDE includes
-#ifdef EMPATH_QT_BUILD
-# include "buttonbox.h"
-#else
-# include <kbuttonbox.h>
-#endif
+#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"

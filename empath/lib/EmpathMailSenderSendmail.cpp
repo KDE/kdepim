@@ -71,8 +71,14 @@ EmpathMailSenderSendmail::sendOne(const RMessage & message)
 	KConfig * c = kapp->getConfig();
 	c->setGroup(GROUP_SENDING);
 
-	empathDebug("sendmail location is" +
-			QString(c->readEntry(KEY_SENDMAIL_LOCATION)));
+	QString sendmailLocation = c->readEntry(KEY_SENDMAIL_LOCATION);
+	
+	if (sendmailLocation.isEmpty()) {
+		empathDebug("No location configured for sendmail");
+		return false;
+	}
+
+	empathDebug("sendmail location is" + sendmailLocation);
 
 	sendmailProcess_ << QString(c->readEntry(KEY_SENDMAIL_LOCATION));
 	sendmailProcess_ << "-t";

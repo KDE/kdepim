@@ -20,18 +20,22 @@
 
 // System includes
 #include <signal.h>
+#include <iostream.h>
 
 // Qt includes
 #include <qmessagebox.h>
+#include <qobject.h>
 
 // KDE includes
 #include <kapp.h>
+#include <kconfig.h>
 
 // Local includes
-#include "ui/EmpathMainWindow.h"
-#include "lib/EmpathDefines.h"
-#include "lib/EmpathUtilities.h"
 #include "lib/Empath.h"
+#include "lib/EmpathEnum.h"
+#include "ui/EmpathUI.h"
+
+class RMessage;
 
 void myMessageHandler(QtMsgType type, const char * msg);
 
@@ -42,15 +46,15 @@ EmpathMain(int argc, char * argv[])
 	
 	app.getConfig()->setDollarExpansion(false);
 	
-	Empath empath_;
+	Empath		e;
+	EmpathUI	ui;
 	
-	EmpathMainWindow mainWindow("mainWindow");
-	
-	app.setMainWidget(&mainWindow);
-	
-	empathDebug("Entering event loop");
-	
-	return kapp->exec();
+	QObject::connect(
+		&e, SIGNAL(newComposer(ComposeType, RMessage *)),
+		&ui, SLOT(s_newComposer(ComposeType, RMessage *)));
+
+	cerr << "Entering event loop";
+	return app.exec();
 }
 
 main(int argc, char * argv[])

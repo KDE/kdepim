@@ -49,11 +49,8 @@ class EmpathMessageListItem : public QListViewItem
 		~EmpathMessageListItem();
 		
 		virtual void setup();
-#if QT_VERSION >= 200
+
 		QString key(int, bool) const;
-#else
-		const char * key(int, bool) const;
-#endif
 
 		EmpathIndexRecord * msgDesc() const { return msgDesc_; }
 

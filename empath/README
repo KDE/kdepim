@@ -1,7 +1,7 @@
 OI !
 
-Note: All things are now separate. Message parsing lib is in rmm, kernel is in lib,
-ui is in ui.
+Note: All things are now separate. Message parsing lib is in rmm, kernel is in
+lib, ui is in ui.
 
 Currently working on: Making Maildir work properly, using a single dir as the base,
 i.e. ~/Maildir, and using separate Maildir type dirs for folders. This is the

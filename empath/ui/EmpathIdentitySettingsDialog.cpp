@@ -59,74 +59,75 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	rgb_sigPreview_->setWidget(w_sigPreview_);
 	
 	QLineEdit	tempLineEdit((QWidget *)0);
-	Q_UINT32 maxLineEditHeight	= tempLineEdit.sizeHint().height();
+	Q_UINT32 h	= tempLineEdit.sizeHint().height();
 
 	l_name_	=
 		new QLabel(i18n("Your name"), w_main_, "l_name");
 	CHECK_PTR(l_name_);
 
-	l_name_->setMaximumHeight(maxLineEditHeight);
+	l_name_->setMaximumHeight(h);
 	
 	le_chooseName_	=
 		new QLineEdit(w_main_, "le_chooseName");
 	CHECK_PTR(le_chooseName_);
 
-	le_chooseName_->setFixedHeight(maxLineEditHeight);
+	le_chooseName_->setFixedHeight(h);
 	
 	l_email_	=
 		new QLabel(i18n("email address"), w_main_, "l_email");
 	CHECK_PTR(l_email_);
 	
-	l_email_->setFixedHeight(maxLineEditHeight);
+	l_email_->setFixedHeight(h);
 	
 	le_chooseEmail_	=
 		new QLineEdit(w_main_, "le_chooseEmail");
 	CHECK_PTR(le_chooseEmail_);
 	
-	le_chooseEmail_->setFixedHeight(maxLineEditHeight);
+	le_chooseEmail_->setFixedHeight(h);
 	
 	l_replyTo_	=
 		new QLabel(i18n("Reply-to address (if different from email address)"),
 				w_main_, "l_replyTo");
 	CHECK_PTR(l_replyTo_);
 	
-	l_replyTo_->setFixedHeight(maxLineEditHeight);
+	l_replyTo_->setFixedHeight(h);
 	
 	le_chooseReplyTo_	=
 		new QLineEdit(w_main_, "le_chooseReplyTo");
 	CHECK_PTR(le_chooseReplyTo_);
 	
-	le_chooseReplyTo_->setFixedHeight(maxLineEditHeight);
+	le_chooseReplyTo_->setFixedHeight(h);
 	
 	l_org_	=
 		new QLabel(i18n("Organisation"), w_main_, "l_org");
 	CHECK_PTR(l_org_);
 	
-	l_org_->setFixedHeight(maxLineEditHeight);
+	l_org_->setFixedHeight(h);
 	
 	le_chooseOrg_	=
 		new QLineEdit(w_main_, "le_chooseOrg");
 	CHECK_PTR(le_chooseOrg_);
 	
-	le_chooseOrg_->setFixedHeight(maxLineEditHeight);
+	le_chooseOrg_->setFixedHeight(h);
 	
 	l_sig_	=
 		new QLabel(i18n("Signature file"), w_main_, "l_sig");
 	CHECK_PTR(l_sig_);
 	
-	l_sig_->setFixedHeight(maxLineEditHeight);
+	l_sig_->setFixedHeight(h);
 	
 	le_chooseSig_	=
 		new QLineEdit(w_main_, "le_chooseSig");
 	CHECK_PTR(le_chooseSig_);
 
-	le_chooseSig_->setFixedHeight(maxLineEditHeight);
+	le_chooseSig_->setFixedHeight(h);
 	
 	pb_chooseSig_	=
 		new QPushButton(w_main_, "pb_chooseSig");
 	CHECK_PTR(pb_chooseSig_);
 	
 	pb_chooseSig_->setText("...");
+	pb_chooseSig_->setFixedSize(h, h);
 	
 	QObject::connect(pb_chooseSig_, SIGNAL(clicked()),
 			this, SLOT(s_chooseSig()));
@@ -169,7 +170,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	topLevelLayout_->addWidget(rgb_main_, 0, 0);
 	
 	mainGroupLayout_->setColStretch(0, 9);
-	mainGroupLayout_->setColStretch(1, 1);
+	mainGroupLayout_->setColStretch(1, 0);
 	mainGroupLayout_->setColStretch(2, 3);
 	
 	mainGroupLayout_->setRowStretch(0, 0);
@@ -208,11 +209,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 EmpathIdentitySettingsDialog::s_chooseSig()
 {
 	
-#ifdef EMPATH_QT_BUILD
-	QString tempSig = QFileDialog::getOpenFileName();
-#else
 	QString tempSig = KFileDialog::getOpenFileName();
-#endif
 	
 	if (tempSig.length() != 0)
 		sig_ = tempSig.data();

@@ -25,6 +25,8 @@
 
 // Local includes
 #include "EmpathSendingSettingsDialog.h"
+#include "EmpathAddressSelectionWidget.h"
+#include "EmpathFolderChooserWidget.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "RikGroupBox.h"
@@ -71,22 +73,19 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 				"rb_sendmail");
 	CHECK_PTR(rb_sendmail_);
 
-	rb_sendmail_->setMaximumHeight(h);
-	rb_sendmail_->setMinimumHeight(h);
+	rb_sendmail_->setFixedHeight(h);
 
 	le_sendmail_		=
 		new QLineEdit(w_server_, "le_sendmail");
 	CHECK_PTR(le_sendmail_);
 	
-	le_sendmail_->setMaximumHeight(h);
-	le_sendmail_->setMinimumHeight(h);
+	le_sendmail_->setFixedHeight(h);
 
 	pb_sendmailBrowse_	=
 		new QPushButton("...", w_server_, "pb_sendmailBrowse");
 	CHECK_PTR(pb_sendmailBrowse_);
 	
-	pb_sendmailBrowse_->setMaximumHeight(h);
-	pb_sendmailBrowse_->setMinimumHeight(h);
+	pb_sendmailBrowse_->setFixedSize(h, h);
 
 	QObject::connect(rb_sendmail_, SIGNAL(toggled(bool)),
 			le_sendmail_, SLOT(setEnabled(bool)));
@@ -113,8 +112,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 		new QPushButton("...", w_server_, "pb_qmailBrowse");
 	CHECK_PTR(pb_qmailBrowse_);
 	
-	pb_qmailBrowse_->setMaximumHeight(h);
-	pb_qmailBrowse_->setMinimumHeight(h);
+	pb_qmailBrowse_->setFixedSize(h, h);
 
 	QObject::connect(rb_qmail_, SIGNAL(toggled(bool)),
 			le_qmail_, SLOT(setEnabled(bool)));
@@ -127,38 +125,29 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 				"rb_smtp");
 	CHECK_PTR(rb_smtp_);
 	
-	rb_smtp_->setMaximumHeight(h);
-	rb_smtp_->setMinimumHeight(h);
+	rb_smtp_->setFixedHeight(h);
 
 	le_smtpServer_		=
 		new QLineEdit(w_server_, "le_smtp");
 	CHECK_PTR(le_smtpServer_);
 	
-	le_smtpServer_->setMaximumHeight(h);
-	le_smtpServer_->setMinimumHeight(h);
+	le_smtpServer_->setFixedHeight(h);
 
 	l_smtpServerPort_	=
 		new QLabel(i18n("Port:"), w_server_, "l_smtpServerPort");
 	CHECK_PTR(l_smtpServerPort_);
 	
-	l_smtpServerPort_->setMaximumHeight(h);
-	l_smtpServerPort_->setMinimumHeight(h);
+	l_smtpServerPort_->setFixedWidth(l_smtpServerPort_->sizeHint().width());
+	l_smtpServerPort_->setFixedHeight(h);
 
-#ifdef EMPATH_QT_BUILD
-	sb_smtpPort_	=
-		new QSpinBox(1, 99999999, 1, w_server_, "sb_smtpPort");
-	CHECK_PTR(sb_smtpPort_);
-#else
 	sb_smtpPort_	=
 		new KNumericSpinBox(w_server_, "sb_smtpPort");
 	CHECK_PTR(sb_smtpPort_);
 	sb_smtpPort_->setEditable(true);
 	sb_smtpPort_->setRange(1, 99999999);
 	sb_smtpPort_->setValue(25);
-#endif
 
-	sb_smtpPort_->setMaximumHeight(h);
-	sb_smtpPort_->setMinimumHeight(h);
+	sb_smtpPort_->setFixedHeight(h);
 
 	QObject::connect(rb_smtp_, SIGNAL(toggled(bool)),
 			le_smtpServer_, SLOT(setEnabled(bool)));
@@ -174,38 +163,29 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 				"rb_qmtp");
 	CHECK_PTR(rb_qmtp_);
 	
-	rb_qmtp_->setMaximumHeight(h);
-	rb_qmtp_->setMinimumHeight(h);
+	rb_qmtp_->setFixedHeight(h);
 
 	le_qmtpServer_		=
 		new QLineEdit(w_server_, "le_qmtp");
 	CHECK_PTR(le_qmtpServer_);
 	
-	le_qmtpServer_->setMaximumHeight(h);
-	le_qmtpServer_->setMinimumHeight(h);
+	le_qmtpServer_->setFixedHeight(h);
 
 	l_qmtpServerPort_	=
 		new QLabel(i18n("Port:"), w_server_, "l_qmtpServerPort");
 	CHECK_PTR(l_qmtpServerPort_);
 	
-	l_qmtpServerPort_->setMaximumHeight(h);
-	l_qmtpServerPort_->setMinimumHeight(h);
+	l_qmtpServerPort_->setFixedHeight(h);
+	l_qmtpServerPort_->setFixedWidth(l_qmtpServerPort_->sizeHint().width());
 
-#ifdef EMPATH_QT_BUILD
-	sb_qmtpPort_	=
-		new QSpinBox(1, 9999999999, 1, w_server_, "sb_qmtpPort");
-	CHECK_PTR(sb_qmtpPort_);
-#else
 	sb_qmtpPort_	=
 		new KNumericSpinBox(w_server_, "sb_qmtpPort");
 	CHECK_PTR(sb_qmtpPort_);
 	sb_qmtpPort_->setEditable(true);
 	sb_qmtpPort_->setRange(1, 99999999);
 	sb_qmtpPort_->setValue(209);
-#endif
 	
-	sb_qmtpPort_->setMaximumHeight(h);
-	sb_qmtpPort_->setMinimumHeight(h);
+	sb_qmtpPort_->setFixedHeight(h);
 
 	QObject::connect(rb_qmtp_, SIGNAL(toggled(bool)),
 			le_qmtpServer_, SLOT(setEnabled(bool)));
@@ -238,8 +218,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 		new QCheckBox(i18n("Send a copy to &me"), w_copies_, "cb_copySelf");
 	CHECK_PTR(cb_copySelf_);
 
-	cb_copySelf_->setMaximumHeight(h);
-	cb_copySelf_->setMinimumHeight(h);
+	cb_copySelf_->setFixedHeight(h);
 	cb_copySelf_->setMinimumWidth(cb_copySelf_->sizeHint().width());
 	
 	cb_copyOther_	=
@@ -247,53 +226,36 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 				"cb_copyOther");
 	CHECK_PTR(cb_copyOther_);
 	
-	cb_copyOther_->setMaximumHeight(h);
-	cb_copyOther_->setMinimumHeight(h);
+	cb_copyOther_->setFixedHeight(h);
 	cb_copyOther_->setMinimumWidth(cb_copyOther_->sizeHint().width());
 
-	le_copyOther_	=
-		new QLineEdit(w_copies_, "le_copyOther");
-	CHECK_PTR(le_copyOther_);
+	asw_copyOther_	=
+		new EmpathAddressSelectionWidget(w_copies_, "asw_copyOther");
+	CHECK_PTR(asw_copyOther_);
 	
-	le_copyOther_->setMaximumHeight(h);
-	le_copyOther_->setMinimumHeight(h);
-	
-	pb_browseCopyOther_	=
-		new QPushButton("...", w_copies_, "pb_browseCopyOther");
-	CHECK_PTR(pb_browseCopyOther_);
-	
-	pb_browseCopyOther_->setMaximumHeight(h);
-	pb_browseCopyOther_->setMinimumHeight(h);
+	asw_copyOther_->setFixedHeight(h);
 	
 	QObject::connect(cb_copyOther_, SIGNAL(toggled(bool)),
-			le_copyOther_, SLOT(setEnabled(bool)));
+			asw_copyOther_, SLOT(setEnabled(bool)));
 	
-	QObject::connect(cb_copyOther_, SIGNAL(toggled(bool)),
-			pb_browseCopyOther_, SLOT(setEnabled(bool)));
-	
-	le_copyOther_->setEnabled(false);
-	pb_browseCopyOther_->setEnabled(false);
+	asw_copyOther_->setEnabled(false);
 	
 	cb_copyFolder_	=
 		new QCheckBox(i18n("Place a copy in &folder: "), w_copies_,
 				"cb_copyFolder");
 	CHECK_PTR(cb_copyFolder_);
 	
-	cb_copyFolder_->setMaximumHeight(h);
-	cb_copyFolder_->setMinimumHeight(h);
+	cb_copyFolder_->setFixedHeight(h);
 	cb_copyFolder_->setMinimumWidth(cb_copyFolder_->sizeHint().width());
 	
-	cmb_copyFolder_	=
-		new QComboBox(w_copies_, "cmb_copyFolder");
-	CHECK_PTR(cmb_copyFolder_);
+	fcw_copyFolder_	=
+		new EmpathFolderChooserWidget(w_copies_, "fcw_copyFolder");
+	CHECK_PTR(fcw_copyFolder_);
 	
-	cmb_copyFolder_->setMaximumHeight(h);
-	cmb_copyFolder_->setMinimumHeight(h);
-	
-	QObject::connect(cb_copyFolder_, SIGNAL(toggled(bool)),
-			cmb_copyFolder_, SLOT(setEnabled(bool)));
+	QObject::connect(fcw_copyFolder_, SIGNAL(toggled(bool)),
+			fcw_copyFolder_, SLOT(setEnabled(bool)));
 
-	cmb_copyFolder_->setEnabled(false);
+	fcw_copyFolder_->setEnabled(false);
 	
 	// Layouts
 	
@@ -306,17 +268,17 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	serverGroupLayout_		= new QGridLayout(w_server_,	4, 4, 0, 10);
 	CHECK_PTR(serverGroupLayout_);
 	
-	serverGroupLayout_->setColStretch(0, 2);
-	serverGroupLayout_->setColStretch(1, 2);
-	serverGroupLayout_->setColStretch(2, 1);
-	serverGroupLayout_->setColStretch(3, 1);
+	serverGroupLayout_->setColStretch(0, 1);
+	serverGroupLayout_->setColStretch(1, 1);
+	serverGroupLayout_->setColStretch(2, 0);
+	serverGroupLayout_->setColStretch(3, 0);
 	
-	copiesGroupLayout_		= new QGridLayout(w_copies_,	3, 3, 0, 10);
+	copiesGroupLayout_		= new QGridLayout(w_copies_,	3, 2, 0, 10);
 	CHECK_PTR(copiesGroupLayout_);
 
-//	copiesGroupLayout_->setColStretch(0, 6);
-	copiesGroupLayout_->setColStretch(1, 4);
-	copiesGroupLayout_->setColStretch(2, 1);
+	copiesGroupLayout_->setColStretch(0, 1);
+	copiesGroupLayout_->setColStretch(1, 1);
+	copiesGroupLayout_->setColStretch(2, 0);
 
 	topLevelLayout_->addWidget(rgb_server_,		0, 0);
 	topLevelLayout_->addWidget(rgb_copies_,		1, 0);
@@ -342,12 +304,11 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 
 	serverGroupLayout_->activate();
 	
-	copiesGroupLayout_->addMultiCellWidget(cb_copySelf_,	0, 0, 0, 2);
+	copiesGroupLayout_->addMultiCellWidget(cb_copySelf_,	0, 0, 0, 1);
 	copiesGroupLayout_->addWidget(cb_copyOther_,			1, 0);
-	copiesGroupLayout_->addWidget(le_copyOther_,			1, 1);
-	copiesGroupLayout_->addWidget(pb_browseCopyOther_,		1, 2);
+	copiesGroupLayout_->addWidget(asw_copyOther_,			1, 1);
 	copiesGroupLayout_->addWidget(cb_copyFolder_,			2, 0);
-	copiesGroupLayout_->addMultiCellWidget(cmb_copyFolder_,	2, 2, 1, 2);
+	copiesGroupLayout_->addWidget(fcw_copyFolder_,			2, 1);
 	
 	copiesGroupLayout_->activate();
 	
@@ -382,10 +343,10 @@ EmpathSendingSettingsDialog::saveData()
 	
 	CWE( KEY_CC_ME,					cb_copySelf_->isChecked()		);
 	CWE( KEY_CC_OTHER,				cb_copyOther_->isChecked()		);
-	CWE( KEY_CC_OTHER_ADDRESS,		le_copyOther_->text()			);
+	CWE( KEY_CC_OTHER_ADDRESS,		asw_copyOther_->selectedAddress());
 	
 	CWE( KEY_COPY_FOLDER,			cb_copyFolder_->isChecked()		);
-	CWE( KEY_COPY_FOLDER_NAME,		cmb_copyFolder_->currentText()	);
+	CWE( KEY_COPY_FOLDER_NAME,		fcw_copyFolder_->selectedURL().asString());
 	
 	empath->updateOutgoingServer();
 	
@@ -418,10 +379,10 @@ EmpathSendingSettingsDialog::loadData()
 	
 	cb_copySelf_->setChecked(	c->readBoolEntry(KEY_CC_ME));
 	cb_copyOther_->setChecked(	c->readBoolEntry(KEY_CC_OTHER));
-	le_copyOther_->setText(		c->readEntry(KEY_CC_OTHER_ADDRESS));
+	asw_copyOther_->setAddress(	c->readEntry(KEY_CC_OTHER_ADDRESS));
 	
 	cb_copyFolder_->setChecked(	c->readEntry(KEY_COPY_FOLDER));
-//	c->setCopyFolderName(cmb_copyFolder_->currentText());
+	fcw_copyFolder_->setURL(	c->readEntry(KEY_COPY_FOLDER_NAME));
 	
 	empath->updateOutgoingServer();
 }

@@ -1,11 +1,11 @@
 INCLUDES= $(all_includes) -I ../rmm/include/ -I ../lib/
 
-lib_LTLIBRARIES = libempathui.la
-libempathui_la_LDFLAGS = -version-info 1:0
+noinst_LIBRARIES = libempathui.a
 
-libempathui_la_METASOURCES = USE_AUTOMOC
+libempathui_a_METASOURCES = USE_AUTOMOC
 
-libempathui_la_SOURCES = \
+libempathui_a_SOURCES = \
+	RikGroupBox.cpp \
 	EmpathAboutBox.cpp \
 	EmpathAccountsSettingsDialog.cpp \
 	EmpathAddressSelectionWidget.cpp \
@@ -64,5 +64,4 @@ libempathui_la_SOURCES = \
 	EmpathTaskWidget.cpp \
 	EmpathTipOfTheDay.cpp \
 	EmpathUIUtils.cpp \
-	RikGroupBox.cpp
-
+	EmpathUI.cpp

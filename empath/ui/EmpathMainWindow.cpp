@@ -740,12 +740,8 @@ EmpathMainWindow::messageListWidget()
 EmpathMainWindow::s_optionsSettingsDisplay()
 {
 	empathDebug("s_fileSettings called");
-#ifdef EMPATH_QT_BUILD
-	EmpathDisplaySettingsDialog settingsDialog(0);
-#else
 	EmpathSettingsDialog settingsDialog(DisplaySettings,
 			(QWidget *)0L, "settingsDialog");
-#endif
 	settingsDialog.exec();
 }
 
@@ -753,12 +749,8 @@ EmpathMainWindow::s_optionsSettingsDisplay()
 EmpathMainWindow::s_optionsSettingsIdentity()
 {
 	empathDebug("s_fileSettings called");
-#ifdef EMPATH_QT_BUILD
-	EmpathIdentitySettingsDialog settingsDialog(0);
-#else
 	EmpathSettingsDialog settingsDialog(IdentitySettings,
 			(QWidget *)0L, "settingsDialog");
-#endif
 	settingsDialog.exec();
 }
 
@@ -766,12 +758,8 @@ EmpathMainWindow::s_optionsSettingsIdentity()
 EmpathMainWindow::s_optionsSettingsCompose()
 {
 	empathDebug("s_fileSettings called");
-#ifdef EMPATH_QT_BUILD
-	EmpathComposeSettingsDialog settingsDialog(0);
-#else
 	EmpathSettingsDialog settingsDialog(ComposeSettings,
 			(QWidget *)0L, "settingsDialog");
-#endif
 	settingsDialog.exec();
 }
 
@@ -779,12 +767,8 @@ EmpathMainWindow::s_optionsSettingsCompose()
 EmpathMainWindow::s_optionsSettingsSending()
 {
 	empathDebug("s_fileSettings called");
-#ifdef EMPATH_QT_BUILD
-	EmpathSendingSettingsDialog settingsDialog(0);
-#else
 	EmpathSettingsDialog settingsDialog(SendingSettings,
 			(QWidget *)0L, "settingsDialog");
-#endif
 	settingsDialog.exec();
 }
 
@@ -792,12 +776,8 @@ EmpathMainWindow::s_optionsSettingsSending()
 EmpathMainWindow::s_optionsSettingsAccounts()
 {
 	empathDebug("s_fileSettings called");
-#ifdef EMPATH_QT_BUILD
-	EmpathAccountsSettingsDialog settingsDialog(0);
-#else
 	EmpathSettingsDialog settingsDialog(AccountsSettings,
 			(QWidget *)0L, "settingsDialog");
-#endif
 	settingsDialog.exec();
 }
 
@@ -805,12 +785,8 @@ EmpathMainWindow::s_optionsSettingsAccounts()
 EmpathMainWindow::s_optionsSettingsFilters()
 {
 	empathDebug("s_fileSettings called");
-#ifdef EMPATH_QT_BUILD
-	EmpathFilterManagerDialog settingsDialog(0);
-#else
 	EmpathSettingsDialog settingsDialog(FilterSettings,
 			(QWidget *)0L, "settingsDialog");
-#endif
 	settingsDialog.exec();
 }
 

@@ -41,11 +41,7 @@ class EmpathFilterListItem : public QListViewItem
 
 		EmpathFilter * filter() const;
 
-#if QT_VERSION >= 200
 		QString key(int column, bool) const;
-#else
-		const char * key(int column, bool) const;
-#endif
 
 	private:
 

@@ -45,11 +45,7 @@ EmpathFilterListItem::~EmpathFilterListItem()
 {
 }
 
-#if QT_VERSION >= 200
 	QString
-#else
-	const char *
-#endif
 EmpathFilterListItem::key(int column, bool) const
 {
 	QString tmpString;
