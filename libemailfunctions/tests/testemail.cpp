@@ -41,11 +41,23 @@ static bool check(const QString& txt, const QString& a, const QString& b)
   return true;
 }
 
+static bool check(const QString& txt, const QStringList& a, const QStringList& b)
+{
+  if ( a.join("\n") == b.join("\n") ) {
+    kdDebug() << txt << " : checking list [ " << a.join( ", " ) << " ] against expected value [ " << b.join( ", " ) << " ]... " << "ok" << endl;
+  }
+  else {
+    kdDebug() << txt << " : checking list [ " << a.join( ",\n" ) << " ] against expected value [ " << b.join( ",\n" ) << " ]... " << "KO !" << endl;
+    exit(1);
+  }
+  return true;
+}
+
 static bool checkGetNameAndEmail(const QString& input, const QString& expName, const QString& expEmail, bool expRetVal)
 {
   QString name, email;
   bool retVal = KPIM::getNameAndMail(input, name, email);
-  check( "getNameAndMail " + input + " retVal", retVal?"true":"false", expRetVal?"true":"false" );
+  check( "getNameAndMail " + input + " retVal", retVal?QString::fromLatin1( "true" ):QString::fromLatin1( "false" ), expRetVal?QString::fromLatin1( "true" ):QString::fromLatin1( "false" ) );
   check( "getNameAndMail " + input + " name", name, expName );
   check( "getNameAndMail " + input + " email", email, expEmail );
   return true;
@@ -120,13 +132,27 @@ static bool checkGetEmailAddress( const QString& input, const QString& expResult
   return true;
 }
 
-static bool checkSplitEmailAddrList( const QString& input, const QString& expResult )
+static bool checkSplitEmailAddrList( const QString& input, const QStringList& expResult )
 {
   QStringList emailAddresses = KPIM::splitEmailAddrList( input );
-  QString result = getSplitEmailParseResultToString( emailAddresses );
-  check( "splitEmailAddrList " + input + " result ", result, expResult );
+  check( "splitEmailAddrList( \"" + input + "\" ) result ", emailAddresses, expResult );
   return true;
 }
+
+static bool checkNormalizeAddressesAndEncodeIDNs( const QString& input, const QString& expResult )
+{
+  QString result = KPIM::normalizeAddressesAndEncodeIDNs( input );
+  check( "normalizeAddressesAndEncodeIDNs( \"" + input + "\" ) result ", result, expResult );
+  return true;
+}
+
+static bool checkQuoteIfNecessary( const QString& input, const QString& expResult )
+{
+  QString result = quoteNameIfNecessary( input );
+  check( "quoteNameIfNecessary " + input + " result ", result, expResult );
+  return true;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -296,10 +322,27 @@ int main(int argc, char *argv[])
   checkGetEmailAddress( "Matt Douhan <matt@[123.123.123.123]>", "matt@[123.123.123.123]" );
  
   // check the splitEmailAddrList method
-  checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "Matt Douhan <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
-  checkSplitEmailAddrList( "\"Matt, Douhan\" <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "\"Matt, Douhan\" <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
+  checkSplitEmailAddrList( "kloecker@kde.org (Kloecker, Ingo)", QStringList() << "kloecker@kde.org (Kloecker, Ingo)" );
+  checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", QStringList() << "Matt Douhan <matt@fruitsalad.org>" << "Foo Bar <foo@bar.com>" );
+  checkSplitEmailAddrList( "\"Matt, Douhan\" <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", QStringList() << "\"Matt, Douhan\" <matt@fruitsalad.org>" << "Foo Bar <foo@bar.com>" );
 
+  // check checkNormalizeAddressesAndEncodeIDNs
+  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org", "matt@fruitsalad.org" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan <matt@fruitsalad.org>", "Matt Douhan <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel) <matt@fruitsalad.org>", "Matt Douhan (jongel) <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>", "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (jongel,fibbel)", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
+  checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (\"jongel,fibbel\")", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
 
+  // check the "quote if necessary" method
+  checkQuoteIfNecessary( "Matt Douhan", "Matt Douhan");
+  checkQuoteIfNecessary( "Douhan, Matt", "\"Douhan, Matt\"");
+  checkQuoteIfNecessary( "Matt \"jongel\" Douhan", "\"Matt \\\"jongel\\\" Douhan\"");
+  checkQuoteIfNecessary( "Matt \\\"jongel\\\" Douhan", "\"Matt \\\"jongel\\\" Douhan\"");
+  checkQuoteIfNecessary( "trailing '\\\\' should never occur \\", "\"trailing '\\\\' should never occur \\\"");
+  checkQuoteIfNecessary( "\"don't quote again\"", "\"don't quote again\"" );
+  checkQuoteIfNecessary( "\"leading double quote", "\"\\\"leading double quote\"" );
+  checkQuoteIfNecessary( "trailing double quote\"", "\"trailing double quote\\\"\"" );
 
   printf("\nTest OK !\n");
 

@@ -226,6 +226,11 @@ KDE_EXPORT QString normalizeAddressesAndDecodeIDNs( const QString & addresses );
  */
 KDE_EXPORT QString normalizeAddressesAndEncodeIDNs( const QString & str );
 
+/** Add quote characters around the given string if it contains a 
+ * character that makes that necessary, in an email name, such as ",".
+ */
+KDE_EXPORT QString quoteNameIfNecessary( const QString& str );
+
 } // namespace
 
 #endif /* EMAIL_H */

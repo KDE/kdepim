@@ -759,8 +759,10 @@ QString KPIM::normalizedAddress( const QString & displayName,
     return addrSpec;
   else if ( comment.isEmpty() )
     return displayName + " <" + addrSpec + ">";
-  else if ( displayName.isEmpty() )
-    return comment + " <" + addrSpec + ">";
+  else if ( displayName.isEmpty() ) {
+    QString commentStr = comment;
+    return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + ">";
+  }
   else
     return displayName + " (" + comment + ") <" + addrSpec + ">";
 }
@@ -871,5 +873,52 @@ QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
                 << "\"" << endl;
   */
   return normalizedAddressList.join( ", " );
+}
+
+
+//-----------------------------------------------------------------------------
+// Escapes unescaped doublequotes in str.
+static QString escapeQuotes( const QString & str )
+{
+  if ( str.isEmpty() )
+    return QString();
+
+  QString escaped;
+  // reserve enough memory for the worst case ( """..."" -> \"\"\"...\"\" )
+  escaped.reserve( 2*str.length() );
+  unsigned int len = 0;
+  for ( unsigned int i = 0; i < str.length(); ++i, ++len ) {
+    if ( str[i] == '"' ) { // unescaped doublequote
+      escaped[len] = '\\';
+      ++len;
+    }
+    else if ( str[i] == '\\' ) { // escaped character
+      escaped[len] = '\\';
+      ++len;
+      ++i;
+      if ( i >= str.length() ) // handle trailing '\' gracefully
+        break;
+    }
+    escaped[len] = str[i];
+  }
+  escaped.truncate( len );
+  return escaped;
+}
+
+//-----------------------------------------------------------------------------
+QString KPIM::quoteNameIfNecessary( const QString &str )
+{
+  QString quoted = str;
+
+  QRegExp needQuotes(  "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
+  // avoid double quoting
+  if ( ( quoted[0] == '"' ) && ( quoted[quoted.length() - 1] == '"' ) ) {
+    quoted = "\"" + escapeQuotes( quoted.mid( 1, quoted.length() - 2 ) ) + "\"";
+  }
+  else if ( quoted.find( needQuotes ) != -1 ) {
+    quoted = "\"" + escapeQuotes( quoted ) + "\"";
+  }
+
+  return quoted;
 }
 
