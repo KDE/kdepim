@@ -87,3 +87,16 @@ bool ADCalendarBase::loadFile_(const QString& appName)
   }
   return loaded_;
 }
+
+void ADCalendarBase::dump() const
+{
+  kdDebug() << "  <calendar>" << endl;
+  kdDebug() << "    <url>" << urlString() << "</url>" << endl;
+  kdDebug() << "    <appname>" << appName() << "</appname>" << endl;
+  if ( loaded() ) kdDebug() << "    <loaded/>" << endl;
+  kdDebug() << "    <actiontype>" << int(actionType()) << "</actiontype>" << endl;
+  if (enabled() ) kdDebug() << "    <enabled/>" << endl;
+  else kdDebug() << "    <disabled/>" << endl;
+  if (available()) kdDebug() << "    <available/>" << endl;
+  kdDebug() << "  </calendar>" << endl;  
+}

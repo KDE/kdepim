@@ -53,26 +53,6 @@ class ADCalendarGui : public ADCalendarBase
     bool           mEnabled;       // monitoring is currently manually enabled
 };
 
-typedef QPtrList<ADCalendarGui> CalendarGuiList;
-
-/*
-// The CalendarIteration class gives secure public access to AlarmGui::mCalendars
-class ADCalendarIteration
-{
-  public:
-    ADCalendarIteration(CalendarGuiList& c)  : calendars(c) { calendar = calendars.first(); }
-    bool           ok() const           { return !!calendar; }
-    bool           next()               { return !!(calendar = calendars.next()); }
-    bool           available() const    { return calendar->available(); }
-    bool           enabled() const      { return calendar->enabled(); }
-    void           enabled(bool tf)     { calendar->enabled_ = tf; }
-    const QString& urlString() const    { return calendar->urlString(); }
-  private:
-    CalendarGuiList&  calendars;
-    ADCalendarGui*    calendar;
-};
-*/
-
 class ADCalendarGuiFactory : public ADCalendarBaseFactory
 {
   public:

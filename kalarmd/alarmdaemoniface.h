@@ -42,6 +42,8 @@ class AlarmDaemonIface : virtual public DCOPObject
                              bool displayCalendarName) = 0;
     virtual ASYNC registerGui(const QString& appName, const QString& dcopObject) = 0;
     virtual ASYNC quit() = 0;
+
+    virtual ASYNC dumpDebug() = 0;
 };
 
 #endif

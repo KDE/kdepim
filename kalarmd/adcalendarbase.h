@@ -61,6 +61,8 @@ class ADCalendarBase : public CalendarLocal
     virtual void setEventPending(const QString& ID) = 0;
     virtual bool getEventPending(QString& ID) = 0;
 
+    void dump() const;
+
   protected:
     bool            loadFile_(const QString& appNamebool);
 

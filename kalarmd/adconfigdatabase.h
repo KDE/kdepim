@@ -23,13 +23,6 @@
 #ifndef ADCONFIGDATABASE_H
 #define ADCONFIGDATABASE_H
 
-/*
-#ifdef KALARMD
-  #include "adcalendar.h"
-#else
-  #include "adcalendar_gui.h"
-#endif
-*/
 #include "adcalendarbase.h"
 #include "calclient.h"
 
@@ -41,6 +34,9 @@ class ADConfigDataBase
     virtual ~ADConfigDataBase() {}
     const ClientInfo* getClientInfo(const QString& appName) const;
     int               clientCount() const     { return mClients.count(); }
+
+    CalendarList calendars() { return mCalendars; }
+    int calendarCount() const { return mCalendars.count(); }
 
   protected:
     QString           readConfigData(bool sessionStarting, bool& deletedClients,
@@ -57,11 +53,13 @@ class ADConfigDataBase
     static const QString GUIS_KEY;
     static const QString CALENDAR_KEY;
 
+  
     ClientMap         mClients;             // client application names and data
     CalendarList      mCalendars;           // the calendars being monitored
-    bool              mIsAlarmDaemon;       // true if the instance is being used by the alarm daemon
 
   private:
+    bool              mIsAlarmDaemon;       // true if the instance is being used by the alarm daemon
+
     QString           mClientDataFile;      // path of file containing client data
 };
 

@@ -113,8 +113,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
   for (unsigned int i = 0;  i < clients.count();  ++i)
   {
     kdDebug() << "ADConfigDataBase::readConfigData(): client: " << clients[i] << endl;
-    if (clients[i].isEmpty()
-    ||  KStandardDirs::findExe(clients[i]) == QString::null)
+    if (clients[i].isEmpty() || KStandardDirs::findExe(clients[i]) == QString::null)
     {
       // Null client name, or application doesn't exist
       if (mIsAlarmDaemon)
@@ -161,21 +160,23 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
             if (comma >= 0)
             {
               QString calname = it.data().mid(comma + 1);
-              ADCalendarBase* cal = getCalendar(calname);
-              if (cal)
-              {
-                // The calendar is already in the client's list, so remove
-                // this redundant client data file entry.
-                if (mIsAlarmDaemon)
-                  deleteConfigCalendar(cal);
-              }
-              else
-              {
-                // Add the calendar to the client's list
-                cal = calFactory->create(calname, clients[i],
-                             static_cast<ADCalendarBase::Type>(it.data().left(comma).toInt()));
-                mCalendars.append(cal);
-                kdDebug() << "ADConfigDataBase::readConfigData(): calendar " << cal->urlString() << endl;
+              if ( !calname.isEmpty() ) {
+                ADCalendarBase* cal = getCalendar(calname);
+                if (cal)
+                {
+                  // The calendar is already in the client's list, so remove
+                  // this redundant client data file entry.
+                  if (mIsAlarmDaemon)
+                    deleteConfigCalendar(cal);
+                }
+                else
+                {
+                  // Add the calendar to the client's list
+                  cal = calFactory->create(calname, clients[i],
+                               static_cast<ADCalendarBase::Type>(it.data().left(comma).toInt()));
+                  mCalendars.append(cal);
+                  kdDebug() << "ADConfigDataBase::readConfigData(): calendar " << cal->urlString() << endl;
+                }
               }
             }
           }

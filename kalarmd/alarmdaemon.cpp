@@ -87,6 +87,17 @@ void AlarmDaemon::quit()
   exit(0);
 }
 
+void AlarmDaemon::dumpDebug()
+{
+  kdDebug() << "AlarmDaemon::dumpDebug()" << endl;
+  
+  for( ADCalendarBase *cal = mCalendars.first(); cal; cal = mCalendars.next() ) {
+    cal->dump();
+  }
+  
+  kdDebug() << "AlarmDaemon::dumpDebug() done" << endl;  
+}
+
 /*
  * DCOP call to enable or disable monitoring of a calendar.
  */

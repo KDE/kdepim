@@ -55,8 +55,6 @@ class ADCalendar : public ADCalendarBase
     QPtrList<QString> eventsPending_; // IDs of pending KALARM type events
 };
 
-//typedef QPtrList<ADCalendar> CalendarList;
-
 class ADCalendarFactory : public ADCalendarBaseFactory
 {
   public:

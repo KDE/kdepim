@@ -39,8 +39,6 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     AlarmDaemon(QObject *parent = 0L, const char *name = 0L);
     virtual ~AlarmDaemon();
 
-    int     calendarCount() const   { return mCalendars.count(); }
-
   private slots:
     void    checkAlarmsSlot();
     void    checkIfSessionStarted();
@@ -67,6 +65,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
                         bool displayCalendarName);
     void    registerGui(const QString& appName, const QString& dcopObject);
     void    quit();
+    void    dumpDebug();
 
   private:
 
