@@ -5,8 +5,8 @@
 
 #include "dummykonnector.h"
 
-typedef KGenericFactory<KSync::DummyKonnector, QObject>  AgendaKonnectorPlugin;
-K_EXPORT_COMPONENT_FACTORY( libagendakonnector,  AgendaKonnectorPlugin );
+typedef KGenericFactory<KSync::DummyKonnector, QObject>  DummyKonnectorPlugin;
+K_EXPORT_COMPONENT_FACTORY( libdummykonnector,  DummyKonnectorPlugin );
 
 using namespace KSync;
 
