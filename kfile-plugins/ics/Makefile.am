@@ -2,7 +2,7 @@
 
 # set the include path for X, kdepim, qt and KDE
 INCLUDES = \
-  -I$(top_srcdir) \ 
+  -I$(top_srcdir) \
   -I$(top_builddir)/libkdepim \
   $(all_includes)
 

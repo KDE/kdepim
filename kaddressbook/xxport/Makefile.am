@@ -1,7 +1,7 @@
 INCLUDES = -I$(top_srcdir) \
            -I$(top_srcdir)/kaddressbook/interfaces \
            -I$(top_srcdir)/kaddressbook \
-           -I$(top_srcdir)/libkdenetwork \ 
+           -I$(top_srcdir)/libkdenetwork \
 			  -I$(top_builddir)/libkdepim \
            $(GPGME_CFLAGS) \
            $(all_includes) 
