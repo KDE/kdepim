@@ -34,6 +34,11 @@
 //#include <qvaluelist.h>
 
 class KPilotDeviceLink;
+class QLabel;
+class QGroupBox;
+class KProgress;
+class QTimer;
+class QGridLayout;
 template <class T> class QValueList;
 template<class Key, class T> class QMap;
 
@@ -60,6 +65,7 @@ protected slots:
 	void connection(KPilotDeviceLink*lnk);
 	void disconnectDevices();
 	void processEvents();
+	void progress();
 public slots:
 	int exec();
 	void slotUser1 () { startDetection(); }
@@ -72,8 +78,11 @@ protected:
 	QLabel* fDevice;
 	QGroupBox* fStatusGroup;
 	QLabel* fStatus;
+	KProgress* fProgress;
 
 	QTimer* fProcessEventsTimer;
+	QTimer* fTimeoutTimer;
+	QTimer* fProgressTimer;
 
 protected:
 	QGridLayout* fResultsGroupLayout;

@@ -1,6 +1,16 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-18  Reinhold Kainhofer
+* Finish the autodetection of the handheld for the wizard. You *CAN* pi_bind
+  to multiple devices, so I just create a bunch of device links and wait for 
+  connected signals... This also means we can get rid of page one of the wizard.
+  There is one problem left: If /dev/pilot or so is a symlink to a real device, 
+  a connection on /dev/pilot and the actual device will be detected, and kpilot
+  will lock up. I guess I'll have to keep a (static) QStringList of real devices 
+  we are bound to in KPilotDeviceLink and disallow binding to the same real 
+  device again.
+
 2004-04-18  Adriaan de Groot
 * Default debug_level to 0, so it doesn't print the call trace, but just the
   (sometimes) useful debug output; use --debug 1 to print the call trace.

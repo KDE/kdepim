@@ -40,6 +40,7 @@
 #include <klocale.h>
 #include <kconfigskeleton.h>
 #include <kapplication.h>
+#include <kprogress.h>
 
 #include "kpilotConfig.h"
 #include "pilotUser.h"
@@ -70,6 +71,9 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	fStatus = new QLabel( i18n("Autodetection not yet started..."), fStatusGroup, "fStatus" );
 	fStatus->setAlignment( QLabel::WordBreak );
 	fStatusGroupLayout->addWidget( fStatus, 0, 0 );
+	
+	fProgress = new KProgress( 60, fStatusGroup, "fProgress" );
+	fStatusGroupLayout->addWidget( fProgress, 1, 0 );
 
 
 
@@ -97,16 +101,22 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	clearWState( WState_Polished );
 	enableButtonOK(false);
 
-	mDevicesToProbe << "/dev/pilot"
+	mDevicesToProbe //<< "/dev/pilot"
 	                <<"/dev/ttyS0"<<"/dev/ttyS1"<<"/dev/ttyS2"<<"/dev/ttyS3"
-	                <<"/dev/tts/0"<<"/dev/tts/1"<<"/dev/tts/2"<<"/dev/tts/3"
+//	                <<"/dev/tts/0"<<"/dev/tts/1"<<"/dev/tts/2"<<"/dev/tts/3"
 	                <<"/dev/ttyUSB0"<<"/dev/ttyUSB1"<<"/dev/ttyUSB2"<<"/dev/ttyUSB3"
-	                <<"/dev/usb/tts/0"<<"/dev/usb/tts/1"<<"/dev/usb/tts/2"<<"/dev/usb/tts/3"
+//	                <<"/dev/usb/tts/0"<<"/dev/usb/tts/1"<<"/dev/usb/tts/2"<<"/dev/usb/tts/3"
 	                <<"/dev/cuaa0"<<"/dev/cuaa1"<<"/dev/cuaa2"<<"/dev/cuaa3"
 	                <<"/dev/ucom0"<<"/dev/ucom1"<<"/dev/ucom2"<<"/dev/ucom3";
+;
 	
 	fProcessEventsTimer = new QTimer( this );
+	fTimeoutTimer = new QTimer( this );
+	fProgressTimer = new QTimer( this );
 	connect( fProcessEventsTimer, SIGNAL(timeout()), this, SLOT(processEvents()) );
+	connect( fTimeoutTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
+	connect( fProgressTimer, SIGNAL(timeout()), this, SLOT( progress()) );
+	connect( this, SIGNAL(finished()), this, SLOT(disconnectDevices()) );
 }
 
 ProbeDialog::~ProbeDialog()
@@ -115,9 +125,13 @@ ProbeDialog::~ProbeDialog()
 
 void ProbeDialog::processEvents() {
 FUNCTIONSETUP;
-kdDebug()<<"processEvents"<<endl;
-QTimer::singleShot(500, this, SLOT(processEvents()));
+//kdDebug()<<"processEvents"<<endl;
+//QTimer::singleShot(500, this, SLOT(processEvents()));
 	KApplication::kApplication()->processEvents();
+}
+
+void ProbeDialog::progress() {
+	fProgress->advance(1);
 }
 
 int ProbeDialog::exec() {
@@ -135,23 +149,20 @@ int ProbeDialog::exec() {
 // *BSD: /dev/pilot, /dev/cuaa[01]   (serial), /dev/ucom* (usb)
 
 void ProbeDialog::startDetection() {
-	QTimer::singleShot( 30000, this, SLOT( timeout() ) );
-// FIXME: Remove this test once everything is implemented!
-//QTimer::singleShot( 10000, this, SLOT( connection() ) );
-
-	fProcessEventsTimer->start( 200, false );
+	disconnectDevices();
+	fProgress->setProgress(0);
 	fStatus->setText( i18n("Starting detection...") );
+	QTimer::singleShot(0, this, SLOT(processEvents()) );
 	processEvents();
 	PilotDaemonDCOP_stub *daemonStub = new PilotDaemonDCOP_stub("kpilotDaemon", "KPilotDaemonIface");
 	if (daemonStub) {
 		daemonStub->stopListening();
 	}
 	KPILOT_DELETE(daemonStub);
-	disconnectDevices();
-	mUserName=QString::null;
-	mDevice=QString::null;
-	mUID=0;
-	mDetected=false;
+	processEvents();
+	if (!fTimeoutTimer->start( 30000, true ) ) kdDebug()<<"Could not start fTimeoutTimer"<<endl;
+	if (!fProcessEventsTimer->start( 100, false ) ) kdDebug()<<"Could not start fProcessEventsTimer"<<endl;
+	if (!fProgressTimer->start( 500, false) ) kdDebug()<<"Could not start Progress timer"<<endl;
 	
 	QStringList::iterator end(mDevicesToProbe.end());
 	KPilotDeviceLink*link;
@@ -164,13 +175,14 @@ kdDebug()<<"after resetting kpilotDeviceLink for "<<(*it)<<endl;
 		mDeviceLinks.append( link );
 		connect( link, SIGNAL(deviceReady(KPilotDeviceLink*)), this, SLOT(connection(KPilotDeviceLink*)) );
 	}
+	fStatus->setText( i18n("Waiting for handheld to connect...") );
 kdDebug()<<"end of startDetection"<<endl;
-QTimer::singleShot(500, this, SLOT(processEvents()));
+QTimer::singleShot(0, this, SLOT(processEvents()));
 }
 
 void ProbeDialog::timeout() {
 	disconnectDevices();
-	fStatus->setText( i18n("Timeout reached, could not detect a handheld.") );
+	if (!mDetected) fStatus->setText( i18n("Timeout reached, could not detect a handheld.") );
 }
 
 void ProbeDialog::connection( KPilotDeviceLink*lnk) {
@@ -194,8 +206,11 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk) {
 }
 
 void ProbeDialog::disconnectDevices() {
-	fStatus->setText( i18n("Disconnected from all devices") );
+	if (!mDetected) fStatus->setText( i18n("Disconnected from all devices") );
 	fProcessEventsTimer->stop( );
+	fTimeoutTimer->stop();
+	fProgressTimer->stop();
+	fProgress->setProgress(fProgress->maxValue());
 	if (!mDeviceLinks.isEmpty()) {
 		PilotLinkList::iterator end(mDeviceLinks.end());
 		for (PilotLinkList::iterator it=mDeviceLinks.begin(); it!=end; ++it) {

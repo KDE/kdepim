@@ -58,10 +58,10 @@ static const char *conduitconfigdialog_id =
 
 ConfigWizard::ConfigWizard(QWidget *parent, const char *n, int m) :
 	KWizard(parent, n),
-	fMode(m ? Standalone : InDialog)
+	fMode((Mode)m)
 {
-	page1=new ConfigWizard_base1(this);
-	addPage( page1, i18n("Select Connection Type") );
+//	page1=new ConfigWizard_base1(this);
+//	addPage( page1, i18n("Select Connection Type") );
 	page2=new ConfigWizard_base2(this);
 	addPage( page2, i18n("Pilot Info") );
 	page3=new ConfigWizard_base3(this);
@@ -101,7 +101,7 @@ void ConfigWizard::accept()
 
 	KPilotSettings::setPilotDevice( devicename );
 	KPilotSettings::setUserName(username);
-	KPilotSettings::setEncoding("iso 8859-15");
+//	KPilotSettings::setEncoding("iso 8859-15");
 	KPilotSettings::setDockDaemon( true );
 	KPilotSettings::setKillDaemonAtExit( !keepPermanently);
 	KPilotSettings::setQuitAfterSync( !keepPermanently );
@@ -209,11 +209,6 @@ void ConfigWizard::accept()
 	KPilotSettings::self()->writeConfig();
 	QDialog::accept();
 }
-
-// Devices to probe:
-// Linux: /dev/pilot (symlink), /dev/ttyS* (serial + irda), /dev/tts/[012345...] (with devfs),
-//        /dev/ttyUSB*, /dev/usb/tts/[012345...]
-// *BSD: /dev/pilot, /dev/cuaa[01]   (serial), /dev/ucom* (usb)
 
 void ConfigWizard::probeHandheld()
 {

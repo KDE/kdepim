@@ -39,16 +39,16 @@ class ConfigWizard : public KWizard
 {
 Q_OBJECT
 public:
-	ConfigWizard(QWidget *p=0L,const char *n=0L,int mode=0);
-	~ConfigWizard();
-
 	enum Mode { InDialog=0, Standalone=1 } ;
+
+	ConfigWizard(QWidget *p=0L,const char *n=0L, int mode=(int)InDialog);
+	~ConfigWizard();
 
 protected slots:
 	void probeHandheld();
 protected:
 	void accept();
-	ConfigWizard_base1 *page1;
+//	ConfigWizard_base1 *page1;
 	ConfigWizard_base2 *page2;
 	ConfigWizard_base3 *page3;
 

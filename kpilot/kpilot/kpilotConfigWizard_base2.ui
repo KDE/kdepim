@@ -8,20 +8,49 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>355</width>
-            <height>290</height>
+            <width>359</width>
+            <height>292</height>
         </rect>
     </property>
     <property name="caption">
         <string>Form4</string>
     </property>
-    <grid>
+    <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLayoutWidget" row="1" column="0">
+        <widget class="QLabel">
             <property name="name">
-                <cstring>layout1_2</cstring>
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>This wizard will help you configure kpilot.</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignVCenter</set>
+            </property>
+        </widget>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>textLabel5</cstring>
+            </property>
+            <property name="text">
+                <string>As a first step, we need to determine the username and how the handheld is connected to the computer.</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignVCenter</set>
+            </property>
+        </widget>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>groupBox2</cstring>
+            </property>
+            <property name="title">
+                <string>Handheld and User Name</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually. 
+Please enter the user name exactly as set on the handheld. The device means a system device on your PC, like /dev/pilot, or /dev/ttyUSB0 or /dev/ttyUSB1 for usb on Linux, or /dev/ttyS1 for serial devices.</string>
             </property>
             <grid>
                 <property name="name">
@@ -38,12 +67,28 @@
                         <cstring>fDeviceName</cstring>
                     </property>
                 </widget>
-                <widget class="QPushButton" row="0" column="2" rowspan="2" colspan="1">
+                <widget class="QPushButton" row="2" column="0" rowspan="1" colspan="2">
                     <property name="name">
                         <cstring>fProbeButton</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Probe...</string>
+                        <string>&amp;Automatically detect the handheld and the user name...</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+A</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>fDeviceName</cstring>
+                    </property>
+                    <property name="text">
+                        <string>/dev/pilot</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>fUserName</cstring>
                     </property>
                 </widget>
                 <widget class="QLabel" row="0" column="0">
@@ -57,44 +102,23 @@
                         <cstring>fUserName</cstring>
                     </property>
                 </widget>
-                <widget class="QLineEdit" row="0" column="1">
-                    <property name="name">
-                        <cstring>fUserName</cstring>
-                    </property>
-                </widget>
-                <widget class="QLineEdit" row="1" column="1">
-                    <property name="name">
-                        <cstring>fDeviceName</cstring>
-                    </property>
-                    <property name="text">
-                        <string>/dev/pilot</string>
-                    </property>
-                </widget>
             </grid>
         </widget>
-        <widget class="QCheckBox" row="2" column="0">
+        <widget class="QCheckBox">
             <property name="name">
                 <cstring>fPilotRunningPermanently</cstring>
             </property>
             <property name="text">
                 <string>KPilot should be &amp;running all the time</string>
             </property>
+            <property name="accel">
+                <string>Alt+R</string>
+            </property>
             <property name="checked">
                 <bool>true</bool>
             </property>
         </widget>
-        <widget class="QLabel" row="0" column="0">
-            <property name="name">
-                <cstring>textLabel5</cstring>
-            </property>
-            <property name="text">
-                <string>As a next step, please enter the username and the exact device the handheld is connected to. Alternatively, you can probe the handheld to determine these values automatically.</string>
-            </property>
-            <property name="alignment">
-                <set>WordBreak|AlignVCenter</set>
-            </property>
-        </widget>
-        <spacer row="3" column="0">
+        <spacer>
             <property name="name">
                 <cstring>spacer4</cstring>
             </property>
@@ -107,11 +131,11 @@
             <property name="sizeHint">
                 <size>
                     <width>20</width>
-                    <height>141</height>
+                    <height>70</height>
                 </size>
             </property>
         </spacer>
-    </grid>
+    </vbox>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
