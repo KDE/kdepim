@@ -510,7 +510,9 @@ EmpathMessageListWidget::setStatus(
 EmpathMessageListWidget::s_showFolder(const EmpathURL & url, unsigned int i)
 {
     empathDebug(url.asString());
-    
+   
+    filling_ = false;
+   
     if (i != listenTo_)
         return;
     
@@ -898,8 +900,7 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
     if (KGlobal::config()->readBoolEntry(UI_THREAD))
         
         // fill threading
-
-        for (; it.current(); ++it) {
+        for (; it.current() && filling_; ++it) {
 
             EmpathIndexRecord * rec = f->index()->record(it.current());
             
@@ -914,7 +915,7 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
     else
         
         // fill nonthreading;
-        for (; it.current(); ++it) {
+        for (; it.current() && filling_; ++it) {
             
             EmpathIndexRecord * rec = f->index()->record(it.current());
 
@@ -923,24 +924,25 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
             }
             
             EmpathMessageListItem * newItem = _addItem(this, *rec);
-            
             setStatus(newItem, rec->status());
-            
             t.doneOne();
         }
-    
-    setSorting(
-        c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
-        c->readNumEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
+   
+    if (filling_) {
+   
+        setSorting(
+            c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
+            c->readNumEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
 
-    viewport()->setUpdatesEnabled(true);
-    setUpdatesEnabled(true);
-    
-    triggerUpdate();
-    
-    filling_ = false;
-    
-   // emit(showing());
+        viewport()->setUpdatesEnabled(true);
+        setUpdatesEnabled(true);
+        
+        triggerUpdate();
+        
+        filling_ = false;
+        
+        // emit(showing());
+    }
 }
 
     void
