@@ -69,6 +69,10 @@ VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Reinhold Kainhofer", 
+		I18N_NOOP("Maintainer"),
+		"reinhold@kainhofer.com",
+		"http://reinhold.kainhofer.com/Linux/");
 	fAbout->addAuthor("Dan Pilone",
 		I18N_NOOP("Original Author"));
 	fAbout->addAuthor("Preston Brown",
@@ -142,6 +146,9 @@ VCalConduitFactory::~VCalConduitFactory()
 }
 
 // $Log$
+// Revision 1.5.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
 // Revision 1.6  2002/04/20 14:21:26  kainhofe
 // Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
 //

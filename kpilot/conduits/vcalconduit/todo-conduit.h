@@ -69,6 +69,7 @@ public:
 	virtual KCal::Incidence *findIncidence(recordid_t);
 	virtual KCal::Incidence *getNextIncidence();
 	virtual KCal::Incidence *getNextModifiedIncidence();
+	virtual int count() {return fAllTodos.count();};
 } ;
 
 
@@ -104,6 +105,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.4.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
 // Revision 1.5  2002/04/22 22:51:51  kainhofe
 // Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
 //

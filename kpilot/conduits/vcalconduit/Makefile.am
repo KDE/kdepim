@@ -11,7 +11,8 @@ METASOURCES = AUTO
 servicedir  = $(kde_servicesdir)
 service_DATA = vcal-conduit.desktop todo-conduit.desktop
 
-kde_module_LTLIBRARIES = libvcalconduit.la libtodoconduit.la
+kde_module_LTLIBRARIES = libtodoconduit.la libvcalconduit.la
+###kde_module_LTLIBRARIES = libtodoconduit.la
 
 libvcalconduit_la_SOURCES = korganizerConduit.ui vcal-factorybase.cc vcal-factory.cc  \
 	vcal-setup.cc vcal-conduitbase.cc vcal-conduit.cc
