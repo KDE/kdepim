@@ -272,10 +272,9 @@ static void listResources(KCal::CalendarResources *p)
 				<< "Calendar is local time: "
 				<< fCalendar->isLocalTime() << endl;
 #endif
-			emit logMessage(i18n("Using %1 time zone: %2")
-				.arg(fCalendar->isLocalTime() ?
-					i18n("non-local") : i18n("local"))
-				.arg(tz));
+			emit logMessage( fCalendar->isLocalTime() ?
+				i18n("Using local time zone: %1").arg(tz) :
+				i18n("Using non-local time zone: %1").arg(tz) );
 
 			KURL kurl(config()->calendarFile());
 			if(!KIO::NetAccess::download(config()->calendarFile(), fCalendarFile, 0L) &&
@@ -346,10 +345,9 @@ static void listResources(KCal::CalendarResources *p)
 #warning "Timezone bug is present."
 #endif
 			addSyncLogEntry(i18n("Syncing with standard calendar resource."));
-			emit logMessage(i18n("Using %1 time zone: %2")
-				.arg(fCalendar->isLocalTime() ?
-					i18n("non-local") : i18n("local"))
-				.arg(tz));
+			emit logMessage( fCalendar->isLocalTime() ?
+				i18n("Using local time zone: %1").arg(tz) :
+				i18n("Using non-local time zone: %1").arg(tz) );
 			break;
 		default:
 			break;
