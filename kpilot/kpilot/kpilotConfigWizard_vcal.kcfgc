@@ -1,4 +1,4 @@
-File=../conduits/vcalconduit/vcalconduitbase.kcfg
+File=../conduits/vcalbaseconduit/vcalconduitbase.kcfg
 ClassName=KPilotWizard_vcalConfig
 Singleton=false
 ItemAccessors=true
