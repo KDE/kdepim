@@ -124,8 +124,10 @@ void KNodeView::readOptions()
   	}		
   }
 
-  int sortCol = conf->readNumEntry("sortCol",0);
-  hdrView->setColAsc(sortCol, conf->readBoolEntry("sortAscending", true));	
+  int sortCol = conf->readNumEntry("sortCol",3);
+  bool sortAsc =conf->readBoolEntry("sortAscending", false);
+  hdrView->setColAsc(sortCol, sortAsc);	
+  hdrView->setSorting(sortCol, sortAsc);
   actSortSelect->setCurrentItem(sortCol);
 }
 
