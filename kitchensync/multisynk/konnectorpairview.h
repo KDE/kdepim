@@ -61,8 +61,12 @@ class KonnectorPairView : public KListView
 
     void refresh();
 
+  signals:
+    void konnectorPairSelected( bool selected );
+
   private slots:
     void refreshView();
+    void slotSelectionChanged();
 
   private:
     KonnectorPairManager *mManager;

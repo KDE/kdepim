@@ -98,7 +98,12 @@ KonnectorPairView::KonnectorPairView( KonnectorPairManager* manager, QWidget *pa
   setAllColumnsShowFocus( true );
   setFullWidth( true );
 
-  connect( manager, SIGNAL( changed() ), this, SLOT( refreshView() ) );
+  connect( manager, SIGNAL( changed() ),
+           this, SLOT( refreshView() ) );
+  connect( this, SIGNAL( selectionChanged() ),
+           this, SLOT( slotSelectionChanged() ) );
+  connect( this, SIGNAL( currentChanged( QListViewItem* ) ),
+           this, SLOT( slotSelectionChanged() ) );
 }
 
 KonnectorPairView::~KonnectorPairView()
@@ -129,6 +134,11 @@ void KonnectorPairView::refreshView()
     new KonnectorPairItem( *it, this );
 
   setSelected( firstChild(), true );
+}
+
+void KonnectorPairView::slotSelectionChanged()
+{
+  emit konnectorPairSelected( selectedItem() != 0 );
 }
 
 #include "konnectorpairview.moc"

@@ -49,6 +49,9 @@ MainWindow::MainWindow( QWidget *widget, const char *name )
 
   initGUI();
 
+  connect( mView, SIGNAL( konnectorPairSelected( bool ) ),
+           this, SLOT( konnectorPairSelected( bool ) ) );
+
   mView->refresh();
 }
 
@@ -161,6 +164,13 @@ void MainWindow::syncDone()
               this, SLOT( syncDone() ) );
 }
 
+void MainWindow::konnectorPairSelected( bool state )
+{
+  mEditAction->setEnabled( state );
+  mDeleteAction->setEnabled( state );
+  mSyncAction->setEnabled( state );
+}
+
 void MainWindow::initGUI()
 {
   mView = new KonnectorPairView( mManager, this );
@@ -171,16 +181,20 @@ void MainWindow::initGUI()
 
   new KAction( i18n( "New..." ), "filenew", 0, this, SLOT( addPair() ),
                actionCollection(), "new" );
-  new KAction( i18n( "Edit..." ), "edit", 0, this, SLOT( editPair() ),
-               actionCollection(), "edit" );
-  new KAction( i18n( "Delete..." ), "editdelete", 0, this, SLOT( deletePair() ),
-               actionCollection(), "delete" );
+  mEditAction = new KAction( i18n( "Edit..." ), "edit", 0, this,
+                             SLOT( editPair() ), actionCollection(), "edit" );
+  mEditAction->setEnabled( false );
+
+  mDeleteAction = new KAction( i18n( "Delete..." ), "editdelete", 0, this,
+                               SLOT( deletePair() ), actionCollection(), "delete" );
+  mDeleteAction->setEnabled( false );
 
   new KAction( i18n( "Log..." ), "filefind", 0, this, SLOT( showLog() ),
                actionCollection(), "log" );
 
-  new KAction( i18n( "Sync..." ), "hotsync", 0, this, SLOT( startSync() ),
-               actionCollection(), "sync" );
+  mSyncAction = new KAction( i18n( "Sync..." ), "hotsync", 0, this,
+                             SLOT( startSync() ), actionCollection(), "sync" );
+  mSyncAction->setEnabled( false );
 
   setXMLFile( "multisynkui.rc" );
   createGUI( 0 );

@@ -26,6 +26,7 @@
 
 #include <syncer.h>
 
+class KAction;
 class KonnectorPairManager;
 class KonnectorPairView;
 class LogDialog;
@@ -57,6 +58,7 @@ class MainWindow : public KMainWindow
     void showLog();
     void startSync();
     void syncDone();
+    void konnectorPairSelected( bool );
 
   private:
     void initGUI();
@@ -65,6 +67,10 @@ class MainWindow : public KMainWindow
     KonnectorPairView *mView;
     KSync::Engine *mEngine;
     LogDialog *mLogDialog;
+
+    KAction *mEditAction;
+    KAction *mDeleteAction;
+    KAction *mSyncAction;
 };
 
 #endif
