@@ -27,7 +27,7 @@
 #include "kngrouppropdlg.h"
 #include "utilities.h"
 #include "knconfigmanager.h"
-#include "knode.h"
+#include "knmainwidget.h"
 #include "knscoring.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"

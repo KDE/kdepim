@@ -23,8 +23,11 @@
 */
 
 #include "knode_part.h"
-#include "knode.h"
+#include "knmainwidget.h"
 #include "aboutdata.h"
+#include "knlistview.h"
+
+#include "sidebarextension.h"
 
 #include <kapplication.h>
 #include <kparts/genericfactory.h>
@@ -60,12 +63,16 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
   canvas->setFocusPolicy(QWidget::ClickFocus);
   setWidget(canvas);
 
-  mainWidget = new KNMainWindow;
+  mainWidget = new KNMainWidget( this, canvas, "knode_widget" );
   QVBoxLayout *topLayout = new QVBoxLayout(canvas);
   topLayout->addWidget(mainWidget);
   mainWidget->setFocusPolicy(QWidget::ClickFocus);
 
   kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
+
+  new KParts::SideBarExtension( mainWidget->exportCollectionView(),
+                                this,
+                                "KNodeSidebar" );
   KGlobal::iconLoader()->addAppDir("knode");
   setXMLFile( "knodeui.rc" );
 }

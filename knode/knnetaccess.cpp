@@ -26,7 +26,7 @@
 #include <ksocks.h>
 #include <kapplication.h>
 
-#include "knode.h"
+#include "knmainwidget.h"
 #include "knjobdata.h"
 #include "knnntpclient.h"
 #include "knsmtpclient.h"

@@ -27,7 +27,7 @@ class KNArticleFactory;
 class KNFolderManager;
 class QWidget;
 class KNFilterManager;
-class KNMainWindow;
+class KNMainWidget;
 class KNScoringManager;
 class KNMemoryManager;
 namespace Kpgp {
@@ -46,7 +46,7 @@ class KNGlobals {
     /** topWidget == top, used for message boxes, */
     QWidget               *topWidget;
     /** no need to include knode.h everywhere */
-    KNMainWindow          *top;
+    KNMainWidget          *top;
     KNArticleWidget       *artWidget;
     KNConfigManager       *cfgManager;
     KNNetAccess           *netAccess;

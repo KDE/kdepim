@@ -52,7 +52,7 @@
 #include "knnntpaccount.h"
 #include "utilities.h"
 #include <kpgp.h>
-#include "knode.h"
+#include "knmainwidget.h"
 #include <kpopupmenu.h>
 #include <kstandarddirs.h>
 #include <kbookmarkmanager.h>

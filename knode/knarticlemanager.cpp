@@ -22,7 +22,7 @@
 #include <kwin.h>
 #include <ktempfile.h>
 
-#include "knode.h"
+#include "knmainwidget.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "utilities.h"

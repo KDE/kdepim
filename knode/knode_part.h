@@ -36,7 +36,7 @@ class KInstance;
 class KAboutData;
 
 class ActionManager;
-class KNMainWindow;
+class KNMainWidget;
 
 class KNodePart: public KParts::ReadOnlyPart
 {
@@ -57,7 +57,7 @@ class KNodePart: public KParts::ReadOnlyPart
   private:
     ActionManager *mActionManager;
     QWidget *mParentWidget;
-    KNMainWindow *mainWidget;
+    KNMainWidget *mainWidget;
 };
 
 #endif

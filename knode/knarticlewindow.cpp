@@ -28,7 +28,7 @@
 #include "knarticlewidget.h"
 #include "utilities.h"
 #include "knglobals.h"
-#include "knode.h"
+#include "knmainwidget.h"
 #include "knarticlewindow.h"
 #include <qpopupmenu.h>
 

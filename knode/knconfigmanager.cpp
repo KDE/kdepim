@@ -26,7 +26,7 @@
 #include "knglobals.h"
 #include "knarticlewidget.h"
 #include "knarticlefactory.h"
-#include "knode.h"
+#include "knmainwidget.h"
 
 
 KNConfigManager::KNConfigManager(QObject *p, const char *n)

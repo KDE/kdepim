@@ -24,7 +24,7 @@
 #include <kdebug.h>
 #include <kcharsets.h>
 
-#include "knode.h"
+#include "knmainwidget.h"
 #include "knarticlemanager.h"
 #include "kngroupdialog.h"
 #include "kncollectionviewitem.h"

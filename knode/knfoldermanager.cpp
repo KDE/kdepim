@@ -30,7 +30,7 @@
 #include "knarticlemanager.h"
 #include "kncleanup.h"
 #include "knmemorymanager.h"
-#include "knode.h"
+#include "knmainwidget.h"
 
 
 KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v), a_rtManager(a)

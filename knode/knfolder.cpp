@@ -32,7 +32,7 @@
 #include "knfolder.h"
 #include "knarticlewidget.h"
 #include "knarticlewindow.h"
-#include "knode.h"
+#include "knmainwidget.h"
 
 
 KNFolder::KNFolder()
