@@ -58,8 +58,6 @@ void FilterCSV::import(FilterInfo *info) {
 bool FilterCSV::convert(const QString &filename, FilterInfo *info) {
    if (!openAddressBook(info)) return false;
 
-   QString caption( i18n("Import Netscape LDIF Personal Addressbook (.LDIF)") );
-
    QFile f(filename);
    f.open(IO_ReadOnly);
    QTextStream csv(&f);
