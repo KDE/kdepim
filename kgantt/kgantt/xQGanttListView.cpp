@@ -8,7 +8,7 @@
 #include "xQGanttListView.h"
 
 #include <qcolor.h>
-
+#include <klocale.h>
 
 xQGanttListView::xQGanttListView(KGanttItem* toplevelitem, QWidget* parent, 
 				 const char * name, WFlags f)
