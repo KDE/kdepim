@@ -1,6 +1,21 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-16  Adriaan de Groot
+* Fixed double dialog when cancelling a change in the selection in the config
+  dialog.
+
+2004-04-11  Adriaan de Groot
+* Testing, testing, 1, 2, 3. Let's look at a use case: someone who doesn't want
+  to sync his or her palm with KDE apps, but does want a convenient application
+  to install files and keep a backup of their palm. How can they use KPilot?
+  Well, uncheck all the conduits except install files, set the daemon to auto-start,
+  and do nothing more than drop the pilot inthe cradle occasionally and hit the
+  HotSync button. Use kpilot's viewers to check the state of the backup.
+* [conduitConfigDialog] Use the CE macro for general config pages. Tighten typing
+  on handleGeneralPages. Add names to the viewers tabs. Make unsaved-changes
+  message make sense.
+
 2004-04-11  Reinhold Kainhofer
 * Fix the codec handling to use KGlobal::charsets.
 * Implemented the startListening and stopListening methods of the daemon.
@@ -9,7 +24,7 @@
 * Some cleanup in the daemon
 
 2004-04-10  Reinhold Kainhofer
-* Split kpilot's configuration into several files, one for each conduit. 
+* Split kpilot's configuration into several files, one for each conduit.
   Also wrote a kconf_update script so the old settings are preserved.
   We still need to sort out the remaining settings written to kpilotrc.
 * Corrected all path variables in the .kcfg files from type String to Path
