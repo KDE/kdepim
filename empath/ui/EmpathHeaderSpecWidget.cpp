@@ -22,6 +22,11 @@
 # pragma implementation "EmpathHeaderSpecWidget.h"
 #endif
 
+// Qt includes
+#include <qlineedit.h>
+#include <qlabel.h>
+
+// Local includes
 #include "EmpathHeaderSpecWidget.h"
 #include "EmpathAddressSelectionWidget.h"
 #include "EmpathUIUtils.h"
@@ -40,7 +45,6 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
         headerBody_(headerBody)
 {
     headerNameWidget_ = new QLabel(this);
-    
     setHeaderName(headerName_);
     
     address_ = false;
@@ -55,18 +59,16 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 
     if (address_) {
 
-        headerBodyWidget_ =
-            new EmpathAddressSelectionWidget(this);
-        
-        ((EmpathAddressSelectionWidget *)headerBodyWidget_)->
-            setText(headerBody_);
-    
-    } else {
+        EmpathAddressSelectionWidget * addressWidget = 
+                new EmpathAddressSelectionWidget(this);
 
-        headerBodyWidget_ = new QLineEdit(this, "headerNameWidget");
-        ((QLineEdit *)headerBodyWidget_)->setText(headerBody_);
-    }
-    
+        headerBodyWidget_ = addressWidget->lineEdit();
+        
+    } else 
+
+        headerBodyWidget_ = new QLineEdit(this, "headerBodyWidget");
+
+    headerBodyWidget_->setText(headerBody_);
     headerBodyWidget_->setFocus();
 }
 
@@ -92,12 +94,7 @@ EmpathHeaderSpecWidget::header()
 EmpathHeaderSpecWidget::setHeaderBody(const QString & headerBody)
 {
     headerBody_ = headerBody;
-    
-    if (address_)
-        ((EmpathAddressSelectionWidget *)headerBodyWidget_)->
-            setText(headerBody_);
-    else
-        ((QLineEdit *)headerBodyWidget_)->setText(headerBody_);
+    headerBodyWidget_->setText(headerBody_);
 }
 
     int
@@ -123,14 +120,48 @@ EmpathHeaderSpecWidget::headerName()
     QString
 EmpathHeaderSpecWidget::headerBody()
 {
+    QString s = headerBodyWidget_->text();
+
     if (address_) {
-        QString s = ((EmpathAddressSelectionWidget *)headerBodyWidget_)->text();
         if (!s.contains('@') && !s.isEmpty())
             s += '@' + empath->hostName();
         return s;
     }
     else
-        return ((QLineEdit *)headerBodyWidget_)->text();
+        return s;
+}
+
+    void
+EmpathHeaderSpecWidget::focusInEvent(QFocusEvent *)
+{
+    headerBodyWidget_->setFocus();
+}
+
+    void
+EmpathHeaderSpecWidget::keyPressEvent(QKeyEvent * e)
+{
+    if (e->state() & ControlButton) 
+        switch (e->key()) {
+        case Key_P:
+            emit lineUp();
+            break;
+        case Key_N:
+            emit lineDown();
+            break;
+        default:
+            e->ignore();
+        }
+    else
+        switch (e->key()) {
+        case Key_Up:
+            emit lineUp();
+            break;
+        case Key_Down:
+            emit lineDown();
+            break;
+        default:
+            e->ignore();
+        }
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -27,8 +27,9 @@
 
 // Qt includes
 #include <qhbox.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
+
+class QLineEdit;
+class QPushButton;
 
 /**
  * Megawidget used to get an address from the user.
@@ -46,6 +47,8 @@ class EmpathAddressSelectionWidget : public QHBox
         QString text() const;
         void setText(const QString &);
 
+        QLineEdit * lineEdit() { return le_address_; };
+        
     protected slots:
 
         void s_textChanged(const QString&);

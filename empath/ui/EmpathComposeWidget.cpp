@@ -91,9 +91,8 @@ EmpathComposeWidget::_init()
     maxSizeColOne_ = 0;
     invisibleHeaders_.setAutoDelete(true);
    
-    attachmentWidget_ = new EmpathAttachmentListWidget(this);
-    
     editorWidget_ = new QMultiLineEdit(this, "editorWidget");
+    attachmentWidget_ = new EmpathAttachmentListWidget(this);
     
     KConfig * c = KGlobal::config();
     
@@ -165,6 +164,7 @@ EmpathComposeWidget::_init()
         _spawnExternalEditor(editorWidget_->text().ascii());
     }
     
+    headerSpecList_.first()->setFocus();
 }
 
 EmpathComposeWidget::~EmpathComposeWidget()
@@ -420,13 +420,19 @@ EmpathComposeWidget::_addExtraHeaders()
 EmpathComposeWidget::_addHeader(const QString & n, const QString & b)
 {
     EmpathHeaderSpecWidget * newHsw = new EmpathHeaderSpecWidget(n, b, this);
-    
     newHsw->show();
-
     headerLayout_->addWidget(newHsw);
-        
-    headerSpecList_.append(newHsw);
-        
+
+    if (!headerSpecList_.isEmpty()) {
+        QObject::connect(
+            newHsw, SIGNAL(lineUp()),
+            headerSpecList_.getLast(), SLOT(setFocus()));
+        QObject::connect(
+            headerSpecList_.getLast(), SIGNAL(lineDown()),
+            newHsw, SLOT(setFocus()));
+    }
+    
+    headerSpecList_.append(newHsw); 
     maxSizeColOne_ = QMAX(newHsw->sizeOfColumnOne(), maxSizeColOne_);
 }
 

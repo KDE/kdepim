@@ -28,11 +28,13 @@
 // Qt includes
 #include <qhbox.h>
 #include <qstring.h>
-#include <qlineedit.h>
 #include <qlabel.h>
 
 // Local includes
 #include "EmpathDefines.h"
+
+class QLineEdit;
+class QLabel;
 
 class EmpathHeaderSpecWidget : public QHBox
 {
@@ -56,10 +58,20 @@ class EmpathHeaderSpecWidget : public QHBox
         void        setHeaderName(const QString & headerName);
         void        setHeaderBody(const QString & headerBody);
 
+    signals:
+
+        void lineUp();
+        void lineDown();
+    
+    protected:
+       
+        void focusInEvent   (QFocusEvent *);
+        void keyPressEvent  (QKeyEvent *);
+        
     private:
 
         QLabel      * headerNameWidget_;
-        QWidget     * headerBodyWidget_;
+        QLineEdit   * headerBodyWidget_;
         
         QString headerName_;
         QString headerBody_;

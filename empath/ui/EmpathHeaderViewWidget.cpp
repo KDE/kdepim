@@ -41,6 +41,7 @@
 #include "EmpathConfig.h"
 #include "EmpathDefines.h"
 #include <RMM_Header.h>
+#include <RMM_DateTime.h>
 
 EmpathHeaderViewWidget::EmpathHeaderViewWidget(
         QWidget * parent, const char * name)
@@ -78,9 +79,15 @@ EmpathHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
     
         RMM::RHeader * h(e.get(s));
         if (h == 0) continue;
-        
-        headerList_.append(h->headerName() + ":");
-        headerList_.append(h->headerBody()->asString());
+            
+        headerList_.append(i18n(h->headerName()) + ":");
+    
+        if (RMM::headerTypesTable[h->headerType()] == RMM::DateTime) {
+            RMM::RDateTime * date = (RMM::RDateTime *)(h->headerBody());
+            headerList_.append(
+                KGlobal::locale()->formatDateTime(date->qdt()));
+        } else
+            headerList_.append(h->headerBody()->asString());
     }
     
     int th = QFontMetrics(KGlobal::generalFont()).height();

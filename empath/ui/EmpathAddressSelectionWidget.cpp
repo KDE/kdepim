@@ -23,6 +23,8 @@
 #endif
 
 // Qt includes
+#include <qlineedit.h>
+#include <qpushbutton.h>
 #include <qmessagebox.h> 
 
 // KDE includes
@@ -40,9 +42,9 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(QWidget * parent)
     le_address_ = new QLineEdit(this, "le_address");
     pb_browse_  = new QPushButton(this, "pb_browse");
 
-    pb_browse_->setPixmap(empathIcon("point")), 
-       
-    pb_browse_->setFixedWidth(le_address_->sizeHint().width());
+    pb_browse_->setPixmap(empathIcon("point"));
+    pb_browse_->setFixedHeight(le_address_->sizeHint().height());
+    pb_browse_->setFixedWidth(pb_browse_->height());
 
     QObject::connect(le_address_, SIGNAL(textChanged(const QString&)),
             this, SLOT(s_textChanged(const QString&)));
