@@ -15,6 +15,7 @@ MENU="<ul>"
 # each, if the file part exists (as a html file) tack it onto the
 # MENU variable as a <li> with link.
 for i in "Main Page/index" \
+	"Modules/modules" \
 	"Namespace List/namespaces" \
 	"Class Hierarchy/hierarchy" \
 	"Alphabetical List/classes" \
