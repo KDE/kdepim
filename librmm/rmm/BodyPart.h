@@ -92,8 +92,6 @@ class BodyPart : public Entity {
         RMM::MessageStatus    status_;
 };
 
-typedef BodyPart Message;
-
 }
 
 #endif

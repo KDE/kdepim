@@ -29,6 +29,7 @@ Mailbox_generated.h \
 Mechanism.h \
 Mechanism_generated.h \
 Message.h \
+Message_generated.h \
 MessageComponent.h \
 MessageID.h \
 MessageID_generated.h \

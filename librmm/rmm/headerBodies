@@ -11,6 +11,7 @@ Header
 HeaderBody MessageComponent
 Mailbox
 Mechanism
+Message BodyPart
 MessageID
 MimeType
 Parameter

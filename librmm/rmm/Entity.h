@@ -28,10 +28,10 @@
 namespace RMM {
 
 /**
- * @short An REntity is the base class of an RBodyPart and an RMessage.
- * An REntity is the base class of an RBodyPart and an RMessage. Note that the
- * RFC822 specification is recursive. That means that an RBodyPart can also be
- * an RMessage, which then in turn contains an RBodyPart !
+ * @short An REntity is the base class of n BodyPart and a Message.
+ * An REntity is the base class of a BodyPart and a Message. Note that the
+ * RFC822 specification is recursive. That means that an BodyPart can also be
+ * a Message, which then in turn contains a BodyPart !
  */
 
 class Entity : public MessageComponent

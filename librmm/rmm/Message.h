@@ -26,7 +26,9 @@
 
 namespace RMM {
 
-typedef RBodyPart RMessage;
+class Message : public BodyPart {
+#include "rmm/Message_generated.h"
+};
 
 }
 
