@@ -4,6 +4,7 @@
 #include <qsplitter.h>
 
 #include <klocale.h>
+#include <kdialog.h>
 
 #include <error.h>
 #include <progress.h>
@@ -19,6 +20,7 @@ Widget::Widget( QWidget* parent, const char* name )
     : QWidget( parent, name )
 {
     m_lay = new QVBoxLayout(this);
+    m_lay->setMargin( KDialog::marginHint() );
     QLabel* label = new QLabel(this);
     label->setText( "<qt><h1>" + i18n("Overview") + "</h1></qt>" );
 
