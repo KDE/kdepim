@@ -1,3 +1,27 @@
+KPilot Developer's notes for april 23rd 2001
+============================================
+
+* Fixed the non-initialization of the conduitCombo pointer by
+  removing it completely. (Thanks Martin!) [19-4]
+* Greg's abbrowser conduit is (almost) ready for the prime-time! [23-4]
+* Fixed bug where absent executables could hang the conduit
+  setup dialog. [23-4]
+* Fixed small UI bug where toggling toolbar didn't resize the contents
+  of the main KPilot window. [23-4]
+* Removed unnecessary connection to (serial) pilot database when
+  conduits are started in --info or --setup mode. [23-4]
+* Discovered many i18n bugs in the sendmail conduit. Ouch. Some fixed. [23-4]
+* In a flash, implemented sending-via-KMail in the sendmail conduit.
+  This is utterly untested and possibly hazardous. I'd appreciate it
+  if some people used a test account for KMail and tried it out. 
+  I will too, soon. [23-4]
+
+Todo:
+
+* Found out why the vcal and todo conduits are so slow -- they
+  really do read in the whole Pilot database through the serial
+  line *twice* each sync. This needs fixing. [19-4]
+
 KPilot Developer's notes for april 19th 2001
 ============================================
 
