@@ -112,7 +112,7 @@ void KAddressBookMain::saveProperties( KConfig* )
   // later when this app is restored
 
   //what I want to save
-  //windowsize
+  //windowsize -> part of saveMainWindowSettings( KGlobal::config(), "MainWindow" );
   //background image/underlining color/alternating color1,2
   //chosen fields
   //chosen fieldsWidths
