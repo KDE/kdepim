@@ -203,6 +203,7 @@ void LogWidget::addMessage(const QString & s)
 //	fLog->append(t);
 //#endif
 	fLog->setText(fLog->text() + t);
+	fLog->setContentsPos(0,contentsHeight());
 }
 
 void LogWidget::addError(const QString & s)
@@ -359,6 +360,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.26  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.25  2002/07/03 12:22:08  binner
 // CVS_SILENT Style guide fixes
 //
