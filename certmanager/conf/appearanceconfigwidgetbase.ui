@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>616</width>
-            <height>350</height>
+            <height>352</height>
         </rect>
     </property>
     <property name="caption">
@@ -89,6 +89,9 @@
                     <property name="name">
                         <cstring>italicCB</cstring>
                     </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
                     <property name="text">
                         <string>Italic</string>
                     </property>
@@ -97,6 +100,9 @@
                     <property name="name">
                         <cstring>boldCB</cstring>
                     </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
                     <property name="text">
                         <string>Bold</string>
                     </property>
@@ -104,6 +110,9 @@
                 <widget class="QCheckBox">
                     <property name="name">
                         <cstring>strikeoutCB</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
                     </property>
                     <property name="text">
                         <string>Strikeout</string>

@@ -201,6 +201,9 @@ void AppearanceConfigWidget::slotSelectionChanged( QListViewItem* item )
   foregroundButton->setEnabled( sel );
   backgroundButton->setEnabled( sel );
   fontButton->setEnabled( sel );
+  italicCB->setEnabled( item );
+  boldCB->setEnabled( item );
+  strikeoutCB->setEnabled( item );
   defaultLookPB->setEnabled( sel );
   if ( item ) {
     CategoryListViewItem* clvi = static_cast<CategoryListViewItem *>( item );
