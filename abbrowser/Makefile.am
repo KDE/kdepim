@@ -6,7 +6,7 @@ APPSDIR = $(kde_appsdir)/Utilities
 
 INCLUDES= -I$(top_srcdir)/kab2/lib $(all_includes)
 
-SUBDIRS = doc pics
+SUBDIRS = pics
 
 SRCDOC_DEST=$(kde_htmldir)/en/abbrowser
 
