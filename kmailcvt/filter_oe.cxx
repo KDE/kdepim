@@ -248,6 +248,7 @@ void FilterOE::dbxReadEmail(QDataStream& ds, int filePos)
   Q_UINT16 blockSize;
   Q_UINT8 intCount, unknown;
   KTempFile tmp;
+  bool _break = false;
   int wasAt = ds.device()->at();
   ds.device()->at(filePos);
 
@@ -256,17 +257,25 @@ void FilterOE::dbxReadEmail(QDataStream& ds, int filePos)
     QByteArray blockBuffer(blockSize);
     ds.readRawBytes(blockBuffer.data(), blockSize);
     tmp.dataStream()->writeRawBytes(blockBuffer.data(), blockSize);
+    // to detect incomplete mails or corrupted archives. See Bug #86119
+    if(ds.atEnd()){
+      _break = true;
+      break;
+    }
     ds.device()->at(nextAddress);
   } while (nextAddress != 0);
   tmp.close();
   
-  if(inf->removeDupMsg) addMessage( inf, folderName, tmp.name() );
-  else addMessage_fastImport( inf, folderName, tmp.name() );
-  
-  inf->setCurrent( ++currentEmail / totalEmails * 100);
+  if(!_break){
+	if(inf->removeDupMsg) addMessage( inf, folderName, tmp.name() );
+	else addMessage_fastImport( inf, folderName, tmp.name() );
+	
+	currentEmail++;
+	int currentPercentage = (int) ( ( (float) currentEmail / totalEmails ) * 100 );
+	inf->setCurrent(currentPercentage);
+	ds.device()->at(wasAt);
+  }
   tmp.unlink();
-
-  ds.device()->at(wasAt);
 }
 
 // vim: ts=2 sw=2 et
