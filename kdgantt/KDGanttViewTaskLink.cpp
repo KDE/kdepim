@@ -343,8 +343,8 @@ void KDGanttViewTaskLink::showMeType( bool visible )
     for ( ; fromIt.current(); ++fromIt ) {
         toIt.toFirst();
         for ( ; toIt.current(); ++toIt ) {
-            if (isvisible || (*fromIt)->isVisibleInGanttView || 
-               (*toIt)->isVisibleInGanttView || myTimeTable->taskLinksVisible) {
+            if (isvisible && (*fromIt)->isVisibleInGanttView &&
+               (*toIt)->isVisibleInGanttView && myTimeTable->taskLinksVisible) {
                 (*horIt)->setPen(p);
                 (*verIt)->setPen(p);
                 (*horIt2)->setPen(p);
