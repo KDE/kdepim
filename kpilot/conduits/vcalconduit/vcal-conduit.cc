@@ -282,7 +282,7 @@ there are two special cases: a full and a first sync.
 
 /* virtual */ void VCalConduit::exec()
 {
-	debug_level=0;
+//	debug_level=0;
 	FUNCTIONSETUP;
 
 	bool loadSuccesful = true;
@@ -760,7 +760,10 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 {
 	FUNCTIONSETUP;
 
-	if (!de.getAlarm() || !e) return;
+	if (!e) return;
+	// Delete all the alarms now and add them one by one later on.
+	e->clearAlarms();
+	if (!de.getAlarm()) return;
 
 	QDateTime alarmDT = readTm(de.getEventStart());
 	int advanceUnits = de.getAdvanceUnits();
@@ -786,15 +789,15 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 		advanceUnits=1;
 	}
 
-	KCal::Duration adv(60*advanceUnits*de.getAdvance());
+	KCal::Duration adv(-60*advanceUnits*de.getAdvance());
 	KCal::Alarm*alm=new KCal::Alarm(e);
 	if (!alm) return;
 
-	alm->setTime(e->dtStart());
+	//TODO: alarms from palm are not correctly stored to calendar:
+//	alm->setTime(e->dtStart());
 	alm->setOffset(adv);
 	alm->setEnabled(true);
 	e->addAlarm(alm);
-	// TODO: Fix alarms
 }
 
 
@@ -810,25 +813,31 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 #endif
 		return;
 	}
-	
-	if (e->alarms().count()<=0)
+
+	if ( !e->isAlarmEnabled() )
 	{
 		de->setAlarm(0);
 		return;
 	}
 
-	const KCal::Alarm *alm=e->alarms().first();
-	if (!alm || !alm->enabled())
+	// find the first enabled alarm
+	QPtrList<KCal::Alarm> alms=e->alarms();
+	KCal::Alarm* alm=0, *alarm=0;
+	for (QPtrListIterator<KCal::Alarm> it(alms); (alarm = it.current()) != 0; ++it) {
+		if (alarm->enabled()) alm=alarm;
+	}
+
+	if (!alm )
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": alarm not enabled"<<endl;
+		DEBUGCONDUIT << fname << ": no enabled alarm found (should exist!!!)"<<endl;
 #endif
 		de->setAlarm(0);
 		return;
 	}
 
-	// offset() is negative if before aptment
-	int aoffs=alm->offset().asSeconds()/60;
+	// palm and PC offsets have a different sign!!
+	int aoffs=-alm->offset().asSeconds()/60;
 	int offs=(aoffs>0)?aoffs:-aoffs;
 
 	// find the best Advance Unit
@@ -1083,8 +1092,21 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEntry)
 {
 	FUNCTIONSETUP;
-	if (((dateEntry.getRepeatType() == repeatDaily) &&
-		dateEntry.getEvent()) && dateEntry.getExceptionCount())
+	
+	// Start from an empty exception list, and if necessary, add exceptions.
+	// At the end of the function, apply the (possibly empty) exception list.
+	KCal::DateList dl;
+
+	if ( !((dateEntry.getRepeatType() == repeatDaily) &&
+		dateEntry.getEvent()) || dateEntry.getExceptionCount()>0 )
+	{
+		for (int i = 0; i < dateEntry.getExceptionCount(); i++)
+		{
+//			vevent->addExDate(readTm(dateEntry.getExceptions()[i]).date());
+			dl.append(readTm(dateEntry.getExceptions()[i]).date());
+		}
+	}
+	else
 	{
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -1092,13 +1114,9 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEn
 		<< dateEntry.getDescription()
 		<< endl ;
 #endif
-		return;
+//		return;
 	}
-
-	for (int i = 0; i < dateEntry.getExceptionCount(); i++)
-	{
-		vevent->addExDate(readTm(dateEntry.getExceptions()[i]).date());
-	}
+	vevent->setExDates(dl);
 }
 
 void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
@@ -1148,6 +1166,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.60  2002/04/20 18:05:50  kainhofe
+// No duplicates any more in the calendar
+//
 // Revision 1.59  2002/04/20 17:38:02  kainhofe
 // recurrence now correctly written to the palm, no longer crashes
 //
