@@ -183,7 +183,7 @@ Kapabilities KonnectorProfile::readKaps( KConfig* conf) {
         caps.setPassword( conf->readEntry("Pass") );
     }
     caps.setCurrentModel( conf->readEntry("Model")  );
-    caps.setConnectionMode( conf->readEntry("ConMode") );
+    caps.setCurrentConnectionMode( conf->readEntry("ConMode") );
 
     // extras
     QStringList list = conf->readListEntry("Extras");
