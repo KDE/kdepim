@@ -89,7 +89,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 #ifdef BRUTE_FORCE
 		if (fHandle->getNextDatabase(i,&db) < 1)
 		{
-			DEBUGKPILOT << fname << ": No database index " << i << endl;
+			DEBUGDAEMON << fname << ": No database index " << i << endl;
 			continue;
 		}
 #endif
@@ -98,7 +98,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 		dbindex = db.index + 1;
 
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Read database " << db.name << endl;
+		DEBUGDAEMON << fname << ": Read database " << db.name << endl;
 #endif
 
 		// Let the Pilot User know what's happening
@@ -166,11 +166,14 @@ static inline bool dontBackup(struct DBInfo *info,
 	const QStringList &dbnames,
 	const QValueList<unsigned long> &dbcreators)
 {
-	QString db = QString::fromLatin1(info->name);
+	// Special case - skip database Unsaved Preferences
+	if (   (info->creator == pi_mktag('p','s','y','s'))  &&
+		(info->type == pi_mktag('p','r','e','f')) ) return true;
 
 	if (dbcreators.findIndex(info->creator) != -1) return true;
 
 	// Now take wildcards into account
+	QString db = QString::fromLatin1(info->name);
 	for (QStringList::const_iterator i = dbnames.begin(); i != dbnames.end(); ++i)
 	{
 		QRegExp re(*i,true,true); // Wildcard match
@@ -182,6 +185,7 @@ static inline bool dontBackup(struct DBInfo *info,
 static inline void initNoBackup(QStringList &dbnames,
 	QValueList<unsigned long> &dbcreators)
 {
+	FUNCTIONSETUP;
 	dbnames.clear();
 	dbcreators.clear();
 
@@ -209,6 +213,18 @@ static inline void initNoBackup(QStringList &dbnames,
 			dbnames.append(s);
 		}
 	}
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Will skip databases " 
+		<< dbnames.join(",") << endl;
+	QString creatorids;
+	for (QValueList<unsigned long>::const_iterator i = dbcreators.begin();
+		i != dbcreators.end(); ++i)
+	{
+		creatorids.append(CSL1("[%1]").arg(*i));
+	}
+	DEBUGDAEMON << fname << ": Will skip creators " << creatorids << endl;
+#endif
 }
 
 /* virtual */ bool BackupAction::exec()
@@ -333,8 +349,16 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	fDBIndex = info.index + 1;
 
 
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Checking database "
+		<< info.name << " [" << info.creator << "]" << endl;
+#endif
 	if (dontBackup(&info,fNoBackupDBs,fNoBackupCreators))
 	{
+#ifdef DEBUG
+		DEBUGDAEMON << fname << ": Skipping database " << info.name
+			<< endl;
+#endif
 		QString s = i18n("Skipping %1")
 			.arg(QString::fromLatin1(info.name));
 		addSyncLogEntry(s);
