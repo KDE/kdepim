@@ -7,6 +7,7 @@ X-KDE-InstantMessagingKABCField=messaging/xmpp
 Comment=Jabber Protocol
 Comment[be]=Пратакол Jabber
 Comment[bg]=Протокол Jabber
+Comment[bs]=Jabber protokol
 Comment[ca]=Protocol Jabber
 Comment[cs]=Jabber protokol
 Comment[da]=Jabber Protokol
@@ -31,9 +32,7 @@ Comment[sr@Latn]=Jabber протокол
 Comment[sv]=Jabber-protokoll
 Comment[ta]=ஜாபர் நெறிமுறை
 Comment[tg]=протоколи Jabber
-Comment[xx]=xxJabber Protocolxx
 Comment[zh_CN]=Jabber 协议
 Name=Jabber
 Name[ta]=ஜாபர்
-Name[xx]=xxJabberxx
 

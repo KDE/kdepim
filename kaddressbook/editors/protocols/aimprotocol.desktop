@@ -7,6 +7,7 @@ X-KDE-InstantMessagingKABCField=messaging/aim
 Comment=AIM Protocol
 Comment[be]=Пратакол AIM
 Comment[bg]=Протокол AIM
+Comment[bs]=AIM protokol
 Comment[ca]=Protocol AIM
 Comment[cs]=AIM protokol
 Comment[da]=AIM Protokol
@@ -31,8 +32,6 @@ Comment[sr@Latn]=AIM протокол
 Comment[sv]=AIM-protokoll
 Comment[ta]=AIM நெறிமுறை
 Comment[tg]=Протоколи AIM
-Comment[xx]=xxAIM Protocolxx
 Comment[zh_CN]=AIM 协议
 Name=AIM
-Name[xx]=xxAIMxx
 

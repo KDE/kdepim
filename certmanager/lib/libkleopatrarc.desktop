@@ -2,6 +2,7 @@
 was-validated=false
 Name=Not validated key
 Name[bg]=Невалиден ключ
+Name[bs]=Ključ nije potvrđen
 Name[ca]=Clau no validada
 Name[cs]=Nevalidovaný klíč
 Name[da]=Ikke valideret nøgle
@@ -26,7 +27,6 @@ Name[sr@Latn]=Неисправни кључ
 Name[sv]=Nyckeln har inte validerats
 Name[ta]=செல்லுபடியாகாத விசை
 Name[tg]=Кадиди озмоида нашуда
-Name[xx]=xxNot validated keyxx
 Name[zh_CN]=未校验的密钥
 
 [Key Filter #1]
@@ -36,6 +36,7 @@ is-revoked=false
 foreground-color=255,0,0
 Name=Expired key
 Name[bg]=Изтекъл ключ
+Name[bs]=Istekao ključ
 Name[ca]=Clau expirada
 Name[cs]=Klíš s prošlou platností
 Name[da]=Udløbet nøgle
@@ -46,6 +47,7 @@ Name[fr]=Clé expirée
 Name[gl]=Chave caducada
 Name[he]=מפתח לא תקף
 Name[hu]=Lejárt kulcs
+Name[is]=Útrunninn lykill
 Name[it]=Chiave scaduta
 Name[nb]=Utgått nøkkel
 Name[nl]=Verlopen sleutel
@@ -60,7 +62,6 @@ Name[sr@Latn]=Истекли кључ
 Name[sv]=Utgången nyckel
 Name[ta]=காலம் கடந்த விசை
 Name[tg]=Калиди аз мӯҳлат баромада
-Name[xx]=xxExpired keyxx
 Name[zh_CN]=过期密钥
 
 [Key Filter #2]
@@ -68,6 +69,7 @@ was-validated=true
 is-revoked=true
 Name=Revoked key
 Name[bg]=Анулиран ключ
+Name[bs]=Povučen ključ
 Name[ca]=Clau revocada
 Name[cs]=Odvolaný klíč
 Name[da]=Fjernet nøgle
@@ -92,7 +94,6 @@ Name[sr@Latn]=Опозвани кључ
 Name[sv]=Återkallad nyckel
 Name[ta]=நீக்கிய விசை
 Name[tg]=Калиди барқароршуда
-Name[xx]=xxRevoked keyxx
 Name[zh_CN]=吊销的密钥
 
 [Key Filter #3]
@@ -101,6 +102,7 @@ is-root-certificate=true
 is-validity=ultimate
 Name=Trusted root certificate
 Name[bg]=Надеждно удостоверение
+Name[bs]=Povjerljiv korijenski certifikat
 Name[ca]=Certificat arrel de confiança
 Name[cs]=Důvěryhodný kořenový certifikát
 Name[da]=Root-certifikat der stoles på
@@ -124,7 +126,6 @@ Name[sr@Latn]=Коренски сертификат коме се верује
 Name[sv]=Pålitligt rotcertifikat
 Name[ta]=நம்பகமான மூல சான்றிதழ்
 Name[tg]=Сертификати решавии эътимод
-Name[xx]=xxTrusted root certificatexx
 Name[zh_CN]=可信任的根证书
 
 [Key Filter #4]
@@ -133,6 +134,7 @@ is-root-certificate=true
 is-not-validity=ultimate
 Name=Not trusted root certificate
 Name[bg]=Ненадеждно удостоверение
+Name[bs]=Nepovjerljiv korijenski certifikat
 Name[ca]=Certificat arrel sense confiança
 Name[cs]=Nedůvěryhodný kořenový certifikát
 Name[da]=Root-certifikat der ikke stoles på
@@ -155,7 +157,6 @@ Name[sr@Latn]=Коренски сертификат коме се не веру�
 Name[sv]=Opålitligt rotcertifikat
 Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
 Name[tg]=Сертификати решавии ғайриэътимод
-Name[xx]=xxNot trusted root certificatexx
 Name[zh_CN]=未信任的根证书
 
 [Key Filter #5]
@@ -163,6 +164,7 @@ was-validated=true
 Name=Other keys
 Name[be]=Іншыя ключы
 Name[bg]=Други ключове
+Name[bs]=Ostali ključevi
 Name[ca]=Altres claus
 Name[cs]=Ostatní klíče
 Name[da]=Andre nøgler
@@ -173,6 +175,7 @@ Name[fr]=Autres clés
 Name[gl]=Outras chaves
 Name[he]=מפתחות אחרים
 Name[hu]=Egyéb kulcsok
+Name[is]=Aðrir lyklar
 Name[it]=Altre chiavi
 Name[nb]=Andre nøkler
 Name[nl]=Andere sleutels
@@ -187,6 +190,5 @@ Name[sr@Latn]=Други кључеви
 Name[sv]=Andra nycklar
 Name[ta]=மற்ற விசைகள்
 Name[tg]=Дигар калидҳо
-Name[xx]=xxOther keysxx
 Name[zh_CN]=其它密钥
 

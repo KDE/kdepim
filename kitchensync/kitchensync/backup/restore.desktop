@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=Konnector Restore
+Name[bs]=Konnector osvježi
 Name[da]=Konnector genopret
 Name[de]=Konnector-Wiederhestellung
 Name[es]=Konnector para restauración
@@ -20,7 +21,6 @@ Name[sr@Latn]=Konnector поврати
 Name[sv]=Konnector återställning
 Name[ta]=இணைப்பானைத் திரும்பப் பெறுதல் 
 Name[tg]=Барқарор кардани Konnector
-Name[xx]=xxKonnector Restorexx
 Name[zh_CN]=Konnector 恢复
 Icon=
 ServiceTypes=KitchenSync/ActionPart

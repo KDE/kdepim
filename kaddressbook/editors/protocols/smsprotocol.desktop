@@ -7,6 +7,7 @@ X-KDE-InstantMessagingKABCField=messaging/sms
 Comment=SMS Protocol
 Comment[be]=Пратакол SMS
 Comment[bg]=Протокол SMS
+Comment[bs]=SMS poruke
 Comment[ca]=Protocol SMS
 Comment[cs]=SMS protokol
 Comment[da]=SMS Protokol
@@ -31,9 +32,7 @@ Comment[sr@Latn]=SMS протокол
 Comment[sv]=SMS-protokoll
 Comment[ta]=SMS நெறிமுறை
 Comment[tg]=протоколи SMS
-Comment[xx]=xxSMS Protocolxx
 Comment[zh_CN]=短信息协议
 Name=SMS
-Name[xx]=xxSMSxx
 Name[zh_CN]=短信息
 
