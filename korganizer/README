@@ -2,15 +2,13 @@
                        | K   O R G A N I Z E R |
                        +-----------------------+
 
-                            version pre3.1
+                            version 3.1
 
                        http://korganizer.kde.org
 
-* Next release: 3.1 (sometime in 2002)
-
 QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
 
-* Official 3.1 release
+* Official 3.1 release (January 2003)
 
   - General:
     - User-definable templates for events and todos.
@@ -31,6 +29,7 @@ QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
     - Coloring of events in month view based on categories.
     - Coloring of due and overdue todos.
     - Improved "What's Next" view.
+    - Configurable cell height in week and day views
 
   - Group scheduling:
     - iMIP group scheduling functions for todos.
