@@ -7,7 +7,8 @@ that &kpilot; uses, focusing on the &kpilot; daemon functionality.
 It is a good idea to make a <link linkend="backup">backup</link>
 of your &handheld; regularly. Other than making backups, it should rarely be necessary
 to do anything other than drop your &handheld; in the cradle and press
-the &HotSync; button.
+the &HotSync; button. The &kpilot; daemon icon on the system tray will flash
+indicating that a sync is under way.
 </para>
 
 <screenshot>
@@ -36,6 +37,8 @@ and select one of the menu items under the
 sub menu.
 </para>
 
+
+
 <para>
 In short, the sync types are:
 </para>
@@ -43,23 +46,17 @@ In short, the sync types are:
 <itemizedlist>
 
 <listitem><para>
-<guilabel>Hot Sync</guilabel>: run all selected conduits and sync the databases
-with a modified flag set, updating the modified records only. This option offers
+<guilabel>HotSync</guilabel>: this option offers
 a nice balance between speed and data safety.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Fast Sync</guilabel>: Only synchronize those
-databases that have conduits, and perform no backup of the data
-on the &PalmPilot;, reducing greatly the time required for the sync
-operation. This also means that if something goes wrong with your &PalmPilot;,
-you may not be able to recover databases with no conduit. This is a classic
-trade-off between speed and safety.
+<guilabel>FastSync</guilabel>: only synchronize those
+databases that have conduits.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Full Sync</guilabel>: run all selected conduits, and sync all databases,
-reading all records, and performing a full backup. It is the safest option, but
+<guilabel>FullSync</guilabel>: the safest option, but
 takes the longest time to complete.
 </para></listitem>
 
@@ -70,9 +67,7 @@ takes the longest time to complete.
 
 <listitem><para>
 <guilabel>Restore</guilabel>: copy a previous backup data from the PC to the
-&handheld;, erasing the data previously held. If you face hardware or software
-problems in your &handheld; preventing you to access your data, you can use
-this to return it to a previous state.
+&handheld;, erasing the data previously held.
 
 <warning><para>
 Use the restore functionality with care, as you can lose all the new
@@ -88,6 +83,16 @@ data entered on the &handheld; since the last backup.
 Alternatively, you can change the default syncing behavior of &kpilot; by
 choosing the most suitable option in the <link linkend="page-hotsync">HotSync
 configure dialog</link>. 
+
+<note><para>
+To configure the conduits or the sync process, you do not need to open the main
+&kpilot; application, as the
+<menuchoice>
+<guimenuitem>Configure KPilot...</guimenuitem>
+</menuchoice>
+menu item is available in the &kpilot; daemon pop-up menu as well.
+</para></note>
+
 </para>
 
 <sect1 id="backup">
@@ -120,16 +125,162 @@ to make the next sync a backup. Then, just press the &HotSync; button.
 
 </sect1>
 
-<sect1 id="hotsync-s">
-<title>Normal &HotSync; Operation</title>
+<sect1 id="restore">
+<title>Restoring your &handheld; data</title>
 
 <para>
-The &HotSync; is &kpilot;'s default sync operation. It will run
-all conduits selected in the
-<link linkend="config-conduits">conduits configuration</link>,
-and sync all records and databases with a modified flag.
+The restore operation consist of transferring all the data previously saved on
+the <acronym>PC</acronym> to the &handheld;, effectively erasing all the new
+data held by the device by returning it to a previous state.
+<warning><para>
+Use the restore functionality with care, as you can lose all the new
+data entered on the &handheld; since the last backup.
+</para></warning>
+</para>
+
+<para>
+The data saved on the last backup is locates on the <filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/User Name/</filename>
+folder. The <filename class="directory">$KDEHOME</filename> environment variable
+(typically <filename class="directory">/home/Login Name/.kde/</filename>) 
+points to the folder that contains your configuration and data for the &kde;
+applications.</para>
+
+<para>
+The most common use for the restore functionality is to recover from a hardware
+or software failure on the device, or accidental database or record deletion.
+The restore function can only be accessed from the 
+main &kpilot; application, and not from the &kpilot; daemon, as
+restoring the data is not a common operation. In order 
+to make the next sync a backup, click the 
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Restore</guimenuitem>
+</menuchoice>
+menu item, then press the &HotSync; button.
 </para>
 
 </sect1>
 
+
+<sect1 id="sync-s">
+<title>Syncing your &handheld; data</title>
+
+<para>
+There are three ways to sync your &handheld;, <guilabel>HotSync</guilabel>,
+<guilabel>FastSync</guilabel> or <guilabel>FullSync</guilabel>.
+</para>
+
+<para>
+When you press the &HotSync; button on your &handheld;, &kpilot;'s will run the 
+default sync operation (usually a <guilabel>HotSync</guilabel>). You can select
+the default sync operation in the <link linkend="page-hotsync">HotSync
+configure dialog</link>. Alternatively, you can click one of these sync options in
+the main &kpilot; application
+<menuchoice>
+<guimenu>File</guimenu>
+</menuchoice>
+menu or in the &kpilot; daemon pop-up 
+<menuchoice>
+<guisubmenu>Next Sync</guisubmenu>
+</menuchoice>
+submenu.
+
+<important><para>
+Using the <link linkend="page-hotsync">HotSync configure dialog</link>
+is the only way to change the default sync operation.
+The main &kpilot; application
+<menuchoice>
+<guimenu>File</guimenu>
+</menuchoice>
+menu items or in the &kpilot; daemon pop-up 
+<menuchoice>
+<guisubmenu>Next Sync</guisubmenu>
+</menuchoice>
+submenu items change only what the <emphasis>next sync</emphasis> will
+be performed.
+</para></important>
+</para>
+
+<screenshot>
+<screeninfo>KPilot Daemon Pop-Up Menu</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="daemon-menu.png" format="PNG"/></imageobject>
+<textobject><phrase>KPilot daemon pop-up menu</phrase></textobject>
+<caption><para>KPilot daemon pop-up menu</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<itemizedlist>
+
+<listitem><para>
+<guilabel>HotSync</guilabel>: run all selected conduits and sync the databases
+with a modified flag set, updating the modified records only. This option offers
+a nice balance between speed and data safety. Available on the main application
+<menuchoice>
+<guimenu>File</guimenu>
+</menuchoice>
+menu and in the daemon pop-up menu
+<menuchoice>
+<guisubmenu>Next Sync</guisubmenu>
+</menuchoice>
+submenu.
+</para></listitem>
+
+<listitem><para>
+<guilabel>FastSync</guilabel>: Only synchronize those
+databases that have conduits, and perform no backup of the data
+on the &PalmPilot;, reducing greatly the time required for the sync
+operation. This also means that if something goes wrong with your &PalmPilot;,
+you may not be able to recover databases with no conduits. This is a classic
+trade-off between speed and safety. Available on the main application
+<menuchoice>
+<guimenu>File</guimenu>
+</menuchoice>
+menu and in the daemon pop-up menu
+<menuchoice>
+<guisubmenu>Next Sync</guisubmenu>
+</menuchoice>
+submenu. This operation only makes sense if you do not use
+<link linkend="using-kpilot">&kpilot; built-in database viewer
+applications</link>, but uses &kpilot; to sync your &handheld; data with
+external applications, using <link linkend="conduits">conduits</link>.
+</para></listitem>
+
+<listitem><para>
+<guilabel>FullSync</guilabel>: run all selected conduits, and sync all databases,
+reading all records, and performing a full backup. It is the safest option, but
+takes the longest time to complete. Available on the main application
+<menuchoice>
+<guimenu>File</guimenu>
+</menuchoice>
+menu only.
+</para></listitem>
+
+</itemizedlist>
+
+<sect2 id="conflicts">
+<title>Resolving conflicts</title>
+
+<para>
+Data records can be changed both on the &handheld; and
+on the <acronym>PC</acronym>. If one record has incompatible changes
+in both the &handheld; and the <acronym>PC</acronym>, (such as
+changing a phone number in different ways on both sides),
+the conflicting change needs to be resolved so
+that both the &handheld; and the <acronym>PC</acronym> are in sync again.
+</para>
+
+<para>
+A pop-up dialog may appear, asking you how to resolve the
+conflict, or you may have a general rule to automatically handle these
+conflicts (depending on your <link linkend="page-hotsync">conflict resolution
+choice</link>). Note that you can define different resolution choices
+for different conduits in the <link linkend="config-conduits">conduits
+configuration dialog</link>.
+</para>
+
+</sect2>
+
+</sect1>
 </chapter>

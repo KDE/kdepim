@@ -326,13 +326,13 @@ Select the type of synchronization that will be performed by default.
 <itemizedlist>
 
 <listitem><para>
-<guilabel>Hot Sync</guilabel>: run all selected conduits and sync the databases
+<guilabel>HotSync</guilabel>: run all selected conduits and sync the databases
 with a modified flag set, updating the modified records only. This option offers
 a nice balance between speed and data safety.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Fast Sync</guilabel>: Only synchronize those
+<guilabel>FastSync</guilabel>: Only synchronize those
 databases that have conduits, and perform no backup of the data
 on the &PalmPilot;, reducing greatly the time required for the sync
 operation. This also means that if something goes wrong with your &PalmPilot;,
@@ -341,7 +341,7 @@ trade-off between speed and safety.
 </para></listitem>
 
 <listitem><para>
-<guilabel>Full Sync</guilabel>: run all selected conduits, and sync all databases,
+<guilabel>FullSync</guilabel>: run all selected conduits, and sync all databases,
 reading all records, and performing a full backup. It is the safest option, but
 takes the longest time to complete.
 </para></listitem>
@@ -396,9 +396,9 @@ and you will need to disable it to use &kpilot; in non-KDE environments.
 <term><guilabel>Conflict Resolution</guilabel></term>
 <listitem>
 <para>
-Data can be changed both on the &handheld; and
-on the PC; if one record has incompatible changes
-in both the &handheld; and the PC, (such as
+Data records can be changed both on the &handheld; and
+on the <acronym>PC</acronym>. If one record has incompatible changes
+in both the &handheld; and the <acronym>PC</acronym>, (such as
 changing a phone number in different ways on both sides),
 the conflicting change needs to be resolved so
 that both the &handheld; and the <acronym>PC</acronym> are in sync again.
