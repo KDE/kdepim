@@ -29,6 +29,7 @@
 #include <iostream>
 
 #include "konsolekalendar.h"
+#include "konsolekalendarepoch.h"
 
 using namespace KCal;
 using namespace std;
@@ -69,6 +70,7 @@ int main(int argc, char *argv[])
                         "illuusio@mailcity.com");
 
   aboutData.addAuthor("Tuukka Pasanen",0, "illuusio@mailcity.com");
+  aboutData.addAuthor("Allen D. Winter", 0, "winterz@earthlink.net");
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
@@ -197,6 +199,25 @@ int main(int argc, char *argv[])
 
     //variables.setDate(date);
   }
+
+/*
+   *  Show next happening and exit
+   *
+   */
+  if ( args->isSet("epoch-start") )
+  {
+     option = args->getOption("epoch-start");
+
+    if( variables.isVerbose() ) {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Show next happening in calendar and exit" << endl;
+    }
+
+    // KonsoleKalendarEpoch::epoch2QDateTime( option );
+
+    //variables.setNext(true);
+  }
+
+
 
 
   /*
