@@ -183,7 +183,8 @@ bool MALConduit::skip()
 	if (skip()) 
 	{
 		emit logMessage(i18n("Skipping MAL sync, because last synchronization was not long enough ago."));
-		return false;
+		emit syncDone(this);
+		return true;
 	}
 	
 	// Set all proxy settings
@@ -240,6 +241,9 @@ void MALConduit::printLogMessage(QString msg)
 
 
 // $Log$
+// Revision 1.4  2002/08/23 22:59:29  kainhofe
+// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
+//
 // Revision 1.3  2002/08/23 22:33:48  kainhofe
 // Added a license exception to be able to legally link to libmal
 //
