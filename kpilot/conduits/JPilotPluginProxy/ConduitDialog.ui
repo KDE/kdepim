@@ -154,7 +154,7 @@
                             <cstring>SearchPluginsButton</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Scan Plugin Directories</string>
+                            <string>&amp;Scan Plugin Folders</string>
                         </property>
                     </widget>
                     <widget class="QLayoutWidget" row="2" column="0" rowspan="1" colspan="3">

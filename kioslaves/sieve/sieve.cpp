@@ -659,7 +659,7 @@ void kio_sieveProtocol::get(const KURL& url)
 void kio_sieveProtocol::del(const KURL &url, bool isfile)
 {
 	if (!isfile) {
-		error(ERR_INTERNAL, i18n("Directories are not supported."));
+		error(ERR_INTERNAL, i18n("Folders are not supported."));
 		return;
 	}
 
