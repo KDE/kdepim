@@ -21,52 +21,59 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#ifndef KABCONFIGWIDGET_H
-#define KABCONFIGWIDGET_H
+#ifndef ADDRESSEEWIDGET_H
+#define ADDRESSEEWIDGET_H
 
 #include <qwidget.h>
 
-class QCheckBox;
-class QListViewItem;
+class KLineEdit;
+
+class QListBox;
+class QListBoxItem;
 class QPushButton;
 
-class KListView;
-
-class AddresseeWidget;
-
-class KABConfigWidget : public QWidget
+class NamePartWidget : public QWidget
 {
   Q_OBJECT
-  
+
   public:
-    KABConfigWidget( QWidget *parent, const char *name = 0 );
+    NamePartWidget( const QString &title, QWidget *parent,
+                    const char *name = 0 );
+    ~NamePartWidget();
+    
+    void setNameParts( const QStringList &list );
+    QStringList nameParts() const;
+
+  private slots:
+    void add();
+    void remove();
+
+    void selectionChanged( QListBoxItem* );
+    void textChanged( const QString& );
+
+  private:
+    KLineEdit *mEdit;
+
+    QListBox *mBox;
+    QPushButton *mAddButton;
+    QPushButton *mRemoveButton;
+};
+
+class AddresseeWidget : public QWidget
+{
+  Q_OBJECT
+
+  public:
+    AddresseeWidget( QWidget *parent, const char *name = 0 );
+    ~AddresseeWidget();
     
     void restoreSettings();
     void saveSettings();
-    void defaults();
-
-  signals:
-    void changed( bool );
-
-  public slots:
-    void modified();
-
-  private slots:
-    void configureExtension();
-    void selectionChanged( QListViewItem* );
-    void itemClicked( QListViewItem* );
 
   private:
-    void restoreExtensionSettings();
-    void saveExtensionSettings();
-
-    KListView *mExtensionView;
-
-    QCheckBox *mNameParsing;
-    QCheckBox *mViewsSingleClickBox;
-    QPushButton *mConfigureButton;
-
-    AddresseeWidget *mAddresseeWidget;
+    NamePartWidget *mPrefix;
+    NamePartWidget *mInclusion;
+    NamePartWidget *mSuffix;
 };
 
 #endif

@@ -2,7 +2,8 @@ INCLUDES= -I$(srcdir)/.. -I$(top_srcdir) $(all_includes)
 
 kde_module_LTLIBRARIES = kcm_kabconfig.la kcm_kabldapconfig.la
 
-kcm_kabconfig_la_SOURCES = kcmkabconfig.cpp kabconfigwidget.cpp extensionconfigdialog.cpp
+kcm_kabconfig_la_SOURCES = kcmkabconfig.cpp kabconfigwidget.cpp \
+                           extensionconfigdialog.cpp addresseewidget.cpp
 kcm_kabconfig_la_LDFLAGS  = $(all_libraries) -module -avoid-version -no-undefined
 kcm_kabconfig_la_LIBADD = $(XTESTLIB) $(LIB_KIO) $(LIB_KDEUI) \
   $(top_builddir)/libkdepim/libkdepim.la ../libkabcommon.la

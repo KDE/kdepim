@@ -26,6 +26,7 @@
 #include <qgroupbox.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qtabwidget.h>
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -35,6 +36,7 @@
 #include <kmessagebox.h>
 #include <ktrader.h>
 
+#include "addresseewidget.h"
 #include "extensionconfigdialog.h"
 #include "extensionwidget.h"
 #include "kabprefs.h"
@@ -62,7 +64,15 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   QVBoxLayout *topLayout = new QVBoxLayout( this, KDialog::marginHint(),
                                             KDialog::spacingHint() );
 
-  QGroupBox *groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "General" ), this );
+  QTabWidget *tabWidget = new QTabWidget( this );
+  topLayout->addWidget( tabWidget );
+
+  // General page
+  QWidget *generalPage = new QWidget( this );
+  QVBoxLayout *layout = new QVBoxLayout( generalPage, KDialog::marginHint(),
+                                            KDialog::spacingHint() );
+
+  QGroupBox *groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "General" ), generalPage );
   QVBoxLayout *boxLayout = new QVBoxLayout( groupBox->layout() );
   boxLayout->setAlignment( Qt::AlignTop );
 
@@ -72,9 +82,9 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mNameParsing = new QCheckBox( i18n( "Automatic name parsing for new addressees" ), groupBox, "mparse" );
   boxLayout->addWidget( mNameParsing );
 
-  topLayout->addWidget( groupBox );
+  layout->addWidget( groupBox );
 
-  groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Extensions" ), this );
+  groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Extensions" ), generalPage );
   boxLayout = new QVBoxLayout( groupBox->layout() );
   boxLayout->setAlignment( Qt::AlignTop );
 
@@ -88,7 +98,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mConfigureButton->setEnabled( false );
   boxLayout->addWidget( mConfigureButton );
 
-  topLayout->addWidget( groupBox );
+  layout->addWidget( groupBox );
 
   connect( mNameParsing, SIGNAL( toggled( bool ) ), this, SLOT( modified() ) );
   connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), this, SLOT( modified() ) );
@@ -98,6 +108,12 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
            SLOT( itemClicked( QListViewItem* ) ) );
   connect( mConfigureButton, SIGNAL( clicked() ),
            SLOT( configureExtension() ) );
+
+  tabWidget->addTab( generalPage, i18n( "General" ) );
+
+  // Addressee page
+  mAddresseeWidget = new AddresseeWidget( this );
+  tabWidget->addTab( mAddresseeWidget, i18n( "Contact" ) );
 }
 
 void KABConfigWidget::restoreSettings()
@@ -107,6 +123,7 @@ void KABConfigWidget::restoreSettings()
 
   mNameParsing->setChecked( KABPrefs::instance()->mAutomaticNameParsing );
   mViewsSingleClickBox->setChecked( KABPrefs::instance()->mHonorSingleClick );
+  mAddresseeWidget->restoreSettings();
 
   restoreExtensionSettings();
 
@@ -121,8 +138,8 @@ void KABConfigWidget::saveSettings()
 
   KABPrefs::instance()->mAutomaticNameParsing = mNameParsing->isChecked();
   KABPrefs::instance()->mHonorSingleClick = mViewsSingleClickBox->isChecked();
-
   KABPrefs::instance()->writeConfig();
+  mAddresseeWidget->saveSettings();
 
   saveExtensionSettings();
 
