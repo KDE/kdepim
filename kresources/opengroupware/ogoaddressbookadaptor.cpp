@@ -50,8 +50,12 @@ QCString OGoAddressBookAdaptor::identifier() const
 
 void OGoAddressBookAdaptor::adaptUploadUrl( KURL &url )
 {
+kdDebug()<<"OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
   url = WebdavHandler::toDAV( url );
-  url.addPath( "new.vcf" );
+  url = WebdavHandler::toDAV( url );
+  url.setPath( url.path() + "/new.vcf" );
+// url.addPath( "new.vcf" );
+kdDebug()<<"after OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
 }
 
 QString OGoAddressBookAdaptor::mimeType() const
