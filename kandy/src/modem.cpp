@@ -319,7 +319,7 @@ bool Modem::lockDevice()
 		}
 
 		if (!kill((pid_t)pid, 0)) {
-                  emit errorMessage( i18n("Process with pid %1 locking the device is still running.")
+                  emit errorMessage( i18n("Process with PID %1, which is locking the device, is still running.")
                                      .arg( pid ) );
                   return false;
 		}
