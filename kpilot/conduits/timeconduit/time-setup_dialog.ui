@@ -104,7 +104,7 @@
                             <cstring>TextLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>&lt;qt&gt;PalmOS Version 3.25 and 3.3 do not support setting the system time, so this conduit will be skipped for handhelds that run one of these operating systems.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;PalmOS Version 3.25 and 3.3 do not support setting the system time, so this conduit will be skipped for handhelds that run either of these operating systems.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                 </grid>
