@@ -496,7 +496,7 @@ void ViewManager::initGUI()
 
 void ViewManager::incSearch( const QString& text )
 {
-  if(!mActiveView )
+  if ( !mActiveView )
     return;
 
   mActiveView->setSelected( QString::null, false );
@@ -506,21 +506,45 @@ void ViewManager::incSearch( const QString& text )
 
 #if KDE_VERSION >= 319
     KABC::AddresseeList list( mAddressBook->allAddressees() );
-    list.sortByField( field );
-
-    KABC::AddresseeList::Iterator it;
-    for ( it = list.begin(); it != list.end(); ++it ) {
-      if ( field->value( *it ).startsWith( text ) ) {
-        mActiveView->setSelected( (*it).uid(), true );
-        return;
+    if (  field ) {
+      list.sortByField( field );
+      KABC::AddresseeList::Iterator it;
+      for ( it = list.begin(); it != list.end(); ++it ) {
+        if ( field->value( *it ).startsWith( text ) ) {
+          mActiveView->setSelected( (*it).uid(), true );
+          return;
+        }
+      }
+    } else {
+      KABC::AddresseeList::Iterator it;
+      for ( it = list.begin(); it != list.end(); ++it ) {
+        KABC::Field::List fieldList = mActiveView->fields();
+        KABC::Field::List::ConstIterator fieldIt;
+        for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
+          if ( (*fieldIt)->value( *it ).startsWith( text ) ) {
+            mActiveView->setSelected( (*it).uid(), true );
+            return;
+          }
+        }
       }
     }
 #else
     KABC::AddressBook::Iterator it;
     for ( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
-      if ( field->value( *it ).startsWith( text ) ) {
-        mActiveView->setSelected( (*it).uid(), true );
-        return;
+      if ( field ) {
+        if ( field->value( *it ).startsWith( text ) ) {
+          mActiveView->setSelected( (*it).uid(), true );
+          return;
+        }
+      } else {
+        KABC::Field::List fieldList = mActiveView->fields();
+        KABC::Field::List::ConstIterator fieldIt;
+        for ( fieldIt = fieldList.begin(); fieldIt != fieldList.end(); ++fieldIt ) {
+          if ( (*fieldIt)->value( *it ).startsWith( text ) ) {
+            mActiveView->setSelected( (*it).uid(), true );
+            return;
+          }
+        }
       }
     }
 #endif

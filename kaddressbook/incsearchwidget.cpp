@@ -82,6 +82,7 @@ void IncSearchWidget::announceFieldChanged()
 void IncSearchWidget::setFields( const KABC::Field::List &list )
 {
   mFieldCombo->clear();
+  mFieldCombo->insertItem( i18n( "All Fields" ) );
 
   KABC::Field::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
@@ -95,11 +96,10 @@ void IncSearchWidget::setFields( const KABC::Field::List &list )
 
 KABC::Field *IncSearchWidget::currentField()const
 {
-  if ( mFieldCombo->currentItem() >= (int)mFieldList.count() ||
-       mFieldCombo->currentItem() == -1 )
-    return 0;
+  if ( mFieldCombo->currentItem() == -1 || mFieldCombo->currentItem() == 0 )
+    return 0;  // for error or 'use all fields'
   else
-    return mFieldList[ mFieldCombo->currentItem() ];
+    return mFieldList[ mFieldCombo->currentItem() - 1 ];
 }
 
 #include "incsearchwidget.moc"
