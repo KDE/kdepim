@@ -7,6 +7,8 @@ SUBDIRS = support pics test
 
 METASOURCES = AUTO
 
+COMPILE_BEFORE_karm = libkdepim kresources
+
 karm_SOURCES =  kaccelmenuwatch.cpp main.cpp desktoptracker.cpp \
                 edittaskdialog.cpp idletimedetector.cpp \
                 printdialog.cpp timekard.cpp karmutility.cpp ktimewidget.cpp \
@@ -15,7 +17,7 @@ karm_SOURCES =  kaccelmenuwatch.cpp main.cpp desktoptracker.cpp \
 		csvexportdialog_base.ui csvexportdialog.cpp plannerparser.cpp \
 		karmdcopiface.skel
 karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la \
-	     -lkcal_resourceremote \
+	     $(top_builddir)/kresources/remote/libkcal_resourceremote.la \
              $(top_builddir)/libkdepim/libkdepim.la $(LIBXSS)
 karm_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 noinst_HEADERS = desktoptracker.h edittaskdialog.h printdialog.h \
