@@ -56,27 +56,49 @@ fwrite($handle,
 </project>    
 ');   
 fclose($handle); 
+};
+
+function simkey($s)
+// This function simulates keypresses that form the string $s, e.g. for $s==hallo, it simulates the keypress of h, then a, then l and so on.
+// find a useful list of keycodes under /usr/include/X11/keysymdef.h
+{
+  echo strlen($s);
+  for ($i=0; $i<strlen($s); $i++)
+  {
+    if ($s[$i]=="/") system("xte 'key KP_Divide'");
+    else system("xte 'key ".$s[$i]."'");
+  }
 }
 
-echo "\nThis is lifetest.php, a program to test karm by starting it and simulating keypresses.\n";
-echo "It is intended for developers who do changes to karm's sourcecode.\n
-Before publishing these changes, they should
-(a) resolve all conflicts with the latest karm sourcecode (cvs up)
-(b) make sure the code still builds (make)
-(c) run automated test routines like this (make check)\n\n";
+function keysim($s)
+// remove everything that makes you have to think twice!!
+{
+  simkey($s);
+}
 
-echo "This program simulates keypresses, so please leave the keyboard alone during the test. Please use a us or de keyboardlayout (setxkbmap us). This must be run in X environment.\n
-You must have XAutomation installed to run this.";
-system("xte -h 2&>/dev/null",$rc);
-if ($rc==0) echo " You have.\n";
-if ($rc==127) echo " You do not have, please get it from http://hoopajoo.net/projects/xautomation.html .\n";
-echo "This program will test karm by issueing karm, so, make sure, this calls the version you want to test (make install).\n\n";
+// int main()
+if ($argv[1]!="--batch")
+{
+  echo "\nThis is lifetest.php, a program to test karm by starting it and simulating keypresses.\n";
+  echo "It is intended for developers who do changes to karm's sourcecode.\n";
+  echo "Before publishing these changes, they should\n";
+  echo "(a) resolve all conflicts with the latest karm sourcecode (cvs up)\n";
+  echo "(b) make sure the code still builds (make)\n";
+  echo "(c) run automated test routines like this (make check)\n\n";
+  
+  echo "This program simulates keypresses, so please leave the keyboard alone during the test. Please use a us or de keyboardlayout (setxkbmap us). This must be run in X environment.\n
+  You must have XAutomation installed to run this.";
+  system("xte -h 2&>/dev/null",$rc);
+  if ($rc==0) echo " You have.\n";
+  if ($rc==127) echo " You do not have, please get it from http://hoopajoo.net/projects/xautomation.html .\n";
+  echo "This program will test karm by issueing karm, so, make sure, this calls the version you want to test (make install).\n\n";
 
-echo "This program will now stop unless you gave the parameter --batch (confirming that you do not touch the keyboard)\n";   
+  echo "This program will now stop unless you give the parameter --batch (confirming that you do not touch the keyboard)\n";   
 
-$err="";
-$exit=0;
-if ($argv[1]=="--batch")
+  $err="";
+  $exit=0;
+}
+else
 {
   system("xte 'key return' 2&>/dev/null",$rc);
   if ($rc==1) $err+="this must be run in an X environment\n";
@@ -117,18 +139,7 @@ if ($argv[1]=="--batch")
     system("xte 'key Tab'");
     system("xte 'key Tab'");
     system("xte 'key Tab'");
-    system("xte 'keydown Shift_L'");
-    system("xte 'key /'");
-    system("xte 'keyup Shift_L'");
-    system("xte 'str tmp'");
-    system("xte 'keydown Shift_L'");
-    system("xte 'key /'");
-    system("xte 'keyup Shift_L'");
-    system("xte 'str karm'");
-    system("xte 'str te'");
-    system("xte 'str st.'");
-    system("xte 'str ics'");
-    //fwrite($pipes[0],"/tmp/karmtest.ics\n");
+    simkey("/tmp/karmtest.ics");
     system("sleep 1");
     system("xte 'key Return'");
     system("sleep 1");
@@ -143,8 +154,7 @@ if ($argv[1]=="--batch")
     system("sleep 1");
     system("xte 'key Return'");
     system("sleep 1");
-    system("xte 'str exampl'");
-    system("xte 'str e 1'");
+    simkey("example 1");
     system("xte 'key Return'");
     system("sleep 1");
     
@@ -161,17 +171,7 @@ if ($argv[1]=="--batch")
     system("xte 'key Down'");
     system("xte 'key Return'");
     system("sleep 1");
-    system("xte 'keydown Shift_L'");
-    system("xte 'key /'");
-    system("xte 'keyup Shift_L'");
-    system("xte 'str tmp'");
-    system("xte 'keydown Shift_L'");
-    system("xte 'key /'");
-    system("xte 'keyup Shift_L'");
-    system("xte 'str exa'");
-    system("xte 'str mple'");
-    system("xte 'str .pla'");
-    system("xte 'str nner'");
+    keysim("/tmp/example.planner");
     system("sleep 1");
     system("xte 'key Return'");
     system("sleep 1");
@@ -187,7 +187,7 @@ if ($argv[1]=="--batch")
     fclose($ics);
     system ("sleep 1");
   }
+}
   echo $err;
   if ($err!="") exit(1);
-}
 ?>
