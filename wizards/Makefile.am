@@ -64,9 +64,7 @@ libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc
 libgroupwisewizard_la_LIBADD = $(top_builddir)/kresources/groupwise/libkcal_groupwise.la \
                           $(top_builddir)/kresources/groupwise/libkabc_groupwise.la \
                           $(top_builddir)/libkdepim/libkdepim.la
-libgroupwisewizard_la_COMPILE_FIRST = $(top_builddir)/kresources/groupwise/kabc_groupwiseprefs.h \
-                                      $(top_builddir)/kresources/groupwise/kcal_groupwiseprefs.h
-
+libgroupwisewizard_la_COMPILE_FIRST = $(top_builddir)/kresources/groupwise/kabc_groupwiseprefs.h 
 
 groupwisewizard_LDADD = libgroupwisewizard.la
 groupwisewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
