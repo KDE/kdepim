@@ -555,6 +555,7 @@ void KABCore::contactModified( const KABC::Addressee &addr )
   UndoStack::instance()->push( command );
   RedoStack::instance()->clear();
 
+  setContactSelected( addr.uid() );
   setModified( true );
 }
 
