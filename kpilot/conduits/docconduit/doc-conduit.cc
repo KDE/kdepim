@@ -172,7 +172,7 @@ bool DOCConduit::pcTextChanged(QString docfn)
 #ifdef DEBUG
 	DEBUGCONDUIT<<"Old digest is "<<oldDigest<<endl;
 #endif
-	
+
 	KMD5 docmd5;
 	QFile docfile(docfn);
 	if (docfile.open(IO_ReadOnly)){
@@ -411,7 +411,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 }
 
 
-/** syncNextDB walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC. 
+/** syncNextDB walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC.
  * syncNextDB and syncNextDOC fist build the list of all PalmDoc texts, and then the method syncDatabases does the actual sync. */
 void DOCConduit::syncNextDB() {
 	FUNCTIONSETUP;
@@ -429,7 +429,7 @@ void DOCConduit::syncNextDB() {
 #endif
 
 	// if creator and/or type don't match, go to next db
-	if (!isCorrectDBTypeCreator(dbinfo) || 
+	if (!isCorrectDBTypeCreator(dbinfo) ||
 		fDBNames.contains(QString::fromLatin1(dbinfo.name)))
 	{
 		QTimer::singleShot(0, this, SLOT(syncNextDB()));
@@ -439,13 +439,13 @@ void DOCConduit::syncNextDB() {
 	QString docfilename=constructDOCFileName(QString::fromLatin1(dbinfo.name));
 	QString pdbfilename=constructPDBFileName(QString::fromLatin1(dbinfo.name));
 
-	docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name), 
+	docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name),
 		docfilename, pdbfilename, eSyncNone);
 	syncInfo.dbinfo=dbinfo;
 	needsSync(syncInfo);
 	fSyncInfoList.append(syncInfo);
 	fDBNames.append(QString::fromLatin1(dbinfo.name));
-	
+
 	QTimer::singleShot(0, this, SLOT(syncNextDB()));
 	return;
 }
@@ -463,7 +463,7 @@ void DOCConduit::syncNextDOC()
 		QTimer::singleShot(0, this, SLOT(checkPDBFiles()));
 		return;
 	}
-	
+
 	// if docnames isn't initialized, get a list of all *.txt files in fDOCDir
 	if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
 		docnames=QDir(fDOCDir, CSL1("*.txt")).entryList() ;
@@ -483,7 +483,7 @@ void DOCConduit::syncNextDOC()
 	QString docfilename=fl.absFilePath();
 	QString pdbfilename;
 	dociterator++;
-	
+
 	DBInfo dbinfo;
 	// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
 	// first fill everything with 0, so we won't have a buffer overflow.
@@ -503,7 +503,7 @@ void DOCConduit::syncNextDOC()
 		DEBUGCONDUIT<<docfilename<<" has already been synced, skipping it."<<endl;
 #endif
 	}
-	
+
 	QTimer::singleShot(0, this, SLOT(syncNextDOC()));
 	return;
 }
@@ -514,14 +514,14 @@ void DOCConduit::syncNextDOC()
  *  If so, install it to the handheld and sync it to the PC */
 void DOCConduit::checkPDBFiles() {
 	FUNCTIONSETUP;
-	
+
 	if (fLocalSync || !fKeepPDBLocally || eSyncDirection==eSyncPCToPDA )
 	{
 		// no more databases available, so check for PC->Palm sync
-		QTimer::singleShot(0, this, SLOT(resolve()));
+		QTimer::singleShot(0, this, SLOT(checkDeletedDocs()));
 		return;
 	}
-	
+
 	// Walk through all files in the pdb directory and check if it has already been synced.
 	// if docnames isn't initialized, get a list of all *.pdb files in fPDBDir
 	if (docnames.isEmpty()/* || dociterator==docnames.end() */) {
@@ -531,7 +531,7 @@ void DOCConduit::checkPDBFiles() {
 	if (dociterator==docnames.end()) {
 		// no more databases available, so start the conflict resolution and then the actual sync proces
 		docnames.clear();
-		QTimer::singleShot(0, this, SLOT(resolve()));
+		QTimer::singleShot(0, this, SLOT(checkDeletedDocs()));
 		return;
 	}
 
@@ -566,6 +566,32 @@ void DOCConduit::checkPDBFiles() {
 	}
 	
 	QTimer::singleShot(0, this, SLOT(checkPDBFiles()));
+}
+
+
+
+void DOCConduit::checkDeletedDocs()
+{
+	FUNCTIONSETUP;
+
+	for (QStringList::Iterator it=fDBListSynced.begin(); it!=fDBListSynced.end(); ++it ) {
+		if (!fDBNames.contains(*it)) {
+			// We need to delete this doc:
+			QString dbname(*it);
+			QString docfilename=constructDOCFileName(dbname);
+			QString pdbfilename=constructPDBFileName(dbname);
+			docSyncInfo syncInfo(dbname, docfilename, pdbfilename, eSyncDelete);
+
+			DBInfo dbinfo;
+			memset(&dbinfo.name[0], 0, 33);
+			strncpy(&dbinfo.name[0], dbname, 30);
+			syncInfo.dbinfo=dbinfo;
+
+			fSyncInfoList.append(syncInfo);
+		}
+	}
+	QTimer::singleShot(0, this, SLOT(resolve()));
+	return;
 }
 
 

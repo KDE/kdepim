@@ -77,6 +77,7 @@ public slots:
 	void syncNextDB();
 	void syncNextDOC();
 	void checkPDBFiles();
+	void checkDeletedDocs();
 	void resolve();
 	void syncDatabases();
 	void cleanup();
