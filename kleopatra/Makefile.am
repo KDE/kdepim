@@ -11,7 +11,7 @@ noinst_HEADERS=certmanager.h certbox.h certitem.h agent.h \
 METASOURCES = AUTO
 INCLUDES =  -I$(top_srcdir)/libkdenetwork -I../kmail $(all_includes)
 
-LDFLAGS = $(all_libraries) $(KDE_RPATH)
+AM_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 LDADD    = ../libkdenetwork/libkdenetwork.la $(LIB_KIO) -lkdeprint
 
 rcdir = $(kde_datadir)/kgpgcertmanager
