@@ -546,9 +546,21 @@ void AbbrowserConduit::setFax(Addressee & abEntry, QString fax)
 }
 
 
+/** First search for a preferred  address. If we don't have one, search
+ *  for home or work as specified in the config dialog. If we don't have
+ *  such one, either, search for the other type. If we still have no luck,
+ *  return an address with preferred + home/work flag (from config dlg). */
 KABC::Address AbbrowserConduit::getAddress(const Addressee & abEntry)
 {
-	return abEntry.address((fPilotStreetHome) ?(KABC::Address::Home) :(KABC::Address::Work));
+	int type=(fPilotStreetHome)?(KABC::Address::Home):(KABC::Address::Work);
+	KABC::Address ad(abEntry.address(KABC::Address::Pref));
+	if (!ad.isEmpty()) return ad;
+	ad=abEntry.address(type);
+	if (!ad.isEmpty()) return ad;
+	ad=abEntry.address((fPilotStreetHome) ?(KABC::Address::Work):(KABC::Address::Home));
+	if (!ad.isEmpty()) return ad;
+
+	return abEntry.address(type | KABC::Address::Pref);
 }
 
 
