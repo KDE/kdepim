@@ -171,8 +171,8 @@ selected, <guibutton>Browse...</guibutton> may be used
 to display a file selection dialog.</para>
 
 <para>In the <guilabel>Time</guilabel> group box, select <guilabel>At
-date/time</guilabel> to enter the date and time when the message is to
-be displayed, or select <guilabel>Time from now</guilabel> to enter
+date/time:</guilabel> to enter the date and time when the message is to
+be displayed, or select <guilabel>Time from now:</guilabel> to enter
 how long after now (in hours and minutes) the message should be
 displayed.</para>
 
@@ -271,9 +271,9 @@ button.</para>
 <listitem>
 <para>Display options to defer the alarm by clicking the
 <guibutton>Defer...</guibutton> button. Then select
-<guilabel>Defer to date/time</guilabel> to enter the date and time
+<guilabel>Defer to date/time:</guilabel> to enter the date and time
 when the message is to be redisplayed, or select <guilabel>Defer for
-time interval</guilabel> to enter how long after now (in hours and
+time interval:</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
 <guibutton>Defer</guibutton> to defer the alarm message.</para>
 
