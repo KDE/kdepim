@@ -1300,7 +1300,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
   QString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
   if (!msade.isNull()) {
     bool floats = (msade == QString::fromLatin1("TRUE"));
-    kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
+//    kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
     event->setFloats(floats);
     if (floats) {
       QDateTime endDate = event->dtEnd();
