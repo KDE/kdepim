@@ -74,16 +74,17 @@ Kleo::PassphraseDialog::PassphraseDialog( const QString & msg, const QString & c
   QWidget * w = new QWidget( this );
   setMainWidget( w );
 
-  QHBoxLayout * hlay = new QHBoxLayout( w, marginHint(), spacingHint() );
+  QHBoxLayout * hlay = new QHBoxLayout( w, 0, spacingHint() );
 
   QLabel * label = new QLabel( w );
-  label->setPixmap( BarIcon( "pgp-keys" ) );
+  label->setPixmap( DesktopIcon( "pgp-keys", KIcon::SizeMedium ) );
   hlay->addWidget( label, 0, AlignTop );
 
   QVBoxLayout * vlay = new QVBoxLayout( hlay ); // inherits spacing
 
   vlay->addWidget( new QLabel( msg.isEmpty() ? i18n("Please enter your passphrase:") : msg, w ) );
 
+  vlay->addWidget( new QLabel( i18n( "Enter passphrase:" ), w ) );
   d->lineedit = new KPasswordEdit( KPasswordEdit::OneStar, w, "d->lineedit" );
   d->lineedit->setMinimumWidth( fontMetrics().width("*") * 20 );
   d->lineedit->setFocus();
