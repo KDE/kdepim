@@ -20,7 +20,6 @@ METASOURCES = AUTO
 
 INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 
-KDE_OPTIONS=nofinal
 ###
 ### On some platforms, such as stock RH 7.1, the KDE libraries are built without
 ### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS, if
