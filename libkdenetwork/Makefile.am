@@ -7,7 +7,6 @@ lib_LTLIBRARIES = libkdenetwork.la
 
 libkdenetwork_la_SOURCES = kscoring.cpp \
                           kscoringeditor.cpp \
-			  kregexp3.cpp \
 			  qutf7codec.cpp \
 			  \
 			  kpgpblock.cpp \
