@@ -1,25 +1,25 @@
 /*
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qlayout.h>
 #include <qpopupmenu.h>
@@ -59,7 +59,7 @@ void KAddressBookView::readConfig( KConfig *config )
 
   if ( mFieldList.isEmpty() )
     mFieldList = KABC::Field::defaultFields();
-  
+
   mDefaultFilterType = (DefaultFilterType)config->readNumEntry( "DefaultFilterType", 1 );
   mDefaultFilterName = config->readEntry( "DefaultFilterName" );
 }
@@ -76,11 +76,11 @@ QString KAddressBookView::selectedEmails()
   QStringList uidList = selectedUids();
   KABC::Addressee addr;
   QString email;
-  
+
   QStringList::Iterator it;
   for ( it = uidList.begin(); it != uidList.end(); ++it ) {
     addr = mCore->addressBook()->findByUid( *it );
-      
+
     if ( !addr.isEmpty() ) {
       QString m = QString::null;
 
@@ -88,16 +88,16 @@ QString KAddressBookView::selectedEmails()
         m = KABC::EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
 
       email = addr.fullEmail( m );
-        
+
       if ( !first )
         emailAddrs += ", ";
       else
         first = false;
-          
+
       emailAddrs += email;
     }
   }
-  
+
   return emailAddrs;
 }
 
@@ -119,7 +119,7 @@ void KAddressBookView::initGUI()
 {
   // Create the layout
   QVBoxLayout *layout = new QVBoxLayout( this );
-    
+
   // Add the view widget
   mViewWidget = new QWidget( this );
   layout->addWidget( mViewWidget );
@@ -144,7 +144,7 @@ const QString &KAddressBookView::defaultFilterName() const
 {
   return mDefaultFilterName;
 }
-    
+
 KAB::Core *KAddressBookView::core() const
 {
   return mCore;
@@ -170,22 +170,23 @@ QWidget *KAddressBookView::viewWidget()
 
 void KAddressBookView::updateView()
 {
-  refresh();
-// PENDING(tokoe): Review this.
-// If the code below is enabled, the contact editors can't
-// be used as extension bar. Whenever something is changed 
-// by the user, it reverts to the old setting right away.
-//
-// /steffen
-#if 0
-  KABC::Addressee::List contacts = mCore->searchManager()->contacts();
-  if ( contacts.count() > 0 )
-    setSelected( contacts.first().uid(), true );
-  else {
-    setSelected( QString::null, false );
-    emit selected( QString::null );
+  QStringList uidList = selectedUids();
+
+  refresh(); // This relists and deselects everything, in all views
+
+  if ( !uidList.isEmpty() ) {
+      // Keep previous selection
+      for( QStringList::Iterator it = uidList.begin(); it != uidList.end(); ++it ) {
+          setSelected( *it, true );
+      }
+  } else {
+      KABC::Addressee::List contacts = mCore->searchManager()->contacts();
+      if ( !contacts.isEmpty() )
+          setSelected( contacts.first().uid(), true );
+      else {
+          emit selected( QString::null );
+      }
   }
-#endif
 }
 
 ViewConfigureWidget *ViewFactory::configureWidget( KABC::AddressBook *ab,
