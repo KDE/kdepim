@@ -101,14 +101,16 @@ KURL ExchangeAccount::calendarURL()
   return url;
 }
 
+void ExchangeAccount::authenticate( QWidget* window )
+{
+  if ( window )
+    authenticate( window->winId() );
+  else
+    authenticate();
+}
+
 void ExchangeAccount::authenticate()
 {
-  kdDebug() << "Entering ExchangeAccount::authenticate()" << endl;
-
-  KIO::AuthInfo info;
-  info.url = baseURL();
-  info.username = mAccount;
-  info.password = mPassword;
 
   long windowId;
   QWidgetList* widgets = QApplication::topLevelWidgets();
@@ -118,7 +120,18 @@ void ExchangeAccount::authenticate()
     windowId = widgets->first()->winId();
   delete widgets;
 
-  kdDebug() << "window ID: " << windowId << endl;
+  authenticate( windowId );
+}
+
+void ExchangeAccount::authenticate( int windowId )
+{
+  kdDebug() << "Entering ExchangeAccount::authenticate( windowId=" << windowId << " )" << endl;
+
+  KIO::AuthInfo info;
+  info.url = baseURL();
+  info.username = mAccount;
+  info.password = mPassword;
+  info.realmValue = mHost;
 
   DCOPClient *dcopClient = new DCOPClient();
   dcopClient->attach();
@@ -131,7 +144,4 @@ void ExchangeAccount::authenticate()
 
   dcopClient->detach();
   delete dcopClient;
-
-  kdDebug() << "Finished ExchangeAccount::authenticate()" << endl;
 }
-

@@ -68,10 +68,10 @@ extern "C" {
 
 using namespace KPIM;
 
-ExchangeDownload::ExchangeDownload( ExchangeAccount* account )
+ExchangeDownload::ExchangeDownload( ExchangeAccount* account, QWidget* window ) :
+  mWindow( window )
 {
   mAccount = account;
-  account->authenticate();
   mMode = Asynchronous;
   mDownloadsBusy = 0;
   mProgress = 0L;
@@ -113,6 +113,7 @@ void ExchangeDownload::initiateDownload( const QDate& start, const QDate& end, b
   increaseDownloads();
 
   KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
+  job->setWindow( mWindow );
   connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotSearchResult(KIO::Job *)));
 }
 
@@ -134,6 +135,7 @@ QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end 
 void ExchangeDownload::slotSearchResult( KIO::Job *job )
 {
   if ( job->error() ) {
+    kdDebug() << "Error result for search: " << job->error() << endl;
     job->showErrorDialog( 0L );
     decreaseDownloads();
     return;
@@ -216,11 +218,12 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
       kdDebug() << "GET url: " << url.prettyURL() << endl;
     
       increaseDownloads();
-      KIO::TransferJob *job2 = KIO::get(url, false, false);
-      KIO::Scheduler::scheduleJob(job2);
-      job2->addMetaData("davHeader", "Translate: f\r\n");
-      connect( job2, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(slotData(KIO::Job *, const QByteArray &)));
-      connect( job2, SIGNAL( result ( KIO::Job * ) ), SLOT ( slotTransferResult( KIO:: Job * ) ) );
+      KIO::TransferJob *job = KIO::get(url, false, false);
+      KIO::Scheduler::scheduleJob(job);
+      job->setWindow( mWindow );
+      job->addMetaData("davHeader", "Translate: f\r\n");
+      connect( job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(slotData(KIO::Job *, const QByteArray &)));
+      connect( job, SIGNAL( result ( KIO::Job * ) ), SLOT ( slotTransferResult( KIO:: Job * ) ) );
     }
   }
 }  
@@ -239,6 +242,7 @@ void ExchangeDownload::handleRecurrence(QString uid) {
   increaseDownloads();
  
   KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
+  job->setWindow( mWindow );
   KIO::Scheduler::scheduleJob(job);
   connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotMasterResult(KIO::Job *)));
 }
@@ -319,19 +323,6 @@ void ExchangeDownload::handlePart( DwEntity *part ) {
     // kdDebug() << contType.TypeStr().c_str() << "/" << contType.SubtypeStr().c_str() << endl;
   }
 }
-
-/*
-void ExchangeDownload::slotComplete( ExchangeProgress *progress )
-{
-  kdDebug() << "Entering slotComplete()" << endl;
-  mCalendar->setModified( true );
-  disconnect( this, 0, progress, 0 );
-  disconnect( progress, 0, this, 0 );
-  progress->delayedDestruct();
-
-  emit downloadFinished( this );
-}
-*/
 
 void ExchangeDownload::increaseDownloads()
 {

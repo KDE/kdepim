@@ -46,12 +46,12 @@ extern "C" {
 
 using namespace KPIM;
 
-ExchangeUpload::ExchangeUpload( KCal::Event* event, ExchangeAccount* account )
+ExchangeUpload::ExchangeUpload( KCal::Event* event, ExchangeAccount* account, QWidget* window ) :
+  mWindow( window )
 {
   kdDebug() << "Called ExchangeUpload" << endl;
 
   mAccount = account;
-  account->authenticate();
   m_currentUpload = event;
   m_currentUploadNumber = 0;
 
@@ -76,6 +76,7 @@ void ExchangeUpload::findUid( QString const& uid )
 //  kdDebug() << "Find uid query: " << endl << query << endl;
   
   KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
+  job->setWindow( mWindow );
   connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotFindUidResult(KIO::Job *)));
 }
 
@@ -127,6 +128,7 @@ void ExchangeUpload::tryExist()
   addElement( doc, prop, "urn:schemas:calendar", "uid" );
 
   KIO::DavJob* job = KIO::davPropFind( url, doc, "0", false );
+  job->setWindow( mWindow );
   job->addMetaData( "errorPage", "false" );
   connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPropFindResult( KIO::Job * ) ) );
 }
@@ -265,6 +267,7 @@ void ExchangeUpload::startUpload( KURL& url )
   // kdDebug() << doc.toString() << endl;
 
   KIO::DavJob *job = KIO::davPropPatch( url, doc, false );
+  job->setWindow( mWindow );
   connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPatchResult( KIO::Job * ) ) );
 }
 

@@ -47,12 +47,12 @@ using namespace KPIM;
 // recurrent appointments? Maybe, so we just look for Master or Single
 // instancetypes
 
-ExchangeDelete::ExchangeDelete( KCal::Event* event, ExchangeAccount* account )
+ExchangeDelete::ExchangeDelete( KCal::Event* event, ExchangeAccount* account, QWidget* window ) :
+  mWindow( window )
 {
   kdDebug() << "Created ExchangeDelete" << endl;
 
   mAccount = account;
-  account->authenticate();
 
   findUidSingleMaster( event->uid() );
 }
@@ -72,6 +72,7 @@ void ExchangeDelete::findUidSingleMaster( QString const& uid )
 	"      OR \"urn:schemas:calendar:instancetype\" = 1)\r\n";
 
   KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
+  job->setWindow( mWindow );
   connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotFindUidResult(KIO::Job *)));
 }
 
@@ -102,6 +103,7 @@ void ExchangeDelete::slotFindUidResult( KIO::Job * job )
 void ExchangeDelete::startDelete( KURL& url )
 {
   KIO::SimpleJob* job = KIO::file_delete( url, false ); // no GUI
+  job->setWindow( mWindow );
   connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotDeleteResult( KIO::Job * ) ) );
 }
 

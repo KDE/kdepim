@@ -55,8 +55,11 @@ class ExchangeAccount {
     //  Put authentication info in KDE password store for auto-authentication
     //  with later webdav access
     void authenticate();
+    void authenticate( QWidget* window );
 
   private:
+    void authenticate( int windowId );
+
     QString mHost;
     QString mAccount;
     QString mPassword;

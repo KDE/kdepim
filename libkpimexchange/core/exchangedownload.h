@@ -44,7 +44,7 @@ enum DownloadState { WaitingForResult, HaveResult };
 class ExchangeDownload : public QObject {
     Q_OBJECT
   public:
-    ExchangeDownload( ExchangeAccount* account );
+    ExchangeDownload( ExchangeAccount* account, QWidget* window=0 );
    ~ExchangeDownload();
 
     // Synchronous functions
@@ -97,6 +97,7 @@ class ExchangeDownload : public QObject {
     QMap<QString,int> m_uids; // This keeps track of uids we already covered. Especially useful for
     	// recurring events.
     QMap<QString,DwString *> m_transferJobs; // keys are URLs
+    QWidget* mWindow;
 };
 
 }

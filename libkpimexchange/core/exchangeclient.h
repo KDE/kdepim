@@ -44,11 +44,25 @@ class ExchangeClient : public QObject {
     ExchangeClient( ExchangeAccount* account );
     ~ExchangeClient();
 
-  // synchronous functions
-  // Will be removed in the near future
-  QPtrList<KCal::Event> events( KCal::Calendar* calendar, const QDate& qd );
+    /**
+     * Associate this client with a window given by @p window.
+     */
+    void setWindow(QWidget *window);
 
-  enum Result { ResultOK, UnknownError };
+    /**
+     * Returns the window this client is associated with.
+     */
+    QWidget *window() const;
+        
+    // synchronous functions
+    enum { ResultOK, UnknownError };
+
+    int downloadSynchronous( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress);
+    int uploadSynchronous( KCal::Event* event );
+    int removeSynchronous( KCal::Event* event );
+
+    // Will be removed in the near future
+    QPtrList<KCal::Event> events( KCal::Calendar* calendar, const QDate& qd );
 
   public slots:
     void download( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress);
@@ -60,6 +74,7 @@ class ExchangeClient : public QObject {
     void slotDownloadFinished( ExchangeDownload* worker );
     void slotUploadFinished( ExchangeUpload* worker );
     void slotRemoveFinished( ExchangeDelete* worker );
+    void slotSyncFinished( int result );
     void slotTestResult( KIO::Job * job );
 
   signals:
@@ -74,7 +89,12 @@ class ExchangeClient : public QObject {
 
   private:
     void test2();
+
+    enum { WaitingForResult, HaveResult };
    
+    int mClientState;
+    int mSyncResult;
+    QWidget* mWindow;
     ExchangeAccount* mAccount;
 };
 

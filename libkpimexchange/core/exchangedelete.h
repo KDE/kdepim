@@ -21,6 +21,8 @@
 #define KDEPIM_EXCHANGE_DELETE_H
 
 #include <qstring.h>
+#include <qwidget.h>
+
 #include <kio/job.h>
 
 #include <libkcal/calendar.h>
@@ -36,7 +38,7 @@ class ExchangeAccount;
 class ExchangeDelete : public QObject {
     Q_OBJECT
   public:
-    ExchangeDelete( KCal::Event* event, ExchangeAccount* account );
+    ExchangeDelete( KCal::Event* event, ExchangeAccount* account, QWidget* window=0 );
     ~ExchangeDelete();
 
   private slots:
@@ -51,6 +53,7 @@ class ExchangeDelete : public QObject {
     void startDelete( KURL& url );
     
     ExchangeAccount* mAccount;
+    QWidget* mWindow;
 };
 
 }

@@ -21,6 +21,7 @@
 #define KDEPIM_EXCHANGE_UPLOAD_H
 
 #include <qstring.h>
+#include <qwidget.h>
 #include <kio/job.h>
 
 #include <libkcal/calendar.h>
@@ -36,7 +37,7 @@ class ExchangeAccount;
 class ExchangeUpload : public QObject {
     Q_OBJECT
   public:
-    ExchangeUpload( KCal::Event* event, ExchangeAccount* account );
+    ExchangeUpload( KCal::Event* event, ExchangeAccount* account, QWidget* window=0 );
     ~ExchangeUpload();
 
   private slots:
@@ -57,6 +58,7 @@ class ExchangeUpload : public QObject {
     ExchangeAccount* mAccount;
     KCal::Event* m_currentUpload;
     int m_currentUploadNumber;
+    QWidget* mWindow;
 };
 
 }
