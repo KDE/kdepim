@@ -1,0 +1,75 @@
+These are preliminary instructions on how to set up kdepim to work
+with a kolab server. It is meant to be a help for people setting
+up for testing. It is also meant as a list of things to set up in the
+upcoming Kolab setup wizard.
+
+
+There are the steps needed to setup the Kolab server as the primary
+server.
+
+
+KMail:
+
+1. Set up your identity.
+2. Set up a disconnected IMAP account to the server and sync it.
+   Optional: Choose TLS and Clear text
+3. Set up sending through the kolab server
+   Optional: Choose authentication and/or TLS
+4. After the first sync, enable IMAP resource folder options in
+   Misc->Groupware and set to be subfolders of the account INBOX
+5. Enable groupware functionality on the same page
+6. TODO: Where is sieve setup???
+
+Note: We might want to add a KMail profile for this in addition
+to the kolab wizard.
+
+
+KAddressBook:
+
+1. Start KDE Control Center and go to KDE Components, page KDE
+   Resources Configuration. Choose the contact resource. Add an
+   IMAP resource and set it to standard.
+   Optional: Delete others or set them to readonly.
+2. Start KAddressBook and add an LDAP server in the configuration
+   with these settings:
+      Host = "kolab.kde.org" (for example)
+      Port = "389"
+      Base DN = "dc=kolab,dc=kde,dc=org"
+   TODO: Are Bind DN and password the Kolab user settings?
+   TODO: If yes, do they make the LDAP resource writable?
+   The scheme for the base DN is to take the parts of the fully
+   qualified hostname of the kolab server and put ",dc=" between
+   the parts and "dc=" in front of it. Or in Qt code:
+      baseDN = "dc=" + hostname.replace( '.', ",dc=" );
+   Finally check the checkbox to activate the LDAP server. Now
+   you can search the Kolab LDAP server and get all users on the
+   system.
+
+
+KOrganizer:
+
+1. Start KDE Control Center and go to KDE Components, page KDE
+   Resources Configuration. Choose the calendar resource. Add an
+   IMAP resource and set it to standard.
+   Optional: Delete others or set them to readonly.
+TODO: Free-Busy setup and KMail mail scheduling.
+
+
+KPilot:
+
+TODO
+
+
+KitchenSync:
+
+TODO
+
+
+kalarmd:
+
+TODO
+
+
+Kontact:
+
+Nothing special, AFAIK
