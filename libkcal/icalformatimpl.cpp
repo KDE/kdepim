@@ -1013,6 +1013,20 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
         mEventsRelate.append(event);
         break;
 
+      case ICAL_X_PROPERTY:
+        if (strcmp(icalproperty_get_name(p),"X-MICROSOFT-CDO-ALLDAYEVENT") == 0) {
+	  text = icalproperty_get_value_as_string(p);
+	  bool floats = (strcmp(text, "TRUE") == 0);
+	  kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
+	  event->setFloats(floats);
+	  if (floats) {
+	    QDateTime endDate = event->dtEnd();
+	    event->setDtEnd(endDate.addDays(-1));
+	  }
+	}
+        break;
+
+
       default:
 //        kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind
 //                  << endl;
