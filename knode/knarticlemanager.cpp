@@ -166,7 +166,7 @@ void KNArticleManager::openContent(KMime::Content *c)
   QString path=saveContentToTemp(c);
   if(path.isNull()) return;
 
-  KService::Ptr offer = KServiceTypeProfile::preferredService(c->contentType()->mimeType(), true);
+  KService::Ptr offer = KServiceTypeProfile::preferredService(c->contentType()->mimeType(), "Application");
   KURL::List lst;
   KURL url;
   url.setPath(path);
