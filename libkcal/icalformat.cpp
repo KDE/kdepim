@@ -42,6 +42,7 @@ extern "C" {
 
 #include "icalformat.h"
 #include "icalformatimpl.h"
+#include <ksavefile.h>
 
 #define _ICAL_VERSION "2.0"
 
@@ -90,7 +91,8 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
   if ( text.isNull() ) return false;
 
-  // TODO: write backup file
+  // Write backup file
+  KSaveFile::backupFile( fileName );
 
   QFile file( fileName );
   if (!file.open( IO_WriteOnly ) ) {
@@ -148,7 +150,7 @@ Incidence *ICalFormat::fromString( const QString &text )
 {
   CalendarLocal cal( mTimeZoneId );
   fromString(&cal, text);
-  
+
   Incidence *ical = 0;
   QPtrList<Event> elist = cal.events();
   if ( elist.count() > 0 ) {
