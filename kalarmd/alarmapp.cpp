@@ -49,9 +49,17 @@ int AlarmApp::newInstance()
   // Check if we already have a running alarm daemon widget
   if (mAd) return 0;
 
-  KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-  mStartedAtLogin = args->isSet("login");
-  args->clear();      // free up memory
+  // Check if we are starting up at session startup
+  static bool restored = false;
+  if (!restored  &&  isRestored()) {
+    mStartedAtLogin = true;
+    restored = true;       // make sure we restore only once
+  }
+  else {
+    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+    mStartedAtLogin = args->isSet("login");
+    args->clear();      // free up memory
+  }
 
   mAd = new AlarmDaemon(0L, "ad");
 
