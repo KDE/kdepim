@@ -109,29 +109,6 @@ void KAddressBookMain::initActions()
   action->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
 }
 
-bool KAddressBookMain::queryClose()
-{
-  if ( mCore->modified() ) {
-    QString text = i18n( "The address book was modified. Do you want to save your changes?" );
-    int ret = KMessageBox::warningYesNoCancel( this, text, "",
-                                              KStdGuiItem::yes(),
-                                              KStdGuiItem::no(), "AskForSave" );
-    switch ( ret ) {
-      case KMessageBox::Yes:
-        mCore->save();
-        break;
-      case KMessageBox::No:
-        return true;
-        break;
-      default: //cancel
-        return false;
-        break;
-    }
-  }
-
-  return true;
-}
-
 void KAddressBookMain::configureKeyBindings()
 {
   KKeyDialog::configure( actionCollection(), this );
