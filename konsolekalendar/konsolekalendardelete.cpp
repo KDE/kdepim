@@ -1,8 +1,8 @@
 /***************************************************************************
-        konsolekalendarDelete.cpp  -  description
+        konsolekalendardelete.cpp  -  description
            -------------------
     begin                : Sun May 25 2003
-    copyright            : (C) 2002 by Tuukka Pasanen
+    copyright            : (C) 2003 by Tuukka Pasanen
     email                : illuusio@mailcity.com
  ***************************************************************************/
 
@@ -16,13 +16,42 @@
  ***************************************************************************/
 
 #include "konsolekalendardelete.h"
+#include <iostream>
 
 
-KonsoleKalendarDelete::KonsoleKalendarDelete()
+using namespace KCal;
+using namespace std;
+
+KonsoleKalendarDelete::KonsoleKalendarDelete( KonsoleKalendarVariables *variables )
 {
+  m_variables = variables;
 }
 
 KonsoleKalendarDelete::~KonsoleKalendarDelete()
 {
+}
+
+bool KonsoleKalendarDelete::deleteEvent()
+{
+  QPtrList<Event> eventList( m_variables->
+                             getCalendar()->
+                             rawEventsForDate(
+                             m_variables->getDate()
+                             ) );
+  Event *singleEvent;
+
+  for ( singleEvent = eventList.first(); singleEvent != 0; singleEvent =
+        eventList.next() ) {
+    cout << "---- Delete---" << endl;
+    cout <<  singleEvent->dtStartStr().remove(0, (singleEvent->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
+    cout << " - ";
+    cout << singleEvent->dtEndStr().remove(0, (singleEvent->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
+    cout << "---- Delete ---" << endl;
+
+    m_variables->getCalendar()->deleteEvent( singleEvent );
+
+  } //for
+
+  return true;
 }
 

@@ -21,12 +21,22 @@
 #include <qdatetime.h>
 #include <qstring.h>
 
+#include "konsolekalendarvariables.h"
+
+namespace KCal
+{
+
 class KonsoleKalendarDelete
 {
   public:
-    KonsoleKalendarDelete();
+    KonsoleKalendarDelete( KonsoleKalendarVariables *variables );
     ~KonsoleKalendarDelete();
 
+    bool deleteEvent();
+
+    private:
+     KonsoleKalendarVariables *m_variables;
 };
 
+}
 #endif
