@@ -264,7 +264,7 @@ QString Incidence::categoriesStr() const
 
 void Incidence::setRelatedToUid(const QString &relatedToUid)
 {
-  if (mReadOnly) return;
+  if ( mReadOnly || mRelatedToUid == relatedToUid ) return;
   mRelatedToUid = relatedToUid;
   updated();
 }
@@ -280,9 +280,11 @@ void Incidence::setRelatedTo(Incidence *relatedTo)
   if(mRelatedTo)
     mRelatedTo->removeRelation(this);
   mRelatedTo = relatedTo;
-  if (mRelatedTo)
+  if (mRelatedTo) {
     mRelatedTo->addRelation(this);
-  updated();
+    if ( mRelatedTo->uid() != mRelatedToUid )
+      setRelatedToUid( mRelatedTo->uid() );
+  }
 }
 
 Incidence *Incidence::relatedTo() const
