@@ -46,11 +46,12 @@ class KAboutApplication;
 
 class PilotRecord;
 class KPilotDCOP_stub;
+class LoggerDCOP_stub;
 
 
 class PilotDaemon;
 class FileInstaller;
-class SyncStack;
+class ActionQueue;
 
 class PilotDaemonTray : public KSystemTray
 {
@@ -174,9 +175,8 @@ private:
 	KPilotDeviceLink::DeviceType fPilotType;
 	int fNextSyncType;
 
-	SyncStack *fSyncStack;
-
-
+	ActionQueue *fSyncStack;
+	
 	/**
 	* This is a pointer to the (optional) docked
 	* system tray icon for the daemon.
@@ -209,8 +209,11 @@ protected slots:
 	* Provide access to KPilot's DCOP interface through a stub.
 	*/
 protected:
+	LoggerDCOP_stub &getLogger() { return *fLogStub; } ;
 	KPilotDCOP_stub &getKPilot() { return *fKPilotStub; } ;
+
 private:
+	LoggerDCOP_stub *fLogStub;
 	KPilotDCOP_stub *fKPilotStub;
 };
 

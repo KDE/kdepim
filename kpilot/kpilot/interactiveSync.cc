@@ -53,7 +53,7 @@ static const char *interactivesync_id =
 
 #include <kdialogbase.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 #include <kapplication.h>
 
@@ -274,6 +274,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return false;
 	}
 
+	emit logProgress(i18n("Restoring %1...").arg(QString::null),1);
+	
 	for (unsigned int i = 0; i < dir.count(); i++)
 	{
 		QString s;
@@ -439,10 +441,11 @@ nextFile:
 		return;
 	}
 
-	addSyncLogEntry(i18n("Restoring %1...").arg(QString::fromLatin1(dbi.name)));
-
-	// Can't really tell what to do here. Is encodeName(fromLatin1())
-	// the right thing to do?
+	QFileInfo databaseInfo(QString::fromLatin1(dbi.name));
+	addSyncLogEntry(databaseInfo.fileName());
+	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
+		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
+	
 	pi_file *f =
 		pi_file_open( /* const_cast <
 		char *>((const char *)QFile::encodeName */ (dbi.name));

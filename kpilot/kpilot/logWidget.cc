@@ -45,7 +45,7 @@ static const char *logw_id =
 #include <qpainter.h>
 
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kprogress.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
@@ -67,7 +67,7 @@ static const char *logw_id =
 
 LogWidget::LogWidget(QWidget * parent) :
 	PilotComponent(parent, "component_log", QString::null),
-	DCOPObject("KPilotIface"),
+	DCOPObject("LogIface"),
 	fLog(0L),
 	fShowTime(false),
 	fSplash(0L),
@@ -213,7 +213,6 @@ void LogWidget::addMessage(const QString & s)
 
 	if (s.isEmpty()) return;
 	if (!fLog) return;
-
 	QString t;
 
 	if (fShowTime)

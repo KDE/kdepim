@@ -4,9 +4,9 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** This is a horrible class that implements three different
-** functionalities and that should be split up as soon as 2.1 
-** is released. See the .cc file for more.
+** Encapsulates all the communication with the pilot. Also
+** does daemon-like polling of the Pilot. Interesting status
+** changes are signalled.
 */
 
 /*

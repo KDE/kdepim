@@ -35,10 +35,20 @@
 class KPilotDCOP : virtual public DCOPObject
 {
 	K_DCOP
+
+public:
+	enum DaemonMessages {
+		None=0,
+		StartOfHotSync=1,
+		EndOfHotSync=2,
+		DaemonQuit=4 } ;
+
 k_dcop:
-	virtual ASYNC logMessage(QString) = 0;
-	virtual ASYNC logError(QString)=0;
-	virtual ASYNC logProgress(QString,int) = 0;
+	/**
+	* This is the method the daemon uses to report
+	* changes in its state.
+	*/
+	virtual ASYNC daemonStatus(int) = 0;
 } ;
 
 

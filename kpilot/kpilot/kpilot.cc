@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -134,10 +134,11 @@ private:
 public:
 	ComponentList &list() { return fPilotComponentList; } ;
 } ;
-	
+
 KPilotInstaller::KPilotInstaller() :
 	KMainWindow(0),
-	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon", 
+	DCOPObject("KPilotIface"),
+	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon",
 		"KPilotDaemonIface")),
 	fP(new KPilotPrivate),
 	fMenuBar(0L),
@@ -147,7 +148,7 @@ KPilotInstaller::KPilotInstaller() :
 	fKillDaemonOnExit(false),
 	fDaemonWasRunning(true),
 	fStatus(Startup),
-	fFileInstallWidget(0L), 
+	fFileInstallWidget(0L),
 	fLogWidget(0L)
 {
 	FUNCTIONSETUP;
@@ -171,12 +172,12 @@ void KPilotInstaller::killDaemonIfNeeded()
 	FUNCTIONSETUP;
 	if (fKillDaemonOnExit)
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname << ": Killing daemon." << endl;
-#endif
-
 		if (!fDaemonWasRunning)
 		{
+#ifdef DEBUG
+			DEBUGKPILOT << fname << ": Killing daemon." << endl;
+#endif
+
 			getDaemon().quitNow();
 		}
 	}
@@ -199,8 +200,8 @@ void KPilotInstaller::startDaemonIfNeeded()
 	if ((s.isNull()) || (!getDaemon().ok()))
 	{
 #ifdef DEBUG
-		DEBUGKPILOT << fname 
-			<< ": Daemon not responding, trying to start it." 
+		DEBUGKPILOT << fname
+			<< ": Daemon not responding, trying to start it."
 			<< endl;
 #endif
 		fDaemonWasRunning = false;
@@ -269,6 +270,7 @@ void KPilotInstaller::setupWidget()
 		<< ": Got XML from "
 		<< xmlFile() << " and " << localXMLFile() << endl;
 #endif
+	setAutoSaveSettings();
 }
 
 
@@ -377,12 +379,39 @@ void KPilotInstaller::slotHotSyncRequested()
 		i18n("Please press the HotSync button."));
 }
 
+#if 0
 void KPilotInstaller::slotFastSyncRequested()
 {
 	FUNCTIONSETUP;
 	setupSync(PilotDaemonDCOP::FastSync,
 		i18n("FastSyncing. ") +
 		i18n("Please press the HotSync button."));
+}
+#endif
+
+void KPilotInstaller::slotListSyncRequested()
+{
+	FUNCTIONSETUP;
+	setupSync(PilotDaemonDCOP::Test,
+		QString::fromLatin1("Listing Pilot databases."));
+}
+
+/* virtual DCOP */ ASYNC KPilotInstaller::daemonStatus(int i)
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Received daemon message " << i << endl;
+#endif
+
+	switch(i)
+	{
+	case KPilotDCOP::EndOfHotSync :
+		componentPostSync();
+		break;
+	default :
+		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
+		break;
+	}
 }
 
 bool KPilotInstaller::componentPreSync()
@@ -412,6 +441,22 @@ bool KPilotInstaller::componentPreSync()
 		return false;
 	}
 	return true;
+}
+
+void KPilotInstaller::componentPostSync()
+{
+	FUNCTIONSETUP;
+
+	for (fP->list().first();
+		fP->list().current(); fP->list().next())
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Post-sync for builtin "
+			<< fP->list().current()->name() << endl;
+#endif
+		fP->list().current()->postHotSync();
+	}
 }
 
 void KPilotInstaller::setupSync(int kind, const QString & message)
@@ -452,9 +497,16 @@ void KPilotInstaller::initMenu()
 	p = new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
+#if 0
 	p = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_fastsync");
+#endif
+#ifdef DEBUG
+	p = new KAction(TODO_I18N("List only"),CSL1("list"),0,
+		this,SLOT(slotListSyncRequested()),
+		actionCollection(), "file_list");
+#endif
 	p = new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
@@ -488,6 +540,19 @@ void KPilotInstaller::fileInstalled(int)
 void KPilotInstaller::quit()
 {
 	FUNCTIONSETUP;
+
+	for (fP->list().first();
+		fP->list().current(); fP->list().next())
+	{
+		QString reason;
+		if (!fP->list().current()->preHotSync(reason))
+		{
+			kdWarning() << k_funcinfo
+				<< ": Couldn't save "
+				<< fP->list().current()->name()
+				<< endl;
+		}
+	}
 
 	killDaemonIfNeeded();
 	kapp->quit();
@@ -593,15 +658,18 @@ void KPilotInstaller::optionsConfigureToolbars()
 {
 	FUNCTIONSETUP;
 	// use the standard toolbar editor
+	saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 	KEditToolbar dlg(actionCollection());
-
-	if (dlg.exec())
-	{
-		// recreate our GUI
-		createGUI();
-	}
+	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
+	dlg.exec();
 }
 
+void KPilotInstaller::slotNewToolbarConfig()
+{
+	// recreate our GUI
+	createGUI();
+	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+}
 
 void KPilotInstaller::slotConfigureKPilot()
 {
@@ -729,7 +797,7 @@ int main(int argc, char **argv)
 
 	KAboutData about("kpilot", I18N_NOOP("KPilot"),
 		KPILOT_VERSION,
-		"KPilot - Hot-sync software for unix\n\n",
+		"KPilot - HotSync software for KDE\n\n",
 		KAboutData::License_GPL, "(c) 1998-2000,2001, Dan Pilone");
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
@@ -862,4 +930,3 @@ int main(int argc, char **argv)
 }
 
 
-//

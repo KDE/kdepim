@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** This defines the "SyncStack", which is the pile of actions
+** This defines the "ActionQueue", which is the pile of actions
 ** that will occur during a HotSync.
 */
 
@@ -117,19 +117,19 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode && SyncStack::ActionMask)
+	switch(fMode && ActionQueue::ActionMask)
 	{
-	case SyncStack::Backup :
+	case ActionQueue::Backup :
 		l.append(CSL1("--backup"));
 		break;
 	default:
 		;
 	}
-	if (fMode & SyncStack::FlagTest)
+	if (fMode & ActionQueue::FlagTest)
 	{
 		l.append(CSL1("--test"));
 	}
-	if (fMode & SyncStack::FlagLocal)
+	if (fMode & ActionQueue::FlagLocal)
 	{
 		l.append(CSL1("--local"));
 	}
@@ -197,12 +197,12 @@ void ConduitProxy::execDone(SyncAction *p)
 	emit syncDone(this);
 }
 
-SyncStack::SyncStack(KPilotDeviceLink *d,
+ActionQueue::ActionQueue(KPilotDeviceLink *d,
 	KConfig *config,
 	const QStringList &conduits,
 	const QString &dir,
 	const QStringList &files) :
-	SyncAction(d,"SyncStack"),
+	SyncAction(d,"ActionQueue"),
 	fReady(false),
 	fConfig(config),
 	fInstallerDir(dir),
@@ -221,14 +221,25 @@ SyncStack::SyncStack(KPilotDeviceLink *d,
 		DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(CSL1(" + ")) << endl;
 	}
 #endif
+
+	kdWarning() << "SyncStack usage is deprecated." << endl;
 }
 
-SyncStack::~SyncStack()
+ActionQueue::ActionQueue(KPilotDeviceLink *d) :
+	SyncAction(d,"ActionQueue"),
+	fReady(false),
+	fConfig(0L)
+	// The string lists have default constructors
 {
 	FUNCTIONSETUP;
 }
 
-void SyncStack::prepare(int m)
+ActionQueue::~ActionQueue()
+{
+	FUNCTIONSETUP;
+}
+
+void ActionQueue::prepare(int m)
 {
 	FUNCTIONSETUP;
 
@@ -237,7 +248,7 @@ void SyncStack::prepare(int m)
 		<< ": Using sync mode " << m
 		<< endl;
 #endif
-
+	
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -253,13 +264,10 @@ void SyncStack::prepare(int m)
 		return;
 	}
 
-	addAction(new CleanupAction(fHandle));
-
-	if (m & WithInstaller)
-	{
-		addAction(new FileInstallAction(fHandle,fInstallerDir,fInstallerFiles));
-	}
-
+	queueInit(m);
+	if (m & WithConduits)
+		queueConduits(fConfig,fConduits,m);
+	
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -278,34 +286,59 @@ void SyncStack::prepare(int m)
 		fReady=false;
 		return;
 	}
+	
+	if (m & WithInstaller)
+		queueInstaller(fInstallerDir,fInstallerFiles);
+		
+	queueCleanup();
+}
 
-	// Add conduits here ...
-	//
-	//
-	for (QStringList::ConstIterator it = fConduits.begin();
-		it != fConduits.end();
-		++it)
-	{
-		ConduitProxy *cp =new ConduitProxy(fHandle,*it,m);
-		cp->setConfig(fConfig);
-		addAction(cp);
-	}
+void ActionQueue::queueInit(int m)
+{
+	FUNCTIONSETUP;
+	
+	addAction(new WelcomeAction(fHandle));
 
 	if (m & WithUserCheck)
 	{
 		addAction(new CheckUser(fHandle));
 	}
-
-	addAction(new WelcomeAction(fHandle));
 }
 
-bool SyncStack::exec()
+void ActionQueue::queueConduits(KConfig *config,const QStringList &l,int m)
+{
+	FUNCTIONSETUP;
+	
+	// Add conduits here ...
+	//
+	//
+	for (QStringList::ConstIterator it = l.begin();
+		it != l.end();
+		++it)
+	{
+		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
+		cp->setConfig(config);
+		addAction(cp);
+	}
+}
+
+void ActionQueue::queueInstaller(const QString &dir, const QStringList &files)
+{
+	addAction(new FileInstallAction(fHandle,dir,files));
+}
+
+void ActionQueue::queueCleanup()
+{
+	addAction(new CleanupAction(fHandle));
+}
+
+bool ActionQueue::exec()
 {
 	actionCompleted(0L);
 	return true;
 }
 
-void SyncStack::actionCompleted(SyncAction *b)
+void ActionQueue::actionCompleted(SyncAction *b)
 {
 	FUNCTIONSETUP;
 

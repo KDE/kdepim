@@ -32,9 +32,10 @@
 
 #include <pi-dlp.h>
 
+#include <qfile.h>
+
 #include <klocale.h>
 #include <kdebug.h>
-
 
 #include "pilotSerialDatabase.h"
 
@@ -42,7 +43,7 @@ static const char *pilotSerialDatabase_id =
 	"$Id$";
 
 PilotSerialDatabase::PilotSerialDatabase(int linksocket,
-	const char *dbName,
+	const QString &dbName,
 	QObject *p,const char *n) :
 	PilotDatabase(p,n),
 	fDBName(0L), 
@@ -50,9 +51,8 @@ PilotSerialDatabase::PilotSerialDatabase(int linksocket,
 	fDBSocket(linksocket)
 {
 	FUNCTIONSETUP;
-	fDBName = new char[::strlen(dbName) + 1];
+	fDBName = dbName;
 
-	::strcpy(fDBName, dbName);
 	openDatabase();
 
 	/* NOTREACHED */
@@ -63,14 +63,12 @@ PilotSerialDatabase::~PilotSerialDatabase()
 {
 	FUNCTIONSETUP;
 	closeDatabase();
-	delete[]fDBName;
 }
 
 QString PilotSerialDatabase::dbPathName() const
 {
 	QString s = CSL1("Pilot:");
-	// This latin1() is ok. Pilot database names are latin1.
-	s.append(QString::fromLatin1(fDBName));
+	s.append(fDBName);
 	return s;
 }
 
@@ -204,7 +202,9 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec()
 	}
 	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), (void *) buffer,
 			&id, &index, &size, &attr, &category) >= 0)
+	{
 		return new PilotRecord(buffer, size, attr, category, id);
+	}
 	return 0L;
 }
 
@@ -272,7 +272,7 @@ void PilotSerialDatabase::openDatabase()
 	int db;
 
 	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite, 
-		const_cast<char *>(getDBName()), &db) < 0)
+		QFile::encodeName(getDBName()).data(), &db) < 0)
 	{
 		kdError() << k_funcinfo
 			<< i18n("Cannot open database")

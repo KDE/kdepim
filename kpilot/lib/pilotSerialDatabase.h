@@ -38,7 +38,7 @@
 class PilotSerialDatabase : public PilotDatabase
 {
 public:
-	PilotSerialDatabase(int linksocket, const char* dbName,
+	PilotSerialDatabase(int linksocket, const QString &dbName,
 		QObject * = 0L, const char * = 0L);
 	virtual ~PilotSerialDatabase();
 
@@ -69,7 +69,7 @@ public:
 
 	virtual QString dbPathName() const;
 
-	const char *getDBName() { return fDBName; }
+	const QString getDBName() { return fDBName; }
 
 protected:
 	virtual void openDatabase();
@@ -80,7 +80,7 @@ protected:
 private:
 	void setDBHandle(int handle) { fDBHandle = handle; }
 
-	char*       fDBName;
+	QString     fDBName;
 	int         fDBHandle;
 	int         fDBSocket;
 };

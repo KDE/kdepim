@@ -2,7 +2,7 @@
 #define _KPILOT_OPTIONS_H
 /* options.h			KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 1998-2001,2002,2003 by Dan Pilone
 **
 ** This file defines some global constants and macros for KPilot.
 ** In particular, KDE2 is defined when KDE2 seems to be the environment
@@ -35,8 +35,8 @@
 
 
 
-// #define QT_NO_ASCII_CAST		(1)
-// #define QT_NO_CAST_ASCII		(1)
+#define QT_NO_ASCII_CAST		(1)
+#define QT_NO_CAST_ASCII		(1)
 
 
 #ifdef HAVE_CONFIG_H

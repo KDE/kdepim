@@ -40,10 +40,11 @@ static const char *pilotlocaldatabase_id =
 #include <qstring.h>
 #include <qfile.h>
 #include <qregexp.h>
+#include <qdatetime.h> 
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 
 #include "pilotLocalDatabase.h"
@@ -469,8 +470,13 @@ void PilotLocalDatabase::closeDatabase()
 	pi_file *dbFile;
 	int i;
 
-	if (isDBOpen() == false)
+	if (isDBOpen() == false) 
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
+#endif
 		return;
+	}
 
 	QString tempName_ = dbPathName();
 	QString newName_ = tempName_ + CSL1(".bak");
@@ -479,6 +485,9 @@ void PilotLocalDatabase::closeDatabase()
 
 	dbFile = pi_file_create(const_cast < char *>((const char *)newName),
 		&fDBInfo);
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Created temp file "<<newName<<" for the database file "<<dbPathName()<<endl;
+#endif
 
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 	for (i = 0; i < fNumRecords; i++)

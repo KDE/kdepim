@@ -49,85 +49,44 @@ static const char *pilotdaemon_id =
 #include <signal.h>
 #include <errno.h>
 
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
-#ifndef QLIST_H
-#include <qlist.h>
-#endif
-#ifndef QCURSOR_H
+#include <qptrlist.h>
 #include <qcursor.h>
-#endif
-#ifndef QDRAGOBJECT_H
 #include <qdragobject.h>
-#endif
-#include <qstack.h>
+#include <qptrstack.h>
 #include <qtimer.h>
 #include <qtooltip.h>
 
-
-#ifndef _KUNIQUEAPP_H
-#include <kuniqueapp.h>
-#endif
-#ifndef _KABOUTDATA_H
+#include <kuniqueapplication.h>
 #include <kaboutdata.h>
-#endif
-#ifndef _KABOUTAPPLICATION_H
 #include <kaboutapplication.h>
-#endif
-#ifndef _KCMDLINEARGS_H
 #include <kcmdlineargs.h>
-#endif
-#ifndef _KWIN_H
 #include <kwin.h>
-#endif
-#ifndef _KSIMPLECONFIG_H
 #include <ksimpleconfig.h>
-#endif
-#ifndef _KURL_H
 #include <kurl.h>
-#endif
-#ifndef _KSOCK_H
 #include <ksock.h>
-#endif
-#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
-#endif
-#ifndef _KSTDDIRS_H
-#include <kstddirs.h>
-#endif
-#ifndef _KPOPUPMENU_H
+#include <kstandarddirs.h>
 #include <kpopupmenu.h>
-#endif
-#ifndef _KICONLOADER_H
 #include <kiconloader.h>
-#endif
-#ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
-#endif
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
-#ifndef _KPROCESS_H
+#include <ktempfile.h>
 #include <kprocess.h>
-#endif
-#ifndef _DCOPCLIENT_H
 #include <dcopclient.h>
-#endif
-
 
 #include "pilotAppCategory.h"
 
-#ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
-#endif
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
 
+#include "hotSync.h"
+#include "interactiveSync.h"
 #include "syncStack.h"
 
 #include "kpilotDCOP_stub.h"
+#include "kpilotDCOP.h"
+#include "logWidgetDCOP_stub.h"
 
 #include "pilotDaemon.moc"
 
@@ -188,7 +147,7 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 /* virtual */ void PilotDaemonTray::closeEvent(QCloseEvent *)
 {
 	FUNCTIONSETUP;
-	kapp->quit();
+	daemon->quitNow();
 }
 
 void PilotDaemonTray::setupWidget()
@@ -287,6 +246,7 @@ PilotDaemon::PilotDaemon() :
 	fSyncStack(0L),
 	fTray(0L),
 	fInstaller(0L),
+	fLogStub(new LoggerDCOP_stub("kpilot", "LogIface")),
 	fKPilotStub(new KPilotDCOP_stub("kpilot", "KPilotIface"))
 {
 	FUNCTIONSETUP;
@@ -594,6 +554,7 @@ bool PilotDaemon::setupPilotLink()
 	case INIT:
 	case HOTSYNC_END:
 	case ERROR:
+		getKPilot().daemonStatus(KPilotDCOP::DaemonQuit);
 		kapp->quit();
 		break;
 	case READY:
@@ -670,6 +631,8 @@ QString PilotDaemon::syncTypeString(int i) const
 		fTray->changeIcon(PilotDaemonTray::Busy);
 	}
 
+	getKPilot().daemonStatus(KPilotDCOP::StartOfHotSync);
+	
 	fStatus = HOTSYNC_START ;
 
 #ifdef DEBUG
@@ -691,31 +654,38 @@ QString PilotDaemon::syncTypeString(int i) const
 		installFiles = c.getSyncFiles();
 	}
 
-	fSyncStack = new SyncStack(fPilotLink,
-		&KPilotConfig::getConfig(),
-		conduits,
-		(fInstaller && installFiles) ? fInstaller->dir() : QString::null,
-		(fInstaller && installFiles) ? fInstaller->fileNames() : QString::null );
-
+	fSyncStack = new ActionQueue(fPilotLink);
+	fSyncStack->queueInit(ActionQueue::WithUserCheck);
+	
 	switch (fNextSyncType)
 	{
 	case PilotDaemonDCOP::Test:
-		fSyncStack->prepare(SyncStack::Test);
+		fSyncStack->addAction(new TestLink(fPilotLink));
+		// No conduits, nothing.
 		break;
 	case PilotDaemonDCOP::Backup:
-		fSyncStack->prepareBackup();
+		if (conduits.count() > 0)
+		{
+			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
+				conduits,
+				ActionQueue::Backup);
+		}
+		fSyncStack->addAction(new BackupAction(fPilotLink));
 		break;
 	case PilotDaemonDCOP::Restore:
-		fSyncStack->prepareRestore();
+		fSyncStack->addAction(new RestoreAction(fPilotLink));
 		break;
 	case PilotDaemonDCOP::HotSync:
-		if (installFiles)
+		if (conduits.count() > 0)
 		{
-			fSyncStack->prepare(SyncStack::HotSyncMode | SyncStack::WithInstaller);
+			fSyncStack->queueConduits(&KPilotConfig::getConfig(),
+				conduits,
+				ActionQueue::HotSync);
 		}
-		else
+		if (installFiles && fInstaller)
 		{
-			fSyncStack->prepare(SyncStack::HotSyncMode);
+			fSyncStack->queueInstaller(fInstaller->dir(),
+				fInstaller->fileNames());
 		}
 		break;
 	default:
@@ -727,6 +697,8 @@ QString PilotDaemon::syncTypeString(int i) const
 		break;
 	}
 
+	fSyncStack->queueCleanup();
+	
 	QObject::connect(fSyncStack, SIGNAL(logError(const QString &)),
 		this, SLOT(logError(const QString &)));
 	QObject::connect(fSyncStack, SIGNAL(logMessage(const QString &)),
@@ -747,7 +719,7 @@ QString PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUPL(2);
 
-	getKPilot().logMessage(s);
+	getLogger().logMessage(s);
 	updateTrayStatus(s);
 }
 
@@ -755,7 +727,7 @@ QString PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUP;
 
-	getKPilot().logMessage(s);
+	getLogger().logMessage(s);
 	updateTrayStatus(s);
 }
 
@@ -763,10 +735,9 @@ QString PilotDaemon::syncTypeString(int i) const
 {
 	FUNCTIONSETUPL(2);
 
-	getKPilot().logProgress(s, i);
+	getLogger().logProgress(s, i);
 	if (!s.isEmpty()) updateTrayStatus(s);
 }
-
 /* slot */ void PilotDaemon::endHotSync()
 {
 	FUNCTIONSETUP;
@@ -779,12 +750,14 @@ QString PilotDaemon::syncTypeString(int i) const
 	KPILOT_DELETE(fSyncStack);
 	fPilotLink->close();
 
-	getKPilot().logProgress(i18n("HotSync Completed.<br>"), 100);
-
+	getLogger().logProgress(i18n("HotSync Completed.<br>"), 100);
+	getKPilot().daemonStatus(KPilotDCOP::EndOfHotSync);
+	
 	fStatus = HOTSYNC_END;
 
 	if (fPostSyncAction & Quit)
 	{
+		getKPilot().daemonStatus(KPilotDCOP::DaemonQuit);
 		kapp->quit();
 	}
 	if (fPostSyncAction & ReloadSettings)

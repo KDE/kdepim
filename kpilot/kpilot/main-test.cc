@@ -110,7 +110,7 @@ void createLink()
 		logWidget, SLOT(addProgress(const QString &,int)));
 }
 
-static SyncStack *syncStack = 0L;
+static ActionQueue *syncStack = 0L;
 
 void connectStack()
 {
@@ -157,11 +157,11 @@ int syncTest(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	syncStack = new SyncStack(deviceLink,&KPilotConfig::getConfig());
+	syncStack = new ActionQueue(deviceLink,&KPilotConfig::getConfig());
 
 	if (p->isSet("backup"))
 	{
-		syncStack->prepare(SyncStack::Backup | SyncStack::WithUserCheck);
+		syncStack->prepare(ActionQueue::Backup | ActionQueue::WithUserCheck);
 	}
 	else if (p->isSet("restore"))
 	{
@@ -169,7 +169,7 @@ int syncTest(KCmdLineArgs *p)
 	}
 	else
 	{
-		syncStack->prepare(SyncStack::Test);
+		syncStack->prepare(ActionQueue::Test);
 	}
 
 	connectStack();
@@ -190,11 +190,11 @@ int execConduit(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	syncStack = new SyncStack(deviceLink,&KPilotConfig::getConfig(),l);
+	syncStack = new ActionQueue(deviceLink,&KPilotConfig::getConfig(),l);
 
 	if (p->isSet("test"))
 	{
-		syncStack->prepare(SyncStack::HotSyncMode| SyncStack::TestMode);
+		syncStack->prepare(ActionQueue::HotSyncMode| ActionQueue::TestMode);
 	}
 	else
 	{

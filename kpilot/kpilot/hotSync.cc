@@ -48,7 +48,7 @@ static const char *hotsync_id =
 #include <qtextcodec.h>
 
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kapplication.h>
 
 #include "pilotUser.h"
@@ -379,7 +379,7 @@ FileInstallAction::~FileInstallAction()
 	FUNCTIONSETUP;
 
 	ASSERT(fDBIndex >= 0);
-	ASSERT((unsigned) fDBIndex < fList.count());
+	ASSERT((unsigned) fDBIndex <= fList.count());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -393,9 +393,11 @@ FileInstallAction::~FileInstallAction()
 		DEBUGDAEMON << fname
 			<< ": Peculiar file index, bailing out." << endl;
 #endif
-		if (fTimer)
-			fTimer->stop();
+		KPILOT_DELETE(fTimer);
+		fDBIndex = (-1);
+		emit logProgress(i18n("Done Installing Files"), 100);
 		emit syncDone(this);
+		return;
 	}
 
 	const QString s = fDir + fList[fDBIndex];

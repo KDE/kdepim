@@ -29,7 +29,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-#include "kpilotDCOP.h"
+#include "logWidgetDCOP.h"
 #include "pilotComponent.h"
 
 class QLabel;
@@ -37,7 +37,7 @@ class QTextEdit;
 class QHBox;
 class KProgress;
 
-class LogWidget : public PilotComponent , public KPilotDCOP
+class LogWidget : public PilotComponent , public LoggerDCOP
 {
 Q_OBJECT
 

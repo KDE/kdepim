@@ -1970,7 +1970,7 @@ int PopMailConduit::doUnixStyle()
 	KConfigGroupSaver cfgs(fConfig,PopmailConduitFactory::group);
 
 	fDatabase=new PilotSerialDatabase(pilotSocket(),
-		"MailDB",this,"MailDB");
+		CSL1("MailDB"),this,"MailDB");
 
 	if (!fDatabase || !fDatabase->isDBOpen())
 	{

@@ -84,23 +84,6 @@ QString charExpansion(const char *s)
 	return t;
 }
 
-ostream & operator << (ostream & o, const QSize & s)
-{
-	o << s.width() << "x" << s.height();
-	return o;
-}
-
-kdbgstream & operator << (kdbgstream & o, const QSize & s)
-{
-	o << s.width() << "x" << s.height();
-	return o;
-}
-
-kndbgstream & operator << (kndbgstream & o, const QSize &)
-{
-	return o;
-}
-
 static KCmdLineOptions debug_options_[] = {
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 	{0, 0, 0}

@@ -35,8 +35,9 @@ static const char *addresswidget_id =
 #include "options.h"
 #endif
 
-#include <string.h>
-#include <stdlib.h>
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
 
 #ifndef QLIST_H
 #include <qlist.h>

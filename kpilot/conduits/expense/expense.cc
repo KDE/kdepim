@@ -215,7 +215,7 @@ ExpenseConduit::~ExpenseConduit()
 		return false;
 	}
 
-	fDatabase=new PilotSerialDatabase(pilotSocket(),"ExpenseDB",
+	fDatabase=new PilotSerialDatabase(pilotSocket(),CSL1("ExpenseDB"),
 		this,"ExpenseDB");
 
 	fConfig->setGroup("Expense-conduit");

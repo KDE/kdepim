@@ -43,7 +43,7 @@ static const char *conduitconfigdialog_id =
 #include <kprocess.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <klibloader.h>
 
 #include "plugin.h"
