@@ -135,10 +135,10 @@ task/time window and status bar.</para>
 time accumulated for each in the current session and in total. Tasks
 being timed have a small clock icon next to the session time.</para>
 
-<para>Subtasks can be created for each task. Clicking the plus sign and 
-minus sign in front of the main task toggles the view of its associated
-subtasks. The total time accrued for a task includes the times for its 
-subtasks, as well as its own accumulated time.</para>
+<para>Subtasks can be created for each task. Double-clicking on a task
+displays or collapses its associated subtasks. The total time accrued
+for a task includes the times for its subtasks, as well as its own
+accumulated time.</para>
 
 </sect1>
 
@@ -294,7 +294,7 @@ zero</action></para>
 <listitem>
 <para><action>Change the name or accumulated time</action> for the
 current task</para><para>There are two options for changing the time: Edit
-Absolute, in which the session and total times can be changed separately,
+Absolute, in which the session and total names can be changed separately,
 and Edit Relative, in which a certain change is added to or subtracted from
 both the session and total times.</para>
 </listitem>
@@ -329,13 +329,11 @@ the keyboard shortcuts</para>
 <listitem><para><action>Opens</action> a dialog to allow the user to
 configure &karm;</para>
 
-<para>The dialog has three sections: <guilabel>Storage</guilabel>,
+<para>The dialog has two tabbed panes: <guilabel>Saving</guilabel>,
 which configures the location of the save file, whether autosaving is
-enabled and the autosave interval, <guilabel>Behavior</guilabel>
-which, when set, pops up an alert when no activity
-has been detected for a specified amount of time and 
-<guilabel>Display</guilabel> where you can select which columns should be
-visible in the task/time window.</para> </listitem>
+enabled and the autosave interval, and <guilabel>Idle
+Detection</guilabel> which, when set, pops up an alert when no activity
+has been detected for a specified amount of time.</para> </listitem>
 </varlistentry>
 
 </variablelist>
