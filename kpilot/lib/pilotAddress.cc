@@ -396,11 +396,12 @@ void PilotAddress::setField(int field, const QString &text)
 	if (fAddressInfo.entry[field])
 	{
 		free(fAddressInfo.entry[field]);
+		fAddressInfo.entry[field]=0L;
 	}
 	if (!text.isEmpty())
 	{
 		fAddressInfo.entry[field] = (char *) malloc(text.length() + 1);
-		strcpy(fAddressInfo.entry[field], codec()->fromUnicode(text));
+		strlcpy(fAddressInfo.entry[field], codec()->fromUnicode(text), text.length() + 1);
 	}
 	else
 	{

@@ -696,20 +696,23 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 
 	const char *componentname = p->name("(none)");
 	char *actionname = 0L;
+	int actionnameLength = 0;
 
 	if (strncmp(componentname, "component_", 10) == 0)
 	{
-		actionname = new char[strlen(componentname) - 10 + 8];
+		actionnameLength = strlen(componentname) - 10 + 8;
+		actionname = new char[actionnameLength];
 
-		strcpy(actionname, "view_");
-		strcat(actionname, componentname + 10);
+		strlcpy(actionname, "view_", actionnameLength);
+		strlcat(actionname, componentname + 10, actionnameLength);
 	}
 	else
 	{
-		actionname = new char[8 + strlen(componentname)];
+		actionnameLength = strlen(componentname) + 8;
+		actionname = new char[actionnameLength];
 
-		strcpy(actionname, "view_");
-		strcat(actionname, componentname);
+		strlcpy(actionname, "view_", actionnameLength);
+		strlcat(actionname, componentname, actionnameLength);
 	}
 
 #ifdef DEBUG

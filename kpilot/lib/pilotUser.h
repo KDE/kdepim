@@ -54,7 +54,7 @@ public:
 	const char* getUserName() const     { return fUser.username; }
 	void setUserName(const char* name)
 	{
-		::strncpy(fUser.username, name,sizeof(fUser.username)-1);
+		strlcpy(fUser.username, name,sizeof(fUser.username));
 		boundsCheck();
 	}
 
@@ -62,10 +62,10 @@ public:
 	const char* getPassword() const     { return fUser.password; }
 	void setPassword(char* password)
 	{
-		::memset(&fUser.password, 0, sizeof(fUser.password));
-		::strncpy(fUser.password, password,sizeof(fUser.password)-1);
+		memset(&fUser.password, 0, sizeof(fUser.password));
+		strlcpy(fUser.password, password,sizeof(fUser.password));
 		boundsCheck();
-		fUser.passwordLength = ::strlen(fUser.password);
+		fUser.passwordLength = strlen(fUser.password);
 	}
 
 	unsigned long getUserID() const     { return fUser.userID; }

@@ -56,18 +56,22 @@ void *PilotMemo::internalPack(unsigned char *buf)
 	FUNCTIONSETUP;
 	kdWarning() << k_funcinfo << ": Deprecated." << endl;
 	QCString s = codec()->fromUnicode(fText);
-	return strcpy((char *) buf, (const char *)s);
+	// Nasty assumption the buffer is big enough
+	strlcpy((char *) buf, (const char *)s, s.length()+1);
+	return buf;
 }
 
 void *PilotMemo::pack(void *buf, int *len)
 {
 	FUNCTIONSETUP;
+	if (!*len) return NULL;
 	if (*len < 0) return NULL; // buffer size being silly
 	if (fText.length() > (unsigned) *len) return NULL; // won't fit either
 
 	QCString s = codec()->fromUnicode(fText);
 
-	unsigned int use_length = QMIN(*len,MAX_MEMO_LEN);
+	unsigned int use_length = *len;
+	if (MAX_MEMO_LEN < use_length) use_length = MAX_MEMO_LEN;
 
 	// It won't fit if the buffer is too small. This second test
 	// is because the encoded length in bytes may be longer (?)

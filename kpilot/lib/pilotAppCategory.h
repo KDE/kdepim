@@ -173,7 +173,7 @@ public:
 		if (label == aCat) { setCat(catId); return true; } \
 	} \
 	if (emptyAvailable<0) return false; \
-	qstrncpy(appinfo.category.name[emptyAvailable], codec()->fromUnicode(label), 16); \
+	strncpy(appinfo.category.name[emptyAvailable], codec()->fromUnicode(label), 16); \
 	setCat(emptyAvailable); \
 	return true;
 

@@ -380,7 +380,7 @@ bool KPilotDeviceLink::open(QString device)
 #else
 	addr.pi_family = PI_AF_PILOT;
 #endif
-	strncpy(addr.pi_device, QFile::encodeName(device),sizeof(addr.pi_device));
+	strlcpy(addr.pi_device, QFile::encodeName(device),sizeof(addr.pi_device));
 
 	ret = pi_bind(fPilotMasterSocket,
 		(struct sockaddr *) &addr, sizeof(addr));
@@ -936,7 +936,7 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 	}
 	QCString encodedName = QFile::encodeName(fullBackupName);
 	char filenameBuf[PATH_MAX];
-	strncpy(filenameBuf,(const char *)encodedName,encodedName.length());
+	strlcpy(filenameBuf,(const char *)encodedName,encodedName.length());
 	f = pi_file_create(filenameBuf,info);
 
 	if (f == 0)

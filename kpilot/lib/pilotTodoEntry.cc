@@ -175,7 +175,7 @@ void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 		fTodoInfo.description = (char *)::malloc(len + 1);
 		if (fTodoInfo.description)
 		{
-			::strcpy(fTodoInfo.description, desc);
+			strlcpy(fTodoInfo.description, desc, len+1);
 		}
 		else
 		{
@@ -209,7 +209,7 @@ void PilotTodoEntry::setNoteP(const char *note, int len)
 		fTodoInfo.note = (char *)::malloc(len + 1);
 		if (fTodoInfo.note)
 		{
-		    ::strcpy(fTodoInfo.note, note);
+		    strlcpy(fTodoInfo.note, note, len+1);
 		}
 		else
 		{

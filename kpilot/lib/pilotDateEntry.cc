@@ -308,7 +308,7 @@ void PilotDateEntry::setDescriptionP(const char *desc, int l)
 			(char *) ::malloc(l + 1);
 		if (fAppointmentInfo.description)
 		{
-			::strcpy(fAppointmentInfo.description, desc);
+			strlcpy(fAppointmentInfo.description, desc, l+1);
 		}
 		else
 		{
@@ -334,7 +334,7 @@ void PilotDateEntry::setNoteP(const char *note, int l)
 		fAppointmentInfo.note = (char *)::malloc(l + 1);
 		if (fAppointmentInfo.note)
 		{
-			strcpy(fAppointmentInfo.note, note);
+			strlcpy(fAppointmentInfo.note, note,l+1);
 		}
 		else
 		{

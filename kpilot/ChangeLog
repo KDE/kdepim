@@ -4,6 +4,14 @@
 2004-10-07  Adriaan de Groot
 * Started adding encoding support to PalmDOC conduit dialogs. Not
   sure how to proceed there.
+* Closed some more bugs, generally confused about some of the bugs
+  remaining in the database -- I need cooperation from the folks
+  reporting the bugs.
+* Went on a str*cpy() hunt to avoid bad copies; converted most to
+  strlcpy(). Not the ones in the docconduit, though, since there,
+  the strncpy()s go to a data structure that doesn't necessarily
+  expect NUL termination (note to self: need to check that _extracting_
+  data from the structure doesn't rely on NUL).
 
 2004-10-05  Adriaan de Groot
 * I wonder if the codec() stuff shouldn't move from the PilotAppCategory
