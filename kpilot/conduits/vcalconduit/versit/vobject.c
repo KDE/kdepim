@@ -43,7 +43,7 @@ DFARS 252.227-7013 or 48 CFR 52.227-19, as applicable.
  */
 
 #ifndef __FreeBSD__
-#include <malloc.h>
+#include <stdlib.h>
 #else
 #include <stdlib.h>
 #endif

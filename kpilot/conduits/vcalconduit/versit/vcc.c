@@ -126,7 +126,7 @@ DFARS 252.227-7013 or 48 CFR 52.227-19, as applicable.
 
 #include <string.h>
 #ifndef __FreeBSD__
-#include <malloc.h>
+#include <stdlib.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -417,10 +417,7 @@ static const short yycheck[] = {     7,
 /* This used to test MSDOS, but that is a bad idea
    since that symbol is in the user namespace.  */
 #if (defined (_MSDOS) || defined (_MSDOS_)) && !defined (__TURBOC__)
-#if 0 /* No need for malloc.h, which pollutes the namespace;
-	 instead, just don't use alloca.  */
-#include <malloc.h>
-#endif
+/* nothing */
 #else /* not MSDOS, or __TURBOC__ */
 #if defined(_AIX)
 /* I don't know what this was needed for, but it pollutes the namespace.
