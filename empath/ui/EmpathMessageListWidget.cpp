@@ -323,7 +323,7 @@ EmpathMessageListWidget::s_messageReply()
     void
 EmpathMessageListWidget::s_messageReplyAll()
 {
-    empath->s_reply(firstSelectedMessage());
+    empath->s_replyAll(firstSelectedMessage());
 }
 
     void
