@@ -71,28 +71,18 @@
 #endif
 #endif
 
+
 #ifdef DEBUG_CERR
-#include <iostream.h>
 #define DEBUGFUNC	cerr
 #else
 #define DEBUGFUNC	kdDebug()
 #endif
 
-#ifndef QSTRING_H
+#include <iostream.h>
 #include <qstring.h>
-#endif
-
-#ifndef QSTRLIST_H
 #include <qstrlist.h>
-#endif
-
-#ifndef _KLOCALE_H
 #include <klocale.h>
-#endif
-
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
 
 
 // KPilot will move towards the *standard* way of doing
@@ -214,6 +204,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.6  2002/01/16 22:24:16  adridg
+// Avoid lib incompatibility crashes
+//
 // Revision 1.5  2002/01/15 22:43:35  adridg
 // Backport to 2.2.2
 //

@@ -30,9 +30,14 @@
 static const char *options_id =
 	"$Id$";
 
-#ifndef _KPILOT_OPTIONS_H
-#include "options.h"
+#ifdef NDEBUG
+#undef NDEBUG
 #endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
+#include "options.h"
 
 #ifdef DEBUG
 
@@ -164,6 +169,9 @@ int const fname = ((int) options_id);
 
 
 // $Log$
+// Revision 1.2  2002/01/16 22:24:16  adridg
+// Avoid lib incompatibility crashes
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //
