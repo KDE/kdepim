@@ -23,7 +23,7 @@
 
 #include "resourcecalendar.h"
 
-#include "idmapper.h"
+#include "libemailfunctions/idmapper.h"
 #include "incidence.h"
 #include "calendarlocal.h"
 
