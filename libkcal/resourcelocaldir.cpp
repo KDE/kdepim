@@ -209,6 +209,13 @@ void ResourceLocalDir::deleteTodo(Todo *todo)
 }
 
 
+void ResourceLocalDir::deleteJournal( Journal *journal )
+{
+  if ( deleteIncidenceFile( journal ) )
+    mCalendar.deleteJournal( journal );
+}
+
+
 void ResourceLocalDir::dump() const
 {
   ResourceCalendar::dump();

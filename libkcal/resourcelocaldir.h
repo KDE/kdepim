@@ -66,6 +66,11 @@ class ResourceLocalDir : public ResourceCached
     */
     void deleteTodo( Todo * );
 
+    /**
+      Remove a journal from the journallist.
+    */
+    void deleteJournal( Journal * );
+
     void dump() const;
 
   protected slots:
