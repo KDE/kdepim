@@ -48,8 +48,8 @@
 UIDialog::UIDialog(QWidget * parent, const char *name,
 	bool modal) :
 	KDialogBase(parent, name, modal, QString::null,
-		KDialogBase::Ok | KDialogBase::Cancel, 
-		KDialogBase::Ok, false), 
+		KDialogBase::Ok | KDialogBase::Cancel,
+		KDialogBase::Ok, false),
 	fP(0L)
 {
 	FUNCTIONSETUP;
@@ -76,7 +76,7 @@ UIDialog::~UIDialog()
 void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 {
 	FUNCTIONSETUP;
-	ASSERT(tabWidget());
+	Q_ASSERT(tabWidget());
 
 	QWidget *w = new QWidget(tabWidget(), "aboutpage");
 
@@ -84,7 +84,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 	QLabel *text;
 	KIconLoader *l = KGlobal::iconLoader();
 	const KAboutData *p = ad ? ad : KGlobal::instance()->aboutData();
-	
+
 	QGridLayout *grid = new QGridLayout(w, 5, 4, SPACING);
 
 	grid->addColSpacing(0, SPACING);
@@ -112,7 +112,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 			<< "kpilot"
 			<< endl;
 #endif
-		applicationIcon = l->loadIcon(QString::fromLatin1("kpilot"), 
+		applicationIcon = l->loadIcon(QString::fromLatin1("kpilot"),
 			KIcon::Desktop);
 	}
 
@@ -187,7 +187,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 		s = i18n("<qt><b>Authors:</b> ");
 
 		QString comma = CSL1(", ");
-		
+
 		unsigned int count=1;
 		for (i=l.begin(); i!=l.end(); ++i)
 		{

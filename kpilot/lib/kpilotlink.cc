@@ -111,7 +111,7 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 		<< endl;
 #endif
 
-	ASSERT(fDeviceLink == 0L);
+	Q_ASSERT(fDeviceLink == 0L);
 	fDeviceLink = this;
 	messagesMask=0xffffffff;
 
@@ -129,7 +129,7 @@ KPilotDeviceLink *KPilotDeviceLink::init(QObject * parent, const char *name)
 {
 	FUNCTIONSETUP;
 
-	ASSERT(!fDeviceLink);
+	Q_ASSERT(!fDeviceLink);
 
 	return new KPilotDeviceLink(parent, name);
 }
@@ -324,7 +324,7 @@ bool KPilotDeviceLink::open()
 		fStatus = CreatedSocket;
 	}
 
-	ASSERT(fStatus == CreatedSocket);
+	Q_ASSERT(fStatus == CreatedSocket);
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
