@@ -85,8 +85,8 @@ kdepim_needs_gpgme_copy=""
 KDEPIM_PATH_GPGME(0.4.4,[
 ],[
 	kdepim_needs_gpgme_copy="true"
-	GPGME_CFLAGS="-I $(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme"
-	GPGME_LIBS="$(top_builddir)/libkdenetwork/libgpgme-copy/gpgme/libgpgme.la"
+	GPGME_CFLAGS='-I $(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme'
+	GPGME_LIBS='$(top_builddir)/libkdenetwork/libgpgme-copy/gpgme/libgpgme.la'
 ])
 
 AM_CONDITIONAL(needs_gpgme_copy, test -n "$kdepim_needs_gpgme_copy")

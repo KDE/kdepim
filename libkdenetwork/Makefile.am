@@ -1,7 +1,7 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 INCLUDES= $(all_includes)
 
-if needs_gpgme_copy
+if kdepim_needs_gpgme_copy
 GPGME_COPY_SUBDIRS = libgpg-error-copy libgpgme-copy
 endif
 

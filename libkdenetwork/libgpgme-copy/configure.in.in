@@ -1,7 +1,3 @@
-dnl for now...
-AM_CONDITIONAL(needs_gpgme_copy, true)
-
-
 dnl From gpgme/configure.ac
 NEED_GPG_VERSION=1.2.2
 NEED_GPGSM_VERSION=1.9.3
