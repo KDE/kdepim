@@ -39,6 +39,8 @@
 class QMultiLineEdit;
 class QPushButton;
 
+class KIconView;
+
 class KPilotInstaller;
 class FileInstaller;
 
@@ -69,7 +71,7 @@ protected:
 	KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
 private:
-	QListBox*   fListBox;
+	KIconView  *fIconView;
 	bool        fSaveFileList;
 
 	KPilotInstaller* fKPilotInstaller;

@@ -44,9 +44,13 @@ static const char *fileinstallwidget_id =
 #include <qlayout.h>
 #include <qwhatsthis.h>
 #include <qmultilineedit.h>
+#include <qpixmap.h>
 
 #include <kfiledialog.h>
 #include <kurldrag.h>
+#include <kiconloader.h>
+#include <kiconview.h>
+#include <kglobal.h>
 
 #include "kpilotConfig.h"
 #include "fileInstaller.h"
@@ -85,9 +89,9 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 		i18n
 		("<qt>Choose a file to add to the list of files to install.</qt>"));
 
-	fListBox = new QListBox(this);
-	grid->addMultiCellWidget(fListBox, 1, 4, 2, 3);
-	QWhatsThis::add(fListBox,
+	fIconView = new KIconView(this);
+	grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
+	QWhatsThis::add(fIconView,
 		i18n
 		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
 
@@ -171,7 +175,7 @@ bool FileInstallWidget::preHotSync(QString &)
 {
 	FUNCTIONSETUP;
 
-	fListBox->setEnabled(false);
+	fIconView->setEnabled(false);
 	fInstaller->setEnabled(false);
 	addButton->setEnabled(false);
 	clearButton->setEnabled(false);
@@ -182,8 +186,9 @@ bool FileInstallWidget::preHotSync(QString &)
 void FileInstallWidget::postHotSync()
 {
 	FUNCTIONSETUP;
+
 	fInstaller->setEnabled(true);
-	fListBox->setEnabled(true);
+	fIconView->setEnabled(true);
 	addButton->setEnabled(true);
 	clearButton->setEnabled(true);
 	if (shown) refreshFileInstallList();
@@ -194,8 +199,15 @@ void FileInstallWidget::refreshFileInstallList()
 {
 	FUNCTIONSETUP;
 
-	fListBox->clear();
-	fListBox->insertStringList(fInstaller->fileNames());
+	QStringList fileNames = fInstaller->fileNames();
+	QPixmap kpilotIcon = KGlobal::iconLoader()->loadIcon(CSL1("kpilot"), KIcon::Desktop);
+
+	fIconView->clear();
+
+	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
+	{
+		new KIconViewItem(fIconView, *fileName, kpilotIcon);
+	}
 }
 
 
