@@ -67,6 +67,7 @@ JumpButtonBar::JumpButtonBar( ViewManager *parent, const char *name )
   : QWidget( parent, name ), mViewManager( parent )
 {
   mButtonLayout = new QGridLayout( this, 10, 3 );
+  mButtonLayout->setAlignment( Qt::AlignTop );
   
   JumpButton *b = new JumpButton( "0,1,2", this, "0" );
   connect( b, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
