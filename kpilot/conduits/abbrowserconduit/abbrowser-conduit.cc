@@ -476,7 +476,7 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 			if (bdate.isValid())
 				return abEntry.setBirthday(bdate);
 			else
-				return abEntry.insertCustom(CSL1("KADDRESSBOOK"), CSL1("X-IMAddress"), cust);
+				return abEntry.insertCustom(CSL1("KADDRESSBOOK"), CSL1("X-Birthday"), cust);
 			break; }
 		case AbbrowserSettings::eCustomURL: {
 			return abEntry.setUrl(cust);
