@@ -119,7 +119,7 @@ void DateLabel::setDate(QDate newDate)
 void DateLabel::setDate()
 {
   // ############################################################################
-  DatePickerDialog* datePicker=new DatePickerDialog( "Select Birthday", this);
+  DatePickerDialog* datePicker=new DatePickerDialog( i18n( "Select Birthday" ), this);
   // -----
   datePicker->setDate(date);
   if(datePicker->exec())

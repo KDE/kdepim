@@ -78,12 +78,12 @@ void ContactDialog::setupTab1()
   QGridLayout *tab1lay = new QGridLayout( tab1, 8, 5 );
   tab1lay->setSpacing( 5 );
   tab1->setMargin( 5 );
-  
+
 /////////////////////////////////
 // The Name/Job title group
 
   // First row
-  QPushButton *pbFullName = new QPushButton( "&Full Name...", tab1 );
+  QPushButton *pbFullName = new QPushButton( i18n( "&Full Name..." ), tab1 );
   leFullName = new ContactLineEdit( tab1, ".AUXCONTACT-N", ce );
   leFullName->setText( curName );
 
@@ -97,14 +97,14 @@ void ContactDialog::setupTab1()
   filler1->setMinimumWidth( 1 );
   tab1lay->addWidget( filler1, 0, 2 );
 
-  QLabel *lJobTitle = new QLabel( "&Job title:", tab1 );
+  QLabel *lJobTitle = new QLabel( i18n( "&Job title:" ), tab1 );
   QLineEdit *leJobTitle = new ContactLineEdit( tab1, "ROLE", ce );
   lJobTitle->setBuddy( leJobTitle );
   tab1lay->addWidget( lJobTitle, 0, 3 );
   tab1lay->addWidget( leJobTitle, 0, 4 );
 
   // Second row
-  QLabel *lCompany = new QLabel( "&Company:", tab1 );
+  QLabel *lCompany = new QLabel( i18n( "&Company:" ), tab1 );
   QLineEdit *leCompany = new ContactLineEdit( tab1, "ORG", ce );
   lCompany->setBuddy( leCompany );
   curCompany = leCompany->text();
@@ -117,7 +117,7 @@ void ContactDialog::setupTab1()
   filler2->setMinimumWidth( 1 );
   tab1lay->addWidget( filler2, 1, 2 );
 
-  QLabel *lFileAs = new QLabel( "F&ile as:", tab1 );
+  QLabel *lFileAs = new QLabel( i18n( "F&ile as:" ), tab1 );
   cbFileAs = new FileAsComboBox( tab1, "X-FileAs", ce );
   QString sFileAs;
   if (ce->find( "X-FileAs" ))
@@ -132,7 +132,7 @@ void ContactDialog::setupTab1()
   lFileAs->setBuddy( cbFileAs );
 // End the Name/Job title group
 ////////////////////////////////
-  
+
   // Horizontal bar (rather verbose)
   QFrame *bar1 = new QFrame( tab1, "horizontal divider 1" );
   bar1->setFrameStyle( QFrame::HLine | QFrame::Sunken );
@@ -143,10 +143,10 @@ void ContactDialog::setupTab1()
 ////////////////////////////////
 // The Email/Webpage group
   ContactComboBox *cbEmail = new ContactComboBox( tab1 );
-  cbEmail->insertItem( "E-mail", "EMAIL" );
-  cbEmail->insertItem( "E-mail 2", "X-E-mail2" );
-  cbEmail->insertItem( "E-mail 3", "X-E-mail3" );
-  QLineEdit *leEmail = new ContactLineEdit( tab1, "EMAIL", ce ); 
+  cbEmail->insertItem( i18n( "E-mail" ), "EMAIL" );
+  cbEmail->insertItem( i18n( "E-mail 2" ), "X-E-mail2" );
+  cbEmail->insertItem( i18n( "E-mail 3" ), "X-E-mail3" );
+  QLineEdit *leEmail = new ContactLineEdit( tab1, "EMAIL", ce );
   cbEmail->setBuddy( leEmail );
   tab1lay->addWidget( cbEmail, 3, 0 );
   tab1lay->addWidget( leEmail, 3, 1 );
@@ -156,7 +156,7 @@ void ContactDialog::setupTab1()
   filler3->setMinimumWidth( 1 );
   tab1lay->addWidget( filler3, 3, 2 );
 
-  QLabel *lWebPage = new QLabel( "&Web page:", tab1 );
+  QLabel *lWebPage = new QLabel( i18n( "&Web page:" ), tab1 );
   QLineEdit *leWebPage = new ContactLineEdit( tab1, "WEBPAGE", ce );
   lWebPage->setBuddy( leWebPage );
   tab1lay->addWidget( lWebPage, 3, 3 );
@@ -174,11 +174,11 @@ void ContactDialog::setupTab1()
 
 ///////////////////////////////
 // The Address/Phone group
-  
+
   // Use a box to keep the widgets fixed vertically in place
   QBoxLayout *lay1 = new QBoxLayout( QBoxLayout::Down, 10, "lay1" );
 
-  QPushButton *pbAddress = new QPushButton( "Add&ress...", tab1 );
+  QPushButton *pbAddress = new QPushButton( i18n( "Add&ress..." ), tab1 );
   connect( pbAddress, SIGNAL( clicked()), this, SLOT( newAddressDialog()));
   lay1->addWidget( pbAddress, 0 );
   cbAddress = new ContactComboBox( tab1 );
@@ -196,7 +196,7 @@ void ContactDialog::setupTab1()
   addressName = Attributes::instance()->nameToField( addresses[2] );
   cbAddress->insertItem( addresses[2], addressName );
   cbAddress->setCurrentItem( addresses.findIndex( i18n( "Business" )));
-  
+
   lay1->addWidget( cbAddress, 0 );
   lay1->addStretch( 1 );  // Fix the other widgets in place
   tab1lay->addLayout( lay1, 5, 0 );
@@ -213,7 +213,7 @@ void ContactDialog::setupTab1()
   filler4->setMinimumWidth( 1 );
   tab1lay->addWidget( filler4, 5, 2 );
 
-  QLabel *lPhone = new QLabel( i18n( "Phone" ) + ":", tab1 );  
+  QLabel *lPhone = new QLabel( i18n( "Phone" ) + ":", tab1 );
   lPhone->setAlignment( QLabel::AlignTop | QLabel::AlignLeft );
   tab1lay->addWidget( lPhone, 5, 3 );
 
@@ -224,7 +224,7 @@ void ContactDialog::setupTab1()
   QStringList namePhone;
   QStringList fieldPhone;
   Attributes::instance()->nameFieldList( 8, &namePhone, &fieldPhone );
-    
+
   int iPhone[4];
   iPhone[0] = fieldPhone.findIndex( "X-BusinessPhone" );
   iPhone[1] = fieldPhone.findIndex( "X-HomePhone" );
@@ -245,7 +245,7 @@ void ContactDialog::setupTab1()
     cbPhone->setMinimumSize( cbPhone->sizeHint() );
     layhGrid->addWidget( cbPhone, row, 0 );
 
-    QLineEdit *ed = new ContactLineEdit( hGrid, fieldPhone[iPhone[row]].ascii(), ce ); 
+    QLineEdit *ed = new ContactLineEdit( hGrid, fieldPhone[iPhone[row]].ascii(), ce );
     ed->setMinimumSize( ed->sizeHint());
     cbPhone->setBuddy( ed );
     layhGrid->addWidget( ed, row ,1 );
@@ -256,7 +256,7 @@ void ContactDialog::setupTab1()
 
 // End The Address/Phone group
 ///////////////////////////////
-   
+
   // Horizontal bar
   QFrame *bar3 = new QFrame( tab1, "horizontal divider 3" );
   bar3->setFrameStyle( QFrame::HLine | QFrame::Sunken );
@@ -274,9 +274,9 @@ void ContactDialog::setupTab1()
   tab1lay->addMultiCellWidget( mleNotes, 7, 7, 0, 4 );
 // End the Note group
 //////////////////////
- 
+
   tab1lay->activate(); // required
-  tabs->addTab( tab1, "&General" );
+  tabs->addTab( tab1, i18n( "&General" ));
 }
 
 void ContactDialog::setupTab2()
@@ -288,17 +288,17 @@ void ContactDialog::setupTab2()
 
   const int numRows = 9;
   QString sLabel[numRows] = { i18n( "D&epartment:" ), i18n( "&Office:" ),
-			      i18n( "&Profession:" ), 
-			      i18n( "Assistant's &Name:" ), 
+			      i18n( "&Profession:" ),
+			      i18n( "Assistant's &Name:" ),
 			      i18n( "&Managers's Name:" ),
-			      i18n( "Birthday" ), i18n( "Anniversary" ), 
+			      i18n( "Birthday" ), i18n( "Anniversary" ),
 			      i18n( "Ni&ckname:" ), i18n( "&Spouse's Name:" )
   };
-  QString entryField[numRows] = { 
+  QString entryField[numRows] = {
     "X-Department", "X-Office", "X-Profession", "X-AssistantsName",
-    "X-ManagersName", "BDAY", "X-Anniversary", "NICKNAME", "X-SpousesName" 
+    "X-ManagersName", "BDAY", "X-Anniversary", "NICKNAME", "X-SpousesName"
   };
-			     
+			
   QLabel *(label[numRows]);
   QPushButton *(pbDate[2]);
   QSize size = QSize( 0, 0 );
@@ -309,7 +309,7 @@ void ContactDialog::setupTab2()
     hGrid->setSpacing( 10 );
     label[row] = new QLabel( sLabel[row], hGrid );
     size = size.expandedTo( label[row]->sizeHint() );
-    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row].ascii(), ce ); 
+    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row].ascii(), ce );
     label[row]->setBuddy( ed );
     lay2->addWidget( hGrid, 0 );
   }
@@ -337,8 +337,8 @@ void ContactDialog::setupTab2()
     lay3->addStretch( 1 ) ;
     lay2->addWidget( v3 );
   }
-    connect( pbDate[0], SIGNAL( clicked()), this, SLOT( pickBirthDate() ));  
-    connect( pbDate[1], SIGNAL( clicked()), this, SLOT( pickAnniversaryDate() ));  
+    connect( pbDate[0], SIGNAL( clicked()), this, SLOT( pickBirthDate() ));
+    connect( pbDate[1], SIGNAL( clicked()), this, SLOT( pickAnniversaryDate() ));
 
   QFrame *f5 = new QFrame( v2, "horizontal divider 1" );
   f5->setFrameStyle( QFrame::HLine | QFrame::Sunken );
@@ -350,7 +350,7 @@ void ContactDialog::setupTab2()
     hGrid->setSpacing( 10 );
     label[row] = new QLabel( sLabel[row], hGrid );
     size = size.expandedTo( label[row]->sizeHint() );
-    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row].ascii(), ce ); 
+    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row].ascii(), ce );
     label[row]->setBuddy( ed );
     lay2->addWidget( hGrid, 0 );
   }
@@ -363,7 +363,7 @@ void ContactDialog::setupTab2()
   pbDate[1]->setMinimumSize( size2 );
 
   lay2->addStretch( 1 ) ;
-  tabs->addTab( v2, "&Details" );
+  tabs->addTab( v2, i18n( "&Details" ));
 }
 
 void ContactDialog::setupTab3()
@@ -373,7 +373,7 @@ void ContactDialog::setupTab3()
     QString tmp;
     QFrame *tab3 = new QFrame( this );
     QBoxLayout *t3lay = new QBoxLayout( tab3, QBoxLayout::TopToBottom, 5, 5 );
-    
+
     QFrame *row1 = new QFrame( tab3 );
     QBoxLayout *lay1 = new QBoxLayout( row1, QBoxLayout::LeftToRight, 1, 1 );
     lay1->setSpacing( 10 );
@@ -383,13 +383,13 @@ void ContactDialog::setupTab3()
     lay1->addWidget( cbSelectFrom, 0 );
     lay1->addStretch( 1 );  // Fix the other widgets in place
     lSelectFrom->setBuddy( cbSelectFrom );
-    t3lay->addWidget( row1, 0);  
-    
-    for (int i = 0; 
+    t3lay->addWidget( row1, 0);
+
+    for (int i = 0;
 	 tmp = Attributes::instance()->fieldListName( i ), tmp != "";
 	 ++i )
       cbSelectFrom->insertItem( tmp );
-    cbSelectFrom->insertItem( i18n( "User-defined fields in folder" )); 
+    cbSelectFrom->insertItem( i18n( "User-defined fields in folder" ));
 
     cbSelectFrom->setCurrentItem( cbSelectFrom->count() - 1 );
     fields = ce->custom();
@@ -405,17 +405,17 @@ void ContactDialog::setupTab3()
     QFrame *row3 = new QFrame( tab3 );
     QBoxLayout *lay3 = new QBoxLayout( row3, QBoxLayout::LeftToRight, 1, 1 );
     lay3->setSpacing( 10 );
-    QPushButton *pbNew = new QPushButton( "&New...", row3 );
+    QPushButton *pbNew = new QPushButton( i18n( "&New..." ), row3 );
     connect( pbNew, SIGNAL( clicked()), this, SLOT( newFieldDialog()));
     lay3->addWidget( pbNew, 0 );
     lay3->addStretch( 1 );  // Fix the other widgets in place
     t3lay->addWidget( row3, 0);
-    tabs->addTab( tab3, "&All fields" );
+    tabs->addTab( tab3, i18n( "&All fields" ));
 }
 
-void ContactDialog::pickBirthDate() 
+void ContactDialog::pickBirthDate()
 {
-  DatePickerDialog* datePicker=new DatePickerDialog( "Select Birthday", this);
+  DatePickerDialog* datePicker=new DatePickerDialog( i18n( "Select Birthday" ), this);
   datePicker->setDate(QDate::currentDate());
   if(datePicker->exec())
     ce->replace( "BDAY", new QString( datePicker->getDate().toString()));
@@ -423,9 +423,9 @@ void ContactDialog::pickBirthDate()
   delete datePicker;
 }
 
-void ContactDialog::pickAnniversaryDate() 
+void ContactDialog::pickAnniversaryDate()
 {
-  DatePickerDialog* datePicker=new DatePickerDialog( "Select Anniversary", this);
+  DatePickerDialog* datePicker=new DatePickerDialog( i18n( "Select Anniversary" ), this);
   datePicker->setDate(QDate::currentDate());
   if(datePicker->exec())
     ce->replace( "X-Anniversary", new QString( datePicker->getDate().toString()));
@@ -449,7 +449,7 @@ void ContactDialog::newFieldDialog()
   }
 }
 
-// We want to update the fileas field using updateFileAs but not 
+// We want to update the fileas field using updateFileAs but not
 // the automatically the parse the name into its components
 // with parseName
 void ContactDialog::newNameDialog()
@@ -521,7 +521,7 @@ void ContactDialog::updateFileAs()
 }
 
 // We don't want to reparse the "N" field if the newNameDialog
-// has been used to enter the name 
+// has been used to enter the name
 void ContactDialog::parseName()
 {
   qDebug( "parseName()" );
@@ -539,21 +539,21 @@ void ContactDialog::parseName()
   QString first;
   QString middle;
   QString last;
-  
+
   name = name.simplifyWhiteSpace();
   if (name.find( i18n( "the" ), 0, false ) != 0) {
     QString sTitle[] = {
-      i18n( "Doctor" ), i18n( "Dr." ), i18n( "Dr" ), i18n( "Miss" ), 
+      i18n( "Doctor" ), i18n( "Dr." ), i18n( "Dr" ), i18n( "Miss" ),
       i18n ( "Mr." ), i18n( "Mr" ), i18n( "Mrs." ), i18n( "Mrs" ),
       i18n( "Ms." ), i18n( "Ms" ), i18n( "Professor" ), i18n( "Prof." ),
       ""
      };
     QString sSuffix[] = {
-      i18n( "IIII" ), i18n( "II" ), i18n( "I" ), i18n( "Junior" ), 
+      i18n( "IIII" ), i18n( "II" ), i18n( "I" ), i18n( "Junior" ),
       i18n( "Jr." ), i18n( "Senior" ), i18n( "Sr." ),
       ""
     };
-    
+
     for (int i =0; sTitle[i] != ""; ++i )
       if (name.find( sTitle[i], 0, false ) == 0) {
 	prefix = sTitle[i];
@@ -561,7 +561,7 @@ void ContactDialog::parseName()
 	name = name.simplifyWhiteSpace();
 	break;
       }
-    
+
     for (int i =0; sSuffix[i] != ""; ++i ) {
       QString tSuffix = sSuffix[i];
       int pos = name.length() - tSuffix.length();
@@ -581,15 +581,15 @@ void ContactDialog::parseName()
 	pos = name.find( " ", 0 );
 	first = name.left( pos );
 	name = name.mid( pos + 1 );
-	name = name.simplifyWhiteSpace(); 
+	name = name.simplifyWhiteSpace();
 	middle = name;
       }
       else
 	first = name;
     }
     else
-      last = name; 
-  }    
+      last = name;
+  }
   ce->replace( "N", new QString( curName ));
   ce->replace( "X-Title", new QString( prefix ) );
   ce->replace( "X-FirstName", new QString( first ) );
@@ -600,9 +600,9 @@ void ContactDialog::parseName()
   updateFileAs();
 }
 
-AddressDialog::AddressDialog( QWidget *parent, 
-			      QString entryField, 
-			      ContactEntry *ce, 
+AddressDialog::AddressDialog( QWidget *parent,
+			      QString entryField,
+			      ContactEntry *ce,
 			      bool modal )
  : QDialog( parent, "", modal ), entryField( entryField), ce( ce )
 {
@@ -620,7 +620,7 @@ AddressDialog::AddressDialog( QWidget *parent,
     i18n( "Brazil" ), i18n( "Brunei" ), i18n( "Bulgaria" ),
     i18n( "Burkina Faso" ), i18n( "Burundi" ), i18n( "Cambodia" ),
     i18n( "Cameroon" ), i18n( "Canada" ), i18n( "Cape Verde" ),
-    i18n( "Cayman Islands" ), i18n( "Central African Republic" ), 
+    i18n( "Cayman Islands" ), i18n( "Central African Republic" ),
     i18n( "Chad" ), i18n( "Chile" ), i18n( "China" ), i18n( "Colombia" ),
     i18n( "Comoros" ), i18n( "Congo" ), i18n( "Congo, Dem. Rep." ),
     i18n( "Costa Rica" ), i18n( "Cote d'Ivoire" ), i18n( "Croatia" ),
@@ -650,7 +650,7 @@ AddressDialog::AddressDialog( QWidget *parent,
     i18n( "Madagascar" ), i18n( "Malawi" ), i18n( "Malaysia" ),
     i18n( "Maldives" ), i18n( "Mali" ), i18n( "Malta" ),
     i18n( "Marshall Islands" ), i18n( "Martinique" ), i18n( "Mauritania" ),
-    i18n( "Mauritius" ), i18n( "Mexico" ), 
+    i18n( "Mauritius" ), i18n( "Mexico" ),
     i18n( "Micronesia, Federated States Of" ), i18n( "Moldova" ),
     i18n( "Monaco" ), i18n( "Mongolia" ), i18n( "Montserrat" ),
     i18n( "Morocco" ), i18n( "Mozambique" ), i18n( "Myanmar" ),
@@ -659,14 +659,14 @@ AddressDialog::AddressDialog( QWidget *parent,
     i18n( "Netherlands Antilles" ), i18n( "New Caledonia" ),
     i18n( "New Zealand" ), i18n( "Nicaragua" ), i18n( "Niger" ),
     i18n( "Nigeria" ), i18n( "Niue" ), i18n( "North Korea" ),
-    i18n( "Northern Ireland" ), i18n( "Northern Mariana Islands" ), 
-    i18n( "Norway" ), i18n( "Oman" ), i18n( "Pakistan" ), i18n( "Palau" ), 
-    i18n( "Palestinian" ), i18n( "Panama" ), i18n( "Papua New Guinea" ), 
-    i18n( "Paraguay" ), i18n( "Peru" ), i18n( "Philippines" ), 
-    i18n( "Poland" ), i18n( "Portugal" ), i18n( "Puerto Rico" ), 
+    i18n( "Northern Ireland" ), i18n( "Northern Mariana Islands" ),
+    i18n( "Norway" ), i18n( "Oman" ), i18n( "Pakistan" ), i18n( "Palau" ),
+    i18n( "Palestinian" ), i18n( "Panama" ), i18n( "Papua New Guinea" ),
+    i18n( "Paraguay" ), i18n( "Peru" ), i18n( "Philippines" ),
+    i18n( "Poland" ), i18n( "Portugal" ), i18n( "Puerto Rico" ),
     i18n( "Qatar" ), i18n( "Romania" ), i18n( "Russia" ), i18n( "Rwanda" ),
-    i18n( "St. Kitts and Nevis" ), i18n( "St. Lucia" ), 
-    i18n( "St. Vincent and the Grenadines" ), i18n( "San Marino" ), 
+    i18n( "St. Kitts and Nevis" ), i18n( "St. Lucia" ),
+    i18n( "St. Vincent and the Grenadines" ), i18n( "San Marino" ),
     i18n( "Sao Tome and Principe" ), i18n( "Saudi Arabia" ),
     i18n( "Senegal" ), i18n( "Serbia & Montenegro" ), i18n( "Seychelles" ),
     i18n( "Sierra Leone" ), i18n( "Singapore" ), i18n( "Slovakia" ),
@@ -678,21 +678,21 @@ AddressDialog::AddressDialog( QWidget *parent,
     i18n( "Tajikistan" ), i18n( "Tanzania" ), i18n( "Thailand" ),
     i18n( "Tibet" ), i18n( "Togo" ), i18n( "Tonga" ),
     i18n( "Trinidad and Tobago" ), i18n( "Tunisia" ), i18n( "Turkey" ),
-    i18n( "Turkmenistan" ), i18n( "Turks and Caicos Islands" ), 
-    i18n( "Tuvalu" ), i18n( "Uganda " ), i18n( "Ukraine" ), 
-    i18n( "United Arab Emirates" ), i18n( "United Kingdom" ), 
-    i18n( "United States" ), i18n( "Uruguay" ), i18n( "Uzbekistan" ), 
-    i18n( "Vanuatu" ), i18n( "Vatican City" ), i18n( "Venezuela" ), 
+    i18n( "Turkmenistan" ), i18n( "Turks and Caicos Islands" ),
+    i18n( "Tuvalu" ), i18n( "Uganda " ), i18n( "Ukraine" ),
+    i18n( "United Arab Emirates" ), i18n( "United Kingdom" ),
+    i18n( "United States" ), i18n( "Uruguay" ), i18n( "Uzbekistan" ),
+    i18n( "Vanuatu" ), i18n( "Vatican City" ), i18n( "Venezuela" ),
     i18n( "Vietnam" ), i18n( "Western Samoa" ), i18n( "Yemen" ),
     i18n( "Yugoslavia" ), i18n( "Zaire" ), i18n( "Zambia" ),
     i18n( "Zimbabwe" ),
     ""
   };
 
-  setCaption( "Address" );
+  setCaption( i18n( "Address" ));
   QGridLayout *hb = new QGridLayout( this, 1, 2, 10 );
   hb->setSpacing( 5 );
-  
+
   QGroupBox *gb = new QGroupBox( this );
   gb->setTitle( i18n( "Address details" ));
   QGridLayout *lay = new QGridLayout( gb, 6, 2, 12 );
@@ -748,7 +748,7 @@ AddressDialog::AddressDialog( QWidget *parent,
     "de", "el", "es", "fi", "fr", "he",
     "hu", "hr", "is", "it", "ko", "nl",
     "no", "pl", "pt", "pt_BR", "ro", "ru",
-    "sv", "tr", "zh_CN.GB2312", "zh_TW.Big5", "et", 
+    "sv", "tr", "zh_CN.GB2312", "zh_TW.Big5", "et",
     ""
   };
   QCString GuessCountry[] = {
@@ -757,7 +757,7 @@ AddressDialog::AddressDialog( QWidget *parent,
     "Germany", "Greece", "Spain", "Finland", "French", "Israel",
     "Hungary", "Croatia", "Iceland", "Italy", "South Korea", "Holland",
     "Norway", "Poland", "Portugal", "Brazil", "Romania", "Russia",
-    "Sweden", "Turkey", "China", "Taiwan", "Estonia", 
+    "Sweden", "Turkey", "China", "Taiwan", "Estonia",
     ""
   };
 
@@ -776,7 +776,7 @@ AddressDialog::AddressDialog( QWidget *parent,
   if (cbNum != -1)
     cbCountry->setCurrentItem( cbNum );
   if (curCountry != "")
-    cbCountry->setEditText( curCountry );    
+    cbCountry->setEditText( curCountry );
   hb->addWidget( gb, 0, 0 );
 
   QFrame *tf = new QFrame( this );
@@ -793,7 +793,7 @@ AddressDialog::AddressDialog( QWidget *parent,
   connect( pbCancel, SIGNAL( clicked() ), this, SLOT( reject()));
 }
 
-void AddressDialog::AddressOk() 
+void AddressDialog::AddressOk()
 {
   QString newAddress = mleStreet->text() + "\n" + leCity->text() + "\n" + leState->text() + "\n" + lePostal->text() + "\n" + cbCountry->currentText();
 
@@ -828,10 +828,10 @@ NameDialog::NameDialog( QWidget *parent, ContactEntry *ce, bool modal )
   sSuffix += i18n( "Sr." );
   sSuffix.sort();
 
-  setCaption( "Full Name" );
+  setCaption( i18n( "Full Name" ));
   QGridLayout *hb = new QGridLayout( this, 1, 2, 10 );
   hb->setSpacing( 5 );
-  
+
   QGroupBox *gb = new QGroupBox( this );
   gb->setTitle( i18n("Name details") );
   QGridLayout *lay = new QGridLayout( gb, 6, 2, 12 );
@@ -906,12 +906,12 @@ void NameDialog::polish()
   setMaximumHeight( height() );
 }
 
-void NameDialog::NameOk() 
+void NameDialog::NameOk()
 {
-  QString name = cbTitle->currentText() + " " + 
-    leFirst->text() + " " + 
-    leMiddle->text() + " " + 
-    leLast->text() + " " 
+  QString name = cbTitle->currentText() + " " +
+    leFirst->text() + " " +
+    leMiddle->text() + " " +
+    leLast->text() + " "
     + cbSuffix->currentText();
   kdDebug() << "NameOk " << name << endl;
   ce->replace( "N", new QString( name.simplifyWhiteSpace() ));
@@ -940,11 +940,11 @@ void ContactDialog::setSheet(int sheet)
 NewFieldDialog::NewFieldDialog( QWidget *parent, bool modal )
   : QDialog( parent, "", modal )
     {
-  setCaption( "Create Custom Field" );
+  setCaption( i18n( "Create Custom Field" ));
 
   QGridLayout *hbl = new QGridLayout( this, 3, 2, 10 );
   hbl->setSpacing( 5 );
-  
+
   QLabel *lField = new QLabel( i18n( "Field name" ), this );
   hbl->addWidget( lField, 0, 0 );
   lField->setAlignment( QLabel::AlignTop | QLabel::AlignLeft );

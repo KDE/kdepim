@@ -13,10 +13,10 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-NameValueSheet::NameValueSheet( QWidget *parent, 
-				int rows, 
-				QStringList name, 
-				QStringList entryField, 
+NameValueSheet::NameValueSheet( QWidget *parent,
+				int rows,
+				QStringList name,
+				QStringList entryField,
 				ContactEntry *ce )
  : QFrame( parent ), lCell( 0 ), rows( rows )
 {
@@ -79,14 +79,14 @@ QSize NameValueSheet::cellSize()
   return QSize( minNameWidth, lCell->size().height() - verticalTrim );
 }
 
-NameValueFrame::NameValueFrame( QWidget *parent, NameValueSheet* vs ) 
- : QScrollView( parent ), vs( vs ) 
+NameValueFrame::NameValueFrame( QWidget *parent, NameValueSheet* vs )
+ : QScrollView( parent ), vs( vs )
 {
   setFrameStyle( QFrame::WinPanel | QFrame::Sunken  );
-  lName = new QLabel( "Name", this );
+  lName = new QLabel( i18n( "Name" ), this );
   lName->setFrameStyle( QFrame::WinPanel | QFrame::Raised );
   lName->setMinimumSize( lName->sizeHint() );
-  lValue = new QLabel( "Value", this );
+  lValue = new QLabel( i18n( "Value" ), this );
   lValue->setFrameStyle( QFrame::WinPanel | QFrame::Raised );
   lValue->setMinimumSize( lValue->sizeHint () );
 
@@ -97,7 +97,7 @@ NameValueFrame::NameValueFrame( QWidget *parent, NameValueSheet* vs )
   setResizePolicy( QScrollView::AutoOne );
   viewport()->setBackgroundColor( vs->backgroundColor() );
 }
-  
+
 #include <kapp.h>
 void NameValueFrame::setSheet( NameValueSheet* vs )
 {
@@ -117,14 +117,14 @@ void NameValueFrame::setSheet( NameValueSheet* vs )
   lName->move( 2, 2 );
   lValue->move( lName->width() + 2, 2 );
   vs->resize( visibleWidth(), vs->height() );
-  
+
   kdDebug() << "cellWidth " << vs->cellSize().width() << endl;
   kdDebug() << "visibleWidth " << visibleWidth() << endl;
 }
 
-void NameValueFrame::resizeEvent(QResizeEvent* e) 
-{ 
-  QScrollView::resizeEvent( e ); 
+void NameValueFrame::resizeEvent(QResizeEvent* e)
+{
+  QScrollView::resizeEvent( e );
   vs->resize( visibleWidth(), vs->height() );
   lName->resize( vs->cellSize() );
   lValue->resize( visibleWidth() - lName->width(), lName->height() );
@@ -132,8 +132,8 @@ void NameValueFrame::resizeEvent(QResizeEvent* e)
   lValue->move( lName->width() + 2, 2 );
 }
 
-ContactLineEdit::ContactLineEdit( QWidget * parent, 
-				  const char * name, 
+ContactLineEdit::ContactLineEdit( QWidget * parent,
+				  const char * name,
 				  ContactEntry *ce )
  : QLineEdit( parent, name ), ce( ce )
 {
@@ -152,7 +152,7 @@ void ContactLineEdit::setName( const char *name )
   setText( "" );
   QLineEdit::setName( name );
   sync();
-} 
+}
 
 void ContactLineEdit::sync()
 {
@@ -161,8 +161,8 @@ void ContactLineEdit::sync()
     setText( *value );
 }
 
-ContactMultiLineEdit::ContactMultiLineEdit( QWidget * parent, 
-					    const char * name, 
+ContactMultiLineEdit::ContactMultiLineEdit( QWidget * parent,
+					    const char * name,
 					    ContactEntry *ce )
  : QMultiLineEdit( parent, name ), ce( ce )
 {
@@ -179,7 +179,7 @@ void ContactMultiLineEdit::setName( const char *name )
   setText( "" );
   QMultiLineEdit::setName( name );
   sync();
-} 
+}
 
 void ContactMultiLineEdit::sync()
 {
@@ -188,8 +188,8 @@ void ContactMultiLineEdit::sync()
     setText( *value );
 }
 
-FileAsComboBox::FileAsComboBox( QWidget * parent, 
-				const char * name, 
+FileAsComboBox::FileAsComboBox( QWidget * parent,
+				const char * name,
 				ContactEntry *ce )
  : QComboBox( true, parent, name ), ce( ce )
 {
@@ -208,7 +208,7 @@ void FileAsComboBox::setName( const char *name )
   setEditText( "" );
   QComboBox::setName( name );
   sync();
-} 
+}
 
 void FileAsComboBox::sync()
 {
