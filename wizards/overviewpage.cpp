@@ -33,7 +33,7 @@
 #include <kstdguiitem.h>
 
 #include "egroupwarewizard.h"
-#include "kolabwizard.h"
+//#include "kolabwizard.h"
 #include "sloxwizard.h"
 
 #include "overviewpage.h"
@@ -65,9 +65,12 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
 
   // FIXME: Maybe hyperlinks would be better than buttons.
 
+#if 0
+  // Kolab stuff disabled for now
   button = new QPushButton( i18n("Kolab"), this );
   layout->addMultiCellWidget( button, 4, 4, 0, 3 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardKolab() ) );
+#endif
 
   button = new QPushButton( i18n("SLOX"), this );
   layout->addMultiCellWidget( button, 5, 5, 0, 3 );
@@ -99,8 +102,11 @@ void OverViewPage::showWizardEGroupware()
 
 void OverViewPage::showWizardKolab()
 {
+#if 0
+  // Kolab stuff disabled
   KolabWizard wizard;
   wizard.exec();
+#endif
 }
 
 void OverViewPage::showWizardSlox()
