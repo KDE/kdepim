@@ -35,10 +35,10 @@ Pab::Pab()
   p->insertItem(i18n("&New Contact"), this, SLOT(newContact()), CTRL+Key_N);
   /*  p->insertItem(i18n("New &Group"), this, SLOT(newGroup()), CTRL+Key_G); */
   p->insertSeparator();
-  p->insertItem(i18n("&Send Mail"), view, SLOT(sendMail()));
+  p->insertItem(i18n("&Send Mail"), view, SLOT(sendMail()), CTRL+Key_Return);
   p->insertSeparator();
   p->insertItem(i18n("&Properties"), view, SLOT(properties()));
-  p->insertItem(i18n("&Delete"), view, SLOT(clear()), Key_Delete);
+  p->insertItem(i18n("&Delete\tDel"));
   p->insertSeparator();
   p->insertItem(i18n("&Quit"), kapp, SLOT(quit()), CTRL+Key_Q);
   

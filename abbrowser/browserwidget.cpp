@@ -1231,3 +1231,11 @@ void PabListView::contentsDropEvent( QDropEvent *e )
       }
   }
 }
+
+void PabListView::keyPressEvent( QKeyEvent *e )
+{
+  if (e->key() == Key_Delete)
+    pabWidget->clear();
+  QListView::keyPressEvent( e );
+}
+

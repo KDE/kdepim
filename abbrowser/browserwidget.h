@@ -91,6 +91,7 @@ protected:
   void contentsMouseMoveEvent( QMouseEvent *e );
   void contentsDragEnterEvent( QDragEnterEvent *e );
   void contentsDropEvent( QDropEvent *e );
+  virtual void keyPressEvent( QKeyEvent * );
 
 public slots:
   void incSearch( const QString &value );
