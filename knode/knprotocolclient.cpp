@@ -35,7 +35,7 @@
 
 #ifndef MSG_NOSIGNAL
 /* bloody glibc 2.0 doesn't define MSG_NOSIGNAL */
-#ifdef __linux
+#ifdef __linux__
 #define MSG_NOSIGNAL 0x4000
 #else
 #define MSG_NOSIGNAL 0
@@ -156,7 +156,7 @@ void KNProtocolClient::waitForWork()
           processJob();
       }
       errorPrefix = "";
-        
+
       clearPipe();
     }
     sendSignal(TSworkDone);      // emit stopped signal
@@ -174,7 +174,7 @@ bool KNProtocolClient::openConnection()
   sendSignal(TSconnect);
 
   qDebug("KNProtocolClient::openConnection(): opening connection");
-  
+
   if (account.server().isEmpty()) {
     job->setErrorString(i18n("Unable to resolve hostname"));
     return false;
@@ -200,17 +200,12 @@ bool KNProtocolClient::openConnection()
 
   in_addr address;
 
-#ifdef HAVE_INET_ATON
-  if (inet_aton(account.server().local8Bit().data(),&address)) {
-#else
+ // can only use inet_addr because of portability problem on Solaris
+ // TODO: port to QDns/QSocket
  // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
- #ifdef HAVE_INET_ADDR
-  address.s_addr = inet_addr(account.server().local8Bit.data());
-  if ( address.s_addr != (in_addr_t)-1 ) {
- #else
-  #error You must have either inet_aton or inet_addr !
- #endif
-#endif
+  address.s_addr = inet_addr(account.server().local8Bit().data());
+  // unsigned int is ok because its uint/32bit in fact
+  if ( (unsigned int) address.s_addr != (unsigned int)-1 ) {
     if (!conRawIP(&address)) {
       closeSocket();
       return false;
@@ -294,10 +289,10 @@ bool KNProtocolClient::sendMsg(const DwString &msg)
   QCString buffer;
   size_t length;
   char inter[10000];
-  
+
   progressValue = 100;
   predictedLines = msg.length()/80;   // rule of thumb
-  
+
   while ((end = strstr(line,"\r\n"))) {
     if (line[0]=='.')                     // expand one period to double period...
       buffer.append(".");
@@ -316,7 +311,7 @@ bool KNProtocolClient::sendMsg(const DwString &msg)
     inter[length]=0;             // terminate string
     buffer += inter;
     line = end+2;
-    doneLines++;        
+    doneLines++;
   }
   buffer += ".\r\n";
   if (!sendStr(buffer))
@@ -382,7 +377,7 @@ bool KNProtocolClient::getNextLine()
 bool KNProtocolClient::getMsg(QStrList &msg)
 {
   char *line;
-  
+
   while (getNextLine()) {
     line = getCurrentLine();
     if (line[0]=='.') {
@@ -394,7 +389,7 @@ bool KNProtocolClient::getMsg(QStrList &msg)
     msg.append(line);
     doneLines++;
   }
-  
+
   return false;        // getNextLine() failed
 }
 
@@ -589,7 +584,7 @@ bool KNProtocolClient::conRawIP(in_addr* ip)
         QString str = i18n("Communication error:\n");
         str += strerror(errno);
         job->setErrorString(str);
-        return false;       
+        return false;
       }
 
       if (ret == 0) {      // nothing happend, timeout
