@@ -41,6 +41,7 @@
 namespace KSync {
 
 class Core;
+class Konnector;
 
 enum SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
 
