@@ -15,7 +15,6 @@
 #include <qstrlist.h>
 #include <qdatastream.h>
 
-int version = 1; // SET THIS WHEN THE PROTOCOL IS CHANGED !!
 int PORT = 6566;
 
   inline Q_UINT32
@@ -41,8 +40,6 @@ fourOctets(Q_UINT32 i)
 
   return s;
 }
-
-const QCString welcomeMessage = "KAB " + QCString().setNum(version) + "\n"; 
 
 KAB::AddressBook * ab;
 
@@ -70,7 +67,16 @@ processCommand(int fd)
   }
 
   cerr << "Server: Command: " << commandType << endl;
-
+  
+  QString validCommandList = "laerfsq";
+  
+  if (validCommandList.contains(commandType)) {
+    cerr << "Server: valid command" << endl;
+  } else {
+    cerr << "Server: invalid command !" << endl;
+    return true;
+  }
+  
   if (commandType == 'q') {
     cerr << "Server: Quit requested" << endl;
     return false;
@@ -100,7 +106,7 @@ processCommand(int fd)
       return false;
     }
 
-    char * buf = new char[totalOctets];
+    buf = new char[totalOctets];
 
     nrecv = ::read(fd, buf, (size_t)totalOctets);
     
@@ -241,16 +247,6 @@ main(int argc, char **argv)
       continue;
     }
     
-#if 0
-    ssize_t i = ::write(fd, welcomeMessage, welcomeMessage.length());
-    
-    if (i == -1) {
-      perror("send");
-      ::close(fd);
-      exit(1);
-    }
-#endif
-
     if (fork() == 0) {
       // Child process.
       cerr << "Server: Hello I'm a child process serving requests !" << endl;
@@ -317,6 +313,8 @@ doReplace(int fd, const QByteArray & s)
   void
 doErase(int fd, const QByteArray & s)
 {
+  cerr << "Server: doErase()" << endl;
+  cerr << "Server: Erasing key \"" << QCString(s) << "\"" << endl; 
   char * d = s.data();
   Q_UINT32 sizeOfKey = decodeToInt((unsigned char *)d);
   
@@ -405,11 +403,20 @@ doFind(int fd, const QByteArray & s)
   QDataStream stream(entityAsByteArray, IO_WriteOnly);
   e->save(stream);
 
-  Q_UINT32 sz = entityAsByteArray.size();
+  Q_UINT32 entitySize = entityAsByteArray.size();
   
-  unsigned char * c = fourOctets(sz);
-  ::write(fd, c, 4);
+  unsigned char * c = fourOctets(entitySize);
+  int sz = ::write(fd, c, 4);
   delete [] c;
+  if (sz != 4) {
+    cerr << "Server: find(): Couldn't write 4 bytes" << endl;
+    return;
+  }
+  sz = ::write(fd, entityAsByteArray.data(), entitySize);
+  if (sz != (int)entitySize) {
+    cerr << "Server: find(): Couldn't write correct number of bytes" << endl;
+    return;
+  }
 }
 
   void

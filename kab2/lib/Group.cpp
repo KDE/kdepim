@@ -6,6 +6,7 @@ using namespace KAB;
   void
 Group::save(QDataStream & str)
 {
+  cerr << "Group::save" << endl;
   Entity::save(str);
   str << members_;
 }

@@ -6,70 +6,69 @@
 module KAddressBook
 {
 
+  enum EntityType { EntityTypeEntity, EntityTypeGroup };
+
   //forward references
   interface AddressBook;
   interface Group;
   interface Entity;
   interface Field;
 
-  typedef sequence<Entity> EntityList;
-  typedef sequence<Group> GroupList;
-  typedef string key;
-
-  interface Entity : KOM::Component
-  {
-    void setName(in string name);
-
-    void addField(in Field f);
-    void removeField(in Field f);
-    void removeFieldByName(in string fieldName);
-  }; 
+  typedef sequence<wstring> StringList;
+  typedef sequence<Field>   FieldList;
+  typedef wstring           Key;
+  typedef sequence<char>    Data;
 
   interface Field
   {
-    wstring key();
-    wstring type();
-    wstring subType();
-    wstring value();
+    Key     key     ();
+    wstring type    ();
+    wstring subType ();
+    Data    value   ();
 
-    void setKey(in string k);
-    void setType(in string t);
-    void setSubType(in string st);
-    void setValue(in string v);
+    void setKey     (in Key k);
+    void setType    (in wstring t);
+    void setSubType (in wstring t);
+    void setValue   (in Data v);
   };
 
-  interface Group
+  interface Entity : KOM::Component
   {
-    wstring name();
+    Key         id            ();
+    wstring     name          ();
+    EntityType  type          ();
+    Field       field         (in wstring n);
+    FieldList   fieldList     ();
+
+    bool        rename        (in wstring n);
+    bool        add           (in Field f);
+    bool        remove        (in Field f);
+    bool        removeByName  (in wstring n);
+  }; 
+
+  interface Group : Entity
+  {
+    wstring     name          ();
+    StringList  members       ();
     
-    void addEntity(in Entity entity);
-    void addGroup(in Group group);
+    void        addEntity     (in Entity e);
+    void        addGroup      (in Group g);
 
-    GroupList subGroupList();
+    void        removeEntity  (in Entity e);
+    void        removeGroup   (in Group g);
   };
-
 
   interface AddressBook
   {
-    GroupList topLevelGroupList();
+    Entity  entity        (in Key k);
+    Group   group         (in Key k);
     
-    void addGroup(in Group g);
-    
-    void addGroupByKey(in key k);
-
-    Group group(in key k);
-
-    Entity entity(in key k);
-
-    void remove(in key k);
-  };
-
-  interface Browser: OpenParts::MainWindow
-  {
-     key addressBook();
-     key group();
-     key entity();
-     Field field();
+    bool    addEntity     (in Entity e);
+    bool    addGroup      (in Group g);
+    bool    addByKey      (in Key k);
+    bool    remove        (in Key k);
+    bool    replaceEntity (in Entity e);
+    bool    replaceGroup  (in Group g);
   };
 };
 

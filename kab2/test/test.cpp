@@ -83,5 +83,18 @@ main(int argc, char ** argv)
   for (; sit.current(); ++sit) {
     cerr << "  Key:  " << sit.current() << endl;
   }
+
+  if (l.count() != 0) {
+    QString key1 = l.at(0);
+    cerr << "Requesting entity with key \"" << key1 << "\"" << endl;
+    KAB::Entity * e = client->entity(key1);
+    if (e == 0) {
+      cerr << "Couldn't load entity with key \"" << key1 << "\"" << endl;
+      exit(0);
+    }
+    cerr << "Loaded an entity with name \"" << e->name() << "\"" << endl;
+  }
+
+  client->quit();
 }
 

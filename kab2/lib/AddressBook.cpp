@@ -208,7 +208,7 @@ AddressBook::entity(const QString & id)
   
   EntityType t = keyToEntityType(key);
   
-  Entity * e;
+  Entity * e = 0;
   
   bool readok = false;
   
