@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-10-04</date>
-<releaseinfo>0.08.01</releaseinfo>
+<date>2002-12-16</date>
+<releaseinfo>0.09.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm/reminder message, and command, scheduler for &kde;.</para>
@@ -57,22 +57,22 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kalarm; is a personal alarm message and command scheduler. It
-lets you set up personal alarm/reminder messages which pop up on the
-screen at the time you specify, or you can set up commands to be
-executed.</para>
+<para>&kalarm; is a personal alarm message, command and email
+scheduler. It lets you set up personal alarm messages which pop up on
+the screen at the time you specify, or you can set up commands to be
+executed or emails to be sent.</para>
 
-<para>In its default graphical mode, &kalarm; displays a list of
+<para>In its default graphical mode, &kalarm; displays the list of
 pending alarms, showing their times and details.  You can create new
 alarms, or you can select existing alarms for modification or
-deletion.</para>
+deletion. You can also optionally view expired alarms.</para>
 
 <para>When setting up or modifying an alarm, you may either type in
-the alarm message text, specify a text file to display, or specify a
-command to execute. You can also choose the colour of the alarm
-message, whether it should repeat, whether to play a sound, and
-whether the alarm should be cancelled if it can't be triggered at its
-scheduled time.</para>
+the alarm message text, specify a text file to display, specify a
+command to execute, or enter an email to send. You can also choose the
+colour of the alarm message, whether it should repeat, whether to play
+a sound, and whether the alarm should be cancelled if it can't be
+triggered at its scheduled time.</para>
 
 <para>Alarms may also be scheduled on the command line, or via &DCOP;
 calls from programs.</para>
@@ -95,8 +95,8 @@ alarm message:</para>
 </mediaobject>
 </screenshot>
 
-<para>When the alarm specifies a command to execute, &kalarm; displays
-nothing.</para>
+<para>When the alarm specifies a command to execute or an email to
+send, &kalarm; displays nothing.</para>
 
 <para>&kalarm; can run in either of two modes:
 <quote>continuous</quote> (the default) where it runs from the &kde;
@@ -118,12 +118,27 @@ them when they become due.</para>
 <title>Graphical mode</title>
 
 <para>When it is run with no command line parameters, &kalarm; starts
-in graphical mode. It displays the current list of outstanding alarms,
-showing their times, repetition intervals, colours, and message texts,
-names of files to display or commands to execute. (For a recurring
-alarm, the time shown is its next scheduled trigger time.) An icon at
-the left of each alarm text/file/command indicates the type of
-alarm.</para>
+in graphical mode, and displays the current list of outstanding
+alarms.</para>
+
+<para>When &kalarm; starts in graphical mode, it checks whether the
+<application>alarm daemon</application> is running. If it is not
+already running, &kalarm; starts it.</para>
+
+<note><para>All spin boxes in &kalarm; have an acceleration facility.
+To make the value change by larger steps, hold down the
+<keycap>Shift</keycap> key while you click on the spin arrow
+buttons.</para></note>
+
+<sect2>
+<title>Alarm list</title>
+
+<para>The main &kalarm; window displays the current list of pending
+alarms, showing their times, repetition intervals, colours, and
+message texts, names of files to display, commands to execute or email
+subjects. (For a recurring alarm, the time shown is its next scheduled
+trigger time.) An icon at the left of each alarm
+text/file/command/email subject indicates the type of alarm.</para>
 
 <screenshot>
 <screeninfo>Screenshot of the &kalarm; main window</screeninfo>
@@ -138,16 +153,21 @@ alarm.</para>
 </screenshot>
 
 <para>For a repeated alarm, the list shows its next scheduled trigger
-time and the number of times which it is due to repeat after
-that.</para>
+time and its basic repetition interval (&eg; <quote>1 Day</quote> for
+a daily recurrence, <quote>3 Weeks</quote> for a recurrence which
+triggers on Monday and Wednesday every third week,
+<quote>Login</quote> for a repeat-at-login alarm).</para>
 
 <para>The alarms may be ordered by date/time, repeat interval, colour
 or text by clicking on the title bar for the appropriate column.
 To reverse the sort order, click the column title bar again.</para>
 
-<para>When &kalarm; starts in graphical mode, it checks whether the
-<application>alarm daemon</application> is running. If it is not
-already running, &kalarm; starts it.</para>
+<para>Expired alarms may be shown in the alarm list by selecting
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Expired
+Alarms</guimenuitem></menuchoice>. To hide them again, repeat the
+action.</para>
+
+</sect2>
 
 <sect2>
 <title>Adding a new alarm</title>
@@ -156,12 +176,19 @@ already running, &kalarm; starts it.</para>
 <guimenu>Actions</guimenu><guimenuitem>New</guimenuitem></menuchoice>.
 This displays the alarm edit dialog as described below.</para>
 
+<para>Alternatively, to base your new alarm on an existing one,
+highlight the existing alarm in the list and select <menuchoice>
+<guimenu>Actions</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
+This displays the alarm edit dialog already filled in with a copy of
+the selected alarm's details.</para>
+
 </sect2>
 
 <sect2>
 <title>Modifying an existing alarm</title>
 
-<para>To modify an existing alarm, do one of the following:</para>
+<para>To modify an existing pending alarm (expired alarms cannot be
+amended), do one of the following:</para>
 
 <itemizedlist>
 <listitem>
@@ -196,14 +223,76 @@ context menu.</para>
 </mediaobject>
 </screenshot>
 
-<para>In the <guilabel>Action</guilabel> group box, select either
-<guilabel>Text</guilabel> in order to enter the message text (which
-may include newlines) in the edit box, <guilabel>File</guilabel> to
-enter the name or &URL; of a text file whose contents are to be
-displayed in the alarm message, or <guilabel>Command</guilabel> to
-enter a shell command to execute.  When <guilabel>File</guilabel> is
-selected, the button to the right of the edit box may be used to
-display a file selection dialog.</para>
+<para>In the <guilabel>Action</guilabel> group box, select the type
+of alarm:</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Text</guilabel> in order to enter an alarm message text
+(which may include newlines) in the edit box. Set the following
+options:</para>
+
+<itemizedlist>
+<listitem>
+<para>The <guilabel>Confirm acknowledgement</guilabel> checkbox lets
+you specify whether you will be prompted for confirmation when you
+close the alarm message window. This may be used as a safeguard
+against accidental acknowledgement of alarms.</para>
+</listitem>
+
+<listitem>
+<para>Check the <guilabel>Sound</guilabel> checkbox if you want an
+audible alarm to sound when the alarm message is displayed. By default
+a beep is sounded; use the button on the right to select an audio file
+to play. To revert to a beep, click the button again. To see what your
+current sound selection is, hover the mouse above the button until a
+tooltip appears.</para>
+</listitem>
+
+<listitem>
+<para>Select the background colour for the alarm message
+window.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para><guilabel>File</guilabel> to enter the name or &URL; of a text
+file whose contents are to be displayed in the alarm message. Use the
+button beside the edit box to display a file selection dialog. Set
+options as for text alarms above.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Command</guilabel> to enter a shell command line to
+execute. The command is passed straight to the default shell (defined
+by the <envar>SHELL</envar> environment variable), and may include
+whatever options, parameters, piped commands, etc. are permitted by
+the shell in a single line command.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Email</guilabel> to enter an email message to send.
+Fill in the recipients' addresses, the email subject line and the
+message body in the three edit fields. Use the button beside the
+addressee edit box to display your &kde; address book from which you
+can select email recipients. Attachments may be added using the
+<guibutton>Add...</guibutton> button. Note that attached files must
+still exist when the alarm is triggered; no copy is stored at the time
+the alarm is configured. To remove an attachment, highlight it in the
+drop-down list and click the <guibutton>Remove</guibutton> button. Set
+the following option:</para>
+
+<itemizedlist>
+<listitem>
+<para>Check the <guilabel>Copy email to self</guilabel> checkbox to
+send a blind copy of the email to yourself when the alarm is
+triggered. The copy will be addressed to your user name.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
 
 <para>If the alarm is a recurring alarm and it was deferred after it
 was last displayed, the <guilabel>Deferred Alarm</guilabel> group box
@@ -293,32 +382,17 @@ date/time until which the alarm will be repeated.</para></listitem>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
 happens if the alarm can't be triggered at its scheduled time. Check
-this box to cancel the alarm if it can't be triggered within one
-minute after the right time. Leave the box unchecked to
-trigger the alarm at the first opportunity starting at the scheduled
-time. Date-only alarms, &ie; ones for which the <guilabel>Any
-time</guilabel> option is selected, will be cancelled if they cannot
-be displayed within 24 hours of the start-of-day time on the date
-scheduled.</para>
+this box to cancel the alarm if it can't be triggered within
+one minute after the right time.
+Leave the box unchecked to trigger the alarm at
+the first opportunity starting at the scheduled time. Date-only alarms,
+&ie; ones for which the <guilabel>Any time</guilabel> option is
+selected, will be cancelled if they cannot be displayed within 24
+hours of the start-of-day time on the date scheduled.</para>
 
 <note><para>An alarm can only be triggered while you are logged in,
 and while both X and the <application>alarm daemon</application> are
 running.</para></note>
-
-<para>The <guilabel>Confirm acknowledgement</guilabel> checkbox lets
-you specify whether you will be prompted for confirmation when you
-close the alarm message window. This may be used as a safeguard
-against accidental acknowledgement of alarms.</para>
-
-<para>Check the <guilabel>Sound</guilabel> checkbox if you want an
-audible alarm to sound when the alarm message is displayed. By default
-a beep is sounded; use the button on the right to select an audio file
-to play. To revert to a beep, click the button again. To see what your
-current sound selection is, hover the mouse above the button until a
-tooltip appears.</para>
-
-<para>Select the background colour for the alarm message
-window.</para>
 
 <para>Press the <guibutton>OK</guibutton> button
 when all details are correct, to add the alarm to the scheduled
@@ -327,7 +401,7 @@ list.</para>
 </sect2>
 
 <sect2>
-<title>Deleting an existing alarm</title>
+<title>Deleting an alarm</title>
 
 <para>To delete an existing alarm, do one of the following:</para>
 
@@ -345,6 +419,31 @@ list and choose
 from the context menu.</para>
 </listitem>
 </itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>Viewing an alarm</title>
+
+<para>To view an existing alarm without the ability to modify it, do
+one of the following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Select it by clicking on its entry in the alarm list. Then choose
+<menuchoice>
+<guimenu>Actions</guimenu><guimenuitem>View</guimenuitem>
+</menuchoice>.</para>
+</listitem>
+<listitem>
+<para><mousebutton>Right</mousebutton> click on its entry in the alarm
+list and choose
+<menuchoice><guimenuitem>View</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+</itemizedlist>
+
+<para>This displays the alarm edit dialog in read-only mode.</para>
 
 </sect2>
 
@@ -528,11 +627,11 @@ the run mode: in <quote>on-demand</quote> mode it hides the system
 tray icon, while in <quote>continuous</quote> mode it quits the
 program.</para>
 
-<tip><para>Quitting &kalarm; has no effect on the <application>alarm
-daemon</application>, which if already active will continue to monitor
-scheduled alarms and request their display when they become due
-(unless you have selected <guilabel>Disable alarms while not
-running</guilabel> in the Preferences dialog).</para></tip>
+<tip><para>If you have deselected <guilabel>Disable alarms while not
+running</guilabel> in the Preferences dialog, quitting &kalarm; has no
+effect on the <application>alarm daemon</application> which if
+already active will continue to monitor scheduled alarms and request
+their display when they become due.</para></tip>
 
 </sect2>
 </sect1>
@@ -659,8 +758,8 @@ icon.</action></para>
 <para>In <quote>continuous</quote> run mode
 only, it also closes all &kalarm; main windows. It has no effect on
 the monitoring of alarms by the <application>alarm
-daemon</application> (unless you have selected <guilabel>Disable
-alarms while not running</guilabel> in the Preferences dialog).</para>
+daemon</application>, if you have deselected <guilabel>Disable alarms
+while not running</guilabel> in the Preferences dialog).</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -678,54 +777,123 @@ This displays the configuration dialog. The
 overall behaviour:</para>
 
 <itemizedlist>
-<listitem><para>Specify &kalarm;'s run mode. You can choose either to
-run it continuously in the &kde; system tray, or to run it only on
-demand. This selection does not affect the display of alarms when they
-become due, since it is the <application>alarm daemon</application>
-and not &kalarm; which monitors the alarm list. Running &kalarm; in
-the system tray makes the application more accessible and displays an
-alarm-enabled indication, but running an application continuously does
-consume some system resources. So if system performance is of concern,
-the <quote>on-demand</quote> option may be preferable.</para>
+<listitem><para><guilabel>Run Mode</guilabel> group box: These options
+control &kalarm;'s system tray icon, and also allow some control over
+&kalarm;'s use of system resources by specifying whether or not to run
+it continuously. If system performance is of concern, running it on
+demand without displaying the system tray icon may be desirable;
+running it continuously in the system tray uses more system resources
+but gives the benefits of displaying an alarm-enabled indication and
+making the application more accessible. Running &kalarm; on demand
+does not affect the execution of alarms, since it is the
+<application>alarm daemon</application> and not &kalarm; which
+monitors the alarm list and triggers alarms.</para>
 
-<para>When running in <quote>on-demand</quote> mode, the system tray
-icon can still be displayed. The main difference in operation between
-the two modes is the effect of closing the system tray icon: in
-<quote>on-demand</quote> mode, closing it has no effect on any
-&kalarm; windows, while in <quote>continuous</quote> mode, closing it
-also closes all &kalarm; main windows.</para>
+<itemizedlist>
+<listitem><para><guilabel>Run continuously in system tray</guilabel>:
+&kalarm; runs continuously and the system tray icon is always
+displayed while it is running. In this mode, closing the system tray
+icon closes all &kalarm; main windows, and if no message windows are
+visible, quits the application. The options available in this mode
+are:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Autostart at login</guilabel>: This starts
+&kalarm; at &kde; session login, ensuring that &kalarm; runs at all
+times unless you manually quit.</para>
+</listitem>
+<listitem><para><guilabel>Disable alarms while not running</guilabel>:
+Checking this option has the effect that alarms will be disabled
+whenever &kalarm;'s system tray icon is not visible.</para>
+</listitem>
+</itemizedlist>
+
+<para>In this mode, if no &kde; system tray exists, &kalarm; runs
+continuously in the background and alarms are always enabled.</para>
 </listitem>
 
-<listitem><para>If you specified that &kalarm; should run in
-<quote>continuous</quote> mode, you can disable all alarms due for
-display while &kalarm; is not running.</para>
+<listitem><para><guilabel>Run only on demand</guilabel>: &kalarm;
+is run only when an alarm is triggered, if you run it manually, or
+while its system tray icon is displayed. In this mode the system tray
+icon can still be displayed, but closing the system tray icon has no
+effect on any &kalarm; windows.</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Autostart system tray icon at
+login</guilabel>: This displays &kalarm;'s system tray icon at login.
+&kalarm; will run until the system tray icon is closed.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
 </listitem>
 
-<listitem><para>Specify that the &kalarm; system tray icon should be
-displayed at &kde; session login.</para>
+<listitem><para><guilabel>System tray update interval</guilabel>: Set
+the frequency at which the &kalarm; system tray icon is updated to
+reflect whether alarms are currently being monitored. This involves
+checking whether the <application>alarm daemon</application> is
+running.</para>
 </listitem>
 
-<listitem><para>Set the frequency at which the &kalarm; system tray
-icon is updated to reflect whether alarms are currently being
-monitored. This involves checking whether the <application>alarm
-daemon</application> is running.</para>
-</listitem>
-
-<listitem><para>Set the start-of-day time for the purposes of
+<listitem><para><guilabel>Start of day for date-only
+alarms</guilabel>: Set the start-of-day time for the purposes of
 triggering date-only alarms, &ie; ones for which the <guilabel>Any
 time</guilabel> option was selected. On the date when they are due,
 such alarms will be output at the earliest opportunity during the
 24 hours starting from the start-of-day time.</para>
 </listitem>
 
-<listitem><para>Specify whether you should be prompted for
-confirmation each time you delete an alarm.</para>
+<listitem>
+<para><guilabel>Email client</guilabel>: Specify the email
+client to be used to send email alarms:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>KMail</guilabel>: When an email alarm is
+triggered, a &kmail; composer window is displayed filled in with the
+email details. You can then choose to send it if and when you
+wish.</para>
+</listitem>
+
+<listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
+triggered, the email is sent automatically using
+<application>sendmail</application>. This option will only work if
+your system is configured to use <application>sendmail</application>
+or <application>mail</application>.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
+whether you should be prompted for confirmation each time you delete
+an alarm.</para>
+</listitem>
+
+<listitem><para><guilabel>Expired Alarms</guilabel> group box: These
+options control the storage of expired alarms.</para>
+<itemizedlist>
+<listitem><para><guilabel>Keep alarms after expiry</guilabel>: Check
+this option to store expired alarms. Uncheck it to keep no record of
+alarms once they have expired.</para>
+</listitem>
+
+<listitem><para><guilabel>Discard expired alarms after</guilabel>:
+Set the number of days to store expired alarms after their last
+activation.</para>
+</listitem>
+
+<listitem><para><guibutton>Clear expired alarms</guibutton>: This
+button discards all currently stored  expired alarms. This has no
+effect on alarms which subsequently expire; they will continue to be
+stored according to the selected options.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 </itemizedlist>
 
 <para>The <guilabel>Alarm Defaults</guilabel> and
 <guilabel>Appearance</guilabel> sections let you choose default values
-for the options in the alarm edit dialog:</para>
+for the options in the alarm edit dialog, and other appearance
+settings:</para>
 <itemizedlist>
 
 <listitem><para>Set the default font and background colour to use for
@@ -733,8 +901,8 @@ alarm message display.</para>
 </listitem>
 
 <listitem><para>Set the default states for the <guilabel>Cancel if
-late</guilabel> and <guilabel>Confirm acknowledgement</guilabel>
-checkboxes.</para>
+late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
+<guilabel>Copy email to self</guilabel> checkboxes.</para>
 </listitem>
 
 <listitem><para>Set beep as the default for the
@@ -744,6 +912,11 @@ checkboxes.</para>
 <listitem><para>Set the default recurrence period for recurring
 alarms.</para>
 </listitem>
+
+<listitem><para>Set the text colour used to show expired alarms in the
+alarm list.</para>
+</listitem>
+
 </itemizedlist>
 
 </sect1>
@@ -798,10 +971,21 @@ time.</para>
   acknowledged.</entry>
 </row>
 <row>
+  <entry><option>-A</option>, <option>--attach <replaceable>URL</replaceable></option></entry>
+  <entry>Specify the name or &URL; of a file which is to be attached
+  to the email. This option may be repeated as necessary.
+  <option>--mail</option> must be specified with this option.</entry>
+</row>
+<row>
   <entry><option>-b</option>, <option>--beep</option></entry>
   <entry>Make an audible beep when the message is displayed.
   <option>--sound</option> must not be present if this option is
   specified.</entry>
+</row>
+<row>
+  <entry><option>--bcc</option></entry>
+  <entry>Blind copy the email to yourself.
+  <option>--mail</option> must be specified with this option.</entry>
 </row>
 <row>
   <entry><option>-c</option>, <option>--color</option>, <option>--colour
@@ -812,17 +996,20 @@ time.</para>
 <row>
   <entry><option>-e</option>, <option>--exec <replaceable>commandline</replaceable></option></entry>
   <entry>Specify a shell command to execute. If specified, this option
-  must be the last &kalarm; option in &kalarm;'s command line. All subsequent
-  command parameters and options  are interpreted as forming the command line to 
-  execute. <option>--file</option> cannot be specified with this 
-  option. <option>--ack-confirm</option>, <option>--beep</option> and
+  must be the last &kalarm; option in &kalarm;'s command line. All
+  subsequent command parameters and options  are interpreted as
+  forming the command line to execute. <option>--file</option> and
+  <option>--mail</option> cannot be specified with this option.
+  <option>--ack-confirm</option>, <option>--beep</option> and
   <option>--color</option> are ignored with this option.</entry>
 </row>
 <row>
   <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
   <entry>Specify the name or &URL; of a text file whose contents are
-  to form the alarm message. <replaceable>message</replaceable> must
-  not be present if this option is specified.</entry>
+  to form the alarm message. <option>--exec</option> and
+  <option>--mail</option> cannot be specified, and
+  <replaceable>message</replaceable> must not be present with this
+  option.</entry>
 </row>
 <row>
   <entry><option>-i</option>, <option>--interval
@@ -851,6 +1038,15 @@ time.</para>
   option.</entry>
 </row>
 <row>
+  <entry><option>-m</option>, <option>--mail
+  <replaceable>address</replaceable></option></entry>
+  <entry>Send an email to the specified address. This option may be
+  repeated as necessary.  <option>--exec</option> and
+  <option>--file</option> cannot be specified with this option.
+  <option>--ack-confirm</option>, <option>--beep</option> and
+  <option>--color</option> are ignored with this option.</entry>
+</row>
+<row>
   <entry><option>-r</option>, <option>--repeat
   <replaceable>count</replaceable></option></entry>
   <entry>The number of times the alarm should be triggered. Specify
@@ -863,6 +1059,12 @@ time.</para>
   <entry>Specify the name or &URL; of an audio file to be played when
   the alarm message is displayed. <option>--beep</option> must
   not be present if this option is specified.</entry>
+</row>
+<row>
+  <entry><option>-S</option>, <option>--subject
+  <replaceable>subject</replaceable></option></entry>
+  <entry>The subject line of the email. <option>--mail</option> must
+  be specified with this option.</entry>
 </row>
 <row>
   <entry><option>-t</option>, <option>--time
@@ -884,7 +1086,8 @@ time.</para>
 </row>
 <row>
   <entry><replaceable>message</replaceable></entry>
-  <entry>Message text to display.</entry>
+  <entry>Message text to display or, if <option>--mail</option> is
+  specified, the body of the email message.</entry>
 </row>
 </tbody>
 </tgroup>
@@ -1036,9 +1239,9 @@ command line parameters), enable alarms using &kalarm;'s system tray
 icon menu, reset the daemon as described
 <link linkend="daemon-reset">below</link>, start it using the
 Service Manager dialog (see <link linkend="daemon-control">Controlling
-the alarm daemon with the Service Manager</link>) or you can run the
-<application>alarm daemon</application> directly from the command
-line:</para>
+the alarm daemon with the Service Manager</link>)
+or you can run the <application>alarm daemon</application> directly
+from the command line:</para>
 
 <screen width="40">
 <prompt>%</prompt> <userinput><command>kalarmd</command></userinput>
@@ -1091,8 +1294,8 @@ applications which also use the <application>alarm
 daemon</application>. Consider resetting the daemon
 instead.</para></warning>
 
-<para>To stop the <application>alarm daemon</application>, either use
-the Service Manager dialog (see
+<para>To stop the <application>alarm daemon</application>,
+either use the Service Manager dialog (see
 <link linkend="daemon-control">Controlling the alarm daemon with the
 Service Manager</link>), or type the following command:</para>
 
@@ -1324,7 +1527,7 @@ depending on when the alarm is due.</para>
 
 <listitem><para>If the alarm is due, it acts as follows. If the
 late-cancel flag is set and the alarm is late, &ie; the scheduled
-trigger time was longer then one minute ago, &kalarm; does not display
+trigger time was longer than one minute ago, &kalarm; does not display
 or execute the alarm; otherwise, &kalarm; displays or executes the
 alarm. If no repetitions of the alarm are still scheduled, &kalarm;
 then deletes the alarm from the calendar file.</para>
@@ -1678,6 +1881,117 @@ identical to
 - see the description of that function for further details.</para>
 </refsect1>
 </refentry>
+
+
+<refentry id="scheduleEmail">
+<refmeta>
+<refentrytitle>scheduleEmail</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>scheduleEmail</refname>
+<refpurpose>schedule a new alarm which sends an email.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>, const QString&amp; <replaceable>subject</replaceable>, const QString&amp; <replaceable>message</replaceable>, const QString&amp; <replaceable>attachments</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>)
+</synopsis>
+<synopsis>
+bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>, const QString&amp; <replaceable>subject</replaceable>, const QString&amp; <replaceable>message</replaceable>, const QString&amp; <replaceable>attachments</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+</synopsis>
+<synopsis>
+bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>, const QString&amp; <replaceable>subject</replaceable>, const QString&amp; <replaceable>message</replaceable>, const QString&amp; <replaceable>attachments</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><parameter>addresses</parameter></term>
+<listitem>
+<para>Specifies the recipient's email address. Specify multiple
+addresses by separating them with commas.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>subject</parameter></term>
+<listitem>
+<para>Specifies the subject line of the email.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>message</parameter></term>
+<listitem>
+<para>Specifies the email message body.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>attachments</parameter></term>
+<listitem>
+<para>Specifies the &URL;s of files to attach to the email. Separate
+multiple &URL;s by commas.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>dateTime</parameter></term>
+<listitem>
+<para>Specifies the scheduled date and time at which the email
+should be sent.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>flags</parameter></term>
+<listitem>
+<para>Specifies the logical OR of the desired alarm flags. The flag
+bits are those defined in class KAlarmEvent in
+<filename>msgevent.h</filename></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>simpleRepeatType</parameter></term>
+<listitem>
+<para>Specifies the recurrence type for the alarm. The permissible
+values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
+are defined in class KAlarmEvent in
+<filename>msgevent.h</filename>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>interval</parameter></term>
+<listitem>
+<para>Specifies the number of periods
+(minutes/days/weeks/months/years) between repetitions of the
+alarm.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>repeatCount</parameter></term>
+<listitem>
+<para>Specifies the number of times that the email should be sent.
+Specify -1 to repeat the alarm indefinitely.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+<para><function>scheduleEmail()</function> is a &DCOP; call to schedule
+the specified email for sending at the specified date and time.
+Apart from specifying the email header and contents, its usage is identical to
+<link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
+- see the description of that function for further details.</para>
+</refsect1>
+</refentry>
+
 </sect1>
 
 <sect1 id="cmdline-interface">
@@ -1774,16 +2088,25 @@ used with one of the other three options.</para>
 <para>The file <filename>$KDEHOME/share/config/kalarmrc</filename>
 holds your &kalarm; preferences.</para>
 
-<para>The calendar file which stores your scheduled alarms is
+<para>The calendar file which stores your pending alarms is
 <filename>$KDEHOME/share/apps/kalarm/calendar.ics</filename>, unless
 a different calendar file is specified in the preferences file.</para>
 
-<note><para>If you change the calendar file in the preferences file,
+<note><para>If you change this calendar file in the preferences file,
 you should also edit the <application>alarm daemon</application>'s
 <filename>clients</filename> configuration file to remove the old
 calendar file reference. This should be done while the
 <application>alarm daemon</application> is not running to avoid it
 overwriting your change.</para></note>
+
+<para>The calendar file which stores your expired alarms is
+<filename>$KDEHOME/share/apps/kalarm/expired.ics</filename>, unless
+a different calendar file is specified in the preferences file.</para>
+
+<para>Details of alarms currently being displayed are stored in the
+calendar file
+<filename>$KDEHOME/share/apps/kalarm/displaying.ics</filename>.</para>
+
 </answer>
 </qandaentry>
 
@@ -1871,7 +2194,7 @@ who kindly agreed to allow the name &kalarm; to be used by this
 &install.intro.documentation;
 
 <para>&kalarm; is available for &kde;2 and as a standalone package for
-&kde;3 from <ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
+&kde;3 from <ulink url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>
 </para>
 
 </sect1>
@@ -1882,7 +2205,9 @@ who kindly agreed to allow the name &kalarm; to be used by this
 <para>&kalarm; requires the standard &kde; libraries to be installed
 (the <filename>kdelibs</filename> package). To compile from source,
 you also need the &Qt; and <filename>kdelibs</filename> development
-packages.</para>
+packages. The X11 development package, if present, is used to improve
+&kalarm;'s ability to function under &kde; without a system
+tray.</para>
 
 <para>&kalarm; uses about 12 Mb and the <application>alarm
 daemon</application> uses about 2.5 Mb of memory to run, but this may
