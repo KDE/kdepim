@@ -22,4 +22,5 @@ METASOURCES = AUTO
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkabconfig.pot
 
-xdg_apps_DATA = kabconfig.desktop kabldapconfig.desktop
+hidden_apps_DATA = kabconfig.desktop kabldapconfig.desktop
+hidden_appsdir = $(kde_appsdir)/.hidden
