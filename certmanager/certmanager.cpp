@@ -54,6 +54,8 @@
 #include <kleo/deletejob.h>
 #include <kleo/keylistjob.h>
 #include <kleo/dn.h>
+#include <kleo/keyfilter.h>
+#include <kleo/keyfiltermanager.h>
 
 #include <ui/progressdialog.h>
 #include <ui/progressbar.h>
@@ -90,17 +92,28 @@
 #include <assert.h>
 
 namespace {
-  //PENDING Michel (testing my code)
+
   class DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
   public:
     ~DisplayStrategy() {}
 
-    QColor keyForeground( const GpgME::Key & key , const QColor & c ) const {
-      return key.isRevoked() ? Qt::red : c ;
+    virtual QFont keyFont( const GpgME::Key& key, const QFont& font ) const {
+      const Kleo::KeyFilter* filter = Kleo::KeyFilterManager::instance()->filterMatching( key );
+      return filter ? filter->font( font ) : font;
+    }
+    virtual QColor keyForeground( const GpgME::Key& key, const QColor& c ) const {
+      const Kleo::KeyFilter* filter = Kleo::KeyFilterManager::instance()->filterMatching( key );
+      if ( filter && filter->fgColor().isValid() )
+        return filter->fgColor();
+      return c;
+    }
+    virtual QColor keyBackground( const GpgME::Key& key, const QColor& c  ) const {
+      const Kleo::KeyFilter* filter = Kleo::KeyFilterManager::instance()->filterMatching( key );
+      if ( filter && filter->bgColor().isValid() )
+        return filter->bgColor();
+      return c;
     }
   };
-
-  // end of PENDING
 
   class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
   public:
