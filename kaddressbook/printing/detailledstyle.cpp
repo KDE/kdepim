@@ -29,6 +29,7 @@
 #include <qcheckbox.h>
 #include <qlayout.h>
 #include <qpaintdevicemetrics.h>
+
 #include "detailledstyle.h"
 #include "printingwizard.h"
 #include "printstyle.h"
