@@ -21,6 +21,7 @@ class QComboBox;
 class QRadioButton;
 class QGroupBox;
 class QButtonGroup;
+class KIO::Job;
 
 
 // This config page is now being used for
@@ -51,9 +52,6 @@ public:
 	virtual ~KPilotOptionsGeneral();
 
 	virtual int commitChanges(KConfig *);
-
-public slots:
-	void slotSetupDaemon();
 
 private:
 	QLineEdit* fPilotDevice;

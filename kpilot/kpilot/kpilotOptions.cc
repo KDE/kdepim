@@ -35,6 +35,8 @@
 #include <kwin.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
+#include <kio/netaccess.h>
+#include <kstddirs.h>
 
 
 #include "kpilotOptions.moc"
@@ -343,32 +345,12 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	grid->addMultiCellWidget(fOverwriteRemote,3,3,fieldCol,fieldCol+2);
 
 	fStartDaemonAtLogin = new QCheckBox(
-		i18n("Start Hot-Sync Daemon at login. "
-			"(Only available with KFM)"), this);
+		i18n("Start Hot-Sync Daemon at login. "), 
+		this);
 	fStartDaemonAtLogin->adjustSize();
 	fStartDaemonAtLogin->setChecked(
 		config->readNumEntry("StartDaemonAtLogin", 0));
 	grid->addMultiCellWidget(fStartDaemonAtLogin,4,4,fieldCol,fieldCol+2);
-
-// 	{
-// 		KFM *fKFM=new KFM();
-// 		if (fKFM==NULL)
-// 		{
-// 			cerr << fname << ": Can't allocate KFM object.\n";
-// 		}
-
-// 		if (fKFM==NULL || fKFM->isKFMRunning()!=true)
-// 		{
-// 			fStartDaemonAtLogin->setEnabled(false);
-// 		}
-// 		if (fKFM!=NULL)
-// 		{
-// 			delete fKFM;
-// 			fKFM=NULL;
-// 		}
-// 	}
-	connect(fStartDaemonAtLogin, SIGNAL(clicked()), 
-		this, SLOT(slotSetupDaemon()));
 
 	fStartKPilotAtHotSync = new QCheckBox(
 		i18n("Start KPilot at Hot-Sync."), this);
@@ -384,16 +366,6 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	fDockDaemon->adjustSize();
 	fDockDaemon->setChecked(config->readNumEntry("DockDaemon", 0));
 	grid->addMultiCellWidget(fDockDaemon,6,6,fieldCol,fieldCol+2);
-
-	{
-// 		KWM* kwm = new KWM();
-// 		if (kwm!=NULL)
-// 		{
-// 			if(kwm->isKWMInitialized() == false)
-// 			fDockDaemon->setEnabled(false);
-// 			delete kwm;
-// 		}
-	}
 
 	grid->activate();
 }
@@ -423,48 +395,31 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 		(int)fStartKPilotAtHotSync->isChecked());
 	config->writeEntry("DockDaemon", (int)fDockDaemon->isChecked());
 
-	return 0;
+	QString dest,src;
+
+	dest = getenv("HOME");
+	dest+="/Desktop/Autostart/KPilotDaemon.desktop";
+
+	src = locate("apps","Utilities/KPilotDaemon.desktop");
+
+	if (fStartDaemonAtLogin->isChecked())
+	{
+		if (src.isNull())
+		{
+			KMessageBox::sorry(this,
+				i18n("Can't find the KPilotDaemon link file\n"
+					"needed to autostart the daemon."));
+		}
+		else
+		{
+			KIO::NetAccess::copy(src,dest);
+		}
+	}
+	else
+	{
+		KIO::NetAccess::del(dest);
+	}
 }
-
-void
-KPilotOptionsGeneral::slotSetupDaemon()
-{
-// 	FUNCTIONSETUP;
-
-//   QString destDir = getenv("HOME");
-  
-
-//   if(fStartDaemonAtLogin->isChecked())
-//     {
-// 	if (fKFM==NULL) fKFM = new KFM;
-// 	if (fKFM==NULL)
-// 	{
-// 		KMsgBox::message(this,i18n("Setup Daemon"),
-// 			i18n("Cannot connect to KFM."),
-// 			KMsgBox::STOP);
-// 		return ;
-// 	}
-
-//       if(fKFM!=NULL && fKFM->isOK() == false)
-// 	{
-// 	  KMsgBox::message(0L, i18n("Setup Daemon"), 
-// 			   i18n("Cannot connect to KFM."), 
-// 			   KMsgBox::STOP);
-// 	  delete fKFM;
-// 	  fKFM = NULL;
-// 	  return;
-// 	}
-//       connect(fKFM, SIGNAL(finished()), this, SLOT(slotKFMFinished()));
-//       QString destDir = getenv("HOME");
-//       fKFM->copy(kapp->kde_appsdir() + "/Utilities/KPilotDaemon.kdelnk", destDir + "/Desktop/Autostart/KPilotDaemon.kdelnk");
-//       // memory leak..
-//     }
-//   else
-//       {
-// 	unlink(destDir + "/Desktop/Autostart/KPilotDaemon.kdelnk");
-//       }
-}
-
 
 // ----------------------------------------------------
 //
@@ -559,4 +514,7 @@ int main(int argc, char **argv)
 }
 #endif
 
-// $Log: $
+// $Log$
+// Revision 1.7  2000/07/30 10:01:55  adridg
+// Completed KDE2 layout
+//
