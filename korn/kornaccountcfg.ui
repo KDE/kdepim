@@ -50,7 +50,7 @@
                                     <enum>WidgetOrigin</enum>
                                 </property>
                                 <property name="text">
-                                    <string>Por&amp;t</string>
+                                    <string>Por&amp;t:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>edPort</cstring>
@@ -61,7 +61,7 @@
                                     <cstring>lbServer</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Se&amp;rver</string>
+                                    <string>Se&amp;rver:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>edServer</cstring>
@@ -72,7 +72,7 @@
                                     <cstring>lbProtocol</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Protocol</string>
+                                    <string>&amp;Protocol:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>cbProtocol</cstring>
@@ -146,7 +146,7 @@
                                     <cstring>lbUsername</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Username</string>
+                                    <string>&amp;Username:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>edUsername</cstring>
@@ -157,7 +157,7 @@
                                     <cstring>lbMailbox</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Mailbox</string>
+                                    <string>&amp;Mailbox:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>edPassword</cstring>
@@ -168,7 +168,7 @@
                                     <cstring>lbAuth</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Aut&amp;hentication</string>
+                                    <string>Aut&amp;hentication:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>cbAuth</cstring>
@@ -179,7 +179,7 @@
                                     <cstring>lbPassword</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Passwor&amp;d</string>
+                                    <string>Passwor&amp;d:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>edPassword</cstring>
@@ -341,7 +341,7 @@
                                             <cstring>lbRunCommand</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>Run &amp;command</string>
+                                            <string>Run &amp;command:</string>
                                         </property>
                                         <property name="buddy" stdset="0">
                                             <cstring>edRunCommand</cstring>
@@ -357,7 +357,7 @@
                                             <cstring>lbPlaySound</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>Play sou&amp;nd</string>
+                                            <string>Play sou&amp;nd:</string>
                                         </property>
                                         <property name="buddy" stdset="0">
                                             <cstring>edPlaySound</cstring>
@@ -370,7 +370,7 @@
                                     <cstring>chPassivePopup</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Show &amp;Passive Popup</string>
+                                    <string>Show &amp;passive popup</string>
                                 </property>
                             </widget>
                             <widget class="QCheckBox">
@@ -381,7 +381,7 @@
                                     <bool>false</bool>
                                 </property>
                                 <property name="text">
-                                    <string>Add &amp;date to Passive Popup</string>
+                                    <string>Add &amp;date to passive popup</string>
                                 </property>
                             </widget>
                         </vbox>

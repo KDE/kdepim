@@ -111,7 +111,7 @@
                             <cstring>lbIcon</cstring>
                         </property>
                         <property name="text">
-                            <string>Icon</string>
+                            <string>Icon:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0">
@@ -119,7 +119,7 @@
                             <cstring>lbBackground</cstring>
                         </property>
                         <property name="text">
-                            <string>Background</string>
+                            <string>Background:</string>
                         </property>
                     </widget>
                     <widget class="QLayoutWidget" row="2" column="2">
@@ -199,7 +199,7 @@
                             <cstring>lbNew</cstring>
                         </property>
                         <property name="text">
-                            <string>New mail</string>
+                            <string>New Mail</string>
                         </property>
                         <property name="alignment">
                             <set>AlignCenter</set>
@@ -210,7 +210,7 @@
                             <cstring>lbText</cstring>
                         </property>
                         <property name="text">
-                            <string>Text</string>
+                            <string>Text:</string>
                         </property>
                     </widget>
                     <widget class="QLayoutWidget" row="1" column="1">
@@ -358,7 +358,7 @@
                             <cstring>lbAnimation</cstring>
                         </property>
                         <property name="text">
-                            <string>Animation</string>
+                            <string>Animation:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="4" column="0">
@@ -366,7 +366,7 @@
                             <cstring>lbFont</cstring>
                         </property>
                         <property name="text">
-                            <string>Font</string>
+                            <string>Font:</string>
                         </property>
                     </widget>
                     <widget class="QLayoutWidget" row="4" column="2">
@@ -735,7 +735,7 @@
                                     <cstring>lbReset</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Reset counter</string>
+                                    <string>Reset counter:</string>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="0" column="1" rowspan="1" colspan="3">
@@ -921,7 +921,7 @@
                                     <cstring>lbPopup</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Popup</string>
+                                    <string>Popup:</string>
                                 </property>
                             </widget>
                             <widget class="QLayoutWidget" row="3" column="3">
@@ -981,7 +981,7 @@
                                     <cstring>lbView</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>View emails</string>
+                                    <string>View emails:</string>
                                 </property>
                             </widget>
                             <widget class="QLayoutWidget" row="6" column="2">
@@ -1041,7 +1041,7 @@
                                     <cstring>lbRecheck</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Recheck</string>
+                                    <string>Recheck:</string>
                                 </property>
                             </widget>
                             <widget class="QLayoutWidget" row="4" column="1">
@@ -1257,7 +1257,7 @@
                                     <cstring>lbRun</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Run command</string>
+                                    <string>Run command:</string>
                                 </property>
                             </widget>
                             <widget class="QLayoutWidget" row="6" column="3">
@@ -1327,7 +1327,7 @@
                                     <cstring>lbCommand</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Co&amp;mmand</string>
+                                    <string>Co&amp;mmand:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>edCommand</cstring>
@@ -1372,7 +1372,7 @@
                                             <cstring>lbNewRun</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>&amp;Run command</string>
+                                            <string>&amp;Run command:</string>
                                         </property>
                                         <property name="buddy" stdset="0">
                                             <cstring>edNewRun</cstring>
@@ -1388,7 +1388,7 @@
                                             <cstring>lbPlaySound</cstring>
                                         </property>
                                         <property name="text">
-                                            <string>Play &amp;sound</string>
+                                            <string>Play &amp;sound:</string>
                                         </property>
                                         <property name="buddy" stdset="0">
                                             <cstring>edPlaySound</cstring>
@@ -1401,7 +1401,7 @@
                                     <cstring>chShowPassive</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Show &amp;Passive Popup</string>
+                                    <string>Show &amp;passive popup</string>
                                 </property>
                             </widget>
                             <widget class="QCheckBox">
@@ -1412,7 +1412,7 @@
                                     <bool>false</bool>
                                 </property>
                                 <property name="text">
-                                    <string>Add da&amp;te to Passive Popup</string>
+                                    <string>Add da&amp;te to passive popup</string>
                                 </property>
                             </widget>
                         </vbox>
@@ -1461,7 +1461,7 @@
                             <cstring>elbDCOP</cstring>
                         </property>
                         <property name="title">
-                            <string>DCO&amp;P-objects</string>
+                            <string>DCO&amp;Objects</string>
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>The names of DCOP-objects by this box. DCOP-objects let other programs add 'virtual' emails to the box.</string>

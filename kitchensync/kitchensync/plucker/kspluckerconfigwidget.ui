@@ -41,7 +41,7 @@
                                 <cstring>textLabel1</cstring>
                             </property>
                             <property name="text">
-                                <string>Path to the Java Executable:</string>
+                                <string>Path to the Java executable:</string>
                             </property>
                         </widget>
                         <spacer>
@@ -81,7 +81,7 @@
                                 <cstring>textLabel2</cstring>
                             </property>
                             <property name="text">
-                                <string>Path to the JPlucker Directory</string>
+                                <string>Path to the JPlucker directory:</string>
                             </property>
                         </widget>
                         <spacer>
@@ -229,7 +229,7 @@
     <slot access="protected" specifier="non virtual">slotAdd()</slot>
     <slot specifier="non virtual">slotRemove()</slot>
     <slot>slotConfigOk()</slot>
-    <slot>readConfig()</slot>    
+    <slot>readConfig()</slot>
     <slot access="private" specifier="non virtual">slotConfigureJXL()</slot>
 </slots>
 <functions>

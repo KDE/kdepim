@@ -43,7 +43,7 @@
                 <cstring>groupBox2</cstring>
             </property>
             <property name="title">
-                <string>Handheld and User Name</string>
+                <string>Handheld &amp;&amp; User Name</string>
             </property>
             <property name="whatsThis" stdset="0">
                 <string>&lt;p&gt;You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.&lt;/p&gt;
