@@ -37,18 +37,19 @@ KGantt::KGantt(KGanttItem* toplevelitem,
   setBackgroundColor(QColor(white));
 
   _splitter = new QSplitter(this);
-  QStyle *cdestyle=QStyleFactory::create("CDE");
-  if(cdestyle)
-	  _splitter->setStyle(cdestyle);
-
+/*
+//  QStyle *cdestyle=QStyleFactory::create("CDE");
+//  if(cdestyle)
+//	  _splitter->setStyle(cdestyle);
+*/
   QPalette pal1(_splitter->palette());
-  QPalette pal(_splitter->palette());
+/*  QPalette pal(_splitter->palette());
   QColorGroup cg(pal.active());
   cg.setColor( QColorGroup::Foreground, blue );
   cg.setColor( QColorGroup::Background, white );
   pal.setActive( cg );
 
-  _splitter->setPalette(pal);
+  _splitter->setPalette(pal);*/
   
   _ganttlist = new xQGanttListView(_toplevelitem, _splitter); 
   _ganttlist->setMinimumWidth(1);
