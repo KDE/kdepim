@@ -58,7 +58,37 @@ void CertificateWizardImpl::slotGenerateCertificate()
     certParms += "Key-Type: RSA\n";
     certParms += "Key-Length: 1024\n"; // PENDING(NN) Might want to make this user-configurable
     certParms += "Key-Usage: Sign, Encrypt\n"; // PENDING(NN) Might want to make this user-configurable
-    certParms += QString( "name-dn: C=%1,O=%2,OU=%3,CN=%4\n" ).arg( countryED->text() ).arg( organizationED->text() ).arg( departmentED->text() ).arg( nameED->text() );
+    certParms += "name-dn: ";
+    bool bFirst = true;
+    if( !countryED->text().isEmpty() ) {
+        if( !bFirst )
+            certParms += ',';
+        certParms += "C=";
+        certParms += countryED->text();
+        bFirst = false;
+    }
+    if( !organizationED->text().isEmpty() ) {
+        if( !bFirst )
+            certParms += ',';
+        certParms += "O=";
+        certParms += countryED->text();
+        bFirst = false;
+    }
+    if( !departmentED->text().isEmpty() ) {
+        if( !bFirst )
+            certParms += ',';
+        certParms += "OU=";
+        certParms += countryED->text();
+        bFirst = false;
+    }
+    if( !nameED->text().isEmpty() ) {
+        if( !bFirst )
+            certParms += ',';
+        certParms += "CN=";
+        certParms += countryED->text();
+        bFirst = false;
+    }
+    certParms += '\n';
     certParms += QString( "name-email: %1\n" ).arg( emailED->text() );
     certParms += "</GnupgKeyParms>\n";
 
