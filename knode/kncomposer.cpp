@@ -861,14 +861,14 @@ void KNComposer::slotToggleDoPost()
 void KNComposer::slotToggleDoMail()
 {
   if (a_ctDoMail->isChecked()) {
-    if (knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
+    if (knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
       QString tmp;
       for(int i=0; i < v_iew->e_dit->numLines(); i++) {
         if (v_iew->e_dit->textLine(i) == "-- ")   // try to be smart, don't include the signature,
           break;                                  // kmail will append one, too.
         tmp+=v_iew->e_dit->textLine(i)+"\n";
       }
-      knGlobals.artFactory->sendMailViaKMail(v_iew->t_o->text(), v_iew->s_ubject->text(), tmp);
+      knGlobals.artFactory->sendMailExternal(v_iew->t_o->text(), v_iew->s_ubject->text(), tmp);
       a_ctDoMail->setChecked(true); //revert
     } else {
       if (a_ctDoPost->isChecked())

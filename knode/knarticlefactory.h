@@ -57,8 +57,8 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void createSupersede(KNArticle *a);
     void createMail(KNHeaders::AddressField *address);
 
-    // send a mail via KMail...
-    void sendMailViaKMail(const QString &address=QString::null, const QString &subject=QString::null, const QString &body=QString::null);
+    // send a mail via an external program...
+    void sendMailExternal(const QString &address=QString::null, const QString &subject=QString::null, const QString &body=QString::null);
 
     //article handling
     void edit(KNLocalArticle *a);

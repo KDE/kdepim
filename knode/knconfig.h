@@ -263,11 +263,11 @@ Q_OBJECT
     void apply();
 
   protected slots:
-    void useKmailToggled(bool b);
+    void useExternalMailerToggled(bool b);
 
   protected:
     KNServerInfo  *s_erverInfo;
-    QCheckBox     *u_seKmail;
+    QCheckBox     *u_seExternalMailer;
     QLineEdit     *s_erver,
                   *p_ort;
     KIntSpinBox   *h_old,
@@ -825,7 +825,7 @@ class PostNewsTechnical : public Base {
     QCString hostname()         { return h_ostname; }
     XHeaders& xHeaders()        { return x_headers; }
     bool noUserAgent()          { return d_ontIncludeUA; }
-    bool useKmail()             { return u_seKmail; }
+    bool useExternalMailer()    { return u_seExternalMailer; }
 
   protected:
     QCString  c_harset,
@@ -837,7 +837,7 @@ class PostNewsTechnical : public Base {
               a_llow8BitHeaders,
               g_enerateMID,
               d_ontIncludeUA,
-              u_seKmail;
+              u_seExternalMailer;
 
     XHeaders x_headers;
 

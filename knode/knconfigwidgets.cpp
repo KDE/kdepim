@@ -500,9 +500,9 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : Base
 {
   QGridLayout *topL=new QGridLayout(this, 6, 3, 5);
 
-  u_seKmail = new QCheckBox(i18n("&Use Kmail for Mail"), this);
-  connect(u_seKmail, SIGNAL(toggled(bool)), SLOT(useKmailToggled(bool)));
-  topL->addMultiCellWidget(u_seKmail, 0, 0, 0, 2);
+  u_seExternalMailer = new QCheckBox(i18n("&Use external mail program"), this);
+  connect(u_seExternalMailer, SIGNAL(toggled(bool)), SLOT(useExternalMailerToggled(bool)));
+  topL->addMultiCellWidget(u_seExternalMailer, 0, 0, 0, 2);
 
   s_erver=new QLineEdit(this);
   s_erverLabel=new QLabel(s_erver, i18n("&Server:"), this);
@@ -532,13 +532,12 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : Base
 
   s_erverInfo=knGlobals.accManager->smtp();
 
-  u_seKmail->setChecked(knGlobals.cfgManager->postNewsTechnical()->useKmail());
-  useKmailToggled(knGlobals.cfgManager->postNewsTechnical()->useKmail());
+  u_seExternalMailer->setChecked(knGlobals.cfgManager->postNewsTechnical()->useExternalMailer());
+  useExternalMailerToggled(knGlobals.cfgManager->postNewsTechnical()->useExternalMailer());
   s_erver->setText(s_erverInfo->server());
   p_ort->setText(QString::number(s_erverInfo->port()));
   h_old->setValue(s_erverInfo->hold());
   t_imeout->setValue(s_erverInfo->timeout());
-
 }
 
 
@@ -553,7 +552,7 @@ void KNConfig::SmtpAccountWidget::apply()
   if(!d_irty)
     return;
 
-  knGlobals.cfgManager->postNewsTechnical()->u_seKmail = u_seKmail->isChecked();
+  knGlobals.cfgManager->postNewsTechnical()->u_seExternalMailer = u_seExternalMailer->isChecked();
   knGlobals.cfgManager->postNewsTechnical()->save();
 
   s_erverInfo->setServer(s_erver->text());
@@ -567,7 +566,7 @@ void KNConfig::SmtpAccountWidget::apply()
 }
 
 
-void KNConfig::SmtpAccountWidget::useKmailToggled(bool b)
+void KNConfig::SmtpAccountWidget::useExternalMailerToggled(bool b)
 {
   s_erver->setEnabled(!b);
   p_ort->setEnabled(!b);

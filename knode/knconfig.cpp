@@ -870,7 +870,7 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
   a_llow8BitHeaders=conf->readBoolEntry("allow8bitChars", false);
   g_enerateMID=conf->readBoolEntry("generateMId", false);
   d_ontIncludeUA=conf->readBoolEntry("dontIncludeUA", false);
-  u_seKmail=conf->readBoolEntry("useKmail", false);
+  u_seExternalMailer=conf->readBoolEntry("useExternalMailer", false);
 
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
   if (dir!=QString::null) {
@@ -906,7 +906,7 @@ void KNConfig::PostNewsTechnical::save()
   conf->writeEntry("generateMId", g_enerateMID);
   conf->writeEntry("MIdhost", QString::fromLatin1(h_ostname));
   conf->writeEntry("dontIncludeUA", d_ontIncludeUA);
-  conf->writeEntry("useKmail", u_seKmail);
+  conf->writeEntry("useExternalMailer", u_seExternalMailer);
 
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
   if (dir==QString::null)

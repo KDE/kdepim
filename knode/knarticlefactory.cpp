@@ -232,8 +232,8 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //-------------------------- </Body> -----------------------------
 
-  if (mail && knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
-    sendMailViaKMail(address.asUnicodeString(), subject, quoted);
+  if (mail && knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+    sendMailExternal(address.asUnicodeString(), subject, quoted);
     mail = false;
     art->setDoMail(true);
     if (!post) {
@@ -257,7 +257,7 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   KNHeaders::ContentType *ct=a->contentType();
   QCString chset;
-  bool incAtt = ( !knGlobals.cfgManager->postNewsTechnical()->useKmail() &&
+  bool incAtt = ( !knGlobals.cfgManager->postNewsTechnical()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
                   i18n("This article contains attachments. Do you want them to be forwarded too?"))
@@ -320,8 +320,8 @@ void KNArticleFactory::createForward(KNArticle *a)
   //------------------------ </Attachments> ------------------------
 
 
-  if (knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
-    sendMailViaKMail(QString::null, subject, fwd);
+  if (knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+    sendMailExternal(QString::null, subject, fwd);
     delete art;
     return;
   }
@@ -486,8 +486,8 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
 void KNArticleFactory::createMail(KNHeaders::AddressField *address)
 {
-  if (knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
-    sendMailViaKMail(address->asUnicodeString());
+  if (knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+    sendMailExternal(address->asUnicodeString());
     return;
   }
 
@@ -509,21 +509,33 @@ void KNArticleFactory::createMail(KNHeaders::AddressField *address)
 }
 
 
-void KNArticleFactory::sendMailViaKMail(const QString &address, const QString &subject, const QString &body)
+void KNArticleFactory::sendMailExternal(const QString &address, const QString &subject, const QString &body)
 {
-  KProcess proc;
-  proc << "kmail";
-  if (!subject.isEmpty()) {
-    proc << "--subject";
-    proc << subject;
-  }
-  if (!body.isEmpty()) {
-    proc << "--body";
-    proc << body;
-  }
+  KURL mailtoURL;
+  QStringList queries;
+  QString query=QString::null;
+  mailtoURL.setProtocol("mailto");
+
   if (!address.isEmpty())
-    proc << address;
-  proc.start(KProcess::DontCare);
+    mailtoURL.setPath(address);
+  if (!subject.isEmpty())
+    queries.append("subject="+subject);
+  if (!body.isEmpty())
+    queries.append("body="+body);
+
+  if (queries.count() > 0) {
+    query = "?";
+    for ( QStringList::Iterator it = queries.begin(); it != queries.end(); ++it ) {
+      if (it != queries.begin())
+        query.append("&");
+      query.append((*it));
+    }
+  }
+
+  if (!query.isEmpty())
+    mailtoURL.setQuery(query);
+
+  kapp->invokeMailer(mailtoURL);
 }
 
 
