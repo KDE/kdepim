@@ -727,7 +727,8 @@ Module::publicKey(const KeyID& keyID)
   readPublicKeys();
 
   for( KeyListIterator it( mPublicKeys ); (*it); ++it )
-    if( keyID == (*it)->primaryKeyID() )
+    if( keyID == (*it)->primaryKeyID() ||
+	keyID == (*it)->primaryFingerprint() )
       return (*it);
 
   return 0;
@@ -751,7 +752,8 @@ Module::secretKey(const KeyID& keyID)
   readSecretKeys();
 
   for( KeyListIterator it( mSecretKeys ); (*it); ++it )
-    if( keyID == (*it)->primaryKeyID() )
+    if( keyID == (*it)->primaryKeyID() ||
+	keyID == (*it)->primaryFingerprint() )
       return (*it);
 
   return 0;
