@@ -69,7 +69,7 @@ class pab
   private:
     void rdPabRec(pabrec & R);
     void prt(unsigned char *mem,pabrec & R,pabrec_entry E);
-    void getrange(pabrec & R,pabrec_entry e,word_t & b,word_t & e);
+    void getrange(pabrec & R,pabrec_entry e,word_t & b,word_t & _e);
   private:
     bool convert(adr_t A,content_t start,content_t stop);
     void dotable(adr_t table,content_t start,content_t stop);

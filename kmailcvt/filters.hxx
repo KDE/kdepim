@@ -81,7 +81,7 @@ class kmail
   public:
     bool kmailStart(filterInfo */*info*/) { return true; }
     bool kmailMessage(filterInfo *info,char *folder,char *msg,unsigned long & added);
-    bool kmailFolder(filterInfo *info,char *folder,FILE *folder);
+    bool kmailFolder(filterInfo *info,char *folder,FILE *_folder);
     void kmailStop(filterInfo *info);
 };
 
