@@ -24,8 +24,8 @@ libabbrowserconduit_la_LIBADD = ../../lib/libkpilot.la
 #
 libabbrowserconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
 
-testdcop_SOURCES = testAbbrowserDCOP.cc contactentry.lo
+testdcop_SOURCES = testAbbrowserDCOP.cc
 testdcop_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-testdcop_LDADD = $(LIB_KDECORE) $(LIB_KFILE)
+testdcop_LDADD = contactentry.lo $(LIB_KDECORE) $(LIB_KFILE)
 
 
