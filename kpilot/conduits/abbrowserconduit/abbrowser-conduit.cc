@@ -162,7 +162,7 @@ void AbbrowserConduit::readConfig()
 
 	// Conflict page
 	SyncAction::eConflictResolution res = (SyncAction::eConflictResolution)AbbrowserSettings::conflictResolution();
-	if (res != SyncAction::eUseGlobalSetting) fConflictResolution = res;
+	setConflictResolution(res);
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -610,6 +610,9 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	DEBUGCONDUIT << "backupAddress:" << endl;
 	showPilotAddress(backupAddr);
 	DEBUGCONDUIT << "------------------------------------------------" << endl;
+#else
+	Q_UNUSED(pcAddr);
+	Q_UNUSED(backupAddr);
 #endif
 }
 
@@ -650,7 +653,7 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": fullsync=" << isFullSync() << ", firstSync=" <<    isFirstSync() << endl;
 	DEBUGCONDUIT << fname << ": "
-		<< "syncDirection=" << fSyncDirection << ", "
+		<< "syncDirection=" << getSyncDirection() << ", "
 		<< "archive = " << AbbrowserSettings::archiveDeleted() << endl;
 	DEBUGCONDUIT << fname << ": conflictRes="<< fConflictResolution << endl;
 	DEBUGCONDUIT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
@@ -678,7 +681,7 @@ void AbbrowserConduit::slotPalmRecToPC()
 	FUNCTIONSETUP;
 	PilotRecord *palmRec = 0L, *backupRec = 0L;
 
-	if (fSyncDirection==SyncAction::eCopyPCToHH)
+	if (getSyncDirection()==SyncAction::eCopyPCToHH)
 	{
 		abiter = aBook->begin();
 		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
@@ -731,7 +734,7 @@ void AbbrowserConduit::slotPCRecToPalm()
 {
 	FUNCTIONSETUP;
 
-	if ( (fSyncDirection==SyncAction::eCopyHHToPC) ||
+	if ( (getSyncDirection()==SyncAction::eCopyHHToPC) ||
 		abiter == aBook->end() || (*abiter).isEmpty() )
 	{
 		pilotindex = 0;
@@ -846,7 +849,7 @@ void AbbrowserConduit::slotDeletedRecord()
 void AbbrowserConduit::slotDeleteUnsyncedPCRecords()
 {
 	FUNCTIONSETUP;
-	if (fSyncDirection==SyncAction::eCopyHHToPC)
+	if (getSyncDirection()==SyncAction::eCopyHHToPC)
 	{
 		QStringList uids;
 		RecordIDList::iterator it;
@@ -880,7 +883,7 @@ void AbbrowserConduit::slotDeleteUnsyncedPCRecords()
 void AbbrowserConduit::slotDeleteUnsyncedHHRecords()
 {
 	FUNCTIONSETUP;
-	if (fSyncDirection==SyncAction::eCopyPCToHH)
+	if (getSyncDirection()==SyncAction::eCopyPCToHH)
 	{
 		RecordIDList ids=fDatabase->idList();
 		RecordIDList::iterator it;
@@ -937,7 +940,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 	FUNCTIONSETUP;
 showAdresses(pcAddr, backupAddr, palmAddr);
 
-	if (fSyncDirection==SyncAction::eCopyPCToHH)
+	if (getSyncDirection()==SyncAction::eCopyPCToHH)
 	{
 		if (pcAddr.isEmpty())
 		{
@@ -955,7 +958,7 @@ showAdresses(pcAddr, backupAddr, palmAddr);
 		}
 	}
 
-	if (fSyncDirection==SyncAction::eCopyHHToPC)
+	if (getSyncDirection()==SyncAction::eCopyHHToPC)
 	{
 #ifdef DEBUG
 			DEBUGCONDUIT<<"0c "<<endl;
@@ -1752,7 +1755,7 @@ bool AbbrowserConduit::_smartMergeTable(ResolutionTable*tab)
 	{
 		// try to merge the three strings
 		item->fResolved=_smartMergeString(item->fEntries[0],
-			item->fEntries[2], item->fEntries[1], fConflictResolution);
+			item->fEntries[2], item->fEntries[1], getConflictResolution());
 		// if a conflict occurred, set the default to something sensitive:
 		if (item->fResolved.isNull() && !(item->fEntries[0].isEmpty() &&
 			item->fEntries[1].isEmpty() && item->fEntries[2].isEmpty() ) )

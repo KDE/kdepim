@@ -1,6 +1,18 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-02-03  Adriaan de Groot
+* I see lots of spelling fixes have been introduced in HEAD. Thanks, TLs.
+* Plans for a photo conduit (Zire71) and a NotePad conduit are forming.
+  pilot-link has the relevant code already, it just needs to be fit
+  into KPilot's form.
+* Worked on the KNotes conduit some more. Remember to update the
+  local database copy, and non-CopyHHtoPC code needs work.
+
+2004-01-31  Adriaan de Groot
+* Finished up the KNotes conduit, I think. The copy to PC part was
+  a little over-enthusiastic.
+
 2004-01-25  Adriaan de Groot
 * Fixed up copyright notices here and there. Dan is listed as copyright
   holder in lots of files he's never worked on; since copyright cannot
@@ -10,7 +22,7 @@
 * Removed compile warnings in the vcal conduit.
 * Moved 72342 to top of list, since now I got HHtoPC copy
   working in kpilotTest I can actually _see_ the bug. It seems to be in
-  PilotMemo
+  PilotMemo.
 
 2004-01-20  Adriaan de Groot
 * Added experimental A-A-P build system.

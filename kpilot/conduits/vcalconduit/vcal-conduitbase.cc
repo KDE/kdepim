@@ -166,8 +166,8 @@ there are two special cases: a full and a first sync.
 
 	readConfig();
 
-	// don't do a first sync by default in any case, only when explicitly requested, or the backup
-	// database or the alendar are empty.
+	// don't do a first sync by default in any case, only when explicitly 
+	// requested, or the backup database or the alendar are empty.
 	fFirstSync = false;
 
 	// TODO: Check Full sync and First sync
@@ -178,13 +178,13 @@ there are two special cases: a full and a first sync.
 
 #ifdef DEBUG
 	DEBUGCONDUIT<<fname<<": fullsync="<<isFullSync()<<", firstSync="<<isFirstSync()<<endl;
-	DEBUGCONDUIT<<fname<<": syncAction="<<fSyncDirection<<
+	DEBUGCONDUIT<<fname<<": syncAction="<<getSyncDirection()<<
 		", conflictResolution = "<<fConflictResolution<<", archive = "<<config()->syncArchived()<<endl;
 #endif
 
 	addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
 	pilotindex=0;
-	switch (fSyncDirection)
+	switch (getSyncDirection())
 	{
 	case SyncAction::eCopyPCToHH:
 		// TODO: Clear the palm and backup database??? Or just add the new items ignore
@@ -214,7 +214,7 @@ error:
 {
 	config()->readConfig();
 	SyncAction::eConflictResolution res=(SyncAction::eConflictResolution)(config()->conflictResolution());
-	if (res!=SyncAction::eUseGlobalSetting) fConflictResolution=res;
+	setConflictResolution(res);
 }
 
 
@@ -352,7 +352,7 @@ void VCalConduitBase::slotPalmRecToPC()
 	if (!r)
 	{
 		fP->updateIncidences();
-		if (fSyncDirection==SyncAction::eCopyHHToPC)
+		if (getSyncDirection()==SyncAction::eCopyHHToPC)
 		{
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
@@ -425,7 +425,7 @@ void VCalConduitBase::slotPCRecToPalm()
 	if (!e)
 	{
 		pilotindex=0;
-		if ( (fSyncDirection==SyncAction::eCopyHHToPC) || (fSyncDirection==SyncAction::eCopyPCToHH) )
+		if ( (getSyncDirection()==SyncAction::eCopyHHToPC) || (getSyncDirection()==SyncAction::eCopyPCToHH) )
 		{
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
@@ -591,7 +591,7 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 
 // return how to resolve conflicts. for now PalmOverrides=0=false, PCOverrides=1=true, Ask=2-> ask the user using a messagebox
 int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
-	if (fConflictResolution==SyncAction::eAskUser)
+	if (getConflictResolution()==SyncAction::eAskUser)
 	{
 		// TODO: This is messed up!!!
 		return KMessageBox::warningYesNo(NULL,
@@ -600,7 +600,7 @@ int VCalConduitBase::resolveConflict(KCal::Incidence*e, PilotAppCategory*de) {
 			i18n("Conflicting Entries")
 		)==KMessageBox::No;
 	}
-	return fConflictResolution;
+	return getConflictResolution();
 }
 
 KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
