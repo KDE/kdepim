@@ -208,7 +208,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	DEBUGKPILOT << fname << ": Daemon status is " << s << endl;
 #endif
 
-	if ((s.isNull()) || (!getDaemon().ok()))
+	if ((s.isEmpty()) || (!getDaemon().ok()))
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname
