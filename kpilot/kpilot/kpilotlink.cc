@@ -96,7 +96,7 @@ const int CStatusMessages::LOG_MESSAGE = 17;
 // (increase) this number.
 //
 //
-/* static */ const int KPilotLink::ConfigurationVersion = 400;
+/* static */ const int KPilotLink::ConfigurationVersion = 401;
 
 int KPilotLink::getConfigVersion(KConfig *config)
 {
@@ -1059,11 +1059,14 @@ KPilotLink::startHotSync()
   checkPilotUser();
 
   updateProgressBar(7);
-  if(fPilotUser.getLastSyncPC() != (unsigned long)gethostid())
-    setSlowSyncRequired(true);
-  //     cout << "Got user info: " << endl;
-  //     cout << "\tName: " << getPilotUser().getUserName() << endl;
-  //     cout << "\tPassword: " << getPilotUser().getPassword() << endl;
+	if(fPilotUser.getLastSyncPC() != (unsigned long)gethostid())
+	{
+		KConfig& c = KPilotLink::getConfig();
+		if (c.readNumEntry("SyncLastPC",1))
+		{
+			setSlowSyncRequired(true);
+		}
+	}
 
   /* Tell user (via Pilot) that we are starting things up */
   if (dlp_OpenConduit(getCurrentPilotSocket()) < 0) 
@@ -1491,12 +1494,7 @@ KConfig& KPilotLink::getConfig(const QString &s)
 
 	if (theconfig)
 	{
-		kdDebug() << fname
-			<< ": Config exists @"
-			<< (int)(theconfig)
-			<< endl;
-
-		// theconfig->setGroup(s);
+		theconfig->setGroup(s);
 		return *theconfig;
 	}
 
@@ -1525,11 +1523,6 @@ KConfig& KPilotLink::getConfig(const QString &s)
 		theconfig=new KConfig(existingConfig,false,false);
 	}
 
-	kdDebug() << fname
-		<< ": Created config @"
-		<< (int)(theconfig)
-		<< endl;
-
 	if (theconfig == 0L)
 	{
 		kdDebug() << fname << ": No configuration was found."
@@ -1547,6 +1540,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.18  2000/11/14 06:32:26  adridg
+// Ditched KDE1 stuff
+//
 // Revision 1.17  2000/11/13 08:52:31  adridg
 // Much getConfig() grief averted
 //
