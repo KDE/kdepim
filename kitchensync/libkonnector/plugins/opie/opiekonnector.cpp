@@ -125,7 +125,7 @@ void OpiePlugin::slotErrorKonnector( int mode, QString error )
 {
     emit errorKonnector(d->udi, mode, error );
 }
-void OpiePlugin::slotWrite(QValueList<KOperations> operations )
+void OpiePlugin::slotWrite(KOperationsList operations )
 {
     d->socket->write(operations );
 }

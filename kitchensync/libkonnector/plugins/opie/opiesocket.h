@@ -31,7 +31,7 @@ Q_OBJECT
   bool insertFile(const QString &fileName );
   void write(const QString &, const QByteArray & );
   void write(KSyncEntryList );
-  void write(QValueList<KOperations> );
+  void write(KOperationsList );
   QString metaId()const;
 
 signals:

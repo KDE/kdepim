@@ -30,7 +30,7 @@ Q_OBJECT
  public slots:
   virtual void slotWrite(const QString &, const QByteArray & ) ;
   virtual void slotWrite(KSyncEntryList ) ;
-  virtual void slotWrite(QValueList<KOperations> ) ;
+  virtual void slotWrite(KOperationsList ) ;
 
  private:
   class OpiePluginPrivate;

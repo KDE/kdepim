@@ -1,6 +1,8 @@
 #ifndef koperations_h
 #define koperations_h
 
+#include <qvaluelist.h>
+
 // nothing funny here yet
 /**
  *  KOperations is responsible to save filesystem
@@ -14,5 +16,10 @@ class KOperations {
     class KOperationsPrivate;
     KOperationsPrivate *d;
 };
+
+/**
+ * Typedef for convinience
+ */
+typedef QValueList<KOperations> KOperationsList;
 
 #endif

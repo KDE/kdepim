@@ -305,7 +305,7 @@ void OpieSocket::write(KSyncEntryList lis)
     d->isSyncing = false; // do it in the write back later on
     lis.clear();
 }
-void OpieSocket::write(QValueList<KOperations> )
+void OpieSocket::write(KOperationsList )
 {
 //    kdDebug(5202) << "write KOperations not implemented yet" << endl;
 }
