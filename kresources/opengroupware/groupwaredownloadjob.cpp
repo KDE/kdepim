@@ -110,9 +110,9 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
   } else {
     QDomDocument doc = mListEventsJob->response();
 
-    //kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    kdDebug(7000) << " IdMapper: " << adaptor()->idMapper()->asString() << endl;
 
-    //kdDebug(7000) << idMapper().asString() << endl;
     QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
     QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
     int c = entries.count();
@@ -133,11 +133,12 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
       mCurrentlyOnServer << location;
       /* if not locally present, download */
       const QString &localId = adaptor()->idMapper()->localId( location );
-      if ( !localId.isNull() && adaptor()->localItemExists( localId ) ) {
-         //kdDebug(7000) << "Not locally present, download: " << location << endl;
+      kdDebug(5006) << "Looking up remote: " << location << " found: " << localId << endl;
+      if ( localId.isEmpty() || !adaptor()->localItemExists( localId ) ) {
+         kdDebug(7000) << "Not locally present, download: " << location << endl;
         download = true;
       } else {
-         //kdDebug(7000) << "Locally present " << endl;
+         kdDebug(7000) << "Locally present " << endl;
         /* locally present, let's check if it's newer than what we have */
         const QString &oldFingerprint =
           adaptor()->idMapper()->fingerprint( localId );
@@ -153,7 +154,7 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
             download = true;
           }
         } else {
-          //kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
+          kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
         }
       }
       if ( download ) {
@@ -222,6 +223,9 @@ void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
     const QString &remote = KURL( mCurrentGetUrl ).path();
     const QString &local = adaptor()->idMapper()->localId( remote );
 
+    // remove old version, we would not have downnloaded 
+    // if it were still current
+    adaptor()->deleteItem( local );
     QString id = adaptor()->addItem( mJobData, local, remote );
 
     if ( id.isEmpty() ) {
