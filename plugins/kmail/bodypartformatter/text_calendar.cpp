@@ -39,6 +39,8 @@
 #include <libkcal/attendee.h>
 #include <libkcal/incidence.h>
 
+#include <kpimprefs.h> // for the timezone
+
 #include <kmail/callback.h>
 #include <kmail/kmmessage.h>
 
@@ -240,9 +242,9 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       const QString iCalendar = bodyPart->asText();
       if ( iCalendar.isEmpty() ) return AsIcon;
 
-      // FIXME: Get the correct time zone from korganizerrc
-      CalendarLocal cl;
+      CalendarLocal cl( KPimPrefs::timezone() );
       ICalFormat format;
+      format.setTimeZone( cl.timeZoneId(), !cl.isLocalTime() );
       format.fromString( &cl, iCalendar );
 
       // Make a shallow copy of the event and task lists
