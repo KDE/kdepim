@@ -1,8 +1,8 @@
-kdepim (2.0-20000524-1.0) experimental; urgency=low
+kdepim (2.0-20000816-1.0) experimental; urgency=low
  
-  * More upstream fixes
+  * New upstream beta version
  
- -- Ivan E. Moore II <rkrusty@debian.org>  Wed, 24 May 2000 04:15:02 -0700
+ -- Ivan E. Moore II <rkrusty@debian.org>  Wed, 16 Aug 2000 22:30:02 -0700
                                                                                 
 kdepim-cvs (2.0-20000521-1.0) experimental; urgency=low
  
