@@ -341,7 +341,6 @@ void OpenGroupware::slotUploadJobResult( KIO::Job *job )
 
 static const QString getEtagFromHeaders( const QString& headers )
 {
-  kdDebug(5006) << "HEADERS " << headers << endl;
   int start = headers.find( "etag:" );
   start += 6;
   return headers.mid( start, headers.find( "\n", start ) - start );
