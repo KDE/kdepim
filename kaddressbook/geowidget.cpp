@@ -390,8 +390,10 @@ void GeoDialog::loadCityList()
         c = line.mid( pos, coord.matchedLength() );
 
       pos = name.search(line, pos);
-      if ( pos > 0 )
-        n = line.mid( pos, coord.matchedLength() ).stripWhiteSpace();
+      if ( pos > 0 ) {
+        n = line.mid( pos, name.matchedLength() ).stripWhiteSpace();
+        n.replace( '_', " " );
+      }
 
       if ( !c.isEmpty() && !n.isEmpty() ) {
         pos = c.find( "+", 1 );
