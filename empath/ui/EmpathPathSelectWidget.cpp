@@ -29,6 +29,7 @@
 
 // KDE includes
 #include <kfiledialog.h>
+#include <kurl.h>
 
 // Local includes
 #include "EmpathPathSelectWidget.h"
@@ -71,11 +72,11 @@ EmpathPathSelectWidget::setPath(const QString & s)
     void
 EmpathFileSelectWidget::s_browse()
 {
-    QString s =
-        KFileDialog::getOpenFileName(le_path_->text(), QString::null, this);
+    KURL url =
+        KFileDialog::getOpenURL(le_path_->text(), QString::null, this);
     
-    if (!s.isEmpty())
-        le_path_->setText(s);
+    if (!url.isEmpty())
+        le_path_->setText(url.filename());
 }
 
     void

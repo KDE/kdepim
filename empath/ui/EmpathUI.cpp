@@ -41,6 +41,7 @@
 #include <kaboutdialog.h>
 #include <kfiledialog.h>
 #include <kaction.h>
+#include <kurl.h>
 
 // Local includes
 #include "Empath.h"
@@ -171,8 +172,8 @@ EmpathUI::s_infoMessage(const QString & s)
     void
 EmpathUI::s_getSaveName(const EmpathURL & url, QWidget * parent)
 {
-    QString saveFilePath =
-        KFileDialog::getSaveFileName(QString::null, QString::null, parent);
+    KURL saveFilePath =
+        KFileDialog::getSaveURL(QString::null, QString::null, parent);
     
     if (saveFilePath.isEmpty())
         return;

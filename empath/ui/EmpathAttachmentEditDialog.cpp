@@ -37,6 +37,7 @@
 #include <kbuttonbox.h>
 #include <klocale.h>
 #include <kapp.h>
+#include <kurl.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
@@ -305,19 +306,19 @@ EmpathAttachmentEditDialog::s_help()
     void
 EmpathAttachmentEditDialog::s_browse()
 {
-    QString filename = KFileDialog::getOpenFileName();
+    KURL url = KFileDialog::getOpenURL();
     
-    if (filename.isEmpty() || filename.at(filename.length() - 1) == '/')
+    if (url.isEmpty() || url.filename().at(url.filename().length() - 1) == '/')
         return;
 
-    efsw_filename_->setPath(filename);
+    efsw_filename_->setPath(url.filename());
     
-    int lastSlash = filename.findRev('/');
+    int lastSlash = url.filename().findRev('/');
 
     if (lastSlash == -1) // eh ?
         return;
     
-    le_description_->setText(filename.mid(lastSlash + 1));
+    le_description_->setText(url.filename().mid(lastSlash + 1));
 }
 
     void
