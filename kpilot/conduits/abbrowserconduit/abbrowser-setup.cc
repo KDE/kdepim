@@ -105,7 +105,7 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	fConfigWidget->fFax->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::faxType(),0));
 	fConfigWidget->fSyncMode->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::syncMode(),10));
+		fConfig->readNumEntry(AbbrowserConduitFactory::syncMode(),0));
 	fConfigWidget->fFirstTimeSync->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(),false));
 	fConfigWidget->fOtherPhone->setCurrentItem(
@@ -114,6 +114,9 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 
 // $Log$
+// Revision 1.7  2002/12/13 16:27:22  kainhofe
+// Some bugfixes
+//
 // Revision 1.6  2002/08/15 21:40:14  kainhofe
 // some more work in the addressbook conduit. Does not yet work
 //

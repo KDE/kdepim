@@ -205,14 +205,6 @@ bool AbbrowserConduit::_loadAddressBook()
 bool AbbrowserConduit::_saveAddressBook()
 {
 	FUNCTIONSETUP;
-//#ifdef DEBUG
-//	DEBUGCONDUIT << "abChanged=" << abChanged << endl;
-//	for(KABC::AddressBook::Iterator contactIter = aBook->begin(); contactIter != aBook->end(); ++contactIter)
-//	{
-//		DEBUGCONDUIT << "Adressee: " <<(*contactIter).realName() << ", uid=" <<(*contactIter).uid() << ", resource=" <<(*contactIter).resource() << endl;
-//	}
-//	DEBUGCONDUIT << fname << " --------------------------------------------"<<endl;
-//#endif
 
 	if(!abChanged) return true;
 //	return(aBook) &&(aBook->saveAll());
@@ -2009,6 +2001,9 @@ void AbbrowserConduit::_checkDelete(PilotRecord* r, PilotRecord *s)
 
 
 // $Log$
+// Revision 1.56  2002/12/21 20:17:24  kainhofe
+// Forgot a #ifdef DEBUG, so the conduit didn't compile
+//
 // Revision 1.55  2002/12/13 16:27:22  kainhofe
 // Some bugfixes
 //
