@@ -205,7 +205,7 @@ icalcomponent* icalmime_parse(char* (*get_string)(char *s, size_t size,
 	}
 
 	if(parts[i].header.error!=SSPM_NO_ERROR){
-	    char *str;
+	    const char *str="Unknown error";
 	    char temp[256];
 
 	    if(parts[i].header.error==SSPM_UNEXPECTED_BOUNDARY_ERROR){
