@@ -526,14 +526,14 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
 //        kdDebug(5850) << "koagenda: filtered button press" << endl;
       if (object != viewport()) {
         if (me->button() == RightButton) {
-          mClickedItem = (KOAgendaItem *)object;
+          mClickedItem = dynamic_cast<KOAgendaItem *>(object);
           if (mClickedItem) {
             selectItem(mClickedItem);
             emit showIncidencePopupSignal(mClickedItem->incidence());
           }
     //            mItemPopup->popup(QCursor::pos());
         } else {
-          mActionItem = (KOAgendaItem *)object;
+          mActionItem = dynamic_cast<KOAgendaItem *>(object);
           if (mActionItem) {
             selectItem(mActionItem);
             Incidence *incidence = mActionItem->incidence();
@@ -569,14 +569,14 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
 
     case QEvent::MouseMove:
       if (object != viewport()) {
-        KOAgendaItem *moveItem = (KOAgendaItem *)object;
-        if (!moveItem->incidence()->isReadOnly() &&
+        KOAgendaItem *moveItem = dynamic_cast<KOAgendaItem *>(object);
+        if (moveItem && !moveItem->incidence()->isReadOnly() &&
             !moveItem->incidence()->recurrence()->doesRecur() )
           if (!mActionItem)
             setNoActionCursor(moveItem,viewportPos);
           else
             performItemAction(viewportPos);
-        } else {
+      } else {
           if ( mActionType == SELECT ) {
             performSelectAction( viewportPos );
           }
@@ -592,9 +592,11 @@ bool KOAgenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
         contentsToGrid(x,y,gx,gy);
         emit newEventSignal(gx,gy);
       } else {
-        KOAgendaItem *doubleClickedItem = (KOAgendaItem *)object;
-        selectItem(doubleClickedItem);
-        emit editIncidenceSignal(doubleClickedItem->incidence());
+        KOAgendaItem *doubleClickedItem = dynamic_cast<KOAgendaItem *>(object);
+        if (doubleClickedItem) {
+          selectItem(doubleClickedItem);
+          emit editIncidenceSignal(doubleClickedItem->incidence());
+        }
       }
       break;
 
