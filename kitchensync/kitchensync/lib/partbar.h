@@ -128,6 +128,8 @@ namespace KSync {
        */
       PartBarItem *currentItem() const;
 
+      void selectPart( const QString & );
+
     signals:
       void activated( ManipulatorPart *part );
 

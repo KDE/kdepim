@@ -131,11 +131,31 @@ KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
 
 KitchenSync::~KitchenSync()
 {
+  writeProfileConfig();
+
   m_prof->save();
 
 #if 0
   createGUI( 0 );
 #endif
+}
+
+void KitchenSync::readProfileConfig()
+{
+  KConfig *config = KGlobal::config();
+  config->setGroup( "Layout_" + currentProfile().uid() );
+  m_bar->selectPart( config->readEntry( "CurrentPart" ) );
+}
+
+void KitchenSync::writeProfileConfig()
+{
+  KConfig *config = KGlobal::config();
+  config->setGroup( "Layout_" + currentProfile().uid() );
+  if ( m_bar->currentItem() && m_bar->currentItem()->part() ) {
+    config->writeEntry( "CurrentPart", m_bar->currentItem()->part()->name() );
+  
+    config->sync();
+  }
 }
 
 /*
@@ -157,6 +177,8 @@ void KitchenSync::initPlugins()
 
 void KitchenSync::addModPart( ManipulatorPart *part )
 {
+    kdDebug() << "KitchenSync::addModPart() " << part->name() << endl;
+
     /* the usual signal and slots */
     connect( part, SIGNAL(sig_progress(ManipulatorPart*, int ) ),
              SLOT(slotPartProg(ManipulatorPart*, int ) ) );
@@ -308,6 +330,15 @@ void KitchenSync::slotConfigProf()
 
 void KitchenSync::switchProfile( const Profile &prof )
 {
+    kdDebug() << "KitchenSync::switchProfile(): " << prof.name() << endl;
+
+    if ( prof.uid() == m_prof->currentProfile().uid() ) {
+      kdDebug() << "Profile already active" << endl;
+      return;
+    }
+
+    writeProfileConfig();
+
     m_bar->clear();
 
     m_parts.setAutoDelete( true );
@@ -320,9 +351,10 @@ void KitchenSync::switchProfile( const Profile &prof )
     for (it = lst.begin(); it != lst.end(); ++it ) {
         addPart( (*it) );
     }
-    Profile oldprof = m_prof->currentProfile();
-    m_prof->setCurrentProfile( oldprof );
+    m_prof->setCurrentProfile( prof );
     emit profileChanged( prof );
+
+    readProfileConfig();
 }
 
 void KitchenSync::addPart( const ManPartService &service )

@@ -32,7 +32,8 @@
 using namespace KSync;
 
 PartBarItem::PartBarItem( PartBar *parent, ManipulatorPart *part )
-  : QListBoxPixmap(KIconLoader::unknown() ) {
+  : QListBoxPixmap(KIconLoader::unknown() )
+{
   m_Parents = parent;
   m_Part = part;
   m_Pixmap = m_Part->pixmap();
@@ -41,10 +42,12 @@ PartBarItem::PartBarItem( PartBar *parent, ManipulatorPart *part )
   //tooltip(part->description() );
 }
 
-PartBarItem::~PartBarItem() {
+PartBarItem::~PartBarItem()
+{
 }
 
-ManipulatorPart* PartBarItem::part() {
+ManipulatorPart* PartBarItem::part()
+{
   return m_Part;
 }
 
@@ -52,11 +55,13 @@ ManipulatorPart* PartBarItem::part() {
 //  return ( m_Part->description() );
 //}
 
-int PartBarItem::width( const QListBox *listbox) const {
+int PartBarItem::width( const QListBox *listbox) const
+{
   return listbox->viewport()->width();
 }
 
-int PartBarItem::height( const QListBox *listbox) const {
+int PartBarItem::height( const QListBox *listbox) const
+{
   int min = 0;
   min = listbox->fontMetrics().lineSpacing() + pixmap()->height() + 6;
   return min;
@@ -86,28 +91,30 @@ void PartBarItem::paint(QPainter *p)
   // draw sunken
   if ( isCurrent() || isSelected() ) {
     qDrawShadePanel( p, 1, 0, w -2, height(box),
-		     box->colorGroup(), true, 1, 0L );
+		     box->colorGroup(), true, 1, 0 );
   }
 }
 
 
 PartBar::PartBar(QWidget *parent, const char *name, WFlags f)
   : QFrame ( parent, name, f ),
-    m_listBox( 0L ),
-    m_activeItem ( 0L ) {
-
-  setListBox( 0L );
+    m_listBox( 0 ),
+    m_activeItem ( 0 )
+{
+  setListBox( 0 );
   setSizePolicy( QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred ) );
 }
 
-PartBarItem * PartBar::insertItem( ManipulatorPart *part, int pos ) {
+PartBarItem * PartBar::insertItem( ManipulatorPart *part, int pos )
+{
 //  kdDebug(5210) << part->name() << "\n" << part->description() << "\n";
   PartBarItem *item = new PartBarItem( this , part );
   m_listBox->insertItem( item, pos );
   return item;
 }
 
-void PartBar::setListBox(KListBox *view) {
+void PartBar::setListBox(KListBox *view)
+{
   delete m_listBox;
 
   if ( !view ) {
@@ -133,17 +140,19 @@ void PartBar::setListBox(KListBox *view) {
 	   SLOT( slotSelected( QListBoxItem * )));
 }
 
-void PartBar::clear() {
+void PartBar::clear()
+{
   m_listBox->clear();
 }
 
-void PartBar::resizeEvent( QResizeEvent *e ) {
+void PartBar::resizeEvent( QResizeEvent *e )
+{
   QFrame::resizeEvent( e );
   m_listBox->resize( width(), height() );
 }
 
-QSize PartBar::sizeHint() const {
-
+QSize PartBar::sizeHint() const
+{
   int w = 0;
   int h = 0;
 
@@ -165,14 +174,16 @@ QSize PartBar::sizeHint() const {
   }
 }
 
-QSize PartBar::minimumSizeHint() const {
+QSize PartBar::minimumSizeHint() const
+{
   QSize s = sizeHint();
   int h = s.height() + m_listBox->horizontalScrollBar()->height();
   int w = s.width() + m_listBox->verticalScrollBar()->width();
   return QSize( w, h );
 }
 
-void PartBar::slotSelected(QListBoxItem *item) {
+void PartBar::slotSelected(QListBoxItem *item)
+{
   if ( item && item != m_activeItem ) {
     PartBarItem* it = static_cast<PartBarItem*>( item );
     m_activeItem = it;
@@ -180,12 +191,25 @@ void PartBar::slotSelected(QListBoxItem *item) {
   }
 }
 
-PartBarItem * PartBar::currentItem() const {
+PartBarItem * PartBar::currentItem() const
+{
   QListBoxItem *item = m_listBox->item(m_listBox->currentItem() );
   if ( item ) {
     return static_cast<PartBarItem *>( item );
   } else {
-    return 0L;
+    return 0;
+  }
+}
+
+void PartBar::selectPart( const QString &name )
+{
+  for( uint i = 0; i < m_listBox->count(); ++i ) {
+    PartBarItem *item = static_cast<PartBarItem *>( m_listBox->item( i ) );
+    if ( item->part()->name() == name ) {
+      m_listBox->setSelected( item, true );
+      slotSelected( item );
+      break;
+    }
   }
 }
 

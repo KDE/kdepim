@@ -65,6 +65,9 @@ class KitchenSync : public Core
     KitchenSync( ActionManager *, QWidget * );
     ~KitchenSync();
 
+    void readProfileConfig();
+    void writeProfileConfig();
+
     /**
       @return the parent for KPart widgets
     */
