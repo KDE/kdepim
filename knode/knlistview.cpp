@@ -56,6 +56,8 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   QColor base;
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
+  p->setFont(fontForColumn(column, p->font()));
+
   QPen pen=p->pen();
   if (isSelected()||active) {
     pen.setColor(cg.highlightedText());

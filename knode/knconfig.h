@@ -687,6 +687,11 @@ class PostNewsTechnical : public Base {
     void save();
 
     QCString charset()          { return c_harset; }
+    QStringList composerCharsets() { return c_omposerCharsets; }
+    int indexForCharset(const QCString &str);
+    QCString findComposerCharset(QCString cs);
+    QCString findComposerCharset(QFont::CharSet cs);
+
     int encoding()              { return e_ncoding; }
     bool allow8BitHeaders()     { return a_llow8Bit; }
     bool generateMessageID()    { return g_enerateMID; }
@@ -697,6 +702,7 @@ class PostNewsTechnical : public Base {
   protected:
     QCString  c_harset,
               h_ostname;
+    QStringList c_omposerCharsets;
 
     int       e_ncoding;
 
@@ -705,6 +711,8 @@ class PostNewsTechnical : public Base {
               d_ontIncludeUA;
 
     XHeaders x_headers;
+
+    QAsciiDict<QCString> findComposerCSCache;
 };
 
 

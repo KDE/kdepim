@@ -99,7 +99,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     this, SLOT(slotSetType(int)));
 
   a_ctSetCharset = new KSelectAction(i18n("C&harset"), 0, actionCollection(), "set_charset");
-  a_ctSetCharset->setItems(KNMimeBase::availableCharsets());
+  a_ctSetCharset->setItems(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
     this, SLOT(slotSetCharset(const QString&)));
 
@@ -390,7 +390,7 @@ void KNComposer::applyChanges()
   KNMimeContent *text=0;
   KNAttachment *a=0;
 
-  QFont::CharSet cs=KNMimeBase::stringToCharset(c_harset);
+  QFont::CharSet cs=KGlobal::charsets()->charsetForEncoding(c_harset);
 
   //Subject
   a_rticle->subject()->fromUnicodeString(v_iew->s_ubject->text(), cs);
@@ -538,7 +538,7 @@ void KNComposer::initData(const QString &text, bool firstEdit)
   else
     c_harset=knGlobals.cfgManager->postNewsTechnical()->charset();
 
-  a_ctSetCharset->setCurrentItem(KNMimeBase::indexForCharset(c_harset));
+  a_ctSetCharset->setCurrentItem(knGlobals.cfgManager->postNewsTechnical()->indexForCharset(c_harset));
 
   // initialize the message type select action
   if (a_rticle->doPost() && a_rticle->doMail())
@@ -572,7 +572,6 @@ void KNComposer::insertFile(QString fileName, bool clear, bool box, QString boxT
   QFile file(fileName);
   bool ok=true;
   QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
-  if(!ok) codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
   QTextStream ts(&file);
   ts.setCodec(codec);
 
@@ -816,8 +815,6 @@ void KNComposer::slotExternalEditor()
 
   bool ok=true;
   QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
-
-  if(!ok) codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
 
   QString tmp;
   for(int i=0; i < v_iew->e_dit->numLines(); i++) {

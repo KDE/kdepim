@@ -19,26 +19,33 @@
 #include <mimelib/datetime.h>
 
 #include <kdebug.h>
+#include <kglobal.h>
+#include <kcharsets.h>
 
+#include "knglobals.h"
+#include "knconfigmanager.h"
 #include "knheaders.h"
 #include "knmime.h"
 #include "knstringsplitter.h"
 
 
-KNHeaders::Generic::Generic(const char *t) : t_ype(0)
+KNHeaders::Generic::Generic(const char *t)
+  : t_ype(0)
 {
   setType(t);
 }
 
 
-KNHeaders::Generic::Generic(const char *t, const QCString &s): t_ype(0)
+KNHeaders::Generic::Generic(const char *t, const QCString &s, QFont::CharSet defaultCS, bool force)
+  : t_ype(0)
 {
   setType(t);
-  from7BitString(s);
+  from7BitString(s,defaultCS, force);
 }
 
 
-KNHeaders::Generic::Generic(const char *t, const QString &s, QFont::CharSet cs) : t_ype(0)
+KNHeaders::Generic::Generic(const char *t, const QString &s, QFont::CharSet cs)
+  : t_ype(0)
 {
   setType(t);
   fromUnicodeString(s, cs);
@@ -51,9 +58,10 @@ KNHeaders::Generic::~Generic()
 }
 
 
-void KNHeaders::Generic::from7BitString(const QCString &s)
+void KNHeaders::Generic::from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force)
 {
-  u_nicode=KNMimeBase::decodeRFC2047String(s, e_ncCSet);
+  e_ncCSet=defaultCS;
+  u_nicode=KNMimeBase::decodeRFC2047String(s, e_ncCSet, force);
 }
 
 
@@ -95,12 +103,10 @@ void KNHeaders::Generic::setType(const char *type)
 //==============================================================================================
 
 
-void KNHeaders::MessageID::from7BitString(const QCString &s)
+void KNHeaders::MessageID::from7BitString(const QCString &s, QFont::CharSet, bool)
 {
   m_id=s;
-  e_ncCSet=QFont::ISO_8859_1;
 }
-
 
 
 QCString KNHeaders::MessageID::as7BitString(bool incType)
@@ -115,9 +121,7 @@ QCString KNHeaders::MessageID::as7BitString(bool incType)
 void KNHeaders::MessageID::fromUnicodeString(const QString &s, QFont::CharSet)
 {
   m_id=s.latin1(); //Message-Ids can only contain us-ascii chars
-  e_ncCSet=QFont::ISO_8859_1;
 }
-
 
 
 QString KNHeaders::MessageID::asUnicodeString()
@@ -135,10 +139,9 @@ void KNHeaders::MessageID::generate(const QCString &fqdn)
 //==============================================================================================
 
 
-void KNHeaders::Control::from7BitString(const QCString &s)
+void KNHeaders::Control::from7BitString(const QCString &s, QFont::CharSet, bool)
 {
   c_trlMsg=s;
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -154,7 +157,6 @@ QCString KNHeaders::Control::as7BitString(bool incType)
 void KNHeaders::Control::fromUnicodeString(const QString &s, QFont::CharSet)
 {
   c_trlMsg=s.latin1();
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -167,9 +169,10 @@ QString KNHeaders::Control::asUnicodeString()
 //==============================================================================================
 
 
-void KNHeaders::Subject::from7BitString(const QCString &s)
+void KNHeaders::Subject::from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force)
 {
-  s_ubject=KNMimeBase::decodeRFC2047String(s, e_ncCSet);
+  e_ncCSet=defaultCS;
+  s_ubject=KNMimeBase::decodeRFC2047String(s, e_ncCSet, force);
 }
 
 
@@ -198,17 +201,19 @@ QString KNHeaders::Subject::asUnicodeString()
 //==============================================================================================
 
 
-void KNHeaders::AddressField::from7BitString(const QCString &s)
+void KNHeaders::AddressField::from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force)
 {
   int pos1=0, pos2=0, type=0;
   QCString n;
+
+  e_ncCSet=defaultCS;
 
   //so what do we have here ?
   if(s.find( QRegExp("*@*(*)", false, true) )!=-1) type=2;       // From: foo@bar.com (John Doe)
   else if(s.find( QRegExp("*<*@*>", false, true) )!=-1) type=1;  // From: John Doe <foo@bar.com>
   else if(s.find( QRegExp("*@*", false, true) )!=-1) type=0;     // From: foo@bar.com
   else { //broken From header => just decode it
-    n_ame=KNMimeBase::decodeRFC2047String(s, e_ncCSet);
+    n_ame=KNMimeBase::decodeRFC2047String(s, e_ncCSet, force);
     return;
   }
 
@@ -248,10 +253,8 @@ void KNHeaders::AddressField::from7BitString(const QCString &s)
 
   if(!n.isEmpty()) {
     KNMimeBase::removeQuots(n);
-    n_ame=KNMimeBase::decodeRFC2047String(n, e_ncCSet);
+    n_ame=KNMimeBase::decodeRFC2047String(n, e_ncCSet,force);
   }
-  else
-    e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -334,12 +337,26 @@ QString KNHeaders::AddressField::asUnicodeString()
 }
 
 
+QCString KNHeaders::AddressField::nameAs7Bit()
+{
+  return KNMimeBase::encodeRFC2047String(n_ame, e_ncCSet);
+}
+
+
+void KNHeaders::AddressField::setNameFrom7Bit(const QCString &s, QFont::CharSet defaultCS, bool force)
+{
+  e_ncCSet=defaultCS;
+  n_ame=KNMimeBase::decodeRFC2047String(s, e_ncCSet, force);
+}
+
+
 //==============================================================================================
 
 
-void KNHeaders::Organization::from7BitString(const QCString &s)
+void KNHeaders::Organization::from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force)
 {
-  o_rga=KNMimeBase::decodeRFC2047String(s, e_ncCSet);
+  e_ncCSet=defaultCS;
+  o_rga=KNMimeBase::decodeRFC2047String(s, e_ncCSet, force);
 }
 
 
@@ -368,13 +385,12 @@ QString KNHeaders::Organization::asUnicodeString()
 //==============================================================================================
 
 
-void KNHeaders::Date::from7BitString(const QCString &s)
+void KNHeaders::Date::from7BitString(const QCString &s, QFont::CharSet, bool)
 {
   DwDateTime dt;
   dt.FromString(s.data());
   dt.Parse();
   t_ime=dt.AsUnixTime();
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -391,9 +407,9 @@ QCString KNHeaders::Date::as7BitString(bool incType)
 }
 
 
-void KNHeaders::Date::fromUnicodeString(const QString &s, QFont::CharSet)
+void KNHeaders::Date::fromUnicodeString(const QString &s, QFont::CharSet cs)
 {
-  from7BitString( QCString(s.latin1()) );
+  from7BitString( QCString(s.latin1()), cs, false);
 }
 
 
@@ -421,23 +437,25 @@ int KNHeaders::Date::ageInDays()
 //==============================================================================================
 
 
-void KNHeaders::To::from7BitString(const QCString &s)
+void KNHeaders::To::from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force)
 {
   if(a_ddrList)
     a_ddrList->clear();
-  else
-    a_ddrList=new QValueList<AddressField>;
+  else {
+    a_ddrList=new QList<AddressField>;
+    a_ddrList->setAutoDelete(true);
+  }
 
   KNStringSplitter split;
   split.init(s, ",");
   bool splitOk=split.first();
   if(!splitOk)
-    *a_ddrList << AddressField(s);
+    a_ddrList->append(new AddressField(s,defaultCS,force));
   else
     while(splitOk)
-      *a_ddrList << AddressField(split.string());
+      a_ddrList->append(new AddressField(split.string(),defaultCS,force));
 
-  e_ncCSet=a_ddrList->first().rfc2047Charset();
+  e_ncCSet=a_ddrList->first()->rfc2047Charset();
 }
 
 
@@ -448,11 +466,11 @@ QCString KNHeaders::To::as7BitString(bool incType)
   if(incType)
     ret+=typeIntro();
 
-  AddressList::Iterator it=a_ddrList->begin();
-  ret+=(*it).as7BitString(false);
-  ++it;
-  for(; it!=a_ddrList->end(); ++it)
-    ret+=","+(*it).as7BitString(false);
+  AddressField *it=a_ddrList->first();
+  if (it)
+    ret+=it->as7BitString(false);
+  for (it=a_ddrList->next() ; it != 0; it=a_ddrList->next() )
+    ret+=","+it->as7BitString(false);
 
   return ret;
 }
@@ -462,14 +480,16 @@ void KNHeaders::To::fromUnicodeString(const QString &s, QFont::CharSet cs)
 {
   if(a_ddrList)
     a_ddrList->clear();
-  else
-    a_ddrList=new QValueList<AddressField>;
+  else  {
+    a_ddrList=new QList<AddressField>;
+    a_ddrList->setAutoDelete(true);
+  }
 
   QStringList l=QStringList::split(",", s);
 
   QStringList::Iterator it=l.begin();
   for(; it!=l.end(); ++it)
-    *a_ddrList << AddressField( (*it), cs );
+    a_ddrList->append(new AddressField( (*it), cs ));
 
   e_ncCSet=cs;
 }
@@ -481,12 +501,11 @@ QString KNHeaders::To::asUnicodeString()
     return QString::null;
 
   QString ret;
-  AddressList::Iterator it=a_ddrList->begin();
-  ret+=(*it).asUnicodeString();
-  ++it;
-
-  for(; it!=a_ddrList->end(); ++it)
-    ret+=","+(*it).asUnicodeString();
+  AddressField *it=a_ddrList->first();
+  if (it)
+    ret+=it->as7BitString(false);
+  for (it=a_ddrList->next() ; it != 0; it=a_ddrList->next() )
+    ret+=","+it->as7BitString(false);
 
   return ret;
 }
@@ -494,30 +513,31 @@ QString KNHeaders::To::asUnicodeString()
 
 void KNHeaders::To::addAddress(const AddressField &a)
 {
-  if(!a_ddrList)
-    a_ddrList=new QValueList<AddressField>;
+  if(!a_ddrList) {
+    a_ddrList=new QList<AddressField>;
+    a_ddrList->setAutoDelete(true);
+  }
 
-  a_ddrList->append(a);
+  a_ddrList->append(new AddressField(a));
 }
 
 
 void KNHeaders::To::emails(QStrList *l)
 {
   l->clear();
-  AddressList::Iterator it=a_ddrList->begin();
-  for(; it!=a_ddrList->end(); ++it)
-    if( (*it).hasEmail() )
-      l->append( (*it).email() );
+
+  for (AddressField *it=a_ddrList->first(); it != 0; it=a_ddrList->next() )
+    if( it->hasEmail() )
+      l->append( it->email() );
 }
 
 
 //==============================================================================================
 
 
-void KNHeaders::Newsgroups::from7BitString(const QCString &s)
+void KNHeaders::Newsgroups::from7BitString(const QCString &s, QFont::CharSet, bool)
 {
   g_roups=s;
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -532,14 +552,13 @@ QCString KNHeaders::Newsgroups::as7BitString(bool incType)
 
 void KNHeaders::Newsgroups::fromUnicodeString(const QString &s, QFont::CharSet)
 {
-  g_roups=s.latin1();
-  e_ncCSet=QFont::ISO_8859_1;
+  g_roups=s.utf8();
 }
 
 
 QString KNHeaders::Newsgroups::asUnicodeString()
 {
-  return QString::fromLatin1(g_roups);
+  return QString::fromUtf8(g_roups);
 }
 
 
@@ -561,10 +580,9 @@ QCString KNHeaders::Newsgroups::firstGroup()
 //==============================================================================================
 
 
-void KNHeaders::Lines::from7BitString(const QCString &s)
+void KNHeaders::Lines::from7BitString(const QCString &s, QFont::CharSet, bool)
 {
   l_ines=s.toInt();
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -583,7 +601,6 @@ QCString KNHeaders::Lines::as7BitString(bool incType)
 void KNHeaders::Lines::fromUnicodeString(const QString &s, QFont::CharSet)
 {
   l_ines=s.toInt();
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -599,10 +616,9 @@ QString KNHeaders::Lines::asUnicodeString()
 //==============================================================================================
 
 
-void KNHeaders::References::from7BitString(const QCString &s)
+void KNHeaders::References::from7BitString(const QCString &s, QFont::CharSet, bool)
 {
   r_ef=s;
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -618,7 +634,6 @@ QCString KNHeaders::References::as7BitString(bool incType)
 void KNHeaders::References::fromUnicodeString(const QString &s, QFont::CharSet)
 {
   r_ef=s.latin1();
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -695,10 +710,9 @@ QCString KNHeaders::References::at(unsigned int i)
 //==============================================================================================
 
 
-void KNHeaders::UserAgent::from7BitString(const QCString &s)
+void KNHeaders::UserAgent::from7BitString(const QCString &s, QFont::CharSet, bool)
 {
   u_agent=s;
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -713,23 +727,24 @@ QCString KNHeaders::UserAgent::as7BitString(bool incType)
 
 void KNHeaders::UserAgent::fromUnicodeString(const QString &s, QFont::CharSet)
 {
-  u_agent=s.latin1();
-  e_ncCSet=QFont::ISO_8859_1;
+  u_agent=s.utf8();
 }
 
 
 QString KNHeaders::UserAgent::asUnicodeString()
 {
-  return QString::fromLatin1(u_agent);
+  return QString::fromUtf8(u_agent);
 }
 
 
 //==============================================================================================
 
 
-void KNHeaders::ContentType::from7BitString(const QCString &s)
+void KNHeaders::ContentType::from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force)
 {
-  kdDebug(5003) << "KNHeaders::ContentType::from7BitString(const QCString &s) : s = " << s << endl;
+  e_ncCSet=defaultCS;
+  f_orceDefaultCS=force;
+//  kdDebug(5003) << "KNHeaders::ContentType::from7BitString(const QCString &s) : s = " << s << endl;
   int pos=s.find(';');
 
   if(pos==-1)
@@ -743,8 +758,6 @@ void KNHeaders::ContentType::from7BitString(const QCString &s)
     c_ategory=CCcontainer;
   else
     c_ategory=CCsingle;
-
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -757,10 +770,9 @@ QCString KNHeaders::ContentType::as7BitString(bool incType)
 }
 
 
-void KNHeaders::ContentType::fromUnicodeString(const QString &s, QFont::CharSet)
+void KNHeaders::ContentType::fromUnicodeString(const QString &s, QFont::CharSet cs)
 {
-  from7BitString(QCString(s.latin1()));
-  e_ncCSet=QFont::ISO_8859_1;
+  from7BitString(QCString(s.latin1()),cs, false);
 }
 
 
@@ -857,16 +869,19 @@ bool KNHeaders::ContentType::isPartial()
 
 QCString KNHeaders::ContentType::charset()
 {
-  QCString ret=getParameter("charset").upper();
-  if(ret.isEmpty()) // || ret=="US-ASCII")
-    ret="ISO-8859-1";
+  QCString ret=getParameter("charset");
+  if(ret.isEmpty() || f_orceDefaultCS) {
+    ret=knGlobals.cfgManager->postNewsTechnical()->findComposerCharset(e_ncCSet);  // find a clean name for the charset
+    if (ret.isEmpty())
+      ret=KGlobal::charsets()->name(e_ncCSet).latin1();  // this name has a invalid format!
+  }
   return ret;
 }
 
 
 void KNHeaders::ContentType::setCharset(const QCString &s)
 {
-  setParameter("charset", s.upper());
+  setParameter("charset", s);
 }
 
 
@@ -884,14 +899,14 @@ void KNHeaders::ContentType::setBoundary(const QCString &s)
 
 QString KNHeaders::ContentType::name()
 {
-  QFont::CharSet dummy;
-  return ( KNMimeBase::decodeRFC2047String(getParameter("name"), dummy) );
+  return ( KNMimeBase::decodeRFC2047String(getParameter("name"), e_ncCSet, false) );
 }
 
 
-void KNHeaders::ContentType::setName(const QCString &s)
+void KNHeaders::ContentType::setName(const QString &s, QFont::CharSet cs)
 {
-  setParameter("name", s, true);
+  e_ncCSet=cs;
+  setParameter("name", KNMimeBase::encodeRFC2047String(s, e_ncCSet), true);
 }
 
 
@@ -992,7 +1007,7 @@ static const encTableType encTable[] = {  { "7Bit", KNHeaders::CE7Bit },
                                           { 0, 0} };
 
 
-void KNHeaders::CTEncoding::from7BitString(const QCString &s)
+void KNHeaders::CTEncoding::from7BitString(const QCString &s, QFont::CharSet, bool)
 {
   c_te=CE7Bit;
   for(int i=0; encTable[i].s!=0; i++)
@@ -1001,8 +1016,6 @@ void KNHeaders::CTEncoding::from7BitString(const QCString &s)
       break;
     }
   d_ecoded=( c_te==CE7Bit || c_te==CE8Bit );
-
-  e_ncCSet=QFont::ISO_8859_1;
 }
 
 
@@ -1022,9 +1035,9 @@ QCString KNHeaders::CTEncoding::as7BitString(bool incType)
 }
 
 
-void KNHeaders::CTEncoding::fromUnicodeString(const QString &s, QFont::CharSet)
+void KNHeaders::CTEncoding::fromUnicodeString(const QString &s, QFont::CharSet cs)
 {
-  from7BitString(QCString(s.latin1()));
+  from7BitString(QCString(s.latin1()),cs,false);
 }
 
 
@@ -1037,8 +1050,9 @@ QString KNHeaders::CTEncoding::asUnicodeString()
 //==============================================================================================
 
 
-void KNHeaders::CDisposition::from7BitString(const QCString &s)
+void KNHeaders::CDisposition::from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force)
 {
+  e_ncCSet = defaultCS;
   if(strncasecmp(s.data(), "attachment", 10)==0)
     d_isp=CDattachment;
   else d_isp=CDinline;
@@ -1049,7 +1063,7 @@ void KNHeaders::CDisposition::from7BitString(const QCString &s)
     pos+=9;
     fn=s.mid(pos, s.length()-pos);
     KNMimeBase::removeQuots(fn);
-    f_ilename=KNMimeBase::decodeRFC2047String(fn, e_ncCSet);
+    f_ilename=KNMimeBase::decodeRFC2047String(fn, e_ncCSet, force);
   }
 }
 
@@ -1107,9 +1121,10 @@ QString KNHeaders::CDisposition::asUnicodeString()
 //==============================================================================================
 
 
-void KNHeaders::CDescription::from7BitString(const QCString &s)
+void KNHeaders::CDescription::from7BitString(const QCString &s, QFont::CharSet defaultCS, bool force)
 {
-  d_esc=KNMimeBase::decodeRFC2047String(s, e_ncCSet);
+  e_ncCSet=defaultCS;
+  d_esc=KNMimeBase::decodeRFC2047String(s, e_ncCSet, force);
 }
 
 

@@ -190,18 +190,16 @@ bool KNGroup::loadHdrs()
       return false;
       
     f.setName(dir+g_roupname+".static");
-      
+
     if(f.open(IO_ReadOnly)) {
+
       if(!resize(c_ount)) {
         f.close();
         return false;
       }
 
-      QFont::CharSet cs;
-      if(useCharset())
-        cs=KNMimeBase::stringToCharset(d_efaultChSet);
-      else
-        cs=KNMimeBase::stringToCharset(knGlobals.cfgManager->postNewsTechnical()->charset());
+      QTime timer;
+      timer.start();
 
       while(!f.atEnd()) {
         buff=f.readLine();    
@@ -219,21 +217,22 @@ bool KNGroup::loadHdrs()
         split.init(buff, "\t");
 
         art=new KNRemoteArticle(this);
+        QFont::CharSet cs=art->defaultCharset();
 
         split.first();
-        art->messageID()->from7BitString(split.string());
+        art->messageID()->from7BitString(split.string(),cs,false);
     
         split.next();
-        art->subject()->fromUnicodeString(QString::fromUtf8(split.string().data()), cs);
+        art->subject()->from7BitString(split.string(),cs,false);
         
         split.next();
         art->from()->setEmail(split.string());
         split.next();
-        if(split.string()!="0") art->from()->setName(QString::fromUtf8(split.string().data()));
-        art->from()->setRFC2047Charset(cs);
+        if(split.string()!="0")
+          art->from()->setNameFrom7Bit(split.string(),art->defaultCharset(),false);
 
         buff=f.readLine();
-        if(buff!="0") art->references()->from7BitString(buff.copy());
+        if(buff!="0") art->references()->from7BitString(buff.copy(),cs,false);
                       
         buff=f.readLine();
         sscanf(buff,"%d %d %d", &id, &lines, (uint*) &timeT);
@@ -248,6 +247,8 @@ bool KNGroup::loadHdrs()
           return false;
         }
       }
+
+      qDebug("%d msec",timer.elapsed());
 
       setLastID();
       f.close();
@@ -324,45 +325,47 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
   QCString tmp;
   KNStringSplitter split;
   split.setIncludeSep(false);
+  QFont::CharSet defCS;
   int cnt=0;
   
   //resize the list 
   if(!resize(siz+hdrs->count())) return;
-  
+
   for(char *line=hdrs->first(); line; line=hdrs->next()) {
     split.init(line, "\t");
       
     //new Header-Object
     art=new KNRemoteArticle(this);
     art->setNew(true);
+    defCS=art->defaultCharset();
     //art->setFetchTime(fTimeT);
         
     //Article Number
     split.first();
     // ignored hdr->artNr=split.string().toInt();
-    
+
     //Subject
     split.next();
-    art->subject()->from7BitString(split.string());
+    art->subject()->from7BitString(split.string(), defCS, false);
     if(art->subject()->isEmpty())
-    	art->subject()->fromUnicodeString(i18n("no subject"), QFont::AnyCharSet);
+    	art->subject()->fromUnicodeString(i18n("no subject"), defCS);
     
     //From and Email
     split.next();
-    art->from()->from7BitString(split.string());
+    art->from()->from7BitString(split.string(), defCS, false);
         
     //Date
     split.next();
-    art->date()->from7BitString(split.string());
+    art->date()->from7BitString(split.string(), defCS, false);
                     
     //Message-ID
     split.next();
-    art->messageID()->from7BitString(split.string().simplifyWhiteSpace());
+    art->messageID()->from7BitString(split.string().simplifyWhiteSpace(), defCS, false);
       
     //References
     split.next();
     if(!split.string().isEmpty())
-      art->references()->from7BitString(split.string()); //use QCString::copy() ?
+      art->references()->from7BitString(split.string(), defCS, false); //use QCString::copy() ?
     
     //Lines
     split.next();
@@ -375,7 +378,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
       return;
     }
   }
-  
+
   sortHdrs(cnt);
   int count = saveStaticData(cnt);
 #ifndef NDEBUG
@@ -416,11 +419,11 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
       if(art->subject()->isEmpty()) continue;
     
       ts << art->messageID()->as7BitString(false) << '\t';
-      ts << art->subject()->asUnicodeString().utf8() << '\t';
+      ts << art->subject()->as7BitString(false) << '\t';
       ts << art->from()->email() << '\t';
 
       if(art->from()->hasName())
-        ts << art->from()->name().utf8() << '\n';
+        ts << art->from()->nameAs7Bit() << '\n';
       else
         ts << "0\n";
           

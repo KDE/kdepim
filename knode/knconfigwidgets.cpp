@@ -1505,7 +1505,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
 
   ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   c_harset=new QComboBox(ggb);
-  c_harset->insertStringList(KNMimeBase::availableCharsets());
+  c_harset->insertStringList(d->composerCharsets());
   ggbL->addWidget(new QLabel(c_harset, i18n("Cha&rset"), ggb), 1,0);
   ggbL->addWidget(c_harset, 1,1);
 
@@ -1562,20 +1562,13 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   xgbL->setRowStretch(4,1);
   xgbL->setColStretch(0,1);
 
-
   //init
   a_llow8bitCB->blockSignals(true); //avoid warning message on startup
   a_llow8bitCB->setChecked(d->a_llow8Bit);
   a_llow8bitCB->blockSignals(false);
   i_ncUaCB->setChecked(d->d_ontIncludeUA);
   g_enMIdCB->setChecked(d->g_enerateMID);
-
-  for(int i=0; i < c_harset->count(); i++)
-    if(c_harset->text(i).latin1() == d->c_harset) {
-      c_harset->setCurrentItem(i);
-      break;
-    }
-
+  c_harset->setCurrentItem(d->indexForCharset(d->charset()));
   e_ncoding->setCurrentItem(d->e_ncoding);
   h_ost->setText(d->h_ostname);
 
@@ -1583,8 +1576,6 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
     l_box->insertItem((*it).header());
 
   slotSelectionChanged();
-
-
 }
 
 
@@ -1599,7 +1590,7 @@ void KNConfig::PostNewsTechnicalWidget::apply()
     return;
 
   d_ata->e_ncoding=e_ncoding->currentItem();
-  d_ata->c_harset=c_harset->currentText().upper().latin1();
+  d_ata->c_harset=c_harset->currentText().latin1();
   d_ata->a_llow8Bit=a_llow8bitCB->isChecked();
   d_ata->g_enerateMID=g_enMIdCB->isChecked();
   d_ata->h_ostname=h_ost->text().latin1();

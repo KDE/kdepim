@@ -353,15 +353,6 @@ void KNArticleManager::setAllThreadsOpen(bool b)
 }
 
 
-void KNArticleManager::setViewFont()
-{
-  QFont fnt=knGlobals.cfgManager->appearance()->articleListFont();
-  if(g_roup && g_roup->useCharset())
-    KGlobal::charsets()->setQFont(fnt, g_roup->defaultCharset());
-  v_iew->setFont(fnt);
-}
-
-
 void KNArticleManager::search()
 {
   if(!g_roup) return;
@@ -385,7 +376,6 @@ void KNArticleManager::setGroup(KNGroup *g)
 
   if(g) {
     v_iew->header()->setLabel(1, i18n("From"));
-    setViewFont();
   }
 }
 
@@ -393,10 +383,8 @@ void KNArticleManager::setGroup(KNGroup *g)
 void KNArticleManager::setFolder(KNFolder *f)
 {
   f_older=f;
-  if(f) {
+  if(f)
     v_iew->header()->setLabel(1, i18n("Newsgroups / To"));
-    setViewFont();
-  }
 }
 
 

@@ -14,15 +14,18 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+#include <kglobal.h>
+#include <kcharsets.h>
+
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knhdrviewitem.h"
 #include "knmime.h"
-#include <stdio.h>
+
 
 
 KNHdrViewItem::KNHdrViewItem(KNListView *ref, KNArticle *a) :
-  KNLVItemBase(ref), art(a)
+  KNLVItemBase(ref), art(a), subjectCS(QFont::ISO_8859_1), nameCS(QFont::ISO_8859_1)
 {
 }
 
@@ -51,6 +54,14 @@ QString KNHdrViewItem::key(int col, bool) const
     return text(col);
 }
 
+
+QCache<QFont> KNHdrViewItem::f_ontCache;
+
+void KNHdrViewItem::clearFontCache()
+{
+  f_ontCache.setAutoDelete(true);
+  f_ontCache.clear();
+}
 
 
 bool KNHdrViewItem::greyOut()
@@ -83,3 +94,27 @@ QColor KNHdrViewItem::greyColor()
   return knGlobals.cfgManager->appearance()->readArticleColor();
 }
 
+
+const QFont& KNHdrViewItem::fontForColumn(int col, const QFont &font)
+{
+  if (col>1) return font;
+
+  QFont *f=0;
+  QFont::CharSet cs;
+  if (col==0)
+    cs = subjectCS;
+  else
+    cs = nameCS;
+
+  // check if we already have a suitable font in the cache
+  f=f_ontCache.find(QString::number((int)(cs)));
+  if (f) return (*f);
+
+  // new charset...
+  f = new QFont(knGlobals.cfgManager->appearance()->articleListFont());
+  KGlobal::charsets()->setQFont(*f, cs);
+  f_ontCache.setAutoDelete(true);
+  f_ontCache.insert(QString::number((int)(cs)),f);
+
+  return (*f);
+}

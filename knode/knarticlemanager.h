@@ -86,7 +86,6 @@ class KNArticleManager : public QObject {
     bool showThreads()                { return s_howThreads; }
     void toggleShowThreads()          { s_howThreads=!s_howThreads; showHdrs(true); }
     void setShowThreads(bool b=true)  { s_howThreads=b; showHdrs(true); }
-    void setViewFont();
 
     //filter
     KNArticleFilter* filter() const { return f_ilter; }

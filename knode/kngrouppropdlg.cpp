@@ -21,6 +21,8 @@
 
 #include <klocale.h>
 
+#include "knglobals.h"
+#include "knconfigmanager.h"
 #include "utilities.h"
 #include "kngroup.h"
 #include "kngrouppropdlg.h"
@@ -133,8 +135,8 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   pageL->addWidget(u_seCharset, 0,0);
 
   c_harset=new QComboBox(false, page);
-  c_harset->insertStringList(KNMimeBase::availableCharsets());
-  c_harset->setCurrentItem( KNMimeBase::indexForCharset(g_rp->defaultCharset()) );
+  c_harset->insertStringList(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
+  c_harset->setCurrentItem(knGlobals.cfgManager->postNewsTechnical()->indexForCharset(g_rp->defaultCharset()));
 
   c_harset->setEnabled(g_rp->useCharset());
   connect(u_seCharset, SIGNAL(toggled(bool)), c_harset, SLOT(setEnabled(bool)));

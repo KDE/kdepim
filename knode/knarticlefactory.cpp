@@ -17,6 +17,7 @@
 #include <qlayout.h>
 #include <qframe.h>
 
+#include <kcharsets.h>
 #include <klocale.h>
 #include <kapp.h>
 #include <kmessagebox.h>
@@ -86,7 +87,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setServerId(g->account()->id());
   art->setDoPost(true);
   art->setDoMail(false);
-  art->newsgroups()->from7BitString(g->groupname().utf8());
+  art->newsgroups()->fromUnicodeString(g->groupname(), art->defaultCharset());
 
   KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
   c_ompList.append(c);
@@ -130,10 +131,10 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       art->setDoMail(true);
     }
     else
-      art->newsgroups()->from7BitString(fup2->as7BitString(false));
+      art->newsgroups()->from7BitString(fup2->as7BitString(false), art->defaultCharset(), false);
   }
   else
-    art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
+    art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false), art->defaultCharset(), false);
 
   //To
   KNHeaders::ReplyTo *replyTo=a->replyTo(false);
@@ -160,7 +161,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     refs=references->as7BitString(false).copy()+" "+a->messageID()->as7BitString(false);
   else
     refs=a->messageID()->as7BitString(false).copy();
-  art->references()->from7BitString(refs);
+  art->references()->from7BitString(refs, art->defaultCharset(),false);
 
   //------------------------- </Headers> ---------------------------
 
@@ -370,14 +371,14 @@ void KNArticleFactory::createCancel(KNArticle *a)
   KNHeaders::MessageID *msgId=a->messageID();
   QCString tmp;
   tmp="cancel of "+msgId->as7BitString(false);
-  art->subject()->from7BitString(tmp);
+  art->subject()->from7BitString(tmp, art->defaultCharset(), false);
 
   //newsgroups
-  art->newsgroups()->from7BitString( a->newsgroups()->as7BitString(false) );
+  art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false), art->defaultCharset(), false);
 
   //control
   tmp="cancel "+msgId->as7BitString(false);
-  art->control()->from7BitString(tmp);
+  art->control()->from7BitString(tmp, art->defaultCharset(), false);
 
   //Lines
   art->lines()->setNumberOfLines(1);
@@ -440,16 +441,16 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   art->subject()->fromUnicodeString(a->subject()->asUnicodeString(), a->subject()->rfc2047Charset());
 
   //newsgroups
-  art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
+  art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false), art->defaultCharset(), false);
 
   //followup-to
-  art->followUpTo()->from7BitString(a->followUpTo()->as7BitString(false));
+  art->followUpTo()->from7BitString(a->followUpTo()->as7BitString(false), art->defaultCharset(), false);
 
   //References
-  art->references()->from7BitString(a->references()->as7BitString(false));
+  art->references()->from7BitString(a->references()->as7BitString(false), art->defaultCharset(), false);
 
   //Supersedes
-  art->supersedes()->from7BitString(a->messageID()->as7BitString(false));
+  art->supersedes()->from7BitString(a->messageID()->as7BitString(false), art->defaultCharset(), false);
 
   //Body
   QString text;
@@ -750,7 +751,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, bool with
   KNConfig::Identity  *grpId=0,
                       *defId=0,
                       *id=0;
-  QFont::CharSet cs=KNMimeBase::stringToCharset(pnt->charset());
+  QFont::CharSet cs=KGlobal::charsets()->charsetForEncoding(pnt->charset());
 
   if(!g)
     grpId=0;
@@ -809,7 +810,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, bool with
 
   //User-Agent
   if( !pnt->noUserAgent() ) {
-    art->userAgent()->from7BitString("KNode/" KNODE_VERSION);
+    art->userAgent()->from7BitString("KNode/" KNODE_VERSION, art->defaultCharset(), false);
   }
 
   //Mime
@@ -824,7 +825,6 @@ KNLocalArticle* KNArticleFactory::newArticle(KNGroup *g, QString &sig, bool with
   //X-Headers
   if(withXHeaders) {
     KNConfig::XHeaders::Iterator it;
-    QFont::CharSet cs=KNMimeBase::stringToCharset(pnt->charset());
     for(it=pnt->xHeaders().begin(); it!=pnt->xHeaders().end(); ++it)
       art->setHeader( new KNHeaders::Generic( (QCString("X-")+(*it).name()), (*it).value(), cs ) );
   }

@@ -159,7 +159,6 @@ bool KNFolder::loadHdrs()
 
     art=new KNLocalArticle(this);
 
-
     //set index-data
     art->setId(dynamic.id);
     art->date()->setUnixTime(dynamic.ti);
@@ -198,13 +197,13 @@ bool KNFolder::loadHdrs()
     //set overview
     pos1=tmp.find(' ')+1;
     pos2=tmp.find('\t', pos1);
-    art->subject()->from7BitString(tmp.mid(pos1, pos2-pos1));
+    art->subject()->from7BitString(tmp.mid(pos1, pos2-pos1), art->defaultCharset(),false);
     pos1=pos2+1;
     pos2=tmp.find('\t', pos1);
-    art->newsgroups()->from7BitString(tmp.mid(pos1, pos2-pos1));
+    art->newsgroups()->from7BitString(tmp.mid(pos1, pos2-pos1), art->defaultCharset(),false);
     pos1=pos2+1;
     pos2=tmp.length();
-    art->to()->from7BitString(tmp.mid(pos1,pos2-pos1));
+    art->to()->from7BitString(tmp.mid(pos1,pos2-pos1), art->defaultCharset(),false);
 
     if(!append(art)) {
       kdError(5003) << "KNFolder::loadHdrs() : cannot append article!"<< endl;
@@ -334,7 +333,6 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
       ts << '\n';
 
       a->setEndOffset(m_boxFile.at()); //save offset
-
 
       //update
       KNArticleWidget::articleChanged(a);

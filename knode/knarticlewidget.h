@@ -88,10 +88,11 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     QList<KNMimeContent> *a_tt;
     bool h_tmlDone, f_ullHdrs, r_ot13;
    	QTimer *t_imer;
+   	QFont::CharSet overrideCS;
+   	bool forceCS;
     	
     KPopupMenu *u_rlPopup, *a_ttPopup;
     QPopupMenu *b_odyPopup;
-
 
   //-------------------------- <Actions> ---------------------------
 
@@ -107,7 +108,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
             *a_ctCancel,
             *a_ctSupersede;
     KToggleAction *a_ctToggleFullHdrs, *a_ctToggleRot13;
-
+    KSelectAction *a_ctSetCharset;
 
   protected slots:
     void slotSave();
@@ -120,6 +121,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void slotSupersede();
     void slotToggleFullHdrs();
     void slotToggleRot13();
+    void slotSetCharset(const QString&);
 
   //-------------------------- </Actions> --------------------------
 
@@ -137,6 +139,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
 
   protected:
     static QList<KNArticleWidget> i_nstances;
+
 };
 
 

@@ -17,6 +17,9 @@
 #ifndef KNHDRVIEWITEM_H
 #define KNHDRVIEWITEM_H
 
+#include <qfont.h>
+#include <qcache.h>
+
 #include "knlistview.h"
 
 class KNArticle;
@@ -30,17 +33,21 @@ class KNHdrViewItem : public KNLVItemBase  {
     ~KNHdrViewItem();
 
     QString key(int, bool) const;
+
     KNArticle *art;
+    QFont::CharSet subjectCS, nameCS;
+
+    static void clearFontCache();
     
   protected:
     bool greyOut();
     bool firstColBold();
     QColor normalColor();
     QColor greyColor();
+    virtual const QFont& fontForColumn(int col, const QFont &font);
+
+    static QCache<QFont> f_ontCache;
+
 };
 
 #endif
-
-
-
-

@@ -46,6 +46,7 @@ class KNLVItemBase : public QListViewItem  {
     virtual QColor normalColor();
     virtual QColor greyColor();
     virtual QString shortString(QString text, int col, int width, QFontMetrics fm);
+    virtual const QFont& fontForColumn(int, const QFont &font)    { return font; }
 
   private:
     bool active;

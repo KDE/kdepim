@@ -17,15 +17,18 @@
 #ifndef KNMIME_H
 #define KNMIME_H
 
-#include "knheaders.h"
-#include "knjobdata.h"
 #include <qlist.h>
 #include <qstringlist.h>
 #include <qfile.h>
 #include <qfont.h>
+#include <qasciidict.h>
+
+#include "knheaders.h"
+#include "knjobdata.h"
 
 class KNMimeContent;
 typedef QValueList<QCString> QCStringList;
+
 
 /* Base class for messages in mime format
    It contains all the enums, static functions
@@ -42,11 +45,7 @@ class KNMimeBase {
                           ATlocal };
 
     //encode and decode
-    static QStringList availableCharsets();
-    static QFont::CharSet stringToCharset(const QCString &str);
-    static QCString charsetToString(QFont::CharSet cs);
-    static int indexForCharset(const QCString &str);
-    static QString decodeRFC2047String(const QCString &src, QFont::CharSet &charset);
+    static QString decodeRFC2047String(const QCString &src, QFont::CharSet &charset, bool force);
     static QCString encodeRFC2047String(const QString &src, QFont::CharSet charset);
 
     //generation of message-ids and boundaries
@@ -126,7 +125,6 @@ class KNMimeBase {
 };
 
 
-
 /* This class encapsulates a mime-encoded content.
    It parses the given data and creates a tree-like
    structure, that represents the structure of the
@@ -176,7 +174,6 @@ class KNMimeContent : public KNMimeBase {
     void setFontForContent(QFont &f);
     void fromUnicodeString(const QString &s);
 
-
     KNMimeContent* textContent();
     void attachments(List *dst, bool incAlternatives=false);
     void addContent(KNMimeContent *c, bool prepend=false);
@@ -185,6 +182,19 @@ class KNMimeContent : public KNMimeBase {
 
     //saves the encoded content to the given textstream
     void toStream(QTextStream &ts);
+
+    // this charset is used for all headers and the body
+    // if the charset is not declared explictly
+    QFont::CharSet defaultCharset()           { return d_efaultCS; }
+    void setDefaultCharset(QFont::CharSet cs) { d_efaultCS = cs; }
+
+    // use the default charset even if a different charset is
+    // declared in the article
+    bool forceDefaultCS()         {  return f_orceDefaultCS; }
+    // enables/disables the force mode, housekeeping.
+    // works correctly only when the article is completly empty or
+    // completly loaded
+    virtual void setForceDefaultCS(bool b);
 
   protected:
     QCString rawHeader(const char *name);
@@ -195,6 +205,9 @@ class KNMimeContent : public KNMimeBase {
               b_ody;
     List *c_ontents;
     KNHeaders::List *h_eaders;
+    QFont::CharSet d_efaultCS;
+    bool f_orceDefaultCS;
+
 };
 
 
@@ -258,6 +271,7 @@ class KNArticle : public KNMimeContent, public KNJobItem {
    	KNArticleCollection* collection()           { return c_ol; }
    	void setCollection(KNArticleCollection *c)  { c_ol=c; }
    	
+    virtual void setForceDefaultCS(bool b);
 
   protected:
     //hardcoded headers
@@ -270,9 +284,10 @@ class KNArticle : public KNMimeContent, public KNJobItem {
     KNHdrViewItem *i_tem;
     BoolFlags f_lags; // some status info
 
-
 }; // KNArticle
 
+
+class KNGroup;
 
 /* KNRemoteArticle represents an article, whos body has to be
    retrieved from a remote host or from the local cache.
@@ -284,16 +299,16 @@ class KNRemoteArticle : public KNArticle {
   public:
     typedef QList<KNRemoteArticle> List;
 
-    KNRemoteArticle(KNArticleCollection *c);
+    KNRemoteArticle(KNGroup *g);
     ~KNRemoteArticle();
 
     // type
     articleType type() { return ATremote; }
 
     // content handling
-    void parse();
-    void assemble() {} //assembling is disabled for remote articles
-    void clear();
+    virtual void parse();
+    virtual void assemble() {} //assembling is disabled for remote articles
+    virtual void clear();
 
     // header access
     KNHeaders::Base* getHeaderByType(const char *type);
@@ -347,6 +362,7 @@ class KNRemoteArticle : public KNArticle {
     void initListItem();
     void updateListItem();
 
+    void setForceDefaultCS(bool b);
 
   protected:
     // hardcoded headers
@@ -430,6 +446,7 @@ class KNLocalArticle : public KNArticle {
 		//list item handling
 		void updateListItem();
 		
+    void setForceDefaultCS(bool b);
 		
 		protected:
 		  //hardcoded headers
@@ -502,6 +519,8 @@ template <class T> T* KNMimeContent::getHeaderInstance(T *ptr, bool create)
   ptr=static_cast <T*> (getHeaderByType(dummy.type()));
   if(!ptr && create) { //no such header found => create it
     ptr=new T();
+    ptr->setRFC2047Charset(d_efaultCS);      // important for the ContentType-Header!!
+    ptr->setForceDefaultCS(f_orceDefaultCS);
     if(!(h_eaders)) {
       h_eaders=new KNHeaders::List();
       h_eaders->setAutoDelete(true);

@@ -673,11 +673,24 @@ KNConfig::XHeader::XHeader(const QString &s)
 
 
 KNConfig::PostNewsTechnical::PostNewsTechnical()
+ : findComposerCSCache(113)
 {
+  findComposerCSCache.setAutoDelete(true);
+
   KConfig *conf=KGlobal::config();
   conf->setGroup("POSTNEWS");
 
-  c_harset=conf->readEntry("Charset","ISO-8859-1").upper().latin1();  // we should use charsetForLocale, but it has the wrong format
+  c_omposerCharsets=conf->readListEntry("ComposerCharsets");
+  if (c_omposerCharsets.isEmpty())
+    c_omposerCharsets=QStringList::split(',',"us-ascii,utf-8,iso-8859-1,iso-8859-2,"
+    "iso-8859-3,iso-8859-4,iso-8859-5,iso-8859-6,iso-8859-7,iso-8859-8,"
+    "iso-8859-9,iso-8859-10,iso-8859-13,iso-8859-14,iso-8859-15,koi8-r,koi8-u,"
+    "iso-2022-jp,iso-2022-jp-2,iso-2022-kr,euc-jp,euc-kr,Big5,gb2312");
+
+  c_harset=conf->readEntry("Charset").latin1();
+  if (c_harset.isEmpty())
+    c_harset=findComposerCharset(KGlobal::charsets()->charsetForLocale());
+
   h_ostname=conf->readEntry("MIdhost").latin1();
   e_ncoding=conf->readNumEntry("Encoding",1);
   a_llow8Bit=conf->readBoolEntry("allow8bitChars", false);
@@ -710,6 +723,7 @@ void KNConfig::PostNewsTechnical::save()
   KConfig *conf=KGlobal::config();
   conf->setGroup("POSTNEWS");
 
+  conf->writeEntry("ComposerCharsets", c_omposerCharsets);
   conf->writeEntry("Charset", QString::fromLatin1(c_harset));
   conf->writeEntry("Encoding", e_ncoding);
   conf->writeEntry("allow8bitChars", a_llow8Bit);
@@ -732,6 +746,76 @@ void KNConfig::PostNewsTechnical::save()
     else
       displayInternalFileError();
   }
+}
+
+
+int KNConfig::PostNewsTechnical::indexForCharset(const QCString &str)
+{
+  int i = c_omposerCharsets.findIndex(QString(str));
+  if (i==-1) {
+    i = c_omposerCharsets.findIndex(QString(c_harset));
+    if (i==-1)
+      i=0;
+  }
+  return i;
+}
+
+
+QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
+{
+  QCString *ret=findComposerCSCache.find(cs);
+  if (ret)
+    return *ret;
+
+  QFont::CharSet qfcs = KGlobal::charsets()->charsetForEncoding(cs);
+  QCString s;
+
+  QStringList::Iterator it;
+  for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
+
+    // match by name
+    if ((*it).lower()==cs.lower().data()) {
+      s = (*it).latin1();
+      break;
+    }
+
+    // match by charset, avoid to return "us-ascii" for iso-8859-1
+    if (((*it).lower()!="us-ascii")&&
+        (KGlobal::charsets()->charsetForEncoding(*it)==qfcs)) {
+      s = (*it).latin1();
+      break;
+    }
+  }
+
+  if (!s.isEmpty())
+    findComposerCSCache.insert(cs, new QCString(s));
+
+  return s;
+}
+
+
+QCString KNConfig::PostNewsTechnical::findComposerCharset(QFont::CharSet cs)
+{
+  if (cs==QFont::ISO_8859_1)  // avoid to return "us-ascii"
+    return "iso-8859-1";
+
+  QCString *ret=findComposerCSCache.find(QString::number((int)(cs)).latin1());
+  if (ret)
+    return *ret;
+
+  QCString s;
+  QStringList::Iterator it;
+  for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
+    if ((KGlobal::charsets()->charsetForEncoding(*it)==cs)) {
+      s = (*it).latin1();
+      break;
+    }
+  }
+
+  if (!s.isEmpty())
+    findComposerCSCache.insert(QString::number((int)(cs)).latin1(), new QCString(s));
+
+  return s;
 }
 
 

@@ -409,7 +409,7 @@ void KNodeView::configChanged()
   }
 
   c_olView->setFont(app->groupListFont());
-  a_rtManager->setViewFont();
+  h_drView->setFont(app->articleListFont());
 
   QPalette p = palette();
   p.setColor(QColorGroup::Base, app->backgroundColor());
@@ -474,7 +474,7 @@ void KNodeView::initActions()
   a_ctFolProperties         = 0;
 	  					
   //header-view - list-handling
-  a_ctArtSortHeaders        = new KSelectAction(i18n("&Sort"), 0, a_ctions, "view_Sort");
+  a_ctArtSortHeaders        = new KSelectAction(i18n("S&ort"), 0, a_ctions, "view_Sort");
   QStringList items;
   items += i18n("By &Subject");
   items += i18n("By S&ender");
@@ -491,7 +491,7 @@ void KNodeView::initActions()
 	                            SLOT(slotArtRefreshList()), a_ctions, "view_Refresh");
 	a_ctArtCollapseAll        = new KAction(i18n("&Collapse all threads"), 0 , this,
 	                            SLOT(slotArtCollapseAll()), a_ctions, "view_CollapseAll");
-	a_ctArtExpandAll          = new KAction(i18n("&Expand all threads"), 0 , this,
+	a_ctArtExpandAll          = new KAction(i18n("E&xpand all threads"), 0 , this,
 	                            SLOT(slotArtExpandAll()), a_ctions, "view_ExpandAll");
 	a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Key_T, this,
 	                            SLOT(slotArtToggleThread()), a_ctions, "thread_toggle");

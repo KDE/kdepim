@@ -35,98 +35,8 @@
 #include "utilities.h"
 
 
-#if QT_VERSION > 220
-#define CHARSETS_COUNT 27
-#else
-#define CHARSETS_COUNT 26
-#endif
 
-
-struct CharsetEntry {
-  const char *name;
-  QFont::CharSet id;
-};
-
-static const CharsetEntry charsetTable[CHARSETS_COUNT] =
-{
-  {"ISO-8859-1", QFont::ISO_8859_1},
-  {"ISO-8859-2", QFont::ISO_8859_2},
-  {"ISO-8859-3", QFont::ISO_8859_3},
-  {"ISO-8859-4", QFont::ISO_8859_4},
-  {"ISO-8859-5", QFont::ISO_8859_5},
-  {"ISO-8859-6", QFont::ISO_8859_6},
-  {"ISO-8859-7", QFont::ISO_8859_7},
-  {"ISO-8859-8", QFont::ISO_8859_8},
-  {"ISO-8859-9", QFont::ISO_8859_9},
-  {"ISO-8859-10", QFont::ISO_8859_10},
-  {"ISO-8859-11", QFont::ISO_8859_11},
-  {"ISO-8859-12", QFont::ISO_8859_12},
-  {"ISO-8859-13", QFont::ISO_8859_13},
-  {"ISO-8859-14", QFont::ISO_8859_14},
-  {"ISO-8859-15", QFont::ISO_8859_15},
-  {"KOI8-R", QFont::KOI8R},
-#if QT_VERSION > 220
-  {"KOI8-U", QFont::KOI8U},
-#endif
-  {"EUCJP", QFont::Set_Ja},
-  {"EUCKR", QFont::Set_Ko},
-  {"SET-TH-TH", QFont::Set_Th_TH},
-  {"SET-GBK", QFont::Set_GBK},
-  {"SET-ZH", QFont::Set_Zh},
-  {"SET-ZH-TW", QFont::Set_Zh_TW},
-  {"SET-BIG5", QFont::Set_Big5},
-  {"TSCII", QFont::TSCII},
-  {"UTF-8", QFont::Unicode},
-  {"US-ASCII", QFont::ISO_8859_1}
-};
-
-
-QStringList KNMimeBase::availableCharsets() {
-  QStringList cs;
-
-  for(int i=0; i < CHARSETS_COUNT; i++)
-    cs << QString::fromLatin1(charsetTable[i].name);
-
-  return cs;
-}
-
-
-QFont::CharSet KNMimeBase::stringToCharset(const QCString &str)
-{
-  for(int i=0; i < CHARSETS_COUNT; i++)
-    if( strcasecmp(str.data(), charsetTable[i].name)==0 )
-      return (charsetTable[i].id);
-
-  //not found => return local charset
-  return KGlobal::charsets()->charsetForLocale();
-}
-
-
-QCString KNMimeBase::charsetToString(QFont::CharSet cs)
-{
-  for(int i=0; i < CHARSETS_COUNT; i++)
-    if(charsetTable[i].id==cs)
-      return QCString(charsetTable[i].name);
-
-  //not found => return local charset
-  return QCString(KGlobal::locale()->charset().latin1());
-}
-
-
-int KNMimeBase::indexForCharset(const QCString &str)
-{
-  if (str.isEmpty())
-    return -1;
-
-  for(int i=0; i < CHARSETS_COUNT; i++)
-    if( strcasecmp(charsetTable[i].name, str.data())==0 )
-      return i;
-
-  return -1;
-}
-
-
-QString KNMimeBase::decodeRFC2047String(const QCString &src, QFont::CharSet &cs)
+QString KNMimeBase::decodeRFC2047String(const QCString &src, QFont::CharSet &cs, bool force)
 {
   QCString result, str;
   QCString charset;
@@ -137,98 +47,100 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, QFont::CharSet &cs)
   const int maxLen=400;
   int i;
 
-  //no 8Bit encoded characters => latin1
-  if(src.find("=?") < 0){
-    cs=QFont::ISO_8859_1;
-    return QString::fromLatin1(src);
-  }
-
-  result.truncate(src.length());
-  for (pos=src.data(), dest=result.data(); *pos; pos++)
-  {
-    if (pos[0]!='=' || pos[1]!='?')
+  if(src.find("=?") < 0)
+    result = src.copy();
+  else {
+    result.truncate(src.length());
+    for (pos=src.data(), dest=result.data(); *pos; pos++)
     {
-      *dest++ = *pos;
-      continue;
-    }
-    beg = pos+2;
-    end = beg;
-    valid = TRUE;
-    // parse charset name
-    charset="";
-    for (i=2,pos+=2; i<maxLen && (*pos!='?'&&(ispunct(*pos)||isalnum(*pos))); i++) {
-      charset+=(*pos);
-      pos++;
-    }
-    if (*pos!='?' || i<4 || i>=maxLen) valid = FALSE;
-    else
-    {
-      // get encoding and check delimiting question marks
-      encoding = toupper(pos[1]);
-      if (pos[2]!='?' || (encoding!='Q' && encoding!='B'))
-        valid = FALSE;
-      pos+=3;
-      i+=3;
-    }
-    if (valid)
-    {
-      mid = pos;
-      // search for end of encoded part
-      while (i<maxLen && *pos && !(*pos=='?' && *(pos+1)=='='))
+      if (pos[0]!='=' || pos[1]!='?')
       {
-        i++;
+        *dest++ = *pos;
+        continue;
+      }
+      beg = pos+2;
+      end = beg;
+      valid = TRUE;
+      // parse charset name
+      charset="";
+      for (i=2,pos+=2; i<maxLen && (*pos!='?'&&(ispunct(*pos)||isalnum(*pos))); i++) {
+        charset+=(*pos);
         pos++;
       }
-      end = pos+2;//end now points to the first char after the encoded string
-      if (i>=maxLen || !*pos) valid = FALSE;
-    }
-
-    if (valid) {
-      ch = *pos;
-      *pos = '\0';
-      str = QCString(mid, (int)(mid - pos - 1));
-      if (encoding == 'Q')
+      if (*pos!='?' || i<4 || i>=maxLen) valid = FALSE;
+      else
       {
-        // decode quoted printable text
-        for (i=str.length()-1; i>=0; i--)
-          if (str[i]=='_') str[i]=' ';
-        dwsrc=str.data();
-        DwDecodeQuotedPrintable(dwsrc, dwdest);
-        str = dwdest.c_str();
+        // get encoding and check delimiting question marks
+        encoding = toupper(pos[1]);
+        if (pos[2]!='?' || (encoding!='Q' && encoding!='B'))
+          valid = FALSE;
+        pos+=3;
+        i+=3;
+      }
+      if (valid)
+      {
+        mid = pos;
+        // search for end of encoded part
+        while (i<maxLen && *pos && !(*pos=='?' && *(pos+1)=='='))
+        {
+          i++;
+          pos++;
+        }
+        end = pos+2;//end now points to the first char after the encoded string
+        if (i>=maxLen || !*pos) valid = FALSE;
+      }
+
+      if (valid) {
+        ch = *pos;
+        *pos = '\0';
+        str = QCString(mid, (int)(mid - pos - 1));
+        if (encoding == 'Q')
+        {
+          // decode quoted printable text
+          for (i=str.length()-1; i>=0; i--)
+            if (str[i]=='_') str[i]=' ';
+          dwsrc=str.data();
+          DwDecodeQuotedPrintable(dwsrc, dwdest);
+          str = dwdest.c_str();
+        }
+        else
+        {
+          // decode base64 text
+          dwsrc=str.data();
+          DwDecodeBase64(dwsrc, dwdest);
+          str = dwdest.c_str();
+        }
+        *pos = ch;
+        for (i=0; str[i]; i++)
+        *dest++ = str[i];
+
+        pos = end -1;
       }
       else
       {
-        // decode base64 text
-        dwsrc=str.data();
-        DwDecodeBase64(dwsrc, dwdest);
-        str = dwdest.c_str();
+        //result += "=?";
+        //pos = beg -1; // because pos gets increased shortly afterwards
+        pos = beg - 2;
+        *dest++ = *pos++;
+        *dest++ = *pos;
       }
-      *pos = ch;
-      for (i=0; str[i]; i++)
-      *dest++ = str[i];
-
-      pos = end -1;
     }
-    else
-    {
-      //result += "=?";
-      //pos = beg -1; // because pos gets increased shortly afterwards
-      pos = beg - 2;
-      *dest++ = *pos++;
-      *dest++ = *pos;
-    }
+    *dest = '\0';
   }
-  *dest = '\0';
 
   //convert to unicode
+
+  QTextCodec *codec=0;
   bool ok=true;
-  QTextCodec *codec=KGlobal::charsets()->codecForName(charset, ok);
-  if(!ok) {
-    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset()); //no suitable codec found => use local charset
-    cs=KGlobal::charsets()->charsetForLocale();
+  if (force || charset.isEmpty())
+    codec=KGlobal::charsets()->codecForName(KGlobal::charsets()->name(cs),ok);
+  else {
+    codec=KGlobal::charsets()->codecForName(charset,ok);
+    if(!ok) {     //no suitable codec found => use default charset
+      codec=KGlobal::charsets()->codecForName(KGlobal::charsets()->name(cs),ok);
+    } else
+      cs=KGlobal::charsets()->charsetForEncoding(charset);
   }
-  else
-    cs=stringToCharset(charset);
 
   return codec->toUnicode(result.data(), result.length());
 }
@@ -242,13 +154,16 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, QFont::CharSet cs)
   QTextCodec *codec=0;
   KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
 
-  chset=charsetToString(cs);
-  codec=KGlobal::charsets()->codecForName(chset, ok);
+  codec=KGlobal::charsets()->codecForName(KGlobal::charsets()->name(cs),ok);
 
   if(!ok) {
     //no codec available => try local8Bit and hope the best ;-)
     chset=KGlobal::locale()->charset().latin1();
-    codec=KGlobal::charsets()->codecForName(chset);
+    codec=KGlobal::charsets()->codecForName(chset,ok);
+  } else {
+    chset=pnt->findComposerCharset(cs);  // find a clean name for the charset
+    if (chset.isEmpty())
+      chset=KGlobal::charsets()->name(cs).latin1();  // this name has a invalid format!
   }
   encoded8Bit=codec->fromUnicode(src);
 
@@ -620,7 +535,8 @@ bool KNMimeBase::BoolFlags::get(unsigned int i)
 //============================================================================================
 
 
-KNMimeContent::KNMimeContent() : c_ontents(0), h_eaders(0)
+KNMimeContent::KNMimeContent()
+ : c_ontents(0), h_eaders(0), d_efaultCS(QFont::ISO_8859_1), f_orceDefaultCS(false)
 {}
 
 
@@ -893,9 +809,7 @@ void KNMimeContent::decodedText(QString &s)
     return;
 
   bool ok=true;
-  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(), ok);
-  if(!ok) // no suitable codec found => try local settings and hope the best ;-)
-    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
+  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(),ok);
 
   s=codec->toUnicode(b_ody.data(), b_ody.length());
 }
@@ -909,9 +823,7 @@ void KNMimeContent::decodedText(QStringList &l)
   QString unicode;
   bool ok=true;
 
-  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(), ok);
-  if(!ok) // no suitable codec found => try local settings and hope the best ;-)
-    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
+  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(),ok);
 
   unicode=codec->toUnicode(b_ody.data(), b_ody.length());
   l=QStringList::split("\n", unicode, true); //split the string at linebreaks
@@ -921,7 +833,7 @@ void KNMimeContent::decodedText(QStringList &l)
 bool KNMimeContent::canDecode8BitText()
 {
   bool ok=true;
-  (void) KGlobal::charsets()->codecForName(contentType()->charset(), ok);
+  (void) KGlobal::charsets()->codecForName(contentType()->charset(),ok);
   return ok;
 }
 
@@ -938,11 +850,14 @@ void KNMimeContent::setFontForContent(QFont &f)
 void KNMimeContent::fromUnicodeString(const QString &s)
 {
   bool ok=true;
-  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(), ok);
+  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(),ok);
 
   if(!ok) { // no suitable codec found => try local settings and hope the best ;-)
-    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
-    contentType()->setCharset(KGlobal::locale()->charset().latin1());
+    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset(),ok);
+    QCString chset=knGlobals.cfgManager->postNewsTechnical()->findComposerCharset(KGlobal::locale()->charset().latin1());
+    if (chset.isEmpty())
+      chset=KGlobal::locale()->charset().latin1();
+    contentType()->setCharset(chset);
   }
 
   b_ody=codec->fromUnicode(s);
@@ -1147,21 +1062,21 @@ KNHeaders::Base* KNMimeContent::getHeaderByType(const char *type)
     if(strcasecmp("Message-Id", type)==0)
       h=new KNHeaders::MessageID(raw);
     else if(strcasecmp("Subject", type)==0)
-      h=new KNHeaders::Subject(raw);
+      h=new KNHeaders::Subject(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("Date", type)==0)
       h=new KNHeaders::Date(raw);
     else if(strcasecmp("From", type)==0)
-      h=new KNHeaders::From(raw);
+      h=new KNHeaders::From(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("Organization", type)==0)
-      h=new KNHeaders::Organization(raw);
+      h=new KNHeaders::Organization(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("Reply-To", type)==0)
-      h=new KNHeaders::ReplyTo(raw);
+      h=new KNHeaders::ReplyTo(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("To", type)==0)
-      h=new KNHeaders::To(raw);
+      h=new KNHeaders::To(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("CC", type)==0)
-      h=new KNHeaders::CC(raw);
+      h=new KNHeaders::CC(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("BCC", type)==0)
-      h=new KNHeaders::BCC(raw);
+      h=new KNHeaders::BCC(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("Newsgroups", type)==0)
       h=new KNHeaders::Newsgroups(raw);
     else if(strcasecmp("Followup-To", type)==0)
@@ -1171,15 +1086,15 @@ KNHeaders::Base* KNMimeContent::getHeaderByType(const char *type)
     else if(strcasecmp("Lines", type)==0)
       h=new KNHeaders::Lines(raw);
     else if(strcasecmp("Content-Type", type)==0)
-      h=new KNHeaders::ContentType(raw);
+      h=new KNHeaders::ContentType(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("Content-Transfer-Encoding", type)==0)
       h=new KNHeaders::CTEncoding(raw);
     else if(strcasecmp("Content-Disposition", type)==0)
-      h=new KNHeaders::CDisposition(raw);
+      h=new KNHeaders::CDisposition(raw, d_efaultCS, f_orceDefaultCS);
     else if(strcasecmp("Content-Description", type)==0)
-      h=new KNHeaders::CDescription(raw);
+      h=new KNHeaders::CDescription(raw, d_efaultCS, f_orceDefaultCS);
     else
-      h=new KNHeaders::Generic(type, raw);
+      h=new KNHeaders::Generic(type, raw, d_efaultCS, f_orceDefaultCS);
 
     if(!h_eaders) {
       h_eaders=new KNHeaders::List();
@@ -1278,6 +1193,15 @@ bool KNMimeContent::decodeText()
 }
 
 
+void KNMimeContent::setForceDefaultCS(bool b)
+{
+  f_orceDefaultCS=b;
+  if (h_eaders)
+    h_eaders->clear();
+  parse();
+}
+
+
 //==========================================================================================
 
 
@@ -1303,13 +1227,13 @@ void KNArticle::parse()
   if(s_ubject.isEmpty()) {
     raw=rawHeader(s_ubject.type());
     if(!raw.isEmpty())
-      s_ubject.from7BitString(raw);
+      s_ubject.from7BitString(raw, d_efaultCS, f_orceDefaultCS);
   }
 
   if(d_ate.isEmpty()) {
     raw=rawHeader(d_ate.type());
     if(!raw.isEmpty())
-      d_ate.from7BitString(raw);
+      d_ate.from7BitString(raw, d_efaultCS, f_orceDefaultCS);
   }
 }
 
@@ -1464,16 +1388,25 @@ void KNArticle::setLocked(bool b)
 }
 
 
+void KNArticle::setForceDefaultCS(bool b)
+{
+  s_ubject.clear();
+  d_ate.clear();
+  l_ines.clear();
+  KNMimeContent::setForceDefaultCS(b);
+}
+
+
 //=========================================================================================
 
 
-KNRemoteArticle::KNRemoteArticle(KNArticleCollection *c) : KNArticle(c)
+KNRemoteArticle::KNRemoteArticle(KNGroup *g)
+ : KNArticle(g), i_dRef(-1), t_hrLevel(0), s_core(50), u_nreadFups(0), n_ewFups(0)
 {
-  i_dRef=-1;
-  t_hrLevel=0;
-  s_core=50;
-  u_nreadFups=0;
-  n_ewFups=0;
+  if (g->useCharset())
+    d_efaultCS = KGlobal::charsets()->charsetForEncoding(g->defaultCharset());
+  else
+    d_efaultCS = KGlobal::charsets()->charsetForEncoding(knGlobals.cfgManager->postNewsTechnical()->charset());
 }
 
 
@@ -1486,13 +1419,13 @@ void KNRemoteArticle::parse()
   KNArticle::parse();
   QCString raw;
   if(m_essageID.isEmpty() && !(raw=rawHeader(m_essageID.type())).isEmpty() )
-    m_essageID.from7BitString(raw);
+    m_essageID.from7BitString(raw, d_efaultCS, f_orceDefaultCS);
 
   if(f_rom.isEmpty() && !(raw=rawHeader(f_rom.type())).isEmpty() )
-    f_rom.from7BitString(raw);
+    f_rom.from7BitString(raw, d_efaultCS, f_orceDefaultCS);
 
   if(l_ines.isEmpty() && !(raw=rawHeader(l_ines.type())).isEmpty() )
-    l_ines.from7BitString(raw);
+    l_ines.from7BitString(raw, d_efaultCS, f_orceDefaultCS);
 }
 
 
@@ -1522,7 +1455,7 @@ KNHeaders::Base* KNRemoteArticle::getHeaderByType(const char *type)
 void KNRemoteArticle::setHeader(KNHeaders::Base *h)
 {
 	if(h->is("Message-ID"))
-		m_essageID.from7BitString(h->as7BitString(false));
+		m_essageID.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);
   else if(h->is("From")) {  	
 		f_rom.setEmail( (static_cast<KNHeaders::From*>(h))->email() );
 		f_rom.setName( (static_cast<KNHeaders::From*>(h))->name() );
@@ -1548,10 +1481,12 @@ bool KNRemoteArticle::removeHeader(const char *type)
 void KNRemoteArticle::initListItem()
 {
   i_tem->setText(0, s_ubject.asUnicodeString());
+  i_tem->subjectCS = s_ubject.rfc2047Charset();
 	if(f_rom.hasName())
   	i_tem->setText(1, f_rom.name());
   else
   	i_tem->setText(1, QString(f_rom.email()));
+  i_tem->nameCS = f_rom.rfc2047Charset();  	
 
   i_tem->setText(3, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
   updateListItem();
@@ -1626,12 +1561,30 @@ void KNRemoteArticle::thread(KNRemoteArticle::List *l)
 }
 
 
+void KNRemoteArticle::setForceDefaultCS(bool b)
+{
+  if (!b) { // restore default
+    KNGroup *g=static_cast<KNGroup*>(c_ol);
+    if (g->useCharset())
+      d_efaultCS = KGlobal::charsets()->charsetForEncoding(g->defaultCharset());
+    else
+      d_efaultCS = KGlobal::charsets()->charsetForEncoding(knGlobals.cfgManager->postNewsTechnical()->charset());
+  }
+  m_essageID.clear();
+  f_rom.clear();
+  KNArticle::setForceDefaultCS(b);
+  initListItem();
+}
+
+
 //=========================================================================================
 
 
 KNLocalArticle::KNLocalArticle(KNArticleCollection *c)
   : KNArticle(c), s_Offset(-1), e_Offset(-1), s_erverId(-1)
-{}
+{
+  d_efaultCS = KGlobal::charsets()->charsetForEncoding(knGlobals.cfgManager->postNewsTechnical()->charset());
+}
 
 
 KNLocalArticle::~KNLocalArticle()
@@ -1644,10 +1597,10 @@ void KNLocalArticle::parse()
   QCString raw;
 
   if(n_ewsgroups.isEmpty() && !(raw=rawHeader(n_ewsgroups.type())).isEmpty() )
-    n_ewsgroups.from7BitString(raw);
+    n_ewsgroups.from7BitString(raw, d_efaultCS, f_orceDefaultCS);
 
   if(t_o.isEmpty() && !(raw=rawHeader(t_o.type())).isEmpty() )
-    t_o.from7BitString(raw);
+    t_o.from7BitString(raw, d_efaultCS, f_orceDefaultCS);
 }
 
 
@@ -1677,9 +1630,9 @@ KNHeaders::Base* KNLocalArticle::getHeaderByType(const char *type)
 void KNLocalArticle::setHeader(KNHeaders::Base *h)
 {
   if(h->is("To"))
-		t_o.from7BitString(h->as7BitString(false));
+		t_o.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);
   else if(h->is("Newsgroups"))  	
-	  n_ewsgroups.from7BitString(h->as7BitString(false));	
+	  n_ewsgroups.from7BitString(h->as7BitString(false), d_efaultCS, f_orceDefaultCS);	
 	else
     return KNArticle::setHeader(h);	
 }
@@ -1704,12 +1657,14 @@ void KNLocalArticle::updateListItem()
     return;
 
   i_tem->setText(0, s_ubject.asUnicodeString());
+  i_tem->subjectCS = s_ubject.rfc2047Charset();
   QString tmp;
   int idx=0;
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
   if(doPost()) {
     tmp+=n_ewsgroups.asUnicodeString();
+    i_tem->nameCS = n_ewsgroups.rfc2047Charset();
     if(canceled())
       i_tem->setPixmap(idx++, app->icon(KNConfig::Appearance::canceledPosting));
     else
@@ -1721,11 +1676,23 @@ void KNLocalArticle::updateListItem()
     if(doPost())
       tmp+=" / ";
     tmp+=t_o.asUnicodeString();
+    i_tem->nameCS = t_o.rfc2047Charset();
   }
 
   i_tem->setText(1, tmp);
   i_tem->setText(2, QString::null);
   i_tem->setText(3, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
+}
+
+
+void KNLocalArticle::setForceDefaultCS(bool b)
+{
+  if (!b)  // restore default
+    d_efaultCS = KGlobal::charsets()->charsetForEncoding(knGlobals.cfgManager->postNewsTechnical()->charset());
+  n_ewsgroups.clear();
+  t_o.clear();
+  KNArticle::setForceDefaultCS(b);
+  updateListItem();
 }
 
 
@@ -1813,7 +1780,7 @@ void KNAttachment::updateContentInfo()
   //Content-Type
   KNHeaders::ContentType *t=c_ontent->contentType();
   t->setMimeType(m_imeType);
-  t->setName( KNMimeBase::encodeRFC2047String(n_ame, KGlobal::charsets()->charsetForLocale()) );
+  t->setName(n_ame, KGlobal::charsets()->charsetForLocale());
   t->setCategory(KNHeaders::CCmixedPart);
 
   //Content-Description

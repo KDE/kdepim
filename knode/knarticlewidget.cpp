@@ -111,6 +111,16 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
                           SLOT(slotToggleRot13()), a_ctions, "view_rot13");
 
+  a_ctSetCharset = new KSelectAction(i18n("Chars&et"), 0, a_ctions, "set_charset");
+  QStringList cs=KGlobal::charsets()->availableEncodingNames();
+  cs.prepend(i18n("Automatic"));
+  a_ctSetCharset->setItems(cs);
+  a_ctSetCharset->setCurrentItem(0);
+  connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
+    this, SLOT(slotSetCharset(const QString&)));
+  overrideCS=QFont::ISO_8859_1;
+  forceCS=false;
+
   //timer
   t_imer=new QTimer(this);
   connect(t_imer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
@@ -466,6 +476,7 @@ void KNArticleWidget::showBlankPage()
   a_ctSupersede->setEnabled(false);
   a_ctToggleFullHdrs->setEnabled(false);
   a_ctToggleRot13->setEnabled(false);
+  a_ctSetCharset->setEnabled(false);
 }
 
 
@@ -493,6 +504,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctSupersede->setEnabled(false);
   a_ctToggleFullHdrs->setEnabled(false);
   a_ctToggleRot13->setEnabled(false);
+  a_ctSetCharset->setEnabled(false);
 }
 
 
@@ -572,6 +584,12 @@ void KNArticleWidget::createHtmlPage()
   if(!a_rticle->hasContent()) {
     showErrorMessage(i18n("the article contains no data"));
     return;
+  }
+
+  if ((forceCS!=a_rticle->forceDefaultCS())||
+      (forceCS && (a_rticle->defaultCharset()!=overrideCS))) {
+    a_rticle->setDefaultCharset(overrideCS);
+    a_rticle->setForceDefaultCS(forceCS);
   }
 
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
@@ -706,6 +724,7 @@ void KNArticleWidget::createHtmlPage()
     a_ctPrint->setEnabled(true);
     a_ctSelAll->setEnabled(true);
     a_ctToggleFullHdrs->setEnabled(true);
+    a_ctSetCharset->setEnabled(true);
     return;
   }
 
@@ -837,6 +856,7 @@ void KNArticleWidget::createHtmlPage()
  	                          	
   a_ctToggleFullHdrs->setEnabled(true);
   a_ctToggleRot13->setEnabled(true);
+  a_ctSetCharset->setEnabled(true);
 
   //start automark-timer
   if(a_rticle->type()==KNMimeBase::ATremote && rng->autoMark())
@@ -1087,6 +1107,27 @@ void KNArticleWidget::slotToggleRot13()
 {
   r_ot13=!r_ot13;
   updateContents();
+}
+
+
+void KNArticleWidget::slotSetCharset(const QString &s)
+{
+  if(s.isEmpty())
+    return;
+
+  if (s == i18n("Automatic")) {
+    forceCS=false;
+    overrideCS=QFont::ISO_8859_1;
+  } else {
+    forceCS=true;
+    overrideCS=KGlobal::charsets()->charsetForEncoding(s);
+  }
+
+  if (a_rticle && a_rticle->hasContent()) {
+    a_rticle->setDefaultCharset(overrideCS);  // the article will choose the correct default,
+    a_rticle->setForceDefaultCS(forceCS);     // when we disable the overdrive
+    createHtmlPage();
+  }
 }
 
 
