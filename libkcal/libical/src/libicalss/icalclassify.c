@@ -251,8 +251,9 @@ void icalssutil_get_parts(icalcomponent* c,
 		parts->reply_partstat = 
 		    icalparameter_get_partstat(param);
 	    }
-	    
-	    parts->reply_attendee = strdup(icalproperty_get_attendee(p));
+	 const char *attendee = icalproperty_get_attendee(p);
+	 if ( attendee )
+	 	parts->reply_attendee = strdup( attendee );
 	}
 
     }    
