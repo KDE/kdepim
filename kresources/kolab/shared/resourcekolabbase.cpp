@@ -87,8 +87,9 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
                                      const QString& xml,
                                      const QString& mimetype,
                                      const QString& subject,
-                                     const QStringList& attachments,
-                                     const QStringList& mimetypes,
+                                     const QStringList& _attachmentURLs,
+                                     const QStringList& _attachmentMimetypes,
+                                     const QStringList& _attachmentNames,
                                      const QStringList& deletedAttachments )
 {
   if ( mSilent )
@@ -103,19 +104,23 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
   file.close();
 
   // Add the xml file as an attachment
-  QStringList a = attachments;
-  QStringList m = mimetypes;
+  QStringList attachmentURLs = _attachmentURLs;
+  QStringList attachmentMimeTypes = _attachmentMimetypes;
+  QStringList attachmentNames = _attachmentNames;
   KURL url;
   url.setPath( file.name() );
   url.setFileEncoding( "UTF-8" );
-  a.prepend( url.url() );
-  m.prepend( mimetype );
+  attachmentURLs.prepend( url.url() );
+  attachmentMimeTypes.prepend( mimetype );
+  attachmentNames.prepend( "kolab.xml" );
 
   QString subj = subject;
   if ( subj.isEmpty() )
     subj = i18n("Internal kolab data: Do not delete this mail.");
 
-  return mConnection->kmailUpdate( resource, sernum, subj, a, m, deletedAttachments );
+  return mConnection->kmailUpdate( resource, sernum, subj,
+                                   attachmentURLs, attachmentMimeTypes, attachmentNames,
+                                   deletedAttachments );
 }
 
 QString ResourceKolabBase::configFile( const QString& type ) const

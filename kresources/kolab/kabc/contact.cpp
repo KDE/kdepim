@@ -34,29 +34,24 @@
 
 #include <kabc/addressee.h>
 #include <kdebug.h>
+#include "resourcekolab.h"
 
 using namespace Kolab;
 
+const char* Contact::s_pictureAttachmentName = "kolab-picture.png";
 
-KABC::Addressee Contact::xmlToAddressee( const QString& xml )
-{
-  Contact contact;
-  contact.load( xml );
-  KABC::Addressee addressee;
-  contact.saveTo( &addressee );
-  return addressee;
-}
-
-QString Contact::addresseeToXML( const KABC::Addressee& addressee )
-{
-  Contact contact( &addressee );
-  return contact.saveXML();
-}
-
+// saving (addressee->xml)
 Contact::Contact( const KABC::Addressee* addr )
 {
-  if ( addr )
-    setFields( addr );
+  setFields( addr );
+}
+
+// loading (xml->addressee)
+Contact::Contact( const QString& xml, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
+{
+  load( xml );
+  if ( !mPictureAttachmentName.isEmpty() )
+    loadPicture( resource, subResource, sernum );
 }
 
 Contact::~Contact()
@@ -283,18 +278,15 @@ QDate Contact::anniversary() const
   return mAnniversary;
 }
 
-#if 0
-// TODO. Probably a QPixmap
-void Contact::setPicture( const QMap& picture )
+void Contact::setPicture( const QImage& picture )
 {
   mPicture = picture;
 }
 
-QPixmap Contact::picture() const
+QImage Contact::picture() const
 {
   return mPicture;
 }
-#endif
 
 void Contact::setChildren( const QString& children )
 {
@@ -591,8 +583,7 @@ bool Contact::loadAttribute( QDomElement& element )
   else if ( tagName == "anniversary" )
     setAnniversary( stringToDate( element.text() ) );
   else if ( tagName == "picture" )
-    // TODO
-    ; //setPicture( element.text() );
+    mPictureAttachmentName = ( element.text() );
   else if ( tagName == "children" )
     setChildren( element.text() );
   else if ( tagName == "gender" )
@@ -635,9 +626,7 @@ bool Contact::saveAttributes( QDomElement& element ) const
   writeString( element, "spouse-name", spouseName() );
   writeString( element, "birthday", dateToString( birthday() ) );
   writeString( element, "anniversary", dateToString( anniversary() ) );
-#if 0
-  writeString( element, "picture", picture() );
-#endif
+  writeString( element, "picture", s_pictureAttachmentName );
   writeString( element, "children", children() );
   writeString( element, "gender", gender() );
   writeString( element, "language", language() );
@@ -807,9 +796,6 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setSpouseName( addressee->custom( "KADDRESSBOOK", "X-SpousesName" ) );
   setBirthday( addressee->birthday().date() );
   setAnniversary( stringToDate( addressee->custom( "KADDRESSBOOK", "X-Anniversary" ) ) );
-#if 0
-  setPicture( addressee->photo() );
-#endif
 
   const QStringList emails = addressee->emails();
   // Conversion problem here:
@@ -853,6 +839,9 @@ void Contact::setFields( const KABC::Addressee* addressee )
       addPhoneNumber( phoneNumber );
     }
   }
+
+  // ### TODO load picture from addressee->logo().url() if !isIntern()
+  setPicture( addressee->logo().data() );
 
   // TODO: Unhandled Addressee fields:
   // mailer, timezone, geo, productId, sortString, logo, sound
@@ -898,9 +887,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
   else
     addressee->removeCustom( "KADDRESSBOOK", "X-Anniversary" );
 
-#if 0
-  addressee->setPicture( photo() );
-#endif
+  addressee->setLogo( KABC::Picture( mPicture ) );
 
   QStringList emailAddresses;
   for ( QValueList<Email>::ConstIterator it = mEmails.begin(); it != mEmails.end(); ++it ) {
@@ -928,5 +915,14 @@ void Contact::saveTo( KABC::Addressee* addressee )
     number.setType( phoneTypeFromString( (*it).type ) );
     number.setNumber( (*it).number );
     addressee->insertPhoneNumber( number );
+  }
+}
+
+void Contact::loadPicture( KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum )
+{
+  KURL url;
+  if ( resource->kmailGetAttachment( url, subResource, sernum, mPictureAttachmentName ) ) {
+    const QString path = url.path();
+    mPicture.load( path );
   }
 }

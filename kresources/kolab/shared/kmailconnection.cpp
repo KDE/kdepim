@@ -208,15 +208,16 @@ bool KMailConnection::kmailDeleteIncidence( const QString& resource,
 bool KMailConnection::kmailUpdate( const QString& resource,
                                    Q_UINT32& sernum,
                                    const QString& subject,
-                                   const QStringList& attachments,
-                                   const QStringList& mimetypes,
+                                   const QStringList& attachmentURLs,
+                                   const QStringList& attachmentMimetypes,
+                                   const QStringList& attachmentNames,
                                    const QStringList& deletedAttachments )
 {
   if ( connectToKMail() ) {
-    sernum = mKMailIcalIfaceStub->update( resource, sernum,
-                                          subject, attachments,
-                                          mimetypes, deletedAttachments );
-
+    sernum = mKMailIcalIfaceStub->update( resource, sernum, subject,
+                                          attachmentURLs, attachmentMimetypes, attachmentNames,
+                                          deletedAttachments );
+    kdDebug() << k_funcinfo << "sernum=" << sernum << " ok=" << mKMailIcalIfaceStub->ok() << endl;
     return sernum && mKMailIcalIfaceStub->ok();
   } else
     return false;

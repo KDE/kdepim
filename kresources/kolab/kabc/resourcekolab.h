@@ -144,6 +144,7 @@ protected:
   void loadSubResourceConfig( KConfig& config, const QString& name,
                               bool writable );
   bool loadSubResource( const QString& subResource );
+  void loadContact( const QString& contactXML, const QString& subResource, Q_UINT32 sernum );
 
   QString configFile() const {
     return Kolab::ResourceKolabBase::configFile( "kabc" );

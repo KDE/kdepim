@@ -1,1 +1,1 @@
-SUBDIRS = shared kabc knotes #kcal
+SUBDIRS = shared kabc knotes kcal

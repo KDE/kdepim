@@ -34,9 +34,11 @@
 #define KOLABCONTACT_H
 
 #include <kolabbase.h>
+#include <qimage.h>
 
 namespace KABC {
   class Addressee;
+  class ResourceKolab;
 }
 
 namespace Kolab {
@@ -65,13 +67,8 @@ public:
     QString country;
   };
 
-  /// Use this to parse an xml string to a contact entry
-  static KABC::Addressee xmlToAddressee( const QString& xml );
-
-  /// Use this to get an xml string describing this contact
-  static QString addresseeToXML( const KABC::Addressee& );
-
-  explicit Contact( const KABC::Addressee* address = 0 );
+  explicit Contact( const KABC::Addressee* address );
+  Contact( const QString& xml, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
   ~Contact();
 
   void saveTo( KABC::Addressee* address );
@@ -144,11 +141,9 @@ public:
   void setAnniversary( const QDate& date );
   QDate anniversary() const;
 
-#if 0
-  // TODO. Probably a QPixmap
-  void setPicture( const QString& name );
-  QString picture() const;
-#endif
+  void loadPicture( KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
+  void setPicture( const QImage& image );
+  QImage picture() const;
 
   void setChildren( const QString& children );
   QString children() const;
@@ -186,6 +181,8 @@ public:
 
   // Serialize this note to an XML string
   QString saveXML() const;
+
+  static const char* s_pictureAttachmentName;
 
 protected:
   void setFields( const KABC::Addressee* );
@@ -225,9 +222,8 @@ private:
   QString mSpouseName;
   QDate mBirthday;
   QDate mAnniversary;
-#if 0
-  QPixmap mPicture;
-#endif
+  QImage mPicture;
+  QString mPictureAttachmentName; // only used when loading
   QString mChildren;
   QString mGender;
   QString mLanguage;

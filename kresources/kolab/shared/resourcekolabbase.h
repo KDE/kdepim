@@ -108,6 +108,7 @@ protected:
   bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
                         const QString& resource ) const;
 
+public: // for Contact
   /// Get an attachment from a mail. Returns a URL to it. This can
   /// be called by the resource after obtaining the incidence.
   /// The resource must delete the temp file.
@@ -115,6 +116,7 @@ protected:
                            Q_UINT32 sernum,
                            const QString& filename ) const;
 
+protected:
   /// Delete an incidence.
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
 
@@ -124,8 +126,9 @@ protected:
                     const QString& xml,
                     const QString& mimetype,
                     const QString& subject,
-                    const QStringList& attachments = QStringList(),
-                    const QStringList& mimetypes = QStringList(),
+                    const QStringList& attachmentURLs = QStringList(),
+                    const QStringList& attachmentMimetypes = QStringList(),
+                    const QStringList& attachmentNames = QStringList(),
                     const QStringList& deletedAttachments = QStringList() );
 
   /// Get the full path of the config file.

@@ -30,14 +30,17 @@
     your version.
 */
 
+#include "resourcekolab.h"
+#include "contact.h"
+
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <qstring.h>
-
-#include "resourcekolab.h"
-#include "contact.h"
 #include <kmessagebox.h>
+#include <ktempfile.h>
+
+#include <qstring.h>
+#include <qfile.h>
 
 using namespace Kolab;
 
@@ -63,8 +66,8 @@ extern "C"
   }
 }
 
-static const char* kmailContentsType = "Contact";
-static const char* attachmentMimeType = "application/x-vnd.kolab.contact";
+static const char* s_kmailContentsType = "Contact";
+static const char* s_attachmentMimeType = "application/x-vnd.kolab.contact";
 
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
@@ -98,7 +101,7 @@ bool KABC::ResourceKolab::doOpen()
 
   // Read the calendar entries
   QMap<QString, bool> subResources;
-  if ( !kmailSubresources( subResources, kmailContentsType ) )
+  if ( !kmailSubresources( subResources, s_kmailContentsType ) )
     return false;
   mSubResources.clear();
   QMap<QString, bool>::ConstIterator it;
@@ -135,10 +138,22 @@ void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
   delete ticket;
 }
 
+void KABC::ResourceKolab::loadContact( const QString& contactXML, const QString& subResource, Q_UINT32 sernum )
+{
+  Contact contact( contactXML, this, subResource, sernum ); // load
+  KABC::Addressee addr;
+  contact.saveTo( &addr );
+
+  addr.setResource( this );
+  addr.setChanged( false );
+  KABC::Resource::insertAddressee( addr ); // same as mAddrMap.insert( addr.uid(), addr );
+  mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
+}
+
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
   QMap<Q_UINT32, QString> lst;
-  if ( !kmailIncidences( lst, attachmentMimeType, subResource ) ) {
+  if ( !kmailIncidences( lst, s_attachmentMimeType, subResource ) ) {
     kdError() << "Communication problem in ResourceKolab::load()\n";
     return false;
   }
@@ -146,11 +161,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
   kdDebug(5500) << "Contacts kolab resource: got " << lst.count() << " contacts in " << subResource << endl;
 
   for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-    KABC::Addressee addr = Contact::xmlToAddressee( it.data() );
-    addr.setResource( this );
-    addr.setChanged( false );
-    Resource::insertAddressee( addr );
-    mUidMap[ addr.uid() ] = StorageReference( subResource, it.key() );
+    loadContact( it.data(), subResource, it.key() );
   }
 
   return true;
@@ -183,13 +194,35 @@ bool KABC::ResourceKolab::save( Ticket* )
       rc &= kmailUpdateAddressee( *it );
     }
 
+  if ( !rc )
+    kdDebug() << k_funcinfo << " failed." << endl;
   return rc;
 }
 
 bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 {
-  const QString xml = Contact::addresseeToXML( addr );
+  Contact contact( &addr );
   const QString uid = addr.uid();
+  // The addressee is converted to: 1) the xml  2) the optional picture
+  const QString xml = contact.saveXML();
+  QStringList attachmentURLs;
+  QStringList attachmentNames;
+  QStringList attachmentMimeTypes;
+  QStringList deletedAttachments;
+  QValueList<KTempFile *> tempFiles;
+  QImage pic = contact.picture();
+  if ( !pic.isNull() ) {
+    KTempFile* tempFile = new KTempFile;
+    tempFile->setAutoDelete( true );
+    pic.save( tempFile->file(), "PNG" );
+    KURL url;
+    url.setPath( tempFile->name() );
+    attachmentURLs.append( url.url() );
+    attachmentMimeTypes.append( "image/png" );
+    attachmentNames.append( Contact::s_pictureAttachmentName );
+  } else {
+    deletedAttachments.append( Contact::s_pictureAttachmentName );
+  }
 
   QString subResource;
   Q_UINT32 sernum;
@@ -201,7 +234,11 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     sernum = 0;
   }
 
-  bool rc = kmailUpdate( subResource, sernum, xml, attachmentMimeType, addr.assembledName() );
+  bool rc = kmailUpdate( subResource, sernum, xml, s_attachmentMimeType, addr.assembledName(),
+                         attachmentURLs, attachmentMimeTypes, attachmentNames,
+                         deletedAttachments );
+  if ( !rc )
+    kdDebug(5500) << "kmailUpdate returned false!" << endl;
   if ( rc ) {
     mUidMap[ uid ] = StorageReference( subResource, sernum );
     // This is ugly, but it's faster than doing
@@ -209,6 +246,10 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     // Reason for this: The Changed attribute of Addressee should
     // be mutable
     const_cast<Addressee&>(addr).setChanged( false );
+  }
+
+  for( QValueList<KTempFile *>::Iterator it = tempFiles.begin(); it != tempFiles.end(); ++it ) {
+    delete (*it);
   }
   return rc;
 }
@@ -252,19 +293,15 @@ void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
 bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
                                                  const QString& subResource,
                                                  Q_UINT32 sernum,
-                                                 const QString& contact )
+                                                 const QString& contactXML )
 {
   // Check if this is a contact
-  if( type != kmailContentsType ) return false;
+  if( type != s_kmailContentsType ) return false;
 
   const bool silent = mSilent;
   mSilent = true;
 
-  KABC::Addressee addr = Contact::xmlToAddressee( contact );
-  addr.setResource( this );
-  addr.setChanged( false );
-  mAddrMap.insert( addr.uid(), addr );
-  mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
+  loadContact( contactXML, subResource, sernum );
 
   addressBook()->emitAddressBookChanged();
 
@@ -278,7 +315,7 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
                                                  const QString& uid )
 {
   // Check if this is a contact
-  if( type != kmailContentsType ) return;
+  if( type != s_kmailContentsType ) return;
 
   const bool silent = mSilent;
   mSilent = true;
@@ -294,7 +331,7 @@ void KABC::ResourceKolab::slotRefresh( const QString& type,
                                        const QString& /*subResource*/ )
 {
   // Check if this is a contact
-  if( type != kmailContentsType ) return;
+  if( type != s_kmailContentsType ) return;
 
   const bool silent = mSilent;
   mSilent = true;
@@ -309,7 +346,7 @@ void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
                                                    const QString& subResource,
                                                    bool writable )
 {
-  if( type != kmailContentsType ) return;
+  if( type != s_kmailContentsType ) return;
 
   if ( mSubResources.contains( subResource ) )
     // Already registered
@@ -326,7 +363,7 @@ void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
 void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
                                                    const QString& subResource )
 {
-  if( type != kmailContentsType ) return;
+  if( type != s_kmailContentsType ) return;
 
   if ( !mSubResources.contains( subResource ) )
     // Not registered
