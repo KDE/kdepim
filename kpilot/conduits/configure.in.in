@@ -96,7 +96,7 @@ NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
   kde_save_CFLAGS="$CFLAGS"
   kde_save_CPPFLAGS="$CPPFLAGS"
   kde_save_LDFLAGS="$LDFLAGS"
-  LIBS="$LIBS $PISOCK_LIB $MAL_LIB -ldl"
+  LIBS="$LIBS $PISOCK_LIB $MAL_LIB"
   CFLAGS="$CFLAGS $MAL_INCLUDE"
   CPPFLAGS="$CPPFLAGS $all_includes $PISOCK_INCLUDE $MAL_INCLUDE"
   LDFLAGS="$LDFLAGS $all_libraries"
@@ -111,6 +111,20 @@ NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
   ],
   , with_mal=no
   )
+  if test "$with_mal" = "no" ; then
+    MAL_LIB="$MAL_LIB -ldl"
+    LIBS="$LIBS $PISOCK_LIB $MAL_LIB"
+    with_mal=yes
+    AC_TRY_LINK(dnl
+    [
+    #include <libmal.h>
+    ],
+    [
+    PalmSyncInfo *psi;
+    ],
+    , with_mal=no
+    )
+  fi
   if test "$with_mal" = "no" ; then
     MAL_INCLUDE=
     MAL_LIB=
