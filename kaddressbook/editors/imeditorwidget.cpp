@@ -212,12 +212,10 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 		//kdDebug( 0 ) << QString::fromLatin1("messaging/%1").arg( protocolToString( *protocolIt ) ) <<
 		//						QString::fromLatin1("All") <<
 		//					lst.join( QChar( 0xE000 ) ) << endl;
-		QString addrBookField;
+		
+		QString addrBookField = ( *protocolIt )->property( "X-KDE-InstantMessagingKABCField" ).toString();
 		if ( !lst.isEmpty() )
-		{
-			addrBookField = ( *protocolIt )->property( "X-KDE-InstantMessagingKABCField" ).toString();
 			addr->insertCustom( addrBookField, QString::fromLatin1( "All" ), lst.join( QChar( 0xE000 ) ) );
-		}
 		else
 			addr->removeCustom( addrBookField, QString::fromLatin1("All") );
 	}
@@ -234,10 +232,14 @@ void IMEditorWidget::setReadOnly( bool readOnly )
 
 void IMEditorWidget::slotUpdateButtons()
 {
-	if ( !mReadOnly && mWidget->lvAddresses->selectedItem() )
+	int num_selected = mWidget->lvAddresses->selectedItems().count(); 
+	if ( !mReadOnly && num_selected == 1)
 	{
 		//mWidget->btnAdd->setEnabled( true );
 		mWidget->btnEdit->setEnabled( true );
+		mWidget->btnDelete->setEnabled( true );
+	} else if(!mReadOnly && num_selected > 1) {	
+		mWidget->btnEdit->setEnabled( false );
 		mWidget->btnDelete->setEnabled( true );
 	}
 	else
@@ -268,7 +270,8 @@ void IMEditorWidget::slotAdd()
 
 void IMEditorWidget::slotEdit()
 {
-	if ( IMAddressLVI *current = static_cast<IMAddressLVI*>(mWidget->lvAddresses->selectedItem() ) )
+	QListViewItemIterator it( mWidget->lvAddresses, QListViewItemIterator::Selected );
+	if ( IMAddressLVI *current = static_cast<IMAddressLVI*>(it.current() ) ) //just edit the first one selected.
 	{
 		KDialogBase *editDialog = new KDialogBase( this, "editaddress", true, i18n("Edit Address"), KDialogBase::Ok|KDialogBase::Cancel );
 		IMAddressWidget *addressWid = new IMAddressWidget( editDialog, mProtocols, current->protocol(), current->address(), current->context() ) ;
@@ -301,7 +304,7 @@ void IMEditorWidget::slotEdit()
 					mChangedProtocols.append( current->protocol() );
 			}
 
-			setModified( modified);
+			if(modified) setModified(true);
 		}
                 delete editDialog;
 	}
@@ -309,18 +312,34 @@ void IMEditorWidget::slotEdit()
 
 void IMEditorWidget::slotDelete()
 {
-	if ( mWidget->lvAddresses->selectedItem() && KMessageBox::warningContinueCancel( this, i18n("Do you really want to remove the selected address?"), i18n("Confirm Remove"), KGuiItem(i18n("&Remove"),"editdelete") ) == KMessageBox::Continue  )
+	int num_selected = 0;
 	{
-		IMAddressLVI * current = static_cast<IMAddressLVI*>( mWidget->lvAddresses->selectedItem() );
-		if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
-		{
-			mChangedProtocols.append( current->protocol() );
-			//kdDebug ( 0 ) << " changed protocols:  " << mProtocols.count() << endl;
-		}
-		delete current;
-
-		setModified( true );
+		QListViewItemIterator it( mWidget->lvAddresses, QListViewItemIterator::Selected );
+		while ( it.current() ) {
+			num_selected++;
+			++it;
+	        }
 	}
+	if(num_selected == 0)
+		return;
+	if(KMessageBox::warningContinueCancel( this, i18n("Do you really want to remove the selected address?", "Do you really want to remove the %n selected addresses?", num_selected), i18n("Confirm Remove"), KGuiItem(i18n("&Remove"),"editdelete") ) != KMessageBox::Continue )
+		return;
+	
+	QListViewItemIterator it( mWidget->lvAddresses);
+        while(it.current())
+	{
+		if(it.current()->isSelected()) {
+			IMAddressLVI * current = static_cast<IMAddressLVI*>( *it );
+			if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
+			{
+				mChangedProtocols.append( current->protocol() );
+				//kdDebug ( 0 ) << " changed protocols:  " << mProtocols.count() << endl;
+			}
+			delete current;
+		} else
+			++it;
+	}
+	setModified( true );
 }
 
 KPluginInfo * IMEditorWidget::protocolFromString( QString fieldValue )

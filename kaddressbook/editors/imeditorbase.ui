@@ -45,6 +45,9 @@
             <property name="name">
                 <cstring>lvAddresses</cstring>
             </property>
+            <property name="selectionMode" stdset="0">
+                <enum>Extended</enum>
+            </property>
             <property name="allColumnsShowFocus">
                 <bool>true</bool>
             </property>
