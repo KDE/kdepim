@@ -1,4 +1,4 @@
-<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V4.1-Based Variant V1.0//EN" [
+<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
   <!ENTITY % English "INCLUDE" -- Change language ONLY here -->
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V2.0//EN">
@@ -1796,6 +1796,9 @@ Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
 </book>
 <!-- 
      $Log$
+     Revision 1.4  2000/12/19 07:12:26  adridg
+     Mostly updated
+
      Revision 1.3  2000/12/13 15:33:40  adridg
      Moved to newer DTDs and entities
 
