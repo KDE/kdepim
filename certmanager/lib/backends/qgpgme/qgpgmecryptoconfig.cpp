@@ -247,9 +247,9 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   (void)runtime;
 #endif
   commandLine += " --change-options ";
-  commandLine += mName;
+  commandLine += KProcess::quote( mName );
   commandLine += " < ";
-  commandLine += tmpFile.name();
+  commandLine += KProcess::quote( tmpFile.name() );
 
   KProcess proc;
   proc.setUseShell( true );
