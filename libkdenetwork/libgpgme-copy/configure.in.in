@@ -298,13 +298,10 @@ dnl AM_CONDITIONAL(BUILD_ASSUAN, test "$GPGSM" != "no")
 
 if test "$GPGSM" != "no"; then
   AC_CHECK_FUNCS(funopen)
-  if test $ac_cv_func_funopen != yes; then
+  #if test $ac_cv_func_funopen != yes; then
     # No funopen but we can implement that in terms of fopencookie.
-    AC_CHECK_FUNCS(fopencookie, AC_LIBOBJ(funopen),
-                   AC_MSG_ERROR([[
-No implementation of fopencookie or funopen available.
-]]))
-  fi
+   # AC_CHECK_FUNCS(fopencookie, AC_LIBOBJ(funopen), AC_MSG_ERROR([[No implementation of fopencookie or funopen available.]]))
+  #fi
 
   dnl it's a #define !!!
   dnl AC_CHECK_FUNCS(isascii)
