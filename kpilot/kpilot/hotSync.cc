@@ -157,7 +157,7 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 
 	addSyncLogEntry(i18n("Full backup started."));
 
-	ASSERT(!fTimer);
+	// ASSERT(!fTimer);
 
 	fTimer = new QTimer(this);
 	QObject::connect(fTimer, SIGNAL(timeout()),
@@ -207,7 +207,6 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 
 	QString s = i18n("Backing up: %1").arg(info.name);
 	addSyncLogEntry(s);
-	emit logMessage(s);
 
 	if (!createLocalDatabase(&info))
 	{
@@ -218,7 +217,7 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 	}
 	else
 	{
-		addSyncLogEntry(i18n(" .. OK\n"));
+		addSyncLogEntry(i18n(" .. OK\n"),false); // Not in kpilot log.
 	}
 }
 
@@ -489,6 +488,11 @@ CleanupAction::~CleanupAction()
 
 
 // $Log$
+// Revision 1.18  2002/08/30 22:24:55  adridg
+// - Improved logging, connected the right signals now
+// - Try to handle dlp_ReadUserInfo failures sensibly
+// - Trying to sort out failures reading the database list.
+//
 // Revision 1.17  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //
