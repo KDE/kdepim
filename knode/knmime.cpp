@@ -439,7 +439,7 @@ bool KNMimeBase::UUParser::parse()
     }
 
   //printf("lineCount=%d , MCount=%d\n", lineCount, MCount);
-  if((lineCount-MCount)>5) return false; //too many "non-M-Lines" found, we give up
+  if( MCount==0 || (lineCount-MCount)>3 ) return false; //too many "non-M-Lines" found, we give up
 
   if( (!containsBegin || !containsEnd) && s_ubject) {  // message may be split up => parse subject
     pos=QRegExp("[0-9]+/[0-9]+").match(QString(s_ubject), 0, &len);
