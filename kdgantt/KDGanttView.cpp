@@ -199,6 +199,7 @@ KDGanttView::~KDGanttView()
   setUpdateEnabled(false);
   // delete cut item, if there is any
   myCanvasView->resetCutPaste( 0 );
+  myTimeTable->clearTaskLinks();
 }
 /*!
   Enables or disables updating of the content of the Gantt view.

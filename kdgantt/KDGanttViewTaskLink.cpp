@@ -47,6 +47,10 @@
   from the toList.
   If one of the lists becomes empty, the complete task link is deleted
   as well.
+  
+  The task link is deleted by KDGanttViews d'tor. 
+  You may delete the task link yourself, if you do it 
+  _before_ KDGanttViews d'tor is called.
 */
 
 

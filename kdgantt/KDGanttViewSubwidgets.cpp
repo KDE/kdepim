@@ -50,6 +50,7 @@
 #include <qdrawutil.h>
 #include <qpalette.h>
 #include <qdragobject.h>
+#include <qptrlist.h>
 
 #include <klocale.h>
 
@@ -74,6 +75,16 @@ KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCa
 QPtrList<KDGanttViewTaskLink> KDTimeTableWidget::taskLinks()
 {
     return myTaskLinkList;
+}
+
+void KDTimeTableWidget::clearTaskLinks()
+{
+    // cannot use clear() here, as tasklinks will remove themselves from my list when deleted!
+    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    while (it.current()) {
+        delete it.current();
+    }
+        
 }
 
 void KDTimeTableWidget::resetWidth( int wid )

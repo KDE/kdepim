@@ -258,6 +258,7 @@ public:
     void setShowTaskLinks( bool show );
     bool showTaskLinks();
     QPtrList<KDGanttViewTaskLink>taskLinks();
+    void clearTaskLinks();
     void updateMyContent();
     void removeItemFromTasklinks( KDGanttViewItem * );
     void setHorBackgroundLines( int count, QBrush brush );
