@@ -192,7 +192,7 @@ class KarmStorage
      * @param task   The task to be removed.
      * @return true if change was saved, false otherwise
      */
-    bool removeTask(const Task* task);
+    bool removeTask(Task* task);
 
     /**
      * Add this task from iCalendar file.

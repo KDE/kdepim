@@ -427,17 +427,19 @@ void TaskView::deleteTask()
   int response = KMessageBox::Yes;
   if ( _preferences->promptDelete() ) {
     if (task->childCount() == 0) {
-      response = KMessageBox::questionYesNo( 0,
-                  i18n( "Are you sure you want to delete "
-                        "the task named\n\"%1\"").arg(task->name()),
-                  i18n( "Deleting Task"));
+      response = KMessageBox::warningYesNo( 0,
+          i18n( "Are you sure you want to delete "
+          "the task named\n\"%1\" and it's entire history?")
+          .arg(task->name()), 
+          i18n( "Deleting Task"));
     }
     else {
-      response = KMessageBox::questionYesNo( 0,
-                  i18n( "Are you sure you want to delete the task named"
-                        "\n\"%1\"\n" "NOTE: all its subtasks will also "
-                        "be deleted!").arg(task->name()),
-                  i18n( "Deleting Task"));
+      response = KMessageBox::warningYesNo( 0,
+          i18n( "Are you sure you want to delete the task named"
+          "\n\"%1\" and it's entire history?\n" 
+          "NOTE: all its subtasks and their history will also "
+          "be deleted!").arg(task->name()),
+          i18n( "Deleting Task"));
     }
   }
 
@@ -470,8 +472,7 @@ void TaskView::deleteTask()
       save();
     }
     else
-      KMessageBox::error(0,i18n(
-            "Error deleting task--libkcal doesn't support this yet."));
+      KMessageBox::error(0,i18n("Error deleting task."));
   }
 
 }

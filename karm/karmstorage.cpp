@@ -410,29 +410,35 @@ QString KarmStorage::addTask(const Task* task, const Task* parent)
   return uid;
 }
 
-bool KarmStorage::removeTask(const Task* task)
+bool KarmStorage::removeTask(Task* task)
 {
-  return false;
-  /*
-
-     Commented out, because libkcal goes into an infinite loop on the
-     following statement.  2003-08-14, Mark
-
-  // delete todo
-  _calendar.deleteTodo(t);
-
-  kdDebug() << "KarmStorage::removeTask 2" << endl;
 
   // delete history
-  eventList = _calendar.rawEvents();
-  for(i = eventList.begin(); i != eventList.end(); ++i) 
-    _calendar.deleteEvent(*i);
-
-  kdDebug() << "KarmStorage::removeTask 3" << endl;
+  KCal::Event::List eventList = _calendar.rawEvents();
+  for(KCal::Event::List::iterator i = eventList.begin(); 
+      i != eventList.end(); 
+      ++i) 
+  {
+    //kdDebug() << "KarmStorage::removeTask: "
+    //  << (*i)->uid() << " - relatedToUid() " 
+    //  << (*i)->relatedToUid()
+    //  << ", relatedTo() = " << (*i)->relatedTo() <<endl;
+    if ( (*i)->relatedToUid() == task->uid()
+        || ( (*i)->relatedTo() 
+            && (*i)->relatedTo()->uid() == task->uid()))
+    {
+      _calendar.deleteEvent(*i);
+    }
+  }
+  
+  // delete todo
+  KCal::Todo *todo = _calendar.todo(task->uid());
+  _calendar.deleteTodo(todo);
 
   // save entire file
   _calendar.save(_icalfile);
-  */
+
+  return true;
 }
 
 void KarmStorage::addComment(const Task* task, const QString& comment)

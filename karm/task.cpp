@@ -204,6 +204,7 @@ bool Task::remove( QPtrList<Task>& activeTasks, KarmStorage* storage)
     {
       if (child->isRunning())
         child->setRunning(false, storage);
+      child->remove(activeTasks, storage);
     }
 
     // original

@@ -37,8 +37,10 @@ X * 2003-09-03: Timecard report.
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
 
-  * 2003-08-15: Update karmstorage.cpp when LocalCalendar::deleteTodo works.
+X * 2003-08-15: Update karmstorage.cpp when LocalCalendar::deleteTodo works.
       - KarmStorage::removeTask: delete "return false;" and uncomment code
+
+  * 2003-09-24: Fix "C" and "S" accelerators on file menu.
 
 X * 2003-09-18: Remove "Active: " from systray tooltip text.
 
@@ -69,6 +71,8 @@ X * 2003-09-16: Remove unused signal (see David Faure's email on kdepim list)
       - TaskView::load()
 
   * 2003-09-19: If task active, editing task stops timer.  Necessary?
+
+  * 2003-09-24: Add date to clipboard reports.
 
 Mark - 3.3
 --------------------------
