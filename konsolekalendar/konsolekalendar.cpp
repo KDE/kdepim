@@ -253,14 +253,17 @@ bool KonsoleKalendar::showInstance()
 
         htmlSettings.setEventView( false );
         htmlSettings.setMonthView( false );
-        title = i18n( "Appointments for " );
         if ( m_variables->getExportType() == ExportTypeMonthHTML ) {
-          title += QDate::longMonthName( firstdate.month() );
+          title = i18n( "Events:" );
           htmlSettings.setMonthView( true );
         } else {
-          title += firstdate.toString( Qt::TextDate );
-          if ( firstdate != lastdate ) {
-            title += " - " + lastdate.toString( Qt::TextDate );
+          if ( firstdate == lastdate ) {
+            title = i18n( "Events: %1" )
+                    .arg(  firstdate.toString( Qt::TextDate ) );
+          } else {
+            title = i18n( "Events: %1 - %2" )
+                    .arg( firstdate.toString( Qt::TextDate ) )
+                    .arg( lastdate.toString( Qt::TextDate ) );
           }
           htmlSettings.setEventView( true );
         }
