@@ -614,9 +614,6 @@ void CalendarResources::connectResource( ResourceCalendar *resource )
            SIGNAL( calendarChanged() ) );
   connect( resource, SIGNAL( resourceSaved( ResourceCalendar * ) ),
            SIGNAL( calendarSaved() ) );
-  connect( resource, SIGNAL( progress( ResourceCalendar *, const QString &,
-                                       int ) ),
-           SIGNAL( progress( ResourceCalendar *, const QString &, int ) ) );
 }
 
 ResourceCalendar *CalendarResources::resource(Incidence *inc)
