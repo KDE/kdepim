@@ -1,6 +1,6 @@
 /*
-    This file is part of KOrganizer.
-    Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
+    This file is part of libkdepim.
+    Copyright (c) 2000, 2001, 2002 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,34 +21,28 @@
     without including the source code for Qt in the source distribution.
 */
 
-// $Id$
-
 #include <qstringlist.h>
 #include <qlineedit.h>
 #include <qlistview.h>
 #include <qheader.h>
 #include <qpushbutton.h>
 
-#include "kabprefs.h"
+#include "kpimprefs.h"
 
 #include "categoryeditdialog.h"
 
-/*
- *  Constructs a CategoryEditDialog which is a child of 'parent', with the
- *  name 'name' and widget flags set to 'f'
- *
- *  The dialog will by default be modeless, unless you set 'modal' to
- *  TRUE to construct a modal dialog.
- */
-CategoryEditDialog::CategoryEditDialog( QWidget* parent,  const char* name, bool modal, WFlags fl )
-    : CategoryEditDialog_base( parent, name, modal, fl )
+CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget* parent,
+                                        const char* name, bool modal,
+                                        WFlags fl )
+  : CategoryEditDialog_base( parent, name, modal, fl ),
+    mPrefs( prefs )  
 {
   mCategories->header()->hide();
 
   QStringList::Iterator it;
   bool categoriesExist=false;
-  for (it = KABPrefs::instance()->mCategoryList.begin();
-       it != KABPrefs::instance()->mCategoryList.end(); ++it ) {
+  for (it = mPrefs->mCustomCategories.begin();
+       it != mPrefs->mCustomCategories.end(); ++it ) {
     new QListViewItem(mCategories,*it);
     categoriesExist=true;
   }
@@ -110,14 +104,14 @@ void CategoryEditDialog::slotOk()
 
 void CategoryEditDialog::slotApply()
 {
-  KABPrefs::instance()->mCategoryList.clear();
+  mPrefs->mCustomCategories.clear();
 
   QListViewItem *item = mCategories->firstChild();
   while(item) {
-    KABPrefs::instance()->mCategoryList.append(item->text(0));
+    mPrefs->mCustomCategories.append(item->text(0));
     item = item->nextSibling();
   }
-  KABPrefs::instance()->writeConfig();
+  mPrefs->writeConfig();
 
   emit categoryConfigChanged();
 }

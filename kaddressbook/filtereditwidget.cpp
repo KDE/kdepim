@@ -66,7 +66,7 @@ void FilterEditWidget::setFilter(const Filter &f)
   clear();
   
   mFilter = f;
-  QStringList cats = KABPrefs::instance()->mCategoryList;
+  QStringList cats = KABPrefs::instance()->mCustomCategories;
   QStringList filterCats = mFilter.categories();
   
   QStringList::Iterator iter;

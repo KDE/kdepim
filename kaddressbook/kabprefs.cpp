@@ -22,7 +22,6 @@
 */                                                                      
 
 #include <kconfig.h>
-#include <kapplication.h>
 #include <klocale.h>
 
 #include "kabprefs.h"
@@ -31,9 +30,9 @@ KABPrefs *KABPrefs::sInstance = 0;
 
 KABPrefs::KABPrefs()
 {
-  mConfig = kapp->config();
+  KPrefs::setCurrentGroup( "Views" );
   
-  load();
+  addItemBool( "HonorSingleClick", &mHonorSingleClick, false );
 }
 
 KABPrefs::~KABPrefs()
@@ -42,42 +41,18 @@ KABPrefs::~KABPrefs()
 
 KABPrefs *KABPrefs::instance()
 {
-  if (sInstance == 0)
+  if ( !sInstance ) {
     sInstance = new KABPrefs();
+    sInstance->readConfig();
+  }
 
   return sInstance;
 }
 
-void KABPrefs::writeConfig()
+void KABPrefs::setCategoryDefaults()
 {
-  save();
-}
-
-void KABPrefs::load()
-{
-  {
-    KConfigGroupSaver s(mConfig, "General");
-    mCategoryList = mConfig->readListEntry("Categories");
-    if (mCategoryList.count() == 0)
-      mCategoryList << i18n("Business") << i18n("Family") << i18n("School")
-                    << i18n("Customer") << i18n("Friend");
-  }
+  mCustomCategories.clear();
   
-  {
-    KConfigGroupSaver s(mConfig, "Views");
-    mHonorSingleClick = mConfig->readBoolEntry("HonorSingleClick", false);
-  }
+  mCustomCategories << i18n("Business") << i18n("Family") << i18n("School")
+                    << i18n("Customer") << i18n("Friend");
 }
-
-void KABPrefs::save()
-{
-  {
-    KConfigGroupSaver(mConfig, "General");
-    mConfig->writeEntry("Categories", mCategoryList);
-  }
-  {
-    KConfigGroupSaver(mConfig, "Views");
-    mConfig->writeEntry("HonorSingleClick", mHonorSingleClick);
-  }
-}
-

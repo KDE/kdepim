@@ -21,8 +21,6 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#include "addresseeeditorwidget.h"
-
 #include <qtabwidget.h>
 #include <qlayout.h>
 #include <qlabel.h>
@@ -40,16 +38,16 @@
 #include <kseparator.h>
 #include <klineedit.h>
 #include <kcombobox.h>
-//#include <kdateedit.h>
 #include <kdebug.h>
 
-#include "kdateedit.h"
-#include "categoryselectdialog.h"
-#include "categoryeditdialog.h"
-#include "addresseeeditorsupportwidgets.h"
+#include <libkdepim/categoryselectdialog.h>
+#include <libkdepim/categoryeditdialog.h>
 
-/////////////////////////////////////
-// AddresseeEditorWidget
+#include "kdateedit.h"
+#include "addresseeeditorsupportwidgets.h"
+#include "kabprefs.h"
+
+#include "addresseeeditorwidget.h"
 
 AddresseeEditorWidget::AddresseeEditorWidget(QWidget *parent, 
                                             const char *name)
@@ -524,7 +522,7 @@ void AddresseeEditorWidget::categoryButtonClicked()
   // Show the category dialog
   if (mCategoryDialog == 0)
   {
-    mCategoryDialog = new CategorySelectDialog(this);
+    mCategoryDialog = new CategorySelectDialog( KABPrefs::instance(), this );
     connect(mCategoryDialog, SIGNAL(categoriesSelected(const QStringList &)),
             SLOT(categoriesSelected(const QStringList &)));
     connect(mCategoryDialog, SIGNAL(editCategories()),
@@ -546,7 +544,7 @@ void AddresseeEditorWidget::editCategories()
 {
   if (mCategoryEditDialog == 0)
   {
-    mCategoryEditDialog = new CategoryEditDialog(this);
+    mCategoryEditDialog = new CategoryEditDialog( KABPrefs::instance(), this );
     connect(mCategoryEditDialog, SIGNAL(categoryConfigChanged()),
             SLOT(categoryButtonClicked()));
   }

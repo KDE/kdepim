@@ -1,4 +1,4 @@
-INCLUDES= -I./printing $(all_includes)
+INCLUDES= -I./printing -I$(top_srcdir) $(all_includes)
 
 SUBDIRS = detailledview printing . pics
 
@@ -15,6 +15,7 @@ kde_module_LTLIBRARIES = libkaddressbookpart.la
 libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 libkaddressbookpart_la_LIBADD  = ./detailledview/libdetailledview.la \
 				 ./printing/libprinter.la \
+                                 $(top_builddir)/libkdepim/libkdepim.la \
 				 $(LIB_KPARTS) $(LIB_KFILE) \
                                  -lkabc -lkdeprint
 libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
@@ -31,10 +32,9 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   cardview.cpp kaddressbookcardview.cpp addresseeeditorwidget.cpp \
   addresseeeditordialog.cpp configurecardviewdialog.cpp \
   addresseeeditorsupportwidgets.cpp kaddressbookprinter.cpp \
-  categoryselectdialog_base.ui categoryselectdialog.cpp \
-  categoryeditdialog_base.ui categoryeditdialog.cpp actionmanager.cpp \
   filtereditdialog.cpp filtereditwidget.cpp filter.cpp \
-  filterselectionwidget.cpp kdateedit.cpp configureviewfilterpage.cpp
+  filterselectionwidget.cpp kdateedit.cpp configureviewfilterpage.cpp \
+  actionmanager.cpp
 
 kaddressbook_METASOURCES = AUTO
 
@@ -49,7 +49,7 @@ noinst_HEADERS = kaddressbook.h undo.h kaddressbookview.h undocmds.h \
   cardview.h kaddressbookcardview.h addresseeeditorwidget.h \
   addresseeeditordialog.h configurecardviewdialog.h \
   addresseeeditorsupportwidgets.h kaddressbookprinter.h \
-  categoryselectdialog.h categoryeditdialog.h actionmanager.h \
+  actionmanager.h \
   filtereditdialog.h filtereditwidget.h filter.h filterselectionwidget.h \
   kdateedit.h configureviewfilterpage.h kabentrypainter.h
 

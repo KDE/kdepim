@@ -1,6 +1,6 @@
 /*
-    This file is part of KOrganizer.
-    Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
+    This file is part of libkdepim.
+    Copyright (c) 2000, 2001, 2002 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,33 +20,38 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-#ifndef CATEGORYEDITDIALOG_H
-#define CATEGORYEDITDIALOG_H
-// $Id$
+#ifndef KPIM_CATEGORYSELECTDIALOG_H
+#define KPIM_CATEGORYSELECTDIALOG_H
 
-#include "categoryeditdialog_base.h"
+#include <libkdepim/categoryselectdialog_base.h>
 
-class CategoryEditDialog : public CategoryEditDialog_base
+class KPimPrefs;
+
+class CategorySelectDialog : public CategorySelectDialog_base
 { 
     Q_OBJECT
   public:
-    CategoryEditDialog( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~CategoryEditDialog();
+    CategorySelectDialog( KPimPrefs *prefs, QWidget* parent = 0,
+                          const char* name = 0, 
+                          bool modal = FALSE, WFlags fl = 0 );
+    ~CategorySelectDialog();
 
+    void setCategories();
+    void setSelected(const QStringList &selList);
+    
   public slots:
-    void add();
-    void remove();
-    void modify();
-
     void slotOk();
     void slotApply();
+    void clear();
+    void updateCategoryConfig();
     
   signals:
-    void categoryConfigChanged();
+    void categoriesSelected(const QString &);
+    void categoriesSelected(const QStringList &);
+    void editCategories();
 
-  private slots:
-    void editItem(QListViewItem *item);
-  void slotTextChanged(const QString &text);
+  private:
+    KPimPrefs *mPrefs;
 };
 
-#endif // CATEGORYEDITDIALOG_H
+#endif

@@ -1,6 +1,6 @@
 /*
-    This file is part of KOrganizer.
-    Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
+    This file is part of libkdepim.
+    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,35 +20,33 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-#ifndef CATEGORYSELECTDIALOG_H
-#define CATEGORYSELECTDIALOG_H
-// $Id$
+#ifndef KPIMPREFS_H
+#define KPIMPREFS_H
 
-#include "categoryselectdialog_base.h"
+#include <qstringlist.h>
 
-/** This code has been borrowed from KOrganizer with Cornelius' approval.
-*/
-class CategorySelectDialog : public CategorySelectDialog_base
-{ 
-    Q_OBJECT
+#include "kprefs.h"
+
+class KPimPrefs : public KPrefs
+{
   public:
-    CategorySelectDialog( QWidget* parent = 0, const char* name = 0, 
-                          bool modal = FALSE, WFlags fl = 0 );
-    ~CategorySelectDialog();
+    KPimPrefs();
+    virtual ~KPimPrefs();
 
-    void setCategories();
-    void setSelected(const QStringList &selList);
-    
-  public slots:
-    void slotOk();
-    void slotApply();
-    void clear();
-    void updateCategoryConfig();
-    
-  signals:
-    void categoriesSelected(const QString &);
-    void categoriesSelected(const QStringList &);
-    void editCategories();
+    /** Set preferences to default values */
+    void usrSetDefaults();
+  
+    /** Read preferences from config file */
+    void usrReadConfig();
+
+    /** Write preferences to config file */
+    void usrWriteConfig();
+
+  public:
+    QStringList mCustomCategories;
+  
+  protected:
+    virtual void setCategoryDefaults() = 0;
 };
 
-#endif // CATEGORYSELECTDIALOG_H
+#endif

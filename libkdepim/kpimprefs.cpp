@@ -1,6 +1,6 @@
 /*
-    This file is part of KOrganizer.
-    Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
+    This file is part of libkdepim.
+    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,32 +20,40 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-#ifndef CATEGORYSELECTDIALOG_H
-#define CATEGORYSELECTDIALOG_H
-// $Id$
 
-#include "categoryselectdialog_base.h"
+#include <kglobal.h>
+#include <kconfig.h>
+#include <klocale.h>
+#include <kdebug.h>
 
-class CategorySelectDialog : public CategorySelectDialog_base
-{ 
-    Q_OBJECT
-  public:
-    CategorySelectDialog( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~CategorySelectDialog();
+#include "kpimprefs.h"
 
-    void setCategories();
-    void setSelected(const QStringList &selList);
-    
-  public slots:
-    void slotOk();
-    void slotApply();
-    void clear();
-    void updateCategoryConfig();
-    
-  signals:
-    void categoriesSelected(const QString &);
-    void categoriesSelected(const QStringList &);
-    void editCategories();
-};
+KPimPrefs::KPimPrefs() :
+  KPrefs("")
+{
+}
 
-#endif // CATEGORYSELECTDIALOG_H
+KPimPrefs::~KPimPrefs()
+{
+}
+
+void KPimPrefs::usrSetDefaults()
+{
+  setCategoryDefaults();
+}
+
+void KPimPrefs::usrReadConfig()
+{
+  kdDebug() << "KPimPrefs::usrReadConfig()" << endl;
+
+  config()->setGroup("General");
+  mCustomCategories = config()->readListEntry("Custom Categories");
+  if (mCustomCategories.isEmpty()) setCategoryDefaults();
+}
+
+
+void KPimPrefs::usrWriteConfig()
+{
+  config()->setGroup("General");
+  config()->writeEntry("Custom Categories",mCustomCategories);
+}

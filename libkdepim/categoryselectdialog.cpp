@@ -1,6 +1,6 @@
 /*
-    This file is part of KOrganizer.
-    Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
+    This file is part of libkdepim.
+    Copyright (c) 2000, 2001, 2002 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,27 +21,19 @@
     without including the source code for Qt in the source distribution.
 */
 
-// $Id$
-
 #include <qlistview.h>
 #include <qpushbutton.h>
 #include <qheader.h>
 
 #include "categoryselectdialog.h"
 
-#include "kabprefs.h"
-//#include "koglobals.h"
+#include "kpimprefs.h"
 
-/* 
- *  Constructs a CategorySelectDialog which is a child of 'parent', with the 
- *  name 'name' and widget flags set to 'f' 
- *
- *  The dialog will by default be modeless, unless you set 'modal' to
- *  TRUE to construct a modal dialog.
- */
-CategorySelectDialog::CategorySelectDialog( QWidget* parent,  const char* name, 
-                                             bool modal, WFlags fl )
-    : CategorySelectDialog_base( parent, name, modal, fl )
+CategorySelectDialog::CategorySelectDialog( KPimPrefs *prefs, QWidget* parent,
+                                            const char* name, 
+                                            bool modal, WFlags fl )
+  : CategorySelectDialog_base( parent, name, modal, fl ),
+    mPrefs( prefs )
 {
   mCategories->header()->hide();
 
@@ -56,19 +48,14 @@ void CategorySelectDialog::setCategories()
 
   QStringList::Iterator it;
 
-  for (it = KABPrefs::instance()->mCategoryList.begin();
-       it != KABPrefs::instance()->mCategoryList.end(); ++it ) {
+  for (it = mPrefs->mCustomCategories.begin();
+       it != mPrefs->mCustomCategories.end(); ++it ) {
     new QCheckListItem(mCategories,*it,QCheckListItem::CheckBox);
   }
 }
 
-
-/*  
- *  Destroys the object and frees any allocated resources
- */
 CategorySelectDialog::~CategorySelectDialog()
 {
-    // no need to delete child widgets, Qt does it all for us
 }
 
 void CategorySelectDialog::setSelected(const QStringList &selList)
@@ -135,4 +122,5 @@ void CategorySelectDialog::updateCategoryConfig()
   
   setSelected(selected);
 }
+
 #include "categoryselectdialog.moc"
