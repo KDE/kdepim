@@ -5,6 +5,7 @@ INCLUDES = -I$(top_srcdir)/libical/src/libical \
            -I$(srcdir)/versit -I$(top_srcdir)/ \
            -I$(top_srcdir)/knotes \
            -I$(top_builddir)/kaddressbook \
+           -I$(top_builddir)/kresources/egroupware \
            $(all_includes)
 
 noinst_HEADERS = kabc_resourcexmlrpcconfig.h kcal_resourcexmlrpcconfig.h \
