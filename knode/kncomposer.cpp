@@ -23,7 +23,7 @@
 #include <kaccel.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
-#include <kabapi.h>
+#include <kabc/addresseedialog.h>
 #include <kaction.h>
 #include <kstdaction.h>
 #include <kkeydialog.h>
@@ -1211,30 +1211,13 @@ void KNComposer::slotGroupsChanged(const QString &t)
 
 void KNComposer::slotToBtnClicked()
 {
-  KabAPI *kab;
-  AddressBook::Entry entry;
-  KabKey key;
-  QString path;
+  KABC::Addressee a = KABC::AddresseeDialog::getAddressee( this );
+  if ( a.isEmpty() ) return;
 
-  kab=new KabAPI(this);
-  if(kab->init()!=AddressBook::NoError) {
-    KMessageBox::error(this, i18n("Cannot initialize the addressbook"));
-    delete kab;
-    return;
-  }
-
-  if(kab->exec()) {
-    if(kab->getEntry(entry, key)!=AddressBook::NoError) {
-      KMessageBox::error(this, i18n("Cannot read addressbook entry"));
-    }
-    else {
-      QString to=v_iew->t_o->text();
-      if(!to.isEmpty()) to+=", ";
-      to+=entry.emails.first().latin1();
-      v_iew->t_o->setText(to);
-    }
-  }
-  delete kab;
+  QString to=v_iew->t_o->text();
+  if(!to.isEmpty()) to+=", ";
+  to+=a.fullEmail();
+  v_iew->t_o->setText(to);
 }
 
 
