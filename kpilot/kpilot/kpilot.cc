@@ -563,7 +563,7 @@ void KPilotInstaller::initMenu()
 
 	KActionMenu *syncPopup;
 
-	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("hotsync"),
+	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("kpilot"),
 		actionCollection(), "popup_hotsync");
 	connect(syncPopup, SIGNAL(activated()),
 		this, SLOT(slotHotSyncRequested()));
@@ -604,7 +604,7 @@ void KPilotInstaller::initMenu()
 		"should restore the Handheld from data on the PC."));
 	syncPopup->insert(a);
 
-	a = new KAction(i18n("&List Only"),CSL1("list"),0,
+	a = new KAction(i18n("&List Only"),CSL1("listsync"),0,
 		this,SLOT(slotListSyncRequested()),
 		actionCollection(), "file_list");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
