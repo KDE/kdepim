@@ -96,7 +96,8 @@ void KNNntpClient::doFetchGroups()
       if (line[1]=='.')
         line++;        // collapse double period into one
       else
-        break;        // message complete
+        if (line[1]==0)
+          break;   // message complete
     }
     s = strchr(line,' ');
     if(!s)
@@ -128,7 +129,8 @@ void KNNntpClient::doFetchGroups()
         if (line[1]=='.')
           line++;        // collapse double period into one
         else
-          break;        // message complete
+          if (line[1]==0)
+            break;   // message complete
       }
       s = line;
       while (*s != '\0' && *s != '\t' && *s != ' ') s++;
@@ -201,7 +203,8 @@ void KNNntpClient::doCheckNewGroups()
       if (line[1]=='.')
         line++;        // collapse double period into one
       else
-        break;        // message complete
+        if (line[1]==0)
+          break;   // message complete
     }
     s = strchr(line,' ');
     if(!s)

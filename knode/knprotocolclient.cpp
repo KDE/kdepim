@@ -384,7 +384,8 @@ bool KNProtocolClient::getMsg(QStrList &msg)
       if (line[1]=='.')
         line++;        // collapse double period into one
       else
-        return true;   // message complete
+        if (line[1]==0)
+          return true;   // message complete
     }
     msg.append(line);
     doneLines++;
