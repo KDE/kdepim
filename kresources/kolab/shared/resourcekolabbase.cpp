@@ -39,6 +39,7 @@
 #include <kinputdialog.h>
 #include <kurl.h>
 #include <ktempfile.h>
+#include <kmessagebox.h>
 #include <qtextstream.h>
 #include <kdebug.h>
 
@@ -152,6 +153,7 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
 
   if ( possible.isEmpty() ) { // None found!!
     kdWarning(5650) << "No writable resource found!" << endl;
+    KMessageBox::error( 0, i18n( "No writable resource was found, saving will not be possible. Reconfigure KMail first." ) );
     return QString::null;
   }
   if ( possible.count() == 1 )
