@@ -38,11 +38,11 @@ class KNHdrViewItem : public KNLVItemBase  {
     virtual QDragObject* dragObject();
 
     KNArticle *art;
+    bool firstColBold();
     virtual int countUnreadInThread();
 
   protected:
     bool greyOut();
-    bool firstColBold();
     QColor normalColor();
     QColor greyColor();
 

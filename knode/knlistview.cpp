@@ -23,6 +23,7 @@
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knlistview.h"
+#include "knhdrviewitem.h"
 
 KNLVItemBase::KNLVItemBase(KNLVItemBase *item)
   : KListViewItem(item), a_ctive(false)
@@ -197,6 +198,8 @@ KNListView::KNListView(QWidget *parent, const char *name)
   header()->setMovingEnabled(true);
   header()->setStretchEnabled(true, 0);
   setFrameStyle(NoFrame);
+
+  tooltip = new KNToolTip(this);
 
   setDropVisualizer(false);
   setDropHighlighter(true);
@@ -466,6 +469,73 @@ QDragObject* KNListView::dragObject()
     return 0;
 }
 
+
+void KNListView::tip( const QPoint &p, QRect &r, QString &str )
+{
+  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
+  int sectionAtPoint = header()->sectionAt(p.x());
+  QFont font;
+  if (t_ype == 1)
+    font = app->groupListFont();
+  if (t_ype == 2)
+    font = app->articleListFont();
+
+  int displacement = (header()->sectionRect(0)).height();
+  QListViewItem *i = itemAt(p - QPoint(0, displacement + 3));
+  r = itemRect( i );
+  r.setBottom(r.bottom() + displacement + 3);
+  r.setLeft(header()->sectionPos(sectionAtPoint));
+  r.setRight(header()->sectionPos(sectionAtPoint) + header()->sectionSize(sectionAtPoint));
+
+  if (i != NULL && r.isValid()) {
+    int pixmapsWidth = 0;
+    int spacers = 0;
+    for (int j=0; j<4; j++) {
+      if (i->pixmap(j)) {
+        if (!(i->pixmap(j))->isNull()) {
+          pixmapsWidth += i->pixmap(j)->width();
+          spacers += 3;
+        }
+      }
+    }
+    if (static_cast<KNHdrViewItem*>(i)->firstColBold())
+      font.setBold(true);
+    int textWidth = QFontMetrics(font).width(i->text(sectionAtPoint), -1);
+    if (sectionAtPoint == 0) {
+      if ( (t_ype == 2) && (columnWidth(0) < textWidth + treeStepSize()*(i->depth()) + 28 + pixmapsWidth + spacers) ) {
+        str = i->text(0);
+      }
+      if ( (t_ype == 1) && (columnWidth(0) < textWidth + treeStepSize()*(i->depth()) + 39) ) {
+        str = i->text(0);
+      }
+    } else {
+        if (columnWidth(sectionAtPoint) < textWidth + 5) {
+          str = i->text(sectionAtPoint);
+        }
+      }  
+  } else
+     str = "";
+
+
+}
+
+
+KNListView::KNToolTip::KNToolTip( QWidget *parent )
+  : QToolTip( parent )
+{
+}
+
+
+void KNListView::KNToolTip::maybeTip( const QPoint &p )
+{
+  QString str;
+  QRect r;
+
+  ((KNListView*)parentWidget())->tip( p, r, str );
+
+  if( !str.isEmpty() && r.isValid() )
+    tip( r, str );
+}
 
 bool KNListView::acceptDrag(QDropEvent* event) const
 {

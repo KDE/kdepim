@@ -20,6 +20,7 @@
 #include <qbitarray.h>
 
 #include <klistview.h>
+#include <qtooltip.h>
 
 class KNListView;
 class QPainter;
@@ -88,6 +89,11 @@ class KNListView : public KListView  {
     void addAcceptableDropMimetype(const char *mimeType, bool outsideOk);
 
     virtual void reparent(QWidget *parent, WFlags f, const QPoint &p, bool showIt=false);
+
+    void tip( const QPoint &p, QRect &r, QString &str );
+    int type()                      { return t_ype; }
+    void setType(int t)             { t_ype = t; }
+
   public slots:
     void slotSortList(int col);
     void slotSizeChanged(int,int,int);
@@ -114,6 +120,18 @@ class KNListView : public KListView  {
     QMemArray<const char*> a_cceptableDropMimetypes;
     QBitArray a_cceptOutside;
     bool k_eepSelection;
+    int t_ype;
+
+  private:
+    class KNToolTip : public QToolTip
+    {
+      public:
+        KNToolTip(QWidget *parent);
+      protected:
+        void maybeTip( const QPoint & );
+    };
+    KNToolTip* tooltip;
+
 
   protected slots:
     void slotCenterDelayed();
