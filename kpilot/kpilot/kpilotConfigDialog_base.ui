@@ -142,7 +142,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Enter the port the Pilot is attached to, serial or USB.</string>
+                                    <string>&lt;qt&gt;Enter the port the Pilot is attached to, serial or USB.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="0"  column="2" >
@@ -177,7 +177,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Choose what kind of connection you use to the Pilot.</string>
+                                    <string>&lt;qt&gt;Choose what kind of connection you use to the Pilot.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="0"  column="3" >
@@ -229,7 +229,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Sets the speed of the connection to your Pilot.</string>
+                                    <string>&lt;qt&gt;Sets the speed of the connection to your Pilot.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="1"  column="0" >
@@ -291,7 +291,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Start up the KPilot daemon every time you log in to KDE.</string>
+                                    <string>&lt;qt&gt;Start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="1"  column="0" >
@@ -310,7 +310,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Places a HotSync icon in the system tray, which you can use to configure the KPilot daemon.</string>
+                                    <string>&lt;qt&gt;Places a HotSync icon in the system tray, which you can use to configure the KPilot daemon.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="2"  column="0" >
@@ -388,7 +388,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                         </property>
                         <property>
                             <name>toolTip</name>
-                            <string>Combine all entries with the same last name.</string>
+                            <string>&lt;qt&gt;Combine all entries with the same last name.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget row="1"  column="0" >
@@ -422,7 +422,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Addresses are displayed in the address viewer sorted by company name, last name.</string>
+                                    <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by company name, last name.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="0"  column="0" >
@@ -441,7 +441,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Addresses are displayed in the address viewer sorted by last name, first name.</string>
+                                    <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by last name, first name.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
@@ -541,7 +541,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Databases listed here are only backed up, not synced.</string>
+                                    <string>&lt;qt&gt;Databases listed here are only backed up, not synced.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget row="1"  column="1" >
@@ -556,7 +556,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 </property>
                                 <property>
                                     <name>toolTip</name>
-                                    <string>Databases listed here are neither backed up, nor synced.</string>
+                                    <string>&lt;qt&gt;Databases listed here are neither backed up, nor synced.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
@@ -632,62 +632,6 @@ KPilot's settings. Use Qt2 designer only!</comment>
                             <class>QCheckBox</class>
                             <property stdset="1">
                                 <name>name</name>
-                                <cstring>fSyncFiles</cstring>
-                            </property>
-                            <property stdset="1">
-                                <name>geometry</name>
-                                <rect>
-                                    <x>11</x>
-                                    <y>11</y>
-                                    <width>538</width>
-                                    <height>21</height>
-                                </rect>
-                            </property>
-                            <property stdset="1">
-                                <name>text</name>
-                                <string>&amp;Sync Files</string>
-                            </property>
-                            <property stdset="1">
-                                <name>accel</name>
-                                <number>276824147</number>
-                            </property>
-                            <property stdset="1">
-                                <name>checked</name>
-                                <bool>true</bool>
-                            </property>
-                            <property>
-                                <name>toolTip</name>
-                                <string>Install files that have been dragged onto KPilot or the KPilot daemon on the Pilot.</string>
-                            </property>
-                        </widget>
-                        <widget>
-                            <class>QCheckBox</class>
-                            <property stdset="1">
-                                <name>name</name>
-                                <cstring>fOverwriteRemote</cstring>
-                            </property>
-                            <property stdset="1">
-                                <name>geometry</name>
-                                <rect>
-                                    <x>11</x>
-                                    <y>38</y>
-                                    <width>538</width>
-                                    <height>21</height>
-                                </rect>
-                            </property>
-                            <property stdset="1">
-                                <name>text</name>
-                                <string>&amp;Local Overrides Pilot</string>
-                            </property>
-                            <property>
-                                <name>toolTip</name>
-                                <string>We really don't know what this does.</string>
-                            </property>
-                        </widget>
-                        <widget>
-                            <class>QCheckBox</class>
-                            <property stdset="1">
-                                <name>name</name>
                                 <cstring>fForceFirstTime</cstring>
                             </property>
                             <property stdset="1">
@@ -758,6 +702,62 @@ KPilot's settings. Use Qt2 designer only!</comment>
                             <property stdset="1">
                                 <name>text</name>
                                 <string>&amp;Prefer FastSync to HotSync</string>
+                            </property>
+                            <property>
+                                <name>toolTip</name>
+                                <string>We really don't know what this does.</string>
+                            </property>
+                        </widget>
+                        <widget>
+                            <class>QCheckBox</class>
+                            <property stdset="1">
+                                <name>name</name>
+                                <cstring>fSyncFiles</cstring>
+                            </property>
+                            <property stdset="1">
+                                <name>geometry</name>
+                                <rect>
+                                    <x>11</x>
+                                    <y>11</y>
+                                    <width>538</width>
+                                    <height>21</height>
+                                </rect>
+                            </property>
+                            <property stdset="1">
+                                <name>text</name>
+                                <string>&amp;Sync Files</string>
+                            </property>
+                            <property stdset="1">
+                                <name>accel</name>
+                                <number>276824147</number>
+                            </property>
+                            <property stdset="1">
+                                <name>checked</name>
+                                <bool>true</bool>
+                            </property>
+                            <property>
+                                <name>toolTip</name>
+                                <string>&lt;qt&gt;Install files that have been dragged onto KPilot or the KPilot daemon on the Pilot.&lt;/qt&gt;</string>
+                            </property>
+                        </widget>
+                        <widget>
+                            <class>QCheckBox</class>
+                            <property stdset="1">
+                                <name>name</name>
+                                <cstring>fOverwriteRemote</cstring>
+                            </property>
+                            <property stdset="1">
+                                <name>geometry</name>
+                                <rect>
+                                    <x>11</x>
+                                    <y>38</y>
+                                    <width>538</width>
+                                    <height>21</height>
+                                </rect>
+                            </property>
+                            <property stdset="1">
+                                <name>text</name>
+                                <string>&amp;Local Overrides Pilot</string>
                             </property>
                             <property>
                                 <name>toolTip</name>
