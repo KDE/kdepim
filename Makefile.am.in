@@ -1,11 +1,15 @@
 ## kdepim/Makefile.am
 ## (C) 1997 Stephan Kulow
 
-if include_exchange_SUBDIR
-COMPILE_FIRST = libical libkcal libkdepim libkpimexchange kgantt kalarmd
-else
-COMPILE_FIRST = libical libkcal libkdepim kgantt kalarmd
-endif
+# these are here to control the compilation order, but are only textual
+# hints for the cvs.sh script. If you change something here, you have
+# to call Makefile.cvs again
+COMPILE_BEFORE_korganizer = libkdepim libkpimexchange kgantt kalarmd
+COMPILE_BEFORE_kaddressbook = libkdepim 
+COMPILE_BEFORE_kandy = libkdepim
+COMPILE_AFTER_libkcal = kalarm kalarmd kitchensync konsolekalendar korganizer ksync ibkpimexchange
+COMPILE_BEFORE_libkcal = libical
+COMPILE_BEFORE_empath = librmm
 
 AUTOMAKE_OPTIONS = foreign 1.4
 DISTCLEANFILES = inst-apps
@@ -20,7 +24,6 @@ $(top_srcdir)/configure.files:
 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common configure.files
 
 MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 SUBDIRS
-
 
 cvs-local:
 	@echo "*** preparing libical" 
