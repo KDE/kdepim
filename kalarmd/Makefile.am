@@ -65,6 +65,5 @@ KDE_ICON = AUTO
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kalarmdgui.pot
-	$(XGETTEXT) alarmdaemonctrl.cpp -o $(podir)/alarmdaemonctrl.pot
 
 include $(top_srcdir)/admin/Doxyfile.am
