@@ -835,10 +835,17 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	return ret;
 }
 
-static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
+/*
+ * Run the config wizard -- this takes a little library magic, and
+ * it might fail entirely; returns false if no wizard could be run,
+ * or true if the wizard runs (says nothing about it being OK'ed or
+ * canceled, though).
+ */
+typedef enum { Failed, OK, Cancel } WizardResult;
+static WizardResult runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 {
 	FUNCTIONSETUP;
-	bool ret = false;
+	WizardResult ret = Failed ;
 	int rememberedSync = daemon.nextSyncType();
 	daemon.requestSync(0);
 
@@ -851,7 +858,6 @@ static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	if (!l)
 	{
 		kdWarning() << k_funcinfo << ": Couldn't load library!" << endl;
-		ret=false;
 		goto sorry;
 	}
 
@@ -863,7 +869,6 @@ static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	if (!f)
 	{
 		kdWarning() << k_funcinfo << ": No create_wizard() in library." << endl;
-		ret = false;
 		goto sorry;
 	}
 
@@ -871,19 +876,22 @@ static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	if (!w)
 	{
 		kdWarning() << k_funcinfo << ": Can't create wizard." << endl;
-		ret = false;
 		goto sorry;
 	}
 
 	if (w->exec())
 	{
 		KPilotSettings::self()->readConfig();
-		ret = true;
+		ret = OK;
+	}
+	else
+	{
+		ret = Cancel;
 	}
 	KPILOT_DELETE(w);
 
 sorry:
-	if (!ret)
+	if (Failed == ret)
 	{
 		KMessageBox::sorry(parent,
 			i18n("The library containing the configuration wizard for KPilot "
@@ -892,7 +900,7 @@ sorry:
 				i18n("Wizard Not Available"));
 	}
 
-	if (ret)
+	if (OK == ret)
 	{
 		KPilotConfig::updateConfigVersion();
 		KPilotSettings::writeConfig();
@@ -969,7 +977,7 @@ void KPilotInstaller::componentUpdate()
 	fAppStatus=UIBusy;
 	fConfigureKPilotDialogInUse = true;
 
-	if (runWizard(getDaemon(),this))
+	if (runWizard(getDaemon(),this) == OK)
 	{
 		componentUpdate();
 	}
@@ -1131,7 +1139,7 @@ int main(int argc, char **argv)
 		bool r = false;
 		if (run_mode == KPilotConfig::WizardAndContinue)
 		{
-			r = runWizard(*daemon,0L);
+			r = ( runWizard(*daemon,0L) == OK );
 		}
 		else
 		{
