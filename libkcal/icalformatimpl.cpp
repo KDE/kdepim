@@ -2002,11 +2002,11 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   // Post-Process list of events with relations, put Event objects in relation
   Event::List::ConstIterator eIt;
   for ( eIt = mEventsRelate.begin(); eIt != mEventsRelate.end(); ++eIt ) {
-    (*eIt)->setRelatedTo( cal->event( (*eIt)->relatedToUid() ) );
+    (*eIt)->setRelatedTo( cal->incidence( (*eIt)->relatedToUid() ) );
   }
   Todo::List::ConstIterator tIt;
   for ( tIt = mTodosRelate.begin(); tIt != mTodosRelate.end(); ++tIt ) {
-    (*tIt)->setRelatedTo( cal->todo( (*tIt)->relatedToUid() ) );
+    (*tIt)->setRelatedTo( cal->incidence( (*tIt)->relatedToUid() ) );
    }
 
   return true;
