@@ -53,6 +53,10 @@ namespace Kleo {
 
      After result() is emitted, the SpecialJob will schedule its own
      destruction by calling QObject::deleteLater().
+
+     Parameters are set using the Qt property system, more general, or
+     constructor parameters are given in the call to
+     Kleo::CryptoBackend::Protocol::specialJob().
   */
   class SpecialJob : public Job {
     Q_OBJECT
