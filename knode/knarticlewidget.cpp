@@ -1475,7 +1475,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
 {
   anchorType type=ATunknown;
   QString target;
-  kdDebug()<<"void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const QPoint *p)***********************************"<<a<<endl;
   if(a.left(17)=="internal://author") {
     type=ATauthor;
   }
@@ -1496,7 +1495,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     type=ATnews;
   }
   else if(a.left(7)=="mailto:") {
-      kdDebug()<<"a.left(7)==========================\n";
     target=a.mid(7, a.length()-7);
     type=ATmailto;
   }
@@ -1527,7 +1525,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     KNRemoteArticle *a;
     KNArticleWindow *awin;
     KMime::Headers::AddressField adr(a_rticle);
-    kdDebug()<<"dddddddddcxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvvvv\n";
     switch(type) {
       case ATauthor:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
@@ -1590,9 +1587,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     }
   }
   else {
-      kdDebug()<<"sddddddddddddddddddddddddddddddddddddddddddddddddd\n";
-      kdDebug()<<" type :"<<type<<endl;
-      kdDebug()<<" (type==ATmailto) "<<(type==ATmailto)<<endl;
     if(type==ATattachment) {
       kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for attachment " << target << endl;
       switch(a_ttPopup->exec(*p)) {
@@ -1635,9 +1629,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
 
 void KNArticleWidget::addAddressbook(const QString & target)
 {
-    kdDebug()<<" target:\n";
     KAddrBookExternal::openEmail( target, target, this );
-
 }
 
 void KNArticleWidget::slotSave()
