@@ -36,6 +36,7 @@
 #include <kleo/encryptjob.h>
 
 #include <gpgmepp/interfaces/progressprovider.h>
+#include <gpgmepp/encryptionresult.h>
 
 #include <qcstring.h>
 
@@ -86,7 +87,7 @@ namespace Kleo {
     GpgME::Data * mPlainText;
     QGpgME::QByteArrayDataProvider * mCipherTextDataProvider;
     GpgME::Data * mCipherText;
-    GpgME::EncryptionResult * mResult;
+    GpgME::EncryptionResult mResult;
   };
 
 }

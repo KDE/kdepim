@@ -128,22 +128,17 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::TrustedKeys &&
-       key.protocol() == GpgME::Context::OpenPGP )
-    switch ( key.userID(0).validity() ) {
-    case GpgME::UserID::Unknown:
-      qDebug( "key validity is unknown" );
-      return false;
-    case GpgME::UserID::Undefined:
-      qDebug( "key validity is undefined" );
-      return false;
-    case GpgME::UserID::Never:
-      qDebug( "key validity is \"never\"" );
-      return false;
-    case GpgME::UserID::Marginal:
-    case GpgME::UserID::Full:
-    case GpgME::UserID::Ultimate:
-      ;
-    }
+       key.protocol() == GpgME::Context::OpenPGP &&
+       // only check this for secret keys for now.
+       // Seems validity isn't checked for secret keylistings...
+       !key.isSecret() ) {
+    std::vector<GpgME::UserID> uids = key.userIDs();
+    for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it )
+      if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
+	return true;
+    qDebug( "key has no UIDs with validity >= Marginal" );
+    return false;
+  }
   // X.509 keys are always trusted, else they won't be the keybox.
   // PENDING(marc) check that this ^ is correct
 
@@ -425,6 +420,24 @@ QStringList Kleo::KeySelectionDialog::fingerprints() const {
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
     if ( const char * fpr = it->subkey(0).fingerprint() )
       result.push_back( fpr );
+  return result;
+}
+
+QStringList Kleo::KeySelectionDialog::pgpKeyFingerprints() const {
+  QStringList result;
+  for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
+    if ( it->protocol() == GpgME::Context::OpenPGP )
+      if ( const char * fpr = it->subkey(0).fingerprint() )
+        result.push_back( fpr );
+  return result;
+}
+
+QStringList Kleo::KeySelectionDialog::smimeFingerprints() const {
+  QStringList result;
+  for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
+    if ( it->protocol() == GpgME::Context::CMS )
+      if ( const char * fpr = it->subkey(0).fingerprint() )
+        result.push_back( fpr );
   return result;
 }
 

@@ -44,6 +44,9 @@
 #include <gpgmepp/data.h>
 #include <gpgmepp/key.h>
 
+#include <kmessagebox.h>
+#include <klocale.h>
+
 #include <assert.h>
 
 Kleo::QGpgMESignJob::QGpgMESignJob( GpgME::Context * context )
@@ -119,16 +122,17 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
 						GpgME::Context::SignatureMode mode,
 						QByteArray & signature ) {
   if ( const GpgME::Error err = setup( signers, plainText ) )
-    return GpgME::SigningResult( 0, err );
-  const GpgME::SigningResult result = mCtx->sign( *mPlainText, *mSignature, mode );
+    return mResult = GpgME::SigningResult( 0, err );
+  mResult = mCtx->sign( *mPlainText, *mSignature, mode );
   signature = mSignatureDataProvider->data();
-  return result;
+  return mResult;
 }
 
 void Kleo::QGpgMESignJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
   if ( context == mCtx ) {
+    mResult = mCtx->signingResult();
     emit done();
-    emit result( mCtx->signingResult(), mSignatureDataProvider->data() );
+    emit result( mResult, mSignatureDataProvider->data() );
     deleteLater();
   }
 }
@@ -139,6 +143,14 @@ void Kleo::QGpgMESignJob::slotCancel() {
 
 void Kleo::QGpgMESignJob::showProgress( const char * what, int type, int current, int total ) {
   emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
+}
+
+void Kleo::QGpgMESignJob::showErrorDialog( QWidget * parent ) const {
+  if ( !mResult.error() || mResult.error().isCanceled() )
+    return;
+  const QString msg = i18n("Signing failed: %1")
+    .arg( QString::fromLocal8Bit( mResult.error().asString() ) );
+  KMessageBox::error( parent, msg );
 }
 
 #include "qgpgmesignjob.moc"

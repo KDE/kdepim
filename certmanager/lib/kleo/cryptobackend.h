@@ -85,7 +85,7 @@ namespace Kleo {
     virtual KeyListJob        * keyListJob( bool remote=false, bool includeSigs=false, bool validate=false ) const = 0;
     virtual EncryptJob        * encryptJob( bool armor=false, bool textmode=false ) const = 0;
     virtual DecryptJob        * decryptJob() const = 0;
-    virtual SignJob           * signJob( int includedCerts=0, bool armor=false, bool textMode=false ) const = 0;
+    virtual SignJob           * signJob( bool armor=false, bool textMode=false ) const = 0;
     virtual VerifyDetachedJob * verifyDetachedJob( bool textmode=false) const = 0;
     virtual VerifyOpaqueJob   * verifyOpaqueJob( bool textmode=false ) const = 0;
     virtual KeyGenerationJob  * keyGenerationJob() const = 0;
@@ -94,7 +94,7 @@ namespace Kleo {
     virtual ExportJob         * secretKeyExportJob( bool armor=false ) const = 0;
     virtual DownloadJob       * downloadJob( bool armor=false ) const = 0;
     virtual DeleteJob         * deleteJob() const = 0;
-    virtual SignEncryptJob    * signEncryptJob( int includedCerts=0, bool armor=false, bool textMode=false ) const = 0;
+    virtual SignEncryptJob    * signEncryptJob( bool armor=false, bool textMode=false ) const = 0;
     virtual DecryptVerifyJob  * decryptVerifyJob( bool textmode=false ) const = 0;
   };
 

@@ -41,6 +41,7 @@
 #include <ktempfile.h>
 #include <qfile.h>
 #include <stdlib.h>
+#include <qtextcodec.h>
 
 // Just for the Q_ASSERT in the dtor. Not thread-safe, but who would
 // have 2 threads talking to gpgconf anyway? :)
@@ -69,7 +70,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
 {
   // Run gpgconf --list-components to make the list of components
 
-  KProcIO proc;
+  KProcIO proc( QTextCodec::codecForName( "utf8" ) );
   proc << "gpgconf"; // must be in the PATH
   proc << "--list-components";
 
@@ -164,7 +165,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
 {
   // Run gpgconf --list-options <component>, and create all groups and entries for that component
 
-  KProcIO proc;
+  KProcIO proc( QTextCodec::codecForName( "utf8" ) );
   proc << "gpgconf"; // must be in the PATH
   proc << "--list-options";
   proc << mName;
@@ -263,7 +264,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
           line += ":16:";
         }
         line += '\n';
-        QCString line8bit = line.latin1(); // latin1 is correct here, it's all escaped (and KProcIO uses latin1 when reading).
+        QCString line8bit = line.utf8(); // encode with utf8, and KProcIO uses utf8 when reading.
         tmpFile.file()->writeBlock( line8bit.data(), line8bit.size()-1 /*no 0*/ );
         dirtyEntries.append( it.current() );
       }
@@ -347,13 +348,13 @@ Kleo::CryptoConfigEntry* QGpgMECryptoConfigGroup::entry( const QString& name ) c
 static QString gpgconf_unescape( const QString& str )
 {
   // Looks like it's the same rules as KURL.
-  return KURL::decode_string( str );
+  return KURL::decode_string( str, 106 );
 }
 
 static QString gpgconf_escape( const QString& str )
 {
   // Escape special chars (including ':' and '%')
-  QString enc = KURL::encode_string( str );
+  QString enc = KURL::encode_string( str, 106 ); // and convert to utf8 first (to get %12%34 for one special char)
   // Also encode commas, for lists.
   enc.replace( ',', "%2c" );
   return enc;

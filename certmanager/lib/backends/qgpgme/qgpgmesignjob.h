@@ -36,6 +36,7 @@
 #include <kleo/signjob.h>
 
 #include <gpgmepp/interfaces/progressprovider.h>
+#include <gpgmepp/signingresult.h>
 
 #include <qcstring.h>
 
@@ -69,6 +70,9 @@ namespace Kleo {
 			       GpgME::Context::SignatureMode mode,
 			       QByteArray & signature );
 
+    /*! \reimp from Job */
+    void showErrorDialog( QWidget * parent ) const;
+
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
     /*! \reimp from Job */
@@ -85,6 +89,7 @@ namespace Kleo {
     GpgME::Data * mPlainText;
     QGpgME::QByteArrayDataProvider * mSignatureDataProvider;
     GpgME::Data * mSignature;
+    GpgME::SigningResult mResult;
   };
 
 }

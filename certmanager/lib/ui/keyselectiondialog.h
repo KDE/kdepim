@@ -100,7 +100,13 @@ namespace Kleo {
     /** Returns a list of selected key IDs. */
     const std::vector<GpgME::Key> & selectedKeys() const { return mSelectedKeys; }
 
+    /// Return all the selected fingerprints
     QStringList fingerprints() const;
+
+    /// Return the selected openpgp fingerprints
+    QStringList pgpKeyFingerprints() const;
+    /// Return the selected smime fingerprints
+    QStringList smimeFingerprints() const;
 
     bool rememberSelection() const;
     bool hideInvalidKeys() const;

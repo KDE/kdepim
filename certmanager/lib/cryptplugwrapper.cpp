@@ -1433,7 +1433,7 @@ Kleo::DecryptJob * CryptPlugWrapper::decryptJob() const {
   return new Kleo::QGpgMEDecryptJob( context );
 }
 
-Kleo::SignJob * CryptPlugWrapper::signJob( int includedCerts, bool armor, bool textMode ) const {
+Kleo::SignJob * CryptPlugWrapper::signJob( bool armor, bool textMode ) const {
   if ( !_cp )
     return 0;
 
@@ -1441,7 +1441,6 @@ Kleo::SignJob * CryptPlugWrapper::signJob( int includedCerts, bool armor, bool t
   if ( !context )
     return 0;
 
-  context->setIncludeCertificates( includedCerts );
   context->setArmor( armor );
   context->setTextMode( textMode );
 
@@ -1542,7 +1541,7 @@ Kleo::DeleteJob * CryptPlugWrapper::deleteJob() const {
   return new Kleo::QGpgMEDeleteJob( context );
 }
 
-Kleo::SignEncryptJob * CryptPlugWrapper::signEncryptJob( int includedCerts, bool armor, bool textMode ) const {
+Kleo::SignEncryptJob * CryptPlugWrapper::signEncryptJob( bool armor, bool textMode ) const {
   if ( !_cp )
     return 0;
 
@@ -1550,7 +1549,6 @@ Kleo::SignEncryptJob * CryptPlugWrapper::signEncryptJob( int includedCerts, bool
   if ( !context )
     return 0;
 
-  context->setIncludeCertificates( includedCerts );
   context->setArmor( armor );
   context->setTextMode( textMode );
 

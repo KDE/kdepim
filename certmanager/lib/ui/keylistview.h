@@ -193,7 +193,7 @@ namespace Kleo {
     const ColumnStrategy * columnStrategy() const { return mColumnStrategy; }
     const DisplayStrategy * displayStrategy() const { return mDisplayStrategy; }
 
-    void flushKeys() {}
+    void flushKeys() { slotUpdateTimeout(); }
 
   signals:
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
@@ -274,7 +274,7 @@ namespace Kleo {
     virtual QColor subkeyForeground( const GpgME::Subkey &, const QColor &  ) const;
     virtual QColor useridForeground( const GpgME::UserID &, const QColor &  ) const;
     virtual QColor signatureForeground( const GpgME::UserID::Signature &, const QColor &  ) const;
-    //backeground
+    //background
     virtual QColor keyBackground( const GpgME::Key &, const QColor &  ) const;
     virtual QColor subkeyBackground( const GpgME::Subkey &, const QColor &  ) const;
     virtual QColor useridBackground( const GpgME::UserID &, const QColor & ) const;

@@ -56,7 +56,7 @@ namespace Kleo {
   unsigned int stringListToCryptoMessageFormats( const QStringList & sl );
 
   enum Action {
-    Conflict, DoIt, DontDoIt, Ask, Impossible
+    Conflict, DoIt, DontDoIt, Ask, AskOpportunistic, Impossible
   };
 
   enum EncryptionPreference {

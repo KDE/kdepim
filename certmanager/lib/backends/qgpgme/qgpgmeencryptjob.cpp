@@ -56,8 +56,7 @@ Kleo::QGpgMEEncryptJob::QGpgMEEncryptJob( GpgME::Context * context )
     mPlainTextDataProvider( 0 ),
     mPlainText( 0 ),
     mCipherTextDataProvider( 0 ),
-    mCipherText( 0 ),
-    mResult( 0 )
+    mCipherText( 0 )
 {
   assert( context );
 }
@@ -69,7 +68,6 @@ Kleo::QGpgMEEncryptJob::~QGpgMEEncryptJob() {
   delete mCipherTextDataProvider; mCipherTextDataProvider = 0;
   delete mPlainText; mPlainText = 0;
   delete mPlainTextDataProvider; mPlainTextDataProvider = 0;
-  delete mResult; mResult = 0;
 }
 
 void Kleo::QGpgMEEncryptJob::setup( const QByteArray & plainText ) {
@@ -114,16 +112,16 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
   setup( plainText );
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  mResult = new GpgME::EncryptionResult( mCtx->encrypt( recipients, *mPlainText, *mCipherText, flags ) );
+  mResult = mCtx->encrypt( recipients, *mPlainText, *mCipherText, flags );
   ciphertext = mCipherTextDataProvider->data();
-  return *mResult;
+  return mResult;
 }
 
 void Kleo::QGpgMEEncryptJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
   if ( context == mCtx ) {
+    mResult = mCtx->encryptionResult();
     emit done();
-    mResult = new GpgME::EncryptionResult( mCtx->encryptionResult() );
-    emit result( *mResult, mCipherTextDataProvider->data() );
+    emit result( mResult, mCipherTextDataProvider->data() );
     deleteLater();
   }
 }
@@ -137,11 +135,11 @@ void Kleo::QGpgMEEncryptJob::showProgress( const char * what, int type, int curr
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent ) const {
-  if ( !mResult || !mResult->error() || mResult->error().isCanceled() )
+  if ( !mResult.error() || mResult.error().isCanceled() )
     return;
   const QString msg = i18n("Encryption failed: %1")
-    .arg( QString::fromLocal8Bit( mResult->error().asString() ) );
-  KMessageBox::sorry( parent, msg );
+    .arg( QString::fromLocal8Bit( mResult.error().asString() ) );
+  KMessageBox::error( parent, msg );
 }
 
 #include "qgpgmeencryptjob.moc"

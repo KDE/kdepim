@@ -58,14 +58,13 @@ namespace Kleo {
     Q_OBJECT
   public:
     struct Item {
-      Item() : pref( UnknownPreference ), format( AutoFormat ) {}
+      Item() : pref( UnknownPreference ) {}
       Item( const QString & a, const std::vector<GpgME::Key> & k,
-	    EncryptionPreference p=UnknownPreference, CryptoMessageFormat f=AutoFormat )
-	: address( a ), keys( k ), pref( p ), format( f ) {}
+	    EncryptionPreference p=UnknownPreference )
+	: address( a ), keys( k ), pref( p ) {}
       QString address;
       std::vector<GpgME::Key> keys;
       EncryptionPreference pref;
-      CryptoMessageFormat format; // unused by this dialog
     };
 
     KeyApprovalDialog( const std::vector<Item> & recipients,

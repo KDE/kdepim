@@ -1542,7 +1542,7 @@ public:
     Kleo::KeyListJob * keyListJob( bool remote=false, bool includeSigs=false, bool validate=true ) const;
     Kleo::EncryptJob * encryptJob( bool armor=false, bool textmode=false ) const;
     Kleo::DecryptJob * decryptJob() const;
-    Kleo::SignJob * signJob( int includedCerts=0, bool armor=false, bool textMode=false ) const;
+    Kleo::SignJob * signJob( bool armor=false, bool textMode=false ) const;
     Kleo::VerifyDetachedJob * verifyDetachedJob( bool textmode=false) const;
     Kleo::VerifyOpaqueJob * verifyOpaqueJob( bool textmode=false ) const;
     Kleo::KeyGenerationJob * keyGenerationJob() const;
@@ -1553,7 +1553,7 @@ public:
     Kleo::DownloadJob * downloadJob( bool armor=false ) const;
     Kleo::DeleteJob * deleteJob() const;
 
-    Kleo::SignEncryptJob * signEncryptJob( int includedCerts=0, bool armor=false, bool textmode=false ) const;
+    Kleo::SignEncryptJob * signEncryptJob( bool armor=false, bool textmode=false ) const;
     Kleo::DecryptVerifyJob * decryptVerifyJob( bool textmode=false ) const;
 
     GpgME::ImportResult importCertificate( const char* data, size_t length );
