@@ -434,9 +434,9 @@ prevent accidental deletions.</para>
 <sect3>
 <title>Template edit dialog</title>
 
-<para>The template edit dialog is similar to the alarm edit dialog
-described in <link linkend="edit-alarm">Modifying an existing
-alarm</link>. The following controls are different:</para>
+<para>The template edit dialog is similar to the
+<link linkend="alarm-edit-dialog">alarm edit dialog</link>. The
+following controls are different:</para>
 
 <itemizedlist>
 <listitem>
@@ -513,7 +513,7 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 <listitem>
 <para>The remaining controls are the same as for
 <guilabel>Text</guilabel> alarms in the
-<link linkend="edit-alarm">Alarm Edit dialog</link>.</para>
+<link linkend="alarm-edit-dialog">Alarm Edit dialog</link>.</para>
 </listitem>
 </itemizedlist>
 
@@ -992,9 +992,9 @@ for details.</para>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>New Alarm...</guimenuitem></menuchoice></term>
-<listitem><para><action>Opens the alarm edit dialog to create a new alarm.</action></para>
-<para>The alarm edit dialog is described in
-<link linkend="edit-alarm">Modifying an existing alarm</link>.</para>
+<listitem><para><action>Opens the
+<link linkend="alarm-edit-dialog">alarm edit dialog</link> to create a
+new alarm.</action></para>
 </listitem>
 </varlistentry>
 
@@ -1211,8 +1211,8 @@ system tray icon context menu.</para>
 icon context menu item
 <menuchoice><guimenuitem>Quit</guimenuitem></menuchoice> depends on
 the run mode: in <quote>on-demand</quote> mode it hides the system
-tray icon, while in <quote>continuous</quote> mode it quits the
-program.</para>
+tray icon, while in <quote>continuous</quote> mode it
+quits the program.</para>
 
 <tip><para>If you have deselected <guilabel>Disable alarms while not
 running</guilabel> in the Preferences dialog, quitting &kalarm; has no
@@ -1886,8 +1886,8 @@ daemon</application>:</para>
 <sect1 id="cmdline-help">
 <title>Help options</title>
 
-<para>The following help options are common to all &kde;
-programs:</para>
+<para>The following help options are common to all
+&kde; programs:</para>
 
 <informaltable>
 <tgroup cols="2">
