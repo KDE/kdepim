@@ -2,9 +2,6 @@
     This file is part of kdepim.
 
     Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Based on the opengroupware resource:
-    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2004 Till Adam <adam@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
