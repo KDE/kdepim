@@ -2,7 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2002,2004 Holger Hans Peter Freyther <freyther@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -20,28 +20,30 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <qregexp.h>
+#include "syncee.h"
+#include "merger.h"
 
 #include <kdebug.h>
 #include <ksimpleconfig.h>
 #include <kstandarddirs.h>
 
-#include "syncee.h"
+#include <qregexp.h>
+
+
+
 
 using namespace KSync;
 
-Syncee::Syncee( uint size )
-  : mStatusLog( 0 ), mSupport( size )
-{
-  mSyncMode = MetaLess;
-  mFirstSync = false;
-  mSupport.fill( true );
-//  kdDebug(5230) << "Size is " << size << " " << mSupport.size() << endl;
-}
+Syncee::Syncee( Merger* merger )
+  : mMerger( merger )
+{}
 
 Syncee::~Syncee()
 {
-  delete mStatusLog;
+}
+
+QString Syncee::identifier()const {
+  return mIdentifier;
 }
 
 void Syncee::setIdentifier( const QString &identifier )
@@ -56,7 +58,6 @@ bool Syncee::isValid()
 
 SyncEntry *Syncee::findEntry( const QString &id )
 {
-//  kdDebug(5231) << "Syncee::findEntry() '" << id << "'" << endl;
 
   SyncEntry *entry = firstEntry();
   while ( entry ) {
@@ -71,90 +72,27 @@ void Syncee::replaceEntry( SyncEntry *oldEntry, SyncEntry *newEntry )
 {
   removeEntry( oldEntry );
   addEntry( newEntry );
+
+  /* no risk no fun */
+  delete oldEntry;
 }
 
-bool Syncee::hasChanged( SyncEntry *entry )
-{
-//  if ( entry->state() != SyncEntry::Undefined ) return true;
-  if ( entry->timestamp().isEmpty() ) return true;
-  if ( !mStatusLog ) return true;
-
-  mStatusLog->setGroup( entry->id() );
-  QString timestamp = mStatusLog->readEntry( "Timestamp" );
-
-  return ( timestamp != entry->timestamp() );
-}
-
-bool Syncee::loadLog()
-{
-  if ( !isValid() ) {
-    kdDebug() << "Syncee::loadLog(): Unable to load Sync log, identifier is "
-                 "empty." << endl;
-    return false;
-  }
-
-  delete mStatusLog;
-
-  QString logFile = locateLocal( "appdata", statusLogName() );
-
-  mStatusLog = new KSimpleConfig( logFile );
-
-  kdDebug() << "Syncee::loadLog() " << logFile << endl;
-
-  return true;
-}
-
-bool Syncee::saveLog()
-{
-  if ( !mStatusLog ) return false;
-  for ( SyncEntry *entry = firstEntry(); entry; entry = nextEntry() ) {
-    mStatusLog->setGroup( entry->id() );
-    mStatusLog->writeEntry( "Name",entry->name() );
-    mStatusLog->writeEntry( "Timestamp",entry->timestamp() );
-  }
-
-  mStatusLog->sync();
-
-  return true;
-}
-
-QString Syncee::statusLogName()
-{
-  QString name = type();
-  
-  name += "-" + identifier();
-
-  name.replace(QRegExp("/"),"_");
-  name.replace(QRegExp(":"),"_");
-
-  name += ".syncee";
-
-  return name;
-}
 
 int Syncee::modificationState( SyncEntry *entry ) const
 {
   return entry->state();
 }
 
-int Syncee::syncMode() const
-{
-  return mSyncMode;
+SyncEntry::PtrList Syncee::added() {
+  return find( SyncEntry::Added );
 }
 
-void Syncee::setSyncMode( int mode )
-{
-  mSyncMode = mode;
+SyncEntry::PtrList Syncee::modified() {
+  return find( SyncEntry::Modified );
 }
 
-bool Syncee::firstSync() const
-{
-  return mFirstSync;
-}
-
-void Syncee::setFirstSync( bool first )
-{
-  mFirstSync = first;
+SyncEntry::PtrList Syncee::removed() {
+  return find( SyncEntry::Removed );
 }
 
 void Syncee::insertId( const QString &type,
@@ -196,30 +134,48 @@ QString Syncee::newId() const
   return QString::null;
 }
 
-void Syncee::setSupports( const QBitArray& ar )
+Merger* Syncee::merger()const
 {
-  mSupport = ar;
-  mSupport.detach();
-  kdDebug(5230) << "setSupports count is " << ar.size() << endl;
+  return mMerger;
 }
 
-QBitArray Syncee::bitArray() const
+void Syncee::setMerger( Merger *merger )
 {
-  return mSupport;
+  mMerger = merger;
 }
 
-bool Syncee::isSupported( uint attr ) const
+void Syncee::setTitle( const QString& str )
 {
-  if ( attr >= mSupport.size() ) return false;
-  return mSupport.testBit( attr );
+  mTitle = str;
 }
 
-void Syncee::setSource( const QString& str )
+QString Syncee::title() const
 {
-  mName = str;
+  return mTitle;
 }
 
-QString Syncee::source() const
+
+void Syncee::setType(const QString& type )
 {
-  return mName;
+  mType = type;
 }
+
+QString Syncee::type()const
+{
+  return mType;
+}
+
+SyncEntry::PtrList Syncee::find( int state )
+{
+  QPtrList<SyncEntry> found;
+  SyncEntry* entry;
+  for ( entry = firstEntry(); entry != 0; entry = nextEntry() )
+    if ( entry->state() == state )
+      found.append( entry );
+
+
+  return found;
+}
+
+
+

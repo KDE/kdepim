@@ -20,9 +20,13 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include "syncentry.h"
+
+#include "merger.h"
+#include "syncee.h"
+
 #include <kdebug.h>
 
-#include "syncentry.h"
 
 using namespace KSync;
 
@@ -30,16 +34,14 @@ SyncEntry::SyncEntry( Syncee *sync )
   : mSyncee( sync ), mDontSync( false )
 {
   mState = Undefined;
-  mSyncState = Undefined;
 }
 
 SyncEntry::SyncEntry( const SyncEntry &ent )
 {
-//  kdDebug(5230) << "SyncEntry copy c'tor " << endl;
-  mState = ent.mState;
-  mSyncee = ent.mSyncee;
-  mSyncState = ent.mSyncState;
+  mState    = ent.mState;
+  mSyncee   = ent.mSyncee;
   mDontSync = ent.mDontSync;
+  mType     = ent.mType;
 }
 
 SyncEntry::~SyncEntry()
@@ -83,7 +85,6 @@ bool SyncEntry::wasRemoved() const
 
 void SyncEntry::setState( int state )
 {
-//  kdDebug(5230) << "State is " << state << endl;
   mState = state;
 }
 
@@ -97,19 +98,9 @@ int SyncEntry::syncState() const
   return mSyncState;
 }
 
-Syncee *SyncEntry::syncee()
+Syncee *SyncEntry::syncee()const
 {
   return mSyncee;
-}
-
-/* not implemented here */
-void SyncEntry::setId( const QString& )
-{
-}
-
-bool SyncEntry::mergeWith( SyncEntry * )
-{
-  return false;
 }
 
 void SyncEntry::setDontSync( bool dontSync )
@@ -122,7 +113,39 @@ bool SyncEntry::dontSync() const
   return mDontSync;
 }
 
+KSync::Merger* SyncEntry::merger()const {
+  if ( !syncee() )
+    return 0l;
+
+  return syncee()->merger();
+}
+
+bool SyncEntry::mergeWith( SyncEntry* other ) {
+  if ( !merger() && !other->merger() )
+    return false;
+
+  /* try at least one merger */
+  Merger *mer = merger() ? merger() : other->merger();
+
+  return mer ->merge( this, other );
+}
+
 KPIM::DiffAlgo* SyncEntry::diffAlgo( SyncEntry*, SyncEntry* )
 {
   return 0;
+}
+
+/* not implemented here */
+void SyncEntry::setId( const QString& )
+{
+}
+
+QString SyncEntry::type()const
+{
+  return mType;
+}
+
+void SyncEntry::setType( const QString& str )
+{
+  mType = str;
 }

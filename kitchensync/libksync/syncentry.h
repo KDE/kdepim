@@ -30,7 +30,7 @@ class DiffAlgo;
 }
 
 namespace KSync {
-
+class Merger;
 class Syncee;
 
 /**
@@ -66,7 +66,7 @@ class SyncEntry
     /**
       Return a string describing the type of the entry
     */
-    virtual QString type() const = 0;
+    QString type() const;
 
     /**
       Return a string describing this entry. This is presented to the user as
@@ -82,11 +82,11 @@ class SyncEntry
     */
     virtual QString id() = 0;
 
-    // We should remove the setId function. The id is determined by the
-    //underlying data, not by externally setting it.
+
     /**
-      Set unique id.
-    */
+       Set the ID of the underlying data. This is needed for example if the UID is not trusted
+       and could come from a device.
+     */
     virtual void setId( const QString& id );
 
     /**
@@ -112,7 +112,7 @@ class SyncEntry
     /**
       For future versions match should try to match one SyncEntry
       with another.
-     
+
       @param entry The entry to be matched
       @return Return -1 if entry is from a different type than this entry
               or the percentage of equality. Or -2 if not implemented
@@ -134,6 +134,10 @@ class SyncEntry
       either Undefined, Added, Modified or Removed
     */
     virtual int state() const;
+
+    // TODO ### discuss for during sync added or such
+    void setSyncState(int);
+    int syncState()const;
 
     /**
       Convience functions for the state of an Entry
@@ -158,19 +162,11 @@ class SyncEntry
 
 
     /**
-      Set sync state (e.g. Added, Modified) of SyncEntry.
-    */
-    virtual void setSyncState( int state = Undefined );
-
-    /**
-      Returns the sync state of this entry.
-    */
-    virtual int syncState() const;
-
-
-    /**
       Creates an exact copy of the this SyncEntry
-      deleting the original is save
+      deleting the original is save and does not influence
+      the clone.
+      Syncee will be unset and SyncStates will be copied over
+      as well.
     */
     virtual SyncEntry *clone() = 0;
 
@@ -182,13 +178,7 @@ class SyncEntry
     /**
       Return the @ref Syncee data set, the entry belongs to.
     */
-    Syncee *syncee();
-
-    /**
-      Merges two sync entries where ever one entry does not support one
-      specific attribute.
-    */
-    virtual bool mergeWith( SyncEntry * );
+    Syncee *syncee()const;
 
     /**
       Set if the entry should be synced or not.
@@ -197,17 +187,26 @@ class SyncEntry
 
     bool dontSync() const;
 
+    bool mergeWith(SyncEntry *other);
+
     /**
-      Returns the diffing algorithm which is used to present the differences between
-      the two SyncEntries when a conflict occurs.
+       Returns the diffing algorithm which is used to present the differences between
+       the two SyncEntries when a conflict occurs.
      */
     virtual KPIM::DiffAlgo* diffAlgo( SyncEntry*, SyncEntry* );
+
+ protected:
+    void setType(const QString&);
+
+ protected:
+    Merger* merger()const;
 
   private:
     int mState;
     int mSyncState;
     Syncee *mSyncee;
-    bool mDontSync;
+    bool mDontSync : 1;
+    QString mType;
 
     class SyncEntryPrivate;
     SyncEntryPrivate *d;

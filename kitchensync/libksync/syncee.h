@@ -2,7 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002,2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2002,2004 Holger Hans Peter Freyther <freyther@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -28,13 +28,14 @@
 #include <qstring.h>
 #include <qptrlist.h>
 
-#include "kontainer.h"
-#include "syncentry.h"
+#include <kontainer.h>
+#include <syncentry.h>
 
 class KSimpleConfig;
 
 namespace KSync {
 
+class Merger;
 /**
   @short A data set to be synced.
   @author Cornelius Schumacher, zecke
@@ -48,7 +49,8 @@ namespace KSync {
   The Syncee class provides an interface, which has to be implemented by
   concrete subclasses.
 
-  Further a Syncee can store a BitMap on what a 'Filler' of the Syncee supports.
+  Further you can set a Merger on the  Syncee to show which attributes are known
+  to you.
   For example Device B got a todolist but has only 3 Attributes.
      Attribute 1: Description
      Attribute 2: Completed
@@ -62,15 +64,16 @@ namespace KSync {
   the additional attributes.
   By default the support map of a Syncee is set to supports all..
 
-
+  @see Merger
   @ref Syncer operates on Syncee objects.
 */
 class Syncee
 {
   public:
-    enum SyncMode { MetaLess=0, MetaMode=2 };
-
-    Syncee( uint supportSize = 0 );
+    /**
+     * Normally firstSync is on
+     */
+    Syncee( Merger* merger );
     virtual ~Syncee();
 
     /**
@@ -97,10 +100,12 @@ class Syncee
     virtual SyncEntry *nextEntry() = 0;
 
     /**
-     * The type of the Syncee
-     */
-    // Do we really need this function?
-    virtual QString type() const { return QString::null; }
+     * The type of the Syncee. 
+     * Sometimes it is not possible to use dynamic_cast and this way a type is nice
+     * to have;
+     */   
+    QString type() const;
+    
     /**
       Find an entry identified by a unique id. See @ref SyncEntry::id().
       @param id the Id to be found
@@ -109,9 +114,13 @@ class Syncee
 
     /**
       Add a @ref SyncEntry object to this data set. Ownership of the object
-      remains with the caller.
+      is transfered and the SyncEntry now belongs to this Syncee. Use
+      KSync::SyncEntry::clone() to create an exact copy of a KSync::SyncEntry.
+      
+      \sa KSync::SyncEntry::clone
     */
     virtual void addEntry( SyncEntry * ) = 0;
+
     /**
       Remove a @ref SyncEntry. The entry is removed from the data set, but the
       object is not deleted.
@@ -120,7 +129,8 @@ class Syncee
 
     /**
       Replace an entry of the data set by another. Ownership of the objects is
-      handled as with the @ref addEntry() and @ref removeEntry() functions.
+      handled as with the @ref addEntry() and the old entry will be deleted
+      internally.
     */
     void replaceEntry( SyncEntry *oldEntry, SyncEntry *newEntry );
 
@@ -136,7 +146,7 @@ class Syncee
       object. As long as the identifier is empty the Syncee doesn't have valid
       data.
     */
-    QString identifier() { return mIdentifier; }
+    QString identifier()const;
 
     /**
       Return if the Syncee is valid. If a Syncee is invalid it means that it
@@ -148,57 +158,11 @@ class Syncee
     virtual bool isValid();
 
     /**
-      Return the name of a config file, which is used to store status
-      information about the data set.
-    */
-    QString statusLogName();
-
-    /**
-      Load the syncing log.
-
-      @return true, if loading is successful, otherwise false.
-    */
-    bool loadLog();
-    /**
-      Save the status log file with the name @ref statusLogName().
-
-      @return true, if loading is successful, otherwise false.
-    */
-    bool saveLog();
-
-    /**
-      Return, if the given @ref SyncEntry has changed since the last syncing.
-      This information is retrieved by comparing the timestamps from the log
-      file and the freshly read data set.
-    */
-    bool hasChanged(SyncEntry *);
-
-    /**
       Returns if hasChanged and the state of change
       Undefined, Added, Modified,Removed
     */
     virtual int modificationState( SyncEntry * entry) const;
 
-    /**
-      Returns the syncMode of this Syncee. The syncMode determines the later
-      used synchronisation algorithm for the best results.
-    */
-    virtual int syncMode() const;
-
-    /**
-      Sets the syncMode of this Syncee.
-    */
-    virtual void setSyncMode( int mode = MetaLess );
-
-    /**
-      Set if it's syncing for the first time.
-    */
-    virtual void setFirstSync( bool firstSync = true );
-
-    /**
-     If it is syncing for the first time.
-    */
-    virtual bool firstSync() const;
 
     /**
       For Meta Syncing you easily know what was changed
@@ -207,21 +171,25 @@ class Syncee
       The following three methods are convience functions to make things
       more smooth later
     */
+    //{
 
-    // Do we really need these functions here?
     /**
-      What was added?
+      What was added? This uses firstEntry() nextEntry internally
+      be aware of it.
     */
-    virtual SyncEntry::PtrList added() { return SyncEntry::PtrList(); }
+    virtual SyncEntry::PtrList added();
     /**
-      What was modified?
+      What was modified? This uses firstEntry() nextEntry internally
+      be aware of it.
     */
-    virtual SyncEntry::PtrList modified() { return SyncEntry::PtrList(); };
+    virtual SyncEntry::PtrList modified();
     /**
-      What was removed?
+      What was removed? This uses firstEntry() nextEntry internally
+      be aware of it.
     */
-    virtual SyncEntry::PtrList removed() { return SyncEntry::PtrList(); }
+    virtual SyncEntry::PtrList removed();
 
+    //}
     /**
       For some parts of memory management it would be good to
       deal with clones. This creates a direct clone of the Syncee
@@ -230,7 +198,7 @@ class Syncee
 //    virtual Syncee *clone() = 0;
 
     /**
-       A KSyncEntry is able to store the relative ids
+       A SyncEntry is able to store the relative ids
        @param  type The type of the id for example todo, kalendar...
        @param  konnectorId The original id of the Entry on konnector side
        @param  kdeId Is the id KDE native classes are assigning
@@ -262,35 +230,34 @@ class Syncee
     QMap<QString,Kontainer::ValueList> ids() const;
 
     /**
-      Set what the Syncee supports.
-    */
-    virtual void setSupports( const QBitArray& );
+     * The Merger set in either the Constructor or by a call
+     * to setMerger.
+     * Merger could be null, this normally indicates that all 
+     * attributes are supported.
+     * 
+     * @see Merger
+     */
+    Merger* merger()const;
 
     /**
-      Returns attributes supported by the Device.
-    */
-    virtual QBitArray bitArray() const;
-
-    // FIXME: Rename setSource to setLabel or setTitle
+     * Set the Merger. Ownership is not transfered and you can use the
+     * same merger on many different Syncees. You can also unset it (passing 0l)
+     */
+    void setMerger( Merger *merger = 0 );
+   
     /**
       Set the source of this Syncee. The string may be presented to the user by
       the conflict resolver
     */
-    void setSource( const QString &src );
+    void setTitle( const QString &src );
 
     /**
-      Eeturns the source of this syncee or QString::null if not set.
+      Returns the source of this syncee or QString::null if not set.
     */
-    QString source() const;
+    QString title() const;
 
 
-    /**
-      Convenience function to figure if a specific attribute is supported.
-    */
-    inline bool isSupported( uint Attribute ) const;
-
-
-    // a bit hacky
+   
     /**
      * When syncing two iCalendar the UIDs are garantuued to be global
      * and you may not change these values at all.
@@ -303,14 +270,21 @@ class Syncee
     
     virtual bool restoreBackup( const QString &filename ) = 0;
 
+ protected:
+    /**
+     * The Syncee Implementation can set the type of the Syncee. This is needed
+     * to identify and cast the syncee
+     */
+    void setType(const QString& type);
+
+    SyncEntry::PtrList find(int state);
+
   private:
-    QMap<QString,Kontainer::ValueList> mMaps;
-    int mSyncMode;
-    bool mFirstSync : 1;
+    QMap<QString,Kontainer::ValueList> mMaps;      
     QString mIdentifier;
-    KSimpleConfig *mStatusLog;
-    QBitArray mSupport;
-    QString mName;
+    Merger* mMerger;
+    QString mTitle;   
+    QString mType;
     class SynceePrivate;
     SynceePrivate *d;
 };
