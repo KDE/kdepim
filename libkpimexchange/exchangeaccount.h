@@ -29,7 +29,7 @@ namespace KPIM {
 class ExchangeAccount : public QObject {
     Q_OBJECT
   public:
-    ExchangeAccount( QString& host, QString& account, QString& password );
+    ExchangeAccount( QString host, QString account, QString password );
     /** 
      Create a new account object, read data from group app data
      */

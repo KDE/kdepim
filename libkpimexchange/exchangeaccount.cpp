@@ -32,7 +32,7 @@
 
 using namespace KPIM;
 
-ExchangeAccount::ExchangeAccount( QString& host, QString& account, QString& password )
+ExchangeAccount::ExchangeAccount( QString host, QString account, QString password )
 {
   mHost = host;
   mAccount = account;
