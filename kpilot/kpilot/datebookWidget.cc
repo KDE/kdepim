@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -31,15 +31,14 @@
 #include "config.h"
 #include "options.h"
 
-#include <pi-file.h>
 
 #include <qlayout.h>
 #include <qdir.h>
+#include <qpushbutton.h>
 
-#include <klistbox.h>
-#include <ktextedit.h>
-
-#include "listCat.h"
+#include <klistview.h>
+#include <kdatepicker.h>
+#include <kmessagebox.h>
 
 #include "datebookWidget.h"
 
@@ -48,12 +47,41 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 {
 	FUNCTIONSETUP;
 
-	QGridLayout *g = new QGridLayout(this,3,5,SPACING);
-	fList = new KListBox(this);
-	g->addWidget(fList,1,1);
-	fDisplay = new KTextEdit(this);
-	fDisplay->setReadOnly(true);
-	g->addWidget(fDisplay,1,3);
+	QGridLayout *g = new QGridLayout(this,1,1,SPACING);
+
+	fDatePicker = new KDatePicker( this, "fDatePicker" );
+	fDatePicker->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)5, 0, 0, fDatePicker->sizePolicy().hasHeightForWidth() ) );
+	g->addMultiCellWidget(fDatePicker,0,0,0,2);
+
+	QSpacerItem* spacer = new QSpacerItem( 20, 180, QSizePolicy::Minimum, QSizePolicy::Expanding );
+	g->addItem( spacer, 1, 1 );
+
+	fAddButton = new QPushButton( i18n( "&Add..." ), this, "pushButton1" );
+	g->addWidget( fAddButton, 2, 0 );
+
+	fEditButton = new QPushButton( i18n( "&Edit..." ), this, "pushButton2" );
+	g->addWidget( fEditButton, 2, 1 );
+
+	fDeleteButton = new QPushButton( i18n( "&Delete..." ), this, "pushButton3" );
+	g->addWidget( fDeleteButton, 2, 2 );
+
+	fEventList = new KListView( this, "kListView1" );
+	fEventList->addColumn( i18n( "Time" ) );
+	fEventList->addColumn( i18n( "Al" ) );
+	fEventList->addColumn( i18n( "Rec" ) );
+	fEventList->addColumn( i18n( "Description" ) );
+//	fEventList->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, 0, 0, fEventList->sizePolicy().hasHeightForWidth() ) );
+	fEventList->setAllColumnsShowFocus( TRUE );
+	fEventList->setShowSortIndicator( TRUE );
+	fEventList->setResizeMode( KListView::/*LastColumn*/AllColumns );
+	fEventList->setFullWidth( TRUE );
+//	fEventList->setAlternateBackground( QColor( 221, 146, 240 ) );
+	g->addMultiCellWidget(fEventList, 0, 2, 3, 3);
+
+	connect(fDatePicker, SIGNAL(), SLOT(slotDayChanged()));
+	connect(fAddButton, SIGNAL(clicked()), SLOT(slotAddEvent()));
+	connect(fEditButton, SIGNAL(clicked()), SLOT(slotEditEvent()));
+	connect(fDeleteButton, SIGNAL(clicked()), SLOT(slotDeleteEvent()));
 }
 
 DatebookWidget::~DatebookWidget()
@@ -65,27 +93,35 @@ DatebookWidget::~DatebookWidget()
 void DatebookWidget::initialize()
 {
 	FUNCTIONSETUP;
-	
-	fList->clear();
-	fDisplay->setText(QString::null);
 
-	QDir dir(dbPath());
-	dir.setNameFilter(CSL1("*.pdb;*.prc"));
-	QStringList l = dir.entryList();
-
-	for (QStringList::ConstIterator i = l.begin();
-		i != l.end();
-		++i)
-	{
-		fList->insertItem(*i);
-	}
-
-	fDisplay->setText(CSL1("No way you're going to get a date."));
-
-	fList->show();
-	fDisplay->show();
+	// TODO: Open the calendar database
+	// TODO: Initialize the current month
+	// TODO: Fill the calendar and the event list
 }
 
+void DatebookWidget::slotDayChanged()
+{
+	FUNCTIONSETUP;
+	KMessageBox::information(this, "slotDayChanged");
+}
+
+void DatebookWidget::slotAddEvent()
+{
+	FUNCTIONSETUP;
+	KMessageBox::information(this, "slotAddEvent");
+}
+
+void DatebookWidget::slotEditEvent()
+{
+	FUNCTIONSETUP;
+	KMessageBox::information(this, "slotEditEvent");
+}
+
+void DatebookWidget::slotDeleteEvent()
+{
+	FUNCTIONSETUP;
+	KMessageBox::information(this, "slotDeleteEvent");
+}
 
 
 #include "datebookWidget.moc"

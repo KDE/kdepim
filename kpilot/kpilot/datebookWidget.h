@@ -22,7 +22,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -32,23 +32,33 @@
 
 #include "pilotComponent.h"
 
-class KListBox;
-class KTextEdit;
+class KDatePicker;
+class QPushButton;
+class KListView;
 
 class DatebookWidget : public PilotComponent
 {
 Q_OBJECT
-  
+
 public:
 	DatebookWidget(QWidget* parent, const QString& dbpath);
 	virtual ~DatebookWidget();
-  
+
 	// Pilot component methods
 	/* virtual */ void initialize();
 
+protected slots:
+	void slotDayChanged();
+	void slotAddEvent();
+	void slotEditEvent();
+	void slotDeleteEvent();
+
 private:
-	KListBox *fList;
-	KTextEdit *fDisplay;
+	KDatePicker*fDatePicker;
+	QPushButton*fAddButton;
+	QPushButton*fEditButton;
+	QPushButton*fDeleteButton;
+	KListView*fEventList;
 };
 
 
