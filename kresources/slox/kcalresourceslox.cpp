@@ -64,6 +64,8 @@ KCalResourceSlox::KCalResourceSlox( const KConfig *config )
 {
   init();
 
+  mPrefs->addGroupPrefix( identifier() );
+
   if ( config ) {
     readConfig( config );
   }
@@ -73,6 +75,8 @@ KCalResourceSlox::KCalResourceSlox( const KURL &url )
   : ResourceCached( 0 )
 {
   init();
+
+  mPrefs->addGroupPrefix( identifier() );
 
   mPrefs->setUrl( url.url() );
 }

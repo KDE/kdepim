@@ -44,6 +44,8 @@ ResourceSlox::ResourceSlox( const KConfig *config )
 {
   init();
 
+  mPrefs->addGroupPrefix( identifier() );
+
   if ( config ) {
     readConfig( config );
   }
@@ -56,6 +58,8 @@ ResourceSlox::ResourceSlox( const KURL &url,
   : Resource( 0 )
 {
   init();
+
+  mPrefs->addGroupPrefix( identifier() );
 
   mPrefs->setUrl( url.url() );
   mPrefs->setUser( user );
