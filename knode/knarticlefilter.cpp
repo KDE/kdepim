@@ -40,7 +40,7 @@ void dummyFilter()
 {
   i18n("default filter name","all");
   i18n("default filter name","unread");
-  //i18n("default filter name","new");   forgot this one, activate after message freeze (CG)
+  i18n("default filter name","new");
   i18n("default filter name","watched");
   i18n("default filter name","threads with unread");
   i18n("default filter name","threads with new");

@@ -62,7 +62,7 @@ void dummyHeader()
   i18n("it's not very important to translate this","Sender");
   i18n("it's not very important to translate this","Subject");
   i18n("it's not very important to translate this","Supersedes");
- // i18n("it's not very important to translate this","To");    I forgot one header, uncomment after message freeze !!!!!!!!
+  i18n("it's not very important to translate this","To");
   i18n("it's not very important to translate this","User-Agent");
   i18n("it's not very important to translate this","X-Mailer");
   i18n("it's not very important to translate this","X-Newsreader");
