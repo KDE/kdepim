@@ -90,6 +90,7 @@ class LocalKonnector : public KSync::Konnector
     KABC::ResourceFile *mAddressBookResourceFile;
     
     KSync::AddressBookSyncee *mAddressBookSyncee;
+    KSync::CalendarSyncee *mCalendarSyncee;
     
     class LocalBookmarkManager : public KBookmarkManager
     {

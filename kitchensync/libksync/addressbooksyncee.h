@@ -114,6 +114,10 @@ class AddressBookSyncee : public Syncee
     AddressBookSyncee( KABC::AddressBook * );
     ~AddressBookSyncee();
 
+    void reset();
+
+    QString identifier();
+
     AddressBookSyncEntry *firstEntry();
     AddressBookSyncEntry *nextEntry();
 

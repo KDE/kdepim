@@ -56,8 +56,9 @@ LocalKonnector::LocalKonnector( const KConfig *config )
   }
 
   mAddressBookSyncee =	new AddressBookSyncee( &mAddressBook );
+  mCalendarSyncee = new CalendarSyncee( &mCalendar );
   
-  mSyncees.append( new CalendarSyncee( &mCalendar ) );
+  mSyncees.append( mCalendarSyncee );
   mSyncees.append( mAddressBookSyncee );
   mSyncees.append( new BookmarkSyncee( &mBookmarkManager ) );
 
@@ -102,13 +103,34 @@ void LocalKonnector::setCapabilities( const KSync::Kapabilities& )
 
 bool LocalKonnector::readSyncees()
 {
+  kdDebug() << "LocalKonnector::readSyncee()" << endl;
+
   if ( !mCalendarFile.isEmpty() ) {
-    if ( !mCalendar.load( mCalendarFile ) ) return false;
+    kdDebug() << "LocalKonnector::readSyncee(): calendar: " << mCalendarFile
+              << endl;
+    if ( mCalendar.load( mCalendarFile ) ) {
+      kdDebug() << "Read succeeded." << endl;
+      mCalendarSyncee->reset();
+      mCalendarSyncee->setIdentifier( mCalendarFile );
+    } else {
+      kdDebug() << "Read failed." << endl;
+      return false;
+    }
   }
 
-  if ( mAddressBookFile.isEmpty() ) {
+  if ( !mAddressBookFile.isEmpty() ) {
+    kdDebug() << "LocalKonnector::readSyncee(): addressbook: "
+              << mAddressBookFile << endl;
+
     mAddressBookResourceFile->setFileName( mAddressBookFile );
-    if ( !mAddressBook.load() ) return false;
+    if ( !mAddressBook.load() ) {
+      kdDebug() << "Read failed." << endl;
+      return false;
+    }
+
+    kdDebug() << "Read succeeded." << endl;
+
+    mAddressBookSyncee->reset();
   
     KABC::AddressBook::Iterator it;
     for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {

@@ -93,12 +93,33 @@ CalendarSyncee::CalendarSyncee( CalendarLocal *calendar )
 
 CalendarSyncee::~CalendarSyncee()
 {
+  clearEntries();
+
+  if ( mOwnCalendar ) delete mCalendar;
+}
+
+void CalendarSyncee::reset()
+{
+  clearEntries();
+}
+
+void CalendarSyncee::clearEntries()
+{
   QMap<Incidence *, CalendarSyncEntry *>::Iterator it;
   for( it = mEntries.begin(); it != mEntries.end(); ++it ) {
     delete it.data();
   }
+  mEntries.clear();
+}
 
-  if ( mOwnCalendar ) delete mCalendar;
+void CalendarSyncee::setIdentifier( const QString &id )
+{
+  mIdentifier = id;
+}
+
+QString CalendarSyncee::identifier()
+{
+  return mIdentifier;
 }
 
 CalendarSyncEntry *CalendarSyncee::firstEntry()
@@ -205,7 +226,7 @@ CalendarSyncEntry *CalendarSyncee::createEntry( Incidence *incidence )
     return entry;
   } else {
     return 0;
-  }  
+  }
 }
 
 bool CalendarSyncee::writeBackup( const QString &filename )

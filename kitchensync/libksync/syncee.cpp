@@ -44,16 +44,6 @@ Syncee::~Syncee()
   delete mStatusLog;
 }
 
-void Syncee::setIdentifier( const QString &i )
-{
-  mIdentifier = i;
-}
-
-QString Syncee::identifier()
-{
-  return mIdentifier;
-}
-
 SyncEntry *Syncee::findEntry( const QString &id )
 {
 //  kdDebug(5231) << "Syncee::findEntry() '" << id << "'" << endl;
@@ -87,6 +77,11 @@ bool Syncee::hasChanged( SyncEntry *entry )
 
 bool Syncee::loadLog()
 {
+  if ( mIdentifier.isEmpty() ) {
+    kdDebug() << "Unable to load Sync log, identifier is empty." << endl;
+    return false;
+  }
+
   delete mStatusLog;
 
   QString logFile = locateLocal( "appdata", statusLogName() );
@@ -114,7 +109,9 @@ bool Syncee::saveLog()
 
 QString Syncee::statusLogName()
 {
-  QString name = identifier();
+  QString name = type();
+  
+  name += "-" + identifier();
 
   name.replace(QRegExp("/"),"_");
   name.replace(QRegExp(":"),"_");

@@ -60,7 +60,7 @@ class Syncer
       synced data, which cannot be resolved automatically. The UI does not
       necessarily have to be interactive.
     */
-    Syncer( SyncUi *ui=0, SyncAlgorithm *iface= 0 );
+    Syncer( SyncUi *ui = 0, SyncAlgorithm *algorithm = 0 );
     virtual ~Syncer();
 
     /**
@@ -69,7 +69,7 @@ class Syncer
     void setSyncAlgorithm( SyncAlgorithm * );
 
     /**
-      Sets the Ui associated with the sync.
+      Sets user interface handler which is used for resolving conflicts.
     */
     void setSyncUi( SyncUi * );
 
@@ -114,8 +114,12 @@ class Syncer
 
   private:
     QPtrList<Syncee> mSyncees;
+
     SyncUi *mUi;
     SyncAlgorithm *mAlgorithm;
+
+    bool mOwnUi;
+    bool mOwnAlgorithm;
 
     class SyncerPrivate;
     SyncerPrivate *d;

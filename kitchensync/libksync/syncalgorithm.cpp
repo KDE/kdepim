@@ -27,10 +27,15 @@
 
 using namespace KSync;
 
+void SyncAlgorithm::setUi( SyncUi *ui )
+{
+  mUi = ui;
+}
+
 SyncEntry *SyncAlgorithm::deconflict( SyncEntry *syncEntry, SyncEntry *target )
 {
   SyncEntry* entry = syncEntry; // default to this
-  if ( mUI ) entry = mUI->deconflict( syncEntry, target );
+  if ( mUi ) entry = mUi->deconflict( syncEntry, target );
   else kdWarning() << "SyncAlgorithm: No UI set." << endl;
 
   return entry;
@@ -39,7 +44,7 @@ SyncEntry *SyncAlgorithm::deconflict( SyncEntry *syncEntry, SyncEntry *target )
 bool SyncAlgorithm::confirmDelete( SyncEntry *syncEntry, SyncEntry *target )
 {
   bool ret = true;
-  if ( mUI ) ret = mUI->confirmDelete( syncEntry, target );
+  if ( mUi ) ret = mUi->confirmDelete( syncEntry, target );
   else kdWarning() << "SyncAlgorithm: No UI set." << endl;
 
   return ret;
@@ -47,6 +52,6 @@ bool SyncAlgorithm::confirmDelete( SyncEntry *syncEntry, SyncEntry *target )
 
 void SyncAlgorithm::informBothDeleted( SyncEntry *entry, SyncEntry *target )
 {
-  if ( mUI ) mUI->informBothDeleted( entry, target );
+  if ( mUi ) mUi->informBothDeleted( entry, target );
   else kdWarning() << "SyncAlgorithm: No UI set." << endl;
 }

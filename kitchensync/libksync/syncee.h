@@ -74,6 +74,15 @@ class Syncee
     virtual ~Syncee();
 
     /**
+      Reset Syncee to initial state. This is called when the data the Syncee
+      operates on is changed externally, i.e. without using the Syncees
+      addEntry() removeEntry(), replaceEntry() methods.
+    */
+    // TODO: It might be better if the Syncee would transparently operate on the
+    // underlying data without requiring the reset() call.
+    virtual void reset() {}
+
+    /**
       Return the first @ref SyncEntry object of the data set. This function
       together with @ref nextEntry() is used to iterate through all entries of a
       Syncee data set.
@@ -116,13 +125,10 @@ class Syncee
     void replaceEntry( SyncEntry *oldEntry, SyncEntry *newEntry );
 
     /**
-      Set the identifier which can be used to uniquely identify this Syncee.
+      Return the identifier which can be used to uniquely identify the Syncee
+      object.
     */
-    void setIdentifier( const QString & );
-    /**
-      Return the identifier.
-    */
-    QString identifier();
+    virtual QString identifier() { return QString::null; }
 
     /**
       Return the name of a config file, which is used to store status
@@ -248,7 +254,7 @@ class Syncee
     */
     virtual QBitArray bitArray() const;
 
-
+    // FIXME: Rename setSource to setLabel or setTitle
     /**
       Set the source of this Syncee. The string may be presented to the user by
       the conflict resolver

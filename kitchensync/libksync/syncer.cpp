@@ -31,19 +31,23 @@
 using namespace KSync;
 
 Syncer::Syncer( SyncUi *ui, SyncAlgorithm *algorithm )
+  : mOwnUi( false ), mOwnAlgorithm( false )
 {
-//  mSyncees.setAutoDelete(true); this leads to crashes
-  if ( !ui ) mUi = new SyncUi();
-  else mUi = ui;
+  if ( !ui ) {
+    mUi = new SyncUi();
+    mOwnUi = true;
+  } else mUi = ui;
 
-  if ( !algorithm ) mAlgorithm = new StandardSync( mUi );
-  else mAlgorithm = algorithm;
+  if ( !algorithm ) {
+    mAlgorithm = new StandardSync( mUi );
+    mOwnAlgorithm = true;
+  } else mAlgorithm = algorithm;
 }
 
 Syncer::~Syncer()
 {
-  delete mUi;
-  delete mAlgorithm;
+  if ( mOwnUi ) delete mUi;
+  if ( mOwnAlgorithm ) delete mAlgorithm;
 }
 
 void Syncer::addSyncee( Syncee *syncee )
@@ -58,6 +62,15 @@ void Syncer::clear()
 
 void Syncer::sync()
 {
+  Syncee *s = mSyncees.first();
+  while( s ) {
+    if ( !s->loadLog() ) {
+      kdError() << "Unable to load sync log for Syncee '" << s->identifier()
+                << endl;
+    }
+    s = mSyncees.next();
+  }
+
   Syncee *target = mSyncees.last();
 
   if ( !target ) {
@@ -110,14 +123,15 @@ void Syncer::syncToTarget( Syncee *source, Syncee *target, bool override )
 
 void Syncer::setSyncAlgorithm( SyncAlgorithm *algorithm )
 {
-  if ( !algorithm ) return;
-  delete mAlgorithm;
+  if ( mOwnAlgorithm ) delete mAlgorithm;
+  mOwnAlgorithm = false;
   mAlgorithm = algorithm;
 }
 
-void Syncer::setSyncUi(  SyncUi *ui )
+void Syncer::setSyncUi( SyncUi *ui )
 {
-  if ( !ui ) return;
-  delete mUi;
+  if ( mOwnUi ) delete mUi;
+  mOwnUi = false;
   mUi = ui;
+  mAlgorithm->setUi( ui );
 }

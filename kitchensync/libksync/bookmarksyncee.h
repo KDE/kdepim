@@ -62,6 +62,8 @@ class BookmarkSyncee : public Syncee
     BookmarkSyncee( KBookmarkManager * );
     ~BookmarkSyncee();
   
+    QString type() const { return "BookmarkSyncee"; }
+  
     BookmarkSyncEntry *firstEntry();
     BookmarkSyncEntry *nextEntry();
     

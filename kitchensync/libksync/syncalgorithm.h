@@ -37,12 +37,14 @@ class SyncAlgorithm
     /**
       Constructor.
     */
-    SyncAlgorithm( SyncUi *ui = 0 ) { mUI = ui; }
+    SyncAlgorithm( SyncUi *ui = 0 ) { mUi = ui; }
 
     /**
       Destructor.
     */
     virtual ~SyncAlgorithm() {}
+
+    void setUi( SyncUi *ui );
 
     /**
       Sync one Syncee object to another one. The data from the two Syncees is
@@ -61,7 +63,7 @@ class SyncAlgorithm
     void informBothDeleted( SyncEntry* syncEntry, SyncEntry* target );
 
   private:
-    SyncUi *mUI;
+    SyncUi *mUi;
 
     class SyncAlgorithmPrivate;
     SyncAlgorithmPrivate* d;

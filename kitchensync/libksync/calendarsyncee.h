@@ -59,6 +59,11 @@ class CalendarSyncee : public Syncee
     ~CalendarSyncee();
 
     QString type() const { return "CalendarSyncee"; }
+
+    void setIdentifier( const QString & );
+    QString identifier();
+
+    void reset();
     
     CalendarSyncEntry *firstEntry();
     CalendarSyncEntry *nextEntry();
@@ -80,6 +85,8 @@ class CalendarSyncee : public Syncee
 
   private:
     CalendarSyncEntry *createEntry( KCal::Incidence * );
+
+    void clearEntries();
   
     KCal::CalendarLocal *mCalendar;
     bool mOwnCalendar;
@@ -90,6 +97,8 @@ class CalendarSyncee : public Syncee
     bool mIteratingEvents;
     
     QMap<KCal::Incidence *,CalendarSyncEntry *> mEntries;
+
+    QString mIdentifier;
 };
 
 }

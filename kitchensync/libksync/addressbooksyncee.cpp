@@ -271,6 +271,16 @@ AddressBookSyncee::~AddressBookSyncee()
   if ( mOwnAddressBook ) delete mAddressBook;
 }
 
+void AddressBookSyncee::reset()
+{
+  mEntries.clear();
+}
+
+QString AddressBookSyncee::identifier()
+{
+  return mAddressBook->identifier();
+}
+
 AddressBookSyncEntry *AddressBookSyncee::firstEntry()
 {
   return mEntries.first();
