@@ -534,7 +534,7 @@ MemoWidget::slotImportMemo()
 	    // show error!
 	    return;
 	    }
-	char *text = new char[MemoWidget::MAX_MEMO_LEN];
+	char *text = new char[(int) MemoWidget::MAX_MEMO_LEN];
 	for(i = 0; (i < (MemoWidget::MAX_MEMO_LEN - 1)) && ((nextChar = importFile.getch()) != -1); i++)
 	    text[i] = nextChar;
 	text[i] = 0;
@@ -576,6 +576,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.32  2001/06/11 07:35:19  adridg
+// Cleanup before the freeze
+//
 // Revision 1.31  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //
