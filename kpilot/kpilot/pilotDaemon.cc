@@ -867,10 +867,11 @@ int main(int argc, char **argv)
 	DEBUGDAEMON << fname 
 		<< ": Adding debug options." << endl;
 	// KCmdLineArgs::addCmdLineOptions(debug_options); // , "debug");
-#endif
+
 
 
 	DEBUGDAEMON << fname << ": Starting app." << endl;
+#endif
 	if (!KUniqueApplication::start())
 	{
 		return 0;
