@@ -40,6 +40,7 @@ class KNGroup : public KNArticleCollection  {
 	  int saveStaticData(int cnt,bool ovr=false);
 	  void saveDynamicData(int cnt,bool ovr=false);
 	  void syncDynamicData();
+		void updateThreadInfo();
 		void resort();
 		
 		//get
@@ -77,8 +78,7 @@ class KNGroup : public KNArticleCollection  {
 	protected:
 		void sortHdrs(int cnt);
 		int findRef(KNFetchArticle *a, int from, int to, bool reverse=false);
-		void updateThreadInfo();
-		
+				
 		int n_ewCount, r_eadCount, l_astNr, m_axFetch;
 		QCString g_roupname;
 		KNUserEntry *u_ser;

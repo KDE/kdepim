@@ -195,6 +195,7 @@ bool KNGroup::loadHdrs()
 				buff=f.readLine();
 		  							
 				sscanf(buff,"%d %d %d %d", &id, &lines, (uint*) &timeT, (uint*) &fTimeT);
+				//qDebug("id = %d", id);
 			
 				art->setId(id);
 				art->setLines(lines);
@@ -490,6 +491,8 @@ void KNGroup::sortHdrs(int cnt)
 			resortCnt=0, idx, oldRef, idRef;
 	KNFetchArticle *art;
 	
+	qDebug("KNGroup::sortHdrs() : start = %d   end = %d", start, end);
+	
 	//resort old hdrs
 	if(start>0)
 		for(idx=0; idx<start; idx++) {
@@ -689,7 +692,7 @@ void KNGroup::resort()
 		at(idx)->setIdRef(-1);
 		at(idx)->setThreadingLevel(0);
 	}
-	
+	qDebug("KNGroup::resort()");
 	sortHdrs(len);
 	saveDynamicData(len, true);
 }
@@ -712,7 +715,6 @@ void KNGroup::updateThreadInfo()
 		while(idRef!=0) {
 			ref=byId(idRef);
 			if(!ref) {
-				//qDebug("%d", idx);
 				brokenThread=true;
 				break;
 			}
@@ -723,6 +725,7 @@ void KNGroup::updateThreadInfo()
 			}
 			idRef=ref->idRef();
 		}
+		if(brokenThread) break;
 	}
 
 	if(brokenThread) {
