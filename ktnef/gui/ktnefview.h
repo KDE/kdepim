@@ -20,10 +20,11 @@
 
 #include <klistview.h>
 #include <qptrlist.h>
+#include <kdepimmacros.h>
 
 class KTNEFAttach;
 
-class KTNEFView : public KListView
+class KDE_EXPORT KTNEFView : public KListView
 {
 	Q_OBJECT
 

@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/ktnef $(all_includes)
+INCLUDES = -I$(top_srcdir)/ktnef $(all_includes) -I$(top_srcdir)/libkdepim
 
 SUBDIRS = pics
 

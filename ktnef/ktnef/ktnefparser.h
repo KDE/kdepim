@@ -21,12 +21,13 @@
 #include <qptrlist.h>
 #include <qstring.h>
 #include <qmap.h>
+#include <kdepimmacros.h>
 
 class KTNEFAttach;
 class KTNEFMessage;
 class KTNEFProperty;
 
-class KTNEFParser
+class KDE_EXPORT KTNEFParser
 {
 public:
 	KTNEFParser();

@@ -20,10 +20,11 @@
 
 #include <ktnef/ktnefpropertyset.h>
 #include <qptrlist.h>
+#include <kdepimmacros.h>
 
 class KTNEFAttach;
 
-class KTNEFMessage : public KTNEFPropertySet
+class KDE_EXPORT KTNEFMessage : public KTNEFPropertySet
 {
 public:
 	KTNEFMessage();

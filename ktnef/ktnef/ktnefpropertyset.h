@@ -20,10 +20,11 @@
 
 #include <qmap.h>
 #include <qvariant.h>
+#include <kdepimmacros.h>
 
 class KTNEFProperty;
 
-class KTNEFPropertySet
+class KDE_EXPORT KTNEFPropertySet
 {
 public:
 	KTNEFPropertySet();
