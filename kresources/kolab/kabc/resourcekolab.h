@@ -159,6 +159,8 @@ protected:
 
   // The list of subresources
   Kolab::ResourceMap mSubResources;
+  QString mCachedSubresource;
+  bool mLocked;
 };
 
 }

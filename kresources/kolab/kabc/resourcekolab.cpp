@@ -39,6 +39,8 @@
 #include <kmessagebox.h>
 #include <ktempfile.h>
 
+#include <qobject.h>
+#include <qtimer.h>
 #include <qstring.h>
 #include <qfile.h>
 #include <assert.h>
@@ -72,7 +74,8 @@ static const char* s_attachmentMimeType = "application/x-vnd.kolab.contact";
 
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
-    Kolab::ResourceKolabBase( "ResourceKolab-KABC" )
+    Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
+    mCachedSubresource( QString::null ), mLocked( false )
 {
   setType( "kolab" );
 }
@@ -133,12 +136,15 @@ KABC::Ticket * KABC::ResourceKolab::requestSaveTicket()
     kdError() << "no addressbook" << endl;
     return 0;
   }
+  mLocked = true;
 
   return createTicket( this );
 }
 
 void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
 {
+  mLocked = false;
+  mCachedSubresource = QString::null;
   delete ticket;
 }
 
@@ -274,7 +280,15 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     subResource = mUidMap[ uid ].resource();
     sernum = mUidMap[ uid ].serialNumber();
   } else {
-    subResource = findWritableResource( mSubResources );
+    if ( !mCachedSubresource.isNull() ) {
+      subResource = mCachedSubresource;
+    } else {
+      subResource = findWritableResource( mSubResources );
+      // We were locked, remember the subresource we are working with until
+      // we are unlocked
+      if ( mLocked )
+        mCachedSubresource = subResource;
+    }
     if ( subResource.isEmpty() )
       return false;
     sernum = 0;
@@ -493,7 +507,6 @@ int KABC::ResourceKolab::subresourceCompletionWeight( const QString& subresource
   return 80;
 }
 
-
 QString KABC::ResourceKolab::subresourceLabel( const QString& subresource ) const
 {
   if ( mSubResources.contains( subresource ) ) {
@@ -522,6 +535,5 @@ QMap<QString, QString> KABC::ResourceKolab::uidToResourceMap() const
     map[ mapIt.key() ] = mapIt.data().resource();
   return map;
 }
-
 
 #include "resourcekolab.moc"
