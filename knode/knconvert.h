@@ -109,9 +109,9 @@ class KNConvert : public QDialog {
     QStringList l_og;
     bool c_onversionDone;
     QString v_ersion;
+    KProcess     *t_ar;
 
     void convert();
-
 
   protected slots:
     void slotStart();

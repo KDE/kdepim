@@ -39,9 +39,7 @@ bool KNConvert::needToConvert(const QString &oldVersion)
 {
   bool ret=(
               (oldVersion.left(3)=="0.3") ||
-              (oldVersion=="0.4beta1") ||
-              (oldVersion=="0.4beta2") ||
-              (oldVersion=="0.4beta3")
+              (oldVersion.left(3)=="0.4")
            );
 
   return ret;
@@ -59,6 +57,7 @@ KNConvert::KNConvert(const QString &version)
 
   QHBoxLayout *btnL=new QHBoxLayout(topL, 5);
   s_tartBtn=new QPushButton(i18n("Start conversion ..."), this);
+  s_tartBtn->setDefault(true);
   btnL->addStretch(1);
   btnL->addWidget(s_tartBtn);
   c_ancelBtn=new QPushButton(i18n("Cancel"), this);
@@ -86,7 +85,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   b_ackupPathLabel=new QLabel(i18n("save backup in:"), w_1);
   w1L->addWidget(b_ackupPathLabel, 3,0);
 
-  b_ackupPath=new KLineEdit(QDir::homeDirPath()+QString("/"), w_1);
+  b_ackupPath=new KLineEdit(QDir::homeDirPath()+QString("/knodedata-")+v_ersion+".tar.gz", w_1);
   w1L->addWidget(b_ackupPath, 3,1);
 
   b_rowseBtn= new QPushButton(i18n("Browse ..."), w_1);
@@ -161,7 +160,6 @@ void KNConvert::slotStart()
   c_ancelBtn->setEnabled(false);
   s_tack->raiseWidget(w_2);
 
-
   c_onverters.setAutoDelete(true);
 
   if(v_ersion.left(3)=="0.3" || v_ersion.left(7)=="0.4beta") {
@@ -177,13 +175,14 @@ void KNConvert::slotStart()
     }
 
     QString dataDir=KGlobal::dirs()->saveLocation("appdata", QString::null, false);
-    KProcess *tar=new KProcess;
-    *tar << "tar";
-    *tar << "-cz" << dataDir
-        << "-f" << b_ackupPath->text()+"knodedata-"+v_ersion+".tar.gz";
-    connect(tar, SIGNAL(processExited(KProcess*)), this, SLOT(slotTarExited(KProcess*)));
-    if(!tar->start()) {
-      delete tar;
+    t_ar=new KProcess;
+    *t_ar << "tar";
+    *t_ar << "-cz" << dataDir
+          << "-f" << b_ackupPath->text();
+    connect(t_ar, SIGNAL(processExited(KProcess*)), this, SLOT(slotTarExited(KProcess*)));
+    if(!t_ar->start()) {
+      delete t_ar;
+      t_ar = 0;
       slotTarExited(0);
     }
   }
@@ -202,7 +201,7 @@ void KNConvert::slotCreateBkupToggled(bool b)
 
 void KNConvert::slotBrowse()
 {
-  QString newPath=KFileDialog::getExistingDirectory(b_ackupPath->text());
+  QString newPath=KFileDialog::getSaveFileName(b_ackupPath->text());
 
   if(!newPath.isEmpty())
     b_ackupPath->setText(newPath);
@@ -211,14 +210,22 @@ void KNConvert::slotBrowse()
 
 void KNConvert::slotTarExited(KProcess *proc)
 {
-  if(! proc || !proc->normalExit() || proc->exitStatus()!=0)
-    if(KMessageBox::No==KMessageBox::warningYesNo(this, i18n("<b>The backup failed!</b>. Do you want to continue anyway?"))) {
-      delete proc;
-      reject();
-    }
+  bool success=true;
 
-  delete proc;
-  if(proc)
+  if(!proc || !proc->normalExit() || proc->exitStatus()!=0) {
+    success=false;
+    if(KMessageBox::No==KMessageBox::warningYesNo(this, i18n("<b>The backup failed!</b>. Do you want to continue anyway?"))) {
+
+      delete t_ar;
+      t_ar = 0;
+      reject();
+      return;
+    }
+  }
+
+  delete t_ar;
+  t_ar = 0;
+  if(success)
     l_og.append(i18n("created backup of the old data-files in %1").arg(b_ackupPath->text()));
   else
     l_og.append(i18n("backup failed!!"));

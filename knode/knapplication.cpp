@@ -51,8 +51,8 @@ int KNApplication::newInstance()
         if(convDlg->conversionDone()) //conversion has already happened but the user has canceled afterwards
           conf->writeEntry("Version", KNODE_VERSION);
         exit(0);
-      }
-      else //conversion done
+        return(0);
+      } else //conversion done
         conf->writeEntry("Version", KNODE_VERSION);
       delete convDlg;
     }
