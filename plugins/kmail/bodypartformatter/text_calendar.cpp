@@ -54,6 +54,7 @@
 
 #include <qurl.h>
 #include <qfile.h>
+#include <qdir.h>
 
 using namespace KCal;
 
@@ -531,6 +532,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       QString location = locateLocal( "data", "korganizer/income." + type,
                                       true );
+      QDir dir;
+      if ( !dir.exists( location ) ) dir.mkdir( location );
       QString file;
       do {
         file = location + "/" + KApplication::randomString( 10 );
