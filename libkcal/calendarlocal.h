@@ -18,9 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
-#ifndef _CALENDARLOCAL_H
-#define _CALENDARLOCAL_H
+#ifndef KCAL_CALENDARLOCAL_H
+#define KCAL_CALENDARLOCAL_H
 
 #include <qintdict.h>
 #include <qmap.h>
@@ -35,7 +34,8 @@ namespace KCal {
 /**
   This class provides a calendar stored as a local file.
 */
-class CalendarLocal : public Calendar, public IncidenceBase::Observer {
+class CalendarLocal : public Calendar, public IncidenceBase::Observer
+{
   public:
     /** constructs a new calendar, with variables initialized to sane values. */
     CalendarLocal();
@@ -65,15 +65,6 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer {
 
     /** retrieves an event on the basis of the unique string ID. */
     Event *getEvent(const QString &UniqueStr);
-    /** builds and then returns a list of all events that match for the
-     * date specified. useful for dayView, etc. etc. */
-    QPtrList<Event> eventsForDate(const QDate &date, bool sorted = FALSE);
-    /** Get events for date \a qdt. */
-    QPtrList<Event> eventsForDate(const QDateTime &qdt);
-    /** Get events in a range of dates. If inclusive is set to true, only events
-     * are returned, which are completely included in the range. */
-    QPtrList<Event> events(const QDate &start,const QDate &end,
-                             bool inclusive=false);
     /** Return all events in calendar */
     QPtrList<Event> getAllEvents();
 
@@ -113,6 +104,22 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer {
     Alarm::List alarmsTo( const QDateTime &to );
 
   protected:
+    /**
+      Builds and then returns a list of all events that match for the
+      date specified. useful for dayView, etc. etc.
+    */
+    QPtrList<Event> rawEventsForDate( const QDate &date, bool sorted = false );
+    /**
+      Get unfiltered events for date \a qdt.
+    */
+    QPtrList<Event> rawEventsForDate( const QDateTime &qdt );
+    /**
+      Get unfiltered events in a range of dates. If inclusive is set to true,
+      only events are returned, which are completely included in the range.
+    */
+    QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
+                               bool inclusive = false );
+
     /** this method should be called whenever a Event is modified directly
      * via it's pointer.  It makes sure that the calendar is internally
      * consistent. */

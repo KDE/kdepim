@@ -593,8 +593,7 @@ QDate CalendarLocal::keyToDate(long int key)
 
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
-// BL: an the returned list should be deleted!!!
-QPtrList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
+QPtrList<Event> CalendarLocal::rawEventsForDate(const QDate &qd, bool sorted)
 {
   // Search non-recurring events
   QPtrList<Event> eventList;
@@ -652,8 +651,8 @@ QPtrList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
 }
 
 
-QPtrList<Event> CalendarLocal::events(const QDate &start,const QDate &end,
-                                    bool inclusive)
+QPtrList<Event> CalendarLocal::rawEvents( const QDate &start, const QDate &end,
+                                          bool inclusive )
 {
   QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
   QPtrList<Event> matchList, *tmpList, tmpList2;
@@ -738,22 +737,19 @@ QPtrList<Event> CalendarLocal::events(const QDate &start,const QDate &end,
   return matchList;
 }
 
+QPtrList<Event> CalendarLocal::rawEventsForDate(const QDateTime &qdt)
+{
+  return rawEventsForDate( qdt.date() );
+}
+
 QPtrList<Event> CalendarLocal::getAllEvents()
 {
   QPtrList<Event> eventList;
 
   if( mOldestDate && mNewestDate )
-    eventList = events(*mOldestDate,*mNewestDate);
+    eventList = rawEvents(*mOldestDate,*mNewestDate);
 
   return eventList;
-}
-
-
-// taking a QDateTime, this function will look for an eventlist in the dict
-// with that date attached.
-QPtrList<Event> CalendarLocal::eventsForDate(const QDateTime &qdt)
-{
-  return eventsForDate(qdt.date());
 }
 
 void CalendarLocal::addJournal(Journal *journal)
