@@ -50,6 +50,9 @@ int main(int argc, char* argv[])
   VCalConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec();
+
+	/* NOTREACHED */
+	(void) id;
 }
 
 VCalConduit::VCalConduit(BaseConduit::eConduitMode mode)
@@ -212,6 +215,32 @@ void VCalConduit::doSync()
    saveVCal();
 }
 
+void VCalConduit::repeatForever(
+	PilotDateEntry *dateEntry,
+	int rFreq,
+	VObject *vevent)
+{
+	FUNCTIONSETUP;
+
+	const char *s = "<no description>";
+
+	if (vevent)
+	{
+		VObject *vo = isAPropertyOf(vevent, VCSummaryProp);
+		if (vo != 0L)
+		{
+			s=fakeCString(vObjectUStringZValue(vo));
+		}
+	}
+
+
+	dateEntry->setRepeatFrequency(rFreq);
+	dateEntry->setRepeatForever();
+	kdDebug() << fname
+		<< ": WARNING: repeat duration is forever for "
+		<< s
+		<< endl;
+}
 
 /*****************************************************************************/
 
@@ -905,8 +934,7 @@ void VCalConduit::doLocalSync()
 	      } else {
 		// we could calculate an end date here, but too lazy right now.
 		// pilot doesn't understand concept of repeat n times.
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever(); // modify me to fix
+		repeatForever(dateEntry,rFreq,vevent);
 	      }
 	    }
 	  }
@@ -944,8 +972,7 @@ void VCalConduit::doLocalSync()
 		dateEntry->setRepeatFrequency(rFreq);
 		dateEntry->setRepeatForever();
 	      } else {
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever(); // again, modify to fix
+		repeatForever(dateEntry,rFreq,vevent);
 	      }
 	    }
 	  }
@@ -995,8 +1022,7 @@ void VCalConduit::doLocalSync()
 		dateEntry->setRepeatFrequency(rFreq);
 		dateEntry->setRepeatForever();
 	      } else {
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever(); // again, modify me to fix
+			repeatForever(dateEntry,rFreq,vevent);
 	      }
 	    }
 	    
@@ -1033,8 +1059,7 @@ void VCalConduit::doLocalSync()
 		dateEntry->setRepeatFrequency(rFreq);
 		dateEntry->setRepeatForever();
 	      } else {
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever(); // again, modify me to fix
+			repeatForever(dateEntry,rFreq,vevent);
 	      }
 	    }
 	  }
@@ -1066,8 +1091,7 @@ void VCalConduit::doLocalSync()
 		dateEntry->setRepeatFrequency(rFreq);
 		dateEntry->setRepeatForever();
 	      } else {
-		dateEntry->setRepeatFrequency(rFreq);
-		dateEntry->setRepeatForever(); // again, modify me to fix
+			repeatForever(dateEntry,rFreq,vevent);
 	      }
 	    }
 	  }
@@ -1369,3 +1393,4 @@ int VCalConduit::numFromDay(const QString &day)
   return -1; // something bad happened. :)
 } 
 
+// $Log:$

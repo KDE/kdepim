@@ -1332,6 +1332,7 @@ KPilotLink::syncNextDB()
   // we'll get called again.
   message=i18n("%1: Running conduit").arg(info.name);
   fMessageDialog->setMessage(message);
+  addSyncLogEntry(message.local8Bit());
   fCurrentDBInfo = info;
 
   if (debug_level & SYNC_MAJOR)
@@ -1567,6 +1568,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.20  2000/11/17 08:37:43  adridg
+// Config changes; kill-daemon-on-exit
+//
 // Revision 1.19  2000/11/14 23:06:53  adridg
 // SyncLastPC implemented
 //

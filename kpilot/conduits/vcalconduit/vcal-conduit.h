@@ -9,6 +9,7 @@
 #include "pi-datebook.h"
 
 class PilotRecord;
+class PilotDateEntry;
 
 class VCalConduit : public BaseConduit
 {
@@ -44,6 +45,15 @@ protected:
 
 private:
 	void getCalendar();
+
+	/**
+	* Set the event to repeat forever, with repeat
+	* frequency @arg rFreq. This function also
+	* warns the user that this is probably not
+	* *quite* the behavior intented but there's
+	* no fix for that.
+	*/
+	void repeatForever(PilotDateEntry *p,int rFreq,VObject *v=0L);
 
 	QString calName;
 };

@@ -451,7 +451,7 @@ AddressWidget::slotAddRecord(PilotAddress* address)
 	// k holds the item number of the address just added.
 	//
 	//
-	int k = fAddressList.count() - 1 ;
+	int k = fListBox->count() - 1 ;
 	fListBox->setCurrentItem(k); // Show the newest one
 	fListBox->setBottomItem(k);
 }
@@ -503,20 +503,32 @@ AddressWidget::slotShowAddress(int which)
     int pad;
     text[0] = 0L;
 
+	int showWhichPhone = theAdd->getShownPhone();
+
     for(i = 0; i < 19; i++)
 	{
 	  if ((i > 2) && (i < 8))
 	    {
 	      strcat(text, fAddressAppInfo.phoneLabels[theAdd->getPhoneLabelIndex(i-3)]);
-	      pad = 10 -
+	      pad = PhoneNumberLength -
 	      strlen(fAddressAppInfo.phoneLabels[theAdd->getPhoneLabelIndex(i-3)]);
+		if (showWhichPhone == i-3)
+		{
+			strcat(text," []");
+			pad -= 3;
+		}
 	    }
 	  else
 	    {
 	      strcat(text, fAddressAppInfo.labels[i]);
-	      pad = 10 - strlen(fAddressAppInfo.labels[i]);
+	      pad = PhoneNumberLength - strlen(fAddressAppInfo.labels[i]);
 	    }
  	strcat(text, ": ");
+	if (i == 18)
+	{
+		strcat(text,"\n");
+		pad=0;
+	}
 	while(pad > 0)
 	    {
 	    strcat(text, " ");
@@ -589,15 +601,17 @@ AddressWidget::slotImportAddressList()
 	const char* nextToken = formatTokenizer->getNextField();
 
  	nextRecord = inputStream.readLine();
+	nextRecord = nextRecord.stripWhiteSpace();
+ 	if(inputStream.eof() || nextRecord.isNull())
+	{
+ 	    break;
+	}
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname << ": Read line " << nextRecord;
 	}
-
- 	if(inputStream.eof() || (nextRecord == ""))
-	{
- 	    break;
-	}
+#endif
 
 	dataTokenizer = new StrTokenizer(nextRecord.latin1(), delim);
 	strcpy(nextField, dataTokenizer->getNextField());
@@ -806,7 +820,11 @@ AddressWidget::slotExportAddressList()
     QFile outFile(fileName);
     if(outFile.open(IO_WriteOnly | IO_Truncate) == FALSE)
  	{
- 	// show error!
+		QString message = i18n("Can't open the "
+			"address file %1 for export").arg(fileName);
+		KMessageBox::error(0L,
+			i18n("Export Address Error"),
+			message);
  	return;
  	}
     QTextStream outStream(&outFile);
@@ -832,6 +850,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.17  2000/11/17 08:37:58  adridg
+// Minor
+//
 // Revision 1.16  2000/11/14 23:02:28  adridg
 // Layout and i18n issues
 //

@@ -29,6 +29,14 @@ class PilotAddress : public PilotAppCategory
     void setField(int field, const char* text);
     char* getField(int field) { return fAddressInfo.entry[field]; }
     int  getPhoneLabelIndex(int index) { return fAddressInfo.phoneLabel[index]; }
+	/**
+	* Returns the (adjusted) index of the phone number
+	* selected by the user to be shown in the
+	* overview of addresses. Adjusted here means
+	* that it's actually an index into 3..8, the fields
+	* that store phone numbers, so 0 means field 3 is selected.
+	*/
+	int getShownPhone() const { return fAddressInfo.showPhone; }
 
     PilotRecord* pack() { return PilotAppCategory::pack(); }
 

@@ -76,6 +76,9 @@ private:
       QList<PilotAddress>   fAddressList;
       unsigned int          fLookupTable[1000];
       QListBox*             fListBox;
+
+public:
+	typedef enum { PhoneNumberLength=16 } Constants ;
     };
 
 #endif
