@@ -283,6 +283,11 @@ void Calendar::setupRelations( Incidence *incidence )
 // If a task with subtasks is deleted, move it's subtasks to the orphans list
 void Calendar::removeRelations( Incidence *incidence )
 {
+  if( !incidence ) {
+    kdDebug(5800) << "Warning: Calendar::removeRelations( 0 )!\n";
+    return;
+  }
+
   QString uid = incidence->uid();
 
   Incidence::List relations = incidence->relations();
