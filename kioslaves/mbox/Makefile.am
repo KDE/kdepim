@@ -1,4 +1,4 @@
-INCLUDES= $(all_includes) -I$(top_builddir)/libkdepim
+INCLUDES= -I$(top_builddir)/libkdepim $(all_includes)
 
 ####### Files
 
