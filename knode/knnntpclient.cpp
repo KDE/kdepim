@@ -327,7 +327,8 @@ void KNNntpClient::doFetchNewHeaders()
   QCString cmd;
   
   sendSignal(TSdownloadNew);
-  errorPrefix=i18n("No new articles could have been retrieved!\nThe following error ocurred:\n");
+  errorPrefix=i18n("No new articles could have been retrieved for\n%1/%2!\nThe following error ocurred:\n")
+  						.arg(account.server()).arg(target->groupname());
   
   cmd="GROUP ";
   cmd+=target->groupname().utf8();
