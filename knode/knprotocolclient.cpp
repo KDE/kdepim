@@ -34,8 +34,13 @@
 #include "knprotocolclient.h"
 
 
-KNProtocolClient::KNProtocolClient(int NfdPipeIn, int NfdPipeOut)
-:  job(0L), inputSize(10000), fdPipeIn(NfdPipeIn), fdPipeOut(NfdPipeOut), tcpSocket(-1)
+KNProtocolClient::KNProtocolClient(int NfdPipeIn, int NfdPipeOut) :
+  job( 0 ),
+  inputSize( 10000 ),
+  fdPipeIn( NfdPipeIn ),
+  fdPipeOut( NfdPipeOut ),
+  tcpSocket( -1 ),
+  mTerminate( false )
 {
   input = new char[inputSize];
 }
@@ -89,20 +94,29 @@ void KNProtocolClient::waitForWork()
   int selectRet;
 
   while (true) {
+    int holdTime = 2 * account.hold();
     if (isConnected()) {  // we are connected, hold the connection for xx secs
       FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
       FD_SET(tcpSocket, &fdsR);
       FD_ZERO(&fdsE);
       FD_SET(tcpSocket, &fdsE);
-      tv.tv_sec = account.hold();
-      tv.tv_usec = 0;
+      tv.tv_sec = 0;
+      tv.tv_usec = 500;
+      --holdTime;
       selectRet = KSocks::self()->select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
       if (selectRet == 0) {
+        if (holdTime <= 0) {
 #ifndef NDEBUG
-        qDebug("knode: KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
+          qDebug("knode: KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
 #endif
-        closeConnection();               // nothing happend...
+          closeConnection();               // nothing happend...
+        } else {
+          if ( mTerminate ) {
+            closeConnection();
+            return;
+          }
+        }
       } else {
         if (((selectRet > 0)&&(!FD_ISSET(fdPipeIn,&fdsR)))||(selectRet == -1)) {
 #ifndef NDEBUG
@@ -113,11 +127,16 @@ void KNProtocolClient::waitForWork()
       }
     }
 
+    struct timeval timeout;
     do {
+      timeout.tv_sec = 0;
+      timeout.tv_usec = 500;
       FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
-    } while (select(FD_SETSIZE, &fdsR, NULL, NULL, NULL)<0);  // don't get tricked by signals
-    
+      if (mTerminate)
+        return;
+    } while (select(FD_SETSIZE, &fdsR, NULL, NULL, &timeout) <= 0);  // don't get tricked by signals
+
     clearPipe();      // remove start signal
 
     timer.start();

@@ -79,7 +79,7 @@ KNNetAccess::~KNNetAccess()
   if(mSMTPProgressItem)
     mSMTPProgressItem->setComplete();
 
-  nntpClient->terminate();
+  nntpClient->terminateClient();
   nntpClient->wait();
 
   delete nntpClient;
