@@ -39,7 +39,7 @@ public:
 	virtual bool canReadMail() const { return true; }
 	virtual bool fullMessage() const { return true; }
 
-	virtual int fields() const { return server | port | username | mailbox | password; }
+	virtual int fields() const { return mailbox; }
 	virtual int urlFields() const { return no_fields; }
 	
 	virtual void recheckKURL( KURL &kurl, KIO::MetaData& )
