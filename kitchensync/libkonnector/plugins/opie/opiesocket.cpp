@@ -3,15 +3,18 @@
 #include <qdom.h>
 #include <qfile.h>
 
+#include <opiedesktopsyncentry.h>
 #include <koperations.h>
 #include <kgenericfactory.h>
 #include <qsocket.h>
 #include <kdebug.h>
 #include <kio/netaccess.h>
 #include <kurl.h>
+#include <qregexp.h>
 
 #include "opiesocket.h"
 #include "opiecategories.h"
+#include "opiehelper.h"
 
 class OpieSocket::OpieSocketPrivate{
 public:
@@ -255,6 +258,7 @@ void OpieSocket::manageCall(const QString &line )
     }
     if( line.startsWith("CALL QPE/Desktop docLinks(QString)" ) ){
 	kdDebug( ) << "desktop entry" << endl;
+	OpieHelper::toOpieDesktopEntry( line, &d->m_sync, d->m_categories  );   
 	return;
     }
     switch( d->getMode ){
@@ -332,6 +336,25 @@ void OpieSocket::parseCategory(const QString &tempFile )
 }
 
 
+QString OpieSocket::categoryById(const QString &id, const QString &app )
+{
+    QValueList<OpieCategories>::Iterator it;
+    QString category;
+    for( it = d->m_categories.begin(); it != d->m_categories.end(); ++it ){
+	kdDebug() << "it :" << (*it).id() << "id:" << id << "ende"<<endl; 
+	if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
+	    //if( app == (*it).app() ){
+	    kdDebug() << "found category" << endl;
+	    category = (*it).name();
+	    break;
+		//}
+	}else {
+	    kdDebug() << "not equal " << endl;
+	}
+    }
+    kdDebug() << "CategoryById: " << category << endl;
+    return category;
+}
 
 
 

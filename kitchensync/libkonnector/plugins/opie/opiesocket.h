@@ -44,6 +44,7 @@ Q_OBJECT
   void slotStartSync();
   void manageCall(const QString &line );
   void parseCategory(const QString &tempFile );
+  QString categoryById(const QString &id, const QString &app = QString::null );
 };
 
 

@@ -78,7 +78,7 @@ class KSyncEntry
       equal, if they contain exactly the same information, including the same id
       and timestamp.
     */
-    virtual bool equals(KSyncEntry *) = 0;
+    //virtual bool equals(KSyncEntry *) = 0;
 
 
 };

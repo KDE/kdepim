@@ -32,6 +32,8 @@ class Kapabilities;
 class KDevice;
 class KOperations;
 class KonnectorPlugin;
+
+
 class Konnector : public QObject{
 Q_OBJECT
  public:

@@ -1,3 +1,5 @@
+#ifndef opiecategories_h
+#define opiecategories_h
 
 #include <qstring.h>
 
@@ -19,3 +21,12 @@ class OpieCategories {
     QString m_app;
     QString m_id;
 };
+
+#endif
+
+
+
+
+
+
+
