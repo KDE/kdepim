@@ -281,6 +281,7 @@ void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
         // Certificate again
         setNextEnabled( generatePage, true );
         setFinishEnabled( finishPage, true );
+	generatePB->setEnabled( false );
     }
 }
 
