@@ -32,6 +32,7 @@
 #include <kinputdialog.h>
 #include <klineedit.h>
 
+#include <qinputdialog.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -46,9 +47,6 @@ RemoteKonnectorConfig::RemoteKonnectorConfig( QWidget *parent )
   QPushButton *button = new QPushButton( i18n("Standard Setup..."), this );
   topLayout->addWidget( button );
   connect( button, SIGNAL( clicked() ), SLOT( setupStandard() ) );
-
-  // makes no sense... do we need it at all?
-  button->hide();
 
   topLayout->addWidget( new QLabel( i18n("Calendar file:"), this ) );
 
@@ -89,6 +87,23 @@ void RemoteKonnectorConfig::saveSettings( KRES::Resource *r )
 
 void RemoteKonnectorConfig::setupStandard()
 {
+  bool ok = false;
+
+  QString hostname = QInputDialog::getText( i18n( "Remote Host" ), i18n( "Enter remote host name" ),
+                                            QLineEdit::Normal, QString::null, &ok, this );
+
+  if ( hostname.isEmpty() || !ok )
+    return;
+
+  QString username = QInputDialog::getText( i18n( "Remote User" ), i18n( "Enter remote user name" ),
+                                            QLineEdit::Normal, QString::null, &ok, this );
+
+  if ( username.isEmpty() || !ok )
+    return;
+
+  QString urlBase = "fish://" + hostname + "/~" + username + "/";
+  mCalendarUrl->setURL( urlBase + ".kde/share/apps/korganizer/std.ics" );
+  mAddressBookUrl->setURL( urlBase + ".kde/share/apps/kabc/std.vcf" );
 }
 
 #include "remotekonnectorconfig.moc"
