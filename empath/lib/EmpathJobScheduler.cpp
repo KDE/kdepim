@@ -213,18 +213,17 @@ EmpathJobScheduler::_enqueue(EmpathJob * j)
   void
 EmpathJobScheduler::_runQueue()
 {
-    if (queue_.count() == 1) {
-        queue_.head()->run();
+    if (queue_.count() != 0) {
+        queue_.dequeue()->run();
 
 // TODO: Enable this code in the far future, when Qt is MT safe.
 #if 0
 #ifdef USE_QPTHREAD
-        queue_.head()->Run();
+        queue_.dequeue()->Run();
 #else
-        queue_.head()->run();
+        queue_.dequeue()->run();
 #endif
 #endif
-        queue_.dequeue();
     }
 }
 // vim:ts=4:sw=4:tw=78

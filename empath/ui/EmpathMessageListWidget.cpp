@@ -66,7 +66,6 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
         lastHeaderClicked_  (-1),
         hideRead_           (false)
 {
-    empathDebug("");
     _init();
 
     setFrameStyle(QFrame::NoFrame);
@@ -89,7 +88,6 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     _setupThreadMenu();
     _restoreColumnSizes();
     _connectUp();
-    empathDebug("");
 }
 
 EmpathMessageListWidget::~EmpathMessageListWidget()
@@ -575,6 +573,7 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem *i)
     setSelected(currentItem(), true);
     kapp->processEvents();
     
+    empathDebug("emitting changeView()");
     emit(changeView(firstSelectedMessage()));
     markAsReadTimer_->go(static_cast<EmpathMessageListItem *>(i));
 }
@@ -582,11 +581,10 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem *i)
     void
 EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
 {
-    markAsReadTimer_->cancel();
     EmpathURL u(url_.mailboxName(), url_.folderPath(), item->id());
+    setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
     // XXX RETVAL ?
     empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read));
-    setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
 }
 
     void

@@ -282,7 +282,7 @@ EmpathUI::_initActions()
             empathIconSet("compose"),
             Key_M, 
             empath,
-            SLOT(s_compose()),
+            SLOT(s_compose(const QString &)),
             actionCollection_,
             "messageCompose"
         );

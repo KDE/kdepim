@@ -48,6 +48,7 @@
 EmpathComposeWindow::EmpathComposeWindow(EmpathComposeForm f)
     :    KTMainWindow()
 {
+    empathDebug("hi");
     composeWidget_ = new EmpathComposeWidget(f, this);
     _init();
 }

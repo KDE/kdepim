@@ -426,10 +426,6 @@ Empath::s_bounce(const EmpathURL & url)
 { composer_->newComposeForm(ComposeBounce, url); }
 
     void
-Empath::s_bugReport()
-{ composer_->bugReport(); }
-
-    void
 Empath::saveMessage(const EmpathURL & url, QWidget * parent)
 { emit(getSaveName(url, parent)); }
 

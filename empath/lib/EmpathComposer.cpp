@@ -163,66 +163,20 @@ EmpathComposer::newComposeForm(ComposeType t, const EmpathURL & url)
 }
 
     void
-EmpathComposer::bugReport()
+EmpathComposer::s_retrieveJobFinished(EmpathRetrieveJob j)
 {
-    EmpathComposeForm composeForm;
-
-    composeForm.setComposeType(ComposeNormal);
-    composeForm.setHeader("To", "KDE-PIM Mailing list <kde-pim@kde.org>"); 
-
-#if 0
-    composeForm.setHeader("To", 
-        (EMPATH_MAINTAINER + " <" + EMPATH_MAINTAINER_EMAIL +">").local8Bit()); 
-
-    // Note: Leave ' ' at start of lines > 0 to conform to RFC822 header spec.
-    // Leave this header visible - don't hide from the user the fact we're
-    // sending information about their system.
-    composeForm.setHeader("X-EmpathInfo",
-        "Empath Version: "  + EMPATH_VERSION_STRING.local8Bit() + "\n"
-        " KDE Version: "    + KDE_VERSION_STRING + "\n"
-        " Qt Version: "     + QT_VERSION_STR + "\n",
-        Visible);
-#endif
-
-    QString body =
-    "- " +
-    i18n("What were you trying to do when the problem occured ?") +
-    "\n\n\n\n" +
-    "- " +
-    i18n("What actually happened ?") +
-    "\n\n\n\n" +
-    "- " +
-    i18n("Exactly what did you do that caused the problem to manifest itself ?") +
-    "\n\n\n\n" +
-    "- " +
-    i18n("Do you have a suggestion as to how this behaviour can be corrected ?") +
-    "\n\n\n\n" +
-    "- " +
-    i18n("If you saw an error message, please try to reproduce it here.");
-
-    composeForm.setBody(body.utf8());
-    _initVisibleHeaders(composeForm);
-    emit(composeFormComplete(composeForm));
-}
- 
-    void
-EmpathComposer::s_retrieveJobComplete(EmpathRetrieveJob j)
-{
-    if (!(jobList_.contains(j.id())))
-        return;
-
-    if (!j.success())
-        return;
-
-    RMM::RMessage m(empath->message(j.url()));
-    
-    if (!m) {
-        empathDebug(
-            "Couldn't get supposedly retrieved message `" +
-            j.url().asString() + "'");
+    if (!(jobList_.contains(j.id()))) {
+        empathDebug("jobList does not contain a job with id " + QString::number(j.id()));
         return;
     }
- 
+
+    if (!j.success()) {
+        empathDebug("job was unsuccessful");
+        return;
+    }
+
+    RMM::RMessage m(j.message());
+    
     switch (jobList_[j.id()].composeType()) {
 
         case ComposeReply:              _reply(j.id(), m);      break; 

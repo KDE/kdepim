@@ -291,10 +291,6 @@ class Empath : public QObject
          * Bounce a message.
          */
         void s_bounce(const EmpathURL &);
-        /**
-         * Creates a new composer using the bug report template.
-         */
-        void s_bugReport();
 
         ///////////////////////////////////////////////////////////////////
         // Async methods.

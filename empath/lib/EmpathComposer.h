@@ -75,11 +75,6 @@ class EmpathComposer : public QObject
         void newComposeForm(const ComposeType, const EmpathURL &);
         
         /**
-         * Create a composeform for sending a bugreport.
-         */
-        void bugReport();
-        
-        /**
          * Convert a composeform to a message, so that it can be sent.
          */
         static RMM::RMessage message(EmpathComposeForm);
@@ -94,7 +89,7 @@ class EmpathComposer : public QObject
         
     protected slots:
 
-        void s_retrieveJobComplete(EmpathRetrieveJob);
+        void s_retrieveJobFinished(EmpathRetrieveJob);
    
     private:
         

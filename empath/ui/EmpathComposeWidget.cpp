@@ -59,6 +59,7 @@ EmpathComposeWidget::EmpathComposeWidget(
         QWidget(parent, "EmpathComposeWidget"),
         composeForm_(composeForm)
 {
+    empathDebug("hi");
     splitter_ = new QSplitter(Vertical, this, "splitter");
  
     envelopeWidget_ = new EmpathEnvelopeWidget(
