@@ -482,6 +482,10 @@ int CryptPlug::caFirstLastChainCertDaysLeftToExpiry( bool bStopAtFirst,
             kdWarning(5150) << "CryptPlug: maximum chain length of 100 exceeded!" << endl;
             break;
         }
+	if ( strcmp( sChainID, rKey->subkeys->fpr ) == 0 ) {
+	  // root found"
+	  break;
+	}
       }
       my_gpgme_key_release( rKey );
     }

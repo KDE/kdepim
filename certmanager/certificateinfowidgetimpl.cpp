@@ -195,9 +195,15 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
     kdWarning() << "CertificateInfoWidgetImpl::startCertificateChainListing(): mChain is empty!" << endl;
     return;
   }
-  if ( !mChain.front().chainID() || !*mChain.front().chainID() ) {
-    // already a root item...
-    kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): empty chain ID - probably the root" << endl;
+  const char * chainID = mChain.front().chainID();
+  if ( !chainID || !*chainID ) {
+    // cert not found:
+    kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): empty chain ID - root not found" << endl;
+    return;
+  }
+  const char * fpr = mChain.front().subkey(0).fingerprint();
+  if ( qstricmp( fpr, chainID ) == 0 ) {
+    kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): chain_id equals fingerprint -> found root" << endl;
     return;
   }
   if ( mChain.size() > 100 ) {
@@ -257,11 +263,11 @@ void CertificateInfoWidgetImpl::updateChainView() {
 
   QValueList<GpgME::Key>::const_iterator it = mChain.begin();
   // root item:
-  if ( (*it).chainID() )
+  if ( (*it).chainID() && qstrcmp( (*it).chainID(), (*it).subkey(0).fingerprint() ) == 0 )
+    item = new QListViewItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
+  else
     item = new QListViewItem( pathView, i18n("Issuer certificate not found ( %1)")
 			      .arg( Kleo::DN( (*it).issuerName() ).prettyDN() ) );
-  else
-    item = new QListViewItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
   item->setOpen( true );
 
   // subsequent items:
