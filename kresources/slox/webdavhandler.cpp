@@ -27,6 +27,7 @@
 #endif
 #ifndef MAXINT
 #include <sys/limits.h>
+#define MAXINT INT_MAX
 #endif
 
 #include <libkdepim/kpimprefs.h>
