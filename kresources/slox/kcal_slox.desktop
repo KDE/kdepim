@@ -1,14 +1,19 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=SLOX Calendar Resource
+Name[bg]=Календарен файл на SLOX
 Name[da]=SLOX kalenderressource
 Name[es]=Recurso de calendario SLOX
 Name[et]=SLOX kalendriressurss
+Name[hu]=SLOX naptár-erőforrás
 Name[it]=Risorsa calendario SLOX
 Name[nl]=SLOX Agendahulpbron
+Name[pt]=Recurso de Calendário SLOX
+Name[pt_BR]=Recurso de Calendário SLOX
+Name[ru]=Календарь SLOX
 Name[sl]=Koledarski vir SLOX
 Name[sv]=SLOX-kalenderresurs
-Name[ta]=SLOX நாள்காட்டி வளம்
+Name[ta]=SLOX நாள்காட்டி மூலம்
 Name[xx]=xxSLOX Calendar Resourcexx
 Name[zh_CN]=SLOX 日历资源
 X-KDE-Library=kcal_slox
