@@ -44,9 +44,9 @@
 #include "cryptowidget.h"
 
 extern "C" {
-  void *init_libkaddrbk_crypto()
+  void *init_libkaddrbk_cryptowidget()
   {
-	qDebug("init_libkaddrbk_crypto()");
+	qDebug("init_libkaddrbk_cryptosettings()");
     return ( new CryptoWidgetFactory );
   }
 }

@@ -34,7 +34,6 @@
 #include "geowidget.h"
 #include "imagewidget.h"
 #include "soundwidget.h"
-#include "cryptowidget.h"
 
 #include "contacteditorwidget.h"
 #include "contacteditorwidgetmanager.h"
@@ -75,7 +74,7 @@ KAB::ContactEditorWidgetFactory *ContactEditorWidgetManager::factory( int pos ) 
 void ContactEditorWidgetManager::reload()
 {
   mFactories.clear();
-
+  kdDebug(5720) << "ContactEditorWidgetManager::reload()" << endl;
   KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget" );
   KTrader::OfferList::ConstIterator it;
 
@@ -103,7 +102,6 @@ void ContactEditorWidgetManager::reload()
   mFactories.append( new SoundWidgetFactory );
   mFactories.append( new GeoWidgetFactory );
   mFactories.append( new CustomFieldsWidgetFactory );
-  mFactories.append( new CryptoWidgetFactory );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
