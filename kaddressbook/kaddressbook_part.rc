@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="12">
+<kpartgui name="kaddressbook" version="13">
 
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -57,8 +57,7 @@
       <Merge/>
       <Action name="options_edit_filters"/>
       <Separator/>
-      <Action name="kaddressbook_configure"/>
-      <Merge name="configure_merge"/>
+      <Action name="kaddressbook_configure" group="settings_configure"/>
     </Menu>
 
   </MenuBar>
