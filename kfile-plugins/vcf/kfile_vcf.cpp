@@ -90,17 +90,17 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     while (!done) {
     
         // read a line
-        file.readLine(linebuf, 4096);
+        file.readLine(linebuf, sizeof(linebuf));
         
         // have we got something useful?
         if (memcmp(linebuf, id_name, 3) == 0) {
             // we have a name
             myptr = linebuf + 3;
-            strncpy(buf_name, myptr, 999);
+            strncpy(buf_name, myptr, sizeof( buf_name ));
         } else if (memcmp(linebuf, id_email, 15) == 0) {
             // we have a name
             myptr = linebuf + 15;
-            strncpy(buf_email, myptr, 999);
+            strncpy(buf_email, myptr, sizeof( buf_email ));
         }
         
         // are we done yet?
