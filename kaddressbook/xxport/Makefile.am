@@ -11,7 +11,7 @@ service_DATA = csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop \
 bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop gnokii_xxport.desktop
 
 METASOURCES = AUTO
-LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
+AM_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
 
 libkaddrbk_csv_xxport_la_SOURCES = csv_xxport.cpp importdialog.cpp
 libkaddrbk_csv_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbookpart.la

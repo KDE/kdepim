@@ -343,9 +343,4 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
   return true;
 }
 
-void GNOKIIXXPort::doExport( const KABC::AddresseeList &list )
-{
-  Q_UNUSED(list);
-}
-
 #include "gnokii_xxport.moc"

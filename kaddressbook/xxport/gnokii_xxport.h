@@ -1,7 +1,6 @@
 /*
     This file is part of KAddressbook.
-    Copyright (c) 2000 - 2003 Oliver Strutynski <olistrut@gmx.de>
-                              Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2003 - 2003 Helge Deller <deller@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,9 +38,6 @@ class GNOKIIXXPort : public XXPortObject
   public slots:
     bool exportContacts( const KABC::AddresseeList &list, const QString &data );
     KABC::AddresseeList importContacts( const QString &data ) const;
-
-  private:
-    void doExport( const KABC::AddresseeList &list );
 };
 
 #endif
