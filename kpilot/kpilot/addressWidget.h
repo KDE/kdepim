@@ -34,8 +34,6 @@ class QListBox;
 class QComboBox;
 class QTextView;
 
-class KConfig;
-
 class PilotDatabase;
 
 
