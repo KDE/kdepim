@@ -36,6 +36,18 @@
 using namespace Kolab;
 
 
+KCal::Journal* Note::xmlToJournal( const QString xml )
+{
+  // TODO: Well...
+  return 0;
+}
+
+QString Note::journalToXML( KCal::Journal* journal )
+{
+  // TODO: Well...
+  return QString::null;
+}
+
 Note::Note()
 {
 }

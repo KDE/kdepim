@@ -38,10 +38,20 @@
 
 class QDomElement;
 
+namespace KCal {
+  class Journal;
+}
+
 namespace Kolab {
 
 class Note : public KolabBase {
 public:
+  /// Use this to parse an xml string to a journal entry
+  static KCal::Journal* xmlToJournal( const QString xml );
+
+  /// Use this to get an xml string describing this journal entry
+  static QString journalToXML( KCal::Journal* );
+
   Note();
   virtual ~Note();
 
