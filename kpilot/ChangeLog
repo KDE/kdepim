@@ -5,8 +5,17 @@ It seems like only yesterday that KDE 2.1.1 was out, and we're already
 in KDE 2.2b1. Thoreau said "Simplify, Simplify". Anyway, this week's
 feature creep:
 
-* I ([ade]) have been mostly working on documenting things. I'm a little
-  strapped for ideas on what to improve.
+* Bugfix for infinite loop when changing categories. [1-4]
+* Some xpms could profitably be removed, since we use pngs now. [1-4]
+* I normalized some more header-file #ifdef / #defines. [1-4]
+* Incorporated patches from Aaron Seigo. [1-4]
+* The todo conduit didn't compile due to changes in vcalBase. [1-4]
+* The vcal conduit's test mode has been expanded. [1-4]
+
+Not-particularly-fixes:
+
+* Don't forget current KPilot version is called 4.1b1, that must be
+  updated to 4.1 final (maybe even 4.2) by the time KDE 2.2 is released.
 
 KPilot Developer's notes for march 24th 2001
 ============================================
