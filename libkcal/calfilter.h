@@ -33,7 +33,6 @@ class CalFilter {
       Return name of filter.
     */
     QString name() const { return mName; }
-//    QString name() const { return QString("buuuuh"); }
     
     /**
       Apply filter to eventlist, all events not matching filter criterias are
