@@ -123,7 +123,7 @@ void MainWindow::exportcsvHistory()
 {
   kdDebug(5970) << i18n("Exporting History to disk.") << endl;
   QString err=_taskView->exportcsvHistory();
-  if (err.isEmpty()) statusBar()->message(i18n("Successfully exported History to csv-file"),1807);
+  if (err.isEmpty()) statusBar()->message(i18n("Successfully exported History to CSV-file"),1807);
   else KMessageBox::error(this, err);
   saveGeometry();
   
