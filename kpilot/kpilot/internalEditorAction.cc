@@ -198,8 +198,14 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	else
 	if (dbName=="DatebookDB")
 	{
-		PilotDateEntry localEvent(localrec);
-		PilotDateEntry serialEvent(serialrec);
+	        struct AppointmentAppInfo fAppInfo;
+		unsigned char *buffer = new unsigned char[PilotDateEntry::APP_BUFFER_SIZE];
+		int appLen = db->readAppBlock(buffer, PilotDateEntry::APP_BUFFER_SIZE);
+		unpack_AppointmentAppInfo(&fAppInfo, buffer, appLen);
+		delete[] buffer;
+
+		PilotDateEntry localEvent(fAppInfo, localrec);
+		PilotDateEntry serialEvent(fAppInfo, serialrec);
 		localEntry=localEvent.getTextRepresentation(true);
 		serialEntry=serialEvent.getTextRepresentation(true);
 		recType=i18n("calendar entry");

@@ -40,16 +40,17 @@
 #include "pilotDateEntry.h"
 
 static const char *pilotDateEntry_id = "$Id$";
+const int PilotDateEntry::APP_BUFFER_SIZE = 0xffff;
 
 
-PilotDateEntry::PilotDateEntry(void):PilotAppCategory()
+PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo):PilotAppCategory(), fAppInfo(appInfo)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(struct Appointment));
 }
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDateEntry()
 */
-PilotDateEntry::PilotDateEntry(PilotRecord * rec):PilotAppCategory(rec)
+PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord * rec):PilotAppCategory(rec), fAppInfo(appInfo)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(fAppointmentInfo));
 	if (rec)
@@ -96,7 +97,7 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 }
 
 
-PilotDateEntry::PilotDateEntry(const PilotDateEntry & e):PilotAppCategory(e)
+PilotDateEntry::PilotDateEntry(const PilotDateEntry & e):PilotAppCategory(e), fAppInfo(e.fAppInfo)
 {
 	::memcpy(&fAppointmentInfo, &e.fAppointmentInfo,
 		sizeof(struct Appointment));
@@ -263,6 +264,16 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 	return text;
 }
 
+bool PilotDateEntry::setCategory(const QString &label)
+{
+	FUNCTIONSETUP;
+	PILOTAPPCATEGORY_SETCATEGORY(fAppInfo,label)
+}
+
+QString PilotDateEntry::getCategoryLabel() const
+{
+	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
+}
 
 void *PilotDateEntry::pack(void *buf, int *len)
 {

@@ -44,8 +44,8 @@
 class PilotDateEntry : public PilotAppCategory
 {
 public:
-  PilotDateEntry(void);
-  PilotDateEntry(PilotRecord* rec);
+  PilotDateEntry(struct AppointmentAppInfo &appInfo);
+  PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord* rec);
   ~PilotDateEntry() { free_Appointment(&fAppointmentInfo); }
 
   PilotDateEntry(const PilotDateEntry &e);
@@ -129,13 +129,17 @@ public:
             fAppointmentInfo.event);
   }
 
+  QString getCategoryLabel() const;
+  bool setCategory(const QString &label);
+  static const int APP_BUFFER_SIZE;
+
 protected:
   void *pack(void *, int *);
   void unpack(const void *, int = 0) { }
 
 private:
   struct Appointment fAppointmentInfo;
-
+        struct AppointmentAppInfo &fAppInfo;
 	void _copyExceptions(const PilotDateEntry &e);
 };
 

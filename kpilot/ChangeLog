@@ -1,6 +1,13 @@
 ** KPILOT CHANGELOG **
 ======================
 
+
+2004-10-04  Adriaan de Groot
+* Bail if the Pilot disconnects, but only between conduits. Conduits
+  themselves should still check for disconnect.
+* Bug maintainence turned up a useful patch for category support
+  in the calendar.
+
 2004-10-01  Adriaan de Groot
 * Merged nice patch from Adrian S for HotPlug.
 * Moved tickle stuff into a separate thread, so that it doesn't

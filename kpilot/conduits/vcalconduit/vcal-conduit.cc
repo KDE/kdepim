@@ -28,10 +28,12 @@
 */
 
 #include "options.h"
+#include <qtextcodec.h>
 #include <libkcal/calendar.h>
 #include <libkcal/recurrence.h>
 #define Recurrence_t KCal::Recurrence
 #include <pilotDateEntry.h>
+#include <pilotDatabase.h>
 #include "vcal-conduit.moc"
 #include "vcal-factory.h"
 
@@ -174,6 +176,32 @@ VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
 }
 
+void VCalConduit::_getAppInfo()
+{
+	FUNCTIONSETUP;
+	// get the address application header information
+	unsigned char *buffer =
+		new unsigned char[PilotDateEntry::APP_BUFFER_SIZE];
+	int appLen = fDatabase->readAppBlock(buffer,PilotDateEntry::APP_BUFFER_SIZE);
+
+	unpack_AppointmentAppInfo(&fAppointmentAppInfo, buffer, appLen);
+	delete[]buffer;
+	buffer = NULL;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " lastUniqueId"
+		<< fAppointmentAppInfo.category.lastUniqueID << endl;
+#endif
+	for (int i = 0; i < 16; i++)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " cat " << i << " =" <<
+			fAppointmentAppInfo.category.name[i] << endl;
+#endif
+	}
+
+}
+
 const QString VCalConduit::getTitle(PilotAppCategory*de)
 {
 	PilotDateEntry*d=dynamic_cast<PilotDateEntry*>(de);
@@ -215,6 +243,7 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotDateEntry*de, const KCal::Even
 	setExceptions(de, e);
 	de->setDescription(e->summary());
 	de->setNote(e->description());
+	setCategory(de, e);
 DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
 	return de->pack();
 }
@@ -256,6 +285,9 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 		DEBUGCONDUIT<<fname<<": DESCRIPTION: "<<de->getDescription()<<"  ---------------------------------------------------"<<endl;
 #endif
 	e->setDescription(de->getNote());
+
+	// used by e.g. Agendus and Datebk
+	setCategory(e, de);
 
 	return e;
 }
@@ -718,13 +750,64 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 	dateEntry->setExceptions(ex_List);
 }
 
-PilotAppCategory*VCalConduit::newPilotEntry(PilotRecord*r) 
+
+void VCalConduit::setCategory(PilotDateEntry *de, const KCal::Event *e)
 {
-  if (r) return new PilotDateEntry(r);
-	else return new PilotDateEntry();
+	if (!de || !e) return;
+	de->setCategory(_getCat(e->categories(), de->getCategoryLabel()));
 }
 
-KCal::Incidence*VCalConduit::newIncidence() 
+/**
+ * _getCat returns the id of the category from the given categories list. If none of the categories exist
+ * on the palm, the "Nicht abgelegt" (don't know the english name) is used.
+ */
+
+QString VCalConduit::_getCat(const QStringList cats, const QString curr) const
+{
+	int j;
+	if (cats.size()<1) return QString::null;
+	if (cats.contains(curr)) return curr;
+	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
+		for (j=1; j<=15; j++)
+		{
+			QString catName = PilotAppCategory::codec()->
+			  toUnicode(fAppointmentAppInfo.category.name[j]);
+			if (!(*it).isEmpty() && !(*it).compare( catName ) )
+			{
+				return catName;
+			}
+		}
+	}
+	// If we have a free label, return the first possible cat
+	QString lastName(fAppointmentAppInfo.category.name[15]);
+	if (lastName.isEmpty()) return cats.first();
+	return QString::null;
+}
+
+void VCalConduit::setCategory(KCal::Event *e, const PilotDateEntry *de)
+{
+	if (!e || !de) return;
+	QStringList cats=e->categories();
+	int cat=de->getCat();
+	if (0<cat && cat<=15)
+	{
+		QString newcat=PilotAppCategory::codec()->toUnicode(fAppointmentAppInfo.category.name[cat]);
+		if (!cats.contains(newcat))
+		{
+			cats.append( newcat );
+			e->setCategories(cats);
+		}
+	}
+}
+
+
+PilotAppCategory*VCalConduit::newPilotEntry(PilotRecord*r)
+{
+	if (r) return new PilotDateEntry(fAppointmentAppInfo,r);
+	else return new PilotDateEntry(fAppointmentAppInfo);
+}
+
+KCal::Incidence*VCalConduit::newIncidence()
 {
   return new KCal::Event;
 }
