@@ -267,27 +267,6 @@ std::vector<DwFieldBody*> DwHeaders::AllFieldBodies(const DwString& aFieldName)
 }
 
 
-DwString DwHeaders::AllFieldBodiesAsString(const DwString& aFieldName)
-{
-    assert(aFieldName != "");
-    DwString str;
-    bool bFirstField = true;
-    for ( DwField* field = mFirstField; field; field = field->Next() ) {
-        if (DwStrcasecmp(field->FieldNameStr(), aFieldName) == 0) {
-            DwFieldBody* fieldBody = field->FieldBody();
-            if ( fieldBody ) {
-                if ( !bFirstField )
-                    str += ", ";
-                str += fieldBody->AsString();
-                bFirstField = false;
-            }
-        }
-
-    }
-    return str;
-}
-
-
 int DwHeaders::NumFields() const
 {
     int count = 0;
