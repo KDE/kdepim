@@ -21,7 +21,8 @@ libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 	./printing/libprinter.la \
 	$(LIB_KPARTS) $(LIB_KHTML) \
 	-lkabc -lkdeprint \
-	./libkabcommon.la
+	./libkabcommon.la \
+	./libkaddressbook.la
 
 libkaddressbookpart_la_SOURCES = \
  addresseditwidget.cpp addresseeconfig.cpp \
@@ -33,7 +34,7 @@ libkaddressbookpart_la_SOURCES = \
  kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
  phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp undo.cpp undocmds.cpp \
  viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
- viewconfigurewidget.cpp viewmanager.cpp xxportmanager.cpp xxportobject.cpp \
+ viewconfigurewidget.cpp viewmanager.cpp xxportmanager.cpp \
  xxportselectdialog.cpp
 
 kaddressbook_METASOURCES = AUTO
@@ -78,8 +79,11 @@ KDE_ICON = kaddressbook
 servicetypedir = $(kde_servicetypesdir)
 servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop kaddressbook_xxport.desktop dcopaddressbook.desktop
 
-noinst_LTLIBRARIES = libkabcommon.la
+lib_LTLIBRARIES = libkaddressbook.la
+libkaddressbook_la_SOURCES = xxportobject.cpp
 
+
+noinst_LTLIBRARIES = libkabcommon.la
 libkabcommon_la_SOURCES = kabprefs.cpp configurewidget.cpp
 
 include ../admin/Doxyfile.am
