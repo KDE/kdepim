@@ -259,8 +259,6 @@ void AddressBookPart::save( AddressBookSyncee* sync, const QString& meta) {
         if( entry->state() != SyncEntry::Removed ) {
             KABC::Addressee adr = entry->addressee();
             adr.setResource( resource(entry->resource() ) );
-            // ##TEST### REMOVE LATER
-            adr.setOrganization( "Test Syncing!");
             book->insertAddressee( adr );
         }
     }
