@@ -59,5 +59,6 @@ void FilterPlain::import(FilterInfo *info)
       info->setTo(dir.dirName());
       addMessage(info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile));
       info->setOverall(100 * ++currentFile/ totalFiles);
+      if ( info->shouldTerminate() ) return;
    }
 }

@@ -15,18 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qlabel.h>
-
 #include <kapplication.h>
-#include <kdebug.h>
 #include <kstandarddirs.h>
+#include <qlabel.h>
 
 #include "kimportpage.h"
 
 KImportPage::KImportPage(QWidget *parent, const char *name ) : KImportPageDlg(parent,name) {
 
 	px_introSidebar->setPixmap(locate("data", "kmailcvt/pics/step2.png"));
-	kdDebug() << "KImportPage::KImportPage" << endl;
 }
 
 KImportPage::~KImportPage() {

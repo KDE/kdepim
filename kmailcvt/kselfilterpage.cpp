@@ -17,7 +17,6 @@
 
 #include <kstandarddirs.h>
 #include <qtextedit.h>
-#include <kdebug.h>
 #include <klocale.h>
 #include "filters.hxx"
 
@@ -26,7 +25,6 @@
 KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterPageDlg(parent,name) {
 
 	px_introSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
-	kdDebug() << "KSelFilterPage::KSelFilterPage" << endl;
 	filterList.setAutoDelete( TRUE );
 	connect(_filters, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 }

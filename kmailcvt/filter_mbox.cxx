@@ -25,7 +25,7 @@
 #include "filter_mbox.hxx"
 
 FilterMBox::FilterMBox() :
-Filter(	i18n("Import mbox archives"),
+Filter(	i18n("Import unix mbox files"),
     "Laurence Anderson",
     i18n("<p><b>mbox import filter</b></p>"
       "<p>This filter will import mbox files into kmail</p>"

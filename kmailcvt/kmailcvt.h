@@ -19,7 +19,7 @@
 #endif
 
 #define KMAILCVT_VERSION "3"
-#define KMAILCVT         I18N_NOOP("KMail & KAddressBook Import Filters")
+#define KMAILCVT         I18N_NOOP("KMail Import Filters")
 
 #include <kapplication.h>
 #include <kwizard.h>

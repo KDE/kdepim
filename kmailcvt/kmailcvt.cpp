@@ -42,11 +42,11 @@ KMailCVT::~KMailCVT() {
 }
 
 void KMailCVT::next() {
-	if(currentPage()==selfilterpage){
+	if( currentPage() == selfilterpage ){
 		// Save selected filter
 		Filter *selectedFilter = selfilterpage->getSelectedFilter();
 		// Goto next page
-		QWizard::next();
+		KWizard::next();
 		// Disable back
 		setBackEnabled(QWizard::currentPage(), false);
 		// Start import
@@ -57,16 +57,14 @@ void KMailCVT::next() {
 		info->setStatusMsg(i18n("Import finished"));
 		// Cleanup
 		delete info;
-		// Enable finish button also reenable back
+		// Enable finish & back buttons
 		setFinishEnabled(QWizard::currentPage(), true);
 		setBackEnabled(QWizard::currentPage(), true);
-		return;
-	}
-	QWizard::next();
+	} else KWizard::next();
 }
 
 void KMailCVT::reject() {
-	if ( currentPage() == importpage ) FilterInfo::terminateASAP();
+	if ( currentPage() == importpage && ! finishButton()->isEnabled() ) FilterInfo::terminateASAP(); // ie. import in progress
         else KWizard::reject();
 }
 

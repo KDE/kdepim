@@ -24,8 +24,6 @@
 #include <qlistbox.h>
 #include <qlabel.h>
 
-#include <kabc/addressbook.h>
-
 #include "kimportpagedlg.h"
 
 class FilterInfo
@@ -71,11 +69,6 @@ class Filter
     static void registerFilter( Creator );
     static List createFilters();
 
-    // FIXME: Move to protected when pablib goes
-    void addContact( const KABC::Addressee& a );
-    bool openAddressBook( FilterInfo* info );
-    bool closeAddressBook( );
-
   protected:
     bool addMessage( FilterInfo* info,
                      const QString& folder,
@@ -84,7 +77,6 @@ class Filter
     QString m_name;
     QString m_author;
     QString m_info;
-    KABC::Ticket *saveTicket;
 };
 
 template< class T >

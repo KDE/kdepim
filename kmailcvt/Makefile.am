@@ -4,7 +4,7 @@ kmailcvt_SOURCES = kimportpagedlg.ui kimportpage.cpp kselfilterpagedlg.ui \
                    kselfilterpage.cpp filters.cxx filter_oe.cxx kmailcvt.cpp \
                    main.cpp filter_pmail.cxx filter_plain.cxx \
                    filter_mbox.cxx
-kmailcvt_LDADD   = -lkabc $(LIB_KFILE)
+kmailcvt_LDADD   = $(LIB_KFILE)
 
 EXTRA_DIST = main.cpp kmailcvt.cpp kimportpage.cpp kimportpage.h \
              kselfilterpage.cpp kselfilterpage.h kmailcvt.h \

@@ -76,11 +76,9 @@
                 </sizepolicy>
             </property>
             <property name="text">
-                <string>&lt;b&gt;Welcome to KMailCVT - The KMail &amp; KAddressBook Import Filters&lt;/b&gt;
-&lt;br&gt;
-This program will help you import your email and address books from your previous email and address book programs.&lt;br&gt;&lt;br&gt;
-Emails will be imported into KMail, contacts into KAddressBook.
+                <string>&lt;b&gt;Welcome to KMailCVT - The KMail Import Tool&lt;/b&gt;
 &lt;br&gt;&lt;br&gt;
+This program will help you import your email from your previous email program into KMail.&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
  Please select the program you would like to import from, then click 'Next'.</string>
             </property>
             <property name="textFormat">
