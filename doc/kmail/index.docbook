@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kmail;">
+  <!ENTITY package "kdenetwork">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
@@ -1868,8 +1869,8 @@ performs a menu item function, it is listed with the menu item.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>N</accel>ew Mail Client...</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>New Mail Client...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1883,8 +1884,8 @@ performs a menu item function, it is listed with the menu item.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
 </shortcut>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem>Save <accel>A</accel>s...</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Save As...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1899,8 +1900,8 @@ and attachments.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
 </shortcut>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>P</accel>rint...</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Print...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1911,8 +1912,8 @@ and attachments.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem>Compact all <accel>f</accel>olders</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Compact all folders</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para>Will compact all folders, &ie; it will really move and delete the messages
@@ -1926,8 +1927,8 @@ on disk according to how you have moved and deleted them in &kmail;.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>
 </shortcut>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem>Check <accel>M</accel>ail</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Check Mail</guimenuitem>
 </menuchoice>
 </term>
 <listitem><para>Checks for new messages in all your accounts, except those that
@@ -1938,7 +1939,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>F</accel>ile</guimenu>
+<guimenu>File</guimenu>
 <guisubmenu>Check Mail in</guisubmenu>
 </menuchoice>
 </term>
@@ -1950,8 +1951,8 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>S</accel>end Queued</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Send Queued</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para>Sends the messages that are in your outbox.</para>
@@ -1961,8 +1962,8 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem>Address <accel>B</accel>ook...</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Address Book...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1973,8 +1974,8 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>I</accel>mport...</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Import...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1990,8 +1991,8 @@ This application lets you import messages from several proprietary mail clients 
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
 </shortcut>
-<guimenu><accel>F</accel>ile</guimenu>
-<guimenuitem><accel>C</accel>lose</guimenuitem>
+<guimenu>File</guimenu>
+<guimenuitem>Close</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2015,8 +2016,8 @@ This application lets you import messages from several proprietary mail clients 
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Und<accel>o</accel></guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Undo</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2031,8 +2032,8 @@ in the trash.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>C</accel>opy text</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Copy text</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2046,8 +2047,8 @@ in the trash.</para>
 <shortcut>
 <keycap>D</keycap>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>D</accel>elete</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Delete</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2062,8 +2063,8 @@ messages are already in the trash folder, they will really be deleted.</para>
 <shortcut>
 <keycap>S</keycap>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>S</accel>earch messages...</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Search messages...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2081,8 +2082,8 @@ pane</guilabel>.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>F</accel>ind in message...</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Find in message...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2094,7 +2095,7 @@ pane</guilabel>.</para>
 <term>
 <menuchoice>
 <shortcut><keycap>K</keycap></shortcut><guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Sele<accel>c</accel>t all messages</guimenuitem>
+<guimenuitem>Select all messages</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2106,8 +2107,8 @@ pane</guilabel>.</para>
 <term>
 <menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Select message <accel>t</accel>ext</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Select message text</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2130,24 +2131,24 @@ pane</guilabel>.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>V</accel>iew</guimenu>
-<guimenuitem><accel>B</accel>rief</guimenuitem>
+<guimenu>View</guimenu>
+<guimenuitem>Brief</guimenuitem>
 </menuchoice>
 <menuchoice>
-<guimenu><accel>V</accel>iew</guimenu>
-<guimenuitem><accel>F</accel>ancy Headers</guimenuitem>
+<guimenu>View</guimenu>
+<guimenuitem>Fancy Headers</guimenuitem>
 </menuchoice>
 <menuchoice>
-<guimenu><accel>V</accel>iew</guimenu>
-<guimenuitem><accel>S</accel>tandard Headers</guimenuitem>
+<guimenu>View</guimenu>
+<guimenuitem>Standard Headers</guimenuitem>
 </menuchoice>
 <menuchoice>
-<guimenu><accel>V</accel>iew</guimenu>
-<guimenuitem><accel>L</accel>ong Headers</guimenuitem>
+<guimenu>View</guimenu>
+<guimenuitem>Long Headers</guimenuitem>
 </menuchoice>
 <menuchoice>
-<guimenu><accel>V</accel>iew</guimenu>
-<guimenuitem><accel>A</accel>ll Headers Headers</guimenuitem>
+<guimenu>View</guimenu>
+<guimenuitem>All Headers Headers</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2159,15 +2160,15 @@ headers in the <guilabel>Message pane</guilabel>.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>V</accel>iew</guimenu>
+<guimenu>View</guimenu>
 <guimenuitem>Iconic Attachments</guimenuitem>
 </menuchoice>
 <menuchoice>
-<guimenu><accel>V</accel>iew</guimenu>
+<guimenu>View</guimenu>
 <guimenuitem>Smart Attachments</guimenuitem>
 </menuchoice>
 <menuchoice>
-<guimenu><accel>V</accel>iew</guimenu>
+<guimenu>View</guimenu>
 <guimenuitem>Inlined Attachments</guimenuitem>
 </menuchoice>
 </term>
@@ -2189,8 +2190,8 @@ pane</guilabel>.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem><accel>C</accel>reate...</guimenuitem>
+<guimenu>Folder</guimenu>
+<guimenuitem>Create...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2211,8 +2212,8 @@ mailing list that is associated with that folder.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem><accel>P</accel>roperties...</guimenuitem>
+<guimenu>Folder</guimenu>
+<guimenuitem>Properties...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2224,8 +2225,8 @@ change the settings for the selected folder.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem>C<accel>o</accel>mpact</guimenuitem>
+<guimenu>Folder</guimenu>
+<guimenuitem>Compact</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2238,8 +2239,8 @@ if your mailboxes seem to be much larger than they ought to be.
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem><accel>E</accel>mpty</guimenuitem>
+<guimenu>Folder</guimenu>
+<guimenuitem>Empty</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2252,8 +2253,8 @@ deleted.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem><accel>R</accel>emove</guimenuitem>
+<guimenu>Folder</guimenu>
+<guimenuitem>Remove</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2264,8 +2265,8 @@ deleted.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem><accel>P</accel>refer HTML to plain text</guimenuitem>
+<guimenu>Folder</guimenu>
+<guimenuitem>Prefer HTML to plain text</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2278,8 +2279,8 @@ activate this for trusted messages.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>F<accel>o</accel>lder</guimenu>
-<guimenuitem><accel>T</accel>hread messages</guimenuitem>
+<guimenu>Folder</guimenu>
+<guimenuitem>Thread messages</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2303,7 +2304,7 @@ they reply to.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
+<guimenu>Message</guimenu>
 <guimenuitem>New Message...</guimenuitem>
 </menuchoice>
 </term>
@@ -2321,8 +2322,8 @@ address.</para>
 <shortcut>
 <keycap>N</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>N</accel>ext</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Next</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2337,7 +2338,7 @@ address.</para>
 <shortcut>
 <keycap>+</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
+<guimenu>Message</guimenu>
 <guimenuitem>Next Unread</guimenuitem>
 </menuchoice>
 </term>
@@ -2352,8 +2353,8 @@ address.</para>
 <shortcut>
 <keycap>P</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>P</accel>revious</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Previous</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2367,7 +2368,7 @@ address.</para>
 <shortcut>
 <keycap>-</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
+<guimenu>Message</guimenu>
 <guimenuitem>Previous Unread</guimenuitem>
 </menuchoice>
 </term>
@@ -2382,8 +2383,8 @@ address.</para>
 <shortcut>
 <keycap>R</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>R</accel>eply...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Reply...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2399,8 +2400,8 @@ selected message's <guilabel>Reply-To</guilabel> field in the
 <shortcut>
 <keycap>A</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>Reply <accel>A</accel>ll...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Reply All...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2418,8 +2419,8 @@ of the selected message's <guilabel>Reply-To:</guilabel> and
 <shortcut>
 <keycap>L</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>Reply <accel>L</accel>ist...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Reply List...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2436,8 +2437,8 @@ Otherwise the <guilabel>To:</guilabel> field will be empty.</para>
 <shortcut>
 <keycombo action="simul">&Alt;<keycap>R</keycap></keycombo>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>Reply <accel>w</accel>ithout quote...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Reply without quote...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2451,8 +2452,8 @@ text of the original message.</para>
 <shortcut>
 <keycap>F</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>F</accel>orward...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Forward...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2467,9 +2468,9 @@ will be forwarded, too.</para>
 <shortcut>
 <keycap>F</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
+<guimenu>Message</guimenu>
 <!-- fixme in kmail: "f" twice as accel -->
-<guimenuitem><accel>F</accel>orward as attachment</guimenuitem>
+<guimenuitem>Forward as attachment</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2484,8 +2485,8 @@ in the original message will also be in the forwarded message's attachment.</par
 <shortcut>
 <keycap>E</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>R<accel>e</accel>direct...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Redirect...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2500,8 +2501,8 @@ added in special header fields (<literal>Redirect-From</literal>,
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>B</accel>ounce...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Bounce...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2514,8 +2515,8 @@ user does not exist. Some people use this option to <quote>reply</quote> to spam
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>Send a<accel>g</accel>ain...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Send again...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2526,8 +2527,8 @@ user does not exist. Some people use this option to <quote>reply</quote> to spam
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
-<guisubmenu>Set <accel>E</accel>ncoding</guisubmenu>
+<guimenu>Message</guimenu>
+<guisubmenu>Set Encoding</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -2542,8 +2543,8 @@ Pane.</para>
 <shortcut>
 <keycap>T</keycap>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>Edi<accel>t</accel></guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Edit</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2555,8 +2556,8 @@ Pane.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
-<guisubmenu><accel>C</accel>reate filter</guisubmenu>
+<guimenu>Message</guimenu>
+<guisubmenu>Create filter</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -2568,7 +2569,7 @@ This new filter is based on the fields of the current mail.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
+<guimenu>Message</guimenu>
 <guisubmenu>Set Status</guisubmenu>
 </menuchoice>
 </term>
@@ -2603,8 +2604,8 @@ below (more than one status per message is currently not supported):</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
-<guisubmenu><accel>M</accel>ove to</guisubmenu>
+<guimenu>Message</guimenu>
+<guisubmenu>Move to</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -2615,9 +2616,9 @@ below (more than one status per message is currently not supported):</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
+<guimenu>Message</guimenu>
 <!-- fixme in kmail: "c" is accel twice -->
-<guisubmenu><accel>C</accel>opy to</guisubmenu>
+<guisubmenu>Copy to</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -2631,7 +2632,7 @@ below (more than one status per message is currently not supported):</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
+<guimenu>Message</guimenu>
 <guimenuitem>Apply Filters</guimenuitem>
 </menuchoice>
 </term>
@@ -2643,7 +2644,7 @@ below (more than one status per message is currently not supported):</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
+<guimenu>Message</guimenu>
 <guimenuitem>View Source...</guimenuitem>
 </menuchoice>
 </term>
@@ -2668,8 +2669,8 @@ at the <literal>Received:</literal> lines in the header.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Show <accel>T</accel>oolbar</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Toolbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2681,8 +2682,8 @@ to compose a new message &etc;).</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Show St<accel>a</accel>tusbar</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Statusbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2694,8 +2695,8 @@ the bottom which shows useful short messages and link targets).</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Configure <accel>K</accel>ey Bindings...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Key Bindings...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2707,8 +2708,8 @@ menu commands.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Configure Tool<accel>b</accel>ars...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2720,8 +2721,8 @@ toolbar.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem><accel>C</accel>onfigure KMail...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure KMail...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2732,8 +2733,8 @@ toolbar.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Configure F<accel>i</accel>lters...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Filters...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2748,80 +2749,8 @@ toolbar.</para>
 <sect2 id="reader-help-menu">
 <title><guimenu>Help</guimenu> Menu</title>
 
-<variablelist>
+&help.menu.documentation;
 
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut>
-<keycap>F1</keycap>
-</shortcut>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem><accel>C</accel>ontents</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Invokes the &kde; help system with the &kmail; help pages
-displayed.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut>
-<keycombo action="simul"><keycap>Shift</keycap><keycap>F1</keycap></keycombo>
-</shortcut>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem>What's <accel>T</accel>his?</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Selecting this option changes the cursor to an arrow with a question
-mark. If you now click on any component of the control panel pane, you get short
-context sensitive help about that item (sorry, this feature is not implemented yet
-for most parts of &kmail;).</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem><accel>R</accel>eport Bug...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens a window for you to report a bug. You have to be connected
-to the Internet to send the bug report.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem><accel>A</accel>bout KMail</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Displays information about &kmail; (version, authors, license agreement).</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu><accel>H</accel>elp</guimenu>
-<guimenuitem>About <accel>K</accel>DE</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Displays information about &kde;.</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
 </sect2>
 </sect1>
 
@@ -2840,8 +2769,8 @@ to the Internet to send the bug report.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>Return</keycap></keycombo>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>S</accel>end</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Send</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2852,8 +2781,8 @@ to the Internet to send the bug report.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>Q</accel>ueue</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Queue</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2864,8 +2793,8 @@ to the Internet to send the bug report.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem>Save in <accel>d</accel>rafts folder</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Save in drafts folder</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2877,8 +2806,8 @@ and send it later.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essages</guimenu>
-<guimenuitem><accel>I</accel>nsert File...</guimenuitem>
+<guimenu>Messages</guimenu>
+<guimenuitem>Insert File...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2893,8 +2822,8 @@ position.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>P</accel>rint...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Print...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2905,8 +2834,8 @@ position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>A</accel>ddressbook...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Addressbook...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2920,8 +2849,8 @@ position.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>N</accel>ew Composer...</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>New Composer...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2935,8 +2864,8 @@ position.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
 </shortcut>
-<guimenu><accel>M</accel>essage</guimenu>
-<guimenuitem><accel>C</accel>lose</guimenuitem>
+<guimenu>Message</guimenu>
+<guimenuitem>Close</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2960,8 +2889,8 @@ position.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Und<accel>o</accel></guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Undo</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2975,8 +2904,8 @@ position.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>Shift</keycap><keycap>Z</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Re<accel>d</accel>o</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Redo</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2990,8 +2919,8 @@ position.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>X</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>C<accel>u</accel>t</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Cut</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3006,8 +2935,8 @@ drag it to a new position.</para>
 <shortcut>
 <keycombo action="simul"><keycap>Ctrl</keycap><keycap>C</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>C</accel>opy</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Copy</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3023,8 +2952,8 @@ cut.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>P</accel>aste</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Paste</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3038,7 +2967,7 @@ cut.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
+<guimenu>Edit</guimenu>
 <guimenuitem>Select <accel>A</accel>ll</guimenuitem>
 </menuchoice>
 </term>
@@ -3053,8 +2982,8 @@ cut.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>F</accel>ind...</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Find...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3068,8 +2997,8 @@ cut.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>
 </shortcut>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>R</accel>eplace...</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Replace...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3080,8 +3009,8 @@ cut.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Cl<accel>e</accel>an Spaces</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Clean Spaces</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3093,8 +3022,8 @@ selection or in the complete message if there is no selection.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem><accel>S</accel>pelling...</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Spelling...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3119,31 +3048,31 @@ options in this <guilabel>Composer</guilabel> window.</para>
 
 <itemizedlist>
 <listitem>
-<para><guimenuitem><accel>A</accel>ll Fields</guimenuitem></para>
+<para><guimenuitem>All Fields</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem><accel>I</accel>dentity</guimenuitem></para>
+<para><guimenuitem>Identity</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem><accel>M</accel>ail Transport</guimenuitem></para>
+<para><guimenuitem>Mail Transport</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem><accel>F</accel>rom</guimenuitem></para>
+<para><guimenuitem>From</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem><accel>R</accel>eply to</guimenuitem></para>
+<para><guimenuitem>Reply to</guimenuitem></para>
 </listitem>
 <listitem>
 <para><guimenuitem><accel>T</accel>o</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem><accel>C</accel>c</guimenuitem></para>
+<para><guimenuitem>Cc</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem><accel>B</accel>cc</guimenuitem></para>
+<para><guimenuitem>Bcc</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem><accel>S</accel>ubject</guimenuitem></para>
+<para><guimenuitem>Subject</guimenuitem></para>
 </listitem>
 </itemizedlist>
 
@@ -3160,8 +3089,8 @@ menu.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>O</accel>ptions</guimenu>
-<guimenuitem><accel>U</accel>rgent</guimenuitem>
+<guimenu>Options</guimenu>
+<guimenuitem>Urgent</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3174,8 +3103,8 @@ incoming messages.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>O</accel>ptions</guimenu>
-<guimenuitem><accel>C</accel>onfirm delivery</guimenuitem>
+<guimenu>Options</guimenu>
+<guimenuitem>Confirm delivery</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3188,8 +3117,8 @@ also supported from the receiver's side in order to work.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>O</accel>ptions</guimenu>
-<guimenuitem>Confirm <accel>r</accel>ead</guimenuitem>
+<guimenu>Options</guimenu>
+<guimenuitem>Confirm read</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3203,8 +3132,8 @@ enabled by the receiver's mail client in order to work.
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>O</accel>ptions</guimenu>
-<guisubmenu>Set <accel>E</accel>ncoding</guisubmenu>
+<guimenu>Options</guimenu>
+<guisubmenu>Set Encoding</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -3216,8 +3145,8 @@ the outgoing mail.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>O</accel>ptions</guimenu>
-<guimenuitem><accel>W</accel>ordwrap</guimenuitem>
+<guimenu>Options</guimenu>
+<guimenuitem>Wordwrap</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3241,8 +3170,8 @@ to paste long lines that shouldn't wrap.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>A</accel>ttach</guimenu>
-<guimenuitem>Append S<accel>i</accel>gnature</guimenuitem>
+<guimenu>Attach</guimenu>
+<guimenuitem>Append Signature</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3253,9 +3182,9 @@ to paste long lines that shouldn't wrap.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>A</accel>ttach</guimenu>
+<guimenu>Attach</guimenu>
 <!-- fixme in kmail: "P" used twice -->
-<guimenuitem>Attach <accel>P</accel>ublic Key...</guimenuitem>
+<guimenuitem>Attach Public Key...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3267,8 +3196,8 @@ key to your message using the default encoding.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>A</accel>ttach</guimenu>
-<guimenuitem>Attach My <accel>P</accel>ublic Key</guimenuitem>
+<guimenu>Attach</guimenu>
+<guimenuitem>Attach My Public Key</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3280,8 +3209,8 @@ public key to your message using the default encoding.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>A</accel>ttach</guimenu>
-<guimenuitem><accel>A</accel>ttach...</guimenuitem>
+<guimenu>Attach</guimenu>
+<guimenuitem>Attach...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3293,8 +3222,8 @@ dialog. The dialog allows to select more than one file using the &Ctrl; key.</pa
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>A</accel>ttach</guimenu>
-<guimenuitem><accel>R</accel>emove</guimenuitem>
+<guimenu>Attach</guimenu>
+<guimenuitem>Remove</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3305,8 +3234,8 @@ dialog. The dialog allows to select more than one file using the &Ctrl; key.</pa
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>A</accel>ttach</guimenu>
-<guimenuitem><accel>S</accel>ave...</guimenuitem>
+<guimenu>Attach</guimenu>
+<guimenuitem>Save...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3318,8 +3247,8 @@ file.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>A</accel>ttach</guimenu>
-<guimenuitem>Pr<accel>o</accel>perties...</guimenuitem>
+<guimenu>Attach</guimenu>
+<guimenuitem>Properties...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3340,8 +3269,8 @@ attachment window.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Show <accel>T</accel>oolbar</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Toolbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3353,8 +3282,8 @@ to send the message &etc;).</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Show St<accel>a</accel>tusbar</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Statusbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3366,8 +3295,8 @@ the bottom which shows useful short messages).</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Configure <accel>K</accel>ey Bindings...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Key Bindings...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3379,8 +3308,8 @@ menu command.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem>Configure Tool<accel>b</accel>ars...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3392,8 +3321,8 @@ toolbar.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem><accel>S</accel>pellchecker...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Spellchecker...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3408,9 +3337,9 @@ toolbar.</para>
 <sect2 id="composer-help-menu">
 <title><guimenu>Help</guimenu> Menu</title>
 
-<para>
-The entries in this menu have the same meaning as <link linkend="reader-help-menu">the
-entries in the Mailreader's help menu</link>.</para>
+<para>The entries in this menu have the same meaning as <link
+linkend="reader-help-menu">the entries in the Mailreader's help
+menu</link>.</para>
 
 </sect2>
 </sect1>
@@ -4148,29 +4077,14 @@ mail)</para></listitem>
 <sect1 id="getting-kmail">
 <title>How to obtain &kmail;</title>
 
-<para>&kmail; is part of the &kde; project <ulink
-url="http://www.kde.org">http://www.kde.org</ulink>. &kmail; can be found in the
-kdenetwork package on <ulink
-url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the main
-&FTP; site of the &kde; project. </para>
+&install.intro.documentation;
+
 </sect1>
 
 <sect1 id="compilation">
 <title>Compilation and Installation</title>
 
-<para>In order to compile and install &kmail; on your system, type the following
-in the base directory of the kdenetwork distribution:</para>
-
-<screen width="40">
-<prompt>%</prompt> <userinput><command>./configure</command></userinput>
-<prompt>%</prompt> <userinput><command>make</command></userinput>
-<prompt>%</prompt> <userinput><command>make</command> <option>install</option></userinput>
-</screen>
-
-<para>Since &kmail; uses <application>autoconf</application> and
-<application>automake</application> you should have no trouble compiling
-it. Should you run into problems please report them to the &kde; mailing
-lists.</para>
+&install.compile.documentation;
 
 </sect1>
 
