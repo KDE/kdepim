@@ -272,6 +272,8 @@ void ResourceSelection::currentChanged( QListViewItem *item )
           resource->open();
 
         resource->asyncLoad();
+      } else {
+        resource->close();
       }
     }
 
