@@ -1115,7 +1115,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     target=a.mid(13, a.length()-13);
     type=ATattachment;
   }
-  else if(a.left(7).lower()=="http://" ||a.left(6).lower()=="ftp://") {
+  else if(a.left(7).lower()=="http://" || a.left(8).lower() == "https://" || 
+          a.left(6).lower()=="ftp://") {
     target=a;
     type=ATurl;
   }
