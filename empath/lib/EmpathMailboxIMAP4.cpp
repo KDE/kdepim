@@ -456,7 +456,7 @@ EmpathMailboxIMAP4::_createIndexRecordFromFetchReply(const QStringList & l)
     QString subject, senderName, senderAddress, messageID, parentID;
     QDateTime date;
     int timeZone = 0;
-    EmpathIndexRecord::Status status = 0;
+    EmpathIndexRecord::Status status = (EmpathIndexRecord::Status)0;
     uint size;
     bool hasAttachments = false;
 
