@@ -1955,7 +1955,7 @@ too. This will remove all the messages in the trash folder whenever you exit &km
 	 <listitem><para>You really should test if encryption works before you use it. &kmail; relies
 	  on PGP/GnuPG's error strings, which often change between different versions.</para></listitem>
 	 <listitem><para>There's a bug in &kmail; 1.1.99 (which comes with KDE 2.0 and 2.0.1) that
-	  makes GnuPG/PGP not work if you use a different language than English. You can work around
+	  makes PGP not work if you use a different language than English. You can work around
 	  it this way (&kmail; will still use your favourite language):</para>
 	  <itemizedlist>
 	   <listitem><para>Rename <filename>/usr/bin/kmail</filename> to <filename>/usr/bin/kmail.original</filename></para></listitem>
