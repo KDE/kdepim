@@ -6,6 +6,7 @@
 #include <kgenericfactory.h>
 #include <kparts/componentfactory.h>
 
+#include "overviewwidget.h"
 #include "ksync_overviewpart.h"
 
 //typedef KGenericFactory< KitchenSync::OverviewPart> OverviewPartFactory;
@@ -29,8 +30,7 @@ QPixmap* OverviewPart::pixmap() {
 
 QWidget* OverviewPart::widget() {
   if(m_widget==0 ){
-    m_widget = new QWidget();
-    m_widget->setBackgroundColor(Qt::red);
+    m_widget = new OverviewWidget();
   }
   return m_widget;
 }
@@ -39,7 +39,7 @@ QWidget* OverviewPart::configWidget() {
 
   m_config = new QWidget();
   m_config->setBackgroundColor( Qt::red );
-  
+
   return m_config;
 };
 
