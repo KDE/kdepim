@@ -128,9 +128,6 @@ void ResourceXMLRPC::init()
   mOpen = false;
 
   mQueueTimer = new QTimer( this );
-  mQueueTimer->start( 3000 );
-
-  connect( mQueueTimer, SIGNAL( timeout() ), this, SLOT( processQueue() ) );
 }
 
 void ResourceXMLRPC::readConfig( const KConfig* config )
@@ -179,6 +176,9 @@ bool ResourceXMLRPC::doOpen()
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   enter_loop();
+
+  mQueueTimer->start( 3000 );
+  connect( mQueueTimer, SIGNAL( timeout() ), this, SLOT( processQueue() ) );
 
   return true;
 }
@@ -302,6 +302,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
 {
   QMap<QString, QVariant> args;
 
+  bool added = false;
   Event *oldEvent = mCalendar.event( ev->uid() );
   if ( oldEvent ) { // already exists
     if ( !oldEvent->isReadOnly() ) {
@@ -311,6 +312,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
                      this, SLOT( updateEntryFinished( const QValueList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
       mCalendar.addEvent( ev );
+      added = true;
     }
   } else { // new event
     writeEvent( ev, args );
@@ -320,7 +322,11 @@ bool ResourceXMLRPC::addEvent( Event* ev )
                    QVariant( ev->uid() ) );
 
     mCalendar.addEvent( ev );
+    added = true;
   }
+
+  if ( added )
+    enter_loop();
 
   return true;
 }
@@ -336,6 +342,7 @@ void ResourceXMLRPC::deleteEvent( Event* ev )
                  this, SLOT( deleteEntryFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( ev->uid() ) );
+  enter_loop();
 }
 
 
@@ -477,7 +484,7 @@ void ResourceXMLRPC::processQueue()
   mDateRangeQueue.clear();
   mDateQueue.clear();
 
-  mQueueTimer->start( 3000 );
+  mQueueTimer->start( 1000 * 10 ); // process queue every 10 second
 }
 
 void ResourceXMLRPC::addToQueue( const QDate &date )
