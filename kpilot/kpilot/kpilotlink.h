@@ -413,6 +413,12 @@ private:
 	*/
 	enum { None = 0 , Running, Connected, Done } fConduitRunStatus ;
 
+	/**
+	* For sanity checking, we try to restrict ourselves to one 
+	* conduit and one socket at a time.
+	*/
+	KSocket *fCurrentConduitSocket;
+
 public:
 	/**
 	* Write a log entry to the pilot. Note that the library
@@ -536,6 +542,9 @@ signals:
 #endif
 
 // $Log$
+// Revision 1.26  2001/05/24 10:36:56  adridg
+// Tickle support
+//
 // Revision 1.25  2001/04/26 21:59:00  adridg
 // CVS_SILENT B0rkage with previous commit
 //
