@@ -24,6 +24,7 @@
 #include <klocale.h>
 #include <kseparator.h>
 #include <kapp.h>
+#include <kiconloader.h>
 
 #include "knfilterconfigwidget.h"
 #include "knstatusfilter.h"
@@ -39,6 +40,7 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
  : QDialog(parent)
 {
   setCaption(kapp->makeStdCaption( i18n("Search for Articles") ));
+  setIcon(SmallIcon("knode"));
   QGroupBox *bg=new QGroupBox(this);
   
   startBtn=new QPushButton(i18n("St&art Search"), bg);
