@@ -1,5 +1,5 @@
 /***************************************************************************
-        kalendarVariables.cpp  -  description
+        konsolekalendarvariables.cpp  -  description
            -------------------
     begin                : Sun Jan 6 2002
     copyright            : (C) 2002 by Tuukka Pasanen
@@ -118,6 +118,17 @@ QString KonsoleKalendarVariables::getCalendarFile()
   return m_calendar;
 }
 
+void KonsoleKalendarVariables::setImportFile(QString calendar)
+{
+  m_import = calendar;
+}
+
+QString KonsoleKalendarVariables::getImportFile()
+{
+  return m_import;
+}
+
+
 void KonsoleKalendarVariables::setCalendar( CalendarLocal *calendar )
 {
 	m_caledarLocal = calendar;
@@ -132,12 +143,12 @@ bool KonsoleKalendarVariables::isAll()
 {
   return m_bAll;
 }
-     
+
 void KonsoleKalendarVariables::setAll( bool all)
 {
   m_bAll = all;
 }
-         
+
 bool KonsoleKalendarVariables::getAll()
 {
   return m_bAll;

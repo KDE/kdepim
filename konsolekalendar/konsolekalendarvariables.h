@@ -2,7 +2,7 @@
 #define _KONSOLEKALENDAR_VARIABLES_H_
 
 /***************************************************************************
-        kalendarVariables.h  -  description
+        konsolekalendarvariables.h  -  description
            -------------------
     begin                : Sun Jan 6 2002
     copyright            : (C) 2002 by Tuukka Pasanen
@@ -32,60 +32,64 @@ class KonsoleKalendarVariables
     KonsoleKalendarVariables();
     ~KonsoleKalendarVariables();
 
-    void setDate(QDateTime date);
+    void setDate( QDateTime date );
     QDateTime getDate();
     bool isDate();
 
-    void setStartDate(QDateTime start);
+    void setStartDate( QDateTime start );
     QDateTime getStartDate();
     bool isStartDate();
 
-    void setEndDate(QDateTime end);
+    void setEndDate( QDateTime end );
     QDateTime getEndDate();
     bool isEndDate();
 
-    void setNext(bool next);
+    void setNext( bool next );
     bool isNext();
 
-    void setVerbose(bool verbose);
+    void setVerbose( bool verbose );
     bool isVerbose();
 
-    void setCalendarFile(QString calendar);
+    void setCalendarFile( QString calendar );
     QString getCalendarFile();
 
-    void setDescription(QString description);
+    void setImportFile( QString calendar );
+    QString getImportFile();
+
+
+    void setDescription( QString description );
     QString getDescription();
     bool isDescription();
 
-    void setSummary(QString description);
+    void setSummary( QString description );
     QString getSummary();
     bool isSummary();
-  
-   
+
+
     bool isAll();
-             
+
     void setAll( bool all );
     bool getAll();
-    
+
     QDate parseDate( QString string );
     QTime parseTime( QString str );
- 
+
     /*
      * Set calendar file for global use
      */
 
    void setCalendar( CalendarLocal *calendar );
-   
+
    /*
-    * Get global calendar 
+    * Get global calendar
     */
 
    CalendarLocal *getCalendar();
-   
+
   private:
-    int findNumber(const QString &str, int &pos, int &startpos);
-    char findSeparator(const QString &str, int &pos, int &seppos);
-    void skipWhiteSpace(const QString &str, int &pos);
+    int findNumber( const QString &str, int &pos, int &startpos );
+    char findSeparator( const QString &str, int &pos, int &seppos );
+    void skipWhiteSpace( const QString &str, int &pos );
 
     QDateTime m_date;
     bool m_bIsDate;
@@ -93,6 +97,7 @@ class KonsoleKalendarVariables
     QDateTime m_endDate;
     bool m_bIsStartDate;
     QString m_calendar;
+    QString m_import;
     QString m_description;
     QString m_summary;
     bool m_bSummary;

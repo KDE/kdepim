@@ -39,7 +39,8 @@ static KCmdLineOptions options[] =
 {
   { "help", I18N_NOOP("Prints this help"), 0 },
   { "verbose", I18N_NOOP("Output helpful (?) debug info"), 0 },
-  { "file <calendar file>", I18N_NOOP("Specify which calendar you want to use."), 0 },
+  { "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use."), 0 },
+  { "import <import-file>", I18N_NOOP("Import this calendar to main calendar"), 0 },
   { "next", I18N_NOOP("Next activity in calendar"), 0 },
   { "date <date>", I18N_NOOP("Show selected day's calendar"), 0 },
   { "time <time>", I18N_NOOP("Show selected time at calendar"), 0 },
@@ -66,6 +67,7 @@ int main(int argc, char *argv[])
                         "0.6", description, KAboutData::License_GPL,
                         "(c) 2002-2003, Tuukka Pasanen", 0, 0,
                         "illuusio@mailcity.com");
+
   aboutData.addAuthor("Tuukka Pasanen",0, "illuusio@mailcity.com");
 
   KCmdLineArgs::init( argc, argv, &aboutData );
@@ -89,6 +91,7 @@ int main(int argc, char *argv[])
   bool del = false;
   bool create = false;
   bool calendarFile = false;
+  bool importFile = false;
 
   QString option;
 
@@ -318,6 +321,18 @@ int main(int argc, char *argv[])
     variables.setAll( false );
   } // else
 
+  if ( args->isSet("import") ) {
+    importFile = true;
+    option = args->getOption("import");
+    variables.setImportFile( option );
+
+    if( variables.isVerbose() ) {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | importing file from: (" << option << ")" << endl;
+    } // if verbose
+
+  } // if
+
+
   if ( args->isSet("file") ) {
     calendarFile = true;
     option = args->getOption("file");
@@ -374,15 +389,19 @@ int main(int argc, char *argv[])
    */
    if( konsolekalendar->openCalendar() ) {
 
-   if( add ) {
-     konsolekalendar->addEvent();
-   }
+     if( importFile ) {
+       konsolekalendar->importCalendar();
+     }
 
-   if( view ) {
-     konsolekalendar->showInstance();
-   }
+     if( add ) {
+       konsolekalendar->addEvent();
+     }
 
-	konsolekalendar->closeCalendar();
+     if( view ) {
+       konsolekalendar->showInstance();
+     }
+
+     konsolekalendar->closeCalendar();
    }
 
    delete konsolekalendar;
