@@ -490,30 +490,63 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             break;
           }
         }
-        // TODO: If still not found, ask about it
       }
       return myself;
+    }
+
+    static bool heuristicalRSVP( Incidence *incidence )
+    {
+      bool rsvp = true; // better send superfluously than not at all
+      Attendee::List attendees = incidence->attendees();
+      Attendee::List::ConstIterator it;
+      for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+        if ( it == attendees.begin() ) {
+          rsvp = (*it)->RSVP(); // use what the first one has
+        } else {
+          if ( (*it)->RSVP() != rsvp ) {
+            rsvp = true; // they differ, default
+            break;
+          }
+        }
+      }
+      return rsvp;
+    }
+
+    static Attendee::Role heuristicalRole( Incidence *incidence )
+    {
+      Attendee::Role role = Attendee::OptParticipant;
+      Attendee::List attendees = incidence->attendees();
+      Attendee::List::ConstIterator it;
+      for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+        if ( it == attendees.begin() ) {
+          role = (*it)->role(); // use what the first one has
+        } else {
+          if ( (*it)->role() != role ) {
+            role = Attendee::OptParticipant; // they differ, default
+            break;
+          }
+        }
+      }
+      return role;
+
     }
 
     void setStatusOnMyself( Incidence* incidence, Attendee* myself, 
                             Attendee::PartStat status, const QString &receiver ) const
     {
-      Q_ASSERT( myself );
       Attendee* newMyself = 0;
-      if( myself ) {
-        myself->setStatus( status );
-        QString name;
-        QString email;
-        KPIM::getNameAndMail( receiver, name, email );
-        if ( name.isEmpty() ) name = myself->name();
-        if ( email.isEmpty() ) email = myself->email();
-        newMyself = new Attendee( name,
-                                  email,
-                                  myself->RSVP(),
-                                  myself->status(),
-                                  myself->role(),
-                                  myself->uid() );
-      }
+      QString name;
+      QString email;
+      KPIM::getNameAndMail( receiver, name, email );
+      if ( name.isEmpty() && myself ) name = myself->name();
+      if ( email.isEmpty()&& myself ) email = myself->email();
+      Q_ASSERT( !email.isEmpty() ); // delivery must be possible
+      newMyself = new Attendee( name,
+                                email,
+                                true, // RSVP, otherwise we would not be here
+                                status,
+                                myself ? myself->role() : heuristicalRole( incidence ),
+                                myself ? myself->uid() : QString::null );
 
       // Make sure only ourselves is in the event
       incidence->clearAttendees();
@@ -549,15 +582,23 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool handleAccept( const QString& iCal, KMail::Callback& callback ) const
+    bool handleInvitation( const QString& iCal, Attendee::PartStat status, 
+                           KMail::Callback &callback ) const
     {
+      bool ok = true;
       const QString receiver = callback.receiver();
       if ( receiver.isEmpty() )
         // Must be some error. Still return true though, since we did handle it
         return true;
 
       // First, save it for KOrganizer to handle
-      saveFile( receiver, iCal, "accepted" );
+      QString dir;
+      if ( status == Attendee::Accepted ) dir = "accepted";
+      else if ( status == Attendee::Tentative  ) dir = "accepted";
+      else if ( status == Attendee::Declined ) dir = "tentative";
+      else return true; // unknown status
+
+      saveFile( receiver, iCal, dir );
 
       // Now produce the return message
       ICalFormat format;
@@ -565,59 +606,14 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
-      if ( myself && myself->RSVP() ) {
-        setStatusOnMyself( incidence, myself, Attendee::Accepted, receiver );
-        return mail( incidence, callback );
+      if ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) {
+        setStatusOnMyself( incidence, myself, status, receiver );
+        ok =  mail( incidence, callback );
       } else {
         ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
-        return true;
       }
-    }
-
-    bool handleAcceptConditionally( const QString& iCal, KMail::Callback& callback ) const
-    {
-      const QString receiver = callback.receiver();
-      if ( receiver.isEmpty() )
-        // Must be some error. Still return true though, since we did handle it
-        return true;
-
-      // First, save it for KOrganizer to handle
-      saveFile( receiver, iCal, "tentative" );
-
-      // Now produce the return message
-      ICalFormat format;
-      Incidence* incidence = icalToString( iCal, format );
-      if( !incidence ) return false;
-      Attendee *myself = findMyself( incidence, receiver );
-      if ( myself && myself->RSVP() ) {
-        setStatusOnMyself( incidence, myself, Attendee::Tentative, receiver );
-        return mail( incidence, callback );
-      } else {
-        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
-        return true;
-      }
-
-    }
-
-    bool handleDecline( const QString& iCal, KMail::Callback& callback ) const
-    {
-      const QString receiver = callback.receiver();
-      if ( receiver.isEmpty() )
-        // Must be some error. Still return true though, since we did handle it
-        return true;
-
-      // Produce a decline message
-      ICalFormat format;
-      Incidence* incidence = icalToString( iCal, format );
-      if( !incidence ) return false;
-      Attendee *myself = findMyself( incidence, receiver );
-      if ( myself && myself->RSVP() ) {
-        setStatusOnMyself( incidence, myself, Attendee::Declined, receiver );
-        return mail( incidence, callback );
-      } else {
-        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
-        return true;
-      }
+      delete incidence;
+      return ok;
     }
 
     bool handleIgnore( const QString&, KMail::Callback& c ) const
@@ -633,13 +629,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       QString iCal = part->asText();
 
       if ( path == "accept" )
-        return handleAccept( iCal, c );
+        return handleInvitation( iCal, Attendee::Accepted, c );
       if ( path == "accept_conditionally" )
-        return handleAcceptConditionally( iCal, c );
+        return handleInvitation( iCal, Attendee::Tentative, c );
       if ( path == "ignore" )
         return handleIgnore( iCal, c );
       if ( path == "decline" )
-        return handleDecline( iCal, c );
+        return handleInvitation( iCal, Attendee::Declined, c );
       if ( path == "reply" || path == "cancel" )
         // These should just be saved with their type as the dir
         if ( saveFile( "Receiver Not Searched", iCal, path ) )
