@@ -1477,6 +1477,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
 {
   anchorType type=ATunknown;
   QString target;
+  kdDebug()<<" target :"<<a<<endl;
   if(a.left(17)=="internal://author") {
     type=ATauthor;
   }
@@ -1504,7 +1505,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
 
     target=a.mid(11, a.length()-11);
 
-    if ((button==LeftButton)||(button==MidButton)) {
       if (a_rticle->collection()->type()!=KNArticleCollection::CTgroup)
         type=ATmailto;
       else {
@@ -1517,9 +1517,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
           default:                type=ATunknown;
         }
       }
-    } else {
-      type=ATunknown;
-    }
   }
 
   if((button==LeftButton)||(button==MidButton)) {
@@ -1600,7 +1597,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         break;
       }
     }
-    else if ( type==ATauthor ) {
+    else if ( type==ATauthor || type == ATmailto ) {
         target = a_rticle->from()->asUnicodeString();
         switch( u_mailtoPopup->exec( *p ) ) {
         case PUP_ADDRESSBOOK:
