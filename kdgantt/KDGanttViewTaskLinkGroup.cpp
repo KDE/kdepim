@@ -50,7 +50,7 @@ QDict<KDGanttViewTaskLinkGroup> KDGanttViewTaskLinkGroup::sGroupDict;
 */
 KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup()
 {
-
+    generateAndInsertName(QString());
 }
 
 /*!
@@ -76,10 +76,8 @@ KDGanttViewTaskLinkGroup::~KDGanttViewTaskLinkGroup()
 */
 KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup( const QString& name )
 {
-    sGroupDict.insert( name, this );
-    _name = name;
+    generateAndInsertName( name );
 }
-
 
 /*!
   Adds a task link LINK to this group. If the task link is already a member of
@@ -272,6 +270,8 @@ void KDGanttViewTaskLinkGroup::removeItem (KDGanttViewTaskLink* link)
 */
 KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::find( const QString& name )
 {
+    if (name.isEmpty()) // avoid error msg from QDict
+        return 0;
     return sGroupDict.find( name );
 }
 
@@ -357,3 +357,31 @@ KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::createFromDomElement( QDomEl
 
     return tlg;
 }
+
+/*!
+  Generates a unique name if necessary and inserts it into the group
+  dictionary.
+*/
+void KDGanttViewTaskLinkGroup::generateAndInsertName( const QString& name )
+{
+    // First check if we already had a name. This can be the case if
+    // the item was reconstructed from an XML file.
+    if( !_name.isEmpty() )
+        // We had a name, remove it
+        sGroupDict.remove( _name );
+    
+    QString newName;
+    if ( name.isEmpty() || sGroupDict.find( name ) ) {
+        // create unique name
+        newName.sprintf( "%p", (void* )this );
+        while( sGroupDict.find( newName ) ) {
+            newName += "_0";
+        }
+    } else {
+        newName = name;
+    }
+    sGroupDict.insert( newName, this );
+    _name = newName;
+    qDebug("KDGanttViewTaskLinkGroup::generateAndInsertName: inserted '%s'",newName.latin1());
+}
+

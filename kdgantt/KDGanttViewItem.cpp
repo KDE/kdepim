@@ -324,6 +324,8 @@ QString KDGanttViewItem::name() const
 
 KDGanttViewItem* KDGanttViewItem::find( const QString& name )
 {
+    if (name.isEmpty()) // avoid error msg from QDict
+        return 0;
     return sItemDict.find( name );
 }
 

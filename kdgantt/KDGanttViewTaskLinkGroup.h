@@ -68,6 +68,8 @@ public:
                      QDomElement& parentElement );
     static KDGanttViewTaskLinkGroup* createFromDomElement( QDomElement& );
 
+    void generateAndInsertName( const QString& name );
+
 private:
     friend class KDTimeTableWidget;
     friend class KDGanttViewTaskLink;
