@@ -65,12 +65,12 @@ protected:
 	bool skip();
 private:
 	enum eProxyTypeEnum {
-		eProxyNone,
+		eProxyNone=0,
 		eProxyHTTP,
 		eProxySOCKS
 	} eProxyType;
 	enum eSyncTimeEnum {
-		eEverySync,
+		eEverySync=0,
 		eEveryHour,
 		eEveryDay,
 		eEveryWeek,
