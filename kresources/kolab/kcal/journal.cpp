@@ -98,13 +98,16 @@ bool Journal::loadAttribute( QDomElement& element )
 {
   QString tagName = element.tagName();
 
-  if ( tagName == "summary" ) {
+  if ( tagName == "summary" )
     setSummary( element.text() );
-    return true;
-  }
+  else if ( tagName == "start-date" )
+    setStartDate( stringToDateTime( element.text() ) );
+  else
+    // Not handled here
+    return KolabBase::loadAttribute( element );
 
-  // Not handled here
-  return KolabBase::loadAttribute( element );
+  // We handled this
+  return true;
 }
 
 bool Journal::saveAttributes( QDomElement& element ) const
@@ -112,13 +115,9 @@ bool Journal::saveAttributes( QDomElement& element ) const
   // Save the base class elements
   KolabBase::saveAttributes( element );
 
-  // Save the elements
-#if 0
-  QDomComment c = element.ownerDocument().createComment( "Journal specific attributes" );
-  element.appendChild( c );
-#endif
-
   writeString( element, "summary", summary() );
+  writeString( element, "start-date", dateTimeToString( startDate() ) );
+
   return true;
 }
 
@@ -160,6 +159,10 @@ QString Journal::saveXML() const
 
 void Journal::saveTo( KCal::Journal* journal )
 {
+  KolabBase::saveTo( journal );
+
+  journal->setSummary( summary() );
+  journal->setDtStart( startDate() );
 }
 
 void Journal::setFields( const KCal::Journal* journal )
