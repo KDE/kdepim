@@ -67,6 +67,7 @@ class ResourceSelection : public KAB::ExtensionWidget
     void initGUI();
 
     ResourceItem* selectedItem() const;
+    ResourceItem* findItemByIdentifier( const QString& id );
 
     KListView *mListView;
     QPushButton *mAddButton;

@@ -332,10 +332,11 @@ void ResourceSelection::updateView()
 
 // Add a new entry
 void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
-                                              const QString& /*type*/,
+                                              const QString& type,
                                               const QString& subResource )
 {
-  kdDebug(5720) << k_funcinfo << resource->resourceName() << " " << subResource << endl;
+  if ( type != "Contact" )
+    return;
   QListViewItem *i = mListView->findItem( resource->resourceName(), 0 );
   if ( !i )
     // Not found
@@ -343,17 +344,31 @@ void ResourceSelection::slotSubresourceAdded( KPIM::ResourceABC *resource,
 
   ResourceItem *item = static_cast<ResourceItem *>( i );
   (void)new ResourceItem( resource, item, subResource );
+
+  core()->addressBook()->emitAddressBookChanged();
+}
+
+ResourceItem *ResourceSelection::findItemByIdentifier( const QString& id )
+{
+  QListViewItem *item;
+  ResourceItem *i = 0;
+  for( item = mListView->firstChild(); item; item = item->itemBelow() ) {
+    i = static_cast<ResourceItem *>( item );
+    if ( i->resourceIdentifier() == id )
+       return i;
+  }
+  return 0;
 }
 
 // Remove an entry
-void ResourceSelection::slotSubresourceRemoved( KPIM::ResourceABC* resource,
-                                                const QString& /*type*/,
+void ResourceSelection::slotSubresourceRemoved( KPIM::ResourceABC* /*resource*/,
+                                                const QString& type,
                                                 const QString& subResource )
 {
-  kdDebug(5720) << k_funcinfo << resource->resourceName() << " " << subResource << endl;
-  // TODO
-  //delete findItemByIdentifier( resource );
-  //emitResourcesChanged();
+  if ( type != "Contact" )
+    return;
+  delete findItemByIdentifier( subResource );
+  core()->addressBook()->emitAddressBookChanged();
 }
 
 ResourceItem* ResourceSelection::selectedItem() const
