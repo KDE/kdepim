@@ -47,6 +47,8 @@ ReadAddressBooksJob::ReadAddressBooksJob( struct soap *soap, const QString &url,
 void ReadAddressBooksJob::setAddressBookIds( const QStringList &ids )
 {
   mAddressBookIds = ids;
+
+  kdDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
 }
 
 void ReadAddressBooksJob::setResource( KABC::ResourceCached *resource )
@@ -56,6 +58,8 @@ void ReadAddressBooksJob::setResource( KABC::ResourceCached *resource )
 
 void ReadAddressBooksJob::run()
 {
+  kdDebug() << "ReadAddressBooksJob::run()" << endl;
+
   mSoap->header->ns1__session = mSession;
   _ns1__getAddressBookListResponse addressBookListResponse;
   soap_call___ns4__getAddressBookListRequest( mSoap, mUrl.latin1(),
@@ -66,7 +70,9 @@ void ReadAddressBooksJob::run()
     std::vector<class ns1__AddressBook * > *addressBooks = addressBookListResponse.books->book;
     std::vector<class ns1__AddressBook * >::const_iterator it;
     for ( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
-      if ( mAddressBookIds.find( GWConverter::stringToQString( (*it)->id ) ) != mAddressBookIds.end() )
+      QString id = GWConverter::stringToQString( (*it)->id );
+      kdDebug() << "ID: " << id << endl;
+      if ( mAddressBookIds.find( id ) != mAddressBookIds.end() )
         readAddressBook( (*it)->id );
     }
   }
@@ -74,6 +80,8 @@ void ReadAddressBooksJob::run()
 
 void ReadAddressBooksJob::readAddressBook( std::string &id )
 {
+  kdDebug() << "ReadAddressBookJob::readAddressBook() " << id.c_str() << endl;
+
   _ns1__getItemsRequest itemsRequest;
   itemsRequest.container = id;
   itemsRequest.filter = 0;
@@ -81,15 +89,24 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
   mSoap->header->ns1__session = mSession;
   _ns1__getItemsResponse itemsResponse;
-  soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
                                     &itemsRequest, &itemsResponse );
+  if ( result != 0 ) {
+    soap_print_fault( mSoap, stderr );
+    return;
+  }
+
+  kdDebug() << "TOCK" << endl;
 
   std::vector<class ns1__Item * > *items = itemsResponse.items->item;
   if ( items ) {
+    kdDebug() << "TOCK." << endl;
     ContactConverter converter( mSoap );
 
     std::vector<class ns1__Item * >::const_iterator it;
     for ( it = items->begin(); it != items->end(); ++it ) {
+      kdDebug() << "ITEM: " << (*it)->name.c_str() << "(" << (*it)->id.c_str()
+        << ")" << endl;
       _ns1__getItemRequest itemRequest;
       itemRequest.id = (*it)->id;
       itemRequest.view = 0;

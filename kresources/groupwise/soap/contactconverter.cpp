@@ -20,6 +20,8 @@
 
 #include "contactconverter.h"
 
+#include <kdebug.h>
+
 ContactConverter::ContactConverter( struct soap* soap )
   : GWConverter( soap )
 {
@@ -195,6 +197,8 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
 KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
 {
+  kdDebug() << "ContactConverter::convertFromContact()" << endl;
+
   KABC::Addressee addr;
 
   if ( !contact )
