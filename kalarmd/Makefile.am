@@ -9,6 +9,8 @@ libkalarmd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 libkalarmd_la_LIBADD  = $(LIB_KDECORE)
 libkalarmd_la_SOURCES =  alarmdaemoniface.stub dummy.cpp
 
+DISTCLEANFILES = dummy.cpp
+
 dummy.cpp:
 	touch dummy.cpp
 
