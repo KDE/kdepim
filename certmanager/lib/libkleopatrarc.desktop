@@ -1,6 +1,12 @@
 [Key Filter #0]
 was-validated=false
 Name=Not validated key
+Name[da]=Ikke valideret nøgle
+Name[es]=Clave no validada
+Name[et]=Võtme ehtsus kontrollimatu
+Name[fr]=Clé non validée
+Name[nl]=Geen gevalideerde sleutel
+Name[sv]=Nyckeln har inte validerats
 
 [Key Filter #1]
 was-validated=true
@@ -8,13 +14,32 @@ is-expired=true
 is-revoked=false
 foreground-color=255,0,0
 Name=Expired key
+Name[da]=Udløbet nøgle
+Name[es]=Clave caducada
+Name[et]=Aegunud võti
+Name[fr]=Clé expirée
+Name[nl]=Verlopen sleutel
+Name[sv]=Utgången nyckel
 
 [Key Filter #2]
 was-validated=true
 is-revoked=true
 Name=Revoked key
+Name[da]=Fjernet nøgle
+Name[es]=Clave revocada
+Name[et]=Tühistatud võti
+Name[fr]=Clé révoquée
+Name[nl]=Ingetrokken sleutel
+Name[sv]=Återkallad nyckel
 
 [Key Filter #3]
 was-validated=true
 Name=Other keys
+Name[be]=Іншыя ключы
+Name[da]=Andre nøgler
+Name[es]=Otras claves
+Name[et]=Muud võtmed
+Name[fr]=Autres clés
+Name[nl]=Andere sleutels
+Name[sv]=Andra nycklar
 
