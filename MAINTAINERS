@@ -1,0 +1,41 @@
+certmanager      Steffen Hansen <hansen@kde.org>
+kaddressbook     Tobias Koenig <tokoe@kde.org>
+                 Cornelius Schumacher <schumacher@kde.org>
+kalarm           David Jarvie <software@astrojar.org.uk>
+kalarmd          Cornelius Schumacher <schumacher@kde.org>
+kandy            Cornelius Schumacher <schumacher@kde.org>
+karm             Mark Bucciarelli <mark@hubcapconsulting.com>
+kdgantt          Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se>
+                 Lutz Rogowski <lutz@klaralvdalens-datakonsult.se>
+kfile-plugins    ?
+kgantt           ? Jochen Hanff <jochen@ifb.bv.tu-berlin.de>
+kioslaves        ? Marc Mutz <mutz@kde.org>
+kitchensync      Cornelius Schumacher <schumacher@kde.org>
+                 Holger Freyther <freyther@kde.org>
+kmail            Ingo Kloecker <kloecker@kde.org>
+                 Don Sanders <sanders@kde.org>
+kmailcvt         ?
+kmobile          Helge Deller <deller@kde.org>
+knode            Roberto Selbach Teixeira <maragato@kde.org>
+knotes           Michael Brade <brade@kde.org>
+konsolekalendar  Tuukka Pasanen <illuusio@mailcity.com>
+kontact          Daniel Molkentin <molkentin@kde.org>
+korganizer       Cornelius Schumacher <schumacher@kde.org>
+korn             ?
+kpilot           Adriaan de Groot <groot@kde.org>
+ksync            Cornelius Schumacher <schumacher@kde.org>
+ktnef            Michael Goffioul <goffioul@imec.be>
+libical          Cornelius Schumacher <schumacher@kde.org>
+libkcal          Cornelius Schumacher <schumacher@kde.org>
+libkdenetwork    Marc Mutz <mutz@kde.org>
+                 Mathias Waack <mathias@atoll-net.de> (Scoring)
+                 Ingo Klöcker <ingo.kloecker@epost.de> (kpgp)
+                 Carsten Burghardt <burghardt@kde.org> (kfoldertree, ksubscription, kaccount)
+                 Karl-Heinz Zimmer <khz@kde.org> (cryptplugwrapper*)
+libkdepim        Cornelius Schumacher <schumacher@kde.org>
+                 Tobias Koenig <tokoe@kde.org> (addresseeview, kvcarddrag)
+                 Zack Rusin <zack@kde.org> (addressesdialog, komposer)
+                 Don Sanders <sanders@kde.org> (maillistdrag)
+libkpimexchange  Jan-Pascal van Best <janpascal@vanbest.org>
+libksieve        ? Marc Mutz <mutz@kde.org>
+mimelib          ?
