@@ -30,6 +30,7 @@
 #include <ksimpleconfig.h>
 
 #include "exchangeprogress.h"
+using namespace KPIM;
 
 ExchangeProgress::ExchangeProgress(QWidget *parent)
   : KProgressDialog(parent, i18n("Exchange Download Progress"), i18n("Exchange Plugin"), "text" )

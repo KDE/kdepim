@@ -23,6 +23,8 @@
 
 class QComboBox;
 
+namespace KPIM {
+
 class ExchangeProgress : public KProgressDialog
 {
   Q_OBJECT
@@ -45,5 +47,7 @@ class ExchangeProgress : public KProgressDialog
   private:
     void updateLabel();
 };
+
+}
 
 #endif

@@ -16,36 +16,28 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#ifndef EXCHANGECONFIG_H
-#define EXCHANGECONFIG_H
 
-#include <kdialogbase.h>
-#include <klineedit.h>
-#include <kpassdlg.h>
+#include "utils.h"
 
-#include <exchangeaccount.h>
-
-class ExchangeConfig : public KDialogBase
+/** In a document doc with node node, add an element with name ns and tagname tag. Return the new element 
+ */
+QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, const QString& tag )
 {
-    Q_OBJECT
-  public:
-    ExchangeConfig(KPIM::ExchangeAccount* account, QWidget *parent=0);
-    virtual ~ExchangeConfig();
+  QDomElement el = doc.createElementNS( ns, tag );
+  node.appendChild( el );
+  return el;
+}
 
-//  protected:
-//    void load();
-//    void save();
-
-  protected slots:
-    void slotOk();
-
-  private:
-  public:
-    KPIM::ExchangeAccount* mAccount;
-    KLineEdit *m_host;
-    KLineEdit *m_user;
-    KPasswordEdit *m_password;
-};
-
-#endif
+/**
+ In a document doc with node node, add an element with namespace ns and tagname tag. Add a textnode in
+ the element with text contents text. Return the new element.
+ */
+QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, const QString& tag, const QString& text )
+{
+  QDomElement el = doc.createElementNS( ns, tag );
+  QDomText textnode = doc.createTextNode( text );
+  el.appendChild( textnode );
+  node.appendChild( el );
+  return el;
+}
 

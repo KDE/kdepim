@@ -16,40 +16,49 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#ifndef KORG_EXCHANGE_H
-#define KORG_EXCHANGE_H
+#ifndef KDEPIM_EXCHANGE_UPLOAD_H
+#define KDEPIM_EXCHANGE_UPLOAD_H
 
 #include <qstring.h>
+#include <kio/job.h>
 
-#include <korganizer/part.h>
-
+#include <libkcal/calendar.h>
 #include <libkcal/event.h>
 
-#include <exchangeaccount.h>
-#include <exchangeclient.h>
+class DwString;
+class DwEntity;
 
-// using namespace KOrg;
+namespace KPIM {
 
-class Exchange : public KOrg::Part {
+class ExchangeAccount;
+
+class ExchangeUpload : public QObject {
     Q_OBJECT
   public:
-    Exchange( KOrg::MainWindow *, const char * );
-    ~Exchange();
-
-    QString info();
+    ExchangeUpload( KCal::Event* event, ExchangeAccount* account );
+    ~ExchangeUpload();
 
   private slots:
-    void download();
-    void upload();
-    void configure();
-    void test();
+    void slotPatchResult( KIO::Job * );
+    void slotPropFindResult( KIO::Job * );
+    void slotFindUidResult( KIO::Job * );
+
+  signals:
+    void startDownload();
+    void finishDownload();
+    void uploadFinished( ExchangeUpload* worker );
 
   private:
-    void test2();
-
-    KPIM::ExchangeClient *mClient;
-    KPIM::ExchangeAccount* mAccount;
+    void tryExist();
+    void startUpload( KURL& url );
+    void findUid( QString const& uid );
+    
+    KCal::Calendar *mCalendar;
+    ExchangeAccount* mAccount;
+    KCal::Event* m_currentUpload;
+    int m_currentUploadNumber;
 };
 
-#endif
+}
 
+#endif

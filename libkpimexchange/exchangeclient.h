@@ -16,40 +16,51 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#ifndef KORG_EXCHANGE_H
-#define KORG_EXCHANGE_H
+#ifndef KDEPIM_EXCHANGE_CLIENT_H
+#define KDEPIM_EXCHANGE_CLIENT_H
 
 #include <qstring.h>
-
-#include <korganizer/part.h>
+#include <kio/job.h>
 
 #include <libkcal/event.h>
+#include <libkcal/icalformat.h>
+#include <libkcal/incidence.h>
 
-#include <exchangeaccount.h>
-#include <exchangeclient.h>
+class DwString;
+class DwEntity;
+class KCal::Calendar;
 
-// using namespace KOrg;
+namespace KPIM {
 
-class Exchange : public KOrg::Part {
+class ExchangeAccount;
+class ExchangeDownload;
+class ExchangeUpload;
+
+class ExchangeClient : public QObject {
     Q_OBJECT
   public:
-    Exchange( KOrg::MainWindow *, const char * );
-    ~Exchange();
+    ExchangeClient( ExchangeAccount* account );
+    ~ExchangeClient();
 
-    QString info();
-
-  private slots:
-    void download();
-    void upload();
-    void configure();
+  public slots:
+    void download( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress);
+    void upload( KCal::Event* event );
     void test();
+  private slots:
+    void slotDownloadFinished( ExchangeDownload* worker );
+    void slotUploadFinished( ExchangeUpload* worker );
+    void slotTestResult( KIO::Job * job );
+
+  signals:
+    void startDownload();
+    void finishDownload();
 
   private:
     void test2();
-
-    KPIM::ExchangeClient *mClient;
-    KPIM::ExchangeAccount* mAccount;
+   
+    ExchangeAccount* mAccount;
 };
 
-#endif
+}
 
+#endif
