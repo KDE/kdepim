@@ -13,7 +13,8 @@ namespace KSync {
      * this is the key to the KonnectorWorld
      * we need to implement the interface to fully support it...
      */
-    class AgendaPlugin : public KSync::KonnectorPlugin{
+    class AgendaPlugin : public KSync::Konnector
+    { 
         Q_OBJECT
     public:
         /**

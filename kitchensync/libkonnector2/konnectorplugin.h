@@ -17,8 +17,8 @@
 
 */
 
-#ifndef konnectorplugin_h
-#define konnectorplugin_h
+#ifndef KSYNC_KONNECTOR_H
+#define KSYNC_KONNECTOR_H
 
 #include <qcstring.h>
 #include <qiconset.h>
@@ -44,13 +44,14 @@ typedef QString UDI;
  *  The base class of all plugins. The functions are
  *  the same as in konnector
  */
-class KonnectorPlugin : public QObject
+class Konnector : public QObject
 {
     Q_OBJECT
   public:
-    KonnectorPlugin( QObject *obj, const char *name,
-                     const QStringList &args = QStringList() );
-    virtual ~KonnectorPlugin();
+    Konnector( QObject *obj, const char *name,
+               const QStringList &args = QStringList() );
+    virtual ~Konnector();
+
     virtual void setUDI( const QString & );
     virtual QString udi() const;
     virtual Kapabilities capabilities() = 0;

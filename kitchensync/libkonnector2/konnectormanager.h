@@ -36,7 +36,7 @@ namespace KSync
 typedef QString UDI;
 class Kapabilities;
 class ConfigWidget;
-class KonnectorPlugin;
+class Konnector;
 class KonnectorInfo;
 
 class KonnectorManager : public QObject
@@ -125,10 +125,10 @@ class KonnectorManager : public QObject
     Device::ValueList allDevices();
     Device parseDevice( const QString& path );
     Device find( const QString& deviceName );
-    KonnectorPlugin* pluginByUDI( const UDI& ) const;
+    Konnector *pluginByUDI( const UDI& ) const;
     UDI newUDI() const;
     Syncee::PtrList findUnknown( Syncee::PtrList& );
-    static KonnectorManager* m_self;
+    static KonnectorManager *m_self;
     Filter::PtrList m_filter;
     Filter::PtrList m_filAdded;
     bool m_auto;

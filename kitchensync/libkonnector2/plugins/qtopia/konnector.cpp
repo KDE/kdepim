@@ -25,7 +25,7 @@ public:
 };
 
 QtopiaPlugin::QtopiaPlugin( QObject* obj, const char* name, const QStringList )
-    : KonnectorPlugin(obj, name ) {
+    : Konnector(obj, name ) {
     d = new Private;
     d->socket = new QtopiaSocket(this, "Opie Socket" );
 

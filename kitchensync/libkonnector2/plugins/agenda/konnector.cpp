@@ -13,7 +13,7 @@ using namespace KSync;
 
 
 AgendaPlugin::AgendaPlugin( QObject* obj, const char* name,const QStringList )
-    : KonnectorPlugin( obj, name ) {
+    : Konnector( obj, name ) {
     m_socket = new AgendaSocket(this);
 
     /* connect the bridge */

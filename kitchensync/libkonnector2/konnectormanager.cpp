@@ -20,7 +20,7 @@ KonnectorManager* KonnectorManager::m_self = 0;
 class KonnectorManager::Private
 {
   public:
-    typedef QMap<QString, KonnectorPlugin*> PluginMap;
+    typedef QMap<QString, Konnector*> PluginMap;
     PluginMap konnectors;
     Device::ValueList devices;
 };
@@ -57,8 +57,8 @@ Device::ValueList KonnectorManager::query()
 
 UDI KonnectorManager::load( const Device& dev )
 {
-    KonnectorPlugin* plugin = KParts::ComponentFactory::
-                              createInstanceFromLibrary<KonnectorPlugin>( dev.library().local8Bit(),
+    Konnector* plugin = KParts::ComponentFactory::
+                              createInstanceFromLibrary<Konnector>( dev.library().local8Bit(),
                                                                           this );
     if ( !plugin ) return QString::null;
 
@@ -88,7 +88,7 @@ bool KonnectorManager::unload( const UDI& udi )
     if ( !d->konnectors.contains( udi ) )
         return false;
 
-    KonnectorPlugin* plugin = d->konnectors[udi];
+    Konnector* plugin = d->konnectors[udi];
     d->konnectors.remove( udi );
     delete plugin;
 
@@ -97,7 +97,7 @@ bool KonnectorManager::unload( const UDI& udi )
 
 Kapabilities KonnectorManager::capabilities( const UDI& udi ) const
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin ) return Kapabilities();
 
     return plugin->capabilities();
@@ -105,7 +105,7 @@ Kapabilities KonnectorManager::capabilities( const UDI& udi ) const
 
 void KonnectorManager::setCapabilities( const UDI& udi, const Kapabilities& cap )
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return;
 
     plugin->setCapabilities( cap );
@@ -117,7 +117,7 @@ ConfigWidget* KonnectorManager::configWidget( const UDI& uid,
 {
     if ( kapp->type() == QApplication::Tty ) return 0;
 
-    KonnectorPlugin* plugin = pluginByUDI( uid );
+    Konnector* plugin = pluginByUDI( uid );
     if ( !plugin ) return 0;
 
     ConfigWidget* wid = plugin->configWidget( parent, name );
@@ -133,7 +133,7 @@ ConfigWidget* KonnectorManager::configWidget( const UDI& uid,
 {
     if ( kapp->type() == QApplication::Tty ) return 0;
 
-    KonnectorPlugin* plugin = pluginByUDI( uid );
+    Konnector* plugin = pluginByUDI( uid );
     if ( !plugin ) return 0;
 
     ConfigWidget* wid = plugin->configWidget( caps, parent, name );
@@ -144,7 +144,7 @@ ConfigWidget* KonnectorManager::configWidget( const UDI& uid,
 
 void KonnectorManager::add( const UDI& udi,  const QString& resource )
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if ( !plugin ) return;
 
     plugin->add( resource );
@@ -152,7 +152,7 @@ void KonnectorManager::add( const UDI& udi,  const QString& resource )
 
 void KonnectorManager::remove( const UDI& udi, const QString& resource )
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return;
 
     plugin->remove( resource );
@@ -160,7 +160,7 @@ void KonnectorManager::remove( const UDI& udi, const QString& resource )
 
 QStringList KonnectorManager::resources( const UDI& udi) const
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return QStringList();
 
     return plugin->resources();
@@ -168,7 +168,7 @@ QStringList KonnectorManager::resources( const UDI& udi) const
 
 void KonnectorManager::download( const UDI& udi, const QString& resource )
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return;
 
     plugin->download( resource );
@@ -176,7 +176,7 @@ void KonnectorManager::download( const UDI& udi, const QString& resource )
 
 bool KonnectorManager::isConnected( const UDI& udi ) const
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return false;
 
     return plugin->isConnected();
@@ -184,7 +184,7 @@ bool KonnectorManager::isConnected( const UDI& udi ) const
 
 bool KonnectorManager::connectDevice( const UDI& udi )
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return false;
 
     return plugin->connectDevice();
@@ -192,7 +192,7 @@ bool KonnectorManager::connectDevice( const UDI& udi )
 
 bool KonnectorManager::disconnectDevice( const UDI& udi )
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return false;
 
     return plugin->disconnectDevice();
@@ -200,7 +200,7 @@ bool KonnectorManager::disconnectDevice( const UDI& udi )
 
 bool KonnectorManager::startSync( const UDI& udi)
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return false;
 
     return plugin->startSync();
@@ -208,7 +208,7 @@ bool KonnectorManager::startSync( const UDI& udi)
 
 bool KonnectorManager::startBackup( const UDI& udi, const QString& path )
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return false;
 
     return plugin->startBackup(path);
@@ -216,7 +216,7 @@ bool KonnectorManager::startBackup( const UDI& udi, const QString& path )
 
 bool KonnectorManager::startRestore( const UDI& udi, const QString& path )
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return false;
 
     return plugin->startRestore(path);
@@ -224,7 +224,7 @@ bool KonnectorManager::startRestore( const UDI& udi, const QString& path )
 
 KonnectorInfo KonnectorManager::info( const UDI& udi) const
 {
-    KonnectorPlugin* plugin = pluginByUDI( udi );
+    Konnector* plugin = pluginByUDI( udi );
     if (!plugin) return KonnectorInfo();
 
     return plugin->info();
@@ -258,7 +258,7 @@ const Filter::PtrList KonnectorManager::filters()
 void KonnectorManager::write( const QString& udi, const Syncee::PtrList &lst )
 {
     kdDebug(5201) << "Write now " <<  udi << endl;
-    KonnectorPlugin* plugin =pluginByUDI(udi);
+    Konnector* plugin =pluginByUDI(udi);
     if (!plugin ) {
         kdDebug(5201) << " Did not contain the plugin " << endl;
         emit error( udi, StdError::konnectorDoesNotExist(udi) );
@@ -333,9 +333,9 @@ UDI KonnectorManager::newUDI() const
     return uid;
 }
 
-KonnectorPlugin* KonnectorManager::pluginByUDI( const UDI& udi ) const
+Konnector* KonnectorManager::pluginByUDI( const UDI& udi ) const
 {
-    KonnectorPlugin* plugin = 0;
+    Konnector* plugin = 0;
 
     if ( d->konnectors.contains( udi ) )
         plugin =  d->konnectors[udi];
@@ -369,8 +369,8 @@ void KonnectorManager::slotDownloaded( const UDI& udi, Syncee::PtrList list)
 
 /*
  * FIXME Cornelius take a look here when you want to implement
- * a generic KIO <-> KonnectorPlugin FileBridge
- * The KIO KonnectorPlugin only retrieves data and the Filter
+ * a generic KIO <-> Konnector FileBridge
+ * The KIO Konnector only retrieves data and the Filter
  * filters for example the AddressBook or any other data...
  *
  * FIXME use filters!!!!

@@ -7,7 +7,7 @@
 #include <konnectorplugin.h>
 
 namespace KSync {
-    class QtopiaPlugin : public KonnectorPlugin {
+    class QtopiaPlugin : public Konnector {
         Q_OBJECT
     public:
         QtopiaPlugin( QObject*, const char*,  const QStringList = QStringList() );
