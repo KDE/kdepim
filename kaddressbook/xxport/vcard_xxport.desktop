@@ -1,7 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_vcard_xxport
-Name=KAB VCard XXPort Plugin
+Name=KAB vCard XXPort Plugin
+Name[sv]=Adressbokens vCard-överföringsinsticksprogram
 Comment=Plugin to import and export contacts in vCard format
+Comment[sv]=Insticksprogram för att importera och exportera kontakter med vCard-format
 Type=Service
 ServiceTypes=KAddressBook/XXPort
