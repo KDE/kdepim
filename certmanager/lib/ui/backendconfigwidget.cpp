@@ -61,6 +61,68 @@ struct Kleo::BackendConfigWidget::Private {
   Kleo::CryptPlugFactory * backendFactory;
 };
 
+namespace Kleo {
+  class BackendListViewItem;
+  class ProtocolCheckListItem;
+}
+
+// Toplevel listviewitem for a given backend (e.g. "GpgME", "Kgpg/gpg v2")
+class Kleo::BackendListViewItem : public QListViewItem
+{
+public:
+  BackendListViewItem( KListView* lv, QListViewItem *prev, const CryptoBackend *cryptoBackend )
+    : QListViewItem( lv, prev, cryptoBackend->displayName() ), mCryptoBackend( cryptoBackend )
+    {}
+
+  const CryptoBackend *cryptoBackend() const { return mCryptoBackend; }
+  static const int RTTI = 20001;
+  virtual int rtti() const { return RTTI; }
+private:
+  const CryptoBackend *mCryptoBackend;
+};
+
+
+// Checklist item under a BackendListViewItem
+// (e.g. "GpgME supports protocol OpenPGP")
+class Kleo::ProtocolCheckListItem : public QCheckListItem
+{
+public:
+  enum ProtocolType { OpenPGP, SMIME };
+  ProtocolCheckListItem( BackendListViewItem* blvi,
+                         QListViewItem* prev,
+                         ProtocolType protocolType,
+                         const CryptoBackend::Protocol* protocol ) // can be 0
+    : QCheckListItem( blvi, prev, itemText( protocolType, protocol ),
+                      QCheckListItem::CheckBox ),
+      mProtocol( protocol )
+    {}
+
+  static const int RTTI = 20002;
+  virtual int rtti() const { return RTTI; }
+
+private:
+  // Helper for the constructor.
+  static QString itemText( ProtocolType protocolType, const CryptoBackend::Protocol* protocol ) {
+    // First one is the generic name (OpenPGP, SMIME)
+    QString protoTypeName = protocolType == OpenPGP ? i18n( "OpenPGP" ) : i18n( "S/MIME" );
+    // second one is implementation name (gpg, gpgsm...)
+    QString impName = protocol ? protocol->displayName() : i18n( "failed" );
+    return QString( "%1 (%2)" ).arg( protoTypeName ).arg( impName );
+  }
+
+  const CryptoBackend::Protocol* mProtocol; // can be 0
+};
+
+static const Kleo::CryptoBackend* currentBackend( KListView* listView ) {
+  QListViewItem* curItem = listView->currentItem();
+  if ( !curItem ) // can't happen
+    return 0;
+  if ( curItem->rtti() == Kleo::ProtocolCheckListItem::RTTI )
+    curItem = curItem->parent();
+  if ( curItem && curItem->rtti() == Kleo::BackendListViewItem::RTTI )
+    return static_cast<Kleo::BackendListViewItem *>( curItem )->cryptoBackend();
+  return 0;
+}
 
 Kleo::BackendConfigWidget::BackendConfigWidget( CryptPlugFactory * factory, QWidget * parent, const char * name, WFlags f )
   : QWidget( parent, name, f ), d( 0 )
@@ -113,32 +175,26 @@ void Kleo::BackendConfigWidget::load() {
   unsigned int backendCount = 0;
 
   // populate the plugin list:
-  QListViewItem * top = 0;
+  BackendListViewItem * top = 0;
   for ( unsigned int i = 0 ; const CryptoBackend * b = d->backendFactory->backend( i ) ; ++i ) {
     const CryptoBackend::Protocol * openpgp = b->openpgp();
     const CryptoBackend::Protocol * smime = b->smime();
 
-    top = new QListViewItem( d->listView, top, b->displayName() );
-    QCheckListItem * last = 0;
+    top = new Kleo::BackendListViewItem( d->listView, top, b );
+    ProtocolCheckListItem * last = 0;
     if ( openpgp ) {
-      last = new QCheckListItem( top, last,
-				 i18n("OpenPGP (%1)").arg( openpgp->displayName() ),
-				 QCheckListItem::CheckBox );
+      last = new ProtocolCheckListItem( top, last, ProtocolCheckListItem::OpenPGP, openpgp );
       last->setOn( openpgp == d->backendFactory->openpgp() );
     } else if ( b->supportsOpenPGP() ) {
-      last = new QCheckListItem( top, last, i18n("OpenPGP (failed)"),
-				 QCheckListItem::CheckBox );
+      last = new ProtocolCheckListItem( top, last, ProtocolCheckListItem::OpenPGP, 0 );
       last->setOn( false );
       last->setEnabled( false );
     }
     if ( smime ) {
-      last = new QCheckListItem( top, last,
-				 i18n("S/MIME (%1)").arg( smime->displayName() ),
-				 QCheckListItem::CheckBox );
+      last = new ProtocolCheckListItem( top, last, ProtocolCheckListItem::SMIME, smime );
       last->setOn( smime == d->backendFactory->smime() );
     } else if ( b->supportsSMIME() ) {
-      last = new QCheckListItem( top, last, i18n("S/MIME (failed)"),
-				 QCheckListItem::CheckBox );
+      last = new ProtocolCheckListItem( top, last, ProtocolCheckListItem::SMIME, 0 );
       last->setOn( false );
       last->setEnabled( false );
     }
@@ -155,8 +211,9 @@ void Kleo::BackendConfigWidget::load() {
   slotSelectionChanged( d->listView->firstChild() );
 }
 
-void Kleo::BackendConfigWidget::slotSelectionChanged( QListViewItem * item ) {
-  d->configureButton->setEnabled( item );
+void Kleo::BackendConfigWidget::slotSelectionChanged( QListViewItem * ) {
+  const CryptoBackend* backend = currentBackend( d->listView );
+  d->configureButton->setEnabled( backend && backend->config() );
 }
 
 
@@ -171,11 +228,12 @@ void Kleo::BackendConfigWidget::slotRescanButtonClicked() {
 }
 
 void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
-  if ( d->backendFactory->config() ) {
-    Kleo::CryptoConfigDialog dlg( d->backendFactory->config() );
+  const CryptoBackend* backend = currentBackend( d->listView );
+  if ( backend && backend->config() ) {
+    Kleo::CryptoConfigDialog dlg( backend->config() );
     dlg.exec();
   }
-  else
+  else // shouldn't happen, button is disabled
     kdWarning(5150) << "Can't configure backend, no config object available" << endl;
 }
 
