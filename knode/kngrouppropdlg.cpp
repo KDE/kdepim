@@ -98,11 +98,12 @@ KNGroupPropDlg::~KNGroupPropDlg()
 
 
 
-void KNGroupPropDlg::apply()
+void KNGroupPropDlg::slotOk()
 {
 	if( !(grp->name()==nick->text()) ) {
 		grp->setName(nick->text());
 		nChanged=true;
 	}
 	uw->applyData();	
+	accept();
 }

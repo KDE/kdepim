@@ -72,7 +72,6 @@ int main(int argc, char* argv[])
     }
   } else {
 	 	KNodeApp* knode = new KNodeApp;
-	 	QObject::connect(&app, SIGNAL(saveYourself()), knode, SLOT(slotSaveYourself()));
    	knode->show();
   }
 

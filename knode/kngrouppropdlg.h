@@ -31,15 +31,17 @@ class KNGroupPropDlg : public KDialogBase  {
 		KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
 		~KNGroupPropDlg();
 		
-		void apply();
 		bool nickHasChanged()	{ return nChanged; }	
 		
 	protected:
-	
 		KNGroup *grp;
 		bool nChanged;
 		KNUserWidget *uw;
 		QLineEdit *nick;
+		
+	protected slots:
+	  void slotOk();
+	
 };
 
 #endif

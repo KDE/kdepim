@@ -294,7 +294,7 @@ void KNodeApp::initStatusBar()
 
 void KNodeApp::initActions()
 {
-  KStdAction::quit(this, SLOT(slotFileQuit()),actionCollection());
+  KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
 
   acc=new KAccel(this);
   view->actReadThrough->plugAccel(acc);
@@ -418,13 +418,6 @@ void KNodeApp::saveOptions()
 //================================ SLOTS =================================
 
 
-void KNodeApp::slotFileQuit()
-{
-  cleanup();
-  kapp->quit();
-}
-
-  	
 void KNodeApp::slotToggleShowAllHdrs()
 {
   KNArticleWidget::toggleFullHeaders();
@@ -642,17 +635,12 @@ void KNodeApp::cleanup()
 
 
 
-bool KNodeApp::queryExit()
-{
-	cleanup();	
-	return true;
-}
-
-
-
 bool KNodeApp::queryClose()
 {
-	return SAManager->closeComposeWindows();
+	if (!SAManager->closeComposeWindows())
+	  return false;	
+  cleanup();	
+	return true;
 }
 
 

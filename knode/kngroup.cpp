@@ -762,7 +762,6 @@ void KNGroup::showProperties()
 	KNGroupPropDlg *d=new KNGroupPropDlg(this);
 	
 	if(d->exec()) {
-		d->apply();
 		if(d->nickHasChanged()) {
 			KNCollectionViewItem *p=p_arent->listItem();
 			QListView *v=l_istItem->listView();

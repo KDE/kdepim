@@ -95,7 +95,6 @@ class KNodeApp : public KTMainWindow
   	 	
   	//exit
     void cleanup();
-    bool queryExit();
     bool queryClose();
 
 	  //actions
@@ -119,13 +118,9 @@ class KNodeApp : public KTMainWindow
     KNSavedArticleManager *SAManager;
     KNFilterManager *FiManager;
 
-	public slots:
-  	void slotSaveYourself()				{ cleanup(); }
-
   protected slots:
 
   	//action-slots	  	
-  	void slotFileQuit();
   	void slotToggleShowAllHdrs();
   	void slotCancel();
   	void slotSupersede();
