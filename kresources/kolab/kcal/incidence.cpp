@@ -562,8 +562,8 @@ void Incidence::setFields( const KCal::Incidence* incidence )
   }
 
   Email org;
-  KPIM::getNameAndMail( incidence->organizer().fullName(), org.displayName,
-                        org.smtpAddress );
+  org.displayName = incidence->organizer().name();
+  org.smtpAddress = incidence->organizer().email();
   setOrganizer( org );
 
   // Attendees:
