@@ -27,9 +27,13 @@
 void *
 memrchr (const void *block, int c, size_t size)
 {
-  void *p;
+  char *p;
+  unsigned char l;
 
-  for (p = block + size; p != block; p --)
+  l = c;
+  p = ((char *)block) + size;
+
+  for ( ; p != block; p --)
     if (*p == c)
       return p;
   return 0;
