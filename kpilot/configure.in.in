@@ -22,7 +22,7 @@ dnl and whatnot stuff.
 dnl
 HAVE_PISOCK=0
 
-if [ -z "$kde_extra_includes" ] ; then
+if test -z "$kde_extra_includes" ; then
 	# do nothing to CPPFLAGS
 else
 	kpilot_save_cflags="$CPPFLAGS"
@@ -89,7 +89,7 @@ else
 	AC_SUBST(LIBPISOCK)
 fi
 
-if [ -z "$kde_extra_includes" ] ; then
+if test -z "$kde_extra_includes" ; then
 	# do nothing to CPPFLAGS
 else
 	CPPFLAGS="$kpilot_save_cflags"
