@@ -1,11 +1,25 @@
-kdepim (4:2.9.9+cvs.20020110-1) unstable; urgency=low
+kdepim (4:3.0.6-1) unstable; urgency=low
 
-  * Update to HEAD, at the request of the maintainer (Adrian de Groot).
-    - The version in KDE_2_2_BRANCH is buggy and no longer being maintained,
-      so I stepped into sync with HEAD (which will be released with KDE3) at
-      [ade]'s request. Enjoy.
+  * New upstream from HEAD.
 
- -- Daniel Stone <daniel@sfarc.net>  Fri, 11 Jan 2002 09:47:46 +1100
+ -- Christopher L Cheney <ccheney@debian.org>  Mon, 22 Jul 2002 12:00:00 +0100
+ 
+kdepim (4:3.0.2-1) unstable; urgency=low
+
+  * New upstream.
+  * Redo debian dir.
+
+ -- Christopher L Cheney <ccheney@debian.org>  Mon, 17 Jun 2002 23:00:00 -0500
+
+kdepim (4:2.2.2-5) unstable; urgency=HIGH
+
+  * Change Maintainer to Chris.
+  * Change || in Build-Deps to |. (closes: #130183)
+  * Apply silly fix for silly PowerPC to fix a silly bug because it stupidly
+    doesn't automatically link in -lgcc. Thanks to Kevin Puetz.
+  * Urgency high because it fixes one real and one potental RC.
+
+ -- Daniel Stone <daniel@sfarc.net>  Wed, 27 Feb 2002 17:18:47 +1100
 
 kdepim (4:2.2.2-4) unstable; urgency=low
 
