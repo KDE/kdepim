@@ -19,13 +19,12 @@ class Calendar;
 class ICalFormat;
 
 /**
-  This class provides an encapsulation of a scheduling message. It asscisates an
-  event with a method and status information. This class is used by the
+  This class provides an encapsulation of a scheduling message. It associates an
+  incidence with a method and status information. This class is used by the
   Scheduler class.
 
   @short A Scheduling message
   @author Cornelius Schumacher
-  @version $Revision$
 */
 class ScheduleMessage {
   public:
@@ -38,11 +37,11 @@ class ScheduleMessage {
     
     /** Return event associated with this message. */
     Incidence *event() { return mEvent; }
-    /** Return iTIP method associated with this message */
+    /** Return iTIP method associated with this message. */
     int method() { return mMethod; }
-    /** Return status of this message */
+    /** Return status of this message. */
     icalclass status() { return mStatus; }
-    /** Return error message if there is any */
+    /** Return error message if there is any. */
     QString error() { return mError; }
 
   private:
@@ -56,17 +55,14 @@ class ScheduleMessage {
   This class provides an encapsulation of iTIP transactions. It is an abstract
   base class for inheritance by implementations of the iTIP scheme like iMIP or
   iRIP.
-  
-  @short iTIP interface
-  @author Cornelius Schumacher
-  @version $Revision$
 */
 class Scheduler {
   public:
+    /** iTIP methods. */
     enum Method { Publish,Request,Refresh,Cancel,Add,Reply,Counter,
                   Declinecounter,NoMethod };
   
-    /** Create scheduler for calendar specified as argument */
+    /** Create scheduler for calendar specified as argument. */
     Scheduler(Calendar *calendar);
     virtual ~Scheduler();
     

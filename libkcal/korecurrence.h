@@ -13,6 +13,9 @@ namespace KCal {
 
 class Incidence;
 
+/**
+  This class represents a recurrence rule for a calendar incidence.
+*/
 class KORecurrence {
   public:
 
@@ -31,8 +34,11 @@ class KORecurrence {
     KORecurrence(Incidence *parent);
     ~KORecurrence();
 
+    /** Set start of recurrence. */
     void setRecurStart(QDateTime start) { mRecurStart = start; }
+    /** Set if recurrence is read-only or can be changed. */
     void setRecurReadOnly(bool readOnly ) { mRecurReadOnly = readOnly; }
+    /** Set number of exception dates. */
     void setRecurExDatesCount(int count ) { mRecurExDatesCount = count; }
 
     /** returns the event's recurrence status.  See the enumeration at the top
@@ -54,7 +60,9 @@ class KORecurrence {
      */
     void setDaily(int _rFreq, const QDate &_rEndDate);
 
+    /** Return frequency of recurrence. */
     int frequency() const;
+    /** Return the number of recurrence instances which occur before the recurrence ends. */
     int duration() const;
     /**
      * return the date on which recurrences end.  Only set currently
@@ -66,9 +74,12 @@ class KORecurrence {
     /** Returns a string representing the recurrence end date in the format
      according to the users lcoale settings. */
     QString endDateStr(bool shortfmt=true) const;
+    /** Return week day mask. */
     const QBitArray &days() const;
     struct rMonthPos;
+    /** Return list of day positions in months. */
     const QList<rMonthPos> &monthPositions() const;
+    /** Return list of day numbers of a  month. */
     const QList<int> &monthDays() const;
   
     /** set an event to recur weekly.
@@ -105,9 +116,13 @@ class KORecurrence {
     /** add a position the the recursMonthlyDay list. */
     void addMonthlyDay(short _rDay);
   
-    void setYearly(int type, int _rFreq, int _rDuration);
-    void setYearly(int type, int _rFreq, const QDate &_rEndDate);
+    /** Set an event to recur yearly ending after \a duration recurrences. */
+    void setYearly(int type, int freq, int duration);
+    /** Set an event to recur yearly ending at \a endDate. */
+    void setYearly(int type, int freq, const QDate &endDate);
+    /** Add position of day in year. */
     void addYearlyNum(short _rNum);
+    /** Return positions of days in year. */
     const QList<int> &yearNums() const;
   
   protected:

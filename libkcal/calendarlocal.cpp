@@ -415,6 +415,7 @@ void CalendarLocal::updateEvent(Incidence *incidence)
   // or internally in the Event itself when certain things change.
   // need to verify with ical documentation.
 
+#if 0
   // handle sending the event to those attendees that need it.
   // mostly broken right now.
   if (incidence->attendeeCount()) {
@@ -429,6 +430,7 @@ void CalendarLocal::updateEvent(Incidence *incidence)
       }
     }
   }
+#endif
 
   Event *anEvent = dynamic_cast<Event *>(incidence);
   if (!anEvent) {

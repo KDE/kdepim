@@ -116,14 +116,3 @@ QString Attendee::roleStr() const
   }
   
 }
-
-void Attendee::setRSVP(const char *r)
-{
-  QString s;
-  s = r;
-  s = s.upper();
-  if (s == "TRUE")
-    mRSVP = TRUE;
-  else
-    mRSVP = FALSE;
-}

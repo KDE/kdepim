@@ -9,6 +9,9 @@
 
 namespace KCal {
 
+/**
+  This class provides a Journal in the sense of RFC2445.
+*/
 class Journal : public Incidence
 {
   public:

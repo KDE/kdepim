@@ -29,10 +29,6 @@ class CalFilter;
   * This is an abstract base class defining the interface to a calendar. It is
   * implemented by subclasses like @see CalendarLocal, which use different
   * methods to store and access the data.
-  *
-  * @short class providing an interface to a calendar
-  * @author Preston Brown
-  * @version $Revision$
   */
 class Calendar : public QObject {
     Q_OBJECT
@@ -163,11 +159,13 @@ class Calendar : public QObject {
     /** Return list of all Journal entries */
     virtual QList<Journal> journalList() = 0;
 
+    /** Add an incidence to calendar. */
     void addIncidence(Incidence *);
   
     /** Enable/Disable dialogs shown by calendar class */  
     void showDialogs(bool d);
 
+    /** Set which holidays the calendar uses. @param h code of holiday (usually a country code) */
     void setHoliday(const QString &h) { mHoliday = h; }
   
   signals:

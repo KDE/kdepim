@@ -58,8 +58,10 @@ class ICalFormat : public CalFormat {
     /** pastes the event and returns a pointer to the new event pasted. */
     Event *pasteEvent(const QDate *, const QTime *newTime = 0L);
     
-    QString createScheduleMessage(Event *,Scheduler::Method);
-    ScheduleMessage *parseScheduleMessage(const QString &);
+    /** Create a scheduling message for event \a e using method \m */
+    QString createScheduleMessage(Event *e,Scheduler::Method m);
+    /** Parse scheduling message provided as string \s */
+    ScheduleMessage *parseScheduleMessage(const QString &s);
     
   protected:
     bool populate(icalfileset *fs);

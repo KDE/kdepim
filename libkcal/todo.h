@@ -9,13 +9,14 @@
 
 namespace KCal {
 
+/**
+  This class provides a Todo in the sense of RFC2445.
+*/
 class Todo : public Incidence
 {
   public:
     Todo();
     ~Todo();
-
-    bool accept(IncidenceVisitor &v) { return v.visit(this); }
 
     /** for setting the todo's due date/time with a QDateTime. */
     void setDtDue(const QDateTime &dtDue);
@@ -68,6 +69,7 @@ class Todo : public Incidence
     bool hasCompletedDate() const;
     
   private:
+    bool accept(IncidenceVisitor &v) { return v.visit(this); }
 
     QDateTime mDtDue;                     // due date of todo
 

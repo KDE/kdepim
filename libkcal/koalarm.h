@@ -9,13 +9,18 @@ namespace KCal {
 
 class Incidence;
 
+/**
+    This class represents an alarm notification. */
 class KOAlarm {
   public:
     /** constructs a new event with variables initialized to "sane" values. */
     KOAlarm(Incidence *parent);
+    /** Destruct KOAlarm object. */
     ~KOAlarm();
 
+    /** Set time the alarm should occur on. */
     void setAlarmStart(QDateTime start) { mAlarmStart = start; }
+    /** Set, if the alarm is read-only or can be changed. */
     void setAlarmReadOnly(bool readOnly ) { mAlarmReadOnly = readOnly; }
 
     /** set the event to have this file as the noise for the alarm. */

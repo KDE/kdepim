@@ -20,14 +20,13 @@ class Calendar;
   This is the base class for calendar formats. It provides an interface for the
   generation/interpretation of a textual representation of a calendar.
 
-  @short class providing in interface to a calendar format
-  @author Cornelius Schumacher
-  @version $Revision$
+  @short Class providing in interface to a calendar format
 */
 class CalFormat {
   public:
     /** Constructs a new format for the calendar given as argument. */
     CalFormat(Calendar *);
+    /** Destruct calendar format. */
     virtual ~CalFormat();
 
     /** Associate a widget with this format */
@@ -60,6 +59,7 @@ class CalFormat {
     /** pastes the event and returns a pointer to the new event pasted. */
     virtual Event *pasteEvent(const QDate *, const QTime *newTime = 0L) = 0;
     
+    /** /deprecated */
     void showDialogs(bool);
 
     /** Clear exception status of this format object */
@@ -70,6 +70,7 @@ class CalFormat {
     */
     KOErrorFormat *exception();
 
+    /** Create a unique id string. */
     static QString createUniqueId();
   
   protected:  

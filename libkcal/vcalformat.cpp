@@ -412,16 +412,16 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
     
     for (; ai.current(); ++ai) {
       curAttendee = ai.current();
-      if (!curAttendee->getEmail().isEmpty() && 
-	  !curAttendee->getName().isEmpty())
-        tmpStr = "MAILTO:" + curAttendee->getName() + " <" +
-                 curAttendee->getEmail() + ">";
-      else if (curAttendee->getName().isEmpty())
-        tmpStr = "MAILTO: " + curAttendee->getEmail();
-      else if (curAttendee->getEmail().isEmpty())
-        tmpStr = "MAILTO: " + curAttendee->getName();
-      else if (curAttendee->getName().isEmpty() && 
-	       curAttendee->getEmail().isEmpty())
+      if (!curAttendee->email().isEmpty() && 
+	  !curAttendee->name().isEmpty())
+        tmpStr = "MAILTO:" + curAttendee->name() + " <" +
+                 curAttendee->email() + ">";
+      else if (curAttendee->name().isEmpty())
+        tmpStr = "MAILTO: " + curAttendee->email();
+      else if (curAttendee->email().isEmpty())
+        tmpStr = "MAILTO: " + curAttendee->name();
+      else if (curAttendee->name().isEmpty() && 
+	       curAttendee->email().isEmpty())
 	kdDebug() << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vtodo, VCAttendeeProp, (const char *)tmpStr.utf8());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");;
@@ -540,18 +540,19 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     QListIterator<Attendee> ai(al);
     Attendee *curAttendee;
     
+    // TODO: Put this functionality into Attendee class
     for (; ai.current(); ++ai) {
       curAttendee = ai.current();
-      if (!curAttendee->getEmail().isEmpty() && 
-	  !curAttendee->getName().isEmpty())
-        tmpStr = "MAILTO:" + curAttendee->getName() + " <" +
-                 curAttendee->getEmail() + ">";
-      else if (curAttendee->getName().isEmpty())
-        tmpStr = "MAILTO: " + curAttendee->getEmail();
-      else if (curAttendee->getEmail().isEmpty())
-        tmpStr = "MAILTO: " + curAttendee->getName();
-      else if (curAttendee->getName().isEmpty() && 
-	       curAttendee->getEmail().isEmpty())
+      if (!curAttendee->email().isEmpty() && 
+	  !curAttendee->name().isEmpty())
+        tmpStr = "MAILTO:" + curAttendee->name() + " <" +
+                 curAttendee->email() + ">";
+      else if (curAttendee->name().isEmpty())
+        tmpStr = "MAILTO: " + curAttendee->email();
+      else if (curAttendee->email().isEmpty())
+        tmpStr = "MAILTO: " + curAttendee->name();
+      else if (curAttendee->name().isEmpty() && 
+	       curAttendee->email().isEmpty())
 	kdDebug() << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vevent, VCAttendeeProp, (const char *)tmpStr.utf8());
       addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");;

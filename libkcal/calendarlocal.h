@@ -14,14 +14,8 @@
 namespace KCal {
 
 /**
-  * This is the main "calendar" object class for KOrganizer.  It holds
-  * information like all appointments/events, user information, etc. etc.
-  * one calendar is associated with each TopWidget (@see topwidget.h).
-  *
-  * @short class providing in interface to a calendar
-  * @author Preston Brown
-  * @version $Revision$
-  */
+    This class provides a calendar stored as a local file.
+*/
 class CalendarLocal : public Calendar {
     Q_OBJECT
   public:
@@ -29,13 +23,14 @@ class CalendarLocal : public Calendar {
     CalendarLocal();
     virtual ~CalendarLocal();
   
-    /** loads a calendar on disk in vCalendar format into the current calendar.
-     * any information already present is lost. Returns TRUE if successful,
-     * else returns FALSE.
-     * @param fileName the name of the calendar on disk.
-     */
+    /**
+      loads a calendar on disk in vCalendar or iCalendar format into the current calendar.
+      any information already present is lost. Returns true if successful,
+      else returns false.
+      @param fileName the name of the calendar on disk.
+    */
     bool load(const QString &fileName);
-    /** writes out the calendar to disk in vCalendar format. Returns true if
+    /** writes out the calendar to disk in the specified \a format. Returns true if
      * successful and false on error.
      * @param fileName the name of the file
      */
@@ -43,6 +38,7 @@ class CalendarLocal : public Calendar {
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
   
+    /** Add Event to calendar. */
     void addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
@@ -52,6 +48,7 @@ class CalendarLocal : public Calendar {
     /** builds and then returns a list of all events that match for the
      * date specified. useful for dayView, etc. etc. */
     QList<Event> eventsForDate(const QDate &date, bool sorted = FALSE);
+    /** Get events for date \a qdt. */
     QList<Event> eventsForDate(const QDateTime &qdt);
     /** Get events in a range of dates. If inclusive is set to true, only events
      * are returned, which are completely included in the range. */
@@ -61,9 +58,9 @@ class CalendarLocal : public Calendar {
     QList<Event> getAllEvents();
   
     /*
-     * returns a QString with the text of the holiday (if any) that falls
-     * on the specified date.
-     */
+      Returns a QString with the text of the holiday (if any) that falls
+      on the specified date.
+    */
     QString getHolidayForDate(const QDate &qd);
     
     /** returns the number of events that are present on the specified date. */

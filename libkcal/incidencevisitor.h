@@ -20,13 +20,27 @@ class Journal;
 class IncidenceVisitor
 {
   public:
+    /** Destruct IncidenceVisitor */
     virtual ~IncidenceVisitor() {}
 
+    /**
+      Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
+      on an Event object.
+    */
     virtual bool visit(Event *) { return false; }
+    /**
+      Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
+      on an Todo object.
+    */
     virtual bool visit(Todo *) { return false; }
+    /**
+      Reimplement this function in your concrete subclass of IncidenceVisitor to perform actions
+      on an Journal object.
+    */
     virtual bool visit(Journal *) { return false; }
     
   protected:
+    /** Constructor is protected to prevent direct creation of visitor base class. */
     IncidenceVisitor() {}
 };
 

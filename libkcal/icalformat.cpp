@@ -660,16 +660,16 @@ void ICalFormat::writeIncidence(icalcomponent *parent,Incidence *incidence)
     QString attendee;
     for (; ai.current(); ++ai) {
       curAttendee = ai.current();
-      if (!curAttendee->getEmail().isEmpty() &&
-          !curAttendee->getName().isEmpty()) {
-        attendee = curAttendee->getName() + " <" + curAttendee->getEmail() +
+      if (!curAttendee->email().isEmpty() &&
+          !curAttendee->name().isEmpty()) {
+        attendee = curAttendee->name() + " <" + curAttendee->email() +
                    ">";
-      } else if (curAttendee->getName().isEmpty()) {
-        attendee = curAttendee->getEmail();
-      } else if (curAttendee->getEmail().isEmpty()) {
-        attendee = curAttendee->getName();
-      } else if (curAttendee->getName().isEmpty() && 
-	         curAttendee->getEmail().isEmpty()) {
+      } else if (curAttendee->name().isEmpty()) {
+        attendee = curAttendee->email();
+      } else if (curAttendee->email().isEmpty()) {
+        attendee = curAttendee->name();
+      } else if (curAttendee->name().isEmpty() && 
+	         curAttendee->email().isEmpty()) {
         attendee = "";
 	kdDebug() << "warning! this Event has an attendee w/o name or email!"
                   << endl;

@@ -12,12 +12,17 @@
 
 namespace KCal {
 
-/** KOrganizer exceptions base class */
+/**
+  KOrganizer exceptions base class. This is currently used as a fancy kind of error code not as an
+  C++ exception.
+*/
 class KOException {
   public:
+    /** Construct exception with descriptive message \a message. */
     KOException(const QString &message=QString::null);
     virtual ~KOException();
-    
+
+    /** Return descriptive message of exception. */    
     virtual QString message();
     
   protected:
@@ -31,9 +36,12 @@ class KOErrorFormat : public KOException {
                            CalVersionUnknown,
                            Restriction };
   
+    /** Create format error exception. */
     KOErrorFormat(ErrorCodeFormat code,const QString &message = QString::null);
     
+    /** Return format error message. */
     QString message();
+    /** Return format error code. */
     ErrorCodeFormat errorCode();
     
   private:

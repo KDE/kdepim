@@ -36,6 +36,7 @@
 
 extern "C" {
   char *parse_holidays(const char *, int year, short force);
+  /** \internal */
   struct holiday {
     char            *string;        /* name of holiday, 0=not a holiday */
     unsigned short  dup;            /* reference count */
@@ -45,8 +46,10 @@ extern "C" {
 
 using namespace KCal;
 
+/** \internal */
 class AddIncidenceVisitor : public IncidenceVisitor {
   public:
+    /** Add incidence to calendar \a calendar. */
     AddIncidenceVisitor(Calendar *calendar) : mCalendar(calendar) {}
     
     bool visit(Event *e) { mCalendar->addEvent(e); return true; }

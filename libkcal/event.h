@@ -9,14 +9,15 @@
 
 namespace KCal {
 
+/**
+  This class provides an Event in the sense of RFC2445.
+*/
 class Event : public Incidence
 {
   public:
     Event();
     ~Event();
-    
-    bool accept(IncidenceVisitor &v) { return v.visit(this); }
-
+  
     /** for setting an event's ending date/time with a QDateTime. */
     void setDtEnd(const QDateTime &dtEnd);
     /** returns an event's ending date/time as a QDateTime. */
@@ -31,6 +32,7 @@ class Event : public Incidence
      to the users locale settings */
     QString dtEndStr() const;
 
+    /** Return true if the event spans multiple days, otherwise return false. */
     bool isMultiDay() const;
 
     /** set the event's time transparency level. */
@@ -39,6 +41,8 @@ class Event : public Incidence
     int transparency() const;
 
   private:
+    bool accept(IncidenceVisitor &v) { return v.visit(this); }
+
     QDateTime mDtEnd;
     int mTransparency;
 };

@@ -13,10 +13,16 @@
 
 namespace KCal {
 
+/**
+  Filter for calendar objects.
+*/
 class CalFilter {
   public:
+    /** Construct filter. */
     CalFilter();
+    /** Construct filter with name */
     CalFilter(const QString &name);
+    /** Destruct filter. */
     ~CalFilter();
     
     /**

@@ -15,6 +15,9 @@
 
 namespace KCal {
 
+/**
+  This class provides the base class common to all calendar components.
+*/
 class Incidence : public QObject
 {
     Q_OBJECT
@@ -25,11 +28,16 @@ class Incidence : public QObject
     Incidence();
     ~Incidence();
 
+    /**
+      Accept IncidenceVisitor. This function has to be overridden by all child classes.
+    */
     virtual bool accept(IncidenceVisitor &) { return false; }
     
-    /** Recreate event. The event is made a new unique event, but already stored
-    event information is preserved. Sets uniquie id, creation date, last
-    modification date and revision number. */
+    /**
+      Recreate event. The event is made a new unique event, but already stored
+      event information is preserved. Sets uniquie id, creation date, last
+      modification date and revision number.
+    */
     void recreate();
     
     /** sets the event to be read only or not */
@@ -37,7 +45,9 @@ class Incidence : public QObject
     /** returns the event's read only status */
     bool isReadOnly() const { return mReadOnly; }
 
+    /** Sets the time the incidence was last modified. */
     void setLastModified(const QDateTime &lm);
+    /** Return the time the incidence was last modified. */
     const QDateTime &lastModified() const;
 
     /** set creation date */
@@ -79,14 +89,15 @@ class Incidence : public QObject
     /** sets the event's float value. */
     void setFloats(bool f);
 
-    /** attendee stuff */
+    /** Add Attendee to this incidence. */
     void addAttendee(Attendee *a);
 //    void removeAttendee(Attendee *a);
 //    void removeAttendee(const char *n);
+    /** Remove all Attendees. */
     void clearAttendees();
-//    Attendee *getAttendee(const char *n) const;
-    // TODO: Remove get from function name
+    /** Return list of attendees. */
     const QList<Attendee> &attendees() const { return mAttendees; };
+    /** Return number of attendees. */
     int attendeeCount() const { return mAttendees.count(); };
 
     /** sets the event's lengthy description. */
@@ -132,6 +143,7 @@ class Incidence : public QObject
     /** sets the list of dates which are exceptions to the recurrence rule */
     void setExDates(const QDateList &_exDates);
     void setExDates(const char *dates);
+    /** Add a date to the list of exfeptions of the recurrence rule. */
     void addExDate(const QDate &date);
 
     /** returns true if there is an exception for this date in the recurrence
@@ -155,18 +167,23 @@ class Incidence : public QObject
     /** return human-readable name of secrecy class */
     static QString secrecyName(int);
 
-    /** pilot syncronization routines */
+    /** pilot syncronization states */
     enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
+    /** Set Pilot Id. */
     void setPilotId(int id);
+    /** Return Pilot Id. */
     int pilotId() const;
     
+    /** Set synchronisation satus. */
     void setSyncStatus(int stat);
+    /** Return synchronisation satus. */
     int syncStatus() const;
 
     /** returns TRUE if the date specified is one on which the event will
      * recur. */
     bool recursOn(const QDate &qd) const;
 
+    /** Emit an eventUpdated() signal. */
     void emitEventUpdated(Incidence *i) { emit eventUpdated(i); }
 
     // VEVENT and VTODO, but not VJOURNAL (move to EventBase class?):
@@ -181,10 +198,13 @@ class Incidence : public QObject
     /** get the event's priority */
     int priority() const;
 
+    /** Return the alarm object associated with this incidence or 0 if there is none. */
     KOAlarm *alarm() const;
+    /** Return the recurrence rule associated with this incidence or 0 if there is none. */
     KORecurrence *recurrence() const;
 
   signals:
+    /** Emitted by the memebr functions, when the Incidence has been updated. */
     void eventUpdated(Incidence *);
 
   protected:
