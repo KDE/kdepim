@@ -256,7 +256,6 @@ collectNotes()
 		saveLocation( "appdata", "notes/" );
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname << ": Notes dir = " << str_notedir << endl;
 	}
@@ -273,7 +272,6 @@ collectNotes()
 		int version ;
 
 #ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Reading note " << *i << endl;
 		}
@@ -320,7 +318,6 @@ findID(NotesMap& m,unsigned long id)
 		if (r.pilotID()==id)
 		{
 #ifdef DEBUG
-			if (debug_level & SYNC_TEDIOUS)
 			{
 				kdDebug() << fname
 					<< ": Found ID "
@@ -337,7 +334,6 @@ findID(NotesMap& m,unsigned long id)
 	delete i;
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": ID "
@@ -375,7 +371,6 @@ KNotesConduit::readConfig()
 	getDebugLevel(c);
 	fDeleteNoteForMemo = c.readBoolEntry("DeleteNoteForMemo",false);
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
 			<< ": Settings "
@@ -522,7 +517,6 @@ bool KNotesConduit::newMemo(NotesMap& m,unsigned long id,PilotMemo *memo)
 		saveLocation( "appdata", "notes/" );
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname << ": Notes dir = " << str_notedir << endl;
 	}
@@ -547,7 +541,6 @@ bool KNotesConduit::newMemo(NotesMap& m,unsigned long id,PilotMemo *memo)
 	QString dataName = "." + noteName + "_data" ;
 	bool success = false;
 #ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname
 			<< ": Creating note "
@@ -607,7 +600,6 @@ bool KNotesConduit::changeMemo(NotesMap& m,NotesMap::Iterator i,PilotMemo *memo)
 	(void) m;
 	NotesSettings n = *i;
 #ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname
 			<< ": Updating note "
@@ -621,7 +613,6 @@ bool KNotesConduit::changeMemo(NotesMap& m,NotesMap::Iterator i,PilotMemo *memo)
 	{
 		file.writeBlock(memo->text(),strlen(memo->text()));
 #ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
 		{
 			kdDebug() << fname
 				<< ": Succesfully updated memo "
@@ -646,7 +637,6 @@ bool KNotesConduit::deleteNote(NotesMap& m,NotesMap::Iterator *i,
 	if (!i)
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname
 				<< ": Unknown Pilot memo "
@@ -659,7 +649,6 @@ bool KNotesConduit::deleteNote(NotesMap& m,NotesMap::Iterator *i,
 	}
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		if (fDeleteNoteForMemo)
 		{
@@ -683,7 +672,6 @@ bool KNotesConduit::deleteNote(NotesMap& m,NotesMap::Iterator *i,
 	NotesSettings n = *(*i);
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname
 			<< ": Deleting note "
@@ -860,6 +848,10 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.16  2001/03/27 11:10:38  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.15  2001/03/09 09:46:14  adridg
 // Large-scale #include cleanup
 //

@@ -155,7 +155,6 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 				memo = new PilotMemo(pilotRec);
 				fMemoList.append(memo);
 #ifdef DEBUG
-				if (debug_level & UI_TEDIOUS)
 				{
 					kdDebug() << fname <<
 						": Added memo "
@@ -167,7 +166,6 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 			else
 			{
 #ifdef DEBUG
-				if (debug_level&UI_TEDIOUS)
 				{
 					kdDebug() << fname <<
 						": Skipped secret record " <<
@@ -179,7 +177,6 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 		else
 		{
 #ifdef DEBUG
-			if (debug_level&UI_TEDIOUS)
 			{
 				kdDebug() << fname << 
 					": Skipped deleted record " <<
@@ -389,10 +386,9 @@ MemoWidget::slotDeleteMemo()
 				      i18n("Delete Memo?")) == KMessageBox::No)
 	{
 #ifdef DEBUG
-		if (debug_level)
 		{
 			kdDebug() << fname <<
-				": Used decided not to delete memo.\n" ;
+				": User decided not to delete memo.\n" ;
 		}
 #endif
 		return;
@@ -450,7 +446,6 @@ MemoWidget::updateWidget()
 			fListBox->insertItem(p);
 
 #ifdef DEBUG
-			if (debug_level & UI_TEDIOUS)
 			{
 				kdDebug() << fname << ": Added memo "
 					<< fMemoList.current()->getTitle()
@@ -461,7 +456,6 @@ MemoWidget::updateWidget()
 		else
 		{
 #ifdef DEBUG
-			if (debug_level & UI_TEDIOUS)
 			{
 				kdDebug() << fname << ": Skipped memo "
 					<< fMemoList.current()->getTitle()
@@ -593,6 +587,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.30  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.29  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //

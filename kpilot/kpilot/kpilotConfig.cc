@@ -84,15 +84,10 @@ static const char *kpilotconfig_id =
 	}
 	else
 	{
-#ifdef DEBUG
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname
-				<< ": Config file has version "
-				<< version
-				<< endl;
-		}
-#endif
+		DEBUGDB << fname
+			<< ": Config file has version "
+			<< version
+			<< endl;
 	}
 
 	return version;
@@ -162,14 +157,9 @@ KConfig& KPilotConfig::getConfig(const QString &s)
 	
 	if (existingConfig.isNull())
 	{
-#ifdef DEBUG
-		if (debug_level & UI_MAJOR)
-		{
-			kdDebug() << fname 
-				<< ": Making a new config file"
-				<< endl;
-		}
-#endif
+		DEBUGDB << fname 
+			<< ": Making a new config file"
+			<< endl;
 		theconfig=new KConfig("kpilotrc",false,false);
 	}
 	else
@@ -195,15 +185,6 @@ static QFont *thefont=0L;
 
 	if (thefont)
 	{
-#ifdef DEBUG
-		if (debug_level && UI_TEDIOUS)
-		{
-			DEBUGKPILOT << fname
-				<< ": Font already set."
-				<< endl;
-		}
-#endif
-
 		return *thefont;
 	}
 
@@ -231,6 +212,9 @@ static QFont *thefont=0L;
 }
 
 // $Log$
+// Revision 1.4  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.3  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

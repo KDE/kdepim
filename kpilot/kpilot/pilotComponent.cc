@@ -103,7 +103,6 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 	{
 		currentCatID=-1;
 #ifdef DEBUG
-		if (debug_level & UI_MINOR)
 		{
 			kdDebug() << fname <<
 				": Category 'All' selected.\n" ;
@@ -282,6 +281,9 @@ void PilotComponent::slotShowComponent()
 }
 
 // $Log$
+// Revision 1.18  2001/04/14 15:21:35  adridg
+// XML GUI and ToolTips
+//
 // Revision 1.17  2001/04/11 21:39:22  adridg
 // Fix for bad-categories bug
 //

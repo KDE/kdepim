@@ -161,7 +161,6 @@ void VCalConduit::doBackup()
 	first = firstTime();
 		
 #ifdef DEBUG
-	if(debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname
 			<< ": Performing full backup"
@@ -235,7 +234,6 @@ void VCalConduit::doSync()
 	}
    
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
 			<< ": Read a total of "
@@ -394,7 +392,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   // info from the PilotRec.
   
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Updating start time"
@@ -432,7 +429,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 }
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Updating end time"
@@ -494,7 +490,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 
   
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Updating alarms"
@@ -545,7 +540,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   }
    
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Updating recurrence"
@@ -638,7 +632,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Updating exceptions"
@@ -680,7 +673,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 	setStatus(vevent,0);
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Done updating"
@@ -733,13 +725,11 @@ void VCalConduit::doLocalSync()
 	}
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname << ": Performing local sync."
 			<< endl;
 	}
   
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Getting timezone."
 			<< endl;
@@ -750,7 +740,6 @@ void VCalConduit::doLocalSync()
 
   
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Initializing iterator."
 			<< endl;
@@ -774,7 +763,6 @@ void VCalConduit::doLocalSync()
 		vo = isAPropertyOf(vevent, KPilotStatusProp);
 
 #ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname
 				<< ": Read the following calendar entry:"
@@ -1245,7 +1233,6 @@ void VCalConduit::doLocalSync()
   }
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname
 			<< ": Read "
@@ -1391,7 +1378,6 @@ void VCalConduit::doLocalSync()
 	if (LocalOverridesPilot)
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
 		{
 			kdDebug() << fname << ": Deleting records from pilot."
 				<< endl;
@@ -1410,7 +1396,6 @@ void VCalConduit::doLocalSync()
 	else
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
 		{
 			kdDebug() << fname << ": Leaving records in pilot, "
 				"even those not found in organizer."
@@ -1451,6 +1436,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.39  2001/04/23 21:26:02  adridg
+// Some testing and i18n() fixups, 8-bit char fixes
+//
 // Revision 1.38  2001/04/23 06:29:30  adridg
 // Patches for bug #23385 and probably #23289
 //

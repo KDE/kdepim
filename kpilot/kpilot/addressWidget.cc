@@ -143,7 +143,6 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
 
 
 #ifdef DEBUG
-	if (debug_level & DB_TEDIOUS)
 	{
 		kdDebug() << fname << ": Reading AddressDB..."
 			<< endl;
@@ -170,7 +169,6 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
 	}
 
 #ifdef DEBUG
-	if (debug_level & DB_TEDIOUS)
 	{
 		kdDebug() << fname 
 			<< ": Total " << currentRecord << " records" << endl;
@@ -346,7 +344,6 @@ AddressWidget::updateWidget()
 	int listIndex = 0;
 
 #ifdef DEBUG
-	if (debug_level & UI_MINOR)
 	{
 		kdDebug() << fname << ": Display Mode=" << 
 			addressDisplayMode << endl ;
@@ -359,7 +356,6 @@ AddressWidget::updateWidget()
 	fListBox->clear();
 	fAddressList.first();
 #ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname << ": Adding records..."
 			<< endl;
@@ -393,7 +389,6 @@ AddressWidget::updateWidget()
 	}
 	fTextWidget->clear();
 #ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": " << listIndex << " records" << endl;
@@ -717,7 +712,6 @@ AddressWidget::slotImportAddressList()
 	delim[1] = 0L;
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Input format is " << importFormat <<
 			endl;
@@ -740,7 +734,6 @@ AddressWidget::slotImportAddressList()
  	    break;
 	}
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname << ": Read line " << nextRecord;
 	}
@@ -830,14 +823,15 @@ AddressWidget::setFieldBySymbol(PilotAddress* rec, const char* symbol, const cha
 	rec->setField(entryCustom4, text);
 	//     else if(strcasecmp(symbol, "%NO") == 0)
 	// 	rec->setField(entryNote, text);
+	else
+	{
+		kdWarning(KPILOT_AREA) << fname
+			<< ": Unknown field "
+			<< symbol 
+			<< endl;
+	}
 
 #ifdef DEBUG
-	if ((debug_level & SYNC_MINOR) && rc)
-	{
-		kdDebug() << fname << ": Unknown field "
-			<< symbol << endl;
-	}
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname << ": Set field " 
 			<< symbol
@@ -985,6 +979,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.34  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.33  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //

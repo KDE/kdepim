@@ -236,7 +236,6 @@ CConduitSetup::fillLists()
 		KServiceTypeProfile::offers("KPilotConduit");
 
 #ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
 	{
 		QStringList::Iterator i = potentiallyInstalled.begin();
 
@@ -267,7 +266,6 @@ CConduitSetup::fillLists()
 		KSharedPtr<KService> o = (*availList).service();
 
 #ifdef DEBUG
-		if (debug_level & UI_TEDIOUS)
 		{
 			kdDebug() << fname << ": "
 				<< o->desktopEntryName()
@@ -358,7 +356,6 @@ void CConduitSetup::writeInstalledConduits()
 		FILE *conduitpipe;
 
 #ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Current conduit = "
 				<< p->text(CONDUIT_NAME)
@@ -367,7 +364,6 @@ void CConduitSetup::writeInstalledConduits()
 #endif
 
 #ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Current conduit service from "
 				<< p->text(CONDUIT_DESKTOP)
@@ -393,7 +389,6 @@ void CConduitSetup::writeInstalledConduits()
 			currentConduit+=" --debug ";
 			currentConduit+=QString().setNum(debug_level);
 		}
-		if (debug_level&SYNC_TEDIOUS)
 		{
 			kdDebug() << fname << ": Conduit startup command line is:\n"
 				<< fname << ": " << currentConduit << endl;
@@ -422,7 +417,6 @@ void CConduitSetup::writeInstalledConduits()
 	      else if (strcmp(dbName,"<none>")==0)
 	      {
 #ifdef DEBUG
-			if (debug_level & SYNC_TEDIOUS)
 			{
 				kdDebug() << fname
 					<< ": Conduit "
@@ -484,6 +478,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.24  2001/04/23 21:30:20  adridg
+// Betteer support of missing conduit executables
+//
 // Revision 1.23  2001/04/23 06:30:38  adridg
 // XML UI updates
 //

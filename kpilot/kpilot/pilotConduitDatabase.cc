@@ -176,14 +176,9 @@ PilotRecord* PilotConduitDatabase::readNextModifiedRec()
 	{
 	if(result == CStatusMessages::NO_SUCH_RECORD)
 	    {
-#ifdef DEBUG
-	    if (debug_level & SYNC_TEDIOUS)
-		{
 		kdDebug() << fname
 			  << ": Got NO_SUCH_RECORD" 
 			  << endl;
-		}
-#endif
 	    return 0L;
 	    }
 	else
@@ -276,9 +271,6 @@ PilotRecord* PilotConduitDatabase::_getRecord()
     read(fDaemonSocket->socket(), data, len);
     newRecord = new PilotRecord((void*)data, len, attrib, cat, uid);
     delete [] data;
-#ifdef DEBUG
-    if (debug_level & SYNC_TEDIOUS)
-	{
 	kdDebug() << fname
 		  << ": Read"
 		  << " len=" << len
@@ -286,8 +278,6 @@ PilotRecord* PilotConduitDatabase::_getRecord()
 		  << " cat=" << cat 
 		  << " UID=" << uid
 		  << endl;
-	}
-#endif
     return newRecord;
     }
 

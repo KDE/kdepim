@@ -153,12 +153,6 @@ setupDialog::setupDialog(QWidget *parent,
 	FUNCTIONSETUP;
 
 	const KAboutData *p=KGlobal::instance()->aboutData();
-#ifdef DEBUG
-	if (modal && debug_level & UI_TEDIOUS)
-	{
-		kdDebug() << fname << ": This is a modal dialog." << endl;
-	}
-#endif
 
 	setCancelButton();
 	setCaption(p->programName() + QString(" ") +
@@ -278,14 +272,6 @@ void setupDialog::setupWidget()
 		return;
 	}
 
-#ifdef DEBUG
-	if (debug_level & UI_MINOR)
-	{
-		kdDebug() << fname << ": setupDialog has " << pages.count()
-			<< " pages." << endl;
-	}
-#endif
-
 	for (i.toFirst(); i.current(); ++i)
 	{
 		setupDialogPage *p=i.current();
@@ -294,14 +280,6 @@ void setupDialog::setupWidget()
 		if (p->width() > x) x=p->width();
 		if (p->height() > y) y=p->height();
 	}
-
-#ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
-	{
-		kdDebug() << fname << ": setupDialog has size "
-			<< x << 'x' << y << endl;
-	}
-#endif
 
 	resize(x+2*SPACING,y+8*SPACING);
 }
@@ -336,13 +314,11 @@ int setupDialog::addPage(setupDialogPage *p)
 	if (filename.isNull()) return QueryNull;
 	if (filename.length()<1) return QueryNull;
 
-#ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
-	{
-		kdDebug() << fname << ": Checking for existence of "
-			<< filelabel.latin1() << ' ' << filename.latin1() << endl;
-	}
-#endif
+	DEBUGDB << fname 
+		<< ": Checking for existence of "
+		<< filelabel.latin1() 
+		<< " "
+		<< filename.latin1() << endl;
 
 	QFileInfo info(filename);
 	if (!info.exists())
@@ -351,26 +327,18 @@ int setupDialog::addPage(setupDialogPage *p)
 		msg+='\n';
 		msg+=i18n("Really use this file?");
 
-#ifdef DEBUG
-		if (debug_level & UI_MAJOR)
-		{
-			kdDebug() << fname << ": " << msg.latin1() << endl;
-		}
-#endif
+		DEBUGDB << fname << ": " << msg.latin1() << endl;
 
 
 		int rc=KMessageBox::questionYesNo(parent,
 			msg,
 			i18n("Missing file?"));
 		
-#ifdef DEBUG
-		if (debug_level)
-		{
-			kdDebug() << fname << ": User said "
-				<< rc << " about using "
-				"nonexistent file." << endl;
-		}
-#endif
+		DEBUGDB << fname
+			<< ": User said "
+			<< rc 
+			<< " about using nonexistent file." 
+			<< endl;
 
 		return rc;
 	}
@@ -462,6 +430,9 @@ setupInfoPage::setupInfoPage(setupDialog *parent,bool includeabout) :
 
 
 // $Log$
+// Revision 1.18  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.17  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

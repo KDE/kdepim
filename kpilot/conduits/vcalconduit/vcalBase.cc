@@ -259,7 +259,6 @@ int VCalBaseConduit::getTimeZone() const
 
 	QString tmpStr(s = fakeCString(vObjectUStringZValue(vo)));
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
 			<< ": Got time zone string "
@@ -296,7 +295,6 @@ int VCalBaseConduit::getTimeZone() const
 	}
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
 			<< ": Calculated TZ offset "
@@ -587,6 +585,9 @@ void VCalBaseConduit::deleteVObject(PilotRecord *rec, const char *type)
 }
 
 // $Log$
+// Revision 1.6  2001/04/23 06:29:30  adridg
+// Patches for bug #23385 and probably #23289
+//
 // Revision 1.5  2001/04/18 21:20:29  adridg
 // Response to bug #24291
 //

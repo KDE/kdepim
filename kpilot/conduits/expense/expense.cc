@@ -29,7 +29,7 @@
 */
 
 
-#include "options.h"
+#include <options.h>
 
 // Only include what we really need:
 // First UNIX system stuff, then std C++, 
@@ -529,6 +529,9 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.15  2001/04/06 08:23:40  cschumac
+// Adding some const definition to get rid of some compiler warnings.
+//
 // Revision 1.14  2001/03/27 11:10:38  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

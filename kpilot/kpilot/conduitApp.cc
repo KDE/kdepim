@@ -184,10 +184,8 @@ KCmdLineArgs *ConduitApp::getOptions()
 #endif
 
 	return p;
-#ifdef DEBUG
 	/* NOTREACHED */
 	(void) conduitapp_id;
-#endif
 }
 
 
@@ -310,15 +308,10 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 	}
 	else
 	{
-#ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
-		{
-			kdDebug() << fname 
-				<< ": Set mode to "
-				<< (int) fMode
-				<< endl;
-		}
-#endif
+		DEBUGDB << fname 
+			<< ": Set mode to "
+			<< (int) fMode
+			<< endl;
 	}
 
 	return fMode;
@@ -443,6 +436,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.27  2001/05/03 18:04:09  adridg
+// Additional authors can now have web addresses, too
+//
 // Revision 1.26  2001/04/29 00:27:28  stern
 // Added check for conduit being in error state; I think the exec algorithm should be cleaned up in future...
 //

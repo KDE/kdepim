@@ -66,14 +66,9 @@ void BaseConduit::init()
 	if (fDBSource == ConduitSocket)
 	    {
 	    fDB = new PilotConduitDatabase();
-#ifdef DEBUG
-	    if (debug_level & SYNC_MINOR)
-		{
-		kdDebug() << fname
+		DEBUGDB << fname
 			  << ": Creating kpilotlink connection"
 			  << endl;
-		}
-#endif
 
 	    
 	    }
@@ -207,6 +202,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.23  2001/04/26 19:00:44  stern
+// Put conduit into error mode if can't open db
+//
 // Revision 1.22  2001/04/23 21:29:57  adridg
 // Tiny code integrity patches
 //

@@ -225,7 +225,6 @@ PilotDaemonTray::setupWidget()
 		SLOT(slotRunKPilot()));
 
 #ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Finished getting icons"
@@ -336,7 +335,6 @@ int PilotDaemon::getPilotSpeed(KConfig& config)
 	}
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
 			<< ": Speed set to "
@@ -380,7 +378,6 @@ PilotDaemon::PilotDaemon() :
 	if (fStatus == ERROR) 
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
 		{
 			kdDebug() << fname
 				<< ": Setting up connections failed."
@@ -397,7 +394,6 @@ PilotDaemon::PilotDaemon() :
 	}
 
 #ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": The daemon is ready with status "
@@ -673,7 +669,6 @@ PilotDaemon::startHotSync()
   // has already begun so that if KPilot is running it doesn't start
   // issuing commands before KPilotLink is ready.
 #ifdef DEBUG
-	if (debug_level &  SYNC_MAJOR)
 	{
 		kdDebug() << fname 
 			<< ": Requesting KPilotLink::startHotSync()" << endl;
@@ -685,7 +680,6 @@ PilotDaemon::startHotSync()
   if(fCurrentSocket == 0L)
     {
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname  <<
 			": No KPilot running." << endl;
@@ -695,7 +689,6 @@ PilotDaemon::startHotSync()
       if(fStartKPilot) // We are supposed to start up kpilot..
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
 		{
 			kdDebug() << fname << ": Starting KPilot GUI." << endl;
 		}
@@ -712,7 +705,6 @@ PilotDaemon::startHotSync()
       else
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
 		{
 			kdDebug()  << fname << ": Starting quick sync." << endl;
 		}
@@ -729,7 +721,6 @@ PilotDaemon::slotDBBackupFinished()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname << ": DB Syncing finished." << endl;
 	}
@@ -784,7 +775,6 @@ PilotDaemon::slotEndHotSync()
 	if (p)
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
 		{
 			kdDebug() << fname
 				<< ": Ending hot-sync now"
@@ -828,7 +818,6 @@ PilotDaemon::slotAccepted(KSocket* connection)
 	}
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname 
 			<< ": Accepted command connection "
@@ -858,7 +847,6 @@ PilotDaemon::slotCommandReceived(KSocket*)
   in >> command;
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Received command "
@@ -902,7 +890,6 @@ PilotDaemon::slotCommandReceived(KSocket*)
       break;
 	case KPilotLink::TestConnection :
 #ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
 		{
 			kdDebug()  << fname
 				<< ": Connection tests OK"
@@ -916,7 +903,6 @@ PilotDaemon::slotCommandReceived(KSocket*)
     }
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": Done reading." << endl;
@@ -939,7 +925,6 @@ PilotDaemon::slotConnectionClosed(KSocket* connection)
 	else
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname 
 				<< ": Connection "
@@ -961,7 +946,6 @@ PilotDaemon::slotAddStatusConnection(KSocket* connection)
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname 
 			<< ": Accepted status connection "
@@ -986,7 +970,6 @@ PilotDaemon::slotRemoveStatusConnection(KSocket* connection)
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		kdDebug() << fname 
 			<< ": Connection "
@@ -1049,14 +1032,12 @@ PilotDaemon::sendStatus(const int status)
 	// Large debugging block
 	//
 	//
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname 
 			<< ": Sending status " << status
 			<< endl;
 	}
 
-	if (debug_level & SYNC_TEDIOUS)
 	{
 		for(fStatusConnections.first() ; 
 			(c=fStatusConnections.current()) ; 
@@ -1074,7 +1055,6 @@ PilotDaemon::sendStatus(const int status)
 		fStatusConnections.next())
 	{
 #ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
 		{
 			kdDebug() << fname
 				<< ": Sending to connection "
@@ -1100,7 +1080,6 @@ PilotDaemon::sendStatus(const int status)
 	}
 
 #ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
 			<< ": Completed status update for "
@@ -1356,6 +1335,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.37  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.36  2001/04/01 17:32:52  adridg
 // I really don't remember
 //

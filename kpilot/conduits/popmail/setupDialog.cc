@@ -324,7 +324,6 @@ void PopMailSendPage::browseSignature()
 	QString filename=fSignature->text();
 
 #ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname << ": Signature currently "
 			<< fSignature->text() << endl;
@@ -343,7 +342,6 @@ void PopMailSendPage::browseSignature()
 	filename = QFileDialog::getOpenFileName(filename,"*");
 
 #ifdef DEBUG
-	if (debug_level & UI_MINOR)
 	{
 		kdDebug() << fname << ": Signature selected "
 			<< filename << endl;
@@ -582,7 +580,6 @@ void PopMailReceivePage::setMode(PopMailConduit::RetrievalMode m)
 	QString filename=fMailbox->text();
 
 #ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname << ": Mailbox currently "
 			<< fMailbox->text() << endl;
@@ -601,7 +598,6 @@ void PopMailReceivePage::setMode(PopMailConduit::RetrievalMode m)
 	filename = QFileDialog::getOpenFileName(filename,"*");
 
 #ifdef DEBUG
-	if (debug_level & UI_MINOR)
 	{
 		kdDebug() << fname << ": Mailbox selected "
 			<< filename << endl;
@@ -668,6 +664,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.17  2001/04/23 21:18:36  adridg
+// Some i18n() fixups and KMail sending
+//
 // Revision 1.16  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

@@ -57,6 +57,9 @@ static const char *kpilotlink_id="$Id$";
 #ifndef QDIR_H
 #include <qdir.h>
 #endif
+#ifndef QTIMER_H
+#include <qtimer.h>
+#endif
 
 #ifndef _KCONFIG_H
 #include <kconfig.h>
@@ -446,15 +449,10 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		memset(s,0,i);
 		read(cSocket->socket(),s,i);
 		s[i]=0;
-#ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
-		{
-			kdDebug() << fname << ": Message length "
-				<< i << " => "
-				<< s
-				<< endl;
-		}
-#endif
+		DEBUGDB << fname << ": Message length "
+			<< i << " => "
+			<< s
+			<< endl;
 		addSyncLogEntry(s);
 		delete s;
 
@@ -626,23 +624,13 @@ KPilotLink::registeredConduit(const QString &dbName) const
 
 	KConfig& config = KPilotConfig::getConfig("Database Names");
 
-#ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
-	{
 		kdDebug() << fname << ": Looking for "
 			<< dbName << endl;
-	}
-#endif
 
 	QString result = config.readEntry(dbName);
 	if (result.isNull())
 	{
-#ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
-		{
 			kdDebug() << fname << ": Not found." << endl;
-		}
-#endif
 
 		return result;
 	}
@@ -650,57 +638,36 @@ KPilotLink::registeredConduit(const QString &dbName) const
 	config.setGroup("Conduit Names");
 	QStringList installed = config.readListEntry("InstalledConduits");
 
-#ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
-	{
-#ifndef NDEBUG
-		kdbgstream s = kdDebug();
-#endif
 		kdDebug() << fname << ": Found conduit "
-			<< result << endl
+			<< result << endl;
+		DEBUGDB
 			<< fname << ": Installed Conduits are"
 			<< endl;
 
 #ifndef NDEBUG
+		kdbgstream s = kdDebug();
 		listStrList(s,installed);
-#endif
-	}
 #endif
 
 	if (!installed.contains(result))
 	{
-#ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
-		{
 			kdDebug() << fname << ": Conduit not installed."
 				<< endl;
-		}
-#endif
 		return QString::null;
 	}
 
 	KService::Ptr conduit = KService::serviceByDesktopName(result);
 	if (!conduit)
 	{
-#ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
-		{
 			kdDebug() << fname << ": No service for this conduit"
 				<< endl;
-		}
-#endif
 		return QString::null;
 	}
 	else
 	{
-#ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
-		{
 			kdDebug() << fname << ": Found service with exec="
 				<< conduit->exec()
 				<< endl;
-		}
-#endif
 		return conduit->exec();
 	}
 }
@@ -937,13 +904,8 @@ KPilotLink::createLocalDatabase(DBInfo* info)
       strcat(name,".pdb");
     }
 
-#ifdef DEBUG
-  if (debug_level & DB_TEDIOUS)
-    {
       kdDebug() << fname << ": Creating local database "
 	   << name << endl;
-    }
-#endif
   /* Ensure that DB-open flag is not kept */
   info->flags &= 0xff;
 
@@ -1073,23 +1035,13 @@ KPilotLink::installFiles(const QString &path)
     }
 
   updateProgressBar(0);
-#ifdef DEBUG
-  if (debug_level & SYNC_MINOR)
-    {
       kdDebug() << fname << ": Installing from directory "
 	   << actualPath << endl;
-    }
-#endif
 
   while(fileIter != fileNameList.end())
     {
-#ifdef DEBUG
-      if (debug_level & SYNC_MAJOR)
-	{
 	  kdDebug() << fname << ": Installing file "
 	       << *fileIter << endl;
-	}
-#endif
 
       updateProgressBar(fileNum++);
 
@@ -1374,14 +1326,9 @@ int KPilotLink::findNextDB(DBInfo *info)
     }
   while(info->flags & dlpDBFlagResource);
 
-#ifdef DEBUG
-  if (debug_level & SYNC_TEDIOUS)
-    {
       kdDebug() << fname << ": Found database with:\n"
 	   << fname << ": Index=" << fNextDBIndex
 	   << endl;
-    }
-#endif
 
   return 1;
 }
@@ -1414,35 +1361,20 @@ KPilotLink::syncNextDB()
     backupOnly=c.readEntry("BackupForSync");
   }
 
-#ifdef DEBUG
-  if (debug_level & SYNC_TEDIOUS)
-    {
       kdDebug() << fname << ": Special dispositions are: \n"
 	   << fname << ": * BackupOnly=" << backupOnly << endl
 	   << fname << ": * Skip=" << skip << endl ;
-    }
-#endif
   if (!findNextDB(&info)) return;
 
-#ifdef DEBUG
-  if (debug_level & SYNC_MAJOR)
-    {
       kdDebug() << fname << ": Syncing " << info.name << endl;
-    }
-#endif
 
 
 
   QString conduitName = registeredConduit(info.name);
   while(conduitName.isNull())
     {
-#ifdef DEBUG
-      if (debug_level & SYNC_MINOR)
-	{
 	  kdDebug() << fname << ": No registered conduit for " 
 	       << info.name << endl;
-	}
-#endif
 
 	// If we want a FastSync, skip all DBs without conduits.
 	//
@@ -1464,7 +1396,6 @@ KPilotLink::syncNextDB()
       //
       //
 #ifdef DEBUG
-      if (debug_level & SYNC_MINOR)
 	{
 	  char *m=printlong(info.creator);
 	  kdDebug() << fname << ": Looking for disposition of "
@@ -1489,12 +1420,7 @@ KPilotLink::syncNextDB()
 
       if(syncDatabase(&info))
 	{
-#ifdef DEBUG
-	  if (debug_level & SYNC_TEDIOUS)
-	    {
 	      kdDebug() << fname << ": Sync OK" << endl;
-	    }
-#endif
 	  addSyncLogEntry("OK.\n");
 	}
       else
@@ -1510,12 +1436,7 @@ KPilotLink::syncNextDB()
       if (!findNextDB(&info)) return;
 
       conduitName = registeredConduit(info.name);
-#ifdef DEBUG
-      if (debug_level & SYNC_MAJOR)
-	{
 	  kdDebug() << fname << ": Syncing " << info.name << endl;
-	}
-#endif
     }
 
   // Fire up the conduit responsible for this db and when it's finished
@@ -1525,13 +1446,8 @@ KPilotLink::syncNextDB()
   addSyncLogEntry(message.local8Bit());
   fCurrentDBInfo = info;
 
-#ifdef DEBUG
-  if (debug_level & SYNC_MAJOR)
-    {
       kdDebug() << fname << ": " 
 	   << message << endl;
-    }
-#endif
 
 
 	fCurrentDB = new PilotSerialDatabase(this,info.name);
@@ -1796,6 +1712,9 @@ void KPilotLink::tickle()
 }
 
 // $Log$
+// Revision 1.49  2001/05/24 10:36:56  adridg
+// Tickle support
+//
 // Revision 1.48  2001/04/29 00:36:13  stern
 // Fixed mismatched brackes in switch
 //

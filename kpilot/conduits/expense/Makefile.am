@@ -1,4 +1,4 @@
-INCLUDES= -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/kpilot $(all_includes)
+INCLUDES= -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot $(all_includes)
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)

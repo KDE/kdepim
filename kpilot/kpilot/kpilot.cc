@@ -222,14 +222,9 @@ KPilotInstaller::~KPilotInstaller()
 	if(fKillDaemonOnExit && fPilotCommandSocket &&
 		(fPilotCommandSocket->socket()>=0))
 	{
-#ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
-		{
 			kdDebug() << fname
 				<< ": Killing daemon."
 				<< endl;
-		}
-#endif
 
 		ofstream out(fPilotCommandSocket->socket());
 		out << -3 << endl;
@@ -395,13 +390,8 @@ KPilotInstaller::slotModeSelected(int selected)
 	FUNCTIONSETUP;
 	int current = 0 ;
 
-#ifdef DEBUG
-	if (debug_level& UI_TEDIOUS)
-	{
 		kdDebug() << fname << ": Responding to callback " << selected
 			<< endl;
-	}
-#endif
 
 	if((unsigned int)selected >= fVisibleWidgetList.count())
 	{
@@ -533,12 +523,7 @@ KPilotInstaller::initPilotLink()
 		// We were called after a reconfigure
 		//
 		//
-#ifdef DEBUG
-		if (debug_level && SYNC_MAJOR)
-		{
 			kdDebug() << fname << ": Reconfiguring daemon.\n" ;
-		}
-#endif
 
 		ofstream out(fPilotCommandSocket->socket());
 		out << "-2" << endl;
@@ -559,14 +544,9 @@ void KPilotInstaller::initCommandSocket()
 		return;
 	}
 
-#ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
-	{
 		kdDebug() << fname
 			<< ": Creating command socket"
 			<< endl ;
-	}
-#endif
 
 	fPilotCommandSocket = new KSocket("localhost", 
 		PILOTDAEMON_COMMAND_PORT);
@@ -582,15 +562,10 @@ void KPilotInstaller::initCommandSocket()
 		return;
 	}
 
-#ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
-	{
 		kdDebug() << fname
 			<< ": Got socket " 
 			<< fPilotCommandSocket->socket()
 			<< endl ;
-	}
-#endif
 
 	
 	if((fPilotCommandSocket->socket() < 0) ||
@@ -598,14 +573,9 @@ void KPilotInstaller::initCommandSocket()
 	{
 		int i;
 
-#ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
-		{
 			kdDebug() << fname
 				<< ": Socket not OK, starting daemon"
 				<< endl;
-		}
-#endif
 
 		// It wasn't running...
 		messageDialog = 
@@ -654,14 +624,9 @@ void KPilotInstaller::initCommandSocket()
 			sleep(1);
 			kapp->processEvents();
 
-#ifdef DEBUG
-			if (debug_level & SYNC_TEDIOUS)
-			{
 				kdDebug() << fname
 					<< ": Trying to connect"
 					<< endl;
-			}
-#endif
 			fPilotCommandSocket = new KSocket("localhost",
 				PILOTDAEMON_COMMAND_PORT);
 			if (!fPilotCommandSocket)
@@ -684,16 +649,11 @@ void KPilotInstaller::initCommandSocket()
 			}
 		}
 
-#ifdef DEBUG
-		if (debug_level & UI_MINOR)
-		{
 			kdDebug() << fname
 				<< ": Halfway result "
 				<< "PilotCommandSocket="
 				<< (int)fPilotCommandSocket
 				<< endl;
-		}
-#endif
 			
 		if(!fPilotCommandSocket)
 		{
@@ -708,25 +668,15 @@ void KPilotInstaller::initCommandSocket()
 					   i18n("Cannot connect to Daemon"));
 					   
 
-#ifdef DEBUG
-			if (debug_level & UI_TEDIOUS)
-			{
 				kdDebug() << fname << ": creating options "
 					<< endl;
-			}
-#endif
 			KPilotOptions* options = new KPilotOptions(this);
 			if (options)
 			{
 				options->exec();
-#ifdef DEBUG
-				if (debug_level & UI_TEDIOUS)
-				{
 					kdDebug() << fname << ": User said "
 						<< options->result()
 						<< endl;
-				}
-#endif
 				delete options;
 			}
 			else
@@ -741,14 +691,9 @@ void KPilotInstaller::initCommandSocket()
 
 		if (messageDialog!=NULL)
 		{
-#ifdef DEBUG
-			if (debug_level & UI_TEDIOUS)
-			{
 				kdDebug() << fname
 					<< ": Closing and deleting msg dialog"
 					<< endl;
-			}
-#endif
 			messageDialog->close();
 			delete messageDialog;
 		}
@@ -756,16 +701,11 @@ void KPilotInstaller::initCommandSocket()
 
 	fLinkCommand[0] = 0L;
 
-#ifdef DEBUG
-	if (debug_level & UI_MINOR)
-	{
 		kdDebug() << fname
 			<< ": End result "
 			<< "PilotCommandSocket="
 			<< (int)fPilotCommandSocket
 			<< endl;
-	}
-#endif
 }
 
 
@@ -808,13 +748,8 @@ KPilotInstaller::initStatusLink()
 		PILOTDAEMON_STATUS_PORT);
 	if (fPilotStatusSocket->socket()!=-1)
 	{
-#ifdef DEBUG
-		if (debug_level& SYNC_TEDIOUS)
-		{
 			kdDebug() << fname <<
 				": Connected socket successfully.\n";
-		}
-#endif
 
 		connect(fPilotStatusSocket, SIGNAL(readEvent(KSocket*)),
 			this, SLOT(slotDaemonStatus(KSocket*)));
@@ -969,13 +904,8 @@ void KPilotInstaller::componentPreSync(bool expectEmptyLinkCommand)
 		fPilotComponentList.current(); 
 		fPilotComponentList.next())
 	{
-#ifdef DEBUG
-		if (debug_level & SYNC_MINOR)
-		{
 			kdDebug() << fname << ": Pre-sync for builtins."
 				<< endl;
-		}
-#endif
 		fPilotComponentList.current()->preHotSync(fLinkCommand);
 	}
 }
@@ -1139,14 +1069,9 @@ KPilotInstaller::quit()
 	if(fKillDaemonOnExit && fPilotCommandSocket &&
 		(fPilotCommandSocket->socket()>=0))
 	{
-#ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
-		{
 			kdDebug() << fname
 				<< ": Killing daemon."
 				<< endl;
-		}
-#endif
 
 		ofstream out(fPilotCommandSocket->socket());
 		out << -3 << endl;
@@ -1225,13 +1150,8 @@ void KPilotInstaller::menuCallback(int item)
 	FUNCTIONSETUP;
 
 
-#ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
-	{
 		kdDebug() << fname << ": Responding to callback " << item
 			<< endl;
-	}
-#endif
 
 	if ((item>=ID_COMBO) && 
 		(item<ID_COMBO+(int)fVisibleWidgetList.count()))
@@ -1282,13 +1202,8 @@ void KPilotInstaller::menuCallback(int item)
 		break;
 	}
 
-#ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
-	{
 		kdDebug() << fname << ": Done responding to item " << item
 			<< endl;
-	}
-#endif
 }
 
 
@@ -1362,31 +1277,16 @@ KPilotInstaller::slotConfigureKPilot()
 		return;
 	}
 
-#ifdef DEBUG
-	if (debug_level & UI_MINOR)
-	{
 		kdDebug() << fname << ": Running options dialog." 
 			<< endl;
-	}
-#endif
 	options->exec();
-#ifdef DEBUG
-	if (debug_level & UI_MINOR)
-	{
 		kdDebug() << fname << ": dialog result "
 			<< options->result() << endl;
-	}
-#endif
 
 	if (options->result())
 	{
-#ifdef DEBUG
-		if (debug_level & UI_TEDIOUS)
-		{
 			kdDebug() << fname 
 				<< ": Updating link." << endl;
-		}
-#endif
 
 		readConfig(KPilotConfig::getConfig());
 
@@ -1403,14 +1303,9 @@ KPilotInstaller::slotConfigureKPilot()
 		fPilotComponentList.current();
 		fPilotComponentList.next())
 		{
-#ifdef DEBUG
-			if (debug_level & UI_TEDIOUS)
-			{
 				kdDebug() << fname 
 					<< ": Updating components." 
 					<< endl;
-			}
-#endif
 
 			fPilotComponentList.current()->initialize();
 		}
@@ -1418,12 +1313,7 @@ KPilotInstaller::slotConfigureKPilot()
 
 	delete options;
 	options=NULL;
-#ifdef DEBUG
-	if (debug_level & UI_MINOR)
-	{
 		kdDebug() << fname << ": Done with options." << endl;
-	}
-#endif
 }
 
 void
@@ -1579,12 +1469,9 @@ int main(int argc, char** argv)
 	if ((run_mode=='s') || (run_mode=='S'))
 	{
 #ifdef DEBUG
-		if (debug_level & UI_MAJOR)
-		{
 			kdDebug() << fname << ": Running setup first."
 				<< " (mode " << run_mode << ")"
 				<< endl ;
-		}
 #endif
 
 		KPilotOptions* options = new KPilotOptions(0L);
@@ -1635,6 +1522,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.51  2001/05/07 19:45:11  adridg
+// KToggle actions used now
+//
 // Revision 1.50  2001/04/26 21:59:00  adridg
 // CVS_SILENT B0rkage with previous commit
 //

@@ -320,14 +320,9 @@ int KPilotOptionsAddress::commitChanges(KConfig& c)
 	c.setGroup(fGroupName);
 
 	c.writeEntry("AddressDisplay",getRadio());
-#ifdef DEBUG
-	if (debug_level & UI_TEDIOUS) 
-	{ 
 		kdDebug() << fname 
 			<< ": Selected display mode " 
 			<< getRadio() << endl ; 
-	}
-#endif
 
 	c.writeEntry("IncomingFormat", fIncomingFormat->text());
 	c.writeEntry("OutgoingFormat", fOutgoingFormat->text());
@@ -481,13 +476,8 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 	fPilotSpeed->insertItem("115200");
 	value=config.readNumEntry("PilotSpeed", pilotRate);
 
-#ifdef DEBUG
-	if (debug_level & UI_TEDIOUS)
-	{
 		kdDebug() << fname << ": Read pilot speed "
 			<< value << " from config." << endl;
-	}
-#endif
 	fPilotSpeed->setCurrentItem(value);
 	grid->addWidget(currentLabel,0,labelCol+2);
 	grid->addWidget(fPilotSpeed,0,fieldCol+2);
@@ -590,26 +580,16 @@ int KPilotOptionsGeneral::commitChanges(KConfig& config)
 
 	if (fStartDaemonAtLogin->isChecked())
 	{
-#ifdef DEBUG
-		if (debug_level & UI_MAJOR)
-		{
 			kdDebug() << fname
 				<< ": Copying autostart file"
 				<< endl;
-		}
 		KIO::NetAccess::copy(src,dest);
-#endif
 	}
 	else
 	{
-#ifdef DEBUG
-		if (debug_level & UI_MAJOR)
-		{
 			kdDebug() << fname
 				<< ": Deleting daemon autostart file (ignore errors)"
 				<< endl;
-		}
-#endif
 		KIO::NetAccess::del(dest);
 	}
 
@@ -740,7 +720,9 @@ KPilotOptions::KPilotOptions(QWidget* parent) :
 
 int main(int argc, char **argv)
 {
+#ifdef DEBUG
 	debug_level=1023;
+#endif
 
 	KAboutData *a=new KAboutData("kpilot",
 		I18N_NOOP("KPilot"),
@@ -790,6 +772,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.30  2001/04/26 21:59:00  adridg
+// CVS_SILENT B0rkage with previous commit
+//
 // Revision 1.29  2001/04/26 19:01:10  stern
 // Added myself to people
 //

@@ -41,11 +41,12 @@ static const char *options_id="$Id$";
 #endif
 
 #ifdef DEBUG
-// The daemon also has a debug level
+// The daemon also has a debug level; debug_spaces is 60 spaces,
+// to align FUNCTIONSETUP output.
 //
 //
 int debug_level=0;
-const char *tabs="\t\t\t\t\t\t";
+const char *debug_spaces="                                                            ";
 
 void listConfig(kdbgstream& s,KConfig &c)
 {
@@ -152,6 +153,9 @@ const int fname = (int) options_id;
 
 
 // $Log$
+// Revision 1.13  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.12  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.
