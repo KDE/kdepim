@@ -30,6 +30,7 @@
 #include <klocale.h>
 #include <kurlrequester.h>
 #include <kimageio.h>
+#include <libkdepim/kpixmapregionselectordialog.h>
 
 #include <qcheckbox.h>
 #include <qdragobject.h>
@@ -238,6 +239,13 @@ QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
   else if ( KIO::NetAccess::download( url, tempFile, this ) ) {
     pixmap = QPixmap( tempFile );
     KIO::NetAccess::removeTempFile( tempFile );
+  }
+
+  QPixmap pixmap2 = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this );
+  if (!pixmap2.isNull()) 
+  {
+     pixmap=pixmap2;
+     mImageUrl->clear();
   }
 
   if ( pixmap.height() != 140 || pixmap.width() != 100 ) {
