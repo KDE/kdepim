@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-09-01</date>
-<releaseinfo>0.09.05</releaseinfo>
+<date>2003-09-15</date>
+<releaseinfo>0.09.06</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -59,7 +59,7 @@
 
 <para>&kalarm; is a personal alarm message, command and email
 scheduler. It lets you set up personal alarm messages which pop up on
-the screen at the time you specify, or you can set up commands to be
+the screen at the chosen time, or you can schedule commands to be
 executed or emails to be sent.</para>
 
 <para>In its default graphical mode, &kalarm; displays the list of
@@ -71,7 +71,7 @@ deletion. You can also optionally view expired alarms.</para>
 the alarm message text, specify a text or image file to display,
 specify a command to execute, or enter an email to send. You can also
 choose the color of the alarm message, whether it should repeat,
-whether to play a sound, and whether the alarm should be cancelled if
+whether to play a sound, and whether the alarm should be canceled if
 it can't be triggered at its scheduled time.</para>
 
 <para>Alarms may also be scheduled from the command line, or via &DCOP;
@@ -332,11 +332,11 @@ controls beside the checkbox.</para>
 
 <listitem>
 <para>Use the <guibutton>Font &amp; Color...</guibutton> button to
-select a font or background color for the alarm message. In the
-<guilabel>Choose Alarm Font &amp; Color</guilabel> dialog, check
-<guilabel>Use default font</guilabel> to display the message in
-whatever font is configured as the default at the time the message is
-displayed. (The default font can be set in the
+select a font, or foreground or background color, for the alarm
+message. In the <guilabel>Choose Alarm Font &amp; Color</guilabel>
+dialog, check <guilabel>Use default font</guilabel> to display the
+message in whatever font is configured as the default at the time
+the message is displayed. (The default font can be set in the
 <link linkend="preferences">Preferences dialog</link>.) To choose a
 specific font for the message, uncheck
 <guilabel>Use default font</guilabel>.</para>
@@ -515,7 +515,7 @@ one minute after the right time.
 Leave the box unchecked to trigger the alarm at
 the first opportunity starting at the scheduled time. Date-only alarms,
 &ie; ones for which the <guilabel>Any time</guilabel> option is
-selected, will be cancelled if they cannot be displayed within 24
+selected, will be canceled if they cannot be displayed within 24
 hours of the start-of-day time on the date scheduled.</para>
 
 <note><para>An alarm can only be triggered while you are logged in,
@@ -947,8 +947,8 @@ Service Manager</link> for details.</para>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenuitem>Restore / Minimise</guimenuitem></menuchoice></term>
-<listitem><para><action>Restores or minimises the main &kalarm; window.</action></para>
+<term><menuchoice><guimenuitem>Restore / Minimize</guimenuitem></menuchoice></term>
+<listitem><para><action>Restores or minimizes the main &kalarm; window.</action></para>
 <para>This option is only available if the run mode is
 <quote>continuous</quote>. (See
 <link linkend="preferences">Configuring &kalarm;</link> for a
@@ -1041,6 +1041,12 @@ time.</para>
   <entry><option>-c</option>, <option>--color</option>, <option>--colour
   <replaceable>color</replaceable></option></entry>
   <entry>Set the message background color to the specified &Qt;
+  color name or hex code 0xRRGGBB.</entry>
+</row>
+<row>
+  <entry><option>-C</option>, <option>--colorfg</option>, <option>--colourfg
+  <replaceable>color</replaceable></option></entry>
+  <entry>Set the message foreground color to the specified &Qt;
   color name or hex code 0xRRGGBB.</entry>
 </row>
 <row>
@@ -1330,7 +1336,7 @@ from the command line:</para>
 <para>It is also possible to reset the <application>alarm
 daemon</application> without stopping it. Resetting causes the
 <application>alarm daemon</application> to re-read the list of
-scheduled messages from the calendar file and re-initialise its
+scheduled messages from the calendar file and re-initialize its
 &kalarm;-related data.</para>
 
 <para>Why might you want to reset the <application>alarm
@@ -1764,14 +1770,14 @@ void cancelEvent(const QString&amp; <replaceable>calendarFile</replaceable>, con
 <term><parameter>calendarFile</parameter></term>
 <listitem>
 <para>Specifies the &URL; of the calendar file containing the event to
-be cancelled.</para>
+be canceled.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><parameter>eventID</parameter></term>
 <listitem>
-<para>Specifies the unique ID of the event to be cancelled, as stored
+<para>Specifies the unique ID of the event to be canceled, as stored
 in <replaceable>calendarFile</replaceable>.</para>
 </listitem>
 </varlistentry>
@@ -1881,7 +1887,7 @@ void handleEvent(const QString&amp; <replaceable>calendarFile</replaceable>, con
 <term><parameter>calendarFile</parameter></term>
 <listitem>
 <para>Specifies the &URL; of the calendar file containing the event to
-be displayed/executed or cancelled.</para>
+be displayed/executed or canceled.</para>
 </listitem>
 </varlistentry>
 
@@ -1889,7 +1895,7 @@ be displayed/executed or cancelled.</para>
 <term><parameter>eventID</parameter></term>
 <listitem>
 <para>Specifies the unique ID of the event to be displayed/executed or
-cancelled, as stored in
+canceled, as stored in
 <replaceable>calendarFile</replaceable>.</para>
 </listitem>
 </varlistentry>
@@ -2472,7 +2478,7 @@ operations.</para></note>
 
 <para>The command line options for scheduling a new alarm are as
 described in the chapter <link linkend="cmdline-operation">Using
-&kalarm;</link>. The options for triggering and cancelling scheduled
+&kalarm;</link>. The options for triggering and canceling scheduled
 alarms are as follows:</para>
 
 <note><para>Normal users may also if they wish use these command line
