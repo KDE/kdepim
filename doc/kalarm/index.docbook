@@ -207,6 +207,11 @@ from the context menu.</para>
 </listitem>
 
 <listitem>
+<para>Click the <mousebutton>Middle</mousebutton> mouse button on the
+system tray icon.</para>
+</listitem>
+
+<listitem>
 <para>Double click on empty space below the last entry in the alarm
 list.</para>
 </listitem>
@@ -1042,7 +1047,7 @@ time.</para>
 <row>
   <entry><option>-b</option>, <option>--beep</option></entry>
   <entry>Make an audible beep when the message is displayed.
-  <option>--sound</option> must not be present if this option is
+  <option>--play</option> must not be present if this option is
   specified.</entry>
 </row>
 <row>
@@ -1119,6 +1124,12 @@ time.</para>
   with this option.</entry>
 </row>
 <row>
+  <entry><option>-p</option>, <option>--play <replaceable>URL</replaceable></option></entry>
+  <entry>Specify the name or &URL; of an audio file to be played once
+  when the alarm message is displayed. <option>--beep</option> must
+  not be present if this option is specified.</entry>
+</row>
+<row>
   <entry><option>--recurrence
   <replaceable>spec</replaceable></option></entry>
   <entry>Set the alarm to recur. Specify the recurrence using iCalendar
@@ -1149,12 +1160,6 @@ time.</para>
   <replaceable>X</replaceable> is one of the following letters: W
   (weeks), D (days). This option cannot be specified with
   <option>--exec</option> or <option>--mail</option>.</entry>
-</row>
-<row>
-  <entry><option>-s</option>, <option>--sound <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of an audio file to be played when
-  the alarm message is displayed. <option>--beep</option> must
-  not be present if this option is specified.</entry>
 </row>
 <row>
   <entry><option>-S</option>, <option>--subject
