@@ -38,8 +38,6 @@ KonnectorPair::~KonnectorPair()
 
   delete mConfig;
   mConfig = 0;
-
-  qDebug( "****************connector %s destroyed", mUid.latin1() );
 }
 
 QString KonnectorPair::uid() const

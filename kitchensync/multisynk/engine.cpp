@@ -116,8 +116,6 @@ void Engine::go( KonnectorPair *pair )
       logMessage( i18n("Request failed.") );
     }
   }
-
-  qDebug( "|||||||||||<<use %d konnectors", mKonnectorCount );
 }
 
 void Engine::slotSynceesRead( Konnector *k )
@@ -234,13 +232,10 @@ void Engine::doSync()
 
   Konnector *k;
   for( k = mKonnectors.first(); k; k = mKonnectors.next() ) {
-    qDebug( "adding syncees for %s", k->resourceName().latin1() );
     SynceeList syncees = k->syncees();
 
-    if ( syncees.count() == 0 ) {
-      qDebug( "Syncee list is empty." );
+    if ( syncees.count() == 0 )
       continue;
-    }
 
     CalendarSyncee *calendarSyncee = syncees.calendarSyncee();
     if ( calendarSyncee )
@@ -249,8 +244,6 @@ void Engine::doSync()
     AddressBookSyncee *addressBookSyncee = syncees.addressBookSyncee();
     if ( addressBookSyncee )
       mAddressBookSyncer.addSyncee( addressBookSyncee );
-
-    qDebug( "added syncees" );
   }
 
   mCalendarSyncer.sync();

@@ -40,8 +40,6 @@ KonnectorPairManager::~KonnectorPairManager()
 
 void KonnectorPairManager::load()
 {
-  qDebug( "do loading" );
-
   KConfig config( configFile() );
 
   config.setGroup( "General" );
@@ -52,8 +50,6 @@ void KonnectorPairManager::load()
     KonnectorPair *pair = new KonnectorPair;
     pair->setUid( *it );
     pair->load();
-
-    qDebug( "loaded %s", pair->uid().latin1() );
 
     mPairs.insert( pair->uid(), pair );
   }

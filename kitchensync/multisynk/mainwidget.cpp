@@ -104,10 +104,8 @@ void MainWidget::editPair()
     return;
 
   KonnectorPair *pair = mManager->pair( uid );
-  if ( !pair ) {
-    qDebug( "oops we lost a pair" );
+  if ( !pair )
     return;
-  }
 
   PairEditorDialog dlg( this );
   dlg.setPair( pair );
@@ -166,8 +164,6 @@ void MainWidget::syncDone()
     return;
 
   KonnectorPair *pair = mManager->pair( uid );
-  if ( pair == 0 )
-    qDebug( "No pair available" );
 
   disconnect( pair->manager(), SIGNAL( synceesRead( Konnector* ) ),
               mEngine, SLOT( slotSynceesRead( Konnector* ) ) );
