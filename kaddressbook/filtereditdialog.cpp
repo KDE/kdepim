@@ -128,6 +128,7 @@ void FilterEditDialog::initGUI()
 
   mCategoriesView = new KListView( page );
   mCategoriesView->addColumn( i18n( "Category" ) );
+  mCategoriesView->setFullWidth( true );
   topLayout->addMultiCellWidget( mCategoriesView, 1, 1, 0, 1 );
 
   mMatchRuleGroup = new QButtonGroup( page );
