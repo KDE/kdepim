@@ -85,7 +85,7 @@ Wallet* KNServerInfo::openWallet()
   QString networkWallet = Wallet::NetworkWallet();
   Wallet* wallet = Wallet::openWallet(networkWallet);
   if (!wallet) {
-    KMessageBox::error(0, i18n("The wallet couldn't be opened "
+    KMessageBox::error(0, i18n("The wallet could not be opened. "
                                "This error is most probably caused "
                                "by providing a wrong password."));
     return 0;
@@ -113,9 +113,9 @@ void KNServerInfo::saveConf(KConfig *conf)
     if (n_eedsLogon) {
       Wallet* wallet = openWallet();
       if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
-          KMessageBox::information(0, i18n("KWallet isn't running. We strongly recommend using "
+          KMessageBox::information(0, i18n("KWallet is not running. It is strongly recommend to use "
                                            "KWallet for managing your password"),
-                                   i18n("KWallet isn't running!"), "KWalletWarning" );
+                                   i18n("KWallet is not running!"), "KWalletWarning" );
           conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
       }
     }

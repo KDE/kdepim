@@ -757,7 +757,7 @@ bool KNArticleWidget::findExec( const QString & exec)
     QString exe = KStandardDirs::findExe( exec, path );
     if ( exe.isEmpty())
     {
-        KMessageBox::error( this,  i18n("%1 no found").arg(exec ));
+        KMessageBox::error( this,  i18n("%1 not found").arg(exec ));
         return false;
     }
     return true;
