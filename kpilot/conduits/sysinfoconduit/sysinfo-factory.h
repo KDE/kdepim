@@ -35,38 +35,36 @@ class KAboutData;
 
 class SysInfoConduitFactory : public KLibFactory
 {
-Q_OBJECT
+	Q_OBJECT
 
 public:
-  SysInfoConduitFactory(QObject * = 0L,const char * = 0L);
-  virtual ~SysInfoConduitFactory();
+	SysInfoConduitFactory(QObject * = 0L,const char * = 0L);
+	virtual ~SysInfoConduitFactory();
 
-  static KAboutData *about() { return fAbout; } ;
+	static KAboutData *about() { return fAbout; } ;
 
 protected:
-  virtual QObject* createObject( QObject* parent = 0,
-    const char* name = 0,
-    const char* classname = "QObject",
-    const QStringList &args = QStringList() );
+	virtual QObject* createObject( QObject* parent = 0,
+		const char* name = 0,
+		const char* classname = "QObject",
+		const QStringList &args = QStringList() );
 private:
-  KInstance *fInstance;
-  static KAboutData *fAbout;
+	KInstance *fInstance;
+	static KAboutData *fAbout;
 public:
-  // KConfig entry keys.
-  static const char *fGroup,
-    *fOutputFile, *fOutputType, *fTemplateFile,
-    *fHardwareInfo, *fUserInfo,
-    *fMemoryInfo, *fStorageInfo,
-    *fDBList, *fRecordNumber,
-    *fSyncInfo, *fKDEVersion,
-    *fPalmOSVersion, *fDebugInfo;
+	// KConfig entry keys.
+	static const char *fGroup,
+		*fOutputFile, *fOutputType, *fTemplateFile,
+		*fHardwareInfo, *fUserInfo,
+		*fMemoryInfo, *fStorageInfo,
+		*fDBList, *fRecordNumber,
+		*fSyncInfo, *fKDEVersion,
+		*fPalmOSVersion, *fDebugInfo;
 } ;
 
 extern "C"
 {
-
-void *init_libsysinfoconduit();
-
+	void *init_libsysinfoconduit();
 }
 
 #endif
