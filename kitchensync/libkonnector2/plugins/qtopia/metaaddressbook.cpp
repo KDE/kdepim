@@ -19,7 +19,7 @@ QString MetaAddressbook::string( KSync::AddressBookSyncEntry* entry) {
     str += adr.familyName();
     str += adr.suffix();
     str += adr.role();
-    str += adr.custom( "opie", "Department" );
+    str += adr.organization();
 
 
     /*
@@ -34,6 +34,7 @@ QString MetaAddressbook::string( KSync::AddressBookSyncEntry* entry) {
     number = adr.phoneNumber( KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
     str += number.number();
 
+    str += adr.preferredEmail();
     str += adr.emails().join(";");
 
     /*
@@ -69,16 +70,18 @@ QString MetaAddressbook::string( KSync::AddressBookSyncEntry* entry) {
     str += ad.postalCode();
     str += ad.country();
 
-    str += adr.custom( "opie", "Office" );
-    str += adr.custom( "opie", "Profession" );
-    str += adr.custom( "opie", "Assistant" );
-    str += adr.custom( "opie", "Manager" );
+    str += adr.custom( "KADDRESSBOOK", "X-Department" );
+    str += adr.custom( "KADDRESSBOOK", "X-SpouseName" );
+    str += adr.custom( "KADDRESSBOOK", "X-Office" );
+    str += adr.custom( "KADDRESSBOOK", "X-Profession" );
+    str += adr.custom( "KADDRESSBOOK", "AssistantsName" );
+    str += adr.custom( "KADDRESSBOOK", "ManagersName" );
     str += adr.custom( "opie", "Children" );
     str += adr.custom( "opie", "HomeWebPage" );
-    str += adr.custom( "opie", "Spouse" );
     str += adr.custom( "opie", "Gender" );
-    str += adr.custom( "opie", "Birthday" );
-    str += adr.custom( "opie", "Anniversary" );
+//    str += adr.custom( "opie", "Birthday" );
+    str += adr.birthday().date().toString(Qt::ISODate);
+    str += adr.custom( "KADDRESSBOOK", "X-Anniversary" );
 
     str += adr.note();
     str += adr.nickName();
