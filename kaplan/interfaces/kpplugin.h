@@ -18,7 +18,7 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// $Id:$
+// $Id$
 
 #ifndef KP_PLUGIN_H
 #define KP_PLUGIN_H
@@ -27,19 +27,40 @@
 
 #include <kxmlguiclient.h>
 
+class DCOPClient;
+
 namespace Kaplan
 {
 	class Core;
 
+    /**
+      * Base class for all Plugins in Kaplan. Inherit from it
+      * to get a plugin. It can insert an icon into the sidepane,
+      * add widgets to the widgetstack and add menu items via XMLGUI.
+      */
 	class Plugin : public QObject, virtual public KXMLGUIClient
 	{
 	Q_OBJECT
 
 	public:
-		Plugin(Core *core, QObject *parent=0, const char *name=0);
+        /**
+          * Creates a new Plugin, note that @param name is required if
+          * you want your plugin to do dcop via it's own instance of 
+          * @ref DCOPClient by calling @ref dcopClient.
+          */
+		Plugin(Core *core, QObject *parent, const char *name);
 		~Plugin();
 
 		Core *core() const;
+
+        /** 
+          * Retrieve the current DCOP Client for the plugin.
+          *
+          * The clients name is taken from the name argument in the constructor.
+          * @note: The DCOPClient object will only be created when this method is
+          * called for the first time.
+          */
+        DCOPClient *dcopClient() const;
 
 	private:
 		class Private;

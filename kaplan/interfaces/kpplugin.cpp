@@ -18,7 +18,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// $Id:$
+// $Id$
+
+#include <dcopclient.h>
 
 #include "kpcore.h"
 
@@ -30,6 +32,8 @@ class Plugin::Private
 {
 public:
 	Kaplan::Core *core;
+    DCOPClient *dcopClient;
+    QCString name;
 };
 
 
@@ -37,7 +41,9 @@ Plugin::Plugin(Kaplan::Core *core, QObject *parent, const char *name)
 : QObject(parent, name)
 {
 	d = new Kaplan::Plugin::Private;
+    d->name = name;
 	d->core = core;
+    d->dcopClient = 0L;
 }
 
 
@@ -51,6 +57,18 @@ Kaplan::Core *Plugin::core() const
 {
 	return d->core;
 }
+
+DCOPClient * Plugin::dcopClient() const
+{
+    if (!d->dcopClient)
+    {
+        d->dcopClient = new DCOPClient();
+        d->dcopClient->registerAs(d->name, false);
+    }
+
+    return d->dcopClient;
+}
+
 
 #include "kpplugin.moc"
 
