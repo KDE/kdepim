@@ -128,10 +128,16 @@ QString Kleo::QGpgMEProgressTokenMapper::map( const char * tokenUtf8, int subtok
   if ( !tokenUtf8 || !*tokenUtf8 )
     return QString::null;
 
+  if ( qstrcmp( tokenUtf8, "file:" ) == 0 )
+    return QString::null; // gpgme's job
+
   return map( QString::fromUtf8( tokenUtf8 ), subtoken, cur, tot );
 }
 
 QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoken, int cur, int tot ) const {
+  if ( token.startsWith( "file:" ) )
+    return QString::null; // gpgme's job
+
   static const Map & tokenMap = makeMap();
 
   const Map::const_iterator it1 = tokenMap.find( token.lower() );
