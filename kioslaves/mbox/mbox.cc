@@ -18,6 +18,7 @@
  */
 #include "mbox.h"
 
+#include <libkdepim/kdepimmacros.h>
 #include "readmbox.h"
 #include "stat.h"
 #include "urlinfo.h"
