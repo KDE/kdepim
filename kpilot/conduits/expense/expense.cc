@@ -110,6 +110,7 @@
 
 #define DATESIZE 10
 #include <kdb/connection.h>
+#include <kdb/dbengine.h>
 #include <pi-expense.h>
 #include <stdlib.h>
 #include <qcstring.h>
@@ -290,16 +291,11 @@ ExpenseConduit::doSync()
 	QString mDBtable=config.readEntry("DBtable");
 	QString mDBlogin=config.readEntry("DBlogin");
 	QString mDBpasswd=config.readEntry("DBpasswd");
-	
 	QString mCSVname=config.readEntry("CSVFileName");
-
-	kdDebug() << "expense" << ": Read config entry \n" << "Db name: " << mDBnm << endl;
 	
 	PilotRecord* rec;
-    QString mDBDType="pg";
-    KDB::Connection* dbconn;
-    //KDB::Connection(mDBType, mDBsrv, 5424, *dbMobject);
-
+    	KDB::Connection* dbconn;
+    
         int recordcount=0;
 	int index=0;
 
@@ -307,18 +303,38 @@ ExpenseConduit::doSync()
 
 	if (mDBType=="1")
 	{
-		DEBUGCONDUIT << "MySQL database requested" << endl;
-//	QString mDBDType="pg";
-     dbconn->setPassword(mDBpasswd);
-     dbconn->setUser(mDBlogin);
-   
-			
+		DEBUGCONDUIT << fname << " Postgres database requested" << endl;
+		QString mDBDType="Postgres";
+		int port=5432;
+		dbconn = DBENGINE->addConnection(mDBDType, mDBsrv, port, mDBlogin);     
+		dbconn->setPassword(mDBpasswd);
+     		dbconn->setUser(mDBlogin);
+		DEBUGCONDUIT << fname << " Host: " << dbconn->host() << endl;
+		DEBUGCONDUIT << fname << "  " << dbconn->prettyPrint() << endl;
+		dbconn->openDatabase(mDBnm);
+		dbconn->open();
+		if (dbconn->isConnected())
+		{
+			DEBUGCONDUIT << fname << "Connected" << endl;
+		}	
 	}
 
 	if (mDBType=="2")
 	{
-		DEBUGCONDUIT << "PostgreSQL database requested" << endl;
-
+		DEBUGCONDUIT << "MySQL database requested" << endl;
+		QString mDBDType="Postgres";
+		int port=3306;
+		dbconn = DBENGINE->addConnection(mDBDType, mDBsrv, port, mDBlogin);     
+		dbconn->setPassword(mDBpasswd);
+	     	dbconn->setUser(mDBlogin);
+		DEBUGCONDUIT << fname << " Host: " << dbconn->host() << endl;
+		DEBUGCONDUIT << fname << "  " << dbconn->prettyPrint() << endl;
+		dbconn->openDatabase(mDBnm);
+		dbconn->open();
+		if (dbconn->isConnected())
+		{
+			DEBUGCONDUIT << fname << "Connected" << endl;
+		}	
 	}
 
 // Now let's read records
@@ -462,6 +478,10 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.8  2001/03/17 01:25:56  molnarc
+//
+// start of db work
+//
 // Revision 1.7  2001/03/17 00:15:11  molnarc
 //
 // expenses.cc --> some fixes
