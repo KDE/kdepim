@@ -90,8 +90,8 @@ void KNSavedArticleManager::readConfig()
   QCString tmp;
   conf->setGroup("POSTNEWS");
   dontIncUA = conf->readBoolEntry("dontIncludeUA", false);
-  warpAt = conf->readNumEntry("maxLength", 76);
-  rewarp = conf->readBoolEntry("rewarp",true);
+  wrapAt = conf->readNumEntry("maxLength", 76);
+  rewrap = conf->readBoolEntry("rewrap",true);
   incSig=conf->readBoolEntry("incSig",false);
   quotSign=conf->readEntry("QuotSign",">");
   intro=conf->readEntry("Intro", "%NAME wrote:").local8Bit();
@@ -229,7 +229,7 @@ void KNSavedArticleManager::post(KNGroup *g)
 
 
 
-//part of the rewarp procedure...
+//part of the rewrap procedure...
 int KNSavedArticleManager::findBreakPos(const QString &text, int start)
 {
   int i;
@@ -246,13 +246,13 @@ int KNSavedArticleManager::findBreakPos(const QString &text, int start)
 
 
 
-//part of the rewarp procedure...
+//part of the rewrap procedure...
 void KNSavedArticleManager::appendTextWPrefix(KNArticle *a, const QString &text, const QString &prefix)
 {
   QString txt = text;
   while (!txt.isEmpty()) {
-    if ((int)(prefix.length()+txt.length()) > warpAt) {
-      int breakPos=findBreakPos(txt,warpAt-prefix.length());
+    if ((int)(prefix.length()+txt.length()) > wrapAt) {
+      int breakPos=findBreakPos(txt,wrapAt-prefix.length());
       a->addBodyLine((prefix+txt.left(breakPos)).local8Bit());
       txt.remove(0,breakPos+1);
     } else {
@@ -320,8 +320,8 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
   text=a->textContent();
   if(!text->mimeInfo()->isReadable()) text->decodeText();
 
-  // semi-intelligent rewarping...
-  if (rewarp) {
+  // semi-intelligent rewrapping...
+  if (rewrap) {
     QString lastPrefix,thisPrefix,leftover,thisLine;   // we have to be unicode clean after 2.0 anyway
 
     for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
@@ -343,8 +343,8 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
         leftover = QString::null;
       }
 
-      if ((int)(thisPrefix.length()+thisLine.length()) > warpAt-2) {
-        int breakPos=findBreakPos(thisLine,warpAt-thisPrefix.length()-2);
+      if ((int)(thisPrefix.length()+thisLine.length()) > wrapAt-2) {
+        int breakPos=findBreakPos(thisLine,wrapAt-thisPrefix.length()-2);
         leftover = thisLine.right(thisLine.length()-breakPos-1);
         thisLine.truncate(breakPos);
       }

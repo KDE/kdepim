@@ -42,7 +42,7 @@ KNPostComSettings::KNPostComSettings(QWidget *p) : KNSettingsWidget(p)
 
   generalL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  generalL->addWidget(new QLabel(i18n("word warp at column:"), generalB),1,0);
+  generalL->addWidget(new QLabel(i18n("word wrap at column:"), generalB),1,0);
   maxLen=new KIntSpinBox(20, 100, 1, 20, 10, generalB);
   generalL->addWidget(maxLen,1,2);
 
@@ -64,8 +64,8 @@ KNPostComSettings::KNPostComSettings(QWidget *p) : KNSettingsWidget(p)
   replyL->addMultiCellWidget(intro, 2,2,0,1);
   replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=msgid"), replyB),3,3,0,1);
 
-  rewarpCB=new QCheckBox(i18n("rewarp quoted text automatically"), replyB);
-  replyL->addMultiCellWidget(rewarpCB, 5,5,0,1);
+  rewrapCB=new QCheckBox(i18n("rewrap quoted text automatically"), replyB);
+  replyL->addMultiCellWidget(rewrapCB, 5,5,0,1);
 
   authSigCB=new QCheckBox(i18n("include the authors signature"), replyB);
   replyL->addMultiCellWidget(authSigCB, 6,6,0,1);
@@ -125,7 +125,7 @@ void KNPostComSettings::init()
   conf->setGroup("POSTNEWS");
 
   maxLen->setValue(conf->readNumEntry("maxLength", 76));
-  rewarpCB->setChecked(conf->readBoolEntry("rewarp",true));
+  rewrapCB->setChecked(conf->readBoolEntry("rewrap",true));
   ownSigCB->setChecked(conf->readBoolEntry("appSig",true));
   intro->setText(conf->readEntry("Intro","%NAME wrote:"));
   authSigCB->setChecked(conf->readBoolEntry("incSig",false));
@@ -141,7 +141,7 @@ void KNPostComSettings::apply()
   conf->setGroup("POSTNEWS");
   
   conf->writeEntry("maxLength", maxLen->value());
-  conf->writeEntry("rewarp",rewarpCB->isChecked());
+  conf->writeEntry("rewrap",rewrapCB->isChecked());
   conf->writeEntry("appSig", ownSigCB->isChecked());
   conf->writeEntry("Intro", intro->text());
   conf->writeEntry("incSig", authSigCB->isChecked());

@@ -42,7 +42,7 @@ class KNPostComSettings : public KNSettingsWidget  {
   protected:
     void init();
     KIntSpinBox *maxLen;
-    QCheckBox *ownSigCB, *authSigCB, *rewarpCB, *externCB;
+    QCheckBox *ownSigCB, *authSigCB, *rewrapCB, *externCB;
     QLineEdit *intro, *quot, *editor;
     
 };
