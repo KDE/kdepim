@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Kolab Calendar Resource
+Name[xx]=xxKolabxx
+X-KDE-Library=kcal_kolab
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=kolab
