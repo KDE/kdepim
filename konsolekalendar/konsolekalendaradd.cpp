@@ -57,11 +57,6 @@ bool KonsoleKalendarAdd::addEvent()
   //TODO: can't this function return false?  else why is it a bool function?
   kdDebug() << "konsolekalendaradd.cpp::addEvent() | Add stuff " << endl;
 
-  if ( !m_variables->isDescription() && m_variables->isSummary() ) {
-    // If no description is provided, use the summary for the description
-    m_variables->setDescription( m_variables->getSummary() );
-  }
-
   if ( m_variables->isDryRun() ) {
     cout << i18n("Insert Event <Dry Run>:").local8Bit()
          << endl;
@@ -80,7 +75,7 @@ bool KonsoleKalendarAdd::addEvent()
     event->setSummary( m_variables->getSummary() );
     event->setFloats( m_variables->getFloating() );
     event->setDescription( m_variables->getDescription() );
-    event->setLocation( m_variables->getDescription() );
+    event->setLocation( m_variables->getLocation() );
 
     if ( m_variables->getCalendar()->addEvent( event ) ) {
       cout << i18n("Success: \"").local8Bit()

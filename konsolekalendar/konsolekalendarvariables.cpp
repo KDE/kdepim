@@ -54,7 +54,7 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bVerbose = false;
   m_bDryRun = false;
   m_bDescription = false;
-  m_description = "Default description";
+  m_description = "";
   m_bSummary = false;
   m_summary = "Default summary";
   m_bFloating = true;
