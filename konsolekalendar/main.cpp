@@ -683,7 +683,7 @@ int main( int argc, char *argv[] )
         return 1;
       }
     } else if ( create && remote ) {
-       cout << i18n( "Currently we can't create remote calendars, i'm very sorry about that!" ).local8Bit()
+       cout << i18n( "Creation of remote calendars is currently not supported." ).local8Bit()
        << endl; 
     }
 
