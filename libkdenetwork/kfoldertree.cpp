@@ -190,6 +190,10 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
                                   int column, int width, int align )
 {
   KFolderTree *ft = static_cast<KFolderTree*>(listView());
+
+  const int unreadRecursiveCount = countUnreadRecursive();
+  const int unreadCount = ( mUnread > 0 ) ? mUnread : 0;
+
   /* The below is exceedingly silly, but Ingo insists that the unread
    * count that is shown in parenthesis after the folder name must
    * be configurable in color. That means that paintCell needs to do
@@ -197,7 +201,7 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
    * needed when there is the unread column, special case that. */
   if ( ft->isUnreadActive() ) {
     if ( (column == 0 || column == ft->unreadIndex())
-          && (mUnread > 0 || (!isOpen() && countUnreadRecursive() > 0)) )
+          && ( unreadCount > 0 || ( !isOpen() && unreadRecursiveCount > 0 ) ) )
     {
       QFont f = p->font();
       f.setWeight(QFont::Bold);
@@ -234,7 +238,8 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
     {
       // use a bold-font for the folder- and the unread-columns
       if ( (column == 0 || column == ft->unreadIndex())
-            && (mUnread > 0 || (!isOpen() && countUnreadRecursive() > 0)) )
+            && ( unreadCount > 0
+                 || ( !isOpen() && unreadRecursiveCount > 0 ) ) )
       {
         QFont f = p->font();
         f.setWeight(QFont::Bold);
@@ -246,11 +251,22 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
         p->setPen( ft->paintInfo().colUnread );
       if (column == 0) {
         // draw the unread-count if the unread-column is not active
-        QString unread = QString::null;
-        if ( !ft->isUnreadActive() && mUnread > 0 )
-          unread = " (" + QString::number(mUnread) + ")";
-        p->drawText( br.right(), 0, width-marg-br.right(), height(),
-            align | AlignVCenter, unread );
+        QString unread;
+
+        if ( !ft->isUnreadActive()
+             && ( unreadCount > 0
+                  || ( !isOpen() && unreadRecursiveCount > 0 ) ) ) {
+          if ( isOpen() )
+            unread = " (" + QString::number( unreadCount ) + ")";
+          else if ( unreadRecursiveCount == unreadCount || mType == Root )
+            unread = " (" + QString::number( unreadRecursiveCount ) + ")";
+          else
+            unread = " (" + QString::number( unreadCount ) + " + " +
+                     QString::number( unreadRecursiveCount-unreadCount ) + ")";
+
+          p->drawText( br.right(), 0, width-marg-br.right(), height(),
+                       align | AlignVCenter, unread );
+        }
       }
     } // end !t.isEmpty()
   }
