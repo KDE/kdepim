@@ -73,4 +73,3 @@ QString KCMKabCustomFields::kabLocalDir()
   return kabdirs.grep( QRegExp( "^"+KGlobal::dirs()->localkdedir() ) ).first();
 }
 
-#include "kcmkabcustomfields.moc"
