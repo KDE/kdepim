@@ -79,7 +79,7 @@ void FilterPMail::import(FilterInfo *info)
 }
 
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-void FilterPMail::processFiles(QString mask, void(FilterPMail::* workFunc)(QString) )
+void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc)(QString) )
 {
    QStringList files = dir.entryList(mask, QDir::Files, QDir::Name);
    kdDebug() << "Mask is " << mask << " count is " << files.count() << endl;
@@ -103,7 +103,7 @@ void FilterPMail::processFiles(QString mask, void(FilterPMail::* workFunc)(QStri
 
 
 /** this function imports one *.CNM message */
-void FilterPMail::importNewMessage(QString file)
+void FilterPMail::importNewMessage(const QString& file)
 {
    QString destFolder("PMail-New Messages");
    inf->to(destFolder);
@@ -112,7 +112,7 @@ void FilterPMail::importNewMessage(QString file)
 
 
 /** this function imports one mail folder file (*.PMM) */
-void FilterPMail::importMailFolder(QString file)
+void FilterPMail::importMailFolder(const QString& file)
 {
    struct {
       char folder[86];
@@ -211,7 +211,7 @@ void FilterPMail::importMailFolder(QString file)
 
 
 /** imports a 'unix' format mail folder (*.MBX) */
-void FilterPMail::importUnixMailFolder(QString file)
+void FilterPMail::importUnixMailFolder(const QString& file)
 {
    #define MAX_LINE 4096
    #define MSG_SEPERATOR_START "From "

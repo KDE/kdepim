@@ -85,7 +85,7 @@ void FilterEudoraAb::import(FilterInfo *info)
       kabAddress(info,"Eudora Light",
           keys[i],(emails[i].isEmpty()) ? QString::null : emails[i],
           QString::null,QString::null,QString::null,
-          (names[i]=="") ? QString::null : names[i],
+          (names[i].isEmpty()) ? QString::null : names[i],
           QString::null,
           QString::null,QString::null,
           QString::null,QString::null,

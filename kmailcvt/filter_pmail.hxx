@@ -33,13 +33,13 @@ public:
 
 protected:
   /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-  void processFiles(QString mask,  void(FilterPMail::* workFunc)(QString) );
+  void processFiles(const QString& mask,  void(FilterPMail::* workFunc)(QString) );
   /** this function imports one *.CNM message */
-  void importNewMessage(QString file);
+  void importNewMessage(const QString& file);
   /** this function imports one mail folder file (*.PMM) */
-  void importMailFolder(QString file);
+  void importMailFolder(const QString& file);
   /** imports a 'unix' format mail folder (*.MBX) */
-  void importUnixMailFolder(QString file);
+  void importUnixMailFolder(const QString& file);
 private:
   /** the working directory */
   QDir dir;
