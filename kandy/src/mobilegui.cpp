@@ -264,7 +264,7 @@ void MobileGui::writeKabc()
 
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
 
-  KABC::AddressBook::Ticket *ticket = addressBook->requestSaveTicket();
+  KABC::Ticket *ticket = addressBook->requestSaveTicket();
 
   if ( !ticket ) {
     kdDebug() << "Error! No ticket to save." << endl;

@@ -1138,10 +1138,10 @@
 </actions>
 <images>
     <image name="image0">
-        <data format="XPM.GZ" length="706">789cad92d10ac2201486ef7d8a83e76ec45623c6207a84a2cb20ba50d7a88b2da87511d1bbe7d169aed945d0ff0bfafb718e8266096c372b483276ed447752a08ee20249756b9afb6ebf7c309ee7a04701333e613c0505eb737ba035ea354e8d282a8ae5bccc6dac28aa824c5150acb52c952ed6b5691bd53f086a99f993d85da411ef86df087ae29a07c012145248f40aee8652041e9010889f6a70a8770da20ad49318f0e78c803b670cfa9a08b024067a1201ae869ec4bb3236df298d993f17ec054df19e43</data>
+        <data format="XPM.GZ" length="706">789cad92cf0ac2300cc6ef7d8ab0dc866c6eb231101f41f12888873673e8610a3a0f22bebbfdb3d6ced583e09742f3f54792429bc6b0592f214ed9b5e3dd91800efc02717d6bdbfb76b778b028cf41ae12b268c2a2040856e7d35ee528739c6a294bca56b32a33b656960a2aa950962bdb48192aac6d1add36a87f1094d2fb2731a7a856b81b7e23e8886dee0143900b2ed0c9bb1b0aeec580f880ff548343bd6b10c9534f42c0cd19013b670cfa9a003024047a1200b6463d898b5a87fe4e4928a2e79cbd00444d9e3f</data>
     </image>
     <image name="image1">
-        <data format="XPM.GZ" length="706">789cd3d7528808f055d0d2e72a2e492cc94c5648ce482c52d04a29cdcdad8c8eb5ade6523232520022330543251d2e253d856405bffcbc54105b19c856360003103711c4b530b13082709340dc644310047153c05c3310047193c1dcc424d31488b158015846190b80ca24262a2721012087349964a030ba69c9c9303d403e9132087b68279388ecff4414193440948c32aa71d86470bb808632a0e8d64385296099143d6c50a9d69a0b000eb5aa86</data>
+        <data format="XPM.GZ" length="706">789cd3d7528808f055d0d2e72a2e492cc94c5648ce482c52d04a29cdcdad8c8eb5ade6523232520022330543251d2e253d856405bffcbc54105b19c856360003103711c4b530b63084709340dc64d364a36453103705ca35837093c1dc9424b31430570f2b00cb2863015099c444e5242400e49026930c1446372d3919a607c8275206610fed641291fd9f8822830688925146350e9b0c6e17d0500614dd7aa830052c93a2870d2ad55a7301002caeaa93</data>
     </image>
 </images>
 <connections>
@@ -1273,6 +1273,7 @@
     </connection>
 </connections>
 <includes>
+    <include location="global" impldecl="in declaration">resourcefile.h</include>
     <include location="global" impldecl="in declaration">addressbook.h</include>
     <include location="local" impldecl="in implementation">mainWindow.ui.h</include>
 </includes>
@@ -1280,10 +1281,11 @@
     <forward>class AddresseeItem</forward>
 </forwards>
 <variables>
-    <variable>QString mCurrentPhone</variable>
-    <variable>QString mCurrentAddress</variable>
-    <variable>KABC::AddressBook *mAddressBook</variable>
+    <variable>KABC::ResourceFile *mResourceFile</variable>
     <variable>AddresseeItem *mCurrentItem</variable>
+    <variable>KABC::AddressBook *mAddressBook</variable>
+    <variable>QString mCurrentAddress</variable>
+    <variable>QString mCurrentPhone</variable>
 </variables>
 <slots>
     <slot>init()</slot>
