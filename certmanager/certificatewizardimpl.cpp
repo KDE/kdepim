@@ -88,6 +88,9 @@ void CertificateWizardImpl::slotGenerateCertificate()
         certParms += "OU=";
         certParms += departmentED->text();
         bFirst = false;
+        if( !emailED->text().isEmpty() ) {
+            certParms += "/Email=" + emailED->text();
+        }
     }
     if( !organizationED->text().isEmpty() ) {
         if( !bFirst )
