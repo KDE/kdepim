@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-11-26</date>
-<releaseinfo>1.02.02</releaseinfo>
+<date>2005-01-02</date>
+<releaseinfo>1.02.04</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -690,14 +690,37 @@ Set options as for text alarms above.</para>
 </listitem>
 
 <listitem>
-<para><guilabel>Command</guilabel> to enter a shell command line to
-execute. The command is passed straight to the default shell (defined
+<para><guilabel>Command</guilabel> to enter a command to
+execute.</para>
+
+<note><para>This option is not available if &kde; is running in kiosk
+mode.</para></note>
+
+<itemizedlist>
+<listitem>
+<para>The <guilabel>Enter a script</guilabel> checkbox lets you choose
+whether to enter a shell command line or a script.</para>
+
+<para>If this option is unchecked, you can enter a shell command line
+to execute. The command is passed straight to the default shell (defined
 by the <envar>SHELL</envar> environment variable), and may include
 whatever options, parameters, piped commands, etc. are permitted by
 the shell in a single line command.</para>
 
-<note><para>This option is not available if &kde; is running in kiosk
-mode.</para></note>
+<para>If this option is checked, you can enter the text of a script to
+execute. Remember to include a first line such as
+<literal>#!/bin/bash</literal> to ensure that the correct command
+interpreter is invoked.</para>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Execute in terminal window</guilabel> to cause
+the command to be executed in a terminal window. This will allow you
+to see any terminal output which the command produces. You can choose
+which type of terminal window should be used in the
+<link linkend="preferences-general">Preferences dialog</link>.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 
 <listitem>
@@ -1564,6 +1587,43 @@ stored according to the selected options.</para>
 </listitem>
 </itemizedlist>
 </listitem>
+
+<listitem><para><guilabel>Terminal for Command Alarms</guilabel>:
+Here, you can select which type of terminal window should be used for
+command alarms which are executed in a terminal window. Some of the
+most common terminal window applications are preconfigured, &eg;
+<application>xterm</application>, &konsole;, although only those
+which are installed on your system will be shown here. You can view
+the actual command options used for each application by displaying the
+context help for its radio button.</para>
+
+<para>If you want to use another application, or want to use one of
+those listed but with different command options, select
+<guilabel>Other</guilabel> and enter the command to invoke the
+terminal window. By default, the alarm's command string will be
+appended to what you specify. Alternatively, you may specify where the
+alarm's command string should be inserted, by use of the following
+codes:</para>
+
+<variablelist>
+<varlistentry>
+<term>%c</term><listitem>The alarm's command string will be substituted.</listitem>
+</varlistentry>
+<varlistentry>
+<term>%w</term><listitem>The alarm's command string will be substituted, with a <literal>sleep</literal> appended.</listitem>
+</varlistentry>
+<varlistentry>
+<term>%C</term><listitem>A temporary command file containing the alarm's command string will be created, and the command to execute the file will be substituted.</listitem>
+</varlistentry>
+<varlistentry>
+<term>%W</term><listitem>A temporary command file containing the alarm's command string will be created with a <literal>sleep</literal> appended, and the command to execute the file will be substituted.</listitem>
+</varlistentry>
+</variablelist>
+
+<para>When the command alarm is triggered, its command string will be
+quoted before being inserted into the terminal window command.</para>
+</listitem>
+
 </itemizedlist>
 </sect1>
 
