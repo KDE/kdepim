@@ -1,0 +1,12 @@
+If you make a new plugin, please add the list of returned items to this list.
+
+
+vcf plugin:
+===========
+
+type       key             W/A        details
+------------------------------------------------------------------------
+String     Name            -/-    Name of person
+String     Email           -/-    Email address
+
+
