@@ -141,6 +141,14 @@ public:
     DwBody& Body() const;
     //. This function returns the {\tt DwBody} object contained by this object.
 
+    int BodySize() const;
+    //. Get the size of the Body
+
+    void SetBodySize( int size ) { mBodySize = size; }
+    //. Explicitly set the size of the Body
+    //. This is needed if the body is empty but you know the size and others 
+    //. should be able to access it
+
 protected:
 
     DwHeaders* mHeaders;
@@ -149,6 +157,7 @@ protected:
 private:
 
     static const char* const sClassName;
+    int mBodySize; // normally mBody->AsString().length()
 
 public:
 

@@ -161,6 +161,7 @@ DwEntity::DwEntity()
     ASSERT(mBody != 0);
     mClassId = kCidEntity;
     mClassName = sClassName;
+    mBodySize = -1;
 }
 
 
@@ -175,6 +176,7 @@ DwEntity::DwEntity(const DwEntity& aEntity)
     mBody->SetParent(this);
     mClassId = kCidEntity;
     mClassName = sClassName;
+    mBodySize = aEntity.mBodySize;
 }
 
 
@@ -187,6 +189,7 @@ DwEntity::DwEntity(const DwString& aStr, DwMessageComponent* aParent)
     ASSERT(mBody != 0);
     mClassId = kCidEntity;
     mClassName = sClassName;
+    mBodySize = -1;
 }
 
 
@@ -282,6 +285,16 @@ DwHeaders& DwEntity::Headers() const
 DwBody& DwEntity::Body() const
 {
     return *mBody;
+}
+
+int DwEntity::BodySize() const
+{
+  if ( mBody->AsString().length() > 0 )
+    return mBody->AsString().length();
+  else if ( mBodySize > 0 )
+    return mBodySize;
+  else
+    return 0;
 }
 
 

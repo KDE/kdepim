@@ -42,6 +42,7 @@ DwMessageComponent::DwMessageComponent()
     mParent = 0;
     mClassId = kCidMessageComponent;
     mClassName = sClassName;
+    mId = "";
 }
 
 
@@ -53,6 +54,7 @@ DwMessageComponent::DwMessageComponent(const DwMessageComponent& aCmp)
     mParent = 0;
     mClassId = kCidMessageComponent;
     mClassName = sClassName;
+    mId = aCmp.mId;
 }
 
 
@@ -65,6 +67,7 @@ DwMessageComponent::DwMessageComponent(const DwString& aStr,
     mParent = aParent;
     mClassId = kCidMessageComponent;
     mClassName = sClassName;
+    mId = "";
 }
 
 
@@ -88,6 +91,7 @@ DwMessageComponent::operator = (const DwMessageComponent& aCmp)
     if (this == &aCmp) return *this;
     mString = aCmp.mString;
     mIsModified = aCmp.mIsModified;
+    mId = aCmp.mId;
     return *this;
 }
 

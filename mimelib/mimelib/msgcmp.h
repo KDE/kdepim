@@ -258,6 +258,10 @@ public:
     //. Returns a object id that is unique among all DwMessageComponent
     //. objects.
 
+    const char* partId() const { return mId; };
+    void SetPartId( const char* id ) { mId = id; };
+    // set or get a unique string for that part
+
 protected:
 
     DwString mString;
@@ -274,6 +278,9 @@ protected:
 
     const char* mClassName;
     // Class name for runtime type identification
+
+    const char* mId;
+    // unique indentifier
 
 private:
 

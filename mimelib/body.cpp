@@ -401,6 +401,7 @@ void DwBody::Parse()
     if (entity->Headers().HasContentType()) {
         const DwMediaType& contentType = entity->Headers().ContentType();
         int type = contentType.Type();
+        int subtype = contentType.Subtype();
         if (type == DwMime::kTypeMultipart) {
             mBoundaryStr = contentType.Boundary();
             // Now parse body into body parts
@@ -416,8 +417,12 @@ void DwBody::Parse()
                 partStr = partStr->mNext;
             }
         }
-        else if (type == DwMime::kTypeMessage) {
-            mMessage = DwMessage::NewMessage(mString, this);
+        else if (type == DwMime::kTypeMessage &&
+                 subtype == DwMime::kSubtypeRfc822) {
+            if (mMessage)
+              mMessage->FromString(mString);
+            else
+              mMessage = DwMessage::NewMessage(mString, this);
             mMessage->Parse();
         }
     }
@@ -436,6 +441,7 @@ void DwBody::Assemble()
     */
     const DwMediaType& contentType = entity->Headers().ContentType();
     int type = contentType.Type();
+    int subtype = contentType.Subtype();
     if (type == DwMime::kTypeMultipart) {
         /*
         int len;
@@ -490,7 +496,9 @@ void DwBody::Assemble()
         mString += mEpilogue;
         mIsModified = 0;
     }
-    else if (type == DwMime::kTypeMessage && mMessage) {
+    else if (type == DwMime::kTypeMessage &&
+             subtype == DwMime::kSubtypeRfc822 &&
+             mMessage) {
         mMessage->Assemble();
         mString = mMessage->AsString();
     }
