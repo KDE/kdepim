@@ -21,7 +21,7 @@ static const char *id="$Id$";
 int debug_level=0;
 const char *tabs="\t\t\t\t\t\t";
 
-static void listConfig(kdbgstream& s,KConfig &c)
+void listConfig(kdbgstream& s,KConfig &c)
 {
 	FUNCTIONSETUP;
 
@@ -50,5 +50,9 @@ static void listConfig(kdbgstream& s,KConfig &c)
 				<< endl;
 		}
 	}
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
 }
 #endif

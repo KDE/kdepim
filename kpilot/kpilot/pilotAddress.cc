@@ -9,6 +9,8 @@
 //
 static const char *id="$Id$";
 
+#include "options.h"
+
 #include <stdlib.h>
 #include "pilotAddress.h"
 
@@ -43,6 +45,10 @@ PilotAddress::pack(void *buf, int *len)
     i = pack_Address(&fAddressInfo, (unsigned char*)buf, *len);
     *len = i;
     return buf;
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
     }
 
 	  

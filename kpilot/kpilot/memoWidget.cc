@@ -203,6 +203,10 @@ MemoWidget::saveData()
 {
 	FUNCTIONSETUP;
 	return true;
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
 }
 
 

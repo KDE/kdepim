@@ -25,6 +25,10 @@ MessageDialog::MessageDialog( QString title, QWidget* parent, const char* name, 
     fMessage->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     fMessage->setAlignment(AlignBottom | AlignHCenter);
     kapp->processEvents();
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
     }
   
 void 

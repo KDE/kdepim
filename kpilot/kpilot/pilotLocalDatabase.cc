@@ -9,6 +9,8 @@
 //
 static const char *id="$Id$";
 
+#include "options.h"
+
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream.h>
@@ -58,6 +60,10 @@ int PilotLocalDatabase::readAppBlock(unsigned char* buffer, int )
 	}
     memcpy((void*)buffer, fAppInfo, fAppLen);
     return fAppLen;
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
     }
 
 // Writes the application block info.

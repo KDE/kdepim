@@ -151,6 +151,10 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 	}
 
 	return currentRecord;
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
 }
 
 void
@@ -828,6 +832,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.16  2000/11/14 23:02:28  adridg
+// Layout and i18n issues
+//
 // Revision 1.15  2000/11/14 06:33:22  adridg
 // Using Qt Layout code now
 //

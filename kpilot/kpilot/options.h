@@ -56,7 +56,7 @@
 #define SYNC_MINOR	(128+256)
 #define SYNC_TEDIOUS	(128+256+512)
 
-#define FUNCTIONSETUP	static char *fname=__FUNCTION__; \
+#define FUNCTIONSETUP	static const char *fname=__FUNCTION__; \
 			if (debug_level & DEBUG_FUNCTIONS) { cerr << \
 			fname << tabs+(strlen(fname)>>3) \
 				<< "(" << __FILE__ << ':' << \
