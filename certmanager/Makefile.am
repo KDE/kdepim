@@ -16,8 +16,8 @@ kgpgcertmanager_SOURCES = \
 
 METASOURCES = AUTO
 
-AM_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-LDADD    = $(LIB_KDEUI) $(LIB_KFILE) $(LIB_KABC) lib/libkleopatra.la
+kgpgcertmanager_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+kgpgcertmanager_LDADD   = lib/libkleopatra.la $(LIB_KIO) $(LIB_KABC)
 
 rcdir = $(kde_datadir)/kgpgcertmanager
 rc_DATA = kgpgcertmanagerui.rc
