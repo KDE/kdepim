@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Kleopatra
 Name[be]=Клеапатра
-Name[ta]=க்லியோபட்ரா
+Name[ta]=க்ளியோபட்ரா
 Name[xx]=xxKleopatraxx
 Type=Application
 Exec=kleopatra --import-certificate %u
