@@ -47,7 +47,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   l_astNewFetch = conf.readDateTimeEntry("lastNewFetch").date();
 
   KNServerInfo::readConf(&conf);
-  return true;
+
   if (n_ame.isEmpty() || s_erver.isEmpty() || i_d == -1)
     return false;
   else
