@@ -139,13 +139,13 @@ KAboutDialog dlg(this,"KmailCvt2");
            email="kmailcvt@hum.org",
            url="http://www.hum.org/kmailcvt.html",
            work=i18n("\n"
-                "Converts various import formats to Kmail and K Addressbook  \n"
+                "Converts various import formats to KMail and K Addressbook  \n"
                 "Currently supported formats:\n\n"
                 );
            work+=imports->getFilters();
            work+=i18n("\n"
-                "You are invited to contribute other import (or output)\n"
-                "formats. I you want to contribute, please contact me.\n"
+                "You are invited to contribute other import (or export)\n"
+                "formats. If you want to contribute, please contact me.\n"
                 "Translations are welcome too!"
                 );
     dlg.setAuthor(name,email,url,work);

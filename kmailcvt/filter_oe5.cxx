@@ -50,22 +50,18 @@ QWidget *parent=info->parent();
    sprintf(dir,getenv("HOME"));
 
    {QString m;
-     m=i18n("Stephan B. Nedregard kindly contributed the OE4/5 import code!\n\n"
-            "Select the Outlook Express 5 directory on "
-            "your system.\n\n"
-            "This import filter wil search for folders\n"
-            "(the '.dbx' files)\n\n"
-            "NOTE: You won't get back your original folder-\n"
-            "structure, only the folders themselves are\n"
-            "imported. But you'll probably only do this\n"
-            "one time ;-).\n\n"
-            "NOTE: Kmailcvt takes the same foldernames\n"
-            "as the Outlook Express foldernames, but precedes\n"
-            "them with 'OE5-'. If this causes trouble to you\n"
-            "(you've got kmail folders beginning with 'OE5-')\n"
-            "cancel this import function (next dialog will\n"
-            "let you do that) and rename the existing kmail\n"
-            "folders."
+     m=i18n("Stephan B. Nedregard kindly contributed the Outlook Express 4/5\n"
+	    "import code.\n\n"
+	    "Select the Outlook Express 5 directory on your system.\n\n"
+	    "This import filter will search for folders (the '.mbx' files).\n\n"
+	    "NOTE: You will not be able to revert to your original folder\n"
+	    "structure, only the folders themselves are imported. But you will\n"
+	    "probably only do this one time.\n\n"
+	    "NOTE: Kmailcvt takes the same folder names as the Outlook Express\n"
+	    "folder names, but precedes them with 'OE5-'. If this causes\n"
+	    "problems for you (you have KMail folders beginning with 'OE5-'),\n"
+	    "cancel this import function (the next dialog will allow you to do\n"
+	    "that) and rename the existing KMail folders."
            );
      info->alert(CAP,m);
    }
@@ -125,7 +121,7 @@ QWidget *parent=info->parent();
               }
 
               {QString f,n;
-                 msg=i18n("  importing folder '%1' to kmail 'OE5-%2'...").arg(file).arg(name);
+                 msg=i18n("  importing folder '%1' to KMail 'OE5-%2'...").arg(file).arg(name);
                  info->log(msg);
               }
 

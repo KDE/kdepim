@@ -45,18 +45,18 @@ QWidget *parent=info->parent();
 FILE   *F;
 
    if (!kabStart(info)) { 
-     info->alert(name(),i18n("Can't open K Addressbook"));
+     info->alert(name(),i18n("Unable to open K Addressbook"));
    }
 
    sprintf(dir,getenv("HOME"));
  
    file=KFileDialog::getOpenFileName(dir,"*.txt *.TXT *.Txt",parent);
    if (file.length()==0) {
-     info->alert(name(),i18n("No Addressbook choosen"));
+     info->alert(name(),i18n("No address book chosen"));
      return;
    }
    F=fopen(file.latin1(),"rt");
-   if (F==NULL) {QString msg=i18n("Can't open file '%1'").arg(file);
+   if (F==NULL) {QString msg=i18n("Unable to open file '%1'").arg(file);
      info->alert(name(),msg);
      return;
    }

@@ -291,24 +291,24 @@ QString msg(_msg);
 int     result;
   result=dcopAddMessage(folderName,msg);
   if (result==-1) { QString msg;
-    msg=i18n("Cannot make folder %1 in kmail").arg(folder);
+    msg=i18n("Cannot make folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
   }
   else if (result==-2) { QString msg;
     msg.sprintf(" '%s' ",folder);
-    msg=i18n("Cannot add message to folder %1 in kmail").arg(folder);
+    msg=i18n("Cannot add message to folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
   }
   else if (result==-3) { QString msg;
-    msg=i18n("FATAL: Couldn't start kmail for dcop communication\n"
-             "       make sure 'kmail' is in your path.");
+    msg=i18n("FATAL: Unable to start KMail for DCOP communication.\n"
+             "       Make sure 'kmail' is in your path.");
     info->alert(cap,msg);
     return false;
   }
   else if (result==0) { QString msg;
-    msg=i18n("Error while adding message to folder %1 in kmail").arg(folder);
+    msg=i18n("Error while adding message to folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
   }

@@ -73,7 +73,7 @@ char s[1024];
       break;
       case OE_NOTOEBOX :
         {QString msg;
-           msg=i18n("%1 is not an oe4 mailbox").arg(folderIn);
+           msg=i18n("%1 is not an Outlook Express 4 mailbox").arg(folderIn);
            info->alert(CAP,msg);
         }
       break;

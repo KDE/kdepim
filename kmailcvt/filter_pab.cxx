@@ -36,7 +36,7 @@ QWidget *parent=info->parent();
 
    _file=KFileDialog::getOpenFileName(dir,"*.pab *.PAB *.Pab",parent);
    if (_file.length()==0) {
-     info->alert(name(),i18n("No Addressbook choosen"));
+     info->alert(name(),i18n("No address book chosen"));
      return;
    }
    strcpy(file,_file.latin1());
@@ -51,6 +51,6 @@ QWidget *parent=info->parent();
       info->to(to);
       info->current(i18n("Currently converting .PAB addresses to Kab"));
       PAB.convert();
-      info->current(i18n("Done converting .PAB addresses to Kab"));
+      info->current(i18n("Finished converting .PAB addresses to Kab"));
    }
 }
