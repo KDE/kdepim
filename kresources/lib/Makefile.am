@@ -29,3 +29,5 @@ METASOURCES = AUTO
 ### then do all the namespaces get mixed together.
 KDE_OPTIONS = nofinal
 
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/kdepimresources.pot
