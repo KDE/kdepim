@@ -35,6 +35,7 @@ class KMailDrop : public QObject
     QString _caption;
     QString _clickCmd;
     QString _nMailCmd;
+    QString _soundFile;
     Style   _style;
     QColor  _bgColour;
     QColor  _fgColour;
@@ -50,6 +51,7 @@ class KMailDrop : public QObject
     static const char *CaptionConfigKey;
     static const char *ClickConfigKey;
     static const char *NewMailConfigKey;
+    static const char *SoundFileConfigKey;
     static const char *DisplayStyleConfigKey;
     static const char *NFgColourConfigKey;
     static const char *NBgColourConfigKey;
@@ -228,6 +230,7 @@ class KMailDrop : public QObject
     QString       caption()       const { return _caption; }
     QString       clickCmd()      const { return _clickCmd; }
     QString       newMailCmd()    const { return _nMailCmd; }
+    QString       soundFile()     const { return _soundFile;}
     QColor        bgColour()      const { return _bgColour; }
     QColor        fgColour()      const { return _fgColour; }
     QColor        newBgColour()   const { return _nbgColour; }
@@ -239,6 +242,7 @@ class KMailDrop : public QObject
     void setCaption(QString);
     void setClickCmd(QString);
     void setNewMailCmd(QString);
+    void setSoundFile(QString);
     void setDisplayStyle(Style);
     void setBgColour(QColor);
     void setFgColour(QColor);

@@ -1,9 +1,11 @@
 
 #include<assert.h>
 
+#include<qfile.h>
 #include <qstring.h>
 #include<qtooltip.h>
 
+#include<kaudioplayer.h>
 #include<kdebug.h>
 #include<kprocess.h>
 
@@ -57,6 +59,9 @@ void KornButton::setNumber(int num)
 	_lastNum = num;
 
 	_style->update( _box->count(), newMessages );
+
+	if (newMessages && !_box->soundFile().isEmpty() && QFile::exists(_box->soundFile()))
+		KAudioPlayer::play(_box->soundFile());
 
 	if (newMessages && !_box->newMailCmd().isEmpty())
 		executeCmd(_box->newMailCmd());

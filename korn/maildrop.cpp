@@ -22,6 +22,7 @@ const char *KMailDrop::TypeConfigKey = "type";
 const char *KMailDrop::CaptionConfigKey = "caption";
 const char *KMailDrop::ClickConfigKey = "onclick";
 const char *KMailDrop::NewMailConfigKey = "onnewmail";
+const char *KMailDrop::SoundFileConfigKey = "soundfile";
 const char *KMailDrop::BgColourConfigKey = "bgcolour";
 const char *KMailDrop::FgColourConfigKey = "fgcolour";
 const char *KMailDrop::NBgColourConfigKey = "newmailbgcolour";
@@ -68,6 +69,7 @@ bool KMailDrop::readConfigGroup(const KConfigBase & c)
   _caption    = c.readEntry(fu(CaptionConfigKey));
   _clickCmd   = c.readPathEntry(fu(ClickConfigKey));
   _nMailCmd   = c.readPathEntry(fu(NewMailConfigKey));
+  _soundFile  = c.readPathEntry(fu(SoundFileConfigKey));
   _style      = Style(c.readUnsignedNumEntry(fu(DisplayStyleConfigKey), Plain));
   _bgColour   = c.readColorEntry(fu(BgColourConfigKey), &QApplication::palette().active().background());
   _fgColour   = c.readColorEntry(fu(FgColourConfigKey), &QApplication::palette().active().text());
@@ -87,6 +89,7 @@ bool KMailDrop::writeConfigGroup(KConfigBase & c) const
   c.writeEntry(fu(CaptionConfigKey),      caption());
   c.writePathEntry(fu(ClickConfigKey),        clickCmd());
   c.writePathEntry(fu(NewMailConfigKey),      newMailCmd());
+  c.writePathEntry(fu(SoundFileConfigKey),    soundFile());
   c.writeEntry(fu(DisplayStyleConfigKey), _style);
   c.writeEntry(fu(BgColourConfigKey),     _bgColour);
   c.writeEntry(fu(FgColourConfigKey),     _fgColour);
@@ -155,6 +158,12 @@ void KMailDrop::setClickCmd(QString s)
 void KMailDrop::setNewMailCmd(QString s)
 {
   _nMailCmd = s;
+  emit(configChanged());
+}
+
+void KMailDrop::setSoundFile(QString s)
+{
+  _soundFile = s;
   emit(configChanged());
 }
 

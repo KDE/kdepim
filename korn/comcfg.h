@@ -6,6 +6,8 @@
 
 #include "moncfg.h"
 
+class KURLRequester;
+
 class QLineEdit;
 
 class KCommandsCfg : public KMonitorCfg
@@ -24,8 +26,9 @@ class KCommandsCfg : public KMonitorCfg
 
   private:
 
-    QLineEdit *_onClick;
-    QLineEdit *_onReceipt;
+    QLineEdit     *_onClick;
+    QLineEdit     *_onReceipt;
+    KURLRequester *_soundFile;
 };
 
 #endif // COMCFG_H
