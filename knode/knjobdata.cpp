@@ -59,7 +59,7 @@ void KNJobConsumer::processJob(KNJobData *j)
 
 // the assingment of a_ccount may cause race conditions, check again.... (CG)
 KNJobData::KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i)
- : t_ype(t), d_ata(i), a_ccount(a), c_anceled(false), c_onsumer(c)
+ : t_ype(t), d_ata(i), a_ccount(a), c_anceled(false), a_uthError(false), c_onsumer(c)
 {
   d_ata->setLocked(true);
 }
