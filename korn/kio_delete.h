@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef KIO_DELETE_H
-#define KIO_DELETE_H
+#ifndef MK_KIO_DELETE_H
+#define MK_KIO_DELETE_H
 
 /*
  * This class handles removing of selected messages.
@@ -66,4 +66,4 @@ private:
 	bool _valid;
 };
 
-#endif
+#endif //MK_KIO_DELETE_H

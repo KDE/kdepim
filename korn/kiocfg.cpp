@@ -102,7 +102,7 @@ QWidget *KKioCfg::makeWidget( QWidget *parent )
 
 	_serverEdit = new QLineEdit( d->server(), aGroup );
 	slay->addWidget(_serverEdit, 2, 1);
-	if( ! _this_protocol->hasServer() )
+	if( ! _this_protocol->fields() & KIO_Protocol::server )
 	{
 		_serverLabel->hide();
 		_serverEdit->hide();
@@ -116,7 +116,7 @@ QWidget *KKioCfg::makeWidget( QWidget *parent )
 
 	_portEdit = new QLineEdit( sport, aGroup );
 	slay->addWidget(_portEdit, 3, 1);
-	if( ! _this_protocol->hasPort() )
+	if( ! _this_protocol->fields() & KIO_Protocol::port )
 	{
 		_portLabel->hide();
 		_portEdit->hide();
@@ -135,7 +135,7 @@ QWidget *KKioCfg::makeWidget( QWidget *parent )
 
 	_userEdit = new QLineEdit( d->user(), aGroup );
 	slay->addWidget(_userEdit, 1, 1);
-	if( ! _this_protocol->hasUsername() )
+	if( ! _this_protocol->fields() & KIO_Protocol::username )
 	{
 		_userLabel->hide();
 		_userEdit->hide();
@@ -146,7 +146,7 @@ QWidget *KKioCfg::makeWidget( QWidget *parent )
 
 	_mailboxEdit = new QLineEdit( d->mailbox(), aGroup );
 	slay->addWidget(_mailboxEdit, 2, 1);
-	if( ! _this_protocol->hasMailbox() )
+	if( ! _this_protocol->fields() & KIO_Protocol::mailbox )
 	{
 		_mailboxLabel->hide();
 		_mailboxEdit->hide();
@@ -157,7 +157,7 @@ QWidget *KKioCfg::makeWidget( QWidget *parent )
 
 	_pwdEdit = new QLineEdit( d->password(), aGroup );
 	slay->addWidget(_pwdEdit, 3, 1);
-	if( ! _this_protocol->hasPassword() )
+	if( ! _this_protocol->fields() & KIO_Protocol::password )
 	{
 		_pwdLabel->hide();
 		_pwdEdit->hide();
@@ -171,7 +171,7 @@ QWidget *KKioCfg::makeWidget( QWidget *parent )
 	slay->addWidget(_savePass, 4, 1);
 
 	_pwdEdit->setEnabled( _savePass->isChecked() );
-	if( ! _this_protocol->hasPassword() )
+	if( ! _this_protocol->fields() & KIO_Protocol::password )
 	{
 		_pwdLabel->hide();
 		_pwdEdit->hide();
@@ -186,7 +186,7 @@ QWidget *KKioCfg::makeWidget( QWidget *parent )
 	_authCombo = new QComboBox( aGroup );
 	_authCombo->insertStringList( _this_protocol->authList() );
 	slay->addWidget( _authCombo, 5, 1);
-	if( ! _this_protocol->hasAuth() )
+	if( ! _this_protocol->fields() & KIO_Protocol::auth )
 	{
 		_authLabel->hide();
 		_authCombo->hide();
@@ -214,12 +214,12 @@ void KKioCfg::updateConfig()
 	assert( d != 0 );
 
 	d->setKioServer( _protoCombo->currentText(),
-	                 _this_protocol->hasServer() ? _serverEdit->text() : "",
-			 _this_protocol->hasPort() ? _portEdit->text().toInt() : 0 );
-	d->setUser( _this_protocol->hasUsername() ? _userEdit->text() : "",
-	            _this_protocol->hasPassword() && _savePass->isChecked() ? _pwdEdit->text() : "", 
-		    _this_protocol->hasMailbox() ? _mailboxEdit->text() : "",
-		    _this_protocol->hasAuth() ? _authCombo->currentText() : "" );
+	                 _this_protocol->fields() & KIO_Protocol::server ? _serverEdit->text() : "",
+			 _this_protocol->fields() & KIO_Protocol::port ? _portEdit->text().toInt() : 0 );
+	d->setUser( _this_protocol->fields() & KIO_Protocol::username ? _userEdit->text() : "",
+	            _this_protocol->fields() & KIO_Protocol::password && _savePass->isChecked() ? _pwdEdit->text() : "", 
+		    _this_protocol->fields() & KIO_Protocol::mailbox ? _mailboxEdit->text() : "",
+		    _this_protocol->fields() & KIO_Protocol::auth ? _authCombo->currentText() : "" );
 }
 
 void KKioCfg::addProtocol( KIO_Protocol * protocol )
@@ -243,7 +243,7 @@ bool KKioCfg::setComboItem( const QString & item )
 void KKioCfg::protoChange(int index)
 {
 	_this_protocol = _protocols->at( index );
-	if( _this_protocol->hasServer() )
+	if( _this_protocol->fields() & KIO_Protocol::server )
 	{
 		_serverLabel->show();
 		_serverEdit->show();
@@ -251,7 +251,7 @@ void KKioCfg::protoChange(int index)
 		_serverLabel->hide();
 		_serverEdit->hide();
 	}
-	if( _this_protocol->hasPort() )
+	if( _this_protocol->fields() & KIO_Protocol::port )
 	{
 		_portLabel->show();
 		_portEdit->show();
@@ -260,7 +260,7 @@ void KKioCfg::protoChange(int index)
 		_portLabel->hide();
 		_portEdit->hide();
 	}
-	if( _this_protocol->hasUsername() )
+	if( _this_protocol->fields() & KIO_Protocol::username )
 	{
 		_userLabel->show();
 		_userEdit->show();
@@ -268,7 +268,7 @@ void KKioCfg::protoChange(int index)
 		_userLabel->hide();
 		_userEdit->hide();
 	}
-	if( _this_protocol->hasMailbox() )
+	if( _this_protocol->fields() & KIO_Protocol::mailbox )
 	{
 		_mailboxLabel->show();
 		_mailboxEdit->show();
@@ -276,7 +276,7 @@ void KKioCfg::protoChange(int index)
 		_mailboxLabel->hide();
 		_mailboxEdit->hide();
 	}
-	if( _this_protocol->hasPassword() )
+	if( _this_protocol->fields() & KIO_Protocol::password )
 	{
 		_savePass->show();
 		_pwdLabel->show();
@@ -287,7 +287,7 @@ void KKioCfg::protoChange(int index)
 		_pwdLabel->hide();
 		_pwdEdit->hide();
 	}
-	if( _this_protocol->hasAuth() )
+	if( _this_protocol->fields() & KIO_Protocol::auth )
 	{
 		_authLabel->show();
 		_authCombo->show();

@@ -10,6 +10,7 @@
 #include <qprogressdialog.h>
 #include <kmessagebox.h>
 #include "maildlg.h"
+#include "progress_dialog.h"
 
 
 KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( QListView *parent, KornMailSubject * item)
@@ -48,8 +49,8 @@ int KornSubjectsDlg::SubjectListViewItem::compare( QListViewItem* item, int colu
 }
 
 KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
-   : KDialogBase( parent, "urldialog", true, "test", Close, Close, true), _mailDrop(0), _subjects(0), mailDlg(0), _subjectsProgress(0), _deleteMailsProgress(0),
-   	_canDeleteMaildrop( true )
+   : KDialogBase( parent, "urldialog", true, "test", Close, Close, true), _mailDrop( new QPtrList< KMailDrop > ), 
+ 	_subjects(0), _delete(0), mailDlg(0), _canDeleteMaildrop( true )
 {
 	_loadSubjectsCanceled = false;
 	setModal( true );
@@ -98,6 +99,22 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 	setInitialSize(QSize(QApplication::desktop()->width(), QApplication::desktop()->height()));
 }
 
+void KornSubjectsDlg::clear()
+{
+	_mailDrop->clear();
+}
+
+void KornSubjectsDlg::addMailBox(KMailDrop* mailDrop)
+{
+	_mailDrop->append( mailDrop );
+}
+	
+void KornSubjectsDlg::loadMessages()
+{
+	reloadSubjects();
+	exec();
+}
+
 void KornSubjectsDlg::listSelectionChanged()
 {
 	if (!_mailDrop)
@@ -108,7 +125,7 @@ void KornSubjectsDlg::listSelectionChanged()
 	showButton->setEnabled(selected == 1);
 
 	// eneable the delete button if one or more items are selected
-	deleteButton->setEnabled((selected > 0) && _mailDrop->canDeleteMails());
+	//TODO//deleteButton->setEnabled((selected > 0) && _mailDrop->canDeleteMails());
 }
 
 void KornSubjectsDlg::doubleClicked(QListViewItem * item)
@@ -121,50 +138,12 @@ KornSubjectsDlg::~KornSubjectsDlg()
 {
 	if (_subjects)
 		delete _subjects;
-	_subjects = NULL;
-}
-
-void KornSubjectsDlg::deleteDeleteProgress()
-{
-	_deleteMailsProgress->setProgress(_deleteMailsProgress->totalSteps());
-        _deleteMailsProgress->hide();
-
-	disconnect(_mailDrop, SIGNAL(deleteMailsTotalSteps(int)), _deleteMailsProgress, SLOT(setTotalSteps(int)));
-        disconnect(_mailDrop, SIGNAL(deleteMailsProgress(int)), _deleteMailsProgress, SLOT(setProgress(int)));
-        disconnect(_mailDrop, SIGNAL(deleteMailsReady(bool)), this, SLOT(deleteMailsReady(bool)));
-
-	disconnect(_deleteMailsProgress, SIGNAL(canceled()), this, SLOT(deleteMailsCanceled()));
-        disconnect(_deleteMailsProgress, SIGNAL(canceled()), _mailDrop, SLOT(deleteMailsCanceled()));
-	
-	delete _deleteMailsProgress;
-	_deleteMailsProgress = 0;
-}
-
-void KornSubjectsDlg::deleteSubjectsProgress()
-{
-	_subjectsProgress->setProgress(_subjectsProgress->totalSteps());
-	_subjectsProgress->hide();
-
-	disconnect(_subjectsProgress, SIGNAL(canceled()), this, SLOT(loadSubjectsCanceled()));
-	disconnect(_subjectsProgress, SIGNAL(canceled()), _mailDrop, SLOT(readSubjectsCanceled()));
-	
-	disconnect(_mailDrop, SIGNAL(readSubjectsTotalSteps(int)), _subjectsProgress, SLOT(setTotalSteps(int)));
-	disconnect(_mailDrop, SIGNAL(readSubjectsProgress(int)), _subjectsProgress, SLOT(setProgress(int)));
-        disconnect(_mailDrop, SIGNAL(readSubject( KornMailSubject * )), this, SLOT(subjectAvailable( KornMailSubject * )));
-        disconnect(_mailDrop, SIGNAL(readSubjectsReady( bool )), this, SLOT(subjectsReady( bool )));
-	
-	delete _subjectsProgress;
-	_subjectsProgress = 0;
+	_subjects = 0;
 }
 
 void KornSubjectsDlg::loadSubjectsCanceled()
 {
 	_loadSubjectsCanceled = true;
-}
-
-void KornSubjectsDlg::deleteMailsCanceled()
-{
-	_deleteMailsCanceled = true;
 }
 
 void KornSubjectsDlg::invertSelection()
@@ -175,75 +154,6 @@ void KornSubjectsDlg::invertSelection()
 void KornSubjectsDlg::removeSelection()
 {
 	_list->clearSelection();
-}
-
-void KornSubjectsDlg::deleteMessage()
-{
-	if (!_mailDrop)
-		return;
-	_deleteMailsCanceled = false;
-	QPtrList<QListViewItem> messages = _list->selectedItems();
-	if (!messages.count())
-		return;
-	QString confirmation = i18n("Do you really want to delete %n message?",
-				    "Do you really want to delete %n messages?", messages.count());
-	if (KMessageBox::questionYesNo(this, confirmation, i18n("Confirmation")) != KMessageBox::Yes)
-		return;
-
-	// Collect ids of teh messages to delete
-	QPtrList<const KornMailId> ids;
-	for ( QListViewItem * item = messages.first(); item; item = messages.next() )
-	{
-		ids.append(((KornSubjectsDlg::SubjectListViewItem *)item)->getMailSubject()->getId());
-	}
-	bool refresh = false; // true: reload subjects after the delete
-	{ // this curled brace ensures, that the progress dialog is deleted before reload is called below
-		// Create progress dialog
-		if( _deleteMailsProgress )
-			deleteDeleteProgress();
-		_deleteMailsProgress = new QProgressDialog(this, "bla", TRUE);
-		_deleteMailsProgress->setMinimumDuration(0);
-		_deleteMailsProgress->setLabelText(i18n("Deleting mail; please wait...."));
-
-		// Initially show it
-		_deleteMailsProgress->setTotalSteps(1000);
-		_deleteMailsProgress->setProgress(1);
-
-		// Connect the progress bar signals of the mail box
-		connect(_mailDrop, SIGNAL(deleteMailsTotalSteps(int)), _deleteMailsProgress, SLOT(setTotalSteps(int)));
-		connect(_mailDrop, SIGNAL(deleteMailsProgress(int)), _deleteMailsProgress, SLOT(setProgress(int)));
-		connect(_mailDrop, SIGNAL(deleteMailsReady(bool)), this, SLOT(deleteMailsReady(bool)));
-		qApp->processEvents();
-
-		// connect the cancel button of the progress bar
-		connect(_deleteMailsProgress, SIGNAL(canceled()), this, SLOT(deleteMailsCanceled()));
-		connect(_deleteMailsProgress, SIGNAL(canceled()), _mailDrop, SLOT(deleteMailsCanceled()));
-
-		// delete the mails
-		refresh = _mailDrop->deleteMails(& ids, &_deleteMailsCanceled);
-
-		if( _mailDrop->synchrone() )
-			deleteDeleteProgress();
-	}
-
-	// delete canceld: reload subjects
-	if( _mailDrop->synchrone() )
-	{
-		if (_deleteMailsCanceled)
-			refresh = true;
-		if (refresh)
-		{
-			// reload the subjects
-			if (!reload())
-				// reload canceled? close dialog
-				close();
-		}
-		else
-		{
-// TODO: delete items from list view
-			kdError() << i18n("remove list view items not implemented! See void KornSubjectsDlg::deleteMessage()") << endl;
-		}
-	}
 }
 
 void KornSubjectsDlg::showMessage()
@@ -259,7 +169,7 @@ void KornSubjectsDlg::showMessage()
 	showMessage(item);
 }
 
-void KornSubjectsDlg::showMessage(QListViewItem * item)
+void KornSubjectsDlg::showMessage(QListViewItem * item )
 {
 	if (!item)
 		return;
@@ -269,157 +179,314 @@ void KornSubjectsDlg::showMessage(QListViewItem * item)
 		mailDlg = new KornMailDlg (this);
 
 	// Feed the mail dailog with data and show it (modal dialog)
-	mailDlg->setMailSubject(_mailDrop, ((KornSubjectsDlg::SubjectListViewItem *)item)->getMailSubject());
+	mailDlg->setMailSubject( ( ( KornSubjectsDlg::SubjectListViewItem *)item )->getMailSubject() );
 	mailDlg->exec();
 }
 
-bool KornSubjectsDlg::reload()
+void KornSubjectsDlg::showSubjectsDlg( const QString& name )
 {
-	_loadSubjectsCanceled = false;
-	_canDeleteMaildrop = false;
-	QValueVector<KornMailSubject> * subjects;
-
-	// clear list view
-	_list->clear();
-	showButton->setEnabled(false);
-	deleteButton->setEnabled(false);
-	{ // this curled brace ensures, that the progress dialog is deleted before the list view is filled
-		// Create progress dialog
-		if( _subjectsProgress )
-			deleteSubjectsProgress(); //Delete old progress bar
-	
-		_subjectsProgress = new QProgressDialog(this, "bla", TRUE);
-			
-		_subjectsProgress->setMinimumDuration(0);
-		_subjectsProgress->setLabelText(i18n("Loading subjects. Please wait..."));
-
-		// Initially show it
-		_subjectsProgress->setTotalSteps(1000);
-		_subjectsProgress->setProgress(1);
-
-		// Connect the progress bar signals of the mail box
-		connect(_mailDrop, SIGNAL(readSubjectsTotalSteps(int)), _subjectsProgress, SLOT(setTotalSteps(int)));
-		connect(_mailDrop, SIGNAL(readSubjectsProgress(int)), _subjectsProgress, SLOT(setProgress(int)));
-		connect(_mailDrop, SIGNAL(readSubject( KornMailSubject * )), this, SLOT(subjectAvailable( KornMailSubject * )));
-		connect(_mailDrop, SIGNAL(readSubjectsReady( bool )), this, SLOT(subjectsReady( bool )));
-		qApp->processEvents();
-
-		// connect the cancel button of the progress bar
-		connect(_subjectsProgress, SIGNAL(canceled()), this, SLOT(loadSubjectsCanceled()));
-		connect(_subjectsProgress, SIGNAL(canceled()), _mailDrop, SLOT(readSubjectsCanceled()));
-		if (_subjects)
-			delete _subjects;
-		_subjects = 0;
-
-		// load the subjects
-		/*
-		 * In case there are no messages, slotSubjectsReady() is called before a list with
-		 * subjects is made. For that case, _subjects must be available (and empty).
-		 * In all other cases, the return value of _mailDrop->readSubjects are placed
-		 * into _subjects afterwards.
-		 *
-		 * In the future, _subjects should be given as a reference argument.
-		 */
-		_subjects = new QValueVector<KornMailSubject>();
-		subjects = _mailDrop->readSubjects(&_loadSubjectsCanceled);
-		delete _subjects;
-		_subjects = subjects;
-
-		if( _mailDrop->synchrone() && !_loadSubjectsCanceled ) //Asynchone communication
-			deleteSubjectsProgress();
-	}
-
-	// show them, if not canceled
-	if (!_loadSubjectsCanceled)
-	{
-		if( _mailDrop->synchrone() )
-		{
-			for( QValueVector<KornMailSubject>::iterator it = _subjects->begin(); it != _subjects->end(); ++it )
-			{
-				new SubjectListViewItem(_list, &(*it));
-			}
-		} else { //else: asynchone
-			return false;
-		}
-		return true;
-	}
-	else
-		// load process canceled. Close dialog!
-		return false;
-	
-	if( _canDeleteMaildrop )
-		_mailDrop = 0;
-	else
-		_canDeleteMaildrop = true;
-}
-
-void KornSubjectsDlg::showSubjectsDlg(KMailDrop *mailDrop)
-{
-	// store the mail box during the lifetime of the dialog
-	_mailDrop = mailDrop;
-	setCaption(i18n("Mails in Box: %1").arg( _mailDrop->caption()) );
+	setCaption( i18n("Mails in Box: %1").arg( name ) );
 
 	// load the subjects
-	if (reload())
-		// if the load process was not cancled: show the dialog
+	reloadSubjects();
+	// if the load process was not cancled: show the dialog
+	if( this->isVisible() )
 		exec();
-
-	// the dialog has been closed, delete the pointer to the mailbox
-	if( _mailDrop->synchrone() )
-		_mailDrop = 0;
 }
 
-void KornSubjectsDlg::messagesCount()
+void KornSubjectsDlg::closeDialog( )
 {
-	disconnect( _mailDrop, SIGNAL( rechecked() ), this, SLOT( messagesCount() ));
-	reload();
+	disconnect( this, SIGNAL( finished() ), this, SLOT( closeDialog() ) );	
+}
+
+//----------------------------
+// ALL FUNCTIONS WITH HAVE SOMETHING TO DO WITH FETCHING SUBJECTS
+//----------------------------
+
+//The public function
+void KornSubjectsDlg::reloadSubjects()
+{
+	if( _subjects )
+		return; //Already fetching
+
+	makeSubjectsStruct();
+		
+	_subjects->progress->setNumberOfBoxes( _mailDrop->count() );
+	_subjects->progress->setProgressOfBoxes( 0 );
+	_subjects->progress->setNumberOfSteps( 1 );
+	_subjects->progress->setProgress( 0 );
+	
+	_subjects->it->toFirst();
+	
+	if( !_subjects->it->current() )
+		return; //No maildrops available.
+	
+	_subjects->progress->show();
+	
+	kdDebug() << "KornSubjectsDlg::reloadSubjects(): " << _subjects->progress->isVisible() << endl;
+	
+	prepareStep1Subjects( _subjects->it->current() );
+}
+
+//Private help-functions
+void KornSubjectsDlg::prepareStep1Subjects( KMailDrop *drop )
+{
+	_subjects->progress->setText( i18n( "Rechecking box..." ) );
+	_subjects->progress->setNumberOfSteps( 1 );
+	_subjects->progress->setProgress( 0 );
+	_subjects->atRechecking = true;
+	
+	connect( drop, SIGNAL( rechecked() ), this, SLOT( slotReloadRechecked() ) );
+	drop->recheck();
+}
+
+void KornSubjectsDlg::removeStep1Subjects( KMailDrop *drop )
+{
+	disconnect( drop, SIGNAL( rechecked() ), this, SLOT( slotReloadRechecked() ) );
+}
+
+void KornSubjectsDlg::prepareStep2Subjects( KMailDrop *drop )
+{
+	_subjects->progress->setText( i18n( "Fetching messages..." ) );
+	_subjects->atRechecking = false;
+	
+	connect( drop, SIGNAL( readSubject( KornMailSubject* ) ), this, SLOT( subjectAvailable( KornMailSubject* ) ) );
+	connect( drop, SIGNAL( readSubjectsReady( bool ) ), this, SLOT( subjectsReady( bool ) ) );
+	connect( drop, SIGNAL( readSubjectsTotalSteps( int ) ), _subjects->progress, SLOT( setNumberOfSteps( int ) ) );
+	connect( drop, SIGNAL( readSubjectsProgress( int ) ), _subjects->progress, SLOT( setProgress( int ) ) );
+	connect( _subjects->progress, SIGNAL( cancelPressed() ), drop, SLOT( readSubjectsCanceled() ) );
+	
+	_subjects->it->current()->readSubjects( 0 );
+}
+
+void KornSubjectsDlg::removeStep2Subjects( KMailDrop *drop )
+{
+	disconnect( drop, SIGNAL( readSubject( KornMailSubject* ) ), this, SLOT( subjectAvailable( KornMailSubject* ) ) );
+	disconnect( drop, SIGNAL( readSubjectsReady( bool ) ), this, SLOT( subjectsReady( bool ) ) );
+	disconnect( drop, SIGNAL( readSubjectsTotalSteps( int ) ), _subjects->progress, SLOT( setNumberOfSteps( int ) ) );
+	disconnect( drop, SIGNAL( readSubjectsProgress( int ) ), _subjects->progress, SLOT( setProgress( int ) ) );
+	disconnect( _subjects->progress, SIGNAL( cancelPressed() ), drop, SLOT( readSubjectsCanceled() ) );
+}
+
+bool KornSubjectsDlg::makeSubjectsStruct()
+{
+	if( _subjects ) //Subjects are already being checked
+		return false;
+	
+	_subjects = new SubjectsData;
+	_subjects->it = new QPtrListIterator< KMailDrop >( *_mailDrop );
+	_subjects->subjects = new QValueVector< KornMailSubject >;
+	_subjects->progress = new DoubleProgressDialog( this, "progress" );
+	_subjects->atRechecking = true;
+	
+	connect( _subjects->progress, SIGNAL( cancelPressed() ), this, SLOT( slotSubjectsCanceled() ) );
+	
+	return true;
+}
+
+void KornSubjectsDlg::deleteSubjectsStruct()
+{
+	disconnect( _subjects->progress, SIGNAL( cancelPressed() ), this, SLOT( slotSubjectsCanceled() ) );
+	
+	delete _subjects->progress;
+	delete _subjects->subjects;
+	delete _subjects->it;
+	delete _subjects; _subjects = 0;
+}
+
+//Slots
+void KornSubjectsDlg::slotReloadRechecked()
+{
+	_subjects->progress->setText( i18n( "Downloading subjects..." ) ); //Progress message when fetching messages
+	
+	removeStep1Subjects( _subjects->it->current() );
+	_subjects->subjects->reserve( _subjects->it->current()->count() ); //enlarge QValueVector to speed adding up.
+	prepareStep2Subjects( _subjects->it->current() );
+}
+
+void KornSubjectsDlg::slotSubjectsCanceled()
+{
+	if( !_subjects )
+		return; //Nothing to do
+	
+	if( _subjects->atRechecking )
+		removeStep1Subjects( _subjects->it->current() );
+	else
+		removeStep2Subjects( _subjects->it->current() );
+	
+	deleteSubjectsStruct();
 }
 
 void KornSubjectsDlg::subjectAvailable( KornMailSubject * subject )
 {
-	_subjects->push_back( *subject );
+	if( _subjects )
+		_subjects->subjects->push_back( *subject );
 	
 	delete subject;
 }
 
 void KornSubjectsDlg::subjectsReady( bool success )
 {
-	if( success )
+	static int progress;
+	
+	if( !_subjects )
+		return;
+	
+	if( _subjects->it->atFirst() )
+		progress = 0;
+	
+	removeStep2Subjects( _subjects->it->current() );
+	
+	//Goto next drop
+	++(*_subjects->it);
+	++progress;
+	
+	_subjects->progress->setProgressOfBoxes( progress );
+	
+	if( _subjects->it->current() )
 	{
-		for( QValueVector<KornMailSubject>::iterator it = _subjects->begin(); it != _subjects->end(); ++it )
+		prepareStep1Subjects( _subjects->it->current() );
+	} else {
+		//All subjects downloaded
+		for( QValueVector<KornMailSubject>::iterator it = _subjects->subjects->begin(); it != _subjects->subjects->end();
+				   ++it )
 		{ //Draw entry's
 			new SubjectListViewItem(_list, &(*it));
 		}
+		
+		if( _subjects->subjects->capacity() != _subjects->subjects->count() )
+			_subjects->subjects->resize( _subjects->subjects->count() );
+	
+		deleteSubjectsStruct();
+		//If windows isn't visible already, shows it.
+		if( !isVisible() && success )
+			show();
+	}
+}
+
+//---------------------------------
+//Here comes all functions with have to do something with deleting messages
+//---------------------------------
+
+
+//Main function
+void KornSubjectsDlg::deleteMessage()
+{
+	if ( !_delete )
+		return; //A delete action is already pending
+	
+	makeDeleteStruct();
+	
+	fillDeleteMessageList();
+	
+	if ( _delete->messages->count() == 0 )
+	{
+		deleteDeleteStruct();
+		return; //No messages to delete
+	} else {
+		_delete->totalNumberOfMessages = _delete->messages->count();
 	}
 	
-	deleteSubjectsProgress();
+	QString confirmation = i18n(	"Do you really want to delete %n message?",
+					"Do you really want to delete %n messages?", _delete->messages->count() );
 	
-	connect( this, SIGNAL( finished() ), this, SLOT( closeDialog() ) );
+	if( KMessageBox::questionYesNo( this, confirmation, i18n( "Confirmation" ) ) != KMessageBox::Yes )
+	{
+		deleteDeleteStruct();
+		return; //Not excepted
+	}
 	
-	if( _subjects->capacity() != _subjects->count() )
-		_subjects->resize( _subjects->count() );
+	_delete->progress->setLabelText( i18n( "Deleting mail; please wait...." ) );
+	_delete->progress->setTotalSteps( _delete->totalNumberOfMessages );
+	_delete->progress->setProgress( 0 );
+	_delete->progress->show();
+
+	deleteNextMessage();
+}
+
+//Private help functions
+void KornSubjectsDlg::makeDeleteStruct()
+{
+	_delete = new DeleteData;
+	_delete->messages = new QPtrList< KornMailSubject >;
+	_delete->ids = new QPtrList< const KornMailId >;
+	_delete->progress = new QProgressDialog( this, "progress" );
+	_delete->totalNumberOfMessages = 0;
 	
-	if( !isVisible() && success )
-		show();
-	else if( !success )
-		cancel();
+	connect( _delete->progress, SIGNAL( canceled() ), this, SLOT( slotDeleteCanceled() ) );
+}
+
+void KornSubjectsDlg::deleteDeleteStruct()
+{
+	disconnect( _delete->progress, SIGNAL( canceled() ), this, SLOT( slotDeleteCanceled() ) );
+	
+	delete _delete->messages;
+	delete _delete->ids;
+	delete _delete->progress;
+	delete _delete; _delete = 0;
+}
+
+void KornSubjectsDlg::fillDeleteMessageList()
+{
+	QListViewItem *current;
+	for( current = _list->selectedItems().first(); current; current = _list->selectedItems().next() )
+		_delete->messages->append( ( ( KornSubjectsDlg::SubjectListViewItem * ) current )->getMailSubject() );
+}
+
+void KornSubjectsDlg::fillDeleteIdList( KMailDrop *drop )
+{
+	_delete->ids->clear();
+	KornMailSubject *current;
+	for( current = _delete->messages->first(); current; current = _delete->messages->next() )
+		if( current->getMailDrop() == drop )
+			_delete->ids->append( current->getId() );
+}
+
+void KornSubjectsDlg::deleteNextMessage()
+{
+	if( _delete->messages->count() == 0 ) //No more messages to delete
+	{
+		deleteDeleteStruct();
+		reloadSubjects(); //Reload all subjects again
+		return;
+	}
+	
+	_delete->ids = new QPtrList< const KornMailId >;
+	_delete->drop = _delete->messages->getFirst()->getMailDrop();
+	
+	fillDeleteIdList( _delete->drop );
+	
+	// Connect the progress bar signals of the mail box
+	connect( _delete->drop, SIGNAL( deleteMailsTotalSteps( int ) ), _delete->progress, SLOT( setTotalSteps( int ) ) );
+	connect( _delete->drop, SIGNAL( deleteMailsProgress( int ) ), _delete->progress, SLOT( setProgress( int ) ) );
+	connect( _delete->drop, SIGNAL( deleteMailsReady( bool ) ), this, SLOT( deleteMailsReady( bool ) ) );
+
+	// connect the cancel button of the progress bar
+	connect( _delete->progress, SIGNAL( canceled() ), _delete->drop, SLOT( deleteMailsCanceled() ) );
+
+	// delete the mails
+	_delete->drop->deleteMails( _delete->ids, 0 );
 }
 
 void KornSubjectsDlg::deleteMailsReady( bool /*success*/ )
 {
-	deleteDeleteProgress();
-	connect( _mailDrop, SIGNAL( rechecked() ), this, SLOT( messagesCount() ));
-	_mailDrop->recheck(); //First, recheck the messages
+	if( !_delete )
+		return;
+	
+	disconnect( _delete->drop, SIGNAL( deleteMailsTotalSteps( int ) ), _delete->progress, SLOT( setTotalSteps( int ) ) );
+	disconnect( _delete->drop, SIGNAL( deleteMailsProgress( int ) ), _delete->progress, SLOT( setProgress( int ) ) );
+	disconnect( _delete->drop, SIGNAL( deleteMailsReady( bool ) ), this, SLOT( deleteMailsReady( bool ) ) );
+
+	// disconnect the cancel button of the progress bar
+	disconnect( _delete->progress, SIGNAL( canceled() ), _delete->drop, SLOT( deleteMailsCanceled() ) );
+	
+	deleteNextMessage();
 }
 
-void KornSubjectsDlg::closeDialog( )
+void KornSubjectsDlg::slotDeleteCanceled()
 {
-	disconnect( this, SIGNAL( finished() ), this, SLOT( closeDialog() ) );	
-
-	if( _canDeleteMaildrop )
-		_mailDrop = 0;
-	else
-		_canDeleteMaildrop = true;
+	deleteDeleteStruct();
+	reloadSubjects();
 }
 
 #include "subjectsdlg.moc"

@@ -8,9 +8,13 @@
 
 class KMailDrop;
 class KornMailSubject;
+class KornMailId;
 class KListView;
 class KornMailDlg;
 class QProgressDialog;
+class DoubleProgressDialog;
+
+template< class T > class QPtrList;
 
 /**
  * KornSubjectsDlg loads all mail subjects and shows them in a list control.
@@ -52,16 +56,31 @@ class KornSubjectsDlg: public KDialogBase
 		KornMailSubject * getMailSubject() const {return _mailSubject;}
 	};
 
-	KMailDrop	*_mailDrop;
-	QValueVector<KornMailSubject> * _subjects;
+	QPtrList< KMailDrop >	*_mailDrop;
+	struct SubjectsData
+	{
+		QPtrListIterator< KMailDrop > *it;
+		QValueVector< KornMailSubject > *subjects;
+		DoubleProgressDialog *progress;
+		bool atRechecking;
+	} *_subjects;
+	
+	struct DeleteData
+	{
+		QPtrList< KornMailSubject > *messages;
+		QPtrList< const KornMailId > *ids;
+		QProgressDialog *progress;
+		KMailDrop *drop;
+		int totalNumberOfMessages;
+	} *_delete;
+	
 	KListView * _list;
 	KPushButton * invertSelButton;
 	KPushButton * clearSelButton;
 	KPushButton * deleteButton;
 	KPushButton * showButton;
 	KornMailDlg * mailDlg;
-	QProgressDialog * _subjectsProgress;
-	QProgressDialog * _deleteMailsProgress;
+	
 	bool _loadSubjectsCanceled, _deleteMailsCanceled;
 	bool _canDeleteMaildrop;
 
@@ -69,7 +88,7 @@ class KornSubjectsDlg: public KDialogBase
 	 * Load the mails subjects and refresh the list view.
 	 * @return false if the load process was cancled (close the dialog!), true otherwise
 	 */
-	bool reload();
+	//bool reload();
 
 	/**
 	 * Show a message in a separate dialog
@@ -84,19 +103,31 @@ public:
 	KornSubjectsDlg( QWidget *parent=0 );
 
 	/**
-	 * Show the KornSubjectsDlg as a modal dialog.
-	 * @param parent parent widget
+	 * This functions clears all available KMailDrop's.
 	 */
-	void showSubjectsDlg(KMailDrop *mailDrop);
+	void clear();
+			
+	/**
+	 * This function adds a maildrop to the list.
+	 * @param mailDrop The maildrop which have to be added.
+	 */
+	void addMailBox(KMailDrop* mailDrop);
+	
+	/**
+	 * This method loads the messages and shows the dialog.
+	 */
+	void loadMessages();
+	
+	/**
+	 * Show the KornSubjectsDlg as a modal dialog.
+	 * @param name The name of the box
+	 */
+	void showSubjectsDlg( const QString& name );
 
 	/**
 	 * KornSubjectsDlg Destructor
 	 */
 	virtual ~KornSubjectsDlg();
-
-private:
-	void deleteDeleteProgress( );
-	void deleteSubjectsProgress( );
 
 private slots:
 
@@ -104,11 +135,6 @@ private slots:
 	 * called if the cancel button was clicked while loadind the subjects
 	 */
 	void loadSubjectsCanceled();
-
-	/**
-	 * called if the cancel button was clicked while deleting mails
-	 */
-	void deleteMailsCanceled();
 
 	/**
 	 * called if the selction of the list view was changed
@@ -126,11 +152,6 @@ private slots:
 	void removeSelection();
 
 	/**
-	 * called if the "Delete" button was clicked
-	 */
-	void deleteMessage();
-
-	/**
 	 * called if the "Show" button was clicked
 	 */
 	void showMessage();
@@ -139,32 +160,38 @@ private slots:
 	 * called if a list view item was double clicked
 	 */
 	void doubleClicked ( QListViewItem *item );
-
-	/**
-	 * After delete of message, the messages have to be recount.
-	 * After that, this slots redisplay them.
-	 */
-	void messagesCount( );
-		
-	/**
-	 * Called when asynchone subject arrived
-	 */
-	void subjectAvailable( KornMailSubject * );
 	
-	/**
-	 * called when asynchone mail is in
-	 */
+	void closeDialog();
+	
+	//Functions for the subjects
+public:
+	void reloadSubjects();
+private:
+	void prepareStep1Subjects( KMailDrop* );
+	void removeStep1Subjects( KMailDrop* );
+	void prepareStep2Subjects( KMailDrop* );
+	void removeStep2Subjects( KMailDrop* );
+	bool makeSubjectsStruct();
+	void deleteSubjectsStruct();
+private slots:
+	void slotReloadRechecked();
+	void slotSubjectsCanceled();
+	void subjectAvailable( KornMailSubject* );
 	void subjectsReady( bool );
-
-	/**
-	 * Called when asynchrone deleting is ready
-	 */
-	void deleteMailsReady( bool );
 	
-	/**
-	 * Called if user end the dialog
-	 */
-	void closeDialog( );
+	//Functions neccesairy for delete
+public slots:
+	void deleteMessage();
+private:
+	void makeDeleteStruct();
+	void deleteDeleteStruct();
+	void fillDeleteMessageList();
+	void fillDeleteIdList( KMailDrop *drop );
+	void deleteNextMessage();
+private slots:
+	void deleteMailsReady( bool );
+	void slotDeleteCanceled();
+	
 };
 
 #endif

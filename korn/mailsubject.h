@@ -1,7 +1,11 @@
 #ifndef MailSubject_h
 #define MailSubject_h
 
+class KMailDrop;
+
 #include "mailid.h"
+
+
 
 /**
  * A KornMailSubject instance represents a single mail. It stores 
@@ -11,6 +15,7 @@
 class KornMailSubject
 {
 	KornMailId * 	_id;
+	KMailDrop *     _drop;
 	QString		_subject;
 	QString		_sender;
 	QString		_header;
@@ -28,8 +33,9 @@ public:
 	 * @param id id of the mail. The KornMailId instance should
 	 * not be touched or deleted afterwards. It is destroyed by
 	 * KornMailSubject's destructor.
+	 * @param drop The KMailDrop.
 	 */
-	KornMailSubject(KornMailId * id);
+	KornMailSubject(KornMailId * id, KMailDrop * drop);
 
 	/**
 	 * KornMailSubject copy constructor. All data of the source
@@ -130,6 +136,17 @@ public:
 	 * @return a string representation
 	 */
 	QString toString() const;
+	
+	/**
+	 * Sets the KMailDrop field.
+	 * @param drop The KMailDrop-object
+	 */
+	void setMailDrop( KMailDrop* drop ) { _drop = drop; }
+	
+	/**
+	 * Returns the KMailDrop instance of the Maildrop which owns the subject
+	 */
+	KMailDrop* getMailDrop() const { return _drop; }
 };
 
 #endif

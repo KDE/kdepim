@@ -21,6 +21,7 @@
 #include"imap.h"
 #include"edrop.h"
 #include"kio.h"
+#include"dcopdrop.h"
 
 KDropManager::KDropManager()
 {
@@ -34,6 +35,7 @@ KDropManager::KDropManager()
 	addPrototype( new KNewsDrop );
 	addPrototype( new KExternDrop );
 	addPrototype( new KKioDrop );
+	addPrototype( new DCOPDrop );
 }
 
 KDropManager::~KDropManager()

@@ -49,7 +49,7 @@ public:
 	virtual bool readConfigGroup ( const KConfigBase& cfg );
 	virtual bool writeConfigGroup ( KConfigBase& cfg ) const;
 
-	virtual void addConfigPage( KDropCfgDialog * );
+	//virtual void addConfigPage( KDropCfgDialog * );
 
 protected:
 	void timerEvent( QTimerEvent * );

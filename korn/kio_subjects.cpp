@@ -105,6 +105,7 @@ void KIO_Subjects::getConnection( )
 		{
 			kdWarning() << i18n( "Not able to open a kio-slave for %1." ).arg( _protocol->configName() );
 			_valid = false;
+			_kio->emitValidChanged();
 			_slave = 0;
 			_kio->emitReadSubjectsReady( false );
 			return;
@@ -158,6 +159,8 @@ void KIO_Subjects::cancelled( )
 void KIO_Subjects::slotReadSubject( KornMailSubject* subject )
 {
 	_valid = true;
+	_kio->emitValidChanged();
+	subject->setMailDrop( _kio );
 	_kio->emitReadSubjectsRead( subject );
 }
 

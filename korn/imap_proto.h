@@ -44,10 +44,11 @@ public:
 	virtual bool canDeleteMail() const { return false; } //See comment above class: metadata expunge=auto doesn't work.
 	virtual bool canReadMail() const { return true; }
 
-	virtual bool hasAuth() const { return true; }
+	virtual int fields() const { return server | port | username | password | mailbox | auth; }
+	virtual int urlFields() const { return no_fields; }
 	virtual unsigned short defaultPort() const { return 143; }
 
-	virtual QStringList authList() const { return QStringList::split( '|', "Plain|LOGIN|ANONYMOUS|CRAM-MD5", false); }
+	virtual QStringList authList() const { return QStringList::split( '|', "*|LOGIN|ANONYMOUS|CRAM-MD5", false); }
 	//Could not test did, my server don't support other authentication methods.
 
 	virtual void recheckKURL    ( KURL &kurl, KIO::MetaData & ) { kurl.setQuery( "unseen" ); }

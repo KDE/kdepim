@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SORTEDMAILSUBJECT_H
-#define SORTEDMAILSUBJECT_H
+#ifndef MK_SORTEDMAILSUBJECT_H
+#define MK_SORTEDMAILSUBJECT_H
 
 #include "mailsubject.h"
 #include <qptrlist.h>
@@ -37,4 +37,4 @@ public:
 	virtual int compareItems ( QPtrCollection::Item item1, QPtrCollection::Item item2 );
 };
 
-#endif
+#endif //MK_SORTEDMAILSUBJECT_H

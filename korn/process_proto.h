@@ -37,12 +37,9 @@ public:
 	virtual bool canReadMail() const { return false; }
 	virtual bool fullMessage() const { return false; }
 
-	virtual bool hasServer() const { return false; }
-	virtual bool hasPort() const { return false; }
-	virtual bool hasUsername() const { return false; }
-	virtual bool hasMailbox() const { return true; }
-	virtual bool hasPassword() const { return false; }
-
+	virtual int fields() const { return mailbox; }
+	virtual int urlFields() const { return no_fields; }
+	
 	virtual QString mailboxName() const { return i18n("Program: "); }
 };
 

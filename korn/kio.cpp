@@ -34,8 +34,8 @@
 #include "kio_delete.h"
 #include "stringid.h"
 #include"utils.h"
-#include"kiocfg.h"
-#include"dropdlg.h"
+//#include"kiocfg.h"
+//#include"dropdlg.h"
 #include "mailsubject.h"
 
 #include<kconfigbase.h>
@@ -63,7 +63,7 @@
 #include"maildir_proto.h"
 #include"qmail_proto.h"
 #include"process_proto.h"
-//#include"mbox_proto.h"
+#include"mbox_proto.h"
 
 /*
  * The 'process' maildrop is a lot different than the other protocols:
@@ -95,7 +95,7 @@ KKioDrop::KKioDrop()
 	_protocols->append( new Pop3s_Protocol   ); 
 	_protocols->append( new Imap_Protocol    );
 	_protocols->append( new Imaps_Protocol   );
-	//_protocols->append( new MBox_Protocol    ); //Not stable enough yet
+	_protocols->append( new MBox_Protocol    ); //Not stable enough yet
 	_protocols->append( new Nntp_Protocol    );
 	_protocols->append( new Maildir_Protocol );
 	_protocols->append( new QMail_Protocol   );
@@ -177,7 +177,8 @@ void KKioDrop::setUser(const QString & user, const QString & password,
 		_metadata->erase( "auth" );
 
 	_valid = _kurl->isValid();
-
+	emit validChanged( valid() );
+	
 	if( ! _valid )
 		kdWarning() << i18n( "url is not valid" ) << endl;
 	
@@ -222,6 +223,17 @@ void KKioDrop::recheck()
 
 	_count->count( this );
 		
+	return;
+}
+
+void KKioDrop::forceRecheck()
+{
+	if( _protocol->configName() == "process" )
+		return;
+	
+	_count->stopActiveCount();
+	_count->count( this );
+
 	return;
 }
 
@@ -298,8 +310,16 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 	KPollableDrop::readConfigGroup( cfg );
 	KIO_Protocol * protocol;
 
+	this->setName( cfg.readEntry( "name", this->name() ).utf8() );
+	
 	val2 = cfg.readEntry(fu(ProtoConfigKey));
-	if( val2.isEmpty() ) { _valid = false; kdWarning() << i18n( "No protocol specified" ) << endl; return false; }
+	if( val2.isEmpty() )
+	{
+		_valid = false;
+		emit validChanged( valid() );
+		kdWarning() << i18n( "No protocol specified" ) << endl;
+		return false;
+	}
 
 	//Set protocol
         delete _protocol;
@@ -311,30 +331,49 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
         if( ! _protocol )
         	_protocol = _protocols->first()->clone();
 
-	if( _protocol->hasServer() )
+	if( _protocol->fields() & KIO_Protocol::server )
 	{
 		val = cfg.readEntry(fu(HostConfigKey));
-		if( val.isEmpty() ) { _valid = false; kdWarning() << i18n( "No server specified" ) << endl; return false; }
+		if( val.isEmpty() )
+		{
+			_valid = false;
+			emit validChanged( valid() );
+			kdWarning() << i18n( "No server specified" ) << endl;
+			return false;
+		}
 		setKioServer( val2, val, cfg.readNumEntry(fu(PortConfigKey), _protocol->defaultPort() ), KIO::MetaData(), false );
 	} else
 		setKioServer( val2, "", _protocol->defaultPort(), KIO::MetaData(), false );
 
-	if( _protocol->hasUsername() )
+	if( _protocol->fields() & KIO_Protocol::username )
 	{
 		_kurl->setUser( cfg.readEntry(fu(UserConfigKey)) );
-		if( _kurl->user().isEmpty() ) { _valid = false; kdWarning() << i18n( "No username specified" ) << endl; return false; }
+		if( _kurl->user().isEmpty() )
+		{
+			_valid = false;
+			emit validChanged( valid() );
+			kdWarning() << i18n( "No username specified" ) << endl;
+			return false;
+		}
 	}
 
-	if( _protocol->hasMailbox() )
+	if( _protocol->fields() & KIO_Protocol::mailbox )
 	{
+		kdDebug() << "FOOBAE" << endl;
 		_kurl->setPath( cfg.readEntry(fu(MailboxConfigKey)) );
-		if( _kurl->path().isEmpty() ) { _valid = false; kdWarning() << i18n( "No mailbox specified" ) << endl; return false; }
+		if( _kurl->path().isEmpty() )
+		{
+			_valid = false;
+			emit validChanged( valid() );
+			kdWarning() << i18n( "No mailbox specified" ) << endl;
+			return false;
+		}
 	}
 
-	if( _protocol->hasPassword() )
+	if( _protocol->fields() & KIO_Protocol::password )
 	{
 		_password = cfg.readEntry(fu(PassConfigKey));
-		decrypt( _password );
+		//decrypt( _password );
 
 		if( _password.isEmpty() ) {
 			_kurl->setPass("");	
@@ -343,12 +382,15 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 		}
 	}
 	
-	if( _protocol->hasAuth() )
+	if( _protocol->fields() & KIO_Protocol::auth )
 	{
 		(*_metadata)["auth"] = cfg.readEntry(fu(AuthConfigKey),"");
 		if( (*_metadata)["auth"].isEmpty() )
 			_metadata->erase( "auth" );
 	}
+	
+	_valid = true;
+	emitValidChanged();
 	
 	return true;
 }
@@ -360,21 +402,21 @@ bool KKioDrop::writeConfigGroup( KConfigBase& cfg ) const
 
 	if( _kurl->hasPass() ) {
 		p = _kurl->pass();
-		encrypt ( p );
+		//encrypt ( p );
 	}
 
 	cfg.writeEntry(fu(ProtoConfigKey),   _protocol->configName() );
-	if( _protocol->hasServer() )
+	if( _protocol->fields() & KIO_Protocol::server )
 		cfg.writeEntry(fu(HostConfigKey),    _kurl->host()     );
-	if( _protocol->hasPort() )
+	if( _protocol->fields() & KIO_Protocol::port )
 		cfg.writeEntry(fu(PortConfigKey),    _kurl->port()     );
-	if( _protocol->hasUsername() )
+	if( _protocol->fields() & KIO_Protocol::username )
 		cfg.writeEntry(fu(UserConfigKey),    _kurl->user() );
-	if( _protocol->hasMailbox() )
+	if( _protocol->fields() & KIO_Protocol::mailbox )
 		cfg.writeEntry(fu(MailboxConfigKey), _kurl->path()     );
-	if( _protocol->hasPassword() )
+	if( _protocol->fields() & KIO_Protocol::password )
 		cfg.writeEntry(fu(PassConfigKey), p );
-	if( _protocol->hasAuth() )
+	if( _protocol->fields() & KIO_Protocol::auth )
 		cfg.writeEntry(fu(AuthConfigKey), auth() );
 
 	return true;
@@ -394,38 +436,38 @@ KKioDrop& KKioDrop::operator = ( const KKioDrop& other )
 	return *this;
 }
 
-void KKioDrop::addConfigPage( KDropCfgDialog *dlg )
-{
-	KKioCfg * kiocfg = new KKioCfg( this );
-	KIO_Protocol * protocol;
-	for( protocol = _protocols->first() ; protocol ; protocol = _protocols->next() )
-		kiocfg->addProtocol( protocol->clone() );
-	
-	dlg->addConfigPage( kiocfg );
+//void KKioDrop::addConfigPage( KDropCfgDialog *dlg )
+//{
+//	KKioCfg * kiocfg = new KKioCfg( this );
+//	KIO_Protocol * protocol;
+//	for( protocol = _protocols->first() ; protocol ; protocol = _protocols->next() )
+//		kiocfg->addProtocol( protocol->clone() );
+//	
+//	dlg->addConfigPage( kiocfg );
+//
+//	KPollableDrop::addConfigPage( dlg );
+//}
 
-	KPollableDrop::addConfigPage( dlg );
-}
-
-void KKioDrop::encrypt( QString& str )
-{
-	unsigned int i, val;
-	unsigned int len = str.length();
-	QString result="";
-
-	for ( i=0; i < len; i++ )
-	{
-		val = str[i].latin1() - ' ';
-		val = (255-' ') - val;
-		result += (char)(val + ' ');
-	}
-
-	str = result; //Replasing with encrypted QString
-}
-
-void KKioDrop::decrypt( QString& str )
-{
-	encrypt( str );
-}
+//void KKioDrop::encrypt( QString& str )
+//{
+//	unsigned int i, val;
+//	unsigned int len = str.length();
+//	QString result="";
+//
+//	for ( i=0; i < len; i++ )
+//	{
+//		val = str[i].latin1() - ' ';
+//		val = (255-' ') - val;
+//		result += (char)(val + ' ');
+//	}
+//
+//	str = result; //Replasing with encrypted QString
+//}
+//
+//void KKioDrop::decrypt( QString& str )
+//{
+//	encrypt( str );
+//}
 
 //Public slots
 void KKioDrop::readSubjectsCanceled()
@@ -441,6 +483,22 @@ void KKioDrop::readMailCanceled()
 void KKioDrop::deleteMailsCanceled()
 {
 	_delete->canceled( );
+}
+
+//Private slots for displaying connection errors
+void KKioDrop::slotConnectionError( int number, const QString& arg )
+{
+	kdError() << KIO::buildErrorString( number, arg ) << endl;
+}
+
+void KKioDrop::slotConnectionWarning( const QString& msg )
+{
+	kdWarning() << msg << endl;
+}
+
+void KKioDrop::slotConnectionInfoMessage( const QString& msg )
+{
+	kdDebug() << msg << endl; //Display only in debug modes
 }
 
 //Private slots
@@ -531,7 +589,7 @@ void KKioDrop::receivedStdout( KProcess *proc, char * buffer, int /*len*/ )
 
 	if( regexp.search( buf ) == 0 )
 	{ //Number found
-		emit changed( regexp.cap( 2 ).toInt() );
+		emit changed( regexp.cap( 2 ).toInt(), this );
 	}
 
 	
@@ -547,10 +605,10 @@ void KKioDrop::processExit(KProcess* proc)
 }
 
 const char *KKioDrop::ProtoConfigKey = "protocol";
-const char *KKioDrop::HostConfigKey = "host";
+const char *KKioDrop::HostConfigKey = "server";
 const char *KKioDrop::PortConfigKey = "port";
-const char *KKioDrop::UserConfigKey = "user";
-const char *KKioDrop::PassConfigKey = "pass";
+const char *KKioDrop::UserConfigKey = "username";
+const char *KKioDrop::PassConfigKey = "password";
 const char *KKioDrop::MailboxConfigKey = "mailbox";
 const char *KKioDrop::SavePassConfigKey = "savepass";
 const char *KKioDrop::AuthConfigKey = "auth";

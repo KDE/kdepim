@@ -22,6 +22,8 @@ class KAction;
 class KornSubjectsDlg;
 
 
+class KDialogBase;
+
 
 /**
 * Korn Top-level widget.
@@ -111,7 +113,8 @@ private:
 	 */
 	QPopupMenu	*initMenu();
 
-	KornOptDlg	*_optDlg;
+	//KornOptDlg	*_optDlg;
+	KDialogBase	*_optDlg;
 
 	/**
 	* Performs hand-holding for new users. This is called

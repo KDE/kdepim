@@ -21,8 +21,8 @@
 const char *KMailDrop::TypeConfigKey = "type";
 const char *KMailDrop::CaptionConfigKey = "caption";
 const char *KMailDrop::ClickConfigKey = "onclick";
-const char *KMailDrop::NewMailConfigKey = "onnewmail";
-const char *KMailDrop::SoundFileConfigKey = "soundfile";
+const char *KMailDrop::NewMailConfigKey = "newcommand";
+const char *KMailDrop::SoundFileConfigKey = "sound";
 const char *KMailDrop::BgColourConfigKey = "bgcolour";
 const char *KMailDrop::FgColourConfigKey = "fgcolour";
 const char *KMailDrop::NBgColourConfigKey = "newmailbgcolour";
@@ -31,15 +31,16 @@ const char *KMailDrop::IconConfigKey = "icon";
 const char *KMailDrop::NewMailIconConfigKey = "newmailicon";
 const char *KMailDrop::DisplayStyleConfigKey = "displaystyle";
 const char *KMailDrop::ResetCounterConfigKey = "resetcounter";
-const char *KMailDrop::PassivePopupConfigKey = "passive_popup";
-const char *KMailDrop::PassiveDateConfigKey = "passive_date";
+const char *KMailDrop::PassivePopupConfigKey = "passivepopup";
+const char *KMailDrop::PassiveDateConfigKey = "passivedate";
+const char *KMailDrop::UseBoxSettingsConfigKey = "boxsettings";
+const char *KMailDrop::RealNameConfigKey = "name";
 
 KMailDrop::KMailDrop()
   : _style(Plain),
-    _lastCount(0),
-    _resetCounter(-1)
+    _lastCount(0)
 {
-  connect(this, SIGNAL(changed(int)), SLOT(setCount(int)));
+  connect(this, SIGNAL(changed( int, KMailDrop* )), SLOT(setCount( int, KMailDrop* )));
   
   //Set default colours; this prevents black (QColor::invalid) boxes after creating a new box.
   _bgColour  = QApplication::palette().active().background();
@@ -53,13 +54,8 @@ KMailDrop::~KMailDrop()
   // Empty.
 }
 
-void KMailDrop::setCount(int count)
+void KMailDrop::setCount(int count, KMailDrop*)
 {
-  if(count<_resetCounter)
-  {
-    _resetCounter = 0;
-    emit(configChanged());
-  }
   _lastCount = count;
 }
 
@@ -68,15 +64,25 @@ void KMailDrop::notifyClients()
   emit(notifyDisconnect());
 }
 
-void KMailDrop::addConfigPage(KDropCfgDialog * dlg)
-{
-  dlg->addConfigPage(new KGeneralCfg(this));
-  dlg->addConfigPage(new KCommandsCfg(this));
-}
+//void KMailDrop::addConfigPage(KDropCfgDialog * dlg)
+//{
+//  dlg->addConfigPage(new KGeneralCfg(this));
+//  dlg->addConfigPage(new KCommandsCfg(this));
+//}
 
 void KMailDrop::forceCountZero()
 {
-  emit changed(0);
+  emit changed( 0, this );
+}
+
+void KMailDrop::readGeneralConfigGroup( const KConfigBase& cfg )
+{
+  _passivePopup = cfg.readBoolEntry(fu(PassivePopupConfigKey), false );
+  _passiveDate = cfg.readBoolEntry(fu(PassiveDateConfigKey), false );
+  _soundFile = cfg.readEntry(fu(SoundFileConfigKey),"");
+  _nMailCmd = cfg.readEntry(fu(NewMailConfigKey),"");
+
+  emit(configChanged());
 }
 
 bool KMailDrop::readConfigGroup(const KConfigBase & c)
@@ -92,9 +98,10 @@ bool KMailDrop::readConfigGroup(const KConfigBase & c)
   _nfgColour  = c.readColorEntry(fu(NFgColourConfigKey), &QApplication::palette().active().text());
   _icon       = c.readEntry(fu(IconConfigKey));
   _nIcon      = c.readEntry(fu(NewMailIconConfigKey));
-  _resetCounter=c.readNumEntry(fu(ResetCounterConfigKey), -1);
-  _passivePopup=c.readBoolEntry(fu(PassivePopupConfigKey), false );
-  _passiveDate= c.readBoolEntry(fu(PassiveDateConfigKey), false );
+  _realName   = c.readEntry(fu(RealNameConfigKey));
+
+  if( !c.readBoolEntry(fu(UseBoxSettingsConfigKey), true ) )
+  	readGeneralConfigGroup( c );
 
   emit(configChanged());
 
@@ -115,7 +122,6 @@ bool KMailDrop::writeConfigGroup(KConfigBase & c) const
   c.writeEntry(fu(NFgColourConfigKey),    _nfgColour);
   c.writeEntry(fu(IconConfigKey),         _icon);
   c.writeEntry(fu(NewMailIconConfigKey),  _nIcon);
-  c.writeEntry(fu(ResetCounterConfigKey), _resetCounter);
   c.writeEntry(fu(PassivePopupConfigKey), _passivePopup );
   c.writeEntry(fu(PassiveDateConfigKey),  _passiveDate );
 
@@ -143,7 +149,7 @@ QValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 	// if the mail count has changed: notify the button!
 	if( newcount != count() && (!stop || !*stop) && synchrone() )
 	{ //asynchrone connections don't have a list at this time
-		emit changed( newcount );
+		emit changed( newcount, this );
 	}
 
 	// if the timer was previously running, start it again
@@ -231,15 +237,6 @@ void KMailDrop::setNewIcon(QString s)
   emit(configChanged());
 }
 
-void KMailDrop::setResetCounter(int rc)
-{
-  if(rc!=_resetCounter)
-  {
-    _resetCounter=rc;
-    emit(configChanged());
-  }
-}
-
 void KMailDrop::setPassivePopup( bool pp )
 {
   _passivePopup = pp;
@@ -250,6 +247,11 @@ void KMailDrop::setPassiveDate( bool pd )
 {
   _passiveDate = pd;
   emit(configChanged());
+}
+
+void KMailDrop::setRealName(QString str)
+{
+	_realName = str;
 }
 
 #include "maildrop.moc"

@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef STRINGID_H
-#define STRINGID_H
+#ifndef MK_STRINGID_H
+#define MK_STRINGID_H
 
 /*
  * This class provides a identification with string,
@@ -43,4 +43,4 @@ public:
 	virtual KornMailId *clone() const;
 };
 
-#endif //STRINGID_H
+#endif //MK_STRINGID_H

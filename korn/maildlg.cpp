@@ -65,10 +65,10 @@ void KornMailDlg::showFullMessage()
 		_mailDrop->readMail(_mailSubject->getId(), &_loadMailCanceled);
 }
 
-void KornMailDlg::setMailSubject(KMailDrop * mailDrop, KornMailSubject * mailSubject)
+void KornMailDlg::setMailSubject( KornMailSubject * mailSubject )
 {
 	_mailSubject = mailSubject;
-	_mailDrop = mailDrop;
+	_mailDrop = mailSubject->getMailDrop();
 
 	// show mail
 	_editCtrl->setText(_mailSubject->getHeader());
@@ -100,7 +100,7 @@ void KornMailDlg::deleteProgress()
 	_progress->setProgress(_progress->totalSteps());
 	_progress->hide();
 	
-	disconnect(_mailDrop, SIGNAL(readMailReady(QString*)), this, SLOT(readMailReady(QString*)));
+	disconnect( _mailDrop, SIGNAL(readMailReady(QString*)), this, SLOT(readMailReady(QString*)));
 	
 	delete _progress;
 	_progress = 0;

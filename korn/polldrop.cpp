@@ -79,14 +79,14 @@ bool KPollableDrop::writeConfigGroup( KConfigBase& cfg ) const
 	return true;
 }
 
-void KPollableDrop::addConfigPage( KDropCfgDialog *dlg )
-{
-	dlg->addConfigPage( new KPollCfg( this ) );
+//void KPollableDrop::addConfigPage( KDropCfgDialog *dlg )
+//{
+//	dlg->addConfigPage( new KPollCfg( this ) );
+//
+//	KMailDrop::addConfigPage( dlg );
+//}
 
-	KMailDrop::addConfigPage( dlg );
-}
-
-const char *KPollableDrop::PollConfigKey = "poll";
+const char *KPollableDrop::PollConfigKey = "interval";
 const int KPollableDrop::DefaultPoll = 300; // 5 minutes
 
 #include "polldrop.moc"

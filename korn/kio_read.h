@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef KIO_READ_H
-#define KIO_READ_H
+#ifndef MK_KIO_READ_H
+#define MK_KIO_READ_H
 
 //This class should be used if someone wants to read the Full Message
 
@@ -57,4 +57,4 @@ private slots:
 	void slotData( KIO::Job*, const QByteArray& );
 };
 
-#endif
+#endif //MK_KIO_READ_H

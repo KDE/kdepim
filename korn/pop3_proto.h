@@ -38,8 +38,8 @@ public:
 	virtual bool canDeleteMail() const { return true; }
 	virtual bool canReadMail() const { return true; }
 
-	virtual bool hasMailbox() const { return false; }
-	virtual bool hasAuth() const { return true; }
+	virtual int fields() const { return server | port | username | password | auth; }
+	virtual int urlFields() const { return no_fields; }
 	virtual unsigned short defaultPort() const { return 110; }
 
 	virtual DeleteTypeEnum deleteFunction() const { return get; }

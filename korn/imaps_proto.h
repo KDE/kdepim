@@ -33,7 +33,7 @@ public:
 	
 	virtual QString protocol() const { return "imaps"; }
 	virtual QString configName() const { return "imaps"; }
-
+	
 	virtual unsigned short defaultPort() const { return 993; }
 };
 

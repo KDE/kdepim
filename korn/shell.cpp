@@ -4,6 +4,8 @@
 * Version:	$Id$
 * Generated:	Sun May  3 10:30:24 EST 1998
 */
+#include "korncfgimpl.h"
+
 
 #include<assert.h>
 #include<qpopupmenu.h>
@@ -18,6 +20,7 @@
 #include<kaboutapplication.h>
 #include<kbugreport.h>
 #include<kdebug.h>
+#include<kdialogbase.h>
 #include <kcursor.h>
 #include "subjectsdlg.h"
 
@@ -289,9 +292,12 @@ void KornShell::optionDlg()
 		return;
 	}
 
-	_optDlg = new KornOptDlg( _manager, 0 );
+	//_optDlg = new KornOptDlg( _manager, 0 );
+	_optDlg = new KDialogBase( 0, "Configuration Dialog", false, i18n( "Korn configuration" ),
+					KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply, KDialogBase::Ok, true );
+	_optDlg->setMainWidget( new KornCfgImpl( _optDlg, "Configuration widget" ) );
 
-	_optDlg->setKornLayout( _settings->layout() );
+	//_optDlg->setKornLayout( _settings->layout() );
 
 	connect( _optDlg, SIGNAL(finished()), this, SLOT(dlgClosed()) );
 
@@ -309,13 +315,13 @@ void KornShell::dlgClosed()
 
 	// ok, read and update settings
 
-	if ( _settings->layout() != _optDlg->kornLayout() ) {
+	//if ( _settings->layout() != _optDlg->kornLayout() ) {
 
-		_settings->setLayout( _optDlg->kornLayout() );
-		_settings->writeConfig();
-
-		needsCreate = true;
-	}
+//		_settings->setLayout( _optDlg->kornLayout() );
+//		_settings->writeConfig();
+//
+//		needsCreate = true;
+//	}
 
 	if ( _configDirty ) {
 		needsCreate = true;

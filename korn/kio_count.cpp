@@ -27,6 +27,7 @@
 #include <kdebug.h>
 #include <kio/jobclasses.h>
 #include <kio/scheduler.h>
+#include <kio/slave.h>
 #include <kio/global.h>
 #include <kurl.h>
 #include <qvaluelist.h>
@@ -76,7 +77,7 @@ void KIO_Count::count( KKioDrop *drop )
 	
 	KURL kurl = *_kurl;
 	KIO::MetaData metadata = *_metadata;
-	
+
 	// Serup a connection
 	if( _protocol->connectionBased( ) )
 	{
@@ -89,10 +90,15 @@ void KIO_Count::count( KKioDrop *drop )
 		{
 			kdWarning() << i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) << endl;
 			_valid = false;
+			_kio->emitValidChanged();
 			_slave = 0;
 			//delete _new_mailurls; _new_mailurls = 0; //No connection pending
 			return;
 		}
+		
+		connect( _slave, SIGNAL( error( int, const QString& ) ), _kio, SLOT( slotConnectionError( int, const QString& ) ) );
+		connect( _slave, SIGNAL( warning( const QString& ) ), _kio, SLOT( slotConnectionWarning( const QString& ) ) );
+		connect( _slave, SIGNAL( infoMessage( const QString& ) ), _kio, SLOT( slotConnectionInfoMessage( const QString& ) ) );
 		
 		/*
 		 * _protocol->recheckConnectKURL could have change kurl and metadata in order to have the right
@@ -114,7 +120,8 @@ void KIO_Count::count( KKioDrop *drop )
 	
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort() );
-		
+	
+	kdDebug() << "KIO::listDir( " << kurl << ", false )" << endl;
 	//Making job to fetch file-list
 	_job = KIO::listDir( kurl, false );
 	_job->addMetaData( metadata );
@@ -122,8 +129,8 @@ void KIO_Count::count( KKioDrop *drop )
 	connect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
 	connect( _job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	         this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
-		 
-	if( _protocol->connectionBased( ) )
+	
+	if( _protocol->connectionBased() )
 		KIO::Scheduler::assignJobToSlave( _slave, _job );
 	else
 		KIO::Scheduler::scheduleJob( _job );
@@ -160,13 +167,13 @@ void KIO_Count::showPassive( const QString& id )
 	KURL kurl = *_kio->_kurl;
 	KIO::MetaData metadata = *_kio->_metadata;
 	kurl = id;
-	KIO::Slave *slave = 0;
+	//KIO::Slave *slave = 0;
 	
 	_kio->_protocol->readSubjectKURL( kurl, metadata );
 	if( kurl.port() == 0 )
 		kurl.setPort( _kio->_protocol->defaultPort() );
 	
-	KIO_Single_Subject *subject = new KIO_Single_Subject( this, id.latin1(), kurl, metadata, _kio->_protocol, slave, id, 0 );
+	KIO_Single_Subject *subject = new KIO_Single_Subject( this, id.latin1(), kurl, metadata, _kio->_protocol, _slave, id, 0 );
 	
 	_subjects_pending++;
 	
@@ -174,9 +181,29 @@ void KIO_Count::showPassive( const QString& id )
         connect( subject, SIGNAL( finished( KIO_Single_Subject* ) ), this, SLOT( deleteSingleSubject( KIO_Single_Subject* ) ) );
 }
 
+void KIO_Count::disconnectSlave()
+{
+	kdDebug() << "KIO_Count::disconnectSlave()" << endl;
+	if( _subjects_pending > 0 )
+		return; //Still getting data
+
+	if( !_protocol->connectionBased() )
+		return; //Protocol doesn't have a connection
+
+	if( !_slave )
+		return; //Slave doens't exist
+
+	//Disconnect slave
+	KIO::Scheduler::disconnectSlave( _slave );
+	delete _protocol;
+	_slave = 0;
+	_protocol = 0;
+}
+
 //This function is called when fetching is over
 void KIO_Count::result( KIO::Job* job )
 {
+	kdDebug() << "KIO_Count::result()" << endl;
 	//job should be the latest job; elsewise: print an error.
 	if( job != _job )
 		kdError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
@@ -184,23 +211,24 @@ void KIO_Count::result( KIO::Job* job )
 	//look of an error occured. If there is, print the error.
 	//This could be very useful by resolving bugs.
 	if( job->error() )
-		kdError() << i18n( "The next KIO-error occurred by counting: %1" ).arg( job->errorText() ) << endl;
+	{
+		kdError() << i18n( "The next KIO-error occurred by counting: %1" ).arg( job->errorString() ) << endl;
+		_valid = false;
+		_kio->emitValidChanged();
+	}
 		
 	disconnect( job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
 	disconnect( job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	            this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
 		    
-	if( _protocol->connectionBased( ) && _slave )
-	{
-		KIO::Scheduler::disconnectSlave( _slave );
-		_slave = 0;
-	}
+	disconnectSlave();
 	
 	//Deletings settings
 	delete _kurl; _kurl = 0;
 	delete _metadata; _metadata = 0;
-	delete _protocol; _protocol = 0;
 	
+	kdDebug() << "name = " << name() << endl;
+	kdDebug() << _kio->_mailurls->count() << " != " << _new_mailurls->count() << endl;
 	if( _kio->_mailurls->count() != _new_mailurls->count() )
 	{
 		*_kio->_mailurls = *_new_mailurls;
@@ -212,6 +240,8 @@ void KIO_Count::result( KIO::Job* job )
 	}
 	delete _new_mailurls; _new_mailurls = 0;
 	
+	_valid = true;
+	_kio->emitValidChanged();
 	_kio->emitRechecked();
 }
 
@@ -293,11 +323,14 @@ void KIO_Count::addtoPassivePopup( KornMailSubject* subject )
 		_kio->emitShowPassivePopup( dynamic_cast< QPtrList<KornMailSubject>* >( _popup_subjects ), _total_new_messages );
 		delete _popup_subjects; _popup_subjects = 0;
 		_total_new_messages = 0;
+
+		disconnectSlave();
 	}
 }
 
 void KIO_Count::deleteSingleSubject( KIO_Single_Subject* single_subject )
 {
+	kdDebug() << "KIO_Count::deleteSingelSubject()" << endl;
 	delete single_subject;
 }
 

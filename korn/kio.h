@@ -124,6 +124,7 @@ public:
 	QString auth() const;
 
 	virtual void recheck();
+	void forceRecheck();
 
 	virtual bool valid();
 
@@ -148,21 +149,21 @@ public:
 	
 	virtual bool synchrone() const { return false; } //class is not synchrone
 
-	virtual void addConfigPage( KDropCfgDialog * );
+	//virtual void addConfigPage( KDropCfgDialog * );
 
 	virtual bool asynchrone() const { return true; }
 
 private:
 	KKioDrop& operator = ( const KKioDrop& );
-	static void encrypt( QString& str );
-	static void decrypt( QString& str );
+	//static void encrypt( QString& str );
+	//static void decrypt( QString& str );
 
 	/*
 	 * The next functions are called from the help-classes (which are friend of the class).
 	 * The only thing this functions do is emitting signals.
 	 */
 	void emitRechecked() { emit rechecked(); }
-	void emitChanged( int value ) { emit changed( value ); }
+	void emitChanged( int value ) { emit changed( value, this ); }
 	
 	void emitReadSubjectsReady( bool success ) { emit readSubjectsReady( success ); }
 	void emitReadSubjectsRead( KornMailSubject * subject ) { emit readSubject( subject ); }
@@ -175,7 +176,14 @@ private:
 	void emitDeleteMailsTotalSteps( int value ) { _deleteMailsTotalSteps = value; emit deleteMailsTotalSteps( value ); }
 	void emitDeleteMailsProgress( int value ) { emit deleteMailsProgress( _deleteMailsTotalSteps - value ); }
 	
-	void emitShowPassivePopup( QPtrList< KornMailSubject > *subject, int total ) { emit showPassivePopup( subject, total ); }
+	void emitShowPassivePopup( QPtrList< KornMailSubject > *subject, int total )
+			{ emit showPassivePopup( subject, total, passiveDate(), this->realName() ); }
+	void emitValidChanged() { emit validChanged( valid() ); }
+
+private slots:
+	void slotConnectionError( int, const QString& );
+	void slotConnectionWarning( const QString& );
+	void slotConnectionInfoMessage( const QString& );
 	
 protected:
 	//The next functions are needed for Process;

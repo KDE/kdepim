@@ -4,16 +4,17 @@
 #include <klocale.h>
 #include <qdatetime.h>
 
-KornMailSubject::KornMailSubject() : _id(0), _size(-1), _date(-1), _fullMessage(false)
+KornMailSubject::KornMailSubject() : _id(0), _drop(0), _size(-1), _date(-1), _fullMessage(false)
 {
 }
 
-KornMailSubject::KornMailSubject(KornMailId * id) : _id(id), _size(-1), _date(-1), _fullMessage(false)
+KornMailSubject::KornMailSubject(KornMailId * id, KMailDrop *drop)
+	: _id(id), _drop( drop ), _size(-1), _date(-1), _fullMessage(false)
 {
 }
 
 KornMailSubject::KornMailSubject(const KornMailSubject & src)
-	: _id(0), _size(-1), _date(-1)
+	: _id(0), _drop(0), _size(-1), _date(-1)
 {
 	operator=(src);
 }
@@ -31,6 +32,7 @@ KornMailSubject & KornMailSubject::operator= (const KornMailSubject & src)
 	_id = 0;
 	if (src._id)
 		_id = src._id->clone();
+	_drop = src._drop;
 	return *this;
 }
 

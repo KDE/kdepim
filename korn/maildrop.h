@@ -44,7 +44,7 @@ class KMailDrop : public QObject
     QString _icon;
     QString _nIcon;
     int     _lastCount;
-    int     _resetCounter;
+    QString _realName;
     bool    _passivePopup;
     bool    _passiveDate;
 
@@ -65,7 +65,9 @@ class KMailDrop : public QObject
     static const char *ResetCounterConfigKey;
     static const char *PassivePopupConfigKey;
     static const char *PassiveDateConfigKey; //Enabled date in Passive popup
-
+    static const char *UseBoxSettingsConfigKey;
+    static const char *RealNameConfigKey;
+    
     /**
      * KMailDrop Constructor
      */
@@ -85,7 +87,7 @@ class KMailDrop : public QObject
      * Number of messages in the mailbox at the last count.
      * @return The number of messages in the mailbox since last count.
      */
-    int count() {return _lastCount-(_resetCounter>=0?_resetCounter:0);};
+    int count() {return _lastCount;};
 
     /** 
      * Recheck the number of letters in this mailbox. Raises the
@@ -115,7 +117,7 @@ class KMailDrop : public QObject
      * then call @ref KDropCfgDialog::addConfigPage with a custom
      * @ref KMonitorCfg object.
      */
-    virtual void addConfigPage( KDropCfgDialog * );
+//    virtual void addConfigPage( KDropCfgDialog * );
 
     /** 
      * Returns a newly created KBoxFactory object initialized to
@@ -128,6 +130,16 @@ class KMailDrop : public QObject
      * own type.
      */
     virtual KMailDrop *clone() const = 0;
+
+    /**
+     * This function reads the settings which can be used by several
+     * accounts. These values can be overwritten by the readConfigGroup
+     * -function.
+     *
+     *@param cfg A configuration object with the group already
+     * set to the configuration for this box
+     */
+    virtual void readGeneralConfigGroup( const KConfigBase& cfg );
 
     /** 
      * Read box configuration from a config group. Subclasses that
@@ -252,9 +264,9 @@ class KMailDrop : public QObject
     QString       icon()          const { return _icon; }
     QString       newIcon()       const { return _nIcon; }
     Style         displayStyle()  const { return _style; }
-    int           resetCounter()  const { return _resetCounter; }
     bool          passivePopup()  const { return _passivePopup; }
     bool	  passiveDate()   const { return _passiveDate; }
+    QString       realName()      const { return _realName; }
 ;
     void setCaption(QString);
     void setClickCmd(QString);
@@ -270,6 +282,7 @@ class KMailDrop : public QObject
     void setResetCounter(int);
     void setPassivePopup(bool);
     void setPassiveDate(bool);
+    void setRealName(QString);
 
     /** 
      * This is called by the manager when it wishes to delete
@@ -298,15 +311,21 @@ class KMailDrop : public QObject
 
     protected slots:
 
-      void setCount( int );
-
+      void setCount( int, KMailDrop* );
+      
 signals:
 
     /** 
      * This signal is emitted when the mailbox discovers 
      * new messages in the maildrop.
      */
-    void changed( int );
+    void changed( int, KMailDrop* );
+
+    /**
+     * This signal is emitted when the valid-status changes.
+     * @param isValid true then and only then if the box is valid
+     */
+    void validChanged( bool isValid );
 
     /** 
      * This is emitted on configuration change, normally
@@ -331,7 +350,7 @@ signals:
      * As argument, there is a KornSubject, which contains a subject and
      * some more info that could be used with the popup.
      */
-    void showPassivePopup( QPtrList< KornMailSubject >*, int );
+    void showPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& realname );
     
     /**
      * readSubjects() might signal readSubject() if

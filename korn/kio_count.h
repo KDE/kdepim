@@ -68,6 +68,7 @@ private:
 	SortedMailSubject *_popup_subjects;
 private:
 	void showPassive( const QString& );
+	void disconnectSlave();
 	
 private slots:
 	void result( KIO::Job* );

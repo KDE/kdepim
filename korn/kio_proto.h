@@ -48,6 +48,11 @@ public:
 	 * Public enumeration
 	 */
 	enum DeleteTypeEnum { get, del };
+	/*
+	 * This enumeration is used when returning the capebilitys of a protocol
+	 */
+	enum Fields {	no_fields = 0, server = 1, port = 2, username = 4, password = 8,
+			mailbox = 16, save_password = 32, auth = 64 };
 
 	/*
 	 * Function to get another instance of the protocol.
@@ -82,12 +87,8 @@ public:
 	 * true means that an option is enabled;
 	 * false means that the option is disabled.
 	 */
-	virtual bool hasServer() const { return true; }
-	virtual bool hasPort() const { return true; }
-	virtual bool hasUsername() const { return true; }
-	virtual bool hasMailbox() const { return true; }
-	virtual bool hasPassword() const { return true; }
-	virtual bool hasAuth() const { return false; }
+	virtual int fields() const { return server | port | username | password | mailbox; }
+	virtual int urlFields() const { return no_fields; }
 	virtual unsigned short defaultPort() const { return 0; }
 
 	/*

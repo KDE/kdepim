@@ -56,7 +56,7 @@ public:
 	 * @param mailDrop maibox which can load the mesage fully
 	 * @param mailSubject mail to show
 	 */
-	void setMailSubject(KMailDrop * mailDrop, KornMailSubject * mailSubject);
+	void setMailSubject( KornMailSubject * mailSubject);
 
 	/**
 	 * KornMailDlg Destructor

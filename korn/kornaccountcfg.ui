@@ -1,0 +1,493 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>KornAccountCfg</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>KornAccountCfg</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>472</width>
+            <height>471</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTabWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab_2</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;Server</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QGroupBox">
+                        <property name="name">
+                            <cstring>gbServer</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Server</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>lbPort</cstring>
+                                </property>
+                                <property name="backgroundOrigin">
+                                    <enum>WidgetOrigin</enum>
+                                </property>
+                                <property name="text">
+                                    <string>Por&amp;t</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>edPort</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>lbServer</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Se&amp;rver</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>edServer</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>lbProtocol</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Protocol</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>cbProtocol</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox" row="0" column="1">
+                                <property name="name">
+                                    <cstring>cbProtocol</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget" row="2" column="1">
+                                <property name="name">
+                                    <cstring>layout6</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="KLineEdit">
+                                        <property name="name">
+                                            <cstring>edPort</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="KURLRequester">
+                                        <property name="name">
+                                            <cstring>urlPort</cstring>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                            <widget class="QLayoutWidget" row="1" column="1">
+                                <property name="name">
+                                    <cstring>layout7</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="KLineEdit">
+                                        <property name="name">
+                                            <cstring>edServer</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="KURLRequester">
+                                        <property name="name">
+                                            <cstring>urlServer</cstring>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QGroupBox">
+                        <property name="name">
+                            <cstring>gbId</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Identity</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QComboBox" row="4" column="1">
+                                <property name="name">
+                                    <cstring>cbAuth</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>lbUsername</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Username</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>edUsername</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>lbMailbox</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Mailbox</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>edPassword</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="4" column="0">
+                                <property name="name">
+                                    <cstring>lbAuth</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Aut&amp;hentication</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>cbAuth</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>lbPassword</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Passwor&amp;d</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>edPassword</cstring>
+                                </property>
+                            </widget>
+                            <widget class="KLineEdit" row="2" column="1">
+                                <property name="name">
+                                    <cstring>edPassword</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="echoMode">
+                                    <enum>Password</enum>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="3" column="1">
+                                <property name="name">
+                                    <cstring>chPassword</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sa&amp;ve password</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+V</string>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget" row="0" column="1">
+                                <property name="name">
+                                    <cstring>layout4</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="KLineEdit">
+                                        <property name="name">
+                                            <cstring>edUsername</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="KURLRequester">
+                                        <property name="name">
+                                            <cstring>urlUsername</cstring>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                            <widget class="QLayoutWidget" row="1" column="1">
+                                <property name="name">
+                                    <cstring>layout5</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="KLineEdit">
+                                        <property name="name">
+                                            <cstring>edMailbox</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="KURLRequester">
+                                        <property name="name">
+                                            <cstring>urlMailbox</cstring>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </grid>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;Account</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout35</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>lbInterval</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>C&amp;heck every (sec):</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>edInterval</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit">
+                                <property name="name">
+                                    <cstring>edInterval</cstring>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;Events</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>chUseBox</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Use settings of box</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+U</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="QGroupBox">
+                        <property name="name">
+                            <cstring>gbNewMail</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="title">
+                            <string>On New Mail</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout33</cstring>
+                                </property>
+                                <grid>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="KURLRequester" row="0" column="1">
+                                        <property name="name">
+                                            <cstring>edRunCommand</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="0" column="0">
+                                        <property name="name">
+                                            <cstring>lbRunCommand</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Run &amp;command</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>edRunCommand</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="KURLRequester" row="1" column="1">
+                                        <property name="name">
+                                            <cstring>edPlaySound</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="1" column="0">
+                                        <property name="name">
+                                            <cstring>lbPlaySound</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Play sou&amp;nd</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>edPlaySound</cstring>
+                                        </property>
+                                    </widget>
+                                </grid>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>chPassivePopup</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Show &amp;Passive Popup</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+P</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>chPassiveDate</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Add &amp;date to Passive Popup</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+D</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                </vbox>
+            </widget>
+        </widget>
+    </vbox>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>cbProtocol</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>KornAccountCfg</receiver>
+        <slot>slotProtocolChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>chUseBox</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>gbNewMail</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>chPassword</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>edPassword</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>cbProtocol</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>KornAccountCfg</receiver>
+        <slot>slotProtocolChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>chPassivePopup</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>chPassiveDate</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>tab</tabstop>
+    <tabstop>cbProtocol</tabstop>
+    <tabstop>edServer</tabstop>
+    <tabstop>urlServer</tabstop>
+    <tabstop>edPort</tabstop>
+    <tabstop>urlPort</tabstop>
+    <tabstop>edUsername</tabstop>
+    <tabstop>urlUsername</tabstop>
+    <tabstop>edMailbox</tabstop>
+    <tabstop>urlMailbox</tabstop>
+    <tabstop>chPassword</tabstop>
+    <tabstop>edPassword</tabstop>
+    <tabstop>cbAuth</tabstop>
+    <tabstop>edInterval</tabstop>
+    <tabstop>chUseBox</tabstop>
+    <tabstop>edRunCommand</tabstop>
+    <tabstop>edPlaySound</tabstop>
+    <tabstop>chPassivePopup</tabstop>
+    <tabstop>chPassiveDate</tabstop>
+</tabstops>
+<slots>
+    <slot access="protected">slotProtocolChanged( const QString&amp; )</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klineedit.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
+</UI>

@@ -39,6 +39,8 @@ public:
 	virtual bool canReadMail() const { return true; }
 	virtual bool fullMessage() const { return true; }
 
+	virtual int fields() const { return server | port | username | password | mailbox; }
+	virtual int urlFields() const { return no_fields; }
 	virtual unsigned short defaultPort() const { return 119; }
 };
 

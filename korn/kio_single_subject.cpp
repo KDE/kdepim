@@ -69,7 +69,7 @@ void KIO_Single_Subject::init( KIO::Slave *& slave)
 	connect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( slotResult( KIO::Job* ) ) );
 	connect( _job, SIGNAL( data         (KIO::Job *, const QByteArray &) ),
 	         this, SLOT( slotData(KIO::Job *, const QByteArray &) ) );
-		 
+	
 	if( _protocol->connectionBased( ) && slave )
 		KIO::Scheduler::assignJobToSlave( slave , _job );
 	else
@@ -127,6 +127,7 @@ void KIO_Single_Subject::slotData( KIO::Job* job, const QByteArray& data )
 		_message->append( data );
 }
 
+//KIO::Scheduler::disconnectSlave missing  if connection stops
 void KIO_Single_Subject::slotResult( KIO::Job *job )
 {
 	if( job != _job )
@@ -136,7 +137,7 @@ void KIO_Single_Subject::slotResult( KIO::Job *job )
 	{
 		kdWarning() << i18n( "Error when fetching %1: %2" ).arg( *_name ).arg( job->errorString() ) << endl;
 	} else {
-		KornMailSubject * mailSubject = new KornMailSubject( new KornStringId( *_name ) );
+		KornMailSubject * mailSubject = new KornMailSubject( new KornStringId( *_name ), 0 );
 		parseMail( _message, mailSubject, _protocol->fullMessage() );
 		mailSubject->setSize( _size );
 		emit readSubject( mailSubject );

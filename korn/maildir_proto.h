@@ -41,10 +41,9 @@ public:
 	virtual bool canReadMail() const { return true; }
 	virtual bool fullMessage() const { return true; }
 
-	virtual bool hasPort() const { return false; }
-	virtual bool hasUsername() const { return false; }
-	virtual bool hasPassword() const { return false; }
-	
+	virtual int fields() const { return server | mailbox; }
+	virtual int urlFields() const { return no_fields; }
+		
 	virtual QString serverName() const { return i18n( "Path:" ); }
 
 	virtual void recheckKURL( KURL &kurl, KIO::MetaData & )

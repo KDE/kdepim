@@ -1,43 +1,31 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 
-INCLUDES = -I$(top_srcdir)/mimelib -I$(top_srcdir)/libkmime $(all_includes)
+INCLUDES = $(all_includes)
+#INCLUDES = -I$(top_srcdir)/mimelib -I$(top_srcdir)/libkmime $(all_includes)
 AM_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 METASOURCES = AUTO
 
 bin_PROGRAMS = korn
-korn_LDADD = $(top_builddir)/mimelib/libmimelib.la $(LIB_KFILE) $(LIBSOCKET) $(top_builddir)/libkmime/libkmime.la
+korn_LDADD = $(LIB_KIO)
+#korn_LDADD = $(top_builddir)/mimelib/libmimelib.la $(LIB_KFILE) $(LIBSOCKET) $(top_builddir)/libkmime/libkmime.la
 
 korn_SOURCES = \
-  dropdlg.cpp \
-  dropman.cpp \
-  ecfg.cpp \
-  edrop.cpp \
-  gencfg.cpp \
-  comcfg.cpp \
-  imap.cpp \
-  imapcfg.cpp \
-  kbiffimap.cpp \
-  kfbrowsebtn.cpp \
-  kornbutt.cpp \
-  kornset.cpp \
+  accountmanager.cpp \
+  boxcontainer.cpp \
+  boxcontaineritem.cpp boxcontaineritem.skel \
+  dcopdrop.cpp \
+  dcopdropif.cpp dcopdropif.skel \
+  dockedcontainer.cpp \
+  dockeditem.cpp \
+  hvcontainer.cpp \
+  hvitem.cpp \
+  keditlistboxman.cpp \
   maildrop.cpp \
   main.cpp \
-  moncfg.cpp \
-  news.cpp \
-  newscfg.cpp \
-  optdlg.cpp \
-  pollcfg.cpp \
   polldrop.cpp \
-  pop.cpp \
-  popcfg.cpp \
-  qmail.cpp \
-  qmailcfg.cpp \
-  shell.cpp \
-  typedlg.cpp \
-  unixcfg.cpp \
-  unixdrop.cpp \
-  btnstyle.cpp \
+  protocols.cpp \
+  kornshell.cpp \
   subjectsdlg.cpp \
   maildlg.cpp \
   mailid.cpp \
@@ -51,21 +39,43 @@ korn_SOURCES = \
   kio_single_subject.cpp \
   kio_read.cpp \
   kio_delete.cpp \
-  kiocfg.cpp \
-  sortedmailsubject.cpp
+  sortedmailsubject.cpp \
+  korncfgimpl.cpp \
+  kornaccountcfgimpl.cpp \
+  kornboxcfgimpl.cpp \
+  kornaccountcfg.ui \
+  kornboxcfg.ui \
+  korncfg.ui \
+  systemtray.cpp \
+  progress_dialog.ui 
 
 noinst_HEADERS = \
+  accountmanager.h \
+  boxcontainer.h \
+  boxcontaineritem.h \
+  dcopdrop.h \
+  dcopdropcfg.h \
+  dcopdropif.h \
+  dockeditem.h \
   dropdlg.h \
   dropman.h \
   ecfg.h \
   edrop.h \
   gencfg.h \
+  hvcontainer.h \
+  hvitem.h \
   comcfg.h \
   imap.h \
   imapcfg.h \
   kbiffimap.h \
+  keditlistboxman.h \
   kfbrowsebtn.h \
+  kornaccountcfgimpl.h \
   kornbutt.h \
+  kornboxcfg.h \
+  kornboxcfgimpl.h \
+  korncfg.h \
+  korncfgimpl.h \
   kornset.h \
   maildrop.h \
   moncfg.h \
@@ -76,9 +86,10 @@ noinst_HEADERS = \
   polldrop.h \
   pop.h \
   popcfg.h \
+  protocols.h \
   qmail.h \
   qmailcfg.h \
-  shell.h \
+  kornshell.h \
   typedlg.h \
   unixcfg.h \
   unixdrop.h \
@@ -87,6 +98,7 @@ noinst_HEADERS = \
   maildlg.h \
   mailid.h \
   mailsubject.h \
+  mbox_proto.h \
   intid.h \
   stringid.h \
   kornapp.h \
@@ -106,7 +118,8 @@ noinst_HEADERS = \
   pop3_proto.h \
   pop3s_proto.h \
   process_proto.h \
-  qmail_proto.h 
+  qmail_proto.h \
+  systemtray.h
 
 srcdoc:
 	kdoc -p -u "/~ssk/src/korn/" -n korn -d /home/ssk/web/src/korn *.h \
@@ -118,3 +131,5 @@ messages:
 KDE_ICON = korn
 
 xdg_apps_DATA = KOrn.desktop
+
+SUBDIRS = kconf_update
