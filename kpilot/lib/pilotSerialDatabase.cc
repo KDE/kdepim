@@ -327,8 +327,20 @@ void PilotSerialDatabase::closeDatabase()
 	setDBOpen(false);
 }
 
+int PilotSerialDatabase::deleteDatabase()
+{
+	FUNCTIONSETUP;
+	
+	if (isDBOpen()) closeDatabase();
+	
+	return dlp_DeleteDB(fDBSocket, 0, fDBName.latin1());
+}
+
 
 // $Log$
+// Revision 1.7  2002/12/13 16:26:09  kainhofe
+// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
+//
 // Revision 1.6  2002/12/08 14:09:24  waba
 // Some cleanup
 //

@@ -179,6 +179,19 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 	return true;
 }
 
+int PilotLocalDatabase::deleteDatabase()
+{
+	FUNCTIONSETUP;
+	if (isDBOpen()) closeDatabase();
+	
+	QString dbpath=dbPathName();
+	QFile fl(dbpath);
+	if (QFile::remove(dbPathName())) 
+		return 0; 
+	else 
+		return -1;
+}
+
 
 
 // Reads the application block info
@@ -619,6 +632,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.10  2002/12/15 13:17:34  kainhofe
+// cardno is not needed for local databases
+//
 // Revision 1.9  2002/12/15 13:16:24  kainhofe
 // Added argument to pilotLocalDatabase's constructor, which specifies whether the default path should be used to search for the database if it cannot be found in the given path.
 //

@@ -54,6 +54,8 @@ public:
 
 	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
 	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0);
+	/** Deletes the database (by name, as given in the constructor and stored in the fDBName field. ) */
+	virtual int deleteDatabase();
 	// Reads the application block info
 	virtual int readAppBlock(unsigned char* buffer, int maxLen);
 	// Writes the application block info.
@@ -132,6 +134,9 @@ private:
 
 
 // $Log$
+// Revision 1.9  2002/12/15 13:16:24  kainhofe
+// Added argument to pilotLocalDatabase's constructor, which specifies whether the default path should be used to search for the database if it cannot be found in the given path.
+//
 // Revision 1.8  2002/12/13 16:26:09  kainhofe
 // Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
 //

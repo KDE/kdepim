@@ -76,6 +76,9 @@ public:
 	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
 	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0) = 0;
 	
+	/** Deletes the database (by name, as given in the constructor, the database name is stored depending on the implementation of PilotLocalDatabase and PilotSerialDatabas) */
+	virtual int deleteDatabase()=0;
+	
 	/** Reads the application block info, returns size. */
 	virtual int readAppBlock(unsigned char* buffer, int maxLen) = 0;
 
@@ -131,7 +134,6 @@ public:
 	
 protected:
 	virtual void openDatabase() = 0;
-public:
 	virtual void closeDatabase() = 0;
 
 	void setDBOpen(bool yesno) { fDBOpen = yesno; }
@@ -143,6 +145,9 @@ private:
 
 
 // $Log$
+// Revision 1.10  2002/12/13 16:26:09  kainhofe
+// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
+//
 // Revision 1.9  2002/11/27 21:29:07  adridg
 // See larger ChangeLog entry
 //

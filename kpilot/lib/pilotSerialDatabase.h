@@ -71,6 +71,8 @@ public:
 
 	virtual QString dbPathName() const;
 
+	/** Deletes the database (by name, as given in the constructor and stored in the fDBName field). */
+	virtual int deleteDatabase();
 	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
 	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0);
 	QString getDBName() { return fDBName; }
@@ -92,6 +94,9 @@ private:
 
 
 // $Log$
+// Revision 1.7  2002/12/13 16:26:09  kainhofe
+// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
+//
 // Revision 1.6  2002/12/08 14:09:24  waba
 // Some cleanup
 //
