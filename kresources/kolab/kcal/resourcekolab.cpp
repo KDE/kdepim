@@ -690,16 +690,20 @@ bool ResourceKolab::subresourceActive( const QString& subresource ) const
   
 void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 {
-  // Workaround: The ResourceView in KOrganizer wants to know this
-  // before it opens the resource :-( Make sure we are open
-  const_cast<ResourceKolab*>( this )->doOpen();
-
+  ResourceMap *map = 0;
+  
   if ( mEventSubResources.contains( subresource ) )
-    return mEventSubResources[ subresource ].setActive( v );
+     map = &mEventSubResources;
   if ( mTodoSubResources.contains( subresource ) )
-    return mTodoSubResources[ subresource ].setActive( v );
+     map = &mTodoSubResources;
   if ( mJournalSubResources.contains( subresource ) )
-    return mJournalSubResources[ subresource ].setActive( v );
+     map = &mJournalSubResources;
+  
+  if ( map && ( ( *map )[ subresource ].active() != v ) ) {
+    ( *map )[ subresource ].setActive( v );
+    doLoad();                     // refresh the mCalendar cache
+    emit resourceChanged( this ); // make KOrganizer read it
+  }
 }
 
 KABC::Lock* ResourceKolab::lock()
