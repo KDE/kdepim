@@ -65,6 +65,7 @@ class KAlarmApp : public KUniqueApplication
 		bool               restoreSession();
 		bool               sessionClosingDown() const      { return mSessionClosingDown; }
 		void               quitIf()                        { quitIf(0); }
+		void               doQuit(QWidget* parent);
 		void               addWindow(TrayWindow* w)        { mTrayWindow = w; }
 		void               removeWindow(TrayWindow*);
 		KAlarmMainWindow*  displayMainWindowSelected(const QString& eventID = QString::null);
