@@ -411,14 +411,12 @@ void KPilotInstaller::slotFastSyncRequested()
 }
 #endif
 
-#ifdef DEBUG
 void KPilotInstaller::slotListSyncRequested()
 {
 	FUNCTIONSETUP;
 	setupSync(PilotDaemonDCOP::Test,
 		QString::fromLatin1("Listing Pilot databases."));
 }
-#endif
 
 /* virtual DCOP */ ASYNC KPilotInstaller::daemonStatus(int i)
 {
@@ -946,6 +944,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.82  2002/12/10 15:54:00  faure
+// Mainwindow settings and KEditToolbar fix, as usual. (untested, other than compilation)
+//
 // Revision 1.81  2002/11/27 21:29:06  adridg
 // See larger ChangeLog entry
 //

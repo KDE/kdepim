@@ -109,12 +109,7 @@ public slots:
 	void slotRestoreRequested();
 	void slotBackupRequested();
 	void slotHotSyncRequested();
-#if 0
-	// void slotFastSyncRequested();
-#endif
-#ifdef DEBUG
 	void slotListSyncRequested();
-#endif
 
 
 	/**
@@ -202,6 +197,9 @@ signals:
 
 
 // $Log$
+// Revision 1.37  2002/12/10 15:54:00  faure
+// Mainwindow settings and KEditToolbar fix, as usual. (untested, other than compilation)
+//
 // Revision 1.36  2002/11/27 21:29:06  adridg
 // See larger ChangeLog entry
 //
