@@ -1,0 +1,124 @@
+/*
+    This file is part of kdepim.
+
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
+#include "webdavhandler.h"
+
+#include <kdebug.h>
+
+SloxItem::SloxItem()
+  : status( Invalid )
+{
+}
+
+QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
+{
+  kdDebug() << "getSloxItems" << endl;
+
+  QValueList<SloxItem> items;
+
+  QDomElement docElement = doc.documentElement();
+
+  QDomNode responseNode;
+  for( responseNode = docElement.firstChild(); !responseNode.isNull();
+       responseNode = responseNode.nextSibling() ) {
+    QDomElement responseElement = responseNode.toElement();
+    if ( responseElement.tagName() == "response" ) {
+      QDomNode propstat = responseElement.namedItem( "propstat" );
+      if ( propstat.isNull() ) {
+        kdError() << "Unable to find propstat tag." << endl;
+        continue;
+      }
+
+      QDomNode prop = propstat.namedItem( "prop" );
+      if ( prop.isNull() ) {
+        kdError() << "Unable to find WebDAV property" << endl;
+        continue;
+      }
+
+      QDomNode sloxId = prop.namedItem( "sloxid" );
+      if ( sloxId.isNull() ) {
+        kdError() << "Unable to find SLOX id." << endl;
+        continue;
+      }
+      QDomElement idElement = sloxId.toElement();
+      QString uid = "KResources_SLOX_" + idElement.text();
+
+      QDomNode sloxStatus = prop.namedItem( "sloxstatus" );
+      if ( sloxStatus.isNull() ) {
+        kdError() << "Unable to find SLOX status." << endl;
+        continue;
+      }
+
+      SloxItem item;
+      item.uid = uid;
+      item.domNode = prop;
+
+      QDomElement sloxStatusElement = sloxStatus.toElement();
+      if ( sloxStatusElement.text() == "DELETE" ) {
+        item.status = SloxItem::Delete;
+      } else if ( sloxStatusElement.text() == "CREATE" ) {
+        item.status = SloxItem::Create;
+      }
+
+      items.append( item );
+    }
+  }
+  
+  return items;
+}
+
+QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt )
+{
+  uint ticks = dt.toTime_t();
+  return QString::number( ticks );
+}
+
+QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
+{
+  QString s = str.mid( 0, str.length() - 3 );
+
+  unsigned long ticks = s.toULong();
+
+  QDateTime dt;
+  dt.setTime_t( ticks );
+
+  return dt;
+}
+
+QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
+                                          const QString &tag )
+{
+  QDomElement el = doc.createElementNS( "DAV", tag );
+  node.appendChild( el );
+  return el;
+}
+
+QDomElement WebdavHandler::addSloxElement( QDomDocument &doc, QDomNode &node,
+                                           const QString &tag,
+                                           const QString &text )
+{
+  QDomElement el = doc.createElementNS( "SLOX", tag );
+  if ( !text.isEmpty() ) {
+    QDomText textnode = doc.createTextNode( text );
+    el.appendChild( textnode );
+  }
+  node.appendChild( el );
+  return el;
+}
