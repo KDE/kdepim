@@ -48,7 +48,7 @@ class Recurrence
       bool negative;
     };
 
-    Recurrence(Incidence *parent, int compatVersion = 310);
+    Recurrence(Incidence *parent, int compatVersion = 0);
     Recurrence(const Recurrence&, Incidence *parent);
     ~Recurrence();
 
@@ -72,6 +72,11 @@ class Recurrence
     void setRecurReadOnly(bool readOnly) { mRecurReadOnly = readOnly; }
     /** Set number of exception dates. */
     void setRecurExDatesCount(int count) { if (count >= 0) mRecurExDatesCount = count; }
+    /** Set the calendar file version for backwards compatibility.
+     * @var version is the KOrganizer/libkcal version, e.g. 220 for KDE 2.2.0.
+     * Specify version = 0 to cancel compatibility mode.
+     */
+    void setCompatVersion(int version = 0);
 
     /** Returns the event's recurrence status.  See the enumeration at the top
      * of this file for possible values. */
@@ -131,10 +136,12 @@ class Recurrence
 
     /** Returns the date of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
+     * Note: for some recurrence types, endDate() can involve significant calculation.
      */
     QDate endDate() const;
     /** Returns the date and time of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
+     * Note: for some recurrence types, endDateTime() can involve significant calculation.
      */
     QDateTime endDateTime() const;
     /** Returns a string representing the recurrence end date in the format
