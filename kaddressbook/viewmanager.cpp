@@ -436,7 +436,7 @@ void ViewManager::createViewFactories()
     }
 
     ViewFactory *viewFactory = static_cast<ViewFactory*>( factory );
-  
+
     if ( !viewFactory ) {
       kdDebug(5720) << "ViewManager::createViewFactories(): Cast failed" << endl;
       continue;
@@ -510,6 +510,8 @@ void ViewManager::initGUI()
 
 void ViewManager::incSearch( const QString& text )
 {
+    if(!mActiveView )
+        return;
   mActiveView->setSelected( QString::null, false );
 
   if ( !text.isEmpty() ) {
@@ -767,14 +769,14 @@ ExtensionWidget *ViewManager::loadExtension( KService::Ptr service, QWidget *par
     kdDebug(5720) << "ViewManager::loadExtension(): Factory creation failed" << endl;
     return 0;
   }
-  
+
   ExtensionFactory *extensionFactory = static_cast<ExtensionFactory*>( factory );
-  
+
   if ( !extensionFactory ) {
     kdDebug(5720) << "ViewManager::loadExtension(): Cast failed" << endl;
     return 0;
   }
-  
+
   return extensionFactory->extension( this, parent );
 }
 
