@@ -15,12 +15,13 @@
 */
 
 #include <qlayout.h>
-#include <qpushbutton.h>
 #include <qcheckbox.h>
 
 #include <klocale.h>
 #include <kapplication.h>
 #include <kiconloader.h>
+#include <kpushbutton.h>
+#include <kstdguiitem.h>
 
 #include "knfilterconfigwidget.h"
 #include "knarticlefilter.h"
@@ -34,16 +35,16 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
   setCaption(kapp->makeStdCaption( i18n("Search for Articles") ));
   setIcon(SmallIcon("knode"));
   QGroupBox *bg=new QGroupBox(this);
-  
+
   startBtn=new QPushButton(i18n("Sta&rt Search"), bg);
-  startBtn->setDefault(true); 
+  startBtn->setDefault(true);
   newBtn=new QPushButton(i18n("&New Search"), bg);
-  closeBtn=new QPushButton(i18n("&Close"), bg);
+  closeBtn=new KPushButton(KStdGuiItem::close(), bg);
 
   completeThreads=new QCheckBox(i18n("Sho&w complete threads"),this);
   fcw=new KNFilterConfigWidget(this);
   fcw->reset();
-  
+
   QHBoxLayout *topL=new QHBoxLayout(this, 5);
   QVBoxLayout *filterL=new QVBoxLayout(this, 0, 5);
   QVBoxLayout *btnL=new QVBoxLayout(bg, 8, 5);
@@ -59,7 +60,7 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
   topL->addLayout(filterL, 1);
   topL->addWidget(bg);
 
-  connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked())); 
+  connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked()));
   connect(newBtn, SIGNAL(clicked()), this, SLOT(slotNewClicked()));
   connect(closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseClicked()));
 

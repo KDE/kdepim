@@ -21,6 +21,8 @@
 #include <kwin.h>
 #include <kseparator.h>
 #include <kapplication.h>
+#include <kstdguiitem.h>
+#include <kpushbutton.h>
 
 #include "knarticlefactory.h"
 #include "knglobals.h"
@@ -1080,7 +1082,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
   topL->addSpacing(10);
   topL->addWidget(sep);
 
-  c_loseBtn=new QPushButton(i18n("&Close"), this);
+  c_loseBtn=new KPushButton(KStdGuiItem::close(), this);
   c_loseBtn->setDefault(true);
   topL->addWidget(c_loseBtn, 0, Qt::AlignRight);
 

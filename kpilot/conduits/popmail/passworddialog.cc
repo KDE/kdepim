@@ -24,7 +24,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -46,7 +46,6 @@ static const char *passworddialog_id="$Id$";
 #include <stdio.h>
 
 #include <qapplication.h>
-#include <qpushbutton.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qdialog.h>
@@ -59,11 +58,13 @@ static const char *passworddialog_id="$Id$";
 
 #include <klocale.h>
 #include <kapplication.h>
+#include <kstdguiitem.h>
+#include <kpushbutton.h>
 
 PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, bool modal, WFlags wflags)
    : QDialog(parent, name, modal, wflags)
 {
-    
+
    _head = head;
 
    //
@@ -72,29 +73,29 @@ PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, 
    if (!_head.isEmpty())
    {
       QLabel *l;
-      
+
       l = new QLabel(_head, this);
       l->setGeometry( 10, 10, 200, 20 );
    }
-   
+
    //
    // Die eine oder zwei Zeile(n) mit der Passwortabfrage
    //
    QLabel *l_password = new QLabel(i18n("Password"), this);
    l_password->setGeometry( 10, 40, 80, 30 );
-   
+
    _w_password = new QLineEdit( this );
    _w_password->setGeometry( 90, 40, 100, 30 );
    _w_password->setEchoMode( QLineEdit::Password );
-   
+
    //
    // Connect vom LineEdit herstellen und Accelerator
    //
    QAccel *ac = new QAccel(this);
    ac->connectItem( ac->insertItem(Key_Escape), this, SLOT(reject()) );
-   
+
    connect( _w_password, SIGNAL(returnPressed()), SLOT(accept()) );
-   
+
    //
    // Eine vertikale Linie erzeugen
    //
@@ -103,27 +104,27 @@ PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, 
    f->setMidLineWidth(1);
    f->setFrameStyle( QFrame::HLine|QFrame::Raised);
    f->setGeometry( 10, 80, 180, 2 );
-   
+
    //
    // Die Buttons "Ok" & "Cancel" erzeugen
    //
    QPushButton *b1, *b2;
-   b1 = new QPushButton(i18n("OK"), this);
+   b1 = new KPushButton(KStdGuiItem::ok(), this);
    b1->setGeometry( 10, 90, 80, 30 );
-   
-   b2 = new QPushButton(i18n("Cancel"), this);
+
+   b2 = new KPushButton(KStdGuiItem::cancel(), this);
    b2->setGeometry( 110, 90, 80, 30 );
-   
+
    // Buttons mit Funktionaliataet belegen
    connect( b1, SIGNAL(clicked()), SLOT(accept()) );
    connect( b2, SIGNAL(clicked()), SLOT(reject()) );
-   
+
    // Fenstertitel
    setCaption(i18n("Password"));
-   
+
    // Focus
    _w_password->setFocus();
-   
+
    setGeometry( x(), y(), 200, 130 );
 
 	(void) passworddialog_id;

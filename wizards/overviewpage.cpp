@@ -22,7 +22,6 @@
 #include <qbuttongroup.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qpushbutton.h>
 #include <qradiobutton.h>
 
 #include <kaccelmanager.h>
@@ -30,6 +29,8 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kpushbutton.h>
+#include <kstdguiitem.h>
 
 #include "kolabwizard.h"
 #include "egroupwarewizard.h"
@@ -71,7 +72,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
   layout->addMultiCellWidget( frame, 5, 5, 0, 3 );
 
-  QPushButton *cancelButton = new QPushButton( SmallIcon("button_cancel"), i18n( "Cancel" ), this );
+  QPushButton *cancelButton = new KPushButton( KStdGuiItem::cancel(), this );
   layout->addWidget( cancelButton, 7, 3 );
 
   connect( cancelButton, SIGNAL( clicked() ), this, SIGNAL( cancel() ) );
