@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Skeleton Device
+Name[sv]=Obestämd mobilenhet
 Comment=Mobile Skeleton Device
+Comment[sv]=Obestämd mobilenhet
 Type=Service
-ServiceTypes=kmobile/device
+ServiceTypes=kdedevice/mobiledevice
 X-KDE-Library=libkmobile_skeleton
-Icon=unknown.png
+Icon=mobile_unknown

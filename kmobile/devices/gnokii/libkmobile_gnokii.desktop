@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Mobile Phone or Organizer (gnokii)
+Name[sv]=Mobilenhet (gnokii)
 Comment=This driver supports many NOKIA and other mobile phones via the gnokii library
+Comment[sv]=Den här drivrutinen stöder många Nokia och andra mobiltelefoner via biblioteket gnokii
 Type=Service
-ServiceTypes=kmobile/device
+ServiceTypes=kdedevice/mobiledevice
 X-KDE-Library=libkmobile_gnokii
-Icon=phone.png
+Icon=mobile_phone

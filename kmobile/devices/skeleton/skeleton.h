@@ -46,7 +46,7 @@ public:
 
     // you may provide your own icon() implementation to display
     // an appropiate Pixmap (e.g. a Palm Pilot or a Zaurus image).
-    QPixmap icon( int size );
+    QString iconFileName() const;
 
     /*
      * Addressbook / Phonebook support

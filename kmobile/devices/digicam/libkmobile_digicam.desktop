@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Digital Camera (xxxx)
+Name[sv]=Digitalkamera (xxxx)
 Comment=This driver supports many digital cameras via the xxxx library
+Comment[sv]=Den här drivrutinen stöder många digitalkameror via biblioteket xxxx
 Type=Service
-ServiceTypes=kmobile/device
+ServiceTypes=kdedevice/mobiledevice
 X-KDE-Library=libkmobile_digicam
-Icon=camera.png
+Icon=mobile_camera

@@ -535,7 +535,7 @@ bool KMobileGnokii::configDialog(QWidget *parent)
 
 QString KMobileGnokii::iconFileName() const
 {
-  return ::locate("data", "kmobile/pics/phone.png");
+  return "mobile_phone";
 }
 
 /*

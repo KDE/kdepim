@@ -86,13 +86,9 @@ bool KMobileSkeleton::isReadOnly()
   return true;
 }
 
-// provide an icon and scale it to the given size
-QPixmap KMobileSkeleton::icon( int size )
+QString KMobileSkeleton::iconFileName() const
 {
-  QPixmap res( ::locate("data", "kmobile/pics/phone.png") );
-  if (size && !res.isNull() && res.width()!=size)
-     res.resize(size,size);
-  return res;
+  return "mobile_unknown";
 }
 
 /*
