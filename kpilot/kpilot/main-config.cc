@@ -46,11 +46,14 @@ static const char *config_id =
 
 #include "conduitSetup.h"
 #include "kpilotConfigDialog.h"
+#include "conduitConfigDialog.h"
 #include "kpilotConfig.h"
 
 static KCmdLineOptions kpilotoptions[] = {
 	{ "c",0,0 },
 	{ "conduits", I18N_NOOP("Configure conduits instead."), 0},
+	{ "n",0,0 },
+	{ "new-style", I18N_NOOP("Use new-style config dialogs."), 0},
 	{ 0,0,0 }
 } ;
 
@@ -79,15 +82,23 @@ int main(int argc, char **argv)
 
 	KApplication a;
 
-	KPilotConfig::getDebugLevel(false);
+	KPilotConfig::getDebugLevel(true);
 
 	int r = 0;
 
 	if (p->isSet("conduits"))
 	{
-		CConduitSetup *d = new CConduitSetup(0L,"conduitConfig");
-
-		r = d->exec();
+		if (p->isSet("new-style"))
+		{
+			ConduitConfigDialog *d = new ConduitConfigDialog(0L,
+				"conduitConfig",true);
+			r = d->exec();
+		}
+		else
+		{
+			CConduitSetup *d = new CConduitSetup(0L,"conduitConfig");
+			r = d->exec();
+		}
 	}
 	else
 	{
@@ -117,6 +128,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.5  2001/10/01 19:53:15  adridg
+// Added conduit config
+//
 // Revision 1.4  2001/09/29 16:26:18  adridg
 // The big layout change
 //
