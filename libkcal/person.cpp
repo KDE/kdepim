@@ -53,10 +53,7 @@ bool KCal::operator==( const Person& p1, const Person& p2 )
 QString Person::fullName() const
 {
   if( mName.isEmpty() ) {
-    if( mEmail.isEmpty() )
-      return i18n( "Unknown" );
-    else
-      return mEmail;
+    return mEmail;
   } else {
     if( mEmail.isEmpty() )
       return mName;
