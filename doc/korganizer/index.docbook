@@ -4,6 +4,7 @@
   <!ENTITY kappname "&korganizer;">
   <!ENTITY package "kdepim">
   <!ENTITY exchange-plugin-workshop SYSTEM "exchange-plugin.docbook">
+  <!ENTITY group-scheduling-workshop SYSTEM "group-scheduling.docbook">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 ]>
@@ -2647,6 +2648,7 @@ the next releases.</para>
 </chapter>
 
 &exchange-plugin-workshop;
+&group-scheduling-workshop;
 
 <chapter id="credits">
 <title>Credits and License</title>

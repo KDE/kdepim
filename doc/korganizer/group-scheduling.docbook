@@ -1,0 +1,427 @@
+<chapter id="group-scheduling-ws">
+
+<chapterinfo>
+<authorgroup>
+
+<author>
+<firstname>G&uuml;nter</firstname> <surname>Schwann</surname>
+<affiliation><address><email>vogel@sbox.tugraz.at</email></address></affiliation>
+<contrib>Original author</contrib>
+</author>
+
+<author>
+<firstname>Cornelius</firstname> <surname>Schumacher</surname>
+<affiliation><address><email>schumacher@kde.org</email></address></affiliation>
+<contrib>Additionals texts</contrib>
+</author>
+
+<author>
+<firstname>Klaus</firstname> <surname>St&auml;rk</surname>
+<affiliation><address><email>staerk@kde.org</email></address></affiliation>
+<contrib>Additionals texts</contrib>
+</author>
+
+<othercredit role="reviewer">
+<firstname>Eric</firstname> <surname>Bischoff</surname>
+<affiliation><address><email>e.bischoff@noos.fr</email></address></affiliation>
+<contrib>Editor</contrib>
+</othercredit>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+</authorgroup>
+
+<abstract>
+<para>This version of the &korganizer; workshop <quote>Group
+Scheduling</quote> was released on October 17, 2002. See the
+<filename>ChangeLog</filename> for details.</para>
+</abstract>
+
+<keywordset>
+<keyword>kdepim</keyword>
+<keyword>KOrganizer</keyword>
+<keyword>KOrganizer workshop</keyword>
+<keyword>group</keyword>
+<keyword>scheduling</keyword>
+</keywordset>
+
+<date>2002-10-17</date>
+<releaseinfo>3.1</releaseinfo>
+</chapterinfo>
+
+<title>&korganizer; workshop: Group scheduling</title>
+
+<sect1 id="group-scheduling-overview">
+<title>Overview</title>
+
+<para>
+Since version 3.0, &korganizer; supports group scheduling. This means
+you can use it to organize appointments and meetings as a team. Group
+scheduling is based on a peer-to-peer architecture using email as the
+communication medium.
+</para>
+
+<para>
+For example, if you want to organize a meeting, you create the event in
+&korganizer; and add all people that should attend by selecting them from
+the &kde; addressbook. You can do this by selecting from a &korganizer;
+dialog or by dragging an entry from &kaddressbook; and dropping it on
+the event in &korganizer;. Then, click on the <guiicon>Request</guiicon>
+toolbar button and the event gets automatically sent to all attendees by
+email. The recipients get an email containing all the relevant information
+for the meeting and, if they have configured &kmail; appropriately,
+the event is automatically inserted in their own &korganizer;. They can
+respond to the meeting proposal by accepting or rejecting it or by making
+a counter proposal. All the information is sent by email again and
+the original organizer of the meeting gets information about the event
+updated in his/her &korganizer;.
+</para>
+
+<para>
+Another example: You are playing in a band and, from time to time, you
+give live concerts. To notify your fans about the concerts, you maintain
+a mailing list. If you use &korganizer; to organize your concert dates,
+you can just click on the <guiicon>Publish</guiicon> toolbar button,
+put in the address of the mailing list and the event gets sent. Mailing
+list subscribers who use &korganizer; get the concert date automatically
+inserted in their calendar.
+</para>
+
+<para>
+Of course, you have complete control over the data that actually get
+inserted into your calendar. You can easily reject email containing
+calendar information which isn't meant for you or in which you are
+not interested.
+</para>
+
+<para>
+Group scheduling adheres to open standards: iTIP (RFC 2446) and iMIP
+(RFC 2447). These are based on iCalendar, the native file format of
+&korganizer;. By using these standards, it is possible to exchange group
+scheduling messages with users of other applications implementing the
+standards, for example, Evolution and Outlook.
+</para>
+
+</sect1>
+
+<sect1 id="group-scheduling-setup">
+<title>Setting up &korganizer; for group scheduling</title>
+
+<para>
+In &korganizer;'s setup, there are two tabs of interest for configuring
+group scheduling. In the first picture here, you have to enter your name,
+email address and email client properly.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_setup1.png" format="PNG"/></imageobject>
+<textobject><para>&korganizer; setup</para></textobject>
+</mediaobject>
+
+<para>
+On the <guilabel>Group Scheduling</guilabel> tab, you can select your
+<guilabel>Scheduling mail client</guilabel>. <guilabel>Dummy</guilabel>
+is used only for tests and is not useful for end-users. So it's safe
+to use <guilabel>Mail Client</guilabel>. The next thing you can select
+is whether your scheduling messages should be sent directly or first be
+stored in the <quote>Outbox</quote>. We suggest to use
+<guilabel>directly</guilabel> if you have a direct internet access,
+and <guilabel>Outbox</guilabel> if you use a dial-up connection.
+</para>
+
+<para>
+The <guilabel>Outbox</guilabel> has the additional benefit of
+letting you check your messages before you send them. In the field
+<guilabel>Additional email addresses</guilabel> you should add all your
+email addresses you use (including aliases). If you receive your email by
+using one single email address that is already listed in the first tab,
+leave the field blank.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_setup2.png" format="PNG"/></imageobject>
+<textobject><para>&korganizer; setup</para></textobject>
+</mediaobject>
+
+<para>
+The last step for setting up group scheduling in &korganizer;
+is to enable a filter in your mail client. The filter has to
+<quote>pipe</quote> every mail through a small script called
+<application>korganizerIn</application>. This script is shipped with
+&korganizer; and can be found in the same directory as the &korganizer;
+binary (&eg; <filename>/opt/kde3/bin/</filename>). In the picture shown
+here, you can see an example for the filter settings for &kde;'s mail
+client <ulink url="http://kmail.kde.org">&kmail;</ulink>.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_filter.png" format="PNG"/></imageobject>
+<textobject><para>&kmail; filter</para></textobject>
+</mediaobject>
+
+</sect1>
+
+<sect1 id="group-scheduling-organizing1">
+<title>Organizing an event using &korganizer;, example #1</title>
+
+<para>
+To organize an event for a group, just create an ordinary event and
+add all attendees in the attendee dialog.  The easiest way to add an
+attendee is to click on the &quot;Addressbook&quot; button and select
+one attendee from your &kde; addressbook (&kaddressbook;).
+</para>
+
+<para>
+<guilabel>Role</guilabel> describes the role an attendee has on this
+event, &eg; Participant or Chair. <guilabel>Status</guilabel> informs
+you whether an attendee already accepted or declined his participation
+on the event. These settings should both be set carefully. Be sure to
+set the option <guilabel>Request Response</guilabel> if you want the
+attendee to answer your event request.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_attendee1.png" format="PNG"/></imageobject>
+<textobject><para>Event attendee</para></textobject>
+</mediaobject>
+
+<para>
+When you've added the new event, you can see it with an icon showing a
+penguin's head (see the event <quote>Meeting</quote> in the middle of
+the picture below). This icon indicates you that you are the organizer
+of this group scheduling event.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_korganizer1.png" format="PNG"/></imageobject>
+<textobject><para>The Organizer icon in &korganizer;</para></textobject>
+</mediaobject>
+
+<para>
+In order to publish an event, just click on it to mark it, and then select
+<guimenuitem>Publish</guimenuitem> from the <guimenu>Schedule</guimenu>
+menu. A dialog will appear, asking for email addresses. Enter all mail
+addresses of the people who should attend the your event. After pressing
+the <guibutton>OK</guibutton> button, the event will either be sent
+directly to the recipients or - acording to your setting - will first
+be placed in the <quote>Outbox</quote>.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_publish.png" format="PNG"/></imageobject>
+<textobject><para>Publishing an event</para></textobject>
+</mediaobject>
+
+<para>
+The second way to publish an event is to send a <quote>Request</quote>
+to the event's attendees, asking them for a reply. The recipients of your
+posting have the choice to accept or to deny the scheduled event. To
+publish in this way, just select the event (you must be organizer of
+this event) and select <guimenuitem>Request</guimenuitem> from the
+<guimenu>Schedule</guimenu> menu.
+</para>
+
+<para>
+When you've configured &korganizer; to use the
+<quote>Outbox</quote>, you can see the event waiting to be sent
+out by selecting <guimenuitem>Outgoing Messages...</guimenuitem> from the
+<guimenu>Schedule</guimenu> menu. <guiicon>Send messages</guiicon> in the
+<quote>Outbox</quote> sends all the messages listed here. You can
+also remove queued email by clicking the <guiicon>Remove</guiicon> button.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_outbox1.png" format="PNG"/></imageobject>
+<textobject><para>The Outbox</para></textobject>
+</mediaobject>
+
+<para>
+Double-clicking on the event shows its details:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_show1.png" format="PNG"/></imageobject>
+<textobject><para>Event details</para></textobject>
+</mediaobject>
+
+</sect1>
+
+<sect1 id="group-scheduling-organizing2">
+<title>Organizing an event using &korganizer;, example #2</title>
+
+<para>
+After some time, you should receive feedback from the attendees you
+invited to the event in example #1. Open the <quote>Inbox</quote>
+by selecting <guimenuitem>Incoming Messages...</guimenuitem> from the
+<guimenu>Schedule</guimenu>. To be sure to see all incoming messages,
+press the <guibutton>Retrieve messages</guibutton> button.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_inbox1.png" format="PNG"/></imageobject>
+<textobject><para>The Inbox</para></textobject>
+</mediaobject>
+
+<para>
+Incoming messages can either be: Reply, Counter, Request,
+Publish. If a message is not interesting to you, you can still
+reject it by pressing <guibutton>Reject</guibutton> button. Pressing
+<guibutton>Accept</guibutton> for a <quote>Reply</quote> event updates
+information about the event in your calendar.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_inbox2.png" format="PNG"/></imageobject>
+<textobject><para>The Inbox</para></textobject>
+</mediaobject>
+
+<para>
+Pressing <guibutton>Accept</guibutton> for a <quote>Counter</quote> event
+pops up a dialog box with the counter-proposal data. If you accept it,
+the event will be updated and sent to all attendees. If you decline it,
+your event settings will be retained.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_counter.png" format="PNG"/></imageobject>
+<textobject><para>Counter dialog</para></textobject>
+</mediaobject>
+
+</sect1>
+
+<sect1 id="group-scheduling-attendee">
+<title>Being an attendee</title>
+
+<para>
+If you receive a new event (<quote>Request</quote> or
+<quote>Publish</quote>) you can add it to your calendar by pressing the
+<guibutton>Accept</guibutton> button. If the message method chosen by
+the sender of that message was <quote>Publish</quote>, nothing more has
+to be done by you.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_inbox2.png" format="PNG"/></imageobject>
+<textobject><para>The Inbox</para></textobject>
+</mediaobject>
+
+<para>
+If the message method was <quote>Request</quote>, your event has an icon
+like the one on the right bottom. This icon indicates that you should
+send a <quote>Reply</quote> to the event's organizer.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_korganizer2.png" format="PNG"/></imageobject>
+<textobject><para>The Reply icon in &korganizer;</para></textobject>
+</mediaobject>
+
+<para>
+To see all events that need a reply, you can use the <guilabel>What's
+next</guilabel> view.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_whatsnext.png" format="PNG"/></imageobject>
+<textobject><para>What's next?</para></textobject>
+</mediaobject>
+
+<para>
+Before you send a reply, you should update your attendee data in the
+event dialog:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_attendee2.png" format="PNG"/></imageobject>
+<textobject><para>Attendee dialog</para></textobject>
+</mediaobject>
+
+<para>
+When you have done so, the event's icon shows three penguin heads to
+indicate that you are an attendee of that event. Now you should click
+once on the event (to mark it) and select <guimenuitem>Reply</guimenuitem>
+from the <guimenu>Schedule</guimenu> menu.
+</para>
+
+<para>
+If you want to do a counter-proposal, you must change the event's
+data, and select <guimenuitem>Counter</guimenuitem> from the
+<guimenu>Schedule</guimenu> menu.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_korganizer3.png" format="PNG"/></imageobject>
+<textobject><para>The Counter icon in KOrganizer</para></textobject>
+</mediaobject>
+
+<para>
+One other possiblity to <quote>Reply</quote> is not to update your
+attendee data, but select <guimenuitem>Reply</guimenuitem> and use the
+<guilabel>Reply</guilabel> dialog that appears to change your attendee
+data.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_reply.png" format="PNG"/></imageobject>
+<textobject><para>Reply dialog</para></textobject>
+</mediaobject>
+
+<para>
+If you use the <quote>Outbox</quote>, you can see the <quote>Reply</quote>
+message in your <quote>Outbox</quote> ...
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_outbox2.png" format="PNG"/></imageobject>
+<textobject><para>The Outbox</para></textobject>
+</mediaobject>
+
+<para>
+... and look at its details by double-clicking on it:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="gs_show2.png" format="PNG"/></imageobject>
+<textobject><para>Event details</para></textobject>
+</mediaobject>
+
+</sect1>
+
+<sect1 id="group-scheduling-credits">
+<title>Credits and license</title>
+
+<para>Contributors:</para>
+
+<variablelist>
+<varlistentry>
+<term>Original author</term>
+<listitem><para>G&uuml;nter Schwann
+  <email>vogel@sbox.tugraz.at</email></para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Additionals texts</term>
+<listitem><para>Cornelius Schumacher
+  <email>schumacher@kde.org</email></para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Additionals texts</term>
+<listitem><para>Klaus St&auml;rk
+  <email>staerk@kde.org</email></para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Conversion to DocBook</term>
+<listitem><para>Eric Bischoff
+  <email>e.bischoff@noos.fr</email></para></listitem>
+</varlistentry>
+</variablelist>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+&underFDL;
+
+</sect1>
+
+</chapter>
