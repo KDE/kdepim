@@ -294,11 +294,11 @@ QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
   int pos1=-1, pos2=0, len=src.length()-1;
   bool folded(false);
 
-  if (n == src.left(n.length())) {
+  if (n.lower() == src.left(n.length()).lower()) {
     pos1 = 0;
   } else {
     n.prepend("\n");
-    pos1 = src.find(n);
+    pos1 = src.find(n,0,false);
   }
 
   if (pos1>-1) {    //there is a header with the given name
