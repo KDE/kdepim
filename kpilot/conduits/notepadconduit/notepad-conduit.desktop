@@ -18,6 +18,7 @@ Name[tg]=Эзоҳот
 Name[zh_CN]=记事本
 Comment=This conduit backs up NotePad drawings to a local folder
 Comment[bg]=Създаване на архивни копия на изображенията създадени с NotePad в локална директория
+Comment[bs]=Ovaj pomoćnik čuva backup NotePad crteža u lokalnom direktoriju
 Comment[da]=Denne kanal sikkerhedskopierer NotePad's tegninger til en lokal mappe
 Comment[de]=Diese Abgleicher sichert NotePad-Zeichnungen in einen lokalen Ordner
 Comment[es]=Este conducto copia los dibujos del bloc de notas en una carpeta local

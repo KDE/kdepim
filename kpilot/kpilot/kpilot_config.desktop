@@ -13,6 +13,7 @@ X-KDE-ParentComponents=kpilot,kpilotDaemon,kontact_kpilotplugin
 
 Name=KPilot Configuration
 Name[be]=Канфігурацыя KPilot
+Name[bs]=KPilot podešavanje
 Name[ca]=Configuració de KPilot
 Name[cs]=Nastavení KPilotu
 Name[da]=KPilot indstilling
@@ -41,6 +42,7 @@ Name[tg]=Танзимоти KPilot
 Name[zh_CN]=KPilot 配置
 Comment=KPilot Main Configuration
 Comment[bg]=Главни настройки на KPilot
+Comment[bs]=KPilot glavno podešavanje
 Comment[ca]=Configuració principal de KPilot
 Comment[cs]=Hlavní nastavení KPilotu
 Comment[da]=KPilot hovedindstilling

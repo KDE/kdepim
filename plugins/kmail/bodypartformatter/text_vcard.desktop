@@ -19,6 +19,7 @@ Name[ta]=பயன்பாட்டு எண்மம்
 Name[tg]=Миқдори зиёди бинарии барномот
 Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/vcard
+Comment[bs]=Dodatak za formatiranje tijela poruke za text/vcard
 Comment[cs]=Formátovač těla emailu pro typ text/vcard
 Comment[da]=Et bodypart formateringsplugin for text/vcard
 Comment[de]=Ein Textinhalt-Formatierer für text/vcard
