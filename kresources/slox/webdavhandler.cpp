@@ -120,14 +120,14 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
 QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt )
 {
   uint ticks = dt.toTime_t();
-  return QString::number( ticks * 1000 );
+  return QString::number( ticks ) + "000";
 }
 
 QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
                                         const QString &timeZoneId )
 {
   uint ticks = dt.toTime_t();
-  return QString::number( ticks * 1000 );
+  return QString::number( ticks ) + "000";
 }
 
 QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
