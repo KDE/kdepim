@@ -1,5 +1,5 @@
 Source: kdepim
-Build-Depends: automake, libtool, kdelibs3-dev, debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlib6g-dev | xlibs-dev, jade, sgml-base, docbook, gettext, bison, libgl-dev
+Build-Depends: automake, libtool, kdelibs3-dev, debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlib6g-dev | xlibs-dev, jade, sgml-base, docbook, gettext, bison | byacc, libgl-dev
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
@@ -23,6 +23,7 @@ Section: x11
 Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}
 Suggests: kdebase, abbrowser
+Conflicts: kdepim
 Description: Personal organizer based on QT and KDE 
  A complete calendar and scheduling program. KOrganizer supports
  information interchange with other calendar applications through the
@@ -49,6 +50,7 @@ Section: utils
 Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}
 Suggests: kdebase, korganizer
+Conflicts: kdepim
 Description: Address book reader
  Address book reader for KDE
 
