@@ -7,9 +7,6 @@ lib_LTLIBRARIES = libvcard.la
 
 libvcard_la_SOURCES = vCard.cpp
 
-test: test.o libvcard.a
-	$(CXX) -o test test.cpp libvcard.a $(all_libraries) -lqt $(INCLUDES)
-
 check_PROGRAMS = testwrite testread
 
 testwrite_LDFLAGS = $(all_libraries) $(KDE_RPATH)
