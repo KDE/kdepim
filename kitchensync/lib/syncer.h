@@ -1,6 +1,26 @@
-#ifndef KSYNCER_H
-#define KSYNCER_H
-// $Id$
+/*
+    This file is part of KitchenSync.
+
+    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
+#ifndef KSYNC_SYNCER_H
+#define KSYNC_SYNCER_H
 
 #include <qbitarray.h>
 #include <qobject.h>
@@ -26,8 +46,7 @@ class Syncee;
   The SyncEntry class represents the basic unit of syncing. It provides an
   interface for identifying and comparing entries, which has to be
   implemented by concrete subclasses. This makes it possible to
-  operate with one synchronisation
-  algorithm on different Syncee's.
+  operate with one synchronisation algorithm on different Syncees.
 
   SyncEntry objects are collected by a @ref Syncee objects.
 */
@@ -41,18 +60,18 @@ class SyncEntry
     enum Status { Undefined =-1, Added = 0, Modified=1, Removed=2 };
 
     /**
-     * This is the basic c'tor of a Syncee.
-     * Every SyncEntry should have a parent Syncee
-     * where it belongs to.
-     */
-    SyncEntry(Syncee* parent = 0);
+      This is the basic c'tor of a Syncee.
+      Every SyncEntry should have a parent Syncee
+      where it belongs to.
+    */
+    SyncEntry( Syncee* parent = 0 );
     SyncEntry( const SyncEntry& );
     virtual ~SyncEntry();
 
     /**
-     * Return a string describing the type of the entry
-     */
-    virtual QString type()const = 0;
+      Return a string describing the type of the entry
+    */
+    virtual QString type() const = 0;
 
     /**
       Return a string describing this entry. This is presented to the user as
@@ -67,6 +86,9 @@ class SyncEntry
       id.
     */
     virtual QString id() = 0;
+    /**
+      Set unique id.
+    */
     virtual void setId( const QString& id );
 
     /**
@@ -87,90 +109,88 @@ class SyncEntry
       equal, if they contain exactly the same information, including the same id
       and timestamp.
     */
-    virtual bool equals(SyncEntry *) = 0;
+    virtual bool equals( SyncEntry * ) = 0;
 
     /**
-     * For future versions match should try to match one SyncEntry
-     * with another.
-     * @param entry The entry to be matched
-     * @return Return -1 if entry is from a different type than this entry
-     * or the percentage of equality. Or -2 if not implemented
-     */
-    virtual int match(SyncEntry *entry );
+      For future versions match should try to match one SyncEntry
+      with another.
+     
+      @param entry The entry to be matched
+      @return Return -1 if entry is from a different type than this entry
+              or the percentage of equality. Or -2 if not implemented
+    */
+    virtual int match( SyncEntry *entry );
 
     /**
-     * Compares one SyncEntry to another. This functions differs from
-     * equals and match in some ways.
-     * it returns 0 if both are equal, -1 if not equal at all, or
-     * the state of equalnes
-     * Equal or EqualModifiedThis, EqualModifiedOther, EqualModifiedBoth
-     * -2 if not implemented
-     */
-    virtual int compareTo( SyncEntry* entry );
+      Compares one SyncEntry to another. This functions differs from
+      equals and match in some ways.
+      it returns 0 if both are equal, -1 if not equal at all, or
+      the state of equalnes
+      Equal or EqualModifiedThis, EqualModifiedOther, EqualModifiedBoth
+      -2 if not implemented
+    */
+    virtual int compareTo( SyncEntry *entry );
 
     /**
-     * The status of this SyncEntry
-     * either Undefined, Added, Modified or Removed
-     */
-    virtual int state()const;
+      The status of this SyncEntry
+      either Undefined, Added, Modified or Removed
+    */
+    virtual int state() const;
 
     /**
-     * Convience functions for the state of an Entry
-     */
-    virtual bool wasAdded()const;
+      Convience functions for the state of an Entry
+    */
+    virtual bool wasAdded() const;
 
     /**
-     * Convience function for the state of an Entry
-     * modified
-     */
-    virtual bool wasModified()const;
+      Convience function for the state of an Entry
+      modified
+    */
+    virtual bool wasModified() const;
 
     /**
-     * Convience function for the state of an Entry
-     */
-    virtual bool wasRemoved()const;
+      Convience function for the state of an Entry
+    */
+    virtual bool wasRemoved() const;
 
     /**
-     * Sets the stae of this SyncEntry
-     */
+      Sets the stae of this SyncEntry
+    */
     virtual void setState( int state = Undefined );
 
+
     /**
-     * sometimes its nice to know if a Entry
-     * was added or modefied during sync
-     */
+      Set sync state (e.g. Added, Modified) of SyncEntry.
+    */
     virtual void setSyncState( int state = Undefined );
 
     /**
-     * returns the sync state of
-     * this entry
-     */
-    virtual int syncState()const;
-
-
-    /**
-     * Creates an exact copy of the this SyncEntry
-     * deleting the original is save
-     */
-    virtual SyncEntry* clone() = 0;
-
-    /**
-       Set the @ref Syncee data set, the entry belongs to.
+      Returns the sync state of this entry.
     */
-    void setSyncee(Syncee *);
+    virtual int syncState() const;
+
 
     /**
-       Return the @ref KSyncee data set, the entry belongs to.
+      Creates an exact copy of the this SyncEntry
+      deleting the original is save
+    */
+    virtual SyncEntry *clone() = 0;
+
+    /**
+      Set the @ref Syncee data set, the entry belongs to.
+    */
+    void setSyncee( Syncee * );
+
+    /**
+      Return the @ref Syncee data set, the entry belongs to.
     */
     Syncee *syncee();
 
     /**
-     * Merges two sync entries where ever one entry
-     * does not support one specefic attribute
-     */
-    virtual bool mergeWith( SyncEntry* );
-
-
+      Merges two sync entries where ever one entry does not support one
+      specific attribute.
+    */
+    virtual bool mergeWith( SyncEntry * );
 
   private:
     int mState;
@@ -319,67 +339,61 @@ class Syncee
     bool hasChanged(SyncEntry *);
 
     /**
-     * Returns if hasChanged and the state of change
-     * Undefined, Added, Modified,Removed
-     */
-    virtual int modificationState( SyncEntry* entry) const;
+      Returns if hasChanged and the state of change
+      Undefined, Added, Modified,Removed
+    */
+    virtual int modificationState( SyncEntry * entry) const;
 
     /**
-     * Returns the syncMode of this Syncee
-     * The syncMode determines the later used
-     * synchronisation algorithm for the best results.
-     */
-    virtual int syncMode()const;
+      Returns the syncMode of this Syncee. The syncMode determines the later
+      used synchronisation algorithm for the best results.
+    */
+    virtual int syncMode() const;
 
     /**
-     * Sets the syncMode of this Syncee
-     */
+      Sets the syncMode of this Syncee.
+    */
     virtual void setSyncMode( int mode = MetaLess );
 
     /**
-     * set if it's syncing for the first time
-     */
+      Set if it's syncing for the first time.
+    */
     virtual void setFirstSync( bool firstSync = true );
 
     /**
-     * if is syncing for the first time
-     */
+     If it is syncing for the first time.
+    */
     virtual bool firstSync() const;
 
     /**
-     * For Meta Syncing you easily know what was changed
-     * from one sync to another. The gathering of these informations
-     * can be made by Syncee itself or by what the developer wants
-     * The following three methods are convience functions to make things
-     * more smooth later
-     */
+      For Meta Syncing you easily know what was changed
+      from one sync to another. The gathering of these informations
+      can be made by Syncee itself or by what the developer wants
+      The following three methods are convience functions to make things
+      more smooth later
+    */
 
     /**
-     * What was added?
-     */
-    virtual SyncEntry::PtrList added() =0;
+      What was added?
+    */
+    virtual SyncEntry::PtrList added() = 0;
 
     /**
-     * what was modified?
-     */
+      What was modified?
+    */
     virtual SyncEntry::PtrList modified() = 0;
 
     /**
-     * and what was removed?
-     */
+      What was removed?
+    */
     virtual SyncEntry::PtrList removed() = 0;
 
     /**
-     * For some parts of memory management it would be good to
-     * deal with clones. This creates a direct clone of the Syncee
-     */
-    virtual Syncee* clone() = 0;
+      For some parts of memory management it would be good to
+      deal with clones. This creates a direct clone of the Syncee
+    */
+    virtual Syncee *clone() = 0;
 
-    /**
-     * When dealing with special uid Konnector-
-     * You might want a new uid to be generated. To later find
-     * an Entry again you'll need this map
-     */
     /**
        A KSyncEntry is able to store the relative ids
        @param  type The type of the id for example todo, kalendar...
@@ -395,48 +409,50 @@ class Syncee
                    const QString &kdeId );
 
 
+    /**
+      When dealing with special uid Konnector-
+      You might want a new uid to be generated. To later find
+      an Entry again you'll need this map
+    */
     virtual QString newId()const;
     /**
-     * @param type The type for the ids to returned
-     * @return the ids as QValueList
-     */
+      @param type The type for the ids to returned
+      @return the ids as QValueList
+    */
     Kontainer::ValueList ids(const QString &type )const;
 
     /**
-     * @return all ids
-     */
+      @return all ids
+    */
     QMap<QString,  Kontainer::ValueList > ids()const;
 
     /**
-     * set what the Syncee supports
-     */
+      Set what the Syncee supports.
+    */
     virtual void setSupports( const QBitArray& );
 
     /**
-     * returns of the Device supported
-     * Attributes
-     */
+      Returns attributes supported by the Device.
+    */
     virtual QBitArray bitArray()const;
 
 
     /**
-     * set the source of this Syncee. The string may
-     * be represented by the conflict resolver
-     */
-    void setSource( const QString& src );
+      Set the source of this Syncee. The string may be presented to the user by
+      the conflict resolver
+    */
+    void setSource( const QString &src );
 
     /**
-     * returns the source of this syncee
-     * or QString::null if not set
-     */
-    QString source()const;
+      Eeturns the source of this syncee or QString::null if not set.
+    */
+    QString source() const;
 
 
     /**
-     * convience function to figure
-     * if a specefic attribute is supported
-     */
-    inline bool isSupported( uint Attribute )const;
+      Convenience function to figure if a specific attribute is supported.
+    */
+    inline bool isSupported( uint Attribute ) const;
 
 
     // a bit hacky
@@ -457,7 +473,7 @@ class Syncee
     QBitArray mSupport;
     QString mName;
     class SynceePrivate;
-    SynceePrivate* d;
+    SynceePrivate *d;
 };
 
 /**
@@ -493,19 +509,18 @@ class Syncer
     virtual ~Syncer();
 
     /**
-     * installs a different syncing implementation
-     */
-    void setSyncAlgorithm( SyncAlgorithm* );
-
+      Sets the syncing algorithm which is used to perform the sync.
+    */
+    void setSyncAlgorithm( SyncAlgorithm * );
 
     /**
       Add a data set, which is to be synced.
     */
-    void addSyncee(Syncee *);
+    void addSyncee( Syncee * );
 
     /**
-     * removes all Syncee added with addSyncee from the Syncer
-     */
+      Removes all Syncee objects added with addSyncee from the Syncer
+    */
     void clear();
 
     /**
@@ -525,7 +540,7 @@ class Syncer
       This function might call conflict resolution functions of the @ref
       SyncUi object.
     */
-    void syncAllToTarget(Syncee *target,bool writeback=false);
+    void syncAllToTarget( Syncee *target, bool writeback = false);
 
     /**
       Sync one specific data set to a target data set. After execution of this
@@ -535,14 +550,15 @@ class Syncer
       This function might call conflict resolution functions of the @ref
       SyncUi object.
     */
-    void syncToTarget(Syncee *syncee, Syncee *target, bool override=false);
+    void syncToTarget( Syncee *syncee, Syncee *target, bool override = false );
 
   private:
     QPtrList<Syncee> mSyncees;
     SyncUi *mUi;
-    SyncAlgorithm* mInterface;
+    SyncAlgorithm *mInterface;
+
     class SyncerPrivate;
-    SyncerPrivate* d;
+    SyncerPrivate *d;
 };
 
 }
