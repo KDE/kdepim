@@ -35,6 +35,8 @@
 
 #include "job.h"
 
+#include <vector>
+
 namespace GpgME {
   class Error;
   class Key;
@@ -80,6 +82,8 @@ namespace Kleo {
        key for signing.
     */
     virtual GpgME::Error start( const QStringList & patterns, bool secretOnly=false ) = 0;
+
+    virtual GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys ) = 0;
 
   signals:
     void nextKey( const GpgME::Key & key );

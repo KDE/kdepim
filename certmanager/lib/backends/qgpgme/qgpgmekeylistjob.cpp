@@ -65,7 +65,7 @@ Kleo::QGpgMEKeyListJob::~QGpgMEKeyListJob() {
   delete[] mPatterns; mPatterns = 0;
 }
 
-GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
+void Kleo::QGpgMEKeyListJob::setup( const QStringList & patterns ) {
   assert( !mPatterns );
 
   // create a new null-terminated C array of char* from patterns:
@@ -77,6 +77,10 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & patterns, bool s
     *pat_it++ = strdup( (*it).utf8().data() );
   }
   *pat_it++ = 0;
+}
+
+GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
+  setup( patterns );
 
   // hook up the context to the eventloopinteractor:
   mCtx->setManagedByEventLoopInteractor( true );
@@ -92,6 +96,19 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & patterns, bool s
   if ( err )
     deleteLater();
   return err;
+}
+
+GpgME::KeyListResult Kleo::QGpgMEKeyListJob::exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys ) {
+  keys.clear();
+  setup( patterns );
+  GpgME::Error err = mCtx->startKeyListing( mPatterns, secretOnly );
+  if ( !err ) {
+    do
+      keys.push_back( mCtx->nextKey( err ) );
+    while ( !err );
+    keys.pop_back();
+  }
+  return mCtx->endKeyListing();
 }
 
 void Kleo::QGpgMEKeyListJob::slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key ) {

@@ -51,8 +51,11 @@ namespace Kleo {
     QGpgMEKeyListJob( GpgME::Context * context );
     ~QGpgMEKeyListJob();
 
-    /*! \reimp from KeyLister */
+    /*! \reimp from KeyListJob */
     GpgME::Error start( const QStringList & patterns, bool secretOnly );
+
+    /*! \reimp from KeyListJob */
+    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys );
 
   private slots:
     void slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
@@ -63,6 +66,7 @@ namespace Kleo {
   private:
     /*! \reimp from GpgME::ProgressProvider */
     void showProgress( const char * what, int type, int current, int total );
+    void setup( const QStringList & );
 
   private:
     GpgME::Context * mCtx;
