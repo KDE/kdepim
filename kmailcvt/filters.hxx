@@ -27,7 +27,7 @@
 
 #include <qcombobox.h>
 #include <qprogressbar.h>
-#include <kabapi.h>
+#include <kabc/addressbook.h>
 #include <qlistbox.h>
 #include <qlabel.h>
 #include "harray.hxx"
@@ -87,21 +87,17 @@ class kmail
 
 #define KAB_NIL "__KAB_NIL__"
 
-class kab : public KabAPI
+class kab
 {
   private:
     filterInfo  *info;    // tmp var
-    AddressBook *api;
+    KABC::AddressBook *mAddressBook;
+    KABC::AddressBook::Ticket *mTicket;
     QString       tels;
     QString       cap;
   public:
     kab();
    ~kab();
-  private:
-    void addIfNotExists(QStringList & l,QString & E);
-    void addIfNotExists(QStringList & l,QString & E,AddressBook::Telephone);
-    void addIfNotExists(std::list<AddressBook::Entry::Address> & l,AddressBook::Entry::Address & A);
-  public:
     bool kabStart(filterInfo *info);
     bool kabAddress(filterInfo *info, QString adrbookname,
                     QString givenname, QString email=KAB_NIL,
@@ -119,6 +115,8 @@ class kab : public KabAPI
                     QString comment=KAB_NIL,QString birthday=KAB_NIL
                    );
     void kabStop(filterInfo *info);
+  private:
+    bool checkStr( QString & );
 };
 
 

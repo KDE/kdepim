@@ -29,28 +29,7 @@
 #include <qlayout.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-
-#define A(a,b)  (a=="" || b=="" || a==b)
-
-bool operator == (AddressBook::Entry::Address & a, AddressBook::Entry::Address & b)
-{
-  return A(a.headline,b.headline);
-/*
-  return A(a.headline,b.headline) &&
-         A(a.position,b.position) &&
-         A(a.org,b.org) &&
-         A(a.orgUnit,b.orgUnit) &&
-         A(a.orgSubUnit,b.orgSubUnit) &&
-         A(a.deliveryLabel,b.deliveryLabel) &&
-         A(a.address,b.address) &&
-         A(a.zip,b.zip) &&
-         A(a.town,b.town) &&
-         A(a.country,b.country) &&
-         A(a.state,b.state);
-*/
-}
-
-#undef A
+#include <kabc/stdaddressbook.h>
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -385,144 +364,43 @@ return false;
 
 kab::kab()
 {
-  api=addressbook();
+  mAddressBook = 0;
   cap=i18n("Kmailcvt - K Address Book API");
 }
 
 kab::~kab()
 {
-  api=NULL;
 }
 
 bool kab::kabStart(filterInfo *info)
 {
-//QWidget *parent=info->parent();
-
-  if (api!=NULL) { return true; }
-
-  if (init()!=AddressBook::NoError) {
+  mAddressBook = KABC::StdAddressBook::self();
+  mTicket = mAddressBook->requestSaveTicket();
+  if ( !mTicket ) {
      info->alert(cap,i18n("Close down Kab to import Addressbook files!"));
-     api=NULL;
      return false;
-  }
-  else {
-     api=addressbook();
+  } else {
      return true;
   }
 }
 
 void kab::kabStop(filterInfo */*info*/)
 {
-  save(true);     // do a forced save.
+  mAddressBook->save( mTicket );
 }
 
-void kab::addIfNotExists(QStringList & l,QString & E)
+bool kab::checkStr( QString &str )
 {
-QStringList::Iterator e;
-   E=E.stripWhiteSpace();
-   if (E.length()==0) { return; }
-   for(e=l.begin();e!=l.end() && strcasecmp((*e).latin1(),E.latin1())!=0;++e);
-   if (e!=l.end()) { return; }
-   for(e=l.begin();e!=l.end() && (*e).length()!=0;++e);
-   if (e==l.end()) { l.append(E); }
-   else { *e=E; }
+  if ( str == KAB_NIL ) return false;
+  str = str.stripWhiteSpace();
+  if ( str.length() ) return true;
+  return false;
 }
-
-void kab::addIfNotExists(QStringList & l,QString & E,AddressBook::Telephone _T)
-{
-QString T;
-QStringList::Iterator e;
-   E=E.stripWhiteSpace();
-   if (E=="") { return; }
-   for(e=l.begin();e!=l.end() && strcasecmp((*e).latin1(),E.latin1())!=0;++e);
-//   {
-//      info->log(*e);
-//   }
-   if (e==l.end()) { char m[10];
-     sprintf(m,"%d",_T-1);T=m;
-     l.append(T);l.append(E);
-   }
-}
-
-#define S(a,b)   b=b.stripWhiteSpace();if (b.length()!=0) { a=b; }
-#define L(a)     (a.length()!=0)
-
-void kab::addIfNotExists(std::list<AddressBook::Entry::Address> & l,AddressBook::Entry::Address & A)
-{
-std::list<AddressBook::Entry::Address>::iterator it;
-
-   A.headline=A.headline.stripWhiteSpace();
-   if (A.headline.length()==0) {
-     info->alert(cap,i18n("Unexpected: Headline of address is empty"));
-     return;
-   }
-
-   //info->alert(cap,A.headline);
-   it=l.begin();
-   if (it!=l.end()) {
-     //info->alert(cap,(*it).headline);
-     for(it=l.begin();
-         it!=l.end() &&
-         strcasecmp((*it).headline.latin1(),A.headline.latin1())!=0;
-       ++it
-      );
-   }
-   if (it==l.end()) {AddressBook::Entry::Address & B=A;
-     if (
-          L(B.position) ||
-          L(B.org) ||
-          L(B.orgUnit) ||
-          L(B.orgSubUnit) ||
-          L(B.deliveryLabel) ||
-          L(B.address) ||
-          L(B.zip) ||
-          L(B.town) ||
-          L(B.country) ||
-          L(B.state)
-        ) {
-       l.insert(l.end(),A);
-     }
-   }
-   else {AddressBook::Entry::Address B;
-     B=*it;
-     S(B.position,A.position);
-     S(B.org,A.org);
-     S(B.orgUnit,A.orgUnit);
-     S(B.orgSubUnit,A.orgSubUnit);
-     S(B.deliveryLabel,A.deliveryLabel);
-     S(B.address,A.address);
-     S(B.zip,A.zip);
-     S(B.town,A.town);
-     S(B.country,A.country);
-     S(B.state,A.state);
-     if (
-          L(B.position) ||
-          L(B.org) ||
-          L(B.orgUnit) ||
-          L(B.orgSubUnit) ||
-          L(B.deliveryLabel) ||
-          L(B.address) ||
-          L(B.zip) ||
-          L(B.town) ||
-          L(B.country) ||
-          L(B.state)
-        ) {
-        *it=B;
-     }
-   }
-}
-
-#undef S
-
-
-#define KDE_A(a,b)   if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { a=s; } }
-#define KDE_B(a,b)   if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s); } }
-#define KDE_T(a,b,c) if (b!=KAB_NIL) { QString s=b; s=s.stripWhiteSpace(); if (s.length()!=0) { addIfNotExists(a,s,c); } }
 
 bool kab::kabAddress(filterInfo *_info,QString adrbookname,
                       QString givenname, QString email,
-                      QString title,QString firstName,
-                      QString additionalName,QString lastName,
+                      QString title,QString firstname,
+                      QString additionalname,QString lastname,
                       QString address,QString town,
                       QString /*state*/,QString zip,QString country,
                       QString organization,QString department,
@@ -532,81 +410,70 @@ bool kab::kabAddress(filterInfo *_info,QString adrbookname,
                       QString comment,QString /*birthday*/
                      )
 {
-//QWidget *parent=_info->parent();
-KabKey                      key;
-unsigned int                i,N;
-bool                        found;
-AddressBook::Entry          e;
-AddressBook::Entry::Address A;
-
   // initialize
 
   info=_info;
-  N=api->noOfEntries();
 
   // first check if givenname already exists...
 
-  i=0;
-  found=false;
-  while(i<N && !found) {
-    api->getKey(i,key);
-    api->getEntry(key,e);
+  KABC::Addressee a;
 
-    found=strcasecmp(e.fn.latin1(),givenname.latin1())==0;
+  QString note;
 
-    if (!found) { i+=1; }
-  }
-
-  // If not add it.
-
-  if (!found) {AddressBook::Entry empty;
-    //info->alert(cap,i18n("not found"));
-    api->add(empty,key);
-    api->getEntry(key,e);
+  KABC::AddressBook::Iterator it;
+  for( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
+    if ( givenname == (*it).formattedName() ) {
+      a = *it;
+      break;
+    }
   }
 
   // Now we've got a valid addressbook entry, fill it up.
 
-  e.fn=givenname;
+  a.setFormattedName( givenname );
 
-  KDE_B(e.emails,email)
+  if ( checkStr( email ) ) a.insertEmail( email );
 
-  KDE_A(e.title,title);
-  KDE_A(e.firstname,firstName);
-  KDE_A(e.middlename,additionalName);
-  KDE_A(e.lastname,lastName);
+  if ( checkStr( title ) ) a.setTitle( title );
+  if ( checkStr( firstname ) ) a.setGivenName ( firstname );
+  if ( checkStr( additionalname ) ) a.setAdditionalName( additionalname );
+  if ( checkStr( lastname ) ) a.setFamilyName( lastname );
 
-  KDE_A(A.address,address);
-  KDE_A(A.town,town);
-  KDE_A(A.country,country);
-  KDE_A(A.zip,zip);
-  KDE_A(A.org,organization);
-  KDE_A(A.orgUnit,department);
-  KDE_A(A.orgSubUnit,subDep);
-  KDE_A(A.position,job);
+  KABC::Address addr;
+  
+  addr.setId( adrbookname );
+  
+  if ( checkStr( town ) ) addr.setLocality( town );
+  if ( checkStr( country ) ) addr.setCountry( country );
+  if ( checkStr( zip ) ) addr.setPostalCode( zip );
+  if ( checkStr( address ) ) addr.setLabel( address );
+  a.insertAddress( addr );
 
-  KDE_T(e.telephone,tel,AddressBook::Fixed);
-  KDE_T(e.telephone,fax,AddressBook::Fax);
-  KDE_T(e.telephone,mobile,AddressBook::Mobile);
-  KDE_T(e.telephone,modem,AddressBook::Modem);
+  if ( checkStr( organization ) ) a.setOrganization( organization );
 
-  KDE_B(e.URLs,homepage);
-  KDE_B(e.talk,talk);
+  if ( checkStr( department ) ) note.append( "Department: " + department + "\n" );
+  if ( checkStr( subDep ) ) note.append( "Sub Department: " + subDep + "\n" );
+  if ( checkStr( job ) ) note.append( job + "\n" );
 
-  KDE_A(e.comment,comment);
+  if ( checkStr( tel ) )
+    a.insertPhoneNumber( KABC::PhoneNumber( tel, KABC::PhoneNumber::Voice ) );
+  if ( checkStr( fax ) )
+    a.insertPhoneNumber( KABC::PhoneNumber( fax, KABC::PhoneNumber::Fax ) );
+  if ( checkStr( mobile ) )
+    a.insertPhoneNumber( KABC::PhoneNumber( mobile, KABC::PhoneNumber::Cell ) );
+  if ( checkStr( modem ) )
+    a.insertPhoneNumber( KABC::PhoneNumber( modem, KABC::PhoneNumber::Modem ) );
 
-  // Change the entry at the key.
+  if ( checkStr( homepage ) ) a.setUrl( KURL( homepage ) );
+  if ( checkStr( talk ) ) note.append( "Talk: " + talk + "\n" );
 
-  A.headline=adrbookname;
-  addIfNotExists(e.addresses,A);
+  if ( checkStr( comment ) ) note.append( comment );
 
-  api->change(key,e);
+  a.setNote( note );
 
-return true;
+  mAddressBook->insertAddressee( a );
+
+  a.dump();
+
+  return true;
 }
-
-#undef KDE_A
-#undef KDE_B
-#undef KDE_T
-
-
