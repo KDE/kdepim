@@ -490,7 +490,6 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 		}
 		else
 		{
-		writeResponse(cSocket,CStatusMessages::NO_SUCH_RECORD);
 		CStatusMessages::write(cSocket->socket(), 
 		CStatusMessages::NO_SUCH_RECORD);
 		}
@@ -1729,6 +1728,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.30  2001/02/01 15:29:44  adridg
+// Fixed very confusing message -- QString::arg used properly now
+//
 // Revision 1.29  2001/01/04 22:19:37  adridg
 // Stuff for Chris and Bug 18072
 //
