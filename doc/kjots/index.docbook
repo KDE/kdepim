@@ -398,19 +398,6 @@ See <link linkend="kjots-books">Using Books</link>
 </para></listitem>
 </varlistentry>
 
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>
-</shortcut>
-<guimenu>Hotlist</guimenu>
-<guimenuitem>Subject List</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Shows</action> the subject list for the current
-book, allowing you to select which page to view.
-</para></listitem>
-</varlistentry>
-
 </variablelist>
 </sect1>
 
