@@ -307,6 +307,12 @@ class KABCore : public KAB::Core
     void editContact( const QString &uid = QString::null );
 
     /**
+     * Let the user chose a different resource for the selected contacts.
+     * If the adding to the new resource is successfull, the contact is
+     * removed from the old one. */
+    void storeContactIn( const QString &uid = QString::null );
+
+    /**
       Launches the ldap search dialog.
      */
     void openLDAPDialog();
@@ -382,6 +388,7 @@ class KABCore : public KAB::Core
     KAction *mActionDelete;
     KAction *mActionCopy;
     KAction *mActionEditAddressee;
+    KAction *mActionStoreAddresseeIn;
     KAction *mActionMerge;
     KAction *mActionMail;
     KAction *mActionMailVCard;

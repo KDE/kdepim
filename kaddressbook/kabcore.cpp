@@ -324,6 +324,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionCopy->setEnabled( selected );
   mActionDelete->setEnabled( selected );
   mActionEditAddressee->setEnabled( selected );
+  mActionStoreAddresseeIn->setEnabled( selected );
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
   mActionChat->setEnabled( selected );
@@ -707,6 +708,36 @@ void KABCore::editContact( const QString &uid )
   }
 }
 
+void KABCore::storeContactIn( const QString &uid )
+{
+  // First, locate the contact entry
+  QStringList uidList;
+  if ( uid.isNull() ) {
+    uidList = mViewManager->selectedUids();
+  } else {
+    uidList << uid;
+  }
+  KABC::Resource *resource = requestResource( mWidget );
+  if ( !resource ) return;
+  KABLock::self( mAddressBook )->lock( resource );
+  QStringList::Iterator it( uidList.begin() );
+  while ( it != uidList.end() ) {
+    KABC::Addressee addr = mAddressBook->findByUid( *it++ );
+    if ( !addr.isEmpty() ) {
+      KABC::Addressee newAddr( addr );
+      // We need to set a new uid, otherwise the insert below is
+      // ignored. This is bad for syncing, but unavoidable, afaiks
+      newAddr.setUid( KApplication::randomString( 10 ) );
+      newAddr.setResource( resource );
+      addressBook()->insertAddressee( newAddr );
+      KABLock::self( mAddressBook )->lock( addr.resource() );
+      addressBook()->removeAddressee( addr );
+      KABLock::self( mAddressBook )->unlock( addr.resource() );
+    }
+  }
+  KABLock::self( mAddressBook )->unlock( resource );
+}
+
 void KABCore::save()
 {
   KABC::StdAddressBook *b = dynamic_cast<KABC::StdAddressBook*>( mAddressBook );
@@ -1053,6 +1084,13 @@ void KABCore::initActions()
                                Key_Delete, this, SLOT( deleteContacts() ),
                                actionCollection(), "edit_delete" );
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
+
+  
+  mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact in..." ), "", 0,
+                                      this, SLOT( storeContactIn() ),
+                                      actionCollection(), "edit_store_in" );
+  mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
+
 
   mActionUndo->setEnabled( false );
   mActionRedo->setEnabled( false );
