@@ -69,7 +69,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
       tmpStart.setDate(day);
       tmpEnd.setDate(day);
 
-      if( (*(event->recurrence())).doesRecur() ) {
+      if( event->doesRecur() ) {
         if ( event->isMultiDay() ) {
           extraDays = event->dtStart().date().daysTo(event->dtEnd().date());
           for (x=0; x<=extraDays; x++) {

@@ -81,7 +81,7 @@ bool CalFilter::filterEvent(Event *event)
 //  kdDebug(5800) << "CalFilter::filterEvent(): " << event->getSummary() << endl;
 
   if (mCriteria & HideRecurring) {
-    if (event->recurrence()->doesRecur()) return false;
+    if (event->doesRecur()) return false;
   }
 
   return filterIncidence(event);

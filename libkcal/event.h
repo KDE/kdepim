@@ -41,6 +41,7 @@ class Event : public Incidence
     Event();
     Event(const Event &);
     ~Event();
+    bool operator==( const Event& ) const;
 
     QCString type() const { return "Event"; }
 
@@ -80,9 +81,6 @@ class Event : public Incidence
     bool mHasEndDate;
     Transparency mTransparency;
 };
-
-bool operator==( const Event&, const Event& );
-
 
 }
 

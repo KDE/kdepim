@@ -36,8 +36,8 @@ Journal *Journal::clone()
 }
 
 
-bool KCal::operator==( const Journal& j1, const Journal& j2 )
+bool Journal::operator==( const Journal& j2 ) const
 {
-    return operator==( (const Incidence&)j1, (const Incidence&)j2 );
+    return static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(j2);
 }
 

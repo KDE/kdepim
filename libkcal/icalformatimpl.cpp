@@ -367,11 +367,10 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   }
 
   // recurrence rule stuff
-  Recurrence *recur = incidence->recurrence();
-  if (recur->doesRecur()) {
+  if (incidence->doesRecur()) {
     kdDebug(5800) << "Write recurrence for '" << incidence->summary() << "' (" << incidence->uid()
               << ")" << endl;
-    icalcomponent_add_property(parent,writeRecurrenceRule(recur));
+    icalcomponent_add_property(parent,writeRecurrenceRule(incidence->recurrence()));
   }
 
   // recurrence excpetion dates

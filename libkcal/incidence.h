@@ -123,6 +123,8 @@ class Incidence : public IncidenceBase
     Incidence(const Incidence &);
     ~Incidence();
 
+    bool operator==( const Incidence& ) const;
+
     /**
       Accept IncidenceVisitor. A class taking part in the visitor mechanism has to
       provide this implementation:
@@ -299,8 +301,6 @@ class Incidence : public IncidenceBase
     
     QString mLocation;
 };
-
-bool operator==( const Incidence&, const Incidence& );
 
 }
 

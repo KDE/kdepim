@@ -50,6 +50,7 @@ class IncidenceBase : public CustomProperties
     IncidenceBase();
     IncidenceBase(const IncidenceBase &);
     virtual ~IncidenceBase();
+    bool operator==( const IncidenceBase& ) const;
 
     virtual QCString type() const = 0;
 
@@ -154,7 +155,6 @@ class IncidenceBase : public CustomProperties
     QPtrList<Observer> mObservers;
 };
 
-bool operator==( const IncidenceBase&, const IncidenceBase& );
 }
 
 #endif

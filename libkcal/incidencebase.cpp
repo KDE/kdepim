@@ -68,13 +68,13 @@ IncidenceBase::~IncidenceBase()
 }
 
 
-bool KCal::operator==( const IncidenceBase& i1, const IncidenceBase& i2 )
+bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
 {
-    if( i1.attendees().count() != i2.attendees().count() ) {
+    if( attendees().count() != i2.attendees().count() ) {
         return false; // no need to check further
     }
 
-    Attendee::List al1 = i1.attendees();
+    Attendee::List al1 = attendees();
     Attendee::List al2 = i2.attendees();
     Attendee::List::ConstIterator a1 = al1.begin();
     Attendee::List::ConstIterator a2 = al2.begin();
@@ -85,16 +85,16 @@ bool KCal::operator==( const IncidenceBase& i1, const IncidenceBase& i2 )
             return false;
         }
 
-    return ( i1.dtStart() == i2.dtStart() &&
-             i1.organizer() == i2.organizer() &&
-             i1.uid() == i2.uid() &&
+    return ( dtStart() == i2.dtStart() &&
+             organizer() == i2.organizer() &&
+             uid() == i2.uid() &&
              // Don't compare lastModified, otherwise the operator is not
              // of much use. We are not comparing for identity, after all.
-             i1.doesFloat() == i2.doesFloat() &&
-             i1.duration() == i2.duration() &&
-             i1.hasDuration() == i2.hasDuration() &&
-             i1.pilotId() == i2.pilotId() &&
-             i1.syncStatus() == i2.syncStatus() );
+             doesFloat() == i2.doesFloat() &&
+             duration() == i2.duration() &&
+             hasDuration() == i2.hasDuration() &&
+             pilotId() == i2.pilotId() &&
+             syncStatus() == i2.syncStatus() );
     // no need to compare mObserver
 }
 

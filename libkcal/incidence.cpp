@@ -30,10 +30,8 @@ using namespace KCal;
 
 Incidence::Incidence() :
   IncidenceBase(),
-  mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3)
+  mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3), mRecurrence(0)
 {
-  mRecurrence = new Recurrence(this);
-
   recreate();
 
   mAlarms.setAutoDelete(true);
@@ -67,7 +65,10 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   }
   mAlarms.setAutoDelete(true);
 
-  mRecurrence = new Recurrence( *(i.mRecurrence), this );
+  if (i.mRecurrence)
+    mRecurrence = new Recurrence( *(i.mRecurrence), this );
+  else
+    mRecurrence = 0;
 }
 
 Incidence::~Incidence()
@@ -89,39 +90,47 @@ static bool stringCompare( const QString& s1, const QString& s2 )
     return s1 == s2;
 }
 
-bool KCal::operator==( const Incidence& i1, const Incidence& i2 )
+bool Incidence::operator==( const Incidence& i2 ) const
 {
-    if( i1.alarms().count() != i2.alarms().count() ) {
+    if( alarms().count() != i2.alarms().count() ) {
         return false; // no need to check further
     }
 
-    Alarm::List::ConstIterator a1 = i1.alarms().begin();
+    Alarm::List::ConstIterator a1 = alarms().begin();
     Alarm::List::ConstIterator a2 = i2.alarms().begin();
-    for( ; a1 != i1.alarms().end() && a2 != i2.alarms().end(); ++a1, ++a2 )
+    for( ; a1 != alarms().end() && a2 != i2.alarms().end(); ++a1, ++a2 )
         if( **a1 == **a2 )
             continue;
         else {
             return false;
         }
 
-    if ( ! operator==( (const IncidenceBase&)i1, (const IncidenceBase&)i2 ) )
+    if ( !( static_cast<const IncidenceBase&>(*this) == static_cast<const IncidenceBase&>(i2) ) )
         return false;
 
+    bool recurrenceEqual = ( mRecurrence == 0 && i2.mRecurrence == 0 );
+    if ( !recurrenceEqual )
+    {
+        recurrenceEqual = mRecurrence != 0 &&
+                          i2.mRecurrence != 0 &&
+                          *mRecurrence == *i2.mRecurrence;
+    }
+
     return
-        i1.created() == i2.created() &&
-        stringCompare( i1.description(), i2.description() ) &&
-        stringCompare( i1.summary(), i2.summary() ) &&
-        i1.categories() == i2.categories() &&
+        recurrenceEqual &&
+        created() == i2.created() &&
+        stringCompare( description(), i2.description() ) &&
+        stringCompare( summary(), i2.summary() ) &&
+        categories() == i2.categories() &&
         // no need to compare mRelatedTo
-        stringCompare( i1.relatedToUid(), i2.relatedToUid() ) &&
-        i1.relations() == i2.relations() &&
-        i1.exDates() == i2.exDates() &&
-        i1.attachments() == i2.attachments() &&
-        i1.resources() == i2.resources() &&
-        i1.secrecy() == i2.secrecy() &&
-        i1.priority() == i2.priority() &&
-        *i1.recurrence() == *i2.recurrence() &&
-        stringCompare( i1.location(), i2.location() );
+        stringCompare( relatedToUid(), i2.relatedToUid() ) &&
+        relations() == i2.relations() &&
+        exDates() == i2.exDates() &&
+        attachments() == i2.attachments() &&
+        resources() == i2.resources() &&
+        secrecy() == i2.secrecy() &&
+        priority() == i2.priority() &&
+        stringCompare( location(), i2.location() );
 }
 
 
@@ -139,7 +148,8 @@ void Incidence::recreate()
 void Incidence::setReadOnly( bool readOnly )
 {
   IncidenceBase::setReadOnly( readOnly );
-  recurrence()->setRecurReadOnly( readOnly);
+  if (mRecurrence)
+    mRecurrence->setRecurReadOnly(readOnly);
 }
 
 void Incidence::setCreated(QDateTime created)
@@ -168,7 +178,8 @@ int Incidence::revision() const
 
 void Incidence::setDtStart(const QDateTime &dtStart)
 {
-  recurrence()->setRecurStart( dtStart);
+  if (mRecurrence)
+    mRecurrence->setRecurStart( dtStart);
   IncidenceBase::setDtStart( dtStart );
 }
 
@@ -278,8 +289,7 @@ void Incidence::removeRelation(Incidence *event)
 
 bool Incidence::recursOn(const QDate &qd) const
 {
-  if (recurrence()->recursOnPure(qd) && !isException(qd)) return true;
-  else return false;
+  return (mRecurrence && mRecurrence->recursOnPure(qd) && !isException(qd));
 }
 
 void Incidence::setExDates(const DateList &exDates)
@@ -468,6 +478,13 @@ bool Incidence::isAlarmEnabled() const
 
 Recurrence *Incidence::recurrence() const
 {
+  if (!mRecurrence)
+  {
+    const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence(const_cast<KCal::Incidence*>(this));
+    mRecurrence->setRecurReadOnly(mReadOnly);
+    mRecurrence->setRecurStart(dtStart());
+  }
+
   return mRecurrence;
 }
 

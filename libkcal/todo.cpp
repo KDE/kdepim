@@ -57,15 +57,16 @@ Todo *Todo::clone()
 }
 
 
-bool KCal::operator==( const Todo& t1, const Todo& t2 )
+bool Todo::operator==( const Todo& t2 ) const
 {
-    return operator==( (const Incidence&)t1, (const Incidence&)t2 ) &&
-        t1.dtDue() == t2.dtDue() &&
-        t1.hasDueDate() == t2.hasDueDate() &&
-        t1.hasStartDate() == t2.hasStartDate() &&
-        t1.completed() == t2.completed() &&
-        t1.hasCompletedDate() == t2.hasCompletedDate() &&
-        t1.percentComplete() == t2.percentComplete();
+    return 
+        static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(t2) &&
+        dtDue() == t2.dtDue() &&
+        hasDueDate() == t2.hasDueDate() &&
+        hasStartDate() == t2.hasStartDate() &&
+        completed() == t2.completed() &&
+        hasCompletedDate() == t2.hasCompletedDate() &&
+        percentComplete() == t2.percentComplete();
 }
 
 void Todo::setDtDue(const QDateTime &dtDue)

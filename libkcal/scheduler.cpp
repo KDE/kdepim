@@ -175,7 +175,7 @@ bool Scheduler::acceptPublish(IncidenceBase *incidence,ScheduleMessage::Status s
   return false;
 }
 
-bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   Incidence *inc = static_cast<Incidence *>(incidence);
   if (inc->type()=="FreeBusy") {
@@ -217,13 +217,13 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
   return true;
 }
 
-bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   deleteTransaction(incidence);
   return false;
 }
 
-bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   bool ret = false;
   Event *even = mCalendar->event(incidence->uid());
@@ -241,7 +241,7 @@ bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status st
   return ret;
 }
 
-bool Scheduler::acceptDeclineCounter(IncidenceBase *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptDeclineCounter(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   deleteTransaction(incidence);
   return false;
@@ -253,7 +253,7 @@ bool Scheduler::acceptDeclineCounter(IncidenceBase *incidence,ScheduleMessage::S
 //  return false;
 //}
 
-bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status status, Method method)
+bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* status */, Method method)
 {
   if(incidence->type()=="FreeBusy") {
     return acceptFreeBusy(incidence, method);
@@ -291,14 +291,14 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status sta
   return ret;
 }
 
-bool Scheduler::acceptRefresh(IncidenceBase *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptRefresh(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   // handled in korganizer's IncomingDialog
   deleteTransaction(incidence);
   return false;
 }
 
-bool Scheduler::acceptCounter(IncidenceBase *incidence,ScheduleMessage::Status status)
+bool Scheduler::acceptCounter(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   deleteTransaction(incidence);
   return false;

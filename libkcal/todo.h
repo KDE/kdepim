@@ -38,6 +38,7 @@ class Todo : public Incidence
     Todo();
     Todo(const Todo &);
     ~Todo();
+    bool operator==( const Todo& ) const;
 
     QCString type() const { return "Todo"; }
 
@@ -121,7 +122,6 @@ class Todo : public Incidence
     int mPercentComplete;
 };
 
-    bool operator==( const Todo&, const Todo& );
 }
 
 #endif

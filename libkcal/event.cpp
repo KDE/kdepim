@@ -48,12 +48,13 @@ Event *Event::clone()
   return new Event(*this);
 }
 
-bool KCal::operator==( const Event& e1, const Event& e2 )
+bool Event::operator==( const Event& e2 ) const
 {
-    return operator==( (const Incidence&)e1, (const Incidence&)e2 ) &&
-        e1.dtEnd() == e2.dtEnd() &&
-        e1.hasEndDate() == e2.hasEndDate() &&
-        e1.transparency() == e2.transparency();
+    return
+        static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(e2) &&
+        dtEnd() == e2.dtEnd() &&
+        hasEndDate() == e2.hasEndDate() &&
+        transparency() == e2.transparency();
 }
 
 
