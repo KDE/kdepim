@@ -45,14 +45,14 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
         // For now, we have to live without the warm and fuzzy feeling a refactoring might give. 
         // Patches appreciated. (danimo)
 
-        addFilter(new FilterOE);
-//        addFilter(new FilterOutlook);
-        addFilter(new FilterOpera);
-        addFilter(new FilterThunderbird);
         addFilter(new FilterEvolution);
         addFilter(new FilterEvolution_v2);
         addFilter(new FilterMailApp);
+        addFilter(new FilterOpera);
+//        addFilter(new FilterOutlook);
+        addFilter(new FilterOE);
         addFilter(new FilterPMail);
+        addFilter(new FilterThunderbird);
         addFilter(new FilterMBox);
         addFilter(new FilterPlain);
 }
