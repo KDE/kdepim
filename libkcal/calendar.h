@@ -67,6 +67,11 @@ class Calendar : public CustomProperties, public IncidenceBase::Observer
     virtual void close() = 0;
   
     /**
+      Sync changes in memory to persistant storage.
+    */
+    virtual void sync() = 0;
+  
+    /**
       Return the owner of the calendar's full name.
     */
     const QString &getOwner() const;

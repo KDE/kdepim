@@ -47,6 +47,8 @@ class CalendarResources : public Calendar
   
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
+
+    void sync();
   
     /** Add Event to calendar. */
     void addEvent(Event *anEvent);
@@ -143,8 +145,6 @@ class CalendarResources : public Calendar
   private:
     void init();
 
-    ResourceCalendar* mPrivateResource;
-    bool mKeepPrivateResource;
     QPtrList<ResourceCalendar> mResources;
     ResourceCalendar* mStandard;
     bool mOpen;

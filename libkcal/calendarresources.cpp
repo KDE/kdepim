@@ -25,6 +25,8 @@
 #include <qptrlist.h>
 
 #include <kdebug.h>
+#include <kstandarddirs.h>
+#include <klocale.h>
 
 #include "vcaldrag.h"
 #include "vcalformat.h"
@@ -59,10 +61,20 @@ void CalendarResources::init()
 {
   kdDebug(5800) << "CalendarResources::init" << endl;
 
-  mPrivateResource = 0;
-  mKeepPrivateResource = false;
   mManager = new KRES::ResourceManager<ResourceCalendar>( "calendar" );
   mResources = mManager->resources( true ); // get active resources;
+
+  if ( mResources.count() == 0 ) {
+    QString fileName = locateLocal( "data", "kcal/std.ics" );
+    ResourceCalendar *defaultResource = new ResourceLocal( fileName );
+    defaultResource->setResourceName( i18n("Default calendar resource") );
+    
+    mManager->add( defaultResource );
+    mManager->setStandardResource( defaultResource );
+
+    mResources.append( defaultResource );
+  }
+
   mStandard = mManager->standardResource();
   if ( !mStandard )
     kdDebug() << "FIXME: We don't have a standard resource. Adding events isn't going to work" << endl;
@@ -82,20 +94,40 @@ void CalendarResources::init()
 CalendarResources::~CalendarResources()
 {
   kdDebug(5800) << "CalendarResources::destructor" << endl;
+
   close();
+
   delete mManager;
 }
 
 void CalendarResources::close()
 {
   kdDebug(5800) << "CalendarResources::close" << endl;
+
   if ( mOpen ) {
     ResourceCalendar *resource;
-    for ( resource = mResources.first(); resource; resource = mResources.next() ) 
+    for ( resource = mResources.first(); resource;
+          resource = mResources.next() ) {
       resource->close();
+    }
 
     setModified( false );
     mOpen = false;
+  }
+}
+
+void CalendarResources::sync()
+{
+  kdDebug(5800) << "CalendarResources::sync()" << endl;
+
+  if ( mOpen ) {
+    ResourceCalendar *resource;
+    for ( resource = mResources.first(); resource;
+          resource = mResources.next() ) {
+      resource->sync();
+    }
+
+    setModified( false );
   }
 }
 
