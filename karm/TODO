@@ -1,5 +1,3 @@
-* check: times can be negative - does that make any sense?
-* add better screenshot to http://pim.kde.org/components/karm.php
 * KarmWindow::makeMenus -> export KAction?
 * KarmWindow::contextMenuRequest QPopupMenu should be static!
 * put connect( ..contextMenu at the right place
@@ -9,20 +7,6 @@
 
 Mark - Sooner ...
 --------------------------
-
-  * 2004-01-27: File locking--test and clear lock on exit.
-
-        If I open a file in KArm, and then open the same file in KOrganizer
-        (using File -> Open, not defining a resource), then locking does not
-        work.  I can write changes in KOrganizer, and I should not be able to
-        as KArm get's a lock when it opens a file and holds on to it.
-
-        I haven't tested locking with local files that are defined as
-        resources in the control center yet.
-
-  * 2003-09-24: Update manual.
-  
-  * 2003-10-24: update changelog.
 
   * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
 
