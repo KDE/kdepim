@@ -77,7 +77,7 @@ enum Result
 class Base;
 class Block;
 
-class Module
+class KDE_EXPORT Module
 {
   friend class Block;
 

@@ -39,6 +39,8 @@
 #include "cryptobackend.h"
 #include <kdepimmacros.h>
 
+#include <kdemacros.h>
+
 namespace Kleo {
   class BackendConfigWidget;
 }

@@ -27,6 +27,8 @@
 #include <utility>
 #include <kdepimmacros.h>
 
+#include <kdemacros.h>
+
 namespace GpgME {
 
   class Key;
@@ -276,9 +278,9 @@ namespace GpgME {
 
   KDE_EXPORT GpgME::Error setDefaultLocale( int category, const char * value );
 
-  Context * wait( GpgME::Error & e, bool hang=true );
+  KDE_EXPORT Context * wait( GpgME::Error & e, bool hang=true );
   typedef void (*IdleFunction)(void);
-  IdleFunction registerIdleFunction( IdleFunction idleFunction );
+  KDE_EXPORT IdleFunction registerIdleFunction( IdleFunction idleFunction );
 
   typedef void (*IOCallback)( void * data, int fd );
 

@@ -23,7 +23,8 @@
 
 #include <qstring.h>
 #include <qptrlist.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
+
 class KSimpleConfig;
 
 class KSyncUi;

@@ -50,7 +50,7 @@ class Key;                  // needed by KeySelectionDialog
 class KeyIDList;            // needed by KeySelectionDialog
 
 /** the passphrase dialog */
-class PassphraseDialog : public KDialogBase
+class KDE_EXPORT PassphraseDialog : public KDialogBase
 {
   Q_OBJECT
 
@@ -70,7 +70,7 @@ class PassphraseDialog : public KDialogBase
 /** a widget for configuring the pgp interface. Can be included into
     a tabdialog. This widget by itself does not provide an apply/cancel
     button mechanism. */
-class Config : public QWidget
+class KDE_EXPORT Config : public QWidget
 {
   Q_OBJECT
 
@@ -97,7 +97,7 @@ class Config : public QWidget
 
 // -------------------------------------------------------------------------
 #define KeySelectionDialogSuper KDialogBase
-class KeySelectionDialog: public KeySelectionDialogSuper
+class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
 {
   Q_OBJECT
 
@@ -196,7 +196,7 @@ class KeySelectionDialog: public KeySelectionDialogSuper
   static const int sCheckSelectionDelay;
 };
 
-class KeyRequester: public QWidget
+class KDE_EXPORT KeyRequester: public QWidget
 {
   Q_OBJECT
 
@@ -248,7 +248,7 @@ protected:
 };
 
 
-class PublicKeyRequester : public KeyRequester {
+class KDE_EXPORT PublicKeyRequester : public KeyRequester {
   Q_OBJECT
 public:
   PublicKeyRequester( QWidget * parent=0, bool multipleKeys=false,
@@ -267,7 +267,7 @@ protected:
 };
 
 
-class SecretKeyRequester : public KeyRequester {
+class KDE_EXPORT SecretKeyRequester : public KeyRequester {
   Q_OBJECT
 public:
   SecretKeyRequester( QWidget * parent=0, bool multipleKeys=false,
@@ -287,7 +287,7 @@ protected:
 
 
 // -------------------------------------------------------------------------
-class KeyApprovalDialog: public KDialogBase
+class KDE_EXPORT KeyApprovalDialog: public KDialogBase
 {
   Q_OBJECT
 
@@ -322,7 +322,7 @@ class KeyApprovalDialog: public KDialogBase
 
 
 // -------------------------------------------------------------------------
-class CipherTextDialog: public KDialogBase
+class KDE_EXPORT CipherTextDialog: public KDialogBase
 {
   Q_OBJECT
 

@@ -23,6 +23,8 @@
 
 class KSyncEntry;
 
+#include <kdemacros.h>
+
 /**
   @short Syncing conflict resolution user interface.
   @author Cornelius Schumacher
@@ -38,7 +40,7 @@ class KSyncEntry;
   conflict resolution, is the most common implementation, there might also be
   use for a non-GUI or even non-interactive user interface.
 */
-class KSyncUi
+class KDE_EXPORT KSyncUi
 {
   public:
     KSyncUi();

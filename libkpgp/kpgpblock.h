@@ -22,6 +22,9 @@
 #include <qcstring.h>
 #include <qstring.h>
 #include <qstrlist.h>
+
+#include <kdemacros.h>
+
 //#include <qstringlist.h>
 class QStringList;
 
@@ -87,7 +90,7 @@ class Module;
    * BEGIN PGP SIGNED MESSAGE
    *     Used for cleartext signed messages.
    */
-class Block
+class KDE_EXPORT Block
 {
  public:
 

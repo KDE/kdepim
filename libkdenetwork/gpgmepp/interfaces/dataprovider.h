@@ -23,9 +23,11 @@
 
 #include <sys/types.h>
 
+#include <kdemacros.h>
+
 namespace GpgME {
 
-  class DataProvider {
+  class KDE_EXPORT DataProvider {
   public:
     virtual ~DataProvider() {}
 

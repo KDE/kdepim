@@ -25,9 +25,11 @@
 #include <qmap.h>
 #include <qvariant.h>
 
+#include <kdemacros.h>
+
 namespace KPIM {
 
-class IdMapper
+class KDE_EXPORT IdMapper
 {
   public:
     /**

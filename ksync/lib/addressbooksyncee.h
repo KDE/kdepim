@@ -25,7 +25,7 @@
 #include <kdepimmacros.h>
 #include "ksyncer.h"
 
-class AddressBookSyncEntry : public KSyncEntry
+class KDE_EXPORT AddressBookSyncEntry : public KSyncEntry
 {
   public:
     AddressBookSyncEntry( const KABC::Addressee & );

@@ -37,6 +37,8 @@
 #include <qvaluevector.h>
 #include <kdepimmacros.h>
 
+#include <kdemacros.h>
+
 class QStringList;
 class QWidget;
 
@@ -107,7 +109,7 @@ namespace Kleo {
     Private * d;
   };
 
-  class DN::Attribute {
+  class KDE_EXPORT DN::Attribute {
   public:
     typedef DN::AttributeList List;
 

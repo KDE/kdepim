@@ -33,7 +33,7 @@ namespace KSync {
 
 class SyncEntry;
 
-class ConflictDialog : public KDialogBase
+class KDE_EXPORT ConflictDialog : public KDialogBase
 {
   Q_OBJECT
 

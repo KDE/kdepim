@@ -33,6 +33,8 @@
 #ifndef __KLEO_ENUM_H__
 #define __KLEO_ENUM_H__
 
+#include <kdemacros.h>
+
 class QString;
 class QStringList;
 
@@ -48,12 +50,12 @@ namespace Kleo {
     AutoFormat = AnyOpenPGP|AnySMIME
   };
 
-  QString cryptoMessageFormatToLabel( CryptoMessageFormat f );
+  KDE_EXPORT QString cryptoMessageFormatToLabel( CryptoMessageFormat f );
 
-  const char * cryptoMessageFormatToString( CryptoMessageFormat f );
-  QStringList cryptoMessageFormatsToStringList( unsigned int f );
-  CryptoMessageFormat stringToCryptoMessageFormat( const QString & s );
-  unsigned int stringListToCryptoMessageFormats( const QStringList & sl );
+  KDE_EXPORT const char * cryptoMessageFormatToString( CryptoMessageFormat f );
+  KDE_EXPORT QStringList cryptoMessageFormatsToStringList( unsigned int f );
+  KDE_EXPORT CryptoMessageFormat stringToCryptoMessageFormat( const QString & s );
+  KDE_EXPORT unsigned int stringListToCryptoMessageFormats( const QStringList & sl );
 
   enum Action {
     Conflict, DoIt, DontDoIt, Ask, AskOpportunistic, Impossible

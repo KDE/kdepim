@@ -165,7 +165,7 @@ namespace Kleo {
     GpgME::UserID mUserID;
   };
 
-  class SignatureKeyListViewItem : public KeyListViewItem {
+  class KDE_EXPORT SignatureKeyListViewItem : public KeyListViewItem {
   public:
     SignatureKeyListViewItem( KeyListView * parent, const GpgME::UserID::Signature & sig );
     SignatureKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID::Signature & sig );
@@ -202,9 +202,54 @@ namespace Kleo {
     Q_OBJECT
     friend class KeyListViewItem;
   public:
-    class ColumnStrategy;
-    class DisplayStrategy;
 
+    class KDE_EXPORT ColumnStrategy {
+    public:
+      virtual ~ColumnStrategy();
+      virtual QString title( int column ) const = 0;
+      virtual int width( int column, const QFontMetrics & fm ) const;
+      virtual QListView::WidthMode widthMode( int ) const { return QListView::Manual; }
+
+      virtual QString text( const GpgME::Key & key, int column ) const = 0;
+      virtual QString toolTip( const GpgME::Key & key, int column ) const;
+      virtual const QPixmap * pixmap( const GpgME::Key &, int ) const { return 0; }
+      virtual int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
+
+      virtual QString subkeyText( const GpgME::Subkey &, int ) const { return QString::null; }
+      virtual QString subkeyToolTip( const GpgME::Subkey & subkey, int column ) const;
+      virtual const QPixmap * subkeyPixmap( const GpgME::Subkey &, int ) const { return 0; }
+      virtual int subkeyCompare( const GpgME::Subkey & subkey1, const GpgME::Subkey & subkey2, const int column ) const;
+
+      virtual QString userIDText( const GpgME::UserID &, int ) const { return QString::null; }
+      virtual QString userIDToolTip( const GpgME::UserID & userID, int column ) const;
+      virtual const QPixmap * userIDPixmap( const GpgME::UserID &, int ) const { return 0; }
+      virtual int userIDCompare( const GpgME::UserID & userID1, const GpgME::UserID & userID2, const int column ) const;
+
+      virtual QString signatureText( const GpgME::UserID::Signature &, int ) const { return QString::null; }
+      virtual QString signatureToolTip( const GpgME::UserID::Signature & sig, int column ) const;
+      virtual const QPixmap * signaturePixmap( const GpgME::UserID::Signature &, int ) const { return 0; }
+      virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
+    };
+
+    class KDE_EXPORT DisplayStrategy {
+    public:
+      virtual ~DisplayStrategy();
+      //font
+      virtual QFont keyFont( const GpgME::Key &, const QFont & ) const;
+      virtual QFont subkeyFont( const GpgME::Subkey &, const QFont & ) const;
+      virtual QFont useridFont( const GpgME::UserID &, const QFont &  ) const;
+      virtual QFont signatureFont( const GpgME::UserID::Signature & , const QFont & ) const;
+      //foreground
+      virtual QColor keyForeground( const GpgME::Key & , const QColor & ) const;
+      virtual QColor subkeyForeground( const GpgME::Subkey &, const QColor &  ) const;
+      virtual QColor useridForeground( const GpgME::UserID &, const QColor &  ) const;
+      virtual QColor signatureForeground( const GpgME::UserID::Signature &, const QColor &  ) const;
+      //background
+      virtual QColor keyBackground( const GpgME::Key &, const QColor &  ) const;
+      virtual QColor subkeyBackground( const GpgME::Subkey &, const QColor &  ) const;
+      virtual QColor useridBackground( const GpgME::UserID &, const QColor & ) const;
+      virtual QColor signatureBackground( const GpgME::UserID::Signature &, const QColor &  ) const;
+    };
 
     KeyListView( const ColumnStrategy * strategy,
 		 const DisplayStrategy * display=0,
@@ -273,55 +318,6 @@ namespace Kleo {
     class Private;
     Private * d;
   };
-
-  class KeyListView::ColumnStrategy {
-  public:
-    virtual KDE_EXPORT ~ColumnStrategy();
-    virtual KDE_EXPORT QString title( int column ) const = 0;
-    virtual KDE_EXPORT int width( int column, const QFontMetrics & fm ) const;
-    virtual KDE_EXPORT QListView::WidthMode widthMode( int ) const { return QListView::Manual; }
-
-    virtual KDE_EXPORT QString text( const GpgME::Key & key, int column ) const = 0;
-    virtual KDE_EXPORT QString toolTip( const GpgME::Key & key, int column ) const;
-    virtual KDE_EXPORT const QPixmap * pixmap( const GpgME::Key &, int ) const { return 0; }
-    virtual KDE_EXPORT int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
-
-    virtual KDE_EXPORT QString subkeyText( const GpgME::Subkey &, int ) const { return QString::null; }
-    virtual KDE_EXPORT QString subkeyToolTip( const GpgME::Subkey & subkey, int column ) const;
-    virtual KDE_EXPORT const QPixmap * subkeyPixmap( const GpgME::Subkey &, int ) const { return 0; }
-    virtual KDE_EXPORT int subkeyCompare( const GpgME::Subkey & subkey1, const GpgME::Subkey & subkey2, const int column ) const;
-
-    virtual KDE_EXPORT QString userIDText( const GpgME::UserID &, int ) const { return QString::null; }
-    virtual KDE_EXPORT QString userIDToolTip( const GpgME::UserID & userID, int column ) const;
-    virtual KDE_EXPORT const QPixmap * userIDPixmap( const GpgME::UserID &, int ) const { return 0; }
-    virtual KDE_EXPORT int userIDCompare( const GpgME::UserID & userID1, const GpgME::UserID & userID2, const int column ) const;
-
-    virtual KDE_EXPORT QString signatureText( const GpgME::UserID::Signature &, int ) const { return QString::null; }
-    virtual KDE_EXPORT QString signatureToolTip( const GpgME::UserID::Signature & sig, int column ) const;
-    virtual KDE_EXPORT const QPixmap * signaturePixmap( const GpgME::UserID::Signature &, int ) const { return 0; }
-    virtual KDE_EXPORT int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
-  };
-
-  class KeyListView::DisplayStrategy {
-  public:
-    virtual KDE_EXPORT ~DisplayStrategy();
-    //font
-    virtual KDE_EXPORT QFont keyFont( const GpgME::Key &, const QFont & ) const;
-    virtual KDE_EXPORT QFont subkeyFont( const GpgME::Subkey &, const QFont & ) const;
-    virtual KDE_EXPORT QFont useridFont( const GpgME::UserID &, const QFont &  ) const;
-    virtual KDE_EXPORT QFont signatureFont( const GpgME::UserID::Signature & , const QFont & ) const;
-    //foreground
-    virtual KDE_EXPORT QColor keyForeground( const GpgME::Key & , const QColor & ) const;
-    virtual KDE_EXPORT QColor subkeyForeground( const GpgME::Subkey &, const QColor &  ) const;
-    virtual KDE_EXPORT QColor useridForeground( const GpgME::UserID &, const QColor &  ) const;
-    virtual KDE_EXPORT QColor signatureForeground( const GpgME::UserID::Signature &, const QColor &  ) const;
-    //background
-    virtual KDE_EXPORT QColor keyBackground( const GpgME::Key &, const QColor &  ) const;
-    virtual KDE_EXPORT QColor subkeyBackground( const GpgME::Subkey &, const QColor &  ) const;
-    virtual KDE_EXPORT QColor useridBackground( const GpgME::UserID &, const QColor & ) const;
-    virtual KDE_EXPORT QColor signatureBackground( const GpgME::UserID::Signature &, const QColor &  ) const;
-  };
-
 }
 
 #endif // __KLEO_KEYLISTVIEW_H__
