@@ -130,7 +130,7 @@ NullConduit::dbInfo()
 	QString m = config.readEntry("DB");
 	if (m.isNull())
 	{
-		return "";
+		return "<none>";
 	}
 	else
 	{
@@ -140,6 +140,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.10  2000/11/13 08:52:31  adridg
+// Much getConfig() grief averted
+//
 // Revision 1.9  2000/11/02 23:10:32  adridg
 // Added attach-to-database feature
 //
