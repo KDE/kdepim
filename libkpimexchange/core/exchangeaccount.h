@@ -69,11 +69,11 @@ class ExchangeAccount : public QObject
 
     //  Put authentication info in KDE password store for auto-authentication
     //  with later webdav access. Also calculates the calendar URL.
-    void authenticate();
-    void authenticate( QWidget *window );
+    bool authenticate();
+    bool authenticate( QWidget *window );
 
   private:
-    void authenticate( int windowId );
+    bool authenticate( int windowId );
     void calcFolderURLs();
     static QString tryMailbox( const QString &_url, const QString &user,
                                const QString &password );

@@ -117,7 +117,7 @@ class ExchangeClient : public QObject {
   private:
     void test2();
 
-    enum { WaitingForResult, HaveResult };
+    enum { WaitingForResult, HaveResult, Error };
    
     int mClientState;
     int mSyncResult;

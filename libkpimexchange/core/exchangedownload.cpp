@@ -61,9 +61,11 @@ extern "C" {
 
 using namespace KPIM;
 
-ExchangeDownload::ExchangeDownload( ExchangeAccount* account, QWidget* window ) :
-  mWindow( window )
+ExchangeDownload::ExchangeDownload( ExchangeAccount *account, QWidget *window )
+  : mWindow( window )
 {
+  kdDebug() << "ExchangeDownload()" << endl;
+
   mAccount = account;
   mDownloadsBusy = 0;
   mProgress = 0;
@@ -92,7 +94,7 @@ void ExchangeDownload::download( KCal::Calendar *calendar, const QDate &start,
   
     connect( this, SIGNAL( startDownload() ), mProgress,
              SLOT( slotTransferStarted() ) );
-    connect( this, SIGNAL(finishDownload()), mProgress,
+    connect( this, SIGNAL(finishDownload() ), mProgress,
              SLOT( slotTransferFinished() ) );
   }
 #endif
@@ -104,7 +106,7 @@ void ExchangeDownload::download( KCal::Calendar *calendar, const QDate &start,
   increaseDownloads();
 
   kdDebug() << "ExchangeDownload::download() davSearch URL: "
-            << mAccount->calendarURL() << endl;  
+            << mAccount->calendarURL() << endl;
 
   KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql",
                                      sql, false );
@@ -135,7 +137,8 @@ void ExchangeDownload::download( const QDate& start, const QDate& end, bool show
   KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
   KIO::Scheduler::scheduleJob(job);
   job->setWindow( mWindow );
-  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotSearchResult(KIO::Job *)));
+  connect( job, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotSearchResult( KIO::Job * ) ) );
 }
 
 QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end )
@@ -156,14 +159,18 @@ QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end 
 void ExchangeDownload::slotSearchResult( KIO::Job *job )
 {
   if ( job->error() ) {
-    kdError() << "Error result for search: " << job->error() << endl;
-    job->showErrorDialog( 0 );
+    kdError() << "ExchangeDownload::slotSearchResult() error: "
+              << job->error() << endl;
+    QString text = i18n("ExchangeDownload\nError accessing '%1': %2")
+                   .arg( mAccount->calendarURL().prettyURL() )
+                   .arg( job->errorString() );
+    KMessageBox::error( 0, text );
     finishUp( ExchangeClient::CommunicationError, job );
     return;
   }
-  QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
+  QDomDocument &response = static_cast<KIO::DavJob *>( job )->response();
 
-   kdDebug() << "Search result: " << endl << response.toString() << endl;
+  kdDebug() << "Search result: " << endl << response.toString() << endl;
 
   handleAppointments( response, true );
   
@@ -174,11 +181,11 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
 {
   if ( job->error() ) {
     kdError() << "Error result for Master search: " << job->error() << endl;
-    job->showErrorDialog( 0L );
+    job->showErrorDialog( 0 );
     finishUp( ExchangeClient::CommunicationError, job );
     return;
   }
-  QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
+  QDomDocument &response = static_cast<KIO::DavJob *>( job )->response();
 
   kdDebug() << "Search (master) result: " << endl << response.toString() << endl;
 
@@ -328,7 +335,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   int error = job->error(); 
   if ( error )
   {
-    job->showErrorDialog( 0L );
+    job->showErrorDialog( 0 );
     finishUp( ExchangeClient::CommunicationError, job );
     return;
   }
@@ -565,8 +572,11 @@ void ExchangeDownload::decreaseDownloads()
   }
 }
 
-void ExchangeDownload::finishUp( int result, const QString& moreInfo )
+void ExchangeDownload::finishUp( int result, const QString &moreInfo )
 {
+  kdDebug() << "ExchangeDownload::finishUp() " << result << " "
+            << moreInfo << endl;
+
   if ( mCalendar ) mCalendar->setModified( true );
   // Disconnect from progress bar
   if ( mProgress ) {
@@ -582,9 +592,11 @@ void ExchangeDownload::finishUp( int result, const QString& moreInfo )
 //  }
 }
 
-void ExchangeDownload::finishUp( int result, KIO::Job* job )
+void ExchangeDownload::finishUp( int result, KIO::Job *job )
 {
-  finishUp( result, QString("WebDAV job error code = ") + QString::number( job->error() ) + ";\n" + "\"" + job->errorString() + "\"" );
+  finishUp( result, QString("WebDAV job error code = ") +
+                    QString::number( job->error() ) + ";\n" + "\"" +
+                    job->errorString() + "\"" );
 }
 
 #include "exchangedownload.moc"

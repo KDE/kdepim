@@ -152,15 +152,15 @@ KURL ExchangeAccount::calendarURL()
   }
 }
 
-void ExchangeAccount::authenticate( QWidget *window )
+bool ExchangeAccount::authenticate( QWidget *window )
 {
   if ( window )
-    authenticate( window->winId() );
+    return authenticate( window->winId() );
   else
-    authenticate();
+    return authenticate();
 }
 
-void ExchangeAccount::authenticate()
+bool ExchangeAccount::authenticate()
 {
   long windowId;
   QWidgetList *widgets = QApplication::topLevelWidgets();
@@ -170,10 +170,10 @@ void ExchangeAccount::authenticate()
     windowId = widgets->first()->winId();
   delete widgets;
 
-  authenticate( windowId );
+  return authenticate( windowId );
 }
 
-void ExchangeAccount::authenticate( int windowId )
+bool ExchangeAccount::authenticate( int windowId )
 {
   kdDebug() << "Entering ExchangeAccount::authenticate( windowId=" << windowId << " )" << endl;
 
@@ -209,6 +209,8 @@ void ExchangeAccount::authenticate( int windowId )
     qApp->processEvents();
   } while ( !mCalendarURL && !mError );
   QApplication::restoreOverrideCursor();
+
+  return !mError;
 }
 
 void ExchangeAccount::calcFolderURLs()

@@ -22,6 +22,7 @@
 #include <kurl.h>
 #include <kdebug.h>
 #include <kcursor.h>
+#include <klocale.h>
 
 // These for test() method
 #include <kio/http.h>
@@ -79,7 +80,7 @@ QString ExchangeClient::timeZoneId()
 
 void ExchangeClient::test()
 {
-//  mAccount->authenticate( mWindow );
+//  if ( !mAccount->authenticate( mWindow ) ) return;
   kdDebug() << "Entering test()" << endl;
   KURL baseURL = KURL( "http://mail.tbm.tudelft.nl/janb/Calendar" );
   KURL url( "webdav://mail.tbm.tudelft.nl/exchange/" );
@@ -120,11 +121,14 @@ ExchangeMonitor* ExchangeClient::monitor( int pollMode, const QHostAddress& ownI
 void ExchangeClient::download( KCal::Calendar *calendar, const QDate &start,
                                const QDate &end, bool showProgress )
 {
-  mAccount->authenticate( mWindow );
+  kdDebug() << "ExchangeClient::download1()" << endl;
 
-  kdDebug() << "Create ExchangeDownload" << endl;
+  if ( !mAccount->authenticate( mWindow ) ) {
+    emit downloadFinished( 0, i18n("Authentification error") ); 
+    return;
+  }
 
-  ExchangeDownload* worker = new ExchangeDownload( mAccount, mWindow );
+  ExchangeDownload *worker = new ExchangeDownload( mAccount, mWindow );
   worker->download( calendar, start, end, showProgress );
   connect( worker,
            SIGNAL( finished( ExchangeDownload *, int, const QString & ) ),
@@ -135,8 +139,14 @@ void ExchangeClient::download( KCal::Calendar *calendar, const QDate &start,
 void ExchangeClient::download( const QDate &start, const QDate &end,
                                bool showProgress )
 {
-  mAccount->authenticate( mWindow );
-  ExchangeDownload* worker = new ExchangeDownload( mAccount, mWindow );
+  kdDebug() << "ExchangeClient::download2()" << endl;
+
+  if ( !mAccount->authenticate( mWindow ) ) {
+    emit downloadFinished( 0, i18n("Authentification error") ); 
+    return;
+  }
+
+  ExchangeDownload *worker = new ExchangeDownload( mAccount, mWindow );
   worker->download( start, end, showProgress );
   connect( worker,
            SIGNAL( finished( ExchangeDownload *, int, const QString & ) ), 
@@ -148,20 +158,31 @@ void ExchangeClient::download( const QDate &start, const QDate &end,
 
 void ExchangeClient::upload( KCal::Event *event )
 {
-  mAccount->authenticate( mWindow );
+  if ( !mAccount->authenticate( mWindow ) ) {
+    emit uploadFinished( 0, i18n("Authentification error") ); 
+    return;
+  }
 
-  ExchangeUpload* worker = new ExchangeUpload( event, mAccount, mTimeZoneId, mWindow );
-  connect( worker, SIGNAL( finished( ExchangeUpload*, int, const QString& ) ), this, SLOT( slotUploadFinished( ExchangeUpload*, int, const QString& ) ) );
+  ExchangeUpload *worker = new ExchangeUpload( event, mAccount, mTimeZoneId,
+                                               mWindow );
+  connect( worker, SIGNAL( finished( ExchangeUpload *, int, const QString & ) ),
+           SLOT( slotUploadFinished( ExchangeUpload *, int, const QString & ) ) );
 }
 
-void ExchangeClient::remove( KCal::Event* event )
+void ExchangeClient::remove( KCal::Event *event )
 {
-  mAccount->authenticate( mWindow );
-  ExchangeDelete* worker = new ExchangeDelete( event, mAccount, mWindow );
-  connect( worker, SIGNAL( finished( ExchangeDelete*, int, const QString& ) ), this, SLOT( slotRemoveFinished( ExchangeDelete*, int, const QString& ) ) );
+  if ( !mAccount->authenticate( mWindow ) ) {
+    emit removeFinished( 0, i18n("Authentification error") ); 
+    return;
+  }
+
+  ExchangeDelete *worker = new ExchangeDelete( event, mAccount, mWindow );
+  connect( worker, SIGNAL( finished( ExchangeDelete *, int, const QString & ) ),
+           SLOT( slotRemoveFinished( ExchangeDelete *, int, const QString & ) ) );
 }
 
-void ExchangeClient::slotDownloadFinished( ExchangeDownload* worker, int result, const QString& moreInfo ) 
+void ExchangeClient::slotDownloadFinished( ExchangeDownload *worker,
+                                           int result, const QString &moreInfo )
 {
   emit downloadFinished( result, moreInfo );
   worker->deleteLater();
@@ -187,61 +208,77 @@ void ExchangeClient::slotRemoveFinished( ExchangeDelete* worker, int result, con
   worker->deleteLater();
 }
 
-int ExchangeClient::downloadSynchronous( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress)
+int ExchangeClient::downloadSynchronous( KCal::Calendar *calendar,
+                                         const QDate &start, const QDate &end,
+                                         bool showProgress )
 {
+  kdDebug() << "ExchangeClient::downloadSynchronous()" << endl;
+
   mClientState = WaitingForResult;
-  connect(this, SIGNAL(downloadFinished( int, const QString& )), 
-		  this, SLOT(slotSyncFinished( int, const QString& )));
+  connect( this, SIGNAL( downloadFinished( int, const QString & ) ), 
+           SLOT( slotSyncFinished( int, const QString & ) ) );
+
+  kdDebug() << "tick" << endl;
 
   download( calendar, start, end, showProgress );
 
-  QApplication::setOverrideCursor( KCursor::waitCursor() );
+  kdDebug() << "tack" << endl;
+
+  // TODO: Remove this busy loop
+  QApplication::setOverrideCursor
+  ( KCursor::waitCursor() );
   do {
     qApp->processEvents();
-  } while ( mClientState==WaitingForResult );
+  } while ( mClientState == WaitingForResult );
   QApplication::restoreOverrideCursor();  
-  disconnect(this, SIGNAL(downloadFinished( int, const QString& )), 
-		  this, SLOT(slotSyncFinished( int, const QString& )));
+
+  kdDebug() << "tock" << endl;
+
+  disconnect( this, SIGNAL( downloadFinished( int, const QString & ) ), 
+              this, SLOT( slotSyncFinished( int, const QString & ) ) );
+
   return mSyncResult;
 }
 
 int ExchangeClient::uploadSynchronous( KCal::Event* event )
 {
   mClientState = WaitingForResult;
-  connect(this, SIGNAL(uploadFinished( int, const QString& )), 
-		  this, SLOT(slotSyncFinished( int, const QString& )));
+  connect( this, SIGNAL( uploadFinished( int, const QString & ) ), 
+           this, SLOT( slotSyncFinished( int, const QString & ) ) );
 
   upload( event );
 
+  // TODO: Remove this busy loop
   QApplication::setOverrideCursor( KCursor::waitCursor() );
   do {
     qApp->processEvents();
-  } while ( mClientState==WaitingForResult );
+  } while ( mClientState == WaitingForResult );
   QApplication::restoreOverrideCursor();  
-  disconnect(this, SIGNAL(uploadFinished( int, const QString& )), 
-		  this, SLOT(slotSyncFinished( int, const QString& )));
+  disconnect( this, SIGNAL( uploadFinished( int, const QString & ) ), 
+              this, SLOT( slotSyncFinished( int, const QString & ) ) );
   return mSyncResult;
 }
 
 int ExchangeClient::removeSynchronous( KCal::Event* event )
 {
   mClientState = WaitingForResult;
-  connect(this, SIGNAL(removeFinished( int, const QString& )), 
-		  this, SLOT(slotSyncFinished( int, const QString& )));
+  connect( this, SIGNAL( removeFinished( int, const QString & ) ), 
+           this, SLOT( slotSyncFinished( int, const QString & ) ) );
 
   remove( event );
 
+  // TODO: Remove this busy loop
   QApplication::setOverrideCursor( KCursor::waitCursor() );
   do {
     qApp->processEvents();
-  } while ( mClientState==WaitingForResult );
+  } while ( mClientState == WaitingForResult );
   QApplication::restoreOverrideCursor();  
-  disconnect(this, SIGNAL(removeFinished( int, const QString& )), 
-		  this, SLOT(slotSyncFinished( int, const QString& )));
+  disconnect( this, SIGNAL( removeFinished( int, const QString & ) ), 
+              this, SLOT( slotSyncFinished( int, const QString & ) ) );
   return mSyncResult;
 }
 
-void ExchangeClient::slotSyncFinished( int result, const QString& moreInfo )
+void ExchangeClient::slotSyncFinished( int result, const QString &moreInfo )
 {
   kdDebug() << "Exchangeclient::slotSyncFinished("<<result<<","<<moreInfo<<")" << endl;
   if ( mClientState == WaitingForResult ) {
