@@ -26,7 +26,7 @@ testresource_LDADD = ../libkcal.la
 
 TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics test_Mozilla.ics
 
-check: readandwrite
+check-local: readandwrite
 	rm -f FAILED; \
 	for i in $(TESTFILES); do \
 	  perl $(srcdir)/checkcalendar.pl  $(srcdir)/data/$$i; \
