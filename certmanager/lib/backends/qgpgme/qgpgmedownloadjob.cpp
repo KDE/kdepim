@@ -56,15 +56,15 @@ Kleo::QGpgMEDownloadJob::QGpgMEDownloadJob( GpgME::Context * context )
 Kleo::QGpgMEDownloadJob::~QGpgMEDownloadJob() {
 }
 
-GpgME::Error Kleo::QGpgMEDownloadJob::start( const QStringList & patterns ) {
-  assert( !mPatterns );
+GpgME::Error Kleo::QGpgMEDownloadJob::start( const QStringList & pats ) {
+  assert( !patterns() );
   assert( !mOutData );
 
   createOutData();
-  setPatterns( patterns );
+  setPatterns( pats );
   hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startPublicKeyExport( mPatterns, *mOutData );
+  const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
 						  
   if ( err )
     deleteLater();

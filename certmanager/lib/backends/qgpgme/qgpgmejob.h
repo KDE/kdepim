@@ -85,8 +85,18 @@ namespace Kleo {
     virtual void doOperationDoneEvent( const GpgME::Error & e ) = 0;
     /*! Hooks up mCtx to be managed by the event loop interactor */
     void hookupContextToEventLoopInteractor();
-    /*! Fills mPatterns from the stringlist */
+    /*! Fills mPatterns from the stringlist, resets chunking to the full list */
     void setPatterns( const QStringList & sl, bool allowEmpty=false );
+    /*! Returnes the number of patterns set */
+    unsigned int numPatterns() const { return mNumPatterns; }
+    /*! Skips to the next chunk of patterns. @return patterns() */
+    const char* * nextChunk();
+    /*! @return patterns, offset by the current chunk */
+    const char* * patterns() const;
+    /*! Set the current pattern chunksize to size and reset the chunk index to zero */
+    void setChunkSize( unsigned int size );
+    /*! @return current chunksize */
+    unsigned int chunkSize() const { return mChunkSize; }
     /*! Creates an empty GpgME::Data/QGpgME::QByteArrayDataProvider pair */
     void createOutData();
     /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair,
@@ -111,15 +121,24 @@ namespace Kleo {
     void showProgress( const char * what, int type, int current, int total );
     char * getPassphrase( const char * useridHint, const char * description,
 			  bool previousWasBad, bool & canceled );
+    void deleteAllPatterns();
+
+  public:
+    void checkInvariants() const;
 
   protected:
     Kleo::Job * mThis;
     GpgME::Context * mCtx;
-    const char* * mPatterns; // use if you want, but it's deleted by this class' dtor!
     GpgME::Data * mInData;
     QGpgME::QByteArrayDataProvider * mInDataDataProvider;
     GpgME::Data * mOutData;
     QGpgME::QByteArrayDataProvider * mOutDataDataProvider;
+  private:
+    const char* * mPatterns;
+    const char * mReplacedPattern;
+    unsigned int mNumPatterns;
+    unsigned int mChunkSize;
+    unsigned int mPatternStartIndex, mPatternEndIndex;
   };
 
 }

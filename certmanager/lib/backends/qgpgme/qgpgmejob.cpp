@@ -52,20 +52,48 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
+#include <algorithm>
+
 #include <assert.h>
 #include <string.h>
+
+namespace {
+  class InvarianceChecker {
+  public:
+#ifdef NDEBUG
+    InvarianceChecker( const Kleo::QGpgMEJob * ) {}
+#else
+    InvarianceChecker( const Kleo::QGpgMEJob * job )
+      : _this( job )
+    {
+      assert( _this );
+      _this->checkInvariants();
+    }
+    ~InvarianceChecker() {
+      _this->checkInvariants();
+    }
+  private:
+    const Kleo::QGpgMEJob * _this;
+#endif
+  };
+}
 
 Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
   : GpgME::ProgressProvider(),
     GpgME::PassphraseProvider(),
     mThis( _this ),
     mCtx( context ),
-    mPatterns( 0 ),
     mInData( 0 ),
     mInDataDataProvider( 0 ),
     mOutData( 0 ),
-    mOutDataDataProvider( 0 )
+    mOutDataDataProvider( 0 ),
+    mPatterns( 0 ),
+    mReplacedPattern( 0 ),
+    mNumPatterns( 0 ),
+    mChunkSize( 1024 ),
+    mPatternStartIndex( 0 ), mPatternEndIndex( 0 )
 {
+  InvarianceChecker check( this );
   assert( context );
   QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(aboutToDestroy()),
 		    _this, SLOT(slotCancel()) );
@@ -77,16 +105,48 @@ Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
     context->setPassphraseProvider( this );
 }
 
+void Kleo::QGpgMEJob::checkInvariants() const {
+#ifndef NDEBUG
+  if ( mPatterns ) {
+    assert( mPatterns[mNumPatterns] == 0 );
+    if ( mPatternEndIndex > 0 ) {
+      assert( mPatternEndIndex > mPatternStartIndex );
+      assert( mPatternEndIndex - mPatternStartIndex == mChunkSize );
+    } else {
+      assert( mPatternEndIndex == mPatternStartIndex );
+    }
+    if ( mPatternEndIndex < mNumPatterns ) {
+      assert( mPatterns[mPatternEndIndex] == 0 );
+      assert( mReplacedPattern != 0 );
+    } else {
+      assert( mReplacedPattern == 0 );
+    }
+  } else {
+    assert( mNumPatterns == 0 );
+    assert( mPatternStartIndex == 0 );
+    assert( mPatternEndIndex == 0 );
+    assert( mReplacedPattern == 0 );
+  }
+#endif
+}
+
 Kleo::QGpgMEJob::~QGpgMEJob() {
+  InvarianceChecker check( this );
   delete mCtx; mCtx = 0;
-  if ( mPatterns )
-    for ( const char* * it = mPatterns ; *it ; ++it )
-      free( (void*)*it );
-  delete[] mPatterns; mPatterns = 0;
   delete mInData; mInData = 0;
   delete mInDataDataProvider; mInDataDataProvider = 0;
   delete mOutData; mOutData = 0;
   delete mOutDataDataProvider; mOutDataDataProvider = 0;
+  deleteAllPatterns();
+}
+
+void Kleo::QGpgMEJob::deleteAllPatterns() {
+  if ( mPatterns )
+    for ( unsigned int i = 0 ; i < mNumPatterns ; ++i )
+      free( (void*)mPatterns[i] );
+  free( (void*)mReplacedPattern ); mReplacedPattern = 0;
+  delete[] mPatterns; mPatterns = 0;
+  mPatternEndIndex = mPatternStartIndex = mNumPatterns = 0;
 }
 
 void Kleo::QGpgMEJob::hookupContextToEventLoopInteractor() {
@@ -97,17 +157,58 @@ void Kleo::QGpgMEJob::hookupContextToEventLoopInteractor() {
 }
 
 void Kleo::QGpgMEJob::setPatterns( const QStringList & sl, bool allowEmpty ) {
+  InvarianceChecker check( this );
+  deleteAllPatterns();
   // create a new null-terminated C array of char* from patterns:
   mPatterns = new const char*[ sl.size() + 1 ];
   const char* * pat_it = mPatterns;
+  mNumPatterns = 0;
   for ( QStringList::const_iterator it = sl.begin() ; it != sl.end() ; ++it ) {
     if ( (*it).isNull() )
       continue;
     if ( (*it).isEmpty() && !allowEmpty )
       continue;
     *pat_it++ = strdup( (*it).utf8().data() );
+    ++mNumPatterns;
   }
   *pat_it++ = 0;
+  mReplacedPattern = 0;
+  mPatternEndIndex = mChunkSize = mNumPatterns;
+}
+
+void Kleo::QGpgMEJob::setChunkSize( unsigned int chunksize ) {
+  InvarianceChecker check( this );
+  if ( mReplacedPattern ) {
+    mPatterns[mPatternEndIndex] = mReplacedPattern;
+    mReplacedPattern = 0;
+  }
+  mChunkSize = std::min( chunksize, mNumPatterns );
+  mPatternStartIndex = 0;
+  mPatternEndIndex = mChunkSize;
+  mReplacedPattern = mPatterns[mPatternEndIndex];
+  mPatterns[mPatternEndIndex] = 0;
+}
+
+const char* * Kleo::QGpgMEJob::nextChunk() {
+  InvarianceChecker check( this );
+  if ( mReplacedPattern ) {
+    mPatterns[mPatternEndIndex] = mReplacedPattern;
+    mReplacedPattern = 0;
+  }
+  mPatternStartIndex += mChunkSize;
+  mPatternEndIndex += mChunkSize;
+  if ( mPatternEndIndex < mNumPatterns ) { // could safely be <=, but the last entry is NULL anyway
+    mReplacedPattern = mPatterns[mPatternEndIndex];
+    mPatterns[mPatternEndIndex] = 0;
+  }
+  return patterns();
+}
+
+const char* * Kleo::QGpgMEJob::patterns() const {
+  InvarianceChecker check( this );
+  if ( mPatternStartIndex < mNumPatterns )
+    return mPatterns + mPatternStartIndex;
+  return 0;
 }
 
 GpgME::Error Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & signers ) {

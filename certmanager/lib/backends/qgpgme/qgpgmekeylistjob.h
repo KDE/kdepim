@@ -64,16 +64,16 @@ namespace Kleo {
 
   private slots:
     void slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
 
   private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QStringList & );
+    void doOperationDoneEvent( const GpgME::Error &) {} // unused, we implement slotOperationDoneEvent ourselves.
+    void setup( const QStringList &, bool );
+    GpgME::KeyListResult attemptSyncKeyListing( std::vector<GpgME::Key> & );
 
   private:
     GpgME::KeyListResult mResult;
+    bool mSecretOnly;
   };
 
 }
