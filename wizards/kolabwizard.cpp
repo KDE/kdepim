@@ -57,11 +57,17 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
 
       KConfig c( "kabldaprc" );
       c.setGroup( "LDAP" );
+      bool hasMyServer = false;
       uint selHosts = c.readNumEntry("NumSelectedHosts", 0);
-      c.writeEntry( "NumSelectedHosts", selHosts + 1 );
-      c.writeEntry( QString("SelectedHost%1").arg(selHosts), host);
-      c.writeEntry( QString("SelectedBase%1").arg(selHosts), basedn);
-      c.writeEntry( QString("SelectedPort%1").arg(selHosts), "389");
+      for ( uint i = 0 ; i < selHosts && !hasMyServer; ++i )
+        if ( c.readEntry( QString("SelectedHost%1").arg(i) ) == host )
+          hasMyServer = true;
+      if ( !hasMyServer ) {
+        c.writeEntry( "NumSelectedHosts", selHosts + 1 );
+        c.writeEntry( QString("SelectedHost%1").arg(selHosts), host);
+        c.writeEntry( QString("SelectedBase%1").arg(selHosts), basedn);
+        c.writeEntry( QString("SelectedPort%1").arg(selHosts), "389");
+      }
     }
 
 };

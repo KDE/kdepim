@@ -24,6 +24,7 @@
 
 #include <kapplication.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 
 class CreateDisconnectedImapAccount : public KConfigPropagator::Change
@@ -72,33 +73,39 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
         c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
         c.writeEntry( "store-passwd", true );
       }
+      c.writeEntry( "port", "993" );
+      c.writeEntry( "use-ssl", true );
 
       c.setGroup( QString("Transport %1").arg(transCnt+1) );
       c.writeEntry( "name", "Kolab Server" );
       c.writeEntry( "host", KolabConfig::self()->server() );
+      c.writeEntry( "type", "smtp" );
+      c.writeEntry( "port", "465" );
+      c.writeEntry( "encryption", "SSL" );
 
-      // ### Should be done using the KPIM identity manager
-
-      if ( !c.hasGroup("Identity") )
-      {
-        c.setGroup( "Identity" );
-      }
+      // Write email in kmailrc or emailidentities, depending on whether the migration was done already
+      KConfig* emailConfig = 0;
+      bool hasEmailIdentities = !locate( "config", "emailidentities" ).isEmpty();
+      if ( hasEmailIdentities )
+        emailConfig = new KConfig( "emailidentities" );
       else
-      {
-        int i = 0;
-        while (c.hasGroup(QString("Identity #%1").arg(i)))
-          ++i;
-
-        c.setGroup( QString("Identity #%1").arg(++i) );
-      }
+        emailConfig = &c;
+      int i = 0;
+      while (emailConfig->hasGroup(QString("Identity #%1").arg(i)))
+        ++i;
+      emailConfig->setGroup( QString("Identity #%1").arg(i) );
 
       QString user = KolabConfig::self()->user();
       int pos = user.find( "@" );
       if ( pos > 0 ) user = user.left( pos );
 
-      c.writeEntry("Email Address", user+"@"+KolabConfig::self()->server() );
-      c.writeEntry("Name", KolabConfig::self()->realName() );
-      c.writeEntry("uoid", kapp->random() );
+      emailConfig->writeEntry("Email Address", user+"@"+KolabConfig::self()->server() );
+      emailConfig->writeEntry("Name", KolabConfig::self()->realName() );
+      emailConfig->writeEntry("uoid", kapp->random() );
+
+      if ( hasEmailIdentities )
+        delete emailConfig;
+      emailConfig = 0;
 
       // This needs to be done here, since it reference just just generated id
       c.setGroup( "IMAP Resource" );
