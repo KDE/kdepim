@@ -46,7 +46,7 @@ KNReadGenSettings::KNReadGenSettings(QWidget *p) : KNSettingsWidget(p)
 	l2=new QLabel(i18n("secs"), mgb);
 	l3=new QLabel(i18n("Open links with"), bgb);
 	browser=new QComboBox(bgb);
-	browser->insertItem("Konquerer");	
+	browser->insertItem("Konqueror");	
 	browser->insertItem("Netscape");
 	expCB=new QCheckBox(i18n("show whole thread on expanding"), vgb);
 	sigCB=new QCheckBox(i18n("show signature"), vgb);
