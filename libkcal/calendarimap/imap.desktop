@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calendar on IMAP-server via kmail
+Name[bg]=Календар на сървър IMAP чрез е-поща
 Name[ca]=Calendari sobre servidor IMAP mitjançant kmail
 Name[cs]=Kalendář na IMAP serveru přes KMail
 Name[cy]=Calendr ar weinydd-IMAP drwy kmail
@@ -9,6 +10,7 @@ Name[de]=Kalender auf IMAP-Server via KMail
 Name[el]=Ημερολόγιο σε εξυπηρετητή IMAP μέσω του kmail
 Name[es]=Calendario en un servidor IMAP vía kmail
 Name[et]=Kalender IMAP serveril KMaili vahendusel
+Name[fi]=Kalenteri IMAP-palvelimella KMailin avulla
 Name[fr]=Calendrier sur un serveur IMAP via KMail
 Name[hu]=IMAP-kiszolgálón tárolt naptár a KMailen keresztül
 Name[it]=Calendario su server IMAP via kmail
@@ -18,6 +20,7 @@ Name[pt]=Calendário no servidor de IMAP via KMail
 Name[pt_BR]=Calendário no IMAP-server via kmail
 Name[ru]=Календарь на сервере IMAP через KMail
 Name[sk]=Kalendár na IMAP-servry cez kmail
+Name[sl]=Koledar na strežniku IMAP preko kmaila
 Name[sr]=Календар на IMAP серверу преко Kmail-а
 Name[sv]=Kalender på en IMAP-server via Kmail
 Name[tr]=Kmail IMAP sunucusu ile Takvim
