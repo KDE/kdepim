@@ -10,6 +10,12 @@ namespace KSync {
     class AddressBookSyncEntry : public SyncEntry
     {
     public:
+        enum Supports {
+            Name = 0,
+            FamilyName,
+            GivenName,
+            AdditionalName
+        };
         typedef QPtrList<AddressBookSyncEntry> PtrList;
         AddressBookSyncEntry( const KABC::Addressee & = KABC::Addressee() );
         AddressBookSyncEntry( const AddressBookSyncEntry& );

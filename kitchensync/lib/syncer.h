@@ -2,6 +2,7 @@
 #define KSYNCER_H
 // $Id$
 
+#include <qbitarray.h>
 #include <qmap.h>
 #include <qstring.h>
 #include <qptrlist.h>
@@ -37,6 +38,7 @@ class SyncEntry
                      EqualButModifiedOther=2, EqualButModifiedBoth=3 };
 
     enum Status { Undefined =-1, Added = 0, Modified, Removed };
+
     /**
      * This is the basic c'tor of a Syncee.
      * Every SyncEntry should have a parent Syncee
@@ -133,6 +135,19 @@ class SyncEntry
     virtual void setState( int state = Undefined );
 
     /**
+     * sometimes its nice to know if a Entry
+     * was added or modefied during sync
+     */
+    virtual void setSyncState( int state = Undefined );
+
+    /**
+     * returns the sync state of
+     * this entry
+     */
+    virtual int syncState()const;
+
+
+    /**
      * Creates an exact copy of the this SyncEntry
      * deleting the original is save
      */
@@ -151,6 +166,7 @@ class SyncEntry
 
   private:
     int mState;
+    int mSyncState;
     Syncee *mSyncee;
     class SyncEntryPrivate;
     SyncEntryPrivate *d;
@@ -169,6 +185,20 @@ class SyncEntry
   The Syncee class provides an interface, which has to be implemented by
   concrete subclasses.
 
+  Further a Syncee can store a BitMap on what a 'Filler' of the Syncee supports.
+  For example Device B got a todolist but has only 3 Attributes.
+     Attribute 1: Description
+     Attribute 2: Completed
+     Attribute 3: DueDate
+
+  The KDE todolist got roughly 10-15 Attributes
+  So when syncing B with KDE, where B would replace KDE Records would lead
+  to loss of up to 12 attributes.
+  This will be avoided by a merge before a replaceEntry operation.
+  This way B will take presedence on the 3 Attributes but we won't lose
+  the additional attributes
+
+
   @ref Syncer operates on Syncee objects.
 */
 class Syncee
@@ -177,7 +207,7 @@ class Syncee
     typedef QPtrList<Syncee> PtrList;
     enum SyncMode { MetaLess=0, MetaMode=2 };
 
-    Syncee();
+    Syncee( uint supportSize = 0);
     virtual ~Syncee();
 
     /**
@@ -313,7 +343,6 @@ class Syncee
      * can be made by Syncee itself or by what the developer wants
      * The following three methods are convience functions to make things
      * more smooth later
-     * FIXME the internal way is not reimplemented again!
      */
 
     /**
@@ -369,6 +398,24 @@ class Syncee
      */
     QMap<QString,  Kontainer::ValueList > ids()const;
 
+    /**
+     * set what the Syncee supports
+     */
+    virtual void setSupports( const QBitArray& );
+
+    /**
+     * returns of the Device supported
+     * Attributes
+     */
+    virtual QBitArray bitArray()const;
+
+    /**
+     * convience function to figure
+     * if a specefic attribute is supported
+     */
+    inline bool isSupported( uint Attribute )const;
+
+
     // a bit hacky
     /**
      * When syncing two iCalendar the UIDs are garantuued to be global
@@ -384,6 +431,7 @@ class Syncee
     bool mFirstSync : 1;
     QString mFilename;
     KSimpleConfig *mStatusLog;
+    QBitArray mSupport;
     class SynceePrivate;
     SynceePrivate* d;
 };

@@ -18,10 +18,12 @@ SyncEntry::SyncEntry( Syncee *sync) :
   mSyncee(sync)
 {
     mState = Undefined;
+    mSyncState = Undefined;
 }
 SyncEntry::SyncEntry( const SyncEntry& ent) {
     mState = ent.mState;
     mSyncee = ent.mSyncee;
+    mSyncState = ent.mSyncState;
 }
 SyncEntry::~SyncEntry()
 {
@@ -52,6 +54,12 @@ bool SyncEntry::wasRemoved() const {
 void SyncEntry::setState( int state ) {
     mState = state;
 }
+void SyncEntry::setSyncState( int state ) {
+    mSyncState = state;
+}
+int SyncEntry::syncState()const {
+    return mSyncState;
+}
 Syncee *SyncEntry::syncee()
 {
   return mSyncee;
@@ -61,8 +69,8 @@ void SyncEntry::setId( const QString& ) {
 
 }
 ///// Syncee ////////////////
-Syncee::Syncee() :
-  mStatusLog(0)
+Syncee::Syncee(uint size) :
+  mStatusLog(0), mSupport( size )
 {
     mSyncMode = MetaLess;
     mFirstSync = false;
@@ -203,6 +211,18 @@ bool Syncee::trustIdsOnFirstSync()const {
 }
 QString Syncee::newId() const {
     return QString::null;
+}
+void Syncee::setSupports( const QBitArray& ar) {
+    mSupport = ar;
+    mSupport.detach();
+}
+QBitArray Syncee::bitArray()const {
+    return mSupport;
+}
+bool Syncee::isSupported( uint attr )const {
+    if ( attr >= mSupport.size() )
+        return false;
+    return mSupport.testBit( attr );
 }
 ////////////// Syncer //////////////////////
 Syncer::Syncer(SyncUi *ui,  SyncAlgorithm *iface)

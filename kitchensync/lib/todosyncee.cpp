@@ -14,7 +14,8 @@ void testIt() {
 TodoSyncEntry::TodoSyncEntry( KCal::Todo* todo )
     : SyncEntry(), mTodo( todo )
 {
-
+    if (!mTodo )
+        mTodo = new KCal::Todo;
 }
 TodoSyncEntry::TodoSyncEntry( const TodoSyncEntry& entry)
     : SyncEntry( entry )

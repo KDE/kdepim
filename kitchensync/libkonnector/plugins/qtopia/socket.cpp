@@ -562,8 +562,12 @@ void QtopiaSocket::handshake( const QString& line) {
     QTextStream stream( d->socket );
     QStringList list = QStringList::split( QString::fromLatin1(" "), line );
     d->path = list[3];
-    d->getMode = d->Desktops;
-    stream << "call QPE/System startSync(QString) KitchenSync" << endl;
+    kdDebug() << "D->PATH is " << d->path << endl;
+    kdDebug() << "D Line Was " << line << endl;
+    if (!d->path.isEmpty() ) {
+        d->getMode = d->Desktops;
+        stream << "call QPE/System startSync(QString) KitchenSync" << endl;
+    }
 }
 void QtopiaSocket::download() {
     readAddressbook();
