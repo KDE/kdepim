@@ -224,13 +224,16 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   QString xml;
   if ( type == "Calendar" ) {
     mimetype = eventAttachmentMimeType;
-    xml = Kolab::Event::eventToXML( static_cast<KCal::Event *>(incidencebase) );
+    xml = Kolab::Event::eventToXML( static_cast<KCal::Event *>(incidencebase),
+                                    mCalendar.timeZoneId() );
   } else if ( type == "Task" ) {
     mimetype = todoAttachmentMimeType;
-    xml = Kolab::Task::taskToXML( static_cast<KCal::Todo *>(incidencebase) );
+    xml = Kolab::Task::taskToXML( static_cast<KCal::Todo *>(incidencebase),
+                                  mCalendar.timeZoneId() );
   } else if ( type == "Journal" ) {
     mimetype = journalAttachmentMimeType;
-    xml = Kolab::Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ) );
+    xml = Kolab::Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ),
+                                        mCalendar.timeZoneId() );
   } else {
     kdWarning(5006) << "Can't happen: unhandled type=" << type << endl;
   }
@@ -266,7 +269,7 @@ bool ResourceKolab::addEvent( KCal::Event* event )
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
                               Q_UINT32 sernum )
 {
-  KCal::Event* event = Kolab::Event::xmlToEvent( xml );
+  KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId() );
   Q_ASSERT( event );
   if( event && !mUidMap.contains( event->uid() ) )
     addEvent( event, subresource, sernum );
@@ -287,7 +290,7 @@ bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
     return false;
 
   if ( !mSilent ) {
-    QString xml = Kolab::Event::eventToXML( event );
+    QString xml = Kolab::Event::eventToXML( event, mCalendar.timeZoneId() );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
     if( !kmailUpdate( subResource, sernum, xml, eventAttachmentMimeType,
@@ -352,7 +355,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo )
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
                              Q_UINT32 sernum )
 {
-  KCal::Todo* todo = Kolab::Task::xmlToTask( xml );
+  KCal::Todo* todo = Kolab::Task::xmlToTask( xml, mCalendar.timeZoneId() );
   Q_ASSERT( todo );
   if( todo && !mUidMap.contains( todo->uid() ) )
     addTodo( todo, subresource, sernum );
@@ -373,7 +376,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
     return false;
 
   if ( !mSilent ) {
-    QString xml = Kolab::Task::taskToXML( todo );
+    QString xml = Kolab::Task::taskToXML( todo, mCalendar.timeZoneId() );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
     if( !kmailUpdate( subResource, sernum, xml, todoAttachmentMimeType,
@@ -425,7 +428,8 @@ bool ResourceKolab::addJournal( KCal::Journal* journal )
 void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
                                 Q_UINT32 sernum )
 {
-  KCal::Journal* journal = Kolab::Journal::xmlToJournal( xml );
+  KCal::Journal* journal =
+    Kolab::Journal::xmlToJournal( xml, mCalendar.timeZoneId() );
   Q_ASSERT( journal );
   if( journal && !mUidMap.contains( journal->uid() ) )
     addJournal( journal, subresource, sernum );
@@ -446,7 +450,8 @@ bool ResourceKolab::addJournal( KCal::Journal* journal,
     return false;
 
   if ( !mSilent ) {
-    QString xml = Kolab::Journal::journalToXML( journal );
+    QString xml = Kolab::Journal::journalToXML( journal,
+                                                mCalendar.timeZoneId() );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
     if( !kmailUpdate( subResource, sernum, xml, journalAttachmentMimeType,

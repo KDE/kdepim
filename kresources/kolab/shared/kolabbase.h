@@ -66,7 +66,7 @@ public:
 
   enum Sensitivity { Public = 0, Private = 1, Confidential = 2 };
 
-  KolabBase();
+  explicit KolabBase( const QString& timezone = QString::null );
   virtual ~KolabBase();
 
   // Return a string identifying this type
@@ -144,12 +144,16 @@ protected:
   // Write a string tag
   static void writeString( QDomElement&, const QString&, const QString& );
 
+  QDateTime localToUTC( const QDateTime& time ) const;
+  QDateTime utcToLocal( const QDateTime& time ) const;
+
   QString mUid;
   QString mBody;
   QString mCategories;
   QDateTime mCreationDate;
   QDateTime mLastModified;
   Sensitivity mSensitivity;
+  QString mTimeZoneId;
 };
 
 }

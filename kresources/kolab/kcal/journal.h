@@ -54,12 +54,12 @@ class Journal : public KolabBase {
 public:
   /// Use this to parse an xml string to a journal entry
   /// The caller is responsible for deleting the returned journal
-  static KCal::Journal* xmlToJournal( const QString& xml );
+  static KCal::Journal* xmlToJournal( const QString& xml, const QString& tz );
 
   /// Use this to get an xml string describing this journal entry
-  static QString journalToXML( KCal::Journal* );
+  static QString journalToXML( KCal::Journal*, const QString& tz );
 
-  explicit Journal( KCal::Journal* journal = 0 );
+  explicit Journal( const QString& tz, KCal::Journal* journal = 0 );
   virtual ~Journal();
 
   virtual QString type() const { return "Journal"; }

@@ -39,23 +39,23 @@
 using namespace Kolab;
 
 
-KCal::Todo* Task::xmlToTask( const QString& xml )
+KCal::Todo* Task::xmlToTask( const QString& xml, const QString& tz )
 {
-  Task task;
+  Task task( tz );
   task.load( xml );
   KCal::Todo* todo = new KCal::Todo();
   task.saveTo( todo );
   return todo;
 }
 
-QString Task::taskToXML( KCal::Todo* todo )
+QString Task::taskToXML( KCal::Todo* todo, const QString& tz )
 {
-  Task task( todo );
+  Task task( tz, todo );
   return task.saveXML();
 }
 
-Task::Task( KCal::Todo* task )
-  : mPriority( 3 ), mPercentCompleted( 100 ),
+Task::Task( const QString& tz, KCal::Todo* task )
+  : Incidence( tz ), mPriority( 3 ), mPercentCompleted( 100 ),
     mStatus( KCal::Incidence::StatusNone ),
     mHasDueDate( false ), mHasCompletedDate( false )
 {
@@ -271,13 +271,13 @@ void Task::setFields( const KCal::Todo* task )
   setPercentCompleted( task->percentComplete() );
   setStatus( task->status() );
   if ( task->hasDueDate() )
-    setDueDate( task->dtDue() );
+    setDueDate( localToUTC( task->dtDue() ) );
   else
     mHasDueDate = false;
   setParent( QString::null );
 
   if ( task->hasCompletedDate() )
-    setCompletedDate( task->completed() );
+    setCompletedDate( localToUTC( task->completed() ) );
   else
     mHasCompletedDate = false;
 }
@@ -291,11 +291,11 @@ void Task::saveTo( KCal::Todo* task )
   task->setStatus( status() );
   task->setHasDueDate( hasDueDate() );
   if ( hasDueDate() )
-    task->setDtDue( dueDate() );
+    task->setDtDue( utcToLocal( dueDate() ) );
 
   if ( parent() != QString::null )
     task->setRelatedToUid( parent() );
 
   if ( hasCompletedDate() )
-    task->setCompleted( mCompletedDate );
+    task->setCompleted( utcToLocal( mCompletedDate ) );
 }

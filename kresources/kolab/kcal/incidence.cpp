@@ -40,8 +40,8 @@
 using namespace Kolab;
 
 
-Incidence::Incidence( KCal::Incidence* incidence )
-  : mAlarm( 0 )
+Incidence::Incidence( const QString& tz, KCal::Incidence* incidence )
+  : KolabBase( tz ), mAlarm( 0 )
 {
   if ( incidence )
     setFields( incidence );
@@ -449,7 +449,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 {
   KolabBase::setFields( incidence );
 
-  setStartDate( incidence->dtStart() );
+  setStartDate( localToUTC( incidence->dtStart() ) );
   setSummary( incidence->summary() );
   setLocation( incidence->location() );
   if ( incidence->isAlarmEnabled() ) {
@@ -510,8 +510,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
 {
   KolabBase::saveTo( incidence );
 
-  QDateTime start = startDate();
-  incidence->setDtStart( start );
+  incidence->setDtStart( utcToLocal( startDate() ) );
   // floating events are currently not covered with the spec because it requires an explizit timezone
   incidence->setFloats( false );
 

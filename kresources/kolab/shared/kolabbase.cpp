@@ -35,16 +35,17 @@
 
 #include <kabc/addressee.h>
 #include <libkcal/journal.h>
+#include <libkdepim/kpimprefs.h>
 #include <kdebug.h>
 #include <qfile.h>
 
 using namespace Kolab;
 
 
-KolabBase::KolabBase()
+KolabBase::KolabBase( const QString& tz )
   : mCreationDate( QDateTime::currentDateTime() ),
     mLastModified( QDateTime::currentDateTime() ),
-    mSensitivity( Public )
+    mSensitivity( Public ), mTimeZoneId( tz )
 {
 }
 
@@ -60,8 +61,8 @@ void KolabBase::setFields( const KCal::Incidence* incidence )
   setUid( incidence->uid() );
   setBody( incidence->description() );
   setCategories( incidence->categoriesStr() );
-  setCreationDate( incidence->created() );
-  setLastModified( incidence->lastModified() );
+  setCreationDate( localToUTC( incidence->created() ) );
+  setLastModified( localToUTC( incidence->lastModified() ) );
   setSensitivity( static_cast<Sensitivity>( incidence->secrecy() ) );
   // TODO: Attachments
 }
@@ -71,8 +72,8 @@ void KolabBase::saveTo( KCal::Incidence* incidence ) const
   incidence->setUid( uid() );
   incidence->setDescription( body() );
   incidence->setCategories( categories() );
-  incidence->setCreated( creationDate() );
-  incidence->setLastModified( lastModified() );
+  incidence->setCreated( utcToLocal( creationDate() ) );
+  incidence->setLastModified( utcToLocal( lastModified() ) );
   incidence->setSecrecy( sensitivity() );
   // TODO: Attachments
 }
@@ -394,4 +395,14 @@ void KolabBase::writeString( QDomElement& element, const QString& tag,
     e.appendChild( t );
     element.appendChild( e );
   }
+}
+
+QDateTime KolabBase::localToUTC( const QDateTime& time ) const
+{
+  return KPimPrefs::localTimeToUtc( time, mTimeZoneId );
+}
+
+QDateTime KolabBase::utcToLocal( const QDateTime& time ) const
+{
+  return KPimPrefs::utcToLocalTime( time, mTimeZoneId );
 }

@@ -39,22 +39,23 @@
 using namespace Kolab;
 
 
-KCal::Journal* Journal::xmlToJournal( const QString& xml )
+KCal::Journal* Journal::xmlToJournal( const QString& xml, const QString& tz )
 {
-  Journal journal;
+  Journal journal( tz );
   journal.load( xml );
   KCal::Journal* kcalJournal = new KCal::Journal();
   journal.saveTo( kcalJournal );
   return kcalJournal;
 }
 
-QString Journal::journalToXML( KCal::Journal* kcalJournal )
+QString Journal::journalToXML( KCal::Journal* kcalJournal, const QString& tz )
 {
-  Journal journal( kcalJournal );
+  Journal journal( tz, kcalJournal );
   return journal.saveXML();
 }
 
-Journal::Journal( KCal::Journal* journal )
+Journal::Journal( const QString& tz, KCal::Journal* journal )
+  : KolabBase( tz )
 {
   if ( journal )
     setFields( journal );
@@ -162,7 +163,7 @@ void Journal::saveTo( KCal::Journal* journal )
   KolabBase::saveTo( journal );
 
   journal->setSummary( summary() );
-  journal->setDtStart( startDate() );
+  journal->setDtStart( utcToLocal( startDate() ) );
 }
 
 void Journal::setFields( const KCal::Journal* journal )
@@ -172,5 +173,5 @@ void Journal::setFields( const KCal::Journal* journal )
 
   // Set our own fields
   setSummary( journal->summary() );
-  setStartDate( journal->dtStart() );
+  setStartDate( localToUTC( journal->dtStart() ) );
 }

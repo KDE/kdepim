@@ -39,23 +39,23 @@
 using namespace Kolab;
 
 
-KCal::Event* Event::xmlToEvent( const QString& xml )
+KCal::Event* Event::xmlToEvent( const QString& xml, const QString& tz  )
 {
-  Event event;
+  Event event( tz );
   event.load( xml );
   KCal::Event* kcalEvent = new KCal::Event();
   event.saveTo( kcalEvent );
   return kcalEvent;
 }
 
-QString Event::eventToXML( KCal::Event* kcalEvent )
+QString Event::eventToXML( KCal::Event* kcalEvent, const QString& tz  )
 {
-  Event event( kcalEvent );
+  Event event( tz, kcalEvent );
   return event.saveXML();
 }
 
-Event::Event( KCal::Event* event )
-  : mShowTimeAs( KCal::Event::Opaque ), mHasEndDate( false )
+Event::Event( const QString& tz, KCal::Event* event )
+  : Incidence( tz ), mShowTimeAs( KCal::Event::Opaque ), mHasEndDate( false )
 {
   if ( event )
     setFields( event );
@@ -162,7 +162,7 @@ void Event::setFields( const KCal::Event* event )
   Incidence::setFields( event );
 
   if ( event->hasEndDate() )
-    setEndDate( event->dtEnd() );
+    setEndDate( localToUTC( event->dtEnd() ) );
   else
     mHasEndDate = false;
   setTransparency( event->transparency() );
@@ -174,6 +174,6 @@ void Event::saveTo( KCal::Event* event )
 
   event->setHasEndDate( mHasEndDate );
   if ( mHasEndDate )
-    event->setDtEnd( endDate() );
+    event->setDtEnd( utcToLocal( endDate() ) );
   event->setTransparency( transparency() );
 }

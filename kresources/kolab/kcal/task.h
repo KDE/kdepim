@@ -56,12 +56,12 @@ class Task : public Incidence {
 public:
   /// Use this to parse an xml string to a task entry
   /// The caller is responsible for deleting the returned task
-  static KCal::Todo* xmlToTask( const QString& xml );
+  static KCal::Todo* xmlToTask( const QString& xml, const QString& tz );
 
   /// Use this to get an xml string describing this task entry
-  static QString taskToXML( KCal::Todo* );
+  static QString taskToXML( KCal::Todo*, const QString& tz );
 
-  explicit Task( KCal::Todo* todo = 0 );
+  explicit Task( const QString& tz, KCal::Todo* todo = 0 );
   virtual ~Task();
 
   virtual QString type() const { return "Task"; }
