@@ -3,18 +3,18 @@
 <sect1 id="first-start"> 
 <title>The first start</title> 
 
-<para>You find &knode; in the <guimenu>K</guimenu> Menu under the
-entry <guisubmenu>Internet</guisubmenu>. The menu entry
+<para>You can find &knode; in the <guimenu>K</guimenu> Menu under the
+<guisubmenu>Internet</guisubmenu> entry: the menu entry
 <guimenuitem>KNode</guimenuitem> launches the program.</para>
 
 <tip> 
-<para>If the entry for &knode; can not be found or if &knode; should
-not appear on the desktop after clicking on the menu entry, read <link
+<para>If the entry for &knode; can not be found or if &knode; does
+not appear after clicking on the menu entry, read <link
 linkend="faq">Questions and Answers</link>.</para> 
 </tip>
 
 <para>The main window of &knode; should now be displayed on your
-desktop as shown. On first start, the settings dialog will be
+desktop as shown; on the first start, the settings dialog will be
 invoked.</para>
 
 <screenshot>
@@ -33,31 +33,31 @@ invoked.</para>
 
 <para>The windows shows the menu bar, the toolbar below and the status
 pane at the buttom. The area between the toolbar and the status pane
-is occupied by a three-part windows.</para>
+is occupied by a three-part window.</para>
 
 <para>There is a folder view, which currently contains only three
 entries:</para>
 
 <simplelist>
-<member>The folder<guilabel>Outbox</guilabel></member>
-<member>The folder<guilabel>Drafts</guilabel></member>
-<member>The folder<guilabel>Sent</guilabel></member>
+<member>The folder <guilabel>Outbox</guilabel></member>
+<member>The folder <guilabel>Drafts</guilabel></member>
+<member>The folder <guilabel>Sent</guilabel></member>
 </simplelist>
 
 <para>When &knode; is completely and correctly configured, the news
 servers and the subscribed news groups will appear there.</para>
 
-<para>In the upper section, is the article view. It is currently empty
-and does not show any articles. Directly below the article view, the
-article window is located. The body of the currently selected article
+<para>In the upper section is the article view; it is currently empty
+and does not show any articles. Directly below the article view is the
+article window; the body of the currently-selected article
 appears there. These windows are also blank at the moment, as there
-are no articles, of course. You should not be confused because before
-reading and publishing news, some things have to be configured. This
+are no articles, of course. You should not be concerned, though, as before
+reading and publishing news some things have to be configured; this
 will be covered by the following section.</para>
 
 <para>We are now beginning the setting up of &knode;. Most settings
 are not important for daily use, but you should know what settings are
-possible and what they are for. Some may miss a
+possible and what they are for. Some may skip the
 <quote>Quickstart</quote> chapter but those who prefer a quick start
 will just glance over the manual anyway. For others, especially those
 who have not any or much experience with a news reader, this chapter
@@ -87,10 +87,10 @@ dialog of &knode;. The figure shows the dialog.</para>
 </mediaobject> 
 </screenshot> 
 
-<para>The dialog is divided into two parts: There is a treeview, in
+<para>The dialog is divided into two parts: in one part there is a treeview, in
 which the top entry <guilabel>Identity</guilabel> is already
-highlighted. In the other, you see the corresponding input
-dialog. These settings relate to your identity with which you navigate
+highlighted; in the other part is the corresponding input
+dialog -- these settings relate to the identity with which you navigate
 through the newsgroups.</para>
 
 <tip>
@@ -112,17 +112,17 @@ mandatory.</para>
 <caution>
 <para> 
 In most newsgroups, it is considered polite and appropriate to appear
-with one's real name. Other newsgroups are less strict about this. But
+with one's real name; other newsgroups are less strict about this. But,
 there are also cases when one would not want to appear with one's real
 name, &eg; in newsgroups where one would like to (and can) talk about
-very personal matters without being exposed. These groups mostly do
+very personal matters without being exposed; these groups mostly do
 tell you in their Charter that the anonymity of their members is
 explicitly approved.</para>
 </caution> 
 
 <tip> 
 <para>For those special cases, &knode; offers settings that can be
-adjusted to each newsgroup individually. Further information can be
+adjusted to each newsgroup individually; further information can be
 found under <link linkend="group-identity">Group local
 Identities</link>.</para>
 </tip> 
@@ -132,10 +132,10 @@ Identities</link>.</para>
 <title><guilabel>Organization</guilabel></title> 
 
 <para>The input field <guilabel>Organization</guilabel> is optional
-and does not have to be filled out. You can enter &eg; the name of
-your company or your university institute, if you use &knode;
-there. If you leave this field blank, it will often be filled out
-later by your Internet provider.</para>
+and does not have to be filled out. You can enter, &eg;, the name of
+your company or your university if you use &knode;
+there; if you leave this field blank, it will often be filled out
+later by your Internet service provider.</para>
 </sect3> 
 
 <sect3> 
@@ -146,16 +146,16 @@ articles, &ie; as actual address of the author, in conjunction with
 the real name (set in the field <guilabel>Name</guilabel>).</para>
 
 <para>The field <guilabel>Email Address</guilabel> shows up when
-someone wants to reply to you by email. The email will be sent to
+someone wants to reply to you by email: the email will be sent to
 the address entered here. Many newsreaders display the sender address
 together with the name in the Header of the article.</para>
 
-<para>Filling out the field <guilabel>Email Address</guilabel> is
+<para>Filling out the <guilabel>Email Address</guilabel> field is
 mandatory.</para>
 <tip>
 <para> 
 Note that the e-mail address will only be used for replies to you if
-the field <guilabel>Reply-to Address</guilabel> is not filled out. In
+the field <guilabel>Reply-to Address</guilabel> is not filled out; in
 this case, the field <guilabel>Email</guilabel> will be ignored for
 replies and the address given under <guilabel>Reply-to
 Address</guilabel> will be used.</para> 
@@ -166,8 +166,8 @@ Address</guilabel> will be used.</para>
 <title><guilabel>Reply-to Address</guilabel></title> 
 
 <para><guilabel>Reply-to Address</guilabel> offers you the possibility
-to enter a different address than your sender e-mail address. If
-someone replies to you by email, this address will be displayed as
+to enter a different address than your sender e-mail address: if
+someone replies to you by email this address will be displayed as
 target address in the reply. An example for using <guilabel>Reply-to
 Address</guilabel> would be that you write the article at the office
 during the day but want to receive the answer in your home inbox,
@@ -178,8 +178,8 @@ differs from the field <guilabel>Email Address</guilabel>.</para>
 
 <warning>
 <para>Some news readers deliberately set this to an invalid e-mail
-address in order to prevent spam mails from being received. What could
-happen though is that a reader sends an e-mail to this invalid address
+address in order to prevent spam mails from being received; what could
+happen, though, is that a reader sends an e-mail to this invalid address
 which you will therefore never receive. You should drop a note about
 this in the signature.</para>
 </warning>
@@ -188,7 +188,7 @@ this in the signature.</para>
 <sect3>
 <title><guilabel>Mail-Copies-To</guilabel></title>
 
-<para>If you enter an email address here, every article will be sent
+<para>If you enter an email address here every article will be sent
 to the usenet and to this email address.</para>
 </sect3>
 
@@ -216,13 +216,13 @@ field is only enabled if the option <guilabel>Use a signature from
 file</guilabel> is selected.</para>
 
 <para>The signature file is a simple text file, which should not
-contain more than four lines. It can for example contain a reference
+contain more than four lines; it can, for example, contain a reference
 to your homepage with the corresponding link, your postal address with
 your telephone number (which would then be of course visible to the
 whole world with every article) or just a cool quote. The signature is
-your brand, so to speak, which will mark all your articles. Therefore
-your signature should be designed sloppily or in the long run annoying
-to others. An old joke that one would have to read over and over again
+your brand, so to speak, which will mark all your articles; therefore,
+your signature should not be designed sloppily or in the long run annoying
+to others: an old joke that one would have to read over and over again
 does not foster sympathy or the interest of the other newsgroup
 subscribers.</para> 
 
@@ -289,25 +289,25 @@ account.</para>
 <anchor id="anc-setting-the-news-account"/>
 
 <para>Now we must tell &knode; about where we get the news from or
-where to send the articless to later on. In the tree view on the
-right, there is an entry <guilabel>Accounts</guilabel>. Click on that
-with the mouse. Then two sub entries will be opened out. We choose the
-entry <guilabel>News</guilabel>, because we first want to configure
-the news account. The list of accounts is still empty.</para>
+where to send the articles to later on. In the tree view on the
+right, there is an <guilabel>Accounts</guilabel> entry; click on it
+with the mouse; then, two sub entries will be opened out. Choose the
+<guilabel>News</guilabel> entry, because we first want to configure
+the news account: the list of accounts is still empty.</para>
 
-<para>Create a new account with <guibutton>New...</guibutton>. The
+<para>To create a new account click on <guibutton>New...</guibutton>. The
 following dialog appears:</para>
 
 <screenshot>
-<screeninfo>The dialog <guilabel>New Account</guilabel></screeninfo> 
+<screeninfo>The <guilabel>New Account</guilabel> dialog</screeninfo> 
 <mediaobject> 
 <imageobject> 
 <imagedata fileref="knode-news-account.png" format="PNG"/> </imageobject> 
 <textobject> 
-<phrase>The dialog <guilabel>New Account</guilabel></phrase> 
+<phrase>The <guilabel>New Account</guilabel> dialog</phrase> 
 </textobject> 
 <caption>
-<para>The dialog <guilabel>New Account</guilabel></para> 
+<para>The <guilabel>New Account</guilabel> dialog</para> 
 </caption> 
 </mediaobject> 
 </screenshot> 
@@ -315,9 +315,9 @@ following dialog appears:</para>
 <sect3>
 <title><guilabel>Name</guilabel></title> 
 
-<para>The field <guilabel>Name</guilabel> can be filled in as you
-like. The text you enter will later be visible in the folder view. You
-can &eg; enter the name of your Internet Provider. For our example we
+<para>The <guilabel>Name</guilabel> field can be filled in as you
+like; the text you enter will later be visible in the folder view. You
+could, for example, enter the name of your Internet Provider; for our example we
 enter the name <userinput>My News Account</userinput>.</para>
 
 </sect3>
@@ -326,23 +326,23 @@ enter the name <userinput>My News Account</userinput>.</para>
 <title><guilabel>Server</guilabel></title> 
 
 <para>The next field is labelled <guilabel>Server</guilabel>. Unlike
-the field <guilabel>Name</guilabel>, it is important what you enter
-here. The name of the news server is fixed and should be made public
-by your internet provider. If you do not know the name of the news
-server, you should get it now. Without this information you can not
-read any news. If your internet provider hasn't an own newsserver you
-can use a public one. Universities often provide public news
-servers.</para>
+the field <guilabel>Name</guilabel>, what you enter here is
+important.  The name of the news server is fixed and you should be able
+to get it from your Internet service provider; if you do not know the name
+of the news server, you should get it now: without this information you can
+not read any news. If your Internet service provider doesn't own a
+news server you can use a public one (universities often provide public news
+servers.)</para>
 
 <para>For our example configuration we enter the name
 <userinput><systemitem
-class="systemname">news.server.com</systemitem></userinput>. You will
-of course enter the real name of your news server.</para>
+class="systemname">news.server.com</systemitem></userinput>; you will,
+of course, enter the real name of your news server.</para>
 
 <tip>
-<para>If you deploy &knode; with a local news server, enter the name
+<para>If you want to use &knode; with a local news server, enter the name
 <userinput><systemitem
-class="systemname">localhost</systemitem></userinput> here!</para>
+class="systemname">localhost</systemitem></userinput> here.</para>
 </tip>
 </sect3>
 
@@ -350,49 +350,48 @@ class="systemname">localhost</systemitem></userinput> here!</para>
 <title><guilabel>Port</guilabel></title> 
 
 <para><guilabel>Port</guilabel>, the next field, has already a default
-value. The Port designates, roughly speaking, a data channel, on which
-the server listens, whether someone wants to retrieve news. It
+value. The Port designates, roughly speaking, a data channel on which
+the server listens for whether someone wants to retrieve news: it
 defaults to the value 119, which is applicable in most
-cases. Therefore we do not change this default for our example.</para>
+cases; therefore, we do not change this default for our example.</para>
 </sect3>
 
 <sect3> 
 <title><guilabel>Hold connection for</guilabel></title> 
 
-<para>The time value you enter here is effective if you have
+<para>The time value you enter here is used if you have
 established a connection to the news server and if, for whatever
 reason, no data is received from or transmitted to the news
-server. After the specified time has expired, &knode; automatically
-disconnects. This, among other things, relieves the server of
-unnecessary connections which reduce its availability for other
-subscribers. It also makes sure that an automatically established
-Internet connection is not held unnecessarily although no data is
+server: after the specified time has elapsed &knode; will automatically
+disconnect.  This, amongst other things, relieves the server of
+unnecessary connections which would otherwise reduce its availability
+for other subscribers; it also makes sure that an automatically-established
+Internet connection is not held unnecessarily even if no data is
 being sent or received.</para>
 
 <tip> 
 <para>This settings mainly makes sense if one receives and reads
-news online. For local news servers it is of almost no importance. If
+news online;  for local news servers it is of almost no importance. If
 this waiting time is set too low, there can be waiting periods if you
 read a longer article and do not do <quote>anything</quote> for some
-time. &knode; has canceled the connection to the server by then after
-the period has expired and has to reestablish it.</para> 
-<para> If this waiting time is set too high, you perhaps waste online
-time when doing nothing.</para> </tip>
+time: &knode; will have canceled the connection to the server by then (after
+the time period has elapsed) and has to reestablish it, causing a delay.</para> 
+<para> If the waiting time is set too high you might waste online
+time whilst doing nothing (perhaps increasing your phone bill).</para> </tip>
 </sect3>
 
 <sect3> 
 <title><guilabel>Timeout</guilabel></title> 
 
-<para>If &knode; connects to the news server, it waits no longer for
-an answer of the news server than the time that is set here. If this
-period is exceeded, you will get a corresponding error message,
-because the server does not respond and &knode; cancels the connection
-attempt.</para>
+<para>If &knode; connects to the news server it waits no longer than the
+time specified here for an answer; if the period is exceeded &knode; cancels
+the connection attempt and you will get an error message stating that the
+server is not responding.</para>
 
 <tip>
 <para>Depending on the quality of your Internet account and the
-news server's current load. there can be waiting periods, so that
-&knode; cancels the connection. If this happens frequently, you should
+news server's current load there can be busy periods where
+&knode; cancels the connection; if this happens frequently, you should
 set this setting to a higher value.</para>
 </tip>
 </sect3> 
@@ -402,12 +401,12 @@ set this setting to a higher value.</para>
 <guilabel>Fetch group descriptions</guilabel></title> 
 
 <para>If this setting is selected, &knode; additionally requests the
-available group descriptions. They will be displayed in the dialog
-<guilabel> Subscribe to Newsgroups</guilabel>.</para>
+available group descriptions; they will be displayed in the 
+<guilabel>Subscribe to Newsgroups</guilabel> dialog.</para>
 
 <tip> 
-<para>There is not a group description for every group, so there is no
-error if no group description is shown when subscribing to a group
+<para>There is not a group description for every group, so it is not
+an error if no group description is shown when subscribing to a group
 later on.</para> 
 </tip> 
 
@@ -418,46 +417,47 @@ later on.</para>
 
 <para>The option <guilabel>Server requires authentication</guilabel>
 needs only to be selected if your news server requires a user name and
-a password when retrieving articles. If this is the case, you will
-find out from your Internet provider or the server's
+a password when retrieving articles; you can find out if this is the case
+from your Internet service provider or the server's
 maintainer.</para>
 
 <tip> 
-<para>If you do not know exactly if this setting is necessary, forget
-about selecting it. If you encounter an error later on, you still can
-select it then. Otherwise select this option and enter your user name
+<para>If you do not know if this setting is necessary forget
+about selecting it for now: if you encounter an error later on, you can
+try selecting it then.  Otherwise, select this option and enter your user name
 under <guilabel>User</guilabel> and the associated password
-under <guilabel> Password</guilabel>.</para>
+under <guilabel>Password</guilabel>.</para>
 </tip> 
 </sect3> 
 
 <sect3> 
 <title>General notes</title> 
 
-<para>By now you have completed the setup of your news account. You
-confirm and save your settings by clicking on the button <guibutton>
-OK</guibutton>. As soon as you have done that, the account will appear
-in the list by the name that you have entered in
-<guilabel>Name</guilabel> before. And if you have a close look, you
-will see that the account is also appearing in the folder view.</para>
+<para>By now you have completed the setup of your news account. You can
+confirm and save your settings by clicking on the
+<guibutton>OK</guibutton> button: as soon as you have done that,
+the account will appear in the list by the name that you entered in
+<guilabel>Name</guilabel> earlier; and, if you have a close look, you
+will see that the account also appears in the folder view.</para>
 
-<para>Via the button <guibutton>Subscribe</guibutton> you can perhaps
-directly get to the dialog for subscribing to news groups. But we
-still have more to do and ignore it for now. There are several ways
+<para>Using the <guibutton>Subscribe</guibutton> button you could
+get directly to the dialog for subscribing to news groups; but, we
+still have more to do so we'll ignore it for now: there are several ways
 that lead to the goal.</para>
 
-<para>In the chapter <link linkend="multiple-news-accounts"> Managing
-multiple news accounts</link> you will learn how to work with multiple
-news accounts. But first, we will stay with this one. In most cases,
+<para>In the <link linkend="multiple-news-accounts"> Managing
+multiple news accounts</link> chapter you can learn how to work with multiple
+news accounts, but first we will stay with this one; in most cases,
 one account is sufficient.</para>
 
 <caution> 
 <para>Please note that some Internet providers only allow retrieving
-news if you are logged on via this provider.</para> 
+news from their news server if you are connected to the Internet
+through them.</para> 
 </caution> 
 
-<para>We will now move on to configuring the email account. In order
-to do that, click on the entry <guilabel>Mail</guilabel> in the tree
+<para>We will now move on to configuring the email account; in order
+to do that, click on the <guilabel>Mail</guilabel> entry in the tree
 view on the left.</para>
 
 </sect3> 
@@ -483,45 +483,44 @@ following Dialog Box appears.</para>
 </mediaobject> 
 </screenshot> 
 
-<para>You will notice this Dialog Box to be very similar to the news
-account settings Dialog Box. But why do we need an email account in a
+<para>You will notice this Dialog Box is very similar to the news
+account settings Dialog Box; but why do we need an email account in a
 newsreader?</para>
 
 <para>Sometimes you need to answer to the author of an article
-directly, without posting to the newsgroup. For example, when you want
+directly, without posting to the newsgroup; for example, when you want
 to make a very personal comment or want to correct an error. Sometimes
-a dialog is more appropriate than a public remark.</para>
+an email is more appropriate than a public remark.</para>
 
-<para>Thats why &knode; provides the possibility to reply by
-email. If you want to use this feature, you must tell &knode; how to
-send emails. You just need to insert the mailserver. When you have
-already configured an email account, &ie; with &kmail;, you can reuse
+<para>That's why &knode; provides the possibility to reply by
+email; if you want to use this feature you must tell &knode; how to
+send emails: you just need to insert the mail server's address. If you have
+already configured an email account, &eg; with &kmail;, you can reuse
 the settings used there.</para>
 
 <sect3> 
 <title><guilabel>Use external mail program</guilabel></title> 
 
-<para>If this option is active, &knode; will use the mail program
-which is configured in the control-center. The other options in this
-dialog will be disabled.</para>
+<para>If this option is active &knode; will use the mail program
+which is configured in the control center; the other options in this
+dialog will then be disabled.</para>
 
 </sect3> 
 
 <sect3> 
 <title><guilabel>Server</guilabel></title> 
 
-<para>The name of your mail server is not arbitrary. Your
-<acronym>ISP</acronym> , should provide you the informations, which
-mail server to use. All you have to do here is to enter the mailserver
-in the <guilabel> Server</guilabel> field.</para>
+<para>The name (address) of your mail server as provided by your Internet service
+provider or system administrator; all you have to do here is enter the mail server's
+name in the <guilabel>Server</guilabel> field.</para>
 
 <para>In our example we enter<userinput><systemitem
-class="systemname">mail.server.de</systemitem></userinput> </para>
+class="systemname">mail.server.de</systemitem></userinput></para>
 
 <tip>
-<para>If you have one, you can send your mail via a local mail
-server. When you use a local mail server, use <systemitem
-class="systemname"> localhost</systemitem> in the
+<para>If you have one you can send your mail via a local mail
+server; if this is the case local mail server enter <systemitem
+class="systemname">localhost</systemitem> in the
 <guilabel>Server</guilabel> field.</para>
 </tip> 
 </sect3>
@@ -530,8 +529,8 @@ class="systemname"> localhost</systemitem> in the
 <title><guilabel>Port</guilabel></title> 
 
 <para>Again, the <guilabel>Port</guilabel> field has a default
-value. In this case it Port 25. You should not need to change this,
-despite your <acronym>ISP</acronym> has a very exotic configuration
+value; in this case it's port 25. You should not need to change this,
+unless your <acronym>ISP</acronym> has a very exotic configuration
 and tells you to do so. We do not change this for the example.</para>
 
 </sect3>
@@ -539,22 +538,23 @@ and tells you to do so. We do not change this for the example.</para>
 <sect3> 
 <title>Hold connection for</title> 
 
-<para>This value is important, after you established a connection with
-your mail server. If there is no data transfer, &knode; cancels the
-connection to your mailserver after this amount of time.</para> 
+<para>This value is important: if you have established a connection
+with your mail server and there is no data transfer occurring &knode;
+cancels the connection to your mailserver after the specified amount
+of time has elapsed.</para> 
 
 </sect3> 
 
 <sect3> 
 <title><guilabel>Timeout</guilabel></title> 
 
-<para>When &knode; tries to connect to the mail server, it waits this
-long for a reply by the the server. Is this time exceeded, you get a
+<para>When &knode; tries to connect to the mail server it will wait this
+long for a reply from the server; if this time is exceeded, you will get a
 error message.</para> 
 
 <tip> 
 <para>Depending on the quality of your connection and the actual load
-of your mail server, you can get long reply times. If &knode; cancels
+of your mail server you might get long reply times; if &knode; cancels
 the connection due to this, you should increase the timeout.</para> 
 </tip> 
 </sect3> 
@@ -563,15 +563,14 @@ the connection due to this, you should increase the timeout.</para>
 <title>General notes</title>
 
 <caution> 
-<para>Some <acronym>ISP</acronym> only allow you to send email over
-their mailserver after you checked your mailbox on new mails. This
+<para>Some <acronym>ISP</acronym>s only allow you to send email using
+their mail server after you have checked your mailbox for new mail: this
 reduces spamming.</para> 
 
-<para>For same reasons, some <acronym>ISP</acronym> only allow you to
-send mail by their mailservers, when you are online with this
-<acronym>ISP</acronym> or if you are logged in at the mailserver. For
-example, this is the normal configuration at GMX and isn't supported
-by &knode; or &kmail; yet.</para>
+<para>For the same reasons, some <acronym>ISP</acronym>s will only allow you
+to send mail using their mailservers if you are online with them
+or if you are logged in at the mailserver; for example, this is the normal
+configuration at GMX and isn't supported by &knode; or &kmail; yet.</para>
 </caution>
 
 </sect3>
@@ -580,21 +579,21 @@ by &knode; or &kmail; yet.</para>
 <sect2 id="knode-appearance">
 <title>Defining the appearance</title>
 
-<para>With the dialog <guilabel>Appearance</guilabel> you are given
+<para>With the <guilabel>Appearance</guilabel> dialog you are given
 the ability to set the colors, the character code and the font size of
-the texts in the article window. The picture below shows the
+the text in the article window; the picture below shows the
 dialog.</para>
 
 <screenshot>
-<screeninfo>Setting up the dialog Appearance</screeninfo>
+<screeninfo>Setting up the Appearance dialog</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="knode-colors-fonts.png" format="PNG"/> </imageobject>
 <textobject>
-<phrase>Setting up the dialog Appearance</phrase>
+<phrase>Setting up the Appearance dialog</phrase>
 </textobject>
 <caption>
-<para>Setting up the dialog Appearance</para>
+<para>Setting up the Appearance dialog</para>
 </caption>
 </mediaobject>
 </screenshot>
@@ -602,18 +601,18 @@ dialog.</para>
 <sect3>
 <title><guilabel>Use custom colors</guilabel></title>
 
-<para>If you select this option, you can adjust the color settings of
-&knode; in the list field below. To change a color setting, do a
-double click with the &LMB; on the list entry to open the &kde; color
-selection dialog.</para>
+<para>If you select this option you can adjust the color settings of
+&knode; in the list field below; to change a color setting do a
+double-click with the &LMB; on the list entry to open the &kde;
+color-selection dialog.</para>
 
 <para>The color selection can only be configured after the checkbox
-has been checked &mdash; otherwise, a double click on the list entries
+has been checked; otherwise, a double-click on the list entries
 won't do anything.</para>
 
 <caution>
-<para>If the setting <guilabel>Use custom colors</guilabel> is
-selected, &knode; won't use colors which have been changed later
+<para>If the <guilabel>Use custom colors</guilabel> setting is
+selected &knode; won't use colors which have been changed later
 globally for &kde; but will only use the colors defined here
 instead.</para>
 </caution>
@@ -622,18 +621,18 @@ instead.</para>
 <sect3>
 <title><guilabel>Use custom fonts</guilabel></title>
 
-<para>If you select this setting, you can adjust the fonts which
-&knode; uses for the display in the list field below. To choose a
-font, do a double click with the &LMB; on the list entry to open the
-&kde; font selection dialog.</para>
+<para>If you select this setting you can adjust the fonts which
+&knode; uses for the display in the list field below; to choose a
+font do a double-click with the &LMB; on the list entry to open the
+&kde; font-selection dialog.</para>
 
 <para>The font can only be configured after the checkbox has been
-checked - otherwise, a double click on the list entries won't do
+checked; otherwise, a double click on the list entries won't do
 anything.</para>
 
 <caution> 
 <para>If the setting <guilabel>Use custom fonts</guilabel> is
-selected, &knode; won't use later changes to the global font settings
+selected &knode; won't use later changes to the global font settings
 for &kde; but will use the fonts defined here instead.</para> 
 </caution> 
 </sect3> 
@@ -644,36 +643,36 @@ for &kde; but will use the fonts defined here instead.</para>
 <title>General News Settings</title> 
 
 <para>Now click on <guibutton>Reading news</guibutton> and then on the
-subentry <guibutton>General</guibutton>. The picture shows the dialog
-and the preferences you can configure there.</para> 
+<guibutton>General</guibutton> sub-entry; the figure below shows the dialog
+containing the preferences you can configure there.</para> 
 
 <screenshot> 
-<screeninfo>Dialog <guilabel>General Preferences</guilabel></screeninfo> 
+<screeninfo><guilabel>General Preferences</guilabel> Dialog</screeninfo> 
 <mediaobject> 
 <imageobject> 
 <imagedata fileref="knode-read-news-settings.png" format="PNG"/> </imageobject> 
 <textobject> 
-<phrase>The dialog <guilabel>General Preferences</guilabel></phrase> 
+<phrase>The <guilabel>General Preferences</guilabel> dialog</phrase> 
 </textobject> 
 <caption> 
-<para>The dialog <guilabel>General Preferences</guilabel></para>
+<para>The <guilabel>General Preferences</guilabel> dialog</para>
 </caption>
 </mediaobject>
 </screenshot>
 
 <para>You don't need to change most of these settings, but we will
-discuss them step by step to give you an overview over the
+discuss them step-by-step to give you an overview of the
 possibilities of &knode;.</para>
 
 <sect3> 
 <title><guilabel>Check for new articles
 automatically</guilabel></title> 
 
-<para>If this box is checked, &knode; tries to request new articles
+<para>If this box is checked &knode; tries to request new articles
 from the server when selecting a newsgroup. These settings especially
 make sense when you use &knode; together with a local news
-server. Downloading the messages obviously only works when the server
-is reachable. For a server which is only reachable via an Internet
+server: downloading the messages obviously only works when the server
+is reachable; for a server which is only reachable via an Internet
 connection, this setting rarely makes sense and should stay
 deactivated.</para>
 
@@ -682,25 +681,25 @@ if necessary, you will get an error message each time you select a
 newsgroup.</para>
 
 <para>If you want to keep control over when a connection to the server
-is established, the menu option
-<menuchoice><guimenu>Group</guimenu><guimenuitem> Get new
-articles</guimenuitem></menuchoice> is appropriate.</para>
+is established, the 
+<menuchoice><guimenu>Group</guimenu><guimenuitem>Get new
+articles</guimenuitem></menuchoice> menu option is appropriate.</para>
 
 </sect3>
 
 <sect3> 
 <title><guilabel>Maximal number of articles to fetch</guilabel></title> 
 
-<para>This sets the restriction of the articles, which are requested
+<para>This sets a restriction on the number articles which are requested
 from the server while downloading. The value configured here is for
-each Newsgroup separately. Set this for instance to 300, so that only
-the 300 newest articles of the newsgroup are requested. Other articles
-are discarded!</para> 
+each newsgroup separately. If this is set, for instance, to 300 only
+the 300 newest articles of the newsgroup are requested; other articles will
+be discarded.</para> 
 
 <warning> 
 <para>For newsgroups with relatively high traffic you might lose
-articles if this value is too low. This especially occurs when you've
-just subscribed to a newsgroup or download articles only occasionally
+articles if this value is too low; this especially occurs when you've
+just subscribed to a newsgroup or only occasionally download articles
 and the traffic for this reason rises above the value specified
 here.</para>
 </warning> 
@@ -711,11 +710,11 @@ here.</para>
 
 <para>Articles you have opened in the article window are marked as
 read after the number of seconds specified here. If you set this value
-relatively high, you avoid that an articles you just glanced at is
-directly marked as read. On the other hand it can be annoying for
-relatively short articles for which you need less time to read than
-specified. If you browse in this case too fast through the articles
-they stay, although you've read them already, unread. Therefore, you
+to be relatively high you avoid articles you have just glanced at
+being marked as read; on the other hand, it can be annoying for
+relatively short articles, for which you need less time to read than
+specified: if you browsed too quickly through the articles
+they would stay unread even though you have read them. Therefore, you
 should adjust this value to your personal preferences.</para>
 
 </sect3> 
@@ -724,26 +723,27 @@ should adjust this value to your personal preferences.</para>
 <title><guilabel>Mark crossposted articles as read</guilabel></title>
 
 <para>Sometimes an <glossterm>article</glossterm> will be posted to
-more than one group. That's called crossposting. If you activate this
-option, those crossposted articles will be marked as read in all
-newsgroups if you read it in one newsgroup.</para>
+more than one group; this is known as crossposting. If you activate this
+option, those crossposted articles will be marked as read in all the
+newsgroups to which they were posted if you read it in one newsgroup.</para>
 
 </sect3>
 
 <sect3>
 <title><guilabel>Smart scrolling</guilabel></title> 
 
-<para>If this option is active, the lines are scrolled soft instead of
-jerky.</para>  <!-- LW: FIXME could be explained a tiny bit better -->
+<para>If this option is selected the lines in the article list are
+scrolled smoothly instead of jerkily.
+</para>  <!-- LW: FIXME could be explained a tiny bit better -->
 
 </sect3> 
 
 <sect3>
 <title><guilabel>Show whole thread on expanding</guilabel></title>
 
-<para>This setting lets discussion be displayed completely (over
+<para>This setting lets a discussion be displayed completely (over
 multiple answer levels) if you click on the plus in front of the
-discussion. If this setting isn't checked, only the immediate answers
+discussion; if this setting isn't checked, only the immediate answers
 to the current article are displayed.</para>
 
 </sect3>
@@ -751,32 +751,32 @@ to the current article are displayed.</para>
 <sect3>
 <title><guilabel>Default to expanded threads</guilabel></title>
 
-<para>Here you can toggle if the threads are expanded by default or if
-they aren't.</para>
+<para>Here you can toggle whether the threads are expanded by default or
+not.</para>
 
 </sect3>
 
 <sect3>
 <title><guilabel>Show article score</guilabel></title> 
 
-<para>This toggles on and off the column for the scoring at the
-article view.</para> 
+<para>Here you can toggle whether the scoring column should be shown
+in the article view.</para> 
 
 </sect3> 
 
 <sect3> 
 <title><guilabel>Show line count</guilabel></title> 
 
-<para>Here you can toggle the column with the number of lines on and
-off.</para> 
+<para>Here you can toggle whether the column with the number of lines
+should be shown in the article view.</para> 
 
 </sect3> 
 
 <sect3> 
 <title><guilabel>Cache size for headers</guilabel></title>
 
-<para>Here you can configure how much memory should be used for
-caching the headers.</para>
+<para>Here you can configure how much memory &knode; should use for
+the caching of the headers.</para>
 
 </sect3>
 
@@ -792,7 +792,7 @@ the caching of the articles.</para>
 <sect2>
 <title><guilabel>Navigation</guilabel></title>
 
-<para>Here you can change some navigation properties of &knode;
+<para>Here you can change some navigation properties of &knode;.
 Normally everything here is switched off, but if you don't like this
 kind of navigation you can change it.</para>
 
@@ -800,9 +800,9 @@ kind of navigation you can change it.</para>
 <title><guilabel>General</guilabel></title>
 
 <para>The keyboard behavior between &knode; and &kmail; is a bit
-different. With the switch <guilabel>Emulate the keyboard behavior of
-KMail</guilabel> you can activate the same keyboard behavior as in
-&kmail; for &knode;.</para>
+different; with the <guilabel>Emulate the keyboard behavior of
+KMail</guilabel> switch you can activate the same keyboard behavior
+as in &kmail; for &knode;.</para>
 
 </sect3>
 
@@ -810,33 +810,33 @@ KMail</guilabel> you can activate the same keyboard behavior as in
 <title><guilabel>Mark All as Read</guilabel></title>
 
 <para>If the box <guilabel>Switch to next group</guilabel> is checked,
-&knode; automatically switches to thenext group if you mark all
+&knode; automatically switches to the next group if you mark all
 articles as read.</para>
 </sect3>
 
 <sect3>
 <title><guilabel>Mark Thread as Read</guilabel></title>
 
-<para>If the box <guilabel>Close the current thread</guilabel>is
-checked, &knode; automatically closes the actual thread if you mark
-this thread as read.</para>
+<para>If <guilabel>Close the current thread</guilabel> is
+checked, &knode; automatically closes a thread if you mark
+it as read.</para>
 
-<para>If the box <guilabel>Go to next unread thread</guilabel> is
+<para>If <guilabel>Go to next unread thread</guilabel> is
 checked, &knode; automatically shows the next thread if you mark the
-actual thread as read.</para>
+the previous thread as read.</para>
 
 </sect3>
 
 <sect3>
 <title><guilabel>Ignore Thread</guilabel></title>
 
-<para>If the box <guilabel>Close the current thread</guilabel>is
-checked, &knode; automatically closes the actual thread if you ignore
-this thread.</para>
+<para>If <guilabel>Close the current thread</guilabel>is
+checked, &knode; automatically closes a thread if you choose to
+ignore it.</para>
 
-<para>If the box <guilabel>Go to next unread thread</guilabel> is
-checked, &knode; automatically shows the next thread if you ignore
-this thread.</para>
+<para>If <guilabel>Go to next unread thread</guilabel> is
+checked, &knode; automatically shows the next thread if you choose
+to ignore the previous one.</para>
 
 </sect3>
 </sect2>
@@ -845,13 +845,13 @@ this thread.</para>
 <title>Scoring rules</title>
 
 <para>To sort the articles you have the possibility to score them. The
-standard score is 0, a higher score means, that the
-<glossterm>article</glossterm> is interesting, a lower score means
-it's boring.</para>
+standard score is 0: a higher score means that the
+<glossterm>article</glossterm> is interesting; a lower score means
+it is less interesting.</para>
 
-<para>In the middle of the window you see a big, white area. Here you
+<para>In the middle of the window you see a big, white area; here you
 can see your scoring rules. Scoring rules are used by &knode; to score
-the incoming articles automatically. If for example a person always
+the incoming articles automatically; if, for example, a person always
 posts nonsense you can automatically score the articles of that person
 down and hide them.</para>
 
@@ -861,18 +861,18 @@ down and hide them.</para>
 rule. We will skip this feature for now, because it is not essential
 for the setup of &knode;.</para>
 
-<para>You will learn more about scoring; in the chapter <link
+<para>You can learn more about scoring; in the chapter <link
 linkend="anc-score-watch-ignore">Scoring, watching and
 ignoring</link>.</para>
 
 <sect3>
 <title><guilabel>Default score for ignored threads</guilabel></title> 
 
-<para>Normally you only need the functions ignore and watch. This
+<para>Normally you only need the functions ignore and watch; this
 simply shows if a thread is interesting or not. Here you can configure
-a default score for the ignored threads.  Choosing the menu item
+a default score for the ignored threads; choosing the 
 <menuchoice><guimenu>Scoring</guimenu><guimenuitem>Ignore
-Thread</guimenuitem></menuchoice> will give this score to all the
+Thread</guimenuitem></menuchoice> menu item will give this score to all the
 posts in that thread, and will apply that score also to future posts
 that follow up the thread.</para> 
 
@@ -882,9 +882,9 @@ that follow up the thread.</para>
 <title><guilabel>Default score for watched threads</guilabel></title> 
 
 <para>If an article is interesting, it will get a score above 0. Here
-you can enter the default score for those articles. Choosing the menu
-item <menuchoice><guimenu>Scoring</guimenu><guimenuitem>Watch
-Thread</guimenuitem></menuchoice> will give this score to all the
+you can enter the default score for those articles; choosing the
+<menuchoice><guimenu>Scoring</guimenu><guimenuitem>Watch
+Thread</guimenuitem></menuchoice>  menu item will give this score to all the
 posts in that thread, and will apply that score also to future posts
 that follow up the thread.</para>
 
@@ -914,41 +914,41 @@ that follow up the thread.</para>
 </mediaobject> 
 </screenshot> 
 
-<para>This dialog shows two lists. The upper list, labeled <guilabel> 
-Filters</guilabel>, shows all defined filters. When you use &knode;
-for the first time, you only see the predefined filters.</para> 
+<para>This dialog shows two lists.  The upper list, labeled <guilabel> 
+Filters</guilabel>, shows all defined filters; when you use &knode;
+for the first time, you will only see the predefined filters.</para> 
 
 <para>With the buttons <guibutton>Add</guibutton>,
 <guibutton>Delete</guibutton>, <guibutton>Edit</guibutton> and
 <guibutton>Copy</guibutton> you can add new filters or delete filters
-no longer needed. We skip this feature for now, because it is not
-essential for the setup of &knode;</para> 
+which are no longer needed; we will skip this feature for now, because
+it is not essential for the setup of &knode;.</para> 
 
-<para>You can find more detailed informations about filters in <link
+<para>You can find more-detailed information about filters in <link
 linkend="using-filters">Defining and using filters</link>.</para>
 
 <para>The lower list, labeled <guilabel>Menu</guilabel>, shows the
-appearance of the menu <menuchoice><guimenu>View</guimenu>
-<guisubmenu>Filter</guisubmenu></menuchoice>, which you can reach from
-the menu bar. The order of the filters in the this menu can be
+appearance of the <menuchoice><guimenu>View</guimenu>
+<guisubmenu>Filter</guisubmenu></menuchoice> menu, which you can reach from
+the menu bar; the order of the filters in the this menu can be
 configured in this list.</para>
 
-<para>The button <guibutton>Up</guibutton> shifts the selected filter
-one position up. Try it, select the second filter and press
-<guibutton>Up</guibutton>. This entry goes up one position.</para> 
+<para>The <guibutton>Up</guibutton> button shifts the selected filter
+one position up. Try it: select the second filter and press
+<guibutton>Up</guibutton>; this entry will then go up one position.</para> 
 
-<para>The button <guibutton>Down</guibutton> does the opposite
-action. Select the filter, you just shifted one up, and
+<para>The <guibutton>Down</guibutton> button does the opposite
+action: select the filter you just shifted one up and
 press<guibutton>Down</guibutton> until it reaches its old
 position.</para>
 
 <para>With the two buttons <guibutton>Add Separator</guibutton> and
-<guibutton>Remove Separator</guibutton> you can group the filters
-optically. The separators are shown as <literal>====</literal>
-in the list. In the Menu they show up as some more appealing
-horizontal lines. Try to add a separator. Then you select the
+<guibutton>Remove Separator</guibutton> you can visually group
+the filters on the menu. The separators are shown as <literal>====</literal>
+in the list; in the Menu they show up as some more-appealing
+horizontal lines.  Try adding separator; then, select the
 separator and remove it by pressing <guibutton>Remove
-separator</guibutton> wider.</para> 
+separator</guibutton>.</para> 
 
 <para>Any changes you make here, you can see in
 <menuchoice><guimenu>View</guimenu><guisubmenu>Filter</guisubmenu></menuchoice>
@@ -961,49 +961,51 @@ after closing this dialog.</para>
 
 <anchor id="anc-knode-headers"/> 
 
-<para>In this dialog, you can set how the single header lines are
+<para>In this dialog you can set how the single header lines are
 displayed in the article window.</para> 
 
 <screenshot> 
-<screeninfo>The dialog <guilabel>Customize displayed article
-headers</guilabel></screeninfo> 
+<screeninfo>The <guilabel>Customize displayed article
+headers</guilabel> Dialog</screeninfo> 
 <mediaobject> 
 <imageobject> 
 <imagedata fileref="knode-header-settings.png" format="PNG"/> </imageobject> 
 <textobject> 
-<phrase>The dialog <guilabel>Customize displayed article
-headers</guilabel></phrase> 
+<phrase>The <guilabel>Customize displayed article
+headers</guilabel> dialog</phrase> 
 </textobject> 
 <caption>
-<para>The dialog <guilabel>Customize displayed article
-headers</guilabel></para>
+<para>The <guilabel>Customize displayed article
+headers</guilabel> dialog</para>
 </caption>
 </mediaobject>
 </screenshot>
 
-<para>This list shows all the header lines which are intended for
-display in the article window. The identifier at the left will be
-displayed, the name in &lt; &gt; stand for the name of the according
-header line how it is transmitted in the Usenet, &ie; for
-<guilabel>From</guilabel> the name <guilabel>From</guilabel>.</para>
+<para>This list shows all the header lines which are to be
+display in the article window. The identifiers at the left will be
+displayed alongside the header lines in &lt; &gt; to their right;
+the header lines are taken from each message, &eg; for
+<guilabel>From</guilabel> the From header line will be used (indicating
+who send the message).</para>
 
-<para>Via <guibutton>Edit</guibutton> you can influence the shown
-identifier as well as the attributes of the shown identifier and the
-text. To make things clearer, we'll now simply select the entry
-<guilabel>From:&lt;From&gt;</guilabel> in the list and open the dialog
+<para>Using <guibutton>Edit</guibutton> you can alter the shown
+identifiers, alter the header line shown by each identifier and
+change the font settings of the text used. To make things clearer,
+we'll now simply select the
+<guilabel>From:&lt;From&gt;</guilabel> entry in the list and open the dialog
 for editing the header display by clicking on
 <guibutton>Edit</guibutton>.</para> 
 
 <screenshot>
-<screeninfo>The dialog Header Properties</screeninfo>
+<screeninfo>The Header Properties Dialog</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="knode-edit-header1.png" format="PNG"/> </imageobject>
 <textobject>
-<phrase>The dialog Header Properties</phrase>
+<phrase>The Header Properties dialog</phrase>
 </textobject>
 <caption>
-<para>The dialog Header Properties</para>
+<para>The Header Properties dialog</para>
 </caption>
 </mediaobject> 
 </screenshot> 
@@ -1011,36 +1013,36 @@ for editing the header display by clicking on
 <sect3> 
 <title><guilabel>Header</guilabel></title> 
 
-<para>The selection box <guilabel>Header</guilabel> shows the entry
-<guilabel>From</guilabel>. That is the name of the header line for the
-sender, as it's actually present in the article and evaluated by the
-newsreader. If you drop down the selection box, &knode; shows a range
-of other identifiers, which stand all for a certain header line in the
-article. For now, we'll leave the identifier <guilabel>From</guilabel>
-configured. We'll work with this list later, when we add a header line
+<para>The <guilabel>Header</guilabel> selection box shows the entry
+<guilabel>From</guilabel>: that is the name of the header line for the
+sender, as present in the article and evaluated by the
+newsreader. If you drop down the selection box &knode; shows a range
+of other identifiers, which stand all for a certain header lines in the
+article: for now, we'll leave the <guilabel>From</guilabel> identifier
+configured; we'll work with this list later, when we add a header line
 to the display.</para> 
 </sect3>
 
 <sect3> 
 <title><guilabel>Displayed Name</guilabel></title> 
 
-<para>This field holds the name, which is later shown in the article
-window as a replacement for the actual identifier of the header
-line. For the header line <guilabel>From</guilabel>, it's the
-<guilabel>from</guilabel>. If you leave this field blank, only the
-content of the header line appears in the article window. This is for
-example the default setting for the header line <guilabel>
-Subject</guilabel>. We won't change anything here either, for now.</para>
+<para>This field holds the name you'd like to be later shown in the article
+window as a label alongside the actual header
+line text; for example, for the <guilabel>From</guilabel> header line the
+label <guilabel>From</guilabel> is used. If you leave this field blank, only the
+content of the header line appears in the article window; this is, for
+example, the default setting for the <guilabel>Subject</guilabel>
+header line. We won't change anything here either, for now.</para>
 
 </sect3> 
 
 <sect3> 
 <title><guilabel>Name</guilabel></title> 
 
-<para> Here you can influence the attributes of the shown name with
-the checkboxes. In our case, the attribute <guilabel>Bold</guilabel>
+<para>Here you can influence the way the 'Displayed Name'
+text is displayed; in our case, the <guilabel>Bold</guilabel> attribute
 is selected for the name <guilabel>From</guilabel>, &ie; the text will
-be shown in bold letters in the article window. Of course, you can
+be shown in bold letters in the article window.  Of course, you can
 combine different attributes, for example <guilabel>Bold</guilabel>
 and <guilabel>Underlined</guilabel>.</para>
 
@@ -1049,13 +1051,10 @@ and <guilabel>Underlined</guilabel>.</para>
 <sect3> 
 <title>Value</title> 
 
-<para>The information given for <guilabel>Name</guilabel> is true for
-these checkboxes as well, but these attributes are associated to the
-content of the shown header line, in course case to the actual
-sender. You can later see the effects of these settings in the
-displayed articles. For example, select here the entry
-<guilabel>Italic</guilabel>, and the sender, &ie; <quote>John Doe
-&lt;johndoe@doubleguns.com&gt;</quote> appears in an italic
+<para>Here you can influence the way the header text is displayed
+in the article window; for example, if the
+<guilabel>Italic</guilabel> entry is selected the sender, &eg; <quote>John Doe
+&lt;johndoe@doubleguns.com&gt;</quote> will appears in an italic
 font.</para>
 
 </sect3> 
@@ -1063,43 +1062,43 @@ font.</para>
 <sect3> 
 <title>Add and remove header lines to the display</title>
 
-<para>To explain the possibilities of this dialog to you, we're going
+<para>To explain the possibilities of this dialog to you we're going
 to add a new header line to the display.</para>
 
 <example> 
 <title>Show the newsreader used for a post in the article window</title> 
 
-<para>This pictures show the dialog with the header line
+<para>This pictures shows the dialog with the header line
 <literal>X-Newsreader</literal>.</para> 
 <screenshot> 
-<screeninfo>The dialog Header Properties</screeninfo> 
+<screeninfo>The Header Properties Dialog</screeninfo> 
 <mediaobject> 
 <imageobject> 
 <imagedata fileref="knode-edit-header2.png" format="PNG"/> </imageobject> 
 <textobject> 
-<phrase>The dialog Header Properties</phrase> 
+<phrase>The Header Properties dialog</phrase> 
 </textobject> 
 <caption> 
-<para>The dialog Header Properties</para> 
+<para>The Header Properties dialog</para> 
 </caption> 
 </mediaobject> 
 </screenshot>
 
 <para>It would be nice if one could see which newsreader another
-subscriber uses in the article window. Well, that's pretty easy
-because there's actually a (optional) header line which contains that
-information.</para>
+subscriber uses in the article window; it is actually quite easy
+to do this because there is a (optional) header line which contains
+the necessary information.</para>
 
-<para>Drop down the selection field <guilabel>Header</guilabel> and
-select the entry <guilabel>X-Newsreader</guilabel> from the
+<para>Drop down the <guilabel>Header</guilabel> selection field and
+select the <guilabel>X-Newsreader</guilabel> entry from the
 list.</para>
 
-<para>In the field <guilabel>Displayed name</guilabel>, enter
+<para>In the <guilabel>Displayed name</guilabel> field, enter
 <userinput>Newsreader</userinput>.</para>
 
 <para>Now you can select any attribute for the display of the field
-and it's content. Next, acknowledge your input with the
-<guibutton>OK</guibutton>. The new header line appears now in the list
+and its content; next, acknowledge your input with the
+<guibutton>OK</guibutton>: the new header line appears now in the list
 and will later be shown in the article window.</para>
 
 </example>
@@ -1111,9 +1110,9 @@ headers in the article window.</para>
 <tip> 
 <para>The statement that the new header line will be shown in the
 article window is actually pretty optimistic, because the entry
-X-Newsreader isn't required for Usenet articles. Therefore, not all
-articles will contain that header line. If the line doesn't exist, the
-according entry simply won't be shown. You will get more informations
+X-Newsreader isn't required for Usenet articles; therefore, not all
+articles will contain that header line: if the line doesn't exist, the
+according entry simply won't be shown. You can get more information
 about headers at <ulink
 url="http://www.kirchwitz.de/~amk/dni/headerzeilen">http://www.kirchwitz.de/~amk/dni/headerzeilen</ulink>
 (german)</para> 
@@ -1127,24 +1126,24 @@ url="http://www.kirchwitz.de/~amk/dni/headerzeilen">http://www.kirchwitz.de/~amk
 <sect3> 
 <title><guilabel>Show fancy header decorations</guilabel></title>
 
-<para>If this is active, the headers will be beautified a
-bit. Otherwise only the plain text is shown.</para> 
+<para>If this is active, the headers will be 'beautified' a
+bit; otherwise, only the plain text is shown.</para> 
 
 </sect3> 
 
 <sect3> 
 <title><guilabel>Rewrap text when necessary</guilabel></title> 
 
-<para>If this option is active, the text-wrapping in the viewer will
-automatically corrected.</para> 
+<para>If this option is active, the text wrapping in the viewer will
+be automatically corrected.</para> 
 
 </sect3> 
 
 <sect3> 
 <title><guilabel>Remove trailing empty lines</guilabel></title>
 
-<para>If this is active, empty lines at the end of the article will
-automatically hidden.</para> 
+<para>If this is active empty lines at the end of the article will
+be automatically hidden.</para> 
 
 </sect3>
 
@@ -1153,40 +1152,40 @@ automatically hidden.</para>
 
 <para>If this setting is activated, the
 <glossterm>signature</glossterm> of the sender is displayed in the
-article window, if it isn't, the signature is surpressed.</para> 
+article window; if it isn't, the signature is surpressed.</para> 
 
 <caution> 
 <para>Please notice that &knode; can display the signature
 correctly only if it can be separated correctly from the article
-content in the current article. There are newsreaders which do this
-separation incorrectly. Two <quote>-</quote> with a following
-<quote>&nbsp;</quote> (space) are correct.</para>
+content in the current article: there are newsreaders which do this
+separation incorrectly.  Two <quote>-</quote> characters followed by a
+<quote>&nbsp;</quote> (space) is correct.</para>
 </caution> 
 
 <tip> 
 <para>Many participants in the newsgroups give hints on their homepage
-or intentionally erroneous specified Email addresses in the header in
-the signature. If you disable displaying the signature, you might
-loose this information. On the other hand you might save yourself
+or say that they have intentionally erroneously specified their Email addresses
+in the header fields: if you disable displaying the signature, you might
+lose this information; on the other hand, you might save yourself
 from reading strange quotes.</para> 
 </tip> 
 </sect3> 
 
 <sect3> 
-<title><guilabel>Interpret text format tags</guilabel></title> 
+<title><guilabel>Interpret text-format tags</guilabel></title> 
 
 <para>If this is active, all text format tags in the message like
 <literal>*bold*</literal>, <literal>/italic/</literal> and
 <literal>_underline_</literal> are shown directly in the viewer. These
-text format tags are an unofficial standard.</para>
+text-format tags are an unofficial standard.</para>
 
 </sect3> 
 
 <sect3> 
-<title><guilabel>Recognized quote characters</guilabel></title> 
+<title><guilabel>Recognize quote characters</guilabel></title> 
 
 <para>To display the quoted text in another size or color, &knode;
-needs to recognize that it's quoted text. Quoted text is normally
+needs to recognize that it's quoted text.  Quoted text is normally
 marked with a <quote>&gt;</quote> at the beginning of the line, but
 sometimes there are other characters. In this field you can enter all
 characters that should mark quoted text.</para> 
@@ -1199,7 +1198,7 @@ possible</guilabel></title>
 
 <para>If this setting is marked, &knode; tries to display the contents
 of possible attachment directly in the window when opening an
-article. For instance, a picture would be displayed directly below the
+article; for instance, a picture would be displayed directly below the
 article text.</para> 
 
 <para>Additionally, you have the possibility to save the attachment or
@@ -1212,10 +1211,10 @@ menu.</para>
 <sect3> 
 <title><guilabel>Open attachments on click</guilabel></title> 
 
-<para>If this box is checked, attachments are opened with an external
-program with is configured for the <acronym>MIME</acronym> type. If
+<para>If this box is checked, attachments are opened with the external
+program which is configured for the <acronym>MIME</acronym> type; if
 there is no such association, a dialog for saving a file is opened and
-you can save the attachment in a separate file.</para> 
+you can save the attachment to a separate file.</para> 
 
 </sect3> 
 
@@ -1225,9 +1224,9 @@ attachments</guilabel></title>
 
 <para>Articles which are sent as Multipart <acronym>MIME</acronym>
 contain the text of the message in multiple formats, for example as
-raw text and <acronym>HTML</acronym>. The newsreader decides which
-part of the article is displayed. This setting makes it possible that
-the other formats can be opened as if they were attachments with a
+raw text and <acronym>HTML</acronym>; the newsreader decides which
+part of the article is displayed.  This setting makes it possible for
+the other formats to be opened as if they were attachments with a
 mouse click.</para>
 
 <para>If this setting is disabled, alternative contents are not
@@ -1241,7 +1240,7 @@ displayed.</para>
 <para>Here you can select which browser is used for displaying links
 you clicked on in a message. Currently, you can either select the
 <application>Netscape Navigator</application> or the default,
-&konqueror;. The selected browser has to be installed, of
+&konqueror;; the selected browser has to be installed, of
 course.</para>
 
 </sect3> 
@@ -1251,25 +1250,25 @@ course.</para>
 <title>Settings for publishing articles</title>
 
 <para>When you post articles with &knode; the settings in the
-following Dialog Box is used.</para> 
+following dialog box are used.</para> 
 
 <screenshot> 
-<screeninfo>The Dialog Box Technical Settings</screeninfo> 
+<screeninfo>The Technical Settings dialog</screeninfo> 
 <mediaobject> 
 <imageobject> 
 <imagedata fileref="knode-post-settings.png" format="PNG"/> </imageobject> 
 <textobject> 
-<phrase>The Dialog Box Technical Settings</phrase> 
+<phrase>The Technical Settings dialog</phrase> 
 </textobject> 
 <caption> 
-<para>The Dialog Box Technical Settings</para> 
+<para>The Technical Settings dialog</para> 
 </caption> 
 </mediaobject> 
 </screenshot> 
 
 <caution> 
-<para>When you choose the wrong settings here, your articles can be
-unreadable or not sendable at all. So please be careful with these
+<para>If you choose the wrong settings here your articles could be
+unreadable or not sendable at all, so please be careful with these
 settings.</para> 
 </caution> 
 
@@ -1292,19 +1291,19 @@ here.</para>
 <title><guilabel>Encoding</guilabel></title> 
 
 <para>Here you set the encoding of the characters for the message
-transfer. You can choose between 8-bit and 7-bit
+transfer; you can choose between 8-bit and 7-bit
 (quoted-printable).</para>
 
-<para>When you choose 8-bit encoding, most special characters are
-transfered correctly. This is for example the normal option for the
+<para>If you choose 8-bit encoding most special characters are
+transfered correctly; this is, for example, the normal option for the
 German groups (de.*).</para> 
 
-<para>When you choose quoted-printable, 8-bit characters (&eg; german
+<para>If you choose quoted-printable 8-bit characters (&eg; German
 umlauts or special characters) are send as encoded 7-bit
-charcaters.</para>
+characters.</para>
 
 <tip>
-<para>In the English newsgroups the 7-bit-coding is quite
+<para>In the English newsgroups 7-bit encoding is quite
 normal.</para>
 </tip> 
 
@@ -1321,47 +1320,47 @@ on.</para>
 </sect3> 
 
 <sect3> 
-<title><guilabel>generate Message-ID</guilabel></title> 
+<title><guilabel>Generate Message-ID</guilabel></title> 
 
 <para>When this is active, &knode; generates its own Message-IDs for
 all articles you post.</para> 
 
 <caution> 
-<para>The Message-ID must be unique worldwide! There would
-otherwise be collisions between messages with the same Message-ID. The
-news server will reject the second article, because it thinks, this
-article was already received.</para>
+<para>The Message-ID must be unique worldwide: there would
+otherwise be collisions between messages with the same Message-ID and the
+news server would reject the second article because it thinks
+this article has already been received.</para>
 
 <para>A Message-ID consists of a valid <acronym>FQDN</acronym> (Full
-Qualified Domain Name). This means it looks similar to an email
+Qualified Domain Name); this means it looks similar to an email
 address with an identification before the <literal>@</literal> and the
 domain.</para>
 
 <para>The identification is generated by &knode; automatically, but
-you must provide a valid domain name in <guilabel>Hostname</guilabel>
-When you do not have your own domain, you should not activate this
-option. Let the newsserver generate a Message-ID for you.</para> 
+you must provide a valid domain name in <guilabel>Hostname</guilabel>;
+if you do not have your own domain, you should not activate this
+option &mdash; let the newsserver generate a Message-ID for you.</para> 
 
 <example> 
 <title>Message-ID</title>
 
 <para>An example for a valid domain would be:
-<literal>kde.org</literal>. A Message-ID generated with this domain
-will look like:</para> 
+<literal>kde.org</literal>; a Message-ID generated with this domain
+would look like:</para> 
 
 <screen>934lek9934@kde.org</screen> 
 </example> 
 
-<para>An unique identification is only guaranteed, when you have your
+<para>An unique identification is only guaranteed if you have your
 own domain. Even when you do not use &knode; for generating your
-Message-IDs there may be collisions, when you are using a local
-newsserver. For example <application>leafnode</application> generates
+Message-IDs there may be collisions when you are using a local
+newsserver; for example, <application>leafnode</application> generates
 a Message-ID which it derives from the local hostname.</para>
 
 </caution> 
 
 <tip> 
-<para>You'll get more information about this and an own free domain at
+<para>You can get more information about this and how to own a free domain at
 <ulink
 url="http://www.qad.org/faq/faq-messageid.html">http://www.qad.org/faq/faq-messageid.html</ulink>.</para> 
 </tip> 
@@ -1370,10 +1369,10 @@ url="http://www.qad.org/faq/faq-messageid.html">http://www.qad.org/faq/faq-messa
 <sect3> 
 <title><guilabel>Hostname</guilabel></title> 
 
-<para>Here you enter the Hostname of your computer. This is used to
-generate the Message-ID. When you do not have your own domain, you
-should not activate this option. Let the newsserver generate a
-Message-ID for you. Using the example above this would be:
+<para>Here you enter the Hostname of your computer; this is used to
+generate the Message-ID. If you do not have your own domain you
+should not activate this option &mdash; let the newsserver generate a
+Message-ID for you.  Using the example above this would be:
 <userinput>kde.org</userinput>.</para>
 
 </sect3>
@@ -1381,62 +1380,62 @@ Message-ID for you. Using the example above this would be:
 <sect3> 
 <title><guilabel>X-Headers</guilabel></title> 
 
-<para>Here you can enter X-Headers, which are not provided by &knode;
-For example: <userinput>X-No-Archive: yes</userinput>. This should
-prevent your articles to be archived by archive services such as
-Google.</para>
+<para>Here you can enter X-Headers which are not provided by &knode;;
+for example, <userinput>X-No-Archive: yes</userinput>, which can be
+used to prevent your articles from being archived by archive services
+such as Google.</para>
 
 <para>X-Headers are experimental headers, which are not included in the
-standard for Internet-Messages. They are, for example, used for
+standard for Internet-Messages;  they are, for example, used for
 extended information transfer. To prevent collisions with later
 standard headers, they have a <quote>X-</quote> prefix.</para>
 
 </sect3> 
 
 <sect3> 
-<title><guilabel>don't add the "User-Agent" identification
+<title><guilabel>Don't add the "User-Agent" identification
 header</guilabel></title> 
 
-<para>When this option is checked, &knode; does not include the
+<para>When this option is checked &knode; does not include the
 corresponding line in the Header before posting.</para>
 
 <para>This header is used for identification of the newsreader the
-article was written in. Besides statistical reasons, this allows to
-identify non-standard newsreaders. You should not activate this
-option, &knode; has no need to hide.</para> </sect3> 
+article was written in; apart from statistical reasons, this allows
+non-standard newsreaders to be identified. You should not activate this
+option &mdash; &knode; has no need to hide.</para> </sect3> 
 </sect2>
 
 <sect2 id="knode-composer-settings"> 
-<title>The Composer settings</title> 
+<title>The Composer Settings</title> 
 
 <screenshot> 
-<screeninfo>The Composer settings Dialog Box</screeninfo> 
+<screeninfo>The Composer Settings dialog</screeninfo> 
 <mediaobject> 
 <imageobject> 
 <imagedata fileref="knode-composer-settings.png" format="PNG"/> </imageobject> 
 <textobject> 
-<phrase>The Composer settings Dialog Box</phrase> 
+<phrase>The Composer Settings dialog</phrase> 
 </textobject> 
 <caption> 
-<para>The Composer settings Dialog Box</para> 
+<para>The Composer Settings dialog</para> 
 </caption> 
 </mediaobject> 
 </screenshot> 
 
 <sect3> 
-<title><guilabel>Word wrap at column</guilabel></title> 
+<title><guilabel>Word-wrap at column</guilabel></title> 
 
-<para>Here you can set the value at which &knode; wraps the
-line. Besides you can deactivate the automatic word-wrapping
+<para>Here you can set the column number at which &knode; wraps the
+line; also, you can deactivate the automatic word-wrapping
 completely.</para> 
 
 <tip> 
-<para>It is recommended to use no more than 76 characters. Even when
-you are able to disable more. Many Usenet users will use a text-based
-newsreader which can not display more than 80 characters. It is
-difficult to read your articles in such a newsreader, if you increase
-this value. This reduces the probability of your articles to be read
-at all.</para> 
+<para>It is recommended to use no more than 76 characters even if
+you are able to display more: many Usenet users use text-based
+newsreaders which can not display more than 80 characters and it is
+difficult to read your articles in such a newsreader if you increase
+this value &mdash; this would reduce the probability of your articles
+being read at all.</para> 
 </tip> 
 </sect3> 
 
@@ -1445,7 +1444,7 @@ at all.</para>
 
 <para>When you write a new <glossterm>article</glossterm> or a
 <glossterm>followup</glossterm>, your <glossterm>signature</glossterm>
-is appended automatically, if you have configured one in
+is appended automatically if you have configured one in
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 KNode...</guimenuitem><guilabel>Identity</guilabel></menuchoice>.</para>
 
@@ -1454,9 +1453,9 @@ KNode...</guimenuitem><guilabel>Identity</guilabel></menuchoice>.</para>
 <sect3> 
 <title><guilabel>Introduction Phrase:</guilabel></title> 
 
-<para>When you write a followup, &knode; inserts an introductionary
-phrase before the quoted original Text. You can put an arbitrary text
-here. You can use variables, which &knode; extracts from the original
+<para>When you write a followup, &knode; inserts an introduction
+phrase before the quoted original text. You can put arbitrary text
+here; you can also use the variables which &knode; extracts from the original
 article, &eg; the name of the author or the date the article was
 written.</para>
 
@@ -1466,31 +1465,31 @@ written.</para>
 <varlistentry> 
 <term><varname>%NAME</varname></term> 
 <listitem> 
-<para>The name of the original author.</para> 
+<para>The name of the original author;</para> 
 </listitem> 
 </varlistentry> 
 <varlistentry> 
 <term><varname>%DATE</varname></term> 
 <listitem> 
-<para>The date the original article was written.</para> 
+<para>The date on which the original article was written;</para> 
 </listitem> 
 </varlistentry> 
 <varlistentry> 
 <term><varname>%EMAIL</varname></term> 
 <listitem> 
-<para>The original authors email address.</para> 
+<para>The original author's email address;</para> 
 </listitem> 
 </varlistentry> 
 <varlistentry> 
 <term><varname>%MSID</varname></term> 
 <listitem> 
-<para>The Message-ID of the original article.</para> 
+<para>The Message-ID of the original article;</para> 
 </listitem> 
 </varlistentry> 
 <varlistentry> 
 <term><varname>%GROUP</varname></term> 
 <listitem> 
-<para>The name of the <glossterm>newsgroup</glossterm> -the article
+<para>The name of the <glossterm>newsgroup</glossterm> the article
 comes from.</para> 
 </listitem> 
 </varlistentry> 
@@ -1498,8 +1497,8 @@ comes from.</para>
 
 <tip> 
 <para>Keep this short, because this introductory line appears in
-every followup. A too long iintroductionaryline can be as repelling as
-a too long signature.</para> 
+every followup: a long introductory line can be as repelling as
+a long signature.</para> 
 </tip> 
 
 <example> 
@@ -1522,16 +1521,16 @@ then insert the following introductionary line.</para>
 <title><guilabel>Rewrap quoted text automatically</guilabel></title> 
 
 <para>When this is checked, the quoted text is wrapped at the correct
-border value. So, every new line is in the correct quoting
+border value; hence, every new line will be at the correct quoting
 level.</para> 
 
 </sect3>
 
 <sect3>
-<title><guilabel>Include the authors signature</guilabel></title>
+<title><guilabel>Include the author's signature</guilabel></title>
 
-<para>When this is activated, not only the text of the original
-message, but also the signature of the author is quoted in a
+<para>When this is activated not only the text of the original
+message, but also the signature of the author, is quoted in a
 reply.</para>
 
 <tip>
@@ -1545,45 +1544,45 @@ impolite.</para>
 phrase</guilabel></title>
 
 <para>Normally the cursor will appear below the whole message when
-answering. With this option turned on the cursor appears below the
+answering; with this option turned on the cursor appears below the
 introduction phrase.</para>
 
 <tip>
-<para>This is especially helpful, when you quote an article and write
-between the quoted lines from top to bottom.</para>
+<para>This is especially helpful if you quote an article and wish to
+write between the quoted lines from top to bottom.</para>
 </tip>
 </sect3>
 
 <sect3>
 <title><guilabel>Define external editor</guilabel></title>
 
-<para>You can define an external editor here, which is opened by
+<para>You can define an external editor here which is opened by
 selecting <menuchoice><guimenu>Tools</guimenu><guimenuitem>Start
 external editor</guimenuitem></menuchoice> in the Composer
 window.</para> 
 
 <para>When <guilabel>Start external editor automatically</guilabel> is
-checked, the external editor is opened directly.</para>
+checked the external editor is opened directly.</para>
 
 <caution>
 <para>Notice the <varname>%f</varname> after the name of the
-editor. This is a variable for the filename of the article you want to
-edit. Do not delete this. You will get an error message when opening
-the external editor.</para>
+editor: this is a variable for the filename of the article you want to
+edit; do not delete this &mdash; you will get an error message when opening
+the external editor if you do.</para>
 </caution>
 
 <tip>
-<para>When you have problems with starting your external Editor, the
-reason may be the editor starting in "the background". This is called
-forking. &knode; only notices the process started, is finished and
+<para>If you have problems with starting your external editor, the
+reason may be that the editor starting in "the background"; this is called
+forking: &knode; only notices the sub-process started and has finished, and
 thinks you have quit the editor. The editor
-<application>gvim</application> is an example for this. You can
+<application>gvim</application> is an example for this; you can
 disable the forking of <application>gvim</application> with the
-commandline switch <option>-f</option>. It is recommended to refer to
-the documentation of the used editor for this.</para>
+commandline switch <option>-f</option>. It is recommended that you refer to
+the documentation of your editor you are experiencing this problem.</para>
 
-<para>When you want to use <application>gvim</application> in
-<guilabel>Specify Editor</guilabel> use the following input:</para>
+<para>If you want to use <application>gvim</application> in
+<guilabel>Specify Editor</guilabel> enter the following:</para>
 
 <para>
 <userinput>
@@ -1593,7 +1592,7 @@ gvim -f %f</userinput>
 </sect3>
 
 <sect3>
-<title><guilabel>Start external Editor
+<title><guilabel>Start external editor
 automatically</guilabel></title>
 
 <para>If this option is active the external editor will be used for
@@ -1621,9 +1620,9 @@ be automatically accepted as a new word.</para>
 <title><guilabel>Consider run-together words as spelling
 errors</guilabel></title>
 
-<para>Here you can toggle if two known words that run together and are
-unknown if they run together should be treated as an error or
-not.</para>
+<para>Here you can toggle if two known words that run together to form an
+unknown word should be treated as an error or
+not.)</para>
 
 </sect3>
 
@@ -1639,7 +1638,7 @@ use.</para>
 <title><guilabel>Encoding</guilabel></title>
 
 <para>Here you can tell &knode; which encoding should be used for
-spell checking. For English texts this should normally be
+spell checking; for English text this should normally be
 <acronym>US-ASCII</acronym>.</para>
 
 </sect3>
@@ -1647,7 +1646,7 @@ spell checking. For English texts this should normally be
 <sect3>
 <title><guilabel>Client</guilabel></title>
 
-<para>Here you can switch between the spell-checkers. You can use
+<para>Here you can switch between the spell-checkers; you can use
 <application>International Ispell</application> or
 <application>Aspell</application>.</para>
 
@@ -1663,13 +1662,13 @@ spell checking. For English texts this should normally be
 <application>PGP</application>. Your
 <application>GnuPG</application>/<application>PGP</application>
 <acronym>ID</acronym> will be built automatically from your configured
-name and email address. It is identically with the from-line in the
+name and email address; it is identical to the from line in the
 header of the <glossterm>article</glossterm>.</para>
 
 <sect3>
 <title><guilabel>Encryption tool</guilabel></title>
 
-<para>Here you can chose your encryption tool.</para>
+<para>Here you can choose your encryption tool.</para>
 
 </sect3>
 
@@ -1677,7 +1676,7 @@ header of the <glossterm>article</glossterm>.</para>
 <title><guilabel>Keep passphrase in memory</guilabel></title>
 
 <para>If this option is active you only need to type the passphrase
-for your private key once. &knode; remembers your passphrase until
+for your private key once; &knode; will remember your passphrase until
 you close &knode; again.</para>
 
 </sect3>
@@ -1686,7 +1685,7 @@ you close &knode; again.</para>
 <title><guilabel>Show ciphered/signed text after
 composing</guilabel></title>
 
-<para>If this option is activated, &knode; shows the signed message in
+<para>If this option is activated &knode; will show the signed message in
 an extra window for confirmation before changing it in the
 editor.</para>
 
@@ -1695,22 +1694,23 @@ editor.</para>
 <sect3>
 <title>Always show the encryption keys for approval</title>
 
-<para>Well, just ignore this option. You can't encrypt or decrypt an
-article in &knode; because it doesn't make any sense to use encryption
-in the usenet. This option is shown because &kmail; and &knode; use the
-same program for PGP.</para> <!-- FIXME: LW - I can see use for -->
+<para>If you are using public newsgroups (on Usenet) you can safely
+ignore this option as it would not be useful to encrypt messages sent
+to Usenet; this option may, however, be useful in private
+newsgroups on private networks where encryption is desired.</para>
+<!-- FIXME: LW - I can see use for -->
 <!-- encryption, on private networks etc.  This needs a rewrite -->
-
+<!-- AndrewColes: is this revision any better? -->
 </sect3>
 
 <sect3>
 <title><guilabel>Check signatures automatically</guilabel></title> 
 
 <para>If this is marked, the <application>PGP</application> signature
-of the article is automatically checked when showing the article. If
+of the article is automatically checked when showing the article; if
 there's no mark, you can check the signature for correctness manually
-with the menu <menuchoice><guimenu>View</guimenu><guimenuitem>Verify
-PGP-Signature</guimenuitem></menuchoice>.</para> 
+with the <menuchoice><guimenu>View</guimenu><guimenuitem>Verify
+PGP-Signature</guimenuitem></menuchoice> menu entry.</para> 
 
 </sect3> 
 
@@ -1718,21 +1718,21 @@ PGP-Signature</guimenuitem></menuchoice>.</para>
 
 
 <sect2 id="knode-article-cleanup"> 
-<title>The article cleanup settings.</title> 
+<title>The article-cleanup settings.</title> 
 
-<para> The dialog below, shows the settings for the article
-cleanup. These settings are used to keep the amount of articles on
-your local harddisk in a reasonable value. &knode; administrates the
-articles in memory, so there can be some decrease in speed, if you
-have to many articles lying around. Most of the time it makes no sense
+<para> The dialog below shows the settings for the article
+cleanup; these settings are used to keep the number of articles on
+your local harddisk to a reasonable number. &knode; administrates the
+articles in memory so there can be some decrease in speed if you
+have to many articles lying around; most of the time it makes no sense
 to keep articles for a very long time. Services like Google and
 Altavista make archiving unnecessary.</para>
 
 <caution> 
 <para>&knode; isn't an offline reader, so all of the
-configuration refers to the headers which are managed by &knode;!  If
-you are running a local news server such as
-<application>leafnode</application> you should refer to it's
+configuration refers to the headers which are managed by &knode;; if
+you are running a local news server, such as
+<application>leafnode</application>, you should refer to its
 documentation to handle expiring the articles on the server &mdash;
 &knode; cannot do this for you.</para>
 </caution> 
@@ -1754,9 +1754,9 @@ documentation to handle expiring the articles on the server &mdash;
 <sect3> 
 <title><guilabel>Expire old articles automatically</guilabel></title> 
 
-<para>When this option is active, all subscribed groups are checked for
-old articles in the time interval set here. The old articles are
-deleted at this time.</para>
+<para>When this option is active all subscribed groups are checked for
+old articles in the time interval set here; the old articles will
+then be deleted.</para>
 
 
 <tip>
@@ -1771,34 +1771,34 @@ group</guimenuitem></menuchoice></para>
 
 <para>Here you can configure how often subscribed groups should be
 checked for old <glossterm>article</glossterm>s and how often those
-articles should be deleted. This option only has effects when the mark
-in front of <guilabel>Expire old articles automatically</guilabel> is
-set.</para>
+articles should be deleted; this option only has an effect when 
+<guilabel>Expire old articles automatically</guilabel> is
+selected.</para>
 
 </sect3>
 
 <sect3>
 <title><guilabel>Keep read articles</guilabel></title>
 
-<para>Read articles are deleted by the next cleanup, if they are older
-than this value. &knode; uses the make date for this.</para>
+<para>Read articles are deleted by the next cleanup if they are older
+than this value; &knode; uses the creation date for this.</para>
 
 </sect3>
 
 <sect3>
 <title><guilabel>Keep unread articles</guilabel></title>
 
-<para>Unread articles are deleted by the next cleanup, if they are
-older than this value. &knode; uses the make date for this.</para>
+<para>Unread articles are deleted by the next cleanup if they are
+older than this value; &knode; uses the creation date for this.</para>
 
 </sect3>
 
 <sect3>
-<title><guilabel>Remove articles that aren't available on the
+<title><guilabel>Remove articles that are not available on the
 server</guilabel></title>
 
 <para>It may happen that you'll see a <glossterm>header</glossterm> in
-&knode; but the article isn't available on the server. If this option
+&knode; but the article is not available on the server; if this option
 is set, those articles will automatically deleted in &knode;.</para>
 
 </sect3>
@@ -1806,19 +1806,18 @@ is set, those articles will automatically deleted in &knode;.</para>
 <sect3>
 <title><guilabel>Preserve threads</guilabel></title> 
 
-<para>This selection forces a thread only to be deleted, if all
-articles contained, fulfill the delete conditions. This means, if the
-last article in the thread would be deleted, all
-<glossterm>articles</glossterm> of the thread will be deleted.</para> 
+<para>This selection forces a thread to be deleted only if all
+articles contained in it fulfil the delete conditions; this means that a thread
+will not be deleted until the last article in the thread should be deleted.</para> 
 
-<para>This prevents old articles in a long thread to vanish, before
-the dicussion is ended.</para>
+<para>This prevents old articles in a long thread from vanishing before
+the discussion has ended.</para>
 
 <caution> 
-<para>&knode; can not predict, if there is a reply, after the set
-conditions are fulfilled. You have to find your own settings for
-this. Some newsgroups have days between replies others only hours. Use
-your own judgment.</para> 
+<para>&knode; can not predict whether there will be a reply after the set
+conditions are fulfilled; you will have to find your own settings for
+this. Some newsgroups have days between replies; others only hours.  Use
+your own judgement.</para> 
 </caution> 
 </sect3> 
 
@@ -1826,17 +1825,17 @@ your own judgment.</para>
 <title><guilabel>Compact folders automatically</guilabel></title> 
 
 <para>This option refers to the memory behavior of &knode;. If an
-<glossterm>article</glossterm> in a folder is deleted, it only will be
-marked as deleted but still uses the memory of your harddisk. With
-this option you can tell &knode; to delete the articles really and
-free the hard disk space regularly.</para>
+<glossterm>article</glossterm> in a folder is deleted it will be
+marked as deleted but still take up space on your hard disk; with
+this option you can tell &knode; to actually delete the articles and
+free the hard-disk space regularly.</para>
 
 <tip>
 <para>You can force this check by selecting
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Compact
 folder</guimenuitem></menuchoice> or for all folders together with
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Compact all
-folder</guimenuitem></menuchoice>.</para>
+folders</guimenuitem></menuchoice>.</para>
 </tip>
 </sect3>
 
@@ -1844,7 +1843,7 @@ folder</guimenuitem></menuchoice>.</para>
 <title><guilabel>Purge folders every</guilabel></title>
 
 <para>Here you can configure how often the folder is checked for
-deleted articles. This only takes effect if the option
+deleted articles; this option only has an effect if the
 <guilabel>Compact folders automatically</guilabel> is set.</para>
 </sect3>
 </sect2>
