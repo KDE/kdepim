@@ -27,16 +27,16 @@ class KonsoleKalendarVariables
     KonsoleKalendarVariables();
     ~KonsoleKalendarVariables();
 
-    void setDate(QDate date);
-    QDate getDate();
+    void setDate(QDateTime date);
+    QDateTime getDate();
     bool isDate();
 
-    void setStartDate(QDate start);
-    QDate getStartDate();
+    void setStartDate(QDateTime start);
+    QDateTime getStartDate();
     bool isStartDate();
 
-    void setEndDate(QDate end);
-    QDate getEndDate();
+    void setEndDate(QDateTime end);
+    QDateTime getEndDate();
     bool isEndDate();
 
     void setNext(bool next);
@@ -53,18 +53,19 @@ class KonsoleKalendarVariables
     void setAll( bool all );
     bool getAll();
     
-    QDate parseDate(QString string);
+    QDate parseDate( QString string );
+    QTime parseTime( QString str );
 
   private:
     int findNumber(const QString &str, int &pos, int &startpos);
     char findSeparator(const QString &str, int &pos, int &seppos);
     void skipWhiteSpace(const QString &str, int &pos);
 
-    QDate m_date;
+    QDateTime m_date;
     bool m_bIsDate;
-    QDate m_startDate;
+    QDateTime m_startDate;
     bool m_bIsStartDate;
-    QDate m_endDate;
+    QDateTime m_endDate;
     QString m_calendar;
     bool m_bIsEndDate;
     bool m_bNext;

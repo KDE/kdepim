@@ -17,6 +17,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
+#include <kdebug.h>
 #include "konsolekalendarvariables.h"
 
 #include <stdlib.h>
@@ -36,13 +37,13 @@ KonsoleKalendarVariables::~KonsoleKalendarVariables()
 {
 }
 
-void KonsoleKalendarVariables::setDate(QDate date)
+void KonsoleKalendarVariables::setDate(QDateTime date)
 {
   m_bIsDate = true;
   m_date = date;
 }
   
-QDate KonsoleKalendarVariables::getDate()
+QDateTime KonsoleKalendarVariables::getDate()
 {
   return m_date;
 }
@@ -52,13 +53,13 @@ bool KonsoleKalendarVariables::isDate()
   return m_bIsDate;
 }
 
-void KonsoleKalendarVariables::setStartDate(QDate start)
+void KonsoleKalendarVariables::setStartDate(QDateTime start)
 {
   m_bIsStartDate = true;
   m_startDate = start;
 }
-  
-QDate KonsoleKalendarVariables::getStartDate()
+
+QDateTime KonsoleKalendarVariables::getStartDate()
 {
   return m_startDate;
 }
@@ -68,13 +69,13 @@ bool KonsoleKalendarVariables::isStartDate()
   return m_bIsStartDate;
 }
 
-void KonsoleKalendarVariables::setEndDate(QDate end)
+void KonsoleKalendarVariables::setEndDate(QDateTime end)
 {
   m_bIsEndDate = true;
   m_endDate = end;
 }
 
-QDate KonsoleKalendarVariables::getEndDate()
+QDateTime KonsoleKalendarVariables::getEndDate()
 {
   return m_endDate;
 }
@@ -127,6 +128,31 @@ void KonsoleKalendarVariables::setAll( bool all)
 bool KonsoleKalendarVariables::getAll()
 {
   return m_bAll;
+}
+
+QTime KonsoleKalendarVariables::parseTime( QString str )
+{
+	int strpos = 0;
+	int startpos = 0;
+	int nums[ 4 ];
+	unsigned int len = 0;
+	
+	printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d\r\n", str.length());
+	
+	
+	// Time is much simpler task than date.
+	
+	while( (len < 4) )
+	{
+	
+		printf("2##!");
+		// get to start position
+		// 
+		nums[ len ++ ] = findNumber( str, strpos, startpos );
+		printf("Jes: %d",nums[len - 1]);			       
+			    
+	}
+	
 }
 
 
@@ -330,6 +356,7 @@ char KonsoleKalendarVariables::findSeparator(const QString &str, int &pos, int &
 }
 
 #define ISWHITESPACE(c) ( ((c)==' ') || ((c)=='\t') || ((c)=='\n') || ((c)=='\r') )
+
 void KonsoleKalendarVariables::skipWhiteSpace(const QString &str, int &pos)
 {
   while( (pos<str_length) && ISWHITESPACE(str[pos]) )
