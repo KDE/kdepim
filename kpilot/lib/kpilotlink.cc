@@ -626,7 +626,8 @@ void KPilotDeviceLink::acceptDevice()
 
 bool KPilotDeviceLink::tickle() const
 {
-	FUNCTIONSETUP;
+	// No FUNCTIONSETUP here because it may be called from
+	// a separate thread.
 	return pi_tickle(pilotSocket()) >= 0;
 }
 
@@ -662,11 +663,19 @@ void TickleThread::run()
 	int subseconds = ChecksPerSecond;
 	int ticktock = SecondsPerTickle;
 	int timeout = fTimeout;
+#ifdef DEBUG_CERR
+	DEBUGDAEMON << fname << ": Running for " << timeout << " seconds." << endl;
+	DEBUGDAEMON << fname << ": Done @" << (void *) fDone << endl;
+#endif
 	while (!(*fDone))
 	{
 		usleep(1000/ChecksPerSecond);
 		if (!(--subseconds))
 		{
+#ifdef DEBUG_CERR
+// Don't dare use kdDebug() here, we're in a separate thread
+			DEBUGDAEMON << fname << ": One second." << endl;
+#endif
 			if (timeout)
 			{
 				if (!(--timeout))
@@ -678,11 +687,17 @@ void TickleThread::run()
 			subseconds=ChecksPerSecond;
 			if (!(--ticktock))
 			{
+#ifdef DEBUG_CERR
+				DEBUGDAEMON << fname << ": Kietel kietel!." << endl;
+#endif
 				ticktock=SecondsPerTickle;
 				fHandle->tickle();
 			}
 		}
 	}
+#ifdef DEBUG_CERR
+	DEBUGDAEMON << fname << ": Finished." << endl;
+#endif
 }
 
 /*
@@ -721,6 +736,9 @@ void KPilotDeviceLink::startTickle(unsigned int timeout)
 		KPILOT_DELETE(fTickleThread);
 	}
 
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Done @" << (void *) (&fTickleDone) << endl;
+#endif
 	fTickleDone = false;
 	fTickleThread = new TickleThread(this,&fTickleDone,timeout);
 	fTickleThread->start();
