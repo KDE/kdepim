@@ -44,11 +44,11 @@ static KCmdLineOptions options[] =
   { "date <date>", I18N_NOOP("Show day info"), 0 },
   { "startdate <startdate>", I18N_NOOP("From this day"), 0 },
   { "enddate <enddate>", I18N_NOOP("To this day"), 0 },
-  { "all", I18N_NOOP("Show all entrys"), 0 },
+  { "all", I18N_NOOP("Show all entries"), 0 },
   { "date", I18N_NOOP("Date for which the calendar is shown."), 0},
   { "startdate", I18N_NOOP("Starting date."), 0},
   { "enddate", I18N_NOOP("Ending date."), 0},
-  { "file", I18N_NOOP("Location to your calendar file."), 0}
+  { "file", I18N_NOOP("Location of your calendar file."), 0}
 };
 
 int main(int argc, char *argv[])
