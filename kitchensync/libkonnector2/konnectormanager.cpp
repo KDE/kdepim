@@ -65,16 +65,16 @@ UDI KonnectorManager::load( const Device& dev )
     QString udi = newUDI();
     plugin->setUDI(udi);
 
-    connect(plugin, SIGNAL(sync(const UDI&, Syncee::PtrList )),
-            this, SLOT(slotSync(const UDI&, Syncee::PtrList) ) );
-    connect(plugin, SIGNAL(sig_progress(const UDI&, const Progress&) ),
-            this, SLOT(slotProgress(const UDI&, const Progress&) ) );
-    connect(plugin, SIGNAL(sig_error(const UDI&, const Error&) ),
-            this, SLOT(slotError(const UDI&, const Error& ) ) );
-    connect(plugin, SIGNAL(sig_downloaded( const UDI&, Syncee::PtrList ) ),
-            this, SLOT(slotDownloaded(const UDI&, Syncee::PtrList ) ) );
+    connect( plugin, SIGNAL( sync( const UDI&, Syncee::PtrList ) ),
+             SLOT( slotSync(const UDI&, Syncee::PtrList) ) );
+    connect( plugin, SIGNAL( sig_progress( const UDI&, const Progress & ) ),
+             SLOT( slotProgress( const UDI &, const Progress & ) ) );
+    connect( plugin, SIGNAL( sig_error( const UDI &, const Error & ) ),
+             SLOT( slotError( const UDI &, const Error& ) ) );
+    connect( plugin, SIGNAL( sig_downloaded( const UDI &, Syncee::PtrList ) ),
+             SLOT( slotDownloaded( const UDI &, Syncee::PtrList ) ) );
 
-    d->konnectors.insert(udi, plugin );
+    d->konnectors.insert( udi, plugin );
     return udi;
 }
 
@@ -85,7 +85,7 @@ UDI KonnectorManager::load( const QString& deviceName )
 
 bool KonnectorManager::unload( const UDI& udi )
 {
-    if (!d->konnectors.contains( udi ) )
+    if ( !d->konnectors.contains( udi ) )
         return false;
 
     KonnectorPlugin* plugin = d->konnectors[udi];
@@ -103,7 +103,7 @@ Kapabilities KonnectorManager::capabilities( const UDI& udi ) const
     return plugin->capabilities();
 }
 
-void KonnectorManager::setCapabilities( const UDI& udi, const Kapabilities& cap)
+void KonnectorManager::setCapabilities( const UDI& udi, const Kapabilities& cap )
 {
     KonnectorPlugin* plugin = pluginByUDI( udi );
     if (!plugin) return;
@@ -115,11 +115,10 @@ ConfigWidget* KonnectorManager::configWidget( const UDI& uid,
                                               QWidget* parent,
                                               const char* name )
 {
-    if (kapp->type() == QApplication::Tty )
-        return 0l;
+    if ( kapp->type() == QApplication::Tty ) return 0;
 
     KonnectorPlugin* plugin = pluginByUDI( uid );
-    if (!plugin) return 0l;
+    if ( !plugin ) return 0;
 
     ConfigWidget* wid = plugin->configWidget( parent, name );
     if (!wid) wid = new ConfigPart( plugin->capabilities(), parent, name );
@@ -132,14 +131,13 @@ ConfigWidget* KonnectorManager::configWidget( const UDI& uid,
                                               QWidget* parent,
                                               const char* name )
 {
-    if (kapp->type() == QApplication::Tty )
-        return 0l;
+    if ( kapp->type() == QApplication::Tty ) return 0;
 
     KonnectorPlugin* plugin = pluginByUDI( uid );
-    if (!plugin) return 0l;
+    if ( !plugin ) return 0;
 
     ConfigWidget* wid = plugin->configWidget( caps, parent, name );
-    if (!wid) wid = new ConfigPart( plugin->capabilities(), caps, parent, name );
+    if ( !wid ) wid = new ConfigPart( plugin->capabilities(), caps, parent, name );
 
     return wid;
 }
@@ -147,7 +145,7 @@ ConfigWidget* KonnectorManager::configWidget( const UDI& uid,
 void KonnectorManager::add( const UDI& udi,  const QString& resource )
 {
     KonnectorPlugin* plugin = pluginByUDI( udi );
-    if (!plugin) return;
+    if ( !plugin ) return;
 
     plugin->add( resource );
 }
@@ -329,9 +327,9 @@ Device KonnectorManager::find( const QString& device )
 UDI KonnectorManager::newUDI() const
 {
     QString uid;
-    do{
+    do {
         uid = kapp->randomString(8);
-    }while ( d->konnectors.contains( uid ) );
+    } while ( d->konnectors.contains( uid ) );
     return uid;
 }
 
@@ -339,7 +337,7 @@ KonnectorPlugin* KonnectorManager::pluginByUDI( const UDI& udi ) const
 {
     KonnectorPlugin* plugin = 0;
 
-    if ( d->konnectors.contains(udi ) )
+    if ( d->konnectors.contains( udi ) )
         plugin =  d->konnectors[udi];
 
     return plugin;

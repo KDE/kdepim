@@ -21,20 +21,19 @@
 
 using namespace KSync;
 
-class Device::DevicePrivate {
-public:
-  DevicePrivate(){
-  }
-  QString name;
-  QString group;
-  QString vendor;
-  QString library;
-  QString id;
+class Device::DevicePrivate
+{
+  public:
+    QString name;
+    QString group;
+    QString vendor;
+    QString library;
+    QString id;
 };
 
-Device::Device(const QString &ident, const QString &group,
-		 const QString &vendor, const QString &library,
-                 const QString &id)
+Device::Device( const QString &ident, const QString &group,
+                const QString &vendor, const QString &library,
+                const QString &id )
 {
   d = new DevicePrivate();
   d->name= ident;
@@ -43,11 +42,13 @@ Device::Device(const QString &ident, const QString &group,
   d->library = library;
   d->id = id;
 }
+
 Device::Device()
 {
   d = new DevicePrivate();
 }
-Device::Device(const Device &dev )
+
+Device::Device( const Device &dev )
 {
   d = new DevicePrivate();
   d->name = dev.name();
@@ -56,6 +57,7 @@ Device::Device(const Device &dev )
   d->library = dev.library();
   d->id = dev.d->id;
 }
+
 Device &Device::operator=( const Device &dev )
 {
     d = new DevicePrivate;
@@ -67,34 +69,44 @@ Device &Device::operator=( const Device &dev )
 
     return *this;
 }
+
 Device::~Device()
 {
   delete d;
 }
+
 QString Device::name() const
 {
   return d->name;
 }
+
 QString Device::group() const
 {
   return d->group;
 }
+
 QString Device::vendor() const
 {
   return d->vendor;
 }
+
 QString Device::library() const
 {
   return d->library;
 }
-QString Device::identify()const
+
+QString Device::identify() const
 {
     return d->id;
 }
-bool Device::operator==(const Device &dest ){
-  if( identify() == dest.identify() && group() == dest.group() && dest.vendor() == vendor() ){
+
+bool Device::operator==( const Device &dest )
+{
+  if( identify() == dest.identify() &&
+      group() == dest.group() &&
+      vendor() == dest.vendor() ) {
     return true;
-  }else{
+  } else {
     return false;
   }
 }
