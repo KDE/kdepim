@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>454</width>
-            <height>254</height>
+            <width>419</width>
+            <height>230</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -45,173 +45,130 @@
                 <attribute name="title">
                     <string>General</string>
                 </attribute>
-                <widget class="QLabel">
+                <grid>
                     <property name="name">
-                        <cstring>TextLabel1</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>11</x>
-                            <y>11</y>
-                            <width>89</width>
-                            <height>26</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Text files:</string>
-                    </property>
-                    <property name="buddy" stdset="0">
-                        <cstring>fTXTDir</cstring>
-                    </property>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>fkeepPDBLocally</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>11</x>
-                            <y>46</y>
-                            <width>89</width>
-                            <height>19</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>Local co&amp;py:</string>
-                    </property>
-                    <property name="checked">
-                        <bool>true</bool>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Check if you want to have the .pdb files somewhere on your PC's harddisk.</string>
-                    </property>
-                </widget>
-                <widget class="KURLRequester">
-                    <property name="name">
-                        <cstring>fPDBDir</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>106</x>
-                            <y>43</y>
-                            <width>353</width>
-                            <height>26</height>
-                        </rect>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Enter the directory where copies of the handheld databases are kept. Local copies are only made if the box is checked as well.</string>
-                    </property>
-                </widget>
-                <widget class="KURLRequester">
-                    <property name="name">
-                        <cstring>fTXTDir</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>106</x>
-                            <y>11</y>
-                            <width>353</width>
-                            <height>26</height>
-                        </rect>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Enter the name of the directory where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
-                    </property>
-                </widget>
-                <widget class="QButtonGroup">
-                    <property name="name">
-                        <cstring>fSyncDirection</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>11</x>
-                            <y>75</y>
-                            <width>448</width>
-                            <height>100</height>
-                        </rect>
-                    </property>
-                    <property name="title">
-                        <string>Synchronization Mode:</string>
-                    </property>
-                    <grid>
+                    <widget class="QLabel" row="0" column="0">
                         <property name="name">
-                            <cstring>unnamed</cstring>
+                            <cstring>TextLabel1</cstring>
                         </property>
-                        <property name="margin">
-                            <number>11</number>
+                        <property name="text">
+                            <string>&amp;Text files:</string>
                         </property>
-                        <property name="spacing">
-                            <number>6</number>
+                        <property name="buddy" stdset="0">
+                            <cstring>fTXTDir</cstring>
                         </property>
-                        <widget class="QRadioButton" row="2" column="0">
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>fkeepPDBLocally</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Local co&amp;py:</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Check if you want to have the .pdb files somewhere on your PC's harddisk.</string>
+                        </property>
+                    </widget>
+                    <widget class="KURLRequester" row="0" column="1">
+                        <property name="name">
+                            <cstring>fTXTDir</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Enter the name of the directory where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
+                        </property>
+                    </widget>
+                    <widget class="QButtonGroup" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fSyncDirection</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Synchronization Mode:</string>
+                        </property>
+                        <grid>
                             <property name="name">
-                                <cstring>RadioButton3</cstring>
+                                <cstring>unnamed</cstring>
                             </property>
-                            <property name="text">
-                                <string>Sync only P&amp;C to PDA</string>
+                            <property name="margin">
+                                <number>11</number>
                             </property>
-                            <property name="buttonGroupId">
-                                <number>2</number>
+                            <property name="spacing">
+                                <number>6</number>
                             </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Sync only changes to the texts on the PC to the handheld. If you changed the texts on the handheld, the changes will not be copied to the PC.</string>
-                            </property>
-                        </widget>
-                        <widget class="QRadioButton" row="1" column="0">
-                            <property name="name">
-                                <cstring>RadioButton2</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Sync only P&amp;DA to PC</string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Only sync changes made on the handheld to the PC. Changes to the text files on the PC will not be committed to the handheld.</string>
-                            </property>
-                        </widget>
-                        <widget class="QRadioButton" row="0" column="0">
-                            <property name="name">
-                                <cstring>RadioButton1</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Sync &amp;all</string>
-                            </property>
-                            <property name="checked">
-                                <bool>true</bool>
-                            </property>
-                            <property name="buttonGroupId">
-                                <number>0</number>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Sync the PC to the Handheld and the handheld to the PC</string>
-                            </property>
-                        </widget>
-                    </grid>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>Spacer1</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>20</height>
-                        </size>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>272</x>
-                            <y>181</y>
-                            <width>20</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                </spacer>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sync only P&amp;C to PDA</string>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>2</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Sync only changes to the texts on the PC to the handheld. If you changed the texts on the handheld, the changes will not be copied to the PC.</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sync only P&amp;DA to PC</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Only sync changes made on the handheld to the PC. Changes to the text files on the PC will not be committed to the handheld.</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>RadioButton1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sync &amp;all</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="buttonGroupId">
+                                    <number>0</number>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>Sync the PC to the Handheld and the handheld to the PC</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <spacer row="3" column="1">
+                        <property name="name">
+                            <cstring>Spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KURLRequester" row="1" column="1">
+                        <property name="name">
+                            <cstring>fPDBDir</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Enter the directory where copies of the handheld databases are kept. Local copies are only made if the box is checked as well.</string>
+                        </property>
+                    </widget>
+                </grid>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -285,7 +242,7 @@
                         <property name="checked">
                             <bool>true</bool>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>When a &lt;* bookmarktext *&gt; appears somewhere in the text, a bookmark will be set at this position, and the text between the &lt;* and the *&gt; will be used as bookmark name. The &lt;*...*&gt; will be removed from the text.</string>
                         </property>
                     </widget>
@@ -296,7 +253,7 @@
                         <property name="text">
                             <string>&amp;Tags at end of text</string>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Tags of the form &lt;bookmarkname&gt; at the end of the text will be used to search the text for the pattern between the &lt; and &gt;. Whenever "bookmarkname" appears in the text, a bookmark will be set there. The endtags &lt;...&gt; will then be removed from the end of the text.</string>
                         </property>
                     </widget>
@@ -327,7 +284,7 @@
                         <property name="checked">
                             <bool>true</bool>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Do you want to convert bookmarks? Most doc readers support bookmarks. You have to provide some information about where the bookmarks should be set and their titles. Check at least one of the bookmark types below.</string>
                         </property>
                     </widget>
@@ -338,7 +295,7 @@
                         <property name="text">
                             <string>Regular &amp;expressions in .bmk file</string>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Use regular expressions in a file textname.bmk (textname.txt is the filename of the text) to search the text for bookmarks.See the documentation for a description of the format of the bmk file.</string>
                         </property>
                     </widget>
@@ -396,7 +353,7 @@
                         <property name="text">
                             <string>Do not convert, if text unchanged (only bookmarks)</string>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Check this if you don't want to sync the text on the handheld to the PC if you only changed the bookmarks on the handheld, but not the text.</string>
                         </property>
                     </widget>

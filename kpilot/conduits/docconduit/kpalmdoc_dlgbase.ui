@@ -84,7 +84,7 @@
                         <property name="name">
                             <cstring>fPDBDir</cstring>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Directory where copies of the handheld databases are kept. You can install them to any PalmOS handheld, and distribute these copies to other people (but beware of copyright infringement!).</string>
                         </property>
                     </widget>
@@ -92,7 +92,7 @@
                         <property name="name">
                             <cstring>fTXTDir</cstring>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Enter the name of the directory where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
                         </property>
                     </widget>
@@ -219,7 +219,7 @@
                         <property name="checked">
                             <bool>true</bool>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>When a &lt;* bookmarktext *&gt; appears somewhere in the text, a bookmark will be set at this position, and the text between the &lt;* and the *&gt; will be used as bookmark name. The &lt;*...*&gt; will be removed from the text.</string>
                         </property>
                     </widget>
@@ -230,7 +230,7 @@
                         <property name="text">
                             <string>&amp;Tags at end of text</string>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Tags of the form &lt;bookmarkname&gt; at the end of the text will be used to search the text for the pattern between the &lt; and &gt;. Whenever "bookmarkname" appears in the text, a bookmark will be set there. The endtags &lt;...&gt; will then be removed from the end of the text.</string>
                         </property>
                     </widget>
@@ -261,7 +261,7 @@
                         <property name="checked">
                             <bool>true</bool>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Do you want to convert bookmarks? Most doc readers support bookmarks. You have to provide some information about where the bookmarks should be set and their titles. Check at least one of the bookmark types below.</string>
                         </property>
                     </widget>
@@ -272,7 +272,7 @@
                         <property name="text">
                             <string>Regular &amp;expressions in .bmk file</string>
                         </property>
-                        <property name="toolTip" stdset="0">
+                        <property name="whatsThis" stdset="0">
                             <string>Use regular expressions in a file textname.bmk (textname.txt is the filename of the text) to search the text for bookmarks.See the documentation for a description of the format of the bmk file.</string>
                         </property>
                     </widget>
