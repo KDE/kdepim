@@ -303,8 +303,8 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
 void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
 {
   QString a=QTextBrowser::anchorAt(e->pos());
-  if(!a.isEmpty() && e->button()==RightButton)
-    anchorClicked(a, RightButton, &(e->globalPos()));
+  if(!a.isEmpty() && (e->button()==RightButton || e->button()==MidButton))
+    anchorClicked(a, e->button(), &(e->globalPos()));
 
   QTextBrowser::viewportMousePressEvent(e);
 
@@ -833,7 +833,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     type=ATurl;
   }
 
-  if(button==LeftButton) {
+  if((button==LeftButton)||(button==MidButton)) {
     switch(type) {
       case ATauthor:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : mailto author" << endl;
