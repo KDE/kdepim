@@ -11,13 +11,9 @@
 ### conduits (and others) -- now build all the database types and known
 ### database record types into a library.
 
-bin_PROGRAMS = kpilot kpilotDaemon pilotListener
+noinst_PROGRAMS = kpilotTest kpilotConfig
+bin_PROGRAMS = kpilot kpilotDaemon
 noinst_LIBRARIES = libconduit.a libpilotdb.a
-
-# WABA: We can't build with enable-final because conduits/vcalconduit links
-# with pilotDateEntry.o -- it's now libconduit.a and libpilotdb.a, so we
-# *can* use --enable-final.
-# KDE_OPTIONS = nofinal
 
 METASOURCES = AUTO
 
@@ -46,9 +42,18 @@ kpilotDaemon_SOURCES = pilotDaemon.cc \
 	fileInstaller.cc \
 	messageDialog.cc \
 	pilotDaemonDCOP.skel \
+	kpilotDCOP.stub \
 	options.cc
 
-pilotListener_SOURCES = pilotListener.cc
+kpilotTest_SOURCES = options.cc kpilotConfig.cc kpilotlink.cc \
+	logWidget.cc pilotComponent.cc \
+	main-test.cc
+
+kpilotConfig_SOURCES = options.cc kpilotConfig.cc \
+	gsetupDialog.cc listCat.cc \
+	conduitSetup.cc kpilotOptions.cc \
+	main-config.cc
+	
 
 libconduit_a_SOURCES = baseConduit.cc conduitApp.cc \
 	messageDialog.cc gsetupDialog.cc \
@@ -63,13 +68,18 @@ libpilotdb_a_SOURCES = \
 	pilotAddress.cc \
 	pilotConduitDatabase.cc pilotSerialDatabase.cc pilotLocalDatabase.cc
 
+
 kpilot_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
 kpilotDaemon_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
+kpilotTest_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
+kpilotConfig_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
 kpilot_LDADD		= -lpilotdb $(LIB_KFILE) $(LIBPISOCK)
 kpilotDaemon_LDADD	= -lpilotdb $(LIB_KFILE) $(LIBPISOCK)
+kpilotTest_LDADD	= $(LIB_KDEUI) $(LIBPISOCK)
+kpilotConfig_LDADD      = $(LIB_KFILE)
 
 appsdir = $(kde_appsdir)/Utilities
 servicetypedir = $(kde_servicetypesdir)

@@ -39,6 +39,8 @@
 #include <kconfig.h>
 #endif
 
+class KCmdLineArgs;
+
 class KPilotConfig
 {
 public:
@@ -72,6 +74,7 @@ public:
 	*/
 	static int getConfigVersion(KConfig *);
 	static int getConfigVersion(KConfig&);
+	static void updateConfigVersion();
 
 	/**
 	* We might have an additional Debug= line in their
@@ -81,6 +84,7 @@ public:
 	* @ret resulting debug level
 	*/
 	static int getDebugLevel(KConfig&,const QString& group=QString::null);
+	static int getDebugLevel(KCmdLineArgs *p=0L);
 
 
 	/**
@@ -98,6 +102,9 @@ public:
 
 
 // $Log$
+// Revision 1.4  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.3  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

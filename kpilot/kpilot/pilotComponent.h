@@ -69,11 +69,6 @@ public:
 	*/
 	virtual void postHotSync() { } ;
 
-	/**
-	* Save data to local disk (?), return true if succesful.
-	*/
-	virtual bool saveData() = 0;
-
 protected:
 	/**
 	* Look up the selected category from the combo box in the
@@ -126,6 +121,9 @@ private:
 
 
 // $Log$
+// Revision 1.9  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.8  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //

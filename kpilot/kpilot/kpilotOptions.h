@@ -87,6 +87,19 @@ public:
 
 	virtual int commitChanges(KConfig&);
 
+protected:
+	/**
+	* Get information about the Pilot device from the environment,
+	* using the standard pilot-link env. variables.
+	*/
+	void getEnvironmentPilot();
+
+	/**
+	* Get information about the user from the environment,
+	* like the passwd file &c.
+	*/
+	void getEnvironmentUser();
+
 private:
 	QLineEdit* fPilotDevice;
 	QComboBox* fPilotSpeed;
@@ -97,6 +110,9 @@ private:
 	QCheckBox *fKillDaemonOnExit;
 	QCheckBox* fStartKPilotAtHotSync;
 	QCheckBox* fDockDaemon;
+
+	QString fPilotPort,fFullUserName;
+	int fPilotRate;
 } ;
 
 /**
@@ -158,6 +174,9 @@ private:
 
 
 // $Log$
+// Revision 1.16  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.15  2001/04/01 17:31:11  adridg
 // --enable-final and #include fixes
 //

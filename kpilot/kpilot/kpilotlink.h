@@ -31,37 +31,16 @@
 #ifndef _KPILOT_KPILOTLINK_H
 #define _KPILOT_KPILOTLINK_H
 
+#include <pi-dlp.h>
+
 #ifndef QOBJECT_H
 #include <qobject.h>
 #endif
 
-class QWidget;
-class KStatusBar;
-class KSocket;
-class KServerSocket;
-class KProgress;
-class KProcess;
 
-class PilotRecord;
-class MessageDialog;
-
-class PilotDatabase;
-class PilotSerialDatabase;
-class PilotLocalDatabase;
-
-// As long as we have a PilotUser data member
-// we'll have to keep including this.
-//
-// TODO: Change to pointer, lose the include.
-//
-//
-#ifndef _KPILOT_PILOTUSER_H
-#include "pilotUser.h"
-#endif
-
-#ifndef _KPILOT_STATUSMESSAGES_H
-#include "statusMessages.h"
-#endif
+class QTimer;
+class QSocketNotifier;
+class KPilotUser;
 
 /*
 ** The KPilotLink class was originally a kind of C++ wrapper
@@ -70,8 +49,11 @@ class PilotLocalDatabase;
 ** it had become something that wrapped a lot more than just
 ** pilot-link. This class currently does:
 ** 
-** * Client and server handling of kpilotlink protocol connections
+** * Client (ie. conduit) handling of kpilotlink protocol connections
 ** * Pilot-link handling
+**
+** Which is exactly what is needed: something that conduits can
+** plug onto to talk to the pilot.
 */
 
 
@@ -106,45 +88,11 @@ struct db
 
 class KPilotLink : public QObject
 {
-	Q_OBJECT
+protected:
+	KPilotLink(const char *name) : QObject(0L,name) { } ;
 
-friend class PilotSerialDatabase;
 
 public:
-
-/*
-** Constructors and Destructors
-*/
-
-	/**
-	* The docs here were:
-	*     Used for opening local databases only.
-	* but I don't really understand that. It is meant,
-	* at any rate, for applications other than the
-	* pilot-link server, ie. everything but the Pilot daemon.
-	*/
-	KPilotLink();
-
-	/**
-	* Creates a pilot link that can sync to the pilot.
-	* @p devicePath is a path to the serial port (or USB
-	* port). If @p devicePath is NULL, then /dev/pilot
-	* is used instead.
-	*
-	* TODO: ditch the statusBar. Use signals instead.
-	*/
-	KPilotLink(QWidget* owner, 
-		KStatusBar* statusBar = 0L, 
-		const QString &devicePath = QString::null);
-
-	virtual ~KPilotLink();
-
-
-/*
-** Connection and Command methods
-*/
-
-
 	/**
 	* This belongs on both client and server end: these are
 	* commands sent from KPilot telling the daemon
@@ -157,383 +105,174 @@ public:
 		InstallFile, 
 		TestConnection 
 	};
+} ;
 
-	/**
-	* Static method to get the current link... the KPilotLink
-	* is supposed to follow the singleton pattern, but does
-	* so rather poorly :(
-	*/
-	static KPilotLink* getPilotLink() 
-		{ return fKPilotLink; }
+class KPilotDeviceLink : public KPilotLink
+{
+Q_OBJECT
 
+/*
+** Constructors and destructors.
+*/
+protected:
 	/**
-	* Begin a HotSync session with a Palm Pilot; this does
-	* the actual serial communications; it can also block the
-	* UI for a while.
+	* Creates a pilot link that can sync to the pilot.
+	*
+	* Call reset() on it to start looking for a device.
 	*/
-	void startHotSync();
+	KPilotDeviceLink();
 
-	/**
-	* End a HotSync session with a Palm Pilot.
-	*/
-	void endHotSync();
+public:
+	virtual ~KPilotDeviceLink();
 
-	/**
-	* Backups all databases to BACKUP_DIR/username.
-	*/
-	void doFullBackup();  
 
-	/**
-	* Restores all databases to the Pilot from BACKUP_DIR/username.
-	*/
-	bool doFullRestore(); 
+/*
+** Status information
+*/
 
+public:
 	/**
-	* Installs all files found in installPath on the Pilot.
+	* The link behaves like a state machine most of the time:
+	* it waits for the actual device to become available, and
+	* then becomes ready to handle syncing.
 	*/
-	void installFiles(const QString &installPath);
+	typedef enum {
+		Init,
+		WaitingForDevice,
+		FoundDevice,
+		DeviceOpen,
+		AcceptedDevice,
+		SyncDone,
+		PilotLinkError
+		} LinkStatus;
+
+	LinkStatus status() const { return fStatus; } ;
+	QString statusString() const;
 
 	/**
 	* True if HotSync has been started but not finished yet
 	* (ie. the physical Pilot is waiting for sync commands)
 	*/
-	bool getConnected() const 
-		{ return fConnected; }
+	bool getConnected() const { return fStatus == AcceptedDevice; }
 
+private:
+	LinkStatus fStatus;
+
+
+/*
+** Used for initially attaching to the device.
+** deviceReady() is emitted when the device has been opened
+** and a Sync can start.
+*/
+public:
+	/**
+	* Return the device link to the Init state and try connecting
+	* to the given device path (if it's non-empty).
+	*/
+	void reset(const QString &pilotPath = QString::null);
+
+	/**
+	* Release all resources, including the master pilot socket,
+	* timers, notifiers, etc.
+	*/
+	void close();
+
+	/**
+	* All sorts of device and connection information.
+	*/
+	QString pilotPath() const { return fPilotPath; } ;
+	bool isTransient() const { return fTransientDevice; } ;
+	void setTransient(bool b) { fTransientDevice=b; } ;
+
+protected slots:
+	/**
+	* Attempt to open the device. Called regularly to check
+	* if the device exists (to handle USB-style devices).
+	*/
+	void openDevice();
+
+	/**
+	* Called when the device is opened *and* activity occurs on the
+	* device. This indicates the beginning of a hotsync.
+	*/
+	void acceptDevice();
+
+protected:
+	/**
+	* Does the low-level opening of the device and handles the
+	* pilot-link library initialisation.
+	*/
+	bool open();
+
+signals:
+	/**
+	* Emitted once the user information has been read and
+	* the HotSync is really ready to go.
+	*/
+	void deviceReady();
+
+protected:
+	/**
+	* Path of the device special file that will be used.
+	* Usually /dev/pilot, /dev/ttySx, or /dev/usb/x.
+	*/
+	QString fPilotPath;
+
+	/**
+	* Is this a transient (USB) style device?
+	*/
+	bool fTransientDevice;
+
+	/**
+	* Timers and Notifiers for detecting activity on the device.
+	*/
+	QTimer *fOpenTimer;
+	QSocketNotifier *fSocketNotifier;
+
+	/**
+	* Pilot-link library handles for the device once it's opened.
+	*/
+	int fPilotMasterSocket;
+	int fCurrentPilotSocket;
+
+/*
+** Utility functions for during a Sync.
+*/
+public:
+ 	/**
+ 	* Write a log entry to the pilot. Note that the library
+ 	* function takes a char *, not const char * (which is
+ 	* highly dubious). Causes signal logEntry(const char *)
+ 	* to be emitted.
+ 	*/
+ 	void addSyncLogEntry(const QString &entry);
+
+signals:
+ 	/**
+ 	* Whenever a conduit adds a Sync log entry (actually,
+ 	* KPilotLink itself adds some log entries itself),
+	* this signal is emitted.
+	*/
+ 	void logMessage(const QString &);
+ 	void logError(const QString &);
+ 	void logProgress(const QString &, int);
+
+
+/*
+** Pilot User Identity functions.
+*/
+public:
 	/**
 	* Returns the user information as set in the KPilot settings dialog.
 	* The user information can also be set by the Pilot, and at the
 	* end of a HotSync the two user informations are synced as well.
 	*/
-	KPilotUser& getPilotUser() 
-		{ return fPilotUser; }
-
-	/**
-	* Changes the path (port) that the link should work with.
-	*/
-	void changePilotPath(const QString& devicePath) 
-		{ initPilotSocket(devicePath); }
-
-/*
-** Sync Mode methods
-*/
-
-	/*
-	** KPilotLink currently uses two boolean variables to indicate
-	** what kind of a sync is running. This is utterly moot since
-	** the internal conduits no longer sync any DBs themselves.
-	** We want to move to a situation where the kind of HotSync is:
-	** 
-	** * FullBackup - copy all DBs to disk
-	** * HotSync    - copy all DBs to disk and run conduits
-	** * FastSync   - copy DBs with conduits to disk and run conduits
-	*/
-
-	/**
-	* This is merely a flag for any widget that should run.  
-	* Will be set by KPilot when doing a full backup, then 
-	* reset after that.  Mostly obsolete since conduits are 
-	* being used.
-	*/
-	void setSlowSyncRequired(bool yesno) 
-		{ fSlowSyncRequired = yesno; }
-
-	/** 
-	* Returns the whether the widget should do a full or partial backup.  
-	* Mostly obsolete now that conduits are being used.
-	*/
-	bool slowSyncRequired() const 
-		{ return fSlowSyncRequired; }
-
-	/**
-	* Here we have another boolean variable with set and get
-	* methods, meant to indicate a FastSync like Heiko Purnhagen
-	* wanted. I have no idea, really, whether it's implemented.
-	*/
-	void setFastSyncRequired(bool yesno) 
-		{ fFastSyncRequired = yesno; } 
-	bool fastSyncRequired() const 
-		{ return fFastSyncRequired; } 
-
-
-/* CONDUIT SYNCING SUPPORT */
-
-	/**
-	* Begins HotSyncing modified data.  Emits databaseSyncComplete() when
-	* finished.
-	*/
-	void quickHotSync();
-
-	/**
-	* Checks to see if there is a conduit registered for database dbName.
-	* returns the name if yes, NULL if no.
-	*/
-	QString registeredConduit(const QString &dbName) const;
-
-	/**
-	* Uses BACKUP_DIR/username/databaseName as local source, and 
-	* compares records versus those on the Pilot in databaseName.  
-	* When finished, BACKUP_DIR/username/databaseName.pdb (or prc) 
-	* will contain the same data as the pilot.
-	*/
-	bool syncDatabase(DBInfo* database);
-
-
-/* START Tickle Support */
-
-public:
-	/**
-	* These are methods and slots intended to keep the Pilot awake while 
-	* something lengthy -- like starting an application -- is going on. 
-	*
-	* Passing a timeout of 0 to setTickleTimeout() indicates no timeout.
-	* Use this with care, as it will keep the Pilot awake forever
-	* without finishing the sync unless stopTickle() is called.
-	*/
-	void setTickleTimeout(unsigned seconds = 30) { fTickleTimeout=2*seconds; } ;
-
-public slots:
-	/**
-	* Start and stop tickle are used to tickle the Pilot every-so-often
-	* while you're doing other work. Note that this uses QTimer, so you
-	* will need an event loop, ie. during for(unsigned i=1; i; i++) foo();
-	* this will not help. Ideal for keeping the Pilot awake during user
-	* interaction, though.
-	*/
-	void startTickle();
-	void stopTickle();
-	void tickle();
-
-signals:
-	void timeout();
-
-private:
-	void initTickle();
-
-	// The tickletimeout and ticklecount here count in half-seconds,
-	// which is also why it says "2*seconds" above.
-	//
-	//
-	QTimer *fTimer;
-	unsigned fTickleTimeout, fTickleCount;
-
-/* END   Tickle Support */
-
-private:
-	/**
-	* For initializing the link: read the configuration
-	* file and save vital information from there.
-	*/
-	void readConfig();
-
-	/**
-	* These two private functions read or write an entire
-	* Pilot record -- which may be of varying length --
-	* from the given socket following the kpilotlink
-	* protocol. A new record is returned by readRecord(),
-	* the caller should dispose of it when done.
-	*/
-	PilotRecord* readRecord(KSocket*);
-	void writeRecord(KSocket*, PilotRecord*);
-
-	/**
-	* Write a single-word response message to the command
-	* connection. This is typically used to respond to 
-	* requests from conduits.
-	*
-	* @return the number of bytes written, should be sizeof(int)
-	*/
-	int writeResponse(KSocket *, CStatusMessages::LinkMessages m);
-
-	/**
-	* Starts syncing the next (could be first) database, either 
-	* by firing up a conduit, or by using syncDatabase() to back 
-	* it up into the BACKUP_DIR.  Uses fNextDBIndex as the next DB 
-	* to sync, and increments it.
-	*/
-	void syncNextDB();
-
-	/**
-	* Asks the Pilot for the next database to sync, storing
-	* the DB info in @p p. 
-	*
-	* @return 0 if there is no more database to sync
-	*/
-	int findNextDB(struct DBInfo *p);
-
-	/**
-	* Does a syncNextDB but without using syncDatabase for
-	* the databases with no conduit -- this is for FastSync.
-	*/
-	void doConduitBackup();
-
-	/**
-	* This function is called by slotConduitClosed and
-	* some other places to resume processing of databases
-	* for a backup or sync.
-	*/
-	void resumeDB();
-
-	/**
-	* When the sync is done (or the backup, or whatever ...)
-	* call this function to cleanup and emit done signals.
-	*/
-	void finishDatabaseSync();
-
-public:
-	typedef enum { Normal, PilotLinkError } Status ;
-
-	Status status() const { return fStatus; } ;
-
-signals:
-	/**
-	* Whenever a conduit adds a Sync log entry (actually,
-	* KPilotLink itself adds some log entries itself),
-	* this signal is emitted.
-	*/
-	void logEntry(const char *);
-
-protected slots:
-	/**
-	* This is for handling the connection, communication,
-	* and disconnection of conduits via the socket that
-	* runs the kpilotlink protocol.
-	*/
-	void slotConduitRead(KSocket*);
-	void slotConduitClosed(KSocket*);
-	void slotConduitConnected(KSocket*);
-	void slotConduitDone(KProcess *);
-
-
-private:
-	/**
-	* This is en enum listing the states that a running conduit
-	* may be in. This is used to detect conduits that crash or
-	* otherwise misbehave.
-	*/
-	enum { None = 0 , Running, Connected, Done } fConduitRunStatus ;
-
-	/**
-	* For sanity checking, we try to restrict ourselves to one 
-	* conduit and one socket at a time.
-	*/
-	KSocket *fCurrentConduitSocket;
-
-public:
-	/**
-	* Write a log entry to the pilot. Note that the library
-	* function takes a char *, not const char * (which is
-	* highly dubious). Causes signal logEntry(const char *)
-	* to be emitted.
-	*/
-	void addSyncLogEntry(const char* entry);
-
-
-/*
-** Misguided GUI methods
-*/
-	/**
-	* These are some seriously misguided methods for showing th
-	* status bar. Really they belong in KPilot itself or the daemon.
-	*/
-	void createNewProgressBar(const QString &title, 
-		const QString &text, 
-		int min, int max, int value);
-	void updateProgressBar(int value) const;
-	void destroyProgressBar();
-
-	/**
-	* Displays a dialog showing error message.
-	*/
-	void showMessage(const QString &message) const;
-
-	/** 
-	* Compares the user name in getPilotUser() to the one saved by KPilot
-	* If they don't match, check with the user to see if we should
-	* make them match.
-	* When this routine returns all the user info in getPilotUser will be 
-	* as correct as the user wants it.
-	*/
-	void checkPilotUser();
+	KPilotUser *getPilotUser() { return fPilotUser; }
 
 protected:
-	void setConnected(bool connected) { fConnected = connected; }
+	KPilotUser  *fPilotUser;
+} ;
 
-	int  getPilotMasterSocket() const { return fPilotMasterSocket; }
-	int  getCurrentPilotSocket() const { return fCurrentPilotSocket; }
-
-
-	QWidget* getOwningWidget() { return fOwningWidget; }
-
-	QString    fPilotPath;  // defaults to /dev/pilot
-	bool       fConnected;
-
-private:
-	static KPilotLink* fKPilotLink; // Static variable to ourself.
-	// static const QString BACKUP_DIR; // The directory backedup databases go..
-
-	/**
-	* This should be called to finish up a HotSync. It sets
-	* some flags on the Pilot and stores the last HotSync time.
-	*/
-	void syncFlags();
-
-	/**
-	* Creates a local database in BACKUP_DIR for the given database.
-	*/
-	bool createLocalDatabase(DBInfo* info);
-
-	/**
-	* findDisposition is used to see if the database 
-	* d is named in the (comma separated) list s.
-	* This is currently based only on the creator of
-	* the database.
-	*/
-	int findDisposition(const QString &s,const struct DBInfo *d);
-
-	/**
-	* Compares two database structs in a strange order.
-	* @return -1,0,1 depending.
-	*/
-	int compare(struct db* d1, struct db* d2);
-
-	/**
-	* Setup the socket that waits for incoming connections from
-	* conduits.
-	*/
-	void initConduitSocket();
-
-	/**
-	* Setup socket that connects to the physical device.
-	* @p inetconnection is currently ignored.
-	*/
-	void initPilotSocket(const QString& devicePath, 
-		bool inetconnection=false);
-
-private:
-	int         fPilotMasterSocket;   // This is the master one created with the class
-	int         fCurrentPilotSocket;  // This changes with each connect()/disconnect()
-	bool        fSlowSyncRequired;
-	bool fFastSyncRequired;
-	QWidget*    fOwningWidget;
-	KStatusBar* fStatusBar;           // Optional
-	QDialog*    fProgressDialog;
-	KProgress*  fProgressMeter;
-	KPilotUser  fPilotUser;           // Pilot User Info
-	KServerSocket* fConduitSocket;    // Socket conduits connect on
-	PilotSerialDatabase* fCurrentDB;  // Currently Open Database (for conduit)
-	DBInfo      fCurrentDBInfo;          // Currently open Database information
-	int         fNextDBIndex;         // The next DB to sync
-	KProcess*    fConduitProcess;
-	MessageDialog* fMessageDialog;    // The dialog showing current status
-
-	Status fStatus;
-	QString fDatabaseDir;
-
-signals:
-	void databaseSyncComplete();
-	void syncingDatabase(char*);
-};
 
 #else
 #ifdef DEBUG
@@ -542,27 +281,3 @@ signals:
 #endif
 
 // $Log$
-// Revision 1.26  2001/05/24 10:36:56  adridg
-// Tickle support
-//
-// Revision 1.25  2001/04/26 21:59:00  adridg
-// CVS_SILENT B0rkage with previous commit
-//
-// Revision 1.24  2001/04/26 19:25:24  adridg
-// Real change in addSyncLogEntry; muchos reformatting
-//
-// Revision 1.23  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.22  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.21  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.20  2001/03/08 16:18:40  adridg
-// Cruft removal
-//
-// Revision 1.19  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//

@@ -59,7 +59,7 @@ static const char *kpilotconfig_id =
 // (increase) this number.
 //
 //
-/* static */ const int KPilotConfig::ConfigurationVersion = 401;
+/* static */ const int KPilotConfig::ConfigurationVersion = 402;
 
 /* static */ int KPilotConfig::getConfigVersion(KConfig *config)
 {
@@ -93,6 +93,14 @@ static const char *kpilotconfig_id =
 	return version;
 }
 
+/* static */ void KPilotConfig::updateConfigVersion()
+{
+	FUNCTIONSETUP;
+
+	KConfig &config = getConfig();
+	config.writeEntry("Configured",ConfigurationVersion);
+}
+
 /* static */ QString KPilotConfig::getDefaultDBPath()
     {
     KConfig& config = getConfig();
@@ -105,13 +113,19 @@ static const char *kpilotconfig_id =
 
 #ifdef DEBUG
 /* static */ int KPilotConfig::getDebugLevel(KConfig& c,const QString& group)
+{
+	return 0;
+}
+
+/* static */ int KPilotConfig::getDebugLevel(KCmdLineArgs *)
+{
+	return 0;
+}
 #else
 /* static */ int KPilotConfig::getDebugLevel(KConfig&, const QString&)
-#endif
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	if (!group.isNull())
 	{
 		c.setGroup(group);
@@ -129,10 +143,25 @@ static const char *kpilotconfig_id =
 	}
 
 	return debug_level ;
-#else
-	return 0;
-#endif
 }
+
+/* static */ int KPilotConfig::getDebugLevel(KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
+
+	if (p)
+	{
+		if (p->isSet("debug"))
+		{
+			debug_level = atoi(p->getOption("debug"));
+		}
+	}
+
+	getDebugLevel(getConfig());
+
+	return debug_level;
+}
+#endif
 
 static KConfig *theconfig = 0L;
 KConfig& KPilotConfig::getConfig(const QString &s)
@@ -201,7 +230,7 @@ static QFont *thefont=0L;
 
 	if (!thefont)
 	{
-		kdError() << fname
+		kdError() << __FUNCTION__
 			<< ": **\n"
 			<< ": ** No font was created! (Expect crash now)\n"
 			<< ": **"
@@ -212,6 +241,9 @@ static QFont *thefont=0L;
 }
 
 // $Log$
+// Revision 1.5  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.4  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

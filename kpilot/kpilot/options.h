@@ -38,32 +38,28 @@
 #ifndef _KPILOT_OPTIONS_H
 #define _KPILOT_OPTIONS_H 1
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 #ifndef QT_VERSION
 #include <qglobal.h>
 #endif
 
 #if (QT_VERSION > 223)
+#if (QT_VERSION > 299)
+#define KDE3
+#else
 #define KDE2
+#endif
 #else
 #error "This is KPilot for KDE2 and won't compile with Qt < 2.2.3"
 #endif
 
-// Turn OFF as much debugging as possible
+// Turn ON as much debugging as possible
 //
 //
-#ifdef NDEBUG
-#undef DEBUG
-#endif
-
-// Define TEST_DEBUG to check whether all the
-// calls to kdWarning and kdError use __FUNCTION__
-// as they should, instead of the lazier (and incorrect)
-// fname. (See below).
-//
-//
-#undef TEST_DEBUG
+#define DEBUG
 
 #ifndef QSTRING_H
 #include <qstring.h>
@@ -94,7 +90,7 @@
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 
 
-#define KPILOT_VERSION	"4.2.3"
+#define KPILOT_VERSION	"4.2.9"
 
 #ifdef DEBUG
 // * KPilot debugging code looks like:
@@ -107,9 +103,6 @@
 // the compiler optimizes them away. There are four DEBUG* macros,
 // defined above. Use the areas *_AREA in calls to kdWarning() or
 // kdError() to make sure the right output is generated.
-
-#include <kdebug.h>
-#include <qstringlist.h>
 
 
 // (Old-style) Debug level is set to some bit pattern; if any 
@@ -143,6 +136,7 @@ void listStrList(kdbgstream &, const QStringList &);
 void listStrList(kdbgstream &, QStrList &);
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
+
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 // In particular it doesn't give functions a local variable fname,
@@ -155,28 +149,20 @@ QString charExpansion(const char *);
 // we still need *something* with the name fname. So we'll declare a
 // single extern fname here.
 //
-// With TEST_DEBUG turned on, fname gets a weird type that is
+// fname gets a weird type that is
 // incompatible with kdWarning() and kdError(), leading to warnings
 // if you mix them. Use __FUNCTION__ instead.
 //
-// With TEST_DEBUG turned off, fname is an int and you won't get
-// warnings. If you use fname by accident in a warning message
-// you will get strange results though, since instead of a readable
-// function name you'll get some nasty number.
-//
 //
 #define FUNCTIONSETUP
-#ifdef TEST_DEBUG
+
 class debugName {
 public:
 	debugName(int i) : j(i) { };
 	int j;
 };
 extern const debugName fname;
-kndbgstream operator << (kndbgstream s, const debugName &);
-#else
-extern const int fname;
-#endif
+inline kndbgstream operator << (kndbgstream s, const debugName &d) { s << d.j; return s; } ;
 #endif
 
 
@@ -193,6 +179,7 @@ extern const int fname;
 //
 //
 #define KPILOT_FREE(a)	{ if (a) { ::free(a); a=0L; } }
+#define KPILOT_DELETE(a) { if (a) { delete a; a=0L; } }
 #else
 #ifdef DEBUG
 #warning "File doubly included"
@@ -201,6 +188,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.29  2001/08/26 13:17:47  zander
+// added includes to make it compile
+//
 // Revision 1.28  2001/06/13 22:51:38  cschumac
 // Minor fixes reviewed on the mailing list.
 //

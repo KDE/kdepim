@@ -29,18 +29,18 @@
 
 static const char *options_id="$Id$";
 
-#include <iostream.h>
-#ifndef _KCONFIG_H
-#include <kconfig.h>
-#endif
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
 #ifndef _KPILOT_OPTIONS_H
 #include "options.h"
 #endif
 
 #ifdef DEBUG
+
+#include <iostream.h>
+
+#include <kconfig.h>
+#include <kdebug.h>
+#include <kcmdlineargs.h>
+
 // The daemon also has a debug level; debug_spaces is 60 spaces,
 // to align FUNCTIONSETUP output.
 //
@@ -139,20 +139,16 @@ QString charExpansion(const char *s)
 }
 
 
+
 #else
-#ifdef TEST_DEBUG
 debugName const fname((int) options_id);
-kndbgstream operator << (kndbgstream s, const debugName&)
-{
-	return s;
-}
-#else
-const int fname = (int) options_id;
-#endif
 #endif
 
 
 // $Log$
+// Revision 1.14  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.13  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

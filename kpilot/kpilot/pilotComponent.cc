@@ -66,6 +66,12 @@ PilotComponent::PilotComponent(QWidget* parent,
 	QWidget(parent,id),
 	fDBPath(path)
 {
+	if (parent)
+	{
+		resize(parent->geometry().width(), 
+			parent->geometry().height());
+	}
+
 	(void) pilotComponent_id;
 }
 
@@ -281,6 +287,9 @@ void PilotComponent::slotShowComponent()
 }
 
 // $Log$
+// Revision 1.19  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.18  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //
