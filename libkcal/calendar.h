@@ -173,6 +173,15 @@ class Calendar {
     virtual Alarm::List alarms( const QDateTime &from,
                                 const QDateTime &to ) = 0;
 
+    class Observer {
+      public:
+        virtual void calendarModified( bool, Calendar * ) = 0;
+    };
+  
+    void registerObserver( Observer * );
+
+    void setModified( bool );
+
   protected:
     /**
       Get events, which occur on the given date.
@@ -205,6 +214,10 @@ class Calendar {
     CalFilter *mFilter;
     
     QString mTimeZoneId;
+
+    Observer *mObserver;
+    
+    bool mModified;
 };
   
 }

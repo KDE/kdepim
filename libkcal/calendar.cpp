@@ -63,6 +63,10 @@ Calendar::Calendar(const QString &timeZoneId)
 
 void Calendar::init()
 {
+  mObserver = 0;
+
+  mModified = false;
+
   mDndFormat = new VCalFormat(this);
   
   mFormat = 0;
@@ -145,6 +149,8 @@ void Calendar::setOwner(const QString &os)
   i = mOwner.find(',');
   if (i != -1)
     mOwner = mOwner.left(i);
+
+  setModified( true );
 }
 
 void Calendar::setTimeZone(const QString & tz)
@@ -165,6 +171,8 @@ void Calendar::setTimeZone(const QString & tz)
   mTimeZone = (60*hours+minutes);
   if (neg)
     mTimeZone = -mTimeZone;
+
+  setModified( true );
 }
 
 QString Calendar::getTimeZoneStr() const 
@@ -183,6 +191,8 @@ QString Calendar::getTimeZoneStr() const
 void Calendar::setTimeZone(int tz)
 {
   mTimeZone = tz;
+
+  setModified( true );
 }
 
 int Calendar::getTimeZone() const
@@ -193,6 +203,8 @@ int Calendar::getTimeZone() const
 void Calendar::setTimeZoneId(const QString &id)
 {
   mTimeZoneId = id;
+
+  setModified( true );
 }
 
 QString Calendar::timeZoneId() const
@@ -207,6 +219,8 @@ const QString &Calendar::getEmail()
 void Calendar::setEmail(const QString &e)
 {
   mOwnerEmail = e;
+
+  setModified( true );
 }
 
 void Calendar::showDialogs(bool d)
@@ -259,4 +273,17 @@ QPtrList<Todo> Calendar::getFilteredTodoList()
   QPtrList<Todo> tl = getTodoList();
   mFilter->apply(&tl);
   return tl;
+}
+
+void Calendar::registerObserver( Observer *observer )
+{
+  mObserver = observer;
+}
+
+void Calendar::setModified( bool modified )
+{
+  if ( modified != mModified ) {
+    if ( mObserver ) mObserver->calendarModified( modified, this );
+    mModified = modified;
+  }
 }

@@ -110,16 +110,24 @@ bool CalendarLocal::load(const QString &fileName)
 //    kdDebug(5800) << "---Success" << endl;
   }
 
+  setModified( false );
+
   return true;
 }
 
 bool CalendarLocal::save(const QString &fileName,CalFormat *format)
 {
+  bool success;
+
   if (format) {
-    return format->save(fileName);
+    success = format->save(fileName);
   } else {
-    return mFormat->save(fileName);
+    success = mFormat->save(fileName);
   }
+
+  if ( success ) setModified( false );
+  
+  return success;
 }
 
 void CalendarLocal::close()
@@ -161,6 +169,8 @@ void CalendarLocal::close()
   mOldestDate = 0L;
   delete mNewestDate;
   mNewestDate = 0L;
+
+  setModified( false );
 }
 
 
@@ -174,6 +184,8 @@ void CalendarLocal::addEvent(Event *anEvent)
   }
   
   anEvent->registerObserver( this );
+
+  setModified( true );
 }
 
 // probably not really efficient, but...it works for now.
@@ -270,6 +282,8 @@ void CalendarLocal::deleteEvent(Event *event)
       anEvent = mRecursList.next();
     }
   }
+
+  setModified( true );
 }
 
 
@@ -306,12 +320,16 @@ void CalendarLocal::addTodo(Todo *todo)
   mTodoList.append(todo);
 
   todo->registerObserver( this );
+
+  setModified( true );
 }
 
 void CalendarLocal::deleteTodo(Todo *todo)
 {
   mTodoList.findRef(todo);
   mTodoList.remove();
+
+  setModified( true );
 }
 
 
@@ -463,6 +481,8 @@ void CalendarLocal::update(IncidenceBase *incidence)
     // ok the event is now GONE.  we want to re-insert it.
     insertEvent(anEvent);
   }
+
+  setModified( true );
 }
 
 // this function will take a VEvent and insert it into the event
@@ -717,6 +737,8 @@ void CalendarLocal::addJournal(Journal *journal)
   mJournalMap.insert(journal->dtStart().date(),journal);
 
   journal->registerObserver( this );
+
+  setModified( true );
 }
 
 Journal *CalendarLocal::journal(const QDate &date)
