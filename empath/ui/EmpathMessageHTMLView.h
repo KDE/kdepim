@@ -61,6 +61,9 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
         {
             // We don't want to create frames, do we ?
         }
+
+        virtual QSize sizeHint() const;
+        virtual QSize minimumSizeHint() const;
         
     protected slots:
         

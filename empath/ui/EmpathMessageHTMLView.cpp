@@ -35,6 +35,7 @@
 #include <kapp.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kstddirs.h>
 #include <khtml.h>
 
 // Local includes
@@ -55,19 +56,21 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 {
     setFrameStyle(QFrame::NoFrame);
     begin();
-    // Begin welcome message
-    write("<HTML>");
-    write("<BODY BGCOLOR=\"#");
-    write(QColorToHTML(
-            kapp->palette().color(QPalette::Normal, QColorGroup::Base)));
-    write("\">");
-    write("<TT><FONT COLOR=\"#");
-    write(QColorToHTML(
-            kapp->palette().color(QPalette::Normal, QColorGroup::Text)));
-    write("\">");
-    write (i18n("Welcome to Empath"));
-    write ("</FONT></TT></HTML>");
-    // End welcome message
+    QString baseColour = "ffffff";
+//        QColorToHTML(kapp->palette().color(QPalette::Normal, QColorGroup::Base));
+    QString textColour = "000000";
+//        QColorToHTML(kapp->palette().color(QPalette::Normal, QColorGroup::Text));
+
+    QString welcomeText = i18n("Welcome to Empath");
+
+    QString imgPath = KGlobal::dirs()->findResource("appdata", "empath_logo.png");
+
+    empathDebug("Logo is at `" + imgPath + "'");
+    
+    // Welcome message
+    write("<HTML><BODY BGCOLOR=\"#" + baseColour + "\"><CENTER><IMG SRC=\""
+        + imgPath + "\"><BR><TT><FONT SIZE=\"+2\" COLOR=\"#" + textColour
+        + "\">" + welcomeText + "</FONT></TT></CENTER></BODY></HTML>");
     end();
     
     QObject::connect(
@@ -156,6 +159,7 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
     
     setCursor(arrowCursor);
     busy_ = false;
+    end();
     return true;
 }
 
@@ -589,6 +593,18 @@ EmpathMessageHTMLWidget::QColorToHTML(const QColor & c)
     QString s;
     s.sprintf("%02X%02X%02X", c.red(), c.green(), c.blue());
     return s;
+}
+        
+    QSize
+EmpathMessageHTMLWidget::sizeHint() const
+{
+    return QSize(width(), 400);
+}
+
+    QSize
+EmpathMessageHTMLWidget::minimumSizeHint() const
+{
+    return QSize(0, 0);
 }
 
 // vim:ts=4:sw=4:tw=78

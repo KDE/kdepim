@@ -21,6 +21,7 @@ install-data-local:
 	$(mkinstalldirs) $(APPSDIR)
 	$(INSTALL_DATA) $(srcdir)/empath.desktop $(APPSDIR)
 	$(mkinstalldirs) $(kde_datadir)/empath
+	$(INSTALL_DATA) empath_logo.png $(kde_datadir)/empath/empath_logo.png
 	
 uninstall-local:
 	-rm -f $(APPSDIR)/empath.desktop

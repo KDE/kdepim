@@ -262,6 +262,9 @@ EmpathListView::contentsMouseReleaseEvent(QMouseEvent *e)
     void
 EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
 {
+    // FIXME: Disable for the moment. Qt crashes !
+    return;
+    
     if (!maybeDrag_)
         return;
 
