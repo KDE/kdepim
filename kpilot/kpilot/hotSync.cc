@@ -36,6 +36,7 @@ static const char *hotsync_id =
 
 #include <time.h>
 #include <unistd.h>
+#include <stdio.h>
 
 #include <pi-file.h>
 

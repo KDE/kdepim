@@ -33,6 +33,8 @@ static const char *interactivesync_id =
 #include "options.h"
 
 #include <time.h>
+#include <unistd.h>
+#include <stdio.h>
 
 #include <pi-socket.h>
 #include <pi-file.h>
