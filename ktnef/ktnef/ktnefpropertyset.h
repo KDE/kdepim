@@ -31,8 +31,8 @@ public:
 
 	/* MAPI properties interface */
 	void addProperty( int key, int type, const QVariant& value, const QVariant& name = QVariant(), bool overwrite = false );
-	QString findProp(     int key,             const QString& fallback, bool convertToUpper=false);
-	QString findNamedProp(const QString& name, const QString& fallback, bool convertToUpper=false);
+	QString findProp(     int key,             const QString& fallback=QString::null, bool convertToUpper=false);
+	QString findNamedProp(const QString& name, const QString& fallback=QString::null, bool convertToUpper=false);
 	QMap<int,KTNEFProperty*>& properties();
 	const QMap<int,KTNEFProperty*>& properties() const;
 	QVariant property( int key ) const;
