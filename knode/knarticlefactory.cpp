@@ -250,11 +250,10 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //-------------------------- </Body> -----------------------------
 
-  if (mail && knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+  if (art->doMail() && knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
     sendMailExternal(address.asUnicodeString(), subject, quoted);
-    mail = false;
-    art->setDoMail(true);
-    if (!post) {
+    art->setDoMail(false);
+    if (!art->doPost()) {
       delete art;
       return;
     }
