@@ -52,6 +52,7 @@
 #include <kopenwith.h>
 #include <kedittoolbar.h>
 #include <kstatusbar.h>
+#include <kurldrag.h>
 
 
 #define	NOT_IMPLEMENTED QMessageBox::information(this, "ktnef", "Not implemented yet", QMessageBox::Ok|QMessageBox::Default, 0)
@@ -147,6 +148,7 @@ void KTNEFMain::setupTNEF()
 	connect(view_, SIGNAL(selectionChanged()), SLOT(viewSelectionChanged()));
 	connect(view_, SIGNAL(rightButtonPressed(QListViewItem*,const QPoint&,int)), SLOT(viewRightButtonPressed(QListViewItem*,const QPoint&,int)));
 	connect(view_, SIGNAL(doubleClicked(QListViewItem*)), SLOT(viewDoubleClicked(QListViewItem*)));
+	connect(view_, SIGNAL(dragRequested(const QValueList<KTNEFAttach*>&)), SLOT(viewDragRequested(const QValueList<KTNEFAttach*>&)));
 }
 
 void KTNEFMain::loadFile(const QString& filename)
@@ -351,6 +353,18 @@ void KTNEFMain::viewDoubleClicked(QListViewItem *item)
 {
 	if (item && item->isSelected())
 		viewFile();
+}
+
+void KTNEFMain::viewDragRequested( const QValueList<KTNEFAttach*>& list )
+{
+	KURL::List urlList;
+	for ( QValueList<KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
+		urlList << KURL( extractTemp( *it ) );
+	if ( !list.isEmpty() )
+	{
+		KURLDrag *urlDrag = new KURLDrag( urlList, this );
+		urlDrag->dragCopy();
+	}
 }
 
 void KTNEFMain::slotEditToolbars()

@@ -55,6 +55,7 @@ protected slots:
 	void viewSelectionChanged();
 	void viewRightButtonPressed(QListViewItem *item, const QPoint& p, int c);
 	void viewDoubleClicked(QListViewItem*);
+	void viewDragRequested( const QValueList<KTNEFAttach*>& list );
     void slotConfigureKeys();
 //protected:
 //	void closeEvent(QCloseEvent *e);
