@@ -92,7 +92,6 @@ class EmpathTaskWidget : public QWidget
         
         QList<EmpathTaskItem> itemList_;
         int    itemHeight_;
-        QLabel * l;
 };
 
 #endif

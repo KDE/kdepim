@@ -42,19 +42,6 @@ EmpathTaskWidget::EmpathTaskWidget(QWidget * parent, const char * name)
 {
     empathDebug("ctor");
 
-    KPixmap px;
-    px.resize(width(), 20);
-
-    KPixmapEffect::gradient(px,
-        QApplication::palette().normal().base(),
-        QApplication::palette().normal().background(),
-        KPixmapEffect::VerticalGradient);
-    
-    l = new QLabel(this);
-    CHECK_PTR(l);
-    l->resize(width(), 20);
-    l->setPixmap(px);
-
     itemList_.setAutoDelete(true);
     QObject::connect(
         empath, SIGNAL(newTask(EmpathTask *)),
@@ -76,18 +63,9 @@ EmpathTaskWidget::resizeEvent(QResizeEvent *)
     for (; it.current(); ++it) {
         
         it.current()->move(
-            0, it.current()->minimumSizeHint().height() * i++ + 20);
+            0, it.current()->minimumSizeHint().height() * i++);
         it.current()->setFixedWidth(width());
     }
-    
-    KPixmap px;
-    px.resize(width(), 20);
-    KPixmapEffect::gradient(px,
-        QApplication::palette().normal().base(),
-        QApplication::palette().normal().background(),
-        KPixmapEffect::VerticalGradient);
-    l->setPixmap(px);
-    l->resize(width(), 20);
 }
 
     void
@@ -121,14 +99,14 @@ EmpathTaskWidget::s_addTask(EmpathTask * t)
     itemList_.append(newItem);
     
     itemHeight_ = (newItem->minimumSizeHint().height());
-    newItem->move(0, ((itemList_.count() - 1) * itemHeight_) + 20);
+    newItem->move(0, ((itemList_.count() - 1) * itemHeight_));
     newItem->setFixedWidth(width());
     newItem->s_setMax(t->max());
     newItem->s_setPos(t->pos());
     newItem->show();
     
-    setFixedHeight(itemList_.count() * itemHeight_ + 20);
-    resize(width(), itemList_.count() * itemHeight_ + 20);
+    setFixedHeight(itemList_.count() * itemHeight_);
+    resize(width(), itemList_.count() * itemHeight_);
     show();
     kapp->processEvents();
     empathDebug("arse");
@@ -146,7 +124,7 @@ EmpathTaskWidget::s_done(EmpathTaskItem * item)
     for (; it.current(); ++it) {
         
         it.current()->move(
-            0, it.current()->minimumSizeHint().height() * i++ + 20);
+            0, it.current()->minimumSizeHint().height() * i++);
     }
     
     setFixedHeight(itemHeight_ * itemList_.count());

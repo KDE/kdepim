@@ -62,9 +62,11 @@ EmpathMailSenderQmail::setQmailLocation(const QString & location)
 }
 
     void
-EmpathMailSenderQmail::sendOne(RMM::RMessage & message)
+EmpathMailSenderQmail::sendOne(RMM::RMessage & message, const QString & id)
 {
     empathDebug("sendOne() called");
+    
+    currentID_ = id;
     
     error_ = false;
 
@@ -133,6 +135,8 @@ EmpathMailSenderQmail::qmailExited(KProcess *)
     if (error_) errorStr_ = "qmail exited abnormally";
     
     written_ = !error_;
+    
+    sendCompleted(currentID_, !error_);
 }
 
     void

@@ -62,10 +62,12 @@ EmpathMailSenderSendmail::setSendmailLocation(const QString & location)
 }
 
     void
-EmpathMailSenderSendmail::sendOne(RMM::RMessage & message)
+EmpathMailSenderSendmail::sendOne(RMM::RMessage & message, const QString & id)
 {
     empathDebug("sendOne() called");
 
+    currentID_ = id;
+    
     error_ = false;
 
     empathDebug("Message text:");
@@ -142,7 +144,7 @@ EmpathMailSenderSendmail::sendmailExited(KProcess *)
 {
     empathDebug("Sendmail exited");
 
-    error_ = (    !sendmailProcess_.normalExit() ||
+    error_ = (  !sendmailProcess_.normalExit() ||
                 sendmailProcess_.exitStatus() != 0);
     
     if (error_) errorStr_ = "sendmail exited abnormally";
@@ -150,6 +152,8 @@ EmpathMailSenderSendmail::sendmailExited(KProcess *)
     written_ = !error_;
     
     messageAsString_ = "";
+    
+    sendCompleted(currentID_, !error_);
 }
 
     void

@@ -28,6 +28,8 @@
 // Qt includes
 #include <qvaluelist.h>
 #include <qobject.h>
+#include <qqueue.h>
+#include <qstring.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -36,8 +38,14 @@
 
 /**
  * @short Sender base class
+ * 
  * Responsibility is to queue messages in a local spool for later delivery
  * by a derived class.
+ * 
+ * Any derived class implements only sendOne(). It must store the id
+ * it is given and once the message is delivered (or delivery has failed)
+ * it must call sendCompleted() with the id and the status of the transaction.
+ * 
  * @author Rikkus
  */
 
@@ -71,7 +79,7 @@ class EmpathMailSender : public QObject
         /**
          * Send one message.
          */
-        virtual void sendOne(RMM::RMessage & message) = 0L;
+        virtual void sendOne(RMM::RMessage & message, const QString & id) = 0L;
 
         /**
          * Kick off a send using all queued messages.
@@ -89,9 +97,15 @@ class EmpathMailSender : public QObject
          */
         virtual void readConfig() = 0;
         
+        void sendCompleted(const QString &, bool);
+    
     private:
         
-        void emergencyBackup(RMM::RMessage &);
+        void _startNextSend();
+        void _emergencyBackup(RMM::RMessage &);
+        void _addPendingSend(const QString & id);
+
+        QQueue<QString> sendQueue_;
 };
 
 #endif

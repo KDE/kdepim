@@ -60,7 +60,7 @@ class EmpathMailSenderSendmail : public EmpathMailSender
         EmpathMailSenderSendmail();
         ~EmpathMailSenderSendmail();
 
-        void sendOne(RMM::RMessage & message);
+        void sendOne(RMM::RMessage & message, const QString & id);
 
         void setSendmailLocation(const QString & location);
         
@@ -75,14 +75,15 @@ class EmpathMailSenderSendmail : public EmpathMailSender
 
     private:
 
-        QString                sendmailLocation_;
-        KProcess            sendmailProcess_;
-        QCString            messageAsString_;
-        bool                error_;
-        QString                errorStr_;
-        Q_UINT32            messagePos_;
-        bool                written_;
-
+        QString     sendmailLocation_;
+        KProcess    sendmailProcess_;
+        QCString    messageAsString_;
+        bool        error_;
+        QString     errorStr_;
+        Q_UINT32    messagePos_;
+        bool        written_;
+        
+        QString     currentID_;
 };
 
 #endif

@@ -62,10 +62,17 @@ class EmpathMailSenderSMTP : public EmpathMailSender
         /**
          * Send one message.
          */
-        void sendOne(RMM::RMessage & message);
+        void sendOne(RMM::RMessage & message, const QString & id);
         
         virtual void saveConfig();
         virtual void readConfig();
+        
+    protected:
+        
+        void s_jobError(int, int, const char *);
+        void s_jobFinished(int);
+        void s_jobCanceled(int);
+        void s_jobReady(int);
 
     private:
 
@@ -73,6 +80,7 @@ class EmpathMailSenderSMTP : public EmpathMailSender
         Q_UINT32    serverPort_;
         
         KIOJob  * job_;
+        QString currentID_;
 };
 
 #endif

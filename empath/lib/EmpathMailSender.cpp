@@ -46,6 +46,7 @@ EmpathMailSender::EmpathMailSender()
     :   QObject()
 {
     empathDebug("ctor");
+    sendQueue_.setAutoDelete(true);
 }
 
 EmpathMailSender::~EmpathMailSender()
@@ -56,79 +57,184 @@ EmpathMailSender::~EmpathMailSender()
     void
 EmpathMailSender::send(RMM::RMessage & message)
 {
-    EmpathTask * t(empath->addTask("Sending message"));
     empath->s_infoMessage(i18n("Sending message"));
 
     KConfig * c(KGlobal::config());
     c->setGroup(EmpathConfig::GROUP_SENDING);
     
-    EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
-    EmpathURL sentURL(c->readEntry(EmpathConfig::KEY_SENT_FOLDER));
+    EmpathURL queueURL  (c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
+    EmpathURL sentURL   (c->readEntry(EmpathConfig::KEY_SENT_FOLDER));
     
     EmpathFolder * queueFolder(empath->folder(queueURL));
-    EmpathFolder * sentFolder(empath->folder(sentURL));
     
     if (queueFolder == 0) {
+    
         empathDebug("Couldn't queue message - couldn't find queue folder !");
+    
         empathDebug("Queue folder was specified as: \"" +
             queueURL.asString() + "\"");
+    
         QMessageBox::critical(0, "Empath",
             i18n("Couldn't queue message ! Writing backup"), i18n("OK"));
-        emergencyBackup(message);
-        t->done();
+    
+        _emergencyBackup(message);
+    
         empath->s_infoMessage(i18n("Unable to send message"));
+    
         return;
     }
     
     QString id(queueFolder->writeMessage(message));
     
     if (id.isNull()) {
+    
         empathDebug("Couldn't queue message - folder won't accept !");
+    
         QMessageBox::critical(0, "Empath",
             i18n("Couldn't queue message ! Writing backup"),
             i18n("OK"));
-        emergencyBackup(message);
-        t->done();
+    
+        _emergencyBackup(message);
+    
         empath->s_infoMessage(i18n("Unable to send message"));
+    
         return;
     }
 
-    bool sentOK = false;
-    sendOne(message);
+    _addPendingSend(id);
+}
+
+    void
+EmpathMailSender::_addPendingSend(const QString & id)
+{
+    sendQueue_.enqueue(new QString(id));
+    
+    if (sendQueue_.count() == 1)
+        _startNextSend();
+}
+
+    void
+EmpathMailSender::_startNextSend()
+{
+    QString * id = sendQueue_.dequeue();
+    
+    if (!id) return;
+    
+    EmpathURL queueURL(
+        KGlobal::config()->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
+    
+    EmpathURL url(queueURL);
+    
+    url.setMessageID(*id);
+
+    RMM::RMessage * m(empath->message(url));
+ 
+    if (m == 0) {
+        
+        empathDebug("Couldn't get a pointer to the next queued message !");
+        
+        QMessageBox::warning(0, "Empath",
+            i18n("Couldn't find next queued message"),
+            i18n("OK"));
+        
+        return;
+    }
+    
+    RMM::RMessage message(*m);
+    
+    sendOne(message, *id);
+}
+ 
+    void
+EmpathMailSender::sendCompleted(const QString & id, bool sentOK)
+{
+    sendQueue_.dequeue();
+    
+    if (!sendQueue_.isEmpty())
+        _startNextSend();
+    
+    KConfig * c(KGlobal::config());
+    
+    using namespace EmpathConfig;
+    EmpathURL queueURL  (c->readEntry(KEY_QUEUE_FOLDER));
+    EmpathURL sentURL   (c->readEntry(KEY_SENT_FOLDER));
+    using namespace std;
+
+    EmpathURL url(queueURL);
+    url.setMessageID(id);
+
+    RMM::RMessage * m(empath->message(url));
+    
+    if (m == 0) {
+        
+        empathDebug("Couldn't get a pointer to the original message !");
+        
+        QMessageBox::critical(0, "Empath",
+            i18n("Couldn't find queued message to move to sent folder"),
+            i18n("OK"));
+        
+        return;
+    }
+    
+    RMM::RMessage message(*m);
     
     if (!sentOK) {
+        
         empathDebug("Couldn't send message !");
+        
         QMessageBox::critical(0, "Empath",
             i18n("Couldn't send message ! Writing backup"),
             i18n("OK"));
-        emergencyBackup(message);
-        t->done();
+        
+        _emergencyBackup(message);
+        
         empath->s_infoMessage(i18n("Unable to send message"));
+        
         return;
     }
     
-    id = sentFolder->writeMessage(message);
+    EmpathFolder * sentFolder(empath->folder(sentURL));
+    
+    if (sentFolder == 0) {
+        
+        empathDebug("Can't get a pointer to the sent folder");
+        
+        QMessageBox::critical(0, "Empath",
+            i18n("Please choose a sent mail folder in settings."),
+            i18n("OK"));
+        
+        return;
+    }
+    
+    QString newID(sentFolder->writeMessage(message));
 
-    if (id.isNull()) {
+    if (newID.isNull()) {
+        
         empathDebug("Couldn't write message to sent folder !");
-        emergencyBackup(message);
-        t->done();
+        
+        _emergencyBackup(message);
+        
         empath->s_infoMessage(i18n("Unable to send message"));
+        
         return;
     }
 
     EmpathURL q(queueURL);
     q.setMessageID(id);
     
+    EmpathFolder * queueFolder(empath->folder(queueURL));
+    
     if (!queueFolder->removeMessage(q)) {
+        
         empathDebug("Couldn't remove message from queue folder !");
-        emergencyBackup(message);
-        t->done();
+        
+        _emergencyBackup(message);
+        
         empath->s_infoMessage(i18n("Unable to send message"));
+        
         return;
     }
     
-    t->done();
     empath->s_infoMessage(i18n("Message sent successfully"));
 }
 
@@ -136,66 +242,32 @@ EmpathMailSender::send(RMM::RMessage & message)
 EmpathMailSender::sendQueued()
 {
     KConfig * c(KGlobal::config());
-    c->setGroup(EmpathConfig::GROUP_SENDING);
     
-    EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
-    EmpathURL sentURL(c->readEntry(EmpathConfig::KEY_SENT_FOLDER));
+    using namespace EmpathConfig;
+    
+    c->setGroup(GROUP_SENDING);
+    EmpathURL queueURL(c->readEntry(KEY_QUEUE_FOLDER));
+    
+    using namespace std;
     
     EmpathFolder * queueFolder(empath->folder(queueURL));
-    EmpathFolder * sentFolder(empath->folder(sentURL));
     
     if (queueFolder == 0) {
         empathDebug("Couldn't send messages - couldn't find queue folder !");
         return;
     }
     
-    if (sentFolder == 0) {
-        empathDebug("Couldn't send messages - couldn't find sent folder !");
-        return;
-    }
-    
-    QList<EmpathURL> messageList;
-    
-    EmpathURL url;
-    
-    bool status = true;
-    
-    EmpathTask * t(empath->addTask("Sending messages"));
-    t->setMax(queueFolder->messageList().count());
-
     EmpathIndexIterator it(queueFolder->messageList());
     
-    for (; it.current(); ++it) {
-        
-        url = queueFolder->url();
-        url.setMessageID(it.current()->id());
-        
-        RMM::RMessage * m(empath->message(url));
-        
-        if (m == 0) {
-            empathDebug("Can't find message \"" + url.asString() + "\"");
-            t->done();
-            return;
-        }
-        
-        RMM::RMessage message(*m);
-        sendOne(message);
-        //if (!sentFolder->writeMessage(message).isNull())
-          //queueFolder->removeMessage(url);
-        t->doneOne();
-    }
-    
-    t->done();
-    
-    if (!status) {
-        empathDebug("Error sending messages");
-    }
+    for (; it.current(); ++it)
+        _addPendingSend(it.current()->id());
 }
 
     void
 EmpathMailSender::queue(RMM::RMessage & message)
 {
     KConfig * c(KGlobal::config());
+
     c->setGroup(EmpathConfig::GROUP_SENDING);
     
     EmpathURL queueURL(c->readEntry(EmpathConfig::KEY_QUEUE_FOLDER));
@@ -203,21 +275,31 @@ EmpathMailSender::queue(RMM::RMessage & message)
     EmpathFolder * queueFolder(empath->folder(queueURL));
     
     if (queueFolder == 0) {
+        
         empathDebug("Couldn't queue message - couldn't find queue folder !");
+        
         QMessageBox::critical(0, "Empath",
             i18n("Couldn't queue message ! Writing backup"), i18n("OK"));
-        emergencyBackup(message);
+        
+        _emergencyBackup(message);
+        
         empath->s_infoMessage(i18n("Unable to queue message"));
+        
         return;
     }
     
     if (!queueFolder->writeMessage(message)) {
+        
         empathDebug("Couldn't queue message - folder won't accept !");
+        
         QMessageBox::critical(0, "Empath",
             i18n("Couldn't queue message ! Writing backup"),
             i18n("OK"));
-        emergencyBackup(message);
+        
+        _emergencyBackup(message);
+        
         empath->s_infoMessage(i18n("Unable to queue message"));
+        
         return;
     }
     
@@ -225,7 +307,7 @@ EmpathMailSender::queue(RMM::RMessage & message)
 }
 
     void
-EmpathMailSender::emergencyBackup(RMM::RMessage & message)
+EmpathMailSender::_emergencyBackup(RMM::RMessage & message)
 {
     empathDebug("Couldn't queue message ! Writing to emergency backup");
 
@@ -234,30 +316,45 @@ EmpathMailSender::emergencyBackup(RMM::RMessage & message)
     QFile f(tempName);
 
     if (!f.open(IO_WriteOnly)) {
+        
         empathDebug("Couldn't open the temporary file " + tempName);
+        
         empathDebug("EMERGENCY BACKUP COULD NOT BE WRITTEN !");
+        
         empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
+        
         QMessageBox::critical(0, "Empath",
-        i18n("Couldn't write the backup file ! Message has been LOST !"),
-        i18n("OK"));
+            i18n("Couldn't write the backup file ! Message has been LOST !"),
+            i18n("OK"));
+        
         empath->s_infoMessage(i18n("Couldn't write backup file !"));
+        
         return;
     }
 
     QCString text(message.asString());
+    
     f.writeBlock(text.data(), text.length());
+    
     f.flush();
+    
     f.close();
     
     if (f.status() != IO_Ok) {
+        
         empathDebug("Couldn't successfully write the temporary file " +
             tempName);
+        
         empathDebug("EMERGENCY BACKUP COULD NOT BE VERIFIED !");
+        
         empathDebug("PLEASE CONTACT PROGRAM MAINTAINER !");
+        
         QMessageBox::critical(0, "Empath",
         i18n("Couldn't write the backup file ! Message may have been LOST !"),
             i18n("OK"));
+        
         empath->s_infoMessage(i18n("Couldn't write backup file !"));
+        
         return;
     }
     

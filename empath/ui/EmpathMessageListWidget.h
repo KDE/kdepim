@@ -144,7 +144,18 @@ class EmpathMessageListWidget : public QListView
         
         void _setupMessageMenu();
         
-        void _updateSelected();
+        void _setSelected(EmpathMessageListItem *, bool);
+        void _setSelected(QListViewItem *, bool);
+        void _clearSelection();
+        Q_UINT32 _nSelected();
+        
+        EmpathMessageListItem *
+            _addItem(EmpathMessageListItem *, EmpathIndexRecord &);
+        
+        EmpathMessageListItem *
+            _addItem(EmpathMessageListWidget *, EmpathIndexRecord &);
+        
+        void _removeItem(EmpathMessageListItem *);
         
         void getDescendants(
             EmpathMessageListItem * initialItem,
@@ -205,8 +216,6 @@ class EmpathMessageListWidget : public QListView
         QPoint dragStart_;
         
         // Order dependency
-        EmpathMainWindow    * parent_;
-        Q_UINT32            nSelected_;
         bool                maybeDrag_;
         bool                wantScreenUpdates_;
         bool                filling_;

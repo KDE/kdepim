@@ -56,8 +56,12 @@ EmpathMailSenderSMTP::setServer(const QString & _name, const Q_UINT32 _port)
 }
 
    void
-EmpathMailSenderSMTP::sendOne(RMM::RMessage & m)
+EmpathMailSenderSMTP::sendOne(RMM::RMessage & m, const QString & id)
 {
+    empathDebug("sendOne() called");
+    
+    currentID_ = id;
+    
     QString sender = KGlobal::config()->readEntry(EmpathConfig::KEY_EMAIL);
 
     QString recipient;
@@ -104,6 +108,30 @@ EmpathMailSenderSMTP::readConfig()
     serverName_ = c->readEntry(EmpathConfig::KEY_SMTP_SERVER_LOCATION,
         "localhost");
     serverPort_ = c->readUnsignedNumEntry(EmpathConfig::KEY_SMTP_SERVER_PORT, 25);
+}
+
+    void
+EmpathMailSenderSMTP::s_jobError(int, int, const char *)
+{
+    sendCompleted(currentID_, false);
+}
+    
+    void
+EmpathMailSenderSMTP::s_jobFinished(int)
+{
+    sendCompleted(currentID_, true);
+}
+    
+    void
+EmpathMailSenderSMTP::s_jobCanceled(int)
+{
+    sendCompleted(currentID_, false);
+}
+
+    void
+EmpathMailSenderSMTP::s_jobReady(int)
+{
+    job_->slotData(0, 0);
 }
 
 // vim:ts=4:sw=4:tw=78

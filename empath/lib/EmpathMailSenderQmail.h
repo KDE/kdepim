@@ -51,7 +51,7 @@ class EmpathMailSenderQmail : public EmpathMailSender
         /**
          * Send one message.
          */
-        void sendOne(RMM::RMessage & message);
+        void sendOne(RMM::RMessage & message, const QString & id);
 
         /**
          * Set the location of the qmail-inject binary.
@@ -79,14 +79,15 @@ class EmpathMailSenderQmail : public EmpathMailSender
 
     private:
 
-        QString                qmailLocation_;
-        KProcess            qmailProcess_;
-        QCString            messageAsString_;
-        bool                error_;
-        QString                errorStr_;
-        Q_UINT32            messagePos_;
-        bool                written_;
-
+        QString     qmailLocation_;
+        KProcess    qmailProcess_;
+        QCString    messageAsString_;
+        bool        error_;
+        QString     errorStr_;
+        Q_UINT32    messagePos_;
+        bool        written_;
+        
+        QString     currentID_;
 };
 
 #endif
