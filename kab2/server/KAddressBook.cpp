@@ -19,6 +19,7 @@
 */
 
 // System includes
+#include <stdlib.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>
