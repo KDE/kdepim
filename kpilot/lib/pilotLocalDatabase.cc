@@ -124,9 +124,6 @@ PilotLocalDatabase::~PilotLocalDatabase()
 	delete[]fAppInfo;
 	for (i = 0; i < fNumRecords; i++)
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Deleting record " << i << endl;
-#endif
 		delete fRecords[i];
 	}
 }
