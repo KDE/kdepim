@@ -477,6 +477,7 @@ class References : public Base {
     QCString first();
     QCString next();
     QCString at(unsigned int i);
+    void append(const QCString &s);
 
   protected:
     QCString r_ef;

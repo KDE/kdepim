@@ -708,6 +708,54 @@ QCString KNHeaders::References::at(unsigned int i)
 }
 
 
+void KNHeaders::References::append(const QCString &s)
+{
+  QString temp=r_ef.data();
+  temp += " ";
+  temp += s.data();
+  QStringList lst=QStringList::split(' ',temp);
+  QRegExp exp("^<.+@.+>$");
+
+  // remove bogus references
+  QStringList::Iterator it = lst.begin();
+  while (it != lst.end()) {
+    if (-1==(*it).find(exp))
+      it = lst.remove(it);
+    else
+      it++;
+  }
+
+  if (lst.isEmpty()) {
+    r_ef = s.copy();    // shouldn't happen...
+    return;
+  } else
+    r_ef = "";
+
+  temp = lst.first();    // include the first id
+  r_ef = temp.latin1();
+  lst.remove(temp);         // avoids duplicates
+  int insPos = r_ef.length();
+
+  for (int i=1;i<=3;i++) {    // include the last three ids
+    if (!lst.isEmpty()) {
+      temp = lst.last();
+      r_ef.insert(insPos,(QString(" %1").arg(temp)).latin1());
+      lst.remove(temp);
+    } else
+      break;
+  }
+
+  while (!lst.isEmpty()) {   // now insert the rest, up to 1000 characters
+    temp = lst.last();
+    if ((15+r_ef.length()+temp.length())<200) {
+      r_ef.insert(insPos,(QString(" %1").arg(temp)).latin1());
+      lst.remove(temp);
+    } else
+      return;
+  }
+}
+
+
 //==============================================================================================
 
 

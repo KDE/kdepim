@@ -173,11 +173,13 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   //References
   KNHeaders::References *references=a->references(false);
   QCString refs;
-  if(references && !references->isEmpty())
-    refs=references->as7BitString(false).copy()+" "+a->messageID()->as7BitString(false);
+  if (references)
+    refs=references->as7BitString(false);
   else
-    refs=a->messageID()->as7BitString(false).copy();
+    refs = "";
+
   art->references()->from7BitString(refs, art->defaultCharset(),false);
+  art->references()->append(a->messageID()->as7BitString(false));
 
   //------------------------- </Headers> ---------------------------
 
