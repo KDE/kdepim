@@ -43,6 +43,7 @@
 #include <klineedit.h>
 #include <kcombobox.h>
 #include <kdebug.h>
+#include <ksqueezedtextlabel.h>
 
 #include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/categoryeditdialog.h>
@@ -132,9 +133,11 @@ void AddresseeEditorWidget::setupTab1()
   connect( mNameEdit, SIGNAL( textChanged(const QString & )), 
            SLOT( nameTextChanged(const QString & )));
   connect( button, SIGNAL( clicked()), this, SLOT( nameButtonClicked()));
+  mNameLabel = new KSqueezedTextLabel( tab1 );
+  mNameLabel->hide();
   layout->addWidget( button, 0, 1 );
   layout->addWidget( mNameEdit, 0, 2 );
-
+  layout->addWidget( mNameLabel, 0, 2 );
   label = new QLabel( i18n("Role:"), tab1 );
   mRoleEdit = new KLineEdit( tab1, "mRoleEdit" );
   connect(mRoleEdit, SIGNAL( textChanged(const QString &) ),
@@ -536,10 +539,16 @@ void AddresseeEditorWidget::nameBoxChanged()
 {
   KABC::Addressee addr;
   AddresseeConfig config( mAddressee );
-  if ( config.automaticNameParsing() )
+  if ( config.automaticNameParsing() ) {
     addr.setNameFromString( mNameEdit->text() );
-  else
+    mNameLabel->hide();
+    mNameEdit->show();
+  } else {
     addr = mAddressee;
+    mNameEdit->hide();
+    mNameLabel->setText( mNameEdit->text() );
+    mNameLabel->show();
+  }
 
   bool block = mFormattedNameBox->signalsBlocked();
   mFormattedNameBox->blockSignals( true );

@@ -39,6 +39,7 @@ class QSpinBox;
 class KLineEdit;
 class KComboBox;
 class KDateEdit;
+class KSqueezedTextLabel;
 
 class EmailEditWidget;
 class AddressEditWidget;
@@ -119,6 +120,7 @@ class AddresseeEditorWidget : public QWidget
     KLineEdit *mURLEdit;
     KLineEdit *mIMAddressEdit;
     KLineEdit *mCategoryEdit;
+    KSqueezedTextLabel *mNameLabel;
     
     // Tab2
     KLineEdit *mDepartmentEdit;
