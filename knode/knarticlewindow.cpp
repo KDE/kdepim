@@ -67,7 +67,7 @@ bool KNArticleWindow::raiseWindowForArticle(KNArticle *art)
 {
   for(KNArticleWindow *i=instances.first(); i; i=instances.next())
     if(i->artW->article() && i->artW->article() ==art) {
-      KWin::setActiveWindow(i->winId());
+      KWin::activateWindow(i->winId());
       return true;
     }
   return false;
@@ -78,7 +78,7 @@ bool KNArticleWindow::raiseWindowForArticle(const QCString &mid)
 {
   for(KNArticleWindow *i=instances.first(); i; i=instances.next())
     if(i->artW->article() && i->artW->article()->messageID()->as7BitString(false)==mid) {
-      KWin::setActiveWindow(i->winId());
+      KWin::activateWindow(i->winId());
       return true;
     }
 

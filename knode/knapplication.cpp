@@ -53,7 +53,7 @@ int KNApplication::newInstance()
   }
 
   if (mainWidget())
-    KWin::setActiveWindow(mainWidget()->winId());
+    KWin::activateWindow(mainWidget()->winId());
   else {
     if (isRestored()) {
       int n = 1;

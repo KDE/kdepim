@@ -132,7 +132,7 @@ void KNScoringManager::configure()
 
   if (dlg) {
     dlg->show();
-    KWin::setActiveWindow(dlg->winId());
+    KWin::activateWindow(dlg->winId());
   }
 }
 

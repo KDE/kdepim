@@ -564,7 +564,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
 
   KNComposer *com=findComposer(a);
   if(com) {
-    KWin::setActiveWindow(com->winId());
+    KWin::activateWindow(com->winId());
     return;
   }
 
@@ -1045,7 +1045,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
   if(delCom)
     c_ompList.removeRef(com); //auto delete
   else
-    KWin::setActiveWindow(com->winId());
+    KWin::activateWindow(com->winId());
 }
 
 

@@ -70,7 +70,7 @@ void KNConfigManager::configure()
     d_ialog->show();
   }
   else
-    KWin::setActiveWindow(d_ialog->winId());
+    KWin::activateWindow(d_ialog->winId());
 }
 
 
