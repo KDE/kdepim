@@ -228,6 +228,7 @@ void SyncConfigPage::load()
 
 	fConfigWidget->fFullBackupCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
 	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
+	fConfigWidget->fScreenlockSecure->setChecked(KPilotSettings::screenlockSecure());
 
 	unmodified();
 }
@@ -240,6 +241,7 @@ void SyncConfigPage::load()
 	KPilotSettings::setSyncType(fConfigWidget->fSpecialSync->currentItem());
 	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
 	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
+	KPilotSettings::setScreenlockSecure(fConfigWidget->fScreenlockSecure->isChecked());
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();

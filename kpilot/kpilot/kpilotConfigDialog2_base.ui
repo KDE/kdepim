@@ -11,7 +11,7 @@
             <x>0</x>
             <y>0</y>
             <width>593</width>
-            <height>328</height>
+            <height>332</height>
         </rect>
     </property>
     <property name="caption">
@@ -24,77 +24,6 @@
         <property name="margin">
             <number>0</number>
         </property>
-        <widget class="QLabel" row="2" column="0">
-            <property name="name">
-                <cstring>textLabel1</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>4</hsizetype>
-                    <vsizetype>5</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="text">
-                <string>Conflict &amp;resolution:</string>
-            </property>
-            <property name="buddy" stdset="0">
-                <cstring>fConflictResolution</cstring>
-            </property>
-        </widget>
-        <widget class="QComboBox" row="2" column="1">
-            <item>
-                <property name="text">
-                    <string>Ask User</string>
-                </property>
-            </item>
-            <item>
-                <property name="text">
-                    <string>Do Nothing</string>
-                </property>
-            </item>
-            <item>
-                <property name="text">
-                    <string>Handheld Overrides</string>
-                </property>
-            </item>
-            <item>
-                <property name="text">
-                    <string>PC Overrides</string>
-                </property>
-            </item>
-            <item>
-                <property name="text">
-                    <string>Values From Last Sync (if possible)</string>
-                </property>
-            </item>
-            <item>
-                <property name="text">
-                    <string>Use Both Entries</string>
-                </property>
-            </item>
-            <property name="name">
-                <cstring>fConflictResolution</cstring>
-            </property>
-        </widget>
-        <spacer row="3" column="1">
-            <property name="name">
-                <cstring>spacer3</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>20</width>
-                    <height>91</height>
-                </size>
-            </property>
-        </spacer>
         <widget class="QCheckBox" row="1" column="1">
             <property name="name">
                 <cstring>fFullBackupCheck</cstring>
@@ -148,6 +77,91 @@
             </property>
             <property name="buddy" stdset="0">
                 <cstring>fSpecialSync</cstring>
+            </property>
+        </widget>
+        <spacer row="4" column="1">
+            <property name="name">
+                <cstring>spacer3</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>170</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QComboBox" row="3" column="1">
+            <item>
+                <property name="text">
+                    <string>Ask User</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Do Nothing</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Handheld Overrides</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>PC Overrides</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Values From Last Sync (if possible)</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Use Both Entries</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>fConflictResolution</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="3" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>4</hsizetype>
+                    <vsizetype>5</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string>Conflict &amp;resolution:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>fConflictResolution</cstring>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="2" column="1">
+            <property name="name">
+                <cstring>fScreenlockSecure</cstring>
+            </property>
+            <property name="text">
+                <string>Do not sync when screensaver is active</string>
+            </property>
+            <property name="checked">
+                <bool>true</bool>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this box to prevent KPilot from syncing your handheld while the screensaver is active. This is a security measure to prevent others from syncing &lt;i&gt;their&lt;/i&gt; handhelds with your data. This option must be disabled when you use a different desktop, since KPilot does not know about other screensavers than KDE's.</string>
             </property>
         </widget>
     </grid>
