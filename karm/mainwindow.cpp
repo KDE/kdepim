@@ -294,7 +294,7 @@ void MainWindow::makeMenus()
   new KAction( i18n("Export to CSV File..."), 0,
       _taskView, SLOT(exportcsvFile()), actionCollection(),
       "export_csvfile");
-  new KAction( i18n("Export history to CSV File..."), 0,
+  new KAction( i18n("Export History to CSV File..."), 0,
       _taskView, SLOT(exportcsvHistory()), actionCollection(),
       "export_csvhistory");
   /*

@@ -65,7 +65,7 @@ void ProfileWizard::initUI()
 
   QBoxLayout *nameLayout = new QHBoxLayout( topLayout );
 
-  QLabel *label = new QLabel( i18n("Profile Name"), topWidget );
+  QLabel *label = new QLabel( i18n("Profile name:"), topWidget );
   nameLayout->addWidget( label );
 
   mNameEdit = new KLineEdit( topWidget );
