@@ -99,9 +99,9 @@ LocationWidget::LocationWidget( KABCore *core, QWidget *parent, const char *name
   KAcceleratorManager::manage( this );
 
   KConfig config( "kaddressbookrc" );
-  mURLs = config.entryMap( QString( "Extensions_%1" ).arg( identifier() ) );
+  config.setGroup( QString( "Extensions_%1" ).arg( identifier() ) );
 
-  mURLTypeCombo->insertStringList( mURLs.keys() );
+  mURLTypeCombo->insertStringList( config.readListEntry( "URLs" ) );
 }
 
 LocationWidget::~LocationWidget()
@@ -166,20 +166,28 @@ QString LocationWidget::createUrl( const KABC::Address &addr )
       %c country (in ISO format)
    */
 
-  QString urlTemplate = mURLs[ mURLTypeCombo->currentText() ];
+  // we need a unique identifier for map24.de
+  KConfig config( "kaddressbookrc" );
+  config.setGroup( QString( "Extensions_%1" ).arg( identifier() ) );
+  QString uid = config.readEntry( "UID", 
+                                  QDateTime::currentDateTime().toString() );
+
+  QString urlTemplate = config.readEntry( mURLTypeCombo->currentText() );
 
 #if KDE_VERSION >= 319
   return urlTemplate.replace( "%s", addr.street() ).
                      replace( "%r", addr.region() ).
                      replace( "%l", addr.locality() ).
                      replace( "%z", addr.postalCode() ).
-                     replace( "%c", addr.countryToISO( addr.street() ) );
+                     replace( "%c", addr.countryToISO( addr.country() ) ).
+                     replace( "%i", uid );
 #else
   return urlTemplate.replace( "%s", addr.street() ).
                      replace( "%r", addr.region() ).
                      replace( "%l", addr.locality() ).
                      replace( "%z", addr.postalCode() ).
-                     replace( "%c", "" );
+                     replace( "%c", "" ).
+                     replace( "%i", uid );
 #endif
 }
 

@@ -28,6 +28,7 @@
 
 #include <kbuttonbox.h>
 #include <kdialog.h>
+#include <kglobal.h>
 #include <klineedit.h>
 #include <klistview.h>
 #include <klocale.h>
@@ -87,25 +88,48 @@ void LocationConfigWidget::restoreSettings( KConfig *cfg )
 {
   mListView->clear();
 
-  QMap<QString, QString> map = cfg->entryMap( cfg->group() );
+  QStringList items = cfg->readListEntry( "URLs" );
+  if ( items.count() == 0 ) {
+    QString uid = QDateTime::currentDateTime().toString();
 
-  if ( map.empty() ) // add a default
-    map.insert( "map24", "http://map24.de/map24/index.php3?street0=%s&zip0=%z&city0=%l&country0=%c&force_maptype=RELOAD&gcf=1" );
+    // add a default, thanks to map24.de for their friendly support
+    items.append( "map24" );
+    cfg->writeEntry( "map24", QString( "http://link2.map24.com/?lid=9cc343ae&"
+                                       "maptype=CGI&"
+                                       "lang=%1&"
+                                       "street0=%s&"
+                                       "zip0=%z&"
+                                       "city0=%l&"
+                                       "country0=%c&"
+                                       "smid=%2" )
+                                       .arg( KGlobal::locale()->country() )
+                                       .arg( uid ) );
+    cfg->writeEntry( "UID", uid );
+  }
 
-  QMap<QString, QString>::Iterator it;
-  for ( it = map.begin(); it != map.end(); ++it )
-    new QListViewItem( mListView, it.key(), it.data() );
+
+  QStringList::Iterator it;
+  for ( it = items.begin(); it != items.end(); ++it )
+    new QListViewItem( mListView, *it, cfg->readEntry( *it ) );
 }
 
 void LocationConfigWidget::saveSettings( KConfig *cfg )
 {
   QString group = cfg->group();
+  QString uid = cfg->readEntry( "UID",
+                                QDateTime::currentDateTime().toString() );
   cfg->deleteGroup( group );
   cfg->setGroup( group );
+  cfg->writeEntry( "UID", uid );
 
+  QStringList items;
   QListViewItem *item;
-  for ( item = mListView->firstChild(); item; item = item->itemBelow() )
+  for ( item = mListView->firstChild(); item; item = item->itemBelow() ) {
     cfg->writeEntry( item->text( 0 ), item->text( 1 ) );
+    items.append( item->text( 0 ) );
+  }
+
+  cfg->writeEntry( "URLs", items );
 }
 
 void LocationConfigWidget::add()

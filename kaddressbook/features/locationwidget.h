@@ -59,7 +59,6 @@ class LocationWidget : public ExtensionWidget
     QString createUrl( const KABC::Address& );
 
     KABC::Address::List mAddressList;
-    QMap<QString, QString> mURLs;
     KComboBox *mAddressTypeCombo;
     KComboBox *mURLTypeCombo;
     KHTMLPart *mHTMLPart;
