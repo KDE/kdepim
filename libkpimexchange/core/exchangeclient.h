@@ -36,6 +36,7 @@ namespace KPIM {
 class ExchangeAccount;
 class ExchangeDownload;
 class ExchangeUpload;
+class ExchangeDelete;
 
 class ExchangeClient : public QObject {
     Q_OBJECT
@@ -44,21 +45,32 @@ class ExchangeClient : public QObject {
     ~ExchangeClient();
 
   // synchronous functions
-  // QPtrList<KCal::Event> events( const QDate &qd );
+  // Will be removed in the near future
   QPtrList<KCal::Event> events( KCal::Calendar* calendar, const QDate& qd );
+
+  enum Result { ResultOK, UnknownError };
 
   public slots:
     void download( KCal::Calendar* calendar, QDate& start, QDate& end, bool showProgress);
     void upload( KCal::Event* event );
+    void remove( KCal::Event* event );
     void test();
+
   private slots:
     void slotDownloadFinished( ExchangeDownload* worker );
     void slotUploadFinished( ExchangeUpload* worker );
+    void slotRemoveFinished( ExchangeDelete* worker );
     void slotTestResult( KIO::Job * job );
 
   signals:
     void startDownload();
     void finishDownload();
+
+    // Don't rely on the result for now - it's probably lying everything's OK
+    // even when it isn't
+    void uploadFinished( int result );
+    void downloadFinished( int result );
+    void removeFinished( int result );
 
   private:
     void test2();

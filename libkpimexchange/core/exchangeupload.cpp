@@ -18,42 +18,26 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <qfile.h>
-
-#include <kapplication.h>
-#include <kconfig.h>
-#include <kstandarddirs.h>
+#include <qstring.h>
+#include <qregexp.h>
 
 #include <kurl.h>
 #include <kdebug.h>
 #include <krfcdate.h>
 #include <kio/job.h>
 
-#include <qfile.h>
-#include <qinputdialog.h>
-#include <qtextstream.h>
-#include <qdatastream.h>
-#include <qcstring.h>
-#include <qregexp.h>
-
-#include <kapp.h>
-#include <kmessagebox.h>
-#include <klocale.h>
-#include <kaction.h>
 #include <kio/slave.h>
 #include <kio/scheduler.h>
 #include <kio/slavebase.h>
 #include <kio/davjob.h>
 #include <kio/http.h>
 
+#include <libkcal/event.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/icalformatimpl.h>
 extern "C" {
   #include <ical.h>
 }
-
-#include "korganizer/korganizer.h"
-#include "korganizer/calendarview.h"
 
 #include "exchangeprogress.h"
 #include "exchangeupload.h"
@@ -71,15 +55,15 @@ ExchangeUpload::ExchangeUpload( KCal::Event* event, ExchangeAccount* account )
   m_currentUpload = event;
   m_currentUploadNumber = 0;
 
-  kdDebug() << "Trying to add appointment " << m_currentUpload->summary() << endl;
+//  kdDebug() << "Trying to add appointment " << m_currentUpload->summary() << endl;
 
   findUid( m_currentUpload->uid() );
 }
 
 ExchangeUpload::~ExchangeUpload()
 {
-  kdDebug() << "Entering Exchange destructor" << endl;
-  kdDebug() << "Finished Exchange destructor" << endl;
+  kdDebug() << "Entering ExchangeUpload destructor" << endl;
+  kdDebug() << "Finished ExchangeUpload destructor" << endl;
 }
 
 void ExchangeUpload::findUid( QString const& uid )
@@ -89,7 +73,7 @@ void ExchangeUpload::findUid( QString const& uid )
         "FROM Scope('shallow traversal of \"\"')\r\n"
         "WHERE \"urn:schemas:calendar:uid\" = '" + uid + "'\r\n";
 
-  kdDebug() << "Find uid query: " << endl << query << endl;
+//  kdDebug() << "Find uid query: " << endl << query << endl;
   
   KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
   connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotFindUidResult(KIO::Job *)));
@@ -99,11 +83,12 @@ void ExchangeUpload::slotFindUidResult( KIO::Job * job )
 {
   if ( job->error() ) {
     job->showErrorDialog( 0L );
+    emit finished( this );
     return;
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
 
-  kdDebug() << "Search uid result: " << endl << response.toString() << endl;
+//  kdDebug() << "Search uid result: " << endl << response.toString() << endl;
 
   QDomElement item = response.documentElement().firstChild().toElement();
   QDomElement hrefElement = item.namedItem( "href" ).toElement();
@@ -118,7 +103,7 @@ void ExchangeUpload::slotFindUidResult( KIO::Job * job )
   QString href = hrefElement.text();
   KURL url(href);
   url.setProtocol("webdav");
-  kdDebug() << "Found URL with identical uid: " << url.prettyURL() << endl;
+  kdDebug() << "Found URL with identical uid: " << url.prettyURL() << ", deleting that one" << endl;
 
   startUpload( url );  
 }  
@@ -149,11 +134,11 @@ void ExchangeUpload::tryExist()
 void ExchangeUpload::slotPropFindResult( KIO::Job *job )
 {
   int error = job->error(); 
-  kdDebug() << "PROPFIND error: " << error << endl;
+  // kdDebug() << "PROPFIND error: " << error << endl;
   if ( error && error != KIO::ERR_DOES_NOT_EXIST )
   {
     job->showErrorDialog( 0L );
-    emit finishDownload();
+    emit finished( this );
     return;
   }
 
@@ -217,9 +202,10 @@ QString timezoneid( int offset ) {
 
 void ExchangeUpload::startUpload( KURL& url )
 {
-  Event* event = static_cast<Event *>( m_currentUpload );
+  KCal::Event* event = static_cast<KCal::Event *>( m_currentUpload );
   if ( ! event ) {
     kdDebug() << "ERROR: trying to upload a non-Event Incidence" << endl;
+    emit finished( this );
     return;
   }
 
@@ -264,7 +250,7 @@ void ExchangeUpload::startUpload( KURL& url )
   kdDebug() << "Recurrence->doesRecur(): " << recurrence->doesRecur() << endl;
   if ( recurrence->doesRecur() != KCal::Recurrence::rNone ) {
     addElement( doc, prop, "urn:schemas:calendar:", "instancetype", "1" );
-    ICalFormat *format = new ICalFormat();
+    KCal::ICalFormat *format = new KCal::ICalFormat();
     QString recurstr = format->toString( recurrence );
     // Strip leading "RRULE\n :" and whitespace
     recurstr = recurstr.replace( QRegExp("^[A-Z]*[\\s]*:"), "").stripWhiteSpace();
@@ -276,7 +262,7 @@ void ExchangeUpload::startUpload( KURL& url )
   } else {
     addElement( doc, prop, "urn:schemas:calendar:", "instancetype", "0" );
   }
-  kdDebug() << doc.toString() << endl;
+  // kdDebug() << doc.toString() << endl;
 
   KIO::DavJob *job = KIO::davPropPatch( url, doc, false );
   connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPatchResult( KIO::Job * ) ) );
@@ -284,9 +270,10 @@ void ExchangeUpload::startUpload( KURL& url )
 
 void ExchangeUpload::slotPatchResult( KIO::Job* job )
 {
-  kdDebug() << "Patch result" << endl;
+  // kdDebug() << "Patch result" << endl;
   QDomDocument response = static_cast<KIO::DavJob *>( job )->response();
-  kdDebug() << response.toString() << endl;
-  emit uploadFinished( this );
+  // kdDebug() << response.toString() << endl;
+  emit finished( this );
 }
 
+#include "exchangeupload.moc"

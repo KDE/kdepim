@@ -60,6 +60,7 @@
 #include "exchangeprogress.h"
 #include "exchangeupload.h"
 #include "exchangedownload.h"
+#include "exchangedelete.h"
 #include "utils.h"
 
 using namespace KPIM;
@@ -161,14 +162,31 @@ void ExchangeClient::upload( KCal::Event* event )
   connect( worker, SIGNAL( finished( ExchangeUpload* ) ), this, SLOT( slotUploadFinished( ExchangeUpload* ) ) );
 }
 
+void ExchangeClient::remove( KCal::Event* event )
+{
+  ExchangeDelete* worker = new ExchangeDelete( event, mAccount );
+  connect( worker, SIGNAL( finished( ExchangeDelete* ) ), this, SLOT( slotRemoveFinished( ExchangeDelete* ) ) );
+}
+
 
 void ExchangeClient::slotDownloadFinished( ExchangeDownload* worker ) 
 {
+  emit downloadFinished( ResultOK );
   delete worker;
 }
 
 void ExchangeClient::slotUploadFinished( ExchangeUpload* worker ) 
 {
+  kdDebug() << "ExchangeClient::slotUploadFinished()" << endl;
+  emit uploadFinished( ResultOK );
   delete worker;
 }
 
+void ExchangeClient::slotRemoveFinished( ExchangeDelete* worker ) 
+{
+  kdDebug() << "ExchangeClient::slotRemoveFinished()" << endl;
+  emit removeFinished( ResultOK );
+  delete worker;
+}
+
+#include "exchangeclient.moc"

@@ -18,8 +18,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <qfile.h>
-
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kstandarddirs.h>
@@ -98,8 +96,9 @@ void ExchangeDownload::initiateDownload( const QDate& start, const QDate& end, b
   // mAccount->authenticate();
 
   if( showProgress ) {
-    kdDebug() << "Creating progress dialog" << endl;
+    //kdDebug() << "Creating progress dialog" << endl;
     mProgress = new ExchangeProgress();
+    mProgress->show();
   
     connect( this, SIGNAL(startDownload()), mProgress, SLOT(slotTransferStarted()) );
     connect( this, SIGNAL(finishDownload()), mProgress, SLOT(slotTransferFinished()) );
@@ -164,12 +163,12 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
 }
 
 void ExchangeDownload::handleAppointments( const QDomDocument& response, bool recurrence ) {
-  kdDebug() << "Entering handleAppointments" << endl;
+  //kdDebug() << "Entering handleAppointments" << endl;
   for( QDomElement item = response.documentElement().firstChild().toElement();
        !item.isNull();
        item = item.nextSibling().toElement() )
   {
-    kdDebug() << "Current item:" << item.tagName() << endl;
+    //kdDebug() << "Current item:" << item.tagName() << endl;
     QDomNodeList propstats = item.elementsByTagNameNS( "DAV:", "propstat" );
     // kdDebug() << "Item has " << propstats.count() << " propstat children" << endl; 
     for( uint i=0; i < propstats.count(); i++ )
@@ -188,7 +187,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
         continue;
       }
       int instanceType = instancetypeElement.text().toInt();
-      kdDebug() << "Instance type: " << instanceType << endl;
+      //kdDebug() << "Instance type: " << instanceType << endl;
     
       if ( recurrence && instanceType > 0 ) {
         QDomElement uidElement = prop.namedItem( "uid" ).toElement();
@@ -226,7 +225,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
 }  
 
 void ExchangeDownload::handleRecurrence(QString uid) {
-  kdDebug() << "Handling recurrence info for uid=" << uid << endl;
+  // kdDebug() << "Handling recurrence info for uid=" << uid << endl;
   QString query = 
         "SELECT \"DAV:href\", \"urn:schemas:calendar:instancetype\"\r\n"
         "FROM Scope('shallow traversal of \"\"')\r\n"
@@ -298,7 +297,7 @@ void ExchangeDownload::slotTransferResult(KIO::Job *job) {
   m_transferJobs.remove( url.url() );
   delete messageData;
   decreaseDownloads();
-  kdDebug() << "Finished slotTransferREsult" << endl;
+  // kdDebug() << "Finished slotTransferREsult" << endl;
 }
 
 void ExchangeDownload::handlePart( DwEntity *part ) {
@@ -360,14 +359,14 @@ void ExchangeDownload::decreaseDownloads()
 
 QPtrList<KCal::Event> ExchangeDownload::eventsForDate( KCal::Calendar* calendar, const QDate &qd )
 {
-  kdDebug() << "Entering ExchangeDownload::eventsForDate()" << endl;
+  // kdDebug() << "Entering ExchangeDownload::eventsForDate()" << endl;
 
   mState = WaitingForResult;
   mMode = Synchronous;
   mCalendar = calendar;
   mEvents = QPtrList<KCal::Event>();
 
-  kdDebug() << "Initiating download..." << endl;
+  // kdDebug() << "Initiating download..." << endl;
   initiateDownload( qd, qd.addDays( 1 ), false );
 
   connect(this, SIGNAL(downloadFinished( ExchangeDownload * )), 
@@ -376,7 +375,7 @@ QPtrList<KCal::Event> ExchangeDownload::eventsForDate( KCal::Calendar* calendar,
     qApp->processEvents();
   } while ( mState==WaitingForResult );
 
-  kdDebug() << "Finished downloading events for date" << endl;
+  // kdDebug() << "Finished downloading events for date" << endl;
   return mEvents;
 
   /*
@@ -406,13 +405,13 @@ QPtrList<KCal::Event> ExchangeDownload::eventsForDate( KCal::Calendar* calendar,
 
 void ExchangeDownload::slotDownloadFinished( ExchangeDownload *download )
 {
-  kdDebug() << "slotDownloadFinished" << endl;
+  // kdDebug() << "slotDownloadFinished" << endl;
   mState = HaveResult;
 }
 
 void ExchangeDownload::slotSyncResult( KIO::Job * job )
 {
-  kdDebug() << "slotSyncResult(): error=" << job->error() << endl;
+  // kdDebug() << "slotSyncResult(): error=" << job->error() << endl;
   if ( job->error() ) {
     job->showErrorDialog( 0L );
   }
@@ -420,3 +419,5 @@ void ExchangeDownload::slotSyncResult( KIO::Job * job )
   mState = HaveResult;
   mResponse = static_cast< KIO::DavJob * >(job)->response();
 }
+
+#include "exchangedownload.moc"

@@ -131,5 +131,7 @@ void ExchangeAccount::authenticate()
 
   dcopClient->detach();
   delete dcopClient;
+
+  kdDebug() << "Finished ExchangeAccount::authenticate()" << endl;
 }
 

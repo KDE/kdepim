@@ -29,8 +29,7 @@
 
 namespace KPIM {
 	
-class ExchangeAccount : public QObject {
-    Q_OBJECT
+class ExchangeAccount {
   public:
     ExchangeAccount( QString host, QString account, QString password );
     /** 

@@ -69,3 +69,4 @@ void ExchangeProgress::updateLabel()
   setLabel( str );
 }
 
+#include "exchangeprogress.moc"

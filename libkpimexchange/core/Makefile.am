@@ -11,13 +11,14 @@ INCLUDES = -I$(top_srcdir)/korganizer/interfaces \
 
 noinst_LTLIBRARIES = libkpimexchangecore.la
 
-libkpimexchangecore_la_SOURCES = exchangeprogress.cpp exchangeclient.cpp exchangeaccount.cpp \
- 			   exchangedownload.cpp exchangeupload.cpp utils.cpp
+libkpimexchangecore_la_SOURCES = exchangeclient.cpp exchangeaccount.cpp \
+ 			   exchangedownload.cpp exchangeupload.cpp exchangedelete.cpp \
+			   utils.cpp exchangeprogress.cpp 
 #libkpimexchange_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0 -module
 #libkpimexchange_la_LIBADD = $(LIB_KIO) $(top_builddir)/libkcal/libkcal.la -lmimelib
 
 kdepimincludedir = $(includedir)/kdepim
 kdepiminclude_HEADERS = exchangeclient.h exchangeaccount.h
 
-noinst_HEADERS = exchangedownload.h exchangeupload.h exchangeprogress.h utils.h
+noinst_HEADERS = exchangedownload.h exchangeupload.h exchangedelete.h exchangeprogress.h utils.h
 

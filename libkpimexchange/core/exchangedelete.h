@@ -17,8 +17,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KDEPIM_EXCHANGE_UPLOAD_H
-#define KDEPIM_EXCHANGE_UPLOAD_H
+#ifndef KDEPIM_EXCHANGE_DELETE_H
+#define KDEPIM_EXCHANGE_DELETE_H
 
 #include <qstring.h>
 #include <kio/job.h>
@@ -33,30 +33,24 @@ namespace KPIM {
 
 class ExchangeAccount;
 
-class ExchangeUpload : public QObject {
+class ExchangeDelete : public QObject {
     Q_OBJECT
   public:
-    ExchangeUpload( KCal::Event* event, ExchangeAccount* account );
-    ~ExchangeUpload();
+    ExchangeDelete( KCal::Event* event, ExchangeAccount* account );
+    ~ExchangeDelete();
 
   private slots:
-    void slotPatchResult( KIO::Job * );
-    void slotPropFindResult( KIO::Job * );
+    void slotDeleteResult( KIO::Job * );
     void slotFindUidResult( KIO::Job * );
 
   signals:
-    void startDownload();
-    void finishDownload();
-    void finished( ExchangeUpload* worker );
+    void finished( ExchangeDelete* worker );
 
   private:
-    void tryExist();
-    void startUpload( KURL& url );
-    void findUid( QString const& uid );
+    void findUidSingleMaster( QString const& uid );
+    void startDelete( KURL& url );
     
     ExchangeAccount* mAccount;
-    KCal::Event* m_currentUpload;
-    int m_currentUploadNumber;
 };
 
 }
