@@ -37,7 +37,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 	QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
 	
 	// First, insert the texts on top:
-	textLabel1 = new QLabel(i18n("Here is a list of all text files and DOC databases the conduit found. The conduit tried to determine the correct sync direction, but for databases in bold red letters a conflict occured (i.e. the text was changed both on the desktop and on the handheld). For these databases please specify which version is the current one."), page);
+	textLabel1 = new QLabel(i18n("Here is a list of all text files and DOC databases the conduit found. The conduit tried to determine the correct sync direction, but for databases in bold red letters a conflict occurred (i.e. the text was changed both on the desktop and on the handheld). For these databases please specify which version is the current one."), page);
 	textLabel1->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
 	topLayout->addWidget(textLabel1);
 

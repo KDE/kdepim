@@ -333,7 +333,7 @@ PopMailConduit::doSync()
 			sprintf(buffer,"[ Sent %d message%c",
 				sent_count,(sent_count>1) ? 's' : 0);
 			addSyncLogEntry(buffer);
-			sprintf(buffer,", Receved %d message%c",
+			sprintf(buffer,", Received %d message%c",
 				received_count,(received_count>1) ? 's' : 0);
 			addSyncLogEntry(buffer);
 		}

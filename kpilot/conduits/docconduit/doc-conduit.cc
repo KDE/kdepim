@@ -584,7 +584,7 @@ void DOCConduit::syncDatabases() {
 		case eSyncDelete:
 		case eSyncPDAToPC:
 		case eSyncPCToPDA:
-			emit logMessage(i18n("Syncronizing text \"%1\"").arg(sinfo.handheldDB));
+			emit logMessage(i18n("Synchronizing text \"%1\"").arg(sinfo.handheldDB));
 			if (!doSync(sinfo)) {
 				// The sync could not be done, so inform the user (the error message should probably issued inside doSync)
 #ifdef DEBUG

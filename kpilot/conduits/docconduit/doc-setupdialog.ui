@@ -49,7 +49,7 @@
                             <string>&amp;Local sync (only sync the two dirs, no synchronization with handheld)</string>
                         </property>
                         <property name="toolTip" stdset="0">
-                            <string>Check this is you only want to syncronize the two directories above, but don't want to install the converted databases to the handheld.</string>
+                            <string>Check this is you only want to synchronize the two directories above, but don't want to install the converted databases to the handheld.</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">

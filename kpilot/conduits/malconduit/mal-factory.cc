@@ -79,9 +79,9 @@ MALConduitFactory::MALConduitFactory(QObject *p, const char *n) :
 
 	fInstance = new KInstance("MALconduit");
 	fAbout = new KAboutData("MALconduit",
-		I18N_NOOP("MAL Syncronization Conduit for KPilot"),
+		I18N_NOOP("MAL Synchronization Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Syncronizes the content from MAL Servers like AvantGo to the Handheld"),
+		I18N_NOOP("Synchronizes the content from MAL Servers like AvantGo to the Handheld"),
 		KAboutData::License_GPL,
 		"(C) 2002, Reinhold Kainhofer");
 	fAbout->addAuthor("Reinhold Kainhofer",

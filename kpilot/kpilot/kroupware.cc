@@ -220,7 +220,7 @@ void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
      logMessage(filename);
    } else {
      logMessage("Calling over DCOP succeeded");
-     logMessage("Sync to KMail has finished sucessfully");
+     logMessage("Sync to KMail has finished successfully");
    }
    QFile::remove( filename );
  }

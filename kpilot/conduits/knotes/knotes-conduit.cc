@@ -771,14 +771,14 @@ int KNotesConduit::pilotToNotes(NotesMap& m)
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
-			<< ": DCOP to KNotes succesful."
+			<< ": DCOP to KNotes successful."
 			<< endl;
 #endif
 	}
 	else
 	{
 		kdWarning() << __FUNCTION__
-			<< ": Couln't tell KNotes about new notes."
+			<< ": Couldn't tell KNotes about new notes."
 			<< endl;
 	}
 
@@ -843,7 +843,7 @@ KNotesConduit::doTest()
 			{
 #ifdef DEBUG
 				DEBUGCONDUIT << fname
-					<< ": DCOP send succesful"
+					<< ": DCOP send successful"
 					<< endl;
 #endif
 			}
