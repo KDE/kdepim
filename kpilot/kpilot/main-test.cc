@@ -38,6 +38,7 @@ static const char *test_id =
 
 #include <qpushbutton.h>
 #include <qhbox.h>
+#include <qtimer.h>
 
 #include <kapplication.h>
 #include <klocale.h>
@@ -73,6 +74,10 @@ static KCmdLineOptions kpilotoptions[] = {
 	{ "T",0,0},
 	{ "notest",
 		I18N_NOOP("*Really* run the conduit, not in test mode."),
+		0 } ,
+	{ "F",0,0},
+	{ "test-local",
+		"Run the conduit in file-test mode.",
 		0 } ,
 	{0, 0, 0}
 };
@@ -194,7 +199,7 @@ int execConduit(KCmdLineArgs *p)
 
 	if (p->isSet("test"))
 	{
-		syncStack->prepare(ActionQueue::HotSyncMode| ActionQueue::TestMode);
+		syncStack->prepare(ActionQueue::HotSyncMode|ActionQueue::TestMode);
 	}
 	else
 	{
@@ -203,6 +208,29 @@ int execConduit(KCmdLineArgs *p)
 
 	connectStack();
 	createConnection(p);
+
+	return kapp->exec();
+}
+
+int testConduit(KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
+
+	// get --exec-conduit value
+	QString s = p->getOption("conduit-exec");
+	if (s.isEmpty()) return 1;
+
+	createLogWidget();
+	createLink();
+
+	syncStack = new ActionQueue(deviceLink);
+	syncStack->queueConduits(&KPilotConfig::getConfig(),
+		QStringList(s),
+		ActionQueue::FlagTest | ActionQueue::FlagLocal);
+
+	connectStack();
+
+	QTimer::singleShot(10,syncStack,SLOT(execConduit()));
 
 	return kapp->exec();
 }
@@ -279,7 +307,14 @@ int main(int argc, char **argv)
 
 	if (p->isSet("conduit-exec"))
 	{
-		return execConduit(p);
+		if (p->isSet("test-local"))
+		{
+			return testConduit(p);
+		}
+		else
+		{
+			return execConduit(p);
+		}
 	}
 
 	// The default is supposed to be "list"

@@ -74,10 +74,19 @@ public:
 	enum { MAX_APPINFO_SIZE=8192 
 		} Constants;
 
-	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
-	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0) = 0;
+	/** 
+	* Creates the database with the given creator, type and flags 
+	* on the given card (default is RAM). If the database already 
+	* exists, this function does nothing. 
+	*/
+	virtual bool createDatabase(long creator=0, long type=0, 
+		int cardno=0, int flags=0, int version=0) = 0;
 	
-	/** Deletes the database (by name, as given in the constructor, the database name is stored depending on the implementation of PilotLocalDatabase and PilotSerialDatabas) */
+	/** 
+	* Deletes the database (by name, as given in the constructor, 
+	* the database name is stored depending on the implementation 
+	* of PilotLocalDatabase and PilotSerialDatabas) 
+	*/
 	virtual int deleteDatabase()=0;
 	
 	/** Reads the application block info, returns size. */
@@ -101,13 +110,27 @@ public:
 	/** Reads the next record from database in category 'category' */
 	virtual PilotRecord* readNextRecInCategory(int category) = 0;
 
-	/** Reads the next record from database that has the dirty flag set. ind (if a valid pointer is given) will receive the index of the returned record. */
+	/** 
+	* Reads the next record from database that has the dirty flag set. 
+	* If @p ind is non-NULL, *ind is set to the index of the current
+	* record (i.e. before the record pointer moves to the next
+	* modified record).
+	*/
 	virtual PilotRecord* readNextModifiedRec(int *ind=NULL) = 0;
 
-	/** Writes a new record to database (if 'id' == 0, one will be assigned to newRecord) */
+	/** 
+	* Writes a new record to database (if 'id' == 0, one will be 
+	* assigned to newRecord) 
+	*/
 	virtual recordid_t writeRecord(PilotRecord* newRecord) = 0;
 
-	/** Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case. Return value is negative on error, 0 otherwise. */
+	/** 
+	* Deletes a record with the given recordid_t from the database, 
+	* or all records, if @p all is set to true. The recordid_t will 
+	* be ignored in this case.
+	*
+	* Return value is negative on error, 0 otherwise.
+	*/
 	virtual int deleteRecord(recordid_t id, bool all=false) = 0;
 	
 	/** Resets all records in the database to not dirty. */

@@ -91,23 +91,30 @@ public:
 protected:
 	bool isTest() const { return fTest; } ;
 	bool isBackup() const { return fBackup; } ;
+	bool isLocal() const { return fLocal; } ;
 
 	KConfig *fConfig;
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
+	/**
+	* See openDatabases_ for info on the @p retrieved
+	* parameter. In --local mode, retrieved is left
+	* unchanged.
+	*/
 	bool openDatabases(const QString &dbName, bool*retrieved=0L);
-	
+
 private:
 	bool fTest;	// Do some kind of test run on the pilot
 	bool fBackup;	// Do a backup of the database
+	bool fLocal;	// Local test without a Pilot
 
 	/**
 	* Open both the local copy of database @p dbName
 	* and the version on the Pilot. Return true only
 	* if both opens succeed. If the local copy of the database
 	* does not exist, it is retrieved from the handheld. In this
-	* case, retrieved is set to true, otherwise it is left alone 
-	* (i.e. retains it value and it not explicitly set to false).
+	* case, retrieved is set to true, otherwise it is left alone
+	* (i.e. retains its value and is not explicitly set to false).
 	*/
 	bool openDatabases_(const QString &dbName, bool*retrieved=0L);
 
@@ -115,6 +122,9 @@ private:
 	* Open both databases, but get the fDatabase not from
 	* the Pilot, but from a local database in an alternate
 	* directory. For testing only.
+	*
+	* If @p localPath is QString::null, don't even try to open
+	* fDatabase. Just open the local one.
 	*/
 	bool openDatabases_(const QString &dbName,const QString &localPath);
 } ;

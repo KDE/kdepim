@@ -156,6 +156,9 @@ KPilotInstaller::KPilotInstaller() :
 	readConfig();
 	setupWidget();
 
+#ifdef DEBUG
+	PilotRecord::allocationInfo();
+#endif
 	fConfigureKPilotDialogInUse = false;
 	fConfigureConduitDialogInUse = false;
 
@@ -168,6 +171,9 @@ KPilotInstaller::~KPilotInstaller()
 	FUNCTIONSETUP;
 	killDaemonIfNeeded();
 	delete fDaemonStub;
+#ifdef DEBUG
+	PilotRecord::allocationInfo();
+#endif
 }
 
 void KPilotInstaller::killDaemonIfNeeded()
@@ -667,7 +673,10 @@ void KPilotInstaller::optionsConfigureToolbars()
 {
 	FUNCTIONSETUP;
 	// use the standard toolbar editor
+#if KDE_VERSION >= 0x030100
+	// This was added in KDE 3.1
 	saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+#endif
 	KEditToolbar dlg(actionCollection());
 	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
 	dlg.exec();

@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -32,7 +32,7 @@
 
 #include <pi-file.h>
 
-class PilotRecord 
+class PilotRecord
 {
 public:
 	PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid);

@@ -51,10 +51,10 @@
  * lc->setColumnText(1,i18n("HTML"));
  * QListViewItem *stdKDE = lc->addCategory(i18n("Standard KDE"));
  * (void) new QListViewItem(stdKDE,i18n("red"),"#FF0000");
- * <PRE>
- * to set sensible column headers for a list of colours 
+ * </PRE>
+ * to set sensible column headers for a list of colors 
  * and their HTML equivalents (although why you would want
- * to categorize colours is beyond me).
+ * to categorize colors is beyond me).
  *
  * @version $Id$
  */

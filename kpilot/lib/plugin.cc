@@ -72,7 +72,8 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	fDatabase(0L),
 	fLocalDatabase(0L),
 	fTest(args.contains(CSL1("--test"))),
-	fBackup(args.contains(CSL1("--backup")))
+	fBackup(args.contains(CSL1("--backup"))),
+	fLocal(args.contains(CSL1("--local")))
 {
 	FUNCTIONSETUP;
 
@@ -120,56 +121,59 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 		QString dbpath(dynamic_cast<PilotLocalDatabase*>(fLocalDatabase)->dbPathName());
 		KPILOT_DELETE(fLocalDatabase);
 #ifdef DEBUG
-		DEBUGCONDUIT << "Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
+		DEBUGCONDUIT << fname
+			<< ": Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
 #endif
 		struct DBInfo dbinfo;
-		if (fHandle->findDatabase(name.latin1(), &dbinfo)<0 ) 
+		if (fHandle->findDatabase(name.latin1(), &dbinfo)<0 )
 		{
 #ifdef DEBUG
-			DEBUGCONDUIT<<fname<<"Could not get DBInfo for "<<name<<"! "<<endl;
+			DEBUGCONDUIT << fname
+				<< ": Could not get DBInfo for "<<name<<"! "<<endl;
 #endif
 			return false;
 		}
 #ifdef DEBUG
-			DEBUGCONDUIT <<"Found Palm database: "<<dbinfo.name<<endl
+			DEBUGCONDUIT << fname
+					<< ": Found Palm database: "<<dbinfo.name<<endl
 					<<"type = "<< dbinfo.type<<endl
 					<<"creator = "<< dbinfo.creator<<endl
 					<<"version = "<< dbinfo.version<<endl
 					<<"index = "<< dbinfo.index<<endl;
 #endif
 		dbinfo.flags &= ~dlpDBFlagOpen;
-		
+
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
 		if (!fi.exists()) {
 			QDir d(fi.dir(TRUE));
 #ifdef DEBUG
-			DEBUGCONDUIT <<"Creating backup directory "<<d.absPath()<<endl;
+			DEBUGCONDUIT << fname << ": Creating backup directory "<<d.absPath()<<endl;
 #endif
 			d.mkdir(d.absPath());
 		}
-		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) ) 
+		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) )
 		{
 #ifdef DEBUG
-			DEBUGCONDUIT << "Could not retrieve database "<<name<<" from the handheld."<<endl;
+			DEBUGCONDUIT << fname << ": Could not retrieve database "<<name<<" from the handheld."<<endl;
 #endif
 			return false;
 		}
 		fLocalDatabase = new PilotLocalDatabase(name);
-		if (!fLocalDatabase || !fLocalDatabase->isDBOpen()) 
+		if (!fLocalDatabase || !fLocalDatabase->isDBOpen())
 		{
 #ifdef DEBUG
-			DEBUGCONDUIT<<"local backup of database "<<name<<" could not be initialized."<<endl;
+			DEBUGCONDUIT << fname << ": local backup of database "<<name<<" could not be initialized."<<endl;
 #endif
 			return false;
 		}
 		if (retrieved) *retrieved=true;
 	}
-	
+
 	// These latin1()'s are ok, since database names are latin1-coded.
-	fDatabase = new PilotSerialDatabase(pilotSocket(), name /* On pilot */, 
+	fDatabase = new PilotSerialDatabase(pilotSocket(), name /* On pilot */,
 		this, name.latin1() /* QObject name */);
-	
+
 	if (!fDatabase)
 	{
 		kdWarning() << k_funcinfo
@@ -183,20 +187,34 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 	        fLocalDatabase && fLocalDatabase->isDBOpen() );
 }
 
+// This whole function is for debugging purposes only.
 bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPath)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT << ": Doing local test mode for " << dbName << endl;
+	DEBUGCONDUIT << fname << ": Doing local test mode for " << dbName << endl;
 #endif
-	fDatabase = new PilotLocalDatabase(dbName,localPath);
+	if (localPath.isNull())
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< ": local mode test for one database only."
+			<< endl;
+#endif
+		fDatabase = new PilotLocalDatabase(dbName);
+		fLocalDatabase = 0L;
+		return false;
+	}
+
+	fDatabase = new PilotLocalDatabase(localPath,dbName);
 	fLocalDatabase= new PilotLocalDatabase(dbName); // From default
 	if (!fLocalDatabase || !fDatabase)
 	{
 		const QString *where2 = PilotLocalDatabase::getDBPath();
 
 		QString none = CSL1("<null>");
-		kdWarning() << k_funcinfo
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
 			<< ": Could not open both local copies of \""
 			<< dbName
 			<< "\"" << endl
@@ -206,19 +224,55 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 			<< (localPath.isEmpty() ? localPath : none)
 			<< "\""
 			<< endl;
+#endif
 	}
+#ifdef DEBUG
+	if (fLocalDatabase)
+	{
+		DEBUGCONDUIT << fname
+			<< ": Opened local database "
+			<< fLocalDatabase->dbPathName()
+			<< (fLocalDatabase->isDBOpen() ? " OK" : "")
+			<< endl;
+	}
+	if (fDatabase)
+	{
+		DEBUGCONDUIT << fname
+			<< ": Opened database "
+			<< fDatabase->dbPathName()
+			<< (fDatabase->isDBOpen() ? " OK" : "")
+			<< endl;
+	}
+#endif
+
 	return (fDatabase && fLocalDatabase);
 }
 
 bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 {
+	FUNCTIONSETUP;
+	
 	/*
 	** We should look into the --local flag passed
 	** to the conduit and act accordingly, but until
 	** that is implemented ..
 	*/
-	
-	return openDatabases_(dbName, retrieved);
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Mode="
+		<< (isTest() ? "test " : "")
+		<< (isLocal() ? "local " : "")
+		<< endl ;
+#endif
+		
+	if (isTest() && isLocal())
+	{
+		return openDatabases_(dbName,CSL1("/tmp/"));
+	}
+	else
+	{
+		return openDatabases_(dbName, retrieved);
+	}
 }
 
 int PluginUtility::findHandle(const QStringList &a)
