@@ -1,9 +1,15 @@
-Done:
-----------------------------------------------------------------
+Todo:
 
-TODO:
-----------------------------------------------------------------
-- Todo, others;)
-- Human readable
-- Code clean
-- 
+Big architectural break-down
+-----------------------------------------------------------------------
+Event class parent class and make konsokalendarvariables as child class
+Move all showing code to konsolekalendarexports
+Move HTML to own method
+Remote calendar support (this should be done smoothly like you write 
+fish://some.com/mycalendar you get you calendar). This should be done
+in some separated lib..
+Parsing args to own methods (from main)
+Clean up starting sequence. (separate sane checks)
+Re-think Whole GPL-QT clause! (Tuukka:) 
+
+
