@@ -114,6 +114,134 @@ ConduitTip::~ConduitTip()
 }
 
 
+#if 0
+/**
+*** As-yet unused class for a list of QCheckBoxes, to replace
+*** the unwieldy two-listbox layout we have now. This code
+*** pretty much copies things from KDebugDialog.
+***
+*** We'll be inserting conduitDescription objects into the list,
+*** which subsume the hacked QListViewItems we use now. 
+**/
+
+/*
+** KCheckBoxList
+*/
+
+#include <qscrollview.h>
+#include <qptrlist.h>
+#include <qvbox.h>
+#include <qcheckbox.h>
+
+class KCheckBoxList : public QScrollView
+{
+public:
+	KCheckBoxList(QWidget *parent=0L);
+	virtual ~KCheckBoxList();
+
+	void addBoxes(const QStringList &);
+	bool addBox(QCheckBox *p) 
+		{ if (p->parent()==boxParent()) 
+			{ m_boxes.append(p); return true; }
+		  else return false; } ;
+	QPtrList<QCheckBox> checkedBoxes() const;
+	const QPtrList<QCheckBox> allBoxes() const { return m_boxes; } ;
+	
+	void selectAllBoxes(bool);
+
+	QWidget *boxParent() const { return m_box; } ;
+	
+protected:
+	QVBox *m_box;
+	QPtrList<QCheckBox> m_boxes;
+} ;
+
+KCheckBoxList::KCheckBoxList(QWidget *parent) :
+	QScrollView(parent)
+{
+	setResizePolicy(QScrollView::AutoOneFit);
+	m_box = new QVBox( viewport() );
+	addChild(m_box);
+}
+
+KCheckBoxList::~KCheckBoxList()
+{
+	// All of the QCheckBoxes are my children,
+	// they die with the widget.
+}
+
+void KCheckBoxList::addBoxes(const QStringList &l)
+{
+	QStringList::ConstIterator it = l.begin();
+	for ( ; it != l.end(); ++it)
+	{
+		QCheckBox *cb = new QCheckBox(*it,m_box);
+		m_boxes.append(cb);
+	}
+}
+
+void KCheckBoxList::selectAllBoxes(bool b)
+{
+	QCheckBox *p;
+	
+	for (p=m_boxes.first(); p; p=m_boxes.next())
+	{
+		p->setChecked(b);
+	}
+}
+
+QPtrList<QCheckBox> KCheckBoxList::checkedBoxes() const
+{
+	QPtrList<QCheckBox> l;
+	QPtrListIterator<QCheckBox> it(m_boxes);
+	QCheckBox *p;
+	
+	for ( ; (p = it.current()) ; ++it)
+	{
+		if (p->isChecked()) l.append(p);
+	}
+	
+	return l;
+}
+
+class ConduitDescription : public QCheckBox
+{
+public:
+	ConduitDescription(KCheckBoxList *owner,
+		const QString &name,
+		const QString &comment,
+		const QString &desktop,
+		const QString &library);
+	virtual ~ConduitDescription();
+	
+	QString conduit() const { return text(); } ;
+	QString comment() const { return fComment; } ;
+	QString desktop() const { return fDesktop; } ;
+	QString library() const { return fLibrary; } ;
+	
+protected:
+	QString fComment,fDesktop,fLibrary;
+} ;
+
+ConduitDescription::ConduitDescription(KCheckBoxList *owner,
+	const QString &name,
+	const QString &comment,
+	const QString &desktop,
+	const QString &library) :
+	QCheckBox(name,owner->boxParent()),
+	fComment(comment),
+	fDesktop(desktop),
+	fLibrary(library)
+{
+	owner->addBox(this);
+}
+
+ConduitDescription::~ConduitDescription()
+{
+}
+#endif
+
+
 ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
 	bool m) : UIDialog(_w, n, m)
 {
@@ -430,6 +558,9 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 
 // $Log$
+// Revision 1.10  2002/12/31 13:22:07  mueller
+// CVS_SILENT fixincludes
+//
 // Revision 1.9  2002/04/20 13:03:31  binner
 // CVS_SILENT Capitalisation fixes.
 //
