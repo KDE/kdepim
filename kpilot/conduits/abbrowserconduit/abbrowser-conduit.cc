@@ -97,7 +97,7 @@ void AbbrowserConduit::cleanupOnCrash(int sig)
 {
 	kdWarning()<<"Crash handler, cleaning up addressbook"<<endl;
 	if (aBook) aBook->cleanUp();
-	::exit( 0 );
+	KCrash::defaultCrashHandler(sig);
 }
 
 
@@ -122,8 +122,8 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QS
 #endif
 	fConduitName=i18n("Addressbook");
 	// Set crash handler, store old handler
-	oldCleanupOnCrash=KCrash::emergencySaveFunction();
-	KCrash::setEmergencySaveFunction(AbbrowserConduit::cleanupOnCrash);
+	oldCleanupOnCrash=KCrash::crashHandler();
+	KCrash::setCrashHandler(AbbrowserConduit::cleanupOnCrash);
 }
 
 
@@ -131,7 +131,7 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QS
 AbbrowserConduit::~AbbrowserConduit()
 {
 	FUNCTIONSETUP;
-	if (oldCleanupOnCrash) KCrash::setEmergencySaveFunction(oldCleanupOnCrash);
+	if (oldCleanupOnCrash) KCrash::setCrashHandler(oldCleanupOnCrash);
 }
 
 
@@ -289,13 +289,7 @@ bool AbbrowserConduit::_loadAddressBook()
 				// the filename instead of having to use a config file)
 				KRES::Resource*rawres=resfact->resource("file", fConfig);
 				KABC::Resource*abookres=dynamic_cast<KABC::Resource*>(rawres);
-				if (abookres)
-				{
-//					abookres->setAddressBook(aBook);
-					aBook->addResource(abookres);
-//					aBook->setStandardResource(abookres);
-				}
-				else
+				if ((!abookres) || (!aBook->addResource(abookres)) )
 				{
 					kdWarning()<<k_funcinfo<<": Unable to open addressbook resource "
 						<<"for file "<<fAbookFile<<endl;
