@@ -483,7 +483,7 @@ void KNArticleWidget::saveAttachement(const QString &id)
   int pos = id.findRev('.');
   if(pos!=-1)
     KNArticleManager::saveContentToFile(att->at(id.mid(++pos, id.length()-pos).toInt()));
-  else KMessageBox::error(0, i18n("Internal error: Malformed identifier !!"));
+  else KMessageBox::error(0, i18n("Internal error: Malformed identifier!"));
 }
 
 
@@ -494,7 +494,7 @@ void KNArticleWidget::openAttachement(const QString &id)
  int pos = id.findRev('.');
  if(pos!=-1)
    KNArticleManager::openContent(att->at(id.mid(++pos, id.length()-pos).toInt()));
- else KMessageBox::error(0, i18n("Internal error: Malformed identifier !!"));
+ else KMessageBox::error(0, i18n("Internal error: Malformed identifier!"));
 }
 
 

@@ -263,7 +263,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
 		qDebug("Authorization requested");
 		
 		if (!account.user().length()) {
-			job->setErrorString(i18n("Authentication failed !!\nCheck your username and password."));
+			job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
 			return false;
 		}
 
@@ -278,7 +278,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
 			qDebug("Password required");
 			
 			if (!account.pass().length()) {
-				job->setErrorString(i18n("Authentication failed !!\nCheck your username and password."));
+				job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
 				return false;
 			}	
 					
