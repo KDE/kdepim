@@ -280,7 +280,7 @@ icalerrorenum icalfileset_commit(icalfileset* cluster)
     strcpy(tmp,impl->path);
 #endif
     
-    if ( (f = fopen(tmp,"w")) < 0 ){
+    if ( (f = fopen(tmp,"w")) == 0 ){
 	icalerror_set_errno(ICAL_FILE_ERROR);
 	return ICAL_FILE_ERROR;
     }
