@@ -2864,8 +2864,6 @@ void test_file_locks()
     int i;
     int final,sec;
 
-    icalfileset_safe_saves = 1;
-
     icalerror_clear_errno();
 
     unlink(path);
