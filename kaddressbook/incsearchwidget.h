@@ -29,6 +29,7 @@
 #include <kabc/field.h>
 
 class QComboBox;
+class QTimer;
 class KLineEdit;
 
 class IncSearchWidget : public QWidget
@@ -69,6 +70,7 @@ class IncSearchWidget : public QWidget
 
   private slots:
     void announceDoSearch();
+    void timeout();
 
   protected:
     virtual void keyPressEvent( QKeyEvent* );
@@ -80,6 +82,7 @@ class IncSearchWidget : public QWidget
     KLineEdit* mSearchText;
     KABC::Field::List mFieldList;
     KABC::Field::List mViewFields;
+    QTimer* mInputTimer;
 };
 
 #endif

@@ -25,6 +25,7 @@
 #include <qcombobox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qtimer.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
@@ -69,6 +70,10 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   QToolTip::add( mFieldCombo, i18n( "Select incremental search field" ) );
   QWhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
 
+  mInputTimer = new QTimer( this );
+
+  connect( mInputTimer, SIGNAL( timeout() ),
+           SLOT( timeout() ) );
   connect( mSearchText, SIGNAL( textChanged( const QString& ) ),
            SLOT( announceDoSearch() ) );
   connect( mSearchText, SIGNAL( returnPressed() ),
@@ -92,6 +97,14 @@ IncSearchWidget::~IncSearchWidget()
 }
 
 void IncSearchWidget::announceDoSearch()
+{
+  if ( mInputTimer->isActive() )
+    mInputTimer->stop();
+
+  mInputTimer->start( 0, true );
+}
+
+void IncSearchWidget::timeout()
 {
   emit doSearch( mSearchText->text() );
 }
