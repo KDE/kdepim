@@ -35,52 +35,25 @@ KNServerInfo::~KNServerInfo()
 
 
 
-void KNServerInfo::copy(KNServerInfo *i)
-{
-  t_ype=i->type();
-  p_ort=i->port();
-  h_old=i->hold();
-  t_imeout=i->timeout();
-  s_erver=i->server();
-  n_eedsLogon = i->needsLogon();
-  u_ser=i->user();
-  p_ass=i->pass();
-}
-
-
-
 void KNServerInfo::clear()
 {
   t_ype=STnntp;
   p_ort=119;
   t_imeout=60;
   h_old=300;
-  s_erver = "";
+  s_erver = QString::null;
   
   n_eedsLogon = false;
-  u_ser = "";
-  p_ass = "";
+  u_ser = QString::null;
+  p_ass = QString::null;
 }
 
-
-
-bool KNServerInfo::isEqual(KNServerInfo *i)
-{
-  return (  (t_ype==i->type())  &&
-            (s_erver==i->server()) &&
-            (p_ort==i->port()) &&
-            (h_old==i->hold()) &&
-            (t_imeout==i->timeout()) &&
-            (n_eedsLogon==i->needsLogon()) &&
-            (u_ser==i->user()) &&
-            (p_ass==i->pass())            );
-}
 
 
     
 void KNServerInfo::readConf(KConfig *conf)
 {
-  s_erver=conf->readEntry("server", "localhost").latin1();
+  s_erver=conf->readEntry("server", "localhost");
 
   if(t_ype==STnntp)
     p_ort=conf->readNumEntry("port", 119);
@@ -98,8 +71,8 @@ void KNServerInfo::readConf(KConfig *conf)
   if(t_ype==STnntp) {
     i_d=conf->readNumEntry("id", -1);
     n_eedsLogon=conf->readBoolEntry("needsLogon",false);
-    u_ser=conf->readEntry("user").local8Bit();
-    p_ass=decryptStr(conf->readEntry("pass")).local8Bit();
+    u_ser=conf->readEntry("user");
+    p_ass=decryptStr(conf->readEntry("pass"));
   }
 }
 
@@ -107,14 +80,28 @@ void KNServerInfo::readConf(KConfig *conf)
 
 void KNServerInfo::saveConf(KConfig *conf)
 {
-  conf->writeEntry("server", QString::fromLatin1(s_erver));
+  conf->writeEntry("server", s_erver);
   conf->writeEntry("port", p_ort);
   conf->writeEntry("holdTime", h_old);
   conf->writeEntry("timeout", t_imeout);
   if (t_ype==STnntp) {
     conf->writeEntry("id", i_d);
     conf->writeEntry("needsLogon", n_eedsLogon);
-    conf->writeEntry("user", QString::fromLocal8Bit(u_ser));
-    conf->writeEntry("pass", encryptStr(QString::fromLocal8Bit(p_ass)));
+    conf->writeEntry("user", u_ser);
+    conf->writeEntry("pass", encryptStr(p_ass));
   }
+}
+
+
+
+bool KNServerInfo::operator==(const KNServerInfo &s)
+{
+  return (  (t_ype==s.t_ype)  &&
+            (s_erver==s.s_erver) &&
+            (p_ort==s.p_ort) &&
+            (h_old==s.h_old) &&
+            (t_imeout==s.t_imeout) &&
+            (n_eedsLogon==s.n_eedsLogon) &&
+            (u_ser==s.u_ser) &&
+            (p_ass==s.p_ass)            );
 }

@@ -434,14 +434,14 @@ void KNConfig::NntpAccountConfDialog::slotOk()
   }
 
   a_ccount->setName(n_ame->text());
-  a_ccount->setServer(s_erver->text().latin1());
+  a_ccount->setServer(s_erver->text());
   a_ccount->setPort(p_ort->text().toInt());
   a_ccount->setHold(h_old->value());
   a_ccount->setTimeout(t_imeout->value());
   a_ccount->setFetchDescriptions(f_etchDes->isChecked());
   a_ccount->setNeedsLogon(a_uth->isChecked());
-  a_ccount->setUser(u_ser->text().local8Bit());
-  a_ccount->setPass(p_ass->text().local8Bit());
+  a_ccount->setUser(u_ser->text());
+  a_ccount->setPass(p_ass->text());
 
   accept();
 }
@@ -508,7 +508,7 @@ KNConfig::SmtpAccountWidget::~SmtpAccountWidget()
 
 void KNConfig::SmtpAccountWidget::apply()
 {
-  s_erverInfo->setServer(s_erver->text().latin1());
+  s_erverInfo->setServer(s_erver->text());
   s_erverInfo->setPort(p_ort->text().toInt());
   s_erverInfo->setHold(h_old->value());
   s_erverInfo->setTimeout(t_imeout->value());

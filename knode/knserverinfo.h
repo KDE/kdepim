@@ -31,7 +31,6 @@ class KNServerInfo {
     KNServerInfo();
     ~KNServerInfo();
     
-    void copy(KNServerInfo *i);
     void clear();
     
     void readConf(KConfig *conf);
@@ -40,33 +39,34 @@ class KNServerInfo {
     //get
     serverType type()         { return t_ype; }
     int id()                  { return i_d; }
-    const QCString& server()  { return s_erver; }
-    const QCString& user()    { return u_ser; }
-    const QCString& pass()    { return p_ass; }
+    const QString& server()   { return s_erver; }
+    const QString& user()     { return u_ser; }
+    const QString& pass()     { return p_ass; }
     int port()                { return p_ort; }
     int hold()                { return h_old; }
     int timeout()             { return t_imeout; }
     bool needsLogon()         { return n_eedsLogon; }
     bool isEmpty()            { return s_erver.isEmpty(); }
-    bool isEqual(KNServerInfo *i);
-    
+
     //set
     void setType(serverType t)        { t_ype=t; }
     void setId(int i)                 { i_d=i; }
-    void setServer(const QCString &s) { s_erver=s.copy(); }
-    void setUser(const QCString &s)   { u_ser=s.copy(); }
-    void setPass(const QCString &s)   { p_ass=s.copy(); }
+    void setServer(const QString &s)  { s_erver=s; }
+    void setUser(const QString &s)    { u_ser=s; }
+    void setPass(const QString &s)    { p_ass=s; }
     void setPort(int p)               { p_ort=p; }
     void setHold(int h)               { h_old=h; }
     void setTimeout(int t)            { t_imeout=t; }
     void setNeedsLogon(bool b)        { n_eedsLogon=b; }
 
+    bool operator==(const KNServerInfo &s);
+
   protected:
     serverType t_ype;
 
-    QCString  s_erver,
-              u_ser,
-              p_ass;
+    QString  s_erver,
+             u_ser,
+             p_ass;
 
     int i_d,
         p_ort,
@@ -75,7 +75,7 @@ class KNServerInfo {
 
     bool n_eedsLogon;
     
-};  
-      
+};
+
 
 #endif

@@ -126,8 +126,8 @@ void KNProtocolClient::waitForWork()
     if (job) {
     //  qDebug("knode: KNProtocolClient::waitForWork(): got job");
 
-      if (job->net()&&!account.isEqual(job->account())) {     // server changed
-        account.copy(job->account());
+      if (job->net()&&!(account == *job->account())) {     // server changed
+        account = *job->account();
         if (isConnected())
           closeConnection();
       }
@@ -204,7 +204,7 @@ bool KNProtocolClient::openConnection()
  // can only use inet_addr because of portability problem on Solaris
  // TODO: port to QDns/QSocket
  // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
-  address.s_addr = inet_addr(account.server().data());
+  address.s_addr = inet_addr(account.server().local8Bit().data());
   // unsigned int is ok because its uint/32bit in fact
   if ( (unsigned int) address.s_addr != (unsigned int)-1 ) {
     if (!conRawIP(&address)) {
@@ -212,7 +212,7 @@ bool KNProtocolClient::openConnection()
       return false;
     }
   } else {               // host name lookup....
-    struct hostent* hostData = gethostbyname(account.server().data());
+    struct hostent* hostData = gethostbyname(account.server().local8Bit().data());
 
     if (NULL==hostData) {
       herror("connect(): ");

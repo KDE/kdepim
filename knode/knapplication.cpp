@@ -80,7 +80,7 @@ int KNApplication::newInstance()
 
 void KNApplication::openURL(const KURL &url)
 {
-  QCString host = url.host().latin1();
+  QString host = url.host();
   unsigned short int port = url.port();
   KNNntpAccount *acc;
 
@@ -91,7 +91,7 @@ void KNApplication::openURL(const KURL &url)
 
   if(!acc) {
     acc=new KNNntpAccount();
-    acc->setName(QString::fromLatin1(host));
+    acc->setName(host);
     acc->setServer(host);
 
     if(port!=0)
@@ -99,8 +99,8 @@ void KNApplication::openURL(const KURL &url)
 
     if(url.hasUser() && url.hasPass()) {
       acc->setNeedsLogon(true);
-      acc->setUser(url.user().local8Bit());
-      acc->setPass(url.pass().local8Bit());
+      acc->setUser(url.user());
+      acc->setPass(url.pass());
     }
 
     if(!knGlobals.accManager->newAccount(acc))
