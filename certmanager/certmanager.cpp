@@ -329,8 +329,13 @@ void CertManager::slotEditKeybindings() {
 
 void CertManager::slotShowConfigurationDialog() {
   ConfigureDialog dlg( this );
-  connect( &dlg, SIGNAL( configCommitted() ), SLOT( slotStartCertificateListing() ) );
+  connect( &dlg, SIGNAL( configCommitted() ), SLOT( slotRepaint() ) );
   dlg.exec();
+}
+
+void CertManager::slotRepaint()
+{
+  mKeyListView->repaintContents();
 }
 
 void CertManager::slotToggleRemote( int idx ) {

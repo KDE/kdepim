@@ -127,6 +127,7 @@ private slots:
     void slotShowConfigurationDialog();
     void slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point);
     void slotDropped(const KURL::List&);
+    void slotRepaint();
 
 private:
     void createStatusBar();

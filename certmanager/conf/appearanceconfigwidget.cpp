@@ -314,8 +314,9 @@ void AppearanceConfigWidget::defaults()
   for ( ; lvit.current() ; ++lvit ) {
     CategoryListViewItem* item = static_cast<CategoryListViewItem *>( lvit.current() );
     item->setDefaultAppearance();
+    item->repaint();
   }
-
+  emit changed();
 }
 
 void AppearanceConfigWidget::slotItalicClicked()
@@ -323,6 +324,7 @@ void AppearanceConfigWidget::slotItalicClicked()
   CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
   if ( item ) {
     item->toggleItalic();
+    item->repaint();
     emit changed();
   }
 }
@@ -332,6 +334,7 @@ void AppearanceConfigWidget::slotBoldClicked()
   CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
   if ( item ) {
     item->toggleBold();
+    item->repaint();
     emit changed();
   }
 }
@@ -341,6 +344,7 @@ void AppearanceConfigWidget::slotStrikeoutClicked()
   CategoryListViewItem* item = static_cast<CategoryListViewItem*>(categoriesLV->selectedItem() );
   if ( item ) {
     item->toggleStrikeout();
+    item->repaint();
     emit changed();
   }
 }
