@@ -91,7 +91,7 @@ class KNProtocolClient : public QObject  {
 
     char *input;
     char *thisLine, *nextLine, *inputEnd;
-    const unsigned int inputSize;
+    unsigned int inputSize;
     int fdPipeIn,fdPipeOut;      //IPC-Pipes to/from async thread
     int tcpSocket;
     int byteCount;     // bytes in&out for the current connection

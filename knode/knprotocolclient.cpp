@@ -348,10 +348,18 @@ bool KNProtocolClient::getNextLine()
   thisLine = input;
   inputEnd = input+div-1;
   do {
-    if ((inputEnd-input) > 9500) {
-      job->setErrorString(i18n("Message size exceeded the size of the internal buffer."));
-      closeSocket();
-      return false;
+    div = inputEnd-thisLine+1;
+    if ((div) > inputSize-100) {
+      inputSize += 10000;
+      char *newInput = new char[inputSize];
+      memmove(newInput,input,div);
+      delete [] input;
+      input = newInput;
+      thisLine = input;
+      inputEnd = input+div-1;
+#ifndef NDEBUG
+      qDebug("knode: KNProtocolClient::getNextLine(): input buffer enlarged");
+#endif
     }
     if (!waitForRead())
       return false;
