@@ -112,8 +112,6 @@ private:
 
   // The list of subresources
   Kolab::ResourceMap mResources;
-  // Mapping from uid to resource
-  QMap<QString, QString> mUidmap;
 };
 
 }

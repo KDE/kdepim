@@ -131,7 +131,7 @@ public:
   virtual void setSubresourceCompletionWeight( const QString&, int );
 
   /// Give the uidmap. Used for ordered searching
-  QMap<QString, QString> uidToResourceMap() const { return mUidmap; }
+  QMap<QString, QString> uidToResourceMap() const;
 
 signals:
   void signalSubresourceAdded( Resource*, const QString&, const QString& );
@@ -157,8 +157,6 @@ protected:
 
   // The list of subresources
   Kolab::ResourceMap mResources;
-  // Mapping from uid to resource
-  QMap<QString, QString> mUidmap;
 };
 
 }

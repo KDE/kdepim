@@ -160,7 +160,7 @@ bool KABC::ResourceKolab::loadResource( const QString& resource )
 
 bool KABC::ResourceKolab::load()
 {
-  mUidmap.clear();
+  mUidMap.clear();
   mAddrMap.clear();
 
   bool rc = true;
@@ -186,7 +186,7 @@ bool KABC::ResourceKolab::save( Ticket* )
       // First the uid and then the vCard
       const QString uid = (*it).uid();
       const QString vCard = mConverter.createVCard( *it );
-      const QString resource = mUidmap[ uid ];
+      const QString resource = mUidMap[ uid ].resource();
       rc &= kmailUpdate( "Contact", resource, uid, vCard );
     }
 
@@ -222,10 +222,10 @@ void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
       // Save the new addressee
       const QString resource = findWritableResource( mResources, "Contact" );
       rc = kmailAddIncidence( "Contact", resource, uid, vCard );
-      mUidmap[ uid ] = resource;
+      mUidMap[ uid ] = resource;
     } else
       // Update existing addressee
-      rc = kmailUpdate( "Contact", mUidmap[ uid ], uid, vCard );
+      rc = kmailUpdate( "Contact", mUidMap[ uid ], uid, vCard );
 
     if( rc )
         // This is ugly, but it's faster than doing
@@ -242,8 +242,8 @@ void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
 {
 #if 0 // TODO
-  kmailDeleteIncidence( "Contact", mUidmap[ addr.uid() ], addr.uid() );
-  mUidmap.remove( addr.uid() );
+  kmailDeleteIncidence( "Contact", mUidMap[ addr.uid() ], addr.uid() );
+  mUidMap.remove( addr.uid() );
 #endif
   Resource::removeAddressee( addr );
 }
@@ -266,7 +266,7 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
     addr.setResource( this );
     addr.setChanged( false );
     mAddrMap.insert( addr.uid(), addr );
-    mUidmap[ addr.uid() ] = resource;
+    mUidMap[ addr.uid() ] = resource;
 
     addressBook()->emitAddressBookChanged();
 
@@ -288,7 +288,7 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
     mSilent = true;
 
     mAddrMap.remove( uid );
-    mUidmap.remove( uid );
+    mUidMap.remove( uid );
     addressBook()->emitAddressBookChanged();
 
     mSilent = silent;
@@ -348,10 +348,10 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
   config.sync();
 
   // Make a list of all uids to remove
-  QMap<QString, QString>::ConstIterator mapIt;
+  Kolab::UidMap::ConstIterator mapIt;
   QStringList uids;
-  for ( mapIt = mUidmap.begin(); mapIt != mUidmap.end(); ++mapIt )
-    if ( mapIt.data() == resource )
+  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+    if ( mapIt.data().resource() == resource )
       // We have a match
       uids << mapIt.key();
 
@@ -360,7 +360,7 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
     QStringList::ConstIterator it;
     for ( it = uids.begin(); it != uids.end(); ++it ) {
       mAddrMap.remove( *it );
-      mUidmap.remove( *it );
+      mUidMap.remove( *it );
     }
 
     addressBook()->emitAddressBookChanged();
@@ -405,5 +405,16 @@ void KABC::ResourceKolab::setSubresourceCompletionWeight( const QString& subreso
     kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
   }
 }
+
+QMap<QString, QString> KABC::ResourceKolab::uidToResourceMap() const
+{
+  // TODO: Couldn't this be made simpler?
+  QMap<QString, QString> map;
+  Kolab::UidMap::ConstIterator mapIt;
+  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+    map[ mapIt.key() ] = mapIt.data().resource();
+  return map;
+}
+
 
 #include "resourcekolab.moc"

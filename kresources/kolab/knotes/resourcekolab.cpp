@@ -133,7 +133,7 @@ bool ResourceKolab::load()
 {
   // We get a fresh list of events, so clean out the old ones
   mCalendar.deleteAllEvents();
-  mUidmap.clear();
+  mUidMap.clear();
 
   bool rc = true;
   Kolab::ResourceMap::ConstIterator itR;
@@ -170,7 +170,6 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
   QString resource = subresource;
   if ( subresource.isEmpty() )
     resource = findWritableResource( mResources );
-  mUidmap[ journal->uid() ] = resource;
 
   if ( mSilent ) return true;
 
@@ -182,6 +181,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
     kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
     return false;
   }
+  mUidMap[ journal->uid() ] = StorageReference( resource, sernum );
 #endif
 
   return true;
@@ -191,8 +191,8 @@ bool ResourceKolab::deleteNote( KCal::Journal* journal )
 {
 #if 0
   const QString uid = journal->uid();
-  kmailDeleteIncidence( "Kolab/Note", mUidmap[ uid ] );
-  mUidmap.remove( uid );
+  kmailDeleteIncidence( "Kolab/Note", mUidMap[ uid ] );
+  mUidMap.remove( uid );
   mCalendar.deleteJournal( journal );
 #endif
   return true;
@@ -203,7 +203,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
 #if 0
   KCal::ICalFormat format;
   QString note = format.toICalString( static_cast<KCal::Journal*>( i ) );
-  if( !kmailUpdate( "Kolab/Note", mUidmap[ i->uid() ], i->uid(), note ) )
+  if( !kmailUpdate( "Kolab/Note", mUidMap[ i->uid() ], i->uid(), note ) )
     kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
 #endif
 }
@@ -300,10 +300,10 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   config.sync();
 
   // Make a list of all uids to remove
-  QMap<QString, QString>::ConstIterator mapIt;
+  Kolab::UidMap::ConstIterator mapIt;
   QStringList uids;
-  for ( mapIt = mUidmap.begin(); mapIt != mUidmap.end(); ++mapIt )
-    if ( mapIt.data() == resource )
+  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+    if ( mapIt.data().resource() == resource )
       // We have a match
       uids << mapIt.key();
 
@@ -313,7 +313,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
     for ( it = uids.begin(); it != uids.end(); ++it ) {
       KCal::Journal* j = mCalendar.journal( *it );
       if( j ) deleteNote( j );
-      mUidmap.remove( *it );
+      mUidMap.remove( *it );
     }
   }
 
