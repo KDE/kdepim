@@ -173,7 +173,7 @@ void TodoConduit::updateTodo(PilotRecord *rec)
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Using rec @" << (int) rec
-		<< " with ID " << ( rec ? rec->getID() : -1)
+		<< " with ID " << ( rec ? rec->getID() : 0xffffffff)
 		<< endl;
 #endif
 
@@ -446,6 +446,9 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot)
 }
 
 // $Log$
+// Revision 1.8  2001/12/31 09:25:05  adridg
+// Cleanup, various fixes for runtime loading
+//
 // Revision 1.7  2001/12/28 12:56:46  adridg
 // Added SyncAction, it may actually do something now.
 //

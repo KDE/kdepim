@@ -33,6 +33,21 @@
 
 #include <kconfig.h>
 
+/*
+** KDE 2.2 uses class KORecurrence in a different header file.
+*/
+#ifdef KDE2
+#include <libkcal/korecurrence.h>
+#define Recurrence_t KORecurrence
+#define DateList_t QDateList
+#define DateListIterator_t QDateListIterator
+#else
+#include <libkcal/recurrence.h>
+#define Recurrence_t Recurrence
+#define DateList_t DateList
+#define DateListIterator_t DateList::ConstIterator
+#endif
+
 #include "pilotRecord.h"
 #include "pilotSerialDatabase.h"
 #include "pilotDateEntry.h"
@@ -264,7 +279,7 @@ void VCalConduit::setVcalRecurrence(Incidence *vevent,
     return;
   }
 
-  Recurrence *recur = vevent->recurrence();
+  Recurrence_t *recur = vevent->recurrence();
   int freq = dateEntry.getRepeatFrequency();
   bool repeatsForever = dateEntry.getRepeatForever();
   QDate endDate;
@@ -306,47 +321,53 @@ void VCalConduit::setVcalRecurrence(Incidence *vevent,
         else recur->setWeekly(freq,dayArray,endDate);
       }
       break;
-    case repeatMonthlyByDay:
-      if (repeatsForever) recur->setMonthly(Recurrence::rMonthlyPos,freq,0);
-      else recur->setMonthly(Recurrence::rMonthlyPos,freq,endDate);
+	case repeatMonthlyByDay:
+		if (repeatsForever)
+		{
+			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,0);
+		}
+		else
+		{
+			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,endDate);
+		}
 
-      dayArray.setBit(dateEntry.getRepeatDay() % 7);
-      recur->addMonthlyPos((dateEntry.getRepeatDay() / 7) + 1,dayArray);
-#if 0
-      tmpStr.sprintf("MP%i %d+ ", dateEntry.getRepeatFrequency(),
-		     (dateEntry.getRepeatDay() / 7) + 1);
-      tmpStr.append(dayname[dateEntry.getRepeatDay() % 7]);
-#endif
-      break;
-    case repeatMonthlyByDate:
-      if (repeatsForever) recur->setMonthly(Recurrence::rMonthlyDay,freq,0);
-      else recur->setMonthly(Recurrence::rMonthlyDay,freq,endDate);
-#if 0      
-      tmpStr.sprintf("MD%i ", dateEntry.getRepeatFrequency());
-#endif
-      break;
-    case repeatYearly:
-      if (repeatsForever) recur->setYearly(Recurrence::rYearlyDay,freq,0);
-      else recur->setYearly(Recurrence::rYearlyDay,freq,endDate);
-#if 0
-      tmpStr.sprintf("YD%i ", dateEntry.getRepeatFrequency());
-#endif
-      break;
+		dayArray.setBit(dateEntry.getRepeatDay() % 7);
+		recur->addMonthlyPos((dateEntry.getRepeatDay() / 7) + 1,dayArray);
+		break;
+	case repeatMonthlyByDate:
+		if (repeatsForever)
+		{
+			recur->setMonthly(Recurrence_t::rMonthlyDay,freq,0);
+		}
+		else
+		{
+			recur->setMonthly(Recurrence_t::rMonthlyDay,freq,endDate);
+		}
+		break;
+	case repeatYearly:
+		if (repeatsForever)
+		{
+			recur->setYearly(Recurrence_t::rYearlyDay,freq,0);
+		}
+		else
+		{
+			recur->setYearly(Recurrence_t::rYearlyDay,freq,endDate);
+		}
+		break;
     case repeatNone:
 #ifdef DEBUG
-      DEBUGCONDUIT << fname
-		   << ": argh! we think it repeats, "
-		   << "but dateEntry has repeatNone!"
-		   << endl;
+		DEBUGCONDUIT << fname
+			<< ": argh! we think it repeats, but dateEntry has repeatNone!"
+			<< endl;
 #endif
-      break;
-    default:
-      break;
+		break;
+	default:
+		break;
   }
 }
 
 
-void VCalConduit::setVcalExceptions(Incidence *vevent, 
+void VCalConduit::setVcalExceptions(Incidence *vevent,
 				    const PilotDateEntry &dateEntry)
 {
   FUNCTIONSETUP;
@@ -508,25 +529,53 @@ void VCalConduit::doLocalSync()
 
 struct tm *VCalConduit::getExceptionDates(Event *vevent, int *n)
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
 
-  struct tm *tmList = 0;
-  int count = 0;
+	struct tm *tmList = 0;
+	int count = 0;
 
-  DateList dates = vevent->exDates();
-  DateList::ConstIterator it;
-  for( it = dates.begin(); it != dates.end(); ++it ) {
-    struct tm extm = writeTm(*it);
-    ++count;
-    tmList = (struct tm *) realloc(tmList, sizeof(struct tm)*count);
-    if (!tmList)
-      kdFatal(CONDUIT_AREA) << __FUNCTION__
-			    << ": realloc() failed!" << endl;
-    tmList[count-1] = extm;
-  }
+	DateList_t dates = vevent->exDates();
+#ifdef KDE2
+	DateListIterator_t it(dates);
+#else
+	DateListIterator_t it;
+#endif
 
-  if (n) *n = count;
-  return tmList;
+	// Short-circuit out if there are no exceptions.
+	//
+	//
+	if (!dates.count())
+	{
+		goto cleanup;
+	}
+
+	// Allocate just once
+	tmList = (struct tm *)calloc(dates.count(),sizeof(struct tm));
+
+#ifdef KDE2
+	for ( ; it.current(); ++it )
+	{
+		QDateTime dt(*(*it));
+		struct tm extm = writeTm(dt);
+		tmList[count] = extm;
+		count++;
+	}
+#else
+	for( it = dates.begin(); it != dates.end(); ++it )
+	{
+		struct tm extm = writeTm(*it);
+		tmList[count] = extm;
+		count++;
+	}
+#endif
+
+cleanup:
+	if (n)
+	{
+		*n = count;
+	}
+
+	return tmList;
 }
 
 
@@ -623,21 +672,21 @@ void VCalConduit::setRepetition(PilotDateEntry *dateEntry,Incidence *incidence)
 {
   FUNCTIONSETUP;
 
-  Recurrence *recur = incidence->recurrence();
+  Recurrence_t *recur = incidence->recurrence();
 
   // Default to repeat daily, since there is no "None" element of
   // PeriodConstants.
   PeriodConstants period = DailyPeriod;
 
   switch (recur->doesRecur()) {
-    case Recurrence::rNone:
+    case Recurrence_t::rNone:
       dateEntry->setRepeatType(repeatNone);
       break;
-    case Recurrence::rDaily:
+    case Recurrence_t::rDaily:
       dateEntry->setRepeatType(repeatDaily);
       period = DailyPeriod;
       break;
-    case Recurrence::rWeekly:
+    case Recurrence_t::rWeekly:
       {
 	// On the pilot bit 0 means sunday, on the desktop it means
 	// monday. => We need to rotate the the bit array by one.
@@ -650,12 +699,12 @@ void VCalConduit::setRepetition(PilotDateEntry *dateEntry,Incidence *incidence)
 	dateEntry->setRepeatDays(days2);
       }
       break;
-    case Recurrence::rMonthlyPos:
+    case Recurrence_t::rMonthlyPos:
       dateEntry->setRepeatType(repeatMonthlyByDay);
       period = MonthlyByPosPeriod;
       {
-        QList<Recurrence::rMonthPos> rl = recur->monthPositions();
-        Recurrence::rMonthPos *r = rl.first();
+        QList<Recurrence_t::rMonthPos> rl = recur->monthPositions();
+        Recurrence_t::rMonthPos *r = rl.first();
         if (!r) {
           kdDebug() << "Recurrence monthlyPos, but no rMonthPos" << endl;
           dateEntry->setRepeatType(repeatNone);
@@ -671,11 +720,11 @@ void VCalConduit::setRepetition(PilotDateEntry *dateEntry,Incidence *incidence)
         }
       }
       break;
-    case Recurrence::rMonthlyDay:
+    case Recurrence_t::rMonthlyDay:
       dateEntry->setRepeatType(repeatMonthlyByDate);
       period = MonthlyByDayPeriod;
       break;
-    case Recurrence::rYearlyDay:
+    case Recurrence_t::rYearlyDay:
       dateEntry->setRepeatType(repeatYearly);
       period = YearlyByDayPeriod;
       break;
@@ -820,6 +869,9 @@ void VCalConduit::doTest()
 }
 
 // $Log$
+// Revision 1.47  2002/01/08 01:25:24  cschumac
+// Compile fixes.
+//
 // Revision 1.46  2001/12/31 09:35:43  adridg
 // Sanitizing __FUNCTION__ and cerr
 //

@@ -163,6 +163,31 @@ void VCalBaseConduit::setSecret(Incidence *vevent,bool secret)
                               Incidence::SecrecyPublic);
 }
 
+#if 0
+QDate VCalBaseConduit::readTm(const struct tm &t)
+{
+  QDate dt(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday);
+  return dt;
+}
+
+struct tm VCalBaseConduit::writeTm(const QDate &dt)
+{
+  struct tm t;
+
+  t.tm_wday = 0; // unimplemented
+  t.tm_yday = 0; // unimplemented
+  t.tm_isdst = 0; // unimplemented
+
+  t.tm_year = dt.year() - 1900;
+  t.tm_mon = dt.month() - 1;
+  t.tm_mday = dt.day();
+  t.tm_hour = 8;
+  t.tm_min = 0;
+  t.tm_sec = 0;
+
+  return t;
+}
+#else
 QDateTime VCalBaseConduit::readTm(const struct tm &t)
 {
   QDateTime dt;
@@ -188,6 +213,7 @@ struct tm VCalBaseConduit::writeTm(const QDateTime &dt)
 
   return t;
 }
+#endif
 
 void VCalBaseConduit::deleteRecord(PilotRecord *rec)
 {
@@ -323,6 +349,9 @@ bool VCalBaseConduit::isKOrganizerRunning()
 }
 
 // $Log$
+// Revision 1.12  2001/12/31 09:25:05  adridg
+// Cleanup, various fixes for runtime loading
+//
 // Revision 1.11  2001/12/28 12:56:46  adridg
 // Added SyncAction, it may actually do something now.
 //

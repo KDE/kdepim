@@ -49,6 +49,18 @@
 #error "This is KPilot for KDE2 and won't compile with Qt < 2.2.3"
 #endif
 
+#ifndef KDE_VERSION
+#include <kapp.h>
+#endif
+
+#if KDE_VERSION > 289
+#define KDE3
+#undef KDE2
+#else
+#undef KDE3
+#define KDE2
+#endif
+
 // Turn ON as much debugging as possible with -DDEBUG -DDEBUG_CERR
 // Some systems have changed kdWarning() and kdDebug() into nops,
 // so DEBUG_CERR changes them into cerr again. Odd and disturbing.
@@ -201,6 +213,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.4  2002/01/14 12:49:27  adridg
+// CVS_SILENT: Avoid compile warnings
+//
 // Revision 1.3  2001/11/25 22:01:31  adridg
 // CVS_SILENT: administrative
 //

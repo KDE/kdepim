@@ -79,9 +79,13 @@ public:
 	*/
 	static int getStatus(Incidence *vevent);
 
+#if 0
+	QDate readTm(const struct tm &);
+	struct tm writeTm(const QDate &);
+#else
 	QDateTime readTm(const struct tm &);
 	struct tm writeTm(const QDateTime &);
-
+#endif
 
 	// Here are some configuration keys -- which have moved out of the
 	// factory -- for all the vcalBase-derived conduits.
@@ -140,5 +144,8 @@ private:
 	bool fFirstTime;
 };
 
-// $Log: $
+// $Log$
+// Revision 1.9  2001/12/28 12:56:46  adridg
+// Added SyncAction, it may actually do something now.
+//
 #endif
