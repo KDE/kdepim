@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>ExpenseWidget</class>
 <author>David B?</author>
 <widget class="QWidget">
@@ -9,339 +9,304 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>576</width>
-            <height>480</height>
+            <width>361</width>
+            <height>307</height>
         </rect>
     </property>
     <property name="caption">
         <string>Form2</string>
     </property>
-    <widget class="QTabWidget">
+    <grid>
         <property name="name">
-            <cstring>tabWidget</cstring>
+            <cstring>unnamed</cstring>
         </property>
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>320</width>
-                <height>340</height>
-            </rect>
-        </property>
-        <widget class="QWidget">
+        <widget class="QTabWidget" row="0" column="0">
             <property name="name">
-                <cstring>tab</cstring>
+                <cstring>tabWidget</cstring>
             </property>
-            <attribute name="title">
-                <string>CSV Export</string>
-            </attribute>
-            <grid>
+            <widget class="QWidget">
                 <property name="name">
-                    <cstring>unnamed</cstring>
+                    <cstring>tab</cstring>
                 </property>
-                <property name="margin">
-                    <number>11</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
-                </property>
-                <widget class="QLabel" row="0" column="0">
+                <attribute name="title">
+                    <string>CSV Export</string>
+                </attribute>
+                <grid>
                     <property name="name">
-                        <cstring>TextLabel1</cstring>
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property name="text">
-                        <string>CSV filename:</string>
-                    </property>
-                </widget>
-                <widget class="QLineEdit" row="0" column="1">
-                    <property name="name">
-                        <cstring>fCSVFilename</cstring>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Full path to csv file containing expense data&lt;/qt&gt;</string>
-                    </property>
-                </widget>
-                <widget class="QPushButton" row="0" column="2">
-                    <property name="name">
-                        <cstring>fCSVBrowse</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Browse...</string>
-                    </property>
-                </widget>
-                <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="3">
-                    <property name="name">
-                        <cstring>fRotatePolicy</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Rotate Policy</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;For an explanation of these options, please read the documentation!&lt;/qt&gt;</string>
-                    </property>
-                    <widget class="QRadioButton">
+                    <widget class="QLabel" row="0" column="0">
                         <property name="name">
-                            <cstring>fOverWrite</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>20</x>
-                                <y>30</y>
-                                <width>160</width>
-                                <height>28</height>
-                            </rect>
+                            <cstring>TextLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Overwrite</string>
+                            <string>CSV filename:</string>
                         </property>
                     </widget>
-                    <widget class="QRadioButton">
+                    <widget class="QLineEdit" row="0" column="1">
                         <property name="name">
-                            <cstring>fAppend</cstring>
+                            <cstring>fCSVFilename</cstring>
                         </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>20</x>
-                                <y>60</y>
-                                <width>151</width>
-                                <height>31</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Append</string>
-                        </property>
-                        <property name="checked">
-                            <bool>true</bool>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Full path to csv file containing expense data&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QRadioButton">
+                    <widget class="QPushButton" row="0" column="2">
                         <property name="name">
-                            <cstring>fRotate</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>20</x>
-                                <y>100</y>
-                                <width>161</width>
-                                <height>20</height>
-                            </rect>
+                            <cstring>fCSVBrowse</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Rotate</string>
+                            <string>Browse...</string>
                         </property>
-                        <property name="checked">
+                    </widget>
+                    <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>fRotatePolicy</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Rotate Policy</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;For an explanation of these options, please read the documentation!&lt;/qt&gt;</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="3">
+                                <property name="name">
+                                    <cstring>fOverWrite</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Overwrite</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="2" column="0" rowspan="1" colspan="3">
+                                <property name="name">
+                                    <cstring>fRotate</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Rotate</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>false</bool>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="3" column="0">
+                                <property name="name">
+                                    <cstring>TextLabel2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Rotate depth:</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="3">
+                                <property name="name">
+                                    <cstring>fAppend</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Append</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <spacer row="3" column="2">
+                                <property name="name">
+                                    <cstring>spacer42</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>50</width>
+                                        <height>21</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QSpinBox" row="3" column="1">
+                                <property name="name">
+                                    <cstring>fRotateNumber</cstring>
+                                </property>
+                                <property name="maxValue">
+                                    <number>10</number>
+                                </property>
+                                <property name="minValue">
+                                    <number>1</number>
+                                </property>
+                                <property name="value">
+                                    <number>3</number>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <spacer row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer43</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>16</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Database Export</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="5" column="0">
+                        <property name="name">
+                            <cstring>TextLabel7</cstring>
+                        </property>
+                        <property name="text">
+                            <string>DB table:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="0">
+                        <property name="name">
+                            <cstring>TextLabel6</cstring>
+                        </property>
+                        <property name="text">
+                            <string>DB name:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="0">
+                        <property name="name">
+                            <cstring>TextLabel5</cstring>
+                        </property>
+                        <property name="text">
+                            <string>DB passwd:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="0">
+                        <property name="name">
+                            <cstring>TextLabel4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>DB login:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>TextLabel3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>DB server:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="4" column="1">
+                        <property name="name">
+                            <cstring>fDBName</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Name of the database, like Expenses&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="2" column="1">
+                        <property name="name">
+                            <cstring>fDBLogin</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>username</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="3" column="1">
+                        <property name="name">
+                            <cstring>fDBPasswd</cstring>
+                        </property>
+                        <property name="autoMask">
                             <bool>false</bool>
                         </property>
+                        <property name="echoMode">
+                            <enum>Password</enum>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Password, not echoed to the screen!&lt;/qt&gt;</string>
+                        </property>
                     </widget>
-                    <widget class="QSpinBox">
+                    <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>fRotateNumber</cstring>
+                            <cstring>fDatabaseType</cstring>
                         </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>140</x>
-                                <y>140</y>
-                                <width>80</width>
-                                <height>31</height>
-                            </rect>
+                        <property name="title">
+                            <string>Database Type</string>
                         </property>
-                        <property name="maxValue">
-                            <number>10</number>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Select "None" if you are using a CSV file&lt;/qt&gt;</string>
                         </property>
-                        <property name="minValue">
-                            <number>1</number>
-                        </property>
-                        <property name="value">
-                            <number>3</number>
-                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton" row="0" column="0">
+                                <property name="name">
+                                    <cstring>fnone</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;None</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fpostgresql</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;PostgreSQL</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="2" column="0">
+                                <property name="name">
+                                    <cstring>fmysql</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;MySQL</string>
+                                </property>
+                            </widget>
+                        </grid>
                     </widget>
-                    <widget class="QLabel">
+                    <widget class="QLineEdit" row="1" column="1">
                         <property name="name">
-                            <cstring>TextLabel2</cstring>
+                            <cstring>fDBServer</cstring>
                         </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>20</x>
-                                <y>140</y>
-                                <width>110</width>
-                                <height>31</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>Rotate depth:</string>
+                        <property name="whatsThis" stdset="0">
+                            <string>foo.bar.com</string>
                         </property>
                     </widget>
-                </widget>
-            </grid>
+                    <widget class="QLineEdit" row="5" column="1">
+                        <property name="name">
+                            <cstring>fDBTable</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Name of the table to update, like UsernameExpenses&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
         </widget>
-        <widget class="QWidget">
-            <property name="name">
-                <cstring>tab</cstring>
-            </property>
-            <attribute name="title">
-                <string>Database Export</string>
-            </attribute>
-            <grid>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>11</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
-                </property>
-                <widget class="QLabel" row="5" column="0">
-                    <property name="name">
-                        <cstring>TextLabel7</cstring>
-                    </property>
-                    <property name="text">
-                        <string>DB table:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="4" column="0">
-                    <property name="name">
-                        <cstring>TextLabel6</cstring>
-                    </property>
-                    <property name="text">
-                        <string>DB name:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="3" column="0">
-                    <property name="name">
-                        <cstring>TextLabel5</cstring>
-                    </property>
-                    <property name="text">
-                        <string>DB passwd:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="2" column="0">
-                    <property name="name">
-                        <cstring>TextLabel4</cstring>
-                    </property>
-                    <property name="text">
-                        <string>DB login:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="1" column="0">
-                    <property name="name">
-                        <cstring>TextLabel3</cstring>
-                    </property>
-                    <property name="text">
-                        <string>DB server:</string>
-                    </property>
-                </widget>
-                <widget class="QLineEdit" row="4" column="1">
-                    <property name="name">
-                        <cstring>fDBName</cstring>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Name of the database, like Expenses&lt;/qt&gt;</string>
-                    </property>
-                </widget>
-                <widget class="QLineEdit" row="5" column="1">
-                    <property name="name">
-                        <cstring>fDBTable</cstring>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Name of the table to update, like UsernameExpenses&lt;/qt&gt;</string>
-                    </property>
-                </widget>
-                <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>fDatabaseType</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Database Type</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Select "None" if you are using a CSV file&lt;/qt&gt;</string>
-                    </property>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>fnone</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>30</y>
-                                <width>131</width>
-                                <height>21</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>&amp;None</string>
-                        </property>
-                        <property name="checked">
-                            <bool>true</bool>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>fpostgresql</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>60</y>
-                                <width>141</width>
-                                <height>21</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>&amp;PostgreSQL</string>
-                        </property>
-                    </widget>
-                    <widget class="QRadioButton">
-                        <property name="name">
-                            <cstring>fmysql</cstring>
-                        </property>
-                        <property name="geometry">
-                            <rect>
-                                <x>10</x>
-                                <y>90</y>
-                                <width>141</width>
-                                <height>21</height>
-                            </rect>
-                        </property>
-                        <property name="text">
-                            <string>&amp;MySQL</string>
-                        </property>
-                    </widget>
-                </widget>
-                <widget class="QLineEdit" row="1" column="1">
-                    <property name="name">
-                        <cstring>fDBServer</cstring>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>foo.bar.com</string>
-                    </property>
-                </widget>
-                <widget class="QLineEdit" row="2" column="1">
-                    <property name="name">
-                        <cstring>fDBLogin</cstring>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>username</string>
-                    </property>
-                </widget>
-                <widget class="QLineEdit" row="3" column="1">
-                    <property name="name">
-                        <cstring>fDBPasswd</cstring>
-                    </property>
-                    <property name="autoMask">
-                        <bool>false</bool>
-                    </property>
-                    <property name="echoMode">
-                        <enum>Password</enum>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Password, not echoed to the screen!&lt;/qt&gt;</string>
-                    </property>
-                </widget>
-            </grid>
-        </widget>
-    </widget>
+    </grid>
 </widget>
 <tabstops>
     <tabstop>tabWidget</tabstop>

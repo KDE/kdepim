@@ -8,15 +8,15 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>371</width>
-            <height>421</height>
+            <width>411</width>
+            <height>424</height>
         </rect>
     </property>
     <property name="caption">
         <string>Deconfliction</string>
     </property>
     <property name="sizeGripEnabled">
-        <bool>true</bool>
+        <bool>false</bool>
     </property>
     <grid>
         <property name="name">
@@ -28,41 +28,60 @@
         <property name="spacing">
             <number>6</number>
         </property>
-        <spacer row="1" column="2">
+        <spacer row="2" column="0">
             <property name="name">
-                <cstring>Spacer6</cstring>
+                <cstring>Spacer7</cstring>
             </property>
             <property name="orientation">
-                <enum>Horizontal</enum>
+                <enum>Vertical</enum>
             </property>
             <property name="sizeType">
                 <enum>Expanding</enum>
             </property>
             <property name="sizeHint">
                 <size>
-                    <width>114</width>
-                    <height>0</height>
+                    <width>16</width>
+                    <height>63</height>
                 </size>
             </property>
         </spacer>
-        <spacer row="1" column="0">
+        <widget class="QCheckBox" row="3" column="0">
             <property name="name">
-                <cstring>Spacer5</cstring>
+                <cstring>CheckBox8</cstring>
             </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
+            <property name="text">
+                <string>Remember choice for all fields of this record</string>
             </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
+            <property name="checked">
+                <bool>true</bool>
             </property>
-            <property name="sizeHint">
-                <size>
-                    <width>114</width>
-                    <height>0</height>
-                </size>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>TextLabel1</cstring>
             </property>
-        </spacer>
-        <widget class="QButtonGroup" row="1" column="1">
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>1</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string>&lt;html&gt;&lt;p&gt;The field "first name" of the entry "Reinhold Kainhofer" was changed on the handheld and on the PC.&lt;/p&gt;
+&lt;table border=0&gt;
+&lt;tr&gt;&lt;td&gt;&lt;b&gt;Handheld:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reinhold&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;b&gt;PC:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reiold&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;b&gt;Last sync:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reihnhod&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;p&gt;How should this conflict be resolved?&lt;/p&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignTop</set>
+            </property>
+        </widget>
+        <widget class="QButtonGroup" row="1" column="0">
             <property name="name">
                 <cstring>ResolutionButtonGroup</cstring>
             </property>
@@ -108,61 +127,13 @@
                 </widget>
             </grid>
         </widget>
-        <spacer row="2" column="1">
+        <widget class="QLayoutWidget" row="5" column="0">
             <property name="name">
-                <cstring>Spacer7</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>0</width>
-                    <height>16</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>CheckBox8</cstring>
-            </property>
-            <property name="text">
-                <string>Remember choice for all fields of this record</string>
-            </property>
-            <property name="checked">
-                <bool>true</bool>
-            </property>
-        </widget>
-        <widget class="Line" row="4" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>Line1</cstring>
-            </property>
-            <property name="frameShape">
-                <enum>HLine</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-        </widget>
-        <widget class="QLayoutWidget" row="5" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>Layout1</cstring>
+                <cstring>layout8</cstring>
             </property>
             <hbox>
                 <property name="name">
                     <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>0</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
                 </property>
                 <widget class="QPushButton">
                     <property name="name">
@@ -190,8 +161,8 @@
                     </property>
                     <property name="sizeHint">
                         <size>
-                            <width>20</width>
-                            <height>0</height>
+                            <width>170</width>
+                            <height>16</height>
                         </size>
                     </property>
                 </spacer>
@@ -228,29 +199,18 @@
                 </widget>
             </hbox>
         </widget>
-        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
+        <widget class="Line" row="4" column="0">
             <property name="name">
-                <cstring>TextLabel1</cstring>
+                <cstring>Line1</cstring>
             </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>5</hsizetype>
-                    <vsizetype>1</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
+            <property name="frameShape">
+                <enum>HLine</enum>
             </property>
-            <property name="text">
-                <string>&lt;html&gt;&lt;p&gt;The field "first name" of the entry "Reinhold Kainhofer" was changed on the handheld and on the PC.&lt;/p&gt;
-&lt;table border=0&gt;
-&lt;tr&gt;&lt;td&gt;&lt;b&gt;Handheld:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reinhold&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;b&gt;PC:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reiold&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;b&gt;Last sync:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reihnhod&lt;/td&gt;&lt;/tr&gt;
-&lt;/table&gt;
-&lt;p&gt;How should this conflict be resolved?&lt;/p&gt;&lt;/html&gt;</string>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
             </property>
-            <property name="alignment">
-                <set>WordBreak|AlignTop</set>
+            <property name="orientation">
+                <enum>Horizontal</enum>
             </property>
         </widget>
     </grid>

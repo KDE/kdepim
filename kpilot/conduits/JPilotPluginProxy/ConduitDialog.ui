@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>JPilotProxyWidget</class>
 <widget class="QWidget">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>553</width>
-            <height>469</height>
+            <width>374</width>
+            <height>348</height>
         </rect>
     </property>
     <property name="caption">
@@ -40,92 +40,54 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QLayoutWidget" row="0" column="0">
+                    <widget class="KListView" row="0" column="0" rowspan="1" colspan="2">
+                        <column>
+                            <property name="text">
+                                <string>Plugin Name</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>true</bool>
+                            </property>
+                        </column>
+                        <column>
+                            <property name="text">
+                                <string>Plugin File Name</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>true</bool>
+                            </property>
+                        </column>
                         <property name="name">
-                            <cstring>Layout7</cstring>
+                            <cstring>ListPlugins</cstring>
                         </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>0</number>
-                            </property>
-                            <property name="spacing">
-                                <number>6</number>
-                            </property>
-                            <widget class="KListView" row="0" column="0">
-                                <column>
-                                    <property name="text">
-                                        <string>Plugin Name</string>
-                                    </property>
-                                    <property name="clickable">
-                                        <bool>true</bool>
-                                    </property>
-                                    <property name="resizeable">
-                                        <bool>true</bool>
-                                    </property>
-                                </column>
-                                <column>
-                                    <property name="text">
-                                        <string>Plugin File Name</string>
-                                    </property>
-                                    <property name="clickable">
-                                        <bool>true</bool>
-                                    </property>
-                                    <property name="resizeable">
-                                        <bool>true</bool>
-                                    </property>
-                                </column>
-                                <property name="name">
-                                    <cstring>ListPlugins</cstring>
-                                </property>
-                                <property name="resizePolicy">
-                                    <enum>AutoOneFit</enum>
-                                </property>
-                                <property name="allColumnsShowFocus">
-                                    <bool>true</bool>
-                                </property>
-                            </widget>
-                            <widget class="QLayoutWidget" row="1" column="0">
-                                <property name="name">
-                                    <cstring>Layout1</cstring>
-                                </property>
-                                <grid>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <property name="margin">
-                                        <number>0</number>
-                                    </property>
-                                    <property name="spacing">
-                                        <number>6</number>
-                                    </property>
-                                    <widget class="QPushButton" row="0" column="0">
-                                        <property name="name">
-                                            <cstring>PushAddPlugin</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;Add Plugin...</string>
-                                        </property>
-                                    </widget>
-                                    <widget class="QPushButton" row="0" column="1">
-                                        <property name="name">
-                                            <cstring>PushConfigure</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;Configure Selected...</string>
-                                        </property>
-                                    </widget>
-                                </grid>
-                            </widget>
-                        </grid>
+                        <property name="resizePolicy">
+                            <enum>AutoOneFit</enum>
+                        </property>
+                        <property name="allColumnsShowFocus">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="1" column="0">
+                        <property name="name">
+                            <cstring>PushAddPlugin</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Add Plugin...</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="1" column="1">
+                        <property name="name">
+                            <cstring>PushConfigure</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Configure Selected...</string>
+                        </property>
                     </widget>
                 </grid>
             </widget>
@@ -140,166 +102,134 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QLayoutWidget" row="0" column="0">
+                    <widget class="QListBox" row="1" column="0" rowspan="1" colspan="3">
                         <property name="name">
-                            <cstring>Layout9</cstring>
+                            <cstring>ListPluginPathes</cstring>
                         </property>
-                        <vbox>
+                    </widget>
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>TextLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>JPilot plugin directories:</string>
+                        </property>
+                    </widget>
+                    <spacer row="3" column="0">
+                        <property name="name">
+                            <cstring>Spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>16</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="3" column="2">
+                        <property name="name">
+                            <cstring>Spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>16</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QPushButton" row="3" column="1">
+                        <property name="name">
+                            <cstring>SearchPluginsButton</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Scan Plugin Directories</string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget" row="2" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>layout6</cstring>
+                        </property>
+                        <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <property name="margin">
-                                <number>0</number>
-                            </property>
-                            <property name="spacing">
-                                <number>6</number>
-                            </property>
-                            <widget class="QLabel">
+                            <widget class="QLineEdit">
                                 <property name="name">
-                                    <cstring>TextLabel1</cstring>
+                                    <cstring>DirEdit</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>BrowseButton</cstring>
+                                </property>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>21</width>
+                                        <height>21</height>
+                                    </size>
                                 </property>
                                 <property name="text">
-                                    <string>JPilot plugin directories:</string>
+                                    <string>&amp;...</string>
                                 </property>
                             </widget>
-                            <widget class="QListBox">
+                            <spacer>
                                 <property name="name">
-                                    <cstring>ListPluginPathes</cstring>
+                                    <cstring>Spacer1</cstring>
                                 </property>
-                            </widget>
-                            <widget class="QLayoutWidget">
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Fixed</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>16</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QPushButton">
                                 <property name="name">
-                                    <cstring>Layout5</cstring>
+                                    <cstring>AddButton</cstring>
                                 </property>
-                                <grid>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <property name="margin">
-                                        <number>0</number>
-                                    </property>
-                                    <property name="spacing">
-                                        <number>0</number>
-                                    </property>
-                                    <spacer row="0" column="2">
-                                        <property name="name">
-                                            <cstring>Spacer1</cstring>
-                                        </property>
-                                        <property name="orientation">
-                                            <enum>Horizontal</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                            <enum>Fixed</enum>
-                                        </property>
-                                        <property name="sizeHint">
-                                            <size>
-                                                <width>16</width>
-                                                <height>20</height>
-                                            </size>
-                                        </property>
-                                    </spacer>
-                                    <widget class="QLineEdit" row="0" column="0">
-                                        <property name="name">
-                                            <cstring>DirEdit</cstring>
-                                        </property>
-                                    </widget>
-                                    <widget class="QPushButton" row="0" column="3">
-                                        <property name="name">
-                                            <cstring>AddButton</cstring>
-                                        </property>
-                                        <property name="maximumSize">
-                                            <size>
-                                                <width>21</width>
-                                                <height>21</height>
-                                            </size>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;+</string>
-                                        </property>
-                                    </widget>
-                                    <widget class="QPushButton" row="0" column="4">
-                                        <property name="name">
-                                            <cstring>RemoveButton</cstring>
-                                        </property>
-                                        <property name="maximumSize">
-                                            <size>
-                                                <width>21</width>
-                                                <height>21</height>
-                                            </size>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;-</string>
-                                        </property>
-                                    </widget>
-                                    <widget class="QPushButton" row="0" column="1">
-                                        <property name="name">
-                                            <cstring>BrowseButton</cstring>
-                                        </property>
-                                        <property name="maximumSize">
-                                            <size>
-                                                <width>21</width>
-                                                <height>21</height>
-                                            </size>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;...</string>
-                                        </property>
-                                    </widget>
-                                </grid>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>21</width>
+                                        <height>21</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;+</string>
+                                </property>
                             </widget>
-                            <widget class="QLayoutWidget">
+                            <widget class="QPushButton">
                                 <property name="name">
-                                    <cstring>Layout8</cstring>
+                                    <cstring>RemoveButton</cstring>
                                 </property>
-                                <grid>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <property name="margin">
-                                        <number>0</number>
-                                    </property>
-                                    <property name="spacing">
-                                        <number>6</number>
-                                    </property>
-                                    <spacer row="0" column="2">
-                                        <property name="name">
-                                            <cstring>Spacer3</cstring>
-                                        </property>
-                                        <property name="orientation">
-                                            <enum>Horizontal</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                            <enum>Expanding</enum>
-                                        </property>
-                                    </spacer>
-                                    <widget class="QPushButton" row="0" column="1">
-                                        <property name="name">
-                                            <cstring>SearchPluginsButton</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;Scan Plugin Directories</string>
-                                        </property>
-                                    </widget>
-                                    <spacer row="0" column="0">
-                                        <property name="name">
-                                            <cstring>Spacer2</cstring>
-                                        </property>
-                                        <property name="orientation">
-                                            <enum>Horizontal</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                            <enum>Expanding</enum>
-                                        </property>
-                                    </spacer>
-                                </grid>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>21</width>
+                                        <height>21</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;-</string>
+                                </property>
                             </widget>
-                        </vbox>
+                        </hbox>
                     </widget>
                 </grid>
             </widget>
@@ -327,4 +257,7 @@
     <tabstop>PushConfigure</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klistview.h</includehint>
+</includehints>
 </UI>
