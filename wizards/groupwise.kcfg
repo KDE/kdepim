@@ -8,7 +8,7 @@
     </entry>
     <entry key="Port" type="UInt" >
       <label>Port</label>
-      <default>7181</default>
+      <default>8201</default>
     </entry>
     <entry key="User" type="String" >
       <label>User name</label>
@@ -34,7 +34,7 @@
     </entry>
     <entry key="UseHttps" type="Bool" >
       <label>Use HTTPS</label>
-      <default>false</default>
+      <default>true</default>
     </entry>
     <entry key="LogFile" type="String" >
       <label>Log File</label>
