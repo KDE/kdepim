@@ -38,7 +38,7 @@ ExchangeConfig::ExchangeConfig( KPIM::ExchangeAccount* account, QWidget* parent 
       account->host() << ":" << account->account() << endl;
 
   QFrame *topFrame = plainPage();
-  QGridLayout *topLayout = new QGridLayout( topFrame, 3, 2, 3 );
+  QGridLayout *topLayout = new QGridLayout( topFrame, 5, 3, 3 );
 
   m_host = new KLineEdit( mAccount->host(), topFrame );
   topLayout->addWidget( new QLabel( i18n( "Exchange server:" ), topFrame ), 0, 0 );
@@ -47,6 +47,7 @@ ExchangeConfig::ExchangeConfig( KPIM::ExchangeAccount* account, QWidget* parent 
   m_user = new KLineEdit( mAccount->account(), topFrame );
   topLayout->addWidget( new QLabel( i18n( "User:" ), topFrame ), 1, 0 );
   topLayout->addWidget( m_user, 1, 1 );
+  connect( m_user, SIGNAL(textChanged(const QString&)), this, SLOT(slotUserChanged(const QString&)) );
 
   m_password = new KLineEdit( mAccount->password(), topFrame );
   topLayout->addWidget( new QLabel( i18n( "Password:" ), topFrame ), 2, 0 );
