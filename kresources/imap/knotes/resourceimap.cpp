@@ -84,6 +84,7 @@ bool KNotesIMAP::ResourceIMAP::load()
   }
 
   // We got a fresh list of events, so clean out the old ones
+  // TODO: notify KNotes
   mCalendar.deleteAllEvents();
 
   // Populate the calendar with the new events
@@ -109,7 +110,7 @@ bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* journal )
   kdDebug(5500) << "KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )\n";
 
   mCalendar.addJournal( journal );
-  manager()->registerNote( this, journal, true );
+  manager()->registerNote( this, journal );
   journal->registerObserver( this );
 
   if ( mSilent ) return true;

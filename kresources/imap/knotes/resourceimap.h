@@ -35,8 +35,8 @@
 #include <resourceimapshared.h>
 #include <resourcenotes.h>
 #include <libkcal/incidencebase.h>
+#include <libkcal/calendarlocal.h>
 
-class KMailICalIface_stub;
 
 namespace KNotesIMAP {
 
@@ -79,6 +79,7 @@ public:
 private:
     // Parse a journal from a string
     KCal::Journal* parseJournal( const QString& str );
+    KCal::CalendarLocal mCalendar;
 
     bool mSilent;
 };
