@@ -132,7 +132,7 @@ QWidget *Debugger::widget()
     topLayout->setSpacing( KDialog::spacingHint() );
     topLayout->setMargin( KDialog::spacingHint() );
 
-    
+
     QBoxLayout *konnectorLayout = new QHBoxLayout( topLayout );
 
     konnectorLayout->addWidget( new QLabel( i18n("Current Konnector:" ),
@@ -149,7 +149,7 @@ QWidget *Debugger::widget()
     QBoxLayout *commandLayout = new QHBoxLayout( topLayout );
 
     QPushButton *button = new QPushButton( "Configure...", m_widget );
-    connect( button, SIGNAL( clicked() ), SLOT( configureKonnector() ) );    
+    connect( button, SIGNAL( clicked() ), SLOT( configureKonnector() ) );
     commandLayout->addWidget( button );
 
     button = new QPushButton( "Connect Device", m_widget );
@@ -174,7 +174,7 @@ QWidget *Debugger::widget()
 
     mLogView = new QTextView( m_widget );
     mLogView->setTextFormat( LogText );
-    topLayout->addWidget( mLogView );    
+    topLayout->addWidget( mLogView );
 
     logMessage( i18n("Ready.") );
   }
@@ -186,7 +186,7 @@ void Debugger::updateKonnectors()
   kdDebug() << "Debugger::updateKonnectors()" << endl;
 
   KRES::Manager<Konnector> *manager = KonnectorManager::self();
-  
+
   KRES::Manager<Konnector>::ActiveIterator it;
   for( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
     kdDebug() << "Konnector: id: " << (*it)->identifier() << endl;
@@ -217,8 +217,8 @@ Konnector *Debugger::currentKonnector()
 
   if ( mConnectedKonnectors.find( k ) < 0 ) {
     kdDebug() << "Connect Konnector" << endl;
-    connect( k, SIGNAL( synceesRead( Konnector * ) ),
-             SLOT( slotReceiveData( Konnector * ) ) );
+    connect( k, SIGNAL( synceesRead( KSync::Konnector * ) ),
+             SLOT( slotReceiveData( KSync::Konnector * ) ) );
     mConnectedKonnectors.append( k );
   }
 
@@ -230,7 +230,7 @@ void Debugger::readSyncees()
   logMessage( i18n("Read Syncees") );
 
   Konnector *k = currentKonnector();
-  
+
   if ( k ) k->readSyncees();
 }
 

@@ -87,14 +87,14 @@ KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
   mEngine = new Engine( m_parts );
 
   KonnectorManager *m = KonnectorManager::self();
-  connect( m, SIGNAL( synceesRead( Konnector * ) ),
-           mEngine, SLOT( slotSynceesRead( Konnector * ) ) );
-  connect( m, SIGNAL( synceeReadError( Konnector * ) ),
-           mEngine, SLOT( slotSynceeReadError( Konnector * ) ) );
-  connect( m, SIGNAL( synceesWritten( Konnector * ) ),
-           mEngine, SLOT( slotSynceesWritten( Konnector * ) ) );
-  connect( m, SIGNAL( synceeWriteError( Konnector * ) ),
-           mEngine, SLOT( slotSynceeWriteError( Konnector * ) ) );
+  connect( m, SIGNAL( synceesRead( KSync::Konnector * ) ),
+           mEngine, SLOT( slotSynceesRead( KSync::Konnector * ) ) );
+  connect( m, SIGNAL( synceeReadError( KSync::Konnector * ) ),
+           mEngine, SLOT( slotSynceeReadError( KSync::Konnector * ) ) );
+  connect( m, SIGNAL( synceesWritten( KSync::Konnector * ) ),
+           mEngine, SLOT( slotSynceesWritten( KSync::Konnector * ) ) );
+  connect( m, SIGNAL( synceeWriteError( KSync::Konnector * ) ),
+           mEngine, SLOT( slotSynceeWriteError( KSync::Konnector * ) ) );
 
   connect( mEngine, SIGNAL(doneSync()),
            this, SIGNAL(doneSync()));

@@ -143,17 +143,17 @@ class ActionPart : public KParts::Part
     virtual void filterKonnectors( QPtrList<Konnector> & ) {}
 
     virtual bool needsKonnectorRead() const { return false; }
-    
+
     virtual bool needsKonnectorWrite() const { return false; }
 
   public slots:
-    virtual void slotSynceesRead( Konnector * ) {}
+    virtual void slotSynceesRead( KSync::Konnector * ) {}
 
-    virtual void slotSynceeReadError( Konnector * ) {}
+    virtual void slotSynceeReadError( KSync::Konnector * ) {}
 
-    virtual void slotSynceesWritten( Konnector * ) {}
+    virtual void slotSynceesWritten( KSync::Konnector * ) {}
 
-    virtual void slotSynceeWriteError( Konnector * ) {}
+    virtual void slotSynceeWriteError( KSync::Konnector * ) {}
 
   protected:
 

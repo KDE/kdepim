@@ -75,7 +75,7 @@ class Debugger : public ActionPart
     void connectDevice();
     void disconnectDevice();
 
-    void slotReceiveData( Konnector * );
+    void slotReceiveData( KSync::Konnector * );
 
   private:
     QPixmap m_pixmap;

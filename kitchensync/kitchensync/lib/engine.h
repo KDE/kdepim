@@ -73,10 +73,10 @@ class Engine : public QObject
     void disconnectDevice( Konnector *k );
 
   protected slots:
-    void slotSynceesRead( Konnector * );
-    void slotSynceeReadError( Konnector * );
-    void slotSynceesWritten( Konnector * );
-    void slotSynceeWriteError( Konnector * );
+    void slotSynceesRead( KSync::Konnector * );
+    void slotSynceeReadError( KSync::Konnector * );
+    void slotSynceesWritten( KSync::Konnector * );
+    void slotSynceeWriteError( KSync::Konnector * );
 
   signals:
     void doneSync();
