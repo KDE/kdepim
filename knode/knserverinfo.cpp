@@ -95,10 +95,21 @@ void KNServerInfo::saveConf(KConfig *conf)
     if (n_eedsLogon && p_assDirty) {
       Wallet *wallet = KNServerInfo::wallet();
       if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
-          KMessageBox::information(0, i18n("KWallet is not running. It is strongly recommended to use "
-                                           "KWallet for managing your passwords."),
-                                   i18n("KWallet is Not Running"), "KWalletWarning" );
-          conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
+        if ( KMessageBox::warningYesNo( 0,
+             i18n("KWallet is not available. It is strongly recommended to use "
+                  "KWallet for managing your passwords.\n"
+                  "However, KNode can store the password in its configuration "
+                  "file instead. The password is stored in an obfuscated format, "
+                  "but should not be considered secure from decryption efforts "
+                  "if access to the configuration file is obtained.\n"
+                  "Do you want to store the password for server '%1' in the "
+                  "configuration file?").arg( server() ),
+             i18n("KWallet Not Available"),
+             KGuiItem( i18n("Store Password") ),
+             KGuiItem( i18n("Do Not Store Password") ) )
+             == KMessageBox::Yes ) {
+          conf->writeEntry( "pass", KNHelper::encryptStr( p_ass ) );
+        }
       }
       p_assDirty = false;
     }
