@@ -1,6 +1,6 @@
 KDE_CXXFLAGS = $(USE_THREADS)
 INCLUDES= $(all_includes)
-SUBDIRS = toolbar pics filters
+SUBDIRS = pics filters
 
 bin_PROGRAMS = knode
 knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
