@@ -22,6 +22,7 @@
 #include <mimelib/utility.h>
 #include <mimelib/uuencode.h>
 
+#include <kdebug.h>
 #include <klocale.h>
 #include <kmimemagic.h>
 
@@ -168,7 +169,7 @@ void KNMimeContent::parse()
     }
   }
   else if(b_ody && mInfo->ctMediaType()==MTtext && b_ody->count()>200) {
-    qDebug("KNMimeContent::parse() : uuencoded binary assumed");
+    kdDebug(5003) << "KNMimeContent::parse() : uuencoded binary assumed" << endl;
     UUParser uup(b_ody, headerLine("Subject"));
     uup.parse();
     
@@ -185,7 +186,7 @@ void KNMimeContent::parse()
     }
     
     else if(uup.isUUencoded()) {
-      qDebug("KNMimeContent::parse() : is uuencoded");
+      kdDebug(5003) << "KNMimeContent::parse() : is uuencoded" << endl;
       if(!ct_List) {
         ct_List=new QList<KNMimeContent>;
         ct_List->setAutoDelete(true);
@@ -426,7 +427,7 @@ void KNMimeContent::changeEncoding(int e)
   else {
 
     if(e!=ECbase64) {
-      qDebug("KNMimeContent::changeEncoding() : non textual data and encoding != base64 - this should not happen => forcing base64");
+      kdWarning(5003) << "KNMimeContent::changeEncoding() : non textual data and encoding != base64 - this should not happen => forcing base64" << endl;
       e=ECbase64;
     }
     
@@ -777,7 +778,7 @@ DwString KNMimeContent::decodedData()
         DwDecodeBase64(src, dst);
       break;
       case ECuuencode:
-        qDebug("uudecode");
+        kdDebug(5003) << "uudecode" << endl;
         dwuu.SetAsciiChars(src);
         dwuu.Decode();
         dst=dwuu.BinaryChars(); 

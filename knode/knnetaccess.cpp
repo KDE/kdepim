@@ -25,6 +25,7 @@
 #include <kmessagebox.h>
 #include <kapp.h>
 #include <kglobal.h>
+#include <kdebug.h>
 
 #include "knode.h"
 #include "knjobdata.h"
@@ -85,13 +86,13 @@ KNNetAccess::~KNNetAccess()
   disconnect(smtpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
   
   if(pthread_cancel(nntpThread)!=0)
-    qDebug("KNNetAccess::~KNNetAccess() : cannot cancel thread");
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot cancel thread" << endl;
   if (0!=pthread_join(nntpThread,NULL))                         // join is important...
-    qDebug("KNNetAccess::~KNNetAccess() : cannot join thread");
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot join thread" << endl;
   if(pthread_cancel(smtpThread)!=0)
-    qDebug("KNNetAccess::~KNNetAccess() : cannot cancel thread");       
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot cancel thread" << endl;
   if (0!=pthread_join(smtpThread,NULL))                         // join is important...
-    qDebug("KNNetAccess::~KNNetAccess() : cannot join thread");
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot join thread" << endl;
     
   delete nntpClient;
   delete smtpClient;
@@ -106,14 +107,14 @@ KNNetAccess::~KNNetAccess()
       (::close(smtpInPipe[1]) == -1)||
       (::close(smtpOutPipe[0]) == -1)||
       (::close(smtpOutPipe[1]) == -1))
-    qDebug( "Can't close pipes" );
+    kdDebug(5003) << "Can't close pipes" << endl;
 }
 
 
 
 void KNNetAccess::addJob(KNJobData *job)
 {
-  // qDebug("KNNetAccess::addJob() : job queued");  // too verbose...
+  // kdDebug(5003) << "KNNetAccess::addJob() : job queued" << endl;
   if (job->type()==KNJobData::JTmail) {
     smtpJobQueue.enqueue(job);
     if (!currentSmtpJob)   // no active job, start the new one
@@ -180,7 +181,7 @@ void KNNetAccess::triggerAsyncThread(int pipeFd)
 {
   int signal=0;
   
-  // qDebug("KNNetAccess::triggerAsyncThread() : sending signal to net thread"); // too verbose
+  // kdDebug(5003) << "KNNetAccess::triggerAsyncThread() : sending signal to net thread" << endl;
   write(pipeFd, &signal, sizeof(int));
 }
 
@@ -189,14 +190,14 @@ void KNNetAccess::triggerAsyncThread(int pipeFd)
 void KNNetAccess::startJobNntp()
 {
   if (nntpJobQueue.isEmpty()) {
-    qDebug("KNNetAccess::startJobNntp(): job queue is empty?? aborting");
+    kdWarning(5003) << "KNNetAccess::startJobNntp(): job queue is empty?? aborting" << endl;
     return;
   }
   currentNntpJob = nntpJobQueue.dequeue();
   nntpClient->insertJob(currentNntpJob);
   triggerAsyncThread(nntpOutPipe[1]);
   actNetStop->setEnabled(true);
-  qDebug("KNNetAccess::startJobNntp(): job started");
+  kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
 }
 
 
@@ -204,7 +205,7 @@ void KNNetAccess::startJobNntp()
 void KNNetAccess::startJobSmtp()
 {
   if (smtpJobQueue.isEmpty()) {
-    qDebug("KNNetAccess::startJobSmtp(): job queue is empty?? aborting");
+    kdWarning(5003) << "KNNetAccess::startJobSmtp(): job queue is empty?? aborting" << endl;
     return;
   }
   unshownMsg = QString::null;
@@ -215,7 +216,7 @@ void KNNetAccess::startJobSmtp()
   smtpClient->insertJob(currentSmtpJob);
   triggerAsyncThread(smtpOutPipe[1]);
   actNetStop->setEnabled(true);
-  qDebug("KNNetAccess::startJobSmtp(): job started");
+  kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
 }
 
 
@@ -224,11 +225,11 @@ void KNNetAccess::threadDoneNntp()
 {
   KNJobData *tmp;
   if (!currentNntpJob) {
-    qDebug("KNNetAccess::threadDoneNntp(): no current job?? aborting");
+    kdWarning(5003) << "KNNetAccess::threadDoneNntp(): no current job?? aborting" << endl;
     return;
   }
     
-  qDebug("KNNetAccess::threadDoneNntp(): job done");
+  kdDebug(5003) << "KNNetAccess::threadDoneNntp(): job done" << endl;
 
   tmp = currentNntpJob;
   nntpClient->removeJob();
@@ -254,11 +255,11 @@ void KNNetAccess::threadDoneSmtp()
 {
   KNJobData *tmp;
   if (!currentSmtpJob) {
-    qDebug("KNNetAccess::threadDoneSmtp(): no current job?? aborting");
+    kdWarning(5003) << "KNNetAccess::threadDoneSmtp(): no current job?? aborting" << endl;
     return;
   }
     
-  qDebug("KNNetAccess::threadDoneSmtp(): job done");
+  kdDebug(5003) << "KNNetAccess::threadDoneSmtp(): job done" << endl;
 
   tmp = currentSmtpJob;
   smtpClient->removeJob();
@@ -282,9 +283,9 @@ void KNNetAccess::slotThreadSignal(int i)
   int signal,byteCount;
   QString tmp;
     
-  //qDebug("KNNetAccess::slotThreadSignal() : signal received from net thread"); // too verbose
+  //kdDebug(5003) << "KNNetAccess::slotThreadSignal() : signal received from net thread" << endl;
   if(read(i, &signal, sizeof(int))==-1) {
-    qDebug("KNNetAccess::slotThreadSignal() : cannot read from pipe");
+    kdDebug(5003) << "KNNetAccess::slotThreadSignal() : cannot read from pipe" << endl;
     return;
   }
       

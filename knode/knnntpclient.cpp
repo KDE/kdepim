@@ -317,22 +317,22 @@ void KNNntpClient::doFetchNewHeaders()
     oldlast=target->lastNr();
     
   toFetch=last-oldlast;
-  qDebug("last %d  oldlast %d  toFetch %d\n",last,oldlast,toFetch);
+  //qDebug("last %d  oldlast %d  toFetch %d\n",last,oldlast,toFetch);
     
   if(toFetch==0) {
-    qDebug("No new Articles in group\n");
+    //qDebug("No new Articles in group\n");
     return;
   }
   
   if(toFetch>target->maxFetch()) {
     toFetch=target->maxFetch();
-    qDebug("Fetching only %d articles\n",toFetch);
+    //qDebug("Fetching only %d articles\n",toFetch);
   }
 
   progressValue = 100;  
   predictedLines = toFetch;
     
-  qDebug("KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
+  //qDebug("KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
   cmd.sprintf("xover %d-%d",last-toFetch+1,last);
   if (!sendCommandWCheck(cmd,224))       // 224 success
     return;
@@ -439,14 +439,14 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     return false;
   
   if (rep==480) {            // 480 requesting authorization
-    qDebug("Authorization requested");
+    //qDebug("Authorization requested");
     
     if (!account.user().length()) {
       job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
       return false;
     }
 
-    qDebug("user: %s",account.user().data());
+    //qDebug("user: %s",account.user().data());
         
     QCString command = "AUTHINFO USER ";
     command += account.user();
@@ -454,14 +454,14 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
       return false;
     
     if (rep==381) {          // 381 PASS required
-      qDebug("Password required");
+      //qDebug("Password required");
       
       if (!account.pass().length()) {
         job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
         return false;
       } 
           
-      qDebug("pass: %s",account.pass().data());
+      //qDebug("pass: %s",account.pass().data());
       
       command = "AUTHINFO PASS ";
       command += account.pass();
@@ -470,12 +470,11 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     }
     
     if (rep==281) {         // 281 authorization success
-      qDebug("Authorization successful");     
+      //qDebug("Authorization successful");
       if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
         return false;
     } else {
-      qDebug("Authorization failed");
-      handleErrors();
+      job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
       return false;
     }
   }

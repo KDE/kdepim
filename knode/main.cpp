@@ -13,8 +13,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <iostream>
-
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>

@@ -19,6 +19,7 @@
 
 #include <qdir.h>
 
+#include <kdebug.h>
 #include <ksimpleconfig.h>
 #include <kglobal.h>
 #include <kiconloader.h>
@@ -115,7 +116,7 @@ void KNAccountManager::loadAccounts()
       gManager->loadGroups(a);
     } else {
       delete a;
-      qDebug("Unable to load account %s!",(*it).local8Bit().data());
+      kdError(5003) << "Unable to load account " << (*it) << "!" << endl;
     }
   }
 }

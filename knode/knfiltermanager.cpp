@@ -30,6 +30,7 @@
 #include <kiconloader.h>
 #include <ktoolbar.h>
 #include <ksimpleconfig.h>
+#include <kdebug.h>
 
 #include "utilities.h"
 #include "knglobals.h"
@@ -97,7 +98,7 @@ int KNFilterSelectAction::plug(QWidget* widget, int index)
     return containerCount() - 1;
   }
 
-  qDebug("Can not plug KFilterSelectAction in %s", widget->className() );
+  kdDebug(5003) << "Can not plug KFilterSelectAction in " << widget->className() << endl;
   return -1;
 }
 

@@ -66,11 +66,11 @@ void KNFocusWidget::slotFocusChanged(QFocusEvent *e)
 {
   if(e->gotFocus()) {
     setFocus(true);
-    //qDebug("focus in");
+    //kdDebug(5003) << "focus in" << endl;
   }
   else if(e->lostFocus()) {
     setFocus(false);
-    //qDebug("focus out");
+    //kdDebug(5003) << "focus out" << endl;
   }   
 }
 

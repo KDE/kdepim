@@ -49,7 +49,7 @@ QCString KNArticleBase::uniqueString()
   
   for(int i=0; i<10; i++){
     pos=(int) (61.0*rand()/(RAND_MAX+1.0));
-    //qDebug("%d", pos);
+    //kdDebug(5003) << pos << endl;
     p[i]=chars[pos];
   }
   ret.sprintf("%d.%s", timeval, p);
@@ -72,7 +72,7 @@ QCString KNArticleBase::multiPartBoundary()
 
 QCString KNArticleBase::decodeQuotedPrintable(const QCString aStr)
 {
-    qDebug("decoding %s", aStr.data());
+  //  kdDebug(5003) << "decoding " << aStr << endl;
 
   DwString dwsrc(aStr.data());
   DwString dwdest;
@@ -784,7 +784,7 @@ QCString KNArticleBase::ReferenceLine::next()
       }
     }
   }
-  //qDebug("KNArticleBase::ReferenceLine::next() : ret = %s", ret.data());
+  //kdDebug(5003) << "KNArticleBase::ReferenceLine::next() : ret = " << ret.data() << endl;
   return ret;
 }
 
@@ -807,7 +807,7 @@ QCString KNArticleBase::ReferenceLine::at(int i)
       ret=l_ine.mid(pos1, pos2-pos1+1);
   }
 
- //qDebug("KNArticleBase::ReferenceLine::at() : ret = %s", ret.data());
+ //kdDebug(5003) << "KNArticleBase::ReferenceLine::at() : ret = " << ret.data() << endl;
  return ret;
 }
 

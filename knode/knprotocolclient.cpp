@@ -69,9 +69,9 @@ void* KNProtocolClient::startThread(void* pseudoThis)
   KNProtocolClient* newthis = (KNProtocolClient*) (pseudoThis);
 
   if (0!=pthread_setcanceltype(PTHREAD_CANCEL_ENABLE,NULL))
-    qDebug("pthread_setcanceltype failed!");
+    qWarning("pthread_setcanceltype failed!");
   if (0!= pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL))
-    qDebug("pthread_setcanceltype failed!");
+    qWarning("pthread_setcanceltype failed!");
 
   signal(SIGPIPE,SIG_IGN);   // ignore sigpipe
 
@@ -129,7 +129,7 @@ void KNProtocolClient::waitForWork()
 
     sendSignal(TSjobStarted);
     if (job) {
-    //  qDebug("KNProtocolClient::waitForWork(): got job");  too verbose
+    //  qDebug("KNProtocolClient::waitForWork(): got job");
 
       if (job->net()&&!account.isEqual(job->account())) {     // server changed
         account.copy(job->account());
@@ -438,7 +438,7 @@ void KNProtocolClient::handleErrors()
 void KNProtocolClient::sendSignal(threadSignal s)
 {
   int signal=(int)s;
-  // qDebug("KNProtcolClient::sendSignal() : sending signal to main thread"); too verbose
+  // qDebug("KNProtcolClient::sendSignal() : sending signal to main thread");
   write(fdPipeOut, &signal, sizeof(int));
 }
 

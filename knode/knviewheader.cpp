@@ -21,6 +21,7 @@
 #include <kglobal.h>
 #include <kstddirs.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "utilities.h"
 #include "knviewheader.h"
@@ -109,7 +110,7 @@ void KNViewHeader::loadAll()
     h->h_eader = headerConf.readEntry("Header");
     flags = headerConf.readIntListEntry("Flags");
     if (h->n_ame.isNull()||h->h_eader.isNull()||(flags.count()!=8)) {
-      qDebug("KNViewHeader::loadAll() : ignoring invalid/incomplete Header"); 
+      kdWarning(5003) << "KNViewHeader::loadAll() : ignoring invalid/incomplete Header" << endl;
       remove(h);
     } else {
       for (int i=0; i<8; i++)
@@ -159,7 +160,7 @@ KNViewHeader* KNViewHeader::newItem()
 {
   KNViewHeader *h=new KNViewHeader();
   instances.append(h);
-  // qDebug("KNViewHeader::newItem() : instance added"); too verbose
+  // kdDebug(5003) << "KNViewHeader::newItem() : instance added" << endl;
   return h;
 }
 
@@ -168,8 +169,8 @@ void KNViewHeader::remove(KNViewHeader *h)
 {
   instances.setAutoDelete(true);
   if (!instances.remove(h))
-    qDebug("KNViewHeader::remove() : cannot find pointer in list !!");  
-  // else qDebug("KNViewHeader::remove() : instance removed");  too verbose
+    kdDebug(5003) << "KNViewHeader::remove() : cannot find pointer in list !!" << endl;
+  // else kdDebug(5003) << "KNViewHeader::remove() : instance removed" << endl;
   
   instances.setAutoDelete(false);
 }
@@ -191,9 +192,9 @@ void KNViewHeader::up(KNViewHeader *h)
   if(idx!=-1) {
     instances.take(idx);
     instances.insert(idx-1, h);
-    qDebug("KNViewHeader::up() : item moved up");
+    kdDebug(5003) << "KNViewHeader::up() : item moved up" << endl;
   }
-  else qDebug("KNViewHeader::up() : item not found in list");   
+  else kdDebug(5003) << "KNViewHeader::up() : item not found in list" << endl;
 }
 
 
@@ -204,9 +205,9 @@ void KNViewHeader::down(KNViewHeader *h)
   if(idx!=-1) {
     instances.take(idx);
     instances.insert(idx+1, h);
-    qDebug("KNViewHeader::up() : item moved down");
+    kdDebug(5003) << "KNViewHeader::up() : item moved down" << endl;
   }
-  else qDebug("KNViewHeader::up() : item not found in list");
+  else kdDebug(5003) << "KNViewHeader::up() : item not found in list" << endl;
 }
 
 

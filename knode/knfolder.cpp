@@ -21,6 +21,7 @@
 #include <kmessagebox.h>
 #include <ksimpleconfig.h>
 #include <kstddirs.h>
+#include <kdebug.h>
 
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"
@@ -120,7 +121,7 @@ bool KNFolder::loadHdrs()
     return false;
     
   if(c_ount>0 && len==0) {
-    qDebug("KNFolder::loadIndex() : loading headers");
+    kdDebug(5003) << "KNFolder::loadIndex() : loading headers" << endl;
     if(!resize(c_ount)) return false;
     
     f.setName(dir+QString("folder%1.idx").arg(i_d));
@@ -130,10 +131,10 @@ bool KNFolder::loadHdrs()
         byteCount = f.readBlock((char*)(&dynamic), sizeof(dynData));
         if ((byteCount == -1)||(byteCount!=sizeof(dynData)))
           if (f.status() == IO_Ok) {
-            qDebug("Found broken entry in dynamic-file: Ignored!");
+            kdWarning(5003) << "Found broken entry in dynamic-file: Ignored!" << endl;
             continue;
           } else {
-            qDebug("Corrupted dynamic file, IO-error!");
+            kdError(5003) << "Corrupted dynamic file, IO-error!" << endl;
             clearList();
             return false;
           }                 
@@ -173,7 +174,7 @@ bool KNFolder::loadHdrs()
           tmp = f.readLine();   
           if(tmp.isEmpty()){
             if (f.status() == IO_Ok) {
-              qDebug("Found broken entry in mbox-file: Ignored!");
+              kdWarning(5003) << "Found broken entry in mbox-file: Ignored!" << endl;
               removeArticle(art);
               delete art;
               continue;
@@ -195,7 +196,7 @@ bool KNFolder::loadHdrs()
     return true;
   }
   else {
-    qDebug("KNFolder::loadIndex() : already loaded");
+    kdDebug(5003) << "KNFolder::loadIndex() : already loaded" << endl;
     return true;
   }
 }
@@ -251,7 +252,7 @@ bool KNFolder::loadArticle(KNSavedArticle *a)
           line=f.readLine();
           if(line.isEmpty()) {
             if (f.status() != IO_Ok) {
-              qDebug("Corrupted mbox file, IO-error!");
+              kdError(5003) << "Corrupted mbox file, IO-error!" << endl;
               return false;
             }
             else if(isHead) {
@@ -352,7 +353,7 @@ bool KNFolder::saveArticle(KNSavedArticle *a)
       return true;
     }
     else {
-      qDebug("KNFolder::saveArticle() : article not in folder !!");
+      kdWarning(5003) << "KNFolder::saveArticle() : article not in folder !!" << endl;
       return false;
     }
   }     

@@ -41,7 +41,7 @@ void KNSmtpClient::processJob()
       doMail();
       break;
     default:
-      qDebug("KNSmtpClient::processJob(): mismatched job");   
+      qDebug("KNSmtpClient::processJob(): mismatched job");
   }
 }
   
@@ -101,12 +101,12 @@ bool KNSmtpClient::openConnection()
     
   if (gethostname(hostName,490)==0) {
     cmd += hostName;
-    qDebug("KNSmtpClient::openConnection(): %s",cmd.data());  
+    //qDebug("KNSmtpClient::openConnection(): %s",cmd.data());
   } else {
     cmd += "foo";
-    qDebug("KNSmtpClient::openConnection(): can't detect hostname, using foo");
+    //qDebug("KNSmtpClient::openConnection(): can't detect hostname, using foo");
   }
-  
+
   if (!sendCommandWCheck(cmd,250))
     return false;
     

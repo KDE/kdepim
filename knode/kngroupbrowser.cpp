@@ -23,6 +23,7 @@
 #include <kseparator.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "knnetaccess.h"
 #include "knjobdata.h"
@@ -270,7 +271,7 @@ void KNGroupBrowser::slotItemExpand(QListViewItem *it)
   if(!it) return;
 
   if(it->childCount()) {
-    qDebug("KNGroupBrowser::slotItemExpand() : has already been expanded, returning");
+    kdDebug(5003) << "KNGroupBrowser::slotItemExpand() : has already been expanded, returning" << endl;
     return;
   }
 
@@ -358,7 +359,7 @@ void KNGroupBrowser::CheckItem::setChecked(bool c)
 void KNGroupBrowser::CheckItem::stateChange(bool s)
 {
   if(browser) {
-    qDebug("KNGroupBrowser::CheckItem::stateChange()");
+    kdDebug(5003) << "KNGroupBrowser::CheckItem::stateChange()" << endl;
     browser->itemChangedState(this, s);
   }
 }

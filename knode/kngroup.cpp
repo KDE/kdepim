@@ -22,6 +22,7 @@
 #include <ksimpleconfig.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kdebug.h>
 
 #include "knglobals.h"
 #include "knuserentry.h"
@@ -84,7 +85,7 @@ bool KNGroup::readInfo(const QString &confPath)
   /*if(tmp.isEmpty()) {
     tmp=info.deleteEntry("name", false);
     info.writeEntry("groupname", tmp);
-    qDebug("Group info-file converted");
+    kdDebug(5003) << "Group info-file converted" << endl;
     info.sync();
   }*/
   
@@ -98,7 +99,7 @@ bool KNGroup::readInfo(const QString &confPath)
   u_ser=new KNUserEntry();
   u_ser->load(&info);
   if(!u_ser->isEmpty()) {
-    qDebug("using alternative user for %s",g_roupname.data());
+    kdDebug(5003) << "using alternative user for " << g_roupname.data() << endl;
   } else {
     delete u_ser;
     u_ser=0;
@@ -158,7 +159,7 @@ KNFetchArticle* KNGroup::byId(int id)
 bool KNGroup::loadHdrs()
 {
   if(c_ount>0 && len==0) {
-    qDebug("KNGroup::loadHdrs() : loading headers");
+    kdDebug(5003) << "KNGroup::loadHdrs() : loading headers" << endl;
     QCString buff;
     KNFile f;
     KNStringSplitter split;
@@ -181,10 +182,10 @@ bool KNGroup::loadHdrs()
         buff=f.readLine();    
         if(buff.isEmpty()){
           if (f.status() == IO_Ok) {
-            qDebug("Found broken line in static-file: Ignored!");
+            kdWarning(5003) << "Found broken line in static-file: Ignored!" << endl;
             continue;
           } else {        
-            qDebug("Corrupted static file, IO-error!");
+            kdError(5003) << "Corrupted static file, IO-error!" << endl;
             clearList();
             return false;
           }         
@@ -227,7 +228,7 @@ bool KNGroup::loadHdrs()
                       
         buff=f.readLine();
         sscanf(buff,"%d %d %d", &id, &lines, (uint*) &timeT);//, (uint*) &fTimeT);
-        //qDebug("id = %d", id);
+        //kdDebug(5003) << "id = " << id << endl;
       
         art->setId(id);
         art->setLines(lines);
@@ -263,10 +264,10 @@ bool KNGroup::loadHdrs()
         byteCount = f.readBlock((char*)(&data), sizeof(dynData));
         if ((byteCount == -1)||(byteCount!=sizeof(dynData)))
           if (f.status() == IO_Ok) {
-            qDebug("Found broken entry in dynamic-file: Ignored!");
+            kdWarning(5003) << "Found broken entry in dynamic-file: Ignored!" << endl;
             continue;
           } else {
-            qDebug("Corrupted dynamic file, IO-error!");
+            kdError(5003) << "Corrupted dynamic file, IO-error!" << endl;
             clearList();
             return false;
           }   
@@ -296,7 +297,7 @@ bool KNGroup::loadHdrs()
     }
           
     
-    qDebug("%d articles read from file\n",cnt);
+    kdDebug(5003) << cnt << " articles read from file" << endl;
     c_ount=len;
     
     updateThreadInfo();
@@ -304,7 +305,7 @@ bool KNGroup::loadHdrs()
   }   
   
   else {
-    qDebug("KNGroup::loadHdrs() : nothing to load");
+    kdDebug(5003) << "KNGroup::loadHdrs() : nothing to load" << endl;
     return true;
   }
 }
@@ -371,7 +372,8 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
   }
   
   sortHdrs(cnt);
-  qDebug("%d headers wrote to file\n", saveStaticData(cnt));
+  int count = saveStaticData(cnt);
+  kdDebug(5003) << count << " headers wrote to file" << endl;
   saveDynamicData(cnt);
   updateThreadInfo();
   c_ount=len;
@@ -505,7 +507,7 @@ void KNGroup::syncDynamicData()
       
       f.close();
 
-      qDebug("%s => updated %d entries of dynamic data", n_ame.local8Bit().data(), cnt);
+      kdDebug(5003) << n_ame << " => updated " << cnt << " entries of dynamic data" << endl;
 
       r_eadCount=readCnt;
     }
@@ -523,7 +525,7 @@ void KNGroup::sortHdrs(int cnt)
       resortCnt=0, idx, oldRef, idRef;
   KNFetchArticle *art;
   
-  qDebug("KNGroup::sortHdrs() : start = %d   end = %d", start, end);
+  kdDebug(5003) << "KNGroup::sortHdrs() : start = " << start << "   end = " << end << endl;
   
   //resort old hdrs
   if(start>0)
@@ -532,7 +534,7 @@ void KNGroup::sortHdrs(int cnt)
       if(art->threadingLevel()>1) {
         oldRef=art->idRef();
         if(findRef(art, start, end)!=-1) {
-          qDebug("%d : old %d    new %d\n",art->id(), oldRef, art->idRef());
+          kdDebug(5003) << art->id() << " : old " << oldRef << "    new " << art->idRef() << "\n" << endl;
           resortCnt++;
           art->setHasChanged(true);
         }
@@ -641,7 +643,7 @@ void KNGroup::sortHdrs(int cnt)
     }
     
     if(isLoop) {
-      qDebug("Sorting : loop in %d", hList[idx]->id);
+      kdDebug(5003) << "Sorting : loop in " << hList[idx]->id << endl;
       hList[idx]->idRef=0;
       hList[idx]->thrLevel=0;
     }
@@ -665,10 +667,10 @@ void KNGroup::sortHdrs(int cnt)
   }
   
   
-  qDebug("\nSorting : %d headers resorted\n", resortCnt);
-  qDebug("Sorting : %d references of %d found in step 1\n",foundCnt_1,refCnt);
-  qDebug("Sorting : %d references of %d found in step 2\n",foundCnt_2,refCnt);
-  qDebug("Sorting : %d references of %d sorted by subject\n",bySubCnt,refCnt);
+  kdDebug(5003) << "Sorting : " << resortCnt << " headers resorted" << endl;
+  kdDebug(5003) << "Sorting : " << foundCnt_1 << " references of " << refCnt << " found in step 1" << endl;
+  kdDebug(5003) << "Sorting : " << foundCnt_2 << " references of " << refCnt << " found in step 2" << endl;
+  kdDebug(5003) << "Sorting : " << bySubCnt << " references of " << refCnt << " sorted by subject" << endl;
     
 }
 
@@ -724,7 +726,7 @@ void KNGroup::resort()
     at(idx)->setIdRef(-1);
     at(idx)->setThreadingLevel(0);
   }
-  qDebug("KNGroup::resort()");
+  kdDebug(5003) << "KNGroup::resort()" << endl;
   sortHdrs(len);
   saveDynamicData(len, true);
 }
@@ -760,7 +762,7 @@ void KNGroup::updateThreadInfo()
   }
 
   if(brokenThread) {
-    qDebug("KNGroup::updateThreadInfo() : Found broken threading infos !! Restoring ...");
+    kdWarning(5003) << "KNGroup::updateThreadInfo() : Found broken threading infos !! Restoring ..." << endl;
     resort();
     updateThreadInfo();
   }

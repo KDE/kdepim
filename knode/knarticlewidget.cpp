@@ -699,7 +699,7 @@ void KNArticleWidget::createHtmlPage()
     if(text->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
       /*text->prepareHtml();
       for(char* l=text->firstBodyLine(); l; l=text->nextBodyLine()) {
-        //qDebug("KNArticleWidget::createHtmlPage() : HTML-Line = %s", l);
+        //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : HTML-Line = " << l << endl;
         buffer+=l;
       }*/
       buffer+=text->htmlCode();

@@ -26,6 +26,7 @@
 #include <klocale.h>
 #include <khtml_part.h>
 #include <kwin.h>
+#include <kdebug.h>
 
 #include "knuserentry.h"
 #include "knjobdata.h"
@@ -216,28 +217,28 @@ KNodeApp::~KNodeApp()
   delete setDialog;
 
   delete NAcc;
-  qDebug("Net deleted\n");
+  kdDebug(5003) << "Net deleted" << endl;
 
   delete AManager;
-  qDebug("AManager deleted\n");
+  kdDebug(5003) << "AManager deleted" << endl;
 
   delete GManager;
-  qDebug("GManager deleted\n");
+  kdDebug(5003) << "GManager deleted" << endl;
 
   delete FAManager;
-  qDebug("FAManager deleted\n");
+  kdDebug(5003) << "FAManager deleted" << endl;
 
   delete FoManager;
-  qDebug("FoManager deleted\n");
+  kdDebug(5003) << "FoManager deleted" << endl;
 
   delete SAManager;
-  qDebug("SAManager deleted\n");
+  kdDebug(5003) << "SAManager deleted" << endl;
 
   delete FiManager;
-  qDebug("FiManager deleted\n");
+  kdDebug(5003) << "FiManager deleted" << endl;
 
   delete AppManager;
-  qDebug("AppManager deleted\n");
+  kdDebug(5003) << "AppManager deleted" << endl;
 }
 
 
@@ -696,23 +697,23 @@ bool KNodeApp::queryClose()
 void KNodeApp::jobDone(KNJobData *j)
 {
   if(!j) return;
-  //qDebug("KNodeApp::jobDone() : job received"); too verbose
+  //kdDebug(5003) << "KNodeApp::jobDone() : job received" << endl;
 
   switch(j->type()) {
     case KNJobData::JTLoadGroups:
     case KNJobData::JTFetchGroups:
     case KNJobData::JTCheckNewGroups:
     case KNJobData::JTfetchNewHeaders:
-      qDebug("KNodeApp::jobDone() : job sent to GManager");
+      kdDebug(5003) << "KNodeApp::jobDone() : job sent to GManager" << endl;
       GManager->jobDone(j);
     break;
     case KNJobData::JTfetchArticle:
-      qDebug("KNodeApp::jobDone() : job sent to FAManager");
+      kdDebug(5003) << "KNodeApp::jobDone() : job sent to FAManager" << endl;
       FAManager->jobDone(j);
     break;
     case KNJobData::JTpostArticle:
     case KNJobData::JTmail:
-      qDebug("KNodeApp::jobDone() : job sent to SAManager");
+      kdDebug(5003) << "KNodeApp::jobDone() : job sent to SAManager" << endl;
       SAManager->jobDone(j);
     break;
   };

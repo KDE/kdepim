@@ -19,6 +19,7 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kdebug.h>
 
 #include "knglobals.h"
 #include "knarticlecollection.h"
@@ -61,7 +62,7 @@ bool KNArticleCollection::resize(int s)
   }
   else {
     siz=nSize;
-    //qDebug("size : %d\n",siz);
+    //kdDebug(5003) << "size : " << siz << "\n" << endl;
     return true;
   }
 }
@@ -150,7 +151,7 @@ int KNArticleCollection::findId(int id)
 
   if (found) return mid;  
   else {
-    qDebug("ID %d not found!\n", id);
+    kdDebug(5003) << "ID " << id << " not found!\n" << endl;
     return -1;
   } 
     
@@ -179,7 +180,7 @@ int KNArticleCollection::findId(int id)
 
   if (found) return list[mid];  
   else {
-    qDebug("ID %d not found!\n", id);
+    kdDebug(5003) << "ID " << id << " not found!\n" << endl;
     return 0;
   } */
 }
@@ -276,7 +277,7 @@ bool KNFile::increaseBuffer()
   if(buffer.resize(2*buffer.size())) {;
     dataPtr=buffer.data();
     dataPtr[0]='\0';
-    qDebug("KNFile::increaseBuffer() : buffer doubled");
+    kdDebug(5003) << "KNFile::increaseBuffer() : buffer doubled" << endl;
     return true;
   }
   else return false;

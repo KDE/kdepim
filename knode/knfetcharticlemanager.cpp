@@ -22,6 +22,7 @@
 #include <kglobal.h>
 #include <kstdaccel.h>
 #include <kwin.h>
+#include <kdebug.h>
 
 #include "knnntpaccount.h"
 #include "knarticlewidget.h"
@@ -203,7 +204,7 @@ void KNFetchArticleManager::setCurrentArticle(KNFetchArticle *a)
 {
   n_ext=a;
   if(a) {
-    qDebug("KNFetchArticleManager::setCurrentArticle() : messageID=%s", a->messageId().data());
+    kdDebug(5003) << "KNFetchArticleManager::setCurrentArticle() : messageID=" << a->messageId() << endl;
     if(a->locked()) return;
     if(a->hasContent()) {
       c_urrent=a;
@@ -536,7 +537,7 @@ void KNFetchArticleManager::slotItemExpanded(QListViewItem *p)
   bool inThread=false;
 
   if(p->childCount() > 0) {
-    //qDebug("KNFetchArticleManager::slotItemExpanded() : childCount = %d => returning", p->childCount());
+    //kdDebug(5003) << "KNFetchArticleManager::slotItemExpanded() : childCount = " << p->childCount() << " => returning" << endl;
     return;
   }
   hdrItem=static_cast<KNHdrViewItem*>(p);

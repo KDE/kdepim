@@ -21,6 +21,7 @@
 #include <qlineedit.h>
 #include <qcheckbox.h>
 
+#include <kdebug.h>
 #include <kglobal.h>
 #include <kdatepik.h>
 #include <klocale.h>
@@ -72,7 +73,7 @@ KNGroupDialog::~KNGroupDialog()
 
 void KNGroupDialog::itemChangedState(CheckItem *it, bool s)
 {
-  qDebug("KNGroupDialog::itemChangedState()");
+  kdDebug(5003) << "KNGroupDialog::itemChangedState()" << endl;
   if(s){
     if(itemInListView(unsubView, it->text(0))) {
       removeListItem(unsubView, it->text(0));

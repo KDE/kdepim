@@ -434,7 +434,7 @@ void KNComposer::slotDestButtonClicked()
         if(!d_estination.isEmpty()) d_estination+=",";
         d_estination+=entry.emails.first().local8Bit();
         view->dest->setText(d_estination);
-        //qDebug("KabApi::getEntry() : name: %s, key: %s", entry.lastname.latin1(), ());
+        //kdDebug(5003) << "KabApi::getEntry() : name: " << entry.lastname << ", key: " << () << endl;
       }
     }
     delete kab;     

@@ -15,9 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <kdebug.h>
 
 #include "knmimeinfo.h"
 #include "knmimecontent.h"
+
 
 KNMimeInfo::KNMimeInfo()
 {
@@ -251,7 +253,7 @@ QCString KNMimeInfo::getCTParameter(const char* param)
       removeQuots(ret);
     }
   }
-  qDebug("KNMimeInfo::getCTParameter() : %s = %s", param, ret.data());
+  kdDebug(5003) << "KNMimeInfo::getCTParameter() : " << param << " = " << ret << endl;
   return ret;
 }
 

@@ -20,6 +20,7 @@
 #include <kstddirs.h>
 #include <ksimpleconfig.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "kngroup.h"
 #include "knfetcharticle.h"
@@ -121,7 +122,7 @@ void KNArticleFilter::load()
   
   l_oaded=true;
   
-  qDebug("KNMessageFilter: filter loaded \"%s\" ", n_ame.latin1());
+  kdDebug(5003) << "KNMessageFilter: filter loaded \"" << n_ame << "\" " << endl;
   
 }
 
@@ -161,7 +162,7 @@ void KNArticleFilter::save()
   conf.setGroup("FROM");
   from.save(&conf);
   
-  qDebug("KNMessageFilter: filter saved \"%s\" ", n_ame.latin1());
+  kdDebug(5003) << "KNMessageFilter: filter saved \"" << n_ame << "\" " << endl;
 }
 
 

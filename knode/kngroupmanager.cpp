@@ -26,6 +26,7 @@
 #include <kglobal.h>
 #include <kurl.h>
 #include <kiconloader.h>
+#include <kdebug.h>
 
 #include "knpurgeprogressdialog.h"
 #include "knode.h"
@@ -132,7 +133,7 @@ bool KNGroupListData::readIn()
     f.close();
     return true;
   } else {
-    qWarning("unable to open %s, reason %d", f.name().latin1(), f.status());
+    kdWarning(5003) << "unable to open " << f.name() << " reason " << f.status() << endl;
     return false;
   }
 }
@@ -152,7 +153,7 @@ bool KNGroupListData::writeOut()
     f.close();
     return true;
   } else {
-    qWarning("unable to open %s, reason %d", f.name().latin1(), f.status());
+    kdWarning(5003) << "unable to open " << f.name() << " reason " << f.status() << endl;
     return false;
   } 
 }
@@ -285,7 +286,7 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
       group->updateListItem();
     } else {
       delete group;
-      qDebug("Unable to load %s!",(*it).local8Bit().data());
+      kdError(5003) << "Unable to load " << (*it) << "!" << endl;
     } 
   }
 }
@@ -334,7 +335,7 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
       kapp->processEvents();
     }
     cup.group(var);
-    qDebug("%s => %d expired , %d left", var->name().latin1(), cup.deleted(), cup.left());
+    kdDebug() << var->name() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
     if(dlg) dlg->progress();
   }
   if(dlg) kapp->processEvents();
@@ -423,7 +424,7 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
         ++it;
       }
     }
-    qDebug("Files deleted!\n");
+    kdDebug(5003) << "Files deleted!\n" << endl;
     
     if(c_urrentGroup==g) setCurrentGroup(0);
     
@@ -447,7 +448,7 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
   if(!g) g=c_urrentGroup;
   if(!g) return;
   if(g->locked()) {
-    qDebug("KNGroupManager::setCurrentGroup() : group locked - returning");
+    kdDebug(5003) << "KNGroupManager::setCurrentGroup() : group locked - returning" << endl;
     return;
   } 
   g->setMaxFetch(defaultMaxFetch);
@@ -463,7 +464,7 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
   if(!g) return;
   KNCleanUp cup;
   cup.group(g, true);
-  qDebug("KNExpire: %s => %d expired , %d left", g->name().latin1(), cup.deleted(), cup.left());
+  kdDebug(5003) << "KNExpire: " << g->name() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
   
   if(cup.deleted()>0) {
     g->updateListItem();
@@ -490,7 +491,7 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
   c_urrentGroup=g;
   aManager->setGroup(g);
   bool loaded;
-  qDebug("KNGroupManager::setCurrentGroup() : group changed");
+  kdDebug(5003) << "KNGroupManager::setCurrentGroup() : group changed" << endl;
   
   if (g) {
     knGlobals.top->setCursorBusy(true);

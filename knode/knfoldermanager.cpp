@@ -26,6 +26,7 @@
 #include <kglobal.h>
 #include <kapp.h>
 #include <kurl.h>
+#include <kdebug.h>
 
 #include "knglobals.h"
 #include "knfolder.h"
@@ -176,7 +177,7 @@ void KNFolderManager::setCurrentFolder(KNFolder *f)
   c_urrentFolder=f;
   aManager->setFolder(f);
   
-  qDebug("KNFolderManager::setCurrentFolder() : folder changed");
+  kdDebug(5003) << "KNFolderManager::setCurrentFolder() : folder changed" << endl;
   
   if(f) {
     if(f->loadHdrs())
@@ -275,7 +276,7 @@ void KNFolderManager::compactAll(KNPurgeProgressDialog *dlg)
       kapp->processEvents();
     }
     cup.folder(var);
-    qDebug("%s => %d deleted , %d left", var->name().latin1(), cup.deleted(), cup.left());
+    kdDebug(5003) << var->name() << " => " << cup.deleted() << " deleted , " << cup.left() << " left" << endl;
     if(dlg) dlg->progress();
   }
   if(dlg) kapp->processEvents();
