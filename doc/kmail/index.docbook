@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>11/11/2000</date>
+<date>19/11/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -1847,7 +1847,26 @@ Mailreader window</link>.
 
 <qandaentry>
  <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
- <answer><para>Not yet. No, we have no idea when it will be ready.</para></answer>
+ <answer><para>Not yet. No, we have no idea when it will be ready. Currently you can still
+ receive mails via <acronym>IMAP</acronym> by using fetchmail:
+ <itemizedlist>
+   <listitem><para>Create a file <filename>~/.fetchmailrc</filename> which contains the following lines:
+   <screen>
+poll &lt;your-mail-server&gt;
+proto IMAP
+user &lt;your-username&gt;
+pass &lt;your-password&gt;
+    </screen>
+    </para></listitem>
+   <listitem><para>Execute <command>chmod 700 ~/.fetchmailrc</command></para></listitem>
+   <listitem><para>Create a local account in &kmail;</para></listitem>
+   <listitem><para>Enter <userinput>fetchmail</userinput> in the field <guilabel>Precommand</guilabel> 
+   (That's not necessary if you have a permanent connection to the net. In that case you're 
+   better off leaving fetchmail running as a daemon.)
+   </para></listitem>
+   <listitem><para>Check your mail</para></listitem>
+ </itemizedlist>
+ </para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -1956,7 +1975,7 @@ implementation for local mail accounts.  This will enable you to use a local
 mail account which is mounted over nfs.</para>
 
 <para>To avoid the risk of losing mail when using a local account it is necessary
-to ensure that KMail uses the same type of locking as your mail delivery
+to ensure that &kmail; uses the same type of locking as your mail delivery
 agent.</para>
 
 <para>There are five different locking options you can use:</para>
@@ -1971,7 +1990,7 @@ agent.</para>
 <para>procmail_lockfile will use a small utility that comes with procmail called
 lockfile.  You can use this if your mail folder is in a directory where you
 have write permissions.  This will not work on your /var/spool/mail/user file
-in most cases.  It will create .lock files on your account when kmail is
+in most cases.  It will create .lock files on your account when &kmail; is
 checking for new mail.  Please note that this will only work if procmail is
 installed on your system.</para>
 
