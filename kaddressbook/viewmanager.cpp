@@ -297,6 +297,8 @@ void ViewManager::setActiveView(const QString &name)
       // Update the inc search combo to show the fields in the new active
       // view.
       refreshIncrementalSearchCombo();
+
+      mActiveView->refresh( QString::null );
     }
     else
     {

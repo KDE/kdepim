@@ -218,8 +218,8 @@ void ActionManager::initReadOnlyActions()
             SLOT(setFilterNames(const QStringList&)));
     connect(mViewManager, SIGNAL(setCurrentFilterName(const QString&)),
             SLOT(setCurrentFilterName(const QString&)));
-    connect(mViewManager, SIGNAL(setCurrentFilter(int index)),
-            SLOT(setCurrentFilter(int index)));
+    connect(mViewManager, SIGNAL(setCurrentFilter(int)),
+            SLOT(setCurrentFilter(int)));
 }
 
 void ActionManager::initReadWriteActions()

@@ -125,7 +125,7 @@ void KAddressBookTableView::refresh(QString uid)
   // For now just repopulate. In reality this method should 
   // check the value of uid, and if valid iterate through
   // the listview to find the entry, then tell it to refresh.
-  
+
   if (uid == QString::null) {
     // Clear the list view
     mListView->clear();
@@ -135,8 +135,6 @@ void KAddressBookTableView::refresh(QString uid)
     for (it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
       new ContactListViewItem(*it, mListView, mDocument, fields());
     }
-        
-    emit selected(QString::null);
         
     // Sometimes the background pixmap gets messed up when we add lots
     // of items.
@@ -149,11 +147,12 @@ void KAddressBookTableView::refresh(QString uid)
       ceItem = dynamic_cast<ContactListViewItem*>( it.current() );
       if ( ceItem && ceItem->addressee().uid() == uid ) {
         ceItem->refresh();
-        break;
+        return;
       }
       ++it;
     }
-    if ( !it.current() ) refresh( QString::null );
+
+    refresh( QString::null );
   }
 }
 
