@@ -44,18 +44,18 @@ QString categoryById(const QString &id, const QString &app, QValueList<OpieCateg
 
 };
 
-OpieHelper* OpieHelper::s_Self = 0;
-KStaticDeleter<OpieHelper> opiehelpersd;
+OpieHelperClass* OpieHelperClass::s_Self = 0;
+KStaticDeleter<OpieHelperClass> opiehelpersd;
 
-OpieHelper* OpieHelper::self()
+OpieHelperClass* OpieHelperClass::self()
 {
   if( !s_Self )
-    s_Self = opiehelpersd.setObject( new OpieHelper() );
+    s_Self = opiehelpersd.setObject( new OpieHelperClass() );
 
   return s_Self;
 };
 
-void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *entry, const QValueList<OpieCategories> &cat )
+void OpieHelperClass::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *entry, OpieHelper::CategoryEdit *edit )
 {
     QString string ( str );
     string.remove(0, 35 );
@@ -82,7 +82,7 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
 	if( con.startsWith("Categories = " ) ){ // FIXME for multiple Categories they're separated by a ;
 	    con = con.remove(0, 13 );
 	    con = con.remove( con.length() -1, 1 );
-	    category = categoryById( con, "Document View", cat );
+	    category = edit->categoryById( con, "Document View" );
 	}else if(con.startsWith("Name = " ) ){
 	    con = con.remove(0, 7);
 	    name = con.stripWhiteSpace();
@@ -108,7 +108,7 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
     entry->append( entr );
 }
 
- void OpieHelper::toCalendar(const QString &timestamp, const QString &todo, const QString &calendar, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &cat )
+ void OpieHelperClass::toCalendar(const QString &timestamp, const QString &todo, const QString &calendar, QPtrList<KSyncEntry> *list, OpieHelper::CategoryEdit *edit )
 {
   KAlendarSyncEntry *entry = new KAlendarSyncEntry();
   list->append( entry );
@@ -138,7 +138,7 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
 	  QStringList list = QStringList::split(";", e.attribute("Categories") );
 	  QStringList categories;
 	  for(int i=0; i< list.count(); i++ ){
-	    categories.append( categoryById(list[i], QString::null, cat ) );
+	    categories.append( edit->categoryById(list[i], "Todo List"  ) );
 	  };
 	  if( !categories.isEmpty() ){
 	    todo->setCategories( categories );
@@ -193,7 +193,7 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
     // start reading
   }
 }
-void OpieHelper::toAddressbook(const QString &timeStamp, const QString &fileName, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &vals)
+void OpieHelperClass::toAddressbook(const QString &timeStamp, const QString &fileName, QPtrList<KSyncEntry> *list, OpieHelper::CategoryEdit *edit)
 {
     KAddressbookSyncEntry *entry = new KAddressbookSyncEntry();
     list->append( entry );
@@ -287,7 +287,7 @@ void OpieHelper::toAddressbook(const QString &timeStamp, const QString &fileName
 
 			QStringList categories = QStringList::split(";", el.attribute("Categories" ) );
 			for(int i=0; i < categories.count(); i++ ){
-			  adr.setCategories(categoryById(categories[i], QString::null, vals  ) );
+			  adr.setCategories(edit->categoryById(categories[i], "Contacts"  ) );
 			}
 			adr.insertCustom("opie", "HomeWebPage", el.attribute("HomeWebPage") );
 			adr.insertCustom("opie", "Spouse", el.attribute("Spouse") );

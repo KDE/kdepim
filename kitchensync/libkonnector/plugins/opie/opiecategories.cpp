@@ -3,7 +3,7 @@
 
 OpieCategories::OpieCategories()
 {
-    
+
 }
 OpieCategories::OpieCategories(const QString &id, const QString &name, const QString &app )
 {
@@ -36,6 +36,12 @@ OpieCategories &OpieCategories::operator=(const OpieCategories &op )
 }
 
 
+bool operator== (const OpieCategories& a,  const OpieCategories &b )
+{
+    if ( a.id() == b.id() && a.name() == b.name() && a.app() == b.app() )
+        return true;
+    return false;
+}
 
 
 

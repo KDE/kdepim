@@ -10,28 +10,29 @@
 #include <kaddressbooksyncentry.h>
 #include <opiedesktopsyncentry.h>
 #include "opiecategories.h"
+#include "categoryedit.h"
 
-class OpieHelper {
+class OpieHelperClass {
  public:
-  OpieHelper() {};
-  ~OpieHelper();
+  OpieHelperClass() {};
+  ~OpieHelperClass();
   void toOpieDesktopEntry(  const QString &,
 			   QPtrList<KSyncEntry> *list,
-			   const QValueList<OpieCategories> & );
+			   OpieHelper::CategoryEdit *edit );
 
   void toCalendar(const QString &timeStamp,
 		  const QString &todo, 
 		  const QString &calendar ,
 		  QPtrList<KSyncEntry> *list,
-		  const QValueList<OpieCategories> &);
+		  OpieHelper::CategoryEdit *edit);
 
   void toAddressbook( const QString &timeStamp,
 		      const QString &fileName,
 		      QPtrList<KSyncEntry> *list,
-		      const QValueList<OpieCategories> & );
-  static OpieHelper *self();
+		      OpieHelper::CategoryEdit *edit );
+  static OpieHelperClass *self();
  private:
-  static OpieHelper *s_Self;
+  static OpieHelperClass *s_Self;
 };
 
 #endif

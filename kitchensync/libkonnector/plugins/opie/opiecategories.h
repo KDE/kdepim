@@ -6,6 +6,7 @@
 class OpieCategories {
  public:
     friend class OpieSocket;
+    friend bool operator== ( const OpieCategories &a, const OpieCategories &b );
     OpieCategories();
     OpieCategories(const QString &id, const QString &name, const QString &app );
     OpieCategories(const OpieCategories & );

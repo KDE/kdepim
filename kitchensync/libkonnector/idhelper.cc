@@ -85,6 +85,11 @@ void KonnectorUIDHelper::removeId( const QString &appName,  const QString &id )
         }
     }
 }
+void KonnectorUIDHelper::replaceIds( const QString &app,
+                                     QValueList<Kontainer> ids )
+{
+    m_ids.replace( app,  ids );
+}
 void KonnectorUIDHelper::clear()
 {
     m_ids.clear();
@@ -102,4 +107,5 @@ void KonnectorUIDHelper::save()
         }
     }
     m_config->writeEntry( "ids",  string );
+    m_config->sync();
 }

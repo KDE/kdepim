@@ -14,8 +14,10 @@
 #include <kurl.h>
 #include <qregexp.h>
 
+
 #include "opiesocket.h"
 #include "opiecategories.h"
+#include "categoryedit.h"
 #include "opiehelper.h"
 
 class OpieSocket::OpieSocketPrivate{
@@ -267,7 +269,7 @@ void OpieSocket::manageCall(const QString &line )
     }
     if( line.startsWith("CALL QPE/Desktop docLinks(QString)" ) ){
 	kdDebug( ) << "CALL docLinks desktop entry" << endl;
-	OpieHelper::self()->toOpieDesktopEntry( line, &d->m_sync, d->m_categories  );
+	OpieHelperClass::self()->toOpieDesktopEntry( line, &d->m_sync, &m_categories  );
     }
     switch( d->getMode ){
 	case d->HANDSHAKE: {
@@ -308,7 +310,7 @@ void OpieSocket::manageCall(const QString &line )
             kdDebug( ) << "------------------TIMESTAMP---------------"<< endl;
             kdDebug()  << item.timeString() << endl;
 
-	    OpieHelper::self()->toAddressbook(item.timeString() , tmpFileName, &d->m_sync, d->m_categories  );
+	    OpieHelperClass::self()->toAddressbook(item.timeString() , tmpFileName, &d->m_sync, &m_categories  );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
 
 	    QString todo;
@@ -318,9 +320,9 @@ void OpieSocket::manageCall(const QString &line )
             kdDebug() << "Fetching calendar" << endl;
 	    url.setPath(d->path + "/Applications/datebook/datebook.xml" );
 	    KIO::NetAccess::download(url, tmpFileName );
-	    OpieHelper::self()->toCalendar(QString::null, todo,
+	    OpieHelperClass::self()->toCalendar(QString::null, todo,
 					   tmpFileName, &d->m_sync,
-					   d->m_categories );
+					   &m_categories );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
 	    KIO::NetAccess::removeTempFile( todo );
 	    // done with fetching
@@ -359,63 +361,11 @@ void OpieSocket::manageCall(const QString &line )
 }
 void OpieSocket::parseCategory(const QString &tempFile )
 {
-    kdDebug() << "parsing the categories" << endl;
-    QDomDocument doc( "mydocument" );
-    QFile f( tempFile );
-    if ( !f.open( IO_ReadOnly ) ){
-	kdDebug() << "can not open " <<tempFile << endl;
-	return;
-    }
-    if ( !doc.setContent( &f ) ) {
-	kdDebug() << "can not setContent" << endl;
-	f.close();
-	return;
-    }
-    f.close();
-    // print out the element names of all elements that are a direct child
-    // of the outermost element.
-    QDomElement docElem = doc.documentElement();
-    QDomNode n = docElem.firstChild();
-//    kdDebug() << "NodeName: " << docElem.nodeName() << endl;
-    if( docElem.nodeName() == QString::fromLatin1("Categories") ){
-	//kdDebug() << "Category" << endl;
-	while( !n.isNull() ) {
-	    QDomElement e = n.toElement(); // try to convert the node to an element.
-	    if( !e.isNull() ) { // the node was really an element.
-		//kdDebug() << "tag name" << e.tagName() << endl;
-
-		QString id = e.attribute("id" );
-		QString app = e.attribute("app" );
-		QString name = e.attribute("name");
-		OpieCategories category( id, name, app );
-		//kdDebug() << "Cat " << id << " " << app << " " << name << endl;
-		d->m_categories.append( category );
-	    }
-	    n = n.nextSibling();
-	}
-    }
-
+    m_categories.parse( tempFile );
 }
-
-
 QString OpieSocket::categoryById(const QString &id, const QString &app )
 {
-    QValueList<OpieCategories>::Iterator it;
-    QString category;
-    for( it = d->m_categories.begin(); it != d->m_categories.end(); ++it ){
-	kdDebug() << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
-	if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
-	    //if( app == (*it).app() ){
-	    //kdDebug() << "found category" << endl;
-	    category = (*it).name();
-	    break;
-		//}
-	}else {
-	    //kdDebug() << "not equal " << endl;
-	}
-    }
-    //kdDebug() << "CategoryById: " << category << endl;
-    return category;
+    return m_categories.categoryById( id,  app );
 }
 // we never synced with him though
 // generate a id and store it on the device

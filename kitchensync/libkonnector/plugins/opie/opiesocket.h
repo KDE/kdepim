@@ -10,6 +10,8 @@
 #include <ksyncentry.h>
 #include <konnector.h>
 
+#include "categoryedit.h"
+
 class OpieSocket : public QObject
 {
 Q_OBJECT
@@ -38,6 +40,7 @@ Q_OBJECT
     QString randomString( int len );
   class OpieSocketPrivate;
   OpieSocketPrivate *d;
+    OpieHelper::CategoryEdit m_categories;
 
  private slots:
   void slotError(int );

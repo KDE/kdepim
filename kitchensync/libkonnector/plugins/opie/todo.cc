@@ -16,6 +16,24 @@
 using namespace OpieHelper;
 
 namespace {
+    QString names2categories( const QStringList &list,  const QValueList<OpieCategories> &categories ) {
+        QString dummy;
+        QValueList<OpieCategories>::ConstIterator catIt;
+        bool found = false;
+        for ( QStringList::ConstIterator listIt = list.begin(); listIt != list.end(); ++listIt ) {
+            for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
+                if ( (*catIt).name() == (*listIt) ) { // the same name
+                    found= true;
+                    dummy.append( (*catIt).id() + ";");
+                }
+            }
+            //if ( !found )
+            //  ; // generate a new category and add to the xml file FIMXME
+        }
+        if ( !dummy.isEmpty() )
+            dummy.remove(dummy.length() -1,  1 ); //remove the last ;
+        return dummy;
+    }
     QString categoryById(const QString &id, const QString &app, QValueList<OpieCategories> cate )
     {
         QValueList<OpieCategories>::Iterator it;
@@ -119,6 +137,7 @@ QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry ,  const QValueList<OpieCatego
     QByteArray array;
     QBuffer buffer( array );
     if ( buffer.open( IO_WriteOnly )) {
+        // clear list
         QPtrList<KCal::Todo> list = entry->calendar()->getTodoList();
         KCal::Todo *todo;
         QTextStream stream( &buffer );
@@ -151,9 +170,44 @@ int ToDo::uid( const QString &udi )
 
     }
 }
-QString todo2String( KCal::Todo* todo,  const QValueList<OpieCategories> &categories )
+QString ToDo::todo2String( KCal::Todo* todo,  const QValueList<OpieCategories> &categories )
 {
     QString text;
+    text.append("<Task ");
+    QStringList list = todo->categories();
+    text.append( "Categories=\"" +names2categories( list, categories ) + "\" " );
+    text.append( "Completed=\""+QString::number( todo->isCompleted()) + "\" " );
+    if ( todo->hasDueDate() ) {
+        text.append( "HasDate=\"1\" ");
+        QDateTime time = todo->dtDue();
+        text.append( "DateDay=\"" +QString::number( time.date().day() ) + "\" ");
+        text.append( "DateMonth=\"" + QString::number( time.date().month() ) + "\" " );
+        text.append( "DateYear=\"" + QString::number( time.date().year() )+ "\" " );
+    }else{
+        text.append( "HasDate=\"0\" ");
+    }
+    text.append( "Priority=\"" + QString::number( todo->priority() ) +"\" " );
+    text.append( "Description=\"" +todo->description() + "\" " );
 
+    // id hacking We don't want to have the ids growing and growing
+    // when an id is used again it will be put to the used list and after done
+    // with syncing we will replace the former
+    QString dummy = konnectorId("todo", todo->uid()  );
+    text.append(" />");
     return text;
+}
+
+QString ToDo::konnectorId( const QString &appName,  const QString &uid )
+{
+    QString id;
+    // Konnector-.length() ==  10
+    if ( uid.startsWith( "Konnector-" ) ) { // not converted
+        id =  uid.mid( 11 );
+    }else if ( m_helper) {
+        id =  m_helper->konnectorId( appName,  uid );
+        //                        konnector kde
+        kde2opie.append( Kontainer( id,     uid ) );
+    }
+
+    return id;
 }
