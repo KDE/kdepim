@@ -76,6 +76,8 @@ class ResourceXMLRPC : public ResourceCalendar
 
     KABC::Lock *lock();
 
+    void changeIncidence( Incidence * );
+
     /**
       Add Event to calendar.
      */

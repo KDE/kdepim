@@ -382,31 +382,15 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
 {
   QMap<QString, QVariant> args;
 
-  bool added = false;
-  Todo *oldTodo = mCalendar.todo( todo->uid() );
-  if ( oldTodo ) { // already exists
-    if ( !oldTodo->isReadOnly() ) {
-      writeTodo( todo, args );
-      args.insert( "id", mTodoUidMap[ todo->uid() ].toInt() );
-      mServer->call( AddTodoCommand, QVariant( args ),
-                     this, SLOT( updateTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
-      mCalendar.addTodo( todo );
-      added = true;
-    }
-  } else { // new event
-    writeTodo( todo, args );
-    mServer->call( AddTodoCommand, QVariant( args ),
-                   this, SLOT( addTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                   this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                   QVariant( todo->uid() ) );
+  writeTodo( todo, args );
+  mServer->call( AddTodoCommand, QVariant( args ),
+                 this, SLOT( addTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( fault( int, const QString&, const QVariant& ) ),
+                 QVariant( todo->uid() ) );
 
-    mCalendar.addTodo( todo );
-    added = true;
-  }
+  mCalendar.addTodo( todo );
 
-  if ( added )
-    enter_loop();
+  enter_loop();
 
   return true;
 }
@@ -437,6 +421,28 @@ Todo::List ResourceXMLRPC::todos( const QDate& date )
   return mCalendar.todos( date );
 }
 
+void ResourceXMLRPC::changeIncidence( Incidence *incedence )
+{
+  if ( incedence->type() != "Todo" )
+    return;
+
+  Todo *todo = dynamic_cast<Todo*>( incedence );
+  if ( !todo )
+    return;
+
+  QMap<QString, QVariant> args;
+
+  Todo *oldTodo = mCalendar.todo( todo->uid() );
+  if ( !oldTodo->isReadOnly() ) {
+    writeTodo( todo, args );
+    args.insert( "id", mTodoUidMap[ todo->uid() ].toInt() );
+    mServer->call( AddTodoCommand, QVariant( args ),
+                   this, SLOT( updateTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                   this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    mCalendar.addTodo( todo );
+    enter_loop();
+  }
+}
 
 bool ResourceXMLRPC::addJournal( Journal* journal )
 {
@@ -757,9 +763,9 @@ void ResourceXMLRPC::deleteTodoFinished( const QValueList<QVariant>&,
   Todo *todo = mCalendar.todo( id.toString() );
   mCalendar.deleteTodo( todo );
 
-  emit resourceChanged( this );
-
   exit_loop();
+
+  emit resourceChanged( this );
 }
 
 void ResourceXMLRPC::updateTodoFinished( const QValueList<QVariant>&,
