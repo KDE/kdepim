@@ -111,9 +111,12 @@ void AddressBookPart::sync( const Syncee::PtrList& in,
     /* 4. */
     AddressBookSyncee* ourbook;
     ourbook = load();
+
+
     if (!ourbook) {
         error( Error(i18n("Could not load the AddressBook") ) );
         done();
+        return;
     }
 
     /* 5. */
