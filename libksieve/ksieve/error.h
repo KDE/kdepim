@@ -87,6 +87,10 @@ namespace KSieve {
       UnsupportedCommand,
       UnsupportedTest,
       UnsupportedComparator,
+      DOMHierarchyRequestError,
+      DOMNotFoundError,
+      DOMWrongScriptError,
+      DOMNoModificationAllowedError,
       TestNestingTooDeep,  // site policy
       BlockNestingTooDeep, // site policy
       InvalidArgument,
