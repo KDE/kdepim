@@ -150,7 +150,7 @@ CheckUser::~CheckUser()
 					<< endl;
 #endif
 
-				const char *l1 = guiUserName.latin1();
+				const char *l1 = PilotAppCategory::codec()->fromUnicode(guiUserName);
 
 #ifdef DEBUG
 				DEBUGDAEMON << fname
@@ -182,22 +182,22 @@ CheckUser::~CheckUser()
 					i18n("Use Handheld Name"));
 				switch (r)
 				{
-					case KMessageBox::Yes:
-							fHandle->getPilotUser()->setUserName(guiUserName.latin1());
-							pilotUserName=guiUserName;
-							break;
-					case KMessageBox::No:
-						KPilotSettings::setUserName(pilotUserName);
-						guiUserName=pilotUserName;
-						break;
-					case KDialogBase::Cancel:
-					default:
-						// TODO: cancel the sync... Or just don't change any user name?
-						break;
+				case KMessageBox::Yes:
+					fHandle->getPilotUser()->setUserName(
+						PilotAppCategory::codec()->fromUnicode(guiUserName));
+					pilotUserName=guiUserName;
+					break;
+				case KMessageBox::No:
+					KPilotSettings::setUserName(pilotUserName);
+					guiUserName=pilotUserName;
+					break;
+				case KDialogBase::Cancel:
+				default:
+					// TODO: cancel the sync... Or just don't change any user name?
+					break;
 				}
 			}
 		}
-
 	}
 
 
