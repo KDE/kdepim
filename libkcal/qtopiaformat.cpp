@@ -56,11 +56,13 @@ class QtopiaParser : public QXmlDefaultHandler
         event->setDescription( attributes.value( "note" ) );
         event->setDtStart( toDateTime( attributes.value( "start" ) ) );
         event->setDtEnd( toDateTime( attributes.value( "end" ) ) );
+
         if ( attributes.value( "type" ) == "AllDay" ) {
           event->setFloats( true );
         } else {
           event->setFloats( false );
         }
+
         QString rtype = attributes.value( "rtype" );
         if ( !rtype.isEmpty() ) {
           QDate startDate = event->dtStart().date();
@@ -93,13 +95,13 @@ class QtopiaParser : public QXmlDefaultHandler
           } else if ( rtype == "Weekly" ) {
             if ( hasEndDate ) r->setWeekly( freq, weekDays, endDate );
             else r->setWeekly( freq, weekDays, -1 );
-          } else if ( rtype == "MonthlyDay" ) {
+          } else if ( rtype == "MonthlyDate" ) {
             if ( hasEndDate )
               r->setMonthly( Recurrence::rMonthlyDay, freq, endDate );
             else
               r->setMonthly( Recurrence::rMonthlyDay, freq, -1 );
-            r->addMonthlyDay( pos );
-          } else if ( rtype == "MonthlyDate" ) {
+            r->addMonthlyDay( startDate.day() );
+          } else if ( rtype == "MonthlyDay" ) {
             if ( hasEndDate )
               r->setMonthly( Recurrence::rMonthlyPos, freq, endDate );
             else
@@ -107,7 +109,7 @@ class QtopiaParser : public QXmlDefaultHandler
             QBitArray days( 7 );
             days.fill( false );
             days.setBit( startDate.dayOfWeek() - 1 );
-            r->addMonthlyPos( startDate.day(), days );
+            r->addMonthlyPos( pos, days );
           } else if ( rtype == "Yearly" ) {
             if ( hasEndDate )
               r->setYearly( Recurrence::rYearlyMonth, freq, endDate );
@@ -117,6 +119,22 @@ class QtopiaParser : public QXmlDefaultHandler
           }
         }
         
+        QString categoryList = attributes.value( "categories" );
+        QStringList categories = QStringList::split( ";", categoryList );
+        // TODO: Translate category ids in real text.
+        event->setCategories( categories );
+
+        QString alarmStr = attributes.value( "alarm" );
+        if ( !alarmStr.isEmpty() ) {
+          kdDebug() << "Alarm: " << alarmStr << endl;
+          Alarm *alarm = new Alarm( event );
+          alarm->setType( Alarm::Display );
+          alarm->setEnabled( true );
+          int alarmOffset = alarmStr.toInt();
+          alarm->setStartOffset( alarmOffset * -60 );
+          event->addAlarm( alarm );
+        }
+
         Event *oldEvent = mCalendar->event( uid );
         if ( oldEvent ) mCalendar->deleteEvent( oldEvent );
 
