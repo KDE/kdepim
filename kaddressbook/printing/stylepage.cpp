@@ -110,14 +110,14 @@ void StylePage::initFieldCombo()
 
 void StylePage::initGUI()
 {
-  setCaption( i18n( "Chose Printing Style" ) );
+  setCaption( i18n( "Choose Printing Style" ) );
 
   QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
                                             KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "What should the print look like?\n"
                                     "KAddressBook has several printing styles, designed for different purposes.\n"
-                                    "Chose the one suiting your needs below." ), this );
+                                    "Choose the style that suits your needs below." ), this );
   topLayout->addMultiCellWidget( label, 0, 0, 0, 1 );
 
   QButtonGroup *group = new QButtonGroup( i18n( "Sorting:" ), this );

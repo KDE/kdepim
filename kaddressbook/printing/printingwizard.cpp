@@ -59,7 +59,7 @@ PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
 {
   mSelectionPage = new SelectionPage( this );
   mSelectionPage->setUseSelection( !selection.isEmpty() );
-  insertPage( mSelectionPage, i18n("Chose Contacts to Print"), -1 );
+  insertPage( mSelectionPage, i18n("Choose Contacts to Print"), -1 );
 
   mFilters = Filter::restore( kapp->config(), "Filter" );
   QStringList filters;
@@ -75,7 +75,7 @@ PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
 
   mStylePage = new StylePage( mAddressBook, this );
   connect( mStylePage, SIGNAL( styleChanged(int) ), SLOT( slotStyleSelected(int) ) );
-  insertPage( mStylePage, i18n("Chose Printing Style"), -1 );
+  insertPage( mStylePage, i18n("Choose Printing Style"), -1 );
 
   registerStyles();
 

@@ -60,21 +60,21 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
 
   mUseWholeBook = new QRadioButton( i18n( "&All contacts" ), mButtonGroup );
   mUseWholeBook->setChecked( true );
-  QWhatsThis::add( mUseWholeBook, i18n( "Print the entire addressbook" ) );
+  QWhatsThis::add( mUseWholeBook, i18n( "Print the entire address book" ) );
   groupLayout->addWidget( mUseWholeBook, 0, 0 );
 
   mUseSelection = new QRadioButton( i18n( "&Selected contacts" ), mButtonGroup );
-  QWhatsThis::add( mUseSelection, i18n( "Print only contacts selected in KAddressBook.\n"
+  QWhatsThis::add( mUseSelection, i18n( "Only print contacts selected in KAddressBook.\n"
                                         "This option is disabled if no contacts are selected." ) );
   groupLayout->addWidget( mUseSelection, 1, 0 );
 
   mUseFilters = new QRadioButton( i18n( "Contacts matching &filter" ), mButtonGroup );
-  QWhatsThis::add( mUseFilters, i18n( "Print only contacts matching the selected filter.\n"
+  QWhatsThis::add( mUseFilters, i18n( "Only print contacts matching the selected filter.\n"
                                      "This option is disabled if you haven't defined any filters" ) );
   groupLayout->addWidget( mUseFilters, 2, 0 );
 
   mUseCategories = new QRadioButton( i18n( "Category &members" ), mButtonGroup );
-  QWhatsThis::add( mUseCategories, i18n( "Print only contacts who are members of a catogory that is checked on the list to the left.\n"
+  QWhatsThis::add( mUseCategories, i18n( "Only print contacts who are members of a category that is checked on the list to the left.\n"
                                        "This option is disabled if you have no categories." ) );
   groupLayout->addWidget( mUseCategories, 3, 0 );
 
