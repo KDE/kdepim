@@ -164,8 +164,10 @@ static void swapItems( LDAPItem *item, LDAPItem *other )
   bool isActive = item->isActive();
   item->setServer( other->server() );
   item->setIsActive( other->isActive() );
+  item->setOn( other->isActive() );
   other->setServer( server );
   other->setIsActive( isActive );
+  other->setOn( isActive );
 }
 
 void LDAPOptionsWidget::slotMoveUp()
