@@ -48,6 +48,7 @@ static const char *memowidget_id =
 #include <qwhatsthis.h>
 #include <qlabel.h>
 #include <qtextcodec.h>
+#include <qdatetime.h>
 
 #include <kapplication.h>
 #include <kmessagebox.h>
@@ -442,14 +443,14 @@ void MemoWidget::updateWidget()
 	//
 	while (fMemoList.current())
 	{
-		if ((fMemoList.current()->getCat() == currentCatID) ||
+		PilotMemo *curr = fMemoList.current();
+		if ((curr->getCat() == currentCatID) ||
 			(currentCatID == -1))
 		{
 			PilotListItem *p =
-				new PilotListItem(fMemoList.current()->
-				shortTitle(),
+				new PilotListItem(curr->shortTitle(),
 				listIndex,
-				fMemoList.current());
+				curr);
 
 			// List will delete the title of the memo,
 			// so there's no memory leak here.
@@ -459,14 +460,14 @@ void MemoWidget::updateWidget()
 
 #ifdef DEBUG
 			DEBUGKPILOT << fname << ": Added memo "
-				<< fMemoList.current()->getTitle() << endl;
+				<< curr->getTitle() << endl;
 #endif
 		}
 		else
 		{
 #ifdef DEBUG
 			DEBUGKPILOT << fname << ": Skipped memo "
-				<< fMemoList.current()->getTitle() << endl;
+				<< curr->getTitle() << endl;
 #endif
 		}
 
@@ -479,6 +480,28 @@ void MemoWidget::updateWidget()
 	slotUpdateButtons();
 
 	lastSelectedMemo=-1;
+}
+
+void MemoWidget::showMemo(const PilotMemo *m)
+{
+	FUNCTIONSETUP;
+
+	int index = fListBox->count();
+	for (int x = 0; x < index; x++)
+	{
+		PilotMemo *p = (PilotMemo *) ((PilotListItem *)fListBox->item(x))->rec();
+#ifdef DEBUG
+		DEBUGKPILOT << fname << ": Memo @" << (void *) p <<endl;
+		DEBUGKPILOT << fname << "       :" << fListBox->item(x)->text() << endl;
+#endif
+		if (m==p)
+		{
+			fListBox->setSelected(x,true);
+			slotShowMemo(x);
+			break;
+		}
+	}
+
 }
 
 void MemoWidget::slotShowMemo(int which)
@@ -573,8 +596,12 @@ bool MemoWidget::addMemo(const QString &s, int category)
 	PilotMemo *aMemo = new PilotMemo(text, 0, 0, category);
 	fMemoList.append(aMemo);
 	writeMemo(aMemo);
-	updateWidget();
 	delete[]text;
+	updateWidget();
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": New memo @" << (void *)aMemo << endl;
+#endif
+	showMemo(aMemo);
 	return true;
 }
 
@@ -583,7 +610,7 @@ void MemoWidget::slotAddMemo()
 	FUNCTIONSETUP;
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fMemoAppInfo.category), true);
-	addMemo(QString::null, currentCatID);
+	addMemo(QDateTime::currentDateTime().toString(), currentCatID);
 }
 
 void MemoWidget::slotImportMemo()

@@ -89,6 +89,10 @@ public slots:
 	void slotAddMemo();
 	void slotSetCategory(int);
 
+protected:
+	void showMemo(const PilotMemo *);
+
+
 private:
 	void setupWidget();
 	void updateWidget(); // Called with the lists have changed..
