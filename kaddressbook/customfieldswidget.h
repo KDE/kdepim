@@ -152,7 +152,7 @@ class CustomFieldsWidgetFactory : public KAB::ContactEditorWidgetFactory
       return new CustomFieldsWidget( ab, parent, name );
     }
 
-    QString pageTitle() const { return i18n( "Custom fields" ); }
+    QString pageTitle() const { return i18n( "Custom Fields" ); }
     QString pageIdentifier() const { return "custom_fields"; }
 };
 

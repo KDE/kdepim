@@ -437,7 +437,7 @@ EmailSelector::EmailSelector( const QStringList &emails,
                                    topFrame );
   topLayout->addWidget( mButtonGroup );
 
-  QRadioButton *button = new QRadioButton( i18n("Preferred Address"), mButtonGroup );
+  QRadioButton *button = new QRadioButton( i18n("Preferred address"), mButtonGroup );
   button->setDown( true );
   mEmailMap.insert( mButtonGroup->id( button ), "" );
 

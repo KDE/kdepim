@@ -50,13 +50,13 @@ extern "C" {
   }
 }
 
-QString CryptoWidgetFactory::pageTitle() const 
-{ 
-  return "Crypto Settings"; 
+QString CryptoWidgetFactory::pageTitle() const
+{
+  return "Crypto Settings";
 }
 QString CryptoWidgetFactory::pageIdentifier() const
-{ 
-  return "crypto"; 
+{
+  return "crypto";
 }
 
 CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
@@ -67,7 +67,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->setColStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 
-  QLabel* l = new QLabel( i18n("Preferred protocol"), this );
+  QLabel* l = new QLabel( i18n("Preferred protocol:"), this );
   topLayout->addWidget( l,0,0 );
   mProtocol = new QComboBox( false, this );
   mProtocol->insertItem( i18n("Inline OpenPGP") );
@@ -76,43 +76,43 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   mProtocol->insertItem( i18n("S/MIME (opaque)") );
   topLayout->addWidget( mProtocol,0,1 );
 
-  l = new QLabel( i18n("Preferred OpenPGP encryption key"), this );
+  l = new QLabel( i18n("Preferred OpenPGP encryption key:"), this );
   topLayout->addWidget( l,1,0 );
-  
-  mPgpKey = 
+
+  mPgpKey =
 	new Kleo::EncryptionKeyRequester( Kleo::CryptPlugFactory::instance()->openpgp(), false, this );
   topLayout->addWidget( mPgpKey,1,1 );
 
-  l = new QLabel( i18n("Preferred S/MIME encryption certificate"), this );  
+  l = new QLabel( i18n("Preferred S/MIME encryption certificate:"), this );
   topLayout->addWidget( l,2,0 );
 
-  mSmimeCert = 
+  mSmimeCert =
 	new Kleo::EncryptionKeyRequester( Kleo::CryptPlugFactory::instance()->smime(), false, this );
   topLayout->addWidget( mSmimeCert,2,1 );
-  
-  QGroupBox* box = new QVGroupBox( i18n("Message preference"), this );
+
+  QGroupBox* box = new QVGroupBox( i18n("Message Preference"), this );
   topLayout->addMultiCellWidget( box, 3,3,0,1 );
-  
+
 
   //send preferences/sign: always sign, ask, never sign
   QHBox* hbox = new QHBox(box);
 
-  l = new QLabel( i18n("Sign"), hbox );
+  l = new QLabel( i18n("Sign:"), hbox );
 
   mSignPref = new QComboBox( false, hbox );
   mSignPref->insertItem( i18n("Ask") );
-  mSignPref->insertItem( i18n("Always sign") );
-  mSignPref->insertItem( i18n("Never sign") );
+  mSignPref->insertItem( i18n("Always Sign") );
+  mSignPref->insertItem( i18n("Never Sign") );
 
   //send preferences/encrypt: always encrypt, ask, never encrypt
   hbox = new QHBox(box);
 
-  l = new QLabel( i18n("Encrypt"), hbox );
+  l = new QLabel( i18n("Encrypt:"), hbox );
 
   mCryptPref = new QComboBox( false, hbox );
   mCryptPref->insertItem( i18n("Ask") );
-  mCryptPref->insertItem( i18n("Always encrypt") );
-  mCryptPref->insertItem( i18n("Never encrypt") );
+  mCryptPref->insertItem( i18n("Always Encrypt") );
+  mCryptPref->insertItem( i18n("Never Encrypt") );
 
   // Emit "changed()" signal
   connect( mProtocol, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
@@ -167,11 +167,11 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   bool blocked = signalsBlocked();
   blockSignals( true );
 
-  mProtocol->setCurrentItem( proto_string_to_int(addr->custom( "KADDRESSBOOK", 
+  mProtocol->setCurrentItem( proto_string_to_int(addr->custom( "KADDRESSBOOK",
 															   "CRYPTOPROTOPREF" )) );
-  mSignPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK", 
+  mSignPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK",
 															  "CRYPTOSIGNPREF" )) );
-  mCryptPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK", 
+  mCryptPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK",
 															   "CRYPTOENCRYPTPREF" )) );
 
   // We dont use the contents of addr->key(...) because we want just a ref.
@@ -185,11 +185,11 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
 
 void CryptoWidget::storeContact( KABC::Addressee *addr )
 {
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", 
+  addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF",
 					  proto_int_to_string(mProtocol->currentItem()) );
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF", 
+  addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
 					  pref_int_to_string(mSignPref->currentItem()) );
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF", 
+  addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
 					  pref_int_to_string(mCryptPref->currentItem()) );
 
   QString pfp = mPgpKey->fingerprint();

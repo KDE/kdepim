@@ -258,7 +258,7 @@ void NameEditDialog::initTypeCombo()
   mFormattedNameCombo->insertItem( i18n( "Custom" ) );
   mFormattedNameCombo->insertItem( i18n( "Simple Name" ) );
   mFormattedNameCombo->insertItem( i18n( "Full Name" ) );
-  mFormattedNameCombo->insertItem( i18n( "Reverse Name with comma" ) );
+  mFormattedNameCombo->insertItem( i18n( "Reverse Name with Comma" ) );
   mFormattedNameCombo->insertItem( i18n( "Reverse Name" ) );
   mFormattedNameCombo->insertItem( i18n( "Organization" ) );
 

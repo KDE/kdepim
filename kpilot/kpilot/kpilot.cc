@@ -378,7 +378,7 @@ void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 		kdWarning() << k_funcinfo << ": Index " << index << endl;
 		return;
 	}
-	
+
 	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
 	{
 		// Load/Unload the data needed
@@ -764,8 +764,8 @@ void KPilotInstaller::slotConfigureKPilot()
 	getDaemon().requestSync(0);
 
 	KPilotSettings::self()->readConfig();
-	
-	KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, i18n("KPilot configuration"), this, "KPilotPreferences", true );
+
+	KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, i18n("Configuration"), this, "KPilotPreferences", true );
 	options->addModule( "kpilot_config.desktop" );
 
 	if (!options)
@@ -876,7 +876,7 @@ int main(int argc, char **argv)
 	KAboutData about("kpilot", I18N_NOOP("KPilot"),
 		KPILOT_VERSION,
 		"KPilot - HotSync software for KDE\n\n",
-		KAboutData::License_GPL, 
+		KAboutData::License_GPL,
 		"(c) 1998-2000,2001, Dan Pilone (c) 2000-2004, Adriaan de Groot",
 		0L,
 		"http://www.slac.com/~pilone/kpilot_home/"
@@ -948,7 +948,7 @@ int main(int argc, char **argv)
 			outdated = true;
 			KPilotConfig::interactiveUpdate();
 		}
-		KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain, 
+		KCMultiDialog *options = new KCMultiDialog( KDialogBase::Plain,
 			i18n("KPilot configuration"), 0L, "KPilotPreferences", true );
 		options->addModule( "kpilot_config.desktop" );
 //		ConduitConfigDialog *options = new ConduitConfigDialog(0L, "configDialog", true);

@@ -75,7 +75,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
   mTypeList.append( "text" );
   mTypeName.append( i18n( "Text" ) );
   mTypeList.append( "integer" );
-  mTypeName.append( i18n( "Numeric value" ) );
+  mTypeName.append( i18n( "Numeric Value" ) );
   mTypeList.append( "boolean" );
   mTypeName.append( i18n( "Boolean" ) );
   mTypeList.append( "date" );
@@ -83,7 +83,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
   mTypeList.append( "time" );
   mTypeName.append( i18n( "Time" ) );
   mTypeList.append( "datetime" );
-  mTypeName.append( i18n( "Date and Time" ) );
+  mTypeName.append( i18n( "Date & Time" ) );
 
   for ( uint i = 0; i < mTypeName.count(); ++i )
     mType->insertItem( mTypeName[ i ] );

@@ -89,7 +89,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mTradeAsFamilyName = new QCheckBox( i18n( "Trade single name component as family name" ), groupBox, "mtrade" );
   boxLayout->addWidget( mTradeAsFamilyName );
 /**
-  TODO: show the checkbox when we can compile agains kdelibs from HEAD, atm it 
+  TODO: show the checkbox when we can compile agains kdelibs from HEAD, atm it
         doesn't work and would just confuse the users ;)
 */
   mTradeAsFamilyName->hide();
@@ -99,7 +99,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   QBoxLayout *editorLayout = new QHBoxLayout( boxLayout, KDialog::spacingHint() );
 
-  QLabel *label = new QLabel( i18n( "Addressee Editor Type:" ), groupBox );
+  QLabel *label = new QLabel( i18n( "Addressee editor type:" ), groupBox );
   editorLayout->addWidget( label );
 
   mEditorCombo = new QComboBox( groupBox );

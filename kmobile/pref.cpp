@@ -10,7 +10,7 @@
 #include <qlabel.h>
 
 KMobilePreferences::KMobilePreferences()
-    : KDialogBase(TreeList, i18n("kmobile Preferences"),
+    : KDialogBase(TreeList, i18n("Preferences"),
                   Help|Default|Ok|Apply|Cancel, Ok)
 {
     // this is the base class for your preferences dialog.  it is now

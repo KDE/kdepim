@@ -141,7 +141,7 @@ AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
   mFormattedNameCombo->insertItem( i18n( "Empty" ) );
   mFormattedNameCombo->insertItem( i18n( "Simple Name" ) );
   mFormattedNameCombo->insertItem( i18n( "Full Name" ) );
-  mFormattedNameCombo->insertItem( i18n( "Reverse Name with comma" ) );
+  mFormattedNameCombo->insertItem( i18n( "Reverse Name with Comma" ) );
   mFormattedNameCombo->insertItem( i18n( "Reverse Name" ) );
   layout->addMultiCellWidget( mFormattedNameCombo, 1, 1, 1, 2 );
 
@@ -181,7 +181,7 @@ void AddresseeWidget::saveSettings()
   KConfig cfg( "kaddressbookrc" );
   cfg.setGroup( "General" );
   cfg.writeEntry( "FormattedNameType", mFormattedNameCombo->currentItem() );
-  
+
   DCOPClient *client = DCOPClient::mainClient();
   if ( client )
       client->emitDCOPSignal( "KABC::AddressBookConfig", "changed()", QByteArray() );
