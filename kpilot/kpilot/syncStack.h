@@ -99,14 +99,6 @@ class ActionQueue : public SyncAction
 Q_OBJECT
 public:
 	ActionQueue(KPilotDeviceLink *device);
-#if 0
-	/** DEPRECATED **/
-	ActionQueue(KPilotDeviceLink *device,
-		KConfig *config,
-		const QStringList &conduits = QStringList(),
-		const QString &installDir = QString::null,
-		const QStringList &installFiles = QStringList());
-#endif
 
 	virtual ~ActionQueue();
 
@@ -132,67 +124,6 @@ protected:
 	QStringList fConduits;
 
 public:
-	enum SyncModes {
-		// Exactly one of these four modes must be set
-		// (although Test can't be set explicitly).
-		//
-		Test=0,
-		Backup=1,
-		Restore=2,
-		HotSync=4,         // Normal operation
-		                   // 8 still available
-		// These are optional (mixins)
-		//
-		//
-		WithBackup=0x10,
-		WithUserCheck=0x20,
-		WithInstaller=0x40,
-		WithConduits=0x80,
-
-		// These are misc. flags you can set
-		FlagPCToHH=0x100,
-		FlagHHToPC=0x200,
-		FlagLocal=0x1000,
-		FlagFull=0x2000,
-		                   // 8192 still available
-		FlagTest=0x4000,
-
-		                   // 32768 still available
-		// These are masks you can use to select
-		// the bits coding the action, mixins (With*)
-		// and misc. flags.
-		//
-		//
-		ActionMask=0xf,
-		MixinMask=0xf0,
-		FlagMask=0xff00,
-		// These are derived values for convenience.
-		// Note that a HotSync doesn't install files by default.
-		//
-		//
-		TestMode = Test | WithUserCheck | WithConduits | FlagTest,
-		BackupMode = Backup | WithUserCheck | WithConduits | WithBackup,
-		RestoreMode = Restore | WithUserCheck,
-		HotSyncMode = HotSync | WithUserCheck | WithConduits
-		} ;
-
-#if 0
-	/**
-	* Call prepare() to push a "standard profile" of SyncActions onto the stack,
-	* ready for execution. These are welcome, cleanup, and actions indicated
-	* by @ref m. @p m is a bitwise or of items from SyncModes --- Exactly
-	* one of Test, Backup, Restore or HotSync, for the main intent of the stack,
-	* and possibly one or more of the With* elements, which insert extra
-	* actions at the relevant moment in the execution of the stack.
-	*/
-
-	/* DEPRECATED */
-	void prepare(int m);
-	void prepareBackup() { prepare(BackupMode); } ;
-	void prepareRestore() { prepare(RestoreMode); } ;
-	void prepareSync() { prepare(HotSyncMode); } ;
-#endif
-
 	/**
 	* Call these queue*() functions to append
 	* standard functional blocks. They're pretty
@@ -204,13 +135,14 @@ public:
 	* actions to the queue (unless you do that
 	* yourself.)
 	*
-	* For queueInit, relevant modes are WithUserCheck (and 0 for no check).
+	* For queueInit, @p checkUser causes a CheckUser action to
+	*    be queued automatically.
 	* For queueConduits, whatever is relevant for the conduits
 	*   can be used, usually things in the FlagMask and ActionMask.
 	*/
 
-	void queueInit(int mode=WithUserCheck);
-	void queueConduits(const QStringList &conduits,int mode=0);
+	void queueInit(bool checkUser = false);
+	void queueConduits(const QStringList &conduits,SyncAction::SyncMode e, bool local=false);
 	void queueInstaller(const QString &dir,const QStringList &files);
 	void queueCleanup();
 
@@ -270,7 +202,8 @@ Q_OBJECT
 public:
 	ConduitProxy(KPilotDeviceLink *,
 		const QString &desktopName,
-		int m);
+		SyncAction::SyncMode m,
+		bool local = false);
 
 protected:
 	virtual bool exec();
@@ -281,7 +214,8 @@ protected:
 	QString fDesktopName;
 	QString fLibraryName;
 	ConduitAction *fConduit;
-	int fMode;
+	SyncAction::SyncMode fMode;
+	bool fLocal;
 } ;
 
 

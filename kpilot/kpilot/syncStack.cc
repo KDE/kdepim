@@ -89,10 +89,12 @@ bool SorryAction::exec()
 
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,
-	int m) :
+	SyncAction::SyncMode m,
+	bool local) :
 	ConduitAction(p,name.latin1()),
 	fDesktopName(name),
-	fMode(m)
+	fMode(m),
+	fLocal(local)
 {
 	FUNCTIONSETUP;
 }
@@ -140,36 +142,39 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode & ActionQueue::ActionMask)
+	switch(fMode)
 	{
-	case ActionQueue::Backup :
+	case eBackup :
 		l.append(CSL1("--backup"));
 		break;
-	default:
-		;
-	}
-	if (fMode & ActionQueue::FlagTest)
+	case eTest:
 		l.append(CSL1("--test"));
-	if (fMode & ActionQueue::FlagLocal)
-		l.append(CSL1("--local"));
-	// do a full sync also when changing PCs
-	if ( (fMode & ActionQueue::FlagFull) ||
-	     (fHandle->getPilotUser()->getLastSyncPC()!=(unsigned long)gethostid() ) )
+		break;
+	case eFastSync: /* FALLTHRU */
+	case eHotSync:
+		/* Nothing to do for fast or hotsync */
+		break;
+	case eFullSync:
 		l.append(CSL1("--full"));
-	if (fMode & ActionQueue::FlagHHToPC)
+		break;
+	case eCopyHHToPC:
 		l.append(CSL1("--copyHHToPC"));
-	if (fMode & ActionQueue::FlagPCToHH)
+		break;
+	case eCopyPCToHH:
 		l.append(CSL1("--copyPCToHH"));
-
-
-	if ((fMode & (ActionQueue::FlagHHToPC | ActionQueue::FlagPCToHH)) ==
-		(ActionQueue::FlagHHToPC | ActionQueue::FlagPCToHH))
-	{
-		kdWarning() << k_funcinfo
-			<< ": Both HHtoPC and PCtoHH set in conduit "
-			<< fDesktopName
-			<< endl;
+		break;
+	case eRestore:
+		kdWarning() << k_funcinfo << ": Running conduit "
+			<< fDesktopName << " on restore." << endl;
+		l.append(CSL1("--test"));
+		break;
 	}
+
+	if (fLocal)
+	{
+		l.append(CSL1("--local"));
+	}
+
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Flags: " << fMode << endl;
@@ -202,11 +207,14 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	addSyncLogEntry(i18n("[Conduit %1]").arg(fDesktopName));
 
 	QString conduitFlags = i18n("Running with flags: ");
+	conduitFlags.append(l.join(CSL1(" ")));
+#if 0
 	for (QStringList::ConstIterator i = l.begin() ; i!=l.end(); ++i)
 	{
 		conduitFlags.append(*i);
 		conduitFlags.append(CSL1("  "));
 	}
+#endif
 
 	logMessage(conduitFlags);
 
@@ -260,19 +268,19 @@ ActionQueue::~ActionQueue()
 }
 
 
-void ActionQueue::queueInit(int m)
+void ActionQueue::queueInit(bool checkUser)
 {
 	FUNCTIONSETUP;
 
 	addAction(new WelcomeAction(fHandle));
 
-	if (m & WithUserCheck)
+	if (checkUser)
 	{
 		addAction(new CheckUser(fHandle));
 	}
 }
 
-void ActionQueue::queueConduits(const QStringList &l,int m)
+void ActionQueue::queueConduits(const QStringList &l,SyncAction::SyncMode m, bool local)
 {
 	FUNCTIONSETUP;
 

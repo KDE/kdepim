@@ -53,7 +53,7 @@ class BackupAction : public SyncAction
 Q_OBJECT
 
 public:
-	BackupAction(KPilotDeviceLink *, int mode=ActionQueue::BackupMode);
+	BackupAction(KPilotDeviceLink *, bool full);
 
 	enum Status { Init,
 		Error,
@@ -83,7 +83,6 @@ private:
 	QTimer *fTimer;
 	int fDBIndex;
 	QString fBackupDir, fDatabaseDir;
-	int fMode;
 	bool fFullBackup;
 	QStringList fNoBackupDBs;
 	QValueList<unsigned long> fNoBackupCreators;

@@ -178,7 +178,7 @@ int syncTest(KCmdLineArgs *p)
 	if (p->isSet("backup"))
 	{
 		syncStack->queueInit();
-		syncStack->addAction(new BackupAction(deviceLink));
+		syncStack->addAction(new BackupAction(deviceLink,true));
 	}
 	else if (p->isSet("restore"))
 	{
@@ -210,14 +210,14 @@ int execConduit(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	int syncMode = ActionQueue::HotSyncMode;
-	if (p->isSet("test")) syncMode |= ActionQueue::TestMode;
-	if (p->isSet("HHtoPC")) syncMode |= ActionQueue::FlagHHToPC;
-	if (p->isSet("PCtoHH")) syncMode |= ActionQueue::FlagPCToHH;
+	SyncAction::SyncMode syncMode = SyncAction::eHotSync;
+	if (p->isSet("test")) syncMode = SyncAction::eTest;
+	if (p->isSet("HHtoPC")) syncMode = SyncAction::eCopyHHToPC;
+	if (p->isSet("PCtoHH")) syncMode = SyncAction::eCopyPCToHH;
 
 	syncStack = new ActionQueue(deviceLink);
 	syncStack->queueInit();
-	syncStack->queueConduits(l,syncMode);
+	syncStack->queueConduits(l,syncMode, p->isSet("local"));
 	syncStack->queueCleanup();
 
 	connectStack();
@@ -238,9 +238,7 @@ int testConduit(KCmdLineArgs *p)
 	createLink();
 
 	syncStack = new ActionQueue(deviceLink);
-	syncStack->queueConduits(
-		QStringList(s),
-		ActionQueue::FlagTest | ActionQueue::FlagLocal);
+	syncStack->queueConduits(QStringList(s),SyncAction::eTest,true);
 
 	connectStack();
 

@@ -116,8 +116,9 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 	return true;
 }
 
-BackupAction::BackupAction(KPilotDeviceLink * p, int mode) :
-	SyncAction(p, "backupAction"), fMode(mode), fFullBackup(mode & ActionQueue::FlagFull)
+BackupAction::BackupAction(KPilotDeviceLink * p, bool full) :
+	SyncAction(p, "backupAction"),
+	fFullBackup(full)
 {
 	FUNCTIONSETUP;
 
@@ -215,7 +216,7 @@ static inline void initNoBackup(QStringList &dbnames,
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Will skip databases " 
+	DEBUGDAEMON << fname << ": Will skip databases "
 		<< dbnames.join(",") << endl;
 	QString creatorids;
 	for (QValueList<unsigned long>::const_iterator i = dbcreators.begin();
@@ -350,7 +351,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Checking database " << info.name 
+	DEBUGDAEMON << fname << ": Checking database " << info.name
 		<< " [" << QString::number(info.creator,16) << "]" << endl;
 #endif
 	if (dontBackup(&info,fNoBackupDBs,fNoBackupCreators))

@@ -1,6 +1,23 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-26  Adriaan de Groot
+* [kpilot.kcfg] Added [a68k] as default skip in the database list.
+* [pilotDaemon] Use standard names for sync actions. Queue sorry
+  when sync type is bad.
+* [hotSync] Change signature of backup action, lose the confusing
+  int mode parameter.
+* [syncStack] Took out the mode stuff, replaced with SyncAction::SyncMode.
+  This simplified a lot of things, actually.  Removed extra changed-PC check
+  in ConduitProxy, on the assumption this is already checked elsewhere.
+
+2004-04-21  Adriaan de Groot
+* [hotSync] Made skip-database work properly, with wildcard support
+  and proper checking again, so you can now backup your Pilot and
+  specify that FATFS and *a68k can be skipped. Even did docs for it.
+* [syncAction] Added function to return standard names for the
+  (enum) sync actions.
+
 2004-04-19  Adriaan de Groot
 * Cleaned up header comments, copyrights, body comments, indentation,
   brace style, and unused code in all kinds of files. Normalized use of

@@ -638,29 +638,7 @@ bool PilotDaemon::setupPilotLink()
 QString PilotDaemon::syncTypeString(SyncAction::SyncMode i) const
 {
 	FUNCTIONSETUP;
-	switch (i)
-	{
-	case SyncAction::eTest:
-		return CSL1("Test");
-	case SyncAction::eHotSync:
-		return CSL1("HotSync");
-	case SyncAction::eFastSync:
-		return CSL1("FastSync");
-	case SyncAction::eFullSync:
-		return CSL1("FullSync");
-	case SyncAction::eBackup:
-		return CSL1("Backup");
-	case SyncAction::eRestore:
-		return CSL1("Restore");
-	case SyncAction::eCopyHHToPC:
-		return CSL1("CopyHHToPC");
-	case SyncAction::eCopyPCToHH:
-		return CSL1("CopyPCToHH");
-
-	default:
-		/* NOTREACHED */
-		return CSL1("<unknown>");
-	}
+	return SyncAction::syncModeName(i);
 }
 
 /**
@@ -932,13 +910,11 @@ static void queueEditors(ActionQueue *fSyncStack, KPilotDeviceLink *pilotLink)
 
 static void queueConduits(ActionQueue *fSyncStack,
 	const QStringList &conduits,
-	bool pcchanged,
-	int mode)
+	SyncAction::SyncMode e)
 {
 	if (conduits.count() > 0)
 	{
-		fSyncStack->queueConduits( conduits,
-			pcchanged ? (mode|ActionQueue::FlagFull) : mode);
+		fSyncStack->queueConduits( conduits,e);
 	}
 }
 
@@ -990,7 +966,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 	}
 
 	// Normal case: regular sync.
-	fSyncStack->queueInit(ActionQueue::WithUserCheck);
+	fSyncStack->queueInit(true);
 
 
 	// Add kroupware to the mix, if needed.
@@ -1012,63 +988,47 @@ static void queueConduits(ActionQueue *fSyncStack,
 	case SyncAction::eBackup:
 		if (KPilotSettings::runConduitsWithBackup() && (conduits.count() > 0))
 		{
-			fSyncStack->queueConduits(conduits,
-				ActionQueue::BackupMode | ActionQueue::FlagFull);
+			fSyncStack->queueConduits(conduits,SyncAction::eBackup);
 		}
-		fSyncStack->addAction(new BackupAction(pilotLink,
-			ActionQueue::BackupMode | ActionQueue::FlagFull));
+		fSyncStack->addAction(new BackupAction(pilotLink,true));
 		break;
 	case SyncAction::eRestore:
 		fSyncStack->addAction(new RestoreAction(pilotLink));
 		queueInstaller(fSyncStack,fInstaller,conduits);
 		break;
+	case SyncAction::eFullSync:
+	case SyncAction::eFastSync:
 	case SyncAction::eHotSync:
 		// first install the files, and only then do the conduits
 		// (conduits might want to sync a database that will be installed
 		queueInstaller(fSyncStack,fInstaller,conduits);
 		queueEditors(fSyncStack,pilotLink);
-		queueConduits(fSyncStack,conduits,pcchanged,ActionQueue::HotSync);
-#if 0
-		if (PilotDaemonDCOP::FastSync == fNextSyncType) goto skipExtraSyncSettings;
-
-		switch (KPilotSettings::syncType())
+		queueConduits(fSyncStack,conduits,fNextSyncType);
+		// And sync the remaining databases if needed.
+		if ( (fNextSyncType == SyncAction::eHotSync) ||
+			(fNextSyncType == SyncAction::eFullSync))
 		{
-		case SyncAction::eFastSync:
-			break;
-		case SyncAction::eHotSync:
-			mode |= ActionQueue::WithBackup;
-			break;
-		case SyncAction::eFullSync:
-			mode |= ActionQueue::WithBackup | ActionQueue::FlagFull;
-			break;
-		case SyncAction::eCopyPCToHH:
-			mode |= ActionQueue::FlagPCToHH;
-			break;
-		case SyncAction::eCopyHHToPC:
-			mode |= ActionQueue::FlagHHToPC;
-			break;
+			fSyncStack->addAction(new BackupAction(pilotLink, (fNextSyncType == SyncAction::eHotSync)));
 		}
-skipExtraSyncSettings:
-
-#ifdef DEBUG
-		DEBUGDAEMON << fname
-			<< ": Sync Mode="
-			<< mode << ", Sync Type="<< KPilotSettings::syncType()<<endl;
-#endif
-		if (mode & ActionQueue::WithBackup)
-			fSyncStack->addAction(new BackupAction(pilotLink, mode));
 		break;
-#endif
-
-
-
+	case SyncAction::eCopyPCToHH:
+		queueConduits(fSyncStack,conduits,SyncAction::eCopyPCToHH);
+		break;
+	case SyncAction::eCopyHHToPC:
+		queueConduits(fSyncStack,conduits,SyncAction::eCopyHHToPC);
+		break;
+#if 0
 	default:
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Can't handle sync type "
 			<< syncTypeString(fNextSyncType) << endl;
 #endif
+		fSyncStack->addAction(new SorryAction(pilotLink),
+			i18n("KPilot cannot perform a sync of type <i>%1</i>.")
+				.arg(SyncAction::syncModeName(fNextSyncType)));
 		break;
+#endif
 	}
 
 	finishKroupware(fSyncStack,pilotLink,_kroupwareParts,syncWithKMail);
