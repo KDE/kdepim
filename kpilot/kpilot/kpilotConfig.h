@@ -72,11 +72,11 @@ public:
 	*/
 //	static KPilotConfigSettings& getConfig();
 
-        /**
+	/**
 	 * @return QString of default path for the BackupDB files
 	 * are located
 	 */
-        static QString getDefaultDBPath();
+	static QString getDefaultDBPath();
 
 
 	// Conduit configuration information

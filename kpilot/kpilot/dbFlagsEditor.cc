@@ -42,9 +42,10 @@
 #include "dbFlagsEditor_base.h"
 
 
-DBFlagsEditor::DBFlagsEditor(DBInfo*dbinfo, QWidget *parent)
- : KDialogBase(parent, "FlagsEditor",false,i18n("Edit Database Flags"),
-              Ok|Cancel), dbi(dbinfo)
+DBFlagsEditor::DBFlagsEditor(DBInfo*dbinfo, QWidget *parent) :
+	KDialogBase(parent, "FlagsEditor",false,
+		i18n("Edit Database Flags"), Ok|Cancel), 
+	dbi(dbinfo)
 {
 	widget=new DBFlagsEditorWidget(this);
 	setMainWidget(widget);

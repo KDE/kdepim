@@ -62,7 +62,7 @@ private:
 	bool fDeleteOnCancel;
 
 	PilotAddress* fAddress;
-        struct AddressAppInfo *fAppInfo;
+	struct AddressAppInfo *fAppInfo;
 	// entry fields
 	QLineEdit *fCustom4Field;
 	QLineEdit *fCustom3Field;

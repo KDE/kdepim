@@ -44,9 +44,12 @@ using namespace KHE;
 /*************************************************
 **************************************************/
 
-DBAppInfoEditor::DBAppInfoEditor(char*appInfoData, int l, QWidget *parent)
- : KDialogBase(parent, "AppBlock Editor",false,i18n("Edit AppInfo Block"),
-              Ok|Cancel), appInfo(appInfoData), len(l)
+DBAppInfoEditor::DBAppInfoEditor(char*appInfoData, int l, QWidget *parent) :
+	KDialogBase(parent, "AppBlock Editor",false,
+		i18n("Edit AppInfo Block"),
+		Ok|Cancel), 
+	appInfo(appInfoData), 
+	len(l)
 {
 #ifdef USE_KHEXEDIT
 	fAppInfoEdit = KHE::createBytesEditWidget( this, "fAppInfoEdit" );

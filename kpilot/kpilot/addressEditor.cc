@@ -167,17 +167,17 @@ void AddressEditor::fillFields()
 
 
 #define MakeField(text,field,row,column) \
-                t=new QLabel(text,p); \
+		t=new QLabel(text,p); \
 		field = new QLineEdit(p); \
-                field->setMinimumWidth(20*SPACING); \
+		field->setMinimumWidth(20*SPACING); \
 		t->setBuddy(field); \
 		grid->addWidget(t,row,column); \
 		grid->addWidget(field,row,column+1);
 
 #define MakeFieldL(text,label,field,row,column) \
-                label = new QLabel(text,p); \
+		label = new QLabel(text,p); \
 		field = new QLineEdit(p); \
-                field->setMinimumWidth(20*SPACING); \
+		field->setMinimumWidth(20*SPACING); \
 		label->setBuddy(field); \
 		grid->addWidget(label,row,column); \
 		grid->addWidget(field,row,column+1);
