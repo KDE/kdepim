@@ -435,7 +435,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       html += "</b></a></td></tr></table>";
 
       QString sDescr = incidence->description();
-      if( ( sMethod == "request" || sMethod == "cancel" ) &&
+      if( ( sMethod == "reply" || sMethod == "request" || sMethod == "cancel" ) &&
           !sDescr.isEmpty() ) {
         string2HTML( sDescr );
         html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
