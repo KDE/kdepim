@@ -1,23 +1,31 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kpilot;">
+  <!ENTITY kpilotver "4.4.0">
   <!ENTITY package "kdepim">
   <!ENTITY USB "<acronym>USB</acronym>">
+  <!ENTITY Sony '<trademark class="registered">Sony</trademark>'>
+  <!ENTITY Clie "<productname><trademark>Clie</trademark></productname>">
   <!ENTITY % English "INCLUDE" > <!-- Change language ONLY here -->
   <!ENTITY % addindex "IGNORE">
 ]>
 
-	
-<!-- TODO:
 
-	Add link to IR-HOWTO
-	Check all commands
-	Fix american / english spelling
+<!--
+    From [ade]: I've finally picked up the docs again, now that
+       KPilot is being released regularly again and has neat
+       and useful new features. The TODO list was pretty much
+       obsolete, I guess. While updating the docs, I've inserted
+       a TODO comment as a place marker.
+
+       The documentation is currently far to unstable (and horribly
+       wrong where it hasn't been updated) that there's no point
+       in trying to translate it.
 -->
-<!-- 
+<!--
     From LW: http://www.palm.com/about/trademark.html According to this,
 	we have have overspecified some of the tradmarks... feel free to
-	adjust if you think this is the case.  
+	adjust if you think this is the case.
 -->
 
 <book lang="&language;">
@@ -49,18 +57,19 @@
 <year>2000</year>
 <year>2001</year>
 <year>2002</year>
+<year>2003</year>
 <holder>Adriaan de Groot</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2002-01-19</date>
-<releaseinfo>4.3.0</releaseinfo>
+<date>2003-07-05</date>
+<releaseinfo>&kpilotver;</releaseinfo>
 
 <abstract>
 <para>
-&kpilot; 4.3.0
-is the &kde; version of the Desktop &HotSync; software for 
+&kpilot; &kpilotver;
+is the &kde; version of the Desktop &HotSync; software for
 the &ThreeCom; &PalmPilot; and similar products.
 </para>
 </abstract>
@@ -79,24 +88,24 @@ the &ThreeCom; &PalmPilot; and similar products.
 <title>Introduction</title>
 
 <para>
-&kpilot; 4.3.0
-is the latest version of the Desktop &HotSync; software for &UNIX;.
-After several releases and 
-many contributions from users &kpilot;, along with
-&korganizer;, has evolved into 
-a rather complete replacement for the
-&Windows; Desktop  provided by &ThreeCom;.  
-&kpilot; offers a few internal
-tools for viewing and manipulating data, and a convenient 
-<acronym>API</acronym> for
-developing ways of sharing data with other applications.
-&kpilot; supports the &ThreeCom; &PalmPilot; and
-similar devices, like the
-&Handspring; &Visor;.
+&kpilot; &kpilotver;
+is an application that
+synchronises your &PalmPilot; or similar
+device (like the &Handspring; &Visor; or the
+&Sony; &Clie;)
+with your &kde; desktop,
+much like the Palm Desktop &HotSync; software does
+for &Windows;.
+&kpilot; can back-up, restore, and &HotSync;
+your &PalmPilot;.
+It can synchronise the built-in applications
+with their &kde; counterparts.
+It also features additional conduits for
+third-party software.
 </para>
 
 <para>
-There is a web page for &kpilot;: the 
+There is a web page for &kpilot;: the
 <ulink url="http://www.slac.com/~pilone/kpilot_home/">
 Official &kpilot; Home Page
 </ulink>.
@@ -104,25 +113,25 @@ The
 <ulink url="http://pim.kde.org/">
 KDE-PIM website
 </ulink>
-also offers useful information on the subject of 
+also offers useful information on the subject of
 <acronym>PIM</acronym>
 in general.
-&kpilot; shares the 
-kde-pim mailing list, 
-<email>kde-pim@kde.org</email>. 
+&kpilot; shares the
+kde-pim mailing list,
+<email>kde-pim@kde.org</email>.
 See
 <ulink url="http://lists.kde.org/">
 the mailing lists page</ulink>
 for more information on subscribing and unsubscribing from the list.
-</para>          
+</para>
 
 <para>
 A word about version numbers:
-&kpilot; 3.x versions
-are for KDE 1.
-With the release of &kde; 2
-&kpilot; 3.x is obsolete
-and &kpilot; 4.x has become current.
+&kpilot; 4.4.0 is current and unstable as of July 2003.
+It works with both &kde; 3.0 and &kde; 3.1,
+though its functionality may be limited with &kde; 3.0.
+Some conduits have been updated to required &kde; 3.2,
+and these conduits will not be installed under older &kde; versions.
 </para>
 
 <warning>
@@ -140,6 +149,18 @@ Updated documentation will be released after the &kde; 3.0 release.
 
 <itemizedlist>
 <listitem>
+<para>
+New in 4.4.0 - The configuration dialogs for both conduits and
+&kpilot;'s general settings have been rearranged again.
+Conduits have been renamed. The popmail and expenses conduits
+have been removed, since they just weren't working.
+For users of &kpilot; 4.3.x versions, both Kroupware syncing
+and file installation have been moved into the conduit configuration.
+A dialog will open up warning you of the transition.
+</para>
+</listitem>
+
+<listitem>
 <para>New in 4.3.0 -
 a new architecture, USB support, and possibly a VCal (&korganizer;)
 conduit that isn't dead slow.
@@ -149,9 +170,6 @@ conduit that isn't dead slow.
 <listitem>
 <para>
 New in 4.2.2 -
-(There were versions 4.1.x and 4.2.1 for KDE 2, but we never
-updated the documentation to reflect this. These revision notes
-apply to the change between &kpilot; 4.0.0 and 4.2.2.)
 Many compilation and portability fixes were applied.
 Those changes do not affect the visible appearance of &kpilot;.
 What <emphasis>has</emphasis> changed is the GUI.
@@ -162,20 +180,8 @@ This has the advantage that you can now easily customize the toolbar
 and that the &kpilot; user interface behaves more like the rest of KDE 2.
 Tool tips (also called balloon help) have finally been added.
 </para>
-<para>
-There are two new external conduits: one for &kaddressbook; (and hence kab, the
-KDE 2 address book) and one for the expenses application on the &PalmPilot;.
-</para>
-<para>
-<emphasis>What's missing:</emphasis>
-The expense conduit is rather experimental as of 
-may 2001,
-but should improve vastly before the KDE 2.2 final release.
-The FastSync vs. HotSync is not fully functional yet.
-There have also been problems reported with the
-<application>KNotes</application> conduit.
-</para>
 </listitem>
+
 <listitem>
 <para>
 New in 4.0.0 -
@@ -184,21 +190,8 @@ A lot of work has gone into making the main
 &kpilot; application compatible with the new KDE 2 standards.
 The stability of the program as a whole has improved as well,
 with lots of bugfixes under the hood.
-The most important visible new features are:
 </para>
 
-<itemizedlist>
-<listitem><para>
-	There is a new &knotes;
-	conduit that synchronizes the memo pad with 
-	&knotes;.</para></listitem>
-<listitem><para>
-	More intuitive conduit installation and setup.
-	</para></listitem>
-<listitem><para>
-	The documentation has been brought mostly up-to-date.
-	</para></listitem>
-</itemizedlist>
 </listitem>
 <listitem>
 <para>
@@ -220,15 +213,13 @@ squashed along with other bugs.
 <listitem>
 <para>
 New in 3.1.14 -
-New configuration options 
+New configuration options
 <link linkend="dbspecial">Backup Only:</link>
-and 
+and
 <link linkend="dbspecial">Skip</link>
 have been added
 to avoid database corruption for some Handbase databases &mdash;
 and possibly other products as well.
-The documentation for &kpilot; &mdash; in english only &mdash; has been
-vastly expanded.
 </para>
 </listitem>
 
@@ -237,9 +228,6 @@ vastly expanded.
 New in 3.1.13 -
 You can now HotSync - experimentally - with &UNIX; style mailboxes.
 The popmail conduit will read a standard mailbox and copy it to the &PalmPilot;.
-The &GUI; has been improved and some issues with various 
-<acronym>OS</acronym> distributions
-have been dealt with. See the buglist for more information.
 </para>
 </listitem>
 
@@ -250,68 +238,9 @@ This release of &kpilot; has only been tested with KDE 1.0, 1.1 and
 1.1.1. Previous versions of KDE are no longer supported.
 &kpilot; 3.1.12 has a number of new features compared to 3.1b9.
 It also includes a large number of bug fixes.
-</para>
-
-<para>
-The most important new features are:
-<itemizedlist>
-<listitem>
-<para>
-	Now supports debugging output, just start &kpilot;
-	by hand from the command line with
-<userinput>
-<command>kpilot</command> 
-<option>--debug 1023</option>
-</userinput>
-	and you will get loads of debugging output.
-	Useful for reporting bugs.
-	See the <link linkend="debug">FAQ</link>
-	for information on the parameter to <userinput>--debug</userinput>.
-</para>
-</listitem>
-<listitem>
-<para>
-	Addresses can be sorted by company, name or by lastname, firstname.
-</para>
-</listitem>
-<listitem>
-<para>
-	A new (demonstration) conduit has been added that does nothing.
-	For programmers, mostly.
-</para>
-</listitem>
-<listitem>
-<para>
-	The &GUI; has been cleaned up.
-</para>
-</listitem>
-</itemizedlist>
-</para>
-
-<para>
-The most important bugs that have been fixed are:
-</para>
-<itemizedlist>
-<listitem>
-<para>
-	<acronym>SMTP</acronym> support
-</para>
-</listitem>
-<listitem>
-<para>
-	Daemon startup
-</para>
-</listitem>
-</itemizedlist>
-
-
-
-
-<para>
-Note that the debugging code hasn't spread to the whole of &kpilot; yet.
-The daemon and conduits do have some debugging output, which may also
-be useful
-if &kpilot; doesn't work perfectly on your system.
+The most important feature is that
+&kpilot;
+	now supports debugging output.
 </para>
 </listitem>
 
@@ -322,9 +251,9 @@ This is the fourth release of &kpilot;.  The major change in this
 release is conduit support.  There are currently two included conduits, a
 &korganizer; conduit (vcal syncing) and a PopMail conduit (this fixes the
 email bug with &kpilot; 2.1).  Also fixed in this release is the
-Address/Memo <quote>off by one</quote> bug.  
+Address/Memo <quote>off by one</quote> bug.
 This release <emphasis>requires</emphasis> KDE Beta 4 or
-better.  
+better.
 </para>
 </listitem>
 
@@ -333,19 +262,36 @@ better.
 
 </sect1>
 
+
+<sect1 id="trademarks">
+<title>Trademarks</title>
+<para>
+&kpilot; describes synchronization operations
+with &PalmOS; devices, and it uses the word &HotSync;
+to name those synchronization operations,
+while recognizing that &HotSync; is a trademark of
+Palm, Inc. Holders of other trademarks, such as
+&Handspring; &Visor;, &Sony; &Clie;, and
+the Palm, Inc. trademarks &PalmPilot; and
+<productname><trademark>Zire</trademark></productname>
+are recognized as well.
+</para>
+</sect1>
+
 </chapter>
 
 <chapter id="using-kpilot">
 <title>Using &kpilot;</title>
- 
-<para>  
-Once &kpilot; is installed it needs to be 
+<!-- TODO: this is really "Configuring KPilot" -->
+
+<para>
+Once &kpilot; is installed it needs to be
 <link linkend="configuring-kpilot">configured</link>
 to match your hardware.
 The <link linkend="conduits">conduits</link>
 need to be configured as well.
 After that you can use &kpilot;
-to synchronise your &PalmPilot; with 
+to synchronise your &PalmPilot; with
 your &kde; desktop or view
 data from your &PalmPilot; with the
 <link linkend="builtin">builtin applications</link>.
@@ -354,15 +300,15 @@ data from your &PalmPilot; with the
 <sect1 id="configuring-kpilot">
 <title>Configuring &kpilot;</title>
 
-<para>  
-Once &kpilot; is installed it is easy to set up.  
-Run &kpilot; from either
-the panel menu or from the command prompt and it will prompt you with
-a dialog box asking you to configure it for the first time.  
+<para>
+When you run &kpilot; from either
+the panel menu or from the command prompt for the first time
+it will prompt you with
+a dialog box to configure it.
 This configuration dialog can be requested later
 from the
 <menuchoice>
-<guimenu>Settings</guimenu> 
+<guimenu>Settings</guimenu>
 <guimenuitem>Configure &kpilot;</guimenuitem>
 </menuchoice>
 menu or by starting &kpilot;
@@ -374,38 +320,54 @@ In addition, if you upgrade &kpilot; and some new configuration
 options require your attention, this setup dialog will reappear.
 </para>
 
-<para>A full description of the setup dialog can be found 
-<link linkend="general">below</link>.</para>
+<caution>
+<title>Changes in &kpilotver;</title>
+<para>
+In &kpilot; &kpilotver;, the way conduits are programmed changed,
+and you will need to use newly compiled conduits. If there are
+old conduits on your system, &kpilot; will prompt you to remove them.
+</para>
+<para>
+The way file installation and Kroupware are enabled has changed.
+They have been moved to conduits; your settings will be preserved,
+and &kpilot; will warn you.
+</para>
+<para>
+The names of encodings have changed as well. If you enabled
+encodings for &kpilot; by editing the configuration file,
+you will need to re-select your encoding from the configuration dialog.
+&kpilot; will <emphasis>not</emphasis> warn you about this.
+</para>
+<para>
+Please take the time to review all of the configuration settings.
+</para>
+</caution>
+
+<screenshot>
+<screeninfo>Configuration Tabs</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-tabs.png" format="PNG"/></imageobject>
+<textobject><phrase>The configuration tabs</phrase></textobject>
+<caption><para>The configuration tabs</para></caption>
+</mediaobject>
+</screenshot>
 
 <para>
-Once
-&kpilot; is properly set up, pressing <guibutton>OK</guibutton>
-will bring up the 
-<link linkend="kpilot-main">main &kpilot; window</link>.  
-The <emphasis>first</emphasis> thing you should do is 
-make a full backup
-of the &PalmPilot;.  
-Do this by selecting 
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Backup</guimenuitem>
-</menuchoice>
-or the toolbar icon
-<guiicon>Full Backup
-<inlinemediaobject>
-<imageobject><imagedata fileref="toolbar_backup.png" format="PNG"/>
-</imageobject>
-</inlinemediaobject>
-</guiicon>.  
-When you do,
-the status bar will ask you to press the &HotSync; button on the
-cradle.  
-Assuming everything is set up properly you should see the
-&PalmPilot; begin to sync and a message box telling you what databases are
-being backed up.  This will back up your entire &PalmPilot; into your local
-directory.  
-Note that this may take a little while, however a normal
-&HotSync; operation is significantly faster.
+The general configuration dialog for &kpilot; has five tabs,
+as shown above. Each is described in detail below.
+The <link linkend="general">General</link> tab
+sets device options.
+The <link linkend="sync">Sync</link> tab
+sets &HotSync; specific options.
+The <link linkend="viewers">Viewers</link> tab
+sets display options for the
+<link linkend="builtin">builtin viewers</link>.
+<link linkend="dbspecial">Backup</link>
+sets special treatment for certain databases.
+Finally, the <link linkend="about">About</link> tab
+describes the &kpilot; application and its authors.
+Every configuration dialog in &kpilot;
+has an About tab listing the authors of that particular part.
 </para>
 
 <sect2 id="general">
@@ -430,24 +392,42 @@ to be started.
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Pilot Device</guilabel></term>
+<term><guilabel>Pilot device</guilabel></term>
 <listitem>
 <para>
 This
-is the serial port that the cradle is connected to.  By default it is
+is the port that the cradle is connected to.
+By default it is
 set to <filename class="devicefile">/dev/pilot</filename>
-which should be a symbolic link to the proper serial port.  
-<emphasis>Make sure the serial port has
+which should be a symbolic link to the real port.
+The port might be a serial port, in which case
+<filename class="devicefile">/dev/pilot</filename>
+should point to
+something like
+<filename class="devicefile">/dev/cuaa0</filename>
+(in FreeBSD) or
+<filename class="devicefile">/dev/ttyS0</filename>
+(in &Linux;).
+For &USB; devices, it can be more difficult to
+determine where
+<filename class="devicefile">/dev/pilot</filename>
+should point.
+It may be possible to configure your &USB; daemon
+to set up the link automatically, so that
+<filename class="devicefile">/dev/pilot</filename>
+points to the right port no matter where you plug in your &PalmOS; device.
+</para>
+
+<para>
+<emphasis>Make sure the port has
 the correct permissions.</emphasis>
 It
 must be read/write by all if &kpilot; is intended to be used by a
-normal user!  This is done by doing a 
+normal user!  This is done by doing a
 <userinput><command>chmod</command> <parameter>666</parameter> <replaceable>device</replaceable></userinput> where
-<replaceable>device</replaceable> is the correct serial port.
-See also the <link linkend="faq">FAQ</link>
-for more information about setting up the &PalmPilot; device.
-<emphasis>&Handspring; &Visor; / &USB; cradle users see the
-<link linkend="faq">FAQ</link> as well!</emphasis>
+<replaceable>device</replaceable> is the correct port.
+&kpilot; will complain if the permissions are wrong, but you
+will need to fix the permissions by hand.
 </para>
 </listitem>
 </varlistentry>
@@ -456,8 +436,10 @@ for more information about setting up the &PalmPilot; device.
 <term><guilabel>Speed</guilabel></term>
 <listitem>
 <para>
-This indicates the speed of the serial connection to the &PalmPilot;.
-For an older model &PalmPilot;, choose 9600. 
+This indicates the speed of the <emphasis>serial</emphasis>
+connection to the &PalmPilot;.
+It has no meaning for &USB; devices.
+For an older model &PalmPilot;, choose 9600.
 Newer models may be able to handle speeds up to
 the maximum listed, 115200.
 You can experiment with the connection speed: the &PalmPilot;
@@ -467,67 +449,68 @@ speeds to see if they work.
 </listitem>
 </varlistentry>
 
+<varlistentry><term><guilabel>Encoding</guilabel></term>
+<listitem>
+<para>
+&PalmOS; devices are available in
+many different languages.
+If your device uses a different encoding than
+ISO-latin1, you will need to select the
+correct encoding from the list in order to have &kpilot;
+display national characters correctly.
+If you can enter Russian in your &PalmPilot;,
+select CP1251, for instance.
+</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
-<term><guilabel>Pilot User</guilabel></term>
+<term><guilabel>Pilot user</guilabel></term>
 <listitem>
 <para>
 This
 is the user name of the &PalmPilot;.  By default this name is the same as
-your log on name.  When you first sync with the &PalmPilot; &kpilot; will
+your log on name.  When you sync with the &PalmPilot; &kpilot; will
 check to see if this name matches the one on the &PalmPilot;.  If they do
 not, you are asked to pick which you will use.  If you pick the local
-name, the &PalmPilot; will be changed to match.  This is also used to store
-the information synced from the &PalmPilot;.  For example, if I were to
-HotSync my &PalmPilot; on your machine, it would store the data into a
-subdirectory named <filename>pilone</filename>.
+name, the &PalmPilot; will be changed to match.
+The <guilabel>Pilot User</guilabel> entry  is also used to store
+the information synced from the &PalmPilot;, in a directory
+named <filename>DBBackup/<replaceable>Pilot User</replaceable></filename>.
 </para>
 </listitem>
 </varlistentry>
 
 
 
-
-
 <varlistentry><term><guilabel>Start
-HotSync Daemon at login</guilabel></term>
+daemon at login</guilabel></term>
 <listitem>
 <para>
  By
 enabling this a link to the daemon is placed in your autostart folder
 and will be started automatically.  Note that this is not normally
 needed if the daemon is docked in the panel.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry><term><guilabel>Start KPilot at HotSync</guilabel></term>
-<listitem>
-<para>
-When the
-&HotSync; button is pressed on the cradle (assuming the daemon is
-running) &kpilot; can sync without actually starting up the 
-&GUI;. 
-However, by enabling this option the daemon will start up the &kpilot;
-&GUI; when the &HotSync; operation begins.
+<!-- TODO: broken functionality -->
 </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Show Daemon in &kicker;</guilabel></term>
+<term><guilabel>Show daemon in panel</guilabel></term>
 <listitem>
 <para>
-This option lets the daemon place a little HotSync icon 
+This option instructs the daemon to place a &HotSync; icon
 <guiicon>HotSync icon
 <inlinemediaobject>
 <imageobject><imagedata fileref="toolbar_hotsync.png" format="PNG"/>
 </imageobject>
 </inlinemediaobject>
-</guiicon>.  
+</guiicon>.
 in
-the &kicker; system tray. 
+the &kicker; system tray.
 This icon has a menu that can be brought up with
-the right mouse button, for performing a &HotSync; and the like.
+the right mouse button.
 Without this option, the daemon is not visible to the user at all.
 </para>
 </listitem>
@@ -536,149 +519,50 @@ Without this option, the daemon is not visible to the user at all.
 <varlistentry>
 <term>
 <anchor id="stopdaemononexit"/>
-<guilabel>Stop Daemon on exit</guilabel>
+<guilabel>Stop daemon on exit</guilabel>
 </term>
 <listitem>
 <para>
 Setting this option will cause the daemon to exit when you quit
-&kpilot;, leaving the serial port free for other &PalmPilot;-syncing tools
+&kpilot;, leaving the device port free for other &PalmPilot;-syncing tools
 such as <application>malsync</application>
 </para>
 </listitem>
 </varlistentry>
 
-</variablelist>
-
-<para>
-For a fully visible &kpilot; installation, 
-enable <guilabel>Start KPilot at HotSync</guilabel>
-and <guilabel>Show Daemon in &kicker;</guilabel>
-while disabling <guilabel>Stop Daemon on exit</guilabel>.
-To make &kpilot; all but invisible,
-disable all the options except 
-<guilabel>Stop Daemon on exit</guilabel>.
-</para>
-
-</sect2>
-
-<sect2 id="address">
-<title>
-Address page
-</title>
-
-<para>
-The address page contains settings specific to the
-<emphasis>built in</emphasis> address book viewer.
-Note that this address book has nothing directly 
-to do with the &kde; address book, your email address book,
-or anything else.
-Connections with those address books could be
-provided by conduits.
-The <application>kaddressbook</application> conduit
-can sync your &PalmPilot; with the &kde; address book.
-</para>
-
-<screenshot>
-<screeninfo>Address page</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="setup-address.png" format="PNG"/></imageobject>
-<textobject><phrase>The Address setup page</phrase></textobject>
-<caption><para>The Address setup page</para></caption>
-</mediaobject>
-</screenshot>
-
-
-<variablelist>
-
 <varlistentry>
-<term><guilabel>Import Format</guilabel></term>
-<term><guilabel>Export Format</guilabel></term>
+<term><guilabel>Quit after HotSync</guilabel></term>
 <listitem>
 <para>
-&kpilot; can import and export the address database
-to or from a text  file.
-These two fields
-determine the format the file is written in (for export)
-or must have (for import).
-You can list the fields of the address book, separated by commas.
-The names of fields are described
-<link linkend="addressfmt">below</link>.
-
-<tip>
-<para>
-Noone really uses the <acronym>CSV</acronym> import and
-export for the address book, so leave it alone.
-</para>
-</tip>
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Address display</guilabel></term>
-<listitem>
-<para>
-This set of radio buttons determines
-how addresses are displayed and sorted in the address book.
-This is similar to the setting in the &PalmPilot; itself
-where addresses can be sorted based on company or on last name.
+When this option is enabled, both &kpilot; and the &kpilot; daemon
+will exit after the &HotSync; operation has completed,
+leaving the device port free for other tools.
+This may be needed on systems where the &USB; daemon
+starts &kpilot; automatically.
 </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
 
-<para>
-Both the import and the export format
-are lists of field specifiers separated by some
-delimiter (usually a comma).
-Note that all fields must be separated
-by the same delimiter.
-For import formats:
-Field specifiers are three-character strings that
-begin with a %.
-Field specifiers
-%<replaceable>CC</replaceable>
-are used to indicate that in the imported data the
-data for the corresponding field is to be found there
-(as a string that does not contain the delimiter character).
-The following field specifiers are supported:
-</para>
-
-<table id="addressfmt">
-<title>Address Format Specifiers</title>
-<tgroup cols="2">
-<thead>
-<row><entry>Specifier</entry><entry>Field</entry></row>
-</thead>
-<tbody>
-<row><entry>%LN</entry><entry>Last name
-</entry></row>
-<row><entry>%FN</entry><entry>First name
-</entry></row>
-<row><entry>%CO</entry><entry>Company
-</entry></row>
-<row><entry>%P1,%P2,%P3,%P4,%P5</entry><entry>Phone numbers 1 through 5
-</entry></row>
-<row><entry>%AD</entry><entry>Address
-</entry></row>
-<row><entry>%CI</entry><entry>City
-</entry></row>
-<row><entry>%ST</entry><entry>State
-</entry></row>
-<row><entry>%ZI</entry><entry>Zip (Postal code)
-</entry></row>
-<row><entry>%CT</entry><entry>Country
-</entry></row>
-<row><entry>%TI</entry><entry>Title
-</entry></row>
-<row><entry>%C1,%C2,%C3,%C4</entry><entry>Custom fields
-</entry></row>
-</tbody>
-</tgroup>
-</table>
 
 </sect2>
+
+<sect2 id="viewers">
+<title>Viewers configuration</title>
+<para>
+Thong.
+</para>
+</sect2>
+
+<sect2 id="about">
+<title>About information</title>
+<para>
+Thong.
+</para>
+</sect2>
+
+
 
 <sect2 id="dbspecial">
 <title>
@@ -809,12 +693,12 @@ most recent information and will overwrite the &PalmPilot;'s copy.
 <term><guilabel>Force first-time sync every time</guilabel></term>
 <listitem>
 <para>
-Under some circumstances &mdash; you have many 
+Under some circumstances &mdash; you have many
 <acronym>PC</acronym>s and many &PalmPilot;s &mdash;
 you may want to perform a &quot;cleaner&quot; HotSync every time
 instead of the &quot;quick-and-dirty&quot; HotSync that
 &kpilot; does if you just have one &PalmPilot; and one <acronym>PC</acronym>.
-Just <emphasis>when</emphasis> you want to enable this 
+Just <emphasis>when</emphasis> you want to enable this
 option is a matter of personal preference.
 </para>
 </listitem>
@@ -859,14 +743,47 @@ This is a classic trade-off between speed and safety.
 </sect2>
 </sect1>
 
+<!--
+<para>
+Once
+&kpilot; is properly set up, pressing <guibutton>OK</guibutton>
+will bring up the
+<link linkend="kpilot-main">main &kpilot; window</link>.
+The <emphasis>first</emphasis> thing you should do is
+make a full backup
+of the &PalmPilot;.
+Do this by selecting
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Backup</guimenuitem>
+</menuchoice>
+or the toolbar icon
+<guiicon>Full Backup
+<inlinemediaobject>
+<imageobject><imagedata fileref="toolbar_backup.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</guiicon>.
+When you do,
+the status bar will ask you to press the &HotSync; button on the
+cradle.
+Assuming everything is set up properly you should see the
+&PalmPilot; begin to sync and a message box telling you what databases are
+being backed up.  This will back up your entire &PalmPilot; into your local
+directory.
+Note that this may take a little while, however a normal
+&HotSync; operation is significantly faster.
+</para>
+-->
+
 <sect1 id="kpilot-main">
 <title>Main Window</title>
 
 <para>
 The main window in &kpilot; just contains the &kpilot; logo.
-You can switch to one of the 
+You can switch to one of the
 <link linkend="builtin">builtin applications</link> by
-using the 
+using the
 <guimenu>View</guimenu> menu.
 </para>
 
@@ -1170,22 +1087,21 @@ delete newly-added memos from the builtin memo application.
       addresses to and from the &PalmPilot;.  
 The import and export format is
       configurable via the 
-<link linkend="address">
-settings dialog</link>.  Note
-that the first field in the 
-import format is used as the 
+settings dialog.  Note
+that the first field in the
+import format is used as the
 <!-- not sure what the markup of key field should be. -->
-Key Field.  
+Key Field.
 That is, if 
 <guilabel>Use Key Field</guilabel> 
 is turned on in the 
-<link linkend="address">settings dialog</link>, 
+settings dialog,
 when importing if &kpilot; sees
-another record with a matching 
-Key Field 
+another record with a matching
+Key Field
 the existing record is
 updated to reflect the new data being read in.  If no such record
-exists, a new record is created.  The default is not to use the 
+exists, a new record is created.  The default is not to use the
 Key Field, 
 so every record read in from the import file is created and
 added to the database.
@@ -1218,13 +1134,13 @@ The button
 lets you read a text file containing records
 in comma-separated-value format (with the fields in the
 particular order described by the
-<link linkend="address">Address Import</link>
+Address Import
 setting) and add those records to the address book.
 The
 <guibutton>Export List</guibutton>
 writes all the addresses in the address book to
 a file in the format given by the
-<link linkend="address">Address Export</link>
+Address Export
 setting.
 </para>
 
@@ -1972,6 +1888,9 @@ Documentation copyright 2000,2001 Adriaan de Groot <email>adridg@cs.kun.nl</emai
 </book>
 <!-- 
      $Log$
+     Revision 1.16  2002/12/11 13:09:08  lauri
+     CVS_SILENT: changing DTD
+
      Revision 1.15  2002/04/16 13:53:57  lauri
      CVS_SILENT: DTD Change
 
