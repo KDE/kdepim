@@ -1,4 +1,0 @@
-dnl AC_OUTPUT(kitchensync/Makefile kitchensync/lib/Makefile 
-dnl	kitchensync/pilotDaemon/Makefile kitchensync/syncManager/Makefile
-dnl	kitchensync/pilotDaemon/pilot-link/Makefile
-dnl	kitchensync/pilotDaemon/pilot-link/libsock/Makefile)

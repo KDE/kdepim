@@ -8,6 +8,7 @@ usr/share/services/todo-conduit.desktop
 usr/share/services/popmail-conduit.desktop
 usr/share/services/knotes-conduit.desktop
 usr/share/services/expense-conduit.desktop
+usr/share/icons/*/*/apps/kpilot*
 usr/bin/kpilot
 usr/bin/kpilotDaemon
 usr/bin/pilotListener

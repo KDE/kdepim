@@ -9,7 +9,7 @@
 #include "koexceptions.h"
 #include "event.h"
 
-#define _PRODUCT_ID "-//K Desktop Environment//NONSGML KOrganizer 2.2//EN"
+#define _PRODUCT_ID "-//K Desktop Environment//NONSGML KOrganizer 2.2.1//EN"
 
 namespace KCal {
 

@@ -89,6 +89,9 @@ void HtmlExport::createHtmlMonthView(QTextStream *ts)
 {
   QDate start = fromDate();
   start.setYMD(start.year(),start.month(),1);  // go back to first day in month
+
+  QDate end(start.year(),start.month(),start.daysInMonth());
+
   if (KGlobal::locale()->weekStartsMonday()) {
     start = start.addDays(1 - start.dayOfWeek());
   } else {
@@ -110,7 +113,7 @@ void HtmlExport::createHtmlMonthView(QTextStream *ts)
   *ts << "</tr>\n";
   
   // Write days
-  while ((start.month() <= fromDate().month())) {
+  while (start <= end) {
     *ts << "<tr>\n";
     for(int i=0;i<7;++i) {
       *ts << "<td valign=top><table border=0>\n";

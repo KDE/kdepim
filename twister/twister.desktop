@@ -1,13 +1,12 @@
 [Desktop Entry]
 Name=Twister
-Name[af]=TWISTER
 Name[is]=Snúningur
 Name[ja]=ツイスター
 Name[lv]=Tvisters
+Name[xh]=jikojiko
 Exec=twister
 Icon=twister
 Comment=PIM client
-Comment[af]=PIM KLIëNT
 Comment[az]=PIM proqramı
 Comment[bg]=Клиент на PIM
 Comment[br]=Arval PIM
@@ -49,7 +48,7 @@ Comment[sv]=PIM-klient
 Comment[ta]=PIM ¸ÕÅ¢
 Comment[tr]=PIM programı
 Comment[uk]=Клієнт PIM
+Comment[xh]=Umxhasi we PIM
 Comment[zh_CN.GB2312]=PIM 客户端程序
-Comment[zh_TW.Big5]=PIM 客戶端
 Terminal=0
 Type=Application

@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 Name=KPilot KNotes Conduit
-Name[af]=KPILOT KNOTAS PAD
 Name[cs]=Propojení s poznámkami KNotes
 Name[de]=KPilot-Einrichtung für KNotes
 Name[eo]=KPilota Notoj-kanalo
@@ -27,8 +26,8 @@ Name[sl]=Veznik s KNotes za KPilot
 Name[sv]=Knotes-kanal för Kpilot
 Name[uk]=Трубопровід КNotes для KPilot
 Name[vi]=Truyền dẫn KPilot KNotes 
+Name[xh]=Umqhubi wenqwelo moya we N izaziso ze K kondiki
 Name[zh_CN.GB2312]=KPilot KNotes 管道
-Name[zh_TW.Big5]=KPilot KNotes 架座
 Implemented=file
 ServiceTypes=KPilotConduit
 Exec=conduitKNotes

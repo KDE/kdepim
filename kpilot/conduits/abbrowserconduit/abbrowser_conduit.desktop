@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 Name=KDE Address Conduit via Abbrowser
-Name[af]=KDE ADRES PAD DEUR MIDDEL VAN ABBROWSER
 Name[az]=Abbrowser üstündən KDE Ünvan Əlavəsi
 Name[cs]=Propojení adresáře KDE pomocí Abbrowser
 Name[da]=KDE Adresse Conduit via Abbrowser
@@ -17,15 +16,18 @@ Name[it]=Condotto Indirizzi KDE  via Abbrowser
 Name[ja]=Abbrowser経由のKDEアドレスコンジット
 Name[lv]=KDE Adresu Ķēde caur ABpārlūku
 Name[nl]=KDE Adres Pijp via Abbrowser
+Name[no]=KDE adressetillegg via Abbrowser
 Name[no_NY]=KDE Adresselenkje via Abbrowser
 Name[pl]=Łącznik adresów KDE poprzez Abbrowser
-Name[pt_BR]=Conduta de Endereços do KDE através do Abbrowser
+Name[pt_BR]=Conduíte de Endereços do KDE através do Abbrowser
 Name[pt]=Conduta de Endereços do KDE através do Abbrowser
+Name[ru]=Канал связи с адресной книгой
 Name[sk]=Spojka adries KDE pomocou Abbrowser
 Name[sl]=Veznik za naslove prek Abbrowserja v KDE
 Name[sv]=KDE-adresskanal via Abbrowser
 Name[uk]=Трубопровід адрес KDE через Abbrowser
 Name[vi]=Truyền dẫn địa chềEqua Abbrowser 
+Name[xh]=idilesi yeKondiki egqitha kumphononongi
 Implemented=file
 ServiceTypes=KPilotConduit
 Exec=abbrowser_conduit

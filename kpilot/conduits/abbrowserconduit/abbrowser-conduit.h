@@ -51,10 +51,6 @@ class AbbrowserConduit : public BaseConduit
       const QString &getPilotOtherMap() const { return fPilotOtherMap; }
       bool isPilotStreetHome() const { return fPilotStreetHome; }
       bool isPilotFaxHome() const { return fPilotFaxHome; }
-      /** @return flag if should close abbrowser if it was already running
-       *  upon exit
-       */
-      bool closeAbbrowserIfOpen() const { return fCloseAbIfOpen; }
       bool backupDone() const { return fBackupDone; }
       
     private:
@@ -129,7 +125,6 @@ class AbbrowserConduit : public BaseConduit
       QString fPilotOtherMap;
       bool fPilotStreetHome;
       bool fPilotFaxHome;
-      bool fCloseAbIfOpen;
       bool fBackupDone;
     };
 // Revision 1.0  2000/12/27 00:22:28  new conduit

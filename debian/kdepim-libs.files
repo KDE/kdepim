@@ -7,13 +7,11 @@ usr/lib/librmm.la
 usr/lib/libvcard.so.0.0.0
 usr/lib/libvcard.so.0
 usr/lib/libvcard.la
-usr/lib/libical.so.*
-usr/lib/libical.la
-usr/lib/libicalss.so.*
-usr/lib/libicalss.la
-usr/lib/libicalvcal.so.*
-usr/lib/libicalvcal.la
 usr/lib/libkgantt.so.0.0.2
 usr/lib/libkgantt.so.0
 usr/lib/libkgantt.la
+usr/lib/libkcal.so.1.0.0
+usr/lib/libkcal.so.1
+usr/lib/libkcal.la
+usr/share/lintian/overrides/kdepim-libs
 usr/share/apps/kgantt/*
