@@ -198,6 +198,10 @@ namespace GpgME {
   }
 
   bool Key::canSign() const {
+#ifndef GPGME_CAN_SIGN_ON_SECRET_OPENPGP_KEYLISTING_NOT_BROKEN
+    if ( d->key && d->key->protocol == GPGME_PROTOCOL_OpenPGP )
+      return true;
+#endif
     return d->key && d->key->can_sign;
   }
 
