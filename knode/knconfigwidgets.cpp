@@ -384,8 +384,10 @@ void KNConfig::NntpAccountListWidget::slotAddBtnClicked()
 {
   KNNntpAccount *acc = new KNNntpAccount();
 
-  if(acc->editProperties(this))
+  if(acc->editProperties(this)) {
     a_ccManager->newAccount(acc);
+    acc->saveInfo();
+  }
   else
     delete acc;
 }
@@ -544,7 +546,8 @@ void KNConfig::NntpAccountConfDialog::slotOk()
   a_ccount->setPass(p_ass->text());
   a_ccount->setIntervalChecking(i_nterval->isChecked());
   a_ccount->setCheckInterval(c_heckInterval->value());
-  a_ccount->saveInfo();
+  if (a_ccount->id() != -1) // only save if account has a valid id
+    a_ccount->saveInfo();
 
   i_dWidget->apply();
 
