@@ -142,7 +142,9 @@ bool ResourceGroupwise::asyncLoad()
   mAddrMap.clear();
   loadCache();
 
-  mServer->readAddressBooks( mPrefs->readAddressBooks(), this );
+  if ( !mServer->readAddressBooks( mPrefs->readAddressBooks(), this ) ) {
+    return false;
+  }
 
   return true;
 }
