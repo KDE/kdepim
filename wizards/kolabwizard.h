@@ -26,6 +26,7 @@
 
 class KLineEdit;
 class QCheckBox;
+class QRadioButton;
 
 class KolabWizard : public KConfigWizard
 {
@@ -42,6 +43,7 @@ class KolabWizard : public KConfigWizard
     KLineEdit *mRealNameEdit;
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;
+    QRadioButton *mKolab1, *mKolab2;
 };
 
 #endif

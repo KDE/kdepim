@@ -99,16 +99,21 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   CreateDisconnectedImapAccount *account =
     new CreateDisconnectedImapAccount( i18n("Kolab Server") );
 
-  QString server = KolabConfig::self()->server();
+  QString email;
+  const QString server = KolabConfig::self()->server();
   QString user = KolabConfig::self()->user();
   int pos = user.find( "@" );
-  if ( pos > 0 ) user = user.left( pos );
+  // with kolab the userid _is_ the full email
+  if ( pos > 0 )
+    // The user typed in a full email address. Assume it's correct
+    email = user;
+  else
+    // Construct the email address. And use it for the username also
+    user = email = user+"@"+KolabConfig::self()->server();
 
-  QString email = user + "@" + server;
-  user = email; // with kolab the userid _is_ the full email
 
   account->setServer( server );
-  account->setUser( email );
+  account->setUser( user );
   account->setPassword( KolabConfig::self()->password() );
   account->setRealName( KolabConfig::self()->realName() );
   account->setEmail( email );

@@ -25,6 +25,10 @@
       <label>Save Password</label>
       <default>false</default>
     </entry>
+    <entry name="Kolab1Legacy" type="Bool">
+      <label>Enable Kolab 1 Legacy settings</label>
+      <default>false</default>
+    </entry>
   </group>
 
   <group name="Constants">
@@ -33,7 +37,7 @@
     </entry>
   </group>
 
-  <propagation source="kolabrc/Constants/EnableFreeBusy"
+  <propagation source="kolabrc/General/Kolab1Legacy"
                target="korganizerrc/FreeBusy/FreeBusyPublishAuto" />
   <propagation source="kolabrc/Constants/EnableFreeBusy"
                target="korganizerrc/FreeBusy/FreeBusyRetrieveAuto" />

@@ -32,13 +32,15 @@
 #include "kresources/imap/kabc/resourceimap.h"
 #include "kresources/imap/knotes/resourceimap.h"
 
-#include <qwhatsthis.h>
 #include <klineedit.h>
 #include <klocale.h>
 
-#include <qlayout.h>
 #include <qcheckbox.h>
+#include <qhbuttongroup.h>
 #include <qlabel.h>
+#include <qlayout.h>
+#include <qradiobutton.h>
+#include <qwhatsthis.h>
 
 class SetupLDAPSearchAccount : public KConfigPropagator::Change
 {
@@ -50,11 +52,24 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
 
     void apply()
     {
-      QString host = KolabConfig::self()->server();
+      const QString host = KolabConfig::self()->server();
+
+      // Figure out the basedn
       QString basedn = host;
+      // If the user gave a full email address, the domain name
+      // of that overrides the server name for the ldap dn
+      const QString user = KolabConfig::self()->user();
+      int pos = user.find( "@" );
+      if ( pos > 0 ) {
+        const QString h = user.mid( pos+1 );
+        if ( !h.isEmpty() )
+          // The user did type in a domain on the email address. Use that
+          basedn = h;
+      }
       basedn.replace(".",",dc=");
       basedn.prepend("dc=");
 
+      // Set the changes
       KConfig c( "kabldaprc" );
       c.setGroup( "LDAP" );
       bool hasMyServer = false;
@@ -87,6 +102,7 @@ class CreateCalendarImapResource : public KConfigPropagator::Change
       KCal::ResourceIMAP *r = new KCal::ResourceIMAP();
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
+      m.setStandardResource( r );
       m.writeConfig();
     }
 };
@@ -106,6 +122,7 @@ class CreateContactImapResource : public KConfigPropagator::Change
       KABC::ResourceIMAP *r = new KABC::ResourceIMAP( 0 );
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
+      m.setStandardResource( r );
       m.writeConfig();
     }
 
@@ -126,6 +143,7 @@ class CreateNotesImapResource : public KConfigPropagator::Change
       KNotesIMAP::ResourceIMAP *r = new KNotesIMAP::ResourceIMAP( 0 );
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
+      m.setStandardResource( r );
       m.writeConfig();
     }
 
@@ -143,7 +161,10 @@ class KolabPropagator : public KConfigPropagator
   protected:
     void addKorganizerChanges( Change::List &changes )
     {
-      KURL freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
+      KURL freeBusyBaseUrl;
+      // usrWriteConfig() is called first, so kolab1Legacy is correct
+      if ( KolabConfig::self()->kolab1Legacy() ) {
+        freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
                                 "/freebusy/";
 
       ChangeConfig *c = new ChangeConfig;
@@ -151,7 +172,6 @@ class KolabPropagator : public KConfigPropagator
       c->group = "FreeBusy";
 
       c->name = "FreeBusyPublishUrl";
-      c->label = "";
 
       QString user = KolabConfig::self()->user();
       // We now use the full email address in the freebusy URL
@@ -164,7 +184,15 @@ class KolabPropagator : public KConfigPropagator
 
       changes.append( c );
 
-      c = new ChangeConfig;
+      } else {
+          // Kolab2: only need FreeBusyRetrieveUrl
+          // "Uploading" is done by triggering a server-side script with an HTTP GET
+          // (done by kmail)
+          freeBusyBaseUrl = "https://" + KolabConfig::self()->server() +
+                            "/freebusy/";
+      }
+
+      ChangeConfig *c = new ChangeConfig;
       c->file = "korganizerrc";
       c->group = "FreeBusy";
       c->name = "FreeBusyRetrieveUrl";
@@ -183,6 +211,14 @@ class KolabPropagator : public KConfigPropagator
       c->file = "korganizerrc";
       c->group = "Group Scheduling";
       c->name = "Use Groupware Communication";
+      c->value = "true";
+      changes.append( c );
+
+      // Use identity "from control center", i.e. from emaildefaults
+      c = new ChangeConfig;
+      c->file = "korganizerrc";
+      c->group = "Personal Settings";
+      c->name = "Use Control Center Email";
       c->value = "true";
       changes.append( c );
     }
@@ -222,11 +258,11 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   mServerEdit = new KLineEdit( page );
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n("Kolab user name:"), page );
+  label = new QLabel( i18n("Email address:"), page );
   topLayout->addWidget( label, 1, 0 );
   mUserEdit = new KLineEdit( page );
   topLayout->addWidget( mUserEdit, 1, 1 );
-  QWhatsThis::add(mUserEdit, i18n("Your Kolab Server user ID. "
+  QWhatsThis::add(mUserEdit, i18n("Your email address on the Kolab Server. "
                         "Format: <i>name@server.domain.tld</i>"));
 
   label = new QLabel( i18n("Real name:"), page );
@@ -241,9 +277,15 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   topLayout->addWidget( mPasswordEdit, 3, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addMultiCellWidget( mSavePasswordCheck, 4, 4, 0, 1 );
+  topLayout->addWidget( mSavePasswordCheck, 4, 1 );
 
   topLayout->setRowStretch( 4, 1 );
+
+  QButtonGroup *bg = new QHButtonGroup(i18n("Server Version"), page );
+  QWhatsThis::add( bg, i18n("Choose the version of the Kolab Server you are using.") );
+  mKolab1 = new QRadioButton( i18n ( "Kolab 1" ), bg );
+  mKolab2 = new QRadioButton( i18n ( "Kolab 2" ), bg );
+  topLayout->addMultiCellWidget( bg, 5, 5, 0, 1 );
 
   setupRulesPage();
   setupChangesPage();
@@ -262,6 +304,8 @@ void KolabWizard::usrReadConfig()
   mRealNameEdit->setText( KolabConfig::self()->realName() );
   mPasswordEdit->setText( KolabConfig::self()->password() );
   mSavePasswordCheck->setChecked( KolabConfig::self()->savePassword() );
+  mKolab1->setChecked( KolabConfig::self()->kolab1Legacy() );
+  mKolab2->setChecked( !KolabConfig::self()->kolab1Legacy() );
 }
 
 void KolabWizard::usrWriteConfig()
@@ -271,4 +315,5 @@ void KolabWizard::usrWriteConfig()
   KolabConfig::self()->setRealName( mRealNameEdit->text() );
   KolabConfig::self()->setPassword( mPasswordEdit->text() );
   KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
+  KolabConfig::self()->setKolab1Legacy( mKolab1->isChecked() );
 }
