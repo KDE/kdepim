@@ -58,7 +58,7 @@ Infrared: (pronounced infra-red) is a relatively slow connection type used solel
 &lt;p&gt;
 Bluetooth: A new connection method, this is used almost exclusively on new, high-end devices, like the Tungsten T3 or the Zire 72.  Device name will be /dev/usb/ttub/{0...n} or /dev/ttyUB{0...n} (Linux), or /dev/ttyp{0...n} (FreeBSD).&lt;/p&gt;
 &lt;p&gt;
-Network: This has not been tested by any of the KPilot developers themselves (hardware donations always accepted!), but it has been reported that setting the device to "net:any" will work for network-enabled devices.  However, this has also been known to lock KPilot up when doing anything other than just syncing.  Use it with caution.
+Network: This has not been tested by any of the KPilot developers themselves (hardware donations always accepted!), but it has been reported that setting the device to "net:any" will work for network-enabled devices.  However, this has also been known to lock KPilot up when doing anything other than just syncing. Use it with caution.
 &lt;/p&gt;</string>
             </property>
             <grid>
