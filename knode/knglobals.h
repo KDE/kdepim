@@ -19,6 +19,7 @@
 
 #include <kconfig.h>
 
+class KInstance;
 class KNConfigManager;
 class KNNetAccess;
 class KNProgress;
@@ -64,6 +65,7 @@ class KNGlobals {
     KNMemoryManager       *memManager;
     Kpgp::Module          *pgp;
     KConfig               *config();
+    KInstance             *instance;
 private:
     KSharedConfig::Ptr c_onfig;
 };

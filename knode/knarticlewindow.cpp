@@ -91,6 +91,9 @@ bool KNArticleWindow::raiseWindowForArticle(const QCString &mid)
 KNArticleWindow::KNArticleWindow(KNArticle *art)
   : KMainWindow(0, "articleWindow")
 {
+  if(knGlobals.instance)
+    setInstance(knGlobals.instance);
+
   if(art)
     setCaption(art->subject()->asUnicodeString());
 

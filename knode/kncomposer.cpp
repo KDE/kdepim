@@ -147,6 +147,9 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     d_elAttList.setAutoDelete(true);
     m_listAction.setAutoDelete( true );
 
+  if(knGlobals.instance)
+    setInstance(knGlobals.instance);
+
   // activate dnd of attachments...
   setAcceptDrops(true);
 
