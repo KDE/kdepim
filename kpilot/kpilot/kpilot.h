@@ -29,13 +29,6 @@
 #ifndef _KPILOT_KPILOT_H
 #define _KPILOT_KPILOT_H
 
-/*
-** Define KPILOT_USE_XMLGUI to a non-zero value to use the
-** new, modern, KDE 2 XML GUI style. Otherwise, KPilot uses
-** the old-fashioned hard-coded GUI.
-*/
-#define KPILOT_USE_XMLGUI	(1)
-
 
 #ifndef QAPP_H
 #include <qapp.h>
@@ -84,6 +77,7 @@
 
 class QPopupMenu;
 class QComboBox;
+class QWidgetStack;
 class KProcess;
 class KAction;
 class KToggleAction;
@@ -142,12 +136,10 @@ public:
 	*/
 	virtual ASYNC filesChanged();
 
-	virtual void resizeEvent(QResizeEvent *);
-
     protected:
       void closeEvent(QCloseEvent *e);
       void setQuitAfterCopyComplete(bool quit) { fQuitAfterCopyComplete = quit; }
-      QWidget* getManagingWidget() { return fManagingWidget; }
+      QWidgetStack *getManagingWidget() { return fManagingWidget; }
       
       // Not sure if this is the way to go or not... might want to make the link
       // persist...
@@ -187,7 +179,6 @@ private:
       void initIcons();
       void initMenu();
       void initStatusBar();
-      void initToolBar();
       void setupWidget();
       void initComponents();
       
@@ -217,9 +208,8 @@ private:
       KStatusBar*     fStatusBar;
       KToolBar*       fToolBar;
       bool            fQuitAfterCopyComplete; // Used for GUI-less interface
-      QWidget*        fManagingWidget;
+      QWidgetStack    *fManagingWidget;
       QList<PilotComponent>  fPilotComponentList; // Has the widgets/components...
-      QList<QWidget>  fVisibleWidgetList;
       KPilotLink*     fPilotLink;
       KSocket*        fPilotCommandSocket;
       KSocket*        fPilotStatusSocket;
@@ -228,30 +218,6 @@ private:
       int             fLastWidgetSelected;
 
       Status fStatus;
-
-#if !KPILOT_USE_XMLGUI
-	/**
-	* We keep track of this one (conduitMenu)
-	* because the various builtin conduits
-	* can register themselves with KPilot and 
-	* they have to show up somewhere.
-	* @see conduitCombo
-	* @see addComponentPage
-	* @see initComponents
-	* @see menuCallback
-	*/
-	QPopupMenu	*conduitMenu;
-	/**
-	* Remember the builtin conduits. 
-	* @see conduitMenu
-	*/
-	QComboBox	*conduitCombo;
-#endif
-
-#if 0
-	QPixmap	icon_hotsync,icon_backup,icon_fastsync,icon_restore,
-		icon_quit;
-#endif
 
 	FileInstallWidget *fFileInstallWidget;
 
@@ -263,13 +229,10 @@ private:
 
 	
  protected slots:
-      void menuCallback(int);
       void quit();
 	void slotConfigureKPilot();
 	void slotConfigureConduits();
       void fileInstalled(int which);
-      void slotModeSelected(int selected);
-      void slotShowComponent(PilotComponent *);
       void slotSyncDone(KProcess* which);
       void slotDaemonStatus(KSocket*);
 
@@ -290,6 +253,9 @@ private:
 
 
 // $Log$
+// Revision 1.25  2001/04/23 06:30:38  adridg
+// XML UI updates
+//
 // Revision 1.24  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

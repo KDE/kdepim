@@ -64,6 +64,10 @@ static const char *kpilot_id="$Id$";
 #include <qcombobox.h>
 #endif
 
+#ifndef QWIDGETSTACK_H
+#include <qwidgetstack.h>
+#endif
+
 #ifndef _KURL_H_
 #include <kurl.h>
 #endif
@@ -173,9 +177,6 @@ KPilotInstaller::KPilotInstaller() :
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false),
     fStatus(Startup),
-#if !KPILOT_USE_XMLGUI
-	conduitCombo(0L),
-#endif
 	fFileInstallWidget(0L)
 {
 	FUNCTIONSETUP;
@@ -252,7 +253,7 @@ KPilotInstaller::setupWidget()
 
 	setCaption("KPilot");
 	setMinimumSize(500,405);
-	fManagingWidget = new QWidget(this);
+	fManagingWidget = new QWidgetStack(this);
 	fManagingWidget->setMinimumSize(500,330);
 	fManagingWidget->show();
 	setCentralWidget(fManagingWidget);
@@ -270,7 +271,6 @@ KPilotInstaller::setupWidget()
 		<< endl;
 
 
-	initToolBar();
 	initStatusBar();
 }
 
@@ -291,7 +291,7 @@ KPilotInstaller::initComponents()
 	titleScreen->setGeometry(0, 0, 
 		getManagingWidget()->geometry().width(), 
 		getManagingWidget()->geometry().height());
-	fVisibleWidgetList.append(titleScreen);
+	fManagingWidget->addWidget(titleScreen,0);
 
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 
@@ -332,155 +332,17 @@ void KPilotInstaller::initIcons()
 }
 
 
-void
-KPilotInstaller::initToolBar()
-{
-	FUNCTIONSETUP;
-
-#if !KPILOT_USE_XMLGUI
-	fToolBar = new KToolBar(this,"toolbar");
-
- 	conduitCombo=new QComboBox(fToolBar,"conduitCombo");
- 	conduitCombo->insertItem(version(0));
-
-	theToolbar->insertWidget(KPilotInstaller::ID_COMBO,140,conduitCombo,0);
- 	connect(conduitCombo,SIGNAL(activated(int)),
- 		this,SLOT(slotModeSelected(int)));
-
-	fToolBar->alignItemRight(KPilotInstaller::ID_COMBO);
-	addToolBar(fToolBar);
-#endif
-}
-
-void KPilotInstaller::resizeEvent(QResizeEvent *e)
-{
-	FUNCTIONSETUP;
-
-	// Real resize events should be handled by the real
-	// resizing code. If we are passed a NULL Event
-	// from local KPilot code, certainly don't change
-	// the main window's size.
-	//
-	//
-	if (e) 
-	{
-		KMainWindow::resizeEvent(e);
-	}
-
-	if (fManagingWidget)
-	{
-		kdDebug() << fname 
-			<< ": New size = "
-			<< fManagingWidget->width()
-			<< "x" 
-			<< fManagingWidget->height() << endl;
-		for (fVisibleWidgetList.first();
-			fVisibleWidgetList.current();
-			fVisibleWidgetList.next())
-		{
-			fVisibleWidgetList.current()->resize(
-				fManagingWidget->size());
-		}
-	}
-}
-
-void
-KPilotInstaller::slotModeSelected(int selected)
-{
-	FUNCTIONSETUP;
-	int current = 0 ;
-
-		kdDebug() << fname << ": Responding to callback " << selected
-			<< endl;
-
-	if((unsigned int)selected >= fVisibleWidgetList.count())
-	{
-		kdWarning() << __FUNCTION__ << ": Illegal component #" 
-			<< selected << " selected.\n" << endl;
-		return;
-	}
-
-
-	current=0;
-	for (fVisibleWidgetList.first();
-		fVisibleWidgetList.current();
-		fVisibleWidgetList.next())
-	{
-		if (selected != current)
-		{
-			fVisibleWidgetList.current()->hide();
-		}
-		else
-		{
-			fVisibleWidgetList.at(selected)->show();
-		}
-
-		current++;
-	}
-		
-
-#if !KPILOT_USE_XMLGUI
-	if (conduitCombo)
-	{
-		fStatusBar->changeItem(conduitCombo->text(selected),0);
-	}
-#endif
-}
-
-void KPilotInstaller::slotShowComponent(PilotComponent *p)
-{
-	FUNCTIONSETUP;
-
-	DEBUGKPILOT << fname
-		<< ": Trying to show component @"
-		<< (int) p
-		<< endl;
-
-	for (QWidget *q = fVisibleWidgetList.first();
-		fVisibleWidgetList.current();
-		q = fVisibleWidgetList.next())
-	{
-		if (q != p)
-		{
-			q->hide();
-		}
-		else
-		{
-			p->show();
-		}
-	}
-}
 
 void KPilotInstaller::slotShowTitlePage()
 {
 	showTitlePage();
 }
 
-void KPilotInstaller::showTitlePage(const QString& msg,bool force)
+void KPilotInstaller::showTitlePage(const QString& msg,bool)
 {
 	FUNCTIONSETUP;
 
-#if !KPILOT_USE_XMLGUI
-	if (conduitCombo)
-	{
-		if ((conduitCombo->currentItem()!=0) || force)
-		{
-			slotModeSelected(0);
-			conduitCombo->setCurrentItem(0);
-		}
-	}
-	else
-	{
-		slotModeSelected(0);
-	}
-#else
-	// Silly ternary operator just to *use* the
-	// parameter force, should be optimised away
-	// by the compiler.
-	//
-	//
-	slotModeSelected(force ? 0 : 0);
-#endif
+	fManagingWidget->raiseWidget((int) 0);
 
 	if (!msg.isNull())
 	{
@@ -933,71 +795,6 @@ KPilotInstaller::closeEvent(QCloseEvent *e)
   e->accept();
 }
 
-#if !KPILOT_USE_XMLGUI
-void
-KPilotInstaller::initMenu()
-{
- 	FUNCTIONSETUP;
- 
-	QPopupMenu* fileMenu = new QPopupMenu;
-
- 	KAction *p;
- 
-	p = KStdAction::preferences(this,
-		SLOT(slotConfigureKPilot()));
-	p->plug(fileMenu);
-	p = new KAction(i18n("C&onfigure Conduits..."),
-		"configure",
-		0,
-		this,
-		SLOT(slotConfigureConduits()),
-		this);
-	p->plug(fileMenu);
-	fileMenu->insertSeparator(-1);
-	p = new KAction(i18n("&HotSync"),
-		"hotsync",
-		0,
-		this,
-		SLOT(slotHotSyncRequested()),
-		this);
-	p->plug(fileMenu);
-	if (fToolBar) p->plug(fToolBar);
-	p = new KAction(i18n("&FastSync"),
-		"fastsync",
-		0,
-		this,
-		SLOT(slotHotSyncRequested()),
-		this);
-	p->plug(fileMenu);
-	p = new KAction(i18n("&Backup"),
-		"backup",
-		0,
-		this,
-		SLOT(slotBackupRequested()),
-		this);
-	if (fToolBar) p->plug(fToolBar);
-	p->plug(fileMenu);
-	p = new KAction(i18n("&Restore"),
-		"restore",
-		0,
-		this,
-		SLOT(slotRestoreRequested()),
-		this);
-	p->plug(fileMenu);
-	fileMenu->insertSeparator(-1);
-	p = KStdAction::quit(this,SLOT(quit()));
-	p->plug(fileMenu);
-
-
-	KPopupMenu *theHelpMenu = helpMenu();
-
-	fMenuBar = menuBar();
-	fMenuBar->insertItem(i18n("&File"), fileMenu);
-	fMenuBar->insertSeparator();
-	fMenuBar->insertItem(i18n("&Help"), theHelpMenu);
-	fMenuBar->show();
-}
-#else
 void
 KPilotInstaller::initMenu()
 {
@@ -1047,7 +844,6 @@ KPilotInstaller::initMenu()
 			this, SLOT(slotConfigureConduits()),
 			actionCollection(), "options_configure_conduits");
 }
-#endif
 
 void
 KPilotInstaller::fileInstalled(int )
@@ -1109,7 +905,11 @@ KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 
 	p->initialize();
 	fPilotComponentList.append(p);
-	fVisibleWidgetList.append(p);
+
+	// The first component added gets id 1, while the title
+	// screen -- added elsewhere -- has id 0.
+	//
+	fManagingWidget->addWidget(p,fPilotComponentList.count());
 
 
 	const char *componentname = p->name("(none)");
@@ -1141,69 +941,7 @@ KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 	pt->setExclusiveGroup("view_menu");
 
 	connect(p,SIGNAL(showComponent(PilotComponent *)),
-		this,SLOT(slotShowComponent(PilotComponent *)));
-}
-
-
-void KPilotInstaller::menuCallback(int item)
-{
-	FUNCTIONSETUP;
-
-
-		kdDebug() << fname << ": Responding to callback " << item
-			<< endl;
-
-	if ((item>=ID_COMBO) && 
-		(item<ID_COMBO+(int)fVisibleWidgetList.count()))
-	{
-#if !KPILOT_USE_XMLGUI
-		if (conduitCombo)
-		{
-			conduitCombo->setCurrentItem(item-ID_COMBO);
-		}
-#endif
-		slotModeSelected(item-ID_COMBO);
-		return;
-	}
-		
-	switch(item)
-	{
-	case KPilotInstaller::ID_HELP_ABOUT:
-		KMessageBox::information(0L,i18n("Hot-Sync Software for Unix\n"
-				"By: Dan Pilone\n"
-				"Email: pilone@slac.com"),
-				     version(0));
-		break;
-
-	case KPilotInstaller::ID_HELP_HELP:
-		kapp->invokeHTMLHelp("kpilot/index.html", "");
-		break;
-	case KPilotInstaller::ID_FILE_QUIT:
-		quit();
-		break;
-	case KPilotInstaller::ID_FILE_SETTINGS:
-		slotConfigureKPilot();
-		break;
-
-	case KPilotInstaller::ID_FILE_BACKUP:
-		slotBackupRequested();
-		break;
-	case KPilotInstaller::ID_FILE_RESTORE:
-		slotRestoreRequested();
-		break;
-	case KPilotInstaller::ID_FILE_HOTSYNC :
-		slotHotSyncRequested();
-		break;
-	case KPilotInstaller::ID_FILE_FASTSYNC :
-		slotFastSyncRequested();
-		break;
-	case KPilotInstaller::ID_CONDUITS_SETUP:
-		slotConfigureConduits();
-		break;
-	}
-
-		kdDebug() << fname << ": Done responding to item " << item
-			<< endl;
+		fManagingWidget,SLOT(raiseWidget(QWidget *)));
 }
 
 
@@ -1522,6 +1260,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.52  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.51  2001/05/07 19:45:11  adridg
 // KToggle actions used now
 //
