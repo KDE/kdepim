@@ -298,29 +298,29 @@ void KPilotInstaller::initComponents()
 	w = getManagingWidget()->addVBoxPage(a,QString::null, \
 		(pixfile.isEmpty() ? QPixmap() : QPixmap(pixfile))) ;
 
-	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/kpilot-bhotsync.png"));
+	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/icons/kpilot-bhotsync.png"));
 	fLogWidget = new LogWidget(w);
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
 
-	ADDICONPAGE(i18n("To-do Viewer"),CSL1("kpilot/kpilot-todo.png"));
+	ADDICONPAGE(i18n("To-do Viewer"),CSL1("kpilot/icons/kpilot-todo.png"));
 	addComponentPage(new TodoWidget(w,defaultDBPath),
 		i18n("To-do Viewer"));
 
-	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/kpilot-address.png"));
+	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/icons/kpilot-address.png"));
 	addComponentPage(new AddressWidget(w,defaultDBPath),
 		i18n("Address Viewer"));
 
-	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/kpilot-knotes.png"));
+	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/icons/kpilot-knotes.png"));
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
 
-	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/kpilot-fileinstaller.png"));
+	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/icons/kpilot-fileinstaller.png"));
 	fFileInstallWidget = new FileInstallWidget(
 		w,defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
 
-	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilot/kpilot-db.png"));
+	ADDICONPAGE(i18n("Generic DB Viewer"),CSL1("kpilot/icons/kpilot-db.png"));
 	addComponentPage(new GenericDBWidget(w,defaultDBPath),
 		i18n("Generic DB Viewer"));
 
