@@ -86,8 +86,6 @@ public:
   KNListView*       collectionView()const  { return c_olView; }
   KNListView*       headerView()const      { return h_drView; }
   KNArticleWidget*  articleView()const     { return a_rtView; }
-
-  KNListView*       exportCollectionView();
 signals:
   void signalCaptionChangeRequest( const QString& );
 
@@ -166,6 +164,8 @@ protected slots:
   void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);
   void slotArticleMMB(QListViewItem *item);
   void slotHdrViewSortingChanged(int i);
+
+  void slotReparented();
 
   //network slots
   void slotNetworkActive(bool b);

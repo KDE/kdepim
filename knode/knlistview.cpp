@@ -72,23 +72,23 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   p->setPen(pen);
 
   p->fillRect(0,0,width, height(), QBrush(base));
-  
+
   if(column==0) {
     QFont font=p->font();
     font.setBold( this->firstColBold() );
     p->setFont(font);
     const QPixmap *pm;
-    
+
     for(int i=0; i<4; i++) {
        pm=pixmap(i);
        if(pm)
         if(!pm->isNull()) {
-          yPM = (height() - pm->height())/2;  
+          yPM = (height() - pm->height())/2;
           p->drawPixmap(xPM, yPM, *pm);
           xPM+=pm->width()+3;
         }
     }
-        
+
     xText=xPM;
   }
 
@@ -117,9 +117,9 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
 int KNLVItemBase::width(const QFontMetrics &fm, const QListView *, int column)
 {
   int ret = fm.boundingRect( text(column) ).width();
-  
+
   if(column==0) {
-    
+
     int i=0;
     const QPixmap *pm=pixmap(i);
     while(pm) {
@@ -492,7 +492,11 @@ void KNListView::slotCenterDelayed()
 }
 
 
+void KNListView::reparent(QWidget *parent, WFlags f, const QPoint &p, bool showIt)
+{
+  KListView::reparent(parent, f, p, showIt);
+  emit reparented();
+}
 
 //--------------------------------
-
 #include "knlistview.moc"

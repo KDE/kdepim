@@ -70,7 +70,7 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
 
   kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
 
-  new KParts::SideBarExtension( mainWidget->exportCollectionView(),
+  new KParts::SideBarExtension( mainWidget->collectionView(),
                                 this,
                                 "KNodeSidebar" );
   KGlobal::iconLoader()->addAppDir("knode");

@@ -143,6 +143,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
           SLOT(slotCollectionViewDrop(QDropEvent*, QListViewItem*)));
   connect(c_olView, SIGNAL(itemRenamed(QListViewItem*)),
           SLOT(slotCollectionRenamed(QListViewItem*)));
+  connect(c_olView, SIGNAL(reparented()), SLOT(slotReparented()));
   // KMail emulation...
   connect(c_olView, SIGNAL(keyLeftPressed()), SLOT(slotNavPrevArt()));
   connect(c_olView, SIGNAL(keyRightPressed()), SLOT(slotNavNextArt()));
@@ -2261,12 +2262,6 @@ void KNMainWidget::slotSwitchToHeaderView()
   h_drView->setFocus();
 }
 
-KNListView* KNMainWidget::exportCollectionView()
-{
-  c_olDock->undock();
-  return c_olView;
-}
-
 void KNMainWidget::slotSwitchToArticleViewer()
 {
   if (!a_rtView->isVisible())
@@ -2325,6 +2320,12 @@ QString FetchArticleIdDlg::messageId() const
 void FetchArticleIdDlg::slotTextChanged(const QString &_text )
 {
     enableButtonOK( !_text.isEmpty() );
+}
+
+void KNMainWidget::slotReparented()
+{
+  if ( c_olView->parent() != c_olDock )
+    c_olDock->undock();
 }
 
 #include "knmainwidget.moc"

@@ -25,7 +25,6 @@ class KNListView;
 class QPainter;
 
 class KNLVItemBase : public KListViewItem  {
-
   public:
   /** restricted to KNListView to prevent that the
       static_cast in @ref ~KNLVItemBase fails. */
@@ -45,7 +44,7 @@ class KNLVItemBase : public KListViewItem  {
     // DND
     virtual QDragObject *dragObject()              { return 0; };
     virtual bool acceptDrag(QDropEvent* ) const    { return false; };
-    
+
     virtual int countUnreadInThread()   { return 0; }
 
   protected:
@@ -88,6 +87,7 @@ class KNListView : public KListView  {
 	the mouse cursor is not on top of an item */
     void addAcceptableDropMimetype(const char *mimeType, bool outsideOk);
 
+    virtual void reparent(QWidget *parent, WFlags f, const QPoint &p, bool showIt=false);
   public slots:
     void slotSortList(int col);
     void slotSizeChanged(int,int,int);
@@ -95,8 +95,8 @@ class KNListView : public KListView  {
   protected:
     void activeRemoved()            { a_ctiveItem = 0; }
     /**
-     * Reimplemented to avoid that KListview reloads the alternate 
-     * background on palette changes. ;-)     
+     * Reimplemented to avoid that KListview reloads the alternate
+     * background on palette changes. ;-)
      */
     virtual bool event(QEvent *e);
     void contentsMousePressEvent(QMouseEvent *e);
@@ -132,6 +132,7 @@ class KNListView : public KListView  {
     void keyUpPressed();
     void keyDownPressed();
 
+    void reparented();
 };
 
 #endif
