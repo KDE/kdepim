@@ -84,7 +84,7 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname 
+	DEBUGCONDUIT << fname
 		<< ": Running conduit " << name() << endl;
 #endif
 
@@ -98,8 +98,19 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 	{
 		emit logError(i18n("The conduit %1 could not be executed.")
 			.arg(QString::fromLatin1(name())));
-		emit syncDone(this);
+		delayDone();
 	}
+}
+
+/* slot */ void SyncAction::delayedDoneSlot()
+{
+	emit syncDone(this);
+}
+
+bool SyncAction::delayDone()
+{
+	QTimer::singleShot(0,this,SLOT(delayedDoneSlot()));
+	return true;
 }
 
 InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
@@ -107,8 +118,8 @@ InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
 	const char *name) :
 	SyncAction(p, name),
 	fParent(visibleparent),
-	fTickleTimer(0L), 
-	fTickleCount(0), 
+	fTickleTimer(0L),
+	fTickleCount(0),
 	fTickleTimeout(0)
 {
 	FUNCTIONSETUP;

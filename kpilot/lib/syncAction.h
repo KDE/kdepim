@@ -74,7 +74,7 @@ protected:
 
 public slots:
 	/**
-	* This just calls exec() and deals with the 
+	* This just calls exec() and deals with the
 	* return code.
 	*/
 	void execConduit();
@@ -84,6 +84,20 @@ signals:
 	void logMessage(const QString &);
 	void logError(const QString &);
 	void logProgress(const QString &,int);
+
+	/**
+	* It might not be safe to emit syncDone() from exec().
+	* So instead, call delayDone() to wait for the main event
+	* loop to return if you manage to do all processing
+	* immediately.
+	*
+	* delayDone() returns true, so that return delayDone();
+	* is a sensible final statement in exec().
+	*/
+protected slots:
+	void delayedDoneSlot();
+protected:
+	bool delayDone();
 
 protected:
 	KPilotDeviceLink *fHandle;
