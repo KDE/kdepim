@@ -21,6 +21,7 @@
 #include <kapp.h>
 #include <klocale.h>
 #include <kfiledialog.h>
+#include <kdebug.h>
 #include "vcal-conduit.h"
 #include "vcal-setup.moc"
 #include "kpilot.h"

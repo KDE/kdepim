@@ -21,6 +21,7 @@ static const char *id="$Id$";
 #include <kapp.h>
 #include <klocale.h>
 #include <kfiledialog.h>
+#include <kdebug.h>
 #include "todo-conduit.h"
 #include "todo-setup.moc"
 #include "kpilot.h"
