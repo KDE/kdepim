@@ -7,5 +7,6 @@ kab_client_SOURCES = kab_client.cpp
 kab_client_LDADD = \
   $(all_libraries) \
   $(top_builddir)/kab2/lib/libKAddressBook.la \
+  $(top_builddir)/kab2/server/libKAddressBookServer.la \
   $(LIB_KDECORE)
 

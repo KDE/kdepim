@@ -11,6 +11,7 @@
 #include <klocale.h>
 #include <kaboutdata.h>
 
+#include "KAddressBookServerInterface_stub.h"
 #include "KAddressBookInterface.h"
 
 static const char * description = I18N_NOOP("KDE addressbook creation tool");
@@ -31,42 +32,10 @@ create(QString name, QString url, QString fmt)
   qDebug("url: %s", url.ascii());
   qDebug("fmt: %s", fmt.ascii());
 
-  QByteArray params, retVal;
+  KAddressBookServerInterface_stub server
+    ("KAddressBookServer", "KAddressBookServer");
 
-  QCString retType;
-
-  QDataStream paramStr(params, IO_WriteOnly);
-
-  paramStr << name << url << fmt;
-
-  bool ok =
-    client->call
-    (
-     "KAddressBookServer",
-     "KAddressBookServer",
-     "create(QString,QString,QString)",
-     params,
-     retType,
-     retVal
-    );
-
-  if (!ok)
-  {
-    fprintf(stderr, "kab_client: can't communicate with KAddressBook server.\n");
-    return false;
-  }
-
-  QDataStream str(retVal, IO_ReadOnly);
-
-  str >> ok;
-
-  if (!ok)
-  {
-    fprintf(stderr, "kab_client: can't create addressbook `%s'.\n", name.latin1());
-    return false;
-  }
-
-  return true;
+  return server.create(name, url, fmt);
 }
 
   bool
@@ -74,78 +43,19 @@ remove(QString name)
 {
   qDebug("name: %s", name.ascii());
 
-  QByteArray params, retVal;
+  KAddressBookServerInterface_stub server
+    ("KAddressBookServer", "KAddressBookServer");
 
-  QCString retType;
-
-  QDataStream paramStr(params, IO_WriteOnly);
-
-  paramStr << name;
-
-  bool ok =
-    client->call
-    (
-     "KAddressBookServer",
-     "KAddressBookServer",
-     "remove(QString)",
-     params,
-     retType,
-     retVal
-    );
-
-  if (!ok)
-  {
-    fprintf(stderr, "kab_client: can't communicate with KAddressBook server.\n");
-    return false;
-  }
-
-  QDataStream str(retVal, IO_ReadOnly);
-
-  str >> ok;
-
-  if (!ok)
-  {
-    fprintf(stderr, "kab_client: can't remove addressbook `%s'.\n", name.latin1());
-    return false;
-  }
-
-  return true;
+  return server.remove(name);
 }
 
   void
 list()
 {
-  QByteArray params, retVal;
+  KAddressBookServerInterface_stub server
+    ("KAddressBookServer", "KAddressBookServer");
 
-  QCString retType;
-
-  bool ok =
-    client->call
-    (
-     "KAddressBookServer",
-     "KAddressBookServer",
-     "list()",
-     params,
-     retType,
-     retVal
-    );
-
-  if (!ok)
-  {
-    fprintf(stderr, "kab_client: can't communicate with KAddressBook server.\n");
-    return;
-  }
-
-  QDataStream str(retVal, IO_ReadOnly);
-
-  QStringList abList;
-  str >> abList;
-
-  if (!ok)
-  {
-    fprintf(stderr, "kab_client: can't read addressbook list.\n");
-    return;
-  }
+  QStringList abList(server.list());
 
   for (QStringList::ConstIterator it(abList.begin()); it != abList.end(); ++it)
   {

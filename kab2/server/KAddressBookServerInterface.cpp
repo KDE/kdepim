@@ -25,8 +25,8 @@
 #include "KAddressBookInterface.h"
 #include "KAddressBookServerInterface.h"
 
-KAddressBookServer::KAddressBookServer()
-	:	KUniqueApplication()
+KAddressBookServerInterface::KAddressBookServerInterface()
+	:	DCOPObject("KAddressBookServer")
 {
 	addressBookList_.setAutoDelete(true);
 
@@ -48,13 +48,13 @@ KAddressBookServer::KAddressBookServer()
   _readConfig();
 }
 
-KAddressBookServer::~KAddressBookServer()
+KAddressBookServerInterface::~KAddressBookServerInterface()
 {
 	// Empty ?
 }
 
 	QStringList
-KAddressBookServer::list()
+KAddressBookServerInterface::list()
 {
 	QStringList ret;
 
@@ -65,7 +65,7 @@ KAddressBookServer::list()
 }
 
   bool
-KAddressBookServer::remove(QString name)
+KAddressBookServerInterface::remove(QString name)
 {
   bool deleted = false;
 
@@ -86,7 +86,7 @@ KAddressBookServer::remove(QString name)
 }
 
   bool
-KAddressBookServer::create(QString name, QString path, QString formatAsXML)
+KAddressBookServerInterface::create(QString name, QString path, QString formatAsXML)
 {
   KAddressBookInterface * ab = new KAddressBookInterface(name, path);
   addressBookList_.append(ab);
@@ -96,7 +96,7 @@ KAddressBookServer::create(QString name, QString path, QString formatAsXML)
 }
 
   void
-KAddressBookServer::_readConfig()
+KAddressBookServerInterface::_readConfig()
 {
   KConfig * c = KGlobal::config();
 
@@ -113,7 +113,7 @@ KAddressBookServer::_readConfig()
 }
 
   void
-KAddressBookServer::_writeConfig()
+KAddressBookServerInterface::_writeConfig()
 {
   KConfig * c = KGlobal::config();
 

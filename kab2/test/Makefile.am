@@ -6,18 +6,23 @@ test_SOURCES        = test.cpp
 addentries_SOURCES  = addentries.cpp
 testparser_SOURCES  = testparser.cpp
 
+METASOURCES         = AUTO
+
 test_LDADD = \
   $(all_libraries) \
   $(top_builddir)/kab2/lib/libKAddressBook.la \
-  $(LIB_KDECORE)
+  $(top_builddir)/kab2/server/libKAddressBookServer.la \
+  $(LIB_KDEUI)
 
 addentries_LDADD = \
   $(all_libraries) \
   $(top_builddir)/kab2/lib/libKAddressBook.la \
+  $(top_builddir)/kab2/server/libKAddressBookServer.la \
   $(LIB_KDECORE)
 
 testparser_LDADD = \
   $(all_libraries) \
   $(top_builddir)/kab2/lib/libKAddressBook.la \
+  $(top_builddir)/kab2/server/libKAddressBookServer.la \
   $(LIB_KDECORE)
 

@@ -25,24 +25,22 @@
 #include <qstringlist.h>
 #include <dcopobject.h>
 
-#include <kuniqueapp.h>
-
 class KAddressBookInterface;
 
-class KAddressBookServer : public KUniqueApplication
+class KAddressBookServerInterface : virtual public DCOPObject
 {
 	K_DCOP
 
 	public:
 
-		KAddressBookServer();
-		virtual ~KAddressBookServer();
+		KAddressBookServerInterface();
+		virtual ~KAddressBookServerInterface();
 
 	k_dcop:
 
 		QStringList list();
     bool remove(QString);
-    bool create(QString name, QString location, QString formatAsXML);
+    bool create(QString name, QString location, QString descFile);
 
 	private:
 

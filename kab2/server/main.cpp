@@ -18,12 +18,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-// System includes
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
 // KDE includes
 #include <kuniqueapp.h>
 #include <klocale.h>
@@ -39,8 +33,6 @@ static const char * VERSION = "0.0.1";
   int
 main(int argc, char * argv[])
 {
-  int prev_umask = umask(077);
-
   KAboutData aboutData(
     "KAddressBookServer",
     I18N_NOOP("KAddressBook server"),
@@ -62,16 +54,16 @@ main(int argc, char * argv[])
 
   KCmdLineArgs::init(argc, argv, &aboutData);
 
-  if (!KAddressBookServer::start())
-	{
+  if (!KUniqueApplication::start())
+  {
 		qDebug("KAB server is already running. Bye bye.");
-    exit(1);
-	}
-    
-  int retval = (new KAddressBookServer)->exec();
+    return 1;
+  }
 
-  umask(prev_umask);
+  KUniqueApplication * app = new KUniqueApplication;
 
-  return retval;
+  new KAddressBookServerInterface;
+
+  return app->exec();
 }
 

@@ -1,109 +1,117 @@
 #include <qstring.h>
 #include <qcstring.h>
+#include <qlistbox.h>
 #include <qlistview.h>
-#include <qdatetime.h>
+#include <qtimer.h>
+#include <qlayout.h>
 
 #include <dcopclient.h>
 #include <kapp.h>
 #include <kcmdlineargs.h>
+#include <kmainwindow.h>
 
+#include "KAddressBookServerInterface.h"
+#include "KAddressBookServerInterface_stub.h"
 #include "KAddressBookInterface.h"
 #include "KAddressBookInterface_stub.h"
 #include "Entry.h"
 #include "Field.h"
 
-  int
-main(int argc, char ** argv)
+#include "test.h"
+
+TestMainWindow::TestMainWindow()
+  : KMainWindow()
 {
-	KCmdLineArgs::init(argc, argv, "testing kab", "testing kab", "testing kab");
+  QWidget * w = new QWidget(this);
 
-  KApplication * app = new KApplication;
+  setCentralWidget(w);
 
-	DCOPClient * client = new DCOPClient;
+  addressBookListBox_ = new QListBox(w);
+  addressBookListView_ = new QListView(w);
 
-	if (!client->attach())
-    qFatal("Can't attach to DCOP");
+  addressBookListView_->setRootIsDecorated(true);
 
-  QStringList addressBookList;
+  addressBookListView_->addColumn("Name");
+  addressBookListView_->addColumn("Value");
+  addressBookListView_->addColumn("Type");
+  addressBookListView_->addColumn("Subtype");
 
+  QVBoxLayout * l = new QVBoxLayout(w);
+
+  l->addWidget(addressBookListBox_);
+  l->addWidget(addressBookListView_);
+
+  connect
+    (
+     addressBookListBox_,
+     SIGNAL(highlighted(const QString &)),
+     this,
+     SLOT(slotSetAddressBook(const QString &))
+    );
+
+  QTimer::singleShot(0, this, SLOT(slotLoad()));
+}
+
+  void
+TestMainWindow::slotLoad()
+{
+  DCOPClient * client = kapp->dcopClient();
+
+  if (!client->attach())
   {
-    QByteArray args, retVal;
-    QCString retType;
-
-    bool ok =
-      client->call
-      (
-       "KAddressBookServer",
-       "KAddressBookServer",
-       "list()",
-       args,
-       retType,
-       retVal
-      );
-
-    if (!ok)
-      qFatal("Can't talk to KAddressBook server");
-
-    QDataStream str(retVal, IO_ReadOnly);
-
-    str >> addressBookList;
+    qWarning("Can't attach to DCOP");
+    return;
   }
 
-  QStringList::ConstIterator it(addressBookList.begin());
+  KAddressBookServerInterface_stub server
+    ("KAddressBookServer", "KAddressBookServer");
 
-  QListView * lv = new QListView;
+  QStringList addressBookList = server.list();
 
-  lv->setRootIsDecorated(true);
+  addressBookListBox_->insertStringList(addressBookList);
+}
 
-  lv->addColumn("Name");
-  lv->addColumn("Value");
-  lv->addColumn("Type");
-  lv->addColumn("Subtype");
+  void
+TestMainWindow::slotSetAddressBook(const QString & name)
+{
+  addressBookListView_->clear();
 
-  QTime begin;
-  begin.start();
-  int count;
+  KAddressBookInterface_stub ab("KAddressBookServer", name.utf8().data());
 
-  for (; it != addressBookList.end(); ++it)
+  QListViewItem * abItem =
+    new QListViewItem(addressBookListView_, ab.name());
+
+  QStringList el(ab.entryList());
+
+  for (QStringList::ConstIterator eit(el.begin()); eit != el.end(); ++eit)
   {
-    KAddressBookInterface_stub * ab =
-      new KAddressBookInterface_stub("KAddressBookServer", (*it).latin1());
+    QString entryID = *eit;
 
-    QListViewItem * abItem = new QListViewItem(lv, ab->name());
+    Entry e(ab.entry(entryID));
 
-    QStringList el(ab->entryList());
-
-    count = el.count();
-
-    for (QStringList::ConstIterator eit(el.begin()); eit != el.end(); ++eit)
+    if (e.isNull())
     {
-      QString entryID = *eit;
+      qDebug("Entry not found");
+      continue;
+    }
 
-      Entry e(ab->entry(entryID));
+    QListViewItem * entryItem = new QListViewItem(abItem, e.id());
 
-      if (e.isNull())
-      {
-        qDebug("Entry not found");
-        continue;
-      }
+    FieldList fl(e.fieldList());
 
-      QListViewItem * entryItem = new QListViewItem(abItem, e.id());
+    for (FieldList::ConstIterator fit(fl.begin()); fit != fl.end(); ++fit)
+    {
+      Field f(*fit);
 
-      FieldList fl(e.fieldList());
+      QListViewItem * fieldItem = new QListViewItem(entryItem, f.name());
 
-      for (FieldList::ConstIterator fit(fl.begin()); fit != fl.end(); ++fit)
-      {
-        Field f(*fit);
+      QByteArray val(f.value());
 
-        QListViewItem * fieldItem = new QListViewItem(entryItem, f.name());
-
-        QByteArray val(f.value());
-
-        if
-          (
-           (f.type().isEmpty() || (f.type() == "text")) &&
-           (f.subType().isEmpty() || (f.subType() == "UCS-2"))
-          )
+      if
+        (
+         (f.type().isEmpty() || (f.type() == "text")) &&
+         (f.subType().isEmpty() || (f.subType() == "UCS-2"))
+        )
         {
           QString s;
           QDataStream str(val, IO_ReadOnly);
@@ -112,21 +120,29 @@ main(int argc, char ** argv)
           fieldItem->setText(2, "text");
           fieldItem->setText(3, "UCS-2");
         }
-        else
-        {
-          fieldItem->setText(1, "Can't display");
-          fieldItem->setText(2, f.type());
-          fieldItem->setText(3, f.subType());
-        }
+      else
+      {
+        fieldItem->setText(1, "Can't display");
+        fieldItem->setText(2, f.type());
+        fieldItem->setText(3, f.subType());
       }
     }
   }
-  qDebug("Time to read %d entities: %d ms", count, begin.elapsed());
+}
 
-  app->setMainWidget(lv);
+  int
+main(int argc, char ** argv)
+{
+	KCmdLineArgs::init(argc, argv, "testing kab", "testing kab", "testing kab");
 
-  lv->show();
+  KApplication * app = new KApplication;
+
+  TestMainWindow * w = new TestMainWindow;
+  app->setMainWidget(w);
+
+  w->show();
 
   return app->exec();
 }
 
+#include "test.moc"

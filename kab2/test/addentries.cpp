@@ -11,6 +11,8 @@
 #include <kapp.h>
 #include <kcmdlineargs.h>
 
+#include "KAddressBookServerInterface.h"
+#include "KAddressBookServerInterface_stub.h"
 #include "KAddressBookInterface.h"
 #include "KAddressBookInterface_stub.h"
 #include "Entry.h"
@@ -30,30 +32,10 @@ main(int argc, char ** argv)
 	if (!client->attach())
     qFatal("Can't attach to DCOP");
 
-  QStringList addressBookList;
+  KAddressBookServerInterface_stub server
+    ("KAddressBookServer", "KAddressBookServer");
 
-  {
-    QByteArray args, retVal;
-    QCString retType;
-
-    bool ok =
-      client->call
-      (
-       "KAddressBookServer",
-       "KAddressBookServer",
-       "list()",
-       args,
-       retType,
-       retVal
-      );
-
-    if (!ok)
-      qFatal("Can't talk to KAddressBook server");
-
-    QDataStream str(retVal, IO_ReadOnly);
-
-    str >> addressBookList;
-  }
+  QStringList addressBookList = server.list();
 
   if (addressBookList.contains("cvs accounts"))
   {
