@@ -1,2 +1,2 @@
-kgantticondir = $(kde_icondir)
+kgantticondir = $(kde_datadir)/kgantt/icons
 kgantticon_ICON = AUTO                                                                                                                                         
