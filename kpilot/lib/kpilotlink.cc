@@ -613,7 +613,7 @@ void KPilotDeviceLink::finishSync()
 	getPilotUser()->setLastSyncDate(time(0));
 
 	dlp_WriteUserInfo(pilotSocket(),getPilotUser()->pilotUser());
-	addSyncLogEntry(i18n("End of Hot-Sync\n"));
+	addSyncLogEntry(i18n("End of HotSync\n"));
 	dlp_EndOfSync(pilotSocket(), 0);
 }
 
@@ -687,6 +687,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.14  2002/07/05 00:15:22  kainhofe
+// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
+//
 // Revision 1.13  2002/05/18 23:28:19  adridg
 // Compile fixes
 //

@@ -449,8 +449,8 @@ void AddressWidget::slotEditRecord()
 	{
 		KMessageBox::error(0L,
 			i18n("Cannot edit new records until "
-				"Hot-Synced with Pilot."),
-			i18n("Hot-Sync Required"));
+				"HotSynced with Pilot."),
+			i18n("HotSync Required"));
 		return;
 	}
 
@@ -566,9 +566,9 @@ void AddressWidget::slotDeleteRecord()
 	if (selectedRecord->id() == 0)
 	{
 		KMessageBox::error(this,
-			i18n("Cannot delete new records until "
-				"Hot-Synced with pilot."),
-			i18n("Hot-Sync Required"));
+			i18n("New records cannot be deleted until "
+				"HotSynced with pilot."),
+			i18n("HotSync Required"));
 		return;
 	}
 
@@ -763,6 +763,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.52  2002/07/03 12:22:08  binner
+// CVS_SILENT Style guide fixes
+//
 // Revision 1.51  2002/05/16 13:06:48  mhunter
 // Corrected typographical errors and Palm -> Pilot for consistency
 //

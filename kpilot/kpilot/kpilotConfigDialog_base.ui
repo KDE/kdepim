@@ -203,7 +203,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <cstring>fStartDaemonAtLogin</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Start Hot-Sync Daemon at login</string>
+                                    <string>&amp;Start HotSync Daemon at login</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>

@@ -116,7 +116,7 @@ CConduitSetup::CConduitSetup(QWidget * parent,
 	categories->setStartOpen(true);
 
 	active = categories->addCategory(i18n("Active"),
-		i18n("Conduits that will run when a hot-sync is done"));
+		i18n("Conduits that will run when a HotSync is done"));
 	available = categories->addCategory(i18n("Available"),
 		i18n("Conduits installed on your system but not active"));
 
@@ -614,6 +614,14 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.33  2002/05/15 17:15:33  gioele
+// kapp.h -> kapplication.h
+// I have removed KDE_VERSION checks because all that files included "options.h"
+// which #includes <kapplication.h> (which is present also in KDE_2).
+// BTW you can't have KDE_VERSION defined if you do not include
+// - <kapplication.h>: KDE3 + KDE2 compatible
+// - <kdeversion.h>: KDE3 only compatible
+//
 // Revision 1.32  2002/04/20 13:03:31  binner
 // CVS_SILENT Capitalisation fixes.
 //

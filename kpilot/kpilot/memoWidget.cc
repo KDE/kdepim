@@ -394,9 +394,9 @@ void MemoWidget::slotDeleteMemo()
 			": Refusing to delete new memo.\n";
 
 		KMessageBox::error(this,
-			i18n("Cannot delete new memo until "
-				"Hot-Synced with pilot."),
-			i18n("Hot-Sync Required"));
+			i18n("New memo cannot be deleted until "
+				"HotSynced with pilot."),
+			i18n("HotSync Required"));
 		return;
 	}
 
@@ -535,8 +535,8 @@ void MemoWidget::slotTextChanged()
 		{
 			KMessageBox::error(0L,
 				i18n
-				("Cannot edit new memo until \n Hot-Synced with pilot."),
-				i18n("Hot-Sync Required"));
+				("New memo cannot be edited until\nHotSynced with pilot."),
+				i18n("HotSync Required"));
 			slotShowMemo(fListBox->currentItem());
 			return;
 		}
@@ -756,6 +756,9 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 }
 
 // $Log$
+// Revision 1.47  2002/07/03 12:22:08  binner
+// CVS_SILENT Style guide fixes
+//
 // Revision 1.46  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"
