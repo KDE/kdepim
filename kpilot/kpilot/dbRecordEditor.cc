@@ -140,7 +140,7 @@ void DBRecordEditor::fillWidgets()
 	fSecret->setChecked(att & dlpRecAttrSecret);
 	fArchived->setChecked(att & dlpRecAttrArchived);
 
-	CHexBuffer*buff=fRecordData->hexBuffer();
+	CHexBuffer*buff=const_cast<CHexBuffer*>(fRecordData->hexBuffer());
 	buff->duplicate(rec->getData(), rec->getLen());
 //  mDocumentModified = false;
 //  setDocumentSize( file.size() );
