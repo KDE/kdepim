@@ -359,7 +359,7 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
       else if ( (*it).contains( "VERSION:2.1" ) )
         ok = converter.vCardToAddressee( *it, addr, KABC::VCardConverter::v2_1 );
       else {
-        KMessageBox::sorry( this, i18n( "Not supported vcard version!" ),
+        KMessageBox::sorry( this, i18n( "Not supported vCard version." ),
                             caption );
         continue;
       }
@@ -388,14 +388,14 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
     }
 
     if ( showDialog && dataList.count() > 1 ) {
-      QString text = i18n( "Imported %1 contacts successfully!" );
-      KMessageBox::information( this, text.arg( numVCards ) );
+      QString text = i18n( "One contact had been imported successfully.", "%n contacts had been imported successfully.", numVCards );
+      KMessageBox::information( this, text );
     }
 
     if ( !fileUrl.isLocalFile() )
       KIO::NetAccess::removeTempFile( fileName );
   } else {
-    QString text = i18n( "<qt>Unable to access <b>%1</b>!</qt>" );
+    QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
     KMessageBox::error( this, text.arg( fileUrl.url() ), caption );
   }
 }
@@ -478,7 +478,7 @@ void KAddressBook::exportVCard( KABC::VCardConverter::Version )
 
   QFile outFile( fileName );
   if ( !outFile.open( IO_WriteOnly ) ) {
-    QString text = i18n( "<qt>Unable to open file <b>%1</b> for export!</qt>" );
+    QString text = i18n( "<qt>Unable to open file <b>%1</b> for export.</qt>" );
     KMessageBox::error( this, text.arg( fileName ) );
     return;
   }
