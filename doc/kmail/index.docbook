@@ -26,7 +26,7 @@
 </author>
 </authorgroup>
 
-<date>01/03/2001</date>
+<date>11/03/2001</date>
 <releaseinfo>1.02.00</releaseinfo>
 
 <copyright>
@@ -112,13 +112,12 @@ bug...</guimenuitem></menuchoice>.</para>
 <para>This is a short introduction to &kmail; and its usage so you can start
 working with it right away. For more in-depth information see the <link
 linkend="using-kmail">Using &kmail;</link> section. Note that &kmail;'s
-installation is not described in this documentation. If you have problems with
-that, see our <link linkend="faq">FAQ</link>.</para>
+installation is described in <link linkend="installation">the appendix</link>.</para>
 
 <para>Invoking &kmail; for the first time creates a directory called <filename
 class="directory">Mail</filename> containing the initial files
 (<filename>inbox</filename>, <filename>outbox</filename>,
-<filename>sent-mail</filename> and <filename>trash</filename>) in your home
+<filename>sent-mail</filename>, <filename>trash</filename> and <filename>drafts</filename>) in your home
 directory.  Use <menuchoice> <guimenu>Settings</guimenu>
 <guimenuitem>Configuration...</guimenuitem> </menuchoice> to enter some initial
 information so &kmail; will be able to properly retrieve and send your
@@ -140,18 +139,16 @@ tabs.</para>
 <para>The settings in the <guilabel>Identity</guilabel> tab are fairly
 straightforward. Fill in the <guilabel>Name</guilabel> field with your full name
 (&eg; <userinput>John Doe</userinput>) and the <guilabel>Organization</guilabel>
-field (optional) with the appropriate information.</para>
+field (optional) with the appropriate information. Next, fill in the 
+<guilabel>Email Address</guilabel> and the <guilabel>Reply-To Address</guilabel> 
+(optional) field with your email address.</para>
 
-<para>Next, fill in the <guilabel>Email Address</guilabel> and the
-<guilabel>Reply-To Address</guilabel> (optional) field with your email
-address. Finally, set the location of your signature file in the
+<para>Finally, set the location of your signature file in the
 <guilabel>Signature File</guilabel> field. You can skip setting the signature
 file if you do not have one, but every time you compose a new message, &kmail;
 will ask you for your signature file. So if you don't want one, select
 <guilabel>Specify signature below</guilabel> and just don't enter anything in
-the field below.</para>
-
-<para>If you want a random signature, you may specify a program <!-- TODO: like
+the field below. If you want a random signature, you may specify a program <!-- TODO: like
 "fortune"? --> and check the <guilabel>The file is a program</guilabel>
 box.</para>
 </sect1>
@@ -218,7 +215,8 @@ a dial-up connection in the <link linkend="faq">FAQ</link> section.</para>
 <guibutton>Add...</guibutton> button in the <guilabel>Incoming Mail</guilabel>
 section. You will then be prompted for the type of account.  Most users should
 select <guilabel>Pop3</guilabel> (<acronym>IMAP</acronym> accounts are not yet
-supported). After pressing <guibutton>OK</guibutton> you will be presented with
+supported).<!-- fixme for 2.2 -->
+ After pressing <guibutton>OK</guibutton> you will be presented with
 the <guilabel>Add Account</guilabel> window. First, fill in the
 <guilabel>Name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
@@ -236,9 +234,11 @@ that this does not encrypt your mails on their normal way through the Internet.<
 
 <para>If you select <guilabel>Store POP password in configuration
 file</guilabel> &kmail; will remember your password so you won't have to type it
-every time you start &kmail; and fetch new mail. Be warned that we cannot really
+every time you start &kmail; and fetch new mail.</para>
+
+<warning><para>Be warned that we cannot really
 encrypt the password, so people who can access your configuration files (&eg;
-system administrators) can get your password if you select this option.</para>
+system administrators) can get your password if you select this option.</para></warning>
 
 <para>Select <guilabel>Delete mail from server</guilabel> if you don't want to
 leave your mail on the server.</para>
@@ -289,7 +289,7 @@ mail by selecting <menuchoice><guimenu>Message</guimenu>
 
 <para>To check your email, select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check
-Mail</guimenuitem></menuchoice> In the lower right corner of the main window, a
+Mail</guimenuitem></menuchoice>. In the lower right corner of the main window, a
 progress bar will indicate how much mail is being downloaded. If you receive the
 message you just sent, then congratulations!  If, however, you receive any error
 messages while testing your setup, make sure that your network connection is
@@ -322,7 +322,9 @@ pane. The number of unread messages and the total number of messages in the
 selected folder is now displayed in the status bar.  The folders can be
 displayed in both a short view, which takes up only a small portion of the left
 side of the screen, and a long view, which takes up the entire left side of the
-screen but is able to show more mailboxes. See the <link
+screen but is able to show more mailboxes. You can toggle between these two views
+under <guilabel>Appearance</guilabel>/<guilabel>Addressbook</guilabel> in the
+<guilabel>Configure</guilabel> dialog. Also see the <link
 linkend="folders">Folders Section</link> for more information about how to use
 folders.</para>
 </listitem>
@@ -348,8 +350,8 @@ ascending/descending.</para>
 <term>Message pane (lower pane)</term>
 <listitem>
 <para>This pane displays the header and body of the currently selected
-message. Attachments appear at the bottom of the message as icons based on the
-&MIME; type of the attachment. You can scroll through the message page by page
+message. Attachments appear at the bottom of the message. 
+You can scroll through the message page by page
 using the <keycap>Page Up</keycap> and <keycap>Page down</keycap> keys, or line
 by line using the <keycap>up arrow</keycap> and <keycap>down arrow</keycap>
 keys. You can also use the following key shortcuts to skip through your messages
@@ -469,8 +471,8 @@ opens.</para>
 you with writing your messages. The <guiicon>ellipsis</guiicon> buttons next to
 the <guilabel>To:</guilabel>, <guilabel>Cc:</guilabel>, and
 <guilabel>Bcc:</guilabel> fields will call up the address book so that you can
-select addresses from there instead of trying to remember them. If you already
-started typing an adress you can also press <keycombo
+select addresses from there. If you already
+started typing an address you can also press <keycombo
 action="simul">&Ctrl;<keycap>T</keycap></keycombo> to get a list of possible
 completions. Whenever you want to add more than one recipient in one of the
 fields, use a comma to separate each address from the next one. You may need to
@@ -480,7 +482,9 @@ even for local users.</para>
 <para>You can use the <menuchoice><guimenu>View</guimenu></menuchoice> menu to
 set up the header fields offered to you. When you are finished with your
 message, hit the <guiicon>Send</guiicon> button (the envelope) to queue or send
-the message.</para> 
+the message. If you don't want to send your message yet, select
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Save in drafts folder</guimenuitem></menuchoice>.
+</para> 
 
 </sect2>
 
@@ -508,7 +512,7 @@ to attach.</para>
 <para>The <guilabel>Message Part Properties</guilabel> dialog will appear to
 prompt you for information about your attachment. The &MIME;-type and file name
 fields are automatically filled in with the appropriate values (Sometimes the
-&MIME;-type value may be wrong. You can then type in any content type by hand or
+&MIME;-type value may be wrong. You can then type in any content &MIME;-type or
 choose from the list of common &MIME;-types). You should then select an encoding
 method for your file from the list of encoding options (normally, the default
 value works fine).</para>
@@ -522,8 +526,8 @@ Attachments pane and selecting
 <menuchoice><guimenuitem>Properties...</guimenuitem></menuchoice> from the
 <menuchoice><guimenu>Attach</guimenu></menuchoice> menu. </para>
 
-<para><acronym>PGP</acronym> keys may also be attached to your message by using
-the appropriate options in the
+<para><application>PGP</application>/<application>GnuPG</application> keys may also 
+be attached to your message by using the appropriate options in the
 <menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <acronym>PGP</acronym>
 key attachments are handled like file attachments.</para>
 </sect2>
@@ -618,19 +622,19 @@ messages will be permanently deleted.</para>
 <sect1 id="the-address-book">
 <title>The Address Book</title>
 
-<para>You can choose between different types of address book in the
-<guilabel>Appearance</guilabel>/<guilabel>Addressbook</guilabel> section in
-&kmail;'s configuration dialog.</para>
-
-<para>The address book described in the following is the <guilabel>Traditional
-KMail</guilabel> address book. The other address books should come with their
-own documentation, as they are in fact independent programs.</para>
-
 <para>An address book is a place to store your commonly used email
 addresses. You can call up the address book from the
 <menuchoice><guimenu>File</guimenu></menuchoice> menu, the address book button
 on the Main window, or the <guiicon>address book</guiicon> button in the
 <guilabel>Composer</guilabel> window.</para>
+
+<para>You can choose between different types of address books in the
+<guilabel>Appearance</guilabel>/<guilabel>Addressbook</guilabel> section in
+&kmail;'s <guilabel>Configure</guilabel> dialog.</para>
+
+<para>The address book described in the following is the <guilabel>Traditional
+KMail</guilabel> address book. The other address books should come with their
+own documentation, as they are in fact independent programs.</para>
 
 <para>To add addresses to the address book, type an email address into the lower
 section of the window and hit the <guibutton>Add</guibutton> button.  The
@@ -654,13 +658,13 @@ to automatically perform certain actions on incoming messages and to manually
 perform actions on selected messages in a folder.</para>
 
 <para>Usually, filters are used on incoming messages, but they can also be
-applied to a message or group of messages. To selectively filter messages in a
-message folder, select the messages you want to filter and type <keycombo
+applied to a message or group of messages. To selectively filter messages, 
+select the messages you want to filter and type <keycombo
 action="simul">&Ctrl;<keycap>J</keycap></keycombo> or select
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Apply
 Filters</guimenuitem></menuchoice>. Note that this will apply all of your
-filters to that message; there is no way to apply only certain filters to a
-message.</para>
+filters to those messages; there is no way to apply only certain filters to
+messages.</para>
 
 <para>If you ever need to remove a filter, select it from the <guilabel>Filter
 Rules</guilabel> window and press the <guibutton>Delete</guibutton>
@@ -684,7 +688,7 @@ are other actions a filter can start:</para>
 <term><guilabel>set identity</guilabel></term>
 <listitem>
 <para>This will set <emphasis>your</emphasis> identity if you reply to this
-message</para>
+message.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -697,8 +701,7 @@ you reply to the message.</para>
 <varlistentry>
 <term><guilabel>set Reply-To</guilabel></term>
 <listitem><para>Will modify the <guilabel>Reply-To</guilabel> field of this
-message.</para>
-<para>This can be useful for mailing lists that automatically set a Reply-To
+message. This can be useful for mailing lists that automatically set a Reply-To
 which you don't like.</para>
 </listitem>
 </varlistentry>
@@ -711,7 +714,7 @@ which you don't like.</para>
 <term><guilabel>execute</guilabel></term>
 <listitem>
 <para>This will execute a program, but will not modify the message. Specify the
-full path to any program you want to execute. &kmail; will block until the
+full path to the program you want to execute. &kmail; will block until the
 program returns. You can feed the program with the parts of the mail:
 <symbol>&percnt;0</symbol>, <symbol>&percnt;1</symbol>, &etc; will stand for
 files representing the message parts. For common mails
@@ -776,7 +779,7 @@ would select <guilabel>KDE-User</guilabel> from the pull-down menu.</para>
 </procedure>
 
 <para>You may find that you need to use more complicated criteria to properly
-filter your messages. For example, you may only want to save the &kde; User List
+filter your messages. For example, you may only want to filter the &kde; User List
 messages that are written by your friend Fred Johnson
 &lt;fj@anywhere.com&gt;. This is where the rest of the matching criteria section
 comes into play:</para>
@@ -801,7 +804,7 @@ type  <userinput>fj@anywhere.com</userinput> in the text field.</para>
 </procedure>
 
 <para>You now have a filter that transfers all &kde; User List messages that are
-from Fred Johnson. </para> 
+from fj@anywhere.com.</para> 
 </sect2>
 </sect1>
 
@@ -844,18 +847,18 @@ attachments manually, using a shell command or some other tool before you attach
 them.</para></warning>
 
 <warning><para>&kmail; has to rely on <application>PGP</application>'s
-output. This is often different between different version of
+output. This output is often different between different version of
 <application>PGP</application>, so it's important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
-not warn you if something fails. You better enable <guilabel>Show ciphered text
+<emphasis>not</emphasis> warn you if something fails. You better enable <guilabel>Show ciphered text
 after composing</guilabel>.  </para></warning>
 
 <para>To setup and use <application>pgp</application> support in &kmail; it is
 necessary to have <application>pgp</application> installed and set up
 properly. Of course we cannot give you a full introduction of
 <application>pgp</application> here. We will only mention the steps you have to
-do to get pgp going. For details you should have a look at the excellent pgp
-command line documentation.</para> 
+do to get <application>pgp</application> going. For details you should have a look at the excellent 
+<application>pgp</application> documentation.</para> 
 
 <para>It is certainly a good idea to study this documentation as well as an
 introduction into public key cryptography (&eg; out of the
@@ -900,30 +903,34 @@ options:</para>
 time you sign a message (before sending) or decrypting a message (sent to
 you). If you turn this option on, &kmail; will remember your passphrase from
 after your first successful input until you finish your &kmail; session. The
-passphrase is stored in memory and not written to the harddisk. Note that a user
+passphrase is stored in memory and not written to the harddisk.</para>
+
+<warning><para>Note that a user
 with enough privileges (&eg; <systemitem>root</systemitem>) might be able to
-catch your passphrase even from the computer's memory.</para>
+catch your passphrase even from the computer's memory.</para></warning>
+
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Always encrypt to self</guilabel></term>
 <listitem>
 <para>If this option is off and you want send an encrypted message to somebody,
 then you can't read this message any longer after you have composed and
 encrypted it. Turn this option on to keep sent encrypted messages readable for
-you too. You can then read the plain text of this messages in the
-<guilabel>sent-mail</guilabel> folder.</para>
+you too.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Show ciphered text after composing</guilabel></term>
 <listitem>
 <para>This will show you the result of encrypting and signing before the message
 gets sent. This way you can still cancel sending if encrypting failed. It is
-strongly recommended to use this option if you have just started using &kmail;
-together with <application>PGP</application>.</para> 
+strongly recommended to use this option.</para> 
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Encryption tool</guilabel></term>
 <listitem>
@@ -955,15 +962,11 @@ url="http://www.cam.ac.uk.pgp.net/pgpnet/">http://www.cam.ac.uk.pgp.net/pgpnet/<
 <para>You compose your message as usual in the <guilabel>Composer</guilabel>
 window of &kmail;. Before you send the message, check the button with the
 underlining icon on it in the toolbar of the composer window. Then, you can send
-the message. To sign it, &kmail; needs to know your pgp passphrase. If you
+the message. To sign it, &kmail; needs to know your <application>pgp</application> passphrase. If you
 didn't select <guilabel>Keep passphrase in memory</guilabel> in the
 <guilabel>Security</guilabel> settings tab, &kmail; will ask you for it.  On the
 other hand, if you have already given the phrase to &kmail;, it will sign the
-message without any further prompt.  In the <guilabel>sent-mail</guilabel>
-folder (or on the outbox, if you don't use <guilabel>send
-immediately</guilabel>) you can verify the result of
-<application>pgp</application>'s signing process. There you should see your
-message wrapped by the info that it was signed by you.</para>
+message without any further prompt.</para>
 
 </sect2>
 
@@ -976,7 +979,7 @@ choose in the <guilabel>Composer</guilabel> window's menu
 Key</guimenuitem></menuchoice>. This will attach your public key to the
 mail. Now you can send the mail.</para>
 
-<para>Remember, that it's not safe at all, if you sign the message to make sure
+<para>Remember that it's not safe at all if you sign the message to make sure
 that the receiver will get the correct key. There can be a man-in-the-middle
 attack, as somebody can change the key and sign the message with that other
 key. That's why the recipient should verify the attached key by checking the
@@ -992,7 +995,7 @@ at the <application>pgp</application> documentation for further details.</para>
 prompted for your passphrase. Then &kmail; will try to decrypt the message and
 show you the plain text if the message had been encrypted with your public
 key. (If not, then you won't be able to read it.) &kmail; stores the messages
-encrypted, so nobody can read this mail without knowing your passphrase.</para>
+encrypted, so nobody can read these messages without knowing your passphrase.</para>
 
 </sect2>
 
@@ -1084,12 +1087,13 @@ folder list lists folders all the way down the left side of the &kmail; window,
 which lets you see more folders than in the default view, but it takes away some
 space for viewing the text of the messages. With <guilabel>Display message
 sizes</guilabel> selected there will be another column in the Header pane that
-show the messages' size in bytes.  <guilabel>Thread list of message
+shows the messages' size in bytes. <guilabel>Thread list of message
 headers</guilabel> will put all the messages in a kind of tree, so the replies
 to a message are next to that message.</para>
 
 <para><guilabel>Prefer plain text to HTML rendering</guilabel> will try to show
-even <acronym>HTML</acronym> mails as plain text. It's a good idea to prefer
+even <acronym>HTML</acronym> mails as plain text. <!-- fixme for 2.2 -->
+It's a good idea to prefer
 plain text, as security problems with <acronym>HTML</acronym> might show up some
 day.</para>
 
@@ -1098,7 +1102,7 @@ day.</para>
 <sect2 id="appearance-tab-profiles">
 <title>Profiles</title>
 
-<para>This section offers several common default settings for colors and font
+<para>This section offers several default settings for colors and font
 sizes.</para>
 
 </sect2>
@@ -1125,13 +1129,13 @@ addresses in the <guilabel>Abbrowser</guilabel> if you only entered them in the
 <title>General</title>
 
 <para>The <guilabel>Phrases</guilabel> section lets you define the automatically
-generatedlines added to message replies, forwarded messages, and quoted
+generated lines added to message replies, forwarded messages, and quoted
 text. There are special &percnt;-denoted characters that will insert certain
 values. These are shown at the top of the <guilabel>Phrases</guilabel> section:
 <symbol>%D</symbol> to insert the date, <symbol>%S</symbol> to insert the
 subject, <symbol>%F</symbol> to insert the sender, <symbol>%%</symbol> to insert
-a percent sign, and <symbol>%_</symbol> to insert a space. The
-<guilabel>Indentation</guilabel> field contains the character that will denote
+a percent sign, and <symbol>%_</symbol> to insert a space. <!-- fixme for 2.2: add %L -->
+The <guilabel>Indentation</guilabel> field contains the character that will denote
 quoted text (you will probably want to use the default).</para>
 
 <para><guilabel>Automatically append signature</guilabel> lets you toggle
@@ -1141,9 +1145,9 @@ whether to automatically include your signature.</para>
 to keep the correct quoting (e.g. the <quote>&gt;</quote> will always be at the
 start of the line).</para>
 
-<para><guilabel>Automatically sign messages using PGP</guilabel> let you toggle
+<para><guilabel>Automatically sign messages using PGP</guilabel> lets you toggle
 whether to automatically sign your messages by default. Of course you can still
-deselect the icon in the composer window for every mail if necessary.</para>
+deselect the icon in the composer window for each mail if necessary.</para>
 
 <para><guilabel>Word wrap at column</guilabel> lets you turn word wrapping on
 and off in the <guilabel>Composer window</guilabel> and lets you set the column
@@ -1155,9 +1159,9 @@ at which words will be wrapped.</para>
 <title>Subject</title>
 
 <para>This section contains a list of prefixes for <quote>Reply</quote> and
-<quote>Forward</quote>. If you receive messages that use different prefixes, you
-can add them here so &kmail; will recognize (and optionally replace)
-them.</para>
+<quote>Forward</quote>. If you receive messages that use prefixes different
+to the standard ones, you can add them here so &kmail; will recognize (and 
+optionally replace) them.</para>
 
 </sect2>
 
@@ -1170,7 +1174,7 @@ the composer's <menuchoice><guimenu>Options</guimenu><guimenuitem>Set
 Encoding</guimenuitem></menuchoice> menu.</para>
 
 <para>The <guilabel>Default charset</guilabel> section lets you choose the
-default charset for qyour own messages. If you select <guilabel>Use own default
+default charset for your own messages. If you select <guilabel>Use own default
 charset when replying or forwarding</guilabel>, the original message's charset
 will be ignored and your charset will be used for replying and
 forwarding.</para>
@@ -1235,11 +1239,11 @@ removed.</para>
 <varlistentry>
 <term><guilabel>Confirm before emptying folders</guilabel></term>
 <listitem>
-<para>To empty a folder means that its messages get transferred to the trash
-folder (and only get deleted if they are already in the
+<para>To empty a folder means that its messages get transferred to the
+<guilabel>trash</guilabel> folder (and only get deleted if they are already in the
 <guilabel>trash</guilabel> folder).  So although you normally won't lose any
 mail, you can still activate a confirmation dialog that will ask you if you
-really want to emtpy the folder.</para> 
+really want to emtpy the folder.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1273,17 +1277,27 @@ linkend="receiving-mail">Incoming Mail</link>.</para>
 their previous email client over to &kmail;. &kmail; stores its mail using the
 <literal>mbox</literal> format, one of the most widely used mailbox formats on
 &UNIX; systems. Mbox mailboxes store messages in one file, identifying where
-messages start and end with the <literal>FROM:</literal> header. For many &UNIX;
-mailers, all you must do is move your mailboxes to <filename
+messages start and end with a <literal>From</literal> line (do not mix it up
+with the <literal>From:</literal> header that contains the message's sender).
+For many &UNIX; mailers, all you must do is move your mailboxes to <filename
 class="directory">~/Mail</filename> (or make <filename
-class="symlink">Mail</filename> a symbolic link to the folder containing you
+class="symlink">Mail</filename> a symbolic link to the folder containing your
 mailboxes), make sure they are writeable by your user, and launch &kmail;. The
 mailboxes should now show up correctly in &kmail;.</para>
 
 <para>If your old mailboxes are not in mbox format, see below for instructions
-on importing some other common formats.</para>
+on importing some other common formats. Take a look at the
+<ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
+homepage</ulink> if your mailbox format is not listed here.</para>
+
+<warning><para>Do not use a second mail client that accesses the files in
+<filename class="directory">~/Mail</filename> while &kmail; is running or
+you might lose messages. This section only explains how to import mailboxes
+to &kmail; once, it's not useful to you if you're planning to use several
+mail clients for your mailboxes in the future.</para></warning>
 
 <variablelist>
+
 <varlistentry>
 <term><application>Eudora Lite</application>/<application>Eudora
 Pro</application></term>
@@ -1305,6 +1319,7 @@ language to change the &Windows; or &Mac; line feeds to &UNIX; line
 feeds.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term>MMDF</term>
 <listitem>
@@ -1313,9 +1328,10 @@ able to use these mailboxes if you just copy them to your
 <filename class="directory">~/Mail</filename> directory. However, MMDF mailboxes
 have not been tested with &kmail;, so your results may vary.  If you can get
 this format to work with &kmail;, please let us know so we can include more
-specific directions in the next documentation release.</para> 
+specific directions in the next documentation release.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term>MH mailboxes</term>
 <listitem>
@@ -1327,13 +1343,7 @@ on a MH folder will convert it to an mbox file.  We strongly suggest that you
 back up your MH mail folders before you use this script.</para>
 </listitem>
 </varlistentry>
-<varlistentry>
-<term>Maildir</term>
-<listitem>
-<para>Maildir mailboxes, used by the <application>Qmail</application> mail
-transfer agent, are not supported by &kmail; at this time. </para> 
-</listitem>
-</varlistentry>
+
 <varlistentry>
 <term>Forte <application>Agent</application></term>
 <listitem>
@@ -1380,34 +1390,44 @@ there.</para>
 class="directory">~/nsmail/</filename> to <filename
 class="directory">~/Mail</filename> and make sure they are writeable (only by
 your user, of course).  The mailboxes will show up in &kmail; the next time you
-restart it.</para>
+start it.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><application>Pegasus Mail</application></term>
 <listitem>
 <para><application>Pegasus</application> for win32 uses single files for Mail
 folders similar to &kmail;. <application>Pegasus mail</application> folder files
-have the extension .pmm but they are the same format as mbox except the messages
-do not start with the From header, but with a control character. To work around
+have the extension <literal role="extension">.pmm</literal> but they are the same format as mbox except the messages
+do not start with the <literal>From</literal> header, but with a control character. To work around
 this, replace each instance of the control character with <literal>From
-aaa@aaa Mon Jan 01 00:00:00 1997</literal>. This <literal>From:</literal>
+aaa@aaa Mon Jan 01 00:00:00 1997</literal>. This <literal>From</literal>
 line should be the first line of every message, before the
 <literal>Received:</literal> and other headers. Make sure to use a text editor
 that lets you save the files in &UNIX; format or create new folders in
 <application>Pegasus</application> that are in &UNIX; format and copy your mails
-there.</para> 
+there.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
-<term>&Microsoft; <application>Outlook</application>, Lotus
-<application>Notes</application>, BeOS Mail files, <application>cc:
+<term>Maildir / Outlook Express / xfmail</term>
+<listitem>
+<para>Tools to convert these formats are available at the
+<ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
+homepage</ulink>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Lotus <application>Notes</application>, BeOS Mail files, <application>cc:
 Mail</application>, &etc;...</term>
 <listitem>
 <para>First you should have a look at <ulink
-url="http://kmail.kde.org">&kmail;'s homepage</ulink> if there a tool to convert
-mails.</para>
-<para> Other mail programs probably do not work with &kmail; as they use
+url="http://kmail.kde.org/download.html">Download section of &kmail;'s homepage</ulink> if there
+are tools to convert mails.</para>
+<para>Mail programs not listed here or on the homepage probably do not work with &kmail; as they use
 proprietary mail formats that &kmail; cannot understand. However, there is no
 harm in trying! If the mailbox file looks similar to the mbox format, try
 copying the mailbox file (remember, the index file is not needed) to your
@@ -1457,7 +1477,8 @@ performs a menu item function, it is listed after the menu item.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Saves the currently displayed message as a plain text file.</para>
+<para>Saves the currently displayed message to a text file, including all the headers
+and attachments.</para>
 </listitem>
 </varlistentry>
 
@@ -1498,7 +1519,8 @@ on disk according to how you have moved and deleted them in &kmail;.</para>
 <guimenuitem>Check <accel>M</accel>ail</guimenuitem>
 </menuchoice>
 </term>
-<listitem><para>Checks for new mail in all your accounts.</para>
+<listitem><para>Checks for new mail in all your accounts, except those that
+have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </listitem>
 </varlistentry>
 
@@ -1573,7 +1595,7 @@ on disk according to how you have moved and deleted them in &kmail;.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Revoke you last move or delete action Note that you cannot undo a deletion
+<para>Revoke you last move or delete action. Note that you cannot undo a deletion
 in the trash.</para>
 </listitem>
 </varlistentry>
@@ -1742,7 +1764,7 @@ pane</guilabel>.</para>
 a new folder.  You can make this new folder a sub folder if you choose a parent
 folder using the <guilabel>File under</guilabel> selection. If you're going to
 use this folder for a mailing list you may want to add the mailing list address
-in the the <guilabel>Associated Mailing List</guilabel> tab. You can then use
+in the <guilabel>Associated Mailing List</guilabel> tab. You can then use
 the <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply
 list...</guimenuitem></menuchoice> menu item. It will open a reply with the
 mailing list address in the <guilabel>To:</guilabel> field (&ie; it will ignore
@@ -1774,7 +1796,8 @@ change the settings for the selected folder.</para>
 </term>
 <listitem>
 <para>Compacts the folder file to reduce its disk space usage. Use this command
-if your mailboxes seem to be much larger than they ought to be.</para>
+if your mailboxes seem to be much larger than they ought to be.
+<!-- TODO: explain? --></para>
 </listitem>
 </varlistentry>
 
@@ -1813,7 +1836,7 @@ deleted.</para>
 </term>
 <listitem>
 <para>This will show <acronym>HTML</acronym> messages using
-<acronym>HTML</acronym> rendering. For security reasons, we suggest to only
+<acronym>HTML</acronym> rendering. For security reasons, we recommend to only
 activate this for trusted messages.</para> 
 </listitem>
 </varlistentry>
@@ -2000,7 +2023,8 @@ will be forwarded, too.</para>
 <listitem>
 <para>Works like forward, except that the message stays the same (even
 the <guilabel>From</guilabel> field). The user who redirected the message is
-added in special header fields (Redirect-From, Redirect-Date, Redirect-To,
+added in special header fields (<literal>Redirect-From</literal>,
+<literal>Redirect-Date</literal>, <literal>Redirect-To</literal>,
 &etc;).</para> 
 </listitem>
 </varlistentry>
@@ -2015,7 +2039,7 @@ added in special header fields (Redirect-From, Redirect-Date, Redirect-To,
 <listitem>
 <para>Sends the message back to the sender with a notice that it cannot be
 delivered. This is nearly exactly the message you get from a mail relay if the
-user does not exist.</para> 
+user does not exist. Some people use this option to "reply" to spam.</para> 
 </listitem>
 </varlistentry>
 
@@ -2056,7 +2080,7 @@ Pane.</para>
 </term>
 <listitem>
 <para>Edits the selected message if it is editable. Only messages in the
-<guilabel>outbox</guilabel> folder can be edited.</para>
+<guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
 </listitem>
 </varlistentry>
 
@@ -2142,7 +2166,10 @@ below:</para>
 </term>
 <listitem>
 <para>Shows the message and its complete headers in plain text format in a new
-window.</para>
+window. This can be useful to find out the origin of a mail. You should know
+that it's easy to fake the <literal>From:</literal> header of a mail, but
+the receiver can still find out which mail servers have been used by looking
+at the <literal>Received:</literal> lines in the header.</para>
 </listitem>
 </varlistentry>
 
@@ -2163,8 +2190,8 @@ window.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icons
-to compose a new message &etc;)</para> 
+<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icon
+to compose a new message &etc;).</para>
 </listitem>
 </varlistentry>
 
@@ -2177,7 +2204,7 @@ to compose a new message &etc;)</para>
 </term>
 <listitem>
 <para>If enabled, the Statusbar is visible (the Statusbar is the small one on
-the bottom which shows useful short messages and link targets)</para>
+the bottom which shows useful short messages and link targets).</para>
 </listitem>
 </varlistentry>
 
@@ -2190,7 +2217,7 @@ the bottom which shows useful short messages and link targets)</para>
 </term>
 <listitem>
 <para>Opens a window that lets you configure the keyboard shortcuts for many
-menu command.</para>
+menu commands.</para>
 </listitem>
 </varlistentry>
 
@@ -2268,8 +2295,8 @@ displayed.</para>
 </term>
 <listitem>
 <para>Selecting this option changes the cursor to an arrow with a question
-mark. Now if you click on any component of the control panel pane, you get short
-context sensitive help about that item (sorry, not implemented yet).</para> 
+mark. If you now click on any component of the control panel pane, you get short
+context sensitive help about that item (sorry, not implemented yet).</para>
 </listitem>
 </varlistentry>
 
@@ -2281,10 +2308,8 @@ context sensitive help about that item (sorry, not implemented yet).</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Open a window for you to report a bug. Please note that bug reports
-are only useful if you tell us exactly how to reproduce the bug. Also
-look at <ulink url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink> to
-see if the bug has been reported already.</para>
+<para>Opens a window for you to report a bug. You have to be connected
+to the Internet to send the bug report.</para>
 </listitem>
 </varlistentry>
 
@@ -2296,7 +2321,7 @@ see if the bug has been reported already.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Displays information about &kmail; (version, authors).</para>
+<para>Displays information about &kmail; (version, authors, license agreement).</para>
 </listitem>
 </varlistentry>
 
@@ -2549,7 +2574,7 @@ cut.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Finds words, phrases, or expressions in the message.</para>
+<para>Finds strings in the message.</para>
 </listitem>
 </varlistentry>
 
@@ -2564,8 +2589,7 @@ cut.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Lets you replace words, phrases, or expressions in your message with other
-words or phrases.</para>
+<para>Lets you replace strings in your message with other strings.</para>
 </listitem>
 </varlistentry>
 
@@ -2649,7 +2673,6 @@ menu.</para>
 
 <variablelist>
 
-<!-- TODO: describe what this means -->
 <varlistentry>
 <term>
 <menuchoice>
@@ -2658,7 +2681,9 @@ menu.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Sets the priority of the message to Urgent.</para>
+<para>Sets the priority of the message to Urgent. The receiver's mail client has to support
+this or it will have no effect. &kmail; itself does not support priorities for
+incoming messages.</para>
 </listitem>
 </varlistentry>
 
@@ -2686,7 +2711,8 @@ also supported from the receiver's side in order to work.</para>
 <listitem>
 <para>If you choose this option, you request a confirmation email once your
 message is downloaded and read by its recipient. This has to be supported and
-enabled by the receiver's mail client in order to work.</para>
+enabled by the receiver's mail client in order to work.
+<!-- TODO: kmail... --></para>
 </listitem>
 </varlistentry>
 
@@ -2744,12 +2770,12 @@ to paste long lines that shouldn't wrap.</para>
 <term>
 <menuchoice>
 <guimenu><accel>A</accel>ttach</guimenu>
-<guimenuitem>Attach <accel>P</accel>ublic Key</guimenuitem>
+<guimenuitem>Attach <accel>P</accel>ublic Key...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>Attaches the corresponding <application>PGP</application> key to your
-message using the default encoding.</para>
+<para>Attaches the corresponding <application>PGP</application>/<application>GnuPG</application>
+key to your message using the default encoding.</para>
 </listitem>
 </varlistentry>
 
@@ -2761,8 +2787,8 @@ message using the default encoding.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Attaches the corresponding <application>GnuPG</application> key to your
-message using the default encoding.</para>
+<para>Attaches your <application>PGP</application>/<application>GnuPG</application>
+public key to your message using the default encoding.</para>
 </listitem>
 </varlistentry>
 
@@ -2775,7 +2801,7 @@ message using the default encoding.</para>
 </term>
 <listitem>
 <para>Attaches a file to the message using the encoding you select in the
-dialog.</para>
+dialog. The dialog allows to select more than one file using the &Ctrl; key.</para>
 </listitem>
 </varlistentry>
 
@@ -2834,8 +2860,8 @@ attachment window.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icons
-to send the message &etc;)</para>
+<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icon
+to send the message &etc;).</para>
 </listitem>
 </varlistentry>
 
@@ -2847,8 +2873,8 @@ to send the message &etc;)</para>
 </menuchoice>
 </term>
 <listitem>
-<para>If enabled, the Statusbar is visible (the Statusbar is the small one on
-the bottom which shows useful short messages)</para>
+<para>If enabled, the Statusbar is visible (the Statusbar is the small one at
+the bottom which shows useful short messages).</para>
 </listitem>
 </varlistentry>
 
@@ -2861,7 +2887,7 @@ the bottom which shows useful short messages)</para>
 </term>
 <listitem>
 <para>Opens a window that lets you configure the keyboard shortcuts for many
-menu command.</para> 
+menu command.</para>
 </listitem>
 </varlistentry>
 
@@ -2898,7 +2924,7 @@ toolbar.</para>
 <title><guimenu>Help</guimenu> Menu</title>
 
 <para>
-These entries have the same meaning as <link linkend="reader-help-menu">the
+The entries in this menu have the same meaning as <link linkend="reader-help-menu">the
 entries in the Mailreader's help menu</link>.</para>
 
 </sect2>
@@ -2913,10 +2939,10 @@ entries in the Mailreader's help menu</link>.</para>
 <qandaentry>
 <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
 <answer><para>Not yet. However, IMAP support is now in active
-development and will probably be part of the &kmail; version that comes with &kde; 2.2
-Until then, you can still receive mails via <acronym>IMAP</acronym>
+development and will probably be part of the &kmail; version that comes with &kde; 2.2.
+Until then, you can receive mails via <acronym>IMAP</acronym>
 by using <application>fetchmail</application>:</para>
- 
+
 <procedure>
 <step><para>Create a file <filename>~/.fetchmailrc</filename> which contains the
 following lines:</para>
@@ -2952,9 +2978,24 @@ starts.</para>
 
 <answer>
 <para>You can find a list of submitted bugs at <ulink
-url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>. Note that not all 
-these bugs are valid, all in all we think that &kmail; is now a very good piece 
-of software.</para></answer>
+url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>. Note that not all
+these bugs are valid, all in all we think that &kmail; is now a very good piece
+of software.</para>
+
+<para><warning><para>However, you should not run &kmail; while another mail client is already
+accessing the files in <filename class="directory">~/Mail</filename>. If you try to do so,
+you might lose messages.</para></warning></para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>&kmail; doesn't display <acronym>HTML</acronym> mail as
+<acronym>HTML</acronym>, I can only see the source.</para></question>
+<answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
+HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
+only do so for trusted mails. Note that plugins (like <trademark
+class="registered">Macromedia</trademark> <application>Flash</application>) will
+not be displayed in &kmail;.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -2971,14 +3012,14 @@ check.</para></answer>
 mail.  Do <emphasis>not</emphasis> let procmail sort the mail to <filename
 class="directory">~/Mail</filename>, but to some other directory which you then
 access by &kmail; as a <guilabel>Local Mailbox</guilabel>.  That is, you have to
-add another account in the <guilabel>Network</guilabel> tab of the Configuration
+add another account in the <guilabel>Network</guilabel> tab of the <guilabel>Configure</guilabel>
 dialog. Also see the &FAQ; about lockfiles.</para></answer>
 </qandaentry>
 
 <qandaentry id="pgp-faq">
 <question><para>What should I know if I want to use
 <application>PGP</application>/<application>GnuPG</application> with
-&kmail;?</para></question> 
+&kmail;?</para></question>
 
 <answer><para>&kmail; provides a simple and easy to use interface for basic
  functions of these programs. Still you should understand how these programs
@@ -2995,12 +3036,15 @@ which often change between different versions.</para>
 <para>Trusting a foreign public key without checking it is no good idea.</para>
 </listitem>
 <listitem>
+<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.</para>
+</listitem>
+<listitem>
 <para>As most other mail clients, &kmail; can encrypt your messages, but
 <emphasis>not</emphasis> your attachments. You have to encrypt them manually
 before you attach them.</para>
 </listitem>
 <listitem>
-<para>There's a bug in &kmail; 1.1.99 (which comes with &kde; 2.0 and 2.0.1)
+<para><!-- fixme for kde 2.2 -->There's a bug in &kmail; 1.1.99 (which comes with &kde; 2.0 and 2.0.1)
 that makes <application>PGP</application> not work if you use a different
 language than English. You can work around it this way (&kmail; will still use
 your favourite language):</para>
@@ -3031,12 +3075,23 @@ for multiple identities.</para>
 </answer>
 </qandaentry>
 
+<!-- fixme: remove for KDE 2.2 -->
+<qandaentry>
+<question><para>Which version of &kmail; supports which version of
+<application>PGP</application>/<application>GnuPG</application>?</para></question>
+<answer>
+<para>Since &kmail; 1.2 you can choose which encryption tool to use if you have
+more than one. All the programs that are listed in the <guilabel>Security</guilabel>
+tab of the <guilabel>Configure</guilabel> dialog are supported.</para>
+</answer>
+</qandaentry>
+
 <qandaentry>
 <question><para>How do I have to set up &kmail; to use (&ie; read and write)
 messages with non-Latin1 characters?</para></question>
 <answer><para>In the
 <guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> section of the
-configuration dialog, select the correct <guilabel>Character set</guilabel> for
+<guilabel>Configure</guilabel> dialog, select the correct <guilabel>Character set</guilabel> for
 the message list and the folder list. If <guilabel>unicode
 (iso10646-1)</guilabel> is available, you should choose it. In case messages are
 still not shown correctly, you can always try other settings from the
@@ -3061,16 +3116,6 @@ under <menuchoice><guimenu>Settings</guimenu>
 mail folders in  &kmail;?</para></question> 
 <answer><para>See the section <link linkend="importing">Using other Mailbox
 files With &kmail;</link>.</para></answer>
-</qandaentry>
-
-<qandaentry>
-<question><para>&kmail; doesn't display <acronym>HTML</acronym> mail as
-<acronym>HTML</acronym>, I can only see the source.</para></question>
-<answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
-HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
-only do so for trusted mails. Note that plugins (like <trademark
-class="registered">Macromedia</trademark> <application>Flash</application>) will
-never be displayed in &kmail;.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -3103,16 +3148,6 @@ window, select the <guilabel>Miscellaneous</guilabel> tab and select
 <guilabel>Compact all folders on exit</guilabel>. Maybe you want to select
 <guilabel>Empty trash on exit</guilabel>, too. This will remove all the messages
 in the trash folder whenever you exit &kmail;.</para></answer>
-</qandaentry>
-
-<qandaentry>
-<question><para>Which version of &kmail; supports which version of
-<application>PGP</application>/<application>GnuPG</application>?</para></question>
-<answer>
-<para>Since &kmail; 1.2 you can choose which encryption tool to use if you have
-more than one. All the programs that are listed in the <guilabel>Security</guilabel>
-tab of the <guilabel>Configuration</guilabel> dialog are supported.</para>
-</answer>
 </qandaentry>
 
 <qandaentry>
@@ -3191,7 +3226,7 @@ used.</para>
 <answer><para>Open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem>
 </menuchoice> window. Click on the <guilabel>Network</guilabel> tab. Select your
-account from the account list and click the <guilabel>Modify</guilabel>
+account from the account list and click the <guilabel>Modify...</guilabel>
 button. This dialog contains the <guilabel>Delete mail from server</guilabel>
 setting which you must not select.</para></answer>
 </qandaentry>
@@ -3205,14 +3240,6 @@ mails?</para></question>
 Look in the <guilabel>Identity</guilabel> tab for the <guilabel>Specify
 signature below</guilabel> field. Select the radio button and type your
 signature below.</para></answer> 
-</qandaentry>
-
-<qandaentry>
-<question><para>Why doesn't word wrap work in the Composer
-window?</para></question>
-<answer><para>The word wrap setting is probably turned off. Word wrap can be
-toggled on and off in the <guilabel>Composer</guilabel> tab of the
-<guilabel>Configure</guilabel> dialog.</para></answer> 
 </qandaentry>
 
 <qandaentry>
@@ -3311,9 +3338,6 @@ documentation by David Rugge <email>davidrugge@mindspring.com</email></para>
 <email>markus.wuebben@kde.org</email>, Robert Williams
 <email>rwilliams@kde.org</email> (Editor)</para>
 
-<para>Some of the &kmail; &FAQ;s were taken from the &kmail; section of the
-&kde; &FAQ;.</para>
-
 <para>Thanks to Michael Elkins <email>me@cs.hmc.edu</email> for his excellent
 description of the different Unix mail formats in the Mutt documentation.</para>
 
@@ -3350,7 +3374,7 @@ url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the main
 <title>Compilation and installation</title>
 
 <para>In order to compile and install &kmail; on your system, type the following
-in the base directory of the &kmail; distribution:</para>
+in the base directory of the kdenetwork distribution:</para>
 
 <screen width="40">
 <prompt>%</prompt> <userinput><command>./configure</command></userinput>
