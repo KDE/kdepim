@@ -11,3 +11,11 @@ Done Date                    Description
 01/98		Partial Backups of apps
 01/98           Finish partial backups
 01/98		Write English Help File
+                Use user preference for text editor for memo widget
+                Add DCOP interface to KPilot
+                Take advantage of KMail's DCOP interface for address widget
+                Conduit for KAB2
+                Port conduits to use KTrader service
+                Add ability to drop text file/whatever into installer and have
+                  it create a doc file for it.
+                Highlight modified records in list box
