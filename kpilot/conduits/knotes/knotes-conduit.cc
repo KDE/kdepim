@@ -192,16 +192,6 @@ findID(NotesMap& m,unsigned long id)
 
 
 
-
-
-
-
-
-
-// A conduit that does nothing has a very
-// simple constructor and destructor.
-//
-//
 KNotesConduit::KNotesConduit(eConduitMode mode) : 
 	BaseConduit(mode),
 	fDeleteNoteForMemo(false)
@@ -349,7 +339,7 @@ bool KNotesConduit::newMemo(NotesMap& m,unsigned long id,PilotMemo *memo)
 {
 	FUNCTIONSETUP;
 
-	QString noteName = memo->getTitle();
+	QString noteName = memo->sensibleTitle();
 
 	// This is code taken directly from KNotes
 	//
@@ -632,9 +622,6 @@ KNotesConduit::doTest()
 }
 
 // $Log$
-// Revision 1.2  2000/11/24 17:54:28  adridg
-// Two-way sync
-//
 // Revision 1.1  2000/11/20 00:22:28  adridg
 // New KNotes conduit
 //

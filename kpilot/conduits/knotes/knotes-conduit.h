@@ -9,8 +9,8 @@
 // $Revision$
 
 
-#ifndef _NULL_CONDUIT_H
-#define _NULL_CONDUIT_H
+#ifndef _KNOTES_CONDUIT_H
+#define _KNOTES_CONDUIT_H
 
 #include "baseConduit.h"
 
@@ -95,6 +95,9 @@ private:
 };
 
 // $Log$
+// Revision 1.3  2000/11/26 01:43:21  adridg
+// Two-way syncs
+//
 // Revision 1.2  2000/11/24 17:54:28  adridg
 // Two-way sync
 //
