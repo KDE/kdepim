@@ -301,7 +301,7 @@ void KNodeApp::initActions()
   actShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
 
 
-  actCancel = new KAction(i18n("&Cancel"), 0 , this, SLOT(slotCancel()),
+  actCancel = new KAction(i18n("article","&Cancel"), 0 , this, SLOT(slotCancel()),
                           actionCollection(), "article_cancel");
   actCancel->setEnabled(false);
   actSupersede = new KAction(i18n("&Supersede"), 0 , this, SLOT(slotSupersede()),

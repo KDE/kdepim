@@ -54,7 +54,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
               actionCollection(), "article_mailReply");
   new KAction(i18n("&Forward"),"fwd", Key_F , this, SLOT(slotArtForward()),
               actionCollection(), "article_forward");
-  new KAction(i18n("&Cancel"), 0 , this, SLOT(slotArtCancel()),
+  new KAction(i18n("article","&Cancel"), 0 , this, SLOT(slotArtCancel()),
                    actionCollection(), "article_cancel");
   new KAction(i18n("&Supersede"), 0 , this, SLOT(slotArtSupersede()),
                    actionCollection(), "article_supersede");

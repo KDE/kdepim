@@ -102,7 +102,7 @@ void KNUserWidget::applyData()
 
 void KNUserWidget::slotSigButton()
 {
-	QString tmp=KFileDialog::getOpenFileName();
+	QString tmp=KFileDialog::getOpenFileName(QString::null,QString::null,this,i18n("Choose Signature"));
 	if(!tmp.isEmpty()) sig->setText(tmp);
 }
 

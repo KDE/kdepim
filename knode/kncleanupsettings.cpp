@@ -39,12 +39,12 @@ KNCleanupSettings::KNCleanupSettings(QWidget *p) : KNSettingsWidget(p)
 	readDays=new QSpinBox(0, 999, 1, this);
 	unreadDays=new QSpinBox(0, 999, 1, this);
 	thrCB=new QCheckBox(i18n("save threads"), this);
-	l1=new QLabel(i18n("days"), this);
+	l1=new QLabel(i18n("purgeGroup","days"), this);
 	l2=new QLabel(i18n("keep read articles"), this);
-	l3=new QLabel(i18n("days"), this);
+	l3=new QLabel(i18n("keepRead","days"), this);
 	l4=new QLabel(i18n("keep unread articles"), this);
-	l5=new QLabel(i18n("days"), this);
-	l6=new QLabel(i18n("days"), this);
+	l5=new QLabel(i18n("keepUnread","days"), this);
+	l6=new QLabel(i18n("compactFolders","days"), this);
 	KSeparator *sep=new KSeparator(this);
 		
 	QGridLayout *topL=new QGridLayout(this, 7, 3, 10);

@@ -28,6 +28,9 @@
 #include <kstdaction.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
+#include <kio/netaccess.h>
+#include <kfiledialog.h>
+#include <keditcl.h>
 
 #include "knsavedarticle.h"
 #include "knmimecontent.h"
@@ -346,7 +349,40 @@ void KNComposer::slotAppendSig()
 
 void KNComposer::slotInsertFile()
 {
-  #warning stub: insert file
+  KURL url = KFileDialog::getOpenURL(QString::null, QString::null, this, i18n("Insert File"));
+  QString fileName;
+
+  if (url.isEmpty())
+    return;
+
+  if (url.isLocalFile())
+    fileName = url.path();
+  else
+    if (!KIO::NetAccess::download(url, fileName))
+      return;
+
+  unsigned int len = QFileInfo(fileName).size();
+  unsigned int readLen;
+  QCString temp;
+  QFile file(fileName);
+
+  if (!file.open(IO_Raw|IO_ReadOnly)) {
+    displayExternalFileError();
+  } else {
+    temp.resize(len + 2);
+    readLen = file.readBlock(temp.data(), len);
+    if (temp[len-1]!='\n')
+      temp[len++] = '\n';
+    temp[len] = '\0';
+  }
+
+  if (!url.isLocalFile()) {
+    KIO::NetAccess::removeTempFile(fileName);
+  }
+
+  int editLine,editCol;
+  view->edit->getCursorPosition(&editLine, &editCol);
+  view->edit->insertAt(temp, editLine, editCol);
 }
 
 

@@ -23,7 +23,9 @@
 #include <ktempfile.h>
 #include <kuserprofile.h>
 #include <kopenwith.h>
+#include <klocale.h>
 
+#include "knode.h"
 #include "knarticlewidget.h"
 #include "knarticle.h"
 #include "knglobals.h"
@@ -54,7 +56,7 @@ KNSaveHelper::~KNSaveHelper()
 
 QFile* KNSaveHelper::getFile()
 {
-  url = KFileDialog::getSaveURL(s_aveName,"*");
+  url = KFileDialog::getSaveURL(s_aveName,QString::null,knGlobals.top,i18n("Save Article"));
 
   if (url.isEmpty())
     return 0;
