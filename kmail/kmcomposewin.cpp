@@ -611,7 +611,7 @@ void KMComposeWin::deadLetter(void)
   int fd = open(fname, O_CREAT|O_APPEND|O_WRONLY, S_IWRITE|S_IREAD);
   if (fd != -1)
   {
-    QCString startStr = "From " + mMsg->fromEmail() + " " + mMsg->dateShortStr() + "\n";
+    QCString startStr( mMsg->mboxMessageSeparator() );
     ::write(fd, startStr, startStr.length());
     ::write(fd, msgStr, msgStr.length());
     ::write(fd, "\n", 1);

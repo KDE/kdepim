@@ -296,6 +296,8 @@ public:
 
   /** Get or set the 'Date' header field */
   QString dateStr() const;
+  /** Returns the message date in asctime format or an empty string if the
+      message lacks a Date header. */
   QCString dateShortStr() const;
   QString dateIsoStr() const;
   time_t date() const;
@@ -793,6 +795,12 @@ public:
 
   /** Returns the last DwBodyPart that was updated */
   DwBodyPart* lastUpdatedPart() { return mLastUpdated; }
+
+  /** Returns an mbox message separator line for this message, i.e. a
+      string of the form
+      "From local@domain.invalid Sat Jun 12 14:00:00 2004\n".
+  */
+  QCString mboxMessageSeparator();
 
 private:
   /** Returns message body with quoting header and indented by the

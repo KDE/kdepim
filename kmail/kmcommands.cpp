@@ -688,10 +688,7 @@ void KMSaveMsgCommand::slotSaveDataReq()
 
 void KMSaveMsgCommand::slotMessageRetrievedForSaving(KMMessage *msg)
 {
-  QCString str( msg->fromEmail() );
-  if ( str.isEmpty() )
-    str = "unknown@unknown.invalid";
-  str = "From " + str + " " + msg->dateShortStr() + "\n";
+  QCString str( msg->mboxMessageSeparator() );
   str += KMFolderMbox::escapeFrom( msg->asString() );
   str += "\n";
   msg->setTransferInProgress(false);
