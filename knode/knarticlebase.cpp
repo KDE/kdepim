@@ -98,7 +98,7 @@ QCString KNArticleBase::encodeQuotedPrintable(const QCString aStr)
 
 QCString KNArticleBase::decodeQuotedPrintableString(const QCString aStr)
 {
-  return decodeRFC1522String(aStr);
+  return decodeRFC2047String(aStr);
 }
 
 
@@ -129,7 +129,7 @@ QCString KNArticleBase::encodeBase64(const QCString aStr)
 
 
 
-QCString KNArticleBase::decodeRFC1522String(const QCString aStr)
+QCString KNArticleBase::decodeRFC2047String(const QCString aStr)
 {
   static QCString result;
   char *pos, *dest, *beg, *end, *mid;
@@ -187,7 +187,7 @@ QCString KNArticleBase::decodeRFC1522String(const QCString aStr)
         // decode quoted printable text
         for (i=str.length()-1; i>=0; i--)
           if (str[i]=='_') str[i]=' ';
-            str = decodeQuotedPrintable(str);
+        str = decodeQuotedPrintable(str);
       }
       else
       {
@@ -215,51 +215,76 @@ QCString KNArticleBase::decodeRFC1522String(const QCString aStr)
 // THIS PART IS TAKEN FROM KMAIL : END
 
 
-QCString KNArticleBase::encodeRFC1522String(const QCString aStr)
+
+// NOTE: this method is not really compilant, as it
+// produces encoded strings longer then the 76 characters limit
+// imposed by RFC-2047. => FIX IT AFTER 2.0
+QCString KNArticleBase::encodeRFC2047String(const QCString aStr)
 {
-  QCString result, tmp, chset;
-  bool usascii, isFirst;
-  KNStringSplitter split;
-  
-  split.init(aStr, " ");
-  
-  isFirst=true;
-  
-  /*lobal::config()->setGroup("POSTNEWS");
-  chset=KGlobal::config()->readEntry("Charset", "ISO-8859-1").upper().local8Bit();*/
-  if(defaultChSet.upper()=="US-ASCII") chset="ISO-8859-1";
-  else chset=defaultChSet;
-  
-  if(!split.first()) tmp=aStr;
-  else tmp=split.string();
-  
-  while(1) {
-  
-    usascii=true;
-      
-    for(unsigned int i=0; i<tmp.length(); i++)
-      if(tmp[i]<0) {
-        usascii=false;
-        break;
-      }
-    
-    if(!isFirst) result+=" ";
-          
-    if(!usascii) {
-      
-      result+="=?"+chset+"?Q?"+encodeQuotedPrintable(tmp)+="?=";
+  QCString result;
+
+  unsigned int start=0,end;
+  bool nonAscii=false;
+
+  for (unsigned int i=0;i<aStr.length();i++) {
+    if (aStr[i]==' ')    // encoding starts at word boundaries
+      start = i+1;
+
+    if (aStr[i]<0) {     // non us-ascii char found, now we determine where to stop encoding
+      end = start;
+      nonAscii=true;
+      break;
     }
-    else result+=tmp;
-    
-    isFirst=false;
-    
-    if(split.next()) tmp=split.string();
-    else break;
-    
   }
-  
-  
-  return result;    
+
+  if (nonAscii) {
+    while ((end<aStr.length())&&(aStr[end]!=' '))  // we encode complete words
+      end++;
+
+    for (unsigned int x=end;x<aStr.length();x++)
+      if (aStr[x]<0) {                   // we found another non-ascii word
+        end = aStr.length();
+
+    while ((end<aStr.length())&&(aStr[end]!=' '))  // we encode complete words
+      end++;
+    }
+
+    QCString chset;
+
+    if(defaultChSet.upper()=="US-ASCII")
+      chset="ISO-8859-1";
+    else
+      chset=defaultChSet;
+
+    result = aStr.left(start)+"=?"+chset+"?Q?";
+
+    char c,hexcode;                       // implementation of the "Q"-encoding described in RFC 2047
+    for (unsigned int i=start;i<end;i++) {
+      c = aStr[i];
+      if (c == ' ')       // make the result readable with not MIME-capable readers
+        result+='_';
+      else
+        if (((c>='a')&&(c<='z'))||      // paranoid mode, we encode *all* special characters to avoid problems
+            ((c>='A')&&(c<='Z'))||      // with "From" & "To" headers
+            ((c>='0')&&(c<='9')))
+          result+=c;
+        else {
+          result += "=";                 // "stolen" from KMail ;-)
+          hexcode = ((c & 0xF0) >> 4) + 48;
+          if (hexcode >= 58) hexcode += 7;
+          result += hexcode;
+          hexcode = (c & 0x0F) + 48;
+          if (hexcode >= 58) hexcode += 7;
+          result += hexcode;
+        }
+    }
+
+    result +="?=";
+    result += aStr.right(aStr.length()-end);
+  } else {
+    result = aStr.copy();
+  }
+  return result;
 }
 
 
@@ -499,7 +524,7 @@ void KNArticleBase::FromLineParser::parse()
       pos1=0;
       pos2=src.find('<');
       if(pos2!=-1) {
-        f_rom=decodeRFC1522String(src.mid(pos1, pos2-pos1)).stripWhiteSpace();
+        f_rom=decodeRFC2047String(src.mid(pos1, pos2-pos1)).stripWhiteSpace();
         pos1=pos2+1;
         pos2=src.find('>', pos1);
         if(pos2==-1) is_broken=true;
@@ -516,7 +541,7 @@ void KNArticleBase::FromLineParser::parse()
         pos1=pos2+1;
         pos2=src.find(')', pos1);
         if(pos2==-1) is_broken=true;
-        else f_rom=decodeRFC1522String(src.mid(pos1, pos2-pos1));
+        else f_rom=decodeRFC2047String(src.mid(pos1, pos2-pos1));
       }
       else is_broken=true;
     break;

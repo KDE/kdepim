@@ -23,8 +23,8 @@ class QSize;
 void saveWindowSize(const QString &name, const QSize &s);
 void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize);
 
-QCString encryptStr(const QCString& aStr);
-QCString decryptStr(const QCString& aStr);
+const QString encryptStr(const QString& aStr);
+const QString decryptStr(const QString& aStr);
 
 void displayInternalFileError();   // use this for all internal files
 void displayExternalFileError();   // use this for all external files

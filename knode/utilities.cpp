@@ -46,16 +46,16 @@ void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize
 
 
 
-QCString encryptStr(const QCString& aStr)
+const QString encryptStr(const QString& aStr)
 {
-  uint i,len = aStr.length();
+  uint i,val,len = aStr.length();
   QCString result;
 
   for (i=0; i<len; i++)
   {
-    unsigned char val = aStr[i] - ' ';
+    val = aStr[i] - ' ';
     val = (255-' ') - val;
-    result += (val + ' ');
+    result += (char)(val + ' ');
   }
 
   return result;
@@ -63,7 +63,7 @@ QCString encryptStr(const QCString& aStr)
 
 
 
-QCString decryptStr(const QCString& aStr)
+const QString decryptStr(const QString& aStr)
 {
   return encryptStr(aStr);
 }

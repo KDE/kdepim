@@ -44,6 +44,7 @@ class KNNntpClient : public KNProtocolClient  {
   
     virtual bool openConnection();     // connect, handshake
     virtual bool sendCommand(const QCString &cmd, int &rep);  // authentication on demand
+    virtual void handleErrors();
     
 };
 

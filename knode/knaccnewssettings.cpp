@@ -147,7 +147,7 @@ void KNAccNewsSettings::slotSelectionChanged()
   KNLBoxItem *it = lb->itemAt(lb->currentItem());
   if (it) {
     KNNntpAccount *a = static_cast<KNNntpAccount*>(it->data());
-    serverInfo->setText(i18n("Server: %1").arg(a->server().data()));
+    serverInfo->setText(i18n("Server: %1").arg(a->server()));
     portInfo->setText(i18n("Port: %1").arg(a->port()));
   } else {
     serverInfo->setText(i18n("Server: "));
@@ -257,7 +257,7 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *a, QWidget *parent, cons
 
   l = new QLabel(i18n("Timeout:"), page);
   topL->addWidget(l,4,0);
-  t_imeout = new QSpinBox(5,600,5,page);
+  t_imeout = new QSpinBox(15,600,5,page);
   t_imeout->setValue(acc->timeout());
   t_imeout->setSuffix(i18n(" sec"));
   topL->addWidget(t_imeout,4,1);
@@ -309,14 +309,14 @@ void KNAccNewsConfDialog::slotOk()
   }
 
   acc->setName(n_ame->text());
-  acc->setServer(s_erver->text().local8Bit());
+  acc->setServer(s_erver->text());
   acc->setPort(p_ort->text().toInt());
   acc->setHold(h_old->value()); 
   acc->setTimeout(t_imeout->value());
   acc->setFetchDescriptions(f_etchDes->isChecked());
   acc->setNeedsLogon(authCB->isChecked());
-  acc->setUser(u_ser->text().local8Bit());
-  acc->setPass(p_ass->text().local8Bit());
+  acc->setUser(u_ser->text());
+  acc->setPass(p_ass->text());
   
   accept();
 }

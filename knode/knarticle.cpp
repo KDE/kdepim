@@ -52,7 +52,7 @@ void KNArticle::clear()
 void KNArticle::parse()
 {
   QCString tmp;
-  if(s_ubject.isEmpty()) s_ubject=decodeRFC1522String(headerLine("Subject"));
+  if(s_ubject.isEmpty()) s_ubject=decodeRFC2047String(headerLine("Subject"));
   
   if(t_imeT==0) {
     tmp=headerLine("Date");

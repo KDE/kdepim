@@ -449,7 +449,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     //qDebug("user: %s",account.user().data());
         
     QCString command = "AUTHINFO USER ";
-    command += account.user();
+    command += account.user().local8Bit();
     if (!KNProtocolClient::sendCommand(command,rep))
       return false;
     
@@ -464,7 +464,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
       //qDebug("pass: %s",account.pass().data());
       
       command = "AUTHINFO PASS ";
-      command += account.pass();
+      command += account.pass().local8Bit();
       if (!KNProtocolClient::sendCommand(command,rep))
         return false; 
     }
@@ -481,6 +481,20 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
   return true;      
 }
 
+
+void KNNntpClient::handleErrors()
+{
+  if (errorPrefix.isEmpty())
+    job->setErrorString(i18n("An error occured:\n%1").arg(getCurrentLine()));
+  else
+    job->setErrorString(errorPrefix + getCurrentLine());
+
+  int code = atoi(getCurrentLine());
+
+  // close the connection only when necessary:
+  if ((code != 430)&&(code != 411))  // 430 no such article found / 411 no such news group
+    closeConnection();
+}
 
 
 //--------------------------------

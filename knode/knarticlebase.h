@@ -88,8 +88,8 @@ class KNArticleBase {
     static QCString decodeBase64(const QCString str);
     static QCString encodeBase64(const QCString str);
     
-    static QCString decodeRFC1522String(const QCString aStr);
-    static QCString encodeRFC1522String(const QCString aStr);
+    static QCString decodeRFC2047String(const QCString aStr);
+    static QCString encodeRFC2047String(const QCString aStr);
     
     static bool stripCRLF(char *str);
     static void removeQuots(QCString &str);

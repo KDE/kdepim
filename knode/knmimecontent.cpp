@@ -601,7 +601,7 @@ QCString KNMimeContent::ctName()
 QCString KNMimeContent::ctDescription()
 {
   QCString ret;
-  ret=decodeRFC1522String(headerLine("Content-Description"));
+  ret=decodeRFC2047String(headerLine("Content-Description"));
 
   return ret;
 }
@@ -611,7 +611,7 @@ QCString KNMimeContent::ctDescription()
 void KNMimeContent::addHeaderLine(const char *line, bool encode)
 {
   if(h_ead) {
-    if(encode) h_ead->append(encodeRFC1522String(line));
+    if(encode) h_ead->append(encodeRFC2047String(line));
     else h_ead->append(line);
   }
 }
@@ -625,7 +625,7 @@ void KNMimeContent::setHeader(const char *name, const QCString &value, bool enco
   line="";
   line+=name;
   line+=": ";
-  if(!allow8bit && encode) line+=encodeRFC1522String(value);
+  if(!allow8bit && encode) line+=encodeRFC2047String(value);
   else line+=value;
     
   if(removeHeader(name)) {
@@ -662,7 +662,7 @@ void KNMimeContent::setHeader(headerType t, const QCString &value, bool encode)
   }
   
   hdr=headerTypeToString(t)+": ";
-  if(!allow8bit && encode) hdr+=encodeRFC1522String(value);
+  if(!allow8bit && encode) hdr+=encodeRFC2047String(value);
   else hdr+=value;
   if(insPos==-1) h_ead->append(hdr);
   else h_ead->insert(insPos, hdr);    
@@ -711,7 +711,7 @@ QCString KNMimeContent::headerLine(const char* name, bool decode)
     }
 
     if(decode && !ret.isEmpty())
-      ret=decodeRFC1522String(ret);
+      ret=decodeRFC2047String(ret);
     /*pos=ret.find(' ');
     if(pos!=-1) ret.remove(0, pos+1);
     else ret="";*/

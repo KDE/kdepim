@@ -55,7 +55,7 @@ KNAccMailSettings::KNAccMailSettings(QWidget *p) : KNSettingsWidget(p)
 
   l = new QLabel(i18n("Timeout:"), this);
   topL->addWidget(l,3,0);
-  t_imeout = new QSpinBox(0,300,5,this);
+  t_imeout = new QSpinBox(15,300,5,this);
   t_imeout->setSuffix(i18n(" sec"));
   topL->addWidget(t_imeout,3,1);
 
@@ -93,7 +93,7 @@ void KNAccMailSettings::init()
 
 void KNAccMailSettings::apply()
 {
-  serverInfo->setServer(s_erver->text().local8Bit());
+  serverInfo->setServer(s_erver->text());
   serverInfo->setPort(p_ort->text().toInt());
   serverInfo->setHold(h_old->value());
   serverInfo->setTimeout(t_imeout->value());

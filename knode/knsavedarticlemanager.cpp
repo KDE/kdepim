@@ -451,8 +451,12 @@ bool KNSavedArticleManager::deleteArticle(KNSavedArticle *a, bool ask)
       if(acc) acc->decUnsentCount();
     }
     delete a;
-    if(a==c_urrentArticle)
+    if(a==c_urrentArticle) {
+      c_urrentArticle = 0;
       mainArtWidget->showBlankPage();
+      actEdit->setEnabled(false);
+      actDelete->setEnabled(false);
+    }
     updateStatusString();
     actSendOutbox->setEnabled(fOutbox->count()!=0);
     return true;

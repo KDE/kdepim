@@ -201,11 +201,11 @@ bool KNProtocolClient::openConnection()
   in_addr address;
 
 #ifdef HAVE_INET_ATON
-  if (inet_aton(account.server(),&address)) {
+  if (inet_aton(account.server().local8Bit().data(),&address)) {
 #else
  // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
  #ifdef HAVE_INET_ADDR
-  address.s_addr = inet_addr(account.server());
+  address.s_addr = inet_addr(account.server().local8Bit.data());
   if ( address.s_addr != (in_addr_t)-1 ) {
  #else
   #error You must have either inet_aton or inet_addr !
@@ -216,7 +216,7 @@ bool KNProtocolClient::openConnection()
       return false;
     }
   } else {               // host name lookup....
-    struct hostent* hostData = gethostbyname(account.server());
+    struct hostent* hostData = gethostbyname(account.server().local8Bit().data());
 
     if (NULL==hostData) {
       herror("connect(): ");

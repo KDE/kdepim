@@ -56,7 +56,7 @@ class KNArticle : public KNMimeContent  {
     KNHdrViewItem* listItem()               { return i_tem; }
     
     //set     
-    void setSubject(const QCString &s)        { s_ubject=decodeRFC1522String(s); }
+    void setSubject(const QCString &s)        { s_ubject=decodeRFC2047String(s); }
     void setListItem(KNHdrViewItem *it);
     void setId(int i)                       { i_d=i; }
     void setTimeT(time_t t);          // TODO: this should honor the global date format!!
