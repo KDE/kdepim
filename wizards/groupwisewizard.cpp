@@ -178,6 +178,17 @@ class GroupwisePropagator : public KConfigPropagator
     }
 
   protected:
+    class Writer : public CreateDisconnectedImapAccount::CustomWriter
+    {
+      public:
+	void writeFolder( KConfig &, int ) {}
+	void writeIds( int accountId, int transportId )
+	{
+          GroupwiseConfig::setKMailAccountId( accountId );
+	  GroupwiseConfig::setKMailTransportId( transportId );
+	}
+    };
+
     void addCustomChanges( Change::List &changes )
     {
       ChangeConfig *c = new ChangeConfig;
@@ -228,21 +239,10 @@ class GroupwisePropagator : public KConfigPropagator
         }
       }
 
-      class Writer : public CreateDisconnectedImapAccount::CustomWriter
-      {
-        public:
-          void writeFolder( KConfig &, int ) {}
-          void writeIds( int accountId, int transportId )
-          {
-            GroupwiseConfig::setKMailAccountId( accountId );
-            GroupwiseConfig::setKMailTransportId( transportId );
-          }
-      };
-
       if ( GroupwiseConfig::createEmailAccount() ) {
         CreateDisconnectedImapAccount *ca =
           new CreateDisconnectedImapAccount( i18n("GroupWise") );
-        
+
         ca->setServer( GroupwiseConfig::host() );
         ca->setUser( GroupwiseConfig::user() );
         ca->setPassword( GroupwiseConfig::password() );
