@@ -144,9 +144,15 @@ const QString SysInfoConduit::defaultpage = QString("KPilot System Information P
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
-const char *SysInfo_conduit_id =
+
+extern "C"
+{
+
+long version_conduit_sysinfo = KPILOT_PLUGIN_API;
+const char *id_conduit_sysinfo =
 	"$Id$";
 
+}
 
 
 
@@ -157,7 +163,7 @@ SysInfoConduit::SysInfoConduit(KPilotDeviceLink * o,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT<<SysInfo_conduit_id<<endl;
+	DEBUGCONDUIT<<id_conduit_sysinfo<<endl;
 #endif
 	fConduitName=i18n("System Information");
 }
@@ -189,7 +195,7 @@ void SysInfoConduit::readConfig()
 /* virtual */ bool SysInfoConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<SysInfo_conduit_id<<endl;
+	DEBUGCONDUIT<<id_conduit_sysinfo<<endl;
 
 	readConfig();
 

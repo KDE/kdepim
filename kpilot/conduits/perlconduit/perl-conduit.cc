@@ -36,12 +36,6 @@
 
 #include "options.h"
 
-// Something to allow us to check what revision
-// the modules are that make up a binary distribution.
-//
-//
-static const char *perl_conduit_id=
-	"$Id$";
 
 #include "perl-conduit.h"  // The Conduit action
 #include "perlconduit.h"   // The settings class
@@ -51,6 +45,14 @@ static const char *perl_conduit_id=
 
 #include <EXTERN.h>
 #include <perl.h>
+
+extern "C"
+{
+long version_conduit_perl = KPILOT_PLUGIN_API;
+const char *id_conduit_perl =
+	"$Id$";
+}
+
 
 class PerlThread : public QThread
 {
@@ -75,11 +77,11 @@ PerlConduit::PerlConduit(KPilotDeviceLink *d,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT << perl_conduit_id << endl;
+	DEBUGCONDUIT << id_conduit_perl << endl;
 #endif
 	fConduitName=i18n("Perl");
 
-	(void) perl_conduit_id;
+	(void) id_conduit_perl;
 }
 
 PerlConduit::~PerlConduit()

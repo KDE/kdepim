@@ -61,7 +61,12 @@
 // the modules are that make up a binary distribution.
 //
 //
-const char *abbrowser_conduit_id="$Id$";
+extern "C"
+{
+long version_conduit_address = KPILOT_PLUGIN_API;
+const char *id_conduit_address="$Id$";
+}
+
 
 using namespace KABC;
 
@@ -97,7 +102,7 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QS
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT<<abbrowser_conduit_id<<endl;
+	DEBUGCONDUIT<<id_conduit_address<<endl;
 #endif
 	fConduitName=i18n("Addressbook");
 }
@@ -627,7 +632,7 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 /* virtual */ bool AbbrowserConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<abbrowser_conduit_id<<endl;
+	DEBUGCONDUIT<<id_conduit_address<<endl;
 
 	_prepare();
 

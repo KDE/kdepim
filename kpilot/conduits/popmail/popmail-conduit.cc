@@ -38,7 +38,7 @@ extern "C"
 {
 
 long version_conduit_popmail = KPILOT_PLUGIN_API;
-static const char *id_conduit_popmail =
+const char *id_conduit_popmail =
 	"$Id$";
 
 }

@@ -39,9 +39,12 @@
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
-const char *Time_conduit_id =
+extern "C"
+{
+long version_conduit_time = KPILOT_PLUGIN_API ;
+const char *id_conduit_time =
 	"$Id$";
-
+}
 
  
  
@@ -52,7 +55,7 @@ TimeConduit::TimeConduit(KPilotDeviceLink * o,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT<<Time_conduit_id<<endl;
+	DEBUGCONDUIT<<id_conduit_time<<endl;
 #endif
 	fConduitName=i18n("Time");
 }
@@ -76,7 +79,7 @@ void TimeConduit::readConfig()
 /* virtual */ bool TimeConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<Time_conduit_id<<endl;
+	DEBUGCONDUIT<<id_conduit_time<<endl;
 
 	readConfig();
 

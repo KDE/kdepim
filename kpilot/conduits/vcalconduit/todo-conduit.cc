@@ -32,9 +32,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *TodoConduit_id = "$Id$";
+#include "options.h"
 
-#include <options.h>
 #include <unistd.h>
 
 #include <qdatetime.h>
@@ -48,16 +47,8 @@ static const char *TodoConduit_id = "$Id$";
 #include <libkcal/todo.h>
 
 
-/*
-** KDE 2.2 uses class KORecurrence in a different header file.
-*/
-#ifdef KDE2
-#define DateList_t QDateList
-#define DateListIterator_t QDateListIterator
-#else
 #define DateList_t KCal::DateList
 #define DateListIterator_t KCal::DateList::ConstIterator
-#endif
 
 #include <pilotSerialDatabase.h>
 #include <pilotLocalDatabase.h>
@@ -69,6 +60,13 @@ static const char *TodoConduit_id = "$Id$";
 #define CONDUIT_VERSION_CATEGORYSYNC 10
 #define CONDUIT_VERSION 10
 
+extern "C"
+{
+long version_conduit_todo = KPILOT_PLUGIN_API;
+
+const char *id_conduit_todo = "$Id$";
+
+}
 
 
 TodoConduitPrivate::TodoConduitPrivate(KCal::Calendar *b) :
@@ -184,11 +182,11 @@ TodoConduit::TodoConduit(KPilotDeviceLink *d,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT << TodoConduit_id << endl;
+	DEBUGCONDUIT << id_conduit_todo << endl;
 #endif
 	fConduitName=i18n("To-do");
         
-        (void) TodoConduit_id;
+        (void) id_conduit_todo;
 }
 
 

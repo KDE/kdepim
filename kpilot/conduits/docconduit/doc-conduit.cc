@@ -54,7 +54,11 @@
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
-const char *doc_conduit_id = "$Id$";
+extern "C"
+{
+long version_conduit_doc = KPILOT_PLUGIN_API;
+const char *id_conduit_doc = "$Id$";
+}
 
 QString dirToString(eSyncDirectionEnum dir) {
 	switch(dir) {
@@ -79,7 +83,7 @@ DOCConduit::DOCConduit(KPilotDeviceLink * o,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT<<doc_conduit_id<<endl;
+	DEBUGCONDUIT<<id_conduit_doc<<endl;
 #endif
 	fConduitName=i18n("DOC");
 }
@@ -264,7 +268,7 @@ QString DOCConduit::constructTXTFileName(QString name) {
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT<<"Conduit version: "<<doc_conduit_id<<endl;
+	DEBUGCONDUIT<<"Conduit version: "<<id_conduit_doc<<endl;
 #endif
 
 	readConfig();
