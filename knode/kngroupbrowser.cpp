@@ -51,7 +51,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   setMainWidget(page);
 
   filterEdit=new KLineEdit(page);
-  QLabel *l=new QLabel(filterEdit,i18n("&Filter:"), page);
+  QLabel *l=new QLabel(filterEdit,i18n("S&earch:"), page);
   noTreeCB=new QCheckBox(i18n("disable &tree view"), page);
   noTreeCB->setChecked(false);
   subCB=new QCheckBox(i18n("&subscribed only"), page);
