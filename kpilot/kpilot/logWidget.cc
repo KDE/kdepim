@@ -229,10 +229,10 @@ void LogWidget::addMessage(const QString & s)
 #if QT_VERSION < 0x030100
 	t.append(TE_EOL);
 	fLog->setText(fLog->text() + t);
-	fLog->scrollToBottom();
 #else
 	fLog->append(t);
 #endif
+	fLog->scrollToBottom();
 }
 
 void LogWidget::addError(const QString & s)
