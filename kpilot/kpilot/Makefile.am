@@ -63,7 +63,7 @@ METASOURCES = AUTO
 
 # make messages.po. Move this one to ../po/ and "make merge" in po
 messages:
-	$(XGETTEXT) -C -ki18n -kI18N_NOOP $(kpilot_SOURCES) -x $(includedir)/kde.pot -o $(podir)/kpilot.pot
+	$(XGETTEXT) -C -ki18n -kI18N_NOOP `find . -name *.cc -print` -x $(includedir)/kde.pot -o $(podir)/kpilot.pot
 
 # just install datas here. Use install-exec-data for scripts and etc.
 # the binary itself is already installed from automake
@@ -104,47 +104,3 @@ uninstall-local:
 	-cp $(MAGIC).new $(MAGIC)
 	-rm -f $(MAGIC).new
 
-# add a dependency for every moc file to be full portable
-# I've added a key binding to emacs for this. 
-kpilot.cc:kpilot.moc
-kpilot.moc: kpilot.h
-	$(MOC) kpilot.h -o kpilot.moc
-kpilotlink.cc:kpilotlink.moc
-kpilotlink.moc: kpilotlink.h
-	$(MOC) kpilotlink.h -o kpilotlink.moc
-fileInstallWidget.cc: fileInstallWidget.moc
-fileInstallWidget.moc: fileInstallWidget.h
-	$(MOC) fileInstallWidget.h -o fileInstallWidget.moc
-memoWidget.cc: memoWidget.moc 
-memoWidget.moc: memoWidget.h
-	$(MOC) memoWidget.h -o memoWidget.moc
-pilotComponent.cc: pilotComponent.moc
-pilotComponent.moc: pilotComponent.h
-	$(MOC) pilotComponent.h -o pilotComponent.moc
-kpilotOptions.cc: kpilotOptions.moc
-kpilotOptions.moc: kpilotOptions.h
-	$(MOC) kpilotOptions.h -o kpilotOptions.moc
-passworddialog.cc: passworddialog.moc
-passworddialog.moc: passworddialog.h
-	$(MOC) passworddialog.h -o passworddialog.moc
-messageDialog.cc: messageDialog.moc
-messageDialog.moc: messageDialog.h
-	$(MOC) messageDialog.h -o messageDialog.moc
-addressWidget.cc: addressWidget.moc
-addressWidget.moc: addressWidget.h
-	$(MOC) addressWidget.h -o addressWidget.moc
-pilotDaemon.cc: pilotDaemon.moc
-pilotDaemon.moc: pilotDaemon.h
-	$(MOC) pilotDaemon.h -o pilotDaemon.moc
-addressEditorData.cpp: addressEditor.moc
-addressEditor.moc: addressEditor.h
-	$(MOC) addressEditor.h -o addressEditor.moc
-conduitSetup.cc: conduitSetup.moc
-conduitSetup.moc: conduitSetup.h
-	$(MOC) conduitSetup.h -o conduitSetup.moc
-baseConduit.cc: baseConduit.moc
-baseConduit.moc: baseConduit.h
-	$(MOC) baseConduit.h -o baseConduit.moc
-conduitApp.cc: conduitApp.moc
-conduitApp.moc: conduitApp.h
-	$(MOC) conduitApp.h -o conduitApp.moc
