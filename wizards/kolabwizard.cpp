@@ -101,6 +101,7 @@ class CreateCalendarKolabResource : public KConfigPropagator::Change
       r->setResourceName( i18n("Kolab Server") );
       r->setName( "kolab-resource" );
       m.add( r );
+      m.setStandardResource( r );
       m.writeConfig();
     }
 };
@@ -121,6 +122,7 @@ class CreateContactKolabResource : public KConfigPropagator::Change
       r->setResourceName( i18n("Kolab Server") );
       r->setName( "kolab-resource" );
       m.add( r );
+      m.setStandardResource( r );
       m.writeConfig();
     }
 
@@ -142,6 +144,7 @@ class CreateNotesKolabResource : public KConfigPropagator::Change
       r->setResourceName( i18n("Kolab Server") );
       r->setName( "kolab-resource" );
       m.add( r );
+      m.setStandardResource( r );
       m.writeConfig();
     }
 
