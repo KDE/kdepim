@@ -32,7 +32,7 @@ $Id$
 * coherent wording for section / tab / ...
 * <menuchoice><guimenu>xxx , or is <guimenu>xxx enough?
 * <guiicon> vs. <guibutton>
-* spelling: homepage vs. home page, popup vs pop up, frontend vs front end
+* spelling:  popup vs pop up, frontend vs front end
 
 * message vs. mail vs. email -> using "message" everywhere
 * window vs. dialog: a dialog is modal, a window is not (I think)
@@ -168,7 +168,7 @@ change some settings in the <guilabel>Identities</guilabel> and
 <title>Setting your Identity</title>
 
 <para>The settings in the <guilabel>Identities</guilabel> page are fairly
-straightforward. Select your defautl identity and click <guibutton>Modify</guibutton>.
+straightforward. Select your default identity and click <guibutton>Modify</guibutton>.
 Fill in the <guilabel>Name</guilabel> field with your
 full name (&eg; <userinput>John Doe</userinput>) and the
 <guilabel>Organization</guilabel> field (optional) with the appropriate
@@ -698,7 +698,7 @@ folder instead of sending them.</para>
 needs. Eventually, though, you will probably need folders to help you organize
 your messages. To create a new folder, select
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>New Folder...</guimenuitem></menuchoice>
-The <link linkend="folders-properties-window">folder proeprties</link> dialog
+The <link linkend="folders-properties-window">folder properties</link> dialog
 will then prompt you for the necessary information. If you ever need to change
 the settings for a folder, select the folder you wish to modify in the Folders pane and select
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Properties...</guimenuitem>
@@ -746,11 +746,13 @@ the <token>Reply-To</token> of the message). You can also click the
 mailing list that is associated with that folder.</para>
 
 <para>The <guilabel>Old Message Expiry</guilabel> section lets you automatically
-move old messages to the <guilabel>trash</guilabel> folder when you exit &kmail;
-(depending on your settings
+delete old messages when you exit &kmail; (depending on your settings
 in &kmail;'s <guilabel>Folders</guilabel> configuration page) or
 via <menuchoice><guimenu>File</guimenu><guisubmenu>Expire
-All Folders</guisubmenu></menuchoice>.</para>
+All Folders</guisubmenu></menuchoice>.
+<warning><para>Messages that are expired are deleted. They are <emphasis>not</emphasis> moved
+to trash, so be careful with this setting.</para></warning>
+</para>
 
 <para>With the <guilabel>Identity</guilabel> section you can set your default
 identity for new messages. Replies to messages that where sent directly
@@ -919,7 +921,7 @@ filtering manually (&ie; via <menuchoice><guimenu>Message</guimenu>
 </varlistentry>
 </variablelist>
 
-<note><para>Filters are automatically named unless you explicitely
+<note><para>Filters are automatically named unless you explicitly
 rename them using the <guibutton>Rename...</guibutton> button.
 The dialog assumes that it should continue auto-naming the filter
 as long as the filter name starts with <quote>&lt;</quote>.
@@ -1106,7 +1108,7 @@ on. Additionally, the whole message is fed into the program's
 case!</para></caution>
 
 <tip><para> You can enter arbitrarily complex shell commands here,
-since &kmail; uses a subshell to execute the command line. Therefore,
+since &kmail; uses a sub shell to execute the command line. Therefore,
 even this command will work (within its limits):
 <userinput><command>uudecode</command> <option>-o</option>
 <parameter>$(mktemp kmail-uudecoded.XXXXXX)</parameter> &amp;&amp;
@@ -1157,7 +1159,7 @@ except for occurrences of <userinput>\n</userinput>,
 <userinput>$n</userinput> and <userinput>${nn}</userinput>, where
 <userinput>n</userinput> is a positive (single-digit, except for the
 third form) number or <userinput>0</userinput>. These constructs are
-interpreted as backreferences to substrings captured with parentheses
+interpreted as back references to substrings captured with parentheses
 in the search string.</para><para>Analogous restrictions as in the
 <guilabel>add header</guilabel> action apply here, too.</para>
 </listitem>
@@ -1349,7 +1351,7 @@ on and  messages were found on the server that exceed the threshold
 size you defined for the POP account. Now you have the chance to
 decide what you want to do with that message. The options are
 <guilabel>Download</guilabel> (green), <guilabel>Download
-later</guilabel> (yellow with eggwatch) and <guilabel>Delete from
+later</guilabel> (yellow with egg watch) and <guilabel>Delete from
 server</guilabel> (red <quote>X</quote>). Be cautious with the delete
 option, since once you deleted a mail from the server, there is no
 way to undelete it again.</para>
@@ -1590,7 +1592,7 @@ trusted key for each recipient.</para>
 
 <para>As mentioned above, you will not be able to read your own encrypted sent
 messages if you do not check <guilabel>Always encrypt to self</guilabel> in the
-setting's <guilabel>Security</guilabel> page. However, note that your
+settings' <guilabel>Security</guilabel> page. However, note that your
 own key is not listed in the <guilabel>Encryption Key Approval</guilabel> dialog 
 even if that option is set.</para>
 
@@ -2457,8 +2459,8 @@ on disk according to how you have moved and deleted them in &kmail;.</para>
 </menuchoice></term>
 <listitem>
 <para>Delete old messages from all folders, according to the rules in
-each folder's <guilabel>Properties</guilabel> dialog (the default is
-not to delete old messages at all).</para>
+each folder's <link linkend="folders-properties-window">Properties dialog</link>
+(the default is not to delete old messages at all).</para>
 </listitem>
 </varlistentry>
 
@@ -2782,7 +2784,7 @@ at the <literal>Received:</literal> lines in the header.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Uses a fixed width (monospace) font to display the messages
+<para>Uses a fixed width (monospaced) font to display the messages
 in the current folder. The font to be used can be configured in the
 <guilabel>Appearance</guilabel> section of &kmail;'s configuration
 dialog.</para>
@@ -3033,7 +3035,7 @@ they reply to.</para>
 </term>
 <listitem>
 <!-- fixme: link to special section?! -->
-<para>Opens up the <link linkend="folders-properties-window">Properties dialof</link> which lets you
+<para>Opens up the <link linkend="folders-properties-window">Properties dialog</link> which lets you
 change the settings for the selected folder.</para> 
 </listitem>
 </varlistentry>
@@ -3284,7 +3286,7 @@ has not yet been read.</entry>
 <row>
 <entry><guimenuitem>Forwarded</guimenuitem></entry>
 <entry>Blue arrow</entry>
-<entry>The message has been forwaded to someone else.</entry>
+<entry>The message has been forwarded to someone else.</entry>
 </row>
 <row>
 <entry><guimenuitem>Queued</guimenuitem></entry>
@@ -3761,7 +3763,7 @@ clipboard is pasted at the current cursor position.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens a dialof that lets you replace strings in your message with other strings.</para>
+<para>Opens a dialog that lets you replace strings in your message with other strings.</para>
 </listitem>
 </varlistentry>
 
@@ -3835,7 +3837,7 @@ menu.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Uses a fixed width (monospace) font to display the currently
+<para>Uses a fixed width (monospaced) font to display the currently
 edited message. The font to be used can be configured in the
 <guilabel>Appearance</guilabel> section of &kmail;'s configuration
 dialog.</para>
@@ -4195,11 +4197,11 @@ menu</link>.</para>
 <answer>
 <para>Because &kmail; currently does not support this. You should use server-side
 filtering (ask your admin for how to install filters on the server and in
-which format), since IMAP is all about managing your emails <emphasis>on the server</emphasis>.
+which format), since IMAP is all about managing your email <emphasis>on the server</emphasis>.
 Unfortunately, although there exists a mail filter language (Sieve, defined
 in RFC3028), there is no standardized access protocol for installing or
 editing server-side Sieve scripts. If such a protocol becomes available in
-the future, &kmail; will most probaly include support for it.</para>
+the future, &kmail; will most probably include support for it.</para>
 </answer>
 </qandaentry>
 
@@ -4772,14 +4774,14 @@ format, however it is  possible to export mail into mbox format using
 <menuchoice><guimenu>File</guimenu><guimenuitem>Export
 Mail</guimenuitem></menuchoice> on a 
 selected mailbox or on selected messages.  Once the messages have been exported, translate 
-the &Mac; line breaks to &UNIX; line breaks using your favourite editor, or using the following 
+the &Mac; line breaks to &UNIX; line breaks using your favorite editor, or using the following 
 command under &Linux;:</para>
 
 <para><userinput><command>cat</command> <option>mail-mac.txt</option> 
 | perl -e 'while (&lt;STDIN&gt;) { s/\r/\n/gi; print $_ ;}'  &gt; mail-unix.txt</userinput></para>
 
-<para>&kmail; will only recognise mboxes placed directly in the <filename class="directory">~/Mail/</filename>
-directory. This means that  a folder heirarchy cannot be preserved by simply moving files into the 
+<para>&kmail; will only recognize mboxes placed directly in the <filename class="directory">~/Mail/</filename>
+directory. This means that  a folder hierarchy cannot be preserved by simply moving files into the 
 <filename class="directory">~/Mail/</filename> folder, but will need to be reconstructed
 within &kmail; manually.</para>
 
