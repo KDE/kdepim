@@ -90,7 +90,8 @@ NotepadConduit::~NotepadConduit()
 
 	NotepadActionThread *thread = new NotepadActionThread(this, pilotSocket());
 	thread->start();
-
+	startTickle();
+	
 	return true;
 }
 
@@ -102,7 +103,9 @@ bool NotepadConduit::event(QEvent *e)
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Notepad thread done." << endl;
 #endif
+		stopTickle();
 		delayDone();
+	
 		return true;
 	}
 	else 
