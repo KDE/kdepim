@@ -24,6 +24,15 @@
 #include <keditcl.h>
 #include <qlineedit.h>
 
+#include <kdeversion.h>
+#if !KDE_IS_VERSION( 3, 1, 90 )
+#define private protected
+#include <keditcl.h>
+#undef private
+#else
+#include <keditcl.h>
+#endif
+
 class QGroupBox;
 
 class KProcess;

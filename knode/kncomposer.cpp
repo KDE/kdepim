@@ -20,7 +20,7 @@
 #include <qdragobject.h>
 #include <qapplication.h>
 #include <kspelldlg.h>
-
+#include <kdeversion.h>
 #include "addressesdialog.h"
 using KPIM::AddressesDialog;
 #include "recentaddresses.h"
@@ -1549,8 +1549,10 @@ void KNComposer::slotSpellFinished()
   {
       if( spellLineEdit )
           slotSpellcheck();
+#if KDE_IS_VERSION( 3, 1, 90 )
       else if( status == KSpell::FinishedNoMisspellingsEncountered )
           KMessageBox::information( this, i18n("No misspellings encountered"));
+#endif
   }
 }
 
