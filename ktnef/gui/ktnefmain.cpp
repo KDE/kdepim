@@ -37,7 +37,6 @@
 #include <kprocess.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
-#include <qinputdialog.h>
 #include <kaction.h>
 #include <kstdaction.h>
 #include <kdialogbase.h>

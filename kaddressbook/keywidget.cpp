@@ -1,28 +1,27 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qfile.h>
-#include <qinputdialog.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -33,6 +32,7 @@
 #include <kdialog.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
+#include <kinputdialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktempfile.h>
@@ -51,14 +51,14 @@ KeyWidget::KeyWidget( QWidget *parent, const char *name )
   mKeyCombo = new KComboBox( this );
   layout->addWidget( mKeyCombo, 0, 1 );
 
-  mAddButton = new QPushButton( i18n( "Add" ), this );
+  mAddButton = new QPushButton( i18n( "Add..." ), this );
   layout->addMultiCellWidget( mAddButton, 1, 1, 0, 1 );
 
   mRemoveButton = new QPushButton( i18n( "Remove" ), this );
   mRemoveButton->setEnabled( false );
   layout->addMultiCellWidget( mRemoveButton, 2, 2, 0, 1 );
 
-  mExportButton = new QPushButton( i18n( "Export" ), this );
+  mExportButton = new QPushButton( i18n( "Export..." ), this );
   mExportButton->setEnabled( false );
   layout->addMultiCellWidget( mExportButton, 3, 3, 0, 1 );
 
@@ -106,7 +106,7 @@ void KeyWidget::addKey()
   }
 
   bool ok;
-  QString name = QInputDialog::getItem( i18n( "Key type" ), i18n( "Select the key type." ), keyTypeNames, 0, true, &ok );
+  QString name = KInputDialog::getItem( i18n( "Key Type" ), i18n( "Select the key type:" ), keyTypeNames, 0, true, &ok );
   if ( !ok || name.isEmpty() )
     return;
 
@@ -149,7 +149,7 @@ void KeyWidget::addKey()
 
 void KeyWidget::removeKey()
 {
-  int pos = mKeyCombo->currentItem();  
+  int pos = mKeyCombo->currentItem();
   if ( pos == -1 )
     return;
 

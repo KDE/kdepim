@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <qfiledialog.h>
-#include <qinputdialog.h>
+#include <kinputdialog.h>
 #include <qmessagebox.h>
 
 #include <klocale.h>
@@ -200,9 +200,9 @@ KABC::Addressee MainWindow::writeAddressee( const KABC::Addressee &addressee )
 void MainWindow::newEntry()
 {
   bool ok = false;
-  QString name = QInputDialog::getText( i18n("New Address Book Entry"),
+  QString name = KInputDialog::getText( i18n("New Address Book Entry"),
                                         i18n("Please enter name."),
-                                        QLineEdit::Normal, QString::null, &ok,
+                                        QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
   
@@ -450,9 +450,9 @@ void MainWindow::newEmail()
   if ( !mCurrentItem ) return;
   
   bool ok = false;
-  QString name = QInputDialog::getText( i18n("New Email Address"),
+  QString name = KInputDialog::getText( i18n("New Email Address"),
                                         i18n("Please enter email address."),
-                                        QLineEdit::Normal, QString::null, &ok,
+                                        QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
   
@@ -470,9 +470,9 @@ void MainWindow::editEmail()
   QString oldName = item->text( 0 );
 
   bool ok = false;
-  QString name = QInputDialog::getText( i18n("Edit Email Address"),
+  QString name = KInputDialog::getText( i18n("Edit Email Address"),
                                         i18n("Please enter new email address."),
-                                        QLineEdit::Normal, oldName, &ok,
+                                        oldName, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
 
@@ -522,9 +522,9 @@ void MainWindow::newCategory()
   if ( !mCurrentItem ) return;
   
   bool ok = false;
-  QString name = QInputDialog::getText( i18n("New Category"),
+  QString name = KInputDialog::getText( i18n("New Category"),
                                         i18n("Please enter category name."),
-                                        QLineEdit::Normal, QString::null, &ok,
+                                        QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
   
@@ -542,9 +542,9 @@ void MainWindow::editCategory()
   QString oldName = item->text( 0 );
 
   bool ok = false;
-  QString name = QInputDialog::getText( i18n("Edit Category"),
+  QString name = KInputDialog::getText( i18n("Edit Category"),
                                         i18n("Please enter new category name."),
-                                        QLineEdit::Normal, oldName, &ok,
+                                        oldName, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
 
@@ -576,10 +576,10 @@ void MainWindow::editCustom()
                     item->text( 2 );
 
   bool ok = false;
-  QString name = QInputDialog::getText( i18n("New Custom Entry"),
+  QString name = KInputDialog::getText( i18n("New Custom Entry"),
                                         i18n("Please enter custom entry.\n"
                                              "Format: APP-NAME:VALUE"),
-                                        QLineEdit::Normal, oldName, &ok,
+                                        oldName, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
 
@@ -603,10 +603,10 @@ void MainWindow::newCustom()
   if ( !mCurrentItem ) return;
   
   bool ok = false;
-  QString name = QInputDialog::getText( i18n("New Custom Entry"),
+  QString name = KInputDialog::getText( i18n("New Custom Entry"),
                                         i18n("Please enter custom entry.\n"
                                              "Format: APP-NAME:VALUE"),
-                                        QLineEdit::Normal, QString::null, &ok,
+                                        QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
   

@@ -1,7 +1,7 @@
 /*
    This file is part of KAddressBook.
    Copyright (C) 2003 Tobias Koenig <tokoe@kde.org>
-                 based on the code of KSpread's CSV Import Dialog 
+                 based on the code of KSpread's CSV Import Dialog
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -23,7 +23,6 @@
 #include <qbuttongroup.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
-#include <qinputdialog.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -38,6 +37,7 @@
 #include <kfiledialog.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <kinputdialog.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
@@ -725,7 +725,7 @@ void CSVImportDialog::applyTemplate()
   // let the user chose, what to take
   bool ok = false;
   QString tmp;
-  tmp = QInputDialog::getItem( i18n( "Template Selection" ),
+  tmp = KInputDialog::getItem( i18n( "Template Selection" ),
                   i18n( "Please select a template, that matches the CSV file." ),
                   templates, 0, false, &ok, this );
 
@@ -772,7 +772,7 @@ void CSVImportDialog::saveTemplate()
   if ( !fileName.contains( ".desktop" ) )
     fileName += ".desktop";
 
-  QString name = QInputDialog::getText( i18n( "Template name" ), i18n( "Please enter a name for the template" ) );
+  QString name = KInputDialog::getText( i18n( "Template Name" ), i18n( "Please enter a name for the template:" ) );
 
   if ( name.isEmpty() )
     return;

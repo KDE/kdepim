@@ -15,8 +15,8 @@
 #include "knmainwidget.h"
 
 #include <qhbox.h>
-#include <qinputdialog.h>
 
+#include <kinputdialog.h>
 #include <kaccel.h>
 #include <kxmlguiclient.h>
 #include <kconfig.h>
@@ -1799,7 +1799,7 @@ void KNMainWidget::slotGrpSetUnread()
   int groupLength=g_rpManager->currentGroup()->length();
 
   bool ok = FALSE;
-  int res = QInputDialog::getInteger(
+  int res = KInputDialog::getInteger(
                 i18n( "Mark Last as Unread" ),
                 i18n( "Enter how many articles should be marked unread:" ), groupLength, 1, groupLength, 1, &ok, this );
   if ( ok )

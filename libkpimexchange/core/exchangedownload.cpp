@@ -19,7 +19,6 @@
 */
 
 #include <qfile.h>
-#include <qinputdialog.h>
 #include <qtextstream.h>
 #include <qdatastream.h>
 #include <qcstring.h>
