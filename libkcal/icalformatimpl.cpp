@@ -302,7 +302,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // alarms
   KOAlarm *alarm = incidence->alarm();
-  if (alarm->repeatCount()) {
+  if (alarm->enabled()) {
     kdDebug() << "Write alarm for " << incidence->summary() << endl;
     icalcomponent_add_component(parent,writeAlarm(alarm));
   }
@@ -594,15 +594,27 @@ icalcomponent *ICalFormatImpl::writeAlarm(KOAlarm *alarm)
     icalattachtype_set_url(attach,QFile::encodeName(alarm->audioFile()).data());
     icalcomponent_add_property(a,icalproperty_new_attach(*attach));
 #endif
+  } else if (!alarm->mailAddress().isEmpty()) {
+    action = ICAL_ACTION_EMAIL;
+    icalcomponent_add_property(a,icalproperty_new_attendee(alarm->mailAddress()));
+    // TODO: multiple attendees can be specified
+    icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject()));
+    icalcomponent_add_property(a,icalproperty_new_description(alarm->text()));
   } else {
     action = ICAL_ACTION_DISPLAY;
-    icalcomponent_add_property(a,icalproperty_new_description("An Alarm"));
+    icalcomponent_add_property(a,icalproperty_new_description(alarm->text()));
   }
   icalcomponent_add_property(a,icalproperty_new_action(action));
 
   icaltriggertype trigger;
   trigger.time = writeICalDateTime(alarm->time());
   icalcomponent_add_property(a,icalproperty_new_trigger(trigger));
+
+  if (alarm->repeatCount()) {
+    icalcomponent_add_property(a,icalproperty_new_repeat(alarm->repeatCount()));
+    icalcomponent_add_property(a,icalproperty_new_duration(
+                             icaldurationtype_from_int(alarm->snoozeTime()*60)));
+  }
 
   return a;
 }
@@ -1294,13 +1306,17 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 {
   kdDebug() << "Read alarm for " << incidence->summary() << endl;
 
+  KOAlarm* koalarm = incidence->alarm();
+  koalarm->setRepeatCount(0);
+  koalarm->setEnabled(true);
+
   icalproperty *p = icalcomponent_get_first_property(alarm,ICAL_ANY_PROPERTY);
 
   icaltriggertype trigger;
   icalattachtype attach;
-  
+  icaldurationtype duration;
+
   icalproperty_action action;
-  const char *text;
 
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
@@ -1312,34 +1328,40 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 
       case ICAL_TRIGGER_PROPERTY:
         trigger = icalproperty_get_trigger(p);
-        incidence->alarm()->setTime(readICalDateTime(trigger.time));
+        koalarm->setTime(readICalDateTime(trigger.time));
         break;
 
       case ICAL_DURATION_PROPERTY:
+        duration = icalproperty_get_duration(p);
+        koalarm->setSnoozeTime(icaldurationtype_as_int(duration)/60);
         break;
 
       case ICAL_REPEAT_PROPERTY:
+        koalarm->setRepeatCount(icalproperty_get_repeat(p));
         break;
 
       // Only in AUDIO and PROCEDURE alarms
       case ICAL_ATTACH_PROPERTY:
         // TODO: move reading the attachement after reading the action type
         attach = icalproperty_get_attach(p);
-        incidence->alarm()->setAudioFile(QFile::decodeName(
+        koalarm->setAudioFile(QFile::decodeName(
             icalattachtype_get_url(&attach)));
         break;
   
       // Only in DISPLAY and EMAIL and PROCEDURE alarms
       case ICAL_DESCRIPTION_PROPERTY:
-        text = icalproperty_get_description(p);
-        // TODO: introduce description of alarm
+        koalarm->setText(icalproperty_get_description(p));
         break;
-        
+
+      // Only in EMAIL alarm
       case ICAL_SUMMARY_PROPERTY:
+        koalarm->setMailSubject(icalproperty_get_summary(p));
         break;
-        
+
       // Only in EMAIL alarm
       case ICAL_ATTENDEE_PROPERTY:
+        koalarm->setMailAddress(icalproperty_get_attendee(p));
+        // TODO: multiple attendees can be specified
         break;
   
       default:
@@ -1351,8 +1373,6 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 
   // TODO: check for consistency of alarm properties
 
-  incidence->alarm()->setRepeatCount(1);
-
 // TODO: read alarms
 #if 0
   /* alarm stuff */
@@ -1362,7 +1382,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       anEvent->setTime(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(a))));
       deleteStr(s);
     }
-    anEvent->setRepeatCount(1);
+    anEvent->setEnabled(true);
     if ((vo = isAPropertyOf(vevent, VCPAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
 	anEvent->setProgramFile(s = fakeCString(vObjectUStringZValue(a)));

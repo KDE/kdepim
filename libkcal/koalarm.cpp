@@ -1,4 +1,4 @@
-// $Id$	
+// $Id$
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -23,7 +23,8 @@ KOAlarm::KOAlarm(Incidence *parent)
   mAlarmText = "";
 
   mAlarmSnoozeTime = 5;
-  mAlarmRepeatCount = 0; // alarm disabled
+  mAlarmRepeatCount = 0;
+  mAlarmEnabled = false;
 }
 
 KOAlarm::~KOAlarm()
@@ -64,6 +65,18 @@ void KOAlarm::setMailAddress(const QString &mailAlarmAddress)
 const QString &KOAlarm::mailAddress() const
 {
   return mMailAlarmAddress;
+}
+
+void KOAlarm::setMailSubject(const QString &mailAlarmSubject)
+{
+  if (mAlarmReadOnly) return;
+  mMailAlarmSubject = mailAlarmSubject;
+  mParent->emitEventUpdated(mParent);
+}
+
+const QString &KOAlarm::mailSubject() const
+{
+  return mMailAlarmSubject;
 }
 
 void KOAlarm::setText(const QString &alarmText)
@@ -117,10 +130,10 @@ int KOAlarm::repeatCount() const
 void KOAlarm::toggleAlarm()
 {
   if (mAlarmReadOnly) return;
-  if (mAlarmRepeatCount) {
-    mAlarmRepeatCount = 0;
+  if (mAlarmEnabled) {
+    mAlarmEnabled = false;
   } else {
-    mAlarmRepeatCount = 1;
+    mAlarmEnabled = true;
 //    QString alarmStr(QString::number(KOPrefs::instance()->mAlarmTime));
 // TODO: Fix default alarm time
     QString alarmStr("10");
@@ -131,3 +144,16 @@ void KOAlarm::toggleAlarm()
   }
   mParent->emitEventUpdated(mParent);
 }
+
+void KOAlarm::setEnabled(bool enable)
+{
+  if (mAlarmReadOnly) return;
+  mAlarmEnabled = enable;
+  mParent->emitEventUpdated(mParent);
+}
+
+bool KOAlarm::enabled() const
+{
+  return mAlarmEnabled;
+}
+

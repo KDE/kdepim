@@ -38,6 +38,11 @@ class KOAlarm {
     /** return the address to send mail to when an alarm goes off */
     const QString &mailAddress() const;
 
+    /** set the subject line of the mail */
+    void setMailSubject(const QString &mailAlarmSubject);
+    /** return the subject line of the mail  */
+    const QString &mailSubject() const;
+
     /** set the text to display when an alarm goes off */
     void setText(const QString &alarmText);
     /** return the text string that displays when an alarm goes off */
@@ -62,19 +67,26 @@ class KOAlarm {
         set's the alarm time to be x minutes before dtStart time. */
     void toggleAlarm();
 
+    /** set the alarm enabled status */
+    void setEnabled(bool enable);
+    /** get the alarm enabled status */
+    bool enabled() const;
+
   private:
     QString mAudioAlarmFile;              // url/filename of sound to play
     QString mProgramAlarmFile;            // filename of program to run
     QString mMailAlarmAddress;            // who to mail for reminder
+    QString mMailAlarmSubject;            // subject of email
     QString mAlarmText;                   // text to display/mail for alarm
 
     QDateTime mAlarmTime;                 // time at which to display the alarm
     int mAlarmSnoozeTime;                 // number of minutes after alarm to
                                           // snooze before ringing again
     int mAlarmRepeatCount;                // number of times for alarm to repeat
-
+                                          // after the initial time
     QDateTime mAlarmStart;
     bool mAlarmReadOnly;
+    bool mAlarmEnabled;
 
     Incidence *mParent;
 };

@@ -736,7 +736,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     addPropValue(vevent, VCResourcesProp, tmpStr.latin1());
 
   // alarm stuff
-  if (anEvent->alarm()->repeatCount()) {
+  if (anEvent->alarm()->enabled()) {
     VObject *a = addProp(vevent, VCDAlarmProp);
     tmpStr = qDateTimeToISO(anEvent->alarm()->time());
     addPropValue(a, VCRunTimeProp, tmpStr.latin1());
@@ -1421,7 +1421,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       anEvent->alarm()->setTime(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(a))));
       deleteStr(s);
     }
-    anEvent->alarm()->setRepeatCount(1);
+    anEvent->alarm()->setEnabled(true);
     if ((vo = isAPropertyOf(vevent, VCPAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
 	s = fakeCString(vObjectUStringZValue(a));
