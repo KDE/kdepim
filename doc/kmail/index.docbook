@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>05/11/2000</date>
+<date>07/11/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -1932,8 +1932,9 @@ command. Alternatively, change the first port number, i.e. the first occurence o
 <userinput>110</userinput>, to something above 1024 and configure
 &kmail; to use that port.</para>
 
-<para>Note that this often doesn't make things more secure if your
-mails have already been sent through the Internet.</para></answer>
+<para>Note: if non-encrypted mails have already been sent via internet, the (only)
+advantage of using ssh is that your password will be sent encrypted to the 
+<acronym>POP3</acronym> server.</para></answer>
 </qandaentry>
 
 <qandaentry>
