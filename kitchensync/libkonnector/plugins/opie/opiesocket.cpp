@@ -492,6 +492,8 @@ void OpieSocket::manageCall(const QString &line )
             delete d->edit;
             d->edit = new OpieHelper::CategoryEdit( tmpFileName );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
+            delete d->helper;
+            d->helper = new KonnectorUIDHelper(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId);
 
             if ( d->meta ) {
                 QString file;
@@ -512,8 +514,6 @@ void OpieSocket::manageCall(const QString &line )
                     readPartner(file);
                     KIO::NetAccess::removeTempFile( file );
                 }
-                delete d->helper;
-                d->helper = new KonnectorUIDHelper(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId);
             }else
                 d->first = false;
 	    kdDebug(5202) << "desktops entries" << endl;
