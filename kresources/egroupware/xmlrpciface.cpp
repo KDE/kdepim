@@ -15,6 +15,7 @@
 #include <klocale.h>
 #include <kmdcodec.h>
 
+#include "debugdialog.h"
 #include "xmlrpciface.h"
 
 using namespace KXMLRPC;
@@ -62,7 +63,8 @@ void Query::call( const QString &server, const QString &method,
                   const QValueList<QVariant> &args, const QString &userAgent )
 {
   const QString xmlMarkup = markupCall( method, args );
-  qDebug( "\033[34;40mQuery: %s\033[0;0m", xmlMarkup.latin1() );
+  DebugDialog::addMessage( xmlMarkup, DebugDialog::Output );
+
   QByteArray postData;
   QDataStream stream( postData, IO_WriteOnly );
   stream.writeRawBytes( xmlMarkup.utf8(), xmlMarkup.utf8().length() );
@@ -99,7 +101,7 @@ void Query::slotResult( KIO::Job *job )
   }
 
   QString data = QString::fromUtf8( m_buffer.data(), m_buffer.size() );
-  qDebug( "\033[35;40mResult: %s\033[0;0m", data.latin1() );
+  DebugDialog::addMessage( data, DebugDialog::Input );
 
   QDomDocument doc;
   QString errMsg;
@@ -315,6 +317,8 @@ Server::Server( const KURL &url, QObject *parent, const char *name )
     m_url = url;
 
   m_userAgent = "KDE XMLRPC resources";
+
+  DebugDialog::init();
 }
 
 Server::~Server()

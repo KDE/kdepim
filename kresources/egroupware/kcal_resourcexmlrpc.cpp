@@ -285,6 +285,22 @@ bool ResourceXMLRPC::doSave()
     }
   }
 
+  const Todo::List todos = mCalendar.rawTodos();
+  Todo::List::ConstIterator todoIt;
+
+  for ( todoIt = todos.begin(); todoIt != todos.end(); ++todoIt ) {
+    if ( !(*todoIt)->isReadOnly() ) {
+      QMap<QString, QVariant> args;
+      writeTodo( (*todoIt), args );
+
+      args.insert( "id", idMapper().remoteId( (*todoIt)->uid() ).toInt() );
+      mServer->call( AddTodoCommand, QVariant( args ),
+                     this, SLOT( updateTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+      counter++;
+    }
+  }
+
   if ( counter != 0 )
     mSynchronizer->start();
 
@@ -1144,7 +1160,7 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
   if ( dateTime.isValid() ) {
     todo->setDtStart( dateTime );
     todo->setHasStartDate( true );
-    if ( dateTime.time().isValid() )
+    if ( !dateTime.time().isNull() )
       todo->setFloats( false );
   }
 
@@ -1152,7 +1168,7 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
   if ( dateTime.isValid() ) {
     todo->setDtDue( dateTime );
     todo->setHasDueDate( true );
-    if ( dateTime.time().isValid() )
+    if ( !dateTime.time().isNull() )
       todo->setFloats( false );
   }
 
