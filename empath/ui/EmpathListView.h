@@ -35,6 +35,7 @@ class QTimer;
 
 /**
  * @short Base class for list views in Empath. Allows some funky stuff.
+ * 
  * @author Wilco Greven
  */
 class EmpathListView : public QListView
@@ -50,10 +51,14 @@ class EmpathListView : public QListView
         virtual ~EmpathListView();
 
         enum UpdateAction { DoNothing, Revert, Update };
-    
-        void setUpdateLinks(bool flag, UpdateAction actionOnUpdate = DoNothing ); 
-        bool isUpdateLinks() { return updateLinks_; };
 
+        void setUpdateLink(bool flag, UpdateAction actionOnUpdate = DoNothing ); 
+        bool isUpdateLink() { return updateLink_; };
+
+        /**
+         * When set TRUE the link isn't shown immediately when the cursor is
+         * moved using the keyboard, but after a short delay. 
+         */
         void setDelayedLink(bool flag) { delayedLink_ = flag; };
         bool isDelayedLink() { return delayedLink_; };
 
@@ -80,7 +85,7 @@ class EmpathListView : public QListView
 
     private:
 
-        bool updateLinks_;
+        bool updateLink_;
         QListViewItem * linkedItem_;
 
         bool delayedLink_;

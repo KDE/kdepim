@@ -689,11 +689,13 @@ EmpathMessageListWidget::startDrag(QListViewItem * item)
 {
     EmpathMessageListItem * i = (EmpathMessageListItem *)item;
 
+    EmpathURL messageURL(url_.mailboxName(), url_.folderPath(), i->id());
+
     empathDebug("Starting a drag");
 
     QStrList uriList;
 
-    uriList.append(i->id());
+    uriList.append(messageURL.asString());
 
     // char * c = new char[i->id().length() + 1];
     // strcpy(c, i->id().ascii());

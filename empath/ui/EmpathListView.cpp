@@ -34,7 +34,7 @@
 EmpathListView::EmpathListView(
     QWidget * parent, const char * name)
     :    QListView(parent, name),
-        updateLinks_(false),
+        updateLink_(false),
         delayedLink_(false),
         waitForLink_(false),
         dragEnabled_(true),
@@ -44,7 +44,7 @@ EmpathListView::EmpathListView(
 
     linkedItem_ = 0;
 
-    delayedLinkTimer_ = new QTimer; 
+    delayedLinkTimer_ = new QTimer(this); 
 
     QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
             this, SLOT(s_currentChanged(QListViewItem *)));
@@ -58,10 +58,10 @@ EmpathListView::~EmpathListView()
 }
 
     void
-EmpathListView::setUpdateLinks(bool flag, UpdateAction actionOnUpdate )
+EmpathListView::setUpdateLink(bool flag, UpdateAction actionOnUpdate )
 {
     empathDebug("");
-    updateLinks_ = flag;
+    updateLink_ = flag;
     if (actionOnUpdate == Revert && linkedItem_) 
         setCurrentItem(linkedItem_);
     else if (actionOnUpdate == Update && currentItem())
@@ -71,13 +71,11 @@ EmpathListView::setUpdateLinks(bool flag, UpdateAction actionOnUpdate )
     void
 EmpathListView::s_currentChanged(QListViewItem * item)
 {
-    delayedLinkTimer_->stop();
-    
     // The current item should always be selected in
     // single selection mode.
     if (!isMultiSelection()) setSelected(item, true);
     
-    if (updateLinks_) { 
+    if (updateLink_) { 
     
         if (delayedLink_) {
             delayedLinkTimer_->start(400); // XXX: hardcoded
@@ -98,6 +96,7 @@ EmpathListView::s_updateLink()
     void
 EmpathListView::s_updateLink(QListViewItem *item)
 {
+    delayedLinkTimer_->stop();
     if (item && item != linkedItem_) {
         if (waitForLink_) {
             setEnabled(false);
@@ -131,7 +130,7 @@ EmpathListView::contentsMousePressEvent(QMouseEvent *e)
 {
     if (!e) return;
     
-    updateLinks_ = false;
+    updateLink_ = false;
             
     if (e->button() == RightButton) {
         QListView::contentsMousePressEvent(e);
@@ -177,7 +176,7 @@ EmpathListView::contentsMouseReleaseEvent(QMouseEvent *e)
     if (!e) return;
     
     if (!( e->button() == LeftButton && e->state() & ControlButton ))
-        setUpdateLinks(true, Update);
+        setUpdateLink(true, Update);
 
     maybeDrag_ = false;
     

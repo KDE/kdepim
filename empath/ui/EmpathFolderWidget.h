@@ -102,12 +102,11 @@ class EmpathFolderWidget : public EmpathListView
         EmpathFolderListItem    * popupMenuOver;
         OverType                popupMenuOverType;
         
-        bool    waitForShown_;
-        bool    wantScreenUpdates_;
-
         QTimer *        autoOpenTimer;
         int             autoOpenTime;
         QListViewItem * dropItem;
+
+        QStrList dragContents_;
         
         int autoscrollMargin;
         void startAutoScroll();

@@ -48,9 +48,7 @@
 
 EmpathFolderWidget::EmpathFolderWidget(
     QWidget * parent, const char * name, bool wait)
-    :    EmpathListView(parent, name),
-        waitForShown_(wait),
-        wantScreenUpdates_(true)
+    :    EmpathListView(parent, name)
 {
     setFrameStyle(QFrame::NoFrame);
     viewport()->setAcceptDrops(true);
@@ -64,8 +62,10 @@ EmpathFolderWidget::EmpathFolderWidget(
     setSorting(0);
 
     dropItem = 0;
-    autoOpenTime = 1000;
-    autoOpenTimer = new QTimer;
+    dragContents_ = 0;
+    autoOpenTime = 500;
+    autoOpenTimer = new QTimer(this);
+    
     autoscrollMargin = 5;
     
     QObject::connect(
@@ -79,7 +79,7 @@ EmpathFolderWidget::EmpathFolderWidget(
 
     QObject::connect(autoOpenTimer, SIGNAL(timeout()),
             this, SLOT(s_openCurrent()));
-    
+
     ////////
     
     otherPopup_.insertItem(i18n("Set up accounts"),
@@ -438,11 +438,18 @@ EmpathFolderWidget::startDrag(QListViewItem * item)
     void
 EmpathFolderWidget::contentsDragEnterEvent(QDragEnterEvent * e)
 {
-    setUpdateLinks(false);
     empathDebug("");
+    setUpdateLink(false);
+    
     if (!QUriDrag::canDecode(e)) {
-        e->ignore();
+        e->ignore(); 
         return;
+    } else {
+        // what's inside the packet?
+        QUriDrag::decode(e, dragContents_);
+        EmpathURL contentURL(QString(dragContents_.first()));
+        if (!contentURL.isValid())
+            e->ignore();
     }
 }
 
@@ -450,11 +457,7 @@ EmpathFolderWidget::contentsDragEnterEvent(QDragEnterEvent * e)
 EmpathFolderWidget::contentsDragMoveEvent(QDragMoveEvent * e)
 {
     empathDebug("");
-    if (!QUriDrag::canDecode(e)) {
-        e->ignore();
-        return;
-    }
-    
+
     QPoint vp = contentsToViewport(e->pos());
     
     QRect insideMargin(
@@ -478,7 +481,7 @@ EmpathFolderWidget::contentsDragMoveEvent(QDragMoveEvent * e)
         e->accept(QRect(0,0,0,0));
         autoOpenTimer->stop();
     } else { 
-        e->accept(); 
+        e->accept(itemRect(i)); 
         
         if (i != dropItem) {
             autoOpenTimer->stop();
@@ -512,8 +515,7 @@ EmpathFolderWidget::contentsDragLeaveEvent(QDragLeaveEvent *)
     autoOpenTimer->stop();
     stopAutoScroll();
     dropItem = 0;
-    
-    setUpdateLinks(true, Revert);
+    setUpdateLink(true, Revert);
 }
 
     void
@@ -522,11 +524,6 @@ EmpathFolderWidget::contentsDropEvent(QDropEvent * e)
     empathDebug("");
     autoOpenTimer->stop();
     stopAutoScroll();
-    
-    if (!QUriDrag::canDecode(e)) {
-        e->ignore();
-        return;
-    }
     
     QListViewItem * item = itemAt(contentsToViewport(e->pos()));
     
@@ -568,6 +565,7 @@ EmpathFolderWidget::contentsDropEvent(QDropEvent * e)
     
     e->accept();
 
+    setUpdateLink(true, Revert);
 }
 
     void
