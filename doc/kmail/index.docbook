@@ -58,7 +58,7 @@ $Id$
 
 </authorgroup>
 
-<date>2002-09-30</date>
+<date>2002-10-01</date>
 <releaseinfo>1.04.07</releaseinfo>
 
 <copyright>
@@ -91,8 +91,8 @@ $Id$
 <chapter id="intro">
 <title>Introduction</title>
 
-<para>The &kmail; Team welcomes you to &kmail;, a user-friendly mailer for the
-K Desktop Environment. Our goal is to make a mailer that is beautiful
+<para>The &kmail; Team welcomes you to &kmail;, a user-friendly email client for the
+K Desktop Environment. Our goal is to make &kmail; a program that is beautiful
 and intuitive without sacrificing power. </para>
 
 <para>If you have never set up an email client on a &UNIX; system
@@ -110,7 +110,8 @@ be done by using <link linkend="keyboard-shortcuts">Keyboard Shortcuts</link>.</
 </listitem>
 <listitem>
 <para>Although &kmail; can be considered reliable you should keep 
-backups of your messages, &ie; just copy the files in <filename class="directory">~/Mail</filename>
+backups of your messages, &ie; just copy the files and directories 
+in <filename class="directory">~/Mail</filename>
 (including the hidden ones that start with a dot) to a safe place.</para>
 </listitem>
 <!-- TODO: add other tips for "invisible" features here -->
@@ -140,30 +141,32 @@ start working with it right away. For more in-depth information see the
 appendix</link>.</para>
 
 <para>Invoking &kmail; for the first time creates a directory called
-<filename class="directory">Mail</filename> containing the initial files
+<filename class="directory">Mail</filename> in your home directory.
+This directory contains the initial folders
 (<filename>inbox</filename>, <filename>outbox</filename>,
 <filename>sent-mail</filename>, <filename>trash</filename> and
-<filename>drafts</filename>) in your home directory. Use <menuchoice>
+<filename>drafts</filename>). Use <menuchoice>
 <guimenu>Settings</guimenu> <guimenuitem>Configure
 &kmail;...</guimenuitem> </menuchoice> to enter some initial information
 so &kmail; will be able to properly retrieve and send your
 messages.</para>
 
 <para>The Configure window consists of six sections:
-<guilabel>Identity</guilabel>, <guilabel>Network</guilabel>,
+<guilabel>Identities</guilabel>, <guilabel>Network</guilabel>,
 <guilabel>Appearance</guilabel>, <guilabel>Composer</guilabel>, 
 <guilabel>Security</guilabel>, and
-<guilabel>Miscellaneous</guilabel>.</para>
+<guilabel>Folders</guilabel>.</para>
 
 <para>To begin sending and receiving messages you will only have to
-change the settings in the <guilabel>Identity</guilabel> and
+change some settings in the <guilabel>Identities</guilabel> and
 <guilabel>Network</guilabel> pages.</para>
 
 <sect1 id="setting-your-identity">
 <title>Setting your Identity</title>
 
-<para>The settings in the <guilabel>Identity</guilabel> page are fairly
-straightforward. Fill in the <guilabel>Name</guilabel> field with your
+<para>The settings in the <guilabel>Identities</guilabel> page are fairly
+straightforward. Select your defautl identity and click <guibutton>Modify</guibutton>.
+Fill in the <guilabel>Name</guilabel> field with your
 full name (&eg; <userinput>John Doe</userinput>) and the
 <guilabel>Organization</guilabel> field (optional) with the appropriate
 information. Next, fill in the <guilabel>Email Address</guilabel> field with your
@@ -172,7 +175,8 @@ using <application>PGP</application> or
 <application>GnuPG</application> you need to set your key in 
 the <guilabel>OpenPGP Key</guilabel> field in the <guilabel>Advanced</guilabel>
 tab. Optionally, go to the <guilabel>Signature</guilabel> tab and
-enter your signature.</para>
+enter your signature. This is a short text that will be automatically
+appended to all your messages.</para>
 
 </sect1>
 
@@ -182,7 +186,7 @@ enter your signature.</para>
 <para>The <guilabel>Network</guilabel> page contains the settings that
 tell &kmail; how to send and receive your email messages. Many of these settings
 can vary greatly depending on the setup of your system and on the kind
-of network that your mail server is located. If you do not know what
+of network that your mail server is located in. If you do not know what
 setting to choose or what to put in a field, consult your Internet
 Service Provider (<acronym>ISP</acronym>) or system
 administrator.</para>
@@ -194,8 +198,8 @@ administrator.</para>
 ways to send messages. The first item in the list is the default
 way to send messages. Using the <guibutton>Add...</guibutton>
 button you can choose between two different ways of sending messages:
-<guilabel>sendmail</guilabel> and
-<guilabel>SMTP</guilabel>. &Sendmail; here
+<guilabel>SMTP</guilabel> and
+<guilabel>Sendmail</guilabel>. &Sendmail; here
 means a local software installation - this has a
 reputation of being difficult to set up, so if you do not already have a
 working &Sendmail; configuration, choose
@@ -232,13 +236,13 @@ chapter.</para>
 
 <para>To set up an account so you can receive mail, press the
 <guibutton>Add...</guibutton> button in the <guilabel>Receiving</guilabel>
-tab. You will then be prompted for the type of account.  Most users should
-select <guilabel>Pop3</guilabel> or <guilabel>IMAP</guilabel>. If
+tab. You will then be prompted for the type of your email account.  Most users should
+select <guilabel>POP3</guilabel> or <guilabel>IMAP</guilabel>. If
 you want to use a local mailbox file, please see the <link linkend="faq-file-locking">FAQ
 about file locking</link>.</para>
         
 <para>You will then be presented with
-the <guilabel>Add Account</guilabel> window. First, fill in the
+the <guilabel>Add account</guilabel> window. First, fill in the
 <guilabel>Name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Host</guilabel> should be filled in with the appropriate information
@@ -264,8 +268,8 @@ this feature, simple leave the field blank.</para>
 &kmail; removes the messages you deleted from the
 server as soon as you leave a folder. Otherwise the messages are
 only marked as deleted and it is up to you to compact the folders
-manually by using the menu item <guimenuitem>Compact All
-Folders</guimenuitem>.</para>
+manually by using the menu item <menuchoice><guimenu>File</guimenu><guimenuitem>Compact All
+Folders</guimenuitem></menuchoice>.</para>
 
 <para>If you check <guilabel>Show hidden folders</guilabel>,
 folders whose name starts with a dot are also displayed.</para>
@@ -275,12 +279,12 @@ folders whose name starts with a dot are also displayed.</para>
 <sect3 id="receiving-mail-pop3">
 <title>Options only relevant to POP3</title>
 
-<para>Select <guilabel>Delete mail from server</guilabel> if you don't want to
+<para>Select <guilabel>Delete message from server after fetching</guilabel> if you don't want to
 leave your messages on the server after you downloaded it.</para>
 
 <para>Select <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> if you
-don't want to check this account whenever you use <menuchoice><guimenu>Check
-Mail</guimenu></menuchoice>.  You can still check for new messages on this account
+don't want to check this account whenever you use <menuchoice><guimenu>File</guimenu><guimenuitem>Check
+Mail</guimenuitem></menuchoice>.  You can still check for new messages on this account
 with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
 In</guimenuitem></menuchoice>.</para>
 
@@ -289,7 +293,7 @@ In</guimenuitem></menuchoice>.</para>
 under <guilabel>Check interval (minutes)</guilabel>.</para>
 
 <para><guilabel>inbox</guilabel> is the default folder for incoming
-mail. If you want to change that for some reason, you can do so with
+messages. If you want to change that for some reason, you can do so with
 <guilabel>Destination folder</guilabel>. But what you probably want is a
 <link linkend="filters">filter</link>, which has nothing to do with this
 option.</para>
@@ -347,10 +351,10 @@ on the <guilabel>Extras</guilabel> resp. <guilabel>Security</guilabel> tab
 to automatically select the most secure settings supported by your server.</para>
 
 <para>You are now ready to send and receive mail. For
-<acronym>IMAP</acronym>, click on the <guilabel>+</guilabel> sign in the
+<acronym>IMAP</acronym>, just open your folders in the
 folder tree in &kmail;'s main window. &kmail; then connects to your
-server and displays the folders it finds. For POP3 use
-<menuchoice><guimenu>File</guimenu> <guimenuitem>Check
+server and displays the messages it finds. For POP3 use
+<menuchoice><guimenu>File</guimenu><guimenuitem>Check
 Mail</guimenuitem></menuchoice>.</para>
 
 </sect3>
@@ -363,12 +367,12 @@ Mail</guimenuitem></menuchoice>.</para>
 <title>Testing your Setup</title>
 
 <para>First, you should send yourself a message to test your
-configuration. To send a message, hit <keycombo
+configuration. To send a message, either hit <keycombo
 action="simul">&Ctrl;<keycap>N</keycap></keycombo>, select the
 <guiicon>New Message</guiicon> icon (the empty sheet of paper) or select
 the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
 Message...</guimenuitem></menuchoice> menu item.  The
-composer window will appear. Fill in the
+<link linkend="the-composer-window">composer window</link> will appear. Fill in the
 <guilabel>To:</guilabel> field with your email address and type
 something in the <guilabel>Subject</guilabel> field. Send the message by
 selecting <menuchoice><guimenu>Message</guimenu> <guimenuitem>Send</guimenuitem>
@@ -381,7 +385,7 @@ window, a progress bar will indicate how many messages are being
 downloaded. If you receive the message you just sent, then
 congratulations!  If, however, you receive any error messages while
 testing your setup, make sure that your network connection is working
-and recheck your settings by selecting
+and recheck your settings at
 <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Configure
 &kmail;...</guimenuitem></menuchoice>.</para>
 
@@ -402,19 +406,15 @@ when &kmail; is started. It is divided into three panes:</para>
 <varlistentry>
 <term>Folders pane (left pane)</term>
 <listitem>
-<para>This pane contains a list of your message folders (other email programs
-may call them mailboxes). If there is a number after the folder name this indicates
-that this folder contains unread messages, except for the <guilabel>outbox</guilabel>
-which shows the number of total messages.
- To select a folder, simply click on
+<para>This pane contains the list of your message folders (other email programs
+may call them mailboxes). To select a folder, simply click on
 it. The messages contained in the folder will now appear in the Headers
-pane. The number of unread messages and the total number of messages in the
-selected folder is now displayed in the status bar.  The folders can be
-displayed in both a short view, which takes up only a small portion of the left
-side of the screen, and a long view, which takes up the entire left side of the
-screen but is able to show more mailboxes. You can toggle between these two views
-under <guilabel>Appearance</guilabel>/<guilabel>Layout</guilabel> in the
-<guilabel>Configure &kmail;...</guilabel> dialog. Also see the <link
+pane. The folder list can be displayed in both a short view, which takes up only
+a small portion of the left side of the screen, and a long view, which takes up the 
+entire left side of the screen but is able to show more mailboxes. You can toggle
+between these two views under <guilabel>Appearance</guilabel>/<guilabel>Layout</guilabel>
+in the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+&kmail;...</guimenuitem></menuchoice> dialog. Also see the <link
 linkend="folders">Folders Section</link> for more information about how to use
 folders.</para>
 </listitem>
@@ -425,25 +425,19 @@ folders.</para>
 <para>This pane lists header information (message Status Flags, Sender, Subject,
 Date, optionally Size) for the messages in the currently selected folder. Clicking on a header
 will select that message and display it in the Message pane. You can also select
-a series of messages by clicking on one message, holding down the
-&Shift; key, and clicking on another message. The two messages
-you just clicked on will be selected, along with all the messages in between. By
-holding down the &Ctrl; key you can select any number of messages without those
-in between. You may sort the messages by clicking on the column that you wish to
-sort. If you click on the same column more then once, sort order will toggle
-between ascending/descending. If you click on the <guilabel>Subject</guilabel>
-column, you can toggle sorting between <guilabel>Subject</guilabel> ascending/descending and 
-<guilabel>Status</guilabel> ascending/descending. 
-Similarly, if you click on the <guilabel>Date</guilabel>
-column, you can toggle sorting between <guilabel>Date</guilabel> ascending/descending and 
-<guilabel>Date (Order of Arrival)</guilabel> ascending/descending.</para>
+more than one message by holding down the &Ctrl; key when clicking on messages.
+You may sort the messages by clicking on the column that you wish to
+sort. If you click on the same column more than once, sort order will toggle
+between ascending/descending.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term>Message pane (lower right pane)</term>
 <listitem>
-<para>This pane displays the currently selected
-message. Attachments appear at the bottom of the message. 
+<para>This pane displays the currently selected message. Attachments appear
+at the bottom of the message, either as icons or in a separate part of the pane,
+depending on <menuchoice><guimenu>View</guimenu>
+<guimenuitem>Attachments</guimenuitem></menuchoice>.
 You can scroll through the message page by page
 using the <keycap>Page Up</keycap> and <keycap>Page down</keycap> keys, or line
 by line using the <keycap>up arrow</keycap> and <keycap>down arrow</keycap>
@@ -531,9 +525,10 @@ to using <keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo> o
 <title>The Composer Window</title>
 
 <para>The composer window is used to write new messages.
-It can be invoked from the <menuchoice><guimenu>Message</guimenu></menuchoice>
-menu or from the <guiicon>New Message</guiicon> icon on the <guilabel>Mail
-Reader</guilabel> window button bar.</para>
+It can be invoked via <menuchoice><guimenu>Message</guimenu>
+<guimenuitem>New Message...</guimenuitem></menuchoice>
+menu or from the <guiicon>New Message</guiicon> icon on the main
+window.</para>
 
 <sect2 id="composing-a-message">
 <title>Composing a Message</title>
@@ -546,13 +541,13 @@ the current identity will become the default identity when you open
 a new composer next time.</para>
 
 <para>There are a variety of shortcuts to help
-you with writing your messages. The <guiicon>ellipsis</guiicon> buttons next to
-the <guilabel>To:</guilabel>, <guilabel>Cc:</guilabel>, and
-<guilabel>Bcc:</guilabel> fields will call up the address book so that you can
+you with writing your messages. The <guibutton>...</guibutton> buttons next to
+the <guilabel>To:</guilabel>, <guilabel>CC:</guilabel>, and
+<guilabel>BCC:</guilabel> fields will call up the address book so that you can
 select addresses from there.</para>
 
 <para>When you start typing an address in the
-<guilabel>To:</guilabel>/<guilabel>Cc:</guilabel>/<guilabel>Bcc:</guilabel>
+<guilabel>To:</guilabel>/<guilabel>CC:</guilabel>/<guilabel>BCC:</guilabel>
 fields, a popup will appear that offers matching addresses that have been used recently 
 and matching addresses from your address book. If you don't like the automatic 
 popup you can disable it by clicking with the &RMB; on the field and choosing 
@@ -568,8 +563,8 @@ users, depending on your system configuration.</para>
 message, click the <guiicon>Send</guiicon> icon (the envelope) to send
 the message now, or click the <guiicon>Queue</guiicon> icon to put
 the message in the outbox. If your message isn't finished yet, select
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Save in drafts
-folder</guimenuitem></menuchoice>. If you want to send an <link
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Save in Drafts
+Folder</guimenuitem></menuchoice>. If you want to send an <link
 linkend="pgp-encrypt-your-messages">encrypted</link>
 or <link linkend="pgp-sign-your-messages">digitally signed</link> message, select the
 <guiicon>Sign Message</guiicon> resp. <guiicon>Encrypt 
@@ -586,7 +581,7 @@ below:</para>
 
 <itemizedlist>
 <listitem>
-<para>Click the <guiicon>paper clip</guiicon> button and select the file you wish
+<para>Click the <guiicon>Attach File</guiicon> (paper clip) icon and select the file you wish
 to attach.</para>
 </listitem>
 <listitem>
@@ -621,7 +616,7 @@ be attached to your message by using the appropriate options in the
 <menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>PGP</application>
 key attachments are handled like file attachments.</para>
 
-<!-- TODO: "fixed" in the future? -->
+<!-- fixme -->
 <!-- copied from below -->
 <warning><para>You can encrypt your messages sent with &kmail;, but this does
 not mean that the attachments are encrypted. You have to encrypt your
@@ -635,7 +630,7 @@ them.</para></warning>
 <title>Checking the Spelling of your Message</title>
 
 <para>To check the spelling of your message, select
-<menuchoice><guimenu>Edit</guimenu>
+<menuchoice><guimenu>Tools</guimenu>
 <guimenuitem>Spelling...</guimenuitem></menuchoice>. &kmail; uses 
 <ulink url="/kspell/">&kspell;</ulink> to
 check spelling, which is the &kde; frontend to the 
@@ -676,7 +671,7 @@ mail. </para>
 <varlistentry>
 <term><guilabel>sent-mail:</guilabel></term>
 <listitem>
-<para>Contains copies of all messages that you have sent. </para>
+<para>Contains copies of all messages that you have moved to trash. </para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -697,34 +692,25 @@ folder instead of sending them.</para>
 <para>You may find that the standard folders are fine for your
 needs. Eventually, though, you will probably need folders to help you organize
 your messages. To create a new folder, select
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Create...</guimenuitem></menuchoice>
-A window will then prompt you for the name of the folder. If you don't want it
-to be a top level folder, you may choose the folder under which it will
-appear. If you ever need to change the settings for a folder, select the folder
-you wish to modify in the Folders pane and select
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>New Folder...</guimenuitem></menuchoice>
+The <link linkend="folders-properties-window">folder proeprties</link> dialog
+will then prompt you for the necessary information. If you ever need to change
+the settings for a folder, select the folder you wish to modify in the Folders pane and select
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Properties...</guimenuitem>
 </menuchoice>.</para>
-<!-- TODO: link to more detailed desc. of all options -->
 
 <para>To move messages from one folder into another, select the message(s) you
 want to move and press the <keycap>M</keycap> key or select
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Move
-to</guimenuitem></menuchoice>. A list of folders will appear.  Select the folder
+To</guimenuitem></menuchoice>. A list of folders will appear.  Select the folder
 from the list that you want to move the messages to.  Messages can also be moved
 by dragging them from the Headers pane into the Folders pane.</para>
 
 <para>If you want to clear all of the messages out of a folder choose
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Empty</guimenuitem></menuchoice>.
-All the messages in the selected folder will then be moved to the trash folder. If
-the selected folder is the <guilabel>trash</guilabel> folder, all of the
-messages will be permanently deleted.</para>
-
-<para>You can use 
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Remove</guimenuitem></menuchoice>
-to remove a folder and all its messages if you choose <guibutton>Remove</guibutton>
-from the appearing confirmation dialog, but unlike with
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Empty</guimenuitem></menuchoice>
-there's no way to get the contents of the folder back.</para>
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Message to
+Trash</guimenuitem></menuchoice>. You can use 
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Delete Folder</guimenuitem></menuchoice>
+to remove a folder and all its messages and sub folders.</para>
 
 <sect2 id="folders-properties-window">
 <title>Folder Properties</title>
@@ -782,6 +768,7 @@ folder to save your own sent messages.</para>
 
 </sect1>
 
+<!-- ### -->
 <sect1 id="filters">
 <title>Message Filters</title>
 <anchor id="filters-id"/>
@@ -1391,7 +1378,7 @@ information on the settings in the <guilabel>Network</guilabel> page.</para>
 
 <para>To check for messages from a particular account, use the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
-in...</guimenuitem></menuchoice> submenu to select the account to check
+In</guimenuitem></menuchoice> submenu to select the account to check
 for mail. You can also press the mouse button on the <guiicon>Check
 Mail</guiicon> icon for some time to get a list of accounts.</para>
 
@@ -1654,6 +1641,7 @@ the key</replaceable></userinput> resp.
 </sect1>
 </chapter>
 
+<!-- ### -->
 <chapter id="configure">
 <title>Configure &kmail;</title>
 
@@ -1669,10 +1657,10 @@ icons in the list on the left hand side of the dialog. This chapter
 will describe each page in detail.</para>
 
 <sect1 id="configure-identity">
-<title>The <guilabel>Identity</guilabel> Page</title>
+<title>The <guilabel>Identities</guilabel> Page</title>
 
 <para>You can find a quick introduction to the
-<guilabel>Identity</guilabel> page in the <link
+<guilabel>Identities</guilabel> page in the <link
 linkend="getting-started">Getting Started</link> section.</para>
 
 <para>This page allows you to create one or more
@@ -1681,39 +1669,20 @@ address and other settings. For example, you can create one identity
 for business communication and one for
 personal communication. If you have more than one email
 address, you can create one identity per address. You will then be
-able to select an address on a per-message basis.</para>
+able to select an identity on a per-message basis.</para>
 
-<para>The page consists of a popup menu named
-<guilabel>Identity</guilabel>, three buttons to perform some general
-identity list management and three tabs holding each identity's
-settings.</para>
-
-<para>The <guilabel>Identity</guilabel> popup will always show at
-least one identity: the <guilabel>Default</guilabel> identity. You
-cannot delete and you cannot rename the <guilabel>Default</guilabel>
+<para>The page consists of a list of identities and buttons to manage
+them. The identities list will always show at
+least one identity, which is then the <guilabel>Default</guilabel> 
 identity.</para>
 
-<para>To rename the currently selected identity, click on the
-<guibutton>Rename...</guibutton> button. A small dialog will come up
-asking for the new name of the identity.</para>
-
-<para>To delete the currently selected identity, click on the
-<guibutton>Remove</guibutton> button and confirm the action in the
-dialog that pops up.</para>
-
-<para>Please note that the <guilabel>Default</guilabel>
-identity cannot be renamed and removed.</para>
-
 <para>To add a new identity to the identity list, click on the
-<guibutton>New...</guibutton> button. A dialog will come up that
-allows you to select certain defaults for your new identity.</para>
+<guibutton>New...</guibutton> button. 
+The <link linkend="configure-identity-newidentitydialog">New identity</link> dialog
+will show up.</para>
 
-<!-- TODO?: s/dialog/form(ular)/? since it's not really a dialog (see iface hall of shame) -->
 <sect2 id="configure-identity-newidentitydialog">
 <title>The <guilabel>New Identity</guilabel> Dialog</title>
-
-<para>You can reach this dialog via &kmail;'s <link
-linkend="configure">configure dialog</link>.</para>
 
 <para>You can enter the name of the new identity into the
 <guilabel>New Identity</guilabel> edit field. This will be the name
@@ -1722,7 +1691,9 @@ shown in the identity list.</para>
 <para>You can choose how the new identity should be initialized by
 checking one of the three radio buttons in the middle of the
 dialog:</para>
+
 <variablelist>
+
 <varlistentry>
 <term><guilabel>With empty fields</guilabel></term>
 <listitem>
@@ -1730,16 +1701,18 @@ dialog:</para>
 standard values.</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Use Control Center settings</guilabel></term>
 <listitem>
 <para>Uses the settings of the <application>Control
 Center</application>'s default email profile (you can edit that one
-under <menuchoice><guimenu>Personalization</guimenu>
+under <menuchoice><guimenu>Internet &amp; Network</guimenu>
 <guimenuitem>Email</guimenuitem></menuchoice> in the
 <application>Control Center</application>).</para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Duplicate existing identity</guilabel></term>
 <listitem>
@@ -1748,7 +1721,9 @@ choose which identity to copy from by selecting the corresponding
 entry in the <guilabel>Existing identities</guilabel> popup.</para>
 </listitem>
 </varlistentry>
+
 </variablelist>
+
 </sect2>
 
 <sect2 id="configure-identity-general">
@@ -1758,7 +1733,7 @@ entry in the <guilabel>Existing identities</guilabel> popup.</para>
 basic settings for the currently selected identity.</para>
 <variablelist>
 <varlistentry>
-<term><guilabel>Name</guilabel></term>
+<term><guilabel>Your name</guilabel></term>
 <listitem>
 <para>Enter your full name here (sometimes also called <emphasis>display name</emphasis>).
 Although this field isn't strictly mandatory, it is recommended to enter 
@@ -1776,18 +1751,17 @@ in the <guilabel>From</guilabel> header field.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>Email Address</guilabel></term>
+<term><guilabel>Email address</guilabel></term>
 <listitem>
-<para>Enter your email address here (without the <emphasis>display
-name</emphasis>).</para>
+<para>Enter your email address here.</para>
 </listitem>
 </varlistentry>
 </variablelist>
-<para>So if your email address is <replaceable>Joe User
+<para>So if your address is <replaceable>Joe User
 &lt;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
-User</userinput> into the <guilabel>Name</guilabel> field and
+User</userinput> into the <guilabel>Your name</guilabel> field and
 <userinput>joe@example.com</userinput> into the <guilabel>Email
-Address</guilabel> field.</para>
+address</guilabel> field.</para>
 </sect2>
 
 <sect2 id="configure-identity-advanced">
@@ -1798,7 +1772,7 @@ rarely used or otherwise specialized settings for the currently
 selected identity.</para>
 <variablelist>
 <varlistentry>
-<term><guilabel>Reply-To Address</guilabel></term>
+<term><guilabel>Reply-To address</guilabel></term>
 <listitem>
 <para>Enter the address to which replies to your messages should be
 sent. Only fill out this field if it is different from your normal
@@ -1819,8 +1793,10 @@ rare cases.</para></note>
 </listitem>
 </varlistentry>
 
+<!-- fixme: bcc addresses -->
+
 <varlistentry>
-<term><guilabel>OpenPGP Key</guilabel></term>
+<term><guilabel>OpenPGP key</guilabel></term>
 <listitem>
 <para>Select here the <application>OpenPGP</application> key
 key that should be used to (digitally) sign messages when this
@@ -1887,7 +1863,8 @@ tab</link> of the <link linkend="configure-network">
 <sect2 id="configure-identity-signature">
 <title><guilabel>Signature</guilabel></title>
 
-<para>This tab allows you to specify a signature (footer/disclaimer)
+<para>This tab allows you to specify a signature (sometimes called
+<quote>footer</quote> or <quote>disclaimer</quote>)
 to be appended to each message sent using this identity.</para>
 
 <note><para>This type of signature has nothing to do with the
@@ -1898,7 +1875,7 @@ the term is already used everywhere else, we keep this notation. Just
 keep in mind that these signatures and digital signatures are two
 completely different things.</para></note>
 
-<para>Check the <guilabel>Enable Signature</guilabel> option if you
+<para>Check the <guilabel>Enable signature</guilabel> option if you
 want to be able to append the signature when using this identity. To
 <emphasis>automatically</emphasis> append it to every new message
 you also have to select <guilabel>Automatically append
@@ -1940,10 +1917,12 @@ from the body of the message by a line containing only the three
 character <quote>-- </quote> (dash, dash, space). &kmail; will
 automatically prepend the signature text with this line if it is not
 already present in the signature text.</para>
-<para>If - for whatever reasons - you do not wish the separator to be
-included automatically by &kmail;, simply add it to the signature 
+<para>If you do not wish the separator to be prepended
+automatically by &kmail;, simply add it to the signature 
 text yourself.</para>
 </note>
+
+<!-- ### -->
 
 </sect2>
 
@@ -3505,7 +3484,6 @@ like playing a sound.</para>
 </sect2>
 </sect1>
 
-<!-- ### -->
 <sect1 id="composer-window-menus">
 <title>The Composer Window</title>
 
