@@ -43,7 +43,8 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
 
     {
         QHBox* hbox   = new QHBox(tab);
-        _hideOnCloseW = new QCheckBox (i18n("Hide taskbar icon"), hbox, "_hideOnCloseW");
+        _hideOnCloseW = new QCheckBox ( i18n("Hide taskbar icon and application instead of quitting"),
+                                        hbox, "_hideOnCloseW");
     }
 
     _doIdleDetectionW = new QCheckBox(i18n("Try to detect idleness"), tab,"_doIdleDetectionW");
@@ -90,7 +91,8 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
    _timeLogW = new KURLRequester(box4, "_timeLogW");
 
   QHBox *box5 = new QHBox(autoSaveMenu);
-  _hideOnCloseW = new QCheckBox (i18n("Hide taskbar icon"), box5, "_hideOnCloseW");
+  _hideOnCloseW = new QCheckBox ( i18n("Hide taskbar icon and application instead of quitting"),
+                                  box5, "_hideOnCloseW");
   connect(_hideOnCloseW, SIGNAL(clicked()), this, SLOT(hideOnCloseCheckBoxChanged()));
 
   //----------------------------------------------------------------------
