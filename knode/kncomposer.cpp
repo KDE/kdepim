@@ -199,7 +199,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   KStdAction::copy(this, SLOT(slotCopy()), actionCollection());
 
-  KStdAction::paste(this, SLOT(slotPaste()), actionCollection());
+  KStdAction::pasteText(this, SLOT(slotPaste()), actionCollection());
 
   new KAction(i18n("Paste as &Quotation"), 0, v_iew->e_dit,
                    SLOT(slotPasteAsQuotation()), actionCollection(), "paste_quoted");
