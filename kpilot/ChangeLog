@@ -1,3 +1,38 @@
+KPilot Developer's notes for december 2nd 2001
+===============================================
+
+More work on the expense conduit. In conduits/expense:
+
+* setupDialog.h
+  - Added an #include <qwidget.h> to make header self-contained.
+* setupDialog.cc
+  - Disabled MySQL button, since there's no code to make it work.
+  - Disabled "logRotate" stuff, since I can't remember what was
+    wanted there and there's no code for it.
+* expense.cc
+  - Reordered #includes, removed extra #ifdeffing. Removed extra #includes.
+  - Split up actions into CSV, MySQL and Postgres specific parts.
+  - Made the other-db methods also write CSV files if needed.
+  - Support both overwrite and append modes for CSV.
+  - TODO: create the mysql code.
+  - TODO: patch possible security hole in echo passwd |
+  - TODO: spawn fewer processes for psql.
+  - TODO? use klocale's date formatting, not US-specific code.
+* expense.h
+  - Changes reflecting the above, and
+  - Documenting what's going on.
+
+In other news:
+
+* conduits/knotes/knotes-action.cc
+  listNotes() - Removed spurious #ifdef DEBUG. Test mode should always work.
+
+And oh, wow, thanks to messing around with the logWidget for KPilot,
+KPilotTest now also has a funky splash screen :)
+
+* kpilot/main-test.cc
+  main() - connect signals from the test action to the log widget.
+
 KPilot Developer's notes for november 25th 2001
 ===============================================
 
@@ -7,6 +42,7 @@ In other news:
 
 * kpilot/logWidget.{h,cc}
   Nifty feature for the sync log: clear the log. Save the log. ToolTips.
+
 
 KPilot Developer's notes for november 18th 2001
 ===============================================

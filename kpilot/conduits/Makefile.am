@@ -5,7 +5,8 @@
 ### The NULL conduit is a neat programming example, but shouldn't be
 ### installed on user systems.
 ###
-SUBDIRS = knotes
+SUBDIRS = knotes \
+	expense
 
 #	vcalconduit \
 #	popmail \

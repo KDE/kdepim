@@ -6,6 +6,7 @@ issues are periodically purged from this list.
 General TODO
 ============
 
+* Make the kpilotTest program able to do more than one sync in a run.
 * Make the FileInstallWidget use a KDirWatcher.
 * Add conduit-sync in the daemon as well.
 + Make daemon able to sync more than once in a run.
