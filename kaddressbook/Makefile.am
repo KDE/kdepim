@@ -30,7 +30,7 @@ libkaddressbookpart_la_SOURCES = \
  filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp imagewidget.cpp \
  importdialog.cpp incsearchwidget.cpp jumpbuttonbar.cpp kaddressbook.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
- kaddressbookview.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
+ kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
  phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp undo.cpp undocmds.cpp \
  viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
  viewconfigurewidget.cpp viewmanager.cpp
@@ -43,9 +43,9 @@ noinst_HEADERS = \
  addviewdialog.h configurewidget.h emaileditwidget.h filter.h \
  filtereditdialog.h filterselectionwidget.h geowidget.h imagewidget.h \
  importdialog.h incsearchwidget.h jumpbuttonbar.h kabprefs.h kaddressbook.h \
- kaddressbook_part.h kaddressbookmain.h kaddressbookview.h ldapsearchdialog.h \
- nameeditdialog.h phoneeditwidget.h secrecywidget.h soundwidget.h \
- typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
+ kaddressbook_part.h kaddressbookmain.h kaddressbookview.h keywidget.h \
+ ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
+ soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
  viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h
 
 rcdir = $(kde_datadir)/kaddressbook

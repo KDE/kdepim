@@ -56,6 +56,7 @@
 #include "geowidget.h"
 #include "imagewidget.h"
 #include "kabprefs.h"
+#include "keywidget.h"
 #include "nameeditdialog.h"
 #include "phoneeditwidget.h"
 #include "secrecywidget.h"
@@ -420,6 +421,13 @@ void AddresseeEditorWidget::setupTab3()
   layout->addWidget( mGeoWidget, 0, 0, Qt::AlignTop );
 
   //////////////////////////////////////
+  // Sound
+  mSoundWidget = new SoundWidget( tab3 );
+  mSoundWidget->setMinimumSize( mSoundWidget->sizeHint() );
+  connect( mSoundWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
+  layout->addWidget( mSoundWidget, 0, 1, Qt::AlignTop );
+
+  //////////////////////////////////////
   // Images
   mImageWidget = new ImageWidget( tab3 );
   mImageWidget->setMinimumSize( mImageWidget->sizeHint() );
@@ -427,14 +435,11 @@ void AddresseeEditorWidget::setupTab3()
   layout->addWidget( mImageWidget, 1, 0, Qt::AlignTop );
 
   //////////////////////////////////////
-  // Sound
-  mSoundWidget = new SoundWidget( tab3 );
-  mSoundWidget->setMinimumSize( mSoundWidget->sizeHint() );
-  connect( mSoundWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  layout->addWidget( mSoundWidget, 0, 1, Qt::AlignTop );
-
-   // Build the layout and add to the tab widget
-  layout->activate(); // required
+  // Keys
+  mKeyWidget = new KeyWidget( tab3 );
+  mKeyWidget->setMinimumSize( mKeyWidget->sizeHint() );
+  connect( mKeyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
+  layout->addWidget( mKeyWidget, 1, 1, Qt::AlignTop );
 
   mTabWidget->addTab( tab3, i18n( "&Misc" ) );
 }
@@ -485,6 +490,7 @@ void AddresseeEditorWidget::load()
   mGeoWidget->setGeo( mAddressee.geo() );
   mImageWidget->setPhoto( mAddressee.photo() );
   mImageWidget->setLogo( mAddressee.logo() );
+  mKeyWidget->setKeys( mAddressee.keys() );
   mSecrecyWidget->setSecrecy( mAddressee.secrecy() );
   mSoundWidget->setSound( mAddressee.sound() );
 
@@ -521,6 +527,7 @@ void AddresseeEditorWidget::save()
   mAddressee.setGeo( mGeoWidget->geo() );
   mAddressee.setPhoto( mImageWidget->photo() );
   mAddressee.setLogo( mImageWidget->logo() );
+  mAddressee.setKeys( mKeyWidget->keys() );
   mAddressee.setSound( mSoundWidget->sound() );
   mAddressee.setSecrecy( mSecrecyWidget->secrecy() );
 

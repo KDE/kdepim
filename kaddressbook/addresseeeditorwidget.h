@@ -46,6 +46,7 @@ class AddressEditWidget;
 class EmailEditWidget;
 class GeoWidget;
 class ImageWidget;
+class KeyWidget;
 class PhoneEditWidget;
 class SecrecyWidget;
 class SoundWidget;
@@ -155,6 +156,7 @@ class AddresseeEditorWidget : public ExtensionWidget
     GeoWidget *mGeoWidget;
     ImageWidget *mImageWidget;
     SoundWidget *mSoundWidget;
+    KeyWidget *mKeyWidget;
 };
 
 #endif
