@@ -26,7 +26,7 @@
 #include <kabc/distributionlist.h>
 #include <kabc/vcard21parser.h>
 #include <kabc/field.h>
-#include <kabc/resourcedlg.h>
+#include <kabc/resourceselectdialog.h>
 
 #include "undo.h"
 #include "undocmds.h"
@@ -179,14 +179,16 @@ void KAddressBook::newAddressee()
   kdDebug() << "KAddressBook::newAddressee()" << endl;
   AddresseeEditorDialog *dialog = 0;
 
-  KABC::ResourceDlg dlg( mDocument, this );
-  if ( KABC::Resource *resource = dlg.exec() ) {
+  KABC::Resource *resource = KABC::ResourceSelectDialog::getResource( mDocument,
+                                                                      this );
+  if ( resource ) {
     KABC::Addressee addr;
     addr.setResource( resource );
     dialog = createAddresseeEditorDialog( this );
     dialog->setAddressee( addr );
-  } else
-      return;
+  } else {
+    return;
+  }
 
   mEditorDict.insert( dialog->addressee().uid(), dialog );
 
