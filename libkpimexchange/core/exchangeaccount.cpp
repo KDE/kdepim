@@ -127,5 +127,8 @@ void ExchangeAccount::authenticate()
   stream << info << windowId;
 
   dcopClient->send( "kded", "kpasswdserver", "addAuthInfo(KIO::AuthInfo, long int)", params );
+
+  dcopClient->detach();
+  delete dcopClient;
 }
 
