@@ -23,6 +23,7 @@
 #include <qtooltip.h>
 
 #include <kapp.h>
+#include <kaboutdata.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kiconloader.h>
@@ -42,13 +43,13 @@ AlarmDockWindow::AlarmDockWindow(AlarmDaemon& ad, const QString& defltClient,
     nClientIds(0L),
     nCalendarIds(0L)
 {
-  KGlobal::iconLoader()->addAppDir("kalarmd");
+  KGlobal::iconLoader()->addAppDir(kapp->aboutData()->appName());
   dPixmap1 = BarIcon("kalarmd");
   dPixmap2 = BarIcon("kalarmd_disabled");
 
   if (dPixmap1.isNull() || dPixmap2.isNull()) {
     KMessageBox::sorry(this, i18n("Can't load docking tray icon!"),
-                             i18n("Alarm Monitor Error"));
+                             i18n("%1 Error").arg(kapp->aboutData()->programName()));
   }
   setPixmap(dPixmap1);
 

@@ -23,12 +23,6 @@
 #ifndef _ALARMDAEMON_H
 #define _ALARMDAEMON_H
 
-#include <qglobal.h>
-#if QT_VERSION < 300
-   #define QPtrList         QList
-   #define QPtrListIterator QListIterator
-#endif
-
 #include <qfont.h>
 #include <qstrlist.h>
 

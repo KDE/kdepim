@@ -1,4 +1,3 @@
-#include <stdio.h>
 /*
     KDE Alarm Daemon.
 
@@ -28,6 +27,7 @@
 #include <qdatetime.h>
 
 #include <kapp.h>
+#include <kaboutdata.h>
 #include <kstddirs.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -35,6 +35,7 @@
 #include <kmessagebox.h>
 #include <knotifyclient.h>
 #include <kio/netaccess.h>
+#include <dcopclient.h>
 
 #include <libkcal/calendarlocal.h>
 
@@ -43,7 +44,6 @@
 #include "alarmdialog.h"
 
 #include "alarmdaemon.h"
-#include <dcopclient.h>
 #include "alarmdaemon.moc"
 
 
@@ -165,9 +165,7 @@ void AlarmDaemon::reloadCal_(const QString& appname, const QString& urlString, b
   {
     ADCalendar* cal = getCalendar(urlString);
     if (cal)
-    {
       reloadCal_(cal);
-    }
     else
     {
       // Calendar wasn't in the list, so add it
@@ -229,7 +227,7 @@ void AlarmDaemon::removeCal_(const QString& urlString)
 }
 
 /*
- * Add an application to the list of client applications,
+ * DCOP call to add an application to the list of client applications,
  * and add it to the config file.
  */
 void AlarmDaemon::registerApp(const QString& appName, const QString& appTitle,
@@ -671,7 +669,7 @@ bool AlarmDaemon::notifyEvent(const ADCalendar* calendar, const QString& eventID
         // starting the session, since if we start the client before the
         // session manager does, a KUniqueApplication client will not then be
         // able to restore its session.
-        // And don't start a client which was started by the login session
+        // And don't contact a client which was started by the login session
         // until it's ready to handle DCOP calls.
         kdDebug() << "AlarmDaemon::notifyEvent(): wait for session startup" << endl;
         return false;
@@ -950,7 +948,7 @@ bool ADCalendar::loadFile(bool quiet)
     loaded_ = load(tmpFile);
     KIO::NetAccess::removeTempFile(tmpFile);
     if (!loaded_)
-      kdDebug() << "Error loading calendar file '" << tmpFile << "'" << endl;
+      kdDebug() << "ADCalendar::loadFile(): Error loading calendar file '" << tmpFile << "'\n";
     else
     {
       // Remove all now non-existent events from the handled list
@@ -969,13 +967,13 @@ bool ADCalendar::loadFile(bool quiet)
     }
   }
   else if (!quiet)
-    KMessageBox::error(0L, i18n("Cannot download calendar from\n%1.").arg(url.prettyURL()), QString::fromLatin1("Alarm Daemon"));
+    KMessageBox::error(0L, i18n("Cannot download calendar from\n%1.").arg(url.prettyURL()), kapp->aboutData()->programName());
   return loaded_;
 }
 
 /*
- * Check whether all the alarms for the event with the given ID
- * have already been handled.
+ * Check whether all the alarms for the event with the given ID have already
+ * been handled.
  */
 bool ADCalendar::eventHandled(const Event* event, const QValueList<QDateTime>& alarmtimes)
 {
@@ -998,14 +996,14 @@ bool ADCalendar::eventHandled(const Event* event, const QValueList<QDateTime>& a
 }
 
 /*
- * Remember that the specified alarms for the event with the given ID
- * have been handled.
+ * Remember that the specified alarms for the event with the given ID have been
+ * handled.
  */
 void ADCalendar::setEventHandled(const Event* event, const QValueList<QDateTime>& alarmtimes)
 {
   if (event)
   {
-    kdDebug() << "ADCalendar::setEventHandled(): " << event->VUID() << endl;
+    kdDebug() << "ADCalendar::setEventHandled(" << event->VUID() << ")\n";
     EventsMap::Iterator it = eventsHandled_.find(event->VUID());
     if (it != eventsHandled_.end())
     {
