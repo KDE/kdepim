@@ -599,7 +599,7 @@ bool Contact::loadAttribute( QDomElement& element )
     setGender( element.text() );
   else if ( tagName == "language" )
     setLanguage( element.text() );
-  else if ( tagName == "phone" )
+  else if ( tagName == "phone-number" )
     return loadPhoneAttribute( element );
   else if ( tagName == "email" )
     return loadEmailAttribute( element );
@@ -684,6 +684,105 @@ QString Contact::saveXML() const
   return document.toString();
 }
 
+static QString addressTypeToString( int /*KABC::Address::Type*/ type )
+{
+  if ( type & KABC::Address::Home )
+    return "home";
+  if ( type & KABC::Address::Work )
+    return "business";
+  return "other";
+}
+
+static int addressTypeFromString( const QString& type )
+{
+  if ( type == "home" )
+    return KABC::Address::Home;
+  if ( type == "business" )
+    return KABC::Address::Work;
+  // well, this shows "other" in the editor, which is what we want...
+  return KABC::Address::Dom | KABC::Address::Intl | KABC::Address::Postal | KABC::Address::Parcel;
+}
+
+static QStringList phoneTypeToString( int /*KABC::PhoneNumber::Types*/ type )
+{
+  // KABC has a bitfield, i.e. the same phone number can be used for work and home
+  // and fax and cellphone etc. etc.
+  // So when saving we need to create as many tags as bits that were set.
+  QStringList types;
+  if ( type & KABC::PhoneNumber::Fax ) {
+    if ( type & KABC::PhoneNumber::Home )
+      types << "homefax";
+    else // assume work -- if ( type & KABC::PhoneNumber::Work )
+      types << "businessfax";
+    type = type & ~KABC::PhoneNumber::Home;
+    type = type & ~KABC::PhoneNumber::Work;
+  }
+
+  if ( type & KABC::PhoneNumber::Home )
+    types << "home1";
+  if ( type & KABC::PhoneNumber::Work )
+    types << "company";
+  if ( type & KABC::PhoneNumber::Msg ) // messaging
+    types << "assistant";
+  if ( type & KABC::PhoneNumber::Pref )
+    types << "primary";
+  if ( type & KABC::PhoneNumber::Voice )
+    types << "callback"; // ##
+  if ( type & KABC::PhoneNumber::Cell )
+    types << "mobile";
+  if ( type & KABC::PhoneNumber::Video )
+    types << "radio"; // ##
+  if ( type & KABC::PhoneNumber::Bbs )
+    types << "ttytdd";
+  if ( type & KABC::PhoneNumber::Modem )
+    types << "home2"; // ###
+  if ( type & KABC::PhoneNumber::Car )
+    types << "car";
+  if ( type & KABC::PhoneNumber::Isdn )
+    types << "isdn";
+  if ( type & KABC::PhoneNumber::Pcs )
+    types << "assistant"; // #
+  if ( type & KABC::PhoneNumber::Pager )
+    types << "pager";
+  return types;
+}
+
+static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type )
+{
+  if ( type == "homefax" )
+    return KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax;
+  if ( type == "businessfax" )
+    return KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax;
+
+  if ( type == "primary" )
+    return KABC::PhoneNumber::Home;
+  if ( type == "company" )
+    return KABC::PhoneNumber::Work;
+  if ( type == "assistant" )
+    return KABC::PhoneNumber::Msg;
+  if ( type == "primary" )
+    return KABC::PhoneNumber::Pref;
+  if ( type == "callback" )
+    return KABC::PhoneNumber::Voice;
+  if ( type == "mobile" )
+    return KABC::PhoneNumber::Cell;
+  if ( type == "radio" )
+    return KABC::PhoneNumber::Video;
+  if ( type == "ttytdd" )
+    return KABC::PhoneNumber::Bbs;
+  if ( type == "home1" )
+    return KABC::PhoneNumber::Modem;
+  if ( type == "car" )
+    return KABC::PhoneNumber::Car;
+  if ( type == "isdn" )
+    return KABC::PhoneNumber::Isdn;
+  if ( type == "assistant" )
+    return KABC::PhoneNumber::Pcs;
+  if ( type == "pager" )
+    return KABC::PhoneNumber::Pager;
+  return KABC::PhoneNumber::Home; // whatever
+}
+
 void Contact::setFields( const KABC::Addressee* addressee )
 {
   KolabBase::setFields( addressee );
@@ -712,26 +811,53 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setPicture( addressee->photo() );
 #endif
 
-  QStringList emails = addressee->emails();
-  // The first email is the preferred one
-  if ( !emails.isEmpty() ) {
-    setPreferredAddress( emails.first() );
-    emails.pop_front();
-  }
-  // Store the others in mEmails. Conversion problem here:
+  const QStringList emails = addressee->emails();
+  // Conversion problem here:
   // KABC::Addressee has only one full name and N addresses, but the XML format
   // has N times (fullname+address). So we just copy the fullname over and ignore it on loading.
-  for( QStringList::ConstIterator it = emails.begin(); it != emails.end(); ++it ) {
+  for ( QStringList::ConstIterator it = emails.begin(); it != emails.end(); ++it ) {
     Email email;
     email.displayName = fullName();
     email.smtpAddress = *it;
     addEmail( email );
   }
 
+  // Now the real-world addresses
+  QString preferredAddress = "home";
+  const KABC::Address::List addresses = addressee->addresses();
+  for ( KABC::Address::List::ConstIterator it = addresses.begin() ; it != addresses.end(); ++it ) {
+    Address address;
+    address.type = addressTypeToString( (*it).type() );
+    address.street = (*it).street();
+    address.city = (*it).locality();
+    address.state = (*it).region();
+    address.zip = (*it).postalCode();
+    address.country = (*it).country();
+    // ## not in the XML format: post-office-box and extended address info.
+    // ## KDE-specific tags? Or hiding those fields? Or adding a warning?
+    addAddress( address );
+    if ( (*it).type() & KABC::Address::Pref ) {
+      preferredAddress = address.type; // home, business or other
+    }
+  }
+  setPreferredAddress( preferredAddress );
+
+  const KABC::PhoneNumber::List phones = addressee->phoneNumbers();
+  for ( KABC::PhoneNumber::List::ConstIterator it = phones.begin(); it != phones.end(); ++it ) {
+    // Create a tag per phone type set in the bitfield
+    QStringList types = phoneTypeToString( (*it).type() );
+    for( QStringList::Iterator typit = types.begin(); typit != types.end(); ++typit ) {
+      PhoneNumber phoneNumber;
+      phoneNumber.type = *typit;
+      phoneNumber.number = (*it).number();
+      addPhoneNumber( phoneNumber );
+    }
+  }
+
   // TODO: Unhandled Addressee fields:
   // mailer, timezone, geo, productId, sortString, logo, sound
-  // agent, phoneNumbers, addresses,
-  // extra custom fields, name(), preferred address, preferred phone number,
+  // agent
+  // extra custom fields, name(), preferred phone number,
   // extra im addresses, crypto settings
 
   // TODO: Things KAddressBook can't handle:
@@ -776,11 +902,31 @@ void Contact::saveTo( KABC::Addressee* addressee )
   addressee->setPicture( photo() );
 #endif
 
-  // Bundle the preferred address and all other addresses into a single list
   QStringList emailAddresses;
-  emailAddresses.append( preferredAddress() );
-  for( QValueList<Email>::Iterator it = mEmails.begin(); it != mEmails.end(); ++it ) {
+  for ( QValueList<Email>::ConstIterator it = mEmails.begin(); it != mEmails.end(); ++it ) {
+    // we can't do anything with (*it).displayName
     emailAddresses.append( (*it).smtpAddress );
   }
   addressee->setEmails( emailAddresses );
+
+  for ( QValueList<Address>::ConstIterator it = mAddresses.begin(); it != mAddresses.end(); ++it ) {
+    KABC::Address address;
+    int type = addressTypeFromString( (*it).type );
+    if ( (*it).type == mPreferredAddress )
+      type |= KABC::Address::Pref;
+    address.setType( type );
+    address.setStreet( (*it).street );
+    address.setLocality( (*it).city );
+    address.setRegion( (*it).state );
+    address.setPostalCode( (*it).zip );
+    address.setCountry( (*it).country );
+    addressee->insertAddress( address );
+  }
+
+  for ( QValueList<PhoneNumber>::ConstIterator it = mPhoneNumbers.begin(); it != mPhoneNumbers.end(); ++it ) {
+    KABC::PhoneNumber number;
+    number.setType( phoneTypeFromString( (*it).type ) );
+    number.setNumber( (*it).number );
+    addressee->insertPhoneNumber( number );
+  }
 }

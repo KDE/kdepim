@@ -171,6 +171,7 @@ public:
   QValueList<Address>& addresses();
   const QValueList<Address>& addresses() const;
 
+  // which address is preferred: home or business or other
   void setPreferredAddress( const QString& address );
   QString preferredAddress() const;
 
