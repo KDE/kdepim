@@ -97,4 +97,4 @@ Name[xh]=Umququzeleli
 Name[zh_CN.GB2312]=组织者
 ServiceTypes=Browser/View
 X-KDE-Library=libkorganizer
-KDE-X-StartupNotify=true
+X-KDE-StartupNotify=true

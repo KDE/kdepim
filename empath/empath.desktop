@@ -87,4 +87,4 @@ Comment[xh]=Umposi
 Comment[zh_CN.GB2312]=邮件程序
 Terminal=0
 Type=Application
-KDE-X-StartupNotify=true
+X-KDE-StartupNotify=true

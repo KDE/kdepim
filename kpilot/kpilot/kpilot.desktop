@@ -13,4 +13,4 @@ Type=Application
 DocPath=kpilot/kpilot.html
 Terminal=0
 MiniIcon=kpilot
-KDE-X-StartupNotify=true
+X-KDE-StartupNotify=true

@@ -46,4 +46,4 @@ Comment[zh_CN.GB2312]=KOrganizer 提示进程
 Terminal=0
 X-KDE-autostart-after=panel
 X-KDE-autostart-condition=korganizerrc:AlarmDaemon:Autostart:true
-KDE-X-StartupNotify=true
+X-KDE-StartupNotify=true
