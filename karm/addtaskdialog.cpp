@@ -153,7 +153,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
   // check specified Desktop Check Boxes
   bool enableDesktops = false;
 
-  if (desktopList!=0 and desktopList->size()>0) {
+  if ((desktopList!=0) && (desktopList->size()>0)) {
     DesktopListType::iterator it = desktopList->begin();
     while (it != desktopList->end()) {
       _deskBox[*it]->setChecked(true);
