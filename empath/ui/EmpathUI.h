@@ -31,7 +31,7 @@
 #include "EmpathComposeForm.h"
 #include "EmpathURL.h"
 
-class QActionCollection;
+class KActionCollection;
 
 class KAction;
 
@@ -55,7 +55,7 @@ class EmpathUI : public QObject
             return instance_;
         }
 
-        QActionCollection * actionCollection()
+        KActionCollection * actionCollection()
         { return actionCollection_; }
 
     protected:
@@ -83,7 +83,7 @@ class EmpathUI : public QObject
         void _showWizardIfNeeded();
 
         static EmpathUI * instance_;
-        QActionCollection * actionCollection_;
+        KActionCollection * actionCollection_;
 
         KAction	* ac_messageCompose_;
 

@@ -151,7 +151,7 @@ EmpathUI::_connectUp()
     void
 EmpathUI::_initActions()
 {
-    actionCollection_ = new QActionCollection(this, "actionCollection");
+    actionCollection_ = new KActionCollection(this, "actionCollection");
 
     ac_messageCompose_ =
         new KAction(

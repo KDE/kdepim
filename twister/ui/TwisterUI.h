@@ -25,7 +25,7 @@
 // Qt includes
 #include <qobject.h>
 
-class QActionCollection;
+class KActionCollection;
 class KAction;
 
 /**
@@ -48,7 +48,7 @@ class TwisterUI : public QObject
             return instance_;
         }
 
-        QActionCollection * actionCollection()
+        KActionCollection * actionCollection()
         { return actionCollection_; }
 
     protected:
@@ -62,7 +62,7 @@ class TwisterUI : public QObject
         void _initActions();
 
         static TwisterUI * instance_;
-        QActionCollection * actionCollection_;
+        KActionCollection * actionCollection_;
 };
 
 #endif

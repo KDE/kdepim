@@ -56,7 +56,7 @@ TwisterUI::_connectUp()
     void
 TwisterUI::_initActions()
 {
-    actionCollection_ = new QActionCollection(this, "actionCollection");
+    actionCollection_ = new KActionCollection(this, "actionCollection");
 }
 
 // vim:ts=4:sw=4:tw=78
