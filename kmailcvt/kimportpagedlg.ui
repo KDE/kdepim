@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>739</width>
-            <height>456</height>
+            <width>775</width>
+            <height>536</height>
         </rect>
     </property>
     <property name="caption">
@@ -19,9 +19,14 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
+        <widget class="QListBox" row="2" column="1">
+            <property name="name">
+                <cstring>_log</cstring>
+            </property>
+        </widget>
         <widget class="QLabel" row="0" column="1">
             <property name="name">
-                <cstring>textLabel1</cstring>
+                <cstring>_textStatus</cstring>
             </property>
             <property name="text">
                 <string>Importing in progress</string>
@@ -30,25 +35,123 @@
                 <set>AlignTop</set>
             </property>
         </widget>
-        <widget class="QLayoutWidget" row="1" column="1">
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="4" colspan="1">
             <property name="name">
                 <cstring>layout5</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>px_introSidebar</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>170</width>
+                            <height>430</height>
+                        </size>
+                    </property>
+                    <property name="frameShape">
+                        <enum>Panel</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Sunken</enum>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                    <property name="indent">
+                        <number>0</number>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>51</height>
+                        </size>
+                    </property>
+                </spacer>
+            </vbox>
+        </widget>
+        <widget class="QLabel" row="3" column="1">
+            <property name="name">
+                <cstring>textLabel1_2</cstring>
+            </property>
+            <property name="text">
+                <string>Please click 'Back' to import more emails or contacts</string>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="1" column="1">
+            <property name="name">
+                <cstring>layout2</cstring>
             </property>
             <grid>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QLabel" row="1" column="0">
+                <widget class="QLabel" row="4" column="0">
                     <property name="name">
-                        <cstring>textLabel1_3</cstring>
+                        <cstring>textLabel4</cstring>
                     </property>
                     <property name="text">
-                        <string>From:</string>
+                        <string>Total:</string>
                     </property>
                 </widget>
-                <widget class="QProgressBar" row="3" column="1">
+                <widget class="QProgressBar" row="4" column="1">
                     <property name="name">
-                        <cstring>_done_current</cstring>
+                        <cstring>_done_overall</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="2" column="0">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>To:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="0">
+                    <property name="name">
+                        <cstring>textLabel3</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Current:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="1">
+                    <property name="name">
+                        <cstring>_from</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>7</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>...</string>
                     </property>
                 </widget>
                 <widget class="QLabel" row="0" column="1">
@@ -67,44 +170,12 @@
                         <string>...</string>
                     </property>
                 </widget>
+                <widget class="QProgressBar" row="3" column="1">
+                    <property name="name">
+                        <cstring>_done_current</cstring>
+                    </property>
+                </widget>
                 <widget class="QLabel" row="2" column="1">
-                    <property name="name">
-                        <cstring>_from</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>7</hsizetype>
-                            <vsizetype>5</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="text">
-                        <string>...</string>
-                    </property>
-                </widget>
-                <widget class="QProgressBar" row="4" column="1">
-                    <property name="name">
-                        <cstring>_done_overall</cstring>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="4" column="0">
-                    <property name="name">
-                        <cstring>textLabel4</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Total:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="2" column="0">
-                    <property name="name">
-                        <cstring>textLabel2</cstring>
-                    </property>
-                    <property name="text">
-                        <string>To:</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="1" column="1">
                     <property name="name">
                         <cstring>_to</cstring>
                     </property>
@@ -120,59 +191,15 @@
                         <string>...</string>
                     </property>
                 </widget>
-                <widget class="QLabel" row="3" column="0">
+                <widget class="QLabel" row="1" column="0">
                     <property name="name">
-                        <cstring>textLabel3</cstring>
+                        <cstring>textLabel1_3</cstring>
                     </property>
                     <property name="text">
-                        <string>Current:</string>
+                        <string>From:</string>
                     </property>
                 </widget>
             </grid>
-        </widget>
-        <widget class="QLabel" row="3" column="1">
-            <property name="name">
-                <cstring>textLabel1_2</cstring>
-            </property>
-            <property name="text">
-                <string>Please click 'Back' to import more emails or contacts</string>
-            </property>
-        </widget>
-        <widget class="QLabel" row="0" column="0" rowspan="4" colspan="1">
-            <property name="name">
-                <cstring>px_introSidebar</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>0</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>170</width>
-                    <height>430</height>
-                </size>
-            </property>
-            <property name="frameShape">
-                <enum>Panel</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="scaledContents">
-                <bool>true</bool>
-            </property>
-            <property name="indent">
-                <number>0</number>
-            </property>
-        </widget>
-        <widget class="QListBox" row="2" column="1">
-            <property name="name">
-                <cstring>_log</cstring>
-            </property>
         </widget>
     </grid>
 </widget>

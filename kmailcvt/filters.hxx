@@ -34,6 +34,7 @@ class FilterInfo
     FilterInfo(KImportPageDlg *dlg, QWidget *parent);
    ~FilterInfo();
 
+    void setStatusMsg( const QString& status );
     void from( const QString& from );
     void to( const QString& to );
     void current( const QString& current );

@@ -25,14 +25,23 @@
 
 #include "filter_ldif.hxx"
 
-FilterLDIF::FilterLDIF() : Filter(i18n("Import Netscape LDIF Address Book 1 (.LDIF)"),"Oliver Strutynski")
+FilterLDIF::FilterLDIF() 
+  : Filter(i18n("Import Netscape LDIF Personal Address Book (.LDIF)"), 
+	"Oliver Strutynski",
+	i18n("<p>The LDAP Data Interchange Format (LDIF) is a common ASCII-text based "
+		"Internet interchange format. Most programs allow you to export data in "
+		"LDIF format and e.g. Netscape and Mozilla store by default their "
+		"Personal Address Book files in this format.</p>"
+		"This import filter reads any LDIF version 1 file and imports the " 
+		"entries into your KDE Addressbook.</p>")
+    )
 {}
 
 FilterLDIF::~FilterLDIF()
 {}
 
 void FilterLDIF::import(FilterInfo *info) {
-   QWidget *parent=info->parent();
+   QWidget *parent = info->parent();
 
    QString filename = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
 		   	"*.ldif *.LDIF *.Ldif", parent);
@@ -72,7 +81,7 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 	department, phone, fax, mobile, homepage, comment;
 
    QTextStream t( &f );
-   QString s, fieldname;
+   QString s, completeline, fieldname;
 
    // We need this for calculating progress
    uint fileSize = f.size();
@@ -81,32 +90,40 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
    // Set to true if data currently read is part of
    // a list of names. Lists will be ignored.
    bool isGroup = false;
+   bool lastWasComment = false;
+   int numEntries = 0;
 
    while ( !t.eof() ) {
 	s = t.readLine();
+	completeline = s;
 	bytesProcessed += s.length();
 	
 	// update progress information
     	info->current(100 * bytesProcessed / fileSize);
     	info->overall(100 * bytesProcessed / fileSize);
 	
-	if (s.isEmpty()) {
+	if (s.isEmpty() && t.eof()) {
 		// Newline: Write data
+writeData:
 		if (!isGroup) {
-  			kabAddress( info, i18n("Netscape Addressbook"),
-				givenName, email, title, firstName, empty, lastName, nickName,
-				street, locality, state, zipCode, country, organization, 
-				department, empty, empty, phone, fax, mobile, empty, homepage, 
-				empty, comment, empty);
+			if (!firstName.isEmpty() || !lastName.isEmpty() || !email.isEmpty()) {
+				numEntries++;
+  				kabAddress( info, i18n("Netscape Addressbook"),
+				  givenName, email, title, firstName, empty, lastName, nickName,
+				  street, locality, state, zipCode, country, organization, 
+				  department, empty, empty, phone, fax, mobile, empty, homepage, 
+				  empty, comment, empty);
+			}
 			givenName = email = title = firstName = lastName = nickName =
 			 street = locality = state = zipCode = country = organization =
-			 department = phone = fax = mobile = homepage = comment = "";
+			 department = phone = fax = mobile = homepage = comment = QString::null;
 
    		} else {
 			info->log(i18n("Warning: List data is being ignored."));
    		}
 
 		isGroup = false;
+		lastWasComment = false;
 		continue;
 	}
 	
@@ -119,21 +136,41 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 						.simplifyWhiteSpace();
     	} else {
     		position = s.find(":");
-    		fieldname = s.left(position).lower();
-    		// Convert Utf8 string to unicode so special characters are preserved
-		// We need this since we are reading normal strings from the file
-		// which are not converted automatically
-		s = QString::fromUtf8(s.mid(position+2, s.length()-position-2).latin1());
+		if (position != -1) {
+    			fieldname = s.left(position).lower();
+    			// Convert Utf8 string to unicode so special characters are preserved
+			// We need this since we are reading normal strings from the file
+			// which are not converted automatically
+			s = QString::fromUtf8(s.mid(position+2, s.length()-position-2).latin1());
+		} else {
+			fieldname = QString::null;
+			s = QString::fromUtf8(s);
+		}
 	}
 
 	if (s.stripWhiteSpace().isEmpty())
 		continue;
+
+	if (fieldname.isEmpty()) {
+		if (lastWasComment) {
+			// if the last entry was a comment, add this one too, since
+			// we might have a multi-line comment entry.
+			if (!comment.isEmpty())
+				comment += "\n";
+			comment += s;
+		}
+		continue;
+	}
+	lastWasComment = false;
 
 	if (fieldname == "givenname")
 		{ firstName = s; continue; }
 
 	if (fieldname == "xmozillanickname")
 		{ nickName = s; continue; }
+
+	if (fieldname == "dn")	/* ignore */
+		{ goto writeData; }
 	
 	if (fieldname == "sn")
 		{ lastName = s;	continue; }
@@ -151,14 +188,19 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 		{ organization = s; continue; }
 
 	if (fieldname == "description")
-		{ comment = s; continue; }
+		{ comment = s; lastWasComment = true; continue; }
 
 	if (fieldname == "homeurl")
 		{ homepage = s;	continue; }
 
 	if (fieldname == "homephone" || fieldname == "telephonenumber") {
-		if (!phone.isEmpty()) info->log(i18n("Discarding Phone Number %1").arg(s));
-  		phone = s;
+		if (!phone.isEmpty())
+			info->log(i18n("Discarding phone number %1 from entry of %2 %3")
+					.arg(s)
+					.arg(firstName)
+					.arg(lastName));
+		else
+  			phone = s;
 		continue; 
 	}
 
@@ -188,10 +230,14 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 
 	if (fieldname == "objectclass" && s == "groupOfNames")
 			isGroup = true;
+
+	info->log(i18n("Unable to handle line: %1").arg(completeline));
   	  	
     } /* while !eof(f) */
 
     f.close();
+    
+    info->log(i18n("%1 phonebook entries sucessfully imported.").arg(numEntries));
 
     kabStop(info);
     return true;

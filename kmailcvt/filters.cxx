@@ -43,6 +43,11 @@ FilterInfo::~FilterInfo()
 {
 }
 
+void FilterInfo::setStatusMsg( const QString& status )
+{
+  m_dlg->_textStatus->setText( status );
+}
+
 void FilterInfo::from( const QString& from )
 {
   m_dlg->_from->setText( from );
@@ -198,17 +203,16 @@ void KAb::kabStop(FilterInfo *info)
 
 bool KAb::checkStr( QString &str )
 {
-  if ( str == QString::null ) return false;
-  str = str.stripWhiteSpace();
-  if ( str.length() ) return true;
-  return false;
+  if ( str.isEmpty() )
+    return false;
+  return !str.stripWhiteSpace().isEmpty();
 }
 
 bool KAb::kabAddress(FilterInfo *_info,QString adrbookname,
                       QString givenname, QString email,
                       QString title,QString firstname,
                       QString additionalname,QString lastname,
-		      QString nickname,
+                      QString nickname,
                       QString address,QString town,
                       QString /*state*/,QString zip,QString country,
                       QString organization,QString department,

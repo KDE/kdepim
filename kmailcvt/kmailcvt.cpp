@@ -58,8 +58,10 @@ void KMailCVT::next() {
 		setBackEnabled(QWizard::currentPage(), false);
 		// Start import
 		FilterInfo *info = new FilterInfo(importpage, _parent);
+		info->setStatusMsg(i18n("Import in progress"));
 		info->clear(); // Clear info from last time
 		selectedFilter->import(info);
+		info->setStatusMsg(i18n("Import finished"));
 		// Cleanup
 		delete info;
 		// Enable finish button also reenable back
