@@ -307,6 +307,7 @@ void IncidenceBase::setDuration(int seconds)
 {
   mDuration = seconds;
   setHasDuration(true);
+  updated();
 }
 
 int IncidenceBase::duration() const
