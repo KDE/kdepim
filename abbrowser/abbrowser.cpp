@@ -144,6 +144,7 @@ void Pab::readConfig()
      sscanf(str.local8Bit(),"%d,%d",&w,&h);
      resize(w,h);
    }
+  applyMainWindowSettings( config );
 }
 
 void Pab::saveConfig()
@@ -156,6 +157,7 @@ void Pab::saveConfig()
   QString s;
   s.sprintf("%i,%i", r.width(), r.height());
   config->writeEntry("Browser", s);
+  saveMainWindowSettings( config );
   config->sync();
 }
 
