@@ -95,3 +95,16 @@ DEB_SHLIBDEPS_INCLUDE := \
 	debian/libkpimidentities1/usr/lib \
 	debian/libksieve0/usr/lib \
 	debian/libmimelib1/usr/lib
+
+# kontact starts fine without korganizer or kpilot dependencies
+DEB_DH_SHLIBDEPS_ARGS += $(DEB_DH_SHLIBDEPS_ARGS_$(cdbs_curpkg))
+DEB_DH_SHLIBDEPS_ARGS_kontact := \
+	-Xusr/lib/kde3/libkontact_korganizerplugin.so \
+	-Xusr/lib/kde3/libkontact_kpilotplugin.so \
+	-Xusr/lib/kde3/libkontact_todoplugin.so -- \
+	-dRecommends \
+	debian/kontact/usr/lib/kde3/libkontact_korganizerplugin.so \
+	debian/kontact/usr/lib/kde3/libkontact_todoplugin.so \
+	-dSuggests \
+	debian/kontact/usr/lib/kde3/libkontact_kpilotplugin.so \
+	-dDepends	# Since -u args go first in dpkg-shlibdeps call

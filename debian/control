@@ -3,14 +3,14 @@ Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Christopher L Cheney <ccheney@debian.org>, Daniel Schepler <schepler@debian.org>
-Build-Depends: autoconf, automake1.9, bison, byacc, cdbs, debhelper (>> 4.2.0), docbook-to-man, flex, gawk, gettext, groff-base, kdelibs4-dev (>> 4:3.3.0), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
+Build-Depends: autoconf, automake1.9, bison, byacc, cdbs, debhelper (>> 4.2.0), flex, gawk, gettext, groff-base, kdelibs4-dev (>> 4:3.3.0), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
 Build-Depends-Indep: doxygen, qt3-doc, kdelibs4-doc
 Standards-Version: 3.6.1.0
 
 Package: kdepim
 Section: kde
 Architecture: all
-Depends: kaddressbook (>= ${Source-Version}), kalarm (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), kdepim-kfile-plugins (>= ${Source-Version}), kdepim-kio-plugins (>= ${Source-Version}), kdepim-wizards (>= ${Source-Version}), kitchensync (>= ${Source-Version}), kleopatra (>= ${Source-Version}), kmail (>= ${Source-Version}), kmailcvt (>= ${Source-Version}), knode (>= ${Source-Version}), knotes (>= ${Source-Version}), konsolekalendar (>= ${Source-Version}), kontact (>= ${Source-Version}), korganizer (>= ${Source-Version}), korn (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version}), ktnef (>= ${Source-Version}), libkcal2 (>= ${Source-Version}), libkdenetwork2 (>= ${Source-Version}), libkdepim1 (>= ${Source-Version}), libkgantt0 (>= ${Source-Version}), libkleopatra0 (>= ${Source-Version}), libkpimexchange1 (>= ${Source-Version}), libkpimidentities1 (>= ${Source-Version}), libksieve0 (>= ${Source-Version}), libmimelib1 (>= ${Source-Version})
+Depends: kaddressbook (>= ${Source-Version}), kalarm (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), kdepim-kfile-plugins (>= ${Source-Version}), kdepim-kio-plugins (>= ${Source-Version}), kdepim-wizards (>= ${Source-Version}), kitchensync (>= ${Source-Version}), kmail (>= ${Source-Version}), kmailcvt (>= ${Source-Version}), knode (>= ${Source-Version}), knotes (>= ${Source-Version}), konsolekalendar (>= ${Source-Version}), kontact (>= ${Source-Version}), korganizer (>= ${Source-Version}), korn (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version}), ktnef (>= ${Source-Version}), libkcal2 (>= ${Source-Version}), libkdenetwork2 (>= ${Source-Version}), libkdepim1 (>= ${Source-Version}), libkgantt0 (>= ${Source-Version}), libkleopatra0 (>= ${Source-Version}), libkpimexchange1 (>= ${Source-Version}), libkpimidentities1 (>= ${Source-Version}), libksieve0 (>= ${Source-Version}), libmimelib1 (>= ${Source-Version})
 Suggests: kdepim-doc-html
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for the
@@ -141,9 +141,9 @@ Description: Synchronization framework
  This package is part of the official KDE pim module.
 
 Package: kleopatra
-Section: net
+Section: contrib/net
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, gnupg2, gnupg-agent, dirmngr
 Suggests: gnupg
 Conflicts: kgpgcertmanager
 Replaces: kgpgcertmanager
@@ -151,6 +151,11 @@ Provides: kgpgcertmanager
 Description: KDE Certificate Manager
  Kleopatra is the KDE tool for managing X.509 certificates in the gpgsm
  keybox and for retrieving certificates from LDAP servers.
+ .
+ To install this package, you will need unofficial packages for GnuPG
+ version 1.9, and you will also need to recompile gpgme with S/MIME
+ support.  See http://lists.debian.org/lists-kde/2004/09/msg00102.html
+ for details.
  .
  This package is part of the official KDE pim module.
 
@@ -172,7 +177,7 @@ Description: KDE Email client
 Package: kmailcvt
 Section: mail
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, kmail
 Replaces: kmail (<< 4:3.0.0)
 Description: KDE KMail addressbook converter
  Converts addressbooks to KMail format.
@@ -221,8 +226,8 @@ Package: kontact
 Section: kde
 Architecture: any
 Depends: ${shlibs:Depends}
-Recommends: kaddressbook, kitchensync, kmail, knode, knotes
-Suggests: knewsticker, kweather
+Recommends: ${shlibs:Recommends}, kaddressbook, kitchensync, kmail, knode, knotes
+Suggests: ${shlibs:Suggests}, knewsticker, kweather
 Replaces: kontact-plugins (<< 4:3.2.92)
 Description: KDE pim application
  Kontact is the integrated solution to your personal information management

@@ -1,3 +1,16 @@
+kdepim (4:3.3.0-3) unstable; urgency=low
+
+  * Updates from KDE_3_3_BRANCH.
+    + Fixes konsolekalendar.  Closes: #269295.
+  * Move kleopatra to contrib for now, until GnuPG2 is in unstable.  In
+    the meantime, add a note to the package description on how to
+    install the package.  Closes: #269789.
+  * Move binary dependencies from kontact-plugins for korganizer and
+    kpilot to Recommends and Suggests, respectively.  Closes: #273402.
+  * kmailcvt Depends: kmail.  Closes: #268788.
+
+ -- Daniel Schepler <schepler@debian.org>  Sat, 25 Sep 2004 19:44:44 -0700
+
 kdepim (4:3.3.0-2) unstable; urgency=low
 
   * Using automake1.7 doesn't fix the korganizer install problems; go to
