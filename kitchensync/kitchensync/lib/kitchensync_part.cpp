@@ -82,7 +82,7 @@ KParts::Part *KitchenSyncFactory::createPartObject(QWidget *parentWidget, const 
 KInstance *KitchenSyncFactory::instance()
 {
   if ( !s_instance ) {
-    s_about = new KAboutData("KitchenSync", I18N_NOOP("KitchenSync"),"0.1");
+    s_about = new KAboutData("kitchensync", I18N_NOOP("KitchenSync"),"0.1");
     s_instance = new KInstance(s_about);
   }
 
