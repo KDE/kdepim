@@ -2,7 +2,7 @@
     knarticlefactory.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -15,14 +15,13 @@
 */
 
 #include <qlayout.h>
+#include <qlabel.h>
+#include <qvbox.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kwin.h>
-#include <kseparator.h>
 #include <kapplication.h>
-#include <kstdguiitem.h>
-#include <kpushbutton.h>
 
 #include "knarticlefactory.h"
 #include "knglobals.h"
@@ -36,8 +35,6 @@
 #include "knnntpaccount.h"
 #include "utilities.h"
 #include "resource.h"
-#include <qlabel.h>
-#include <qpushbutton.h>
 
 
 KNArticleFactory::KNArticleFactory(QObject *p, const char *n)
@@ -993,7 +990,7 @@ void KNArticleFactory::showSendErrorDialog()
 {
   if(!s_endErrDlg) {
     s_endErrDlg=new KNSendErrorDialog();
-    connect(s_endErrDlg, SIGNAL(dialogDone()), this, SLOT(slotSendErrorDialogDone()));
+    connect(s_endErrDlg, SIGNAL(closeClicked()), this, SLOT(slotSendErrorDialogDone()));
   }
   s_endErrDlg->show();
 }
@@ -1057,7 +1054,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
 
 void KNArticleFactory::slotSendErrorDialogDone()
 {
-  delete s_endErrDlg;
+  s_endErrDlg->delayedDestruct();
   s_endErrDlg=0;
 }
 
@@ -1065,36 +1062,21 @@ void KNArticleFactory::slotSendErrorDialogDone()
 //======================================================================================================
 
 
-KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
+KNSendErrorDialog::KNSendErrorDialog() 
+  : KDialogBase(knGlobals.topWidget, 0, true, i18n("Errors While Sending"), Close, Close, true)
 {
   p_ixmap=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::sendErr);
 
-  QVBoxLayout *topL=new QVBoxLayout(this, 5,5);
+  QVBox *page = makeVBoxMainWidget();
 
-  QLabel *l=new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occurred while sending these articles:"))
-                                                 .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), this);
-  topL->addWidget(l);
-
-  j_obs=new KNDialogListBox(true,this);
-  topL->addWidget(j_obs, 1);
-
-  e_rror=new QLabel(this);
-  topL->addSpacing(5);
-  topL->addWidget(e_rror);
-
-  KSeparator *sep=new KSeparator(this);
-  topL->addSpacing(10);
-  topL->addWidget(sep);
-
-  c_loseBtn=new KPushButton(KStdGuiItem::close(), this);
-  c_loseBtn->setDefault(true);
-  topL->addWidget(c_loseBtn, 0, Qt::AlignRight);
-
+  new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occurred while sending these articles:"))
+                                       .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), page);
+  j_obs=new KNDialogListBox(true, page);
+  e_rror=new QLabel(QString::null, page);
+  
   connect(j_obs, SIGNAL(highlighted(int)), this, SLOT(slotHighlighted(int)));
-  connect(c_loseBtn, SIGNAL(clicked()), this, SLOT(slotCloseBtnClicked()));
-
-  setCaption(kapp->makeStdCaption(i18n("Errors While Sending")));
-  KNHelper::restoreWindowSize("sendDlg", this, sizeHint());
+  
+  KNHelper::restoreWindowSize("sendDlg", this, QSize(320,250));
 }
 
 
@@ -1120,28 +1102,6 @@ void KNSendErrorDialog::slotHighlighted(int idx)
     QString tmp=i18n("<b>Error message:</b><br>")+it->error;
     e_rror->setText(tmp);
   }
-}
-
-
-void KNSendErrorDialog::slotCloseBtnClicked()
-{
-  emit dialogDone();
-}
-
-
-void KNSendErrorDialog::keyPressEvent(QKeyEvent *e)
-{
-  if ((e->key()==Key_Enter)||(e->key()==Key_Return)||(e->key()==Key_Escape))
-    emit dialogDone();
-  else
-    QDialog::keyPressEvent(e);
-}
-
-
-void KNSendErrorDialog::closeEvent(QCloseEvent *e)
-{
-  e->accept();
-  emit dialogDone();
 }
 
 //-------------------------------

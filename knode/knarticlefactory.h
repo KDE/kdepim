@@ -2,7 +2,7 @@
     knarticlefactory.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -17,8 +17,8 @@
 #ifndef KNARTICLEFACTORY_H
 #define KNARTICLEFACTORY_H
 
-#include <qdialog.h>
 #include <qptrlist.h>
+#include <kdialogbase.h>
 
 #include "knjobdata.h"
 #include "knarticle.h"
@@ -96,7 +96,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 };
 
 
-class KNSendErrorDialog : public QDialog  {
+class KNSendErrorDialog : public KDialogBase  {
 
   Q_OBJECT
 
@@ -118,20 +118,10 @@ class KNSendErrorDialog : public QDialog  {
 
     KNDialogListBox *j_obs;
     QLabel *e_rror;
-    QPushButton *c_loseBtn;
     QPixmap p_ixmap;
 
   protected slots:
     void slotHighlighted(int idx);
-    void slotCloseBtnClicked();
-
-  protected:
-    void keyPressEvent(QKeyEvent *e);
-    void closeEvent(QCloseEvent *e);
-
-  signals:
-    void dialogDone();
-
 };
 
 #endif //KNARTICLEFACTORY_H
