@@ -1,5 +1,5 @@
 KDE_CXXFLAGS = $(USE_THREADS)
-INCLUDES= $(all_includes) -DQT_NO_ASCII_CAST -DQT_NO_COMPAT -DQT_CLEAN_NAMESPACE
+INCLUDES= $(all_includes)
 SUBDIRS = toolbar pics filters
 
 bin_PROGRAMS = knode
