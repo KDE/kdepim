@@ -70,22 +70,22 @@ void Kleo::Job::showErrorDialog( QWidget * ) const {
 
 
 #define make_job_subclass(x) \
-  Kleo::x##Job::x##Job( QObject * parent, const char * name ) : Job( parent, name ) {} \
-  Kleo::x##Job::~x##Job() {}
+  Kleo::x::x( QObject * parent, const char * name ) : Job( parent, name ) {} \
+  Kleo::x::~x() {}
 
-make_job_subclass(KeyList)
-make_job_subclass(Encrypt)
-make_job_subclass(Decrypt)
-make_job_subclass(DecryptVerify)
-make_job_subclass(Sign)
-make_job_subclass(SignEncrypt)
-make_job_subclass(VerifyDetached)
-make_job_subclass(VerifyOpaque)
-make_job_subclass(KeyGeneration)
-make_job_subclass(Import)
-make_job_subclass(Export)
-make_job_subclass(Download)
-make_job_subclass(Delete)
+make_job_subclass(KeyListJob)
+make_job_subclass(EncryptJob)
+make_job_subclass(DecryptJob)
+make_job_subclass(DecryptVerifyJob)
+make_job_subclass(SignJob)
+make_job_subclass(SignEncryptJob)
+make_job_subclass(VerifyDetachedJob)
+make_job_subclass(VerifyOpaqueJob)
+make_job_subclass(KeyGenerationJob)
+make_job_subclass(ImportJob)
+make_job_subclass(ExportJob)
+make_job_subclass(DownloadJob)
+make_job_subclass(DeleteJob)
 
 #undef make_job_subclass
 
