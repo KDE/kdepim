@@ -7,6 +7,12 @@ You only have to add the following line to your .muttrc
 
     source "kabc2mutt |"
 
+You can also configure mutt to query kabc2mutt when typing a substring
+of an email address (see the docu for query_command).
+To do this, add the following line to your .muttrc
+
+    set query_command = "kabc2mutt --query '%s' --format query"
+
 Have fun with it
 
 Ciao,
