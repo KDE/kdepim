@@ -93,8 +93,6 @@ private:
 	*/
 protected:
 	void killDaemonIfNeeded();
-public:
-	void startDaemonIfNeeded();
 
 public slots:
 	/**
@@ -110,6 +108,7 @@ public slots:
 	void slotHHtoPCRequested();
 	void slotPCtoHHRequested();
 
+	void startDaemonIfNeeded();
 
 	/**
 	* These are slots for the standard Configure ...

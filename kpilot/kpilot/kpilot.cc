@@ -193,10 +193,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	if (!fDaemonWasRunning && KApplication::startServiceByDesktopName(
 		CSL1("kpilotdaemon"),
 		QString::null, &daemonError, &daemonDCOP, &daemonPID
-#if (KDE_VERSION >= 220)
-			// Startup notification was added in 2.2
-			, "0"
-#endif
+			, "0" /* no notify */
 		))
 	{
 		kdError() << k_funcinfo
@@ -1107,7 +1104,6 @@ static KCmdLineOptions kpilotoptions[] = {
 
 // "Regular" mode == 0
 // setup mode == 's'
-// conduit setup == 'c'
 //
 // This is only changed by the --setup flag --
 // kpilot still does a setup the first time it is run.
@@ -1227,13 +1223,11 @@ int main(int argc, char **argv)
 
 	if (tp->status() == KPilotInstaller::Error)
 	{
-		delete tp;
-
-		tp = 0;
+		KPILOT_DELETE(tp);
 		return 1;
 	}
 
-	tp->startDaemonIfNeeded();
+	QTimer::singleShot(0,tp,SLOT(startDaemonIfNeeded()));
 
 	KGlobal::dirs()->addResourceType("pilotdbs",
 		CSL1("share/apps/kpilot/DBBackup"));
