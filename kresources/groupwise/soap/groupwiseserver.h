@@ -63,7 +63,7 @@ class GroupwiseServer : public QObject
     bool logout();
 
     bool readCalendar( KCal::Calendar*, KCal::ResourceGroupwise* );
-    bool addIncidence( KCal::Incidence * );
+    bool addIncidence( KCal::Incidence *, KCal::ResourceGroupwise * );
     bool changeIncidence( KCal::Incidence * );
     bool deleteIncidence( KCal::Incidence * );
 

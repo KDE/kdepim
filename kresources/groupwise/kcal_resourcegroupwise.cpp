@@ -158,8 +158,8 @@ void ResourceGroupwise::loadFinished()
   saveCache();
   enableChangeNotification();
 
-  emit resourceLoaded( this );
   emit resourceChanged( this );
+  emit resourceLoaded( this );
 }
 
 bool ResourceGroupwise::doSave()
@@ -174,7 +174,10 @@ bool ResourceGroupwise::doSave()
 
   Incidence::List added = addedIncidences();
   for( it = added.begin(); it != added.end(); ++it ) {
-    if ( mServer->addIncidence( *it ) ) clearChange( *it );
+    if ( mServer->addIncidence( *it, this ) ) {
+      clearChange( *it );
+      saveCache();
+    }
   }
   Incidence::List changed = changedIncidences();
   for( it = changed.begin(); it != changed.end(); ++it ) {

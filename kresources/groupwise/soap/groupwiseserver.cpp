@@ -364,7 +364,8 @@ bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::Re
   return true;
 }
 
-bool GroupwiseServer::addIncidence( KCal::Incidence *incidence )
+bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
+  KCal::ResourceGroupwise *resource )
 {
   kdDebug() << "GroupwiseServer::addIncidence() " << incidence->summary()
             << endl;
@@ -400,8 +401,12 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence )
     kdDebug() << "SOAP call succeeded" << endl;
   }
 
+//  kdDebug() << "RESPONDED UID: " << response.id.c_str() << endl;
+
   incidence->setCustomProperty( "GWRESOURCE", "UID",
                                 QString::fromUtf8( response.id.c_str() ) );
+  resource->setRemoteUid( incidence->uid(),
+    QString::fromUtf8( response.id.c_str() ) );
 
   return true;
 }
@@ -422,7 +427,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   } else if ( incidence->type() == "Todo" ) {
     item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
   } else {
-    kdError() << "KCal::GroupwiseServer::addIncidence(): Unknown type: "
+    kdError() << "KCal::GroupwiseServer::changeIncidence(): Unknown type: "
               << incidence->type() << endl;
     return false;
   }
@@ -651,7 +656,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
           ns1__AcceptLevel acceptLevel = (*it2)->acceptLevel;
 
           std::string subject = (*it2)->subject;
-          kdDebug() << "BLOCK Subject: " << subject.c_str() << endl;
+//          kdDebug() << "BLOCK Subject: " << subject.c_str() << endl;
 
           if ( acceptLevel == Busy || acceptLevel == OutOfOffice ) {
             freeBusy->addPeriod( blockStart, blockEnd );
