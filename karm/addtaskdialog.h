@@ -31,7 +31,7 @@
 #include "ktimewidget.h"
 
 class QLineEdit;
-class KTimeWidget;
+class KArmTimeWidget;
 class QRadioButton;
 
 /**
@@ -61,9 +61,9 @@ class AddTaskDialog : public KDialogBase
 
   private:
     QLineEdit* _name;
-    KTimeWidget* _totalTW;
-    KTimeWidget* _sessionTW;
-    KTimeWidget* _diffTW;
+    KArmTimeWidget* _totalTW;
+    KArmTimeWidget* _sessionTW;
+    KArmTimeWidget* _diffTW;
     QComboBox* _operator;
     std::vector<QCheckBox*> _deskBox; // we only need an array, but ISO forbids
                                  // passing an array as a function argument
