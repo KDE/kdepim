@@ -19,9 +19,9 @@ klockfile:  Holger Freyther <freyther@kde.org>
 	    * contains a library for locking and
 	      sharing files
 
-libkunit:   Holger Freyther <freyther@kde.org>
+libkonnector:   Holger Freyther <freyther@kde.org>
 	    * contains the backend responsible for
-	      syncing
+	      getting QPtrList<KSyncEntry> from a konnector
 	        
 libksync:  Cornelius Schumacher <schumacher@kde.org> / Holger Freyther
 	    * contains the syncbackend

@@ -1,3 +1,6 @@
+2002-01-25 Holger Freyther <freyther@kde.org>
+        * rename libkunit to libkonnector
+
 2002-01-14 Holger Freyther <freyther@kde.org>
         * Adds a changelog. This is the frist 
 	  activity of the new KitchenSync project
