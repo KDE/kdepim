@@ -213,6 +213,10 @@ static QString eventViewerFormatAttachments( Incidence *i )
   return tmpStr;
 }
 
+/* 
+  FIXME:This function depends of kaddressbook. Is necessary a new 
+  type of event?
+*/
 static QString eventViewerFormatBirthday( Event *event )
 {
   if ( !event) return  QString::null;
@@ -226,7 +230,6 @@ static QString eventViewerFormatBirthday( Event *event )
   const QString iconPath = iconLoader.iconPath( "mail_generic",
                                                   KIcon::Small );
   //TODO: add a tart icon 
-  kdDebug(5800) << "eventViewerFormatBirthday: email:" << email_1 << "uid: " << uid_1     << " name: " << name_1 << endl;
   QString tmpString = "<ul>";
   tmpString += linkPerson( email_1, name_1, uid_1, iconPath );
   
@@ -234,8 +237,6 @@ static QString eventViewerFormatBirthday( Event *event )
     QString uid_2 = event->customProperty("KABC","UID-2");
     QString name_2 = event->customProperty("KABC","NAME-2");
     QString email_2= event->customProperty("KABC","EMAIL-2");
-  kdDebug(5800) << "eventViewerFormatBirthday: email:" << email_2 << "uid: " << uid_2 
-    << " name: " << name_2 << endl;
     tmpString += linkPerson( email_2, name_2, uid_2, iconPath );
   }
   
