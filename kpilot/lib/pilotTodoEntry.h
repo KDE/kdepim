@@ -54,8 +54,6 @@ public:
 
 	PilotTodoEntry& operator=(const PilotTodoEntry &e);
 
-	PilotRecord* pack() { return PilotAppCategory::pack(); }
-
 	struct tm getDueDate() const { return fTodoInfo.due; }
 	void setDueDate(struct tm& d) { fTodoInfo.due = d; }
 	const struct tm *getDueDate_p() const { return &fTodoInfo.due; }

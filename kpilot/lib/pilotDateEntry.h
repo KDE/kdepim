@@ -54,8 +54,6 @@ public:
   PilotDateEntry& operator=(const PilotDateEntry &e);
 	virtual QString getTextRepresentation(bool richText=false);
 
-  PilotRecord* pack() { return PilotAppCategory::pack(); }
-
   bool isEvent() const { return fAppointmentInfo.event; }
   int getEvent() const { return fAppointmentInfo.event; }
   void setEvent(int event) { fAppointmentInfo.event = event; }

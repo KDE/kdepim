@@ -149,7 +149,6 @@ public:
 	int getShownPhone() const { return fAddressInfo.showPhone; }
 	void setShownPhone(EPhoneType phoneType);
 	int  getPhoneLabelIndex(int index) { return fAddressInfo.phoneLabel[index]; }
-	PilotRecord* pack() { return PilotAppCategory::pack(); }
 
 
 	void *pack(void *, int *);
