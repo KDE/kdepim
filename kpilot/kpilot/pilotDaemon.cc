@@ -940,8 +940,7 @@ static void queueInstaller(ActionQueue *fSyncStack,
 {
 	if (c.findIndex(CSL1("internal_fileinstall")) >= 0)
 	{
-		fSyncStack->queueInstaller(fInstaller->dir(),
-			fInstaller->fileNames());
+		fSyncStack->queueInstaller(fInstaller->dir());
 	}
 }
 
@@ -1056,6 +1055,8 @@ static void queueConduits(ActionQueue *fSyncStack,
 		queueInstaller(fSyncStack,fInstaller,conduits);
 		queueEditors(fSyncStack,pilotLink);
 		queueConduits(fSyncStack,conduits,fNextSyncType);
+		// After running the conduits, install new databases
+		queueInstaller(fSyncStack,fInstaller,conduits);
 		// And sync the remaining databases if needed.
 		if ( (fNextSyncType == SyncAction::eHotSync) ||
 			(fNextSyncType == SyncAction::eFullSync))

@@ -240,7 +240,7 @@ static inline void initNoBackup(QStringList &dbnames,
 	FUNCTIONSETUP;
 
 	mDeviceDBs = KPilotSettings::deviceDBs();
-	
+
 	fBackupDir =
 		fDatabaseDir +
 		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
@@ -362,7 +362,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	}
 
 	fDBIndex = info.index + 1;
-	
+
 	char buff[7];
 	buff[0] = '[';
 	set_long( &buff[1], info.creator );
@@ -370,8 +370,8 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	buff[7] = '\0';
 	QString creator( buff );
 	info.name[33]='\0';
-	QString dbname( info.name );	
-	if ( !mDeviceDBs.contains( creator ) ) 
+	QString dbname( info.name );
+	if ( !mDeviceDBs.contains( creator ) )
 		mDeviceDBs << creator;
 	if ( !mDeviceDBs.contains( dbname ) )
 		mDeviceDBs << dbname;
@@ -503,7 +503,7 @@ void BackupAction::endBackup()
 	fDBIndex = (-1);
 	fActionStatus = BackupEnded;
 	mDeviceDBs.sort();
-	QString old( QString::null ); 
+	QString old( QString::null );
 	QStringList::Iterator itr = mDeviceDBs.begin();
 	while ( itr != mDeviceDBs.end() ) {
 		if ( old == *itr ) {
@@ -519,27 +519,13 @@ void BackupAction::endBackup()
 }
 
 FileInstallAction::FileInstallAction(KPilotDeviceLink * p,
-	const QString & d,
-	const QStringList & l) :
+	const QString & d) :
 	SyncAction(p, "fileInstall"),
 	fDBIndex(-1),
 	fTimer(0L),
-	fDir(d),
-	fList(l)
+	fDir(d)
 {
 	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": File list has "
-		<< fList.  count() << " entries" << endl;
-
-	QStringList::ConstIterator i;
-
-	for (i = fList.begin(); i != fList.end(); ++i)
-	{
-		DEBUGCONDUIT << fname << ": " << *i << endl;
-	}
-#endif
 }
 
 FileInstallAction::~FileInstallAction()
@@ -553,13 +539,15 @@ FileInstallAction::~FileInstallAction()
 {
 	FUNCTIONSETUP;
 
-	fDBIndex = 0;
-
+	QDir installDir(fDir);
+	fList = installDir.entryList(QDir::Files |
+		QDir::NoSymLinks | QDir::Readable);
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Installing " << fList.count() << " files" << endl;
 #endif
 
+	fDBIndex = 0;
 	emit logMessage(i18n("[File Installer]"));
 
 	// Possibly no files to install?

@@ -33,35 +33,18 @@ static const char *fileinstaller_id =
 	"$Id$";
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
 #include <unistd.h>
 
-#ifndef QSTRING_H
 #include <qstring.h>
-#endif
-#ifndef QSTRLIST_H
 #include <qstrlist.h>
-#endif
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
 
-#ifndef _KGLOBAL_H
 #include <kglobal.h>
-#endif
-#ifndef _KSTDDIRS_H
-#include <kstddirs.h>
-#endif
-#ifndef _KURL_H
+#include <kstandarddirs.h>
 #include <kurl.h>
-#endif
-#ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
-#endif
-
 #include <kmessagebox.h>
 
 #include "fileInstaller.moc"

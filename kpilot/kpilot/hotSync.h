@@ -94,8 +94,7 @@ class FileInstallAction : public SyncAction
 Q_OBJECT
 public:
 	FileInstallAction(KPilotDeviceLink *,
-		const QString &fileDir,
-		const QStringList &fileNames);
+		const QString &fileDir);
 	virtual ~FileInstallAction();
 
 	virtual QString statusString() const;

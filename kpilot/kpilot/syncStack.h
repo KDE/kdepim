@@ -143,7 +143,7 @@ public:
 
 	void queueInit(bool checkUser = false);
 	void queueConduits(const QStringList &conduits,SyncAction::SyncMode e, bool local=false);
-	void queueInstaller(const QString &dir,const QStringList &files);
+	void queueInstaller(const QString &dir);
 	void queueCleanup();
 
 

@@ -303,9 +303,9 @@ void ActionQueue::queueConduits(const QStringList &l,SyncAction::SyncMode m, boo
 	}
 }
 
-void ActionQueue::queueInstaller(const QString &dir, const QStringList &files)
+void ActionQueue::queueInstaller(const QString &dir)
 {
-	addAction(new FileInstallAction(fHandle,dir,files));
+	addAction(new FileInstallAction(fHandle,dir));
 }
 
 void ActionQueue::queueCleanup()
