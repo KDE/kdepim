@@ -21,7 +21,7 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 
-filter_pab::filter_pab() : filter(i18n("Import MS Exchange Personal Adress Book (.PAB)"),"Hans Dijkema")
+filter_pab::filter_pab() : filter(i18n("Import MS Exchange Personal Address Book (.PAB)"),"Hans Dijkema")
 {}
 
 filter_pab::~filter_pab()
@@ -37,7 +37,7 @@ QWidget *parent=info->parent();
 
    _file=KFileDialog::getOpenFileName(dir,"*.pab *.PAB *.Pab",parent);
    if (_file.length()==0) {
-     info->alert(name(),i18n("No Adressbook choosen"));
+     info->alert(name(),i18n("No Addressbook choosen"));
      return;
    }
    strcpy(file,_file.latin1());

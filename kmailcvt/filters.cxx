@@ -387,7 +387,7 @@ return false;
 kab::kab()
 {
   api=addressbook();
-  cap=i18n("Kmailcvt - K Adress Book API");
+  cap=i18n("Kmailcvt - K Address Book API");
 }
 
 kab::~kab()

@@ -53,7 +53,7 @@ FILE   *F;
  
    file=KFileDialog::getOpenFileName(dir,"*.txt *.TXT *.Txt",parent);
    if (file.length()==0) {
-     info->alert(name(),i18n("No Adressbook choosen"));
+     info->alert(name(),i18n("No Addressbook choosen"));
      return;
    }
    F=fopen(file.latin1(),"rt");

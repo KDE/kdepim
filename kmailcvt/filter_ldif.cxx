@@ -25,7 +25,7 @@
 
 #include "filter_ldif.hxx"
 
-filter_ldif::filter_ldif() : filter(i18n("Import Netscape LDIF Adress Book 1(.LDIF)"),"Oliver Strutynski")
+filter_ldif::filter_ldif() : filter(i18n("Import Netscape LDIF Address Book 1(.LDIF)"),"Oliver Strutynski")
 {}
 
 filter_ldif::~filter_ldif()
@@ -42,7 +42,7 @@ void filter_ldif::import(filterInfo *info) {
 
    _file=KFileDialog::getOpenFileName(dir,"*.ldif *.LDIF *.Ldif",parent);
    if (_file.length()==0) {
-     info->alert(name(),i18n("No Adressbook choosen"));
+     info->alert(name(),i18n("No Addressbook choosen"));
      return;
    }
 	 strcpy(file,_file.latin1());	//lukas: FIXME no strcpy nor .latin1() for filenames!!!
@@ -64,7 +64,7 @@ void filter_ldif::import(filterInfo *info) {
 
 bool filter_ldif::convert(const char *filename, filterInfo *info) {
 		QString caption;
-		caption=i18n("Import Netscape LDIF Personal Adressbook (.LDIF)");
+		caption=i18n("Import Netscape LDIF Personal Addressbook (.LDIF)");
 
 		if (!kabStart(info)) {
 			info->alert(caption,"Error starting KAB");
