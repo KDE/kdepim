@@ -36,6 +36,9 @@
 
 #include "qgpgmeencryptjob.h"
 
+#include <klocale.h>
+#include <kmessagebox.h>
+
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
@@ -53,7 +56,8 @@ Kleo::QGpgMEEncryptJob::QGpgMEEncryptJob( GpgME::Context * context )
     mPlainTextDataProvider( 0 ),
     mPlainText( 0 ),
     mCipherTextDataProvider( 0 ),
-    mCipherText( 0 )
+    mCipherText( 0 ),
+    mResult( 0 )
 {
   assert( context );
 }
@@ -65,6 +69,7 @@ Kleo::QGpgMEEncryptJob::~QGpgMEEncryptJob() {
   delete mCipherTextDataProvider; mCipherTextDataProvider = 0;
   delete mPlainText; mPlainText = 0;
   delete mPlainTextDataProvider; mPlainTextDataProvider = 0;
+  delete mResult; mResult = 0;
 }
 
 void Kleo::QGpgMEEncryptJob::setup( const QByteArray & plainText ) {
@@ -109,15 +114,16 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
   setup( plainText );
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  const GpgME::EncryptionResult result = mCtx->encrypt( recipients, *mPlainText, *mCipherText, flags );
+  mResult = new GpgME::EncryptionResult( mCtx->encrypt( recipients, *mPlainText, *mCipherText, flags ) );
   ciphertext = mCipherTextDataProvider->data();
-  return result;
+  return *mResult;
 }
 
 void Kleo::QGpgMEEncryptJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
   if ( context == mCtx ) {
     emit done();
-    emit result( mCtx->encryptionResult(), mCipherTextDataProvider->data() );
+    mResult = new GpgME::EncryptionResult( mCtx->encryptionResult() );
+    emit result( *mResult, mCipherTextDataProvider->data() );
     deleteLater();
   }
 }
@@ -128,6 +134,14 @@ void Kleo::QGpgMEEncryptJob::slotCancel() {
 
 void Kleo::QGpgMEEncryptJob::showProgress( const char * what, int type, int current, int total ) {
   emit progress( what ? QString::fromUtf8( what ) : QString::null, type, current, total );
+}
+
+void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent ) const {
+  if ( !mResult || !mResult->error() || mResult->error().isCanceled() )
+    return;
+  const QString msg = i18n("Encryption failed: %1")
+    .arg( QString::fromLocal8Bit( mResult->error().asString() ) );
+  KMessageBox::sorry( parent, msg );
 }
 
 #include "qgpgmeencryptjob.moc"

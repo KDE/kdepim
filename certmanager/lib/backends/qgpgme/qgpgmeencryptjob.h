@@ -67,6 +67,9 @@ namespace Kleo {
 				  const QByteArray & plainText, bool alwaysTrust,
 				  QByteArray & cipherText );
 
+    /*! \reimp from Job */
+    void showErrorDialog( QWidget * parent ) const;
+
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
     /*! \reimp from Job */
@@ -83,6 +86,7 @@ namespace Kleo {
     GpgME::Data * mPlainText;
     QGpgME::QByteArrayDataProvider * mCipherTextDataProvider;
     GpgME::Data * mCipherText;
+    GpgME::EncryptionResult * mResult;
   };
 
 }

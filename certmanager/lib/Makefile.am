@@ -24,6 +24,9 @@ libkleopatra_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
 METASOURCES = AUTO
 
 messages: rc.cpp
-	$(XGETTEXT) *.cpp *.h kleo/*.cpp kleo/*.h -o $(podir)/libkleopatra.pot
+	$(XGETTEXT) *.cpp *.h \
+	kleo/*.cpp kleo/*.h \
+	ui/*.cpp ui/*.h \
+	backend/*/*.cpp backend/*/*.h -o $(podir)/libkleopatra.pot
 
 include ../../admin/Doxyfile.am

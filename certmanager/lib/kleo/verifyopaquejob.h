@@ -63,9 +63,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     VerifyOpaqueJob( QObject * parent, const char * name );
+  public:
     ~VerifyOpaqueJob();
 
-  public:
     /**
        Starts the verification operation. \a signature contains the
        signature data, while \a signedData contains the data over

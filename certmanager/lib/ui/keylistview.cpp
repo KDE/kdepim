@@ -47,6 +47,11 @@
 #include <qpainter.h>
 #include <qfont.h>
 #include <qcolor.h>
+#include <qtimer.h>
+
+#include <vector>
+
+static const int updateDelayMilliSecs = 500;
 
 namespace {
 
@@ -97,6 +102,14 @@ namespace {
 
 } // anon namespace
 
+struct Kleo::KeyListView::Private {
+  Private() : updateTimer( 0 ), itemToolTip( 0 ) {}
+
+  std::vector<GpgME::Key> keyBuffer;
+  QTimer * updateTimer;
+  QToolTip * itemToolTip;
+};
+
 // a list of signals where we want to replace QListViewItem with
 // Kleo:KeyListViewItem:
 static const struct {
@@ -118,10 +131,14 @@ static const int numSignalReplacements = sizeof signalReplacements / sizeof *sig
 Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const DisplayStrategy * displayStrategy, QWidget * parent, const char * name, WFlags f )
   : KListView( parent, name ),
     mColumnStrategy( columnStrategy ),
-    mDisplayStrategy ( displayStrategy  ),
-    mItemToolTip( 0 )
+    mDisplayStrategy ( displayStrategy  )
 {
   setWFlags( f );
+
+  d = new Private();
+
+  d->updateTimer = new QTimer( this );
+  connect( d->updateTimer, SIGNAL(timeout()), SLOT(slotUpdateTimeout()) );
 
   if ( !columnStrategy ) {
     kdWarning(5150) << "Kleo::KeyListView: need a column strategy to work with!" << endl;
@@ -143,18 +160,39 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
 
   QToolTip::remove( this );
   QToolTip::remove( viewport() ); // make double sure :)
-  mItemToolTip = new ItemToolTip( this );
+  d->itemToolTip = new ItemToolTip( this );
 }
 
 Kleo::KeyListView::~KeyListView() {
+  delete d->itemToolTip; d->itemToolTip = 0;
+  delete d; d = 0;
   delete mColumnStrategy; mColumnStrategy = 0;
   delete mDisplayStrategy; mDisplayStrategy = 0;
-  delete mItemToolTip; mItemToolTip = 0;
 }
 
 void Kleo::KeyListView::slotAddKey( const GpgME::Key & key ) {
-  if ( !key.isNull() )
-    (void)new KeyListViewItem( this, key );
+  if ( key.isNull() )
+    return;
+
+  d->keyBuffer.push_back( key );
+  if ( !d->updateTimer->isActive() )
+    d->updateTimer->start( updateDelayMilliSecs, true /* single-shot */ );
+}
+
+void Kleo::KeyListView::slotUpdateTimeout() {
+  if ( d->keyBuffer.empty() )
+    return;
+
+  const bool wasUpdatesEnabled = isUpdatesEnabled();
+  if ( !wasUpdatesEnabled )
+    setUpdatesEnabled( false );
+  kdDebug( 5150 ) << "Kleo::KeyListView::slotUpdateTimeout(): processing "
+		  << d->keyBuffer.size() << " items en block" << endl;
+  for ( std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it )
+    (void)new KeyListViewItem( this, *it );
+  if ( wasUpdatesEnabled )
+    setUpdatesEnabled( true );
+  d->keyBuffer.clear();
 }
 
 void Kleo::KeyListView::slotRefreshKey( const GpgME::Key & key ) {
@@ -197,49 +235,49 @@ void Kleo::KeyListView::slotEmitContextMenuRequested( QListViewItem * item, cons
 //
 
 Kleo::KeyListViewItem::KeyListViewItem( KeyListView * parent, const GpgME::Key & key )
-  : KListViewItem( parent ), mKey( key )
+  : KListViewItem( parent )
 {
-
+  setKey( key );
 }
 
 Kleo::KeyListViewItem::KeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Key & key )
-  : KListViewItem( parent, after ), mKey( key )
+  : KListViewItem( parent, after )
 {
-
+  setKey( key );
 }
 
 Kleo::KeyListViewItem::KeyListViewItem( KeyListViewItem * parent, const GpgME::Key & key )
-  : KListViewItem( parent ), mKey( key )
+  : KListViewItem( parent )
 {
-
+  setKey( key );
 }
 
 Kleo::KeyListViewItem::KeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::Key & key )
-  : KListViewItem( parent, after ), mKey( key )
+  : KListViewItem( parent, after )
 {
-
+  setKey( key );
 }
 
 void Kleo::KeyListViewItem::setKey( const GpgME::Key & key ) {
   mKey = key;
+  // the ColumnStrategy operations might be very slow, so cache their
+  // result here, where we're non-const :)
+  const Kleo::KeyListView::ColumnStrategy * cs = listView() ? listView()->columnStrategy() : 0 ;
+  if ( !cs )
+    return;
+  const int numCols = listView() ? listView()->columns() : 0 ;
+  for ( int i = 0 ; i < numCols ; ++i ) {
+    setText( i, cs->text( key, i ) );
+    if ( const QPixmap * pix = cs->pixmap( key, i ) )
+      setPixmap( i, *pix );
+  }
   repaint();
-}
-
-QString Kleo::KeyListViewItem::text( int col ) const {
-  return listView() && listView()->columnStrategy()
-    ? listView()->columnStrategy()->text( key(), col )
-    : QString::null ;
 }
 
 QString Kleo::KeyListViewItem::toolTip( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->toolTip( key(), col )
     : QString::null ;
-}
-
-const QPixmap * Kleo::KeyListViewItem::pixmap( int col ) const {
-  return listView() && listView()->columnStrategy()
-    ? listView()->columnStrategy()->pixmap( key(), col ) : 0 ;
 }
 
 int Kleo::KeyListViewItem::compare( QListViewItem * item, int col, bool ascending ) const {

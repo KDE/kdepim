@@ -66,9 +66,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     SignJob( QObject * parent, const char * name );
+  public:
     ~SignJob();
 
-  public:
     /**
        Starts the signing operation. \a signers is the list of keys to
        sign \a plainText with. Empty (null) keys are ignored.

@@ -39,7 +39,6 @@
 
 class QPainter;
 class QColorGroup;
-class QToolTip;
 class QFont;
 class QColor;
 
@@ -68,10 +67,6 @@ namespace Kleo {
     KeyListView * listView() const;
     /*! \reimp for covariant return */
     KeyListViewItem * nextSibling() const;
-    /*! \reimp */
-    QString text( int col ) const;
-    /*! \reimp */
-    const QPixmap * pixmap( int col ) const;
     /*! \reimp */
     int compare( QListViewItem * other, int col, bool ascending ) const;
     /*! \reimp to allow for key() overload above */
@@ -111,7 +106,7 @@ namespace Kleo {
     /*! \reimp */
     int rtti() const { return RTTI; }
     /*! \reimp */
-    void paintCell( QPainter *p, const QColorGroup &cg,int column, int width, int alignment );
+    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
 
   private:
     GpgME::Subkey mSubkey;
@@ -216,6 +211,7 @@ namespace Kleo {
     void slotEmitReturnPressed( QListViewItem* );
     void slotEmitSelectionChanged( QListViewItem* );
     void slotEmitContextMenuRequested( QListViewItem*, const QPoint&, int );
+    void slotUpdateTimeout();
 
   public:
     /*! \reimp for covariant return */
@@ -230,7 +226,7 @@ namespace Kleo {
   private:
     const ColumnStrategy * mColumnStrategy;
     const DisplayStrategy * mDisplayStrategy;
-    QToolTip * mItemToolTip;
+
     class Private;
     Private * d;
   };

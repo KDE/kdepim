@@ -62,9 +62,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     ExportJob( QObject * parent, const char * name );
+  public:
     ~ExportJob();
 
-  public:
     /**
        Starts the export operation. \a patterns is a list of patterns
        used to restrict the list of keys exported. Empty patterns are

@@ -66,10 +66,11 @@ namespace Kleo {
     Q_OBJECT
   protected:
     KeyListJob( QObject * parent, const char * name );
-    ~KeyListJob();
 
   public:
-    /**
+   ~KeyListJob();
+
+     /**
        Starts the keylist operation. \a pattern is a list of patterns
        used to restrict the list of keys returned. Empty patterns are
        ignored. If \a pattern is empty or contains only empty strings,

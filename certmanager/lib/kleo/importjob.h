@@ -63,9 +63,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     ImportJob( QObject * parent, const char * name );
+  public:
     ~ImportJob();
 
-  public:
     /**
        Starts the importing operation. \a keyData contains the data to
        import from.

@@ -36,6 +36,7 @@
 #include <qobject.h>
 
 class QString;
+class QWidget;
 
 namespace Kleo {
 
@@ -60,7 +61,10 @@ namespace Kleo {
     Q_OBJECT
   protected:
     Job( QObject * parent, const char * name );
+  public:
     ~Job();
+
+    virtual void showErrorDialog( QWidget * parent=0 ) const;
 
   public slots:
     virtual void slotCancel() = 0;

@@ -59,9 +59,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     DeleteJob( QObject * parent, const char * name );
+  public:
     ~DeleteJob();
 
-  public:
     /**
        Starts the delete operation. \a key represents the key to
        delete, \a allowSecretKeyDeletion specifies if a key may also

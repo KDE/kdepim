@@ -62,9 +62,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     KeyGenerationJob( QObject * parent, const char * name );
+  public:
     ~KeyGenerationJob();
 
-  public:
     /**
        Starts the key generation operation. \a parameters is a
        backend-specific string containing the paramaters of the key to

@@ -65,9 +65,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     EncryptJob( QObject * parent, const char * name );
+  public:
     ~EncryptJob();
 
-  public:
     /**
        Starts the encryption operation. \a recipients is the a list of
        keys to encrypt \a plainText to. Empty (null) keys are ignored.

@@ -63,9 +63,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     DecryptJob( QObject * parent, const char * name );
+  public:
     ~DecryptJob();
 
-  public:
     /**
        Starts the decryption operation. \a cipherText is the data to
        decrypt.

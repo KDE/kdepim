@@ -62,9 +62,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     DownloadJob( QObject * parent, const char * name );
+  public:
     ~DownloadJob();
 
-  public:
     /**
        Starts the download operation. \a fingerprints is a list of
        fingerprints used to specify the list of keys downloaded. Empty
