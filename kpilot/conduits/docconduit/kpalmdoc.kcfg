@@ -8,7 +8,7 @@
         <default>false</default>
     </entry>
     <entry name="AskOverwrite" key="Ask before overwriting files" type="Bool">
-       <default>true</default> 
+       <default>true</default>
     </entry>
     <entry name="VerboseMessages" key="Verbose messages" type="Bool">
         <default>true</default>
@@ -30,6 +30,9 @@
     </entry>
     <entry name="BookmarksToPC" key="Bookmarks to PC" type="UInt">
         <default>0</default>
+    </entry>
+    <entry name="Encoding" type="String">
+        <default>ISO8859-15</default>
     </entry>
 	</group>
 </kcfg>

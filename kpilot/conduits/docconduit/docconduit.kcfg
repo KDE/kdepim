@@ -7,9 +7,9 @@
     <entry name="KeepPDBsLocally" key="Keep PDBs locally" type="Bool">
         <default>false</default>
     </entry>
-		<entry name="LocalSync" key="Sync only locally" type="Bool">
-				<default>false</default>
-		</entry>
+    <entry name="LocalSync" key="Sync only locally" type="Bool">
+      <default>false</default>
+    </entry>
     <entry name="ConflictResolution" key="Conflict Resolution" type="UInt">
         <default>0</default>
     </entry>
@@ -42,6 +42,9 @@
     </entry>
     <entry name="ConvertedDOCfiles" key="Converted PalmDOCs" type="StringList">
         <default></default>
+    </entry>
+    <entry name="Encoding" type="String">
+	<default>ISO8859-15</default>
     </entry>
   </group>
 

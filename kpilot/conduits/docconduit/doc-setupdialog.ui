@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>DOCWidget</class>
 <author>Reinhold Kainhofer</author>
 <widget class="QWidget">
@@ -9,7 +9,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>680</width>
+            <width>564</width>
             <height>266</height>
         </rect>
     </property>
@@ -20,6 +20,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
         </sizepolicy>
+    </property>
+    <property name="caption">
+        <string>Form2</string>
     </property>
     <grid>
         <property name="name">
@@ -181,83 +184,7 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <spacer row="3" column="0">
-                        <property name="name">
-                            <cstring>Spacer3_2</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Fixed</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>16</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="4" column="0">
-                        <property name="name">
-                            <cstring>Spacer3_3</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Fixed</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>16</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="2" column="0">
-                        <property name="name">
-                            <cstring>Spacer3</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Fixed</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>16</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="2" column="1">
-                        <property name="name">
-                            <cstring>fBookmarksInline</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Inline tags in text</string>
-                        </property>
-                        <property name="checked">
-                            <bool>true</bool>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>Check this box to create bookmarks from inline tags in the text. The inline tag consist of tags in the form &lt;* bookmarktext *&gt;. The bookmark location is set using the location of the inline tag in the text, and  the name is the text between the &lt;* and the *&gt;. The inline tag (&lt;*...*&gt;) will be removed from the text.</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="3" column="1">
-                        <property name="name">
-                            <cstring>fBookmarksEndtags</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Tags at end of text</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>Check this box to convert tags of the form &lt;bookmarkname&gt; at the end of the text to bookmarks. The text inside the tag ("bookmarkname") will be searched in the text, and whenever found, a bookmark will be set there. The endtags &lt;...&gt; will then be removed from the end of the text.</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="2">
+                    <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>fCompress</cstring>
                         </property>
@@ -274,12 +201,15 @@
                             <string>&lt;qt&gt;The Palm DOC format supports compressing the text to save memory. Check this box to enable text compression, so the resulting Palm DOC database will consume about 50% less memory than in uncompressed state. Almost all DOC readers on the Palm support compressed texts.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>fConvertBookmarks</cstring>
                         </property>
                         <property name="text">
                             <string>Convert &amp;bookmarks</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+B</string>
                         </property>
                         <property name="checked">
                             <bool>true</bool>
@@ -288,18 +218,7 @@
                             <string>&lt;qt&gt;Check this box to enable bookmark creation when converting text files to Palm DOC databases. Most doc readers support bookmarks. In order to create a bookmark, it is necessary to to provide the location in the text where the bookmark should be set and the bookmark title, in at least one of the formats listed below.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="4" column="1">
-                        <property name="name">
-                            <cstring>fBookmarksBmk</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Regular &amp;expressions in .bmk file</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Check this box to use regular expressions in a file to search the text for bookmarks. The file should have the same name as the text file, but should end in .bmk instead of .txt (for instance, the regular expression file for textname.txt should be textname.bmk). See the documentation for a description of the format of the bmk file.&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <spacer row="5" column="1">
+                    <spacer row="6" column="2">
                         <property name="name">
                             <cstring>spacer9</cstring>
                         </property>
@@ -316,6 +235,67 @@
                             </size>
                         </property>
                     </spacer>
+                    <widget class="QCheckBox" row="2" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksInline</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Inline tags in text</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+I</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Check this box to create bookmarks from inline tags in the text. The inline tag consist of tags in the form &lt;* bookmarktext *&gt;. The bookmark location is set using the location of the inline tag in the text, and  the name is the text between the &lt;* and the *&gt;. The inline tag (&lt;*...*&gt;) will be removed from the text.</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Encoding:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fEncoding</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksEndtags</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Tags at end of text</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+T</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Check this box to convert tags of the form &lt;bookmarkname&gt; at the end of the text to bookmarks. The text inside the tag ("bookmarkname") will be searched in the text, and whenever found, a bookmark will be set there. The endtags &lt;...&gt; will then be removed from the end of the text.</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="1">
+                        <property name="name">
+                            <cstring>fBookmarksBmk</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Regular &amp;expressions in .bmk file</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+E</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Check this box to use regular expressions in a file to search the text for bookmarks. The file should have the same name as the text file, but should end in .bmk instead of .txt (for instance, the regular expression file for textname.txt should be textname.bmk). See the documentation for a description of the format of the bmk file.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="5" column="1">
+                        <property name="name">
+                            <cstring>fEncoding</cstring>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -539,6 +519,8 @@
         </widget>
     </grid>
 </widget>
+<customwidgets>
+</customwidgets>
 <connections>
     <connection>
         <sender>fConvertBookmarks</sender>

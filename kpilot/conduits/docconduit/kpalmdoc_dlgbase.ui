@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>ConverterDlgBase</class>
 <widget class="QWidget">
     <property name="name">
@@ -8,9 +8,12 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>456</width>
-            <height>256</height>
+            <width>492</width>
+            <height>339</height>
         </rect>
+    </property>
+    <property name="caption">
+        <string>ConverterDlgBase</string>
     </property>
     <grid>
         <property name="name">
@@ -85,47 +88,6 @@
                             <string>Folder where copies of the handheld databases are kept. You can install them to any PalmOS handheld, and distribute these copies to other people (but beware of copyright infringement).</string>
                         </property>
                     </widget>
-                    <widget class="KURLRequester" row="0" column="1" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fTXTDir</cstring>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>Enter the name of the folder where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
-                        </property>
-                    </widget>
-                    <widget class="KPushButton" row="6" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fTextToPDB</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Convert Text to PalmDOC</string>
-                        </property>
-                    </widget>
-                    <widget class="KPushButton" row="6" column="2">
-                        <property name="name">
-                            <cstring>fPDBToText</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Convert PalmDOC to Text</string>
-                        </property>
-                    </widget>
-                    <spacer row="5" column="1">
-                        <property name="name">
-                            <cstring>spacer5</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>150</height>
-                            </size>
-                        </property>
-                    </spacer>
                     <widget class="QCheckBox" row="3" column="1" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fAskOverwrite</cstring>
@@ -140,6 +102,63 @@
                         </property>
                         <property name="text">
                             <string>&amp;Verbose messages</string>
+                        </property>
+                    </widget>
+                    <widget class="KPushButton" row="7" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fTextToPDB</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Convert Text to PalmDOC</string>
+                        </property>
+                    </widget>
+                    <widget class="KPushButton" row="7" column="2">
+                        <property name="name">
+                            <cstring>fPDBToText</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Convert PalmDOC to Text</string>
+                        </property>
+                    </widget>
+                    <spacer row="6" column="1">
+                        <property name="name">
+                            <cstring>spacer5</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KURLRequester" row="0" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fTXTDir</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Enter the name of the folder where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="5" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fEncoding</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Encoding:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fEncoding</cstring>
                         </property>
                     </widget>
                 </grid>
@@ -388,6 +407,8 @@
         </widget>
     </grid>
 </widget>
+<customwidgets>
+</customwidgets>
 <connections>
     <connection>
         <sender>fConvertBookmarks</sender>
@@ -413,10 +434,10 @@
     <includehint>kurlrequester.h</includehint>
     <includehint>klineedit.h</includehint>
     <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
     <includehint>kurlrequester.h</includehint>
     <includehint>klineedit.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
 </includehints>
 </UI>

@@ -45,10 +45,10 @@ int main(int argc, char *argv[])
 	about.addAuthor("Reinhold Kainhofer", I18N_NOOP("Main Developer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
 	about.addCredit("Adriaan de Groot", I18N_NOOP("Maintainer of KPilot"),
-		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
+		"groot@kde.org", "http://www.kpilot.org/");
 
 	KCmdLineArgs::init(argc, argv, &about);
-  KApplication::addCmdLineOptions();
+	KApplication::addCmdLineOptions();
 
 	KApplication app;
 	ConverterDlg *dlg=new ConverterDlg(0L, i18n("PalmDOC Converter"));
