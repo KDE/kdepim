@@ -29,14 +29,15 @@
 #include <qobject.h>
 #include <qptrlist.h>
 #include <qtimer.h>
+#include <qvaluelist.h>
 
 #include <kabc/addressee.h>
 
 #include "clicklineedit.h"
 #include "kcompletion.h"
+#include <dcopobject.h>
 
 class KConfig;
-template<typename T> class QValueList;
 
 namespace KPIM {
 class LdapSearch;
@@ -46,8 +47,9 @@ typedef QValueList<LdapResult> LdapResultList;
 
 namespace KPIM {
 
-class AddresseeLineEdit : public ClickLineEdit
+class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
 {
+  K_DCOP
   Q_OBJECT
 
   public:
@@ -58,20 +60,37 @@ class AddresseeLineEdit : public ClickLineEdit
     virtual void setFont( const QFont& );
 
     static KConfig *config();
-    static bool getNameAndMail(const QString& aStr, QString& name, QString& mail);
 
   public slots:
     void cursorAtEnd();
     void enableCompletion( bool enable );
 
-  protected:
+  protected slots:
     virtual void loadContacts();
+  protected:
     void addContact( const KABC::Addressee&, int weight );
     virtual void keyPressEvent( QKeyEvent* );
-    virtual void paste();
+    /**
+     * Reimplemented for smart insertion of email addresses.
+     * Features:
+     * - Automatically adds ',' if necessary to separate email addresses
+     * - Correctly decodes mailto URLs
+     * - Recognizes email addresses which are protected against address
+     *   harvesters, i.e. "name at kde dot org" and "name(at)kde.org"
+     */
     virtual void insert( const QString &text );
+    /** Reimplemented for smart insertion of pasted email addresses. */
+    virtual void paste();
+    /** Reimplemented for smart insertion with middle mouse button. */
+    virtual void mouseReleaseEvent( QMouseEvent *e );
+    /** Reimplemented for smart insertion of dragged email addresses. */
+    virtual void dropEvent( QDropEvent *e );
     void doCompletion( bool ctrlT );
     virtual QPopupMenu *createPopupMenu();
+
+  k_dcop:
+    // Connected to the DCOP signal
+    void slotIMAPCompletionOrderChanged();
 
   private slots:
     void slotCompletion() { doCompletion(false); }
@@ -100,6 +119,7 @@ class AddresseeLineEdit : public ClickLineEdit
     static KPIM::LdapSearch *s_LDAPSearch;
     static QString *s_LDAPText;
     static AddresseeLineEdit *s_LDAPLineEdit;
+    static KConfig *s_config;
 
     class AddresseeLineEditPrivate;
     AddresseeLineEditPrivate *d;
