@@ -308,7 +308,8 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   fwd+=( i18n(" Subject")+": "+a->subject()->asUnicodeString()+"\n");
   fwd+=( i18n(" From")+": "+a->from()->asUnicodeString()+"\n");
-  fwd+=( i18n(" Date")+": "+a->date()->asUnicodeString()+"\n\n");
+  fwd+=( i18n(" Date")+": "+a->date()->asUnicodeString()+"\n");
+  fwd+=( i18n(" Newsgroup")+": "+a->newsgroups()->asUnicodeString()+"\n\n");
 
   KMime::Content *text=a->textContent();
   if(text) {
