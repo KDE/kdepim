@@ -98,35 +98,43 @@ void KNotesIMAP::ResourceIMAP::doClose()
     config.writeEntry( it.key(), it.data() );
 }
 
+bool KNotesIMAP::ResourceIMAP::loadResource( const QString& resource )
+{
+  // Get the list of journals
+  QStringList lst;
+  if( !kmailIncidences( lst, "Note", resource ) ) {
+    kdError(5500) << "Communication problem in "
+                  << "ResourceIMAP::getIncidenceList()\n";
+    return false;
+  }
+
+  // Populate the calendar with the new entries
+  const bool silent = mSilent;
+  mSilent = true;
+  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+    KCal::Journal* journal = parseJournal( *it );
+    if( journal )
+      addNote( journal, resource );
+  }
+  mSilent = silent;
+
+  return true;
+}
+
 bool KNotesIMAP::ResourceIMAP::load()
 {
   // We get a fresh list of events, so clean out the old ones
   mCalendar.deleteAllEvents();
   mUidmap.clear();
 
+  bool rc = true;
   QMap<QString, bool>::ConstIterator itR;
   for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
     if ( !itR.data() )
       // This resource is disabled
       continue;
 
-    // Get the list of journals
-    QStringList lst;
-    if( !kmailIncidences( lst, "Note", itR.key() ) ) {
-      kdError(5500) << "Communication problem in "
-                    << "ResourceIMAP::getIncidenceList()\n";
-      return false;
-    }
-
-    // Populate the calendar with the new events
-    const bool silent = mSilent;
-    mSilent = true;
-    for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
-      KCal::Journal* journal = parseJournal( *it );
-      if( journal )
-        addNote( journal, itR.key() );
-    }
-    mSilent = silent;
+    rc &= loadResource( itR.key() );
   }
 
   return true;
@@ -237,16 +245,79 @@ void KNotesIMAP::ResourceIMAP::slotRefresh( const QString& type,
 void KNotesIMAP::ResourceIMAP::subresourceAdded( const QString& type,
                                                  const QString& resource )
 {
-  // TODO: Optimize this
-  slotRefresh( type, resource );
+  if ( type != "Note" )
+    // Not ours
+    return;
+
+  if ( mResources.contains( resource ) )
+    // Not registered
+    return;
+
+  KConfig config( configFile() );
+  config.setGroup( "Note" );
+
+  mResources[ resource ] = config.readBoolEntry( resource, true );
+  loadResource( resource );
+  emit signalSubresourceAdded( this, type, resource );
 }
 
 void KNotesIMAP::ResourceIMAP::subresourceDeleted( const QString& type,
                                                    const QString& resource )
 {
-  // TODO: Optimize this
-  slotRefresh( type, resource );
+  if ( type != "Note" )
+    // Not ours
+    return;
+
+  if ( !mResources.contains( resource ) )
+    // Not registered
+    return;
+
+  // Ok, it's our job, and we have it here
+  mResources.erase( resource );
+
+  KConfig config( configFile() );
+  config.setGroup( "Note" );
+  config.deleteEntry( resource );
+  config.sync();
+
+  // Make a list of all uids to remove
+  QMap<QString, QString>::ConstIterator mapIt;
+  QStringList uids;
+  for ( mapIt = mUidmap.begin(); mapIt != mUidmap.end(); ++mapIt )
+    if ( mapIt.data() == resource )
+      // We have a match
+      uids << mapIt.key();
+
+  // Finally delete all the incidences
+  if ( !uids.isEmpty() ) {
+    QStringList::ConstIterator it;
+    for ( it = uids.begin(); it != uids.end(); ++it ) {
+      KCal::Journal* j = mCalendar.journal( *it );
+      if( j ) deleteNote( j );
+      mUidmap.remove( *it );
+    }
+  }
+
+  emit signalSubresourceRemoved( this, type, resource );
 }
+
+QStringList KNotesIMAP::ResourceIMAP::subresources() const
+{
+  return mResources.keys();
+}
+
+bool KNotesIMAP::ResourceIMAP::subresourceActive( const QString& res ) const
+{
+  if ( mResources.contains( res ) ) {
+    return mResources[ res ];
+  }
+
+  // Safe default bet:
+  kdDebug(5650) << "subresourceActive( " << res << " ): Safe bet\n";
+
+  return true;
+}
+
 
 KCal::Journal* KNotesIMAP::ResourceIMAP::parseJournal( const QString& str )
 {

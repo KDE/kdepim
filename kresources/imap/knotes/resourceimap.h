@@ -83,8 +83,20 @@ public:
   void subresourceAdded( const QString& type, const QString& resource );
   void subresourceDeleted( const QString& type, const QString& resource );
 
+  /** Return the list of subresources. */
+  QStringList subresources() const;
+
+  /** Is this subresource active? */
+  bool subresourceActive( const QString& ) const;
+
+signals:
+  void signalSubresourceAdded( Resource*, const QString&, const QString& );
+  void signalSubresourceRemoved( Resource*, const QString&, const QString& );
+
 private:
   bool addNote( KCal::Journal* journal, const QString& resource );
+
+  bool loadResource( const QString& resource );
 
   QString configFile() const {
     return ResourceIMAPBase::ResourceIMAPShared::configFile( "knotes" );
