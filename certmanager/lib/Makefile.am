@@ -13,12 +13,14 @@ libkleopatra_la_SOURCES = \
 libkleopatra_la_LIBADD = \
 			kleo/libkleopatra_core.la \
 			backends/qgpgme/libkleopatra_backend_qgpgme.la \
-			backends/kpgp/libkleopatra_backend_kpgp.la \
 			ui/libkleopatra_ui.la \
 			\
 			$(top_builddir)/libkdenetwork/libkdenetwork.la \
 			$(top_builddir)/libkdenetwork/qgpgme/libqgpgme.la \
 			$(LIB_KDEUI)
+
+# Disabled for kdepim-3.3, see also kleo/cryptobackendfactory.cpp
+# backends/kpgp/libkleopatra_backend_kpgp.la
 
 libkleopatra_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
 
