@@ -44,7 +44,6 @@ class QLayout;
 class QLabel;
 class QGridLayout;
 class KAccount;
-class QCheckBox;
 
 //==========================================================================
 
@@ -86,7 +85,7 @@ class GroupItem : public QCheckListItem
      * Get/Set the KGroupInfo
      */
     KGroupInfo info() { return mInfo; }
-    void setInfo( KGroupInfo info ) { mInfo = info; }
+    void setInfo( KGroupInfo info );
 
     /**
      * Get/Set the original parent
@@ -107,10 +106,9 @@ class GroupItem : public QCheckListItem
     virtual void setDescription();
 
     /**
-     * Get/Set if this is a checkable item
+     * Get if this is a checkable item
      */
-    bool isCheckItem() { return mIsCheckItem; }
-    void setIsCheckItem( bool check ) { mIsCheckItem = check; }
+    bool isCheckItem() const { return mIsCheckItem; }
 
     /**
      * Get/Set if state changes should be ignored

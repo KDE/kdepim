@@ -53,7 +53,7 @@ bool KGroupInfo::operator< (const KGroupInfo &gi2)
 
 GroupItem::GroupItem( QListView *v, const KGroupInfo &gi, KSubscription* browser, 
     bool isCheckItem )
-  : QCheckListItem( v, gi.name, isCheckItem ? CheckBox : Controller ), 
+  : QCheckListItem( v, gi.name, isCheckItem ? CheckBox : CheckBoxController ), 
     mInfo( gi ), mBrowser( browser ), mIsCheckItem( isCheckItem ), 
     mIgnoreStateChange( false )
 {
@@ -64,10 +64,19 @@ GroupItem::GroupItem( QListView *v, const KGroupInfo &gi, KSubscription* browser
 //-----------------------------------------------------------------------------
 GroupItem::GroupItem( QListViewItem *i, const KGroupInfo &gi, KSubscription* browser, 
     bool isCheckItem )
-  : QCheckListItem( i, gi.name, isCheckItem ? CheckBox : Controller ), 
+  : QCheckListItem( i, gi.name, isCheckItem ? CheckBox : CheckBoxController ), 
     mInfo( gi ), mBrowser( browser ), mIsCheckItem( isCheckItem ),
     mIgnoreStateChange( false )
 {
+  if (listView()->columns() > 1)
+    setDescription();
+}
+
+//-----------------------------------------------------------------------------
+void GroupItem::setInfo( KGroupInfo info )
+{
+  mInfo = info;
+  setText(0, mInfo.name);
   if (listView()->columns() > 1)
     setDescription();
 }
