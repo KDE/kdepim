@@ -1,6 +1,6 @@
-### Makefile for the abbrowser / kabc conduit
+### Makefile for the time conduit
 ###
-### The abbrowser conduit is Copyright (C) 2001 by Greg Stern
+### The time conduit is Copyright (C) 2002 by Reinhold Kainhofer
 
 INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 METASOURCES = AUTO
@@ -18,3 +18,4 @@ libtimeconduit_la_SOURCES = \
 	time-setup_dialog.ui
 libtimeconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib 
 libtimeconduit_la_LIBADD = -lkpilot 
+ 
