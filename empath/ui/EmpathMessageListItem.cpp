@@ -160,4 +160,3 @@ EmpathMessageListItem::setStatus(RMM::MessageStatus s)
 	m.setStatus(s);
 }
 
-

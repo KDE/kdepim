@@ -97,6 +97,8 @@ EmpathMailbox::unreadMessageCount() const
 	Q_UINT32 c = 0;
 	
 	EmpathFolderListIterator it(folderList_);
+	empathDebug("There are " + QString().setNum(folderList_.count()) +
+		"folders to count messages in");
 	
 	for (; it.current(); ++it)
 		c += it.current()->unreadMessageCount();
@@ -107,6 +109,9 @@ EmpathMailbox::unreadMessageCount() const
 	void
 EmpathMailbox::s_countUpdated(int unread, int read)
 {
+	empathDebug("s_countUpdated() called");
+	empathDebug("emitting(" + QString().setNum(unreadMessageCount()) +
+	   ", " + QString().setNum(messageCount()) + ")");
 	emit(countUpdated((int)unreadMessageCount(), (int)messageCount()));
 }
 

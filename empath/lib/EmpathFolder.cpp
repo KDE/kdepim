@@ -101,6 +101,8 @@ EmpathFolder::update()
 	if (m == 0) return;
 	empathDebug("mailbox name = " + m->name());
 	m->syncIndex(url_);
+	empathDebug("emitting(" + QString().setNum(messageList_.countUnread()) +
+	   ", " + QString().setNum(messageList_.count()) + ")");
 	emit(countUpdated(messageList_.countUnread(), messageList_.count()));
 }
 
@@ -132,5 +134,22 @@ EmpathFolder::parent() const
 	empathDebug("Parent folder path is \"" + f + "\"");
 	EmpathURL u(url_.mailboxName(), f, QString::null);
 	return empath->folder(u);
+}
+
+	bool
+EmpathFolder::mark(const EmpathURL & message, RMM::MessageStatus s)
+{
+	empathDebug("mark called");
+	EmpathMailbox * m(empath->mailbox(url_));
+	if (m == 0) return false;
+	bool retval = m->mark(message, s);
+	if (retval) {
+		empathDebug("Marked message successfully");
+		messageList_[message.messageID()]->setStatus(s);
+		emit(countUpdated(messageList_.countUnread(), messageList_.count()));
+		return true;
+	}
+	empathDebug("Did NOT mark message successfully");
+	return false;
 }
 

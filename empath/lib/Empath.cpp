@@ -247,9 +247,9 @@ Empath::remove(const EmpathURL & url)
 	bool
 Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
 {
-	EmpathMailbox * m = mailbox(url);
-	if (m == 0) return false;
-	return m->mark(url, s);
+	EmpathFolder * f = folder(url);
+	if (f == 0) return false;
+	return f->mark(url, s);
 }
 
 	void

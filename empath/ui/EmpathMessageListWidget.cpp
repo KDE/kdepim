@@ -479,17 +479,17 @@ EmpathMessageListWidget::s_rightButtonPressed(
 	EmpathMessageListItem * i = (EmpathMessageListItem *)item;
 
 	if (i->status() & RMM::Read)
-		messageMenu_.changeItem(messageMenuItemMark,
+		messageMenu_.changeItem(messageMenuItemMarkRead,
 			i18n("Mark as unread"));
 	else
-		messageMenu_.changeItem(messageMenuItemMark,
+		messageMenu_.changeItem(messageMenuItemMarkRead,
 			i18n("Mark as read"));
 
 	if (i->status() & RMM::Replied)
-		messageMenu_.changeItem(messageMenuItemMark,
+		messageMenu_.changeItem(messageMenuItemMarkReplied,
 			i18n("Mark as not replied to"));
 	else
-		messageMenu_.changeItem(messageMenuItemMark,
+		messageMenu_.changeItem(messageMenuItemMarkReplied,
 			i18n("Mark as replied to"));
 	
 	if (i->status() & RMM::Marked)
@@ -556,6 +556,9 @@ EmpathMessageListWidget::setStatus(
 		EmpathMessageListItem * item, RMM::MessageStatus status)
 {
 	empathDebug("setStatus() called with " + QString().setNum(status));
+	
+	item->setStatus(status);
+	
 	if (status & RMM::Read)
 		if (status & RMM::Marked)
 			if (status & RMM::Replied)
@@ -579,8 +582,6 @@ EmpathMessageListWidget::setStatus(
 			else
 				item->setPixmap(0, px_);
 	
-	item->setStatus(status);
-
 	return;
 }
 
@@ -724,22 +725,21 @@ EmpathMessageListWidget::_setupMessageMenu()
 	messageMenu_.insertItem(empathIcon("mini-view.png"), i18n("View"),
 		this, SLOT(s_messageView()));
 	
-	messageMenu_.insertItem(empathIcon("mini-view.png"), i18n("View &Source"),
-		this, SLOT(s_messageViewSource()));
-
+	messageMenu_.insertSeparator();
+	
 	messageMenuItemMark =
 		messageMenu_.insertItem(
-			empathIcon("mini-mark.png"), i18n("Tag"),
+			empathIcon("tree-marked.png"), i18n("Tag"),
 			this, SLOT(s_messageMark()));
 	
 	messageMenuItemMarkRead =
 		messageMenu_.insertItem(
-			empathIcon("mini-mark.png"), i18n("Mark as Read"),
+			empathIcon("tree-read.png"), i18n("Mark as Read"),
 			this, SLOT(s_messageMarkRead()));
 	
 	messageMenuItemMarkReplied =
 		messageMenu_.insertItem(
-			empathIcon("mini-mark.png"), i18n("Mark as Replied"),
+			empathIcon("tree-replied.png"), i18n("Mark as Replied"),
 			this, SLOT(s_messageMarkReplied()));
 		
 	messageMenu_.insertSeparator();
@@ -753,17 +753,11 @@ EmpathMessageListWidget::_setupMessageMenu()
 	messageMenu_.insertItem(empathIcon("mini-forward.png"), i18n("Forward"),
 		this, SLOT(s_messageForward()));
 
-	messageMenu_.insertItem(empathIcon("mini-bounce.png"), i18n("Bounce"),
-		this, SLOT(s_messageBounce()));
-
 	messageMenu_.insertItem(empathIcon("mini-delete.png"), i18n("Delete"),
 		this, SLOT(s_messageDelete()));
 
 	messageMenu_.insertItem(empathIcon("mini-save.png"), i18n("Save As"),
 		this, SLOT(s_messageSaveAs()));
-	
-	messageMenu_.insertItem(empathIcon("empath-print.png"), i18n("Print..."),
-		this, SLOT(s_messagePrint()));
 }
 
 EmpathMarkAsReadTimer::EmpathMarkAsReadTimer(EmpathMessageListWidget * parent)
@@ -857,11 +851,18 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 		return;
 	}
 	
+	QListViewItem * item = itemAt(e->pos());
+
+	if (!item) {
+		empathDebug("No item under cursor");
+		return;
+	}
+	
 	// CASE 1: Right button pressed
 	
 	if (e->button() == RightButton) {
 		empathDebug("CASE 1");
-		messageMenu_.exec(QCursor::pos());
+		s_rightButtonPressed(itemAt(e->pos()), QCursor::pos(), 0); 
 		return;
 	}
 	
@@ -870,13 +871,7 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 	maybeDrag_ = true;
 	dragStart_ = e->pos();
 	
-	QListViewItem * item = itemAt(e->pos());
 
-	if (!item) {
-		empathDebug("No item under cursor");
-		return;
-	}
-	
 	// CASE 2: Left button pressed, but no modifier keys.
 	
 	if (e->state() == 0) {

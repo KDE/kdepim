@@ -18,7 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// KDE includes
 #include <kiconloader.h>
+#include <kmsgbox.h>
+#include <klocale.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -96,5 +99,6 @@ EmpathAddressSelectionWidget::s_lostFocus()
 EmpathAddressSelectionWidget::s_browseClicked()
 {
 	empathDebug("s_browseClicked() called");
+	KMsgBox(0, "Empath", i18n("Sorry, the addressbook isn't ready for use yet."), KMsgBox::EXCLAMATION, i18n("OK"));
 }
 

@@ -198,6 +198,13 @@ RBodyPart::parse()
 		}
 		
 		rmmDebug("boundary == \"" + boundary_ + "\"");
+		
+		if (boundary_.isEmpty()) {
+			parsed_		= true;
+			assembled_	= false;
+			return;
+		}
+		
 		if (boundary_.at(0) == '\"') {
 			boundary_.remove(boundary_.length() - 1, 1);
 			boundary_.remove(0, 1);

@@ -40,7 +40,6 @@
 #include "EmpathUIUtils.h"
 #include "EmpathUtilities.h"
 
-const int fsizes[7] = { 14, 14, 14, 14, 14, 14, 14 };
 
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 		QWidget			*	_parent,
@@ -50,7 +49,6 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	empathDebug("ctor");
 	qInitPngIO();
 	
-	setFontSizes(fsizes);
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET);
@@ -97,14 +95,32 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool isHTML)
 		return;
 	}
 	// FIXME Remove ascii()
+
+	KConfig * config(kapp->getConfig());
+	config->setGroup(EmpathConfig::GROUP_DISPLAY);
+	
+	QFont defaultFixed(empathFixedFont());
+	
+	QFont f =
+		config->readFontEntry(
+			EmpathConfig::KEY_FIXED_FONT, &defaultFixed);
+
+	setFixedFont(f.family().ascii());
+	
+	int fs = f.pointSize();
+	
+	int fsizes[7] = { fs, fs, fs, fs, fs, fs, fs };
+	setFontSizes(fsizes);
+	
 	setStandardFont(empathGeneralFont().family().ascii());
-	setFixedFont(empathFixedFont().family().ascii());
+
 	setURLCursor(KCursor::handCursor());
 	setFocusPolicy(QWidget::StrongFocus);
 	
 	KConfig * c = kapp->getConfig();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
+	setDefaultBGColor(empathWindowColour());
 	setDefaultTextColors(
 		empathTextColour(),
 		c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR),

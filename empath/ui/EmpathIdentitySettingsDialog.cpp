@@ -402,7 +402,8 @@ EmpathIdentitySettingsDialog::s_saveSig()
 	void
 EmpathIdentitySettingsDialog::s_OK()
 {
-	s_apply();
+	if (!applied_)
+		s_apply();
 	kapp->getConfig()->sync();
 	delete this;
 }

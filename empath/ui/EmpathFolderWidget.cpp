@@ -109,8 +109,6 @@ EmpathFolderWidget::update()
 	empathDebug("update() called");
 	setUpdatesEnabled(false);
 	empathDebug("set updates to disabled");
-	clear();
-	empathDebug("cleared");
 	
 	EmpathMailboxListIterator mit(empath->mailboxList());
 
@@ -119,6 +117,14 @@ EmpathFolderWidget::update()
 		empathDebug("Adding mailbox " + mit.current()->name());
 		_addMailbox(*mit.current());
 	}
+	
+	QListIterator<EmpathFolderListItem> it(itemList_);
+	
+	for (; it.current(); ++it)
+		if (!it.current()->isTagged()) {
+			itemList_.remove(it.current());
+			QListView::removeItem((QListViewItem *)it.current());
+		}
 
 	setUpdatesEnabled(true);
 	triggerUpdate();
@@ -131,10 +137,23 @@ EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
 	empathDebug("Add mailbox called for mailbox \"" +
 		mailbox.name() + "\"");
 	
-	EmpathFolderListItem * newItem =
-		new EmpathFolderListItem(this, mailbox.url());
+	EmpathFolderListItem * newItem;
+	EmpathFolderListItem * found = find(mailbox.url());
+
+	if (found != 0) {
+		
+		found->tag(true);
+		newItem = found;
+		
+	} else {
 	
-	CHECK_PTR(newItem);
+		newItem =
+			new EmpathFolderListItem(this, mailbox.url());
+		CHECK_PTR(newItem);
+		newItem->tag(true);
+	
+		itemList_.append(newItem);
+	}
 	
 	empathDebug("============================================================");
 	empathDebug("Adding folders of mailbox \"" + mailbox.name() + "\"");
@@ -157,9 +176,24 @@ EmpathFolderWidget::_addChildren(
 	
 	// Add this item first.
 
-	EmpathFolderListItem * newItem =
-		new EmpathFolderListItem(parent, item->url());
-	CHECK_PTR(newItem);
+	EmpathFolderListItem * newItem;
+	
+	EmpathFolderListItem * found = find(item->url());
+
+	if (found != 0) {
+		
+		found->tag(true);
+		newItem = found;
+
+	} else {
+	
+		newItem =
+			new EmpathFolderListItem(parent, item->url());
+		CHECK_PTR(newItem);
+		newItem->tag(true);
+	
+		itemList_.append(newItem);
+	}
 
 	EmpathMailbox * m = empath->mailbox(item->url());
 	if (m == 0) return;
@@ -219,6 +253,7 @@ EmpathFolderWidget::s_rightButtonPressed(
 		otherPopup_.exec(QCursor::pos());
 		return;
 	}
+	setSelected(item, true);
 	
 	EmpathFolderListItem * i = (EmpathFolderListItem *)item;
 	
@@ -344,12 +379,16 @@ EmpathFolderWidget::s_newFolder()
 
 	EmpathFolderListItem * item =
 		new EmpathFolderListItem(popupMenuOver, newFolderURL);
+	
+	itemList_.append(item);
 }
 
 	void
 EmpathFolderWidget::s_removeFolder()
 {
-	empathDebug("s_removeFolder \"" + popupMenuOver->url().asString() + "\" called");
+	empathDebug("s_removeFolder \"" +
+		popupMenuOver->url().asString() + "\" called");
+
 	EmpathMailbox * m = empath->mailbox(popupMenuOver->url());
 	if (m == 0) return;
 	if (!m->removeFolder(popupMenuOver->url())) {
@@ -390,5 +429,20 @@ EmpathFolderWidget::dropEvent(QDropEvent * e)
 		itemAt(e->pos())->setText(0, str);
 		return;
 	}
+}
+
+	EmpathFolderListItem *
+EmpathFolderWidget::find(const EmpathURL & url)
+{
+	QListIterator<EmpathFolderListItem> it(itemList_);
+	
+	for (; it.current(); ++it)
+		if (it.current()->url() == url) {
+			empathDebug("Found a folder list item with url \""
+				+ url.asString() + "\" already in list");
+			return it.current();
+		}
+	
+	return 0;
 }
 

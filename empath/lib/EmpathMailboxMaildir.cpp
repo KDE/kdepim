@@ -187,8 +187,6 @@ EmpathMailboxMaildir::readConfig()
 	
 	path_ = c->readEntry(EmpathConfig::KEY_LOCAL_MAILBOX_PATH);
 	_recursiveReadFolders(path_);
-	
-	emit(updateFolderLists());
 }
 
 	void
@@ -257,6 +255,9 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
 		CHECK_PTR(m);
 		
 		boxList_.append(m);
+		emit(updateFolderLists());
+		
+		m->init();
 	}
 }
 

@@ -77,16 +77,21 @@ class EmpathFolderWidget : public QListView
 	private:
 
 		enum OverType { Folder, Mailbox };
-		EmpathFolderListItem * _parentFolderListFolder(const EmpathFolder & folder);
+		
 		void _addMailbox(const EmpathMailbox & mailbox);
 		void _addChildren(EmpathFolder * item, EmpathFolderListItem * parent);
+		
+		EmpathFolderListItem * find(const EmpathURL &);
 		
 		QPopupMenu folderPopup_;
 		QPopupMenu mailboxPopup_;
 		QPopupMenu otherPopup_;
 		
+		QList<EmpathFolderListItem> itemList_;
+		
 		EmpathFolderListItem	* popupMenuOver;
 		OverType				popupMenuOverType;
+		
 		bool	waitForShown_;
 };
 

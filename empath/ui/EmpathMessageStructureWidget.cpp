@@ -18,9 +18,15 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// Qt includes
+#include <qfile.h>
+#include <qdatastream.h>
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
+#include <kfiledialog.h>
+#include <kmsgbox.h>
 
 // Local includes
 #include "EmpathMessageStructureWidget.h"
@@ -51,6 +57,14 @@ EmpathMessageStructureWidget::EmpathMessageStructureWidget
 		SIGNAL(rightButtonPressed(QListViewItem *, const QPoint &, int)),
 		this,
 		SLOT(s_rightButtonPressed(QListViewItem *, const QPoint &, int)));
+	
+	popup_.insertItem(empathIcon("mini-save.png"),
+			i18n("Save &As"),
+			this, SLOT(s_saveAs()));
+	
+	popup_.insertItem(
+			i18n("Open with..."),
+			this, SLOT(s_openWith()));
 	
 }
 
@@ -97,5 +111,48 @@ EmpathMessageStructureWidget::s_currentChanged(QListViewItem * item)
 	if (item->depth() == 0) return;
 	EmpathMessageStructureItem * i = (EmpathMessageStructureItem *)item;
 	emit(partChanged(i->part()));
+}
+
+	void
+EmpathMessageStructureWidget::s_rightButtonPressed(
+	QListViewItem * item, const QPoint &, int)
+{
+	setSelected(item, true);
+	popup_.exec(QCursor::pos());
+}
+
+	void
+EmpathMessageStructureWidget::s_saveAs()
+{
+	QString saveFilePath =
+		KFileDialog::getSaveFileName(
+			QString::null, QString::null, this, i18n("Empath: Save Message").ascii());
+	empathDebug(saveFilePath);
+	
+	if (saveFilePath.isEmpty()) {
+		empathDebug("No filename given");
+		return;
+	}
+	
+	QFile f(saveFilePath);
+	if (!f.open(IO_WriteOnly)) {
+		// Warn user file cannot be opened.
+		empathDebug("Couldn't open file for writing");
+		KMsgBox(this, "Empath",i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
+		return;
+	}
+	empathDebug("Opened " + saveFilePath + " OK");
+	
+	QDataStream d(&f);
+	
+	d << "x";
+
+	f.close();
+	
+}
+
+	void
+EmpathMessageStructureWidget::s_openWith()
+{
 }
 

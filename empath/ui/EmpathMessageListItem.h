@@ -65,9 +65,9 @@ class EmpathMessageListItem : public QListViewItem
 		RMM::MessageStatus	status()	const	{ return m.status();	}
 		Q_UINT32			size()		const	{ return m.size();		}
 		
-		void setStatus(RMM::MessageStatus);
-
 		const char * className() const { return "EmpathMessageListItem"; }
+		
+		void setStatus(RMM::MessageStatus);
 		
 	private:
 

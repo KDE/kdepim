@@ -50,7 +50,6 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
 {
 	path_ = basePath + "/" + url.folderPath();
 	empathDebug("ctor - path_ == " + path_);
-	_init();
 }
 
 EmpathMaildir::~EmpathMaildir()
@@ -64,9 +63,6 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 	empathDebug("sync(" + url.asString() + ") called");
 	QTime realBegin(QTime::currentTime());
 	
-	EmpathTask * t(empath->addTask(i18n("Reading mailbox")));
-	CHECK_PTR(t);
-	
 	// First make sure any new mail that has arrived goes into cur.
 	_markNewMailAsSeen();
 	
@@ -77,18 +73,26 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 		empathDebug("sync: Couldn't find folder !");
 		return;
 	}
-#if 0
+	
+	if (f->messageList().count() == 0) {
+		_readIndex();
+	}
+
 	if (!ignoreMtime) {
 	
 		// Check the mtime of cur. If it's not changed, we can return now.
-		QFileInfo fi(path_ + "/cur/");
+		QFileInfo fiDir(path_ + "/cur/");
+		QFileInfo fiIndex(path_ + "/.empathIndex");
 		
-		if (fi.lastModified() <= mtime_) {
+		if (fiDir.lastModified() < fiIndex.lastModified()) {
 			empathDebug("sync: Not modified");
 			return;
 		}
 	}
-#endif
+
+	EmpathTask * t(empath->addTask(i18n("Reading mailbox")));
+	CHECK_PTR(t);
+
 	// Get the dir listing.
 	QDir d(path_ + "/cur/",
 		QString::null, QDir::Name | QDir::IgnoreCase,
@@ -236,7 +240,7 @@ EmpathMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
 	
 	QString newFilename(filename);
 	
-	if (newFilename.find(":2,") == -1)
+	if (!newFilename.contains(":2,"))
 		newFilename += ":2," + statusFlags;
 	else
 		newFilename.replace(QRegExp(":2,.*"), ":2," + statusFlags);
@@ -375,9 +379,9 @@ EmpathMaildir::_messageData(const QString & filename)
 }
 
 	void
-EmpathMaildir::_init()
+EmpathMaildir::init()
 {
-	empathDebug("_init() called");
+	empathDebug("init() called");
 	
 	d.setPath(path_);
 
@@ -394,6 +398,8 @@ EmpathMaildir::_init()
 	// Make sure our directory structure is sane.
 	_setupDirs();
 	
+	kapp->processEvents();
+	
 	// Clear out any temporary files. (see maildir(5))
 	_clearTmp();
 	
@@ -406,8 +412,11 @@ EmpathMaildir::_init()
 	// Last op may have taken some time.
 	kapp->processEvents();
 	
+	// Quickly read the index in.
+	//_readIndex();
+	
 	// Tell the index to sync up with what's stored.
-	_readIndex();
+	sync(url_);
 	
 	// Last op may have taken some time.
 	kapp->processEvents();
@@ -751,7 +760,7 @@ EmpathMaildir::_readIndex()
 		r = new EmpathIndexRecord;
 		CHECK_PTR(r);
 		indexStream >> *r;
-	
+#if 0	
 		int flagsStart = r->id().find(re_flags);
 
 		if (!flagsStart) flagsStart = r->id().length();
@@ -759,11 +768,11 @@ EmpathMaildir::_readIndex()
 		QString flags = r->id().right(r->id().length() - flagsStart + 3);
 	
 		r->setStatus(
-		  flags.contains('S') ? RMM::Read		: (RMM::MessageStatus)0
-		| flags.contains('F') ? RMM::Marked		: (RMM::MessageStatus)0
-		| flags.contains('T') ? RMM::Trashed	: (RMM::MessageStatus)0
-		| flags.contains('R') ? RMM::Replied	: (RMM::MessageStatus)0);
-		
+			(RMM::MessageStatus)
+			(	(flags.contains('S') ? RMM::Read	: 0)	|
+				(flags.contains('R') ? RMM::Replied	: 0)	|
+				(flags.contains('F') ? RMM::Marked	: 0)	));
+#endif
 		empathDebug("Inserting the new index record.");
 		
 		if (r->id().isEmpty()) {

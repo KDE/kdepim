@@ -44,6 +44,9 @@ class EmpathFolderListItem : public QObject, public QListViewItem
 
 		QString key(int, bool) const;
 		
+		void tag(bool) { tagged_ = true; }
+		bool isTagged() { return tagged_; }
+		
 	protected slots:
 
 		void s_setCount(int, int);
@@ -51,6 +54,7 @@ class EmpathFolderListItem : public QObject, public QListViewItem
 	private:
 	
 		EmpathURL url_;
+		bool tagged_;
 };
 
 #endif

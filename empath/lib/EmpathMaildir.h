@@ -48,6 +48,8 @@ class EmpathMaildir
 		EmpathMaildir(const QString & basePath, const EmpathURL & url);
 		virtual ~EmpathMaildir();
 		
+		void		init();
+		
 		const QString &		basePath()	const { return basePath_; }
 		const EmpathURL &	url()		const { return url_; }
 		const QString &		path()		const { return path_; }
@@ -71,7 +73,6 @@ class EmpathMaildir
 		
 		QString		_write(RMessage & msg);
 		QCString	_messageData(const QString & filename);
-		void		_init();
 		void		_markNewMailAsSeen();
 		void 		_markAsSeen(const QString & name);
 		void		_clearTmp();

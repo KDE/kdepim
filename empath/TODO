@@ -32,8 +32,6 @@ Things you might want to VOLUNTEER for :)
 ===============================================================================
 Little things I need to do:
 
-* Use the user's set font size when showing messages, not just font family.
-
 * Make folder widgets set totals correctly.
 
 * Implement cut/copy/paste etc in editor. How ? I should be using an OpenPart

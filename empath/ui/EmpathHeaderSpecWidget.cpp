@@ -49,7 +49,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 	
 	pb_selectRecipients_ = new QPushButton(this, "pb_selectRecipients");
 	CHECK_PTR(pb_selectRecipients_);
-	pb_selectRecipients_->setPixmap(empathIcon("browse.png"));
+	pb_selectRecipients_->setPixmap(empathIcon("point.png"));
 	
 	int h = headerBodyWidget_->sizeHint().height();
 	headerNameWidget_->setFixedHeight(h);

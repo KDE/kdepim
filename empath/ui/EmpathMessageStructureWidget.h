@@ -48,6 +48,9 @@ class EmpathMessageStructureWidget : public QListView
 	protected slots:
 		
 		void s_currentChanged(QListViewItem *);
+		void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
+		void s_saveAs();
+		void s_openWith();
 
 	signals:
 		
@@ -56,6 +59,8 @@ class EmpathMessageStructureWidget : public QListView
 	private:
 		
 		void _addChildren(RBodyPart *, QListViewItem *);
+		
+		QPopupMenu popup_;
 
 };
 

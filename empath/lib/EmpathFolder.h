@@ -81,6 +81,8 @@ class EmpathFolder : public QObject
 		 */
 		RMessage * message(const EmpathURL & url);
 
+		bool mark(const EmpathURL &, RMM::MessageStatus);
+
 	signals:
 
 		void countUpdated(int, int);

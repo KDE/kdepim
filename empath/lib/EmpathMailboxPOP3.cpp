@@ -135,8 +135,7 @@ EmpathMailboxPOP3::sizeOfMessage(const EmpathURL & _id)
 	QString
 EmpathMailboxPOP3::plainBodyOfMessage(const EmpathURL & _id)
 {
-	QString s;
-	return s;
+	return "";
 }
 
 	REnvelope *
