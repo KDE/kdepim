@@ -173,7 +173,7 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   mSignPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK", 
 															  "CRYPTOSIGNPREF" )) );
   mCryptPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK", 
-															   "CRYPTOCRYPTPREF" )) );
+															   "CRYPTOENCRYPTPREF" )) );
 
   // We dont use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
@@ -190,7 +190,7 @@ void CryptoWidget::storeContact( KABC::Addressee *addr )
 					  proto_int_to_string(mProtocol->currentItem()) );
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF", 
 					  pref_int_to_string(mSignPref->currentItem()) );
-  addr->insertCustom( "KADDRESSBOOK", "CRYPTOCRYPTPREF", 
+  addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF", 
 					  pref_int_to_string(mCryptPref->currentItem()) );
 
   QString pfp = mPgpKey->fingerprint();
