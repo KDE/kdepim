@@ -33,6 +33,8 @@
 
 #include "incidence.h"
 
+#include <qvaluelist.h>
+
 #include <libkcal/journal.h>
 #include <korganizer/version.h>
 #include <kdebug.h>
@@ -200,6 +202,19 @@ void Incidence::saveAttendees( QDomElement& element ) const
     saveAttendeeAttribute( element, *it );
 }
 
+void Incidence::saveAttachments( QDomElement& element ) const
+{
+  KCal::Attachment::List::ConstIterator it = mAttachments.begin();
+  for ( ; it != mAttachments.end(); ++it ) {
+    KCal::Attachment *a = (*it);
+    if ( a->isUri() ) {
+      writeString( element, "link-attachment", a->uri() ); 
+    } else if ( a->isBinary() ) {
+      // TODO
+    }
+  }
+}
+
 void Incidence::saveRecurrence( QDomElement& element ) const
 {
   QDomElement e = element.ownerDocument().createElement( "recurrence" );
@@ -290,6 +305,10 @@ bool Incidence::loadAttribute( QDomElement& element )
       return true;
     } else
       return false;
+  } else if ( tagName == "inline-attachment" ) {
+    // TODO
+  } else if ( tagName == "link-attachment" ) {
+    mAttachments.push_back( new KCal::Attachment( element.text() ) );
   } else if ( tagName == "alarm" )
     // Alarms should be minutes before. Libkcal uses event time + alarm time
     setAlarm( - element.text().toInt() );
@@ -325,6 +344,7 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   if ( !mRecurrence.cycle.isEmpty() )
     saveRecurrence( element );
   saveAttendees( element );
+  saveAttachments( element );
   if ( mHasAlarm ) {
     // Alarms should be minutes before. Libkcal uses event time + alarm time
     int alarmTime = qRound( -alarm() );
@@ -565,6 +585,16 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     addAttendee( attendee );
   }
 
+  mAttachments.clear();
+
+  // Attachments
+  KCal::Attachment::List attachments = incidence->attachments();
+  KCal::Attachment::List::ConstIterator it2;
+  for ( it2 = attachments.begin(); it2 != attachments.end(); ++it2 ) {
+    KCal::Attachment *a = *it2;
+    mAttachments.push_back( a );
+  }
+  
   if ( incidence->doesRecur() ) {
     setRecurrence( incidence->recurrence() );
     mRecurrence.exclusions = incidence->exDates();
@@ -631,6 +661,14 @@ void Incidence::saveTo( KCal::Incidence* incidence )
                                                 (*it).smtpAddress,
                                                 (*it).requestResponse,
                                                 status, role ) );
+  }
+
+  incidence->clearAttachments();
+  KCal::Attachment::List::ConstIterator it2;
+  for ( it2 = mAttachments.begin(); it2 != mAttachments.end(); ++it2 ) {
+    KCal::Attachment *a = (*it2);
+    // TODO should we copy?
+    incidence->addAttachment( a );
   }
 
   if ( !mRecurrence.cycle.isEmpty() ) {
