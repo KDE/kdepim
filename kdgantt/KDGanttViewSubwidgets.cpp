@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 Klarï¿½vdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -2612,7 +2612,7 @@ void KDLegendWidget::clearLegend ( )
     if ( dock )
         myLegend = new QGroupBox( 1, Qt::Horizontal, scroll->viewport() );
     else
-        myLegend = new QGroupBox( 1, Qt::Horizontal, i18n( "Legend:" ), scroll->viewport() );
+        myLegend = new QGroupBox( 1, Qt::Horizontal, i18n( "Legend" ), scroll->viewport() );
     myLegend->setBackgroundColor( Qt::white );
     myLegend->setFont( font() );
     scroll->addChild(  myLegend );
