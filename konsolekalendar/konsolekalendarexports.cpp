@@ -74,15 +74,16 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event ){
   *ts << endl << I18N_NOOP("Summary:") << endl;
   *ts << "\t" << event->summary().local8Bit() << endl;
   *ts << I18N_NOOP("Description:") << endl;  
-  *ts << "\t" << event->description().local8Bit() << endl;
-  *ts << "-----------------" << endl;
+  if( !event->description().isEmpty() ) {
+    *ts << "\t" << event->description().local8Bit() << endl;
+  } else {
+    *ts << "\t" << I18N_NOOP("(no description available)") << endl;  
+  }
+  *ts << I18N_NOOP("UID:") << endl;  
+  *ts << "\t" << event->uid().local8Bit() << endl;
+  *ts << "----------------------------------" << endl;
 
-	return true;
-}
-
-bool KonsoleKalendarExports::exportAsTxtKorganizer( QTextStream *ts, Event *event ){
- event = event;
- return true;
+  return true;
 }
 
 bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
@@ -93,12 +94,14 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
   }
 
 
-  *ts << "\t" << I18N_NOOP("Summary:") << "\t";
-  *ts << "\t\"" << event->summary().local8Bit() << "\"" << "\t";
-  *ts << "\t" << I18N_NOOP("Description:") << "\t";
-  *ts << "\t\"" << event->description().local8Bit() << "\"" << endl;
+  *ts << "\t" << I18N_NOOP("Summary:");
+  *ts << "\t\"" << event->summary().local8Bit() << "\"";
+  *ts << "\t" << I18N_NOOP("Description:");
+  *ts << "\t\"" << event->description().local8Bit() << "\"";
+  *ts << "\t" << I18N_NOOP("UID:");
+  *ts << "\t" << event->uid().local8Bit() << endl;
 
- return true;
+  return true;
 }
 
 
