@@ -105,6 +105,8 @@ void ResourceRemote::readConfig( const KConfig *config )
 
   url = config->readEntry( "UploadUrl" );
   mUploadUrl = KURL( url );
+
+  mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
 }
 
 void ResourceRemote::writeConfig( KConfig *config )
@@ -115,6 +117,8 @@ void ResourceRemote::writeConfig( KConfig *config )
 
   config->writeEntry( "DownloadUrl", mDownloadUrl.url() );
   config->writeEntry( "UploadUrl", mUploadUrl.url() );
+
+  config->writeEntry( "ReloadPolicy", mReloadPolicy );
 }
 
 void ResourceRemote::setDownloadUrl( const KURL &url )
@@ -135,6 +139,16 @@ void ResourceRemote::setUploadUrl( const KURL &url )
 KURL ResourceRemote::uploadUrl() const
 {
   return mUploadUrl;
+}
+
+void ResourceRemote::setReloadPolicy( int i )
+{
+  mReloadPolicy = i;
+}
+
+int ResourceRemote::reloadPolicy() const
+{
+  return mReloadPolicy;
 }
 
 QString ResourceRemote::cacheFile()
@@ -270,6 +284,7 @@ void ResourceRemote::dump() const
   ResourceCalendar::dump();
   kdDebug(5800) << "  DownloadUrl: " << mDownloadUrl.url() << endl;
   kdDebug(5800) << "  UploadUrl: " << mUploadUrl.url() << endl;
+  kdDebug(5800) << "  ReloadPolicy: " << mReloadPolicy << endl;
 }
 
 #include "resourceremote.moc"

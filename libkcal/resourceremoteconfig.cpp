@@ -56,6 +56,13 @@ ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent,  const char* name )
   mUploadUrl->setMode( KFile::Files );
   mainLayout->addWidget( label, 2, 0 );
   mainLayout->addWidget( mUploadUrl, 2, 1 );
+
+  mReloadGroup = new QButtonGroup( 1, Horizontal, i18n("Reload"), this );
+  mainLayout->addMultiCellWidget( mReloadGroup, 3, 3, 0, 1 );
+  new QRadioButton( i18n("Never"), mReloadGroup );
+  new QRadioButton( i18n("On startup"), mReloadGroup );
+  new QRadioButton( i18n("Once a day"), mReloadGroup );
+  new QRadioButton( i18n("Always"), mReloadGroup );
 }
 
 void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
@@ -64,8 +71,10 @@ void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
   if ( res ) {
     mDownloadUrl->setURL( res->downloadUrl().url() );
     mUploadUrl->setURL( res->uploadUrl().url() );
+    kdDebug() << "ANOTER RELOAD POLICY: " << res->reloadPolicy() << endl;
+    mReloadGroup->setButton( res->reloadPolicy() );
   } else {
-    kdDebug(5700) << "ERROR: ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;
+    kdError(5700) << "ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;
   }
 }
 
@@ -75,8 +84,9 @@ void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
   if ( res ) {
     res->setDownloadUrl( mDownloadUrl->url() );
     res->setUploadUrl( mUploadUrl->url() );
+    res->setReloadPolicy( mReloadGroup->selectedId() );
   } else {
-    kdDebug(5700) << "ERROR: ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
+    kdError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
   }
 }
 

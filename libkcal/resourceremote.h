@@ -52,6 +52,8 @@ class ResourceRemote : public ResourceCached
     friend class ResourceRemoteConfig;
 
   public:
+    enum { ReloadNever, ReloadOnStartup, ReloadOnceADay, ReloadAlways };
+  
     ResourceRemote( const KConfig * );
     ResourceRemote( const KURL &downloadUrl, const KURL &uploadUrl = KURL() );
     virtual ~ResourceRemote();
@@ -64,6 +66,9 @@ class ResourceRemote : public ResourceCached
     
     void setUploadUrl( const KURL & );
     KURL uploadUrl() const;
+
+    void setReloadPolicy( int );
+    int reloadPolicy() const;
 
     QString cacheFile();
 
@@ -97,6 +102,8 @@ class ResourceRemote : public ResourceCached
 
     KURL mDownloadUrl;
     KURL mUploadUrl;
+
+    int mReloadPolicy;
 
     ICalFormat mFormat;
 

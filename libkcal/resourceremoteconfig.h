@@ -45,6 +45,8 @@ class ResourceRemoteConfig : public KRES::ConfigWidget
   private:
     KURLRequester* mDownloadUrl;
     KURLRequester* mUploadUrl;
+
+    QButtonGroup *mReloadGroup;
 };
 
 }
