@@ -16,7 +16,7 @@ TODO LIST (Ignore the file TODO)
   config dialog. Some of them might make sense.
 * Add force-first-time to the KNotes conduit.
 * Conflict resolution in Addressbook conduit not consistent
-* Add custom field sync to the addressbook conduit
+- Add custom field sync to the addressbook conduit [HEAD, Reinhold]
 * GJJ: Replace newlines in TODO summaries (not allowed in libkabc)
 * Sync multiple email addresses in the addressbook conduit
 * Sync with the preferred address in the addressbook conduit
@@ -29,7 +29,31 @@ TODO LIST (Ignore the file TODO)
   output without starting KPilot at all.
 * Update README, TODO, NEWS, AUTHORS in HEAD.
 * Merge the JPilot proxy changes (even though it's disabled).
+* Check the first-time syncing behavior of all the conduits.
+* Merge between HEAD and BRANCH (again).
+* Fix the NULL conduit's tooltip - OR - make it actually do what
+  the current tooltip says (resetSyncFlags() should be enough).
+  
+2003-3-20  Adriaan de Groot
+* Merging between BRANCH and HEAD.
+* options.h [BRANCH] Upped the version number again.
+* lib/ [BOTH] Merged documentation, fixed minor bug in plugin.cc in HEAD.
+* kpilot/ [BOTH] Merged stuff. 
+* pilotDaemon.{h,cc} [HEAD] The daemon has extra DCOP features and kroupware.
+* kpilot.h [HEAD] Extra in-use code and Ben's removal of toolbars
+  (supported by standards in KDE 3.2 - this needs backporting and
+  #ifdeffing).
+* conduitConfigDialog.cc [HEAD] Has all the setup stuff for the checkbox
+  list conversion (a GJJ) but #if 0'ed out.
+* kpilotConfig{Dialog,}.{h,cc} [HEAD] Adds a GUI for the pilot encoding.
+* kpilotDCOP.h [HEAD] Extra configure methods from David.
+* listCat.h [BOTH] One-up the spelling mafia.
 
+2003-3-17  Adriaan de Groot
+* [fileInstallWidget.cc] Applied file-installer multiselect patch
+  from Ulrik Mikaelsson.
+* [pilotDaemon.cc] Applied DCOP interface additions from David Mott.
+  
 2003-3-15  Adriaan de Groot
 * The popmail conduit runs in backup mode during syncs. So do all the
   other conduits. What's going on? Thanks to Tobia Baier for spotting this.
