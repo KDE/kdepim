@@ -1,25 +1,25 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qbuttongroup.h>
 #include <qcheckbox.h>
@@ -95,7 +95,7 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   mAddressee = addr;
 
   mAddressList.clear();
-  
+
   // Insert types for existing numbers.
   mTypeCombo->insertTypeList( list );
 
@@ -176,7 +176,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mAddressList = list;
 
   QWidget *page = plainPage();
-  
+
   QGridLayout *topLayout = new QGridLayout( page, 8, 2 );
   topLayout->setSpacing( spacingHint() );
 
@@ -223,7 +223,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   fillCountryCombo( mCountryCombo );
   label->setBuddy( mCountryCombo );
   topLayout->addWidget( mCountryCombo, 6, 1 );
-  
+
   mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
   topLayout->addMultiCellWidget( mPreferredCheckBox, 7, 7, 0, 1 );
 
@@ -237,7 +237,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   QPushButton *addButton = new QPushButton( i18n( "&Add..." ), buttonBox );
   connect( addButton, SIGNAL( clicked() ), SLOT( addAddress() ) );
 
-  QPushButton *removeButton = new QPushButton( i18n( "&Remove" ), buttonBox );
+  removeButton = new QPushButton( i18n( "&Remove" ), buttonBox );
   connect( removeButton, SIGNAL( clicked() ), SLOT( removeAddress() ) );
 
   mTypeCombo->updateTypes();
@@ -259,6 +259,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   KAcceleratorManager::manage( this );
 
   mChanged = false;
+  removeButton->setEnabled( mAddressList.count() > 1 );
 }
 
 AddressEditDialog::~AddressEditDialog()
@@ -322,13 +323,18 @@ void AddressEditDialog::addAddress()
 
     modified();
   }
+  removeButton->setEnabled( true );
 }
 
 void AddressEditDialog::removeAddress()
 {
-  mAddressList.remove( mTypeCombo->selectedElement() );
-  mTypeCombo->updateTypes();
-  updateAddressEdits();
+    if ( mAddressList.count()>1 )
+    {
+        mAddressList.remove( mTypeCombo->selectedElement() );
+        mTypeCombo->updateTypes();
+        updateAddressEdits();
+    }
+    removeButton->setEnabled( mAddressList.count()>1 );
 }
 
 void AddressEditDialog::fillCountryCombo(KComboBox *combo)
@@ -363,7 +369,7 @@ void AddressEditDialog::fillCountryCombo(KComboBox *combo)
     i18n( "Greece" ), i18n( "Greenland" ), i18n( "Grenada" ),
     i18n( "Guam" ), i18n( "Guatemala" ), i18n( "Guinea" ),
     i18n( "Guinea-Bissau" ), i18n( "Guyana" ), i18n( "Haiti" ),
-    i18n( "Honduras" ), i18n( "Hong Kong" ), i18n( "Hungary" ), 
+    i18n( "Honduras" ), i18n( "Hong Kong" ), i18n( "Hungary" ),
     i18n( "Iceland" ), i18n( "India" ), i18n( "Indonesia" ),
     i18n( "Iran" ), i18n( "Iraq" ), i18n( "Ireland" ),
     i18n( "Israel" ), i18n( "Italy" ), i18n( "Ivory Coast" ),
@@ -415,13 +421,13 @@ void AddressEditDialog::fillCountryCombo(KComboBox *combo)
     i18n( "Zimbabwe" ),
     ""
   };
-  
+
   QStringList countries;
   for ( int i = 0; sCountry[ i ] != ""; ++i )
     countries.append( sCountry[i] );
 
   countries.sort();
-  
+
   combo->insertStringList( countries );
 }
 
@@ -457,7 +463,7 @@ AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
     QCheckBox *box = (QCheckBox*)mGroup->find( i );
     box->setChecked( type & mTypeList[ i ] );
   }
-}    
+}
 
 AddressTypeDialog::~AddressTypeDialog()
 {
