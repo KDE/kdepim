@@ -44,9 +44,7 @@
 
 #include <kabc/locknull.h>
 #include <klocale.h>
-#if 0
 #include <libkdepim/kincidencechooser.h>
-#endif
 
 using namespace KCal;
 using namespace Kolab;
@@ -232,7 +230,6 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 
 void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
 {
-#if 0
     if ( ! inc )
         return;
     if ( ! mResolveConflict ) {
@@ -277,7 +274,6 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
 
       mSilent = silent;
   }
-#endif
 }
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
                                   const QString& subResource, Q_UINT32 sernum )
