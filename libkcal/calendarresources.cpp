@@ -601,14 +601,4 @@ void CalendarResources::resourceDeleted( ResourceCalendar *resource )
 
 }
 
-QPtrList<KRES::Resource> CalendarResources::resourceList()
-{
-  QPtrList<KRES::Resource> rlist;
-  KCal::CalendarResourceManager::Iterator it;
-  for( it = mManager->begin(); it != mManager->end(); ++it ) {
-    rlist.append(*it);
-  }
-  return rlist;
-}
-
 #include "calendarresources.moc"

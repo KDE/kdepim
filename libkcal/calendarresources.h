@@ -182,9 +182,6 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     /** Return Resource for given uid */
     ResourceCalendar *resource(Incidence *);
 
-    /** Return a list of all resources */
-    QPtrList<KRES::Resource> resourceList();
-
   signals:
     void calendarChanged();
 
