@@ -42,11 +42,11 @@ libsloxwizard_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 libsloxwizard_la_SOURCES = sloxwizard.cpp sloxconfig.kcfgc
 libsloxwizard_la_LIBADD = $(top_builddir)/kresources/slox/libkcal_slox.la \
                           $(top_builddir)/kresources/slox/libkabc_slox.la \
-                          $(top_builddir)/libkdepim/libkdepim.la \
+                          $(top_builddir)/libkdepim/libkdepim.la
 
 sloxwizard_LDADD = libsloxwizard.la
 sloxwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-sloxwizard_SOURCES = sloxmain.cpp 
+sloxwizard_SOURCES = sloxmain.cpp
 
 noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h
 
