@@ -124,6 +124,10 @@ void SysInfoWidgetConfig::commit(KConfig *fConfig)
 
 	while(ci)
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Saving " << ci->text(PART_KEY)
+			<< (ci->isOn() ? " on" : " off") << endl;
+#endif
 		fConfig->writeEntry(ci->text(PART_KEY),ci->isOn());
 		updateSetting(ci);
 		i=i->nextSibling();
@@ -148,12 +152,17 @@ void SysInfoWidgetConfig::load(KConfig *fConfig)
 		i->setOn(fConfig->readBoolEntry(p->key, true));
 		i->setText(PART_KEY,QString::fromLatin1(p->key));
 		updateSetting(i);
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Loaded " << p->key
+			<< (i->isOn() ? " on" : " off") << endl;
+#endif
 		p++;
 	}
 }
 
-/* virtual */ bool SysInfoWidgetConfig::isModified()
+/* virtual */ bool SysInfoWidgetConfig::isModified() const
 {
+	FUNCTIONSETUP;
 	if (fModified) return true;
 
 	QListViewItem *i = fConfigWidget->fPartsList->firstChild();
@@ -163,6 +172,12 @@ void SysInfoWidgetConfig::load(KConfig *fConfig)
 	{
 		bool current = ci->isOn();
 		bool original = !ci->text(PART_SETTING).isEmpty();
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Checking " << ci->text(PART_KEY)
+			<<  " was " << (original ? " on" : " off")
+			<< " now " << (current ? " on" : " off") << endl;
+#endif
+
 		if (current!=original) return true;
 		i=i->nextSibling();
 		ci = dynamic_cast<QCheckListItem *>(i);
