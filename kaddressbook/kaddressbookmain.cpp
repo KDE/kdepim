@@ -27,6 +27,9 @@
 #include <kmessagebox.h>
 #include <kstatusbar.h>
 
+#include <libkdepim/statusbarprogresswidget.h>
+#include <libkdepim/progressdialog.h>
+
 #include "kabcore.h"
 
 #include "kaddressbookmain.h"
@@ -45,6 +48,18 @@ KAddressBookMain::KAddressBookMain( const QString &file )
 
   statusBar()->show();
   statusBar()->insertItem( "", 1 );
+
+  KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(),
+    this );
+  progressDialog->hide();
+
+  KPIM::StatusbarProgressWidget *progressWidget;
+  progressWidget = new KPIM::StatusbarProgressWidget( progressDialog,
+    statusBar() );
+  progressWidget->show();
+
+  statusBar()->addWidget( progressWidget, 0, true );
+
   mCore->setStatusBar( statusBar() );
 
   setStandardToolBarMenuEnabled( true );
