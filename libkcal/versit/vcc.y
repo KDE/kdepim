@@ -147,6 +147,10 @@ extern "C" {
 #endif
 
 int yyparse();
+static int yylex();
+
+static VObject* popVObject();
+
 
 enum LexMode {
 	L_NORMAL,
