@@ -80,7 +80,7 @@ class Core : public KParts::MainWindow
     virtual SyncUi *syncUi() = 0;
 
     /**
-     * @return the prefered syncAlgorithm of KitchenSync
+     * @return the preferred syncAlgorithm of KitchenSync
      */
     virtual SyncAlgorithm *syncAlgorithm() = 0;
 

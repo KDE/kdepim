@@ -83,7 +83,7 @@ class KNArticleCollection : public KNCollection {
     int size()                    { return a_rticles.size(); }
     int length()                  { return a_rticles.length(); }
 
-    // cache behaviour
+    // cache behavior
     bool isNotUnloadable()               { return n_otUnloadable; }
     void setNotUnloadable(bool b=true)   { n_otUnloadable = b; }
 

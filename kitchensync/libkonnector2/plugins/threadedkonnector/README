@@ -5,6 +5,6 @@ This implementation does nothing other then print debug messages via
 kdDebug() and signal that it has finished. Fill the switch statement in
 ClientThread::run() with life if you want to use this framework.
 
-Enjoy syncronous programming.
+Enjoy synchronous programming.
 
    Mathias Fröhlich <Mathias.Froehlich@web.de>

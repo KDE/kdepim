@@ -49,7 +49,7 @@ void KornMailDlg::showFullMessage()
 	qApp->processEvents();
 
 	// connect the mailbox's cancel button
-	connect(&progress, SIGNAL(cancelled()), this, SLOT(loadMailCanceled()));
+	connect(&progress, SIGNAL(canceled()), this, SLOT(loadMailCanceled()));
 
 	// now load the mail fully
 	QString mail = _mailDrop->readMail(_mailSubject->getId(), &_loadMailCanceled);

@@ -18,7 +18,7 @@ Message-ID: <20000701193222.64581.qmail@hotmail.com>
 X-Originating-IP: [212.216.213.14]
 From: "Meffo Leoni" <mef73@hotmail.com>
 To: <cygwin@sourceware.cygnus.com>
-Subject: import libraries in VC enviroment
+Subject: import libraries in VC environment
 Date: Sat, 1 Jul 2000 21:31:11 +0200
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
@@ -35,7 +35,7 @@ Content-Transfer-Encoding: quoted-printable
 
 With the help of the mailing list support I compiled with cygwin wget =
 and lapack (light version 1.1).
-Now I have a question may I include succesfully a library compiled in a =
+Now I have a question may I include successfully a library compiled in a =
 VC project workspace renaming it *.lib
 I need some dll's as the executable wget???
 
@@ -56,7 +56,7 @@ http-equiv=3DContent-Type>
 support I=20
 compiled with cygwin wget and lapack (light version 1.1).</FONT></DIV>
 <DIV><FONT face=3DArial size=3D2>Now I have a question may I include =
-succesfully a=20
+successfully a=20
 library compiled in a VC project workspace renaming it =
 *.lib</FONT></DIV>
 <DIV><FONT face=3DArial size=3D2>I need some dll's as the executable=20

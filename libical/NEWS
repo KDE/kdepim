@@ -108,7 +108,7 @@ Version 0.21, 20 Nov 00 ( cvs tag libical-0-21)
 	* icalspanlist.c Added new class, icalspanlist, that generates a
  	list of alternating busy and free times from an icalset. The class
  	includes routines to gnerate rfc2445 busy and free lists, and to
- 	get the next avaliable busy or free time after a given time.
+ 	get the next available busy or free time after a given time.
 
 
 Version 0.20D 3 Nov 00
@@ -151,7 +151,7 @@ Fixed more memory leaks.
 Version 0.18a 10 June 00 ( cvs tag libical-0-18a )
 -----------------------------------------------
 
-Did the final tweaks to stow.c, a program to recieve and store iMIP
+Did the final tweaks to stow.c, a program to receive and store iMIP
 messages.
 
 
@@ -312,7 +312,7 @@ The imip source/sink programs in /src/imip is demonstrably functional.
 Version 0.12b 17Oct99
 ---------------------
 
-More bug fixes, particularily in parse from string routines
+More bug fixes, particularly in parse from string routines
 
 ICal::Store is mostly functional
 
@@ -410,7 +410,7 @@ Version 0.06 25Apr99
 --------------------
 
 Expanded distribution to include:
-	Directory structure that can accomodate future expansion
+	Directory structure that can accommodate future expansion
 	Several levels of Makefiles
 	This CHANGES file
 

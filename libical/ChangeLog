@@ -324,7 +324,7 @@
 	* icalspanlist.c Added new class, icalspanlist, that generates a
  	list of alternating busy and free times from an icalset. The class
  	includes routines to gnerate rfc2445 busy and free lists, and to
- 	get the next avaliable busy or free time after a given time.
+ 	get the next available busy or free time after a given time.
 
 2000-11-06  Federico Mena Quintero  <federico@helixcode.com>
  

@@ -76,7 +76,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   //-------------------------------- <GUI> ------------------------------------
   initStatusBar();
 
-  //setup splitter behaviour
+  //setup splitter behavior
   manager()->setSplitterHighResolution(true);
   manager()->setSplitterOpaqueResize(true);
   manager()->setSplitterKeepSize(true);

@@ -86,7 +86,7 @@ KNNntpAccount::~KNNntpAccount()
 }
 
 
-// trys to read information, returns false if it fails to do so
+// tries to read information, returns false if it fails to do so
 bool KNNntpAccount::readInfo(const QString &confPath)
 {
   KSimpleConfig conf(confPath);

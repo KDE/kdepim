@@ -275,7 +275,7 @@ namespace KSieve {
 	return MultiLineString;
       }
       // else fall through:
-    default: // Identifier (first must not be 0-9, and can't (catched by Number above))
+    default: // Identifier (first must not be 0-9, and can't (caught by Number above))
       if ( !isIText( *mState.cursor ) ) {
 	makeError( Error::IllegalCharacter );
 	return None;

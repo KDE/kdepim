@@ -229,8 +229,8 @@ class KNDisplayedHeader {
     bool hasName() const                     { return !n_ame.isEmpty(); }
 
     //translated name
-    QString translatedName();                     // *trys* to translate the name
-    void setTranslatedName(const QString &s);     // *trys* to retranslate the name to english
+    QString translatedName();                     // *tries* to translate the name
+    void setTranslatedName(const QString &s);     // *tries* to retranslate the name to english
     void setTranslateName(bool b)       { t_ranslateName=b; }
     bool translateName() const                { return t_ranslateName; }
 

@@ -300,7 +300,7 @@ void KNArticleFilter::doFilter(KNFolder *f)
 }
 
 
-// *trys* to translate the name
+// *tries* to translate the name
 QString KNArticleFilter::translatedName()
 {
   if (translateName) {
@@ -318,7 +318,7 @@ QString KNArticleFilter::translatedName()
 
 
 
-// *trys* to retranslate the name to english
+// *tries* to retranslate the name to english
 void KNArticleFilter::setTranslatedName(const QString &s)
 {
   bool retranslated = false;

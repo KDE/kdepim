@@ -94,7 +94,7 @@ namespace KSieve {
       CASE( TooManyActions );
 #undef CASE
     default:
-      return "<unkown>";
+      return "<unknown>";
     }
   }
 

@@ -1971,7 +1971,7 @@ const char** KNDisplayedHeader::predefs()
 }
 
 
-// *trys* to translate the name
+// *tries* to translate the name
 QString KNDisplayedHeader::translatedName()
 {
   if (t_ranslateName) {
@@ -1988,7 +1988,7 @@ QString KNDisplayedHeader::translatedName()
 }
 
 
-// *trys* to retranslate the name to english
+// *tries* to retranslate the name to english
 void KNDisplayedHeader::setTranslatedName(const QString &s)
 {
   bool retranslated = false;

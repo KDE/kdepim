@@ -41,7 +41,7 @@
 5.2 NOSERVICE Invalid calendar service.
 5.3 NOSCHED No scheduling support for  user.
 6.1 AUTHENTICATEFAILURE Unsupported authentication mechanism, credentials rejected
-6.2 AUTHENTICATIONABORTED Sender aborted authentication, authentication exchange cancelled
+6.2 AUTHENTICATIONABORTED Sender aborted authentication, authentication exchange canceled
 8.0 GENERALFAILURE A failure has occurred in the Receiver that prevents the operation from succeeding.
 8.1 SERVERTOOBUSY The iRIP Receiver is too busy.
 8.2 ICALOBJECTTOOBIG Object has exceeded the server's size limit.

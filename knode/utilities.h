@@ -114,7 +114,7 @@ public:
 
   /** opens a file dialog and returns a file open for reading */
   KNFile* getFile(QString dialogTitle);
-  /** trys to access the file specified by the url and returns
+  /** tries to access the file specified by the url and returns
       a file open for reading */
   KNFile* setURL(KURL url);
   /** returns the file after getFile(QString) of setURL(url) was called */

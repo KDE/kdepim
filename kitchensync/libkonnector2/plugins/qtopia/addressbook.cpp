@@ -88,7 +88,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 			// Handle multiple mail addresses
                         QString DefaultEmail = el.attribute("DefaultEmail");
                         if ( !DefaultEmail.isEmpty() )
-                            adr.insertEmail( DefaultEmail, true ); // prefered
+                            adr.insertEmail( DefaultEmail, true ); // preferred
                         QString Emails = el.attribute("Emails");
 			int emailCount = 1;
 			QString Email = Emails.section( ' ', 1, 1, QString::SectionSkipEmpty);

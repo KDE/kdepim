@@ -426,7 +426,7 @@ icalparser_set_gen_data(parser,stream)
 
 These routines will construct a parser object to which you can add
 lines of input and retrieve any components that the parser creates
-from the input. These routines work by specifing an adaptor routine
+from the input. These routines work by specifying an adaptor routine
 to get string data from a source. For an example:
 
 char* read_stream(char *s, size_t size, void *d) 
@@ -881,7 +881,7 @@ Icaltime_from_timet takes a timet value, representing seconds past
 the POSIX epoch, and a flag to indicate if the time is a date. Dates
 have an identical structure to a time, but the time portion ( hours,
 minuts and seconds ) is always 00:00:00. Dates act differently in
-sorting an comparision, and they have a different string representation
+sorting an comparison, and they have a different string representation
 in RFC2445. 
 
 The icaltime_from_int is like icaltime_from_timet, but with an arbitrary
@@ -974,7 +974,7 @@ struct icaltimetype icaltime_as_local(struct icaltimetype tt);
 The libical distribution includes a separate library, libicalss, that
 allows you to store iCal component data to disk in a variety of ways.
 This library also includes code to implement the CSTP protocol of
-CAP and has some routines for deciphering incomming messages. 
+CAP and has some routines for deciphering incoming messages. 
 
 The file storage routines are organized in an inheritance heirarchy
 that is rooted in icalset, with the derived class icalfileset and
@@ -1218,7 +1218,7 @@ to get a string that describes the error. The enumerations are:
 * ICAL_MALFORMEDDATA_ERROR -- An input string was not in the correct
   format
 
-* ICAL_PARSE_ERROR -- The parser failed to parse an incomming component
+* ICAL_PARSE_ERROR -- The parser failed to parse an incoming component
 
 * ICAL_INTERNAL_ERROR -- Largely equivalent to an assert
 

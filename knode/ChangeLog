@@ -27,7 +27,7 @@ changes between 0.4 and 0.6
    the groupbrowser
  - added option to expand all threads by default
  - a new tab "Navigation" in the configuration dialog:
-   + its possible emulate cursor key behaviour of KMail
+   + its possible emulate cursor key behavior of KMail
    + "mark all read", "mark thread as read" and "ignore thread"
       can now trigger additional actions. (close thread, go to
       next thread/group)
@@ -35,9 +35,9 @@ changes between 0.4 and 0.6
  - Proper handling of crossposted articles, they are marked
    as read simutaneously in all groups.
  - ignored articles are now automatically marked as read
- - Added option to retreive the article source
+ - Added option to retrieve the article source
  - New menu option: fetch an article by message-id
- - Added option to retreive an article from groups.google.com
+ - Added option to retrieve an article from groups.google.com
    if it's unavailable on the local server
  - Trailing empty lines can be stripped from incoming articles
  - Highlighting of "news:" and "mailto:" urls, all email-addresses
@@ -45,7 +45,7 @@ changes between 0.4 and 0.6
  - Its now configurable what characters are recognized as quote signs
  - Its no possible to disable the fancy header decorations,
    saves space on small displays
- - The word wrap behaviour of the article widget is
+ - The word wrap behavior of the article widget is
    now configurable
  - added a menuoption and a keyboard shortcut that switches
    from proportional to fixed font in the article viewer
@@ -135,7 +135,7 @@ changes between 0.1.13 and 0.3.2
   + optional external editor
   + nice attachment handling
   + insert file functionality
-  + quoted text can be rewarped to preserve the orignal quoting.
+  + quoted text can be rewarped to preserve the original quoting.
   + improved signature handling,
     exiting sig dashes are detected
     optional: direct entry of the signature in the configuration dialog
@@ -198,7 +198,7 @@ changes between 0.1.11 and 0.1.12
     + Added an Option to the Article-menu
     + A doubleclick on an article opens it in a new window
     + If you click on a "reference-link" using the middle button, the
-      reference is opened in a new window. This behaviour is similar to
+      reference is opened in a new window. This behavior is similar to
       the "open link in new window"-function of a webbrowser.
 - added a "focus-indicator" marking the pane that currently
   has got the focus
@@ -230,7 +230,7 @@ changes between 0.1.9 and 0.1.10
 - added new option "show whole thread on expanding"
 - now all dialogs remember their size
 - added "next/prev group" to the "Goto-Menu"
-- the signature-file can now be choosen
+- the signature-file can now be chosen
 - a lot of minor changes and bugfixes
 
 changes between 0.1.8 and 0.1.9:
@@ -273,7 +273,7 @@ changes between 0.1.1 and 0.1.5 :
 - the groups in the left-hand window are sorted alphabetically
   now
 - changed the behavior of the clickable From-Header in the
-  message view; now the reply-To adress is used if present
+  message view; now the reply-To address is used if present
 - added the item "mail reply" to the popup-menu in the
   message list
 - improved the message list:

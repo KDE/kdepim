@@ -810,7 +810,7 @@ icalparser_set_gen_data(parser,stream)
 
 These routines will construct a parser object to which you can add lines
  of input and retrieve any components that the parser creates from the input.
- These routines work by specifing an adaptor routine to get string data
+ These routines work by specifying an adaptor routine to get string data
  from a source.
  For an example:
 \layout LyX-Code
@@ -1510,7 +1510,7 @@ Icaltime_from_timet takes a timet value, representing seconds past the POSIX
  epoch, and a flag to indicate if the time is a date.
  Dates have an identical structure to a time, but the time portion ( hours,
  minuts and seconds ) is always 00:00:00.
- Dates act differently in sorting an comparision, and they have a different
+ Dates act differently in sorting an comparison, and they have a different
  string representation in RFC2445.
  
 \layout Standard
@@ -1664,7 +1664,7 @@ Storing Objects
 The libical distribution includes a separate library, libicalss, that allows
  you to store iCal component data to disk in a variety of ways.
  This library also includes code to implement the CSTP protocol of CAP and
- has some routines for deciphering incomming messages.
+ has some routines for deciphering incoming messages.
  
 \layout Standard
 
@@ -2133,7 +2133,7 @@ An input string was not in the correct format
 \newline 
 ICAL_PARSE_ERROR
 \newline 
-the parser failed to parse an incomming component
+the parser failed to parse an incoming component
 \newline 
 ICAL_INTERNAL_ERROR 
 \newline 
@@ -2150,7 +2150,7 @@ ICAL_ALLOCATION_ERROR
 \newline 
 ICAL_NO_ERROR
 \newline 
-No error has occured
+No error has occurred
 \newline 
 ICAL_TIMEDOUT_ERROR
 \newline 

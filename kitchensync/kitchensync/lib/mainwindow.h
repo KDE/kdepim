@@ -116,7 +116,7 @@ class KSyncMainWindow : public Core
     SyncUi *syncUi();
 
     /**
-     * @return the prefered syncAlgorithm of KitchenSync
+     * @return the preferred syncAlgorithm of KitchenSync
      */
     SyncAlgorithm *syncAlgorithm();
 

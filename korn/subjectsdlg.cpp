@@ -179,7 +179,7 @@ void KornSubjectsDlg::deleteMessage()
 		qApp->processEvents();
 
 		// connect the cancel button of the progress bar
-		connect(&progress, SIGNAL(cancelled()), this, SLOT(deleteMailsCanceled()));
+		connect(&progress, SIGNAL(canceled()), this, SLOT(deleteMailsCanceled()));
 
 		// delete the mails
 		refresh = _mailDrop->deleteMails(& ids, &_deleteMailsCanceled);
@@ -258,7 +258,7 @@ bool KornSubjectsDlg::reload()
 		qApp->processEvents();
 
 		// connect the cancel button of the progress bar
-		connect(&progress, SIGNAL(cancelled()), this, SLOT(loadSubjectsCanceled()));
+		connect(&progress, SIGNAL(canceled()), this, SLOT(loadSubjectsCanceled()));
 		if (_subjects)
 			delete _subjects;
 		_subjects = 0;

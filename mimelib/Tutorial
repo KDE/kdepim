@@ -107,7 +107,7 @@ One of the first classes you should become familiar with is the DwString
 class, which handles character strings in MIME++.  DwString has been
 designed to handle very large character strings, so it may be different
 from string classes in other libraries.  Most of the standard C library
-string fuctions have DwString counterparts in MIME++.  These functions
+string functions have DwString counterparts in MIME++.  These functions
 all start with "Dw", and include DwStrcpy(), DwStrcmp(), DwStrcasecmp(),
 and so on.  In addition, the equality operators and assignment operators
 work as expected.  If you have used string classes from other libraries,

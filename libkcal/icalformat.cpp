@@ -272,7 +272,7 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
 {
   icalcomponent *message = mImpl->createScheduleComponent(incidence,method);
 
-  QString messageText = icalcomponent_as_ical_string(message);
+  QString messageText = QString::fromUtf8( icalcomponent_as_ical_string(message) );
 
 #if 0
   kdDebug(5800) << "ICalFormat::createScheduleMessage: message START\n"
