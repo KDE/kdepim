@@ -37,6 +37,7 @@ kresources/groupdav:
    uid, different href, only one of them can be in the local cache -> the other
    one is downloaded and replaces the current item, so on next folder sync the
    first item is downloaded again and replaces the other one...)
+-) Use the If-Match / If-None-Match headers to prevent overwriting changes on the server
 
 
 kresources/blogging:
