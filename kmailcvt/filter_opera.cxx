@@ -96,6 +96,10 @@ void FilterOpera::import(FilterInfo *info)
               info->setFrom( *mailFile );
               info->setTo( folderName );
 
+              QByteArray input(MAX_LINE);
+	      long l = 0;
+              bool first_msg = true;
+
 	     while ( !operaArchiv.atEnd() ) {
 		  KTempFile tmp;
                   /* comment by Danny:
@@ -105,10 +109,10 @@ void FilterOpera::import(FilterInfo *info)
                   * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
                   * get Unicode/UTF-email but KMail can't detect the correct charset.
                   */
-		  QByteArray input(MAX_LINE);
 		  QCString seperate;
 	 
-		  long l = operaArchiv.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
+		  if(!first_msg) tmp.file()->writeBlock( input, l );
+		  l = operaArchiv.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
 		  tmp.file()->writeBlock( input, l );
 	 
 		  while ( ! operaArchiv.atEnd() &&  (l = operaArchiv.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
@@ -117,6 +121,8 @@ void FilterOpera::import(FilterInfo *info)
 				  tmp.file()->writeBlock( input, l );
 		  }
 		  tmp.close();
+		  first_msg = false;
+
 		  if(info->removeDupMsg) addMessage( info, folderName, tmp.name() );
 		  else addMessage_fastImport( info, folderName, tmp.name() );
 		  tmp.unlink();
