@@ -177,8 +177,16 @@ int execConduit(KCmdLineArgs *p)
 	createLink();
 
 	syncStack = new SyncStack(deviceLink,&KPilotConfig::getConfig(),l);
-	syncStack->prepareSync();
-	
+
+	if (p->isSet("test"))
+	{
+		syncStack->prepare(SyncStack::HotSyncMode| SyncStack::TestMode);
+	}
+	else
+	{
+		syncStack->prepareSync();
+	}
+
 	connectStack();
 	createConnection(p);
 
@@ -268,6 +276,13 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.15.2.1  2002/04/04 20:28:28  adridg
+// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
+// when using PILOT_VERSION. kpilotTest defaults to list, like the options
+// promise. Always do old-style USB sync (also works with serial devices)
+// and runs conduits only for HotSync. KPilot now as it should have been
+// for the 3.0 release.
+//
 // Revision 1.15  2002/02/02 11:46:02  adridg
 // Abstracting away pilot-link stuff
 //
