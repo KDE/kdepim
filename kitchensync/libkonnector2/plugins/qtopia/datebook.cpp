@@ -273,13 +273,13 @@ QString DateBook::event2string( KCal::Event *event )
 {
     QString str;
     str.append( "<event ");
-    str.append( "description=\"" +event->summary()  + "\" ");
-    str.append( "location=\"" + event->location() + "\" ");
+    str.append( "description=\"" +escape( event->summary() ) + "\" ");
+    str.append( "location=\"" + escape( event->location() ) + "\" ");
     str.append( "categories=\"" +  categoriesToNumber( event->categories() ) + "\" ");
     str.append( "uid=\"" +  konnectorId("EventSyncEntry", event->uid() ) + "\" ");
     str.append( "start=\"" + QString::number( toUTC( event->dtStart() ) ) + "\" ");
     str.append( "end=\"" +  QString::number(  toUTC( event->dtEnd() ) ) + "\" ");
-    str.append( "note=\"" + event->description() + "\" "); //use escapeString copied from TT
+    str.append( "note=\"" + escape( event->description() ) + "\" "); //use escapeString copied from TT
     if ( event->doesFloat() )
         str.append( "type=\"AllDay\" ");
     // recurrence

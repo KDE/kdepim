@@ -1,4 +1,6 @@
 
+#include <qstylesheet.h>
+
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
@@ -204,4 +206,7 @@ int Base::newId()
 }
 const Device* Base::device() {
     return m_device;
+}
+QString Base::escape( const QString& string ) {
+    return QStyleSheet::escape( string );
 }

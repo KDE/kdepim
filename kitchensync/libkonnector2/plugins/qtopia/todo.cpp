@@ -190,7 +190,7 @@ QString ToDo::todo2String( KCal::Todo* todo )
     kdDebug(5227) << " todo->isCompleted " << todo->isCompleted() << endl;
     text.append( "Completed=\""+QString::number( todo->isCompleted()) + "\" " );
     text.append( "Progress=\"" + QString::number( todo->percentComplete() ) + "\" ");
-    text.append( "Summary=\"" + todo->summary() + "\" ");
+    text.append( "Summary=\"" + escape( todo->summary() ) + "\" ");
     if ( todo->hasDueDate() ) {
         text.append( "HasDate=\"1\" ");
         QDateTime time = todo->dtDue();
@@ -201,7 +201,7 @@ QString ToDo::todo2String( KCal::Todo* todo )
         text.append( "HasDate=\"0\" ");
     }
     text.append( "Priority=\"" + QString::number( todo->priority() ) +"\" " );
-    text.append( "Description=\"" +todo->description() + "\" " );
+    text.append( "Description=\"" +escape( todo->description() ) + "\" " );
 
     // id hacking We don't want to have the ids growing and growing
     // when an id is used again it will be put to the used list and after done

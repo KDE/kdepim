@@ -44,7 +44,7 @@ namespace OpieHelper {
         KSync::KonnectorUIDHelper* helper() { return m_helper; };
         bool isMetaSyncingEnabled()const;
         void setMetaSyncingEnabled(bool meta);
-	
+
         // returns a ; separated list of real ids
         // will also add the value m_kde2opie
         QString categoriesToNumber( const QStringList &categories,
@@ -54,8 +54,11 @@ namespace OpieHelper {
                                             const QString &app = QString::null );
         QString konnectorId( const QString &appName,  const QString &uid );
         QString kdeId( const QString &appName, const QString &uid );
+
+        /** escapes a whole string */
+        QString escape(const QString&);
 	const Device* device();
-        
+
 	CategoryEdit *m_edit;
         KSync::KonnectorUIDHelper *m_helper;
         Kontainer::ValueList m_kde2opie;
