@@ -455,13 +455,13 @@ bool Contact::saveAttributes( QDomElement& ) const
   return false;
 }
 
-bool Contact::load( const QDomDocument& xml )
+bool Contact::loadXML( const QDomDocument& xml )
 {
   kdError() << "NYI: " << k_funcinfo << endl;
   return false;
 }
 
-QString Contact::save() const
+QString Contact::saveXML() const
 {
   kdError() << "NYI: " << k_funcinfo << endl;
   return QString::null;

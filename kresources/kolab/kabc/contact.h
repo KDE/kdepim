@@ -173,10 +173,10 @@ public:
   bool saveAttributes( QDomElement& ) const;
 
   // Load this note by reading the XML file
-  bool load( const QDomDocument& xml );
+  bool loadXML( const QDomDocument& xml );
 
   // Serialize this note to an XML string
-  QString save() const;
+  QString saveXML() const;
 
 protected:
   void setFields( KABC::Address* );
