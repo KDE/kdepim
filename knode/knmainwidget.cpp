@@ -64,7 +64,7 @@ using KRecentAddress::RecentAddresses;
 #include "knmemorymanager.h"
 #include <kcmdlineargs.h>
 
-#include <klistviewsearchline_pimcopy.h>
+#include <klistviewsearchline.h>
 
 KNGlobals knGlobals;
 
@@ -167,7 +167,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
                                         "all messages are shown again." ) );
 
   QLabel *lbl = new QLabel(i18n("&Search:"), q_uicksearch, "kde toolbar widget");
-  QLineEdit *s_earchLineEdit = new KPIM::KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
+  QLineEdit *s_earchLineEdit = new KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
   q_uicksearch->setStretchableWidget(s_earchLineEdit);
   lbl->setBuddy(s_earchLineEdit);
   connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
