@@ -46,7 +46,7 @@
 
 
 class QWidget;
-class KSocket;
+class PilotDatabase;
 /** @brief Base class for all conduits.
  *
  *  A conduit is a seperate application that handles syncing with a
@@ -72,7 +72,7 @@ class KSocket;
  *
  *  GSQA: What is the relationship between KPilotLink and BaseConduit.
  *        Right now getConfig() exists in KPilotLink as a static.  Can
- *        / should we move it to BaseConduit?
+ *        / should we move it to BaseConduit?  Why does BaseConduit inherit from QObject
  */
 class BaseConduit : public QObject
 {
@@ -86,21 +86,37 @@ public:
 		Setup,
 		Backup, 
 		Test,
-		DBInfo
+		DBInfo,
+		UseLocalDB // use the local database instead of pilot daemon
 	};
 
 	enum ConduitExitCode {
 		Normal=0,
 		ConduitMisconfigured=1,		// f.ex missing file
 		DCOPError=2,			// generic DCOP error
-		PeerApplicationMissing=3
+		PeerApplicationMissing=3,
+		InvalidLocalDBPath=4
 		} ;
   /**
    * The mode that this conduit should be running in will be passed to the
    * constructor.   After the constructor returns the appropriate 
    * virtual method should be called (ie: setup, hotsync, backup, etc).
+   *
+   * UseLocalDB should not be passed into this method; use the below
+   * constructor instead.  If UseLocalDB is passed into this constructor,
+   * the conduit will be put into an ErrorState with exit code
+   * InvalidLocalDBPath
    */
   BaseConduit(eConduitMode);
+  /**
+   * This will put the conduit in UseLocalDB mode and will open
+   * the localDBPath database instead of using the PilotDaemon.
+   *
+   * This allows the developer to test their conduit without having to
+   * actually sync to the palm pilot or use a simulator.  The initial
+   * DB can be saved by using the backup mode in kpilot instead of syncing.
+   */
+  BaseConduit(const QString &dbName);
   virtual ~BaseConduit();
 
   /**
@@ -200,7 +216,7 @@ protected:
 	* than 30 characters.
 	* Returns 1 on success, 0 on failure.
 	*/
-	int addSyncLogMessage(const char *s);
+  bool addSyncLogMessage(const char *s);
 
 	/**
 	* Conduits can have an additional Debug= line in their
@@ -237,9 +253,7 @@ private:
    */
   eConduitMode fMode;
 
-  KSocket* fDaemonSocket;
-  PilotRecord* getRecord(KSocket*);
-  void writeRecord(KSocket* theSocket, PilotRecord* rec);
+  PilotDatabase *fDB;
 };
 
 
@@ -249,6 +263,15 @@ private:
 
 
 // $Log$
+// Revision 1.19  2001/03/19 23:12:39  stern
+// Made changes necessary for upcoming abbrowser conduit.
+//
+// Mainly, I added two public methods to PilotAddress that allow for easier
+// setting and getting of phone fields.
+//
+// I also have added some documentation throughout as I have tried to figure
+// out how everything works.
+//
 // Revision 1.18  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

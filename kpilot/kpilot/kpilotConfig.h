@@ -52,6 +52,13 @@ public:
 	*/
 	static KConfig& getConfig(const QString &group=QString::null);
 
+        /**
+	 * @return QString of default path for the BackupDB files
+	 * are located
+	 */
+        static QString getDefaultDBPath();
+
+  
 	/**
 	* This number can be changed every time a new
 	* KPilot version is released that absolutely requires
@@ -89,6 +96,9 @@ public:
 
 
 // $Log$
+// Revision 1.2  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.1  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

@@ -158,7 +158,7 @@ PilotRecord* PilotSerialDatabase::readNextModifiedRec()
     }
 
 // Writes a new record to database (if 'id' == 0, one will be assigned and returned in 'newid')
-int PilotSerialDatabase::writeRecord(PilotRecord* newRecord)
+recordid_t PilotSerialDatabase::writeRecord(PilotRecord* newRecord)
     {
 	FUNCTIONSETUP;
     recordid_t newid;
@@ -167,14 +167,14 @@ int PilotSerialDatabase::writeRecord(PilotRecord* newRecord)
     if(isDBOpen() == false)
 	{
 	kdError() << __FUNCTION__ << ": DB not open" << endl;
-	return -1;
+	return 0;
 	}
     success = dlp_WriteRecord(getPilotLink()->getCurrentPilotSocket(), getDBHandle(), newRecord->getAttrib(), 
 			      newRecord->getID(), newRecord->getCat(), newRecord->getData(),
 			      newRecord->getLen(), &newid);
     if(newRecord->getID() == 0)
 	newRecord->setID(newid);
-    return success;
+    return newid;
     }
 
 // Resets all records in the database to not dirty.
@@ -233,10 +233,15 @@ void PilotSerialDatabase::closeDatabase()
     if(isDBOpen() == false)
 	return;
     dlp_CloseDB(getPilotLink()->getCurrentPilotSocket(), getDBHandle());
+    setDBOpen(false);
     }
 
 
 // $Log$
+// Revision 1.10  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.9  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

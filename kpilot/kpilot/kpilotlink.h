@@ -320,7 +320,7 @@ private:
   KProgress*  fProgressMeter;
   KPilotUser  fPilotUser;           // Pilot User Info
   KServerSocket* fConduitSocket;    // Socket conduits connect on
-  PilotDatabase* fCurrentDB;           // Currently Open Database (for conduit)
+  PilotSerialDatabase* fCurrentDB;  // Currently Open Database (for conduit)
   DBInfo      fCurrentDBInfo;          // Currently open Database information
   int         fNextDBIndex;         // The next DB to sync
   KProcess*    fConduitProcess;
@@ -341,6 +341,9 @@ signals:
 #endif
 
 // $Log$
+// Revision 1.21  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.20  2001/03/08 16:18:40  adridg
 // Cruft removal
 //

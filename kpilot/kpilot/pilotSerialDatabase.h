@@ -64,9 +64,9 @@ class PilotSerialDatabase : public PilotDatabase
     /** Reads the next record from database that has the dirty flag set. */
     virtual PilotRecord* readNextModifiedRec();
     /** Writes a new ID to the record specified the index.  Not supported on Serial connections */
-    virtual int writeID(PilotRecord* ) { return 0; }
+      virtual recordid_t writeID(PilotRecord* ) { return 0; }
     /** Writes a new record to database (if 'id' == 0, one will be assigned to newRecord) */
-    virtual int writeRecord(PilotRecord* newRecord);
+    virtual recordid_t writeRecord(PilotRecord* newRecordb);
     /** Resets all records in the database to not dirty. */
     virtual int resetSyncFlags();
     /** Resets next record index to beginning */
@@ -96,6 +96,9 @@ class PilotSerialDatabase : public PilotDatabase
 
 
 // $Log$
+// Revision 1.6  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.5  2001/02/07 14:21:59  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

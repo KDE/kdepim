@@ -16,7 +16,7 @@ kpilot_SOURCES	= kpilot.cc \
 	fileInstaller.cc fileInstallWidget.cc \
 	pilotMemo.cc memoWidget.cc pilotComponent.cc \
 	kpilotOptions.cc messageDialog.cc gsetupDialog.cc \
-	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
+	pilotConduitDatabase.cc pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
 	listItems.cc kpilotDCOP.skel \
 	pilotAddress.cc addressWidget.cc addressEditor.cc \
 	strToken.cc pilotDateEntry.cc \
@@ -33,7 +33,7 @@ kpilotDaemon_SOURCES = pilotDaemon.cc \
 
 pilotListener_SOURCES = pilotListener.cc
 
-libconduit_a_SOURCES = baseConduit.cc conduitApp.cc \
+libconduit_a_SOURCES = baseConduit.cc pilotConduitDatabase.cc conduitApp.cc \
 	pilotRecord.cc pilotSerialDatabase.cc pilotLocalDatabase.cc \
 	messageDialog.cc gsetupDialog.cc \
 	kpilotConfig.cc kpilotlink.cc options.cc

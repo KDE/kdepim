@@ -259,6 +259,7 @@ KPilotInstaller::setupWidget()
     setCentralWidget(fManagingWidget);
     }
 
+
 void
 KPilotInstaller::initComponents()
 {
@@ -273,11 +274,7 @@ KPilotInstaller::initComponents()
 		getManagingWidget()->geometry().height());
 	fVisibleWidgetList.append(titleScreen);
 
-	KConfig& config = KPilotConfig::getConfig();
-	QString lastUser = config.readEntry("UserName");
-	QString dbsubpath = "kpilot/DBBackup/";
-	QString defaultDBPath = KGlobal::dirs()->
-		saveLocation("data", dbsubpath + lastUser + "/");
+	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 
 	addComponentPage(new MemoWidget(getManagingWidget(),defaultDBPath),
 		i18n("Memo Viewer"));
@@ -1396,6 +1393,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.44  2001/03/09 09:40:52  adridg
+// Large-scale #include cleanup; component resizing bug fixed
+//
 // Revision 1.43  2001/03/05 23:57:53  adridg
 // Added KPILOT_VERSION
 //

@@ -30,14 +30,13 @@
 
 // Abstract base class for PalmPilot database access.
 
-#ifndef _PILOT_MACROS_H_
-#include <pi-macros.h> /* for recordid_t */
-#endif
-
 #ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
 #endif
 
+#ifndef _PILOT_MACROS_H_
+#include <pi-macros.h> /* for recordid_t */
+#endif
 /**
  * Methods to access a database on the pilot.  
  *
@@ -64,15 +63,15 @@ class PilotDatabase
     /** Reads the next record from database that has the dirty flag set. */
     virtual PilotRecord* readNextModifiedRec() = 0;
     /** Writes a new ID to the record specified the index.  Not supported on Serial connections */
-    virtual int writeID(PilotRecord* rec) = 0;
+    virtual recordid_t writeID(PilotRecord* rec) = 0;
     /** Writes a new record to database (if 'id' == 0, one will be assigned to newRecord) */
-    virtual int writeRecord(PilotRecord* newRecord) = 0;
+    virtual recordid_t writeRecord(PilotRecord* newRecord) = 0;
     /** Resets all records in the database to not dirty. */
-    virtual int resetSyncFlags() = 0;
-    /** Resets next record index to beginning */
-    virtual int resetDBIndex() = 0;
-    /** Purges all Archived/Deleted records from Palm Pilot database */
-    virtual int cleanUpDatabase() = 0;
+      virtual int resetSyncFlags() = 0;
+      /** Resets next record index to beginning */
+      virtual int resetDBIndex() = 0;
+      /** Purges all Archived/Deleted records from Palm Pilot database */
+      virtual int cleanUpDatabase() = 0;
 
     bool isDBOpen() const { return fDBOpen; }
 
@@ -92,6 +91,9 @@ class PilotDatabase
 
 
 // $Log$
+// Revision 1.7  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.6  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

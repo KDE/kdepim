@@ -86,6 +86,16 @@ static const char *kpilotconfig_id =
 	return version;
 }
 
+/* static */ QString KPilotConfig::getDefaultDBPath()
+    {
+    KConfig& config = getConfig();
+    QString lastUser = config.readEntry("UserName");
+    QString dbsubpath = "kpilot/DBBackup/";
+    QString defaultDBPath = KGlobal::dirs()->
+	saveLocation("data", dbsubpath + lastUser + "/");
+    return defaultDBPath;
+    }
+
 #ifdef DEBUG
 /* static */ int KPilotConfig::getDebugLevel(KConfig& c,const QString& group)
 #else
@@ -209,6 +219,9 @@ static QFont *thefont=0L;
 }
 
 // $Log$
+// Revision 1.2  2001/02/25 12:39:15  adridg
+// Removed stupid crash from ::fixed()
+//
 // Revision 1.1  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

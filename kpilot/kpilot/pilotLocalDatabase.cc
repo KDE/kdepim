@@ -189,27 +189,27 @@ PilotRecord* PilotLocalDatabase::readNextModifiedRec()
     }
 
 // Writes a new ID to the record specified the index.  Not supported on Serial connections
-int PilotLocalDatabase::writeID(PilotRecord* rec)
+recordid_t PilotLocalDatabase::writeID(PilotRecord* rec)
 {
 	FUNCTIONSETUP;
 
   if(isDBOpen() == false)
     {
       kdError() << __FUNCTION__ << ": DB not open!" << endl;
-      return -1;
+      return 0;
     }
   if(fPendingRec == -1)
     {
       kdError() << __FUNCTION__ << ": Last call was _NOT_ readNextModifiedRec()" << endl;
-      return -1;
+      return 0;
     }
   fRecords[fPendingRec]->setID(rec->getID());
   fPendingRec = -1;
-  return 0;
+  return rec->getID();
 }
 
 // Writes a new record to database (if 'id' == 0, it is assumed that this is a new record to be installed on pilot)
-int PilotLocalDatabase::writeRecord(PilotRecord* newRecord)
+recordid_t PilotLocalDatabase::writeRecord(PilotRecord* newRecord)
     {
 	FUNCTIONSETUP;
     int i;
@@ -250,7 +250,7 @@ int PilotLocalDatabase::writeRecord(PilotRecord* newRecord)
       }
     // Ok, we don't have it, so just tack it on.
     fRecords[fNumRecords++] = new PilotRecord(newRecord);
-    return 0;
+    return newRecord->getID();
     }
 
 // Resets all records in the database to not dirty.
@@ -389,10 +389,14 @@ void PilotLocalDatabase::closeDatabase()
 	unlink((const char *)QFile::encodeName(tempName));
 	rename((const char *)QFile::encodeName(newName), 
 		(const char *)QFile::encodeName(tempName));
+	setDBOpen(false);
 }
 
 
 // $Log$
+// Revision 1.11  2001/02/27 15:40:48  adridg
+// Use QCString and QFile::encodeName where appropriate
+//
 // Revision 1.10  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

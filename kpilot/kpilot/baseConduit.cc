@@ -28,32 +28,37 @@
 */
 #include "options.h"
 
-#include <iostream.h>
-#include <fcntl.h>
-#include <ctype.h>
 #include <unistd.h>
 #include <qpixmap.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <ksock.h>
 #include <kconfig.h>
 #include <kdebug.h>
+#include <assert.h>
 
 #include "kpilotConfig.h"
+#include "pilotLocalDatabase.h"
+#include "pilotConduitDatabase.h"
 
 #include "baseConduit.moc"
-#include "statusMessages.h"
 
 static const char *baseconduit_id="$Id$";
 
 BaseConduit::BaseConduit(eConduitMode mode)
-  : QObject(), fMode(mode), fDaemonSocket(0L)//, fReportData(false)
+      : QObject(), fMode(mode), fDB(0L)
 {
 	FUNCTIONSETUP;
 
 	if((mode == BaseConduit::HotSync) || 
 		(mode == BaseConduit::Backup))
 	{
+	fDB = new PilotConduitDatabase();
+	if (!fDB->isDBOpen())
+	    {
+	    delete fDB;
+	    fDB = 0L;
+	    }
+	     
 #ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
@@ -63,36 +68,35 @@ BaseConduit::BaseConduit(eConduitMode mode)
 		}
 #endif
 
-		// KPilotDaemon Status Socket
-		fDaemonSocket = new KSocket("localhost", KPILOTLINK_PORT); 
-		if (fDaemonSocket == 0L)
-		{
-			kdError() << __FUNCTION__
-				<< ": Can't create socket"
-				<< endl ;
-			fMode=BaseConduit::Error;
-			return;
-		}
-		if (fDaemonSocket->socket()<0)
-		{
-			kdError() << __FUNCTION__
-				<< ": Socket is not connected"
-				<< endl ;
-			fMode=BaseConduit::Error;
-			return;
-		}
-		fcntl(fDaemonSocket->socket(), F_SETFL, O_APPEND);
+	
 	}
+	else if( mode == UseLocalDB )
+	    {
+	    kdError() << __FUNCTION__
+		      << ": Wrong constructor for UseLocalDB mode" << endl;
+	    fMode = BaseConduit::Error;
+	    }
 }
 
-BaseConduit::~BaseConduit()
-{
-	if(fDaemonSocket)
+BaseConduit::BaseConduit(const QString &localDB) 
+      : QObject(), fMode(UseLocalDB), fDB(0L)
+    {
+    FUNCTIONSETUP;
+
+    QString dbPath = KPilotConfig::getDefaultDBPath();
+	
+    fDB = new PilotLocalDatabase( dbPath, localDB );
+    if (!fDB->isDBOpen())
 	{
-		delete fDaemonSocket;
-		fDaemonSocket=0L;
+	delete fDB;
+	fDB = 0L;
 	}
-}
+    }
+BaseConduit::~BaseConduit()
+    {
+    delete fDB;
+    fDB = 0L;
+    }
 
 int BaseConduit::getDebugLevel(KConfig& c)
 {
@@ -101,259 +105,67 @@ int BaseConduit::getDebugLevel(KConfig& c)
 	(void) baseconduit_id;
 }
 
-// For a description of the protocol used to
-// send log messages, see the other end of the
-// link in kpilotlink.cc.
-//
-//
-#define SYNC_MSG_SIZE	(64)
 
-int BaseConduit::addSyncLogMessage(const char *s)
-{
-	FUNCTIONSETUP;
-
-	char buffer[SYNC_MSG_SIZE];
-	const char *check_s;
-	char *bufp;
-	int l,r;
-
-	// Sanity check the message.
-	//
-	//
-	if (s == 0L) return 0;
-	l=strlen(s);
-	if (l>(SYNC_MSG_SIZE / 2)) return 0;
-	check_s=s;
-	while (*check_s)
-	{
-		if ((!isprint(*check_s)) || 
-			(*check_s == '\r') ||
-			(*check_s == '\n'))
-			return 0;
-		check_s++;
-	}
-
-	memset(buffer,0,SYNC_MSG_SIZE);
-	// Make l a multiple of sizeof(int)
-	//
-	//
-	if (l % sizeof(int))
-	{
-		l/=sizeof(int);
-		l*=sizeof(int);
-		l+=sizeof(int);
-	}
-
-	bufp=buffer;
-	*((int *)bufp)=CStatusMessages::LOG_MESSAGE;
-	bufp+=sizeof(int);
-	*((int *)bufp)=l;
-	bufp+=sizeof(int);
-	strcpy(bufp,s);
-
-	r=write(fDaemonSocket->socket(),buffer,
-		2*sizeof(int)+l);
-
-	return 1; // (r == (2*sizeof(int)+l));
-}
+bool BaseConduit::addSyncLogMessage(const char *s)
+    {
+    PilotConduitDatabase *conduitDb = dynamic_cast<PilotConduitDatabase *>(fDB);
+    if (conduitDb)
+	return conduitDb->addSyncLogMessage(s);
+    return false;
+    }
 
 
 int BaseConduit::readAppInfo(unsigned char *buffer)
-{
-	FUNCTIONSETUP;
-
-	int len = 0;
-	int recvlen;
-
-	CStatusMessages::write(fDaemonSocket->socket(),
-		CStatusMessages::READ_APP_INFO);
-	if (read(fDaemonSocket->socket(),&len,sizeof(int)))
-	{
-		// Sanity check
-		//
-		//
-		if ((len<0) || (len>16000))
-		{
-			kdError() << __FUNCTION__
-				<< ": Got crazy length for READ_APP_INFO"
-				<< endl;
-			return 0;
-		}
-
-		if ((recvlen=read(fDaemonSocket->socket(),buffer,len))!=len)
-		{
-			kdWarning() << __FUNCTION__
-				<< ": Expected length "
-				<< len
-				<< " and read "
-				<< recvlen
-				<< endl;
-		}
-
-		return recvlen;
-	}
-	else
-	{
-		kdWarning() << __FUNCTION__
-			<< ": Got no response to READ_APP_INFO"
-			<< endl;
-		return 0;
-	}
-}
+    {
+    assert(fDB);
+    return fDB->readAppBlock(buffer, sizeof(buffer));
+    }
 // Returns 0L if no more modified records.  User must delete
 // the returned record when finished with it.
 PilotRecord* 
 BaseConduit::readNextModifiedRecord()
-{
-	FUNCTIONSETUP;
-
-  int result = 0;
-
-  CStatusMessages::write(fDaemonSocket->socket(), 
-  	CStatusMessages::NEXT_MODIFIED_REC);
-  if(read(fDaemonSocket->socket(), &result, sizeof(int)))
-    {
-      if(result == CStatusMessages::NO_SUCH_RECORD)
-	{
-#ifdef DEBUG
-		if (debug_level & SYNC_TEDIOUS)
-		{
-			kdDebug() << fname
-				<< ": Got NO_SUCH_RECORD" 
-				<< endl;
-		}
-#endif
-	  return 0L;
-	}
-      else
-	{
-		return getRecord(fDaemonSocket);
-	}
+    {    
+    assert(fDB);
+    return fDB->readNextModifiedRec();
     }
-  else
-    {
-      kdWarning() << __FUNCTION__ << ": Failure on read" << endl;
-      return 0L;
-    }
-}
 
 // Returns 0L if no more records in category.  User must delete
 // the returned record when finished with it.
 PilotRecord*
 BaseConduit::readNextRecordInCategory(int category)
-{
-  int result = 0;
-	CStatusMessages::write(fDaemonSocket->socket(), 
-		CStatusMessages::NEXT_REC_IN_CAT);
-  write(fDaemonSocket->socket(), &category, sizeof(int));
-  read(fDaemonSocket->socket(), &result, sizeof(int));
-  if(result == CStatusMessages::NO_SUCH_RECORD)
-    return 0L;
-  return getRecord(fDaemonSocket);
-}
+    {
+    assert(fDB);
+    return fDB->readNextRecInCategory(category);
+    }
 
 // Returns 0L if ID is invalid.  User must delete the
 // returned record when finished with it.
 PilotRecord*
 BaseConduit::readRecordById(recordid_t id)
-{
-  int result = 0;
-
-  CStatusMessages::write(fDaemonSocket->socket(), 
-  	CStatusMessages::READ_REC_BY_ID);
-  write(fDaemonSocket->socket(), &id, sizeof(recordid_t));
-  read(fDaemonSocket->socket(), &result, sizeof(int));
-  if(result == CStatusMessages::NO_SUCH_RECORD)
-    return 0L;
-  return getRecord(fDaemonSocket);
-}
+    {
+    assert(fDB);
+    return fDB->readRecordById(id);
+    }
 
 // Returns 0L if index is invalid.  User must delete the
 // returned record when finished with it.
 PilotRecord* 
 BaseConduit::readRecordByIndex(int index)
-{
-  int result = 0;
-
-  CStatusMessages::write(fDaemonSocket->socket(), 
-  	CStatusMessages::READ_REC_BY_INDEX);
-  write(fDaemonSocket->socket(), &index, sizeof(int));
-  read(fDaemonSocket->socket(), &result, sizeof(int));
-  if(result == CStatusMessages::NO_SUCH_RECORD)
-    return 0L;
-  return getRecord(fDaemonSocket);
-}
+    {
+    assert(fDB);
+    return fDB->readRecordByIndex(index);
+    }
 
 // Writes a record to the current database.  If rec->getID() == 0,
 // a new ID will be assigned and returned.  Else, rec->getID() is
 // returned
 recordid_t 
 BaseConduit::writeRecord(PilotRecord* rec)
-{
-  int result = 0;
-  recordid_t id = 0;
+    {
+    assert(fDB);
+    return fDB->writeRecord(rec);
+    }
 
-  CStatusMessages::write(fDaemonSocket->socket(), 
-  	CStatusMessages::WRITE_RECORD);
-  writeRecord(fDaemonSocket, rec);
-  read(fDaemonSocket->socket(), &result, sizeof(int));
-  read(fDaemonSocket->socket(), &id, sizeof(recordid_t));
-  return id;
-}
-
-
-void
-BaseConduit::writeRecord(KSocket* theSocket, PilotRecord* rec)
-{
-  int len = rec->getLen();
-  int attrib = rec->getAttrib();
-  int cat = rec->getCat();
-  recordid_t uid = rec->getID();
-  char* data = rec->getData();
-  
-  CStatusMessages::write(theSocket->socket(), 
-  	CStatusMessages::REC_DATA);
-  write(theSocket->socket(), &len, sizeof(int));
-  write(theSocket->socket(), &attrib, sizeof(int));
-  write(theSocket->socket(), &cat, sizeof(int));
-  write(theSocket->socket(), &uid, sizeof(recordid_t));
-  write(theSocket->socket(), data, len);
-}
-
-// REC_DATA has already been read!  This just grabs the actual
-// record.
-PilotRecord*
-BaseConduit::getRecord(KSocket* in)
-{
-	FUNCTIONSETUP;
-
-  int len, attrib, cat;
-  recordid_t uid;
-  char* data;
-  PilotRecord* newRecord;
-
-  read(in->socket(), &len, sizeof(int));
-  read(in->socket(), &attrib, sizeof(int));
-  read(in->socket(), &cat, sizeof(int));
-  read(in->socket(), &uid, sizeof(recordid_t));
-  data = new char[len];
-  read(in->socket(), data, len);
-  newRecord = new PilotRecord((void*)data, len, attrib, cat, uid);
-  delete [] data;
-#ifdef DEBUG
-	if (debug_level & SYNC_TEDIOUS)
-	{
-  		kdDebug() << fname
-			<< ": Read"
-			<< " len=" << len
-			<< " att=" << attrib
-			<< " cat=" << cat 
-			<< " UID=" << uid
-			<< endl;
-	}
-#endif
-  return newRecord;
-}
 
 
 #include "kpilot_conduit.xpm"
@@ -394,6 +206,10 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.18  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.17  2001/03/02 16:59:35  adridg
 // Added new protocol message READ_APP_INFO for conduit->daemon communication
 //

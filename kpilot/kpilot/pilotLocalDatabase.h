@@ -41,10 +41,12 @@
 #endif
 
 class PilotLocalDatabase : public PilotDatabase
-{
-public:
-	PilotLocalDatabase(const QString& path, const QString& name);
-	virtual ~PilotLocalDatabase();
+    {
+    public:
+
+      /** Opens the local database */
+      PilotLocalDatabase(const QString& path, const QString& name);
+      virtual ~PilotLocalDatabase();
 
     // Changes any forward slahses to underscores
     void checkDBName();
@@ -61,9 +63,9 @@ public:
     // Reads the next record from database that has the dirty flag set.
     virtual PilotRecord* readNextModifiedRec();
     // Writes a new ID to the record specified the index.  Not supported on Serial connections
-    virtual int writeID(PilotRecord* rec);
+    virtual recordid_t writeID(PilotRecord* rec);
     // Writes a new record to database (if 'id' == 0, one will be assigned to newRecord)
-    virtual int writeRecord(PilotRecord* newRecord);
+    virtual recordid_t writeRecord(PilotRecord* newRecord);
     // Resets all records in the database to not dirty.
     virtual int resetSyncFlags();
     // Resets next record index to beginning
@@ -101,6 +103,9 @@ public:
 
 
 // $Log$
+// Revision 1.8  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.7  2001/02/27 15:39:21  adridg
 // Added dbPathName to make .pdb name construction consistent
 //
