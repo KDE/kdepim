@@ -97,6 +97,8 @@ class EmpathIndex
         
         QStrList allKeys();
 
+        void setStatus(const QString & id, RMM::MessageStatus status);
+        
         const char * className() const { return "EmpathIndex"; }
 
     protected:

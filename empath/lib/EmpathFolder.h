@@ -135,6 +135,9 @@ class EmpathFolder : public QObject
         
         QString indexFileName() { return indexFileName_; }
         
+        void setStatus(const QString & id, RMM::MessageStatus status)
+        { index_.setStatus(id, status); }
+        
     protected slots:
         
         /**

@@ -186,8 +186,6 @@ EmpathMessageListWidget::find(RMM::RMessageID & msgId)
     void
 EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 {
-    empathDebug("addItem called");
-    
     if (item == 0) {
         empathDebug("item == 0 !");
         return;
@@ -201,8 +199,8 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 
     // Find parent of this item.
     
-    empathDebug("Message has parentID, looking for parent");
-    empathDebug("PARENTID: \"" + item->parentID().asString() + "\"");
+//    empathDebug("Message has parentID, looking for parent");
+//    empathDebug("PARENTID: \"" + item->parentID().asString() + "\"");
         
     EmpathMessageListItem * parentItem = 0;
     
@@ -218,8 +216,8 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
         }
     }
 
-    EmpathMessageListItem * newItem(0);
-
+    EmpathMessageListItem * newItem;
+    
     if (parentItem == 0)
         newItem = _addItem(this, *item);
     else
@@ -409,17 +407,20 @@ EmpathMessageListWidget::s_rightButtonPressed(
         QListViewItem * item, const QPoint & pos, int)
 {
     if (item == 0) return;
+
     wantScreenUpdates_ = false;
     
-    if (_nSelected() == 0)
+//    if (_nSelected() == 0)
         _setSelected(item, true);
     
+#if 0
     if (_nSelected() != 1) {
         multipleMessageMenu_.exec(pos);
         wantScreenUpdates_ = true;
         return;
     }
-    
+#endif
+
     EmpathMessageListItem * i = (EmpathMessageListItem *)item;
 
     if (i->status() & RMM::Read)
@@ -489,6 +490,9 @@ EmpathMessageListWidget::setStatus(
         EmpathMessageListItem * item, RMM::MessageStatus status)
 {
     item->setStatus(status);
+    
+    EmpathFolder * f = empath->folder(url_);
+    f->setStatus(item->id(), status);
 
     if (status & RMM::Read)
         if (status & RMM::Marked)
@@ -512,8 +516,6 @@ EmpathMessageListWidget::setStatus(
                 item->setPixmap(0, px_xxR_);
             else
                 item->setPixmap(0, px_xxx_);
-    
-    return;
 }
 
     void
@@ -701,6 +703,7 @@ EmpathMessageListWidget::contentsMousePressEvent(QMouseEvent * e)
 {
     QListView::contentsMousePressEvent(e);
     return;
+#if 0
     empathDebug("MOUSE PRESS EVENT");
     
     if (!isUpdatesEnabled()) {
@@ -878,6 +881,7 @@ EmpathMessageListWidget::contentsMousePressEvent(QMouseEvent * e)
         _setSelected(item, true);
         return;
     }
+#endif
 }
 
     void
@@ -894,6 +898,7 @@ EmpathMessageListWidget::contentsMouseMoveEvent(QMouseEvent * e)
     
     QListView::contentsMouseMoveEvent(e);
     return; // XXX: Still broken.
+#if 0
     
     if (!maybeDrag_) {
         return;
@@ -938,6 +943,7 @@ EmpathMessageListWidget::contentsMouseMoveEvent(QMouseEvent * e)
     
     empathDebug("Starting the drag copy");
     u->drag();
+#endif
 }
 
     void
@@ -1174,8 +1180,6 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
     QListIterator<EmpathIndexRecord> mit(masterList_);
     
     setSorting(-1);
-
-    
     
     for (; mit.current(); ++mit) {
 

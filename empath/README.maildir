@@ -2,6 +2,8 @@
 -- Rik Hemsley <rik@kde.org>
 -- 28th June 1999 
 
+Note: I've converted the maildir man page to html. Find it as maildir.html.
+
 To use Empath with local mailboxes, they need to be in Maildir format.
 
 A Maildir box is easy to identify. Instead of being a single file, it's

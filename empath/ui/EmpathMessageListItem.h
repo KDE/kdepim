@@ -60,14 +60,14 @@ class EmpathMessageListItem : public QListViewItem
 
         QString key(int, bool) const;
 
-        const QString &        id()        const    { return m.id();        }
-        RMM::RMessageID &    messageID()         { return m.messageID();    }
-        RMM::RMessageID &    parentID()            { return m.parentID();    }
-        const QString &        subject()    const    { return m.subject();    }
-        RMM::RMailbox &        sender()            { return m.sender();    }
-        RMM::RDateTime &    date()                { return m.date();        }
-        RMM::MessageStatus    status()    const    { return m.status();    }
-        Q_UINT32            size()        const    { return m.size();        }
+        const QString &     id()        const   { return m.id();        }
+        RMM::RMessageID &   messageID()         { return m.messageID(); }
+        RMM::RMessageID &   parentID()          { return m.parentID();  }
+        const QString &     subject()   const   { return m.subject();   }
+        RMM::RMailbox &     sender()            { return m.sender();    }
+        RMM::RDateTime &    date()              { return m.date();      }
+        RMM::MessageStatus  status()    const   { return m.status();    }
+        Q_UINT32            size()      const   { return m.size();      }
         
         const char * className() const { return "EmpathMessageListItem"; }
         

@@ -27,6 +27,11 @@
 #include "EmpathFolder.h"
 #include "Empath.h"
 
+// Implementation note:
+// The actual data (the value) is composed of an 8-bit byte, used for
+// marking status, plus a serialised version of an EmpathIndexRecord.
+// This saves us the time it takes to [de]serialise records.
+
 EmpathIndex::EmpathIndex()
     :   blockSize_(1024)
 {
@@ -66,25 +71,27 @@ EmpathIndex::record(const QCString & key)
     }
     
     datum k;
-    k.dptr  = const_cast<char *>(key.data());
+    k.dptr  = key.data();
     k.dsize = key.length();
     
     datum out = gdbm_fetch(dbf_, k);
 
-    if (out.dptr == NULL) {
+    if (!out.dptr) {
         empathDebug("does not exist");
         return 0;
     }
     
     QByteArray a;
-    a.setRawData(out.dptr, out.dsize);
+    a.setRawData(out.dptr + 1, out.dsize - 1);
     
     EmpathIndexRecord * rec = new EmpathIndexRecord;
 
     QDataStream s(a, IO_ReadOnly);
     s >> *rec;
     
-    a.resetRawData(out.dptr, out.dsize);
+    a.resetRawData(out.dptr + 1, out.dsize - 1);
+    
+    rec->setStatus((RMM::MessageStatus)(out.dptr[0]));
     
     return rec;
 }
@@ -92,40 +99,22 @@ EmpathIndex::record(const QCString & key)
     Q_UINT32
 EmpathIndex::countUnread()
 {
-    return 0;
     empathDebug("");
-
+    
     if (!dbf_) {
         empathDebug("dbf is not open");
         return 0;
     }
 
-    Q_UINT32 count;
-
-    datum key = gdbm_firstkey(dbf_);
+    Q_UINT32 count = 0;
     
-    QByteArray a;
+    datum key = gdbm_firstkey(dbf_);
     
     while (key.dptr) {
 
-        // We could do this much more efficiently by having
-        // a single byte at the start of each value datum,
-        // and using that to store the status. This would
-        // require a little work in other methods, namely
-        // ignoring the first byte.
-#if 0
-        a.setRawData(key.dptr, key.dsize);
-
-        EmpathIndexRecord rec;
-    
-        QDataStream s(a, IO_ReadOnly);
-        
-        s >> rec;
-   
-        if (rec.status() & RMM::Read)
-#endif
+        if (!((RMM::MessageStatus)(key.dptr[0]) & RMM::Read))
             ++count;
-        
+
         key = gdbm_nextkey(dbf_, key);
     }
     
@@ -136,7 +125,6 @@ EmpathIndex::countUnread()
     Q_UINT32
 EmpathIndex::count()
 {
-    return 0;
     empathDebug("");
     
     if (!dbf_) {
@@ -144,11 +132,9 @@ EmpathIndex::count()
         return 0;
     }
 
-    Q_UINT32 count;
+    Q_UINT32 count = 0;
     
     datum key = gdbm_firstkey(dbf_);
-    
-    QByteArray a;
     
     while (key.dptr) {
 
@@ -224,7 +210,7 @@ EmpathIndex::allKeys()
 
     while (key.dptr) {
         
-        QCString s(key.dptr,key.dsize + 1);
+        QCString s(key.dptr, key.dsize + 1);
         
         l.append(s);
         
@@ -243,7 +229,7 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
         empathDebug("dbf is not open");
         return false;
     }
-
+    
 
     datum k;
     k.dptr  = key.data();
@@ -253,9 +239,14 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
     QDataStream s(a, IO_WriteOnly);
     s << rec;
     
+    unsigned int dataSize = 1 + a.size();
+    char * data = new char[dataSize];
+    memcpy(data + 1, a.data(), a.size());
+    data[0] = (unsigned char)(rec.status());
+    
     datum d;
-    d.dptr  = a.data();
-    d.dsize = a.size();
+    d.dptr  = data;
+    d.dsize = dataSize;
     
     int retval = gdbm_store(dbf_, k, d, GDBM_REPLACE);
     
@@ -291,7 +282,6 @@ EmpathIndex::clear()
         empathDebug("dbf is not open");
         return;
     }
-
     
     datum key = gdbm_firstkey(dbf_);
 
@@ -301,6 +291,34 @@ EmpathIndex::clear()
         key = gdbm_nextkey(dbf_, key);
     }
 
+}
+
+    void
+EmpathIndex::setStatus(const QString & id, RMM::MessageStatus status)
+{
+    if (!dbf_) {
+        empathDebug("dbf is not open");
+        return;
+    }
+    
+    datum k;
+    k.dptr  = const_cast<char *>(id.data());
+    k.dsize = id.length();
+    
+    datum changer = gdbm_fetch(dbf_, k);
+
+    if (!changer.dptr) {
+        empathDebug("does not exist");
+        return;
+    }
+    
+    changer.dptr[0] = (unsigned char)(status);
+
+    int retval = gdbm_store(dbf_, k, changer, GDBM_REPLACE);
+
+    if (retval == -1) {
+        empathDebug("Couldn't replace record");
+    }
 }
 
 // vim:ts=4:sw=4:tw=78
