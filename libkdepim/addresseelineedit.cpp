@@ -320,28 +320,39 @@ void AddresseeLineEdit::enableCompletion( bool enable )
   m_useCompletion = enable;
 }
 
+QString AddresseeLineEdit::completionSearchText( QString& prevAddr /* out parameter */ )
+{
+  if ( completionBox() && completionBox()->isVisible() ) {
+    // The popup is visible already - do the matching on the initial string,
+    // not on the currently selected one.
+    prevAddr = m_previousAddresses;
+    return completionBox()->cancelledText();
+  } else {
+    QString s( text() );
+    int n = s.findRev(',');
+    if ( n >= 0 ) {
+      ++n; // Go past the ","
+
+      int len = s.length();
+
+      // Increment past any whitespace...
+      while ( n < len && s[ n ].isSpace() )
+        ++n;
+
+      prevAddr = s.left( n );
+      s = s.mid( n ).stripWhiteSpace();
+    }
+    return s;
+  }
+}
+
 void AddresseeLineEdit::doCompletion( bool ctrlT )
 {
   if ( !m_useCompletion )
     return;
 
   QString prevAddr;
-
-  QString s( text() );
-  int n = s.findRev(',');
-
-  if ( n >= 0 ) {
-    n++; // Go past the ","
-
-    int len = s.length();
-
-    // Increment past any whitespace...
-    while ( n < len && s[ n ].isSpace() )
-      n++;
-
-    prevAddr = s.left( n );
-    s = s.mid( n, 255 ).stripWhiteSpace();
-  }
+  const QString s = completionSearchText( prevAddr );
 
   if ( s_addressesDirty )
     loadContacts(); // read from local address book
@@ -375,11 +386,12 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
       m_previousAddresses = prevAddr;
       QStringList items = s_completion->allMatches( s );
       items += s_completion->allMatches( "\"" + s );
-      //kdDebug(5300) << "     AddresseeLineEdit::doCompletion() found: " << items.join(" AND ") << endl;
       uint beforeDollarCompletionCount = items.count();
 
       if ( s.find( ' ' ) == -1 ) // one word, possibly given name
         items += s_completion->allMatches( "$$" + s );
+
+      //kdDebug(5300) << "     AddresseeLineEdit::doCompletion() found: " << items.join(" AND ") << endl;
 
       if ( items.isEmpty() ) {
         setCompletedItems( items, false );
@@ -628,16 +640,31 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
 
 void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSuggest )
 {
-    QString txt = text();
+    QString prevAddr;
+    const QString txt = completionSearchText( prevAddr );
+    KCompletionBox* completionBox = this->completionBox();
 
     if ( !items.isEmpty() &&
          !(items.count() == 1 && txt == items.first()) )
     {
-        if ( !txt.isEmpty() )
-            completionBox()->setCancelledText( txt );
-
-        completionBox()->setItems( items );
-        completionBox()->popup();
+        if ( completionBox->isVisible() )
+        {
+          const QString currentSelection = completionBox->currentText();
+          completionBox->setItems( items );
+          QListBoxItem* item = completionBox->findItem( currentSelection, Qt::ExactMatch );
+          if ( item )
+          {
+            completionBox->setCurrentItem( item );
+            completionBox->setSelected( item, true );
+          }
+        }
+        else // completion box not visible yet -> show it
+        {
+          if ( !txt.isEmpty() )
+            completionBox->setCancelledText( txt );
+          completionBox->setItems( items );
+          completionBox->popup();
+        }
 
         if ( autoSuggest )
         {
@@ -649,8 +676,8 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
     }
     else
     {
-        if ( completionBox() && completionBox()->isVisible() )
-            completionBox()->hide();
+        if ( completionBox && completionBox->isVisible() )
+            completionBox->hide();
     }
 }
 

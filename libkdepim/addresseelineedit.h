@@ -108,6 +108,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
 
     void setCompletedItems( const QStringList& items, bool autoSuggest );
     void addCompletionItem( const QString& string, int weight );
+    QString completionSearchText( QString& );
 
     QString m_previousAddresses;
     bool m_useCompletion;
