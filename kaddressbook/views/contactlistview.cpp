@@ -159,6 +159,7 @@ ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
 QString ContactListViewItem::key(int column, bool ascending) const
 {
 #if KDE_VERSION >= 319
+  Q_UNUSED( ascending )
   return mFields[ column ]->sortKey( mAddressee );
 #else
   return QListViewItem::key( column, ascending ).lower();
