@@ -27,6 +27,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
+#include <config.h>
+
 static const char *interactivesync_id =
 	"$Id$";
 
@@ -285,7 +287,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Adding " << s << " to restore list." << endl;
 #endif
 
-		qstrcpy(dbi.name, QFile::encodeName(dirname + s));
+		strlcpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
 
 		f = pi_file_open(dbi.name);
 		if (!f)
@@ -490,6 +492,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.15  2002/11/27 21:29:06  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.14  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //
