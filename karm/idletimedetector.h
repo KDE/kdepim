@@ -10,6 +10,7 @@ class QTimer;
  #include <X11/Xlib.h>
  #include <X11/Xutil.h>
  #include <X11/extensions/scrnsaver.h>
+ #include <fixx11h.h>
 #endif // HAVE_LIBXSS
 
 // Seconds per minutes - useful for speeding debugging up!
