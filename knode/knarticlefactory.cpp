@@ -312,87 +312,88 @@ void KNArticleFactory::createForward(KNArticle *a)
 
 void KNArticleFactory::createCancel(KNArticle *a)
 {
+  if(!cancelAllowed(a))
+    return;
 
   if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget,
     i18n("Do you really want to cancel this article?")))
     return;
 
-  if(!cancelAllowed(a))
+  bool sendNow;
+  switch (KMessageBox::warningYesNoCancel(knGlobals.topWidget, i18n("Do you want to send the cancel\nmessage now or later?"), i18n("Question"),i18n("&Now"),i18n("&Later"))) {
+    case KMessageBox::Yes : sendNow = true; break;
+    case KMessageBox::No :  sendNow = false; break;
+    default :               return;
+  }
+
+  KNGroup *grp;
+  KNNntpAccount *nntp;
+
+  if(a->type()==KNMimeBase::ATremote)
+    nntp=(static_cast<KNGroup*>(a->collection()))->account();
+  else {
+    KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
+    la->setCanceled(true);
+    la->updateListItem();
+    nntp=knGlobals.accManager->account(la->serverId());
+    if(!nntp)
+      nntp=knGlobals.accManager->first();
+    if(!nntp) {
+      KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news-account configured!"));
+      return;
+    }
+  }
+
+  grp=knGlobals.grpManager->group(a->newsgroups()->firstGroup(), nntp);
+
+  QString sig;
+  KNLocalArticle *art=newArticle(grp, sig, false);
+  if(!art)
     return;
 
+  //init
+  art->contentType()->setCharset("US-ASCII");
+  art->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
+  art->setDoPost(true);
+  art->setDoMail(false);
 
-    bool sendNow;
-    switch (KMessageBox::warningYesNoCancel(knGlobals.topWidget, i18n("Do you want to send the cancel\nmessage now or later?"), i18n("Question"),i18n("&Now"),i18n("&Later"))) {
-      case KMessageBox::Yes : sendNow = true; break;
-      case KMessageBox::No :  sendNow = false; break;
-      default :               return;
-    }
+  //server
+  art->setServerId(nntp->id());
 
-    KNGroup *grp;
-    KNNntpAccount *nntp;
+  //subject
+  KNHeaders::MessageID *msgId=a->messageID();
+  QCString tmp;
+  tmp="cancel of "+msgId->as7BitString(false);
+  art->subject()->from7BitString(tmp);
 
-    if(a->type()==KNMimeBase::ATremote)
-      nntp=(static_cast<KNGroup*>(a->collection()))->account();
-    else {
-      KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
-      la->setCanceled(true);
-      la->updateListItem();
-      nntp=knGlobals.accManager->account(la->serverId());
-      if(!nntp)
-        nntp=knGlobals.accManager->first();
-      if(!nntp) {
-        KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news-account configured!"));
-        return;
-      }
-    }
+  //newsgroups
+  art->newsgroups()->from7BitString( a->newsgroups()->as7BitString(false) );
 
-    grp=knGlobals.grpManager->group(a->newsgroups()->firstGroup(), nntp);
+  //control
+  tmp="cancel "+msgId->as7BitString(false);
+  art->control()->from7BitString(tmp);
 
-    QString sig;
-    KNLocalArticle *art=newArticle(grp, sig, false);
-    if(!art)
-      return;
+  //Lines
+  art->lines()->setNumberOfLines(1);
 
-    //init
-    art->contentType()->setCharset("US-ASCII");
-    art->contentTransferEncoding()->setCte(KNHeaders::CE7Bit);
-    art->setDoPost(true);
-    art->setDoMail(false);
+  //body
+  art->fromUnicodeString(QString::fromLatin1("cancel by original author\n"));
 
-    //server
-    art->setServerId(nntp->id());
+  //assemble
+  art->assemble();
 
-    //subject
-    KNHeaders::MessageID *msgId=a->messageID();
-    QCString tmp;
-    tmp="cancel of "+msgId->as7BitString(false);
-    art->subject()->from7BitString(tmp);
-
-    //newsgroups
-    art->newsgroups()->from7BitString( a->newsgroups()->as7BitString(false) );
-
-    //control
-    tmp="cancel "+msgId->as7BitString(false);
-    art->control()->from7BitString(tmp);
-
-    //Lines
-    art->lines()->setNumberOfLines(1);
-
-    //body
-    art->fromUnicodeString(QString::fromLatin1("cancel by original author\n"));
-
-    //assemble
-    art->assemble();
-
-    //send
-    KNLocalArticle::List lst;
-    lst.append(art);
-    sendArticles(&lst, sendNow);
+  //send
+  KNLocalArticle::List lst;
+  lst.append(art);
+  sendArticles(&lst, sendNow);
 }
 
 
 void KNArticleFactory::createSupersede(KNArticle *a)
 {
+  if(!cancelAllowed(a))
+    return;
+
   if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget,
     i18n("Do you really want to supersede this article?")))
     return;
@@ -430,13 +431,13 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   art->setServerId(nntp->id());
 
   //subject
-  art->subject()->fromUnicodeString(a->subject()->asUnicodeString(), QFont::AnyCharSet);
-
-  //to
-  art->to()->from7BitString(a->to()->as7BitString(false));
+  art->subject()->fromUnicodeString(a->subject()->asUnicodeString(), a->subject()->rfc2047Charset());
 
   //newsgroups
   art->newsgroups()->from7BitString(a->newsgroups()->as7BitString(false));
+
+  //followup-to
+  art->followUpTo()->from7BitString(a->followUpTo()->as7BitString(false));
 
   //References
   art->references()->from7BitString(a->references()->as7BitString(false));
@@ -449,7 +450,6 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   KNMimeContent *textContent=a->textContent();
   if(textContent)
     textContent->decodedText(text);
-
 
   //open composer
   KNComposer *c=new KNComposer(art, text, sig);
