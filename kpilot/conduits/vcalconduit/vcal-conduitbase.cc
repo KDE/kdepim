@@ -424,7 +424,7 @@ void VCalConduitBase::slotPCRecToPalm()
 #ifdef DEBUG
 		DEBUGCONDUIT<<fname<<": found PC entry with pilotID "<<ix<<endl;
 		DEBUGCONDUIT<<fname<<": Description: "<<e->summary()<<endl;
-		DEBUGCONDUIT<<fname<<": Time: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
+		DEBUGCONDUIT<<fname<<": Time: "<<e->dtStart().toString()<<" until "<<e->dtEnd().toString()<<endl;
 #endif
 	PilotRecord *s=0L;
 	if (ix>0 && (s=fDatabase->readRecordById(ix)))
@@ -566,13 +566,6 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 			// similar entry found, so just copy, no need to insert again
 			incidenceFromRecord(e,de);
 		}
-/*	if (e && de)
-	{
-
-		incidenceFromRecord(e,de);
-		// TODO: find out if there is already an entry with this data...
-
-		fP->addIncidence(e);*/
 	}
 	KPILOT_DELETE(de);
 	return e;

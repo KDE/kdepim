@@ -271,7 +271,7 @@ void VCalConduit::setStartEndTimes(KCal::Event *e,const PilotDateEntry *de)
 	FUNCTIONSETUP;
 	e->setDtStart(readTm(de->getEventStart()));
 #ifdef DEBUG
-	DEBUGCONDUIT<<"Start time on Palm: "<<readTm(de->getEventStart())<<", on PC: "<<e->dtStart()<<endl;
+	DEBUGCONDUIT<<"Start time on Palm: "<<readTm(de->getEventStart()).toString()<<", on PC: "<<e->dtStart().toString()<<endl;
 #endif
 	e->setFloats(de->isEvent());
 
