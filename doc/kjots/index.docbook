@@ -305,7 +305,7 @@ textbox. Note that this only searches the current page.
 <guimenu>Edit</guimenu>
 <guimenuitem>Find Next</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Searches</action> for the next occurance
+<listitem><para><action>Searches</action> for the next occurrence
 of the search text (specified with Find).</para></listitem>
 </varlistentry>
 
