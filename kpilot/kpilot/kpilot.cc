@@ -35,36 +35,19 @@ static const char *kpilot_id =
 #include "options.h"
 #endif
 
-#if 0
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
-#endif
-
 #ifndef QFILE_H
 #include <qfile.h>
 #endif
 
-#ifndef QLIST_H
-#include <qlist.h>
-#endif
+#include <qptrlist.h>
 
 #ifndef QSTRING_H
 #include <qstring.h>
 #endif
 
-#ifndef QLISTBOX_H
-#include <qlistbox.h>
-#endif
-
-#ifndef QCOMBOBOX_H
-#include <qcombobox.h>
-#endif
-
 #include <qvbox.h>
+#include <qtimer.h>
+
 #include <kjanuswidget.h>
 
 #ifndef _KURL_H_
@@ -81,9 +64,6 @@ static const char *kpilot_id =
 #endif
 #ifndef _KWIN_H_
 #include <kwin.h>
-#endif
-#ifndef _KPROCESS_H_
-#include <kprocess.h>
 #endif
 #ifndef _KCOMBOBOX_H_
 #include <kcombobox.h>
@@ -115,12 +95,8 @@ static const char *kpilot_id =
 #ifndef _KUNIQUEAPP_H_
 #include <kuniqueapp.h>
 #endif
-#ifndef _KKDEYDIALOG_H_
 #include <kkeydialog.h>
-#endif
-#ifndef _KEDITTOOLBAR_H_
 #include <kedittoolbar.h>
-#endif
 
 #include <kprogress.h>
 
@@ -334,6 +310,8 @@ void KPilotInstaller::initComponents()
 
 #undef ADDICONPAGE
 #undef VIEWICON
+
+	QTimer::singleShot(500,this,SLOT(initializeComponents()));
 }
 
 
@@ -531,7 +509,6 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		<< (int) p << " called " << p->name("(none)") << endl;
 #endif
 
-	p->initialize();
 	fP->list().append(p);
 
 	// The first component added gets id 1, while the title
@@ -575,6 +552,16 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		this, SLOT(slotSelectComponent(PilotComponent *)));
 }
 
+/* slot */ void KPilotInstaller::initializeComponents()
+{
+	FUNCTIONSETUP;
+	
+	for (PilotComponent *p = fP->list().first();
+		p ; p = fP->list().next())
+	{
+		p->initialize();
+	}
+}
 
 
 void KPilotInstaller::optionsShowToolbar()
