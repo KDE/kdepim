@@ -30,6 +30,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kstandarddirs.h>
 
 #include "vcaldrag.h"
 #include "vcalformat.h"
@@ -154,11 +155,17 @@ bool ResourceLocal::load()
 {
   if ( !mOpen ) return true;
 
-  bool success = mCalendar.load( mURL.path() );
+  bool success;
 
-  d->mLastModified = readLastModified();
+  if ( !KStandardDirs::exists( mURL.path() ) ) {
+    kdDebug() << "ResourceLocal::load(): File doesn't exist yet." << endl;
+    success = true;
+  } else {
+    success = mCalendar.load( mURL.path() );
+    if ( success ) d->mLastModified = readLastModified();
+  }
 
-  emit resourceLoaded( this );
+  if ( success ) emit resourceLoaded( this );
 
   return success;
 }
