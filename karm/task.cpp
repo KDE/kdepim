@@ -174,14 +174,12 @@ bool Task::parseEvent( KCal::Event* event, long& minutes, QString& name, int& le
     level = 0;
 
   QString desktopList = event->customProperty( kapp->instanceName(), QCString( "desktopList" ) );
-  kdDebug() << "Have desktop list of: " << desktopList << endl;
   QStringList desktopStrList = QStringList::split( QString::fromLatin1( "\\," ), desktopList );
   desktops.clear();
   for ( QStringList::iterator iter = desktopStrList.begin(); iter != desktopStrList.end(); ++iter ) {
     int desktopInt = (*iter).toInt( &ok );
     if ( ok ) {
       desktops.push_back( desktopInt );
-      kdDebug() << "Just added desktop: " << desktopInt << endl;
     }
   }
 
