@@ -89,7 +89,10 @@ static KCmdLineOptions kpilotoptions[] = {
 	{ "PCtoHH",
 		I18N_NOOP("Copy Desktop to Pilot."),
 		0 } ,
-	{ "bug-timeout",
+	{ "test-timeout",
+		I18N_NOOP("Run conduit specially designed to timeout."),
+		0 } ,
+	{ "test-usercheck",
 		I18N_NOOP("Run conduit specially designed to timeout."),
 		0 } ,
 #ifdef DEBUG
@@ -232,7 +235,7 @@ int syncTest(KCmdLineArgs *p)
 		syncStack->queueInit(0);
 		syncStack->addAction(new RestoreAction(deviceLink));
 	}
-	else if (p->isSet("bug-timeout"))
+	else if (p->isSet("test-timeout"))
 	{
 		syncStack->queueInit();
 		syncStack->addAction( new TimeoutAction(deviceLink) );
@@ -240,7 +243,7 @@ int syncTest(KCmdLineArgs *p)
 	}
 	else
 	{
-		syncStack->queueInit();
+		syncStack->queueInit(p->isSet("test-usercheck") /* whether to run usercheck */);
 		syncStack->addAction(new TestLink(deviceLink));
 	}
 	syncStack->queueCleanup();
@@ -359,7 +362,8 @@ int main(int argc, char **argv)
 	if ( p->isSet("backup") ||
 		p->isSet("restore") ||
 		p->isSet("list") ||
-		p->isSet("bug-timeout") )
+		p->isSet("test-timeout") ||
+		p->isSet("test-usercheck") )
 	{
 		return syncTest(p);
 	}
