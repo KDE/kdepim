@@ -18,7 +18,9 @@
 //#define HAVE_SGI_STL
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qgroupbox.h>
 
+#include <ktempfile.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobalsettings.h>
@@ -42,7 +44,8 @@
 
 
 KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
-    :	KTMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n), attChanged(false)
+    :	KTMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n), attChanged(false),
+      externalEdited(false), externalEditor(0), editorTempfile(0)
 {
 	if(!sig.isEmpty()) s_ignature=sig.copy();	
 	
@@ -50,15 +53,17 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   view=new ComposerView(this, a_rticle->isMail());
 	setView(view);
 	connect(view->subject, SIGNAL(textChanged(const QString&)),
-		this, SLOT(slotSubjectChanged(const QString&)));
+      		this, SLOT(slotSubjectChanged(const QString&)));
 	if(!a_rticle->isMail()) {
 		connect(view->fupCheck, SIGNAL(toggled(bool)),
-			this, SLOT(slotFupCheckToggled(bool)));
+      			this, SLOT(slotFupCheckToggled(bool)));
 	}
-	connect(view->dest, SIGNAL(textChanged(const QString&)),
-		this, SLOT(slotDestinationChanged(const QString&)));
-	connect(view->destButton, SIGNAL(clicked()),
-		this, SLOT(slotDestButtonClicked()));
+  connect(view->dest, SIGNAL(textChanged(const QString&)),
+          this, SLOT(slotDestinationChanged(const QString&)));
+  connect(view->destButton, SIGNAL(clicked()),
+          this, SLOT(slotDestButtonClicked()));
+	connect(view->cancelEditorButton, SIGNAL(clicked()),
+          this, SLOT(slotCancelEditor()));      		
 		
   // file menu
   new KAction(i18n("&Send Now"),"sendnow", 0 , this, SLOT(slotSendNow()),
@@ -81,8 +86,10 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   KStdAction::find(this, SLOT(slotFind()), actionCollection());
   KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
   KStdAction::replace(this, SLOT(slotReplace()), actionCollection());
-  KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
-
+  actExternalEditor = new KAction(i18n("&Start External Editor"), 0, this, SLOT(slotExternalEditor()),
+                                  actionCollection(), "external_editor");
+  actSpellCheck = KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
+		
   // attach menu
   new KAction(i18n("Append &Signature"), "signature", 0 , this, SLOT(slotAppendSig()),
                    actionCollection(), "append_signature");
@@ -101,15 +108,24 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
 
 	//init data	
 	initData();
-	if(appSig) slotAppendSig();
+	if (appSig) slotAppendSig();
+	
 	setConfig();
 	restoreWindowSize("composer", this, sizeHint());
+	
+	if (useExternalEditor) slotExternalEditor();
 }
 
 
 KNComposer::~KNComposer()
 {
-	saveWindowSize("composer", size());	
+  delete spellChecker;
+  delete externalEditor;  // this also kills the editor process if it's still running
+  if (editorTempfile) {
+    editorTempfile->unlink();
+    delete editorTempfile;
+  }
+  saveWindowSize("composer", size());	
 }
 
 
@@ -144,7 +160,12 @@ void KNComposer::initData()
 	if(body) {
 		for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine())
 			view->edit->insertLine(line);
-	}
+	} else {
+	  if (appSig) {
+  	  view->edit->insertLine("");
+  	  view->edit->insertLine("");
+  	}
+	}	
 		
 	if(a_rticle->subject().isEmpty()) slotSubjectChanged(QString::null);
 	else view->subject->setText(a_rticle->subject());
@@ -160,9 +181,9 @@ bool KNComposer::hasValidData()
 
 void KNComposer::bodyContent(KNMimeContent *b)
 {
-	b->clearBody();
-	for(int idx=0; idx < view->edit->numLines(); idx++)
-			b->addBodyLine(view->edit->textLine(idx).local8Bit());
+  b->clearBody();
+  for(int idx=0; idx < view->edit->numLines(); idx++)
+    b->addBodyLine(view->edit->textLine(idx).local8Bit());
 }
 
 
@@ -172,6 +193,37 @@ QCString KNComposer::followUp2()
 	if(view->fupCheck->isChecked() && view->fup2->count()!=0)
 		ret=view->fup2->currentText().local8Bit();
 	return ret;
+}
+
+
+// inserts at cursor position if clear is false, replaces content otherwise
+void KNComposer::insertFile(QString fileName, bool clear=false)
+{
+  unsigned int len = QFileInfo(fileName).size();
+  unsigned int readLen;
+  QCString temp;
+  QFile file(fileName);
+
+  if (!file.open(IO_Raw|IO_ReadOnly)) {
+    if (clear)                // ok, not pretty, assuming that we load a tempfile when clear==true (external editor)
+      displayTempFileError();
+    else
+      displayExternalFileError();
+  } else {
+    temp.resize(len + 2);
+    readLen = file.readBlock(temp.data(), len);
+    if (temp[len-1]!='\n')
+      temp[len++] = '\n';
+    temp[len] = '\0';
+  }
+
+  if (clear) {
+    view->edit->setText(temp);
+  } else {
+    int editLine,editCol;
+    view->edit->getCursorPosition(&editLine, &editCol);
+    view->edit->insertAt(temp, editLine, editCol);
+  }
 }
 
 
@@ -319,10 +371,82 @@ void KNComposer::slotReplace()
 }
 
 
+void KNComposer::slotExternalEditor()
+{
+  if (externalEditor)   // in progress...
+    return;
+
+  if (externalEditorCommand.isEmpty())
+    KMessageBox::error(0, i18n("No editor configured.\nPlease do this in the settings dialog."));
+
+  if (editorTempfile) {       // shouldn't happen...
+    editorTempfile->unlink();
+    delete editorTempfile;
+    editorTempfile = 0;
+  }
+
+  editorTempfile = new KTempFile();
+
+  if (editorTempfile->status()!=0) {
+    displayTempFileError();
+    editorTempfile->unlink();
+    delete editorTempfile;
+    editorTempfile = 0;
+    return;
+  }
+
+  editorTempfile->file()->writeBlock(view->edit->text().local8Bit());
+  editorTempfile->close();
+
+  if (editorTempfile->status()!=0) {
+    displayTempFileError();
+    editorTempfile->unlink();
+    delete editorTempfile;
+    editorTempfile = 0;
+    return;
+  }
+
+  externalEditor = new KProcess();
+	
+	KNStringSplitter split;       // construct command line...
+ 	split.init(externalEditorCommand.local8Bit(), " ");	
+ 	bool filenameAdded = false;
+  bool splitOk=split.first();
+  while(splitOk) {
+    if (split.string()=="%f") {
+      (*externalEditor) << editorTempfile->name();
+      filenameAdded = true;
+    } else
+      (*externalEditor) << split.string();
+   	splitOk=split.next();
+  }
+  if (!filenameAdded)    // no %f in the editor command
+    (*externalEditor) << editorTempfile->name();
+
+  connect(externalEditor, SIGNAL(processExited(KProcess *)),this, SLOT(slotEditorFinished(KProcess *)));
+  if (!externalEditor->start()) {
+    KMessageBox::error(0, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
+    delete externalEditor;
+    externalEditor = 0;
+    editorTempfile->unlink();
+    delete editorTempfile;
+    editorTempfile = 0;
+    return;
+  }
+	
+  actExternalEditor->setEnabled(false);   // block other edit action while the editor is running...
+  actSpellCheck->setEnabled(false);
+  view->showExternalNotification();
+}
+
+
 void KNComposer::slotSpellcheck()
 {
-  if (spellChecker)  // In progress...
+  if (spellChecker)    // in progress...
     return;
+
+  actExternalEditor->setEnabled(false);
+  actSpellCheck->setEnabled(false);
 
   spellChecker = new KSpell(this, i18n("Spellcheck"), this,
                             SLOT(slotSpellStarted(KSpell *)));
@@ -372,28 +496,11 @@ void KNComposer::slotInsertFile()
     if (!KIO::NetAccess::download(url, fileName))
       return;
 
-  unsigned int len = QFileInfo(fileName).size();
-  unsigned int readLen;
-  QCString temp;
-  QFile file(fileName);
-
-  if (!file.open(IO_Raw|IO_ReadOnly)) {
-    displayExternalFileError();
-  } else {
-    temp.resize(len + 2);
-    readLen = file.readBlock(temp.data(), len);
-    if (temp[len-1]!='\n')
-      temp[len++] = '\n';
-    temp[len] = '\0';
-  }
+  insertFile(fileName);
 
   if (!url.isLocalFile()) {
     KIO::NetAccess::removeTempFile(fileName);
   }
-
-  int editLine,editCol;
-  view->edit->getCursorPosition(&editLine, &editCol);
-  view->edit->insertAt(temp, editLine, editCol);
 }
 
 
@@ -449,15 +556,21 @@ void KNComposer::slotSpellStarted( KSpell *)
 
 void KNComposer::slotSpellDone(const QString &newtext)
 {
+  actExternalEditor->setEnabled(true);
+  actSpellCheck->setEnabled(true);
   view->edit->spellcheck_stop();
   if (spellChecker->dlgResult() == 0)
     view->edit->setText(newtext);
   spellChecker->cleanUp();
+  delete spellChecker;
+  spellChecker = 0;
 }
 
 
-void KNComposer::slotSpellFinished( )
+void KNComposer::slotSpellFinished()
 {
+  actExternalEditor->setEnabled(true);
+  actSpellCheck->setEnabled(true);
   KSpell::spellStatus status = spellChecker->status();
   delete spellChecker;
   spellChecker = 0;
@@ -471,6 +584,26 @@ void KNComposer::slotSpellFinished( )
 }
 
 
+void KNComposer::slotEditorFinished(KProcess *)
+{
+  insertFile(editorTempfile->name(),true);
+  slotCancelEditor();   // cleanup...
+}
+
+
+void KNComposer::slotCancelEditor()
+{
+  delete externalEditor;  // this also kills the editor process if it's still running
+  externalEditor = 0;
+  editorTempfile->unlink();
+  delete editorTempfile;
+  editorTempfile = 0;
+
+  actExternalEditor->setEnabled(true);
+  actSpellCheck->setEnabled(true);
+  view->hideExternalNotification();
+}
+
 
 //=====================================================================================
 
@@ -483,14 +616,16 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
 	QWidget *editW=new QWidget(this);
 	QFrame *fr1=new QFrame(editW);
 	fr1->setFrameStyle(QFrame::Box | QFrame::Sunken);
-	l1=new QLabel(i18n("Subject:"), fr1);
 	subject=new QLineEdit(fr1);
-	if(mail) l2=new QLabel(i18n("To:"), fr1);
-	else l2=new QLabel(i18n("Groups:"), fr1);
+	l1=new QLabel(subject,i18n("S&ubject:"), fr1);
 	dest=new QLineEdit(fr1);
-	destButton=new QPushButton(i18n("Browse..."), fr1);
+  if (mail)
+    l2=new QLabel(dest, i18n("&To:"), fr1);
+  else
+    l2=new QLabel(dest, i18n("&Groups:"), fr1);
+	destButton=new QPushButton(i18n("&Browse..."), fr1);
 	if(!mail) {
-		fupCheck=new QCheckBox(i18n("Followup-To:"), fr1);
+		fupCheck=new QCheckBox(i18n("Followup-&To:"), fr1);
 		fupCheck->setMinimumSize(fupCheck->sizeHint());
 		fup2=new QComboBox(true, fr1);
 		fup2->setMinimumSize(fup2->sizeHint());
@@ -503,6 +638,17 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
 	edit=new KEdit(editW);
 	edit->setMinimumHeight(150);
 	
+  QVBoxLayout *l = new QVBoxLayout(edit);
+  l->addStretch(1);
+	notification=new QGroupBox(2,Qt::Horizontal,edit);
+	new QLabel(i18n("You are currently editing the article body in an external editor.\nTo continue you have to close the external editor."),notification);
+	cancelEditorButton=new QPushButton(i18n("&Kill external editor"), notification);
+	notification->setFrameStyle(QFrame::Panel | QFrame::Raised);
+	notification->setLineWidth(2);
+	notification->hide();
+	l->addWidget(notification,0,Qt::AlignHCenter);
+	l->addStretch(1);
+		
 	QGridLayout *frameL1=new QGridLayout(fr1, frameLines,3, 10,10);
 	frameL1->addWidget(l1, 0,0);
 	frameL1->addMultiCellWidget(subject, 0,0,1,2);
@@ -531,7 +677,7 @@ KNComposer::ComposerView::~ComposerView()
 
 
 
-void KNComposer::ComposerView::showAttachementList()
+void KNComposer::ComposerView::showAttachmentList()
 {
 	if(!attList) {
 		attList=new QListView(this);
@@ -541,11 +687,29 @@ void KNComposer::ComposerView::showAttachementList()
 
 
 
+void KNComposer::ComposerView::showExternalNotification()
+{
+  edit->setReadOnly(true);
+  notification->show();
+}
+
+
+
+void KNComposer::ComposerView::hideExternalNotification()
+{
+  edit->setReadOnly(false);
+  notification->hide();
+}
+
+
 //===============================================================
+
 bool KNComposer::appSig;
 bool KNComposer::useViewFnt;
+bool KNComposer::useExternalEditor;
 int KNComposer::lineLen;
 QString KNComposer::fntFam;
+QString KNComposer::externalEditorCommand;
 
 void KNComposer::readConfig()
 {
@@ -554,11 +718,11 @@ void KNComposer::readConfig()
 	lineLen=conf->readNumEntry("maxLength", 72);
 	appSig=conf->readBoolEntry("appSig", true);
 	useViewFnt=conf->readBoolEntry("useViewFont", false);
+	useExternalEditor=conf->readBoolEntry("useExternalEditor",false);
+	externalEditorCommand=conf->readEntry("externalEditor","kwrite %f");
 	conf->setGroup("FONTS-COLORS");
 	fntFam=conf->readEntry("family", "helvetica");
 }
-
-
 
 
 //--------------------------------

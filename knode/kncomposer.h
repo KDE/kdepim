@@ -25,9 +25,15 @@
 #include <ktmainwindow.h>
 #include <keditcl.h>
 
+class QGroupBox;
+
+class KSpell;
+class KProcess;
+class KTempFile;
+class KEdit;
+
 class KNNntpAccount;
 class KNSavedArticle;
-class KSpell;
 
 
 class KNComposer : public KTMainWindow  {
@@ -46,7 +52,7 @@ class KNComposer : public KTMainWindow  {
 		KNSavedArticle* article()	{ return a_rticle; }
 		bool hasValidData();
 		
-		bool textChanged()										{ return (view->edit->isModified()); }
+		bool textChanged()										{ return (view->edit->isModified() || externalEdited); }
 		bool attachmentsChanged()							{ return attChanged; }
 		void bodyContent(KNMimeContent *b);
 		QCString subject()                    { return QCString(view->subject->text().local8Bit()); }
@@ -58,7 +64,9 @@ class KNComposer : public KTMainWindow  {
 	  				
 	protected:
 		void closeEvent(QCloseEvent *e);
-		void initData();				
+		void initData();		
+		// inserts at cursor position if clear is false, replaces content otherwise
+		void insertFile(QString fileName, bool clear=false);
 	
 		class ComposerView  : public QSplitter {
 			
@@ -66,9 +74,13 @@ class KNComposer : public KTMainWindow  {
 			 	ComposerView(QWidget *parent=0, bool mail=false);
 			 	~ComposerView();
 			 	
-			 	void showAttachementList();
+			 	void showAttachmentList();
+			 	void showExternalNotification();
+			 	void hideExternalNotification();
 			
 				KEdit *edit;
+				QGroupBox *notification;
+				QPushButton *cancelEditorButton;
 				QListView *attList;
 				QLineEdit *subject, *dest;
 				QComboBox *fup2;
@@ -78,15 +90,21 @@ class KNComposer : public KTMainWindow  {
 		};
 		ComposerView *view;
 		KSpell *spellChecker;
+		KAction *actSpellCheck;
 		composerResult r_esult;
 		KNSavedArticle *a_rticle;
 		KNNntpAccount *nntp;
 		QCString s_ignature, d_estination;
 		bool attChanged;
 		
-		static bool appSig, useViewFnt;
+		bool externalEdited;
+		KAction *actExternalEditor;
+		KProcess *externalEditor;
+		KTempFile *editorTempfile;
+
+		static bool appSig, useViewFnt, useExternalEditor;
 		static int lineLen;
-		static QString fntFam;
+		static QString fntFam, externalEditorCommand;
 		
  	protected slots:
  		void slotDestinationChanged(const QString &t);
@@ -97,12 +115,13 @@ class KNComposer : public KTMainWindow  {
  		// action slots
  		void slotSendNow();
  		void slotSendLater(); 		
- 		void slotSaveAsDraft(); 		
+ 		void slotSaveAsDraft(); 	
  		void slotArtDelete();
   	void slotFileClose();
   	void slotFind();
   	void slotFindNext();
   	void slotReplace();
+ 		void slotExternalEditor();  	
   	void slotSpellcheck();
   	void slotAppendSig();
   	void slotInsertFile();
@@ -116,6 +135,10 @@ class KNComposer : public KTMainWindow  {
     void slotSpellStarted(KSpell *);
     void slotSpellDone(const QString&);
     void slotSpellFinished();
+
+    // external editor
+    void slotEditorFinished(KProcess *);
+    void slotCancelEditor();
 					
  	signals:
  		void composerDone(KNComposer*);
