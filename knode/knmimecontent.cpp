@@ -61,6 +61,12 @@ void KNMimeContent::initContent()
   	b_ody=new QStrList();
 		b_ody->setAutoDelete(true);
 	}
+	
+	if(ct_List) {
+	  delete ct_List;
+	  ct_List=0;
+	}
+	
 	if(!mInfo) mInfo=new KNMimeInfo();
 }
 
@@ -244,6 +250,32 @@ KNMimeInfo* KNMimeContent::mimeInfo()
 {
   if(!mInfo) mInfo=new KNMimeInfo();
   return mInfo;
+}
+
+
+
+void KNMimeContent::copyContent(KNMimeContent *c)
+{
+  KNMimeContent *content;
+  initContent();
+  *(this->mInfo) = *(c->mInfo);
+
+  *(this->h_ead) = *(c->h_ead);
+
+  if(c->b_ody) {
+    *(this->b_ody) = *(c->b_ody);
+  }
+  else if(c->ct_List) {
+    ct_List=new QList<KNMimeContent>;
+    ct_List->setAutoDelete(true);
+
+    for(KNMimeContent *var=c->ct_List->first(); var; var=c->ct_List->next()) {
+      content=new KNMimeContent();
+      content->copyContent(var);
+      ct_List->append(content);
+    }
+  }
+
 }
 
 
@@ -629,10 +661,8 @@ void KNMimeContent::toStream(QTextStream &ts)
 		boundary=mimeInfo()->getCTParameter("boundary");
 		if(boundary.isEmpty()) {
 			qDebug("KNMimeContent::toStream() : no boundary found - creating new one!!");
-			boundary=multiPartBoundary();
-			tmp="boundary=\""+boundary+"\"";
-			mimeInfo()->addCTParameter(tmp);
-		}
+			mimeInfo()->setBoundaryParameter(multiPartBoundary());
+	  }
 	}	
 	
 	for(line=h_ead->first(); line; line=h_ead->next())

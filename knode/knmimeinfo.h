@@ -30,6 +30,8 @@ class KNMimeInfo : public KNArticleBase {
 		KNMimeInfo();
 		~KNMimeInfo();
 	
+		void operator=(const KNMimeInfo &i);
+		
 		//parse
 		void parse(KNMimeContent *c);
 		
@@ -54,6 +56,10 @@ class KNMimeInfo : public KNArticleBase {
 		void setIsReadable(bool i)								{ i_sReadable=i; }
 		void setCustomMimeType(const QCString &m);
 		void addCTParameter(const QCString &s);
+		void setCTParameter(const QCString &name, const QCString &value);
+		void setCharsetParameter(const QCString &p);
+		void setBoundaryParameter(const QCString &p);
+		void setNameParameter(const QCString &p);
 			
 	protected:
 	 	QCString assembleMimeType();

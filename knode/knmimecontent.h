@@ -38,6 +38,7 @@ class KNMimeContent : public KNArticleBase  {
 		virtual void parse();
 		virtual void assemble();
 		virtual void clear();
+		virtual void copyContent(KNMimeContent *c);
 		void clearAttachements()				{ if(ct_List) ct_List->clear(); }		
 		void clearHead()								{ if(h_ead) h_ead->clear(); }		
 		void clearBody()								{ if(b_ody) b_ody->clear(); }				

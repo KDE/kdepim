@@ -37,6 +37,19 @@ KNMimeInfo::~KNMimeInfo()
 
 
 
+void KNMimeInfo::operator=(const KNMimeInfo &i)
+{
+  c_ontentType=i.c_ontentType.copy();
+  c_tCategory=i.c_tCategory;
+  c_tMType=i.c_tMType;
+  c_tSType=i.c_tSType;
+  c_tEncoding=i.c_tEncoding;
+  c_tDisposition=i.c_tDisposition;
+  i_sReadable=i.i_sReadable;
+}
+
+
+
 void KNMimeInfo::parse(KNMimeContent *c)
 {
   QCString tmp;
@@ -162,7 +175,7 @@ const QCString& KNMimeInfo::contentType()
     pos1=c_ontentType.find(';', pos1);
     if(pos1==-1) c_ontentType=assembleMimeType();
     else {
-      params=c_ontentType.right(c_ontentType.length()-pos1+1);
+      params=c_ontentType.right(c_ontentType.length()-pos1);
       c_ontentType=assembleMimeType()+params;
     }
   }
@@ -219,6 +232,50 @@ QCString KNMimeInfo::getCTParameter(const char* param)
 	}
 	qDebug("KNMimeInfo::getCTParameter() : %s = %s", param, ret.data());
 	return ret;
+}
+
+
+
+
+void KNMimeInfo::setCTParameter(const QCString &name, const QCString &value)
+{
+  int pos1=0, pos2=0;
+  QCString param=name;
+
+  pos1=c_ontentType.find(param, 0, false);
+  if(pos1==-1) {
+    param+="=\""+value+"\"";
+    addCTParameter(param);
+  }
+  else {
+    pos2=c_ontentType.find(';', pos1);
+    if(pos2==-1)
+      pos2=c_ontentType.length();
+    c_ontentType.remove(pos1, pos2-pos1);
+    param=name+"=\""+value+"\"";
+    c_ontentType.insert(pos1, param);
+  }
+}
+
+
+
+void KNMimeInfo::setCharsetParameter(const QCString &p)
+{
+  setCTParameter("charset", p);
+}
+
+
+
+void KNMimeInfo::setBoundaryParameter(const QCString &p)
+{
+  setCTParameter("boundary", p);
+}
+
+
+
+void KNMimeInfo::setNameParameter(const QCString &p)
+{
+  setCTParameter("name", p);
 }
 
 
