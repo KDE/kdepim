@@ -22,8 +22,8 @@
 #include "knsmtpclient.h"
 
 
-KNSmtpClient::KNSmtpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent, const char *name)
-: KNProtocolClient(NfdPipeIn,NfdPipeOut,parent,name)
+KNSmtpClient::KNSmtpClient(int NfdPipeIn, int NfdPipeOut)
+: KNProtocolClient(NfdPipeIn,NfdPipeOut)
 {}
 
 

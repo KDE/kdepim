@@ -14,10 +14,6 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-
-#include <pthread.h>
-
-
 #include <kmessagebox.h>
 #include <kuserprofile.h>
 #include <kopenwith.h>
@@ -204,15 +200,8 @@ void KNArticleManager::showHdrs(bool clear)
       knGlobals.top->articleView()->setArticle(0);
     }
 
-    if(g_roup->isLocked()) {
-      if (0!=pthread_mutex_lock(knGlobals.netAccess->nntpMutex())) {
-        kdDebug(5003) << "failed to lock nntp mutex" << endl;
-        knGlobals.top->setStatusMsg(QString::null);
-        updateStatusString();
-        knGlobals.top->setCursorBusy(false);
-        return;
-      }
-    }
+    if(g_roup->isLocked())
+      knGlobals.netAccess->nntpMutex().lock();     
 
     if(f_ilter)
       f_ilter->doFilter(g_roup);
@@ -297,8 +286,8 @@ void KNArticleManager::showHdrs(bool clear)
 
     d_isableExpander=false;
 
-    if (g_roup->isLocked() && (0!=pthread_mutex_unlock(knGlobals.netAccess->nntpMutex())))
-      kdDebug(5003) << "failed to unlock nntp mutex" << endl;
+    if (g_roup->isLocked())
+      knGlobals.netAccess->nntpMutex().unlock();     
   }
 
   else { //folder

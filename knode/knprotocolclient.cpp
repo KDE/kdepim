@@ -34,8 +34,8 @@
 #include "knprotocolclient.h"
 
 
-KNProtocolClient::KNProtocolClient(int NfdPipeIn, int NfdPipeOut, QObject *parent, const char *name)
-:  QObject(parent,name), job(0L), inputSize(10000), fdPipeIn(NfdPipeIn), fdPipeOut(NfdPipeOut), tcpSocket(-1)
+KNProtocolClient::KNProtocolClient(int NfdPipeIn, int NfdPipeOut)
+:  job(0L), inputSize(10000), fdPipeIn(NfdPipeIn), fdPipeOut(NfdPipeOut), tcpSocket(-1)
 {
   input = new char[inputSize];
 }
@@ -49,19 +49,15 @@ KNProtocolClient::~KNProtocolClient()
 }
 
 
-void* KNProtocolClient::startThread(void* pseudoThis)
+void KNProtocolClient::run()
 {
-  KNProtocolClient *newthis = static_cast<KNProtocolClient*>(pseudoThis);
-
   if (0!=pthread_setcanceltype(PTHREAD_CANCEL_ENABLE,NULL))
     qWarning("pthread_setcanceltype failed!");
   if (0!= pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL))
     qWarning("pthread_setcanceltype failed!");
 
   signal(SIGPIPE,SIG_IGN);   // ignore sigpipe
-
-  newthis->waitForWork();
-  return NULL;
+  waitForWork();
 }
 
 
@@ -121,7 +117,7 @@ void KNProtocolClient::waitForWork()
       FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
     } while (select(FD_SETSIZE, &fdsR, NULL, NULL, NULL)<0);  // don't get tricked by signals
-
+    
     clearPipe();      // remove start signal
 
     timer.start();
@@ -621,7 +617,3 @@ void KNProtocolClient::clearPipe()
   } while (selectRet == 1);
 }
 
-
-// -----------------------------------------------------------------------------
-
-#include "knprotocolclient.moc"

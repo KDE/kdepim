@@ -17,9 +17,8 @@
 #ifndef KNNETACCESS_H
 #define KNNETACCESS_H
 
-#include <pthread.h>
-
 #include <qobject.h>
+#include <qmutex.h>
 #include <qptrqueue.h>
 
 class QSocketNotifier;
@@ -47,7 +46,7 @@ class KNNetAccess : public QObject  {
     /** current statusbar message */
     QString currentMsg()         { return currMsg; }
 
-    pthread_mutex_t* nntpMutex() { return &nntp_Mutex; }
+    QMutex& nntpMutex() { return nntp_Mutex; }
 
   protected:
     /** passes a signal through the ipc-pipe to the net-thread */
@@ -68,9 +67,8 @@ class KNNetAccess : public QObject  {
     KNNntpClient *nntpClient;
     KNSmtpClient *smtpClient;   
     QPtrList<KNJobData> nntpJobQueue, smtpJobQueue;
-    KNJobData *currentNntpJob, *currentSmtpJob;
-    pthread_t nntpThread, smtpThread;
-    pthread_mutex_t nntp_Mutex;
+    KNJobData *currentNntpJob, *currentSmtpJob;    
+    QMutex nntp_Mutex;
     int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
     QSocketNotifier *nntpNotifier,*smtpNotifier;
 

@@ -17,18 +17,16 @@
 #ifndef KNNNTPCLIENT_H
 #define KNNNTPCLIENT_H
 
-#include <pthread.h>
+#include <qmutex.h>
 
 #include <knprotocolclient.h>
 
 
 class KNNntpClient : public KNProtocolClient  {
 
-  Q_OBJECT
-
   public:
     
-    KNNntpClient(int NfdPipeIn, int NfdPipeOut, pthread_mutex_t *nntpMutex, QObject *parent=0, const char *name=0);
+    KNNntpClient(int NfdPipeIn, int NfdPipeOut, QMutex& nntpMutex);
     ~KNNntpClient();
     
   protected:
@@ -52,7 +50,7 @@ class KNNntpClient : public KNProtocolClient  {
     bool switchToGroup(const QString &newGroup);
 
     QString currentGroup;
-    pthread_mutex_t *mutex;
+    QMutex& mutex;
     
 };
 

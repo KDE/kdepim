@@ -14,7 +14,6 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <pthread.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -63,21 +62,11 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
   // strange effects on FreeBSD
   (void) KSocks::self();
 
-  nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],&nntp_Mutex,this);
-  smtpClient=new KNSmtpClient(smtpOutPipe[0],smtpInPipe[1],this);
+  nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],nntp_Mutex);
+  smtpClient=new KNSmtpClient(smtpOutPipe[0],smtpInPipe[1]);
   
-  if(pthread_mutex_init(&nntp_Mutex, NULL)!=0) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nCannot initialize the nntp mutex!"));
-    kapp->exit(1);
-  }
-  if(pthread_create(&nntpThread, 0,&(nntpClient->startThread), nntpClient)!=0) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nCannot create the nntp-network-thread!"));
-    kapp->exit(1);
-  }
-  if(pthread_create(&smtpThread, 0,&(smtpClient->startThread), smtpClient)!=0) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nCannot create the smtp-network-thread!"));
-    kapp->exit(1);
-  }
+  nntpClient->start();
+  smtpClient->start();
   
   nntpJobQueue.setAutoDelete(false);    
   smtpJobQueue.setAutoDelete(false);    
@@ -89,17 +78,11 @@ KNNetAccess::~KNNetAccess()
 {
   disconnect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
   disconnect(smtpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
-  
-  if(pthread_cancel(nntpThread)!=0)
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot cancel nntp thread" << endl;
-  if (0!=pthread_join(nntpThread,NULL))                         // join is important...
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot join nntp thread" << endl;
-  if (0!=pthread_mutex_destroy(&nntp_Mutex))
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot destroy nntp mutex" << endl;
-  if(pthread_cancel(smtpThread)!=0)
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot cancel smtp thread" << endl;
-  if (0!=pthread_join(smtpThread,NULL))                         // join is important...
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot join smtp thread" << endl;
+
+  nntpClient->terminate();
+  nntpClient->wait();
+  smtpClient->terminate();
+  smtpClient->wait();
     
   delete nntpClient;
   delete smtpClient;

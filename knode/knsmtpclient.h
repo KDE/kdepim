@@ -22,10 +22,8 @@
 
 class KNSmtpClient : public KNProtocolClient  {
 
-  Q_OBJECT
-
   public:
-    KNSmtpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
+    KNSmtpClient(int NfdPipeIn, int NfdPipeOut);
     ~KNSmtpClient();
   
   protected:

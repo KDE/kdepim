@@ -17,17 +17,16 @@
 #include <stdlib.h>
 #include <klocale.h>
 #include <qtextcodec.h>
+#include <qmutex.h>
 
 #include "kngroupmanager.h"
 #include "knnntpclient.h"
 #include "utilities.h"
 
 
-KNNntpClient::KNNntpClient(int NfdPipeIn, int NfdPipeOut, pthread_mutex_t *nntpMutex, QObject *parent, const char *name)
-: KNProtocolClient(NfdPipeIn,NfdPipeOut,parent,name)
-{
-  mutex = nntpMutex;
-}
+KNNntpClient::KNNntpClient(int NfdPipeIn, int NfdPipeOut, QMutex& nntpMutex)
+: KNProtocolClient(NfdPipeIn,NfdPipeOut), mutex(nntpMutex)
+{}
 
 
 KNNntpClient::~KNNntpClient()
@@ -418,19 +417,10 @@ void KNNntpClient::doFetchNewHeaders()
     
   sendSignal(TSsortNew);
 
-  if (0==pthread_mutex_lock(mutex)) {
-    target->insortNewHeaders(&headers, this);
-    target->setLastNr(last);
-    if (0!=pthread_mutex_unlock(mutex)) {
-#ifndef NDEBUG
-      qDebug("knode: failed to unlock nntp mutex");
-#endif
-    }
-  } else {
-#ifndef NDEBUG
-    qDebug("knode: failed to lock nntp mutex");
-#endif
-  }
+  mutex.lock();
+  target->insortNewHeaders(&headers, this);
+  target->setLastNr(last);
+  mutex.unlock();
 }
 
 

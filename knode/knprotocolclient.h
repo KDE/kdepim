@@ -18,7 +18,7 @@
 #define KNPROTOCOLCLIENT_H
 
 #include <qdatetime.h>
-#include <qobject.h>
+#include <qthread.h>
 #include <qcstring.h>
 
 #include <knserverinfo.h>
@@ -28,9 +28,7 @@ class KNJobData;
 struct in_addr;
 
 
-class KNProtocolClient : public QObject  {
-
-  Q_OBJECT
+class KNProtocolClient : public QThread  {
 
   public:
     enum threadSignal { TSworkDone=0, TSjobStarted=1, TSconnect=2, TSloadGrouplist=3,
@@ -38,10 +36,10 @@ class KNProtocolClient : public QObject  {
                         TSsortNew=7, TSdownloadArticle=8, TSsendArticle=9, TSsendMail=10,
                         TSprogressUpdate=11, TSdownloadDesc=12, TSdownloadNewGroups=13 };
 
-    KNProtocolClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
+    KNProtocolClient(int NfdPipeIn, int NfdPipeOut);
     ~KNProtocolClient();
   
-    static void* startThread(void* pseudoThis);
+    virtual void run();
 
     void insertJob(KNJobData *newJob);
     void removeJob();
