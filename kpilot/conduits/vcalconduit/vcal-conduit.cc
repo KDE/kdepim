@@ -98,11 +98,10 @@ void VCalConduitPrivate::removeIncidence(KCal::Incidence *e)
 
 KCal::Incidence *VCalConduitPrivate::findIncidence(recordid_t id)
 {
-	KCal::Event *event = fAllEvents.first();
-	while (event!=0)
-	{
-		if ((recordid_t)event->pilotId() == id) return event;
-		event = fAllEvents.next();
+	KCal::Event::List::ConstIterator it;
+        for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
+		KCal::Event *event = *it;
+                if ((recordid_t)event->pilotId() == id) return event;
 	}
 	return 0L;
 }
@@ -115,11 +114,10 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 	QString title=entry->getDescription();
 	QDateTime dt=readTm( entry->getEventStart() );
 
-	KCal::Event *event = fAllEvents.first();
-	while (event!=0)
-	{
+	KCal::Event::List::ConstIterator it;
+        for( it = fAllEvents.begin(); it != fAllEvents.end(); ++it ) {
+		KCal::Event *event = *it;
 		if ( (event->dtStart() == dt) && (event->summary() == title) ) return event;
-		event = fAllEvents.next();
 	}
 	return 0L;
 }
@@ -128,9 +126,14 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 
 KCal::Incidence *VCalConduitPrivate::getNextIncidence()
 {
-	if (reading) return fAllEvents.next();
-	reading=true;
-	return fAllEvents.first();
+	if (reading) {
+                ++fAllEventsIterator;
+                if ( fAllEventsIterator == fAllEvents.end() ) return 0;
+        } else {
+	        reading=true;
+                fAllEventsIterator = fAllEvents.begin();
+        }
+        return *fAllEventsIterator;
 }
 
 
@@ -140,17 +143,19 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 	if (!reading)
 	{
 		reading=true;
-		e=fAllEvents.first();
+                fAllEventsIterator = fAllEvents.begin();
+                if ( fAllEventsIterator != fAllEvents.end() ) e = *fAllEventsIterator;
 	}
 	else
 	{
-		e=fAllEvents.next();
+                ++fAllEventsIterator;
 	}
 	while (e && e->syncStatus()==KCal::Incidence::SYNCNONE)
 	{
-		e=fAllEvents.next();
+                ++fAllEventsIterator;
 	}
-	return e;
+        if ( fAllEventsIterator == fAllEvents.end() ) return 0;
+	else return *fAllEventsIterator;
 }
 
 
@@ -367,10 +372,11 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	}
 
 	// find the first enabled alarm
-	QPtrList<KCal::Alarm> alms=e->alarms();
-	KCal::Alarm* alm=0, *alarm=0;
-	for (QPtrListIterator<KCal::Alarm> it(alms); (alarm = it.current()) != 0; ++it) {
-		if (alarm->enabled()) alm=alarm;
+	KCal::Alarm::List alms=e->alarms();
+	KCal::Alarm* alm=0;
+	KCal::Alarm::List::ConstIterator it;
+        for ( it = alms.begin(); it != alms.end(); ++it ) {
+		if ((*it)->enabled()) alm=*it;
 	}
 
 	if (!alm )

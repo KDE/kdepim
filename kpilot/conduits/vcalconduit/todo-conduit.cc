@@ -100,11 +100,10 @@ void TodoConduitPrivate::removeIncidence(KCal::Incidence *e)
 
 KCal::Incidence *TodoConduitPrivate::findIncidence(recordid_t id)
 {
-	KCal::Todo *todo = fAllTodos.first();
-	while(todo)
-	{
+	KCal::Todo::List::ConstIterator it;
+        for( it = fAllTodos.begin(); it != fAllTodos.end(); ++it ) {
+                KCal::Todo *todo = *it;
 		if ((recordid_t)(todo->pilotId()) == id) return todo;
-		todo = fAllTodos.next();
 	}
 
 	return 0L;
@@ -120,11 +119,10 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 	QString title=entry->getDescription();
 	QDateTime dt=readTm( entry->getDueDate() );
 
-	KCal::Todo *event = fAllTodos.first();
-	while (event!=0)
-	{
+	KCal::Todo::List::ConstIterator it;
+        for( it = fAllTodos.begin(); it != fAllTodos.end(); ++it ) {
+                KCal::Todo *event = *it;
 		if ( (event->dtDue().date() == dt.date()) && (event->summary() == title) ) return event;
-		event = fAllTodos.next();
 	}
 	return 0L;
 }
@@ -133,9 +131,14 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 
 KCal::Incidence *TodoConduitPrivate::getNextIncidence()
 {
-	if (reading) return fAllTodos.next();
-	reading=true;
-	return fAllTodos.first();
+	if (reading) {
+                ++fAllTodosIterator;
+                if ( fAllTodosIterator == fAllTodos.end() ) return 0;
+        } else {
+	        reading=true;
+                fAllTodosIterator = fAllTodos.begin();
+        }
+        return *fAllTodosIterator;
 }
 
 
@@ -147,21 +150,23 @@ FUNCTIONSETUP;
 	if (!reading)
 	{
 		reading=true;
-		e=fAllTodos.first();
+                fAllTodosIterator = fAllTodos.begin();
+                if ( fAllTodosIterator != fAllTodos.end() ) e=*fAllTodosIterator;
 	}
 	else
 	{
-		e=fAllTodos.next();
+		++fAllTodosIterator;
 	}
 	while (e && e->syncStatus()!=KCal::Incidence::SYNCMOD)
 	{
-		e=fAllTodos.next();
+		++fAllTodosIterator;
 #ifdef DEBUG
 if (e)
 DEBUGCONDUIT<< e->summary()<<" had SyncStatus="<<e->syncStatus()<<endl;
 #endif
 	}
-	return e;
+        if ( fAllTodosIterator == fAllTodos.end() ) return 0;
+	else return *fAllTodosIterator;
 }
 
 

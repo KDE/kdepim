@@ -48,7 +48,8 @@ public:
 	VCalConduitPrivate(KCal::Calendar *buddy);
 	virtual ~VCalConduitPrivate() {};
 
-	QPtrList<KCal::Event> fAllEvents;
+	KCal::Event::List fAllEvents;
+	KCal::Event::List::ConstIterator fAllEventsIterator;
 
 	virtual int updateIncidences();
 	virtual void addIncidence(KCal::Incidence*);

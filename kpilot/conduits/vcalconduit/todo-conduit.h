@@ -52,11 +52,8 @@ public:
 	TodoConduitPrivate(KCal::Calendar *buddy);
 	virtual ~TodoConduitPrivate() {};
 
-#ifdef KDE2
-	QList<KCal::Todo> fAllTodos;
-#else
-	QPtrList<KCal::Todo> fAllTodos;
-#endif
+	KCal::Todo::List fAllTodos;
+	KCal::Todo::List::ConstIterator fAllTodosIterator;
 
 	virtual int updateIncidences();
 	virtual void addIncidence(KCal::Incidence*);
