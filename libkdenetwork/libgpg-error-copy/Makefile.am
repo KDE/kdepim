@@ -48,14 +48,14 @@ strerror.lo: err-codes.h gpg-error.h
 code-to-errno.lo: code-to-errno.h gpg-error.h
 code-from-errno.lo: code-from-errno.h gpg-error.h
 
-err-sources.h: mkstrtable.awk err-sources.h.in
+err-sources.h: $(srcdir)/mkstrtable.awk $(srcdir)/err-sources.h.in
 	$(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=3 \
                 $(srcdir)/err-sources.h.in >$@
 
 #We don't need err-sources-sym.h, err-codes-sym.h, errnos-sym.h.
 # since those are for the gpg-error binary
 
-err-codes.h: mkstrtable.awk err-codes.h.in
+err-codes.h: $(srcdir)/mkstrtable.awk err-codes.h.in
 	$(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=3 \
                 $(srcdir)/err-codes.h.in >$@
 
@@ -71,7 +71,7 @@ mkerrcodes.h: mkerrcodes.awk
 # program at build time.
 # DF: we have no such thing in KDE. Using $(CC) instead.
 mkerrcodes: mkerrcodes.c mkerrcodes.h
-	$(CC) -I. -I$(srcdir) -o $@ $<
+	$(CC) -I. -I$(srcdir) -o $@ $(srcdir)/mkerrcodes.c
 
 code-from-errno.h: mkerrcodes
 	./$< | $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
