@@ -23,10 +23,9 @@
 
 #include <qmap.h>
 
-#include <kabc/resource.h>
+#include "libkdepim/kabcresourcecached.h"
 
 class KConfig;
-class UIDMapper;
 
 namespace KXMLRPC {
 class Server;
@@ -36,7 +35,7 @@ namespace KABC {
 
 class EGroupwarePrefs;
 
-class ResourceXMLRPC : public Resource
+class ResourceXMLRPC : public ResourceCached
 {
   Q_OBJECT
 
@@ -61,9 +60,6 @@ class ResourceXMLRPC : public Resource
     virtual bool save( Ticket * );
     virtual bool asyncSave( Ticket * );
 
-    virtual void insertAddressee( const Addressee &addr );
-    virtual void removeAddressee( const Addressee& addr );
-
   protected:
     void init();
 
@@ -79,6 +75,13 @@ class ResourceXMLRPC : public Resource
     void loadCustomFieldsFinished( const QValueList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
+    void addContactFault( int, const QString&, const QVariant& );
+    void updateContactFault( int, const QString&, const QVariant& );
+    void deleteContactFault( int, const QString&, const QVariant& );
+
+    void addContact( const KABC::Addressee& );
+    void updateContact( const KABC::Addressee& );
+    void deleteContact( const KABC::Addressee& );
 
   private:
     void initEGroupware();
@@ -95,7 +98,6 @@ class ResourceXMLRPC : public Resource
     QString mSessionID;
     QString mKp3;
 
-    UIDMapper *mUidMapper;
     QMap<QString, int> mCategoryMap;
     QMap<QString, int> mAddrTypes;
     QMap<QString, QString> mCustomFieldsMap;

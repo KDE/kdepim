@@ -35,8 +35,6 @@
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
 
-#include "uidmapper.h"
-
 #include "xmlrpciface.h"
 
 using namespace KABC;
@@ -48,7 +46,7 @@ static const QString LoadCategoriesCommand = "addressbook.boaddressbook.categori
 static const QString LoadCustomFieldsCommand = "addressbook.boaddressbook.customfields";
 
 ResourceXMLRPC::ResourceXMLRPC( const KConfig *config )
-  : Resource( config ), mServer( 0 )
+  : ResourceCached( config ), mServer( 0 )
 {
   init();
 
@@ -62,7 +60,7 @@ ResourceXMLRPC::ResourceXMLRPC( const KConfig *config )
 
 ResourceXMLRPC::ResourceXMLRPC( const QString &url, const QString &domain,
                                 const QString &user, const QString &password )
-  : Resource( 0 ), mServer( 0 )
+  : ResourceCached( 0 ), mServer( 0 )
 {
   init();
 
@@ -89,9 +87,6 @@ void ResourceXMLRPC::initEGroupware()
 {
   KURL url( mPrefs->url() );
 
-  mUidMapper = new UIDMapper( locateLocal( "data", "kabc/egroupware_cache/" + url.host() + "/cache.dat" ) );
-  mUidMapper->load();
-
   mAddrTypes.insert( "dom", Address::Dom );
   mAddrTypes.insert( "intl", Address::Intl );
   mAddrTypes.insert( "parcel", Address::Parcel );
@@ -100,15 +95,13 @@ void ResourceXMLRPC::initEGroupware()
 
 ResourceXMLRPC::~ResourceXMLRPC()
 {
-  mUidMapper->store();
-
-  delete mUidMapper;
-  mUidMapper = 0;
+  saveCache();
 
   delete mServer;
   mServer = 0;
 
   delete mPrefs;
+  mPrefs = 0;
 }
 
 void ResourceXMLRPC::writeConfig( KConfig *config )
@@ -174,6 +167,8 @@ void ResourceXMLRPC::doClose()
 
 bool ResourceXMLRPC::load()
 {
+  mAddrMap.clear();
+
   return true;
 }
 
@@ -181,6 +176,10 @@ bool ResourceXMLRPC::asyncLoad()
 {
   if ( !mServer )
     return false;
+
+  mAddrMap.clear();
+
+  loadCache();
 
   QMap<QString, QVariant> args;
   args.insert( "start", "1" );
@@ -207,50 +206,68 @@ bool ResourceXMLRPC::asyncLoad()
 }
 
 
-bool ResourceXMLRPC::save( Ticket* )
+bool ResourceXMLRPC::save( Ticket *ticket )
 {
-  return false; // readonly
+  return asyncSave( ticket );
 }
 
-bool ResourceXMLRPC::asyncSave( Ticket* )
+bool ResourceXMLRPC::asyncSave( Ticket *ticket )
 {
-  return false; // readonly
+  KABC::Addressee::List::Iterator it;
+
+  KABC::Addressee::List addedList = addedAddressees();
+  for ( it = addedList.begin(); it != addedList.end(); ++it ) {
+    addContact( *it );
+  }
+
+  KABC::Addressee::List changedList = changedAddressees();
+  for ( it = changedList.begin(); it != changedList.end(); ++it ) {
+    updateContact( *it );
+  }
+
+  KABC::Addressee::List deletedList = deletedAddressees();
+  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
+    deleteContact( *it );
+  }
+
+  return true;
 }
 
-void ResourceXMLRPC::insertAddressee( const Addressee& addr )
+void ResourceXMLRPC::addContact( const Addressee& addr )
 {
+  qDebug( "addContact: %s (%s)", addr.assembledName().latin1(), addr.uid().latin1() );
+
   QMap<QString, QVariant> args;
   writeContact( addr, args );
 
-  if ( mAddrMap.find( addr.uid() ) == mAddrMap.end() ) { // new entry
-    mAddrMap.insert( addr.uid(), addr );
-
-    mServer->call( AddContactCommand, args,
-                   this, SLOT( addContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                   this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                   QVariant( addr.uid() ) );
-  } else {
-    mAddrMap[ addr.uid() ] = addr;
-    args.insert( "id", mUidMapper->remoteUid( addr.uid() ) );
-    mServer->call( AddContactCommand, args,
-                   this, SLOT( updateContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                   this, SLOT( fault( int, const QString&, const QVariant& ) ) );
-  }
-
-  enter_loop();
+  mServer->call( AddContactCommand, args,
+                 this, SLOT( addContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( addContactFault( int, const QString&, const QVariant& ) ),
+                 QVariant( addr.uid() ) );
 }
 
-void ResourceXMLRPC::removeAddressee( const Addressee& addr )
+void ResourceXMLRPC::updateContact( const Addressee& addr )
 {
-  QString id = mUidMapper->remoteUid( addr.uid() );
+  qDebug( "updateContact: %s (%s)", addr.assembledName().latin1(), addr.uid().latin1() );
 
-  mServer->call( DeleteContactCommand, id,
-                 this, SLOT( deleteContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ),
+  QMap<QString, QVariant> args;
+  writeContact( addr, args );
+
+  args.insert( "id", remoteUid( addr.uid() ) );
+  mServer->call( AddContactCommand, args,
+                 this, SLOT( updateContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( updateContactFault( int, const QString&, const QVariant& ) ),
                  QVariant( addr.uid() ) );
+}
 
+void ResourceXMLRPC::deleteContact( const Addressee& addr )
+{
+  qDebug( "deleteContact: %s (%s)", addr.assembledName().latin1(), addr.uid().latin1() );
 
-  enter_loop();
+  mServer->call( DeleteContactCommand, remoteUid( addr.uid() ),
+                 this, SLOT( deleteContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( deleteContactFault( int, const QString&, const QVariant& ) ),
+                 QVariant( addr.uid() ) );
 }
 
 void ResourceXMLRPC::loginFinished( const QValueList<QVariant> &variant,
@@ -297,6 +314,7 @@ void ResourceXMLRPC::listContactsFinished( const QValueList<QVariant> &mapList,
   QValueList<QVariant> contactList = mapList[ 0 ].toList();
   QValueList<QVariant>::Iterator contactIt;
 
+  KABC::Addressee::List serverContacts;
   for ( contactIt = contactList.begin(); contactIt != contactList.end(); ++contactIt ) {
     QMap<QString, QVariant> map = (*contactIt).toMap();
 
@@ -309,43 +327,48 @@ void ResourceXMLRPC::listContactsFinished( const QValueList<QVariant> &mapList,
       addr.setResource( this );
       addr.setChanged( false );
 
-      QString localUid = mUidMapper->localUid( uid );
-      if ( localUid.isEmpty() ) {
-        mUidMapper->add( addr.uid(), uid );
+      QString local = localUid( uid );
+      if ( local.isEmpty() ) { // new entry
+        setRemoteUid( addr.uid(), uid );
       } else {
-        addr.setUid( localUid );
+        addr.setUid( local );
       }
 
       mAddrMap.insert( addr.uid(), addr );
+      serverContacts.append( addr );
     }
   }
 
-  exit_loop();
+  cleanUpCache( serverContacts );
+  saveCache();
 
   emit loadingFinished( this );
-}
-
-void ResourceXMLRPC::deleteContactFinished( const QValueList<QVariant>&,
-                                            const QVariant &id )
-{
-  mAddrMap.remove( id.toString() );
-  mUidMapper->removeByLocal( id.toString() );
-
-  exit_loop();
-}
-
-void ResourceXMLRPC::updateContactFinished( const QValueList<QVariant>&,
-                                            const QVariant& )
-{
-  exit_loop();
 }
 
 void ResourceXMLRPC::addContactFinished( const QValueList<QVariant> &list,
                                          const QVariant &id )
 {
-  mUidMapper->add( id.toString(), list[ 0 ].toString() );
+  clearChange( id.toString() );
+  setRemoteUid( id.toString(), list[ 0 ].toString() );
 
-  exit_loop();
+  saveCache();
+}
+
+void ResourceXMLRPC::updateContactFinished( const QValueList<QVariant>&,
+                                            const QVariant &id )
+{
+  clearChange( id.toString() );
+
+  saveCache();
+}
+
+void ResourceXMLRPC::deleteContactFinished( const QValueList<QVariant>&,
+                                            const QVariant &id )
+{
+  clearChange( id.toString() );
+  removeRemoteUid( remoteUid( id.toString() ) );
+
+  saveCache();
 }
 
 void ResourceXMLRPC::fault( int error, const QString &errorMsg,
@@ -355,6 +378,47 @@ void ResourceXMLRPC::fault( int error, const QString &errorMsg,
   addressBook()->error( msg );
 
   exit_loop();
+}
+
+void ResourceXMLRPC::addContactFault( int, const QString &errorMsg,
+                                      const QVariant &id )
+{
+  KABC::Addressee addr = mAddrMap[ id.toString() ];
+
+  mAddrMap.remove( addr.uid() );
+
+  QString msg = i18n( "Unable to add contact %1 to server. (%2)" );
+  addressBook()->error( msg.arg( addr.formattedName(), errorMsg ) );
+}
+
+void ResourceXMLRPC::updateContactFault( int, const QString &errorMsg,
+                                         const QVariant &id )
+{
+  KABC::Addressee addr = mAddrMap[ id.toString() ];
+
+  QString msg = i18n( "Unable to update contact %1 on server. (%2)" );
+  addressBook()->error( msg.arg( addr.formattedName(), errorMsg ) );
+}
+
+void ResourceXMLRPC::deleteContactFault( int, const QString &errorMsg,
+                                         const QVariant &id )
+{
+  KABC::Addressee addr;
+  addr.setFormattedName( "coolo" );
+
+  KABC::Addressee::List deletedList = deletedAddressees();
+  KABC::Addressee::List::Iterator it;
+  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
+    if ( (*it).uid() == id.toString() ) {
+      addr = *it;
+      break;
+    }
+  }
+
+  mAddrMap.insert( addr.uid(), addr );
+
+  QString msg = i18n( "Unable to delete contact %1 from server. (%2)" );
+  addressBook()->error( msg.arg( addr.formattedName(), errorMsg ) );
 }
 
 QString ResourceXMLRPC::addrTypesToTypeStr( int typeMask )
