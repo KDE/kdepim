@@ -522,29 +522,27 @@ void KPilotInstaller::initMenu()
 {
 	FUNCTIONSETUP;
 
-	KAction *p;
-
 	// File actions
-	p = new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
+	(void )new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
 #if 0
-	p = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
+	(void) new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_fastsync");
 #endif
 #ifdef DEBUG
-	p = new KAction(TODO_I18N("List only"),CSL1("list"),0,
+	(void) new KAction(TODO_I18N("List only"),CSL1("list"),0,
 		this,SLOT(slotListSyncRequested()),
 		actionCollection(), "file_list");
 #endif
-	p = new KAction(i18n("&Backup"), CSL1("backup"), 0,
+	(void) new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
-	p = new KAction(i18n("&Restore"), CSL1("restore"), 0,
+	(void) new KAction(i18n("&Restore"), CSL1("restore"), 0,
 		this, SLOT(slotRestoreRequested()),
 		actionCollection(), "file_restore");
-	p = KStdAction::quit(this, SLOT(quit()), actionCollection());
+	(void) KStdAction::quit(this, SLOT(quit()), actionCollection());
 
 	// View actions
 
@@ -561,13 +559,13 @@ void KPilotInstaller::initMenu()
 		actionCollection());
 #endif
 
-	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
+	(void) KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
-	p = KStdAction::configureToolbars(this, SLOT(optionsConfigureKeys()),
+	(void) KStdAction::configureToolbars(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
-	p = KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
+	(void) KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 		actionCollection());
-	p = new KAction(i18n("C&onfigure Conduits..."), CSL1("configure"), 0, this,
+        (void) new KAction(i18n("C&onfigure Conduits..."), CSL1("configure"), 0, this,
 		SLOT(slotConfigureConduits()), actionCollection(),
 		"options_configure_conduits");
 }
