@@ -179,7 +179,7 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
     // store date time
     Profile prof = core()->currentProfile();
     Kapabilities cap = prof.caps();
-    KCal::ICalFormat *form = new KCal::ICalFormat(calendar->calendar() );
+    KCal::ICalFormat *form = new KCal::ICalFormat();
     if ( cap.isMetaSyncingEnabled() ) {
         m_conf->setGroup( prof.name() );
         m_conf->writeEntry("time", time );
