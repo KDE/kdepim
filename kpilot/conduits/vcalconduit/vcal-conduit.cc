@@ -138,7 +138,7 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 		++fAllEventsIterator;
 	}
 	while ( fAllEventsIterator != fAllEvents.end() &&
-		e && e->syncStatus()==KCal::Incidence::SYNCNONE)
+		e && e->syncStatus()==KCal::Incidence::SYNCNONE && e->pilotId() > 0)
 	{
 		++fAllEventsIterator;
 		e=*fAllEventsIterator;
