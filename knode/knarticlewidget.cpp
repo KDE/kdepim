@@ -138,7 +138,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
     : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false),
       emuKMail(false), f_inddialog(0), a_ctions(actColl)
 {
-  i_nstances.append(this);
+  instances()->append(this);
   setNotifyClick( true );
 
   f_actory = new QMimeSourceFactory();
@@ -225,7 +225,11 @@ KNArticleWidget::~KNArticleWidget()
   if(a_rticle && a_rticle->isOrphant())
     delete a_rticle; //don't leak orphant articles
 
-  i_nstances.removeRef(this);
+  instances()->removeRef(this);
+  if(instances()->count() == 0) {
+    delete i_nstances;
+    i_nstances = 0;
+  }
   delete a_tt;
   delete a_ttPopup;
   delete u_rlPopup;
@@ -1877,18 +1881,26 @@ void KNArticleWidget::slotVerify()
 //--------------------------------------------------------------------------------------
 
 
-QPtrList<KNArticleWidget> KNArticleWidget::i_nstances;
+QPtrList<KNArticleWidget>* KNArticleWidget::i_nstances = 0;
+
+QPtrList<KNArticleWidget>* KNArticleWidget::instances()
+{
+  if(!i_nstances)
+    i_nstances = new QPtrList<KNArticleWidget>();
+  return i_nstances;
+}
+
 
 void KNArticleWidget::configChanged()
 {
-  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+  for(KNArticleWidget *i=instances()->first(); i; i=instances()->next())
     i->applyConfig();
 }
 
 
 bool KNArticleWidget::articleVisible(KNArticle *a)
 {
-  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+  for(KNArticleWidget *i=instances()->first(); i; i=instances()->next())
     if(a==i->article())
       return true;
   return false;
@@ -1897,7 +1909,7 @@ bool KNArticleWidget::articleVisible(KNArticle *a)
 
 void KNArticleWidget::articleRemoved(KNArticle *a)
 {
-  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+  for(KNArticleWidget *i=instances()->first(); i; i=instances()->next())
     if(a==i->article())
       i->showBlankPage();
 }
@@ -1905,7 +1917,7 @@ void KNArticleWidget::articleRemoved(KNArticle *a)
 
 void KNArticleWidget::articleChanged(KNArticle *a)
 {
-  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+  for(KNArticleWidget *i=instances()->first(); i; i=instances()->next())
     if(a==i->article())
       i->updateContents();
 }
@@ -1913,7 +1925,7 @@ void KNArticleWidget::articleChanged(KNArticle *a)
 
 void KNArticleWidget::articleLoadError(KNArticle *a, const QString &error)
 {
-  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+  for(KNArticleWidget *i=instances()->first(); i; i=instances()->next())
     if(a==i->article())
       i->showErrorMessage(error);
 }
@@ -1921,7 +1933,7 @@ void KNArticleWidget::articleLoadError(KNArticle *a, const QString &error)
 
 void KNArticleWidget::collectionRemoved(KNArticleCollection *c)
 {
-  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+  for(KNArticleWidget *i=instances()->first(); i; i=instances()->next())
     if(i->article() && i->article()->collection()==c)
       i->showBlankPage();
 }
@@ -1929,7 +1941,7 @@ void KNArticleWidget::collectionRemoved(KNArticleCollection *c)
 
 void KNArticleWidget::cleanup()
 {
-  for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
+  for(KNArticleWidget *i=instances()->first(); i; i=instances()->next())
     i->setArticle(0); //delete orphant articles => avoid crash in destructor
 }
 

@@ -206,7 +206,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     static void cleanup();
 
   protected:
-    static QPtrList<KNArticleWidget> i_nstances;
+    static QPtrList<KNArticleWidget> *i_nstances;
+    static QPtrList<KNArticleWidget> *instances();
 
 };
 
