@@ -39,7 +39,7 @@
 
 </authorgroup>
 
-<date>2001-09-02</date>
+<date>2001-09-20</date>
 <releaseinfo>1.03.00</releaseinfo>
 
 <copyright>
@@ -283,6 +283,7 @@ directory it might be useful to store the mails in a subdirectory
 the <guilabel>Prefix to folders</guilabel> field so that &kmail; does
 not mix up mailbox files and other files. Note that even with a slash as the
 first character, this path is interpreted relatively to your home directory.
+<!-- fixme: still correct? does it make sense? -->
 If you are not interested in this feature, simple leave the field blank.</para>
 
 <para>If you check <guilabel>Automatically expunge deleted
@@ -3437,6 +3438,15 @@ search for all occurrences of <quote>Consistent=false</quote> and replace them w
 This bug will be fixed in KDE 2.2.1 which will probably be released in September 2001.
 <!-- fixme?: doesn't work when leaving by session management -->
 </para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>When I reply to an email there is a special character one line 
+before the signature. I get a warning about a changed character set
+when I try to send the mail.</para></question>
+<answer>
+<para>Upgrade to Qt-2.3.1.</para>
 </answer>
 </qandaentry>
 
