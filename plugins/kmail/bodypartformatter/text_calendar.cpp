@@ -478,7 +478,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // Find myself. There will always be all attendees listed, even if
       // only I need to answer it.
       if ( attendees.count() == 1 )
-        // Only one attendee, that must be me
+        // Only one attendee, that must be me, or a distribution list
         myself = *attendees.begin();
       else {
         for ( it = attendees.begin(); it != attendees.end(); ++it ) {
@@ -502,9 +502,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee* newMyself = 0;
       if( myself ) {
         myself->setStatus( status );
-        newMyself = new Attendee( myself->name(),
-                                  receiver.isEmpty() ? myself->email() :
-                                  receiver,
+        QString name;
+        QString email;
+        KPIM::getNameAndMail( receiver, name, email );
+        if ( name.isEmpty() ) name = myself->name();
+        if ( email.isEmpty() ) email = myself->email();
+        newMyself = new Attendee( name,
+                                  email,
                                   myself->RSVP(),
                                   myself->status(),
                                   myself->role(),
@@ -558,6 +562,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // Now produce the return message
       ICalFormat format;
       Incidence* incidence = icalToString( iCal, format );
+
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
       if ( myself && myself->RSVP() ) {
