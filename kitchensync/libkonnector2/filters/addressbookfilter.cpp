@@ -19,12 +19,15 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include <qgroupbox.h>
 #include <qheader.h>
+#include <qlabel.h>
 #include <qlayout.h>
-#include <qlistview.h>
+#include <qwhatsthis.h>
 #include <qwidget.h>
 
 #include <kgenericfactory.h>
+#include <klistview.h>
 #include <klocale.h>
 #include <libkdepim/kpimprefs.h>
 
@@ -134,11 +137,14 @@ AddressBookConfigWidget::AddressBookConfigWidget( QWidget *parent, const char *n
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  mView = new QListView( this );
-  mView->addColumn( "" );
-  mView->header()->hide();
+  QGroupBox *box = new QGroupBox( 1, Qt::Vertical, i18n( "Contacts" ), this );
+  layout->addWidget( box );
 
-  layout->addWidget( mView );
+  mView = new KListView( box );
+  mView->addColumn( i18n( "Categories" ) );
+  mView->setFullWidth( true );
+
+  QWhatsThis::add( mView, i18n( "Select the categories for which the contacts shall be synchronized. When no category is selected, all contacts will be included." ) );
 }
 
 void AddressBookConfigWidget::setCategories( const QStringList &categories )

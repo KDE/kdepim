@@ -24,6 +24,8 @@
 
 #include "filter.h"
 
+class KListView;
+
 namespace KSync {
 
 class CalendarSyncee;
@@ -53,7 +55,7 @@ class CalendarConfigWidget : public QWidget
     void useDateChanged( bool );
 
   private:
-    QListView *mView;
+    KListView *mView;
     QLabel *mStartLabel;
     KDateEdit *mStartDate;
     QLabel *mEndLabel;

@@ -24,11 +24,12 @@
 #include <qheader.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlistview.h>
+#include <qwhatsthis.h>
 #include <qwidget.h>
 
 #include <kdialog.h>
 #include <kgenericfactory.h>
+#include <klistview.h>
 #include <klocale.h>
 #include <libkdepim/kdateedit.h>
 #include <libkdepim/kpimprefs.h>
@@ -157,33 +158,38 @@ CalendarConfigWidget::CalendarConfigWidget( QWidget *parent, const char *name )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  QGroupBox *box = new QGroupBox( 1, Vertical, i18n( "Categories" ), this );
+  QGroupBox *box = new QGroupBox( 2, Qt::Vertical, i18n( "Events and Todos" ), this );
 
-  mView = new QListView( box );
-  mView->addColumn( "" );
-  mView->header()->hide();
+  mView = new KListView( box );
+  mView->addColumn( i18n( "Categories" ) );
+  mView->setFullWidth( true );
 
-  layout->addWidget( box );
+  QWhatsThis::add( mView, i18n( "Select the categories for which the events and todos shall be synchronized. When no category is selected, all events and todos will be included." ) );
 
-  box = new QGroupBox( 0, Horizontal, i18n( "Time Range" ), this );
-  QGridLayout *boxLayout = new QGridLayout( box->layout(), 2, 4, KDialog::spacingHint() );
+  QWidget *timeWidget = new QWidget( box );
+  QGridLayout *wdgLayout = new QGridLayout( timeWidget, 3, 3, KDialog::marginHint(),
+                                            KDialog::spacingHint() );
 
-  mUseDate = new QCheckBox( i18n( "Use time range" ), box );
-  boxLayout->addMultiCellWidget( mUseDate, 0, 0, 0, 3 );
+  mUseDate = new QCheckBox( i18n( "Use time range" ), timeWidget );
+  wdgLayout->addMultiCellWidget( mUseDate, 0, 0, 0, 1 );
 
-  mStartLabel = new QLabel( i18n( "start date", "From:" ), box );
-  mStartDate = new KDateEdit( box );
+  QWhatsThis::add( mUseDate, i18n( "Synchronize only events and todos in a special time range." ) );
+
+  mStartLabel = new QLabel( i18n( "start date", "From:" ), timeWidget );
+  mStartDate = new KDateEdit( timeWidget );
   mStartLabel->setBuddy( mStartDate );
 
-  boxLayout->addWidget( mStartLabel, 1, 0 );
-  boxLayout->addWidget( mStartDate, 1, 1 );
-
-  mEndLabel = new QLabel( i18n( "end date", "Till:" ), box );
-  mEndDate = new KDateEdit( box );
+  mEndLabel = new QLabel( i18n( "end date", "Till:" ), timeWidget );
+  mEndDate = new KDateEdit( timeWidget );
   mEndLabel->setBuddy( mEndDate );
 
-  boxLayout->addWidget( mEndLabel, 1, 2 );
-  boxLayout->addWidget( mEndDate, 1, 3 );
+  wdgLayout->addWidget( mStartLabel, 1, 0, Qt::AlignRight );
+  wdgLayout->addWidget( mStartDate, 1, 1 );
+  wdgLayout->addWidget( mEndLabel, 2, 0, Qt::AlignRight );
+  wdgLayout->addWidget( mEndDate, 2, 1 );
+  wdgLayout->setColStretch( 2, 10 );
+
+  QWhatsThis::add( box, i18n( "Only the events and todos in the given date range will be synchronized." ) );
 
   layout->addWidget( box );
 

@@ -24,6 +24,8 @@
 
 #include "filter.h"
 
+class KListView;
+
 namespace KSync {
 
 class AddressBookSyncee;
@@ -40,7 +42,7 @@ class AddressBookConfigWidget : public QWidget
     QStringList selectedCategories() const;
 
   private:
-    QListView *mView;
+    KListView *mView;
 };
 
 
