@@ -395,6 +395,7 @@ bool KNComposer::hasValidData()
   //GNKSA body checks
   bool empty = true;
   bool longLine = false;
+  bool hasAttributionLine = false;
   int sigLength = 0;
   int notQuoted = 0;
   int textLines = 0;
@@ -424,8 +425,10 @@ bool KNComposer::hasValidData()
     if(!line.isEmpty()) {
       empty = false;
       textLines++;
-      if (line[0]!='>')
+      if (line[0]!='>') {
         notQuoted++;
+        if (i==0) hasAttributionLine = true;
+      }
     }
     if(line.length()>80) {
       longLine = true;
@@ -444,9 +447,10 @@ bool KNComposer::hasValidData()
   }
 
   if ((textLines>1)&&(notQuoted==1)) {
-    if (!(KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text.\nDo you want to re-edit the article or send it anyway?"),
-                                    QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
-      return false;
+    if (hasAttributionLine)
+      if (!(KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text.\nDo you want to re-edit the article or send it anyway?"),
+                                       QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+        return false;
   } else {
     if (notQuoted==0) {
       KMessageBox::sorry(this, i18n("You can't post an article consisting\nentirely of quoted text!"));
