@@ -2,6 +2,9 @@
 <MenuBar>
 	<Menu name="file" >
 		<text>File</text>
+		<Action name="export_certificate"/>
+		<Action name="export_secret_keys"/>
+		<Separator/>
 		<Action name="redisplay" />
 		<Action name="quit" />
 	</Menu>

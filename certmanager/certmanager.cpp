@@ -46,6 +46,7 @@
 #include <cryptplugfactory.h>
 #include <kleo/downloadjob.h>
 #include <kleo/importjob.h>
+#include <kleo/exportjob.h>
 #include <kleo/multideletejob.h>
 #include <kleo/deletejob.h>
 #include <kleo/keylistjob.h>
@@ -54,6 +55,7 @@
 #include <ui/progressdialog.h>
 #include <ui/progressbar.h>
 #include <ui/keylistview.h>
+#include <ui/keyselectiondialog.h>
 
 // GPGME++
 #include <gpgmepp/importresult.h>
@@ -196,15 +198,24 @@ void CertManager::createActions() {
 
   // Import Certificates
   // Import from file
-  mImportCertFromFileAction = new KAction( i18n("Certificate..."), QIconSet(),
+  mImportCertFromFileAction = new KAction( i18n("Import Certificate..."), QIconSet(),
                                              0, this,
                                              SLOT(slotImportCertFromFile()),
                                              actionCollection(),
                                              "importCertFromFile" );
+  
+
   // CRLs
   // Import from file
-  mImportCRLFromFileAction = new KAction( i18n("CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
+  mImportCRLFromFileAction = new KAction( i18n("Import CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
+
+  (void)new KAction( i18n("Export Certificate..."), "export", 0, this,
+		     SLOT(slotExportCertificate()), actionCollection(),
+		     "export_certificate" );
+  (void)new KAction( i18n("Export Secret Keys..."), "export", 0, this,
+		     SLOT(slotExportSecretKey()), actionCollection(),
+		     "export_secret_keys" );
 
   QString dirmngr = KStandardDirs::findExe( "gpgsm" );
   mDirMngrFound = !dirmngr.isEmpty();
@@ -687,6 +698,113 @@ void CertManager::slotListViewItemActivated( Kleo::KeyListViewItem * item ) {
   connect( top, SIGNAL(requestCertificateDownload(const QString&)),
 	   SLOT(slotStartCertificateDownload(const QString&)) );
   dialog->show();
+}
+
+void CertManager::slotExportCertificate() {
+  QPtrList<Kleo::KeyListViewItem> items = mKeyListView->selectedItems();
+  if ( items.isEmpty() )
+    return;
+
+  QStringList fingerprints;
+  for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
+    if ( it.current()->key().isNull() )
+      if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
+	fingerprints.push_back( fpr );
+
+  startCertificateExport( fingerprints );
+}
+
+static void showCertificateExportError( QWidget * parent, const GpgME::Error & err ) {
+  assert( err );
+  const QString msg = i18n("<qt><p>An error occured while trying to export "
+			   "the certificate:</p>"
+			   "<p><b>%1</b></p></qt>")
+    .arg( QString::fromLocal8Bit( err.asString() ) );
+  KMessageBox::error( parent, msg, i18n("Certificate Export Failed") );
+}
+
+void CertManager::startCertificateExport( const QStringList & fingerprints ) {
+  if ( fingerprints.empty() )
+    return;
+
+  // PENDING(marc): let user choose between binary and PEM format?
+  Kleo::ExportJob * job = Kleo::CryptPlugFactory::instance()->smime()->publicKeyExportJob( false );
+  assert( job );
+
+  connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
+	   SLOT(slotCertificateExportResult(const GpgME::Error&,const QByteArray&)) );
+
+  const GpgME::Error err = job->start( fingerprints );
+  if ( err )
+    showCertificateExportError( this, err );
+  else
+    (void)new Kleo::ProgressDialog( job, i18n("Exporting certificate"), this );
+}
+
+void CertManager::slotCertificateExportResult( const GpgME::Error & err, const QByteArray & data ) {
+  if ( err ) {
+    showCertificateExportError( this, err );
+    return;
+  }
+
+  kdDebug() << "CertManager::slotCertificateExportResult(): got " << data.size() << " bytes" << endl;
+  // FIXME: upload
+}
+
+
+void CertManager::slotExportSecretKey() {
+  Kleo::KeySelectionDialog dlg( i18n("Secret Key Export"),
+				i18n("Select the secret keys to export:"),
+				Kleo::CryptPlugFactory::instance()->smime(),
+				std::vector<GpgME::Key>(),
+				Kleo::KeySelectionDialog::SecretKeys,
+				true /* multiple */,
+				false /* no remember choice box */,
+				this, "secret key export key selection dialog" );
+  //dlg.setHideInvalidKeys( false );
+
+  if ( dlg.exec() != QDialog::Accepted )
+    return;
+
+  kdDebug() << "selected " << dlg.fingerprints().size() << " keys" << endl;
+  startSecretKeyExport( dlg.fingerprints() );
+}
+
+static void showSecretKeyExportError( QWidget * parent, const GpgME::Error & err ) {
+  assert( err );
+  const QString msg = i18n("<qt><p>An error occured while trying to export "
+			   "the secret key:</p>"
+			   "<p><b>%1</b></p></qt>")
+    .arg( QString::fromLocal8Bit( err.asString() ) );
+  KMessageBox::error( parent, msg, i18n("Secret Key Export Failed") );
+}
+
+void CertManager::startSecretKeyExport( const QStringList & fingerprints ) {
+  if ( fingerprints.empty() )
+    return;
+
+  // PENDING(marc): let user choose between binary and PEM format?
+  Kleo::ExportJob * job = Kleo::CryptPlugFactory::instance()->smime()->secretKeyExportJob( false );
+  assert( job );
+
+  connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
+	   SLOT(slotSecretKeyExportResult(const GpgME::Error&,const QByteArray&)) );
+
+  const GpgME::Error err = job->start( fingerprints );
+  if ( err )
+    showSecretKeyExportError( this, err );
+  else
+    (void)new Kleo::ProgressDialog( job, i18n("Exporting secret keys"), this );
+}
+
+void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QByteArray & data ) {
+  if ( err ) {
+    showSecretKeyExportError( this, err );
+    return;
+  }
+
+  kdDebug() << "CertManager::slotSecretKeyExportResult(): got " << data.size() << " bytes" << endl;
+  // FIXME: upload
 }
 
 #include "certmanager.moc"

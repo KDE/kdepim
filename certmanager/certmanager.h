@@ -88,6 +88,8 @@ private slots:
     void revokeCertificate();
     void extendCertificate();
     void slotDeleteCertificate();
+    void slotExportSecretKey();
+    void slotExportCertificate();
 
     void slotImportCertFromFile();
     void slotImportCertFromFile( const KURL & filename );
@@ -98,6 +100,8 @@ private slots:
     void slotCertificateDownloadResult( const GpgME::Error & error, const QByteArray & keyData );
     void slotKeyListResult( const GpgME::KeyListResult & result );
     void slotDeleteResult( const GpgME::Error & error, const GpgME::Key & );
+    void slotSecretKeyExportResult( const GpgME::Error & error, const QByteArray & keyData );
+    void slotCertificateExportResult( const GpgME::Error & error, const QByteArray & keyData );
 
     void importCRLFromFile();
     void importCRLFromLDAP();
@@ -115,15 +119,14 @@ private slots:
     void slotEditKeybindings();
 
 private:
-    GpgME::ImportResult importCertificateWithFingerprint( const QString & fingerprint );
-    GpgME::ImportResult importCertificateFromFile( QFile & file );
-
     void createStatusBar();
     void createActions();
     void updateStatusBarLabels();
     void updateImportActions( bool enable );
     void startCertificateImport( const QByteArray & keyData );
     void startImportCRL( const QString& fileName, bool isTempFile );
+    void startSecretKeyExport( const QStringList & fingerprints );
+    void startCertificateExport( const QStringList & fingerprints );
 
 private:
     Kleo::KeyListView * mKeyListView;
