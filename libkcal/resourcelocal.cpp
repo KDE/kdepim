@@ -108,6 +108,16 @@ void ResourceLocal::writeConfig( KConfig* config )
 void ResourceLocal::init()
 {
   mOpen = false;
+
+  connect( &mDirWatch, SIGNAL( dirty( const QString & ) ),
+           SLOT( reload() ) );
+  connect( &mDirWatch, SIGNAL( created( const QString & ) ),
+           SLOT( reload() ) );
+  connect( &mDirWatch, SIGNAL( deleted( const QString & ) ),
+           SLOT( reload() ) );
+
+  mDirWatch.addFile( mURL.path() );
+  mDirWatch.startScan();
 }
 
 
@@ -120,11 +130,16 @@ bool ResourceLocal::doOpen()
 {
   kdDebug(5800) << "Opening resource " << resourceName() << " with URL " << mURL.prettyURL() << endl;
 
-  if ( mOpen ) return true;
+  mOpen = true;
 
-  mOpen = mCalendar.load( mURL.path() );
+  return true;
+}
 
-  return mOpen;
+bool ResourceLocal::load()
+{
+  if ( !mOpen ) return true;
+  
+  return mCalendar.load( mURL.path() );
 }
 
 bool ResourceLocal::sync()
@@ -132,6 +147,16 @@ bool ResourceLocal::sync()
   if ( !mOpen ) return true;
 
   return mCalendar.save( mURL.path() );
+}
+
+void ResourceLocal::reload()
+{
+  if ( !mOpen ) return;
+
+  mCalendar.close();
+  mCalendar.load( mURL.path() );
+
+  emit resourceChanged( this );
 }
 
 void ResourceLocal::doClose()
@@ -262,3 +287,5 @@ void ResourceLocal::dump() const
   ResourceCalendar::dump();
   kdDebug(5800) << "  Url: " << mURL.url() << endl;
 }
+
+#include "resourcelocal.moc"

@@ -54,6 +54,8 @@ class ResourceCalendar : public QObject, public KRES::Resource
 
     virtual void writeConfig( KConfig* config );
 
+    virtual bool load() = 0;
+
     /**
      Writes calendar to storage. Writes calendar to disk file,
      writes updates to server, whatever.
@@ -138,6 +140,8 @@ class ResourceCalendar : public QObject, public KRES::Resource
      * events after this call.
      */
     void eventsDeleted( QPtrList<Event>& events );
+
+    void resourceChanged( ResourceCalendar * );
 
   public:
     /**

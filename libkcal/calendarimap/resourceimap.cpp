@@ -115,7 +115,12 @@ QStringList ResourceIMAP::getIncidenceList( const QString& type )
 
 bool ResourceIMAP::doOpen()
 {
-  kdDebug(5800) << "Opening resource " << resourceName() << " on " << mServer << endl;
+  return true;
+}
+
+bool ResourceIMAP::load()
+{
+  kdDebug(5800) << "Loading resource " << resourceName() << " on " << mServer << endl;
 
   QStringList lst = getIncidenceList( "Calendar" );
   for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {

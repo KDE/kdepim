@@ -55,6 +55,8 @@ namespace KCal {
 
     virtual void writeConfig( KConfig* config );
 
+    bool load();
+
     bool sync();
 
     /** Add Event to calendar. */

@@ -27,6 +27,7 @@
 
 #include <kurl.h>
 #include <kconfig.h>
+#include <kdirwatch.h>
 
 #include "incidence.h"
 #include "calendarlocal.h"
@@ -40,6 +41,8 @@ namespace KCal {
 */
 class ResourceLocal : public ResourceCalendar
 {
+    Q_OBJECT
+
     friend class ResourceLocalConfig;
 
   public:
@@ -48,6 +51,8 @@ class ResourceLocal : public ResourceCalendar
     virtual ~ResourceLocal();
 
     virtual void writeConfig( KConfig* config );
+
+    bool load();
 
     bool sync();
 
@@ -135,6 +140,9 @@ class ResourceLocal : public ResourceCalendar
 
     void dump() const;
 
+  protected slots:
+    void reload();
+
   protected:
 
     /** clears out the current calendar, freeing all used memory etc. etc. */
@@ -154,6 +162,8 @@ class ResourceLocal : public ResourceCalendar
     CalFormat* mFormat;
 
     bool mOpen;
+
+    KDirWatch mDirWatch;
 };
 
 }

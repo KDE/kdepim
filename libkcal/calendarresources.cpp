@@ -87,7 +87,9 @@ void CalendarResources::init()
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     kdDebug(5800) << "Opening resource " + (*it)->resourceName() << endl;
     bool result = (*it)->open();
+    result = (*it)->load();
     // Really should remove resource if open not successful
+    connectResource( *it );
   }
 
   mOpen = true;
@@ -447,3 +449,11 @@ void CalendarResources::incidenceUpdated( IncidenceBase * )
 {
   kdDebug() << "CalendarResources::incidenceUpdated( IncidenceBase * ): Not yet implemented\n";
 }
+
+void CalendarResources::connectResource( ResourceCalendar *resource )
+{
+  connect( resource, SIGNAL( resourceChanged( ResourceCalendar * ) ),
+           SIGNAL( calendarChanged() ) );
+}
+
+#include "calendarresources.moc"

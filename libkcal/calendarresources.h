@@ -23,6 +23,7 @@
 
 #include <qintdict.h>
 #include <qmap.h>
+#include <qobject.h>
 
 #include "calendar.h"
 
@@ -36,8 +37,9 @@ class ResourceCalendar;
 /**
   This class provides a calendar stored as a local file.
 */
-class CalendarResources : public Calendar
+class CalendarResources : public QObject, public Calendar
 {
+    Q_OBJECT
   public:
     /** constructs a new calendar that uses the ResourceManager for "calendar" */
     CalendarResources();
@@ -128,6 +130,9 @@ class CalendarResources : public Calendar
     /** Return all alarms, which ocur before given date. */
     Alarm::List alarmsTo( const QDateTime &to );
 
+  signals:
+    void calendarChanged();
+
   protected:
     /**
       The observer interface. So far not implemented.
@@ -150,13 +155,15 @@ class CalendarResources : public Calendar
     QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
 
+    void connectResource( ResourceCalendar * );
+
   private:
     void init();
 
     bool mOpen;
 
     KRES::ResourceManager<ResourceCalendar>* mManager;
-};  
+};
 
 }
 
