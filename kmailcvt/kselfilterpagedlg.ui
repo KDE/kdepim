@@ -8,65 +8,18 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>532</width>
+            <width>606</width>
             <height>461</height>
         </rect>
     </property>
-    <grid>
+    <property name="caption">
+        <string>KSelFilterPageDlg</string>
+    </property>
+    <hbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QComboBox" row="1" column="1">
-            <property name="name">
-                <cstring>mFilterCombo</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>5</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-        </widget>
-        <widget class="QLabel" row="0" column="1">
-            <property name="name">
-                <cstring>TextLabel6</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>1</hsizetype>
-                    <vsizetype>1</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="text">
-                <string>&lt;b&gt;Welcome to KMailCVT - The KMail Import Tool&lt;/b&gt;
-&lt;br&gt;&lt;br&gt;
-This program will help you import your email from your previous email program into KMail.&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
- Please select the program you would like to import from, then click 'Next'.</string>
-            </property>
-            <property name="textFormat">
-                <enum>RichText</enum>
-            </property>
-            <property name="alignment">
-                <set>WordBreak|AlignTop|AlignLeft</set>
-            </property>
-            <property name="vAlign" stdset="0">
-            </property>
-            <property name="wordwrap" stdset="0">
-            </property>
-        </widget>
-        <widget class="QTextEdit" row="2" column="1">
-            <property name="name">
-                <cstring>mDesc</cstring>
-            </property>
-            <property name="readOnly">
-                <bool>true</bool>
-            </property>
-        </widget>
-        <widget class="QLabel" row="0" column="0" rowspan="4" colspan="1">
+        <widget class="QLabel">
             <property name="name">
                 <cstring>mIntroSidebar</cstring>
             </property>
@@ -88,7 +41,10 @@ This program will help you import your email from your previous email program in
                 <enum>Panel</enum>
             </property>
             <property name="frameShadow">
-                <enum>Sunken</enum>
+                <enum>Plain</enum>
+            </property>
+            <property name="lineWidth">
+                <number>0</number>
             </property>
             <property name="scaledContents">
                 <bool>true</bool>
@@ -97,18 +53,98 @@ This program will help you import your email from your previous email program in
                 <number>0</number>
             </property>
         </widget>
-        <widget class="QCheckBox" row="3" column="1">
+        <spacer>
             <property name="name">
-                <cstring>remDupMsg</cstring>
+                <cstring>spacer56</cstring>
             </property>
-            <property name="text">
-                <string>Remove duplicate messages during import</string>
+            <property name="orientation">
+                <enum>Horizontal</enum>
             </property>
-            <property name="checked">
-                <bool>false</bool>
+            <property name="sizeType">
+                <enum>Fixed</enum>
             </property>
+            <property name="sizeHint">
+                <size>
+                    <width>10</width>
+                    <height>10</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout19</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>TextLabel6</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>1</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>&lt;b&gt;Welcome to KMailCVT - The KMail Import Tool&lt;/b&gt;
+&lt;br&gt;&lt;br&gt;
+This program will help you import your email from your previous email program into KMail.&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+ Please select the program you would like to import from, then click 'Next'.</string>
+                    </property>
+                    <property name="textFormat">
+                        <enum>RichText</enum>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignTop|AlignLeft</set>
+                    </property>
+                    <property name="vAlign" stdset="0">
+                    </property>
+                    <property name="wordwrap" stdset="0">
+                    </property>
+                </widget>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>mFilterCombo</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="QTextEdit">
+                    <property name="name">
+                        <cstring>mDesc</cstring>
+                    </property>
+                    <property name="readOnly">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>remDupMsg</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Remove &amp;duplicate messages during import</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+D</string>
+                    </property>
+                    <property name="checked">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+            </vbox>
         </widget>
-    </grid>
+    </hbox>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
