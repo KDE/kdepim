@@ -99,7 +99,7 @@ void BaseConduit::init()
 
 BaseConduit::~BaseConduit()
     {
-    delete fDB;
+    if (fDB) delete fDB;
     fDB = 0L;
     }
 
@@ -211,6 +211,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.21  2001/03/30 17:11:31  stern
+// Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
+//
 // Revision 1.20  2001/03/29 21:41:49  stern
 // Added local database support in the command line for conduits
 //
