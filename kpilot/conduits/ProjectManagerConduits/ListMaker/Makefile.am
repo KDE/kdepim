@@ -17,7 +17,7 @@ service_DATA = ListMaker-conduit.desktop
 ### DEBUG_CERR. Define DEBUG to get debugging support anywhere.
 ###
 ### KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
-KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
+#KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
 
 
 ###SUBDIRS = ListMaker
@@ -28,7 +28,7 @@ KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
 ###          ShadowPlan
 
 
-lib_LTLIBRARIES = libListMakerConduit.la 
+kde_module_LTLIBRARIES = libListMakerConduit.la
 
 libListMakerConduit_la_SOURCES = \
    ListMaker-conduit.cc  pilotListMakerEntry.cc ListMaker-factory.cc \
