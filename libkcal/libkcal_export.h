@@ -1,6 +1,9 @@
 /*
     This file is part of libkcal.
-		
+
+     Copyright (C) 2004 Dirk Mueller <mueller@kde.org>
+     Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
