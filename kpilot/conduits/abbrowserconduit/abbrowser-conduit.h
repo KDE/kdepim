@@ -92,6 +92,7 @@ public:
 
 	int _conflict(const QString &entry, const QString &field, const QString &pc, const QString &backup, 
 			const QString &palm, bool & mergeNeeded, QString & mergedStr);
+	int _compare(const QString &str1, const QString &str2) const;
 
 	/**
 	*  @return the Abbrowser Contact field to map the pilot "other" phone
@@ -150,7 +151,8 @@ private:
 	void _copy(KABC::Addressee &toAbEntry, const PilotAddress &fromPilotAddr);
 	void _setPilotAddress(PilotAddress &toPilotAddr, const KABC::Address &abAddress);
 	bool _equal(const PilotAddress &piAddress, KABC::Addressee &abEntry) const;
-   KABC::Addressee _findMatch(const PilotAddress & pilotAddress) const;
+	KABC::Addressee _findMatch(const PilotAddress & pilotAddress) const;
+	int _getCat(const QStringList cats) const ;
 
    /** 
 	*  Given a list of contacts, creates the pilot id to contact key map
@@ -213,6 +215,9 @@ private:
 
 
 // $Log$
+// Revision 1.17  2002/06/30 22:17:50  kainhofe
+// some cleanup. Changes from the palm are still not applied to the pc, pc->palm still disabled.
+//
 // Revision 1.16  2002/06/30 16:23:23  kainhofe
 // Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
 //

@@ -29,18 +29,25 @@
 */
 
 #include <kdialogbase.h>
+class KPilotDeviceLink;
 class QButtonGroup;
 class QCheckBox;
+class QTimer;
 class ResolutionDlg : public KDialogBase
 { 
     Q_OBJECT
 
 public:
-	ResolutionDlg( QWidget* parent=0, QString caption="", QString Text="", QStringList lst=QStringList(), QString remember="");
+	ResolutionDlg( QWidget* parent=0, KPilotDeviceLink*fH=0L, QString caption="", QString Text="", QStringList lst=QStringList(), QString remember="");
 	~ResolutionDlg();
-
+public slots:
+	void _tickle();
+public:
 	QButtonGroup* ResolutionButtonGroup;
 	QCheckBox* rememberCheck;
+protected:
+	QTimer* tickleTimer;
+	KPilotDeviceLink* fHandle;
 };
 
 #endif // MYDIALOG_H

@@ -355,20 +355,11 @@ void AbbrowserConduit::syncPalmRecToPC()
 	
 	if (fFirstTime || fFullSync)
 	{
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << " about to readRecordByIndex " << pilotindex << endl;
-#endif
 		r=fDatabase->readRecordByIndex(pilotindex++);
 	}
 	else
 	{
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << " about to readRecordByIndex " << pilotindex << endl;
-#endif
 		r=dynamic_cast<PilotSerialDatabase*>(fDatabase)->readNextModifiedRec();
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << " record read. " << endl;
-#endif
 	}
 	
 	if (!r)
@@ -422,15 +413,9 @@ void AbbrowserConduit::syncPalmRecToPC()
 		}
 	}
 
-#ifdef DEBUG
-	DEBUGCONDUIT<<fname<<":  appending syncID "<<r->getID()<<" to syncedids"<<endl;
-#endif
 	syncedIds.append(r->getID());
 	KPILOT_DELETE(r);
 	KPILOT_DELETE(s);
-#ifdef DEBUG
-	DEBUGCONDUIT<<fname<<":  r and s deleted, using singleShot with syncPalmRecToPC()"<<endl;
-#endif
 	
 	QTimer::singleShot(0,this,SLOT(syncPalmRecToPC()));
 }
@@ -440,8 +425,8 @@ void AbbrowserConduit::syncPalmRecToPC()
 void AbbrowserConduit::syncPCRecToPalm()
 {
 	FUNCTIONSETUP;
-QTimer::singleShot(0, this, SLOT(cleanup()));
-return;
+//QTimer::singleShot(0, this, SLOT(cleanup()));
+//return;
 	bool ok;
 	KABC::Addressee ad=*abiter;
 	QString recID(ad.custom(appString, idString));
@@ -619,9 +604,6 @@ KABC::Addressee AbbrowserConduit::_saveAbEntry(KABC::Addressee &abEntry)
 	// TODO: Clear a modified flag (if existent)
 	if (!abEntry.custom(appString, idString).isEmpty())
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": custom string not empty: "<<abEntry.custom(appString, idString)<<endl;
-#endif
 		addresseeMap.insert(abEntry.custom(appString, idString).toLong(), abEntry.uid());
 	}
 #ifdef DEBUG
@@ -631,13 +613,7 @@ KABC::Addressee AbbrowserConduit::_saveAbEntry(KABC::Addressee &abEntry)
 	}
 #endif
 	  
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": Before insertAddresse(abEntry) with abEntry="<<abEntry.realName()<<endl;
-#endif
 	aBook->insertAddressee(abEntry);
-#ifdef DEBUG
-	DEBUGCONDUIT<<fname<<": abEntry successfully inserted..."<<endl;
-#endif
 	abChanged=true;
 	return abEntry;
 }
@@ -889,56 +865,55 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress,
 {
 	FUNCTIONSETUP;
 	// TODO: also check the PilotID
-	if (QString(piAddress.getField(entryLastname)) != abEntry.familyName() ) 
+	if (_compare( abEntry.familyName(), piAddress.getField(entryLastname))  ) 
 	{
-#ifdef DEBUG
-	DEBUGCONDUIT<<"Not equal: \""<<piAddress.getField(entryLastname)<<"\" and \""<< abEntry.familyName()<<"\""<<endl;
-#endif
 		return false;
-	}
-	if (piAddress.getField(entryFirstname) != abEntry.givenName() )
+	} 
+	if (_compare( abEntry.givenName(), piAddress.getField(entryFirstname) ) )
 		return false;
-	if (piAddress.getField(entryTitle) != abEntry.title() )
+	if (_compare( abEntry.title(), piAddress.getField(entryTitle)))
 		return false;
-	if (piAddress.getField(entryCompany) != abEntry.organization() )
+	if (_compare( abEntry.organization(), piAddress.getField(entryCompany)))
 		return false;
-	if (piAddress.getField(entryNote) != abEntry.note() )
+	if (_compare( abEntry.note(), piAddress.getField(entryNote)))
 		return false;
-	if (piAddress.getCategoryLabel() != abEntry.categories().first() )
+	int cat=_getCat(abEntry.categories() );
+//#ifdef DEBUG
+//	DEBUGCONDUIT<<"Category for "<<abEntry.realName()<<" was: \""<<cat<<" ("<<fAddressAppInfo.category.name[cat]<<")"<<endl;
+//#endif
+	if (_compare( fAddressAppInfo.category.name[cat], piAddress.getCategoryLabel()))
 		return false;
-	if (piAddress.getPhoneField(PilotAddress::eWork) != abEntry.phoneNumber(KABC::PhoneNumber::Work).number() )
+	if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Work).number(), piAddress.getPhoneField(PilotAddress::eWork)))
 		return false;
-	if (piAddress.getPhoneField(PilotAddress::eHome) != abEntry.phoneNumber(KABC::PhoneNumber::Home).number() )
+	if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Home).number(), piAddress.getPhoneField(PilotAddress::eHome)))
 		return false;
+
 // TODO: what to do with the other record on the palm???
-//	if (piAddress.getPhoneField(PilotAddress::eEmail) != abEntry.findRef(fPilotOtherMap) )
+//	if (_compare( abEntry.findRef(fPilotOtherMap), piAddress.getPhoneField(PilotAddress::eEmail)))
 //		return false;
-	if (piAddress.getPhoneField(PilotAddress::eOther) != abEntry.preferredEmail() )
+	if (_compare( abEntry.preferredEmail(), piAddress.getPhoneField(PilotAddress::eOther)) )
 		return false;
 	if (isPilotFaxHome())
-		if (piAddress.getPhoneField(PilotAddress::eFax) != 
-			abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home).number() )
+		if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home).number(), piAddress.getPhoneField(PilotAddress::eFax) ) )
 			return false;
-		else if (piAddress.getPhoneField(PilotAddress::eFax) !=
-				abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work).number() )
+		else if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work).number(), piAddress.getPhoneField(PilotAddress::eFax) ) )
 			return false;
-	if (piAddress.getPhoneField(PilotAddress::eMobile) !=
-			abEntry.phoneNumber(KABC::PhoneNumber::Cell).number() )
+	if (_compare( abEntry.phoneNumber(KABC::PhoneNumber::Cell).number(), piAddress.getPhoneField(PilotAddress::eMobile) ) )
 		return false;
 	KABC::Address address = abEntry.address(KABC::Address::Home);
-	if (piAddress.getField(entryAddress) != address.street() )
+	if (_compare( address.street(), piAddress.getField(entryAddress)))
 	{
 		address = abEntry.address(KABC::Address::Work);
-		if (piAddress.getField(entryAddress) != address.street() )
+		if (_compare( address.street(), piAddress.getField(entryAddress)))
 			return false;
 	}
-	if (piAddress.getField(entryCity) != address.locality() )
+	if (_compare( address.locality(), piAddress.getField(entryCity)))
 		return false;
-	if (piAddress.getField(entryState) != address.region() )
+	if (_compare( address.region(), piAddress.getField(entryState)))
 		return false;
-	if (piAddress.getField(entryZip) != address.postalCode() )
+	if (_compare( address.postalCode(), piAddress.getField(entryZip)))
 		return false;
-	if (piAddress.getField(entryCountry) != address.country() )
+	if (_compare( address.country(), piAddress.getField(entryCountry)))
 		return false;
 
 	
@@ -999,8 +974,30 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	}
 	
 	// TODO: Process the additional entries from the Palm (the palm database app block tells us the name of the fields)
+	
 	//TODO: sync categories
+	toPilotAddr.setCat(_getCat(fromAbEntry.categories()));
 //showPilotAddress(toPilotAddr);
+}
+
+/** 
+ * _getCat returns the id of the category from the given categories list. If none of the categories exist 
+ * on the palm, the "Nicht abgelegt" (don't know the english name) is used.
+ */
+	int AbbrowserConduit::_getCat(const QStringList cats) const
+{
+	FUNCTIONSETUP;
+	int j;
+	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
+		for (j=1; j<=15; j++) 
+		{
+			if (!(*it).isEmpty() && ! _compare(*it, fAddressAppInfo.category.name[j]) ) 
+			{
+				return j;
+			}
+		}
+	}
+	return 0;
 }
 
 
@@ -1063,6 +1060,16 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	toAbEntry.insertCustom(appString, idString, QString::number(fromPiAddr.getID()));
 	
 	// TODO: Sync categories
+	// first remove all categories and then add only the appropriate one
+	for (int j=1; j<=15; j++) 
+	{
+		toAbEntry.removeCategory(fAddressAppInfo.category.name[j]);
+	}
+	int cat=fromPiAddr.getCat();
+	if (0<cat && cat<=15) 
+	{
+		toAbEntry.insertCategory( fAddressAppInfo.category.name[cat] );
+	}
 //showAddressee(toAbEntry);
 }
 
@@ -1138,6 +1145,18 @@ int AbbrowserConduit::_conflict(const QString &entry, const QString &field, cons
 	return CHANGED_NONE;
 }
 
+
+
+int AbbrowserConduit::_compare(const QString &str1, const QString &str2) const
+{
+	FUNCTIONSETUP;
+//#ifdef DEBUG
+//	DEBUGCONDUIT<<"str2="<<str1<<", str2="<<str2<<endl<<"str1.isEmpty="<<str1.isEmpty()<<", str2.isEmpty="<<str2.isEmpty()<<"str1.compare(str2)="<<str1.compare(str2)<<endl;
+//#endif
+	
+	if (str1.isEmpty() && str2.isEmpty() ) return 0;
+	else return str1.compare(str2);
+}
 
 
 #define clearAdd(res)  (res&CHANGED_NORES)?0:res
@@ -1595,7 +1614,7 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getEntryResolution(const
 AbbrowserConduit::EConflictResolution AbbrowserConduit::ResolutionDialog(QString Title, QString Text, QStringList &lst, QString remember, bool*rem) const
 {
 	FUNCTIONSETUP;
-	ResolutionDlg*dlg=new ResolutionDlg(0L, Title, Text, lst, remember);
+	ResolutionDlg*dlg=new ResolutionDlg(0L, fHandle, Title, Text, lst, remember);
 	if (dlg->exec()==KDialogBase::Cancel) 
 	{
 		return eDoNotResolve;
@@ -1744,6 +1763,9 @@ void AbbrowserConduit::doTest()
 }*/
 
 // $Log$
+// Revision 1.34  2002/06/30 22:17:50  kainhofe
+// some cleanup. Changes from the palm are still not applied to the pc, pc->palm still disabled.
+//
 // Revision 1.33  2002/06/30 16:23:23  kainhofe
 // Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
 //

@@ -32,17 +32,19 @@
 #include <qvbuttongroup.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
+#include <qtimer.h>
 
 #include <kdialogbase.h>
+#include <kpilotlink.h>
 
-ResolutionDlg::ResolutionDlg( QWidget* parent, QString caption, QString Text, QStringList lst, QString remember) : 
-	KDialogBase( parent, "resolutiondlg", true, caption, Ok|Cancel, Ok, true ), ResolutionButtonGroup(0L), rememberCheck(0L)
+ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString caption, QString Text, QStringList lst, QString remember) : 
+	KDialogBase( parent, "resolutiondlg", true, caption, Ok|Cancel, Ok, true ), ResolutionButtonGroup(0L), rememberCheck(0L), tickleTimer(0L), fHandle(fH)
 {
 	QWidget *page = new QWidget( this );
 	setMainWidget(page);
 
 	setSizeGripEnabled( TRUE );
-	QGridLayout* topLayout = new QGridLayout( page, 1, 1, 11, 6, "MyDialogLayout"); 
+	QGridLayout* topLayout = new QGridLayout( page, 5, 3, 11, 6, "MyDialogLayout"); 
 	
 	QLabel* label = new QLabel(Text, page, "TextLabel1" );
 //	TextLabel1->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)2, (QSizePolicy::SizeType)5, 0, 0, TextLabel1->sizePolicy().hasHeightForWidth() ) );
@@ -50,17 +52,19 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, QString caption, QString Text, QS
 	topLayout->addMultiCellWidget( label, 0, 0, 0, 2 );
 
 	QSpacerItem* spacer = new QSpacerItem( 0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum );
-	topLayout->addItem( spacer, 1, 2 );
-	spacer = new QSpacerItem( 0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum );
 	topLayout->addItem( spacer, 1, 0 );
-
-	ResolutionButtonGroup = new QVButtonGroup(this, "ResolutionButtonGroup" );
-	
+	ResolutionButtonGroup = new QVButtonGroup(page, "ResolutionButtonGroup" );
+	topLayout->addMultiCellWidget( ResolutionButtonGroup, 1,1, 1,1 );
 	for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
 		new QRadioButton(*it, ResolutionButtonGroup);
 	}
 //	ResolutionButtonGroup->setButton(0);
-	topLayout->addWidget( ResolutionButtonGroup, 1, 1 );
+	spacer = new QSpacerItem( 0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum );
+	topLayout->addItem( spacer, 1, 2 );
+
+//	QLineEdit* ed=new QLineEdit(page);
+//	topLayout->addMultiCellWidget( ed, 1,1, 2,3);
+	
 
 	spacer = new QSpacerItem( 0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding );
 	topLayout->addItem( spacer, 2, 1 );
@@ -79,6 +83,21 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, QString caption, QString Text, QS
 //	setTabOrder( RadioButton1_2_2, buttonOk );
 //	setTabOrder( buttonOk, buttonCancel );
 //	setTabOrder( buttonCancel, buttonHelp );
+	if (fHandle) 
+		tickleTimer=new QTimer(this, "TickleTimer");
+
+	if (tickleTimer) 
+	{
+		connect( tickleTimer, SIGNAL(timeout()), this, SLOT(_tickle()) );
+		tickleTimer->start( 10000 ); // tickle the palm every 10 seconds to prevent a timeout until the sync is really finished.
+	}
+
+}
+
+void ResolutionDlg::_tickle() 
+{
+	if (fHandle)
+		fHandle->tickle();
 }
 
 /*  
