@@ -354,7 +354,7 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 			return 1;
 		}
 	}
-
+	
 	// Handle modes where we don't need any local databases
 	// first, and return. Remaining cases will be dealt with
 	// later.
@@ -408,7 +408,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 	// init the conduit after DCOP is setup
 	fConduit->init();
-
+	// the mode could have changed to error if init didn't run
+	// properly
+        fMode = fConduit->getMode();
 	switch(fMode)
 	{
 	case BaseConduit::HotSync : fConduit->doSync(); break;
@@ -419,6 +421,10 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 #endif
 		fConduit->doTest(); 
 		break;
+	case BaseConduit::Error :
+	    kdError() << __FUNCTION__ << ": ConduitApp is in Error state: " <<
+		    fConduit->getExitCode() << "." << endl;
+	    return fConduit->getExitCode();
 	default :
 		kdWarning() << __FUNCTION__ << ": ConduitApp has state " 
 			<< (int) fMode 
@@ -434,6 +440,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.25  2001/04/26 05:28:16  adridg
+// Make conduits use the right .po file
+//
 // Revision 1.24  2001/04/23 21:08:14  adridg
 // Removed an unnecessary connection to pilot database
 //
