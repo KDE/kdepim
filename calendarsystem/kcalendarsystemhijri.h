@@ -32,7 +32,7 @@ class KCalendarSystemHijri : public KCalendarSystem
     void constructDateInMonth(QDate& date, int month);
     void constructDateInYear(QDate& date, int year);
     QDate parseDate(QString text);
-    QString wDayName(int day);
+    QString weekDayName(int col, bool shortName);
     int dayOfTheWeek(const QDate& date);
     int numberOfDaysInMonth(const QDate& date);
     int numberOfDaysPrevMonth(const QDate& date);

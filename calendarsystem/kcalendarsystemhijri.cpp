@@ -247,10 +247,12 @@ QDate KCalendarSystemHijri::parseDate(QString text)
   return enteredDate;
 }
 
-QString KCalendarSystemHijri::wDayName(int day)
+QString KCalendarSystemHijri::weekDayName(int day, bool shortName)
 {
-  //kdDebug() << "Hijri wDayName" << endl;
-  return QString( sdow[day-1] );
+  if( shortName )
+     return QString( sdow[day-1] );
+  else
+     return QString( dow[day-1] );
 }
 
 int KCalendarSystemHijri::dayOfTheWeek(const QDate& date)
@@ -259,13 +261,10 @@ int KCalendarSystemHijri::dayOfTheWeek(const QDate& date)
   SDATE  *sd, *gd, *sd1;
   // firstly, we get hijri date from actual gregorian date
   sd = hdate(date.year(), date.month(), date.day());
-  //kdDebug() << "day " << sd->day << " dayOfWeek " << sd->dw << endl;
-  // then lets, create gregorian date for the first day of that hijri month
-  gd = gdate(sd->year, sd->mon, 1);
-  // ...and oooops, there's the first day of month hijri date
-  sd1 = hdate(gd->year, gd->mon, gd->day);
-  //kdDebug() << "day " << sd1->day << " dayOfWeek " << sd1->dw << endl;
-  return (sd1->dw)+1;
+  if( sd->dw == 0 ) 
+	return 7;
+  else 
+	return (sd->dw);
 }
 
 int KCalendarSystemHijri::numberOfDaysInMonth(const QDate& date)

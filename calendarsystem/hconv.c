@@ -23,12 +23,12 @@
 
 
 char	*dow[]= {
-	"Yaumul Ahad", "Yaumul Ithnain", " Yaumu Zulatha", " Yaumul Arbi'a",
-	"Yaumul Khamees", "Yaumul Jumma", "Yaumu Sabt"
+	"Yaumul Ithnain", " Yaumu Zulatha", " Yaumul Arbi'a",
+	"Yaumul Khamees", "Yaumul Jumma", "Yaumu Sabt", "Yaumul Ahad"
 };
 
 char *sdow[] = {
-	"Ahd", "Ith", "Zul", "Arb", "Kha", "Jum", "Sab"
+	 "Ith", "Zul", "Arb", "Kha", "Jum", "Sab", "Ahd"
 };
 
 char	*mname[]= {

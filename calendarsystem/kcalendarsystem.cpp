@@ -152,19 +152,16 @@ QDate KCalendarSystemGregorian::parseDate(QString text)
 }
 
 
-QString KCalendarSystemGregorian::wDayName(int col)
+QString KCalendarSystemGregorian::weekDayName(int col, bool shortName)
 {
   //kdDebug() << "Gregorian wDayName" << endl;
-  return KGlobal::locale()->weekDayName(col, true);
+  return KGlobal::locale()->weekDayName(col, shortName);
 }
 
 
 int KCalendarSystemGregorian::dayOfTheWeek(const QDate& date)
 {
-  kdDebug() << "Gregorian dayOfTheWeek" << endl;
-  QDate temp;
-  temp.setYMD(date.year(), date.month(), 1);
-  return temp.dayOfWeek();
+  return date.dayOfWeek();
 }
 
 int KCalendarSystemGregorian::numberOfDaysInMonth(const QDate& date)

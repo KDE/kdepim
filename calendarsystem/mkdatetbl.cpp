@@ -134,13 +134,13 @@ KDateTable::paintCell(QPainter *painter, int row, int col)
       if (KGlobal::locale()->weekStartsMonday())
         {
           // CALSYS daystr = KGlobal::locale()->weekDayName(col+1, true);
-	  daystr = calendarSystem->wDayName(col+1);
+	  daystr = calendarSystem->weekDayName(col+1);
 
           if (col == 5 || col == 6)
               normalday = false;
         } else {
           // CALSYS daystr = KGlobal::locale()->weekDayName(col==0? 7 : col, true);
-	  daystr = calendarSystem->wDayName(col==0?7 : col);
+	  daystr = calendarSystem->weekDayName(col==0?7 : col);
 
           if (col == 0 || col == 6)
               normalday = false;
@@ -319,7 +319,7 @@ KDateTable::setFontSize(int size)
   for(count=0; count<7; ++count)
     {
       // CALSYS rect=metrics.boundingRect(KGlobal::locale()->weekDayName(count+1, true));
-      rect = metrics.boundingRect( calendarSystem->wDayName(count+1));
+      rect = metrics.boundingRect( calendarSystem->weekDayName(count+1));
       maxCell.setWidth(QMAX(maxCell.width(), rect.width()));
       maxCell.setHeight(QMAX(maxCell.height(), rect.height()));
     }

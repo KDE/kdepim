@@ -45,7 +45,7 @@ class KCalendarSystem
     // Convert day/month/year string to a valid date
     virtual QDate parseDate(QString text) = 0;
     // Short week day name
-    virtual QString wDayName(int col) = 0;
+    virtual QString weekDayName(int col, bool shortName = false ) = 0;
     // Day of week number of date
     virtual int dayOfTheWeek(const QDate& date) = 0;
     // Lenght of the month
@@ -81,9 +81,9 @@ class KCalendarSystemGregorian : public KCalendarSystem
     int monthsInYear(int year);
     QString getMonthName(int month);
     void constructDateInMonth(QDate& date, int month);
-          void constructDateInYear(QDate& date, int year);
+    void constructDateInYear(QDate& date, int year);
     QDate parseDate(QString text);
-    QString wDayName(int col);
+    QString weekDayName(int col, bool shortName);
     int dayOfTheWeek(const QDate& date);
     int numberOfDaysInMonth(const QDate& date);
     int numberOfDaysPrevMonth(const QDate& date);
