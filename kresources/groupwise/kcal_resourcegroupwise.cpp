@@ -28,6 +28,9 @@
 
 #include "soap/groupwiseserver.h"
 
+#include <libkcal/icalformat.h>
+#include <libkcal/calendarlocal.h>
+
 #include <qapplication.h>
 #include <qdatetime.h>
 #include <qptrlist.h>
@@ -46,7 +49,8 @@
 using namespace KCal;
 
 ResourceGroupwise::ResourceGroupwise()
-  : ResourceCached( 0 ), mLock( true ), mServer( 0 )
+  : ResourceCached( 0 ), mLock( true ), mServer( 0 ),
+    mProgress( 0 )
 {
   init();
 
@@ -80,6 +84,9 @@ ResourceGroupwise::~ResourceGroupwise()
 
 void ResourceGroupwise::init()
 {
+  mDownloadJob = 0;
+  mProgress = 0;
+
   mPrefs = new GroupwisePrefsBase();
   
   setType( "groupwise" );
@@ -143,12 +150,44 @@ bool ResourceGroupwise::doLoad()
     return false;
   }
 
+  if ( mDownloadJob ) {
+    kdWarning() << "Download still in progress" << endl;
+    return false;
+  }
+
   mCalendar.close();
 
   disableChangeNotification();
   loadCache();
+  enableChangeNotification();
+
+  emit resourceChanged( this );
 
   clearChanges();
+
+#if 1
+  KURL url( prefs()->url() );
+  url.setProtocol( "groupwise" );
+  url.setPath( "/calendar/" );
+  url.setUser( prefs()->user() );
+  url.setPass( prefs()->password() );
+
+  kdDebug() << "Download URL: " << url << endl;
+
+  mJobData = QString::null;
+
+  mDownloadJob = KIO::get( url, false, false );
+  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
+           SLOT( slotJobResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+           SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
+
+  mProgress = KPIM::ProgressManager::instance()->createProgressItem(
+    KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
+  connect( mProgress,
+           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SLOT( cancelLoad() ) );
+#else
 
 #if 1
   if ( !mServer->readCalendarSynchronous( this ) ) {
@@ -163,7 +202,61 @@ bool ResourceGroupwise::doLoad()
     return false;
   }
 #endif
+
+#endif
   return true;
+}
+
+void ResourceGroupwise::slotJobResult( KIO::Job *job )
+{
+  kdDebug() << "ResourceGroupwise::slotJobResult(): " << endl;
+
+  if ( job->error() ) {
+    loadError( job->errorString() );
+  } else {
+    disableChangeNotification();
+
+    clearCache();
+
+    CalendarLocal calendar;
+    ICalFormat ical;
+    if ( !ical.fromString( &calendar, mJobData ) ) {
+      loadError( i18n("Error parsing calendar data.") );
+    } else {
+      Incidence::List incidences = calendar.incidences();
+      Incidence::List::ConstIterator it;
+      for( it = incidences.begin(); it != incidences.end(); ++it ) {
+//        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
+        Incidence *i = (*it)->clone();
+        QString remote = (*it)->uid();
+        QString local = localUid( remote );
+        if ( local.isEmpty() ) {
+          setRemoteUid( i->uid(), remote );
+        } else {
+          i->setUid( local );
+        }
+        addIncidence( i );
+      }
+    }
+    saveCache();
+    enableChangeNotification();
+
+    clearChanges();
+
+    emit resourceChanged( this );
+    emit resourceLoaded( this );
+  }
+
+  mDownloadJob = 0;
+  if ( mProgress ) mProgress->setComplete();
+  mProgress = 0;
+}
+
+void ResourceGroupwise::slotJobData( KIO::Job *, const QByteArray &data )
+{
+//  kdDebug() << "ResourceGroupwise::slotJobData()" << endl;
+
+  mJobData.append( data.data() );
 }
 
 void ResourceGroupwise::loadFinished()
@@ -227,6 +320,14 @@ bool ResourceGroupwise::confirmSave()
 KABC::Lock *ResourceGroupwise::lock()
 {
   return &mLock;
+}
+
+void ResourceGroupwise::cancelLoad()
+{
+  if ( mDownloadJob ) mDownloadJob->kill();
+  mDownloadJob = 0;
+  if ( mProgress ) mProgress->setComplete();
+  mProgress = 0;
 }
 
 #include "kcal_resourcegroupwise.moc"
