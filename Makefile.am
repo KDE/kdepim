@@ -1,7 +1,7 @@
 ## kdepim/Makefile.am
 ## (C) 1997 Stephan Kulow
 
-COMPILE_FIRST = vCard libimap librmm libdif libical kgantt
+COMPILE_FIRST = vCard libimap librmm libdif libical libkcal kgantt
 SUBDIRS = $(COMPILE_FIRST) $(TOPSUBDIRS)
 
 AUTOMAKE_OPTIONS = foreign 1.4

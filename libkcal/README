@@ -1,0 +1,12 @@
+libkcal
+=======
+
+This library contains the calendaring classes originally only used by
+KOrganizer. They provide a C++ API for handling the vCalendar and iCalendar
+formats, which makes use of Qt classes. This library should be GUI independent
+and suitable for writing command line applications.
+
+libkcal is currently only used by KOrganizer. It's API is still under
+development and will change without further notice. If you are interested in
+using this library, please contact Cornelius Schumacher <schumacher@kde.org>,
+the current maintainer of the lib.
