@@ -109,7 +109,8 @@ void Alarm::setTime(const QDateTime &alarmTime)
 
 QDateTime Alarm::time() const
 {
-  return mAlarmTime;
+  if ( hasTime() ) return mAlarmTime;
+  else return mOffset.end( mParent->dtStart() );
 }
 
 bool Alarm::hasTime() const

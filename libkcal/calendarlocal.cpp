@@ -381,6 +381,8 @@ Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
 {
   if( mOldestDate )
     return alarms( *mOldestDate, to );
+  else
+    return alarms( QDateTime( QDate( 1900, 1, 1 ) ), to );
 }
 
 Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
@@ -419,6 +421,8 @@ void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
   Alarm *alarm;
   for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {  
     if ( alarm->enabled() ) {
+//      kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
+//                    << "': " << alarm->time().toString() << endl;
       if ( alarm->time() >= from && alarm->time() <= to ) {
         alarms.append( alarm );
       }
@@ -689,14 +693,17 @@ QPtrList<Event> CalendarLocal::events(const QDate &start,const QDate &end,
 
 QPtrList<Event> CalendarLocal::getAllEvents()
 {
-  if(mOldestDate)
-    return events(*mOldestDate,*mNewestDate);
+  QPtrList<Event> eventList;
+
+  if( mOldestDate && mNewestDate )
+    eventList = events(*mOldestDate,*mNewestDate);
+
+  return eventList;
 }
 
 
 // taking a QDateTime, this function will look for an eventlist in the dict
 // with that date attached.
-// this list is dynamically allocated and SHOULD BE DELETED when done with!
 QPtrList<Event> CalendarLocal::eventsForDate(const QDateTime &qdt)
 {
   return eventsForDate(qdt.date());

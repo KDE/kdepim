@@ -695,7 +695,13 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   icalcomponent_add_property(a,icalproperty_new_action(action));
 
   icaltriggertype trigger;
-  trigger.time = writeICalDateTime(alarm->time());
+  if ( alarm->hasTime() ) {
+    trigger.time = writeICalDateTime(alarm->time());
+    trigger.duration = icaldurationtype_null_duration();
+  } else {
+    trigger.time = icaltime_null_time();
+    trigger.duration = icaldurationtype_from_int( alarm->offset().asSeconds() );
+  }
   icalcomponent_add_property(a,icalproperty_new_trigger(trigger));
 
   if (alarm->repeatCount()) {
@@ -1472,11 +1478,10 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       case ICAL_TRIGGER_PROPERTY:
         trigger = icalproperty_get_trigger(p);
         if (icaltime_is_null_time(trigger.time)) {
-//          kdDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has no time." << endl;
           if (icaldurationtype_is_null_duration(trigger.duration)) {
-//            kdDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has no duration." << endl;
+            kdDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has no time and no duration." << endl;
           } else {
-//            kdDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has duration." << endl;
+            ialarm->setOffset( Duration( icaldurationtype_as_int( trigger.duration ) ) );
           }
         } else {
           ialarm->setTime(readICalDateTime(trigger.time));
