@@ -21,7 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <kapplication.h>
+#include <kshell.h>
 #include <libkdepim/addresseeview.h>
+
+#include "kabprefs.h"
 
 #include "look_html.h"
 
@@ -29,6 +33,9 @@ KABHtmlView::KABHtmlView( QWidget *parent, const char *name )
   : KABBasicLook( parent, name )
 {
   mView = new KPIM::AddresseeView( this );
+
+  connect( mView, SIGNAL( phoneNumberClicked( const QString& ) ),
+           this, SLOT( phoneNumberClicked( const QString& ) ) );
 }
 
 KABHtmlView::~KABHtmlView()
@@ -38,6 +45,17 @@ KABHtmlView::~KABHtmlView()
 void KABHtmlView::setAddressee( const KABC::Addressee &addr )
 {
   mView->setAddressee( addr );
+}
+
+void KABHtmlView::phoneNumberClicked( const QString &number )
+{
+  QString commandLine = KABPrefs::instance()->mPhoneHookApplication;
+  commandLine.replace( "%N", number );
+
+  QStringList tokens = KShell::splitArgs( commandLine, KShell::TildeExpand );
+
+  if ( tokens.count() != 0 )
+    KApplication::kdeinitExec( tokens[ 0 ], tokens );
 }
 
 #include "look_html.moc"

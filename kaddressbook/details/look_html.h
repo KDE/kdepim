@@ -51,6 +51,9 @@ class KABHtmlView : public KABBasicLook
      */
     void setAddressee( const KABC::Addressee& );
 
+  private slots:
+    void phoneNumberClicked( const QString &number );
+
   private:
     KPIM::AddresseeView *mView;
 };

@@ -41,6 +41,7 @@ class KABPrefs : public KPimPrefs
     bool mHonorSingleClick;
     bool mAutomaticNameParsing;
     int mCurrentIncSearchField;
+    QString mPhoneHookApplication;
 
     // GUI
     bool mJumpButtonBarVisible;

@@ -24,9 +24,12 @@
 #include <qcheckbox.h>
 #include <qframe.h>
 #include <qgroupbox.h>
+#include <qlabel.h>
 #include <qlayout.h>
+#include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qtabwidget.h>
+#include <qtooltip.h>
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -73,7 +76,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
                                             KDialog::spacingHint() );
 
   QGroupBox *groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "General" ), generalPage );
-  QVBoxLayout *boxLayout = new QVBoxLayout( groupBox->layout() );
+  QBoxLayout *boxLayout = new QVBoxLayout( groupBox->layout() );
   boxLayout->setAlignment( Qt::AlignTop );
 
   mViewsSingleClickBox = new QCheckBox( i18n( "Honor KDE single click" ), groupBox, "msingle" );
@@ -81,6 +84,18 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   mNameParsing = new QCheckBox( i18n( "Automatic name parsing for new addressees" ), groupBox, "mparse" );
   boxLayout->addWidget( mNameParsing );
+
+  layout->addWidget( groupBox );
+
+  groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
+  boxLayout = new QHBoxLayout( groupBox->layout(), KDialog::spacingHint() );
+  QLabel *label = new QLabel( i18n( "Phone:" ), groupBox );
+  boxLayout->addWidget( label );
+
+  mPhoneHook = new QLineEdit( groupBox );
+  QToolTip::add( mPhoneHook, i18n( "<ul><li>%N: Phone Number</li></ul>" ) );
+  boxLayout->addWidget( mPhoneHook );
+  boxLayout->setStretchFactor( mPhoneHook, 1 );
 
   layout->addWidget( groupBox );
 
@@ -102,6 +117,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   connect( mNameParsing, SIGNAL( toggled( bool ) ), this, SLOT( modified() ) );
   connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), this, SLOT( modified() ) );
+  connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), this, SLOT( modified() ) );
   connect( mExtensionView, SIGNAL( selectionChanged( QListViewItem* ) ),
            SLOT( selectionChanged( QListViewItem* ) ) );
   connect( mExtensionView, SIGNAL( clicked( QListViewItem* ) ),
@@ -124,6 +140,7 @@ void KABConfigWidget::restoreSettings()
 
   mNameParsing->setChecked( KABPrefs::instance()->mAutomaticNameParsing );
   mViewsSingleClickBox->setChecked( KABPrefs::instance()->mHonorSingleClick );
+  mPhoneHook->setText( KABPrefs::instance()->mPhoneHookApplication );
   mAddresseeWidget->restoreSettings();
 
   restoreExtensionSettings();
@@ -137,6 +154,7 @@ void KABConfigWidget::saveSettings()
 {
   KABPrefs::instance()->mAutomaticNameParsing = mNameParsing->isChecked();
   KABPrefs::instance()->mHonorSingleClick = mViewsSingleClickBox->isChecked();
+  KABPrefs::instance()->mPhoneHookApplication = mPhoneHook->text();
   mAddresseeWidget->saveSettings();
 
   saveExtensionSettings();

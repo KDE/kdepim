@@ -27,6 +27,7 @@
 #include <qwidget.h>
 
 class QCheckBox;
+class QLineEdit;
 class QListViewItem;
 class QPushButton;
 
@@ -65,6 +66,7 @@ class KABConfigWidget : public QWidget
     QCheckBox *mNameParsing;
     QCheckBox *mViewsSingleClickBox;
     QPushButton *mConfigureButton;
+    QLineEdit *mPhoneHook;
 
     AddresseeWidget *mAddresseeWidget;
 };
