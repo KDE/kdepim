@@ -616,9 +616,9 @@ bool KNComposer::applyChanges()
           if ( KMessageBox::warningContinueCancel( this, 
                    i18n("You haven't configured your preferred "
                         "signing key yet.\n"
-                        "Please specify it either in the global "
-                        "identity configuration\n"
-                        "or in the account properties or in the "
+                        "Please specify it in the global "
+                        "identity configuration,\n"
+                        "in the account properties or in the "
                         "group properties!\n"
                         "The article will be sent unsigned." ),
                    QString::null, i18n( "Send unsigned" ),
