@@ -39,21 +39,40 @@
 #include "setup_base.h"
 
 #include "knotes-factory.h"
-#include "knotes-setup.moc"
+#include "knotes-setup.h"
 
+
+KNotesConfigBase::KNotesConfigBase(QWidget *w, const char *n) :
+	ConduitConfigBase(w,n),
+	fConfigWidget(0L)
+{
+	fConfigWidget = new KNotesWidget(w);
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,KNotesConduitFactory::about());
+	fWidget = fConfigWidget;
+}
+
+void KNotesConfigBase::commit(KConfig *fConfig)
+{
+	KConfigGroupSaver s(fConfig,KNotesConduitFactory::group);
+
+	fConfig->writeEntry(KNotesConduitFactory::matchDeletes,
+		fConfigWidget->fDeleteNoteForMemo->isChecked());
+}
+
+void KNotesConfigBase::load(KConfig *fConfig)
+{
+	KConfigGroupSaver s(fConfig,KNotesConduitFactory::group);
+
+	fConfigWidget->fDeleteNoteForMemo->setChecked(
+		fConfig->readBoolEntry(KNotesConduitFactory::matchDeletes,false));
+}
 
 KNotesWidgetSetup::KNotesWidgetSetup(QWidget *w, const char *n,
 	const QStringList & a) :
 	ConduitConfig(w,n,a)
 {
 	FUNCTIONSETUP;
-
-	fConfigWidget = new KNotesWidget(widget());
-	setTabWidget(fConfigWidget->tabWidget);
-	addAboutPage(false,KNotesConduitFactory::about());
-
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+	fConfigBase = new KNotesConfigBase(widget(),"KNotesConfig");
 }
 
 KNotesWidgetSetup::~KNotesWidgetSetup()
@@ -66,11 +85,7 @@ KNotesWidgetSetup::~KNotesWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,KNotesConduitFactory::group);
-
-	fConfig->writeEntry(KNotesConduitFactory::matchDeletes,
-		fConfigWidget->fDeleteNoteForMemo->isChecked());
+	fConfigBase->commit(fConfig);
 }
 
 /* virtual */ void KNotesWidgetSetup::readSettings()
@@ -78,10 +93,6 @@ KNotesWidgetSetup::~KNotesWidgetSetup()
 	FUNCTIONSETUP;
 
 	if (!fConfig) return;
-
-	KConfigGroupSaver s(fConfig,KNotesConduitFactory::group);
-
-	fConfigWidget->fDeleteNoteForMemo->setChecked(
-		fConfig->readBoolEntry(KNotesConduitFactory::matchDeletes,false));
+	fConfigBase->load(fConfig);
 }
 

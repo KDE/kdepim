@@ -33,9 +33,20 @@
 
 class KNotesWidget;
 
+class KNotesConfigBase : public ConduitConfigBase
+{
+public:
+	KNotesConfigBase(QWidget *parent, const char *name);
+	
+	virtual void commit(KConfig *);
+	virtual void load(KConfig *);
+
+private:
+	KNotesWidget *fConfigWidget;
+} ;
+
 class KNotesWidgetSetup : public ConduitConfig
 {
-Q_OBJECT
 public:
 	KNotesWidgetSetup(QWidget *,const char *,const QStringList &);
 	virtual ~KNotesWidgetSetup();
@@ -46,7 +57,7 @@ protected:
 	virtual void commitChanges();
 
 private:
-	KNotesWidget *fConfigWidget;
+	KNotesConfigBase *fConfigBase;
 } ;
 
 #endif
