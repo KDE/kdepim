@@ -1,6 +1,13 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-10-05  Adriaan de Groot
+* I wonder if the codec() stuff shouldn't move from the PilotAppCategory
+  to the device link -- after all, it's the _device_ that knows what
+  the encoding is (who knows, maybe future versions of Pilots will be
+  able to tell th desktop this).
+* Added a localBackup action, so we can make ~ backup files of all the
+  database files before doing a sync, just in case.
 
 2004-10-04  Adriaan de Groot
 * Bail if the Pilot disconnects, but only between conduits. Conduits
