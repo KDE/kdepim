@@ -311,15 +311,10 @@ bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPat
 	return (fDatabase && fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
+bool ConduitAction::openDatabases(const QString &dbName, bool *retrieved)
 {
 	FUNCTIONSETUP;
 
-	/*
-	** We should look into the --local flag passed
-	** to the conduit and act accordingly, but until
-	** that is implemented ..
-	*/
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Mode="
@@ -328,7 +323,7 @@ bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 		<< endl ;
 #endif
 
-	if (isTest() && isLocal())
+	if (isLocal())
 	{
 		return openDatabases_(dbName,CSL1("/tmp/"));
 	}
