@@ -18,7 +18,7 @@ AM_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
 
 XXLIBS = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la $(top_builddir)/libkdepim/libkdepim.la
 
-libkaddrbk_csv_xxport_la_SOURCES = csv_xxport.cpp csvimportdialog.cpp
+libkaddrbk_csv_xxport_la_SOURCES = csv_xxport.cpp csvimportdialog.cpp dateparser.cpp
 libkaddrbk_csv_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_vcard_xxport_la_SOURCES = vcard_xxport.cpp

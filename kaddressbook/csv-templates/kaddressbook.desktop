@@ -1,5 +1,6 @@
 [General]
 Columns=43
+DatePattern=Y-M-D
 DelimiterOther=
 DelimiterType=0
 QuoteType=0
@@ -9,9 +10,12 @@ Name=KAddressBook (KDE 3.1)
 Name[af]=K-adresboek (Kde 3.1)
 Name[be]=K Адрасная кніга (KDE 3.1)
 Name[bg]=КАдреснаКнига (KDE 3.1)
+Name[ca]=Llibreta d'adreces (KDE 3.1)
 Name[cs]=Kniha adres (KDE 3.1)
+Name[cy]=KLlyfrCyfeiriadau (KDE 3.1)
 Name[de]=Adressbuch (KDE 3.1)
 Name[eo]=Adresaro (KDE 3.1)
+Name[et]=KDE aadressiraamat (KDE 3.1)
 Name[fo]=KAdressubók (KDE 3.1)
 Name[hu]=Címjegyzék (KDE 3.1)
 Name[it]=Rubrica degli indirizzi (KDE 3.1)
@@ -23,6 +27,7 @@ Name[ru]=Адресная книга (KDE 3.1)
 Name[sv]=Kadressbok (KDE 3.1)
 Name[tr]=K Adres Defteri (KDE 3.1)
 Name[ven]=Bugu ya diresi ya K (KDE 3.1)
+Name[xx]=xxKAddressBook (KDE 3.1)xx
 Name[zh_TW]=KAddressBook (KDE 3.1) 通訊錄
 
 [csv column map]

@@ -1,5 +1,6 @@
 [General]
 Columns=39
+DatePattern=M/D/Y
 DelimiterOther=
 DelimiterType=0
 QuoteType=0
@@ -7,6 +8,8 @@ QuoteType=0
 [Misc]
 Name=Yahoo! AddressBook
 Name[be]=Адрасная кніга Yahoo!
+Name[ca]=Llibreta d'adreces Yahoo!
+Name[cy]=Llyfr Cyfeiriadau Yahoo!
 Name[da]=Yahoo! adressebog
 Name[el]=Βιβλίο διευθύνσεων Yahoo!
 Name[es]=Libreta de direcciones de Yahoo!
@@ -16,6 +19,7 @@ Name[ru]=Адресная книга Yahoo!
 Name[sk]=Yahoo! kniha adries
 Name[sv]=Yahoo! adressbok
 Name[tr]=Yahoo! Adres Defteri
+Name[xx]=xxYahoo! AddressBookxx
 
 [csv column map]
 0=3

@@ -85,6 +85,7 @@ class CSVImportDialog : public KDialogBase
     QRadioButton* mRadioSpace;
     QRadioButton* mRadioOther;
     QLineEdit* mDelimiterEdit;
+    QLineEdit* mDatePatternEdit;
     QComboBox* mComboLine;
     QComboBox* mComboQuote;
     QCheckBox* mIgnoreDuplicates;

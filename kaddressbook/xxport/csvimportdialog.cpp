@@ -25,11 +25,12 @@
 #include <qcombobox.h>
 #include <qinputdialog.h>
 #include <qlabel.h>
+#include <qlayout.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qtable.h>
-#include <qlayout.h>
+#include <qtooltip.h>
 
 #include <kapplication.h>
 #include <kdebug.h>
@@ -40,6 +41,8 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
+
+#include "dateparser.h"
 
 #include "csvimportdialog.h"
 
@@ -145,6 +148,7 @@ CSVImportDialog::~CSVImportDialog()
 
 KABC::AddresseeList CSVImportDialog::contacts() const
 {
+  DateParser dateParser( mDatePatternEdit->text() );
   KABC::AddresseeList contacts;
 
   for ( int row = 1; row < mTable->numRows(); ++row ) {
@@ -156,7 +160,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
       QComboTableItem *item = static_cast<QComboTableItem*>( mTable->item( 0, 
                                                              col ) );
       if ( !item ) {
-        qDebug( "ERROR: item cast failed" );
+        kdError() << "ERROR: item cast failed" << endl;
         continue;
       }
 
@@ -190,7 +194,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
           a.setNickName( value );
           break;
         case Birthday:
-          a.setBirthday( QDateTime::fromString( value, Qt::ISODate ) );
+          a.setBirthday( dateParser.parse( value ) );
           break;
         case Email:
           if ( !value.isEmpty() )
@@ -347,7 +351,7 @@ void CSVImportDialog::initGUI()
   mUrlRequester->setFilter( "*.csv" );
   hbox->addWidget( mUrlRequester );
 
-  layout->addMultiCellLayout( hbox, 0, 0, 0, 3 );
+  layout->addMultiCellLayout( hbox, 0, 0, 0, 4 );
 
   // Delimiter: comma, semicolon, tab, space, other
   mDelimiterBox = new QButtonGroup( i18n( "Delimiter" ), page );
@@ -387,20 +391,33 @@ void CSVImportDialog::initGUI()
   mComboQuote->insertItem( i18n( "None" ), 2 );
   layout->addWidget( mComboQuote, 2, 2 );
 
+  mDatePatternEdit = new QLineEdit( page );
+  mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 format as default
+  QToolTip::add( mDatePatternEdit, i18n( "<ul><li>y: year with 2 digits</li>"
+                                         "<li>Y: year with 4 digits</li>"
+                                         "<li>m: month with 1 or 2 digits</li>"
+                                         "<li>M: month with 2 digits</li>"
+                                         "<li>d: day with 1 or 2 digits</li>"
+                                         "<li>D: day with 2 digits</li></ul>" ) );
+  layout->addWidget( mDatePatternEdit, 2, 4 );
+
   label = new QLabel( i18n( "Start at line:" ), page );
   layout->addWidget( label, 1, 3 );
 
   label = new QLabel( i18n( "Textquote:" ), page );
   layout->addWidget( label, 1, 2 );
 
+  label = new QLabel( i18n( "Date format:" ), page );
+  layout->addWidget( label, 1, 4 );
+
   mIgnoreDuplicates = new QCheckBox( page );
   mIgnoreDuplicates->setText( i18n( "Ignore duplicate delimiters" ) );
-  layout->addMultiCellWidget( mIgnoreDuplicates, 3, 3, 2, 3 );
+  layout->addMultiCellWidget( mIgnoreDuplicates, 3, 3, 2, 4 );
 
   mTable = new QTable( 0, 0, page );
   mTable->setSelectionMode( QTable::NoSelection );
   mTable->horizontalHeader()->hide();
-  layout->addMultiCellWidget( mTable, 4, 4, 0, 3 );
+  layout->addMultiCellWidget( mTable, 4, 4, 0, 4 );
 
   setButtonText( User1, i18n( "Apply Template" ) );
   setButtonText( User2, i18n( "Save Template" ) );
@@ -717,6 +734,7 @@ void CSVImportDialog::applyTemplate()
 
   KSimpleConfig config( fileMap[ tmp ], true );
   config.setGroup( "General" );
+  mDatePatternEdit->setText( config.readEntry( "DatePattern", "Y-M-D" ) );
   uint numColumns = config.readUnsignedNumEntry( "Columns" );
   mDelimiterEdit->setText( config.readEntry( "DelimiterOther" ) );
   mDelimiterBox->setButton( config.readNumEntry( "DelimiterType" ) );
@@ -761,6 +779,7 @@ void CSVImportDialog::saveTemplate()
 
   KConfig config( fileName );
   config.setGroup( "General" );
+  config.writeEntry( "DatePattern", mDatePatternEdit->text() );
   config.writeEntry( "Columns", mTable->numCols() );
   config.writeEntry( "DelimiterType", mDelimiterBox->id( mDelimiterBox->selected() ) );
   config.writeEntry( "DelimiterOther", mDelimiterEdit->text() );
