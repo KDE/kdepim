@@ -141,6 +141,27 @@ private slots:
     void sync();
 };
 
+
+/*
+ * Same idea as ContactLineEdit but for a  read/write ComboBox
+ * instead of a LineEdit
+ */
+class FileAsComboBox : public QComboBox
+{
+    Q_OBJECT
+
+public:
+    FileAsComboBox( QWidget *parent, const char *name, ContactEntry *ce );
+    virtual void setName ( const char * name );
+
+private:
+    ContactEntry *ce;
+
+private slots:
+    void sync();
+    virtual void updateContact();
+};
+
 /*
   A ContactComboBox object is a non-editable QComboBox like widget. Each 
   ContactComboBox has a buddy widget, normally a ContactLineEdit associated

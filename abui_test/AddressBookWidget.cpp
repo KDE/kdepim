@@ -28,8 +28,6 @@ AddressBookDialog::AddressBookDialog(ContactEntry * e, const char * name = 0)
 
     layout_     = new QGridLayout(mainWidget_, 2, 1, 10, 10);
     abWidget_   = new ContactDialog(mainWidget_, "abWidget", e);
-    abWidget_->setMinimumSize(abWidget_->minimumSizeHint());
-    mainWidget_->setMinimumSize(mainWidget_->minimumSizeHint());
     
     // Button box.
 
@@ -50,9 +48,22 @@ AddressBookDialog::AddressBookDialog(ContactEntry * e, const char * name = 0)
     layout_->addWidget(buttonBox_,  1, 0);
     
     layout_->activate();
+    mainWidget_->setMinimumSize(mainWidget_->minimumSizeHint());
 
     // Done. Set the view and show yourself.    
     setView(mainWidget_);
+
+    // oh Dear, setView takes a widget not a layout. 
+    // And there is no setViewLayout.
+    // widget( layout ( widget (layout layout ) )) -> bad sizeHint
+    // widget( layout (layout (layout ... ))) -> good sizeHint
+    // Hence I need to do the sizing manually! :-(
+    // - Don Sanders
+    QSize rightSize = QSize( mainWidget_->sizeHint().width(), 
+			     mainWidget_->sizeHint().height() + 
+			     fileMenu_->sizeHint().height() + 
+			     toolBar()->sizeHint().height() );
+    resize( rightSize );
     show();
 }
 

@@ -101,11 +101,19 @@ of a problem this is for other locales.
 
 The dialog window is not sized properly until after it is shown. This can 
 cause the window manager to misposition the window.
+OK I noticed that his was happening to other dialogs too.
+Fixed!
+There were a multitude of factors that can cause this
+using QWidget::autoAdd, Using a QHBox or QWBox, using a Widget to
+frame a layout (containing widgets) and inserting the widget in a
+layout (inside the dialog) and using a tabdialog instead of a
+tabwidget.
 
 I wonder if this dialog should be modal or not.
 
 Maybe tab1 should be completely redesigned making use a QGridLayout,
 addMultiCellWidget and alignment.
+Done!
 
 I haven't spent much time on the keyboard accelerators.
 

@@ -5,7 +5,6 @@
 */
 
 #include "contact.h"
-#include <qtabwidget.h>
 #include <qlayout.h>
 #include <qvbox.h>
 #include <qwidget.h>
@@ -16,6 +15,7 @@
 #include <qcombobox.h>
 #include <qgrid.h>
 #include <qgroupbox.h>
+#include <qtabwidget.h>
 
 #include "namevalue.h"
 #include "contactentry.h"
@@ -24,17 +24,29 @@
 #include "kapp.h" // for kapp->palette()
 #include "kglobal.h"
 
-ContactDialog::ContactDialog(QWidget *parent, const char *name, ContactEntry *ce)
-  : QTabWidget(parent, name), vs( 0 ), vp( 0 )
+ContactDialog::ContactDialog( QWidget *parent, const char *name, ContactEntry *ce )
+  : QTabWidget( parent, name ), vs( 0 ), vp( 0 )
 {
     ce ? this->ce = ce : this->ce = new ContactEntry();
     if (ce->find( "N" ))
       curName = *ce->find( "N");
+    /*
+    QVBoxLayout *vb = new QVBoxLayout( this, 5 );
+    tabs = new QTabWidget( this );
+    vb->addWidget( tabs );
+    tabs->setMargin( 4 );
+    */
+    tabs = this;
+    setMargin( 4 );
+
     setupTab1();
     setupTab2();
     setupTab3();
+    
     ce->touch();
-    setMinimumSize(minimumSizeHint());
+    debug( "sizhint " + QString().setNum( sizeHint().width() ));
+    setMinimumSize( sizeHint() );
+    resize( sizeHint() );
 }
 
 ContactEntry* ContactDialog::entry()
@@ -44,123 +56,134 @@ ContactEntry* ContactDialog::entry()
 
 void ContactDialog::setupTab1()
 {
-  QHBox *tabAux = new QHBox( this );
-  QVBox *tab1 = new QVBox( tabAux );
+  QFrame *tab1 = new QFrame( 0, "tab1" );
+  tab1->setFrameStyle( QFrame::NoFrame );
+  QGridLayout *tab1lay = new QGridLayout( tab1, 8, 5 );
+  tab1lay->setSpacing( 5 );
   tab1->setMargin( 5 );
   
 /////////////////////////////////
 // The Name/Job title group
-  QFrame *h1 = new QFrame( tab1 );
-  QGridLayout *lay0 = new QGridLayout( h1, 2, 5 );
-  lay0->setSpacing( 5 );
-  lay0->setAutoAdd( true );
 
   // First row
-  QPushButton *pbFullName = new QPushButton( "&Full Name...", h1 );
-  leFullName = new ContactLineEdit( h1, ".AUXCONTACT-N", ce );
+  QPushButton *pbFullName = new QPushButton( "&Full Name...", tab1 );
+  leFullName = new ContactLineEdit( tab1, ".AUXCONTACT-N", ce );
   leFullName->setText( curName );
   connect( ce, SIGNAL( changed() ), this, SLOT( parseName() ));
   connect( pbFullName, SIGNAL( clicked()), this, SLOT( newNameDialog()));
+  tab1lay->addWidget( pbFullName, 0, 0 );
+  tab1lay->addWidget( leFullName, 0, 1 );
 
-  QFrame * filler1 = new QFrame( h1, "filler1" );
+  QFrame * filler1 = new QFrame( tab1, "filler1" );
   filler1->setFrameStyle( QFrame::NoFrame );
   filler1->setMinimumWidth( 1 );
+  tab1lay->addWidget( filler1, 0, 2 );
 
-  QLabel *lJobTitle = new QLabel( "&Job title:", h1 );
-  QLineEdit *leJobTitle = new ContactLineEdit( h1, "ROLE", ce );
+  QLabel *lJobTitle = new QLabel( "&Job title:", tab1 );
+  QLineEdit *leJobTitle = new ContactLineEdit( tab1, "ROLE", ce );
   lJobTitle->setBuddy( leJobTitle );
+  tab1lay->addWidget( lJobTitle, 0, 3 );
+  tab1lay->addWidget( leJobTitle, 0, 4 );
 
   // Second row
-  QLabel *lCompany = new QLabel( "&Company:", h1 );
-  QLineEdit *leCompany = new ContactLineEdit( h1, "ORG", ce );
+  QLabel *lCompany = new QLabel( "&Company:", tab1 );
+  QLineEdit *leCompany = new ContactLineEdit( tab1, "ORG", ce );
   lCompany->setBuddy( leCompany );
   curCompany = leCompany->text();
   connect( ce, SIGNAL( changed() ), this, SLOT( monitorCompany() ));
+  tab1lay->addWidget( lCompany, 1, 0 );
+  tab1lay->addWidget( leCompany, 1, 1 );
 
-  QFrame * filler2 = new QFrame( h1, "filler2" );
+  QFrame * filler2 = new QFrame( tab1, "filler2" );
   filler2->setFrameStyle( QFrame::NoFrame );
   filler2->setMinimumWidth( 1 );
+  tab1lay->addWidget( filler2, 1, 2 );
 
-  QLabel *lFileAs = new QLabel( "F&ile as:", h1 );
-  cbFileAs = new QComboBox( true, h1, "cbFileAs" );
-  cbFileAs->insertItem( "Sanders, Don" );
+  QLabel *lFileAs = new QLabel( "F&ile as:", tab1 );
+  cbFileAs = new FileAsComboBox( tab1, "X-FileAs", ce );
+  updateFileAs();
+  if (ce->find( "X-FileAs" ))
+    cbFileAs->setEditText( *ce->find( "X-FileAs" ));
+  connect( cbFileAs, SIGNAL( textChanged( const QString& ) ), cbFileAs, SLOT( updateContact() ));
+  tab1lay->addWidget( lFileAs, 1, 3 );
+  tab1lay->addWidget( cbFileAs, 1, 4 );
 
   lFileAs->setBuddy( cbFileAs );
 // End the Name/Job title group
 ////////////////////////////////
-
+  
   // Horizontal bar (rather verbose)
   QFrame *bar1 = new QFrame( tab1, "horizontal divider 1" );
   bar1->setFrameStyle( QFrame::HLine | QFrame::Sunken );
   bar1->setMinimumHeight( 10 );
-  QFrame *bar2 = new QFrame( tab1, "horizontal blank 1" );
-  bar2->setFrameStyle( QFrame::NoFrame );  
-  bar2->setMinimumHeight( 6 );
+  bar1->setMaximumHeight( 10 );
+  tab1lay->addMultiCellWidget( bar1, 2, 2, 0, 4 );
 
 ////////////////////////////////
 // The Email/Webpage group
-  QHBox *h4 = new QHBox( tab1 );
-  h4->setSpacing( 5 );
-
-  ContactComboBox *cbEmail = new ContactComboBox( h4 );
+  ContactComboBox *cbEmail = new ContactComboBox( tab1 );
   cbEmail->insertItem( "E-mail", "EMAIL" );
   cbEmail->insertItem( "E-mail 2", "X-E-mail2" );
   cbEmail->insertItem( "E-mail 3", "X-E-mail3" );
-  QLineEdit *leEmail = new ContactLineEdit( h4, "EMAIL", ce ); 
+  QLineEdit *leEmail = new ContactLineEdit( tab1, "EMAIL", ce ); 
   cbEmail->setBuddy( leEmail );
+  tab1lay->addWidget( cbEmail, 3, 0 );
+  tab1lay->addWidget( leEmail, 3, 1 );
 
-  QFrame * filler4 = new QFrame( h4, "filler4" );
-  filler4->setFrameStyle( QFrame::NoFrame );
-  filler4->setMinimumWidth( 1 );
+  QFrame *filler3 = new QFrame( tab1, "filler3" );
+  filler3->setFrameStyle( QFrame::NoFrame );
+  filler3->setMinimumWidth( 1 );
+  tab1lay->addWidget( filler3, 3, 2 );
 
-  QLabel *lWebPage = new QLabel( "&Web page:", h4 );  
-  QLineEdit *leWebPage = new ContactLineEdit( h4, "WEBPAGE", ce );
+  QLabel *lWebPage = new QLabel( "&Web page:", tab1 );  
+  QLineEdit *leWebPage = new ContactLineEdit( tab1, "WEBPAGE", ce );
   lWebPage->setBuddy( leWebPage );
+  tab1lay->addWidget( lWebPage, 3, 3 );
+  tab1lay->addWidget( leWebPage, 3, 4 );
+
 // End the Email/Webpage group
 ///////////////////////////////
 
   // Horizontal bar (rather verbose)
-  QFrame *f5 = new QFrame( tab1, "horizontal divider 2" );
-  f5->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-  f5->setMinimumHeight( 10 );
-  QFrame *f6 = new QFrame( tab1, "horizontal blank 2" );
-  f6->setFrameStyle( QFrame::NoFrame );  
-  f6->setMinimumHeight( 6 );
+  QFrame *bar2 = new QFrame( tab1, "horizontal divider 2" );
+  bar2->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+  bar2->setMinimumHeight( 10 );
+  bar2->setMaximumHeight( 10 );
+  tab1lay->addMultiCellWidget( bar2, 4, 4, 0, 4 );
 
 ///////////////////////////////
 // The Address/Phone group
-  QHBox *h3 = new QHBox( tab1 );
-  h3->setSpacing( 5 );
-
+  
   // Use a box to keep the widgets fixed vertically in place
-  QFrame *v1 = new QFrame( h3 );
-  QBoxLayout *lay1 = new QBoxLayout( v1, QBoxLayout::Down, 1, 1, "h3BoxLayout" );
-  lay1->setSpacing( 10 );
-  QPushButton *pbAddress = new QPushButton( "Add&ress...", v1 );
+  QBoxLayout *lay1 = new QBoxLayout( QBoxLayout::Down, 10, "lay1" );
+
+  QPushButton *pbAddress = new QPushButton( "Add&ress...", tab1 );
   connect( pbAddress, SIGNAL( clicked()), this, SLOT( newAddressDialog()));
   lay1->addWidget( pbAddress, 0 );
-  cbAddress = new ContactComboBox( v1 );
+  cbAddress = new ContactComboBox( tab1 );
   cbAddress->insertItem( "Business", "X-BusinessAddress" );
   cbAddress->insertItem( "Home", "X-HomeAddress" );
   cbAddress->insertItem( "Other", "X-OtherAddress" );
   lay1->addWidget( cbAddress, 0 );
   lay1->addStretch( 1 );  // Fix the other widgets in place
+  tab1lay->addLayout( lay1, 5, 0 );
 
   // Perhaps the address "subfields" (city, postal, country) should be cleared
   // when this control loses focus. They aren't at the moment.
-  QMultiLineEdit *mleAddress = new ContactMultiLineEdit( h3, "X-BusinessAddress", ce );
+  QMultiLineEdit *mleAddress = new ContactMultiLineEdit( tab1, "X-BusinessAddress", ce );
   cbAddress->setBuddy( mleAddress );
+  tab1lay->addWidget( mleAddress, 5, 1 );
 
-  QFrame * filler3 = new QFrame( h3, "filler3" );
-  filler3->setFrameStyle( QFrame::NoFrame );
-  filler3->setMinimumWidth( 1 );
+  QFrame *filler4 = new QFrame( tab1, "filler4" );
+  filler4->setFrameStyle( QFrame::NoFrame );
+  filler4->setMinimumWidth( 1 );
+  tab1lay->addWidget( filler4, 5, 2 );
 
-  QLabel *lPhone = new QLabel( "Phone:", h3 );  
+  QLabel *lPhone = new QLabel( "Phone:", tab1 );  
   lPhone->setAlignment( QLabel::AlignTop | QLabel::AlignLeft );
+  tab1lay->addWidget( lPhone, 5, 3 );
 
-  // Use a boxlayout to keep the widgets position fixed vertically
-  QFrame *v2 = new QFrame( h3 );
-  QBoxLayout *lay2 = new QBoxLayout( v2, QBoxLayout::TopToBottom, 1, 1, "h3BoxLayout" );
+  QBoxLayout *lay2 = new QBoxLayout( QBoxLayout::TopToBottom, 1 );
   lay2->setSpacing( 10 );
   const int numRows = 4;
 
@@ -186,85 +209,49 @@ void ContactDialog::setupTab1()
 
   int iPhone[] = { 1, 7, 3, 11 };
 
-  int v2Width = 0;
+  QGridLayout *layhGrid = new QGridLayout( numRows, 2 );
+  layhGrid->setSpacing( 10 );
   for ( int row = 0; row < numRows; row++ ) {
-    QGrid *hGrid = new QGrid ( 2, QGrid::Horizontal, v2 );
-    hGrid->setSpacing( 10 );
+    QFrame *hGrid = tab1;
 
     ContactComboBox *cbPhone = new ContactComboBox( hGrid );
     for (int i =0; sPhone[i] != ""; ++i )
       cbPhone->insertItem( i18n( sPhone[i] ), vPhone[i] );
     cbPhone->setCurrentItem( iPhone[row] );
     cbPhone->setMinimumSize( cbPhone->sizeHint() );
+    layhGrid->addWidget( cbPhone, row, 0 );
 
     QLineEdit *ed = new ContactLineEdit( hGrid, vPhone[iPhone[row]], ce ); 
     ed->setMinimumSize( ed->sizeHint());
     cbPhone->setBuddy( ed );
-
-    v2Width = cbPhone->sizeHint().width() + 10 + ed->sizeHint().width();
-    lay2->addWidget( hGrid, 0 );
+    layhGrid->addWidget( ed, row ,1 );
   }
+  lay2->addLayout( layhGrid, 0 );
   lay2->addStretch( 1 ) ;
+  tab1lay->addLayout( lay2, 5, 4 );
 
-  // Rather awkward horizontal bar
-  QFrame *f3 = new QFrame( tab1, "horizontal divider 3" );
-  f3->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-  f3->setMinimumHeight( 10 );
-  QFrame *f4 = new QFrame( tab1, "horizontal blank 3" );
-  f4->setFrameStyle( QFrame::NoFrame );  
-  f4->setMinimumHeight( 6 );
 // End The Address/Phone group
 ///////////////////////////////
+   
+  // Horizontal bar
+  QFrame *bar3 = new QFrame( tab1, "horizontal divider 3" );
+  bar3->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+  bar3->setMinimumHeight( 10 );
+  bar3->setMaximumHeight( 10 );
+  tab1lay->addMultiCellWidget( bar3, 6, 6, 0, 4 );
 
 //////////////////////
 // The Note group
   // Interestingly this doesn't have an equivalent in tab3
   QMultiLineEdit *mleNotes = new ContactMultiLineEdit( tab1, "X-Notes", ce );
   mleNotes->setMinimumSize( mleNotes->sizeHint() );
+  mleNotes->resize( mleNotes->sizeHint() );
+  tab1lay->addMultiCellWidget( mleNotes, 7, 7, 0, 4 );
 // End the Note group
 //////////////////////
-
-  // Make widgets in first "column" same size
-  QSize tSz1 = pbFullName->sizeHint().expandedTo( lCompany->sizeHint()).expandedTo( pbAddress->sizeHint()).expandedTo( cbAddress->sizeHint() ).expandedTo( cbEmail->sizeHint() );;
-  pbFullName->setMinimumSize( tSz1 );
-  lCompany->setMinimumSize( tSz1 );
-  pbAddress->setMinimumSize( tSz1 );
-  cbAddress->setMinimumSize( tSz1 );
-  cbEmail->setMinimumSize( tSz1 );
-
-  // Make widgets in second "column" same size
-  QSize tSz2 = leFullName->sizeHint().expandedTo( leCompany->sizeHint()).expandedTo( mleAddress->sizeHint()).expandedTo( leEmail->sizeHint());
-  QSize tSz4 = leJobTitle->sizeHint().expandedTo( cbFileAs->sizeHint()).expandedTo( leWebPage->sizeHint()).expandedTo( QSize( v2Width, 0 ));
-  tSz2 = tSz2.expandedTo( tSz4 );
-  tSz2.setHeight( 0 ); // Only expand horizontally
-
-  leFullName->setMinimumSize( leFullName->sizeHint().expandedTo( tSz2 ));
-  leCompany->setMinimumSize( leCompany->sizeHint().expandedTo( tSz2 ));
-  // For some reason the mleAddress widget is a bit smaller than
-  // the others even after this correction
-  mleAddress->setMinimumSize( mleAddress->sizeHint().expandedTo( tSz2 ));
-  leEmail->setMinimumSize( leCompany->sizeHint().expandedTo( tSz2 ));
-
-  // Make widgets in third "column" same size
-  QSize tSz3 = lJobTitle->sizeHint().expandedTo( lFileAs->sizeHint()).expandedTo( lPhone->sizeHint()).expandedTo( lWebPage->sizeHint());
-  lJobTitle->setMinimumSize( tSz3 );
-  lFileAs->setMinimumSize( tSz3 );
-  lPhone->setMinimumSize( tSz3 );
-  lWebPage->setMinimumSize( tSz3 );
-
-  // Make widgets in fourth "column" same size
-  leJobTitle->setMinimumSize( tSz2 );
-  cbFileAs->setMinimumSize( tSz2 );
-  leWebPage->setMinimumSize( tSz2 );
-
-  // Use blank and tabAux widgets to force the dialog to be big enough to 
-  // show the entire tab (it's a cludge)
-  QFrame *blank  = new QFrame( tabAux );
-  blank->setFrameStyle( QFrame::NoFrame );
-  blank->setMinimumWidth( 5 );
-  lay0->activate();
-
-  addTab( tabAux, "&General" );
+ 
+  tab1lay->activate(); // required
+  tabs->addTab( tab1, "&General" );
 }
 
 void ContactDialog::setupTab2()
@@ -275,7 +262,7 @@ void ContactDialog::setupTab2()
   lay2->setSpacing( 10 );
 
   const int numRows = 9;
-  QString sLabel[numRows] = { "De&partment:", "&Office:", "&Profession:", 
+  QString sLabel[numRows] = { "D&epartment:", "&Office:", "&Profession:", 
                         "Assistant's &Name:", "&Managers's Name:",
                         "Birthday", "Anniversary:", "Ni&ckname:", 
                         "&Spouse's Name:" };
@@ -335,7 +322,8 @@ void ContactDialog::setupTab2()
     hGrid->setSpacing( 10 );
     label[row] = new QLabel( sLabel[row], hGrid );
     size = size.expandedTo( label[row]->sizeHint() );
-    new ContactLineEdit( hGrid, entryField[row], ce ); 
+    QLineEdit *ed = new ContactLineEdit( hGrid, entryField[row], ce ); 
+    label[row]->setBuddy( ed );
     lay2->addWidget( hGrid, 0 );
   }
 
@@ -347,8 +335,7 @@ void ContactDialog::setupTab2()
   pbDate[1]->setMinimumSize( size2 );
 
   lay2->addStretch( 1 ) ;
-  addTab( v2, "&Details" );
-
+  tabs->addTab( v2, "&Details" );
 }
 
 void ContactDialog::setupTab3()
@@ -388,7 +375,6 @@ void ContactDialog::setupTab3()
     vs = new NameValueSheet( 0, names.count(), names, fields, ce );
     vp = new NameValueFrame( tab3, vs );
     connect( cbSelectFrom, SIGNAL( activated(int)), this, SLOT( setSheet(int)));
-
     t3lay->addWidget( vp, 1);
 
     QFrame *row3 = new QFrame( tab3 );
@@ -399,7 +385,7 @@ void ContactDialog::setupTab3()
     lay3->addWidget( pbNew, 0 );
     lay3->addStretch( 1 );  // Fix the other widgets in place
     t3lay->addWidget( row3, 0);
-    addTab( tab3, "&All fields" );
+    tabs->addTab( tab3, "&All fields" );
 }
 
 void ContactDialog::pickBirthDate() 
@@ -662,33 +648,37 @@ AddressDialog::AddressDialog( QWidget *parent,
   hb->setSpacing( 5 );
   
   QGroupBox *gb = new QGroupBox( this );
-  gb->setTitle( i18n( "Address details" ) );
-  QGridLayout *lay = new QGridLayout( gb, 4, 2, 12 );
+  gb->setTitle( i18n( "Address details" ));
+  QGridLayout *lay = new QGridLayout( gb, 6, 2, 12 );
   lay->setSpacing( 5 );
-  lay->setAutoAdd( true );
-  new QFrame( gb );
-  new QFrame( gb );
+  lay->addWidget( new QFrame( gb ), 0, 0 );
+  lay->addWidget( new QFrame( gb ), 0, 1 );
 
   QLabel *lStreet = new QLabel( i18n( "Street" ), gb );
   lStreet->setAlignment( QLabel::AlignTop | QLabel::AlignLeft );
+  lay->addWidget( lStreet, 1, 0 );
   mleStreet = new QMultiLineEdit( gb );
+  lay->addWidget( mleStreet, 1, 1 );
   if (ce->find( entryField + "Street" ))
     mleStreet->setText( *ce->find( entryField + "Street" ));
   mleStreet->setMinimumSize( mleStreet->sizeHint() );
-  new QLabel( i18n( "City" ), gb );
+  lay->addWidget( new QLabel( i18n( "City" ), gb ), 2, 0 );
   leCity = new QLineEdit( gb );
   if (ce->find( entryField + "City" ))
     leCity->setText( *ce->find( entryField + "City" ));
-  new QLabel( i18n( "State/Province" ), gb );
+  lay->addWidget( leCity, 2, 1 );
+  lay->addWidget( new QLabel( i18n( "State/Province" ), gb ), 3, 0 );
   leState = new QLineEdit( gb );
   if (ce->find( entryField + "State" ))
     leState->setText( *ce->find( entryField + "State" ));
-  new QLabel( i18n( "Zip/Postal Code" ), gb );
+  lay->addWidget( leState, 3, 1 );
+  lay->addWidget( new QLabel( i18n( "Zip/Postal Code" ), gb ), 4, 0 );
   lePostal = new QLineEdit( gb );
   if (ce->find( entryField + "PostalCode" ))
     lePostal->setText( *ce->find( entryField + "PostalCode" ));
+  lay->addWidget( lePostal, 4, 1 );
 
-  new QLabel( i18n("Country"), gb );
+  lay->addWidget( new QLabel( i18n("Country"), gb ), 5, 0 );
   cbCountry = new QComboBox( true, gb );
   QString curCountry;
   int cbNum = -1;
@@ -700,6 +690,7 @@ AddressDialog::AddressDialog( QWidget *parent,
     if (i18n( sCountry[i] ) == curCountry)
       cbNum = i;
   cbCountry->setAutoCompletion( true );
+  lay->addWidget( cbCountry, 5, 1 );
 
   QString language = KGlobal::locale()->language();
   // Try to guess the country the user is in depending
@@ -740,8 +731,6 @@ AddressDialog::AddressDialog( QWidget *parent,
     cbCountry->setCurrentItem( cbNum );
   if (curCountry != "")
     cbCountry->setEditText( curCountry );    
-
-  //  lay->activate();
   hb->addWidget( gb, 0, 0 );
 
   QFrame *tf = new QFrame( this );
@@ -752,7 +741,6 @@ AddressDialog::AddressDialog( QWidget *parent,
   lay1->addWidget( pbCancel, 0 );
   lay1->addStretch( 1 );  // Fix the other widgets in place
 
-  //  lay1->activate();
   hb->addWidget( tf, 0, 1 );
   hb->activate();
   connect( pbOk, SIGNAL( clicked() ), this, SLOT( AddressOk()));
@@ -791,13 +779,12 @@ NameDialog::NameDialog( QWidget *parent, ContactEntry *ce, bool modal )
   
   QGroupBox *gb = new QGroupBox( this );
   gb->setTitle( i18n("Name details") );
-  QGridLayout *lay = new QGridLayout( gb, 5, 2, 12 );
+  QGridLayout *lay = new QGridLayout( gb, 6, 2, 12 );
   lay->setSpacing( 5 );
-  lay->setAutoAdd( true );
-  new QFrame( gb );
-  new QFrame( gb );
+  lay->addWidget( new QFrame( gb ),0,0);
+  lay->addWidget( new QFrame( gb ),0,1);
 
-  new QLabel( i18n("Title"), gb );
+  lay->addWidget( new QLabel( i18n("Title"), gb ),1,0);
   cbTitle = new QComboBox( true, gb );
   for (int i =0; sTitle[i] != ""; ++i )
     cbTitle->insertItem( i18n( sTitle[i] ));
@@ -805,29 +792,34 @@ NameDialog::NameDialog( QWidget *parent, ContactEntry *ce, bool modal )
     cbTitle->setEditText( *ce->find( "X-Title" ));
   else
     cbTitle->setEditText( "" );
+  lay->addWidget( cbTitle,1,1 );
 
-  new QLabel( i18n("First"), gb );
+  lay->addWidget( new QLabel( i18n("First"), gb ), 2,0);
   leFirst = new QLineEdit( gb );
   if (ce->find( "X-FirstName" ))
     leFirst->setText( *ce->find( "X-FirstName" ));
   else
     leFirst->setText( "" );
-
+  lay->addWidget( leFirst, 2, 1 );
   leFirst->setMinimumSize( leFirst->sizeHint() );
-  new QLabel( i18n("Middle"), gb );
+
+  lay->addWidget( new QLabel( i18n("Middle"), gb ), 3, 0 );
   leMiddle = new QLineEdit( gb );
   if (ce->find( "X-MiddleName" ))
     leMiddle->setText( *ce->find( "X-MiddleName" ));
   else
     leMiddle->setText( "" );
-  new QLabel( i18n("Last"), gb );
+  lay->addWidget( leMiddle,3 ,1 );
+
+  lay->addWidget( new QLabel( i18n("Last"), gb ), 4, 0 );
   leLast = new QLineEdit( gb );
   if (ce->find( "X-LastName" ))
     leLast->setText( *ce->find( "X-LastName" ));
   else
     leLast->setText( "" );
+  lay->addWidget( leLast, 4, 1 );
 
-  new QLabel( i18n("Suffix"), gb );
+  lay->addWidget( new QLabel( i18n("Suffix"), gb ), 5, 0 );
   cbSuffix = new QComboBox( true, gb );
   for (int i =0; sSuffix[i] != ""; ++i )
     cbSuffix->insertItem( i18n( sSuffix[i] ));
@@ -835,8 +827,8 @@ NameDialog::NameDialog( QWidget *parent, ContactEntry *ce, bool modal )
     cbSuffix->setEditText( *ce->find( "X-Suffix" ));
   else
     cbSuffix->setEditText( "" );
+  lay->addWidget( cbSuffix, 5, 1 );
 
-  lay->activate();
   hb->addWidget( gb, 0, 0 );
 
   QFrame *tf = new QFrame( this );
@@ -847,7 +839,6 @@ NameDialog::NameDialog( QWidget *parent, ContactEntry *ce, bool modal )
   lay1->addWidget( pbCancel, 0 );
   lay1->addStretch( 1 );  // Fix the other widgets in place
 
-  lay1->activate();
   hb->addWidget( tf, 0, 1 );
   hb->activate();
   connect( pbOk, SIGNAL( clicked() ), this, SLOT( NameOk() ));

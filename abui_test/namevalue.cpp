@@ -7,6 +7,7 @@
 #include "namevalue.h"
 #include <qlayout.h>
 #include <qstringlist.h>
+#include <qcombobox.h>
 #include "contactentry.h"
 #include "klocale.h"
 
@@ -151,7 +152,7 @@ ContactMultiLineEdit::ContactMultiLineEdit( QWidget * parent,
   connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
 }
 
-void ContactMultiLineEdit::focusOutEvent ( QFocusEvent * )
+void ContactMultiLineEdit::focusOutEvent( QFocusEvent * )
 {	
   ce->replace( QString( name()), new QString( text()) );
 }
@@ -168,6 +169,34 @@ void ContactMultiLineEdit::sync()
   const QString *value = ce->find( name() );
   if ((value) && (*value != text()))
     setText( *value );
+}
+
+FileAsComboBox::FileAsComboBox( QWidget * parent, 
+				const char * name, 
+				ContactEntry *ce )
+ : QComboBox( true, parent, name ), ce( ce )
+{
+  connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
+}
+
+void FileAsComboBox::updateContact()
+{	
+  debug( "FileAsComboBox::focusOutEvent" );
+  ce->replace( QString( name()), new QString( currentText()) );
+}
+
+void FileAsComboBox::setName( const char *name )
+{
+  setEditText( "" );
+  QComboBox::setName( name );
+  sync();
+} 
+
+void FileAsComboBox::sync()
+{
+  const QString *value = ce->find( name() );
+  if ((value) && (*value != currentText()))
+    setEditText( *value );
 }
 
 ContactComboBox::ContactComboBox( QWidget *parent )

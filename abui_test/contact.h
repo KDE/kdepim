@@ -9,8 +9,8 @@
 
 #include <qstring.h>
 #include <qtabwidget.h>
-#include <qstringlist.h>
 #include <qdialog.h>
+#include <qstringlist.h>
 
 class NameValueSheet;
 class NameValueFrame;
@@ -20,6 +20,8 @@ class QMultiLineEdit;
 class QLineEdit;
 class QComboBox;
 class QWidget;
+class QTabWidget;
+class FileAsComboBox;
 
 /**
  * A tabbed dialog for entering/updating an address book entry.
@@ -34,7 +36,7 @@ public:
  * then that ContactEntry object will be updated otherwise a new 
  * ContactEntry object will be created
  */
-    ContactDialog(QWidget *parent, const char *name, ContactEntry* ce = 0);
+    ContactDialog( QWidget *parent, const char *name, ContactEntry* ce = 0 );
 
 /**
  * Returns the ContactEntry associated with this dialog.
@@ -46,6 +48,7 @@ private:
     void setupTab2();
     void setupTab3();
     void updateFileAs();
+    QTabWidget* tabs;
     NameValueSheet *vs;
     NameValueFrame *vp;
     QStringList names;
@@ -54,7 +57,7 @@ private:
     ContactEntry* ce;
     QMultiLineEdit *mleAddress;
     ContactComboBox *cbAddress;
-    QComboBox *cbFileAs;
+    FileAsComboBox *cbFileAs;
     QLineEdit *leFullName;
     QString curName;
     QString curCompany;
