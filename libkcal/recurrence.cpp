@@ -987,7 +987,7 @@ bool Recurrence::recursWeekly(const QDate &qd) const
   int i = qd.dayOfWeek()-1;
   bool weekDayMatches = rDays.testBit( (uint) i);
   QDate dStart = mRecurStart.date();
-  if ( mParent->type() == "Todo" && weekDayMatches ) {
+  if ( mParent && mParent->type() == "Todo" && weekDayMatches ) {
     dStart = dStart.addDays( qd.dayOfWeek() - mRecurStart.date().dayOfWeek() );
   }
 
