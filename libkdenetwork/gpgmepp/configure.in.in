@@ -81,8 +81,11 @@ dnl
 
 dnl END inline of gpgme.m4
 
+# The minimum required gpgme version is 0.4.5.
+# It was the first useable one for C++ (class keyword) and KDE (largefile support).
+
 kdepim_needs_gpgme_copy=""
-KDEPIM_PATH_GPGME(0.4.4,[
+KDEPIM_PATH_GPGME(0.4.5,[
 	AC_LANG_SAVE
 	AC_LANG_C
 	kdepim_gpgmepp_save_cflags="$CFLAGS"
@@ -137,8 +140,6 @@ AC_SUBST(GPGME_LIBS_DEP)
 AM_CONDITIONAL(needs_gpgme_copy, test -n "$kdepim_needs_gpgme_copy")
 
 dnl Always true - either from the local copy or from the system lib.
-dnl Only kept for compat, feel free to clean up those 3 lines
-AC_DEFINE(HAVE_GPGME_H, 1, [Define to 1 if you have gpgme >= 0.4.4])
-AC_DEFINE(HAVE_GPGME_0_4_BRANCH, 1, [Define to 1 if you have gpgme >= 0.4.4])
-AM_CONDITIONAL(have_gpgme, true)
+dnl Still used in gpgmepp/gpgmefw.h for some reason.
+AC_DEFINE(HAVE_GPGME_0_4_BRANCH, 1, [Always set since we use gpgme-copy if gpgme isn't available])
 
