@@ -31,7 +31,7 @@
 
 #include "libkcal/calendarlocal.h"
 #include "libkcal/incidence.h"
-#include "libkcal/resourcecalendar.h"
+#include "libkcal/resourcecached.h"
 
 namespace KXMLRPC {
 class Server;
@@ -45,7 +45,7 @@ namespace KCal {
 /**
   This class provides access to php/eGroupware calendar via XML-RPC.
 */
-class ResourceXMLRPC : public ResourceCalendar
+class ResourceXMLRPC : public ResourceCached
 {
   Q_OBJECT
 
@@ -56,6 +56,11 @@ class ResourceXMLRPC : public ResourceCalendar
 
     void readConfig( const KConfig* config );
     void writeConfig( KConfig* config );
+
+    /**
+      Return name of file used as cache for remote file.
+    */
+    QString cacheFile() const;
 
     void setURL( const KURL& url );
     KURL url() const;
@@ -196,7 +201,6 @@ class ResourceXMLRPC : public ResourceCalendar
 
     void listTodosFinished( const QValueList<QVariant>&, const QVariant& );
     void addTodoFinished( const QValueList<QVariant>&, const QVariant& );
-    void updateTodoFinished( const QValueList<QVariant>&, const QVariant& );
     void deleteTodoFinished( const QValueList<QVariant>&, const QVariant& );
     void loadTodoCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
 
@@ -209,7 +213,6 @@ class ResourceXMLRPC : public ResourceCalendar
 
   private slots:
     void reload();
-    void processQueue();
 
   private:
     void init();
@@ -222,10 +225,6 @@ class ResourceXMLRPC : public ResourceCalendar
     void enter_loop();
     void exit_loop();
 
-    void addToQueue( const QDate &date );
-    void addToQueue( const QDate &start, const QDate &end );
-
-    CalendarLocal mCalendar;
     KXMLRPC::Server *mServer;
 
     bool mOpen;
@@ -244,9 +243,6 @@ class ResourceXMLRPC : public ResourceCalendar
     QMap<QString, int> mTodoCategoryMap;
     QMap<QString, QString> mTodoStateMap;
     QMap<QString, int> mRightsMap;
-    QTimer *mQueueTimer;
-    QValueList<QDate> mDateQueue;
-    QValueList< QPair<QDate, QDate> > mDateRangeQueue;
 
     bool mSyncComm;
 
