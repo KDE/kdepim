@@ -31,7 +31,7 @@ using namespace KCal;
 Incidence::Incidence() :
   IncidenceBase(),
   mRelatedTo(0), mStatus(StatusNone), mSecrecy(SecrecyPublic),
-  mPriority(3), mRecurrence(0)
+  mPriority(5), mRecurrence(0)
 {
   recreate();
 
