@@ -59,7 +59,7 @@ Description: Mobile phone utility for KDE
 Package: kdepim-libs
 Architecture: any
 Section: libs
-Replaces: libical
+Replaces: libical, korganizer (<< 4:2.2.1-1)
 Depends: ${shlibs:Depends}
 Description: KDE libraries amd modules for kdepim
  This package contains the different interface modules and libraries
