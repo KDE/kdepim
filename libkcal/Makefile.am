@@ -72,7 +72,7 @@ service_DATA = local.desktop localdir.desktop kabc.desktop
 
 METASOURCES = AUTO
 
-messages:
+messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/libkcal.pot
 
 include ../admin/Doxyfile.am
