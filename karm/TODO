@@ -4,6 +4,5 @@
 * add notes to logentries
 * the BUGS file contains nonsense
 * add better screenshot to http://pim.kde.org/components/karm.php
-* split out Tray of top
 * semantically karm.cpp and top.cpp are not clearly separated. Bring some sense
   into that
