@@ -1,8 +1,8 @@
-SUBDIRS = versit tests
+SUBDIRS = libical versit tests
 
-INCLUDES = -I$(top_srcdir)/libical/src/libical \
-  -I$(top_srcdir)/libical/src/libicalss -I$(top_builddir)/libical/src/libical \
-  -I$(top_builddir)/libical/src/libicalss -I$(srcdir)/versit -I$(top_srcdir)/ \
+INCLUDES = -I$(srcdir)/libical/src/libical \
+  -I$(srcdir)/libical/src/libicalss -I./libical/src/libical \
+  -I./libical/src/libicalss -I$(srcdir)/versit -I$(top_srcdir)/ \
   -I$(top_srcdir)/ktnef \
   -I$(top_srcdir)/libemailfunctions \
   $(all_includes)
@@ -10,13 +10,13 @@ INCLUDES = -I$(top_srcdir)/libical/src/libical \
 lib_LTLIBRARIES   = libkcal.la
 libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0
 libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
-                     $(top_builddir)/libical/src/libical/libical.la \
-                     $(top_builddir)/libical/src/libicalss/libicalss.la \
+                     ./libical/src/libical/libical.la \
+                     ./libical/src/libicalss/libicalss.la \
                      $(top_builddir)/ktnef/lib/libktnef.la \
                      ../libemailfunctions/libemailfunctions.la \
                      -lkresources -lkabc
 
-libkcal_la_COMPILE_FIRST = $(top_builddir)/libical/src/libical/ical.h $(top_builddir)/libical/src/libicalss/icalss.h
+libkcal_la_COMPILE_FIRST = ./libical/src/libical/ical.h ./libical/src/libicalss/icalss.h
 libkcal_la_SOURCES = \
 	incidencebase.cpp incidence.cpp journal.cpp todo.cpp event.cpp \
 	freebusy.cpp attendee.cpp attachment.cpp recurrence.cpp alarm.cpp \
@@ -38,7 +38,7 @@ libkcal_la_SOURCES = \
 	qtopiaformat.cpp \
 	htmlexportsettings.kcfgc htmlexport.cpp calendarnull.cpp \
 	freebusyurlstore.cpp \
-        confirmsavedialog.cpp
+	confirmsavedialog.cpp
 
 libkcalincludedir = $(includedir)/libkcal
 libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
