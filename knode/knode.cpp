@@ -594,7 +594,7 @@ void KNMainWindow::initActions()
   //collection-view - groups
   a_ctGrpProperties         = new KAction(i18n("Group &Properties..."), "configure", 0, this,
                               SLOT(slotGrpProperties()), actionCollection(), "group_properties");
-  a_ctGrpRename             = new KAction(i18n("&Rename Group"), "text", 0, this,
+  a_ctGrpRename             = new KAction(i18n("Rename &Group"), "text", 0, this,
                               SLOT(slotGrpRename()), actionCollection(), "group_rename");
   a_ctGrpGetNewHdrs         = new KAction(i18n("&Get New Articles"), "mail_get" , 0, this,
                               SLOT(slotGrpGetNewHdrs()), actionCollection(), "group_dnlHeaders");
@@ -608,7 +608,7 @@ void KNMainWindow::initActions()
                               SLOT(slotGrpSetAllRead()), actionCollection(), "group_allRead");
   a_ctGrpSetAllUnread       = new KAction(i18n("Mark All as U&nread"), 0, this,
                               SLOT(slotGrpSetAllUnread()), actionCollection(), "group_allUnread");
-  a_ctGrpSetUnread          = new KAction(i18n("Mark Last as U&nread..."), 0, this,
+  a_ctGrpSetUnread          = new KAction(i18n("Mark Last as Unr&ead..."), 0, this,
                               SLOT(slotGrpSetUnread()), actionCollection(), "group_unread");
 
   //collection-view - folder
