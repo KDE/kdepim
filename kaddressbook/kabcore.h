@@ -40,10 +40,6 @@ namespace KPIM {
 class AddresseeView;
 }
 
-namespace KSettings {
-class Dialog;
-}
-
 class KAboutData;
 class KAction;
 class KActionCollection;
@@ -291,11 +287,6 @@ class KABCore : public KAB::Core
     void editContact( const QString &uid = QString::null );
 
     /**
-      Launches the configuration dialog.
-     */
-    void openConfigDialog();
-
-    /**
       Launches the ldap search dialog.
      */
     void openLDAPDialog();
@@ -319,7 +310,6 @@ class KABCore : public KAB::Core
     void extensionModified( const KABC::Addressee::List &list );
     void clipboardDataChanged();
     void updateActionMenu();
-    void configureKeyBindings();
 
     void slotEditorDestroyed( const QString &uid );
     void configurationChanged();
@@ -348,13 +338,11 @@ class KABCore : public KAB::Core
     QSplitter *mDetailsSplitter;
     QSplitter *mExtensionBarSplitter;
 
-    KSettings::Dialog *mConfigureDialog;
     LDAPSearchDialog *mLdapSearchDialog;
     QDict<AddresseeEditorDialog> mEditorDict;
 
     bool mReadWrite;
     bool mModified;
-    bool mIsPart;
 
     KAction *mActionPaste;
     KAction *mActionCut;

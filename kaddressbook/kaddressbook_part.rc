@@ -57,9 +57,6 @@
       <Merge/>
       <Action name="options_edit_filters"/>
       <Separator/>
-      <Action name="options_configure_keybinding"/>
-      <Action name="options_configure_toolbars"/>
-      <Action name="kaddressbook_configure_shortcuts"/>
       <Merge name="configure_merge"/>
     </Menu>
 

@@ -21,10 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kedittoolbar.h>
 #include <kkeydialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <ksettings/dialog.h>
+#include <ksettings/dispatcher.h>
 #include <kstatusbar.h>
 
 #include "kabcore.h"
@@ -32,7 +33,7 @@
 #include "kaddressbookmain.h"
 
 KAddressBookMain::KAddressBookMain()
-  : DCOPObject( "KAddressBookIface" ), KMainWindow( 0 ) 
+  : DCOPObject( "KAddressBookIface" ), KMainWindow( 0 ), mConfigDialog( 0 )
 {
   setCaption( i18n( "Address Book Browser" ) );
 
@@ -46,10 +47,11 @@ KAddressBookMain::KAddressBookMain()
   statusBar()->show();
   mCore->setStatusBar( statusBar() );
 
-  setStandardToolBarMenuEnabled(true);
-  
+  setStandardToolBarMenuEnabled( true );
+
   createGUI( "kaddressbookui.rc", false );
 
+  resize( 400, 300 ); // initial size
   setAutoSaveSettings();
 }
 
@@ -99,27 +101,12 @@ void KAddressBookMain::readProperties( KConfig* )
 void KAddressBookMain::initActions()
 {
   KStdAction::quit( this, SLOT( close() ), actionCollection() );
-  KStdAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
-}
 
-void KAddressBookMain::configureToolbars()
-{
-  saveMainWindowSettings( KGlobal::config(), "MainWindow" );
-
-  KEditToolbar dlg( factory() );
-  connect( &dlg, SIGNAL( newToolbarConfig() ), SLOT( slotNewToolbarConfig() ) );
-
-  dlg.exec();
-}
-
-void KAddressBookMain::slotNewToolbarConfig()
-{
-  applyMainWindowSettings( KGlobal::config(), "MainWindow" );
-}
-
-void KAddressBookMain::configureKeys()
-{
-  KKeyDialog::configure( actionCollection(), true, this );
+  KAction *action;
+  action = KStdAction::preferences( this, SLOT( configure() ), actionCollection() );
+  action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
+  action = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
+  action->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
 }
 
 bool KAddressBookMain::queryClose()
@@ -144,5 +131,26 @@ bool KAddressBookMain::queryClose()
 
   return true;
 }
+
+void KAddressBookMain::configureKeyBindings()
+{
+  KKeyDialog::configure( actionCollection(), this );
+}
+
+void KAddressBookMain::configure()
+{
+  // Save the current config so we do not loose anything if the user accepts
+  mCore->saveSettings();
+
+  if ( !mConfigDialog ) {
+    mConfigDialog = new KSettings::Dialog( this );
+
+    KSettings::Dispatcher::self()->registerInstance( KGlobal::instance(), mCore,
+                                                     SLOT( configurationChanged() ) );
+  }
+
+  mConfigDialog->show();
+}
+
 
 #include "kaddressbookmain.moc"

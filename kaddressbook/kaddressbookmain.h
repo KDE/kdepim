@@ -29,6 +29,7 @@
 #include <kaction.h>
 #include <kapplication.h>
 #include <kmainwindow.h>
+#include <ksettings/dialog.h>
 
 #include "kaddressbookiface.h"
 
@@ -75,15 +76,14 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
     void readProperties( KConfig* );
 
     virtual bool queryClose();
- 
-  protected slots:
-    void configureToolbars();
-    void configureKeys();
 
-    void slotNewToolbarConfig();
-    
+  private slots:
+    void configureKeyBindings();
+    void configure();
+
   private:
     KABCore *mCore;
+    KSettings::Dialog *mConfigDialog;
 };
 
 #endif

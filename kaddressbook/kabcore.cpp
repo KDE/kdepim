@@ -38,17 +38,13 @@
 #include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kactionclasses.h>
-#include <kcmultidialog.h>
 #include <kdebug.h>
 #include <kdeversion.h>
 #include <klocale.h>
-#include <kkeydialog.h>
 #include <kmessagebox.h>
 #include <kprinter.h>
 #include <kprotocolinfo.h>
 #include <kresources/selectdialog.h>
-#include <ksettings/dialog.h>
-#include <ksettings/dispatcher.h>
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
@@ -75,11 +71,9 @@
 KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
-    mExtensionManager( 0 ), mConfigureDialog( 0 ), mLdapSearchDialog( 0 ),
+    mExtensionManager( 0 ), mLdapSearchDialog( 0 ),
     mReadWrite( readWrite ), mModified( false )
 {
-  mIsPart = !parent->isA( "KAddressBookMain" );
-
   mWidget = new QWidget( parent, name );
 
   mAddressBook = KABC::StdAddressBook::self( true );
@@ -800,21 +794,6 @@ QString KABCore::getNameByPhone( const QString &phone )
   return ownerName;
 }
 
-void KABCore::openConfigDialog()
-{
-  // Save the current config so we do not loose anything if the user accepts
-  saveSettings();
-
-  if ( !mConfigureDialog ) {
-    mConfigureDialog = new KSettings::Dialog( mWidget );
-
-    KSettings::Dispatcher::self()->registerInstance( KGlobal::instance(), this,
-                                                     SLOT( configurationChanged() ) );
-  }
-
-  mConfigureDialog->show();
-}
-
 void KABCore::openLDAPDialog()
 {
   if ( !KProtocolInfo::isKnownProtocol( KURL( "ldap://localhost" ) ) ) {
@@ -940,7 +919,7 @@ void KABCore::initActions()
   connect( QApplication::clipboard(), SIGNAL( dataChanged() ),
            SLOT( clipboardDataChanged() ) );
 
-  KAction *action, *settingsAction;
+  KAction *action;
 
   // file menu
   mActionMail = KStdAction::mail( this, SLOT( sendMail() ), actionCollection() );
@@ -989,21 +968,6 @@ void KABCore::initActions()
   mActionRedo->setEnabled( false );
 
   // settings menu
-  if ( mIsPart ) {
-    action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0, this,
-                 SLOT( openConfigDialog() ), actionCollection(),
-                 "kaddressbook_configure" );
-    settingsAction = new KAction( i18n( "Configure S&hortcuts..." ), "configure_shortcuts", 0,
-                 this, SLOT( configureKeyBindings() ), actionCollection(),
-                 "kaddressbook_configure_shortcuts" );
-  } else {
-    action = KStdAction::preferences( this, SLOT( openConfigDialog() ), actionCollection() );
-    settingsAction = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
-  }
-
-  action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
-  settingsAction->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
-
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       actionCollection(), "options_show_jump_bar" );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
@@ -1059,11 +1023,6 @@ void KABCore::updateActionMenu()
     mActionRedo->setText( i18n( "Redo %1" ).arg( redo->top()->name() ) );
 
   mActionRedo->setEnabled( !redo->isEmpty() );
-}
-
-void KABCore::configureKeyBindings()
-{
-  KKeyDialog::configure( actionCollection(), mWidget );
 }
 
 #include "kabcore.moc"
