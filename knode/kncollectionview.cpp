@@ -19,6 +19,7 @@
 #include <kiconloader.h>
 #include <klistview.h>
 #include <klocale.h>
+#include <kpopupmenu.h>
 
 #include "knglobals.h"
 #include "knconfig.h"
@@ -35,16 +36,28 @@
 
 KNCollectionView::KNCollectionView(QWidget *parent, const char* name) :
   KFolderTree(parent, name),
-  mActiveItem(0)
+  mActiveItem( 0 ),
+  mPopup( 0 )
 {
   setDragEnabled(true);
   addAcceptableDropMimetype("x-knode-drag/article", false);
   addAcceptableDropMimetype("x-knode-drag/folder", true);
   addColumn(i18n("Name"),162);
-  addTotalColumn(i18n("Total"),36);
-  addUnreadColumn(i18n("Unread"),48);
   setDropHighlighter(true);
 
+  // popup menu to enable/disable unread and total columns
+  header()->setClickEnabled( true );
+  header()->installEventFilter( this );
+  mPopup = new KPopupMenu( this );
+  mPopup->insertTitle( i18n("View Columns") );
+  mPopup->setCheckable( true );
+  mUnreadPop = mPopup->insertItem( i18n("Unread Column"), this, SLOT(toggleUnreadColumn()) );
+  mTotalPop = mPopup->insertItem( i18n("Total Column"), this, SLOT(toggleTotalColumn()) );
+
+  // add unread and total columns if necessary
+  readConfig();
+
+  // load accounts and folders
   reloadAccounts();
   reloadFolders();
 
@@ -72,6 +85,63 @@ KNCollectionView::KNCollectionView(QWidget *parent, const char* name) :
   connect(header(), SIGNAL(sizeChange(int,int,int)), SLOT(slotSizeChanged(int,int,int)));
 
   installEventFilter(this);
+}
+
+
+KNCollectionView::~KNCollectionView()
+{
+  writeConfig();
+}
+
+
+
+void KNCollectionView::readConfig()
+{
+  KConfig *conf = knGlobals.config();
+  conf->setGroup( "GroupView" );
+
+  // execute the listview layout stuff only once
+  static bool initDone = false;
+  if (!initDone) {
+    initDone = true;
+    const int unreadColumn = conf->readNumEntry("UnreadColumn", 1);
+    const int totalColumn = conf->readNumEntry("TotalColumn", 2);
+
+    // we need to _activate_ them in the correct order
+    // this is ugly because we can't use header()->moveSection
+    // but otherwise the restoreLayout doesn't know that to do
+    if (unreadColumn != -1 && unreadColumn < totalColumn)
+      addUnreadColumn( i18n("Unread"), 48 );
+    if (totalColumn != -1)
+      addTotalColumn( i18n("Total"), 36 );
+    if (unreadColumn != -1 && unreadColumn > totalColumn)
+      addUnreadColumn( i18n("Unread"), 48 );
+    updatePopup();
+
+    restoreLayout( knGlobals.config(), "GroupView" );
+  }
+
+  // font & color settings
+  KNConfig::Appearance *app = knGlobals.configManager()->appearance();
+  setFont( app->groupListFont() );
+
+  QPalette p = palette();
+  p.setColor( QColorGroup::Base, app->backgroundColor() );
+  p.setColor( QColorGroup::Text, app->textColor() );
+  setPalette( p );
+  setAlternateBackground( app->backgroundColor() );
+  // FIXME: make this configurable
+  mPaintInfo.colUnread = QColor( "blue" );
+}
+
+
+void KNCollectionView::writeConfig()
+{
+  KConfig *conf = knGlobals.config();
+  conf->setGroup( "GroupView" );
+  saveLayout( knGlobals.config(), "GroupView" );
+  conf->writeEntry( "UnreadColumn", unreadIndex() );
+  conf->writeEntry( "TotalColumn", totalIndex() );
 }
 
 
@@ -229,6 +299,11 @@ void KNCollectionView::updateFolder(KNFolder* f)
 }
 
 
+void KNCollectionView::reload()
+{
+  reloadAccounts();
+  reloadFolders();
+}
 
 void KNCollectionView::setActive( QListViewItem *i )
 {
@@ -320,6 +395,36 @@ void KNCollectionView::contentsDropEvent( QDropEvent *e )
 }
 
 
+
+void KNCollectionView::toggleUnreadColumn()
+{
+  if ( isUnreadActive() )
+    removeUnreadColumn();
+  else
+    addUnreadColumn( i18n("Unread"), 48 );
+  mPopup->setItemChecked( mUnreadPop, isUnreadActive() );
+  reload();
+}
+
+
+void KNCollectionView::toggleTotalColumn()
+{
+  if ( isTotalActive() )
+    removeTotalColumn();
+  else
+    addTotalColumn( i18n("Total"), 36 );
+  mPopup->setItemChecked( mTotalPop, isTotalActive() );
+  reload();
+}
+
+void KNCollectionView::updatePopup() const
+{
+  mPopup->setItemChecked( mUnreadPop, isUnreadActive() );
+  mPopup->setItemChecked( mTotalPop, isTotalActive() );
+}
+
+
+
 void KNCollectionView::slotSizeChanged(int section, int, int newSize)
 {
   viewport()->repaint(
@@ -334,7 +439,17 @@ bool KNCollectionView::eventFilter(QObject *o, QEvent *e)
     if (!hasFocus())  // focusChangeRequest was successful
       return true;
   }
-  return KListView::eventFilter(o, e);
+
+  // header popup menu
+  if ( e->type() == QEvent::MouseButtonPress &&
+       static_cast<QMouseEvent*>(e)->button() == RightButton &&
+       o->isA("QHeader") )
+  {
+    mPopup->popup( static_cast<QMouseEvent*>(e)->globalPos() );
+    return true;
+  }
+
+  return KFolderTree::eventFilter(o, e);
 }
 
 

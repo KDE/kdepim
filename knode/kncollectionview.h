@@ -18,6 +18,7 @@
 
 #include <kfoldertree.h>
 
+class KPopupMenu;
 class KNNntpAccount;
 class KNGroup;
 class KNFolder;
@@ -29,8 +30,12 @@ class KNCollectionView : public KFolderTree {
 
   public:
     KNCollectionView(QWidget *parent, const char *name = 0);
+    ~KNCollectionView();
 
     void setActive(QListViewItem *item);
+
+    void readConfig();
+    void writeConfig();
 
   public slots:
     void addAccount(KNNntpAccount* a);
@@ -49,6 +54,8 @@ class KNCollectionView : public KFolderTree {
     void addPendingFolders();
     void reloadFolders();
 
+    void reload();
+
     void nextGroup();
     void prevGroup();
 
@@ -56,6 +63,10 @@ class KNCollectionView : public KFolderTree {
     void decCurrentFolder();
     void incCurrentFolder();
     void selectCurrentFolder();
+
+    void toggleUnreadColumn();
+    void toggleTotalColumn();
+    void updatePopup() const;
 
   signals:
     void folderDrop( QDropEvent *e, KNCollectionViewItem *item );
@@ -74,6 +85,8 @@ class KNCollectionView : public KFolderTree {
 
   private:
     QListViewItem *mActiveItem;
+    KPopupMenu *mPopup;
+    int mUnreadPop, mTotalPop;
 
   private slots:
     void slotSizeChanged(int section, int, int newSize);

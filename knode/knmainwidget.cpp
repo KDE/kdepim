@@ -537,17 +537,8 @@ void KNMainWidget::openURL(const KURL &url)
 // update fonts and colors
 void KNMainWidget::configChanged()
 {
-  KNConfig::Appearance *app=c_fgManager->appearance();
-
-  c_olView->setFont(app->groupListFont());
-
-  QPalette p = palette();
-  p.setColor(QColorGroup::Base, app->backgroundColor());
-  p.setColor(QColorGroup::Text, app->textColor());
-  c_olView->setPalette(p);
-  c_olView->setAlternateBackground(app->backgroundColor());
-
   h_drView->configChanged();
+  c_olView->readConfig();
   a_rtManager->updateListViewItems();
 }
 
@@ -812,49 +803,13 @@ void KNMainWidget::readOptions()
   KConfig *conf=knGlobals.config();
   conf->setGroup("APPEARANCE");
 
-  QValueList<int> lst = conf->readIntListEntry("Hdrs_Size3");
-  if (lst.count()==8) {
-    QValueList<int>::Iterator it = lst.begin();
-    QHeader *h=c_olView->header();
-    for (int i=0; i<3; i++) {
-      h->resizeSection(i,(*it));
-      ++it;
-    }
-
-//     h=h_drView->header();
-//     for (int i=0; i<5; i++) {
-//       h->resizeSection(i,(*it));
-//       ++it;
-//     }
-  }
-
-  lst = conf->readIntListEntry("Hdr_Order");
-  if (lst.count()==8) {
-    QValueList<int>::Iterator it = lst.begin();
-
-    QHeader *h=c_olView->header();
-    for (int i=0; i<3; i++) {
-      h->moveSection(i,(*it));
-      ++it;
-    }
-
-//     h=h_drView->header();
-//     for (int i=0; i<5; i++) {
-//       h->moveSection(i,(*it));
-//       ++it;
-//     }
-  }
-
   if (conf->readBoolEntry("quicksearch", true))
     a_ctToggleQuickSearch->setChecked(true);
   else
     q_uicksearch->hide();
+  c_olView->readConfig();
   h_drView->readConfig();
   a_ctArtSortHeaders->setCurrentItem( h_drView->sortColumn() );
-
-  int sortCol = conf->readNumEntry("account_sortCol", 0);
-  bool sortAsc = conf->readBoolEntry("account_sortAscending", true);
-  c_olView->setSorting(sortCol, sortAsc);
 
   resize(787,478);  // default optimized for 800x600
   //applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
@@ -869,34 +824,10 @@ void KNMainWidget::saveOptions()
   KConfig *conf=knGlobals.config();
   conf->setGroup("APPEARANCE");
 
-  // store section sizes
-  QValueList<int> lst;
-  QHeader *h=c_olView->header();
-  for (int i=0; i<3; i++)
-    lst << h->sectionSize(i);
-
-  h=h_drView->header();
-  for (int i=0; i<5; i++)
-    lst << h->sectionSize(i);
-  conf->writeEntry("Hdrs_Size3", lst);
-
-  // store section order
-  lst.clear();
-  h=c_olView->header();
-  for (int i=0; i<3; i++)
-    lst << h->mapToIndex(i);
-
-  h=h_drView->header();
-  for (int i=0; i<5; i++)
-    lst << h->mapToIndex(i);
-  conf->writeEntry("Hdr_Order", lst);
-
-  // store sorting setup
-  conf->writeEntry("account_sortCol", c_olView->sortColumn());
-  conf->writeEntry("account_sortAscending", c_olView->sortOrder() == Qt::Ascending ? true : false);
   conf->writeEntry("quicksearch", q_uicksearch->isShown());
   //saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
+  c_olView->writeConfig();
   h_drView->writeConfig();
 
   // store dock configuration

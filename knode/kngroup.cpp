@@ -73,6 +73,7 @@ void KNGroup::updateListItem()
   if(!l_istItem) return;
   l_istItem->setTotalCount( c_ount );
   l_istItem->setUnreadCount( c_ount - r_eadCount - i_gnoreCount );
+  l_istItem->repaint();
 }
 
 
