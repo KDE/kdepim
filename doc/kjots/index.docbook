@@ -88,32 +88,32 @@ is sensible to do so.</para>
 <sect1 id="kjots-books">
 <title>Using Books</title>
 
-<para>To create a new book, use <keycombo action="simul">&Ctrl;
+<para>To create a new book, use <keycombo action="simul">&Ctrl;&Shift;
 <keycap>N</keycap></keycombo> or the menu entry
 <menuchoice><guimenu>File</guimenu><guimenuitem>New
 Book</guimenuitem></menuchoice>, and you will be prompted to enter a
 name for the new book.</para>
 
-<para>The name of the new book should now appear in the bottom left hand
-corner of the window. If you want the book to be on your
-<quote>Hotlist</quote>, choose <menuchoice><guimenu>Hotlist</guimenu>
-<guimenuitem>Add Current Book to Hotlist</guimenuitem></menuchoice> and
-a button with the book's name will appear near the bottom of the
-screen. You can have up to 8 books on the hotlist, and can remove the
-current book using <menuchoice><guimenu>Hotlist</guimenu>
-<guimenuitem>Remove Current Book From
-Hotlist</guimenuitem></menuchoice>.</para>
+<para>The name of the new book should now appear in the left part of 
+the window. If you want the book to be in your
+<quote>Bookmarks</quote>, use <keycombo action="simul">&Ctrl;
+<keycap>B</keycap></keycombo> or the menu entry <menuchoice>
+<guimenu>Bookmarks</guimenu><guimenuitem>Add Bookmark</guimenuitem>
+</menuchoice>. You can even organize your bookmarks in separate folders 
+just as you probably do in &konqueror;.</para>
 
+<tip><para>If you want to have your books in a different order, you can 
+simply drag and drop the book to the place where you want it to be.
+</para></tip>
 
-<para>A book can be saved using <keycombo action="simul">&Ctrl;
-<keycap>S</keycap></keycombo> or the menu entry
-<menuchoice><guimenu>File</guimenu><guimenuitem>Save Current
-Book</guimenuitem></menuchoice>. When you change books, or exit &kjots;,
-the currently open book will be saved.</para>
+<para>Maybe you have noticed that there is no <quote>Save</quote> anywhere. 
+This is not an error, &kjots; saves your books and pages automatically, 
+so you will never lose that small note you write when you are on the phone 
+and need to write down something in a hurry.</para>
 
-<para>You can also export an entire book as a text file, using
-<menuchoice><guimenu>File</guimenu> <guimenuitem>Save Book to ASCII
-File...</guimenuitem></menuchoice>.  You will be then prompted to enter a
+<para>You can also export an entire book as a text file or as a html file, 
+using <menuchoice><guimenu>File</guimenu> <guimenuitem>Export book...
+</guimenuitem></menuchoice>.  You will be then prompted to enter a
 location for the file to be saved.  The format of an example saved book
 is shown below:</para>
 
@@ -133,6 +133,11 @@ Remember to go to the shops!
 ################
 This is the third page and is an example for KJots.</screen>
 
+<para>Remember that the dialog where you are prompted for a filename is 
+a standard &kde; dialog. That means it is just as easy to store the file 
+on your local hard disk as it is to save it on a web server, ftp server 
+or USB memory stick. So you can export as html and save it on a webserver, 
+this way you always have your notes available to you.</para>
 </sect1>
 
 <sect1 id="kjots-pages">
@@ -140,34 +145,34 @@ This is the third page and is an example for KJots.</screen>
 
 <para>Pages are where you actually write whatever you are going to
 write. Once you have created a book, you can type text in the main text
-box. </para>
+box.</para>
 
-<para>To create additional pages, you can use
-<menuchoice><guimenu>Edit</guimenu><guimenuitem>New Page</guimenuitem>
+<para>To create additional pages, you can use <keycombo action="simul">&Ctrl;
+<keycap>N</keycap></keycombo> or the menu entry
+<menuchoice><guimenu>File</guimenu><guimenuitem>New Page</guimenuitem>
 </menuchoice>, which will create a new page. Similarly, the current page
-can be removed using <menuchoice>
-<guimenu>Edit</guimenu><guimenuitem>Delete Page</guimenuitem>
-</menuchoice>.</para>
+can be removed using <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Delete Page</guimenuitem></menuchoice>.</para>
+
+<tip><para>If you need to insert the current date and time while you are 
+writing a note, you can use  <keycombo action="simul">&Ctrl;<keycap>I
+</keycap></keycombo></para></tip>
 
 <para>So that you can get to the page you want to see, pages can (and
-should) be given a Subject. This can be chosen by typing the subject in
-the textbox at the top of the window. To view a list of subjects for
-the current book, use <keycombo action="simul">&Ctrl;
-<keycap>L</keycap></keycombo>.</para>
+should) be given a name. This can be done in the way you are used to: 
+select the page you want to rename, wait a second and click it once more. 
+You are then able to rename the page. Of course there is also a keyboard 
+shortcut, you can use that at any time while writing a note. The shortcut 
+is: <keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo>.</para>
 
-<tip><para>To quickly switch between pages, use <keycombo
-action="simul">&Ctrl; <keycap>K</keycap></keycombo> to go to the next
-page, and <keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo>
-to go to the previous page.  You can also use the scrollbar below the
-main text window, to change pages.</para></tip>
+<para>An other way of renaming the page is by selecting a part of your note 
+and then press <keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>, 
+the selected text will instantly become the title of the page.</para>
 
-<para>If you select a &URL;, such as http://www.kde.org, or
-ftp://ftp.kde.org, and then <mousebutton>right</mousebutton> click on
-the selected text, you can choose to open the &URL; in &konqueror;, or
-any program you choose in
-<menuchoice><guimenu>Options</guimenu><guimenuitem>Configure
-KJots</guimenuitem></menuchoice>.</para>
-
+<tip><para>If you want fast access to a particular page, you 
+can assign a keyboard shortcut to that page. Go to <menuchoice>
+<guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...
+</guimenuitem></menuchoice></para></tip>
 </sect1>
 </chapter>
 
@@ -184,6 +189,17 @@ KJots</guimenuitem></menuchoice>.</para>
 <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
+<guimenuitem>New Page...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Creates</action> a new Page</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;&Shift;<keycap>N</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
 <guimenuitem>New Book...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Creates</action> a new Book</para></listitem>
@@ -191,42 +207,47 @@ KJots</guimenuitem></menuchoice>.</para>
 
 <varlistentry>
 <term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Export Page</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Saves</action> the current page to a text file 
+or a html file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Export Book</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Saves</action> the current book to a text file 
+or a html file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Delete Page</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Deletes</action> the current page.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Delete Book</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Deletes</action> the current book.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>Save Current Book</guimenuitem>
+<guimenuitem>Print</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Saves</action> the currently open Book. Books are saved
-in <filename class="directory">$HOME/.kde/share/apps/kjots/</filename>  Each
-book is saved as a single file, they are readable in any text
-editor.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Save Book to ASCII File...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Saves</action> the current book to a text file.
-See <link linkend="kjots-books">Using Books</link>.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Save Page to ASCII File...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Saves</action> the current page to a text file.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Delete Current Book...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Deletes</action> the currently open Book.</para></listitem>
+<listitem><para><action>Prints</action> the current book or page.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -239,8 +260,6 @@ See <link linkend="kjots-books">Using Books</link>.</para></listitem>
 </menuchoice></term>
 <listitem><para><action>Quits</action> &kjots;</para></listitem>
 </varlistentry>
-
-
 </variablelist>
 </sect1>
 
@@ -287,6 +306,18 @@ to the main textbox.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
+<keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Paste as Page Title</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Renames</action> the page to the text on the 
+clipboard.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
 <keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
 </shortcut>
 <guimenu>Edit</guimenu>
@@ -325,85 +356,81 @@ only on the current page.
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo>
 </shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>New Page</guimenuitem>
+<guimenuitem>Rename...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Creates</action> a new blank page
-in the current book.</para></listitem>
+<listitem><para>Gives the possibility to <action>rename</action> the 
+current page.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>D</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>I</keycap></keycombo>
 </shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Delete Page</guimenuitem>
+<guimenuitem>Insert Date</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Deletes</action> the current page.
+<listitem><para><action>Inserts</action> the date and time in the 
+current page.</para></listitem>
+</varlistentry>
+</variablelist>
+</sect1>
+
+<sect1 id="menu-bookmarks">
+<title>The <guimenu>Bookmarks</guimenu> Menu</title>
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>B</keycap></keycombo>
+</shortcut>
+<guimenu>Bookmarks</guimenu>
+<guimenuitem>Add bookmark</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Adds</action> the current page to the list of
+bookmarks. See <link linkend="kjots-books">Using Books</link>
 </para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Previous</guimenuitem>
+<guimenu>Bookmarks</guimenu>
+<guimenuitem>Edit bookmarks</guimenuitem>
 </menuchoice></term>
-<listitem><para>Changes the view to the previous page in the current
-book, if it exists.</para></listitem>
+<listitem><para><action>Edits</action> the bookmarks. Here you can 
+search bookmarks, make comments, organize them in different folders and 
+much more.
+</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>K</keycap></keycombo>
-</shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Next</guimenuitem>
+<guimenu>Bookmarks</guimenu>
+<guimenuitem>New Bookmark Folder</guimenuitem>
 </menuchoice></term>
-<listitem><para>Changes the view to the next page in the current
-book, if it exists.
-</para></listitem>
+<listitem><para><action>Makes</action> a new folder where you can store 
+your bookmarks.</para></listitem>
 </varlistentry>
 
 </variablelist>
 </sect1>
 
-<sect1 id="menu-hotlist">
-<title>The <guimenu>Hotlist</guimenu> Menu</title>
+<sect1 id="menu-settings">
+<title>The <guimenu>Settings</guimenu> Menu</title>
 <variablelist>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Hotlist</guimenu>
-<guimenuitem>Add Current Book to Hotlist</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Hide/Show Toolbar</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Adds</action> the current book to the hotlist.
-See <link linkend="kjots-books">Using Books</link>
-</para></listitem>
+<listitem><para><action>Toggles</action> display of the toolbar below the 
+menu bar.</para></listitem>
 </varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Hotlist</guimenu>
-<guimenuitem>Remove Current Book From Hotlist</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Removes</action> the current book to the hotlist.
-See <link linkend="kjots-books">Using Books</link>
-</para></listitem>
-</varlistentry>
-
-</variablelist>
-</sect1>
-
-<sect1 id="menu-options">
-<title>The <guimenu>Options</guimenu> Menu</title>
-<variablelist>
 
 <varlistentry>
 <term><menuchoice>
@@ -417,10 +444,19 @@ menu items.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure KJots</guimenuitem>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Choose</action> which items are present in the 
+toolbar.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure KJots...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Configure</action> options for &kjots;, including
-the external program to open <acronym>URL</acronym>s and the font to use.
+the font to use and the settings for autosaving.
 </para></listitem>
 </varlistentry>
 
