@@ -90,11 +90,13 @@ void KNCleanUp::reset()
 void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 {
   int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0, firstArtNr=g->firstNr();
-  bool unavailable=false;
+  bool unavailable=false, alreadyLoaded=true;
   KNRemoteArticle *art, *ref;
 
-  if(!g->loadHdrs()) return;
+  alreadyLoaded = g->isLoaded();
 
+  if (!alreadyLoaded && !g->loadHdrs())
+    return;
 
   //find all expired
   for(int i=0; i<g->length(); i++) {
@@ -170,6 +172,11 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
   g->saveInfo();
   leftCnt=g->count();
 
+  if (!alreadyLoaded) {    // free allocated memory...
+    g->clear();
+    g->clearSearchIndex();
+  }
+
   kdDebug(5003) << "KNCleanUp::expireGroup() : " << g->groupname() << ": "
     << delCnt << " deleted , " << leftCnt << " left" << endl;
 
@@ -182,12 +189,16 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 void KNCleanUp::compactFolder(KNFolder *f)
 {
   KNLocalArticle *art;
+  bool alreadyLoaded=true;
+
   QDir dir(f->path());
 
   if(!dir.exists())
     return;
 
-  if(!f->loadHdrs())
+  alreadyLoaded = f->isLoaded();
+
+  if (!alreadyLoaded && !f->loadHdrs())
     return;
 
   f->closeFiles();
@@ -216,6 +227,11 @@ void KNCleanUp::compactFolder(KNFolder *f)
 
     dir.remove(oldName);
     dir.rename(newName, oldName);
+
+    if (!alreadyLoaded) {    // free allocated memory...
+      f->clear();
+      f->clearSearchIndex();
+    }
   }
 }
 
