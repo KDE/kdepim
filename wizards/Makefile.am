@@ -1,3 +1,5 @@
+KDE_OPTIONS = nofinal
+
 INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkcal \
   -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
   $(all_includes)
