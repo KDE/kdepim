@@ -59,7 +59,7 @@ void KIO_Read::slotResult( KIO::Job* job )
 		kdWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;
 
 	if( job->error() )
-		kdWarning() << i18n( "An error occured when fetching the requested email: %1." ).arg( job->errorString() ) << endl;
+		kdWarning() << i18n( "An error occurred when fetching the requested email: %1." ).arg( job->errorString() ) << endl;
 		
 	_kio->emitReadMailReady( _message );
 	

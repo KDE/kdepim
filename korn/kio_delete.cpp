@@ -89,7 +89,7 @@ bool KIO_Delete::setupSlave( KURL kurl, KIO::MetaData metadata, KIO_Protocol *& 
 		
 	if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) )
 	{
-		kdWarning() << i18n( "Could not a connected slave; I can't delete this way..." ) << endl;
+		kdWarning() << i18n( "Could not get a connected slave; I cannot delete this way..." ) << endl;
 		_valid = false;
 		return false;
 	}
@@ -166,7 +166,7 @@ void KIO_Delete::slotResult( KIO::Job* job )
 {
 	if( job->error() )
 	{
-		kdWarning() << i18n( "An error occured when deleting email: %1." ).arg( job->errorString() ) << endl;
+		kdWarning() << i18n( "An error occurred when deleting email: %1." ).arg( job->errorString() ) << endl;
 		_valid = false;
 	}
 	

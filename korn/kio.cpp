@@ -157,7 +157,7 @@ void KKioDrop::setUser(const QString & user, const QString & password,
 	_valid = _kurl->isValid();
 
 	if( ! _valid )
-		kdWarning() << i18n( "url is not valid!" ) << endl;
+		kdWarning() << i18n( "url is not valid" ) << endl;
 }
 
 QString KKioDrop::protocol() const
@@ -275,7 +275,7 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 	KIO_Protocol * protocol;
 
 	val2 = cfg.readEntry(fu(ProtoConfigKey));
-	if( val2.isEmpty() ) { _valid = false; kdWarning() << i18n( "No protocol specefied!" ) << endl; return false; }
+	if( val2.isEmpty() ) { _valid = false; kdWarning() << i18n( "No protocol specified" ) << endl; return false; }
 
 	//Set protocol
         delete _protocol;
@@ -290,7 +290,7 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 	if( _protocol->hasServer() )
 	{
 		val = cfg.readEntry(fu(HostConfigKey));
-		if( val.isEmpty() ) { _valid = false; kdWarning() << i18n( "No server specified!" ) << endl; return false; }
+		if( val.isEmpty() ) { _valid = false; kdWarning() << i18n( "No server specified" ) << endl; return false; }
 		setKioServer( val2, val, cfg.readNumEntry(fu(PortConfigKey), _protocol->defaultPort() ), KIO::MetaData(), false );
 	} else
 		setKioServer( val2, "", _protocol->defaultPort(), KIO::MetaData(), false );
@@ -298,13 +298,13 @@ bool KKioDrop::readConfigGroup( const KConfigBase& cfg )
 	if( _protocol->hasUsername() )
 	{
 		_kurl->setUser( cfg.readEntry(fu(UserConfigKey)) );
-		if( _kurl->user().isEmpty() ) { _valid = false; kdWarning() << i18n( "No username specified!" ) << endl; return false; }
+		if( _kurl->user().isEmpty() ) { _valid = false; kdWarning() << i18n( "No username specified" ) << endl; return false; }
 	}
 
 	if( _protocol->hasMailbox() )
 	{
 		_kurl->setPath( cfg.readEntry(fu(MailboxConfigKey)) );
-		if( _kurl->path().isEmpty() ) { _valid = false; kdWarning() << i18n( "No mailbox specified!" ) << endl; return false; }
+		if( _kurl->path().isEmpty() ) { _valid = false; kdWarning() << i18n( "No mailbox specified" ) << endl; return false; }
 	}
 
 	if( _protocol->hasPassword() )

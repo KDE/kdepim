@@ -102,7 +102,7 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 void KIO_Single_Subject::slotData( KIO::Job* job, const QByteArray& data )
 {
 	if( job != _job )
-		kdWarning() << i18n( "Got invalid job; something strange happend?" ) << endl;
+		kdWarning() << i18n( "Got invalid job; something strange happened?" ) << endl;
 	if( !data.isEmpty() )
 		_message->append( data );
 }
@@ -110,7 +110,7 @@ void KIO_Single_Subject::slotData( KIO::Job* job, const QByteArray& data )
 void KIO_Single_Subject::slotResult( KIO::Job *job )
 {
 	if( job != _job )
-		kdWarning() << i18n( "Got invalid job; something strange happend?" ) << endl;
+		kdWarning() << i18n( "Got invalid job; something strange happened?" ) << endl;
 		
 	if( job->error() )
 	{
