@@ -60,7 +60,7 @@ static const struct Desc pk_elg[] = {
 
 static const struct Desc primegen[] = {
   // FIXME: add all type's?
-  { 0, I18N_NOOP("Searching a large prime number..."), false, false }
+  { 0, I18N_NOOP("Searching for a large prime number..."), false, false }
 };
 
 static const struct Desc need_entropy[] = {
