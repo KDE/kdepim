@@ -68,7 +68,7 @@ void ResourceIMAP::writeConfig( KConfig* config )
 
 void ResourceIMAP::init()
 {
-  kdDebug() << "ResourceIMAP::init()" << endl;
+  // kdDebug() << "ResourceIMAP::init()" << endl;
 
   mSilent = false;
 
@@ -88,7 +88,7 @@ void ResourceIMAP::init()
     kdError() << "DCOP connection to incidenceDeleted failed" << endl;
   }
 }
-  
+
 
 ResourceIMAP::~ResourceIMAP()
 {
@@ -120,7 +120,7 @@ bool ResourceIMAP::doOpen()
 
 bool ResourceIMAP::load()
 {
-  kdDebug(5800) << "Loading resource " << resourceName() << " on " << mServer << endl;
+  // kdDebug(5800) << "Loading resource " << resourceName() << " on " << mServer << endl;
 
   QStringList lst = getIncidenceList( "Calendar" );
   for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -164,13 +164,13 @@ bool ResourceIMAP::save()
 
 bool ResourceIMAP::addEvent(Event *anEvent)
 {
-  kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
+  // kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
   mCalendar.addEvent(anEvent);
   anEvent->registerObserver( this );
   
   if( mSilent ) return true;
 
-  // call kmail ...
+  // Call kmail ...
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
   arg << QString::fromLatin1("Calendar");
@@ -196,8 +196,8 @@ bool ResourceIMAP::addEvent(Event *anEvent)
 // probably not really efficient, but...it works for now.
 void ResourceIMAP::deleteEvent(Event *event)
 {
-  kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
-  // call kmail ...
+  // kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
+  // Call kmail ...
   if( !mSilent ) {
     QByteArray data;
     QDataStream arg(data, IO_WriteOnly);
@@ -222,7 +222,6 @@ void ResourceIMAP::deleteEvent(Event *event)
 
 Event *ResourceIMAP::event( const QString &uid )
 {
-  kdDebug(5800) << "ResourceIMAP::event(): " << uid << endl;
   return mCalendar.event(uid);
 }
 
@@ -329,7 +328,7 @@ QPtrList<Todo> ResourceIMAP::todos( const QDate &date )
 
 bool ResourceIMAP::addJournal(Journal *journal)
 {
-  kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+  // kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
   mCalendar.addJournal(journal);
   journal->registerObserver( this );
 
@@ -405,7 +404,6 @@ Alarm::List ResourceIMAP::alarmsTo( const QDateTime &to )
 
 Alarm::List ResourceIMAP::alarms( const QDateTime &from, const QDateTime &to )
 {
-  kdDebug(5800) << "ResourceIMAP::alarms(" << from.toString() << " - " << to.toString() << ")\n";
   return mCalendar.alarms( from, to );
 }
 
@@ -476,7 +474,7 @@ KCal::Incidence* ResourceIMAP::parseIncidence( const QString& str )
 
 bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 {
-  kdDebug() << "ResourceIMAP::addIncidence( " << type << ", " << /*ical*/"..." << " )" << endl;
+  // kdDebug() << "ResourceIMAP::addIncidence( " << type << ", " << /*ical*/"..." << " )" << endl;
   Incidence* i = parseIncidence( ical );
   if( !i ) return false;
   // Ignore events that come from us
@@ -495,7 +493,7 @@ bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 
 void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
 {
-  kdDebug() << "ResourceIMAP::deleteIncidence( " << type << ", " << uid << " )" << endl;
+  // kdDebug() << "ResourceIMAP::deleteIncidence( " << type << ", " << uid << " )" << endl;
   // Ignore events that come from us
   if( !mCurrentUID.isNull() && mCurrentUID == uid ) return;
 
