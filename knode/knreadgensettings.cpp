@@ -16,13 +16,17 @@
  ***************************************************************************/
 
 
-#include "knreadgensettings.h"
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+
+#include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
+
+#include "knreadgensettings.h"
 #include "utilities.h"
+
 
 KNReadGenSettings::KNReadGenSettings(QWidget *p) : KNSettingsWidget(p)
 {
@@ -88,7 +92,7 @@ KNReadGenSettings::~KNReadGenSettings()
 
 void KNReadGenSettings::init()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	
 	conf->setGroup("READNEWS");
 	maxFetch->setValue(conf->readNumEntry("maxFetch", 300));
@@ -107,7 +111,7 @@ void KNReadGenSettings::init()
 
 void KNReadGenSettings::apply()
 {
-	KConfig *conf=CONF(); 	
+	KConfig *conf=KGlobal::config(); 	
 	conf->setGroup("READNEWS");
 	conf->writeEntry("autoCheck", autoCB->isChecked());
 	conf->writeEntry("showSig",sigCB->isChecked());

@@ -39,27 +39,12 @@ class KNodeView : public QSplitter
  		 	
 		KNodeView(QWidget *parent=0,const char * name=0);
  		~KNodeView();
-  	 		
- 		void sepPos(QValueList<int> &vert, QValueList<int> &horz);
- 		void setSepPos(const QValueList<int> &vert, const QValueList<int> &horz);				
-
- 		bool isZoomed()	    { return is_Zoomed; }
- 		void toggleZoom();
  		
- 		void headersSize(QStrList *lst);
- 		void setHeadersSize(QStrList *lst);
- 		 		
- 		void nextArticle();
- 		void prevArticle();
- 		void nextUnreadArticle();
- 		void readThrough();
- 		void nextUnreadThread();
+		const KActionCollection& actions()      { return actionCollection; } 		
  		
- 		void nextGroup();
- 		void prevGroup();
- 		 		
- 		void toggleThread(); 		
- 		
+		void readOptions();
+		void saveOptions();				
+ 		 			
   protected:
  		void initCollectionView();
     void initHdrView();
@@ -69,8 +54,24 @@ class KNodeView : public QSplitter
  	 	KNListView *hdrView;
    	KNListView *collectionView;
     int sPos1, sPos2;
-    bool is_Zoomed;
 
+    KSelectAction *actSortSelect;
+    KAction *actNextArt, *actPrevArt, *actNextUnreadArt, *actReadThrough, *actNextUnreadThread,
+            *actNextGroup, *actPrevGroup, *actToggleThread;
+		KActionCollection actionCollection;
+
+  protected slots:
+   	void slotSortMenuSelect(int newCol);   // select from KSelectAction
+   	void slotSortHdrSelect(int newCol);    // select from QListView header
+   	void slotNextArticle();
+   	void slotPrevArticle();
+   	void slotNextUnreadArticle();
+   	void slotReadThrough();
+   	void slotNextUnreadThread();
+   	void slotNextGroup();
+   	void slotPrevGroup();
+   	void slotToggleThread();
+   	
 };
 
 #endif // KNODEVIEW_H

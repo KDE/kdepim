@@ -21,21 +21,27 @@
 
 #include <qlist.h>
 
-class KNListView;
+class KAction;
 
+class KNListView;
 class KNPurgeProgressDialog;
 class KNFolder;
 class KNSavedArticleManager;
 
-class KNFolderManager {
+class KNFolderManager : public QObject
+{
+	Q_OBJECT
 	
 	public:
 		enum stFolder { SFdrafts=0, SFoutbox=1, SFsent=2 };
-		KNFolderManager(KNSavedArticleManager *a, KNListView *v);
+		KNFolderManager(KNSavedArticleManager *a, KNListView *v, QObject * parent=0, const char * name=0);
 		~KNFolderManager();
-				
+		
+		const KActionCollection& actions()    { return actionCollection; }	
+		
 		int count()														{ return c_ount; }
 		KNFolder* currentFolder()							{ return c_urrentFolder; }
+  	bool hasCurrentFolder()				      	{ return (c_urrentFolder!=0); }
 		void setCurrentFolder(KNFolder *f);
 		KNFolder* standardFolder(stFolder stf);
 		KNFolder* folder(int i);
@@ -60,7 +66,13 @@ class KNFolderManager {
 		KNListView *view;
 		KNSavedArticleManager *aManager;
 		int lastId, c_ount;
+		KAction *actCompactFolder, *actEmptyFolder;
+		KActionCollection actionCollection;
 		
+	protected slots:	
+	  void slotCompactFolder()              { compactFolder(); }
+	  void slotEmptyFolder()		            { emptyFolder(); }
+	
 };
 
 #endif

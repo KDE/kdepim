@@ -52,14 +52,14 @@ KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCSt
   connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
   connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
 
-  setDialogSize("groupSelDlg", this);
+  restoreWindowSize("groupSelDlg", this, sizeHint());
 }
 
 
 
 KNGroupSelectDialog::~KNGroupSelectDialog()
 {
-  saveDialogSize("groupSelDlg", this->size());
+  saveWindowSize("groupSelDlg", this->size());
 }
 
 
@@ -236,14 +236,14 @@ KNGroupSelectDialog::KNGroupSelectDialog(KNNntpAccount *a, QCString &groups, QWi
 	}
 	
 	setCaption(i18n("select newsgroups"));
-	setDialogSize("gSelectDLG", this);
+	restoreWindowSize("gSelectDLG", this, sizeHint());
 }
 
 
 
 KNGroupSelectDialog::~KNGroupSelectDialog()
 {
-	saveDialogSize( "gSelectDLG", this->size());
+	saveWindowSize( "gSelectDLG", size());
 }
 
 

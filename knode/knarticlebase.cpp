@@ -15,16 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qregexp.h>
-#include <kconfig.h>
-#include <mimelib/mimepp.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <ctype.h>
 
+#include <qregexp.h>
+
+#include <mimelib/mimepp.h>
+#include <kconfig.h>
+#include <kglobal.h>
 
 #include "knarticlebase.h"
-#include "utilities.h"
 #include "knstringsplitter.h"
 
 bool KNArticleBase::allow8bit;
@@ -222,8 +223,8 @@ QCString KNArticleBase::encodeRFC1522String(const QCString aStr)
 	
 	isFirst=true;
 	
-	CONF()->setGroup("POSTNEWS");
-	chset=CONF()->readEntry("Charset", "ISO-8859-1").upper().local8Bit();
+	KGlobal::config()->setGroup("POSTNEWS");
+	chset=KGlobal::config()->readEntry("Charset", "ISO-8859-1").upper().local8Bit();
 	if(chset=="US-ASCII") chset="ISO-8859-1";
 	
 	if(!split.first()) tmp=aStr;

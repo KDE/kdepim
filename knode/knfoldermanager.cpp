@@ -22,27 +22,33 @@
 #include <kmessagebox.h>
 #include <ksimpleconfig.h>
 #include <kstddirs.h>
+#include <kaction.h>
+#include <kglobal.h>
+#include <kapp.h>
 
 #include "knfolder.h"
 #include "knfoldermanager.h"
 #include "kncollectionviewitem.h"
-#include "knglobals.h"
 #include "kncleanup.h"
 #include "knpurgeprogressdialog.h"
 #include "knsavedarticlemanager.h"
 #include "utilities.h"
 
-KNFolderManager::KNFolderManager(KNSavedArticleManager *a, KNListView *v)
+
+KNFolderManager::KNFolderManager(KNSavedArticleManager *a, KNListView *v,  QObject * parent, const char * name)
+  : QObject(parent, name), view(v), aManager(a), lastId(3), c_ount(3)
 {
-	view=v;
-	aManager=a;
 	fList=new QList<KNFolder>;
 	fList->setAutoDelete(true);
-	lastId=3;
-	c_ount=3;
 	createStandardFolders();
 	c_ount+=loadCustomFolders();
-	showListItems();
+ 	showListItems();
+		
+	actCompactFolder = new KAction(i18n("&Compact Folder"), 0, this, SLOT(slotCompactFolder()),
+                                 &actionCollection, "folder_compact");
+  actEmptyFolder = new KAction(i18n("&Empty Folder"), 0, this, SLOT(slotEmptyFolder()),
+                               &actionCollection, "folder_empty");
+
 	setCurrentFolder(0);	
 }
 
@@ -61,7 +67,7 @@ bool KNFolderManager::timeToCompact()
 	QDate lastComDate;
 	int y, m, d, interval;
 
-	KConfig *c=CONF();
+	KConfig *c=KGlobal::config();
 	c->setGroup("EXPIRE");
 	
 	if(!c->readBoolEntry("doCompact", true)) return false;
@@ -169,11 +175,16 @@ void KNFolderManager::setCurrentFolder(KNFolder *f)
 	qDebug("KNFolderManager::setCurrentFolder() : folder changed");
 	
 	if(f) {
-		if(f->loadHdrs()) aManager->showHdrs();
-		else KMessageBox::error(0, i18n("Cannot load index-file!"));
-	}	
-	if(!c_urrentFolder) xTop->folderDisplayed(false);
-	xTop->folderSelected((c_urrentFolder!=0));
+		if(f->loadHdrs())
+		  aManager->showHdrs();
+		else
+		   KMessageBox::error(0, i18n("Cannot load index-file!"));
+    actCompactFolder->setEnabled(true);
+    actEmptyFolder->setEnabled(true);		
+	}	else {
+    actCompactFolder->setEnabled(false);
+    actEmptyFolder->setEnabled(false);
+  }	
 }
 
 
@@ -248,7 +259,7 @@ void KNFolderManager::compactFolder(KNFolder *f)
 void KNFolderManager::compactAll(KNPurgeProgressDialog *dlg)
 {
 	QDate today=QDate::currentDate();
-	KConfig *c=CONF();
+	KConfig *c=KGlobal::config();
 	KNCleanUp cup;
 	
 	if(dlg) dlg->init(i18n("Compacting folders ..."), fList->count());
@@ -270,3 +281,6 @@ void KNFolderManager::compactAll(KNPurgeProgressDialog *dlg)
 	c->writeEntry("lastComD", today.day());
 }
 
+//--------------------------------
+
+#include "knfoldermanager.moc"

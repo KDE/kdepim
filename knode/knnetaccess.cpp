@@ -21,6 +21,7 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kapp.h>
 
 #include "knnetaccess.h"
 #include "utilities.h"
@@ -64,6 +65,10 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
 	
 	nntpJobQueue.setAutoDelete(false);		
 	smtpJobQueue.setAutoDelete(false);		
+	
+	actNetStop = new KAction(i18n("Stop &Network"),"stop",0, this, SLOT(slotCancelAllJobs()),
+	                         &actionCollection, "net_stop");
+	actNetStop->setEnabled(false);
 }
 
 
@@ -115,40 +120,6 @@ void KNNetAccess::addJob(KNJobData *job)
 }
 
 
-
-void KNNetAccess::cancelAllJobs()
-{
-	KNJobData *tmp;	
-	
-	// ** nntp ***********************************************
-	
-	if (currentNntpJob) {                // stop active job
-		currentNntpJob->cancel();
-		triggerAsyncThread(nntpOutPipe[1]);
-	}
-		
-	while(!nntpJobQueue.isEmpty()) {     // kill all waiting jobs
-	  tmp=nntpJobQueue.dequeue();
-		tmp->cancel();
-		xTop->jobDone(tmp);
-	}	
-	
-	// ** smtp ***********************************************	
-			
-  if (currentSmtpJob) {        // stop active job
-		currentSmtpJob->cancel();
-		triggerAsyncThread(smtpOutPipe[1]);
-	}
-		
-	while(!smtpJobQueue.isEmpty()) {     // kill all waiting jobs
-	  tmp=smtpJobQueue.dequeue();
-		tmp->cancel();
-		xTop->jobDone(tmp);
-	}
-}
-
-
-
 // passes a signal through the ipc-pipe to the net-thread
 void KNNetAccess::triggerAsyncThread(int pipeFd)
 {
@@ -168,7 +139,7 @@ void KNNetAccess::startJobNntp()
 	currentNntpJob = nntpJobQueue.dequeue();
 	nntpClient->insertJob(currentNntpJob);
 	triggerAsyncThread(nntpOutPipe[1]);
-	xTop->netIsActive(true);	
+  actNetStop->setEnabled(true);
 	qDebug("KNNetAccess::startJobNntp(): job started");
 }
 
@@ -187,7 +158,7 @@ void KNNetAccess::startJobSmtp()
 	currentSmtpJob = smtpJobQueue.dequeue();
 	smtpClient->insertJob(currentSmtpJob);
 	triggerAsyncThread(smtpOutPipe[1]);
-	xTop->netIsActive(true);	
+  actNetStop->setEnabled(true);
 	qDebug("KNNetAccess::startJobSmtp(): job started");
 }
 
@@ -207,11 +178,11 @@ void KNNetAccess::threadDoneNntp()
   nntpClient->removeJob();
 	currentNntpJob = 0L;
  	if (!currentSmtpJob) {
-		xTop->netIsActive(false);	
- 	  xTop->disableProgressBar();
+		actNetStop->setEnabled(false);
+ 	  xProgress->disableProgressBar();
  	 	xTop->setStatusMsg();
  	}	else {
-  	xTop->setProgressBar(unshownProgress,unshownByteCount);
+  	xProgress->setProgressBar(unshownProgress,unshownByteCount);
   	xTop->setStatusMsg(unshownMsg);
 	}
 	
@@ -237,8 +208,8 @@ void KNNetAccess::threadDoneSmtp()
   smtpClient->removeJob();
 	currentSmtpJob = 0L;
  	if (!currentNntpJob) {
-		xTop->netIsActive(false);	
- 	  xTop->disableProgressBar();
+   	actNetStop->setEnabled(false);
+		  xProgress->disableProgressBar();
  	 	xTop->setStatusMsg();
  	}
 	
@@ -273,7 +244,7 @@ void KNNetAccess::slotThreadSignal(int i)
     		xTop->setStatusMsg(i18n(" Downloading grouplist ..."));
     	break;
   		case KNProtocolClient::TSdownloadNew:
-  			xTop->setStatusMsg(i18n(" Downüloading new headers ..."));
+  			xTop->setStatusMsg(i18n(" Downloading new headers ..."));
   		break;
   		case KNProtocolClient::TSsortNew:
   			xTop->setStatusMsg(i18n(" Sorting ..."));
@@ -285,7 +256,7 @@ void KNNetAccess::slotThreadSignal(int i)
   			xTop->setStatusMsg(i18n(" Sending article ..."));
   		break;
   		case KNProtocolClient::TSjobStarted:
-      	xTop->setProgressBar(10,"0 Bytes");
+      	xProgress->setProgressBar(10,"0 Bytes");
       break;
   		case KNProtocolClient::TSprogressUpdate:
   		  byteCount = nntpClient->getByteCount();
@@ -293,7 +264,7 @@ void KNNetAccess::slotThreadSignal(int i)
   		    tmp = QString::number(byteCount) + " Bytes";
   		  else
   		    tmp = QString::number(byteCount/1000.0,'f',1)+ " kB";
-  		  xTop->setProgressBar(nntpClient->getProgressValue(),tmp);
+  		  xProgress->setProgressBar(nntpClient->getProgressValue(),tmp);
   		break;
   	};
   } else {                    // signal from smtp thread
@@ -311,6 +282,12 @@ void KNNetAccess::slotThreadSignal(int i)
  		   	if (!currentNntpJob)
   		    xTop->setStatusMsg(unshownMsg);
   		break;
+  		case KNProtocolClient::TSjobStarted:
+      	unshownByteCount = "0 Bytes";
+      	unshownProgress = 10;
+      	if (!currentNntpJob)
+    		  xProgress->setProgressBar(unshownProgress,unshownByteCount);
+      break;
 	  	case KNProtocolClient::TSprogressUpdate:
   	  	byteCount = smtpClient->getByteCount();
   		  if (byteCount < 1000)
@@ -318,12 +295,45 @@ void KNNetAccess::slotThreadSignal(int i)
   		  else
   		    unshownByteCount = QString::number(byteCount/1000.0,'f',1)+ " kB";
   		  unshownProgress = smtpClient->getProgressValue();
-  		  xTop->setProgressBar(unshownProgress,unshownByteCount);
+ 		   	if (!currentNntpJob)
+    		  xProgress->setProgressBar(unshownProgress,unshownByteCount);
   		break;
   	}
   }
 }
 
+
+
+void KNNetAccess::slotCancelAllJobs()
+{
+	KNJobData *tmp;	
+	
+	// ** nntp ***********************************************
+	
+	if (currentNntpJob) {                // stop active job
+		currentNntpJob->cancel();
+		triggerAsyncThread(nntpOutPipe[1]);
+	}
+		
+	while(!nntpJobQueue.isEmpty()) {     // kill all waiting jobs
+	  tmp=nntpJobQueue.dequeue();
+		tmp->cancel();
+		xTop->jobDone(tmp);
+	}	
+	
+	// ** smtp ***********************************************	
+			
+  if (currentSmtpJob) {        // stop active job
+		currentSmtpJob->cancel();
+		triggerAsyncThread(smtpOutPipe[1]);
+	}
+		
+	while(!smtpJobQueue.isEmpty()) {     // kill all waiting jobs
+	  tmp=smtpJobQueue.dequeue();
+		tmp->cancel();
+		xTop->jobDone(tmp);
+	}
+}
 
 
 //--------------------------------

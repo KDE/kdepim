@@ -24,6 +24,8 @@
 #include <qsocketnotifier.h>
 #include <pthread.h>
 
+#include <kaction.h>
+
 #include "knnntpclient.h"
 #include "knsmtpclient.h"
 #include "knjobdata.h"
@@ -37,8 +39,9 @@ class KNNetAccess : public QObject  {
 		KNNetAccess(QObject *parent=0, const char *name=0);
 		~KNNetAccess();
 		
+		const KActionCollection& actions()    { return actionCollection; }	
+		
 		void addJob(KNJobData *job);
-		void cancelAllJobs();
 
 	protected:
 		void triggerAsyncThread(int pipeFd);     // passes a signal through the ipc-pipe to the net-thread
@@ -57,9 +60,12 @@ class KNNetAccess : public QObject  {
 	  pthread_t nntpThread, smtpThread;
 	  int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
 	  QSocketNotifier *nntpNotifier,*smtpNotifier;
+	  KAction* actNetStop;
+		KActionCollection actionCollection;
 	
 	protected slots:
 		void slotThreadSignal(int i);
+		void slotCancelAllJobs();
 };
 
 #endif

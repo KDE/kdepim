@@ -51,17 +51,15 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
 	QString tmp=i18n("Properties of ");
 	tmp+=grp->name();
 	
-	setCaption(tmp);
-	
-	setDialogSize("groupPropDLG", this);
-
+	setCaption(tmp);	
+  restoreWindowSize("groupPropDLG", this, sizeHint());
 }
 
 
 
 KNGroupPropDlg::~KNGroupPropDlg()
 {
-	saveDialogSize("groupPropDLG", this->size());
+	saveWindowSize("groupPropDLG", size());
 }
 
 

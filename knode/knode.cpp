@@ -15,6 +15,7 @@
 
 #include <kmessagebox.h>
 #include <kstdaction.h>
+#include <kaccel.h>
 
 #include "knsettingsdialog.h"
 #include "knhdrviewitem.h"
@@ -26,6 +27,7 @@
 #include "resource.h"
 #include "knode.h"
 
+KNProgress* xProgress;
 KNodeApp* xTop;
 KNNetAccess *xNet;
 
@@ -35,14 +37,71 @@ KNNetAccess *xNet;
 //========================================================================
 
 
-KNProgress::KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent, const char *name)
-: KProgress(minValue,maxValue,value,orient,parent,name), desHeight(desiredHeight)
-{}
+KNProgress::KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent=0, const char *name=0)
+ : KProgress(minValue, maxValue, value, orient, parent, name), desHeight(desiredHeight)
+{
+	setFixedWidth(110);
+  setFrameStyle(QFrame::Box | QFrame::Raised);
+  setLineWidth(1);
+  setBackgroundMode(QWidget::PaletteBackground);
+  disableProgressBar();
+}
 
 
 
 KNProgress::~KNProgress()
 {}
+
+
+
+// 0% and no text
+void KNProgress::disableProgressBar()
+{
+	progVal=0;
+	setFormat(QString::null);
+	setValue(0);
+}
+
+
+
+// manual operation
+void KNProgress::setProgressBar(int value,const QString& text)
+{
+	setFormat(text);
+	if (value>1000)
+	  value = 1000;
+	setValue(value);
+}
+
+
+
+// display 0%
+void KNProgress::initProgressBar()
+{
+	progVal=0;
+	setFormat("%p%");
+	setValue(1);
+}
+								
+
+
+// add 10%
+void KNProgress::stepProgressBar()
+{
+	progVal+=100;
+	if(progVal>=1000) progVal=1000;
+	setFormat("%p%");
+	setValue(progVal);
+}
+											
+
+
+// display 100%
+void KNProgress::fullProgressBar()
+{
+  setFormat("%p%");
+	setValue(1000);
+}
 
 
 
@@ -64,25 +123,20 @@ KNodeApp::KNodeApp()
 
   //init the GUI
   setPlainCaption("KNode " KNODE_VERSION);
-
-  initView();	
+  initView();
+  KNLVItemBase::initIcons();	
   initStatusBar();
-  initActions();
-  initPopups();
-
+	
   //init Net
 	NAcc=new KNNetAccess();
 	xNet=NAcc;
-			
-	//init Filter Manager
-	FiManager=new KNFilterManager(actViewFilters);
 	
+  //init filter manager
+	FiManager=new KNFilterManager();
+
 	//init Fetch-Article Manager
-	FAManager=new KNFetchArticleManager(view->hdrView);
-	connect(FiManager, SIGNAL(filterChanged(KNArticleFilter*)),
-		FAManager, SLOT(slotFilterChanged(KNArticleFilter*)));	
-  actViewShowThreads->setChecked(FAManager->threaded());
-			
+	FAManager=new KNFetchArticleManager(view->hdrView, FiManager);
+				
   //init Group Manager
 	GManager=new KNGroupManager(FAManager);
 	
@@ -94,13 +148,13 @@ KNodeApp::KNodeApp()
 	
 	//init Folder Manager
 	FoManager=new KNFolderManager(SAManager, view->collectionView);
-	
-	//read options
-	readOptions();
 
-  netIsActive(false);
-  disableProgressBar();
-  KNLVItemBase::initIcons();
+	// all components that provide actions are created, now
+	// build menu- & toolbar
+  initActions();
+  initPopups();
+	
+	restoreWindowSize("main", this, QSize(600,400));
 
   // set the keyboard focus indicator on the first item in the collectionView
 	if(view->collectionView->firstChild())
@@ -168,214 +222,12 @@ void KNodeApp::setCursorBusy(bool b)
 }
 
 
-
-void KNodeApp::netIsActive(bool b)
-{
-	static bool status=true;
-	if(status!=b) {
-  	actNetStop->setEnabled(b);
-		status=b;
-	}	
-}
-
-
-
-// 0% and no text
-void KNodeApp::disableProgressBar()
-{
-	progr=0;
-	progBar->setFormat(QString::null);
-	progBar->setValue(0);
-}
-
-
-
-// manual operation
-void KNodeApp::setProgressBar(int value,const QString& text)
-{
-	progBar->setFormat(text);
-	if (value>1000)
-	  value = 1000;
-	progBar->setValue(value);
-}
-
-
-
-// display 0%
-void KNodeApp::initProgressBar()
-{
-	progr=0;
-	progBar->setFormat("%p%");
-	progBar->setValue(1);
-}
-								
-
-
-// add 10%
-void KNodeApp::stepProgressBar()
-{
-	progr+=100;
-	if(progr>=1000) progr=1000;
-	progBar->setValue(progr);
-}
-											
-
-
-// display 100%
-void KNodeApp::fullProgressBar()
-{
-	progBar->setValue(1000);
-}
-
-
-
-void KNodeApp::accountSelected(bool b)
-{
-	static bool status=true;
-	
-	if(status!=b) {
-	  actAccProperties->setEnabled(b);
-	  actAccSubscribeGrps->setEnabled(b);
-	  actAccLoadHdrs->setEnabled(b);
-	  actAccDelete->setEnabled(b);
-    actArtPostNew->setEnabled(b);
-		status=b;
-	}
-}
-
-
-
-void KNodeApp::groupSelected(bool b)
-{
-	static bool status=true;
-		
-	if(status!=b) {
-  	actGrpProperties->setEnabled(b);
-  	actGrpUnsubscribe->setEnabled(b);
-		status=b;
-	}
-}
-
-
-
-void KNodeApp::groupDisplayed(bool b)
-{
-	static bool status=true;
-
-	if(status!=b) {
-  	actGrpLoadHdrs->setEnabled(b);
-  	actGrpExpire->setEnabled(b);
-  	actGrpResort->setEnabled(b);
-  	actGrpAllRead->setEnabled(b);
-    actGrpAllUnread->setEnabled(b);
-    actArtSearch->setEnabled(b);
-   	actViewExpandAll->setEnabled(b);
-  	actViewCollapseAll->setEnabled(b);
-  	actViewRefresh->setEnabled(b);
-		status=b;
-	}	
-}
-
-
-
-void KNodeApp::fetchArticleSelected(bool b)
-{
-	static bool status=true;
-	
-	if(status!=b) {
-	  actArtOwnWindow->setEnabled(b);
-  	actArtRead->setEnabled(b);
-  	actArtUnread->setEnabled(b);
-	  actThreadRead->setEnabled(b);
-	  actThreadUnread->setEnabled(b);
-	  actThreadSetScore->setEnabled(b);
-	  actThreadWatch->setEnabled(b);
-	  actThreadIgnore->setEnabled(b);
-	  actThreadToggle->setEnabled(b);
-		status=b;
-	}
-}
-
-
-
-void KNodeApp::fetchArticleDisplayed(bool b)
-{
-	static bool status=true;
-	
-	if(status!=b) {
-   	actFileSave->setEnabled(b);
-   	actFilePrint->setEnabled(b);
-   	actEditFind->setEnabled(b);
-    actArtPostReply->setEnabled(b);
-    actArtMailReply->setEnabled(b);
-    actArtForward->setEnabled(b);
-		status=b;
-	}
-}
-
-
-
-void KNodeApp::folderSelected(bool b)
-{
-	static bool status=true;
-
-	if(status!=b) {
-	  actFolderCompact->setEnabled(b);
-	  actFolderEmpty->setEnabled(b);
-		status=b;
-	}	
-}
-
-
-
-void KNodeApp::folderDisplayed(bool b)
-{
-	/*static bool status=true;
-	static int menus[]=	{	ID_SEARCH, -1 };
-	if(status!=b) {
-		updateMenus(menus, b);
-		status=b;
-	}*/	
-}
-
-
-
-void KNodeApp::savedArticleSelected(bool b)
-{
-	static bool status=true;
-
-	if(status!=b) {
-  	actArtDelete->setEnabled(b);
-    actArtSendNow->setEnabled(b);
-    actArtSendLater->setEnabled(b);
-    actArtEdit->setEnabled(b);		
-		status=b;
-	}	
-}
-
-
-
-void KNodeApp::savedArticleDisplayed(bool b)
-{
-	static bool status=true;
-
-	if(status!=b) {
-   	actFileSave->setEnabled(b);
-   	actFilePrint->setEnabled(b);
-   	actEditFind->setEnabled(b);
-  	actArtCancel->setEnabled(b);
-		status=b;
-	}	
-}
-
-
-
 //============================ INIT && UPDATE ============================
 
 
 void KNodeApp::initView()
 {
-  KNArticleWidget::readConfig();
+  KNArticleWidget::readOptions();
   KNViewHeader::loadAll();
   view = new KNodeView(this);
   setView(view);
@@ -388,9 +240,6 @@ void KNodeApp::initView()
   	
   connect(view->hdrView, SIGNAL(doubleClicked(QListViewItem*)),
   	this, SLOT(slotHeaderDoubleClicked(QListViewItem*)));
-    	
-  connect(view->hdrView, SIGNAL(sortingChanged(int)),
-  	this, SLOT(slotSortingChanged(int)));
   	
   connect(view->hdrView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
   	this, SLOT(slotArticlePopup(QListViewItem*, const QPoint&, int)));
@@ -404,11 +253,8 @@ void KNodeApp::initStatusBar()
 {
 	KStatusBar *sb=statusBar();
 	
-	progBar = new KNProgress(sb->sizeHint().height()-4, 0, 1000, 0, KProgress::Horizontal, sb );
-	progBar->setFixedWidth(110);
-  progBar->setFrameStyle(QFrame::Box | QFrame::Raised);
-  progBar->setLineWidth(1);
-  progBar->setBackgroundMode(QWidget::PaletteBackground);
+	progBar = new KNProgress(sb->sizeHint().height()-4,0,1000,0, KProgress::Horizontal,sb );
+	xProgress = progBar;
   sb->addWidget(progBar);
 	
  	sb->insertItem(QString::null, SB_MAIN,2);
@@ -423,139 +269,34 @@ void KNodeApp::initStatusBar()
 
 void KNodeApp::initActions()
 {
-  // file menu
-  actFileSave = KStdAction::save(this, SLOT(slotFileSave()),actionCollection());
-  actFilePrint = KStdAction::print(view->artView, SLOT(print()),actionCollection());
-  actNetSendPending = new KAction(i18n("Sen&d pending messages"), 0, this, SLOT(slotNetSendPending()),
-                                  actionCollection(), "net_sendPending");
-  actNetStop = new KAction(i18n("Stop &Network"),"stop",0, this, SLOT(slotNetStop()),
-                           actionCollection(), "net_stop");
   KStdAction::quit(this, SLOT(slotFileQuit()),actionCollection());
 
-  // edit menu
-  actEditCopy = KStdAction::copy(view->artView, SLOT(copySelection()),actionCollection());
-  actEditCopy->setEnabled(false);
-  connect(view->artView->part(),SIGNAL(selectionChanged()),this,SLOT(slotSelectionChanged()));
-  actEditFind = KStdAction::find(view->artView, SLOT(findText()),actionCollection());
-
-  // view menu
-  actViewShowThreads = new KToggleAction(i18n("Show th&reads"), 0 , this, SLOT(slotToggleShowThreads()),
-                                         actionCollection(), "view_showThreads");
-  actViewExpandAll = new KAction(i18n("&Expand all threads"), 0 , this, SLOT(slotViewExpand()),
-                                 actionCollection(), "view_ExpandAll");
-  actViewCollapseAll = new KAction(i18n("&Collapse all threads"), 0 , this, SLOT(slotViewCollapse()),
-                                  actionCollection(), "view_CollapseAll");
-  actViewRefresh = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this, SLOT(slotViewRefresh()),
-                               actionCollection(), "view_Refresh");
-  actViewShowAllHdrs = new KToggleAction(i18n("Show &all headers"), 0 , this, SLOT(slotToggleShowAllHdrs()),
-                                         actionCollection(), "view_showAllHdrs");
-  actViewShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
-  actViewFilters = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , actionCollection(), "view_Filter");
-  actViewSort = new KSelectAction(i18n("&Sort"), 0 ,actionCollection(), "view_Sort");
-  connect(actViewSort,SIGNAL(activated(int)),this,SLOT(slotViewSort (int)));
-  QStringList items;
-  items += i18n("By &Subject");
-  items += i18n("By S&ender");
-  items += i18n("By S&core");
-  items += i18n("By &Date");
-  actViewSort->setItems(items);
-
-  // go menu
-  new KAction(i18n("&Next article"), Key_N , this, SLOT(slotGotoNextArt()),
-              actionCollection(), "go_nextArticle");
-  new KAction(i18n("&Previous article"), Key_B , this, SLOT(slotGotoPrevArt()),
-              actionCollection(), "go_prevArticle");
-  new KAction(i18n("Next unread &article"),"nextart", ALT+Key_Space , this, SLOT(slotGotoNextUnreadArt()),
-              actionCollection(), "go_nextUnreadArticle");
-  new KAction(i18n("Next unread &thread"),"nextthr", CTRL+Key_Space , this, SLOT(slotGotoNextThr()),
-              actionCollection(), "go_nextUnreadThread");
-  new KAction(i18n("Ne&xt group"), Key_Plus , this, SLOT(slotGotoNextGroup()),
-              actionCollection(), "go_nextGroup");
-  new KAction(i18n("Pre&vious group"), Key_Minus , this, SLOT(slotGotoPrevGroup()),
-              actionCollection(), "go_prevGroup");
-  KAction *readthrough = new KAction(i18n("Read &through articles"), Key_Space , this, SLOT(slotReadThrough()),
-                                     actionCollection(), "go_readThrough");
   acc=new KAccel(this);
-  readthrough->plugAccel(acc);
+  view->actReadThrough->plugAccel(acc);
 
-  // account menu
-  actAccProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotAccProperties()),
-                                 actionCollection(), "account_properties");
-  actAccSubscribeGrps = new KAction(i18n("&Subscribe to Newsgroups..."),"grpdlg", 0, this, SLOT(slotAccSubscribeGrps()),
-                                    actionCollection(), "account_subscribe");
-  actAccLoadHdrs = new KAction(i18n("&Get New Articles"), "dlall", 0, this, SLOT(slotAccLoadHdrs()),
-                                    actionCollection(), "account_dnlHeaders");
-  actAccDelete = new KAction(i18n("&Delete"), 0, this, SLOT(slotAccDelete()),
-                                    actionCollection(), "account_delete");
+  actShowAllHdrs = new KToggleAction(i18n("Show &all headers"), 0 , this, SLOT(slotToggleShowAllHdrs()),
+                                     actionCollection(), "view_showAllHdrs");
+  actShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
 
-  // group menu
-  actGrpProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotGrpProperties()),
-                                 actionCollection(), "group_properties");
-  actGrpLoadHdrs = new KAction(i18n("&Get New Articles"), 0, this, SLOT(slotGrpLoadHdrs()),
-                               actionCollection(), "group_dnlHeaders");
-  actGrpExpire = new KAction(i18n("E&xpire Now"), 0, this, SLOT(slotGrpExpire()),
-                             actionCollection(), "group_expire");
-  actGrpResort = new KAction(i18n("Res&ort"), 0, this, SLOT(slotGrpResort()),
-                             actionCollection(), "group_resort");
-  actGrpAllRead = new KAction(i18n("Mark all as &read"), 0, this, SLOT(slotGrpAllRead()),
-                              actionCollection(), "group_allRead");
-  actGrpAllUnread = new KAction(i18n("Mark all as u&nread"), 0, this, SLOT(slotGrpAllUnread()),
-                                actionCollection(), "group_allUnread");
-  actGrpUnsubscribe = new KAction(i18n("&Unsubscribe"), 0, this, SLOT(slotGrpUnsubscribe()),
-                                  actionCollection(), "group_unsubscribe");
-  actFolderCompact = new KAction(i18n("&Compact Folder"), 0, this, SLOT(slotFolderCompact()),
-                                 actionCollection(), "folder_compact");
-  actFolderEmpty = new KAction(i18n("&Empty Folder"), 0, this, SLOT(slotFolderEmpty()),
-                               actionCollection(), "folder_empty");
-
-  // article menu
-  actArtPostNew = new KAction(i18n("&Post new article"), "newmsg", Key_P , this, SLOT(slotArtNew()),
-                              actionCollection(), "article_postNew");
-  actArtPostReply = new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotArtReply()),
-                                actionCollection(), "article_postReply");
-  actArtMailReply = new KAction(i18n("&Mail reply"),"remail", Key_A , this, SLOT(slotArtRemail()),
-                                actionCollection(), "article_mailReply");
-  actArtForward = new KAction(i18n("&Forward"),"fwd", Key_F , this, SLOT(slotArtForward()),
-                              actionCollection(), "article_forward");
-  actArtRead = new KAction(i18n("Mark as &read"), Key_D , this, SLOT(slotArtMarkRead()),
-                           actionCollection(), "article_read");
-  actArtUnread = new KAction(i18n("Mark as &unread"), Key_U , this, SLOT(slotArtMarkUnread()),
-                             actionCollection(), "article_unread");
-  actThreadRead = new KAction(i18n("Mark as &read"), ALT+Key_D , this, SLOT(slotArtThrRead()),
-                              actionCollection(), "thread_read");
-  actThreadUnread = new KAction(i18n("Mark as &unread"), ALT+Key_U , this, SLOT(slotArtThrUnread()),
-                                actionCollection(), "thread_unread");
-  actThreadSetScore = new KAction(i18n("Set &score"), Key_S , this, SLOT(slotArtThrScore()),
-                                  actionCollection(), "thread_setScore");
-  actThreadWatch = new KAction(i18n("&Watch"), Key_W , this, SLOT(slotArtThrWatch()),
-                               actionCollection(), "thread_watch");
-  actThreadIgnore = new KAction(i18n("&Ignore"), Key_I , this, SLOT(slotArtThrIgnore()),
-                                actionCollection(), "thread_ignore");
-  actThreadToggle = new KAction(i18n("&Toggle Subthread"), Key_T , this, SLOT(slotArtThrToggle()),
-                                actionCollection(), "thread_toggle");
-  actArtOwnWindow = new KAction(i18n("&Open in own window"), Key_O , this, SLOT(slotArtOwnWindow()),
-                                actionCollection(), "article_ownWindow");
-  actArtEdit = new KAction(i18n("&Edit"), Key_E , this, SLOT(slotArtEdit()),
-                           actionCollection(), "article_edit");
-  actArtDelete = new KAction(i18n("&Delete"), Key_Delete , this, SLOT(slotArtDelete()),
-                             actionCollection(), "article_delete");
-  actArtCancel = new KAction(i18n("&Cancel post"), 0 , this, SLOT(slotArtCancel()),
-                             actionCollection(), "article_cancel");
-  actArtSendNow = new KAction(i18n("Send &now"), 0 , this, SLOT(slotArtSendNow()),
-                              actionCollection(), "article_sendNow");
-  actArtSendLater = new KAction(i18n("Send &later"), 0 , this, SLOT(slotArtSendLater()),
-                                actionCollection(), "article_sendLater");
-  actArtSearch = new KAction(i18n("&Search"),"search" , Key_F4 , this, SLOT(slotArtSearch()),
-                             actionCollection(), "article_search");
-
-  // settings menu
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
   KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
 
-  createGUI( "knodeui.rc" );
+  // add all external actions...
+  *actionCollection() += AManager->actions();
+  *actionCollection() += FoManager->actions();
+  *actionCollection() += GManager->actions();
+  *actionCollection() += FAManager->actions();
+  *actionCollection() += SAManager->actions();
+  *actionCollection() += FiManager->actions();
+  *actionCollection() += NAcc->actions();
+  *actionCollection() += view->actions();
+
+  createGUI("knodeui.rc",false);
+  guiFactory()->addClient(view->artView->part());
+  conserveMemory();
 }
 
 
@@ -563,7 +304,7 @@ void KNodeApp::initActions()
 #ifdef TEST
 #include "kncomposer.h"
 #include "knfilterconfigwidget.h"
-#include "knsearchdialog.h"
+#include "knsearchdialog.h"ü
 #include "knpurgeprogressdialog.h"
 #endif
 
@@ -631,93 +372,17 @@ void KNodeApp::initPopups()
 }
 
 
+
 void KNodeApp::saveOptions()
 {
-	QStrList lst;
-	lst.setAutoDelete(true);
-  KConfig *conf=CONF();
- 	int id=-1;
-     	
-  conf->setGroup("APPEARANCE");
-
-  //main window
-  conf->writeEntry("WSize", this->size());
-
-  //view
-  QValueList<int> vert,horz;
-  view->sepPos(vert,horz);
-  conf->writeEntry("Vert_SepPos",vert);
-  conf->writeEntry("Horz_SepPos",horz);
-  view->headersSize(&lst);
-  conf->writeEntry("Hdrs_Size", lst);
-  conf->writeEntry("sortCol", view->hdrView->sortColumn());
-  conf->writeEntry("sortAscending", view->hdrView->ascending());
-
-  conf->setGroup("READNEWS");
-
-  KNArticleFilter *f=FiManager->currentFilter();
-
-  if(f) id=f->id();
-
-  conf->writeEntry("lastFilterID", id);
-  conf->writeEntry("fullHdrs", KNArticleWidget::fullHeaders());
-}
-
-
-
-void KNodeApp::readOptions()
-{
-  QStrList lst;
-  lst.setAutoDelete(true);
-  	
-  KConfig *conf=CONF();   	
-  conf->setGroup("APPEARANCE");
-  	
-  //main window
-  QSize s(600,400);
-  this->resize(conf->readSizeEntry("WSize", &s));
-  	   	
-  //view
-  view->setSepPos(conf->readIntListEntry("Vert_SepPos"), conf->readIntListEntry("Horz_SepPos"));
-
-  conf->readListEntry("Hdrs_Size", lst);
-  if(lst.count()>0) view->setHeadersSize(&lst);
-  int sortCol=conf->readNumEntry("sortCol",0);
-  bool asc=conf->readBoolEntry("sortAscending", true);
-  view->hdrView->setColAsc(sortCol, asc);
-  view->hdrView->setSorting(sortCol, asc);	
-  actViewSort->setCurrentItem(sortCol);
-  	  	
-  conf->setGroup("READNEWS");
-  FiManager->setFilter(conf->readNumEntry("lastFilterID", 1));
-  FAManager->slotFilterChanged(FiManager->currentFilter());	
+	saveWindowSize("main", size());	
+  view->saveOptions();
+  FiManager->saveOptions();
+  KNArticleWidget::saveOptions();
 }
 
 
 //================================ SLOTS =================================
-
-//======== FILE MENU =================
-
-void KNodeApp::slotFileSave()
-{
-	if(FAManager->hasCurrentArticle())
-		KNArticleManager::saveArticleToFile(FAManager->currentArticle());
-		
-	if(SAManager->hasCurrentArticle())
-		KNArticleManager::saveArticleToFile(SAManager->currentArticle());	
-}
-
-
-void KNodeApp::slotNetSendPending()
-{
-  SAManager->sendOutbox();
-}
- 	
-
-void KNodeApp::slotNetStop()
-{
-  NAcc->cancelAllJobs();
-}
 
 
 void KNodeApp::slotFileQuit()
@@ -726,305 +391,12 @@ void KNodeApp::slotFileQuit()
   kapp->quit();
 }
 
-
-//======== VIEW MENU =================
-
-
-void KNodeApp::slotToggleShowThreads()
-{
-  FAManager->toggleThreaded();
-}
-
   	
 void KNodeApp::slotToggleShowAllHdrs()
 {
   KNArticleWidget::toggleFullHeaders();
 }
 
-
-void KNodeApp::slotViewSort(int id)
-{
-	view->hdrView->slotSortList(id);
-}
-
-
-void KNodeApp::slotViewRefresh()
-{
-	FAManager->showHdrs();
-}
-
-  	
-void KNodeApp::slotViewExpand()
-{
-  FAManager->expandAllThreads(true);
-}
-
-
-void KNodeApp::slotViewCollapse()
-{
-  FAManager->expandAllThreads(false);
-}
-
-
-//======== GO MENU =================  	
-
-
-void KNodeApp::slotGotoNextArt()
-{
-	view->nextArticle();
-}
-
-
-void KNodeApp::slotGotoPrevArt()
-{
-	view->prevArticle();
-}
-
-
-void KNodeApp::slotGotoNextUnreadArt()
-{
-	view->nextUnreadArticle();
-}
-
-
-void KNodeApp::slotReadThrough()
-{
-	view->readThrough();
-}
-
-
-void KNodeApp::slotGotoNextThr()
-{
-	view->nextUnreadThread();
-}
-
-
-void KNodeApp::slotGotoNextGroup()
-{
-	view->nextGroup();
-}
-
-
-void KNodeApp::slotGotoPrevGroup()
-{
-	view->prevGroup();
-}
-
-	
-//======== ACCOUNT MENU =================  	
-  	  	
-  	
-void KNodeApp::slotAccProperties()
-{
-  #warning FIXME: stub (open conf dialog and show account properties)
-}
-  	
-
-void KNodeApp::slotAccSubscribeGrps()
-{
-	view->artView->showBlankPage();
-	GManager->showGroupDialog(AManager->currentAccount());
-}
-
- 	
-void KNodeApp::slotAccLoadHdrs()
-{
-  GManager->checkAll(AManager->currentAccount());
-}
-
-
-void KNodeApp::slotAccDelete()
-{
-  #warning FIXME: stub (confirmation question, delete account)
-}
-
- 	
-//======== GROUP MENU =================  	
-
-  	
-void KNodeApp::slotGrpProperties()
-{
-  GManager->showGroupProperties();
-}
-
- 	
-void KNodeApp::slotGrpLoadHdrs()
-{
-  GManager->checkGroupForNewHeaders();
-}
-
-	
-void KNodeApp::slotGrpExpire()
-{
-  GManager->expireGroupNow();
-}
-  	
-
-void KNodeApp::slotGrpResort()
-{
-  GManager->resortGroup();
-}
-
-   	
-void KNodeApp::slotGrpAllRead()
-{
-  FAManager->setAllRead(0, true);
-}
-  	
-
-void KNodeApp::slotGrpAllUnread()
-{
-	FAManager->setAllRead(0, false);
-}
-   	
-
-void KNodeApp::slotGrpUnsubscribe()
-{
-  if(KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("Do you really want to unsubscribe this group?"))) {
-	  view->artView->showBlankPage();
-  	GManager->unsubscribeGroup();
-	}
-}
-  	
-	
-void KNodeApp::slotFolderCompact()
-{
-  FoManager->compactFolder();
-}
-
-
-void KNodeApp::slotFolderEmpty()
-{
-  FoManager->emptyFolder();
-}
-
- 	
-//======== ARTICLE MENU =================  	
-
-		
-void KNodeApp::slotArtNew()
-{
-	if(GManager->hasCurrentGroup()) SAManager->post(GManager->currentGroup());
-	else if(AManager->hasCurrentAccount()) SAManager->post(AManager->currentAccount());	
-}
-
-
-
-void KNodeApp::slotArtReply()
-{
-	SAManager->reply(FAManager->currentArticle(), GManager->currentGroup());	
-}
-
-
-
-void KNodeApp::slotArtRemail()
-{
-	SAManager->reply(FAManager->currentArticle(),0);	
-}
-
-
-
-void KNodeApp::slotArtForward()
-{
-	SAManager->forward(FAManager->currentArticle());	
-}
-
-
-
-void KNodeApp::slotArtOwnWindow()
-{
-	FAManager->articleWindow();
-}
-
-
-
-void KNodeApp::slotArtMarkRead()
-{
-	FAManager->setArticleRead(0, true);
-}
-
-
-
-void KNodeApp::slotArtMarkUnread()
-{
-	FAManager->setArticleRead(0, false);
-}
-
-		
-void KNodeApp::slotArtEdit()
-{
-	SAManager->editArticle();	
-}
-
-
-void KNodeApp::slotArtDelete()
-{
-	SAManager->deleteArticle(0, true);	
-}
-		 	
- 	
-void KNodeApp::slotArtCancel()
-{
-  SAManager->cancel();
-}
-  	
-
-void KNodeApp::slotArtSendNow()
-{
-  SAManager->sendArticle();
-}
-  	
-  	
-void KNodeApp::slotArtSendLater()
-{
-  SAManager->sendArticle(0, false);
-}
-  	
-
-void KNodeApp::slotArtSearch()
-{
-	FAManager->search();
-}
-  	
-
-void KNodeApp::slotArtThrRead()
-{
-	FAManager->setThreadRead(0, true);
-}
-
-
-void KNodeApp::slotArtThrUnread()
-{
-	FAManager->setThreadRead(0, false);
-}
-
-
-void KNodeApp::slotArtThrScore()
-{
-	FAManager->setThreadScore();
-}
-
-
-void KNodeApp::slotArtThrWatch()
-{
-	FAManager->toggleWatched();
-}
-
-
-void KNodeApp::slotArtThrIgnore()
-{
-	FAManager->toggleIgnored();
-}
-
-
-void KNodeApp::slotArtThrToggle()
-{
-	view->toggleThread();
-}	
-
-  	  	
-//======== SETTINGS MENU =================
-  	
   	
 void KNodeApp::slotToggleToolBar()
 {
@@ -1067,7 +439,7 @@ void KNodeApp::slotSettings()
 	  SAManager->readConfig();
 		GManager->readConfig();
 		FAManager->readConfig();
-		KNArticleWidget::readConfig();
+		KNArticleWidget::readOptions();
 		KNArticleWidget::updateInstances();
 	}		
 	delete sdlg;
@@ -1096,14 +468,14 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
    		if (!(view->hdrView->hasFocus())&&!(view->artView->hasFocus()))
 	     	view->hdrView->setFocus();
 			fldr=(KNFolder*)((KNCollectionViewItem*)it)->coll;
-			xTop->setStatusMsg(QString::null, SB_FILTER);
+			setStatusMsg(QString::null, SB_FILTER);
 		}
 		else if(((KNCollectionViewItem*)it)->coll->type()==KNCollection::CTnntpAccount) {
 		  it->setOpen(true);
 			acc=(KNNntpAccount*)((KNCollectionViewItem*)it)->coll;
-		  xTop->setStatusMsg(QString::null, SB_GROUP);
-  	  xTop->setStatusMsg(QString::null, SB_FILTER);
-    	xTop->setCaption(QString::null);
+		  setStatusMsg(QString::null, SB_GROUP);
+  	  setStatusMsg(QString::null, SB_FILTER);
+    	setCaption(QString::null);
 		}
 		view->artView->showBlankPage();
 	}
@@ -1148,13 +520,6 @@ void KNodeApp::slotHeaderDoubleClicked(QListViewItem *it)
 
 
 
-void KNodeApp::slotSortingChanged(int sortCol)
-{
-  actViewSort->setCurrentItem(sortCol);
-}
-
-
-
 void KNodeApp::slotArticlePopup(QListViewItem *it, const QPoint &p, int)
 {
   if (it) {
@@ -1179,12 +544,6 @@ void KNodeApp::slotCollectionPopup(QListViewItem *it, const QPoint &p, int c)
   			accPopup->popup(p);			
   	}
   }
-}
-
-
-void KNodeApp::slotSelectionChanged()
-{
-  actEditCopy->setEnabled(view->artView->part()->hasSelection());		
 }
 
 

@@ -63,12 +63,15 @@ class KNFilterManager : public QObject
 	Q_OBJECT
 
 	public:
-	  KNFilterManager(KNFilterSelectAction *filterMenu);
-		KNFilterManager();
+		KNFilterManager(QObject * parent=0, const char * name=0);
 		~KNFilterManager();
 		
-		KNArticleFilter* setFilter(const int id);
-		KNArticleFilter* currentFilter()	{ return currFilter; }
+  	const KActionCollection& actions()      { return actionCollection; }
+
+		void readOptions();
+		void saveOptions();
+		
+		KNArticleFilter* currentFilter()	    { return currFilter; }		
 			
 		void startConfig(KNFilterSettings *fs);
 		void endConfig();
@@ -80,6 +83,7 @@ class KNFilterManager : public QObject
 	protected:
 		void loadFilters();
 		void saveFilterLists();
+		KNArticleFilter* setFilter(const int id);
 		KNArticleFilter* byID(int id);
 		bool nameIsOK(KNArticleFilter *f);
 		void updateMenu();
@@ -87,8 +91,9 @@ class KNFilterManager : public QObject
 		QList<KNArticleFilter> fList;
 		KNFilterSettings *fset;
 	  KNArticleFilter *currFilter;
-		KNFilterSelectAction *menu;
-		QValueList<int> menuOrder;		
+		KNFilterSelectAction *actFilter;
+		QValueList<int> menuOrder;	
+		KActionCollection actionCollection;	
 	
 	protected slots:
 		void slotMenuActivated(int id);

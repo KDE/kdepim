@@ -94,14 +94,14 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
 	initData();
 	if(appSig) appendSignature();
 	setConfig();
-	setDialogSize("composer", this);	
+	restoreWindowSize("composer", this, sizeHint());
 }
 
 
 
 KNComposer::~KNComposer()
 {
-	saveDialogSize("composer", this->size());	
+	saveWindowSize("composer", size());	
 }
 
 
@@ -199,7 +199,7 @@ void KNComposer::appendSignature()
 
 void KNComposer::attachFile()
 {
-	snyimpl();
+  #warning stub - attachFile
 }
 
 
@@ -271,7 +271,7 @@ void KNComposer::slotCallback(int id)
 			appendSignature();
 		break;
 		case APP_FILE:
-			snyimpl();
+		  #warning stub: attach file
 		break;
 		case APP_ATT_FILE:
 			attachFile();
@@ -433,7 +433,7 @@ QString KNComposer::fntFam;
 
 void KNComposer::readConfig()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("POSTNEWS");
 	lineLen=conf->readNumEntry("maxLength", 72);
 	appSig=conf->readBoolEntry("appSig", true);

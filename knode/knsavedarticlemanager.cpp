@@ -21,9 +21,9 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstddirs.h>
+#include <kglobal.h>
 
 #include "knsavedarticlemanager.h"
-#include "knglobals.h"
 #include "knhdrviewitem.h"
 #include "kncontrolarticle.h"
 #include "kngroup.h"
@@ -34,18 +34,37 @@
 #include "knsearchdialog.h"
 #include "knaccountmanager.h"
 #include "utilities.h"
+#include "knglobals.h"
 
-KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am) :
-	QObject(0,0), KNArticleManager(v)
+
+KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am, QObject * parent, const char * name) :
+	QObject(parent,name), KNArticleManager(v), f_older(0), sedlg(0), sDlg(0), accM(am)
 {
-	f_older=0;
-	sedlg=0;
-	sDlg=0;
 	//f_ilter=0;
-	accM=am;
+
 	defaultUser=new KNUserEntry();
-	comList=new QList<KNComposer> ;
+	comList=new QList<KNComposer>;
+		
 	readConfig();
+	
+  actSendOutbox = new KAction(i18n("Sen&d pending messages"), 0, this, SLOT(slotSendOutbox()),
+                              &actionCollection, "net_sendPending");
+  actSendOutbox->setEnabled(false);
+  actEdit = new KAction(i18n("&Edit"), Key_E , this, SLOT(slotEdit()),
+                        &actionCollection, "article_edit");
+  actEdit->setEnabled(false);
+  actDelete = new KAction(i18n("&Delete"), Key_Delete , this, SLOT(slotDelete()),
+                          &actionCollection, "article_delete");
+  actDelete->setEnabled(false);
+  actCancel = new KAction(i18n("&Cancel post"), 0 , this, SLOT(slotCancel()),
+                          &actionCollection, "article_cancel");
+  actCancel->setEnabled(false);
+  actSendNow = new KAction(i18n("Send &now"), 0 , this, SLOT(slotSendNow()),
+                           &actionCollection, "article_sendNow");
+  actSendNow->setEnabled(false);
+  actSendLater = new KAction(i18n("Send &later"), 0 , this, SLOT(slotSendLater()),
+                             &actionCollection, "article_sendLater");
+  actSendLater->setEnabled(false);
 }
 
 
@@ -62,7 +81,7 @@ KNSavedArticleManager::~KNSavedArticleManager()
 
 void KNSavedArticleManager::readConfig()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	QCString tmp;
 	conf->setGroup("IDENTITY");
 	defaultUser->load(conf);
@@ -78,6 +97,16 @@ void KNSavedArticleManager::readConfig()
 	KNComposer::readConfig();
 	for(KNComposer *c=comList->first(); c; c=comList->next())
 		c->setConfig();
+}
+
+
+		
+void KNSavedArticleManager::setStandardFolders(KNFolder *d, KNFolder *o, KNFolder *s)
+{
+  fDrafts=d;
+  fOutbox=o;
+  actSendOutbox->setEnabled(!fOutbox->isEmpty());
+  fSent=s;
 }
 
 
@@ -121,7 +150,6 @@ void KNSavedArticleManager::showHdrs()
 	
 	xTop->setStatusMsg();
 	xTop->setCursorBusy(false);
-	xTop->folderDisplayed(true);	
 	updateStatusString();
 }
 
@@ -152,9 +180,13 @@ void KNSavedArticleManager::setCurrentArticle(KNSavedArticle *a)
 			if(a->folder() && a->folder()->loadArticle(a)) showArticle(a);
 			else showError(a, i18n("Cannot load the article!"));
 		}
+	}	else {
+    actEdit->setEnabled(false);
+    actDelete->setEnabled(false);
+    actCancel->setEnabled(false);
+    actSendNow->setEnabled(false);
+    actSendLater->setEnabled(false);
 	}
-	else xTop->savedArticleDisplayed(false);
-	xTop->savedArticleSelected((c_urrentArticle!=0));	
 }
 
 
@@ -386,6 +418,7 @@ void KNSavedArticleManager::sendArticle(KNSavedArticle *a, bool now)
 	}
 	else {
 		fOutbox->addArticle(a);
+	  actSendOutbox->setEnabled(true);
 		if(f_older==fOutbox) showHdrs();
 	}
 	if(a==c_urrentArticle) mainArtWidget->showBlankPage();
@@ -644,7 +677,11 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 void KNSavedArticleManager::showArticle(KNArticle *a, bool force)
 {
 	KNArticleManager::showArticle(a, force);
-	xTop->savedArticleDisplayed(true);
+  actEdit->setEnabled(true);
+  actDelete->setEnabled(true);
+  actCancel->setEnabled(true);
+  actSendNow->setEnabled(true);
+  actSendLater->setEnabled(true);
 }
 
 
@@ -652,7 +689,11 @@ void KNSavedArticleManager::showArticle(KNArticle *a, bool force)
 void KNSavedArticleManager::showError(KNArticle *a, const QString &error)
 {
   KNArticleManager::showError(a, error);
-  xTop->savedArticleDisplayed(false);
+  actEdit->setEnabled(false);
+  actDelete->setEnabled(false);
+  actCancel->setEnabled(false);
+  actSendNow->setEnabled(false);
+  actSendLater->setEnabled(false);
 }
 
 
@@ -713,6 +754,7 @@ void KNSavedArticleManager::jobDone(KNJobData *job)
 		sedlg->appendJob(job);
 		fOutbox->addArticle(art);
 		if(f_older==fOutbox) showHdrs();
+    actSendOutbox->setEnabled(true);
 	}
 	else if(art->type()!=KNArticleBase::ATcontrol) {
 		if(art->isMail()) {
@@ -732,6 +774,7 @@ void KNSavedArticleManager::jobDone(KNJobData *job)
 		if(art->folder()!=0) art->folder()->removeArticle(art);
 		delete art;
 		delete job;
+	  actSendOutbox->setEnabled(!fOutbox->isEmpty());
 		return;
 	}
 	delete job;
@@ -775,7 +818,6 @@ void KNSavedArticleManager::updateStatusString()
 	  xTop->setCaption(f_older->name());
 	}
 }
-
 
 
 

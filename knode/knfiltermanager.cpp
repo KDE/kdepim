@@ -26,11 +26,12 @@
 #include <kstddirs.h>
 #include <kpopupmenu.h>
 #include <ktoolbarbutton.h>
+#include <kiconloader.h>
+#include <ktoolbar.h>
 
 #include "knfiltermanager.h"
 #include "knfilterdialog.h"
 #include "utilities.h"
-#include "knglobals.h"
 #include "resource.h"
 #include "knfiltersettings.h"
 
@@ -121,14 +122,16 @@ void KNFilterSelectAction::slotMenuActivated(int id)
 
 
 
-KNFilterManager::KNFilterManager(KNFilterSelectAction *filterMenu)
- : fset(0), currFilter(0), menu(filterMenu)
+KNFilterManager::KNFilterManager( QObject * parent, const char * name)
+ : QObject(parent,name), fset(0), currFilter(0)
 {
 	fList.setAutoDelete(true);
-
-	connect(menu, SIGNAL(activated(int)), this,	SLOT(slotMenuActivated(int)));
+	
+	actFilter = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , &actionCollection, "view_Filter");
+	connect(actFilter, SIGNAL(activated(int)), this,	SLOT(slotMenuActivated(int)));
 	
 	loadFilters();	
+	readOptions();	
 }
 
 
@@ -139,25 +142,45 @@ KNFilterManager::~KNFilterManager()
 
 
 
+void KNFilterManager::readOptions()
+{
+  KConfig *conf=KGlobal::config();   	
+  conf->setGroup("READNEWS");
+  setFilter(conf->readNumEntry("lastFilterID", 1));
+}
+
+
+
+void KNFilterManager::saveOptions()
+{
+  if (currFilter) {
+    KConfig *conf=KGlobal::config();   	
+    conf->setGroup("READNEWS");
+    conf->writeEntry("lastFilterID", currFilter->id());
+  }
+}
+
+
+
 void KNFilterManager::loadFilters()
 {
 	QString fname(KGlobal::dirs()->findResource("appdata","filters/filters.rc"));
-	if (fname == QString::null)
-		return;
-  KSimpleConfig conf(fname,true);
+	if (fname != QString::null) {
+    KSimpleConfig conf(fname,true);
 	
-	QValueList<int> activeFilters = conf.readIntListEntry("Active");
-	menuOrder = conf.readIntListEntry("Menu");
+    QValueList<int> activeFilters = conf.readIntListEntry("Active");
+    menuOrder = conf.readIntListEntry("Menu");
 	
-  QValueList<int>::Iterator it = activeFilters.begin();
-  while (it != activeFilters.end()) {
-  	KNArticleFilter *f=new KNArticleFilter((*it));
-		if (f->loadInfo())
-			addFilter(f);
-		else
-			delete f;	
-		it++;
-  }	
+    QValueList<int>::Iterator it = activeFilters.begin();
+    while (it != activeFilters.end()) {
+    	KNArticleFilter *f=new KNArticleFilter((*it));
+		  if (f->loadInfo())
+  			addFilter(f);
+  		else
+  			delete f;	
+  		it++;
+    }	
+  }
  	updateMenu();	
 }
 
@@ -210,7 +233,7 @@ void KNFilterManager::endConfig()
 	}
 		
 	if(currFilter)
-	 if(!currFilter->isEnabled()) currFilter=0;
+    if(!currFilter->isEnabled()) currFilter=0;
 
  	updateMenu();
 
@@ -273,6 +296,23 @@ void KNFilterManager::deleteFilter(KNArticleFilter *f)
 
 
 
+KNArticleFilter* KNFilterManager::setFilter(const int id)
+{
+	KNArticleFilter *bak=currFilter;
+	
+	currFilter=byID(id);	
+	
+	if(currFilter) {
+	  actFilter->setCurrentItem(currFilter->id());
+    emit(filterChanged(currFilter));
+	}	else
+	  currFilter=bak;
+	
+	return currFilter;		
+}
+
+
+
 KNArticleFilter* KNFilterManager::byID(int id)
 {
 	KNArticleFilter *ret=0;
@@ -300,39 +340,24 @@ bool KNFilterManager::nameIsOK(KNArticleFilter *f)
 
 
 
-KNArticleFilter* KNFilterManager::setFilter(const int id)
-{
-	KNArticleFilter *bak=currFilter;
-	
-	currFilter=byID(id);	
-	
-	if(currFilter)
-	  menu->setCurrentItem(currFilter->id());
-	else
-	  currFilter=bak;
-	
-	return currFilter;		
-}
-
-
-
 void KNFilterManager::updateMenu()
 {
-	menu->popupMenu()->clear();
+	actFilter->popupMenu()->clear();
 	KNArticleFilter *f=0;
 	
 	QValueList<int>::Iterator it = menuOrder.begin();
   while (it != menuOrder.end()) {
 	 	if ((*it)!=-1) {
 			if ((f=byID((*it))))
-				menu->popupMenu()->insertItem(f->name(), f->id());
+				actFilter->popupMenu()->insertItem(f->name(), f->id());
 		}
-		else menu->popupMenu()->insertSeparator();
+		else actFilter->popupMenu()->insertSeparator();
 		++it;
   }
 	
 	if(currFilter)
-		menu->setCurrentItem(currFilter->id());
+		actFilter->setCurrentItem(currFilter->id());
+	actFilter->setEnabled(!menuOrder.isEmpty());
 }
 
 
@@ -372,8 +397,8 @@ void KNFilterManager::slotMenuActivated(int id)
 {
 	KNArticleFilter *f=setFilter(id);
 	
-	if(f) emit filterChanged(f);
-	else KMessageBox::error(0, i18n("ERROR : no such filter!"));
+	if (!f)
+    KMessageBox::error(0, i18n("ERROR : no such filter!"));
 }
 
 

@@ -15,15 +15,18 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <stdlib.h>
 
-#include "knaccmailsettings.h"
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+
 #include <klocale.h>
 #include <kconfig.h>
-#include <stdlib.h>
-#include "utilities.h"
+#include <kglobal.h>
+
+#include "knaccmailsettings.h"
+
 
 KNAccMailSettings::KNAccMailSettings(QWidget *p) : KNSettingsWidget(p)
 {
@@ -60,7 +63,7 @@ KNAccMailSettings::~KNAccMailSettings()
 
 void KNAccMailSettings::init()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("SERVER");
 	
 	smtp->setText(conf->readEntry("Smtp",""));
@@ -71,7 +74,7 @@ void KNAccMailSettings::init()
 
 void KNAccMailSettings::apply()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("SERVER");
 	conf->writeEntry("Smtp", smtp->text());
 	conf->writeEntry("sPort", sPort->value());

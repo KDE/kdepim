@@ -16,12 +16,15 @@
  ***************************************************************************/
 
 
-#include "kncleanupsettings.h"
 #include <qlabel.h>
 #include <qlayout.h>
+
 #include <klocale.h>
 #include <kconfig.h>
 #include <kseparator.h>
+#include <kglobal.h>
+
+#include "kncleanupsettings.h"
 #include "utilities.h"
 
 KNCleanupSettings::KNCleanupSettings(QWidget *p) : KNSettingsWidget(p)
@@ -77,7 +80,7 @@ KNCleanupSettings::~KNCleanupSettings()
 
 void KNCleanupSettings::init()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("EXPIRE");
 	groupCB->setChecked(conf->readBoolEntry("doExpire", true));
 	slotGroupCBtoggled(groupCB->isChecked());
@@ -94,7 +97,7 @@ void KNCleanupSettings::init()
 
 void KNCleanupSettings::apply()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("EXPIRE");
 	conf->writeEntry("doExpire", groupCB->isChecked());
 	conf->writeEntry("expInterval", groupDays->value());

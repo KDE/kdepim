@@ -56,16 +56,15 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/) : QWidget()
 	//if(t==STfolderSearch) fcw->setLimited();
 	
 	setCaption(i18n("Search articles"));
-//	setIcon(kapp->getMiniIcon());
-	setDialogSize("searchDlg", this);
+  restoreWindowSize("searchDlg", this, sizeHint());
 }
 
 
 
 KNSearchDialog::~KNSearchDialog()
 {
-	 delete f_ilter;
-	 saveDialogSize("searchDlg", this->size());
+  delete f_ilter;
+  saveWindowSize("searchDlg", size());
 }
 
 

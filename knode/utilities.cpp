@@ -13,14 +13,16 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <stdio.h>
+#include <ctype.h>
+#include <qdir.h>
+
 #include <klocale.h>
 #include <kmessagebox.h>
 
 #include "utilities.h"
 #include "knode.h"
 #include "knstringsplitter.h"
-#include <ctype.h>
-#include <qdir.h>
 
 
 /*
@@ -81,21 +83,20 @@ void removeQuots(QCString &str)
 */
 
 
-void saveDialogSize(const QString &name, const QSize &s)
+void saveWindowSize(const QString &name, const QSize &s)
 {
-	KConfig *c=CONF();
-	c->setGroup("DIALOGS");
-	c->writeEntry(name, s);
-	
+  KConfig *c=KGlobal::config();	
+	c->setGroup("WINDOW_SIZES");
+	c->writeEntry(name, s);	
 }
 
 
-void setDialogSize(const QString &name, QWidget *d)
+void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize)
 {
-	KConfig *c=CONF();
-	c->setGroup("DIALOGS");
+  KConfig *c=KGlobal::config();
+	c->setGroup("WINDOW_SIZES");
 	
-	QSize s=c->readSizeEntry(name);
+	QSize s=c->readSizeEntry(name,&defaultSize);
 	
 	if(s.isValid()) d->resize(s);	
 }
@@ -128,16 +129,12 @@ QString decryptStr(const QString& aStr)
 
 
 
-void snyimpl()
-{
-	KMessageBox::information(0,i18n("Sorry, this feature is not yet implemented :-("));
-}
-
-
 void displayInternalFileError()
 {
 	KMessageBox::error(0, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\n!\nYou should close this application now,\nto avoid data loss!"));
 }
+
+
 
 void displayExternalFileError()
 {
@@ -145,10 +142,12 @@ void displayExternalFileError()
 }
 
 
+
 void displayRemoteFileError()
 {
 	KMessageBox::error(0, i18n("Unable to save remote file!"));
 }
+
 
 
 void displayTempFileError()

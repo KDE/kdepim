@@ -13,10 +13,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qpixmap.h>
+
+#include <kapp.h>
+#include <kiconloader.h>
+
 #include "knlvitembase.h"
 #include "utilities.h"
-#include <qpixmap.h>
-#include <kapp.h>
 
 
 bool KNLVItemBase::totalExpand=true;

@@ -29,7 +29,6 @@
 // include files for KDE
 #include <klocale.h>
 #include <ktmainwindow.h>
-#include <kaccel.h>
 #include <kiconloader.h>
 #include <qprogressbar.h>
 #include <kprogress.h>
@@ -42,7 +41,7 @@
 #include "knfiltermanager.h"
 
 
-class KNProgress : public KProgress    // Ok, this is just a hack to adjust the sizeHint of the progress bar
+class KNProgress : public KProgress
 {
   Q_OBJECT
 
@@ -50,10 +49,16 @@ class KNProgress : public KProgress    // Ok, this is just a hack to adjust the 
     KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent=0, const char *name=0);
     ~KNProgress();
 
+    void disableProgressBar();		                                  // 0% and no text
+    void setProgressBar(int value,const QString& = QString::null);  // manual operation
+    void initProgressBar();                                         // display 0%
+    void stepProgressBar();                                         // add 10%
+    void fullProgressBar();                                         // display 100%
+
     virtual QSize sizeHint() const;
 
-  private:
-    int desHeight;
+  protected:
+    int desHeight, progVal;
 };
 
 
@@ -71,24 +76,6 @@ class KNodeApp : public KTMainWindow
     void setStatusHelpMsg(const QString& text);
     void setCursorBusy(bool b=true);
 
-    void netIsActive(bool b);
-
-    void disableProgressBar();		// 0% and no text
-    void setProgressBar(int value,const QString& = QString::null);  // manual operation
-    void initProgressBar();       // display 0%
-    void stepProgressBar();       // add 10%
-    void fullProgressBar();       // display 100%
-
-    void accountSelected(bool b);
-    void groupSelected(bool b);
-    void groupDisplayed(bool b);
-    void fetchArticleSelected(bool b);
-    void fetchArticleDisplayed(bool b);
-    void folderSelected(bool b);
-    void folderDisplayed(bool b);
-    void savedArticleSelected(bool b);
-    void savedArticleDisplayed(bool b);
-
     //Member-Access
     KNAccountManager* accManager()				{ return AManager; }
     KNGroupManager* gManager()						{ return GManager; }
@@ -99,7 +86,6 @@ class KNodeApp : public KTMainWindow
 
     //network
     void jobDone(KNJobData *j);
-
     	
 	protected:
 
@@ -110,27 +96,13 @@ class KNodeApp : public KTMainWindow
  	  void initPopups();      	
   	
   	void saveOptions();
-  	void readOptions();
   	 	
   	//exit
     void cleanup();
     bool queryExit();
 
 	  //actions
-    KAction  *actFileSave, *actFilePrint, *actNetSendPending, *actNetStop, *actEditCopy, *actEditFind,
-             *actViewExpandAll,*actViewCollapseAll, *actViewRefresh,
-             *actAccProperties, *actAccSubscribeGrps, *actAccLoadHdrs, *actAccDelete,
-             *actGrpProperties, *actGrpLoadHdrs, *actGrpExpire, *actGrpResort, *actGrpAllRead,
-             *actGrpAllUnread, *actGrpUnsubscribe, *actFolderCompact, *actFolderEmpty,
-             *actArtPostNew, *actArtPostReply, *actArtMailReply, *actArtForward,
-             *actArtRead, *actArtUnread, *actArtOwnWindow, *actArtEdit, *actArtDelete,
-             *actArtCancel, *actArtSendNow, *actArtSendLater, *actArtSearch,
-             *actThreadRead, *actThreadUnread, *actThreadSetScore, *actThreadWatch,
-             *actThreadIgnore, *actThreadToggle;
-
-    KSelectAction *actViewSort;
-    KNFilterSelectAction *actViewFilters;
-    KToggleAction *actViewShowThreads, *actViewShowAllHdrs;
+    KToggleAction *actShowAllHdrs;
 
    	//popups
    	QPopupMenu 	*accPopup, *groupPopup, *folderPopup,
@@ -139,7 +111,6 @@ class KNodeApp : public KTMainWindow
    	KAccel *acc;
    	KNodeView *view;
     KNProgress *progBar;
-   	int progr;
 		
     KNNetAccess	*NAcc;
     KNAccountManager *AManager;
@@ -155,62 +126,9 @@ class KNodeApp : public KTMainWindow
   protected slots:
 
   	//action-slots	  	
-  	void slotFileSave();                // file menu
-  	void slotNetSendPending();
-  	void slotNetStop();
   	void slotFileQuit();
-  	
-  	void slotToggleShowThreads();       // view menu
   	void slotToggleShowAllHdrs();
-  	void slotViewSort(int id);
-  	void slotViewRefresh();
-  	void slotViewExpand();
-  	void slotViewCollapse();
-  	
-  	void slotGotoNextArt();              // go menu
-  	void slotGotoPrevArt();  	
-  	void slotGotoNextUnreadArt();
-  	void slotReadThrough();
-  	void slotGotoNextThr();
-  	void slotGotoNextGroup();
-  	void slotGotoPrevGroup();
- 	  	
-  	void slotAccProperties();           // account menu
-  	void slotAccSubscribeGrps();
-  	void slotAccLoadHdrs();
-  	void slotAccDelete();
-  	
-  	void slotGrpProperties();           // group menu
-  	void slotGrpLoadHdrs();
-  	void slotGrpExpire();
-  	void slotGrpResort();
-   	void slotGrpAllRead();
-  	void slotGrpAllUnread();  	
-   	void slotGrpUnsubscribe();
-  	void slotFolderCompact();
-  	void slotFolderEmpty();
-  	  	
-  	void slotArtNew();                  // article menu
-  	void slotArtReply();
-  	void slotArtRemail();
-  	void slotArtForward();
-  	void slotArtOwnWindow();
-  	void slotArtMarkRead();
-  	void slotArtMarkUnread();
-  	void slotArtEdit();
-  	void slotArtDelete();
-  	void slotArtCancel();
-  	void slotArtSendNow();
-  	void slotArtSendLater();
-  	void slotArtSearch();
-  	void slotArtThrRead();
-  	void slotArtThrUnread();
-  	void slotArtThrScore();
-  	void slotArtThrWatch();
-  	void slotArtThrIgnore();
-  	void slotArtThrToggle();
-  	  		
-  	void slotToggleToolBar();            // settings menu
+   	void slotToggleToolBar();
   	void slotToggleStatusBar();
   	void slotConfKeys();
   	void slotConfToolbar();
@@ -220,10 +138,9 @@ class KNodeApp : public KTMainWindow
 	 	void slotCollectionSelected(QListViewItem *it);
   	void slotHeaderSelected(QListViewItem *it);
   	void slotHeaderDoubleClicked(QListViewItem *it);
-  	void slotSortingChanged(int newCol);
   	void slotArticlePopup(QListViewItem *it, const QPoint &p, int c);
   	void slotCollectionPopup(QListViewItem *it, const QPoint &p, int c);
-		void slotSelectionChanged();
+
 };
 
 #endif // KNODE_H

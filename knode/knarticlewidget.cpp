@@ -17,20 +17,24 @@
 
 #include <qstring.h>
 #include <qclipboard.h>
+#include <qpopupmenu.h>
 
 #include <kcursor.h>
 #include <khtml_part.h>
 #include <khtmlview.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
+#include <kglobal.h>
+#include <klocale.h>
+#include <kconfig.h>
+#include <kstdaction.h>
 
 #include "resource.h"
 #include "knarticlecollection.h"
-#include "utilities.h"
-#include "knglobals.h"
 #include "knarticlewidget.h"
 #include "knviewheader.h"
 #include "knsavedarticlemanager.h"
+#include "knglobals.h"
 
 #define PUP_OPEN  1000
 #define PUP_SAVE  2000
@@ -56,9 +60,11 @@ KNArticleWidget::browserType KNArticleWidget::browser;
 QList<KNArticleWidget> KNArticleWidget::instances;
 
 
-void KNArticleWidget::readConfig()
+void KNArticleWidget::readOptions()
 {
-	KConfig *c=CONF(); c->setGroup("READNEWS");
+  KConfig *c = KGlobal::config();   	
+  c->setGroup("READNEWS");
+	
 	showSig=c->readBoolEntry("showSig", true);
 	fullHdrs=c->readBoolEntry("fullHdrs", false);
 	inlineAtt=c->readBoolEntry("inlineAtt", false);
@@ -85,6 +91,14 @@ void KNArticleWidget::readConfig()
 	}
 }
 
+
+void KNArticleWidget::saveOptions()
+{
+  KConfig *c = KGlobal::config();   	
+  c->setGroup("READNEWS");
+
+  c->writeEntry("fullHdrs", fullHdrs);
+}
 
 
 void KNArticleWidget::updateInstances()
@@ -156,16 +170,14 @@ bool KNArticleWidget::fullHeaders()
 KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
     : QVBox(parent, name), a_rticle(0), c_oll(0), att(0), h_tmlDone(false)
 {
-  p_art=new KHTMLPart(this);
-	part()->setURLCursor(KCursor::handCursor());
-	applyConfig();
+  p_art=new KHTMLPart(this,0,0,0,KHTMLPart::DefaultGUI);
+	p_art->setURLCursor(KCursor::handCursor());
 	
-	connect(part()->browserExtension(),SIGNAL(openURLRequest(const KURL &,const KParts::URLArgs &)),
+	connect(p_art->browserExtension(),SIGNAL(openURLRequest(const KURL &,const KParts::URLArgs &)),
 					this,SLOT(slotURLRequest(const KURL &,const KParts::URLArgs &)));
 	connect(p_art, SIGNAL(popupMenu(const QString&, const QPoint&)),
 	        this, SLOT(slotPopup(const QString&, const QPoint&)));
 	instances.append(this);	
-	
 
   // No need to deal with focus policies here :) KHTMLPart does it all for us :) (Simon)
   //	p_art->view()->viewport()->setFocusPolicy(QWidget::NoFocus);
@@ -179,6 +191,20 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
   attPopup=new QPopupMenu();
   attPopup->insertItem(i18n("Open"), PUP_OPEN);
   attPopup->insertItem(i18n("Save"), PUP_SAVE);
+
+  actSave = KStdAction::save(this, SLOT(slotSave()), &actionCollection);
+  actSave->setEnabled(false);
+  actPrint = KStdAction::print(this, SLOT(slotPrint()), &actionCollection);
+  actPrint->setEnabled(false);
+  actCopy = KStdAction::copy(this, SLOT(slotCopy()), &actionCollection);
+  actCopy->setEnabled(false);
+  connect(p_art,SIGNAL(selectionChanged()),this,SLOT(slotSelectionChanged()));
+/*  KAction *act = p_art->actionCollection()->action( "selectAll" );
+  if (act) actionCollection.insert(act);
+  act = p_art->actionCollection()->action( "find" );
+  if (act) actionCollection.insert(act); */
+
+	applyConfig();
 }
 
 
@@ -205,28 +231,6 @@ void KNArticleWidget::scrollDown()
   view->scrollBy( 0, view->visibleHeight()-offs);
 }
 
-
-void KNArticleWidget::print()
-{
-  KAction *print = p_art->actionCollection()->action( "printFrame" );
-  if (print)
-    print->activate();
-}
-
-
-void KNArticleWidget::copySelection()
-{
-  if (p_art->hasSelection())
-		QApplication::clipboard()->setText(p_art->selectedText());
-}
-
-
-void KNArticleWidget::findText()
-{
-  KAction *find = p_art->actionCollection()->action( "find" );
-  if (find)
-    find->activate();
-}
 
 
 void KNArticleWidget::focusInEvent(QFocusEvent *e)
@@ -284,15 +288,15 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
 
 void KNArticleWidget::applyConfig()
 {
-	part()->setStandardFont(htmlFont);
+	p_art->setStandardFont(htmlFont);
 	
  	QValueList<int> fontsizes;          // taken from kmail
-  part()->resetFontSizes();
-  int diff = htmlFontSize - part()->fontSizes()[3];
-  if (part()->fontSizes()[0]+diff > 0) {
+  p_art->resetFontSizes();
+  int diff = htmlFontSize - p_art->fontSizes()[3];
+  if (p_art->fontSizes()[0]+diff > 0) {
     for (int i=0;i<7; i++)
-      fontsizes << part()->fontSizes()[i] + diff;
-    part()->setFontSizes(fontsizes);
+      fontsizes << p_art->fontSizes()[i] + diff;
+    p_art->setFontSizes(fontsizes);
   }
 	
 	updateContents();
@@ -514,42 +518,46 @@ bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 
 void KNArticleWidget::showBlankPage()
 {
-	part()->begin(KURL("file:/"));
-	part()->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"></body></html>")
+	p_art->begin(KURL("file:/"));
+	p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"></body></html>")
 								.arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
-	part()->end();
+	p_art->end();
 	
 	a_rticle=0;
 	c_oll=0;
 	delete att;
 	att=0;	
 	h_tmlDone=false;
+  actSave->setEnabled(false);
+  actPrint->setEnabled(false);
 }
 
 
 
 void KNArticleWidget::showErrorMessage(const QString &s)
 {
-	part()->begin();//(KURL("file:/"));
-	part()->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\">")
+	p_art->begin();//(KURL("file:/"));
+	p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\">")
 								.arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
-	part()->write(i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>"));
-	part()->write(toHtmlString(s,true,false));
-  part()->write("</font></body></html>");
-	part()->end();
+	p_art->write(i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>"));
+	p_art->write(toHtmlString(s,true,false));
+  p_art->write("</font></body></html>");
+	p_art->end();
 	
 	a_rticle=0;
 	c_oll=0;
 	delete att;
 	att=0;
   h_tmlDone=false;
+  actSave->setEnabled(false);
+  actPrint->setEnabled(false);
 }
 
 
 
 void KNArticleWidget::updateContents()
 {
-	if(a_rticle) createHtmlPage();
+	if (a_rticle) createHtmlPage();
 	else showBlankPage();
 }
 
@@ -560,7 +568,8 @@ void KNArticleWidget::setData(KNArticle *a, KNArticleCollection *c)
 	a_rticle=a;
 	c_oll=c;
 	h_tmlDone=false;
-	//if(!a || !a->hasContent()) showBlankPage();
+  actSave->setEnabled((a && a->hasContent()));
+	// if(!a || !a->hasContent()) showBlankPage();
 }
 
 
@@ -571,10 +580,11 @@ void KNArticleWidget::createHtmlPage()
   	showBlankPage();
   	return;
   }
+  actSave->setEnabled(true);
+  actPrint->setEnabled(true);
 
- 	KHTMLPart *p = part();
-	p->begin(KURL("file:/"));
-	p->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"><table width=\"100%\" cols=3 cellpadding=0 style=\"padding-left: 3px\">\n")
+	p_art->begin(KURL("file:/"));
+	p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"><table width=\"100%\" cols=3 cellpadding=0 style=\"padding-left: 3px\">\n")
 									.arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
 									
  	QString buffer,hLine;									
@@ -623,8 +633,8 @@ void KNArticleWidget::createHtmlPage()
 		}	
 	}	
 
-	p->begin(KURL("file:/"));
-	p->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"><table width=\"100%%\" cellpadding=2><tr><td width=50 bgcolor=\"%4\">&nbsp;</td><td>")
+	p_art->begin(KURL("file:/"));
+	p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"><table width=\"100%%\" cellpadding=2><tr><td width=50 bgcolor=\"%4\">&nbsp;</td><td>")
 									.arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]).arg(hexColors[FG_COL]));
 									
   if (!rowCount)
@@ -634,7 +644,7 @@ void KNArticleWidget::createHtmlPage()
 	  buffer.insert(4,QString("<td width=40 bgcolor=\"%1\" rowspan=\"%2\">&nbsp;</td>")
 	                         .arg(hexColors[FG_COL]).arg(rowCount));
 					
-	p->write(buffer);
+	p_art->write(buffer);
 										
 	buffer=QString("<tr><td colspan=3 bgcolor=\"%1\" width=\"100%\">").arg(hexColors[FG_COL]);
 	
@@ -652,16 +662,16 @@ void KNArticleWidget::createHtmlPage()
  	if(body) {
  		body->prepareForDisplay();
  		
- 		if (!p->setCharset(body->ctCharset())) {
+ 		if (!p_art->setCharset(body->ctCharset())) {
  			buffer+=QString("<tr><td colspan=3 bgcolor=red width=\"100%\"><font color=black>%1</font></td></tr>\n")
  								.arg(i18n("Unknown charset! Default charset is used instead."));
 			KCharsets *c = KGlobal::charsets();  	
- 			p->setCharset(c->name(c->charsetForLocale()));
+ 			p_art->setCharset(c->name(c->charsetForLocale()));
  		}
  	}
  	 	
  	buffer+="</table><br>\n<div style=\"padding-left: 4px\">\n";
- 	p->write(buffer); 	
+ 	p_art->write(buffer); 	
  	buffer=QString::null;
  	
 	if(!body || a_rticle->isMultipart()) {
@@ -677,10 +687,10 @@ void KNArticleWidget::createHtmlPage()
  	}	
 	
 	if(a_rticle->mimeInfo()->ctSubType()==KNArticleBase::STpartial) {
-		p->write("<b>This article has the Mime-Type &quot;message/partial&quot;, \
+		p_art->write("<b>This article has the Mime-Type &quot;message/partial&quot;, \
 					   which KNode cannot handle yet.<br>Meanwhile you can save the \
 						 article as a text-file and reassemble it by hand.<b></div></body></html>");
-		p->end();
+		p_art->end();
 		h_tmlDone=true;
 		return;
 	}	
@@ -738,7 +748,7 @@ void KNArticleWidget::createHtmlPage()
     }	
   }
 
-  p->write(buffer);
+  p_art->write(buffer);
   buffer=QString::null;
 
 	if(att) {
@@ -785,8 +795,8 @@ void KNArticleWidget::createHtmlPage()
   }	
 
   buffer += "</div></body></html>";
-  p->write(buffer);
-	p->end();
+  p_art->write(buffer);
+	p_art->end();
 	h_tmlDone=true;
 }	
 
@@ -815,6 +825,38 @@ void KNArticleWidget::slotPopup(const QString &url, const QPoint &p)
       break;
     }
   }
+}
+
+
+
+void KNArticleWidget::slotSave()
+{
+  if(a_rticle)
+		KNArticleManager::saveArticleToFile(a_rticle);
+}
+
+
+
+void KNArticleWidget::slotPrint()
+{
+  KAction *print = p_art->actionCollection()->action( "printFrame" );
+  if (print)
+    print->activate();
+}
+
+
+
+void KNArticleWidget::slotCopy()
+{
+  if (p_art->hasSelection())
+		QApplication::clipboard()->setText(p_art->selectedText());
+}
+
+
+
+void KNArticleWidget::slotSelectionChanged()
+{
+  actCopy->setEnabled(p_art->hasSelection());		
 }
 
 

@@ -20,7 +20,6 @@
 #define KNARTICLEWINDOW_H
 
 #include <ktmainwindow.h>
-#include <kaction.h>
 
 class KNArticle;
 class KNArticleWidget;
@@ -36,16 +35,13 @@ class KNArticleWindow : public KTMainWindow  {
 	 	KNArticleWidget* artWidget()				{ return artW; }
 			
 	protected:
-		KAction  *actEditCopy;
 		KNArticleWidget *artW;
 		
 	protected slots:
-  	void slotFileSave();
   	void slotFileClose();
   	void slotArtReply();
   	void slotArtRemail();
   	void slotArtForward();
-		void slotSelectionChanged();		
 };
 
 #endif

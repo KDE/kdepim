@@ -22,24 +22,37 @@
 #include <ksimpleconfig.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kglobal.h>
 
 #include "kngroupmanager.h"
 #include "resource.h"
-#include "utilities.h"
 #include "kncollectionviewitem.h"
-#include "knglobals.h"
-
+#include "utilities.h"
+#include "knnntpaccount.h"
 #include "kncleanup.h"
 #include "knuserentry.h"
+#include "knglobals.h"
 
 
-
-KNGroupManager::KNGroupManager(KNFetchArticleManager *a) : QObject(0,0), aManager(a), gDialog(0)
+KNGroupManager::KNGroupManager(KNFetchArticleManager *a, QObject * parent, const char * name)
+  : QObject(parent,name), aManager(a), gDialog(0)
 {
 	gList=new QList<KNGroup>;
 	gList->setAutoDelete(true);
 		
 	readConfig();	
+	
+	actProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotProperties()),
+                              &actionCollection, "group_properties");
+  actLoadHdrs = new KAction(i18n("&Get New Articles"), 0, this, SLOT(slotLoadHdrs()),
+                            &actionCollection, "group_dnlHeaders");
+  actExpire = new KAction(i18n("E&xpire Now"), 0, this, SLOT(slotExpire()),
+                          &actionCollection, "group_expire");
+  actResort = new KAction(i18n("Res&ort"), 0, this, SLOT(slotResort()),
+                          &actionCollection, "group_resort");
+  actUnsubscribe = new KAction(i18n("&Unsubscribe"), 0, this, SLOT(slotUnsubscribe()),
+                               &actionCollection, "group_unsubscribe");			
+	
 	setCurrentGroup(0);
 }
 
@@ -55,7 +68,7 @@ KNGroupManager::~KNGroupManager()
 
 void KNGroupManager::readConfig()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("READNEWS");
 	a_utoCheck=conf->readBoolEntry("autoCheck",true);
 	defaultMaxFetch=conf->readNumEntry("maxFetch", 500);		
@@ -70,7 +83,7 @@ bool KNGroupManager::timeToExpire()
 	QDate lastExpDate;
 	int y, m, d, interval;
 
-	KConfig *c=CONF();
+	KConfig *c=KGlobal::config();
 	c->setGroup("EXPIRE");
 	doExpire=c->readBoolEntry("doExpire", true);
 	
@@ -184,7 +197,7 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 {
 	KNCleanUp cup;
 	QDate today=QDate::currentDate();
-	KConfig *c=CONF();
+	KConfig *c=KGlobal::config();
 	
 	if(dlg) dlg->init(i18n("Deleting expired articles ..."), gList->count());
 	
@@ -351,30 +364,28 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
 	bool loaded;
 	qDebug("KNGroupManager::setCurrentGroup() : group changed");
 	
-	if(g) {
+	if (g) {
 		xTop->setCursorBusy(true);
 		loaded=g->loadHdrs();
 		xTop->setCursorBusy(false);	
-		if(loaded) {
+		if (loaded) {
 			aManager->showHdrs();
 			if(a_utoCheck) checkGroupForNewHeaders(g);
-		}
-		else KMessageBox::error(0, i18n("Cannot load saved headers"));
-		/*if(a_utoCheck) {
-			checkGroupForNewHeaders(g);
-		}	
-		else {
-			xTop->setCursorBusy(true);
-			loaded=g->loadHdrs();
-			xTop->setCursorBusy(false);	
-			if(loaded) {
-				aManager->showHdrs();
-			}
-			else MBox(err, i18n("Cannot load saved headers"));
-		}*/
+		}	else
+		  KMessageBox::error(0, i18n("Cannot load saved headers"));
+		
+		actProperties->setEnabled(true);
+		actLoadHdrs->setEnabled(true);
+		actExpire->setEnabled(true);
+		actResort->setEnabled(true);
+		actUnsubscribe->setEnabled(true);		
+	} else {
+		actProperties->setEnabled(false);
+		actLoadHdrs->setEnabled(false);
+		actExpire->setEnabled(false);
+		actResort->setEnabled(false);
+		actUnsubscribe->setEnabled(false);		
 	}
-	if(!c_urrentGroup) xTop->groupDisplayed(false);
-	xTop->groupSelected((c_urrentGroup!=0));
 }
 
 
@@ -450,6 +461,13 @@ void KNGroupManager::slotDialogNewList(KNNntpAccount *a)
 	xNet->addJob(job);
 }
 
+
+
+void KNGroupManager::slotUnsubscribe()
+{
+  if(KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("Do you really want to unsubscribe this group?")))
+	  unsubscribeGroup();
+}
 
 
 //--------------------------------

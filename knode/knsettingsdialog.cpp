@@ -122,13 +122,13 @@ KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), O
   // Key bindings
   frame = addHBoxPage(i18n("Key bindings"), i18n("Key bindings"), BarIcon("arrow_right"));
   widgets.append(new KNKeySettings(frame));
-  
-  setDialogSize("settingsDlg", this);
+
+  restoreWindowSize("settingsDlg", this, sizeHint());
 }
   
 KNSettingsDialog::~KNSettingsDialog()
 {
-  saveDialogSize("settingsDlg", this->size());
+  saveWindowSize("settingsDlg", this->size());
 }
 
   

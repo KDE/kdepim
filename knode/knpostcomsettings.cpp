@@ -15,14 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#include "knpostcomsettings.h"
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+
+#include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
+
+#include "knpostcomsettings.h"
 #include "utilities.h"
+
 
 KNPostComSettings::KNPostComSettings(QWidget *p) : KNSettingsWidget(p)
 {
@@ -74,7 +77,7 @@ KNPostComSettings::~KNPostComSettings()
 
 void KNPostComSettings::init()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("POSTNEWS");
 
   maxLen->setValue(conf->readNumEntry("maxLength", 76));
@@ -90,7 +93,7 @@ void KNPostComSettings::init()
 
 void KNPostComSettings::apply()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("POSTNEWS");
 	
 	conf->writeEntry("maxLength", maxLen->value());

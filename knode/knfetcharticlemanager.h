@@ -19,6 +19,7 @@
 #ifndef KNFETCHARTICLEMANAGER_H
 #define KNFETCHARTICLEMANAGER_H
 
+#include <kaction.h>
 #include "knarticlemanager.h"
 
 class QTimer;
@@ -28,14 +29,19 @@ class KNFetchArticle;
 class KNSearchDialog;
 class KNJobData;
 class KNGroup;
+class KNFilterManager;
+
 
 class KNFetchArticleManager : public QObject, public KNArticleManager  {
 	
 	Q_OBJECT
 	
 	public:
-		KNFetchArticleManager(KNListView *v);
+		KNFetchArticleManager(KNListView *v, KNFilterManager* fiManager, QObject * parent=0, const char * name=0);
 		~KNFetchArticleManager();
+		
+		const KActionCollection& actions()      { return actionCollection; }
+		
 		void readConfig();
 				
 		void setGroup(KNGroup *g);					
@@ -81,6 +87,12 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
 		int tOut;
 		bool t_hreaded, autoMark;
 		KNSearchDialog *sDlg;
+    KAction *actExpandAll, *actCollapseAll, *actRefresh,
+            *actAllRead, *actAllUnread, *actPostReply, *actMailReply, *actForward,
+            *actMarkRead, *actMarkUnread, *actOwnWindow,  *actSearch, *actThreadRead,
+            *actThreadUnread, *actThreadSetScore, *actThreadWatch,*actThreadIgnore;
+    KToggleAction *actShowThreads;
+		KActionCollection actionCollection;
 					
 	public slots:
 		void slotFilterChanged(KNArticleFilter *f);
@@ -88,6 +100,24 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
 					
 	protected slots:
 		void slotTimer();
+		void slotToggleShowThreads()  { toggleThreaded(); }
+		void slotThreadsExpand()      { expandAllThreads(true); }
+		void slotThreadsCollapse()    { expandAllThreads(false); }
+		void slotRefresh()            { showHdrs(); }
+		void slotSearch()             { search(); }
+    void slotThreadRead()         { setThreadRead(0, true); }
+    void slotThreadUnread()       { setThreadRead(0, false); }
+    void slotThreadScore()        { setThreadScore(); }
+    void slotThreadWatch()        { toggleWatched(); }
+    void slotThreadIgnore()       { toggleIgnored(); }
+    void slotAllRead()            { setAllRead(0, true); }
+    void slotAllUnread()          {	setAllRead(0, false); }
+    void slotReply();
+    void slotRemail();
+    void slotForward();
+    void slotOwnWindow()          { articleWindow(); }
+    void slotMarkRead()           { setArticleRead(0, true); }
+    void slotMarkUnread()         { setArticleRead(0, false); }
 		
 };
 

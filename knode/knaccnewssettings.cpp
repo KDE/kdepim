@@ -21,13 +21,14 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 
+#include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
+#include <kiconloader.h>
 
 #include "knaccnewssettings.h"
 #include "knlistbox.h"
 #include "knaccountmanager.h"
-#include "utilities.h"
 
 
 KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am)

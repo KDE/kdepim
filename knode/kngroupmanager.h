@@ -27,15 +27,17 @@
 #include "kngroupdialog.h"
 #include "knpurgeprogressdialog.h"
 
-class KNGroupManager : public QObject{
+class KNGroupManager : public QObject {
 
 	Q_OBJECT
  			
 	public:
-		KNGroupManager(KNFetchArticleManager *a);
+		KNGroupManager(KNFetchArticleManager *a, QObject * parent=0, const char * name=0);
 		~KNGroupManager();
-	 	
-		void readConfig();
+		
+		const KActionCollection& actions()    { return actionCollection; }	
+		
+		void readConfig();		
 	 	void loadGroups(KNNntpAccount *a);
 	 	void getSubscribed(KNNntpAccount *a, QStrList *l);
 	  void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);	 	
@@ -47,12 +49,12 @@ class KNGroupManager : public QObject{
 		void expireGroupNow(KNGroup *g=0);
 		void resortGroup(KNGroup *g=0);
 			
-	  void setAutoCheck(bool check) 	{ a_utoCheck=check;}
-		bool autoCheck() 								{ return a_utoCheck;}
+	  void setAutoCheck(bool check)         { a_utoCheck=check;}
+		bool autoCheck()                      { return a_utoCheck;}
 	 		
 		KNGroup* group(const QCString &gName, const KNServerInfo *s);
-		KNGroup* currentGroup() 				{ return c_urrentGroup; }
-		bool hasCurrentGroup()					{ return (c_urrentGroup!=0); }
+		KNGroup* currentGroup()               { return c_urrentGroup; }
+		bool hasCurrentGroup()                { return (c_urrentGroup!=0); }
 		void setCurrentGroup(KNGroup *g);
 		
 		void checkAll(KNNntpAccount *a);
@@ -61,6 +63,9 @@ class KNGroupManager : public QObject{
 	  void syncGroups();		
 	  void jobDone(KNJobData *j);			
 	
+	public slots:
+		void slotDialogNewList(KNNntpAccount *a);
+		
 	protected:
 		QList<KNGroup>  *gList;
 		KNGroup *c_urrentGroup;
@@ -68,9 +73,16 @@ class KNGroupManager : public QObject{
 		KNGroupDialog *gDialog;				
 		int defaultMaxFetch;
 		bool a_utoCheck;
+		KAction *actProperties, *actLoadHdrs, *actExpire, *actResort, *actUnsubscribe;
+		KActionCollection actionCollection;
 				
-	public slots:
-		void slotDialogNewList(KNNntpAccount *a);
+	protected slots:	
+	  void slotProperties()                 { showGroupProperties(); }
+	  void slotLoadHdrs() 		              { checkGroupForNewHeaders(); }
+ 	  void slotExpire() 		                { expireGroupNow(); }
+ 	  void slotResort() 		                { resortGroup(); }
+ 	  void slotUnsubscribe();	
+ 	  	
 };
 
 

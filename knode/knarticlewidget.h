@@ -25,6 +25,7 @@
 #include <kurl.h>
 #include <kparts/browserextension.h>
 #include <khtml_part.h>
+#include <kaction.h>
 
 class KNArticle;
 class KNArticleCollection;
@@ -37,11 +38,12 @@ class KNArticleWidget : public QVBox  {
 	public:
 		enum browserType { BTkonqueror=0 , BTnetscape=1 };
 		
-		KNArticleWidget(QWidget *parent=0, const char *name=0);
+		KNArticleWidget(QWidget *parent=0, const char *name=0 );
 		~KNArticleWidget();
 		
 //=======================================	
-		static void readConfig();
+  	static void readOptions();
+  	static void saveOptions();
 		static void updateInstances();
 		static KNArticleWidget* find(KNArticle *a);
 		static KNArticleWidget* mainWidget();
@@ -50,6 +52,8 @@ class KNArticleWidget : public QVBox  {
 		static void toggleFullHeaders();
 		static bool fullHeaders();						
 //=======================================
+
+    const KActionCollection& actions()      { return actionCollection; }
 
     bool scrollingDownPossible();       // needed for "read-through"
     void scrollDown();
@@ -65,13 +69,7 @@ class KNArticleWidget : public QVBox  {
 				
 		KNArticle* article()							{ return a_rticle; }		
 		KNArticleCollection* collection()	{ return c_oll; }
-		bool htmlDone()										{ return h_tmlDone; }
-    KHTMLPart* part() const           { return p_art; }
-
-  public slots:
-    void print();
-    void copySelection();
-    void findText();
+   	KHTMLPart* part()                 { return p_art; }
 
   protected:
 		void focusInEvent(QFocusEvent *e);
@@ -89,6 +87,8 @@ class KNArticleWidget : public QVBox  {
 		QPopupMenu *urlPopup, *attPopup;
 		KHTMLPart *p_art;
 		QScrollView *view;
+		KAction *actSave, *actPrint, *actCopy;
+		KActionCollection actionCollection;
 					
 		static bool showSig, fullHdrs, inlineAtt, openAtt, altAsAtt;
 		static QString hexColors[7];
@@ -100,6 +100,10 @@ class KNArticleWidget : public QVBox  {
 	protected slots:
 		void slotURLRequest (const KURL &url, const KParts::URLArgs &args);
 		void slotPopup(const QString &url, const QPoint &p);
+		void slotSave();
+    void slotPrint();
+    void slotCopy();
+ 		void slotSelectionChanged();
 		
 	signals:
 		void focusChanged(QFocusEvent*);				

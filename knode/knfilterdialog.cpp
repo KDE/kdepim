@@ -94,15 +94,15 @@ KNFilterDialog::
 	fw->score->setFilter(f->score);
 	fw->subject->setFilter(f->subject);
 	fw->from->setFilter(f->from);
-		
-	setDialogSize("filterDLG", this);
+	
+	restoreWindowSize("filterDLG", this, sizeHint());	
 }
 
 
 
 KNFilterDialog::~KNFilterDialog()
 {
-	saveDialogSize("filterDLG", this->size());
+	saveWindowSize("filterDLG", size());
 }
 
 

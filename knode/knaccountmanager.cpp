@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <stdlib.h>
 #include <qdir.h>
 
 #include <ksimpleconfig.h>
@@ -23,27 +24,38 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstddirs.h>
+#include <kaction.h>
 
+#include "knsavedarticlemanager.h"
 #include "knaccountmanager.h"
 #include "knaccnewssettings.h"
 #include "kncollectionviewitem.h"
-#include "knglobals.h"
 #include "utilities.h"
+#include "knglobals.h"
 
-KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v)
+KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
+  : QObject(parent, name), gManager(gm), set(0), lastId(0), view(v)
 {
-	gManager=gm;
-	view=v;
 	accList=new QList<KNNntpAccount>;
 	accList->setAutoDelete(true);
-	lastId=0;
-	set=0;
-	setCurrentAccount(0);
 	s_mtp=new KNServerInfo();
 	s_mtp->setType(KNServerInfo::STsmtp);
 	s_mtp->setId(0);
 	readConfig();
 	loadAccounts();
+	
+  actProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotProperties()),
+                              &actionCollection, "account_properties");
+  actSubscribe = new KAction(i18n("&Subscribe to Newsgroups..."),"grpdlg", 0, this, SLOT(slotSubscribe()),
+                             &actionCollection, "account_subscribe");
+  actLoadHdrs = new KAction(i18n("&Get New Articles"), "dlall", 0, this, SLOT(slotLoadHdrs()),
+                            &actionCollection, "account_dnlHeaders");
+  actDelete = new KAction(i18n("&Delete"), 0, this, SLOT(slotDelete()),
+                          &actionCollection, "account_delete");
+  actPostNewArticle = new KAction(i18n("&Post new article"), "newmsg", Key_P , this, SLOT(slotPostNewArticle()),
+                                  &actionCollection, "article_postNew");
+	
+	setCurrentAccount(0);
 }
 
 
@@ -58,7 +70,7 @@ KNAccountManager::~KNAccountManager()
 
 void KNAccountManager::readConfig()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("SERVER");
 	s_mtp->setServer((conf->readEntry("Smtp","")).latin1());
 	s_mtp->setPort(conf->readNumEntry("sPort", 25));	
@@ -132,7 +144,19 @@ KNNntpAccount* KNAccountManager::account(int i)
 void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
 {
 	c_urrentAccount=a;
-	xTop->accountSelected((a!=0));
+	if (a) {
+		actProperties->setEnabled(true);
+		actSubscribe->setEnabled(true);
+		actLoadHdrs->setEnabled(true);
+		actDelete->setEnabled(true);
+		actPostNewArticle->setEnabled(true);
+	} else {
+		actProperties->setEnabled(false);
+		actSubscribe->setEnabled(false);
+		actLoadHdrs->setEnabled(false);
+		actDelete->setEnabled(false);
+		actPostNewArticle->setEnabled(false);		
+	}
 }
 
 
@@ -188,6 +212,9 @@ void KNAccountManager::applySettings(KNNntpAccount *a)
 
 void KNAccountManager::removeAccount(KNNntpAccount *a)
 {
+	if(!a) a=c_urrentAccount;
+	if(!a) return;
+
 	QList<KNGroup> *lst;
 	if(a->hasUnsent()) {
 		KMessageBox::information(0, i18n("This account cannot be deleted, since there are some unsent messages for it."));
@@ -214,6 +241,8 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
 			system(cmd.local8Bit().data());
 		}
 		accList->removeRef(a);
+		
+		if(c_urrentAccount==a) setCurrentAccount(0);
 	}			
 }
 
@@ -223,3 +252,50 @@ void KNAccountManager::endConfig()
 {
 	set=0;
 }
+
+
+
+void KNAccountManager::slotProperties()
+{
+  #warning FIXME: stub (open conf dialog and show account properties)
+}
+  	
+
+
+void KNAccountManager::slotSubscribe()
+{
+	if (c_urrentAccount)
+		gManager->showGroupDialog(c_urrentAccount);
+}
+
+ 	
+
+void KNAccountManager::slotLoadHdrs()
+{
+  if (c_urrentAccount)
+    gManager->checkAll(c_urrentAccount);
+}
+
+
+
+void KNAccountManager::slotDelete()
+{
+  removeAccount();
+}
+
+
+
+void KNAccountManager::slotPostNewArticle()
+{
+  if (c_urrentAccount) {
+  	if(gManager->hasCurrentGroup())
+	    xTop->sArtManager()->post(gManager->currentGroup());
+  	else
+  	  xTop->sArtManager()->post(c_urrentAccount);	
+  }
+}
+
+//--------------------------------
+
+#include "knaccountmanager.moc"
+

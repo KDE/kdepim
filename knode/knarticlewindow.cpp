@@ -36,16 +36,10 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
 	artW->setData(art, col);
   setView(artW);
 
-  // file menu
-  KStdAction::save(this, SLOT(slotFileSave()),actionCollection());
-  KStdAction::print(artW, SLOT(print()),actionCollection());
-  KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
+  *actionCollection() += artW->actions();        // include the actions of the article widget
 
-  // edit menu
-  actEditCopy = KStdAction::copy(artW, SLOT(copySelection()),actionCollection());
-  actEditCopy->setEnabled(false);
-  connect(artW->part(),SIGNAL(selectionChanged()),this,SLOT(slotSelectionChanged()));
-  KStdAction::find(artW, SLOT(findText()),actionCollection());
+  // file menu
+  KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
 
   // article menu
   new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotArtReply()),
@@ -55,25 +49,18 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   new KAction(i18n("&Forward"),"fwd", Key_F , this, SLOT(slotArtForward()),
               actionCollection(), "article_forward");
 
-  createGUI( "knreaderui.rc" );
+  createGUI( "knreaderui.rc",false);
+  guiFactory()->addClient(artW->part());
+  conserveMemory();
 
-  resize(500,400);                      // default value
-	setDialogSize("reader", this);	
+	restoreWindowSize("reader", this, QSize(500,400));
 }
 
 
 
 KNArticleWindow::~KNArticleWindow()
 {
-	saveDialogSize("reader", this->size());	
-}
-
-
-
-void KNArticleWindow::slotFileSave()
-{
-  if(artW->article())
-		KNArticleManager::saveArticleToFile(artW->article());
+	saveWindowSize("reader", size());	
 }
 
 
@@ -104,12 +91,6 @@ void KNArticleWindow::slotArtForward()
 	xTop->sArtManager()->forward(artW->article());
 }
 
-
-
-void KNArticleWindow::slotSelectionChanged()
-{
-  actEditCopy->setEnabled(artW->part()->hasSelection());		
-}
 
 
 //--------------------------------

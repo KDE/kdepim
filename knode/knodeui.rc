@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNode">
+<kpartgui name="KNode" version="2">
 
 <ActionProperties>
 <Action name="options_configure" icon="settings"/>

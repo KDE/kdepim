@@ -16,12 +16,12 @@
  ***************************************************************************/
 
 #include <klocale.h>
+#include <kglobal.h>
 #include <kconfig.h>
 #include <qlayout.h>
 #include <qcheckbox.h>
 
 #include "knusersettings.h"
-#include "utilities.h"
 
 KNUserSettings::KNUserSettings(QWidget *p) : KNSettingsWidget(p)
 {
@@ -41,7 +41,7 @@ KNUserSettings::~KNUserSettings()
 
 void KNUserSettings::init()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("IDENTITY");
 	user->load(conf);
 	uw->setData(user);
@@ -51,7 +51,7 @@ void KNUserSettings::init()
 
 void KNUserSettings::apply()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 	conf->setGroup("IDENTITY");
 	uw->applyData();
 	user->save(conf);

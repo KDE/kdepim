@@ -21,6 +21,8 @@
 
 #include <qobject.h>
 
+#include <kaction.h>
+
 #include "knarticlemanager.h"
 #include "knarticlebase.h"
 
@@ -40,10 +42,13 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
 	Q_OBJECT	
 
 	public:
-		KNSavedArticleManager(KNListView *v, KNAccountManager *am);
+		KNSavedArticleManager(KNListView *v, KNAccountManager *am, QObject * parent=0, const char * name=0);
 		~KNSavedArticleManager();
+		
+		const KActionCollection& actions()    { return actionCollection; }		
+		
 		void readConfig();
-		void setStandardFolders(KNFolder *d, KNFolder *o, KNFolder *s) { fDrafts=d; fOutbox=o; fSent=s; }
+		void setStandardFolders(KNFolder *d, KNFolder *o, KNFolder *s);
 		void setFolder(KNFolder *f);
 		void showHdrs();
 		//void search();
@@ -87,15 +92,22 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
 		//KNArticleFilter *f_ilter;
 		KNAccountManager *accM;
 		QList<KNComposer> *comList;
-		
+		KAction *actSendOutbox, *actEdit, *actDelete, *actCancel,
+		        *actSendNow, *actSendLater;
+		KActionCollection actionCollection;		
 				
 	protected slots:
 		void slotComposerDone(KNComposer *com);
 		void slotSendErrorDialogDone();
 		//void slotSearchDialogDone();
 		//void slotDoSearch(KNArticleFilter *f);
-		
-		
+		void slotSendOutbox()        { sendOutbox(); }
+ 		void slotEdit()              { editArticle(); }
+		void slotDelete()            { deleteArticle(0, true); }
+		void slotCancel()            { cancel(); }
+		void slotSendNow()           { sendArticle(); }
+		void slotSendLater()         { sendArticle(0, false); }
+			
 };
 
 #endif

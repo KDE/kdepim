@@ -25,11 +25,16 @@
 
 class KNAccNewsSettings;
 
-class KNAccountManager {
+class KNAccountManager : public QObject
+{
+	Q_OBJECT
 	
 	public:
-		KNAccountManager(KNGroupManager *gm, KNListView *v);
+		KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent=0, const char * name=0);
 		~KNAccountManager();
+		
+		const KActionCollection& actions()      { return actionCollection; }
+			
 		void readConfig();
 		void saveYourself();
 		void setCurrentAccount(KNNntpAccount *a);
@@ -38,7 +43,7 @@ class KNAccountManager {
 		
 		void newAccount();
 		void applySettings(KNNntpAccount *a);
-		void removeAccount(KNNntpAccount *a);
+		void removeAccount(KNNntpAccount *a=0);
 		void endConfig();
 		
 		bool hasCurrentAccount()							{ return (c_urrentAccount!=0); }
@@ -47,8 +52,7 @@ class KNAccountManager {
 		KNNntpAccount* first()								{ return accList->first(); }
 		KNNntpAccount* next()									{ return accList->next(); }
 		KNNntpAccount* account(int i);	
-		
-		
+				
 	protected:
 		void loadAccounts();
 		KNGroupManager *gManager;
@@ -59,6 +63,16 @@ class KNAccountManager {
 		KNAccNewsSettings *set;
 		int lastId;
 		KNListView *view;		
+		KAction *actProperties, *actSubscribe, *actLoadHdrs, *actDelete, *actPostNewArticle;
+		KActionCollection actionCollection;
+				
+	protected slots:	
+	  void slotProperties();
+	  void slotSubscribe();
+	  void slotLoadHdrs();
+	  void slotDelete();
+	  void slotPostNewArticle();
+			
 };
 
 #endif

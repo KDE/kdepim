@@ -16,15 +16,8 @@
 #ifndef UTIL
 #define UTIL
 
-
 #include <qstring.h>
-#include <stdio.h>
-#include <kglobal.h>
-#include <kiconloader.h>
-#define CONF() KGlobal::config()
-
-#define TITLE "KNode"
-
+#include <qsize.h>
 
 #define SIZE(w) 		w->setMinimumSize(w->sizeHint())
 #define FSIZE(w) 		w->setFixedSize(w->sizeHint())
@@ -35,15 +28,11 @@
 bool stripCRLF(QCString &str);
 void removeQuots(QCString &str);*/
 
-void saveDialogSize(const QString &name, const QSize &s);
-
-void setDialogSize(const QString &name, QWidget *d);
+void saveWindowSize(const QString &name, const QSize &s);
+void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize);
 
 QString encryptStr(const QString& aStr);
-
 QString decryptStr(const QString& aStr);
-
-void snyimpl();
 
 void displayInternalFileError();	 // use this for all internal files
 void displayExternalFileError();   // use this for all external files

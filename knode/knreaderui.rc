@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNReader">
+<kpartgui name="KNReader" version="2">
 
 <ActionProperties>
 <Action name="options_configure" icon="settings"/>

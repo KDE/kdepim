@@ -16,15 +16,14 @@
 #ifndef KNGLOBALS_H
 #define KNGLOBALS_H
 
-
 #include "knnetaccess.h"
 #include "knode.h"
-
 
 extern KNNetAccess *xNet;
 
 extern KNodeApp *xTop;
 
+extern KNProgress *xProgress;
 
 #endif
 

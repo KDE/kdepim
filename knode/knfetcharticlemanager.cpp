@@ -15,35 +15,74 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qheader.h>
+
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <qheader.h>
+#include <kglobal.h>
+#include <kstdaccel.h>
+
 #include "knfetcharticlemanager.h"
-#include "utilities.h"
+#include "knsavedarticlemanager.h"
 #include "knarticlewindow.h"
 #include "knhdrviewitem.h"
 #include "knthread.h"
 #include "knscoredialog.h"
-#include "knglobals.h"
 #include "kngroup.h"
 #include "knarticlefilter.h"
+#include "knfiltermanager.h"
 #include "knjobdata.h"
 #include "knsearchdialog.h"
+#include "knglobals.h"
 
-KNFetchArticleManager::KNFetchArticleManager(KNListView *v) :
-	QObject(0,0), KNArticleManager(v)
+
+KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiManager, QObject * parent, const char * name)
+  :	QObject(parent, name), KNArticleManager(v), g_roup(0), c_urrent(0), n_ext(0), tOut(3000), sDlg(0)
 {
-	g_roup=0;
-	f_ilter=0;
-	tOut=3000;
-	sDlg=0;
-	c_urrent=0;
-	n_ext=0;
+	connect(fiManager, SIGNAL(filterChanged(KNArticleFilter*)), this, SLOT(slotFilterChanged(KNArticleFilter*)));
+  f_ilter = fiManager->currentFilter();
 		
 	timer=new QTimer();
 	connect(timer, SIGNAL(timeout()), this, SLOT(slotTimer()));
 	
 	readConfig();
+	
+  actShowThreads = new KToggleAction(i18n("Show th&reads"), 0 , this, SLOT(slotToggleShowThreads()),
+                                     &actionCollection, "view_showThreads");
+	actShowThreads->setChecked(t_hreaded);
+	
+	actExpandAll = new KAction(i18n("&Expand all threads"), 0 , this, SLOT(slotThreadsExpand()),
+                             &actionCollection, "view_ExpandAll");
+  actCollapseAll = new KAction(i18n("&Collapse all threads"), 0 , this, SLOT(slotThreadsCollapse()),
+                               &actionCollection, "view_CollapseAll");
+  actRefresh = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this, SLOT(slotRefresh()),
+                           &actionCollection, "view_Refresh");
+  actAllRead = new KAction(i18n("Mark all as &read"), 0, this, SLOT(slotAllRead()),
+                           &actionCollection, "group_allRead");
+  actAllUnread = new KAction(i18n("Mark all as u&nread"), 0, this, SLOT(slotAllUnread()),
+                             &actionCollection, "group_allUnread");
+  actPostReply = new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotReply()),
+                             &actionCollection, "article_postReply");
+  actMailReply = new KAction(i18n("&Mail reply"),"remail", Key_A , this, SLOT(slotRemail()),
+                             &actionCollection, "article_mailReply");
+  actForward = new KAction(i18n("&Forward"),"fwd", Key_F , this, SLOT(slotForward()),
+                           &actionCollection, "article_forward");
+  actMarkRead = new KAction(i18n("Mark as &read"), Key_D , this, SLOT(slotMarkRead()),
+                            &actionCollection, "article_read");
+  actMarkUnread = new KAction(i18n("Mark as &unread"), Key_U , this, SLOT(slotMarkUnread()),
+                              &actionCollection, "article_unread");
+  actThreadUnread = new KAction(i18n("Mark as &unread"), ALT+Key_U , this, SLOT(slotThreadUnread()),
+                                &actionCollection, "thread_unread");
+  actThreadSetScore = new KAction(i18n("Set &score"), Key_S , this, SLOT(slotThreadScore()),
+                                  &actionCollection, "thread_setScore");
+  actThreadWatch = new KAction(i18n("&Watch"), Key_W , this, SLOT(slotThreadWatch()),
+                               &actionCollection, "thread_watch");
+  actThreadIgnore = new KAction(i18n("&Ignore"), Key_I , this, SLOT(slotThreadIgnore()),
+                                &actionCollection, "thread_ignore");
+  actOwnWindow = new KAction(i18n("&Open in own window"), Key_O , this, SLOT(slotOwnWindow()),
+                             &actionCollection, "article_ownWindow");
+  actSearch = new KAction(i18n("&Search"),"search" , Key_F4 , this, SLOT(slotSearch()),
+                          &actionCollection, "article_search");
 }
 
 
@@ -58,7 +97,7 @@ KNFetchArticleManager::~KNFetchArticleManager()
 
 void KNFetchArticleManager::readConfig()
 {
-	KConfig *c=CONF();
+	KConfig *c=KGlobal::config();
 	c->setGroup("READNEWS");
 	tOut=1000*c->readNumEntry("markSecs", 3);
 	KNLVItemBase::setTotalExpand(c->readBoolEntry("totalExpand", true));
@@ -115,7 +154,6 @@ void KNFetchArticleManager::showHdrs(bool clear)
 	
 	xTop->setStatusMsg("");	
 	xTop->setCursorBusy(false);
-	xTop->groupDisplayed(true);
 	
 	updateStatusString();
 }
@@ -149,9 +187,9 @@ void KNFetchArticleManager::setCurrentArticle(KNFetchArticle *a)
 	}
 	else {
 		c_urrent=0;
-		xTop->fetchArticleDisplayed(false);
+//		xTop->fetchArticleDisplayed(false);
 	}
-	xTop->fetchArticleSelected((c_urrent!=0));
+//	xTop->fetchArticleSelected((c_urrent!=0));
 }
 
 
@@ -342,7 +380,7 @@ void KNFetchArticleManager::showArticle(KNArticle *a)
 	KNArticleManager::showArticle(a);
 	if(a==c_urrent) {
 		if(!c_urrent->isRead() && autoMark) timer->start(tOut, true);
-		xTop->fetchArticleDisplayed(true);
+//		xTop->fetchArticleDisplayed(true);
 	}
 }
 
@@ -353,7 +391,7 @@ void KNFetchArticleManager::showCancel(KNArticle *a)
 //	KNArticleWidget *aw=KNArticleWidget::find(a);
 	if(a==c_urrent) {
 		timer->stop();
-		xTop->fetchArticleDisplayed(false);
+//		xTop->fetchArticleDisplayed(false);
 	}	
 //	if(aw) aw->showCancelMessage();             // I think we don't need this, check later (CG)
 }
@@ -365,7 +403,7 @@ void KNFetchArticleManager::showError(KNArticle *a, const QString &error)
 	KNArticleManager::showError(a, error);
 	if(a==c_urrent) {
 		timer->stop();
-		xTop->fetchArticleDisplayed(false);
+//		xTop->fetchArticleDisplayed(false);
 	}
 }
 
@@ -480,6 +518,27 @@ void KNFetchArticleManager::slotSearchDialogDone()
 void KNFetchArticleManager::slotTimer()
 {
 	if(c_urrent) setArticleRead(c_urrent);
+}
+
+
+
+void KNFetchArticleManager::slotReply()
+{	
+  xTop->sArtManager()->reply(c_urrent,g_roup);
+}
+
+
+
+void KNFetchArticleManager::slotRemail()
+{	
+  xTop->sArtManager()->reply(c_urrent,0);	
+}
+
+
+
+void KNFetchArticleManager::slotForward()
+{
+  xTop->sArtManager()->forward(c_urrent);
 }
 
 

@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <stdio.h>
 
 #include <qlayout.h>
 #include <qfontdatabase.h>
@@ -22,6 +23,7 @@
 #include <qlabel.h>
 #include <qvalidator.h>
 
+#include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
 
@@ -93,7 +95,7 @@ KNReadAppSettings::~KNReadAppSettings()
 void KNReadAppSettings::init()
 {
 	char col[10];
-	KConfig *c=CONF();
+	KConfig *c=KGlobal::config();
 	QColor w(white), b(black), g(gray);
 	QColor *dflt;	
 	
@@ -120,7 +122,7 @@ void KNReadAppSettings::init()
 
 void KNReadAppSettings::apply()
 {
-	KConfig *c=CONF();
+	KConfig *c=KGlobal::config();
 	char col[10];
 	
 	c->setGroup("FONTS-COLORS");

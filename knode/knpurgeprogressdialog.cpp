@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #include "knpurgeprogressdialog.h"
 #include "utilities.h"
 #include "knglobals.h"

@@ -18,16 +18,16 @@
 #include <qdatetime.h>
 
 #include <kmessagebox.h>
+#include <kglobal.h>
 
 #include "kncleanup.h"
-#include "utilities.h"
 #include "knglobals.h"
 
 KNCleanUp::KNCleanUp()
 {
 	delCnt=0;
 	leftCnt=0;
-	KConfig *c=CONF();
+	KConfig *c=KGlobal::config();
 	c->setGroup("EXPIRE");
 	rDays=c->readNumEntry("readDays", 10);
 	uDays=c->readNumEntry("unreadDays", 15);

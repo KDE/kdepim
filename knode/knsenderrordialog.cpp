@@ -44,14 +44,14 @@ KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(xTop, 0, true)
 	topL->activate();
 	
 	setCaption(i18n("Errors while sending"));
-	setDialogSize("sendDlg", this);
+	restoreWindowSize("sendDlg", this, sizeHint());
 }
 
 
 
 KNSendErrorDialog::~KNSendErrorDialog()
 {
-	saveDialogSize("sendDlg", this->size());
+	saveWindowSize("sendDlg", size());
 }
 
 

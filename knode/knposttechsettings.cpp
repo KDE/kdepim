@@ -111,7 +111,7 @@ KNPostTechSettings::~KNPostTechSettings()
 
 void KNPostTechSettings::init()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 
   conf->setGroup("POSTNEWS");
   encoding->setCurrentItem(conf->readNumEntry("Encoding",1));
@@ -151,7 +151,7 @@ void KNPostTechSettings::init()
 
 void KNPostTechSettings::apply()
 {
-	KConfig *conf=CONF();
+	KConfig *conf=KGlobal::config();
 
 	conf->setGroup("POSTNEWS");
 	conf->writeEntry("Encoding",encoding->currentItem());

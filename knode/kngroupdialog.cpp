@@ -50,14 +50,14 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
   connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
   connect(newListBtn, SIGNAL(clicked()), this, SLOT(slotNewListBtn()));
 
-  setDialogSize("groupDlg", this);
+  restoreWindowSize("groupDlg", this, sizeHint());
 }
 
 
 
 KNGroupDialog::~KNGroupDialog()
 {
-  saveDialogSize("groupDlg", this->size());
+  saveWindowSize("groupDlg", this->size());
 }
 
 
