@@ -67,6 +67,16 @@ void ResourceCalendar::writeConfig( KConfig* config )
   KRES::Resource::writeConfig( config );
 }
 
+Incidence *ResourceCalendar::incidence( const QString &uid )
+{
+  Incidence *i = event( uid );
+  if ( i ) return i;
+  i = todo( uid );
+  if ( i ) return i;
+  i = journal( uid );
+  return i;
+}
+
 bool ResourceCalendar::addIncidence( Incidence *incidence )
 {
   Incidence::AddVisitor<ResourceCalendar> v( this );

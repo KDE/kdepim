@@ -131,6 +131,12 @@ class ResourceCalendar : public KRES::Resource
     virtual bool deleteIncidence( Incidence * );
 
     /**
+      Return incidence with given unique id. If there is no incidence with that
+      uid, return 0.
+    */
+    Incidence *incidence( const QString &uid );
+
+    /**
       Add event to resource.
     */
     virtual bool addEvent( Event *event ) = 0;
