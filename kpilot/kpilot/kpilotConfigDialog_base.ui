@@ -604,7 +604,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                             <cstring>fSyncWithKMail</cstring>
                         </property>
                         <property name="text">
-                            <string>Sync with KMail ( with Kroupware enabled )</string>
+                            <string>Sync with KMail (with Kroupware enabled)</string>
                         </property>
                     </widget>
                     <spacer>
