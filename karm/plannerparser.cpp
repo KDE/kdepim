@@ -56,7 +56,7 @@ test cases:
     
     // only <task>s within <tasks> are processed
     if (qName == QString::fromLatin1("tasks")) withInTasks=true;
-    if ((qName == QString::fromLatin1("task")) and (withInTasks))
+    if ((qName == QString::fromLatin1("task")) && (withInTasks))
     {
 	
       // find out name and percent-complete

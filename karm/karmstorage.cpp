@@ -610,7 +610,7 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   }
   
   // save, either locally or remote
-  if ((rc.url.isLocalFile()) or (!rc.url.url().contains("/")))
+  if ((rc.url.isLocalFile()) || (!rc.url.url().contains("/")))
   {    
     QString filename=rc.url.path();
     if (filename.isEmpty()) filename=rc.url.url();
@@ -960,7 +960,7 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   
   // save, either locally or remote
   
-  if ((rc.url.isLocalFile()) or (!rc.url.url().contains("/")))
+  if ((rc.url.isLocalFile()) || (!rc.url.url().contains("/")))
   {    
     QString filename=rc.url.path();
     if (filename.isEmpty()) filename=rc.url.url();
