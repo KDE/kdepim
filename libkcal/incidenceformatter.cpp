@@ -141,15 +141,9 @@ static QString linkPerson( const QString& email, QString name,
 
   // Make the mailto link
   if ( !email.isEmpty() && !iconPath.isNull() ) {
-    QString receiver;
-    if ( name.isEmpty() )
-      // Only use the email address
-      receiver = email;
-    else
-      // Full receiver
-      receiver = name +" <" + email + ">";
-    tmpString += eventViewerAddLink( "mailto:" + receiver,
-                                     "<img src=\"" + iconPath + "\">" );
+    KCal::Person person( name, email );
+    tmpString += eventViewerAddLink( "mailto:" + person.fullName(),
+		"<img src=\"" + iconPath + "\">" );
   }
   tmpString += "</li>\n";
 
