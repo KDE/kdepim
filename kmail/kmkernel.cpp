@@ -165,7 +165,7 @@ KMKernel::~KMKernel ()
 bool KMKernel::handleCommandLine( bool noArgsOpensReader )
 {
   QString to, cc, bcc, subj, body;
-  KURL messageFile = QString::null;
+  KURL messageFile;
   KURL::List attachURLs;
   bool mailto = false;
   bool checkMail = false;

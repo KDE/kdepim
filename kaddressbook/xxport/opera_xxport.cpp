@@ -118,7 +118,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
       } else if ( key == QString::fromLatin1( "description" ) )
         addr.setNote( value.replace( separator, "\n" ) );
       else if ( key == QString::fromLatin1( "url" ) )
-        addr.setUrl( value );
+        addr.setUrl( KURL( value ) );
       else if ( key == QString::fromLatin1( "pictureurl" ) ) {
         KABC::Picture pic( value );
         addr.setPhoto( pic );

@@ -55,7 +55,7 @@ class KSync : public KMainWindow
 
     /** opens a file specified by commandline option
      */
-    void openDocumentFile(const KURL& url=0);
+    void openDocumentFile(const KURL& url=KURL());
     /** returns a pointer to the current document connected to the KTMainWindow instance and is used by
      * the View class to access the document object's methods
      */	
