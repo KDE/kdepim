@@ -493,6 +493,17 @@ int KABC::ResourceKolab::subresourceCompletionWeight( const QString& subresource
   return 80;
 }
 
+
+QString KABC::ResourceKolab::subresourceLabel( const QString& subresource ) const
+{
+  if ( mSubResources.contains( subresource ) ) {
+    return mSubResources[ subresource ].label();
+  }
+
+  kdDebug(5650) << "subresourceLabel( " << subresource << " ): not found!\n";
+  return QString::null;
+}
+
 void KABC::ResourceKolab::setSubresourceCompletionWeight( const QString& subresource, int completionWeight )
 {
   if ( mSubResources.contains( subresource ) ) {
