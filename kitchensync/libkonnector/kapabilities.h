@@ -52,7 +52,7 @@ class Kapabilities {
   bool needsDestIP()const;
   void setNeedsIPs(bool ip);
   void setNeedsSrcIP( bool srcIp );
-  void setNeedsDestIp(bool srcIp );
+  void setNeedsDestIP(bool srcIp );
   void setSrcIP( const QHostAddress & );
   QHostAddress srcIP()const;
   void setDestIP(const QHostAddress &);
@@ -66,9 +66,9 @@ class Kapabilities {
   bool needAuthentication();
   void setNeedAuthentication(bool need);
   void setUser(const QString &);
-  QString user();
+  QString user() const;
   void setPassword(const QString & );
-  QString password();
+  QString password() const;
 
   QValueList< QPair<QString, QString> > userProposals();
   void setUserProposals( QValueList< QPair<QString, QString> > );
@@ -77,6 +77,22 @@ class Kapabilities {
  private:
   class KapabilitiesPrivate;
   KapabilitiesPrivate *d;
+  bool m_push:1;
+  bool m_needConnection:1;
+  bool m_listdir:1;
+  bool m_needsIp:1;
+  bool m_needsSrcIp:1;
+  bool m_needsDestIp:1;
+  bool m_needsAuthent:1;
+  QHostAddress m_src;
+  QHostAddress m_dest;
+  QValueList< QPair<QHostAddress,QHostAddress> > m_propsIPs; 
+  QValueList< QPair<QString, QString> > m_propAuth;
+  bool m_canHandle;
+  QStringList m_ports;
+  int m_current;
+  QString m_user;
+  QString m_pass;
 };
 #endif
 

@@ -4,7 +4,10 @@
 #include <qvaluelist.h>
 #include <klocale.h>
 #include <qstring.h>
+#include <qhostaddress.h>
 
+#include <kdebug.h>
+#include <kapabilities.h>
 #include <kdevice.h>
 #include <konnector.h>
  
@@ -31,12 +34,20 @@ int main(int argc, char *argv[] )
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
   KApplication a;
 
-  Konnector konnector;
+  Konnector *konnector = new Konnector(0,0);
   QValueList<KDevice> device;
-  device = konnector.query();
+  device = konnector->query();
   for(QValueList<KDevice>::Iterator it = device.begin(); it != device.end(); ++it ){
-    qWarning("KDevice: %s", (*it).identify().latin1() );
-    QString outp = konnector.registerKonnector( (*it) );
+    kdDebug() << "KDevice: " <<  (*it).identify() << endl;
+    QString outp = konnector->registerKonnector( (*it) );
+    kdDebug() << "UID " <<  outp;
+    Kapabilities caps = konnector->capabilities( outp );
+    caps.setUser("ich" );
+    caps.setPassword("doesntmatter");
+    QHostAddress adr;
+    adr.setAddress("127.0.0.1" );
+    caps.setDestIP(adr );
+    konnector->setCapabilities( outp, caps ); 
     if(outp.isEmpty() ){
       qWarning("couldn't load" );
     }

@@ -48,7 +48,7 @@ Q_OBJECT
   virtual void slotWrite(QPtrList<KSyncEntry> ) = 0;
   virtual void slotWrite(QValueList<KOperations> ) = 0;
  signals:
-  void sync(QString, int, QPtrList<KSyncEntry> ); 
+  void sync(QString,  QPtrList<KSyncEntry> ); 
   void errorKonnector(QString, int, QString );
 };
 #endif

@@ -48,6 +48,7 @@ KDevice::KDevice(const KDevice &dev )
   d->id = dev.identify();
   d->group = dev.group();
   d->vendor = dev.vendor();
+  d->library = dev.library();
 }
 KDevice::~KDevice()
 {

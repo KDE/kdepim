@@ -1,9 +1,13 @@
 
+#ifndef opieplugin_h
+#define opieplugin_h
+
+#include <qptrlist.h>
 #include <konnectorplugin.h>
 
 class OpiePlugin : public KonnectorPlugin
 {
-Q_OBJECt
+Q_OBJECT
  public:
   OpiePlugin(QObject *obj, const char *name, const QStringList );
   ~OpiePlugin();
@@ -24,4 +28,11 @@ Q_OBJECt
  private:
   class OpiePluginPrivate;
   OpiePluginPrivate *d;
+
+ private slots:
+  void slotSync( QPtrList<KSyncEntry> );
+  void slotErrorKonnector(int , QString );
 };
+
+
+#endif

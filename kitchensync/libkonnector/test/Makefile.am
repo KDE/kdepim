@@ -16,13 +16,13 @@
 #    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 #    Boston, MA 02111-1307, USA.
 
-INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector $(all_includes)
+INCLUDES= -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib $(all_includes)
 LDADD = $(top_builddir)/kitchensync/libkonnector/libkonnector.la
 LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 check_PROGRAMS = konnectortest
 
-konnectortest_LDADD = ../libksharedfile.la $(LIB_KDEUI) $(LIB_QT)
+konnectortest_LDADD = ../libkonnector.la $(LIB_KDEUI) $(LIB_QT)
 konnectortest_SOURCES =  konnectortest.cpp
 
 METASOURCES = AUTO

@@ -52,7 +52,7 @@ Q_OBJECT
   void write(const QString &udi, QValueList<KOperations> );
   void write(const QString &udi, const QString &dest, const QByteArray& ); // post processing
  signals:
-  void wantsToSync(QString, int, QPtrList<KSyncEntry>);
+  void wantsToSync(QString, QPtrList<KSyncEntry>);
   void stateChanged(QString, bool ); // udi + state
   void konnectorError(QString, int, QString ); // udi + code + string
  private:
@@ -62,8 +62,8 @@ Q_OBJECT
   KonnectorPlugin* pluginByUDI(const QString &udi );
 
  private slots:
-  void slotSync(QString, int, QPtrList<KSyncEntry> entry );
- void slotError(QString, int, QString);
+  void slotSync(QString, QPtrList<KSyncEntry> entry );
+  void slotError(QString, int, QString);
 };
 
 #endif
