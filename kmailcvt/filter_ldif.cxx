@@ -15,14 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <iostream.h>
+#include <stdlib.h>
 
-#include "filter_ldif.hxx"
+#include <qtextstream.h>
 
 #include <kfiledialog.h>
 #include <klocale.h>
-#include <qtextstream.h>
-#include <stdlib.h>
 
+#include "filter_ldif.hxx"
 
 filter_ldif::filter_ldif() : filter(i18n("Import Netscape LDIF Adress Book 1(.LDIF)"),"Oliver Strutynski")
 {}
