@@ -17,12 +17,7 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qtimer.h>
-#if QT_VERSION < 300
-#  include <qregexp3.h>
-#else
-#  include <qregexp.h>
-#  define QRegExp3 QRegExp
-#endif
+#include <qregexp.h>
 
 #include <kseparator.h>
 #include <kiconloader.h>
@@ -313,7 +308,7 @@ void KNGroupBrowser::slotItemDoubleClicked(QListViewItem *it)
 void KNGroupBrowser::slotFilter(const QString &txt)
 {
   QString filtertxt = txt.lower();
-  QRegExp3 reg(filtertxt, false, false);
+  QRegExp reg(filtertxt, false, false);
   CheckItem *cit=0;
 
   bool notCheckSub = !subCB->isChecked();

@@ -15,11 +15,6 @@
 */
 
 #include <qlayout.h>
-#if QT_VERSION < 300
-#  include <qregexp3.h>
-#else
-#  define QRegExp3 QRegExp
-#endif
 #include <qcheckbox.h>
 
 #include <klocale.h>
@@ -50,7 +45,7 @@ bool KNStringFilter::doFilter(const QString &s)
 
   if(!expanded.isEmpty()) {
     if(regExp) {
-      QRegExp3 matcher(expanded);
+      QRegExp matcher(expanded);
       ret=(matcher.search(s) > 0);
     } else
       ret=(s.find(expanded,0,false)!=-1);
