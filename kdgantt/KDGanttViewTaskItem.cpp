@@ -189,6 +189,7 @@ void KDGanttViewTaskItem::setStartTime( const QDateTime& start )
 void KDGanttViewTaskItem::hideMe()
 {
     startShape->hide();
+    progressShape->hide();
     textCanvas->hide();
 }
 
@@ -206,6 +207,8 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
   bool takedefaultHeight = true ; // pending: make configureable
   float prio = ((float) ( priority() - 100 )) / 100.0;
   startShape->setZ( prio );
+  progressShape->setZ(startShape->z()+0.002); // less than textCanvas
+  progressShape->hide();
   textCanvas->setZ( prio + 0.005 );
   if ( displaySubitemsAsGroup() && !parent() && !isOpen() ) {
     hideMe();
@@ -219,7 +222,8 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
   }
   //setExpandable(false);
   KDCanvasRectangle* temp = (KDCanvasRectangle*) startShape;
-  int startX, endX, midX = 0,allY;
+  KDCanvasRectangle* progtemp = (KDCanvasRectangle*) progressShape;
+  int startX, endX, midX = 0,allY, progX=0;
    if ( coordY )
     allY = coordY;
   else
@@ -227,6 +231,9 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
   startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
   endX = myGanttView->myTimeHeader->getCoordX(myEndTime);
   midX = endX;
+  if (myProgress > 0) {
+    progX = (endX - startX) * myProgress / 100;
+  }
   int hei = height();
   if ( ! isVisible() ) {
     KDGanttViewItem * par = parent();
@@ -266,6 +273,19 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     temp->setSize(endX-startX,  hei-3 );
   temp->move(startX, allY-hei/2 +2);
   temp->show();
+  if (progX > 0) {
+    // FIXME: For now, just use inverted color for progress
+    QColor c = temp->brush().color();
+    int h, s, v;
+    c.getHsv(&h, &s, &v);
+    h > 359/2 ? h -= 359/2 : h += 359/2;
+    c.setHsv(h, s, v);
+    progtemp->setBrush(QBrush(c));
+    
+    progtemp->setSize(progX, hei-3);
+    progtemp->move(temp->x(), temp->y());
+    progtemp->show();
+  }
   int wid = endX-startX - 4;
   if ( !displaySubitemsAsGroup() && !myGanttView->calendarMode()) {
     moveTextCanvas(endX,allY);

@@ -85,7 +85,7 @@ protected:
     void generateAndInsertName( const QString& name );
     KDCanvasLine * startLine, *endLine,
       * startLineBack, *endLineBack, *actualEnd ;
-    KDCanvasPolygonItem* startShape,* midShape, *endShape,
+    KDCanvasPolygonItem* startShape,* midShape, *endShape, *progressShape,
       * startShapeBack,* midShapeBack, *endShapeBack;
     KDGanttView* myGanttView;
     KDCanvasText* textCanvas;
@@ -96,6 +96,7 @@ protected:
     bool blockUpdating;
 
     void moveTextCanvas(int x, int y);
+    int myProgress;
 
 public:
     virtual ~KDGanttViewItem();
@@ -156,6 +157,8 @@ public:
     void setTextColor( const QColor& color );
     QColor textColor() const;
 
+    void setProgress(int percent);
+    
     KDGanttViewItem* firstChild() const;
     KDGanttViewItem* nextSibling() const;
     KDGanttViewItem* parent() const;

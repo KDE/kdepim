@@ -260,6 +260,7 @@ KDGanttViewItem::~KDGanttViewItem()
   if ( startShapeBack ) delete startShapeBack  ;
   if ( midShapeBack ) delete midShapeBack   ;
   if ( endShapeBack ) delete endShapeBack  ;
+  if ( progressShape ) delete  progressShape ;
   myGanttView->myTimeTable->removeItemFromTasklinks( this );
   myGanttView->myCanvasView->resetCutPaste( this );
   if ( listView() ) {
@@ -1422,6 +1423,8 @@ void KDGanttViewItem::initColorAndShapes(Type t)
   //_isCalendar = false;
     _callListViewOnSetOpen = true;
     myType = t;
+    myProgress = 0;
+    progressShape = 0;
     blockUpdating = true;
     isVisibleInGanttView = false;
     startShape = 0;
@@ -1472,6 +1475,7 @@ void KDGanttViewItem::initColorAndShapes(Type t)
       if ( startShape )
 	delete startShape;
       startShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+      progressShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
     }
 
     // set color of shapes
@@ -2501,4 +2505,17 @@ void KDGanttViewItem::setTextOffset(QPoint p)
 bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
 {
     return tc == textCanvas;
+}
+
+/*!
+  Specifies the progress of this item in percent.
+  Progress is limited to minimum 0, maximum 100.
+
+  \param time the progress in percent.
+*/
+
+void KDGanttViewItem::setProgress(int percent)
+{
+    myProgress = QMAX(0, percent);
+    myProgress = QMIN(100, myProgress);
 }
