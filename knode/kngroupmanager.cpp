@@ -334,11 +334,11 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 
   for(KNGroup *var=gList->first(); var; var=gList->next()) {
     if(dlg) {
-      dlg->setInfo(var->name());
+      dlg->setInfo(var->groupname());
       kapp->processEvents();
     }
     cup.group(var);
-    kdDebug() << var->name() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
+    kdDebug() << var->groupname() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
     if(dlg) dlg->progress();
   }
   if (dlg) {
@@ -414,13 +414,13 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
   if(!g) return;
 
   if(g->locked()) {
-    KMessageBox::sorry(knGlobals.topWidget, QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe it at the moment.")).arg(g->name()));
+    KMessageBox::sorry(knGlobals.topWidget, QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe it at the moment.")).arg(g->groupname()));
     return;
   }
 
   acc=g->account();
   
-  QDir dir(acc->path(),g->name()+"*");
+  QDir dir(acc->path(),g->groupname()+"*");
   if (dir.exists()) {
     const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
     if (list) {
@@ -470,7 +470,7 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
   if(!g) return;
   KNCleanUp cup;
   cup.group(g, true);
-  kdDebug(5003) << "KNExpire: " << g->name() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
+  kdDebug(5003) << "KNExpire: " << g->groupname() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
   
   if(cup.deleted()>0) {
     g->updateListItem();
@@ -646,7 +646,7 @@ void KNGroupManager::slotUnsubscribe()
 {
   if (!c_urrentGroup)
     return;
-  if(KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to unsubscribe from %1?").arg(c_urrentGroup->name())))
+  if(KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to unsubscribe from %1?").arg(c_urrentGroup->groupname())))
     unsubscribeGroup();
 }
 

@@ -30,7 +30,7 @@
 
 
 KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name )
-  : KDialogBase(Tabbed, i18n("Properties of %1").arg(group->name()),
+  : KDialogBase(Tabbed, i18n("Properties of %1").arg(group->groupname()),
                 Ok|Cancel|Help, Ok, parent, name),
     grp(group), nChanged(false)
 {
