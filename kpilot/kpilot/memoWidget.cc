@@ -109,6 +109,9 @@ MemoWidget::MemoWidget( QWidget* parent, const QString& path) :
 	fMemoList.setAutoDelete(true);
 	// fTextWidget->setFont(KPilotConfig::fixed());
 	slotUpdateButtons();
+
+	connect(fTextWidget, SIGNAL(textChanged()), 
+		this, SLOT(slotTextChanged()));
 }
 
 MemoWidget::~MemoWidget()
@@ -287,8 +290,6 @@ MemoWidget::setupWidget()
 	fTextWidget = new QMultiLineEdit(this, "textArea");
 	fTextWidget->setWordWrap(QMultiLineEdit::WidgetWidth);
 	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
-	connect(fTextWidget, SIGNAL(textChanged()), 
-		this, SLOT(slotTextChanged()));
 	QToolTip::add(fTextWidget,
 		i18n("The text of the selected memo appears here."));
 
@@ -576,6 +577,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.34  2001/06/13 22:51:38  cschumac
+// Minor fixes reviewed on the mailing list.
+//
 // Revision 1.33  2001/06/13 21:26:54  adridg
 // Add cast to avoid comile warning
 //
