@@ -369,7 +369,7 @@ bool KNodeView::requestShutdown()
 
   if( a_rtFactory->jobsPending() &&
       KMessageBox::No==KMessageBox::warningYesNo(knGlobals.top, i18n(
-"KNode is currently sending articles. If you quit now you might loose these \
+"KNode is currently sending articles. If you quit now you might lose these \
 articles.\nDo you want to continue anyway?"))
     )
     return false;
@@ -1303,11 +1303,11 @@ void KNodeView::slotFolDelete()
       KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot delete a standard-folder."));
 
   else if( KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
-      i18n("Do you really want to delete this folder and all it's children ?")) ) {
+      i18n("Do you really want to delete this folder and all its children ?")) ) {
 
     if(!f_olManager->deleteFolder(f_olManager->currentFolder()))
       KMessageBox::sorry(knGlobals.topWidget,
-      i18n("This Folder cannot be deleted because some of\n it's articles are currently in use.") );
+      i18n("This Folder cannot be deleted because some of\n its articles are currently in use.") );
     else
       slotCollectionSelected(0);
   }
@@ -1348,7 +1348,7 @@ void KNodeView::slotFolEmpty()
   if(f_olManager->currentFolder()) {
     if(f_olManager->currentFolder()->lockedArticles()>0) {
       KMessageBox::sorry(knGlobals.topWidget,
-      i18n("This folder cannot be emptied at the moment\nbecause some of it's articles are currently in use.") );
+      i18n("This folder cannot be emptied at the moment\nbecause some of its articles are currently in use.") );
       return;
     }
     if( KMessageBox::Yes == KMessageBox::questionYesNo(

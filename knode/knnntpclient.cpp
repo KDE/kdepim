@@ -87,7 +87,7 @@ void KNNntpClient::doFetchGroups()
   KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
   
   sendSignal(TSdownloadGrouplist);
-  errorPrefix = i18n("The group list could not be retrieved.\nThe following error occured:\n");
+  errorPrefix = i18n("The group list could not be retrieved.\nThe following error occurred:\n");
   
   progressValue = 100;
   predictedLines = 30000;     // rule of thumb ;-)
@@ -149,7 +149,7 @@ void KNNntpClient::doFetchGroups()
   tempVector.sort();
 
   if (target->getDescriptions) {
-    errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
+    errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occurred:\n");
     progressValue = 100;
     doneLines = 0;
     predictedLines = target->groups->count();
@@ -216,7 +216,7 @@ void KNNntpClient::doCheckNewGroups()
   KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
   
   sendSignal(TSdownloadNewGroups);
-  errorPrefix = i18n("New groups could not be retrieved.\nThe following error occured:\n");
+  errorPrefix = i18n("New groups could not be retrieved.\nThe following error occurred:\n");
   
   progressValue = 100;
   predictedLines = 30;     // rule of thumb ;-)
@@ -270,7 +270,7 @@ void KNNntpClient::doCheckNewGroups()
     return;     // stopped...
 
   if (target->getDescriptions) {
-    errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
+    errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occurred:\n");
     progressValue = 100;
     doneLines = 0;
     predictedLines = tmpList.count()*3;
@@ -331,7 +331,7 @@ void KNNntpClient::doFetchNewHeaders()
   //bool tmpLoad = false;
 
   sendSignal(TSdownloadNew);
-  errorPrefix=i18n("No new articles could have been retrieved for\n%1/%2!\nThe following error ocurred:\n")
+  errorPrefix=i18n("No new articles could be retrieved for\n%1/%2!\nThe following error ocurred:\n")
               .arg(account.server()).arg(target->groupname());
 
   /*if( !target->isLoaded() ) {
@@ -368,7 +368,7 @@ void KNNntpClient::doFetchNewHeaders()
   if (s) {
     last=atoi(s);
   } else {
-    QString tmp=i18n("No new articles could have been retrieved!\nThe server sent a malformated response:\n");
+    QString tmp=i18n("No new articles could be retrieved!\nThe server sent a malformatted response:\n");
     tmp+=getCurrentLine();
     job->setErrorString(tmp);
     closeConnection();
@@ -444,7 +444,7 @@ void KNNntpClient::doFetchArticle()
   QCString cmd;
 
   sendSignal(TSdownloadArticle);
-  errorPrefix = i18n("Article could not be retrieved.\nThe following error occured:\n");
+  errorPrefix = i18n("Article could not be retrieved.\nThe following error occurred:\n");
 
   progressValue = 100;
   predictedLines = target->lines()->numberOfLines()+10;
@@ -534,7 +534,7 @@ void KNNntpClient::doFetchSource()
   KNRemoteArticle *target = static_cast<KNRemoteArticle*>(job->data());
 
   sendSignal(TSdownloadArticle);
-  errorPrefix = i18n("Article could not be retrieved.\nThe following error occured:\n");
+  errorPrefix = i18n("Article could not be retrieved.\nThe following error occurred:\n");
 
   progressValue = 100;
   predictedLines = target->lines()->numberOfLines()+10;
@@ -716,7 +716,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
 void KNNntpClient::handleErrors()
 {
   if (errorPrefix.isEmpty())
-    job->setErrorString(i18n("An error occured:\n%1").arg(getCurrentLine()));
+    job->setErrorString(i18n("An error occurred:\n%1").arg(getCurrentLine()));
   else
     job->setErrorString(errorPrefix + getCurrentLine());
 

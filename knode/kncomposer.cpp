@@ -345,7 +345,7 @@ bool KNComposer::hasValidData()
     }
 
     if (groupCount>5)
-      if (!(KMessageBox::warningYesNo( this, i18n("You are crossposting to more than five newsgroups.\nPlease reconsider wether this is really usefull\nand remove groups in which your article is off-topic.\nDo you want to re-edit the article or send it anyway?"),
+      if (!(KMessageBox::warningYesNo( this, i18n("You are crossposting to more than five newsgroups.\nPlease reconsider whether this is really useful\nand remove groups in which your article is off-topic.\nDo you want to re-edit the article or send it anyway?"),
                                        QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
         return false;
 
@@ -360,7 +360,7 @@ bool KNComposer::hasValidData()
     }
 
     if (fupCount>5)
-      if (!(KMessageBox::warningYesNo( this, i18n("You are directing replies into more than five newsgroups.\nPlease reconsider wether this is really usefull.\nDo you want to re-edit the article or send it anyway?"),
+      if (!(KMessageBox::warningYesNo( this, i18n("You are directing replies into more than five newsgroups.\nPlease reconsider whether this is really useful.\nDo you want to re-edit the article or send it anyway?"),
                                        QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
         return false;
   }
@@ -447,7 +447,7 @@ bool KNComposer::hasValidData()
       return false;
   } else
     if (sigLength>4)
-       KMessageBox::information(this, i18n("Your signature exceeds the widely accepted limit of 4 lines.\nPlease consider to shorten your signature,\notherwise you will probably annoy your readers"),
+       KMessageBox::information(this, i18n("Your signature exceeds the widely accepted limit of 4 lines.\nPlease consider shortening your signature.\nOtherwise, you will probably annoy your readers"),
                                 QString::null,"longSignatureWarning");
 
   v_alidated=true;
