@@ -62,6 +62,7 @@ class ICalFormatImpl {
     Attendee *readAttendee(icalproperty *attendee);
     void readIncidence(icalcomponent *parent,Incidence *incidence);
     void readRecurrenceRule(icalproperty *rrule,Incidence *event);
+    void readRecurrence( const struct icalrecurrencetype &r, Recurrence* recur );
     void readAlarm(icalcomponent *alarm,Incidence *incidence);
     /** Return the PRODID string loaded from calendar file */
     const QString &loadedProductId()  { return mLoadedProductId; }

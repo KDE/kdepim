@@ -1181,6 +1181,11 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
 
   dumpIcalRecurrence(r);
 
+  readRecurrence( r, recur );
+}
+
+void ICalFormatImpl::readRecurrence( const struct icalrecurrencetype &r, Recurrence* recur )
+{
   int wkst;
   int index = 0;
   short day = 0;

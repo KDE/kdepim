@@ -212,6 +212,24 @@ QString ICalFormat::toString( Recurrence *recurrence )
   return QString::fromLocal8Bit( text );
 }
 
+bool ICalFormat::fromString( Recurrence * recurrence, const QString& rrule )
+{
+  bool success = true;
+  icalerror_clear_errno();
+  struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule );
+  if ( icalerrno != ICAL_NO_ERROR ) {
+    kdDebug() << "Recurrence parsing error: " << icalerror_strerror( icalerrno ) << endl;
+    success = false;
+  }
+
+  if ( success ) {
+    mImpl->readRecurrence( recur, recurrence );
+  }
+
+  return success;
+}
+
+
 QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
                                           Scheduler::Method method)
 {

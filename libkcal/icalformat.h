@@ -76,6 +76,11 @@ class ICalFormat : public CalFormat {
       Return recurrence as iCalendar formatted text.
     */
     QString toString( Recurrence * );
+    /**
+      Parse string and fill recurrence object with
+      that information
+    */
+    bool fromString ( Recurrence *, const QString& );
   
     /** Create a scheduling message for event \a e using method \m */
     QString createScheduleMessage(IncidenceBase *e,Scheduler::Method m);
