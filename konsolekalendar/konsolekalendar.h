@@ -23,7 +23,7 @@
 #include <kapplication.h>
 
 #include "konsolekalendar.h"
-#include "kalendarVariables.h"
+#include "konsolekalendarvariables.h"
 #include "calendarlocal.h"
 #include "event.h"
 
@@ -33,7 +33,7 @@ namespace KCal {
 class KonsoleKalendar
 {
   public:
-    KonsoleKalendar(KalendarVariables &variables);
+    KonsoleKalendar(KonsoleKalendarVariables &variables);
     ~KonsoleKalendar();
 
     void showInstance();
@@ -44,7 +44,7 @@ class KonsoleKalendar
     void printEventTime(Event *event);
     bool isHappened(Event *event);
       
-    KalendarVariables m_variables;
+    KonsoleKalendarVariables m_variables;
     CalendarLocal *m_Calendar;
 };
 

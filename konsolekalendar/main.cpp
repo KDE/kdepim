@@ -54,7 +54,7 @@ static KCmdLineOptions options[] =
 int main(int argc, char *argv[])
 {
   KAboutData aboutData( "konsolekalendar", I18N_NOOP( "KonsoleKalendar" ),
-                        "0.1", description, KAboutData::License_GPL,
+                        "0.5", description, KAboutData::License_GPL,
                         "(c) 2002, Tuukka Pasanen", 0, 0,
                         "illuusio@mailcity.com");
   aboutData.addAuthor("Tuukka Pasanen",0, "illuusio@mailcity.com");
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
   KApplication app( false, false );
 	
-  KalendarVariables variables;
+  KonsoleKalendarVariables variables;
 
   if ( args->isSet("verbose") ){
      variables.setVerbose(true);

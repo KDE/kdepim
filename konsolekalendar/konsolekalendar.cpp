@@ -32,7 +32,7 @@
 using namespace KCal;
 using namespace std;
 
-KonsoleKalendar::KonsoleKalendar(KalendarVariables &variables)
+KonsoleKalendar::KonsoleKalendar(KonsoleKalendarVariables &variables)
 {
   m_variables = variables;
   m_Calendar =  new CalendarLocal;
