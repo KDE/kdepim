@@ -32,20 +32,27 @@ ExchangeConverterContact::ExchangeConverterContact()
 
 
 #define propertyDAV( prop ) \
-    WebdavHandler::addDavElement( doc, root, prop )
+    WebdavHandler::addElement( doc, props, "d:" prop )
 #define propertyNS( ns, prop ) \
-    WebdavHandler::addElementNS( doc, root, ns, prop )
+    WebdavHandler::addElementNS( doc, props, ns, prop )
 #define propertyContact( prop ) \
-    WebdavHandler::addElementNS( doc, root, "urn:schemas:contacts:", prop )
+    WebdavHandler::addElement( doc, props, "c:" prop )
 #define propertyCalendar( prop ) \
-    WebdavHandler::addElementNS( doc, root, "urn:schemas:calendar:", prop )
+    WebdavHandler::addElement( doc, props, "cal:" prop )
 #define propertyHTTPMail( prop ) \
-    WebdavHandler::addElementNS( doc, root, "urn:schemas:httpmail:", prop )
+    WebdavHandler::addElement( doc, props, "m:" prop )
 #define property( prop ) \
-    Webdavhandler::addElement( doc, root, prop )
+    Webdavhandler::addElement( doc, props, prop )
 
-void ExchangeConverterContact::createRequest( QDomDocument &doc, QDomElement &root )
+void ExchangeConverterContact::createRequest( QDomDocument &doc, QDomElement &props )
 {
+  QDomAttr att_c = doc.createAttribute( "xmlns:c" );
+  att_c.setValue( "urn:schemas:contacts:" );
+  doc.documentElement().setAttributeNode( att_c );
+  QDomAttr att_cal = doc.createAttribute( "xmlns:cal" );
+  att_cal.setValue( "urn:schemas:calendar:" );
+  doc.documentElement().setAttributeNode( att_cal );
+  
   propertyDAV( "contentclass" );
   propertyDAV( "getcontenttype" );
   propertyNS( "http://schemas.microsoft.com/exchange/", "outlookmessageclass" );
@@ -55,7 +62,8 @@ void ExchangeConverterContact::createRequest( QDomDocument &doc, QDomElement &ro
   propertyDAV( "getlastmodified" );
   propertyDAV( "isreadonly" );
   propertyContact( "cn" );
-  propertyContact( "uid" );
+//   propertyContact( "uid" );
+  propertyDAV( "uid" );
   propertyContact( "fileas" );
   propertyContact( "cn" );
   propertyContact( "givenName" );
@@ -78,7 +86,7 @@ void ExchangeConverterContact::createRequest( QDomDocument &doc, QDomElement &ro
   propertyContact( "businesshomepage" );
   propertyContact( "fburl" );
   // TODO: Does this work?
-  propertyNS( "urn:schemas-microsoft-com:office:office", "Keywords" );
+//   propertyNS( "urn:schemas-microsoft-com:office:office", "Keywords" );
   propertyDAV( "sensitivity" );
   propertyContact( "telephoneNumber" );
   propertyContact( "telephonenumber2" );
@@ -209,6 +217,7 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
   if ( WebdavHandler::extractString( node, "uid", tmpstr ) ) {
     addressee.setUid( tmpstr );
   } else {
+    kdDebug()<<"Addressee does not have a UID"<<endl;
     return false;
   }
 /* KDE4: addressee does not have any creation or modification date :-(( */
@@ -355,16 +364,21 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
 
 Addressee::List ExchangeConverterContact::parseWebDAV( const QDomDocument& davdata )
 {
-  kdDebug() << "Response: " << endl << davdata.toString() << endl;
   Addressee::List list;
 
   QDomElement prop = davdata.documentElement().namedItem( "response" )
                      .namedItem( "propstat" ).namedItem( "prop" ).toElement();
-  if ( prop.isNull() ) return list;
+  if ( prop.isNull() ) {
+kdDebug()<<"ExchangeConverterContact::parseWebDAV, no response->propstat->prop element!"<<endl;
+    return list;
+  }
  
   QString contentclass;
   bool success = WebdavHandler::extractString( prop, "contentclass", contentclass );
-  if ( !success ) return Addressee::List();
+  if ( !success ) {
+kdDebug()<<"ExchangeConverterContact::parseWebDAV, No contentclass entry"<<endl;
+    return list;
+  }
   
   success = false;
   Addressee addressee;
@@ -374,16 +388,20 @@ Addressee::List ExchangeConverterContact::parseWebDAV( const QDomDocument& davda
   
   if ( success ) {
     list.append( addressee );
+  } else {
+  
   }
   return list;
 }
 
 #define domDavProperty( name, value ) \
-  WebdavHandler::addDavElement( doc, prop, name, value );
+  WebdavHandler::addElement( doc, prop, "d:" name, value );
 #define domProperty( NS, name, value ) \
   WebdavHandler::addElementNS( doc, prop, NS, name, value );
 #define domContactProperty( name, value ) \
-  WebdavHandler::addElementNS( doc, prop, "urn:schemas:contacts:", name, value );
+  WebdavHandler::addElement( doc, prop, "c:" name, value );
+#define domCalendarProperty( name, value ) \
+  WebdavHandler::addElement( doc, prop, "cal:" name, value );
 #define domPhoneProperty( name, type ) \
   domContactProperty( name, addr.phoneNumber( type ).number() );
 
@@ -391,9 +409,13 @@ Addressee::List ExchangeConverterContact::parseWebDAV( const QDomDocument& davda
 QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
 {
   QDomDocument doc;
-  QDomElement root = WebdavHandler::addDavElement( doc, doc, "propertyupdate" );
-  QDomElement set = WebdavHandler::addDavElement( doc, root, "set" );
-  QDomElement prop = WebdavHandler::addDavElement( doc, set, "prop" );
+  QDomElement root = WebdavHandler::addDavElement( doc, doc, "d:propertyupdate" );
+  QDomElement set = WebdavHandler::addElement( doc, root, "d:set" );
+  QDomElement prop = WebdavHandler::addElement( doc, set, "d:prop" );
+  
+  QDomAttr att_c = doc.createAttribute( "xmlns:c" );
+  att_c.setValue( "urn:schemas:contacts:" );
+  doc.documentElement().setAttributeNode( att_c );
   
   domDavProperty( "contentclass", "urn:content-classes:person" );
   domProperty( "http://schemas.microsoft.com/exchange/",
@@ -547,8 +569,8 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   KABC::Geo geo = addr.geo();
   if ( geo.isValid() ) {
     // TODO: Do we need to set any other attribute to make it a float?
-    domProperty( "urn:schemas:calendar:", "geolatitude", QString::number( geo.latitude() ) );
-    domProperty( "urn:schemas:calendar:", "geolongitude", QString::number( geo.longitude() ) );
+    domCalendarProperty( "geolatitude", QString::number( geo.latitude() ) );
+    domCalendarProperty( "geolongitude", QString::number( geo.longitude() ) );
   }
 
   domContactProperty( "textdescription", addr.note() );
