@@ -51,8 +51,6 @@ class CSVImportDialog : public KDialogBase
 
   protected slots:
     virtual void slotOk();
-    virtual void slotUser1();
-    virtual void slotUser2();
 
   private slots:
     void returnPressed();
@@ -63,6 +61,9 @@ class CSVImportDialog : public KDialogBase
     void ignoreDuplicatesChanged( int );
     void setFile( const QString& );
     void urlChanged( const QString& );
+
+    void applyTemplate();
+    void saveTemplate();
 
   private:
     enum { Undefined, FormattedName, FamilyName, GivenName, AdditionalName,

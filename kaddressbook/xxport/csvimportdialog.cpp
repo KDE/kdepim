@@ -131,6 +131,12 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
            this, SLOT( setFile( const QString& ) ) );
   connect( mUrlRequester->lineEdit(), SIGNAL( textChanged ( const QString& ) ),
            this, SLOT( urlChanged( const QString& ) ) );
+
+  connect( this, SIGNAL( user1Clicked() ),
+           this, SLOT( applyTemplate() ) );
+  
+  connect( this, SIGNAL( user2Clicked() ),
+           this, SLOT( saveTemplate() ) );
 }
 
 CSVImportDialog::~CSVImportDialog()
@@ -436,6 +442,7 @@ void CSVImportDialog::fillTable()
   QTextStream inputStream( mData, IO_ReadOnly );
   inputStream.setEncoding( QTextStream::Locale );
 
+  int maxColumn = 0;
   while ( !inputStream.atEnd() ) {
     inputStream >> x; // read one char
 
@@ -538,6 +545,9 @@ void CSVImportDialog::fillTable()
     }
     if ( x != mDelimiter )
       lastCharDelimiter = false;
+
+    if ( column > maxColumn )
+      maxColumn = column;
   }
 
   // file with only one line without '\n'
@@ -548,6 +558,7 @@ void CSVImportDialog::fillTable()
   }
 
   adjustRows( row - mStartLine );
+  mTable->setNumCols( maxColumn );
 
   for ( column = 0; column < mTable->numCols(); ++column ) {
     QComboTableItem *item = new QComboTableItem( mTable, mTypeMap.keys() );
@@ -585,7 +596,7 @@ void CSVImportDialog::setText( int row, int col, const QString& text )
   }
 
   if ( mTable->numCols() < col )
-    mTable->setNumCols( col );
+    mTable->setNumCols( col + 50 ); // We add 50 at a time to limit recalculation
 
   mTable->setText( row - 1, col - 1, text );
 }
@@ -672,7 +683,7 @@ void CSVImportDialog::slotOk()
     KMessageBox::sorry( this, i18n( "You have to assign at least one column." ) );
 }
 
-void CSVImportDialog::slotUser1()
+void CSVImportDialog::applyTemplate()
 {
   QMap<uint,int> columnMap;
   QMap<QString, QString> fileMap;
@@ -731,7 +742,7 @@ void CSVImportDialog::slotUser1()
   }
 }
 
-void CSVImportDialog::slotUser2()
+void CSVImportDialog::saveTemplate()
 {
   QString fileName = KFileDialog::getSaveFileName(
                      locateLocal( "data", QString( kapp->name() ) + "/csv-templates/" ),
