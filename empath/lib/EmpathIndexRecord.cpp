@@ -45,6 +45,7 @@ EmpathIndexRecord::EmpathIndexRecord()
         parentMessageId_    (""),
         tagged_             (false)
 {
+    // Empty
 }
         
 EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
@@ -58,8 +59,8 @@ EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
         parentMessageId_    (i.parentMessageId_),
         tagged_             (i.tagged_)
 {
+    // Empty.
 }
-
 
 EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
     :   id_                 (id),
@@ -72,6 +73,7 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
         parentMessageId_    (m.envelope().parentMessageId()),
         tagged_             (false)
 {
+    // Empty.
 }
 
 EmpathIndexRecord::EmpathIndexRecord(
@@ -94,21 +96,41 @@ EmpathIndexRecord::EmpathIndexRecord(
         parentMessageId_    (parentMessageId),
         tagged_             (false)
 {
+    // Empty.
+}
+
+    EmpathIndexRecord &
+EmpathIndexRecord::operator = (const EmpathIndexRecord & i)
+{
+    if (this == &i) // Avoid a = a.
+        return *this;
+    
+    id_                 = i.id_;
+    subject_            = i.subject_;
+    sender_             = i.sender_;
+    date_               = i.date_;
+    status_             = i.status_;
+    size_               = i.size_;
+    messageId_          = i.messageId_;
+    parentMessageId_    = i.parentMessageId_;
+    tagged_             = i.tagged_;
+
+    return *this;
 }
 
 EmpathIndexRecord::~EmpathIndexRecord()
 {
+    // Empty.
 }
 
-    bool
-EmpathIndexRecord::hasParent()
-{
-    return !parentMessageId_.asString().isEmpty();
-}
-
+#if 0
+// Re-enable this for locale == en_UK only ?
     QString
 EmpathIndexRecord::niceDate(bool twelveHour)
 {
+    if (isNull_)
+        return QString::null;
+
     QDateTime now(QDateTime::currentDateTime());
     QDateTime then(date_.qdt());
     
@@ -139,16 +161,17 @@ EmpathIndexRecord::niceDate(bool twelveHour)
        
     return dts;
 }
+#endif
 
     QDataStream &
 operator << (QDataStream & s, EmpathIndexRecord & rec)
 {
     s   << rec.id_
-        << (unsigned short)rec.tagged_
+        << (Q_UINT8)rec.tagged_
         << rec.subject_
         << rec.sender_
         << rec.date_
-        << (unsigned int)rec.status_
+        << (Q_UINT8)rec.status_
         << rec.size_
         << rec.messageId_
         << rec.parentMessageId_;
@@ -159,29 +182,23 @@ operator << (QDataStream & s, EmpathIndexRecord & rec)
     QDataStream &
 operator >> (QDataStream & s, EmpathIndexRecord & rec)
 {
-    unsigned int i;
-    unsigned short j;
+    Q_UINT8 statusAsInt;
+    Q_UINT8 taggedAsInt;
 
     s   >> rec.id_
-        >> j
+        >> taggedAsInt
         >> rec.subject_
         >> rec.sender_
         >> rec.date_
-        >> i
+        >> statusAsInt
         >> rec.size_
         >> rec.messageId_
         >> rec.parentMessageId_;
 
-    rec.status_ = (RMM::MessageStatus)i;
-    rec.tagged_ = (bool)j;
+    rec.status_ = (RMM::MessageStatus)statusAsInt;
+    rec.tagged_ = (bool)taggedAsInt;
     
     return s;
-}
-
-    void
-EmpathIndexRecord::setStatus(RMM::MessageStatus s)
-{
-    status_ = s;
 }
 
 // vim:ts=4:sw=4:tw=78

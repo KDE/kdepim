@@ -100,11 +100,11 @@ EmpathMailSender::sendQueued()
         return;
     }
     
-    QStrList l(queueFolder->index()->allKeys());
-    QStrListIterator it(l);
+    QStringList l(queueFolder->index()->allKeys());
+    QStringList::ConstIterator it;
     
-    for (; it.current(); ++it) {
-        sendQueue_.enqueue(new QString(it.current()));
+    for (it = l.begin(); it != l.end(); ++it) {
+        sendQueue_.enqueue(new QString(*it));
         if (sendQueue_.count() == 1)
             _startNextSend();
     }

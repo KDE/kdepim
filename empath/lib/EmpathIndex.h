@@ -50,12 +50,12 @@ class EmpathIndex
         /**
          * Get the index record using the given key.
          */
-        EmpathIndexRecord * record(const QCString & key);
+        EmpathIndexRecord record(const QString & key);
 
         /**
          * Find out if the record exists
          */
-        bool contains(const QCString & key) const;
+        bool contains(const QString & key) const;
         
         /**
          * Set the index to talk to the given folder.
@@ -90,17 +90,17 @@ class EmpathIndex
         /**
          * Insert entry.
          */
-        bool insert(const QCString &, EmpathIndexRecord &);
+        bool insert(const QString &, EmpathIndexRecord &);
 
         /**
          * Insert entry.
          */
-        bool replace(const QCString &, EmpathIndexRecord &);
+        bool replace(const QString &, EmpathIndexRecord &);
 		
         /**
          * Remove entry.
          */
-        bool remove(const QCString &);
+        bool remove(const QString &);
 
         /**
          * @return URL of the related folder.
@@ -111,9 +111,9 @@ class EmpathIndex
 		
         QDateTime lastModified() const;
 		
-        QStrList allKeys() const;
+        QStringList allKeys() const;
 
-        void setStatus(const QString & id, RMM::MessageStatus status);
+        void setStatus(const QString & key, RMM::MessageStatus status);
         
         bool initialised() const { return initialised_; }
         void setInitialised(bool i) { initialised_ = i; }

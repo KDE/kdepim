@@ -47,7 +47,6 @@
 #include "Empath.h"
 #include "EmpathComposer.h"
 #include "EmpathMailboxList.h"
-#include "EmpathIndexRecord.h"
 #include "EmpathMailSenderSendmail.h"
 #include "EmpathMailSenderQmail.h"
 #include "EmpathMailSenderSMTP.h"

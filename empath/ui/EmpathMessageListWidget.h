@@ -87,7 +87,6 @@ class EmpathMessageListWidget : public EmpathListView
         EmpathMessageListItem * findRecursive(
                 EmpathMessageListItem * initialItem, RMM::RMessageID & msgId);
         
-        void addItem(EmpathIndexRecord * item);
         EmpathURL firstSelectedMessage();
         
         const EmpathURL & currentFolder() { return url_; }
@@ -150,6 +149,9 @@ class EmpathMessageListWidget : public EmpathListView
         Q_UINT32 _nSelected();
         
         EmpathMessageListItem *
+            _threadItem(EmpathIndexRecord & item);
+        
+        EmpathMessageListItem *
             _addItem(EmpathMessageListItem *, EmpathIndexRecord &);
         
         EmpathMessageListItem *
@@ -168,12 +170,11 @@ class EmpathMessageListWidget : public EmpathListView
         QPopupMenu  messageMarkMenu_;
         QPopupMenu  threadMenu_;
         
-        EmpathMessageListItemList itemList_;
-
-        QPixmap    px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
+        QPixmap px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
                 px_SMx_, px_SxR_, px_xMR_, px_SMR_;
         
-        void setStatus(EmpathMessageListItem * item, RMM::MessageStatus status);
+        void setStatus(EmpathMessageListItem *, RMM::MessageStatus);
+        void setStatusPixmap(EmpathMessageListItem *, RMM::MessageStatus);
 
         EmpathURL url_;
 

@@ -38,20 +38,12 @@
 #include "EmpathFolder.h"
 #include "Empath.h"
 
-// Implementation note:
-//
-// The value part is composed of an 8-bit byte, used for marking status,
-// plus a serialised version of an EmpathIndexRecord. This saves us
-// [de]serialising records when we only want to access the status.
-
 EmpathIndex::EmpathIndex()
     :   dbf_(0),
         count_(0),
         unreadCount_(0),
         initialised_(false)
 {
-    // Empty.
-    empathDebug("");
 }
 
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
@@ -102,28 +94,28 @@ EmpathIndex::setFolder(const EmpathURL & folder)
     folder_ = folder;
 }
 
-    EmpathIndexRecord *
-EmpathIndex::record(const QCString & key)
+    EmpathIndexRecord
+EmpathIndex::record(const QString & key)
 {
+    EmpathIndexRecord rec;
+
     if (dbf_ == 0) {
         empathDebug("Index not open!");
-        return 0;
+        return rec;
     }
 
     if (key.isEmpty()) {
         empathDebug("I'm not retrieving using an empty key");
-        return 0;
+        return rec;
     }
 
     QByteArray a = dbf_->retrieve(key);
 
     if (a.isNull())
-        return 0;
+        return rec;
     
-    EmpathIndexRecord * rec = new EmpathIndexRecord;
-
     QDataStream s(a, IO_ReadOnly);
-    s >> *rec;
+    s >> rec;
     
     return rec;
 }
@@ -131,8 +123,7 @@ EmpathIndex::record(const QCString & key)
     Q_UINT32
 EmpathIndex::countUnread() const
 {
-    // STUB
-    return 0;
+    return unreadCount_;
 }
 
      Q_UINT32
@@ -188,10 +179,10 @@ EmpathIndex::_open()
     return true;
 }
 
-    QStrList
+    QStringList
 EmpathIndex::allKeys() const
 {
-    QStrList l;   
+    QStringList l;
 
     if (dbf_ == 0) {
         empathDebug("Index not open!");
@@ -207,7 +198,7 @@ EmpathIndex::allKeys() const
 }
 
     bool
-EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
+EmpathIndex::insert(const QString & key, EmpathIndexRecord & rec)
 {
     if (dbf_ == 0) {
         empathDebug("Index not open!");
@@ -239,7 +230,7 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
 }
 
     bool
-EmpathIndex::replace(const QCString & key, EmpathIndexRecord & rec)
+EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
 {
     if (dbf_ == 0) {
         empathDebug("Index not open!");
@@ -267,7 +258,7 @@ EmpathIndex::replace(const QCString & key, EmpathIndexRecord & rec)
 }
 
     bool
-EmpathIndex::remove(const QCString & key)
+EmpathIndex::remove(const QString & key)
 {  
     if (dbf_ == 0) {
         empathDebug("Index not open!");
@@ -303,15 +294,23 @@ EmpathIndex::clear()
 }
 
     void
-EmpathIndex::setStatus(const QString & id, RMM::MessageStatus status)
+EmpathIndex::setStatus(const QString & key, RMM::MessageStatus status)
 {
     if (dbf_ == 0) {
         empathDebug("Index not open!");
         return;
     }
 
-    // TODO
+    EmpathIndexRecord rec = record(key);
     
+    if (rec.isNull()) {
+        empathDebug("Couldn't find record");
+        return;
+    }
+    
+    rec.setStatus(status);
+
+    replace(key, rec);
 }
     
     QDateTime
@@ -321,7 +320,7 @@ EmpathIndex::lastModified() const
 }	 
 
     bool
-EmpathIndex::contains(const QCString & s) const
+EmpathIndex::contains(const QString & s) const
 {
     return dbf_->exists(s);
 }

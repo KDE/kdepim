@@ -48,11 +48,11 @@ class EmpathMessageListItem : public QListViewItem
     
         EmpathMessageListItem(
             EmpathMessageListWidget * parent,
-            EmpathIndexRecord & msgDesc);
+            EmpathIndexRecord rec);
 
         EmpathMessageListItem(
             EmpathMessageListItem * parent,
-            EmpathIndexRecord & msgDesc);
+            EmpathIndexRecord rec);
 
         ~EmpathMessageListItem();
         
@@ -60,10 +60,10 @@ class EmpathMessageListItem : public QListViewItem
 
         QString key(int, bool) const;
 
-        const QString &     id()        const   { return m.id();        }
+        QString             id()        const   { return m.id();        }
         RMM::RMessageID &   messageID()         { return m.messageID(); }
         RMM::RMessageID &   parentID()          { return m.parentID();  }
-        const QString &     subject()   const   { return m.subject();   }
+        QString             subject()   const   { return m.subject();   }
         RMM::RMailbox &     sender()            { return m.sender();    }
         RMM::RDateTime &    date()              { return m.date();      }
         RMM::MessageStatus  status()    const   { return m.status();    }

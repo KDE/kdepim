@@ -29,6 +29,9 @@
 #include <qstring.h>
 #include <qlist.h>
 
+// KDE includes
+#include <ksharedptr.h>
+
 // Local includes
 #include "EmpathDefines.h"
 #include <RMM_Enum.h>
@@ -75,78 +78,96 @@ class EmpathIndexRecord
                 RMM::RMessageID &   messageID,
                 RMM::RMessageID &   parentMessageID);
 
+        EmpathIndexRecord & operator = (const EmpathIndexRecord &);
+        
         ~EmpathIndexRecord();
         
         /**
          * Stream the index record out to a QDataStream.
          */
-        friend QDataStream &
-            operator << (QDataStream &, EmpathIndexRecord &);
+        friend QDataStream & operator << (QDataStream &, EmpathIndexRecord &);
         
         /**
          * Stream the index record in from a QDataStream.
          */
-        friend QDataStream &
-            operator >> (QDataStream &, EmpathIndexRecord &);
+        friend QDataStream & operator >> (QDataStream &, EmpathIndexRecord &);
 
         /**
          * The unique id of this record.
          */
-        const QString &     id()        const   { return id_;               }
+        QString id() const
+        { return id_; }
+        
         /**
          * The subject of the related message.
          */
-        const QString &     subject()   const   { return subject_;          }
+        QString subject() const
+        { return subject_; }
+        
         /**
          * The sender of the related message. This is usually the first
          * sender mentioned in 'From:' but may be that referenced in 'Sender:'
          * if there's no 'From:' header.
          */
-        RMM::RMailbox &     sender()            { return sender_;           }
+        RMM::RMailbox & sender()
+        { return sender_; }
+        
         /**
          * The date of sending of the related message.
          */
-        RMM::RDateTime &    date()              { return date_;             }
+        RMM::RDateTime & date()
+        { return date_; }
+        
         /**
          * The status of the related message (Read, Marked, ...).
          */
-        RMM::MessageStatus  status()    const   { return status_;           }
+        RMM::MessageStatus status() const
+        { return status_; }
+        
         /**
          * The size of the related message.
          */
-        Q_UINT32            size()      const   { return size_;             }
+        Q_UINT32 size() const
+        { return size_; }
+        
         /**
          * The message-id of the related message.
          */
-        RMM::RMessageID &   messageID()         { return messageId_;        }
+        RMM::RMessageID & messageID()
+        { return messageId_; }
+        
         /**
          * The message-id of the previous message (for threading).
          */
-        RMM::RMessageID &   parentID()          { return parentMessageId_;  }
+        RMM::RMessageID & parentID()
+        { return parentMessageId_; }
         
         /**
          * Find out if there's a previous message (for threading).
          */
-        bool                hasParent();
+        bool hasParent()
+        { return !parentMessageId_.asString().isEmpty(); }
         
-        /**
-         * Nice date representation. FIXME: Locale dependent.
-         */
-        QString             niceDate(bool twelveHour);
-
         /**
          * Change the status of this record.
          */
-        void setStatus(RMM::MessageStatus s);
+        void setStatus(RMM::MessageStatus s)
+        { status_ = s; }
         
         /**
          * @internal
          */
-        void tag(bool b)    { tagged_ = b; }
+        void tag(bool b)
+        { tagged_ = b; }
+        
         /**
          * @internal
          */
-        bool isTagged()     { return tagged_; }
+        bool isTagged() const
+        { return tagged_; }
+
+        bool isNull() const
+        { return id_.isNull(); }
         
         /**
          * @internal
@@ -166,6 +187,8 @@ class EmpathIndexRecord
         RMM::RMessageID     parentMessageId_;
         
         bool                tagged_;
+
+        bool                isNull_;
 };
 
 /**

@@ -162,7 +162,6 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(QWidget * parent)
         "<i>%2</i> will be replaced by the name of the\n"
         "person who sent you the message.\n"));
 
-  
     QWhatsThis::add(le_forward_, i18n(
         "Choose the phrase that will be added\n"
         "before a message when you forward it.\n"
@@ -170,7 +169,6 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(QWidget * parent)
         "the message was sent to you.\n"
         "<i>%2</i> will be replaced by the name of the\n"
         "person who sent you the message.\n"));
-
     
     QWhatsThis::add(cb_quote_, i18n(
         "With this selected, when you reply to a\n"

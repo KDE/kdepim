@@ -82,8 +82,8 @@ EmpathFolder::setPixmap(const QString & p)
     pixmapName_ = p;
 }
 
-    const EmpathIndexRecord *
-EmpathFolder::record(const QCString & key)
+    EmpathIndexRecord
+EmpathFolder::record(const QString & key)
 {
     return index_->record(key);
 }

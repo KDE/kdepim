@@ -110,7 +110,7 @@ Database::_loadIndex()
   indexFile_.reset();
   indexStream_ >> offset_;
 
-  QCString key;
+  QString key;
   Q_UINT32 ofs;
   
   while (!indexStream_.eof()) {
@@ -165,7 +165,7 @@ Database::_close()
 }
 
   bool
-Database::insert(const QCString & key, const QByteArray & data)
+Database::insert(const QString & key, const QByteArray & data)
 {
   ok_ = true;
 
@@ -187,13 +187,13 @@ Database::insert(const QCString & key, const QByteArray & data)
 }
 
   bool
-Database::exists(const QCString & key)
+Database::exists(const QString & key)
 {
   return (index_[key] != 0);
 }
 
   QByteArray
-Database::retrieve(const QCString & key)
+Database::retrieve(const QString & key)
 {
   ok_ = true;
 
@@ -224,7 +224,7 @@ Database::retrieve(const QCString & key)
 }
 
   bool
-Database::remove(const QCString & key)
+Database::remove(const QString & key)
 {
   ok_ = true;
   bool removed = index_.remove(key);
@@ -235,7 +235,7 @@ Database::remove(const QCString & key)
 }
 
   bool
-Database::replace(const QCString & key, const QByteArray & data, bool & ow)
+Database::replace(const QString & key, const QByteArray & data, bool & ow)
 {
   ok_ = true;
 
@@ -309,8 +309,6 @@ Database::replace(const QCString & key, const QByteArray & data, bool & ow)
   dataFile_.at(*ofs);
   dataStream_ << data;
 
-  dataFileSize_ = dataFile_.at();
-  
   return true;
 }
 
@@ -369,7 +367,7 @@ Database::reorganise()
 
     if (data.isNull()) {
       _setError
-        ("Record `" + QCString(it.currentKey()) + "' not found in data file");
+        ("Record `" + QString(it.currentKey()) + "' not found in data file");
       continue;
     }
 

@@ -20,7 +20,7 @@
 */
 
 #include <qdatetime.h>
-#include <qasciidict.h>
+#include <qdict.h>
 #include <qfile.h>
 #include <qstring.h>
 #include <qcstring.h>
@@ -28,9 +28,8 @@
 
 namespace RDB {
 
-typedef QAsciiDict<Q_UINT32> Index;
-typedef QAsciiDictIterator<Q_UINT32> IndexIterator;
-
+typedef QDict<Q_UINT32> Index;
+typedef QDictIterator<Q_UINT32> IndexIterator;
 
 /**
  * @short A persistent QAsciiDict<QByteArray>
@@ -75,29 +74,29 @@ class Database
     /**
      * @return false if the record could not be added
      */
-    bool insert(const QCString & key, const QByteArray & data);
+    bool insert(const QString & key, const QByteArray & data);
     /**
      * @param ow If this comes back true, there was no such key and the
      * record has been added. Otherwise, the record was replaced.
      * @return false if the record could not be replaced
      */
-    bool replace(const QCString & key, const QByteArray & data, bool & ow);
+    bool replace(const QString & key, const QByteArray & data, bool & ow);
     /**
      * @return false if the record could not be removed. This might
      * mean it did not exist.
      */
-    bool remove(const QCString & key);
+    bool remove(const QString & key);
 
     /**
      * @return the record referenced by the key. The record will be null
      * (use QByteArray::isNull() to test) if the record didn't exist.
      */
-    QByteArray retrieve(const QCString & key);
+    QByteArray retrieve(const QString & key);
     
     /**
      * @return true if the key is in the index.
      */
-    bool exists(const QCString & key);
+    bool exists(const QString & key);
 
     /**
      * Write all data to disk NOW.

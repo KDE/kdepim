@@ -89,8 +89,6 @@ EmpathMaildir::sync(bool force)
     if (!force && !_touched(f))
         return;
         
-    empathDebug("required");
-    
     tagList_.clear();
     
     _markNewMailAsSeen();
@@ -201,7 +199,7 @@ EmpathMaildir::removeMessage(const QString & id)
     if (!f.remove())
         return false;
     
-    folder->index()->remove(id.latin1());
+    folder->index()->remove(id);
 
     return true;
 }
@@ -511,17 +509,17 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 
     QStringList::ConstIterator it(fileList.begin());
     
-    QCString s;
+    QString s;
     QRegExp re_flags(":2,[A-Za-z]*$");
 
     for (; it != fileList.end(); ++it) {
 
-        s = (*it).utf8();
+        s = *it;
 
         RMM::MessageStatus status(RMM::MessageStatus(0));
         
         int i = s.find(re_flags);
-        QCString flags;
+        QString flags;
         
         if (i != -1) {
             
@@ -541,15 +539,15 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 
         if (exists) {
         
-            EmpathIndexRecord * rec = f->index()->record(s);
-            
-            if (rec->status() != status) {
-                rec->setStatus(status);
-                f->index()->replace(rec->id().utf8(), *rec);
-            }
+            EmpathIndexRecord rec = f->index()->record(s);
 
-            delete rec;
-            rec = 0;
+            if (rec.isNull())
+                continue;
+            
+            if (rec.status() != status) {
+                rec.setStatus(status);
+                f->index()->replace(rec.id(), rec);
+            }
         
         } else {
  
@@ -574,20 +572,16 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
     void
 EmpathMaildir::_removeUntagged(EmpathFolder * f)
 {
-    QStrList l(f->index()->allKeys());
+    QStringList l(f->index()->allKeys());
 
-    QStrListIterator it(l);
+    QStringList::ConstIterator it;
     
-    for (; it.current(); ++it) {
+    for (it = l.begin(); it != l.end(); ++it) {
 
-        QString s(it.current());
-        
-        if (!tagList_.contains(s)) {
+        if (!tagList_.contains(*it)) {
 
-            empathDebug("Record `" + s + "' not tagged - removing from index");
-
-            f->index()->remove(it.current());
-            f->itemGone(it.current());
+            f->index()->remove(*it);
+            f->itemGone(*it);
         }
     }
 }

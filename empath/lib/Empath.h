@@ -47,7 +47,6 @@
 
 class EmpathMailSender;
 class EmpathFolder;
-class EmpathIndexRecord;
 class EmpathTask;
 
 /**

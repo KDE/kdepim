@@ -31,11 +31,10 @@
 
 // Local includes
 #include "EmpathURL.h"
+#include "EmpathIndexRecord.h"
 
 class EmpathIndex;
 class EmpathMailbox;
-class EmpathIndexRecord;
-class EmpathIndexAllocator;
 
 /**
  * @short Mail folder
@@ -115,7 +114,7 @@ class EmpathFolder : public QObject
          * Get an index record given an ID.
          * @return 0 if couldn't be found.
          */ 
-        const EmpathIndexRecord * record(const QCString & key);
+        EmpathIndexRecord record(const QString & key);
 
         /**
          * Call this when you want to sync with the mailbox and update any

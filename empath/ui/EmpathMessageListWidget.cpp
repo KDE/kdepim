@@ -159,10 +159,13 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
 EmpathMessageListWidget::findRecursive(
         EmpathMessageListItem * initialItem, RMM::RMessageID & msgId)
 {
-    ASSERT(initialItem);
+    if (initialItem == 0) {
+        empathDebug("initial item is 0 !");
+        return 0;
+    }
 
     EmpathMessageListItem * fChild =
-        dynamic_cast<EmpathMessageListItem *>(initialItem->firstChild());
+        static_cast<EmpathMessageListItem *>(initialItem->firstChild());
     
     if (fChild != 0) {
         EmpathMessageListItem * found = findRecursive(fChild, msgId);
@@ -170,7 +173,7 @@ EmpathMessageListWidget::findRecursive(
     }
     
     EmpathMessageListItem * nextSibling =
-        dynamic_cast<EmpathMessageListItem *>(initialItem->nextSibling());
+        static_cast<EmpathMessageListItem *>(initialItem->nextSibling());
     
     if (nextSibling != 0) {
         EmpathMessageListItem * found = findRecursive(nextSibling, msgId);
@@ -188,46 +191,37 @@ EmpathMessageListWidget::find(RMM::RMessageID & msgId)
         return 0;
 
     return findRecursive(
-        dynamic_cast<EmpathMessageListItem *>(firstChild()), msgId);
+        static_cast<EmpathMessageListItem *>(firstChild()), msgId);
 }
 
-    void
-EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
+    EmpathMessageListItem *
+EmpathMessageListWidget::_threadItem(EmpathIndexRecord & rec)
 {
-    if (item == 0) {
-        empathDebug("item == 0 !");
-        return;
+    if (rec.isNull()) {
+        empathDebug("record is null !");
+        return 0;
     }
 
     EmpathMessageListItem * parentItem = 0;
     
     // Find parent of this item.
-    if (!item->parentID().localPart().isEmpty())
+    if (!rec.parentID().localPart().isEmpty())
 
         for (QListViewItemIterator it(this); it.current(); ++it) {
             
             EmpathMessageListItem * i =
-                dynamic_cast<EmpathMessageListItem *>(it.current());
-            
-            if (i == 0) {
-                empathDebug("dynamic_cast to EmpathMessageListItem FAILED !");
-                return;
-            }
+                static_cast<EmpathMessageListItem *>(it.current());
 
-            if (i->messageID() == item->parentID()) {
+            if (i->messageID() == rec.parentID()) {
                 parentItem = i;
                 break;
             }
         }
 
-    EmpathMessageListItem * newItem;
-    
     if (parentItem == 0)
-        newItem = _addItem(this, *item);
+        return _addItem(this, rec);
     else
-        newItem = _addItem(parentItem, *item);
-
-    setStatus(newItem, item->status());
+        return _addItem(parentItem, rec);
 }
 
     EmpathURL
@@ -237,12 +231,7 @@ EmpathMessageListWidget::firstSelectedMessage()
     if (currentItem() == 0) return u;
     
     EmpathMessageListItem * item =
-        dynamic_cast<EmpathMessageListItem *>(currentItem());
-    
-    if (item == 0) {
-        empathDebug("dynamic_cast to EmpathMessageListItem FAILED !");
-        return u;
-    }
+        static_cast<EmpathMessageListItem *>(currentItem());
     
     return EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
 }
@@ -257,13 +246,8 @@ EmpathMessageListWidget::markOne(RMM::MessageStatus status)
         return;
     
     EmpathMessageListItem * item =
-        dynamic_cast<EmpathMessageListItem *>(currentItem());
+        static_cast<EmpathMessageListItem *>(currentItem());
 
-    if (item == 0) {
-        empathDebug("dynamic_cast to EmpathMessageListItem FAILED !");
-        return;
-    }
-    
     EmpathURL u(url_.mailboxName(), url_.folderPath(), item->id());
     
     RMM::MessageStatus stat = item->status();
@@ -415,12 +399,7 @@ EmpathMessageListWidget::s_rightButtonPressed(QListViewItem * item,
     }
 
     EmpathMessageListItem * i =
-        dynamic_cast<EmpathMessageListItem *>(item);
-
-    if (i == 0) {
-        empathDebug("dynamic_cast to EmpathMessageListItem FAILED !");
-        return;
-    }
+        static_cast<EmpathMessageListItem *>(item);
 
     if (i->status() & RMM::Read)
         messageMenu_.changeItem(messageMenuItemMarkRead,
@@ -461,7 +440,7 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem *i)
     kapp->processEvents();
 
     emit(changeView(firstSelectedMessage()));
-    markAsReadTimer_->go(dynamic_cast<EmpathMessageListItem *>(i));
+    markAsReadTimer_->go(static_cast<EmpathMessageListItem *>(i));
 }
 
     void
@@ -481,7 +460,13 @@ EmpathMessageListWidget::setStatus(
     
     EmpathFolder * f = empath->folder(url_);
     f->setStatus(item->id(), status);
+    setStatusPixmap(item, status);
+}
 
+    void
+EmpathMessageListWidget::setStatusPixmap(
+        EmpathMessageListItem * item, RMM::MessageStatus status)
+{
     if (status & RMM::Read)
         if (status & RMM::Marked)
             if (status & RMM::Replied)
@@ -707,12 +692,7 @@ EmpathMessageListWidget::s_startDrag(const QList<QListViewItem> & items)
     while (it.current()) {
         
         EmpathMessageListItem * i =
-            dynamic_cast<EmpathMessageListItem *>(it.current());
-
-        if (i == 0) {
-            empathDebug("dynamic_cast to EmpathMessageListItem FAILED !");
-            return;
-        }
+            static_cast<EmpathMessageListItem *>(it.current());
 
         EmpathURL messageURL(url_.mailboxName(), url_.folderPath(), i->id());
         uriList.append(messageURL.asString());
@@ -741,13 +721,8 @@ EmpathMessageListWidget::selectTagged()
     for (; it.current(); ++it) {
  
         EmpathMessageListItem * i =
-            dynamic_cast<EmpathMessageListItem *>(it.current());
+            static_cast<EmpathMessageListItem *>(it.current());
 
-        if (i == 0) {
-            empathDebug("dynamic_cast to EmpathMessageListItem FAILED !");
-            return;
-        }
-        
         if (i->status() & RMM::Marked)
             _setSelected(i, true);
     }
@@ -768,13 +743,8 @@ EmpathMessageListWidget::selectRead()
     for (; it.current(); ++it) {
  
         EmpathMessageListItem * i =
-            dynamic_cast<EmpathMessageListItem *>(it.current());
+            static_cast<EmpathMessageListItem *>(it.current());
 
-        if (i == 0) {
-            empathDebug("dynamic_cast to EmpathMessageListItem FAILED !");
-            return;
-        }
-        
         if (i->status() & RMM::Read)
             _setSelected(i, true);
     }
@@ -827,13 +797,8 @@ EmpathMessageListWidget::s_itemGone(const QString & s)
     for (; it.current(); ++it) {
  
         EmpathMessageListItem * i =
-            dynamic_cast<EmpathMessageListItem *>(it.current());
+            static_cast<EmpathMessageListItem *>(it.current());
 
-        if (i == 0) {
-            empathDebug("dynamic_cast to EmpathMessageListItem FAILED !");
-            return;
-        }
-        
         if (i->id() == s)
             _removeItem(i);
     }
@@ -849,22 +814,17 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
     if (f == 0)
         return;
         
-    EmpathIndexRecord * i(f->index()->record(s.latin1()));
+    EmpathIndexRecord rec(f->index()->record(s.latin1()));
 
-    if (i == 0) {
+    if (rec.isNull()) {
         empathDebug("Can't find index record for \"" + s + "\"");
         return;
     }
     
-    if (KGlobal::config()->readBoolEntry(EmpathConfig::UI_THREAD)) {
-    
-        addItem(i);
-    
-    } else {
-
-        EmpathMessageListItem * newItem = _addItem(this, *i);
-        setStatus(newItem, i->status());
-    }
+    if (KGlobal::config()->readBoolEntry(EmpathConfig::UI_THREAD))
+        _threadItem(rec);
+    else
+        _addItem(this, rec);
 }
 
     void
@@ -886,8 +846,6 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
     
     setSorting(-1);
     
-    QStrList l(f->index()->allKeys());
-    empathDebug("There are " + QString().setNum(l.count()) + " keys");
     
     KConfig * c(KGlobal::config());
     
@@ -895,36 +853,39 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
 
     c->setGroup(GROUP_DISPLAY);
 
-    QStrListIterator it(l);
+    QStringList index(f->index()->allKeys());
+    QStringList::ConstIterator it(index.begin());
     
     if (KGlobal::config()->readBoolEntry(UI_THREAD))
         
         // fill threading
-        for (; it.current() && filling_; ++it) {
+        for (; it != index.end() && filling_; ++it) {
 
-            EmpathIndexRecord * rec = f->index()->record(it.current());
+            EmpathIndexRecord rec = f->index()->record(*it);
             
-            if (rec == 0) {
+            if (rec.isNull()) {
+                empathDebug("Can't find record, but I'd called allKeys !");
                 continue;
             }
 
-            addItem(rec);
+            _threadItem(rec);
             t.doneOne();
         }
     
     else
         
         // fill nonthreading;
-        for (; it.current() && filling_; ++it) {
+        // Rikkus: Hey Wilco, you don't need ';' after comments ;)
+        for (; it != index.end() && filling_; ++it) {
             
-            EmpathIndexRecord * rec = f->index()->record(it.current());
+            EmpathIndexRecord rec = f->index()->record(*it);
 
-            if (rec == 0) {
+            if (rec.isNull()) {
+                empathDebug("Can't find record, but I'd called allKeys !");
                 continue;
             }
             
-            EmpathMessageListItem * newItem = _addItem(this, *rec);
-            setStatus(newItem, rec->status());
+            _addItem(this, rec);
             t.doneOne();
         }
    
@@ -1023,7 +984,7 @@ EmpathMessageListWidget::clearSelection()
 EmpathMessageListWidget::setSelected(QListViewItem * item, bool b)
 {
     if (item)
-        _setSelected(dynamic_cast<EmpathMessageListItem *>(item), b);
+        _setSelected(static_cast<EmpathMessageListItem *>(item), b);
 }
 
     void
@@ -1053,26 +1014,25 @@ EmpathMessageListWidget::_nSelected()
 
     EmpathMessageListItem *
 EmpathMessageListWidget::_addItem(
-    EmpathMessageListItem * prt, EmpathIndexRecord & d)
+    EmpathMessageListItem * prt, EmpathIndexRecord & rec)
 {
-    EmpathMessageListItem * i = new EmpathMessageListItem(prt, d);
-    itemList_.append(i);
-    return i;
+    EmpathMessageListItem * newItem = new EmpathMessageListItem(prt, rec);
+    setStatusPixmap(newItem, rec.status());
+    return newItem;
 }
 
     EmpathMessageListItem *
 EmpathMessageListWidget::_addItem(
-    EmpathMessageListWidget * prt, EmpathIndexRecord & d)
+    EmpathMessageListWidget * prt, EmpathIndexRecord & rec)
 {
-    EmpathMessageListItem * i = new EmpathMessageListItem(prt, d);
-    itemList_.append(i);
-    return i;
+    EmpathMessageListItem * newItem = new EmpathMessageListItem(prt, rec);
+    setStatusPixmap(newItem, rec.status());
+    return newItem;
 }
 
     void
 EmpathMessageListWidget::_removeItem(EmpathMessageListItem * i)
 {
-    itemList_.remove(i);
     selected_.remove(i);
     delete i;
 }

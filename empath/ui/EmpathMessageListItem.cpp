@@ -27,6 +27,7 @@
 
 // KDE includes
 #include <kglobal.h>
+#include <klocale.h>
 
 // Local includes
 #include "EmpathMessageListWidget.h"
@@ -35,23 +36,23 @@
 
 EmpathMessageListItem::EmpathMessageListItem(
         EmpathMessageListWidget * parent,
-        EmpathIndexRecord & msgDesc)
+        EmpathIndexRecord rec)
     :    
         QListViewItem(parent),
-        m(msgDesc)
+        m(rec)
 {
-    niceDate_ = msgDesc.niceDate(true);
+    niceDate_ = KGlobal::locale()->formatDateTime(rec.date().qdt());
     _init();
 }
 
 EmpathMessageListItem::EmpathMessageListItem(
         EmpathMessageListItem * parent,
-        EmpathIndexRecord & msgDesc)
+        EmpathIndexRecord rec)
     :    
         QListViewItem(parent),
-        m(msgDesc)
+        m(rec)
 {
-    niceDate_ = msgDesc.niceDate(true);
+    niceDate_ = KGlobal::locale()->formatDateTime(rec.date().qdt());
     _init();
 }
 
