@@ -68,7 +68,7 @@ void Script::setTimeout( int seconds )
 
 int Script::run()
 {
-  kdDebug() << "Script::running " << m_proc->arguments() << " ..." << endl;
+  //kdDebug() << "Script::running " << m_proc->arguments() << " ..." << endl;
   m_proc->start();
   // This didn't work.  But Ctrl-C does.  :P
   //QTimer::singleShot( m_timeoutInSeconds * 1000, m_proc, SLOT( kill() ) );
@@ -88,7 +88,7 @@ void Script::exit()
 {
   //kdDebug () << "Script::exit()" << endl;
   m_status = m_proc->exitStatus();
-  //kdDebug () << "script exit, status = " << m_proc->exitStatus() << endl;
+  //kdDebug () << "Script::exit(), m_status = " << m_proc->exitStatus() << endl;
   delete m_proc;
   m_proc = 0;
 }
@@ -99,14 +99,13 @@ void Script::stderr()
   m_status = 1;
   QString data = QString( m_proc->readStderr() );
   m_stderr= true;
-  kdDebug() << "stderr:" << endl;
-  kdDebug() << data << endl;
+  kdDebug() << "stderr:" << data << endl;
 }
 
 void Script::stdout()
 {
   QString data = QString( m_proc->readStdout() );
-  kdDebug() << "stdout:" << endl;
+  //kdDebug() << "stdout:" << endl;
   kdDebug() << data << endl;
 }
 

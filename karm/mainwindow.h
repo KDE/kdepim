@@ -2,6 +2,7 @@
 #define KARM_MAIN_WINDOW_H
 
 #include <kmainwindow.h>
+#include <karmdcopiface.h>
 
 class QListViewItem;
 class QPoint;
@@ -19,7 +20,7 @@ class PrintDialog;
  * Main window to tie the application together.
  */
 
-class MainWindow : public KMainWindow
+class MainWindow : public KMainWindow, virtual public KarmDCOPIface
 {
   Q_OBJECT
 
@@ -35,6 +36,8 @@ class MainWindow : public KMainWindow
   public:
     MainWindow();
     virtual ~MainWindow();
+    QString version() const;
+
 
   protected slots:
     void keyBindings();

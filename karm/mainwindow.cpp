@@ -12,6 +12,7 @@
 #include <qptrlist.h>
 #include <qstring.h>
 
+#include <dcopclient.h>
 #include <kaccel.h>
 #include <kaction.h>
 #include <kapplication.h>       // kapp
@@ -33,14 +34,16 @@
 #include "task.h"
 #include "taskview.h"
 #include "tray.h"
+#include "version.h"
 
 MainWindow::MainWindow()
-  : KMainWindow(0),
-    _accel( new KAccel( this ) ),
-    _watcher( new KAccelMenuWatch( _accel, this ) ),
-    _taskView( new TaskView( this ) ),
-    _totalSum( 0 ),
-    _sessionSum( 0 )
+  : KMainWindow(0), 
+    _accel     ( new KAccel( this ) ),
+    _watcher   ( new KAccelMenuWatch( _accel, this ) ),
+    _taskView  ( new TaskView( this ) ),
+    _totalSum  ( 0 ),
+    _sessionSum( 0 ),
+    DCOPObject ( "KarmDCOPIface" )
 {
   setCentralWidget( _taskView );
   // status bar
@@ -87,6 +90,12 @@ MainWindow::MainWindow()
   _preferences->emitSignals();
   slotSelectionChanged();
 
+  // Register with DCOP
+  if ( !kapp->dcopClient()->isRegistered() ) 
+  {
+    kapp->dcopClient()->registerAs( "karm" );
+    kapp->dcopClient()->setDefaultObject( objId() );
+  }
 }
 
 void MainWindow::slotSelectionChanged()
@@ -421,6 +430,12 @@ void MainWindow::contextMenuRequest( QListViewItem*, const QPoint& point, int )
                           factory()->container( i18n( "task_popup" ), this ) );
     if ( pop )
       pop->popup( point );
+}
+
+
+QString MainWindow::version() const
+{
+  return KARM_VERSION;
 }
 
 #include "mainwindow.moc"

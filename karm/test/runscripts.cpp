@@ -71,15 +71,20 @@ int runscripts
   const QFileInfoList *list = dir.entryInfoList();
   QFileInfoListIterator it( *list );
   QFileInfo *fi;
-  while ( !rval && (fi = it.current()) != 0 ) 
+  while ( !rval && ( fi = it.current() ) != 0 ) 
   {
-    s->addArgument( interpreter );
-    s->addArgument( path + QDir::separator() + fi->fileName().latin1() );
+    kdDebug() << "running " << fi->fileName() << endl;
+    // We don't want to run all scripts, e.g. shared routines.
+    if ( ! fi->fileName().startsWith( "__" ) ) 
+    {
+      s->addArgument( interpreter );
+      s->addArgument( path + QDir::separator() + fi->fileName().latin1() );
 
-    // Thorsten's xautomation tests run with user interaction by default.
-    if ( interpreter == "sh" ) s->addArgument( "--batch" );
+      // Thorsten's xautomation tests run with user interaction by default.
+      if ( interpreter == "sh" ) s->addArgument( "--batch" );
 
-    rval = s->run();
+      rval = s->run();
+    }
     ++it;
   }
   delete s;
