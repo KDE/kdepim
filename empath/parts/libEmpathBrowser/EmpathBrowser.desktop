@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Comment=email mailbox browser
+Name=EmpathBrowser
+ServiceTypes=KParts/ReadWritePart
+X-KDE-Library=libEmpathBrowser

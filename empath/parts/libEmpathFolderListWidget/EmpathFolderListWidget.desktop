@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Comment=email folder list
+Name=EmpathFolderListWidget
+ServiceTypes=KParts/ReadWritePart
+X-KDE-Library=libEmpathFolderListWidget
