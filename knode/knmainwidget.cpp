@@ -15,6 +15,8 @@
 #include "knmainwidget.h"
 
 #include <qhbox.h>
+#include <qlayout.h>
+#include <ktoolbar.h>
 
 #include <kinputdialog.h>
 #include <kaccel.h>
@@ -56,6 +58,8 @@ using KRecentAddress::RecentAddresses;
 #include <kpgp.h>
 #include "knmemorymanager.h"
 #include <kcmdlineargs.h>
+
+#include <klistviewsearchline_pimcopy.h>
 
 KNGlobals knGlobals;
 
@@ -160,10 +164,35 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   }
   header = new KDockWidgetHeader(h_drDock, "headerDockHeader");
   h_drDock->setHeader(header);
-  h_drView=new KNListView(h_drDock, "hdrView");
+  QWidget *dummy = new QWidget(h_drDock);
+  QVBoxLayout *vlay = new QVBoxLayout(dummy);
+  h_drView=new KNListView(dummy, "hdrView");
   header->setDragPanel(new KNDockWidgetHeaderDrag(h_drView, header, h_drDock));
-  h_drDock->setWidget(h_drView);
+  h_drDock->setWidget(dummy);
   h_drDock->manualDock(a_rtDock, KDockWidget::DockTop, 5000);
+
+  KToolBar *tb = new KToolBar(dummy, "search toolbar");
+  KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
+                                           QApplication::reverseLayout()
+                                           ? "clear_left"
+                                           : "locationbar_erase",
+                                           0, this,
+                                           SLOT( slotClearHeaderSearch() ),
+                                           actionCollection(),
+                                           "reset_quicksearch" );
+  resetQuickSearch->plug( tb );
+  resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search<b><br>"
+                                        "Resets the quick search so that "
+                                        "all messages are shown again." ) );
+
+  QLabel *lbl = new QLabel(i18n("&Search:"), tb, "kde toolbar widget");
+  s_earchLineEdit = new KPIM::KListViewSearchLine(tb, h_drView, "KListViewSearchLine");
+  tb->setStretchableWidget(s_earchLineEdit);
+  lbl->setBuddy(s_earchLineEdit);
+
+  vlay->addWidget(tb);
+  vlay->addWidget(h_drView);
+  
 
   h_drView->setAcceptDrops(false);
   h_drView->setDragEnabled(true);
@@ -1083,6 +1112,10 @@ void KNMainWidget::closeCurrentThread()
   }
 }
 
+void KNMainWidget::slotClearHeaderSearch()
+{
+ s_earchLineEdit->clear();
+}
 
 void KNMainWidget::slotArticleSelected(QListViewItem *i)
 {

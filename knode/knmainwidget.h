@@ -218,6 +218,8 @@ protected slots:
   void slotArticleMMB(QListViewItem *item);
   void slotHdrViewSortingChanged(int i);
 
+  void slotClearHeaderSearch();
+  
   void slotReparented();
 
   //network slots
@@ -407,6 +409,7 @@ private:
   KStatusBarLabel *s_tatusMain;
   KStatusBarLabel *s_tatusFilter;
   KXMLGUIClient *m_GUIClient;
+  QLineEdit * s_earchLineEdit;
 };
 
 
