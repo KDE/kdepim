@@ -44,7 +44,7 @@
 #include "mikesstyle.h"
 #include "ringbinderstyle.h"
 
-#include "../kabprefs.h"
+#include "kabprefs.h"
 #include "printprogress.h"
 #include "printstyle.h"
 
