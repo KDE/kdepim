@@ -28,7 +28,7 @@ libkcal_la_SOURCES = \
 	calendarresources.cpp \
         qtopiaformat.cpp
 
-kde_module_LTLIBRARIES = libkcm_kcalendars.la kcal_dir.la kcal_remote.la
+kde_module_LTLIBRARIES = libkcm_kcalendars.la kcal_dir.la kcal_remote.la kcal_kabc.la
 
 libkcm_kcalendars_la_SOURCES = kcmcalendars.cpp
 libkcm_kcalendars_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
@@ -42,6 +42,10 @@ kcal_remote_la_SOURCES = resourceremote.cpp resourceremoteconfig.cpp
 kcal_remote_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kcal_remote_la_LIBADD  = libkcal.la -lkderesources
 
+kcal_kabc_la_SOURCES = resourcekabc.cpp resourcekabcconfig.cpp
+kcal_kabc_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
+kcal_kabc_la_LIBADD  = libkcal.la -lkderesources -lkabc
+
 EXTRA_PROGRAMS = convertqtopia
 convertqtopia_SOURCES = convertqtopia.cpp
 convertqtopia_LDFLAGS = $(all_libraries)
@@ -51,7 +55,7 @@ datadir = $(kde_appsdir)/Settings/Components
 data_DATA = kcalendars.desktop
 
 linkdir= $(kde_datadir)/kresources/calendar
-link_DATA = local.desktop localdir.desktop remote.desktop
+link_DATA = local.desktop localdir.desktop remote.desktop kabc.desktop
 
 METASOURCES = AUTO
 

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+
+[Misc]
+Encoding=UTF-8
+Name=Birthdays from kaddressbook
+
+[Plugin]
+Type=birthdays
+X-KDE-Library=kcal_kabc
