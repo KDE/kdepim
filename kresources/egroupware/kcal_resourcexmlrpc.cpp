@@ -219,7 +219,7 @@ bool ResourceXMLRPC::doLoad()
                  this, SLOT( listTodosFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  mServer->call( LoadEventCategoriesCommand, QVariant( false, 0 ),
+  mServer->call( LoadEventCategoriesCommand, QVariant( QMap<QString, QVariant>() ),
                  this, SLOT( loadEventCategoriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
@@ -280,7 +280,7 @@ bool ResourceXMLRPC::doSave()
       QMap<QString, QVariant> args;
       writeEvent( (*evIt), args );
 
-      args.insert( "id", mEventUidMapper->remoteUid( (*evIt)->uid() ).toInt() );
+      args.insert( "id", mEventUidMapper->remoteUid( (*evIt)->uid() ) );
       mServer->call( AddEventCommand, QVariant( args ),
                      this, SLOT( updateEventFinished( const QValueList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
@@ -322,7 +322,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
   if ( oldEvent ) { // already exists
     if ( !oldEvent->isReadOnly() ) {
       writeEvent( ev, args );
-      args.insert( "id", mEventUidMapper->remoteUid( ev->uid() ).toInt() );
+      args.insert( "id", mEventUidMapper->remoteUid( ev->uid() ) );
       mServer->call( AddEventCommand, QVariant( args ),
                      this, SLOT( updateEventFinished( const QValueList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
@@ -351,7 +351,7 @@ void ResourceXMLRPC::deleteEvent( Event* ev )
   if ( !(mRightsMap[ ev->uid() ] & CAL_ACCESS_DELETE) )
     return;
 
-  int id = mEventUidMapper->remoteUid( ev->uid() ).toInt();
+  QString id = mEventUidMapper->remoteUid( ev->uid() );
 
   mServer->call( DeleteEventCommand, id,
                  this, SLOT( deleteEventFinished( const QValueList<QVariant>&, const QVariant& ) ),
@@ -411,7 +411,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
 
 void ResourceXMLRPC::deleteTodo( Todo *todo )
 {
-  int id = mTodoUidMapper->remoteUid( todo->uid() ).toInt();
+  QString id = mTodoUidMapper->remoteUid( todo->uid() );
 
   mServer->call( DeleteTodoCommand, id,
                  this, SLOT( deleteTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
@@ -451,7 +451,7 @@ void ResourceXMLRPC::changeIncidence( Incidence *incidence )
   Todo *oldTodo = mCalendar.todo( todo->uid() );
   if ( !oldTodo->isReadOnly() ) {
     writeTodo( todo, args );
-    args.insert( "id", mTodoUidMapper->remoteUid( todo->uid() ).toInt() );
+    args.insert( "id", mTodoUidMapper->remoteUid( todo->uid() ) );
     mServer->call( AddTodoCommand, QVariant( args ),
                    this, SLOT( updateTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
                    this, SLOT( fault( int, const QString&, const QVariant& ) ) );
@@ -709,8 +709,7 @@ void ResourceXMLRPC::updateEventFinished( const QValueList<QVariant>&,
 void ResourceXMLRPC::addEventFinished( const QValueList<QVariant>& list,
                                        const QVariant& id )
 {
-  int uid = list[ 0 ].toInt();
-  mEventUidMapper->add( id.toString(), QString::number( uid ) );
+  mEventUidMapper->add( id.toString(), list[ 0 ].toString() );
   mRightsMap[ id.toString() ] = CAL_ACCESS_ALL;
 
   exit_loop();
@@ -801,8 +800,7 @@ void ResourceXMLRPC::updateTodoFinished( const QValueList<QVariant>&,
 void ResourceXMLRPC::addTodoFinished( const QValueList<QVariant>& list,
                                       const QVariant& id )
 {
-  int uid = list[ 0 ].toInt();
-  mTodoUidMapper->add( id.toString(), QString::number( uid ) );
+  mTodoUidMapper->add( id.toString(), list[ 0 ].toString() );
 
   exit_loop();
 }

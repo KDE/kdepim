@@ -232,7 +232,7 @@ void ResourceXMLRPC::insertAddressee( const Addressee& addr )
 
 void ResourceXMLRPC::removeAddressee( const Addressee& addr )
 {
-  int id = mUidMapper->remoteUid( addr.uid() ).toInt();
+  QString id = mUidMapper->remoteUid( addr.uid() );
 
   mServer->call( DeleteContactCommand, id,
                  this, SLOT( deleteContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
@@ -333,9 +333,7 @@ void ResourceXMLRPC::updateContactFinished( const QValueList<QVariant>&,
 void ResourceXMLRPC::addContactFinished( const QValueList<QVariant> &list,
                                          const QVariant &id )
 {
-  int uid = list[ 0 ].toInt();
-
-  mUidMapper->add( id.toString(), QString::number( uid ) );
+  mUidMapper->add( id.toString(), list[ 0 ].toString() );
 
   exit_loop();
 }
