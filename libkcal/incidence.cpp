@@ -53,7 +53,6 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 //  Incidence::List mRelations;    Incidence::List mRelations;
   mExDates = i.mExDates;
   mExDateTimes = i.mExDateTimes;
-  mAttachments = i.mAttachments;
   mResources = i.mResources;
   mStatusString = i.mStatusString;
   mStatus = i.mStatus;
@@ -61,6 +60,9 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mPriority = i.mPriority;
   mLocation = i.mLocation;
 
+  // Alarms and Attachments are stored in ListBase<...>, which is a QValueList<...*>.
+  // We need to really duplicate the objects stored therein, otherwise deleting
+  // i will also delete all attachments from this object (setAutoDelete...)
   Alarm::List::ConstIterator it;
   for( it = i.mAlarms.begin(); it != i.mAlarms.end(); ++it ) {
     Alarm *b = new Alarm( **it );
@@ -68,6 +70,13 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
     mAlarms.append( b );
   }
   mAlarms.setAutoDelete(true);
+  
+  Attachment::List::ConstIterator it1;
+  for ( it1 = i.mAttachments.begin(); it1 != i.mAttachments.end(); ++it1 ) {
+    Attachment *a = new Attachment( **it1 );
+    mAttachments.append( a );
+  }
+  mAttachments.setAutoDelete( true );
 
   if (i.mRecurrence)
     mRecurrence = new Recurrence( *(i.mRecurrence), this );

@@ -23,6 +23,13 @@
 
 using namespace KCal;
 
+Attachment::Attachment( const Attachment &attachment)
+{
+  mMimeType = attachment.mMimeType;
+  mData = attachment.mData;
+  mBinary = attachment.mBinary;
+}
+
 Attachment::Attachment(const QString& uri, const QString& mime)
 {
   mMimeType = mime;

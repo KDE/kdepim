@@ -36,6 +36,13 @@ class Attachment
     typedef ListBase<Attachment> List;
 
     /**
+      Create a Reference to some URI by copying an existing Attachment.
+      
+      @param attachment the attachment to be duplicated
+    */
+    Attachment( const Attachment &attachment );
+
+    /**
       Create a Reference to some URI.
       
       @param uri the uri this attachment refers to
