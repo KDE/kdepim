@@ -48,6 +48,7 @@ namespace Kleo {
   class VerifyOpaqueJob;
   class SignEncryptJob;
   class DecryptVerifyJob;
+  class RefreshKeysJob;
 }
 
 class QString;
@@ -96,6 +97,7 @@ namespace Kleo {
     virtual DeleteJob         * deleteJob() const = 0;
     virtual SignEncryptJob    * signEncryptJob( bool armor=false, bool textMode=false ) const = 0;
     virtual DecryptVerifyJob  * decryptVerifyJob( bool textmode=false ) const = 0;
+    virtual RefreshKeysJob    * refreshKeysJob() const = 0;
   };
 
 }

@@ -49,6 +49,7 @@
 #include "exportjob.h"
 #include "downloadjob.h"
 #include "deletejob.h"
+#include "refreshkeysjob.h"
 
 #include <qapplication.h>
 
@@ -86,6 +87,7 @@ make_job_subclass(ImportJob)
 make_job_subclass(ExportJob)
 make_job_subclass(DownloadJob)
 make_job_subclass(DeleteJob)
+make_job_subclass(RefreshKeysJob)
 
 #undef make_job_subclass
 
@@ -104,3 +106,4 @@ make_job_subclass(DeleteJob)
 #include "exportjob.moc"
 #include "downloadjob.moc"
 #include "deletejob.moc"
+#include "refreshkeysjob.moc"

@@ -49,6 +49,7 @@
 #include <backends/qgpgme/qgpgmesignencryptjob.h>
 #include <backends/qgpgme/qgpgmedecryptverifyjob.h>
 #include <backends/qgpgme/qgpgmecryptoconfig.h>
+#include <backends/qgpgme/qgpgmerefreshkeysjob.h>
 
 // qgpgme
 #include <qgpgme/dataprovider.h>
@@ -1478,6 +1479,14 @@ Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor ) const {
 
   // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
   return new Kleo::QGpgMESecretKeyExportJob( armor );
+}
+
+Kleo::RefreshKeysJob * CryptPlugWrapper::refreshKeysJob() const {
+  if ( !_cp || _cp->mProtocol != GpgME::Context::CMS ) // fixme: add support for gpg, too
+    return 0;
+
+  // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
+  return new Kleo::QGpgMERefreshKeysJob();
 }
 
 Kleo::DownloadJob * CryptPlugWrapper::downloadJob( bool armor ) const {

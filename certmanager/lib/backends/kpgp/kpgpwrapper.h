@@ -52,6 +52,7 @@ namespace Kleo {
   class SignEncryptJob;
   class DecryptVerifyJob;
   class CryptoConfig;
+  class RefreshKeysJob;
 }
 
 namespace Kpgp {
@@ -83,6 +84,7 @@ public:
   Kleo::SignEncryptJob * signEncryptJob( bool armor=false,
                                          bool textMode=false ) const;
   Kleo::DecryptVerifyJob * decryptVerifyJob( bool textmode=false ) const;
+  Kleo::RefreshKeysJob * refreshKeysJob() const;
 
 private:
   Kpgp::Base * pgpBase() const;

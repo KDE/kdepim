@@ -24,7 +24,7 @@ kleo_HEADERS = \
 	job.h \
 	keylistjob.h keygenerationjob.h importjob.h exportjob.h downloadjob.h deletejob.h \
 	encryptjob.h decryptjob.h signjob.h verifydetachedjob.h verifyopaquejob.h \
-	decryptverifyjob.h signencryptjob.h \
+	decryptverifyjob.h signencryptjob.h refreshkeysjob.h \
 	multideletejob.h \
 	hierarchicalkeylistjob.h \
 	\

@@ -81,6 +81,7 @@ namespace Kleo {
   class SignEncryptJob;
   class DecryptVerifyJob;
   class CryptoConfig;
+  class RefreshKeysJob;
 }
 
 /*! \file cryptplugwrapper.h
@@ -1555,6 +1556,7 @@ public:
 
     Kleo::SignEncryptJob * signEncryptJob( bool armor=false, bool textmode=false ) const;
     Kleo::DecryptVerifyJob * decryptVerifyJob( bool textmode=false ) const;
+    Kleo::RefreshKeysJob * refreshKeysJob() const;
 
     GpgME::ImportResult importCertificate( const char* data, size_t length );
 

@@ -38,7 +38,7 @@
 
 #include "kpgpbackendbase.h"
 
-#include "../../../../libkdenetwork/kpgpbase.h"
+#include <kpgpbase.h>
 
 #include <backends/kpgp/kpgpkeylistjob.h>
 //#include <backends/kpgp/kpgpencryptjob.h>
@@ -148,6 +148,11 @@ Kleo::SignEncryptJob * KpgpWrapper::signEncryptJob( bool /*armor*/,
 }
 
 Kleo::DecryptVerifyJob * KpgpWrapper::decryptVerifyJob( bool /*textmode*/ ) const
+{
+  return 0;
+}
+
+Kleo::RefreshKeysJob * KpgpWrapper::refreshKeysJob() const
 {
   return 0;
 }
