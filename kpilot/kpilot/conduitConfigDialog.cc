@@ -465,8 +465,10 @@ void ConduitConfigWidget::fillLists()
 
 static void dumpConduitInfo(const KLibrary *lib)
 {
+#ifdef DEBUG
 	DEBUGKPILOT << "Plugin version = " << PluginUtility::pluginVersion(lib) << endl;
 	DEBUGKPILOT << "Plugin id      = " << PluginUtility::pluginVersionString(lib) << endl;
+#endif
 }
 
 static ConduitConfigBase *handleGeneralPages(QWidget *w, QListViewItem *p)
