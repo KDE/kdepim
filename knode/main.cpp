@@ -2,7 +2,7 @@
     main.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2000 the KNode authors.
+    Copyright (c) 1999-2001 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
                         KNODE_VERSION,
                         I18N_NOOP("A newsreader for KDE"),
                         KAboutData::License_GPL,
-                        "Copyright (c) 1999-2000 the KNode authors",
+                        "Copyright (c) 1999-2001 the KNode authors",
                         0,
                         "http://knode.sourceforge.net/");
                         

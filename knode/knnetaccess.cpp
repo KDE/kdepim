@@ -2,7 +2,7 @@
     knnetaccess.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2000 the KNode authors.
+    Copyright (c) 1999-2001 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
