@@ -437,7 +437,7 @@ void KNotesAction::getConfigInfo()
 			<< endl;
 		notes.clear();
 		memos.clear();
-		fFirstSync = true;
+		setFirstSync( true );
 	}
 
 	QValueList<KNoteID_t>::ConstIterator iNotes = notes.begin();
