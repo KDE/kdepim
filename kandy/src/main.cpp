@@ -48,7 +48,7 @@ static KCmdLineOptions options[] =
 {
    { "terminal", I18N_NOOP("Show terminal window."), 0 },
    { "mobilegui", I18N_NOOP("Show mobile GUI."), 0 },
-   { "nogui", I18N_NOOP("Don't show GUI."), 0 },
+   { "nogui", I18N_NOOP("Do not show GUI."), 0 },
    { "+[profile]", I18N_NOOP("Filename of command profile file."), 0 },
    KCmdLineLastOption // End of options.
 };
