@@ -475,6 +475,8 @@ void KAddressBook::exportVCard( KABC::VCardConverter::Version )
     name = "addressbook.vcf";
 
   QString fileName = KFileDialog::getSaveFileName( name );
+  if ( fileName.isEmpty() )
+    return;
 
   QFile outFile( fileName );
   if ( !outFile.open( IO_WriteOnly ) ) {
