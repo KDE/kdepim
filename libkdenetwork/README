@@ -34,10 +34,6 @@ Contents:
                        Maintainer: Marc Mutz <mutz@kde.org>
 		       License: GPL v2
 
-  kregexp3             A KRegExp replacement based on QRegExp from Qt3.x
-                       Maintainer: Marc Mutz <mutz@kde.org>
-		       License: GPL
-
   kfoldertree/	       Base classes for KNode's and KMail's folder lists,
   ksubscription/       subscription dialogs and accounts.
   kaccount	       Maintainer: Carsten Burghardt <burghardt@kde.org>
