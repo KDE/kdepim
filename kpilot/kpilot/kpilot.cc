@@ -104,7 +104,7 @@ KPilotInstaller::KPilotInstaller()
 
 	}
 
-	fKillDaemonOnExit = config.readBoolEntry("StopDaemonAtExit",false);
+	readConfig(config);
 
     if(config.readNumEntry("NextUniqueID", 0) == 0)
       {
@@ -160,6 +160,13 @@ KPilotInstaller::~KPilotInstaller()
 	if (fPilotCommandSocket) delete fPilotCommandSocket;
 	fPilotCommandSocket=0L;
 }
+
+void KPilotInstaller::readConfig(KConfig& config)
+{
+	config.setGroup(QString::null);
+	fKillDaemonOnExit = config.readBoolEntry("StopDaemonAtExit",false);
+}
+
 
 #include "kpilot.xpm"
 
@@ -852,6 +859,8 @@ void KPilotInstaller::menuCallback(int item)
 			{
 				cerr << fname << ": Updating link." << endl;
 			}
+
+			readConfig(KPilotLink::getConfig());
 
 			// Update the link to reflect new settings.
 			//
