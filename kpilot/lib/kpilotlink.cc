@@ -35,7 +35,7 @@ static const char *kpilotlink_id = "$Id$";
 #include <pi-version.h>
 
 #ifndef PILOT_LINK_VERSION
-#error "You need at least pilot-link version 0.10.1"
+#error "You need at least pilot-link version 0.9.5"
 #endif
 
 #define PILOT_LINK_NUMBER	((100*PILOT_LINK_VERSION) + \
@@ -294,8 +294,13 @@ bool KPilotDeviceLink::open()
 			goto errInit;
 		}
 
+#if PILOT_LINK_NUMBER < 10
+		fPilotMasterSocket = pi_socket(PI_AF_SLP,
+			PI_SOCK_STREAM, PI_PF_PADP);
+#else
 		fPilotMasterSocket = pi_socket(PI_AF_PILOT,
 			PI_SOCK_STREAM, PI_PF_DLP);
+#endif
 
 		if (fPilotMasterSocket<1)
 		{
@@ -319,7 +324,11 @@ bool KPilotDeviceLink::open()
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
 #endif
 
+#if PILOT_LINK_NUMBER < 10
+	addr.pi_family = PI_AF_SLP;
+#else
 	addr.pi_family = PI_AF_PILOT;
+#endif
 	strncpy(addr.pi_device, QFile::encodeName(fPilotPath),sizeof(addr.pi_device));
 
 
@@ -445,6 +454,8 @@ void KPilotDeviceLink::acceptDevice()
 		return;
 	}
 
+	emit logProgress(QString::null,10);
+
 	fCurrentPilotSocket = pi_accept(fPilotMasterSocket, 0, 0);
 	if (fCurrentPilotSocket == -1)
 	{
@@ -469,24 +480,6 @@ void KPilotDeviceLink::acceptDevice()
 
 	emit logProgress(QString::null, 30);
 
-	struct SysInfo sys_info;
-	if (dlp_ReadSysInfo(fCurrentPilotSocket,&sys_info) < 0)
-	{
-		emit logError(i18n("Unable to read system information from Pilot"));
-		fStatus=PilotLinkError;
-		return;
-	}
-#ifdef DEBUG
-	else
-	{
-		DEBUGDAEMON << fname 
-			<< ": RomVersion=" << sys_info.romVersion
-			<< " Locale=" << sys_info.locale
-			<< " Product=" << sys_info.prodID << endl;
-	}
-#endif
-	dlp_OpenConduit(fCurrentPilotSocket);
-
 	fPilotUser = new KPilotUser;
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
@@ -505,7 +498,7 @@ void KPilotDeviceLink::acceptDevice()
 		<< ": Read user name " << fPilotUser->getUserName() << endl;
 #endif
 
-	emit logProgress(i18n("Checking last PC..."), 70);
+	emit logProgress(i18n("Checking last PC..."), 60);
 
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
@@ -524,8 +517,31 @@ void KPilotDeviceLink::acceptDevice()
 	}
 	fStatus = AcceptedDevice;
 
-	emit logProgress(QString::null, 100);
+	emit logProgress(QString::null,70);
 
+	struct SysInfo sys_info;
+	if (dlp_ReadSysInfo(fCurrentPilotSocket,&sys_info) < 0)
+	{
+		emit logError(i18n("Unable to read system information from Pilot"));
+		fStatus=PilotLinkError;
+		return;
+	}
+#ifdef DEBUG
+	else
+	{
+		DEBUGDAEMON << fname
+			<< ": RomVersion=" << sys_info.romVersion
+			<< " Locale=" << sys_info.locale
+#if PILOT_LINK_NUMBER < 10
+			/* No prodID member */
+#else
+			<< " Product=" << sys_info.prodID
+#endif
+			<< endl;
+	}
+#endif
+
+	emit logProgress(QString::null, 100);
 	emit deviceReady();
 }
 
@@ -807,6 +823,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.25  2002/08/31 22:35:46  mhunter
+// CVS_SILENT Corrected typographical errors
+//
 // Revision 1.24  2002/08/30 22:24:55  adridg
 // - Improved logging, connected the right signals now
 // - Try to handle dlp_ReadUserInfo failures sensibly
