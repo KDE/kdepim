@@ -304,7 +304,7 @@ public:
 	virtual QString statusString() const;
 
 public slots:
-	virtual void exec();
+	virtual void exec() = 0;
 
 signals:
 	void syncDone(SyncAction *);
@@ -325,6 +325,9 @@ protected:
 
 
 // $Log$
+// Revision 1.32  2001/09/23 18:24:59  adridg
+// New syncing architecture
+//
 // Revision 1.31  2001/09/16 12:24:54  adridg
 // Added sensible subclasses of KPilotLink, some USB support added.
 //

@@ -63,15 +63,6 @@ SyncAction::SyncAction(KPilotDeviceLink *p,
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void SyncAction::exec()
-{
-	FUNCTIONSETUP;
-
-	DEBUGDAEMON << fname
-		<< ": NULL action executed."
-		<< endl;
-}
-
 /* virtual */ QString SyncAction::statusString() const
 {
 	QString s("status=");
@@ -516,6 +507,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.56  2001/09/23 18:24:59  adridg
+// New syncing architecture
+//
 // Revision 1.55  2001/09/16 12:24:54  adridg
 // Added sensible subclasses of KPilotLink, some USB support added.
 //
