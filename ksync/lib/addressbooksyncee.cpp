@@ -1,6 +1,6 @@
 #include <kdebug.h>
 #include <kabc/resource.h>
-#include <kresources/resourcemanager.h>
+#include <kresources/manager.h>
 
 #include "addressbooksyncee.h"
 
@@ -57,7 +57,7 @@ AddressBookSyncee::~AddressBookSyncee()
 
 bool AddressBookSyncee::read()
 {
-  KRES::ResourceManager<KABC::Resource> manager( "contact" );
+  KRES::Manager<KABC::Resource> manager( "contact" );
   KABC::Resource *resource = manager.createResource( "file" );
   mAddressBook->addResource( resource );
   return mAddressBook->load();
