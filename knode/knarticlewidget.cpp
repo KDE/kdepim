@@ -134,9 +134,10 @@ QByteArray KNMimeSource::encodedData(const char *) const
 //=============================================================================================================
 
 
-KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
+KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiClient, 
+    QWidget *parent, const char *name )
     : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false),
-      emuKMail(false), f_inddialog(0), a_ctions(actColl)
+      emuKMail(false), f_inddialog(0), a_ctions(actColl), mGuiClient(guiClient)
 {
   instances()->append(this);
   setNotifyClick( true );
@@ -400,8 +401,7 @@ void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
     anchorClicked(a, e->button(), &e->globalPos());
   else
     if (e->button()==RightButton) {
-      QPopupMenu *popup = static_cast<QPopupMenu *>(knGlobals.guiClient->factory()->container("body_popup",
-knGlobals.guiClient));
+      QPopupMenu *popup = static_cast<QPopupMenu *>(mGuiClient->factory()->container("body_popup", mGuiClient));
       if ( popup )
         popup->popup(e->globalPos());
     }

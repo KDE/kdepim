@@ -97,7 +97,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   if(art)
     setCaption(art->subject()->asUnicodeString());
 
-  artW=new KNArticleWidget(actionCollection(),this);
+  artW = new KNArticleWidget(actionCollection(), this, this);
   artW->setArticle(art);
   setCentralWidget(artW);
 

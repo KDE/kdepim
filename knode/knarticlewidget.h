@@ -77,7 +77,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     enum browserType  { BTkonqueror=0 , BTnetscape=1 };
     enum anchorType   { ATurl, ATauthor, ATattachment, ATnews, ATmsgid, ATmailto, ATunknown };
 
-    KNArticleWidget(KActionCollection* actColl, QWidget *parent=0, const char *name=0 );
+    KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiClient, 
+      QWidget *parent=0, const char *name=0 );
     ~KNArticleWidget();
 
     bool scrollingDownPossible();       // needed for "read-through"
@@ -144,6 +145,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
   //-------------------------- <Actions> ---------------------------
 
     KActionCollection *a_ctions;
+    KXMLGUIClient *mGuiClient;
 
     KAction *a_ctSave,
             *a_ctPrint,

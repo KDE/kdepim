@@ -92,7 +92,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   }
   KDockWidgetHeader *header = new KDockWidgetHeader(a_rtDock, "artDockHeader");
   a_rtDock->setHeader(header);
-  a_rtView=new KNArticleWidget( actionCollection(), a_rtDock ,"artView");
+  a_rtView = new KNArticleWidget(actionCollection(), knGlobals.guiClient, a_rtDock ,"artView");
   header->setDragPanel(new KNDockWidgetHeaderDrag(a_rtView, header, a_rtDock));
   knGlobals.artWidget=a_rtView;
   a_rtDock->setWidget(a_rtView);
