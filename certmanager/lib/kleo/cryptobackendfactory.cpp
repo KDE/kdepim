@@ -59,10 +59,12 @@ Kleo::CryptoBackendFactory::CryptoBackendFactory()
   mSelf = this;
   mConfigObject = 0;
   mBackendList.push_back( new QGpgMEBackend() );
+#if 0 // disabled for kde-3.3
   mBackendList.push_back( new PGP2Backend() );
   mBackendList.push_back( new PGP5Backend() );
   mBackendList.push_back( new PGP6Backend() );
   mBackendList.push_back( new GPG1Backend() );
+#endif
   scanForBackends();
   readConfig();
 }
@@ -155,6 +157,7 @@ void Kleo::CryptoBackendFactory::setSMIMEBackend( const CryptoBackend* backend )
   const QString name = backend ? backend->name() : QString::null;
   KConfigGroup group( configObject(), "Backends" );
   group.writeEntry( "SMIME", name );
+  configObject()->sync();
   mSMIMEBackend = backend;
 }
 
@@ -162,6 +165,7 @@ void Kleo::CryptoBackendFactory::setOpenPGPBackend( const CryptoBackend* backend
   const QString name = backend ? backend->name() : QString::null;
   KConfigGroup group( configObject(), "Backends" );
   group.writeEntry( "OpenPGP", name );
+  configObject()->sync();
   mOpenPGPBackend = backend;
 }
 
