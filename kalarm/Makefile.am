@@ -27,12 +27,12 @@ alarmguiiface.h: $(top_srcdir)/kalarmd/alarmguiiface.h
 autostart_DATA = kalarm.tray.desktop
 autostartdir = $(prefix)/share/autostart
 
-kdelnkdir = $(kde_appsdir)/Utilities/More
-kdelnk_DATA = kalarm.desktop
+install-data-local:
+	$(mkinstalldirs) $(kde_appsdir)/Applications/
+	$(INSTALL_DATA) $(srcdir)/kalarm.desktop $(kde_appsdir)/Applications/kalarm.desktop
 
-install-data-local: uninstall.desktop
-	$(mkinstalldirs) $(kde_appsdir)/Applications
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(kde_appsdir)/Applications/kalarm.desktop
+uninstall-local:
+	-rm -f $(kde_appsdir)/Applications/kalarm.desktop
 
 KDE_ICON = AUTO
 
