@@ -27,14 +27,14 @@ QPixmap* KNLVItemBase::pms[15];
 
 void KNLVItemBase::initIcons()
 {
-  for(int i=0; i<15; i++) pms[i]=0;
+  for(int i=0; i<16; i++) pms[i]=0;
 }
 
 
 
 void KNLVItemBase::clearIcons()
 {
-	for(int i=0; i<15; i++) delete pms[i];	
+	for(int i=0; i<16; i++) delete pms[i];	
 }
 
 
@@ -52,6 +52,7 @@ QPixmap& KNLVItemBase::icon(pixmapType t)
 			case PTeyes:						*pms[t]=UserIcon("eyes");					break;
 			case PTmail:						*pms[t]=UserIcon("mail");					break;
 			case PTposting:					*pms[t]=UserIcon("posting");			break;
+			case PTcontrol:					*pms[t]=UserIcon("ctlart");		  	break;			
 			case PTstatusSent:			*pms[t]=UserIcon("stat_sent");		break;
 			case PTstatusEdit:			*pms[t]=UserIcon("stat_edit");		break;
 			case PTstatusCanceled:	*pms[t]=UserIcon("stat_cncl");		break;

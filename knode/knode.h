@@ -102,6 +102,7 @@ class KNodeApp : public KTMainWindow
     bool queryExit();
 
 	  //actions
+	  KAction *actCancel, *actSupersede;       // located here, because KNSaved- *and* KNReadArticleManager provide cancel/supersede
     KToggleAction *actShowAllHdrs;
 
    	//popups
@@ -128,11 +129,13 @@ class KNodeApp : public KTMainWindow
   	//action-slots	  	
   	void slotFileQuit();
   	void slotToggleShowAllHdrs();
+  	void slotCancel();
+  	void slotSupersede();
    	void slotToggleToolBar();
   	void slotToggleStatusBar();
   	void slotConfKeys();
   	void slotConfToolbar();
-  	void slotSettings();  	  	
+  	void slotSettings();  	
   	  	
   	//view-slots  	
 	 	void slotCollectionSelected(QListViewItem *it);

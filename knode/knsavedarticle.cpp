@@ -84,13 +84,6 @@ void KNSavedArticle::clear()
 
 
 
-bool KNSavedArticle::editable()
-{
-	return ( 	( (s_tatus==AStoPost || s_tatus==AStoMail)
-							&& type()!=ATcontrol ));
-}
-
-
 void KNSavedArticle::updateListItem()
 {
 	if(!i_tem) return;
@@ -98,8 +91,15 @@ void KNSavedArticle::updateListItem()
 	i_tem->setText(0, s_ubject);
 	i_tem->setText(3, timeString());
 	
-	if(isMail()) i_tem->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTmail));
-	else i_tem->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTposting));
+	if (isMail())
+	  i_tem->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTmail));
+	else {
+	  if (type()==ATsaved)
+	  	i_tem->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTposting));
+	  else
+  	  i_tem->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTcontrol));
+  }
+
 	if(sent() && !canceled()) i_tem->setPixmap(1, KNLVItemBase::icon(KNLVItemBase::PTstatusSent));
 	else if(canceled()) i_tem->setPixmap(1, KNLVItemBase::icon(KNLVItemBase::PTstatusCanceled));
 	else i_tem->setPixmap(1, KNLVItemBase::icon(KNLVItemBase::PTstatusEdit));
@@ -119,4 +119,19 @@ const QCString& KNSavedArticle::firstDestination()
 	else ret="";
 		
 	return ret;
+}
+
+
+//==============================================================================================
+
+
+KNControlArticle::KNControlArticle(controlType t, articleStatus s)
+  : KNSavedArticle(s), c_tlType(t)
+{
+}
+
+
+
+KNControlArticle::~KNControlArticle()
+{
 }

@@ -24,10 +24,10 @@ class KNLVItemBase : public QListViewItem  {
 	public:
 		enum pixmapType { 	PTgreyBall=0, PTredBall=1, PTgreyBallChkd=2,
 												PTredBallChkd=3, PTnewFups=4, PTeyes=5,
-												PTmail=6, PTposting=7, PTstatusSent=8,
-												PTstatusEdit=9, PTstatusCanceled=10,
-												PTnntp=11, PTgroup=12, PTfolder=13,
-												PTnull=14 };
+												PTmail=6, PTposting=7, PTcontrol=8,
+                        PTstatusSent=9,	PTstatusEdit=10,
+                        PTstatusCanceled=11, PTnntp=12,
+                        PTgroup=13, PTfolder=14, PTnull=15 };
 												
 		KNLVItemBase(KNListView *view);      // restricted to KNListView to prevent that the
 		KNLVItemBase(KNLVItemBase *item);    // static_cast in ~KNLVItemBase fails. (single selection in multi-mode hack)

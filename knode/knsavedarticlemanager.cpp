@@ -25,7 +25,6 @@
 
 #include "knsavedarticlemanager.h"
 #include "knhdrviewitem.h"
-#include "kncontrolarticle.h"
 #include "kngroup.h"
 #include "knfetcharticle.h"
 #include "knfolder.h"
@@ -56,9 +55,6 @@ KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am
   actDelete = new KAction(i18n("&Delete"), Key_Delete , this, SLOT(slotDelete()),
                           &actionCollection, "article_delete");
   actDelete->setEnabled(false);
-  actCancel = new KAction(i18n("&Cancel post"), 0 , this, SLOT(slotCancel()),
-                          &actionCollection, "article_cancel");
-  actCancel->setEnabled(false);
   actSendNow = new KAction(i18n("Send &now"), 0 , this, SLOT(slotSendNow()),
                            &actionCollection, "article_sendNow");
   actSendNow->setEnabled(false);
@@ -183,7 +179,6 @@ void KNSavedArticleManager::setCurrentArticle(KNSavedArticle *a)
 	}	else {
     actEdit->setEnabled(false);
     actDelete->setEnabled(false);
-    actCancel->setEnabled(false);
     actSendNow->setEnabled(false);
     actSendLater->setEnabled(false);
 	}
@@ -457,48 +452,56 @@ void KNSavedArticleManager::sendOutbox()
 
 
 
-void KNSavedArticleManager::cancel(KNSavedArticle *a)
+void KNSavedArticleManager::cancel(KNSavedArticle *a=0)
 {
-	KNControlArticle *ca=0;
-	QCString hl, ctl;
-	DwDateTime dt;
-	if(!a) a=c_urrentArticle;
-	if(!a) return;
+	if (!a) a=c_urrentArticle;
+	if (!a) return;
 	
-	if(!a->sent())
-		KMessageBox::information(0, i18n("Only sent articles can be canceled!"));
-	else if(a->isMail())
-		KMessageBox::information(0, i18n("Emails cannot be canceled!"));
-	else if(a->canceled())
-		KMessageBox::information(0, i18n("This article has already been canceled!"));	
-	else {
-		if(KMessageBox::Yes==KMessageBox::questionYesNo(0, i18n("Do you really want to cancel this article?"))) return;
-		hl=a->headerLine("Message-ID");
-		if(hl.isEmpty()) {
-			KMessageBox::information(0, i18n("This article cannot be canceled,\nbecause it's message-id has not been created by KNode!"));
-			return;
-		}
-		ctl="cancel "+hl;
-		ca=new KNControlArticle();
-		ca->initContent();
-		ca->addHeaderLine("Subject: Control message");
-		hl=a->headerLine("From");
-		ca->setHeader(KNArticleBase::HTfrom, hl);
-		hl=a->headerLine("Newsgroups");
-		ca->setHeader(KNArticleBase::HTnewsgroups, hl);
-		dt.Assemble();
-		ca->setHeader(KNArticleBase::HTdate, dt.AsString().c_str());
-		ca->setTimeT(dt.AsUnixTime());
-		ca->setHeader(KNArticleBase::HTcontrol, ctl);
-		ca->parse();
-		ca->setServerId(a->serverId());
-		a->setStatus(KNArticleBase::AScanceled);
-		a->setHeader(KNArticleBase::HTxknstatus, "canceled");
-		saveArticle(a);
-		a->updateListItem();
-		a->folder()->setToSync(true);
-		sendArticle(ca);
-	}
+  if (cancelAllowed(a))         // check if we can cancel
+    if (generateCancel(a,getAccount(a))) {
+   		a->setStatus(KNArticleBase::AScanceled);      // the user agreed...
+	  	a->setHeader(KNArticleBase::HTxknstatus, "canceled");
+  		saveArticle(a);
+  		a->updateListItem();
+  		a->folder()->setToSync(true);
+  	}
+}
+
+
+
+void KNSavedArticleManager::cancel(KNFetchArticle *a, KNGroup *g)
+{
+  if (!a || !g) return;
+
+  if (cancelAllowed(a,g))
+		generateCancel(a,g->account());
+}
+
+
+
+void KNSavedArticleManager::supersede(KNSavedArticle *a=0)
+{
+	if (!a) a=c_urrentArticle;
+	if (!a) return;
+	
+  if (cancelAllowed(a))         // check if we can cancel
+    if (generateSupersede(a,getAccount(a))) {
+   		a->setStatus(KNArticleBase::AScanceled);      // the user agreed...
+	  	a->setHeader(KNArticleBase::HTxknstatus, "canceled");
+  		saveArticle(a);
+  		a->updateListItem();
+  		a->folder()->setToSync(true);
+  	}
+}
+
+
+
+void KNSavedArticleManager::supersede(KNFetchArticle *a, KNGroup *g)
+{
+  if (!a || !g) return;
+	
+  if (cancelAllowed(a,g))
+		generateSupersede(a,g->account());
 }
 
 
@@ -679,7 +682,6 @@ void KNSavedArticleManager::showArticle(KNArticle *a, bool force)
 	KNArticleManager::showArticle(a, force);
   actEdit->setEnabled(true);
   actDelete->setEnabled(true);
-  actCancel->setEnabled(true);
   actSendNow->setEnabled(true);
   actSendLater->setEnabled(true);
 }
@@ -691,7 +693,6 @@ void KNSavedArticleManager::showError(KNArticle *a, const QString &error)
   KNArticleManager::showError(a, error);
   actEdit->setEnabled(false);
   actDelete->setEnabled(false);
-  actCancel->setEnabled(false);
   actSendNow->setEnabled(false);
   actSendLater->setEnabled(false);
 }
@@ -756,7 +757,7 @@ void KNSavedArticleManager::jobDone(KNJobData *job)
 		if(f_older==fOutbox) showHdrs();
     actSendOutbox->setEnabled(true);
 	}
-	else if(art->type()!=KNArticleBase::ATcontrol) {
+  else {
 		if(art->isMail()) {
 			art->setHeader(KNArticleBase::HTxknstatus, "mailed");
 			art->setStatus(KNArticleBase::ASmailed);
@@ -769,13 +770,7 @@ void KNSavedArticleManager::jobDone(KNJobData *job)
 		}
 		fSent->addArticle(art);
 		if(f_older==fSent) showHdrs();
-	}
-	else {
-		if(art->folder()!=0) art->folder()->removeArticle(art);
-		delete art;
-		delete job;
 	  actSendOutbox->setEnabled(!fOutbox->isEmpty());
-		return;
 	}
 	delete job;
 }
@@ -811,12 +806,162 @@ void KNSavedArticleManager::mailToClicked(KNArticleWidget *aw)
 }
 
 
+
 void KNSavedArticleManager::updateStatusString()
 {
 	if(f_older) {
 	  xTop->setStatusMsg(i18n(" %1 : %2 messages").arg(f_older->name()).arg(f_older->length()), SB_GROUP);
 	  xTop->setCaption(f_older->name());
 	}
+}
+
+
+
+bool KNSavedArticleManager::cancelAllowed(KNSavedArticle *a)
+{
+  if (!a)
+    return false;
+  if (a->isMail()) {
+		KMessageBox::information(0, i18n("Emails cannot be canceled or superseded!"));
+		return false;
+  }
+  if ((a->type()==KNArticleBase::ATcontrol) && (static_cast<KNControlArticle*>(a)->ctlType()==KNArticleBase::CTcancel)) {
+		KMessageBox::information(0, i18n("Cancel messages cannot be canceled or superseded!"));
+		return false;
+  }
+	if (!a->sent()) {
+		KMessageBox::information(0, i18n("Only sent articles can be canceled or superseded!"));
+		return false;
+  }
+	if (a->canceled()) {
+		KMessageBox::information(0, i18n("This article has already been canceled or superseded!"));	
+		return false;
+  }		
+	if(a->headerLine("Message-ID").isEmpty()) {
+		KMessageBox::information(0, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article\nin the newsgroup and cancel (or supersede) it there."));
+		return false;
+	}
+	return true;
+}
+
+
+
+bool KNSavedArticleManager::cancelAllowed(KNFetchArticle *a, KNGroup *g)
+{
+  if (!a || !g)
+    return false;
+	KNUserEntry *user = defaultUser;
+	if (g->user())
+	  user = g->user();
+  if (user->name()!=a->fromName()||user->email()!=a->fromEmail()) {
+		KMessageBox::information(0, i18n("This article does not appear to be from you.\nYou can only cancel or supersede you own articles."));	
+    return false;
+  }
+  if (!a->hasContent())  {
+  	KMessageBox::information(0, i18n("You have to download the article body\nbefore you can cancel or supersede the article."));	
+    return false;
+  }
+  return true;
+}
+
+
+
+// returns false if aborted by the user
+bool KNSavedArticleManager::generateCancel(KNArticle *a, KNNntpAccount *acc)
+{
+	if(KMessageBox::No==KMessageBox::questionYesNo(0, i18n("Do you really want to cancel this article?")))
+	  return false;
+  bool sendNow = (KMessageBox::Yes==KMessageBox::questionYesNo(0, i18n("Do you want to send the cancel\nmessage now or later?"),QString::null,i18n("&Now"),i18n("&Later")));
+
+	QCString mid;
+	if (genMId) {
+		if (MIdhost.isEmpty()) {
+			KMessageBox::information(0, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+	  	return false;
+	  } else {
+	  	mid="<"+KNArticleBase::uniqueString();
+			mid+="@"+MIdhost+">";
+		}
+	}
+	
+	KNControlArticle *ca=new KNControlArticle(KNArticleBase::CTcancel, KNArticleBase::AStoPost);
+  ca->setServerId(acc->id());
+	acc->incUnsentCount();
+	ca->initContent();
+	if(genMId) ca->setHeader(KNArticleBase::HTmessageId, mid);
+	
+	QCString id=a->headerLine("Message-ID");
+	DwDateTime dt;
+	dt.Assemble();
+  ca->setHeader(KNArticleBase::HTsubject, "cancel of "+id);
+	ca->setHeader(KNArticleBase::HTfrom, a->headerLine("From"));
+	ca->setHeader(KNArticleBase::HTnewsgroups, a->headerLine("Newsgroups"));
+	ca->setHeader(KNArticleBase::HTdate, dt.AsString().c_str());
+	ca->setTimeT(dt.AsUnixTime());
+	ca->setHeader(KNArticleBase::HTcontrol,"cancel "+id);
+	ca->addBodyLine("cancel by original author");
+	
+	ca->parse();
+	sendArticle(ca, sendNow);
+
+  return true;
+}
+
+	
+
+// returns false if aborted by the user
+bool KNSavedArticleManager::generateSupersede(KNArticle *a, KNNntpAccount *acc)
+{
+	if(KMessageBox::No==KMessageBox::questionYesNo(0, i18n("Do you really want to supersede this article?")))
+	  return false;
+
+	QCString mid;
+	if (genMId) {
+		if (MIdhost.isEmpty()) {
+			KMessageBox::information(0, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+	  	return false;
+	  } else {
+	  	mid="<"+KNArticleBase::uniqueString();
+			mid+="@"+MIdhost+">";
+		}
+	}
+	
+	KNControlArticle *ca=new KNControlArticle(KNArticleBase::CTsupersede, KNArticleBase::AStoPost);	
+  ca->setServerId(acc->id());
+	acc->incUnsentCount();
+	ca->initContent();
+	if(genMId) ca->setHeader(KNArticleBase::HTmessageId, mid);
+	
+ 	//x-headers
+	QString dir(KGlobal::dirs()->saveLocation("appdata"));
+	if (dir==QString::null)
+		displayInternalFileError();
+	else {
+		KNFile f(dir+"xheaders");
+		if(f.open(IO_ReadOnly)) {
+			while(!f.atEnd())
+				a->addHeaderLine(f.readLine(), true);		
+			f.close();
+		}		
+	}
+
+  ca->setHeader(KNArticleBase::HTsubject, a->headerLine("Subject"));
+	ca->setHeader(KNArticleBase::HTnewsgroups, a->headerLine("Newsgroups"));
+	QCString ref = a->headerLine("References");
+	if (!ref.isEmpty())
+  	ca->setHeader(KNArticleBase::HTreferences, ref);	
+  ca->setHeader(KNArticleBase::HTsupersedes, a->headerLine("Message-ID"));
+	ca->parse();
+	
+  KNMimeContent *body=a->mainContent();
+	if(!body->mimeInfo()->isReadable()) body->prepareForDisplay();
+	for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine()) {
+		if(!incSig && strncmp("-- ", line, 3)==0) break;
+		ca->addBodyLine(line);
+	}
+	openInComposer(ca);		
+			
+  return true;
 }
 
 

@@ -278,6 +278,14 @@ void KNodeApp::initActions()
                                      actionCollection(), "view_showAllHdrs");
   actShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
 
+
+  actCancel = new KAction(i18n("&Cancel"), 0 , this, SLOT(slotCancel()),
+                          actionCollection(), "article_cancel");
+  actCancel->setEnabled(false);
+  actSupersede = new KAction(i18n("&Supersede"), 0 , this, SLOT(slotSupersede()),
+                             actionCollection(), "article_supersede");
+  actSupersede->setEnabled(false);
+
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
   KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
@@ -397,6 +405,24 @@ void KNodeApp::slotToggleShowAllHdrs()
   KNArticleWidget::toggleFullHeaders();
 }
 
+
+void KNodeApp::slotCancel()
+{
+  if (FAManager->hasCurrentArticle())
+    SAManager->cancel(FAManager->currentArticle(),FAManager->group());
+  else
+    SAManager->cancel();
+}
+
+ 	
+void KNodeApp::slotSupersede()
+{
+  if (FAManager->hasCurrentArticle())
+    SAManager->supersede(FAManager->currentArticle(),FAManager->group());
+  else
+    SAManager->supersede();
+}
+
   	
 void KNodeApp::slotToggleToolBar()
 {
@@ -483,6 +509,8 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
 	AManager->setCurrentAccount(acc);
 	GManager->setCurrentGroup(grp);
 	FoManager->setCurrentFolder(fldr);
+  actCancel->setEnabled(false);
+  actSupersede->setEnabled(false);
 }
 
 
@@ -497,7 +525,9 @@ void KNodeApp::slotHeaderSelected(QListViewItem *it)
 		else sart=(KNSavedArticle*)((KNHdrViewItem*)it)->art;
 	}
 	FAManager->setCurrentArticle(fart);
-	SAManager->setCurrentArticle(sart);			
+	SAManager->setCurrentArticle(sart);
+  actCancel->setEnabled(true);
+  actSupersede->setEnabled(true);
 }
 
 

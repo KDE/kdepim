@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNReader" version="2">
+<kpartgui name="KNReader" version="3">
 
 <ActionProperties>
 <Action name="options_configure" icon="settings"/>
@@ -15,6 +15,9 @@
     <Action name="article_postReply"/>
     <Action name="article_mailReply"/>
     <Action name="article_forward"/>
+    <Separator/>
+    <Action name="article_cancel"/>
+    <Action name="article_supersede"/>
   </Menu>
 </MenuBar>
 

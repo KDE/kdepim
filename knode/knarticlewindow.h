@@ -42,6 +42,8 @@ class KNArticleWindow : public KTMainWindow  {
   	void slotArtReply();
   	void slotArtRemail();
   	void slotArtForward();
+  	void slotArtCancel();
+  	void slotArtSupersede();
 };
 
 #endif

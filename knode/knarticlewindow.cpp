@@ -49,6 +49,11 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   new KAction(i18n("&Forward"),"fwd", Key_F , this, SLOT(slotArtForward()),
               actionCollection(), "article_forward");
 
+  new KAction(i18n("&Cancel"), 0 , this, SLOT(slotArtCancel()),
+                   actionCollection(), "article_cancel");
+  new KAction(i18n("&Supersede"), 0 , this, SLOT(slotArtSupersede()),
+                   actionCollection(), "article_supersede");
+
   createGUI( "knreaderui.rc",false);
   guiFactory()->addClient(artW->part());
   conserveMemory();
@@ -74,7 +79,7 @@ void KNArticleWindow::slotFileClose()
 
 void KNArticleWindow::slotArtReply()
 {
-	xTop->sArtManager()->reply(artW->article(), (KNGroup*)artW->collection());
+	xTop->sArtManager()->reply(artW->article(),static_cast<KNGroup*>(artW->collection()));
 }
 
 
@@ -91,6 +96,19 @@ void KNArticleWindow::slotArtForward()
 	xTop->sArtManager()->forward(artW->article());
 }
 
+
+
+void KNArticleWindow::slotArtCancel()
+{
+	xTop->sArtManager()->cancel(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
+}
+
+
+
+void KNArticleWindow::slotArtSupersede()
+{
+	xTop->sArtManager()->supersede(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
+}
 
 
 //--------------------------------

@@ -360,6 +360,7 @@ QCString KNArticleBase::headerTypeToString(headerType t)
 		case HTuserAgent:   	s="User-Agent";                 break;
 		case HTxknstatus:     s="X-KNode-Status";             break;
 		case HTxkntempfile:   s="X-KNode-Tempfile";           break;
+		case HTsupersedes:    s="Supersedes";                 break;		
 		default:              s="X-Unknown";                  break;
 	}
 	return s;
@@ -390,6 +391,7 @@ int KNArticleBase::stringToHeaderType(const char *s)
 	else if(strncasecmp(s, "User-Agent", 10)==0)                    t=HTuserAgent;
 	else if(strncasecmp(s, "X-KNode-Status", 14)==0)                t=HTxknstatus;
 	else if(strncasecmp(s, "X-KNode-Tempfile", 16)==0)              t=HTxkntempfile;
+  else if(strncasecmp(s, "Supersedes", 10)==0)                    t=HTsupersedes;	
 	else                                                            t=HTunknown;
 	
 	return t;

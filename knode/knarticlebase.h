@@ -59,9 +59,10 @@ class KNArticleBase {
    												HTdate=70, HTreferences=75, HTlines=80, HTorga=85,
 													HTmimeVersion=90, HTcontentType=100, HTencoding=110,
 													HTdisposition=120, HTuserAgent=140,
-													HTxknstatus=150, HTxkntempfile=160, HTunknown=200 }; 									
+													HTxknstatus=150, HTxkntempfile=160,
+													HTsupersedes=170, HTunknown=200 }; 									
 
-		enum controlType {		CTcancel=0, CTunknown=1 };
+		enum controlType {		CTcancel=0, CTsupersede=2, CTunknown=1 };
 		
 		enum contentCategory  { CCmain=10, CCalternative=20, CCattachement=30,
 		                        CCcontainer=40 };

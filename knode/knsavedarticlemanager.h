@@ -32,6 +32,7 @@ class KNGroup;
 class KNJobData;
 class KNComposer;
 class KNFolder;
+class KNFetchArticle;
 class KNSavedArticle;
 class KNSearchDialog;
 class KNSendErrorDialog;
@@ -67,6 +68,9 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
 		void sendArticle(KNSavedArticle *a=0, bool now=true);
 		void sendOutbox();
 		void cancel(KNSavedArticle *a=0);
+		void cancel(KNFetchArticle *a, KNGroup *g);		
+		void supersede(KNSavedArticle *a=0);
+		void supersede(KNFetchArticle *a, KNGroup *g);		
 			
 		void jobDone(KNJobData *job);
 		
@@ -80,7 +84,11 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
 		void showArticle(KNArticle *a, bool force=false);
 		void showError(KNArticle *a, const QString &error);
 		void updateStatusString();
-		
+    bool cancelAllowed(KNSavedArticle *a);
+    bool cancelAllowed(KNFetchArticle *a, KNGroup *g);
+    bool generateCancel(KNArticle *a, KNNntpAccount *acc);
+    bool generateSupersede(KNArticle *a, KNNntpAccount *acc);
+				
 		KNSavedArticle *c_urrentArticle;
 		KNFolder *f_older, *fDrafts, *fOutbox, *fSent;
 		KNUserEntry *defaultUser;
@@ -92,8 +100,7 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
 		//KNArticleFilter *f_ilter;
 		KNAccountManager *accM;
 		QList<KNComposer> *comList;
-		KAction *actSendOutbox, *actEdit, *actDelete, *actCancel,
-		        *actSendNow, *actSendLater;
+		KAction *actSendOutbox, *actEdit, *actDelete, *actSendNow, *actSendLater;
 		KActionCollection actionCollection;		
 				
 	protected slots:
