@@ -110,6 +110,7 @@ QString Task::parent() const
 void Task::setDueDate( const QDateTime& date )
 {
   mDueDate = date;
+  mHasDueDate = true;
 }
 
 QDateTime Task::dueDate() const
@@ -125,6 +126,7 @@ bool Task::hasDueDate() const
 void Task::setCompletedDate( const QDateTime& date )
 {
   mCompletedDate = date;
+  mHasCompletedDate = true;
 }
 
 QDateTime Task::completedDate() const
@@ -170,6 +172,8 @@ bool Task::loadAttribute( QDomElement& element )
     setDueDate( stringToDateTime( element.text() ) );
   else if ( tagName == "parent" )
     setParent( element.text() );
+  else if ( tagName == "x-completed-date" )
+    setCompletedDate( stringToDateTime( element.text() ) );
   else
     return Incidence::loadAttribute( element );
 
@@ -217,7 +221,8 @@ bool Task::saveAttributes( QDomElement& element ) const
   if ( !parent().isNull() )
     writeString( element, "parent", parent() );
 
-  // TODO: completeddate
+  if ( hasCompletedDate() )
+    writeString( element, "x-completed-date", dateTimeToString( completedDate() ) );
 
   return true;
 }
@@ -271,7 +276,10 @@ void Task::setFields( const KCal::Todo* task )
     mHasDueDate = false;
   setParent( QString::null );
 
-  // TODO: Completed date
+  if ( task->hasCompletedDate() )
+    setCompletedDate( task->completed() );
+  else
+    mHasCompletedDate = false;
 }
 
 void Task::saveTo( KCal::Todo* task )
@@ -288,5 +296,6 @@ void Task::saveTo( KCal::Todo* task )
   if ( parent() != QString::null )
     task->setRelatedToUid( parent() );
 
-  // TODO: Completed date
+  if ( hasCompletedDate() )
+    task->setCompleted( mCompletedDate );
 }
