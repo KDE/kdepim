@@ -272,7 +272,7 @@ KPilotConfigSettings::~KPilotConfigSettings()
 
 
 #define IntProperty_(a,key,defl,m) \
-	int KPilotConfigSettings::get##a(QComboBox *p) { \
+	int KPilotConfigSettings::get##a(QComboBox *p) const { \
 	int i = readNumEntry(key,defl); \
 	if ((i<0) || (i>m)) i=0; \
 	if (p) p->setCurrentItem(i); \
@@ -289,7 +289,7 @@ IntProperty_(Version, "Configured", 0, 100000)
 IntProperty_(Debug, "Debug", 0, 1023)
 
 #define BoolProperty_(a,key,defl) \
-	bool KPilotConfigSettings::get##a(QCheckBox *p) { \
+	bool KPilotConfigSettings::get##a(QCheckBox *p) const { \
 	bool b = readBoolEntry(key,defl); if (p) p->setChecked(b); return b; } \
 	void KPilotConfigSettings::set##a(QCheckBox *p) { \
 	set##a(p->isChecked()); } \
@@ -306,7 +306,7 @@ BoolProperty_(UseKeyField, "UseKeyField", false)
 
 
 #define StringProperty_(a,key,defl) \
-	QString KPilotConfigSettings::get##a(QLineEdit *p) { \
+	QString KPilotConfigSettings::get##a(QLineEdit *p) const { \
 	QString s = readEntry(key,defl); if (p) p->setText(s); return s; } \
 	void  KPilotConfigSettings::set##a(QLineEdit *p) { \
 	set##a(p->text()); } \
@@ -316,7 +316,7 @@ BoolProperty_(UseKeyField, "UseKeyField", false)
 
 StringProperty_(PilotDevice, "PilotDevice", CSL1("/dev/pilot"))
 StringProperty_(Encoding, "Encoding", QString::null)
-
+IntProperty_(EncodingDD,"EncodingDD",0,7)
 
 StringProperty_(User, "UserName", QString::null)
 StringProperty_(BackupOnly, "BackupForSync", CSL1("Arng,PmDB,lnch"))

@@ -109,6 +109,8 @@ void KPilotConfigDialog::readConfig()
 	(void) c.getSyncFiles(fConfigWidget->fSyncFiles);
 	(void) c.getSyncWithKMail(fConfigWidget->fSyncWithKMail);
 
+	getEncoding(c);
+	
 	c.setAddressGroup();
 	(void) c.getUseKeyField(fConfigWidget->fUseKeyField);
 	setAddressDisplay(c.getAddressDisplayMode());
@@ -156,6 +158,7 @@ void KPilotConfigDialog::readConfig()
 	c.setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin);
 	c.setKillDaemonOnExit(fConfigWidget->fKillDaemonOnExit);
 	c.setDockDaemon(fConfigWidget->fDockDaemon);
+	setEncoding(c);
 
 	// DB specials page
 	c.setShowSecrets(fConfigWidget->fUseSecret);
@@ -226,3 +229,62 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 	}
 }
 
+// Vaguely copied from the JPilot source
+#define ENCODING_COUNT	(7)
+static const char *encodings[ENCODING_COUNT+1] =
+{
+	"ISO8859-1",  // Latin1
+	"Shift-JIS",  // Japanese
+	"CP1250",     // Czech
+	"CP1251",     // Russian, Palm in 1251
+	"KOI8-R",     // Russian, Palm in KOI8-R
+	"Big5",       // Chinese, hopefully the same as gtkrc.zh_TW.Big5
+	"eucKR",      // Korean
+	0L            // redundant NULL
+} ;
+
+void KPilotConfigDialog::getEncoding(const KPilotConfigSettings &c)
+{
+	FUNCTIONSETUP;
+	
+	int i = c.getEncodingDD();
+	QString e = c.getEncoding();
+
+	if ((i<0) || (i>=ENCODING_COUNT))
+	{
+		kdWarning() << k_funcinfo
+			<< ": Impossible encoding number "
+			<< i << endl;
+		i=0;
+	}
+	
+	if (QString::fromLatin1(encodings[i]) != e)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Mismatch between encoding number "
+			<< i
+			<< " and name "
+			<< e
+			<< endl;
+	}
+	
+	fConfigWidget->fPilotEncoding->setCurrentItem(i);
+}
+
+void KPilotConfigDialog::setEncoding(KPilotConfigSettings &c)
+{
+	FUNCTIONSETUP;
+	
+	int i = fConfigWidget->fPilotEncoding->currentItem();
+	
+	if ((i<0) || (i>=ENCODING_COUNT))
+	{
+		kdWarning() << k_funcinfo
+			<< ": Impossible encoding number "
+			<< i << endl;
+		i=0;
+	}
+	
+	c.setEncodingDD(i);
+	c.setEncoding(QString::fromLatin1(encodings[i]));
+}

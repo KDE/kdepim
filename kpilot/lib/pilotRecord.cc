@@ -105,7 +105,7 @@ void PilotRecord::setData(const char *data, int len)
 /* static */ QTextCodec *PilotAppCategory::pilotCodec = 0L;
 
 static const char *latin1 = "ISO8859-1" ;
-// static const char *sjis = "Shift-JIS" ;
+// Other names of encodings are in the config dialog source
 
 /* static */ QTextCodec *PilotAppCategory::createCodec(const char *p)
 {

@@ -64,17 +64,17 @@ public:
 	//
 
 #define IntProperty(a) \
-	int get##a(QComboBox *p=0L); \
+	int get##a(QComboBox *p=0L) const; \
 	void set##a(QComboBox *); \
 	void set##a(int); \
 
 #define BoolProperty(a) \
-	bool get##a(QCheckBox *p=0L); \
+	bool get##a(QCheckBox *p=0L) const; \
 	void set##a(QCheckBox *); \
 	void set##a(bool);
 
 #define StringProperty(a) \
-	QString get##a(QLineEdit *p=0L); \
+	QString get##a(QLineEdit *p=0L) const; \
 	void set##a(QLineEdit *); \
 	void set##a(const QString &);
 
@@ -88,6 +88,7 @@ public:
 	StringProperty(User)
 	// There's no GUI to access this one.
 	StringProperty(Encoding)
+	IntProperty(EncodingDD)
 
 
 	BoolProperty(StartDaemonAtLogin)

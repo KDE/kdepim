@@ -33,6 +33,7 @@
 #include "uiDialog.h"
 
 class KPilotConfigWidget;
+class KPilotConfigSettings;
 
 class KPilotConfigDialog : public UIDialog 
 {
@@ -55,6 +56,11 @@ private:
 	void disableUnusedOptions();
 	int getAddressDisplay() const;
 	void setAddressDisplay(int);
+
+	// Read and write the values of Encoding
+	// and EncodingDD.
+	void getEncoding(const KPilotConfigSettings &);
+	void setEncoding(KPilotConfigSettings &);
 } ;
 
 #endif
