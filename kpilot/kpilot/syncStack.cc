@@ -117,7 +117,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode && ActionQueue::ActionMask)
+	switch(fMode & ActionQueue::ActionMask)
 	{
 	case ActionQueue::Backup :
 		l.append(CSL1("--backup"));
