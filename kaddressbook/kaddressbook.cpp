@@ -68,6 +68,9 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
   mDocument->addCustomField( i18n("IM Address"),
                              KABC::Field::Personal,
                              "X-IMAddress", "KADDRESSBOOK" );
+  mDocument->addCustomField( i18n("Anniversary"),
+                             KABC::Field::Personal,
+                             "X-Anniversary", "KADDRESSBOOK" );
 
   // Create the GUI
   mViewManager = new ViewManager(mDocument, kapp->config(),
@@ -343,6 +346,9 @@ void KAddressBook::importVCard()
       PwNewCommand *command = new PwNewCommand(mDocument, a);
       UndoStack::instance()->push(command);
       RedoStack::instance()->clear();
+
+      KABC::Resource *resource = KABC::ResourceSelectDialog::getResource( mDocument, this );
+      a.setResource( resource );
 
       mViewManager->refresh();
 
