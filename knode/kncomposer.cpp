@@ -14,6 +14,19 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+#include "kngroupmanager.h"
+#include "kngroupselectdialog.h"
+#include "knstringsplitter.h"
+#include "utilities.h"
+#include "knglobals.h"
+#include "kncomposer.h"
+#include "knode.h"
+#include "knmime.h"
+#include "knconfigmanager.h"
+#include "knaccountmanager.h"
+#include "knnntpaccount.h"
+#include "knpgp.h"
+
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qvgroupbox.h>
@@ -36,18 +49,6 @@
 #include <kfiledialog.h>
 #include <kdebug.h>
 
-#include "kngroupmanager.h"
-#include "kngroupselectdialog.h"
-#include "knstringsplitter.h"
-#include "utilities.h"
-#include "knglobals.h"
-#include "kncomposer.h"
-#include "knode.h"
-#include "knmime.h"
-#include "knconfigmanager.h"
-#include "knaccountmanager.h"
-#include "knnntpaccount.h"
-#include "knpgp.h"
 
 
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit)
@@ -56,7 +57,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
       s_pellChecker(0), a_ttChanged(false)
 {
   d_elAttList.setAutoDelete(true);
-    
+
   //init v_iew
   v_iew=new ComposerView(this);
   setCentralWidget(v_iew);
@@ -149,11 +150,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //options menu
 
   a_ctDoPost = new KToggleAction(i18n("Send &News Article"), "filenew", 0 , this,
-                   SLOT(slotToggleDoPost()), actionCollection(), "send_news");      
-  
+                   SLOT(slotToggleDoPost()), actionCollection(), "send_news");
+
   a_ctDoMail = new KToggleAction(i18n("Send E-&Mail"), "mail_generic" , 0 , this,
                    SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
-  
+
   a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
   a_ctSetCharset->setItems(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
@@ -164,7 +165,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
 
   a_ctWordWrap  = new KToggleAction(i18n("&Word Wrap"), 0 , this,
-                      SLOT(slotToggleWordWrap()), actionCollection(), "toggle_wordwrap");     
+                      SLOT(slotToggleWordWrap()), actionCollection(), "toggle_wordwrap");
 
   //tools menu
 
@@ -1546,7 +1547,7 @@ void KNComposer::Editor::slotPasteAsQuotation()
   if (!s.isEmpty()) {
     for (int i=0; (uint)i<s.length(); i++) {
       if ( s[i] < ' ' && s[i] != '\n' && s[i] != '\t' )
-        s[i] = ' ';       
+        s[i] = ' ';
     }
     s.prepend("> ");
     s.replace(QRegExp("\n"),"\n> ");
@@ -1639,7 +1640,7 @@ void KNComposer::Editor::slotRemoveBox()
     QString s = QString::fromLatin1("\n") + markedText() + QString::fromLatin1("\n");
     s.replace(QRegExp("\n,----[^\n]*\n"),"\n");
     s.replace(QRegExp("\n| "),"\n");
-    s.replace(QRegExp("\n`----[^\n]*\n"),"\n"); 
+    s.replace(QRegExp("\n`----[^\n]*\n"),"\n");
     s.remove(0,1);
     s.truncate(s.length()-1);
     pasteString(s);
