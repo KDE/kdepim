@@ -35,6 +35,23 @@ COMMAND="$KONSOLEKALENDAR $1 --time $HOUR:$MINUTE --description $3 --summary $3 
 echo using command $COMMAND
 $COMMAND
 
+echo "################################ TEXT ##################################"
+COMMAND="$KONSOLEKALENDAR --view --time $HOUR:$MINUTE --date $YEAR-$MONTH-$DATE --export-type Text --file=$2"
+$COMMAND
+
+echo "################################ HTML ##################################"
+COMMAND="$KONSOLEKALENDAR --view --time $HOUR:$MINUTE --date $YEAR-$MONTH-$DATE --export-type HTML --file=$2"
+$COMMAND
+
+
+echo "################################ CSV ##################################"
+COMMAND="$KONSOLEKALENDAR --view --time $HOUR:$MINUTE --date $YEAR-$MONTH-$DATE --export-type CSV --file=$2"
+$COMMAND
+
+echo "################################ ORG ##################################"
+COMMAND="$KONSOLEKALENDAR --view --time $HOUR:$MINUTE --date $YEAR-$MONTH-$DATE --export-type Text-organizer --file=$2"
+$COMMAND
+
 let DATE=$DATE+1
 let MINUTE=$MINUTE+1
 
