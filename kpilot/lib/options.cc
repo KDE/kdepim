@@ -122,22 +122,30 @@ struct tm writeTm(const QDate &dt)
 }
 
 #ifdef DEBUG
-KPilotDepthCount::KPilotDepthCount() :
-	fDepth(depth)
+KPilotDepthCount::KPilotDepthCount(int level, const char *s) :
+	fDepth(depth),
+	fLevel(level),
+	fName(s)
 {
+#ifdef DEBUG
+	if (debug_level>fLevel) { DEBUGKPILOT << indent() << ">" << name() << endl; }
+#endif
 	depth++;
 }
 
 KPilotDepthCount::~KPilotDepthCount()
 {
+#ifdef DEBUG
+	if (debug_level>fLevel+1) { DEBUGKPILOT << indent() << "<" << name() << endl; }
+#endif
 	depth--;
 }
 
-QString KPilotDepthCount::string() const
+QString KPilotDepthCount::indent() const
 {
 	QString s;
 	s.fill(' ',fDepth);
-	return s+s;
+	return s+s+' ';
 }
 
 int KPilotDepthCount::depth = 0;
