@@ -1,7 +1,7 @@
 /*
     lzfu.cpp
 
-    Copyright (C) 2003 Michael Goffioul <goffioul@imec.be>
+    Copyright (C) 2003 Michael Goffioul <kdeprint@swing.be>
 
     This file is part of KTNEF, the KDE TNEF support library/program.
 

@@ -1,7 +1,7 @@
 /*
     main.cpp
 
-    Copyright (C) 2002 Michael Goffioul <goffioul@imec.be>
+    Copyright (C) 2002 Michael Goffioul <kdeprint@swing.be>
 
     This file is part of KTNEF, the KDE TNEF support library/program.
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
   KAboutData aboutData( "ktnef", I18N_NOOP("KTnef"),
     "1.0", description, KAboutData::License_GPL,
     "(c) 2000, Michael Goffioul");
-  aboutData.addAuthor("Michael Goffioul",0, "goffioul@imec.be");
+  aboutData.addAuthor("Michael Goffioul",0, "kdeprint@swing.be");
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
   KApplication::addCmdLineOptions();
