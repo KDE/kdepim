@@ -20,7 +20,6 @@
 #include "storedtransferjob.h"
 
 using namespace KIOext;
-using namespace KIO;
 
 #define KIO_ARGS QByteArray packedArgs; QDataStream stream( packedArgs, IO_WriteOnly ); stream
 
@@ -28,7 +27,7 @@ StoredTransferJob::StoredTransferJob(const KURL& url, int command,
                                      const QByteArray &packedArgs,
                                      const QByteArray &_staticData,
                                      bool showProgressInfo)
-    : TransferJob( url, command, packedArgs, _staticData, showProgressInfo ),
+    : KIO::TransferJob( url, command, packedArgs, _staticData, showProgressInfo ),
       m_uploadOffset( 0 )
 {
     connect( this, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
@@ -81,7 +80,7 @@ StoredTransferJob *KIOext::storedGet( const KURL& url, bool reload, bool showPro
 {
     // Send decoded path and encoded query
     KIO_ARGS << url;
-    StoredTransferJob * job = new StoredTransferJob( url, CMD_GET, packedArgs, QByteArray(), showProgressInfo );
+    StoredTransferJob * job = new StoredTransferJob( url, KIO::CMD_GET, packedArgs, QByteArray(), showProgressInfo );
     if (reload)
        job->addMetaData("cache", "reload");
     return job;
@@ -91,7 +90,7 @@ StoredTransferJob *KIOext::put( const QByteArray& arr, const KURL& url, int perm
                                 bool overwrite, bool resume, bool showProgressInfo )
 {
     KIO_ARGS << url << Q_INT8( overwrite ? 1 : 0 ) << Q_INT8( resume ? 1 : 0 ) << permissions;
-    StoredTransferJob * job = new StoredTransferJob( url, CMD_PUT, packedArgs, QByteArray(), showProgressInfo );
+    StoredTransferJob * job = new StoredTransferJob( url, KIO::CMD_PUT, packedArgs, QByteArray(), showProgressInfo );
     job->setData( arr );
     return job;
 }
