@@ -46,6 +46,7 @@ PrintDialog::PrintDialog()
 {
   QWidget *page = new QWidget( this ); 
   setMainWidget(page);
+  int year, month;
 
   QVBoxLayout *layout = new QVBoxLayout(page);
   
@@ -62,7 +63,11 @@ PrintDialog::PrintDialog()
 
   rangeLayout->addWidget(new QLabel(i18n("From:"), rangeWidget));
   _from = new KDateEdit(rangeWidget);
-  _from->setDate(QDate::currentDate().addDays(-1));
+
+  // Default from date to beginning of the month
+  year = QDate::currentDate().year();
+  month = QDate::currentDate().month();
+  _from->setDate(QDate(year, month, 1));
   rangeLayout->addWidget(_from);
   rangeLayout->addWidget(new QLabel(i18n("To:"), rangeWidget));
   _to = new KDateEdit(rangeWidget);
