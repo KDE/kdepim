@@ -1,4 +1,5 @@
 #include <iostream.h>
+#include <klocale.h>
 #include "pi-source.h"
 #include "pi-memo.h"
 #include "pilotMemo.h"
@@ -44,3 +45,38 @@ void *PilotMemo::pack(void *buf, int *len)
 
     return internalPack((unsigned char *) buf);
     }
+
+
+QString
+PilotMemo::shortTitle() const
+{
+	QString t = QString(getTitle()).simplifyWhiteSpace();
+
+	if (t.length() < 32) return t;
+	t.truncate(40);
+
+	int spaceIndex = t.findRev(' ');
+	if (spaceIndex > 32)
+	{
+		t.truncate(spaceIndex);
+	}
+	
+	t += "...";
+
+	return t;
+}
+
+QString
+PilotMemo::sensibleTitle() const
+{
+	const char *s = getTitle();
+
+	if (s && *s)
+	{
+		return QString(s);
+	}
+	else
+	{
+		return QString(i18n("[unknown]"));
+	}
+}

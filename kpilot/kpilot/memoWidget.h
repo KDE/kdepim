@@ -12,7 +12,6 @@
 
 #include "pilotComponent.h"
 #include <qmlined.h>
-#include <qlistbox.h>
 #include <qcombo.h>
 #include <time.h>
 #include "pi-memo.h"
@@ -20,6 +19,7 @@
 #include "kpilotlink.h"
 
 class KPilotInstaller;
+class QListBox;
 
 class MemoWidget : public PilotComponent
 {
@@ -44,6 +44,12 @@ protected:
 	void initializeMemos(PilotDatabase *);
   
  public slots:
+	/**
+	* Called whenever the selected memo changes to indicate
+	* which buttons are active, mostly to prevent the delete
+	* button from being active when it can't do anything.
+	*/
+	void slotUpdateButtons();
  void slotShowMemo(int);
   void slotTextChanged();
   void slotImportMemo();
@@ -61,7 +67,9 @@ private:
   struct MemoAppInfo fMemoAppInfo;
   QList<PilotMemo>   fMemoList;
   unsigned int       fLookupTable[1000]; // Used to index the listbox into the memolist
-  QListBox*          fListBox;
+  QListBox *          fListBox;
+
+	QPushButton *fExportButton,*fDeleteButton;
 };
 
 #endif

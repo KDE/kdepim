@@ -68,6 +68,7 @@ MemoWidget::MemoWidget(KPilotInstaller* installer, QWidget* parent)
 	fMemoList.setAutoDelete(true);
 	fTextWidget->setFont(installer->fixed());
 	installer->addComponentPage(this, "Memos");
+	slotUpdateButtons();
 }
 
 MemoWidget::~MemoWidget()
@@ -237,6 +238,8 @@ MemoWidget::setupWidget()
 	grid->addMultiCellWidget(fListBox,1,1,0,1);
 	connect(fListBox, SIGNAL(highlighted(int)), 
 		this, SLOT(slotShowMemo(int)));
+	connect(fListBox, SIGNAL(selectionChanged()),
+		this, SLOT(slotUpdateButtons()));
 
 	label = new QLabel(i18n("Memo Text:"), this);
 	grid->addWidget(label,0,2);
@@ -250,13 +253,30 @@ MemoWidget::setupWidget()
 	grid->addWidget(button,2,0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportMemo()));
 
-	button = new QPushButton(i18n("Export Memo"), this);
-	grid->addWidget(button,2,1);
-	connect(button, SIGNAL(clicked()), this, SLOT(slotExportMemo()));
+	fExportButton = new QPushButton(i18n("Export Memo"), this);
+	grid->addWidget(fExportButton,2,1);
+	connect(fExportButton, SIGNAL(clicked()), this, SLOT(slotExportMemo()));
 
-	button = new QPushButton(i18n("Delete Memo"), this);
-	grid->addWidget(button,3,0);
-	connect(button, SIGNAL(clicked()), this, SLOT(slotDeleteMemo()));
+	fDeleteButton = new QPushButton(i18n("Delete Memo"), this);
+	grid->addWidget(fDeleteButton,3,0);
+	connect(fDeleteButton, SIGNAL(clicked()), this, SLOT(slotDeleteMemo()));
+}
+
+void
+MemoWidget::slotUpdateButtons()
+{
+	FUNCTIONSETUP;
+
+	int item = fListBox->currentItem();
+
+	if (fExportButton)
+	{
+		fExportButton -> setEnabled(item != -1);
+	}
+	if (fDeleteButton)
+	{
+		fDeleteButton -> setEnabled(item != -1);
+	}
 }
 
 void 
@@ -275,8 +295,10 @@ MemoWidget::slotDeleteMemo()
 
 	if(item == -1)
 	{
+#ifdef DEBUG
 		kdDebug() << fname <<
 			": No current item selected\n" ;
+#endif
 		return;
 	}
 
@@ -361,6 +383,8 @@ MemoWidget::updateWidget()
 			// so there's no memory leak here.
 			//
 			//
+			fListBox->insertItem(fMemoList.current()->shortTitle());
+#if 0
 			const char *s = fMemoList.current()->getTitle() ;
 			if (s && *s)
 			{
@@ -370,6 +394,7 @@ MemoWidget::updateWidget()
 			{
 				fListBox->insertItem(i18n("[unknown]"));
 			}
+#endif
 
 			fLookupTable[currentEntry++] = listIndex;
 			if (debug_level & UI_TEDIOUS)
@@ -403,6 +428,7 @@ MemoWidget::slotShowMemo(int which)
   fTextWidget->deselect();
   fTextWidget->setText(fMemoList.at(fLookupTable[which])->text());
   connect(fTextWidget, SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
+	
 }
 
 void

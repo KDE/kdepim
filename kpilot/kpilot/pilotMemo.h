@@ -11,6 +11,7 @@
 #define __KPILOT_MEMO_H
 
 #include <pi-macros.h>
+#include <qstring.h>
 #include "pilotAppCategory.h"
 #include "pilotRecord.h"
 
@@ -30,6 +31,21 @@ public:
   PilotRecord* pack() { return PilotAppCategory::pack(); }
   
 	typedef enum { MAX_MEMO_LEN=8192 } Constants ;
+
+	/**
+	* Return a "short but sensible" title. getTitle() returns the
+	* first line of the memo, which may be very long
+	* and inconvenient. sensibleTitle() returns about 30
+	* characters.
+	*/
+	QString shortTitle() const;
+
+	/**
+	* Returns a (complete) title if there is one and [unknown]
+	* otherwise.
+	*/
+	QString sensibleTitle() const;
+
 protected:
   //     void *pack(int *i);
   void *pack(void *, int *);
