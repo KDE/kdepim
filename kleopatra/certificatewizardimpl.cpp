@@ -71,3 +71,4 @@ void CertificateWizardImpl::slotGenerateCertificate()
 }
 
 
+#include "certificatewizardimpl.moc"

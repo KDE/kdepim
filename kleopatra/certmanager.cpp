@@ -132,7 +132,7 @@ void CertManager::newCertificate()
 
 
 /**
-   This slot is invokwed when the user chooses File->Quit
+   This slot is invoked when the user chooses File->Quit
 */
 void CertManager::quit()
 {
@@ -172,3 +172,5 @@ void CertManager::importCRLFromLDAP()
 {
   qDebug("Not Yet Implemented");
 }
+
+#include "certmanager.moc"
