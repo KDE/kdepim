@@ -316,7 +316,7 @@ bool KPilotDeviceLink::open()
 		DEBUGDAEMON << fname << ": Typing to open " << fPilotPath << endl;
 #endif
 
-#if PILOT_LINK_NUMBER < 10
+#if PILOT_LINK_NUMBER < 1000
 		fPilotMasterSocket = pi_socket(PI_AF_SLP,
 			PI_SOCK_STREAM, PI_PF_PADP);
 #else
