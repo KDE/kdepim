@@ -156,4 +156,6 @@ class CustomFieldsWidgetFactory : public KAB::ContactEditorWidgetFactory
     QString pageIdentifier() const { return "custom_fields"; }
 };
 
+void splitField( const QString&, QString&, QString&, QString& );
+
 #endif

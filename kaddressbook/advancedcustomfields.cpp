@@ -35,9 +35,9 @@
 #include <klineedit.h>
 #include <kstandarddirs.h>
 
-#include "advancedcustomfields.h"
+#include "customfieldswidget.h"
 
-static void splitField( const QString&, QString&, QString&, QString& );
+#include "advancedcustomfields.h"
 
 
 AdvancedCustomFields::AdvancedCustomFields( const QString &uiFile, KABC::AddressBook *ab,
@@ -204,21 +204,6 @@ QString AdvancedCustomFields::pageIdentifier() const
 QString AdvancedCustomFields::pageTitle() const
 {
   return mTitle;
-}
-
-static void splitField( const QString &str, QString &app, QString &name, QString &value )
-{
-  int colon = str.find( ':' );
-  if ( colon != -1 ) {
-    QString tmp = str.left( colon );
-    value = str.mid( colon + 1 );
-
-    int dash = tmp.find( '-' );
-    if ( dash != -1 ) {
-      app = tmp.left( dash );
-      name = tmp.mid( dash + 1 );
-    }
-  }
 }
 
 #include "advancedcustomfields.moc"

@@ -40,8 +40,6 @@
 
 #include "customfieldswidget.h"
 
-static void splitField( const QString&, QString&, QString&, QString& );
-
 
 AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Add Field" ), Ok | Cancel,
@@ -489,7 +487,7 @@ QStringList CustomFieldsWidget::marshallFields( bool global ) const
 }
 
 
-static void splitField( const QString &str, QString &app, QString &name, QString &value )
+void splitField( const QString &str, QString &app, QString &name, QString &value )
 {
   int colon = str.find( ':' );
   if ( colon != -1 ) {
