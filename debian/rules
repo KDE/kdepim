@@ -31,7 +31,7 @@ debian/stamp-kontact-icons-uu:
 	fi
 	touch debian/stamp-kontact-icons-uu
 
-#common-build-arch:: debian/stamp-man-pages
+common-build-arch:: debian/stamp-man-pages
 debian/stamp-man-pages:
 # Generate man pages for the programs
 	for f in debian/man/*.man; do \
