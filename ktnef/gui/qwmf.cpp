@@ -1128,8 +1128,8 @@ void QWinMetaFile::xyToAngle( int xStart, int yStart, int xEnd, int yEnd, int& a
 {
     float aStart, aLength;
 
-    aStart = atan2( yStart,  xStart );
-    aLength = atan2( yEnd, xEnd ) - aStart;
+    aStart = atan2( double(yStart),  double(xStart) );
+    aLength = atan2( double(yEnd), double(xEnd) ) - aStart;
 
     angleStart = (int)(aStart * 2880 / 3.14166);
     angleLength = (int)(aLength * 2880 / 3.14166);
