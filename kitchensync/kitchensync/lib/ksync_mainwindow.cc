@@ -615,6 +615,13 @@ void KSyncMainWindow::slotKonnectorProfile() {
     if ( item == -1 ) item = 0;
     if (m_konprof->count() == 0 ) return;
 
+    // make sure it honors the deactivated plugins - not really nice like this, maybe do it better later
+    for ( int j = 0; j <= item; j++ )  {
+        if ( (m_konprof->profile(j)).udi().isEmpty() )  {
+            item++;
+        }
+    }
+
     KonnectorProfile cur = m_konprof->profile( item );
     switchProfile( cur );
     m_konprof->setCurrent( cur );
