@@ -1,0 +1,1705 @@
+<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+  <!ENTITY kappname "&kpilot;" -- this only *seems* redundant -->
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE" -- change language only here -->
+  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Application-Variable Entities V1.0//EN">
+  %ents;
+]>
+
+<!-- $Id$ -->
+<!-- This is the CVS change log:
+     $Log$
+     Revision 1.2  2000/12/09 12:50:24  adridg
+     New screenshots
+
+-->
+
+<book lang="&language;">
+
+<bookinfo>
+<title>KPilot User's Guide</title>
+
+<authorgroup>
+<author>
+	<firstname>Dan</firstname>
+	<surname>Pilone</surname>
+	<affiliation>
+		<address><email>pilone@slac.com</email></address>
+	</affiliation>
+</author>
+<author>
+	<firstname>Adriaan</firstname>
+	<othername>de</othername>
+	<surname>Groot</surname>
+	<affiliation>
+		<address><email>adridg@cs.kun.nl</email></address>
+	</affiliation>
+</author>
+</authorgroup>
+
+<copyright>
+<year>1999</year>
+<year>2000</year>
+<holder>Adriaan de Groot</holder>
+</copyright>
+
+<legalnotice>&FDLNotice;</legalnotice>
+
+<date>9/12/2000</date>
+<releaseinfo>4.0.0</releaseinfo>
+
+<abstract>
+<para>
+KPilot 4.0.0
+is the latest version of the Desktop HotSync software for Unix.
+After several releases and many
+contributions from users KPilot, along with
+<application>KOrganizer</application>, has evolved into 
+a rather complete replacement for the
+Windows Desktop  provided by 3Com.  
+KPilot offers a few internal
+tools for viewing and manipulating data, and a convenient API for
+developing ways of sharing data with other applications.
+</para>
+</abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>KPilot</keyword>
+<keyword>kdepim</keyword>
+<keyword>palm pilot</keyword>
+<keyword>synchronisation</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>
+KPilot 4.0.0
+is the latest version of the Desktop HotSync software for Unix.
+After several releases and 
+many contributions from users KPilot, along with
+<application>KOrganizer</application>, has evolved into 
+a rather complete replacement for the
+Windows Desktop  provided by 3Com.  
+KPilot offers a few internal
+tools for viewing and manipulating data, and a convenient API for
+developing ways of sharing data with other applications.
+</para>
+
+<para>
+There is a web page for KPilot: the 
+<ulink url="http://www.slac.com/~pilone/kpilot_home/">
+Official KPilot Home Page
+</ulink>.
+There is also a mailing list. Send mail to
+<email>majordomo@slac.com</email>
+with the following subject: <userinput>subscribe kpilot-list</userinput>.
+(To <emphasis>unsubscribe</emphasis> from the list
+again, send mail to
+<email>majordomo@slac.com</email>
+with the following subject:
+<userinput>unsubscribe kpilot-list</userinput>.
+Do not send subscribe or unsubscribe requests to the
+list itself.)
+You may also wish to use 
+<email>kde-pim@kde.org</email> for more general
+questions about the integration between 
+your Pilot and KDE.
+</para>
+
+<para>
+A word about version numbers:
+KPilot 3.x versions
+are for KDE 1.
+With the release of KDE 2
+KPilot 3.x is obsolete
+and KPilot 4.x has become current.
+</para>
+
+
+
+<sect1 id="kpilot-revhistory">
+<title>KPilot Revision History</title>
+
+
+<itemizedlist>
+<listitem>
+<para>
+New in 4.0.0 -
+KPilot is now a KDE 2 application.
+A lot of work has gone into making the main
+KPilot application compatible with the new KDE 2 standards.
+The stability of the program as a whole has improved as well,
+with lots of bugfixes under the hood.
+The most important visible new features are:
+<itemizedlist>
+<listitem><para>
+	There is a new <application>KNotes</application>
+	conduit that synchronizes the memo pad with 
+	<application>KNotes</application>.</para></listitem>
+<listitem><para>
+	More intuitive conduit installation and setup.
+	</para></listitem>
+<listitem><para>
+	The documentation has been brought mostly up-to-date.
+	</para></listitem>
+</itemizedlist>
+</para>
+</listitem>
+<listitem>
+<para>
+New in 3.2.1 -
+more bugfixes. KPilot 3.2.1 is also
+the last version of KPilot for KDE 1.
+Development on the 3.x series has stopped.
+</para>
+</listitem>
+<listitem>
+<para>
+New in 3.2.0 -
+KPilot has been polished sufficiently for
+a new public release.
+The infamous application-category bug has been
+squashed along with other bugs, see
+<ulink url="http://www.cs.kun.nl/~adridg/kpilot/kpilot-release#RELEASE320">
+the buglist</ulink>.
+The documentation has been translated into
+German and partially into Dutch.
+</para>
+</listitem>
+<listitem>
+<para>
+New in 3.1.14 -
+New configuration options 
+<link linkend="dbspecial">Backup Only</link>
+and 
+<link linkend="dbspecial">Skip</link>
+have been added
+to avoid database corruption for some Handbase databases --
+and possibly other products as well.
+The documentation for KPilot -- in english only -- has been
+vastly expanded.
+</para>
+</listitem>
+
+<listitem>
+<para>
+New in 3.1.13 -
+You can now sync - experimentally - with UNIX style mailboxes.
+The popmail conduit will read a standard mailbox and copy it to the Pilot.
+The UI has been improved and some issues with various OS distributions
+have been dealt with. See the buglist for more information.
+</para>
+</listitem>
+
+<listitem>
+<para>
+New in 3.1.12 -
+This release of KPilot has only been tested with KDE 1.0, 1.1 and
+1.1.1. Previous versions of KDE are no longer supported.
+KPilot 3.1.12 has a number of new features compared to 3.1b9.
+It also includes a large number of bug fixes.
+</para>
+
+<para>
+The most important new features are:
+<itemizedlist>
+<listitem>
+<para>
+	Now supports debugging output, just start KPilot
+	by hand from the command line with
+	<userinput>kpilot --debug 1023</userinput>
+	and you will get loads of debugging output.
+	Useful for reporting bugs.
+	See the <link linkend="debug">FAQ</link>
+	for information on the parameter to <userinput>--debug</userinput>.
+</para>
+</listitem>
+<listitem>
+<para>
+	Addresses can be sorted by company, name or by lastname, firstname.
+</para>
+</listitem>
+<listitem>
+<para>
+	A new (demonstration) conduit has been added that does nothing.
+	For programmers, mostly.
+</para>
+</listitem>
+<listitem>
+<para>
+	The UI has been cleaned up.
+</para>
+</listitem>
+</itemizedlist>
+</para>
+
+<para>
+The most important bugs that have been fixed are:
+<itemizedlist>
+<listitem>
+<para>
+	SMTP support
+</para>
+</listitem>
+<listitem>
+<para>
+	Daemon startup
+</para>
+</listitem>
+</itemizedlist>
+</para>
+
+
+
+<para>
+Note that the debugging code hasn't spread to the whole of KPilot yet.
+The daemon and conduits do have some debugging output, which may also
+be useful
+if KPilot doesn't work perfectly on your system.
+</para>
+</listitem>
+
+<listitem>
+<para>
+New in 3.1.9 -
+This is the fourth release of KPilot.  The major change in this
+release is conduit support.  There are currently two included conduits, a
+KOrganizer conduit (vcal syncing) and a PopMail conduit (this fixes the
+email bug with KPilot 2.1).  Also fixed in this release is the
+Address/Memo &quot;off by one&quot; bug.  
+This release <emphasis>requires</emphasis> KDE Beta 4 or
+better.  
+</para>
+</listitem>
+
+</itemizedlist>
+
+
+</sect1>
+
+</chapter>
+
+
+
+
+
+
+<chapter id="using-kpilot">
+<title>Using KPilot</title>
+ 
+<para>  
+Once KPilot is installed it needs to be 
+<link linkend="configuring-kpilot">configured</link>
+to match your hardware.
+The <link linkend="conduits">conduits</link>
+need to be configured as well.
+After that you can use KPilot
+to synchronise your Pilot with 
+your KDE desktop or view
+data from your Pilot with the
+<link linkend="builtin">builtin applications</link>.
+</para>
+
+<sect1 id="configuring-kpilot">
+<title>Configuring KPilot</title>
+
+<para>  
+Once KPilot is installed it is rather easy to set up.  
+Run KPilot from either
+the panel menu or from the command prompt and it will prompt you with
+a dialog box asking you to configure it for the first time.  
+This configuration dialog can be requested later
+<menuchoice>
+<guimenu>File</guimenu> 
+<guimenuitem>Settings</guimenuitem>
+</menuchoice>
+menu or by starting KPilot
+from the shell
+as follows:
+<screen width="40">
+<prompt>$ </prompt> <userinput>kpilot --setup</userinput>
+</screen>
+In addition, if you upgrade KPilot and some new configuration
+options require your attention, this setup dialog will reappear.
+</para>
+
+<para>A full description of the setup dialog can be found 
+<link linkend="general">below</link>.</para>
+
+<para>
+Once
+KPilot is properly set up, pressing <guibutton>OK</guibutton>
+will bring up the 
+<link linkend="kpilotmain">main KPilot window</link>.  
+The <emphasis>first</emphasis> thing you should do is 
+make a full backup
+of the Pilot.  
+Do this by selecting 
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Backup</guimenuitem>
+</menuchoice>
+or the toolbar icon
+<guiicon>Full Backup
+<inlinemediaobject>
+<imageobject><imagedata fileref="toolbar_backup.png" format="PNG">
+</imageobject>
+</inlinemediaobject>
+</guiicon>.  
+When you do,
+the status bar will ask you to press the hot-sync button on the
+cradle.  
+Assuming everything is set up properly you should see the
+Pilot begin to sync and a message box telling you what databases are
+being backed up.  This will back up your entire Pilot into your local
+directory.  
+Note that this may take a little while, however a normal
+hot-sync is significantly faster.
+</para>
+
+<sect2 id="general">
+<title>General page</title>
+
+<para>
+This is a setup page that contains options describing
+the Pilot hardware, you, the user
+and how you want the various parts of KPilot
+to be started.
+</para>
+
+<screenshot>
+<screeninfo>General page</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-general.png" format="png"></imageobject>
+<textobject><phrase>The General setup page</phrase></textobject>
+<caption><para>The General setup page</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Pilot Device</guilabel></term>
+<listitem>
+<para>
+This
+is the serial port that the cradle is connected to.  By default it is
+set to <filename>/dev/pilot</filename>
+which should be a symbolic link to the proper serial port.  
+<emphasis>Make sure the serial port has
+the correct permissions.</emphasis>
+It
+must be read/write by all if KPilot is intended to be used by a
+normal user!  This is done by doing a 
+<userinput>chmod 666 <replaceable>device</replaceable></userinput> where
+<replaceable>device</replaceable> is the correct serial port.
+See also the <link linkend="faq">FAQ</link>
+for more information about setting up the pilot device.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Speed</guilabel></term>
+<listitem>
+<para>
+This indicates the speed of the serial connection to the Pilot.
+For an older model Pilot, choose 9600. 
+Newer models may be able to handle speeds up to
+the maximum listed, 115200.
+You can experiment with the connection speed: the Pilot
+manual suggests starting at a speed of 19200 and trying faster
+speeds to see if they work.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Pilot User</guilabel></term>
+<listitem>
+<para>
+This
+is the user name of the Pilot.  By default this name is the same as
+your log on name.  When you first sync with the Pilot KPilot will
+check to see if this name matches the one on the Pilot.  If they do
+not, you are asked to pick which you will use.  If you pick the local
+name, the Pilot will be changed to match.  This is also used to store
+the information synced from the Pilot.  For example, if I were to
+hot-sync my Pilot on your machine, it would store the data into a
+subdirectory named 'pilone'.
+</para>
+</listitem>
+</varlistentry>
+
+
+
+
+
+<varlistentry><term><guilabel>Start
+Hot-Sync Daemon at login</guilabel></term>
+<listitem>
+<para>
+ By
+enabling this a link to the daemon is placed in your autostart folder
+and will be started automatically.  Note that this is not normally
+needed if the daemon is docked in the panel.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><guilabel>Start
+KPilot at Hot-Sync</guilabel></term>
+<listitem>
+<para>
+ When the
+hot-sync button is pressed on the cradle (assuming the daemon is
+running) KPilot can sync without actually starting up the GUI. 
+However, by enabling this option the daemon will start up the KPilot
+GUI when the hot-sync begins.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show Daemon in KPanel</guilabel></term>
+<listitem>
+<para>
+This option lets the daemon place a little hot sync icon in
+the KPanel. This icon has a menu that can be brought up with
+the right mouse button, for performing hot syncs and the like.
+Without this option, the daemon is not visible to the user at all.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<anchor id="stopdaemononexit">
+<guilabel>Stop Daemon on exit</guilabel>
+</term>
+<listitem>
+<para>
+Setting this option will cause the daemon to exit when you quit
+KPilot, leaving the serial port free for other Pilot-syncing tools
+such as <application>malsync</application>
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+For a fully visible KPilot installation, 
+enable <guilabel>Start KPilot at Hot-Sync</guilabel>
+and <guilabel>Show Daemon in KPanel</guilabel>
+while disabling <guilabel>Stop Daemon on exit</guilabel>.
+To make KPilot all but invisible,
+disable all the options except 
+<guilabel>Stop Daemon on exit</guilabel>.
+</para>
+
+</sect2>
+
+<sect2 id="address">
+<title>
+Address page
+</title>
+
+<para>
+The address page contains settings specific to the
+<emphasis>built in</emphasis> address book.
+Note that this address book has nothing directly 
+to do with the KDE address book, your email address book,
+or anything else.
+Connections with those address books could be
+provided by conduits.
+(Right now there is <emphasis>no</emphasis>
+conduit for the address book, though.)
+</para>
+
+<screenshot>
+<screeninfo>Address page</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-address.png" format="png"></imageobject>
+<textobject><phrase>The Address setup page</phrase></textobject>
+<caption><para>The Address setup page</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Import Format</guilabel></term>
+<term><guilabel>Export Format</guilabel></term>
+<listitem>
+<para>
+KPilot can import and export the address database
+to or from a text  file.
+These two fields
+determine the format the file is written in (for export)
+or must have (for import).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Address display</guilabel></term>
+<listitem>
+<para>
+This set of radio buttons determines
+how addresses are displayed and sorted in the address book.
+This is similar to the setting in the Pilot itself
+where addresses can be sorted based on company or on last name.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+Both the import and the export format
+are lists of field specifiers separated by some
+delimiter (usually a comma).
+Note that all fields must be separated
+by the same delimiter.
+For import formats:
+Field specifiers are three-character strings that
+begin with a %.
+Field specifiers
+%<replaceable>CC</replaceable>
+are used to indicate that in the imported data the
+data for the corresponding field is to be found there
+(as a string that does not contain the delimiter character).
+The following field specifiers are supported:
+</para>
+
+<table id="addressfmt">
+<title>Address Format Specifiers</title>
+<tgroup cols="2">
+<thead>
+<row><entry>Specifier</entry><entry>Field</entry></row>
+</thead>
+<tbody>
+<row><entry>%LN</entry><entry>Last name
+</entry></row>
+<row><entry>%FN</entry><entry>First name
+</entry></row>
+<row><entry>%CO</entry><entry>Company
+</entry></row>
+<row><entry>%P1,%P2,%P3,%P4,%P5</entry><entry>Phone numbers 1 through 5
+</entry></row>
+<row><entry>%AD</entry><entry>Address
+</entry></row>
+<row><entry>%CI</entry><entry>City
+</entry></row>
+<row><entry>%ST</entry><entry>State
+</entry></row>
+<row><entry>%ZI</entry><entry>Zip (Postal code)
+</entry></row>
+<row><entry>%CT</entry><entry>Country
+</entry></row>
+<row><entry>%TI</entry><entry>Title
+</entry></row>
+<row><entry>%C1,%C2,%C3,%C4</entry><entry>Custom fields
+</entry></row>
+</tbody>
+</tgroup>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</sect2>
+
+
+<sect2 id="dbspecial">
+<title>
+DB Specials page
+</title>
+
+<para>
+This page contains settings specific to
+the Pilot databases KPilot works with.
+</para>
+
+<screenshot>
+<screeninfo>DB Specials page</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="setup-dbspecial.png" format="png">
+</imageobject>
+<textobject><phrase>The DB Setup page</phrase></textobject>
+<caption><para>The DB Setup page</para></caption>
+</mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Show secrets</guilabel></term>
+<listitem>
+<para>
+	In your Pilot you can mark some records
+	as &quot;private.&quot; 
+	By default,
+	KPilot does not
+	display these records on the screen.
+	If you want to see them, turn this
+	option on.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Backup only</guilabel></term>
+<listitem>
+<para>
+	This text field can be used to list databases
+	that should not be synced, only backed up.
+	Note that you have to fill in the database creator,
+	not the name of the product, so for Handbase
+	databases you fill in 
+	<userinput>PmDB</userinput>.
+	Multiple databases should be separated by commas.
+	See the <link linkend="dbskip">FAQ</link>
+	for a list of databases that should be listed
+	here (the default should be OK though).
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term><guilabel>Skip</guilabel></term>
+<listitem>
+<para>
+	This text field lists databases that should not be backed up nor
+	synced, in the same format as the backup only field.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+
+</sect2>
+
+<sect2 id="sync">
+<title>
+Sync page
+</title>
+
+<para>
+The sync page contains preferences relevant to
+the Hot-Sync operation on your Pilot. 
+</para>
+
+<screenshot>
+<screeninfo>Sync page</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="setup-sync.png" format="png">
+</imageobject>
+<textobject><phrase>The Sync page</phrase></textobject>
+<caption><para>The Sync page</para></caption>
+</mediaobject>
+</screenshot>
+
+<variablelist>
+<varlistentry><term><guilabel>Sync Files</guilabel></term>
+<listitem>
+<para>
+When
+this is enabled any files dropped into the file install (either the
+icon docked on the panel or into the file installer in KPilot)
+will be installed on the Pilot during the next hot-sync.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><guilabel>Local overrides Pilot</guilabel></term>
+<listitem>
+<para>
+When
+a record has been modified on both the Pilot and the local side, only
+one can be kept.  By default KPilot assumes the Pilot has the most
+recent information and will keep that.  By enabling this option
+KPilot assumes <emphasis>it</emphasis> has the
+most recent information and will overwrite the Pilot's copy.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Force first-time sync every time</guilabel></term>
+<listitem>
+<para>
+Under some circumstances -- you have many PCs and many Pilots --
+you may want to perform a &quot;cleaner&quot; hot-sync every time
+instead of the &quot;quick-and-dirty&quot; hot-sync that
+KPilot does if you just have one Pilot and one PC.
+Just <emphasis>when</emphasis> you want to enable this 
+option is a matter of personal preference.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do full backup when changing PCs</guilabel></term>
+<listitem>
+<para>
+If you have more than one PC and synchronise your Pilot
+with each of them you may want to disable this option.
+When you change PCs it is a good idea to perform a full backup,
+since otherwise your KDE desktop will not reflect
+the state of your Pilot accurately. (This is a limitation
+of the Pilot itself.) On the other hand, performing a full
+backup can be time-consuming and annoying, which is why
+you can disable such a backup here.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Prefer Fast-Sync to Hot-Sync</guilabel></term>
+<listitem>
+<para>
+While a hot-sync is faster than a full backup,
+a fast-sync is faster still than a hot-sync and
+synchronises only those databases that have conduits.
+This means that any database without a conduit is
+not backed up and not synchronised.
+This also means that if something goes wrong with your Pilot,
+you may not be able to recover databases with no
+conduit.
+This is a classic trade-off between speed and safety.
+</para>
+</listitem>
+</varlistentry>
+
+
+</variablelist>
+</sect2>
+</sect1>
+
+<sect1 id="kpilotmain">
+<title>
+Main Window
+</title>
+
+<para>
+The main window in KPilot just contains the &kpilot; logo.
+You can switch to one of the 
+<link linkend="builtin">builtin applications</link> by
+using the drop-down list on the toolbar.
+</para>
+
+<screenshot>
+<screeninfo>KPilot Main Window</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="main-app.png" format="png"></imageobject>
+<textobject><phrase>The Main Window</phrase></textobject>
+<caption><para>The Main Window</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+The main window contains the application menu, which we will deal with here.
+<itemizedlist>
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Settings</guimenuitem>
+</menuchoice>
+brings up the <link linkend="general">configuration dialog</link>
+for KPilot.
+</para>
+</listitem>
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Hot-Sync</guimenuitem>
+</menuchoice>
+starts a hot-sync. You should press the
+Hot-Sync button on your Pilot's cradle.
+<emphasis>Note:</emphasis>
+it is not possible to cancel a hot-sync once
+the request has been made.
+</para>
+</listitem>
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Fast-Sync</guimenuitem>
+</menuchoice>
+(not available with all installations)
+starts a fast-sync in the same way that 
+a hot-sync is started.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Backup</guimenuitem>
+</menuchoice>
+performs a full backup of your Pilot. This 
+is like a hot-sync, but can take several minutes.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Restore</guimenuitem>
+</menuchoice>.
+This copies all the data on your PC to your Pilot,
+replacing whatever data was there.
+Use this if your Pilot suffers some catastrophe
+(or is replaced by a new one).
+<emphasis>
+Doing a restore will erase all data on the Pilot
+before restoring the information from your PC!
+</emphasis>
+</para>
+</listitem>
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Quit</guimenuitem>
+</menuchoice>
+quits KPilot, closing the main window and stopping the
+daemon if that 
+<link linkend="stopdaemononexit">configuration option</link>
+is enabled.
+</para>
+</listitem>
+
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>Conduits</guimenu>
+<guimenuitem>External</guimenuitem>
+</menuchoice>
+configures the external conduits.
+This is explained <link linkend="conduits">below</link>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+<menuchoice>
+<guimenu>Conduits</guimenu>
+</menuchoice>:
+The remainder of the <menuchoice>
+<guimenu>Conduits</guimenu>
+</menuchoice>
+menu lists the 
+<link linkend="builtin">builtin applications</link>, 
+just like the
+drop-down box in the toolbar does.
+Select one of these applications
+to switch to it.
+</para>
+</listitem>
+
+
+</itemizedlist>
+
+</para>
+
+</sect1>
+
+
+
+
+<sect1 id="builtin">
+<title>
+Builtin Applications
+</title>
+
+<para>
+The builtin applications can be selected in two ways:
+either by selecting the application from the
+<menuchoice><guimenu>Conduits</guimenu></menuchoice>
+menu, for example
+<menuchoice>
+<guimenu>Conduits</guimenu>
+<guimenuitem>Memo</guimenuitem>
+</menuchoice>,
+or by selecting the application from the drop-down list
+in KPilot's toolbar.
+</para>
+
+<screenshot>
+<screeninfo>KPilot Toolbar</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="toolbar.png" format="png"></imageobject>
+<textobject><phrase>The KPilot Toolbar</phrase></textobject>
+<caption><para>The KPilot Toolbar</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+Selecting one of the builtin applications
+will cause that application to appear in KPilot's main
+window.
+Any changes you make to the Pilot databases with
+the builtin applications (such as deleting a memo)
+do not take effect on the Pilot until the next hot-sync.
+</para>
+
+<sect2 id="memo-app">
+
+<title>The Memo Application</title>
+    
+<para>
+    The memo application allows you to view the memos on your Pilot,
+      export them to text files, import new ones to be installed the next 
+      time you hot-sync, or edit existing ones.
+</para>
+
+<screenshot>
+<screeninfo>Memo Application</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="memo-app.png" format="png"></imageobject>
+<textobject><phrase>The Memo Application</phrase></textobject>
+<caption><para>The Memo Application</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+The memo application has a drop-down box 
+for the memo categories defined in the Pilot.
+Here category &quot;All&quot; is selected.
+Underneath the drop-down box is a list of memo titles.
+These are the first lines of the memos, just like
+in the Pilot memo application.
+Clicking on one of the memo titles in the list
+box will display it in the text box labelled
+<guilabel>Memo Text:</guilabel> to the right.
+</para>
+
+<para>
+When a memo is selected you can use the buttons
+<guibutton>Export Memo</guibutton> and
+<guibutton>Delete Memo</guibutton>
+to export the selected memo to a file 
+or to delete the selected memo.
+Exporting a memo requires
+you to give a filename; the memo
+is written to that file.
+Take care not to overwrite existing files with this action.
+Deleting a memo does not affect the Pilot
+until the next hot-sync.
+</para>
+
+<para>
+The
+<guibutton>Import Memo</guibutton>
+button allows you to read a text file and
+add it -- as a memo -- to the Pilot.
+Importing a memo does not take effect until
+the next hot-sync.
+Note that if you import a memo and decide that
+you do not want to have it on the Pilot
+you must perform a hot-sync (copying the memo
+to the Pilot) and then delete the memo
+from the Pilot. It is not possible to
+delete newly-added memos from the builtin memo application.
+</para>
+
+</sect2>
+    
+<sect2 id="address-app">
+<title>The Address Utility</title>
+<para>
+    The address viewer lets you view, import, export and edit
+      addresses to and from the Pilot.  
+The import and export format is
+      configurable via the 
+<link linkend="address">
+settings dialog</link>.  Note
+that the first field in the 
+import format is used as the 
+<!-- not sure what the markup of key field should be. -->
+Key Field.  
+That is, if 
+<guilabel>Use Key Field</guilabel> 
+is turned on in the 
+<link linkend="address">settings dialog</link>, 
+when importing if KPilot sees
+another record with a matching 
+Key Field 
+the existing record is
+updated to reflect the new data being read in.  If no such record
+exists, a new record is created.  The default is not to use the 
+Key Field, 
+so every record read in from the import file is created and
+added to the database.
+</para>
+
+
+
+<screenshot>
+<screeninfo>The Address Application</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="address-app.png" format="png"></imageobject>
+<textobject><phrase>The Address Application</phrase></textobject>
+<caption><para>The Address Application</para></caption>
+</mediaobject>
+</screenshot>
+
+
+<para>
+The address application resembles the memo application;
+the drop-down box, list and text area function exactly
+the same, allowing you to select and view an address
+as on the Pilot.
+</para>
+
+<para>
+You can use the buttons
+to enter new records into the address book,
+delete addresses or changes addresses.
+The button
+<guibutton>Import List</guibutton>
+lets you read a text file containing records
+in comma-separated-value format (with the fields in the
+particular order described by the
+<link linkend="address">Address Import</link>
+setting) and add those records to the address book.
+The
+<guibutton>Export List</guibutton>
+writes all the addresses in the address book to
+a file in the format given by the
+<link linkend="address">Address Export</link>
+setting.
+</para>
+
+
+
+</sect2>
+
+<sect2 id="installer-app">
+<title>The File Installer</title>
+<para>
+The file installer supports dragging and dropping of
+files into the file list area
+or just hit the
+<guibutton>Add File</guibutton> button to add a file if you are not.  
+These files will
+be installed on your Pilot during the next hot sync if 
+<guilabel>Sync Files</guilabel>
+is checked in the 
+<link linkend="configuring-kpilot">settings dialog</link>.  
+If you choose not to
+install the files on the Pilot, just hit 
+<guibutton>Clear List</guibutton>
+to remove any pending files.  
+<emphasis>Note that an internal copy of the
+file is kept, so you can even drag and drop URLs from 
+<application>Konqueror</application>!
+</emphasis>
+</para>
+
+<para>
+Also, if you are using the Hot-Sync Daemon you may drag and
+drop files/URLs onto the docked icon on the tool bar.  Provided
+<guilabel>Sync Files</guilabel> is checked in the 
+<link linkend="general">settings dialog</link> they
+will be installed the next time you hot-sync.
+</para>
+
+
+
+<screenshot>
+<screeninfo>The File Installer</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="file-app.png" format="png"></imageobject>
+<textobject><phrase>The File Installer</phrase></textobject>
+<caption><para>The File Installer</para></caption>
+</mediaobject>
+</screenshot>
+
+
+
+</sect2>
+</sect1>
+
+<sect1 id="conduits">
+<title>Conduits</title>
+
+<para>
+Conduits can be external programs, written by third parties,
+to interface your Pilot to any application imaginable.
+</para>
+
+<para>
+Conduits can be set up by selecting
+<menuchoice>
+<guimenu>Conduits</guimenu>
+<guimenuitem>External</guimenuitem>
+</menuchoice>.
+This allows you to select which conduits 
+to run during a hot sync and to configure those conduits.
+A window similar to the following will be displayed:
+<screenshot>
+<screeninfo>The Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="setup-conduit.png" format="png"></imageobject>
+<textobject><phrase>The Conduit Setup Dialog</phrase></textobject>
+<caption><para>The Conduit Setup Dialog</para></caption>
+</mediaobject>
+</screenshot>
+You can drag-and-drop conduits between the two
+branches of the tree (from <guilabel>Available</guilabel>
+to <guilabel>Active</guilabel> and back again).
+Only those conduits listed under <guilabel>Active</guilabel>
+will actually run during a hot-sync.
+</para>
+
+<sect2 id="popmail-cond">
+<title>Mail Conduit</title>
+
+<para>
+This conduit allows you to send and receive email.
+The configuration of the Mail Conduit
+is fairly complex.
+<screenshot>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-popmail-top.png" format="png"></imageobject>
+<textobject><phrase>The Mail Conduit Setup Dialog</phrase></textobject>
+<caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
+</mediaobject>
+</screenshot>
+There are two tabs in the setup dialog for
+the Mail Conduit,
+one for
+<link linkend="popmail-cond-send">Sending mail</link>
+and one for
+<link linkend="popmail-cond-recv">Receiving mail</link>.
+</para>
+
+<sect3 id="popmail-cond-send">
+<title>Sending Mail</title>
+
+<screenshot>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-popmail-send-method.png" format="png"></imageobject>
+<textobject><phrase>Choosing the Send Method</phrase></textobject>
+<caption><para>Choosing the Send Method</para></caption>
+</mediaobject>
+</screenshot>
+
+</sect3>
+
+<sect3 id="popmail-cond-recv">
+<title>Receiving Mail</title>
+
+
+<screenshot>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-popmail-recv-method.png" format="png"></imageobject>
+<textobject><phrase>Choosing the Receive Method</phrase></textobject>
+<caption><para>Choosing the Receive Method</para></caption>
+</mediaobject>
+</screenshot>
+</sect3>
+
+
+</sect2>
+
+<sect2 id="vcal-cond">
+<title>Calendar Conduit</title>
+
+<para>
+This conduit will synchronize your Pilot
+with <application>KOrganizer</application>.
+The conduit needs two pieces of information:
+the filename of the calendar file
+(this will usually be a file
+that ends in <filename>.vcs</filename>
+under
+<filename>.kde/share/apps/korganizer/</filename>
+under your home directory)
+and whether or not to ask before changing
+data in that calendar file.
+</para>
+
+<screenshot>
+<screeninfo>The Calendar Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-vcal.png" format="png"></imageobject>
+<textobject><phrase>Calendar Conduit Setup</phrase></textobject>
+<caption><para>Calendar Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+You can usually leave 
+<guilabel>Prompt before changing data</guilabel>
+off.
+</para>
+
+</sect2>
+
+<sect2 id="todo-cond">
+<title>To-do Conduit</title>
+
+<para>
+This conduit synchronizes with
+<application>KOrganizer</application>'s
+todo list.
+The configuration dialog looks exactly the same as
+the configuration dialog for the
+<link linkend="vcal-cond">Calendar Conduit</link>.
+</para>
+
+</sect2>
+
+<sect2 id="conduit-knotes">
+<title>KNotes Conduit</title>
+
+<para>
+The
+<application>KNotes</application> Conduit
+is a partial replacement for the builtin 
+<link linkend="builtin">memo application</link>.
+It keeps the notes you write with
+<application>KNotes</application>
+synchronized with the memos you write on 
+your Pilot.
+</para>
+
+<para>
+Setting up the KNotes conduit is very simple,
+since there is only one configuration option.
+<screenshot>
+<screeninfo>KNotes Conduit Setup</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-knotes.png" format="png"></imageobject>
+<textobject><phrase>KNotes Conduit Setup</phrase></textobject>
+<caption><para>KNotes Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+
+
+<sect2 id="conduit-null">
+<title>NULL conduit</title>
+
+<para>
+The NULL conduit is included as a programming example and
+has no practical function whatsoever.
+</para>
+</sect2>
+
+
+</sect1>
+
+
+
+
+</chapter>
+
+
+
+<chapter id="faq">
+<title>FAQ</title>
+
+<sect1 id="crash">
+<title>KPilot Startup Problems</title>
+
+
+<qandaset>
+
+<qandaentry>
+<question>
+<para>
+What do I put after <userinput>--debug</userinput>?
+</para>
+</question>
+<answer>
+<para>
+The number after <userinput>--debug</userinput>
+indicates what kind of messages
+you want to see; 1023 indicates <emphasis>all messages</emphasis>.
+The exact numbers you can use are as follows:
+<table id="debug">
+<title>Debug Values</title>
+<tgroup cols="2">
+<thead>
+<row><entry>Value</entry><entry>Meaning</entry></row>
+</thead>
+<tbody>
+<row><entry>1</entry><entry>List the name of *every* function called. 
+	Very tedious.
+</entry></row>
+<row><entry>2</entry><entry>Major UI operations 
+	(e.g.&nbsp;Creating windows).
+</entry></row>
+<row><entry>4</entry><entry>Minor UI operations 
+	(e.g.&nbsp;Adding visual elements).
+</entry></row>
+<row><entry>8</entry><entry><emphasis>All</emphasis> UI operations 
+	(e.g.&nbsp;Filling list boxes -- this is very tedious).
+</entry></row>
+<row><entry>16</entry><entry>Major database operations.
+</entry></row>
+<row><entry>32</entry><entry>Minor database operations.
+</entry></row>
+<row><entry>64</entry><entry>All database operations.
+</entry></row>
+<row><entry>128</entry><entry>Major sync actions.
+</entry></row>
+<row><entry>256</entry><entry>Minor sync actions.
+</entry></row>
+<row><entry>512</entry><entry>All sync actions.
+</entry></row>
+</tbody>
+</tgroup>
+</table>
+Just add up the numbers of the kind of messages you want.
+</para>
+</answer>
+</qandaentry>
+
+
+
+<qandaentry>
+<question>
+<para>
+KPilot says &quot;Can't connect to pilot&quot;
+</para>
+</question>
+<answer>
+<para>
+This can have various causes. Check that:
+<itemizedlist>
+<listitem>
+<para>
+	The pilot device 
+	(usually <filename>/dev/pilot</filename>) exists and points
+	to the serial port the Pilot is actually connected to.
+</para>
+<para>
+	To link the Pilot device to the correct serial port,
+	you can either fill in 
+	<filename>/dev/ttyS<replaceable>n</replaceable></filename> 
+	in the <guilabel>Pilot Device</guilabel>
+	field in the
+	<link linkend="general">setup dialog</link> 
+	or (preferably) link 
+	<filename>/dev/pilot</filename> to 
+	<filename>/dev/ttyS<replaceable>n</replaceable></filename> 
+	with the following command (as root):
+	<userinput>
+	ln -s /dev/ttyS<replaceable>n</replaceable> /dev/pilot
+	</userinput>
+	Here <filename>/dev/ttyS<replaceable>n</replaceable></filename> 
+	is the name 
+	of the serial port; replace <replaceable>n</replaceable>
+	with the correct number (usually 0 or 1).
+</para>
+</listitem>
+<listitem>
+<para>
+	Check that you have permission to read and write to the serial port.
+	The permissions for the serial port should be such that you can write to
+	it. This is most easily done by running the following (as root):
+	<userinput>
+	chmod 666 /dev/ttyS<replaceable>n</replaceable>
+	</userinput>
+</para>
+</listitem>
+<listitem>
+<para>
+	Try starting the daemon by hand before starting KPilot.
+</para>
+</listitem>
+<listitem>
+<para>
+	(For Mandrake 7 systems) Check the system security level:
+	settings higher than 3 prevent some forms of inter-process
+	communication which are necessary for KPilot to
+	operate correctly.
+</para>
+
+<para>
+	(<emphasis>Mandrake security information 
+	courtesy of Jay Summett</emphasis>)
+	To set your MSEC (Mandrake SECurity) settings to not block the
+	KPilot socket (to localhost connect) you can login as root and
+	type 
+	<userinput>
+	/etc/security/msec/init.sh 3
+	</userinput>
+	Which will set your msec level to 3 (regular security).
+	For more information about the various security levels, etc, see:
+	<ulink url="http://www.linux-mandrake.com/userguide/en/reference/017.html#157">
+	the Mandrake reference guide</ulink>.
+</para>
+</listitem>
+</itemizedlist>
+</para>
+</answer>
+</qandaentry>
+					      
+</qandaset>
+
+</sect1>
+
+<sect1 id="database">
+<title>Database Questions</title>
+
+<para>
+This section answers questions commonly asked about
+particular databases and how they 
+interact with KPilot.
+</para>
+
+<qandaset>
+
+<qandaentry>
+<question>
+<para>
+Databases become corrupted after a sync,
+what should I do?
+</para>
+</question>
+<answer>
+<para>
+Certain databases (from third-party software manufacturers)
+appear not to follow the standard database layout.
+If you can find out what the creator id of the database is,
+you can add it to either the 
+<guilabel>Backup Only</guilabel> list or the 
+<guilabel>Skip</guilabel> list in the 
+<link linkend="dbspecial">settings dialog</link>.
+</para>
+
+<para>
+The following table shows which databases should be skipped
+or backed-up only:
+<table id="dbskip">
+<title>Databases needing Special Treatment</title>
+<tgroup cols="3">
+<thead>
+<row><entry>Database</entry><entry>Creator ID</entry><entry>Action</entry></row>
+</thead>
+<tbody>
+<row>
+	<entry>Launcher (the Pilot's main menu)</entry>
+	<entry>lnch</entry>
+	<entry>Skip</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Is there a conduit for Netscape Calendar?
+</para>
+</question>
+<answer>
+<para>
+No, there isn't.
+Neither are there plans to include support or write a
+conduit for Netscape Calendar.
+</para>
+</answer>
+</qandaentry>
+
+
+</qandaset>
+
+</sect1>
+
+<sect1 id="hotsync">
+<title>
+Special Hotsync Questions
+</title>
+
+<para>
+This section lists questions about hotsync methods that differ
+from the &quot;usual&quot; direct serial link method.
+</para>
+
+<qandaset>
+
+<qandaentry>
+<question>
+<para>
+How do I do an infrared (IR) hotsync?
+</para>
+</question>
+<answer>
+<para>
+First of all your Pilot has to actually support IR hotsyncs.
+This can be achieved through various means:
+PalmOS 3.3 and higher include support for it;
+there is an IR enhancements package for older
+PalmOS versions; IrLink from IsComplete apparently has the
+same capabilities.
+Check out the
+<ulink url="http://www.palm.com/">Palm</ulink>
+web pages for more information.
+</para>
+
+<para>
+Assuming your Pilot now has IR hotsync support and it
+is setup to do IR hotsyncs (in the hotsync preferences on the Pilot),
+we can turn our attention to the PC you will be syncing with.
+It needs an IR port. 
+For laptops, this is trivial, desktop PCs may require some
+extra hardware.
+</para>
+
+<para>
+Your linux kernel will need to support IR and the IRCOMM protocol.
+For stock RedHat systems, the following command should
+setup IR support (as root):
+<screen width="40">
+<prompt># </prompt><userinput>modprobe ircomm</userinput>
+</screen>
+Other distributions should follow the IR-HOWTO.
+Once IR support in the kernel has been activated,
+you need to make devices for the IR ports.
+The IR-HOWTO suggests (as root):
+<screen width="40">
+<prompt># </prompt><userinput>mknod /dev/ircomm0 60 64</userinput>
+<prompt># </prompt><userinput>chmod 666 /dev/ircomm0</userinput>
+</screen>
+Next we need to start some daemons for IR services:
+<screen width="40">
+<prompt># </prompt><userinput>irattach /dev/ttyS<replaceable>n</replaceable></userinput>
+<prompt># </prompt><userinput>irmanager -d 0</userinput>
+</screen>
+Here <filename>/dev/ttyS<replaceable>n</replaceable></filename>
+is the serial port
+the IR port is using. <replaceable>n</replaceable> could be 0, 1, or some other
+number depending on your hardware setup.
+Follow the instructions in the IR-HOWTO for assistance
+(for desktop machines, it's usually a setting in the BIOS).
+</para>
+
+<para>
+Once you've gotten this far, just make <filename>/dev/pilot</filename>
+point to <filename>/dev/ircomm0</filename>
+and you're ready!
+</para>
+</answer>
+</qandaentry>
+
+
+
+<qandaentry>
+<question>
+<para>Can I do a hot sync with my (USB) Handspring Visor?</para>
+</question>
+<answer>
+<para>
+Yes, you can.
+I don't have definitive information, but postings on the
+kpilot list have stated that you can point <filename>/dev/pilot</filename>
+to the USB device and everything will work fine.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>Is there any support for remote hot syncs?</para>
+</question>
+<answer>
+<para>
+No, not yet. 
+Maybe later.
+</para>
+</answer>
+</qandaentry>
+
+
+</qandaset>
+
+
+
+</sect1>
+</chapter>
+
+
+
+<chapter id="credits">
+
+<title>Credits and License</title>
+
+<para>
+KPilot
+Program copyright 1998-2000 by Dan Pilone
+<email>pilone@slac.com</email>
+</para>
+<para>
+Contributors:
+<itemizedlist>
+<listitem><para>Adriaan de Groot <email>adridg@cs.kun.nl</email></para>
+</listitem>
+<listitem><para>Preston Brown <email>pbrown@redhat.com</email></para>
+</listitem>
+<listitem><para>Conduits by: Herwin Jan Steehouwer,
+Kenneth Albanowski, Michael Kropfberger
+</para></listitem>
+<listitem><para>Patches by: Robert Ambrose, Scott Presnell,
+Dag Nygren, Chuck Robey, Jay Summet, Heiko Purnhagen,
+J&ouml;rg Habenicht
+</para></listitem>
+</itemizedlist>
+</para>
+
+<para>
+Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
+</para>
+
+&underFDL;
+&underGPL;
+</chapter>
+
+<![ %addindex; [ &kdedocindex; ]]>
+</book>
+<!--
+Local Variables:
+sgml-minimize-attributes: nil
+sgml-general-insert-case: lower
+End:
+-->
