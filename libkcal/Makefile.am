@@ -3,6 +3,7 @@ SUBDIRS = versit
 INCLUDES = -I$(top_srcdir)/libical/src/libical \
   -I$(top_srcdir)/libical/src/libicalss -I$(top_builddir)/libical/src/libical \
   -I$(top_builddir)/libical/src/libicalss -I$(srcdir)/versit $(all_includes)
+AM_CPPFLAGS = -DLIBKCAL_BACK_COMPAT
 
 lib_LTLIBRARIES   = libkcal.la
 libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0 -module
