@@ -31,9 +31,7 @@
 */
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
 // Only include what we really need:
 // First UNIX system stuff, then std C++, 
@@ -42,34 +40,16 @@
 //
 #include <iostream.h>
 
-#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
-#endif
-
-#ifndef _KCONFIG_H
 #include <kconfig.h>
-#endif
-
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
+#include <klocale.h>
 
 
-#ifndef _KPILOT_CONDUITAPP_H
 #include "conduitApp.h"
-#endif
-
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
-
-#ifndef _NULL_NULL_CONDUIT_H
 #include "null-conduit.h"
-#endif
-
-#ifndef _NULL_SETUPDIALOG_H
 #include "setupDialog.h"
-#endif
 
 
 
@@ -176,6 +156,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.21  2001/04/26 19:19:26  adridg
+// [GUI] i18n updates and QToolTips
+//
 // Revision 1.20  2001/04/16 13:36:03  adridg
 // Removed --enable-final borkage
 //
