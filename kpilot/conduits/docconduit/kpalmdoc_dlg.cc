@@ -53,9 +53,9 @@ void ConverterDlg::writeSettings()
 //	config->setGroup("GeneralData");
 
 	// General page
-	fConfig->writeEntry("TXT directory", dlg->fTXTDir->url());
-	fConfig->writeEntry("PDB directory", dlg->fPDBDir->url());
-	fConfig->writeEntry("Sync directories", dlg->fDirectories->isChecked());
+	fConfig->writeEntry("TXT folder", dlg->fTXTDir->url());
+	fConfig->writeEntry("PDB folder", dlg->fPDBDir->url());
+	fConfig->writeEntry("Sync folders", dlg->fDirectories->isChecked());
 	fConfig->writeEntry("Ask before overwriting files", dlg->fAskOverwrite->isChecked());
 	fConfig->writeEntry("Verbose messages", dlg->fVerbose->isChecked());
 
@@ -145,9 +145,10 @@ void ConverterDlg::slotToText()
 	{
 		if (pdbinfo.isFile())
 		{
-			int res=KMessageBox::questionYesNo(this, i18n("<qt>You selected "
-				"directory sync, but gave a filename <em>%1</em>. <br>Use "
-				"directory <em>%2</em> instead?</qt>").arg(pdburl)
+			int res=KMessageBox::questionYesNo(this, 
+				i18n("<qt>You selected to sync folders, "
+				"but gave a filename instead (<em>%1</em>)."
+				"<br>Use folder <em>%2</em> instead?</qt>").arg(pdburl)
 				.arg(pdbinfo.dirPath(true)));
 			if (res==KMessageBox::Yes)
 			{
@@ -160,15 +161,19 @@ void ConverterDlg::slotToText()
 		if (!pdbinfo.isDir())
 		{
 			// no directory, so error message and return
-			KMessageBox::sorry(this, i18n("<qt>The directory <em>%1</em> for "
-				"the handheld database files is not a valid directory.</qt>").arg(pdburl));
+			KMessageBox::sorry(this, 
+				i18n("<qt>The folder <em>%1</em> for "
+				"the handheld database files is not a valid "
+				"folder.</qt>").arg(pdburl));
 			return;
 		}
 
 		if (!pdbinfo.exists())
 		{
-			KMessageBox::sorry(this, i18n("<qt>The directory <em>%1</em> for "
-				"the handheld database files is not a valid directory.</qt>").arg(pdburl));
+			KMessageBox::sorry(this, 
+				i18n("<qt>The folder <em>%1</em> for "
+				"the handheld database files is not a "
+				"valid directory.</qt>").arg(pdburl));
 			return;
 		}
 
@@ -176,9 +181,10 @@ void ConverterDlg::slotToText()
 		// Now check the to directory:
 		if (txtinfo.isFile())
 		{
-			int res=KMessageBox::questionYesNo(this, i18n("<qt>You selected "
-				"directory sync, but gave a filename <em>%1</em>. <br>Use "
-				"directory <em>%2</em> instead?</qt>").arg(txturl)
+			int res=KMessageBox::questionYesNo(this, 
+				i18n("<qt>You selected to sync folders, "
+				"but gave a filename instead (<em>%1</em>)."
+				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
 				.arg(txtinfo.dirPath(true)));
 			if (res==KMessageBox::Yes) {
 				txturl=txtinfo.dirPath(true);
@@ -192,7 +198,8 @@ void ConverterDlg::slotToText()
 			txtinfo.dir().mkdir(txturl, true);
 		}
 		if (!txtinfo.isDir()) {
-			KMessageBox::sorry(this, i18n("<qt>The directory <em>%1</em> for "
+			KMessageBox::sorry(this, 
+				i18n("<qt>The folder <em>%1</em> for "
 				"the text files could not be created.</qt>").arg(txturl));
 			return;
 		}
@@ -286,9 +293,10 @@ void ConverterDlg::slotToPDB()
 	{
 		if (txtinfo.isFile())
 		{
-			int res=KMessageBox::questionYesNo(this, i18n("<qt>You selected "
-				"directory sync, but gave a filename <em>%1</em>. <br>Use "
-				"directory <em>%2</em> instead?</qt>").arg(txturl)
+			int res=KMessageBox::questionYesNo(this, 
+				i18n("<qt>You selected to sync folders, "
+				"but gave a filename instead (<em>%1</em>)."
+				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
 				.arg(txtinfo.dirPath(true)));
 			if (res==KMessageBox::Yes)
 			{
@@ -300,8 +308,9 @@ void ConverterDlg::slotToPDB()
 
 		if (!txtinfo.isDir() || !txtinfo.exists())
 		{
-			KMessageBox::sorry(this, i18n("<qt>The directory <em>%1</em> for "
-				"the text files is not a valid directory.</qt>").arg(txturl));
+			KMessageBox::sorry(this, 
+				i18n("<qt>The folder <em>%1</em> for "
+				"the text files is not a valid folder.</qt>").arg(txturl));
 			return;
 		}
 
@@ -310,8 +319,10 @@ void ConverterDlg::slotToPDB()
 		if (pdbinfo.isFile())
 		{
 			int res=KMessageBox::questionYesNo(this, i18n("<qt>You selected "
-				"directory sync, but gave a filename <em>%1</em>. <br>Use "
-				"directory <em>%2</em> instead?</qt>").arg(pdburl)
+				i18n("<qt>You selected to sync folders, "
+				"but gave a filename instead (<em>%1</em>)."
+				"<br>Use folder <em>%2</em> instead?</qt>")
+				.arg(pdburl)
 				.arg(pdbinfo.dirPath(true)));
 			if (res==KMessageBox::Yes) {
 				pdburl=pdbinfo.dirPath(true);
@@ -325,7 +336,7 @@ void ConverterDlg::slotToPDB()
 			pdbinfo.dir().mkdir(pdburl, true);
 		}
 		if (!pdbinfo.isDir()) {
-			KMessageBox::sorry(this, i18n("<qt>The directory <em>%1</em> for "
+			KMessageBox::sorry(this, i18n("<qt>The folder <em>%1</em> for "
 				"the PalmDOC files could not be created.</qt>").arg(pdburl));
 			return;
 		}
@@ -392,8 +403,8 @@ void ConverterDlg::slotDirectories(bool dir)
 	DEBUGCONDUIT<<"Slot Directories: "<<dir<<endl;
 	if (dir)
 	{
-		dlg->fTextLabel->setText(i18n("&Text directory:"));
-		dlg->fPdbLabel->setText(i18n("&PalmDOC directory:"));
+		dlg->fTextLabel->setText(i18n("&Text folder:"));
+		dlg->fPdbLabel->setText(i18n("&PalmDOC folder:"));
 		dlg->fTXTDir->setMode(KFile::LocalOnly | KFile::Directory);
 		dlg->fPDBDir->setMode(KFile::LocalOnly | KFile::Directory);
 	} else {
