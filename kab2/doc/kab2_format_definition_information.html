@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- Copyright (C) 2000 Rik Hemsley <rik@kde.org> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+
+    <title>
+      [[without]] - KAB2 format definition information
+    </title>
+
+    <link rel="stylesheet" type="text/css" href="without.css" />
+
+  </head>
+
+  <body bgcolor="778899">
+
+  <h1>
+    KAB2 format definition information
+  </h1>
+
+
+<h2>
+  Introduction
+</h2>
+
+<p>
+  KAB2 uses format definitions. These allow key name -&gt; value type
+  mappings to be created. Note that this is not key -&gt; value mapping.  It
+  is the name of the key and the data type of the value which we are
+  concerned with.
+</p>
+
+<h2>
+  Why use format definitions ?
+</h2>
+
+<p>
+  Most addressbooks use a fixed format definition. For example, the vCard
+  specification defines a set of field names with strictly defined value
+  storage. KAB1 does the same. While this is fine for a very simple
+  addressbook, users often wish to extend the addressbook format, storing
+  different information to that which was initially envisaged as being
+  necessary by the format author.
+</p>
+
+<p>
+  While it is possible to allow for extensions through 'extra' fields, this
+  is not an ideal solution to the problem. KAB2 tries to address the problem
+  by providing no fixed format, rather the format may be specified freely.
+</p>
+
+<h2>
+  Issues
+</h2>
+
+<p>
+  One side-effect of allowing arbitrary value types is that the front-end may
+  not know how to present some values to the user. For example, the user may
+  wish to store images in a format which the front-end has no handler for.
+</p>
+
+<p>
+  There are many possible solutions to the problem stated above. One is to
+  provide a value-storage specification mechanism within the addressbook
+  format definition. This, however, would quickly become extremely complex
+  and would still require convoluted mechanisms within the front-end to
+  handle hints from the format definition as to how value types should be
+  rendered.
+</p>
+
+<p>
+  It is my opinion that keeping the format definition simple and leaving
+  rendering decisions to the front-end is the wisest route. Modern desktop
+  applications usually have some support for embedding or launching viewers
+  for arbitrary mime types.
+</p>
+  
+<p>Mime types for which a handler cannot be found
+  can be dealt with in a sensible fashion. For example, a web browser will
+  usually ask the user for a program which can display an image whose format
+  it does not recognise.
+</p>
+
+<p>
+  While leaving data format handling to the front-end is convenient to the
+  writer of the format definition mechanism, it is still possible to provide
+  a reasonable system for handling enumerated types and lists.  This is what
+  KAB2 attempts to do.
+</p>
+
+<h2>
+  Storage
+</h2>
+
+<p>
+  Format definitions are stored by KAB2 using a class called
+  FormatDefinition. A FormatDefinition holds FieldFormat objects, each of
+  which specifies the key, caption, value data type, and other
+  meta-information about a 'field'.
+</p>
+
+<p>
+  The FormatDefinition class is easy to use for the programmer, but
+  definitions must also be editable by the user. This suggests that a GUI
+  editor for definitions would be useful, but does not address the problem of
+  no GUI being available, nor does it allow for a platform-independent
+  storage format.
+</p>
+
+<p>
+  To address these issues, format definitions may be stored in XML. This
+  allows editing on the most basic of equipment, ensures that the format
+  will be readable and understandable by a reasonably capable user, and
+  deals with transmission, platform dependence and storage details at once.
+</p>
+
+<h3>
+  Example XML format definition file:
+</h3>
+
+<!-- XML -->
+<pre>&lt;?<span class="element-id">xml</span> <span class="attr">version</span>=<span class="constant">&quot;1.0&quot;</span> <span class="attr">encoding</span>=<span class="constant">&quot;UTF-8&quot;</span>?&gt;
+
+<!-- DOCTYPE -->
+&lt;!<span class="element-id">DOCTYPE</span> kab_format&gt;
+
+<!-- START DEF -->
+&lt;<span class="element-id">kab-definition</span> <span class="attr">name</span>=<span class="constant">&quot;definition name&quot;</span>&gt;
+
+<!-- FIELD -->
+&nbsp;&nbsp;&lt;<span class="element-id">field</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">name</span>=<span class="constant">&quot;name&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">caption</span>=<span class="constant">&quot;Full name&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">unique</span>=<span class="constant">&quot;true&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">mimetype</span>=<span class="constant">&quot;text/UCS-2&quot;</span>
+&nbsp;&nbsp;/&gt;
+
+<!-- FIELD -->
+&nbsp;&nbsp;&lt;<span class="element-id">field</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">name</span>=<span class="constant">&quot;homePage&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">caption</span>=<span class="constant">&quot;Home page&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">unique</span>=<span class="constant">&quot;false&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">mimetype</span>=<span class="constant">&quot;text/uri&quot;</span>
+&nbsp;&nbsp;/&gt;
+
+<!-- FIELD -->
+&nbsp;&nbsp;&lt;<span class="element-id">field</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">email</span>=<span class="constant">&quot;email&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">caption</span>=<span class="constant">&quot;Email address&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">unique</span>=<span class="constant">&quot;false&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">mimetype</span>=<span class="constant">&quot;address/rfc822&quot;</span>
+&nbsp;&nbsp;/&gt;
+
+<!-- END DEF -->
+&lt;<span class="element-id">/kab-definition</span>&gt;
+</pre>
+
+<p>
+  More text to go here later...
+</p>
+
+  </body>
+
+</html>

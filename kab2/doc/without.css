@@ -1,0 +1,87 @@
+/* Copyright (C) 2000 Rik Hemsley <rik@kde.org> */
+
+BODY {
+  color: rgb(224, 224, 224);
+  background: rgb(80, 100, 120);
+  font-family: Virtue, Charcoal, Verdana, Arial, Helvetica, sans-serif;
+}
+
+P {
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-bottom: 20px;
+}
+
+A:link    { color: #a2c5ca }
+A:active  { color: #ffffff }
+A:visited { color: #a2c5ca }
+
+A:link          IMG { border: 0px }
+A:link.active   IMG { border: 0px }
+A:link.visited  IMG { border: 0px }
+
+HTML:lang(fr) { quotes: '« ' ' »' }
+HTML:lang(de) { quotes: '»' '«' '\2039' '\203A' }
+
+IMG {
+  border: 0px;
+  margin: 0px;
+}
+
+IMG.icon {
+  width:        34px;
+  height:       34px;
+  border-width: 0px;
+  margin: 8px;
+}
+
+IMG.thumbnail {
+  width:        200px;
+  height:       150px;
+  border-width: 0px;
+}
+
+IMG.logo {
+  width:        216px;
+  height:       34px;
+  border-width: 0px;
+}
+
+PRE {
+  background-color: rgb(142, 158, 168);
+  color: black;
+}
+
+PRE SPAN.keyword {
+  color: blue;
+}
+ 
+PRE SPAN.visibility {
+  color: yellow;
+}
+
+PRE SPAN.type {
+  color: white;
+}
+ 
+PRE SPAN.function-name {
+  color: red;
+}
+ 
+PRE SPAN.constant {
+  color: red;
+}
+ 
+PRE SPAN.comment {
+  color: blue;
+}
+
+PRE SPAN.element-id {
+  color: white;
+}
+
+PRE SPAN.attr {
+  color: yellow;
+}
+ 
+/* vim:ts=2:sw=2:tw=78:set et: */
