@@ -180,6 +180,11 @@ class CalendarLocal : public Calendar
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
+      If inclusive is set to false, all events which overlap the range are
+      returned. An event's entire time span is considered in evaluating
+      whether it should be returned. For a non-recurring event, its span is
+      from its start to its end date. For a recurring event, its time span is
+      from its first to its last recurrence.
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
