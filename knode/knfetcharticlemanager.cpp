@@ -52,6 +52,7 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
 		
 	timer=new QTimer();
 	connect(timer, SIGNAL(timeout()), this, SLOT(slotTimer()));
+	connect(view, SIGNAL(expanded(QListViewItem*)), this, SLOT(slotItemExpanded(QListViewItem*)));
 	
 	readConfig();
 	
@@ -110,7 +111,8 @@ void KNFetchArticleManager::readConfig()
 	KConfig *c=KGlobal::config();
 	c->setGroup("READNEWS");
 	tOut=1000*c->readNumEntry("markSecs", 3);
-	KNLVItemBase::setTotalExpand(c->readBoolEntry("totalExpand", true));
+	totalExpand=c->readBoolEntry("totalExpand", true);
+	//KNHdrViewItem::setTotalExpand(totalExpand);
 	t_hreaded=c->readBoolEntry("showThreads", true);
 	autoMark=c->readBoolEntry("autoMark", true);
 }
@@ -151,12 +153,17 @@ void KNFetchArticleManager::showHdrs(bool clear)
 	
 	for (int i=0; i<g_roup->length(); i++){
 		art=g_roup->at(i);
-		art->setFiltered(false);
-		if(!art->listItem() && art->filterResult()) {
-			if(t_hreaded) createThread(art);
+		if( ( !art->listItem() && art->filterResult() ) &&
+		    ( art->idRef()==0 || !g_roup->byId(art->idRef())->filterResult() ) ) {
+		
+		  art->setListItem(new KNHdrViewItem(view));
+		  art->initListItem();
+		}
+		
+		
+			/*if(t_hreaded) createThread(art);
 			else createHdrItem(art);
-			//if((++cnt>100) && (cnt%100==0)) kapp->processEvents();
-		}		
+		}*/		
 	}
 	
 	if(view->firstChild())
@@ -434,23 +441,24 @@ void KNFetchArticleManager::createThread(KNFetchArticle *a)
   int idRef;
 	bool found;
 
-	if(a->idRef()==0) createHdrItem(a);
-	else {
-		idRef=a->idRef();
-		found=false;
-		while(idRef!=0 && !found) {
-				ref=g_roup->byId(idRef);
-				if(ref->filterResult()) found=true;
-				else idRef=ref->idRef();
-		}	
-		
-		if(found) {	
-			if(!ref->listItem())  createThread(ref);
-			a->setListItem(new KNHdrViewItem(ref->listItem()));
-			a->initListItem();
-		}
-		else createHdrItem(a);
-	}
+	//if(a->idRef()==0) createHdrItem(a);
+	//else {
+  idRef=a->idRef();
+  found=false;
+  while(idRef!=0 && !found) {
+    ref=g_roup->byId(idRef);
+    found=ref->filterResult();
+    idRef=ref->idRef();
+  }	
+  		
+  if(found) {	
+  	if(!ref->listItem())  createThread(ref);
+  	a->setListItem(new KNHdrViewItem(ref->listItem()));
+  }
+  else
+    a->setListItem(new KNHdrViewItem(view));
+  		
+  a->initListItem();
 }
 
 
@@ -505,6 +513,48 @@ void KNFetchArticleManager::referenceClicked(int refNr, KNArticleWidget *aw,int 
 			view->setSelected(ref->listItem(), true);			
 	}
 	else target->showErrorMessage(i18n("article not found"));	
+}
+
+
+
+void KNFetchArticleManager::slotItemExpanded(QListViewItem *p)
+{
+  int idRef=0, topId=0;
+  KNFetchArticle *art, *ref;
+  KNHdrViewItem *hdrItem;
+
+  bool inThread=false;
+
+  if(p->childCount() > 0) {
+    //qDebug("KNFetchArticleManager::slotItemExpanded() : childCount = %d => returning", p->childCount());
+    return;
+  }
+  hdrItem=static_cast<KNHdrViewItem*>(p);
+  topId=hdrItem->art->id();
+
+
+  for(int i=0; i<g_roup->count(); i++) {
+    art=g_roup->at(i);
+    if(art->filterResult() && !art->listItem()) {
+
+      if(art->idRef()==topId) {
+        art->setListItem(new KNHdrViewItem(hdrItem));
+        art->initListItem();
+      }
+      else if(totalExpand) {
+        idRef=art->idRef();
+        inThread=false;
+        while(idRef>0 && !inThread) {
+          ref=g_roup->byId(idRef);
+          inThread=(ref->id()==topId);
+          idRef=ref->idRef();
+        }
+        if(inThread)
+          createThread(art);
+      }
+    }
+  }
+  if(totalExpand) hdrItem->expandChildren();
 }
 
 

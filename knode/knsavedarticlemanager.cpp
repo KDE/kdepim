@@ -462,7 +462,7 @@ void KNSavedArticleManager::sendOutbox()
 
 
 
-void KNSavedArticleManager::cancel(KNSavedArticle *a=0)
+void KNSavedArticleManager::cancel(KNSavedArticle *a)
 {
 	if (!a) a=c_urrentArticle;
 	if (!a) return;
@@ -489,7 +489,7 @@ void KNSavedArticleManager::cancel(KNFetchArticle *a, KNGroup *g)
 
 
 
-void KNSavedArticleManager::supersede(KNSavedArticle *a=0)
+void KNSavedArticleManager::supersede(KNSavedArticle *a)
 {
 	if (!a) a=c_urrentArticle;
 	if (!a) return;
@@ -623,13 +623,12 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 	if(c->textChanged()) c->bodyContent(art);
 	art->setSubject(c->subject());
 	art->setDestination(c->destination());
-	art->setTimeT(dt.AsUnixTime());
+  art->setTimeT(dt.AsUnixTime());
   art->mimeInfo()->setIsReadable(true);
 	art->mimeInfo()->setCTEncoding(enc);
 	art->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
 	art->mimeInfo()->setCTSubType(KNArticleBase::STplain);	
-	tmp="charset=\""+charset+"\"";
-	art->mimeInfo()->addCTParameter(tmp);
+	art->mimeInfo()->setCharsetParameter(charset);
 	art->assemble();
 	
 	
@@ -899,17 +898,18 @@ bool KNSavedArticleManager::generateCancel(KNArticle *a, KNNntpAccount *acc)
 	if(genMId) ca->setHeader(KNArticleBase::HTmessageId, mid);
 	
 	QCString id=a->headerLine("Message-ID");
-	DwDateTime dt;
-	dt.Assemble();
-  ca->setHeader(KNArticleBase::HTsubject, "cancel of "+id);
+	ca->setSubject("cancel of "+id);
 	ca->setHeader(KNArticleBase::HTfrom, a->headerLine("From"));
-	ca->setHeader(KNArticleBase::HTnewsgroups, a->headerLine("Newsgroups"));
-	ca->setHeader(KNArticleBase::HTdate, dt.AsString().c_str());
-	ca->setTimeT(dt.AsUnixTime());
+	ca->setDestination(a->headerLine("Newsgroups"));
+	ca->setTimeT(time(0));
 	ca->setHeader(KNArticleBase::HTcontrol,"cancel "+id);
 	ca->addBodyLine("cancel by original author");
 	
-	ca->parse();
+	ca->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
+	ca->mimeInfo()->setCTSubType(KNArticleBase::STplain);
+	
+	ca->assemble();
+	
 	sendArticle(ca, sendNow);
 
   return true;
@@ -937,10 +937,17 @@ bool KNSavedArticleManager::generateSupersede(KNArticle *a, KNNntpAccount *acc)
 	KNControlArticle *ca=new KNControlArticle(KNArticleBase::CTsupersede, KNArticleBase::AStoPost);	
   ca->setServerId(acc->id());
 	acc->incUnsentCount();
-	ca->initContent();
-	if(genMId) ca->setHeader(KNArticleBase::HTmessageId, mid);
 	
- 	//x-headers
+	ca->copyContent(a);
+	ca->setHeader(KNArticleBase::HTsupersedes, a->headerLine("Message-ID"));
+		
+	if(genMId)
+	  ca->setHeader(KNArticleBase::HTmessageId, mid);
+	else
+	  ca->removeHeader("Message-Id");
+	
+	ca->parse();
+ 	/*/x-headers
 	QString dir(KGlobal::dirs()->saveLocation("appdata"));
 	if (dir==QString::null)
 		displayInternalFileError();
@@ -951,23 +958,25 @@ bool KNSavedArticleManager::generateSupersede(KNArticle *a, KNNntpAccount *acc)
 				a->addHeaderLine(f.readLine(), true);		
 			f.close();
 		}		
-	}
+	}*/
 
-  ca->setHeader(KNArticleBase::HTsubject, a->headerLine("Subject"));
-	ca->setHeader(KNArticleBase::HTnewsgroups, a->headerLine("Newsgroups"));
+  /*ca->setSubject(a->headerLine("Subject"));
+	ca->setDestination(a->headerLine("Newsgroups"));
 	QCString ref = a->headerLine("References");
 	if (!ref.isEmpty())
-  	ca->setHeader(KNArticleBase::HTreferences, ref);	
-  ca->setHeader(KNArticleBase::HTsupersedes, a->headerLine("Message-ID"));
-	ca->parse();
+  	ca->references()->setLine(ref);	
+
 	
+  	
   KNMimeContent *body=a->mainContent();
 	if(!body->mimeInfo()->isReadable()) body->prepareForDisplay();
 	for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine()) {
 		if(!incSig && strncmp("-- ", line, 3)==0) break;
 		ca->addBodyLine(line);
-	}
-	openInComposer(ca);		
+	}*/
+		
+	
+	openInComposer(ca);
 			
   return true;
 }

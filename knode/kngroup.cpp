@@ -732,10 +732,9 @@ void KNGroup::updateThreadInfo()
 	}
 
 	if(brokenThread) {
-		qDebug("Found broken threading infos !! Restoring ...");
+		qDebug("KNGroup::updateThreadInfo() : Found broken threading infos !! Restoring ...");
 		resort();
-		qDebug("Done");
-	  updateThreadInfo();
+		updateThreadInfo();
 	}
 }
 

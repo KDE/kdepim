@@ -54,10 +54,12 @@ class KNFetchArticle : public KNArticle  {
 		bool isNew()														{ return flags.at(2); }
 		bool filterResult()											{ return flags.at(3); }
 		bool filtered()													{ return flags.at(4); }
+		bool hasFollowUps()                     { return flags.at(5); }
 		bool hasNewFollowUps()									{ return (newFups > 0); }
 		bool hasUnreadFollowUps()								{ return (unrFups > 0); }
-		bool hasChanged()												{ return flags.at(5); }
-		bool locked()														{ return flags.at(6); }
+		bool hasChanged()												{ return flags.at(6); }
+		bool locked()														{ return flags.at(7); }
+		
 				
 		//set
 		void setMessageId(const QCString &s)						{ m_Id=s; }
@@ -79,8 +81,9 @@ class KNFetchArticle : public KNArticle  {
 		void setNew(bool b)															{ flags.setBit(2,b); }
 		void setFilterResult(bool b)										{ flags.setBit(3,b); }
 		void setFiltered(bool b)												{ flags.setBit(4,b); }
-	  void setHasChanged(bool b)											{ flags.setBit(5,b); }
-		void setLocked(bool b)													{ flags.setBit(6,b); }
+		void setHasFollowUps(bool b)                    { flags.setBit(5,b); }
+	  void setHasChanged(bool b)											{ flags.setBit(6,b); }
+		void setLocked(bool b)													{ flags.setBit(7,b); }
 	
 				
 	protected:

@@ -24,6 +24,7 @@
 #include "knarticlemanager.h"
 
 class QTimer;
+class QListViewItem;
 
 class KNArticleFilter;
 class KNFetchArticle;
@@ -86,7 +87,7 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
 		KNArticleFilter *f_ilter;
 		QTimer *timer;
 		int tOut;
-		bool t_hreaded, autoMark;
+		bool t_hreaded, autoMark, totalExpand;
 		KNSearchDialog *sDlg;
     KAction *actExpandAll, *actCollapseAll, *actRefresh,
             *actAllRead, *actAllUnread, *actPostReply, *actMailReply, *actForward,
@@ -98,6 +99,7 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
 	public slots:
 		void slotFilterChanged(KNArticleFilter *f);
 		void slotSearchDialogDone();
+		void slotItemExpanded(QListViewItem *p);
 					
 	protected slots:
 		void slotTimer();

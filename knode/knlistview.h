@@ -38,19 +38,18 @@ class KNLVItemBase : public QListViewItem  {
 		void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
 		int width(const QFontMetrics &fm, const QListView *lv, int column);
 		void paintFocus(QPainter *, const QColorGroup & cg, const QRect & r);
-		void setOpen(bool o);
 		void sortChildItems(int column, bool a);
 		
+		void expandChildren();
+				
 		static void initIcons();
 		static void clearIcons();
-		static void setTotalExpand(bool b)	{ totalExpand=b; }		
 		static QPixmap& icon(pixmapType t);
 		
 	protected:
 		virtual bool greyOut()					{ return false; }
 		virtual bool firstColBold()     { return false; }
-	  static bool totalExpand;
-		static QPixmap *pms[15];
+	  static QPixmap *pms[15];
 };
 
 

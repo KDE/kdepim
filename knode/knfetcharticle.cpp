@@ -23,7 +23,7 @@ KNFetchArticle::KNFetchArticle()
 {
 	l_ines=-1;
 	fTimeT=0;
-	flags.fill(false,7);
+	flags.fill(false,8);
 	i_dRef=-1;
 	thrLevel=0;
 	unrFups=0;
@@ -138,6 +138,8 @@ void KNFetchArticle::updateListItem()
 	else i_tem->setPixmap(2, KNLVItemBase::icon(KNLVItemBase::PTnull));
 	
 	i_tem->setText(2, QString("%1").arg(s_core,3));
+	
+	i_tem->setExpandable(hasFollowUps());
 }
 
 

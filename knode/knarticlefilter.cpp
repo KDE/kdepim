@@ -139,26 +139,36 @@ void KNArticleFilter::doFilter(KNGroup *g)
 	
 	if(!l_oaded) load();
 	
+	
+	for(int idx=0; idx<g->length(); idx++) {
+	  art=g->at(idx);
+	  art->setFiltered(false);
+	  art->setHasFollowUps(false);
+  }
+	
 		
 	for(int idx=0; idx<g->length(); idx++) {
 	
 		art=g->at(idx);
-	
-	  if(!art->filtered()) {
-	  	
-	  	if(applyFilter(art)) {
-	  		
-	  	 	if(apon==threads) {
-	  			idRef=art->idRef();
-	  		
-	  			while(idRef!=0) {
-	  				ref=g->byId(idRef);
-	  				ref->setFilterResult(true);
-	  				ref->setFiltered(true);
-	  				idRef=ref->idRef();
-	  			}
-	  		}
-	  		else c_ount++;
+
+	  if(!art->filtered() && applyFilter(art)) {
+	    if(apon==threads) {
+	  		idRef=art->idRef();
+	  	  while(idRef!=0) {
+	  			ref=g->byId(idRef);
+	  			ref->setFilterResult(true);
+	  			ref->setFiltered(true);
+	  			ref->setHasFollowUps(true);
+	  			idRef=ref->idRef();
+	  	  }
+	  	}
+	  	else {
+	  	  if(art->idRef() > 0) {
+	  	    ref=g->byId(art->idRef());
+	  	    if(ref)
+	  	      ref->setHasFollowUps(true);  	
+	  	  }
+	  	  c_ount++;
 	  	}
 	  }
 	}

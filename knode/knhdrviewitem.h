@@ -27,13 +27,16 @@ class KNHdrViewItem : public KNLVItemBase  {
 		KNHdrViewItem(KNListView *ref, KNArticle *a=0);
 		KNHdrViewItem(KNLVItemBase *ref, KNArticle *a=0);
 		~KNHdrViewItem();
+		//void setOpen(bool o);
 		QString key(int, bool) const;
 		KNArticle *art;
 		
+		//static void setTotalExpand(bool b)	{ totalExpand=b; }
+				
 	protected:
 		bool greyOut();
 		bool firstColBold();
-		
+		//static bool totalExpand;
 };
 
 #endif

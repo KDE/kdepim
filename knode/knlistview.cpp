@@ -22,7 +22,7 @@
 #include "knlistview.h"
 
 
-bool KNLVItemBase::totalExpand=true;
+//bool KNLVItemBase::totalExpand=true;
 QPixmap* KNLVItemBase::pms[15];
 
 void KNLVItemBase::initIcons()
@@ -170,36 +170,28 @@ void KNLVItemBase::paintFocus(QPainter *p, const QColorGroup & cg, const QRect &
 
 
 
-void KNLVItemBase::setOpen(bool o)
-{
-	QListViewItem *it;
-	QListViewItem::setOpen(o);
-	
-	
-	if(o && totalExpand) {
-		it=firstChild();
-		while(it) {
-			if(it->depth()==0) break;
-			else {
-				it->setOpen(true);
-				it=it->nextSibling();
-			}
-		}
-	}		
-}
-
-
-
 void KNLVItemBase::sortChildItems(int column, bool a)
 {
 	QListViewItem::sortChildItems(column, true);
 }
 
 
+
+void KNLVItemBase::expandChildren()
+{
+  QListViewItemIterator it(firstChild());
+	
+  for( ; it.current(); ++it) {
+    if(it.current()->depth()==depth()) break;
+    it.current()->setOpen(true);
+  }
+}
+
+
 //==============================================================================
 
 
-KNListView::KNListView(QWidget *parent, const char *name=0)
+KNListView::KNListView(QWidget *parent, const char *name)
   : QListView(parent,name), sAsc(true), sCol(-1), exclusiveSelectedItem(0)
 {
 	connect(header(), SIGNAL(sectionClicked(int)),
