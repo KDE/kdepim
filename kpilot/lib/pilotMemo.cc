@@ -33,6 +33,7 @@ static const char *pilotMemo_id =
 #include <qtextcodec.h>
 
 #include "pilotMemo.h"
+#include "pilotDatabase.h"
 
 
 
@@ -142,4 +143,15 @@ QString PilotMemo::sensibleTitle() const
 	{
 		return i18n("[unknown]");
 	}
+}
+
+PilotMemoInfo::PilotMemoInfo(PilotDatabase *d)
+{
+	FUNCTIONSETUP;
+	int appLen = 8192;
+	unsigned char buffer[8192];
+
+	appLen = d->readAppBlock(buffer,appLen);
+
+	unpack_MemoAppInfo(&fInfo, buffer, appLen);
 }

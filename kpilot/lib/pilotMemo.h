@@ -30,8 +30,11 @@
 
 #include <qstring.h>
 
+#include <pi-memo.h>
+
 #include "pilotAppCategory.h"
 
+class PilotDatabase;
 
 class KDE_EXPORT PilotMemo : public PilotAppCategory
 {
@@ -55,7 +58,7 @@ public:
 	/**
 	* Return a "short but sensible" title. getTitle() returns the
 	* first line of the memo, which may be very long
-	* and inconvenient. sshortTitle() returns about 30
+	* and inconvenient. shortTitle() returns about 30
 	* characters.
 	*/
 	QString shortTitle() const;
@@ -72,6 +75,14 @@ protected:
 
 private:
 	QString fText;
+};
+
+class KDE_EXPORT PilotMemoInfo
+{
+public:
+	PilotMemoInfo(PilotDatabase *);
+protected:
+	struct MemoAppInfo fInfo;
 };
 
 #endif
