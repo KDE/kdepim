@@ -146,6 +146,8 @@ KABC::Picture ImageWidget::photo() const
         photo.setData( px->convertToImage().scaleHeight( 140 ) );
       else
         photo.setData( px->convertToImage().scaleWidth( 100 ) );
+
+      photo.setType( "PNG" );
     }
   }
 
@@ -183,6 +185,8 @@ KABC::Picture ImageWidget::logo() const
         logo.setData( px->convertToImage().scaleHeight( 140 ) );
       else
         logo.setData( px->convertToImage().scaleWidth( 100 ) );
+
+      logo.setType( "PNG" );
     }
   }
 
