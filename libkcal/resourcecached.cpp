@@ -19,7 +19,9 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include <qdatastream.h>
 #include <qdatetime.h>
+#include <qfile.h>
 #include <qstring.h>
 #include <qptrlist.h>
 
@@ -276,17 +278,82 @@ void ResourceCached::clearChanges()
 
 void ResourceCached::loadCache()
 {
+  mUidMap.clear();
+
+  // load uid map
+  QFile mapFile( uidMapFile() );
+  if ( mapFile.open( IO_ReadOnly ) ) {
+    QDataStream stream( &mapFile );
+    stream >> mUidMap;
+    mapFile.close();
+  } else {
+    kdError() << "Can't open uid map file '" << mapFile.name() << "'" << endl;
+  }
+
+  // load cache
   mCalendar.load( cacheFile() );
 }
 
 void ResourceCached::saveCache()
 {
+  // save uid map
+  QFile mapFile( uidMapFile() );
+  if ( mapFile.open( IO_WriteOnly ) ) {
+    QDataStream stream( &mapFile );
+    stream << mUidMap;
+    mapFile.close();
+  } else {
+    kdError() << "Can't open uid map file '" << mapFile.name() << "'" << endl;
+  }
+
+  // save cache
   mCalendar.save( cacheFile() );
+}
+
+void ResourceCached::setRemoteUid( const QString &localUid, const QString &remoteUid )
+{
+  mUidMap.insert( localUid, remoteUid );
+}
+
+void ResourceCached::removeRemoteUid( const QString &remoteUid )
+{
+  QMap<QString, QVariant>::Iterator it;
+  for ( it = mUidMap.begin(); it != mUidMap.end(); ++it )
+    if ( it.data().toString() == remoteUid ) {
+      mUidMap.remove( it );
+      return;
+    }
+}
+
+QString ResourceCached::remoteUid( const QString &localUid ) const
+{
+  QMap<QString, QVariant>::ConstIterator it;
+  it = mUidMap.find( localUid );
+
+  if ( it != mUidMap.end() )
+    return it.data().toString();
+  else
+    return QString::null;
+}
+
+QString ResourceCached::localUid( const QString &remoteUid ) const
+{
+  QMap<QString, QVariant>::ConstIterator it;
+  for ( it = mUidMap.begin(); it != mUidMap.end(); ++it )
+    if ( it.data().toString() == remoteUid )
+      return it.key();
+
+  return QString::null;
 }
 
 QString ResourceCached::cacheFile() const
 {
   return locateLocal( "cache", "kcal/kresources/" + identifier() );
+}
+
+QString ResourceCached::uidMapFile() const
+{
+  return locateLocal( "data", "kcal/uidmaps/" + type() + "/" + identifier() );
 }
 
 void ResourceCached::calendarIncidenceAdded( Incidence *i )

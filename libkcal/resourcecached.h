@@ -257,6 +257,26 @@ class ResourceCached : public ResourceCalendar,
      */
     void saveCache();
 
+    /**
+      Stores the remote uid for the given local uid.
+     */
+    void setRemoteUid( const QString &localUid, const QString &remoteUid );
+
+    /**
+      Removes the remote uid.
+     */
+    void removeRemoteUid( const QString &remoteUid );
+
+    /**
+      Returns the remote uid of the given local uid.
+     */
+    QString remoteUid( const QString &localUid ) const;
+
+    /**
+      Returns the local uid for the given remote uid.
+     */
+    QString localUid( const QString &remoteUid ) const;
+
   protected:
     // From Calendar::Observer
     void calendarIncidenceAdded( KCal::Incidence * );
@@ -287,6 +307,8 @@ class ResourceCached : public ResourceCalendar,
      */
     virtual QString cacheFile() const;
 
+    virtual QString uidMapFile() const;
+
   protected slots:
     void slotReload();
     void slotSave();
@@ -307,6 +329,8 @@ class ResourceCached : public ResourceCalendar,
     QMap<KCal::Incidence *,bool> mAddedIncidences;
     QMap<KCal::Incidence *,bool> mChangedIncidences;
     QMap<KCal::Incidence *,bool> mDeletedIncidences;
+
+    QMap<QString, QVariant> mUidMap;
 
     class Private;
     Private *d;
