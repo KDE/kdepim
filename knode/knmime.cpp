@@ -1501,7 +1501,7 @@ void KNArticle::setForceDefaultCS(bool b)
 
 
 KNRemoteArticle::KNRemoteArticle(KNGroup *g)
- : KNArticle(g), i_dRef(-1), t_hrLevel(0), s_core(50), u_nreadFups(0), n_ewFups(0)
+ : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), t_hrLevel(0), s_core(50), u_nreadFups(0), n_ewFups(0)
 {
   m_essageID.setParent(this);
   f_rom.setParent(this);

@@ -42,11 +42,13 @@ class KNNntpClient : public KNProtocolClient  {
     void doFetchArticle();
     void doPostArticle();
     void doFetchSource();
-  
+
     virtual bool openConnection();     // connect, handshake
     virtual bool sendCommand(const QCString &cmd, int &rep);  // authentication on demand
     virtual void handleErrors();
+    bool switchToGroup(const QString &newGroup);
 
+    QString currentGroup;
     pthread_mutex_t *mutex;
     
 };

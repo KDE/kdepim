@@ -326,6 +326,10 @@ class KNRemoteArticle : public KNArticle {
     KNHeaders::MessageID* messageID(bool create=true) { if(!create && m_essageID.isEmpty()) return 0; return &m_essageID; }
     KNHeaders::From* from(bool create=true)           { if(!create && f_rom.isEmpty()) return 0; return &f_rom; }
 
+    // article number
+    int articleNumber()                  { return a_rticleNumber; }
+    void setArticleNumber(int number)    { a_rticleNumber = number; }
+
     // status
     bool isNew()                         { return f_lags.get(1); }
     void setNew(bool b=true)             { f_lags.set(1, b); }
@@ -379,12 +383,12 @@ class KNRemoteArticle : public KNArticle {
     KNHeaders::MessageID m_essageID;
     KNHeaders::From f_rom;
 
-    int i_dRef; // id of a possible reference-article
-    unsigned char t_hrLevel; // quality of threading
-    short         s_core; // guess what ;-)
-    unsigned short u_nreadFups, // number of the article's unread follow-ups
-                   n_ewFups; // number of the article's new follow-ups
-
+    int a_rticleNumber;
+    int i_dRef;                      // id of a possible reference-article
+    unsigned char t_hrLevel;         // quality of threading
+    short s_core;                    // guess what ;-)
+    unsigned short u_nreadFups,      // number of the article's unread follow-ups
+                   n_ewFups;         // number of the article's new follow-ups
 
 }; // KNRemoteArticle
 

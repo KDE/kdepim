@@ -189,7 +189,7 @@ bool KNGroup::loadHdrs()
     QCString buff;
     KNFile f;
     KNStringSplitter split;
-    int cnt=0, id, lines;
+    int cnt=0, id, lines, fileFormatVersion, artNumber;
     time_t timeT;//, fTimeT;
     KNRemoteArticle *art;
 
@@ -237,12 +237,19 @@ bool KNGroup::loadHdrs()
 
         buff=f.readLine();
         if(buff!="0") art->references()->from7BitString(buff.copy());
-                      
+
         buff=f.readLine();
-        sscanf(buff,"%d %d %u", &id, &lines, (uint*) &timeT);
+        if (sscanf(buff,"%d %d %u %d", &id, &lines, (uint*) &timeT, &fileFormatVersion) < 4)
+          fileFormatVersion = 0;          // KNode <= 0.4 had no version number
         art->setId(id);
         art->lines()->setNumberOfLines(lines);
         art->date()->setUnixTime(timeT);
+
+        if (fileFormatVersion > 0) {
+          buff=f.readLine();
+          sscanf(buff,"%d", &artNumber);
+					art->setArticleNumber(artNumber);
+        }
 
         if(append(art)) cnt++;
         else {
@@ -343,7 +350,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
 
     //Article Number
     split.first();
-    // ignored hdr->artNr=split.string().toInt();
+    art->setArticleNumber(split.string().toInt());
 
     //Subject
     split.next();
@@ -441,11 +448,12 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
     
       ts << art->id() << ' ';
       ts << art->lines()->numberOfLines() << ' ';
-      ts << art->date()->unixTime() << '\n';
+      ts << art->date()->unixTime() << ' ';
+      ts << "1\n";       // version number to achieve backward compability easily
 
-    
+      ts << art->articleNumber() << '\n';
+
       savedCnt++;
-      
     }
   
     f.close();

@@ -337,6 +337,8 @@ void KNNntpClient::doFetchNewHeaders()
   cmd+=target->groupname().utf8();
   if (!sendCommandWCheck(cmd,211))       // 211 n f l s group selected
     return;
+
+  currentGroup = target->groupname();
     
   progressValue = 90; 
     
@@ -418,14 +420,29 @@ void KNNntpClient::doFetchNewHeaders()
 void KNNntpClient::doFetchArticle()
 {
   KNRemoteArticle *target = static_cast<KNRemoteArticle*>(job->data());
-  
+  QCString cmd;
+
   sendSignal(TSdownloadArticle);
   errorPrefix = i18n("Article could not been retrieved.\nThe following error occured:\n");
 
   progressValue = 100;
   predictedLines = target->lines()->numberOfLines()+10;
+
+  if (target->articleNumber() != -1) {
+    QString groupName = static_cast<KNGroup*>(target->collection())->groupname();
+    if (currentGroup != groupName) {
+      cmd="GROUP ";
+      cmd+=groupName.utf8();
+      if (!sendCommandWCheck(cmd,211))       // 211 n f l s group selected
+        return;
+      currentGroup = groupName;
+    }
+    cmd.setNum(target->articleNumber());
+    cmd.prepend("ARTICLE ");
+  } else {
+    cmd = "ARTICLE " + target->messageID()->as7BitString(false);
+  }
     
-  QCString cmd = "ARTICLE " + target->messageID()->as7BitString(false);
   if (!sendCommandWCheck(cmd,220)) {      // 220 n <a> article retrieved - head and body follow
     int code = atoi(getCurrentLine());
     if (code == 430)  // 430 no such article found
@@ -518,6 +535,8 @@ void KNNntpClient::doFetchSource()
 
 bool KNNntpClient::openConnection()
 {
+	currentGroup = QString::null;
+
   QString oldPrefix = errorPrefix;
   errorPrefix=i18n("Unable to connect.\nThe following error ocurred:\n");
 
