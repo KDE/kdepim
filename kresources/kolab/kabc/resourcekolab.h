@@ -130,6 +130,9 @@ public:
   /// Completion weight for a given subresource
   virtual int subresourceCompletionWeight( const QString& ) const;
 
+  /// Label for a given subresource
+  virtual QString subresourceLabel( const QString& ) const;
+
   /// Set completion weight for a given subresource
   virtual void setSubresourceCompletionWeight( const QString&, int );
 
