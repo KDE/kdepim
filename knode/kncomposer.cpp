@@ -57,13 +57,11 @@ using KRecentAddress::RecentAddresses;
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"
-#include <kpgp.h>
 #include "knarticlefactory.h"
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <qpopupmenu.h>
 #include <spellingfilter.h>
-#include <qcursor.h>
 #include <kstdguiitem.h>
 
 KNLineEdit::KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompletion,
@@ -843,6 +841,8 @@ bool KNComposer::applyChanges()
           if( block.clearsign( signingKey, codec->name() ) == Kpgp::Ok ) {
               QCString result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
+          } else {
+              return false;
           }
       }
   }

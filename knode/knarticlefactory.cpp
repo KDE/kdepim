@@ -1012,6 +1012,8 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
       if(delCom) {
         if ( com->applyChanges() )
           sendArticles(&lst, true);
+        else
+          delCom = false;
       }
     break;
 
@@ -1020,6 +1022,8 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
       if(delCom) {
         if ( com->applyChanges() )
           sendArticles(&lst, false);
+        else
+          delCom = false;
       }
     break;
 
