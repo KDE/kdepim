@@ -17,3 +17,4 @@ usr/lib/libkgantt.so.0.0.2
 usr/lib/libkgantt.so.0
 usr/lib/libkgantt.la
 usr/share/apps/kgantt/*
+usr/share/lintian/overrides/kdepim-libs
