@@ -32,11 +32,11 @@ class KLineEdit;
 
 namespace KRES {
 class ConfigWidget;
-};
+}
 
 namespace KSync {
 class Konnector;
-};
+}
 
 class KonnectorConfigDialog : public KDialogBase
 {
