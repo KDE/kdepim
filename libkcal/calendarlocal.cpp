@@ -241,17 +241,35 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
 {
   Alarm::List::ConstIterator it;
   QDateTime qdt;
+  int  endOffset = 0;
+  bool endOffsetValid = false;
   for( it = incidence->alarms().begin(); it != incidence->alarms().end();
        ++it ) {
-    if ( incidence->recursOn( from.date() ) ) {
-      // Find a recurrence which might have an alarm in the
-      // specified time interval
-#warning "This doesn't work for minutely or hourly recurrences"
-// TODO: This misses recurrences after 'from' but within the time range.
-      qdt.setTime( (*it)->time().time() );
-      qdt.setDate( from.date() );
+    Alarm *alarm = *it;
+    if ( alarm->hasTime() ) {
+      // The alarm time is defined as an absolute date/time
+      qdt = alarm->time();
+    } else {
+      // The alarm time is defined by an offset from the event start or end time.
+      // Find the offset from the event start time, which is also used as the
+      // offset from the recurrence time.
+      int offset = 0;
+      if ( alarm->hasStartOffset() ) {
+        offset = alarm->startOffset().asSeconds();
+      } else if ( alarm->hasEndOffset() ) {
+        if ( !endOffsetValid ) {
+          endOffset = incidence->dtStart().secsTo( incidence->dtEnd() );
+          endOffsetValid = true;
+        }
+        offset = alarm->endOffset().asSeconds() + endOffset;
+      }
+      // Adjust the 'from' date/time and find the next recurrence at or after it
+      qdt = incidence->recurrence()->getNextDateTime( from.addSecs(-offset - 1) );
+      if (!qdt.isValid())
+        continue;
+      // Remove the adjustment to get the alarm time
+      qdt = qdt.addSecs( offset );
     }
-    else qdt = (*it)->time();
     kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
                   << "': " << qdt.toString() << " - " << (*it)->enabled()
                   << endl;
@@ -265,8 +283,6 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
   }
 }
 
-
-/****************************** PROTECTED METHODS ****************************/
 
 // after changes are made to an event, this should be called.
 void CalendarLocal::update( IncidenceBase *incidence )
