@@ -197,25 +197,21 @@ void PhoneEditWidget::edit()
 
 void PhoneEditWidget::updatePrefEdit()
 {
-  mPrefEdit->setFocus();
   updateEdit( mPrefCombo );
 }
 
 void PhoneEditWidget::updateSecondEdit()
 {
-  mSecondEdit->setFocus();
   updateEdit( mSecondCombo );
 }
 
 void PhoneEditWidget::updateThirdEdit()
 {
-  mThirdEdit->setFocus();
   updateEdit( mThirdCombo );
 }
 
 void PhoneEditWidget::updateFourthEdit()
 {
-  mFourthEdit->setFocus();
   updateEdit( mFourthCombo );
 }
 

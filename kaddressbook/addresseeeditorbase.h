@@ -46,6 +46,8 @@ class AddresseeEditorBase : public KAB::ExtensionWidget
     virtual void setAddressee( const KABC::Addressee& ) = 0;
     virtual const KABC::Addressee &addressee() = 0;
 
+    virtual void setInitialFocus() = 0;
+
     virtual void contactsSelectionChanged()
     {
        KABC::Addressee::List list = selectedContacts();

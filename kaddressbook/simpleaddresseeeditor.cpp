@@ -62,6 +62,11 @@ const KABC::Addressee &SimpleAddresseeEditor::addressee()
   return mAddressee;
 }
 
+void SimpleAddresseeEditor::setInitialFocus()
+{
+  mNameEdit->setFocus();
+}
+
 void SimpleAddresseeEditor::initGui()
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
@@ -82,8 +87,6 @@ void SimpleAddresseeEditor::initGui()
   topLayout->addWidget( mEmailEdit, 1, 1 );
   connect( mEmailEdit, SIGNAL( textChanged( const QString & ) ),
            SLOT( emitModified() ) );
-
-  mNameEdit->setFocus();
 }
 
 void SimpleAddresseeEditor::load()

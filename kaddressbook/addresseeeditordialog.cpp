@@ -79,6 +79,7 @@ void AddresseeEditorDialog::setAddressee( const KABC::Addressee &addr )
   enableButton( KDialogBase::Apply, false );
 
   mEditorWidget->setAddressee( addr );
+  mEditorWidget->setInitialFocus();
 }
 
 KABC::Addressee AddresseeEditorDialog::addressee()

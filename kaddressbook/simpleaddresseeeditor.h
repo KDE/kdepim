@@ -45,6 +45,8 @@ class SimpleAddresseeEditor : public AddresseeEditorBase
 
     bool dirty();
 
+    void setInitialFocus();
+
     QString title() const;
     QString identifier() const;
 

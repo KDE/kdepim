@@ -98,8 +98,6 @@ void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
   setReadOnly( readOnly );
 
   load();
-
-  mNameEdit->setFocus();
 }
 
 const KABC::Addressee &AddresseeEditorWidget::addressee()
@@ -111,7 +109,7 @@ void AddresseeEditorWidget::textChanged( const QString& )
 {
   emitModified();
 }
-  
+
 void AddresseeEditorWidget::initGUI()
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
@@ -793,6 +791,11 @@ QString AddresseeEditorWidget::title() const
 QString AddresseeEditorWidget::identifier() const
 {
   return "contact_editor";
+}
+
+void AddresseeEditorWidget::setInitialFocus()
+{
+  mNameEdit->setFocus();
 }
 
 void AddresseeEditorWidget::setReadOnly( bool readOnly )
