@@ -137,8 +137,8 @@ the message page by page using the PAGE UP and PAGE DOWN keys, or line by line u
 down arrow keys. You can also use the following key shortcuts to skip through your 
 messages without having to use the mouse:
 <itemize>
-<item>N or the left arrow key - Next message
-<item>P or the right arrow key - Previous message
+<item>N or the right arrow key - Next message
+<item>P or the left arrow key - Previous message
 <item>+ - Next unread message
 <item>- - Previous unread message
 </itemize>
@@ -576,11 +576,11 @@ Removes the selected folder.
 <sect2>Message menu
 <p>
 <descrip>
-<tag>Next (N or the left arrow key</tag>
+<tag>Next (N or the right arrow key)</tag>
 Selects the next message in the Headers pane.<p>
 <tag>Next Unread (+)</tag>
 Selects the next unread message in the Headers pane.<p>
-<tag>Previous (P or the right arrow key)</tag>
+<tag>Previous (P or the left arrow key)</tag>
 Selects the previous message in the Headers pane.<p>
 <tag>Previous Unread (-)</tag>
 Selects the previous unread message in the Headers pane.<p>
