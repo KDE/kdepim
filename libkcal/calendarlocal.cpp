@@ -67,22 +67,16 @@ bool CalendarLocal::load(const QString &fileName)
 
   delete mFormat;
   
-  // If cal format can be identified by extension use appropriate format. If
-  // not, try to load with iCalendar. It will detect, if it is actually a
+  // Always try to load with iCalendar. It will detect, if it is actually a
   // vCalendar file.
-  QString extension = fileName.right(4);
-  if (extension == ".vcs") {
-    mFormat = new VCalFormat(this);
-  } else {
-    mFormat = new ICalFormat(this);
-  }
+  mFormat = new ICalFormat(this);
  
   mFormat->clearException();
   bool success = mFormat->load(fileName);
 
   if (!success) {
     if (mFormat->exception()) {
-      kdDebug() << "---Error: " << mFormat->exception()->errorCode() << endl;
+//      kdDebug() << "---Error: " << mFormat->exception()->errorCode() << endl;
       if (mFormat->exception()->errorCode() == KOErrorFormat::CalVersion1) {
         // Expected non vCalendar file, but detected vCalendar
         kdDebug() << "CalendarLocal::load() Fallback to VCalFormat" << endl;
@@ -92,11 +86,11 @@ bool CalendarLocal::load(const QString &fileName)
       }
       return false;
     } else {
-      kdDebug() << "No exception set" << endl;
+      kdDebug() << "Warning! There should be set an exception." << endl;
       return false;
     }
   } else {
-    kdDebug() << "---Success" << endl;
+//    kdDebug() << "---Success" << endl;
   }
   
   return true;
