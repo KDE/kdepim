@@ -29,14 +29,13 @@
 
 namespace RMM {
 
-Q_UINT32 RTokenise(
-	const char * str,
-	const char * delim,
-	QStrList & l,
-	bool skipComments = true,
-	bool quotedTokens = true);
-
-};
+	Q_UINT32 RTokenise(
+		const char * str,
+		const char * delim,
+		QStrList & l,
+		bool skipComments = true,
+		bool quotedTokens = true);
+}
 
 #endif
 

@@ -26,7 +26,7 @@
 
 #include <RMM_Text.h>
 
-namespace RMM {
+using namespace RMM;
 
 RText::RText()
 	:	RHeaderBody()
@@ -92,6 +92,4 @@ RText::createDefault()
 {
 	rmmDebug("createDefault() called");
 }
-
-};
 

@@ -107,6 +107,16 @@ EmpathPOPIndexEntry::uidl()
 	return uidl_;
 }
 
+EmpathPOPIndex::EmpathPOPIndex()
+{
+	empathDebug("ctor");
+}
+
+EmpathPOPIndex::~EmpathPOPIndex()
+{
+	empathDebug("dtor");
+}
+
 EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
 	:	EmpathMailbox		(name),
 		serverPort_			(110),

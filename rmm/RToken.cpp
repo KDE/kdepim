@@ -28,6 +28,7 @@
 #include <qstrlist.h>
 
 #include <RMM_Defines.h>
+#include <RMM_Enum.h>
 
 namespace RMM {
 
@@ -39,7 +40,6 @@ RTokenise(
 	bool skipComments,
 	bool quotedTokens)
 {
-	// FIXME no stderr !
 	l.clear();
 	
 	if (!delim || !str || strlen(delim) == 0 || strlen(str) == 0) return 0;
@@ -153,5 +153,4 @@ RTokenise(
 	return l.count();
 }
 
-};
-
+}

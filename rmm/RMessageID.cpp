@@ -34,7 +34,7 @@
 #include <RMM_MessageID.h>
 #include <RMM_Token.h>
 
-namespace RMM {
+using namespace RMM;
 
 int RMessageID::seq_ = 0;
 
@@ -103,7 +103,7 @@ RMessageID::operator = (const QCString & s)
 
 
 	QDataStream &
-operator >> (QDataStream & s, RMessageID & mid)
+RMM::operator >> (QDataStream & s, RMessageID & mid)
 {
 	s	>> mid.localPart_
 		>> mid.domain_;
@@ -113,7 +113,7 @@ operator >> (QDataStream & s, RMessageID & mid)
 }
 		
 	QDataStream &
-operator << (QDataStream & s, RMessageID & mid)
+RMM::operator << (QDataStream & s, RMessageID & mid)
 {
 	mid.parse();
 	s	<< mid.localPart_
@@ -207,6 +207,4 @@ RMessageID::createDefault()
 	parsed_ = true;
 	assembled_ = false;
 }
-
-};
 

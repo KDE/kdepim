@@ -25,7 +25,7 @@
 #include <RMM_DispositionType.h>
 #include <RMM_Token.h>
 
-namespace RMM {
+using namespace RMM;
 
 RDispositionType::RDispositionType()
 	:	RHeaderBody()
@@ -121,6 +121,4 @@ RDispositionType::_assemble()
 RDispositionType::createDefault()
 {
 }
-
-};
 

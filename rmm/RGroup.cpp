@@ -27,7 +27,7 @@
 #include <RMM_Group.h>
 #include <RMM_Token.h>
 
-namespace RMM {
+using namespace RMM;
 
 RGroup::RGroup()
 {
@@ -160,6 +160,4 @@ RGroup::createDefault()
 	name_ = "unnamed";
 	assembled_ = false;
 }
-
-};
 

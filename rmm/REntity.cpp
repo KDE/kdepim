@@ -24,10 +24,7 @@
 
 #include <RMM_Entity.h>
 
-namespace RMM {
+using namespace RMM;
 
 REntity::~REntity() {}
-
-};
-
 

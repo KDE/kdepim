@@ -27,7 +27,7 @@
 #include <RMM_Mailbox.h>
 #include <RMM_Token.h>
 
-namespace RMM {
+using namespace RMM;
 
 RMailbox::RMailbox()
 	:	RAddress()
@@ -98,7 +98,7 @@ RMailbox::operator == (RMailbox & m)
 }
 
 	QDataStream &
-operator >> (QDataStream & s, RMailbox & mailbox)
+RMM::operator >> (QDataStream & s, RMailbox & mailbox)
 {
 	s	>> mailbox.phrase_
 		>> mailbox.route_
@@ -110,7 +110,7 @@ operator >> (QDataStream & s, RMailbox & mailbox)
 }
 	
 	QDataStream &
-operator << (QDataStream & s, RMailbox & mailbox)
+RMM::operator << (QDataStream & s, RMailbox & mailbox)
 {
 	mailbox.parse();
 	s	<< mailbox.phrase_
@@ -284,6 +284,4 @@ RMailbox::createDefault()
 	
 	assembled_ = false;
 }
-
-};
 

@@ -28,7 +28,7 @@
 #include <RMM_Envelope.h>
 #include <RMM_Enum.h>
 
-namespace RMM {
+using namespace RMM;
 
 REnvelope::REnvelope()
 {
@@ -105,8 +105,8 @@ REnvelope::_parse()
 
 		// We don't want non-printable chars, apart from \n and \t.
 		// The header's supposed to be 7 bit us-ascii. I'm not going to handle
-		// backspaces, no matter what rfc822 says. That's just crazy. If you want
-		// to do fancy chars in a header, you must quote them.
+		// backspaces, no matter what rfc822 says. That's just crazy.
+		// If you want to do fancy chars in a header, you must quote them.
 
 		if ((*c != '\n' && *c != '\t' && *c < 32) || *c == 127) {
 			rmmDebug("Invalid char in header");
@@ -162,51 +162,24 @@ REnvelope::_assemble()
 }
 
 	void
-REnvelope::_createDefault(RMM::HeaderType t)
+REnvelope::_createDefault(HeaderType t)
 {
-	rmmDebug("Creating default of type " + QCString(RMM::headerNames[t]));
+	rmmDebug("Creating default of type " + QCString(headerNames[t]));
 	RHeader * h = new RHeader;
-	h->setName(RMM::headerNames[t]);
+	h->setName(headerNames[t]);
 
 	RHeaderBody * b;
-	switch (RMM::headerTypesTable[t]) {
+	switch (headerTypesTable[t]) {
 
-		case RMM::Address:
-			b = new RAddress;
-			break;
-
-		case RMM::AddressList:
-			b = new RAddressList;
-			break;
-
-		case RMM::DateTime:
-			b = new RDateTime;
-			break;
-
-		case RMM::DispositionType:
-			b = new RDispositionType;
-			break;
-
-		case RMM::Mailbox:
-			b = new RMailbox;
-			break;
-
-		case RMM::MailboxList:
-			b = new RMailboxList;
-			break;
-
-		case RMM::Mechanism:
-			b = new RMechanism;
-			break;
-
-		case RMM::MessageID:
-			b = new RMessageID;
-			break;
-
-		case RMM::Text:
-		default:
-			b = new RText;
-			break;
+		case Address:			b = new RAddress;			break;
+		case AddressList:		b = new RAddressList;		break;
+		case DateTime:			b = new RDateTime;			break;
+		case DispositionType:	b = new RDispositionType;	break;
+		case Mailbox:			b = new RMailbox;			break;
+		case MailboxList:		b = new RMailboxList;		break;
+		case Mechanism:			b = new RMechanism;			break;
+		case MessageID:			b = new RMessageID;			break;
+		case Text: default:		b = new RText;				break;
 	}
 
 	b->createDefault();
@@ -222,7 +195,7 @@ REnvelope::createDefault()
 }
 
 	bool
-REnvelope::has(RMM::HeaderType t)
+REnvelope::has(HeaderType t)
 {
 	parse();
 	RHeaderListIterator it(headerList_);
@@ -260,10 +233,10 @@ REnvelope::get(const QCString & s)
 }
 
 	RHeaderBody *
-REnvelope::get(RMM::HeaderType h)
+REnvelope::get(HeaderType h)
 {
 	parse();
-	rmmDebug("get " + QCString(RMM::headerNames[h]));
+	rmmDebug("get " + QCString(headerNames[h]));
 	// See if we can find this header in the list.
 
 	RHeaderListIterator it(headerList_);
@@ -279,39 +252,20 @@ REnvelope::get(RMM::HeaderType h)
 	// else make a new one, set it to default values, and return that.
 
 	rmmDebug("Creating a new item as there wasn't one existing.");
-	RMM::HeaderDataType hdt = RMM::headerTypesTable[h];
+	HeaderDataType hdt = headerTypesTable[h];
 
 	RHeaderBody * d;
 
 	switch (hdt) {
-		case RMM::Address:
-			d = new RAddress;
-			break;
-		case RMM::AddressList:
-			d = new RAddressList;
-			break;
-		case RMM::DateTime:
-			d = new RDateTime;
-			break;
-		case RMM::DispositionType:
-			d = new RDispositionType;
-			break;
-		case RMM::Mailbox:
-			d = new RMailbox;
-			break;
-		case RMM::MailboxList:
-			d = new RMailboxList;
-			break;
-		case RMM::Mechanism:
-			d = new RMechanism;
-			break;
-		case RMM::MessageID:
-			d = new RMessageID;
-			break;
-		case RMM::Text:
-		default:
-			d = new RText;
-			break;
+		case Address:			d = new RAddress;			break;
+		case AddressList:		d = new RAddressList;		break;
+		case DateTime:			d = new RDateTime;			break;
+		case DispositionType:	d = new RDispositionType;	break;
+		case Mailbox:			d = new RMailbox;			break;
+		case MailboxList:		d = new RMailboxList;		break;
+		case Mechanism:			d = new RMechanism;			break;
+		case MessageID:			d = new RMessageID;			break;
+		case Text: default:		d = new RText;				break;
 	}
 
 	CHECK_PTR(d);
@@ -332,171 +286,171 @@ REnvelope::get(RMM::HeaderType h)
 
 	RText
 REnvelope::approved()
-{ return *(RText *)get(RMM::HeaderApproved); }
+{ return *(RText *)get(HeaderApproved); }
 
 	RAddressList 
 REnvelope::bcc()
-{ return *(RAddressList *)get(RMM::HeaderBcc); }
+{ return *(RAddressList *)get(HeaderBcc); }
 
 	RMailboxList
 REnvelope::cc()
-{ return *(RMailboxList *)get(RMM::HeaderCc); }
+{ return *(RMailboxList *)get(HeaderCc); }
 
 	RText 
 REnvelope::comments()
-{ return *(RText *)get(RMM::HeaderComments); }
+{ return *(RText *)get(HeaderComments); }
 
 	RText 
 REnvelope::contentDescription()
-{ return *(RText *)get(RMM::HeaderContentDescription); }
+{ return *(RText *)get(HeaderContentDescription); }
 
 	RDispositionType 
 REnvelope::contentDisposition()
-{ return *(RDispositionType *)(RMM::HeaderContentDisposition); }
+{ return *(RDispositionType *)(HeaderContentDisposition); }
 
 	RMessageID 
 REnvelope::contentID()
-{ return *(RMessageID *)get(RMM::HeaderContentID); }
+{ return *(RMessageID *)get(HeaderContentID); }
 
 	RText 
 REnvelope::contentMD5()
-{ return *(RText *)get(RMM::HeaderContentMD5); }
+{ return *(RText *)get(HeaderContentMD5); }
 
 	RContentType 
 REnvelope::contentType()
-{ return *(RContentType *)get(RMM::HeaderContentType); }
+{ return *(RContentType *)get(HeaderContentType); }
 
 	RText 
 REnvelope::control()
-{ return *(RText *)get(RMM::HeaderControl); }
+{ return *(RText *)get(HeaderControl); }
 
 	RCte 
 REnvelope::contentTransferEncoding()
-{ return *(RCte *)get(RMM::HeaderContentTransferEncoding); }
+{ return *(RCte *)get(HeaderContentTransferEncoding); }
 
 	RDateTime 
 REnvelope::date()
-{ return *(RDateTime *)get(RMM::HeaderDate); }
+{ return *(RDateTime *)get(HeaderDate); }
 
 	RText 
 REnvelope::distribution()
-{ return *(RText *)get(RMM::HeaderDistribution); }
+{ return *(RText *)get(HeaderDistribution); }
 
 	RText 
 REnvelope::encrypted()
-{ return *(RText *)get(RMM::HeaderEncrypted); }
+{ return *(RText *)get(HeaderEncrypted); }
 
 	RDateTime 
 REnvelope::expires()
-{ return *(RDateTime *)get(RMM::HeaderExpires); }
+{ return *(RDateTime *)get(HeaderExpires); }
 
 	RText 
 REnvelope::followupTo()
-{ return *(RText *)get(RMM::HeaderFollowupTo); }
+{ return *(RText *)get(HeaderFollowupTo); }
 
 	RMailboxList 
 REnvelope::from()
-{ return *(RMailboxList *)get(RMM::HeaderFrom); }
+{ return *(RMailboxList *)get(HeaderFrom); }
 
 	RText 
 REnvelope::inReplyTo()
-{ return *(RText *)get(RMM::HeaderInReplyTo); }
+{ return *(RText *)get(HeaderInReplyTo); }
 
 	RText 
 REnvelope::keywords()
-{ return *(RText *)get(RMM::HeaderKeywords); }
+{ return *(RText *)get(HeaderKeywords); }
 
 	RText 
 REnvelope::lines()
-{ return *(RText *)get(RMM::HeaderLines); }
+{ return *(RText *)get(HeaderLines); }
 
 	RMessageID 
 REnvelope::messageID()
-{ return *(RMessageID *)get(RMM::HeaderMessageID); }
+{ return *(RMessageID *)get(HeaderMessageID); }
 
 	RText 
 REnvelope::mimeVersion()
-{ return *(RText *)get(RMM::HeaderMimeVersion); }
+{ return *(RText *)get(HeaderMimeVersion); }
 
 	RText 
 REnvelope::newsgroups()
-{ return *(RText *)get(RMM::HeaderNewsgroups); }
+{ return *(RText *)get(HeaderNewsgroups); }
 
 	RText 
 REnvelope::organization()
-{ return *(RText *)get(RMM::HeaderOrganization); }
+{ return *(RText *)get(HeaderOrganization); }
 
 	RText 
 REnvelope::path()
-{ return *(RText *)get(RMM::HeaderPath); }
+{ return *(RText *)get(HeaderPath); }
 
 	RText 
 REnvelope::received()
-{ return *(RText *)get(RMM::HeaderReceived); }
+{ return *(RText *)get(HeaderReceived); }
 
 	RText 
 REnvelope::references()
-{ return *(RText *)get(RMM::HeaderReferences); }
+{ return *(RText *)get(HeaderReferences); }
 
 	RAddressList 
 REnvelope::replyTo()
-{ return *(RAddressList *)get(RMM::HeaderReplyTo); }
+{ return *(RAddressList *)get(HeaderReplyTo); }
 
 	RAddressList 
 REnvelope::resentBcc()
-{ return *(RAddressList *)get(RMM::HeaderResentBcc); }
+{ return *(RAddressList *)get(HeaderResentBcc); }
 
 	RAddressList 
 REnvelope::resentCc()
-{ return *(RAddressList *)get(RMM::HeaderResentCc); }
+{ return *(RAddressList *)get(HeaderResentCc); }
 
 	RDateTime 
 REnvelope::resentDate()
-{ return *(RDateTime *)get(RMM::HeaderResentDate); }
+{ return *(RDateTime *)get(HeaderResentDate); }
 
 	RMailboxList 
 REnvelope::resentFrom()
-{ return *(RMailboxList *)get(RMM::HeaderResentFrom); }
+{ return *(RMailboxList *)get(HeaderResentFrom); }
 
 	RMessageID 
 REnvelope::resentMessageID()
-{ return *(RMessageID *)get(RMM::HeaderResentMessageID); }
+{ return *(RMessageID *)get(HeaderResentMessageID); }
 
 	RAddressList 
 REnvelope::resentReplyTo()
-{ return *(RAddressList *)get(RMM::HeaderResentReplyTo); }
+{ return *(RAddressList *)get(HeaderResentReplyTo); }
 
 	RMailbox 
 REnvelope::resentSender()
-{ return *(RMailbox *)get(RMM::HeaderResentSender); }
+{ return *(RMailbox *)get(HeaderResentSender); }
 
 	RAddressList 
 REnvelope::resentTo()
-{ return *(RAddressList *)get(RMM::HeaderResentTo); }
+{ return *(RAddressList *)get(HeaderResentTo); }
 
 	RText 
 REnvelope::returnPath()
-{ return *(RText *)get(RMM::HeaderReturnPath); }
+{ return *(RText *)get(HeaderReturnPath); }
 
 	RMailbox 
 REnvelope::sender()
-{ return *(RMailbox *)get(RMM::HeaderSender); }
+{ return *(RMailbox *)get(HeaderSender); }
 
 	RText 
 REnvelope::subject()
-{ return *(RText *)get(RMM::HeaderSubject); }
+{ return *(RText *)get(HeaderSubject); }
 
 	RText 
 REnvelope::summary()
-{ return *(RText *)get(RMM::HeaderSummary); }
+{ return *(RText *)get(HeaderSummary); }
 
 	RAddressList 
 REnvelope::to()
-{ return *(RAddressList *)get(RMM::HeaderTo); }
+{ return *(RAddressList *)get(HeaderTo); }
 
 	RText 
 REnvelope::xref()
-{ return *(RText *)get(RMM::HeaderXref); }
+{ return *(RText *)get(HeaderXref); }
 
 	RMailbox
 REnvelope::firstSender()
@@ -504,7 +458,7 @@ REnvelope::firstSender()
 	parse();
 	rmmDebug("firstSender() called");
 
-	if (!has(RMM::HeaderFrom))
+	if (!has(HeaderFrom))
 		return sender();
 	
 	RMailbox m;
@@ -527,13 +481,13 @@ REnvelope::parentMessageId()
 
 	RMessageID m;
 
-	if (has(RMM::HeaderReferences)) {
+	if (has(HeaderReferences)) {
 
 		QCString s = references().asString();
 		s = s.right(s.length() - s.findRev('<'));
 		m = s;
 
-	} else if (has(RMM::HeaderInReplyTo)) {
+	} else if (has(HeaderInReplyTo)) {
 
 		RText t = inReplyTo();
 		m = t.asString();
@@ -548,7 +502,7 @@ REnvelope::parentMessageId()
 }
 
 	void
-REnvelope::set(RMM::HeaderType t, const QCString & s)
+REnvelope::set(HeaderType t, const QCString & s)
 {
 	parse();
 	RHeaderListIterator it(headerList_);
@@ -557,39 +511,21 @@ REnvelope::set(RMM::HeaderType t, const QCString & s)
 		if (it.current()->headerType() == t)
 			headerList_.remove(it.current());
 
-	RMM::HeaderDataType hdt = RMM::headerTypesTable[t];
+	HeaderDataType hdt = headerTypesTable[t];
 
 	RHeaderBody * d;
 
 	switch (hdt) {
-		case RMM::Address:
-			d = new RAddress;
-			break;
-		case RMM::AddressList:
-			d = new RAddressList;
-			break;
-		case RMM::DateTime:
-			d = new RDateTime;
-			break;
-		case RMM::DispositionType:
-			d = new RDispositionType;
-			break;
-		case RMM::Mailbox:
-			d = new RMailbox;
-			break;
-		case RMM::MailboxList:
-			d = new RMailboxList;
-			break;
-		case RMM::Mechanism:
-			d = new RMechanism;
-			break;
-		case RMM::MessageID:
-			d = new RMessageID;
-			break;
-		case RMM::Text:
-		default:
-			d = new RText;
-			break;
+
+		case Address:			d = new RAddress;			break;
+		case AddressList:		d = new RAddressList;		break;
+		case DateTime:			d = new RDateTime;			break;
+		case DispositionType:	d = new RDispositionType;	break;
+		case Mailbox:			d = new RMailbox;			break;
+		case MailboxList:		d = new RMailboxList;		break;
+		case Mechanism:			d = new RMechanism;			break;
+		case MessageID:			d = new RMessageID;			break;
+		case Text: default:		d = new RText;				break;
 	}
 	
 	CHECK_PTR(d);
@@ -636,6 +572,4 @@ REnvelope::addHeader(const QCString & s)
 	headerList_.append(newHeader);
 	assembled_ = false;
 }
-
-};
 

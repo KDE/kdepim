@@ -25,7 +25,7 @@
 #include <qstring.h>
 #include <RMM_HeaderBody.h>
 
-namespace RMM {
+using namespace RMM;
 
 RHeaderBody::RHeaderBody()
 	:	RMessageComponent()
@@ -95,6 +95,3 @@ RHeaderBody::createDefault()
 {
 	rmmDebug("WARNING CREATEDEFAULT CALLED");
 }
-	
-};
-

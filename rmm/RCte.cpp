@@ -26,7 +26,7 @@
 
 #include <RMM_Cte.h>
 
-namespace RMM {
+using namespace RMM;
 
 RCte::RCte()
 	:	RHeaderBody()
@@ -88,17 +88,17 @@ RCte::_parse()
 	strRep_		= strRep_.stripWhiteSpace();
 	
 	if (!stricmp(strRep_, "7bit"))
-		mechanism_ = RMM::CteType7bit;
+		mechanism_ = CteType7bit;
 	else if (!stricmp(strRep_, "8bit"))
-		mechanism_ = RMM::CteType8bit;
+		mechanism_ = CteType8bit;
 	else if (!stricmp(strRep_, "base64"))
-		mechanism_ = RMM::CteTypeBase64;
+		mechanism_ = CteTypeBase64;
 	else if (!stricmp(strRep_, "quoted-printable"))
-		mechanism_ = RMM::CteTypeQuotedPrintable;
+		mechanism_ = CteTypeQuotedPrintable;
 	else if (!strnicmp(strRep_, "x", 1))
-		mechanism_ = RMM::CteTypeXtension;
+		mechanism_ = CteTypeXtension;
 	else 
-		mechanism_ = RMM::CteTypeBinary;
+		mechanism_ = CteTypeBinary;
 }
 
 	void
@@ -106,26 +106,26 @@ RCte::_assemble()
 {
 	switch (mechanism_) {
 
-		case RMM::CteType7bit:
+		case CteType7bit:
 			strRep_ = "7bit";
 			break;
 			
-		case RMM::CteType8bit:
+		case CteType8bit:
 			strRep_ = "8bit";
 			break;
 		
-		case RMM::CteTypeBase64:
+		case CteTypeBase64:
 			strRep_ = "Base64";
 			break;
 		
-		case RMM::CteTypeQuotedPrintable:
+		case CteTypeQuotedPrintable:
 			strRep_ = "Quoted-Printable";
 			break;
 		
-		case RMM::CteTypeXtension:
+		case CteTypeXtension:
 			break;
 		
-		case RMM::CteTypeBinary:
+		case CteTypeBinary:
 		default:
 			strRep_ = "binary";
 			break;
@@ -136,13 +136,13 @@ RCte::_assemble()
 RCte::createDefault()
 {
 	rmmDebug("createDefault() called");
-	mechanism_	= RMM::CteTypeBase64;
+	mechanism_	= CteTypeBase64;
 	parsed_		= true;
 	assembled_	= false;
 }
 
 
-	RMM::CteType
+	CteType
 RCte::mechanism()
 {
 	parse();
@@ -150,11 +150,9 @@ RCte::mechanism()
 }
 
 	void
-RCte::setMechanism(RMM::CteType t)
+RCte::setMechanism(CteType t)
 {
 	mechanism_ = t;
 	assembled_	= false;
 }
-
-};
 

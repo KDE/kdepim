@@ -31,7 +31,7 @@
 #include <RMM_MailboxList.h>
 #include <RMM_Token.h>
 
-namespace RMM {
+using namespace RMM;
 
 RMailboxList::RMailboxList()
 	:	RHeaderBody()
@@ -193,6 +193,4 @@ RMailboxList::count()
 	parse();
 	return list_.count();
 }
-
-};
 

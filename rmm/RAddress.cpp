@@ -29,7 +29,7 @@
 #include <RMM_Group.h>
 #include <RMM_Mailbox.h>
 
-namespace RMM {
+using namespace RMM;
 
 RAddress::RAddress()
 	:	RHeaderBody(),
@@ -223,6 +223,4 @@ RAddress::createDefault()
 		mailbox_->createDefault();
 	}
 }
-
-};
 

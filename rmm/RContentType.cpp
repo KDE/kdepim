@@ -27,7 +27,7 @@
 #include <RMM_ContentType.h>
 #include <RMM_Token.h>
 
-namespace RMM {
+using namespace RMM;
 
 RContentType::RContentType()
 	:	RHeaderBody()
@@ -192,6 +192,4 @@ RContentType::parameterList()
 	parse();
 	return parameterList_;
 }
-
-};
 

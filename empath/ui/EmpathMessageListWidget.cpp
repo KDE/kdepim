@@ -1227,7 +1227,10 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
 	filling_ = true;
 	
 	setUpdatesEnabled(false);
+	empath->s_infoMessage(
+		"Message list hidden while filling until Qt bug fixed !!!");
 	
+	hide();
 	clear();
 	
 	KGlobal::config()->setGroup(EmpathConfig::GROUP_DISPLAY);
@@ -1236,6 +1239,8 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
 		_fillThreading(f);
 	else
 		_fillNonThreading(f);
+	
+	show();
 	
 	filling_ = false;
 	

@@ -88,6 +88,8 @@ class EmpathPOPIndex : public QList<EmpathPOPIndexEntry>
 		EmpathPOPIndex();
 		~EmpathPOPIndex();
 		int compareItems(EmpathPOPIndexEntry * i1, EmpathPOPIndexEntry * i2);
+		
+		const char * className() const { return "EmpathPOPIndex"; }
 };
 
 typedef QListIterator<EmpathPOPIndexEntry>	EmpathPOPIndexIterator;

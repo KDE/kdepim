@@ -31,7 +31,7 @@
 #include <RMM_Message.h>
 #include <RMM_Envelope.h>
 
-namespace RMM {
+using namespace RMM;
 
 RMessage::RMessage()
 	:	RBodyPart()
@@ -56,14 +56,14 @@ RMessage::~RMessage()
 	rmmDebug("dtor");
 }
 
-	RMM::MessageStatus
+	MessageStatus
 RMessage::status()
 {
 	return status_;
 }
 
 	void
-RMessage::setStatus(RMM::MessageStatus s)
+RMessage::setStatus(MessageStatus s)
 {
 	status_ = s;
 }
@@ -115,7 +115,4 @@ RMessage::createDefault()
 {
 	RBodyPart::createDefault();
 }
-
-
-};
 

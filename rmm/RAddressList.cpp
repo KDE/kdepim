@@ -31,7 +31,7 @@
 #include <RMM_Mailbox.h>
 #include <RMM_Token.h>
 
-namespace RMM {
+using namespace RMM;
 
 RAddressList::RAddressList()
 	:	RHeaderBody()
@@ -165,6 +165,4 @@ RAddressList::createDefault()
 		list_.append(a);
 	}
 }
-
-};
 

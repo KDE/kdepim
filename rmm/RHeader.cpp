@@ -37,11 +37,11 @@
 #include <RMM_MessageID.h>
 #include <RMM_Text.h>
 
-namespace RMM {
+using namespace RMM;
 
 RHeader::RHeader()
 	:	RMessageComponent(),
-		headerType_(RMM::HeaderUnknown),
+		headerType_(HeaderUnknown),
 		headerBody_(0)
 {
 	rmmDebug("ctor");
@@ -130,7 +130,7 @@ RHeader::headerName()
 	return headerName_;
 }
 
-	RMM::HeaderType
+	HeaderType
 RHeader::headerType()
 {
 	parse();
@@ -152,7 +152,7 @@ RHeader::setName(const QCString & name)
 }
 
 	void
-RHeader::setType(RMM::HeaderType t)
+RHeader::setType(HeaderType t)
 {
 	headerType_ = t;
 	assembled_ = false;
@@ -173,7 +173,7 @@ RHeader::_parse()
 	ASSERT(headerBody_ == 0);
 	delete headerBody_;
 	headerBody_ = 0;
-	headerType_ = RMM::HeaderUnknown;
+	headerType_ = HeaderUnknown;
 
 	if (split == -1) {
 		rmmDebug("No split ?");
@@ -185,25 +185,25 @@ RHeader::_parse()
 	headerName_ = strRep_.left(split);
 	headerName_ = headerName_.stripWhiteSpace();
 	
-	headerType_ = RMM::headerNameToEnum(headerName_);
+	headerType_ = headerNameToEnum(headerName_);
 
-	if (headerType_ == RMM::HeaderUnknown) {
+	if (headerType_ == HeaderUnknown) {
 		rmmDebug("I'm an unknown header, \"" + headerName_ + "\"");
 	}
 
 	RHeaderBody * b;
-	switch (RMM::headerTypesTable[headerType_]) {
-		case RMM::Address:			b = new RAddress;			break;
-		case RMM::AddressList:		b = new RAddressList;		break;
-		case RMM::ContentType:		b = new RContentType;		break;
-		case RMM::Cte:				b = new RCte;				break;
-		case RMM::DateTime:			b = new RDateTime;			break;
-		case RMM::DispositionType:	b = new RDispositionType;	break;
-		case RMM::Mailbox:			b = new RMailbox;			break;
-		case RMM::MailboxList:		b = new RMailboxList;		break;
-		case RMM::Mechanism:		b = new RMechanism;			break;
-		case RMM::MessageID:		b = new RMessageID;			break;
-		case RMM::Text: default:	b = new RText;				break;
+	switch (headerTypesTable[headerType_]) {
+		case Address:			b = new RAddress;			break;
+		case AddressList:		b = new RAddressList;		break;
+		case ContentType:		b = new RContentType;		break;
+		case Cte:				b = new RCte;				break;
+		case DateTime:			b = new RDateTime;			break;
+		case DispositionType:	b = new RDispositionType;	break;
+		case Mailbox:			b = new RMailbox;			break;
+		case MailboxList:		b = new RMailboxList;		break;
+		case Mechanism:			b = new RMechanism;			break;
+		case MessageID:			b = new RMessageID;			break;
+		case Text: default:		b = new RText;				break;
 	}
 	CHECK_PTR(b);
 
@@ -218,10 +218,10 @@ RHeader::_parse()
 RHeader::_assemble()
 {
 	if ((int)headerType_ > 42)
-		headerType_ = RMM::HeaderUnknown;
+		headerType_ = HeaderUnknown;
 	
-	if (headerType_ != RMM::HeaderUnknown) {
-		headerName_ = RMM::headerNames[headerType_];
+	if (headerType_ != HeaderUnknown) {
+		headerName_ = headerNames[headerType_];
 	}
 
 	strRep_ = headerName_;
@@ -239,6 +239,4 @@ RHeader::_assemble()
 RHeader::createDefault()
 {
 }
-
-};
 

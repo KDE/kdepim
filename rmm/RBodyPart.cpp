@@ -32,7 +32,8 @@
 #include <RMM_Message.h>
 #include <RMM_Enum.h>
 
-namespace RMM {
+using namespace RMM;
+
 
 RBodyPart::RBodyPart()
 	:	REntity()
@@ -129,14 +130,14 @@ RBodyPart::operator == (RBodyPart & part)
 	//body_				== part.body_				&&
 }
 
-	RMM::MimeType
+	MimeType
 RBodyPart::mimeType()
 {
 	parse();
 	return mimeType_;
 }
 
-	RMM::MimeSubType
+	MimeSubType
 RBodyPart::mimeSubType()
 {
 	parse();
@@ -144,14 +145,14 @@ RBodyPart::mimeSubType()
 }
 
 	void
-RBodyPart::setMimeType(RMM::MimeType t)
+RBodyPart::setMimeType(MimeType t)
 {
 	mimeType_ = t;
 	assembled_ = false;
 }
 
 	void
-RBodyPart::setMimeSubType(RMM::MimeSubType st)
+RBodyPart::setMimeSubType(MimeSubType st)
 {
 	mimeSubType_ = st;
 	assembled_ = false;
@@ -160,14 +161,14 @@ RBodyPart::setMimeSubType(RMM::MimeSubType st)
 	void
 RBodyPart::setMimeType(const QCString & s)
 {
-	mimeType_ = RMM::mimeTypeStr2Enum(s);
+	mimeType_ = mimeTypeStr2Enum(s);
 	assembled_ = false;
 }
 
 	void
 RBodyPart::setMimeSubType(const QCString & s)
 {
-	mimeSubType_ = RMM::mimeSubTypeStr2Enum(s);
+	mimeSubType_ = mimeSubTypeStr2Enum(s);
 	assembled_ = false;
 }
 
@@ -202,7 +203,7 @@ RBodyPart::_parse()
 	rmmDebug("Looking to see if there's a Content-Type header");
 	// Now see if there's a Content-Type header in the envelope.
 	// If there is, we might be looking at a multipart message.
-	if (!envelope_.has(RMM::HeaderContentType)) {
+	if (!envelope_.has(HeaderContentType)) {
 		
 		parsed_		= true;
 		assembled_	= false;
@@ -296,8 +297,8 @@ RBodyPart::_parse()
 			
 	}
 
-	mimeType_		= RMM::mimeTypeStr2Enum(contentType.type());
-	mimeSubType_	= RMM::mimeSubTypeStr2Enum(contentType.subType());
+	mimeType_		= mimeTypeStr2Enum(contentType.type());
+	mimeSubType_	= mimeSubTypeStr2Enum(contentType.subType());
 
 	rmmDebug("=== RBodyPart parse end   =====================================");
 }
@@ -372,7 +373,7 @@ RBodyPart::data()
 	return data_;
 }
 
-	RMM::DispType
+	DispType
 RBodyPart::disposition()
 {
 	parse();
@@ -413,30 +414,30 @@ RBodyPart::decode()
 	REnvelope e;
 	RBodyPart x;
 	
-	if (envelope_.has(RMM::Cte)) {
+	if (envelope_.has(Cte)) {
 		
 		rmmDebug("This part has cte header");
 	
 		switch (envelope_.contentTransferEncoding().mechanism()) {
 			
-			case RMM::CteTypeBase64:
+			case CteTypeBase64:
 				rmmDebug("This part is encoded in base 64");
 				e = envelope_;
-				e.set(RMM::HeaderContentTransferEncoding, "");
+				e.set(HeaderContentTransferEncoding, "");
 				x = e.asString() + RDecodeBase64(data_);
 				break;
 
-			case RMM::CteTypeQuotedPrintable:
+			case CteTypeQuotedPrintable:
 				rmmDebug("This part is encoded in quoted-printable");
 				e = envelope_;
-				e.set(RMM::HeaderContentTransferEncoding, "");
+				e.set(HeaderContentTransferEncoding, "");
 				x = e.asString() + RDecodeQuotedPrintable(data_);
 				break;
 				
-			case RMM::CteType7bit:
-			case RMM::CteType8bit:
-			case RMM::CteTypeBinary:
-			case RMM::CteTypeXtension:
+			case CteType7bit:
+			case CteType8bit:
+			case CteTypeBinary:
+			case CteTypeXtension:
 			default:
 				rmmDebug("This part is not encoded");
 				return *this;
@@ -451,6 +452,4 @@ RBodyPart::decode()
 
 	return x;
 }
-
-};
 

@@ -34,7 +34,7 @@
 #include <RMM_Utility.h>
 #include <RMM_Enum.h>
 
-namespace RMM {
+using namespace RMM;
 
 RMimeType::RMimeType()
 {
@@ -82,14 +82,14 @@ RMimeType::operator == (RMimeType & t)
 		parameterList_	== t.parameterList_);
 }
 
-	RMM::MimeType
+	MimeType
 RMimeType::type()
 {
 	return type_;
 }
 
 	void
-RMimeType::setType(RMM::MimeType t)
+RMimeType::setType(MimeType t)
 {
 	type_ = t;
 }
@@ -97,17 +97,17 @@ RMimeType::setType(RMM::MimeType t)
 	void
 RMimeType::setType(const QCString & s)
 {
-	type_ = RMM::mimeTypeStr2Enum(s);
+	type_ = mimeTypeStr2Enum(s);
 }
 
-	RMM::MimeSubType
+	MimeSubType
 RMimeType::subType()
 {
 	return subType_;
 }
 
 	void
-RMimeType::setSubType(RMM::MimeSubType t)
+RMimeType::setSubType(MimeSubType t)
 {
 	subType_ = t;
 }
@@ -115,7 +115,7 @@ RMimeType::setSubType(RMM::MimeSubType t)
 	void
 RMimeType::setSubType(const QCString & s)
 {
-	subType_ = RMM::mimeSubTypeStr2Enum(s);
+	subType_ = mimeSubTypeStr2Enum(s);
 }
 
 	QCString
@@ -157,6 +157,4 @@ RMimeType::createDefault()
 {
 	rmmDebug("createDefault called");
 }
-
-};
 

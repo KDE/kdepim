@@ -37,7 +37,7 @@
 #include <RMM_Enum.h>
 #include <RMM_Token.h>
 
-namespace RMM {
+using namespace RMM;
 
 RDateTime::RDateTime()
 	:	RHeaderBody(),
@@ -102,7 +102,7 @@ RDateTime::operator == (RDateTime & dt)
 }
 
 	QDataStream &
-operator >> (QDataStream & s, RDateTime & dt)
+RMM::operator >> (QDataStream & s, RDateTime & dt)
 {
 	s	>> dt.qdate_
 		>> dt.zone_;
@@ -112,7 +112,7 @@ operator >> (QDataStream & s, RDateTime & dt)
 }
 
 	QDataStream &
-operator << (QDataStream & s, RDateTime & dt)
+RMM::operator << (QDataStream & s, RDateTime & dt)
 {
 	dt.parse();
 	s	<< dt.qdate_
@@ -166,7 +166,7 @@ RDateTime::_parse()
 	else
 		dayOfMonth_ = atoi(tokens.at(i++));
 
-	month_ = RMM::strToMonth(tokens.at(i++));
+	month_ = strToMonth(tokens.at(i++));
 
 	if (strlen(tokens.at(i)) == 2)
 		year_ = atoi(tokens.at(i++)) + 1900;
@@ -259,6 +259,4 @@ RDateTime::asUnixTime()
 
 	return (Q_UINT32)timeT;	
 }
-
-};
 
