@@ -169,7 +169,7 @@ void LogWidget::addError(const QString & s)
 {
 	FUNCTIONSETUP;
 
-	QString t("<qt><B>");
+	QString t("<qt><b>");
 
 	if (fShowTime)
 	{
@@ -179,7 +179,7 @@ void LogWidget::addError(const QString & s)
 	}
 
 	t.append(s);
-	t.append("</B></qt>");
+	t.append("</b></qt>");
 
 	fLog->append(s);
 }
@@ -239,10 +239,11 @@ void LogWidget::hideSplash()
 	if (fLog)
 	{
 		QTime t = QTime::currentTime();
-		QString s1 = t.toString();
-
-		s1.append("  ");
+		QString s1 = "<b>";
+		s1.append(t.toString());
+		s1.append(":</b>  ");
 		s1.append(s);
+		s1.append("<br />");
 		fLog->append(s1);
 	}
 }
@@ -326,6 +327,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.14  2002/01/23 08:36:26  adridg
+// Handle KProgress::setValue vs setProgress decisively
+//
 // Revision 1.13  2002/01/22 19:42:25  bero
 // Fix build with current kdelibs
 //
