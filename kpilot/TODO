@@ -63,16 +63,17 @@ Unimportant (lowest priority)
 =============================
 33) JPilot conduit: Implement the conduit as an external GTK application,
     that is embedded into kpilot using qxembed
-34) GJJ: Add tooltips to all controls in all conduit configure dialogs
+34) JJ: Add tooltips to all controls in all conduit configure dialogs
 35) Do not store the RecordID with the vcalendar entry, but in the kpilot
     config
-36) GJJ: Move the file install widget to an iconview.
-37) GJJ: Show the sync log as a KPassivePopup
+37) JJ: Show the sync log as a KPassivePopup
 39) Make an application that just has a LogWidget and KPilot's dcop
     interface (and registration!) so that you can follow the daemon's
     log output without starting KPilot at all.
 40) Allow the todo conduit to use the manana database (see jpilot)
 41) Allow the memo conduit to use the pedit32 database (see jpilot)
+42) Use pdf2text application to also install pdb files with the palmdoc
+    conduit.
 
 
 
