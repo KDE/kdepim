@@ -15,7 +15,7 @@ Description: KDE Personal Information Management metapackage
 Package: kdepim-dev
 Section: devel
 Architecture: any
-Depends: kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), kdepim-libs (= ${Source-Version}) 
+Depends: kaddressbook (= ${Source-Version}), kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), kdepim-libs (= ${Source-Version}) 
 Description: KDE Personal Information Management (development files)
  This package contains development files needed to compile kdepim applications.
 
