@@ -42,6 +42,8 @@
 
 #include <dcopclient.h>
 
+#include <time.h>  // required by pilot-link includes
+
 #include <pi-memo.h>
 
 #include "pilotMemo.h"
@@ -320,6 +322,9 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.1  2001/10/16 21:44:53  adridg
+// Split up some files, added behavior
+//
 // Revision 1.4  2001/10/10 22:39:49  adridg
 // Some UI/Credits/About page patches
 //
