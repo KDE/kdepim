@@ -1,5 +1,30 @@
-KPilot Developer's notes for june 3rd 2001
+KPilot Developer's notes for june 5th 2001
 ==========================================
+
+[ade]: Well, I'm back from my conference -- which was pretty neat -- and lo!
+In my mailbox are many patches to be applied. Thanks guys. This keeps
+KPilot moving forward even when all of the "regular" developers are
+doing silly things (like moving).
+
+2001-06-05  Palle Girgensohn
+
+* */Makefile.am
+  I had to tweak some Makefiles to get kpilot working on FreeBSD.
+  KPilot must include LIBPISOCK_PATH in its INCLUDES setup.
+  [Newer CVS versions already did, but I would like to note my 
+  appreciation for sent-in patches that aid in portability -- ade]
+
+2001-06-02  Philipp Hullmann
+
+* conduits/vcalconduit/*.{h,cc}
+  This is a new version of my large todoconduit/vcalconduit patch,
+  hopefully more suitable for human consumption than the previous one. It
+  mostly splits the large sync functions into smaller pieces, simplifies the
+  code for recurring events a lot, and moves some more code to vcalBase.
+
+* kpilot/pilot*Entry.cc
+  ... and one more patch to PilotDateEntry and PilotTodoEntry: replace 
+  notes of length 0 with empty ones.
 
 2001-05-23  Philipp Hullmann
 
