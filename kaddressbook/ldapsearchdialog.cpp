@@ -36,9 +36,14 @@
 
 #include "ldapsearchdialog.h"
 
-inline static QString asUtf8( const QByteArray &val )
+static QString asUtf8( const QByteArray &val )
 {
-  return QString::fromUtf8( val.data(), val.size() - 1 );
+  const char *data = val.data();
+  //QString::fromUtf8() bug workaround
+  if ( data[ val.size() - 1 ] == '\0' ) 
+    return QString::fromUtf8( data, val.size() - 1 );
+  else
+    return QString::fromUtf8( data, val.size() );
 }
 
 static QString join( const KABC::LdapAttrValue& lst, const QString& sep )
