@@ -18,6 +18,24 @@ Moving on past 3.0.2 and trying to sort things out.
   am now worried about what happens when you leave the KPilot UI running
   during a sync, since both applications have a RW copy of the config file.
 
+2002-06-24  Reinhold Kainhofer
+  Still fighting with the addressbook conduit. The Palm -> PC way already
+  seems to work. Haven't committed anything yet to prevent breaking 
+  compilation of the kdepim module with a conduit which won't work yet anyway.
+  
+
+KPilot Developer's notes for june 16th, 2002
+============================================
+
+2002-06-16 Reinhold Kainhofer
+* backported many fixes in the vcal conduits to the BRANCH for the 3.0.2
+  release. 
+* For the addressbook conduit I implemented a method 
+  QValueList<recordid_t> PilotDatabase::idList()
+  which returns a list of all record ids in the database
+* KPilotDeviceLink::openDatabases now fetches the database from the palm 
+  if no backup copy exists on the PC.
+
 KPilot Developer's notes for june 9th, 2002
 ===========================================
 
