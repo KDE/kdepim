@@ -412,7 +412,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
                                   Q_UINT32 sernum )
 {
-
+  Q_ASSERT( incidence );
   const QString &uid = incidence->uid();
   QString subResource = _subresource;
   Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
