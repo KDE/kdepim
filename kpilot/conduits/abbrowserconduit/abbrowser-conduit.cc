@@ -687,57 +687,78 @@ void AbbrowserConduit::_setAppInfo()
 bool AbbrowserConduit::_equal(const PilotAddress &piAddress,
 			      ContactEntry &abEntry) const
     {
-    if (piAddress.getField(entryLastname) != abEntry.getLastName())
+    bool mergeNeeded=false; // not needed here, but in merge func
+    QString mergedStr; // not needed here, but in merge func
+    if (_conflict(piAddress.getField(entryLastname),
+		  abEntry.getLastName(), mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getField(entryFirstname) != abEntry.getFirstName())
+    if (_conflict(piAddress.getField(entryFirstname), abEntry.getFirstName(),
+		  mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getField(entryTitle) != abEntry.getJobTitle())
+    if (_conflict(piAddress.getField(entryTitle), abEntry.getJobTitle(),
+		  mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getField(entryCompany) != abEntry.getCompany())
+    if (_conflict(piAddress.getField(entryCompany), abEntry.getCompany(),
+		  mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getField(entryNote) != abEntry.getNote())
+    if (_conflict(piAddress.getField(entryNote), abEntry.getNote(),
+		  mergeNeeded, mergedStr))
+	{
+	qDebug("AbbrowserConduit::_equal note !=; palm = '%s' ab = '%s'",
+	       piAddress.getField(entryNote), abEntry.getNote().latin1());
 	return false;
-    if (piAddress.getCategoryLabel() != abEntry.getFolder())
+	}
+    if (_conflict(piAddress.getCategoryLabel(), abEntry.getFolder(),
+		  mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getPhoneField(PilotAddress::eWork) !=
-	abEntry.getBusinessPhone())
+    if (_conflict(piAddress.getPhoneField(PilotAddress::eWork),
+		  abEntry.getBusinessPhone(), mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getPhoneField(PilotAddress::eHome) != abEntry.getHomePhone())
+    if (_conflict(piAddress.getPhoneField(PilotAddress::eHome),
+		  abEntry.getHomePhone(), mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getPhoneField(PilotAddress::eEmail) != abEntry.getEmail())
+    if (_conflict(piAddress.getPhoneField(PilotAddress::eEmail),
+		  abEntry.getEmail(), mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getPhoneField(PilotAddress::eFax) !=abEntry.getBusinessFax())
+    if (_conflict(piAddress.getPhoneField(PilotAddress::eFax),
+		  abEntry.getBusinessFax(), mergeNeeded, mergedStr))
 	return false;
-    if (piAddress.getPhoneField(PilotAddress::eMobile)
-	!= abEntry.getMobilePhone())
+    if (_conflict(piAddress.getPhoneField(PilotAddress::eMobile),
+	abEntry.getMobilePhone(), mergeNeeded, mergedStr))
 	return false;
     ContactEntry::Address *address = abEntry.getHomeAddress();
-    if (piAddress.getField(entryAddress) != address->getStreet())
+    if (_conflict(piAddress.getField(entryAddress), address->getStreet(),
+		  mergeNeeded, mergedStr))
 	{
 	delete address;
 	address = abEntry.getBusinessAddress();
-	if (piAddress.getField(entryAddress) != address->getStreet())
+	if (_conflict(piAddress.getField(entryAddress), address->getStreet(),
+		      mergeNeeded, mergedStr))
 	    {
 	    delete address;
 	    return false;
 	    }
 	}
-    if (piAddress.getField(entryCity) != address->getCity())
+    if (_conflict(piAddress.getField(entryCity), address->getCity(),
+		  mergeNeeded, mergedStr))
 	{
 	delete address;
 	return false;
 	}
-    if (piAddress.getField(entryState) != address->getState())
+    if (_conflict(piAddress.getField(entryState), address->getState(),
+		  mergeNeeded, mergedStr))
 	{
 	delete address;
 	return false;
 	}
-    if (piAddress.getField(entryZip) != address->getZip())
+    if (_conflict(piAddress.getField(entryZip), address->getZip(),
+		  mergeNeeded, mergedStr))
 	{
 	delete address;
 	return false;
 	}
-    if (piAddress.getField(entryCountry) != address->getCountry())
+    if (_conflict(piAddress.getField(entryCountry), address->getCountry(),
+		  mergeNeeded, mergedStr))
 	{
 	delete address;
 	return false;
@@ -805,11 +826,17 @@ void AbbrowserConduit::doBackup()
 	    abKey = idContactMap[pilotAddress.id()];
 	    ContactEntry *abEntry = abbrowserContacts[abKey];
 	    assert(abEntry != NULL);
-
+	    
 	    // if equal, do nothing since it is already there
 	    if (!_equal(pilotAddress, *abEntry))
+		{
+		qDebug("AbbrowserConduit::doBackup id = %d match but not equal; pilot = '%s %s' abEntry = '%s'", (int)pilotAddress.id(),
+		       pilotAddress.getField(entryFirstname),
+		       pilotAddress.getField(entryLastname),
+		       abEntry->findRef("fn").latin1());
 		// if not equal, let the user choose what to do
 		_handleConflict( &pilotAddress, abEntry, abKey);
+		}
 	    }
 	else
 	    {
@@ -827,10 +854,16 @@ void AbbrowserConduit::doBackup()
 		    _saveAbEntry(*abEntry, abKey);
 		    }
 		else
+		    {
+		    qDebug("Abbrowser::doBackup both records exist (no id match) but conflict");
 		    _handleConflict(&pilotAddress, abEntry, abKey);
+		    }
 		}
 	    else  // if not found in the abbrowser contacts, add it
+		{
+		qDebug("Abbrowser::doBackup adding new pilot record to abbrowser");
 		_addToAbbrowser(pilotAddress);
+		}
 	    }
 	}
     }
