@@ -102,15 +102,19 @@ void LocalKonnector::setCapabilities( const KSync::Kapabilities& )
 
 bool LocalKonnector::readSyncees()
 {
-  if ( !mCalendar.load( mCalendarFile ) ) return false;
+  if ( !mCalendarFile.isEmpty() ) {
+    if ( !mCalendar.load( mCalendarFile ) ) return false;
+  }
 
-  mAddressBookResourceFile->setFileName( mAddressBookFile );
-  if ( !mAddressBook.load() ) return false;
+  if ( mAddressBookFile.isEmpty() ) {
+    mAddressBookResourceFile->setFileName( mAddressBookFile );
+    if ( !mAddressBook.load() ) return false;
   
-  KABC::AddressBook::Iterator it;
-  for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
-    KSync::AddressBookSyncEntry entry( *it );
-    mAddressBookSyncee->addEntry( &entry );
+    KABC::AddressBook::Iterator it;
+    for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
+      KSync::AddressBookSyncEntry entry( *it );
+      mAddressBookSyncee->addEntry( &entry );
+    }
   }
 
   // TODO: Read Bookmarks
@@ -147,16 +151,20 @@ void LocalKonnector::download( const QString& )
 
 bool LocalKonnector::writeSyncees()
 {
-  if ( !mCalendar.save( mCalendarFile ) ) return false;
-
-  KABC::Ticket *ticket;
-  ticket = mAddressBook.requestSaveTicket( mAddressBookResourceFile );
-  if ( !ticket ) {
-    kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
-                << "addressbook." << endl;
-    return false; 
+  if ( !mCalendarFile.isEmpty() ) {
+    if ( !mCalendar.save( mCalendarFile ) ) return false;
   }
-  if ( !mAddressBook.save( ticket ) ) return false;
+
+  if ( !mAddressBookFile.isEmpty() ) {
+    KABC::Ticket *ticket;
+    ticket = mAddressBook.requestSaveTicket( mAddressBookResourceFile );
+    if ( !ticket ) {
+      kdWarning() << "LocalKonnector::writeSyncees(). Couldn't get ticket for "
+                  << "addressbook." << endl;
+      return false; 
+    }
+    if ( !mAddressBook.save( ticket ) ) return false;
+  }
 
   // TODO: Write Bookmarks
 
