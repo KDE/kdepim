@@ -27,7 +27,6 @@
 #include "calformat.h"
 
 #include "incidencebase.h"
-#include "incidencebase.moc"
 
 using namespace KCal;
 

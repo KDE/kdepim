@@ -33,7 +33,6 @@
 #include "calfilter.h"
 
 #include "calendar.h"
-#include "calendar.moc"
 
 using namespace KCal;
 

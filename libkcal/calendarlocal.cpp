@@ -37,7 +37,6 @@
 #include "journal.h"
 
 #include "calendarlocal.h"
-#include "calendarlocal.moc"
 
 using namespace KCal;
 
