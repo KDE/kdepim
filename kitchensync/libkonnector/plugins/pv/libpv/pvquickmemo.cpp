@@ -165,7 +165,7 @@ void CasioPV::PVQuickMemo::setFieldData( datapacket& packet )
       m_continued = packet.continued;
       break;
     default:
-      throw PVDataEntryException( "PVQuickMemo::setFieldData : recieved unsupported fieldCode : " + packet.fieldCode, 4003 );
+      throw PVDataEntryException( "PVQuickMemo::setFieldData : received unsupported fieldCode : " + packet.fieldCode, 4003 );
   }
 }
 

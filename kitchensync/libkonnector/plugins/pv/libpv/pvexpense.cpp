@@ -200,7 +200,7 @@ void CasioPV::PVExpense::setFieldData( datapacket& packet )
       m_data[packet.fieldCode] = packet.data;
       break;
     default:
-      throw PVDataEntryException( "PVExpense::setFieldData : recieved unsupported fieldCode : " + packet.fieldCode, 4003 );
+      throw PVDataEntryException( "PVExpense::setFieldData : received unsupported fieldCode : " + packet.fieldCode, 4003 );
   }
 }
 

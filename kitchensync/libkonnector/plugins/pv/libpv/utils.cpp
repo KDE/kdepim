@@ -25,7 +25,7 @@ using namespace std;
 using namespace CasioPV;
 
 /**
-   * This method changes the return code 0x0D as it is recieved from the PV to
+   * This method changes the return code 0x0D as it is received from the PV to
    * 0x0A as it is used by Unix.
    * @param data Data to be changed
    * @return string Changed data (return code in Unix format)

@@ -42,13 +42,13 @@ CasioPV::Protocol::Protocol()
 
   m_speed = 9600;
   m_actual_send_No = 0;
-  m_actual_recieve_No = 0;
+  m_actual_receive_No = 0;
   string m_modelcode = "0000";            // may be there are better pre-defines
   string m_username = "000000000000";
   string m_optionalcode = "000000000000000000000000";
   m_userid = "";
   m_pvpin = "";
-  m_recievedNAK = 0;
+  m_receivedNAK = 0;
   m_sendNAK = 0;
   m_inSecretArea = false;
 
@@ -64,13 +64,13 @@ CasioPV::Protocol::Protocol( string port ){
 
   m_speed = 9600;
   m_actual_send_No = 0;
-  m_actual_recieve_No = 0;
+  m_actual_receive_No = 0;
   string m_modelcode = "0000";            // may be there are better pre-defines
   string m_username = "000000000000";
   string m_optionalcode = "000000000000000000000000";
   m_userid = "";
   m_pvpin = "";
-  m_recievedNAK = 0;
+  m_receivedNAK = 0;
   m_sendNAK = 0;
   m_inSecretArea = false;
   try {
@@ -92,13 +92,13 @@ CasioPV::Protocol::Protocol( Serial& com ){
 
   m_speed = 9600;
   m_actual_send_No = 0;
-  m_actual_recieve_No = 0;
+  m_actual_receive_No = 0;
   string m_modelcode = "0000";            // may be there are better pre-defines
   string m_username = "000000000000";
   string m_optionalcode = "000000000000000000000000";
   m_userid = "";
   m_pvpin = "";
-  m_recievedNAK = 0;
+  m_receivedNAK = 0;
   m_sendNAK = 0;
   m_inSecretArea = false;
   m_com = com;
@@ -140,7 +140,7 @@ void CasioPV::Protocol::SetRequestedSpeed( int speed ){
   m_com.SetInputSpeed( 9600 );
   m_com.SetOutputSpeed( 9600 );
   // set back to 0
-  m_actual_recieve_No = m_actual_send_No = 0;
+  m_actual_receive_No = m_actual_send_No = 0;
 
   debugout( "END:Protocol::SetRequestedSpeed( int speed )" );
 }
@@ -167,19 +167,19 @@ void CasioPV::Protocol::WakeUp(){
 /**
    * Every packet type has its own start byte which identify it. This method reads this byte from the serial line.
    * @param checklink defaults to true.
-   * If this is set to true RecieveOrder checks recieved packet headers for a link packet which cancels the communication
-   * and throws an exception if one is recieved.
-   * @return recieved packet type
+   * If this is set to true ReceiveOrder checks received packet headers for a link packet which cancels the communication
+   * and throws an exception if one is received.
+   * @return received packet type
    * @exception ProtocolException
    */
-unsigned int CasioPV::Protocol::RecieveOrder( bool checklink ){
-//  debugout( "BEGIN:Protocol::RecieveOrder()" );
+unsigned int CasioPV::Protocol::ReceiveOrder( bool checklink ){
+//  debugout( "BEGIN:Protocol::ReceiveOrder()" );
 
   unsigned int order = 0;
   try {
     order = m_com.ReadByte();//1000);
   } catch ( SerialException e ) {
-    if ( e.getErrorCode() == 3002 ) throw ProtocolException( "Protocol::RecieveLinkPacket : timeout", 2010 );
+    if ( e.getErrorCode() == 3002 ) throw ProtocolException( "Protocol::ReceiveLinkPacket : timeout", 2010 );
     if ( e.getErrorCode() == 3006 ) order = CAN;
   }
   switch ( order ) {
@@ -193,72 +193,72 @@ unsigned int CasioPV::Protocol::RecieveOrder( bool checklink ){
                 break;
     case CAN  : debugout( "Link packet" );
                 if ( checklink ) {
-                  unsigned int linktype = RecieveLinkPacket( true );
-                  cerr << "Protocol::RecieveOrder : link packet : " << linktype << endl;
-                  throw ProtocolException( "Protocol::RecieveOrder : link packet for break", 2011 );       //check this no response interogation others are already thrown
+                  unsigned int linktype = ReceiveLinkPacket( true );
+                  cerr << "Protocol::ReceiveOrder : link packet : " << linktype << endl;
+                  throw ProtocolException( "Protocol::ReceiveOrder : link packet for break", 2011 );       //check this no response interogation others are already thrown
                 }
                 break;
     case 'P'    : debugout( "Looks like PVPIN is installed" );
                 break;
-    default : throw ProtocolException( "Protocol::RecieveOrder : unknown command : ", 2009 );// + (char)order, 2009 );
+    default : throw ProtocolException( "Protocol::ReceiveOrder : unknown command : ", 2009 );// + (char)order, 2009 );
   }
 
-//  debugout( "END:Protocol::RecieveOrder()" );
+//  debugout( "END:Protocol::ReceiveOrder()" );
   return order;
 }
 
 /**
-   * This method waits for the acknowledge of the currently recieved packet.
+   * This method waits for the acknowledge of the currently received packet.
    * The packet number is stored in m_actual_send_No.
    * @return false in case of a NAK packet and true in case of a ACK packet.
    * @exception ProtocolException
    */
-bool CasioPV::Protocol::RecieveACK(){
-  debugout( "BEGIN:Protocol::RecieveACK()" );
+bool CasioPV::Protocol::ReceiveACK(){
+  debugout( "BEGIN:Protocol::ReceiveACK()" );
 
   unsigned int ro, No;
   bool rc = true;
 
-  ro = RecieveOrder();
-  No = RecievePacketNo();
+  ro = ReceiveOrder();
+  No = ReceivePacketNo();
 
   if ( ro == NAK ) {
-    cerr << "ERROR: recieved NAK" << endl;
-    m_recievedNAK++;
-    if ( m_recievedNAK == 5 ) throw ProtocolException( "Protocol::RecieveACK : recieved to much NAK", 2005 );
+    cerr << "ERROR: received NAK" << endl;
+    m_receivedNAK++;
+    if ( m_receivedNAK == 5 ) throw ProtocolException( "Protocol::ReceiveACK : received to much NAK", 2005 );
     rc = false;
   } else if ( ro == ACK ) {
-    m_recievedNAK = 0;
+    m_receivedNAK = 0;
     m_actual_send_No++;
     m_actual_send_No %= 256;
   } else {
-    throw ProtocolException( "Protocol::RecieveACK : waited for ACK or NAK but recieved ", 2006 ); //+ (char)ro, 2006 );  // check could also be 2004
+    throw ProtocolException( "Protocol::ReceiveACK : waited for ACK or NAK but received ", 2006 ); //+ (char)ro, 2006 );  // check could also be 2004
   }
 
-  debugout( "END:Protocol::RecieveACK()" );
+  debugout( "END:Protocol::ReceiveACK()" );
   return rc;
 }
 
 /**
-   * This method sends the acknowledge of the recently recieved packet.
-   * The packet number is stored in m_actual_recieve_No.
+   * This method sends the acknowledge of the recently received packet.
+   * The packet number is stored in m_actual_receive_No.
    */
 void CasioPV::Protocol::SendACK() {
   debugout( "BEGIN:Protocol::SendACK()" );
 
   m_com.WriteByte( ACK );
-  SendPacketNo( m_actual_recieve_No );
+  SendPacketNo( m_actual_receive_No );
   m_sendNAK = 0;
-  debugout( "Send ACK for PacketNo " << dec << m_actual_recieve_No );
-  m_actual_recieve_No++;
-  m_actual_recieve_No %= 256;
+  debugout( "Send ACK for PacketNo " << dec << m_actual_receive_No );
+  m_actual_receive_No++;
+  m_actual_receive_No %= 256;
 
   debugout( "END:Protocol::SendACK()" );
 }
 
 /**
-   * This method sends the NOT acknowledge for the recently recieved packet.
-   * The packet number is stored in m_actual_recieve_No.
+   * This method sends the NOT acknowledge for the recently received packet.
+   * The packet number is stored in m_actual_receive_No.
    * This may happens if packet is corrupt.
    * @exception ProtocolException
    */
@@ -266,10 +266,10 @@ void CasioPV::Protocol::SendNAK() {
   debugout( "BEGIN:Protocol::SendNAK()" );
 
   m_com.WriteByte( NAK );
-  SendPacketNo( m_actual_recieve_No );
+  SendPacketNo( m_actual_receive_No );
   m_sendNAK++;
   if ( m_sendNAK == 5 ) throw ProtocolException( "Protocol::SendNAK : sended to much NAK", 2007 );
-  debugout( "Send NAK for PacketNo " << dec << m_actual_recieve_No );
+  debugout( "Send NAK for PacketNo " << dec << m_actual_receive_No );
 
   debugout( "END:Protocol::SendNAK()" );
 }
@@ -281,34 +281,34 @@ void CasioPV::Protocol::SendNAK() {
 
 /**
    * This method waits for a link packet.
-   * @param order_recieved defaults to false. If this is set to true the packet type byte must be checked with @ref RecieveOrder .
-   * This is used in @ref RecieveOrder to check for link packets which cancels the communication.
-   * @return unsigned int with the recieved link command type.
+   * @param order_received defaults to false. If this is set to true the packet type byte must be checked with @ref ReceiveOrder .
+   * This is used in @ref ReceiveOrder to check for link packets which cancels the communication.
+   * @return unsigned int with the received link command type.
    * @exception ProtocolException
    */
-unsigned int CasioPV::Protocol::RecieveLinkPacket( bool order_recieved ){
-  debugout( "BEGIN:Protocol::RecieveLinkPacket( bool order_recieved = false )" );
+unsigned int CasioPV::Protocol::ReceiveLinkPacket( bool order_received ){
+  debugout( "BEGIN:Protocol::ReceiveLinkPacket( bool order_received = false )" );
 
   unsigned int linkcommand;
 
   try {
-    if ( !order_recieved ) {
-      unsigned int ro = RecieveOrder( false );
+    if ( !order_received ) {
+      unsigned int ro = ReceiveOrder( false );
       if ( ro == 'P' ) {                                                    // if pvpin is active send pin
         string pvpin = m_com.ReadString( 5 );
         if ( pvpin == "VPIN:" ) {
           m_com.WriteString( m_pvpin + "\r\n" );
-          ro = RecieveOrder( false );
+          ro = ReceiveOrder( false );
         }
       }
-      if ( ro != CAN ) throw ProtocolException( "Protocol::RecieveLinkPacket : not a link packet!!", 2004 );
+      if ( ro != CAN ) throw ProtocolException( "Protocol::ReceiveLinkPacket : not a link packet!!", 2004 );
     }
 
-    unsigned int response_no = RecievePacketNo();                     // packet number
-    if ( !order_recieved && ( response_no != m_actual_recieve_No ) )      // in case of a break packet the packet number is the same as of the recently recieved packet
-                throw ProtocolException( "Protocol::RecieveLinkPacket : Recieved wrong packet number", 2008 );
+    unsigned int response_no = ReceivePacketNo();                     // packet number
+    if ( !order_received && ( response_no != m_actual_receive_No ) )      // in case of a break packet the packet number is the same as of the recently received packet
+                throw ProtocolException( "Protocol::ReceiveLinkPacket : Received wrong packet number", 2008 );
 
-    RecieveXBytes( linkcommand, 4 );                                  // link command
+    ReceiveXBytes( linkcommand, 4 );                                  // link command
 
     switch ( linkcommand ) {
       case CALLING_UP :                         // 0x0000
@@ -322,25 +322,25 @@ unsigned int CasioPV::Protocol::RecieveLinkPacket( bool order_recieved ){
         break;
       case BREAK_COMMUNICATION :            // 0x0101
         debugout( "Break data block" );
-        throw ProtocolException( "Protocol::RecieveOrder : link packet for break data block", 2011 );
+        throw ProtocolException( "Protocol::ReceiveOrder : link packet for break data block", 2011 );
         break;
       case BREAK_COMMAND_BLOCK :            // 0x0021
         debugout( "Break command block" );
-        throw ProtocolException( "Protocol::RecieveOrder : link packet for break command block", 2011 );
+        throw ProtocolException( "Protocol::ReceiveOrder : link packet for break command block", 2011 );
         break;
       case BREAK_DATA_BLOCK :               // 0x0031
         debugout( "Break data block" );
-        throw ProtocolException( "Protocol::RecieveOrder : link packet for break data block", 2011 );
+        throw ProtocolException( "Protocol::ReceiveOrder : link packet for break data block", 2011 );
         break;
       default :
-        throw ProtocolException( "Protocol::RecieveLinkPacket : recieved unkown link packet !!!!!!!!", 2009);
+        throw ProtocolException( "Protocol::ReceiveLinkPacket : received unknown link packet !!!!!!!!", 2009);
     }
   } catch (SerialException e) {
     cerr << "ERROR: " << e.getMessage() << endl;
-    throw ProtocolException( "Protocol::RecieveLinkPacket : timeout", 2010 );
+    throw ProtocolException( "Protocol::ReceiveLinkPacket : timeout", 2010 );
   }
 
-  debugout( "END:Protocol::RecieveLinkPacket( bool order_recieved = false )" );
+  debugout( "END:Protocol::ReceiveLinkPacket( bool order_received = false )" );
   return linkcommand;
 }
 
@@ -380,26 +380,26 @@ void CasioPV::Protocol::SendLinkPacket( int type ){
 
 /**
    * This method waits for a command packet.
-   * @param order_recieved defaults to false. If this is set to true the packet type byte must be checked with @ref RecieveOrder .
+   * @param order_received defaults to false. If this is set to true the packet type byte must be checked with @ref ReceiveOrder .
    * @return false in the case that the checksum is not correct and true else.
    * @exception ProtocolException
    */
-bool CasioPV::Protocol::RecieveCommandPacket( unsigned int& commandtype, bool order_recieved ) {
-  debugout( "BEGIN:Protocol::RecieveCommandPacket( unsigned int&, bool order_recieved=false )" );
+bool CasioPV::Protocol::ReceiveCommandPacket( unsigned int& commandtype, bool order_received ) {
+  debugout( "BEGIN:Protocol::ReceiveCommandPacket( unsigned int&, bool order_received=false )" );
 
   string bytes = "";
   unsigned int NoOfBytes = 0;
   try {
-    if ( !order_recieved && RecieveOrder() != SOH ) throw ProtocolException( "Protocol::RecieveCommandPacket : not a command packet!!", 2004);
+    if ( !order_received && ReceiveOrder() != SOH ) throw ProtocolException( "Protocol::ReceiveCommandPacket : not a command packet!!", 2004);
 
-    unsigned int response_no = RecievePacketNo();                       // PacketNo
-    if ( response_no != m_actual_recieve_No ) throw ProtocolException( "Protocol::RecieveCommandPacket : Recieved wrong packet number!!!!!!!!", 2008 );
+    unsigned int response_no = ReceivePacketNo();                       // PacketNo
+    if ( response_no != m_actual_receive_No ) throw ProtocolException( "Protocol::ReceiveCommandPacket : Received wrong packet number!!!!!!!!", 2008 );
 
-    unsigned int check = RecieveXBytes( NoOfBytes, 2 );                   // Number of bytes
+    unsigned int check = ReceiveXBytes( NoOfBytes, 2 );                   // Number of bytes
 
-    check += RecieveXBytes( commandtype, 4 );                         // command
+    check += ReceiveXBytes( commandtype, 4 );                         // command
 
-    check += RecieveXBytes( bytes, NoOfBytes - 4 );                       // data
+    check += ReceiveXBytes( bytes, NoOfBytes - 4 );                       // data
 
     string checksum = m_com.ReadString( 2 );                            // checksum
 
@@ -515,47 +515,47 @@ bool CasioPV::Protocol::RecieveCommandPacket( unsigned int& commandtype, bool or
       case APPEND_REGISTRATION_R :                  // 0x8810   // should be used for append and add data, but is only used by add data
         debugout( "Result command" );
         debugout( "Append registration" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case MODIFY_DATA_R :                              // 0x8811
         debugout( "Result command" );
         debugout( "Modify data" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case CHANGE_USER_ID_R :                         // 0x881f
         debugout( "Result command" );
         debugout( "Change user id" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case DELETE_DATA_R :                              // 0x8820
         debugout( "Result command" );
         debugout( "Delete data" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case SEND_MODIFIED_DATA_REQUEST_R :       // 0x8830
         debugout( "Result command" );
         debugout( "Send modified data request" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case SEND_NEW_DATA_REQUEST_R :              // 0x8831
         debugout( "Result command" );
         debugout( "Send new data request" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case DATA_SEND_REQUEST_R :                    // 0x8832
         debugout( "Result command" );
         debugout( "Data send request" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case CHECK_FOR_MODIFIED_DATA_R :              // 0x8840
         debugout( "Result command" );
         debugout( "Check for modified data" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case NUMBER_OF_DATA_REQUEST_R :           // 0x8841
         debugout( "Result command" );
         debugout( "Number of data request" );
-        if ( bytes != "0000" ) throw ProtocolException( "Protocol::RecieveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
+        if ( bytes != "0000" ) throw ProtocolException( "Protocol::ReceiveCommandPacket : command was not success full. resultcode: "+bytes, 2013);
         break;
       case START_DATA_BLOCK :                       // 0x0200
         debugout( "Start data block" );
@@ -569,15 +569,15 @@ bool CasioPV::Protocol::RecieveCommandPacket( unsigned int& commandtype, bool or
         break;
       default :
         cerr << "ERROR: Unknown Command : " << hex << commandtype << dec << endl;
-        throw ProtocolException( "Protocol::RecieveCommandPacket : Unknown Command", 2004 );
+        throw ProtocolException( "Protocol::ReceiveCommandPacket : Unknown Command", 2004 );
     }
 
   } catch ( SerialException e ) {
     cerr << "ERROR: " << e.getMessage() << endl;
-    throw ProtocolException( "Protocol::RecieveCommandPacket : timeout", 2010 );
+    throw ProtocolException( "Protocol::ReceiveCommandPacket : timeout", 2010 );
   }
 
-  debugout( "END:Protocol::RecieveCommandPacket( unsigned int&, bool order_recieved=false )" );
+  debugout( "END:Protocol::ReceiveCommandPacket( unsigned int&, bool order_received=false )" );
   return true;
 }
 
@@ -850,32 +850,32 @@ void CasioPV::Protocol::SendCommandPacket( unsigned int type, unsigned int DataC
 **************************************/
 
 /**
-   * This method recieves a datapacket and stores it in a @ref datapacket struct.
+   * This method receives a datapacket and stores it in a @ref datapacket struct.
    * @param packet contains the data, the field code and the continued bit
-   * @param order_recieved defaults to false. If this is set to true the packet type byte must be checked with @ref RecieveOrder .
+   * @param order_received defaults to false. If this is set to true the packet type byte must be checked with @ref ReceiveOrder .
    * @return false in the case that the checksum is not correct and true else.
    * @exception ProtocolException
    */
-bool CasioPV::Protocol::RecieveDataPacket( datapacket& packet, bool order_recieved ){
-  debugout( "BEGIN:Protocol::RecieveDataPacket( datapacket&, bool order_recieved = false )" );
+bool CasioPV::Protocol::ReceiveDataPacket( datapacket& packet, bool order_received ){
+  debugout( "BEGIN:Protocol::ReceiveDataPacket( datapacket&, bool order_received = false )" );
 
   bool rc = true;
   try {
-    if ( !order_recieved && RecieveOrder() != STX ) throw ProtocolException( "Protocol::RecieveDataPacket :  not a data packet!!", 2004 );
+    if ( !order_received && ReceiveOrder() != STX ) throw ProtocolException( "Protocol::ReceiveDataPacket :  not a data packet!!", 2004 );
 
-    unsigned int response_no = RecievePacketNo();                     // PacketNo
-    if ( response_no != m_actual_recieve_No ) throw ProtocolException( "Protocol::RecieveDataPacket :  Recieved wrong packet number", 2008 );
+    unsigned int response_no = ReceivePacketNo();                     // PacketNo
+    if ( response_no != m_actual_receive_No ) throw ProtocolException( "Protocol::ReceiveDataPacket :  Received wrong packet number", 2008 );
 
     unsigned int NoOfBytes = 0;
-    unsigned int check = RecieveXBytes( NoOfBytes, 4 );                 // Number of bytes
+    unsigned int check = ReceiveXBytes( NoOfBytes, 4 );                 // Number of bytes
 
-    check += RecieveXBytes( packet.fieldCode, 5 );                      // field code
+    check += ReceiveXBytes( packet.fieldCode, 5 );                      // field code
 
     unsigned char continued = m_com.ReadByte();                     // continued flag is the 6th byte of the field code
     packet.continued = ( continued == '1' );
     check += (unsigned int)continued;
 
-    check += RecieveXBytes( packet.data, NoOfBytes - 6 );               // data
+    check += ReceiveXBytes( packet.data, NoOfBytes - 6 );               // data
 
     string checksum = m_com.ReadString( 2 );                          // checksum
 
@@ -889,16 +889,16 @@ bool CasioPV::Protocol::RecieveDataPacket( datapacket& packet, bool order_reciev
           cerr << "ERROR: Checksum not correct !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
           rc = false;
     }                                                                                  // what should be done if the checksum is not correct?
-    // increment of  actual_recieve_No
-    m_actual_recieve_No++;
-    m_actual_recieve_No %= 256;
+    // increment of  actual_receive_No
+    m_actual_receive_No++;
+    m_actual_receive_No %= 256;
 
   } catch (SerialException e) {
     cerr << "ERROR: " << e.getMessage() << endl;
-    throw ProtocolException( "Protocol::RecieveDataPacket : timeout", 2000); //check define for timeout
+    throw ProtocolException( "Protocol::ReceiveDataPacket : timeout", 2000); //check define for timeout
   }
 
-  debugout( "END:Protocol::RecieveDataPacket( datapacket&, bool order_recieved = false )" );
+  debugout( "END:Protocol::ReceiveDataPacket( datapacket&, bool order_received = false )" );
   return rc;
 }
 
@@ -957,7 +957,7 @@ string CasioPV::Protocol::GetOptionalCode(){
 }
 
 /**
-   * This method sets the pvpin code which will be sended by @ref RecieveLinkPacket if PVPIN is installed and enabled.
+   * This method sets the pvpin code which will be sended by @ref ReceiveLinkPacket if PVPIN is installed and enabled.
    * Make sure that this is a number which is given as a string.
    */
 void CasioPV::Protocol::SetPVPIN( string& pvpin ){

@@ -186,7 +186,7 @@ class Serial {
 		int m_fd;
 		string m_lockfile;
 		termios m_options;	// Struct for serial parameters
-		unsigned char m_recieved;
+		unsigned char m_received;
 
 		/**
 		   * No descriptions

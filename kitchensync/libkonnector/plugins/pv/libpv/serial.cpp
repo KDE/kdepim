@@ -133,7 +133,7 @@ unsigned char CasioPV::Serial::ReadByte( int timeout ){										// parameter ti
 
 	if ( m_fd == -1 ) throw SerialException( "Serial::ReadByte : Port not open", 3005 );
 
-	unsigned char recieved;
+	unsigned char received;
 	timeval timestart, timenow;
 	gettimeofday(&timestart, NULL);
 
@@ -147,11 +147,11 @@ unsigned char CasioPV::Serial::ReadByte( int timeout ){										// parameter ti
 	unsigned char* buffer = new unsigned char( 0x00 );
 	if ( read(m_fd, buffer, 1) == -1 ) throw SerialException( "Serial::ReadByte : could not read next byte", 3003 );
 	if ( *buffer == 0x18 ) throw SerialException( "Serial::ReadString : link packet", 3006 );
-	recieved = *buffer;
+	received = *buffer;
 	delete( buffer );
-//	debugout( "recieved " << hex << (unsigned int)recieved << dec );
+//	debugout( "received " << hex << (unsigned int)received << dec );
 
-	return recieved;
+	return received;
 }
 
 /**
@@ -162,7 +162,7 @@ string CasioPV::Serial::ReadString( unsigned int count, int timeout ){										
 	if ( m_fd == -1 ) throw SerialException( "Serial::ReadString : Port not open", 3005 );
 
 	unsigned char* buffer = new unsigned char( 0x00 );
-	string recieved = "";
+	string received = "";
 	timeval timestart, timenow;
 
 	for ( unsigned int i = 0; i<count; i++ ) {
@@ -177,12 +177,12 @@ string CasioPV::Serial::ReadString( unsigned int count, int timeout ){										
 		}
 		if ( read(m_fd, buffer, 1) == -1 ) throw SerialException( "Serial::ReadString : could not read next byte", 3003);
 		if ( *buffer == 0x18 ) throw SerialException( "Serial::ReadString : link packet", 3006 );
-		recieved += *buffer;
+		received += *buffer;
 	}
 	delete( buffer );
-//	debugout( "recieved " << recieved );
+//	debugout( "received " << received );
 
-	return recieved;
+	return received;
 }
 
 /**

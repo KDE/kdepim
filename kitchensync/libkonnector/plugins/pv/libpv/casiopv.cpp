@@ -147,44 +147,44 @@ void CasioPV::CasioPV::WaitForLink( int speed, string pvpin ){
   m_protocol->SetRequestedSpeed( speed );
 // !!!!!!!!!!!!!!!!!!!!!!! have to add time out !!!!!!!!!!!!!!!!!!!!!!!!!!
   try {
-    m_protocol->RecieveLinkPacket();                                            // recieve calling up
+    m_protocol->ReceiveLinkPacket();                                            // receive calling up
   } catch (ProtocolException e) {
     cerr << "ERROR: " << e.getMessage() << endl;
-    if ( e.getErrorCode() == 2000 ) throw CasioPVException( "CasioPV::WaitForLink : didn't recieve calling up !timeout!", 1001);
+    if ( e.getErrorCode() == 2000 ) throw CasioPVException( "CasioPV::WaitForLink : didn't receive calling up !timeout!", 1001);
   }
   m_protocol->SendACK();
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve protocol level exchange
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive protocol level exchange
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
   do {
     m_protocol->SendCommandPacket(PROTOCOL_LEVEL_EXCHANGE_R);     // send protocol level exchange respond
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve UserID
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive UserID
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
   do {
     m_protocol->SendCommandPacket(USER_ID_EXCHANGE_R);                  // send UserID respond
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve Com speed settings
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive Com speed settings
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
   do {
     m_protocol->SendCommandPacket(COMMUNICATION_SPEED_SETTING_R); // send Com speed settings respond
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve Phase transition
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive Phase transition
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
   do {
     m_protocol->SendCommandPacket(PHASE_TRANSITION_COMMAND_R);      // send Phase transition for 01
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
   m_protocol->EndPhase1();
 
@@ -206,14 +206,14 @@ unsigned int CasioPV::CasioPV::GetNumberOfData( int dataCondition ){
 
   do {
     m_protocol->SendCommandPacket( NUMBER_OF_DATA_REQUEST, dataCondition );
-  } while ( !m_protocol->RecieveACK() );
+  } while ( !m_protocol->ReceiveACK() );
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve start data block
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive start data block
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
 
-  m_protocol->RecieveDataPacket( packet );                                      // recieve number of data
+  m_protocol->ReceiveDataPacket( packet );                                      // receive number of data
 
   if ( packet.fieldCode == NUMBER_OF_DATA ) {
 //    debugout( "number of data = " << packet.data );
@@ -225,13 +225,13 @@ unsigned int CasioPV::CasioPV::GetNumberOfData( int dataCondition ){
       NoOfData += packet.data[i];
     }
   } else {
-    throw CasioPVException( "CasioPV::GetNumberOfData : Didn't recieve the number of data!!!!!", 1002);
+    throw CasioPVException( "CasioPV::GetNumberOfData : Didn't receive the number of data!!!!!", 1002);
   }
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve end data block
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive end data block
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve number of data request result
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive number of data request result
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
@@ -256,30 +256,30 @@ void CasioPV::CasioPV::GetEntry( PVDataEntry& dataEntry, unsigned int dataOrder 
 
   do {
     m_protocol->SendCommandPacket( DATA_SEND_REQUEST, dataEntry.getModeCode(), dataOrder );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve start data block
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive start data block
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
 
-  if ( m_protocol->RecieveOrder() == 0x02 ) {
+  if ( m_protocol->ReceiveOrder() == 0x02 ) {
     do {
-      m_protocol->RecieveDataPacket( packet, true );                              // recieve data         check the checksum!!!!!!!!!!!
+      m_protocol->ReceiveDataPacket( packet, true );                              // receive data         check the checksum!!!!!!!!!!!
       dataEntry.setFieldData( packet );
-    } while ( m_protocol->RecieveOrder() == 0x02 );
+    } while ( m_protocol->ReceiveOrder() == 0x02 );
   } else {
     throw CasioPVException( "CasioPV::GetEntry : Communication error!!", 1003 );
   }
 
   bool checkorder = true;
-  while ( !m_protocol->RecieveCommandPacket( command, checkorder ) ) {          // recieve end data block
+  while ( !m_protocol->ReceiveCommandPacket( command, checkorder ) ) {          // receive end data block
     m_protocol->SendNAK();
     checkorder = false;
   }
   m_protocol->SendACK();
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve result command
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive result command
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
@@ -298,30 +298,30 @@ void CasioPV::CasioPV::GetSpecifiedEntry( PVDataEntry& dataEntry, unsigned int d
 
   do {
     m_protocol->SendCommandPacket( 0x8033, dataEntry.getModeCode(), dataOrder );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve start data block
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive start data block
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
 
-  if ( m_protocol->RecieveOrder() == 0x02 ) {
+  if ( m_protocol->ReceiveOrder() == 0x02 ) {
     do {
-      m_protocol->RecieveDataPacket( packet, true );                              // recieve data
+      m_protocol->ReceiveDataPacket( packet, true );                              // receive data
       dataEntry.setFieldData( packet );
-    } while ( m_protocol->RecieveOrder() == 0x02 );
+    } while ( m_protocol->ReceiveOrder() == 0x02 );
   } else {
     throw CasioPVException( "CasioPV::GetData : Communication error!!", 1003 );
   }
 
   bool checkorder = true;
-  while ( !m_protocol->RecieveCommandPacket( command, checkorder ) ) {          // recieve end data block
+  while ( !m_protocol->ReceiveCommandPacket( command, checkorder ) ) {          // receive end data block
     m_protocol->SendNAK();
     checkorder = false;
   }
   m_protocol->SendACK();
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve result command
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive result command
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
@@ -356,11 +356,11 @@ unsigned int CasioPV::CasioPV::AddEntry( PVDataEntry& dataEntry ) {
 
   do {
     m_protocol->SendCommandPacket( ADD_DATA, dataEntry.getModeCode(), dataOrder );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
   do {
     m_protocol->SendCommandPacket( START_DATA_BLOCK );                  // send start data block
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
   for (map<unsigned int, string>::const_iterator entrydata = dataEntry.getData().begin(); entrydata != dataEntry.getData().end(); entrydata++ ){
     datapacket packet;
@@ -379,13 +379,13 @@ unsigned int CasioPV::CasioPV::AddEntry( PVDataEntry& dataEntry ) {
 
 /*  do {
     m_protocol->SendCommandPacket( DATA_BLOCK_CHECK );            // send data block check
-  } while (!m_protocol->RecieveACK());*/
+  } while (!m_protocol->ReceiveACK());*/
 
   do {
     m_protocol->SendCommandPacket( END_DATA_BLOCK );                    // send end data block
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve result command
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive result command
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
@@ -409,11 +409,11 @@ void CasioPV::CasioPV::AppendEntry( PVDataEntry& dataEntry ){
 
   do {                                                                          // send append registration command
     m_protocol->SendCommandPacket( APPEND_REGISTRATION, dataEntry.getModeCode() );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
   do {
     m_protocol->SendCommandPacket( START_DATA_BLOCK );                // send start data block
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
   for (map<unsigned int, string>::const_iterator entrydata = dataEntry.getData().begin(); entrydata != dataEntry.getData().end(); entrydata++ ){
     datapacket packet;
@@ -432,14 +432,14 @@ void CasioPV::CasioPV::AppendEntry( PVDataEntry& dataEntry ){
 
 /*  do {
     m_protocol->SendCommandPacket( DATA_BLOCK_CHECK );            // send data block check
-  } while (!m_protocol->RecieveACK());*/
+  } while (!m_protocol->ReceiveACK());*/
 
   do {
     m_protocol->SendCommandPacket( END_DATA_BLOCK );                    // send end data block
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-// !!!!!!!!!!!!!!!!!!!! recieve result command like GetData ?????????????????? looks like a bug in the protocol
-/*  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve result command
+// !!!!!!!!!!!!!!!!!!!! receive result command like GetData ?????????????????? looks like a bug in the protocol
+/*  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive result command
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();*/
@@ -464,29 +464,29 @@ CasioPV::ModifyList CasioPV::CasioPV::CheckForModifiedEntries( unsigned int data
 
   do {
     m_protocol->SendCommandPacket( CHECK_FOR_MODIFIED_DATA, dataCondition );
-  } while ( !m_protocol->RecieveACK() );
+  } while ( !m_protocol->ReceiveACK() );
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve start data block
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive start data block
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
 
   while ( packet.continued ) {
-    unsigned int ro =  m_protocol->RecieveOrder();
+    unsigned int ro =  m_protocol->ReceiveOrder();
     switch ( ro ) {
       case 0x02 : {
-          m_protocol->RecieveDataPacket( packet, true );                          // recieve list of modified data
+          m_protocol->ReceiveDataPacket( packet, true );                          // receive list of modified data
           modifiedData += packet.data;
         }
         break;
       case 0x01 : {
-          while ( !m_protocol->RecieveCommandPacket( command, true ) ) {        // recieve data block check
+          while ( !m_protocol->ReceiveCommandPacket( command, true ) ) {        // receive data block check
             m_protocol->SendNAK();
           }
           m_protocol->SendACK();
         }
         break;
-      default : throw CasioPVException( "CasioPV::CheckForModifiedEntries : Didn't recieve the modified data list !!!!!", 1006 );
+      default : throw CasioPVException( "CasioPV::CheckForModifiedEntries : Didn't receive the modified data list !!!!!", 1006 );
     }
   }
 
@@ -505,15 +505,15 @@ CasioPV::ModifyList CasioPV::CasioPV::CheckForModifiedEntries( unsigned int data
       m_modifiedList.push_back( modifiedEntry );
     }
   } else {
-    throw CasioPVException( "CasioPV::CheckForModifiedEntries : Didn't recieve the modified data list !!!!!", 1006 );
+    throw CasioPVException( "CasioPV::CheckForModifiedEntries : Didn't receive the modified data list !!!!!", 1006 );
   }
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve end data block
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive end data block
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve numbers of modified data result
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive numbers of modified data result
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
@@ -534,27 +534,27 @@ void CasioPV::CasioPV::GetModifiedEntry( PVDataEntry& dataEntry, unsigned int da
 
   do {
     m_protocol->SendCommandPacket( SEND_MODIFIED_DATA_REQUEST, dataEntry.getModeCode(), dataOrder );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve start data block
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive start data block
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
 
   if ( command == START_DATA_BLOCK ) {
-    while ( m_protocol->RecieveOrder() == 0x02 ) {
-      m_protocol->RecieveDataPacket( packet, true );                              // recieve data
+    while ( m_protocol->ReceiveOrder() == 0x02 ) {
+      m_protocol->ReceiveDataPacket( packet, true );                              // receive data
       dataEntry.setFieldData( packet );
     }
 
     bool checkorder = true;
-    while ( !m_protocol->RecieveCommandPacket( command, checkorder ) ) {        // recieve end data block
+    while ( !m_protocol->ReceiveCommandPacket( command, checkorder ) ) {        // receive end data block
       m_protocol->SendNAK();
       checkorder = false;
     }
     m_protocol->SendACK();
 
-    while ( !m_protocol->RecieveCommandPacket( command ) ) {                  // recieve result command
+    while ( !m_protocol->ReceiveCommandPacket( command ) ) {                  // receive result command
       m_protocol->SendNAK();
     }
     m_protocol->SendACK();
@@ -587,27 +587,27 @@ unsigned int CasioPV::CasioPV::GetNewEntry( PVDataEntry& dataEntry ){
 
   do {                                                                            // send new data request command
     m_protocol->SendCommandPacket( SEND_NEW_DATA_REQUEST, dataEntry.getModeCode(), dataOrder );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve start data block
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive start data block
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
 
   if ( command == START_DATA_BLOCK ) {
-    while ( m_protocol->RecieveOrder() == 0x02 ) {
-      m_protocol->RecieveDataPacket( packet, true );                              // recieve data
+    while ( m_protocol->ReceiveOrder() == 0x02 ) {
+      m_protocol->ReceiveDataPacket( packet, true );                              // receive data
       dataEntry.setFieldData( packet );
     }
 
     bool checkorder = true;
-    while ( !m_protocol->RecieveCommandPacket( command, checkorder ) ) {        // recieve end data block
+    while ( !m_protocol->ReceiveCommandPacket( command, checkorder ) ) {        // receive end data block
       m_protocol->SendNAK();
       checkorder = false;
     }
     m_protocol->SendACK();
 
-    while ( !m_protocol->RecieveCommandPacket( command ) ) {                  // recieve result command
+    while ( !m_protocol->ReceiveCommandPacket( command ) ) {                  // receive result command
       m_protocol->SendNAK();
     }
     m_protocol->SendACK();
@@ -627,9 +627,9 @@ void CasioPV::CasioPV::DeleteEntry( unsigned int dataCondition, unsigned int dat
 
   do {                                                                            // send delete data command
     m_protocol->SendCommandPacket( DELETE_DATA, dataCondition, dataOrder );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve delete data result
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive delete data result
     m_protocol->SendNAK();
   }
 
@@ -650,11 +650,11 @@ void CasioPV::CasioPV::ModifyEntry( PVDataEntry& dataEntry, unsigned int dataOrd
 
   do {                                                                            // send modify data command
     m_protocol->SendCommandPacket( MODIFY_DATA, dataEntry.getModeCode(), dataOrder );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
   do {
     m_protocol->SendCommandPacket( START_DATA_BLOCK );                  // send start data block
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
   for (map<unsigned int, string>::const_iterator entrydata = dataEntry.getData().begin(); entrydata != dataEntry.getData().end(); entrydata++ ){
     datapacket packet;
@@ -673,13 +673,13 @@ void CasioPV::CasioPV::ModifyEntry( PVDataEntry& dataEntry, unsigned int dataOrd
 
 /*  do {
     m_protocol->SendCommandPacket( DATA_BLOCK_CHECK );            // send data block check
-  } while (!m_protocol->RecieveACK());*/
+  } while (!m_protocol->ReceiveACK());*/
 
   do {
     m_protocol->SendCommandPacket( END_DATA_BLOCK );
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve result command
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive result command
     m_protocol->SendNAK();
   }
   m_protocol->SendACK();
@@ -699,9 +699,9 @@ void CasioPV::CasioPV::ChangeOptionalCode( string optionalcode ){
 
   do {
     m_protocol->SendCommandPacket( CHANGE_USER_ID );                      // send change optional code request
-  } while (!m_protocol->RecieveACK());
+  } while (!m_protocol->ReceiveACK());
 
-  while ( !m_protocol->RecieveCommandPacket( command ) ) {                    // recieve change optional code result
+  while ( !m_protocol->ReceiveCommandPacket( command ) ) {                    // receive change optional code result
     m_protocol->SendNAK();
   }
 

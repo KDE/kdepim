@@ -565,7 +565,7 @@ QString pvDaemon::getAllEntriesFromPV(unsigned int category)
   }
   catch (CasioPVException e)
   {
-    kdDebug() << "CasioPVException catched" << endl;
+    kdDebug() << "CasioPVException caught" << endl;
     sendException(e.getMessage().c_str(), e.getErrorCode());
   }
   return QString::null;
@@ -619,7 +619,7 @@ QString pvDaemon::getChangesFromPV(unsigned int category)
   }
   catch (CasioPVException e)
   {
-    kdDebug() << "CasioPVException catched" << endl;
+    kdDebug() << "CasioPVException caught" << endl;
     sendException(e.getMessage().c_str(), e.getErrorCode());
   }
   return QString::null;
@@ -761,7 +761,7 @@ void pvDaemon::writeEntries(QDomNode& n, bool ignoreState)
   } // try
   catch (CasioPVException e)
   {
-    kdDebug() << "CasioPVException catched" << endl;
+    kdDebug() << "CasioPVException caught" << endl;
     sendException(e.getMessage().c_str(), e.getErrorCode());
   }
 }
@@ -779,7 +779,7 @@ void pvDaemon::sendException(const QString& msg, const unsigned int number, bool
   // Prepare DCOP send to CasioPVLink
   QByteArray data;
   QDataStream dataStream(data, IO_WriteOnly);
-  dataStream << i18n(msg) << number;
+  dataStream << msg << number;
   if (!kapp->dcopClient()->send("kitchensync", "CasioPVLinkIface",
                                  "errorPV(QString,unsigned int)", data))
   {

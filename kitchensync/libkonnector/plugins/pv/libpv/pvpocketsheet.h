@@ -144,7 +144,7 @@ private:
     bool m_isSecret;
 
     /**
-       * This method changes the return code 0x0D as it is recieved from the PV to 0x0A as it is used by Unix.
+       * This method changes the return code 0x0D as it is received from the PV to 0x0A as it is used by Unix.
        */
     string ChangeReturnCodeToUnix( string& data );
 

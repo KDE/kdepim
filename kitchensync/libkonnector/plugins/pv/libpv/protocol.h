@@ -116,30 +116,30 @@ class Protocol {
     /**
        * Every packet type has its own start byte which identify it. This method reads this byte from the serial line.
        * @param checklink defaults to true.
-       * If this is set to true RecieveOrder checks recieved packet headers for a link packet which cancels the communication
-       * and throws an exception if one is recieved.
-       * @return recieved packet type
+       * If this is set to true ReceiveOrder checks received packet headers for a link packet which cancels the communication
+       * and throws an exception if one is received.
+       * @return received packet type
        * @exception ProtocolException
        */
-    unsigned int RecieveOrder( bool checklink = true );
+    unsigned int ReceiveOrder( bool checklink = true );
 
     /**
-       * This method waits for the acknowledge of the recently recieved packet.
+       * This method waits for the acknowledge of the recently received packet.
        * The packet number is stored in m_actual_send_No.
        * @return false in case of a NAK packet and true in case of a ACK packet.
        * @exception ProtocolException
        */
-    bool RecieveACK();
+    bool ReceiveACK();
 
     /**
-       * This method sends the acknowledge for the recently recieved packet.
-       * The packet number is stored in m_actual_recieve_No.
+       * This method sends the acknowledge for the recently received packet.
+       * The packet number is stored in m_actual_receive_No.
        */
     void SendACK();
 
     /**
-       * This method sends the NOT acknowledge for the currently recieved packet.
-       * The packet number is stored in m_actual_recieve_No.
+       * This method sends the NOT acknowledge for the currently received packet.
+       * The packet number is stored in m_actual_receive_No.
        * This may happens if a packet is corrupt.
        * @exception ProtocolException
        */
@@ -147,12 +147,12 @@ class Protocol {
 
     /**
        * This method waits for a link packet.
-       * @param order_recieved defaults to false. If this is set to true the packet type byte must be checked with @ref RecieveOrder .
-       * This is used in @ref RecieveOrder to check for link packets which cancels the communication.
-       * @return unsigned int with the recieved link command type.
+       * @param order_received defaults to false. If this is set to true the packet type byte must be checked with @ref ReceiveOrder .
+       * This is used in @ref ReceiveOrder to check for link packets which cancels the communication.
+       * @return unsigned int with the received link command type.
        * @exception ProtocolException
        */
-    unsigned int RecieveLinkPacket( bool order_recieved = false );
+    unsigned int ReceiveLinkPacket( bool order_received = false );
 
     /**
        * This method sends a link packet.
@@ -163,11 +163,11 @@ class Protocol {
 
     /**
        * This method waits for a command packet.
-       * @param order_recieved defaults to false. If this is set to true the packet type byte must be checked with @ref RecieveOrder .
+       * @param order_received defaults to false. If this is set to true the packet type byte must be checked with @ref ReceiveOrder .
        * @return false in the case that the checksum is not correct and true else.
        * @exception ProtocolException
        */
-    bool RecieveCommandPacket( unsigned int& commandtype, bool order_recieved = false );
+    bool ReceiveCommandPacket( unsigned int& commandtype, bool order_received = false );
 
     /**
        * This method sends a command packet.
@@ -179,13 +179,13 @@ class Protocol {
     void SendCommandPacket( unsigned int type, unsigned int DataCondition = 0, unsigned int DataOrder = 0 );
 
     /**
-       * This method recieves a datapacket and stores it in a @ref datapacket struct.
+       * This method receives a datapacket and stores it in a @ref datapacket struct.
        * @param packet contains the data, the field code and the continued bit
-       * @param order_recieved defaults to false. If this is set to true the packet type byte must be checked with @ref RecieveOrder .
+       * @param order_received defaults to false. If this is set to true the packet type byte must be checked with @ref ReceiveOrder .
        * @return false in the case that the checksum is not correct and true else.
        * @exception ProtocolException
        */
-    bool RecieveDataPacket( datapacket& packet, bool order_recieved = false );
+    bool ReceiveDataPacket( datapacket& packet, bool order_received = false );
 
     /**
        * Sends a @ref datapacket to the PV.
@@ -206,7 +206,7 @@ class Protocol {
     string GetOptionalCode();
 
     /**
-       * This method sets the pvpin code which will be sended by @ref RecieveLinkPacket if PVPIN is installed and enabled.
+       * This method sets the pvpin code which will be sended by @ref ReceiveLinkPacket if PVPIN is installed and enabled.
        * Make sure that this is a number which is given as a string.
        */
     void SetPVPIN( string& pvpin );
@@ -236,9 +236,9 @@ class Protocol {
 
   private:
     unsigned int m_speed;
-    unsigned int m_actual_recieve_No;
+    unsigned int m_actual_receive_No;
     unsigned int m_actual_send_No;
-    unsigned int m_recievedNAK;
+    unsigned int m_receivedNAK;
     unsigned int m_sendNAK;
     string m_userid;
     string m_pvpin;
@@ -271,7 +271,7 @@ class Protocol {
     }
 
     /**
-       * This method converts the recieved byte from the PV, which is in hex format, in the corresponding int value.
+       * This method converts the received byte from the PV, which is in hex format, in the corresponding int value.
        * @return converted value int->hex
        */
     inline unsigned char IntToHex(unsigned int value){
@@ -313,10 +313,10 @@ class Protocol {
     }
 
      /**
-        * This method recieves an unsigned int with count bytes.
-        * @return the checksum for the recieved bytes.
+        * This method receives an unsigned int with count bytes.
+        * @return the checksum for the received bytes.
         */
-    inline unsigned int RecieveXBytes( unsigned int& value, unsigned int count ){
+    inline unsigned int ReceiveXBytes( unsigned int& value, unsigned int count ){
       unsigned int checksum = 0;
       string tmp = "";
       value = 0;
@@ -330,10 +330,10 @@ class Protocol {
     }
 
      /**
-        * This method recieves a string with count bytes.
-        * @return the checksum for the recieved bytes.
+        * This method receives a string with count bytes.
+        * @return the checksum for the received bytes.
         */
-    inline unsigned int RecieveXBytes( string& value, unsigned int count ){
+    inline unsigned int ReceiveXBytes( string& value, unsigned int count ){
       unsigned int checksum = 0;
 
       value = m_com.ReadString( count );
@@ -355,13 +355,13 @@ class Protocol {
 
 
      /**
-        * This method recieves the actual count of the packet and store it in m_actual_recieve_No.
+        * This method receives the actual count of the packet and store it in m_actual_receive_No.
         * @return the packet number as an unsigned int.
         */
-    inline unsigned int RecievePacketNo(){
-      string recieveNo = m_com.ReadString( 2 );
-      debugout( "PacketNo = " << dec << HexToInt( recieveNo[0] )*16 + HexToInt( recieveNo[1] ) );
-      return HexToInt( recieveNo[0] )*16 + HexToInt( recieveNo[1] );
+    inline unsigned int ReceivePacketNo(){
+      string receiveNo = m_com.ReadString( 2 );
+      debugout( "PacketNo = " << dec << HexToInt( receiveNo[0] )*16 + HexToInt( receiveNo[1] ) );
+      return HexToInt( receiveNo[0] )*16 + HexToInt( receiveNo[1] );
     }
 
      /**
