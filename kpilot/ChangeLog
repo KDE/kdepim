@@ -33,6 +33,21 @@ TODO LIST (Ignore the file TODO)
 * Merge between HEAD and BRANCH (again).
 * Fix the NULL conduit's tooltip - OR - make it actually do what
   the current tooltip says (resetSyncFlags() should be enough).
+* GJJ: Create good icons for the kpalmdoc converter application.
+
+
+2003-3-23  Reinhold Kainhofer
+* Lot of work on the docconduit. Finished the KPalmDOC application. 
+  It converts text files to .pdb files that can be viewed as ebooks 
+	on the handheld. The user can either convert single text files 
+	to or from PalmDOC .pdb files, or choose a directory, where all 
+	*.txt or *.pdb files will be converted to another directory.
+  I created some icons by just putting the text mime-type icon  
+	behind the kpilot icon, so the icons don't look too well. All artists 
+	are welcome to improve them.
+* Tried to implement a configure option for libmal, and use autoconf's
+  built-in functionality to detect libmal. Doesn't work yet, so I 
+	haven't commited it yet.
 
 2003-3-23  Adriaan de Groot
 * More merging .. conduits today:
