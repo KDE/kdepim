@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kalarm;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-01-13</date>
-<releaseinfo>0.09.01</releaseinfo>
+<date>2003-02-24</date>
+<releaseinfo>0.09.02</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -74,7 +74,7 @@ colour of the alarm message, whether it should repeat, whether to play
 a sound, and whether the alarm should be cancelled if it can't be
 triggered at its scheduled time.</para>
 
-<para>Alarms may also be scheduled on the command line, or via &DCOP;
+<para>Alarms may also be scheduled from the command line, or via &DCOP;
 calls from programs.</para>
 
 <para>When an alarm message is due, it is displayed on each &kde;
@@ -136,9 +136,10 @@ buttons.</para></tip>
 <para>The main &kalarm; window displays the current list of pending
 alarms, showing their times, repetition intervals, colours, and
 message texts, names of files to display, commands to execute or email
-subjects. (For a recurring alarm, the time shown is its next scheduled
-trigger time.) An icon at the left of each alarm
-text/file/command/email subject indicates the type of alarm.</para>
+subjects. (For a recurring alarm or an alarm with a reminder, the time
+shown is its next scheduled trigger time.) An icon at the left of each
+alarm text/file/command/email subject indicates the type of
+alarm.</para>
 
 <screenshot>
 <screeninfo>Screenshot of the &kalarm; main window</screeninfo>
@@ -264,6 +265,17 @@ controls beside the checkbox.</para>
 <para>Select the background colour for the alarm message
 window.</para>
 </listitem>
+
+<listitem>
+<para>Use the <guibutton>Font &amp; Colour...</guibutton> button to
+select a font for the alarm message. In the <guilabel>Choose Alarm Font
+&amp; Colour</guilabel> dialog, check <guilabel>Use default
+font</guilabel> to display the message in whatever font is configured
+as the default at the time the message is displayed. (The default font
+can be set in the <link linkend="preferences">Preferences
+dialog</link>.) To choose a specific font for the message, uncheck
+<guilabel>Use default font</guilabel>.</para>
+</listitem>
 </itemizedlist>
 </listitem>
 
@@ -333,27 +345,31 @@ options</link> describes how to set the start-of-day time.)</para>
 </listitem>
 </itemizedlist>
 
-<para>Specify whether or how the alarm should be repeated in the
-<guilabel>Repetition</guilabel> group box.</para>
+<para>The alarm's basic repetition characteristic is displayed for
+convenience in the <guilabel>Alarm</guilabel> tab. Specify whether or
+how the alarm should be repeated in the <guilabel>Recurrence</guilabel>
+tab:</para>
+
+<itemizedlist>
+<listitem>
+<para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
+recurrence type or time period as follows:</para>
 
 <itemizedlist>
 <listitem><para>To trigger the alarm once only, select <guilabel>No
-repetition</guilabel>.</para></listitem>
+recurrence</guilabel>.</para></listitem>
 
-<listitem><para>Select <guilabel>Repeat at login</guilabel> to trigger
-the alarm whenever you log in, until its scheduled time. (Note that an
-alarm repeated at login will also be triggered any time you enable
+<listitem><para>Select <guilabel>At login</guilabel> to trigger
+the alarm whenever you log in, until its scheduled end time. (Note that
+an alarm repeated at login will also be triggered any time you enable
 alarms, or restart or reset the <application>alarm
 daemon</application>.)</para></listitem>
 
-<listitem><para>Select <guilabel>Recur</guilabel> to trigger the alarm
-at regular intervals. You must then specify the recurrence parameters
-in the <guilabel>Recurrence</guilabel> tab.</para>
-
-<para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
-recurrence time period by selecting one of the time period types and
-entering in the <guilabel>Recur every</guilabel> box how many time
-periods should elapse between recurrences. For example, to repeat
+<listitem>
+<para>To make the alarm recur at regular intervals, select one of the
+time period types and then enter in the
+<guilabel>Recur every</guilabel> box how many time periods should
+elapse between recurrences. For example, to repeat
 every fortnight, you could select <guilabel>Daily</guilabel> and enter
 a value of 14, or select <guilabel>Weekly</guilabel> and enter a value
 of 2. Depending on the time period type selected, you may have further
@@ -376,7 +392,11 @@ the year, or a position in a month (&eg; the last Saturday in
 May).</para>
 </listitem>
 </itemizedlist>
+</listitem>
+</itemizedlist>
+</listitem>
 
+<listitem>
 <para>In the <guilabel>Recurrence End</guilabel> group box, set the
 overall recurrence time span as follows:</para>
 
@@ -702,7 +722,7 @@ date/time shown is that for the main alarm or its recurrence, not the
 reminder message time, and the window title is
 <quote>Reminder</quote>).</para>
 
-<para>In the case of a repeated alarm, if an unacknowledged message
+<para>In the case of a recurring alarm, if an unacknowledged message
 window remains from a previous occurrence of the alarm, the existing
 window is simply popped up when the alarm recurs. This avoids having
 to acknowledge multiple copies of the same message should you not
@@ -862,6 +882,17 @@ times unless you manually quit.</para>
 <listitem><para><guilabel>Disable alarms while not running</guilabel>:
 Checking this option has the effect that alarms will be disabled
 whenever &kalarm;'s system tray icon is not visible.</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Warn before quitting</guilabel>: When alarms
+are disabled while &kalarm; is not running, checking this option
+prompts you for confirmation if you attempt to terminate &kalarm; using
+the system tray icon's <menuchoice><guimenu>Quit</guimenu></menuchoice>
+option. This prevents accidental disabling of alarms. For safety, this
+option is automatically re-enabled by default whenever you change run
+mode.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 </itemizedlist>
 
@@ -974,6 +1005,10 @@ settings:</para>
 alarm message display.</para>
 </listitem>
 
+<listitem><para>Set the text colour used to show expired alarms in the
+alarm list.</para>
+</listitem>
+
 <listitem><para>Set the default states for the <guilabel>Cancel if
 late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
 <guilabel>Copy email to self</guilabel> checkboxes.</para>
@@ -983,15 +1018,10 @@ late</guilabel>, <guilabel>Confirm acknowledgement</guilabel> and
 <guilabel>Sound</guilabel> option.</para>
 </listitem>
 
-<listitem><para>Set the default recurrence period for recurring
-alarms.</para>
+<listitem><para>Set the default recurrence type.</para>
 </listitem>
 
-<listitem><para>Set the default reminder period..</para>
-</listitem>
-
-<listitem><para>Set the text colour used to show expired alarms in the
-alarm list.</para>
+<listitem><para>Set the default reminder period units.</para>
 </listitem>
 
 </itemizedlist>
@@ -1100,7 +1130,8 @@ time.</para>
   <replaceable>X</replaceable> is one of the following letters: Y
   (years), M (months), W (weeks), D (days).
   Mandatory if <option>--repeat</option> or <option>--until</option>
-  is specified.</entry>
+  is specified. <option>--recurrence</option> cannot be specified with
+  this option.</entry>
 </row>
 <row>
   <entry><option>-l</option>, <option>--late-cancel</option></entry>
@@ -1124,11 +1155,22 @@ time.</para>
   <option>--color</option> are ignored with this option.</entry>
 </row>
 <row>
+  <entry><option>--recurrence
+  <replaceable>spec</replaceable></option></entry>
+  <entry>Set the alarm to recur. Specify the recurrence using iCalendar
+  syntax (defined in RFC2445),
+  &eg; <quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote>.
+  <option>--repeat</option>, <option>--interval</option>, and
+  <option>--until</option> cannot be specified with this
+  option.</entry>
+</row>
+<row>
   <entry><option>-r</option>, <option>--repeat
   <replaceable>count</replaceable></option></entry>
-  <entry>The number of times the alarm should be triggered. Specify
+  <entry>Set the number of times the alarm should be triggered. Specify
   -1 to repeat the alarm indefinitely. <option>--interval</option>
-  must be, and <option>--until</option> cannot be, specified with this
+  must be, and <option>--until</option> and
+  <option>--recurrence</option> cannot be, specified with this
   option.</entry>
 </row>
 <row>
@@ -1171,8 +1213,8 @@ time.</para>
   <entry>Repeat the alarm until the date or date/time specified.
   Specify a date without a time in the same format as for
   <option>--time</option>. <option>--interval</option> must be, and
-  <option>--repeat</option> cannot be, specified with this
-  option.</entry>
+  <option>--repeat</option> and <option>--recurrence</option> cannot
+  be, specified with this option.</entry>
 </row>
 <row>
   <entry><replaceable>message</replaceable></entry>
@@ -1642,7 +1684,7 @@ ignored.</para></note>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
@@ -1703,6 +1745,17 @@ should be displayed. Specify 0 if no reminder is required.</para>
 </varlistentry>
 
 <varlistentry>
+<term><parameter>recurrence</parameter></term>
+<listitem>
+<para>Specifies a regular recurrence for the alarm, using iCalendar
+syntax as defined in RFC2445. For example,
+<quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote> would specify
+4 repetitions at 3-monthly intervals on the last Monday of the
+month. For a non-recurring alarm, specify an empty string.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><parameter>simpleRepeatType</parameter></term>
 <listitem>
 <para>Specifies the recurrence type for the alarm. The permissible
@@ -1748,11 +1801,12 @@ message to the calendar file for later display.</para>
 
 <para>Use a code sequence similar to the following to set up the
 parameter data for the &DCOP; call to
-<function>scheduleMessage()</function> for a non-repeating
-alarm:</para>
+<function>scheduleMessage()</function> for a non-recurring alarm, or
+for a regularly recurring alarm using iCalendar syntax to specify its
+recurrence:</para>
 
 <screen>
-QString message, audioFile;
+QString message, audioFile, recurrence;
 QDateTime dateTime;
 QColor bgColour;
 Q_UINT32 flags;
@@ -1763,12 +1817,13 @@ QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
 arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
-arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder;
+arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; reminder &lt;&lt; recurrence;
 </screen>
 
 <para>Use a code sequence similar to the following to set up the
 parameter data for the &DCOP; call to
-<function>scheduleMessage()</function> for a repeating alarm:</para>
+<function>scheduleMessage()</function> for a regularly recurring alarm
+without using iCalendar syntax:</para>
 
 <screen>
 QString message, audioFile;
@@ -1798,7 +1853,7 @@ text file.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
@@ -1860,6 +1915,17 @@ should be displayed. Specify 0 if no reminder is required.</para>
 </varlistentry>
 
 <varlistentry>
+<term><parameter>recurrence</parameter></term>
+<listitem>
+<para>Specifies a regular recurrence for the alarm, using iCalendar
+syntax as defined in RFC2445. For example,
+<quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote> would specify
+4 repetitions at 3-monthly intervals on the last Monday of the
+month. For a non-recurring alarm, specify an empty string.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><parameter>simpleRepeatType</parameter></term>
 <listitem>
 <para>Specifies the recurrence type for the alarm. The permissible
@@ -1911,7 +1977,7 @@ command.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>)
+bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
@@ -1946,6 +2012,17 @@ should be executed.</para>
 bits are those defined in class KAlarmEvent in
 <filename>msgevent.h</filename> except that the BEEP flag bit is
 ignored.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>recurrence</parameter></term>
+<listitem>
+<para>Specifies a regular recurrence for the alarm, using iCalendar
+syntax as defined in RFC2445. For example,
+<quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote> would specify
+4 repetitions at 3-monthly intervals on the last Monday of the
+month. For a non-recurring alarm, specify an empty string.</para>
 </listitem>
 </varlistentry>
 
@@ -2002,7 +2079,7 @@ identical to
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>, const QString&amp; <replaceable>subject</replaceable>, const QString&amp; <replaceable>message</replaceable>, const QString&amp; <replaceable>attachments</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>)
+bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>, const QString&amp; <replaceable>subject</replaceable>, const QString&amp; <replaceable>message</replaceable>, const QString&amp; <replaceable>attachments</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleEmail(const QString&amp; <replaceable>addresses</replaceable>, const QString&amp; <replaceable>subject</replaceable>, const QString&amp; <replaceable>message</replaceable>, const QString&amp; <replaceable>attachments</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
@@ -2058,6 +2135,17 @@ should be sent.</para>
 <para>Specifies the logical OR of the desired alarm flags. The flag
 bits are those defined in class KAlarmEvent in
 <filename>msgevent.h</filename></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>recurrence</parameter></term>
+<listitem>
+<para>Specifies a regular recurrence for the alarm, using iCalendar
+syntax as defined in RFC2445. For example,
+<quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote> would specify
+4 repetitions at 3-monthly intervals on the last Monday of the
+month. For a non-recurring alarm, specify an empty string.</para>
 </listitem>
 </varlistentry>
 
