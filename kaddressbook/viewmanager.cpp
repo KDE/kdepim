@@ -72,7 +72,7 @@ ViewManager::ViewManager( KABC::AddressBook *ab, KConfig *config,
   initGUI();
 
   mViewDict.setAutoDelete( true );
-  mViewFactoryDict.setAutoDelete( true );
+//  mViewFactoryDict.setAutoDelete( true );
 
   createViewFactories();
 

@@ -2,8 +2,10 @@
 
 #include <qstring.h>
 
+#include <kabc/stdaddressbook.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kcrash.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kstartupinfo.h>
@@ -12,6 +14,16 @@
 
 #include "kaddressbookmain.h"
 #include "kaddressbook_part.h"
+
+extern "C" {
+
+void crashHandler( int )
+{
+  KABC::StdAddressBook::handleCrash();
+  ::exit( 0 );
+}
+
+}
 
 class KAddressBookApp : public KUniqueApplication {
   public:
@@ -70,6 +82,8 @@ int KAddressBookApp::newInstance()
       mMainWin->newContact();
     }
   }
+
+  KCrash::setEmergencySaveFunction( crashHandler );
 
   return 0;
 }
