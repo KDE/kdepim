@@ -128,8 +128,6 @@ class UnknownSyncee : public Syncee
     QString type()const;
     void addEntry( SyncEntry*  );
     void removeEntry( SyncEntry* );
-    bool read();
-    bool write();
     SyncEntry::PtrList added();
     SyncEntry::PtrList modified();
     SyncEntry::PtrList removed();

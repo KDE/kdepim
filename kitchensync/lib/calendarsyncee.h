@@ -68,9 +68,6 @@ class CalendarSyncee : public Syncee
     void addEntry( SyncEntry * );
     void removeEntry( SyncEntry * );
 
-    bool read();
-    bool write();
-
     SyncEntry::PtrList added() { return SyncEntry::PtrList(); }
     SyncEntry::PtrList modified() { return SyncEntry::PtrList(); }
     SyncEntry::PtrList removed() { return SyncEntry::PtrList(); }

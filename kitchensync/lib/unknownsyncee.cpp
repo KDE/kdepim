@@ -163,16 +163,6 @@ QString UnknownSyncee::type() const
     return QString::fromLatin1("UnknownSyncee");
 }
 
-bool UnknownSyncee::read()
-{
-    return true;
-}
-
-bool UnknownSyncee::write()
-{
-    return true;
-}
-
 SyncEntry::PtrList UnknownSyncee::added()
 {
     return voidi();

@@ -79,8 +79,6 @@ class OpieDesktopSyncee : public Syncee
     ~OpieDesktopSyncee();
     QString type() const;
     Syncee* clone();
-    bool read();
-    bool write();
     void addEntry( SyncEntry* entry );
     void removeEntry( SyncEntry* entry);
     SyncEntry* firstEntry();

@@ -70,11 +70,11 @@ void Syncer::sync()
     syncToTarget(syncee,target);
     syncee = mSyncees.next();
   }
-  target->save();
+  target->saveLog();
   syncee = mSyncees.first();
   while (syncee != target) {
     syncToTarget(target,syncee,true);
-    syncee->save();
+    syncee->saveLog();
     syncee = mSyncees.next();
   }
 }

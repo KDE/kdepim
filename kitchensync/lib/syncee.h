@@ -130,35 +130,17 @@ class Syncee
     QString statusLogName();
 
     /**
-      Load the data set from the file with them name @ref filename().
+      Load the syncing log.
 
       @return true, if loading is successful, otherwise false.
     */
-    bool load();
+    bool loadLog();
     /**
-      Save the data set to the file with them name @ref filename().
+      Save the syncing log.
 
       @return true, if loading is successful, otherwise false.
     */
-    bool save();
-
-    /**
-      Read the data set from disk from the file with the name @ref filename().
-      This function has to be reimplemented by concrete subclasses to provide
-      the actual reading from disk.
-
-      @return true, if reading is successful, otherwise false.
-    */
-    virtual bool read() = 0;
-
-    /**
-      Write the data set to disk to the file with the name @ref filename().
-      This function has to be reimplemented by concrete subclasses to provide
-      the actual writing to disk.
-
-      @return true, if writing is successful, otherwise false.
-    */
-    virtual bool write() = 0;
+    bool saveLog();
 
     /**
       Write the status log file with the name @ref statusLogName().

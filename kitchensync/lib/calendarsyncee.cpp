@@ -86,18 +86,6 @@ CalendarSyncee::~CalendarSyncee()
   delete mCalendar;
 }
 
-bool CalendarSyncee::read()
-{
-  mCalendar->close();
-  return mCalendar->load(filename());
-}
-
-bool CalendarSyncee::write()
-{
-  return mCalendar->save(filename());
-}
-
-
 CalendarSyncEntry *CalendarSyncee::firstEntry()
 {
   mEvents = mCalendar->events();

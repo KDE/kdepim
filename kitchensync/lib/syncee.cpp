@@ -85,23 +85,18 @@ bool Syncee::hasChanged( SyncEntry *entry )
   return (timestamp != entry->timestamp());
 }
 
-bool Syncee::load()
+bool Syncee::loadLog()
 {
   delete mStatusLog;
   mStatusLog = new KSimpleConfig( locateLocal( "appdata", statusLogName() ) );
 
-  return read();
+  return true;
 }
 
-bool Syncee::save()
+bool Syncee::saveLog()
 {
-  bool success = write();
-  if ( success ) {
-    writeLog();
-    return true;
-  } else {
-    return false;
-  }
+  writeLog();
+  return true;
 }
 
 void Syncee::writeLog()

@@ -255,28 +255,6 @@ AddressBookSyncee::~AddressBookSyncee()
 //  delete mAddressBook;
 }
 
-/*
- * FIX ME. Read Addressbook and CreateEntries
- */
-bool AddressBookSyncee::read()
-{
-//  ( void * ) new KABC::ResourceFile( mAddressBook, filename() );
-//  return mAddressBook->load();
-    return true;
-}
-
-/**
- * FIX ME. Create Addressbook insert Addressees and save it
- */
-bool AddressBookSyncee::write()
-{
-//  KABC::Ticket *ticket = mAddressBook->requestSaveTicket();
-//  if ( !ticket ) return false;
-//  return mAddressBook->save( ticket );
-    return true;
-}
-
-
 AddressBookSyncEntry *AddressBookSyncee::firstEntry()
 {
   return mEntries.first();

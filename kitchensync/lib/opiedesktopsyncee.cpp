@@ -138,16 +138,6 @@ Syncee* OpieDesktopSyncee::clone()
     return syncee;
 }
 
-bool OpieDesktopSyncee::read()
-{
-    return true;
-}
-
-bool OpieDesktopSyncee::write()
-{
-    return true;
-}
-
 void OpieDesktopSyncee::addEntry( SyncEntry* entry )
 {
     OpieDesktopSyncEntry* opEntry;
