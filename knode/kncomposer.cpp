@@ -244,22 +244,16 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     v_iew->e_dit->setCursorPosition(0,0);
   v_iew->e_dit->setFocus();
 
-  if (v_iew->s_ubject->text().length() == 0) {
-    v_iew->s_ubject->setCursorPosition(0);
+  if (v_iew->s_ubject->text().length() == 0) {    
     v_iew->s_ubject->setFocus();
-    v_iew->e_dit->setFocusPolicy(ClickFocus);
   }      
 
-  if (v_iew->g_roups->text().length() == 0 && m_ode == news) {
-    v_iew->g_roups->setCursorPosition(0);
-    v_iew->g_roups->setFocus();
-    v_iew->e_dit->setFocusPolicy(ClickFocus);
+  if (v_iew->g_roups->text().length() == 0 && m_ode == news) {    
+    v_iew->g_roups->setFocus();    
   }
 
-  if (v_iew->t_o->text().length() == 0 && m_ode == mail) {
-    v_iew->t_o->setCursorPosition(0);
-    v_iew->t_o->setFocus();
-    v_iew->e_dit->setFocusPolicy(ClickFocus);
+  if (v_iew->t_o->text().length() == 0 && m_ode == mail) {    
+    v_iew->t_o->setFocus();    
   }
 
   if(firstEdit && knGlobals.cfgManager->postNewsComposer()->appendOwnSignature())
