@@ -6,7 +6,9 @@ COMPILE_FIRST = lib
 SUBDIRS = $(COMPILE_FIRST) kpilot conduits
 
 messages:
+	$(EXTRACTRC) `find . -name "*.rc" -o -name "*.ui"`  > rc.cpp
 	$(XGETTEXT) `find . -name "*.cc" -o -name "*.cpp"` -o $(podir)/kpilot.pot   
+	-rm -f rc.cpp
 
 # Just for the KPilot developers: grab all the strings, for checking.
 devel-pot :
