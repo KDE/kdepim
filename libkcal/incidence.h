@@ -134,7 +134,9 @@ class Incidence : public IncidenceBase
     int revision() const;
 
     /** Set starting date/time. */
-    void setDtStart(const QDateTime &dtStart);
+    virtual void setDtStart(const QDateTime &dtStart);
+    /** Return the incidence's ending date/time as a QDateTime. */
+    virtual QDateTime dtEnd() const  { return QDateTime(); }
 
     /** sets the event's lengthy description. */
     void setDescription(const QString &description);
