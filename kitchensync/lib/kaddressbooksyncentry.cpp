@@ -22,6 +22,7 @@
 KAddressbookSyncEntry::KAddressbookSyncEntry()
 {
     m_addressb = 0;
+    setSyncMode(SYNC_NORMAL );
 }
 KAddressbookSyncEntry::~KAddressbookSyncEntry()
 {
@@ -31,6 +32,7 @@ KAddressbookSyncEntry::~KAddressbookSyncEntry()
 KAddressbookSyncEntry::KAddressbookSyncEntry(KABC::AddressBook *adr )
 {
     m_addressb = adr;
+    setSyncMode(SYNC_NORMAL );
 }
 KABC::AddressBook* KAddressbookSyncEntry::addressbook()
 {

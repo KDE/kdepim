@@ -15,6 +15,7 @@ OpieDesktopSyncEntry::OpieDesktopSyncEntry(const QString &category, const QStrin
     m_name = name;
     m_type = type;
     m_size = size;
+    setSyncMode(SYNC_NORMAL );
 }
 OpieDesktopSyncEntry::~OpieDesktopSyncEntry()
 {

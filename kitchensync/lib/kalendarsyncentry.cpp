@@ -27,6 +27,7 @@
 KAlendarSyncEntry::KAlendarSyncEntry()
 {
   m_calendar = 0;
+  setSyncMode(SYNC_NORMAL );
 }
 KAlendarSyncEntry::~KAlendarSyncEntry()
 {
@@ -36,6 +37,7 @@ KAlendarSyncEntry::KAlendarSyncEntry(KCal::CalendarLocal *cal,const QString &nam
 {
   this->m_calendar = cal;
   this->m_name = name;
+  setSyncMode(SYNC_NORMAL );
 }
 QString KAlendarSyncEntry::name()
 {

@@ -40,6 +40,7 @@ class QDateTime;
 class KSyncEntry
 {
   public:
+  enum SyncMode {SYNC_NORMAL=1, SYNC_SUB };
     KSyncEntry();
     virtual ~KSyncEntry();
   
@@ -51,6 +52,8 @@ class KSyncEntry
       Return a string describing this entry. This is presented to the user as
       identifier for the entry, when user interaction is required.
     */
+    int syncMode()const { return m_mode; };
+    void setSyncMode(int mode ) { m_mode = mode; };
     virtual QString name() = 0;
     virtual void setName(const QString & ) = 0;
     /**
@@ -78,10 +81,13 @@ class KSyncEntry
       equal, if they contain exactly the same information, including the same id
       and timestamp.
     */
-    // FIXME
+    // FIXME fixed
     virtual bool equals(KSyncEntry *) = 0;
     virtual KSyncEntry* clone() = 0;
-
+ private:
+    class KSyncEntryPrivate;
+    KSyncEntryPrivate *d;
+    int m_mode;
 };
 
 #endif

@@ -43,6 +43,7 @@ KUnknownSyncEntry::KUnknownSyncEntry()
 {
   d = new KUnknownSyncEntryPrivate;
   d->time = QDate::currentDate().toString();
+  setSyncMode(SYNC_NORMAL );
 }
 KUnknownSyncEntry::KUnknownSyncEntry(const QString &name, const QString &id, const QString &fileName)
 {
@@ -51,6 +52,7 @@ KUnknownSyncEntry::KUnknownSyncEntry(const QString &name, const QString &id, con
   d->id = id;
   d->fileName = fileName;
   d->time = QDate::currentDate().toString() ;
+  setSyncMode(SYNC_NORMAL );
 }
 KUnknownSyncEntry::~KUnknownSyncEntry()
 {
