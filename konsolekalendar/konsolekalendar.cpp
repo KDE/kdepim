@@ -107,6 +107,7 @@ bool KonsoleKalendar::showInstance()
   bool status = true;
   QFile f;
   QString title;
+  Event::List *eventList;
   Event *event;
 
   if ( m_variables->isDryRun() ) {
@@ -153,8 +154,7 @@ bool KonsoleKalendar::showInstance()
                     << "view all events sorted list"
                     << endl;
 
-	  Event::List sortedList = m_variables->getCalendar()->
-                                   events( EventSortStartAscending );
+	  Event::List sortedList = allEventsSorted();
 
           QDate dt, firstdate, lastdate;
           firstdate = sortedList.first()->dtStart().date();
@@ -201,7 +201,7 @@ bool KonsoleKalendar::showInstance()
           }
 	} else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
-                    << "view events within date range list"
+                    << "view raw events within date range list"
                     << endl;
 
 	  QDate dt;
@@ -218,10 +218,11 @@ bool KonsoleKalendar::showInstance()
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view all events sorted list"
                     << endl;
-          Event::List sortedList = Event::List ( m_variables->getCalendar()->
-                                                 events( EventSortStartAscending ) );
-	  firstdate = sortedList.first()->dtStart().date();
-	  lastdate = sortedList.last()->dtStart().date();
+          eventList =
+            new Event::List ( m_variables->getCalendar()->rawEvents() );
+	  firstdate = eventList->first()->dtStart().date();
+	  lastdate = eventList->last()->dtStart().date();
+          delete eventList;
 	} else if ( m_variables->isUID() ) {
 	  // TODO
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -231,7 +232,7 @@ bool KonsoleKalendar::showInstance()
 	  return( false );
 	} else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
-                    << "HTML view events within date range list"
+                    << "HTML view raw events within date range list"
                     << endl;
 	  firstdate = m_variables->getStartDateTime().date();
 	  lastdate = m_variables->getEndDateTime().date();
@@ -344,7 +345,6 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
 
   *ts << output ;
 
-
   /* TODO
    * Left for backup (IF EVERYTHING GOES WRONG)
    *
@@ -444,6 +444,26 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
     }
   }
   return found;
+}
+
+Event::List KonsoleKalendar::allEventsSorted()
+{
+  Event::List *eventList =
+    new Event::List ( m_variables->getCalendar()->rawEvents( ) );
+
+  // Sort based on Event Starting DateTime
+  Event::List::ConstIterator it;
+  Event::List eventListSorted;
+  Event::List::Iterator sortIt;
+  for ( it = eventList->begin(); it != eventList->end(); ++it ) {
+    sortIt = eventListSorted.begin();
+    while ( sortIt != eventListSorted.end() &&
+            (*it)->dtStart() >= (*sortIt)->dtStart() ) {
+      ++sortIt;
+    }
+    eventListSorted.insert( sortIt, *it );
+  }
+  return ( eventListSorted );
 }
 
 void KonsoleKalendar::printSpecs()

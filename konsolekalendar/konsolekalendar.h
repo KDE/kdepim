@@ -113,6 +113,12 @@ namespace KCal {
     bool printEvent( QTextStream *ts, Event *event, QDate dt );
 
     /**
+     * Builds and then returns a list of all events sorted in time order
+     *
+     */
+    Event::List allEventsSorted();
+
+    /**
      * Variables that changes stuff in programm
      */
     KonsoleKalendarVariables *m_variables;
