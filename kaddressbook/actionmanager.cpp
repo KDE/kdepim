@@ -206,7 +206,7 @@ void ActionManager::initReadOnlyActions()
 
   // only enable LDAP lookup if we can handle the protocol
   if ( KProtocolInfo::isKnownProtocol( KURL( "ldap://localhost" ) ) ) {
-    new KAction( i18n( "&Lookup Addresses in Directory" ), "ldap_lookup", 0,
+    new KAction( i18n( "&Lookup Addresses in Directory" ), "find", 0,
                  mWidget, SLOT( slotOpenLDAPDialog() ), mACollection, "ldap_lookup" );
   }
 

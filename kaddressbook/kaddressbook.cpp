@@ -350,6 +350,7 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
     QStringList dataList = QStringList::split( "\r\n\r\n", data );
 
     QStringList::Iterator it;
+    uint numVCards = 0;
     for ( it = dataList.begin(); it != dataList.end(); ++it ) {
       KABC::Addressee addr;
       bool ok = false;
@@ -372,16 +373,23 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
 
         mViewManager->refresh();
 
-        if ( showDialog )
+        if ( showDialog && dataList.count() == 1 )
           editAddressee( addr.uid() );
 
+        numVCards++;
         emit modified( true );
+
       } else {
         QString text = i18n( "The selected file does not appear to be a valid vCard. "
                              "Please check the file and try again." );
 
         KMessageBox::sorry( this, text, caption );
       }
+    }
+
+    if ( showDialog && dataList.count() > 1 ) {
+      QString text = i18n( "Imported %1 contacts successfully!" );
+      KMessageBox::information( this, text.arg( numVCards ) );
     }
 
     if ( !fileUrl.isLocalFile() )
