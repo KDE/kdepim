@@ -82,8 +82,8 @@ GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 {
 	this_filter = this;
 	m_progressDlg = NULL;
-	createImportAction( i18n( "Import From Nokia Mobile Phone..." ) );
-	createExportAction( i18n( "Export to Nokia Mobile Phone..." ) );
+	createImportAction( i18n( "Import From Mobile Phone..." ) );
+	createExportAction( i18n( "Export to Mobile Phone..." ) );
 }
 
 /* import */
@@ -464,7 +464,7 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 	if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
 		i18n("<qt>Please connect your Mobile Phone to your computer and press "
 		     "<b>Continue</b> to start importing the personal contacts.<br><br>"
-		     "Please note that if your mobile phone is not properly connected "
+		     "Please note that if your Mobile Phone is not properly connected "
 		     "the following detection phase might take up to two minutes, during which "
                      "KAddressbook will behave unresponsively.</qt>") ))
 	  return addrList;
@@ -477,7 +477,7 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 	m_progressDlg->progressBar()->setProgress(0);
 	m_progressDlg->progressBar()->setCenterIndicator(true);
 	m_progressDlg->setModal(true);
-	m_progressDlg->setMinimumSize(450,350); // not honored yet - seems like bug in KProgressDialog
+	m_progressDlg->setInitialSize(QSize(450,350));
 	m_progressDlg->show();
   	processEvents();
 
@@ -715,7 +715,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	m_progressDlg->progressBar()->setProgress(0);
 	m_progressDlg->progressBar()->setCenterIndicator(true);
 	m_progressDlg->setModal(true);
-	m_progressDlg->setMinimumSize(450,350); // not honored yet - seems like bug in KProgressDialog
+	m_progressDlg->setInitialSize(QSize(450,350));
 	m_progressDlg->show();
   	processEvents();
 
