@@ -49,6 +49,8 @@ KNotesConfigBase::KNotesConfigBase(QWidget *w, const char *n) :
 	fConfigWidget = new KNotesWidget(w);
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,KNotesConduitFactory::about());
 	fWidget = fConfigWidget;
+	QObject::connect(fConfigWidget->fDeleteNoteForMemo,SIGNAL(clicked()),
+		this,SLOT(modified()));
 	fConduitName=i18n("KNotes");
 }
 
