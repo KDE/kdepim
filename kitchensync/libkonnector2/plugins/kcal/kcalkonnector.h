@@ -22,7 +22,7 @@
 #ifndef KSYNC_KCALKONNECTOR_H
 #define KSYNC_KCALKONNECTOR_H
 
-#include <libkcal/calendarlocal.h>
+#include <libkcal/calendarresources.h>
 #include <libkcal/resourcecalendar.h>
 
 #include <konnector.h>
@@ -65,12 +65,13 @@ class KCalKonnector : public KSync::Konnector
     void savingFinished();
 
   private:
+    KCal::ResourceCalendar* createResource( const QString &identifier );
+
     KCalKonnectorConfig *mConfigWidget;
     QString mResourceIdentifier;
 
-    KCal::CalendarLocal mCalendar;
+    KCal::CalendarResources *mCalendar;
     KCal::ResourceCalendar *mResource;
-    KRES::Manager<KCal::ResourceCalendar> *mManager;
 
     KSync::CalendarSyncee *mCalendarSyncee;
 

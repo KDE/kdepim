@@ -23,8 +23,6 @@
 
 #include <kdebug.h>
 
-#include <todosyncee.h>
-
 #include <idhelper.h>
 
 #include "device.h"
@@ -166,6 +164,7 @@ KSync::TodoSyncee* ToDo::toKDE( const QString &fileName, ExtraMap& map )
     } // n.isNull
     return syncee;
 }
+
 KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee, ExtraMap& map )
 {
     // KDE ID clear bit first
@@ -189,7 +188,9 @@ KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee, ExtraMap& map )
         {
             if ( entry->state() == KSync::SyncEntry::Removed )
                 continue;
-            *stream << todo2String( entry->todo(), map ) << endl;
+
+            KCal::Todo *todo = entry->todo();
+            *stream << todo2String( todo, map ) << endl;
         }
         *stream << "</Tasks>" << endl;
     }

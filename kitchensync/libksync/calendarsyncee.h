@@ -21,7 +21,7 @@
 #ifndef CALENDARSYNCEE_H
 #define CALENDARSYNCEE_H
 
-#include <libkcal/calendarlocal.h>
+#include <libkcal/calendar.h>
 
 #include "syncee.h"
 
@@ -54,8 +54,7 @@ class CalendarSyncEntry : public SyncEntry
 class CalendarSyncee : public Syncee
 {
   public:
-    CalendarSyncee();
-    CalendarSyncee( KCal::CalendarLocal * );
+    CalendarSyncee( KCal::Calendar* );
     ~CalendarSyncee();
 
     QString type() const { return "CalendarSyncee"; }
@@ -75,7 +74,7 @@ class CalendarSyncee : public Syncee
     SyncEntry::PtrList removed() { return SyncEntry::PtrList(); }
     Syncee *clone() { return 0; }
 
-    KCal::CalendarLocal *calendar() const { return mCalendar; }
+    KCal::Calendar *calendar() const { return mCalendar; }
 
     bool writeBackup( const QString & );
     bool restoreBackup( const QString & );
@@ -85,8 +84,7 @@ class CalendarSyncee : public Syncee
 
     void clearEntries();
   
-    KCal::CalendarLocal *mCalendar;
-    bool mOwnCalendar;
+    KCal::Calendar *mCalendar;
     KCal::Event::List mEvents;
     KCal::Event::List::ConstIterator mCurrentEvent;
     KCal::Todo::List mTodos;

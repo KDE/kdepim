@@ -20,6 +20,7 @@
 */
 
 #include <kdebug.h>
+#include <libkcal/filestorage.h>
 
 #include "calendarsyncee.h"
 
@@ -79,14 +80,8 @@ CalendarSyncEntry *CalendarSyncEntry::clone()
   return new CalendarSyncEntry( *this );
 }
 
-CalendarSyncee::CalendarSyncee()
-  : mOwnCalendar( true ), mIteratingEvents( true )
-{
-  mCalendar = new CalendarLocal;
-}
-
-CalendarSyncee::CalendarSyncee( CalendarLocal *calendar )
-  : mOwnCalendar( false ), mIteratingEvents( true )
+CalendarSyncee::CalendarSyncee( Calendar *calendar )
+  : mIteratingEvents( true )
 {
   mCalendar = calendar;
 }
@@ -94,8 +89,6 @@ CalendarSyncee::CalendarSyncee( CalendarLocal *calendar )
 CalendarSyncee::~CalendarSyncee()
 {
   clearEntries();
-
-  if ( mOwnCalendar ) delete mCalendar;
 }
 
 void CalendarSyncee::reset()
@@ -221,12 +214,28 @@ CalendarSyncEntry *CalendarSyncee::createEntry( Incidence *incidence )
 
 bool CalendarSyncee::writeBackup( const QString &filename )
 {
-  return mCalendar->save( filename );
+  KCal::FileStorage storage( mCalendar, filename );
+
+  bool ok = true;
+  ok = ok && storage.open();
+  ok = ok && storage.save();
+  ok = ok && storage.close();
+
+  return ok;
 }
 
 bool CalendarSyncee::restoreBackup( const QString &filename )
 {
   mCalendar->close();
+
+  KCal::FileStorage storage( mCalendar, filename );
+
+  bool ok = true;
+  ok = ok && storage.open();
+  ok = ok && storage.load();
+  ok = ok && storage.close();
+
   clearEntries();
-  return mCalendar->load( filename );
+
+  return ok;
 }

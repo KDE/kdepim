@@ -34,7 +34,6 @@ namespace KSync {
 
 class AddressBookSyncee;
 class CalendarSyncee;
-class TodoSyncee;
 
 class QtopiaSocket : public QObject
 {

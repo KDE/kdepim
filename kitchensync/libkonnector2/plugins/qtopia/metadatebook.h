@@ -23,18 +23,17 @@
 
 #include <qbitarray.h>
 
-#include <eventsyncee.h>
 #include <calendarsyncee.h>
 
 #include "md5metatemplate.h"
 
 namespace OpieHelper {
-    class MetaDatebook : public MD5Template<KSync::CalendarSyncee, KSync::EventSyncEntry> {
+    class MetaDatebook : public MD5Template<KSync::CalendarSyncee, KSync::CalendarSyncEntry> {
     public:
         MetaDatebook();
         ~MetaDatebook();
 
-        QString string( KSync::EventSyncEntry* );
+        QString string( KSync::CalendarSyncEntry* );
 
 
     private:

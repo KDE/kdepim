@@ -25,6 +25,7 @@
 #include <kdebug.h>
 
 #include <calendarsyncee.h>
+#include <libkcal/calendarlocal.h>
 
 #include "device.h"
 #include "datebook.h"
@@ -201,7 +202,7 @@ KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QString
 KSync::CalendarSyncee* DateBook::toKDE( const QString& fileName, ExtraMap& extraMap )
 {
 //    kdDebug(5229) << "To KDE " << endl;
-    KSync::CalendarSyncee* syncee = new KSync::CalendarSyncee();
+    KSync::CalendarSyncee* syncee = new KSync::CalendarSyncee( new KCal::CalendarLocal() );
     syncee->setSource( "Opie");
     syncee->setIdentifier( "Opie" );
     if( device() )
@@ -275,6 +276,9 @@ KTempFile* DateBook::fromKDE( KSync::CalendarSyncee* syncee, ExtraMap& extraMap 
             if (entry->state() == KSync::SyncEntry::Removed )
                 continue;
             event = dynamic_cast<KCal::Event*>( entry->incidence() );
+            if ( !event )
+              continue;
+
             *stream << event2string( event, extraMap ) << endl;
         }
         *stream << "</events>" << endl;

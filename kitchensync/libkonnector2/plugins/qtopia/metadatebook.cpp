@@ -27,14 +27,16 @@
 using namespace OpieHelper;
 
 MetaDatebook::MetaDatebook()
-    : MD5Template<KSync::CalendarSyncee, KSync::EventSyncEntry>()
+    : MD5Template<KSync::CalendarSyncee, KSync::CalendarSyncEntry>()
 {
 }
 MetaDatebook::~MetaDatebook() {
 }
-QString MetaDatebook::string( KSync::EventSyncEntry* ev) {
+QString MetaDatebook::string( KSync::CalendarSyncEntry* ev) {
     QString string;
-    KCal::Event* event = ev->incidence();
+    KCal::Event* event = dynamic_cast<KCal::Event*>( ev->incidence() );
+    if ( !event )
+      return "";
 
     string  = event->categories().join(";");
     string += event->summary();

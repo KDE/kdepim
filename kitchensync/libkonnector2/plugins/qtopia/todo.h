@@ -25,9 +25,11 @@
 #include <qdom.h>
 #include <qmap.h>
 #include <qvaluelist.h>
+
 #include <libkcal/todo.h>
 
 #include <kontainer.h>
+#include <todosyncee.h>
 
 #include "helper.h"
 
@@ -36,7 +38,6 @@ class OpieCategories;
 namespace KSync {
     class KonnectorUIDHelper;
     class Syncee;
-    class TodoSyncee;
 }
 namespace OpieHelper {
 

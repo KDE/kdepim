@@ -26,6 +26,7 @@
 #include <kgenericfactory.h>
 #include <konnectorinfo.h>
 #include <libkcal/resourcecalendar.h>
+#include <libkdepim/kpimprefs.h>
 
 #include "kcalkonnector.h"
 #include "kcalkonnectorconfig.h"
@@ -48,33 +49,28 @@ KCalKonnector::KCalKonnector( const KConfig *config )
     mResourceIdentifier = config->readEntry( "CurrentResource" );
   }
 
-  mManager = new KRES::Manager<KCal::ResourceCalendar>( "calendar" );
-  mManager->readConfig();
+  mCalendar = new KCal::CalendarResources( KPimPrefs::timezone() );
 
-  mCalendarSyncee = new CalendarSyncee( &mCalendar );
-  mCalendarSyncee->setSource( i18n( "Calendar" ) );
-  
-  mSyncees.append( mCalendarSyncee );
-
-  KRES::Manager<KCal::ResourceCalendar>::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    if ( (*it)->identifier() == mResourceIdentifier ) {
-      mResource = *it;
-      break;
-    }
-  }
+  mResource = createResource( mResourceIdentifier );
 
   if ( mResource ) {
+    mCalendar->resourceManager()->add( mResource );
     connect( mResource, SIGNAL( resourceLoaded( ResourceCalendar* ) ),
              SLOT( loadingFinished() ) );
     connect( mResource, SIGNAL( resourceSaved( ResourceCalendar* ) ),
              SLOT( savingFinished() ) );
+
+    mCalendarSyncee = new CalendarSyncee( mCalendar );
+    mCalendarSyncee->setSource( i18n( "Calendar" ) );
+    mCalendarSyncee->setIdentifier( "calendar" );
+  
+    mSyncees.append( mCalendarSyncee );
   }
 }
 
 KCalKonnector::~KCalKonnector()
 {
-  delete mManager;
+  delete mCalendar;
 }
 
 void KCalKonnector::writeConfig( KConfig *config )
@@ -108,13 +104,15 @@ void KCalKonnector::setCapabilities( const KSync::Kapabilities& )
 
 bool KCalKonnector::readSyncees()
 {
-  if ( !mResource )
+  if ( mCalendar->resourceManager()->isEmpty() )
     return false;
 
-  if ( !mResource->open() )
-    return false;
+  mCalendarSyncee->reset();
 
-  return mResource->load();
+  mCalendar->close();
+  mCalendar->load();
+
+  return true;
 }
 
 bool KCalKonnector::connectDevice()
@@ -144,53 +142,51 @@ void KCalKonnector::download( const QString& )
 
 bool KCalKonnector::writeSyncees()
 {
-  if ( !mResource )
+  if ( mCalendar->resourceManager()->isEmpty() )
     return false;
 
-  bool ok = true;
-
-  KCal::Incidence::List oldList = mResource->rawIncidences();
-  KCal::Incidence::List::Iterator oldIt;
-
-  if ( !mResource->readOnly() ) {
-    KCal::Incidence::List list = mCalendar.incidences();
-    KCal::Incidence::List::Iterator it;
-    bool found = false;
-    for ( it = list.begin(); it != list.end(); ++it ) {
-      for ( oldIt = oldList.begin(); oldIt != oldList.end(); ++oldIt ) {
-        if ( (*oldIt)->uid() == (*it)->uid() ) {
-          (*(*oldIt)) = (*(*it));
-          found = true;
-        }
-      }
-
-      if ( !found )
-        mResource->addIncidence( *it );
-    }
-
-    ok = mResource->save();
+  KCal::CalendarResources::Ticket *ticket = mCalendar->requestSaveTicket( mResource );
+  if ( !ticket ) {
+    kdWarning() << "KCalKonnector::writeSyncees(). Couldn't get ticket for resource." << endl;
+    return false;
   }
 
-  return ok;
+  mCalendar->save( ticket );
+
+  return true;
 }
 
 void KCalKonnector::loadingFinished()
 {
-  mCalendarSyncee->reset();
-
-  KCal::Incidence::List list = mResource->rawIncidences();
-  KCal::Incidence::List::Iterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    KSync::CalendarSyncEntry entry( *it, mCalendarSyncee );
-    mCalendarSyncee->addEntry( &entry );
-  }
-
   emit synceesRead( this );
 }
 
 void KCalKonnector::savingFinished()
 {
   emit synceesWritten( this );
+}
+
+KCal::ResourceCalendar* KCalKonnector::createResource( const QString &identifier )
+{
+  KConfig config( "kresources/calendar/stdrc" );
+
+  config.setGroup( "General" );
+  QStringList activeKeys = config.readListEntry( "ResourceKeys" );
+  if ( !activeKeys.contains( identifier ) )
+    return 0;
+
+  KRES::Factory *factory = KRES::Factory::self( "calendar" );
+  config.setGroup( "Resource_" + identifier );
+
+  QString type = config.readEntry( "ResourceType" );
+  QString name = config.readEntry( "ResourceName" );
+  KCal::ResourceCalendar *resource = dynamic_cast<KCal::ResourceCalendar*>( factory->resource( type, &config ) );
+  if ( !resource ) {
+    kdError() << "Failed to create resource with id " << identifier << endl;
+    return 0;
+  }
+
+  return resource;
 }
 
 #include "kcalkonnector.moc"

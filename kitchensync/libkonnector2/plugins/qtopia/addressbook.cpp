@@ -172,7 +172,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 
                         adr.insertCustom("KADDRESSBOOK", "X-Department",  el.attribute("Department") );
 			adr.insertCustom("opie", "HomeWebPage", el.attribute("HomeWebPage") );
-			adr.insertCustom("KADDRESSBOOK", "X-SpouseName", el.attribute("Spouse") );
+			adr.insertCustom("KADDRESSBOOK", "X-SpousesName", el.attribute("Spouse") );
 			adr.insertCustom("opie", "Gender", el.attribute("Gender") );
 
                         /*

@@ -26,6 +26,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kio/netaccess.h>
+#include <libkcal/calendarlocal.h>
 
 #include <addressbooksyncee.h>
 #include <calendarsyncee.h>
@@ -525,7 +526,7 @@ void QtopiaSocket::readDatebook()
     QString tempfile;
     if (!downloadFile( "/Applications/datebook/datebook.xml", tempfile ) ) {
         emit error( StdError::downloadError(i18n("Datebook") ) );
-        syncee = new KSync::CalendarSyncee;
+        syncee = new KSync::CalendarSyncee( new KCal::CalendarLocal() );
         tempfile = QString::null;
     }
     emit prog( StdProgress::converting(i18n("Datebook") ) );
@@ -570,7 +571,7 @@ void QtopiaSocket::readTodoList()
     emit prog( StdProgress::downloading(i18n("TodoList") ) );
     if (!downloadFile( "/Applications/todolist/todolist.xml", tempfile ) ) {
         emit error( StdError::downloadError(i18n("TodoList") ) );
-        syncee = new KSync::TodoSyncee;
+        syncee = new KSync::TodoSyncee();
         tempfile = QString::null;
     }
 
