@@ -58,7 +58,7 @@ void FilterThunderbird::import(FilterInfo *info)
   kfd = new KFileDialog( thunderDir, "", 0, "kfiledialog", true );
   kfd->setMode(KFile::Directory | KFile::LocalOnly); 
   kfd->exec();
-  QString mailDir  = kfd->selectedFile();
+  mailDir  = kfd->selectedFile();
 
    if (mailDir.isEmpty()) {
     info->alert(i18n("No directory selected."));
@@ -89,8 +89,8 @@ void FilterThunderbird::import(FilterInfo *info)
       QString temp_mailfile = *mailFile;
       if (temp_mailfile.endsWith(".msf") || temp_mailfile.endsWith("msgFilterRules.dat")) {}
       else {
-          info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
-          importMBox(info, mailDir + "/" + temp_mailfile , temp_mailfile, QString::null);
+	  info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
+          importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString::null);
       }
     }
     
@@ -121,7 +121,7 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
       QString temp_mailfile = *mailFile;
       if (temp_mailfile.endsWith(".msf") || temp_mailfile.endsWith("msgFilterRules.dat")) {}
       else {
-          info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
+	  info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
           importMBox(info, (dirName + "/" + temp_mailfile) , KMailRootDir, KMailSubDir);
       }
     }
@@ -156,8 +156,21 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
     QFileInfo filenameInfo(mboxName);
     
     info->setCurrent(0);
-    info->setFrom(mboxName);
-    info->setTo(targetDir);
+    if( mboxName.length() > 20 ) {
+        QString tmp_info = mboxName;
+	tmp_info = tmp_info.replace( mailDir, "../" );
+	if (tmp_info.contains(".sbd")) tmp_info.remove(".sbd");
+	info->setFrom( tmp_info );
+    }
+    else 
+        info->setFrom(mboxName);
+    if(targetDir.contains(".sbd")) {
+	QString tmp_info = targetDir;
+	tmp_info.remove(".sbd");
+	info->setTo(tmp_info);
+    }
+    else
+     	info->setTo(targetDir);
     
     while (!mbox.atEnd()) {
       KTempFile tmp;
@@ -171,7 +184,6 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
       */
       QByteArray input(MAX_LINE);
       QCString seperate;
-      mbox.readLine(input.data(),MAX_LINE);
 	
       long l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
       tmp.file()->writeBlock( input, l );

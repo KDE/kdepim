@@ -107,7 +107,6 @@ void FilterOpera::import(FilterInfo *info)
                   */
 		  QByteArray input(MAX_LINE);
 		  QCString seperate;
-		  operaArchiv.readLine(input.data(),MAX_LINE);
 	 
 		  long l = operaArchiv.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
 		  tmp.file()->writeBlock( input, l );

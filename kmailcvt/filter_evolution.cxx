@@ -52,7 +52,7 @@ void FilterEvolution::import(FilterInfo *info)
     evolDir = QDir::homeDirPath();
   }
 
-  QString mailDir = KFileDialog::getExistingDirectory(evolDir, info->parent());
+  mailDir = KFileDialog::getExistingDirectory(evolDir, info->parent());
 
   if (mailDir.isEmpty()) {
     info->alert(i18n("No directory selected."));
@@ -75,6 +75,7 @@ void FilterEvolution::import(FilterInfo *info)
       info->setOverall((int) ((float) currentDir / numSubDirs * 100));
     }
   }
+  info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
   info->setCurrent(100);
   info->setOverall(100);
 }
@@ -119,16 +120,32 @@ void FilterEvolution::importDirContents(FilterInfo *info, const QString& dirName
 void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, const QString& rootDir, const QString& targetDir)
 {
   QFile mbox(mboxName);
+  QString tmp_from = mboxName;
   if (!mbox.open(IO_ReadOnly)) {
     info->alert(i18n("Unable to open %1, skipping").arg(mboxName));
   } else {
     QFileInfo filenameInfo(mboxName);
     
     info->setCurrent(0);
-    info->addLog(i18n("Importing emails from %1...").arg(mboxName));
-    info->setFrom(mboxName);
-    info->setTo(targetDir);
-    
+    if( mboxName.length() > 20 ) {
+        QString tmp_info = mboxName;
+	tmp_info = tmp_info.replace( mailDir, ".." );
+	if (tmp_info.contains("subfolders/")) tmp_info.remove("subfolders/");
+	info->setFrom( tmp_info );
+	tmp_from = tmp_info;
+    }
+    else 
+        info->setFrom(mboxName);
+    if(targetDir.contains("subfolders/")) {
+	QString tmp_info = targetDir;
+	tmp_info.remove("subfolders/");
+	info->setTo(tmp_info);
+    }
+    else
+     	info->setTo(targetDir);
+
+    info->addLog(i18n("Importing emails from %1...").arg(tmp_from));
+
     while (!mbox.atEnd()) {
       KTempFile tmp;
       /* comment by Danny:
@@ -140,7 +157,6 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
       */
       QByteArray input(MAX_LINE);
       QCString seperate;
-      mbox.readLine(input.data(),MAX_LINE);
 	
       long l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
       tmp.file()->writeBlock( input, l );
@@ -166,7 +182,6 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
       if (info->shouldTerminate()) return;
     }
   
-    info->addLog(i18n("Finished importing emails from %1").arg(mboxName));
     if (count_duplicates > 0)
     {
 	info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
