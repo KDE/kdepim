@@ -141,6 +141,9 @@ bool ResourceLocalDir::load()
 
   QStringList::ConstIterator it;
   for( it = entries.begin(); it != entries.end(); ++it ) {
+    if ( (*it).endsWith( "~" ) ) // is backup file, ignore it
+      continue;
+
     QString fileName = dirName + "/" + *it;
     kdDebug() << " read '" << fileName << "'" << endl;
     CalendarLocal cal;
