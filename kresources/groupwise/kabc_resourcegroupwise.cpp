@@ -124,12 +124,12 @@ void ResourceGroupwise::releaseSaveTicket( Ticket *ticket )
 
 bool ResourceGroupwise::doOpen()
 {
-  return mServer->login();
+  return true;
 }
 
 void ResourceGroupwise::doClose()
 {
-  mServer->logout();
+  cancelLoad();
 }
 
 bool ResourceGroupwise::load()
@@ -209,6 +209,8 @@ bool ResourceGroupwise::save( Ticket *ticket )
 
 bool ResourceGroupwise::asyncSave( Ticket* )
 {
+  if ( !mServer->login() ) return false;
+
   KABC::Addressee::List::Iterator it;
 
   KABC::Addressee::List addedList = addedAddressees();
@@ -232,6 +234,8 @@ bool ResourceGroupwise::asyncSave( Ticket* )
   }
 
   saveCache();
+
+  mServer->logout();
 
   return true;
 }
