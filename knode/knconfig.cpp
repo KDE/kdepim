@@ -18,27 +18,19 @@
 
 #include <stdlib.h>
 
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qtextstream.h>
 
-#include <kglobal.h>
-#include <kconfig.h>
 #include <ksimpleconfig.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kglobalsettings.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kiconeffect.h>
-#include <kcharsets.h>
 #include <kprocess.h>
 
 #include "knglobals.h"
-#include "knnntpaccount.h"
-#include "knaccountmanager.h"
 #include "kngroupmanager.h"
 #include "knarticlewidget.h"
 #include "utilities.h"

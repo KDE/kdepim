@@ -14,14 +14,13 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
 
 #include "kngroup.h"
 #include "knfolder.h"
-#include "knarticle.h"
 #include "utilities.h"
 #include "knarticlefilter.h"
 

@@ -14,11 +14,8 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qstrlist.h>
 
-#include "kngroup.h"
 #include "knarticle.h"
-#include "knjobdata.h"
 #include "knglobals.h"
 #include "knnetaccess.h"
 

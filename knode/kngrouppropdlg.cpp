@@ -16,10 +16,8 @@
 
 #include <qgroupbox.h>
 #include <qlayout.h>
-#include <qlabel.h>
 #include <qvbox.h>
 #include <qcheckbox.h>
-#include <qcombobox.h>
 
 #include <klocale.h>
 #include <klineedit.h>
@@ -29,8 +27,6 @@
 #include "utilities.h"
 #include "kngroup.h"
 #include "kngrouppropdlg.h"
-#include "knconfig.h"
-#include "knarticle.h"
 
 
 KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name )

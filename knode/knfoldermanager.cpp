@@ -14,20 +14,12 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qlistview.h>
 #include <qdir.h>
-#include <qhbox.h>
 
 #include <klocale.h>
-#include <kiconloader.h>
 #include <kmessagebox.h>
-#include <kstddirs.h>
-#include <kaction.h>
-#include <kglobal.h>
-#include <kapp.h>
-#include <kurl.h>
+#include <kstandarddirs.h>
 #include <kdebug.h>
-#include <klineedit.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"

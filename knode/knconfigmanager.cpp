@@ -21,7 +21,6 @@
 #include <kwin.h>
 
 #include <qhbox.h>
-#include <qframe.h>
 
 #include "utilities.h"
 #include "knglobals.h"

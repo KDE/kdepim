@@ -17,11 +17,8 @@
 #include <kdebug.h>
 
 #include "knmemorymanager.h"
-#include "kngroup.h"
 #include "knfolder.h"
-#include "knarticle.h"
 #include "knglobals.h"
-#include "knconfig.h"
 #include "knconfigmanager.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"

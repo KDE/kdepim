@@ -14,12 +14,8 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qlayout.h>
 #include <qpainter.h>
 
-#include "knglobals.h"
-#include "knconfig.h"
-#include "knconfigmanager.h"
 #include "knwidgets.h"
 
 

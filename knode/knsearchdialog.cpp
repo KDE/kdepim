@@ -15,22 +15,15 @@
 */
 
 #include <qlayout.h>
-#include <qgroupbox.h>
 #include <qpushbutton.h>
-#include <qbitarray.h>
 #include <qcheckbox.h>
 
 #include <klocale.h>
-#include <kseparator.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kiconloader.h>
 
 #include "knfilterconfigwidget.h"
-#include "knstatusfilter.h"
-#include "knrangefilter.h"
-#include "knstringfilter.h"
 #include "knarticlefilter.h"
-#include "knglobals.h"
 #include "utilities.h"
 #include "knsearchdialog.h"
 

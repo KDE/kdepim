@@ -15,11 +15,8 @@
 */
 
 #include <qlayout.h>
-#include <qframe.h>
 
-#include <kcharsets.h>
 #include <klocale.h>
-#include <kapp.h>
 #include <kmessagebox.h>
 #include <kwin.h>
 #include <kseparator.h>
@@ -29,13 +26,11 @@
 #include "knconfigmanager.h"
 #include "kngroupmanager.h"
 #include "knaccountmanager.h"
-#include "kngroup.h"
 #include "knfoldermanager.h"
 #include "knarticlemanager.h"
 #include "knfolder.h"
 #include "kncomposer.h"
 #include "knnntpaccount.h"
-#include "knwidgets.h"
 #include "utilities.h"
 #include "resource.h"
 

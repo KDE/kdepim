@@ -15,8 +15,6 @@
 */
 
 #include <qlayout.h>
-#include <qdir.h>
-#include <qtextstream.h>
 #include <qwidgetstack.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
@@ -25,8 +23,7 @@
 #include <kfiledialog.h>
 #include <kseparator.h>
 #include <kmessagebox.h>
-#include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <klineedit.h>
 #include <kprocess.h>
 

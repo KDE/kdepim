@@ -14,20 +14,16 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qtextstream.h>
 #include <qfileinfo.h>
 
-#include <kmessagebox.h>
 #include <ksimpleconfig.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kdebug.h>
 #include <klocale.h>
 
 #include <kqcstringsplitter.h>
 
-#include "knaccountmanager.h"
 #include "knarticlemanager.h"
-#include "knnntpaccount.h"
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 #include "utilities.h"

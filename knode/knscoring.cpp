@@ -14,25 +14,19 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qobject.h>
 #include <qstring.h>
 
 #if QT_VERSION < 300
 #  define Q_ASSERT ASSERT
 #endif
 
-#include <kdebug.h>
 #include <kwin.h>
-#include <kdialogbase.h>
-#include <klocale.h>
 #include <kscoringeditor.h>
 
-#include <kmime_headers.h>
 
 #include "knscoring.h"
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
-#include "knnntpaccount.h"
 #include "utilities.h"
 #include "knglobals.h"
 

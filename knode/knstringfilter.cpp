@@ -15,14 +15,12 @@
 */
 
 #include <qlayout.h>
-#include <qregexp.h>
 #if QT_VERSION < 300
 #  include <qregexp3.h>
 #else
 #  define QRegExp3 QRegExp
 #endif
 #include <qcheckbox.h>
-#include <qcombobox.h>
 
 #include <klocale.h>
 #include <ksimpleconfig.h>

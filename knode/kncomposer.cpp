@@ -14,18 +14,11 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qvgroupbox.h>
 #include <qheader.h>
-#include <qvbox.h>
 #include <qtextcodec.h>
 #include <qclipboard.h>
 #include <qdragobject.h>
 
-#include <klocale.h>
-#include <kglobalsettings.h>
-#include <kglobal.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kabapi.h>
@@ -33,24 +26,20 @@
 #include <kstdaction.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
-#include <kio/netaccess.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
 #include <klineedit.h>
 #include <kcombobox.h>
 #include <kspell.h>
-#include <kprocess.h>
 #include <ktempfile.h>
 
 #include <kqcstringsplitter.h>
 
-#include "kngroupmanager.h"
 #include "kngroupselectdialog.h"
 #include "utilities.h"
 #include "knglobals.h"
 #include "kncomposer.h"
 #include "knode.h"
-#include "knarticle.h"
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"

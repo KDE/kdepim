@@ -16,8 +16,6 @@
 
 #include <qdragobject.h>
 
-#include <kglobal.h>
-#include <kcharsets.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"

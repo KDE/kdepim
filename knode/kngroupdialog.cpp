@@ -16,7 +16,6 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qstrlist.h>
 #include <qbuttongroup.h>
 #include <qradiobutton.h>
 #include <qcheckbox.h>
@@ -29,7 +28,6 @@
 #include <klineedit.h>
 
 #include "utilities.h"
-#include "kngroupmanager.h"
 #include "knnntpaccount.h"
 #include "kngroupdialog.h"
 #include "knglobals.h"

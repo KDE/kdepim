@@ -14,26 +14,18 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qfile.h>
-#include <qtextstream.h>
 
 #include <ksimpleconfig.h>
 #include <klocale.h>
-#include <kmessagebox.h>
 #include <kdebug.h>
 
 #include <kqcstringsplitter.h>
 
-#include "knserverinfo.h"
 #include "knprotocolclient.h"
 #include "knglobals.h"
-#include "knarticle.h"
 #include "kncollectionviewitem.h"
 #include "kngrouppropdlg.h"
-#include "knnntpaccount.h"
-#include "knaccountmanager.h"
 #include "utilities.h"
-#include "kngroup.h"
 #include "knconfigmanager.h"
 #include "knode.h"
 #include "knscoring.h"

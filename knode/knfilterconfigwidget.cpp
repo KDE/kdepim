@@ -15,7 +15,6 @@
 */
 
 #include <qlayout.h>
-#include <qbitarray.h>
 #include <qlabel.h>
 
 #include <klocale.h>

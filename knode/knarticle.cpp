@@ -14,17 +14,11 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qfileinfo.h>
-#include <qstringlist.h>
 
-#include <kglobal.h>
 #include <klocale.h>
 #include <kmdcodec.h>
-#include <kcharsets.h>
 #include <kmimemagic.h>
-#include <kdebug.h>
 
-#include "knarticle.h"
 #include "knhdrviewitem.h"
 #include "kngroup.h"
 #include "knglobals.h"

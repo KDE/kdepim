@@ -14,34 +14,21 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include "knconfig.h"
 
-#include <qlayout.h>
-#include <qbuttongroup.h>
 #include <qvbox.h>
-#include <qlabel.h>
 #include <qcheckbox.h>
 #include <qpainter.h>
 
 #include <klocale.h>
 #include <knumvalidator.h>
 #include <kmessagebox.h>
-#include <kglobal.h>
-#include <kconfig.h>
 #include <kcolordialog.h>
 #include <kfontdialog.h>
-#include <kiconloader.h>
 #include <kfiledialog.h>
-#include <krun.h>
 #include <kuserprofile.h>
 #include <kopenwith.h>
-#include <kcharsets.h>
-#include <kdebug.h>
 #include <kscoringeditor.h>
-#include <kpgp.h>
-#include <knuminput.h>
 #include <kspell.h>
-#include <klineedit.h>
 #include <kcombobox.h>
 
 #include "knaccountmanager.h"
@@ -52,7 +39,6 @@
 #include "knarticlewidget.h"
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
-#include "knarticle.h"
 #include "knscoring.h"
 #include "knconfigmanager.h"
 #include "knpgp.h"

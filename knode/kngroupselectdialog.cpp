@@ -14,7 +14,6 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qwidget.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qheader.h>
@@ -25,7 +24,6 @@
 
 #include "utilities.h"
 #include "kngroupselectdialog.h"
-#include "kngroupmanager.h"
 
 
 KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act) :

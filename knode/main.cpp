@@ -18,7 +18,6 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
-#include <kapp.h>
 #include "knapplication.h"
 #include "resource.h"
 #include "knode.h"

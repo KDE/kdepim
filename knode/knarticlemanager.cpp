@@ -17,17 +17,13 @@
 
 #include <pthread.h>
 
-#include <qheader.h>
 
-#include <kfiledialog.h>
 #include <kmessagebox.h>
-#include <krun.h>
 #include <kuserprofile.h>
 #include <kopenwith.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kwin.h>
-#include <kcharsets.h>
 #include <ktempfile.h>
 
 #include "knode.h"
@@ -38,14 +34,11 @@
 #include "kngroupmanager.h"
 #include "knarticlewidget.h"
 #include "knsearchdialog.h"
-#include "knwidgets.h"
 #include "knfiltermanager.h"
-#include "kngroup.h"
 #include "knfolder.h"
 #include "knarticlefilter.h"
 #include "knhdrviewitem.h"
 #include "knnetaccess.h"
-#include "knpgp.h"
 #include "knnntpaccount.h"
 #include "knscoring.h"
 #include "knmemorymanager.h"

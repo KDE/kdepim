@@ -15,14 +15,10 @@
 */
 
 #include <stdlib.h>
-#include <qstrlist.h>
 #include <klocale.h>
 #include <qtextcodec.h>
 
-#include "knarticle.h"
-#include "kngroup.h"
 #include "kngroupmanager.h"
-#include "knjobdata.h"
 #include "knnntpclient.h"
 #include "utilities.h"
 

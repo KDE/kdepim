@@ -20,15 +20,10 @@
 
 #include <kdebug.h>
 #include <ksimpleconfig.h>
-#include <kglobal.h>
-#include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kaction.h>
-#include <kurl.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
-#include "kngroup.h"
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
 #include "kncollectionviewitem.h"
@@ -37,7 +32,6 @@
 #include "utilities.h"
 #include "knaccountmanager.h"
 #include "knfoldermanager.h"
-#include "knconfig.h"
 
 
 KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)

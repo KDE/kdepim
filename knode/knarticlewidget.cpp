@@ -18,32 +18,23 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include <qstring.h>
 #include <qclipboard.h>
-#include <qfileinfo.h>
 #include <qdir.h>
 #include <qpaintdevicemetrics.h>
-#include <qstylesheet.h>
 #include <qpainter.h>
 #include <qtimer.h>
-#include <qregexp.h>
 
 #include <kprinter.h>
 #include <kiconloader.h>
-#include <kpopupmenu.h>
 #include <kdebug.h>
-#include <kcursor.h>
 #include <kmessagebox.h>
-#include <kglobal.h>
 #include <klocale.h>
-#include <kconfig.h>
 #include <kstdaction.h>
 #include <kprocess.h>
 #include <kcharsets.h>
 #include <kaction.h>
 
 #include "resource.h"
-#include "knarticle.h"
 #include "knarticlewidget.h"
 #include "knglobals.h"
 #include "knarticlemanager.h"
@@ -55,7 +46,6 @@
 #include "knfolder.h"
 #include "knnntpaccount.h"
 #include "utilities.h"
-#include "knscoring.h"
 #include "knpgp.h"
 #include "knode.h"
 

@@ -14,19 +14,13 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qpixmap.h>
 #include <qhbox.h>
 
 #include <kconfig.h>
-#include <kglobal.h>
 #include <kmessagebox.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
 #include <kstdaction.h>
-#include <kaccel.h>
-#include <kurl.h>
-#include <klocale.h>
-#include <kwin.h>
 #include <kdebug.h>
 #include <kmenubar.h>
 #include <kiconloader.h>
@@ -43,7 +37,6 @@
 #include "knconfigmanager.h"
 #include "knarticlemanager.h"
 #include "knarticlefactory.h"
-#include "kngroup.h"
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
 #include "knaccountmanager.h"

@@ -26,12 +26,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <qstrlist.h>
 #include <klocale.h>
 #include <kextsock.h>
 #include <ksocks.h>
 
-#include "knserverinfo.h"
 #include "knjobdata.h"
 #include "knprotocolclient.h"
 

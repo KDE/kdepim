@@ -19,7 +19,6 @@
 #include <klocale.h>
 
 #include "knarticle.h"
-#include "knjobdata.h"
 #include "knsmtpclient.h"
 
 

@@ -22,8 +22,6 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kapp.h>
-#include <kglobal.h>
 #include <kdebug.h>
 #include <kio/passdlg.h>
 #include <ksocks.h>

@@ -14,8 +14,6 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <kconfig.h>
-#include <kglobal.h>
 #include "knpgp.h"
 
 KNpgp::KNpgp()

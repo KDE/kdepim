@@ -16,10 +16,7 @@
 
 #include <qlabel.h>
 #include <qcheckbox.h>
-#include <qgroupbox.h>
 #include <qlayout.h>
-#include <qbitarray.h>
-#include <qpixmap.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -27,9 +24,6 @@
 
 #include "knglobals.h"
 #include "knfiltermanager.h"
-#include "knstatusfilter.h"
-#include "knrangefilter.h"
-#include "knstringfilter.h"
 #include "knfilterconfigwidget.h"
 #include "knarticlefilter.h"
 #include "utilities.h"

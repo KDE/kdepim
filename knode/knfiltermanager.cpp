@@ -15,26 +15,14 @@
 */
 
 #include <stdlib.h>
-#include <qlayout.h>
-#include <qwhatsthis.h>
-#include <qbitarray.h>
 
-#include <ktabctl.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kstddirs.h>
-#include <kpopupmenu.h>
-#include <ktoolbarbutton.h>
-#include <kiconloader.h>
-#include <ktoolbar.h>
+#include <kstandarddirs.h>
 #include <ksimpleconfig.h>
-#include <kdebug.h>
 
 #include "utilities.h"
 #include "knglobals.h"
-#include "knstatusfilter.h"
-#include "knrangefilter.h"
-#include "knstringfilter.h"
 #include "knarticlefilter.h"
 #include "knfilterdialog.h"
 #include "knfiltermanager.h"

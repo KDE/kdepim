@@ -31,12 +31,9 @@
 #include <klineedit.h>
 
 #include "knnetaccess.h"
-#include "knjobdata.h"
-#include "knode.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knnntpaccount.h"
-#include "kngroupmanager.h"
 #include "kngroupbrowser.h"
 
 

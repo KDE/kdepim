@@ -17,13 +17,11 @@
 #include <kwin.h>
 
 #include <kstdaction.h>
-#include <klocale.h>
 #include <kedittoolbar.h>
 #include <kkeydialog.h>
 #include <kconfig.h>
 #include <kaction.h>
 
-#include "kngroup.h"
 #include "knarticle.h"
 #include "knarticlewidget.h"
 #include "utilities.h"

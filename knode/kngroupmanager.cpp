@@ -16,23 +16,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <qheader.h>
 #include <qdir.h>
 
-#include <ksimpleconfig.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kglobal.h>
-#include <kurl.h>
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kcharsets.h>
 
 #include "knode.h"
 #include "knarticlemanager.h"
-#include "knjobdata.h"
 #include "kngroupdialog.h"
-#include "kngroup.h"
 #include "kncollectionviewitem.h"
 #include "knnntpaccount.h"
 #include "knprotocolclient.h"
@@ -44,7 +38,6 @@
 #include "utilities.h"
 #include "knarticlewindow.h"
 #include "knarticlewidget.h"
-#include "kngroupmanager.h"
 #include "knmemorymanager.h"
 
 

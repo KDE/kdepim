@@ -16,28 +16,20 @@
 
 #include <stdlib.h>
 
-#include <qdatetime.h>
-#include <qtextstream.h>
 #include <qdir.h>
 #include <qlayout.h>
-#include <qframe.h>
-#include <qlabel.h>
 #include <qprogressbar.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kglobal.h>
-#include <kconfig.h>
 #include <kseparator.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kdebug.h>
 
-#include "kngroup.h"
 #include "knfolder.h"
 #include "knglobals.h"
 #include "kncleanup.h"
 #include "knconfig.h"
-#include "knarticlewidget.h"
 #include "knfoldermanager.h"
 #include "kngroupmanager.h"
 #include "knarticlemanager.h"

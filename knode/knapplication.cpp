@@ -17,7 +17,6 @@
 #include <kwin.h>
 #include <kdebug.h>
 #include <kcmdlineargs.h>
-#include <kurl.h>
 #include <kconfig.h>
 
 #include "knode.h"

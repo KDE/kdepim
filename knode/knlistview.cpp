@@ -15,12 +15,10 @@
 */
 
 #include <qheader.h>
-#include <qlayout.h>
 #include <qtimer.h>
 #include <qpainter.h>
 
 #include "knglobals.h"
-#include "knconfig.h"
 #include "knconfigmanager.h"
 #include "knlistview.h"
 
