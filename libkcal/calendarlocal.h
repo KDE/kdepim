@@ -1,7 +1,8 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -21,12 +22,7 @@
 #ifndef KCAL_CALENDARLOCAL_H
 #define KCAL_CALENDARLOCAL_H
 
-#include <qintdict.h>
-
 #include "calendar.h"
-
-#define BIGPRIME 1031 /* should allow for at least 4 appointments 365 days/yr
-			 to be almost instantly fast. */
 
 namespace KCal {
 
@@ -38,9 +34,13 @@ class CalFormat;
 class CalendarLocal : public Calendar
 {
   public:
-    /** constructs a new calendar, with variables initialized to sane values. */
+    /**
+      Constructs a new calendar, with variables initialized to sane values.
+    */
     CalendarLocal();
-    /** constructs a new calendar, with variables initialized to sane values. */
+    /**
+      Constructs a new calendar, with variables initialized to sane values.
+    */
     CalendarLocal( const QString &timeZoneId );
     ~CalendarLocal();
   
@@ -59,38 +59,31 @@ class CalendarLocal : public Calendar
     */
     bool save( const QString &fileName, CalFormat *format = 0 );
 
-    /** clears out the current calendar, freeing all used memory etc. etc. */
+    /**
+      Clears out the current calendar, freeing all used memory etc. etc.
+    */
     void close();
 
     void save() {}
   
-    /** Add Event to calendar. */
-    bool addEvent(Event *anEvent);
-    /** deletes an event from this calendar. */
-    void deleteEvent(Event *);
+    /**
+      Add Event to calendar.
+    */
+    bool addEvent( Event *event );
+    /** 
+      Deletes an event from this calendar.
+    */
+    void deleteEvent( Event *event );
 
     /**
       Retrieves an event on the basis of the unique string ID.
     */
-    Event *event(const QString &UniqueStr);
-    /**
-      Return filtered list of all events in calendar.
-    */
-//    QPtrList<Event> events();
+    Event *event( const QString &uid );
     /**
       Return unfiltered list of all events in calendar.
     */
     QPtrList<Event> rawEvents();
 
-    /*
-      Returns a QString with the text of the holiday (if any) that falls
-      on the specified date.
-    */
-    QString getHolidayForDate(const QDate &qd);
-    
-    /** returns the number of events that are present on the specified date. */
-    int numEvents(const QDate &qd);
-  
     /**
       Add a todo to the todolist.
     */
@@ -119,28 +112,43 @@ class CalendarLocal : public Calendar
     */
     QPtrList<Todo> todos() { return Calendar::todos(); }
 
-    /** Add a Journal entry to calendar */
-    bool addJournal(Journal *);
-    /** Remove a Journal from the calendar */
-    void deleteJournal(Journal *);
-    /** Return Journal for given date */
-    Journal *journal(const QDate &);
-    /** Return Journal with given UID */
-    Journal *journal(const QString &UID);
-    /** Return list of all Journals stored in calendar */
+    /**
+      Add a Journal entry to calendar.
+    */
+    bool addJournal( Journal * );
+    /**
+      Remove a Journal from the calendar.
+    */
+    void deleteJournal( Journal * );
+    /**
+      Return Journal for given date.
+    */
+    Journal *journal( const QDate & );
+    /**
+      Return Journal with given UID.
+    */
+    Journal *journal( const QString &uid );
+    /**
+      Return list of all Journals stored in calendar.
+    */
     QPtrList<Journal> journals();
 
-    /** Return all alarms, which ocur in the given time interval. */
+    /**
+      Return all alarms, which ocur in the given time interval.
+    */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );
 
-    /** Return all alarms, which ocur before given date. */
+    /**
+      Return all alarms, which ocur before given date.
+    */
     Alarm::List alarmsTo( const QDateTime &to );
 
-    
-    /** this method should be called whenever a Event is modified directly
-     * via it's pointer.  It makes sure that the calendar is internally
-     * consistent. */
-    void update(IncidenceBase *incidence);
+    /**
+      This method should be called whenever a Event is modified directly
+      via it's pointer. It makes sure that the calendar is internally
+      consistent.
+    */
+    void update( IncidenceBase *incidence );
  
     /**
       Builds and then returns a list of all events that match for the
@@ -157,7 +165,6 @@ class CalendarLocal : public Calendar
     */
     QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
-
  
   protected:
  
@@ -165,15 +172,8 @@ class CalendarLocal : public Calendar
     void incidenceUpdated( IncidenceBase *i ) { update( i ); }
   
     /** inserts an event into its "proper place" in the calendar. */
-    void insertEvent(const Event *anEvent);
+    void insertEvent( Event *event );
   
-    /** on the basis of a QDateTime, forms a hash key for the dictionary. */
-    long int makeKey(const QDateTime &dt);
-    /** on the basis of a QDate, forms a hash key for the dictionary */
-    long int makeKey(const QDate &d);
-    /** Return the date for which the specified key was made. */
-    QDate keyToDate(long int key);
-
     /** Append alarms of incidence in interval to list of alarms. */
     void appendAlarms( Alarm::List &alarms, Incidence *incidence,
                        const QDateTime &from, const QDateTime &to );
@@ -185,16 +185,10 @@ class CalendarLocal : public Calendar
   private:
     void init();
 
-    QIntDict<QPtrList<Event> > *mCalDict;    // dictionary of lists of events.
-    QPtrList<Event> mRecursList;             // list of repeating events.
-
-    QPtrList<Todo> mTodoList;               // list of todo items.
-
+    QPtrList<Event> mEventList;
+    QPtrList<Todo> mTodoList;
     QPtrList<Journal> mJournalList;
-  
-    QDate mOldestDate;
-    QDate mNewestDate;
-};  
+};
 
 }
 

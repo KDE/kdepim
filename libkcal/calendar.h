@@ -189,7 +189,7 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Returns the number of events that are present on the specified date.
     */
-    virtual int numEvents( const QDate &qd ) = 0;
+    virtual int numEvents( const QDate & ) { return 0; }
   
     /**
       Add a todo to the todolist.
