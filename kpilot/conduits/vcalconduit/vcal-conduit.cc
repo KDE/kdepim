@@ -103,6 +103,11 @@ public:
 	int updateEvents();
 	void removeEvent(KCal::Event *);
 	KCal::Event *findEvent(recordid_t);
+	KCal::Event *getNextEvent();
+	KCal::Event *getNextModifiedEvent();
+
+protected:
+	bool reading;
 
 private:
 	KCal::Calendar *fCalendar;
@@ -112,6 +117,7 @@ VCalConduit::VCalPrivate::VCalPrivate(KCal::Calendar *b) :
 	fCalendar(b)
 {
 	fAllEvents.setAutoDelete(false);
+	reading=false;
 }
 
 int VCalConduit::VCalPrivate::updateEvents()
@@ -139,6 +145,31 @@ KCal::Event *VCalConduit::VCalPrivate::findEvent(recordid_t id)
 	return 0L;
 }
 
+KCal::Event *VCalConduit::VCalPrivate::getNextEvent()
+{
+	if (reading) return fAllEvents.next();
+	reading=true;
+	return fAllEvents.first();
+}
+
+KCal::Event *VCalConduit::VCalPrivate::getNextModifiedEvent()
+{
+	KCal::Event*e=0L;
+	if (!reading) 
+	{
+		reading=true;
+		e=fAllEvents.first();
+	}
+	else
+	{
+		e=fAllEvents.next();
+	}
+	while (e && e->syncStatus()==KCal::Incidence::SYNCNONE) 
+	{
+		e=fAllEvents.next();
+	}
+	return e;
+}
 
 
 
@@ -217,6 +248,7 @@ VCalConduit::~VCalConduit()
 	fP = new VCalPrivate(fCalendar);
 	fP->updateEvents();
 
+	pilotindex=0;
 	QTimer::singleShot(0,this,SLOT(syncRecord()));
 	return;
 
@@ -253,13 +285,21 @@ void VCalConduit::syncRecord()
 {
 	FUNCTIONSETUP;
 
-	PilotRecord *r = fCurrentDatabase->readNextModifiedRec();
+	PilotRecord *r;
+	if (fFirstTime) 
+	{
+		r = fCurrentDatabase->readRecordByIndex(pilotindex++);
+	}
+	else
+	{
+		r = fCurrentDatabase->readNextModifiedRec();
+	}
 	PilotRecord *s = 0L;
 
 	if (!r)
 	{
 		fP->updateEvents();
-		QTimer::singleShot(0,this,SLOT(syncRecord()));
+		QTimer::singleShot(0 ,this,SLOT(syncEvent()));
 		return;
 	}
 
@@ -288,10 +328,86 @@ void VCalConduit::syncRecord()
 
 void VCalConduit::syncEvent()
 {
+// TODO: skip PC => Palm sync for now because it corrupts the palm data...
+QTimer::singleShot(0,this,SLOT(deleteRecord()));
+return;
+
+
 	FUNCTIONSETUP;
+	KCal::Event*e=0L;
+	if (fFirstTime)
+	{
+		e=fP->getNextEvent();
+	}
+	else
+	{
+		e=fP->getNextModifiedEvent();
+	}
+	if (!e)
+	{
+		QTimer::singleShot(0,this,SLOT(deleteRecord()));
+		return;
+	}
+	// find the corresponding index on the palm and sync. If there is none, create it.
+	int ix=e->pilotId();
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": found PC entry with pilotID "<<ix<<endl;
+#endif
+	PilotRecord *s=0L;
+	PilotDateEntry*de;
+	if (ix>0 && (s=fCurrentDatabase->readRecordById(ix)))
+	{
+		if (e->syncStatus()==KCal::Incidence::SYNCDEL)
+		{
+			deletePalmRecord(e, s);
+		}
+		else
+		{
+			de=new PilotDateEntry(s);
+			updateEventOnPalm(e, de);
+#ifdef DEBUG
+			DEBUGCONDUIT<<fname<<": nach updateEventOnPalm , vor delete de"<<endl;
+			DEBUGCONDUIT<<fname<<": description: "<<de->getDescription()<<endl;
+			DEBUGCONDUIT<<fname<<": note: "<<de->getNote()<<endl;
+			DEBUGCONDUIT<<fname<<": Exception: "<<de->getExceptions()<<endl;
+			if (de->getExceptions()) {
+			struct tm ttm1=(*(de->getExceptions()));
+			if (de->getExceptions()) {
+				DEBUGCONDUIT << fname << ": Exception: " << readTm(ttm1).toString() << endl;
+			}}
+#endif
+			delete de;
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": nach delete de " << endl;
+#endif
+		}
+	} else {
+		de=new PilotDateEntry();
+		updateEventOnPalm(e, de);
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": nach updateEventOnPalm , vor delete de"<<endl;
+		DEBUGCONDUIT<<fname<<": description: "<<de->getDescription()<<endl;
+		DEBUGCONDUIT<<fname<<": note: "<<de->getNote()<<endl;
+		DEBUGCONDUIT<<fname<<": Exception: "<<de->getExceptions()<<endl;
+		if (de->getExceptions()) {
+		struct tm ttm1=(*(de->getExceptions()));
+		if (de->getExceptions()) {
+			DEBUGCONDUIT << fname << ": Exception: " << readTm(ttm1).toString() << endl;
+		}}
+#endif
+		delete de;
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": nach delete de "<<endl;
+#endif
+	}
+	KPILOT_DELETE(s);
+	QTimer::singleShot(0, this, SLOT(syncEvent()));
+}
 
-
-	QTimer::singleShot(0,this,SLOT(cleanup()));
+void VCalConduit::deleteRecord()
+{
+// TODO: use the backup db to findout which records have been deleted locally on the PC
+	QTimer::singleShot(0, this, SLOT(cleanup()));
 }
 
 void VCalConduit::cleanup()
@@ -317,6 +433,7 @@ void VCalConduit::addRecord(PilotRecord *r)
 	PilotDateEntry de(r);
 	KCal::Event *e = new KCal::Event;
 	eventFromRecord(e,de);
+	// TODO: find out if there is already an entry with this data...
 	fCalendar->addEvent(e);
 }
 
@@ -338,11 +455,11 @@ void VCalConduit::changeRecord(PilotRecord *r,PilotRecord *s)
 	FUNCTIONSETUP;
 
 	PilotDateEntry de(r);
-	KCal::Event *e = findEvent(r->getID());
+	KCal::Event *e = fP->findEvent(r->getID());
 	if (e)
 	{
 		eventFromRecord(e,de);
-		fBackupDatabase->writeRecord(s);
+		fBackupDatabase->writeRecord(r);
 	}
 	else
 	{
@@ -354,8 +471,87 @@ void VCalConduit::changeRecord(PilotRecord *r,PilotRecord *s)
 	}
 }
 
+void VCalConduit::deletePalmRecord(KCal::Event*e, PilotRecord*s)
+{
+	FUNCTIONSETUP;
+	if (s)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": deleting record " << s->getID() << endl;
+#endif
+		s->setAttrib(~dlpRecAttrDeleted);
+		fCurrentDatabase->writeRecord(s);
+		fBackupDatabase->writeRecord(s);
+	}
+	else
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": could not find record to delete (" << e->pilotId() << ")" << endl;
+#endif
+	}
+}
+
+/* I have to use a pointer to an existing PilotDateEntry so that I can handle
+   new records as well (and to prevend some crashes concerning the validity
+   domain of the PilotRecord*r). In syncEvent this PilotDateEntry is created. */
+void VCalConduit::updateEventOnPalm(KCal::Event*e, PilotDateEntry*de)
+{
+	FUNCTIONSETUP;
+	if (!de) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": NULL event given... Skipping it"<<endl;
+#endif
+		return;
+	}
+	PilotRecord*r=entryFromEvent(de, e);
+
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": After entryFromEvent..." << endl;
+#endif
+	if (r)
+	{
+		fBackupDatabase->writeRecord(r);
+		fCurrentDatabase->writeRecord(r);
+		e->setSyncStatus(KCal::Incidence::SYNCNONE);
+		e->setPilotId(r->getID());
+	}
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Endof updateEventOnPalm..." << endl;
+#endif
+}
+
+PilotRecord*VCalConduit::entryFromEvent(PilotDateEntry*de, const KCal::Event*e)
+{
+	FUNCTIONSETUP;
+	if (!de) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": NULL event given... Skipping it"<<endl;
+#endif
+		return NULL;
+	}
+
+	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
+	if (e->secrecy()!=KCal::Event::SecrecyPublic) de->makeSecret();
+
+	setStartEndTimes(de, e);
+	setAlarms(de, e);
+	setRecurrence(de, e);
+//TODO enable:	setExceptions(de, e);
+	de->setDescription(e->summary());
+	de->setNote(e->description());
+	return de->pack();
+}
+
 KCal::Event *VCalConduit::eventFromRecord(KCal::Event *e, const PilotDateEntry &de)
 {
+	FUNCTIONSETUP;
+	if (!e) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": NULL event given... Skipping it"<<endl;
+#endif
+		return NULL;
+	}
+
 	e->setOrganizer(fCalendar->getEmail());
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 	e->setSecrecy(de.isSecret() ?
@@ -378,6 +574,7 @@ KCal::Event *VCalConduit::eventFromRecord(KCal::Event *e, const PilotDateEntry &
 
 void VCalConduit::setStartEndTimes(KCal::Event *e,const PilotDateEntry &de)
 {
+	FUNCTIONSETUP;
 	e->setDtStart(readTm(de.getEventStart()));
 	e->setFloats(de.isEvent());
 
@@ -389,6 +586,18 @@ void VCalConduit::setStartEndTimes(KCal::Event *e,const PilotDateEntry &de)
 	{
 		e->setDtEnd(readTm(de.getEventEnd()));
 	}
+}
+
+void VCalConduit::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
+{
+	FUNCTIONSETUP;
+	struct tm ttm=writeTm(e->dtStart());
+	de->setEventStart(ttm);
+	de->setEvent(e->doesFloat());
+
+	ttm=writeTm(e->dtEnd());
+	de->setEventEnd(ttm);
+	//TODO:... Use setRepeatEnd???
 }
 
 void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
@@ -422,6 +631,13 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry &de)
 	}
 
 	// TODO: Fix alarms
+}
+
+void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
+{
+	FUNCTIONSETUP;
+
+	// TODO: ....
 }
 
 void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry &dateEntry)
@@ -531,6 +747,68 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry &dateEnt
 	}
 }
 
+void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *event)
+{
+	FUNCTIONSETUP;
+
+	// TODO: When do I have to set "NoRepeat"
+	// TODO: When do I have to set "dailyRepeat"
+
+	KCal::Recurrence*r=event->recurrence();
+	if (!r) return;
+	int freq=r->frequency();
+	QDate endDate=r->endDate();
+
+	bool forever=( (!endDate.isValid()) && (r->duration()==0));
+	if (forever) dateEntry->setRepeatForever();
+	else
+	{
+		dateEntry->setRepeatEnd(writeTm(endDate));
+	}
+
+	QBitArray dayArray;
+	switch(freq)
+	{
+	case KCal::Recurrence::rDaily:
+		dateEntry->setRepeatFrequency(repeatDaily);
+		break;
+	case KCal::Recurrence::rWeekly:
+		dateEntry->setRepeatFrequency(repeatWeekly);
+		dayArray=r->days();
+		// TODO: Do I have to rotate the bits by one?
+		dateEntry->setRepeatDays(dayArray);
+		break;
+	case KCal::Recurrence::rMonthlyPos:
+		dateEntry->setRepeatFrequency(repeatMonthlyByDate);
+		if (r->monthPositions().count()>0)
+		{
+			QPtrList<KCal::Recurrence::rMonthPos> mps=r->monthPositions();
+			const KCal::Recurrence::rMonthPos*mp=mps.first();
+			int pos=0;
+			dayArray=mp->rDays;
+			// this is quite clumsy, but I haven't found a better way...
+			for (int j=0; j<7; j++)
+				if (dayArray[j]) pos=j;
+			dateEntry->setRepeatDay(static_cast<DayOfMonthType>(7*(mp->rPos-1) + pos));
+		}
+		break;
+	case KCal::Recurrence::rMonthlyDay:
+		dateEntry->setRepeatFrequency(repeatMonthlyByDay);
+		break;
+	case KCal::Recurrence::rYearlyDay:
+		dateEntry->setRepeatFrequency(repeatYearly);
+		break;
+	case KCal::Recurrence::rNone:
+		dateEntry->setRepeatFrequency(repeatNone);
+		break;
+	default:
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": Unknown recurrence frequency "<< freq <<endl;
+#endif
+		break;
+	}
+}
+
 void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEntry)
 {
 	FUNCTIONSETUP;
@@ -552,7 +830,23 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEn
 	}
 }
 
+void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *vevent )
+{
+	FUNCTIONSETUP;
+	KCal::DateList list=vevent->exDates();
+	KCal::DateList::iterator it;
+	for ( it = list.begin(); it != list.end(); ++it )
+	{
+		QDateTime dt(*it);
+		struct tm ttm=writeTm(dt);
+		dateEntry->setExceptions(&ttm);
+	}
+}
+
 // $Log$
+// Revision 1.51  2002/02/23 20:57:41  adridg
+// #ifdef DEBUG stuff
+//
 // Revision 1.50  2002/01/26 15:01:02  adridg
 // Compile fixes and more
 //

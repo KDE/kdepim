@@ -62,18 +62,29 @@ protected slots:
 	*/
 	void syncEvent();
 	void cleanup();
+	void deleteRecord();
 
 protected:
 	void addRecord(PilotRecord *);
 	void deleteRecord(PilotRecord *,PilotRecord *);
 	void changeRecord(PilotRecord *,PilotRecord *);
 
+	void deletePalmRecord(KCal::Event*e, PilotRecord*s);
+	void updateEventOnPalm(KCal::Event*e, PilotDateEntry*de);
+	//void addPalmRecord(KCal::Event *e);
+
 	KCal::Event *eventFromRecord(KCal::Event *, const PilotDateEntry &);
+	PilotRecord *entryFromEvent(PilotDateEntry*de, const KCal::Event*e);
 
 	void setStartEndTimes(KCal::Event *,const PilotDateEntry &);
 	void setAlarms(KCal::Event *,const PilotDateEntry &);
 	void setRecurrence(KCal::Event *,const PilotDateEntry &);
 	void setExceptions(KCal::Event *,const PilotDateEntry &);
+
+	void setStartEndTimes(PilotDateEntry *, const KCal::Event * );
+	void setAlarms(PilotDateEntry *, const KCal::Event * );
+	void setRecurrence(PilotDateEntry *, const KCal::Event * );
+	void setExceptions(PilotDateEntry *, const KCal::Event * );
 
 	KCal::Event *findEvent(recordid_t);
 
@@ -84,6 +95,7 @@ protected:
 
 	QString fCalendarFile;
 	bool fFirstTime,fDeleteOnPilot;
+	int pilotindex;
 
 private:
 	class VCalPrivate;
@@ -91,6 +103,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.20  2002/01/26 15:01:02  adridg
+// Compile fixes and more
+//
 // Revision 1.19  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
