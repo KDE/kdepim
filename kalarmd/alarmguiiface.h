@@ -24,7 +24,8 @@
 // $Id$
 
 #include <dcopobject.h>
-#include "alarmdaemoniface.h"
+// Don't use #include "alarmdaemoniface.h" so that programs other than kalarmd can compile
+#include <kalarmd/alarmdaemoniface.h>
 
 class AlarmGuiIface : virtual public DCOPObject
 {
