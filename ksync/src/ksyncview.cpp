@@ -153,7 +153,7 @@ void KSyncView::showSource()
     return;
   } else {
     kdDebug() << "** Source '" << item->text(0) << endl;
-    KSyncee *syncee = createSyncee(item->text(0));
+    KSyncee *syncee = createSyncee(KURL( item->text(0) ));
     KSyncEntry *entry = syncee->firstEntry();
     while(entry) {
       kdDebug() << "**  '" << entry->name() << "'" << endl;
@@ -225,7 +225,7 @@ KSyncee *KSyncView::createSyncee(const KURL &url)
     QString tmpFile = createTempFile();
 
     loader = new SynceeLoader(this,syncee,tmpFile);
-    KIO::FileCopyJob *j = KIO::file_copy(url,tmpFile,-1,true);
+    KIO::FileCopyJob *j = KIO::file_copy(url,KURL::fromPathOrURL( tmpFile ),-1,true);
     connect(j,SIGNAL(result(KIO::Job *)),
             loader,SLOT(loadSyncee(KIO::Job *)));
     return syncee;

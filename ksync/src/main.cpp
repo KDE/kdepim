@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
         if (args->count())
         {
-            ksync->openDocumentFile(args->arg(0));
+            ksync->openDocumentFile(args->url(0));
         }
         else
         {
