@@ -24,6 +24,7 @@
 #include <kdebug.h>
 
 #include "incidence.h"
+#include "todo.h"
 
 #include "alarm.h"
 
@@ -110,7 +111,15 @@ void Alarm::setTime(const QDateTime &alarmTime)
 QDateTime Alarm::time() const
 {
   if ( hasTime() ) return mAlarmTime;
-  else return mOffset.end( mParent->dtStart() );
+  else 
+  {
+    if (mParent->type()=="Todo") {
+      Todo *t = static_cast<Todo*>(mParent);
+      return mOffset.end( t->dtDue() );
+    } else {
+      return mOffset.end( mParent->dtStart() );
+    }
+  }
 }
 
 bool Alarm::hasTime() const
