@@ -43,10 +43,6 @@
 #include "pilotAppCategory.h"
 #endif
 
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
-
 /** @brief A wrapper class around the Address struct provided by pi-address.h
  *
  * This class allows the user to set and get address field values.
@@ -112,30 +108,29 @@ public:
 	*  entryTitle, entryCustom1, entryCustom2, entryCustom3, entryCustom4,
 	*  entryNote };
 	*/
-	void setField(int field, const char* text);
-	const char* getField(int field) const
-		{ return fAddressInfo.entry[field]; }
+	void setField(int field, const QString &text);
+	QString getField(int field) const;
 
-	const char *getCategoryLabel() const
-		{ return fAppInfo.category.name[getCat()]; }
+	QString getCategoryLabel() const;
+	
 	/** If the label already exists, uses the id; if not, adds the label
 	*  to the category list
 	*  @return false if category labels are full
 	*/
-	bool setCategory(const char *label);
+	bool setCategory(const QString &label);
 
 
 	/** @param checkCustom4 flag if true, checks the entryCustom4 field
 	*  for extra phone fields
 	*  @return the field associated with the type
 	*/
-	const char *getPhoneField(EPhoneType type, bool checkCustom4=true) const;
+	QString getPhoneField(EPhoneType type, bool checkCustom4=true) const;
 
 	/** @param overflowCustom is true, and entryPhone1 to entryPhone5 is full
 	*  it will use entryCustom4 field to store the field
 	*/
-	void setPhoneField(EPhoneType type, const char *field,
-	bool overflowCustom=true);
+	void setPhoneField(EPhoneType type, const QString &field,
+		bool overflowCustom=true);
 
 	/**
 	* Returns the (adjusted) index of the phone number
@@ -155,6 +150,13 @@ public:
 	void unpack(const void *, int = 0) { }
 
 	static const int APP_BUFFER_SIZE;
+
+protected:
+	// Get the pointers in cases where no conversion to
+	// unicode is desired.
+	//
+	const char *getFieldP(int field) const
+		{ return fAddressInfo.entry[field]; }
 
 private:
 	void _copyAddressInfo(const struct Address &copyFrom);

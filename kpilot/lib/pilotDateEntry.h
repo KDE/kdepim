@@ -119,12 +119,20 @@ public:
   const struct tm *getExceptions() const { return fAppointmentInfo.exception; }
   void setExceptions(struct tm *e);
 
-  void  setDescription(const char* desc);
-  const char* getDescription() const { return fAppointmentInfo.description; }
+	void setDescription(const QString &);
+	QString getDescription() const;
+	
+	void setNote(const QString &);
+	QString getNote() const;
+	
+protected:
+	void  setDescriptionP(const char* desc, int l=-1);
+	const char* getDescriptionP() const { return fAppointmentInfo.description; }
 
-  void  setNote(const char* note);
-  const char* getNote() const { return fAppointmentInfo.note; }
+	void  setNoteP(const char* note, int l=-1);
+	const char* getNoteP() const { return fAppointmentInfo.note; }
 
+public:
   bool isMultiDay() const {
     return ((fAppointmentInfo.repeatType == repeatDaily) &&
             (fAppointmentInfo.repeatFrequency == 1) &&

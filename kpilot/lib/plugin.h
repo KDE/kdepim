@@ -109,14 +109,14 @@ private:
 	* case, retrieved is set to true, otherwise it is left alone 
 	* (i.e. retains it value and it not explicitly set to false).
 	*/
-	bool openDatabases_(const char *dbName, bool*retrieved=0L);
+	bool openDatabases_(const QString &dbName, bool*retrieved=0L);
 
 	/**
 	* Open both databases, but get the fDatabase not from
 	* the Pilot, but from a local database in an alternate
 	* directory. For testing only.
 	*/
-	bool openDatabases_(const char *dbName,const char *localPath);
+	bool openDatabases_(const QString &dbName,const QString &localPath);
 } ;
 
 class PluginUtility

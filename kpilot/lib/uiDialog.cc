@@ -88,7 +88,7 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #endif
 
 	QPixmap applicationIcon =
-		l->loadIcon(p->appName(),
+		l->loadIcon(QString::fromLatin1(p->appName()),
 		KIcon::Desktop,
 		0, KIcon::DefaultState, 0L,
 		true);
@@ -101,7 +101,8 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 			<< "kpilot"
 			<< endl;
 #endif
-		applicationIcon = l->loadIcon("kpilot", KIcon::Desktop);
+		applicationIcon = l->loadIcon(QString::fromLatin1("kpilot"), 
+			KIcon::Desktop);
 	}
 
 	text = new QLabel(w);
@@ -134,7 +135,9 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Text size "
-		<< text->size()
+		<< text->size().width()
+		<< ","
+		<< text->size().height()
 		<< endl;
 #endif
 	grid->addColSpacing(2,SPACING+text->size().width()/2);
@@ -144,12 +147,12 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 	if (!p->homepage().isEmpty())
 	{
 		s += p->homepage();
-		s += "<br>";
+		s += CSL1("<br>");
 	}
 	s += i18n("Send questions and comments to <i>kde-pim@kde.org</i>");
-	s += "<br>";
+	s += CSL1("<br>");
 	s += i18n("Send bug reports to <i>%1</i>").arg(p->bugAddress());
-	s += "</qt>";
+	s += CSL1("</qt>");
 
 	text->setText(s);
 	grid->addMultiCellWidget(text, 2, 2, 2, 3);
@@ -172,13 +175,15 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 		QValueList<KAboutPerson>::ConstIterator i;
 		s = i18n("<qt><b>Authors:</b> ");
 
+		QString comma = CSL1(", ");
+		
 		unsigned int count=1;
 		for (i=l.begin(); i!=l.end(); ++i)
 		{
-			s.append(QString("%1 (<i>%2</i>)%3")
+			s.append(CSL1("%1 (<i>%2</i>)%3")
 				.arg((*i).name())
 				.arg((*i).task())
-				.arg(count<l.count() ? ", " : "")
+				.arg(count<l.count() ? comma : QString::null)
 				);
 			count++;
 		}
@@ -190,17 +195,17 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 			s.append(i18n("<br><b>Credits:</b> "));
 			for (i=l.begin(); i!=l.end(); ++i)
 			{
-				s.append(QString("%1 (<i>%2</i>)%3")
+				s.append(CSL1("%1 (<i>%2</i>)%3")
 					.arg((*i).name())
 					.arg((*i).task())
-					.arg(count<l.count() ? ", " : "")
+					.arg(count<l.count() ? comma : QString::null)
 					);
 				count++;
 			}
 		}
 
 
-		s.append("</qt>");
+		s.append(CSL1("</qt>"));
 
 		text = new QLabel(w);
 		text->setText(s);
@@ -218,7 +223,9 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Size "
-		<< w->size()
+		<< w->size().width()
+		<< ","
+		<< w->size().height()
 		<< endl;
 #endif
 
@@ -226,7 +233,9 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Adjusted size "
-		<< w->size()
+		<< w->size().width()
+		<< ","
+		<< w->size().height()
 		<< endl;
 #endif
 
@@ -244,7 +253,9 @@ void UIDialog::addAboutPage(bool aboutbutton,KAboutData *ad)
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Final size "
-		<< sz
+		<< sz.width()
+		<< ","
+		<< sz.height()
 		<< endl;
 #endif
 

@@ -25,15 +25,14 @@
 /*
 ** Bug reports and questions can be sent to groot@kde.org
 */
+#include "options.h"
+
 #include <stdlib.h>
 
-#ifndef _KDEBUG_H_
-#include <kdebug.h>
-#endif
+#include <qtextcodec.h>
 
-#ifndef _KPILOT_OPTIONS_H
-#include "options.h"
-#endif
+#include <kdebug.h>
+
 
 #include "pilotTodoEntry.h"
 
@@ -69,8 +68,8 @@ PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotAppCategory(e), fA
 	fTodoInfo.description = 0L;
 	fTodoInfo.note = 0L;
 
-	setDescription(e.fTodoInfo.description);
-	setNote(e.fTodoInfo.note);
+	setDescriptionP(e.getDescriptionP());
+	setNoteP(e.getNoteP());
 
 }				// end of copy constructor
 
@@ -87,20 +86,20 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 		fTodoInfo.description = 0L;
 		fTodoInfo.note = 0L;
 
-		setDescription(e.fTodoInfo.description);
-		setNote(e.fTodoInfo.note);
+		setDescriptionP(e.getDescriptionP());
+		setNoteP(e.getNoteP());
 
 	}
 
 	return *this;
 }				// end of assignment operator
 
-bool PilotTodoEntry::setCategory(const char *label)
+bool PilotTodoEntry::setCategory(const QString &label)
 {
 	FUNCTIONSETUP;
 	for (int catId = 0; catId < 16; catId++)
 	{
-		QString aCat = fAppInfo.category.name[catId];
+		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);
 
 		if (label == aCat)
 		{
@@ -111,13 +110,19 @@ bool PilotTodoEntry::setCategory(const char *label)
 			// if empty, then no more labels; add it 
 		if (aCat.isEmpty())
 		{
-			qstrncpy(fAppInfo.category.name[catId], label, 16);
+			qstrncpy(fAppInfo.category.name[catId], 
+				codec()->fromUnicode(label), 16);
 			setCat(catId);
 			return true;
 		}
 	}
 	// if got here, the category slots were full
 	return false;
+}
+
+QString PilotTodoEntry::getCategoryLabel() const
+{
+	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
 }
 
 void *PilotTodoEntry::pack(void *buf, int *len)
@@ -129,12 +134,29 @@ void *PilotTodoEntry::pack(void *buf, int *len)
 	return buf;
 }
 
-void PilotTodoEntry::setDescription(const char *desc)
+void PilotTodoEntry::setDescription(const QString &desc)
+{
+	setDescriptionP(codec()->fromUnicode(desc),desc.length());
+}
+
+void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 {
 	KPILOT_FREE(fTodoInfo.description);
-	if (desc && (::strlen(desc) > 0)) 
+	if (desc && *desc)
 	{
-		fTodoInfo.description = strdup(desc);
+		if (-1 == len) len=::strlen(desc);
+
+		fTodoInfo.description = (char *)::malloc(len + 1);
+		if (fTodoInfo.description)
+		{
+			::strcpy(fTodoInfo.description, desc);
+		}
+		else
+		{
+			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+				<< ": malloc() failed, description not set"
+				<< endl;
+		}
 	}
 	else
 	{
@@ -142,15 +164,41 @@ void PilotTodoEntry::setDescription(const char *desc)
 	}
 }
 
-void PilotTodoEntry::setNote(const char *note)
+QString PilotTodoEntry::getDescription() const
+{
+	return codec()->toUnicode(getDescriptionP());
+}
+
+void PilotTodoEntry::setNote(const QString &note)
+{
+	setNoteP(codec()->fromUnicode(note),note.length());
+}
+
+void PilotTodoEntry::setNoteP(const char *note, int len)
 {
 	KPILOT_FREE(fTodoInfo.note);
-	if (note && (::strlen(note) > 0))
-	{
-		fTodoInfo.note = strdup(note);
+	if (note && *note)
+	  {
+	    if (-1 == len) len=::strlen(note);
+		fTodoInfo.note = (char *)::malloc(len + 1);
+		if (fTodoInfo.note)
+		{
+		    ::strcpy(fTodoInfo.note, note);
+		}
+		else
+		{
+			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+				<< ": malloc() failed, note not set" << endl;
+		}
 	}
 	else
 	{
 		fTodoInfo.note = 0L;
 	}
 }
+
+QString PilotTodoEntry::getNote() const
+{
+	return codec()->toUnicode(getNoteP());
+}
+

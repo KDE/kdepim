@@ -2,9 +2,9 @@
 #define _KPILOT_SYNCSTACK_H
 /* syncStack.h                        KPilot
 **
-** Copyright (C) 1998-2001,2003 by Dan Pilone
+** Copyright (C) 1998-2001 by Dan Pilone
 **
-** This defines the "ActionQueue", which is the sequence of actions
+** This defines the "SyncStack", which is the pile of actions
 ** that will occur during a HotSync. There's also two fairly
 ** unimportant SyncActions defined.
 */
@@ -30,36 +30,20 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qptrqueue.h>
+#include <qstack.h>
 
 #include "plugin.h"
 
 /**
-* This used to be called SyncStack, and while a stack is cool
-* for some things, it actually rather confuses the issue because
-* you _use_ this class for specifying "do this, then that, then ..."
-* and in program code you need to reverse that order when adding
-* items to a stack. So now it's a Queue, FIFO, and program
-* code looks more normal.
+* The SyncStack is a meta-action, which handles running a bunch of SyncActions
+* in sequence. It is a SyncAction itself, so it can even be pushed onto another
+* SyncStack (though I doubt that that is useful).
 *
-* Also updated to Qt3 in all aspects.
-*/
-
-/**
-* The ActionQueue is a meta-action, which handles running a bunch of SyncActions
-* in sequence. It is a SyncAction itself, so it can even be queued on another
-* ActionQueue.
-*
-* An ActionQueue is constructed with a @p device. As usual, you should connect
+* A SyncStack is constructed with a @p device. As usual, you should connect
 * the device's deviceReady() signal with the exec() slot -- or something to that effect.
-* The ActionQueue will then run all the actions in the queue in sequence.
+* The SyncStack will then run all the actions on the stack in sequence.
 *
-*/
-
-/*
-* The constructor with lots of parameters is DEPRECATED.
-*
-* The @p config parameter is passed on to conduit actions that may be in the queue.
+* The @p config parameter is passed on to conduit actions that may be on the stack.
 *
 * @p conduits is a list of .desktop filenames (without the extension); for each conduit,
 * a ConduitProxy action is created, which loads the conduit and runs the SyncAction
@@ -68,18 +52,18 @@
 * For FileInstallers, pass in the list of filenames and the directory in @p installDir
 * and @p installFiles.
 *
-* When you create an ActionQueue, pass in all the necessary conduit- and filenames.
-* You cannot change them later. You must also call prepare() to add all the items
-* to the queue; ie.
+* When you create a SyncStack, pass in all the necessary conduit- and filenames.
+* You cannot change them later. You must also call prepare() to push all the items
+* on the stack; ie.
 *
-* ActionQueue s(p,c,QStringList(),"/tmp","foo.prc");
+* SyncStack s(p,c,QStringList(),"/tmp","foo.prc");
 *
-* Creates a queue with some information set, but without any actions in it.
+* Creates a stack with some information set, but without any actions on the stack.
 * Next, call prepare() or somesuch:
 *
 * s.prepareSync();
 *
-* This will add a buch of "standard" actions to the queue for a HotSync, ie. a
+* This will push a buch of "standard" actions on the stack for a HotSync, ie. a
 * welcome message action, user check, the conduits (if any; none were specified in the
 * constructor above), a file install action (which will try to install /tmp/foo.prc) and
 * some cleanup actions.
@@ -88,39 +72,31 @@
 * Alternatively, you can use addAction() to fill up the stack yourself.
 */
 
-/**
-* The constructor with one parameter is preferred. You can
-* call the public member functions to enqueue actions in
-* several standard ways.
-*/
-
-class ActionQueue : public SyncAction
+class SyncStack : public SyncAction
 {
 Q_OBJECT
 public:
-	ActionQueue(KPilotDeviceLink *device);
-	/** DEPRECATED **/
-	ActionQueue(KPilotDeviceLink *device,
+	SyncStack(KPilotDeviceLink *device,
 		KConfig *config,
 		const QStringList &conduits = QStringList(),
 		const QString &installDir = QString::null,
 		const QStringList &installFiles = QStringList());
-	virtual ~ActionQueue();
+	virtual ~SyncStack();
 
 private:
-	QPtrQueue < SyncAction > SyncActionQueue;
+	QStack < SyncAction > SyncActionStack;
 
 public:
-	bool isEmpty() const { return SyncActionQueue.isEmpty(); };
+	bool isEmpty() const { return SyncActionStack.isEmpty(); };
 	/**
 	* You can push your own actions onto the stack, but you should
 	* only do so if you don't call prepare().
 	*/
-	void addAction(SyncAction * a) { SyncActionQueue.enqueue(a); };
+	void addAction(SyncAction * a) { SyncActionStack.push(a); };
 
 protected:
-	void clear() { SyncActionQueue.clear(); };
-	SyncAction *nextAction() { return SyncActionQueue.dequeue(); };
+	void clear() { SyncActionStack.clear(); };
+	SyncAction *nextAction() { return SyncActionStack.pop(); };
 
 	bool fReady;
 	KConfig *fConfig;
@@ -177,35 +153,11 @@ public:
 	* and possibly one or more of the With* elements, which insert extra
 	* actions at the relevant moment in the execution of the stack.
 	*/
-	
-	/* DEPRECATED */
 	void prepare(int m);
 	void prepareBackup() { prepare(BackupMode); } ;
 	void prepareRestore() { prepare(RestoreMode); } ;
 	void prepareSync() { prepare(HotSyncMode); } ;
 
-	/**
-	* Call these queue*() functions to append
-	* standard functional blocks. They're pretty
-	* much mutually exclusive with the prepare*()
-	* functions above.
-	*
-	* You should at least call queueInit() and
-	* queueCleanup() to add the welcome and cleanup
-	* actions to the queue (unless you do that
-	* yourself.)
-	*
-	* For queueInit, relevant modes are WithUserCheck.
-	* For queueConduits, whatever is relevant for the conduits
-	*   can be used, usually things in the FlagMask and ActionMask.
-	*/
-	
-	void queueInit(int mode=WithUserCheck); 
-	void queueConduits(KConfig *,const QStringList &conduits,int mode=0);
-	void queueInstaller(const QString &dir,const QStringList &files);
-	void queueCleanup();
-	
-	
 protected:
 	virtual bool exec();
 

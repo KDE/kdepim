@@ -69,29 +69,9 @@ protected:
 	* emit syncDone(); if processing does not start
 	* normally (ie. exec() returns false) then the
 	* environment will deal with syncDone().
-	*
-	* It is probably not a good idea to emit syncDone(this);
-	* within exec(). You certainly need to return true in
-	* that case. It's probably better wrt. the growth of the 
-	* stack and possible deletion of the SyncAction object
-	* before exec() returns into execConduit() to use
-	* delayDone(); return true; instead.
 	*/
 	virtual bool exec() = 0;
 
-	/*
-	* Use
-	*	delayDone();
-	* 	return true;
-	* within exec() if you finish processing successfully
-	* and immediately. This delays the syncDone() signal
-	* until the main event loop is reached again.
-	*/
-private slots:
-	void slotDelayDone();
-protected:
-	void delayDone();
-	
 public slots:
 	/**
 	* This just calls exec() and deals with the 

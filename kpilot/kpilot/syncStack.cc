@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** This defines the "ActionQueue", which is the pile of actions
+** This defines the "SyncStack", which is the pile of actions
 ** that will occur during a HotSync.
 */
 
@@ -58,7 +58,8 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 {
 	FUNCTIONSETUP;
 
-	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n").arg(KPILOT_VERSION));
+	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
+		.arg(QString::fromLatin1(KPILOT_VERSION)));
 	emit syncDone(this);
 	return true;
 }
@@ -116,21 +117,21 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode && ActionQueue::ActionMask)
+	switch(fMode && SyncStack::ActionMask)
 	{
-	case ActionQueue::Backup :
-		l.append("--backup");
+	case SyncStack::Backup :
+		l.append(CSL1("--backup"));
 		break;
 	default:
 		;
 	}
-	if (fMode & ActionQueue::FlagTest)
+	if (fMode & SyncStack::FlagTest)
 	{
-		l.append("--test");
+		l.append(CSL1("--test"));
 	}
-	if (fMode & ActionQueue::FlagLocal)
+	if (fMode & SyncStack::FlagLocal)
 	{
-		l.append("--local");
+		l.append(CSL1("--local"));
 	}
 
 
@@ -196,12 +197,12 @@ void ConduitProxy::execDone(SyncAction *p)
 	emit syncDone(this);
 }
 
-ActionQueue::ActionQueue(KPilotDeviceLink *d,
+SyncStack::SyncStack(KPilotDeviceLink *d,
 	KConfig *config,
 	const QStringList &conduits,
 	const QString &dir,
 	const QStringList &files) :
-	SyncAction(d,"ActionQueue"),
+	SyncAction(d,"SyncStack"),
 	fReady(false),
 	fConfig(config),
 	fInstallerDir(dir),
@@ -217,28 +218,17 @@ ActionQueue::ActionQueue(KPilotDeviceLink *d,
 	}
 	else
 	{
-		DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(" + ") << endl;
+		DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(CSL1(" + ")) << endl;
 	}
 #endif
-
-	kdWarning() << "SyncStack usage is deprecated." << endl;
 }
 
-ActionQueue::ActionQueue(KPilotDeviceLink *d) :
-	SyncAction(d,"ActionQueue"),
-	fReady(false),
-	fConfig(0L)
-	// The string lists have default constructors
+SyncStack::~SyncStack()
 {
 	FUNCTIONSETUP;
 }
 
-ActionQueue::~ActionQueue()
-{
-	FUNCTIONSETUP;
-}
-
-void ActionQueue::prepare(int m)
+void SyncStack::prepare(int m)
 {
 	FUNCTIONSETUP;
 
@@ -247,7 +237,7 @@ void ActionQueue::prepare(int m)
 		<< ": Using sync mode " << m
 		<< endl;
 #endif
-	
+
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -263,10 +253,13 @@ void ActionQueue::prepare(int m)
 		return;
 	}
 
-	queueInit(m);
-	if (m & WithConduits)
-		queueConduits(fConfig,fConduits,m);
-	
+	addAction(new CleanupAction(fHandle));
+
+	if (m & WithInstaller)
+	{
+		addAction(new FileInstallAction(fHandle,fInstallerDir,fInstallerFiles));
+	}
+
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -285,59 +278,34 @@ void ActionQueue::prepare(int m)
 		fReady=false;
 		return;
 	}
-	
-	if (m & WithInstaller)
-		queueInstaller(fInstallerDir,fInstallerFiles);
-		
-	queueCleanup();
-}
 
-void ActionQueue::queueInit(int m)
-{
-	FUNCTIONSETUP;
-	
-	addAction(new WelcomeAction(fHandle));
+	// Add conduits here ...
+	//
+	//
+	for (QStringList::ConstIterator it = fConduits.begin();
+		it != fConduits.end();
+		++it)
+	{
+		ConduitProxy *cp =new ConduitProxy(fHandle,*it,m);
+		cp->setConfig(fConfig);
+		addAction(cp);
+	}
 
 	if (m & WithUserCheck)
 	{
 		addAction(new CheckUser(fHandle));
 	}
+
+	addAction(new WelcomeAction(fHandle));
 }
 
-void ActionQueue::queueConduits(KConfig *config,const QStringList &l,int m)
-{
-	FUNCTIONSETUP;
-	
-	// Add conduits here ...
-	//
-	//
-	for (QStringList::ConstIterator it = l.begin();
-		it != l.end();
-		++it)
-	{
-		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
-		cp->setConfig(config);
-		addAction(cp);
-	}
-}
-
-void ActionQueue::queueInstaller(const QString &dir, const QStringList &files)
-{
-	addAction(new FileInstallAction(fHandle,dir,files));
-}
-
-void ActionQueue::queueCleanup()
-{
-	addAction(new CleanupAction(fHandle));
-}
-
-bool ActionQueue::exec()
+bool SyncStack::exec()
 {
 	actionCompleted(0L);
 	return true;
 }
 
-void ActionQueue::actionCompleted(SyncAction *b)
+void SyncStack::actionCompleted(SyncAction *b)
 {
 	FUNCTIONSETUP;
 
