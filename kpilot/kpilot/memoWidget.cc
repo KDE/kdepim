@@ -363,9 +363,9 @@ MemoWidget::slotDeleteMemo()
 		kdWarning() << __FUNCTION__ <<
 			": Refusing to delete new memo.\n";
 
-		KMessageBox::error(this, i18n("Hot-Sync Required"), 
-			i18n("Cannot delete new memo until \n" 
-				"Hot-Synced with pilot."));
+		KMessageBox::error(this, i18n("Cannot delete new memo until \n" 
+				   "Hot-Synced with pilot."),
+                                    i18n("Hot-Sync Required"));
 		return;
 	}
 
@@ -576,6 +576,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.33  2001/06/13 21:26:54  adridg
+// Add cast to avoid comile warning
+//
 // Revision 1.32  2001/06/11 07:35:19  adridg
 // Cleanup before the freeze
 //

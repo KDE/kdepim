@@ -44,7 +44,7 @@
 #include <qglobal.h>
 #endif
 
-#if (QT_VERSION > 199)
+#if (QT_VERSION > 223)
 #define KDE2
 #else
 #error "This is KPilot for KDE2 and won't compile with Qt < 2.2.3"
@@ -201,6 +201,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.27  2001/05/24 10:31:38  adridg
+// Philipp Hullmann's extensive memory-leak hunting patches
+//
 // Revision 1.26  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //
