@@ -296,7 +296,7 @@ Watts <email>lauri@kde.org</email>.</para>
 
 <para>You will need to have the kdelibs package installed in order to
 successfully compile the kdepim package that contains &kandy;.  The
-kdepim package may be found at the same location as the kdepim
+kdelibs package may be found at the same location as the kdepim
 package.</para>
 
 <para>The &kaddressbook; is part of the kdebase package.  This can also
