@@ -1043,7 +1043,7 @@ int main(int argc, char **argv)
 		KAboutData::License_GPL, 
 		"(c) 1998-2000,2001, Dan Pilone (c) 2000-2004, Adriaan de Groot",
 		0L,
-		"http://www.fruitsalad.org/people/adridg/kpilot"
+		"http://www.slac.com/~pilone/kpilot_home/"
 		);
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
