@@ -236,7 +236,10 @@ bool KABC::ResourceIMAP::addIncidence( const QString& type,
     mAddrMap.insert( addr.uid(), addr );
     mUidmap[ addr.uid() ] = resource;
 
-    addressBook()->emitAddressBookChanged();
+    if ( !addressBook() ){
+      kdDebug(5650) << "addIncidence() : addressBook() returning NULL pointer.\n";
+    }else
+      addressBook()->emitAddressBookChanged();
 
     mSilent = silent;
 
@@ -256,7 +259,10 @@ void KABC::ResourceIMAP::deleteIncidence( const QString& type,
 
     mAddrMap.remove( uid );
     mUidmap.remove( uid );
-    addressBook()->emitAddressBookChanged();
+    if ( !addressBook() ){
+      kdDebug(5650) << "deleteIncidence() : addressBook() returning NULL pointer.\n";
+    }else
+      addressBook()->emitAddressBookChanged();
 
     mSilent = silent;
   }
@@ -270,7 +276,10 @@ void KABC::ResourceIMAP::slotRefresh( const QString& type,
     mSilent = true;
 
     load();
-    addressBook()->emitAddressBookChanged();
+    if ( !addressBook() ){
+      kdDebug(5650) << "slotRefresh() : addressBook() returning NULL pointer.\n";
+    }else
+      addressBook()->emitAddressBookChanged();
 
     mSilent = silent;
   }
@@ -291,7 +300,10 @@ void KABC::ResourceIMAP::subresourceAdded( const QString& type,
   config.setGroup( "Contact" );
   loadSubResourceConfig( config, resource );
   loadResource( resource );
-  addressBook()->emitAddressBookChanged();
+  if ( !addressBook() ){
+    kdDebug(5650) << "subresourceAdded() : addressBook() returning NULL pointer.\n";
+  }else
+    addressBook()->emitAddressBookChanged();
   emit signalSubresourceAdded( this, type, resource );
 }
 
@@ -329,7 +341,10 @@ void KABC::ResourceIMAP::subresourceDeleted( const QString& type,
       mUidmap.remove( *it );
     }
 
-    addressBook()->emitAddressBookChanged();
+    if ( !addressBook() ){
+      kdDebug(5650) << "subresourceDeleted() : addressBook() returning NULL pointer.\n";
+    }else
+      addressBook()->emitAddressBookChanged();
   }
 
   emit signalSubresourceRemoved( this, type, resource );
@@ -387,7 +402,10 @@ void KABC::ResourceIMAP::asyncLoadResult( const QStringList& lst, const QString&
                                     const QString& folder )
 {
   populate( lst, folder );
-  addressBook()->emitAddressBookChanged();
+  if ( !addressBook() ){
+    kdDebug(5650) << "asyncLoadResult() : addressBook() returning NULL pointer.\n";
+  }else
+    addressBook()->emitAddressBookChanged();
 }
 
 #include "resourceimap.moc"
