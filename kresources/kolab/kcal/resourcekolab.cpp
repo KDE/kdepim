@@ -494,26 +494,114 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
                                            const QString& /*subResource*/,
                                            const QString& uid )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  if ( type != kmailEventContentsType && type != kmailTodoContentsType
+       && type != kmailJournalContentsType )
+    // Not ours
+    return;
+
+  KCal::Incidence* incidence = mCalendar.incidence( uid );
+  if( incidence )
+    mCalendar.deleteIncidence( incidence );
+  mUidMap.remove( uid );
 }
 
 void ResourceKolab::slotRefresh( const QString& type,
                                  const QString& /*subResource*/ )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  // TODO: Only load the specified resource
+  if ( type == "Calendar" )
+    loadAllEvents();
+  else if ( type == "Task" )
+    loadAllTodos();
+  else if ( type == "Journal" )
+    loadAllJournals();
 }
 
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& subResource,
                                              bool writable )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  ResourceMap* map = 0;
+  const char* mimetype = 0;
+  if ( type == kmailEventContentsType ) {
+    map = &mEventSubResources;
+    mimetype = eventAttachmentMimeType;
+  } else if ( type == kmailTodoContentsType ) {
+    map = &mTodoSubResources;
+    mimetype = todoAttachmentMimeType;
+  } else if ( type == kmailJournalContentsType ) {
+    map = &mJournalSubResources;
+    mimetype = journalAttachmentMimeType;
+  } else
+    // Not ours
+    return;
+
+  if ( map->contains( subResource ) )
+    // Already registered
+    return;
+
+  KConfig config( configFile() );
+  config.setGroup( subResource );
+
+  bool active = config.readBoolEntry( subResource, true );
+  (*map)[ subResource ] = Kolab::SubResource( active, writable, subResource );
+  loadSubResource( subResource, mimetype );
+  emit signalSubresourceAdded( this, type, subResource );
 }
 
 void ResourceKolab::fromKMailDelSubresource( const QString& type,
                                              const QString& subResource )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  if ( type == kmailEventContentsType ) {
+    if ( mEventSubResources.contains( subResource ) )
+      mEventSubResources.erase( subResource );
+    else
+      // Not registered
+      return;
+  } else if ( type == kmailTodoContentsType ) {
+    if ( mTodoSubResources.contains( subResource ) )
+      mTodoSubResources.erase( subResource );
+    else
+      // Not registered
+      return;
+  } else if ( type == kmailJournalContentsType ) {
+    if ( mJournalSubResources.contains( subResource ) )
+      mJournalSubResources.erase( subResource );
+    else
+      // Not registered
+      return;
+  } else
+    // Not ours
+    return;
+
+  // Delete from the config file
+  KConfig config( configFile() );
+  config.deleteGroup( subResource );
+  config.sync();
+
+  // Make a list of all uids to remove
+  Kolab::UidMap::ConstIterator mapIt;
+  QStringList uids;
+  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+    if ( mapIt.data().resource() == subResource )
+      // We have a match
+      uids << mapIt.key();
+
+  // Finally delete all the incidences
+  if ( !uids.isEmpty() ) {
+    const bool silent = mSilent;
+    mSilent = true;
+    QStringList::ConstIterator it;
+    for ( it = uids.begin(); it != uids.end(); ++it ) {
+      KCal::Incidence* incidence = mCalendar.incidence( *it );
+      if( incidence )
+        mCalendar.deleteIncidence( incidence );
+      mUidMap.remove( *it );
+    }
+    mSilent = silent;
+  }
+
+  emit signalSubresourceRemoved( this, type, subResource );
 }
 
 QStringList ResourceKolab::subresources() const
