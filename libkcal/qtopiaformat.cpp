@@ -48,7 +48,8 @@ class QtopiaParser : public QXmlDefaultHandler
     {
       if ( qName == "event" ) {
         Event *event = new Event;
-        QString uid = attributes.value( "uid" );
+        QString uid = "Qtopia" + attributes.value( "uid" );
+        event->setUid( uid );
 
         event->setSummary( attributes.value( "description" ) );
         event->setLocation( attributes.value( "location" ) );
@@ -115,6 +116,9 @@ class QtopiaParser : public QXmlDefaultHandler
             r->addYearlyNum( startDate.month() );
           }
         }
+        
+        Event *oldEvent = mCalendar->event( uid );
+        if ( oldEvent ) mCalendar->deleteEvent( oldEvent );
 
         mCalendar->addEvent( event );
       }
