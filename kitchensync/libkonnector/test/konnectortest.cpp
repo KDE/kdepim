@@ -44,9 +44,9 @@ int main(int argc, char *argv[] )
     Kapabilities caps = konnector->capabilities( outp );
     caps.setUser("ich" );
     caps.setPassword("doesntmatter");
-    QHostAddress adr;
-    adr.setAddress("192.168.0.10" );
-    caps.setDestIP(adr );
+//    QHostAddress adr;
+//    adr.setAddress("192.168.0.10" );
+    caps.setDestIP( "192.168.0.10" );
     caps.setMetaSyncingEnabled( true );
     konnector->setCapabilities( outp, caps );
     konnector->startSync( outp );

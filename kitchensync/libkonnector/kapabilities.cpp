@@ -95,11 +95,11 @@ void Kapabilities::setSupportsListDir(bool listDir)
 {
   m_listdir = listDir;
 }
-QStringList Kapabilities::ports()const
+QArray<int> Kapabilities::ports()const
 {
   return m_ports;
 }
-void Kapabilities::setPorts(const QStringList & ports)
+void Kapabilities::setPorts(const QArray<int> & ports)
 {
   m_ports = ports;
 }
@@ -135,19 +135,19 @@ void Kapabilities::setNeedsDestIP(bool needs)
 {
   m_needsDestIp = needs;
 }
-void Kapabilities::setSrcIP(const QHostAddress &addr)
+void Kapabilities::setSrcIP(const QString &addr)
 {
   m_src = addr;
 }
-void Kapabilities::setDestIP(const QHostAddress &addr)
+void Kapabilities::setDestIP(const QString &addr)
 {
   m_dest = addr;
 }
-QHostAddress Kapabilities::srcIP() const
+QString Kapabilities::srcIP() const
 {
   return m_src;
 }
-QHostAddress Kapabilities::destIP() const
+QString Kapabilities::destIP() const
 {
   return m_dest;
 }
@@ -159,11 +159,11 @@ void Kapabilities::setAutoHandle(bool handle)
 {
   m_canHandle = handle;
 }
-QValueList< QPair<QHostAddress, QHostAddress > >  Kapabilities::ipProposals() const
+QValueList<QString >  Kapabilities::ipProposals() const
 {
   return m_propsIPs;
 }
-void Kapabilities::setIpProposals( QValueList<QPair<QHostAddress,QHostAddress> > ips )
+void Kapabilities::setIpProposals( const QValueList<QString > &ips )
 {
   m_propsIPs = ips;
 }

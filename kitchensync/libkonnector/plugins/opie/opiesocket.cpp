@@ -37,8 +37,8 @@ public:
     bool startSync:1;
     bool isSyncing:1;
     bool isConnecting:1;
-    QHostAddress src;
-    QHostAddress dest;
+    QString src;
+    QString dest;
     QSocket *socket;
     QTimer *timer;
     QString path;
@@ -82,12 +82,12 @@ void OpieSocket::setPassword(const QString &pass )
 {
     d->pass = pass;
 }
-void OpieSocket::setSrcIP(const QHostAddress &src )
+void OpieSocket::setSrcIP(const QString &src )
 {
     d->src = src;
 }
 
-void OpieSocket::setDestIP(const QHostAddress &dest )
+void OpieSocket::setDestIP(const QString &dest )
 {
     d->dest = dest;
 }
@@ -115,7 +115,7 @@ void OpieSocket::startUp() // start the connection
     d->startSync = false;
     d->isConnecting = true;
     d->m_categories.clear();
-    d->socket->connectToHost(d->dest.toString(), 4243 );
+    d->socket->connectToHost(d->dest, 4243 );
 }
 bool OpieSocket::startSync()
 {
@@ -307,7 +307,7 @@ void OpieSocket::manageCall(const QString &line )
 	    url.setProtocol("ftp" );
 	    url.setUser( d->user );
 	    url.setPass( d->pass );
-	    url.setHost( d->dest.toString() );
+	    url.setHost( d->dest );
 	    url.setPort( 4242 );
 	    url.setPath(d->path + "/Settings/Categories.xml " );
 	    //tmpFileName = QString::fromLatin1("/home/ich/categories.xml")
@@ -377,7 +377,7 @@ void OpieSocket::manageCall(const QString &line )
                 url.setProtocol("ftp" );
                 url.setUser( d->user );
                 url.setPass( d->pass );
-                url.setHost( d->dest.toString() );
+                url.setHost( d->dest );
                 url.setPort( 4242 );
                 url.setPath(d->path + "/Settings/meinPartner");
                 if ( !KIO::NetAccess::download( url,  file ) ) {
@@ -415,7 +415,7 @@ void OpieSocket::newPartner()
         url.setProtocol("ftp" );
         url.setUser( d->user );
         url.setPass( d->pass );
-        url.setHost( d->dest.toString() );
+        url.setHost( d->dest );
         url.setPort( 4242 );
         url.setPath(d->path + "/Settings/meinPartner");
         KIO::NetAccess::upload( fileN,  url );

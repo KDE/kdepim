@@ -20,8 +20,8 @@ Q_OBJECT
     ~OpieSocket();
   void setUser(const QString &user );
   void setPassword(const QString &pass );
-  void setSrcIP( const QHostAddress & );
-  void setDestIP(const QHostAddress & );
+  void setSrcIP( const QString & );
+  void setDestIP(const QString & );
   void setMeta( bool );
   void startUp();
   bool startSync();

@@ -70,15 +70,9 @@ Kapabilities OpiePlugin::capabilities( )
   user.append(qMakePair(QString::fromLatin1("root"),  QString::fromLatin1("test123") ) );
   user.append(qMakePair(QString::fromLatin1("ich"), QString::fromLatin1("test321") ) );
   caps.setUserProposals( user );
-  QValueList< QPair<QHostAddress, QHostAddress> > ips;
-  QHostAddress src;
-  QHostAddress dest;
-  src.setAddress("192.168.1.100" );
-  dest.setAddress("192.168.1.201");
-  ips.append( qMakePair(src, dest ) );
-  src.setAddress("127.0.0.1" );
-  dest.setAddress("127.0.0.1");
-  ips.append( qMakePair(src, dest ) );
+  QValueList< QString > ips;
+  QString  src = "192.168.1.100";
+  ips.append( src );
   return caps;
 }
 

@@ -20,6 +20,7 @@
 #ifndef kapabilities_h
 #define kapabilities_h
 
+#include <qarray.h>
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
@@ -93,13 +94,13 @@ public:
      * Which ports are possible.
      * @return Array with possible ports
      */
-    QStringList ports()const;
+    QArray<int> ports()const;
 
     /**
      * Set the possible ports
      * @param the possible ports
      */
-    void setPorts(const QStringList & );
+    void setPorts(const  QArray<int>& );
 
     /**
      * Which port is actually used.
@@ -151,24 +152,24 @@ public:
      * with that method
      * @param source ip
      */
-    void setSrcIP( const QHostAddress & );
+    void setSrcIP( const QString & ); // FIXME use QString FIXED
 
     /**
      * Returns the src IP
      * @return source ip
      */
-    QHostAddress srcIP()const;
+    QString srcIP()const;
 
     /**
      * Set the destination IP
      * @param set destination ip
      */
-    void setDestIP(const QHostAddress &);
+    void setDestIP(const QString &);
 
     /**
      * @return destination ip
      */
-    QHostAddress destIP()const;
+    QString destIP()const;
 
     /**
      * The device can act on its own to establish an connection
@@ -189,8 +190,8 @@ public:
      * ipPproposals gives you a pair of ip Addresses which the Konnector
      * think could work
      */
-    QValueList< QPair<QHostAddress, QHostAddress > > ipProposals() const;
-    void setIpProposals( QValueList< QPair<QHostAddress, QHostAddress> >);
+    QValueList<QString > ipProposals() const;
+    void setIpProposals( const QValueList<QString>& );
 
 
     /**
@@ -287,12 +288,12 @@ private:
     bool m_needsAuthent:1;
     bool m_supMeta:1; // supports Meta
     bool m_meta:1;
-    QHostAddress m_src;
-    QHostAddress m_dest;
-    QValueList< QPair<QHostAddress,QHostAddress> > m_propsIPs;
+    QString m_src;
+    QString m_dest;
+    QValueList<QString > m_propsIPs;
     QValueList< QPair<QString, QString> > m_propAuth;
     bool m_canHandle;
-    QStringList m_ports;
+    QArray<int> m_ports;
     int m_current;
     QString m_user;
     QString m_pass;
