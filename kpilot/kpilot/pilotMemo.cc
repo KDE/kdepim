@@ -26,18 +26,32 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 #include <iostream.h>
+
+#ifndef _KLOCALE_H_
 #include <klocale.h>
+#endif
+
+#ifndef _PILOT_SOURCE_H_
 #include <pi-source.h>
+#endif
+
+#ifndef _PILOT_MEMO_H_
 #include <pi-memo.h>
-#include <pilotMemo.h>
+#endif
+
+#ifndef _KPILOT_PILOTMEMO_H
+#include "pilotMemo.h"
+#endif
+
 
 static const char *pilotMemo_id =
-	"$Id:$";
+	"$Id$";
 
 PilotMemo::PilotMemo(PilotRecord* rec)
   : PilotAppCategory(rec)
     {
     unpack(rec->getData(), 1);
+    (void) pilotMemo_id;
     }
 
 void PilotMemo::unpack(const void *text, int firstTime) 
@@ -113,6 +127,9 @@ PilotMemo::sensibleTitle() const
 
 
 // $Log$
+// Revision 1.8  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.7  2001/02/07 14:21:54  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

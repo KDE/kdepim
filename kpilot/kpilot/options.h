@@ -216,10 +216,15 @@ extern const int fname;
 //
 //
 #define SPACING		(10)
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.22  2001/03/05 23:57:53  adridg
+// Added KPILOT_VERSION
+//
 // Revision 1.21  2001/03/01 20:43:24  adridg
 // Some new (and harmless) debug functions
 //

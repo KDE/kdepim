@@ -29,21 +29,65 @@
 */
 
 
+#include "options.h"
 
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
+
+#ifndef QLABEL_H
 #include <qlabel.h>
+#endif
+
+#ifndef QPUSHBT_H
 #include <qpushbt.h>
+#endif
+
+#ifndef QDIALOG_H
 #include <qdialog.h>
+#endif
+
+#ifndef QLINED_H
 #include <qlined.h>
+#endif
+
+#ifndef QCHKBOX_H
 #include <qchkbox.h>
+#endif
+
+#ifndef QLAYOUT_H
 #include <qlayout.h>
+#endif
+
+#ifndef _KAPP_H
 #include <kapp.h>
+#endif
+
+#ifndef _KLOCALE_H
 #include <klocale.h>
+#endif
+
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+
+#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
+#endif
+
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+
+#ifndef _KPILOT_VCAL_CONDUIT_H
 #include "vcal-conduit.h"
+#endif
+
+
 #include "vcal-setup.moc"
 
 VCalSetupPage::VCalSetupPage(setupDialog *parent,KConfig& config) :
@@ -126,6 +170,9 @@ VCalSetup::VCalSetup(QWidget *parent) :
 
 
 // $Log$
+// Revision 1.12  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.11  2001/02/07 15:46:32  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

@@ -27,16 +27,25 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KNOTES_CONDUIT_H
-#define _KNOTES_CONDUIT_H
+#ifndef _KPILOT_KNOTES_CONDUIT_H
+#define _KPILOT_KNOTES_CONDUIT_H
 
+#ifndef _KPILOT_BASECONDUIT_H
 #include "baseConduit.h"
+#endif
+
 
 class PilotRecord;
 class PilotMemo;
 
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+
+#ifndef QMAP_H
 #include <qmap.h>
+#endif
+
 
 
 // This class stores information about notes.
@@ -174,6 +183,9 @@ private:
 #endif
 
 // $Log$
+// Revision 1.6  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//
 // Revision 1.5  2000/12/29 14:17:51  adridg
 // Added checksumming to KNotes conduit
 //

@@ -29,12 +29,20 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _VCALCONDUIT_H
-#define _VCALCONDUIT_H
+#ifndef _KPILOT_VCALCONDUIT_H
+#define _KPILOT_VCALCONDUIT_H
 
-#include "baseConduit.h"
-#include "vcc.h"
+#include <time.h>
+
+#ifndef _PILOT_DATEBOOK_H_
 #include <pi-datebook.h>
+#endif
+
+#include "vcc.h"
+
+#ifndef _KPILOT_BASECONDUIT_H
+#include "baseConduit.h"
+#endif
 
 class PilotRecord;
 class PilotDateEntry;
@@ -125,4 +133,7 @@ private:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.12  2001/02/07 15:46:32  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

@@ -31,17 +31,44 @@
 #include <qlistbox.h>
 #include "listItems.h"
 
+/* static */ int PilotListItem::crt = 0;
+/* static */ int PilotListItem::del = 0;
+/* static */ int PilotListItem::count = 0;
+
+/* static */ void PilotListItem::counts()
+{
+	kdDebug() << __FUNCTION__
+		<< ": created="
+		<< crt
+		<< " deletions="
+		<< del
+		<< endl;
+}
+
 PilotListItem::PilotListItem(const QString &text, 
 	int pilotid, 
 	void *r) : QListBoxText(text), 
 	fid(pilotid), 
 	fr(r)
 {
-	FUNCTIONSETUP;
+	crt++;
+	count++;
+	if (!(count & 0xff)) counts();
+}
+
+PilotListItem::~PilotListItem()
+{
+	del++;
+	count++;
+	if (!(count & 0xff)) counts();
 }
 
 
+
 // $Log$
+// Revision 1.2  2001/03/04 20:51:21  adridg
+// Removed spurious .moc file
+//
 // Revision 1.1  2001/03/04 11:22:12  adridg
 // In response to bug 21392, replaced fixed-length lookup table by a subclass
 // of QListBoxItem inserted into list box. This subclass carries data to

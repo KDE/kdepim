@@ -27,8 +27,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOTCONFIG_H
-#define _KPILOTCONFIG_H
+#ifndef _KPILOT_KPILOTCONFIG_H
+#define _KPILOT_KPILOTCONFIG_H
 
 // Normally I wouldn't include this since you can use "class KConfig"
 // instead, but there's really no point in including this file at all
@@ -83,7 +83,12 @@ public:
 	static const QFont& fixed() ;
 } ;
 
+#else
+#warning "File doubly included"
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//

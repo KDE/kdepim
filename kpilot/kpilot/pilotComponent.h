@@ -25,14 +25,19 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __PILOT_COMPONENT_H
-#define __PILOT_COMPONENT_H
+#ifndef _KPILOT_PILOTCOMPONENT_H
+#define _KPILOT_PILOTCOMPONENT_H
 
 /**
   * Base class for any module to KPilot
   */
+#ifndef QWIDGET_H
 #include <qwidget.h>
+#endif
+
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
 
 struct CategoryAppInfo;
 class QComboBox;
@@ -106,11 +111,16 @@ private:
 	QString fDBPath;
 } ;
 
+#else
+#warning "File doubly included"
 #endif
 
 
 
 // $Log$
+// Revision 1.6  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.5  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

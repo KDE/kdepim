@@ -25,13 +25,25 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __KPILOT_MEMO_H
-#define __KPILOT_MEMO_H
+#ifndef _KPILOT_PILOTMEMO_H
+#define _KPILOT_PILOTMEMO_H
 
+#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h>
+#endif
+
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+
+#ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
+#endif
+
 
 class PilotMemo : public PilotAppCategory
 {
@@ -78,7 +90,12 @@ private:
 
 
 
+#else
+#warning "File doubly included"
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.7  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

@@ -26,10 +26,13 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _EXPENSE_CONDUIT_H
-#define _EXPENSE_CONDUIT_H
+#ifndef _KPILOT_EXPENSE_H
+#define _KPILOT_EXPENSE_H
 
+#ifndef _KPILOT_BASECONDUIT_H
 #include "baseConduit.h"
+#endif
+
 
 class PilotRecord;
 
@@ -51,4 +54,7 @@ protected:
 
 #endif
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/03/04 21:47:04  adridg
+// New expense conduit, non-functional but it compiles
+//

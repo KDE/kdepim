@@ -28,21 +28,25 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _GSETUPDIALOG_H
-#define _GSETUPDIALOG_H
+#ifndef _KPILOT_GSETUPDIALOG_H
+#define _KPILOT_GSETUPDIALOG_H
 
-#ifndef __OPTIONS_H
-#include "options.h"
+#ifndef QSTRING_H
+#include <qstring.h>
 #endif
 
-
-// Includes reduced to a minimum
-//
-//
-#include <qstring.h>
+#ifndef QTABDLG_H
 #include <qtabdlg.h>
+#endif
+
+#ifndef QLIST_H
 #include <qlist.h>
+#endif
+
+#ifndef _KMESSAGEBOX_H_
 #include <kmessagebox.h>
+#endif
+
 
 class setupDialog;
 class KConfig;
@@ -321,9 +325,14 @@ private:
 
 	int fConfigVersion;
 } ;
+#else
+#warning "File doubly included"
 #endif /* _GSETUPDIALOG_H */
 
 // $Log$
+// Revision 1.6  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//
 // Revision 1.5  2001/01/30 14:00:34  habenich
 // added surrounding #ifndef's
 //

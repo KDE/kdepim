@@ -39,14 +39,36 @@
 //
 //
 #include <stream.h>
-#include <kmessagebox.h>
-#include <kconfig.h>
-#include <kdebug.h>
 
+#ifndef _KMESSAGEBOX_H
+#include <kmessagebox.h>
+#endif
+
+#ifndef _KCONFIG_H
+#include <kconfig.h>
+#endif
+
+#ifndef _KDEBUG_H
+#include <kdebug.h>
+#endif
+
+
+#ifndef _KPILOT_CONDUITAPP_H
 #include "conduitApp.h"
+#endif
+
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+
+#ifndef _KPILOT_NULL_CONDUIT_H
 #include "null-conduit.h"
+#endif
+
+#ifndef _KPILOT_SETUPDIALOG_H
 #include "setupDialog.h"
+#endif
+
 
 
 // Something to allow us to check what revision
@@ -152,6 +174,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.16  2001/03/05 23:57:53  adridg
+// Added KPILOT_VERSION
+//
 // Revision 1.15  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

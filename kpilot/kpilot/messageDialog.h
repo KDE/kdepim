@@ -47,6 +47,11 @@ class MessageDialog : public QDialog
     protected:
     QLabel* fMessage;
     };
+#else
+#warning "File doubly included"
 #endif
 
-// $Log:$
+// $Log$
+// Revision 1.5  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

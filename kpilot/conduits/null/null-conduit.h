@@ -28,10 +28,12 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _NULL_CONDUIT_H
-#define _NULL_CONDUIT_H
+#ifndef _KPILOT_NULL_CONDUIT_H
+#define _KPILOT_NULL_CONDUIT_H
 
+#ifndef _KPILOT_BASECONDUIT_H
 #include "baseConduit.h"
+#endif
 
 class PilotRecord;
 
@@ -49,6 +51,9 @@ public:
 #endif
 
 // $Log$
+// Revision 1.6  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//
 // Revision 1.5  2000/11/02 23:10:32  adridg
 // Added attach-to-database feature
 //

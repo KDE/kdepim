@@ -25,13 +25,25 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __BASE_CONDUIT_H
-#define __BASE_CONDUIT_H
+#ifndef _KPILOT_BASECONDUIT_H
+#define _KPILOT_BASECONDUIT_H
 
+#ifndef QOBJECT_H
 #include <qobject.h>
+#endif
+
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+
+#ifndef QPIXMAP_H
 #include <qpixmap.h>
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
+#endif
+
 
 class QWidget;
 class KSocket;
@@ -199,10 +211,15 @@ private:
 };
 
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.17  2001/03/04 21:59:30  adridg
+// Possible missed #include leading to incomplete types
+//
 // Revision 1.16  2001/03/02 16:59:35  adridg
 // Added new protocol message READ_APP_INFO for conduit->daemon communication
 //

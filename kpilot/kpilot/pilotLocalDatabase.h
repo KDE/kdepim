@@ -25,16 +25,20 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __PILOT_LOCAL_DATABASE_H
-#define __PILOT_LOCAL_DATABASE_H
+#ifndef _KPILOT_PILOTLOCALDATABASE_H
+#define _KPILOT_PILOTLOCALDATABASE_H
 
 // Database class for a local (file based) pilot datbase.
 
 #include <time.h>	/* for broken pilot-link libraries */
+
+#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h>	/* for recordid_t */
-// #include <pi-file.h>
-#include <pilotDatabase.h>
-// #include <pilotRecord.h>
+#endif
+
+#ifndef _KPILOT_PILOTDATABASE_H
+#include "pilotDatabase.h"
+#endif
 
 class PilotLocalDatabase : public PilotDatabase
 {
@@ -91,10 +95,15 @@ public:
     int         fPendingRec; // Temp index for the record about to get an ID.
     };
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.7  2001/02/27 15:39:21  adridg
+// Added dbPathName to make .pdb name construction consistent
+//
 // Revision 1.6  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

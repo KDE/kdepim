@@ -25,18 +25,32 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __KPILOT_TODO_ENTRY_H
-#define __KPILOT_TODO_ENTRY_H
+#ifndef _KPILOT_PILOTTODOENTRY_H
+#define _KPILOT_PILOTTODOENTRY_H
 
-#include <qbitarray.h>
 #include <time.h>
 #include <string.h>
 
-#include <pi-macros.h>
-#include <pi-todo.h>
+#ifndef QBITARRAY_H
+#include <qbitarray.h>
+#endif
 
+#ifndef _PILOT_MACROS_H_
+#include <pi-macros.h>
+#endif
+
+#ifndef _PILOT_TODO_H_
+#include <pi-todo.h>
+#endif
+
+#ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
+#endif
+
 
 
 class PilotTodoEntry : public PilotAppCategory
@@ -77,7 +91,12 @@ private:
 
 
 
+#else
+#warning "File doubly included"
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.5  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

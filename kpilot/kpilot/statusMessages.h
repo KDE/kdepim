@@ -29,8 +29,8 @@
 
 
 
-#ifndef __STATUS_MESSAGES_H
-#define __STATUS_MESSAGES_H
+#ifndef _KPILOT_STATUSMESSAGES_H
+#define _KPILOT_STATUSMESSAGES_H
 
 #include <unistd.h>
 
@@ -68,10 +68,15 @@ public:
 };
 
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.7  2001/03/02 16:59:35  adridg
+// Added new protocol message READ_APP_INFO for conduit->daemon communication
+//
 // Revision 1.6  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

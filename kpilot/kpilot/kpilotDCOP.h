@@ -26,8 +26,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOTDCOP_H
-#define _KPILOTDCOP_H
+#ifndef _KPILOT_KPILOTDCOP_H
+#define _KPILOT_KPILOTDCOP_H
 
 #include <dcopobject.h>
 
@@ -39,7 +39,12 @@ k_dcop:
 	virtual ASYNC filesChanged() = 0;
 } ;
 
+#else
+#warning "File doubly included"
 #endif
 
 
-// $Log: $
+// $Log$
+// Revision 1.1  2001/03/04 22:22:29  adridg
+// DCOP cooperation between daemon & kpilot for d&d file install
+//

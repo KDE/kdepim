@@ -25,13 +25,18 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __PILOT_DATABASE_H
-#define __PILOT_DATABASE_H
+#ifndef _KPILOT_PILOTDATABASE_H
+#define _KPILOT_PILOTDATABASE_H
 
 // Abstract base class for PalmPilot database access.
 
+#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h> /* for recordid_t */
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
+#endif
 
 /**
  * Methods to access a database on the pilot.  
@@ -81,10 +86,15 @@ class PilotDatabase
     bool fDBOpen;
     };
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.6  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.5  2001/02/07 14:21:49  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

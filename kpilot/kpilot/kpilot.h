@@ -26,20 +26,47 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef __KPILOT_H
-#define __KPILOT_H
+#ifndef _KPILOT_KPILOT_H
+#define _KPILOT_KPILOT_H
 
 
+#ifndef QAPP_H
 #include <qapp.h>
-#include <qmenubar.h>
-#include <qlist.h>
-#include <qpopmenu.h>
-#include <qpixmap.h>
+#endif
 
+#ifndef QMENUBAR_H
+#include <qmenubar.h>
+#endif
+
+#ifndef QLIST_H
+#include <qlist.h>
+#endif
+
+#ifndef QPOPMENU_H
+#include <qpopmenu.h>
+#endif
+
+#ifndef QPIXMAP_H
+#include <qpixmap.h>
+#endif
+
+
+#ifndef _KAPP_H_
 #include <kapp.h>
+#endif
+
+#ifndef _KLOCALE_H_
 #include <klocale.h>
+#endif
+
+#ifndef _KMAINWINDOW_H_
 #include <kmainwindow.h>
+#endif
+
+#ifndef _KPROGRESS_H_
 #include <kprogress.h>
+#endif
+
 
 class QPopupMenu;
 class QComboBox;
@@ -48,8 +75,14 @@ class KProcess;
 class PilotComponent;
 class FileInstallWidget;
 
+#ifndef _KPILOT_KPILOTLINK_H
 #include "kpilotlink.h"
+#endif
+
+#ifndef _KPILOT_KPILOTDCOP_H
 #include "kpilotDCOP.h"
+#endif
+
 
 
 
@@ -99,6 +132,8 @@ public:
 	* DCOP interface.
 	*/
 	virtual ASYNC filesChanged();
+
+	virtual void resizeEvent(QResizeEvent *);
 
     protected:
       void closeEvent(QCloseEvent *e);
@@ -218,12 +253,17 @@ private:
 
 
  
+#else
+#warning "File doubly included"
 #endif
 
 #undef REALLY_KPILOT
 
 
 // $Log$
+// Revision 1.21  2001/03/04 22:22:29  adridg
+// DCOP cooperation between daemon & kpilot for d&d file install
+//
 // Revision 1.20  2001/03/02 13:07:18  adridg
 // Completed switch to KAction
 //

@@ -49,10 +49,15 @@ k_dcop:
 	virtual ASYNC startHotSync(int) = 0;
 } ;
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.3  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.2  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

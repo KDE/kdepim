@@ -28,26 +28,40 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _LISTITEMS_H
-#define _LISTITEMS_H
+#ifndef _KPILOT_LISTITEMS_H
+#define _KPILOT_LISTITEMS_H
 
+#ifndef QLISTBOX_H
 #include <qlistbox.h>
+#endif
 
 class PilotListItem : public QListBoxText
 {
 public:
 	PilotListItem(const QString &text, int pilotid=0, void *r=0); 
-	~PilotListItem(){};
+	virtual ~PilotListItem();
 	int id() const {return fid;};
 	const void *rec() const {return fr;};
+
+	static void counts();
 
 protected:
 	int fid;
 	void *fr;
+
+private:
+	static int crt,del,bal,count;
 };
 
 
+#else
+#warning "File doubly included"
 #endif
 
-// $Log: $
+// $Log$
+// Revision 1.1  2001/03/04 11:22:12  adridg
+// In response to bug 21392, replaced fixed-length lookup table by a subclass
+// of QListBoxItem inserted into list box. This subclass carries data to
+// lookup the relevant pilot record.
+//
 	

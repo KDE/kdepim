@@ -28,10 +28,12 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __PILOT_LIST_ENTRY_H
-#define __PILOT_LIST_ENTRY_H
+#ifndef _KPILOT_PILOTLISTENTRY_H
+#define _KPILOT_PILOTLISTENTRY_H
 
+#ifndef QLISTBOX_H
 #include <qlistbox.h>
+#endif
 
 class PilotListEntry : public QListBoxText
 {
@@ -46,7 +48,12 @@ private:
   int fId;
 };
   
+#else
+#warning "File doubly included"
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.4  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

@@ -25,16 +25,27 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __KPILOT_ADDRESS_H
-#define __KPILOT_ADDRESS_H
+#ifndef _KPILOT_PILOTADDRESS_H
+#define _KPILOT_PILOTADDRESS_H
 
 #include <time.h>
 #include <string.h>
+
+#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h>
+#endif
+
+#ifndef _PILOT_ADDRESS_H_
 #include <pi-address.h>
+#endif
+
+#ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
-#include <string.h>
+#endif
 
 class PilotAddress : public PilotAppCategory
     {
@@ -71,7 +82,12 @@ class PilotAddress : public PilotAppCategory
 
 
 
+#else
+#warning "File doubly included"
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.6  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

@@ -48,25 +48,66 @@ static const char *popmail_conduit_id=
 #include <ctype.h>
 #include <iostream.h>
 
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
+
+#ifndef QTEXTSTREAM_H
 #include <qtextstream.h>
+#endif
 
+
+#ifndef _KAPP_H
 #include <kapp.h>
-#include <kconfig.h>
-#include <kmessagebox.h>
-#include <ksock.h>
-#include <kiconloader.h>
-#include <kdebug.h>
-#include <kaboutdata.h>
+#endif
 
-#include "conduitApp.h"
+#ifndef _KCONFIG_H
+#include <kconfig.h>
+#endif
+
+#ifndef _KMESSAGEBOX_H
+#include <kmessagebox.h>
+#endif
+
+#ifndef _KSOCK_H
+#include <ksock.h>
+#endif
+
+#ifndef _KICONLOADER_H
+#include <kiconloader.h>
+#endif
+
+#ifndef _KDEBUG_H
+#include <kdebug.h>
+#endif
+
+#ifndef _KABOUTDATA_H
+#include <kaboutdata.h>
+#endif
+
+
+#ifndef _PILOT_SOURCE_H_
 #include <pi-source.h>
+#endif
+#ifndef _PILOT_MAIL_H_
 #include <pi-mail.h>
+#endif
+#ifndef _PILOT_DLP_H_
 #include <pi-dlp.h>
+#endif
+
+#ifndef _KPILOT_CONDUITAPP_H
+#include "conduitApp.h"
+#endif
+
+#ifndef _KPILOT_KPILOTCONFIG_H
+#include "kpilotConfig.h"
+#endif
+
+
 #include "passworddialog.h"
 #include "popmail-conduit.h"
 #include "setupDialog.h"
-#include "kpilotConfig.h"
 
 extern "C" {
 extern time_t parsedate(char * p);
@@ -1636,6 +1677,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.18  2001/03/06 12:13:32  adridg
+// Fixed Solaris compilation problems (again?)
+//
 // Revision 1.17  2001/03/05 23:57:53  adridg
 // Added KPILOT_VERSION
 //

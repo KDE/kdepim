@@ -28,18 +28,26 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
+#ifndef _KDEBUG_H_
 #include <kdebug.h>
+#endif
+
+#ifndef _KLOCALE_H_
 #include <klocale.h>
+#endif
+
+
 #include "listCat.moc"
 
 static const char *listCat_id =
-	"$Id:$";
+	"$Id$";
 
 ListCategorizer::ListCategorizer(QWidget *parent, const char *name) :
 	KListView(parent,name),
 	fStartOpen(false)
 {
 	setupWidget();
+	(void) listCat_id;
 }
 
 ListCategorizer::ListCategorizer(const QStringList& i,
@@ -166,6 +174,9 @@ QListViewItem *ListCategorizer::addItem(const QString& category,
 
 
 // $Log$
+// Revision 1.3  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.2  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

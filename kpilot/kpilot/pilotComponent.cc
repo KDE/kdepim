@@ -30,13 +30,28 @@
 
 
 #include "options.h"
+
 #include <time.h>
 #include <stream.h>
+
+#ifndef _PILOT_APPINFO_H_
 #include <pi-appinfo.h>
+#endif
+
+#ifndef QWIDGET_H
 #include <qwidget.h>
+#endif
+
+#ifndef QCOMBOBOX_H
 #include <qcombobox.h>
+#endif
+
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+
 #include "pilotComponent.moc"
+
 
 static const char *pilotComponent_id =
 	"$Id$";
@@ -208,6 +223,9 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.11  2001/03/04 21:27:07  adridg
+// Note to self: compile first, commit after
+//
 // Revision 1.10  2001/03/04 21:20:55  adridg
 // Attempt to fix poor matching of category names
 //

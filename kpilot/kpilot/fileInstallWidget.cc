@@ -43,14 +43,7 @@ static const char *fileinstallwidget_id="$Id$";
 #include <qpushbt.h>
 #include <qdragobject.h>
 #include <qlayout.h>
-// 
-// #include <kstddirs.h>
-// #include <klocale.h>
-// #include <kurl.h>
-// #include <kmessagebox.h>
 #include <kfiledialog.h>
-// #include <kdebug.h>
-// #include <kio/netaccess.h>
 
 #include "kpilotlink.h"
 #include "kpilotConfig.h"
@@ -95,6 +88,11 @@ FileInstallWidget::FileInstallWidget( QWidget* parent,
 	setAcceptDrops(true);
 }
 
+void FileInstallWidget::resizeEvent( QResizeEvent *e )
+{
+	FUNCTIONSETUP;
+
+}
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent* event)
 {
@@ -175,6 +173,9 @@ FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.14  2001/03/04 13:11:58  adridg
+// Actually use the fileInstaller object
+//
 // Revision 1.13  2001/02/26 22:12:24  adridg
 // Use Qt layout classes
 //

@@ -37,23 +37,65 @@
 //
 //
 #include <stream.h>
-#include <qdir.h>
-#include <qmap.h>
-#include <kglobal.h>
-#include <kstddirs.h>
-#include <kmessagebox.h>
-#include <ksimpleconfig.h>
-#include <kconfig.h>
-#include <dcopclient.h>
-#include <kdebug.h>
-
 #include <time.h>
-#include <pi-expense.h>
 
+#ifndef QDIR_H
+#include <qdir.h>
+#endif
+
+#ifndef QMAP_H
+#include <qmap.h>
+#endif
+
+#ifndef _KGLOBAL_H
+#include <kglobal.h>
+#endif
+
+#ifndef _KSTDDIRS_H
+#include <kstddirs.h>
+#endif
+
+#ifndef _KMESSAGEBOX_H
+#include <kmessagebox.h>
+#endif
+
+#ifndef _KSIMPLECONFIG_H
+#include <ksimpleconfig.h>
+#endif
+
+#ifndef _KCONFIG_H
+#include <kconfig.h>
+#endif
+
+#ifndef _DCOPCLIENT_H
+#include <dcopclient.h>
+#endif
+
+#ifndef _KDEBUG_H
+#include <kdebug.h>
+#endif
+
+
+#ifndef _PILOT_EXPENSE_H_
+#include <pi-expense.h>
+#endif
+
+#ifndef _KPILOT_CONDUITAPP_H
 #include "conduitApp.h"
+#endif
+
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+
+#ifndef _KPILOT_EXPENSE_H
 #include "expense.h"
+#endif
+
+#ifndef _KPILOT_SETUPDIALOG_H
 #include "setupDialog.h"
+#endif
+
 
 
 
@@ -146,6 +188,9 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.2  2001/03/05 23:57:53  adridg
+// Added KPILOT_VERSION
+//
 // Revision 1.1  2001/03/04 21:45:30  adridg
 // New expense conduit, non-functional but it compiles
 //

@@ -68,9 +68,14 @@ private:
 	KProcess *conduitSetup;
 	QStringList conduitPaths;
 } ;
+#else
+#warning "File doubly included"
 #endif
 
 // $Log$
+// Revision 1.10  2001/02/08 17:59:34  adridg
+// Removed spurious #ifdefs, and the #define that goes with it. Make KPilot exit consistently after user-requested setup actions.
+//
 // Revision 1.9  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

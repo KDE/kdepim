@@ -36,24 +36,69 @@
 //
 //
 #include <stream.h>
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
+
+#ifndef QMAP_H
 #include <qmap.h>
+#endif
+
+#ifndef _KGLOBAL_H
 #include <kglobal.h>
+#endif
+
+#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
+#endif
+
+#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
+#endif
+
+#ifndef _KSIMPLECONFIG_H
 #include <ksimpleconfig.h>
+#endif
+
+#ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
+
+#ifndef _DCOPCLIENT_H
 #include <dcopclient.h>
+#endif
+
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
 
+
+#ifndef _KPILOT_CONDUITAPP_H
 #include "conduitApp.h"
+#endif
+
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+
+#ifndef _KPILOT_KNOTES_CONDUIT_H
 #include "knotes-conduit.h"
+#endif
+
+#ifndef _KPILOT_SETUPDIALOG_H
 #include "setupDialog.h"
+#endif
+
+#ifndef _KPILOT_PILOTMEMO_H
 #include "pilotMemo.h"
+#endif
 
 
+
+#ifndef _KPILOT_MD5WRAP_H
 #include	"md5wrap.h"
+#endif
+
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -815,6 +860,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.14  2001/03/05 23:57:53  adridg
+// Added KPILOT_VERSION
+//
 // Revision 1.13  2001/02/26 22:13:26  adridg
 // Removed misleading comments
 //

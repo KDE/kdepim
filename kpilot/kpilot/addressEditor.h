@@ -26,10 +26,12 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _ADDRESSEDITOR_H
-#define _ADDRESSEDITOR_H
+#ifndef _KPILOT_ADDRESSEDITOR_H
+#define _KPILOT_ADDRESSEDITOR_H
 
+#ifndef _KDIALOGBASE_H
 #include <kdialogbase.h>
+#endif
 
 class QLineEdit;
 class PilotAddress;
@@ -80,7 +82,12 @@ private:
   void initLayout();
   void fillFields();
 };
+#else
+#warning "File doubly included"
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.5  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

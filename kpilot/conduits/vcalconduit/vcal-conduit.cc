@@ -34,7 +34,6 @@
 // short lived, it shouldn't matter so much. -- PGB
 
 
-#define DEBUG
 #include "options.h"
 
 #include <sys/types.h>
@@ -43,23 +42,65 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifndef QBITARRAY_H
 #include <qbitarray.h>
+#endif
+
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
+
+#ifndef QDATETM_H
 #include <qdatetm.h>
+#endif
+
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+
+#ifndef QMSGBOX_H
 #include <qmsgbox.h>
+#endif
 
+
+#ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
+
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
 
+
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#include "pilotDatabase.h"
-#include "pilotRecord.h"
-#include "pilotDateEntry.h"
+#endif
 
+#ifndef _KPILOT_PILOTDATABASE_H
+#include "pilotDatabase.h"
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
+#include "pilotRecord.h"
+#endif
+
+#ifndef _KPILOT_PILOTDATEENTRY_H
+#include "pilotDateEntry.h"
+#endif
+
+
+#ifndef _KPILOT_VCAL_CONDUIT_H
 #include "vcal-conduit.h"
+#endif
+
+#ifndef _KPILOT_VCAL_SETUP_H
 #include "vcal-setup.h"
+#endif
+
+#ifndef _KPILOT_CONDUITAPP_H
 #include "conduitApp.h"
+#endif
+
 
 static const char *id=
 	"$Id$";
@@ -1831,6 +1872,9 @@ int VCalConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.27  2001/03/07 19:49:07  adridg
+// Bugfix #20318 and #21816
+//
 // Revision 1.26  2001/03/05 23:57:53  adridg
 // Added KPILOT_VERSION
 //

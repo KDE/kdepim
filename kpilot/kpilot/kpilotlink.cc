@@ -706,6 +706,8 @@ KPilotLink::doFullRestore()
 
 	for (it=dbList.begin(); it!=dbList.end(); ++it)
 	{
+		if ((*it == "..") || (*it == ".")) continue;
+
 		DEBUGKPILOT << fname
 			<< ": Trying database "
 			<< *it
@@ -713,7 +715,7 @@ KPilotLink::doFullRestore()
 
 		db[dbcount] = (struct db*)malloc(sizeof(struct db));
 		sprintf(db[dbcount]->name,
-			QFile::encodeName(*it));
+			QFile::encodeName(dirname + *it));
 	
 		f = pi_file_open(db[dbcount]->name);
 		if (f==0) 
@@ -1658,6 +1660,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.38  2001/03/02 16:59:35  adridg
+// Added new protocol message READ_APP_INFO for conduit->daemon communication
+//
 // Revision 1.37  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

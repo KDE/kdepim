@@ -27,11 +27,17 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
+#include "options.h"
+
 #include <string.h>
+
+#ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
+#endif
+
 
 static const char *pilotRecord_id =
-	"$Id:$";
+	"$Id$";
 
 
 PilotRecord::PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid)
@@ -39,6 +45,7 @@ PilotRecord::PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid)
     {
     fData = new char[len];
     memcpy(fData, data, len);
+    (void) pilotRecord_id;
     }
 
 PilotRecord::PilotRecord(PilotRecord* orig)
@@ -98,6 +105,9 @@ void PilotRecord::makeSecret()
 
 
 // $Log$
+// Revision 1.5  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.4  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -32,12 +32,17 @@ static const char *pilotadress_id="$Id$";
 #include "options.h"
 
 #include <stdlib.h>
+
+#ifndef _KPILOT_PILOTADDRESS_H
 #include "pilotAddress.h"
+#endif
+
 
 PilotAddress::PilotAddress(PilotRecord* rec)
   : PilotAppCategory(rec)
     {
     unpack_Address(&fAddressInfo, (unsigned char*)rec->getData(), rec->getLen());
+    (void)pilotadress_id;
     }
 
 void 
@@ -68,6 +73,9 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.9  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.8  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -32,11 +32,19 @@
 */
 
 
-#ifndef _POPMAIL_CONDUIT_H
-#define _POPMAIL_CONDUIT_H
+#ifndef _KPILOT_POPMAIL_CONDUIT_H
+#define _KPILOT_POPMAIL_CONDUIT_H
 
-#include "baseConduit.h"
+#include <time.h>
+
+#ifndef _PILOT_MAIL_H_
 #include <pi-mail.h>
+#endif
+
+#ifndef _KPILOT_BASECONDUIT_H
+#include "baseConduit.h"
+#endif
+
 
 class PilotRecord;
 
@@ -144,4 +152,7 @@ private:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.8  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

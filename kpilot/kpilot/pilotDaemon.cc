@@ -30,7 +30,12 @@ static const char *id="$Id$";
 
 #include "options.h"
 
+#include <time.h>
+
+#ifdef TIME_WITH_SYS_TIME
 #include <sys/time.h>
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -47,7 +52,6 @@ static const char *id="$Id$";
 #include <qlist.h>
 #include <qcursor.h>
 #include <qdragobject.h>
-#include <errno.h>
 
 #include <kuniqueapp.h>
 #include <kaboutdata.h>
@@ -66,7 +70,6 @@ static const char *id="$Id$";
 #include <kprocess.h>
 #include <dcopclient.h>
 
-#include "pilotDaemon.moc"
 #include "hotsync.h"
 #include "busysync.h"
 #include "statusMessages.h"
@@ -74,6 +77,7 @@ static const char *id="$Id$";
 #include "kpilotlink.h"
 #include "kpilotConfig.h"
 
+#include "pilotDaemon.moc"
 
 
 // Define OWN_CRASHHANDLER if you want the daemon to handle crashes
@@ -1293,6 +1297,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.34  2001/03/05 23:44:39  adridg
+// KPILOT_VERSION added. Fixed double-sync (maybe). Extra monitor debugging.
+//
 // Revision 1.33  2001/03/04 21:22:00  adridg
 // Added drag 'n drop file install to daemon
 //

@@ -25,13 +25,16 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __PILOT_USER_H
-#define __PILOT_USER_H
+#ifndef _KPILOT_PILOTUSER_H
+#define _KPILOT_PILOTUSER_H
 
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+#ifndef _PILOT_DLP_H_
 #include <pi-dlp.h>
+#endif
 
 class KPilotUser
     {
@@ -70,7 +73,12 @@ class KPilotUser
     struct PilotUser fUser;
     };
 
+#else
+#warning "File doubly included"
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.4  2001/02/06 08:05:20  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//

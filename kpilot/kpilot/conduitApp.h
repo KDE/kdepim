@@ -28,12 +28,17 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef __CONDUIT_APP_H
-#define __CONDUIT_APP_H
+#ifndef _KPILOT_CONDUITAPP_H
+#define _KPILOT_CONDUITAPP_H
 
+#ifndef _KAPP_H_
 #include <kapp.h>
-#include "options.h"
+#endif
+
+#ifndef _KPILOT_BASECONDUIT_H
 #include "baseConduit.h"
+#endif
+
 
 class KAboutData;
 class KCmdLineOptions;
@@ -127,9 +132,14 @@ private:
 
 	bool setupDCOP();
 } ;
+#else
+#warning "File doubly included"
 #endif
 
 // $Log$
+// Revision 1.12  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//
 // Revision 1.11  2000/12/31 16:44:00  adridg
 // Patched up the debugging stuff again
 //

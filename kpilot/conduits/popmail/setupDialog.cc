@@ -36,31 +36,89 @@
 static const char *setupDialog_id=
 	"$Id$";
 
+#include "options.h"
 
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
-
-#include <kconfig.h>
-#include <kapp.h>
-#include <qlabel.h>
-#include <qchkbox.h>
-#include <qlined.h>
-#include <qdir.h>
-#include <qfiledlg.h>
-#include <qbttngrp.h>
-#include <qpushbutton.h>
-#include <qradiobt.h>
-#include <qlayout.h>
-#include <qvbuttongroup.h>
-#include <kstddirs.h>
-#include <kdebug.h>
-
 #include <stream.h>
+
+#ifndef _KCONFIG_H
+#include <kconfig.h>
+#endif
+
+#ifndef _KAPP_H
+#include <kapp.h>
+#endif
+
+#ifndef _KLOCALE_H
+#include <klocale.h>
+#endif
+
+#ifndef _KSTDDIRS_H
+#include <kstddirs.h>
+#endif
+
+#ifndef _KDEBUG_H
+#include <kdebug.h>
+#endif
+
+
+
+#ifndef QLABEL_H
+#include <qlabel.h>
+#endif
+
+#ifndef QCHKBOX_H
+#include <qchkbox.h>
+#endif
+
+#ifndef QLINED_H
+#include <qlined.h>
+#endif
+
+#ifndef QDIR_H
+#include <qdir.h>
+#endif
+
+#ifndef QFILEDLG_H
+#include <qfiledlg.h>
+#endif
+
+#ifndef QBTTNGRP_H
+#include <qbttngrp.h>
+#endif
+
+#ifndef QPUSHBUTTON_H
+#include <qpushbutton.h>
+#endif
+
+#ifndef QRADIOBT_H
+#include <qradiobt.h>
+#endif
+
+#ifndef QLAYOUT_H
+#include <qlayout.h>
+#endif
+
+#ifndef QVBUTTONGROUP_H
+#include <qvbuttongroup.h>
+#endif
+
+
+#ifndef _KPILOT_POPMAIL_CONDUIT_H
 #include "popmail-conduit.h"
+#endif
+
+#ifndef _KPILOT_SETUPDIALOG_H
 #include "setupDialog.moc"
+#endif
+
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+
 
 PopMailSendPage::PopMailSendPage(setupDialog *parent,KConfig& config) :
 	setupDialogPage(i18n("Sending Mail"),parent)
@@ -574,6 +632,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.14  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.13  2001/02/09 15:59:28  habenich
 // replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
 //

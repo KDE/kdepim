@@ -39,26 +39,76 @@
 #include <iostream.h>
 #include <stdlib.h>
 #include <time.h>
-#include <qbitarray.h>
-#include <qdir.h>
-#include <qdatetm.h>
-#include <qstring.h>
-#include <qmsgbox.h>
-#include <kapp.h>
-#include <kmessagebox.h>
-#include <kconfig.h>
-#include <kdebug.h>
 
+#ifndef QBITARRAY_H
+#include <qbitarray.h>
+#endif
+
+#ifndef QDIR_H
+#include <qdir.h>
+#endif
+
+#ifndef QDATETM_H
+#include <qdatetm.h>
+#endif
+
+#ifndef QSTRING_H
+#include <qstring.h>
+#endif
+
+#ifndef QMSGBOX_H
+#include <qmsgbox.h>
+#endif
+
+
+#ifndef _KAPP_H
+#include <kapp.h>
+#endif
+
+#ifndef _KMESSAGEBOX_H
+#include <kmessagebox.h>
+#endif
+
+#ifndef _KCONFIG_H
+#include <kconfig.h>
+#endif
+
+#ifndef _KDEBUG_H
+#include <kdebug.h>
+#endif
+
+
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+
+#ifndef _KPILOT_PILOTDATABASE_H
 #include "pilotDatabase.h"
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
 #include "pilotRecord.h"
+#endif
+
+#ifndef _KPILOT_PILOTTODOENTRY_H
 #include "pilotTodoEntry.h"
+#endif
+
 
 #include "vcc.h"
 
+#ifndef _KPILOT_TODO_CONDUIT_H
 #include "todo-conduit.h"
+#endif
+
+#ifndef _KPILOT_TODO_SETUP_H
 #include "todo-setup.h"
+#endif
+
+#ifndef _KPILOT_CONDUITAPP_H
 #include "conduitApp.h"
+#endif
+
 
 
 // globals
@@ -694,6 +744,9 @@ int TodoConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.14  2001/03/05 23:57:53  adridg
+// Added KPILOT_VERSION
+//
 // Revision 1.13  2001/03/04 13:46:49  adridg
 // struct tm woes
 //

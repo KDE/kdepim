@@ -26,8 +26,8 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __ADDRESS_WIDGET_H
-#define __ADDRESS_WIDGET_H
+#ifndef _KPILOT_ADDRESSWIDGET_H
+#define _KPILOT_ADDRESSWIDGET_H
 
 class QMultiLineEdit;
 class QListBox;
@@ -38,8 +38,14 @@ class KConfig;
 class PilotDatabase;
 
 
+
+#ifndef _KPILOT_PILOTCOMPONENT_H
 #include "pilotComponent.h"
+#endif
+
+#ifndef _KPILOT_PILOTADDRESS_H
 #include "pilotAddress.h"
+#endif
 
 class AddressWidget : public PilotComponent
 {
@@ -107,10 +113,17 @@ public:
 	typedef enum { PhoneNumberLength=16 } Constants ;
     };
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.11  2001/03/04 11:22:12  adridg
+// In response to bug 21392, replaced fixed-length lookup table by a subclass
+// of QListBoxItem inserted into list box. This subclass carries data to
+// lookup the relevant pilot record.
+//
 // Revision 1.10  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

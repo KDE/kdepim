@@ -29,11 +29,17 @@
 */
 
 
-#include "strToken.h"
+#include "options.h"
+
 #include <string.h>
 
+#ifndef _KPILOT_STRTOKEN_H
+#include "strToken.h"
+#endif
+
+
 static const char *strToken_id =
-	"$Id:$";
+	"$Id$";
 
 StrTokenizer::StrTokenizer(const char* string, const char* delims)
     {
@@ -41,6 +47,7 @@ StrTokenizer::StrTokenizer(const char* string, const char* delims)
     strcpy(fString, string);
     fDelims = new char[strlen(delims) + 1];
     strcpy(fDelims, delims);
+    (void) strToken_id;
     }
 
 const char*
@@ -62,6 +69,9 @@ StrTokenizer::getNextField()
 
 
 // $Log$
+// Revision 1.5  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.4  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

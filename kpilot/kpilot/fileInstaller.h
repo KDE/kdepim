@@ -29,8 +29,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef __FILEINSTALLER_H
-#define __FILEINSTALLER_H
+#ifndef _KPILOT_FILEINSTALLER_H
+#define _KPILOT_FILEINSTALLER_H
 
 #include <qobject.h>
 #include <qstring.h>
@@ -69,9 +69,14 @@ private:
 	int fPendingCopies;
 } ;
 
+#else
+#warning "File doubly included"
 #endif
 
 // $Log$
+// Revision 1.2  2001/03/04 13:11:58  adridg
+// Actually use the fileInstaller object
+//
 // Revision 1.1  2001/03/01 20:41:11  adridg
 // Added class to factor out code in daemon and fileinstallwidget
 //

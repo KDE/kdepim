@@ -26,11 +26,14 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __PILOT_RECORD_H
-#define __PILOT_RECORD_H
+#ifndef _KPILOT_PILOTRECORD_H
+#define _KPILOT_PILOTRECORD_H
 
 #include <time.h>
+
+#ifndef _PILOT_FILE_H_
 #include <pi-file.h>
+#endif
 
 class PilotRecord 
     {
@@ -71,10 +74,16 @@ public:
 
     };
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.5  2001/02/07 14:21:56  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.4  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

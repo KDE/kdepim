@@ -28,17 +28,31 @@
 #ifndef __MEMO_WIDGET_H
 #define __MEMO_WIDGET_H
 
+#ifndef QMLINED_H
 #include <qmlined.h>
-#include <qcombo.h>
+#endif
+
+#ifndef QCOMBOBOX_H
+#include <qcombobox.h>
+#endif
+
 #include <time.h>
+
+#ifndef _PILOT_MEMO_H_
 #include <pi-memo.h>
+#endif
 
 class KPilotInstaller;
 class QListBox;
 
 
+#ifndef _KPILOT_PILOTMEMO_H
 #include "pilotMemo.h"
+#endif
+
+#ifndef _KPILOT_PILOTCOMPONENT_H
 #include "pilotComponent.h"
+#endif
 
 class MemoWidget : public PilotComponent
 {
@@ -90,10 +104,15 @@ private:
 	QPushButton *fExportButton,*fDeleteButton;
 };
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.10  2001/03/04 13:11:49  adridg
+// More response to bug 21392
+//
 // Revision 1.9  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

@@ -26,10 +26,12 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __FILE_INSTALL_WIDGET_H
-#define __FILE_INSTALL_WIDGET_H
+#ifndef _KPILOT_FILEINSTALLWIDGET_H
+#define _KPILOT_FILEINSTALLWIDGET_H
 
+#ifndef _KPILOT_PILOTCOMPONENT_H
 #include "pilotComponent.h"
+#endif
 
 class KPilotInstaller;
 class FileInstaller;
@@ -60,6 +62,8 @@ protected:
 
     KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
+	/* virtual */ void resizeEvent(QResizeEvent *);
+
 private:
     QListBox*   fListBox;
     bool        fSaveFileList;
@@ -74,10 +78,15 @@ public slots:
 	void refreshFileInstallList();
     };
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.10  2001/03/04 22:22:29  adridg
+// DCOP cooperation between daemon & kpilot for d&d file install
+//
 // Revision 1.9  2001/03/04 13:11:58  adridg
 // Actually use the fileInstaller object
 //

@@ -216,9 +216,14 @@ protected slots:
 	void slotFilesChanged();
 };
 
+#else
+#warning "File doubly included"
 #endif
 
 // $Log$
+// Revision 1.18  2001/03/04 21:24:37  adridg
+// Added drag 'n drop file install to daemon
+//
 // Revision 1.17  2001/03/04 11:23:04  adridg
 // Changed for bug 21392
 //

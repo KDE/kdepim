@@ -28,11 +28,13 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef __KPILOT_LINK
-#define __KPILOT_LINK
+#ifndef _KPILOT_KPILOTLINK_H
+#define _KPILOT_KPILOTLINK_H
 
 
+#ifndef QOBJECT_H
 #include <qobject.h>
+#endif
 
 class QWidget;
 class KStatusBar;
@@ -47,10 +49,21 @@ class MessageDialog;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
 
+#ifndef _KPILOT_PILOTUSER_H
 #include "pilotUser.h"
+#endif
+
+#ifndef _KPILOT_PILOTDATABASE_H
 #include "pilotDatabase.h"
+#endif
+
+#ifndef _KPILOT_PILOTSERIALDATABASE_H
 #include "pilotSerialDatabase.h"
+#endif
+
+#ifndef _KPILOT_PILOTLOCALDATABASE_H
 #include "pilotLocalDatabase.h"
+#endif
 
 /**
   * This class is an attempt to provide some wrapper around the pilot-link
@@ -241,7 +254,6 @@ private:
 	enum { None = 0 , Running, Connected, Done } fConduitRunStatus ;
 
 public:
-
   /**
    * Write a log entry to the pilot. Note that the library
    * function takes a char *, not const char * (which is
@@ -324,11 +336,14 @@ signals:
 //   void recordDeleted(PilotRecord*);
 };
 
+#else
+#warning "File doubly included"
 #endif
 
-#undef REALLY_KPILOTLINK
-
 // $Log$
+// Revision 1.20  2001/03/08 16:18:40  adridg
+// Cruft removal
+//
 // Revision 1.19  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

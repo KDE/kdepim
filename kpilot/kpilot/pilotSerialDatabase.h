@@ -25,15 +25,23 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
-#ifndef __PILOT_SERIAL_DATABASE_H
-#define __PILOT_SERIAL_DATABASE_H
+#ifndef _KPILOT_PILOTSERIALDATABASE_H
+#define _KPILOT_PILOTSERIALDATABASE_H
 
 // Database class for a database on the pilot connected
 // via the serial port (ie: hot-sync cradle)
 
+#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h> /* for recordid_t */
+#endif
+
+#ifndef _KPILOT_PILOTDATABASE_H
 #include <pilotDatabase.h>
+#endif
+
+#ifndef _KPILOT_PILOTRECORD_H
 #include <pilotRecord.h>
+#endif
 
 class KPilotLink;
 
@@ -82,10 +90,16 @@ class PilotSerialDatabase : public PilotDatabase
     KPilotLink* fPilotLink;
     };
 
+#else
+#warning "File doubly included"
 #endif
 
 
 // $Log$
+// Revision 1.5  2001/02/07 14:21:59  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.4  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

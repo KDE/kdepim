@@ -29,12 +29,13 @@
 #include "pilotTodoEntry.h"
 
 static const char *pilotTodoEntry_id =
-	"$Id:$";
+	"$Id$";
 
 PilotTodoEntry::PilotTodoEntry(PilotRecord* rec)
   : PilotAppCategory(rec)
 {
   unpack_ToDo(&fTodoInfo, (unsigned char*)rec->getData(), rec->getLen());
+  (void) pilotTodoEntry_id;
 }
 
 void* PilotTodoEntry::pack(void *buf, int *len)
@@ -74,6 +75,9 @@ void PilotTodoEntry::setNote(const char* note)
 
 
 // $Log$
+// Revision 1.6  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.5  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -370,7 +370,6 @@ MemoWidget::updateWidget()
 	}
 
 	int listIndex = 0;
-	int currentEntry = 0;
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fMemoAppInfo.category),false);
 
@@ -543,6 +542,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.25  2001/03/04 13:11:49  adridg
+// More response to bug 21392
+//
 // Revision 1.24  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
