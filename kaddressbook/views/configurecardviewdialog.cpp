@@ -128,8 +128,8 @@ void CardViewLookNFeelPage::restoreSettings( KConfig *config )
   cbDrawBorders->setChecked( config->readBoolEntry( "DrawBorder", true ) );
   
   // behaviour
-  cbShowFieldLabels->setChecked( config->readBoolEntry( "DrawFieldLabels", true ) );
-  cbShowEmptyFields->setChecked( config->readBoolEntry( "ShowEmptyFields", true ) );
+  cbShowFieldLabels->setChecked( config->readBoolEntry( "DrawFieldLabels", false ) );
+  cbShowEmptyFields->setChecked( config->readBoolEntry( "ShowEmptyFields", false ) );
 }
 
 void CardViewLookNFeelPage::saveSettings( KConfig *config )

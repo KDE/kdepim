@@ -157,7 +157,7 @@ KAddressBookCardView::KAddressBookCardView( KABC::AddressBook *ab,
                                             QWidget *parent, const char *name )
     : KAddressBookView( ab, parent, name )
 {
-    mShowEmptyFields = true;
+    mShowEmptyFields = false;
 
     // Init the GUI
     QVBoxLayout *layout = new QVBoxLayout(viewWidget());
@@ -227,8 +227,8 @@ void KAddressBookCardView::readConfig(KConfig *config)
   mCardView->setDrawCardBorder(config->readBoolEntry("DrawBorder", true));
   mCardView->setDrawColSeparators(config->readBoolEntry("DrawSeparators",
                                                         true));
-  mCardView->setDrawFieldLabels(config->readBoolEntry("DrawFieldLabels",true));
-  mShowEmptyFields = config->readBoolEntry("ShowEmptyFields", true);
+  mCardView->setDrawFieldLabels(config->readBoolEntry("DrawFieldLabels",false));
+  mShowEmptyFields = config->readBoolEntry("ShowEmptyFields", false);
   
   mCardView->setShowEmptyFields( mShowEmptyFields );
   
