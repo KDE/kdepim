@@ -26,7 +26,7 @@
 #include <qlayout.h>
 #include <qregexp.h>
 #include <qhbox.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include <qcombobox.h>
 #include <kdebug.h>

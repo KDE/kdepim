@@ -9,9 +9,9 @@
 #include <qvbox.h>
 #include <qframe.h>
 #include <kconfig.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kurlrequester.h>
 
 Preferences *Preferences::_instance = 0;

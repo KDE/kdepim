@@ -16,7 +16,7 @@
 #include <qpopupmenu.h>
 #include <kconfig.h>
 #include <kaccel.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kdockwindow.h>
 #include <kglobal.h>
 #include <kiconloader.h>
