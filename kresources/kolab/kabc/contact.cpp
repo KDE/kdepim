@@ -34,6 +34,8 @@
 #include "resourcekolab.h"
 
 #include <kabc/addressee.h>
+#include <kabc/stdaddressbook.h>
+#include <libkdepim/distributionlist.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
 #include <qfile.h>
@@ -543,6 +545,37 @@ void Contact::saveAddressAttributes( QDomElement& element ) const
   }
 }
 
+
+void Kolab::Contact::loadDistrListMember( const QDomElement& element )
+{
+  Member member;
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+      if ( tagName == "display-name" )
+        member.displayName = e.text();
+      else if ( tagName == "smtp-address" )
+        member.email = e.text();
+    }
+  }
+  mDistrListMembers.append( member );
+}
+
+void Contact::saveDistrListMembers( QDomElement& element ) const
+{
+  QValueList<Member>::ConstIterator it = mDistrListMembers.begin();
+  for( ; it != mDistrListMembers.end(); ++it ) {
+    QDomElement e = element.ownerDocument().createElement( "member" );
+    element.appendChild( e );
+    const Member& m = *it;
+    writeString( e, "display-name", m.displayName );
+    writeString( e, "smtp-address", m.email );
+  }
+}
+
 bool Contact::loadAttribute( QDomElement& element )
 {
   QString tagName = element.tagName();
@@ -622,6 +655,10 @@ bool Contact::loadAttribute( QDomElement& element )
   }
   else if ( tagName == "x-custom" )
     loadCustomAttributes( element );
+  else if ( mIsDistributionList && tagName == "display-name" )
+    setFullName( element.text() );
+  else if ( mIsDistributionList && tagName == "member" )
+    loadDistrListMember( element );
   else
     return KolabBase::loadAttribute( element );
 
@@ -634,41 +671,46 @@ bool Contact::saveAttributes( QDomElement& element ) const
   // Save the base class elements
   KolabBase::saveAttributes( element );
 
-  saveNameAttribute( element );
-  writeString( element, "free-busy-url", freeBusyUrl() );
-  writeString( element, "organization", organization() );
-  writeString( element, "web-page", webPage() );
-  writeString( element, "im-address", imAddress() );
-  writeString( element, "department", department() );
-  writeString( element, "office-location", officeLocation() );
-  writeString( element, "profession", profession() );
-  // <role> is gone; jobTitle() is not shown in the addresseeeditor,
-  // so let's bind <job-title> to role()
-  //writeString( element, "role", role() );
-  //writeString( element, "job-title", jobTitle() );
-  writeString( element, "job-title", role() );
-  writeString( element, "manager-name", managerName() );
-  writeString( element, "assistant", assistant() );
-  writeString( element, "nick-name", nickName() );
-  writeString( element, "spouse-name", spouseName() );
-  writeString( element, "birthday", dateToString( birthday() ) );
-  writeString( element, "anniversary", dateToString( anniversary() ) );
-  if ( !picture().isNull() )
-    writeString( element, "picture", mPictureAttachmentName );
-  if ( !logo().isNull() )
-    writeString( element, "x-logo", mLogoAttachmentName );
-  if ( !sound().isNull() )
-    writeString( element, "x-sound", mSoundAttachmentName );
-  writeString( element, "children", children() );
-  writeString( element, "gender", gender() );
-  writeString( element, "language", language() );
-  savePhoneAttributes( element );
-  saveEmailAttributes( element );
-  saveAddressAttributes( element );
-  writeString( element, "preferred-address", preferredAddress() );
-  if ( mHasGeo ) {
-    writeString( element, "latitude", QString::number( latitude(), 'g', DBL_DIG ) );
-    writeString( element, "longitude", QString::number( longitude(), 'g', DBL_DIG ) );
+  if ( mIsDistributionList ) {
+    writeString( element, "display-name", fullName() );
+    saveDistrListMembers( element );
+  } else {
+    saveNameAttribute( element );
+    writeString( element, "free-busy-url", freeBusyUrl() );
+    writeString( element, "organization", organization() );
+    writeString( element, "web-page", webPage() );
+    writeString( element, "im-address", imAddress() );
+    writeString( element, "department", department() );
+    writeString( element, "office-location", officeLocation() );
+    writeString( element, "profession", profession() );
+    // <role> is gone; jobTitle() is not shown in the addresseeeditor,
+    // so let's bind <job-title> to role()
+    //writeString( element, "role", role() );
+    //writeString( element, "job-title", jobTitle() );
+    writeString( element, "job-title", role() );
+    writeString( element, "manager-name", managerName() );
+    writeString( element, "assistant", assistant() );
+    writeString( element, "nick-name", nickName() );
+    writeString( element, "spouse-name", spouseName() );
+    writeString( element, "birthday", dateToString( birthday() ) );
+    writeString( element, "anniversary", dateToString( anniversary() ) );
+    if ( !picture().isNull() )
+      writeString( element, "picture", mPictureAttachmentName );
+    if ( !logo().isNull() )
+      writeString( element, "x-logo", mLogoAttachmentName );
+    if ( !sound().isNull() )
+      writeString( element, "x-sound", mSoundAttachmentName );
+    writeString( element, "children", children() );
+    writeString( element, "gender", gender() );
+    writeString( element, "language", language() );
+    savePhoneAttributes( element );
+    saveEmailAttributes( element );
+    saveAddressAttributes( element );
+    writeString( element, "preferred-address", preferredAddress() );
+    if ( mHasGeo ) {
+      writeString( element, "latitude", QString::number( latitude(), 'g', DBL_DIG ) );
+      writeString( element, "longitude", QString::number( longitude(), 'g', DBL_DIG ) );
+    }
   }
   saveCustomAttributes( element );
 
@@ -679,11 +721,13 @@ bool Contact::loadXML( const QDomDocument& document )
 {
   QDomElement top = document.documentElement();
 
-  if ( top.tagName() != "contact" ) {
-    qWarning( "XML error: Top tag was %s instead of the expected contact",
+  mIsDistributionList = top.tagName() == "distribution-list";
+  if ( top.tagName() != "contact" && !mIsDistributionList ) {
+    qWarning( "XML error: Top tag was %s instead of the expected contact or distribution-list",
               top.tagName().ascii() );
     return false;
   }
+
 
   for ( QDomNode n = top.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     if ( n.isComment() )
@@ -709,7 +753,8 @@ bool Contact::loadXML( const QDomDocument& document )
 QString Contact::saveXML() const
 {
   QDomDocument document = domTree();
-  QDomElement element = document.createElement( "contact" );
+  QDomElement element = document.createElement(
+    mIsDistributionList ? "distribution-list" : "contact" );
   element.setAttribute( "version", "1.0" );
   saveAttributes( element );
   document.appendChild( element );
@@ -829,6 +874,7 @@ static const char* s_knownCustomFields[] = {
   "X-AssistantsName",
   "X-SpousesName",
   "X-Anniversary",
+  "DistributionList",
   0
 };
 
@@ -836,6 +882,23 @@ static const char* s_knownCustomFields[] = {
 void Contact::setFields( const KABC::Addressee* addressee )
 {
   KolabBase::setFields( addressee );
+
+  mIsDistributionList = KPIM::DistributionList::isDistributionList( *addressee );
+  if ( mIsDistributionList ) {
+    // Hopefully all resources are available during saving, so we can look up
+    // in the addressbook to get name+email from the UID.
+    KPIM::DistributionList distrList( *addressee );
+    const KPIM::DistributionList::Entry::List entries = distrList.entries( KABC::StdAddressBook::self() );
+    KPIM::DistributionList::Entry::List::ConstIterator it = entries.begin();
+    for ( ; it != entries.end() ; ++it ) {
+      Member m;
+      m.displayName = (*it).addressee.formattedName();
+      m.email = (*it).email;
+      if ( m.email.isEmpty() )
+        m.email = (*it).addressee.preferredEmail();
+      mDistrListMembers.append( m );
+    }
+  }
 
   setGivenName( addressee->givenName() );
   setMiddleNames( addressee->additionalName() );
@@ -957,9 +1020,8 @@ void Contact::setFields( const KABC::Addressee* addressee )
   // So it doesn't matter much if we don't have them in the XML.
   // mailer, timezone, productId, sortString, agent, rfc2426 name()
 
-  // TODO: Things KAddressBook can't handle:
+  // Things KAddressBook can't handle, so they are saved as unhandled tags:
   // initials, children, gender, language
-  // Well, so that's part of the "unhandled" tag thing.
 
   // TODO: Free/Busy URL. This is done rather awkward in KAddressBook -
   // it stores it in a local file through a korganizer file :-(
@@ -971,10 +1033,23 @@ void Contact::saveTo( KABC::Addressee* addressee )
   // TODO: This needs the same set of TODOs as the setFields method
   KolabBase::saveTo( addressee );
 
+  if ( mIsDistributionList ) {
+    KPIM::DistributionList distrList( *addressee );
+    distrList.setName( fullName() );
+    QValueList<Member>::ConstIterator mit = mDistrListMembers.begin();
+    for ( ; mit != mDistrListMembers.end(); ++mit ) {
+      distrList.insertEntry( (*mit).displayName, (*mit).email );
+    }
+    addressee->insertCustom( "KADDRESSBOOK", "DistributionList", distrList.custom( "KADDRESSBOOK", "DistributionList" ) );
+    Q_ASSERT( KPIM::DistributionList::isDistributionList( *addressee ) );
+  }
+
   addressee->setGivenName( givenName() );
   addressee->setAdditionalName( middleNames() );
   addressee->setFamilyName( lastName() );
   addressee->setFormattedName( fullName() );
+  if ( mIsDistributionList )
+    addressee->setName( fullName() );
   addressee->setPrefix( prefix() );
   addressee->setSuffix( suffix() );
   addressee->setOrganization( organization() );
