@@ -25,16 +25,12 @@
 
 
 int jp_logf(int level, char *format, ...) {
-//#ifdef DEBUG
    printf("inside jp_logf (%s) \n",format);
-//#endif
 	return 0;
 }
 
 int jpilot_logf(int level, char *format, ...) {
-//#ifdef DEBUG
    printf("inside jpilot_logf (%s) \n",format);
-//#endif
 	return 0;
 }
 
