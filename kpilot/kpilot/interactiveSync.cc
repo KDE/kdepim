@@ -31,6 +31,8 @@ static const char *hotsync_id = "$Id$";
 
 #include "options.h"
 
+#include <time.h>
+
 #include <pi-socket.h>
 #include <pi-file.h>
 
@@ -43,6 +45,7 @@ static const char *hotsync_id = "$Id$";
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qtl.h>
+#include <qstyle.h>
 
 #include <kdialogbase.h>
 #include <kglobal.h>
@@ -58,7 +61,7 @@ static const char *hotsync_id = "$Id$";
 #include "kpilotConfig.h"
 #include "interactiveSync.moc"
 
-static const char *interactive_id="$Id: $";
+static const char *interactive_id="$Id$";
 
 
 InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
@@ -163,9 +166,12 @@ int InteractiveAction::questionYesNo(const QString &text,
 
 	lay->addStretch(1);
 	QLabel *label1 = new QLabel( contents);
-	label1->setPixmap(
-		QMessageBox::standardIcon(QMessageBox::Information, 
-			kapp->style().guiStyle()));
+#if QT_VERSION < 300
+	label1->setPixmap(QMessageBox::standardIcon(QMessageBox::Information,
+        	kapp->style().guiStyle()));
+#else
+	label1->setPixmap(QMessageBox::standardIcon(QMessageBox::Information));
+#endif
 	lay->add( label1 );
 	QLabel *label2 = new QLabel( text, contents);
 	label2->setMinimumSize(label2->sizeHint());
@@ -597,4 +603,7 @@ nextFile:
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/09/24 22:25:54  adridg
+// New SyncActions with support for interaction with the user
+//
