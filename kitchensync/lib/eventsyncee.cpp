@@ -38,7 +38,7 @@ bool EventSyncEntry::mergeWith( SyncEntry* entry ) {
     QBitArray da = toEv->syncee()->bitArray();
     QBitArray hier = syncee()->bitArray();
 
-    for (uint i = 0; i< da.count() && i < hier.count(); i++ ) {
+    for (uint i = 0; i< da.size() && i < hier.size(); i++ ) {
         if (da[i] && !hier[i] )
             map()->invoke(i, incidence(), toEv->incidence() );
     }

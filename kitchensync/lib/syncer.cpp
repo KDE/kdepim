@@ -21,7 +21,7 @@ SyncEntry::SyncEntry( Syncee *sync) :
     mSyncState = Undefined;
 }
 SyncEntry::SyncEntry( const SyncEntry& ent) {
-    kdDebug(5231) << "SyncEntry copy c'tor " << endl;
+    kdDebug(5230) << "SyncEntry copy c'tor " << endl;
     mState = ent.mState;
     mSyncee = ent.mSyncee;
     mSyncState = ent.mSyncState;
@@ -80,8 +80,8 @@ Syncee::Syncee(uint size) :
     mSyncMode = MetaLess;
     mFirstSync = false;
     mSupport.fill(true);
+    kdDebug(5230) << "Size is " << size << " " << mSupport.size() << endl;
 }
-
 
 Syncee::~Syncee()
 {
@@ -221,6 +221,7 @@ QString Syncee::newId() const {
 void Syncee::setSupports( const QBitArray& ar) {
     mSupport = ar;
     mSupport.detach();
+    kdDebug(5230) << "setSupports count is " << ar.size() << endl;
 }
 QBitArray Syncee::bitArray()const {
     return mSupport;

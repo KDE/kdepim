@@ -170,20 +170,24 @@ namespace {
 }
 
 bool AddressBookSyncEntry::mergeWith( SyncEntry* ent) {
+    kdDebug(5228) << "mergeWith was called " << endl;
     if ( ent->name() != name() || !ent->syncee() || !syncee() )
         return false;
+    kdDebug(5228) << "Passed the test " << endl;
 
     AddressBookSyncEntry* entry = static_cast<AddressBookSyncEntry*> (ent);
     QBitArray hier = syncee()->bitArray();
     QBitArray da   = entry->syncee()->bitArray();
+    kdDebug(5228) << "Hier count " << hier.size() << " Da count "<< da.size() << endl;
     MergeMap::Iterator it;
     MergeMap* ma = map();
-    for (uint i = 0; i < da.count() && i < hier.count(); i++ ) {
+    for (uint i = 0; i < da.size() && i < hier.size(); i++ ) {
         /*
          * If da supports [i] and this entry does
          * not -> merge
          */
         if ( da[i] && !hier[i] ) {
+            kdDebug(5228) << " da supports and hier not " << i << endl;
             it = ma->find( i );
             if (it!= ma->end() )
                 (*it.data())(mAddressee,entry->mAddressee);
@@ -249,7 +253,7 @@ void AddressBookSyncee::addEntry( SyncEntry *entry )
 {
   AddressBookSyncEntry *abEntry = dynamic_cast<AddressBookSyncEntry *>(entry);
   if (!abEntry) {
-    kdDebug() << "AddressBookSyncee::addEntry(): SyncEntry has wrong type."
+    kdDebug(5228) << "AddressBookSyncee::addEntry(): SyncEntry has wrong type."
               << endl;
   } else {
       abEntry->setSyncee( this ); // set the parent
@@ -265,7 +269,7 @@ void AddressBookSyncee::removeEntry( SyncEntry *entry )
 {
   AddressBookSyncEntry *abEntry = dynamic_cast<AddressBookSyncEntry *>(entry);
   if ( !abEntry ) {
-    kdDebug() << "AddressBookSyncee::removeEntry(): SyncEntry has wrong type."
+    kdDebug(5228) << "AddressBookSyncee::removeEntry(): SyncEntry has wrong type."
               << endl;
   } else {
       mEntries.remove( abEntry );
@@ -293,6 +297,7 @@ Syncee* AddressBookSyncee::clone() {
     AddressBookSyncee* clone = new AddressBookSyncee();
     clone->setSyncMode( syncMode() );
     clone->setFirstSync( firstSync() );
+    clone->setSupports( bitArray() );
     for ( entry = mEntries.first(); entry != 0; entry = mEntries.next() ) {
         cloneE = entry->clone();
         clone->addEntry( cloneE ); // mSyncee gets updatet
