@@ -6,6 +6,7 @@ X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=exchange
 ServiceTypes=KResources/Plugin
 Name=Calendar on Exchange2000 Server
+Name[ar]=Exchange 2000 ملقم
 Name[be]=Каляндар на сэрвэры Exchange 2000
 Name[bg]=Календар на сървър Exchange2000
 Name[bs]=Kalendar na Exchange2000 serveru

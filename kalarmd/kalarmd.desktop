@@ -3,7 +3,7 @@
 Encoding=UTF-8
 Name=Alarm Daemon
 Name[af]=Alarm Bediener
-Name[ar]=مراقب Alarm
+Name[ar]=مراقب KAlarm
 Name[bg]=Демон на алармата
 Name[br]=Diaoul Alarm
 Name[bs]=Alarm demon
@@ -27,6 +27,7 @@ Name[it]=Demone degli avvisi
 Name[ja]=アラームデーモン
 Name[lt]=Aliarmų tarnyba
 Name[lv]=Trauksmes Dēmons
+Name[mk]=Роковник демон
 Name[ms]=Daemon Jam Loceng
 Name[mt]=Programm tal-allarmi
 Name[nb]=Alarmnisse

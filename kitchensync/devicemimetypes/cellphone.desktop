@@ -4,6 +4,7 @@ Icon=pda_blue
 Type=MimeType
 MimeType=kdedevice/cellphone
 Comment=Connected Cellular Phone
+Comment[ar]=هاتف خليوي متصل
 Comment[bg]=Връзка с мобилен телефон
 Comment[bs]=Spojen mobilni telefon
 Comment[ca]=Telèfon mòbil connectat

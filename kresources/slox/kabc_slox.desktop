@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=SLOX
+Name[ar]=SMS
 X-KDE-Library=kabc_slox
 Type=Service
 ServiceTypes=KResources/Plugin

@@ -2,7 +2,9 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_resourceselection
 Name=Address Book Management Plugin
+Name[ar]=أداة إضافية لإدارة دفتر العناوين
 Name[be]=Дапаўненьне "Кіраваньне адраснамі кнігамі"
+Name[br]=Lugent melestradur ar c'harnedoù chomlec'hioù
 Name[bs]=Dodatak za rukovanje adresarom
 Name[ca]=Endollable de gestió de llibretes d'adreces
 Name[cs]=Modul pro správu knih adres
@@ -34,6 +36,7 @@ Name[tg]=Идоракунии китоби адресӣ
 Name[uk]=Втулок для керування адресною книгою
 Name[zh_CN]=地址簿管理插件
 Comment=Plugin for managing address books
+Comment[ar]=ملحق لإدارة قوائم التوزيع
 Comment[be]=Дапаўненьне для кіраваньня адраснамі кнігамі
 Comment[bg]=Приставка за управление на адресника
 Comment[bs]=Dodatak za upravljanje adresarima

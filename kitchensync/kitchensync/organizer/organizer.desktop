@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=OrganizerPart
+Name[ar]=منظم كيدي
 Name[be]=Частка "Арганізатар"
 Name[ca]=Part de Organizer
 Name[cs]=Komponenta organizéru
@@ -14,6 +15,7 @@ Name[hr]=Organizer komponenta
 Name[is]=Organizer-íforrit
 Name[it]=Parte Organizer
 Name[ja]=Organize パート
+Name[mk]=Организатор - дел
 Name[nb]=Tidsplanleggerdel
 Name[nl]=Organizer-part
 Name[nn]=Tidsplanleggjardel
