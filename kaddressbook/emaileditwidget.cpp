@@ -237,7 +237,7 @@ QStringList EmailEditDialog::emails() const
 
   for ( uint i = 0; i < mEmailListBox->count(); ++i ) {
     EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( i ) );
-    if ( (int)i == mEmailListBox->currentItem() )
+    if ( item->preferred() )
       emails.prepend( item->text() );
     else
       emails.append( item->text() );
