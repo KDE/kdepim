@@ -50,6 +50,7 @@ class LDAPOptionsWidget : public QWidget
     void slotEditHost();
     void slotRemoveHost();
     void slotSelectionChanged( QListViewItem* );
+    void slotItemClicked( QListViewItem* );
 
   private:
     void initGUI();

@@ -71,8 +71,9 @@ class LDAPServer
 class LDAPItem : public QCheckListItem
 {
   public:
-    LDAPItem( QListView *parent, const LDAPServer &server )
-      : QCheckListItem( parent, QString::null, QCheckListItem::CheckBox )
+    LDAPItem( QListView *parent, const LDAPServer &server, bool isActive = false )
+      : QCheckListItem( parent, QString::null, QCheckListItem::CheckBox ),
+        mIsActive( isActive )
     {
       setServer( server );
     }
@@ -86,8 +87,12 @@ class LDAPItem : public QCheckListItem
 
     LDAPServer server() const { return mServer; }
 
+    void setIsActive( bool isActive ) { mIsActive = isActive; }
+    bool isActive() const { return mIsActive; }
+
   private:
     LDAPServer mServer;
+    bool mIsActive;
 };
 
 LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
@@ -101,6 +106,8 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
   connect( mHostListView, SIGNAL( selectionChanged( QListViewItem* ) ),
            SLOT( slotSelectionChanged( QListViewItem* ) ) );
   connect( mHostListView, SIGNAL(doubleClicked( QListViewItem *, const QPoint &, int )), this, SLOT(slotEditHost()));
+  connect( mHostListView, SIGNAL( clicked( QListViewItem* ) ),
+           SLOT( slotItemClicked( QListViewItem* ) ) );
 }
 
 LDAPOptionsWidget::~LDAPOptionsWidget()
@@ -113,6 +120,18 @@ void LDAPOptionsWidget::slotSelectionChanged( QListViewItem *item )
 
   mEditButton->setEnabled( state );
   mRemoveButton->setEnabled( state );
+}
+
+void LDAPOptionsWidget::slotItemClicked( QListViewItem *item )
+{
+  LDAPItem *ldapItem = dynamic_cast<LDAPItem*>( item );
+  if ( !ldapItem )
+    return;
+
+  if ( ldapItem->isOn() != ldapItem->isActive() ) {
+    emit changed( true );
+    ldapItem->setIsActive( ldapItem->isOn() );
+  }
 }
 
 void LDAPOptionsWidget::slotAddHost()
@@ -182,7 +201,7 @@ void LDAPOptionsWidget::restoreSettings()
     server.setBindDN( config->readEntry( QString( "SelectedBind%1" ).arg( i ) ) );
     server.setPwdBindDN( config->readEntry( QString( "SelectedPwdBind%1" ).arg( i ) ) );
 
-    LDAPItem *item = new LDAPItem( mHostListView, server );
+    LDAPItem *item = new LDAPItem( mHostListView, server, true );
     item->setOn( true );
   }
 
@@ -224,11 +243,11 @@ void LDAPOptionsWidget::saveSettings()
       config->writeEntry( QString( "SelectedPwdBind%1" ).arg( selected ), server.pwdBindDN() );
       selected++;
     } else {
-      config->writeEntry( QString( "Host%1" ).arg( selected ), server.host() );
-      config->writeEntry( QString( "Port%1" ).arg( selected ), server.port() );
-      config->writeEntry( QString( "Base%1" ).arg( selected ), server.baseDN() );
-      config->writeEntry( QString( "Bind%1" ).arg( selected ), server.bindDN() );
-      config->writeEntry( QString( "PwdBind%1" ).arg( selected ), server.pwdBindDN() );
+      config->writeEntry( QString( "Host%1" ).arg( unselected ), server.host() );
+      config->writeEntry( QString( "Port%1" ).arg( unselected ), server.port() );
+      config->writeEntry( QString( "Base%1" ).arg( unselected ), server.baseDN() );
+      config->writeEntry( QString( "Bind%1" ).arg( unselected ), server.bindDN() );
+      config->writeEntry( QString( "PwdBind%1" ).arg( unselected ), server.pwdBindDN() );
       unselected++;
     }
   }
