@@ -110,11 +110,11 @@ void KNProtocolClient::waitForWork()
       tv.tv_usec = 0;
       selectRet = select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
       if (selectRet == 0) {
-        qDebug("KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
+        qDebug("knode: KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
         closeConnection();               // nothing happend...
       } else {
         if (((selectRet > 0)&&(!FD_ISSET(fdPipeIn,&fdsR)))||(selectRet == -1)) {
-          qDebug("KNProtocolClient::waitForWork(): connection broken, closing it");
+          qDebug("knode: KNProtocolClient::waitForWork(): connection broken, closing it");
           closeSocket();
         }
       }
@@ -129,7 +129,7 @@ void KNProtocolClient::waitForWork()
 
     sendSignal(TSjobStarted);
     if (job) {
-    //  qDebug("KNProtocolClient::waitForWork(): got job");
+    //  qDebug("knode: KNProtocolClient::waitForWork(): got job");
 
       if (job->net()&&!account.isEqual(job->account())) {     // server changed
         account.copy(job->account());
@@ -173,7 +173,7 @@ bool KNProtocolClient::openConnection()
 {
   sendSignal(TSconnect);
 
-  qDebug("KNProtocolClient::openConnection(): opening connection");
+  qDebug("knode: KNProtocolClient::openConnection(): opening connection");
 
   if (account.server().isEmpty()) {
     job->setErrorString(i18n("Unable to resolve hostname"));
@@ -238,7 +238,7 @@ void KNProtocolClient::closeConnection()
   fd_set fdsW;
   timeval tv;
 
-  qDebug("KNProtocolClient::closeConnection(): closing connection");
+  qDebug("knode: KNProtocolClient::closeConnection(): closing connection");
 
   FD_ZERO(&fdsW);
   FD_SET(tcpSocket, &fdsW);
@@ -435,7 +435,7 @@ void KNProtocolClient::handleErrors()
 void KNProtocolClient::sendSignal(threadSignal s)
 {
   int signal=(int)s;
-  // qDebug("KNProtcolClient::sendSignal() : sending signal to main thread");
+  // qDebug("knode: KNProtcolClient::sendSignal() : sending signal to main thread");
   write(fdPipeOut, &signal, sizeof(int));
 }
 
@@ -476,7 +476,7 @@ bool KNProtocolClient::waitForRead()
   }
   if (ret > 0) {
     if (FD_ISSET(fdPipeIn,&fdsR)) {  // stop signal
-      qDebug("KNProtocolClient::waitForRead(): got stop signal");
+      qDebug("knode: KNProtocolClient::waitForRead(): got stop signal");
       closeConnection();
       return false;
     }
@@ -536,7 +536,7 @@ bool KNProtocolClient::waitForWrite()
   }
   if (ret > 0) {
     if (FD_ISSET(fdPipeIn,&fdsR)) {  // stop signal
-      qDebug("KNProtocolClient::waitForWrite(): got stop signal");
+      qDebug("knode: KNProtocolClient::waitForWrite(): got stop signal");
       closeConnection();
       return false;
     }

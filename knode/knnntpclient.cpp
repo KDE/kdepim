@@ -59,7 +59,7 @@ void KNNntpClient::processJob()
       doPostArticle();
       break;
     default:
-      qDebug("KNNntpClient::processJob(): mismatched job");   
+      qDebug("knode: KNNntpClient::processJob(): mismatched job");
   }   
 }
   
@@ -101,7 +101,7 @@ void KNNntpClient::doFetchGroups()
     }
     s = strchr(line,' ');
     if(!s)
-      qDebug("retrieved broken group-line - ignoring");
+      qDebug("knode: retrieved broken group-line - ignoring");
     else {
       s[0] = 0;    // cut string
       tmpList.append(line);
@@ -135,7 +135,7 @@ void KNNntpClient::doFetchGroups()
       s = line;
       while (*s != '\0' && *s != '\t' && *s != ' ') s++;
       if (*s == '\0') {
-        qDebug("retrieved broken group-description - ignoring");
+        qDebug("knode: retrieved broken group-description - ignoring");
       } else {
         s[0] = 0;         // terminate groupname
         s++;
@@ -208,7 +208,7 @@ void KNNntpClient::doCheckNewGroups()
     }
     s = strchr(line,' ');
     if(!s)
-      qDebug("retrieved broken group-line - ignoring");
+      qDebug("knode: retrieved broken group-line - ignoring");
     else {
       s[0] = 0;    // cut string
       tmpList.append(line);
@@ -245,7 +245,7 @@ void KNNntpClient::doCheckNewGroups()
         s = desList.first();
         while (*s != '\0' && *s != '\t' && *s != ' ') s++;
         if (*s == '\0') {
-          qDebug("retrieved broken group-description - ignoring");
+          qDebug("knode: retrieved broken group-description - ignoring");
           tempList.append(new KNGroupInfo(group,"",true));
         } else {
           while (*s == ' ' || *s == '\t') s++;    // go on to the description
@@ -320,22 +320,22 @@ void KNNntpClient::doFetchNewHeaders()
     oldlast=target->lastNr();
     
   toFetch=last-oldlast;
-  //qDebug("last %d  oldlast %d  toFetch %d\n",last,oldlast,toFetch);
+  //qDebug("knode: last %d  oldlast %d  toFetch %d\n",last,oldlast,toFetch);
     
   if(toFetch==0) {
-    //qDebug("No new Articles in group\n");
+    //qDebug("knode: No new Articles in group\n");
     return;
   }
   
   if(toFetch>target->maxFetch()) {
     toFetch=target->maxFetch();
-    //qDebug("Fetching only %d articles\n",toFetch);
+    //qDebug("knode: Fetching only %d articles\n",toFetch);
   }
 
   progressValue = 100;  
   predictedLines = toFetch;
     
-  //qDebug("KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
+  //qDebug("knode: KNNntpClient::doFetchNewHeaders() : xover %d-%d", last-toFetch+1, last);
   cmd.sprintf("xover %d-%d",last-toFetch+1,last);
   if (!sendCommandWCheck(cmd,224))       // 224 success
     return;
@@ -421,7 +421,7 @@ bool KNNntpClient::openConnection()
     return false;
 
   if (rep==500) {
-    qDebug("\"MODE READER\" command not recognized.");
+    qDebug("knode: \"MODE READER\" command not recognized.");
   } else
     if ((rep!=200)&&(rep!=201)) { // 200 Hello, you can post
       handleErrors();             // 201 Hello, you can't post
@@ -442,14 +442,14 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     return false;
   
   if (rep==480) {            // 480 requesting authorization
-    //qDebug("Authorization requested");
+    //qDebug("knode: Authorization requested");
     
     if (!account.user().length()) {
       job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
       return false;
     }
 
-    //qDebug("user: %s",account.user().data());
+    //qDebug("knode: user: %s",account.user().data());
         
     QCString command = "AUTHINFO USER ";
     command += account.user().local8Bit();
@@ -457,14 +457,14 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
       return false;
     
     if (rep==381) {          // 381 PASS required
-      //qDebug("Password required");
+      //qDebug("knode: Password required");
       
       if (!account.pass().length()) {
         job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
         return false;
       } 
           
-      //qDebug("pass: %s",account.pass().data());
+      //qDebug("knode: pass: %s",account.pass().data());
       
       command = "AUTHINFO PASS ";
       command += account.pass().local8Bit();
@@ -473,7 +473,7 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     }
     
     if (rep==281) {         // 281 authorization success
-      //qDebug("Authorization successful");
+      //qDebug("knode: Authorization successful");
       if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
         return false;
     } else {
