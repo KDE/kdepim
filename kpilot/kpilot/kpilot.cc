@@ -628,11 +628,11 @@ void KPilotInstaller::initMenu()
 	// View actions
 
 	// Options actions
-#if KDE_VERSION >= 0x30180
+#if KDE_IS_VERSION(3,1,80)
 	createStandardStatusBarAction();
 #endif
 
-#if KDE_VERSION >= 0x30080
+#if KDE_IS_VERSION(3,0,80)
 	setStandardToolBarMenuEnabled(true);
 #else
 	m_toolbarAction =
@@ -752,7 +752,7 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 	}*/
 }
 
-#if KDE_VERSION >= 0x30080
+#if KDE_IS_VERSION(3,0,80)
 // Included in kdelibs in KDE 3.1, but we can't #ifdef slots,
 // so include a dummy implementation.
 void KPilotInstaller::optionsShowToolbar()
@@ -786,7 +786,7 @@ void KPilotInstaller::optionsConfigureToolbars()
 {
 	FUNCTIONSETUP;
 	// use the standard toolbar editor
-#if KDE_VERSION >= 0x030100
+#if KDE_IS_VERSION(3,1,0)
 	// This was added in KDE 3.1
 	saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 #endif
@@ -801,7 +801,7 @@ void KPilotInstaller::slotNewToolbarConfig()
 	FUNCTIONSETUP;
 	// recreate our GUI
 	createGUI();
-#if KDE_VERSION >= 0x030100
+#if KDE_IS_VERSION(3,1,0)
 	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 #endif
 }

@@ -62,7 +62,7 @@ static const char *memowidget_id =
 
 #include "memoWidget.moc"
 
-#if KDE_VERSION >= 0x30100
+#if KDE_IS_VERSION(3,1,0)
 #include <ktextedit.h>
 #else
 #define KTextEdit QTextEdit

@@ -306,7 +306,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Adding " << s << " to restore list." << endl;
 #endif
 
-#if KDE_VERSION < 306  /* 305 ok? */
+#if !KDE_IS_VERSION(3,0,6)  /* 3.0.5 ok? */
 		strncpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name) - 1);
 		dbi.name[(sizeof(dbi.name) - 1)] = '\0';
 #else
