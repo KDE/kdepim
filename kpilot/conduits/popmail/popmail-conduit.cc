@@ -526,7 +526,12 @@ int PopMailConduit::sendViaSMTP()
 	// longer than 1024 characters.
 	//
 	//
+#ifdef __osf__
+	getdomainname(buffer+1024,1024);    // getdomainname is void here
+        ret = 0;
+#else
 	ret = getdomainname(buffer+1024,1024);
+#endif
 	if (ret)
 	{
 		ret=errno;
@@ -1890,6 +1895,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.21  2001/04/26 19:20:17  adridg
+// Respect KMail's outboxFolder setting
+//
 // Revision 1.20  2001/04/23 21:08:42  adridg
 // Extra debugging for bug #24522
 //
