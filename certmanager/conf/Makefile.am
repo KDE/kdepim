@@ -19,5 +19,5 @@ kcm_kleopatra_la_LIBADD = ../lib/libkleopatra.la $(LIB_KDEUI)
 
 kde_services_DATA = \
 	kleopatra_config_dirserv.desktop \
-	kleopatra_config_appear.desktop \
-	kleopatra_config_dnorder.desktop
+	kleopatra_config_appear.desktop 
+#	kleopatra_config_dnorder.desktop
