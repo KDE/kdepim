@@ -1,5 +1,5 @@
 Source: kdepim
-Build-Depends: autoconf, kdelibs3-dev, debhelper, libpisock-dev, pilot-link,libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlib6g-dev, jade, sgml-base, docbook, gettext, bison, libgl-dev, libc6-dev
+Build-Depends: autoconf, automake, kdelibs3-dev, debhelper, libjpeg62-dev, libpng2-dev, libqt2.2-dev, zlib1g-dev, xlib6g-dev | xlibs, jade, sgml-base, docbook, gettext, bison, libgl-dev, libc6-dev
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
