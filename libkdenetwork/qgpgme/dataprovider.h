@@ -24,10 +24,11 @@
 #include <gpgmepp/interfaces/dataprovider.h>
 
 #include <qcstring.h>
+#include <kdepimmacros.h>
 
 namespace QGpgME {
 
-  class QByteArrayDataProvider : public GpgME::DataProvider {
+  class KDE_EXPORT QByteArrayDataProvider : public GpgME::DataProvider {
   public:
     QByteArrayDataProvider();
     QByteArrayDataProvider( const QByteArray & initialData );

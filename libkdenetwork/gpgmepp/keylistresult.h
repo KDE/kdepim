@@ -23,13 +23,14 @@
 
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/result.h>
+#include <kdepimmacros.h>
 
 namespace GpgME {
 
   class Context;
   class Error;
 
-  class KeyListResult : public Result {
+  class KDE_EXPORT KeyListResult : public Result {
   public:
     KeyListResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit KeyListResult( const Error & err );

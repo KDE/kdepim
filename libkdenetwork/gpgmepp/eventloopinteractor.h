@@ -21,6 +21,7 @@
 #ifndef __GPGMEPP_EVENTLOOPINTERACTOR_H__
 #define __GPGMEPP_EVENTLOOPINTERACTOR_H__
 
+#include <kdepimmacros.h>
 
 namespace GpgME {
 
@@ -103,7 +104,7 @@ namespace GpgME {
 
       
   */
-  class EventLoopInteractor {
+  class KDE_EXPORT EventLoopInteractor {
   protected:
     EventLoopInteractor();
   public:

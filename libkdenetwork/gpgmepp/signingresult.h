@@ -28,14 +28,14 @@
 #include <time.h>
 
 #include <vector>
-
+#include <kdepimmacros.h>
 namespace GpgME {
 
   class Error;
   class CreatedSignature;
   class InvalidSigningKey;
 
-  class SigningResult : public Result {
+  class KDE_EXPORT SigningResult : public Result {
   public:
     SigningResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit SigningResult( const Error & err );
@@ -57,7 +57,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class InvalidSigningKey {
+  class KDE_EXPORT InvalidSigningKey {
     friend class SigningResult;
     InvalidSigningKey( SigningResult::Private * parent, unsigned int index );
   public:
@@ -77,7 +77,7 @@ namespace GpgME {
     unsigned int idx;
   };
 
-  class CreatedSignature {
+  class KDE_EXPORT CreatedSignature {
     friend class SigningResult;
     CreatedSignature( SigningResult::Private * parent, unsigned int index );
   public:

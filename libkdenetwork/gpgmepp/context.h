@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <utility>
+#include <kdepimmacros.h>
 
 namespace GpgME {
 
@@ -45,7 +46,7 @@ namespace GpgME {
 
   class EngineInfo;
 
-  class Error {
+  class KDE_EXPORT Error {
   public:
     Error( int e=0 ) : mErr( e ) {}
 
@@ -63,7 +64,7 @@ namespace GpgME {
     int mErr;
   };
 
-  class Context {
+  class KDE_EXPORT Context {
     Context( gpgme_ctx_t );
   public:
     enum Protocol { OpenPGP, CMS, Unknown };
@@ -273,7 +274,7 @@ namespace GpgME {
   //
   //
 
-  GpgME::Error setDefaultLocale( int category, const char * value );
+  KDE_EXPORT GpgME::Error setDefaultLocale( int category, const char * value );
 
   Context * wait( GpgME::Error & e, bool hang=true );
   typedef void (*IdleFunction)(void);
@@ -281,9 +282,9 @@ namespace GpgME {
 
   typedef void (*IOCallback)( void * data, int fd );
 
-  EngineInfo engineInfo( Context::Protocol proto );
+  KDE_EXPORT EngineInfo engineInfo( Context::Protocol proto );
 
-  GpgME::Error checkEngine( Context::Protocol proto );
+  KDE_EXPORT GpgME::Error checkEngine( Context::Protocol proto );
 
 } // namespace GpgME
 

@@ -24,9 +24,11 @@
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/context.h>
 
+#include <kdepimmacros.h>
+
 namespace GpgME {
 
-  class EngineInfo {
+  class KDE_EXPORT EngineInfo {
   public:
     EngineInfo();
     EngineInfo( gpgme_engine_info_t engine );

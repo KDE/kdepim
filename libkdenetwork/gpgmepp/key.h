@@ -27,6 +27,7 @@
 #include <sys/time.h>
 
 #include <vector>
+#include <kdepimmacros.h>
 
 namespace GpgME {
 
@@ -37,7 +38,7 @@ namespace GpgME {
   // class Key
   //
 
-  class Key {
+  class KDE_EXPORT Key {
     friend class Context;
   public:
     Key();
@@ -111,7 +112,7 @@ namespace GpgME {
   // class Subkey
   //
 
-  class Subkey {
+  class KDE_EXPORT Subkey {
   public:
     Subkey( gpgme_key_t key=0, gpgme_sub_key_t subkey=0 );
     Subkey( gpgme_key_t key, unsigned int idx );
@@ -157,7 +158,7 @@ namespace GpgME {
   // class UserID
   //
 
-  class UserID {
+  class KDE_EXPORT UserID {
   public:
     class Signature;
 
@@ -199,7 +200,7 @@ namespace GpgME {
   // class UserID::Signature
   //
 
-  class UserID::Signature {
+  class KDE_EXPORT UserID::Signature {
   public:
     class Notation;
 
@@ -256,7 +257,7 @@ namespace GpgME {
   //
   //
 
-  class UserID::Signature::Notation {
+  class KDE_EXPORT UserID::Signature::Notation {
   public:
     Notation( gpgme_key_t key=0, gpgme_user_id_t uid=0,
 	      gpgme_key_sig_t sig=0, gpgme_sig_notation_t nota=0 );

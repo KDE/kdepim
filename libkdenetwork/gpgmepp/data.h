@@ -25,13 +25,14 @@
 
 #include <sys/types.h> // for size_t, off_t
 #include <cstdio> // FILE
+#include <kdepimmacros.h>
 
 namespace GpgME {
 
   class DataProvider;
   class Error;
 
-  class Data {
+  class KDE_EXPORT Data {
   public:
     Data();
     Data( gpgme_data_t data );

@@ -3,7 +3,7 @@ KDE_OPTIONS = foreign
 
 SUBDIRS = interfaces .
 
-INCLUDES = -I$(top_srcdir)/libkdenetwork -I$(top_srcdir)/libkdenetwork/gpgmepp $(GPGME_CFLAGS)
+INCLUDES = $(all_includes) -I$(top_srcdir)/libkdenetwork -I$(top_srcdir)/libkdenetwork/gpgmepp $(GPGME_CFLAGS) -I$(top_srcdir)/libkdepim
 
 gpgmeppdir = $(includedir)/gpgme++
 gpgmepp_HEADERS = context.h \

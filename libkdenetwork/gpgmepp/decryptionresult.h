@@ -23,12 +23,13 @@
 
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/result.h>
+#include <kdepimmacros.h>
 
 namespace GpgME {
 
   class Error;
 
-  class DecryptionResult : public Result {
+  class KDE_EXPORT DecryptionResult : public Result {
   public:
     DecryptionResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit DecryptionResult( const Error & err );

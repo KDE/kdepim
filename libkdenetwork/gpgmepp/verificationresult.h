@@ -28,12 +28,14 @@
 
 #include <vector>
 
+#include <kdepimmacros.h>
+
 namespace GpgME {
 
   class Error;
   class Signature;
 
-  class VerificationResult : public Result {
+  class KDE_EXPORT VerificationResult : public Result {
   public:
     VerificationResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit VerificationResult( const Error & err );
@@ -52,7 +54,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class Signature {
+  class KDE_EXPORT Signature {
     friend class VerificationResult;
     Signature( VerificationResult::Private * parent, unsigned int index );
   public:
@@ -108,7 +110,7 @@ namespace GpgME {
     unsigned int idx;
   };
 
-  class Signature::Notation {
+  class KDE_EXPORT Signature::Notation {
     friend class Signature;
     Notation( VerificationResult::Private * parent, unsigned int sindex, unsigned int nindex );
   public:

@@ -25,13 +25,14 @@
 #include <gpgmepp/result.h>
 
 #include <vector>
+#include <kdepimmacros.h>
 
 namespace GpgME {
 
   class Error;
   class Import;
 
-  class ImportResult : public Result {
+  class KDE_EXPORT ImportResult : public Result {
   public:
     ImportResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit ImportResult( const Error & error );
@@ -67,7 +68,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class Import {
+  class KDE_EXPORT Import {
     friend class ImportResult;
     Import( ImportResult::Private * parent, unsigned int idx );
   public:

@@ -25,13 +25,14 @@
 #include <gpgmepp/result.h>
 
 #include <vector>
+#include <kdepimmacros.h>
 
 namespace GpgME {
 
   class Error;
   class InvalidRecipient;
 
-  class EncryptionResult : public Result {
+  class KDE_EXPORT EncryptionResult : public Result {
   public:
     EncryptionResult( gpgme_ctx_t ctx=0, int error=0 );
     explicit EncryptionResult( const Error & err );
@@ -52,7 +53,7 @@ namespace GpgME {
     Private * d;
   };
 
-  class InvalidRecipient {
+  class KDE_EXPORT InvalidRecipient {
     friend class EncryptionResult;
     InvalidRecipient( EncryptionResult::Private * parent, unsigned int index );
   public:
