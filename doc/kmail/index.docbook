@@ -39,7 +39,7 @@
 
 </authorgroup>
 
-<date>2001-08-11</date>
+<date>2001-09-02</date>
 <releaseinfo>1.03.00</releaseinfo>
 
 <copyright>
@@ -281,8 +281,9 @@ have a shell account on the server and the mails are stored in your home
 directory it might be useful to store the mails in a subdirectory
 <filename class="directory">/Mail/</filename>. Use this as a value in
 the <guilabel>Prefix to folders</guilabel> field so that &kmail; does
-not mix up mailbox files and other files. If you are not interested in
-this feature, simple leave the field blank.</para>
+not mix up mailbox files and other files. Note that even with a slash as the
+first character, this path is interpreted relatively to your home directory.
+If you are not interested in this feature, simple leave the field blank.</para>
 
 <para>If you check <guilabel>Automatically expunge deleted
 messages</guilabel> &kmail; removes the mails you deleted from the
