@@ -973,7 +973,7 @@ void KNMainWidget::prepareShutdown()
   delete cup;
 
   saveOptions();
-  RecentAddresses::self()->save( knGlobals.config() );
+  RecentAddresses::self(knGlobals.config())->save( knGlobals.config() );
   c_fgManager->syncConfig();
   a_rtManager->deleteTempFiles();
   g_rpManager->syncGroups();

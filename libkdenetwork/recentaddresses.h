@@ -51,7 +51,7 @@ public:
     /**
      * @returns the only possible instance of this class.
      */
-    static RecentAddresses * self();
+    static RecentAddresses * self(KConfig *config = 0L);
 
     /**
      * @returns the list of recent addresses.
@@ -92,7 +92,7 @@ public:
     void save( KConfig * );
 
 private:
-    RecentAddresses();
+    RecentAddresses(KConfig *config = 0L);
 
     KABC::Addressee::List m_addresseeList;
 

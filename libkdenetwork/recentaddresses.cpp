@@ -43,16 +43,19 @@ static KStaticDeleter<RecentAddresses> sd;
 
 RecentAddresses * RecentAddresses::s_self = 0;
 
-RecentAddresses * RecentAddresses::self()
+RecentAddresses * RecentAddresses::self( KConfig *config)
 {
     if ( !s_self )
-        sd.setObject( s_self, new RecentAddresses() );
+        sd.setObject( s_self, new RecentAddresses(config) );
     return s_self;
 }
 
-RecentAddresses::RecentAddresses()
+RecentAddresses::RecentAddresses(KConfig * config)
 {
+  if ( !config )
     load( KGlobal::config() );
+  else
+    load( config );
 }
 
 RecentAddresses::~RecentAddresses()

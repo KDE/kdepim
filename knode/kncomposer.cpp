@@ -76,7 +76,7 @@ void KNLineEdit::loadAddresses()
 {
     KNLineEditInherited::loadAddresses();
 
-    QStringList recent = RecentAddresses::self()->addresses();
+    QStringList recent = RecentAddresses::self(knGlobals.config())->addresses();
     QStringList::Iterator it = recent.begin();
     for ( ; it != recent.end(); ++it )
         addAddress( *it );
@@ -990,7 +990,7 @@ void KNComposer::insertFile(bool clear, bool box)
 void KNComposer::addRecentAddress()
 {
     if( !v_iew->t_o->isHidden() )
-        RecentAddresses::self()->add( v_iew->t_o->text() );
+        RecentAddresses::self(knGlobals.config())->add( v_iew->t_o->text() );
 }
 
 void KNComposer::slotSendNow()
@@ -1427,7 +1427,7 @@ void KNComposer::slotToBtnClicked()
       dlg.setSelectedTo( lst );
   }
 #endif
-  dlg.setRecentAddresses( RecentAddresses::self()->kabcAddresses() );
+  dlg.setRecentAddresses( RecentAddresses::self(knGlobals.config())->kabcAddresses() );
   if (dlg.exec()==QDialog::Rejected) return;
 
   if(!to.isEmpty())
