@@ -218,7 +218,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord* newRecord)
     if(isDBOpen() == false)
 	{
 	kdError() << __FUNCTION__ << ": DB not open!" << endl;
-	return -1;
+	return 0;
 	}
     // We can't do this since it's possible the local apps need to rewrite a record
     // that also exists on the pilot, ie: it would already have a uid but incorrectly
@@ -394,6 +394,9 @@ void PilotLocalDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.12  2001/03/27 23:54:43  stern
+// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
+//
 // Revision 1.11  2001/02/27 15:40:48  adridg
 // Use QCString and QFile::encodeName where appropriate
 //

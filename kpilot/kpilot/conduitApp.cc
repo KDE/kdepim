@@ -62,6 +62,7 @@ static KCmdLineOptions conduitoptions[] =
 		"with this conduit"), 0L },
 	{ "hotsync", I18N_NOOP("HotSync the databases associated "
 		"with this conduit"), 0L },
+	{ "local",I18N_NOOP("HotSync the database to the local database file instead of the palm pilot") ,0L },
 	{ "test",I18N_NOOP("Test this conduit (possibly unimplemented)")
 		,0L },
 #ifdef DEBUG
@@ -252,6 +253,7 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 	CheckArg("hotsync",HotSync);
 	CheckArg("backup",Backup);
 	CheckArg("test",Test);
+	CheckArg("local",LocalDB);
 
 	if (fMode==BaseConduit::None)
 	{
@@ -302,9 +304,13 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 		}
 	}
 
+	// init the conduit after DCOP is setup
+	fConduit->init();
+
 	switch(fMode)
 	{
 	case BaseConduit::DBInfo : cout << fConduit->dbInfo(); break;
+	case BaseConduit::LocalDB : 
 	case BaseConduit::HotSync : fConduit->doSync(); break;
 	case BaseConduit::Backup : fConduit->doBackup(); break;
 	case BaseConduit::Test : 
@@ -344,6 +350,10 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.20  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.19  2001/02/26 22:13:07  adridg
 // Removed useless getopt.h; fixes compile prob on Solaris
 //

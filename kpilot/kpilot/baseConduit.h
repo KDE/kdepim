@@ -87,7 +87,7 @@ public:
 		Backup, 
 		Test,
 		DBInfo,
-		UseLocalDB // use the local database instead of pilot daemon
+		LocalDB // use the local database instead of pilot daemon
 	};
 
 	enum ConduitExitCode {
@@ -108,17 +108,19 @@ public:
    * InvalidLocalDBPath
    */
   BaseConduit(eConduitMode);
-  /**
-   * This will put the conduit in UseLocalDB mode and will open
-   * the localDBPath database instead of using the PilotDaemon.
-   *
-   * This allows the developer to test their conduit without having to
-   * actually sync to the palm pilot or use a simulator.  The initial
-   * DB can be saved by using the backup mode in kpilot instead of syncing.
-   */
-  BaseConduit(const QString &dbName);
   virtual ~BaseConduit();
 
+  /**
+   *  Actually opens the appropriate database (local using pilotLocalDatabase
+   *  or over socket using the pilotConduitDatabase).  This cannot
+   *  be done in the constructor since the virtual function dbInfo()
+   *  is needed for pilotLocalDatabase.
+   *
+   *  This method should be called inside the the ConduitApp function
+   *  setConduit().
+   */
+  void init();
+  
   /**
    *  This will be called to do the actual hotsync.  Users should override
    *  this to do a normal hotsync with the pilot.
@@ -263,6 +265,9 @@ private:
 
 
 // $Log$
+// Revision 1.20  2001/03/27 23:54:43  stern
+// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
+//
 // Revision 1.19  2001/03/19 23:12:39  stern
 // Made changes necessary for upcoming abbrowser conduit.
 //

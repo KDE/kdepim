@@ -47,10 +47,18 @@ static const char *baseconduit_id="$Id$";
 BaseConduit::BaseConduit(eConduitMode mode)
       : QObject(), fMode(mode), fDB(0L)
 {
+}
+
+void BaseConduit::init()
+    {
 	FUNCTIONSETUP;
 
-	if((mode == BaseConduit::HotSync) || 
-		(mode == BaseConduit::Backup))
+	// in case the user calls this twice
+	if (fDB)
+	    return ;
+	
+	if((fMode == BaseConduit::HotSync) || 
+	   (fMode == BaseConduit::Backup))
 	{
 	fDB = new PilotConduitDatabase();
 	if (!fDB->isDBOpen())
@@ -70,28 +78,20 @@ BaseConduit::BaseConduit(eConduitMode mode)
 
 	
 	}
-	else if( mode == UseLocalDB )
+	else if( fMode == LocalDB )
 	    {
-	    kdError() << __FUNCTION__
-		      << ": Wrong constructor for UseLocalDB mode" << endl;
-	    fMode = BaseConduit::Error;
+	    QString dbPath = KPilotConfig::getDefaultDBPath();
+	    QString localDB = dbInfo();
+	    fDB = new PilotLocalDatabase( dbPath, localDB );
+	    if (!fDB->isDBOpen())
+		{
+		delete fDB;
+		fDB = 0L;
+		}
+	    
 	    }
 }
 
-BaseConduit::BaseConduit(const QString &localDB) 
-      : QObject(), fMode(UseLocalDB), fDB(0L)
-    {
-    FUNCTIONSETUP;
-
-    QString dbPath = KPilotConfig::getDefaultDBPath();
-	
-    fDB = new PilotLocalDatabase( dbPath, localDB );
-    if (!fDB->isDBOpen())
-	{
-	delete fDB;
-	fDB = 0L;
-	}
-    }
 BaseConduit::~BaseConduit()
     {
     delete fDB;
@@ -206,6 +206,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.19  2001/03/27 23:54:43  stern
+// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
+//
 // Revision 1.18  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.
