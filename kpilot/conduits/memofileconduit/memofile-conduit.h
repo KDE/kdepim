@@ -73,7 +73,9 @@ private:
 
 	
 	bool	readConfig();
-	void	getAppInfo();
+	bool	getAppInfo();
+	bool	setAppInfo();
+	unsigned char *doPackAppInfo( int *appLen );
 	QString	getCategoryName(int category);
 
 	bool	initializeFromPilot();
@@ -89,7 +91,7 @@ private:
 	bool	sync();
 	
 	int 	writeToPilot(Memofile * memofile);
-	void	deleteFromPilot(Memofile* memofile);
+	void	deleteFromPilot(PilotMemo* memo);
 
 	void 	cleanup();
 	

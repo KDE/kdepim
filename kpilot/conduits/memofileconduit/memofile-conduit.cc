@@ -60,6 +60,8 @@ static const char *memofile_conduit_id=
 #include "memofile-factory.h"
 #include "memofile-conduit.h"
 #include "memofileSettings.h"
+
+
 /**
  * Our workhorse.  This is the main driver for the conduit.
  */
@@ -74,7 +76,7 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
 	DEBUGCONDUIT<<memofile_conduit_id<<endl;
 #endif
 	fConduitName=i18n("Memofile");
-	fMemoList.setAutoDelete(true);
+	fMemoList.setAutoDelete(true);	
 }
 
 MemofileConduit::~MemofileConduit()
@@ -104,11 +106,10 @@ MemofileConduit::~MemofileConduit()
 	_memofiles = new Memofiles(fCategories, fMemoAppInfo, _memo_directory);
 
 	fFirstSync = _memofiles->isFirstSync();
-
-	addSyncLogEntry(" Syncing with " + _memo_directory + ".");
+	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));
 
 	if (SyncAction::eCopyHHToPC == getSyncDirection() || fFirstSync) {
-		addSyncLogEntry(" Copying Pilot to PC...");
+		addSyncLogEntry(i18n(" Copying Pilot to PC..."));
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": copying Pilot to PC." << endl;
 #endif
@@ -117,13 +118,13 @@ MemofileConduit::~MemofileConduit()
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": copying PC to Pilot." << endl;
 #endif
-		addSyncLogEntry(" Copying PC to Pilot...");
+		addSyncLogEntry(i18n(" Copying PC to Pilot..."));
 		copyPCToHH();
 	} else {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": doing regular sync." << endl;
 #endif
-		addSyncLogEntry(" Doing regular sync...");
+		addSyncLogEntry(i18n(" Doing regular sync..."));
 		sync();
 	}
 
@@ -132,7 +133,7 @@ MemofileConduit::~MemofileConduit()
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": stats: " << getResults() << endl;
 #endif
-	addSyncLogEntry(" " + getResults());
+	addSyncLogEntry(getResults());
 
 	return delayDone();
 }
@@ -171,7 +172,64 @@ bool MemofileConduit::readConfig()
 
 }
 
-void MemofileConduit::getAppInfo()
+bool MemofileConduit::setAppInfo()
+{
+	FUNCTIONSETUP;
+
+	// reset our category mapping from the filesystem
+	MemoCategoryMap map = _memofiles->readCategoryMetadata();
+
+	if (map.count() <=0) {
+#ifdef DEBUG
+			DEBUGCONDUIT << fname
+			<< ": category metadata map is empty, nothing to do." << endl;
+#endif
+		return true;
+	}
+
+	fCategories = map;
+	
+	for (int i = 0; i < 15; i++)
+	{
+		if (fCategories.contains(i)) {
+			QString name = fCategories[i].left(16);
+			
+#ifdef DEBUG
+			DEBUGCONDUIT << fname
+			<< ": setting category: [" << i
+			<< "] to name: ["
+			<< name << "]" << endl;
+#endif
+
+			memset(fMemoAppInfo.category.name[i], 0, 16);
+			strlcpy(fMemoAppInfo.category.name[i], name.latin1(), 16);
+		}
+	}
+
+	int appLen = 0;
+	unsigned char *buffer = doPackAppInfo( &appLen );
+	if ( buffer )
+	{	if (fDatabase)
+		fDatabase->writeAppBlock( buffer, appLen );
+		if (fLocalDatabase)
+			fLocalDatabase->writeAppBlock( buffer, appLen );
+		delete[] buffer;
+	}
+
+	return true;
+}
+
+unsigned char *MemofileConduit::doPackAppInfo( int *appLen )
+{
+	int appLength = pack_MemoAppInfo(&fMemoAppInfo, 0, 0);
+	unsigned char *buffer = new unsigned char[appLength];
+	pack_MemoAppInfo(&fMemoAppInfo, buffer, appLength);
+	if ( appLen ) *appLen = appLength;
+	return buffer;
+}
+
+
+bool MemofileConduit::getAppInfo()
 {
 	FUNCTIONSETUP;
 
@@ -180,13 +238,12 @@ void MemofileConduit::getAppInfo()
 	int appInfoSize = fDatabase->readAppBlock(buffer,PilotDatabase::MAX_APPINFO_SIZE);
 
 	if (appInfoSize<0) {
-		fActionStatus=Error;
-		return;
+		return false;
 	}
 
 	unpack_MemoAppInfo(&fMemoAppInfo,buffer,appInfoSize);
 	PilotDatabase::listAppInfo(&fMemoAppInfo.category);
-
+	return true;
 }
 
 
@@ -201,9 +258,9 @@ bool MemofileConduit::initializeFromPilot()
 	_countModifiedToPilot = 0;
 	_countNewToPilot = 0;
 
-	getAppInfo();
+	if (!getAppInfo()) return false;
 
-	if (!loadPilotCategories())	return false;
+	if (!loadPilotCategories()) return false;
 
 	return true;
 }
@@ -318,13 +375,13 @@ void MemofileConduit::getModifiedFromPilot()
 	while ((pilotRec = fDatabase->readNextModifiedRec()) != NULL) {
 		memo = new PilotMemo(pilotRec);
 		// we are syncing to both our filesystem and to the local
-		// databse, so take care of the local database here
+		// database, so take care of the local database here
 		if (memo->isDeleted()) {
 			fLocalDatabase->deleteRecord(memo->getID());
 		} else {
 			fLocalDatabase->writeRecord(pilotRec);
 		}
-
+		
 		if ((!pilotRec->isSecret()) || _sync_private) {
 			fMemoList.append(memo);
 
@@ -382,14 +439,13 @@ void MemofileConduit::listPilotMemos()
 	PilotMemo *memo;
 	for ( memo = fMemoList.first(); memo; memo = fMemoList.next() ) {
 		QString _category_name = fCategories[memo->getCat()];
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
+
+		DEBUGCONDUIT << fConduitName
 		<< ": listing record id: [" << memo->id()
 		<< "] category id: [" << memo->getCat()
 		<< "] category name: [" << _category_name
 		<< "] title: [" << memo->getTitle()
 		<< "]" << endl;
-#endif
 	}
 
 }
@@ -414,6 +470,21 @@ bool MemofileConduit::copyPCToHH()
 {
 	FUNCTIONSETUP;
 
+	// set category info from the filesystem, if we can.
+	// Note: This will reset both fCategories and fMemoAppInfo, so
+	//       after this, we need to reinitialize our memofiles object...
+	setAppInfo();
+	cleanup();
+	
+	// re-create our memofiles helper...
+	delete _memofiles;
+	_memofiles = new Memofiles(fCategories, fMemoAppInfo, _memo_directory);
+
+	// make sure we are starting with a clean database on both ends...
+	fDatabase->deleteRecord(0, true);
+	fLocalDatabase->deleteRecord(0, true);
+	cleanup();
+	
 	_memofiles->load(true);
 
 	QPtrList<Memofile> memofiles = _memofiles->getAll();
@@ -437,6 +508,17 @@ int MemofileConduit::writeToPilot(Memofile * memofile)
 	int oldid = memofile->id();
 
 	PilotRecord *r = memofile->pack();
+
+	if (!r) {
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+	<< ": ERROR: [" << memofile->toString()
+	<< "] could not be written to the pilot."
+	<< endl;
+#endif
+		
+		return -1;
+	}
 
 	int newid = fDatabase->writeRecord(r);
 	fLocalDatabase->writeRecord(r);
@@ -465,18 +547,23 @@ int MemofileConduit::writeToPilot(Memofile * memofile)
 
 }
 
-void MemofileConduit::deleteFromPilot(Memofile * memofile)
+void MemofileConduit::deleteFromPilot(PilotMemo * memo)
 {
 	FUNCTIONSETUP;
 
-	fDatabase->deleteRecord(memofile->getID());
-	fLocalDatabase->deleteRecord(memofile->getID());
+	PilotRecord *r = memo->pack();
+	if (r) {
+		r->setDeleted(true);
+		fDatabase->writeRecord(r);
+		fLocalDatabase->writeRecord(r);
+	}
+	delete r;
 
 	_countDeletedToPilot++;
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
-	<< ": memofile: [" << memofile->toString()
+	<< ": memo: [" << memo->getTitle()
 	<< "] deleted from the pilot."
 	<< endl;
 #endif
@@ -517,18 +604,18 @@ QString MemofileConduit::getResults()
 	QString result = "";
 
 	if (_countNewToPilot > 0)
-		result += QString::number(_countNewToPilot) + " new to Palm. ";
+		result += i18n("%1 new to Palm. ").arg(_countNewToPilot);
 
 	if (_countModifiedToPilot > 0)
-		result += QString::number(_countModifiedToPilot) + " changed to Palm. ";
+		result += i18n("%1 changed to Palm. ").arg(_countModifiedToPilot);
 
 	if (_countDeletedToPilot > 0)
-		result += QString::number(_countDeletedToPilot) + " deleted from Palm. ";
+		result += i18n("%1 deleted from Palm. ").arg(_countDeletedToPilot);
 
 	result += _memofiles->getResults();
 
 	if (result.length() <= 0)
-		result = " no changes made.";
+		result = i18n(" no changes made.");
 
 	return result;
 }
@@ -537,10 +624,10 @@ void MemofileConduit::cleanup()
 {
 	FUNCTIONSETUP;
 
-	fDatabase->cleanup();
 	fDatabase->resetSyncFlags();
-	fLocalDatabase->cleanup();
+	fDatabase->cleanup();
 	fLocalDatabase->resetSyncFlags();
+	fLocalDatabase->cleanup();
 }
 
 

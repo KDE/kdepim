@@ -70,7 +70,7 @@ bool Memofile::load()
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": I was asked to load, but have no filename to load.  "
-		<< "No soup for you." << endl;
+		<< endl;
 #endif
 		return false;
 	}
@@ -80,7 +80,7 @@ bool Memofile::load()
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": Couldn't open file: [" << filenameAbs() << "] to read.  "
-		<< "No soup for you." << endl;
+		<< endl;
 #endif
 		return false;
 	}
@@ -103,7 +103,8 @@ bool Memofile::load()
 #endif
 		text = title + CSL1("\n") + body;
 	}
-	setText( text );
+
+	setText(text);
 	f.close();
 
 	return true;
@@ -148,7 +149,7 @@ bool Memofile::saveFile()
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": I was asked to save, but have no filename to save to.  "
-		<< "Bummer!" << endl;
+		<< endl;
 #endif
 		return false;
 	}

@@ -58,11 +58,14 @@ public:
 	Memofile * find (const QString & category, const QString & filename);
 	Memofile * find (recordid_t id);
 
+	MemoCategoryMap readCategoryMetadata();
+	void setCategories(MemoCategoryMap map) { _categories = map; } ;
+
 	static QString FIELD_SEP;
 
 private:
    
-	MemoCategoryMap & _categories;
+	MemoCategoryMap _categories;
 	struct MemoAppInfo & _memoAppInfo;
 	QString & _baseDirectory;
 	QPtrList<Memofile> _memofiles;

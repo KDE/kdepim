@@ -515,6 +515,73 @@ bool Memofiles::saveMemoMetadata()
 
 }
 
+MemoCategoryMap Memofiles::readCategoryMetadata()
+{
+	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+	<< ": reading categories from file: ["
+	<< _categoryMetadataFile << "]" << endl;
+#endif
+
+	MemoCategoryMap map;
+	map.clear();
+
+	QFile f( _categoryMetadataFile );
+	QTextStream stream(&f);
+
+	if( !f.open(IO_ReadOnly) ) {
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+		<< ": ooh, bad.  couldn't open your categories file for reading."
+		<< endl;
+#endif
+		return map;
+	}
+
+
+	while ( !stream.atEnd() ) {
+		QString data = stream.readLine();
+		int errors = 0;
+		bool ok;
+	
+		QStringList fields = QStringList::split( FIELD_SEP, data );
+		if ( fields.count() >= 2 ) {
+			int id = fields[0].toInt( &ok );
+			if ( !ok )
+				errors++;
+			QString categoryName = fields[1];
+			if ( categoryName.isEmpty() )
+				errors++;
+	
+			if (errors <= 0) {
+				map[id] = categoryName;
+			}
+		} else {
+			errors++;
+		}
+	
+		if (errors > 0) {
+#ifdef DEBUG
+			DEBUGCONDUIT << fname
+			<< ": error: couldn't understand this line: [" << data << "]."
+			<< endl;
+#endif
+		}
+	}
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+	<< ": loaded: [" << map.count() << "] categories."
+	<< endl;
+#endif
+
+	f.close();
+
+	return map;
+}
+
 bool Memofiles::saveCategoryMetadata()
 {
 	FUNCTIONSETUP;
@@ -668,13 +735,13 @@ QString Memofiles::getResults()
 	QString result = "";
 
 	if (_countNewToLocal > 0)
-		result += QString::number(_countNewToLocal) + " new to filesystem. ";
+		result += i18n("%1 new to filesystem. ").arg(_countNewToLocal);
 
 	if (_countModifiedToLocal > 0)
-		result += QString::number(_countModifiedToLocal) + " changed to filesystem. ";
+		result += i18n("%1 changed to filesystem. ").arg(_countModifiedToLocal);
 
 	if (_countDeletedToLocal > 0)
-		result += QString::number(_countDeletedToLocal) + " deleted from filesystem. ";
+		result += i18n("%1 deleted from filesystem. ").arg(_countDeletedToLocal);
 
 	return result;
 }
