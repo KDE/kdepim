@@ -170,6 +170,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool mail( Incidence* incidence, KMail::Callback& callback ) const
     {
       ICalFormat format;
+      format.setTimeZone( KPimPrefs::timezone(), false );
       QString msg = format.createScheduleMessage( incidence,
                                                   Scheduler::Reply );
       QString subject;
