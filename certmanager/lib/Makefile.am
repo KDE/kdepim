@@ -28,7 +28,7 @@ install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(kde_confdir)
 	$(INSTALL_DATA) $(srcdir)/libkleopatrarc.desktop $(DESTDIR)$(kde_confdir)/libkleopatrarc
 
-uninstall-data-local:
+uninstall-local:
 	rm -f $(DESTDIR)$(kde_confdir)/libkleopatrarc
 
 messages: rc.cpp
