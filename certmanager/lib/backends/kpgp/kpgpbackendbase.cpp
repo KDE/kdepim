@@ -90,10 +90,6 @@ QString Kleo::PGP6Backend::displayName() const {
   return i18n("Kpgp/pgp v6");
 }
 
-static const QString notYetImplemented() {
-  return i18n("Not yet implemented");
-}
-
 static const QString notSupported() {
   return i18n("This backend does not support S/MIME");
 }
