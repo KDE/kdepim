@@ -181,6 +181,14 @@ class GroupwisePropagator : public KConfigPropagator
   protected:
     void addCustomChanges( Change::List &changes )
     {
+      ChangeConfig *c = new ChangeConfig;
+      c->file = "korganizerrc";
+      c->group = "FreeBusy";
+      c->name = "FreeBusyRetrieveUrl";
+      c->value = "groupwise://" + GroupwiseConfig::self()->host() +
+        "/freebusy/";
+      changes.append( c );
+
       KCal::CalendarResourceManager m1( "calendar" );
       m1.readConfig();
       KCal::CalendarResourceManager::Iterator it;

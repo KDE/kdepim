@@ -35,4 +35,22 @@
    <label>Id of KABC resource</label>
   </entry>
  </group>
+
+  <group name="Constants">
+    <entry name="EnableFreeBusy">
+      <default>true</default>
+    </entry>
+  </group>
+
+  <propagation source="groupwiserc/Constants/EnableFreeBusy"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveAuto" />
+
+  <propagation source="groupwiserc/General/User"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveUser" />
+  <propagation source="groupwiserc/General/Password"
+               target="korganizerrc/FreeBusy/FreeBusyRetrievePassword"
+               hidevalue="true" />
+  <propagation source="groupwiserc/General/SavePassword"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveSavePassword" />
+
 </kcfg>
