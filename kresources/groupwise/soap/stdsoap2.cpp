@@ -3072,7 +3072,7 @@ tcp_connect(struct soap *soap, const char *endpoint, const char *host, int port)
 #elif defined(WIN32) || defined(__APPLE__) || defined(HP_UX) || defined(SUN_OS) || defined(OPENSERVER) || defined(TRU64) || defined(VXWORKS)
         int n = sizeof(struct sockaddr_in);
 #else
-        size_t n = sizeof(struct sockaddr_in);
+        kde_socklen_t n = sizeof(struct sockaddr_in);
 #endif
         fd_set fds;
         if (soap->connect_timeout > 0)
@@ -3503,7 +3503,10 @@ tcp_accept(struct soap *soap, int s, struct sockaddr *a, int *n)
 #elif defined(WIN32) || defined(__APPLE__) || defined(HP_UX) || defined(SUN_OS) || defined(OPENSERVER) || defined(TRU64) || defined(VXWORKS)
   fd = (int)accept((SOAP_SOCKET)s, a, n);
 #else
-  fd = (int)accept((SOAP_SOCKET)s, a, (size_t*)n);
+  kde_socklen_t n_size = 0;
+  if (n) n_size = *n;
+  fd = (int)accept((SOAP_SOCKET)s, a, &n_size);
+  if (n) *n = n_size;
 #endif
 #ifdef SOCKET_CLOSE_ON_EXEC
 #ifdef WIN32
