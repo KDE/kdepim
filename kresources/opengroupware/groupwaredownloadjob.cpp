@@ -146,7 +146,7 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
           adaptor()->idMapper()->fingerprint( localId );
         if ( oldFingerprint != newFingerprint ) {
           //kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint <<
-            " new: " << newFingerprint << endl;
+          //  " new: " << newFingerprint << endl;
           // something changed on the server, let's see if we also changed it locally
           if ( adaptor()->localItemHasChanged( localId ) ) {
             // TODO conflict resolution
