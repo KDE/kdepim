@@ -43,7 +43,7 @@ static const int ID_LABEL    = 10;
 CertManager::CertManager( bool remote, const QString& query, 
 			  QWidget* parent, const char* name ) :
     KMainWindow( parent, name ),
-    gpgsmProc( 0 ), _certBox(0), _remote( remote )
+    gpgsmProc( 0 ), dirmngrProc(0), _certBox(0), _remote( remote )
 {
   KMenuBar* bar = menuBar();
 
@@ -99,7 +99,10 @@ CertManager::CertManager( bool remote, const QString& query,
                                              actionCollection(),
                                              "importCertFromFile" );
   importCertFromFile->plug( certImportMenu );
-  importCertFromFile->setEnabled( true );
+  QStringList lst;
+  lst << "gpgsm" << "-h";
+  importCertFromFile->setEnabled( checkExec( lst ) );
+  lst.clear();
 
 
   // CRL menu --------------------------------------------------
@@ -114,9 +117,10 @@ CertManager::CertManager( bool remote, const QString& query,
   KAction* importCRLFromFile = new KAction( i18n("From &File..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
   importCRLFromFile->plug( crlImportMenu );
-  importCRLFromFile->setEnabled( false );
+  lst << "dirmngr" << "-h";
+  importCRLFromFile->setEnabled( checkExec( lst ) );
 
-  // Import from file
+  // Import from LDAP
   KAction* importCRLFromLDAP = new KAction( i18n("From &LDAP"), QIconSet(), 0, this, SLOT( importCRLFromLDAP() ),
                                             actionCollection(), "importCRLFromLDAP" );
   importCRLFromLDAP->plug( crlImportMenu );
@@ -125,14 +129,14 @@ CertManager::CertManager( bool remote, const QString& query,
   // Toolbar
   _toolbar = toolBar( "mainToolBar" );
 
-  _toolbar->insertWidget( ID_LABEL, -1, new QLabel( i18n("Look for"), _toolbar ) );
+  _toolbar->insertWidget( ID_LABEL, -1, new QLabel( i18n("Look for"), _toolbar, "kde toolbar widget" ) );
 
 
   _toolbar->insertLined( query, ID_LINEEDIT, SIGNAL( returnPressed() ), this, 
 			 SLOT( loadCertificates() ) );
   _toolbar->setItemAutoSized( ID_LINEEDIT, true );
 
-  QStringList lst;
+  lst.clear();
   lst << i18n("in local certificates") << i18n("in external certificates");
   _toolbar->insertCombo( lst, ID_COMBO, false, SIGNAL( highlighted(int) ),
 			 this, SLOT( slotToggleRemote(int) ) );
@@ -149,6 +153,13 @@ CertManager::CertManager( bool remote, const QString& query,
   setCentralWidget( _certBox );
 
   if( !query.isEmpty() ) loadCertificates();
+}
+
+bool CertManager::checkExec( const QStringList& args )
+{
+  KProcess testProc;
+  testProc << args;
+  return testProc.start( KProcess::DontCare );
 }
 
 CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent, 
@@ -324,10 +335,12 @@ void CertManager::importCertFromFile()
         gpgsmProc = new KProcess();
         *gpgsmProc << "gpgsm";
         *gpgsmProc << "--import" << certFilename;
+	errorbuffer = "";
         connect( gpgsmProc, SIGNAL( processExited( KProcess* ) ),
                  this, SLOT( slotGPGSMExited() ) );
-        if( !gpgsmProc->start() ) { // NotifyOnExit, NoCommunication
-                                    // are defaults
+	connect( gpgsmProc, SIGNAL( receivedStderr(KProcess*, char*, int)  ),
+		 this, SLOT( slotStderr( KProcess*, char*, int ) ) );
+        if( !gpgsmProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) { 
             KMessageBox::error( this, i18n( "Unable to start GPGSM process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
             delete gpgsmProc;
             gpgsmProc = 0;
@@ -346,7 +359,7 @@ void CertManager::slotGPGSMExited()
         KMessageBox::error( this, i18n( "The GPGSM process that tried to import the certificate file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
     else
         if( gpgsmProc->exitStatus() )
-            KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file." ), i18n( "Certificate Manager Error" ) );
+            KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file. The output from GPGSM was: " )+errorbuffer, i18n( "Certificate Manager Error" ) );
         else
             KMessageBox::information( this, i18n( "Certificate file imported successfully." ), i18n( "Certificate Manager Error" ) );
 
@@ -354,13 +367,54 @@ void CertManager::slotGPGSMExited()
         delete gpgsmProc;
 }
 
+/**
+   This slot is called when the dirmngr process that imports a
+   certificate file exists.
+*/
+void CertManager::slotDirmngrExited()
+{
+    if( !dirmngrProc->normalExit() )
+        KMessageBox::error( this, i18n( "The Dirmngr process that tried to import the CRL file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
+    else
+        if( dirmngrProc->exitStatus() )
+            KMessageBox::error( this, i18n( "An error occurred when trying to import the CRL file. The output from Dirmngr was: ") + errorbuffer, i18n( "Certificate Manager Error" ) );
+        else
+            KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Error" ) );
+
+    if( dirmngrProc )
+        delete dirmngrProc;
+}
 
 /**
    This slot will import CRLs from a file.
 */
 void CertManager::importCRLFromFile()
 {
-  qDebug("Not Yet Implemented");
+  QString filename = KFileDialog::getOpenFileName( QString::null,
+						       QString::null,
+						       this,
+						       i18n( "Select CRL File" ) );
+  
+  if( !filename.isEmpty() ) {
+    dirmngrProc = new KProcess();
+    *dirmngrProc << "dirmngr";
+    *dirmngrProc << "--load-crl" << filename;
+    errorbuffer = "";
+    connect( dirmngrProc, SIGNAL( processExited( KProcess* ) ),
+	     this, SLOT( slotDirmngrExited() ) );
+    connect( dirmngrProc, SIGNAL( receivedStderr(KProcess*, char*, int)  ),
+	     this, SLOT( slotStderr( KProcess*, char*, int ) ) );
+    if( !dirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) { 
+      KMessageBox::error( this, i18n( "Unable to start dirmngr process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
+      delete dirmngrProc;
+      dirmngrProc = 0;
+    }
+  }
+}
+
+void CertManager::slotStderr( KProcess*, char* buf, int len )
+{
+  errorbuffer += QString::fromLocal8Bit( buf, len );
 }
 
 /**

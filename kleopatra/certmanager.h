@@ -30,18 +30,30 @@ protected slots:
     void quit();
     void revokeCertificate();
     void extendCertificate();
+
     void importCertFromFile();
     void importCRLFromFile();
     void importCRLFromLDAP();
+
     void slotGPGSMExited();
+    void slotDirmngrExited();
+    void slotStderr( KProcess*, char*, int );
+
     void slotToggleRemote(int idx);
 
 private:
-  CertItem* fillInOneItem( CertBox* lv, CertItem* parent, 
-			   const CryptPlugWrapper::CertificateInfo& info );
+    bool checkExec( const QStringList& args );
+
+    CertItem* fillInOneItem( CertBox* lv, CertItem* parent, 
+			     const CryptPlugWrapper::CertificateInfo& info );
 
     CryptPlugWrapper::CertificateInfoList _certList;
+
     KProcess* gpgsmProc;
+    KProcess* dirmngrProc;
+    QString errorbuffer;
+
+
     KToolBar* _toolbar;
     CertBox* _certBox;
     bool     _remote;
