@@ -83,11 +83,7 @@ void VCalConduitPrivate::addIncidence(KCal::Incidence*e)
 
 int VCalConduitPrivate::updateIncidences()
 {
-#if KDE_VERSION >= 305
 	fAllEvents = fCalendar->events();
-#else
-	fAllEvents = fCalendar->getAllEvents();
-#endif
 	fAllEvents.setAutoDelete(false);
 	return fAllEvents.count();
 }
@@ -692,6 +688,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.75  2002/08/21 10:40:56  adridg
+// Whoops, bad assumptions on the version number in HEAD
+//
 // Revision 1.74  2002/08/20 20:49:11  adridg
 // Make sure the HEAD code compiles under KDE 3.0.x too, wrt. libkcal changes
 //

@@ -86,11 +86,7 @@ void TodoConduitPrivate::addIncidence(KCal::Incidence*e)
 
 int TodoConduitPrivate::updateIncidences()
 {
-#if KDE_VERSION >= 305
 	fAllTodos = fCalendar->todos();
-#else
-	fAllTodos = fCalendar->getTodoList();
-#endif
 	fAllTodos.setAutoDelete(false);
 	return fAllTodos.count();
 }
@@ -424,6 +420,9 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 
 
 // $Log$
+// Revision 1.22  2002/08/21 10:40:56  adridg
+// Whoops, bad assumptions on the version number in HEAD
+//
 // Revision 1.21  2002/08/20 20:49:11  adridg
 // Make sure the HEAD code compiles under KDE 3.0.x too, wrt. libkcal changes
 //
