@@ -29,6 +29,8 @@ static const char *syncAction_id =
 
 #include "options.h"
 
+#include <time.h>
+
 #include <pi-socket.h>
 #include <pi-dlp.h>
 
@@ -211,3 +213,6 @@ int InteractiveAction::questionYesNo(const QString & text,
 }
 
 // $Log$
+// Revision 1.1  2001/10/08 21:56:02  adridg
+// Start of making a separate KPilot lib
+//

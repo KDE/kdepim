@@ -27,6 +27,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <time.h>
 
 #include <pi-dlp.h>
 
@@ -139,5 +140,8 @@ protected:
 
 
 // $Log$
+// Revision 1.1  2001/10/08 21:56:02  adridg
+// Start of making a separate KPilot lib
+//
 
 #endif

@@ -64,6 +64,7 @@ static const char *id =
 #include <qdragobject.h>
 #endif
 #include <qstack.h>
+#include <qtimer.h>
 
 #ifndef _KUNIQUEAPP_H
 #include <kuniqueapp.h>
@@ -899,6 +900,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.52  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.51  2001/10/08 12:49:11  cschumac
 // kde3 compile fixes.
 //

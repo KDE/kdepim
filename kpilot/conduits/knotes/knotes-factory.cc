@@ -31,6 +31,7 @@
 #include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qmap.h>
+#include <qtimer.h>
 
 #if KDE_VERSION < 300
 #include <kapp.h>
@@ -337,5 +338,8 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.1  2001/10/08 22:27:42  adridg
+// New ui, moved to lib-based conduit
+//
 //
 
