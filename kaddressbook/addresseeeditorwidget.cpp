@@ -174,8 +174,7 @@ void AddresseeEditorWidget::setupTab1()
   
   // File as (formatted name)
   label = new QLabel( i18n( "Formatted name:" ), tab1 );
-  mFormattedNameBox = new KComboBox( tab1 );
-  mFormattedNameBox->setEditable( true );
+  mFormattedNameBox = new KComboBox( true, tab1 );
   mFormattedNameBox->setDuplicatesEnabled( false );
   mFormattedNameBox->setAutoCompletion( true );
   label->setBuddy( mFormattedNameBox );

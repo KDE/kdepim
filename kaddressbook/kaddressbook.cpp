@@ -26,7 +26,7 @@
 #include <qregexp.h>
 
 #include <kabc/field.h>
-#include <kabc/resourceselectdialog.h>
+#include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
 #include <kapplication.h>
@@ -39,6 +39,9 @@
 #include <kprinter.h>
 #include <kprocess.h>
 #include <kprotocolinfo.h>
+#include <kresources/resource.h>
+#include <kresources/resourcemanager.h>
+#include <kresources/resourceselectdialog.h>
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
 
@@ -175,8 +178,13 @@ void KAddressBook::newAddressee()
 {
   AddresseeEditorDialog *dialog = 0;
 
-  KABC::Resource *resource = KABC::ResourceSelectDialog::getResource( mAddressBook,
-                                                                      this );
+  KRES::ResourceManager<KRES::Resource> manager( "contact" );
+  QPtrList<KRES::Resource> resources = manager.resources( true );
+  kdDebug() << "newAddressee(): resources.count()=" << resources.count() << endl;
+
+  KRES::Resource *res = KRES::ResourceSelectDialog::getResource( resources, this );
+  KABC::Resource *resource = static_cast<KABC::Resource*>( res );
+
   if ( resource ) {
     KABC::Addressee addr;
     addr.setResource( resource );
