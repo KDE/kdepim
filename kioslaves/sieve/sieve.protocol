@@ -21,6 +21,7 @@ Description[fr]=Un ioslave pour le protocole de filtrage de messagerie Sieve
 Description[hu]=KDE-protokoll a Sieve levélszűrő protokollhoz
 Description[it]=Un ioslave per il protocollo di filtraggio posta Sieve
 Description[nl]=Een ioslave voor het Sieve-mailfilterprotocol
+Description[nn]=Ein i/u-slave for e-postfilterprotokollen Sieve
 Description[pl]=Wtyczka protokołu filtrowania poczty Sieve
 Description[pt]=Um 'ioslave' para o protocolo de filtragem de correio Sieve
 Description[pt_BR]=Um IO-Slave para o protocolo de filtragem de email Sieve
