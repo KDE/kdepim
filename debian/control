@@ -1,5 +1,5 @@
 Source: kdepim
-Build-Depends: automake, autoconf, libtool, kdelibs-dev (>= 4:2.2-0), debhelper (>> 2.0.0), gettext, bison | byacc, libpisock-dev, flex
+Build-Depends: automake, autoconf, libtool, kdelibs-dev (>= 4:2.2-0), debhelper (>> 3.0.0), gettext, bison | byacc, libpisock-dev, flex
 Section: x11
 Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
