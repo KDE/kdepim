@@ -24,4 +24,4 @@ service_DATA = cryptosettings.desktop imaddresseditor.desktop
 
 libkaddrbk_instantmessaging_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
 libkaddrbk_instantmessaging_la_SOURCES = imeditorwidget.cpp imeditorbase.ui imaddressbase.ui imaddresswidget.cpp
-libkaddrbk_instantmessaging_la_LIBADD = -lkabinterfaces
+libkaddrbk_instantmessaging_la_LIBADD = ../interfaces/libkabinterfaces.la
