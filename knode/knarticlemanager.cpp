@@ -419,7 +419,7 @@ void KNArticleManager::setFolder(KNFolder *f)
 {
   f_older=f;
   if(f)
-    v_iew->header()->setLabel(1, i18n("Newsgroups / To"));
+    v_iew->header()->setLabel(1, i18n("Newsgroups/To"));
 }
 
 
