@@ -200,7 +200,7 @@ QString Query::marshal( const QVariant &arg ) const
       case QVariant::Bool:
       {
         QString markup = "<value><boolean>";
-        markup += arg.toBool() ? "true" : "false";
+        markup += arg.toBool() ? "1" : "0";
         markup += "</boolean></value>\r\n";
         return markup;
       }
