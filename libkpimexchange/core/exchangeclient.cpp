@@ -124,7 +124,7 @@ void ExchangeClient::download( KCal::Calendar *calendar, const QDate &start,
   kdDebug() << "ExchangeClient::download1()" << endl;
 
   if ( !mAccount->authenticate( mWindow ) ) {
-    emit downloadFinished( 0, i18n("Authentification error") ); 
+    emit downloadFinished( 0, i18n("Authentication error") ); 
     return;
   }
 
@@ -142,7 +142,7 @@ void ExchangeClient::download( const QDate &start, const QDate &end,
   kdDebug() << "ExchangeClient::download2()" << endl;
 
   if ( !mAccount->authenticate( mWindow ) ) {
-    emit downloadFinished( 0, i18n("Authentification error") ); 
+    emit downloadFinished( 0, i18n("Authentication error") ); 
     return;
   }
 
@@ -161,7 +161,7 @@ void ExchangeClient::upload( KCal::Event *event )
   kdDebug() << "ExchangeClient::upload()" << endl;
 
   if ( !mAccount->authenticate( mWindow ) ) {
-    emit uploadFinished( 0, i18n("Authentification error") ); 
+    emit uploadFinished( 0, i18n("Authentication error") ); 
     return;
   }
 
@@ -174,7 +174,7 @@ void ExchangeClient::upload( KCal::Event *event )
 void ExchangeClient::remove( KCal::Event *event )
 {
   if ( !mAccount->authenticate( mWindow ) ) {
-    emit removeFinished( 0, i18n("Authentification error") ); 
+    emit removeFinished( 0, i18n("Authentication error") ); 
     return;
   }
 
