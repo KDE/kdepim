@@ -100,7 +100,8 @@ Pab::Pab()
   // we do want a status bar
   enableStatusBar();
   connect( kapp, SIGNAL( aboutToQuit() ), this, SLOT( saveConfig() ) );
-  setMinimumSize( sizeHint() );
+  resize( sizeHint() );
+  readConfig();
 }
 
 void Pab::newContact()
@@ -131,16 +132,27 @@ void Pab::save()
 
 void Pab::readConfig()
 {
+  KConfig *config = kapp->config();
+  int w, h;
+  config->setGroup("Geometry");
+  QString str = config->readEntry("Browser", "");
+  if (!str.isEmpty() && str.find(',')>=0)
+  {
+    sscanf(str,"%d,%d",&w,&h);
+    resize(w,h);
+  }
 }
 
 void Pab::saveConfig()
 {
-  debug( "saveConfig" );
   view->saveConfig();
   KConfig *config = kapp->config();
 
   config->setGroup("Geometry");
-  config->writeEntry("MainWin", "abc");
+  QRect r = geometry();
+  QString s;
+  s.sprintf("%i,%i", r.width(), r.height());
+  config->writeEntry("Browser", s);
   config->sync();
 }
 

@@ -623,7 +623,7 @@ PabWidget::PabWidget( ContactEntryList *cel,
 
   mainLayout->addWidget( listView );
   mainLayout->activate();
-  resize( sizeHint() );
+
   QObject::connect( iSearch, SIGNAL( textChanged( const QString& )), 
 		    listView, SLOT( incSearch( const QString& ))); 
   QObject::connect( cbField, SIGNAL( activated( int )),
@@ -640,7 +640,6 @@ PabWidget::~PabWidget()
 void PabWidget::setupListView()
 {
   listView = new PabListView( this );
-  //xxxx  listView->setSelection( Extended );
   QObject::connect( listView, SIGNAL( selectionChanged() ), 
 		    this, SLOT( selectionChanged() ) );
   QObject::connect( listView, SIGNAL( doubleClicked( QListViewItem* ) ), 
