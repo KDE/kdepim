@@ -1,4 +1,4 @@
-INCLUDES= -I./printing -I$(top_srcdir) $(all_includes)
+INCLUDES= -I./printing -I$(top_srcdir) -I./detailledview $(all_includes)
 
 SUBDIRS = detailledview printing . pics csv-templates
 
