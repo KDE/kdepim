@@ -207,8 +207,6 @@ bool KABC::ResourceKolab::save( Ticket* )
       rc &= kmailUpdateAddressee( *it );
     }
 
-  // TODO save distribution lists too
-
   if ( !rc )
     kdDebug(5650) << k_funcinfo << " failed." << endl;
   return rc;
