@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "certmanager.h"
 
 #include "certbox.h"
@@ -25,6 +26,7 @@
 #include <kstatusbar.h>
 #include <kcombobox.h>
 #include <kstandarddirs.h>
+#include <kdcopservicestarter.h>
 
 // Qt
 #include <qtextedit.h>
@@ -51,50 +53,50 @@ public:
     if (kapp && !kapp->authorizeKAction(name()))
       return -1;
     if ( widget->inherits( "KToolBar" ) ) {
-      KToolBar *bar = (KToolBar *)widget;      
-      int id_ = getToolButtonID();      
+      KToolBar *bar = (KToolBar *)widget;
+      int id_ = getToolButtonID();
       QLabel* label = new QLabel( text(), bar, "kde toolbar widget" );
-      bar->insertWidget( id_, label->width(), label, index );      
-      addContainer( bar, id_ );      
-      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
+      bar->insertWidget( id_, label->width(), label, index );
+      addContainer( bar, id_ );
+      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
       return containerCount() - 1;
     }
-    
+
     int containerId = KAction::plug( widget, index );
-    
+
     return containerId;
   }
 };
 
 class LineEditAction : public KAction {
 public:
-  LineEditAction( const QString& text,  KActionCollection* parent, QObject* receiver, 
+  LineEditAction( const QString& text,  KActionCollection* parent, QObject* receiver,
 		  const char* member, const char* name )
-    : KAction( text, QIconSet(), KShortcut(), 0, 0, parent, name ), 
+    : KAction( text, QIconSet(), KShortcut(), 0, 0, parent, name ),
       _le(0), _receiver(receiver),_member(member) {}
   virtual int plug( QWidget *widget, int index = -1 ) {
     if (kapp && !kapp->authorizeKAction(name()))
       return -1;
     if ( widget->inherits( "KToolBar" ) ) {
-      KToolBar *bar = (KToolBar *)widget;      
-      int id_ = getToolButtonID();      
+      KToolBar *bar = (KToolBar *)widget;
+      int id_ = getToolButtonID();
       // The toolbar trick doesn't seem to work for lineedits
       //_le = new QLineEdit( bar, "kde toolbar widget" );
       _le = new QLineEdit( bar );
-      bar->insertWidget( id_, _le->width(), _le, index );      
+      bar->insertWidget( id_, _le->width(), _le, index );
       bar->setStretchableWidget( _le );
-      addContainer( bar, id_ );      
-      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
-      connect( _le, SIGNAL( returnPressed() ), _receiver, _member );      
+      addContainer( bar, id_ );
+      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
+      connect( _le, SIGNAL( returnPressed() ), _receiver, _member );
       return containerCount() - 1;
     }
-    
+
     int containerId = KAction::plug( widget, index );
-    
+
     return containerId;
   }
 
-  void clear() { _le->setText(""); }  
+  void clear() { _le->setText(""); }
   void focusAll() { _le->selectAll(); _le->setFocus(); }
   QString text() { return _le->text(); }
   void setText( const QString& txt ) { _le->setText(txt); }
@@ -107,24 +109,24 @@ private:
 
 class ComboAction : public KAction {
 public:
-  ComboAction( const QStringList& lst,  KActionCollection* parent, QObject* receiver, 
+  ComboAction( const QStringList& lst,  KActionCollection* parent, QObject* receiver,
 		  const char* member, const char* name )
-    : KAction( QString::null, QIconSet(), KShortcut(), 0, 0, parent, name ), 
+    : KAction( QString::null, QIconSet(), KShortcut(), 0, 0, parent, name ),
       _lst(lst), _receiver(receiver), _member(member) {}
   virtual int plug( QWidget *widget, int index = -1 ) {
     if (kapp && !kapp->authorizeKAction(name()))
       return -1;
     if ( widget->inherits( "KToolBar" ) ) {
-      KToolBar *bar = (KToolBar *)widget;      
-      int id_ = getToolButtonID();   
-      bar->insertCombo( _lst, id_, false, SIGNAL( highlighted(int) ), _receiver, _member ); 
-      addContainer( bar, id_ );      
-      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );      
+      KToolBar *bar = (KToolBar *)widget;
+      int id_ = getToolButtonID();
+      bar->insertCombo( _lst, id_, false, SIGNAL( highlighted(int) ), _receiver, _member );
+      addContainer( bar, id_ );
+      connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
       return containerCount() - 1;
     }
-    
+
     int containerId = KAction::plug( widget, index );
-    
+
     return containerId;
   }
 private:
@@ -134,7 +136,7 @@ private:
 };
 
 
-CertManager::CertManager( bool remote, const QString& query, 
+CertManager::CertManager( bool remote, const QString& query,
 			  QWidget* parent, const char* name )
   : KMainWindow( parent, name ),
     dirmngrProc(0),
@@ -187,14 +189,14 @@ CertManager::CertManager( bool remote, const QString& query,
   _toolbar = toolBar( "mainToolBar" );
 
   (new LabelAction( i18n("Look For"), actionCollection(), "label_action"))->plug( _toolbar );
-  _leAction = new LineEditAction( QString::null, actionCollection(), this, 
-				  SLOT( loadCertificates() ), 
+  _leAction = new LineEditAction( QString::null, actionCollection(), this,
+				  SLOT( loadCertificates() ),
 				  "query_lineedit_action");
   _leAction->plug( _toolbar );
 
   QStringList lst;
   lst << i18n("in local certificates") << i18n("in external certificates");
-  _comboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ), 
+  _comboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ),
 		       "location_combo_action");
   _comboAction->plug( _toolbar );
 
@@ -220,16 +222,16 @@ bool CertManager::checkExec( const QStringList& args )
   return testProc.start( KProcess::DontCare );
 }
 
-CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent, 
+CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent,
 				      const CryptPlugWrapper::CertificateInfo& info )
 {
   if( parent ) {
     //qDebug("New with parent");
     return new CertItem( info,
-			 0, this, parent );  
+			 0, this, parent );
   } else {
     //qDebug("New root");
-    return new CertItem( info,			
+    return new CertItem( info,
 			 0, this, lv );
   }
 }
@@ -240,7 +242,7 @@ void CertManager::slotToggleRemote( int idx )
 }
 
 /**
-   This is an internal function, which loads the certificates that 
+   This is an internal function, which loads the certificates that
    match the current query, local or remote.
 */
 void CertManager::loadCertificates()
@@ -270,7 +272,7 @@ void CertManager::loadCertificates()
     _certList = pWrapper->listKeys(text, _remote, &truncated );
   }
   //qDebug("Done");
-  
+
   if( truncated ) {
     //statusBar()->message();
     KMessageBox::information( this, i18n("The server returned truncated output.\nPlease use a more specific search string to get all results.") );
@@ -279,8 +281,8 @@ void CertManager::loadCertificates()
   }
 
   //lst = fillInListView( _certBox, 0, lst );
-  
-  for( CryptPlugWrapper::CertificateInfoList::Iterator it = _certList.begin(); 
+
+  for( CryptPlugWrapper::CertificateInfoList::Iterator it = _certList.begin();
        it != _certList.end(); ++it ) {
     //qDebug("New CertItem %s", (*it).userid.latin1() );
     fillInOneItem( _certBox, 0, *it );
@@ -293,6 +295,38 @@ void CertManager::loadCertificates()
   QApplication::restoreOverrideCursor();
 }
 
+static const char* const dcopObjectId = "KMailIface";
+/**
+  Send the new certificate by mail using KMail
+ */
+void CertManager::sendCertificate( const QString& email, const QByteArray& certificateData )
+{
+  QString error;
+  QCString dcopService = "kmail";
+
+  QCString dummy;
+  // OK, so kmail (or kontact) is running. Now ensure the object we want is available.
+  if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) ) {
+    // hack because DCOP/Mailer doesn't exist in 3.2-branch
+    KDCOPServiceStarter::self()->startServiceFor( "DCOP/ResourceBackend/IMAP",
+                                                  QString::null,
+                                                  QString::null, &error, &dcopService );
+    assert( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dcopService, dummy ) );
+  }
+
+  DCOPClient* dcopClient = kapp->dcopClient();
+  QByteArray data;
+  QDataStream arg( data, IO_WriteOnly );
+  arg << email;
+  arg << certificateData;
+  if( !dcopClient->send( dcopService, dcopObjectId,
+                         "sendCertificate(QString,QByteArray)", data ) ) {
+    KMessageBox::error( this,
+                        i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
+    return;
+  }
+}
+
 /**
    This slot is invoked when the user selects "New certificate"
 */
@@ -302,17 +336,7 @@ void CertManager::newCertificate()
   if( wizard->exec() == QDialog::Accepted ) {
       if( wizard->sendToCARB->isChecked() ) {
           // Ask KMail to send this key to the CA.
-          DCOPClient* dcopClient = kapp->dcopClient();
-          QByteArray data;
-          QDataStream arg( data, IO_WriteOnly );
-          arg << wizard->caEmailED->text();
-          arg << wizard->keyData();
-          if( !dcopClient->send( "kmail*", "KMailIface",
-                                 "sendCertificate(QString,QByteArray)", data ) ) {
-              KMessageBox::error( this,
-                                  i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
-              return;
-          }
+          sendCertificate( wizard->caEmailED->text(), wizard->keyData() );
       } else {
           // Store in file
           QFile file( wizard->storeUR->url() );
@@ -372,9 +396,9 @@ void CertManager::importCertFromFile()
 	QString info;
 	int retval = importCertificateFromFile( certFilename, &info );
 	if( retval ) {
-	  KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file. The error code from CryptPlug was %1 and output was: %2" ).arg(retval).arg(info), i18n( "Certificate Manager Error" ) );	  
+	  KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file. The error code from CryptPlug was %1 and output was: %2" ).arg(retval).arg(info), i18n( "Certificate Manager Error" ) );
 	} else {
-	  KMessageBox::information( this, i18n( "Certificate file imported successfully. Additional info: %1" ).arg(info), i18n( "Certificate Imported" ) );	  
+	  KMessageBox::information( this, i18n( "Certificate file imported successfully. Additional info: %1" ).arg(info), i18n( "Certificate Imported" ) );
 	}
     }
 }
@@ -406,7 +430,7 @@ void CertManager::importCRLFromFile()
 						       QString::null,
 						       this,
 						       i18n( "Select CRL File" ) );
-  
+
   if( !filename.isEmpty() ) {
     dirmngrProc = new KProcess();
     *dirmngrProc << "dirmngr";
@@ -416,7 +440,7 @@ void CertManager::importCRLFromFile()
 	     this, SLOT( slotDirmngrExited() ) );
     connect( dirmngrProc, SIGNAL( receivedStderr(KProcess*, char*, int)  ),
 	     this, SLOT( slotStderr( KProcess*, char*, int ) ) );
-    if( !dirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) { 
+    if( !dirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
       KMessageBox::error( this, i18n( "Unable to start dirmngr process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
       delete dirmngrProc;
       dirmngrProc = 0;
@@ -466,7 +490,7 @@ int CertManager::importCertificateWithFingerprint( const QString& fingerprint, Q
   return retval;
 }
 
-bool CertManager::haveCertificate( const QString& fingerprint ) 
+bool CertManager::haveCertificate( const QString& fingerprint )
 {
   bool truncated;
   CryptPlugWrapper::CertificateInfoList lst = pWrapper->listKeys( fingerprint, false, &truncated );

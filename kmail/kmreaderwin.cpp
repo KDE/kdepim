@@ -799,8 +799,8 @@ void KMReaderWin::setMsg(KMMessage* aMsg, bool force)
         << aMsg->fromStrip() << ", readyToShow " << (aMsg->readyToShow()) << endl;
 
   bool complete = true;
-  if ( aMsg && 
-       !aMsg->readyToShow() && 
+  if ( aMsg &&
+       !aMsg->readyToShow() &&
        (aMsg->getMsgSerNum() != mLastSerNum) &&
        !aMsg->isComplete() )
     complete = false;
@@ -1413,7 +1413,7 @@ void KMReaderWin::slotTouchMessage()
       KMCommand *command = new KMSetStatusCommand( KMMsgStatusRead, serNums );
       command->start();
       KMMessage * receipt = message()->createMDN( MDN::ManualAction,
-                                                  MDN::Displayed, 
+                                                  MDN::Displayed,
                                                   true /* allow GUI */ );
       if ( receipt )
         if ( !kmkernel->msgSender()->send( receipt ) ) // send or queue
@@ -2097,12 +2097,12 @@ void KMReaderWin::slotMailtoOpenAddrBook()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlCopy()
 {
-  KMMainWidget *mainWidget = dynamic_cast<KMMainWidget*>(mMainWindow);
-  if (mainWidget)
-  {
-    KMCommand *command = new KMUrlCopyCommand( mUrlClicked, mainWidget );
-    command->start();
-  }
+  // we don't necessarily need a mainWidget for KMUrlCopyCommand so
+  // it doesn't matter if the dynamic_cast fails.
+  KMCommand *command =
+    new KMUrlCopyCommand( mUrlClicked,
+                          dynamic_cast<KMMainWidget*>( mMainWindow ) );
+  command->start();
 }
 
 //-----------------------------------------------------------------------------

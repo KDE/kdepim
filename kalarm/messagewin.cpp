@@ -589,15 +589,15 @@ void MessageWin::closeEvent(QCloseEvent* ce)
 */
 void MessageWin::slotDefer()
 {
-	DeferAlarmDlg* deferDlg = new DeferAlarmDlg(i18n("Defer Alarm"), QDateTime::currentDateTime().addSecs(60),
-	                                            false, this, "deferDlg");
-	deferDlg->setLimit(eventID);
+	DeferAlarmDlg deferDlg(i18n("Defer Alarm"), QDateTime::currentDateTime().addSecs(60),
+	                       false, this, "deferDlg");
+	deferDlg.setLimit(eventID);
 	mDeferDlgShowing = true;
 	if (!Preferences::instance()->modalMessages())
 		lower();
-	if (deferDlg->exec() == QDialog::Accepted)
+	if (deferDlg.exec() == QDialog::Accepted)
 	{
-		DateTime dateTime = deferDlg->getDateTime();
+		DateTime dateTime = deferDlg.getDateTime();
 		const Event* kcalEvent = eventID.isNull() ? 0 : theApp()->getCalendar().event(eventID);
 		if (kcalEvent)
 		{
@@ -667,7 +667,7 @@ TextMimeSourceFactory::TextMimeSourceFactory(const QString& absPath, KTextBrowse
 	  mLast(0)
 {
 	view->setMimeSourceFactory(this);
-	QString type = KMimeType::findByURL(absPath)->name();
+	QString type = KMimeType::findByPath(absPath)->name();
 	switch (KAlarmApp::fileType(type))
 	{
 		case 1:

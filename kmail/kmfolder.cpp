@@ -719,6 +719,7 @@ int KMFolder::remove()
 {
   assert(!name().isEmpty());
 
+  mChild = 0;
   clearIndex(true, true); // delete and remove from dict
   close(TRUE);
 

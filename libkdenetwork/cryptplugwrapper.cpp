@@ -448,6 +448,14 @@ QString CryptPlugWrapper::libName() const
     return _libName;
 }
 
+QString CryptPlugWrapper::protocol() const
+{
+  if ( _libName.contains( "smime" ) )
+    return "smime";
+  if ( _libName.contains( "openpgp" ) )
+    return "openpgp";
+  return QString::null;
+}
 
 void CryptPlugWrapper::setDisplayName( const QString& name )
 {

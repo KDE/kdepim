@@ -214,22 +214,26 @@ bool NameEditDialog::changed() const
 
 QString NameEditDialog::formattedName( const KABC::Addressee &addr, int type )
 {
+  QString name;
+
   switch ( type ) {
     case SimpleName:
-      return addr.givenName() + " " + addr.familyName();
+      name = addr.givenName() + " " + addr.familyName();
       break;
     case FullName:
-      return addr.prefix() + " " + addr.givenName() + " " +
+      name = addr.prefix() + " " + addr.givenName() + " " +
              addr.additionalName() + " " + addr.familyName() + " " +
              addr.suffix();
       break;
     case ReverseName:
-      return addr.familyName() + ", " + addr.givenName();
+      name = addr.familyName() + ", " + addr.givenName();
       break;
     default:
-      return "";
+      name = "";
       break;
   }
+
+  return name.simplifyWhiteSpace();
 }
 
 void NameEditDialog::parseBoxChanged( bool value )

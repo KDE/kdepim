@@ -300,6 +300,7 @@ private:
   QWidget *mParent;
   QPtrList<partNode> mAttachments;
   bool mEncoded;
+  bool mMessageComplete;
 };
 
 class KMReplyToCommand : public KMCommand

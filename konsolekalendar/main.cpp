@@ -79,9 +79,10 @@ static KCmdLineOptions options[] =
   { "import <import-file>", I18N_NOOP("  Import this calendar to main calendar"), 0 },
 
   { ":", I18N_NOOP(" Operation modifiers:"), 0 },
-//  { "next", I18N_NOOP("  View next activity in calendar"), 0 },
+  { "next", I18N_NOOP("  View next activity in calendar"), 0 },
   { "all", I18N_NOOP("  View all calendar entries"), 0 },
   { "uid <uid>", I18N_NOOP("  Event Unique-string identifier"), 0 },
+  { "show-next <show-next>", I18N_NOOP("  From this day show next # days activities"), 0 },
   { "date <start-date>", I18N_NOOP("  Start from this day [YYYY-MM-DD]"), 0 },
   { "time <start-time>", I18N_NOOP("  Start from this time [HH:MM:SS]"), 0 },
   { "end-date <end-date>", I18N_NOOP("  End at this day [YYYY-MM-DD]"), 0 },
@@ -310,12 +311,12 @@ int main(int argc, char *argv[])
    *  Show next happening and exit
    *
    */
-  /*if ( args->isSet("next") )
+  if ( args->isSet("next") )
   {
     kdDebug() << "main | parse options | Show next event only" << endl;
 
     variables.setNext(true);
-  }*/
+  }
 
 
   /*
@@ -381,6 +382,31 @@ int main(int argc, char *argv[])
       return(1);
     }
     kdDebug() << "main | parse options | End date after converstion: (" << enddate.toString() << ")" << endl;
+  }
+
+  /*
+   *  Show next # days and exit
+   *
+   */
+
+  if ( args->isSet("show-next") )
+  {
+
+    bool ok;
+
+    option = args->getOption("show-next");
+    kdDebug() << "main | parse options | Show " << option << " days ahead" << endl;
+    variables.setDaysCount( option.toInt( &ok, 10 ) );
+
+	if( !ok ){
+	  kdError() << i18n("Invalid Date Count Specified: ").local8Bit() << option << endl;
+	  return(1);
+	}
+
+    enddate = startdate;
+    enddate = enddate.addDays( variables.getDaysCount() );
+    kdDebug() << "main | parse options | End date after converstion: (" << enddate.toString() << ")" << endl;	
+
   }
 
   /*

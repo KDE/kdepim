@@ -32,7 +32,7 @@
 
 
 /* This is a loaded library, which is initialized with the line below */
-K_EXPORT_COMPONENT_FACTORY( libkmobile_skeleton, KMobileSkeleton() );
+K_EXPORT_COMPONENT_FACTORY( libkmobile_skeleton, KMobileSkeleton() )
 
 /* createObject needs to be reimplemented by every KMobileDevice driver */
 QObject *KMobileSkeleton::createObject( QObject *parent, const char *name,

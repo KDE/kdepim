@@ -12,7 +12,7 @@
 #include "modemhandler.h"
 
 typedef KGenericFactory<PhonePlugin, QObject>  PhoneKonnectorPlugin;
-K_EXPORT_COMPONENT_FACTORY( libphonekonnector,  PhoneKonnectorPlugin );
+K_EXPORT_COMPONENT_FACTORY( libphonekonnector,  PhoneKonnectorPlugin )
 
 class PhonePlugin::PhonePluginPrivate
 {
