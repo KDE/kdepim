@@ -55,9 +55,9 @@ KNSaveHelper::~KNSaveHelper()
 }
 
 
-QFile* KNSaveHelper::getFile()
+QFile* KNSaveHelper::getFile(QString dialogTitle)
 {
-  url = KFileDialog::getSaveURL(lastPath+s_aveName,QString::null,knGlobals.topWidget,i18n("Save Article"));
+  url = KFileDialog::getSaveURL(lastPath+s_aveName,QString::null,knGlobals.topWidget,dialogTitle);
 
   if (url.isEmpty())
     return 0;
@@ -66,6 +66,13 @@ QFile* KNSaveHelper::getFile()
   lastPath.truncate(lastPath.length()-url.fileName().length());
 
   if (url.isLocalFile()) {
+    if (QFileInfo(url.path()).exists() &&
+        (KMessageBox::warningContinueCancel(knGlobals.topWidget,
+                                            i18n("A file named %1 already exists.\nDo you want to replace it?").arg(url.path()),
+                                            dialogTitle, i18n("&Replace")) != KMessageBox::Continue)) {
+      return 0;
+    }
+
     file = new QFile(url.path());
     if(!file->open(IO_WriteOnly)) {
       displayExternalFileError();
@@ -123,7 +130,7 @@ void KNArticleManager::saveContentToFile(KNMimeContent *c)
 {
   KNSaveHelper helper(c->ctName().data());
 
-  QFile *file = helper.getFile();
+  QFile *file = helper.getFile(i18n("Save Attachment"));
 
   if (file) {
     DwString data=c->decodedData();
@@ -140,7 +147,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a)
 
   KNSaveHelper helper(fName);
 
-  QFile *file = helper.getFile();
+  QFile *file = helper.getFile(i18n("Save Article"));
   KNMimeContent *text=0;
   if (file) {
     DwString tmp = "";

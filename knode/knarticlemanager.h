@@ -46,7 +46,7 @@ public:
   ~KNSaveHelper();
   
   // returns a file open for writing
-  QFile* getFile();
+  QFile* getFile(QString dialogTitle);
   
 private:
 
