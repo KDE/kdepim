@@ -54,9 +54,14 @@ extern "C" {
 
 /* Check for compiler features.  */
 #if __GNUC__
+#ifdef __GNUC_PATCHLEVEL__
 #define _GPGME_GCC_VERSION (__GNUC__ * 10000 \
                             + __GNUC_MINOR__ * 100 \
                             + __GNUC_PATCHLEVEL__)
+#else
+#define _GPGME_GCC_VERSION (__GNUC__ * 10000 \
+                            + __GNUC_MINOR__ * 100)
+#endif
 
 #if _GPGME_GCC_VERSION > 30100
 #define _GPGME_DEPRECATED	__attribute__ ((__deprecated__))
