@@ -596,12 +596,11 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
       // KArm events have the custom property X-KDE-Karm-duration
       if (! processed.contains( (*event)->uid()))
       {
-        // If an event spans multiple days, then we attribute the hours to the
-        // first day.  This is not ideal because it mis-reports the actual
-        // time spent, but it is the easiest way to avoid double counting for
-        // now.  (If an event spans two days, CalendarLocal::rawEventsForDate
-        // will return the same event on both days.)  This should be
-        // put in the documentation.
+        // If an event spans multiple days, CalendarLocal::rawEventsForDate
+        // will return the same event on both days.  To avoid double-counting
+        // such events, we (arbitrarily) attribute the hours from both days on
+        // the first day.  This mis-reports the actual time spent, but it is
+        // an easy fix for a (hopefully) rare situation.
         processed.append( (*event)->uid());
 
         duration = (*event)->customProperty(kapp->instanceName(), 
