@@ -362,10 +362,11 @@ recurrence type or time period as follows:</para>
 <listitem><para>To trigger the alarm once only, select <guilabel>No
 recurrence</guilabel>.</para></listitem>
 
-<listitem><para>Select <guilabel>At login</guilabel> to trigger
-the alarm whenever you log in, until its scheduled end time. (Note that
-an alarm repeated at login will also be triggered any time you enable
-alarms, or restart or reset the <application>alarm
+<listitem><para>Select <guilabel>At login</guilabel> to trigger the
+alarm whenever you log in, until its scheduled end time. Then, at its
+scheduled end time it will finally be triggered one last time. (Note
+that an alarm repeated at login will also be triggered any time you
+enable alarms, or restart or reset the <application>alarm
 daemon</application>.)</para></listitem>
 
 <listitem>
