@@ -1,11 +1,8 @@
-#ifndef _KPILOT_VCAL_FACTORY_H
-#define _KPILOT_VCAL_FACTORY_H
-/* vcal-factory.h                       KPilot
+/* vcal-factory.cc                      KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** This file defines the factory for the vcal-conduit plugin.
-** It also defines the class for the behavior of the setup dialog.
 */
 
 /*
@@ -28,51 +25,28 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
+#include "vcal-factorybase.moc"
 
-#include <klibloader.h>
-#include "vcal-factorybase.h"
 
-class KInstance;
-class KAboutData;
+// Configuration keys
+//
+//
+const char * const VCalConduitFactoryBase::calendarFile = "CalFile" ;
+const char * const VCalConduitFactoryBase::firstTime = "FirstTime" ;
+const char * const VCalConduitFactoryBase::deleteOnPilot = "DeleteOnPilot" ;
+const char * const VCalConduitFactoryBase::fullSyncOnPCChange = "FullSyncOnPCChange";
+const char * const VCalConduitFactoryBase::alwaysFullSync = "AlwaysFullSync";
 
-class VCalConduitFactory : public VCalConduitFactoryBase
-{
-Q_OBJECT;
-
-public:
-	VCalConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~VCalConduitFactory();
-
-	static KAboutData *about() { return fAbout; } ;
-
-	static const char * const group;
-
-protected:
-	virtual QObject* createObject( QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
-private:
-	KInstance *fInstance;
-	static KAboutData *fAbout;
-} ;
-
-extern "C"
-{
-
-void *init_libvcalconduit();
-
-} ;
 
 // $Log$
 // Revision 1.6  2002/04/20 14:21:26  kainhofe
 // Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
 //
-// Revision 1.5  2002/04/19 19:34:11  kainhofe
-// didn't compile
-//
-// Revision 1.4  2002/01/25 21:43:12  adridg
+// Revision 1.5  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
+// Revision 1.4  2001/12/31 09:25:05  adridg
+// Cleanup, various fixes for runtime loading
 //
 // Revision 1.3  2001/12/28 12:56:46  adridg
 // Added SyncAction, it may actually do something now.
@@ -84,4 +58,3 @@ void *init_libvcalconduit();
 // New files for move to .so
 //
 
-#endif

@@ -46,19 +46,15 @@ void *init_libtodoconduit()
 
 } ;
 
-
 // Configuration keys
 //
 //
-const char * const ToDoConduitFactory::calendarFile = "CalFile" ;
-const char * const ToDoConduitFactory::firstTime = "FirstTime" ;
-const char * const ToDoConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
 const char * const ToDoConduitFactory::group = "todoOptions" ;
 
 
 KAboutData *ToDoConduitFactory::fAbout = 0L;
 ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+	VCalConduitFactoryBase(p,n)
 {
 	FUNCTIONSETUP;
 
@@ -142,6 +138,12 @@ ToDoConduitFactory::~ToDoConduitFactory()
 }
 
 // $Log$
+// Revision 1.4  2002/04/22 22:51:51  kainhofe
+// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
+//
+// Revision 1.3  2001/12/31 09:25:05  adridg
+// Cleanup, various fixes for runtime loading
+//
 // Revision 1.2  2001/12/27 16:43:36  adridg
 // Fixup configuration
 //

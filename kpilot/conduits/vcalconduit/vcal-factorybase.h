@@ -1,10 +1,10 @@
-#ifndef _KPILOT_TODO_FACTORY_H
-#define _KPILOT_TODO_FACTORY_H
-/* todo-factory.h                       KPilot
+#ifndef _KPILOT_VCAL_FACTORYBASE_H
+#define _KPILOT_VCAL_FACTORYBASE_H
+/* vcal-factory.h                       KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 **
-** This file defines the factory for the todo-conduit plugin.
+** This file defines the factory for the vcal-conduit plugin.
 ** It also defines the class for the behavior of the setup dialog.
 */
 
@@ -30,43 +30,41 @@
 */
 
 #include <klibloader.h>
-#include "vcal-factorybase.h"
 
-class KInstance;
-class KAboutData;
-
-class ToDoConduitFactory : public VCalConduitFactoryBase
+class VCalConduitFactoryBase : public KLibFactory
 {
-Q_OBJECT
+Q_OBJECT;
 
 public:
-	ToDoConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~ToDoConduitFactory();
+	VCalConduitFactoryBase(QObject * p= 0L,const char * n= 0L):KLibFactory(p,n){};
+	virtual ~VCalConduitFactoryBase() {};
 
-	static KAboutData *about() { return fAbout; } ;
-
-	static const char * const group;
+	static const char * const calendarFile,
+		* const firstTime,
+		* const deleteOnPilot,
+		*const fullSyncOnPCChange,
+		*const alwaysFullSync;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
 		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
-private:
-	KInstance *fInstance;
-	static KAboutData *fAbout;
+		const QStringList &args = QStringList() )=0;
 } ;
 
-extern "C"
-{
-
-void *init_libtodoconduit();
-
-} ;
 
 // $Log$
-// Revision 1.3  2002/04/22 22:51:51  kainhofe
-// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
+// Revision 1.6  2002/04/20 14:21:26  kainhofe
+// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
+//
+// Revision 1.5  2002/04/19 19:34:11  kainhofe
+// didn't compile
+//
+// Revision 1.4  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
+// Revision 1.3  2001/12/28 12:56:46  adridg
+// Added SyncAction, it may actually do something now.
 //
 // Revision 1.2  2001/12/27 16:43:36  adridg
 // Fixup configuration
