@@ -440,7 +440,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     return;
 
   if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget,
-    i18n("Do you really want to supercede this article?")))
+    i18n("Do you really want to supersede this article?")))
     return;
 
   KNGroup *grp;
@@ -487,7 +487,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   //References
   art->references()->from7BitString(a->references()->as7BitString(false));
 
-  //Supercedes
+  //Supersedes
   art->supersedes()->from7BitString(a->messageID()->as7BitString(false));
 
   //Body
@@ -906,33 +906,33 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
     KNLocalArticle *localArt=static_cast<KNLocalArticle*>(a);
 
     if(localArt->doMail() && !localArt->doPost()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("E-mails cannot be canceled or superceded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("E-mails cannot be canceled or superseded!"));
       return false;
     }
 
     KNHeaders::Control *ctrl=localArt->control(false);
     if(ctrl && ctrl->isCancel()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superceded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superseded!"));
       return false;
     }
 
     if(!localArt->posted()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("Only sent articles can be canceled or superceded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Only sent articles can be canceled or superseded!"));
       return false;
     }
 
     if(localArt->canceled()) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("This article has already been canceled or superceded!"));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("This article has already been canceled or superseded!"));
       return false;
     }
 
     KNHeaders::MessageID *mid=localArt->messageID(false);
     if(!mid || mid->isEmpty()) {
       KMessageBox::sorry(knGlobals.topWidget, i18n(
-"This article cannot be canceled or superceded,\n\
+"This article cannot be canceled or superseded,\n\
 because its message-id has not been created by KNode!\n\
 But you can look for your article in the newsgroup\n\
-and cancel (or supercede) it there."));
+and cancel (or supersede) it there."));
       return false;
     }
 
@@ -966,12 +966,12 @@ and cancel (or supercede) it there."));
     }
 
     if(!ownArticle) {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supercede you own articles."));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supersede you own articles."));
       return false;
     }
 
     if(!remArt->hasContent())  {
-      KMessageBox::sorry(knGlobals.topWidget, i18n("You have to download the article body\nbefore you can cancel or supercede the article."));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("You have to download the article body\nbefore you can cancel or supersede the article."));
       return false;
     }
 
