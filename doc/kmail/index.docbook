@@ -100,6 +100,293 @@ an archive of the developer's mailing list is at <ulink url="http://lists.kde.or
 
 
 
+<chapter id="faq">
+<title>Frequently Asked Questions (FAQ)</title>
+
+<qandaset id="faqset">
+
+<qandaentry>
+ <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
+ <answer><para>Not yet. However, IMAP support is now in active development. Because of the
+ many changes required, it will probably not be part of KDE 2.1. Currently you can still
+ receive mails via <acronym>IMAP</acronym> by using fetchmail:
+ <itemizedlist>
+   <listitem><para>Create a file <filename>~/.fetchmailrc</filename> which contains the following lines:
+   <screen>poll &lt;your-mail-server&gt;
+proto IMAP
+user &lt;your-username&gt;
+pass &lt;your-password&gt;</screen>
+   If your mail username and your local username differ you have to add
+the following entry:
+   <screen>is &lt;local-username&gt;</screen>
+   </para></listitem>
+   <listitem><para>Execute <command>chmod 700 ~/.fetchmailrc</command></para></listitem>
+   <listitem><para>Create a local account in &kmail;</para></listitem>
+   <listitem><para>Enter <userinput>fetchmail</userinput> in the field <guilabel>Precommand</guilabel> 
+   (That's not necessary if you have a permanent connection to the net. In that case you're 
+   better off leaving fetchmail running as a daemon. This also has the advantage that you won't
+   have to add your password to <filename>~/.fetchmailrc</filename>, you will be asked for it
+   when the daemon starts.)
+   </para></listitem>
+   <listitem><para>Check your mail</para></listitem>
+ </itemizedlist>
+ </para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I install &kmail;?</para></question>
+ <answer><para>&kmail; is part of KDE's kdenetwork package, it requires
+ the packages kdelibs, kdesupport and kdebase. If you have problems
+ installing any of these packages, we suggest you visit the FAQ at 
+ the <ulink url="http://www.kde.org">KDE  homepage</ulink> or search 
+ the <ulink url="http://lists.kde.org">mailing list archives</ulink>.
+ </para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Are there any known bugs in &kmail;?</para></question>
+ <answer><para>You can find a list of submitted bugs at <ulink url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>.
+ Not all these bugs are <quote>real</quote>, some are based on misunderstanding
+ of features etc. Here's a real problem (only affects &kmail; before KDE 2.1): &kmail; will not delete some temporary files if it crashes. In this
+ case, you should <command>cd</command> to <filename class="directory">~/.kde/share/apps/kmail/tmp/</filename>
+ and delete all the files and folders there.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Does &kmail; support <acronym>APOP</acronym>?</para></question>
+ <answer><para>Yes, <acronym>APOP</acronym> is used automatically if it's
+ available. There's currently no feedback if it's used, and no way to check.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Can I use &kmail; and procmail?</para></question>
+ <answer><para>Yes, but it's important to do it the right way or you might lose mail.
+ Do <emphasis>not</emphasis> let procmail sort the mail to <filename class="directory">~/Mail</filename>,
+ but to some other directory which you then access by &kmail; as a <guilabel>Local Mailbox</guilabel>.
+ I.e. you have to add another account in the <guilabel>Network</guilabel> tab of the
+ Configuration dialog. Also see the FAQ about lockfiles.</para></answer>
+</qandaentry>
+
+<qandaentry id="pgpfaq">
+ <question><para>What should I know if I want to use PGP/GnuPG with &kmail;?</para></question>
+ <answer><para>&kmail; provides a simple and easy to use interface for basic functions of these
+ programs. Still you should understand how these programs work and what might make them
+ insecure. Important issues:</para>
+ <itemizedlist>
+	 <listitem><para>You <emphasis>really</emphasis> should test if encryption works before you use it. &kmail; relies
+	  on PGP/GnuPG's error strings, which often change between different versions.</para></listitem>
+	 <listitem><para>Trusting a foreign public key without checking it is no good idea.</para></listitem>
+	 <listitem><para>As most other mail clients, &kmail; can encrypt your messages,
+	  but <emphasis>not</emphasis> your attachments. You have to encrypt them manually before 
+	  you attach them.</para></listitem>
+	 <listitem><para>There's a bug in &kmail; 1.1.99 (which comes with KDE 2.0 and 2.0.1) that
+	  makes PGP not work if you use a different language than English. You can work around
+	  it this way (&kmail; will still use your favourite language):</para>
+	  <itemizedlist>
+	   <listitem><para>Rename <filename>/usr/bin/kmail</filename> to <filename>/usr/bin/kmail.original</filename></para></listitem>
+	   <listitem><para>Install in <filename class="directory">/usr/bin</filename> the following shell script, calling it 
+		<filename>kmail</filename> and making sure it is owned by <quote>root</quote> and has 755 permissions (rwxr-xr-x):</para>
+<screen>
+#!/bin/bash
+LANGUAGE=en
+export LANGUAGE
+kmail.original $*
+</screen></listitem>
+	  </itemizedlist>
+	  </listitem>
+	 <listitem><para>&kmail; is <emphasis>not</emphasis> able to use different keys for multiple identities.</para></listitem>
+ </itemizedlist>
+ </answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I have to set up &kmail; to use (i.e. read and write) messages with non-Latin1
+ characters?</para></question>
+ <answer><para>&kmail; 1.1.99 had some bugs in its handling of characters that are not part of
+ Latin1. The following applies to KDE 2.1(beta): In the <guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> section
+ of the configuration dialog, select the correct <guilabel>Character set</guilabel> for the message
+ list and the folder list. If <guilabel>unicode (iso10646-1)</guilabel> is available, 
+ you should choose it. In case messages are still not shown correctly, you can always try 
+ other settings from the  <menuchoice><guimenu>Message</guimenu><guimenuitem>Set
+ Encoding</guimenuitem></menuchoice> menu.
+ For writing messages, go to <guilabel>Composer</guilabel>/<guilabel>Charset</guilabel> and 
+ configure the default charset you want to use for your own mails.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Spellchecking doesn't recognize non-english characters.</para></question>
+ <answer><para>Before you can use spellchecking the first time, you have to configure it.
+You can do so in the <guilabel>Composer</guilabel> window's 
+menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</guimenuitem></menuchoice>.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I use my Eudora/Netscape/Outlook/... mail folders in &kmail;?</para></question>
+ <answer><para>See the section <link linkend="secImporting">Using other Mailbox files With &kmail;</link>.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>&kmail; doesn't display <acronym>HTML</acronym> mail as <acronym>HTML</acronym>,
+ I can only see the source.</para></question>
+ <answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer HTML to plain 
+ text</guimenuitem></menuchoice>. For security reasons you should only do so for
+ mails from trusted sources.
+ </para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How can I use mail folders that are not in <filename class="directory">~/Mail/</filename>?</para></question>
+ <answer><para>Simply create a symlink in your <filename class="directory">~/Mail</filename> directory using 
+ <command>ln -s /somewhere/Mail/mymailboxfile ~/Mail/remote</command>. When you start &kmail; you will 
+ see a new folder with the name <guilabel>remote</guilabel> that contains the mails in your remote 
+ folder. If you want to add a whole remote mail directory use <command>ln -s /somewhere/Mail ~/Mail/.remotedir.directory</command>.
+ For that case you also need to create a new empty folder named <filename class="directory">remotedir</filename> 
+ with &kmail;. The folder <filename class="directory">remotedir</filename> will then contain all remote mailbox folders 
+ as subfolders.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>My folders keep growing even when I delete messages.</para></question>
+ <answer><para>To really remove deleted messages from disk, you have to compact your folders. To do so
+automatically, open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> window,
+select the Miscellaneous tab and select <guilabel>Compact all folders
+on exit</guilabel>. Maybe you want to select <guilabel>Empty trash on exit</guilabel>,
+too. This will remove all the messages in the trash folder whenever you exit &kmail;.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Which version of &kmail; supports which version of PGP/GnuPG?</para></question>
+ <answer><para>&kmail; 1.0.x: The unpatched version supports only PGP (version 2.x and 5.x). &kmail;
+will prefer version 5.x if both versions are installed. There is no
+way for the user to force &kmail; to use version 2.x in this case. There
+are patches for PGP6 and GnuPG support at <ulink url="http://kmail.kde.org">&kmail;'s
+homepage</ulink>. If the GnuPG patch is applied, and GnuPG <emphasis>and</emphasis> PGP are installed, &kmail;
+will prefer GnuPG. Here is no way to force &kmail; to use PGP.</para>
+<para>&kmail; 1.1.x: This has at least the improvements from the patches above.</para>
+<para>&kmail; 1.2.x: Now you can choose which encryption tool to use if you have more than one.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Can I use encryption with my normal (non-<acronym>SSL</acronym>) <acronym>POP3</acronym> account?</para></question>
+ <answer><para>If your <acronym>POP3</acronym> server runs an ssh daemon, you can use ssh to tunnel your <acronym>POP3</acronym> connection
+using the following command:</para>
+
+<para><userinput>ssh -L 110:127.0.0.1:110 user@host</userinput></para>
+
+<para>Modify your &kmail; configuration to fetch the mail via <acronym>POP3</acronym> from
+<userinput>localhost</userinput>, ssh will tunnel the connection for you. You need to be root to execute this
+command. Alternatively, change the first port number, i.e. the first occurence of 
+<userinput>110</userinput>, to something above 1024 and configure
+&kmail; to use that port.</para>
+
+<para>Note: if non-encrypted mails have already been sent via internet, the (only)
+advantage of using ssh is that your password will be sent encrypted to the 
+<acronym>POP3</acronym> server.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Does &kmail; lock the folders it uses?</para></question>
+ <answer><para>&kmail; does not lock the files in <filename class="directory">~/Mail</filename>.
+ To avoid the risk of losing mail <emphasis>if using a local account</emphasis> it is necessary
+ to ensure that &kmail; uses the same type of locking as your mail delivery
+ agent.</para>
+
+<para>There are five different locking options you can use:</para>
+<itemizedlist>
+	<listitem><para><guilabel>Mutt dotlock (recommended)</guilabel></para></listitem>
+	<listitem><para><guilabel>Mutt dotlock privileged</guilabel></para></listitem>
+	<listitem><para><guilabel>Procmail lockfile</guilabel></para></listitem>
+	<listitem><para><guilabel>FCNTL</guilabel> (default)</para></listitem>
+	<listitem><para><guilabel>none (use with care)</guilabel></para></listitem>
+</itemizedlist>
+
+<para><guilabel>Mutt dotlock</guilabel> and <guilabel>Mutt dotlock
+privileged</guilabel> will both use a small utility that comes with mutt
+called <command>mutt_dotlock</command>. <guilabel>Mutt dotlock</guilabel>
+can be used in the same way as the <guilabel>Procmail lockfile</guilabel>
+option, with the same limitation with regards to the <filename
+class="directory">/var/spool/mail/</filename> folders. However, the
+<guilabel>Mutt dotlock privileged</guilabel> option can create lock files
+in the <filename class="directory">/var/spool/mail</filename> directory. 
+<command>mutt_dotlock</command> is a setgid program and this option will
+run it in setgid mode. Please note that these options will only work if
+mutt is installed on your system.</para>
+
+<para><guilabel>Procmail lockfile</guilabel> will use a small utility that
+comes with procmail called <command>lockfile</command>. You can use this
+if your mail folder is in a directory where you have write permissions. 
+This will not work on your <filename
+class="directory">/var/spool/mail/user</filename> file in most cases.  It
+will create <filename>.lock</filename> files on your account when &kmail;
+is checking for new mail. Please note that this will only work if procmail
+is installed on your system.</para>
+
+<para><guilabel>FCNTL</guilabel>: the default option will use the
+<function>fcntl()</function> system call.</para>
+
+<para>If you don't want to use any locking, the <guilabel>none</guilabel>
+option is what you want. However, there are risks of losing mail when no
+locking is used.</para>
+
+</answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I leave mail on the server?</para></question>
+ <answer><para>Open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> window. Click
+on the <guilabel>Network</guilabel> tab. Select your account
+from the account list and click the <guilabel>Modify</guilabel> button. This
+dialog contains the <guilabel>Delete mail from server</guilabel> setting which
+you must not select.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I automatically insert a text footer within my mails?</para></question>
+ <answer><para>The text footer is called a signature file. Select 
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice>
+Look in the <guilabel>Identity</guilabel> tab for the
+<guilabel>Specify signature below</guilabel> field.
+Select the radio button and type your signature below.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Why does &kmail; keep asking me for the location of my signature file?</para></question>
+ <answer><para>&kmail; will ask you the location of your signature file if you have checked the
+option <guilabel>Use a signature from file</guilabel> in the <guilabel>Composer</guilabel> tab of
+the <guilabel>Configure</guilabel> dialog, but have not specified a signature file in the
+<guilabel>Identity</guilabel> tab. You should either specify a signature file or deselect
+<guilabel>Use a signature from file</guilabel>.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Why doesn't word wrap work in the Composer window?</para></question>
+ <answer><para>The word wrap setting is probably turned off. Word wrap can be toggled on and off in the 
+<guilabel>Composer</guilabel> tab of the <guilabel>Configure</guilabel> dialog.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How can I find out how many unread messages I have in a mail folder?</para></question>
+ <answer><para>The number of unread messages is conveniently displayed in the
+<guilabel>Folders pane</guilabel> after the folder name.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I set up sendmail to work with &kmail; if I have a dial-up connection?</para></question>
+ <answer><para>First you should check if your Linux/BSD/whatever distribution can do this for
+you. Perhaps it has already been set up during installation.</para>
+
+<para>If that's not the case, you may want to have a look at
+<ulink url="http://www.linuxdoc.org/HOWTO/mini/Mail-Queue.html">the Mail Queue HOWTO</ulink>
+or at <ulink url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">UCT Linux User's group page
+on configuring sendmail for Dial-up connections</ulink>.</para></answer>
+</qandaentry>
+
+</qandaset>
+
+</chapter>
+
+
+
 <chapter id="secgettingstarted">
 <title>Getting Started</title>
 
@@ -859,40 +1146,56 @@ setting's <guilabel>Security</guilabel> tab.</para>
 <sect1 id="appearancetab">
 <title>Appearance Tab</title>
 
-<para>The <guilabel>Fonts</guilabel> section allows you to change the type, size and 
+<sect2 id="appearancetab-fonts">
+<title>Fonts</title>
+<para>This section allows you to change the type, size and 
 character set of the display fonts.</para>
+</sect2>
 
-<para>The <guilabel>Colors</guilabel> section allows you to change the color of the text.
+<sect2 id="appearancetab-colors">
+<title>Colors</title>
+<para>This section allows you to change the color of the text.
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that's quoted
 more than three times will appear in color.</para>
+</sect2>
 
-<para>The <guilabel>Layout</guilabel> section lets you toggle the long folder list on and off.
+<sect2 id="appearancetab-layout">
+<title>Layout</title>
+<para>This section lets you toggle the long folder list on and off.
 The long folder list lists folders all the way down the left side of the &kmail; window, which lets you see 
 more folders than in the default view, but it takes away some space for viewing the text 
 of the messages. With <guilabel>Display message sizes</guilabel> selected there
 will be another column in the Header pane that show the messages' size in bytes.
 <guilabel>Thread list of message headers</guilabel> will put all the messages in a kind
 of tree, so the replies to a message are next to that message.</para>
-
 <para><guilabel>Prefer plain text to HTML
 rendering</guilabel> will try to show even HTML mails as plain text. It's a good idea to
 prefer plain text, as security problems with HTML might show up some day.</para>
+</sect2>
 
-<para>The <guilabel>Profiles</guilabel> section offers several common default settings
-for colors and font sizes.</para>
+<sect2 id="appearancetab-profiles">
+<title>Profiles</title>
+<para>This section offers several common default settings for colors and font sizes.</para>
+</sect2>
 
-<para>The <guilabel>Addressbook</guilabel> section allows you to choose between several
+<sect2 id="appearancetab-addressbook">
+<title>Addressbook</title>
+<para>This section allows you to choose between several
 address books, whereas <guilabel>Traditional KMail</guilabel> is a very simple one
 and <guilabel>Abbrowser</guilabel> is an advanced one. Please note the comments
 under the selection that tell you the packages you need to use the advanced variants.
 The address books' database is independent, i.e. you will not see addresses in the
 <guilabel>Abbrowser</guilabel> if you only entered them in the <guilabel>Traditional KMail</guilabel>
 address book.</para>
+</sect2>
 
 </sect1>
 
 <sect1 id="composertab">
 <title>Composer Tab</title>
+
+<sect2 id="composertab-general">
+<title>General</title>
 
 <para>The <guilabel>Phrases</guilabel> section lets you define the automatically generated
 lines added to message replies, forwarded
@@ -916,8 +1219,32 @@ icon in the composer window for every mail if necessary.</para>
 lets you turn word wrapping on and off in the <guilabel>Composer window</guilabel> and lets you set the
 column at which words will be wrapped.</para>
 
-</sect1>
+</sect2>
 
+<sect2 id="composertab-subject">
+<title>Subject</title>
+
+<para>This section contains a list of prefixes for <quote>Reply</quote>
+and <quote>Forward</quote>. If you receive messages that use different prefixes, you can
+add them here so &kmail; will recognize (and optionally replace) them.</para>
+
+</sect2>
+
+<sect2 id="composertab-charset">
+<title>Charset</title>
+
+<para>This section lets you choose the default charset for your own
+messages. In the composer you can still change the charset with
+<menuchoice><guimenu>Options</guimenu><guimenuitem>Set 
+Encoding</guimenuitem></menuchoice>. If you select <guilabel>Use own
+default charset when replying or forwarding</guilabel>, the original message's
+charset will be ignored and your charset will be used for replying and
+forwarding.</para>
+
+</sect2>
+
+
+</sect1>
 
 <sect1 id="mimetab">
 <title>Mime Headers Tab</title>
@@ -1945,292 +2272,6 @@ Mailreader's help menu</link>.
 
 </sect2>
 </sect1>
-</chapter>
-
-
-<chapter id="faq">
-<title>Frequently Asked Questions (FAQ)</title>
-
-<qandaset id="faqset">
-
-<qandaentry>
- <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
- <answer><para>Not yet. However, IMAP support is now in active development. Because of the
- many changes required, it will probably not be part of KDE 2.1. Currently you can still
- receive mails via <acronym>IMAP</acronym> by using fetchmail:
- <itemizedlist>
-   <listitem><para>Create a file <filename>~/.fetchmailrc</filename> which contains the following lines:
-   <screen>poll &lt;your-mail-server&gt;
-proto IMAP
-user &lt;your-username&gt;
-pass &lt;your-password&gt;</screen>
-   If your mail username and your local username differ you have to add
-the following entry:
-   <screen>is &lt;local-username&gt;</screen>
-   </para></listitem>
-   <listitem><para>Execute <command>chmod 700 ~/.fetchmailrc</command></para></listitem>
-   <listitem><para>Create a local account in &kmail;</para></listitem>
-   <listitem><para>Enter <userinput>fetchmail</userinput> in the field <guilabel>Precommand</guilabel> 
-   (That's not necessary if you have a permanent connection to the net. In that case you're 
-   better off leaving fetchmail running as a daemon. This also has the advantage that you won't
-   have to add your password to <filename>~/.fetchmailrc</filename>, you will be asked for it
-   when the daemon starts.)
-   </para></listitem>
-   <listitem><para>Check your mail</para></listitem>
- </itemizedlist>
- </para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>How do I install &kmail;?</para></question>
- <answer><para>&kmail; is part of KDE's kdenetwork package, it requires
- the packages kdelibs, kdesupport and kdebase. If you have problems
- installing any of these packages, we suggest you visit the FAQ at 
- the <ulink url="http://www.kde.org">KDE  homepage</ulink> or search 
- the <ulink url="http://lists.kde.org">mailing list archives</ulink>.
- </para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Are there any known bugs in &kmail;?</para></question>
- <answer><para>You can find a list of submitted bugs at <ulink url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>.
- Not all these bugs are <quote>real</quote>, some are based on misunderstanding
- of features etc. Here's a real problem (only affects &kmail; before KDE 2.1): &kmail; will not delete some temporary files if it crashes. In this
- case, you should <command>cd</command> to <filename class="directory">~/.kde/share/apps/kmail/tmp/</filename>
- and delete all the files and folders there.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Does &kmail; support <acronym>APOP</acronym>?</para></question>
- <answer><para>Yes, <acronym>APOP</acronym> is used automatically if it's
- available. There's currently no feedback if it's used, and no way to check.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Can I use &kmail; and procmail?</para></question>
- <answer><para>Yes, but it's important to do it the right way or you might lose mail.
- Do <emphasis>not</emphasis> let procmail sort the mail to <filename class="directory">~/Mail</filename>,
- but to some other directory which you then access by &kmail; as a <guilabel>Local Mailbox</guilabel>.
- I.e. you have to add another account in the <guilabel>Network</guilabel> tab of the
- Configuration dialog. Also see the FAQ about lockfiles.</para></answer>
-</qandaentry>
-
-<qandaentry id="pgpfaq">
- <question><para>What should I know if I want to use PGP/GnuPG with &kmail;?</para></question>
- <answer><para>&kmail; provides a simple and easy to use interface for basic functions of these
- programs. Still you should understand how these programs work and what might make them
- insecure. Important issues:</para>
- <itemizedlist>
-	 <listitem><para>You <emphasis>really</emphasis> should test if encryption works before you use it. &kmail; relies
-	  on PGP/GnuPG's error strings, which often change between different versions.</para></listitem>
-	 <listitem><para>Trusting a foreign public key without checking it is no good idea.</para></listitem>
-	 <listitem><para>As most other mail clients, &kmail; can encrypt your messages,
-	  but <emphasis>not</emphasis> your attachments. You have to encrypt them manually before 
-	  you attach them.</para></listitem>
-	 <listitem><para>There's a bug in &kmail; 1.1.99 (which comes with KDE 2.0 and 2.0.1) that
-	  makes PGP not work if you use a different language than English. You can work around
-	  it this way (&kmail; will still use your favourite language):</para>
-	  <itemizedlist>
-	   <listitem><para>Rename <filename>/usr/bin/kmail</filename> to <filename>/usr/bin/kmail.original</filename></para></listitem>
-	   <listitem><para>Install in <filename class="directory">/usr/bin</filename> the following shell script, calling it 
-		<filename>kmail</filename> and making sure it is owned by <quote>root</quote> and has 755 permissions (rwxr-xr-x):</para>
-<screen>
-#!/bin/bash
-LANGUAGE=en
-export LANGUAGE
-kmail.original $*
-</screen></listitem>
-	  </itemizedlist>
-	  </listitem>
-	 <listitem><para>&kmail; is <emphasis>not</emphasis> able to use different keys for multiple identities.</para></listitem>
- </itemizedlist>
- </answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>How do I have to set up &kmail; to use (i.e. read and write) messages with non-Latin1
- characters?</para></question>
- <answer><para>&kmail; 1.1.99 had some bugs in its handling of characters that are not part of
- Latin1. The following applies to KDE 2.1(beta): In the <guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> section
- of the configuration dialog, select the correct <guilabel>Character set</guilabel> for the message
- list and the folder list. If <guilabel>unicode (iso10646-1)</guilabel> is available, 
- you should choose it. In case messages are still not shown correctly, you can always try 
- other settings from the  <menuchoice><guimenu>Message</guimenu><guimenuitem>Set
- Encoding</guimenuitem></menuchoice> menu.
- For writing messages, go to <guilabel>Composer</guilabel>/<guilabel>Charset</guilabel> and 
- configure the default charset you want to use for your own mails.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Spellchecking doesn't recognize non-english characters.</para></question>
- <answer><para>Before you can use spellchecking the first time, you have to configure it.
-You can do so in the <guilabel>Composer</guilabel> window's 
-menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</guimenuitem></menuchoice>.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>How do I use my Eudora/Netscape/Outlook/... mail folders in &kmail;?</para></question>
- <answer><para>See the section <link linkend="secImporting">Using other Mailbox files With &kmail;</link>.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>&kmail; doesn't display <acronym>HTML</acronym> mail as <acronym>HTML</acronym>,
- I can only see the source.</para></question>
- <answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer HTML to plain 
- text</guimenuitem></menuchoice>. For security reasons you should only do so for
- mails from trusted sources.
- </para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>How can I use mail folders that are not in <filename class="directory">~/Mail/</filename>?</para></question>
- <answer><para>Simply create a symlink in your <filename class="directory">~/Mail</filename> directory using 
- <command>ln -s /somewhere/Mail/mymailboxfile ~/Mail/remote</command>. When you start &kmail; you will 
- see a new folder with the name <guilabel>remote</guilabel> that contains the mails in your remote 
- folder. If you want to add a whole remote mail directory use <command>ln -s /somewhere/Mail ~/Mail/.remotedir.directory</command>.
- For that case you also need to create a new empty folder named <filename class="directory">remotedir</filename> 
- with &kmail;. The folder <filename class="directory">remotedir</filename> will then contain all remote mailbox folders 
- as subfolders.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>My folders keep growing even when I delete messages.</para></question>
- <answer><para>To really remove deleted messages from disk, you have to compact your folders. To do so
-automatically, open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> window,
-select the Miscellaneous tab and select <guilabel>Compact all folders
-on exit</guilabel>. Maybe you want to select <guilabel>Empty trash on exit</guilabel>,
-too. This will remove all the messages in the trash folder whenever you exit &kmail;.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Which version of &kmail; supports which version of PGP/GnuPG?</para></question>
- <answer><para>&kmail; 1.0.x: The unpatched version supports only PGP (version 2.x and 5.x). &kmail;
-will prefer version 5.x if both versions are installed. There is no
-way for the user to force &kmail; to use version 2.x in this case. There
-are patches for PGP6 and GnuPG support at <ulink url="http://kmail.kde.org">&kmail;'s
-homepage</ulink>. If the GnuPG patch is applied, and GnuPG <emphasis>and</emphasis> PGP are installed, &kmail;
-will prefer GnuPG. Here is no way to force &kmail; to use PGP.</para>
-<para>&kmail; 1.1.x: This has at least the improvements from the patches above.</para>
-<para>&kmail; 1.2.x: Now you can choose which encryption tool to use if you have more than one.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Can I use encryption with my normal (non-<acronym>SSL</acronym>) <acronym>POP3</acronym> account?</para></question>
- <answer><para>If your <acronym>POP3</acronym> server runs an ssh daemon, you can use ssh to tunnel your <acronym>POP3</acronym> connection
-using the following command:</para>
-
-<para><userinput>ssh -L 110:127.0.0.1:110 user@host</userinput></para>
-
-<para>Modify your &kmail; configuration to fetch the mail via <acronym>POP3</acronym> from
-<userinput>localhost</userinput>, ssh will tunnel the connection for you. You need to be root to execute this
-command. Alternatively, change the first port number, i.e. the first occurence of 
-<userinput>110</userinput>, to something above 1024 and configure
-&kmail; to use that port.</para>
-
-<para>Note: if non-encrypted mails have already been sent via internet, the (only)
-advantage of using ssh is that your password will be sent encrypted to the 
-<acronym>POP3</acronym> server.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Does &kmail; lock the folders it uses?</para></question>
- <answer><para>&kmail; does not lock the files in <filename class="directory">~/Mail</filename>.
- To avoid the risk of losing mail <emphasis>if using a local account</emphasis> it is necessary
- to ensure that &kmail; uses the same type of locking as your mail delivery
- agent.</para>
-
-<para>There are five different locking options you can use:</para>
-<itemizedlist>
-	<listitem><para><guilabel>Mutt dotlock (recommended)</guilabel></para></listitem>
-	<listitem><para><guilabel>Mutt dotlock privileged</guilabel></para></listitem>
-	<listitem><para><guilabel>Procmail lockfile</guilabel></para></listitem>
-	<listitem><para><guilabel>FCNTL</guilabel> (default)</para></listitem>
-	<listitem><para><guilabel>none (use with care)</guilabel></para></listitem>
-</itemizedlist>
-
-<para><guilabel>Mutt dotlock</guilabel> and <guilabel>Mutt dotlock
-privileged</guilabel> will both use a small utility that comes with mutt
-called <command>mutt_dotlock</command>. <guilabel>Mutt dotlock</guilabel>
-can be used in the same way as the <guilabel>Procmail lockfile</guilabel>
-option, with the same limitation with regards to the <filename
-class="directory">/var/spool/mail/</filename> folders. However, the
-<guilabel>Mutt dotlock privileged</guilabel> option can create lock files
-in the <filename class="directory">/var/spool/mail</filename> directory. 
-<command>mutt_dotlock</command> is a setgid program and this option will
-run it in setgid mode. Please note that these options will only work if
-mutt is installed on your system.</para>
-
-<para><guilabel>Procmail lockfile</guilabel> will use a small utility that
-comes with procmail called <command>lockfile</command>. You can use this
-if your mail folder is in a directory where you have write permissions. 
-This will not work on your <filename
-class="directory">/var/spool/mail/user</filename> file in most cases.  It
-will create <filename>.lock</filename> files on your account when &kmail;
-is checking for new mail. Please note that this will only work if procmail
-is installed on your system.</para>
-
-<para><guilabel>FCNTL</guilabel>: the default option will use the
-<function>fcntl()</function> system call.</para>
-
-<para>If you don't want to use any locking, the <guilabel>none</guilabel>
-option is what you want. However, there are risks of losing mail when no
-locking is used.</para>
-
-</answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>How do I leave mail on the server?</para></question>
- <answer><para>Open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice> window. Click
-on the <guilabel>Network</guilabel> tab. Select your account
-from the account list and click the <guilabel>Modify</guilabel> button. This
-dialog contains the <guilabel>Delete mail from server</guilabel> setting which
-you must not select.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>How do I automatically insert a text footer within my mails?</para></question>
- <answer><para>The text footer is called a signature file. Select 
-<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice>
-Look in the <guilabel>Identity</guilabel> tab for the
-<guilabel>Specify signature below</guilabel> field.
-Select the radio button and type your signature below.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Why does &kmail; keep asking me for the location of my signature file?</para></question>
- <answer><para>&kmail; will ask you the location of your signature file if you have checked the
-option <guilabel>Use a signature from file</guilabel> in the <guilabel>Composer</guilabel> tab of
-the <guilabel>Configure</guilabel> dialog, but have not specified a signature file in the
-<guilabel>Identity</guilabel> tab. You should either specify a signature file or deselect
-<guilabel>Use a signature from file</guilabel>.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Why doesn't word wrap work in the Composer window?</para></question>
- <answer><para>The word wrap setting is probably turned off. Word wrap can be toggled on and off in the 
-<guilabel>Composer</guilabel> tab of the <guilabel>Configure</guilabel> dialog.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>How can I find out how many unread messages I have in a mail folder?</para></question>
- <answer><para>The number of unread messages is conveniently displayed in the
-<guilabel>Folders pane</guilabel> after the folder name.</para></answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>How do I set up sendmail to work with &kmail; if I have a dial-up connection?</para></question>
- <answer><para>First you should check if your Linux/BSD/whatever distribution can do this for
-you. Perhaps it has already been set up during installation.</para>
-
-<para>If that's not the case, you may want to have a look at
-<ulink url="http://www.linuxdoc.org/HOWTO/mini/Mail-Queue.html">the Mail Queue HOWTO</ulink>
-or at <ulink url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">UCT Linux User's group page
-on configuring sendmail for Dial-up connections</ulink>.</para></answer>
-</qandaentry>
-
-</qandaset>
-
 </chapter>
 
 
