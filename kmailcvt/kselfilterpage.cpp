@@ -17,7 +17,7 @@
 
 #include <kstandarddirs.h>
 #include <kaboutdata.h>
-
+#include <qtextedit.h>
 #include <kdebug.h>
 
 #include "kselfilterpage.h"
@@ -27,15 +27,22 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
 	px_introSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
 	kdDebug() << "KSelFilterPage::KSelFilterPage" << endl;
 	filterList.setAutoDelete( TRUE );
+	connect(_filters, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 }
 
 KSelFilterPage::~KSelFilterPage() {
+}
+
+void KSelFilterPage::filterSelected(int i)
+{
+	_desc->setText(filterList.at(i)->info());
 }
 
 void KSelFilterPage::addFilter(Filter *f)
 {
 	filterList.append(f);
 	_filters->insertItem(f->name());
+	if (_filters->count() == 1) filterSelected(0); // Setup description box with fist filter selected
 }
 
 Filter * KSelFilterPage::getSelectedFilter(void)

@@ -31,7 +31,17 @@
 
 
 FilterPlain::FilterPlain() :
-   Filter(i18n("Import Plain Text Emails"),"Laurence Anderson")
+   Filter(i18n("Import Plain Text Emails"),
+               "Laurence Anderson",
+              i18n("Select the directory containing the emails on your system.\n\n"
+              "The emails are placed in a folder with the same name as the\n"
+              "directory they were in.\n"
+              "This filter will import all .msg, .eml and .txt emails.\n"
+              "If this causes problems for you (ie. you have KMail folders\n"
+              "with that name, or there are some non-email txt files),\n"
+              "cancel this import function (the next dialog\n"
+              "will allow you to do that) and rename the existing KMail\n"
+              "folders, or move the non-email txt files."))
 {
 }
 
@@ -46,17 +56,6 @@ FilterPlain::~FilterPlain()
 void FilterPlain::import(FilterInfo *info)
 {
    inf = info;
-
-   inf->alert(name(), i18n("Select the directory containing the emails on your system.\n\n"
-              "The emails are placed in a folder with the same name as the\n"
-              "directory they were in.\n"
-              "This filter will import all .msg, .eml and .txt emails.\n"
-              "If this causes problems for you (ie. you have KMail folders\n"
-              "with that name, or there are some non-email txt files),\n"
-              "cancel this import function (the next dialog\n"
-              "will allow you to do that) and rename the existing KMail\n"
-              "folders, or move the non-email txt files."
-             ));
 
    // Select directory containing plain text emails
    mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(),inf->parent());

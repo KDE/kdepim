@@ -109,10 +109,11 @@ void FilterInfo::alert(QString conversion, QString message)
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-Filter::Filter(QString _name, QString _author)
+Filter::Filter(QString _name, QString _author, QString _info)
 {
   myName=_name;
   myAuthor=_author;
+  myInfo=_info;
 }
 
 Filter::~Filter()
@@ -127,6 +128,11 @@ QString Filter::name(void)
 QString Filter::author(void)
 {
   return myAuthor;
+}
+
+QString Filter::info(void)
+{
+  return myInfo;
 }
 
 void Filter::import(FilterInfo *info)

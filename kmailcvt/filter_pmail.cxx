@@ -28,7 +28,17 @@
 
 
 FilterPMail::FilterPMail() :
-   Filter(i18n("Import Folders From Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),"Holger Schurig")
+   Filter(i18n("Import Folders From Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),
+   "Holger Schurig",
+   i18n("Select the Pegasus-Mail directory on your system.\n\n"
+              "This import filter will import your folders, but not\n"
+              "the folder structure. But you will probably only do\n"
+              "this one time.\n\n"
+              "NOTE: Kmailcvt creates folders with the prefix 'pmail-'.\n"
+              "If this causes problems for you (you have KMail folders\n"
+              "with that prefix), cancel this import function (the next dialog\n"
+              "will allow you to do that) and rename the existing KMail\n"
+              "folders."))
 {
   CAP=i18n("Import Pegasus-Mail");
 }
@@ -49,18 +59,6 @@ void FilterPMail::import(FilterInfo *info)
    if (!kmailStart(info)) { return; }
    inf = info;
    par = info->parent();
-
-   msg = i18n("Select the Pegasus-Mail directory on your system.\n\n"
-              "This import filter will import your folders, but not\n"
-              "the folder structure. But you will probably only do\n"
-              "this one time.\n\n"
-              "NOTE: Kmailcvt creates folders with the prefix 'pmail-'.\n"
-              "If this causes problems for you (you have KMail folders\n"
-              "with that prefix), cancel this import function (the next dialog\n"
-              "will allow you to do that) and rename the existing KMail\n"
-              "folders."
-             );
-   info->alert(CAP,msg);
 
    // Select directory from where I have to import files
    choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),par);

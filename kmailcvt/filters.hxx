@@ -105,15 +105,17 @@ class KAb
 class Filter : public KMail, public KAb
 {
   public:
-    Filter(QString name,QString author);
+    Filter(QString name,QString author,QString info=QString::null);
     virtual ~Filter();
     virtual void import(FilterInfo *i);
     QString author(void);
     QString name(void);
+    QString info(void);
 
   private:
     QString myName;
     QString myAuthor;
+    QString myInfo;
 };
 
 #endif

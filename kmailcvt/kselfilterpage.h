@@ -37,6 +37,8 @@ public:
      QPtrList<Filter> filterList;
      QWidget *_parent;
      FilterInfo *info;
+private slots:
+     void filterSelected(int i);
 };
 
 #endif

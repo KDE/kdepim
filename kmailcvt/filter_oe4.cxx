@@ -28,7 +28,20 @@
 #include <dirent.h>
 #include <klocale.h>
 
-FilterOE4::FilterOE4() : Filter(i18n("Import Folders From Outlook Express 4"),"Stephan B. Nedregard/Hans Dijkema")
+FilterOE4::FilterOE4() : Filter(i18n("Import Folders From Outlook Express 4"),
+      "Stephan B. Nedregard/Hans Dijkema",
+      i18n("<p>Stephan B. Nedregard kindly contributed the Outlook Express 4 "
+      "import code.</p>"
+      "<p>Select the Outlook Express directory on your system. "
+      "This import filter will search for folders (the '.mbx' files).</p>"
+      "<p><b>NOTE:</b> You will not be able to revert to your original folder "
+      "structure, only the folders themselves are imported. But you will "
+      "probably only do this one time.</p>"
+      "<p><b>NOTE:</b> The folder names will be the same as the Outlook Express "
+      "folder names, but they will be preceded with 'OE4-'. If this causes "
+      "problems for you (you have KMail folders beginning with 'OE4-'), "
+      "cancel this import function (the next dialog will allow you to do "
+      "that) and rename the existing KMail folders.</p>"))
 {
   CAP=i18n("Import Outlook Express 4");
 }
@@ -44,22 +57,6 @@ void FilterOE4::import(FilterInfo *info)
   QWidget *parent=info->parent();
 
   if (!kmailStart(info)) { return; }
-
-   msg=i18n("<p>Stephan B. Nedregard kindly contributed the Outlook Express 4 "
-      "import code.</p>"
-      "<p>Select the Outlook Express directory on your system. "
-      "This import filter will search for folders (the '.mbx' files).</p>"
-      "<p><b>NOTE:</b> You will not be able to revert to your original folder "
-      "structure, only the folders themselves are imported. But you will "
-      "probably only do this one time.</p>"
-      "<p><b>NOTE:</b> The folder names will be the same as the Outlook Express "
-      "folder names, but they will be preceded with 'OE4-'. If this causes "
-      "problems for you (you have KMail folders beginning with 'OE4-'), "
-      "cancel this import function (the next dialog will allow you to do "
-      "that) and rename the existing KMail folders.</p>"
-      );
-
-   info->alert(CAP,msg);
 
    choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),parent, 
       i18n("Select Folder"));
