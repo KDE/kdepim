@@ -1,6 +1,10 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-01-20  Adriaan de Groot
+* Added experimental A-A-P build system.
+* Cleanups in conduit config, added stub buttons for wizards.
+
 2004-01-16  Adriaan de Groot
 * De-tabified ChangeLog again.
 * Updated version. Hope that \374 makes sense (it's a ü).
@@ -27,9 +31,9 @@
 * New DCOP functions in the daemon to query its state and settings
 * the kontact plugin also detects if the daemon is quit
 * Use a QSplitter in the config dialog instead of the QHBox layout
-* implemented the kconf_update scripts to move groupless entries to the 
+* implemented the kconf_update scripts to move groupless entries to the
   [General] group
-* Still missing: 
+* Still missing:
     o) KConfig sync between the three processes working on the
        kpilot config: kpilot, kpilotDaemon and possibly kontact
        with the kpilot plugin

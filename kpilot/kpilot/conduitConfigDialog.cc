@@ -141,6 +141,32 @@ ConduitTip::~ConduitTip()
 #define NEW_CONDUIT      (8)
 
 
+static QHBox *addDescriptionPage(QWidgetStack *parent,
+	int pageno,
+	const QString &text,
+	bool buttons)
+{
+	QHBox *h = 0L;
+	QVBox *v = new QVBox(parent);
+	QLabel *l = new QLabel(v);
+
+	v->setFrameShape(QLabel::Box);
+
+	l->setText(text);
+	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
+
+	if (buttons)
+	{
+		h = new QHBox(v);
+		l = new QLabel(v);
+	}
+
+	parent->addWidget(v,pageno);
+
+	return h;
+}
+
+
 ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n) :
 	KCModule(parent, n)
 {
@@ -153,11 +179,10 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	QWidget *w = 0L; // For spacing purposes only.
 	QLabel *l = 0L;
 	QVBox *v = 0L;
+	QHBox *btns = 0L;
 
 	// Create the left hand column
 	v = new QVBox( spl );
-//	v->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7,
-//	                  0, 1, listView1->sizePolicy().hasHeightForWidth() ) );
 	fConduitList = new QListView(v,"ConduitList");
 	fConduitList->addColumn(i18n("Conduit"));
 	v->setStretchFactor(fConduitList, 50);
@@ -168,89 +193,64 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 
 	// Right hand column
 	fStack = new QWidgetStack(spl,"RightPart");
-//	spl->setStretchFactor(v, 7);
-//	spl->setStretchFactor(fStack, 6);
 
 	// Zero'th page in stack
-	l = new QLabel(fStack);
-	l->setFrameShape(QLabel::Box);
-	l->setText(i18n("<qt>This is KPilot's configuration. "
+	addDescriptionPage(fStack,INTRO,
+		i18n("<qt>This is KPilot's configuration. "
 		"You can enable an actions or conduit by clicking on its checkbox. "
 		"Checked conduits will be run during a HotSync. "
 		"Select a conduit to configure it. "
 		"General settings can be changed as well."
-		"</qt>"));
-	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
-	fStack->addWidget(l,INTRO);
+		"</qt>"),false);
 
 	// First page in stack (right hand column)
-	l = new QLabel(fStack);
-	l->setFrameShape(QLabel::Box);
-	l->setText(i18n("<qt>This conduit appears to be broken and cannot "
-		"be configured.</qt>"));
-	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
-	fStack->addWidget(l,BROKEN_CONDUIT);
+	addDescriptionPage(fStack,BROKEN_CONDUIT,
+		i18n("<qt>This conduit appears to be broken and cannot "
+		"be configured.</qt>"),false);
 
 	// Second page, now with layout in a single column
-	v = new QVBox(fStack,"OldStyle");
-	w = new QWidget(v);
-	v->setStretchFactor(w,50);
-	fOldStyleLabel = new QLabel(v);
-	// Within this column, center the button box
-	QHBox *h = new QHBox(v,"ButtonBox");
-	w = new QWidget(h);
-	h->setStretchFactor(w,50);
-	fConfigureButton = new QPushButton(h);
+	btns = addDescriptionPage(fStack,OLD_CONDUIT,
+		i18n("<qt>This is an old-style conduit.</qt>"),true);
+	w = new QWidget(btns);
+	btns->setStretchFactor(w,50);
+	fConfigureButton = new QPushButton(btns);
 	fConfigureButton->setText(i18n("Configure..."));
-	w = new QWidget(h);
-	h->setStretchFactor(w,50);
-	// Add stretch beneath the button box
-	w = new QWidget(v);
-	v->setStretchFactor(w,50);
-	fStack->addWidget(v,OLD_CONDUIT);
+	w = new QWidget(btns);
+	btns->setStretchFactor(w,50);
 
 	// Page 3
-	l = new QLabel(fStack);
-	l->setFrameShape(QLabel::Box);
-	l->setText(i18n("<qt>This is an internal conduit which has no "
-		"configuration options.</qt>"));
-	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
-	fStack->addWidget(l,INTERNAL_CONDUIT);
+	addDescriptionPage(fStack,INTERNAL_CONDUIT,
+		i18n("<qt>This is an internal conduit which has no "
+		"configuration options.</qt>"),false);
 
 	// Page 4 - explanation of what "actions" are.
-	l = new QLabel(fStack);
-	l->setFrameShape(QLabel::Box);
-	l->setText(i18n("<qt><i>Actions</i> lists actions that can occur "
+	addDescriptionPage(fStack,INTERNAL_EXPLN,
+		i18n("<qt><i>Actions</i> lists actions that can occur "
 		"during a HotSync but that require no further configuration. "
-		// "If the list is hidden, double-click on the <i>Actions</i> label."
-		"</qt>"));
-	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
-	fStack->addWidget(l,INTERNAL_EXPLN);
+		"</qt>"),false);
 
 	// Page 5 - explanation about conduits
-	l = new QLabel(fStack);
-	l->setFrameShape(QLabel::Box);
-	l->setText(i18n("<qt><i>Conduits</i> are external (possibly third-party) "
+	addDescriptionPage(fStack,CONDUIT_EXPLN,
+		i18n("<qt><i>Conduits</i> are external (possibly third-party) "
 		"programs that perform synchronization actions. They may "
 		"have individual configurations. Select a conduit to configure it, "
 		"and enable it by clicking on its checkbox. "
-		// "If the list of conduits is hidden, double-click on the "
-		// "<i>conduits</i> label."
-		"</qt>"));
-	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
-	fStack->addWidget(l,CONDUIT_EXPLN);
+		"</qt>"),false);
 
 	// Page 6 - explanation about general setup
 	//
 	// TODO: add wizard-startup buttons here.
-	l = new QLabel(fStack);
-	l->setFrameShape(QLabel::Box);
-	l->setText(i18n("<qt>The <i>general</i> portion of KPilot's setup "
+	btns = addDescriptionPage(fStack,GENERAL_EXPLN,
+		i18n("<qt>The <i>general</i> portion of KPilot's setup "
 		"contains settings for your hardware and the way KPilot "
 		"should display your data. The HotSync settings are "
-		"various esoteric things.</qt>"));
-	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
-	fStack->addWidget(l,GENERAL_EXPLN);
+		"various esoteric things.</qt>"),true);
+	w = new QWidget(btns);
+	btns->setStretchFactor(w,50);
+	(void) new QPushButton(i18n("Configuration Wizard"),btns);
+	(void) new QPushButton(i18n("Kontact Wizard"),btns);
+	w = new QWidget(btns);
+	btns->setStretchFactor(w,50);
 
 
 	fStack->addWidget(UIDialog::aboutPage(fStack,0L),GENERAL_ABOUT);
