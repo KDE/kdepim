@@ -64,42 +64,55 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   new QListViewItem( listView, i18n("Valid to"), info.expire.toString() );
   new QListViewItem( listView, i18n("Valid from"), info.created.toString() );
 
-  new QListViewItem( listView, i18n("Email"), info.dn["1.2.840.113549.1.9.1"] );
+  //new QListViewItem( listView, i18n("Email"), info.dn["1.2.840.113549.1.9.1"] );
   new QListViewItem( listView, i18n("Country"), info.dn["C"] );
   new QListViewItem( listView, i18n("Organizational Unit"), info.dn["OU"] );
   new QListViewItem( listView, i18n("Organization"), info.dn["O"] );
   new QListViewItem( listView, i18n("Location"), info.dn["L"] );
   new QListViewItem( listView, i18n("Name"), info.dn["CN"] );
   new QListViewItem( listView, i18n("Issuer"), info.issuer.stripWhiteSpace() );
-  new QListViewItem( listView, i18n("Subject"), info.userid.stripWhiteSpace() );
+
+  QStringList::ConstIterator it = info.userid.begin();
+  QListViewItem* item = new QListViewItem( listView, i18n("Subject"), 
+			    (*it).stripWhiteSpace() );
+  ++it;
+  while( it != info.userid.end() ) {
+    if( (*it)[0] == '<' ) {
+      item = new QListViewItem( listView, item, i18n("Email"), (*it).mid(1,(*it).length()-2));
+    } else {
+      item = new QListViewItem( listView, item, i18n("Aka"), (*it).stripWhiteSpace() );
+    }
+    ++it;  
+  } 
 
   // Set up cert. path
   if( !_manager ) return;
   const CryptPlugWrapper::CertificateInfoList& lst = _manager->certList();
   QString issuer = info.issuer;
   QStringList items;
-  items << info.userid;
+  items << info.userid[0];
   while( true ) {
     bool found = false;
     CryptPlugWrapper::CertificateInfo info;
     for( CryptPlugWrapper::CertificateInfoList::ConstIterator it = lst.begin();
 	 it != lst.end(); ++it ) {
-      if( (*it).userid == issuer && !items.contains(info.userid) ) {
+      if( (*it).userid[0] == issuer && !items.contains(info.userid[0]) ) {
 	info = (*it);
 	found = true;
 	break;
       }
     }
     if( found ) {
-      items.prepend( info.userid );
+      items.prepend( info.userid[0] );
       issuer = info.issuer;
-      if( info.userid == info.issuer ) {
+      // FIXME(steffen): Use real DN comparison
+      if( info.userid[0] == info.issuer ) {
 	// Root item
 	break;
       } 
     } else break;
   }
-  QListViewItem* item = 0;
+  item = 0;
   for( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
     if( item ) item = new QListViewItem( item, *it );
     else item = new QListViewItem( pathView, *it );

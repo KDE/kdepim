@@ -35,6 +35,7 @@ private:
 
     CryptPlugWrapper::CertificateInfoList _certList;
     KProcess* gpgsmProc;
+    QLineEdit* _searchEdit;
     CertBox* _certBox;
 };
 

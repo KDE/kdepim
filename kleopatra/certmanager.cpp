@@ -26,6 +26,9 @@
 #include <qradiobutton.h>
 #include <qwizard.h>
 #include <qgrid.h>
+#include <qpushbutton.h>
+#include <qvbox.h>
+#include <qcursor.h>
 
 extern CryptPlugWrapper* pWrapper;
 
@@ -104,10 +107,20 @@ CertManager::CertManager( QWidget* parent, const char* name ) :
   importCRLFromLDAP->setEnabled( false );
 
   // Main Window --------------------------------------------------
-  _certBox = new CertBox( this, "certBox" );
-  setCentralWidget( _certBox );
+  QVBox* vb = new QVBox( this );
+  QHBox* hb = new QHBox( vb );
+  _searchEdit = new QLineEdit( hb, "searchEdit" );
+  QPushButton* searchButton = new QPushButton( i18n("Search"), hb, "searchEdit" );
 
-  loadCertificates();
+  _certBox = new CertBox( vb, "certBox" );
+  setCentralWidget( vb );
+
+  connect( _searchEdit, SIGNAL( returnPressed() ),
+	   searchButton, SLOT( animateClick() ) );
+  connect( searchButton, SIGNAL( clicked() ),
+	   this, SLOT( loadCertificates() ) );
+
+  //loadCertificates();
 }
 
 CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent, 
@@ -115,7 +128,7 @@ CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent,
 {
   if( parent ) {
     //qDebug("New with parent");
-    return new CertItem( info.userid.stripWhiteSpace(),
+    return new CertItem( info.userid[0].stripWhiteSpace(),
 			 info.serial.stripWhiteSpace(), 
 			 info.issuer.stripWhiteSpace(),
 			 info.dn["CN"], 
@@ -130,7 +143,7 @@ CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent,
 			 0, this, parent );  
   } else {
     //qDebug("New root");
-    return new CertItem( info.userid.stripWhiteSpace(), 
+    return new CertItem( info.userid[0].stripWhiteSpace(), 
 			 info.serial.stripWhiteSpace(),
 			 info.issuer.stripWhiteSpace(),
 			 info.dn["CN"], 
@@ -184,10 +197,16 @@ void CertManager::loadCertificates()
   Agent* subsub = new Agent( "SubSub Agent", sub, this );
   */
 
+  QApplication::setOverrideCursor( QCursor::WaitCursor );
+
   // Clear display
   _certBox->clear();
 
-  _certList = pWrapper->listKeys();
+  if( _searchEdit->text().isEmpty() ) {
+    _certList = pWrapper->listKeys();
+  } else {
+    _certList = pWrapper->listKeys(_searchEdit->text().stripWhiteSpace());
+  }
   
   //lst = fillInListView( _certBox, 0, lst );
   
@@ -196,6 +215,7 @@ void CertManager::loadCertificates()
     //qDebug("New CertItem %s", (*it).userid.latin1() );
     fillInOneItem( _certBox, 0, *it );
   }
+  QApplication::restoreOverrideCursor();
 }
 
 /**
