@@ -1,0 +1,155 @@
+# Makefile for a standalone kpilotConfig
+
+QTDIR=/usr/lib/qt-2.3.0
+KDEDIR=/usr
+
+MOC=$(QTDIR)/bin/moc
+UIC=$(QTDIR)/bin/uic
+DCOPIDL=$(KDEDIR)/bin/dcopidl
+DCOPIDL2CPP=$(KDEDIR)/bin/dcopidl2cpp
+
+CXX=g++
+CXXFLAGS=-DDEBUG -DDEBUG_CERR
+# INCLUDES=-I$(QTDIR)/include -I$(KDEDIR)/include
+#
+# Or, for stupid RH 7.1 systems:
+INCLUDES=-I$(QTDIR)/include -I/usr/include/kde
+LDFLAGS=-L$(KDEDIR)/lib -Wl,-R -Wl,$(KDEDIR)/lib \
+	-L$(QTDIR)/lib -Wl,-R -Wl,$(QTDIR)/lib
+
+CONFIG_DISTDIR=kpilotConfig-0.2
+CONFIG_OBJS=options.o kpilotConfig.o \
+	uiDialog.o kpilotConfigDialog.o kpilotConfigDialog_base.o \
+	main-config.o
+CONFIG_MOCS=uiDialog.moc kpilotConfigDialog_base.moc kpilotConfigDialog.moc
+CONFIG_EXTRA=kpilotConfigDialog_base.ui
+CONFIG_LIBS=-lkdeui -lkfile -lkdecore -lqt 
+
+TEST_DISTDIR=kpilotTest-0.2
+TEST_OBJS=options.o kpilotlink.o kpilotConfig.o \
+	pilotComponent.o logWidget.o \
+	hotSync.o main-test.o
+TEST_MOCS=kpilotlink.moc \
+	pilotComponent.moc logWidget.moc \
+	hotSync.moc
+TEST_EXTRA=pilotUser.h
+TEST_LIBS=-lkdeui -lqt -lpisock
+
+KPILOT_DISTDIR=kpilot-4.2.9
+KPILOT_OBJS=options.o \
+	pilotDaemonDCOP_stub.o \
+	kpilotDCOP_skel.o \
+	kpilot.o kpilotConfig.o \
+	uiDialog.o kpilotConfigDialog.o kpilotConfigDialog_base.o \
+	pilotComponent.o logWidget.o memoWidget.o addressWidget.o \
+	addressEditor.o \
+	fileInstaller.o fileInstallWidget.o \
+	conduitSetup.o listCat.o listItems.o \
+	strToken.o \
+	pilotRecord.o pilotLocalDatabase.o pilotAddress.o pilotMemo.o
+KPILOT_MOCS=pilotComponent.moc logWidget.moc memoWidget.moc addressWidget.moc \
+	fileInstaller.moc addressEditor.moc \
+	fileInstallWidget.moc \
+	listCat.moc conduitSetup.moc \
+	uiDialog.moc kpilotConfigDialog_base.moc kpilotConfigDialog.moc \
+	kpilot.moc 
+KPILOT_EXTRA=kpilotConfigDialog_base.ui pilotDaemonDCOP.h kpilotDCOP.h \
+	pilotAppCategory.h pilotDatabase.h kpilot_on_pp.h
+KPILOT_LIBS=-lkfile -lkdeui -lqt -lpisock
+
+DAEMON_DISTDIR=kpilotDaemon-4.2.9
+DAEMON_OBJS=options.o \
+	pilotDaemonDCOP_skel.o kpilotDCOP_stub.o \
+	pilotDaemon.o kpilotConfig.o kpilotlink.o hotSync.o \
+	fileInstaller.o
+DAEMON_MOCS=pilotDaemon.moc kpilotlink.moc hotSync.moc fileInstaller.moc
+DAEMON_EXTRA=pilotDaemonDCOP.h kpilotDCOP.h pilotUser.h \
+	hotsync.h busysync.h
+DAEMON_LIBS=-lkfile -lkdeui -lqt -lpisock
+
+DISTFILES=kpilotConfig.tar.gz kpilotTest.tar.gz kpilot.tar.gz kpilotDaemon.tar.gz
+
+all : kpilotConfig kpilotTest kpilot kpilotDaemon
+
+kpilotConfig : $(CONFIG_MOCS) $(CONFIG_OBJS)
+	g++ -o $@ $(CONFIG_OBJS) $(LDFLAGS) $(CONFIG_LIBS)
+
+kpilotTest : $(TEST_MOCS) $(TEST_OBJS)
+	g++ -o $@ $(TEST_OBJS) $(LDFLAGS) $(TEST_LIBS)
+
+kpilot : $(KPILOT_MOCS) $(KPILOT_OBJS)
+	g++ -o $@ $(KPILOT_OBJS) $(LDFLAGS) $(KPILOT_LIBS)
+
+kpilotDaemon : $(DAEMON_MOCS) $(DAEMON_OBJS)
+	g++ -o $@ $(DAEMON_OBJS) $(LDFLAGS) $(DAEMON_LIBS)
+	
+clean :
+	rm -f $(CONFIG_OBJS) $(CONFIG_MOCS) $(KPILOT_OBJS) $(DAEMON_OBJS)
+	rm -f $(TEST_OBJS) $(TEST_MOCS) $(KPILOT_MOCS) $(DAEMON_MOCS)
+	rm -f $(DISTFILES)
+
+dist : $(DISTFILES)
+
+kpilotConfig.tar.gz :
+	test -d $(CONFIG_DISTDIR) || mkdir $(CONFIG_DISTDIR)
+	sed -e 's/^all *:.*/all : kpilotConfig/' Makefile-standalone \
+		> $(CONFIG_DISTDIR)/Makefile
+	-cp $(CONFIG_OBJS:%.o=%.cc) $(CONFIG_OBJS:%.o=%.h) $(CONFIG_DISTDIR)
+	-cp $(CONFIG_EXTRA) $(CONFIG_DISTDIR)
+	tar cvzf $@ $(CONFIG_DISTDIR)
+	-rm -f $(CONFIG_DISTDIR)/*
+	-rmdir $(CONFIG_DISTDIR)
+
+kpilotTest.tar.gz :
+	test -d $(TEST_DISTDIR) || mkdir $(TEST_DISTDIR)
+	sed -e 's/^all *:.*/all : kpilotTest/' Makefile-standalone \
+		> $(TEST_DISTDIR)/Makefile
+	-cp $(TEST_OBJS:%.o=%.cc) $(TEST_OBJS:%.o=%.h) $(TEST_DISTDIR)
+	-cp $(TEST_EXTRA) $(TEST_DISTDIR)
+	tar cvzf $@ $(TEST_DISTDIR)
+	-rm -f $(TEST_DISTDIR)/*
+	-rmdir $(TEST_DISTDIR)
+
+kpilot.tar.gz :
+	test -d $(KPILOT_DISTDIR) || mkdir $(KPILOT_DISTDIR)
+	sed -e 's/^all *:.*/all : kpilot/' Makefile-standalone \
+		> $(KPILOT_DISTDIR)/Makefile
+	-cp $(KPILOT_OBJS:%.o=%.cc) $(KPILOT_OBJS:%.o=%.h) $(KPILOT_DISTDIR)
+	-cp $(KPILOT_EXTRA) $(KPILOT_DISTDIR)
+	tar cvzf $@ $(KPILOT_DISTDIR)
+	-rm -f $(KPILOT_DISTDIR)/*
+	-rmdir $(KPILOT_DISTDIR)
+
+kpilotDaemon.tar.gz :
+	test -d $(DAEMON_DISTDIR) || mkdir $(DAEMON_DISTDIR)
+	sed -e 's/^all *:.*/all : kpilotDaemon/' Makefile-standalone \
+		> $(DAEMON_DISTDIR)/Makefile
+	-cp $(DAEMON_OBJS:%.o=%.cc) $(DAEMON_OBJS:%.o=%.h) $(DAEMON_DISTDIR)
+	-cp $(DAEMON_EXTRA) $(DAEMON_DISTDIR)
+	tar cvzf $@ $(DAEMON_DISTDIR)
+	-rm -f $(DAEMON_DISTDIR)/*
+	-rmdir $(DAEMON_DISTDIR)
+
+kpilotConfigDialog_base.cc : kpilotConfigDialog_base.h kpilotConfigDialog_base.ui
+	echo '#include <klocale.h>' > $@
+	$(UIC) -tr i18n -i kpilotConfigDialog_base.h kpilotConfigDialog_base.ui | \
+		sed -e "s,i18n( \"\" ),QString::null,g" >> $@
+
+kpilotConfigDialog_base.h : kpilotConfigDialog_base.ui
+	$(UIC) -o $@ $<
+
+
+%.kidl : %.h
+	$(DCOPIDL) $< > $@ || ( rm -f $@ ; /bin/false )
+
+%_stub.cc : %.kidl
+	$(DCOPIDL2CPP) --c++-suffix cc --no-skel $<
+
+%_skel.cc : %.kidl
+	$(DCOPIDL2CPP) --c++-suffix cc --no-stub $<
+	
+%.o : %.cc
+	g++ -c $(CXXFLAGS) $(INCLUDES) -o $@ $<
+
+%.moc : %.h
+	$(MOC) -o $@ $<
