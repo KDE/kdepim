@@ -26,6 +26,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qtoolbutton.h>
 #include <qstring.h>
 
 #include <kabc/addresslineedit.h>
@@ -37,6 +38,10 @@
 
 #include "addhostdialog.h"
 #include "ldapoptionswidget.h"
+#include <qvgroupbox.h>
+#include <qhbox.h>
+#include <qvbox.h>
+#include <kiconloader.h>
 
 class LDAPServer
 {
@@ -72,7 +77,7 @@ class LDAPItem : public QCheckListItem
 {
   public:
     LDAPItem( QListView *parent, const LDAPServer &server, bool isActive = false )
-      : QCheckListItem( parent, QString::null, QCheckListItem::CheckBox ),
+      : QCheckListItem( parent, parent->lastItem(), QString::null, QCheckListItem::CheckBox ),
         mIsActive( isActive )
     {
       setServer( server );
@@ -100,6 +105,7 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
 {
   initGUI();
 
+  mHostListView->setSorting( -1 );
   mHostListView->addColumn( QString::null );
   mHostListView->header()->hide();
 
@@ -108,6 +114,9 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
   connect( mHostListView, SIGNAL(doubleClicked( QListViewItem *, const QPoint &, int )), this, SLOT(slotEditHost()));
   connect( mHostListView, SIGNAL( clicked( QListViewItem* ) ),
            SLOT( slotItemClicked( QListViewItem* ) ) );
+
+  connect( mUpButton, SIGNAL( clicked() ), this, SLOT( slotMoveUp() ) );
+  connect( mDownButton, SIGNAL( clicked() ), this, SLOT( slotMoveDown() ) );
 }
 
 LDAPOptionsWidget::~LDAPOptionsWidget()
@@ -117,9 +126,10 @@ LDAPOptionsWidget::~LDAPOptionsWidget()
 void LDAPOptionsWidget::slotSelectionChanged( QListViewItem *item )
 {
   bool state = ( item != 0 );
-
   mEditButton->setEnabled( state );
   mRemoveButton->setEnabled( state );
+  mDownButton->setEnabled( item && item->itemBelow() );
+  mUpButton->setEnabled( item && item->itemAbove() );
 }
 
 void LDAPOptionsWidget::slotItemClicked( QListViewItem *item )
@@ -185,9 +195,43 @@ void LDAPOptionsWidget::slotRemoveHost()
   emit changed( true );
 }
 
+static void swapItems( LDAPItem *item, LDAPItem *other )
+{
+  LDAPServer server = item->server();
+  bool isActive = item->isActive();
+  item->setServer( other->server() );
+  item->setIsActive( other->isActive() );
+  other->setServer( server );
+  other->setIsActive( isActive );
+}
+
+void LDAPOptionsWidget::slotMoveUp()
+{
+  LDAPItem *item = static_cast<LDAPItem *>( mHostListView->selectedItem() );
+  if ( !item ) return;
+  LDAPItem *above = static_cast<LDAPItem *>( item->itemAbove() );
+  if ( !above ) return;
+  swapItems( item, above );
+  mHostListView->setCurrentItem( above );
+  mHostListView->setSelected( above, true );
+  emit changed( true );
+}
+
+void LDAPOptionsWidget::slotMoveDown()
+{
+  LDAPItem *item = static_cast<LDAPItem *>( mHostListView->selectedItem() );
+  if ( !item ) return;
+  LDAPItem *below = static_cast<LDAPItem *>( item->itemBelow() );
+  if ( !below ) return;
+  swapItems( item, below );
+  mHostListView->setCurrentItem( below );
+  mHostListView->setSelected( below, true );
+  emit changed( true );
+}
+
 void LDAPOptionsWidget::restoreSettings()
 {
-    mHostListView->clear();
+  mHostListView->clear();
   KConfig *config = KABC::AddressLineEdit::config();
   KConfigGroupSaver saver( config, "LDAP" );
 
@@ -269,19 +313,28 @@ void LDAPOptionsWidget::initGUI()
 {
   QVBoxLayout *layout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
 
-  QGroupBox *groupBox = new QGroupBox( i18n( "LDAP Servers" ), this );
-  groupBox->setColumnLayout( 0, Qt::Vertical );
-  groupBox->layout()->setSpacing( KDialog::spacingHint() );
-  groupBox->layout()->setMargin( KDialog::marginHint() );
+  QVGroupBox *groupBox = new QVGroupBox( i18n( "LDAP Servers" ), this );
+  groupBox->setInsideSpacing( KDialog::spacingHint() );
+  groupBox->setInsideMargin( KDialog::marginHint() );
 
-  QVBoxLayout *groupBoxLayout = new QVBoxLayout( groupBox->layout() );
-  groupBoxLayout->setAlignment( Qt::AlignTop );
+  // Contents of the QVGroupBox: label and hbox
+  /*QLabel *label =*/ new QLabel( i18n( "Check all servers that should be used:" ), groupBox );
 
-  QLabel *label = new QLabel( i18n( "Check all servers that should be used:" ), groupBox );
-  groupBoxLayout->addWidget( label );
+  QHBox* hBox = new QHBox( groupBox );
+  // Contents of the hbox: listview and up/down buttons on the right (vbox)
+  mHostListView = new KListView( hBox );
 
-  mHostListView = new KListView( groupBox );
-  groupBoxLayout->addWidget( mHostListView );
+  QVBox* upDownBox = new QVBox( hBox );
+  mUpButton = new QToolButton( upDownBox, "mUpButton" );
+  mUpButton->setPixmap( BarIcon( "up", KIcon::SizeSmall ) );
+  mUpButton->setEnabled( false ); // b/c no item is selected yet
+
+  mDownButton = new QToolButton( upDownBox, "mDownButton" );
+  mDownButton->setPixmap( BarIcon( "down", KIcon::SizeSmall ) );
+  mDownButton->setEnabled( false ); // b/c no item is selected yet
+
+  QWidget* spacer = new QWidget( upDownBox );
+  upDownBox->setStretchFactor( spacer, 100 );
 
   layout->addWidget( groupBox );
 

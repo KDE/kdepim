@@ -26,12 +26,13 @@
 
 #include <qwidget.h>
 
+class QToolButton;
 class KListView;
 class QListViewItem;
 class QPushButton;
 
 class LDAPOptionsWidget : public QWidget
-{ 
+{
   Q_OBJECT
 
   public:
@@ -51,6 +52,8 @@ class LDAPOptionsWidget : public QWidget
     void slotRemoveHost();
     void slotSelectionChanged( QListViewItem* );
     void slotItemClicked( QListViewItem* );
+    void slotMoveUp();
+    void slotMoveDown();
 
   private:
     void initGUI();
@@ -60,6 +63,9 @@ class LDAPOptionsWidget : public QWidget
     QPushButton* mAddButton;
     QPushButton* mEditButton;
     QPushButton* mRemoveButton;
+
+    QToolButton* mUpButton;
+    QToolButton* mDownButton;
 };
 
 #endif
