@@ -2,7 +2,7 @@
     knserverinfo.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -40,7 +40,7 @@ class KNServerInfo {
     int id()const                  { return i_d; }
     const QString& server()   { return s_erver; }
     const QString& user()     { return u_ser; }
-    const QString& pass()     { return p_ass; }
+    const QString& pass();
     int port() const                { return p_ort; }
     int hold() const               { return h_old; }
     int timeout() const            { return t_imeout; }
@@ -60,8 +60,13 @@ class KNServerInfo {
 
     bool operator==(const KNServerInfo &s);
 
+    /** Loads the password from KWallet, used for on-demand password loading */
+    void readPassword();
+
   protected:
-    Wallet* openWallet();
+    /** Returns a pointer to an open wallet if available, 0 otherwise */
+    static Wallet* wallet();
+
     serverType t_ype;
 
     QString  s_erver,
@@ -76,7 +81,11 @@ class KNServerInfo {
     bool n_eedsLogon,
          p_assDirty;
 
+  private:
+    static Wallet* mWallet;
 };
 
 
 #endif
+
+// kate: space-indent on; indent-width 2;

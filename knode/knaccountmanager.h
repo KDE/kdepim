@@ -2,7 +2,7 @@
     knaccountmanager.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -49,6 +49,9 @@ class KNAccountManager : public QObject
     KNNntpAccount* next()                 { return accList->next(); }
     KNNntpAccount* account(int i);
 
+    /** Loads the passwords of all accounts, allows on-demand wallet opening */
+    void loadPasswords();
+
   protected:
     void loadAccounts();
     KNGroupManager *gManager;
@@ -64,3 +67,5 @@ class KNAccountManager : public QObject
 };
 
 #endif
+
+// kate: space-indent on; indent-width 2;

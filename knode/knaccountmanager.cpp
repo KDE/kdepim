@@ -2,7 +2,7 @@
     knaccountmanager.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -210,6 +210,16 @@ void KNAccountManager::accountRenamed(KNNntpAccount *a)
   emit(accountModified(a));
 }
 
+
+void KNAccountManager::loadPasswords()
+{
+  KNNntpAccount *a;
+  for (a = accList->first(); a; a = accList->next())
+    a->readPassword();
+}
+
 //--------------------------------
 
 #include "knaccountmanager.moc"
+
+// kate: space-indent on; indent-width 2;

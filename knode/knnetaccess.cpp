@@ -40,7 +40,7 @@ using KPIM::ProgressManager;
 
 
 KNNetAccess::KNNetAccess(QObject *parent, const char *name )
-  : QObject(parent,name), currentNntpJob(0), currentSmtpJob(0), 
+  : QObject(parent,name), currentNntpJob(0), currentSmtpJob(0),
     mNNTPProgressItem(0), mSMTPProgressItem(0)
 {
   if((pipe(nntpInPipe)==-1)||
@@ -120,6 +120,10 @@ void KNNetAccess::addJob(KNJobData *job)
     job->notifyConsumer();
     return;
   }
+
+  // make sure the account has its password loaded
+  // this allows on-demand wallet opening
+  job->account()->pass();
 
   if (job->type()==KNJobData::JTmail) {
     smtpJobQueue.append(job);
@@ -220,8 +224,8 @@ void KNNetAccess::startJobNntp()
     kdWarning(5003) << "KNNetAccess::startJobNntp(): job queue is empty?? aborting" << endl;
     return;
   }
-  
-  mNNTPProgressItem = ProgressManager::createProgressItem( 
+
+  mNNTPProgressItem = ProgressManager::createProgressItem(
       0, "NNTP", i18n("KNode NNTP"), QString::null, true, false );
   connect(mNNTPProgressItem, SIGNAL(progressItemCanceled(ProgressItem*)), SLOT(slotCancelNNTPJobs()));
 
@@ -247,7 +251,7 @@ void KNNetAccess::startJobSmtp()
   }
   unshownMsg = QString::null;
 
-  mSMTPProgressItem = ProgressManager::createProgressItem( 
+  mSMTPProgressItem = ProgressManager::createProgressItem(
       0, "SMTP", i18n("KNode SMTP"), QString::null, true, false );
   connect(mSMTPProgressItem, SIGNAL(progressItemCanceled(ProgressItem*)), SLOT(slotCancelSMTPJobs()));
 
