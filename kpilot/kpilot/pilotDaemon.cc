@@ -40,7 +40,7 @@ static const char *id="$Id$";
 #include <qdragobject.h>
 #include <errno.h>
 
-#include <kapp.h>
+#include <kuniqueapp.h>
 #include <kaboutdata.h>
 #include <kaboutapplication.h>
 #include <kcmdlineargs.h>
@@ -262,6 +262,7 @@ int PilotDaemon::getPilotSpeed(KConfig& config)
 
 
 PilotDaemon::PilotDaemon() : 
+	DCOPObject("KPilotDaemonIface"),
 	fStatus(INIT),
   	fMonitorProcess(0L), fCurrentSocket(0L),
     fCommandSocket(0L), fStatusSocket(0L), fQuit(false), fPilotLink(0L),
@@ -489,6 +490,39 @@ void PilotDaemon::quitImmediately()
 } 
  
 void
+PilotDaemon::startHotSync(int mode)
+{
+	FUNCTIONSETUP;
+
+	switch(mode)
+	{
+	case 1:
+		DEBUGDAEMON << fname
+			<< ": Starting a normal HotSync"
+			<< endl;
+		break;
+	case 2: 
+		DEBUGDAEMON << fname
+			<< ": Starting a FastSync"
+			<< endl;
+		break;
+	case 3:
+		DEBUGDAEMON << fname
+			<< ": Starting a full Backup"
+			<< endl;
+		break;
+	default :
+		kdWarning() << __FUNCTION__
+			<< ": Unknown mode "
+			<< mode
+			<< " passed to startHotSync()"
+			<< endl;
+		return 0;
+	}
+
+}
+
+void
 PilotDaemon::startHotSync()
 {
 	FUNCTIONSETUP;
@@ -506,8 +540,6 @@ PilotDaemon::startHotSync()
   // We need to send the SYNC_STARTING message after the sync
   // has already begun so that if KPilot is running it doesn't start
   // issuing commands before KPilotLink is ready.
-  getPilotLink()->startHotSync();
-  sendStatus(CStatusMessages::SYNC_STARTING);
 #ifdef DEBUG
 	if (debug_level &  SYNC_MAJOR)
 	{
@@ -515,6 +547,8 @@ PilotDaemon::startHotSync()
 			<< ": Requesting KPilotLink::startHotSync()" << endl;
 	}
 #endif
+  getPilotLink()->startHotSync();
+  sendStatus(CStatusMessages::SYNC_STARTING);
 
   if(fCurrentSocket == 0L)
     {
@@ -1052,7 +1086,7 @@ int main(int argc, char* argv[])
 {
 	FUNCTIONSETUP;
 
-        KAboutData about("kpilot", I18N_NOOP("KPilot"),
+        KAboutData about("kpilotDaemon", I18N_NOOP("KPilot"),
                          "4.0b",
                          "KPilot - Hot-sync software for unix\n\n",
                          KAboutData::License_GPL,
@@ -1068,7 +1102,7 @@ int main(int argc, char* argv[])
 
         KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
-	KApplication::addCmdLineOptions();
+	KUniqueApplication::addCmdLineOptions();
 	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
 
 #ifdef DEBUG
@@ -1082,7 +1116,11 @@ int main(int argc, char* argv[])
 	}
 #endif
 
-	KApplication a(true,true);
+	if (!KUniqueApplication::start())
+	{
+		return 0;
+	}
+	KUniqueApplication a(true,true);
 
 	// A block just to keep variables local.
 	//
@@ -1136,6 +1174,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.24  2001/01/04 11:33:20  bero
+// Fix build
+//
 // Revision 1.23  2001/01/03 00:02:45  adridg
 // Added Heiko's FastSync
 //

@@ -1170,21 +1170,25 @@ KPilotLink::startHotSync()
 		       0, 10, 0);
   updateProgressBar(0);
 
-  // BAD HACK!
-	sleep(1);
     
   ret = pi_listen(getPilotMasterSocket(),1);
   if(ret == -1) 
     {
-      perror("pi_listen");
-      exit(1);
+	kdError() << __FUNCTION__ 
+		<< ": pi_listen failed: "
+		<< perror
+		<< endl;
+	return;
     }
 
-  fCurrentPilotSocket = pi_accept(fPilotMasterSocket,0,0);
+  fCurrentPilotSocket = pi_accept(getPilotMasterSocket(),0,0);
   if(fCurrentPilotSocket == -1) 
     {
-      perror("pi_accept");
-      exit(1);
+	kdError() << __FUNCTION__
+		<< ": pi_accept failed: "
+		<< perror
+		<< endl;
+	return;
     }
   setConnected(true);
   updateProgressBar(3);
@@ -1723,6 +1727,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.28  2001/01/03 00:02:45  adridg
+// Added Heiko's FastSync
+//
 // Revision 1.27  2001/01/01 18:05:35  adridg
 // i18n stuff in Backup and Restore
 //

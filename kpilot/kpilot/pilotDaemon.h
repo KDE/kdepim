@@ -13,8 +13,10 @@
 
 #include <qpixmap.h>
 #include <ktmainwindow.h>
-#include <kpilotlink.h>
 #include <ksystemtray.h>
+
+#include "kpilotlink.h"
+#include "pilotDaemonDCOP.h"
 
 class KConfig;
 class KSocket;
@@ -72,7 +74,7 @@ private:
 } ;
 
 
-class PilotDaemon : public QObject
+class PilotDaemon : public QObject, virtual public PilotDaemonDCOP
 {
 friend class PilotDaemonTray;
 
@@ -113,6 +115,11 @@ public:
 	* setting in the config file)
 	*/
 	void showTray();
+
+	// The next few functions are the DCOP interface
+	//
+	//
+	virtual ASYNC startHotSync(int);
 
 protected:
 	DaemonStatus fStatus;
@@ -178,4 +185,7 @@ private slots:
 };
 
 
-// $Log:$
+// $Log$
+// Revision 1.13  2001/01/03 00:02:45  adridg
+// Added Heiko's FastSync
+//

@@ -17,6 +17,7 @@ kpilot_SOURCES	= kpilot.cc kpilotlink.cc fileInstallWidget.cc pilotMemo.cc memoW
 
 kpilotDaemon_SOURCES = pilotDaemon.cc kpilotlink.cc pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
 	messageDialog.cc \
+	pilotDaemonDCOP.skel \
 	options.cc
 
 pilotListener_SOURCES = pilotListener.cc

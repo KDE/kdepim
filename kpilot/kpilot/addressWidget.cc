@@ -463,6 +463,22 @@ AddressWidget::slotCreateNewRecord()
 {
 	FUNCTIONSETUP;
 
+	// Response to bug 18072: Don't even try to
+	// add records to an empty or unopened database,
+	// since we don't have the DBInfo stuff to deal with it.
+	//
+	//
+	PilotDatabase *myDB= KPilotLink::getPilotLink()->
+		openLocalDatabase("AddressDB");
+	if (!myDB || !myDB->isDBOpen())
+	{
+		KMessageBox::sorry(this,
+			i18n("You can't add addresses to the address book\n"
+			     "until you have done a HotSync at least once\n"
+			     "to retrieve the database layout from your Palm."),
+			i18n("Can't add new address"));
+	}
+
   AddressEditor* editor = new AddressEditor(0L);
   connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
 	  this, SLOT(slotAddRecord(PilotAddress*)));
@@ -476,6 +492,7 @@ AddressWidget::slotAddRecord(PilotAddress* address)
 
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fAddressAppInfo.category),true);
+
 
   address->setCat(currentCatID);
   fAddressList.append(address);
@@ -892,6 +909,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.22  2000/12/31 16:44:00  adridg
+// Patched up the debugging stuff again
+//
 // Revision 1.21  2000/12/21 00:42:50  adridg
 // Mostly debugging changes -- added FUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
 //
