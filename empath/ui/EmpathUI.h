@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathUI.h"
+#endif
+
 #ifndef EMPATH_UI_H
 #define EMPATH_UI_H
 
@@ -28,6 +32,10 @@
 #include "Empath.h"
 #include "EmpathURL.h"
 
+/**
+ * @short A KDE interface to Empath
+ * A KDE interface to Empath.
+ */
 class EmpathUI : public QObject
 {
     Q_OBJECT
@@ -48,6 +56,7 @@ class EmpathUI : public QObject
         void s_setupFilters();
         void s_about();
         void s_bugReport();
+        void s_configureMailbox(const EmpathURL &, QWidget * = 0);
         void s_infoMessage(const QString &);
         void s_getSaveName(const EmpathURL &);
         

@@ -43,17 +43,9 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
     :    QDialog(parent, name, true),
         filter_(filter)
 {
-    empathDebug("ctor");
-    
     setCaption(i18n("Filter Action"));
     
-    QLineEdit    tempLineEdit((QWidget *)0);
-    Q_UINT32 h    = tempLineEdit.sizeHint().height();
-    
     buttonBox_    = new KButtonBox(this);
-    CHECK_PTR(buttonBox_);
-
-    buttonBox_->setMaximumHeight(h);
     
     // Bottom button group
     pb_help_    = buttonBox_->addButton(i18n("&Help"));    
@@ -63,102 +55,76 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
     
     buttonBox_->layout();
 
-    QObject::connect(pb_OK_, SIGNAL(clicked()),
-            this, SLOT(s_OK()));
-    
-    QObject::connect(pb_cancel_, SIGNAL(clicked()),
-            this, SLOT(s_cancel()));
-    
-    QObject::connect(pb_help_, SIGNAL(clicked()),
-            this, SLOT(s_help()));
+    QObject::connect(pb_OK_,        SIGNAL(clicked()), SLOT(s_OK()));
+    QObject::connect(pb_cancel_,    SIGNAL(clicked()), SLOT(s_cancel()));
+    QObject::connect(pb_help_,      SIGNAL(clicked()), SLOT(s_help()));
 
     rgb_choices_    = new RikGroupBox(i18n("Actions"), 8, this, "rgb_choices");
-    CHECK_PTR(rgb_choices_);
-    
-    w_choices_    = new QWidget(rgb_choices_,    "w_choices");
-    CHECK_PTR(w_choices_);
-    
+    w_choices_      = new QWidget(rgb_choices_,    "w_choices");
+
     rgb_choices_->setWidget(w_choices_);
 
-    bg_choices_ =
-        new QButtonGroup(this, "bg_choices");
-    CHECK_PTR(bg_choices_);
+    bg_choices_ = new QButtonGroup(this, "bg_choices");
 
     bg_choices_->hide();
     bg_choices_->setExclusive(true);
 
     rb_moveFolder_    = new QRadioButton(w_choices_, "rb_moveFolder");
-    CHECK_PTR(rb_moveFolder_);
     rb_delete_        = new QRadioButton(w_choices_, "rb_delete");
-    CHECK_PTR(rb_delete_);
     rb_ignore_        = new QRadioButton(w_choices_, "rb_ignore");
-    CHECK_PTR(rb_ignore_);
-    rb_forwardTo_    = new QRadioButton(w_choices_, "rb_forwardTo");
-    CHECK_PTR(rb_forwardTo_);
-
-    rb_moveFolder_->setFixedHeight(h);
-    rb_delete_->setFixedHeight(h);
-    rb_ignore_->setFixedHeight(h);
-    rb_forwardTo_->setFixedHeight(h);
+    rb_forwardTo_     = new QRadioButton(w_choices_, "rb_forwardTo");
 
     bg_choices_->insert(rb_moveFolder_);
     bg_choices_->insert(rb_delete_);
     bg_choices_->insert(rb_ignore_);
     bg_choices_->insert(rb_forwardTo_);
     
-    l_moveFolder_    = new QLabel(i18n("to folder:"), w_choices_, "l_moveFolder");
-    CHECK_PTR(l_moveFolder_);
-    l_moveFolder_->setFixedWidth(l_moveFolder_->sizeHint().width());
-    l_delete_        = new QLabel(i18n("Delete"), w_choices_, "l_delete");
-    CHECK_PTR(l_delete_);
-    l_ignore_        = new QLabel(i18n("Ignore"), w_choices_, "l_ignore");
-    CHECK_PTR(l_ignore_);
-    l_forwardTo_    = new QLabel(i18n("Forward to:"), w_choices_, "l_forwardTo");
-    CHECK_PTR(l_forwardTo_);
-    l_forwardTo_->setFixedWidth(l_forwardTo_->sizeHint().width());
-    
+    l_moveFolder_ = new QLabel(i18n("to folder:"),  w_choices_);
+    l_delete_     = new QLabel(i18n("Delete"),      w_choices_);
+    l_ignore_     = new QLabel(i18n("Ignore"),      w_choices_);
+    l_forwardTo_  = new QLabel(i18n("Forward to:"), w_choices_);
+
     cb_moveOrCopy_    = new QComboBox(w_choices_, "cb_moveOrCopy");
-    CHECK_PTR(cb_moveOrCopy_);
 
     cb_moveOrCopy_->insertItem(i18n("Move"));
     cb_moveOrCopy_->insertItem(i18n("Copy"));
     
     cb_moveOrCopy_->setFixedWidth(cb_moveOrCopy_->sizeHint().width() + 10);
     
-    fcw_moveFolder_    = new EmpathFolderChooserWidget(w_choices_, "folderChooser");
-    CHECK_PTR(fcw_moveFolder_);
-
-    asw_address_        = new EmpathAddressSelectionWidget(w_choices_, "asw");
-    CHECK_PTR(asw_address_);
-    
-    cb_continue_        =
-        new QCheckBox(i18n("Continue matching"), w_choices_, "cb_continue");
-    CHECK_PTR(cb_continue_);
-    cb_continue_->setFixedHeight(h);
+    fcw_moveFolder_ = new EmpathFolderChooserWidget(w_choices_);
+    asw_address_    = new EmpathAddressSelectionWidget(w_choices_);
+    cb_continue_    = new QCheckBox(i18n("Continue matching"), w_choices_);
 
     // Connect the radio buttons to the widgets they control so that the widgets
     // are disabled when the radio buttons are switched off.
     
-    QObject::connect(rb_moveFolder_, SIGNAL(toggled(bool)),
-            cb_moveOrCopy_, SLOT(setEnabled(bool)));
+    QObject::connect(
+        rb_moveFolder_, SIGNAL(toggled(bool)),
+        cb_moveOrCopy_, SLOT(setEnabled(bool)));
     
-    QObject::connect(rb_moveFolder_, SIGNAL(toggled(bool)),
-            fcw_moveFolder_, SLOT(setEnabled(bool)));
+    QObject::connect(
+        rb_moveFolder_, SIGNAL(toggled(bool)),
+        fcw_moveFolder_, SLOT(setEnabled(bool)));
 
-    QObject::connect(rb_moveFolder_, SIGNAL(toggled(bool)),
-            l_moveFolder_, SLOT(setEnabled(bool)));
+    QObject::connect(
+        rb_moveFolder_, SIGNAL(toggled(bool)),
+        l_moveFolder_, SLOT(setEnabled(bool)));
     
-    QObject::connect(rb_delete_, SIGNAL(toggled(bool)),
-            l_delete_, SLOT(setEnabled(bool)));
+    QObject::connect(
+        rb_delete_, SIGNAL(toggled(bool)),
+        l_delete_, SLOT(setEnabled(bool)));
     
-    QObject::connect(rb_ignore_, SIGNAL(toggled(bool)),
-            l_ignore_, SLOT(setEnabled(bool)));
+    QObject::connect(
+        rb_ignore_, SIGNAL(toggled(bool)),
+        l_ignore_, SLOT(setEnabled(bool)));
     
-    QObject::connect(rb_forwardTo_, SIGNAL(toggled(bool)),
-            l_forwardTo_, SLOT(setEnabled(bool)));
+    QObject::connect(
+        rb_forwardTo_, SIGNAL(toggled(bool)),
+        l_forwardTo_, SLOT(setEnabled(bool)));
     
-    QObject::connect(rb_forwardTo_, SIGNAL(toggled(bool)),
-            asw_address_, SLOT(setEnabled(bool)));
+    QObject::connect(
+        rb_forwardTo_, SIGNAL(toggled(bool)),
+        asw_address_, SLOT(setEnabled(bool)));
 
     rb_moveFolder_->setChecked(true);
     rb_delete_->setChecked(false);
@@ -168,16 +134,9 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
     // Layouts
 
     mainLayout_            = new QGridLayout(this, 2, 1, 10, 10);
-    CHECK_PTR(mainLayout_);
-    
     layout_                = new QGridLayout(w_choices_, 5, 2, 10, 10);
-    CHECK_PTR(layout_);
-    
     mc_subLayout_                = new QGridLayout(1, 3);
-    CHECK_PTR(mc_subLayout_);
-    
     ft_subLayout_                = new QGridLayout(1, 2);
-    CHECK_PTR(ft_subLayout_);
     
     layout_->addLayout(mc_subLayout_,    0, 1);
     layout_->addLayout(ft_subLayout_,    3, 1);
@@ -226,7 +185,7 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
 
 EmpathFilterActionDialog::~EmpathFilterActionDialog()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
@@ -262,7 +221,7 @@ EmpathFilterActionDialog::load()
             
         case EmpathFilterEventHandler::Forward:
             rb_forwardTo_->setChecked(true);
-            asw_address_->setAddress(handler->forwardAddress());
+            asw_address_->setText(handler->forwardAddress());
             break;
             
         default:
@@ -290,7 +249,7 @@ EmpathFilterActionDialog::s_OK()
         handler->setIgnore();
     
     else if (rb_forwardTo_->isChecked())
-        handler->setForward(asw_address_->selectedAddress());
+        handler->setForward(asw_address_->text());
 
     
     filter_->setEventHandler(handler);

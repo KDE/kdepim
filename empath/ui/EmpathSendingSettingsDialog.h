@@ -56,11 +56,11 @@ class EmpathSendingSettingsDialog : public QDialog
         
         static void create();
 
-        ~EmpathSendingSettingsDialog() { empathDebug("dtor"); exists_ = false; }
+        ~EmpathSendingSettingsDialog();
 
         void saveData();
         void loadData();
-        void closeEvent(QCloseEvent *);
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
         
     protected slots:
 

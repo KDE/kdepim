@@ -33,11 +33,11 @@
 #include <RMM_Token.h>
 
 EmpathURL::EmpathURL()
-    :    mailboxName_    (QString::null),
-        folderPath_        (QString::null),
-        messageID_        (QString::null),
-        strRep_            (QString::null),
-        isValid_            (false)
+    :   mailboxName_    (QString::null),
+        folderPath_     (QString::null),
+        messageID_      (QString::null),
+        strRep_         (QString::null),
+        isValid_        (false)
 {
 }
 
@@ -47,16 +47,16 @@ EmpathURL::EmpathURL(
         const QString & messageID)
     :
         mailboxName_    (mailboxName),
-        folderPath_        (folderPath),
-        messageID_        (messageID),
-        strRep_            (QString::null),
-        isValid_            (true)
+        folderPath_     (folderPath),
+        messageID_      (messageID),
+        strRep_         (QString::null),
+        isValid_        (true)
 {
     _assemble();
 }
 
 EmpathURL::EmpathURL(const QString & fullPath)
-    :    strRep_(fullPath),
+    :   strRep_(fullPath),
         isValid_(false)
 {
     _parse();
@@ -65,10 +65,10 @@ EmpathURL::EmpathURL(const QString & fullPath)
 
 
 EmpathURL::EmpathURL(const EmpathURL & url)
-    :    mailboxName_(url.mailboxName_),
-        folderPath_(url.folderPath_),
-        messageID_(url.messageID_),
-        isValid_(url.isValid_)
+    :   mailboxName_    (url.mailboxName_),
+        folderPath_     (url.folderPath_),
+        messageID_      (url.messageID_),
+        isValid_        (url.isValid_)
 {
     _assemble();
 }
@@ -86,28 +86,28 @@ EmpathURL::_parse()
     if (strRep_.contains('/') == 0) {
         // No slashes, therefore it's just got a mailbox name.
         mailboxName_    = strRep_;
-        folderPath_        = QString::null;
-        messageID_        = QString::null;
+        folderPath_     = QString::null;
+        messageID_      = QString::null;
         return;
     }
             
     if (!hadTrailingSlash) {
         // Not a mailbox (because the above didn't match), but has a
         // trailing slash. Therefore it's a mailbox + a folder path.
-        unsigned int i    = strRep_.find('/');
+        unsigned int i  = strRep_.find('/');
         mailboxName_    = strRep_.left(i);
-        folderPath_        = strRep_.right(strRep_.length() - i - 1);
-        messageID_        = QString::null;
+        folderPath_     = strRep_.right(strRep_.length() - i - 1);
+        messageID_      = QString::null;
         return;
     }
     
     // Well, it's got a mailbox and a folder path, and the above didn't match,
     // so it's also got a message id.
-    unsigned int i    = strRep_.find('/');
+    unsigned int i  = strRep_.find('/');
     mailboxName_    = strRep_.left(i);
-    unsigned int j    = strRep_.findRev('/');
-    folderPath_        = strRep_.mid(i + 1, j);
-    messageID_        = strRep_.right(strRep_.length() - j);
+    unsigned int j  = strRep_.findRev('/');
+    folderPath_     = strRep_.mid(i + 1, j);
+    messageID_      = strRep_.right(strRep_.length() - j);
 }
 
 EmpathURL::~EmpathURL()
@@ -118,8 +118,8 @@ EmpathURL::~EmpathURL()
 EmpathURL::operator = (const EmpathURL & url)
 {
     mailboxName_    = url.mailboxName_;
-    folderPath_        = url.folderPath_;
-    messageID_        = url.messageID_;
+    folderPath_     = url.folderPath_;
+    messageID_      = url.messageID_;
     _assemble();
     return *this;
 }
@@ -137,9 +137,9 @@ EmpathURL::operator = (const QString & url)
 EmpathURL::operator == (const EmpathURL & b) const
 {
     return (
-            mailboxName_    == b.mailboxName_    &&
-            folderPath_        == b.folderPath_    &&
-            messageID_        == b.messageID_);
+            mailboxName_    == b.mailboxName_   &&
+            folderPath_     == b.folderPath_    &&
+            messageID_      == b.messageID_);
 }
 
     bool

@@ -23,23 +23,21 @@
 
 #include <qstring.h>
 
-static const QString    EMPATH_VERSION_STRING    =
-    QString::fromLatin1("1.0 Alpha");
+static const QString    EMPATH_MAINTAINER       = "Rik Hemsley";
+static const QString    EMPATH_MAINTAINER_EMAIL = "rik@kde.org";
 
+static const QString    EMPATH_VERSION_STRING   = "1.0 Pre-alpha";
 static const int        EMPATH_VERSION_MAJOR    = 0;
 static const int        EMPATH_VERSION_MINOR    = 8;
-static const int        EMPATH_VERSION_RELEASE    = 1;
-
-#define returnIfFalse(b) if (!((b))) { return; }
+static const int        EMPATH_VERSION_RELEASE  = 1;
 
 #ifndef NDEBUG
 #include <iostream>
 # ifdef __GNUG__
-#  define empathDebug(a) cerr << className() << ":" << __FUNCTION__ << " (" \
-                              << __LINE__ << "): " << QString((a)) << endl;
+#  define empathDebug(a) cerr << className() << ":"   << __FUNCTION__ << " (" \
+                              << __LINE__    << "): " << QString((a)) << endl;
 # else
-#  define empathDebug(a) cerr << className() << ": " \
-                              << QString((a)) << endl;
+#  define empathDebug(a) cerr << className() << ": " << QString((a)) << endl;
 # endif
 #else
 # define empathDebug(a)

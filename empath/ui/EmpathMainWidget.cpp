@@ -40,8 +40,6 @@
 EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
     : QWidget(parent, name)
 {
-    empathDebug("ctor");
-
     hSplit = new QSplitter(this, "hSplit");
     CHECK_PTR(hSplit);
     
@@ -85,8 +83,6 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
 
 EmpathMainWidget::~EmpathMainWidget()
 {
-    empathDebug("dtor");
-    
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
     

@@ -18,26 +18,23 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+#pragma interface "EmpathAccountsSettingsDialog.h"
+#endif
+
 #ifndef EMPATHACCOUNTSSETTINGSDIALOG_H
 #define EMPATHACCOUNTSSETTINGSDIALOG_H
 
 // Qt includes
-#include <qlayout.h>
 #include <qwidget.h>
-#include <qlabel.h>
 #include <qlistview.h>
-#include <qbuttongroup.h>
-#include <qstring.h>
-#include <qpushbutton.h>
 #include <qdialog.h>
 
-// KDE includes
-#include <kbuttonbox.h>
-
 // Local includes
+#include "EmpathURL.h"
 #include "EmpathDefines.h"
 
-class RikGroupBox;
+class EmpathMailbox;
 
 /**
  * Dialog used to configure settings for each account.
@@ -52,51 +49,37 @@ class EmpathAccountsSettingsDialog : public QDialog
         
         static void create();
 
-        ~EmpathAccountsSettingsDialog() { empathDebug("dtor"); exists_ = false;}
-        void closeEvent(QCloseEvent *);
+        ~EmpathAccountsSettingsDialog();
+
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
 
     protected slots:
 
-        void s_newAccount();
-        void s_editAccount();
-        void s_removeAccount();
+        void s_new();
+        void s_edit();
+        void s_remove();
         
         void s_OK();
         void s_cancel();
         void s_help();
         void s_apply();
+        
+        void s_updateMailboxList();
 
     private:
         
-        EmpathAccountsSettingsDialog(QWidget * parent, const char * name);
+        EmpathAccountsSettingsDialog(QWidget * = 0);
+  
+        QListView       * lv_accts_;
 
-        void updateMailboxList();
-
-        QButtonGroup            * buttonGroup_;
-        
-        RikGroupBox                * rgb_account_;
-        QGridLayout                * accountGroupLayout_;
-    
-        QWidget                    * w_account_;
-    
-        QListView                * lv_accts_;
-        
-        QPushButton                * pb_newAccount_;
-        QPushButton                * pb_editAccount_;
-        QPushButton                * pb_removeAccount_;
-    
-        QGridLayout                * topLevelLayout_;
-
-        KButtonBox        * buttonBox_;
-        QPushButton        * pb_help_;
-        QPushButton        * pb_apply_;
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        
-        static bool        exists_;
+        static bool     exists_;
         bool            applied_;
+};
 
-
+class EmpathAccountListItem : public QListViewItem
+{
+    public:
+        EmpathAccountListItem(QListView *, EmpathMailbox *);
 };
 
 #endif

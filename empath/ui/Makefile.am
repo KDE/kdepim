@@ -6,7 +6,6 @@ libempathui_a_METASOURCES = AUTO
 
 libempathui_a_SOURCES = \
 EmpathAccountsSettingsDialog.cpp \
-EmpathAccountsSettingsWidget.cpp \
 EmpathAddressSelectionWidget.cpp \
 EmpathAttachmentEditDialog.cpp \
 EmpathAttachmentListWidget.cpp \
@@ -19,7 +18,6 @@ EmpathConfigMaildirDialog.cpp \
 EmpathConfigPOP3Dialog.cpp \
 EmpathConfigPOP3General.cpp \
 EmpathConfigPOP3Logging.cpp \
-EmpathConfigPOP3Password.cpp \
 EmpathConfigPOP3Server.cpp \
 EmpathConfigPOP3Widget.cpp \
 EmpathDisplaySettingsDialog.cpp \
@@ -31,8 +29,6 @@ EmpathFolderChooserDialog.cpp \
 EmpathFolderChooserWidget.cpp \
 EmpathFolderListItem.cpp \
 EmpathFolderWidget.cpp \
-EmpathHeaderBodyWidget.cpp \
-EmpathHeaderNameWidget.cpp \
 EmpathHeaderSpecWidget.cpp \
 EmpathHeaderViewWidget.cpp \
 EmpathIdentitySettingsDialog.cpp \
@@ -42,18 +38,17 @@ EmpathMainWidget.cpp \
 EmpathMainWindow.cpp \
 EmpathMessageMarkDialog.cpp \
 EmpathMatchPropertiesDialog.cpp \
-EmpathMenuMaker.cpp \
 EmpathMessageDownloadStatus.cpp \
 EmpathMessageHTMLView.cpp \
 EmpathMessageListItem.cpp \
 EmpathMessageListWidget.cpp \
-EmpathMessageSourceView.cpp \
 EmpathMessageStructureWidget.cpp \
 EmpathMessageStructureItem.cpp \
 EmpathMessageViewWidget.cpp \
 EmpathMessageViewWindow.cpp \
 EmpathMessageWidget.cpp \
-EmpathSetupWizard.cpp \
+EmpathPathSelectWidget.cpp \
+EmpathPasswordEditWidget.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathServerTypeDialog.cpp \
 EmpathSubjectSpecWidget.cpp \

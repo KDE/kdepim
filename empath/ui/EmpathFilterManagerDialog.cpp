@@ -55,7 +55,6 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
         QWidget * parent, const char * name)
     :    QDialog(parent, name, false)
 {
-    empathDebug("ctor");
     setCaption(i18n("Filter Settings"));
 
     mainLayout_ = new QGridLayout(this, 2, 1, 10, 10);
@@ -184,15 +183,11 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
     void
 EmpathFilterManagerDialog::s_addFilter()
 {
-    empathDebug("s_addFilter() called");
-    
     EmpathFilter * newFilter = new EmpathFilter(i18n("Unnamed"));
     
-    EmpathFilterEditDialog filterEditDialog(newFilter,
-            this, "filterEditDialog");
+    EmpathFilterEditDialog filterEditDialog(newFilter, this);
     
     if (filterEditDialog.exec() != QDialog::Accepted) {
-        empathDebug("Deleting unwanted filter");
         delete newFilter;
         newFilter = 0;
         return;
@@ -204,21 +199,24 @@ EmpathFilterManagerDialog::s_addFilter()
     update();
 }
 
+EmpathFilterManagerDialog::~EmpathFilterManagerDialog()
+{
+    exists_ = false;
+}
+
     void
 EmpathFilterManagerDialog::s_editFilter()
 {
-    empathDebug("s_editFilter() called");
-    
     EmpathFilter * editedFilter =
         ((EmpathFilterListItem *)lv_filters_->currentItem())->filter();
     
     if (editedFilter == 0)
         return;
     
-    EmpathFilterEditDialog filterEditDialog(editedFilter,
-            this, "filterEditDialog");
+    EmpathFilterEditDialog filterEditDialog(editedFilter, this);
 
-    if (filterEditDialog.exec() != QDialog::Accepted) return;
+    if (filterEditDialog.exec() != QDialog::Accepted)
+        return;
     
     update();
 }
@@ -226,8 +224,6 @@ EmpathFilterManagerDialog::s_editFilter()
     void
 EmpathFilterManagerDialog::s_removeFilter()
 {
-    empathDebug("s_removeFilter() called");
-    
     EmpathFilter * editedFilter =
         ((EmpathFilterListItem *)lv_filters_->currentItem())->filter();
     
@@ -242,8 +238,6 @@ EmpathFilterManagerDialog::s_removeFilter()
     void
 EmpathFilterManagerDialog::s_moveUp()
 {
-    empathDebug("s_moveUp() called");
-    
     EmpathFilterListItem * currentItem =
         ((EmpathFilterListItem *)lv_filters_->currentItem());
     
@@ -260,8 +254,6 @@ EmpathFilterManagerDialog::s_moveUp()
     void
 EmpathFilterManagerDialog::s_moveDown()
 {
-    empathDebug("s_moveDown() called");
-
     EmpathFilterListItem * currentItem =
         ((EmpathFilterListItem *)lv_filters_->currentItem());
     
@@ -314,8 +306,7 @@ EmpathFilterManagerDialog::update()
     void
 EmpathFilterManagerDialog::saveData()
 {
-    empathDebug("saveData() called");
-    empath->filterList().save();
+    empath->filterList().saveConfig();
 }
 
     void
@@ -354,13 +345,6 @@ EmpathFilterManagerDialog::s_cancel()
 {
     if (!applied_)
         KGlobal::config()->rollback(true);
-    delete this;
-}
-
-    void
-EmpathFilterManagerDialog::closeEvent(QCloseEvent * e)
-{
-    e->accept();
     delete this;
 }
 

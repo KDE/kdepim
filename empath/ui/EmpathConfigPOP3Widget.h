@@ -34,13 +34,10 @@
 
 // Local includes
 #include "EmpathDefines.h"
-
-class RikGroupBox;
-class EmpathMailboxPOP3;
+#include "EmpathURL.h"
 
 class EmpathConfigPOP3Server;
 class EmpathConfigPOP3Logging;
-class EmpathConfigPOP3Password;
 class EmpathConfigPOP3General;
 class EmpathMailbox;
 
@@ -53,23 +50,20 @@ class EmpathConfigPOP3Widget : public KTabCtl
 
     public:
         
-        EmpathConfigPOP3Widget(EmpathMailboxPOP3 * mailbox, bool loadData,
-            QWidget * parent = 0, const char * name = 0);
+        EmpathConfigPOP3Widget(const EmpathURL &, QWidget * = 0);
 
-        ~EmpathConfigPOP3Widget() { empathDebug("dtor"); }
+        ~EmpathConfigPOP3Widget();
         
-        void setMailbox(EmpathMailboxPOP3 * mailbox, bool loadData = true);
-
         void    saveData();
         void    loadData();
         
     private:
 
-        EmpathMailbox                * mailbox_;
-        EmpathConfigPOP3Server        * serverWidget_;
-        EmpathConfigPOP3Logging        * loggingWidget_;
-        EmpathConfigPOP3Password    * passwordWidget_;
-        EmpathConfigPOP3General        * generalWidget_;
+        EmpathURL url_;
+
+        EmpathConfigPOP3Server  * serverWidget_;
+        EmpathConfigPOP3Logging * loggingWidget_;
+        EmpathConfigPOP3General * generalWidget_;
 };
 
 #endif

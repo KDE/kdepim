@@ -26,28 +26,25 @@
 #define EMPATH_ADDRESS_SELECTION_WIDGET_H
 
 // Qt includes
-#include <qwidget.h>
+#include <qhbox.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qlayout.h>
 
 /**
  * Megawidget used to get an address from the user.
  * Not yet implemented: Allows user to browse through address book.
  */
-class EmpathAddressSelectionWidget : public QWidget
+class EmpathAddressSelectionWidget : public QHBox
 {
     Q_OBJECT
     
     public:
     
-        EmpathAddressSelectionWidget(QWidget * parent = 0, const char * name = 0);
+        EmpathAddressSelectionWidget(QWidget * parent = 0);
         virtual ~EmpathAddressSelectionWidget();
 
-        QString selectedAddress() const;
-        void setAddress(const QString &);
-        QString text() const { return selectedAddress(); }
-        void setText(const QString & s) { setAddress(s); }
+        QString text() const;
+        void setText(const QString &);
 
     protected slots:
 
@@ -57,10 +54,8 @@ class EmpathAddressSelectionWidget : public QWidget
         
     private:
 
-        QGridLayout        * layout_;
-
-        QLineEdit        * le_address_;
-        QPushButton        * pb_browse_;
+        QLineEdit   * le_address_;
+        QPushButton * pb_browse_;
 };
 
 #endif

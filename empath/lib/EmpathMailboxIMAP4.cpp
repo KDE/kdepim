@@ -32,9 +32,8 @@ EmpathMailboxIMAP4::EmpathMailboxIMAP4(const QString & name)
         username_       (QString::null),
         password_       (QString::null)
 {
-    empathDebug("ctor");
     type_ = IMAP4;
-    setName(name);
+    typeString_ = "IMAP4";
 }
 
 
@@ -63,7 +62,7 @@ EmpathMailboxIMAP4::saveConfig()
 }
 
     void
-EmpathMailboxIMAP4::readConfig()
+EmpathMailboxIMAP4::loadConfig()
 {
     // STUB
 }
@@ -120,12 +119,6 @@ EmpathMailboxIMAP4::password()
 {
     // STUB
     return password_;
-}
-
-    EmpathMailbox::SavePolicy
-EmpathMailboxIMAP4::passwordSavePolicy()
-{
-    return passwordSavePolicy_;
 }
 
     QString

@@ -28,20 +28,11 @@
 // Qt includes
 #include <qdialog.h>
 #include <qwidget.h>
-#include <qlabel.h>
-#include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qradiobutton.h>
-#include <qlayout.h>
-#include <qcheckbox.h>
-#include <qlistbox.h>
-#include <qbuttongroup.h>
-
-// KDE includes
-#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 #include "RikGroupBox.h"
 
 class EmpathMailboxIMAP4;
@@ -55,15 +46,14 @@ class EmpathConfigIMAP4Dialog : public QDialog
 
     public:
         
-        EmpathConfigIMAP4Dialog(
-                EmpathMailboxIMAP4 * mailbox,
-                QWidget * parent = 0,
-                const char * name = 0);
+        static void create(const EmpathURL &, QWidget * = 0);
 
-        ~EmpathConfigIMAP4Dialog() { empathDebug("dtor"); }
+        ~EmpathConfigIMAP4Dialog();
 
         void fillInSavedData();
         
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
+
     protected slots:
 
         void    s_OK();
@@ -74,22 +64,18 @@ class EmpathConfigIMAP4Dialog : public QDialog
 
     private:
 
-        EmpathMailboxIMAP4    * mailbox_;
-
-        RikGroupBox        * rgb_server_;
+        EmpathConfigIMAP4Dialog(const EmpathURL &, QWidget *  = 0);
         
-        KButtonBox        * buttonBox_;
+        void saveData();
+        void loadData();
 
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_Cancel_;
-        QPushButton        * pb_Help_;
+        EmpathURL url_;
+
+        QPushButton * pb_OK_;
+        QPushButton * pb_Cancel_;
+        QPushButton * pb_Help_;
     
-        QWidget            * w_server_;
-    
-        QLabel            * l_notImp_;
-        
-        QGridLayout        * topLevelLayout_;
-        QGridLayout        * serverGroupLayout_;
+        static bool exists_;
 };
 
 #endif

@@ -30,77 +30,70 @@
 #include "EmpathConfigPOP3Widget.h"
 #include "EmpathConfigPOP3Server.h"
 #include "EmpathConfigPOP3Logging.h"
-#include "EmpathConfigPOP3Password.h"
 #include "EmpathConfigPOP3General.h"
+#include "Empath.h"
 
-EmpathConfigPOP3Widget::EmpathConfigPOP3Widget(
-        EmpathMailboxPOP3 * mailbox,
-        bool loadData,
-        QWidget * parent,
-        const char * name)
-    :    KTabCtl(parent, name)
+EmpathConfigPOP3Widget::EmpathConfigPOP3Widget
+    (const EmpathURL & url, QWidget * parent)
+    :   KTabCtl(parent, "ConfigPOP3Widget"),
+        url_(url)
 {
-    empathDebug("ctor");
+    serverWidget_   = new EmpathConfigPOP3Server(url_, this);
+    loggingWidget_  = new EmpathConfigPOP3Logging(url, this);
+    generalWidget_  = new EmpathConfigPOP3General(url, this);
     
-    serverWidget_ =
-        new EmpathConfigPOP3Server(this, "serverWidget");
-    CHECK_PTR(serverWidget_);
-
-    loggingWidget_ =
-        new EmpathConfigPOP3Logging(this, "loggingWidget");
-    CHECK_PTR(loggingWidget_);
+    addTab(serverWidget_,   i18n("Server"));
+    addTab(generalWidget_,  i18n("General"));
+    addTab(loggingWidget_,  i18n("Logging"));
     
-    passwordWidget_ =
-        new EmpathConfigPOP3Password(this, "passwordWidget");
-    CHECK_PTR(passwordWidget_);
-    
-    generalWidget_ =
-        new EmpathConfigPOP3General(this, "generalWidget");
-    CHECK_PTR(generalWidget_);
-    
-    addTab(serverWidget_,            i18n("Server"));
-    addTab(generalWidget_,            i18n("General"));
-    addTab(passwordWidget_,            i18n("Password"));
-    addTab(loggingWidget_,            i18n("Logging"));
-    
-    setMailbox(mailbox, loadData);
-
-    serverWidget_->loadData();
-    generalWidget_->loadData();
-    passwordWidget_->loadData();
-    loggingWidget_->loadData();
-
-    setMinimumSize(minimumSizeHint());
-    resize(minimumSizeHint());
+    loadData();
 };
+
+EmpathConfigPOP3Widget::~EmpathConfigPOP3Widget()
+{
+    // Empty.
+}
 
     void
 EmpathConfigPOP3Widget::saveData()
 {
-    empathDebug("saveData() called");
+    EmpathMailbox * mailbox = empath->mailbox(url_);
+
+    if (mailbox == 0)
+        return;
+
+    if (mailbox->type() != EmpathMailbox::POP3) {
+        empathDebug("Incorrect mailbox type");
+        return;
+    }
+    
+    EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
+
     serverWidget_->saveData();
     generalWidget_->saveData();
-    passwordWidget_->saveData();
     loggingWidget_->saveData();
-    mailbox_->saveConfig();
+    m->saveConfig();
 }
 
     void
-EmpathConfigPOP3Widget::setMailbox(EmpathMailboxPOP3 * mailbox, bool loadData)
+EmpathConfigPOP3Widget::loadData()
 {
-    mailbox_ = mailbox;
+    EmpathMailbox * mailbox = empath->mailbox(url_);
 
-    ASSERT(mailbox_);
+    if (mailbox == 0)
+        return;
+
+    if (mailbox->type() != EmpathMailbox::POP3) {
+        empathDebug("Incorrect mailbox type");
+        return;
+    }
     
-    if (loadData)
-        mailbox_->readConfig();
+    EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
 
-    empathDebug("Set mailbox " + mailbox->name());
-    serverWidget_->setMailbox(mailbox);
-    generalWidget_->setMailbox(mailbox);
-    passwordWidget_->setMailbox(mailbox);
-    loggingWidget_->setMailbox(mailbox);
+    m->loadConfig();
+    serverWidget_->loadData();
+    generalWidget_->loadData();
+    loggingWidget_->loadData();
 }
-
 
 // vim:ts=4:sw=4:tw=78

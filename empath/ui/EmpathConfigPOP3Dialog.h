@@ -28,15 +28,11 @@
 // Qt includes
 #include <qdialog.h>
 #include <qpushbutton.h>
-#include <qlayout.h>
-
-// KDE includes
-#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
-class RikGroupBox;
 class EmpathMailboxPOP3;
 class EmpathConfigPOP3Widget;
 class EmpathMailbox;
@@ -50,13 +46,11 @@ class EmpathConfigPOP3Dialog : public QDialog
 
     public:
         
-        EmpathConfigPOP3Dialog(
-                EmpathMailboxPOP3 * mailbox,
-                bool loadData,
-                QWidget * parent = 0,
-                const char * name = 0);
+        static void create(const EmpathURL &, QWidget * = 0);
 
-        ~EmpathConfigPOP3Dialog() { empathDebug("dtor"); }
+        ~EmpathConfigPOP3Dialog();
+        
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
         
     protected slots:
 
@@ -66,17 +60,20 @@ class EmpathConfigPOP3Dialog : public QDialog
 
     private:
 
-        EmpathMailboxPOP3    * mailbox_;
+        EmpathConfigPOP3Dialog(const EmpathURL &, QWidget * = 0);
+        
+        void saveData();
+        void loadData();
 
-        EmpathConfigPOP3Widget    * settingsWidget_;
+        EmpathURL url_;
 
-        KButtonBox        * buttonBox_;
+        EmpathConfigPOP3Widget * settingsWidget_;
 
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_Cancel_;
-        QPushButton        * pb_Help_;
-    
-        QGridLayout        * mainLayout_;
+        QPushButton * pb_OK_;
+        QPushButton * pb_Cancel_;
+        QPushButton * pb_Help_;
+
+        static bool exists_;
 };
 
 #endif

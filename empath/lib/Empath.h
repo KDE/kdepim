@@ -251,6 +251,12 @@ class Empath : public QObject
          * Use when folders have changed and any displayed lists need updating.
          */
         void s_updateFolderLists() { emit(updateFolderLists()); }
+
+        /**
+         * Please ask the user to enter settings for the mailbox
+         * specified in the URL.
+         */
+        void s_configureMailbox(const EmpathURL &, QWidget * = 0);
        
         ///////////////////////////////////////////////////////////////////
         // Message composition.
@@ -501,6 +507,11 @@ class Empath : public QObject
         void s_messageReadyForSave(bool, const EmpathURL &, QString, QString);
         
     signals:
+
+        /**
+         * Please ask the user to configure this mailbox.
+         */
+        void configureMailbox(const EmpathURL &, QWidget * = 0);
         
         /**
          * Please ask the user to enter a path to save this message

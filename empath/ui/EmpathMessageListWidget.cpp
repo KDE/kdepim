@@ -43,7 +43,6 @@
 
 // Local includes
 #include "EmpathMessageMarkDialog.h"
-#include "EmpathMessageList.h"
 #include "EmpathMessageListWidget.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathIndex.h"
@@ -61,8 +60,6 @@ EmpathMessageListWidget::EmpathMessageListWidget(
         wantScreenUpdates_    (false),
         filling_            (false)
 {
-    empathDebug("ctor");
-    
     setFrameStyle(QFrame::NoFrame);
 
     wantScreenUpdates_ = false;
@@ -133,10 +130,6 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 
 EmpathMessageListWidget::~EmpathMessageListWidget()
 {
-    empathDebug("dtor");
-    empathDebug("Saving column sizes and positions");
-    empathDebug("XXX: Sort this so that positions can be restored");
-    
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_GENERAL);
     
@@ -186,8 +179,9 @@ EmpathMessageListWidget::findRecursive(
     EmpathMessageListItem *
 EmpathMessageListWidget::find(RMM::RMessageID & msgId)
 {
-    empathDebug("find (" + msgId.asString() + ") called");
-    if (!firstChild()) return 0;
+    if (!firstChild())
+        return 0;
+
     return findRecursive((EmpathMessageListItem *)firstChild(), msgId);
 }
 
@@ -232,7 +226,6 @@ EmpathMessageListWidget::firstSelectedMessage()
     void
 EmpathMessageListWidget::markOne(RMM::MessageStatus status)
 {
-    empathDebug("mark() called");
     // Don't bother auto-marking this as the user's done it.
     markAsReadTimer_->cancel();
     
@@ -257,7 +250,6 @@ EmpathMessageListWidget::markOne(RMM::MessageStatus status)
     void
 EmpathMessageListWidget::mark(RMM::MessageStatus status)
 {
-    empathDebug("mark() called");
     // Don't bother auto-marking this as the user's done it.
     markAsReadTimer_->cancel();
     
@@ -267,10 +259,8 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
 
     EmpathMessageListItemIterator it(selected_);
     
-    for (; it.current(); ++it) {
-        empathDebug("Adding " + it.current()->id());
+    for (; it.current(); ++it)
         l.append(it.current()->id());
-    }
         
     empath->mark(url_, l, status);
     
@@ -299,36 +289,30 @@ EmpathMessageListWidget::s_messageMarkReplied()
     void
 EmpathMessageListWidget::s_messageReply()
 {
-    empathDebug("s_messageReply called");
     empath->s_reply(firstSelectedMessage());
 }
 
     void
 EmpathMessageListWidget::s_messageReplyAll()
 {
-    empathDebug("s_messageReplyAll called");
     empath->s_reply(firstSelectedMessage());
 }
 
     void
 EmpathMessageListWidget::s_messageForward()
 {
-    empathDebug("s_messageForward called");
     empath->s_forward(firstSelectedMessage());
 }
 
     void
 EmpathMessageListWidget::s_messageBounce()
 {
-    empathDebug("s_messageBounce called");
     empath->s_bounce(firstSelectedMessage());
 }
 
     void
 EmpathMessageListWidget::s_messageDelete()
 {
-    empathDebug("s_messageDelete called");
-    
     EmpathURL u(url_);
     
     EmpathTask * t(empath->addTask(i18n("Deleting messages")));
@@ -356,36 +340,30 @@ EmpathMessageListWidget::s_messageDelete()
     void
 EmpathMessageListWidget::s_messageSaveAs()
 {
-    empathDebug("s_messageSaveAs called");
     empath->saveMessage(firstSelectedMessage());
 }
 
     void
 EmpathMessageListWidget::s_messageCopyTo()
 {
-    empathDebug("s_messageCopyTo called");
-
+    // STUB
 }
 
     void
 EmpathMessageListWidget::s_messagePrint()
 {
-    empathDebug("s_messagePrint called");
-
+    // STUB
 }
 
     void
 EmpathMessageListWidget::s_messageFilter()
 {
-    empathDebug("s_messageFilter called");
-
+    // STUB
 }
 
     void
 EmpathMessageListWidget::s_messageView()
 {
-    empathDebug("s_messageView called");
-    
     EmpathMessageViewWindow * messageViewWindow =
         new EmpathMessageViewWindow(
             firstSelectedMessage(),
@@ -443,14 +421,12 @@ EmpathMessageListWidget::s_rightButtonPressed(QListViewItem * item,
     void
 EmpathMessageListWidget::s_doubleClicked(QListViewItem *)
 {
-    empathDebug("s_messageDoubleClicked called");
     s_messageView();
 }
 
     void
 EmpathMessageListWidget::s_linkChanged(QListViewItem *i)
 {
-    empathDebug("Current message changed - updating message widget");
     markAsReadTimer_->cancel();
 
     // Make sure we highlight the current item.
@@ -516,10 +492,8 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
         return;
     }
     
-    empath->s_infoMessage(
-        i18n("Reading mailbox") + " " + url.asString());
+    empath->s_infoMessage(i18n("Reading mailbox") + " " + url.asString());
     
-    empathDebug("Looking for old folder - this is likely to say 'mailbox not found' - that's ok");
     EmpathFolder * oldFolder = empath->folder(url_);
     
     if (oldFolder != 0) {
@@ -553,7 +527,6 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
     }
    
     clear();
-    empathDebug("pass");
     masterList_.clear();
     
     f->index()->sync();
@@ -662,7 +635,7 @@ EmpathMarkAsReadTimer::EmpathMarkAsReadTimer(EmpathMessageListWidget * parent)
 
 EmpathMarkAsReadTimer::~EmpathMarkAsReadTimer()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
@@ -810,7 +783,6 @@ EmpathMessageListWidget::selectInvert()
     void
 EmpathMessageListWidget::s_itemGone(const QString & s)
 {
-    empathDebug("itemGone(" + s + ")");
     if (filling_) return;
     
     QListViewItemIterator it(this);
@@ -827,8 +799,6 @@ EmpathMessageListWidget::s_itemGone(const QString & s)
     void
 EmpathMessageListWidget::s_itemCome(const QString & s)
 {
-    empathDebug("itemCome(" + s + ")");
-    
     if (filling_) return;
 
     EmpathFolder * f(empath->folder(url_));
@@ -891,8 +861,6 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
     
     QStrList l(f->index()->allKeys());
     
-    empathDebug("There are " + QString().setNum(l.count()) + " keys");
-
     QStrListIterator it(l);
 
     for (; it.current(); ++it) {
@@ -988,9 +956,6 @@ EmpathMessageListWidget::s_messageMarkMany()
     
     QStringList l;
 
-    empathDebug("There are " + QString().setNum(_nSelected()) +
-        " selected messages");
-
     EmpathMessageListItemIterator it(selected_);
     
     for (; it.current(); ++it)
@@ -1047,7 +1012,6 @@ EmpathMessageListWidget::s_collapseThread()
     void
 EmpathMessageListWidget::clearSelection()
 {
-    empathDebug("");
     QListView::clearSelection();
     selected_.clear();
 }

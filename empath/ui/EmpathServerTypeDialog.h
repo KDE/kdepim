@@ -51,7 +51,7 @@ class EmpathServerTypeDialog : public QDialog
 
         ~EmpathServerTypeDialog() { empathDebug("dtor"); }
 
-        EmpathMailbox::AccountType accountType();
+        EmpathMailbox::Type accountType();
 
     protected slots:
 
@@ -61,23 +61,23 @@ class EmpathServerTypeDialog : public QDialog
 
     private:
 
-        RikGroupBox        * rgb_type_;
+        RikGroupBox     * rgb_type_;
         QButtonGroup    * buttonGroup_;
     
-        QWidget            * w_type_;
+        QWidget         * w_type_;
     
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_Cancel_;
-        QPushButton        * pb_Help_;
+        QPushButton     * pb_OK_;
+        QPushButton     * pb_Cancel_;
+        QPushButton     * pb_Help_;
         
         QRadioButton    * rb_serverTypeMaildir_;
         QRadioButton    * rb_serverTypePOP3_;
         QRadioButton    * rb_serverTypeIMAP4_;
     
-        QGridLayout        * topLevelLayout_;
-        QGridLayout        * typeGroupLayout_;
+        QGridLayout     * topLevelLayout_;
+        QGridLayout     * typeGroupLayout_;
 
-        KButtonBox        * buttonBox_;
+        KButtonBox      * buttonBox_;
 };
 
 #endif

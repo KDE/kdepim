@@ -58,11 +58,11 @@ class EmpathComposeSettingsDialog : public QDialog
         
         static void create();
 
-        ~EmpathComposeSettingsDialog() { empathDebug("dtor"); exists_ = false; }
+        ~EmpathComposeSettingsDialog();
 
         void saveData();
         void loadData();
-        void closeEvent(QCloseEvent *);
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
 
     protected slots:
 

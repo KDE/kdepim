@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathUI.h"
+#endif
+
 // Qt includes
 #include <qstring.h>
 #include <qwidgetlist.h>
@@ -48,7 +52,10 @@
 #include "EmpathSendingSettingsDialog.h"
 #include "EmpathAccountsSettingsDialog.h"
 #include "EmpathFilterManagerDialog.h"
-#include "EmpathSetupWizard.h"
+#include "EmpathConfigMaildirDialog.h"
+#include "EmpathConfigIMAP4Dialog.h"
+#include "EmpathConfigPOP3Dialog.h"
+//#include "EmpathSetupWizard.h"
 #include "EmpathConfig.h"
 
 EmpathUI::EmpathUI()
@@ -76,6 +83,10 @@ EmpathUI::EmpathUI()
         empath, SIGNAL(newComposer(const QString &)),
         this,   SLOT(s_newComposer(const QString &)));
     
+    QObject::connect(
+        empath, SIGNAL(configureMailbox(const EmpathURL &, QWidget *)),
+        this,   SLOT(s_configureMailbox(const EmpathURL &, QWidget *)));
+
     QObject::connect(
         empath, SIGNAL(setupWizard()),      this, SLOT(s_setupWizard()));
     QObject::connect(
@@ -198,7 +209,7 @@ EmpathUI::s_sendEmail(const QString & name, const QString & email)
     void
 EmpathUI::s_setupWizard()
 {
-    EmpathSetupWizard::create();
+//    EmpathSetupWizard::create();
 }
 
     void
@@ -212,5 +223,34 @@ EmpathUI::s_getSaveName(const EmpathURL & url)
    
     empath->s_saveNameReady(url, saveFilePath);
 }
+
+    void
+EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
+{
+    empathDebug("");
+    EmpathMailbox * mailbox = empath->mailbox(url);
+
+    if (mailbox == 0)
+        return;
+ 
+    switch (mailbox->type()) {
+
+        case EmpathMailbox::Maildir:
+            EmpathConfigMaildirDialog::create(url, w);
+            break;
+
+        case EmpathMailbox::POP3:
+            EmpathConfigPOP3Dialog::create(url, w);
+            break;
+
+        case EmpathMailbox::IMAP4:
+            EmpathConfigIMAP4Dialog::create(url, w);
+            break;
+
+        default:
+            break;
+    }
+}
+
 
 // vim:ts=4:sw=4:tw=78

@@ -18,8 +18,12 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EMPATHMESSAGEDESCRIPTIONLIST
-#define EMPATHMESSAGEDESCRIPTIONLIST
+#ifdef __GNUG__
+# pragma interface "EmpathIndex.h"
+#endif
+
+#ifndef EMPATHINDEX_H
+#define EMPATHINDEX_H
 
 // System includes
 #include <gdbm.h>

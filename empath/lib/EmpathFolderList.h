@@ -26,13 +26,13 @@
 #define EMPATHFOLDERLIST_H
 
 // Qt includes
-#include <qlist.h>
+#include <qdict.h>
 
 // Local includes
 #include "EmpathFolder.h"
 
-typedef QList<EmpathFolder> EmpathFolderList;
-typedef QListIterator<EmpathFolder> EmpathFolderListIterator;
+typedef QDict<EmpathFolder> EmpathFolderList;
+typedef QDictIterator<EmpathFolder> EmpathFolderListIterator;
 
 #endif
 // vim:ts=4:sw=4:tw=78

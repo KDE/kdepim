@@ -22,100 +22,114 @@
 # pragma implementation "EmpathConfigIMAP4Dialog.h"
 #endif
 
+// Qt includes
+#include <qlabel.h>
+#include <qlayout.h>
+
 // KDE includes
+#include <kbuttonbox.h>
 #include <klocale.h>
 
 // Local includes
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathMailboxIMAP4.h"
-        
-EmpathConfigIMAP4Dialog::EmpathConfigIMAP4Dialog(
-        EmpathMailboxIMAP4 * mailbox,
-        QWidget * parent,
-        const char * name)
-    :    QDialog(parent, name, true),
-        mailbox_(mailbox)
+ 
+bool EmpathConfigIMAP4Dialog::exists_ = false;
+
+    void
+EmpathConfigIMAP4Dialog::create(const EmpathURL & url, QWidget * parent)
 {
-    empathDebug("ctor");
+    if (exists_) return;
+    exists_ = true;
+    EmpathConfigIMAP4Dialog * d = new EmpathConfigIMAP4Dialog(url, parent);
+    CHECK_PTR(d);
+    d->show();
+    d->loadData();
+}
+        
+EmpathConfigIMAP4Dialog::EmpathConfigIMAP4Dialog
+    (const EmpathURL & url, QWidget * parent)
+    :   QDialog(parent, "ConfigIMAP4Dialog", true),
+        url_(url)
+{
+    RikGroupBox * rgb_server =
+        new RikGroupBox(i18n("Server"), 8, this, "rgb_server");
+    
+    QWidget * w_server = new QWidget(rgb_server, "w_server");
+    
+    rgb_server->setWidget(w_server);
+    
+    KButtonBox * buttonBox = new KButtonBox(this);
 
-    mailbox_    = 0;
-    
-    buttonBox_                = new KButtonBox(this);
-    CHECK_PTR(buttonBox_);
-    
-    rgb_server_                = new RikGroupBox(i18n("Server"), 8, this,
-            "rgb_server");
-    CHECK_PTR(rgb_server_);
-    
-    w_server_                = new QWidget(rgb_server_,        "w_server");
-    CHECK_PTR(w_server_);
-    
-    rgb_server_->setWidget(w_server_);
-    
-    QLineEdit    tempLineEdit((QWidget *)0);
-    Q_UINT32 h    = tempLineEdit.sizeHint().height();
-
-    buttonBox_->setFixedHeight(h);
-    
     // Widgets
 
     // Bottom button group
-    pb_OK_        = buttonBox_->addButton(i18n("&OK"));
-    pb_Cancel_    = buttonBox_->addButton(i18n("&Cancel"));
-    pb_Help_    = buttonBox_->addButton(i18n("&Help"));    
+    pb_OK_      = buttonBox->addButton(i18n("&OK"));
+    pb_Cancel_  = buttonBox->addButton(i18n("&Cancel"));
+    pb_Help_    = buttonBox->addButton(i18n("&Help"));    
 
-    // Server username and address
-    l_notImp_    =
-        new QLabel(i18n("Sorry not implemented yet"), w_server_, "l_notImp");
-    CHECK_PTR(l_notImp_);
+    QLabel * l_notImp  =
+        new QLabel(i18n("Sorry not implemented yet"), w_server, "l_notImp");
 
     // Layouts
     
-    topLevelLayout_            = new QGridLayout(this, 1, 1, 10, 10);
-    CHECK_PTR(topLevelLayout_);
+    QGridLayout * topLevelLayout = new QGridLayout(this, 1, 1, 10, 10);
     
     // Main layout of widget's main groupbox
-    serverGroupLayout_        = new QGridLayout(w_server_,    1, 1, 0, 10);
-    CHECK_PTR(serverGroupLayout_);
+    QGridLayout * serverGroupLayout = new QGridLayout(w_server, 1, 1, 0, 10);
     
-    serverGroupLayout_->addWidget(l_notImp_,            0, 0);
+    serverGroupLayout->addWidget(l_notImp, 0, 0);
     
-    topLevelLayout_->addWidget(rgb_server_,    0, 0);
-    topLevelLayout_->addWidget(buttonBox_,    1, 0);
+    topLevelLayout->addWidget(rgb_server, 0, 0);
+    topLevelLayout->addWidget(buttonBox, 1, 0);
 
-    serverGroupLayout_->activate();
-    topLevelLayout_->activate();
+    serverGroupLayout->activate();
+    topLevelLayout->activate();
     
     fillInSavedData();
+}
 
-    setMinimumSize(320,200);
-
-    resize(320, 200);
+EmpathConfigIMAP4Dialog::~EmpathConfigIMAP4Dialog()
+{
+    exists_ = false;
 }
 
     void
 EmpathConfigIMAP4Dialog::s_OK()
 {
-    // That's it
+    // STUB
     accept();
 }
 
     void
 EmpathConfigIMAP4Dialog::fillInSavedData()
 {
-
+    // STUB
 }
 
     void
 EmpathConfigIMAP4Dialog::s_Cancel()
 {
+    // STUB
     reject();
 }
 
     void
 EmpathConfigIMAP4Dialog::s_Help()
 {
+    // STUB
 }
 
+    void
+EmpathConfigIMAP4Dialog::loadData()
+{
+    // STUB
+}
+
+    void
+EmpathConfigIMAP4Dialog::saveData()
+{
+    // STUB
+}
 
 // vim:ts=4:sw=4:tw=78

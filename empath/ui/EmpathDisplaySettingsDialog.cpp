@@ -49,16 +49,13 @@ EmpathDisplaySettingsDialog::create()
 {
     if (exists_) return;
     exists_ = true;
-    EmpathDisplaySettingsDialog * d = new EmpathDisplaySettingsDialog(0, 0);
-    CHECK_PTR(d);
-    d->show();
+    EmpathDisplaySettingsDialog * d = new EmpathDisplaySettingsDialog;
     d->loadData();
+    d->exec();
 }
         
-EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
-        QWidget * parent,
-        const char * name)
-    :    QDialog(parent, name, false),
+EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
+    :   QDialog(parent, "DisplaySettings", false),
         applied_(false)
 {
     empathDebug("ctor");
@@ -325,16 +322,16 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     
     buttonBox_->layout();
     
-    QObject::connect(pb_OK_,        SIGNAL(clicked()),    SLOT(s_OK()));
-    QObject::connect(pb_default_,    SIGNAL(clicked()),    SLOT(s_default()));
-    QObject::connect(pb_apply_,        SIGNAL(clicked()),    SLOT(s_apply()));
-    QObject::connect(pb_cancel_,    SIGNAL(clicked()),    SLOT(s_cancel()));
-    QObject::connect(pb_help_,        SIGNAL(clicked()),    SLOT(s_help()));
+    QObject::connect(pb_OK_,        SIGNAL(clicked()),  SLOT(s_OK()));
+    QObject::connect(pb_default_,   SIGNAL(clicked()),  SLOT(s_default()));
+    QObject::connect(pb_apply_,     SIGNAL(clicked()),  SLOT(s_apply()));
+    QObject::connect(pb_cancel_,    SIGNAL(clicked()),  SLOT(s_cancel()));
+    QObject::connect(pb_help_,      SIGNAL(clicked()),  SLOT(s_help()));
 /////////////////////////////////////////////////////////////////////////////
 
     // Layouts
     
-    topLevelLayout_                = new QGridLayout(this, 4, 1, 10, 10);
+    topLevelLayout_             = new QGridLayout(this, 4, 1, 10, 10);
     CHECK_PTR(topLevelLayout_);
 
     listGroupLayout_            = new QGridLayout(w_list_, 3, 2, 0, 10);
@@ -381,6 +378,11 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
     resize(minimumSizeHint());
 };
 
+EmpathDisplaySettingsDialog::~EmpathDisplaySettingsDialog()
+{
+    exists_ = false;
+}
+
     void
 EmpathDisplaySettingsDialog::s_chooseFixedFont()
 {
@@ -419,35 +421,27 @@ EmpathDisplaySettingsDialog::loadData()
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
-    QFont font; QColor col;
+    QFont f = KGlobal::fixedFont();
 
-    font = KGlobal::fixedFont();
-    
     l_sampleFixed_->setFont(
-        c->readFontEntry(EmpathConfig::KEY_FIXED_FONT, &font));
+        c->readFontEntry(EmpathConfig::KEY_FIXED_FONT, &f));
     
     cb_underlineLinks_->setChecked(
         c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS, true));
     
-    col = kapp->palette().color(QPalette::Normal, QColorGroup::Base);
+    QColor col = kapp->palette().color(QPalette::Normal, QColorGroup::Text);
     
     kcb_quoteColourOne_->setColor(
         c->readColorEntry(EmpathConfig::KEY_QUOTE_COLOUR_ONE, &col));
     
-    col = kapp->palette().color(QPalette::Normal, QColorGroup::Text);
-    
     kcb_quoteColourTwo_->setColor(
         c->readColorEntry(EmpathConfig::KEY_QUOTE_COLOUR_TWO, &col));
     
-    col = Qt::darkBlue;
-
     kcb_linkColour_->setColor(
-        c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR, &col));
+        c->readColorEntry(EmpathConfig::KEY_LINK_COLOUR, &Qt::darkBlue));
 
-    col = Qt::darkCyan;
-    
     kcb_visitedLinkColour_->setColor(
-        c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR, &col));
+        c->readColorEntry(EmpathConfig::KEY_VISITED_LINK_COLOUR, &Qt::darkCyan));
     
     cb_threadMessages_->setChecked(
         c->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES, true));
@@ -523,13 +517,6 @@ EmpathDisplaySettingsDialog::s_cancel()
 {
     if (!applied_)
         KGlobal::config()->rollback(true);
-    delete this;
-}
-
-    void
-EmpathDisplaySettingsDialog::closeEvent(QCloseEvent * e)
-{
-    e->accept();
     delete this;
 }
 

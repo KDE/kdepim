@@ -56,11 +56,11 @@ class EmpathDisplaySettingsDialog : public QDialog
     public:
         
         static void create();
-        ~EmpathDisplaySettingsDialog() { empathDebug("dtor"); exists_ = false; }
+        ~EmpathDisplaySettingsDialog();
 
         void saveData();
         void loadData();
-        void closeEvent(QCloseEvent *);
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
 
     protected slots:
         
@@ -74,7 +74,7 @@ class EmpathDisplaySettingsDialog : public QDialog
 
     private:
 
-        EmpathDisplaySettingsDialog(QWidget * parent = 0, const char * name = 0);
+        EmpathDisplaySettingsDialog(QWidget * = 0);
 
         QButtonGroup    * buttonGroup_;
 

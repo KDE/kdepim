@@ -53,8 +53,6 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
     :   KHTMLWidget(_parent, _name),
         busy_(false)
 {
-    empathDebug("ctor");
-
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
     QString iconSet = c->readEntry(EmpathConfig::KEY_ICON_SET);
@@ -82,14 +80,11 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 
 EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
 {
-    empathDebug("dtor");
 }
 
     bool
 EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
 {
-    empathDebug("");
-    
     if (busy_) return false;
     busy_ = true;
 

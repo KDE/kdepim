@@ -26,22 +26,20 @@
 #define EMPATHFOLDERCHOOSERWIDGET_H
 
 // Qt includes
-#include <qlabel.h>
+#include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qwidget.h>
-#include <qlayout.h>
-#include <qframe.h>
+#include <qhbox.h>
 
 // Local includes
 #include "EmpathURL.h"
 
-class EmpathFolderChooserWidget : public QFrame
+class EmpathFolderChooserWidget : public QHBox
 {
     Q_OBJECT
     
     public:
     
-        EmpathFolderChooserWidget(QWidget * parent, const char * name);
+        EmpathFolderChooserWidget(QWidget * parent = 0);
         virtual ~EmpathFolderChooserWidget();
 
         EmpathURL selectedURL() const;
@@ -55,9 +53,8 @@ class EmpathFolderChooserWidget : public QFrame
     
     private:
 
-        QLabel        * l_folderName_;
-        QPushButton    * pb_selectFolder_;
-        QGridLayout    * layout_;
+        QLineEdit   * le_folderName_;
+        QPushButton * pb_selectFolder_;
 
         EmpathURL    url_;
 };

@@ -58,12 +58,12 @@ class EmpathFilterList : public QList<EmpathFilter>
          * Load settings.
          * Called by Empath on startup.
          */
-        void load();
+        void loadConfig();
         /**
          * Save settings.
          * Called by Empath on startup.
          */
-        void save();
+        void saveConfig();
         
         /**
          * Filter the given message.

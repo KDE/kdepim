@@ -26,16 +26,15 @@
 #define EMPATHHEADERSPECWIDGET_H
 
 // Qt includes
-#include <qwidget.h>
+#include <qhbox.h>
 #include <qstring.h>
-#include <qlayout.h>
 #include <qlineedit.h>
 #include <qlabel.h>
 
 // Local includes
 #include "EmpathDefines.h"
 
-class EmpathHeaderSpecWidget : public QWidget
+class EmpathHeaderSpecWidget : public QHBox
 {
     Q_OBJECT
 
@@ -48,19 +47,19 @@ class EmpathHeaderSpecWidget : public QWidget
 
         ~EmpathHeaderSpecWidget();
 
-        int            sizeOfColumnOne();
+        int         sizeOfColumnOne();
         void        setColumnOneSize(int);
 
-        QString        header();
-        QString        headerName();
-        QString        headerBody();
+        QString     header();
+        QString     headerName();
+        QString     headerBody();
         void        setHeaderName(const QString & headerName);
         void        setHeaderBody(const QString & headerBody);
 
     private:
 
-        QLabel        * headerNameWidget_;
-        QWidget        * headerBodyWidget_;
+        QLabel      * headerNameWidget_;
+        QWidget     * headerBodyWidget_;
         
         QString headerName_;
         QString headerBody_;

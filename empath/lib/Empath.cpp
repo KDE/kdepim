@@ -46,7 +46,6 @@
 #include "Empath.h"
 #include "EmpathMailboxList.h"
 #include "EmpathIndexRecord.h"
-#include "EmpathMessageList.h"
 #include "EmpathMailSenderSendmail.h"
 #include "EmpathMailSenderQmail.h"
 #include "EmpathMailSenderSMTP.h"
@@ -62,19 +61,13 @@ Empath::start()
 {
     if (!started_) {
         started_ = true;
-        new Empath;
+        (void)new Empath;
     }
 }
         
     void
 Empath::shutdown()
 {
-    empathDebug("dtor");
-
-    filterList_.save();
-    mailboxList_.saveConfig();
-    KGlobal::config()->sync();
-
     delete mailSender_;
     mailSender_ = 0;
 
@@ -95,12 +88,16 @@ Empath::init()
 {
     processID_ = getpid();
     pidStr_.setNum(processID_);
+    
     _saveHostName();
     _setStartTime();
-    mailboxList_.init();
-    filterList_.load();
+    
+    mailboxList_.loadConfig();
+    filterList_.loadConfig();
+    
     KConfig * c = KGlobal::config();
     c->setGroup("Identity");
+    
     QString userName = c->readEntry(EmpathConfig::KEY_NAME);
     if (!userName)
         emit(setupWizard());
@@ -113,7 +110,7 @@ Empath::~Empath()
     void
 Empath::s_saveConfig()
 {
-    filterList_.save();
+    filterList_.saveConfig();
     mailboxList_.saveConfig();
     KGlobal::config()->sync();
 }
@@ -154,7 +151,7 @@ Empath::updateOutgoingServer()
 
     CHECK_PTR(mailSender_);
 
-    mailSender_->readConfig();
+    mailSender_->loadConfig();
 }
 
     RMM::RMessage *
@@ -181,14 +178,7 @@ Empath::message(const EmpathURL & source)
     EmpathMailbox *
 Empath::mailbox(const EmpathURL & url)
 {
-    EmpathMailboxListIterator it(mailboxList_);
-    
-    for (; it.current(); ++it)
-        if (it.current()->name() == url.mailboxName())
-            return it.current();
-    
-    empathDebug("Can't find mailbox " + url.mailboxName());
-    return 0;
+    return mailboxList_[url.mailboxName()];
 }
 
     EmpathFolder *
@@ -248,7 +238,7 @@ Empath::write(const EmpathURL & url, RMM::RMessage & msg, QString xinfo)
     
     if (m == 0) {
         emit(writeComplete(false, url, xinfo));
-        return EmpathURL("");
+        return EmpathURL();
     }
     return m->write(url, msg, QString::null, xinfo);
 }
@@ -601,6 +591,10 @@ Empath::s_bounce(const EmpathURL & url)
     void
 Empath::s_infoMessage(const QString & s)
 { emit(infoMessage(s)); }
+
+    void
+Empath::s_configureMailbox(const EmpathURL & u, QWidget * w)
+{ emit(configureMailbox(u, w)); }
 
 
 // vim:ts=4:sw=4:tw=78

@@ -98,9 +98,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
     
     l_queueFolder_->setFixedHeight(h);
     
-    fcw_queueFolder_ =
-        new EmpathFolderChooserWidget(w_queuing_, "fcw_queueFolder");
-    CHECK_PTR(fcw_queueFolder_);
+    fcw_queueFolder_ = new EmpathFolderChooserWidget(w_queuing_);
     
     // Sent mail
     
@@ -110,9 +108,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
     
     l_sentFolder_->setFixedHeight(h);
     
-    fcw_sentFolder_ =
-        new EmpathFolderChooserWidget(w_queuing_, "fcw_sentFolder");
-    CHECK_PTR(fcw_sentFolder_);
+    fcw_sentFolder_ = new EmpathFolderChooserWidget(w_queuing_);
     
     // Server
 
@@ -322,9 +318,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
     cb_copyOther_->setFixedHeight(h);
     cb_copyOther_->setMinimumWidth(cb_copyOther_->sizeHint().width());
 
-    asw_copyOther_    =
-        new EmpathAddressSelectionWidget(w_copies_, "asw_copyOther");
-    CHECK_PTR(asw_copyOther_);
+    asw_copyOther_    = new EmpathAddressSelectionWidget(w_copies_);
     
     QWhatsThis::add(asw_copyOther_, i18n(
             "If you choose this option, all outgoing messages\n"
@@ -440,6 +434,11 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
     empathDebug("Done layout");
 }
 
+EmpathSendingSettingsDialog::~EmpathSendingSettingsDialog()
+{
+    exists_ = false;
+}
+
     void
 EmpathSendingSettingsDialog::saveData()
 {
@@ -462,7 +461,7 @@ EmpathSendingSettingsDialog::saveData()
     CWE(KEY_SMTP_SERVER_LOCATION,   le_smtpServer_->text());
     CWE(KEY_SMTP_SERVER_PORT,       sb_smtpPort_->value());
     CWE(KEY_CC_OTHER,               cb_copyOther_->isChecked());
-    CWE(KEY_CC_OTHER_ADDRESS,       asw_copyOther_->selectedAddress());
+    CWE(KEY_CC_OTHER_ADDRESS,       asw_copyOther_->text());
     CWE(KEY_QUEUE_FOLDER,           fcw_queueFolder_->selectedURL().asString());
     CWE(KEY_SENT_FOLDER,            fcw_sentFolder_->selectedURL().asString());
     
@@ -492,9 +491,9 @@ EmpathSendingSettingsDialog::loadData()
     le_smtpServer_  ->setText       (c->readEntry   (KEY_SMTP_SERVER_LOCATION));
     sb_smtpPort_    ->setValue      (c->readNumEntry    (KEY_SMTP_SERVER_PORT));
     cb_copyOther_   ->setChecked    (c->readBoolEntry   (KEY_CC_OTHER));
-    asw_copyOther_  ->setAddress    (c->readEntry   (KEY_CC_OTHER_ADDRESS));
-    fcw_queueFolder_->setURL        (c->readEntry   (KEY_QUEUE_FOLDER));
-    fcw_sentFolder_ ->setURL        (c->readEntry   (KEY_SENT_FOLDER));
+    asw_copyOther_  ->setText       (c->readEntry       (KEY_CC_OTHER_ADDRESS));
+    fcw_queueFolder_->setURL        (c->readEntry       (KEY_QUEUE_FOLDER));
+    fcw_sentFolder_ ->setURL        (c->readEntry       (KEY_SENT_FOLDER));
     
     empath->updateOutgoingServer();
 }
@@ -550,13 +549,6 @@ EmpathSendingSettingsDialog::s_cancel()
 {
     if (!applied_)
         KGlobal::config()->rollback(true);
-    delete this;
-}
-
-    void
-EmpathSendingSettingsDialog::closeEvent(QCloseEvent * e)
-{
-    e->accept();
     delete this;
 }
 

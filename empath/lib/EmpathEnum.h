@@ -55,6 +55,14 @@ enum ComposeType {
     ComposeBounce
 };
 
+enum MessagePriority {
+    Highest,
+    High,
+    Normal,
+    Low,
+    Lowest
+};
+
 #endif
 
 // vim:ts=4:sw=4:tw=78

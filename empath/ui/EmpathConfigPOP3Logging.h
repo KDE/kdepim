@@ -27,18 +27,16 @@
 
 // Qt includes
 #include <qwidget.h>
-#include <qlabel.h>
-#include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qradiobutton.h>
-#include <qlayout.h>
 #include <qcheckbox.h>
 #include <qspinbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
 class EmpathMailboxPOP3;
+class EmpathFileSelectWidget;
 
 /**
  * Configure what happens during a pop3 transaction wrt logging.
@@ -50,11 +48,9 @@ class EmpathConfigPOP3Logging : public QWidget
 
     public:
         
-        EmpathConfigPOP3Logging(QWidget * parent = 0, const char * name = 0);
+        EmpathConfigPOP3Logging(const EmpathURL &, QWidget * = 0);
         
         ~EmpathConfigPOP3Logging();
-        
-        void setMailbox(EmpathMailboxPOP3 * mailbox);
         
         void loadData();
         void saveData();
@@ -62,23 +58,17 @@ class EmpathConfigPOP3Logging : public QWidget
     protected slots:
 
         void    s_viewLog();
-        void    s_chooseLogFile();
 
     private:
 
-        EmpathMailboxPOP3    * mailbox_;
+        EmpathURL url_;
 
-        QCheckBox        * cb_logConversation_;
-        QCheckBox        * cb_appendToLog_;
-        QLabel            * l_logFile_;
-        QLineEdit        * le_logFile_;
-        QPushButton        * pb_browseLogFile_;
-        QPushButton        * pb_viewCurrentLog_;
-        QLabel            * l_maxLogFileSize_;
-        QSpinBox        * sb_maxLogFileSize_;
-        QLabel            * l_logFileKb_;
-        
-        QGridLayout        * topLevelLayout_;
+        QCheckBox   * cb_logConversation_;
+        QCheckBox   * cb_appendToLog_;
+        QPushButton * pb_viewCurrentLog_;
+        QSpinBox    * sb_maxLogFileSize_;
+
+        EmpathFileSelectWidget * efsw_logFile_;
 };
 #endif
 // vim:ts=4:sw=4:tw=78

@@ -35,20 +35,13 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
         QWidget * parent,
         const char * name)
     :
-        QWidget(parent, name),
+        QHBox(parent, "HeaderSpecWidget"),
         headerName_(headerName),
         headerBody_(headerBody)
 {
-    empathDebug("ctor");
+    headerNameWidget_ = new QLabel(this);
     
-    QGridLayout * layout_    
-        = new QGridLayout(this, 1, 2, 0, 4);
-    CHECK_PTR(layout_);
-    
-    headerNameWidget_    = new QLabel(this, "headerNameWidget");
-    CHECK_PTR(headerNameWidget_);
-    
-    headerNameWidget_->setText(headerName_ + ":");
+    setHeaderName(headerName_);
     
     address_ = false;
 
@@ -62,55 +55,44 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
 
     if (address_) {
 
-        headerBodyWidget_    =
-            new EmpathAddressSelectionWidget(this, "headerNameWidget");
-        CHECK_PTR(headerBodyWidget_);
+        headerBodyWidget_ =
+            new EmpathAddressSelectionWidget(this);
         
         ((EmpathAddressSelectionWidget *)headerBodyWidget_)->
             setText(headerBody_);
     
     } else {
 
-        headerBodyWidget_    = new QLineEdit(this, "headerNameWidget");
-        CHECK_PTR(headerBodyWidget_);
+        headerBodyWidget_ = new QLineEdit(this, "headerNameWidget");
         ((QLineEdit *)headerBodyWidget_)->setText(headerBody_);
     }
     
-    
-    layout_->addWidget(headerNameWidget_, 0, 0);
-    layout_->addWidget(headerBodyWidget_, 0, 1);
-
-    layout_->activate();
-    
     headerBodyWidget_->setFocus();
-    
-    setFixedHeight(headerBodyWidget_->minimumSizeHint().height());
 }
 
 EmpathHeaderSpecWidget::~EmpathHeaderSpecWidget()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
 EmpathHeaderSpecWidget::setHeaderName(const QString & headerName)
 {
     headerName_ = headerName;
-    headerNameWidget_->setText(headerName_);
+    headerNameWidget_->setText(headerName_ + ":");
 }
 
     QString
 EmpathHeaderSpecWidget::header()
 {
-//    return (headerNameWidget_->text() + " " + headerBodyWidget_->text());
-    return QString::null;
+    return (headerName() + ": " + headerBody());
 }
 
     void
 EmpathHeaderSpecWidget::setHeaderBody(const QString & headerBody)
 {
-    empathDebug("setHeaderBody(" + headerBody + ")");
     headerBody_ = headerBody;
+    
     if (address_)
         ((EmpathAddressSelectionWidget *)headerBodyWidget_)->
             setText(headerBody_);
@@ -133,7 +115,9 @@ EmpathHeaderSpecWidget::setColumnOneSize(int i)
     QString
 EmpathHeaderSpecWidget::headerName()
 {
-    return headerNameWidget_->text();
+    QString s = headerNameWidget_->text();
+    s.truncate(s.length() - 1); // Remove trailing ':'
+    return s;
 }
 
     QString

@@ -22,10 +22,6 @@
 # pragma implementation "EmpathComposeSettingsDialog.h"
 #endif
 
-#ifdef __GNUG__
-# pragma implementation ""
-#endif
-
 #include <qwhatsthis.h>
 
 // KDE includes
@@ -398,6 +394,11 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
     resize(minimumSizeHint());
 }
 
+EmpathComposeSettingsDialog::~EmpathComposeSettingsDialog()
+{
+   exists_ = false;
+}
+
     void
 EmpathComposeSettingsDialog::saveData()
 {
@@ -529,13 +530,6 @@ EmpathComposeSettingsDialog::s_cancel()
 {
     if (!applied_)
         KGlobal::config()->rollback(true);
-    delete this;
-}
-
-    void
-EmpathComposeSettingsDialog::closeEvent(QCloseEvent * e)
-{
-    e->accept();
     delete this;
 }
 

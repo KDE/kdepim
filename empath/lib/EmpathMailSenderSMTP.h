@@ -36,7 +36,6 @@
 // Local includes
 #include "RMM_Message.h"
 #include "EmpathDefines.h"
-#include "EmpathMessageList.h"
 #include "EmpathMailSender.h"
 
 /**
@@ -67,7 +66,7 @@ class EmpathMailSenderSMTP : public EmpathMailSender
         void sendOne(RMM::RMessage & message, const QString & id);
         
         virtual void saveConfig();
-        virtual void readConfig();
+        virtual void loadConfig();
         
     protected:
         

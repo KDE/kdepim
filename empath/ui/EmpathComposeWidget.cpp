@@ -50,39 +50,39 @@
 #include <RMM_Token.h>
 
 EmpathComposeWidget::EmpathComposeWidget(
-        QWidget *            parent,
-        const char *        name)
+        QWidget     * parent,
+        const char  * name)
     :
         QWidget(parent, name),
         url_("")
 {
-    empathDebug("ctor");
+    // Empty.
 }
 
 EmpathComposeWidget::EmpathComposeWidget(
-        Empath::ComposeType    t,
-        const EmpathURL &    m,
-        QWidget *            parent,
-        const char *        name)
+        Empath::ComposeType t,
+        const EmpathURL     & m,
+        QWidget             * parent,
+        const char          * name)
     :
         QWidget(parent, name),
         composeType_(t),
         url_(m)
 {
-    empathDebug("ctor");
+    // Empty.
 }
 
 EmpathComposeWidget::EmpathComposeWidget(
-        const QString &        recipient,
-        QWidget *            parent,
-        const char *        name)
+        const QString   & recipient,
+        QWidget         * parent,
+        const char      * name)
     :
         QWidget(parent, name),
         composeType_(Empath::ComposeNormal),
         url_(""),
         recipient_(recipient)
 {
-    empathDebug("ctor");
+    // Empty.
 }
 
     void
@@ -91,59 +91,46 @@ EmpathComposeWidget::_init()
     maxSizeColOne_ = 0;
     invisibleHeaders_.setAutoDelete(true);
    
-    // Create widgets.
-    attachmentWidget_ =
-        new EmpathAttachmentListWidget(this);
+    attachmentWidget_ = new EmpathAttachmentListWidget(this);
     
-    l_priority_ = new QLabel(i18n("Priority:"), this, "l_priority_");
-    CHECK_PTR(l_priority_);
-
-    cmb_priority_ = new QComboBox(this, "cmb_priority_");
-    CHECK_PTR(cmb_priority_);
-
-    cmb_priority_->insertItem("Highest");
-    cmb_priority_->insertItem("High");
-    cmb_priority_->insertItem("Normal");
-    cmb_priority_->insertItem("Low");
-    cmb_priority_->insertItem("Lowest");
-
-    cmb_priority_->setFixedWidth(cmb_priority_->sizeHint().width());
-    cmb_priority_->setCurrentItem(2);
-
     editorWidget_ = new QMultiLineEdit(this, "editorWidget");
-    CHECK_PTR(editorWidget_);
     
-//    editorWidget_->setFillColumnMode(76, true);
-//    editorWidget_->setWordWrap(true);
+    KConfig * c = KGlobal::config();
+    
+    c->setGroup(EmpathConfig::GROUP_COMPOSE);
+    
+    // If user wants us to wrap lines at a specific value, we can do that
+    // in the editor to their specified width. This should give the user
+    // a good idea of what their text will look like on the other end.
+    //
+    // If the user doesn't want us to wrap, we'll wrap text dynamically
+    // in the editor anyway to make editing easier. We must not wrap the
+    // actual text we send though.
 
+    if (!c->readBoolEntry(EmpathConfig::KEY_WRAP_LINES, true))
+        editorWidget_->setWordWrap(QMultiLineEdit::DynamicWrap);
+    
+    else {
+        
+        editorWidget_->setWordWrap(QMultiLineEdit::FixedColumnWrap);
+        editorWidget_->setWrapColumnOrWidth(
+            c->readUnsignedNumEntry(EmpathConfig::KEY_WRAP_COLUMN, 76));
+    }
+        
     KGlobal::config()->setGroup(EmpathConfig::GROUP_DISPLAY);
     editorWidget_->setFont(
         KGlobal::config()->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
  
     // Layouts.
-    QVBoxLayout     *layout_            = new QVBoxLayout(this, 4);
-    QHBoxLayout     *topLayout_         = new QHBoxLayout(this, 4);
-    headerLayout_                       = new QVBoxLayout(this, 4);
-    QVBoxLayout     *extraLayout_       = new QVBoxLayout(this, 4);
-    QHBoxLayout     *priorityLayout_    = new QHBoxLayout(this, 4);
-    
-    layout_     ->addLayout(topLayout_,     0);
-    layout_     ->addWidget(editorWidget_,  9);
-    
-    topLayout_  ->addLayout(headerLayout_,  9);
-    topLayout_  ->addLayout(extraLayout_,   2); 
+    QVBoxLayout * layout    = new QVBoxLayout(this, 4);
+    QHBoxLayout * topLayout = new QHBoxLayout;
+    headerLayout_           = new QVBoxLayout;
 
-    extraLayout_->addWidget(attachmentWidget_);
-    extraLayout_->addLayout(priorityLayout_);
+    topLayout->addLayout(headerLayout_,     1);
+    topLayout->addWidget(attachmentWidget_, 0);
 
-    priorityLayout_->addWidget(l_priority_,     0, AlignRight);
-    priorityLayout_->addWidget(cmb_priority_,   0, AlignRight);
- 
-    layout_->activate();
-    topLayout_->activate();
-    headerLayout_->activate();
-    extraLayout_->activate();
-    priorityLayout_->activate();
+    layout->addLayout(topLayout,    0);
+    layout->addWidget(editorWidget_,1);
 
     _addHeader("To");
     _addHeader("Cc");
@@ -155,10 +142,10 @@ EmpathComposeWidget::_init()
 
     switch (composeType_) {
 
-        case Empath::ComposeReply:        _reply();        break; 
-        case Empath::ComposeReplyAll:    _reply(true);    break; 
-        case Empath::ComposeForward:    _forward();        break; 
-        case Empath::ComposeNormal:        default:        break;
+        case Empath::ComposeReply:      _reply();       break; 
+        case Empath::ComposeReplyAll:   _reply(true);   break; 
+        case Empath::ComposeForward:    _forward();     break; 
+        case Empath::ComposeNormal:      default:       break;
     }
     
     if (composeType_ == Empath::ComposeForward) {
@@ -432,9 +419,7 @@ EmpathComposeWidget::_addExtraHeaders()
     void
 EmpathComposeWidget::_addHeader(const QString & n, const QString & b)
 {
-    EmpathHeaderSpecWidget * newHsw =
-        new EmpathHeaderSpecWidget(n, b, this);
-    CHECK_PTR(newHsw);
+    EmpathHeaderSpecWidget * newHsw = new EmpathHeaderSpecWidget(n, b, this);
     
     newHsw->show();
 
@@ -443,8 +428,6 @@ EmpathComposeWidget::_addHeader(const QString & n, const QString & b)
     headerSpecList_.append(newHsw);
         
     maxSizeColOne_ = QMAX(newHsw->sizeOfColumnOne(), maxSizeColOne_);
-    
-    headerLayout_->activate();
 }
 
     void

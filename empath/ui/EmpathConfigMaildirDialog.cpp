@@ -22,8 +22,13 @@
 # pragma implementation "EmpathConfigMaildirDialog.h"
 #endif
 
+// System includes
+#include <stdlib.h>
+
+// Qt includes
+#include <qlayout.h>
+
 // KDE includes
-#include <kfiledialog.h>
 #include <klocale.h>
 #include <kapp.h>
 #include <kglobal.h>
@@ -31,145 +36,100 @@
 
 // Local includes
 #include "EmpathConfigMaildirDialog.h"
+#include "EmpathPathSelectWidget.h"
 #include "EmpathMailboxMaildir.h"
 #include "RikGroupBox.h"
 #include "EmpathUIUtils.h"
+#include "Empath.h"
+ 
+bool EmpathConfigMaildirDialog::exists_ = false;
+
+    void
+EmpathConfigMaildirDialog::create(const EmpathURL & url, QWidget * parent)
+{
+    if (exists_) return;
+    exists_ = true;
+    EmpathConfigMaildirDialog * d = new EmpathConfigMaildirDialog(url, parent);
+    d->loadData();
+    d->exec();
+}
         
-EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
-        EmpathMailboxMaildir * mailbox,
-        QWidget * parent,
-        const char * name)
-    :    QDialog(parent, name, true),
-        mailbox_(mailbox),
+EmpathConfigMaildirDialog::EmpathConfigMaildirDialog
+        (const EmpathURL & url, QWidget * parent)
+    :   QDialog(parent, "EmpathConfigMaildirDialog", true),
+        url_(url),
         applied_(false)
 {
-    empathDebug("ctor");
-    
-    setCaption(i18n("Settings for mailbox") + " \"" + mailbox->name());
+    setCaption(i18n("Configuring mailbox") + " " + url_.mailboxName());
 
-    rgb_server_                = new RikGroupBox(i18n("Server"), 8, this,
-            "rgb_server");
-    CHECK_PTR(rgb_server_);
-    
-    w_server_                = new QWidget(rgb_server_, "w_server");
-    CHECK_PTR(w_server_);
-    
-    rgb_server_->setWidget(w_server_);
+    EmpathMailbox * mailbox = empath->mailbox(url);
 
-    QLineEdit    tempLineEdit((QWidget *)0);
-    Q_UINT32 h    = tempLineEdit.sizeHint().height();
+    if (mailbox == 0)
+        return;
 
-    // Main group
-    
-        
-    l_mailboxPath_    =
-        new QLabel(i18n("Mailbox location"), w_server_, "l_mailboxPath");
-    CHECK_PTR(l_mailboxPath_);
-    
-    le_mailboxPath_ = new QLineEdit(w_server_, "le_mailboxPath");
-    CHECK_PTR(le_mailboxPath_);
-    le_mailboxPath_->setFixedHeight(h);
-    
-    pb_browseMailboxPath_ =
-        new QPushButton(w_server_, "pb_browseMailboxPath");
-    CHECK_PTR(pb_browseMailboxPath_);
-    pb_browseMailboxPath_->setPixmap(empathIcon("browse"));
-    
-    pb_browseMailboxPath_->setFixedWidth(pb_browseMailboxPath_->sizeHint().height());
-    pb_browseMailboxPath_->setFixedHeight(pb_browseMailboxPath_->sizeHint().height());
+    if (mailbox->type() != EmpathMailbox::Maildir) {
+        empathDebug("Not EmpathMaildirMailbox !")
+        return;
+    }
 
-    QObject::connect(pb_browseMailboxPath_, SIGNAL(clicked()),
-            this, SLOT(s_browseMailboxPath()));
-
-    cb_mailCheckInterval_    =
+    EmpathMailboxMaildir * m = (EmpathMailboxMaildir *)mailbox;
+    
+    l_mailboxPath_  =
+        new QLabel(i18n("Location"), this, "l_mailboxPath");
+    
+    edsw_mailboxPath_ = new EmpathDirSelectWidget("", this);
+    
+    cb_mailCheckInterval_ =
         new QCheckBox(i18n("Check for new mail at interval (in minutes):"),
-                w_server_, "cb_mailCheckInterval");
-    CHECK_PTR(cb_mailCheckInterval_);
+                this, "cb_mailCheckInterval");
 
-    cb_mailCheckInterval_->setFixedHeight(h);
-    
-    sb_mailCheckInterval_    =
-        new QSpinBox(1, 240, 1, w_server_, "sb_mailCheckInterval");
-    CHECK_PTR(sb_mailCheckInterval_);
-    
-    sb_mailCheckInterval_->setFixedHeight(h);
+    sb_mailCheckInterval_ =
+        new QSpinBox(1, 240, 1, this, "sb_mailCheckInterval");
 
     QObject::connect(cb_mailCheckInterval_, SIGNAL(toggled(bool)),
             sb_mailCheckInterval_, SLOT(setEnabled(bool)));
 
-///////////////////////////////////////////////////////////////////////////////
-// Button box
-
-    buttonBox_    = new KButtonBox(this);
-    CHECK_PTR(buttonBox_);
-
-    buttonBox_->setFixedHeight(h);
+    KButtonBox * buttonBox  = new KButtonBox(this);
     
-    pb_help_    = buttonBox_->addButton(i18n("&Help"));    
-    CHECK_PTR(pb_help_);
+    pb_help_    = buttonBox->addButton(i18n("&Help"));    
+    pb_default_ = buttonBox->addButton(i18n("&Default"));    
     
-    pb_default_    = buttonBox_->addButton(i18n("&Default"));    
-    CHECK_PTR(pb_default_);
+    buttonBox->addStretch();
     
-    buttonBox_->addStretch();
-    
-    pb_OK_        = buttonBox_->addButton(i18n("&OK"));
-    CHECK_PTR(pb_OK_);
+    pb_OK_      = buttonBox->addButton(i18n("&OK"));
     
     pb_OK_->setDefault(true);
     
-    pb_apply_    = buttonBox_->addButton(i18n("&Apply"));
-    CHECK_PTR(pb_apply_);
+    pb_apply_   = buttonBox->addButton(i18n("&Apply"));
+    pb_cancel_  = buttonBox->addButton(i18n("&Cancel"));
     
-    pb_cancel_    = buttonBox_->addButton(i18n("&Cancel"));
-    CHECK_PTR(pb_cancel_);
+    buttonBox->layout();
     
-    buttonBox_->layout();
+    QObject::connect(pb_OK_,        SIGNAL(clicked()),  SLOT(s_OK()));
+    QObject::connect(pb_default_,   SIGNAL(clicked()),  SLOT(s_default()));
+    QObject::connect(pb_apply_,     SIGNAL(clicked()),  SLOT(s_apply()));
+    QObject::connect(pb_cancel_,    SIGNAL(clicked()),  SLOT(s_cancel()));
+    QObject::connect(pb_help_,      SIGNAL(clicked()),  SLOT(s_help()));
+ 
+    QVBoxLayout * v     = new QVBoxLayout(this, 10, 10);
     
-    QObject::connect(pb_OK_,        SIGNAL(clicked()),    SLOT(s_OK()));
-    QObject::connect(pb_default_,    SIGNAL(clicked()),    SLOT(s_default()));
-    QObject::connect(pb_apply_,        SIGNAL(clicked()),    SLOT(s_apply()));
-    QObject::connect(pb_cancel_,    SIGNAL(clicked()),    SLOT(s_cancel()));
-    QObject::connect(pb_help_,        SIGNAL(clicked()),    SLOT(s_help()));
-/////////////////////////////////////////////////////////////////////////////
+    QHBoxLayout * b     = new QHBoxLayout(v);
+    b->addWidget(l_mailboxPath_);
+    b->addWidget(edsw_mailboxPath_);
+    
+    QHBoxLayout * b2    = new QHBoxLayout(v);
+    b2->addWidget(cb_mailCheckInterval_);
+    b2->addWidget(sb_mailCheckInterval_);
 
-
-    // Layouts
-    
-    topLevelLayout_            = new QGridLayout(this, 2, 1, 10, 10);
-    CHECK_PTR(topLevelLayout_);
-    
-    // Main layout of widget's main groupbox
-    serverGroupLayout_        = new QGridLayout(w_server_,    2, 3, 0, 10);
-    CHECK_PTR(serverGroupLayout_);
-    
-    serverGroupLayout_->setRowStretch(0, 0);
-    serverGroupLayout_->setRowStretch(1, 0);
-
-    serverGroupLayout_->addWidget(l_mailboxPath_,                    0, 0);
-    serverGroupLayout_->addWidget(le_mailboxPath_,                    0, 1);
-    serverGroupLayout_->addWidget(pb_browseMailboxPath_,            0, 2);
-    serverGroupLayout_->addMultiCellWidget(cb_mailCheckInterval_,    1, 1, 0, 1);
-    serverGroupLayout_->addWidget(sb_mailCheckInterval_,            1, 2);
-
-    topLevelLayout_->addWidget(rgb_server_,    0, 0);
-    topLevelLayout_->addWidget(buttonBox_,    1, 0);
-
-    serverGroupLayout_->setColStretch(0, 6);
-    serverGroupLayout_->setColStretch(1, 6);
-    serverGroupLayout_->setColStretch(2, 2);
-    
-    serverGroupLayout_->setRowStretch(0, 7);
-    serverGroupLayout_->setRowStretch(1, 1);
-    
-    serverGroupLayout_->activate();
-    topLevelLayout_->activate();
-    
-    rgb_server_->setMinimumSize(rgb_server_->minimumSizeHint());
-    setMinimumSize(minimumSizeHint());
-    resize(minimumSizeHint());
+    v->addWidget(buttonBox);
     
     loadData();
+}
+
+EmpathConfigMaildirDialog::~EmpathConfigMaildirDialog()
+{
+    empathDebug("");
+    exists_ = false;
 }
 
     void
@@ -178,29 +138,56 @@ EmpathConfigMaildirDialog::s_OK()
     hide();
     if (!applied_)
         s_apply();
+
+    empathDebug("Syncing config");
     KGlobal::config()->sync();
 
     // That's it
     accept();
+    delete this;
 }
 
     void
 EmpathConfigMaildirDialog::saveData()
 {
-    ASSERT(mailbox_ != 0);
-    mailbox_->setPath(le_mailboxPath_->text());
-    mailbox_->setCheckMail(cb_mailCheckInterval_->isChecked());
-    mailbox_->setCheckMailInterval(sb_mailCheckInterval_->value());
+    EmpathMailbox * mailbox = empath->mailbox(url_);
+
+    if (mailbox == 0)
+        return;
+
+    if (mailbox->type() != EmpathMailbox::Maildir) {
+        empathDebug("Not EmpathMaildirMailbox !")
+        return;
+    }
+
+    EmpathMailboxMaildir * m = (EmpathMailboxMaildir *)mailbox;
+
+    m->setPath              (edsw_mailboxPath_->selected());
+    m->setCheckMail         (cb_mailCheckInterval_->isChecked());
+    m->setCheckMailInterval (sb_mailCheckInterval_->value());
+
+    m->saveConfig();
 }
 
     void
 EmpathConfigMaildirDialog::loadData()
 {
-    ASSERT(mailbox_ != 0);
-    le_mailboxPath_->setText(mailbox_->path());
-    cb_mailCheckInterval_->setChecked(mailbox_->checkMail());
-    sb_mailCheckInterval_->setValue(mailbox_->checkMailInterval());
-    sb_mailCheckInterval_->setEnabled(mailbox_->checkMail());
+    EmpathMailbox * mailbox = empath->mailbox(url_);
+
+    if (mailbox == 0)
+        return;
+
+    if (mailbox->type() != EmpathMailbox::Maildir) {
+        empathDebug("Not EmpathMaildirMailbox !")
+        return;
+    }
+
+    EmpathMailboxMaildir * m = (EmpathMailboxMaildir *)mailbox;
+
+    edsw_mailboxPath_       ->setPath       (m->path());
+    cb_mailCheckInterval_   ->setChecked    (m->checkMail());
+    sb_mailCheckInterval_   ->setValue      (m->checkMailInterval());
+    sb_mailCheckInterval_   ->setEnabled    (m->checkMail());
 }
 
     void
@@ -209,6 +196,7 @@ EmpathConfigMaildirDialog::s_cancel()
     if (!applied_)
         KGlobal::config()->rollback(true);
     reject();
+    delete this;
 }
 
     void
@@ -231,7 +219,7 @@ EmpathConfigMaildirDialog::s_apply()
     void
 EmpathConfigMaildirDialog::s_default()
 {
-    le_mailboxPath_->setText("");
+    edsw_mailboxPath_->setPath(QString::null);
     cb_mailCheckInterval_->setChecked(true);
     sb_mailCheckInterval_->setValue(1);
 }
@@ -240,15 +228,6 @@ EmpathConfigMaildirDialog::s_default()
 EmpathConfigMaildirDialog::s_help()
 {
     //empathInvokeHelp(QString::null, QString::null);
-}
-
-    void
-EmpathConfigMaildirDialog::s_browseMailboxPath()
-{
-    QString temp_path =
-        KFileDialog::getOpenFileName(QString::null, "*", this, "getPath");
-
-    if (temp_path.length() != 0) le_mailboxPath_->setText(temp_path);
 }
 
 // vim:ts=4:sw=4:tw=78

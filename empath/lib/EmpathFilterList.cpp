@@ -34,20 +34,17 @@
 
 EmpathFilterList::EmpathFilterList()
 { 
-    empathDebug("ctor");
+    // Empty.
 }
 
 EmpathFilterList::~EmpathFilterList()
 { 
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
-EmpathFilterList::save()
+EmpathFilterList::saveConfig()
 {
-    empathDebug("save() called");
-    
-    empathDebug("There are " + QString().setNum(count()) + " filters to save");
     EmpathFilterListIterator it(*this);
     
     QStrList list;
@@ -57,7 +54,6 @@ EmpathFilterList::save()
         list.append(it.current()->name().ascii());
     }
     
-    empathDebug("Saving number of filters");
     KConfig * config = KGlobal::config();
     config->setGroup(EmpathConfig::GROUP_GENERAL);
     
@@ -65,10 +61,8 @@ EmpathFilterList::save()
 }
 
     void
-EmpathFilterList::load()
+EmpathFilterList::loadConfig()
 {
-    empathDebug("load() called");
-    
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_GENERAL);
     
@@ -89,10 +83,6 @@ EmpathFilterList::load()
     void
 EmpathFilterList::filter(const EmpathURL & id)
 {
-    empathDebug("filterMessage(" + QString(id.asString()) + ") called");
-
-    empathDebug("There are " + QString().setNum(count()) + " filters to try");
-    
     EmpathFilterListIterator it(*this);
     
     for (; it.current(); ++it)

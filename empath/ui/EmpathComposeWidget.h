@@ -117,12 +117,10 @@ class EmpathComposeWidget : public QWidget
         
         EmpathAttachmentListWidget * attachmentWidget_;
 
-        QMultiLineEdit    * editorWidget_;
+        QMultiLineEdit   * editorWidget_;
         QListView        * lv_attachments_;
-        QComboBox        * cmb_priority_;
-        QLabel            * l_priority_;
-        QVBoxLayout        * headerLayout_;
-        QLabel            * l_subject_;
+        QVBoxLayout      * headerLayout_;
+        QLabel           * l_subject_;
         QLineEdit        * le_subject_;
         
         QList<EmpathHeaderSpecWidget> headerSpecList_;

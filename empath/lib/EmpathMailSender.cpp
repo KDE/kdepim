@@ -45,13 +45,12 @@
 EmpathMailSender::EmpathMailSender()
     :   QObject()
 {
-    empathDebug("ctor");
     sendQueue_.setAutoDelete(true);
 }
 
 EmpathMailSender::~EmpathMailSender()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void

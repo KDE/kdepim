@@ -65,7 +65,7 @@ class EmpathMailSenderSendmail : public EmpathMailSender
         void setSendmailLocation(const QString & location);
         
         virtual void saveConfig();
-        virtual void readConfig();
+        virtual void loadConfig();
 
     protected slots:
 

@@ -22,43 +22,52 @@
 # pragma implementation "EmpathConfigPOP3Dialog.h"
 #endif
 
+// Qt includes
+#include <qlayout.h>
+
 // KDE includes
 #include <klocale.h>
+#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathConfigPOP3Dialog.h"
 #include "EmpathConfigPOP3Widget.h"
-#include "RikGroupBox.h"
 #include "EmpathMailboxPOP3.h"
 
-EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog(
-        EmpathMailboxPOP3 * mailbox,
-        bool loadData,
-        QWidget * parent,
-        const char * name)
-    :    QDialog(parent, name, true),
-        mailbox_(mailbox)
+bool EmpathConfigPOP3Dialog::exists_ = false;
+
+    void
+EmpathConfigPOP3Dialog::create(const EmpathURL & url, QWidget * parent)
 {
-    empathDebug("ctor");
-    settingsWidget_    =
-        new EmpathConfigPOP3Widget(mailbox_, loadData, this, "settingsWidget");
-    CHECK_PTR(settingsWidget_);
+    if (exists_) return;
+    exists_ = true;
+    EmpathConfigPOP3Dialog * d = new EmpathConfigPOP3Dialog(url, parent);
+    CHECK_PTR(d);
+    d->show();
+    d->loadData();
+}
+ 
+EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog
+    (const EmpathURL & url, QWidget * parent)
+    :   QDialog(parent, "ConfigPOP3Dialog", true),
+        url_(url)
+{
+    setCaption(i18n("Configuring mailbox") + " " + url_.mailboxName());
+
+    settingsWidget_ = new EmpathConfigPOP3Widget(url_, this);
 
     QPushButton tempButton((QWidget *)0, "MI");
     int h = tempButton.sizeHint().height();
     
-    buttonBox_    = new KButtonBox(this);
-    CHECK_PTR(buttonBox_);
+    KButtonBox * buttonBox    = new KButtonBox(this);
 
-    buttonBox_->setFixedHeight(h);
-    
     // Bottom button group
-    pb_Help_    = buttonBox_->addButton(i18n("&Help"));    
-    buttonBox_->addStretch();
-    pb_OK_        = buttonBox_->addButton(i18n("&OK"));
-    pb_Cancel_    = buttonBox_->addButton(i18n("&Cancel"));
+    pb_Help_    = buttonBox->addButton(i18n("&Help"));    
+    buttonBox->addStretch();
+    pb_OK_      = buttonBox->addButton(i18n("&OK"));
+    pb_Cancel_  = buttonBox->addButton(i18n("&Cancel"));
     
-    buttonBox_->layout();
+    buttonBox->layout();
 
     QObject::connect(pb_OK_, SIGNAL(clicked()),
             this, SLOT(s_OK()));
@@ -69,16 +78,20 @@ EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog(
     QObject::connect(pb_Help_, SIGNAL(clicked()),
             this, SLOT(s_Help()));
 
-    mainLayout_ = new QGridLayout(this, 2, 1, 10, 10);
-    CHECK_PTR(mainLayout_);
+    QGridLayout * mainLayout = new QGridLayout(this, 2, 1, 10, 10);
 
-    mainLayout_->setRowStretch(0, 7);
-    mainLayout_->setRowStretch(1, 1);
+    mainLayout->setRowStretch(0, 7);
+    mainLayout->setRowStretch(1, 1);
     
-    mainLayout_->addWidget(settingsWidget_,   0, 0);
-    mainLayout_->addWidget(buttonBox_,        1, 0);
+    mainLayout->addWidget(settingsWidget_, 0, 0);
+    mainLayout->addWidget(buttonBox,       1, 0);
     
-    mainLayout_->activate();
+    mainLayout->activate();
+}
+
+EmpathConfigPOP3Dialog::~EmpathConfigPOP3Dialog()
+{
+    exists_ = false;
 }
 
     void
@@ -101,5 +114,18 @@ EmpathConfigPOP3Dialog::s_Help()
 {
     empathDebug("s_Help called");
 }
+
+    void
+EmpathConfigPOP3Dialog::loadData()
+{
+    settingsWidget_->loadData();
+}
+
+    void
+EmpathConfigPOP3Dialog::saveData()
+{
+    settingsWidget_->saveData();
+}
+
 
 // vim:ts=4:sw=4:tw=78

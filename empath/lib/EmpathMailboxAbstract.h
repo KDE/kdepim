@@ -42,7 +42,7 @@ newMail() const;
 saveConfig();
 
     virtual void
-readConfig();
+loadConfig();
         
     virtual void
 sync(const EmpathURL &);

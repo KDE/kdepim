@@ -25,7 +25,6 @@ EmpathMailboxMaildir.cpp \
 EmpathMailboxPOP3.cpp \
 EmpathMaildir.cpp \
 EmpathMatcher.cpp \
-EmpathMessageList.cpp \
 EmpathURL.cpp \
 EmpathSecurityProcess.cpp \
 EmpathTask.cpp \

@@ -1,22 +1,15 @@
+#include "EmpathEnum.h"
 #include <kmenubar.h>
 
 void
 EmpathComposeWindow::setupMenuBar()
 {
-    fileMenu_    = new QPopupMenu();
-    CHECK_PTR(fileMenu_);
-
-    editMenu_    = new QPopupMenu();
-    CHECK_PTR(editMenu_);
-    
-    attachmentMenu_    = new QPopupMenu();
-    CHECK_PTR(attachmentMenu_);
-
+    fileMenu_       = new QPopupMenu();
+    editMenu_       = new QPopupMenu();
+    attachmentMenu_ = new QPopupMenu();
     messageMenu_    = new QPopupMenu();
-    CHECK_PTR(messageMenu_);
-    
-    helpMenu_    = new QPopupMenu();
-    CHECK_PTR(helpMenu_);
+    helpMenu_       = new QPopupMenu();
+    priorityMenu_   = new QPopupMenu();
 
     // File menu
     
@@ -89,6 +82,12 @@ EmpathComposeWindow::setupMenuBar()
 
     messageMenu_->insertItem(empathIcon("copy"), i18n("&Copy to..."),
         this, SLOT(s_messageCopyTo()));
+
+    priorityMenu_->insertItem(i18n("Highest"),  Highest);
+    priorityMenu_->insertItem(i18n("High"),     High);
+    priorityMenu_->insertItem(i18n("Normal"),   Normal);
+    priorityMenu_->insertItem(i18n("Low"),      Low);
+    priorityMenu_->insertItem(i18n("Lowest"),   Lowest);
     
     helpMenu_->insertItem(i18n("&Contents"),
         this, SLOT(s_help()));
@@ -110,6 +109,7 @@ EmpathComposeWindow::setupMenuBar()
     menuBar()->insertItem(i18n("&Edit"), editMenu_);
     menuBar()->insertItem(i18n("&Attachment"), attachmentMenu_);
     menuBar()->insertItem(i18n("&Message"), messageMenu_);
+    menuBar()->insertItem(i18n("&Priority"), priorityMenu_);
     menuBar()->insertSeparator();
     menuBar()->insertItem(i18n("&Help"), helpMenu_);
 }

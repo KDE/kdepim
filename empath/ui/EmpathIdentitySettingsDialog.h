@@ -50,14 +50,12 @@ class EmpathIdentitySettingsDialog : public QDialog
     public:
         
         static void create();
-        ~EmpathIdentitySettingsDialog() { empathDebug("dtor"); exists_ = false;}
+        ~EmpathIdentitySettingsDialog();
 
         void saveData();
         void loadData();
     
-    protected:
-        void hideEvent(QHideEvent *) { delete this; }
-        void closeEvent(QCloseEvent *);
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
 
     protected slots:
 

@@ -96,7 +96,6 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
         Q_UINT32       serverPort();
         QString        username();
         QString        password();
-        SavePolicy     passwordSavePolicy();
     
     private:
 
@@ -104,7 +103,6 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
         Q_UINT32            serverPort_;
         QString             username_;
         QString             password_;
-        SavePolicy          passwordSavePolicy_;
         bool                loggingPolicy_;
         QString             logFilePath_;
         bool                logFileDisposalPolicy_;

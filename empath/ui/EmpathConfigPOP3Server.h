@@ -26,19 +26,17 @@
 #define EMPATHCONFIGPOP3SERVER_H
 
 // Qt includes
-#include <qdialog.h>
 #include <qwidget.h>
-#include <qlabel.h>
 #include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qcheckbox.h>
+#include <qspinbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
 class RikGroupBox;
 class EmpathMailboxPOP3;
+class EmpathPasswordEditWidget;
 
 /**
  * Configure name, port, password etc for pop3 server
@@ -49,40 +47,22 @@ class EmpathConfigPOP3Server : public QWidget
 
     public:
         
-        EmpathConfigPOP3Server(QWidget * parent = 0, const char * name = 0);
+        EmpathConfigPOP3Server(const EmpathURL &, QWidget * = 0);
 
         ~EmpathConfigPOP3Server();
-        
-        void setMailbox(EmpathMailboxPOP3 * mailbox);
-
-        void fillInSavedData();
         
         void loadData();
         void saveData();
         
-    protected slots:
-
-        void    s_starPassword(bool yn);
-
-    protected:
-
     private:
 
-        EmpathMailboxPOP3    * mailbox_;
+        EmpathURL url_;
 
-        QLabel            * l_uname_;
-        QLabel            * l_pass_;
-        QLabel            * l_inServer_;
-        QLabel            * l_inServerPort_;
+        QLineEdit   * le_uname_;
+        QLineEdit   * le_inServer_;
+        QSpinBox    * sb_inServerPort_;
         
-        QLineEdit        * le_uname_;
-        QLineEdit        * le_pass_;
-        QLineEdit        * le_inServer_;
-        QLineEdit        * le_inServerPort_;
-
-        QPushButton        * pb_starPassword_;
-        
-        QGridLayout        * topLevelLayout_;
+        EmpathPasswordEditWidget * epew_pass_;
 };
 
 #endif

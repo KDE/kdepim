@@ -22,161 +22,100 @@
 # pragma implementation "EmpathConfigPOP3Server.h"
 #endif
 
+// Qt includes
+#include <qlabel.h>
+#include <qlayout.h>
+
 // KDE includes
 #include <klocale.h>
 
 // Local includes
+#include "Empath.h"
 #include "EmpathDefines.h"
 #include "EmpathConfigPOP3Server.h"
 #include "EmpathMailboxPOP3.h"
+#include "EmpathPasswordEditWidget.h"
 
-EmpathConfigPOP3Server::EmpathConfigPOP3Server(QWidget * parent, const char * name)
-    : QWidget(parent, name)
+EmpathConfigPOP3Server::EmpathConfigPOP3Server
+    (const EmpathURL & url, QWidget * parent)
+    :   QWidget(parent, "ConfigPOP3Server"),
+        url_(url)
 {
-    empathDebug("ctor");
-    mailbox_ = 0;
-
-    QLineEdit    tempLineEdit((QWidget *)0);
-    Q_UINT32 h    = tempLineEdit.sizeHint().height();
-    
     // Server username and address
-    l_inServer_    =
-        new QLabel(i18n("Server address:"), this, "l_inServer");
-    CHECK_PTR(l_inServer_);
-    
-    l_inServer_->setFixedHeight(h);
-    
-    le_inServer_    =
-        new QLineEdit(this, "le_inServer");
-    CHECK_PTR(le_inServer_);
-    
-    le_inServer_->setFixedHeight(h);
-    
-    l_inServerPort_    =
-        new QLabel(i18n("Server port:"), this, "l_inServerPort");
-    CHECK_PTR(l_inServerPort_);
-    
-    l_inServerPort_->setFixedHeight(h);
-    
-    le_inServerPort_    =
-        new QLineEdit(this, "le_inServerPort");
-    CHECK_PTR(le_inServerPort_);
-    
-    le_inServerPort_->setFixedHeight(h);
-    
-    l_uname_    =
-        new QLabel(i18n("Mail server user name:"), this, "l_uname");
-    CHECK_PTR(l_uname_);
-    
-    l_uname_->setFixedHeight(h);
-    
-    le_uname_    =
-        new QLineEdit(this, "le_uname");
-    CHECK_PTR(le_uname_);
-    
-    le_uname_->setFixedHeight(h);
-    
-    l_pass_    =
-        new QLabel(i18n("Mail server password:"), this, "l_pass");
-    CHECK_PTR(l_pass_);
-    
-    l_pass_->setFixedHeight(h);
-    
-    le_pass_    =
-        new QLineEdit(this, "le_pass");
-    CHECK_PTR(le_pass_);
+    QLabel * l_inServer     = new QLabel(i18n("Server address"), this);
+    QLabel * l_inServerPort = new QLabel(i18n("Server POP3 port"), this);
+    QLabel * l_uname        = new QLabel(i18n("Mail server user name"), this);
+    QLabel * l_pass         = new QLabel(i18n("Mail server password"), this);
 
-    le_pass_->setEchoMode(QLineEdit::NoEcho);
-    
-    le_pass_->setFixedHeight(h);
-
-    pb_starPassword_    =
-        new QPushButton(this, "pb_starPassword");
-    CHECK_PTR(pb_starPassword_);
-    
-    pb_starPassword_->setText("*");
-    pb_starPassword_->setToggleButton(true);
-    
-    pb_starPassword_->setFixedHeight(h);
-
-    QObject::connect(pb_starPassword_, SIGNAL(toggled(bool)),
-            this, SLOT(s_starPassword(bool)));
+    le_inServer_        = new QLineEdit(this);
+    sb_inServerPort_    = new QSpinBox(this);
+    le_uname_           = new QLineEdit(this);
+    epew_pass_          = new EmpathPasswordEditWidget(QString::null, this);
 
     // Layout
     
-    topLevelLayout_        = new QGridLayout(this,     4, 3, 10, 10);
-    CHECK_PTR(topLevelLayout_);
+    QVBoxLayout * topLevelLayout  = new QVBoxLayout(this, 10, 10);
 
-    topLevelLayout_->setColStretch(0, 5);
-    topLevelLayout_->setColStretch(1, 5);
-    topLevelLayout_->setColStretch(2, 1);
-
-    topLevelLayout_->addWidget(l_inServer_,                    0, 0);
-    topLevelLayout_->addMultiCellWidget(le_inServer_,        0, 0, 1, 2);
-    topLevelLayout_->addWidget(l_inServerPort_,                1, 0);
-    topLevelLayout_->addMultiCellWidget(le_inServerPort_,    1, 1, 1, 2);
-    topLevelLayout_->addWidget(l_uname_,                    2, 0);
-    topLevelLayout_->addWidget(le_uname_,                    2, 1);
-    topLevelLayout_->addWidget(l_pass_,                        3, 0);
-    topLevelLayout_->addWidget(le_pass_,                    3, 1);
-    topLevelLayout_->addWidget(pb_starPassword_,            3, 2);
-
-    topLevelLayout_->activate();
+    QHBoxLayout * layout0 = new QHBoxLayout(topLevelLayout);
+    layout0->addWidget(l_inServer);
+    layout0->addWidget(le_inServer_);
     
-    le_pass_->setEchoMode(QLineEdit::Password);
+    QHBoxLayout * layout1 = new QHBoxLayout(topLevelLayout);
+    layout1->addWidget(l_inServerPort);
+    layout1->addWidget(sb_inServerPort_);
+
+    QHBoxLayout * layout2 = new QHBoxLayout(topLevelLayout);
+    layout2->addWidget(l_uname);
+    layout2->addWidget(le_uname_);
+
+    topLevelLayout->addWidget(epew_pass_);
+}
+
+EmpathConfigPOP3Server::~EmpathConfigPOP3Server()
+{
+    // Empty.
 }
 
     void
 EmpathConfigPOP3Server::saveData()
 {
-    empathDebug("saveData() called");
-    
-    if (mailbox_ == 0) {
-        empathDebug("Mailbox is 0. Can't really save that.");
+    EmpathMailbox * mailbox = empath->mailbox(url_);
+
+    if (mailbox == 0)
+        return;
+
+    if (mailbox->type() != EmpathMailbox::POP3) {
+        empathDebug("Incorrect mailbox type");
         return;
     }
-    
-    mailbox_->setServerAddress(le_inServer_->text());
-    mailbox_->setServerPort(QString(le_inServerPort_->text()).toInt());
-    mailbox_->setUsername(le_uname_->text());
-    mailbox_->setPassword(le_pass_->text());
+
+    EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
+
+    m->setServerAddress (le_inServer_->text());
+    m->setServerPort    (sb_inServerPort_->value());
+    m->setUsername      (le_uname_->text());
+    m->setPassword      (epew_pass_->text());
 }
 
     void
 EmpathConfigPOP3Server::loadData()
 {
-    empathDebug("Filling in saved data");
+    EmpathMailbox * mailbox = empath->mailbox(url_);
 
-    if (mailbox_ == 0) {
-        empathDebug("Mailbox is 0. Can't really load that.");
+    if (mailbox == 0)
+        return;
+
+    if (mailbox->type() != EmpathMailbox::POP3) {
+        empathDebug("Incorrect mailbox type");
         return;
     }
 
-    le_inServer_->setText(mailbox_->serverAddress());
-    le_inServerPort_->setText(QString().setNum(mailbox_->serverPort()));
-    le_uname_->setText(mailbox_->username());
-    le_pass_->setText(mailbox_->password());
+    EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
 
+    le_inServer_    ->setText   (m->serverAddress());
+    sb_inServerPort_->setValue  (m->serverPort());
+    le_uname_       ->setText   (m->username());
+    epew_pass_      ->setText   (m->password());
 }
-
-EmpathConfigPOP3Server::~EmpathConfigPOP3Server()
-{
-    empathDebug("dtor");
-}
-        
-    void
-EmpathConfigPOP3Server::s_starPassword(bool yn)
-{
-    le_pass_->setEchoMode(yn ? QLineEdit::Password : QLineEdit::NoEcho);
-}
-
-    void
-EmpathConfigPOP3Server::setMailbox(EmpathMailboxPOP3 * mailbox)
-{
-    empathDebug("Set mailbox " + mailbox->name());
-    mailbox_ = mailbox;
-    loadData();
-}
-
 
 // vim:ts=4:sw=4:tw=78

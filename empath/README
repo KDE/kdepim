@@ -1,54 +1,79 @@
--- The Empath Mail Client
--- Rik Hemsley <rik@kde.org>
--- 2nd September 1999 
-
 Description:
 
-  Mail client written using the Qt and KDE libraries.
-  Designed to be a part of the KDE-PIM (Personal Information Management)
-  project.
-
-Features:
-
-  Designed to be fast, sturdy, extensible, and very safe.
+  Mail client written using the KDE libraries.
+  Intended to be a part of the KDE-PIM project.
   
-  'Fast' doesn't necessarily mean 'faster than all other clients'. It
-  means Empath won't stall the user interface at any point. This means you
-  get to keep working whatever's going on behind the scenes.
+  Home page: http://without.netpedia.net
+  Chief maintainer: Rik Hemsley <rik@kde.org>
   
-  Empath doesn't use the most common UNIX mailbox formats, as these are
-  completely unsafe. Empath only uses Maildir format mailboxes for local
-  mail.
-
 Requirements:
 
   You will need to use a Maildir format mailbox. Read README.maildir
   for more information.
 
-  To use Empath you need Qt version 2 from CVS and KDE from CVS.
-  To get Qt, point your ftp client at ftp.troll.no
-  To get KDE libraries from CVS, if you're not already developing for KDE
-  you will probably want to get a recent snapshot of the CVS. Look at
-  ftp.kde.org for the daily snapshots. Please use a mirror.
+  You need the snapshot of Qt from the 9th of October 1999. This snapshot
+  is compatible with the current KDE source.
+
+  You also need to get the current versions of kdesupport and kdelibs.
   
-  Please also note that KDE HEAD branch is under continous development.
-  It's easy to end up with a snapshot that's not source or binary compatible
-  with Empath as the KDE API isn't yet stabilised. Please talk to Rik if
-  you don't understand what this means, and would like advice.
+  You can either:
+  1. Get a snapshot via ftp.
+  2. Get a local copy of the sources via cvsup.
+  3. Use your CVS access (if you have it) to get a local copy.
 
   Links:
   http://www.troll.no - the home of Troll Tech (Qt).
   http://www.kde.org - the home of the KDE project.
 
-Developers:
+Contributing:
 
-  See TODO for what you can help with.
+  If you're interested in contributing to the project, please mail
+  Rik <rik@kde.org> and ask questions.
 
-  Please mail me to let me know what you're interested in doing.
-  This doesn't have to be coding, it can be providing input for the design of
-  the system, writing docs, translating, testing, etc. The more the merrier.
+  Help is needed in the following areas:
+   
+  * Architectural
+    - Error reporting (exceptions ?)
+    - Identify inefficient models / paradigms.
+    - Identify and describe usage of design patterns, restructure the
+      existing architecture where necessary to allow description in
+      terms of DP.
+    - Decide how threading support can be built in.
+    - Design a CORBA interface.
+    - Draw UML diagram(s)
+ 
+  * Implementation
+    - Adding new features.
+    - Debugging.
+    - Support for widget embedding.
+    - Clean up over-complex, dangerous, sloppy or ill-conceived code.
+    - Identify and plug memory leaks.
+    - Identify and plug security holes.
+    - Implement threading support
+    - Implement a CORBA interface.
 
-  If you want to help coding, read DESIGN.html
+  Note: Programmers and designers may read DESIGN.html for a useful
+  introduction to the system architecture.
+    
+  * Documentation
+    - Clean up and assure completeness of class documentation.
+    - Keep web pages up to date.
+      + Announce recent developments.
+      + Provide regular updates w.r.t advances in development (use CVS logs).
+    - Write and maintain a user manual.
+
+  * Artwork
+    - Redesign application icon (and possibly toolbar icons).
+    - Design a logo.
+  
+  * Maintenance
+    - Bug reporting.
+    - Testing.
+  
+  * Propaganda
+    - Announce developments to relevant entities.
+    - Write a succinct project description.
+    - Create a presentation suitable for the media.
 
 Contact information:
 
@@ -61,6 +86,6 @@ Contact information:
     kde-pim@kde.org
 
     Subscription requests (this is a low traffic list) should go to
-    kde-pim-request@kde.org and have 'subscribe' in the body.
+    kde-pim-request@kde.org and have 'subscribe my@email.address' in the body.
 
 

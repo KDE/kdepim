@@ -36,44 +36,24 @@
 #include "EmpathMailbox.h"
 #include "EmpathUIUtils.h"
 
-EmpathFolderChooserWidget::EmpathFolderChooserWidget(
-        QWidget * parent, const char * name)
-    :    QFrame(parent, name)
+EmpathFolderChooserWidget::EmpathFolderChooserWidget(QWidget * parent)
+    :    QHBox(parent, "FolderChooserWidget")
 {
-    empathDebug("ctor");
-    setFrameStyle(QFrame::Box | QFrame::Raised);
-    setLineWidth(1);
-    l_folderName_        = new QLabel(this, "l_folderName_");
-    CHECK_PTR(l_folderName_);
-    
+    le_folderName_      = new QLineEdit(this, "l_folderName_");
     pb_selectFolder_    = new QPushButton(this, "pb_selectFolder_");
-    CHECK_PTR(pb_selectFolder_);
-    pb_selectFolder_->setPixmap(empathIcon("browse"));
-    
-    layout_                = new QGridLayout(this, 1, 2, 2, 10);
-    CHECK_PTR(layout_);
 
+    pb_selectFolder_->setPixmap(empathIcon("browse"));
     pb_selectFolder_->setFixedWidth(pb_selectFolder_->sizeHint().height());
-    
-    layout_->addWidget(l_folderName_,        0, 0);
-    layout_->addWidget(pb_selectFolder_,    0, 1);
-    layout_->activate();
     
     QObject::connect(pb_selectFolder_, SIGNAL(clicked()),
             this, SLOT(s_browse()));
     
-    l_folderName_->setText("<" + i18n("no folder selected") + ">");
-    
-    setFixedHeight(
-        pb_selectFolder_->sizeHint().height() +
-        frameWidth() * 2);
-    
-    l_folderName_->setFixedHeight(pb_selectFolder_->sizeHint().height());
+    le_folderName_->setText("<" + i18n("no folder selected") + ">");
 }
 
 EmpathFolderChooserWidget::~EmpathFolderChooserWidget()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     EmpathURL
@@ -85,26 +65,20 @@ EmpathFolderChooserWidget::selectedURL() const
     void
 EmpathFolderChooserWidget::setURL(const EmpathURL & url)
 {
-    empathDebug("setURL(" + url.asString() + ") called");
-    
     url_ = url;
-    
-    l_folderName_->setText(url_.mailboxName() + "/" + url_.folderPath());
+    le_folderName_->setText(url_.mailboxName() + "/" + url_.folderPath());
 }
 
     void
 EmpathFolderChooserWidget::s_browse()
 {
-    empathDebug("s_browse() called");
-    EmpathFolderChooserDialog fcd(this, "folderChooserDialog");
+    EmpathFolderChooserDialog fcd(this);
     
-    if (!fcd.exec()) {
-        empathDebug("Cancelled");
+    if (!fcd.exec())
         return;
-    }
 
     url_ = fcd.selected();
-    l_folderName_->setText(url_.mailboxName() + "/" + url_.folderPath());
+    le_folderName_->setText(url_.mailboxName() + "/" + url_.folderPath());
 }
 
 // vim:ts=4:sw=4:tw=78

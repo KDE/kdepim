@@ -286,8 +286,6 @@ EmpathFolderWidget::s_folderProperties()
     void
 EmpathFolderWidget::s_mailboxCheck()
 {
-    empathDebug("s_mailboxCheck() called");
-
     if (popupMenuOverType != Mailbox) {
         empathDebug("The popup menu wasn't over a mailbox !");
         return;
@@ -303,52 +301,12 @@ EmpathFolderWidget::s_mailboxCheck()
     void
 EmpathFolderWidget::s_mailboxProperties()
 {
-    empathDebug("s_mailboxProperties() called");
-
     if (popupMenuOverType != Mailbox) {
         empathDebug("The popup menu wasn't over a mailbox !");
         return;
     }
-    
-    EmpathMailbox * m = empath->mailbox(popupMenuOver->url());
 
-    if (m == 0) return;
-    
-    empathDebug("Mailbox name = " + m->name());
-
-    switch (m->type()) {
-
-        case EmpathMailbox::Maildir:
-            {
-                EmpathConfigMaildirDialog configDialog(
-                        (EmpathMailboxMaildir *)m, this, "configDialog");
-                if (configDialog.exec() == QDialog::Accepted)
-                    update();
-            }
-            break;
-
-        case EmpathMailbox::POP3:
-            {
-                EmpathConfigPOP3Dialog configDialog(
-                        (EmpathMailboxPOP3 *)m, true, this, "configDialog");
-                if (configDialog.exec() == QDialog::Accepted)
-                    update();
-            }
-            break;
-
-        case EmpathMailbox::IMAP4:
-            {
-                EmpathConfigIMAP4Dialog configDialog(
-                        (EmpathMailboxIMAP4 *)m, this, "configDialog");
-                if (configDialog.exec() == QDialog::Accepted)
-                    update();
-            }
-            break;
-
-        default:
-            break;
-    }
-
+    empath->s_configureMailbox(popupMenuOver->url(), this);
 }
 
     void
@@ -360,7 +318,6 @@ EmpathFolderWidget::s_update()
     void
 EmpathFolderWidget::s_newFolder()
 {
-    empathDebug("s_newFolder() called");
     KLineEditDlg led(i18n("Folder name"), QString::null, this, false);
     led.exec();
 
@@ -376,9 +333,6 @@ EmpathFolderWidget::s_newFolder()
     void
 EmpathFolderWidget::s_removeFolder()
 {
-    empathDebug("s_removeFolder \"" +
-        popupMenuOver->url().asString() + "\" called");
-
     empath->remove(popupMenuOver->url(), QString::null);
 }
 

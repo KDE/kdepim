@@ -35,12 +35,10 @@ EmpathTask::EmpathTask(const QString & name)
         pos_(0),
         done_(false)
 {
-    empathDebug("");
 }
 
 EmpathTask::~EmpathTask()
 {
-    empathDebug("");
     emit(finished());
 }
 

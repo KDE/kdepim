@@ -6,6 +6,13 @@ Note: I've converted the maildir man page to html. Find it as maildir.html.
 
 To use Empath with local mailboxes, they need to be in Maildir format.
 
+I _highly_ recommend that you use Maildir format mailboxes. You can't
+actually use mbox, mh, mmdf or any other local storage type with Empath
+anyway. The main reason for using Maildir is safety. Maildir does not
+use locking and is safe to use over NFS. In fact, it's completely safe.
+If your machine / network goes down, you will NOT lose mail. If another
+process accesses your mailbox, it will NOT be corrupted.
+
 A Maildir box is easy to identify. Instead of being a single file, it's
 a directory containing subdirectories called 'cur', 'new' and 'tmp'.
 
@@ -94,4 +101,7 @@ have mail delivered to this spool in future.
 	with the respective packages. It's a great deal easier to set up maildrop
 	than qmail, though I'd recommend moving your site to qmail if you don't
 	need sendmail's extra functionality and care about mail security and safety.
+
+    If users' home directories are mounted over NFS, then you are crazy
+    to use anything but Maildir. Think about it.
 

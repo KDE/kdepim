@@ -1,3 +1,26 @@
+/*
+    Empath - Mailer for KDE
+    
+    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
+
+#ifdef __GNUG__
+# pragma implementation "EmpathHeaderViewWidget.h"
+#endif
 
 // Qt includes
 #include <qstrlist.h>
@@ -24,7 +47,6 @@ EmpathHeaderViewWidget::EmpathHeaderViewWidget(
     :    QWidget(parent, name),
         glowing_(false)
 {
-    empathDebug("ctor");
     clipIcon_ = empathIcon("clip");
     clipGlow_ = empathIcon("clip-glow");
     setMouseTracking(true);
@@ -33,13 +55,12 @@ EmpathHeaderViewWidget::EmpathHeaderViewWidget(
 
 EmpathHeaderViewWidget::~EmpathHeaderViewWidget()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
 EmpathHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
 {
-    empathDebug("useEnvelope()");
     headerList_.clear();
     KConfig * c(KGlobal::config());
     // FIXME Must be QStringList when available.
@@ -54,7 +75,6 @@ EmpathHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
         
         QCString s = it.current();
         s = s.stripWhiteSpace();
-        empathDebug("Using header: " + QString::fromLatin1(s));
     
         RMM::RHeader * h(e.get(s));
         if (h == 0) continue;

@@ -32,18 +32,16 @@
 EmpathMailbox::EmpathMailbox(const QString & name)
     :    url_(name, QString::null, QString::null)
 {
+    empathDebug(name);
     pixmapName_ = "mailbox";
     
     folderList_.setAutoDelete(true);
     
-    QObject::connect(
-        this,   SIGNAL(updateFolderLists()),
-        empath, SLOT(s_updateFolderLists()));
+    _connectUp();
 }
 
 EmpathMailbox::~EmpathMailbox()
 {
-    empathDebug("dtor");
 }
 
     void
@@ -119,13 +117,7 @@ EmpathMailbox::folder(const EmpathURL & url)
     if (fp.at(fp.length() - 1) == '/')
         fp.remove(fp.length() - 1, 1);
     
-    EmpathFolderListIterator it(folderList_);
-
-    for (; it.current(); ++it)
-        if (it.current()->url().folderPath() == fp)
-            return it.current();
-    
-    return 0;
+    return folderList_[fp];
 }
 
     void
@@ -272,5 +264,48 @@ EmpathMailbox::_runQueue()
         }
     }
 }
+
+    void
+EmpathMailbox::_connectUp()
+{
+    QObject::connect(
+        this,   SIGNAL(updateFolderLists()),
+        empath, SLOT(s_updateFolderLists()));
+
+    QObject::connect(
+            this,
+            SIGNAL(retrieveComplete(bool, const EmpathURL &, const EmpathURL &,
+                    QString, QString)),
+            empath,
+            SLOT(s_retrieveComplete(bool, const EmpathURL &, const EmpathURL &,
+                    QString, QString)));
+
+    QObject::connect(
+        this,
+        SIGNAL(retrieveComplete(bool, const EmpathURL &,
+                QString, QString)),
+        empath,
+        SLOT(s_retrieveComplete(bool, const EmpathURL &,
+                QString, QString)));
+
+    QObject::connect(
+        this,
+        SIGNAL(removeComplete(bool, const EmpathURL &, QString, QString)),
+        empath, SLOT(
+        s_removeComplete(bool, const EmpathURL &, QString, QString)));
+
+    QObject::connect(
+        this,
+        SIGNAL(writeComplete(bool, const EmpathURL &, QString, QString)),
+        empath,
+        SLOT(s_writeComplete(bool, const EmpathURL &, QString, QString)));
+
+    QObject::connect(
+        this,
+        SIGNAL(markComplete(bool, const EmpathURL &, QString, QString)),
+        empath,
+        SLOT(s_markComplete(bool, const EmpathURL &, QString, QString)));
+}
+
 
 // vim:ts=4:sw=4:tw=78

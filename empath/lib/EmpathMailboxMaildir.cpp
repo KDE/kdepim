@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailboxMaildir.h"
+#endif
+
 // Qt includes
 #include <qfile.h>
 #include <qdatastream.h>
@@ -33,20 +37,33 @@
 // Local includes
 #include "EmpathMailboxMaildir.h"
 #include "EmpathFolderList.h"
-#include "EmpathMessageList.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 
 EmpathMailboxMaildir::EmpathMailboxMaildir(const QString & name)
-    :    EmpathMailbox(name)
+    :   EmpathMailbox(name),
+        initialised_(false)
 {
     type_ = Maildir;
+    typeString_ = "Maildir";
     seq_ = 0;
     boxList_.setAutoDelete(true);
 }
 
 EmpathMailboxMaildir::~EmpathMailboxMaildir()
 {
+    // Empty.
+}
+
+    void
+EmpathMailboxMaildir::init()
+{
+    if (initialised_)
+        return;
+
+    initialised_ = true;
+    
+    loadConfig();
 }
 
     void
@@ -132,11 +149,11 @@ EmpathMailboxMaildir::_setupDefaultFolders()
     EmpathFolder    * folder_trash  = new EmpathFolder  (urlTrash);
     EmpathMaildir   * box_trash     = new EmpathMaildir (path_, urlTrash);
     
-    folderList_.append(folder_trash);
-    folderList_.append(folder_sent);
-    folderList_.append(folder_drafts);
-    folderList_.append(folder_outbox);
-    folderList_.append(folder_inbox);
+    folderList_.insert(folder_trash->name(), folder_trash);
+    folderList_.insert(folder_sent->name(), folder_sent);
+    folderList_.insert(folder_drafts->name(), folder_drafts);
+    folderList_.insert(folder_outbox->name(), folder_outbox);
+    folderList_.insert(folder_inbox->name(), folder_inbox);
     
     boxList_.append(box_trash);
     boxList_.append(box_sent);
@@ -175,6 +192,7 @@ EmpathMailboxMaildir::newMail() const
     void
 EmpathMailboxMaildir::saveConfig()
 {
+    empathDebug("Path == `" + path_ + "'");
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
     
@@ -183,11 +201,10 @@ EmpathMailboxMaildir::saveConfig()
     
     c->writeEntry(EmpathConfig::KEY_CHECK_MAIL, checkMail_);
     c->writeEntry(EmpathConfig::KEY_CHECK_MAIL_INTERVAL, checkMailInterval_);
-    c->sync();
 }
 
     void
-EmpathMailboxMaildir::readConfig()
+EmpathMailboxMaildir::loadConfig()
 {
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_MAILBOX + url_.mailboxName());
@@ -203,9 +220,20 @@ EmpathMailboxMaildir::readConfig()
     
     if (path_.at(path_.length()) != '/')
         path_ += '/';
+ 
+    if (path_.isEmpty()) {
+        empathDebug("My path is empty :(");
+        return;
+    }
+
+    QDir d(path_);
     
+    if (!d.exists())
+        if (!d.mkdir(path_)) {
+            empathDebug("Couldn't make " + path_ + " !!!!!");
+        }
+
     _recursiveReadFolders(path_);
-    emit(updateFolderLists());
     
     // Initialise all maildir objects.
     
@@ -213,6 +241,8 @@ EmpathMailboxMaildir::readConfig()
     
     for (; it.current(); ++it)
         it.current()->init();
+    
+    emit(updateFolderLists());
 }
 
     void
@@ -276,7 +306,7 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     EmpathURL url(url_.mailboxName(), s, QString::null);
     EmpathFolder * f = new EmpathFolder(url);
     
-    folderList_.append(f);
+    folderList_.insert(url.folderPath(), f);
     
     EmpathMaildir * m = new EmpathMaildir(path_, url);
     
@@ -300,19 +330,6 @@ EmpathMailboxMaildir::s_checkNewMail()
 EmpathMailboxMaildir::s_getNewMail()
 {
     // STUB
-}
-
-    void
-EmpathMailboxMaildir::init()
-{
-    QDir d(path_);
-    
-    if (!d.exists())
-        if (!d.mkdir(path_)) {
-            empathDebug("Couldn't make " + path_ + " !!!!!");
-        }
-
-    readConfig();
 }
 
     void
@@ -402,6 +419,8 @@ EmpathMailboxMaildir::_removeMessage(
 EmpathMailboxMaildir::setPath(const QString & path)
 {
     path_ = path;
+    saveConfig();
+    loadConfig();
 }
 
     EmpathMaildir *
@@ -425,7 +444,7 @@ EmpathMailboxMaildir::_createFolder(
 
     m->init();
     
-    folderList_.append(f);
+    folderList_.insert(f->name(), f);
     boxList_.append(m);
     
     emit(createFolderComplete(true, url, xxinfo, xinfo));
@@ -443,7 +462,7 @@ EmpathMailboxMaildir::_removeFolder(
     
     for (; fit.current(); ++fit)
         if (fit.current()->url().folderPath() == url.folderPath()) {
-            folderList_.remove(fit.current());
+            folderList_.remove(fit.current()->name());
             removedFromFolderList = true;
             break;
         }

@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMailboxMaildir.h"
+#endif
+
 #ifndef EMPATHMAILBOXMAILDIR_H
 #define EMPATHMAILBOXMAILDIR_H
 
@@ -70,6 +74,7 @@ class EmpathMailboxMaildir : public EmpathMailbox
         QString                 path_;
         QString                 canonName_;
         EmpathMaildirList       boxList_;
+        bool                    initialised_;
 };
 
 #endif

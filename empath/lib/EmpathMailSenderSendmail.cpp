@@ -178,7 +178,7 @@ EmpathMailSenderSendmail::saveConfig()
 }
 
     void
-EmpathMailSenderSendmail::readConfig()
+EmpathMailSenderSendmail::loadConfig()
 {
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_SENDING);

@@ -31,11 +31,8 @@
 #include <qlistbox.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
-#include <qlayout.h>
 #include <qlineedit.h>
 
-// KDE includes
-#include <kbuttonbox.h>
 
 class EmpathFilter;
 class RikGroupBox;
@@ -47,10 +44,7 @@ class EmpathFilterEditDialog : public QDialog
 
     public:
     
-        EmpathFilterEditDialog(
-                EmpathFilter * filter,
-                QWidget * parent = 0,
-                const char * name = 0);
+        EmpathFilterEditDialog(EmpathFilter *, QWidget * = 0);
         
         virtual ~EmpathFilterEditDialog();
         
@@ -68,45 +62,23 @@ class EmpathFilterEditDialog : public QDialog
     private:
 
         void            update();
-        RikGroupBox        * rgb_arrives_;
-        RikGroupBox        * rgb_matches_;
-        RikGroupBox        * rgb_action_;
 
-        QWidget            * w_arrives_;
-        QWidget            * w_matches_;
-        QWidget            * w_action_;
+        RikGroupBox     * rgb_matches_;
 
-        QGridLayout        * mainLayout_;
-        QGridLayout        * nameLayout_;
-        QGridLayout        * arrivesLayout_;
-        QGridLayout        * matchesLayout_;
-        QGridLayout        * actionLayout_;
-
+        QWidget         * w_matches_;
         QListBox        * lb_matches_;
-
-        QLabel            * l_action_;
-        
-        QPushButton        * pb_addMatch_;
-        QPushButton        * pb_editMatch_;
-        QPushButton        * pb_removeMatch_;
-    
-        QPushButton        * pb_editAction_;
-
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        QPushButton        * pb_help_;
-
-        KButtonBox        * buttonBox_;
-        KButtonBox        * exprButtonBox_;
-
-        QLabel            * l_arrivesFolder_;
-
-        EmpathFolderChooserWidget * fcw_arrivesFolder_;
+        QLabel          * l_action_;
+        QLineEdit       * le_name_;
+        QPushButton     * pb_addMatch_;
+        QPushButton     * pb_editMatch_;
+        QPushButton     * pb_removeMatch_;
+        QPushButton     * pb_editAction_;
+        QPushButton     * pb_OK_;
+        QPushButton     * pb_cancel_;
+        QPushButton     * pb_help_;
 
         EmpathFilter    * filter_;
-        
-        QLabel            * l_name_;
-        QLineEdit        * le_name_;
+        EmpathFolderChooserWidget * fcw_arrives_;
 };
 
 #endif

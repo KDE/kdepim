@@ -87,11 +87,11 @@ class EmpathComposeWindow : public KTMainWindow
         void s_aboutEmpath();
         void s_aboutQt();
 
-        void s_confirmDelivery    (bool);
-        void s_confirmReading    (bool);
-        void s_addSignature        (bool);
+        void s_confirmDelivery  (bool);
+        void s_confirmReading   (bool);
+        void s_addSignature     (bool);
         void s_digitallySign    (bool);
-        void s_encrypt            (bool);
+        void s_encrypt          (bool);
         
     signals:
         
@@ -110,6 +110,7 @@ class EmpathComposeWindow : public KTMainWindow
         QPopupMenu        * editMenu_;
         QPopupMenu        * attachmentMenu_;
         QPopupMenu        * messageMenu_;
+        QPopupMenu        * priorityMenu_;
         QPopupMenu        * helpMenu_;
 
         // Empath stuff

@@ -38,7 +38,7 @@
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageViewWindow.h"
 #include "EmpathFolderChooserDialog.h"
-#include "EmpathMessageSourceView.h"
+
 #include <RMM_Message.h>
 
 EmpathMessageViewWindow::EmpathMessageViewWindow(

@@ -96,7 +96,7 @@ class EmpathMailSender : public QObject
          * Load your config now !
          * Called by Empath on startup.
          */
-        virtual void readConfig() = 0;
+        virtual void loadConfig() = 0;
         
         void sendCompleted(const QString &, bool);
     

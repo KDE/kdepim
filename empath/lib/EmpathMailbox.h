@@ -124,8 +124,7 @@ class EmpathMailbox : public QObject
     
     public:
         
-        enum AccountType    { Local, Maildir, POP3, IMAP4 };
-        enum SavePolicy     { Forever, ThisSession, Never };
+        enum Type { Maildir, POP3, IMAP4 };
         
         EmpathMailbox();
     
@@ -192,8 +191,7 @@ class EmpathMailbox : public QObject
         // Pure virtuals.
 
         /**
-         * Initialise this mailbox. Must be called after ctor and before
-         * any other methods.
+         * Initialise.
          */
         virtual void init() = 0;
         /**
@@ -204,7 +202,7 @@ class EmpathMailbox : public QObject
         /**
          * Trigger a config read for this box.
          */
-        virtual void readConfig() = 0;
+        virtual void loadConfig() = 0;
  
         /**
          * Synchronise the index for the folder specified in the url.
@@ -311,7 +309,11 @@ class EmpathMailbox : public QObject
         /**
          * Report the type of this mailbox.
          */
-        AccountType type() const { return type_; }
+        Type type() const { return type_; }
+        /**
+         * Report the type of this mailbox as a string.
+         */
+        QString typeAsString() const { return typeString_; }
         /**
          * Name of the desired pixmap to represent this box.
          */
@@ -353,7 +355,8 @@ class EmpathMailbox : public QObject
 
         EmpathURL   url_;
 
-        AccountType type_;
+        Type type_;
+        QString typeString_;
 
         Q_UINT32    newMessagesCount_;
 
@@ -367,6 +370,7 @@ class EmpathMailbox : public QObject
 
     private:
 
+        void _connectUp();
         void _enqueue(const EmpathURL &, RMM::MessageStatus, QString, QString);
         void _enqueue(const EmpathURL &, RMM::RMessage &, QString, QString);
         void _enqueue(ActionType, const EmpathURL &, QString, QString);

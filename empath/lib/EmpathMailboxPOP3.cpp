@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathMailboxPOP3.h"
+#endif
+
 // Qt includes
 #include <qregexp.h>
 #include <qdir.h>
@@ -30,7 +34,6 @@
 
 // Local includes
 #include "EmpathMailboxPOP3.h"
-#include "EmpathMessageList.h"
 #include "EmpathFolderList.h"
 #include "Empath.h"
 #include "EmpathConfig.h"
@@ -46,6 +49,7 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
         authenticationTries_(8)
 {
     type_ = POP3;
+    typeString_ = "POP3";
     
     job = 0;
     job = new KIOJob();
@@ -65,7 +69,7 @@ EmpathMailboxPOP3::~EmpathMailboxPOP3()
     void
 EmpathMailboxPOP3::init()
 {
-    readConfig();
+    loadConfig();
     
     QObject::connect(
         job,    SIGNAL(sigFinished(int)),
@@ -87,7 +91,7 @@ EmpathMailboxPOP3::init()
     url.setFolderPath(i18n("Inbox"));
     
     EmpathFolder * folder_inbox = new EmpathFolder(url);
-    folderList_.append(folder_inbox);
+    folderList_.insert(folder_inbox->name(), folder_inbox);
     
     emit(updateFolderLists());
 }
@@ -400,7 +404,6 @@ EmpathMailboxPOP3::saveConfig()
     CWE(KEY_POP3_USERNAME,                  username_);
     CWE(KEY_POP3_PASSWORD,                  password_);
     CWE(KEY_POP3_APOP,                       useAPOP_);
-    CWE(KEY_POP3_SAVE_POLICY,               (unsigned long)passwordSavePolicy_);
     CWE(KEY_POP3_LOGGING_POLICY,            logging_);
     CWE(KEY_POP3_LOG_FILE_PATH,             logFilePath_);
     CWE(KEY_POP3_LOG_FILE_DISPOSAL_POLICY,  logFileDisposalPolicy_);
@@ -409,11 +412,10 @@ EmpathMailboxPOP3::saveConfig()
     CWE(KEY_POP3_MAIL_CHECK_INTERVAL,       checkMailInterval_);
     CWE(KEY_POP3_RETRIEVE_IF_HAVE,          retrieveIfHave_);
 #undef CWE
-    config_->sync();
 }
 
     void
-EmpathMailboxPOP3::readConfig()
+EmpathMailboxPOP3::loadConfig()
 {
     empathDebug("Reading config");
     KConfig * config_ = KGlobal::config();
@@ -433,7 +435,6 @@ EmpathMailboxPOP3::readConfig()
     config_->setDollarExpansion(false);
     password_               = CRE(KEY_POP3_PASSWORD, "");
     useAPOP_                = CRBE(KEY_POP3_APOP, true);
-    passwordSavePolicy_     = (SavePolicy) CRUNE(KEY_POP3_SAVE_POLICY, Never);
     logging_                = CRBE(KEY_POP3_LOGGING_POLICY,    false);
     logFilePath_            = CRE(KEY_POP3_LOG_FILE_PATH, "");
     logFileDisposalPolicy_  = CRBE(KEY_POP3_LOG_FILE_DISPOSAL_POLICY, false);
@@ -477,12 +478,6 @@ EmpathMailboxPOP3::setUseAPOP(bool yn)
 EmpathMailboxPOP3::setPassword(const QString & password)
 {
     password_ = password;
-}
-
-    void
-EmpathMailboxPOP3::setPasswordSavePolicy(SavePolicy policy)
-{
-    passwordSavePolicy_ = policy;
 }
 
     void
@@ -545,12 +540,6 @@ EmpathMailboxPOP3::password()
 EmpathMailboxPOP3::useAPOP()
 {
     return useAPOP_;
-}
-
-    EmpathMailbox::SavePolicy
-EmpathMailboxPOP3::passwordSavePolicy()
-{ 
-    return passwordSavePolicy_;
 }
 
     bool

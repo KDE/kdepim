@@ -18,18 +18,23 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathSetupWizard.h"
+#endif
+
 #ifndef EMPATHSETUPWIZARD_H
 #define EMPATHSETUPWIZARD_H
 
 // Qt includes
 #include <qwizard.h>
+#include <qspinbox.h>
 #include <qlineedit.h>
 #include <qvalidator.h>
 
-class EmpathAccountsSettingsWidget;
 class EmpathWelcomePage;
 class EmpathUserInfoPage;
-class EmpathAccountInfoPage;
+class EmpathAccountTypePage;
+class EmpathAccountSetupPage;
 class EmpathReviewPage;
 
 class EmpathSetupWizard : public QWizard
@@ -45,7 +50,10 @@ class EmpathSetupWizard : public QWizard
     protected slots:
         
         void s_userContinueOK(bool);
-        void s_accountContinueOK(bool);
+        void s_accountSetupContinueOK(bool);
+        void s_setPop   (bool);
+        void s_setLocal (bool);
+        void s_setHelp  (bool);
 
     private:
         
@@ -53,7 +61,8 @@ class EmpathSetupWizard : public QWizard
 
         EmpathWelcomePage       * welcomePage_;
         EmpathUserInfoPage      * userPage_;
-        EmpathAccountInfoPage   * accountPage_;
+        EmpathAccountTypePage   * accountTypePage_;
+        EmpathAccountSetupPage  * accountSetupPage_;
         EmpathReviewPage        * reviewPage_;
 };
 
@@ -95,22 +104,47 @@ class EmpathUserInfoPage : public QWidget
         QLineEdit * le_name_, * le_address_;
 };
 
-class EmpathAccountInfoPage : public QWidget
+class EmpathAccountTypePage : public QWidget
 {
     Q_OBJECT
         
     public:
         
-        EmpathAccountInfoPage(QWidget * parent, const char * name = 0);
-        virtual ~EmpathAccountInfoPage();
-        
-    signals:
-        
-        void continueOK(bool);
+        EmpathAccountTypePage(QWidget * parent, const char * name = 0);
+        virtual ~EmpathAccountTypePage();
+};
 
-    private:
+class EmpathAccountSetupPage : public QWidget
+{
+    Q_OBJECT
+        
+    public:
+
+        enum AccountType {
+          POP,
+          Local,
+          None
+        };
+        
+        EmpathAccountSetupPage(QWidget * parent, const char * name = 0);
+        virtual ~EmpathAccountSetupPage();
+        
+        void showPop();
+        void showLocal();
+        void showHelp();
+
     
-        EmpathAccountsSettingsWidget * widget_;
+    signals:
+    
+        void continueOK(bool);
+      
+    private:
+
+        // Widgets for POP setup.
+        QLineEdit * le_hostname_;
+        QLineEdit * le_username_;
+        QLineEdit * le_password_;
+        QSpinBox  * sb_port_;
 };
 
 class EmpathReviewPage : public QWidget

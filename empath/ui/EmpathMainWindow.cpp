@@ -43,7 +43,6 @@
 #include "EmpathMessageListWidget.h"
 #include "EmpathMessageViewWindow.h"
 #include "EmpathMessageWidget.h"
-#include "EmpathMessageList.h"
 #include "EmpathFolderWidget.h"
 #include "EmpathConfig.h"
 #include "EmpathFolderChooserDialog.h"
@@ -52,8 +51,6 @@
 EmpathMainWindow::EmpathMainWindow(const char * name)
     :    KTMainWindow(name)
 {
-    empathDebug("ctor");
-
     // Resize to previous size.
     
     KConfig * c = KGlobal::config();
@@ -90,8 +87,6 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
 
 EmpathMainWindow::~EmpathMainWindow()
 {
-    empathDebug("dtor");
-
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
@@ -177,21 +172,17 @@ EmpathMainWindow::closeEvent(QCloseEvent * e)
     void
 EmpathMainWindow::s_fileSendNew()
 {
-    empathDebug("s_fileSendNew called");
     empath->sendQueued();
 }
 
     void
 EmpathMainWindow::s_fileAddressBook()
 {
-    empathDebug("s_fileAddressBook called");
 }
     
     void
 EmpathMainWindow::s_fileQuit()
 {
-    empathDebug("s_fileQuit called");
-
     // FIXME: Check if the user wants to save changes.
     
     // Hide all toplevels while we clean up.
@@ -219,32 +210,24 @@ EmpathMainWindow::s_fileQuit()
 EmpathMainWindow::s_folderNew()
 {
     // STUB
-    empathDebug("s_folderNew called");
-
 }
 
     void
 EmpathMainWindow::s_folderEdit()
 {
     // STUB
-    empathDebug("s_folderEdit called");
-
 }
 
     void
 EmpathMainWindow::s_folderClear()
 {
     // STUB
-    empathDebug("s_folderClear called");
-
 }
 
     void
 EmpathMainWindow::s_folderDelete()
 {
     // STUB
-    empathDebug("s_folderDelete called");
-
 }
 
 
@@ -306,10 +289,8 @@ EmpathMainWindow::s_messageCopyTo()
 
     EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
-    if (fcd.exec() != QDialog::Accepted) {
-        empathDebug("copy cancelled");
+    if (fcd.exec() != QDialog::Accepted)
         return;
-    }
 
     empath->copy(messageListWidget_->firstSelectedMessage(), fcd.selected());
 }
@@ -317,14 +298,10 @@ EmpathMainWindow::s_messageCopyTo()
     void
 EmpathMainWindow::s_messageMoveTo()
 {
-    empathDebug("s_messageMoveTo called");
-
     EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
-    if (fcd.exec() != QDialog::Accepted) {
-        empathDebug("copy cancelled");
+    if (fcd.exec() != QDialog::Accepted)
         return;
-    }
 
     empath->move
         (messageListWidget_->firstSelectedMessage(), fcd.selected());

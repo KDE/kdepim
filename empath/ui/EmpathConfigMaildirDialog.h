@@ -32,7 +32,6 @@
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
-#include <qlayout.h>
 #include <qcheckbox.h>
 #include <qlistbox.h>
 #include <qbuttongroup.h>
@@ -43,7 +42,9 @@
 
 // Maildir includes
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
+class EmpathDirSelectWidget;
 class EmpathMailboxMaildir;
 class RikGroupBox;
 
@@ -57,14 +58,13 @@ class EmpathConfigMaildirDialog : public QDialog
 
     public:
         
-        EmpathConfigMaildirDialog(
-                EmpathMailboxMaildir * mailbox,
-                QWidget * parent = 0,
-                const char * name = 0);
+        static void create(const EmpathURL &, QWidget * = 0);
 
-        ~EmpathConfigMaildirDialog() { empathDebug("dtor"); }
+        ~EmpathConfigMaildirDialog();
 
         void setMailbox(EmpathMailboxMaildir * mailbox);
+        
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
         
     protected slots:
 
@@ -73,41 +73,34 @@ class EmpathConfigMaildirDialog : public QDialog
         void    s_help();
         void    s_apply();
         void    s_default();
-        void    s_browseMailboxPath();
 
     private:
+
+        EmpathConfigMaildirDialog(const EmpathURL &, QWidget * = 0);
 
         void saveData();
         void loadData();
         
-        EmpathMailboxMaildir    * mailbox_;
+        EmpathURL url_;
 
-        RikGroupBox        * rgb_server_;
-        
-        KButtonBox        * buttonBox_;
-        
-        QWidget            * w_server_;
-        
-        QGridLayout        * topLevelLayout_;
-        QGridLayout        * serverGroupLayout_;
-        
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        QPushButton        * pb_help_;
-        QPushButton        * pb_apply_;
-        QPushButton        * pb_default_;
+        QPushButton * pb_OK_;
+        QPushButton * pb_cancel_;
+        QPushButton * pb_help_;
+        QPushButton * pb_apply_;
+        QPushButton * pb_default_;
 
         // w_server
         
-        QLabel            * l_mailboxPath_;
-        QLineEdit        * le_mailboxPath_;
-        QPushButton        * pb_browseMailboxPath_;
-
-        QSpinBox        * sb_mailCheckInterval_;
-
-        QCheckBox        * cb_mailCheckInterval_;
+        QLabel      * l_mailboxPath_;
+        EmpathDirSelectWidget  * edsw_mailboxPath_;
         
-        bool            applied_;
+        QSpinBox    * sb_mailCheckInterval_;
+
+        QCheckBox   * cb_mailCheckInterval_;
+        
+        bool applied_;
+        
+        static bool     exists_;
 };
 
 #endif

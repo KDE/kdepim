@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma interface "EmpathMailboxPOP3.h"
+#endif
+
 #ifndef EMPATHMAILBOXPOP3_H
 #define EMPATHMAILBOXPOP3_H
 
@@ -161,7 +165,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         QString     username();
         QString     password();
         bool        useAPOP();
-        SavePolicy  passwordSavePolicy();
         bool        loggingPolicy();
         QString     logFilePath();
         bool        logFileDisposalPolicy();
@@ -195,7 +198,6 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         // End order dependency
         
         bool        useAPOP_;
-        SavePolicy  passwordSavePolicy_;
         bool        loggingPolicy_;
         QString     logFilePath_;
         bool        logFileDisposalPolicy_;

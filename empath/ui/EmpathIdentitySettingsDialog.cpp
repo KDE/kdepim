@@ -308,6 +308,11 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
     resize(minimumSizeHint());
 }
 
+EmpathIdentitySettingsDialog::~EmpathIdentitySettingsDialog()
+{
+    exists_ = false;
+}
+
     void
 EmpathIdentitySettingsDialog::s_chooseSig()
 {
@@ -471,13 +476,6 @@ EmpathIdentitySettingsDialog::s_cancel()
 {
     if (!applied_)
         KGlobal::config()->rollback(true);
-    delete this;
-}
-
-    void
-EmpathIdentitySettingsDialog::closeEvent(QCloseEvent * e)
-{
-    e->accept();
     delete this;
 }
 

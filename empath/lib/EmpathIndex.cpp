@@ -18,6 +18,10 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifdef __GNUG__
+# pragma implementation "EmpathIndex.h"
+#endif
+
 // Qt includes
 #include <qdatastream.h>
 #include <qregexp.h>
@@ -35,17 +39,20 @@
 #include "Empath.h"
 
 // Implementation note:
-// The actual data (the value) is composed of an 8-bit byte, used for
-// marking status, plus a serialised version of an EmpathIndexRecord.
-// This saves us the time it takes to [de]serialise records.
+//
+// The value part is composed of an 8-bit byte, used for marking status,
+// plus a serialised version of an EmpathIndexRecord. This saves us
+// [de]serialising records when we only want to access the status.
 
 EmpathIndex::EmpathIndex()
     :   blockSize_(1024),
         count_(0),
         unreadCount_(0),
-        initialised_(false)
+        initialised_(false),
+        dbf_(0)
 {
     // Empty.
+    empathDebug("");
 }
 
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
@@ -53,8 +60,10 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
         folder_(folder),
         count_(0),
         unreadCount_(0),
-        initialised_(false)
+        initialised_(false),
+        dbf_(0)
 {
+    empathDebug(folder.asString());
     QString resDir =
         KGlobal::dirs()->saveLocation("indices", folder.mailboxName(), true);
 
@@ -101,7 +110,7 @@ EmpathIndex::setFolder(const EmpathURL & folder)
     EmpathIndexRecord *
 EmpathIndex::record(const QCString & key)
 {
-    if (!dbf_ && !_open()) {
+    if ((dbf_ == 0) && !_open()) {
         empathDebug("Index not open!");
         return 0;
     }
@@ -146,7 +155,7 @@ EmpathIndex::count()
     void
 EmpathIndex::sync()
 {
-    if (!dbf_ && !_open()) {
+    if ((dbf_ == 0) && !_open()) {
         empathDebug("Index not open!");
         return;
     }
@@ -164,7 +173,7 @@ EmpathIndex::sync()
     void
 EmpathIndex::_close()
 {
-    if (!dbf_) {
+    if (dbf_ == 0) {
         empathDebug("dbf is not open");
         return;
     }
@@ -177,14 +186,19 @@ EmpathIndex::_close()
     bool
 EmpathIndex::_open()
 {
+    if (dbf_ != 0) {
+        empathDebug("Already open");
+        return true;
+    }
+
     dbf_ = gdbm_open(
         filename_.local8Bit().data(), blockSize_, GDBM_WRCREAT, 0600, NULL);
     
-    if (!dbf_) {
+    if (dbf_ == 0) {
         empathDebug(gdbm_strerror(gdbm_errno));
         return false;
     }
-    
+
     count_ = unreadCount_ = 0;
 
     return true;
@@ -195,7 +209,7 @@ EmpathIndex::allKeys()
 {
     QStrList l;   
 
-    if (!dbf_ && !_open()) {
+    if ((dbf_ == 0) && !_open()) {
         empathDebug("Index not open!");
         return l;
     }
@@ -217,7 +231,7 @@ EmpathIndex::allKeys()
     bool
 EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
 {
-    if (!dbf_ && !_open()) {
+    if ((dbf_ == 0) && !_open()) {
         empathDebug("Index not open!");
         return false;
     }
@@ -257,7 +271,7 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
     bool
 EmpathIndex::remove(const QCString & key)
 {  
-    if (!dbf_ && !_open()) {
+    if ((dbf_ == 0) && !_open()) {
         empathDebug("Index not open!");
         return false;
     }
@@ -293,7 +307,7 @@ EmpathIndex::remove(const QCString & key)
     void
 EmpathIndex::clear()
 {
-    if (!dbf_ && !_open()) {
+    if ((dbf_ == 0) && !_open()) {
         empathDebug("Index not open!");
         return;
     }
@@ -312,7 +326,7 @@ EmpathIndex::clear()
     void
 EmpathIndex::setStatus(const QString & id, RMM::MessageStatus status)
 {
-    if (!dbf_ && !_open()) {
+    if ((dbf_ == 0) && !_open()) {
         empathDebug("Index not open!");
         return;
     }

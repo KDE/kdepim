@@ -2,6 +2,8 @@ Things you might want to VOLUNTEER for :)
 
 Highest priority first.
 
+* Write a configure test for gdbm - what to do if this fails ?
+
 * Make forwarding work properly. If only one plain body part -> just
   add some text stating this is forwarded, else attach as message/rfc822 ?
 

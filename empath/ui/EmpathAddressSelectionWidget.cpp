@@ -34,33 +34,15 @@
 #include "EmpathUIUtils.h"
 #include "EmpathAddressSelectionWidget.h"
 
-EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
-        QWidget * parent,
-        const char * name)
-    :
-        QWidget(parent, name)
+EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(QWidget * parent)
+    :   QHBox(parent, "AddressSelectionWidget")
 {
-    empathDebug("ctor");
-    
-    layout_        = new QGridLayout(this, 1, 2, 0, 10);
-    CHECK_PTR(layout_);
-    le_address_    = new QLineEdit(this, "le_address");
-    CHECK_PTR(le_address_);
-    pb_browse_    = new QPushButton(this, "pb_browse");
-    CHECK_PTR(pb_browse_);
+    le_address_ = new QLineEdit(this, "le_address");
+    pb_browse_  = new QPushButton(this, "pb_browse");
 
     pb_browse_->setPixmap(empathIcon("point")), 
        
-    pb_browse_->setFixedWidth(le_address_->sizeHint().height());
-    
-    le_address_->setFixedHeight(le_address_->sizeHint().height());
-    pb_browse_->setFixedHeight(le_address_->sizeHint().height());
-
-    layout_->setColStretch(0, 10);
-    layout_->setColStretch(1, 0);
-    
-    layout_->addWidget(le_address_,    0, 0);
-    layout_->addWidget(pb_browse_,    0, 1);
+    pb_browse_->setFixedWidth(le_address_->sizeHint().width());
 
     QObject::connect(le_address_, SIGNAL(textChanged(const QString&)),
             this, SLOT(s_textChanged(const QString&)));
@@ -71,23 +53,21 @@ EmpathAddressSelectionWidget::EmpathAddressSelectionWidget(
 
     QObject::connect(pb_browse_, SIGNAL(clicked()),
             this, SLOT(s_browseClicked()));
-
-    layout_->activate();
 }
 
 EmpathAddressSelectionWidget::~EmpathAddressSelectionWidget()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     QString
-EmpathAddressSelectionWidget::selectedAddress() const
+EmpathAddressSelectionWidget::text() const
 {
     return le_address_->text();
 }
 
     void
-EmpathAddressSelectionWidget::setAddress(const QString & address)
+EmpathAddressSelectionWidget::setText(const QString & address)
 {
     le_address_->setText(address);
 }
@@ -95,19 +75,18 @@ EmpathAddressSelectionWidget::setAddress(const QString & address)
     void
 EmpathAddressSelectionWidget::s_textChanged(const QString&)
 {
-    empathDebug("s_textChanged() called");
+    // STUB
 }
 
     void
 EmpathAddressSelectionWidget::s_lostFocus()
 {
-    empathDebug("s_lostFocus() called");
+    // STUB
 }
 
     void
 EmpathAddressSelectionWidget::s_browseClicked()
 {
-    empathDebug("s_browseClicked() called");
     QMessageBox::information(this, "Empath",
         i18n("Sorry, the addressbook isn't ready for use yet."), i18n("OK"));
 }

@@ -50,10 +50,9 @@ class EmpathFilterManagerDialog : public QDialog
     public:
     
         static void create();
-        virtual ~EmpathFilterManagerDialog()
-        { empathDebug("dtor"); exists_ = false; }
+        ~EmpathFilterManagerDialog();
         void saveData();
-        void closeEvent(QCloseEvent *);
+        void closeEvent(QCloseEvent * e) { e->accept(); delete this; }
         
     protected slots:
         

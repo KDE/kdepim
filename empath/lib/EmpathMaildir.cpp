@@ -47,7 +47,6 @@
 #include "EmpathFolder.h"
 #include "EmpathFolderList.h"
 #include "EmpathIndex.h"
-#include "EmpathMessageList.h"
 #include "Empath.h"
 #include "EmpathTask.h"
 #include "EmpathMailbox.h"
@@ -57,6 +56,8 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
         url_(url),
         basePath_(basePath)
 {
+    empathDebug(url_.asString());
+    
     path_ = basePath + "/" + url.folderPath();
     
     QObject::connect(&timer_, SIGNAL(timeout()),
@@ -91,8 +92,6 @@ EmpathMaildir::sync(bool force)
 
     if (!force && !_touched(f))
         return;
-    
-    empathDebug("I have to sync");
     
     _markNewMailAsSeen();
     
@@ -460,10 +459,8 @@ EmpathMaildir::s_timerBeeped()
     bool
 EmpathMaildir::_touched(EmpathFolder * f)
 {
-    if (!(f->index()->initialised())) {
-        empathDebug("Index not initialised");
+    if (!(f->index()->initialised()))
         return true;
-    }
     
     QFileInfo fiDir(path_ + "/cur/");
     
@@ -496,9 +493,6 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 
     QStringList fileList(d.entryList());
 
-    empathDebug("There are " +
-        QString().setNum(fileList.count()) + " files in cur");
-    
     QStringList::ConstIterator it(fileList.begin());
     
     t->setMax(fileList.count());
