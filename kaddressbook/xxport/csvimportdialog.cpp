@@ -39,6 +39,7 @@
 #include <klocale.h>
 #include <kinputdialog.h>
 #include <kmessagebox.h>
+#include <kprogress.h>
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
 
@@ -150,6 +151,14 @@ KABC::AddresseeList CSVImportDialog::contacts() const
 {
   DateParser dateParser( mDatePatternEdit->text() );
   KABC::AddresseeList contacts;
+
+  KProgressDialog progressDialog( mPage );
+  progressDialog.setAutoClose( true );
+  progressDialog.progressBar()->setTotalSteps( mTable->numRows() );
+  progressDialog.setLabel( i18n( "Importing contacts" ) );
+  progressDialog.show();
+
+  kapp->processEvents();
 
   for ( int row = 1; row < mTable->numRows(); ++row ) {
     KABC::Addressee a;
@@ -323,6 +332,13 @@ KABC::AddresseeList CSVImportDialog::contacts() const
       }
     }
 
+    kapp->processEvents();
+    
+    if ( progressDialog.wasCancelled() )
+      return KABC::AddresseeList();
+
+    progressDialog.progressBar()->advance( 1 );
+
     if ( !addrHome.isEmpty() )
       a.insertAddress( addrHome );
     if ( !addrWork.isEmpty() )
@@ -337,24 +353,24 @@ KABC::AddresseeList CSVImportDialog::contacts() const
 
 void CSVImportDialog::initGUI()
 {
-  QWidget* page = plainPage();
+  mPage = plainPage();
 
-  QGridLayout *layout = new QGridLayout( page, 1, 1, marginHint(), 
+  QGridLayout *layout = new QGridLayout( mPage, 1, 1, marginHint(), 
                                          spacingHint() );
   QHBoxLayout *hbox = new QHBoxLayout();
   hbox->setSpacing( spacingHint() );
   
-  QLabel *label = new QLabel( i18n( "File to import:" ), page );
+  QLabel *label = new QLabel( i18n( "File to import:" ), mPage );
   hbox->addWidget( label );
 
-  mUrlRequester = new KURLRequester( page );
+  mUrlRequester = new KURLRequester( mPage );
   mUrlRequester->setFilter( "*.csv" );
   hbox->addWidget( mUrlRequester );
 
   layout->addMultiCellLayout( hbox, 0, 0, 0, 4 );
 
   // Delimiter: comma, semicolon, tab, space, other
-  mDelimiterBox = new QButtonGroup( i18n( "Delimiter" ), page );
+  mDelimiterBox = new QButtonGroup( i18n( "Delimiter" ), mPage );
   mDelimiterBox->setColumnLayout( 0, Qt::Vertical );
   mDelimiterBox->layout()->setSpacing( spacingHint() );
   mDelimiterBox->layout()->setMargin( marginHint() );
@@ -381,17 +397,17 @@ void CSVImportDialog::initGUI()
   mDelimiterEdit = new QLineEdit( mDelimiterBox );
   delimiterLayout->addWidget( mDelimiterEdit, 1, 2 );
 
-  mComboLine = new QComboBox( false, page );
+  mComboLine = new QComboBox( false, mPage );
   mComboLine->insertItem( i18n( "1" ) );
   layout->addWidget( mComboLine, 2, 3 );
 
-  mComboQuote = new QComboBox( false, page );
+  mComboQuote = new QComboBox( false, mPage );
   mComboQuote->insertItem( i18n( "\"" ), 0 );
   mComboQuote->insertItem( i18n( "'" ), 1 );
   mComboQuote->insertItem( i18n( "None" ), 2 );
   layout->addWidget( mComboQuote, 2, 2 );
 
-  mDatePatternEdit = new QLineEdit( page );
+  mDatePatternEdit = new QLineEdit( mPage );
   mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 format as default
   QToolTip::add( mDatePatternEdit, i18n( "<ul><li>y: year with 2 digits</li>"
                                          "<li>Y: year with 4 digits</li>"
@@ -401,20 +417,20 @@ void CSVImportDialog::initGUI()
                                          "<li>D: day with 2 digits</li></ul>" ) );
   layout->addWidget( mDatePatternEdit, 2, 4 );
 
-  label = new QLabel( i18n( "Start at line:" ), page );
+  label = new QLabel( i18n( "Start at line:" ), mPage );
   layout->addWidget( label, 1, 3 );
 
-  label = new QLabel( i18n( "Textquote:" ), page );
+  label = new QLabel( i18n( "Textquote:" ), mPage );
   layout->addWidget( label, 1, 2 );
 
-  label = new QLabel( i18n( "Date format:" ), page );
+  label = new QLabel( i18n( "Date format:" ), mPage );
   layout->addWidget( label, 1, 4 );
 
-  mIgnoreDuplicates = new QCheckBox( page );
+  mIgnoreDuplicates = new QCheckBox( mPage );
   mIgnoreDuplicates->setText( i18n( "Ignore duplicate delimiters" ) );
   layout->addMultiCellWidget( mIgnoreDuplicates, 3, 3, 2, 4 );
 
-  mTable = new QTable( 0, 0, page );
+  mTable = new QTable( 0, 0, mPage );
   mTable->setSelectionMode( QTable::NoSelection );
   mTable->horizontalHeader()->hide();
   layout->addMultiCellWidget( mTable, 4, 4, 0, 4 );

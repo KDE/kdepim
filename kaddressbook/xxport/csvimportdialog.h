@@ -89,6 +89,7 @@ class CSVImportDialog : public KDialogBase
     QComboBox* mComboLine;
     QComboBox* mComboQuote;
     QCheckBox* mIgnoreDuplicates;
+    QWidget* mPage;
     KURLRequester* mUrlRequester;
 
     void initGUI();
