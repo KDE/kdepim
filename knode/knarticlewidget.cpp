@@ -159,7 +159,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
 
   //actions
   a_ctSave              = KStdAction::save(this, SLOT(slotSave()), a_ctions);
-  a_ctSave->setText("&Save...");
+  a_ctSave->setText(i18n("&Save..."));
   a_ctPrint             = KStdAction::print(this, SLOT(slotPrint()), a_ctions);
   a_ctSelAll            = KStdAction::selectAll(this, SLOT(slotSelectAll()), a_ctions);
   a_ctCopy              = KStdAction::copy(this, SLOT(copy()), a_ctions);
@@ -263,7 +263,7 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
   if ( !e ) return;
 
   int offs = (visibleHeight() < 30) ? visibleHeight() : 30;
-    
+
   switch(e->key()) {
     case Key_Prior:
       scrollBy( 0, -visibleHeight()+offs);
@@ -351,9 +351,9 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
 
   uint lastReplacement=0;
   for(uint idx=0; idx<len; idx++){
-    
+
     switch(text[idx].latin1()) {
-      
+
       case '\r':  lastReplacement=idx; break;
       case '\n':  lastReplacement=idx; result+="<br>"; break;
       case '<' :  lastReplacement=idx; result+="&lt;"; break;
@@ -361,7 +361,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '&' :  lastReplacement=idx; result+="&amp;"; break;
       case '"' :  lastReplacement=idx; result+="&quot;"; break;
       case '\t':  lastReplacement=idx; result+="        "; break;   // tab == 8 spaces
-      
+
       case '@' :            // email-addresses or message-ids
         if (parseURLs) {
           uint startIdx = idx;
@@ -396,8 +396,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
         }
         result+=text[idx];
         break;
-      
-      case 'h' :  
+
+      case 'h' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'
           regExp="^https?://[^\\s<>()\"|\\[\\]{}]+";
@@ -414,8 +414,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           }
         }
         result+=text[idx];
-        break;  
-      
+        break;
+
       case 'w' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'
@@ -433,8 +433,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           }
         }
         result+=text[idx];
-        break;  
-      
+        break;
+
       case 'f' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'
@@ -523,7 +523,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
                   break;
                 case '*' :
                   result+=QString("<b>%1</b>").arg(toHtmlString(text.mid(idx+1,matchLen-2),parseURLs,beautification));
-                  break;                  
+                  break;
               }
               idx+=matchLen-1;
               lastReplacement=idx;
@@ -532,11 +532,11 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           }
         }
         result+=text[idx];
-        break;    
-            
+        break;
+
       default  : result+=text[idx];
     }
-  }           
+  }
   return result;
 }
 
@@ -551,12 +551,12 @@ void KNArticleWidget::openURL(const QString &url)
   else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTnetscape){
     KProcess proc;
     proc << "netscape";
-  
+
     struct stat info;      // QFileInfo is unable to handle netscape's broken symlink
     if (lstat((QDir::homeDirPath()+"/.netscape/lock").local8Bit(),&info)==0)
       proc << "-remote" << QString("openURL(%1)").arg(url);
     else
-      proc << url;  
+      proc << url;
 
     proc.start(KProcess::DontCare);
   }
@@ -780,7 +780,7 @@ void KNArticleWidget::processJob(KNJobData *j)
         showErrorMessage(j->errorString());
     }
   }
-  
+
   delete j;
 }
 
@@ -910,7 +910,7 @@ void KNArticleWidget::createHtmlPage()
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-family = " << font().family() << endl;
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-charset = " << (int)(font().charSet()) << endl;
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : article-charset = " << text->contentType()->charset() << endl;
-  
+
   html+="</table>";
 
   //----------------------------------- </Header> --------------------------------------
@@ -1306,24 +1306,24 @@ void KNArticleWidget::slotPrint()
 
     QStringList lines;
     KNMimeContent *txt=a_rticle->textContent();
-    
+
     if(txt) {
       txt->decodedText(lines);
       for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
-        
+
         if(yPos+margin > metrics.height()) {
           printer->newPage();
           yPos=0;
         }
-        
+
         text=(*it);
         p.drawText( 10, yPos+margin,  metrics.width(),
                     fm.lineSpacing(), ExpandTabs | DontClip,
                     text );
-        
+
         yPos+=fm.lineSpacing();
       }
-    } 
+    }
 
     p.end();
   }
@@ -1452,7 +1452,7 @@ void KNArticleWidget::slotTimeout()
 void KNArticleWidget::slotVerify()
 {
   knGlobals.artManager->verifyPGPSignature(a_rticle);
-}                                                                                                                                    
+}
 
 //--------------------------------------------------------------------------------------
 
