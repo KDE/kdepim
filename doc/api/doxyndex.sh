@@ -4,9 +4,11 @@
 # is to make the menu on the left in the file match the actually
 # generated files (ie. leave out namespaces if there are none).
 #
-# Usage: doxyndex.sh <html-output-directory>
+# Usage: doxyndex.sh <toplevel-apidocs-dir> <relative-html-output-directory>
 
-echo "Postprocessing files in $1"
+WRKDIR="$1/$2"
+TOPDIR=`echo "$2" | sed -e 's+[^/][^/]*/+../+g' -e 's+html$+..+'`
+echo "Postprocessing files in $WRKDIR ($TOPDIR)"
 
 MENU="<ul>"
 
@@ -26,14 +28,14 @@ for i in "Main Page/index" \
 do
 	NAME=`dirname "$i"`
 	FILE=`basename "$i"`
-	test -f "$1/$FILE.html" && MENU="$MENU<li><a href=\"$FILE.html\">$NAME</a></li>"
+	test -f "$WRKDIR/$FILE.html" && MENU="$MENU<li><a href=\"$FILE.html\">$NAME</a></li>"
 done
 
 MENU="$MENU</ul>"
 
 # Now substitute in the MENU in every file. This depends
 # on HTML_HEADER (ie. header.html) containing the <!-- menu --> comment.
-for i in "$1"/*.html
+for i in "$WRKDIR"/*.html
 do
 	sed -e "s+<!-- menu -->+$MENU+" < "$i" > "$i.new"
 	mv "$i.new" "$i"
