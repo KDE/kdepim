@@ -49,16 +49,6 @@ using namespace KPIM;
 
 extern "C"
 {
-/*  
-  KRES::ConfigWidget *config_widget( QWidget *parent ) {
-    return new KCal::ResourceExchangeConfig( parent, "Configure Exchange Calendar" );
-  }
-
-  KRES::Resource *resource( const KConfig *config ) {
-    kdDebug() << "In researchExchange static resource() function" << endl;
-    return new KCal::ResourceExchange( config );
-  }
-*/
   void* init_resourcecalendarexchange()
   {
     return new KRES::PluginFactory<ResourceExchange,ResourceExchangeConfig>();
