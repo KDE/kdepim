@@ -1,6 +1,6 @@
-usr/lib/libimap.so.0.0.0
-usr/lib/libimap.so.0
-usr/lib/libimap.la
+usr/lib/libkimap.so.0.0.0
+usr/lib/libkimap.so.0
+usr/lib/libkimap.la
 usr/lib/librmm.so.1.0.0
 usr/lib/librmm.so.1
 usr/lib/librmm.la
