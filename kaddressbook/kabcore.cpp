@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressbook.
-    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2003 - 2004 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -254,7 +254,7 @@ KAboutData *KABCore::createAboutData()
   KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
                                       "3.2", I18N_NOOP( "The KDE Address Book" ),
                                       KAboutData::License_GPL_V2,
-                                      I18N_NOOP( "(c) 1997-2003, The KDE PIM Team" ) );
+                                      I18N_NOOP( "(c) 1997-2004, The KDE PIM Team" ) );
   about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
   about->addAuthor( "Don Sanders", I18N_NOOP( "Original author" ) );
   about->addAuthor( "Cornelius Schumacher",

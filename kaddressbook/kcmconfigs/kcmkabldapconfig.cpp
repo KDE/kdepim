@@ -71,7 +71,7 @@ const KAboutData* KCMKabLdapConfig::aboutData() const
   KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabldapconfig" ),
                                       I18N_NOOP( "KAB LDAP Configure Dialog" ),
                                       0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c), 2003 Tobias Koenig" ) );
+                                      I18N_NOOP( "(c), 2003 - 2004 Tobias Koenig" ) );
 
   about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
 
