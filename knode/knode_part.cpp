@@ -79,6 +79,7 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
 
 KNodePart::~KNodePart()
 {
+  mainWidget->prepareShutdown();
 }
 
 KAboutData *KNodePart::createAboutData()

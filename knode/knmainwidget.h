@@ -65,6 +65,7 @@ public:
 
   /** exit */
   bool queryClose();
+  void prepareShutdown();
 
   //GUI
   void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
@@ -161,7 +162,6 @@ protected:
   void saveOptions();
 
   bool requestShutdown();
-  void prepareShutdown();
 
   virtual void showEvent(QShowEvent *);
 
