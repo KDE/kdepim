@@ -41,6 +41,12 @@ public:
 		DBInfo
 	};
 
+	enum ConduitExitCode {
+		Normal=0,
+		ConduitMisconfigured=1,		// f.ex missing file
+		DCOPError=2,			// generic DCOP error
+		PeerApplicationMissing=3
+		} ;
   /**
    * The mode that this conduit should be running in will be passed to the
    * constructor.   After the constructor returns the appropriate 

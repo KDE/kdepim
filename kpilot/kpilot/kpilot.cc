@@ -68,7 +68,8 @@ static const char *id="$Id$";
 KPilotInstaller::KPilotInstaller()
   : KMainWindow(0), fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
-    fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false)
+    fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false),
+    fStatus(Startup)
 {
 	FUNCTIONSETUP;
 
@@ -101,7 +102,8 @@ KPilotInstaller::KPilotInstaller()
 	{
 		kdError() << __FUNCTION__ << ": Couldn't connect to daemon -- quitting"
 			<< endl;
-		exit(1);
+		fStatus = Error ;
+		return;
 	}
     setupWidget();
     initComponents();
@@ -1186,8 +1188,15 @@ int main(int argc, char** argv)
 	if (run_mode=='c')
 	{
 		CConduitSetup *cs = new CConduitSetup(0L);
-		cs->exec();
-		exit(2);
+		int r = cs->exec();
+		if (r)
+		{
+			return 1;	// Dialog cancelled
+		}
+		else
+		{
+			return 0;
+		}
 	}
 #endif
 
@@ -1224,6 +1233,13 @@ int main(int argc, char** argv)
 
         KPilotInstaller *tp = new KPilotInstaller();
 
+	if (tp->status() == KPilotInstaller::Error)
+	{
+		delete tp;
+		tp=0;
+		return 1;
+	}
+
         KGlobal::dirs()->addResourceType("pilotdbs", "share/apps/kpilot/DBBackup");
 	a.setMainWidget(tp);
 	return a.exec();
@@ -1231,6 +1247,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.31  2001/02/05 11:19:18  adridg
+// Reduced icon-loading code to hard-coded xpms
+//
 // Revision 1.30  2001/01/19 22:18:43  waba
 // KTMainWindow is obsolete. I hope it works because I can't test due to lack of
 // pilot. At least it compiles.

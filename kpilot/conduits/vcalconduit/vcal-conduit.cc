@@ -168,7 +168,7 @@ void VCalConduit::getCalendar()
 			<< endl;
 
 		KMessageBox::error(0, message,"vCalendar Conduit Fatal Error");
-		exit(1);
+		exit(ConduitMisconfigured);
 	}
 	else
 	{
@@ -1826,6 +1826,9 @@ int VCalConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.23  2001/02/02 17:31:57  adridg
+// Reduced debugging message overload
+//
 // Revision 1.22  2001/01/15 14:50:50  bero
 // Fix build
 //

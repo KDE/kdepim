@@ -228,6 +228,12 @@ private:
 	*/
 	void resumeDB();
 
+
+public:
+	typedef enum { Normal, PilotLinkError } Status ;
+
+	Status status() const { return fStatus; } ;
+
 public slots:
   void slotConduitRead(KSocket*);
   void slotConduitClosed(KSocket*);
@@ -336,6 +342,9 @@ private:
   int         fNextDBIndex;         // The next DB to sync
   KProcess*    fConduitProcess;
   MessageDialog* fMessageDialog;    // The dialog showing current status
+
+	Status fStatus;
+
 signals:
   void databaseSyncComplete();
   void syncingDatabase(char*);

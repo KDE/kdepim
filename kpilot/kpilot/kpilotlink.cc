@@ -164,7 +164,8 @@ KPilotLink::KPilotLink()
 	fSlowSyncRequired(false),
 	fFastSyncRequired(false),
     fOwningWidget(0L), fStatusBar(0L), fProgressDialog(0L), fConduitSocket(0L),
-    fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L), fMessageDialog(0L)
+    fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L), fMessageDialog(0L),
+	fStatus(Normal)
 {
 	fKPilotLink = this;
 	readConfig();
@@ -181,14 +182,15 @@ KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
 	fFastSyncRequired(false),
     fOwningWidget(owner), fStatusBar(statusBar), fProgressDialog(0L),
     fConduitSocket(0L), fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L),
-    fMessageDialog(0L)
+    fMessageDialog(0L),
+	fStatus(Normal)
 {
   fKPilotLink = this;
 	readConfig();
   initPilotSocket(devicePath);
+	if (fStatus!=Normal) return;
   initConduitSocket();
   fMessageDialog = new MessageDialog(i18n("Sync Status"));
-
 }
 
 KPilotLink::~KPilotLink()
@@ -211,7 +213,7 @@ KPilotLink::~KPilotLink()
 
 
 void
-KPilotLink::initPilotSocket(const QString& devicePath, bool inetconnection)
+KPilotLink::initPilotSocket(const QString& devicePath, bool)
 {
 	FUNCTIONSETUP;
 
@@ -310,7 +312,7 @@ errInit:
 	KMessageBox::error(fOwningWidget, msg,
 		i18n("Error Initializing Daemon"));
 
-	exit(1);
+	fStatus = PilotLinkError;
 }
 
 void
@@ -827,7 +829,7 @@ KPilotLink::doFullRestore()
 	  kdWarning() << __FUNCTION__ << ": Exiting on cancel. "
 	    "All data not restored."
 	       << endl;
-	  exit(1);
+	  return false;
 	}
       showMessage(i18n("Restoring databases to Palm Pilot. "
 		       "Slow sync required."));
@@ -1728,6 +1730,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.31  2001/02/02 17:31:32  adridg
+// Fixed conduit bug
+//
 // Revision 1.30  2001/02/01 15:29:44  adridg
 // Fixed very confusing message -- QString::arg used properly now
 //

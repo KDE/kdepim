@@ -72,6 +72,13 @@ class KPilotInstaller : public KMainWindow
     void addComponentPage(QWidget* widget, QString name);
 
 
+	typedef enum { Normal,
+		Startup,
+		WaitingForDaemon,
+		UIBusy,
+		Error } Status ;
+
+	Status status() const { return fStatus; } ;
 
     protected:
       void closeEvent(QCloseEvent *e);
@@ -152,6 +159,8 @@ private:
       bool            fKillDaemonOnExit;
       char            fLinkCommand[10000];
       int             fLastWidgetSelected;
+
+      Status fStatus;
 
 	/**
 	* We keep track of this one (conduitMenu)

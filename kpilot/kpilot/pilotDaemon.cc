@@ -348,8 +348,6 @@ PilotDaemon::reloadSettings()
 
 	if (fMonitorProcess)
 	{
-		disconnect(fMonitorProcess, SIGNAL(processExited(KProcess*)),
-			this, SLOT(slotProcFinished(KProcess*)));
 		killMonitor();
 	}
 	else
@@ -375,6 +373,17 @@ PilotDaemon::setupConnections()
 	fStatusSocket = 0L;
 
 	fPilotLink = new KPilotLink(0L, 0L, QFile::encodeName(fPilotDevice));
+	if (!fPilotLink)
+	{
+		e = EACCES;
+		goto ErrConn;
+	}
+	if (fPilotLink->status() != KPilotLink::Normal)
+	{
+		e = EACCES;
+		goto ErrConn;
+	}
+
 	fCommandSocket = new KServerSocket(PilotDaemon::COMMAND_PORT);
 	if (fCommandSocket && (fCommandSocket->socket() < 0 )) 
 	{
@@ -402,7 +411,7 @@ PilotDaemon::setupConnections()
 
 ErrConn:
 	kdError() << __FUNCTION__
-		<< ": Error creating socket for daemon: "
+		<< ": While creating socket for daemon: "
 		<< strerror(e)
 		<< endl;
 
@@ -476,8 +485,13 @@ void PilotDaemon::killMonitor(bool finishsync)
 		m->kill();
 	}
 
-	delete fMonitorProcess;
-	fMonitorProcess=0L;
+	if (fMonitorProcess)
+	{
+		disconnect(fMonitorProcess, SIGNAL(processExited(KProcess*)),
+			this, SLOT(slotProcFinished(KProcess*)));
+		delete fMonitorProcess;
+		fMonitorProcess=0L;
+	}
 }
 
 
@@ -577,7 +591,7 @@ PilotDaemon::startHotSync()
 	    {
 	      execlp("kpilot", "kpilot", 0);
 		kdError() << __FUNCTION__ << ": Failed to start KPilot." << endl;
-	      exit(1);
+	      exit(1);	// This is a legitimate exit(), since we should never get here.
 	    }
 	}
       else
@@ -965,21 +979,15 @@ PilotDaemon::saveProperties(KConfig&)
 {
 	FUNCTIONSETUP;
 
-  disconnect(fMonitorProcess, SIGNAL(processExited(KProcess*)),
-	  this, SLOT(slotProcFinished(KProcess*)));
-  fMonitorProcess->kill();
+	killMonitor();
 }
 
 PilotDaemon::~PilotDaemon()
 {
 	FUNCTIONSETUP;
 
-  //  Should delete this but something goes apeshit
-  disconnect(fMonitorProcess, SIGNAL(processExited(KProcess*)),
-	     this, SLOT(slotProcFinished(KProcess*)));
-  fMonitorProcess->kill();
-//   delete fMonitorProcess;
-  //   delete fSyncProcess;
+	killMonitor();
+
   delete fPilotLink;
   delete fCommandSocket;
   delete fStatusSocket;
@@ -1130,6 +1138,7 @@ int main(int argc, char* argv[])
 	//
 	{
 	KConfig& c=KPilotLink::getConfig();
+	c.setReadOnly(true);
 	int v = c.readNumEntry("Configured",0);
 
 	if (v < KPilotLink::ConfigurationVersion)
@@ -1154,6 +1163,8 @@ int main(int argc, char* argv[])
 		kdError() << __FUNCTION__ 
 			<< ": Failed to start up daemon"
 			<< endl;
+		delete gPilotDaemon;
+		gPilotDaemon = 0;
 		return 2;
 	}
 	
@@ -1177,6 +1188,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.26  2001/01/06 13:20:23  adridg
+// Cleaned up DCOP; changed version number
+//
 // Revision 1.25  2001/01/04 22:19:37  adridg
 // Stuff for Chris and Bug 18072
 //

@@ -94,7 +94,7 @@ void TodoConduit::getCalendar()
 			KMessageBox::error(0,
 				message.arg(calName),
 				i18n("Todo Conduit Fatal Error"));
-			exit(-1);
+			exit(ConduitMisconfigured);
 		}
 	}
 	else
