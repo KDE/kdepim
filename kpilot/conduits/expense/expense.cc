@@ -90,38 +90,7 @@
 #include <pi-expense.h>
 #endif
 
-#ifndef _KPILOT_CONDUITAPP_H
-#include "conduitApp.h"
-#endif
 
-#ifndef _KPILOT_KPILOTCONFIG_H
-#include "kpilotConfig.h"
-#endif
-
-#ifndef _KPILOT_EXPENSE_H
-#include "expense.h"
-#endif
-
-#ifndef _KPILOT_SETUPDIALOG_H
-#include "setupDialog.h"
-#endif
-
-#ifndef _KPILOT_PILOTDATEENTRY_H
-#include "pilotDateEntry.h"
-#endif
-
-#ifndef _KPILOT_PILOTDATABASE_H
-#include "pilotDatabase.h"
-#endif
- 
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
-
-
-#ifndef _PILOT_EXPENSE_H
-#include <pi-expense.h>
-#endif
 
 #ifndef _STDLIB_H
 #include <stdlib.h>
@@ -151,6 +120,13 @@
 #include <string.h>
 #endif
 
+
+#include "pilotDatabase.h"
+#include "pilotRecord.h"
+
+// #include "pilotDateEntry.h"
+
+#include "expense.h"
 
 #define DATESIZE 10
 /*  This was copied out of the pilot-link package.  
@@ -267,36 +243,12 @@ static const char *expense_id =
 	"$Id$";
 
 
-// This is a generic main() function, all
-// conduits look basically the same,
-// except for the name of the conduit.
-//
-//
-int main(int argc, char* argv[])
-{
-	ConduitApp a(argc,argv,"conduitExpense",
-		I18N_NOOP("Expense Conduit"),
-		KPILOT_VERSION);
 
 
-	a.addAuthor("Adriaan de Groot",
-		"Expense Conduit author",
-		"adridg@cs.kun.nl");
-
-	a.addAuthor("Christopher Molnar",
-		"Expense Conduit author",
-		"molnarc@nebsllc.com");
-
-	ExpenseConduit conduit(a.getMode());
-	a.setConduit(&conduit);
-	return a.exec();
-}
-
-
-
-
-ExpenseConduit::ExpenseConduit(eConduitMode mode) : 
-	BaseConduit(mode)
+ExpenseConduit::ExpenseConduit(KPilotDeviceLink *d,
+	const char *name,
+	const QStringList &l) :
+	ConduitAction(d,name,l)
 {
 	FUNCTIONSETUP;
 
@@ -308,23 +260,22 @@ ExpenseConduit::~ExpenseConduit()
 
 }
 
-void
-ExpenseConduit::doSync()
+/* virtual */ void
+ExpenseConduit::exec()
 {
 	FUNCTIONSETUP;
 	struct Expense e;
 	kdDebug() << "expense" << ": In expense doSync" << endl;
 
-	KConfig& config=KPilotConfig::getConfig();
-	config.setGroup(ExpenseOptions::ExpenseGroup);
+	fConfig->setGroup("Expense-conduit");
 	
-	QString mDBType=config.readEntry("DBTypePolicy");
-	QString mDBnm=config.readEntry("DBname");
-	QString mDBsrv=config.readEntry("DBServer");
-	QString mDBtable=config.readEntry("DBtable");
-	QString mDBlogin=config.readEntry("DBlogin");
-	QString mDBpasswd=config.readEntry("DBpasswd");
-	QString mCSVname=config.readEntry("CSVFileName");
+	QString mDBType=fConfig->readEntry("DBTypePolicy");
+	QString mDBnm=fConfig->readEntry("DBname");
+	QString mDBsrv=fConfig->readEntry("DBServer");
+	QString mDBtable=fConfig->readEntry("DBtable");
+	QString mDBlogin=fConfig->readEntry("DBlogin");
+	QString mDBpasswd=fConfig->readEntry("DBpasswd");
+	QString mCSVname=fConfig->readEntry("CSVFileName");
 	
 	PilotRecord* rec;
 	KShellProcess * shproc;
@@ -349,6 +300,7 @@ ExpenseConduit::doSync()
 		while (shproc->isRunning())
 			{
 			DEBUGCONDUIT << fname << " " << shproc->pid() << " still running" << endl;
+			sleep(1);
 			}
 		// DEBUGCONDUIT << fname << shproc.args() << endl;
 		// DEBUGCONDUIT << fname << sqlcmd << endl;
@@ -361,8 +313,7 @@ ExpenseConduit::doSync()
 	}
 
 // Now let's read records
-	while ((rec=readNextModifiedRecord()))
-// 	while ((rec=readRecordByIndex(index++)))
+	while ((rec=fHandle->readNextModifiedRecord()))
         {
                 if (rec->isDeleted())
                 {
@@ -529,6 +480,9 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.16  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.15  2001/04/06 08:23:40  cschumac
 // Adding some const definition to get rid of some compiler warnings.
 //

@@ -1,3 +1,5 @@
+#ifndef _KPILOT_EXPENSE_H
+#define _KPILOT_EXPENSE_H
 /* expense.h			KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
@@ -26,12 +28,8 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOT_EXPENSE_H
-#define _KPILOT_EXPENSE_H
 
-#ifndef _KPILOT_BASECONDUIT_H
-#include "baseConduit.h"
-#endif
+#include "plugin.h"
 
 
 class PilotRecord;
@@ -39,27 +37,31 @@ class PilotDatabase;
 
 
 
-class ExpenseConduit : public BaseConduit
+class ExpenseConduit : public ConduitAction
 {
 public:
-	ExpenseConduit(eConduitMode mode);
+	ExpenseConduit(KPilotDeviceLink *,
+		const char *name=0L,
+		const QStringList &args = QStringList());
 	virtual ~ExpenseConduit();
   
-	virtual void doSync();
-	virtual QWidget* aboutAndSetup();
 
-	virtual const char* dbInfo();
-	virtual void doTest();
-
-protected:
+	virtual void exec();
 };
 
-#endif
 
 // $Log$
+// Revision 1.3  2001/03/15 21:10:07  molnarc
+//
+//
+// CJM - now it saves a csv file to the path in kpilotrc if
+//       the path exists. csv file needs some work, but its
+//       a start.
+//
 // Revision 1.2  2001/03/09 09:46:14  adridg
 // Large-scale #include cleanup
 //
 // Revision 1.1  2001/03/04 21:47:04  adridg
 // New expense conduit, non-functional but it compiles
 //
+#endif

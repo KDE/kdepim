@@ -40,7 +40,6 @@
 #include <kdebug.h>
 #include <kfiledialog.h>
 
-#include "kpilotConfig.h"
 #include "setupDialog.moc"
 
 // Something to allow us to check what revision
@@ -49,8 +48,8 @@
 //
 static const char *setupDialog_id="$Id$";
 
-ExpenseCSVPage::ExpenseCSVPage(setupDialog *p,KConfig& c) :
-	setupDialogPage(i18n("CSV Export"),p)
+ExpenseCSVPage::ExpenseCSVPage(QWidget *parent) :
+	QWidget(parent,"ExpenseCSV")
 {
 	FUNCTIONSETUP;
 
@@ -64,7 +63,6 @@ ExpenseCSVPage::ExpenseCSVPage(setupDialog *p,KConfig& c) :
 	grid->addWidget(fBrowseButton,1,3);
 
 	fCSVFileName = new QLineEdit(this);
-	fCSVFileName->setText(c.readEntry("CSVFileName"));
 	grid->addWidget(fCSVFileName,1,2);
 
 	QVButtonGroup *g = new QVButtonGroup(i18n("Rotate Policy"),this);
@@ -73,7 +71,56 @@ ExpenseCSVPage::ExpenseCSVPage(setupDialog *p,KConfig& c) :
 	fAppend = new QRadioButton(i18n("&Append"),g);
 	fRotate = new QRadioButton(i18n("&Rotate"),g);
 
-	int m = c.readNumEntry("CSVRotatePolicy",PolicyOverwrite);
+
+
+	connect(g,SIGNAL(clicked(int)),
+		this,SLOT(slotPolicyChanged()));
+
+
+	QHBox *h = new QHBox(g);
+	l = new QLabel(i18n("Rotate Depth:"),h);
+	fRotateNumber = new QSpinBox(1,10,1,h);
+
+	grid->addMultiCellWidget(g,2,2,1,3);
+
+	grid->addColSpacing(0,SPACING);
+	grid->addRowSpacing(0,SPACING);
+	grid->addColSpacing(4,SPACING);
+	grid->setRowStretch(4,100);
+}
+
+void ExpenseCSVPage::slotBrowse()
+{
+        FUNCTIONSETUP;
+ 
+	QString fileName = KFileDialog::getOpenFileName(0L, "*.csv");
+	if(fileName.isNull()) return;
+	fCSVFileName->setText(fileName);
+}
+
+int ExpenseCSVPage::getPolicy() const
+{
+	FUNCTIONSETUP;
+
+	int m = PolicyOverwrite;
+	if (fAppend->isChecked()) m = PolicyAppend;
+	if (fRotate->isChecked()) m = PolicyRotate;
+
+	if ((m==PolicyOverwrite) && !fOverWrite->isChecked())
+	{
+		kdWarning() << k_funcinfo
+			<< ": Unknown policy button selected."
+			<< endl;
+		return -1;
+	}
+
+	return m;
+}
+
+void ExpenseCSVPage::setPolicy(RotatePolicy m)
+{
+	FUNCTIONSETUP;
+
 	switch(m)
 	{
 	case PolicyOverwrite :
@@ -86,55 +133,20 @@ ExpenseCSVPage::ExpenseCSVPage(setupDialog *p,KConfig& c) :
 		fRotate->setChecked(true);
 		break;
 	default :
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown rotate policy "
 			<< m
 			<< endl;
 	}
-
-	connect(g,SIGNAL(clicked(int)),
-		this,SLOT(slotPolicyChanged()));
-
-
-	QHBox *h = new QHBox(g);
-	l = new QLabel(i18n("Rotate Depth:"),h);
-	fRotateNumber = new QSpinBox(1,10,1,h);
-	fRotateNumber->setValue(c.readNumEntry("CSVRotate",3));
-
-	grid->addWidget(g,2,2);
-
 	slotPolicyChanged();
-
-	grid->addColSpacing(0,SPACING);
-	grid->addRowSpacing(0,SPACING);
-	grid->addColSpacing(4,SPACING);
-	grid->setRowStretch(4,100);
 }
 
-void ExpenseCSVPage::slotBrowse()
+void ExpenseCSVPage::readSettings(KConfig &c)
 {
-        FUNCTIONSETUP;
- 
-  QString fileName = KFileDialog::getOpenFileName(0L, "*.csv");
-  if(fileName.isNull()) return;
-  fCSVFileName->setText(fileName);
-}
-
-int ExpenseCSVPage::getPolicy() const
-{
-	int m = PolicyOverwrite;
-	if (fAppend->isChecked()) m = PolicyAppend;
-	if (fRotate->isChecked()) m = PolicyRotate;
-
-	if ((m==PolicyOverwrite) && !fOverWrite->isChecked())
-	{
-		kdWarning() << __FUNCTION__
-			<< ": Unknown policy button selected."
-			<< endl;
-		return -1;
-	}
-
-	return m;
+	fCSVFileName->setText(c.readEntry("CSVFileName"));
+	int m = c.readNumEntry("CSVRotatePolicy",PolicyOverwrite);
+	setPolicy((RotatePolicy) m);
+	fRotateNumber->setValue(c.readNumEntry("CSVRotate",3));
 }
 
 int ExpenseDBPage::getPolicy() const
@@ -145,7 +157,7 @@ int ExpenseDBPage::getPolicy() const
 
 	if ((m==PolicyNone) && !fnone->isChecked())
 	{
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown policy button selected."
 			<< endl;
 		return -1;
@@ -169,7 +181,7 @@ void ExpenseCSVPage::slotPolicyChanged()
 		fRotateNumber->setEnabled(true);
 		break;
 	default:
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown policy button selected -- "
 			<< m
 			<< endl;
@@ -207,8 +219,8 @@ int ExpenseDBPage::commitChanges(KConfig& c)
 }
 
 
-ExpenseDBPage::ExpenseDBPage(setupDialog *p,KConfig& c):
-	setupDialogPage(i18n("Database Export"),p)
+ExpenseDBPage::ExpenseDBPage(QWidget *parent) :
+	QWidget(parent,"ExpenseDB")
 {
 	FUNCTIONSETUP;
 
@@ -219,28 +231,24 @@ ExpenseDBPage::ExpenseDBPage(setupDialog *p,KConfig& c):
 	grid->addWidget(ld1,2,1);
 
 	fDBServer = new QLineEdit(this);
-	fDBServer ->setText(c.readEntry("DBServer"));
 	grid->addWidget(fDBServer,2,2);
 
 	QLabel *ld2 = new QLabel(i18n("DB Login:"),this);
 	grid->addWidget(ld2,3,1);
 
 	fDBlogin = new QLineEdit(this);
-	fDBlogin ->setText(c.readEntry("DBlogin"));
 	grid->addWidget(fDBlogin,3,2);
 
 	QLabel *ld3 = new QLabel(i18n("DB Passwd:"),this);
 	grid->addWidget(ld3,4,1);
 
 	fDBpasswd = new QLineEdit(this);
-	fDBpasswd ->setText(c.readEntry("DBpasswd"));
 	grid->addWidget(fDBpasswd,4,2);
 
 	QLabel *ld4 = new QLabel(i18n("DB Name:"),this);
 	grid->addWidget(ld4,5,1);
 
 	fDBname = new QLineEdit(this);
-	fDBname ->setText(c.readEntry("DBname"));
 	grid->addWidget(fDBname,5,2);
 
 
@@ -248,7 +256,6 @@ ExpenseDBPage::ExpenseDBPage(setupDialog *p,KConfig& c):
 	grid->addWidget(ld5,6,1);
 
 	fDBtable = new QLineEdit(this);
-	fDBtable ->setText(c.readEntry("DBtable"));
 	grid->addWidget(fDBtable,6,2);
 
 
@@ -258,8 +265,32 @@ ExpenseDBPage::ExpenseDBPage(setupDialog *p,KConfig& c):
 	fpostgresql = new QRadioButton(i18n("&PostgreSQL"),gt);
 	fmysql = new QRadioButton(i18n("&MySQL"),gt);
 
+	grid->addMultiCellWidget(gt,1,1,1,2);
 
+
+	connect(gt,SIGNAL(clicked(int)),
+		this,SLOT(slotPolicyChanged()));
+
+	grid->addRowSpacing(0,SPACING);
+	grid->addColSpacing(0,SPACING);
+	grid->addColSpacing(4,SPACING);
+	grid->addRowSpacing(7,SPACING);
+	grid->setRowStretch(7,100);
+}
+
+void ExpenseDBPage::readSettings(KConfig &c)
+{
+	fDBServer ->setText(c.readEntry("DBServer"));
+	fDBlogin ->setText(c.readEntry("DBlogin"));
+	fDBpasswd ->setText(c.readEntry("DBpasswd"));
+	fDBname ->setText(c.readEntry("DBname"));
+	fDBtable ->setText(c.readEntry("DBtable"));
 	int m = c.readNumEntry("DBTypePolicy",PolicyNone);
+	setPolicy((DBTypePolicy) m);
+}
+
+void ExpenseDBPage::setPolicy(DBTypePolicy m)
+{
 	switch(m)
 	{
 	case PolicyNone :
@@ -272,27 +303,13 @@ ExpenseDBPage::ExpenseDBPage(setupDialog *p,KConfig& c):
 		fmysql->setChecked(true);
 		break;
 	default :
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown rotate policy "
 			<< m
 			<< endl;
 	}
 
-	connect(gt,SIGNAL(clicked(int)),
-		this,SLOT(slotPolicyChanged()));
-
-
-	grid->addWidget(gt,1,1);
-
-
-
-
-	grid->addRowSpacing(0,SPACING);
-	grid->addColSpacing(0,SPACING);
-	grid->addColSpacing(4,SPACING);
-	grid->addRowSpacing(7,SPACING);
-	grid->setRowStretch(7,100);
-
+	slotPolicyChanged();
 }
 
 void ExpenseDBPage::slotPolicyChanged()
@@ -305,35 +322,20 @@ void ExpenseDBPage::slotPolicyChanged()
 	case PolicyNone:
 	case PolicyPostgresql:
 	case PolicyMysql:
+		break;
 	default:
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown policy button selected -- "
 			<< m
 			<< endl;
 	}
 }
 
-/* static */ const char *ExpenseOptions::ExpenseGroup("conduitExpense");
-
-ExpenseOptions::ExpenseOptions(QWidget *parent) :
-	setupDialog(parent,ExpenseGroup,0L)
-{
-	FUNCTIONSETUP;
-	KConfig& c = KPilotConfig::getConfig(ExpenseGroup);
-
-	addPage(new ExpenseCSVPage(this,c));
-
-/*Add a DB Info page */
-	addPage(new ExpenseDBPage(this,c));
-
-	addPage(new setupInfoPage(this));
-	setupWidget();
-
-	(void) setupDialog_id;
-}
-
   
 // $Log$
+// Revision 1.5  2001/10/10 17:01:15  mueller
+// CVS_SILENT: fixincludes
+//
 // Revision 1.4  2001/03/27 11:10:38  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

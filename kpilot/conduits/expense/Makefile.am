@@ -1,30 +1,19 @@
-INCLUDES= -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot $(all_includes)
+### Makefile for the Expense Conduit
+###
+### The expense conduit is Copyright (C) 2001 by Chris Molnar
+
+INCLUDES= $(all_includes) -I../../lib
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)
 service_DATA = expense-conduit.desktop
 
-####### This part is very kpilot specific
-# you can add here more. This one gets installed
-bin_PROGRAMS = conduitExpense
+kde_module_LTLIBRARIES = libexpenseconduit.la
 
-# KDE magic file
-MAGIC=$(kde_mimedir)/magic
 
-# Which sources should be compiled for this conduit
-conduitExpense_SOURCES= expense.cc setupDialog.cc
-
-# the library search path
-conduitExpense_LDFLAGS = $(all_libraries) \
-	$(KDE_RPATH) \
-	-L../../kpilot
-
-# the libraries to link against. Be aware of the order. First the libraries,
-# that depend on the following ones.
-conduitExpense_LDADD   =  \
-	-lconduit -lpilotdb \
-	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
-	@LIBSOCKET@ -lpisock
+libexpenseconduit_la_SOURCES = expense-factory.cc setupDialog.cc expense.cc
+libexpenseconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
+libexpenseconduit_la_LIBADD  =  -lkpilot
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = expense.h setupDialog.h 

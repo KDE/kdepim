@@ -1,9 +1,12 @@
+#ifndef _EXPENSE_SETUPDIALOG_H
+#define _EXPENSE_SETUPDIALOG_H
 /* setupDialog.h			KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
 **
-** This file is part of the KNotes conduit, a conduit for KPilot that
-** synchronises the Pilot's memo pad application with KNotes.
+** This file is part of the Expense conduit, a conduit for KPilot that
+** synchronises the Pilot's expense application with external files.
+** It supports CSV export and (possibly) SQL database export.
 */
 
 /*
@@ -24,11 +27,9 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef __EXPENSE_SETUP_H
-#define __EXPENSE_SETUP_H
 
 class QLabel;
 class QLineEdit;
@@ -36,21 +37,21 @@ class QRadioButton;
 class QSpinBox;
 class KConfig;
 
-#include "gsetupDialog.h"
-
-class ExpenseCSVPage : public setupDialogPage
+class ExpenseCSVPage : public QWidget
 {
 	Q_OBJECT
 
 public:
-	ExpenseCSVPage(setupDialog *,KConfig& );
+	ExpenseCSVPage(QWidget *);
 
-	virtual int commitChanges(KConfig&);
+	virtual int commitChanges(KConfig &);
+	void readSettings(KConfig &);
 
 	typedef enum { PolicyOverwrite,
 		PolicyAppend,
 		PolicyRotate } RotatePolicy;
 	int getPolicy() const;
+	void setPolicy(RotatePolicy);
 
 public slots:
 	void slotPolicyChanged();
@@ -63,19 +64,21 @@ protected:
 	QPushButton *fBrowseButton;
 } ;
 
-class ExpenseDBPage : public setupDialogPage
+class ExpenseDBPage : public QWidget
 {
 	Q_OBJECT
 
 public:
-	ExpenseDBPage(setupDialog *,KConfig& );
+	ExpenseDBPage(QWidget *);
 
 	virtual int commitChanges(KConfig&);
+	void readSettings(KConfig &);
 
 	typedef enum { PolicyPostgresql,
 		PolicyMysql,
 		PolicyNone } DBTypePolicy;
 	int getPolicy() const;
+	void setPolicy(DBTypePolicy);
 
 public slots:
 	void slotPolicyChanged();
@@ -85,23 +88,15 @@ protected:
 	QRadioButton *fpostgresql,*fmysql,*fnone;
 } ;
 
-class ExpenseOptions : public setupDialog
-{
-	Q_OBJECT
-
-friend class ExpenseConduit;
-public:
-	ExpenseOptions(QWidget *parent);
-
-
-protected:
-	static const char *ExpenseGroup;
-};
-
-#endif
 
 
 // $Log$
+// Revision 1.2  2001/03/14 16:56:02  molnarc
+//
+// CJM - Added browse button on csv export tab.
+// CJM - Added database export tab and required information.
+//
 // Revision 1.1  2001/03/04 21:47:04  adridg
 // New expense conduit, non-functional but it compiles
 //
+#endif
