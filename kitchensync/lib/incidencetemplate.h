@@ -13,7 +13,7 @@ namespace KSync {
         IncidenceTemplate(Entry* entry)
             : SyncEntry(), mIncidence( entry ) {
             if (!entry )
-                entry = new Entry;
+                mIncidence = new Entry;
 
         };
         IncidenceTemplate( const IncidenceTemplate& temp )

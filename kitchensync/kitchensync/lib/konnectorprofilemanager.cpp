@@ -69,7 +69,7 @@ void KonnectorProfileManager::clear()  {
     m_current = KonnectorProfile();
 }
 void KonnectorProfileManager::load() {
-    kdDebug() << "KonnectorProfileManager::load() " << endl;
+    kdDebug(5210) << "KonnectorProfileManager::load() " << endl;
     KonnectorProfileFileManager man;
     setList( man.load() );
 }

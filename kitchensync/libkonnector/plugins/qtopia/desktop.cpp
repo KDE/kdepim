@@ -27,7 +27,7 @@ KSync::OpieDesktopSyncee* Desktop::toSyncee( const QString& str) {
     string.replace(QRegExp("\r\n"), "\n" ); // hell we're on unix
 
     if ( !str.contains("[Desktop Entry]") ) {
-        kdDebug() <<"Desktop Entry: " << str << endl;
+        kdDebug(5224) <<"Desktop Entry: " << str << endl;
         delete syncee;
         return 0l;
     }

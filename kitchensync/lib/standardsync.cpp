@@ -9,7 +9,7 @@
 using namespace KSync;
 
 void StandardSync::syncToTarget( Syncee* source, Syncee* target,  bool override ) {
-    kdDebug() << "StandardSync::syncToTarget(): from: " << source->filename()
+    kdDebug(5200) << "StandardSync::syncToTarget(): from: " << source->filename()
               << " to: " << target->filename() << "  override: "
               << override  << endl;
 

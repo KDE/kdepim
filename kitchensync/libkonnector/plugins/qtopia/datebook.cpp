@@ -45,12 +45,12 @@ DateBook::~DateBook(){
  * Converts an Opie Event to a KDE one
  */
 KCal::Event* DateBook::toEvent( QDomElement e) {
-//    kdDebug(5202) << "inside event" << endl;
+//    kdDebug(522) << "inside event" << endl;
     KCal::Event* event = new KCal::Event();
     QStringList list = QStringList::split(";",  e.attribute("categories") );
     QStringList categories;
     for ( uint i = 0; i < list.count(); i++ ) {
-//        kdDebug(5202) << list[i]<< " categories " << m_edit->categoryById( list[i],  "Calendar") << endl;
+//        kdDebug(5229) << list[i]<< " categories " << m_edit->categoryById( list[i],  "Calendar") << endl;
         categories.append(m_edit->categoryById(list[i], "Calendar") );
     }
     if (!categories.isEmpty() ) {
@@ -64,11 +64,11 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
     // time
 
     QString start = e.attribute("start");
-//    kdDebug(5202) << "Start " << fromUTC( (time_t) start.toLong() ).toString() << endl;
+//    kdDebug(5229) << "Start " << fromUTC( (time_t) start.toLong() ).toString() << endl;
     event->setDtStart( fromUTC( (time_t) start.toLong() ) );
 
     QString end = e.attribute("end");
-//    kdDebug(5202) << "End " << fromUTC( (time_t) end.toLong() ).toString() << endl;
+//    kdDebug(5229) << "End " << fromUTC( (time_t) end.toLong() ).toString() << endl;
     event->setDtEnd( fromUTC( (time_t) end.toLong() ) );
 
     // type
@@ -89,7 +89,7 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
     QString type = e.attribute("rtype");
     int freq = e.attribute("rfreq").toInt();
     bool hasEnd = e.attribute("rhasenddate").toInt();
-    //kdDebug() << "HasEndDate: " << hasEnd << endl;
+    //kdDebug(5229) << "HasEndDate: " << hasEnd << endl;
 
     KCal::Recurrence *rec = event->recurrence();
     start = e.attribute("created");
@@ -124,7 +124,7 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
 
         if ( hasEnd ) {
             start = e.attribute("enddt");
-//            kdDebug() << "has end " << start << endl;
+//            kdDebug(5229) << "has end " << start << endl;
             rec->setWeekly( freq,  bits, fromUTC( (time_t) start.toLong() ).date() );
         }else{
             rec->setWeekly( freq,  bits,  -1 );
@@ -177,24 +177,24 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
 
 KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
 {
-//    kdDebug(5202) << "To KDE " << endl;
+//    kdDebug(5229) << "To KDE " << endl;
     KSync::EventSyncee* syncee = new KSync::EventSyncee();
 
     QFile file( fileName );
     if ( file.open( IO_ReadOnly ) ) {
-        //kdDebug(5202) << "file open" << endl;
+        //kdDebug(5229) << "file open" << endl;
         QDomDocument doc("mydocument");
         if ( doc.setContent( &file ) ) {
-//            kdDebug(5202) << "setContent" << endl;
+//            kdDebug(5229) << "setContent" << endl;
             QDomElement docElem = doc.documentElement();
-//            kdDebug(5202) << "TagName docElem " << docElem.tagName() << endl;
+//            kdDebug(5229) << "TagName docElem " << docElem.tagName() << endl;
             QDomNode n = docElem.firstChild();
             QString dummy;
             while (!n.isNull() ) {
                 QDomElement el = n.toElement();
                 if (!el.isNull() ) {
-//                    kdDebug(5202) << "e " << el.tagName() << endl;
-//                    kdDebug(5202) << "e.isNull not" << endl;
+//                    kdDebug(5229) << "e " << el.tagName() << endl;
+//                    kdDebug(5229) << "e.isNull not" << endl;
 
                     if ( el.tagName() == "events") {
 

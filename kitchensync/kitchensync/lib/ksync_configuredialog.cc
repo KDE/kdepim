@@ -98,7 +98,7 @@ void ConfigureDialog::setup() {
 void ConfigureDialog::unload() {
 }
 
-void ConfigureDialog::apply(bool apply) {
+void ConfigureDialog::apply(bool ) {
 
 }
 #include "ksync_configuredialog.moc"

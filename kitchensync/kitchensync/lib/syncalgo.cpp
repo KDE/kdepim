@@ -38,7 +38,7 @@ void PIMSyncAlg::syncToTarget( Syncee* syncee,
 void PIMSyncAlg::syncFirst( Syncee* syncee,
                             Syncee* target,
                             bool override ) {
-    kdDebug() << "SyncFirst " << endl;
+    kdDebug(5230) << "SyncFirst " << endl;
     SyncEntry *targetEntry = 0l;
 
     /* start with the first */
@@ -47,7 +47,7 @@ void PIMSyncAlg::syncFirst( Syncee* syncee,
     while (sourceEntry) {
 
         if ( sourceEntry->state() == SyncEntry::Removed ) {
-	    kdDebug() << "Entry removed " << sourceEntry->name() << endl;
+	    kdDebug(5230) << "Entry removed " << sourceEntry->name() << endl;
             sourceEntry = syncee->nextEntry();
             continue;
         }
@@ -58,23 +58,23 @@ void PIMSyncAlg::syncFirst( Syncee* syncee,
 
         /* if it is check if modified. if not it's new */
         if (targetEntry) {
-	    kdDebug() << "Found target " << endl;
+	    kdDebug(5230) << "Found target " << endl;
             // Entry already exists in target
             if (sourceEntry->equals(targetEntry)) {
-	        kdDebug() << "No action required" << endl;
+	        kdDebug(5230) << "No action required" << endl;
                 // Entries are equal, no action required
             } else {
                 // Entries are different, resolve conflict
                 if (override && targetEntry->state() != SyncEntry::Removed ) {
                     // Force override
-		    kdDebug() << "override" << endl;
+		    kdDebug(5230) << "override" << endl;
                     target->replaceEntry(targetEntry,sourceEntry->clone() );
                 } else {
                     if (syncee->hasChanged(sourceEntry) &&
                         target->hasChanged(targetEntry)) {
-			kdDebug() << "Deconflict " <<  endl;
-			kdDebug() << "Entry 1 state: " << sourceEntry->state() << endl;
-			kdDebug() << "Entry 2 state: " << targetEntry->state() << endl;
+			kdDebug(5230) << "Deconflict " <<  endl;
+			kdDebug(5230) << "Entry 1 state: " << sourceEntry->state() << endl;
+			kdDebug(5230) << "Entry 2 state: " << targetEntry->state() << endl;
                         // Both entries have changed
                         SyncEntry *result = deconflict(sourceEntry,targetEntry);
                         if (result == sourceEntry) {
@@ -92,7 +92,7 @@ void PIMSyncAlg::syncFirst( Syncee* syncee,
             }
         } else {
             // New entry if id starts with konnector id... set a new one
-	    kdDebug() << "adding target " << endl;
+	    kdDebug(5230) << "adding target " << endl;
             addEntry( syncee, target, sourceEntry );
         }
         sourceEntry = syncee->nextEntry();
@@ -112,7 +112,7 @@ void PIMSyncAlg::syncFirst( Syncee* syncee,
 void PIMSyncAlg::syncMeta( Syncee* syncee,
                            Syncee* target,
                            bool over ) {
-    kdDebug() << "SyncMeta " << endl;
+    kdDebug(5230) << "SyncMeta " << endl;
     QPtrList<SyncEntry> entries = syncee->added();
     SyncEntry* entry;
     SyncEntry* targetEntry;
@@ -120,12 +120,12 @@ void PIMSyncAlg::syncMeta( Syncee* syncee,
     for ( entry = entries.first(); entry; entry = entries.next() ) {
         /* assign new uid */
 	targetEntry = target->findEntry( entry->id() );
-	kdDebug() << "About to add " << entry->name() << endl;
+	kdDebug(5230) << "About to add " << entry->name() << endl;
 	if(!targetEntry ){
-	  kdDebug() << "Not added before " << endl;
+	  kdDebug(5230) << "Not added before " << endl;
           addEntry( syncee, target, entry );
 	}else {
-	  kdDebug() << "Added before " << endl;
+	  kdDebug(5230) << "Added before " << endl;
 	}
     }
     /* modified */
@@ -163,24 +163,24 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
         result = 0;
         other = target->findEntry( entry->id()  );
         if (other ) { // exists, should always do
-	    kdDebug() << "Entry 1 " << entry->name() << endl;
-	    kdDebug() << "Entry 2 " << other->name() << endl;
+	    kdDebug(5230) << "Entry 1 " << entry->name() << endl;
+	    kdDebug(5230) << "Entry 2 " << other->name() << endl;
 
             /* entry modified and other unchanged */
             if(entry->wasModified() && other->state()== SyncEntry::Undefined ) {
-                kdDebug() << "Modified and unchanged " << endl;
+                kdDebug(5230) << "Modified and unchanged " << endl;
                 target->replaceEntry( other, entry->clone() );
             }
             /* entry removed and other unchanged or removed too */
             else if ( entry->wasRemoved() &&
                        ( other->wasRemoved() || other->state() == SyncEntry::Undefined ) ) {
-                kdDebug() << "Removed and either removed or unchanged too " << endl;
+                kdDebug(5230) << "Removed and either removed or unchanged too " << endl;
                 target->replaceEntry( other, entry->clone() );
             }
             /* entry was removed and other changed */
             else if ( entry->wasRemoved() &&
                 other->wasModified() ) {
-                kdDebug() << "Entry wasRemoved and other wasModified override is "
+                kdDebug(5230) << "Entry wasRemoved and other wasModified override is "
                           << over << endl;
                 if (!over)
                     result = deconflict(entry,other);
@@ -189,10 +189,10 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                 }
 
             }else if ( entry->wasModified() && other->wasModified() ) {
-                kdDebug() << "Both where modified override" << over<< endl;
-                kdDebug() << "Entry1 timestamp " << entry->timestamp() << endl;
-                kdDebug() << "Entry2 timestamp " << other->timestamp() << endl;
-                kdDebug() << "Equals " << entry->equals( other ) << endl;
+                kdDebug(5230) << "Both where modified override" << over<< endl;
+                kdDebug(5230) << "Entry1 timestamp " << entry->timestamp() << endl;
+                kdDebug(5230) << "Entry2 timestamp " << other->timestamp() << endl;
+                kdDebug(5230) << "Equals " << entry->equals( other ) << endl;
 
                 if (!over )
                     result = deconflict(entry,other);
@@ -204,7 +204,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
             }
 
         }else {
-	    kdDebug() << "added " << endl;
+	    kdDebug(5230) << "added " << endl;
             addEntry(syncee, target, entry);
         }
 

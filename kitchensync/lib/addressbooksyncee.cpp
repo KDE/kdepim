@@ -41,16 +41,16 @@ bool AddressBookSyncEntry::equals( SyncEntry *entry )
 {
   AddressBookSyncEntry *abEntry = dynamic_cast<AddressBookSyncEntry *>(entry);
   if ( !abEntry ) {
-    kdDebug() << "AddressBookSyncee::equals(): Wrong type." << endl;
+    kdDebug(5228) << "AddressBookSyncee::equals(): Wrong type." << endl;
     return false;
   }
 
   if ( mAddressee == abEntry->addressee() ) {
-    kdDebug() << "AddressBookSyncEntry::equals(): '" << entry->name() << "':"
+    kdDebug(5228) << "AddressBookSyncEntry::equals(): '" << entry->name() << "':"
               << "equal" << endl;
     return true;
   } else {
-    kdDebug() << "AddressBookSyncEntry::equals(): '" << entry->name() << "':"
+    kdDebug(5228) << "AddressBookSyncEntry::equals(): '" << entry->name() << "':"
               << "not equal" << endl;
     return false;
   }

@@ -43,8 +43,6 @@ using namespace KSync;
 KSyncSystemTray::KSyncSystemTray(QWidget* parent,  const char* name)
     : KSystemTray(parent,name) {
 
-    bool gotDeviceConnection = false;
-
     ksyncIconConnected =  KGlobal::iconLoader()->loadIcon("newmsg", KIcon::User);
     ksyncIconDisconnected = KGlobal::iconLoader()->loadIcon("newmsg", KIcon::User);
 

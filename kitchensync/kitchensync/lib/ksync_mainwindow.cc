@@ -116,7 +116,7 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
 
 KSyncMainWindow::~KSyncMainWindow()
 {
-    kdDebug() << "d'tor" << endl;
+    kdDebug(5210) << "d'tor" << endl;
     m_konprof->save();
     m_prof->save();
     createGUI(0l );
@@ -212,7 +212,7 @@ void KSyncMainWindow::initSystray( void ) {
  * and then push
  */
 void KSyncMainWindow::slotSync(){
-    kdDebug() << "Slot sync " << endl;
+    kdDebug(5210) << "Slot sync " << endl;
 
     KonnectorProfile prof = konnectorProfile();
     if (prof.udi().isEmpty() ) return;
@@ -223,7 +223,7 @@ void KSyncMainWindow::slotSync(){
 }
 
 void KSyncMainWindow::slotBackup() {
-    kdDebug() << "Slot backup " << endl;
+    kdDebug(5210) << "Slot backup " << endl;
 
     QString path = KFileDialog::getSaveFileName(
                           QDir::homeDirPath(), i18n("*.xml|Backup files"), this,
@@ -251,7 +251,7 @@ void KSyncMainWindow::slotBackup() {
 }
 
 void KSyncMainWindow::slotRestore() {
-    kdDebug() << "Slot restore " << endl;
+    kdDebug(5210) << "Slot restore " << endl;
 
     QString path = KFileDialog::getOpenFileName(
                            QDir::homeDirPath(), "*.xml|Backup files", this,
@@ -430,13 +430,12 @@ void KSyncMainWindow::slotSync( const QString &udi,
     kdDebug(5210) << "Some data arrived Yeah baby" << endl;
     kdDebug(5210) << "Lis got "  << lis.count() << "elements" << endl;
     Syncee *syncee=0;
-    kdDebug() << "Pointer address " << lis.at(0) << endl;
+    kdDebug(5210) << "Pointer address " << lis.at(0) << endl;
     for ( syncee= lis.first();syncee != 0; syncee = lis.next() ) {
-        kdDebug() << "Type is " << syncee->type() << endl;
+        kdDebug(5210) << "Type is " << syncee->type() << endl;
     }
     // pass them through all widgets
     ManipulatorPart* part=0l;
-    ManipulatorPart* po=0l;
 
     for ( part = m_parts.first(); part != 0; part = m_parts.next() ) {
         part->startSync();
@@ -470,7 +469,7 @@ void KSyncMainWindow::slotSync( const QString &udi,
  * check if the state is from the current Konnector
  * if yes update the state
  */
-void KSyncMainWindow::slotStateChanged( const QString &udi,
+void KSyncMainWindow::slotStateChanged( const QString & /*udi*/,
                                         bool connected )
 {
     kdDebug(5210) << "State changed " << connected << endl;
@@ -480,10 +479,11 @@ void KSyncMainWindow::slotStateChanged( const QString &udi,
         statusBar()->message(i18n("Connected") );
     statusBar()->show();
 }
+
 /*
  * Show a KMessageBox
  */
-void KSyncMainWindow::slotKonnectorError( const QString& udi,
+void KSyncMainWindow::slotKonnectorError( const QString& /*udi*/,
                                           int error,
                                           const QString& id )
 {

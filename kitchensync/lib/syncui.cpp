@@ -18,9 +18,9 @@ SyncUi::~SyncUi()
 
 SyncEntry *SyncUi::deconflict(SyncEntry *syncEntry, SyncEntry *targetEntry)
 {
-  kdDebug() << "deconflicting:" << endl;
-  kdDebug() << "  source: " << syncEntry->name() << endl;
-  kdDebug() << "  target: " << targetEntry->name() << endl;
+  kdDebug(5231) << "deconflicting:" << endl;
+  kdDebug(5231) << "  source: " << syncEntry->name() << endl;
+  kdDebug(5231) << "  target: " << targetEntry->name() << endl;
 
   return 0;
 }

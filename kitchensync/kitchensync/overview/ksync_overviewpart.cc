@@ -17,7 +17,7 @@ K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory );
 using namespace KSync ;
 
 OverviewPart::OverviewPart(QWidget *parent, const char *name,
-			   QObject *par, const char *na,const QStringList & )
+			   QObject *, const char *,const QStringList & )
   : ManipulatorPart( parent, name ) {
 //  setInstance(OverviewPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("kcmsystem", KIcon::Desktop, 48 );

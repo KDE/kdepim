@@ -34,7 +34,7 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
     QStringList categories;
 
     for ( uint i = 0; i < list.count(); i++ ) {
-        kdDebug(5202)<< list[i]
+        kdDebug(5227)<< list[i]
                      << " Category "
                      << m_edit->categoryById( list[i],  "Todo List")
                      << endl;
@@ -50,13 +50,29 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
     setUid(todo,  e.attribute("Uid")  );
 
     dummy = e.attribute("Completed");
-    Int = dummy.toInt();
-    if ( Int )
-        todo->setCompleted( true);
-    else
-        todo->setPercentComplete( e.attribute("Progress").toInt() );
 
-    kdDebug() << "dummy completed " << dummy << " " << Int
+    /*
+     * if setCompleted is called
+     * libkcal decides to put
+     * percentage done to 100%
+     * but if I put percentage
+     * to say 50% it is not uncompleting the item
+     * and if setCompleted( false ) is called
+     * likcal sets percent completed to 0
+     */
+    Int = dummy.toInt();
+
+    /* !0 */
+    if ( Int ) {
+        todo->setCompleted( false );
+        todo->setPercentComplete( e.attribute("Progress").toInt() );
+    }
+    todo->setPercentComplete( e.attribute("Progress").toInt() );
+    todo->setCompleted(Int );
+
+
+
+    kdDebug(5227) << "dummy completed " << dummy << " " << Int
               << endl;
 
     dummy = e.attribute("Priority" );
@@ -64,6 +80,7 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
     dummy = e.attribute("HasDate" );
     bool status = dummy.toInt( );
     if(status){
+        kdDebug(5227) << "Has Due Date " << endl;
         todo->setHasDueDate(true );
         QDateTime time = QDateTime::currentDateTime();
         QDate date;
@@ -74,6 +91,11 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
         date.setYMD(year, month, day);
         time.setDate( date );
         todo->setDtDue( time );
+        /*
+         * libkcal does not set HasDueDate TRUE
+         * if we supply a due date
+         */
+        todo->setHasDueDate( true );
     }else{
         todo->setHasDueDate( false );
     }
@@ -151,6 +173,7 @@ QString ToDo::todo2String( KCal::Todo* todo )
     text.append("<Task ");
     QStringList list = todo->categories();
     text.append( "Categories=\"" + categoriesToNumber( list ) + "\" " );
+    kdDebug(5227) << " todo->isCompleted " << todo->isCompleted() << endl;
     text.append( "Completed=\""+QString::number( todo->isCompleted()) + "\" " );
     text.append( "Progress=\"" + QString::number( todo->percentComplete() ) + "\" ");
     text.append( "Summary=\"" + todo->summary() + "\" ");

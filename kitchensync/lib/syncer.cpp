@@ -94,7 +94,7 @@ QString Syncee::filename()
 
 SyncEntry *Syncee::findEntry(const QString &id)
 {
-  kdDebug() << "Syncee::findEntry() '" << id << "'" << endl;
+  kdDebug(5231) << "Syncee::findEntry() '" << id << "'" << endl;
 
   SyncEntry *entry = firstEntry();
   while (entry) {

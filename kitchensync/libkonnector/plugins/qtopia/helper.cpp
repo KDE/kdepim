@@ -101,13 +101,13 @@ QString Base::categoriesToNumber( const QStringList &list, const QString &app )
     for ( QStringList::ConstIterator listIt = list.begin(); listIt != list.end(); ++listIt ) {
         for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
             if ( (*catIt).name() == (*listIt) ) { // the same name
-	        kdDebug() << "Found " << (*listIt) << endl;
+	        kdDebug(5224) << "Found " << (*listIt) << endl;
                 found= true;
                 dummy.append( (*catIt).id() + ";");
             }
         }
         if ( !found ){
-	 kdDebug() << "Not Found category " << (*listIt) << endl;
+	 kdDebug(5224) << "Not Found category " << (*listIt) << endl;
          dummy.append( QString::number(m_edit->addCategory( app, (*listIt) ) ) + ";" );  // generate a new category
 	}
     }

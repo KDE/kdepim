@@ -12,7 +12,6 @@ namespace KSync {
     public:
         EventSyncEntry(KCal::Event* ev = 0l) :
             IncidenceTemplate<KCal::Event>( ev ) {
-
         };
         SyncEntry* clone();
 

@@ -23,7 +23,7 @@ KonnectorWizard::KonnectorWizard(KonnectorManager* manager)
     initUI();
 }
 KonnectorWizard::KonnectorWizard(KonnectorManager* manager,
-                                 const KonnectorProfile& prof)
+                                 const KonnectorProfile& /*prof*/)
     : KWizard(0, "wizard", true ), m_manager( manager) {
     m_conf = 0;
     m_free = false;
@@ -86,7 +86,7 @@ void KonnectorWizard::slotKonChanged( const QString& str) {
     if ( str == m_current )  // the selection was not changed
         return;
     if ( str == i18n("Please choose a Konnector") ) {
-        kdDebug() << "Connector " << endl;
+        kdDebug(5210) << "Connector " << endl;
         delete m_conf;
         m_conf =0;
         return;

@@ -280,8 +280,8 @@ void QtopiaSocket::process() {
     while ( d->socket->canReadLine() ) {
         QTextStream stream( d->socket );
         QString line = d->socket->readLine();
-        kdDebug() << line << endl;
-        kdDebug() << d->mode << endl;
+        kdDebug(5225) << line << endl;
+        kdDebug(5225) << d->mode << endl;
         switch( d->mode ) {
         case d->Start:
             start(line);
@@ -521,7 +521,7 @@ void QtopiaSocket::pass( const QString& line) {
         d->connected    = false;
         d->isConnecting = false;
     }else {
-        kdDebug() << "Konnected" << endl;
+        kdDebug(5225) << "Konnected" << endl;
         d->mode = d->Noop;
         QTimer::singleShot(10000, this, SLOT(slotNOOP() ) );
         emit stateChanged( true );
@@ -562,8 +562,8 @@ void QtopiaSocket::handshake( const QString& line) {
     QTextStream stream( d->socket );
     QStringList list = QStringList::split( QString::fromLatin1(" "), line );
     d->path = list[3];
-    kdDebug() << "D->PATH is " << d->path << endl;
-    kdDebug() << "D Line Was " << line << endl;
+    kdDebug(5225) << "D->PATH is " << d->path << endl;
+    kdDebug(5225) << "D Line Was " << line << endl;
     if (!d->path.isEmpty() ) {
         d->getMode = d->Desktops;
         stream << "call QPE/System startSync(QString) KitchenSync" << endl;
@@ -648,6 +648,8 @@ void QtopiaSocket::readTimeZones() {
 }
 bool QtopiaSocket::downloadFile( const QString& str, QString& dest ) {
     KURL uri = url( d->path + str );
-    return KIO::NetAccess::download( uri, dest );
+    bool b = KIO::NetAccess::download( uri, dest );
+    kdDebug(5225) << "Getting " << str << " " << b << endl;
+    return b;
 }
 #include "socket.moc"

@@ -53,7 +53,7 @@ KonnectorProfile::ValueList KonnectorDialog::toUnload()const {
     return list;
 }
 KonnectorProfile::ValueList KonnectorDialog::toLoad()const {
-    kdDebug() << "toLoad" << endl;
+    kdDebug(5210) << "toLoad" << endl;
     QPtrList<KonnectorCheckItem> items = list2list();
     KonnectorProfile::ValueList list;
     KonnectorCheckItem* item;
@@ -61,7 +61,7 @@ KonnectorProfile::ValueList KonnectorDialog::toLoad()const {
         /* not loaded but marked as loaded */
         if ( item->isOn() && item->profile().udi() == QString::null ) {
             list.append( item->profile() );
-            kdDebug() << " item " << item->profile().name() << endl;
+            kdDebug(5210) << " item " << item->profile().name() << endl;
         }
     }
 

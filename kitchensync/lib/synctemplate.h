@@ -54,10 +54,10 @@ namespace KSync {
             return find(SyncEntry::Removed );
         }
         void addEntry( SyncEntry* entry ) {
-            kdDebug() << "addEntry " << entry->type() << endl;
+            kdDebug(5231) << "addEntry " << entry->type() << endl;
             Entry* tempEntry = dynamic_cast<Entry*> ( entry );
             if ( tempEntry == 0l ) {
-                kdDebug() << "could not cast" << endl;
+                kdDebug(5231) << "could not cast" << endl;
                 return;
             };
             tempEntry->setSyncee( this );
@@ -76,12 +76,12 @@ namespace KSync {
 
     protected:
         SyncEntry::PtrList find( int state ) {
-            kdDebug() << "state " << state << endl;
+            kdDebug(5231) << "state " << state << endl;
             SyncEntry::PtrList found;
             Entry* entry;
             for (entry = mList.first(); entry != 0; entry = mList.next() ) {
                 if ( entry->state() == state ) {
-                    kdDebug() << "match state " << entry->state() << endl;
+                    kdDebug(5231) << "match state " << entry->state() << endl;
                     found.append( entry );
                 }
             }
