@@ -23,15 +23,14 @@
 #include "knconfigmanager.h"
 #include "knlistview.h"
 
-
 KNLVItemBase::KNLVItemBase(KNLVItemBase *item)
-  : KListViewItem(item), a_ctive(false)
+  : KFolderTreeItem(item, "news"), a_ctive(false)
 {
 }
 
 
 KNLVItemBase::KNLVItemBase(KNListView *view)
-  : KListViewItem(view), a_ctive(false)
+  : KFolderTreeItem(view), a_ctive(false)
 {
 }
 
@@ -165,12 +164,17 @@ QString KNLVItemBase::shortString(QString text, int, int width, QFontMetrics fm)
   return t;
 }
 
+int KNLVItemBase::countUnreadRecursive()
+{
+  return 0;
+}
+
 
 //==============================================================================
 
 
 KNListView::KNListView(QWidget *parent, const char *name)
-  : KListView(parent,name), s_ortAsc(true), s_ortCol(-1), d_elayedCenter(-1), a_ctiveItem(0), k_eepSelection(false)
+  : KFolderTree(parent,name), s_ortAsc(true), s_ortCol(-1), d_elayedCenter(-1), a_ctiveItem(0), k_eepSelection(false)
 {
   connect(header(), SIGNAL(clicked(int)),
           this, SLOT(slotSortList(int)));
@@ -453,6 +457,8 @@ void KNListView::slotCenterDelayed()
   if (d_elayedCenter != -1)
     ensureVisible(contentsX(), d_elayedCenter, 0, visibleHeight()/2);
 }
+
+
 
 //--------------------------------
 
