@@ -1,5 +1,5 @@
 /*
-    decryptverifyjob.h
+    keyfiltermanager.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,61 +30,40 @@
     your version.
 */
 
-#ifndef __KLEO_DECRYPTVERIFYJOB_H__
-#define __KLEO_DECRYPTVERIFYJOB_H__
+#ifndef __KLEO_KEYFILTERMANAGER_H__
+#define __KLEO_KEYFILTERMANAGER_H__
 
-#include "job.h"
-
-#include <qcstring.h>
-
-#include <utility>
+#include <qobject.h>
 
 namespace GpgME {
-  class Error;
   class Key;
-  class DecryptionResult;
-  class VerificationResult;
 }
 
+namespace Kleo {
+  class KeyFilter;
+}
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous combined decrypters and verifiers
-
-     To use a DecryptVerifyJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the operation with a
-     call to start(). This call might fail, in which case the
-     DecryptVerifyJob instance will have scheduled it's own destruction with
-     a call to QObject::deleteLater().
-
-     After result() is emitted, the DecryptVerifyJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class DecryptVerifyJob : public Job {
+  class KeyFilterManager : public QObject {
     Q_OBJECT
   protected:
-    DecryptVerifyJob( QObject * parent, const char * name );
+    KeyFilterManager( QObject * parent=0, const char * name=0 );
+    ~KeyFilterManager();
+
   public:
-    ~DecryptVerifyJob();
+    static const KeyFilterManager * instance();
 
-    /**
-       Starts the combined decryption and verification operation.
-       \a cipherText is the data to decrypt and later verify.
-    */
-    virtual GpgME::Error start( const QByteArray & cipherText ) = 0;
+    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
 
-    /** Synchronous equivalent of start() */
-    virtual std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-      exec( const QByteArray & cipherText, QByteArray & plainText ) = 0;
+    void reload();
 
-  signals:
-    void result( const GpgME::DecryptionResult & decryptionresult,
-		 const GpgME::VerificationResult & verificationresult,
-		 const QByteArray & plainText );
+  private:
+    class Private;
+    Private * d;
+    static KeyFilterManager * mSelf;
   };
 
 }
 
-#endif // __KLEO_DECRYPTVERIFYJOB_H__
+#endif // __KLEO_KEYFILTERMANAGER_H__

@@ -441,7 +441,7 @@ void CertManager::extendCertificate()
 */
 void CertManager::slotImportCertFromFile()
 {
-  QString filter = QString("*.p7c *.p12|") + i18n("Certificates (*.p7c *.p12)");
+  const QString filter = QString("*.pem *.der *.p7c *.p12|") + i18n("Certificates (*.pem *.der *.p7c *.p12)");
   slotImportCertFromFile( KFileDialog::getOpenURL( QString::null, filter, this,
                                                    i18n( "Select Certificate File" ) ) );
 }

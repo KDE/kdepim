@@ -77,7 +77,8 @@ namespace Kleo {
       AuthenticationKeys = 128,
       OpenPGPKeys = 256,
       SMIMEKeys = 512,
-      AllKeys = PublicKeys | SecretKeys | OpenPGPKeys | SMIMEKeys
+      AllKeys = PublicKeys | SecretKeys | OpenPGPKeys | SMIMEKeys,
+      ValidTrustedEncryptionKeys = AllKeys | EncryptionKeys | ValidKeys | TrustedKeys
     };
 
     KeySelectionDialog( const QString & title,

@@ -87,6 +87,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
   // handle errors, if any (and if requested)
   if ( showErrors && rc != 0 ) {
     QString wmsg = i18n("<qt>Failed to execute gpgconf:<br>%1</qt>").arg( strerror(rc) );
+    kdWarning(5150) << wmsg << endl; // to see it from test_cryptoconfig.cpp
     KMessageBox::error(0, wmsg);
   }
   mParsed = true;
@@ -285,11 +286,17 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
 
   // ####### TODO error handling (message box).
-  if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issues 104/115)
+  if ( rc == -1 )
+  {
+    QString wmsg = i18n( "Couldn't start gpgconf\nCheck that gpgconf is in the PATH and that it can be started" );
+    kdWarning(5150) << wmsg << endl;
+    KMessageBox::error(0, wmsg);
+  }
+  else if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issues 104/115)
   {
     QString wmsg = i18n( "Error from gpgconf while saving configuration: %1" ).arg( strerror( rc ) );
-    KMessageBox::error(0, wmsg);
     kdWarning(5150) << k_funcinfo << ":" << strerror( rc ) << endl;
+    KMessageBox::error(0, wmsg);
   }
   else
   {
@@ -334,8 +341,25 @@ static QString gpgconf_unescape( const QString& str )
 
 static QString gpgconf_escape( const QString& str )
 {
-  // ####### FIXME: this should escape ":" and "," in lists, but not much more?
-  return KURL::encode_string( str );
+  // Escape special chars (including ':' and '%')
+  QString enc = KURL::encode_string( str );
+  // Also encode commas, for lists.
+  enc.replace( ',', "%2c" );
+  return enc;
+}
+
+static QString urlpart_encode( const QString& str )
+{
+  QString enc( str );
+  enc.replace( '%', "%25" ); // first!
+  enc.replace( ':', "%3a" );
+  //kdDebug() << "  urlpart_encode: " << str << " -> " << enc << endl;
+  return enc;
+}
+
+static QString urlpart_decode( const QString& str )
+{
+  return KURL::decode_string( str );
 }
 
 // gpgconf arg type number -> CryptoConfigEntry arg type enum mapping
@@ -506,11 +530,12 @@ static KURL parseURL( int mRealArgType, const QString& str )
       QStringList::const_iterator it = items.begin();
       KURL url;
       url.setProtocol( "ldap" );
-      url.setHost( *it++ );
+      url.setHost( urlpart_decode( *it++ ) );
       url.setPort( (*it++).toInt() );
-      url.setUser( *it++ );
-      url.setPass( *it++ );
-      url.setQuery( *it );
+      url.setPath( "/" ); // workaround KURL parsing bug
+      url.setUser( urlpart_decode( *it++ ) );
+      url.setPass( urlpart_decode( *it++ ) );
+      url.setQuery( urlpart_decode( *it ) );
       return url;
     } else
       kdWarning(5150) << "parseURL: malformed LDAP server: " << str << endl;
@@ -524,8 +549,14 @@ static QString splitURL( int mRealArgType, const KURL& url )
 {
   if ( mRealArgType == 33 ) { // LDAP server
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-    // Not sure about encoding/escaping here. It will all be escaped when passing to gpgconf, but what if the pass contains ':'?
-    return url.host() + ":" + QString::number( url.port() ) + ":" + url.user() + ":" + url.pass() + ":" + url.query().mid(1);
+    Q_ASSERT( url.protocol() == "ldap" );
+    return urlpart_encode( url.host() ) + ":" +
+      QString::number( url.port() ) + ":" +
+      urlpart_encode( url.user() ) + ":" +
+      urlpart_encode( url.pass() ) + ":" +
+      // KURL automatically encoded the query (e.g. for spaces inside it),
+      // so decode it before writing it out to gpgconf (issue119)
+      urlpart_encode( KURL::decode_string( url.query().mid(1) ) );
   }
   return url.path();
 }
@@ -715,7 +746,7 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
         }
       }
       QString res = lst.join( "," );
-      kdDebug(5150) << res << endl;
+      kdDebug(5150) << "toString: " << res << endl;
       return res;
     } else { // normal string
       QString res = mValue.toString();

@@ -68,9 +68,9 @@ namespace Kleo {
     Q_OBJECT
   protected:
     SignEncryptJob( QObject * parent, const char * name );
+  public:
     ~SignEncryptJob();
 
-  public:
     /**
        Starts the combined signing and encrypting operation. \a signers
        is the list of keys to sign \a plainText with. \a recipients is

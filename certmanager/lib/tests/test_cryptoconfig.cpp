@@ -136,11 +136,13 @@ int main( int argc, char** argv ) {
 
   {
     // Static querying of a single boolean option
-    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Monitor", "quiet" );
+    static const char* s_groupName = "Monitor";
+    static const char* s_entryName = "quiet";
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
     if ( entry ) {
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_None );
       bool val = entry->boolValue();
-      cout << "quiet option: " << ( val ? "is set" : "is not set" ) << endl;
+      cout << "quiet option initially: " << ( val ? "is set" : "is not set" ) << endl;
 
       entry->setBoolValue( !val );
       assert( entry->isDirty() );
@@ -150,10 +152,10 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check new value
-      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Monitor", "quiet" );
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
       assert( entry );
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_None );
-      cout << "quiet option: " << ( val ? "is set" : "is not set" ) << endl;
+      cout << "quiet option now: " << ( val ? "is set" : "is not set" ) << endl;
       assert( entry->boolValue() == !val );
 
       // Set to default
@@ -165,7 +167,7 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check value
-      entry = config->entry( "dirmngr", "Monitor", "quiet" );
+      entry = config->entry( "dirmngr", s_groupName, s_entryName );
       assert( !entry->isDirty() );
       assert( !entry->isSet() );
       cout << "quiet option reset to default: " << ( entry->boolValue() ? "is set" : "is not set" ) << endl;
@@ -179,16 +181,18 @@ int main( int argc, char** argv ) {
       cout << "quiet option reset to initial: " << ( val ? "is set" : "is not set" ) << endl;
     }
     else
-      cout << "Entry dirmngr/Monitor/quiet not found" << endl;
+      cout << "Entry 'dirmngr/" << s_groupName << "/" << s_entryName << "' not found" << endl;
   }
 
   {
     // Static querying and setting of a single int option
-    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "LDAP", "ldaptimeout" );
+    static const char* s_groupName = "LDAP";
+    static const char* s_entryName = "ldaptimeout";
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
     if ( entry ) {
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_UInt );
       uint val = entry->uintValue();
-      cout << "LDAP timeout: " << val << " seconds." << endl;
+      cout << "LDAP timeout initially: " << val << " seconds." << endl;
 
       // Test setting the option directly, then querying again
       //system( "echo 'ldaptimeout:0:101' | gpgconf --change-options dirmngr" );
@@ -201,10 +205,10 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check new value
-      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "LDAP", "ldaptimeout" );
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
       assert( entry );
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_UInt );
-      cout << "LDAP timeout: " << entry->uintValue() << " seconds." << endl;
+      cout << "LDAP timeout now: " << entry->uintValue() << " seconds." << endl;
       assert( entry->uintValue() == 101 );
 
       // Set to default
@@ -216,7 +220,7 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check value
-      entry = config->entry( "dirmngr", "LDAP", "ldaptimeout" );
+      entry = config->entry( "dirmngr", s_groupName, s_entryName );
       assert( !entry->isDirty() );
       assert( !entry->isSet() );
       cout << "LDAP timeout reset to default, " << entry->uintValue() << " seconds." << endl;
@@ -230,16 +234,18 @@ int main( int argc, char** argv ) {
       cout << "LDAP timeout reset to initial " << val << " seconds." << endl;
     }
     else
-      cout << "Entry dirmngr/LDAP/ldaptimeout not found" << endl;
+      cout << "Entry 'dirmngr/" << s_groupName << "/" << s_entryName << "' not found" << endl;
   }
 
   {
     // Static querying and setting of a single string option
-    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Debug", "log-file" );
+    static const char* s_groupName = "Debug";
+    static const char* s_entryName = "log-file";
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
     if ( entry ) {
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
       QString val = entry->stringValue();
-      cout << "Log-file: " << val.local8Bit() << endl;
+      cout << "Log-file initially: " << val.local8Bit() << endl;
 
       // Test setting the option, sync'ing, then querying again
       entry->setStringValue( "/tmp/test:%e5ä" );
@@ -253,10 +259,10 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check new value
-      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Debug", "log-file" );
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
       assert( entry );
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
-      cout << "Log-file: " << entry->stringValue().local8Bit() << endl;
+      cout << "Log-file now: " << entry->stringValue().local8Bit() << endl;
       assert( entry->stringValue() == "/tmp/test:%e5ä" ); // (or even with %e5 decoded)
 
       // Reset old value
@@ -275,7 +281,62 @@ int main( int argc, char** argv ) {
       cout << "Log-file reset to initial " << val.local8Bit() << endl;
     }
     else
-      cout << "Entry dirmngr/Debug/log-file not found" << endl;
+      cout << "Entry 'dirmngr/" << s_groupName << "/" << s_entryName << "' not found" << endl;
+  }
+
+  {
+    // Static querying and setting of the LDAP URL list option
+    static const char* s_groupName = "LDAP";
+    static const char* s_entryName = "LDAP Server";
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
+    if ( entry ) {
+      assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL );
+      assert( entry->isList() );
+      KURL::List val = entry->urlValueList();
+      cout << "URL list initially: " << val.toStringList().join(", ").local8Bit() << endl;
+
+      // Test setting the option, sync'ing, then querying again
+      KURL::List lst;
+      // We use non-empty paths to workaround a bug in KURL (kdelibs-3.2)
+      lst << KURL( "ldap://a:389/?b" );
+      lst << KURL( "ldap://foo:389/?a:b" ); // the query contains a litteral ':' (KURL supports this)
+      lst << KURL( "ldap://server:389/?a%3db,c%3dDE" ); // the query contains a litteral ','
+      //cout << " trying to set: " << lst.toStringList().join(", ").local8Bit() << endl;
+      assert( lst[0].query() == "?b" );
+      assert( lst[1].query() == "?a:b" );
+      entry->setURLValueList( lst );
+      assert( entry->isDirty() );
+      config->sync( true );
+
+      // Let's see how it prints it
+      system( "gpgconf --list-options dirmngr | grep 'LDAP Server'" );
+
+      // Clear cached values!
+      config->clear();
+
+      // Check new value
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
+      assert( entry );
+      assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL );
+      assert( entry->isList() );
+      KURL::List newlst = entry->urlValueList();
+      cout << "URL list now: " << newlst.toStringList().join(", ").local8Bit() << endl;
+      assert( newlst.count() == 3 );
+      //cout << "newlst[0]=" << newlst[0].url().local8Bit() << endl;
+      //cout << "lst[0]=" << lst[0].url().local8Bit() << endl;
+      assert( newlst[0] == lst[0] );
+      assert( newlst[1] == lst[1] );
+      assert( newlst[2] == lst[2] );
+
+      // Reset old value
+      entry->setURLValueList( val );
+      assert( entry->isDirty() );
+      config->sync( true );
+
+      cout << "URL list reset to initial: " << val.toStringList().join(", ").local8Bit() << endl;
+    }
+    else
+      cout << "Entry 'dirmngr/" << s_groupName << "/" << s_entryName << "' not found" << endl;
   }
 
   cout << "Done." << endl;

@@ -197,6 +197,7 @@ KURL::List DirectoryServicesWidget::urlList() const
         url.setProtocol( "ldap" );
         url.setHost( item->text( 0 ) );
         url.setPort( item->text( 1 ).toInt() );
+        url.setPath( "/" ); // workaround KURL parsing bug
         url.setQuery( item->text( 2 ) );
         url.setUser( item->text( 3 ) );
         url.setPass( static_cast<QX500ListViewItem *>( item )->password() );

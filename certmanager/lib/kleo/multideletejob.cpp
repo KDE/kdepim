@@ -92,7 +92,7 @@ void Kleo::MultiDeleteJob::slotResult( const GpgME::Error & err ) {
 
   const int current = mIt - mKeys.begin();
   const int total = mKeys.size();
-  emit progress( i18n("%1/%2").arg( current ).arg( total ), 0, current, total );
+  emit progress( i18n("progress info: \"%1 of %2\"","%1/%2").arg( current ).arg( total ), 0, current, total );
 }
 
 GpgME::Error Kleo::MultiDeleteJob::startAJob() {
