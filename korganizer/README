@@ -12,6 +12,8 @@ QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
 
   - Bug fixes:
     - Fix event duplication (#55999).
+    - Don't crash when setting todos to completed (#56348).
+    - Completed todo items are automatically marked modified (#43862).
 
 * Official 3.1.1 release (March 2003)
   

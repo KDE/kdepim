@@ -24,6 +24,7 @@
 #include <qlayout.h>
 #include <qheader.h>
 #include <qcursor.h>
+#include <qtimer.h>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -681,10 +682,18 @@ void KOTodoView::modified(bool b)
 {
   emit isModified(b);
 }
-void KOTodoView::setTodoModified( Todo* todo ) 
+
+void KOTodoView::setTodoModifiedDelayed( Todo *todo )
 {
-  emit todoModifiedSignal( todo, KOGlobals::UNKNOWN_MODIFIED );
+  mTodo = todo;
+  QTimer::singleShot( 0, this, SLOT( setTodoModified() ) );
 }
+
+void KOTodoView::setTodoModified() 
+{
+  emit todoModifiedSignal( mTodo, KOGlobals::UNKNOWN_MODIFIED );
+}
+
 void KOTodoView::clearSelection()
 {
   mTodoListView->selectAll( false );

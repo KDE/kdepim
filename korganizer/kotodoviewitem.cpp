@@ -19,7 +19,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <iostream.h>
+
 #include "kotodoviewitem.h"
 #include "kotodoview.h"
 #include "koprefs.h"
@@ -171,8 +171,9 @@ void KOTodoViewItem::stateChange(bool state)
     item->stateChange(state);
     myChild = myChild->nextSibling();
   }
+
   mTodoView->modified(true);
-  mTodoView->setTodoModified( mTodo );
+  mTodoView->setTodoModifiedDelayed( mTodo );
 }
 
 bool KOTodoViewItem::isAlternate()

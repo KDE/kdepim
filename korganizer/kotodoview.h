@@ -160,6 +160,8 @@ class KOTodoView : public KOrg::BaseView
   protected slots:
     void processSelectionChange();
 
+    void setTodoModified();
+
   private:
     /*
      * the TodoEditor approach is rather unscaling in the long
@@ -171,7 +173,7 @@ class KOTodoView : public KOrg::BaseView
      *  -- zecke 2002-07-08
      */
     friend class KOTodoViewItem;
-    void setTodoModified( Todo* );
+    void setTodoModifiedDelayed( Todo * );
     QMap<Todo *,KOTodoViewItem *>::ConstIterator insertTodoItem(Todo *todo);
     void restoreItemState( QListViewItem * );
 
@@ -192,6 +194,8 @@ class KOTodoView : public KOrg::BaseView
 
     DocPrefs *mDocPrefs;
     QString mCurrentDoc;
+
+    Todo *mTodo;
 };
 
 #endif
