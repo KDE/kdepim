@@ -69,6 +69,7 @@ class ReadAddressBooksJob : public GWJob
     GroupwiseServer *mServer;
     QStringList mAddressBookIds;
     KABC::ResourceCached *mResource;
+    int mProgress;
 };
 
 class ReadCalendarJob : public GWJob
