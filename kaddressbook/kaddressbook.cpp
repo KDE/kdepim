@@ -522,8 +522,9 @@ void KAddressBook::configure()
 {
 
   if ( !mConfigureDialog ) {
-    mConfigureDialog = new KCMultiDialog( this, "PIM" );
+    mConfigureDialog = new KCMultiDialog( "PIM", this );
     mConfigureDialog->addModule( "PIM/kabconfig.desktop" );
+    mConfigureDialog->addModule( "PIM/kabldapconfig.desktop" );
     connect( mConfigureDialog, SIGNAL( applyClicked() ), SLOT( configChanged() ) );
     connect( mConfigureDialog, SIGNAL( okClicked() ), SLOT( configChanged() ) );
   }
