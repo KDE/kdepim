@@ -59,10 +59,19 @@ public:
 
 	/**
 	* Get ready for a hotsync -- write any unflushed records
-	* to disk, close windows, whatever. Append commands to send
-	* to the pilot onto the char * array.
+	* to disk, close windows, whatever. Returns false if it
+	* is impossible to go into a sync now (due to open windows
+	* or strange state.).
+	*
+	* The default implementation returns true.
+	*
+	* If the function returns false, it can also put a string
+	* stating the reason why into @p s. This string will be 
+	* displayed to the user:
+	*     "Can't start HotSync. %1" 
+	* where %1 is replaced by s.
 	*/
-	virtual void preHotSync(char* ) { } ;
+	virtual bool preHotSync(QString &s) ;
 
 	/**
 	* Reload data (possibly changed by the hotsync) etc. etc.
@@ -116,6 +125,9 @@ private:
 
 
 // $Log$
+// Revision 1.12  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.11  2001/09/16 13:37:48  adridg
 // Large-scale restructuring
 //

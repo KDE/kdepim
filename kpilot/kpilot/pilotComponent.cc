@@ -274,7 +274,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 		}
 	}
 
-      CategoryAll:
+CategoryAll:
 	c->insertItem(i18n("All"), 0);
 }
 
@@ -290,7 +290,17 @@ void PilotComponent::slotShowComponent()
 	emit showComponent(this);
 }
 
+/* virtual */ bool PilotComponent::preHotSync(QString &)
+{
+	FUNCTIONSETUP;
+
+	return true;
+}
+
 // $Log$
+// Revision 1.21  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.20  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test
