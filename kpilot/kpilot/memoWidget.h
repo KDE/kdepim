@@ -37,6 +37,8 @@ public:
   
   static int MAX_MEMO_LEN;
 
+	int findSelectedCategory(bool AllIsUnfiled=false);
+
 protected:
 	void initializeCategories(PilotDatabase *);
 	void initializeMemos(PilotDatabase *);

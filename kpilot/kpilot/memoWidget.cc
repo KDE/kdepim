@@ -350,26 +350,18 @@ MemoWidget::slotDeleteMemo()
 	initialize();
 }
 
-void
-MemoWidget::updateWidget()
+int MemoWidget::findSelectedCategory(bool AllIsUnfiled)
 {
 	FUNCTIONSETUP;
 
-	if (fCatList->currentItem()==-1)
-	{
-		kdDebug() << fname <<
-			": No category selected.\n";
-		return ;
-	}
-
-	int listIndex = 0;
-	int currentEntry = 0;
-
 	// Semantics of currentCatID are: 
 	//
-	// >=0 is a specific category based on the text -> category number 
-	// 	mapping defined by the Pilot, 
-	// ==-1 means "All" category selected.
+	// >=0		is a specific category based on the text -> 
+	//		category number mapping defined by the Pilot, 
+	// ==-1 	means "All" category selected when 
+	//		AllIsUnfiled is true.
+	// == Unfiled	means "All" category selected when 
+	//		AllIsUnfiled is false.
 	//
 	//
 	int currentCatID = 0;
@@ -387,7 +379,7 @@ MemoWidget::updateWidget()
 	if (fCatList->currentItem()==0)
 	{
 		currentCatID=-1;
-		if (debug_level&UI_MINOR)
+		if (debug_level & UI_MINOR)
 		{
 			kdDebug() << fname <<
 				": Category 'All' selected.\n" ;
@@ -396,7 +388,7 @@ MemoWidget::updateWidget()
 	else
 	{
 		QString selectedCategory=fCatList->text(fCatList->currentItem());
-		if (debug_level&UI_MINOR)
+		if (debug_level & UI_MINOR)
 		{
 			kdDebug() << fname << 
 				": List item " << fCatList->currentItem() <<
@@ -406,10 +398,10 @@ MemoWidget::updateWidget()
 
 		currentCatID=0;
 		while(strcmp(fMemoAppInfo.category.name[currentCatID], 
-		       selectedCategory.latin1()) && 
+		       selectedCategory.local8Bit()) && 
 			(currentCatID < fCatList->count()))
 		{
-			if (debug_level&UI_TEDIOUS)
+			if (debug_level & UI_TEDIOUS)
 			{
 				kdDebug() << fname <<
 					": Didn't match category " <<
@@ -434,11 +426,33 @@ MemoWidget::updateWidget()
 		}
 		else
 		{
-			kdDebug() << fname << ": Selected category didn't match "
+			kdDebug() << fname 
+				<< ": Selected category didn't match "
 				"any name!\n" ;
 			currentCatID=-1;
 		}
 	}
+
+	if ((currentCatID==-1) && AllIsUnfiled) currentCatID=0;
+	return currentCatID;
+}
+
+void
+MemoWidget::updateWidget()
+{
+	FUNCTIONSETUP;
+
+	if (fCatList->currentItem()==-1)
+	{
+		kdDebug() << fname <<
+			": No category selected.\n";
+		return ;
+	}
+
+	int listIndex = 0;
+	int currentEntry = 0;
+	int currentCatID = findSelectedCategory(false);
+
 
 	fListBox->clear();
 	fMemoList.first();
@@ -530,20 +544,8 @@ MemoWidget::slotImportMemo()
     FUNCTIONSETUP;
     int i = 0;
     int nextChar;
-    int currentCatID = -1;
+    int currentCatID = findSelectedCategory(true);
   
-    // If a category is deleted after others have been added, none of the
-    // category numbers are changed.  So we need to find the category number
-    // for this category.
-    char notFound = 1;
-    while (notFound)
-      {
-	currentCatID++;
-	if (fMemoAppInfo.category.name[currentCatID])
-	  notFound = strcmp(fMemoAppInfo.category.name[currentCatID],
-			    fCatList->text(fCatList->currentItem()).latin1());
-      }
-
     QString fileName = KFileDialog::getOpenFileName();
     if(fileName != NULL)
 	{
