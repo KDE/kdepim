@@ -1050,11 +1050,12 @@ main ftp site of the KDE project.
 <title>Requirements</title>
 
 <para>In order to use &kappname;, you need to run KDE 2.0 or later. &kappname; uses the libraries
-<filename>libkcal</filename>, <filename>libical</filename> and <filename>libicalss</filename>
-from the KDE package kdepim. Copies of these are included in the standalone &kappname; package.
+<filename>libkcal</filename> (slightly updated), <filename>libical</filename> and <filename>libicalss</filename>
+from the KDE package kdepim version 2.2. There are different versions of the standalone &kappname; package
+which contain the appropriate sets of libraries depending on which version, if any, of kdepim you have installed.
 </para>
 
-<para>&kappname; uses about 5 Mb of
+<para>&kappname; uses about 8 Mb and the alarm daemon uses about 5 Mb of
 memory to run, but this may vary depending on your platform and configuration.
 </para>
 
