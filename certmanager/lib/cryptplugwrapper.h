@@ -534,9 +534,6 @@ public:
               activated may be initialized or configured or used to perform
               crypto actions.
 
-        \param parent  The parent widget to be used for displaying dialogs.
-                       If this parameter is NULL the desktop is used as
-                       the dialogs' parent widget.
         \param name    The external name that is visible in lists, messages,
                        etc.
         \param libName Complete path+name of CRYPTPLUG library that is to
