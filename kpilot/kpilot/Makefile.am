@@ -1,10 +1,9 @@
 bin_PROGRAMS = 	kpilot kpilotDaemon pilotListener
 noinst_LIBRARIES = libconduit.a
 
-kpilot_METASOURCES = AUTO
-kpilotDaemon_METASOURCES = AUTO
+METASOURCES = AUTO
 
-SUBDIRS = doc
+#SUBDIRS = 
 INCLUDES= $(all_includes)
 
 
