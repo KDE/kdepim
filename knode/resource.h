@@ -2,7 +2,7 @@
     resource.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 
 //========= KNode Version Information ============
 
-#define KNODE_VERSION "0.8.90"
+#define KNODE_VERSION "0.8.91"
 
 //================= StatusBar ====================
 
