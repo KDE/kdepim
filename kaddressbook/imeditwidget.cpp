@@ -41,7 +41,7 @@
 #include <kmessagebox.h>
 
 #include "imeditwidget.h"
-#include "editors/imeditorwidget.h"
+#include "imeditorwidget.h"
 
 IMEditWidget::IMEditWidget( QWidget *parent, KABC::Addressee &addr, const char *name )
   : QWidget( parent, name ), mAddressee(addr)
@@ -117,7 +117,7 @@ QString IMEditWidget::preferredIM()
 }
 void IMEditWidget::edit()
 {
-  IMEditorWidget dlg(this);
+  IMEditorWidget dlg(this, mIMEdit->text());
   dlg.loadContact(&mAddressee);
   dlg.setReadOnly(mReadOnly);
 
@@ -125,9 +125,8 @@ void IMEditWidget::edit()
     if ( dlg.isModified() ) {
       //Stores the changes into mAddressee.  mAddressee isn't actually saved to the addressbook
       //until we save the record.
-      dlg.storeContact(&mAddressee); 
-//      mIMList = dlg.emails();
-//      mIMEdit->setText( mIMList[ 0 ] );
+      dlg.storeContact(&mAddressee);
+      mIMEdit->setText( dlg.preferred() );
       emit modified();
     }
   }

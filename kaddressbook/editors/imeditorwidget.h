@@ -52,20 +52,22 @@ class IMEditorWidget : public KDialogBase
   Q_OBJECT
 
   public:
-    IMEditorWidget( QWidget *parent, const char *name = 0 );
+    IMEditorWidget( QWidget *parent, const QString &preferredIM, const char *name = 0 );
     ~IMEditorWidget() {};
 
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
-    QValueList<KPluginInfo *> availableProtocols() const;
+    QValueList<KPluginInfo *> availableProtocols() const; 
     bool isModified() const;
+    QString preferred();
 
   protected slots:
     void slotUpdateButtons();
     void slotAdd();
     void slotEdit();
     void slotDelete();
+    void slotSetStandard();
 
   protected:
     /**
@@ -81,6 +83,7 @@ class IMEditorWidget : public KDialogBase
   private:
     bool mReadOnly;
     bool mModified;
+    QString mPreferred;
     IMEditorBase *mWidget;
     void setModified( bool modified );
 
@@ -108,10 +111,18 @@ class IMAddressLVI : public KListViewItem
     QString address() const;
     IMContext context() const;
 
+    void setPreferred( bool preferred );
+    bool preferred() const;
+  
+  protected:
+    virtual void paintCell( QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
+	   
   private:
     KPluginInfo * mProtocol;
+    bool mPreferred;
     IMContext mContext;
     QString mAddress;
 };
 
 #endif
+

@@ -37,10 +37,10 @@
 
 IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols ) : IMAddressBase( parent )
 {
+	//New Address
 	mProtocols = protocols;
 	populateProtocols();
-        connect( cmbProtocol, SIGNAL( activated(const QString&) ), this, SLOT( slotProtocolChanged() ) );
-	slotProtocolChanged();
+	init();
 }
 
 IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
@@ -49,6 +49,7 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
   : IMAddressBase( parent )
 {
   Q_UNUSED( context );
+  	//Edit Address
 
 	mProtocols = protocols;
 	populateProtocols();
@@ -57,9 +58,18 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
 	
 	edtAddress->setText( address.section(QChar(0xE120),0,0) );
 	edtNetwork->setText( address.section(QChar(0xE120),1) );
+	init();
+}
+
+void IMAddressWidget::init() {
         connect( cmbProtocol, SIGNAL( activated(const QString&) ), this, SLOT( slotProtocolChanged() ) );
+	connect( edtAddress, SIGNAL( textChanged(const QString&) ), this, SLOT( slotAddressChanged(const QString &) ) );
 	slotProtocolChanged();
 }
+
+void IMAddressWidget::slotAddressChanged(const QString &text) {
+	emit inValidState(!text.stripWhiteSpace().isEmpty());
+}	
 
 KPluginInfo * IMAddressWidget::protocol()
 {
@@ -118,3 +128,6 @@ void IMAddressWidget::slotProtocolChanged() {
 		labelNetwork->hide();
 	}
 }
+
+#include "imaddresswidget.moc"
+

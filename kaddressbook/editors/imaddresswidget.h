@@ -43,6 +43,7 @@ class KPluginInfo;
  */
 class IMAddressWidget : public IMAddressBase
 {
+Q_OBJECT
 public:
 	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols);
 	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols, KPluginInfo *protocol, const QString& address, const IMContext& context = Any );
@@ -50,6 +51,9 @@ public:
 	IMContext context();
 	QString address();
 	QValueList<KPluginInfo *> mProtocols;
+	
+signals:
+	void inValidState(bool );
 protected:
 	/**
 	 * Populate combobox with protocols
@@ -58,7 +62,11 @@ protected:
 	
 protected slots:
 	void slotProtocolChanged();
-	
+
+	void slotAddressChanged(const QString &text);
+private:
+	void init();
 };
 
 #endif
+

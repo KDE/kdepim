@@ -8,13 +8,13 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>452</width>
-            <height>233</height>
+            <width>442</width>
+            <height>247</height>
         </rect>
     </property>
     <property name="sizePolicy">
         <sizepolicy>
-            <hsizetype>7</hsizetype>
+            <hsizetype>5</hsizetype>
             <vsizetype>7</vsizetype>
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
@@ -27,7 +27,62 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="KListView" row="0" column="0" rowspan="4" colspan="1">
+        <spacer row="4" column="1">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="3" column="1">
+            <property name="name">
+                <cstring>btnSetStandard</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Set Standard</string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>The IM Address that is set as the standard is the address that is shown in main editor window.</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;qt&gt;Only one IM Address can be set as the standard IM Address.&lt;br&gt;The standard IM Address is shown in the main editor window, and other programs may use this as hint for deciding which IM Address to show.&lt;/qt&gt;</string>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="2" column="1">
+            <property name="name">
+                <cstring>btnDelete</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Remove</string>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="1" column="1">
+            <property name="name">
+                <cstring>btnEdit</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Edit...</string>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="0" column="1">
+            <property name="name">
+                <cstring>btnAdd</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Add...</string>
+            </property>
+        </widget>
+        <widget class="KListView" row="0" column="0" rowspan="5" colspan="1">
             <column>
                 <property name="text">
                     <string>Protocol</string>
@@ -55,16 +110,16 @@
             </property>
             <property name="sizePolicy">
                 <sizepolicy>
-                    <hsizetype>3</hsizetype>
+                    <hsizetype>7</hsizetype>
                     <vsizetype>3</vsizetype>
-                    <horstretch>0</horstretch>
+                    <horstretch>1</horstretch>
                     <verstretch>0</verstretch>
                 </sizepolicy>
             </property>
             <property name="minimumSize">
                 <size>
-                    <width>66</width>
-                    <height>35</height>
+                    <width>200</width>
+                    <height>28</height>
                 </size>
             </property>
             <property name="selectionMode" stdset="0">
@@ -77,45 +132,20 @@
                 <bool>true</bool>
             </property>
         </widget>
-        <widget class="KPushButton" row="2" column="1">
+        <widget class="KActiveLabel" row="5" column="0" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>btnDelete</cstring>
+                <cstring>lblWarning</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>7</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
             </property>
             <property name="text">
-                <string>&amp;Remove</string>
-            </property>
-        </widget>
-        <widget class="KPushButton" row="0" column="1">
-            <property name="name">
-                <cstring>btnAdd</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Add...</string>
-            </property>
-        </widget>
-        <spacer row="3" column="1">
-            <property name="name">
-                <cstring>spacer1</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>20</width>
-                    <height>245</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="KPushButton" row="1" column="1">
-            <property name="name">
-                <cstring>btnEdit</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Edit...</string>
+                <string>&lt;em&gt;Note:&lt;/em&gt; Please read the help page before adding or editing Instant Messenging Addresses here.</string>
             </property>
         </widget>
     </grid>
@@ -124,9 +154,10 @@
 </customwidgets>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
     <includehint>klistview.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
+    <includehint>kactivelabel.h</includehint>
 </includehints>
 </UI>
