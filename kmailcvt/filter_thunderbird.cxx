@@ -150,6 +150,7 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
 void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, const QString& rootDir, const QString& targetDir)
 {
   QFile mbox(mboxName);
+  bool first_msg = true;
   if (!mbox.open(IO_ReadOnly)) {
     info->alert(i18n("Unable to open %1, skipping").arg(mboxName));
   } else {
@@ -172,6 +173,9 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
     else
      	info->setTo(targetDir);
     
+    QByteArray input(MAX_LINE);
+    long l = 0;
+
     while (!mbox.atEnd()) {
       KTempFile tmp;
       /** @todo check if the file is really a mbox, maybe search for 'from' string at start */
@@ -182,16 +186,18 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
       * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
       * get Unicode/UTF-email but KMail can't detect the correct charset.
       */
-      QByteArray input(MAX_LINE);
       QCString seperate;
 	
-      long l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
+      if(!first_msg) tmp.file()->writeBlock( input, l );
+      l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
       tmp.file()->writeBlock( input, l );
 	
       while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
 	tmp.file()->writeBlock( input, l );
       }
       tmp.close();
+      first_msg = false;
+
       QString destFolder = "";
       QString _targetDir = targetDir;
       if(!targetDir.isNull()){
