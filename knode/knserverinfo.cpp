@@ -42,6 +42,7 @@ void KNServerInfo::copy(KNServerInfo *i)
   h_old=i->hold();
   t_imeout=i->timeout();
   s_erver=i->server();
+  n_eedsLogon = i->needsLogon();
   u_ser=i->user();
   p_ass=i->pass();
 }

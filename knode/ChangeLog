@@ -1,3 +1,12 @@
+changes between 0.3.2 and 0.3.3
+- bugfix for networking on solaris
+- bugfix for continuous reconnection on
+  news servers with authentication
+- sane default window sizes
+- correct default for the smtp-server port
+- bugfix for a problem with some smtp servers
+- fixes for non-iso-8859-x users
+
 changes between 0.1.13 and 0.3.2
 - ported to KDE2, new style guide compilant XML-GUI
 - multithreaded network-code

@@ -185,6 +185,9 @@ bool KNProtocolClient::openConnection()
     return false;
   }
 
+  // use non-blocking sockets only if we are sure that
+  // they work reliable. (i.e. on linux / glibc >=2.0)
+#ifdef __linux__
 #if (__GNU_LIBRARY__ != 1)        // non-blocking operation doesn't work on libc5
   if (-1 == fcntl(tcpSocket,F_SETFL,O_NONBLOCK)) {  // make socket non-blocking
     QString str = i18n("Communication error:\n");
@@ -193,6 +196,7 @@ bool KNProtocolClient::openConnection()
     closeSocket();
     return false;
   }
+#endif
 #endif
 
   in_addr address;
