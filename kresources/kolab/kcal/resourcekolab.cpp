@@ -32,6 +32,7 @@
 */
 
 #include "resourcekolab.h"
+#include "event.h"
 
 #include <kabc/locknull.h>
 
@@ -228,52 +229,80 @@ bool ResourceKolab::addEvent( KCal::Event* event )
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
                               Q_UINT32 sernum )
 {
-#if 0
   KCal::Event* event = Event::xmlToEvent( xml );
   Q_ASSERT( event );
   if( event && !mUidMap.contains( event->uid() ) )
     addEvent( event, subresource, sernum );
-#endif
 }
 
 bool ResourceKolab::addEvent( KCal::Event* event, const QString& subresource,
                               Q_UINT32 sernum )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return true;
+  event->registerObserver( this );
+
+  // Find out if this event was previously stored in KMail
+  bool newEvent = subresource.isEmpty();
+  mCalendar.addEvent( event );
+
+  QString resource =
+    newEvent ? findWritableResource( mEventSubResources ) : subresource;
+
+  if ( !mSilent ) {
+    QString xml = Event::eventToXML( event );
+    kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
+
+    if( !kmailUpdate( resource, sernum, xml, eventAttachmentMimeType,
+                      event->uid() ) ) {
+      kdError(5500) << "Communication problem in ResourceKolab::addEvent()\n";
+      return false;
+    }
+  }
+
+  if ( !resource.isEmpty() && sernum != 0 ) {
+    mUidMap[ event->uid() ] = StorageReference( resource, sernum );
+    return true;
+  }
+
+  return false;
 }
 
-void ResourceKolab::deleteEvent( KCal::Event* )
+void ResourceKolab::deleteEvent( KCal::Event* event )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  const QString uid = event->uid();
+  if( !mUidMap.contains( uid ) ) return; // Odd
+  if ( !mSilent )
+    kmailDeleteIncidence( mUidMap[ uid ].resource(),
+                          mUidMap[ uid ].serialNumber() );
+  mUidMap.remove( uid );
+  mCalendar.deleteEvent(event);
 }
-KCal::Event* ResourceKolab::event( const QString& )
+
+KCal::Event* ResourceKolab::event( const QString& uid )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return 0;
+  return mCalendar.event(uid);
 }
+
 KCal::Event::List ResourceKolab::rawEvents()
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Event::List();
+  return mCalendar.rawEvents();
 }
+
 KCal::Event::List ResourceKolab::rawEventsForDate( const QDate& date,
                                                    bool sorted )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Event::List();
+  return mCalendar.rawEventsForDate( date, sorted );
 }
+
 KCal::Event::List ResourceKolab::rawEventsForDate( const QDateTime& qdt )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Event::List();
+  return mCalendar.rawEventsForDate( qdt );
 }
+
 KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
                                             const QDate& end,
                                             bool inclusive )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Event::List();
+  return mCalendar.rawEvents( start, end, inclusive );
 }
 
 bool ResourceKolab::addTodo( KCal::Todo* todo )
@@ -368,10 +397,24 @@ void ResourceKolab::setTimeZoneId( const QString& tzid )
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& subResource,
                                            Q_UINT32 sernum,
-                                           const QString& contact )
+                                           const QString& xml )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return true;
+  bool rc = true;
+  const bool silent = mSilent;
+  mSilent = true;
+
+  // If this xml file is one of ours, load it here
+  if ( type == kmailEventContentsType )
+    addEvent( xml, subResource, sernum );
+  else if ( type == kmailTodoContentsType )
+    addTodo( xml, subResource, sernum );
+  else if ( type == kmailJournalContentsType )
+    addJournal( xml, subResource, sernum );
+  else
+    rc = false;
+
+  mSilent = silent;
+  return rc;
 }
 
 void ResourceKolab::fromKMailDelIncidence( const QString& type,
