@@ -38,18 +38,18 @@ class LoggerDCOP : virtual public DCOPObject
 
 k_dcop:
 	// Indicates the start of a sync process
-	virtual ASYNC logStartSync() = 0L ;
+	virtual ASYNC logStartSync() = 0 ;
 	// Indicates the end of a sync process
-	virtual ASYNC logEndSync() = 0L ;
+	virtual ASYNC logEndSync() = 0 ;
 	// Adds a single message to the log, with formatting 
 	// showing it's an error message.
-	virtual ASYNC logError(QString) = 0L ;
+	virtual ASYNC logError(QString) = 0 ;
 	// Adds a regular message.
-	virtual ASYNC logMessage(QString) = 0L ;
+	virtual ASYNC logMessage(QString) = 0 ;
 	// Adds a message if the string is non-null, and
 	// sets the progress bar to @p n%. Limit @p n
 	// to the range 0 .. 100.
-	virtual ASYNC logProgress(QString,int n) = 0L ;
+	virtual ASYNC logProgress(QString,int n) = 0 ;
 } ;
 
 
