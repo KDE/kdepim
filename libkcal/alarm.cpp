@@ -48,64 +48,40 @@ Alarm::~Alarm()
 
 bool Alarm::operator==( const Alarm& rhs ) const
 {
-  if ( mType != rhs.mType ) {
-    kdDebug(5800) << "Alarm::operator==() 1. Type: " << mType << ", "
-                  << rhs.mType << endl;
+  if ( mType != rhs.mType ||
+       mAlarmSnoozeTime != rhs.mAlarmSnoozeTime ||
+       mAlarmRepeatCount != rhs.mAlarmRepeatCount ||
+       mAlarmEnabled != rhs.mAlarmEnabled ||
+       mHasTime != rhs.mHasTime)
     return false;
-  }
-  if ( mAlarmSnoozeTime != rhs.mAlarmSnoozeTime ) {
-    kdDebug(5800) << "Alarm::operator==() 2\n";
-    return false;
-  }
-  if ( mAlarmRepeatCount != rhs.mAlarmRepeatCount ) {
-    kdDebug(5800) << "Alarm::operator==() 3\n";
-    return false;
-  }
-  if ( mAlarmEnabled != rhs.mAlarmEnabled ) {
-    kdDebug(5800) << "Alarm::operator==() 4\n";
-    return false;
-  }
-  if ( mHasTime != rhs.mHasTime ) {
-    kdDebug(5800) << "Alarm::operator==() 5\n";
-    return false;
-  }
 
-  kdDebug(5800) << "Alarm::operator==() 6\n";
   if (mHasTime) {
-  kdDebug(5800) << "Alarm::operator==() a\n";
     if (mAlarmTime != rhs.mAlarmTime)
       return false;
   } else {
-  kdDebug(5800) << "Alarm::operator==() b\n";
     if (mOffset != rhs.mOffset ||
         mEndOffset != rhs.mEndOffset)
       return false;
   }
 
-  kdDebug(5800) << "bla - Alarm::operator==() 2\n";
   switch (mType) {
     case Display:
-  kdDebug(5800) << "Alarm::operator==() 3\n";
       return mDescription == rhs.mDescription;
 
     case Email:
-  kdDebug(5800) << "Alarm::operator==() 4\n";
       return mDescription == rhs.mDescription &&
              mMailAttachFiles == rhs.mMailAttachFiles &&
              mMailAddresses == rhs.mMailAddresses &&
              mMailSubject == rhs.mMailSubject;
 
     case Procedure:
-  kdDebug(5800) << "Alarm::operator==() 5\n";
       return mFile == rhs.mFile &&
              mDescription == rhs.mDescription;
 
     case Audio:
-  kdDebug(5800) << "Alarm::operator==() 6\n";
       return mFile == rhs.mFile;
 
     case Invalid:
-  kdDebug(5800) << "Alarm::operator==() 7\n";
       break;
   }
   return false;

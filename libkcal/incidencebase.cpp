@@ -71,17 +71,14 @@ IncidenceBase::~IncidenceBase()
 
 bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
 {
-  kdDebug(5800) << "IncidenceBase::operator==() \n";
   if( attendees().count() != i2.attendees().count() ) {
       return false; // no need to check further
   }
 
-  kdDebug(5800) << "IncidenceBase::operator==() 1\n";
   Attendee::List al1 = attendees();
   Attendee::List al2 = i2.attendees();
   Attendee::List::ConstIterator a1 = al1.begin();
   Attendee::List::ConstIterator a2 = al2.begin();
-  kdDebug(5800) << "IncidenceBase::operator==() 2\n";
   for( ; a1 != al1.end() && a2 != al2.end(); ++a1, ++a2 ) {
     if( **a1 == **a2 )
         continue;
@@ -90,43 +87,16 @@ bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
     }
   }
 
-  kdDebug(5800) << "IncidenceBase::operator==() 3\n";
-
-  if ( !( dtStart() == i2.dtStart() ) ) {
-    kdDebug(5800) << "Failed in 1\n";
-    return false;
-  }
-  if ( !( organizer() == i2.organizer() ) ) {
-    kdDebug(5800) << "Failed in 2\n";
-    return false;
-  }
-  if ( !( uid() == i2.uid() ) ) {
-    kdDebug(5800) << "Failed in 3\n";
-    return false;
-  }
+  return ( dtStart() == i2.dtStart() &&
+           organizer() == i2.organizer() &&
+           uid() == i2.uid() &&
            // Don't compare lastModified, otherwise the operator is not
            // of much use. We are not comparing for identity, after all.
-  if ( !( doesFloat() == i2.doesFloat() ) ) {
-    kdDebug(5800) << "Failed in 4\n";
-    return false;
-  }
-  if ( !( duration() == i2.duration() ) ) {
-    kdDebug(5800) << "Failed in 5\n";
-    return false;
-  }
-  if ( !( hasDuration() == i2.hasDuration() ) ) {
-    kdDebug(5800) << "Failed in 6\n";
-    return false;
-  }
-  if ( !( pilotId() == i2.pilotId() ) ) {
-    kdDebug(5800) << "Failed in 7\n";
-    return false;
-  }
-  if ( !( syncStatus() == i2.syncStatus() ) ) {
-    kdDebug(5800) << "Failed in 8\n";
-    return false;
-  }
-  return true;
+           doesFloat() == i2.doesFloat() &&
+           duration() == i2.duration() &&
+           hasDuration() == i2.hasDuration() &&
+           pilotId() == i2.pilotId() &&
+           syncStatus() == i2.syncStatus() );
   // no need to compare mObserver
 }
 

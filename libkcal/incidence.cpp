@@ -106,12 +106,10 @@ static bool stringCompare( const QString& s1, const QString& s2 )
 
 bool Incidence::operator==( const Incidence& i2 ) const
 {
-  kdDebug(5800) << "operator==\n";
     if( alarms().count() != i2.alarms().count() ) {
         return false; // no need to check further
     }
 
-  kdDebug(5800) << "operator== 1\n";
     Alarm::List::ConstIterator a1 = alarms().begin();
     Alarm::List::ConstIterator a2 = i2.alarms().begin();
     for( ; a1 != alarms().end() && a2 != i2.alarms().end(); ++a1, ++a2 )
@@ -121,11 +119,9 @@ bool Incidence::operator==( const Incidence& i2 ) const
             return false;
         }
 
-  kdDebug(5800) << "operator== 2\n";
     if ( !IncidenceBase::operator==(i2) )
         return false;
 
-  kdDebug(5800) << "operator== 3\n";
     bool recurrenceEqual = ( mRecurrence == 0 && i2.mRecurrence == 0 );
     if ( !recurrenceEqual )
     {
@@ -134,10 +130,9 @@ bool Incidence::operator==( const Incidence& i2 ) const
                           *mRecurrence == *i2.mRecurrence;
     }
 
-  kdDebug(5800) << "operator== 4\n";
     return
         recurrenceEqual &&
-        // created() == i2.created() &&
+        created() == i2.created() &&
         stringCompare( description(), i2.description() ) &&
         stringCompare( summary(), i2.summary() ) &&
         categories() == i2.categories() &&
