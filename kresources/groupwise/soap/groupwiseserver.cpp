@@ -352,7 +352,7 @@ QMap<QString, QString> GroupwiseServer::addressBookList()
 
 bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::ResourceGroupwise *resource )
 {
-  ReadAddressBooksJob *job = new ReadAddressBooksJob( mUrl, mSession, 0 );
+  ReadAddressBooksJob *job = new ReadAddressBooksJob( mSoap, mUrl, mSession, 0 );
   job->setAddressBookIds( addrBookIds );
   job->setResource( resource );
 
@@ -565,7 +565,7 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
 
 bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGroupwise *resource )
 {
-  ReadCalendarJob *job = new ReadCalendarJob( mUrl, mSession, 0 );
+  ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession, 0 );
   job->setCalendar( calendar );
   job->setCalendarFolder( &mCalendarFolder );
   job->setResource( resource );

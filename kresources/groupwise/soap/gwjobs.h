@@ -43,7 +43,7 @@ class GWJob : public KPIM::ThreadWeaver::Job
   public:
     enum Type { ReadAddressBooks, ReadCalendar };
 
-    GWJob( Type type, const QString &url, const std::string &session,
+    GWJob( Type type, struct soap *soap, const QString &url, const std::string &session,
            QObject *parent );
     virtual ~GWJob();
 
@@ -61,7 +61,7 @@ class GWJob : public KPIM::ThreadWeaver::Job
 class ReadAddressBooksJob : public GWJob
 {
   public:
-    ReadAddressBooksJob( const QString &url, const std::string &session,
+    ReadAddressBooksJob( struct soap *soap, const QString &url, const std::string &session,
                          QObject *parent );
 
     void setAddressBookIds( const QStringList& );
@@ -81,7 +81,7 @@ class ReadAddressBooksJob : public GWJob
 class ReadCalendarJob : public GWJob
 {
   public:
-    ReadCalendarJob( const QString &url, const std::string &session,
+    ReadCalendarJob( struct soap *soap, const QString &url, const std::string &session,
                      QObject *parent );
 
     void setCalendar( KCal::Calendar* );

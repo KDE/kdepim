@@ -33,24 +33,19 @@
 
 #include "gwjobs.h"
 
-GWJob::GWJob( Type type, const QString &url, const std::string &session,
+GWJob::GWJob( Type type, struct soap *soap, const QString &url, const std::string &session,
               QObject *parent )
   : Job( parent, "GWJob" ),
     mType( type ), mUrl( url ), mSession( session )
 {
-  mSoap = new struct soap();
-  soap_init( mSoap );
-
+  mSoap = soap_copy( soap );
   mSoap->header = new( SOAP_ENV__Header );
 }
 
 GWJob::~GWJob()
 {
-  soap_end( mSoap );
-  soap_done( mSoap );
-
-  delete mSoap->header;
-  mSoap->header = 0;
+  soap_free( mSoap );
+  mSoap = 0;
 }
 
 void GWJob::processEvent( KPIM::ThreadWeaver::Event *event )
@@ -60,9 +55,9 @@ void GWJob::processEvent( KPIM::ThreadWeaver::Event *event )
     deleteLater();
 }
 
-ReadAddressBooksJob::ReadAddressBooksJob( const QString &url, const std::string &session,
-                                          QObject *parent )
-  : GWJob( ReadAddressBooks, url, session, parent )
+ReadAddressBooksJob::ReadAddressBooksJob( struct soap *soap, const QString &url,
+                                          const std::string &session, QObject *parent )
+  : GWJob( ReadAddressBooks, soap, url, session, parent )
 {
 }
 
@@ -145,9 +140,9 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   }
 }
 
-ReadCalendarJob::ReadCalendarJob( const QString &url, const std::string &session,
-                                  QObject *parent )
-  : GWJob( ReadCalendar, url, session, parent )
+ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
+                                  const std::string &session, QObject *parent )
+  : GWJob( ReadCalendar, soap, url, session, parent )
 {
 }
 
