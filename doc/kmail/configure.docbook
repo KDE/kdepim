@@ -30,7 +30,7 @@
 <firstname>Michel</firstname>
 <surname>Boyer de la Giroday</surname>
 <affiliation><address>
-<email>michel@klaralvdalens-datakonsult.se</email>
+<email>michel@kdab.net</email>
 </address></affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
@@ -275,7 +275,7 @@ address</guilabel> field.</para></example>
 	
 	<varlistentry id="configure-identity-cryptography-smime-sign">
 	  <term>
-	    <guilabel>S/MIME signing certificate</guilabel>
+	    <guilabel>&smime; signing certificate</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -300,7 +300,7 @@ address</guilabel> field.</para></example>
 	
 	<varlistentry id="configure-identity-cryptography-smime-encrypt">
 	  <term>
-	    <guilabel>S/MIME encryption certificate</guilabel>
+	    <guilabel>&smime; encryption certificate</guilabel>
 	  </term>
 	  <listitem>
 	    <para>
@@ -1456,6 +1456,226 @@ of key words can be modified.</para>
 	backend configuration dialog</link>. Please refer
 	to the &gpgsm; manual for a description of these options.
       </para>
+
+      <variablelist>
+
+	<varlistentry id="configure-smime-validation-certificate-crls">
+	  <term>
+	    <guilabel>Validate certificates using CRLs</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &smime; certificates are validated using 
+	      Certificate Revocation Lists (<acronym>CRLs</acronym>).
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-validation-certificate-ocps">
+	  <term>
+	    <guilabel>Validate certificates online (OCSP)</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If this option is selected, &smime; certificates are validated 
+              using the Online Certificates Status Protocol 
+              (<acronym>OCSP</acronym>).
+            </para>
+            <para>
+              Fill in the <acronym>URL</acronym> of the <acronym>OCSP</acronym>              responder in the field reserved at this effect.  
+	    </para> 
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-online-certificate-responder-url">
+	  <term>
+	    <guilabel>OCSP responder URL</guilabel>
+          </term>
+         <listitem>
+	      <para>
+		Enter the address of the server for online validation
+		of certificates. The <acronym>URL</acronym>
+                is usually starting with <emphasis>http://</emphasis>. 
+	      </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-online-certificate-responder-signature">
+	  <term>
+	    <guilabel>OCSP responder signature</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	       Select or change and enter the S/Mime key to use.
+            </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-online-certificate-responder-ignore">
+	  <term>
+	    <guilabel>Ignore service URL of certificates</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Check this option to skip online validation using the OCSP.
+	      This Option requires <emphasis>dirmngr >= 0.9.0</emphasis>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-validation-policies">
+	  <term>
+	    <guilabel>Do not check certificate policies</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      By default, <guilabel>GnuPG</guilabel> uses the file 
+              <emphasis>~/.gnupg/policies.txt</emphasis> to check if a
+              certificate policy is allowed. If this option is selected,
+              policies are not checked.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-validation-consult-crls">
+	  <term>
+	    <guilabel>Never consult a CRLs</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If this option is checked, Certificate Revocation Lists are 
+              never used to validate <acronym>&smime;</acronym> certificates.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-validation-fetch-issuer">
+	  <term>
+	    <guilabel>Fetch missing issuer certificates</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Check this option if you want the missing issuer certificates
+              to be fetched when necessary. This applies to both validation 
+              methods, <acronym>CRLs</acronym> and <acronym>OCSP</acronym>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-http-ignore-distribution-point">
+	  <term>
+	    <guilabel>Ignore HTTP CRL Distribution Point of certificates</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	     When looking for the location of a <acronym>CRL</acronym>, 
+             <quote>the "to be tested"</quote>certificate usually contains 
+             so called CRL Distribution Point (<acronym>DP</acronym>) entries 
+             which are <acronym>URLs</acronym> describing the way to access 
+             the <acronym>URL</acronym>. The first found <acronym>DP</acronym>
+             entry is used.  
+             With this option all entries using the <acronym>HTTP</acronym>
+             scheme are ignored when looking for a suitable 
+             <acronym>DP</acronym>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-http-requests">
+	  <term>
+	    <guilabel>Don't perform any HTTP requests</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	     Entirely disables the use of <acronym>HTTP</acronym> for 
+             <acronym>&smime;</acronym>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-http-proxy">
+	  <term>
+	    <guilabel>Use system HTTP proxy</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	     If this option is selected, the value of the 
+             <acronym>HTTP</acronym> proxy shown on the right 
+             (which comes from the environment variable http_proxy) 
+             will be used for any <acronym>HTTP</acronym> request.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-http-requests-proxy">
+	  <term>
+	    <guilabel>Use this proxy for HTTP requests</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Enter here the location of your <acronym>HTTP</acronym> Proxy, 
+              which will be used for all <acronym>HTTP</acronym> requests 
+              relating to <acronym>&smime;</acronym>. 
+              The syntax is <quote>"host:port"</quote>, for instance 
+              <emphasis>myproxy.nowhere.com:3128</emphasis>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-ldap-distribution-point">
+	  <term>
+	    <guilabel>Ignore LDAP CRL Distribution Point of certificates</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	     When looking for the location of a <acronym>CRL</acronym>, 
+             the <quote>"to be tested"</quote> certificate usually contains 
+             so called CRL Distribution Point (<acronym>DP</acronym>) entries 
+             which are <acronym>URLs</acronym> describing the way to access 
+             the <acronym>URL</acronym>. 
+             The first found <acronym>DP</acronym> entry is used.  
+             With this option all entries using the <acronym>LDAP</acronym>
+             scheme are ignored when looking for a suitable 
+             <acronym>DP</acronym>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-ldap-requests">
+	  <term>
+	    <guilabel>Don't perform any LDAP requests</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	     Entirely disables the use of <acronym>LDAP</acronym> for 
+             <acronym>&smime;</acronym>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-smime-certificate-ldap-proxy-host">
+	  <term>
+	    <guilabel>Proxy host for LDAP requests</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	     Entering a <acronym>LDAP</acronym> server here will make all 
+             <acronym>LDAP</acronym> requests go to that server first. 
+             More precisely, this setting overrides any specified host 
+             and port part in a <acronym>LDAP URL</acronym> and will also 
+             be used if host and port have been ommitted from the 
+             <acronym>URL</acronym>. Other <acronym>LDAP</acronym> servers 
+             will be used only if the connection to the 
+             <emphasis>proxy</emphasis> failed.
+             The syntax is <acronym>HOST</acronym> or 
+             <acronym>HOST:PORT</acronym>. If <acronym>PORT</acronym> is 
+             ommitted, <quote>port 389</quote> 
+             (standard <acronym>LDAP</acronym> port) is used.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
     </sect2>
 
     <sect2 id="configure-security-crypto-backends">
