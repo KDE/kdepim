@@ -482,12 +482,12 @@ bool Contact::loadAddressAttribute( QDomElement& element )
         address.type = e.text();
       else if ( tagName == "street" )
         address.street = e.text();
-      else if ( tagName == "city" )
-        address.city = e.text();
-      else if ( tagName == "state" )
-        address.state = e.text();
-      else if ( tagName == "zip" )
-        address.zip = e.text();
+      else if ( tagName == "locality" )
+        address.locality = e.text();
+      else if ( tagName == "region" )
+        address.region = e.text();
+      else if ( tagName == "postal-code" )
+        address.postalCode = e.text();
       else if ( tagName == "country" )
         address.country = e.text();
       else
@@ -510,9 +510,9 @@ void Contact::saveAddressAttributes( QDomElement& element ) const
     const Address& a = *it;
     writeString( e, "type", a.type );
     writeString( e, "street", a.street );
-    writeString( e, "city", a.city );
-    writeString( e, "state", a.state );
-    writeString( e, "zip", a.zip );
+    writeString( e, "locality", a.locality );
+    writeString( e, "region", a.region );
+    writeString( e, "postal-code", a.postalCode );
     writeString( e, "country", a.country );
   }
 }
@@ -685,10 +685,10 @@ static QStringList phoneTypeToString( int /*KABC::PhoneNumber::Types*/ type )
 
   if ( type & KABC::PhoneNumber::Home )
     types << "home1";
-  if ( type & KABC::PhoneNumber::Work )
-    types << "company";
   if ( type & KABC::PhoneNumber::Msg ) // messaging
-    types << "assistant";
+    types << "home2"; // #
+  if ( type & KABC::PhoneNumber::Work )
+    types << "business1";
   if ( type & KABC::PhoneNumber::Pref )
     types << "primary";
   if ( type & KABC::PhoneNumber::Voice )
@@ -700,15 +700,16 @@ static QStringList phoneTypeToString( int /*KABC::PhoneNumber::Types*/ type )
   if ( type & KABC::PhoneNumber::Bbs )
     types << "ttytdd";
   if ( type & KABC::PhoneNumber::Modem )
-    types << "home2"; // ###
+    types << "telex"; // #
   if ( type & KABC::PhoneNumber::Car )
     types << "car";
   if ( type & KABC::PhoneNumber::Isdn )
     types << "isdn";
   if ( type & KABC::PhoneNumber::Pcs )
-    types << "assistant"; // #
+    types << "assistant"; // ## Assistant is e.g. secretary
   if ( type & KABC::PhoneNumber::Pager )
     types << "pager";
+  // "company" and "business2" are not generated...
   return types;
 }
 
@@ -719,12 +720,12 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type
   if ( type == "businessfax" )
     return KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax;
 
-  if ( type == "primary" )
+  if ( type == "home1" )
     return KABC::PhoneNumber::Home;
-  if ( type == "company" )
-    return KABC::PhoneNumber::Work;
-  if ( type == "assistant" )
+  if ( type == "home2" )
     return KABC::PhoneNumber::Msg;
+  if ( type == "business1" )
+    return KABC::PhoneNumber::Work;
   if ( type == "primary" )
     return KABC::PhoneNumber::Pref;
   if ( type == "callback" )
@@ -735,7 +736,7 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type
     return KABC::PhoneNumber::Video;
   if ( type == "ttytdd" )
     return KABC::PhoneNumber::Bbs;
-  if ( type == "home1" )
+  if ( type == "telex" )
     return KABC::PhoneNumber::Modem;
   if ( type == "car" )
     return KABC::PhoneNumber::Car;
@@ -745,6 +746,10 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type
     return KABC::PhoneNumber::Pcs;
   if ( type == "pager" )
     return KABC::PhoneNumber::Pager;
+  if ( type == "company" )
+    return KABC::PhoneNumber::Work; // # duplicated
+  if ( type == "business2" )
+    return KABC::PhoneNumber::Work; // # duplicated
   return KABC::PhoneNumber::Home; // whatever
 }
 
@@ -791,9 +796,9 @@ void Contact::setFields( const KABC::Addressee* addressee )
     Address address;
     address.type = addressTypeToString( (*it).type() );
     address.street = (*it).street();
-    address.city = (*it).locality();
-    address.state = (*it).region();
-    address.zip = (*it).postalCode();
+    address.locality = (*it).locality();
+    address.region = (*it).region();
+    address.postalCode = (*it).postalCode();
     address.country = (*it).country();
     // ## not in the XML format: post-office-box and extended address info.
     // ## KDE-specific tags? Or hiding those fields? Or adding a warning?
@@ -888,9 +893,9 @@ void Contact::saveTo( KABC::Addressee* addressee )
       type |= KABC::Address::Pref;
     address.setType( type );
     address.setStreet( (*it).street );
-    address.setLocality( (*it).city );
-    address.setRegion( (*it).state );
-    address.setPostalCode( (*it).zip );
+    address.setLocality( (*it).locality );
+    address.setRegion( (*it).region );
+    address.setPostalCode( (*it).postalCode );
     address.setCountry( (*it).country );
     addressee->insertAddress( address );
   }

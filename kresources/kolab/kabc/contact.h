@@ -55,9 +55,9 @@ public:
   public:
     QString type;
     QString street;
-    QString city;
-    QString state;
-    QString zip;
+    QString locality;
+    QString region;
+    QString postalCode;
     QString country;
   };
 
