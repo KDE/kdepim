@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -56,7 +56,7 @@ public:
 	PilotLocalDatabase( const QString& path,
 		const QString& name, bool useDefaultPath=true,
 		QObject *p=0L,const char *n=0L);
-	PilotLocalDatabase(const QString &name,
+	PilotLocalDatabase(const QString &name, bool useDefaultPath=true,
 		QObject *p=0L,const char *n=0L);
 
 
@@ -80,17 +80,17 @@ public:
 	virtual PilotRecord* readRecordByIndex(int index);
 	// Reads the next record from database in category 'category'
 	virtual PilotRecord* readNextRecInCategory(int category);
-	/** 
-	* Reads the next record from database that has the dirty flag set. 
-	* ind (if a valid pointer is given) will receive the index of the 
-	* returned record. 
+	/**
+	* Reads the next record from database that has the dirty flag set.
+	* ind (if a valid pointer is given) will receive the index of the
+	* returned record.
 	*/
 	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
 	// Writes a new record to database (if 'id' == 0, one will be assigned to newRecord)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
-	/** 
-	* Deletes a record with the given recordid_t from the database, 
-	* or all records, if all is set to true. The recordid_t will be 
+	/**
+	* Deletes a record with the given recordid_t from the database,
+	* or all records, if all is set to true. The recordid_t will be
 	* ignored in this case. Return value is negative on error, 0 otherwise.
 	*/
 	virtual int deleteRecord(recordid_t id, bool all=false);

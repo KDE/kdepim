@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -40,7 +40,7 @@ static const char *pilotlocaldatabase_id =
 #include <qstring.h>
 #include <qfile.h>
 #include <qregexp.h>
-#include <qdatetime.h> 
+#include <qdatetime.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -55,10 +55,10 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 	PilotDatabase(p,n),
 	fPathName(path),
 	fDBName(dbName),
-	fAppInfo(0L), 
-	fAppLen(0), 
-	fNumRecords(0), 
-	fCurrentRecord(0), 
+	fAppInfo(0L),
+	fAppLen(0),
+	fNumRecords(0),
+	fCurrentRecord(0),
 	fPendingRec(-1)
 {
 	FUNCTIONSETUP;
@@ -87,30 +87,35 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 }
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
-	QObject *p, const char *n) :
+	bool useDefaultPath, QObject *p, const char *n) :
 	PilotDatabase(p,n),
 	fPathName(QString::null),
 	fDBName(dbName),
-	fAppInfo(0L), 
-	fAppLen(0), 
-	fNumRecords(0), 
-	fCurrentRecord(0), 
+	fAppInfo(0L),
+	fAppLen(0),
+	fNumRecords(0),
+	fCurrentRecord(0),
 	fPendingRec(-1)
 {
 	FUNCTIONSETUP;
-
-	if (fPathBase && !fPathBase->isEmpty())
-	{
-		fPathName = *fPathBase;
-	}
-	else
-	{
-		fPathName = KGlobal::dirs()->saveLocation("data",
-			CSL1("kpilot/DBBackup/"));
-	}
-
 	fixupDBName();
 	openDatabase();
+
+	if (!isDBOpen() && useDefaultPath)
+	{
+		if (fPathBase && !fPathBase->isEmpty())
+		{
+			fPathName = *fPathBase;
+		}
+		else
+		{
+			fPathName = KGlobal::dirs()->saveLocation("data",
+				CSL1("kpilot/DBBackup/"));
+		}
+
+		fixupDBName();
+		openDatabase();
+	}
 }
 
 
@@ -140,10 +145,10 @@ void PilotLocalDatabase::fixupDBName()
 #endif
 }
 
-bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags, int version) 
+bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags, int version)
 {
 	FUNCTIONSETUP;
-	
+
 	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
 	if (isDBOpen()) {
 #ifdef DEBUG
@@ -155,7 +160,7 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 #ifdef DEBUG
 	DEBUGCONDUIT<<"Creating database "<<fDBName<<endl;
 #endif
-	
+
 	// Database names seem to be latin1.
 	memcpy(&fDBInfo.name[0], fDBName.latin1(), 34*sizeof(char));
 	fDBInfo.creator=creator;
@@ -169,11 +174,11 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 	fDBInfo.createDate=(QDateTime::currentDateTime()).toTime_t();
 	fDBInfo.modifyDate=(QDateTime::currentDateTime()).toTime_t();
 	fDBInfo.backupDate=(QDateTime::currentDateTime()).toTime_t();
-	
+
 	delete[] fAppInfo;
 	fAppInfo=0L;
 	fAppLen=0;
-	
+
 	for (int i=0; i<fNumRecords; i++) {
 		KPILOT_DELETE(fRecords[i]);
 		fRecords[i]=NULL;
@@ -181,7 +186,7 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 	fNumRecords=0;
 	fCurrentRecord=0;
 	fPendingRec=0;
-	
+
 	// TODO: Do I have to open it explicitely???
 	setDBOpen(true);
 	return true;
@@ -191,12 +196,12 @@ int PilotLocalDatabase::deleteDatabase()
 {
 	FUNCTIONSETUP;
 	if (isDBOpen()) closeDatabase();
-	
+
 	QString dbpath=dbPathName();
 	QFile fl(dbpath);
-	if (QFile::remove(dbPathName())) 
-		return 0; 
-	else 
+	if (QFile::remove(dbPathName()))
+		return 0;
+	else
 		return -1;
 }
 
@@ -235,22 +240,22 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 }
 
 
-	// returns the number of records in the database 
+	// returns the number of records in the database
 int PilotLocalDatabase::recordCount()
 {
 	return fNumRecords;
 }
 
 
-// Returns a QValueList of all record ids in the database. 
+// Returns a QValueList of all record ids in the database.
 QValueList<recordid_t> PilotLocalDatabase::idList()
 {
 	int idlen=recordCount();
 	QValueList<recordid_t> idlist;
 	if (idlen<=0) return idlist;
-	
+
 	// now create the QValue list from the idarr:
-	for (int id=0; id<idlen; id++) 
+	for (int id=0; id<idlen; id++)
 	{
 		idlist.append(fRecords[id]->getID());
 	}
@@ -393,7 +398,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 //      flags = flags | dlpRecAttrDirty;
 
 	// Instead of making the app do it, assume that whenever a record is
-	// written to the database it is dirty.  (You can clean up the database with 
+	// written to the database it is dirty.  (You can clean up the database with
 	// resetSyncFlags().)  This will make things get copied twice during a hot-sync
 	// but shouldn't cause any other major headaches.
 	newRecord->setAttrib(newRecord->getAttrib() | dlpRecAttrDirty);
@@ -416,7 +421,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 }
 
 // Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case
-int PilotLocalDatabase::deleteRecord(recordid_t id, bool all) 
+int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 {
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
@@ -424,10 +429,10 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 		kdError() << k_funcinfo <<": DB not open"<<endl;
 		return -1;
 	}
-	
-	if (all) 
+
+	if (all)
 	{
-		for (int i=0; i<fNumRecords; i++) 
+		for (int i=0; i<fNumRecords; i++)
 		{
 			delete fRecords[i];
 			fRecords[i]=0L;
@@ -440,7 +445,7 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 	else
 	{
 		int i=0;
-		while ( (i<fNumRecords) && (fRecords[i]->getID()!=id) ) 
+		while ( (i<fNumRecords) && (fRecords[i]->getID()!=id) )
 			i++;
 		if (fRecords[i]->getID() == id)
 		{
@@ -531,7 +536,7 @@ QString PilotLocalDatabase::dbPathName() const
 	FUNCTIONSETUP;
 	QString tempName(fPathName);
 	QString slash = CSL1("/");
-	
+
 	if (!tempName.endsWith(slash)) tempName += slash;
 	tempName += getDBName();
 	tempName += CSL1(".pdb");
@@ -581,7 +586,7 @@ void PilotLocalDatabase::closeDatabase()
 	pi_file *dbFile;
 	int i;
 
-	if (isDBOpen() == false) 
+	if (isDBOpen() == false)
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
