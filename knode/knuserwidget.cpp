@@ -35,7 +35,7 @@
 KNUserWidget::KNUserWidget(QWidget *parent, const char *n)
 	: QWidget(parent, n), entry(0)
 {
-  QGridLayout *topL=new QGridLayout(this,  6, 3, 5,5);
+  QGridLayout *topL=new QGridLayout(this,  9, 3, 5,5);
 
   QLabel *l=new QLabel(i18n("Name:"), this);		
   topL->addWidget(l, 0,0);

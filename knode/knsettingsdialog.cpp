@@ -35,7 +35,6 @@
 #include "knaccountmanager.h"
 #include "knfoldermanager.h"
 #include "knfiltermanager.h"
-#include "knode.h"
 #include "knaccnewssettings.h"
 #include "knaccmailsettings.h"
 #include "knreadgensettings.h"
@@ -52,8 +51,8 @@
 #include "knsettingsdialog.h"
 
 
-KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), Ok|Apply|Cancel|Help, Ok,
-                                                   knGlobals.top, 0, false, true)
+KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
+  : KDialogBase(TreeList, i18n("Settings"), Ok|Apply|Cancel|Help, Ok, parent, name, false, true)
 {
   setShowIconsInTreeList(true);
   //  setRootIsDecorated(false);

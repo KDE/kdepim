@@ -15,25 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #ifndef KNGROUPPROPDLG_H
 #define KNGROUPPROPDLG_H
 
+#include <kdialogbase.h>
 
-#include <qtabdialog.h>
-
-class QGroupBox;
-class QLabel;
 class QLineEdit;
-class QCheckBox;
 class KNUserWidget;
 class KNGroup;
 
 
-class KNGroupPropDlg : public QTabDialog  {
+class KNGroupPropDlg : public KDialogBase  {
 
 	public:
-		KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *n=0);
+		KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
 		~KNGroupPropDlg();
 		
 		void apply();
@@ -41,34 +36,10 @@ class KNGroupPropDlg : public QTabDialog  {
 		
 	protected:
 	
-		class statistics : public QWidget {
-		
-			public:
-				statistics(QWidget *parent=0, const char *name=0, int *values=0);
-				~statistics();
-				
-				void resizeEvent(QResizeEvent*);
-								
-				QGroupBox *gb1;
-				QLabel *t_otal, *u_nread, *n_ew, *u_nrThr, *n_ewThr;
-		};
-		
-		class settings : public QWidget {
-			
-			public:
-				settings(QWidget *parent=0, const char *name=0);
-				~settings();
-								
-				QCheckBox *useID;
-				KNUserWidget *uw;
-				QLineEdit *nick;
-				
-		};
-		
-		settings *set;
-		statistics *sta;
 		KNGroup *grp;
 		bool nChanged;
+		KNUserWidget *uw;
+		QLineEdit *nick;
 };
 
 #endif

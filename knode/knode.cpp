@@ -484,7 +484,7 @@ void KNodeApp::slotConfToolbar()
 void KNodeApp::slotSettings()
 {
   if (!setDialog) {
-    setDialog = new KNSettingsDialog();
+    setDialog = new KNSettingsDialog(this);
     connect(setDialog, SIGNAL(finished()), this, SLOT(slotSettingsFinished()));
   }
   setDialog->show();
