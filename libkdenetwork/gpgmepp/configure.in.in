@@ -86,6 +86,7 @@ KDEPIM_PATH_GPGME(0.4.4,[
 	AC_LANG_SAVE
 	AC_LANG_C
 	kdepim_gpgmepp_save_cflags="$CFLAGS"
+	kdepim_gpgmepp_save_libs="$LIBS"
 	CFLAGS="$GPGME_CFLAGS"
 	AC_MSG_CHECKING([if gpgme has GPGME_KEYLIST_MODE_VALIDATE])
 	AC_TRY_COMPILE([#include <gpgme.h>], [
@@ -96,7 +97,11 @@ KDEPIM_PATH_GPGME(0.4.4,[
 	], [
 		AC_MSG_RESULT([no])
 	])
+	AC_CHECK_LIB(gpgme,gpgme_cancel, [
+		AC_DEFINE(HAVE_GPGME_CANCEL, 1, [Define to 1 if your gpgme supports gpgme_cancel()])
+	])
 	CFLAGS="$kdepim_gpgmepp_save_cflags"
+	LIBS="$kdepim_gpgmepp_save_libs"
 	AC_LANG_RESTORE
 	
 ],[
