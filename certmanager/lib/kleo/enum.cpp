@@ -35,49 +35,136 @@
 #include <klocale.h>
 
 #include <qstring.h>
+#include <qstringlist.h>
+
+static const struct {
+  Kleo::CryptoMessageFormat format;
+  const char * displayName;
+  const char * configName;
+} cryptoMessageFormats[] = {
+  { Kleo::InlineOpenPGPFormat,
+    I18N_NOOP("Inline OpenPGP (deprecated)"),
+    "inline openpgp" },
+  { Kleo::OpenPGPMIMEFormat,
+    I18N_NOOP("OpenPGP/MIME"),
+    "openpgp/mime" },
+  { Kleo::SMIMEFormat,
+    I18N_NOOP("S/MIME"),
+    "s/mime" },
+  { Kleo::SMIMEOpaqueFormat,
+    I18N_NOOP("S/MIME opaque"),
+    "s/mime opaque" },
+};
+static const unsigned int numCryptoMessageFormats
+  = sizeof cryptoMessageFormats / sizeof *cryptoMessageFormats ;
 
 const char * Kleo::cryptoMessageFormatToString( Kleo::CryptoMessageFormat f ) {
-  switch ( f ) {
-  default:
-  case AutoFormat:
+  if ( f == AutoFormat )
     return "auto";
-  case InlineOpenPGPFormat:
-    return "inline openpgp";
-  case OpenPGPMIMEFormat:
-    return "openpgp/mime";
-  case SMIMEFormat:
-    return "s/mime";
-  case SMIMEOpaqueFormat:
-    return "s/mime opaque";
-  };
+  for ( unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i )
+    if ( f == cryptoMessageFormats[i].format )
+      return cryptoMessageFormats[i].configName;
+  return 0;
+}
+
+QStringList Kleo::cryptoMessageFormatsToStringList( unsigned int f ) {
+  QStringList result;
+  for ( unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i )
+    if ( f & cryptoMessageFormats[i].format )
+      result.push_back( cryptoMessageFormats[i].configName );
+  return result;
 }
 
 QString Kleo::cryptoMessageFormatToLabel( Kleo::CryptoMessageFormat f ) {
-  switch ( f ) {
-  default:
-    return QString::null;
-  case AutoFormat:
-    return i18n("Auto");
-  case InlineOpenPGPFormat:
-    return i18n("Inline OpenPGP (deprecated)");
-  case OpenPGPMIMEFormat:
-    return i18n("OpenPGP/MIME");
-  case SMIMEFormat:
-    return i18n("S/MIME");
-  case SMIMEOpaqueFormat:
-    return i18n("S/MIME opaque");
-  }
+  if ( f == AutoFormat )
+    return i18n("Any");
+  for ( unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i )
+    if ( f == cryptoMessageFormats[i].format )
+      return i18n( cryptoMessageFormats[i].displayName );
+  return QString::null;
 }
 
 Kleo::CryptoMessageFormat Kleo::stringToCryptoMessageFormat( const QString & s ) {
   const QString t = s.lower();
-  if ( t == "inline openpgp" )
-    return InlineOpenPGPFormat;
-  if ( t == "openpgp/mime" )
-    return OpenPGPMIMEFormat;
-  if ( t == "s/mime" )
-    return SMIMEFormat;
-  if ( t == "s/mime opaque" )
-    return SMIMEOpaqueFormat;
+  for ( unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i )
+    if ( t == cryptoMessageFormats[i].configName )
+      return cryptoMessageFormats[i].format;
   return AutoFormat;
+}
+
+unsigned int Kleo::stringListToCryptoMessageFormats( const QStringList & sl ) {
+  unsigned int result = 0;
+  for ( QStringList::const_iterator it = sl.begin() ; it != sl.end() ; ++it )
+    result |= stringToCryptoMessageFormat( *it );
+  return result;
+}
+
+// For the config values used below, see also kaddressbook/editors/cryptowidget.cpp
+
+const char* Kleo::encryptionPreferenceToString( EncryptionPreference pref )
+{
+  switch( pref ) {
+  case UnknownPreference:
+    return 0;
+  case NeverEncrypt:
+    return "never";
+  case AlwaysEncrypt:
+    return "always";
+  case AlwaysEncryptIfPossible:
+    return "alwaysIfPossible";
+  case AlwaysAskForEncryption:
+    return "askAlways";
+  case AskWheneverPossible:
+    return "askWhenPossible";
+  }
+  return 0; // keep the compiler happy
+}
+
+Kleo::EncryptionPreference Kleo::stringToEncryptionPreference( const QString& str )
+{
+  if ( str == "never" )
+    return NeverEncrypt;
+  if ( str == "always" )
+    return AlwaysEncrypt;
+  if ( str == "alwaysIfPossible" )
+    return AlwaysEncryptIfPossible;
+  if ( str == "askAlways" )
+    return AlwaysAskForEncryption;
+  if ( str == "askWhenPossible" )
+    return AskWheneverPossible;
+  return UnknownPreference;
+}
+
+const char* Kleo::signingPreferenceToString( SigningPreference pref )
+{
+  switch( pref ) {
+  case UnknownSigningPreference:
+    return 0;
+  case NeverSign:
+    return "never";
+  case AlwaysSign:
+    return "always";
+  case AlwaysSignIfPossible:
+    return "alwaysIfPossible";
+  case AlwaysAskForSigning:
+    return "askAlways";
+  case AskSigningWheneverPossible:
+    return "askWhenPossible";
+  }
+  return 0; // keep the compiler happy
+}
+
+Kleo::SigningPreference Kleo::stringToSigningPreference( const QString& str )
+{
+  if ( str == "never" )
+    return NeverSign;
+  if ( str == "always" )
+    return AlwaysSign;
+  if ( str == "alwaysIfPossible" )
+    return AlwaysSignIfPossible;
+  if ( str == "askAlways" )
+    return AlwaysAskForSigning;
+  if ( str == "askWhenPossible" )
+    return AskSigningWheneverPossible;
+  return UnknownSigningPreference;
 }

@@ -34,31 +34,33 @@
 #define __KLEO_ENUM_H__
 
 class QString;
+class QStringList;
 
 namespace Kleo {
 
   enum CryptoMessageFormat {
-    AutoFormat = -1,
-    InlineOpenPGPFormat = 0,
-    OpenPGPMIMEFormat = 1,
-    SMIMEFormat = 2,
-    SMIMEOpaqueFormat = 3
+    InlineOpenPGPFormat = 1,
+    OpenPGPMIMEFormat = 2,
+    SMIMEFormat = 4,
+    SMIMEOpaqueFormat = 8,
+    AnyOpenPGP = InlineOpenPGPFormat|OpenPGPMIMEFormat,
+    AnySMIME = SMIMEOpaqueFormat|SMIMEFormat,
+    AutoFormat = AnyOpenPGP|AnySMIME
   };
 
   QString cryptoMessageFormatToLabel( CryptoMessageFormat f );
 
   const char * cryptoMessageFormatToString( CryptoMessageFormat f );
+  QStringList cryptoMessageFormatsToStringList( unsigned int f );
   CryptoMessageFormat stringToCryptoMessageFormat( const QString & s );
+  unsigned int stringListToCryptoMessageFormats( const QStringList & sl );
 
-  enum EncryptionAction {
-    Conflict = -1,
-    DoNotEncrypt = 0,
-    DoEncrypt = 1,
-    AskForApproval = 2
+  enum Action {
+    Conflict, DoIt, DontDoIt, Ask, Impossible
   };
 
   enum EncryptionPreference {
-    UnknownPreference,
+    UnknownPreference = 0,
     NeverEncrypt,
     AlwaysEncrypt,
     AlwaysEncryptIfPossible,
@@ -66,6 +68,20 @@ namespace Kleo {
     AskWheneverPossible
   };
 
+  const char* encryptionPreferenceToString( EncryptionPreference pref );
+  EncryptionPreference stringToEncryptionPreference( const QString& str );
+
+  enum SigningPreference {
+    UnknownSigningPreference,
+    NeverSign,
+    AlwaysSign,
+    AlwaysSignIfPossible,
+    AlwaysAskForSigning,
+    AskSigningWheneverPossible
+  };
+
+  const char* signingPreferenceToString( SigningPreference pref );
+  SigningPreference stringToSigningPreference( const QString& str );
 }
 
 #endif // __KLEO_CRYPTOBACKEND_H__
