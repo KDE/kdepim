@@ -22,7 +22,7 @@ synctest4_LDADD = ../libksync2.la -lkabc_file
 
 synctest5_SOURCES = synctest5.cpp synctesthelper.cpp
 synctest5_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-synctest5_LDADD = ../libksync2.la $(KDE_KIO)
+synctest5_LDADD = ../libksync2.la $(LIB_KIO)
 
 check: synctest1 synctest2
 	mkdir -p ./data
