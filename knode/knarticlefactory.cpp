@@ -695,16 +695,13 @@ void KNArticleFactory::processJob(KNJobData *j)
   lst.append(art);
 
   if(!j->success()) {
-    //sending of this article failed => move it to the "Outbox-Folder"
-    if(!f_olManager->outbox()->saveArticles(&lst)) {
-      displayInternalFileError();
-      if(art->collection()==0)
-        delete art;
-      return;
-    }
     showSendErrorDialog();
     s_endErrDlg->append(art->subject()->asUnicodeString(), j->errorString());
     delete j; //unlock article
+
+    //sending of this article failed => move it to the "Outbox-Folder"
+    if(art->collection()!=f_olManager->outbox())
+      saveArticles(&lst, f_olManager->outbox());
   }
   else {
 

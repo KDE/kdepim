@@ -889,7 +889,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
 				a=g->byMessageId(a_rticle->references()->at(target.toInt()));
 				if(a)
 					setArticle(a);
-				else
+			  else
 					showErrorMessage(i18n("Article %1 not found in group %2")
 																.arg(a_rticle->references()->at(target.toInt()))
 																.arg(g->groupname()));

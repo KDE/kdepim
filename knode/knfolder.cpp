@@ -360,26 +360,39 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 
 void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
 {
-  int idx=0, delCnt=0;
-  for(KNLocalArticle *a=l->first(); a; a=l->next()) {
+  if(l->isEmpty())
+    return;
+
+  int idx=0, delCnt=0, *positions;
+  positions=new int[l->count()];
+  KNLocalArticle *a=0;
+
+  for(a=l->first(); a; a=l->next()) {
+    idx=l->at();
     if(a->isLocked())
+      positions[idx]=-1;
+    else
+      positions[idx]=findId(a->id());
+  }
+
+  for(idx=0; idx < (int)(l->count()); idx++) {
+    if(positions[idx]==-1)
       continue;
-    idx=findId(a->id());
-    if(idx!=-1 && at(idx)==a) {
-      list[idx]=0;
-      delCnt++;
 
-      //update
-      knGlobals.artFactory->deleteComposerForArticle(a);
-      KNArticleWidget::articleRemoved(a);
-      delete a->listItem();
+    a=at(positions[idx]);
+    list[(positions[idx])]=0;
+    delCnt++;
 
-      if(del)
-        delete a;
-      else
-        a->setId(-1);
+    //update
+    knGlobals.artFactory->deleteComposerForArticle(a);
+    KNArticleWidget::articleRemoved(a);
+    delete a->listItem();
 
-    }
+    //delete article
+    if(del)
+       delete a;
+    else
+      a->setId(-1);
   }
 
   if(delCnt>0) {
@@ -388,6 +401,7 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
     updateListItem();
     i_ndexDirty=true;
   }
+  delete positions;
 }
 
 

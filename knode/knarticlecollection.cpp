@@ -138,20 +138,38 @@ int KNArticleCollection::findId(int id)
   int start=0, end=len, mid=0, currentId=0;
   bool found=false;
   end=len;
+  KNArticle *current=0;
 
   while (start!=end && !found) {
     mid=(start+end)/2;
-    currentId=list[mid]->id();
-      if (currentId==id) found=true;
-      else
-        if (currentId < id) 
-        start=mid+1;
-        else end=mid;
+    current=list[mid];
+    /*if(!current) {
+      int idx=mid;
+      while(!current && ++idx<len)
+        current=list[idx];
+      if(!current) {
+        idx=mid;
+        while(!current && --idx>=0)
+          current=list[mid];
+      }
+    }
+
+    if(!current) {
+      found=false;
+      break;
+    }*/
+    currentId=current->id();
+    if(currentId==id)
+      found=true;
+    else if(currentId < id)
+      start=mid+1;
+    else
+      end=mid;
   }
 
   if (found) return mid;  
   else {
-    kdDebug(5003) << "ID " << id << " not found!\n" << endl;
+    kdDebug(5003) << "KNArticleCollection::findId() : ID " << id << " not found!\n" << endl;
     return -1;
   } 
     
