@@ -12,8 +12,7 @@ using namespace KCal;
 CalFilter::CalFilter()
 {
   mEnabled = true;
-  mInclusion = 0;
-  mExclusion = 0;
+  mCriteria = 0;
 }
 
 CalFilter::CalFilter(const QString &name)
@@ -44,31 +43,78 @@ void CalFilter::apply(QList<Event> *eventlist)
 //  kdDebug() << "CalFilter::apply() done" << endl;
 }
 
+// TODO: avoid duplicating apply() code
+void CalFilter::apply(QList<Todo> *eventlist)
+{
+  if (!mEnabled) return;
+
+//  kdDebug() << "CalFilter::apply()" << endl;
+
+  Todo *event = eventlist->first();
+  while(event) {
+    if (!filterTodo(event)) {
+      eventlist->remove();
+      event = eventlist->current();
+    } else {
+      event = eventlist->next();
+    }
+  }
+
+//  kdDebug() << "CalFilter::apply() done" << endl;
+}
+
 bool CalFilter::filterEvent(Event *event)
 {
 //  kdDebug() << "CalFilter::filterEvent(): " << event->getSummary() << endl;
 
-  if (mInclusion) {
-    bool passed = false;
-    if (mInclusion & Recurring) {
-      if (event->recurrence()->doesRecur()) passed = true;
-    }
-    if (mInclusion & Floating) {
-      if (event->doesFloat()) passed = true;
-    }
-    if (!passed) return false;
+  if (mCriteria & HideRecurring) {
+    if (event->recurrence()->doesRecur()) return false;
   }
-  
-  
-  if (mExclusion) {
-    if (mExclusion & Recurring) {
-      if (event->recurrence()->doesRecur()) return false;
-    }
-    if (mExclusion & Floating) {
-      if (event->doesFloat()) return false;
-    }
+
+  return filterIncidence(event);
+}
+
+bool CalFilter::filterTodo(Todo *todo)
+{
+//  kdDebug() << "CalFilter::filterEvent(): " << event->getSummary() << endl;
+
+  if (mCriteria & HideCompleted) {
+    if (todo->isCompleted()) return false;
   }
-  
+
+  return filterIncidence(todo);
+}
+
+bool CalFilter::filterIncidence(Incidence *incidence)
+{
+//  kdDebug() << "CalFilter::filterEvent(): " << event->getSummary() << endl;
+
+  if (mCriteria & ShowCategories) {
+    for (QStringList::Iterator it = mCategoryList.begin();
+         it != mCategoryList.end(); ++it ) {
+      QStringList incidenceCategories = incidence->categories();
+      for (QStringList::Iterator it2 = incidenceCategories.begin();
+           it2 != incidenceCategories.end(); ++it2 ) {
+        if ((*it) == (*it2)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  } else {
+    for (QStringList::Iterator it = mCategoryList.begin();
+         it != mCategoryList.end(); ++it ) {
+      QStringList incidenceCategories = incidence->categories();
+      for (QStringList::Iterator it2 = incidenceCategories.begin();
+           it2 != incidenceCategories.end(); ++it2 ) {
+        if ((*it) == (*it2)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+    
 //  kdDebug() << "CalFilter::filterEvent(): passed" << endl;
   
   return true;
@@ -84,22 +130,22 @@ bool CalFilter::isEnabled()
   return mEnabled;
 }
 
-void CalFilter::setInclusionCriteria(int criteria)
+void CalFilter::setCriteria(int criteria)
 {
-  mInclusion = criteria;
+  mCriteria = criteria;
 }
 
-int CalFilter::inclusionCriteria()
+int CalFilter::criteria()
 {
-  return mInclusion;
+  return mCriteria;
 }
 
-void CalFilter::setExclusionCriteria(int criteria)
+void CalFilter::setCategoryList(const QStringList &categoryList)
 {
-  mExclusion = criteria;
+  mCategoryList = categoryList;
 }
 
-int CalFilter::exclusionCriteria()
+QStringList CalFilter::categoryList()
 {
-  return mExclusion;
+  return mCategoryList;
 }

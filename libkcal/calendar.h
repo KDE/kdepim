@@ -143,6 +143,7 @@ class Calendar : public QObject {
     virtual void addTodo(Todo *todo) = 0;
     /** remove a todo from the todolist. */
     virtual void deleteTodo(Todo *) = 0;
+    QList<Todo> getFilteredTodoList();
     virtual const QList<Todo> &getTodoList() const = 0;
     /** searches todolist for an event with this unique string identifier,
       returns a pointer or null. */

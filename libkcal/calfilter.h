@@ -10,6 +10,7 @@
 #include <qlist.h>
 
 #include "event.h"
+#include "todo.h"
 
 namespace KCal {
 
@@ -41,10 +42,28 @@ class CalFilter {
     void apply(QList<Event> *eventlist);
     
     /**
+      Apply filter to todolist, all todos not matching filter criterias are
+      removed from the list.
+    */
+    void apply(QList<Todo> *todolist);
+    
+    /**
       Apply filter criteria on the specified event. Return true, if event passes
       criteria, otherwise return false.
     */
     bool filterEvent(Event *);
+    
+    /**
+      Apply filter criteria on the specified todo. Return true, if event passes
+      criteria, otherwise return false.
+    */
+    bool filterTodo(Todo *);
+    
+    /**
+      Apply filter criteria on the specified incidence. Return true, if event passes
+      criteria, otherwise return false.
+    */
+    bool filterIncidence(Incidence *);
     
     /**
       Enable or disable filter.
@@ -55,33 +74,38 @@ class CalFilter {
     */
     bool isEnabled();
 
-    enum { Recurring = 1, Floating = 2 };
+
+    /**
+      Set list of categories, which is used for showing/hiding categories of
+      events.
+      See related functions.
+    */
+    void setCategoryList(const QStringList &);
+    /**
+      Return category list, used for showing/hiding categories of events.
+      See related functions.
+    */
+    QStringList categoryList();
+    
+    enum { HideRecurring = 1, HideCompleted = 2, ShowCategories = 4 };
     
     /**
       Set criteria, which have to be fulfilled by events passing the filter.
     */
-    void setInclusionCriteria(int);
+    void setCriteria(int);
     /**
       Get inclusive filter criteria.
     */
-    int inclusionCriteria();
-    
-    /**
-      Set criteria, which prevent events to pass the filter.
-    */
-    void setExclusionCriteria(int);
-    /**
-      Get exclusive filter criteria.
-    */
-    int exclusionCriteria();
+    int criteria();
     
   private:
     QString mName;
 
-    int mExclusion;
-    int mInclusion;
+    int mCriteria;
     
     bool mEnabled;
+    
+    QStringList mCategoryList;
 };
 
 }

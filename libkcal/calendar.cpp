@@ -410,3 +410,10 @@ void Calendar::addIncidence(Incidence *i)
 
   i->accept(v);
 }
+
+QList<Todo> Calendar::getFilteredTodoList()
+{
+  QList<Todo> tl = getTodoList();
+  mFilter->apply(&tl);
+  return tl;
+}
