@@ -702,8 +702,8 @@ again. Usually, just keeping the list address works best.</para></tip>
 
 <para>The second method is to manually construct a filter from scratch
 by calling the filter dialog through
-<menuchoice><guimenu>Settings</guimenu>Filter
-Rules...</menuchoice>. The filter dialog is described in detail in the
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Filter
+Rules...</guimenuitem></menuchoice>. The filter dialog is described in detail in the
 following subsection.</para>
 </sect2>
 
