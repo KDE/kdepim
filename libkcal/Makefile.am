@@ -15,7 +15,7 @@ libkcal_la_SOURCES = \
         freebusy.cpp attendee.cpp recurrence.cpp alarm.cpp \
         calendar.cpp calendarlocal.cpp \
         calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
-	vcaldrag.cpp \
+	vcaldrag.cpp icaldrag.cpp \
         exceptions.cpp \
         scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
         calfilter.cpp \

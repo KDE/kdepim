@@ -31,10 +31,13 @@
 #include <klocale.h>
 
 #include "vcaldrag.h"
+#include "icaldrag.h"
 #include "calendar.h"
 #include "vcalformat.h"
 
 #include "dndfactory.h"
+#include "icalformat.h"
+#include "calendarlocal.h"
 
 using namespace KCal;
 
@@ -163,101 +166,73 @@ void DndFactory::cutEvent(Event *selectedEv)
   }
 }
 
-bool DndFactory::copyEvent(Event *selectedEv)
+bool DndFactory::copyEvent( Event *selectedEv )
 {
   QClipboard *cb = QApplication::clipboard();
-  VObject *vcal, *vevent;
-  QString tmpStr;
 
-  vcal = newVObject(VCCalProp);
+  CalendarLocal cal;
+  cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  Event *ev = new Event( *selectedEv );
+  cal.addEvent(ev);
+  cb->setData( new ICalDrag( &cal ) );
 
-  //  addPropValue(vcal,VCLocationProp, "0.0");
-  addPropValue(vcal,VCProdIdProp, productId());
-  tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
-  addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
-
-  vevent = eventToVEvent(selectedEv);
-
-  addVObjectProp(vcal, vevent);
-
-  // paste to clipboard
-  cb->setData(new VCalDrag(vcal));
-
-  // free memory associated with vCalendar stuff
-  cleanVObject(vcal);
-
-
-  return TRUE;
+  return true;
 }
 
 Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
 {
-  VObject *vcal, *curVO, *curVOProp;
-  VObjectIterator i;
-  int daysOffset;
+//  kdDebug() << "DnDFactory::pasteEvent()" << endl;
 
-  Event *anEvent = 0L;
+  CalendarLocal cal;
+
+  Event *anEvent = 0;
 
   QClipboard *cb = QApplication::clipboard();
-  int bufsize;
-  const char * buf;
-  buf = cb->text().local8Bit();  // vCalendar object is in latin1
-				//lukas: yeah, so why not screw it :(
-  bufsize = strlen(buf);
 
-  if (!VCalDrag::decode(cb->data(),&vcal)) {
-    kdDebug() << "An error has occurred parsing the contents of the clipboard."
-                 "You can only paste a valid vCalendar into " << application()
-              << endl;
+  if (!ICalDrag::decode(cb->data(),&cal)) {
+    kdDebug(5800) << "An error has occurred parsing the contents of the clipboard."
+                     "You can only paste a valid iCalendar into " << application()
+                  << endl;
     return 0;
   }
 
-  initPropIterator(&i, vcal);
+  QPtrList<Event> evList = cal.events();
+  Event *ev = evList.first();
+  if ( ev ) {
+    anEvent = new Event( *ev );
 
-  // we only take the first object.
-  do  {
-    curVO = nextVObject(&i);
-  } while (strcmp(vObjectName(curVO), VCEventProp));
+    // if we pasted an event that was the result of a copy in our
+    // own calendar, now we have duplicate UID strings.  Need to generate
+    // a new one for this new event.
+    QString uidStr = createUniqueId();
+    if ( mCalendar->event( anEvent->uid() ) )
+      anEvent->setUid( uidStr );
 
-  // now, check to see that the object is BOTH an event, and if so,
-  // that it has a starting date
-  if (strcmp(vObjectName(curVO), VCEventProp) == 0) {
-    if ((curVOProp = isAPropertyOf(curVO, VCDTstartProp)) ||
-	(curVOProp = isAPropertyOf(curVO, VCDTendProp))) {
+    int daysOffset = anEvent->dtEnd().date().dayOfYear() -
+      anEvent->dtStart().date().dayOfYear();
 
-      // we found an event with a start time, put it in the dict
-      anEvent = VEventToEvent(curVO);
-      // if we pasted an event that was the result of a copy in our
-      // own calendar, now we have duplicate UID strings.  Need to generate
-      // a new one for this new event.
-      QString uidStr = createUniqueId();
-      if (mCalendar->event(anEvent->uid()))
-	anEvent->setUid(uidStr);
-
-      daysOffset = anEvent->dtEnd().date().dayOfYear() -
-	anEvent->dtStart().date().dayOfYear();
-
-      if (newTime)
-	anEvent->setDtStart(QDateTime(newDate, *newTime));
-      else
-	anEvent->setDtStart(QDateTime(newDate, anEvent->dtStart().time()));
-
-      anEvent->setDtEnd(QDateTime(newDate.addDays(daysOffset),
-				  anEvent->dtEnd().time()));
-      mCalendar->addEvent(anEvent);
+    if ( newTime ) {
+      anEvent->setDtStart( QDateTime( newDate, *newTime ) );
     } else {
-      kdDebug(5800) << "found a VEvent with no DTSTART/DTEND! Skipping" << endl;
+      anEvent->setDtStart( QDateTime( newDate, anEvent->dtStart().time() ) );
     }
-  } else if (strcmp(vObjectName(curVO), VCTodoProp) == 0) {
-    kdDebug(5800) << "Trying to paste a Todo." << endl;
-// TODO: check, if todos can be pasted
-//    Todo *aTodo = VTodoToEvent(curVO);
-//    mCalendar->addTodo(aTodo);
+
+    anEvent->setDtEnd( QDateTime( newDate.addDays( daysOffset ),
+				  anEvent->dtEnd().time() ) );
+    mCalendar->addEvent( anEvent );
   } else {
-    kdDebug(5800) << "unknown event type in paste!!!" << endl;
+    QPtrList<Todo> toList = cal.todos();
+    Todo *to = toList.first();
+    if (to) {
+      //anTodo = new Todo(*to);
+      kdDebug(5800) << "Trying to paste a Todo." << endl;
+      // TODO: check, if todos can be pasted
+      //    Todo *aTodo = VTodoToEvent(curVO);
+      //    mCalendar->addTodo(aTodo);
+    } else {
+      kdDebug(5800) << "unknown event type in paste!!!" << endl;
+    }
   }
-  // get rid of temporary VObject
-  deleteVObject(vcal);
+
   return anEvent;
 }
