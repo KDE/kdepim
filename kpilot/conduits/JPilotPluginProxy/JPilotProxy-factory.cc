@@ -42,7 +42,7 @@
 extern "C"
 {
 
-void *init_libJPilotProxy() {
+void *init_conduit_JPilotProxy() {
 	FUNCTIONSETUP;
 //	K_EXPORT_COMPONENT_FACTORY( libkspread, KSpreadFactory )
 	return new JPilotProxyConduitFactory;

@@ -9,4 +9,4 @@ Name[pt_BR]=Informação do Sistema
 Name[sv]=Systeminformation
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libsysinfoconduit
+X-KDE-Library=conduit_sysinfo

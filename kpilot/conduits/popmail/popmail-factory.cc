@@ -43,7 +43,7 @@
 extern "C"
 {
 
-void *init_libpopmailconduit()
+void *init_conduit_popmail()
 {
 	return new PopmailConduitFactory;
 }

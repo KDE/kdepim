@@ -69,7 +69,7 @@ kpilotConfig_SOURCES = kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	dbSelectionDialog.cc dbSelection_base.ui \
 	conduitConfigDialog.cc \
-	listCat.cc main-config.cc
+	main-config.cc
 
 
 libkhexedit_shared_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)

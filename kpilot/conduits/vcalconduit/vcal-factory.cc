@@ -40,7 +40,7 @@
 extern "C"
 {
 
-void *init_libvcalconduit()
+void *init_conduit_vcal()
 {
 	return new VCalConduitFactory;
 }

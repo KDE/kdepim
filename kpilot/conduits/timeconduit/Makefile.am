@@ -8,14 +8,14 @@ METASOURCES = AUTO
 servicedir = $(kde_servicesdir)
 service_DATA = time_conduit.desktop
 
-kde_module_LTLIBRARIES = libtimeconduit.la
+kde_module_LTLIBRARIES = conduit_time.la
 
 
-libtimeconduit_la_SOURCES = \
+conduit_time_la_SOURCES = \
 	time-factory.cc \
 	time-setup.cc \
 	time-conduit.cc \
 	time-setup_dialog.ui
-libtimeconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
-libtimeconduit_la_LIBADD = ../../lib/libkpilot.la $(LIB_KDEUI)
+conduit_time_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+conduit_time_la_LIBADD = ../../lib/libkpilot.la $(LIB_KDEUI)
  

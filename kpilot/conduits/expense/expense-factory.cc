@@ -47,7 +47,7 @@
 extern "C"
 {
 
-void *init_libexpenseconduit()
+void *init_conduit_expense()
 {
 	return new ExpenseConduitFactory;
 }

@@ -50,4 +50,4 @@ Name[zh_TW]=KOrganizer 待辦事項 Conduit
 Name[zu]=KUmgqugquzeli Todo Conduit
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libtodoconduit
+X-KDE-Library=conduit_todo

@@ -131,8 +131,8 @@ void KPilotConfigDialog::readConfig()
 
 	fConfigWidget->fFullBackupCheck->setChecked(c.getFullSyncOnPCChange());
 	fConfigWidget->fConflictResolution->setCurrentItem(c.getConflictResolution());
-	fConfigWidget->fSyncFiles->setChecked(c.getSyncFiles());
-	fConfigWidget->fSyncWithKMail->setChecked(c.getSyncWithKMail());
+	// fConfigWidget->fSyncFiles->setChecked(c.getSyncFiles());
+	// fConfigWidget->fSyncWithKMail->setChecked(c.getSyncWithKMail());
 
 	/* Viewers tab */
 	fConfigWidget->fInternalEditors->setChecked(c.getInternalEditors());
@@ -197,8 +197,8 @@ void KPilotConfigDialog::readConfig()
 	c.setSyncType(syncmode);
 	c.setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
 	c.setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
-	c.setSyncFiles(fConfigWidget->fSyncFiles->isChecked());
-	c.setSyncWithKMail(fConfigWidget->fSyncWithKMail->isChecked());
+	// c.setSyncFiles(fConfigWidget->fSyncFiles->isChecked());
+	// c.setSyncWithKMail(fConfigWidget->fSyncWithKMail->isChecked());
 
 	/* Viewers tab */
 	c.setInternalEditors( fConfigWidget->fInternalEditors->isChecked());

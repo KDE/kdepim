@@ -118,10 +118,11 @@ ConduitTip::~ConduitTip()
 }
 
 // Page numbers in the widget stack
-#define INTRO		(0)
-#define OLD_CONDUIT	(1)
-#define BROKEN_CONDUIT	(2)
-#define NEW_CONDUIT	(3)
+#define INTRO            (0)
+#define OLD_CONDUIT      (1)
+#define BROKEN_CONDUIT   (2)
+#define INTERNAL_CONDUIT (3)
+#define NEW_CONDUIT      (4)
 
 
 ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
@@ -130,23 +131,22 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
 	p->setSpacing(10);
 
 	QWidget *w = 0L; // For spacing purposes only.
+	QLabel *l = 0L;
+	QVBox *v = 0L;
 
 	// Create the left hand column
-	QVBox *v = new QVBox(p,"LeftPart");
-	fConduitList = new QListView(v,"ConduitList");
+	fConduitList = new QListView(p,"ConduitList");
 	fConduitList->addColumn(i18n("Conduit"));
-	QLabel *l = new QLabel(v);
-	l->setText(i18n("<qt>Select a conduit in the list above to configure it. "
-		"Checked conduits will be run during a HotSync.</qt>"));
-	// This is a spacer
-	w = new QWidget(v);
-	v->setStretchFactor(w,100);
 
 	// Right hand column
 	fStack = new QWidgetStack(p,"RightPart");
 
 	// Zero'th page in stack
 	l = new QLabel(fStack);
+	l->setFrameShape(QLabel::Box);
+	l->setText(i18n("<qt>Select a conduit in the list to configure it. "
+		"Checked conduits will be run during a HotSync.</qt>"));
+	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
 	fStack->addWidget(l,INTRO);
 
 	// First page in stack (right hand column)
@@ -154,6 +154,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
 	l->setFrameShape(QLabel::Box);
 	l->setText(i18n("<qt>This conduit appears to be broken and cannot "
 		"be configured.</qt>"));
+	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
 	fStack->addWidget(l,BROKEN_CONDUIT);
 
 	// Second page, now with layout in a single column
@@ -173,6 +174,13 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
 	w = new QWidget(v);
 	v->setStretchFactor(w,50);
 	fStack->addWidget(v,OLD_CONDUIT);
+
+	// Page 3
+	l = new QLabel(fStack);
+	l->setFrameShape(QLabel::Box);
+	l->setText(i18n("<qt>This conduit has no configuration options.</qt>"));
+	l->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::ExpandTabs | Qt::WordBreak);
+	fStack->addWidget(l,INTERNAL_CONDUIT);
 }
 
 
@@ -295,7 +303,7 @@ void ConduitConfigWidget::fillLists()
 		p->setText(CONDUIT_DESKTOP,o->desktopEntryName());
 		p->setText(CONDUIT_LIBRARY,o->library());
 
-		if (potentiallyInstalled.contains(o->desktopEntryName()) == 0)
+		if (potentiallyInstalled.findIndex(o->desktopEntryName()) < 0)
 		{
 			p->setOn(false);
 		}
@@ -306,6 +314,22 @@ void ConduitConfigWidget::fillLists()
 
 		++availList;
 	}
+
+	// Now the (statically compiled) internal conduits
+	QCheckListItem *p = 0L;
+#define IC(a,b,c) p = new QCheckListItem(fConduitList,i18n(a),QCheckListItem::CheckBox); \
+	p->setText(CONDUIT_COMMENT,i18n(c)); \
+	p->setText(CONDUIT_LIBRARY,"internal_" ## b); \
+	p->setText(CONDUIT_DESKTOP,"internal_" ## b); \
+	if (potentiallyInstalled.findIndex(p->text(CONDUIT_DESKTOP))>=0) \
+		p->setOn(true);
+
+	IC("Kroupware","kroupware",
+		"Sync the handheld with a Kroupware client (for example, KMail).");
+	IC("Install Files","fileinstall",
+		"Install files that are dragged to KPilot onto the handheld.");
+
+#undef IC
 }
 
 void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
@@ -334,6 +358,12 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 	{
 		fStack->raiseWidget(BROKEN_CONDUIT);
 		warnNoExec(p);
+		return;
+	}
+
+	if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("internal_")))
+	{
+		fStack->raiseWidget(INTERNAL_CONDUIT);
 		return;
 	}
 

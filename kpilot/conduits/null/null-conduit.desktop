@@ -47,4 +47,4 @@ Comment[zh_TW]=此 conduit 不做任何事。您可以將它附加到資料庫�
 Comment[zu]=Le conduit ayenzi lutho.Ungayifaka kwi database ukuvimbelayona ekushababaleni.
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libnullconduit
+X-KDE-Library=conduit_null

@@ -41,4 +41,4 @@ Name[zh_CN]=KPilot KNotes 管道
 Name[zu]=KUmshayeli webhanoyi Kamaphepha amancane Conduit
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libknotesconduit
+X-KDE-Library=conduit_knotes

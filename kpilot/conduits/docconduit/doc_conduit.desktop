@@ -15,4 +15,4 @@ Name[sv]=Palm DOC-kanal
 Name[zh_CN]=Palm DOC 管道
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libdocconduit
+X-KDE-Library=conduit_doc

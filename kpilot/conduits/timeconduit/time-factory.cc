@@ -42,7 +42,7 @@
 extern "C"
 {
 
-void *init_libtimeconduit()
+void *init_conduit_time()
 {
 	return new TimeConduitFactory;
 }

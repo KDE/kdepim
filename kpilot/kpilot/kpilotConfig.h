@@ -92,8 +92,8 @@ public:
 	IntProperty(SyncType)
 	BoolProperty(FullSyncOnPCChange)
 	IntProperty(ConflictResolution)
-	BoolProperty(SyncFiles)
-	BoolProperty(SyncWithKMail)
+	// BoolProperty(SyncFiles)
+	// BoolProperty(SyncWithKMail)
 
 	/* Viewers tab */
 	BoolProperty(InternalEditors)

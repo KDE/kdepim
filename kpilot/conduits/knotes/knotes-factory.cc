@@ -47,7 +47,7 @@
 extern "C"
 {
 
-void *init_libknotesconduit()
+void *init_conduit_knotes()
 {
 	return new KNotesConduitFactory;
 }

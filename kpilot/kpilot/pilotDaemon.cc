@@ -649,7 +649,8 @@ QString PilotDaemon::syncTypeString(int i) const
 
 	KPilotConfigSettings &c = KPilotConfig::getConfig();
 	QStringList conduits( c.getInstalledConduits() );
-	if (c.getSyncFiles() && fInstaller) mode |= ActionQueue::WithInstaller;
+	if ( (conduits.findIndex( CSL1("internal_fileinstall") ) >= 0) &&
+		fInstaller) mode |= ActionQueue::WithInstaller;
 
 	// Queue to add all the actions for this sync to.
 	fSyncStack = new ActionQueue(fPilotLink);
@@ -701,8 +702,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	}
 
 #ifdef ENABLE_KROUPWARE
-	c.setGroup(QString::null);
-	if ( c.getSyncWithKMail() )
+	if ( conduits.findIndex( CSL1("internal_kroupware") ) >= 0 )
 	{
 		logMessage( i18n("Kroupware syncing is enabled.") );
 
@@ -724,7 +724,6 @@ QString PilotDaemon::syncTypeString(int i) const
 		if (conduits.findIndex( CSL1("abbrowser_conduit") ) >= 0 )
 			_kroupwareParts |= KroupwareSync::Address ;
 	}
-	c.setGroup(QString::null);
 
 	if (_syncWithKMail)
 	{

@@ -13,14 +13,15 @@ servicedir = $(kde_servicesdir)
 service_DATA = doc_conduit.desktop
 
 noinst_LTLIBRARIES = libpalmdoc_shared.la
-kde_module_LTLIBRARIES = libdocconduit.la
+kde_module_LTLIBRARIES = conduit_doc.la
 bin_PROGRAMS = kpalmdoc
 
 libpalmdoc_shared_la_SOURCES = makedoc9.cc pilotDOCHead.cc pilotDOCEntry.cc pilotDOCBookmark.cc DOC-converter.cc
 
-libdocconduit_la_SOURCES = doc-factory.cc doc-setup.cc doc-conduit.cc doc-setupdialog.ui doc-conflictdialog.cc 
-libdocconduit_la_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-libdocconduit_la_LIBADD = ../../lib/libkpilot.la libpalmdoc_shared.la
+conduit_doc_la_SOURCES = doc-factory.cc doc-setup.cc doc-conduit.cc doc-setupdialog.ui doc-conflictdialog.cc 
+conduit_doc_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+conduit_doc_la_LIBADD = ../../lib/libkpilot.la libpalmdoc_shared.la \
+	$(LIB_KDEUI) $(LIB_KFILE)
 
 ##libpalmdoc_shared.la
 

@@ -11,7 +11,7 @@ KPilot's settings.!</comment>
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>385</width>
+            <width>386</width>
             <height>310</height>
         </rect>
     </property>
@@ -257,31 +257,6 @@ This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fSyncWithKMail</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Sync with KMail (with Kroupware enabled)</string>
-                        </property>
-                    </widget>
-                    <spacer row="6" column="1">
-                        <property name="name">
-                            <cstring>Spacer1</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
                     <widget class="QComboBox" row="2" column="1">
                         <item>
                             <property name="text">
@@ -334,17 +309,6 @@ This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt
                         </property>
                         <property name="buddy" stdset="0">
                             <cstring>fConflictResolution</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fSyncFiles</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Install files</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Install files that have been dragged onto KPilot or the KPilot daemon on the Pilot.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="2">
@@ -659,8 +623,6 @@ This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt
     <tabstop>fSpecialSync</tabstop>
     <tabstop>fFullBackupCheck</tabstop>
     <tabstop>fConflictResolution</tabstop>
-    <tabstop>fSyncFiles</tabstop>
-    <tabstop>fSyncWithKMail</tabstop>
     <tabstop>fUseSecret</tabstop>
     <tabstop>fNormalDisplay</tabstop>
     <tabstop>fCompanyDisplay</tabstop>

@@ -46,7 +46,7 @@
 extern "C"
 {
 
-void *init_libmalconduit()
+void *init_conduit_mal()
 {
 	return new MALConduitFactory;
 }

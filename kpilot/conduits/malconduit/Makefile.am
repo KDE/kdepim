@@ -9,9 +9,9 @@ METASOURCES = AUTO
 servicedir = $(kde_servicesdir)
 service_DATA = mal_conduit.desktop
 
-kde_module_LTLIBRARIES = libmalconduit.la
-libmalconduit_la_SOURCES = mal-setup_dialog.ui mal-factory.cc mal-setup.cc mal-conduit.cc 
-	
-libmalconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
-libmalconduit_la_LIBADD = ../../lib/libkpilot.la $(MAL_LIB) $(LIB_KDEUI)
+kde_module_LTLIBRARIES = conduit_mal.la
+
+conduit_mal_la_SOURCES = mal-setup_dialog.ui mal-factory.cc mal-setup.cc mal-conduit.cc 
+conduit_mal_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+conduit_mal_la_LIBADD = ../../lib/libkpilot.la $(MAL_LIB) $(LIB_KDEUI)
 

@@ -8,13 +8,13 @@ METASOURCES = AUTO
 servicedir = $(kde_servicesdir)
 service_DATA = expense-conduit.desktop
 
-kde_module_LTLIBRARIES = libexpenseconduit.la
+kde_module_LTLIBRARIES = conduit_expense.la
 
 
-libexpenseconduit_la_SOURCES = expenseConduit.ui setupDialog.cc \
+conduit_expense_la_SOURCES = expenseConduit.ui setupDialog.cc \
 	expense.cc expense-factory.cc
-libexpenseconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
-libexpenseconduit_la_LIBADD  = ../../lib/libkpilot.la $(LIB_KIO)
+conduit_expense_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+conduit_expense_la_LIBADD  = ../../lib/libkpilot.la $(LIB_KIO)
 
 ## this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = expense.h setupDialog.h 

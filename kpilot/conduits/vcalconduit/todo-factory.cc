@@ -40,7 +40,7 @@
 extern "C"
 {
 
-void *init_libtodoconduit()
+void *init_conduit_todo()
 {
 	return new ToDoConduitFactory;
 }

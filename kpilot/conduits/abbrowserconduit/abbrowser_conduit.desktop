@@ -37,4 +37,4 @@ Name[zh_CN]=KDE 地址簿管道
 Name[zh_TW]=KDE 通訊錄 Conduit
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libaddressconduit
+X-KDE-Library=conduit_address

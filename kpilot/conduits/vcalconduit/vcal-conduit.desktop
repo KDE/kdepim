@@ -93,4 +93,4 @@ Comment[zh_TW]=此 conduit 以 KOrganizer 行事曆來與您的 Pilot 同步。
 Comment[zu]=Le conduit ihambisana ngokuhlanganela i Pilot yakho nge KUmgqugquzeli wencwadi yezinsuku.
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libvcalconduit
+X-KDE-Library=conduit_vcal

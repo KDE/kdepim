@@ -40,7 +40,7 @@
 extern "C"
 {
 
-void *init_libaddressconduit()
+void *init_conduit_address()
 {
 	return new AbbrowserConduitFactory;
 }

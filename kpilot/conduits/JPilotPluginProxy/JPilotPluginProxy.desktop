@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=JPilot Plugin Proxy Conduit
+Name[ca]=Conducte de servidor intermedi del connector JPilot
 Name[cs]=Propojení s moduly aplikace JPilot
 Name[da]=JPilot-plugin proxy-conduit
 Name[de]=JPilot-Plugin-Zwischenspeicherung
@@ -31,4 +32,4 @@ Name[zh_CN]=JPilot 插件代理管道
 Name[zh_TW]=JPilot 外掛代理 Conduit
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libJPilotProxy
+X-KDE-Library=conduit_JPilotProxy

@@ -41,7 +41,7 @@
 extern "C"
 {
 
-void *init_libsysinfoconduit()
+void *init_conduit_sysinfo()
 {
 	return new SysInfoConduitFactory;
 }

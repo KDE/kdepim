@@ -11,9 +11,9 @@ SUBDIRS = JPilotAPI
 servicedir = $(kde_servicesdir)
 service_DATA = JPilotPluginProxy.desktop
 
-kde_module_LTLIBRARIES = libJPilotProxy.la
+kde_module_LTLIBRARIES = conduit_JPilotProxy.la
 
-libJPilotProxy_la_SOURCES = ConduitDialog.ui JPilotProxy-conduit.cc JPilotProxy-factory.cc JPilotProxy-setup.cc jplugin.cpp
-libJPilotProxy_la_LDFLAGS = $(KDE_PLUGIN) $(KDE_RPATH)
-libJPilotProxy_la_LIBADD = ../../lib/libkpilot.la -lgtk -lgdbm -lgdk
+conduit_JPilotProxy_la_SOURCES = ConduitDialog.ui JPilotProxy-conduit.cc JPilotProxy-factory.cc JPilotProxy-setup.cc jplugin.cpp
+conduit_JPilotProxy_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+conduit_JPilotProxy_la_LIBADD = ../../lib/libkpilot.la -lgtk -lgdbm -lgdk
 

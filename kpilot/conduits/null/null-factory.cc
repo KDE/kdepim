@@ -44,7 +44,7 @@
 extern "C"
 {
 
-void *init_libnullconduit()
+void *init_conduit_null()
 {
 	return new NullConduitFactory;
 }

@@ -1,5 +1,14 @@
 TODO LIST (Moved again to the file TODO)
 
+2003-7-5  Adriaan de Groot
+* Renamed all conduit plugins from lib<bla>conduit (and variants) to
+  conduit_<bla>, so that they're easier to identify in $KDEDIR/lib/kde3.
+  Of course, this doesn't work right. Feh.
+* Removed listCat again.
+* Implemented a notion of "internal conduit", so that we can move
+  the "install files" and "kroupware" stuff to the conduit config
+  dialog and out of the general stuff, where it looks weird.
+
 2003-7-4  Adriaan de Groot
 * Removed the words "KPilot", "KDE" and "Conduit" from all the conduit names.
 * Removed double logging in NULL conduit, added message for explicit fail.

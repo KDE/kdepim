@@ -11,4 +11,4 @@ Name[pt_BR]=Sincronização de Horário
 Name[sv]=Tidssynkronisering
 Implemented=file
 ServiceTypes=KPilotConduit
-X-KDE-Library=libtimeconduit
+X-KDE-Library=conduit_time
