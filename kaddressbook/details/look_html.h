@@ -28,10 +28,8 @@
 
 #include "look_basic.h"
 
-class QColor;
-
 namespace KABC { class Addressee; }
-class KTextBrowser;
+namespace KPIM { class AddresseeView; }
 
 class KABHtmlView : public KABBasicLook
 {
@@ -54,9 +52,7 @@ class KABHtmlView : public KABBasicLook
     void setAddressee( const KABC::Addressee& );
 
   private:
-    KTextBrowser *mTextBrowser;
-    QColor mBaseColor;
-    QColor mTextColor;
+    KPIM::AddresseeView *mView;
 };
 
 class KABHtmlViewFactory : public KABLookFactory

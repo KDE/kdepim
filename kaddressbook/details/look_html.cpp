@@ -21,32 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kabc/phonenumber.h>
-#include <kabc/address.h>
-#include <kdebug.h>
-#include <kglobal.h>
-#include <kglobalsettings.h>
-#include <kiconloader.h>
-#include <kstringhandler.h>
-#include <ktextbrowser.h>
+#include <libkdepim/addresseeview.h>
 
 #include "look_html.h"
 
 KABHtmlView::KABHtmlView( QWidget *parent, const char *name )
   : KABBasicLook( parent, name )
 {
-  mTextBrowser = new KTextBrowser( this );
-  mTextBrowser->setWrapPolicy( QTextEdit::AtWordBoundary );
-  mTextBrowser->setLinkUnderline( false );
-  mTextBrowser->setVScrollBarMode( QScrollView::AlwaysOff );
-  mTextBrowser->setHScrollBarMode( QScrollView::AlwaysOff );
-
-  QStyleSheet *sheet = mTextBrowser->styleSheet();
-  QStyleSheetItem *link = sheet->item( "a" );
-  link->setColor( KGlobalSettings::linkColor() );
-
-  mBaseColor = KGlobalSettings::baseColor();
-  mTextColor = KGlobalSettings::textColor();
+  mView = new KPIM::AddresseeView( this );
 }
 
 KABHtmlView::~KABHtmlView()
@@ -55,111 +37,7 @@ KABHtmlView::~KABHtmlView()
 
 void KABHtmlView::setAddressee( const KABC::Addressee &addr )
 {
-  mTextBrowser->setText( QString::null );
-
-  if ( addr.isEmpty() )
-    return;
-
-  QString name = ( addr.formattedName().isEmpty() ? addr.assembledName() :
-                   addr.formattedName() );
-
-  QString dynamicPart;
-
-  KABC::PhoneNumber::List phones = addr.phoneNumbers();
-  KABC::PhoneNumber::List::ConstIterator phoneIt;
-  for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt ) {
-    dynamicPart += QString(
-      "<tr><td align=\"right\"><b>%1</b></td>"
-      "<td align=\"left\">%2</td></tr>" )
-      .arg( KABC::PhoneNumber::typeLabel( (*phoneIt).type() ) )
-      .arg( (*phoneIt).number() );
-  }
-
-  QStringList emails = addr.emails();
-  QStringList::ConstIterator emailIt;
-  QString type = i18n( "Email" );
-  for ( emailIt = emails.begin(); emailIt != emails.end(); ++emailIt ) {
-    dynamicPart += QString(
-      "<tr><td align=\"right\"><b>%1</b></td>"
-      "<td align=\"left\"><a href=\"mailto:%2\">%3</a></td></tr>" )
-      .arg( type )
-      .arg( *emailIt )
-      .arg( *emailIt );
-    type = i18n( "Other" );
-  }
-
-  if ( !addr.url().url().isEmpty() ) {
-    dynamicPart += QString(
-      "<tr><td align=\"right\"><b>%1</b></td>"
-      "<td align=\"left\">%2</td></tr>" )
-      .arg( i18n( "Homepage" ) )
-      .arg( KStringHandler::tagURLs( addr.url().url() ) );
-  }
-
-  KABC::Address::List addresses = addr.addresses();
-  KABC::Address::List::ConstIterator addrIt;
-  for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
-    if ( (*addrIt).label().isEmpty() ) {
-      QString formattedAddress = (*addrIt).formattedAddress().stripWhiteSpace();
-      formattedAddress = formattedAddress.replace( '\n', "<br>" );
-
-      dynamicPart += QString(
-        "<tr><td align=\"right\"><b>%1</b></td>"
-        "<td align=\"left\">%2</td></tr>" )
-        .arg( KABC::Address::typeLabel( (*addrIt).type() ) )
-        .arg( formattedAddress );
-    } else {
-      dynamicPart += QString(
-        "<tr><td align=\"right\"><b>%1</b></td>"
-        "<td align=\"left\">%2</td></tr>" )
-        .arg( KABC::Address::typeLabel( (*addrIt).type() ) )
-        .arg( (*addrIt).label().replace( '\n', "<br>" ) );
-    }
-  }
-
-  QString notes;
-  if ( !addr.note().isEmpty() ) {
-    notes = QString(
-      "<tr><td colspan=\"2\"><hr noshade=\"1\"></td></tr>"
-      "<tr>"
-      "<td align=\"right\" valign=\"top\"><b>%1:</b></td>" // note label
-      "<td align=\"left\">%2</td>"          // note
-      "</tr>" ).arg( i18n( "Notes" ) ).arg( addr.note().replace( '\n', "<br>" ) );
-  }
-
-  QString strAddr = QString::fromLatin1(
-  "<html>"
-  "<body text=\"%1\" bgcolor=\"%2\">"
-  "<table>"
-  "<tr>"
-  "<td rowspan=\"3\" align=\"right\" valign=\"top\">"
-  "<img src=\"myimage\" width=\"50\" height=\"70\">"
-  "</td>"
-  "<td align=\"left\"><font size=\"+2\"><b>%3</b></font></td>"   // name
-  "</tr>"
-  "<tr>"
-  "<td align=\"left\">%4</td>"          // role
-  "</tr>"
-  "<tr>"
-  "<td align=\"left\">%5</td>"          // organization
-  "</tr>"
-  "<tr><td colspan=\"2\">&nbsp;</td></tr>"
-  "%6"                                  // dynamic part
-  "%7"
-  "</table>"
-  "</body>"
-  "</html>").arg( mTextColor.name() ).arg( mBaseColor.name() ).arg( name )
-  .arg( addr.role() ).arg( addr.organization() ).arg( dynamicPart ).arg( notes );
-
-
-  KABC::Picture picture = addr.photo();
-  if ( picture.isIntern() && !picture.data().isNull() )
-    QMimeSourceFactory::defaultFactory()->setImage( "myimage", picture.data() );
-  else
-    QMimeSourceFactory::defaultFactory()->setPixmap( "myimage",
-      KGlobal::iconLoader()->loadIcon( "penguin", KIcon::Desktop, 128 ) );
-
-  mTextBrowser->setText( strAddr );
+  mView->setAddressee( addr );
 }
 
 #include "look_html.moc"
