@@ -34,7 +34,7 @@
 
 #include <klocale.h>
 
-static const char kleopatra_version[] = "0.11";
+static const char kleopatra_version[] = "0.20";
 static const char description[] = I18N_NOOP("KDE Key Manager");
 
 struct about_data {
