@@ -115,12 +115,17 @@ void ViewManager::saveSettings()
 
 QStringList ViewManager::selectedUids() const
 {
-  return mActiveView->selectedUids();
+    if ( mActiveView )
+        return mActiveView->selectedUids();
+    else
+        return QStringList();
 }
 
 QStringList ViewManager::selectedEmails() const
 {
-  return mActiveView->selectedEmails();
+    if ( mActiveView )
+        return mActiveView->selectedEmails();
+    else return QStringList();
 }
 
 void ViewManager::setSelected( const QString &uid, bool selected )
