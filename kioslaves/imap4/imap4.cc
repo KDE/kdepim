@@ -1165,8 +1165,12 @@ IMAP4Protocol::special (const QByteArray & aData)
   {
     int cmd;
     stream >> cmd;
-    specialACLCommand( cmd, stream );
-    finished();
+    if ( hasCapability( "ACL" ) ) {
+      specialACLCommand( cmd, stream );
+      finished();
+    } else {
+      error( ERR_UNSUPPORTED_ACTION, "ACL" );
+    }
     break;
   }
   case 'S': // status
