@@ -28,6 +28,7 @@
 #include <string>
 
 #include <kabc/addressee.h>
+#include <libkcal/freebusy.h>
 
 #include "gwjobs.h"
 
@@ -73,6 +74,10 @@ class GroupwiseServer : public QObject
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
     bool changeAddressee( const KABC::Addressee& );
     bool removeAddressee( const KABC::Addressee& );
+
+    bool readFreeBusy( const QString &displayName, const QString &email,
+      const QString &uuid, const QDate &start,
+      const QDate &end, KCal::FreeBusy * );
 
     bool dumpData();
     void dumpFolderList();

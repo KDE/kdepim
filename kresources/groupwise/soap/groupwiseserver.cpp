@@ -578,4 +578,110 @@ bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGrou
   return true;
 }
 
+bool GroupwiseServer::readFreeBusy( const QString &displayName,
+  const QString &email, const QString &uuid,
+  const QDate &start, const QDate &end, KCal::FreeBusy *freeBusy )
+{
+  kdDebug() << "GroupwiseServer::readFreeBusy()" << endl;
+
+  GWConverter conv( mSoap );
+
+  // Setup input data
+  ns1__FreeBusyUser user;
+  user.displayName = displayName.utf8();
+  user.email = email.utf8();
+  user.uuid = uuid.utf8();  
+
+  std::vector<class ns1__FreeBusyUser * > users;
+  users.push_back( &user );
+
+  ns1__FreeBusyUserList userList;
+  userList.user = &users;
+
+  // Start session
+  _ns1__startFreeBusySessionRequest startSessionRequest;
+  startSessionRequest.users = &userList;
+  startSessionRequest.startDate = conv.qDateToChar( start );
+  startSessionRequest.endDate = conv.qDateToChar( end );
+  
+  _ns1__startFreeBusySessionResponse startSessionResponse;
+
+  mSoap->header->ns1__session = mSession;
+
+  int result = soap_call___ns13__startFreeBusySessionRequest( mSoap,
+    mUrl.latin1(), NULL, &startSessionRequest, &startSessionResponse );
+
+  if ( result != 0 ) {
+    soap_print_fault( mSoap, stderr );
+    return false;
+  }
+
+  int fbSessionId = startSessionResponse.freeBusySessionId;
+
+  kdDebug() << "Free/Busy session ID: " << fbSessionId << endl;
+
+
+  // Get free/busy data
+  _ns1__getFreeBusyRequest getFreeBusyRequest;
+  getFreeBusyRequest.freeBusySessionId = QString::number( fbSessionId ).utf8();
+  
+  _ns1__getFreeBusyResponse getFreeBusyResponse;
+
+  mSoap->header->ns1__session = mSession;
+
+  result = soap_call___ns15__getFreeBusyRequest( mSoap,
+    mUrl.latin1(), NULL, &getFreeBusyRequest, &getFreeBusyResponse );
+
+  if ( result != 0 ) {
+    soap_print_fault( mSoap, stderr );
+    return false;
+  }
+ 
+  std::vector<class ns1__FreeBusyInfo *> *infos = 0;
+  if ( getFreeBusyResponse.freeBusyInfo ) infos =
+    getFreeBusyResponse.freeBusyInfo->user;
+
+  if ( infos ) {
+    std::vector<class ns1__FreeBusyInfo *>::const_iterator it;
+    for( it = infos->begin(); it != infos->end(); ++it ) {
+      std::vector<class ns1__FreeBusyBlock *> *blocks = 0;
+      if ( (*it)->blocks ) blocks = (*it)->blocks->block;
+      if ( blocks ) {
+        std::vector<class ns1__FreeBusyBlock *>::const_iterator it2;
+        for( it2 = blocks->begin(); it2 != blocks->end(); ++it2 ) {
+          QDateTime blockStart = conv.charToQDateTime( (*it2)->startDate );
+          QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate );
+          ns1__AcceptLevel acceptLevel = (*it2)->acceptLevel;
+
+          std::string subject = (*it2)->subject;
+          kdDebug() << "BLOCK Subject: " << subject.c_str() << endl;
+
+          if ( acceptLevel == Busy || acceptLevel == OutOfOffice ) {
+            freeBusy->addPeriod( blockStart, blockEnd );
+          }
+        }
+      }
+    }
+  }
+
+  // Close session
+  _ns1__closeFreeBusySessionRequest closeSessionRequest;
+  closeSessionRequest.freeBusySessionId = fbSessionId;
+  
+  _ns1__closeFreeBusySessionResponse closeSessionResponse;
+
+  mSoap->header->ns1__session = mSession;
+
+  result = soap_call___ns14__closeFreeBusySessionRequest( mSoap,
+    mUrl.latin1(), NULL, &closeSessionRequest, &closeSessionResponse );
+
+  if ( result != 0 ) {
+    soap_print_fault( mSoap, stderr );
+    return false;
+  }
+
+
+  return true;
+}
+
 #include "groupwiseserver.moc"
