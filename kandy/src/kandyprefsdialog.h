@@ -29,6 +29,11 @@ class KandyPrefsDialog : public KPrefsDialog
   protected:
     void setupSerialTab();
     void setupWindowsTab();
+ private:
+    KPrefsWidString *serialDevice;
+    KPrefsWidBool *openOnStartup;
+    KPrefsWidBool *startupTerminal;
+    KPrefsWidBool *startupMobile;
 };
 
 #endif

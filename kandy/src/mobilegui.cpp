@@ -157,6 +157,7 @@ MobileGui::MobileGui(CommandScheduler *scheduler,QWidget* parent,
 
 MobileGui::~MobileGui()
 {
+  delete mSyncer;
 }
 
 void MobileGui::exit()
