@@ -1,6 +1,35 @@
 KPilot Developer's notes for october 21st 2001
 ==============================================
 
+2001-10-20  Adriaan de Groot
+
+Worse is when your AGP bus turns out to be broken instead.
+
+* conduits/knotes/knotes-action.{h,cc}
+  Added action resetIndexes which should be called at the end of every phase
+  of the sync, basically to reset the counter and list iterator to the 
+  beginning of the list of KNotes.
+
+2001-10-19  Adriaan de Groot
+
+Dern. Having your video card break and being thrown back to a 4MB SiS card 
+fit only for a firewall with no monitor is *no* fun. Where's a 24-hour
+computer store when you need one? Not only that, but I realise I'm
+going to have to put some serious thought into the KNotes conduit and
+how it is supposed to sync. So since that's hard, I'm going to look at
+the Mail conduit instead, since the functionality there is pretty much 
+complete.
+
+2001-10-18  Adriaan de Groot
+
+* kpilot/Icons/
+  () Incorporated most of Kristof Borrey's fantastic new icons for KPilot.
+* conduits/knotes/
+  () Removed old files setupDialog.{h,cc}
+* conduits/knotes/knotes-action.{h,cc}
+  () Added new function getConfigInfo that reads the config file for
+     the lists of Ids (matching KNote ids to memo ids).
+
 2001-10-16  Adriaan de Groot
 
 * lib/options.h

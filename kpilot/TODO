@@ -6,18 +6,21 @@ issues are periodically purged from this list.
 General TODO
 ============
 
-* Handle real devfs better (regular USB support seems OK now).
-* Handle difference between pi_bind() "no such file" error and others.
+* Add conduit-sync in the daemon as well.
++ Make daemon able to sync more than once in a run.
++ Close device at end of sync.
 * Look into possible buffer overflows in pi_socket structure.
 * Add a validator ensuring path lengths are kept < 14 chars for 
   pilot-link <= 0.9.5
+* Handle real devfs better (regular USB support seems OK now).
+* Handle difference between pi_bind() "no such file" error and others.
 o Make pi_install_file amenable to use in a GUI program. [Move to a thread
   in KDE3 and leave unsolved in KDE2]
 * Port conduits to new setup.
 * Add malsync conduit.
 * Fix local database & do regression testing
-+ Make daemon able to sync more than once in a run.
-+ Close device at end of sync.
+* How *do* you sync KNotes with the memo pad? This is hard.
+* Make the popmail conduit use the ioslaves.
 
 
 Specific JOBS
