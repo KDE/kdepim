@@ -2,11 +2,17 @@
                        | K   O R G A N I Z E R |
                        +-----------------------+
 
-                            version 3.0.1
+                            version 3.0.2
 
                        http://korganizer.kde.org
 
 QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
+
+* Official 3.0.2 release (June 2002)
+
+  - Bug fixes
+    - Respect secrecy setting in HTML export also in non-english languages.
+    - Insert page breaks in todo printouts when necessary.
 
 * Official 3.0.1 release (May 2002)
 
