@@ -345,7 +345,7 @@ Dialog für die Einstellungen aufgerufen.
 <screeninfo>Die Einrichtung von &knode;</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-start.png" format="png">
+	    <imagedata fileref="knode-start.png" format="PNG">
 	  </imageobject>
           <textobject>
           <phrase>&knode; nach dem ersten Start</phrase>
@@ -413,7 +413,7 @@ Dialog.</para>
 <screeninfo>Dialog für das Eintrage der Benutzerdaten</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-identity.png" format="png">
+	    <imagedata fileref="knode-identity.png" format="PNG">
 	  </imageobject>
           <textobject>
 	  <phrase>Die Eingabe der persönlichen Daten</phrase>
@@ -642,7 +642,7 @@ neuen Zugang an. Es erscheint folgender Dialog:
 <screeninfo>Der Dialog <guilabel>Neuer Zugang</guilabel></screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-news-account.png" format="png">
+	    <imagedata fileref="knode-news-account.png" format="PNG">
 	  </imageobject>
 	  <textobject>
 	    <phrase>Der Dialog <guilabel>Neuer Zugang</guilabel></phrase>
@@ -832,7 +832,7 @@ haben, erscheint rechts folgender Dialog.</para>
 <screeninfo>Dialog für das Einrichten des E-Mail-Zugangs</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-mail-account.png" format="png">
+	    <imagedata fileref="knode-mail-account.png" format="PNG">
 	  </imageobject>
 	  <textobject>
 	<phrase>Das Einrichten des Mail-Zugangs</phrase>
@@ -950,7 +950,7 @@ können.</para>
 <screeninfo>Dialog Allgemeine Einstellungen</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-read-news-settings.png" format="png">
+	    <imagedata fileref="knode-read-news-settings.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Allgemeine Einstellungen</phrase>
@@ -1156,7 +1156,7 @@ Vorspann-Zeilen im Betrachter angezeigt werden.</para>
 <screeninfo>Der Dialog Anzeigekonfiguration Vorspannzeilen</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-header-settings.png" format="png">
+	    <imagedata fileref="knode-header-settings.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Anzeigekonfiguration Vorspannzeilen</phrase>
@@ -1185,7 +1185,7 @@ Bearbeiten der Vorspannanzeige auf.
 <screeninfo>Der Dialog Vorspannanzeige</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-header1.png" format="png">
+	    <imagedata fileref="knode-edit-header1.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Vorspannanzeige</phrase>
@@ -1273,7 +1273,7 @@ Vorspannzeile für die Anzeige hinzufügen.
 <screeninfo>Der Dialog Vorspannanzeige</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-header2.png" format="png">
+	    <imagedata fileref="knode-edit-header2.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Vorspannanzeige</phrase>
@@ -1338,7 +1338,7 @@ Betrachter festzulegen. Die Abbildung zeigt den Dialog.
 <screeninfo>Der Dialog Erscheinungsbild einstellen</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-colors-fonts.png" format="png">
+	    <imagedata fileref="knode-colors-fonts.png" format="PNG">
 	  </imageobject>
 	 <textobject>
 	<phrase>Der Dialog Erscheinungsbild einstellen</phrase>
@@ -1440,7 +1440,7 @@ immer den eingestellten Font. #ASK DEVELOPER#
 <screeninfo>Dialog Artikelfilter</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-filters.png" format="png">
+	    <imagedata fileref="knode-filters.png" format="PNG">
 	  </imageobject>
 	  <textobject><phrase>Der Dialog Artikelfilter</phrase></textobject>
 	  <caption><para>Der Dialog Artikelfilter</para></caption>
@@ -1512,7 +1512,7 @@ Einstellungen im folgenden Dialog verwendet.
 <screeninfo>Der Dialog Technische Einstellungen</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-post-settings.png" format="png">
+	    <imagedata fileref="knode-post-settings.png" format="PNG">
 	  </imageobject>
 	  <textobject>
 	 <phrase>Der Dialog Technische Einstellungen</phrase>
@@ -1711,7 +1711,7 @@ Option nicht markieren. &knode; muss sich nicht verstecken.
 <screeninfo>Der Dialog Einstellungen für den Editor</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-composer-settings.png" format="png">
+	    <imagedata fileref="knode-composer-settings.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Einstellungen für den Editor</phrase>
@@ -1943,7 +1943,7 @@ Altavista machen ein Archivieren eigentlich unnötig.
 <screeninfo>Der Dialog Verwaltung des Speicherplatzes</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-cleanup.png" format="png">
+	    <imagedata fileref="knode-cleanup.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Verwaltung des Speicherplatzes</phrase>
@@ -2056,7 +2056,7 @@ folgende Dialog.</para>
 <screeninfo>Der Dialog Newsgruppen abonnieren</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-subscribe.png" format="png">
+	    <imagedata fileref="knode-subscribe.png" format="PNG">
 	  </imageobject>
 	 <textobject>
 	<phrase>Der Dialog Newsgruppen abonnieren</phrase>
@@ -2342,7 +2342,7 @@ Spaltenüberschriften.
 <screeninfo>Die drei Ansichten von &knode;</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-views.png" format="png">
+	    <imagedata fileref="knode-views.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Die drei Ansichten von &knode;</phrase>
@@ -2633,14 +2633,14 @@ denen die einzelnen <glossterm>Artikel</glossterm> markiert sind.</para>
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="greyball.png" format="png"> </imageobject></inlinemediaobject>
+<imagedata fileref="greyball.png" format="PNG"> </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> wurden bereits gelesen.
 </para>
 </listitem>
 
 <listitem>
 <para>
-<inlinemediaobject><imageobject><imagedata fileref="greyballchk.png" format="png">
+<inlinemediaobject><imageobject><imagedata fileref="greyballchk.png" format="PNG">
 </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> wurden
 bereits gelesen und der Inhalt des
@@ -2651,7 +2651,7 @@ Artikels wurde vom Server abgeholt.
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="redball.png" format="png"> </imageobject></inlinemediaobject>
+<imagedata fileref="redball.png" format="PNG"> </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> sind noch ungelesen,
 der Inhalt des Artikels wurde noch nicht vom Server abgeholt.
 </para>
@@ -2660,7 +2660,7 @@ der Inhalt des Artikels wurde noch nicht vom Server abgeholt.
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="redballchk.png" format="png"> </imageobject></inlinemediaobject>
+<imagedata fileref="redballchk.png" format="PNG"> </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> wurden noch nicht gelesen,
 der Inhalt wurde aber bereits vom Server abgeholt.
 </para>
@@ -2669,7 +2669,7 @@ der Inhalt wurde aber bereits vom Server abgeholt.
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="newsubs.png" format="png"></imageobject></inlinemediaobject>
+<imagedata fileref="newsubs.png" format="PNG"></imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> gehören zu einer
 Diskussion, die neue und noch ungelesene Folgeartikel aufweist.
 </para>
@@ -2678,7 +2678,7 @@ Diskussion, die neue und noch ungelesene Folgeartikel aufweist.
 <listitem>
 <para>
 <inlinemediaobject><imageobject>
-<imagedata fileref="eyes.png" format="png"> </imageobject></inlinemediaobject>
+<imagedata fileref="eyes.png" format="PNG"> </imageobject></inlinemediaobject>
 Mit diesem Symbol gekennzeichnete <glossterm>Artikel</glossterm> gehören zu einer
 Diskussion, die als "überwacht" gekennzeichnet wurde. Dieser Status entspricht einer
 Bewertung von 100.
@@ -3452,7 +3452,7 @@ zeigt.</para>
 <screeninfo>Der erste eigene Artikel</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-new-article.png" format="png">
+	    <imagedata fileref="knode-new-article.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Der erste eigene Artikel</phrase>
@@ -3671,7 +3671,7 @@ Gruß.
 <screeninfo>Die Antwort auf den eigenen Artikel</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-followup.png" format="png">
+	    <imagedata fileref="knode-followup.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Die Antwort auf den eigenen Artikel</phrase>
@@ -3760,7 +3760,7 @@ Später versenden</guimenuitem></menuchoice>.
 <screeninfo>Eine Antwort per E-Mail</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-reply.png" format="png">
+	    <imagedata fileref="knode-reply.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Eine Antwort per E-Mail</phrase>
@@ -3808,7 +3808,7 @@ zeigt den Dialog zum Bearbeiten der Filter.
 <screeninfo>Der Dialog Neuer Filter</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-edit-filter.png" format="png">
+	    <imagedata fileref="knode-edit-filter.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Der Dialog Neuer Filter</phrase>
@@ -4166,7 +4166,7 @@ und einer Textdatei, die als Anhang versendet werden sollen.
 <screeninfo>Anhänge versenden</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-composer-attachments.png" format="png">
+	    <imagedata fileref="knode-composer-attachments.png" format="PNG">
 	  </imageobject>
 	<textobject>
 	<phrase>Anhänge versenden</phrase>
@@ -4227,7 +4227,7 @@ Die folgende Abbildung zeigt den Suchen Dialog.
 <screeninfo>Der Suchen Dialog</screeninfo>
 	<mediaobject>
 	  <imageobject>
-	    <imagedata fileref="knode-search.png" format="png">
+	    <imagedata fileref="knode-search.png" format="PNG">
 	  </imageobject>
 	 <textobject>
 	<phrase>Der Suchen Dialog</phrase>
@@ -6624,7 +6624,7 @@ documentation is licensed under the terms of the <ulink
 url="common/fdl-licence.html">GNU Free Documentation License.</ulink>
 </para>
 
-<![ %addindex; [ &kdedocindex; ]]>
+<![ %addindex; [ &documentation.index; ]]>
 &underFDL;               <!-- FDL licence for the documentation -->
 &underGPL;               <!-- GPL License for the application -->
 
@@ -6915,5 +6915,5 @@ weitere Angaben, die nur intern genutzt werden.
 </glossdiv>
 </glossary>
 
-&kdedocindex;
+&documentation.index;
 </book>

@@ -375,7 +375,7 @@ to be started.
 <screenshot>
 <screeninfo>General page</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="setup-general.png" format="png"></imageobject>
+<imageobject><imagedata fileref="setup-general.png" format="PNG"></imageobject>
 <textobject><phrase>The General setup page</phrase></textobject>
 <caption><para>The General setup page</para></caption>
 </mediaobject>
@@ -527,7 +527,7 @@ conduit for the address book, though.)
 <screenshot>
 <screeninfo>Address page</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="setup-address.png" format="png"></imageobject>
+<imageobject><imagedata fileref="setup-address.png" format="PNG"></imageobject>
 <textobject><phrase>The Address setup page</phrase></textobject>
 <caption><para>The Address setup page</para></caption>
 </mediaobject>
@@ -642,7 +642,7 @@ the &PalmPilot; databases &kpilot; works with.
 <screeninfo>DB Specials page</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="setup-dbspecial.png" format="png">
+<imagedata fileref="setup-dbspecial.png" format="PNG">
 </imageobject>
 <textobject><phrase>The DB Setup page</phrase></textobject>
 <caption><para>The DB Setup page</para></caption>
@@ -713,7 +713,7 @@ the HotSync operation on your &PalmPilot;.
 <screeninfo>Sync page</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="setup-sync.png" format="png">
+<imagedata fileref="setup-sync.png" format="PNG">
 </imageobject>
 <textobject><phrase>The Sync page</phrase></textobject>
 <caption><para>The Sync page</para></caption>
@@ -812,7 +812,7 @@ using the drop-down list on the toolbar.
 <screenshot>
 <screeninfo>&kpilot; Main Window</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="main-app.png" format="png"></imageobject>
+<imageobject><imagedata fileref="main-app.png" format="PNG"></imageobject>
 <textobject><phrase>The Main Window</phrase></textobject>
 <caption><para>The Main Window</para></caption>
 </mediaobject>
@@ -1010,7 +1010,7 @@ in &kpilot;'s toolbar.
 <screenshot>
 <screeninfo>&kpilot; Toolbar</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="toolbar.png" format="png"></imageobject>
+<imageobject><imagedata fileref="toolbar.png" format="PNG"></imageobject>
 <textobject><phrase>The &kpilot; Toolbar</phrase></textobject>
 <caption><para>The &kpilot; Toolbar</para></caption>
 </mediaobject>
@@ -1038,7 +1038,7 @@ do not take effect on the &PalmPilot; until the next HotSync.
 <screenshot>
 <screeninfo>Memo Application</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="memo-app.png" format="png"></imageobject>
+<imageobject><imagedata fileref="memo-app.png" format="PNG"></imageobject>
 <textobject><phrase>The Memo Application</phrase></textobject>
 <caption><para>The Memo Application</para></caption>
 </mediaobject>
@@ -1120,7 +1120,7 @@ added to the database.
 <screenshot>
 <screeninfo>The Address Application</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="address-app.png" format="png"></imageobject>
+<imageobject><imagedata fileref="address-app.png" format="PNG"></imageobject>
 <textobject><phrase>The Address Application</phrase></textobject>
 <caption><para>The Address Application</para></caption>
 </mediaobject>
@@ -1195,7 +1195,7 @@ will be installed the next time you HotSync.
 <screenshot>
 <screeninfo>The File Installer</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="file-app.png" format="png"></imageobject>
+<imageobject><imagedata fileref="file-app.png" format="PNG"></imageobject>
 <textobject><phrase>The File Installer</phrase></textobject>
 <caption><para>The File Installer</para></caption>
 </mediaobject>
@@ -1226,7 +1226,7 @@ A window similar to the following will be displayed:
 <screenshot>
 <screeninfo>The Conduit Setup Dialog</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="setup-conduit.png" format="png"></imageobject>
+<imageobject><imagedata fileref="setup-conduit.png" format="PNG"></imageobject>
 <textobject><phrase>The Conduit Setup Dialog</phrase></textobject>
 <caption><para>The Conduit Setup Dialog</para></caption>
 </mediaobject>
@@ -1248,7 +1248,7 @@ is fairly complex.
 <screenshot>
 <screeninfo>Setting up the Mail Conduit</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-top.png" format="png"></imageobject>
+<imageobject><imagedata fileref="conduit-popmail-top.png" format="PNG"></imageobject>
 <textobject><phrase>The Mail Conduit Setup Dialog</phrase></textobject>
 <caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
 </mediaobject>
@@ -1267,7 +1267,7 @@ and one for
 <screenshot>
 <screeninfo>Setting up the Mail Conduit</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-send-method.png" format="png"></imageobject>
+<imageobject><imagedata fileref="conduit-popmail-send-method.png" format="PNG"></imageobject>
 <textobject><phrase>Choosing the Send Method</phrase></textobject>
 <caption><para>Choosing the Send Method</para></caption>
 </mediaobject>
@@ -1282,7 +1282,7 @@ and one for
 <screenshot>
 <screeninfo>Setting up the Mail Conduit</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-recv-method.png" format="png"></imageobject>
+<imageobject><imagedata fileref="conduit-popmail-recv-method.png" format="PNG"></imageobject>
 <textobject><phrase>Choosing the Receive Method</phrase></textobject>
 <caption><para>Choosing the Receive Method</para></caption>
 </mediaobject>
@@ -1312,7 +1312,7 @@ data in that calendar file.
 <screenshot>
 <screeninfo>The Calendar Conduit Setup Dialog</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-vcal.png" format="png"></imageobject>
+<imageobject><imagedata fileref="conduit-vcal.png" format="PNG"></imageobject>
 <textobject><phrase>Calendar Conduit Setup</phrase></textobject>
 <caption><para>Calendar Conduit Setup</para></caption>
 </mediaobject>
@@ -1360,7 +1360,7 @@ since there is only one configuration option.
 <screenshot>
 <screeninfo>&knotes; Conduit Setup</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-knotes.png" format="png"></imageobject>
+<imageobject><imagedata fileref="conduit-knotes.png" format="PNG"></imageobject>
 <textobject><phrase>&knotes; Conduit Setup</phrase></textobject>
 <caption><para>&knotes; Conduit Setup</para></caption>
 </mediaobject>
@@ -1792,10 +1792,13 @@ Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
 &underGPL;
 </chapter>
 
-<![ %addindex; [ &kdedocindex; ]]>
+<![ %addindex; [ &documentation.index; ]]>
 </book>
 <!-- 
      $Log$
+     Revision 1.6  2001/02/22 11:29:16  bischoff
+     Fixed the date and the releaseinfo
+
      Revision 1.5  2001/02/08 16:42:47  bischoff
      Temporarily reverted to DocBook 3.1
 

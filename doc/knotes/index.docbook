@@ -562,7 +562,7 @@ lists.</para>
 </sect1>
 </appendix>
 
-<![ %addindex; [ &kdedocindex; ]]>
+<![ %addindex; [ &documentation.index; ]]>
 </book>
 <!--
 Local Variables:
