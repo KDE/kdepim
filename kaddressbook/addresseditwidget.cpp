@@ -230,8 +230,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
 
   label = new QLabel(i18n("Country:"), page);
   topLayout->addWidget(label, 6, 0);
-  mCountryCombo = new KComboBox(page, "mCountryCombo");
-  mCountryCombo->setEditable(true);
+  mCountryCombo = new KComboBox( true, page, "mCountryCombo" );
   mCountryCombo->setDuplicatesEnabled(false);
   mCountryCombo->setAutoCompletion(true);
   fillCountryCombo( mCountryCombo );
