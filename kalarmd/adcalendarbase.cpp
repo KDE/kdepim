@@ -36,6 +36,7 @@
 #include <kdebug.h>
 
 #include "adcalendarbase.h"
+#include "adcalendarbase.moc"
 
 ADCalendarBase::EventsMap ADCalendarBase::eventsHandled_;
 
