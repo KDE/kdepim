@@ -1,10 +1,10 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 bin_PROGRAMS = kmailcvt
-kmailcvt_SOURCES = oe4_2mbox.cpp liboe.cxx filter_oe4.cxx oe5_2mbox.cpp pablib.cxx mapihd.cpp filters.cxx filter_pab.cxx filter_oe5.cxx kmailcvt.cpp main.cpp filter_eudora_ab.cxx
+kmailcvt_SOURCES = oe4_2mbox.cpp liboe.cxx filter_oe4.cxx oe5_2mbox.cpp pablib.cxx mapihd.cpp filters.cxx filter_pab.cxx filter_oe5.cxx kmailcvt.cpp main.cpp filter_eudora_ab.cxx filter_ldif.cxx
 kmailcvt_LDADD   = -lkab -lkfile -lkdeui -lkdecore -lqt -lXext -lX11 $(LIBSOCKET)
 
 
-EXTRA_DIST = main.cpp kmailcvt.cpp kmailcvt.h kmailcvt.desktop kmailcvt.xpm mini-kmailcvt.xpm filter_oe5.cxx filter_oe5.hxx filter_eudora_ab.cxx filter_eudora_ab.hxx filter_pab.cxx filter_pab.hxx filters.cxx filters.hxx harray.hxx mapihd.cpp mapihd.h pablib.cxx pablib.hxx pabtypes.h liboe.h oe5_2mbox.cpp oe5_2mbox.h filter_oe4.cxx filter_oe4.hxx liboe.cxx oe4_2mbox.cpp oe4_2mbox.h PAB_format.html sv9429424.gif 
+EXTRA_DIST = main.cpp kmailcvt.cpp kmailcvt.h kmailcvt.desktop kmailcvt.xpm mini-kmailcvt.xpm filter_oe5.cxx filter_oe5.hxx filter_eudora_ab.cxx filter_eudora_ab.hxx filter_pab.cxx filter_pab.hxx filters.cxx filters.hxx harray.hxx mapihd.cpp mapihd.h pablib.cxx pablib.hxx pabtypes.h liboe.h oe5_2mbox.cpp oe5_2mbox.h filter_oe4.cxx filter_oe4.hxx liboe.cxx oe4_2mbox.cpp oe4_2mbox.h PAB_format.html sv9429424.gif filter_ldif.hxx filter_ldif.cxx
 
 appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kmailcvt.desktop
