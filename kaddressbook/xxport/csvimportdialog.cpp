@@ -751,7 +751,7 @@ void CSVImportDialog::slotUser2()
   KConfig config( fileName );
   config.setGroup( "General" );
   config.writeEntry( "Columns", mTable->numCols() );
-  config.writeEntry( "DelimiterType", mDelimiterBox->selectedId() );
+  config.writeEntry( "DelimiterType", mDelimiterBox->id( mDelimiterBox->selected() ) );
   config.writeEntry( "DelimiterOther", mDelimiterEdit->text() );
   config.writeEntry( "QuoteType", mComboQuote->currentItem() );
 
