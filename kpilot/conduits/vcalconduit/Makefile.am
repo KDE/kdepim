@@ -14,7 +14,7 @@ service_DATA = vcal-conduit.desktop
 # noinst_PROGRAMS = vcalconduit
 
 # Which sources should be compiled for vcalconduit
-vcalconduit_SOURCES= vcal-conduit.cc vcal-setup.cc
+vcalconduit_SOURCES= vcalBase.cc vcal-conduit.cc vcal-setup.cc
 
 # the library search path
 vcalconduit_LDFLAGS = $(all_libraries) \
@@ -28,5 +28,5 @@ vcalconduit_LDADD   = ../../kpilot/pilotDateEntry.o -lconduit \
 	@LIBSOCKET@ -lversit $(LIBPISOCK)
 
 # this option you can leave out. Just, if you use "make dist", you need it
-noinst_HEADERS = vcal-conduit.h vcal-setup.h
+noinst_HEADERS = vcalBase.h vcal-conduit.h vcal-setup.h
 

@@ -40,14 +40,15 @@
 
 #include "vcc.h"
 
-#ifndef _KPILOT_BASECONDUIT_H
-#include "baseConduit.h"
+#ifndef _KPILOT_VCALBASE_H
+#include "vcalBase.h"
 #endif
 
 class PilotRecord;
 class PilotDateEntry;
 
-class VCalConduit : public BaseConduit
+	
+class VCalConduit : public VCalBaseConduit
 {
 public:
   VCalConduit(BaseConduit::eConduitMode mode);
@@ -60,37 +61,13 @@ public:
 
   virtual const char* dbInfo() { return "DatebookDB"; }
   
-public:
-	/**
-	* There are a whole bunch of methods that set particular
-	* properties on VObjects. Probably they don't belong here
-	* but in versit.
-	*/
-	void setSummary(VObject *vevent,const char *note);
-	void setNote(VObject *vevent,const char *note);
-	void setSecret(VObject *vevent,bool secret);
-	void setStatus(VObject *vevent,int status);                                                    
+
 
 protected:
-  void doLocalSync();
-  PilotRecord *findEntryInDB(unsigned int id);
-  VObject *findEntryInCalendar(unsigned int id);
-  void deleteVObject(PilotRecord *rec);
-  void updateVObject(PilotRecord *rec);
-  void saveVCal();
-  QString TmToISO(struct tm tm);
-  struct tm ISOToTm(const QString &tStr);
-  int numFromDay(const QString &day);
-  int timeZone;
-  VObject *fCalendar;
+	void doLocalSync();
+	void updateVObject(PilotRecord *rec);
 
 private:
-	void getCalendar();
-	/**
-	* Retrieve the time zone set in the vcal file.
-	* Returns number of minutes relative to UTC.
-	*/
-	int getTimeZone() const;
 
 	/**
 	* Set the event to repeat forever, with repeat
@@ -126,14 +103,15 @@ private:
 		int rFreq,
 		int rDuration,
 		PeriodConstants period);
-
-	QString calName;
 };
 
 #endif
 
 
 // $Log$
+// Revision 1.13  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.12  2001/02/07 15:46:32  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

@@ -34,24 +34,23 @@
 
 #include <config.h>
 
-#ifndef _TIME_H
+#include <sys/time.h>
+#ifdef TIME_WITH_SYS_TIME
 #include <time.h>
 #endif
-#ifdef TIME_WITH_SYS_TIME
-#ifndef _SYS_TIME_H
-#include <sys/time.h>
-#endif
+
+#ifndef QSTRING_H
+#include <qstring.h>
 #endif
 
-#include <qstring.h>
-#include "baseConduit.h"
+#include "../vcalconduit/vcalBase.h"
 
 class QWidget;
 class PilotRecord;
 class VObject;
 
 
-class TodoConduit : public BaseConduit
+class TodoConduit : public VCalBaseConduit
 {
 public:
   TodoConduit(eConduitMode mode);
@@ -68,16 +67,16 @@ public:
 
 protected:
   void doLocalSync();
-  PilotRecord *findEntryInDB(unsigned int id);
-  VObject *findEntryInCalendar(unsigned int id);
-  void deleteVObject(PilotRecord *rec);
+  //PilotRecord *findEntryInDB(unsigned int id);
+//  VObject *findEntryInCalendar(unsigned int id);
+//  void deleteVObject(PilotRecord *rec);
   void updateVObject(PilotRecord *rec);
-  void saveTodo();
-  QString TmToISO(struct tm tm);
-  struct tm ISOToTm(const QString &tStr);
-  int numFromDay(const QString &day);
-  int timeZone;
-  VObject *fCalendar;
+//  void saveTodo();
+//  QString TmToISO(struct tm tm);
+//  struct tm ISOToTm(const QString &tStr);
+//  int numFromDay(const QString &day);
+//  int timeZone;
+//  VObject *fCalendar;
 
 private:
 	/**
@@ -87,15 +86,18 @@ private:
 	* require a KApplication object, which is only
 	* created when exec() is called.
 	*/
-	void getCalendar();
+//	void getCalendar();
 
-	QString calName;
+//	QString calName;
 };
 
 #endif
 
 
 // $Log$
+// Revision 1.9  2001/03/04 13:46:49  adridg
+// struct tm woes
+//
 // Revision 1.8  2001/02/07 15:46:32  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

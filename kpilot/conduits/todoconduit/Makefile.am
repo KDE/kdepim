@@ -18,7 +18,8 @@ todoconduit_LDFLAGS = $(all_libraries) -L../vcalconduit/versit \
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-todoconduit_LDADD   = ../../kpilot/pilotTodoEntry.o -lconduit \
+todoconduit_LDADD   = ../../kpilot/pilotTodoEntry.o ../vcalconduit/vcalBase.o \
+	-lconduit \
 	$(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
 	@LIBSOCKET@ -lversit $(LIBPISOCK)
 

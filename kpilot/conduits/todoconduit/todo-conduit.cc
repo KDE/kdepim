@@ -127,72 +127,29 @@ int main(int argc, char* argv[])
 
 
 TodoConduit::TodoConduit(eConduitMode mode)
-  : BaseConduit(mode)
+  : VCalBaseConduit(mode)
 {
 	FUNCTIONSETUP;
-
-	fCalendar = 0L;
 }
 
 
 TodoConduit::~TodoConduit()
 {
-  if (fCalendar) {
-    cleanVObject(fCalendar);
-    cleanStrTbl();
-  }
 }
 
 
 /* static */ const char *TodoConduit::version()
 {
-	return "ToDo Conduit v4.0";
+	return "ToDo Conduit " KPILOT_VERSION;
 }
 
-void TodoConduit::getCalendar()
-{
-	FUNCTIONSETUP;
-
-	KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
-
-	calName = config.readEntry("CalFile");
-	first = getFirstTime(config);
-
-
-	if ((getMode() == BaseConduit::HotSync) || 
-		(getMode() == BaseConduit::Backup)) 
-	{
-		fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
-
-		if (fCalendar == 0L) 
-		{
-			QString message(i18n(
-				"The TodoConduit could not open "
-				"the file `%1'. Please configure "
-				"the conduit with the correct "
-				"filename and try again."));
-			KMessageBox::error(0,
-				message.arg(calName),
-				i18n("Todo Conduit Fatal Error"));
-			exit(ConduitMisconfigured);
-		}
-	}
-	else
-	{
-		kdDebug() << fname
-			<< ": Called in mode "
-			<< (int) getMode()
-			<< " where it makes no sense."
-			<< endl;
-	}
-}
 
 void TodoConduit::doBackup()
 {
    PilotRecord* rec;
    int index = 0;
 
-	getCalendar();
+	getCalendar(TodoSetup::TodoGroup);
 
    rec = readRecordByIndex(index++);
 
@@ -207,7 +164,7 @@ void TodoConduit::doBackup()
      rec = readRecordByIndex(index++);
    }
    // save the todoendar
-   saveTodo();
+   saveVCal();
 }
 
 void TodoConduit::doSync()
@@ -215,7 +172,7 @@ void TodoConduit::doSync()
 	FUNCTIONSETUP;
    PilotRecord* rec;
 
-	getCalendar();
+	getCalendar(TodoSetup::TodoGroup);
    rec = readNextModifiedRecord();
 
    // get only MODIFIED entries from Pilot, compared with the above (doBackup),
@@ -229,7 +186,7 @@ void TodoConduit::doSync()
        if (pilotRecModified)
 	 updateVObject(rec);
        else {
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": Asked for a modified record and got "
 			   "an unmodified one."
 			<< endl;
@@ -246,7 +203,7 @@ void TodoConduit::doSync()
    doLocalSync();
 
    // now we save the todoendar.
-   saveTodo();
+   saveVCal();
 }
 
 
@@ -268,7 +225,7 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   vtodo=findEntryInCalendar(rec->getID());
   if (!vtodo) {
     // no event was found, so we need to add one with some initial info
-    vtodo = addProp(fCalendar, VCTodoProp);
+    vtodo = addProp(calendar(), VCTodoProp);
 
     dateString.sprintf("%.2d%.2d%.2dT%.2d%.2d%.2d",
 			todaysDate.date().year(), todaysDate.date().month(),
@@ -380,41 +337,8 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   
 }
 
-/*
- * The pilot record specified was deleted on the pilot.  Remove
- * the corresponding vobject from the todoendar.
- */
-void TodoConduit::deleteVObject(PilotRecord *rec)
-{
-  VObject *delvo;
-  
-  delvo = findEntryInCalendar(rec->getID());
-  // if the entry was found, it is still in the todo list.  We need to
-  // set the Status flag to Deleted, so that KOrganizer will not load
-  // it next time the todo list is read in.  If it is not found, the
-  // user has also deleted it already in the todo list, and we can
-  // safely do nothing.
-  if (delvo) {
-    // we now use the additional 'KPilotSkip' property, instead of a special
-    // value for KPilotStatusProp.
-    addProp(delvo, KPilotSkipProp);
-  }  
-}
-
 /*****************************************************************************/
 
-void TodoConduit::saveTodo()
-{
-	FUNCTIONSETUP;
-
-	KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
-	QString calName = config.readEntry("CalFile");
-
-	if (fCalendar)
-	{
-		writeVObjectToFile((char*)calName.latin1(), fCalendar);  
-	}
-}
 
 void TodoConduit::doLocalSync()
 {
@@ -428,32 +352,9 @@ void TodoConduit::doLocalSync()
   recordid_t id;
   PilotRecord *pRec;
   PilotTodoEntry *todoEntry;
-  timeZone = 0;
+  fTimeZone = getTimeZone();
   
-  vo = isAPropertyOf(fCalendar, VCTimeZoneProp);
-  
-  // deal with time zone offset
-  if (vo) {
-    bool neg = FALSE;
-    int hours, minutes;
-    QString tmpStr(s = fakeCString(vObjectUStringZValue(vo)));
-    deleteStr(s);
-    
-    if (tmpStr.left(1) == "-")
-      neg = TRUE;
-    if (tmpStr.left(1) == "-" || tmpStr.left(1) == "+")
-      tmpStr.remove(0, 1);
-    hours = tmpStr.left(2).toInt();
-    if (tmpStr.length() > 2)
-      minutes = tmpStr.right(2).toInt();
-    else
-      minutes = 0;
-    timeZone = (60*hours+minutes);
-    if (neg)
-      timeZone = -timeZone;
-  }
-  
-  initPropIterator(&i, fCalendar);
+  initPropIterator(&i, calendar());
   
   // go through the whole todo list.  If the event has the dirty (modified)
   // flag set, make a new pilot record and add it.
@@ -646,104 +547,17 @@ void TodoConduit::doLocalSync()
 	setFirstTime(config,false);
 }
 
-/*
- * Given an pilot id, search the todo list for a matching vobject, and return
- * the pointer to that object.  If not found, return NULL.
- */
-VObject* TodoConduit::findEntryInCalendar(unsigned int id)
-{
-  VObjectIterator i;
-  VObject* entry = 0L;
-  VObject* objectID;
-  
-  initPropIterator(&i, fCalendar);
-  
-  // go through all the vobjects in the todo
-  while (moreIteration(&i)) {
-     entry = nextVObject(&i);
-     objectID = isAPropertyOf(entry, KPilotIdProp);
 
-     if (objectID && (strcmp(vObjectName(entry), VCTodoProp) == 0)) {
-       if(strtoul(fakeCString(vObjectUStringZValue(objectID)), 0L, 0) == id) {
-  	 return entry;
-       }
-     }
-  }
-  return 0L;
-}
-
-/* put up teh about / setup dialog. */
+/* put up the about / setup dialog. */
 QWidget* TodoConduit::aboutAndSetup()
 {
   return new TodoSetup();
 }
 
-QString TodoConduit::TmToISO(struct tm tm)
-{
-  QString dStr;
-  
-  dStr.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
-	       1900 + tm.tm_year,
-	       tm.tm_mon + 1,
-	       tm.tm_mday,
-	       tm.tm_hour,
-	       tm.tm_min,
-	       tm.tm_sec);
-  
-  return dStr;
-}
-
-struct tm TodoConduit::ISOToTm(const QString &tStr)
-{
-  struct tm tm;
-  
-  tm.tm_wday = 0; // unimplemented
-  tm.tm_yday = 0; // unimplemented
-  tm.tm_isdst = 0; // unimplemented
-  
-  sscanf(tStr.latin1(),"%04d%02d%02dT%02d%02d%02d",
-	 &tm.tm_year, &tm.tm_mon,
-	 &tm.tm_mday, &tm.tm_hour,
-	 &tm.tm_min, &tm.tm_sec);
-
-  // possibly correct for timeZone
-  if (timeZone && (tStr.right(1) == "Z")) {
-    QDateTime tmpDT;
-    tmpDT.setDate(QDate(tm.tm_year, tm.tm_mon, tm.tm_mday));
-    tmpDT.setTime(QTime(tm.tm_hour, tm.tm_min, tm.tm_sec));
-    tmpDT = tmpDT.addSecs(60*timeZone); // correct from GMT
-    tm.tm_year = tmpDT.date().year();
-    tm.tm_mon = tmpDT.date().month();
-    tm.tm_mday = tmpDT.date().day();
-    tm.tm_hour = tmpDT.time().hour();
-    tm.tm_min = tmpDT.time().minute();
-    tm.tm_sec = tmpDT.time().second();
-  }
-
-  // tm_year is only since 1900
-  tm.tm_year -= 1900; 
-  // pilot month is 0-based.
-  tm.tm_mon -= 1;
-
-  return tm;
-}
-
-int TodoConduit::numFromDay(const QString &day)
-{
-  if (day == "SU ") return 0;
-  if (day == "MO ") return 1;
-  if (day == "TU ") return 2;
-  if (day == "WE ") return 3;
-  if (day == "TH ") return 4;
-  if (day == "FR ") return 5;
-  if (day == "SA ") return 6;
-  
-  return -1; // something bad happened. :)
-} 
-
-
-
 // $Log$
+// Revision 1.15  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.14  2001/03/05 23:57:53  adridg
 // Added KPILOT_VERSION
 //
