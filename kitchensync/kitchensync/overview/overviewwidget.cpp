@@ -55,13 +55,15 @@ Widget::Widget( QWidget* parent, const char* name )
     m_split->setResizeMode( m_edit, QSplitter::KeepSize );
 
     m_layout = new QVBoxLayout( m_ab );
-    layout->setAutoAdd( TRUE );
+    m_layout->setAutoAdd( TRUE );
     //layout->addStretch();
 
     m_lay->addWidget( label );
     m_lay->addWidget( line );
     m_lay->addWidget( info );
     m_lay->addWidget( m_split, 100 );
+
+    m_messageList.setAutoDelete( true );
 }
 Widget::~Widget() {
 
