@@ -45,7 +45,8 @@ using namespace Kolab;
 KolabBase::KolabBase( const QString& tz )
   : mCreationDate( QDateTime::currentDateTime() ),
     mLastModified( QDateTime::currentDateTime() ),
-    mSensitivity( Public ), mTimeZoneId( tz )
+    mSensitivity( Public ), mTimeZoneId( tz ),
+    mHasPilotSyncId( false ),  mHasPilotSyncStatus( false )
 {
 }
 
@@ -215,6 +216,38 @@ KolabBase::Sensitivity KolabBase::sensitivity() const
   return mSensitivity;
 }
 
+void KolabBase::setPilotSyncId( unsigned long id )
+{
+  mHasPilotSyncId = true;
+  mPilotSyncId = id;
+}
+
+bool KolabBase::hasPilotSyncId() const
+{
+  return mHasPilotSyncId;
+}
+
+unsigned long KolabBase::pilotSyncId() const
+{
+  return mPilotSyncId;
+}
+
+void KolabBase::setPilotSyncStatus( int status )
+{
+  mHasPilotSyncStatus = true;
+  mPilotSyncStatus = status;
+}
+
+bool KolabBase::hasPilotSyncStatus() const
+{
+  return mHasPilotSyncStatus;
+}
+
+int KolabBase::pilotSyncStatus() const
+{
+  return mPilotSyncStatus;
+}
+
 bool KolabBase::loadEmailAttribute( QDomElement& element, Email& email )
 {
   for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
@@ -265,6 +298,10 @@ bool KolabBase::loadAttribute( QDomElement& element )
     setSensitivity( stringToSensitivity( element.text() ) );
   else if ( tagName == "product-id" )
     return true; // ignore this field
+  else if ( tagName == "pilot-sync-id" )
+    setPilotSyncId( element.text().toULong() );
+  else if ( tagName == "pilot-sync-status" )
+    setPilotSyncStatus( element.text().toInt() );
   else
     return false;
 
@@ -282,7 +319,10 @@ bool KolabBase::saveAttributes( QDomElement& element ) const
   writeString( element, "last-modification-date",
                dateTimeToString( lastModified() ) );
   writeString( element, "sensitivity", sensitivityToString( sensitivity() ) );
-
+  if ( hasPilotSyncId() )
+    writeString( element, "pilot-sync-id", QString::number( pilotSyncId() ) );
+  if ( hasPilotSyncStatus() )
+    writeString( element, "pilot-sync-status", QString::number( pilotSyncStatus() ) );
   return true;
 }
 
