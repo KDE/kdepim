@@ -195,7 +195,7 @@ void ATCommand::setResultFields( QString fieldsString )
       TmpString = "";
     } else
     // Not within a quoted area
-    if (TmpString == "")
+    if (TmpString.isEmpty())
       (*fields).append( *it );
     else
     // Within a quoted area
