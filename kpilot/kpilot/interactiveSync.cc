@@ -326,7 +326,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		{
 			kdWarning() << k_funcinfo
 				<< ": Can't open " << s << endl;
-			logMessage(i18n("File `%1' can not be read.").arg(s));
+			logMessage(i18n("File `%1' cannot be read.").arg(s));
 			continue;
 		}
 
@@ -341,7 +341,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		{
 			kdWarning() << k_funcinfo
 				<< ": Can't open " << s << endl;
-			logMessage(i18n("File `%1' can not be read.").arg(s));
+			logMessage(i18n("File `%1' cannot be read.").arg(s));
 		}
 
 		pi_file_close(f);
