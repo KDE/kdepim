@@ -636,7 +636,7 @@ void AbbrowserConduit::showAddressee(const Addressee & abAddress)
 	DEBUGCONDUIT << "\t\tLast name = " << abAddress.familyName() << endl;
 	DEBUGCONDUIT << "\t\tFirst name = " << abAddress.givenName() << endl;
 	DEBUGCONDUIT << "\t\tCompany = " << abAddress.organization() << endl;
-	DEBUGCONDUIT << "\t\tJob Title = " << abAddress.title() << endl;
+	DEBUGCONDUIT << "\t\tJob Title = " << abAddress.prefix() << endl;
 	DEBUGCONDUIT << "\t\tNote = " << abAddress.note() << endl;
 	DEBUGCONDUIT << "\t\tHome phone = " << abAddress.phoneNumber(PhoneNumber::Home).number() << endl;
 	DEBUGCONDUIT << "\t\tWork phone = " << abAddress.phoneNumber(PhoneNumber::Work).number() << endl;
@@ -1013,7 +1013,7 @@ bool AbbrowserConduit::syncAddressee(Addressee &pcAddr, PilotAddress*backupAddr,
 		PilotAddress*palmAddr)
 {
 	FUNCTIONSETUP;
-showAdresses(pcAddr, backupAddr, palmAddr);
+	showAdresses(pcAddr, backupAddr, palmAddr);
 
 	if (getSyncDirection()==SyncAction::eCopyPCToHH)
 	{
@@ -1409,7 +1409,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 			return false;
 		if(_compare(abEntry.givenName(), piAddress->getField(entryFirstname)))
 			return false;
-		if(_compare(abEntry.title(), piAddress->getField(entryTitle)))
+		if(_compare(abEntry.prefix(), piAddress->getField(entryTitle)))
 			return false;
 		if(_compare(abEntry.organization(), piAddress->getField(entryCompany)))
 			return false;
@@ -1491,7 +1491,7 @@ void AbbrowserConduit::_copy(PilotAddress *toPilotAddr, Addressee &fromAbEntry)
 	if(!fromAbEntry.additionalName().isEmpty()) firstAndMiddle += CSL1(" ") + fromAbEntry.additionalName();
 	toPilotAddr->setField(entryFirstname, firstAndMiddle);
 	toPilotAddr->setField(entryCompany, fromAbEntry.organization());
-	toPilotAddr->setField(entryTitle, fromAbEntry.title());
+	toPilotAddr->setField(entryTitle, fromAbEntry.prefix());
 	toPilotAddr->setField(entryNote, fromAbEntry.note());
 
 	// do email first, to ensure its gets stored
@@ -1562,7 +1562,7 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 	toAbEntry.setFamilyName(fromPiAddr->getField(entryLastname));
 	toAbEntry.setGivenName(fromPiAddr->getField(entryFirstname));
 	toAbEntry.setOrganization(fromPiAddr->getField(entryCompany));
-	toAbEntry.setTitle(fromPiAddr->getField(entryTitle));
+	toAbEntry.setPrefix(fromPiAddr->getField(entryTitle));
 	toAbEntry.setNote(fromPiAddr->getField(entryNote));
 
 	// copy the phone stuff
@@ -1697,7 +1697,7 @@ bool AbbrowserConduit::_buildResolutionTable(ResolutionTable*tab, const Addresse
 	appendAddr(i18n("Last name"), pcAddr.familyName(), entryLastname);
 	appendAddr(i18n("First name"), pcAddr.givenName(), entryFirstname);
 	appendAddr(i18n("Organization"), pcAddr.organization(), entryCompany);
-	appendAddr(i18n("Title"), pcAddr.title(), entryTitle);
+	appendAddr(i18n("Title"), pcAddr.prefix(), entryTitle);
 	appendAddr(i18n("Note"), pcAddr.note(), entryNote);
 	appendAddr(i18n("Custom 1"), getCustomField(pcAddr, 0), entryCustom1);
 	appendAddr(i18n("Custom 2"), getCustomField(pcAddr, 1), entryCustom2);
