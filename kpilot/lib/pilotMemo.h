@@ -50,7 +50,7 @@ public:
 	QString getTitle(void) const ;
 	PilotRecord* pack() { return PilotAppCategory::pack(); } ;
 
-	static const unsigned int MAX_MEMO_LEN=8192;
+	static const int MAX_MEMO_LEN=8192;
 
 	/**
 	* Return a "short but sensible" title. getTitle() returns the
