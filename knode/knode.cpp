@@ -91,7 +91,7 @@ KNMainWindow::KNMainWindow()
   manager()->setSplitterKeepSize(true);
 
   //article view
-  a_rtDock = createDockWidget(i18n("Article Viewer"), SmallIcon("contents"), 0,
+  a_rtDock = createDockWidget("article_viewer", SmallIcon("contents"), 0,
                               kapp->makeStdCaption(i18n("Article Viewer")), i18n("Article Viewer"));
   a_rtView=new KNArticleWidget(actionCollection(), a_rtDock ,"artView");
   knGlobals.artWidget=a_rtView;
@@ -110,7 +110,7 @@ KNMainWindow::KNMainWindow()
   connect(a_rtView, SIGNAL(keyRightPressed()), SLOT(slotNavNextArt()));
 
   //collection view
-  c_olDock = createDockWidget(i18n("Group View"), UserIcon("group"), 0,
+  c_olDock = createDockWidget("group_view", UserIcon("group"), 0,
                               kapp->makeStdCaption(i18n("Group View")), i18n("Group View"));
   c_olView=new KNListView(c_olDock, "collectionView");
   header = new KDockWidgetHeader(c_olDock);
@@ -155,7 +155,7 @@ KNMainWindow::KNMainWindow()
   connect(c_olView, SIGNAL(keyNextPressed()), a_rtView, SLOT(slotKeyNext()));
 
   //header view
-  h_drDock = createDockWidget(i18n("Header View"), SmallIcon("text_block"), 0,
+  h_drDock = createDockWidget("header_view", SmallIcon("text_block"), 0,
                               kapp->makeStdCaption(i18n("Header View")), i18n("Header View"));
   h_drView=new KNListView(h_drDock, "hdrView");
   header = new KDockWidgetHeader(h_drDock);
