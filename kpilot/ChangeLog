@@ -1,8 +1,48 @@
+KPilot Developer's notes for october 14th 2001
+==============================================
+
+Whee! It's KDE's birthday today. What a fitting day to finally release
+a version of KPilot that actually works, has useful features, and 
+doesn't gum up your Pilot hopelessly. This is KPilot 4.2.9, and it
+works with KDE 2.1, 2.2 and 3.0. Whether or not it reaches the
+distro's I don't know.
+
+2001-10-08  Adriaan de Groot
+
+* Added lots of things in lib/ to enforce some kind of uniformity on
+  conduits and factories. Utility functions, too.
+* Added an app-icon for the KNotes conduit. It's ugly as all get-out.
+* Added a test-conduits and a list-conduits mode to kpilotTest.
+* Went back and tested all the stuff we already had, since this
+  re-architecting carries risks. This showed that not everything had
+  gone right: I'd lost track of the pilot socket somewhere. Hmph.
+  Two rounds of re-writing headers, all the parameters finally end
+  up in the right place.
+* The knotes conduit now lists new knotes but doesn't install them.
+
 KPilot Developer's notes for october 7th 2001
 =============================================
 
 Ah, post-KDE3-alpha1. And that when KPilot remains completely 2.1 and 2.2
-compatible. A new release of KPilot for 2.2 is imminent.
+compatible. A new release of KPilot for 2.2 is imminent, say oct. 14th or so.
+KDE 2.2.2 was just released, but contains no changes to KPilot at all --
+all the bugfixes were not of the kind that would fit in the 2.2.2 plan.
+
+2001-10-07  Adriaan de Groot
+
+Hmm. Missed a few days. What I remember:
+
+* Implemented the Null- and KNotes-conduits setup dialogs in plugin
+  libraries using David's UI files. That was fun and easy to do.
+* Make the new-style conduit configurator handle plugin libraries.
+  This was less fun, but it works. I haven't had any feedback on 
+  which of the two config dialogs is easier to use, but right now
+  I'm leaning towards the new-style one (two columns + some buttons,
+  just like it was *long* ago.) D'nD would be nice though.
+* The new-style thingy doesn't handle saving which conduits are enabled.
+* Made a new subdir lib/, since the plugins need to share some code
+  with KPilot and you need a .so to make it link properly.
+* Wrestled with sensible layout of the about page.
 
 2001-10-01  Adriaan de Groot
 

@@ -31,18 +31,20 @@
 
 #include <klibloader.h>
 
-#include "uiDialog.h"
+#include "plugin.h"
 
 class NullWidget;
 class KInstance;
 class KAboutData;
 
-class NullWidgetSetup : public UIDialog
+class NullWidgetSetup : public ConduitConfig
 {
 Q_OBJECT
 public:
-	NullWidgetSetup(QWidget *,const char *,bool);
+	NullWidgetSetup(QWidget *,const char *,const QStringList &);
 	virtual ~NullWidgetSetup();
+
+	virtual void readSettings();
 
 protected:
 	virtual void commitChanges();
@@ -78,6 +80,9 @@ void *init_libnullconduit();
 
 } ;
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/10/04 23:51:55  adridg
+// Nope. One more really final commit to get the alpha to build. Dirk, otherwise just remove the conduits/ subdir from kdepim/kpilot/Makefile.am
+//
 
 #endif

@@ -31,6 +31,7 @@
 #include <qtabwidget.h>
 #include <qlineedit.h>
 
+#include <kconfig.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
 
@@ -84,23 +85,28 @@ NullConduitFactory::~NullConduitFactory()
 {
 	FUNCTIONSETUP;
 
-	if (qstrcmp(c,"QObject")==0)
-	{
-		// Conduit objects
-		//
-		return 0L;
-	}
-	else if (qstrcmp(c,"QWidget")==0)
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Creating object of class "
+		<< c
+		<< endl;
+#endif
+
+	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
 
 		if (w)
 		{
-			return new NullWidgetSetup(w,n,
-				!a.contains("nonmodal"));
+			return new NullWidgetSetup(w,n,a);
 		}
 		else 
 		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname
+				<< ": Couldn't cast parent to widget."
+				<< endl;
+#endif
 			return 0L;
 		}
 	}
@@ -108,17 +114,18 @@ NullConduitFactory::~NullConduitFactory()
 	return 0L;
 }
 
-NullWidgetSetup::NullWidgetSetup(QWidget *w, const char *n, bool b) :
-	UIDialog(w,n,b)
+NullWidgetSetup::NullWidgetSetup(QWidget *w, const char *n, 
+	const QStringList & a) :
+	ConduitConfig(w,n,a)
 {
 	FUNCTIONSETUP;
 
 	fConfigWidget = new NullWidget(widget());
+	setTabWidget(fConfigWidget->tabWidget);
+	addAboutPage(false,NullConduitFactory::about());
+
 	fConfigWidget->tabWidget->adjustSize();
 	fConfigWidget->resize(fConfigWidget->tabWidget->size());
-	setTabWidget(fConfigWidget->tabWidget);
-
-	addAboutPage(NullConduitFactory::about());
 }
 
 NullWidgetSetup::~NullWidgetSetup()
@@ -130,6 +137,8 @@ NullWidgetSetup::~NullWidgetSetup()
 {
 	FUNCTIONSETUP;
 
+	if (!fConfig) return;
+
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Message="
@@ -140,8 +149,41 @@ NullWidgetSetup::~NullWidgetSetup()
 		<< fConfigWidget->fDatabases->text()
 		<< endl;
 #endif
+
+	KConfigGroupSaver s(fConfig,"Null-conduit");
+
+	fConfig->writeEntry("LogMessage",fConfigWidget->fLogMessage->text());
+	fConfig->writeEntry("Databases",fConfigWidget->fDatabases->text());
+}
+
+/* virtual */ void NullWidgetSetup::readSettings()
+{
+	FUNCTIONSETUP;
+
+	if (!fConfig) return;
+
+	KConfigGroupSaver s(fConfig,"Null-conduit");
+
+	fConfigWidget->fLogMessage->setText(
+		fConfig->readEntry("LogMessage",i18n("KPilot was here!")));
+	fConfigWidget->fDatabases->setText(
+		fConfig->readEntry("Databases"));
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Read Message="
+		<< fConfigWidget->fLogMessage->text()
+		<< endl;
+	DEBUGCONDUIT << fname
+		<< ": Read Database="
+		<< fConfigWidget->fDatabases->text()
+		<< endl;
+#endif
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/10/04 23:51:55  adridg
+// Nope. One more really final commit to get the alpha to build. Dirk, otherwise just remove the conduits/ subdir from kdepim/kpilot/Makefile.am
+//
 
