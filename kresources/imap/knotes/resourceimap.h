@@ -33,6 +33,8 @@
 #define RESOURCEIMAP_H
 
 #include <resourceimapshared.h>
+#include <resourcenotes.h>
+#include <libkcal/incidencebase.h>
 
 class KMailICalIface_stub;
 
@@ -43,21 +45,39 @@ namespace KNotesIMAP {
  * addresses in an IMAP folder in KMail (or other conforming email
  * clients).
  */
-  class ResourceIMAP : public Resource,
-                       virtual public ResourceIMAP::ResourceIMAPShared
+  class ResourceIMAP : public ResourceNotes,
+                       public KCal::IncidenceBase::Observer,
+                       public ResourceIMAPBase::ResourceIMAPShared
 {
   Q_OBJECT
-  K_DCOP
 
-  k_dcop:
+public:
+    ResourceIMAP( const KConfig* );
+    virtual ~ResourceIMAP();
+
+    /**
+     * Load resource data.
+     */
+    virtual bool load();
+
+    /**
+     * Save resource data.
+     */
+    virtual bool save();
+
+    virtual bool addNote( KCal::Journal* );
+
+    virtual bool deleteNote( KCal::Journal* );
+
+    virtual void incidenceUpdated( KCal::IncidenceBase* );
+
+    // The IMAPBase methods called by KMail
     virtual bool addIncidence( const QString& type, const QString& notes );
     virtual void deleteIncidence( const QString& type, const QString& uid );
     virtual void slotRefresh( const QString& type );
 
-public:
-  ResourceIMAP( const KConfig* );
-  virtual ~ResourceIMAP();
-
+private:
+    bool mSilent;
 };
 
 }

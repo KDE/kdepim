@@ -31,9 +31,6 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <klocale.h>
-
-#include "kmailicalIface_stub.h"
 
 #include "resourceimap.h"
 
@@ -62,12 +59,43 @@ extern "C"
 
 
 KNotesIMAP::ResourceIMAP::ResourceIMAP( const KConfig *config )
-  : ResourceIMAPShared( "ResourceIMAP-KNotes" )
+  : ResourceNotes( config ),
+    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-KNotes" ),
+    mSilent( false )
 {
 }
 
 KNotesIMAP::ResourceIMAP::~ResourceIMAP()
 {
+}
+
+bool KNotesIMAP::ResourceIMAP::load()
+{
+  kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::load()\n";
+  return false;
+}
+
+bool KNotesIMAP::ResourceIMAP::save()
+{
+  kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::save()\n";
+  return false;
+}
+
+bool KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )
+{
+  kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::addNote( KCal::Journal* )\n";
+  return false;
+}
+
+bool KNotesIMAP::ResourceIMAP::deleteNote( KCal::Journal* )
+{
+  kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::deleteNote( KCal::Journal* )\n";
+  return false;
+}
+
+void KNotesIMAP::ResourceIMAP::incidenceUpdated( KCal::IncidenceBase* )
+{
+  kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::incidenceUpdated( KCal::IncidenceBase* )\n";
 }
 
 /*
@@ -80,6 +108,7 @@ bool KNotesIMAP::ResourceIMAP::addIncidence( const QString& type,
   Q_UNUSED( type );
   Q_UNUSED( note );
   kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::addIncidence()\n";
+  return false;
 }
 
 void KNotesIMAP::ResourceIMAP::deleteIncidence( const QString& type,
