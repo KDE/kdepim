@@ -26,7 +26,7 @@
 #include <qlistview.h>
 #include <qpushbutton.h>
 
-#include <kabc/addresslineedit.h>
+#include <addresseelineedit.h>
 #include <kapplication.h>
 #include <kcombobox.h>
 #include <kconfig.h>
@@ -50,11 +50,11 @@ static QString asUtf8( const QByteArray &val )
     return QString::fromUtf8( data, val.size() );
 }
 
-static QString join( const KABC::LdapAttrValue& lst, const QString& sep )
+static QString join( const KPIM::LdapAttrValue& lst, const QString& sep )
 {
   QString res;
   bool alredy = false;
-  for ( KABC::LdapAttrValue::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+  for ( KPIM::LdapAttrValue::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     if ( alredy )
       res += sep;
     alredy = TRUE;
@@ -94,11 +94,11 @@ static QMap<QString, QString>& adrbookattr2ldap()
 class ContactListItem : public QListViewItem
 {
   public:
-    ContactListItem( QListView* parent, const KABC::LdapAttrMap& attrs )
+    ContactListItem( QListView* parent, const KPIM::LdapAttrMap& attrs )
       : QListViewItem( parent ), mAttrs( attrs )
     { }
 
-    KABC::LdapAttrMap mAttrs;
+    KPIM::LdapAttrMap mAttrs;
 
     virtual QString text( int col ) const
     {
@@ -200,7 +200,7 @@ LDAPSearchDialog::~LDAPSearchDialog()
 
 void LDAPSearchDialog::restoreSettings()
 {
-  // Create one KABC::LdapClient per selected server and configure it.
+  // Create one KPIM::LdapClient per selected server and configure it.
 
   // First clean the list to make sure it is empty at 
   // the beginning of the process
@@ -213,7 +213,7 @@ void LDAPSearchDialog::restoreSettings()
 
   // then read the config file and register all selected 
   // server in the list
-  KConfig* config = KABC::AddressLineEdit::config();
+  KConfig* config = KPIM::AddresseeLineEdit::config();
   KConfigGroupSaver saver( config, "LDAP" );
   mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" ); 
   if ( !mNumHosts ) {
@@ -222,7 +222,7 @@ void LDAPSearchDialog::restoreSettings()
   } else {
     mIsOK = true;
     for ( int j = 0; j < mNumHosts; ++j ) {
-      KABC::LdapClient* ldapClient = new KABC::LdapClient( this, "ldapclient" );
+      KPIM::LdapClient* ldapClient = new KPIM::LdapClient( 0, this, "ldapclient" );
     
       QString host = config->readEntry( QString( "SelectedHost%1" ).arg( j ), "" );
       if ( !host.isEmpty() )
@@ -251,8 +251,8 @@ void LDAPSearchDialog::restoreSettings()
 
       ldapClient->setAttrs( attrs );
 
-      connect( ldapClient, SIGNAL( result( const KABC::LdapObject& ) ),
-	       this, SLOT( slotAddResult( const KABC::LdapObject& ) ) );
+      connect( ldapClient, SIGNAL( result( const KPIM::LdapObject& ) ),
+	       this, SLOT( slotAddResult( const KPIM::LdapObject& ) ) );
       connect( ldapClient, SIGNAL( done() ),
 	       this, SLOT( slotSearchDone() ) ); 
       connect( ldapClient, SIGNAL( error( const QString& ) ),
@@ -299,19 +299,19 @@ void LDAPSearchDialog::saveSettings()
 
 void LDAPSearchDialog::cancelQuery()
 {
-  for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+  for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     client->cancelQuery();
   }
 }
 
-void LDAPSearchDialog::slotAddResult( const KABC::LdapObject& obj )
+void LDAPSearchDialog::slotAddResult( const KPIM::LdapObject& obj )
 {
   new ContactListItem( mResultListView, obj.attrs );
 }
 
 void LDAPSearchDialog::slotSetScope( bool rec )
 {
-  for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+  for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     if ( rec )
       client->setScope( "sub" );
     else
@@ -366,9 +366,9 @@ void LDAPSearchDialog::slotStartSearch()
 
   QString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText(), startsWith );
 
-   // loop in the list and run the KABC::LdapClients 
+   // loop in the list and run the KPIM::LdapClients 
   mResultListView->clear();
-  for( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+  for( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     client->startQuery( filter );
   }
 
@@ -384,7 +384,7 @@ void LDAPSearchDialog::slotStopSearch()
 void LDAPSearchDialog::slotSearchDone()
 {
   // If there are no more active clients, we are done.
-  for ( KABC::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+  for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
     if ( client->isActive() )
       return;
   }
@@ -462,8 +462,8 @@ void LDAPSearchDialog::slotUser3()
       addr.setNameFromString( asUtf8( cli->mAttrs["cn"].first() ) );
 
       // email
-      KABC::LdapAttrValue lst = cli->mAttrs["mail"];
-      KABC::LdapAttrValue::ConstIterator it = lst.begin();
+      KPIM::LdapAttrValue lst = cli->mAttrs["mail"];
+      KPIM::LdapAttrValue::ConstIterator it = lst.begin();
       bool pref = true;
       if ( it != lst.end() ) {
         addr.insertEmail( asUtf8( *it ), pref );
