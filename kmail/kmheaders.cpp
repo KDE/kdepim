@@ -930,6 +930,8 @@ void KMHeaders::setFolder (KMFolder *aFolder, bool jumpToFirst)
                  this, SLOT(msgChanged()));
       disconnect(mFolder, SIGNAL(cleared()),
                  this, SLOT(folderCleared()));
+      disconnect(mFolder, SIGNAL(expunged()),
+                 this, SLOT(folderCleared()));
       disconnect(mFolder, SIGNAL(statusMsg(const QString&)),
                  mOwner, SLOT(statusMsg(const QString&)));
       writeSortOrder();
@@ -957,6 +959,8 @@ void KMHeaders::setFolder (KMFolder *aFolder, bool jumpToFirst)
               this, SLOT(msgChanged()));
       connect(mFolder, SIGNAL(cleared()),
               this, SLOT(folderCleared()));
+      connect(mFolder, SIGNAL(expunged()),
+                 this, SLOT(folderCleared()));
       connect(mFolder, SIGNAL(statusMsg(const QString&)),
               mOwner, SLOT(statusMsg(const QString&)));
       connect(mFolder, SIGNAL(numUnreadMsgsChanged(KMFolder*)),
