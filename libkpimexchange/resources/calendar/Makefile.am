@@ -20,5 +20,5 @@ resourcecalendarexchange_la_LIBADD= -lkresources \
                                     $(top_builddir)/libkcal/libkcal.la \
                                     $(top_builddir)/libkpimexchange/libkpimexchange.la 
 
-linkdir= $(kde_datadir)/kresources/calendar
-link_DATA= exchange.desktop
+servicedir = $(kde_servicesdir)/kresources/kcal
+service_DATA= exchange.desktop

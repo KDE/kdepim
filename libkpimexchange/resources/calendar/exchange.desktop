@@ -1,10 +1,26 @@
 [Desktop Entry]
 Type=Service
-
-[Misc]
-Encoding=UTF-8
-Name=Calendar on Exchange2000 server
-
-[Plugin]
-Type=exchange
 X-KDE-Library=resourcecalendarexchange
+Encoding=UTF-8
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=exchange
+ServiceTypes=KResources/Plugin
+Name=Calendar on Exchange2000 server
+Name[be]=Каляндар на сэрвэры Exchange 2000
+Name[ca]=Calendari a un servidor Exchange2000
+Name[cy]=Calendr ar weinydd Exchange2000
+Name[da]=Kalender på Exchange2000 server
+Name[el]=Ημερολόγιο σε εξυπηρετητή Exchange2000
+Name[es]=Calendario en servidor Exchange2000
+Name[fr]=Calendrier sur un serveur Exchange2000
+Name[hu]=Exchange 2000 kiszolgálón tárolt naptár
+Name[it]=Calendario su un server Exchange2000
+Name[pt_BR]=Calendário em servidor Exchange2000
+Name[ru]=Календарь на сервере Microsoft Exchange 2000
+Name[sk]=Kalendár na Exchange2000 servery
+Name[sr]=Календар на Exchange2000 серверу
+Name[sv]=Kalender på en Exchange 2000-server
+Name[tr]=Exchange2000 sunucusundaki takvim
+Name[xx]=xxCalendar on Exchange2000 serverxx
+Name[zh_CN]=Exchange2000 服务器上的日历
+
