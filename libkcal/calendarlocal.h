@@ -23,6 +23,7 @@
 #define KCAL_CALENDARLOCAL_H
 
 #include "calendar.h"
+#include <qdict.h>
 
 namespace KCal {
 
@@ -49,7 +50,7 @@ class CalendarLocal : public Calendar
       calendar. Incidences already present are preserved. If an event of the
       file to be loaded has the same unique id as an incidence already present
       the new incidence is ignored.
-      
+
       To load a CalendarLocal object from a file without preserving existing
       incidences call close() before load().
 
@@ -73,12 +74,12 @@ class CalendarLocal : public Calendar
     void close();
 
     void save() {}
-  
+
     /**
       Add Event to calendar.
     */
     bool addEvent( Event *event );
-    /** 
+    /**
       Deletes an event from this calendar.
     */
     void deleteEvent( Event *event );
@@ -123,7 +124,7 @@ class CalendarLocal : public Calendar
     Todo::List todos( const QDate &date );
     /**
       Return list of all todos.
-      
+
       Workaround because compiler does not recognize function of base class.
     */
     Todo::List todos() { return Calendar::todos(); }
@@ -169,7 +170,7 @@ class CalendarLocal : public Calendar
       consistent.
     */
     void update( IncidenceBase *incidence );
- 
+
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
@@ -190,15 +191,15 @@ class CalendarLocal : public Calendar
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
- 
+
   protected:
- 
+
     /** Notification function of IncidenceBase::Observer. */
     void incidenceUpdated( IncidenceBase *i ) { update( i ); }
-  
+
     /** inserts an event into its "proper place" in the calendar. */
     void insertEvent( Event *event );
-  
+
     /** Append alarms of incidence in interval to list of alarms. */
     void appendAlarms( Alarm::List &alarms, Incidence *incidence,
                        const QDateTime &from, const QDateTime &to );
@@ -210,7 +211,9 @@ class CalendarLocal : public Calendar
   private:
     void init();
 
-    Event::List mEventList;
+    typedef QDict<Event> EventDict;
+    typedef QDictIterator<Event> EventDictIterator;
+    EventDict mEvents;
     Todo::List mTodoList;
     Journal::List mJournalList;
 

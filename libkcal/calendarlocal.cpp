@@ -39,13 +39,13 @@
 using namespace KCal;
 
 CalendarLocal::CalendarLocal()
-  : Calendar()
+  : Calendar(), mEvents( 47 )
 {
   init();
 }
 
 CalendarLocal::CalendarLocal(const QString &timeZoneId)
-  : Calendar(timeZoneId)
+  : Calendar(timeZoneId), mEvents( 47 )
 {
   init();
 }
@@ -97,7 +97,7 @@ void CalendarLocal::deleteEvent( Event *event )
 {
   kdDebug(5800) << "CalendarLocal::deleteEvent" << endl;
 
-  if ( mEventList.removeRef( event ) ) {
+  if ( mEvents.remove( event->uid() ) ) {
     setModified( true );
   } else {
     kdWarning() << "CalendarLocal::deleteEvent(): Event not found." << endl;
@@ -107,23 +107,15 @@ void CalendarLocal::deleteEvent( Event *event )
 void CalendarLocal::deleteAllEvents()
 {
   // kdDebug(5800) << "CalendarLocal::deleteAllEvents" << endl;
-  mEventList.setAutoDelete( true );
-  mEventList.clear();
-  mEventList.setAutoDelete( false );
+  mEvents.setAutoDelete( true );
+  mEvents.clear();
+  mEvents.setAutoDelete( false );
 }
 
 Event *CalendarLocal::event( const QString &uid )
 {
   kdDebug(5800) << "CalendarLocal::event(): " << uid << endl;
-
-  Event::List::ConstIterator it;
-  for ( it = mEventList.begin(); it != mEventList.end(); ++it ) {
-    if ( (*it)->uid() == uid ) {
-      return *it;
-    }
-  }
-
-  return 0;
+  return mEvents[ uid ];
 }
 
 bool CalendarLocal::addTodo( Todo *todo )
@@ -200,8 +192,8 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 
   Alarm::List alarms;
 
-  Event::List::ConstIterator it;
-  for( it = mEventList.begin(); it != mEventList.end(); ++it ) {
+  EventDictIterator it( mEvents );
+  for( ; it.current(); ++it ) {
     Event *e = *it;
     if ( e->doesRecur() ) appendRecurringAlarms( alarms, e, from, to );
     else appendAlarms( alarms, e, from, to );
@@ -298,9 +290,15 @@ void CalendarLocal::update( IncidenceBase *incidence )
 
 void CalendarLocal::insertEvent( Event *event )
 {
-  if ( mEventList.find( event ) == mEventList.end() ) {
-    mEventList.append( event );
+  QString uid = event->uid();
+  if ( mEvents[ uid ] == 0 ) {
+    mEvents.insert( uid, event );
   }
+#ifndef NDEBUG
+  else // if we already have an event with this UID, it has to be the same event,
+      // otherwise something's really broken
+      Q_ASSERT( mEvents[uid] == event );
+#endif
 }
 
 
@@ -308,8 +306,8 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
 {
   Event::List eventList;
 
-  Event::List::ConstIterator it;
-  for( it = mEventList.begin(); it != mEventList.end(); ++it ) {
+  EventDictIterator it( mEvents );
+  for( ; it.current(); ++it ) {
     Event *event = *it;
 
     if ( event->doesRecur() ) {
@@ -341,7 +339,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
   // now, we have to sort it based on dtStart.time()
   Event::List eventListSorted;
   Event::List::Iterator sortIt;
-  for ( it = eventList.begin(); it != eventList.end(); ++it ) {
+  for( it.toFirst(); it.current(); ++it ) {
     sortIt = eventListSorted.begin();
     while ( sortIt != eventListSorted.end() &&
             (*it)->dtStart().time() >= (*sortIt)->dtStart().time() ) {
@@ -359,8 +357,8 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
   Event::List eventList;
 
   // Get non-recurring events
-  Event::List::ConstIterator it;
-  for( it = mEventList.begin(); it != mEventList.end(); ++it ) {
+  EventDictIterator it( mEvents );
+  for( ; it.current(); ++it ) {
     Event *event = *it;
     if ( event->doesRecur() ) {
       QDate rStart = event->dtStart().date();
@@ -425,7 +423,11 @@ Event::List CalendarLocal::rawEventsForDate( const QDateTime &qdt )
 
 Event::List CalendarLocal::rawEvents()
 {
-  return mEventList;
+  Event::List eventList;
+  EventDictIterator it( mEvents );
+  for( ; it.current(); ++it )
+    eventList.append( *it );
+  return eventList;
 }
 
 bool CalendarLocal::addJournal(Journal *journal)
