@@ -33,9 +33,13 @@
 
 KIO::TransferJob *DAVGroupwareGlobals::createListItemsJob( const KURL &url )
 {
-  QDomDocument props = WebdavHandler::createItemsAndVersionsPropsRequest();
-  kdDebug(5800) << "props = "<< props.toString() << endl;
-  return KIO::davPropFind( url, props, "1", false );
+  QDomDocument doc;
+  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
+  QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
+  WebdavHandler::addDavElement( doc, prop, "getetag" );
+//  WebdavHandler::addDavElement( doc, prop, "contentclass" );
+  kdDebug(5800) << "props = "<< doc.toString() << endl;
+  return KIO::davPropFind( url, doc, "1", false );
 }
 
 KPIM::GroupwareJob::ContentType DAVGroupwareGlobals::contentClass( const QString &contentclass )
