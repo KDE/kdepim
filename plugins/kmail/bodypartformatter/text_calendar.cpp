@@ -502,10 +502,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee* newMyself = 0;
       if( myself ) {
         myself->setStatus( status );
-
-        // No more request response
-        myself->setRSVP(false);
-
         newMyself = new Attendee( myself->name(),
                                   receiver.isEmpty() ? myself->email() :
                                   receiver,
