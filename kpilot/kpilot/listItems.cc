@@ -61,11 +61,11 @@ static const char *listitems_id =
 
 PilotListItem::PilotListItem(const QString & text,
 	int pilotid, void *r) :
-	QListBoxText(text), 
-	fid(pilotid), 
+	QListBoxText(text),
+	fid(pilotid),
 	fr(r)
 {
-	FUNCTIONSETUP;
+	// FUNCTIONSETUP;
 #ifdef DEBUG
 	crt++;
 	count++;
@@ -77,7 +77,7 @@ PilotListItem::PilotListItem(const QString & text,
 
 PilotListItem::~PilotListItem()
 {
-	FUNCTIONSETUP;
+	// FUNCTIONSETUP;
 #ifdef DEBUG
 	del++;
 	count++;
@@ -89,6 +89,9 @@ PilotListItem::~PilotListItem()
 
 
 // $Log$
+// Revision 1.6  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.5  2001/09/29 16:26:18  adridg
 // The big layout change
 //

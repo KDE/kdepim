@@ -1,3 +1,20 @@
+KPilot Developer's notes for february 11th 2002
+===============================================
+
+2002-02-06  Adriaan de Groot
+* kpilot/listItems.cc lib/pilotRecord.cc
+  - Removed some FUNCTIONSETUPs, since they were really clogging debugging
+    output and not adding anything interesting. Changes some other
+    debug output as well.
+* kpilot/addressWidget.cc
+  - I *think* I squashed a memory leak, caused by createTitle which
+    was still returning char * instead of QString. Moved to QString anyway.
+
+2002-02-03  Adriaan de Groot
+* kpilot/Icons/kpilot-hotsync.png
+  - Whipped up a new icon for HotSyncing. This makes all the icons in
+    the Janus view the same size.
+
 KPilot Developer's notes for february 2nd 2002
 ==============================================
 

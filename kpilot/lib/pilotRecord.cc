@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -95,19 +95,19 @@ void PilotRecord::setData(const char *data, int len)
 
 bool PilotRecord::isArchived() const
 {
-	FUNCTIONSETUP;
+	// FUNCTIONSETUP;
 	return getAttrib() & dlpRecAttrArchived;
 }
 
 bool PilotRecord::isDeleted() const
 {
-	FUNCTIONSETUP;
+	// FUNCTIONSETUP;
 	return getAttrib() & dlpRecAttrDeleted;
 }
 
 bool PilotRecord::isSecret() const
 {
-	FUNCTIONSETUP;
+	// FUNCTIONSETUP;
 	return getAttrib() & dlpRecAttrSecret;
 }
 
@@ -128,6 +128,9 @@ void PilotRecord::makeSecret()
 
 
 // $Log$
+// Revision 1.1  2001/10/10 21:47:14  adridg
+// Shared files moved from ../kpilot/ and polished
+//
 // Revision 1.8  2001/09/29 16:26:18  adridg
 // The big layout change
 //

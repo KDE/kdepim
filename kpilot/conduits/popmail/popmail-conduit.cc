@@ -49,7 +49,10 @@ static const char *popmail_conduit_id=
 #include <errno.h>
 
 #include <time.h>  // Needed by pilot-link include
+#include <pi-version.h>
+#if PILOT_LINK_MAJOR < 10
 #include <pi-config.h>
+#endif
 #include <pi-mail.h>
 
 #include <qdir.h>
@@ -1972,6 +1975,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.36  2002/01/26 15:00:57  adridg
+// Compile fixes and more
+//
 // Revision 1.35  2002/01/23 10:14:51  adridg
 // CVS_SILENT: Compile fix on RH72
 //

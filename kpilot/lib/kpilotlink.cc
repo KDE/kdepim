@@ -40,6 +40,7 @@ static const char *kpilotlink_id =
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream.h>
+#include <errno.h>
 
 #include <qdir.h>
 #include <qtimer.h>
@@ -217,8 +218,13 @@ bool KPilotDeviceLink::open()
 			goto errInit;
 		}
 
+#if PILOT_LINK_MAJOR < 10
 		if (!(fPilotMasterSocket = pi_socket(PI_AF_SLP,
 					PI_SOCK_STREAM, PI_PF_PADP)))
+#else
+		if (!(fPilotMasterSocket = pi_socket(PI_AF_PILOT,
+					PI_SOCK_STREAM, PI_PF_DLP)))
+#endif
 		{
 			e = errno;
 			msg = i18n("Cannot create socket for communicating "
@@ -240,7 +246,11 @@ bool KPilotDeviceLink::open()
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
 #endif
 
+#if PILOT_LINK_MAJOR < 10
 	addr.pi_family = PI_AF_SLP;
+#else
+	addr.pi_family = PI_AF_PILOT;
+#endif
 	strcpy(addr.pi_device, QFile::encodeName(fPilotPath));
 
 	ret = pi_bind(fPilotMasterSocket,
@@ -638,6 +648,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.7  2002/02/02 11:46:03  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.6  2002/01/25 21:43:13  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

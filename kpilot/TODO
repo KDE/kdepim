@@ -13,7 +13,6 @@ General TODO
 * Add malsync conduit.
 * Fix local database & do regression testing
 * How *do* you sync KNotes with the memo pad? This is hard.
-* Make the popmail conduit use the ioslaves.
 * Make the address book conduit use libkab (or whatever it's called now).
 + Make daemon able to sync more than once in a run.
 + Close device at end of sync.
@@ -87,3 +86,13 @@ as the current fCurrentRecord member, since conduits may depend on it.
 * __FUNCTION__ needs to be replaced by k_funcinfo. The popmail conduit is
   bad for that one, at the very least.
 
+***
+*** Popmail Conduit & IOSlaves
+***
+
+The popmail conduit duplicates a lot of code found elsewhere -- it does
+SMTP sending and POP3 retrieval of mail messages. That should really be 
+left to IOSlaves, which are better debugged. Using tickle() will be 
+necessary while waiting for responses from the slaves, since you must keep
+the pilot awake. (This opens the door to multi-threading conduits, with
+possibly an asynchronous "pre-sync" action).

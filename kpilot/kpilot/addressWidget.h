@@ -40,13 +40,8 @@ class PilotDatabase;
 
 
 
-#ifndef _KPILOT_PILOTCOMPONENT_H
 #include "pilotComponent.h"
-#endif
-
-#ifndef _KPILOT_PILOTADDRESS_H
 #include "pilotAddress.h"
-#endif
 
 class AddressWidget : public PilotComponent
 {
@@ -107,7 +102,12 @@ private:
 	* @see fAddressList
 	*/
 	int getAllAddresses(PilotDatabase *addressDB);
-	char *createTitle(PilotAddress *,int displayMode);
+
+	/**
+	* Create a sensible "title" for an address, composed
+	* of first + last name if possible.
+	*/
+	QString createTitle(PilotAddress *,int displayMode);
 
 	/**
 	* We use a QComboBox fCatList to hold the user-visible names
@@ -149,6 +149,9 @@ public:
 
 
 // $Log$
+// Revision 1.21  2001/09/30 16:59:22  adridg
+// Cleaned up preHotSync
+//
 // Revision 1.20  2001/09/29 16:26:18  adridg
 // The big layout change
 //

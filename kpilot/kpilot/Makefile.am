@@ -76,8 +76,8 @@ kpilotConfig_LDADD      = $(LIB_KFILE) ../lib/libkpilot.la
 
 appsdir = $(kde_appsdir)/Utilities
 servicetypedir = $(kde_servicetypesdir)
-apps_DATA = kpilot.desktop kpilotdaemon.desktop
-servicetype_DATA = kpilotconduit.desktop
+apps_DATA = kpilot.desktop  kpilotdaemon.desktop
+servicetype_DATA = kpilotconduit.desktop 
 
 rcdir = $(kde_datadir)/kpilot
 rc_DATA = kpilotui.rc

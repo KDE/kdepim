@@ -78,16 +78,23 @@ LogWidget::LogWidget(QWidget * parent) :
 			"during the current HotSync</qt>"));
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
 
-	fLog->setText(i18n("<qt><B>HotSync Log</B></qt>"));
+
+	QString initialText ;
 
 	// TODO: disable once the beta-stage has been left.
 	//
 	//
-	fLog->append(i18n("<qt>%1 is an <B>alpha</B> version of the software "
+	initialText.append(
+		i18n("<qt>KPilot %1 is an <B>alpha</B> version of the software "
 		"and should be used with even more caution than usual. "
 		"There is no point in sending in bug reports unless you "
-		"include a backtrace and the debugging output."
-		"</qt>"));
+		"include a backtrace and the debugging output.<BR/>"
+		"</qt>").arg(KPILOT_VERSION));
+
+	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
+
+
+	fLog->setText(initialText);
 
 	QHBox *h = new QHBox(this);
 	h->setSpacing(SPACING);
@@ -338,6 +345,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.17  2002/02/02 11:46:02  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.16  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

@@ -100,7 +100,7 @@ static const char *addresswidget_id =
 #include "addressWidget.moc"
 
 // This is the size of several (automatic) buffers,
-// used to retrieve data from the database. 
+// used to retrieve data from the database.
 // I have no idea if 0xffff is some magic number or not.
 //
 //
@@ -108,7 +108,7 @@ static const char *addresswidget_id =
 
 AddressWidget::AddressWidget(QWidget * parent,
 	const QString & path) :
-	PilotComponent(parent, "component_address", path), 
+	PilotComponent(parent, "component_address", path),
 	fAddrInfo(0),
 	fPendingAddresses(0)
 {
@@ -148,9 +148,9 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 			address = new PilotAddress(fAddressAppInfo, pilotRec);
 			if (address == 0L)
 			{
-				kdWarning() << k_funcinfo 
-					<< ": Couldn't allocate record " 
-					<< currentRecord++ 
+				kdWarning() << k_funcinfo
+					<< ": Couldn't allocate record "
+					<< currentRecord++
 					<< endl;
 				break;
 			}
@@ -361,21 +361,11 @@ void AddressWidget::updateWidget()
 
 
 
-char *AddressWidget::createTitle(PilotAddress * address, int displayMode)
+QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 {
-	FUNCTIONSETUP;
+	// FUNCTIONSETUP;
 
-	// The list will delete it..
-	char *title = new char[255];
-
-	if (title == 0L)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Cannot allocate title string." << endl;
-		return 0L;
-	}
-
-	title[0] = (char) 0;	// in case the first copy fails
+	QString title;
 
 	switch (displayMode)
 	{
@@ -383,16 +373,17 @@ char *AddressWidget::createTitle(PilotAddress * address, int displayMode)
 		if (address->getField(entryCompany) &&
 			strcmp(address->getField(entryCompany), ""))
 		{
-			strcpy(title, address->getField(entryCompany));
+			title.append(address->getField(entryCompany));
 		}
 		if (address->getField(entryLastname) &&
 			strcmp(address->getField(entryLastname), ""))
 		{
-			if (title[0])
+			if (!title.isEmpty())
 			{
-				strcat(title, ", ");
+				title.append( ", ");
 			}
-			strcat(title, address->getField(entryLastname));
+
+			title.append(address->getField(entryLastname));
 		}
 		break;
 	case 0:
@@ -400,33 +391,31 @@ char *AddressWidget::createTitle(PilotAddress * address, int displayMode)
 		if (address->getField(entryLastname) &&
 			strcmp(address->getField(entryLastname), ""))
 		{
-			strcpy(title, address->getField(entryLastname));
+			title.append(address->getField(entryLastname));
 		}
 
 		if (address->getField(entryFirstname) &&
 			strcmp(address->getField(entryFirstname), ""))
 		{
-			if (title[0])
+			if (!title.isEmpty())
 			{
-				strcat(title, ", ");
+				title.append( ", ");
 			}
-			strcat(title, address->getField(entryFirstname));
+			title.append(address->getField(entryFirstname));
 		}
 		break;
 	}
 
-	if (title[0] == 0L)	// One last try
+	if (title.isEmpty())	// One last try
 	{
 		if (fAddressList.current()->getField(entryCompany))
 		{
-			strcpy(title, fAddressList.current()->
+			title.append(fAddressList.current()->
 				getField(entryCompany));
 		}
-		if (title[0] == 0)
+		if (title.isEmpty())
 		{
-			QString t = i18n("[unknown]");
-
-			strcpy(title, t.local8Bit());
+			title = i18n("[unknown]");
 		}
 	}
 
@@ -611,6 +600,15 @@ void AddressWidget::slotShowAddress(int which)
 	PilotAddress *addr = (PilotAddress *) p->rec();
 	int i;
 
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Showing "
+		<< addr->getField(entryLastname)
+		<< " "
+		<< addr->getField(entryFirstname)
+		<< endl;
+#endif
+
 	/*
 	 * enum values from pi-address.h
 	 *
@@ -772,6 +770,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.46  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.45  2001/12/31 15:52:40  adridg
 // CVS_SILENT: Spit 'n polish
 //
