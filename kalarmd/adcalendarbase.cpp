@@ -23,6 +23,9 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <unistd.h>
+#include <time.h>
+
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 #include <kio/netaccess.h>
@@ -44,9 +47,26 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
   {
     KConfig cfg( locate( "config", "korganizerrc" ) );
     cfg.setGroup( "Time & Date" );
-    QString tz = cfg.readEntry( "TimeZoneId" );
+    QString tz = cfg.readEntry( "TimeZoneId", "" );
     kdDebug(5900) << "ADCalendarBase(): tz: " << tz << endl;
-    setTimeZoneId( cfg.readEntry( "TimeZoneId" ) );
+    if( tz.isEmpty() ) {
+      // Set a reasonable default timezone is none
+      // was found in the config file
+      // see koprefs.cpp in korganizer
+      QString zone;
+      char zonefilebuf[100];
+      int len = readlink("/etc/localtime",zonefilebuf,100);
+      if (len > 0 && len < 100) {
+	zonefilebuf[len] = '\0';
+	zone = zonefilebuf;
+	zone = zone.mid(zone.find("zoneinfo/") + 9);
+      } else {
+	tzset();
+	zone = tzname[0];
+      }
+      tz = zone;
+    }
+    setTimeZoneId( tz );
   }
 }
 
