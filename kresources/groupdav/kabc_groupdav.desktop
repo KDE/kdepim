@@ -1,6 +1,23 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=GroupDAV Server (e.g. OpenGroupware)
+Name[bg]=Сървър GroupDAV (e.g. OpenGroupware)
+Name[br]=Servijer GroupDAV (e.g. OpenGroupware)
+Name[ca]=Servidor GroupDAV (p.ex. OpenGroupware)
+Name[da]=GroupDAV-server (f.eks. OpenGroupware)
+Name[es]=Servidor GroupDAV (por ejemplo, OpenGroupware)
+Name[et]=GroupDAV server (nt. OpenGroupware)
+Name[it]=Server GroupDAV (per es. OpenGroupware)
+Name[nl]=GroupDAV-server (OpenGroupware)
+Name[pt]=Servidor GroupDAV (por exemplo OpenGroupware)
+Name[pt_BR]=Servidor GroupDav (p. ex. OpenGroupware)
+Name[ru]=Сервер GroupDAV (например, OpenGroupware)
+Name[sr]=GroupDAV сервер (нпр. OpenGroupware)
+Name[sr@Latn]=GroupDAV сервер (нпр. OpenGroupware)
+Name[sv]=GroupDAV-server (t.ex. OpenGroupware)
+Name[uk]=Сервер GroupDAV (напр., OpenGroupware)
+Name[xx]=xxGroupDAV Server (e.g. OpenGroupware)xx
+Name[zh_CN]=GroupDAV 服务器(如 OpenGroupware)
 X-KDE-Library=kabc_groupdav
 Type=Service
 ServiceTypes=KResources/Plugin

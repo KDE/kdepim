@@ -127,7 +127,7 @@ bool ConnectionManager::askToConnect( QWidget * mainWidget )
 	i18n( "Message shown when a network connection failed.  The placeholder contains the concrete description of the operation eg 'while performing this operation", "A network connection failed %1.  Do you want to place the application in offline mode?" );
 	return ( KMessageBox::questionYesNo( mainWidget,
 			 i18n("This application is currently in offline mode.  Do you want to connect in order to carry out this operation?"),
-																		i18n("Leave offline mode?"),
+																		i18n("Leave Offline Mode?"),
 																		KStdGuiItem::yes(), KStdGuiItem::no(),
 																		QString::fromLatin1("OfflineModeAlwaysGoOnline") ) == KMessageBox::Yes );
 }

@@ -5,15 +5,21 @@ Actions=JPluck-Add
 
 [Desktop Action JPluck-Add]
 Name=Add to KitchenSync Plucker Plugin
+Name[bg]=Добавяне към приставката KitchenSync Plucker
 Name[da]=Tilføj til køkkenvask plucker-plugin
 Name[es]=Añadir a la extensión Plucker de KitchenSync
 Name[et]=Lisa KitchenSynci Pluckeri pluginale
 Name[fr]=Ajouter le module Plucker à KitchenSync
+Name[it]=Aggiungi al plugin KitchenSync Plucker
+Name[nl]=Toevoegen aan KitchenSync Plucker Plugin
 Name[pt]=Adicionar ao 'Plugin' Plucker do KitchenSync
 Name[pt_BR]=Adicionar ao 'Plugin' Plucker do KitchenSync
 Name[ru]=Добавить в модуль KitchenSync Plucker
+Name[sr]=Прикључак за додавање у KitchenSync Plucker
+Name[sr@Latn]=Прикључак за додавање у KitchenSync Plucker
 Name[sv]=Lägg till i Kitchensyncs plockningsinsticksprogram
-Name[tr]=Kitchen Plucker Eklentisi Ekle
+Name[tr]=KitchenSync Plucker Eklentisine Ekle
 Name[uk]=Додати до втулку Plucker у KitchenSync
+Name[xx]=xxAdd to KitchenSync Plucker Pluginxx
 Exec=dcop kitchensync PluckerInterface "addPluckerFeed(KURL)" %u
 Icon=knode

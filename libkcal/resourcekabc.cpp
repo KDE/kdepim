@@ -106,9 +106,6 @@ void ResourceKABC::writeConfig( KConfig *config )
   ResourceCalendar::writeConfig( config );
   config->writeEntry( "AlarmDays", mAlarmDays );
   config->writeEntry( "Alarm", mAlarm );
-
-  if ( isOpen() )
-    load();
 }
 
 
