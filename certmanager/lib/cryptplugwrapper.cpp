@@ -1481,7 +1481,7 @@ Kleo::ImportJob * CryptPlugWrapper::importJob() const {
   return new Kleo::QGpgMEImportJob( context );
 }
 
-Kleo::ExportJob * CryptPlugWrapper::exportJob( bool armor ) const {
+Kleo::ExportJob * CryptPlugWrapper::publicKeyExportJob( bool armor ) const {
   if ( !_cp )
     return 0;
 
@@ -1491,6 +1491,14 @@ Kleo::ExportJob * CryptPlugWrapper::exportJob( bool armor ) const {
 
   context->setArmor( armor );
   return new Kleo::QGpgMEExportJob( context );
+}
+
+Kleo::ExportJob * CryptPlugWrapper::secretKeyExportJob( bool armor ) const {
+  if ( !_cp || _cp->mProtocol != GpgME::Context::CMS ) // fixme: add support for gpg, too
+    return 0;
+
+  // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
+  return 0;//new Kleo::GpgSMSecretKeyExportJob( armor );
 }
 
 Kleo::DownloadJob * CryptPlugWrapper::downloadJob( bool armor ) const {

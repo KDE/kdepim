@@ -1538,10 +1538,13 @@ public:
     Kleo::VerifyDetachedJob * verifyDetachedJob( bool textmode=false) const;
     Kleo::VerifyOpaqueJob * verifyOpaqueJob( bool textmode=false ) const;
     Kleo::KeyGenerationJob * keyGenerationJob() const;
+
     Kleo::ImportJob * importJob() const;
-    Kleo::ExportJob * exportJob( bool armor=false ) const;
+    Kleo::ExportJob * publicKeyExportJob( bool armor=false ) const;
+    Kleo::ExportJob * secretKeyExportJob( bool armor=false ) const;
     Kleo::DownloadJob * downloadJob( bool armor=false ) const;
     Kleo::DeleteJob * deleteJob() const;
+
     Kleo::SignEncryptJob * signEncryptJob( int includedCerts=0, bool armor=false, bool textmode=false ) const;
     Kleo::DecryptVerifyJob * decryptVerifyJob( bool textmode=false ) const;
 

@@ -67,7 +67,8 @@ namespace Kleo {
     virtual VerifyOpaqueJob   * verifyOpaqueJob( bool textmode=false ) const = 0;
     virtual KeyGenerationJob  * keyGenerationJob() const = 0;
     virtual ImportJob         * importJob() const = 0;
-    virtual ExportJob         * exportJob( bool armor=false ) const = 0;
+    virtual ExportJob         * publicKeyExportJob( bool armor=false ) const = 0;
+    virtual ExportJob         * secretKeyExportJob( bool armor=false ) const = 0;
     virtual DownloadJob       * downloadJob( bool armor=false ) const = 0;
     virtual DeleteJob         * deleteJob() const = 0;
     virtual SignEncryptJob    * signEncryptJob( int includedCerts=0, bool armor=false, bool textMode=false ) const = 0;
