@@ -3,6 +3,7 @@
     Kolab storage format. See www.kolab.org for documentation on this.
 
     Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
+                  2004 Till Adam <till@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -35,10 +36,15 @@
 #include "event.h"
 #include "task.h"
 #include "journal.h"
+
+#include <assert.h>
+
 #include <qobject.h>
+#include <qtimer.h>
 
 #include <kabc/locknull.h>
-//#include <libkdepim/kincidencechooser.h>
+#include <klocale.h>
+#include <libkdepim/kincidencechooser.h>
 
 using namespace KCal;
 using namespace Kolab;
@@ -195,11 +201,6 @@ bool ResourceKolab::doSave()
 
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 {
-  QString type = incidencebase->type();
-  if ( type == "Event" ) type = "Calendar";
-  else if ( type == "Todo" ) type = "Task";
-  else if ( type != "Journal" ) return;
-
   incidencebase->setSyncStatus( KCal::Event::SYNCMOD );
   incidencebase->setLastModified( QDateTime::currentDateTime() );
   // we should probably update the revision number here,
@@ -208,57 +209,27 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 
   const QString uid = incidencebase->uid();
 
+  if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
+    /* We are currently processing this event ( removing and readding or 
+     * adding it ). If so, ignore this update. Keep the last of these around 
+     * and process once we hear back from KMail on this event. */
+    mPendingUpdates.replace( uid, incidencebase );
+    return;
+  }
+
   QString subResource;
   Q_UINT32 sernum;
   if ( mUidMap.contains( uid ) ) {
     subResource = mUidMap[ uid ].resource();
     sernum = mUidMap[ uid ].serialNumber();
-  } else {
-    /* Either this is a bogus update or we are currently processing
-     * this event ( removing and readding it ). If so, ignore this
-     * update. Keep the last of these around and process once
-     * we hear back from KMail on this event. */
-    mPendingUpdates.replace( uid, incidencebase );
-    return;
+    mUidsPendingUpdate.append( uid );
   }
 
-  const char* mimetype = 0;
-  QString xml;
-  if ( type == "Calendar" ) {
-    mimetype = eventAttachmentMimeType;
-    xml = Kolab::Event::eventToXML( static_cast<KCal::Event *>(incidencebase),
-                                    mCalendar.timeZoneId() );
-  } else if ( type == "Task" ) {
-    mimetype = todoAttachmentMimeType;
-    xml = Kolab::Task::taskToXML( static_cast<KCal::Todo *>(incidencebase),
-                                  mCalendar.timeZoneId() );
-  } else if ( type == "Journal" ) {
-    mimetype = journalAttachmentMimeType;
-    xml = Kolab::Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ),
-                                        mCalendar.timeZoneId() );
-  } else {
-    kdWarning(5006) << "Can't happen: unhandled type=" << type << endl;
-  }
-
-  kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
-
-  /* Remove from the local calendar and the uidmap. The update will add the
-   * event to a folder which will result in the signals telling us about it.
-   * This way the other instances of this resource are notified as well, and
-   * we know which uids are currently being processed. */
-  if ( mUidMap.contains( uid ) ) {
-    mUidMap.remove( uid );
-    mCalendar.deleteIncidence( static_cast<KCal::Incidence*>( incidencebase ) );
-  }
-
-  if( !kmailUpdate( subResource, sernum, xml, mimetype, uid ) ) {
-    kdError(5500) << "Communication problem in ResourceKolab::incidenceUpdated()\n";
-    return;
-  }
+  sendKMailUpdate( incidencebase, subResource, sernum );
 }
+
 void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
 {
-#if 0
     if ( ! inc )
         return;
     if ( ! mResolveConflict ) {
@@ -287,35 +258,22 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
           addedIncidence = inc;
       } else if ( result == 0 ) { // take both
           localIncidence = local->clone();
+          localIncidence->recreate();
+          localIncidence->setSummary( i18n("Copy of: %1").arg(localIncidence->summary()) );
           addedIncidence = inc;
       }
-      if ( localIncidence )
-          localIncidence->recreate();
-      if ( addedIncidence )
-          addedIncidence->recreate();
       bool silent = mSilent;
       mSilent = false;
-      if ( local->type() == "Event" ) {
-          deleteEvent( (Event*)local );
-          kmailDeleteIncidence( subresource,sernum);
-          if ( localIncidence ) addEvent( (Event*)localIncidence, subresource, 0  );
-          if ( addedIncidence  ) addEvent( (Event*)addedIncidence, subresource, 0  );
-      } else if (local->type() == "Todo" ) {
-          deleteTodo((Todo*)local);
-          kmailDeleteIncidence( subresource,sernum);
-          if ( localIncidence ) addTodo( (Todo*)localIncidence, subresource, 0  );
-          if ( addedIncidence  ) addTodo( (Todo*)addedIncidence, subresource, 0  );
-      } else if ( local->type() == "Journal" ) {
-          deleteJournal((Journal*)local );
-          kmailDeleteIncidence( subresource,sernum);
-          if ( localIncidence ) addJournal( (Journal*)localIncidence, subresource, 0  );
-          if ( addedIncidence  ) addJournal( (Journal*)addedIncidence, subresource, 0  );
-      }
+      deleteIncidence( local ); // remove local from kmail
+      kmailDeleteIncidence( subresource, sernum );// remove new from kmail
+      mSilent = true;
+      deleteIncidence( local ); // remove local from calendar and from the uid map
+      mSilent = false; // now we can add the new ones
+      if ( localIncidence ) addIncidence( localIncidence, subresource, 0  );
+      if ( addedIncidence  ) addIncidence( addedIncidence, subresource, 0  );
+
       mSilent = silent;
-
-
   }
-#endif
 }
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
                                   const QString& subResource, Q_UINT32 sernum )
@@ -330,9 +288,130 @@ void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
     addJournal( xml, subResource, sernum );
 }
 
+
+bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const QString& subresource,
+                                     Q_UINT32 sernum )
+{
+  const QString& type = incidencebase->type();
+  const char* mimetype = 0;
+  QString xml;
+  if ( type == "Event" ) {
+    mimetype = eventAttachmentMimeType;
+    xml = Kolab::Event::eventToXML( static_cast<KCal::Event *>(incidencebase),
+                                    mCalendar.timeZoneId() );
+  } else if ( type == "Todo" ) {
+    mimetype = todoAttachmentMimeType;
+    xml = Kolab::Task::taskToXML( static_cast<KCal::Todo *>(incidencebase),
+                                  mCalendar.timeZoneId() );
+  } else if ( type == "Journal" ) {
+    mimetype = journalAttachmentMimeType;
+    xml = Kolab::Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ),
+                                        mCalendar.timeZoneId() );
+  } else {
+    kdWarning(5006) << "Can't happen: unhandled type=" << type << endl;
+  }
+
+//  kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
+
+  return kmailUpdate( subresource, sernum, xml, mimetype, incidencebase->uid() );
+}
+
+bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
+                                  Q_UINT32 sernum )
+{
+
+  const QString &uid = incidence->uid();
+  QString subResource = _subresource;
+  Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
+
+  const QString& type = incidence->type();
+  if ( type == "Event" )
+    map = &mEventSubResources;
+  else if ( type == "Todo" )
+    map = &mTodoSubResources;
+  else if ( type == "Journal" )
+    map = &mJournalSubResources;
+  else
+    kdWarning() << "unknown type " << type << endl;
+
+  if ( !mSilent ) { /* We got this one from the user, tell KMail. */
+    // Find out if this event was previously stored in KMail
+    bool newIncidence = _subresource.isEmpty();
+    if ( newIncidence ) {
+      subResource = findWritableResource( *map );
+    }
+    if ( subResource.isEmpty() )
+      return false;
+
+    if ( !sendKMailUpdate( incidence, subResource, sernum ) ) {
+      kdError(5500) << "Communication problem in ResourceKolab::addIncidence()\n";
+      return false;
+    } else {
+      // KMail is doing it's best to add the event now, put a sticker on it,
+      // so we know it's one of our transient ones
+      mUidsPendingAdding.append( uid );
+
+      /* Add to the cache immediately if this is a new event coming from 
+       * KOrganizer. It relies on the incidence being in the calendar when
+       * addIncidence returns. */
+      if ( newIncidence ) {
+        mCalendar.addIncidence( incidence );
+        incidence->registerObserver( this );
+      }
+    }
+  } else { /* KMail told us */
+    bool ourOwnUpdate = false;
+    /* Check if we updated this one, which means kmail deleted and added it. 
+     * We know the new state, so lets just not do much at all. The old incidence 
+     * in the calendar remains valid, but the serial number changed, so we need to 
+     * update that */
+    if ( ourOwnUpdate = mUidsPendingUpdate.contains( uid ) ) {
+      mUidsPendingUpdate.remove( uid );
+      mUidMap.remove( uid );
+      mUidMap[ uid ] = StorageReference( subResource, sernum );
+    } else {
+      /* This is a real add, from KMail, we didn't trigger this ourselves.
+         If this uid already exists in this folder, do conflict resolution */
+      if ( mUidMap.contains( uid )
+          && ( mUidMap[ uid ].resource() == subResource ) ) {
+        resolveConflict( incidence, subResource, sernum );
+        return true;
+      }
+      /* Add to the cache if the add didn't come from KOrganizer, in which case
+       * we've already added it, and listen to updates from KOrganizer for it. */
+      if ( !mUidsPendingAdding.contains( uid ) ) {
+        mCalendar.addIncidence( incidence );
+        incidence->registerObserver( this );
+      }
+      kdDebug(5650) << "Registering: " << this << " as Observer of: " << incidence << endl;
+      if ( !subResource.isEmpty() && sernum != 0 ) {
+        mUidMap[ uid ] = StorageReference( subResource, sernum );
+        incidence->setReadOnly( !(*map)[ subResource ].writable() );
+      }
+    }
+    /* Check if there are updates for this uid pending and if so process them. */
+    if ( KCal::IncidenceBase *update = mPendingUpdates.find( uid ) ) {
+      mSilent = false; // we do want to tell KMail
+      mPendingUpdates.remove( uid );
+      incidenceUpdated( update );
+    } else {
+      /* If the uid was added by KMail, KOrganizer needs to be told, so 
+       * schedule emitting of the resourceChanged signal. */
+      if ( !mUidsPendingAdding.contains( uid ) ) {
+        if ( !ourOwnUpdate ) mResourceChangedTimer.changeInterval( 100 );
+      } else {
+        mUidsPendingAdding.remove( uid );
+      }
+    }
+
+  }
+  return true;
+}
+
+
 bool ResourceKolab::addEvent( KCal::Event* event )
 {
-  return addEvent( event, QString::null, 0 );
+  return addIncidence( event, QString::null, 0 );
 }
 
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
@@ -341,68 +420,31 @@ void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
   KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId() );
   Q_ASSERT( event );
   if( event ) {
-    if ( !mUidMap.contains( event->uid() ) )
-      addEvent( event, subresource, sernum );
-    else
-      resolveConflict( event, subresource, sernum );
+      addIncidence( event, subresource, sernum );
   }
 }
 
-bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
-                              Q_UINT32 sernum )
+bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
 {
-  // Find out if this event was previously stored in KMail
-  bool newEvent = _subresource.isEmpty();
-
-  QString subResource =
-    newEvent ? findWritableResource( mEventSubResources ) : _subresource;
-  if ( subResource.isEmpty() )
-    return false;
-
-  /* check the noop case */
-  if ( mUidMap.contains( event->uid() ) && mUidMap[ event->uid() ].resource() == subResource )
-    return false;
-
+  const QString uid = incidence->uid();
+  if( !mUidMap.contains( uid ) ) return false; // Odd
+  /* The user told us to delete, tell KMail */
   if ( !mSilent ) {
-    /* We got this one from the user, tell KMail. */
-    QString xml = Kolab::Event::eventToXML( event, mCalendar.timeZoneId() );
-    kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
-
-    if( !kmailUpdate( subResource, sernum, xml, eventAttachmentMimeType,
-                      event->uid() ) ) {
-      kdError(5500) << "Communication problem in ResourceKolab::addEvent()\n";
-      return false;
-    }
+    kmailDeleteIncidence( mUidMap[ uid ].resource(),
+                          mUidMap[ uid ].serialNumber() );
+    mUidsPendingDeletion.append( uid );
+    incidence->unRegisterObserver( this );
+    mCalendar.deleteIncidence( incidence );
+    mUidMap.remove( uid );
   } else {
-    /* KMail got back to us, add to the cache unless there are pending updates. */
-    mCalendar.addEvent( event );
-    event->registerObserver( this );
-    if ( !subResource.isEmpty() && sernum != 0 ) {
-      mUidMap[ event->uid() ] = StorageReference( subResource, sernum );
-      event->setReadOnly( !mEventSubResources[ subResource ].writable() );
-    }
-    if ( KCal::IncidenceBase *update = mPendingUpdates.find( event->uid() ) ) {
-      mSilent = false; // we do want to tell KMail
-      mPendingUpdates.remove( event->uid() );
-      incidenceUpdated( update );
-    }
+    assert( false ); // If this still happens, something is very wrong
   }
   return true;
 }
 
 void ResourceKolab::deleteEvent( KCal::Event* event )
 {
-  const QString uid = event->uid();
-  if( !mUidMap.contains( uid ) ) return; // Odd
-  /* The user told us to delete, tell KMail */
-  if ( !mSilent ) {
-    kmailDeleteIncidence( mUidMap[ uid ].resource(),
-                          mUidMap[ uid ].serialNumber() );
-  } else {
-    /* KMail told us it went away. Cope. */
-    mUidMap.remove( uid );
-    mCalendar.deleteEvent(event);
-  }
+  deleteIncidence( event );
 }
 
 KCal::Event* ResourceKolab::event( const QString& uid )
@@ -435,7 +477,7 @@ KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
 
 bool ResourceKolab::addTodo( KCal::Todo* todo )
 {
-  return addTodo( todo, QString::null, 0 );
+  return addIncidence( todo, QString::null, 0 );
 }
 
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
@@ -444,65 +486,12 @@ void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
   KCal::Todo* todo = Kolab::Task::xmlToTask( xml, mCalendar.timeZoneId() );
   Q_ASSERT( todo );
   if( todo )
-    if ( !mUidMap.contains( todo->uid() ) )
-      addTodo( todo, subresource, sernum );
-    else
-      resolveConflict( todo, subresource, sernum );
-}
-
-bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
-                             Q_UINT32 sernum )
-{
-  // Find out if this todo was previously stored in KMail
-  bool newTodo = _subresource.isEmpty();
-
-  QString subResource =
-    newTodo ? findWritableResource( mTodoSubResources ) : _subresource;
-  if ( subResource.isEmpty() )
-    return false;
-
- /* check the noop case */
-  if ( mUidMap.contains( todo->uid() ) && mUidMap[ todo->uid() ].resource() == subResource )
-    return false;
-
-  if ( !mSilent ) {
-    QString xml = Kolab::Task::taskToXML( todo, mCalendar.timeZoneId() );
-    kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
-
-    if( !kmailUpdate( subResource, sernum, xml, todoAttachmentMimeType,
-                      todo->uid() ) ) {
-      kdError(5500) << "Communication problem in ResourceKolab::addTodo()\n";
-      return false;
-    }
-  } else {
-    /* KMail got back to us, add to the cache unless there are pending updates. */
-    mCalendar.addTodo( todo );
-    todo->registerObserver( this );
-    if ( !subResource.isEmpty() && sernum != 0 ) {
-      mUidMap[ todo->uid() ] = StorageReference( subResource, sernum );
-      todo->setReadOnly( !mTodoSubResources[ subResource ].writable() );
-    }
-    if ( KCal::IncidenceBase *update = mPendingUpdates.find( todo->uid() ) ) {
-      mSilent = false; // we do want to tell KMail
-      mPendingUpdates.remove( todo->uid() );
-      incidenceUpdated( update );
-    }
-  }
-  return true;
+      addIncidence( todo, subresource, sernum );
 }
 
 void ResourceKolab::deleteTodo( KCal::Todo* todo )
 {
-  const QString uid = todo->uid();
-  if( !mUidMap.contains( uid ) ) return; // Odd
-  if ( !mSilent ) {
-    kmailDeleteIncidence( mUidMap[ uid ].resource(),
-                          mUidMap[ uid ].serialNumber() );
-  } else {
-    /* KMail told us it went away. Cope. */
-    mUidMap.remove( uid );
-    mCalendar.deleteTodo( todo );
-  }
+  deleteIncidence( todo );
 }
 
 KCal::Todo* ResourceKolab::todo( const QString& uid )
@@ -522,7 +511,7 @@ KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
 
 bool ResourceKolab::addJournal( KCal::Journal* journal )
 {
-  return addJournal( journal, QString::null, 0 );
+  return addIncidence( journal, QString::null, 0 );
 }
 
 void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
@@ -532,69 +521,13 @@ void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
     Kolab::Journal::xmlToJournal( xml, mCalendar.timeZoneId() );
   Q_ASSERT( journal );
   if( journal ) {
-    if ( !mUidMap.contains( journal->uid() ) )
-      addJournal( journal, subresource, sernum );
-    else
-      resolveConflict( journal, subresource, sernum );
+      addIncidence( journal, subresource, sernum );
   }
-}
-
-bool ResourceKolab::addJournal( KCal::Journal* journal,
-                                const QString& _subresource, Q_UINT32 sernum )
-{
-  // Find out if this journal was previously stored in KMail
-  bool newJournal = _subresource.isEmpty();
-
-  QString subResource =
-    newJournal ? findWritableResource( mJournalSubResources ) : _subresource;
-  if ( subResource.isEmpty() )
-    return false;
-
-  /* check the noop case */
-  if ( mUidMap.contains( journal->uid() ) && mUidMap[ journal->uid() ].resource() == subResource )
-    return false;
-
-  if ( !mSilent ) {
-    /* We got this one from the user, tell KMail. */
-    QString xml = Kolab::Journal::journalToXML( journal,
-                                                mCalendar.timeZoneId() );
-    kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
-
-    if( !kmailUpdate( subResource, sernum, xml, journalAttachmentMimeType,
-                      journal->uid() ) ) {
-      kdError(5500) << "Communication problem in ResourceKolab::addJournal()\n";
-      return false;
-    }
-  } else {
-    /* KMail got back to us, add to the cache unless there are pending updates. */
-    mCalendar.addJournal( journal );
-    journal->registerObserver( this );
-    if ( !subResource.isEmpty() && sernum != 0 ) {
-      mUidMap[ journal->uid() ] = StorageReference( subResource, sernum );
-      journal->setReadOnly( !mJournalSubResources[ subResource ].writable() );
-    }
-    if ( KCal::IncidenceBase *update = mPendingUpdates.find( journal->uid() ) ) {
-      mSilent = false; // we do want to tell KMail
-      mPendingUpdates.remove( journal->uid() );
-      incidenceUpdated( update );
-    }
-  }
-  return true;
 }
 
 void ResourceKolab::deleteJournal( KCal::Journal* journal )
 {
-  const QString uid = journal->uid();
-  if( !mUidMap.contains( uid ) ) return; // Odd
-  /* The user told us to delete, tell KMail */
-  if ( !mSilent ) {
-    kmailDeleteIncidence( mUidMap[ uid ].resource(),
-                          mUidMap[ uid ].serialNumber() );
-  } else {
-    /* KMail told us it went away. Cope. */
-    mUidMap.remove( uid );
-    mCalendar.deleteJournal( journal );
-  }
+  deleteIncidence( journal );
 }
 
 KCal::Journal* ResourceKolab::journal( const QDate& date )
@@ -628,7 +561,6 @@ void ResourceKolab::setTimeZoneId( const QString& tzid )
   mCalendar.setTimeZoneId( tzid );
 }
 
-#include <qtimer.h>
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& subResource,
                                            Q_UINT32 sernum,
@@ -649,12 +581,11 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
     rc = false;
 
   mSilent = silent;
-  mResourceChangedTimer.changeInterval( 100 );
-  return rc;
+ return rc;
 }
 
 void ResourceKolab::fromKMailDelIncidence( const QString& type,
-                                           const QString& subResource,
+                                           const QString& /*subResource*/,
                                            const QString& uid )
 {
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
@@ -662,14 +593,22 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
     // Not ours
     return;
 
-  if ( mUidMap.contains( uid ) && mUidMap[ uid ].resource() != subResource )
-    return; // it was already moved elsewhere
-
-  KCal::Incidence* incidence = mCalendar.incidence( uid );
-  if( incidence )
-    mCalendar.deleteIncidence( incidence );
-  mUidMap.remove( uid );
-  mResourceChangedTimer.changeInterval( 100 );
+  // Can't be in both, by contract
+  if ( mUidsPendingDeletion.contains( uid ) ) {
+    mUidsPendingDeletion.remove( uid );
+  } else if ( mUidsPendingUpdate.contains( uid ) ) {
+    // It's good to know if was deleted, but we are waiting on a new one to 
+    // replace it, so let's just sit tight.
+  } else {
+    // We didn't trigger this, so KMail did, remove the reference to the uid
+    KCal::Incidence* incidence = mCalendar.incidence( uid );
+    if( incidence ) {
+      incidence->unRegisterObserver( this );
+      mCalendar.deleteIncidence( incidence );
+    }
+    mUidMap.remove( uid );
+    mResourceChangedTimer.changeInterval( 100 );
+  }
 }
 
 void ResourceKolab::fromKMailRefresh( const QString& type,
@@ -832,6 +771,7 @@ void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 
 void ResourceKolab::slotEmitResourceChanged()
 {
+   kdDebug(5650) << "Emitting resource changed " << endl;
    emit resourceChanged( this );
    mResourceChangedTimer.stop();
 }
