@@ -17,8 +17,8 @@ AgendaPlugin::AgendaPlugin( QObject* obj, const char* name,const QStringList )
     m_socket = new AgendaSocket(this);
 
     /* connect the bridge */
-    connect(m_socket, SIGNAL(sync(Syncee::PtrList) ),
-            this, SLOT(slotSync(Syncee::PtrList) ) );
+    connect(m_socket, SIGNAL(sync(SynceeList) ),
+            this, SLOT(slotSync(SynceeList) ) );
     connect(m_socket, SIGNAL(error(const Error& ) ),
             this, SLOT(slotError(const Error& ) ) );
     connect(m_socket, SIGNAL(prog(const Progress&) ),
@@ -48,7 +48,7 @@ void AgendaPlugin::setCapabilities( const KSync::Kapabilities& caps ) {
     m_socket->setMetaName( caps.modelName() );
     m_socket->startUP(); // connect now
 }
-bool AgendaPlugin::startSync() {
+bool AgendaPlugin::readSyncees() {
     m_socket->startSync();
     return true;
 }
@@ -88,11 +88,12 @@ KSync::ConfigWidget* AgendaPlugin::configWidget( QWidget* parent, const char* na
 }
 
 // bridging!! below
-void AgendaPlugin::write( Syncee::PtrList lst ) {
-    m_socket->write( lst );
+bool AgendaPlugin::writeSyncees() {
+    m_socket->write( SynceeList() );
+    return true;
 }
-void AgendaPlugin::slotSync( Syncee::PtrList lst) {
-    emit sync( this, lst );
+void AgendaPlugin::slotSync( SynceeList lst) {
+    emit synceesRead( this, lst );
 }
 void AgendaPlugin::slotError( const Error& err ) {
     error( err );

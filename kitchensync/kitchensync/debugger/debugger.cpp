@@ -205,13 +205,14 @@ void Debugger::readSyncees()
 
   Konnector *k = currentKonnector();
   
-  if ( k ) k->startSync();
+  if ( k ) k->readSyncees();
 }
 
-void Debugger::slotReceiveData( Konnector *, Syncee::PtrList syncees )
+void Debugger::slotReceiveData( Konnector *, SynceeList syncees )
 {
-  Syncee *syncee;
-  for( syncee = syncees.first(); syncee; syncee = syncees.next() ) {
+  SynceeList::ConstIterator it;
+  for( it = syncees.begin(); it != syncees.end(); ++it ) {
+    Syncee *syncee = *it;
     logMessage( i18n("Got Syncee of type %1").arg( syncee->type() ) );
     SyncEntry *syncEntry;
     for( syncEntry = syncee->firstEntry(); syncEntry;
@@ -233,7 +234,7 @@ void Debugger::writeSyncees()
   int result = dialog.exec();
   if ( result == QDialog::Accepted ) {
     logMessage( i18n("Write Syncees") );
-    Syncee::PtrList syncees;
+    SynceeList syncees;
     if ( mEventCheck.isChecked() ) {
       logMessage( i18n("Write events") );
       syncees.append( new CalendarSyncee( &mCalendar ) );
@@ -245,7 +246,7 @@ void Debugger::writeSyncees()
     }
     kdDebug() << "Send data" << endl;
     Konnector *k = currentKonnector();
-    if ( k ) k->doWrite( syncees );
+    if ( k ) k->writeSyncees();
   }
 }
 

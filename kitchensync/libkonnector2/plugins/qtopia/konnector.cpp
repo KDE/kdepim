@@ -9,23 +9,22 @@
 #include "socket.h"
 #include "konnector.h"
 
-
 typedef KGenericFactory<KSync::QtopiaPlugin, QObject>  QtopiaKonnectorPlugin;
 K_EXPORT_COMPONENT_FACTORY( libqtopiakonnector,  QtopiaKonnectorPlugin );
 
-
 using namespace KSync;
 
+class QtopiaPlugin::Private
+{
+  public:
+    Private() : socket( 0 ) {}
 
-class QtopiaPlugin::Private {
-public:
-    Private() : socket(0l){
-    }
-    QtopiaSocket* socket;
+    QtopiaSocket *socket;
 };
 
 QtopiaPlugin::QtopiaPlugin( QObject* obj, const char* name, const QStringList )
-    : Konnector(obj, name ) {
+    : Konnector(obj, name )
+{
     d = new Private;
     d->socket = new QtopiaSocket(this, "Opie Socket" );
 
@@ -37,10 +36,14 @@ QtopiaPlugin::QtopiaPlugin( QObject* obj, const char* name, const QStringList )
     connect(d->socket, SIGNAL(prog(const Progress& ) ),
             this, SLOT(slotProg(const Progress& ) ) );
 }
-QtopiaPlugin::~QtopiaPlugin() {
+
+QtopiaPlugin::~QtopiaPlugin()
+{
     delete d;
 }
-Kapabilities QtopiaPlugin::capabilities() {
+
+Kapabilities QtopiaPlugin::capabilities()
+{
     Kapabilities caps;
     caps.setSupportMetaSyncing( true );
     caps.setSupportsPushSync( true );
@@ -68,73 +71,108 @@ Kapabilities QtopiaPlugin::capabilities() {
 
     return caps;
 }
-void QtopiaPlugin::setCapabilities( const KSync::Kapabilities& caps) {
+
+void QtopiaPlugin::setCapabilities( const KSync::Kapabilities& caps )
+{
     d->socket->setDestIP( caps.destIP() );
     d->socket->setUser( caps.user() );
     d->socket->setPassword( caps.password() );
     d->socket->setModel( caps.currentModel(), caps.modelName() );
     d->socket->startUp();
 }
-bool QtopiaPlugin::startSync() {
+
+bool QtopiaPlugin::readSyncees()
+{
     d->socket->setResources( resources() );
     return d->socket->startSync();
 }
-bool QtopiaPlugin::startBackup( const QString&  ) {
+
+bool QtopiaPlugin::startBackup( const QString & )
+{
     return false;
 }
-bool QtopiaPlugin::startRestore( const QString& ) {
+
+bool QtopiaPlugin::startRestore( const QString& )
+{
     return false;
 }
-bool QtopiaPlugin::connectDevice() {
+
+bool QtopiaPlugin::connectDevice()
+{
     d->socket->startUp();
     return true;
 }
-bool QtopiaPlugin::disconnectDevice() {
+
+bool QtopiaPlugin::disconnectDevice()
+{
     d->socket->hangUP();
     return true;
 }
-QString QtopiaPlugin::metaId()const {
+
+QString QtopiaPlugin::metaId() const
+{
     return d->socket->metaId();
 }
-QIconSet QtopiaPlugin::iconSet()const {
+
+QIconSet QtopiaPlugin::iconSet() const
+{
     kdDebug(5225) << "iconSet" << endl;
     QPixmap logo;
     logo.load( locate( "appdata", "pics/opie.png" ) );
     return QIconSet( logo );
 }
-QString QtopiaPlugin::iconName()const {
+
+QString QtopiaPlugin::iconName() const
+{
     return QString::fromLatin1("opie.png");
 }
-void QtopiaPlugin::write( Syncee::PtrList lst) {
+
+bool QtopiaPlugin::writeSyncees()
+{
     kdDebug(5201) << " writing it now " << endl;
-    d->socket->write( lst );
+    d->socket->write( SynceeList() );
+    return true;
 }
+
 /* private slots for communication here */
-void QtopiaPlugin::slotSync(Syncee::PtrList lst ) {
-    emit sync( this , lst );
+void QtopiaPlugin::slotSync(SynceeList lst )
+{
+    emit synceesRead( this , lst );
 }
-void QtopiaPlugin::slotError( const Error& err ) {
+
+void QtopiaPlugin::slotError( const Error& err )
+{
     error( err );
 }
-void QtopiaPlugin::slotProg( const Progress& prog ) {
+
+void QtopiaPlugin::slotProg( const Progress& prog )
+{
     progress( prog );
 }
-KonnectorInfo QtopiaPlugin::info()const {
+
+KonnectorInfo QtopiaPlugin::info() const
+{
     return KonnectorInfo(QString::fromLatin1("Qtopia Konnector"),
                          iconSet(),
                          QString::fromLatin1("Qtopia1.5"),
                          metaId(),
                          iconName(),
                          d->socket->isConnected() );
-
 }
-void QtopiaPlugin::download( const QString& res) {
+
+void QtopiaPlugin::download( const QString& res)
+{
     d->socket->download( res );
 }
-ConfigWidget* QtopiaPlugin::configWidget( const Kapabilities& cap, QWidget* parent, const char* name ) {
+
+ConfigWidget* QtopiaPlugin::configWidget( const Kapabilities& cap, QWidget* parent, const char* name )
+{
     return new OpieHelper::QtopiaConfig( cap, parent, name );
 }
-ConfigWidget* QtopiaPlugin::configWidget( QWidget* parent, const char* name ) {
+
+ConfigWidget* QtopiaPlugin::configWidget( QWidget* parent, const char* name )
+{
     return new OpieHelper::QtopiaConfig( parent, name );
 }
+
 #include "konnector.moc"

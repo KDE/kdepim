@@ -34,7 +34,9 @@ namespace KSync {
          */
         void setCapabilities( const KSync::Kapabilities& );
 
-        bool startSync();
+        bool readSyncees();
+        bool writeSyncees();
+
         bool startBackup(const QString& path );
         bool startRestore( const QString& path );
 
@@ -51,16 +53,12 @@ namespace KSync {
         KSync::ConfigWidget* configWidget( const KSync::Kapabilities&, QWidget* parent, const char* name );
         KSync::ConfigWidget* configWidget( QWidget* parent, const char* name );
 
-    protected:
-        /** write the Syncee back to the device */
-        void write( Syncee::PtrList );
-
     private:
         AgendaSocket* m_socket;
 
     private slots:
-        /** bridget from socket->plugin->konnectormanager */
-        void slotSync( Syncee::PtrList );
+        /** bridge from socket->plugin->konnectormanager */
+        void slotSync( SynceeList );
         void slotError( const Error& error );
         void slotProg( const Progress& );
 

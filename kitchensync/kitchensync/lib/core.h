@@ -134,7 +134,7 @@ class Core : public KParts::MainWindow
      * @param konnector pointer to Konnector object
      * @param lst The downloaded Syncee
      */
-    void konnectorDownloaded( Konnector *, Syncee::PtrList lst );
+    void konnectorDownloaded( Konnector *, SynceeList lst );
 
     /**
      * Whenever the currently activated parts changed

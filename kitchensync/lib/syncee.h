@@ -68,7 +68,6 @@ namespace KSync {
 class Syncee
 {
   public:
-    typedef QPtrList<Syncee> PtrList;
     enum SyncMode { MetaLess=0, MetaMode=2 };
 
     Syncee( uint supportSize = 0);

@@ -24,7 +24,7 @@
 #include "incidencetemplate.h"
 #include "synctemplate.h"
 
-#include <event.h>
+#include <libkcal/event.h>
 
 namespace KSync {
 

@@ -19,7 +19,7 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <calformat.h>
+#include <libkcal/calformat.h>
 
 #include <kstaticdeleter.h>
 #include "eventsyncee.h"

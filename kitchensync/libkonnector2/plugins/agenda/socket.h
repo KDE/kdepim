@@ -4,6 +4,7 @@
 #include <qobject.h>
 
 #include <syncee.h>
+#include <synceelist.h>
 
 #include <stderror.h>
 #include <stdprogress.h>
@@ -31,10 +32,10 @@ namespace KSync {
         /** start to sync  now */
         void startSync();
 
-        void write( Syncee::PtrList );
+        void write( SynceeList );
         /* signals for the bridge */
     signals:
-        void sync(Syncee::PtrList);
+        void sync(SynceeList);
         void error(const Error& );
         void prog( const Progress& );
 

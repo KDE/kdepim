@@ -255,7 +255,7 @@ void KSyncMainWindow::slotSync()
         return;
     }
 
-    prof.konnector()->startSync();
+    prof.konnector()->readSyncees();
 }
 
 void KSyncMainWindow::slotBackup()
@@ -444,14 +444,14 @@ void KSyncMainWindow::initKonnector()
 
     m_konnectorManager = KonnectorManager::self();
 
-    connect( m_konnectorManager, SIGNAL( sync( Konnector *, Syncee::PtrList ) ),
-             SLOT( slotSync( Konnector *,  Syncee::PtrList) ) );
+    connect( m_konnectorManager, SIGNAL( sync( Konnector *, SynceeList ) ),
+             SLOT( slotSync( Konnector *,  SynceeList) ) );
     connect( m_konnectorManager, SIGNAL( progress( Konnector *, const Progress& ) ),
              SLOT( slotKonnectorProg( Konnector *, const Progress&) ) );
     connect( m_konnectorManager, SIGNAL( error( Konnector *, const Error& ) ),
              SLOT( slotKonnectorErr( Konnector *, const Error&) ) );
-    connect( m_konnectorManager, SIGNAL( downloaded( Konnector *, Syncee::PtrList ) ),
-             SIGNAL( konnectorDownloaded( Konnector *, Syncee::PtrList) ) );
+    connect( m_konnectorManager, SIGNAL( downloaded( Konnector *, SynceeList ) ),
+             SIGNAL( konnectorDownloaded( Konnector *, SynceeList) ) );
 }
 
 /*
@@ -517,7 +517,7 @@ KonnectorProfileManager* KSyncMainWindow::konnectorProfileManager() const
 // raise overview and then pipe informations
 // when switching to KSyncee/KSyncEntry we will make
 // it asynchronus
-void KSyncMainWindow::slotSync( Konnector *konnector, Syncee::PtrList lis)
+void KSyncMainWindow::slotSync( Konnector *konnector, SynceeList lis)
 {
     if ( konnector != currentKonnectorProfile().konnector() ) {
         emit partError( 0, Error(i18n("A Konnector wanted to sync but it's not the current one") ) );
@@ -813,15 +813,11 @@ void KSyncMainWindow::slotPartSyncStatus( ManipulatorPart* par, int err )
         part->sync( m_inSyncee, m_outSyncee );
     } else { // we're done go write it back
         emit partProgress( 0, Progress(i18n("Going to write the information back now.") ) );
-        m_inSyncee.setAutoDelete( true );
-        m_inSyncee.clear();
         delete m_partsIt;
         m_partsIt = 0;
         kdDebug(5210) << "Going to write back " << m_outSyncee.count() << endl;
         m_konnectorManager->write( currentKonnectorProfile().konnector(),
                                    m_outSyncee );
-        m_outSyncee.setAutoDelete( false );
-        m_outSyncee.clear();
         // now we only wait for the done
     }
 }

@@ -72,14 +72,14 @@ void DummyKonnector::setCapabilities( const KSync::Kapabilities & )
 {
 }
 
-bool DummyKonnector::startSync()
+bool DummyKonnector::readSyncees()
 {
-  CalendarSyncee *calendarSyncee = new CalendarSyncee( &mCalendar );
+  SynceeList synceeList;
 
-  Syncee::PtrList list;
-  list.append( calendarSyncee );
+  CalendarSyncee *calendarSyncee = new CalendarSyncee( &mCalendar );
+  synceeList.append( calendarSyncee );
   
-  emit sync( this, list );
+  emit synceesRead( this, synceeList );
 
   return true;
 }
@@ -132,8 +132,10 @@ KSync::ConfigWidget *DummyKonnector::configWidget( QWidget* parent, const char* 
   return 0;
 }
 
-void DummyKonnector::write( Syncee::PtrList lst )
+bool DummyKonnector::writeSyncees()
 {
+  emit synceesWritten( this );
+  return true;
 }
 
 

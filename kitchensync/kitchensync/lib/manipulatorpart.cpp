@@ -71,7 +71,7 @@ QWidget *ManipulatorPart::configWidget()
     return 0;
 }
 
-void ManipulatorPart::sync( const Syncee::PtrList& , Syncee::PtrList& )
+void ManipulatorPart::sync( const SynceeList& , SynceeList& )
 {
     done();
 }

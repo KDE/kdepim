@@ -71,11 +71,14 @@ void LocalKonnector::setCapabilities( const KSync::Kapabilities& caps )
 {
 }
 
-bool LocalKonnector::startSync()
+bool LocalKonnector::readSyncees()
 {
-    Syncee::PtrList syncees;
+    SynceeList syncees;
     if ( !mCalendar.load( mCalendarFile ) ) return false;
     syncees.append( new CalendarSyncee( &mCalendar ) );    
+
+    emit synceesRead( this, syncees );
+
     return true;
 }
 
@@ -130,9 +133,11 @@ KSync::ConfigWidget *LocalKonnector::configWidget( QWidget* parent, const char* 
   return mConfigWidget;
 }
 
-void LocalKonnector::write( Syncee::PtrList syncees )
+bool LocalKonnector::writeSyncees()
 {
   mCalendar.save( mCalendarFile );
+
+  return true;
 }
 
 

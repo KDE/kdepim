@@ -42,12 +42,10 @@ void AgendaSocket::startSync() {
      * DO Collect MetaInformations
      */
 
-    Syncee::PtrList lst;
+    SynceeList lst;
     emit sync(lst);
-
-    lst.clear();
 }
-void AgendaSocket::write( Syncee::PtrList lst) {
+void AgendaSocket::write( SynceeList lst) {
     // reconvert and write back!!!
 
     /**
@@ -56,8 +54,6 @@ void AgendaSocket::write( Syncee::PtrList lst) {
      * Do write MetaInformations!!
      */
 
-    lst.setAutoDelete( true );
-    lst.clear();
     emit prog(StdProgress::done() );
 }
 

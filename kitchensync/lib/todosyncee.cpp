@@ -21,14 +21,14 @@
 
 #include <kstaticdeleter.h>
 
-#include <calformat.h>
+#include <libkcal/calformat.h>
 
 #include "incidencetemplate.h"
 #include "todosyncee.h"
 
 
 using namespace KSync;
-using KCal::Todo;
+using namespace KCal;
 
 /* A test for the template
 void testIt() {

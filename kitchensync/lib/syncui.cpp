@@ -45,7 +45,7 @@ SyncEntry *SyncUi::deconflict( SyncEntry *syncEntry, SyncEntry *targetEntry )
   return 0;
 }
 
-bool SyncUi::confirmDelete( SyncEntry *entry, SyncEntry *target )
+bool SyncUi::confirmDelete( SyncEntry *, SyncEntry *target )
 {
   kdDebug(5231) << "Entry with name " << target->name() << " was deleted "
                 << endl;
@@ -54,7 +54,7 @@ bool SyncUi::confirmDelete( SyncEntry *entry, SyncEntry *target )
   return true;
 }
 
-void SyncUi::informBothDeleted( SyncEntry *entry, SyncEntry *other )
+void SyncUi::informBothDeleted( SyncEntry *entry, SyncEntry * )
 {
   kdDebug(5231) << "Entry with uid " << entry->id()
                 << "was deleted on both sides " << endl;

@@ -15,7 +15,8 @@ namespace KSync {
 
         Kapabilities capabilities();
         void setCapabilities( const KSync::Kapabilities& );
-        bool startSync();
+        bool readSyncees();
+        bool writeSyncees();
         bool startBackup( const QString& path );
         bool startRestore( const QString& path );
         bool connectDevice();
@@ -30,7 +31,6 @@ namespace KSync {
         QString metaId()const;
         QIconSet iconSet()const;
         QString iconName()const;
-        void write( Syncee::PtrList );
     signals:
         void backup();
         void restore();
@@ -41,7 +41,7 @@ namespace KSync {
         Private* d;
 
     private slots:
-        void slotSync(Syncee::PtrList );
+        void slotSync(SynceeList );
         void slotError( const Error& );
         void slotProg( const Progress& );
 

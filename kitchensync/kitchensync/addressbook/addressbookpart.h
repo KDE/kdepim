@@ -36,7 +36,7 @@ namespace KSync {
         QString iconName()const;
         bool configIsVisible()const;
         bool canSync()const;
-        void sync( const Syncee::PtrList& , Syncee::PtrList& );
+        void sync( const SynceeList& , SynceeList& );
     public:
         void slotConfigOk();
     private:

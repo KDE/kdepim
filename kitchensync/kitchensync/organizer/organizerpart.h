@@ -40,7 +40,7 @@ namespace KSync {
     bool partIsVisible()const;
     bool configIsVisible()const;
     QWidget* configWidget();
-    void sync( const Syncee::PtrList&,  Syncee::PtrList& );
+    void sync( const SynceeList&, SynceeList& );
   public:
 
     void slotConfigOk();

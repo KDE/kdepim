@@ -111,8 +111,8 @@ void OrganizerPart::slotConfigOk()
  * 9. append the Syncee to the out list
  * 10. have a party and get drunk
  */
-void OrganizerPart::sync( const Syncee::PtrList& in,
-                                  Syncee::PtrList& out )
+void OrganizerPart::sync( const SynceeList &in,
+                          SynceeList &out )
 {
     /* 0. */
     KConfig conf("korganizerrc");
@@ -130,22 +130,8 @@ void OrganizerPart::sync( const Syncee::PtrList& in,
     bool met = kon.kapabilities().isMetaSyncingEnabled();
 
     /* 3. */
-    Syncee* syncee=0l;
-    EventSyncee* evSyncee = 0l;
-    TodoSyncee* toSyncee = 0l;
-    QPtrListIterator<Syncee> syncIt( in );
-    kdDebug(5222) << "in count " << in.count() << endl;
-    for ( ; syncIt.current(); ++syncIt ) {
-        kdDebug(5222) << "syncee pointer " <<  syncIt.current() << endl;
-        syncee = syncIt.current();
-        kdDebug(5222) << "type " << syncee->type() << endl;
-        if ( syncee->type() == QString::fromLatin1("EventSyncee") )
-            evSyncee = (EventSyncee*)syncee;
-        else if ( syncee->type() == QString::fromLatin1("TodoSyncee") )
-            toSyncee = (TodoSyncee*)syncee;
-        /* we got both now we can break the loop */
-        if ( evSyncee && toSyncee ) break;
-    }
+    EventSyncee *evSyncee = in.eventSyncee();
+    TodoSyncee *toSyncee = in.todoSyncee();
     if (!evSyncee && !toSyncee) {
         done();
         return; // did not find both of them

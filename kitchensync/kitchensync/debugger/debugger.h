@@ -23,6 +23,8 @@
 
 #include <manipulatorpart.h>
 
+#include <synceelist.h>
+
 #include <libkcal/calendarlocal.h>
 
 #include <klocale.h>
@@ -65,7 +67,7 @@ class Debugger : public ManipulatorPart
     void readSyncees();
     void writeSyncees();
 
-    void slotReceiveData( Konnector *, Syncee::PtrList syncees );
+    void slotReceiveData( Konnector *, SynceeList syncees );
 
   private:
     QPixmap m_pixmap;
@@ -75,6 +77,8 @@ class Debugger : public ManipulatorPart
     QTextView *mLogView;
 
     KCal::CalendarLocal mCalendar;
+
+    SynceeList mSynceeList;
 };
 
 }

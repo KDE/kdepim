@@ -72,8 +72,8 @@ bool AddressBookPart::canSync()const{
  * 9. write back
  * 10. party
  */
-void AddressBookPart::sync( const Syncee::PtrList& in,
-                            Syncee::PtrList& out ){
+void AddressBookPart::sync( const SynceeList& in,
+                            SynceeList& out ){
     kdDebug(5228) << "processEntry in AddressBookPart aye" << endl;
     /* 1. */
     Profile prof = core()->currentProfile();
@@ -85,19 +85,11 @@ void AddressBookPart::sync( const Syncee::PtrList& in,
     kdDebug(5228) << "Is meta syncing enabled? " << met << endl;
 
     /* 3. */
-    Syncee* syncee = 0l;
-    AddressBookSyncee* aBook=0l;
-    QPtrListIterator<Syncee> syncIt( in );
-    for ( ; syncIt.current(); ++syncIt ) {
-        syncee = syncIt.current();
-        if (syncee->type() == QString::fromLatin1("AddressBookSyncee") ) {
-	    kdDebug(5228) << "Found our syncee" << endl;
-            aBook = (AddressBookSyncee*) syncee;
-            break;
-        }
-
+    AddressBookSyncee *aBook = in.addressBookSyncee();
+    if (!aBook) {
+      done();
+      return;
     }
-    if (!aBook) {done(); return;}
 
     progress( Progress(i18n("Going to load AddressBook") ) );
     /* 4. */

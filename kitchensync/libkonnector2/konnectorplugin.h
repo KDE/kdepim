@@ -28,6 +28,7 @@
 #include <qptrlist.h>
 
 #include <syncee.h>
+#include <synceelist.h>
 
 #include "stderror.h"
 #include "stdprogress.h"
@@ -62,6 +63,49 @@ class Konnector : public QObject
     virtual ~Konnector();
 
     /**
+      Request list of Syncee objects containing PIM data from connected entity.
+      The response is sent with the signal synceesRead(). If an error occurs
+      during read the signal synceeReadError() is emitted.
+
+      @return true, if request could successfully be started, false otherwise.
+    */
+    virtual bool readSyncees() = 0;
+
+    /**
+      Request to write back data contained in Syncee objects delivered by
+      synceesAvailable() to connected entity. The result of the write is sent
+      with the signal synceesWritten(). If an error occurs during write the
+      signal synceeWriteError() is emitted.
+
+      @return true, if request could successfully be started, false otherwise.
+    */
+    virtual bool writeSyncees() = 0;
+
+  signals:
+    /**
+      Emitted when Syncee list becomes available as response to
+      requestSyncees().
+    */
+    void synceesRead( Konnector *, const SynceeList & );
+
+    /**
+      Emitted when an error occurs during read.
+    */
+    void synceeReadError( Konnector * );
+
+    /**
+      Emitted when Syncee list was successfully written back to connected
+      entity.
+    */
+    void synceesWritten( Konnector * );
+
+    /**
+      Emitted when an error occurs during write.
+    */
+    void synceeWriteError( Konnector * );
+
+  public:
+    /**
       Return capabilities of the Konnector.
     */
     virtual Kapabilities capabilities() = 0;
@@ -79,7 +123,7 @@ class Konnector : public QObject
       @return False, if error occured while trying to start syncing, otherwise
               true.
     */
-    virtual bool startSync() = 0;
+//    virtual bool startSync() = 0;
     /**
       Start restore.
     */
@@ -127,7 +171,6 @@ class Konnector : public QObject
      */
     virtual QStringList builtIn() const;
     bool isConnected() const;
-    void doWrite( Syncee::PtrList );
 
   protected:
     void progress( const Progress & );
@@ -137,17 +180,17 @@ class Konnector : public QObject
     /**
       Write data contained in list of Syncee object back to device.
     */
-    virtual void write( Syncee::PtrList ) = 0;
+//    virtual void write( Syncee::PtrList ) = 0;
 
   signals:
     /**
       This signal is emitted to provide the results to a startSync() call.
     */
-    void sync( Konnector *, Syncee::PtrList );
+//    void sync( Konnector *, Syncee::PtrList );
 
     void sig_progress( Konnector *, const Progress & );
     void sig_error( Konnector *, const Error & );
-    void sig_downloaded( Konnector *, Syncee::PtrList );
+    void sig_downloaded( Konnector *, const SynceeList & );
 
   private:
     QStringList m_resources;

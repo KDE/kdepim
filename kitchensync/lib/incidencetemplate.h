@@ -25,7 +25,7 @@
 
 #include <qmap.h>
 
-#include <incidence.h>
+#include <libkcal/incidence.h>
 
 /*
  * Internal helper!!!

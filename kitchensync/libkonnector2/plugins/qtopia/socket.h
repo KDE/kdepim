@@ -31,14 +31,14 @@ namespace KSync {
         bool startSync();
         bool isConnected();
 
-        void write( Syncee::PtrList );
+        void write( SynceeList );
         void download( const QString& res );
         void setResources( const QStringList& );
         QString metaId()const;
 
 
     signals:
-        void sync( Syncee::PtrList );
+        void sync( SynceeList );
         void error( const Error& );
         void prog( const Progress& );
 

@@ -79,9 +79,4 @@ QStringList Konnector::builtIn() const
     return QStringList();
 }
 
-void Konnector::doWrite( Syncee::PtrList list )
-{
-    write( list );
-}
-
 #include "konnectorplugin.moc"

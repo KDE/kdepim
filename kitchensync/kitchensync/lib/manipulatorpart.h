@@ -31,6 +31,7 @@
 #include <kdebug.h>
 
 #include <syncee.h>
+#include <synceelist.h>
 
 #include <error.h>
 #include <progress.h>
@@ -127,7 +128,7 @@ class ManipulatorPart : public KParts::Part
      * @param in The Syncee List coming from a KonnectorPlugin
      * @param out The Syncee List which will be written to the Konnector
      */
-    virtual void sync( const Syncee::PtrList& in, Syncee::PtrList& out );
+    virtual void sync( const SynceeList &in, SynceeList &out );
 
   protected:
 

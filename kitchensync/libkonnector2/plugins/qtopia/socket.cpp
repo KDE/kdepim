@@ -21,6 +21,8 @@
 #include "metadatebook.h"
 #include "metatodo.h"
 
+#include "todo.h"
+
 #include "socket.h"
 
 using namespace KSync;
@@ -66,7 +68,7 @@ public:
     QString path;
     int mode;
     int getMode;
-    Syncee::PtrList m_sync;
+    SynceeList m_sync;
 
     QValueList<OpieCategories> categories;
     QString partnerId;
@@ -206,38 +208,23 @@ bool QtopiaSocket::isConnected() {
     else
         return false;
 }
-void QtopiaSocket::write( Syncee::PtrList list) {
+void QtopiaSocket::write( SynceeList list) {
     if (!isConnected() ) {
         emit error( Error( i18n("<qt>Can not write the data back.\n There is no connection to the device") ) );
-        list.setAutoDelete( true );
         emit prog( StdProgress::done() );
         return;
     }
-    Syncee *syncee;
 
     kdDebug(5225) << "Writing information back now. Count is " << list.count() << endl;
-    /*
-     * For all Syncees we see if it
-     * is one of the Opie built in functionality
-     */
-    for ( syncee = list.first(); syncee != 0l; syncee = list.next() ) {
-        kdDebug(5225) << " Trying to write " << syncee->type() << endl;
-        if ( syncee->type() == QString::fromLatin1("AddressBookSyncee") ) {
-            AddressBookSyncee* abSyncee = static_cast<AddressBookSyncee*>(syncee );
-            writeAddressbook( abSyncee );
-        }else if ( syncee->type() == QString::fromLatin1("EventSyncee") ) {
-            EventSyncee* evSyncee = static_cast<EventSyncee*>(syncee);
-            writeDatebook( evSyncee );
-        }else if ( syncee->type() == QString::fromLatin1("TodoSyncee") ) {
-            TodoSyncee* toSyncee = static_cast<TodoSyncee*>(syncee);
-            writeTodoList( toSyncee );
-        }
-    }
-    /*
-     * so that a clear frees the Syncees
-     */
-    list.setAutoDelete( true );
-    list.clear();
+    
+    AddressBookSyncee *abSyncee = list.addressBookSyncee();
+    if ( abSyncee ) writeAddressbook( abSyncee );
+
+    EventSyncee *evSyncee = list.eventSyncee();
+    if ( evSyncee ) writeDatebook( evSyncee );
+
+    TodoSyncee *toSyncee = list.todoSyncee();
+    if ( toSyncee ) writeTodoList( toSyncee );
 
     /*
      * write new category information

@@ -183,7 +183,7 @@ class KSyncMainWindow : public Core
      * @param konnector pointer to Konnector object
      * @param lst The downloaded Syncee
      */
-    void konnectorDownloaded( Konnector *, Syncee::PtrList lst );
+    void konnectorDownloaded( Konnector *, SynceeList lst );
 
     /**
      * Whenever the currently activated parts changed
@@ -248,7 +248,7 @@ class KSyncMainWindow : public Core
 
     /* slots for the KonnectorManager */
   private slots:
-    void slotSync( Konnector *, Syncee::PtrList );
+    void slotSync( Konnector *, SynceeList );
     void slotKonnectorProg( Konnector *, const Progress & );
     void slotKonnectorErr( Konnector *, const Error & );
 
@@ -265,8 +265,8 @@ class KSyncMainWindow : public Core
     // loaded parts
     QPtrList<ManipulatorPart> m_parts;
     QPtrListIterator<ManipulatorPart> *m_partsIt;
-    Syncee::PtrList m_outSyncee;
-    Syncee::PtrList m_inSyncee;
+    SynceeList m_outSyncee;
+    SynceeList m_inSyncee;
     bool m_isSyncing;
 
     ManPartService::ValueList m_partsLst;

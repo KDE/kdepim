@@ -68,14 +68,14 @@ Konnector *KonnectorManager::load( const Device& dev )
         createInstanceFromLibrary<Konnector>( dev.library().local8Bit(), this );
     if ( !plugin ) return 0;
 
-    connect( plugin, SIGNAL( sync( Konnector *, Syncee::PtrList ) ),
-             SLOT( slotSync( Konnector *, Syncee::PtrList) ) );
+    connect( plugin, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
+             SLOT( slotSync( Konnector *, const SynceeList & ) ) );
     connect( plugin, SIGNAL( sig_progress( Konnector *, const Progress & ) ),
              SLOT( slotProgress( Konnector *, const Progress & ) ) );
     connect( plugin, SIGNAL( sig_error( Konnector *, const Error & ) ),
              SLOT( slotError( Konnector *, const Error& ) ) );
-    connect( plugin, SIGNAL( sig_downloaded( Konnector *, Syncee::PtrList ) ),
-             SLOT( slotDownloaded( Konnector *, Syncee::PtrList ) ) );
+    connect( plugin, SIGNAL( sig_downloaded( Konnector *, const SynceeList & ) ),
+             SLOT( slotDownloaded( Konnector *, const SynceeList & ) ) );
 
     m_konnectors.append( plugin );
 
@@ -147,7 +147,7 @@ const Filter::PtrList KonnectorManager::filters()
     return m_filAdded;
 }
 
-void KonnectorManager::write( Konnector *plugin, const Syncee::PtrList &lst )
+void KonnectorManager::write( Konnector *plugin, const SynceeList &lst )
 {
     kdDebug(5201) << "KonnectorManager::write" << endl;
     if ( !plugin ) {
@@ -157,7 +157,7 @@ void KonnectorManager::write( Konnector *plugin, const Syncee::PtrList &lst )
         return;
     }
     kdDebug(5201) << "Konnector: " << plugin->info().name() << endl;
-    plugin->doWrite( lst );
+    plugin->writeSyncees();
 }
 
 /*
@@ -214,9 +214,9 @@ Device KonnectorManager::find( const QString& device )
     return dev;
 }
 
-void KonnectorManager::slotSync( Konnector *k, Syncee::PtrList list )
+void KonnectorManager::slotSync( Konnector *k, const SynceeList & list )
 {
-    Syncee::PtrList unknown = findUnknown( list );
+    const SynceeList & unknown = findUnknown( list );
     filter( unknown, list );
     emit sync( k, list );
 }
@@ -231,9 +231,9 @@ void KonnectorManager::slotError( Konnector *k, const Error &err )
     emit error( k, err );
 }
 
-void KonnectorManager::slotDownloaded( Konnector *k, Syncee::PtrList list)
+void KonnectorManager::slotDownloaded( Konnector *k, const SynceeList & list)
 {
-    Syncee::PtrList unknown = findUnknown( list );
+    const SynceeList & unknown = findUnknown( list );
     filter( unknown, list );
     emit downloaded( k, list );
 }
@@ -246,18 +246,16 @@ void KonnectorManager::slotDownloaded( Konnector *k, Syncee::PtrList list)
  *
  * FIXME use filters!!!!
  */
-void KonnectorManager::filter( Syncee::PtrList lst , Syncee::PtrList& real)
+void KonnectorManager::filter( const SynceeList &lst, const SynceeList &real )
 {
-    Syncee* syncee= 0;
-    for ( syncee = lst.first(); syncee; syncee = lst.next() ) {
-        real.append( syncee );
-    }
+    kdError() << "KonnectorManager::filter() not implemented" << endl;
 }
 
-Syncee::PtrList KonnectorManager::findUnknown( Syncee::PtrList& lst )
+SynceeList KonnectorManager::findUnknown( const SynceeList &lst )
 {
+#if 0
     lst.setAutoDelete( false );
-    Syncee::PtrList list;
+    const SynceeList & list;
     Syncee* syn;
     for ( syn = lst.first(); syn; syn = lst.next() ) {
         if ( syn->type() == QString::fromLatin1("UnknownSyncEntry") ) {
@@ -266,6 +264,8 @@ Syncee::PtrList KonnectorManager::findUnknown( Syncee::PtrList& lst )
         }
     }
     return list;
+#endif
+  return SynceeList();
 }
 
 #include "konnectormanager.moc"

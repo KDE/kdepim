@@ -27,6 +27,7 @@
 #include <kstaticdeleter.h>
 
 #include <syncee.h>
+#include <synceelist.h>
 
 #include "kdevice.h"
 #include "filter.h"
@@ -77,22 +78,22 @@ class KonnectorManager : public QObject
     const Filter::PtrList filters();
 
   public slots:
-    void write( Konnector *, const Syncee::PtrList& );
+    void write( Konnector *, const SynceeList & );
 
   signals:
-    void sync( Konnector *, Syncee::PtrList );
+    void sync( Konnector *, const SynceeList & );
     void progress( Konnector *, const Progress & );
-    void error( Konnector *, const   Error & );
-    void downloaded( Konnector *, Syncee::PtrList );
+    void error( Konnector *, const Error & );
+    void downloaded( Konnector *, const SynceeList & );
 
   private slots:
-    void slotSync( Konnector *, Syncee::PtrList );
+    void slotSync( Konnector *, const SynceeList & );
     void slotProgress( Konnector *, const Progress & );
     void slotError( Konnector *, const Error & );
-    void slotDownloaded( Konnector *, Syncee::PtrList );
+    void slotDownloaded( Konnector *, const SynceeList & );
 
   private:
-    void filter( Syncee::PtrList unknown, Syncee::PtrList &real );
+    void filter( const SynceeList &unknown, const SynceeList &real );
 
     KonnectorManager();
     ~KonnectorManager();
@@ -100,7 +101,7 @@ class KonnectorManager : public QObject
     Device::ValueList allDevices();
     Device parseDevice( const QString& path );
     Device find( const QString& deviceName );
-    Syncee::PtrList findUnknown( Syncee::PtrList& );
+    SynceeList findUnknown( const SynceeList & );
 
     static KonnectorManager *m_self;
 
@@ -113,7 +114,7 @@ class KonnectorManager : public QObject
     QPtrList<Konnector> m_konnectors;
 
     class Private;
-//    Private *d;
+    Private *d;
 };
 
 }

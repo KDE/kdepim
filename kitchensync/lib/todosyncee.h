@@ -21,7 +21,7 @@
 #ifndef KSYNC_TODO_SYNCEE_H
 #define KSYNC_TODO_SYNCEE_H
 
-#include <todo.h>
+#include <libkcal/todo.h>
 
 #include "synctemplate.h"
 
