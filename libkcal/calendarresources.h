@@ -249,6 +249,14 @@ class CalendarResources : public Calendar,
 
     void signalErrorMessage( const QString & );
 
+    /**
+      This signal is emitted to indicate progress of actions the resource
+      executes, e.g. while downloading data. The id is unique to the action, the
+      percent value shows how much of the action is complete. A percent value of
+      -1 indicates that there is progress, but the percent value is unknown.
+    */
+    void progress( ResourceCalendar *, const QString &id, int percent );
+
   protected:
     /**
       The observer interface. So far not implemented.
