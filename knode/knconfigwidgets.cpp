@@ -805,11 +805,6 @@ KNConfig::AppearanceWidget::AppearanceWidget(QWidget *p, const char *n)
   connect(c_olChngBtn, SIGNAL(clicked()), this, SLOT(slotColChangeBtnClicked()));
   topL->addWidget(c_olChngBtn,1,1);
 
-  // FIXME: use global default button instead
-  c_olDefBtn=new KPushButton(KStdGuiItem::defaults(), this);
-  connect(c_olDefBtn, SIGNAL(clicked()), this, SLOT(slotColDefaultBtnClicked()));
-  topL->addWidget(c_olDefBtn,2,1);
-
   //font-list
   f_List = new KNDialogListBox(false, this);
   topL->addMultiCellWidget(f_List,5,7,0,0);
@@ -823,10 +818,6 @@ KNConfig::AppearanceWidget::AppearanceWidget(QWidget *p, const char *n)
   f_ntChngBtn=new QPushButton(i18n("Chang&e..."), this);
   connect(f_ntChngBtn, SIGNAL(clicked()), this, SLOT(slotFontChangeBtnClicked()));
   topL->addWidget(f_ntChngBtn,5,1);
-
-  f_ntDefBtn=new QPushButton(i18n("Defaul&ts"), this);
-  connect(f_ntDefBtn, SIGNAL(clicked()), this, SLOT(slotFontDefaultBtnClicked()));
-  topL->addWidget(f_ntDefBtn,6,1);
 
   load();
 }
@@ -872,10 +863,32 @@ void KNConfig::AppearanceWidget::save()
 }
 
 
+void KNConfig::AppearanceWidget::defaults()
+{
+  // default colors
+  ColorListItem *colorItem;
+  for(int i=0; i < d_ata->colorCount(); i++) {
+    colorItem=static_cast<ColorListItem*>(c_List->item(i));
+    colorItem->setColor(d_ata->defaultColor(i));
+  }
+  c_List->triggerUpdate(true);
+  c_List->repaint(true);
+
+  // default fonts
+  FontListItem *fontItem;
+  for(int i=0; i < d_ata->fontCount(); i++) {
+    fontItem=static_cast<FontListItem*>(f_List->item(i));
+    fontItem->setFont(d_ata->defaultFont(i));
+  }
+  f_List->triggerUpdate(false);
+
+  emit changed(true);
+}
+
+
 void KNConfig::AppearanceWidget::slotColCheckBoxToggled(bool b)
 {
   c_List->setEnabled(b);
-  c_olDefBtn->setEnabled(b);
   c_olChngBtn->setEnabled(b && (c_List->currentItem()!=-1));
   if (b) c_List->setFocus();
   emit changed(true);
@@ -899,19 +912,6 @@ void KNConfig::AppearanceWidget::slotColItemSelected(QListBoxItem *it)
 }
 
 
-void KNConfig::AppearanceWidget::slotColDefaultBtnClicked()
-{
-  ColorListItem *colorItem;
-  for(int i=0; i < d_ata->colorCount(); i++) {
-    colorItem=static_cast<ColorListItem*>(c_List->item(i));
-    colorItem->setColor(d_ata->defaultColor(i));
-  }
-  c_List->triggerUpdate(true);
-  c_List->repaint(true);
-  emit changed(true);
-}
-
-
 void KNConfig::AppearanceWidget::slotColChangeBtnClicked()
 {
   if(c_List->currentItem()!=-1)
@@ -928,7 +928,6 @@ void KNConfig::AppearanceWidget::slotColSelectionChanged()
 void KNConfig::AppearanceWidget::slotFontCheckBoxToggled(bool b)
 {
   f_List->setEnabled(b);
-  f_ntDefBtn->setEnabled(b);
   f_ntChngBtn->setEnabled(b && (f_List->currentItem()!=-1));
   if (b) f_List->setFocus();
   emit changed(true);
@@ -948,18 +947,6 @@ void KNConfig::AppearanceWidget::slotFontItemSelected(QListBoxItem *it)
       f_List->triggerUpdate(false);
     }
   }
-  emit changed(true);
-}
-
-
-void KNConfig::AppearanceWidget::slotFontDefaultBtnClicked()
-{
-  FontListItem *fontItem;
-  for(int i=0; i < d_ata->fontCount(); i++) {
-    fontItem=static_cast<FontListItem*>(f_List->item(i));
-    fontItem->setFont(d_ata->defaultFont(i));
-  }
-  f_List->triggerUpdate(false);
   emit changed(true);
 }
 

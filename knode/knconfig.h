@@ -399,6 +399,7 @@ class AppearanceWidget : public BaseWidget {
 
     void load();
     void save();
+    void defaults();
 
     //===================================================================================
     // code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
@@ -445,9 +446,7 @@ class AppearanceWidget : public BaseWidget {
               *f_List;
     QCheckBox *c_olorCB,
               *f_ontCB;
-    QPushButton *c_olDefBtn,
-                *c_olChngBtn,
-                *f_ntDefBtn,
+    QPushButton *c_olChngBtn,
                 *f_ntChngBtn;
 
     Appearance *d_ata;
@@ -456,14 +455,12 @@ class AppearanceWidget : public BaseWidget {
     //colors
     void slotColCheckBoxToggled(bool b);
     void slotColItemSelected(QListBoxItem *);   // show color dialog for the entry
-    void slotColDefaultBtnClicked();
     void slotColChangeBtnClicked();
     void slotColSelectionChanged();
 
     //fonts
     void slotFontCheckBoxToggled(bool b);
     void slotFontItemSelected(QListBoxItem *);  // show font dialog for the entry
-    void slotFontDefaultBtnClicked();
     void slotFontChangeBtnClicked();
     void slotFontSelectionChanged();
 
