@@ -37,6 +37,25 @@ KPilot Developer's notes for February 8th, 2003
   QFile::encodeName() or by updating other functions to take QStrings
   instead of const char *, and using the Pilot codec where appropriate.
 
+2003-2-6  Adriaan de Groot
+* Did a big chunk of merging from BRANCH to HEAD. Discovered two
+  things that didn't work well:
+  - Changes in the abbrowser conduit wrt. getCustomField()
+  - Memo widget optimizations
+  I hope I got them right. I'm going back to work in BRANCH.
+* Constant strings in the source are now (almost all) marked
+  with CSL1() for Constant String Latin 1. This reduces the 
+  number of hits for [lL]atin1. The macro uses a syntactic trick
+  to make sure it's only applied to constant strings.
+  
+    
+2003-2-5  Adriaan de Groot
+* Almost everywhere [BRANCH] Search and destroyed latin1().
+* options.h [BRANCH] Handle <kdebugclasses.h> properly. Um, sort of. 
+  The dag-blabbed file is obsolete in KDE 3.2, required in 3.1, and
+  incomplete in 3.0. Ignore it instead. Ignore all the fancy Q*
+  operator <<s and do it all by hand.
+
 2003-2-2  Adriaan de Groot
 * conduitConfigDialog.cc [HEAD] Started inserting code for improved
   conduit selection and activation.
