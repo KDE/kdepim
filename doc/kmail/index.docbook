@@ -14,12 +14,16 @@
 "by hand" (using nedit) so please don't mix up the formatting too much. -->
 
 <!-- TODO: 
+* document "check what the server supports"
+* document "pipelining..."
+* more about the "create folder" dialog
 * is it "message", "mail" or "email" ??? 
-* what is section / tab / ... ?
+* coherent wording for is section / tab / ...
 * better markup instead of 'quote'
-* PGP: acronym or application?
-* "permissions" or "permission"
-* Internet or internet
+* <menuchoice><guimenu>xxx , or is <guimenu>xxx enough?
+* fix my adverb vs. adjective mistakes
+* <guiicon> vs. <guibutton>
+* in KMail: kmail vs. KMail
 -->
 
 <authorgroup>
@@ -103,13 +107,9 @@ action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to select the folder
 you navigated to.</para>
 </listitem>
 <listitem>
-<para>In the <guilabel>Composer</guilabel> you can select text and
-drag it around with the mouse.</para>
-</listitem>
-<listitem>
 <para>Although &kmail; can be considered reliable you should keep 
 backups of your messages, &ie; just copy the files in <filename class="directory">~/Mail</filename>
-to a safe place.</para>
+(including the hidden ones that start with a dot) to a safe place.</para>
 </listitem>
 <!-- TODO: add other tips for "invisible" features here -->
 
@@ -122,7 +122,7 @@ url="http://lists.kde.org/?l=kde-kmail&amp;r=1&amp;w=2">lists.kde.org</ulink>.</
 
 <para>Please report bugs in &kmail; using
 <menuchoice><guimenu>Help</guimenu><guimenuitem>Report
-bug...</guimenuitem></menuchoice>.</para>
+Bug...</guimenuitem></menuchoice>.</para>
 
 <para>We hope you will enjoy &kmail;!</para>
 
@@ -147,10 +147,10 @@ appendix</link>.</para>
 so &kmail; will be able to properly retrieve and send your
 messages.</para>
 
-<para>The Configure window consists of seven sections:
+<para>The Configure window consists of six sections:
 <guilabel>Identity</guilabel>, <guilabel>Network</guilabel>,
-<guilabel>Appearance</guilabel>, <guilabel>Composer</guilabel>, <guilabel>Mime
-Headers</guilabel>, <guilabel>Security</guilabel>, and
+<guilabel>Appearance</guilabel>, <guilabel>Composer</guilabel>, 
+<guilabel>Security</guilabel>, and
 <guilabel>Miscellaneous</guilabel>.</para>
 
 <para>To begin sending and receiving messages you will only have to
@@ -164,24 +164,22 @@ change the settings in the <guilabel>Identity</guilabel> and
 straightforward. Fill in the <guilabel>Name</guilabel> field with your
 full name (&eg; <userinput>John Doe</userinput>) and the
 <guilabel>Organization</guilabel> field (optional) with the appropriate
-information. Next, fill in the <guilabel>Email Address</guilabel> and
-the <guilabel>Reply-To Address</guilabel> (optional) field with your
-email address. If you are using <application>PGP</application> or
-<application>GnuPG</application> you need to set an identity in 
-the <guilabel>OpenPGP Key</guilabel> field.</para>
+information. Next, fill in the <guilabel>Email Address</guilabel> field with your
+email address (&eg; <userinput>john@somewhere.org</userinput>). If you are 
+using <application>PGP</application> or
+<application>GnuPG</application> you need to set your identity in 
+the <guilabel>OpenPGP Key</guilabel> field in the <guilabel>Advanced</guilabel>
+tab. Optionally, go to the <guilabel>Signature</guilabel> tab and
+enter your signature.</para>
 
-<para>Optionally, set the location of your signature file in the
-<guilabel>Signature File</guilabel> field. If you want a random 
-signature, you may specify a program <!-- TODO: like
-"fortune"? --> and check the <guilabel>The file is a program</guilabel>
-box.</para>
-
+<!--###fixme?
 <para>If you add a new identity, an <guilabel>Add
 Transport...</guilabel> button will appear (this button does not exist
 for the <guilabel>Default</guilabel> identity). It allows you to
 configure a way of sending messages for a specific identity, &eg; you
 might want to use a different <acronym>SMTP</acronym> server for one of
 your identities.</para>
+-->
 
 </sect1>
 
@@ -189,26 +187,35 @@ your identities.</para>
 <title>Setting up your Account</title>
 
 <para>The <guilabel>Network</guilabel> tab contains the settings that
-tell &kmail; how to send and receive your email. Many of these settings
+tell &kmail; how to send and receive your email messages. Many of these settings
 can vary greatly depending on the setup of your system and on the kind
 of network that your mail server is located. If you do not know what
 setting to choose or what to put in a field, consult your Internet
-Service Provider (<acronym>ISP</acronym>) or System
-Administrator.</para>
+Service Provider (<acronym>ISP</acronym>) or system
+administrator.</para>
 
 <sect2 id="sending-mail">
-<title>Sending Mail</title>
+<title>Sending</title>
 
-<para>The <guilabel>Sending Mail</guilabel> section provides two options
-for sending messages: <guilabel>sendmail</guilabel> and
-<guilabel>SMTP</guilabel>. <application>Sendmail</application> has a
+<para>The <guilabel>Sending</guilabel> tab provides a list of
+ways to send messages. The first item in the list is the default
+way to send messages. Using the <guibutton>Add...</guibutton>
+button you can choose between two different ways of sending messages:
+<guilabel>sendmail</guilabel> and
+<guilabel>SMTP</guilabel>. &Sendmail; here
+means a local software installation - this has a
 reputation of being difficult to set up, so if you do not already have a
-working <application>sendmail</application> configuration, choose
-<guilabel>SMTP</guilabel> and fill in the <guilabel>Server</guilabel>
-field with the name and domain of your mail server. You will probably
+working &Sendmail; configuration, choose
+<guilabel>SMTP</guilabel> and fill in the <guilabel>Name</guilabel>
+field with a descriptive name 
+(&eg; <userinput>My Mail Account</userinput>)
+and the <guilabel>Host</guilabel>
+field with the name and domain of your mail server 
+(&eg; <userinput>smtp.provider.com</userinput>). You will probably
 not need to change the <guilabel>Port</guilabel> setting (the default is
 <userinput>25</userinput>).</para>
-        
+
+<!-- TODO: more specific link -->
 <para>If you do want to use &Sendmail; and you are using a dial-up
 connection, follow the instructions for setting up sendmail for a
 dial-up connection in the <link linkend="faq">&FAQ;</link>
@@ -221,38 +228,29 @@ different identities by adding them with the <guilabel>Add
 Transport...</guilabel> button in the <guilabel>Identity</guilabel>
 section.</para>
 
-</sect2>
-
-<sect2 id="sending">
-<title>Sending</title>
-
-<para>The <guilabel>Sending</guilabel> section lets you configure how
-and when messages are sent.</para>
-        
-<!-- fixme: move         
-<para>With <guilabel>Precommand</guilabel> you can specify a command 
-that will be executed before your messages will be sent. Note that
-this is not available <guilabel>Sendmail</guilabel>.</para>
--->
+<para>A description of the other options can be found
+in the <link linkend="configure-network-sending">Configuration</link>
+chapter.</para>
 
 </sect2>
 
 <sect2 id="receiving-mail">
-<title>Incoming Mail</title>
+<title>Receiving</title>
 
 <para>To set up an account so you can receive mail, press the
-<guibutton>Add...</guibutton> button in the <guilabel>Incoming Mail</guilabel>
-section. You will then be prompted for the type of account.  Most users should
+<guibutton>Add...</guibutton> button in the <guilabel>Receiving</guilabel>
+tab. You will then be prompted for the type of account.  Most users should
 select <guilabel>Pop3</guilabel> or <guilabel>IMAP</guilabel>.</para>
         
-<para>After pressing <guibutton>OK</guibutton> you will be presented with
+<para>You will then be presented with
 the <guilabel>Add Account</guilabel> window. First, fill in the
 <guilabel>Name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Host</guilabel> should be filled in with the appropriate information
-from your <acronym>ISP</acronym> or System Administrator. You should not
+from your <acronym>ISP</acronym> or system administrator. You should not
 need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
-<userinput>110</userinput>, the default for <acronym>IMAP</acronym> is <userinput>143</userinput>).</para>
+<userinput>110</userinput>, the default for <acronym>IMAP</acronym> is
+<userinput>143</userinput>).</para>
         
 <sect3 id="receiving-mail-imap">
 <title>Options only relevant to <acronym>IMAP</acronym></title>
@@ -260,20 +258,20 @@ need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
 <para>If you are using <acronym>IMAP</acronym>, you can optionally
 specify a path in the <guilabel>Prefix to folders</guilabel> field. This
 tells &kmail; where it can find your folders on the server. If you also
-have a shell account on the server and the mails are stored in your home
-directory it might be useful to store the mails in a subdirectory
+have a shell account on the server and the messages are stored in your home
+directory it might be useful to store the messages in a subdirectory
 <filename class="directory">/Mail/</filename>. Use this as a value in
 the <guilabel>Prefix to folders</guilabel> field so that &kmail; does
 not mix up mailbox files and other files. Note that even with a slash as the
 first character, this path is interpreted relatively to your home directory.
 If you are not interested in this feature, simple leave the field blank.</para>
 
-<para>If you check <guilabel>Automatically expunge deleted
-messages</guilabel> &kmail; removes the mails you deleted from the
-server as soon as you leave a folder. Otherwise the mails are
+<para>If you check <guilabel>Automatically compact folders</guilabel> 
+&kmail; removes the messages you deleted from the
+server as soon as you leave a folder. Otherwise the messages are
 only marked as deleted and it is up to you to compact the folders
-manually by using the menu item <guimenuitem>Compact all
-folders</guimenuitem>.</para>
+manually by using the menu item <guimenuitem>Compact All
+Folders</guimenuitem>.</para>
           
 <para>If you check <guilabel>Show hidden folders</guilabel>,
 folders whose name starts with a dot are also displayed.</para>
@@ -288,9 +286,9 @@ leave your messages on the server after you downloaded it.</para>
 
 <para>Select <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> if you
 don't want to check this account whenever you use <menuchoice><guimenu>Check
-mail</guimenu></menuchoice>.  You can still check for new messages on this account
+Mail</guimenu></menuchoice>.  You can still check for new messages on this account
 with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
-in</guimenuitem></menuchoice>.</para>
+In</guimenuitem></menuchoice>.</para>
 
 <para>Select <guilabel>Enable interval mail checking</guilabel> if you want
 &kmail; to check for new messages automatically. The interval can be specified below
@@ -311,12 +309,13 @@ that &kmail; will not continue until the program returns.</para>
 <sect3 id="receiving-mail-imap-pop3">
 <title>Options for both <acronym>IMAP</acronym> and POP3</title>
 
+<!-- TODO: move all this, this isn't important for beginners?! -->
 <para>If you select <guilabel>Store POP password in configuration
 file</guilabel> resp. <guilabel>Store IMAP password in configuration
 file</guilabel> &kmail; will remember your password so you won't have to
 type it every time you start &kmail; and fetch new mail.</para>
 
-<warning><para>Be warned that we cannot really encrypt your password, so
+<warning><para>Be warned that &kmail; cannot really encrypt your password, so
 people who can access your configuration files (&eg; system
 administrators) can easily get your password if you select this
 option.</para></warning>
@@ -326,16 +325,20 @@ option.</para></warning>
 if it is available).</para>
 
 <para>For POP3 &kmail; supports <guilabel>Clear text</guilabel>,
-<guilabel>PLAIN</guilabel>, <guilabel>CRAM-MD5</guilabel> and
-<guilabel>APOP</guilabel> authentication.  <guilabel>APOP</guilabel> and
+<guilabel>PLAIN</guilabel>, <guilabel>LOGIN</guilabel>, <guilabel>CRAM-MD5</guilabel>,
+<guilabel>DIGEST-MD5</guilabel> and
+<guilabel>APOP</guilabel> authentication.
+<!-- fixme: still correct?: -->
+<guilabel>APOP</guilabel> and
 <guilabel>CRAM-MD5</guilabel> are secure on their own, all the other
 options are only secure when used together with <guilabel>SSL</guilabel>
 or <guilabel>TLS</guilabel>.  You should only use <guilabel>Clear
 text</guilabel> if your server doesn't support any of the other
 authentication methods. Additionally, for <acronym>IMAP</acronym>
-<guilabel>Anonymous</guilabel> is supported.</para>
+<guilabel>Anonymous</guilabel> is supported, but <guilabel>APOP</guilabel>
+is not.</para>
 
-<para>You are now ready to send and receive mail! For
+<para>You are now ready to send and receive mail. For
 <acronym>IMAP</acronym>, click on the <guilabel>+</guilabel> sign in the
 folder tree in &kmail;'s main window. &kmail; then connects to your
 server and displays the folders it finds. For POP3 use
@@ -360,8 +363,8 @@ Message...</guimenuitem></menuchoice> menu item.  The
 <guilabel>Composer</guilabel> window will appear. Fill in the
 <guilabel>To:</guilabel> field with your email address and type
 something in the <guilabel>Subject</guilabel> field. Send the message by
-selecting <menuchoice><guimenu>Message</guimenu> <guimenuitem>Send
-now</guimenuitem></menuchoice>.</para>
+selecting <menuchoice><guimenu>Message</guimenu> <guimenuitem>Send</guimenuitem>
+</menuchoice>.</para>
       
 <para>To check your email, select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check
@@ -372,7 +375,7 @@ congratulations!  If, however, you receive any error messages while
 testing your setup, make sure that your network connection is working
 and recheck your settings by selecting
 <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Configure
-&kmail;...</guimenuitem></menuchoice></para>
+&kmail;...</guimenuitem></menuchoice>.</para>
 
 </sect1>
 
@@ -392,8 +395,9 @@ when &kmail; is started. It is divided into three panes:</para>
 <term>Folders pane (left pane)</term>
 <listitem>
 <para>This pane contains a list of your message folders (other email programs
-call them mailboxes). If there is a number after the folder name this indicates
-that this folder contains unread mails. To select a folder, simply click on
+may call them mailboxes). If there is a number after the folder name this indicates
+that this folder contains unread messages.<!-- fixme: except outbox -->
+ To select a folder, simply click on
 it. The messages contained in the folder will now appear in the Headers
 pane. The number of unread messages and the total number of messages in the
 selected folder is now displayed in the status bar.  The folders can be
@@ -410,7 +414,7 @@ folders.</para>
 <term>Headers pane (upper right pane)</term>
 <listitem>
 <para>This pane lists header information (message Status Flags, Sender, Subject,
-Date, optionally Size and Score) for the messages in the currently selected folder. Clicking on a header
+Date, optionally Size) for the messages in the currently selected folder. Clicking on a header
 will select that message and display it in the Message pane. You can also select
 a series of messages by clicking on one message, holding down the
 &Shift; key, and clicking on another message. The two messages
@@ -425,13 +429,13 @@ Similarly, if you click on the <guilabel>Date</guilabel>
 column, you can toggle sorting between <guilabel>Date</guilabel> ascending/descending and 
 <guilabel>Date (Order of Arrival)</guilabel> ascending/descending. Note that
 the latter doesn't sort by the date messages arrived, but it sorts by 
-the order in which messages were inserted into a folder.<!-- fixme: correct? --></para>
+the order in which messages were inserted into a folder.<!-- fixme: still correct? --></para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term>Message pane (lower right pane)</term>
 <listitem>
-<para>This pane displays the header and body of the currently selected
+<para>This pane displays the currently selected
 message. Attachments appear at the bottom of the message. 
 You can scroll through the message page by page
 using the <keycap>Page Up</keycap> and <keycap>Page down</keycap> keys, or line
@@ -484,65 +488,6 @@ action="simul">&Ctrl;<keycap>-</keycap></keycombo></entry>
 </varlistentry>
 </variablelist>
 
-<para>Messages can have one (not more) of several status flags, which can be changed from
-the <menuchoice><guimenu>Message</guimenu><guimenuitem>Set
-Status</guimenuitem></menuchoice> submenu. The status flags are described
-below:</para>
-
-<!-- TODO: I think it's worth adding inline images here, at some -->
-<!-- point. LW. -->
-
-<informaltable>
-<tgroup cols="2">
-<thead>
-<row>
-<entry>Status</entry>
-<entry>Symbol</entry>
-<entry>Meaning</entry>
-</row>
-</thead>
-<tbody>
-<row>
-<entry><guimenuitem>New</guimenuitem></entry>
-<entry>Red dot</entry>
-<entry>The message has been received for the first time, and is unread.</entry>
-</row>
-<row>
-<entry><guimenuitem>Unread</guimenuitem></entry>
-<entry>Green dot</entry>
-<entry>The message has already been retrieved off the server at least once, but
-has not yet been read.</entry>
-</row>
-<row>
-<entry><guimenuitem>Read</guimenuitem></entry>
-<entry>Dash</entry>
-<entry>The message has been read</entry>
-</row>
-<row>
-<entry><guimenuitem>Replied</guimenuitem></entry>
-<entry>Blue u-turn arrow</entry>
-<entry>A reply has been composed to this message.</entry>
-</row>
-<row>
-<entry><guimenuitem>Queued</guimenuitem></entry>
-<entry>Envelope</entry>
-<entry>The message has been queued in the outbox to be sent later.</entry>
-</row>
-<row>
-<entry><guimenuitem>Sent</guimenuitem></entry>
-<entry>Angled envelope</entry>
-<entry>The message has been sent.</entry>
-</row>
-<row>
-<entry><guimenuitem>Flagged</guimenuitem></entry>
-<entry>Flag</entry>
-<entry>This status will not automatically be set by &kmail;. You can use it freely to mark 
-messages that are in some way important to you.</entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-
 </sect1>
 
 <sect1 id="the-composer-window">
@@ -550,19 +495,15 @@ messages that are in some way important to you.</entry>
 
 <para>The <guilabel>Composer</guilabel> window is used to write new messages.
 It can be invoked from the <menuchoice><guimenu>Message</guimenu></menuchoice>
-menu or from the <guiicon>document</guiicon> icon on the <guilabel>Mail
-Reader</guilabel> window button bar.  If you have not set the location of your
-signature file and you have <guilabel>Use a signature from file</guilabel>
-checked in the <guilabel>Composer</guilabel> tab of the
-<guilabel>Configure &kmail;...</guilabel> dialog, you will be prompted for the location of
-your signature file before the <guilabel>Composer</guilabel> window
-opens.</para>
+menu or from the <guiicon>New Message</guiicon> icon on the <guilabel>Mail
+Reader</guilabel> window button bar.</para>
 
 <sect2 id="composing-a-message">
 <title>Composing a Message</title>
 
 <para>To write your message, fill in the appropriate fields in the
-<guilabel>Composer</guilabel> window. There are a variety of shortcuts to help
+<guilabel>Composer</guilabel> window. Use the <guimenu>View</guimenu> menu
+to select which header fields are displayed. There are a variety of shortcuts to help
 you with writing your messages. The <guiicon>ellipsis</guiicon> buttons next to
 the <guilabel>To:</guilabel>, <guilabel>Cc:</guilabel>, and
 <guilabel>Bcc:</guilabel> fields will call up the address book so that you can
@@ -579,13 +520,14 @@ a different completion mode.</para>
 recipient in one of the fields, use a comma to separate each address
 from the next one. You may need to specify fully qualified addresses
 (&ie; <userinput>user@domain.com</userinput>) even for local
-users.</para>
+users, depending on your sysetm configuration.</para>
 
-<para>You can use the <menuchoice><guimenu>View</guimenu></menuchoice> menu to
-set up the header fields offered to you. When you are finished with your
-message, hit the <guiicon>Send</guiicon> button (the envelope) to queue or send
-the message. If you don't want to send your message yet, select
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Save in drafts folder</guimenuitem></menuchoice>.
+<para>When you are finished with your
+message, click the <guiicon>Send</guiicon> icon (the envelope) to send
+the message now, or click the <guiicon>Queue</guiicon> icon to put
+the message in the outbox. If your message isn't finished yet, select
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Save in drafts
+folder</guimenuitem></menuchoice>.
 </para> 
 
 </sect2>
@@ -611,29 +553,29 @@ to attach.</para>
 </listitem>
 </itemizedlist>
 
-<para>The <guilabel>Message Part Properties</guilabel> dialog will appear to
-prompt you for information about your attachment. The &MIME;-type and 
-<guilabel>Name</guilabel>
-fields are automatically filled in with the appropriate values. Sometimes the
-&MIME;-type value may be wrong. You can then type in any content &MIME;-type or
+<para>Once a file is attached to your message, it appears in the attachments
+pane at the bottom of the <guilabel>Composer</guilabel> window. You can use the
+&RMB; on each attachment to <guimenuitem>View</guimenuitem>,
+<guimenuitem>Save</guimenuitem> or <guimenuitem>Remove</guimenuitem>
+the attachment.</para>
+
+<para>Use the <guimenuitem>Properties...</guimenuitem> item to
+open the <guilabel>Message Part Properties</guilabel> dialog.
+The first field contains the attachment's &MIME;-type. Just like the <guilabel>Name</guilabel>
+field, it should be automatically filled with an appropriate value. Sometimes the
+&MIME;-type value may be wrong. You can then type in any &MIME;-type or
 choose from the list of common &MIME;-types. You can also select an encoding
 method for your file from the list of encoding options (normally, the default
-value works fine).</para>
-
-<para>Once a file is attached to your message, it appears in the Attachments
-pane at the bottom of the <guilabel>Composer</guilabel> window. You may remove,
-save, or get information about an attachment by selecting its name in the
-Attachments pane and selecting
-<menuchoice><guimenuitem>Remove</guimenuitem></menuchoice>,
-<menuchoice><guimenuitem>Save...</guimenuitem></menuchoice>, or
-<menuchoice><guimenuitem>Properties...</guimenuitem></menuchoice> from the
-<menuchoice><guimenu>Attach</guimenu></menuchoice> menu. </para>
+value works fine). Check the <guilabel>Suggest automatic display</guilabel> option 
+if you want to suggest to the recipient the automatic (inline) display of this part 
+in the message preview, instead of the default icon view.</para>
 
 <para><application>PGP</application>/<application>GnuPG</application> keys may also 
 be attached to your message by using the appropriate options in the
 <menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>PGP</application>
 key attachments are handled like file attachments.</para>
 
+<!-- TODO: "fixed" in the future? -->
 <!-- copied from below -->
 <warning><para>You can encrypt your messages sent with &kmail;, but this does
 not mean that the attachments are encrypted. You have to encrypt your
@@ -651,7 +593,7 @@ them.</para></warning>
 <guimenuitem>Spelling...</guimenuitem></menuchoice>. &kmail; uses &kspell; to
 check spelling, which is the &kde; frontend to the 
 <application>ispell</application> or <application>aspell</application> spelling
-checker. Note that you may need to configure the spellchecker using
+checker. Note that you may first need to configure the spellchecker using
 <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Spellchecker...</guimenuitem></menuchoice>.</para>
 
@@ -699,7 +641,8 @@ mail. </para>
 <varlistentry>
 <term><guilabel>drafts:</guilabel></term>
 <listitem>
-<para>Contains messages you started to edit but didn't finish.</para>
+<para>Contains messages you started to edit but then saved to this
+folder instead of sending them.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -714,6 +657,7 @@ appear. If you ever need to change the settings for a folder, select the folder
 you wish to modify in the Folders pane and select
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Properties...</guimenuitem>
 </menuchoice>.</para>
+<!-- TODO: link to more detailed desc. of all options -->
 
 <para>To move messages from one folder into another, select the message(s) you
 want to move and press the <keycap>M</keycap> key or select
@@ -724,44 +668,16 @@ by dragging them from the Headers pane into the Folders pane.</para>
 
 <para>If you want to clear all of the messages out of a folder choose
 <menuchoice><guimenu>Folder</guimenu><guimenuitem>Empty</guimenuitem></menuchoice>.
-All the messages in the selected folder will be moved to the trash folder. If
+All the messages in the selected folder will then be moved to the trash folder. If
 the selected folder is the <guilabel>trash</guilabel> folder, all of the
 messages will be permanently deleted.</para>
 
-</sect1>
-
-<sect1 id="the-address-book">
-<title>The Address Book</title>
-
-<para>An address book lets you store your commonly used email
-addresses. You can call up the address book from the
-<menuchoice><guimenu>File</guimenu></menuchoice> menu, the address book button
-on the Main window, or the <guiicon>address book</guiicon> button in the
-<guilabel>Composer</guilabel> window.</para>
-
-<para>You can choose between different types of address books in the
-<guilabel>Appearance</guilabel>/<guilabel>Addressbook</guilabel> section in
-&kmail;'s <guilabel>Configure &kmail;...</guilabel> dialog.</para>
-
-<para>The default address book is &kaddressbook;, which has <ulink
-url="help:/kaddressbook">its own documentation</ulink>.</para>
-
-<sect2 id="the-address-book-simple">
-<title>&kmail;'s simple <quote>traditional</quote> address book</title>
-
-<para>To add addresses to the address book, type an email address into the lower
-section of the window and hit the <guibutton>Add</guibutton> button. The
-address will then appear on top of the list (the next time you open the address
-book it will have its place according to the alphabetical order).
-To remove an address, select it
-from the list and hit the <guibutton>Remove</guibutton> button. </para>
-
-<para>Addresses can also be added to the address book from the <guilabel>Mail
-Reader</guilabel> window by &RMB; clicking on an email address in the
-<guilabel>To:</guilabel> or <guilabel>From:</guilabel> fields and selecting
-<guilabel>Add to address book</guilabel>.</para>
-
-</sect2>
+<para>You can use 
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Remove</guimenuitem></menuchoice>
+to remove a folder and all its messages if you choose <guibutton>Remove</guibutton>
+from the appearing confirmation dialog, but unlike with
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Empty</guimenuitem></menuchoice>
+there's no way to get the contents of the folder back.</para>
 
 </sect1>
 
@@ -804,24 +720,18 @@ linkend="filter-dialog">filter dialog</link> to those messages.</para>
 to use <menuchoice><guimenu>Message</guimenu><guimenuitem>Create
 Filter</guimenuitem></menuchoice>. This will call the filter dialog
 and present you with a new filter which has the first rule of the
-search pattern and the first action (as <quote>move to folder</quote>) preset. In
+search pattern and the first action (as <guilabel>move to folder</guilabel>) preset. In
 most cases, all you have to do is select the folder where the message
 should be moved to. But you can, of course, edit the filter as you
 like.</para>
 
 <para>The interesting thing about this method is that creating a
 filter on mailing lists will try really hard to find a criterion that
-uniquely identifies mails from that list. If it succeeds, the guessed
+uniquely identifies messages from that list. If it succeeds, the guessed
 name of the list is presented in the
 <menuchoice><guimenu>Message</guimenu><guisubmenu>Create
 Filter</guisubmenu><guimenuitem>Filter on
 Mailing-List...</guimenuitem></menuchoice> menu entry.</para>
-
-<!-- This is now done automatically
-<tip><para>In most cases this works very well, yet sometimes you
-should delete parts of the header contents that are likely to change
-again. Usually, just keeping the list address works best.</para></tip>
--->
 
 <para>The second method is to manually construct a filter from scratch
 by calling the filter dialog through
@@ -840,11 +750,8 @@ filters.</para>
 <para>You reach it either via
 <menuchoice><guimenu>Message</guimenu><guisubmenu>Create
 Filter</guisubmenu></menuchoice> or
-<menuchoice><guimenu>Settings</guimenu><guimenuitem>Filter
-Rules...</guimenuitem></menuchoice>.</para>
-
-<para>To exit this dialog without applying changes, click on
-<guibutton>Cancel</guibutton> or hit &Esc;.</para>
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure 
+Filters...</guimenuitem></menuchoice>.</para>
 
 <para>The dialog is divided into four main sections:</para>
 <variablelist>
@@ -869,13 +776,8 @@ additional (initially empty) rule if you want to define more complex
 patterns and on <guibutton>Fewer</guibutton> to remove the last
 rule. <guibutton>Clear</guibutton> clears the pattern, &ie; it removes
 all but two rules from screen and resets those two.</para>
-
-<para>Invalid or empty rules are not evaluated. In fact, they are
-removed internally. Whether a given rule is considered invalid depends
-on the type of rule, but as a rule of thumb you can assume that rules
-are considered invalid if any one of the two edit fields is
-empty. Thus, to effectively delete a particular rule, you only need to
-clear one of those two edit fields.</para></listitem>
+<para>Invalid or empty rules are not evaluated.</para>
+</listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Filter Actions</guilabel></term> <listitem><para>In
@@ -889,26 +791,20 @@ empty action if you want to define more than one action and on
 <guibutton>Fewer</guibutton> to remove the last
 action. <guibutton>Clear</guibutton> clears the list, &ie; it
 removes all but one action and resets that one.</para>
-
-<para>Invalid or empty actions are not executed. In fact, they are
-removed internally. Whether a given action is considered invalid
-depends on the type of action, but as a rule of thumb you can assume
-that actions are considered empty if no type is selected or - in case
-of actions that need a textual parameter (&ie; one which must be
-entered into a line edit) - the parameter is empty. Thus, to
-effectively delete a particular action, you only need to unset its
-type, &ie; select the last (empty) item in the type drop-down
-list.</para></listitem>
+<para>Invalid or empty actions are not executed.</para>
+</listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>Advanced options</guilabel></term><listitem><para> In
+<term><guilabel>Advanced Options</guilabel></term>
+<listitem><para> In
 this group you can define a few advanced options for filters that
-allow you to refine your filtering.</para> <para>Using the first row
+allow you to refine your filtering.</para>
+<para>Using the first row
 of check boxes, you can toggle the applicability of the corresponding
 filter: The <guilabel>incoming messages</guilabel> check shows whether
-it may be considered for incoming mails (&ie; on <guimenuitem>Check
+it may be considered for incoming messages (&ie; on <guimenuitem>Check
 Mail</guimenuitem>). The <guilabel>sent messages</guilabel> check
-shows the same for sent mails (&ie; <emphasis>after</emphasis>
+shows the same for sent messages (&ie; <emphasis>after</emphasis>
 <guimenuitem>Send</guimenuitem>) and the <guilabel>manual
 filtering</guilabel> check controls whether to apply this filter when
 filtering manually (&ie; via <menuchoice><guimenu>Message</guimenu>
@@ -922,12 +818,6 @@ rename them using the <guibutton>Rename...</guibutton> button.
 The dialog assumes that it should continue auto-naming the filter
 as long as the filter name starts with <quote>&lt;</quote>.
 </para></note>
-
-<para>Click on the <guibutton>OK</guibutton> button to apply all
-changes and close the dialog, <guibutton>Apply</guibutton> to apply
-all changes and leave the dialog open, and
-<guibutton>Cancel</guibutton> to close the dialog without applying any
-changes.</para>
 
 <note>
 <para>If you apply filter changes, via
@@ -1017,6 +907,7 @@ folder</guilabel>. Here's a list of all possible actions:</para>
 <listitem>
 <para>This will move the message to another folder. You currently 
 cannot use <acronym>IMAP</acronym> folders as a target.</para>
+<!-- fixme: still correct? -->
 </listitem>
 </varlistentry>
 <!-- TODO: does not exist yet
@@ -1030,17 +921,17 @@ folders as a target.</para></caution>
 </varlistentry>
 -->
 <varlistentry>
-<term><guilabel>mark as</guilabel></term>
-<listitem>
-<para>This allows you to mark the message as read or important (flagged), but
-also as forwarded, replied, &etc;</para>
-</listitem>
-</varlistentry>
-<varlistentry>
 <term><guilabel>set identity to</guilabel></term>
 <listitem>
 <para>This will set <emphasis>your</emphasis> identity if you reply to this
 message.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>mark as</guilabel></term>
+<listitem>
+<para>This allows you to mark the message as read or important (flagged), but
+also as forwarded, replied, &etc;</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1089,6 +980,45 @@ makes tracking of such things as spam very easy for the sender.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
+<term><guilabel>execute command</guilabel></term>
+<listitem>
+<para>This will execute a program, but will not modify the
+message. Specify the full path to the program you want to
+execute. &kmail; will block until the program returns. You can feed
+the program with the parts of the mail: <symbol>&percnt;0</symbol>,
+<symbol>&percnt;1</symbol>, &etc; will stand for files representing
+the message parts. For common messages <symbol>&percnt;0</symbol> is the
+text, <symbol>&percnt;1</symbol> the first attachment and so
+on. Additionally, the whole message is fed into the program's
+<acronym>stdin</acronym>.</para>
+
+<!-- fixme: still correct? -->
+<caution><para>This currently only works if the message has
+<emphasis>at least one</emphasis> attachment. No, not even
+<symbol>&percnt;0</symbol> will work in the general
+case!</para></caution>
+
+<tip><para> You can enter arbitrarily complex shell commands here,
+since &kmail; uses a subshell to execute the command line. Therefore,
+even this command will work (within its limits):
+<userinput><command>uudecode</command> <option>-o</option>
+<parameter>$(mktemp kmail-uudecoded.XXXXXX)</parameter> &amp;&amp;
+<command>echo</command> <parameter>$'\a'</parameter></userinput></para></tip>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>pipe through</guilabel></term>
+<listitem>
+<para>This will feed the message to a program. If that program returns
+output, the entire message (including the headers) will be replaced
+with this output. If the program doesn't return output, the message
+won't change.  Specify the full path to the program.</para>
+<caution><para>Be cautious with this action, as it will easily mess up
+your messages if the filter program does return garbage or extra
+lines.</para></caution>
+</listitem>
+</varlistentry>
+<varlistentry>
 <term><guilabel>remove header</guilabel></term>
 <listitem>
 <para>Will remove <emphasis>all</emphasis> header fields with the
@@ -1123,44 +1053,6 @@ third form) number or <userinput>0</userinput>. These constructs are
 interpreted as backreferences to substrings captured with parentheses
 in the search string.</para><para>Analogous restrictions as in the
 <guilabel>add header</guilabel> action apply here, too.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>execute command</guilabel></term>
-<listitem>
-<para>This will execute a program, but will not modify the
-message. Specify the full path to the program you want to
-execute. &kmail; will block until the program returns. You can feed
-the program with the parts of the mail: <symbol>&percnt;0</symbol>,
-<symbol>&percnt;1</symbol>, &etc; will stand for files representing
-the message parts. For common mails <symbol>&percnt;0</symbol> is the
-text, <symbol>&percnt;1</symbol> the first attachment and so
-on. Additionally, the whole message is fed into the program's
-<acronym>stdin</acronym>.</para>
-
-<caution><para>This currently only works if the message has
-<emphasis>at least one</emphasis> attachment. No, not even
-<symbol>&percnt;0</symbol> will work in the general
-case!</para></caution>
-
-<tip><para> You can enter arbitrarily complex shell commands here,
-since &kmail; uses a subshell to execute the command line. Therefore,
-even this command will work (within its limits):
-<userinput><command>uudecode</command> <option>-o</option>
-<parameter>$(mktemp kmail-uudecoded.XXXXXX)</parameter> &amp;&amp;
-<command>echo</command> <parameter>$'\a'</parameter></userinput></para></tip>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>pipe through</guilabel></term>
-<listitem>
-<para>This will feed the message to a program. If that program returns
-output, the entire message (including the headers) will be replaced
-with this output. If the program doesn't return output, the message
-won't change.  Specify the full path to the program.</para>
-<caution><para>Be cautious with this action, as it will easily mess up
-your messages if the filter program does return garbage or extra
-lines.</para></caution>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1198,8 +1090,8 @@ List messages is that they always contain
 almost unique, because this fails for cross-posted messages.</para>
 </step>
 <step>
-<para>Select <menuchoice><guimenu>Settings</guimenu><guimenuitem>Filter
-Rules...</guimenuitem></menuchoice>.</para>
+<para>Select <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure 
+Filters...</guimenuitem></menuchoice>.</para>
 </step>
 <step>
 <para>Press the <guibutton>New</guibutton> button to create an empty
@@ -1309,7 +1201,8 @@ them.</para></warning>
 output. This output is often different between different version of
 <application>PGP</application>, so it's important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
-<emphasis>not</emphasis> warn you if something fails. You better enable <guilabel>Show ciphered text
+<emphasis>not</emphasis> warn you if something fails. You better enable 
+<guilabel>Show ciphered/signed text
 after composing</guilabel>.  </para></warning>
 
 <para>To setup and use <application>PGP</application> support in &kmail; it is
@@ -1352,11 +1245,23 @@ co-operation between &kmail; and <application>pgp</application>.</para>
 
 <para>Enter your <application>PGP</application> user identity in the
 corresponding field of the <guilabel>Identity</guilabel> settings.
-Then select the <guilabel>PGP</guilabel> tab on
+Then select the <guilabel>OpenPGP</guilabel> tab on
 the <guilabel>Security</guilabel> settings page. There you'll find the
 following options:</para>
 
 <variablelist>
+
+<varlistentry>
+<term><guilabel>Encryption tool</guilabel></term>
+<listitem>
+<para>Here you can choose if you want to use <application>PGP</application>,
+<application>GnuPG</application> or no encryption
+software at all. Of course the program you select has to be
+installed on your system. It is also important to select the correct
+version.</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term><guilabel>Keep passphrase in memory</guilabel></term>
 <listitem>
@@ -1379,7 +1284,7 @@ you too.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Show ciphered text after composing</guilabel></term>
+<term><guilabel>Show ciphered/signed text after composing</guilabel></term>
 <listitem>
 <para>This will show you the result of encrypting and signing before the message
 gets sent. This way you can still cancel sending if encrypting failed. It is
@@ -1387,16 +1292,14 @@ strongly recommended to use this option.</para>
 </listitem>
 </varlistentry>
 
+<!-- fixme: what's this??
 <varlistentry>
-<term><guilabel>Encryption tool</guilabel></term>
+<term><guilabel>Always show the encryption keys for approval</guilabel></term>
 <listitem>
-<para>Here you can choose if you want to use <application>PGP</application>,
-<application>GnuPG</application> or no encryption
-software at all. Of course the program you select has to be
-installed on your system. It is also important to select the correct
-version.</para>
+<para></para> 
 </listitem>
 </varlistentry>
+-->
 </variablelist>
 
 <para>On the <guilabel>Composer</guilabel> tab you can also check the
@@ -1408,7 +1311,7 @@ set the signing option for each message manually.)</para>
 encrypted messages and to let them verify your signature you
 must send them your public key or upload your public key to a public
 <application>PGP</application> key server so that they can fetch your key from there.
-To send encrypted mails to other people or to verify their signed
+To send encrypted messages to other people or to verify their signed
 messages you will need their public keys.  You can store your public key(s) on a
 public <application>PGP</application> key server such as <ulink
 url="http://www.cam.ac.uk.pgp.net/pgpnet/">http://www.cam.ac.uk.pgp.net/pgpnet/</ulink>.</para>
@@ -1496,7 +1399,7 @@ can choose the appropriate key from the list or cancel the action.
 process.</para>
 
 <para>As mentioned above, you won't be able to read your own encrypted sent
-mails if you don't check <guilabel>Always encrypt to self</guilabel> in the
+messages if you don't check <guilabel>Always encrypt to self</guilabel> in the
 setting's <guilabel>Security</guilabel> tab.</para>
 
 </sect2>
@@ -1599,8 +1502,6 @@ entry in the <guilabel>Existing identities</guilabel> popup.</para>
 </listitem>
 </varlistentry>
 </variablelist>
-<para>Hit <guibutton>OK</guibutton> to create the new identity or
-<guibutton>Cancel</guibutton> to abort creation.</para>
 </sect2>
 
 <sect2 id="configure-identity-general">
@@ -1635,13 +1536,11 @@ name</emphasis>).</para>
 </listitem>
 </varlistentry>
 </variablelist>
-<note>
-<para>If your email address is <replaceable>Joe User
+<para>So if your email address is <replaceable>Joe User
 &lt;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
 User</userinput> into the <guilabel>Name</guilabel> field and
 <userinput>joe@example.com</userinput> into the <guilabel>Email
 Address</guilabel> field.</para>
-</note>
 </sect2>
 
 <sect2 id="configure-identity-advanced">
@@ -1654,7 +1553,7 @@ selected identity.</para>
 <varlistentry>
 <term><guilabel>Reply-To Address</guilabel></term>
 <listitem>
-<para>Enter the address to which replies to your mails should be
+<para>Enter the address to which replies to your messages should be
 sent. Only fill out this field if it is different from your normal
 address (specified using the <guilabel>Name</guilabel> and
 <guilabel>Email Address</guilabel> on the <link
@@ -1663,7 +1562,7 @@ tab</link>), since replies default to the sender's address
 anyway.</para>
 <note><para>This field is only useful if you want replies to your mail
 to go somewhere else than your regular email address, &eg; if you are
-using this identity to send emails from an email address that cannot
+using this identity to send messages from an email address that cannot
 receive messages. Note that this field will possibly be
 deprecated by newer versions of the Internet email standard. Furthermore,
 some mailing lists overwrite this header field with their post address to
@@ -1702,13 +1601,13 @@ page</link>.</para></note>
 <varlistentry>
 <term><guilabel>Sent-mail folder</guilabel></term>
 <listitem>
-<para>Select the folder into which mails should be filed after sending
+<para>Select the folder into which messages should be filed after sending
 when using this identity.</para>
 
 <tip><para>You can exercise more fine-grained control over where to
-file sent mails by creating a corresponding <link
+file sent messages by creating a corresponding <link
 linkend="filters">filter</link> that is applied to outgoing
-mails.</para></tip>
+messages.</para></tip>
 
 </listitem>
 </varlistentry>
@@ -1725,7 +1624,7 @@ this identity.</para>
 <term><guilabel>Special transport</guilabel></term>
 <listitem>
 <para>Select or enter an alternative SMTP server to be used when sending
-mails using this identity.</para>
+messages using this identity.</para>
 
 <note><para>You need to configure outgoing mail servers first, before
 you can choose them from the list. You can do this on the <link
@@ -1797,7 +1696,7 @@ to the right of it to browse your filesystem.</para>
 signature text from input field below</guilabel> and enter the text
 into the appearing text box.</para>
 
-<note><para>On the internet, signatures are by convention separated
+<note><para>On the Internet, signatures are by convention separated
 from the body of the message by a line containing only the three
 character <quote>-- </quote> (dash, dash, space). &kmail; will
 automatically prepend the signature text with this line if it is not
@@ -1822,8 +1721,8 @@ section.</para>
 <para>This page allows you to create one or more (incoming and
 outgoing) <emphasis>accounts</emphasis>, &ie; combinations of mail
 servers, login information and other settings. Typically, you will
-create one outgoing (used for sending mails) and one incoming (used to
-retrieve mails) account. You can create as many accounts as you want, though,
+create one outgoing (used for sending messages) and one incoming (used to
+retrieve messages) account. You can create as many accounts as you want, though,
 and assign each one to different <link
 linkend="configure-identity">identities</link> or decide on a per-message
 basis.</para>
@@ -1835,10 +1734,10 @@ basis.</para>
 outgoing mail servers and set some common options.</para>
 
 <para>For basic information, see <link
-linkend="setting-up-your-account">Setting up your Account</link>.</para>
+linkend="sending-mail">Setting up your Account: Sending</link>.</para>
 
 <para><guilabel>Confirm before send</guilabel> will pop up a
-confirmation box every time your send a message.</para>
+confirmation box every time you send a message.</para>
 
 <para><guilabel>Send mail in Outbox on check</guilabel> will send
 all messages from the outbox when you check for new messages.</para>
@@ -1850,10 +1749,10 @@ selected, the message is sent to the mail server immediately, while if
 the outbox to be sent later with the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
 Queued</guimenuitem></menuchoice> command or automatically when you
-check your mail, depending on the settings in the
-<guilabel>Miscellaneous</guilabel> tab.</para>
+check your mail, depending on the setting of 
+<guilabel>Send mail in Outbox on check</guilabel> above.</para>
 
-<para><guilabel>Message Property</guilabel> lets you select how your
+<para><guilabel>Message property</guilabel> lets you select how your
 message will be encoded when it is sent. <guilabel>Allow
 8-bit</guilabel> means that &kmail; will send your message in 8 bit
 <acronym>ASCII</acronym>, which means that all special characters such
@@ -1869,10 +1768,10 @@ do not need to change the default.<!-- TODO: advise what's better --></para>
 <title><guilabel>Receiving</guilabel> Tab</title>
 
 <para>For basic information, see <link
-linkend="setting-up-your-account">Setting up your Account</link>.</para>
+linkend="receiving-mail">Setting up your Account: Receiving</link>.</para>
 
 <para>With <guilabel>New Mail notification</guilabel> you can set
-how &kmail; will notify you if a new message has arrived. Of course
+how &kmail; will notify you if new messages have arrived. Of course
 this only makes sense if <guilabel>Enable interval mail checking</guilabel>
 is activated for at least one account:</para>
 
@@ -1913,8 +1812,9 @@ is activated for at least one account:</para>
 <title>Fonts</title>
 
 <para>This section allows you to change the type, size and character set of the
-display fonts. <guilabel>Message Body</guilabel> sets the font for both
-the reader pane and the composer window.<!-- fixme: better wording in the program -->
+display fonts. <guilabel>Message body</guilabel> sets the font for
+the reader pane, <guilabel>Composer</guilabel> sets the font for
+writing messages in the composer window.<!-- fixme in kmail: better wording? -->
 There's a separate entry for <guilabel>Message List - Date Field</guilabel>
 so you can choose a monospaced font for the date field for better readability.</para>
 
@@ -1935,11 +1835,15 @@ quoted more than three times will appear in color.</para>
 <para><guilabel>Show long folder list</guilabel> lets you toggle the long folder 
 list on and off.  The long folder list shows folders all the way down the left 
 side of the &kmail; main window, which lets you see more folders than in the short view, 
-but it takes away some space for viewing the text of the messages. With <guilabel>Display message
-sizes</guilabel> selected there will be another column in the Header pane that
-shows the messages' size in bytes. <guilabel>Thread list of message
-headers</guilabel> will put all the messages in a kind of tree, so the replies
-to a message are below that message.</para>
+but it takes away some space for viewing the text of the messages. 
+<guilabel>Show color bar</guilabel> activates a bar at the left side of the reader
+pane that gives you information about the encryption and digital signature
+about the mail.<!-- fixme: more -->
+With <guilabel>Display message sizes</guilabel> selected there will be another 
+column in the header pane that shows the messages' size.
+<guilabel>Thread list of message headers</guilabel> will put all the messages 
+in the header pane in a kind of tree list, so that the replies to a message are 
+directly below that message.</para>
 
 <para>With <guilabel>Message header threading options</guilabel> you can select
 under which conditions threads should appear open by default (&ie; not
@@ -1995,20 +1899,6 @@ a dialog when you enter a folder with a matching message.</para>
 <sect2 id="configure-composer-general">
 <title>General</title>
 
-<para>The <guilabel>Phrases</guilabel> section lets you define the automatically
-generated lines that are added to message replies, forwarded messages, and quoted
-text. There are special &percnt;-denoted characters that will insert certain
-values. These are shown at the top of the <guilabel>Phrases</guilabel> section:
-<symbol>%D</symbol> to insert the date, <symbol>%S</symbol> to insert the
-subject, <symbol>%F</symbol> to insert the sender, <symbol>%%</symbol> to insert
-a percent sign, <symbol>%_</symbol> to insert a space, and <symbol>%L</symbol> 
-to insert a line break. You can add reply phrases in languages other than
-your default &kde; language using the <guilabel>Language</guilabel> button.
-This will only work for languages whose i18n package you have installed.</para>
-
-<para>The <guilabel>Indentation</guilabel> field contains the character that will denote
-quoted text (you will probably want to use the default).</para>
-
 <para><guilabel>Automatically append signature</guilabel> lets you toggle
 whether to automatically include your signature as defined in the 
 <link linkend="setting-your-identity">identity tab</link>.</para>
@@ -2017,7 +1907,7 @@ whether to automatically include your signature as defined in the
 to keep the correct quoting (&eg; the <quote>&gt; </quote> will always be at the
 start of the line).</para>
 
-<para><guilabel>Automatically sign messages using PGP</guilabel> lets you toggle
+<para><guilabel>Automatically sign messages using OpenPGP</guilabel> lets you toggle
 whether to automatically sign your messages by default. Of course you can still
 deselect the icon in the composer window for each message if necessary.</para>
 
@@ -2026,17 +1916,30 @@ and off in the <guilabel>Composer window</guilabel> and lets you set the column
 at which words will be wrapped (you probably should not need to change
 the default value, which is <userinput>78</userinput>).</para>
 
-</sect2>
-
-<sect2 id="configure-composer-editor">
-<title>Editor</title>
-
 <para>If you don't like the <guilabel>Composer</guilabel> you can use a
 different editor. Note that the <guilabel>Composer</guilabel> window will still open and
 the external editor will open as soon as you type just one character in the body
 of the message. If you're done, save the text and exit the editor. The text will
 now appear in the <guilabel>Composer</guilabel> window, where you can send
-it.</para>
+it. Note that your editor may not return immediately, &eg; you have to
+use <userinput>gvim -f %f</userinput> for <application>gvim</application>.</para>
+
+</sect2>
+
+<sect2 id="configure-composer-phrases">
+<title>Phrases</title>
+
+<para>The <guilabel>Phrases</guilabel> tab lets you define the automatically
+generated lines that are added to message replies, forwarded messages, and the
+character that's added in front of quoted text. 
+There are special &percnt;-denoted characters that will insert certain
+values. These are also shown at the top of the <guilabel>Phrases</guilabel> section:
+<symbol>%D</symbol> to insert the date, <symbol>%S</symbol> to insert the
+subject, <symbol>%F</symbol> to insert the sender, <symbol>%%</symbol> to insert
+a percent sign, <symbol>%_</symbol> to insert a space, and <symbol>%L</symbol> 
+to insert a line break. You can add reply phrases in languages other than
+your default &kde; language using the <guilabel>Language</guilabel> button.
+This will only work for languages whose i18n package you have installed.</para>
 
 </sect2>
 
@@ -2046,41 +1949,43 @@ it.</para>
 <para>This section contains a list of prefixes for <quote>Reply</quote> and
 <quote>Forward</quote>. If you receive messages that use prefixes different
 to the standard ones, you can add them here so &kmail; will recognize 
-them (this way &kmail; can ignore them for sorting messages and 
-optionally replace them).</para>
+them. This way &kmail; can ignore them for sorting messages and
+when setting the subject of a reply, and optionally replace them 
+with <quote>Re:</quote>.</para>
 
 </sect2>
 
 <sect2 id="configure-composer-charset">
 <title>Charset</title>
 
-<para>In the <guilabel>Available charsets</guilabel> section you can manage the
+<para>Here you can manage the
 charsets available for your own messages. The charsets in this list appear in
 the composer's <menuchoice><guimenu>Options</guimenu><guimenuitem>Set
 Encoding</guimenuitem></menuchoice> menu.</para>
+<!--- fixme: does this work?? -->
 
-<para>The <guilabel>Default charset</guilabel> section lets you choose the
-default charset for your own messages. If you select <guilabel>Use own default
-charset when replying or forwarding</guilabel>, the original message's charset
-will be ignored and your charset will be used for replying and
-forwarding.</para>
+<para>If you select <guilabel>Keep original charset when replying
+or forwarding</guilabel>, the original message's charset
+will be kept, unless there are now characters that cannot be
+represented using that charset.</para>
 
 </sect2>
 
 <sect2 id="configure-composer-headers">
 <title>Headers</title>
 
-<para>The <guilabel>Create own Message-Id headers</guilabel> section lets you define
+<para>The <guilabel>Use custom Message-Id suffix</guilabel> checkbox lets you define
 how your messages' Message-Id field will be generated. The Message-Id
 must have a suffix that's world-wide unique. Depeding on your setup,
 this might already be the case. You should send yourself a message and
 look at its headers. If it contains a Message-Id that ends in
 <quote>localhost</quote> or any other string that's not guaranteed to
-be unique you need to select <guilabel>Create own Message-Id
-headers</guilabel> and set a unique suffix. The best thing is to 
+be unique you need to set a unique suffix in <guilabel>Custom Message-Id 
+suffix</guilabel>. The best thing is to 
 use the name of a domain which you are the owner of.</para>
+<!-- fixme: still necessary to send oneself a mail? -->
 
-<para>The <guilabel>Define custom mime header tags</guilabel> section
+<para>The <guilabel>Define custom mime header fields</guilabel> list
 sets the headers that &kmail; will use for its outgoing messages. You
 can both invent new fields and overwrite existing ones. This feature
 is only useful for advanced users.</para>
@@ -2102,13 +2007,13 @@ security problems with <acronym>HTML</acronym> might show up. When
 this option is off, you can still read <acronym>HTML</acronym>
 messages, but only as plain text.</para>
 
-<para><guilabel>Load external references from the net</guilabel>
-will  load external images, style sheets &etc; from the internet when
+<para>With <guilabel>Allow mails to load external references from the net</guilabel>
+turned on, &kmail; can load external images, style sheets &etc; from the Internet when
 you look at an <acronym>HTML</acronym> message. We strongly recommend
-to leave this  option off (although it has no effect if
-<guilabel>Prefer HTML to plain  text</guilabel> is off already). By
-adding external references to their mails, people sending spam can
-detect that you have looked at their message. Note that this option
+to leave this option off (although it has no effect if you only view 
+plain text messages). By
+adding external references to their messages, people sending spam can
+detect that and when you have looked at their message. Note that this option
 has no effect on &Java;, Javascript and Plugins - these are disabled
 anyway and cannot be enabled at all.</para>
 
@@ -2123,11 +2028,11 @@ delivery</guilabel> filter action.</para>
 </sect2>
 
 <sect2 id="configure-security-pgp">
-<title>PGP</title>
+<title>OpenPGP</title>
 
 <para id="configure-security-pgp-encrypttoself">For the
-<guilabel>PGP</guilabel> tab please see the <link
-linkend="pgp-settings"><application>PGP</application>
+<guilabel>OpenPGP</guilabel> tab please see the <link
+linkend="pgp-settings"><application>OpenPGP</application>
 section</link>.</para>
 
 </sect2>
@@ -2140,51 +2045,9 @@ section</link>.</para>
 <sect2 id="configure-misc-folders">
 <title>Folders</title>
 
-<variablelist>
-<varlistentry>
-<term><guilabel>Empty trash on exit</guilabel></term>
-<listitem>
-<para>The trash folder is cleared of messages when you quit &kmail; if this
-option is selected. The following two options are disabled, if this one
-is enabled.</para> 
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Keep trash size below...</guilabel></term>
-<listitem>
-<para>On exit, delete old messages if the trash folder becomes bigger than this limit.</para> 
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>In trash, on exit, remove messages older than...</guilabel></term>
-<listitem>
-<para>The trash folder is cleared of messages older than the given age 
-when you quit &kmail;, if this option is selected.</para> 
-</listitem>
-</varlistentry>
-</variablelist>
-
-</sect2>
-
-<sect2 id="misc-tab-folders">
-<title>Folders</title>
 
 <variablelist>
-<varlistentry>
-<term><guilabel>Send Mail in outbox Folder on Check</guilabel></term>
-<listitem>
-<para>All messages queued in the outbox folder will be sent whenever you check
-for new mail.</para> 
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Compact all folders on exit</guilabel></term>
-<listitem>
-<para>This will compact all folders every time you exit &kmail;. Compacting
-folders means that the messages you deleted will really be
-removed.</para>
-</listitem>
-</varlistentry>
+
 <varlistentry>
 <term><guilabel>Confirm before emptying folders</guilabel></term>
 <listitem>
@@ -2195,35 +2058,103 @@ mail, you can still activate a confirmation dialog that will ask you if you
 really want to empty the folder.</para>
 </listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>Warn before expiring messages</guilabel></term>
+<listitem>
+<para>This will pop up a confirmation dialog before messages are expired
+(&eg; on exit).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Loop in the current folder when trying to find unread mail</guilabel></term>
+<listitem>
+<para>When you press one of the shortcuts to find new messages (e.g. <keycap>Space</keycap>)
+and this option is activated, &kmail; will not jump to the next folder, but instead
+try to find new messages at the top of the current folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>By default, mail folders on disk are...</guilabel></term>
+<listitem>
+<para>Here you can set the default format for new folders. You can still
+change it for each new folder in the <link linkend="reader-folder-menu">Create 
+Folder</link> dialog.</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
-</sect2>
+<para><guilabel>On program exit, perfom the following tasks</guilabel>:</para>
 
-<sect2 id="misc-tab-new-mail-notification">
-<title>New Mail Notification</title>
+<variablelist>
 
-<para>This let's you configure actions for the arrival of new mail. Note that
-automatically fetching messages can be configured in your account settings under <link
-linkend="receiving-mail">Incoming Mail</link>.</para>
+<varlistentry>
+<term><guilabel>Compact all folders</guilabel></term>
+<listitem>
+<para>This will compact all folders every time you exit &kmail;. Compacting
+folders means that the messages you deleted will really be
+removed.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Empty trash</guilabel></term>
+<listitem>
+<para>The trash folder is cleared of messages when you quit &kmail; if this
+option is selected. The following two options are disabled, if this one
+is enabled.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Expire old messages</guilabel></term>
+<listitem>
+<para>Delete old messages from all folders, according to the rules in
+each folder's <guilabel>Properties</guilabel> dialog (the default is
+not to delete old messages at all).</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect2>
 
 <sect2 id="configure-misc-addressbook">
 <title>Addressbook</title>
 
-<!-- fixme?: does the traditional address bokk still exist? -->
-<para>This section allows you to choose between several address books, whereas
-<guilabel>Traditional KMail</guilabel> is a very simple one and
-<guilabel>&kaddressbook;</guilabel> is an advanced one - we recommend
-to use &kaddressbook;. Note that you need the kdeutils package 
-to use <guilabel>KAB</guilabel>.</para>
+<para>An address book lets you store your commonly used email
+addresses. You can call up the address book via
+<menuchoice><guimenu>File</guimenu><guimenuitem>Address Book</guimenuitem></menuchoice>,
+the <guiicon>Address Book</guiicon> button in the main window, 
+or the <guiicon>Address Book</guiicon> button in the
+composer window.</para>
+<!-- fixme in kmail: address book vs addressbook -->
 
-<para>While the <guilabel>Traditional KMail</guilabel> database is
-independent (&ie; you will not see addresses in 
-<guilabel>KAB</guilabel>/<guilabel>&kaddressbook;</guilabel> if you
-only entered them in the <guilabel>Traditional KMail</guilabel>
-address book), <guilabel>KAB</guilabel> and <guilabel>&kaddressbook;</guilabel>
-use the same database.</para>
+<para>You can choose between two different address books:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>KAdressbook</guilabel></term>
+<listitem>
+<para>This is the default address book, which has <ulink
+url="/kaddressbook/">its own documentation</ulink>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>KAB</guilabel></term>
+<listitem>
+<para>If the kdeutils package is installed on your system you
+can also choose this address book. See the <ulink
+url="/kab/">&kab; documentation</ulink>.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect2>
 
@@ -2352,7 +2283,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens up the <link linkend="the-address-book">Address Book</link>.</para>
+<para>Opens up the <link linkend="configure-misc-addressbook">Address Book</link>.</para>
 </listitem>
 </varlistentry>
 
@@ -2979,29 +2910,59 @@ sub menu you select.</para>
 following states (more than one status per message is currently not supported):</para>
 <!-- fixme: more than one somewhen supported? -->
 
-<itemizedlist>
-<listitem>
-<para><guimenuitem>New</guimenuitem></para>
-</listitem>
-<listitem>
-<para><guimenuitem>Unread</guimenuitem></para>
-</listitem>
-<listitem>
-<para><guimenuitem>Read</guimenuitem></para>
-</listitem>
-<listitem>
-<para><guimenuitem>Replied</guimenuitem></para>
-</listitem>
-<listitem>
-<para><guimenuitem>Queued</guimenuitem></para>
-</listitem>
-<listitem>
-<para><guimenuitem>Sent</guimenuitem></para>
-</listitem>
-<listitem>
-<para><guimenuitem>Important</guimenuitem></para>
-</listitem>
-</itemizedlist>
+<!-- TODO: I think it's worth adding inline images here, at some -->
+<!-- point. LW. -->
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>Status</entry>
+<entry>Symbol</entry>
+<entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><guimenuitem>New</guimenuitem></entry>
+<entry>Red dot</entry>
+<entry>The message has been received for the first time, and is unread.</entry>
+</row>
+<row>
+<entry><guimenuitem>Unread</guimenuitem></entry>
+<entry>Green dot</entry>
+<entry>The message has already been retrieved off the server at least once, but
+has not yet been read.</entry>
+</row>
+<row>
+<entry><guimenuitem>Read</guimenuitem></entry>
+<entry>Dash</entry>
+<entry>The message has been read.</entry>
+</row>
+<row>
+<entry><guimenuitem>Replied</guimenuitem></entry>
+<entry>Blue u-turn arrow</entry>
+<entry>A reply to this message has been sent.</entry>
+</row>
+<row>
+<entry><guimenuitem>Queued</guimenuitem></entry>
+<entry>Envelope</entry>
+<entry>The message has been queued in the outbox to be sent later.</entry>
+</row>
+<row>
+<entry><guimenuitem>Sent</guimenuitem></entry>
+<entry>Angled envelope</entry>
+<entry>The message has been sent.</entry>
+</row>
+<row>
+<entry><guimenuitem>Important</guimenuitem></entry>
+<entry>Flag</entry>
+<entry>This status will not automatically be set by &kmail;. You can use it freely to mark 
+messages that are in some way important to you.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
 </listitem>
 </varlistentry>
 
@@ -3872,7 +3833,7 @@ class="directory">~/Mail</filename> directory using
 <filename>/somewhere/Mail/mymailboxfile</filename>
 <filename class="symlink">~/Mail/remote</filename></userinput>. When you start
 &kmail; you will see a new folder with the name <guilabel>remote</guilabel> that
-contains the mails in your remote folder. If you want to add a whole remote mail
+contains the messages in your remote folder. If you want to add a whole remote mail
 directory use <userinput><command>ln</command> <option>-s</option>
 <filename>/somewhere/Mail</filename> <filename
 class="symlink">~/Mail/.remotedir.directory</filename></userinput>.  For that
@@ -3970,7 +3931,7 @@ folders</guimenuitem></menuchoice> (by default this will also happen every time 
 <acronym>HTML</acronym>, I can only see plain text.</para></question>
 <answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
 HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
-only do so for trusted mails. Note that plugins (like <trademark
+only do so for trusted messages. Note that plugins (like <trademark
 class="registered">Macromedia</trademark> <application>Flash</application>),
 &Java; and Javascript will not be displayed in &kmail; for security reasons
 and there's no way to activate them.</para></answer>
@@ -4019,7 +3980,7 @@ and the mailing list address will be set in the <guilabel>To:</guilabel> field.
 <quote>SMTP after POP3</quote> and <quote>SMTP Auth</quote>. 
 <quote>SMTP Auth</quote> can be set in the <guilabel>General</guilabel> tab
 of the SMTP configuration dialog.
-To use <quote>SMTP after POP3</quote> you have to collect all your mails in the
+To use <quote>SMTP after POP3</quote> you have to collect all your messages in the
 <guilabel>outbox</guilabel> and send them just after you have fetched new mail.
 <!-- fixme: how to make it more simple? -->
 </para></answer>
@@ -4082,6 +4043,7 @@ before you attach them.</para>
 </answer>
 </qandaentry>
 
+<!-- fixme: doesn't exist anymore??
 <qandaentry>
 <question><para>How do I have to set up &kmail; to use (&ie; read and write)
 messages with non-Latin1 characters?</para></question>
@@ -4089,15 +4051,15 @@ messages with non-Latin1 characters?</para></question>
 <guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> section of the
 <guilabel>Configure &kmail;...</guilabel> dialog, select the correct <guilabel>Character set</guilabel> for
 the message list and the folder list. 
-<!-- fixme: doesn't exist anymore?? -->
 If <guilabel>unicode
 (iso10646-1)</guilabel> is available, you should choose it. In case messages are
 still not shown correctly, you can always try other settings from the
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Set
 Encoding</guimenuitem></menuchoice> menu.  For writing messages, go to
 <guilabel>Composer</guilabel>/<guilabel>Charset</guilabel> and configure the
-default charset you want to use for your own mails.</para></answer>
+default charset you want to use for your own messages.</para></answer>
 </qandaentry>
+-->
 
 <qandaentry>
 <question><para>Spellchecking doesn't recognize non-english
@@ -4130,8 +4092,8 @@ user@host</option></userinput></para>
 <para>Modify your &kmail; configuration to fetch the mail via
 <acronym>POP3</acronym> from <userinput>localhost</userinput> and ssh will tunnel
 the connection for you.
-<note><para>If non-encrypted mails have already been sent
-via internet, the only advantage of using <application>ssh</application> is
+<note><para>If non-encrypted messages have already been sent
+via Internet, the only advantage of using <application>ssh</application> is
 that your <emphasis>password</emphasis> will be sent encrypted to the <acronym>POP3</acronym>
 server.</para></note></para>
 </answer>
@@ -4158,7 +4120,7 @@ locking as your mail delivery agent.</para>
 <para><guilabel>Procmail lockfile</guilabel> will use a small utility that comes
 with <application>procmail</application> called <command>lockfile</command>. You
 can use this if your mail folder is in a directory where you have write
-permissions.  This will not work on your <filename
+permission.  This will not work on your <filename
 class="directory">/var/spool/mail/user</filename> file in most cases.  It will
 create <filename>.lock</filename> files on your account when &kmail; is checking
 for new mail. Please note that this will only work if
@@ -4200,7 +4162,7 @@ setting which you must not select.</para></answer>
 
 <qandaentry>
 <question><para>How do I automatically insert a text footer within my
-mails?</para></question>
+messages?</para></question>
 <answer><para>The text footer is called a signature file. Select
 <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>
@@ -4252,12 +4214,13 @@ available in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 <chapter id="importing">
 <title>Using other Mailbox Files with &kmail;</title>
 
-<para>&kmail; offers an import tool for some formats. You can access it
+<para>&kmail; offers an import tool for the messages and address books of some
+other mail clients. You can access it
 using <menuchoice><guimenu>File</guimenu><guimenuitem>Import...</guimenuitem></menuchoice>.
 You only need to read this chapter if this tool does not work for you.</para>
 
 <para>This section is for all of the users who need to move email messages from
-their previous email client over to &kmail;. &kmail; stores its mail using the
+their previous email client over to &kmail;. &kmail; can store its mail using the
 <literal>mbox</literal> format, one of the most widely used mailbox formats on
 &UNIX; systems. Mbox mailboxes store messages in one file, identifying where
 messages start and end with a <literal>From</literal> line (do not mix this up
@@ -4268,10 +4231,10 @@ class="symlink">Mail</filename> a symbolic link to the folder containing your
 mailboxes), make sure they are writeable by your user, and launch &kmail;. The
 mailboxes should now show up correctly in &kmail;.</para>
 
-<para>If your old mailboxes are not in mbox format, see below for instructions
-on importing some other common formats. Take a look at the
+<para>Please have a look at the
 <ulink url="http://kmail.kde.org/download.html">Download section of &kmail;'s
-homepage</ulink> if your mailbox format is not listed here.</para>
+homepage</ulink> first, to see if there's a tool that imports your mailbox
+and maybe even address book.</para>
 
 <warning><para>Do not use a second mail client that accesses the files in
 <filename class="directory">~/Mail</filename> while &kmail; is running or
@@ -4389,7 +4352,7 @@ aaa@aaa Mon Jan 01 00:00:00 1997</literal>. This <literal>From</literal>
 line should be the first line of every message, before the
 <literal>Received:</literal> and other headers. Make sure to use a text editor
 that lets you save the files in &UNIX; format or create new folders in
-<application>Pegasus</application> that are in &UNIX; format and copy your mails
+<application>Pegasus</application> that are in &UNIX; format and copy your messages
 there.</para>
 </listitem>
 </varlistentry>
@@ -4408,8 +4371,8 @@ homepage</ulink>.</para>
 Mail</application>, &etc;...</term>
 <listitem>
 <para>First you should have a look at <ulink
-url="http://kmail.kde.org/download.html">Download section of &kmail;'s homepage</ulink> if there
-are tools to convert mails.</para>
+url="http://kmail.kde.org/download.html">Download section of &kmail;'s homepage</ulink> if 
+there are tools to convert your messages.</para>
 <para>Mail programs not listed here or on the homepage probably do not work with &kmail; as they use
 proprietary mail formats that &kmail; cannot understand. However, there is no
 harm in trying! If the mailbox file looks similar to the mbox format, try
@@ -4428,52 +4391,61 @@ revision of this documentation. </para>
 <chapter id="credits-and-licenses">
 <title>Credits and Licenses</title>
 
-<para>&kmail;: Copyright the &kmail; developers, 1997-2001</para>
+<para>&kmail;: Copyright the &kmail; developers, 1997-2002</para>
 
 &underGPL;
 &underFDL;
 
-<sect1 id="developers">
-<title>Original Developers</title>
+<sect1 id="team">
+<title>Development Team and Contributors</title>
 <!-- please keep in sync with the authors list on the webpage -->
 
+<!-- This is generated with "authors2xml.pl kmail/main.cpp"
+ (except the "maintainer" comment: -->
 <itemizedlist>
-<listitem>
-<para>Stefan Taferner <email>taferner@alpin.or.at</email></para>
-</listitem>
-<listitem>
-<para>Markus Wuebben <email>markus.wuebben@kde.org</email></para>
-</listitem>
-</itemizedlist>
-
-</sect1>
-
-<sect1 id="team">
-<title>Current Team</title>
-
-<itemizedlist>
-
-<listitem><para>Waldo Bastian <email>bastian@kde.org</email></para></listitem>
+<listitem><para>Michael Haeckel <email>haeckel@kde.org</email> (current maintainer)</para></listitem>
+<listitem><para>Don Sanders <email>sanders@kde.org</email></para></listitem>
+<listitem><para>Stefan Taferner  <email>taferner@kde.org</email></para></listitem>
+<listitem><para>Ingo Kloecker <email>ingo.kloecker@epost.de</email></para></listitem>
+<listitem><para>Marc Mutz <email>mutz@kde.org</email></para></listitem>
+<listitem><para>Daniel Naber <email>daniel.naber@t-online.de</email></para></listitem>
 <listitem><para>Andreas Gungl <email>a.gungl@gmx.de</email></para></listitem>
-<listitem><para>Michael Haeckel
-<email>michael@haeckel.net</email></para></listitem>
-<listitem><para>Lars Knoll <email>knoll@mpi-hd.mpg.de</email></para></listitem>
-<listitem><para>J. Nick Koston
-<email>bdraco@darkorb.net</email></para></listitem>
-<listitem><para>Marc Mutz
-<email>mutz@kde.org</email></para></listitem>
-<listitem><para>Daniel Naber
-<email>daniel.naber@t-online.de</email></para></listitem>
+<listitem><para>Toyohiro Asukai <email>toyohiro@ksmplus.com</email></para></listitem>
+<listitem><para>Waldo Bastian <email>bastian@kde.org</email></para></listitem>
+<listitem><para>Carsten Burghardt <email>carsten.burghardt@web.de</email></para></listitem>
+<listitem><para>Steven Brown <email>swbrown@ucsd.edu</email></para></listitem>
+<listitem><para>Cristi Dumitrescu <email>cristid@chip.ro</email></para></listitem>
+<listitem><para>Philippe Fremy <email>pfremy@chez.com</email></para></listitem>
+<listitem><para>Kurt Granroth <email>granroth@kde.org</email></para></listitem>
+<listitem><para>Heiko Hund <email>heiko@ist.eigentlich.net</email></para></listitem>
+<listitem><para>Igor Janssen <email>rm@linux.ru.net</email></para></listitem>
+<listitem><para>Matt Johnston <email>matt@caifex.org</email></para></listitem>
+<listitem><para>Christer Kaivo-oja <email>whizkid@telia.com</email></para></listitem>
+<listitem><para>Lars Knoll <email>knoll@kde.org</email></para></listitem>
+<listitem><para>J. Nick Koston <email>bdraco@darkorb.net</email></para></listitem>
+<listitem><para>Stephan Kulow <email>coolo@kde.org</email></para></listitem>
+<listitem><para>Guillaume Laurent <email>glaurent@telegraph-road.org</email></para></listitem>
+<listitem><para>Sam Magnuson <email>sam@trolltech.com</email></para></listitem>
+<listitem><para>Laurent Montel <email>lmontel@mandrakesoft.com</email></para></listitem>
+<listitem><para>Matt Newell <email>newellm@proaxis.com</email></para></listitem>
+<listitem><para>Denis Perchine <email>dyp@perchine.com</email></para></listitem>
+<listitem><para>Samuel Penn <email>sam@bifrost.demon.co.uk</email></para></listitem>
+<listitem><para>Carsten Pfeiffer <email>pfeiffer@kde.org</email></para></listitem>
 <listitem><para>Sven Radej <email>radej@kde.org</email></para></listitem>
+<listitem><para>Mark Roberts <email>mark@taurine.demon.co.uk</email></para></listitem>
+<listitem><para>Wolfgang Rohdewald <email>wrohdewald@dplanet.ch</email></para></listitem>
 <listitem><para>Espen Sand <email>espen@kde.org</email></para></listitem>
-<listitem><para>Don Sanders <email>sanders@kde.org</email> (Active
-maintainer)</para></listitem>
-<listitem><para>George Staikos
-<email>staikos@0wned.org</email></para></listitem>
-<listitem><para>Mario Weilguni
-<email>mweilguni@sime.com</email></para></listitem>
-<listitem><para>Robert D. Williams
-<email>rwilliams@kde.org</email></para></listitem>
+<listitem><para>George Staikos <email>staikos@kde.org</email></para></listitem>
+<listitem><para>Jason Stephenson <email>panda@mis.net</email></para></listitem>
+<listitem><para>Jacek Stolarczyk <email>jacek@mer.chemia.polsl.gliwice.pl</email></para></listitem>
+<listitem><para>Roberto S. Teixeira <email>maragato@kde.org</email></para></listitem>
+<listitem><para>Ronen Tzur <email>rtzur@shani.net</email></para></listitem>
+<listitem><para>Mario Weilguni <email>mweilguni@sime.com</email></para></listitem>
+<listitem><para>Wynn Wilkes <email>wynnw@calderasystems.com</email></para></listitem>
+<listitem><para>Robert D. Williams <email>rwilliams@kde.org</email></para></listitem>
+<listitem><para>Markus Wuebben <email>markus.wuebben@kde.org</email></para></listitem>
+<listitem><para>Thorsten Zachmann <email>t.zachmann@zagge.de</email></para></listitem>
+<listitem><para>Karl-Heinz Zimmer <email>khz@kde.org</email></para></listitem>
 </itemizedlist>
 
 </sect1>
@@ -4481,10 +4453,10 @@ maintainer)</para></listitem>
 <sect1 id="documentation">
 <title>Documentation</title>
 
-<para>Update for &kmail; 1.2 and 1.3 by Daniel Naber
-<email>daniel.naber@t-online.de</email>, <application>PGP</application> part by
+<para>Update for &kmail; 1.2 to 1.4 by Daniel Naber
+<email>daniel.naber@t-online.de</email>, <application>OpenPGP</application> part by
 Andreas Gungl <email>a.gungl@gmx.de</email>, filter part by
-Marc Mutz <email>Marc.Mutz@uni-bielefeld.de</email>. Other parts
+Marc Mutz <email>mutz@kde.org</email>. Other parts
 have been contributed by the various &kmail; developers.</para>
 
 <para>&kmail; 1.0
@@ -4494,7 +4466,8 @@ Original documentation by Markus Wuebben
 <email>rwilliams@kde.org</email> (Editor).</para>
 
 <para>Thanks to Michael Elkins <email>me@cs.hmc.edu</email> for his excellent
-description of the different &UNIX; mail formats in the <application>Mutt</application> documentation.</para>
+description of the different &UNIX; mail formats in the <application>Mutt</application> 
+documentation.</para>
 
 <para>Thanks to the following people for providing directions on using other
 mail client mailboxes with &kmail;:</para>
@@ -4545,5 +4518,3 @@ End:
 
 // vim:ts=0:sw=2:tw=78:noet
 -->
-
-
