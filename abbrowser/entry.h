@@ -55,7 +55,8 @@ public:
   ContactEntryList();
   ~ContactEntryList();
 
-  void sync();
+  void commit();
+  void refresh();
   QString insert( ContactEntry *item );
   void unremove( const QString &key, ContactEntry *item );
   void remove( const QString &key );
@@ -70,8 +71,6 @@ public:
   KabAPI *addrBook;
   QStringList removedKeys;
   QDict<ContactEntry> ceDict;
-  //  void save();
-  //  void load();
 };
 
 /*

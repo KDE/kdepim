@@ -891,6 +891,7 @@ PabListView::PabListView( PabWidget *parent, const char *name )
     oldColumn( 0 )
 {
   setAllColumnsShowFocus( true );
+  setShowSortIndicator(true);
   setSelectionMode( Extended );
   up = new QIconSet( BarIcon("abup" ), QIconSet::Small );
   down = new QIconSet( BarIcon("abdown" ), QIconSet::Small );
@@ -1076,10 +1077,7 @@ void PabListView::setSorting( int column )
   this->column = column;
   this->ascending = true;
 
-  if (oldColumn != -1)
-    setColumnText( oldColumn, QIconSet( QPixmap()), columnText( oldColumn ));
   oldColumn = column;
-  setColumnText( column, *up, columnText( column ));
   QListView::setSorting( column, ascending );
 }
 
@@ -1094,13 +1092,7 @@ void PabListView::setSorting( int column, bool ascending )
     b = "ascending";
   debug( "PabWidget::setSorting" + a + " " + b );
 
-  if (oldColumn != -1)
-    setColumnText( oldColumn, QIconSet( QPixmap()), columnText( oldColumn ));
   oldColumn = column;
-  if (ascending)
-    setColumnText( column, *up, columnText( column ));
-  else
-    setColumnText( column, *down, columnText( column ));
   QListView::setSorting( column, ascending );
 
   if (column != -1)

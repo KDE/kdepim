@@ -138,6 +138,7 @@ public slots:
   virtual void selectAll();
   virtual void saveConfig();
   virtual void readConfig();
+  virtual void reconstructListView();
   void change( QString entryKey, ContactEntry *ce );
   PabListViewItem* addEntry( QString EntryKey );
   void addNewEntry( ContactEntry *ce );
@@ -151,7 +152,6 @@ protected slots:
 protected:
   virtual void selectNames( QStringList fields );
   void setupListView();
-  virtual void reconstructListView();
 
   ContactEntryList *cel;
   QStringList field;

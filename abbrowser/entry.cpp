@@ -18,6 +18,23 @@ ContactEntryList::ContactEntryList()
 {
   addrBook = new KabAPI; // KabApi is a dialog;
   CHECK_PTR(addrBook);
+
+  ceDict.setAutoDelete( true );
+  refresh();
+}
+
+ContactEntryList::~ContactEntryList()
+{
+  commit();
+}
+
+void ContactEntryList::refresh()
+{
+  KabKey key;
+  AddressBook::Entry entry;
+  ContactEntry *item;
+
+  ceDict.clear();
   if(addrBook->init()!=AddressBook::NoError)
   { // this connects to the default address book and opens it:
     debug( "Error initializing the connection to your KAB address book." );
@@ -27,11 +44,7 @@ ContactEntryList::ContactEntryList()
     debug ("KMKernel::init: KabApi initialized.");
   }
 
-  KabKey key;
-  AddressBook::Entry entry;
-  ContactEntry *item;
   int num = addrBook->addressbook()->noOfEntries();
-
   for (int i = 0; i < num; ++i) {
     if (AddressBook::NoError != addrBook->addressbook()->getKey( i, key )) {
       return;
@@ -42,15 +55,10 @@ ContactEntryList::ContactEntryList()
     }
     item = KabEntryToContactEntry( entry );
     ceDict.insert( key.getKey(), item );   
-  }
+  }  
 }
 
-ContactEntryList::~ContactEntryList()
-{
-  sync();
-}
-
-void ContactEntryList::sync()
+void ContactEntryList::commit()
 {
   QStringList::Iterator it;
   KabKey key;
@@ -60,6 +68,7 @@ void ContactEntryList::sync()
   }
   if (addrBook->addressbook()->save("", true)!=AddressBook::NoError)
     debug( "Error occurred trying to update database" );
+  addrBook->addressbook()->close();
 }
 
 QString ContactEntryList::insert( ContactEntry *item )

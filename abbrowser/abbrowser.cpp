@@ -143,7 +143,11 @@ void Pab::updateContact( QString addr, QString name )
 
 void Pab::save()
 {
-  document->sync();
+  document->commit();
+  document->refresh();
+  view->saveConfig();
+  view->readConfig();
+  view->reconstructListView();
   //xxx  document->save( "entries.txt" );
     UndoStack::instance()->clear();
     RedoStack::instance()->clear();
