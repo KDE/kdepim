@@ -46,10 +46,10 @@
 
 EmpathIndex::EmpathIndex()
     :   blockSize_(1024),
+        dbf_(0),
         count_(0),
         unreadCount_(0),
-        initialised_(false),
-        dbf_(0)
+        initialised_(false)
 {
     // Empty.
     empathDebug("");
@@ -58,10 +58,10 @@ EmpathIndex::EmpathIndex()
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
 	:	blockSize_(1024),
         folder_(folder),
+        dbf_(0),
         count_(0),
         unreadCount_(0),
-        initialised_(false),
-        dbf_(0)
+        initialised_(false)
 {
     empathDebug(folder.asString());
     QString resDir =
@@ -78,7 +78,8 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
     
     QString legalName = folder.folderPath().replace(QRegExp("/"), "_");
     
-    filename_ = resDir + "/" + legalName;
+    // filename_ = resDir + "/" + legalName;
+    filename_ = "/tmp/" + legalName;
 
     QFileInfo fi(filename_);
 
