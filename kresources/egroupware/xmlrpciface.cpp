@@ -70,6 +70,7 @@ void Query::call( const QString &server, const QString &method,
   KIO::TransferJob *job = KIO::http_post( KURL( server ), postData, false );
   job->addMetaData( "UserAgent", userAgent );
   job->addMetaData( "content-type", "Content-Type: text/xml; charset=utf-8" );
+  job->addMetaData( "ConnectTimeout", "50" );
 
   connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            this, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
