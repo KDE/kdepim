@@ -1299,7 +1299,7 @@ C=DE
 	      </entry>
 	    </row>
 	    <row>
-	      <entry><varname><replaceable>prefix</replaceable>-ownertrust</varname></entry>
+	      <entry><varname><replaceable>prefix</replaceable>-validity</varname></entry>
 	      <entry>validity</entry>
 	      <entry>
 		Analogous to
