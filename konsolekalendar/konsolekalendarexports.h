@@ -26,7 +26,7 @@ namespace KCal
 class KonsoleKalendarExports
 {
 public:
-  KonsoleKalendarExports( KonsoleKalendarVariables *variables );
+  KonsoleKalendarExports( KonsoleKalendarVariables *variables  = 0);
   ~KonsoleKalendarExports();
 
   /*
