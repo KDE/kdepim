@@ -87,9 +87,11 @@ class KNJobData {
     const QString& errorString() const    { return e_rrorString; }
     bool success() const                  { return e_rrorString.isEmpty(); }
     bool canceled() const                 { return c_anceled; }
+    bool authError() const                { return a_uthError; }
     
     void setErrorString(const QString& s) { e_rrorString=s; }
-    void cancel() { c_anceled=true; }
+    void cancel()                         { c_anceled=true; }
+    void setAuthError(bool b)             { a_uthError=b; }
 
     void notifyConsumer();
 
@@ -99,6 +101,7 @@ class KNJobData {
     KNServerInfo *a_ccount;
     QString e_rrorString;
     bool c_anceled;
+    bool a_uthError;
     KNJobConsumer *c_onsumer;
         
 };

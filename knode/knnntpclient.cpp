@@ -356,6 +356,7 @@ void KNNntpClient::doFetchNewHeaders()
     QString tmp=i18n("No new articles could have been retrieved!\nThe server sent a malformated response:\n");
     tmp+=getCurrentLine();
     job->setErrorString(tmp);
+    closeConnection();
     return;
   }
   
@@ -565,6 +566,7 @@ bool KNNntpClient::openConnection()
 
       if (!account.pass().length()) {
         job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+        job->setAuthError(true);
         return false;
       }
 
@@ -574,14 +576,28 @@ bool KNNntpClient::openConnection()
       command += account.pass().local8Bit();
       if (!KNProtocolClient::sendCommand(command,rep))
         return false;
-    }
 
-    #ifndef NDEBUG
-    if (rep==281)          // 281 authorization success
-      qDebug("knode: Authorization successful");
-    else
-      qDebug("knode: Authorization failed");    // we don't care, the server can refuse the info
-    #endif
+      if (rep==281) {         // 281 authorization success
+        #ifndef NDEBUG
+        qDebug("knode: Authorization successful");
+        #endif
+      } else {
+        #ifndef NDEBUG
+        qDebug("knode: Authorization failed");
+        #endif
+        job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+        job->setAuthError(true);
+        closeConnection();
+        return false;
+      }
+    } else {
+      #ifndef NDEBUG
+      if (rep==281)          // 281 authorization success
+        qDebug("knode: Authorization successful");
+      else
+        qDebug("knode: Authorization failed");    // we don't care, the server can refuse the info
+      #endif
+    }
   }
   
   progressValue = 70;
@@ -602,6 +618,8 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     
     if (!account.user().length()) {
       job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+      job->setAuthError(true);
+      closeConnection();
       return false;
     }
 
@@ -617,6 +635,8 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
       
       if (!account.pass().length()) {
         job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+        job->setAuthError(true);
+        closeConnection();
         return false;
       } 
           
@@ -636,6 +656,8 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
         return false;
     } else {
       job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+      job->setAuthError(true);
+      closeConnection();
       return false;
     }
   }

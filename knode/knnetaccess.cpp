@@ -25,6 +25,7 @@
 #include <kapp.h>
 #include <kglobal.h>
 #include <kdebug.h>
+#include <kio/passdlg.h>
 
 #include "knode.h"
 #include "knjobdata.h"
@@ -242,6 +243,32 @@ void KNNetAccess::threadDoneNntp()
   kdDebug(5003) << "KNNetAccess::threadDoneNntp(): job done" << endl;
 
   tmp = currentNntpJob;
+
+  if (!tmp->success() && tmp->authError()) {
+    kdDebug(5003) << "KNNetAccess::threadDoneNntp(): authentication error" << endl;
+    KNServerInfo *info = tmp->account();
+    if (info) {
+      QString user = info->user();
+      QString pass = info->pass();
+      bool keep=false;
+      if (KDialog::Accepted == KIO::PasswordDialog::getNameAndPassword(user, pass, &keep,
+                                 i18n("You need to supply a username and a\npassword to access this server"), false,
+                                 kapp->makeStdCaption(i18n("Authorization Dialog")),info->server(),i18n("Server:"))) {
+        info->setNeedsLogon(true);
+        info->setUser(user);
+        info->setPass(pass);
+        tmp->setAuthError(false);
+        tmp->setErrorString(QString::null);
+
+        kdDebug(5003) << "KNNetAccess::threadDoneNntp(): trying again with authentication data" << endl;
+
+        // restart job...
+        triggerAsyncThread(nntpOutPipe[1]);
+        return;
+      }
+    }
+  }
+
   nntpClient->removeJob();
   currentNntpJob = 0L;
   if (!currentSmtpJob) {
