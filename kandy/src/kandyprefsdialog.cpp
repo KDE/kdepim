@@ -58,17 +58,15 @@ void KandyPrefsDialog::setupSerialTab()
   topLayout->setSpacing(spacingHint());
   topLayout->setMargin(marginHint());
   
-  serialDevice =
-      new KPrefsWidString(i18n("Serial Device"),
-                          &(KandyPrefs::instance()->mSerialDevice),this,
-                          topFrame);
+  serialDevice = addWidString( i18n("Serial Device"),
+                               &(KandyPrefs::instance()->mSerialDevice),
+                               topFrame);
   topLayout->addWidget(serialDevice->label(),0,0);
   topLayout->addWidget(serialDevice->lineEdit(),0,1);
 
-  openOnStartup = 
-       new KPrefsWidBool(i18n("Open Modem On Startup"),
-                         &(KandyPrefs::instance()->mStartupModem),this,
-                         topFrame);
+  openOnStartup = addWidBool( i18n("Open Modem On Startup"),
+                              &(KandyPrefs::instance()->mStartupModem),
+                              topFrame);
   topLayout->addWidget(openOnStartup->checkBox(),1,0);
   
   topLayout->setRowStretch(2,1);
@@ -83,16 +81,14 @@ void KandyPrefsDialog::setupWindowsTab()
   topLayout->setSpacing(spacingHint());
   topLayout->setMargin(marginHint());
   
-  startupTerminal = 
-       new KPrefsWidBool(i18n("Open Terminal Window On Startup"),
-                         &(KandyPrefs::instance()->mStartupTerminalWin),this,
-                         topFrame);
+  startupTerminal = addWidBool( i18n("Open Terminal Window On Startup"),
+                                &(KandyPrefs::instance()->mStartupTerminalWin),
+                                topFrame);
   topLayout->addWidget(startupTerminal->checkBox(),0,0);
   
-  startupMobile = 
-       new KPrefsWidBool(i18n("Open Mobile Window On Startup"),
-                         &(KandyPrefs::instance()->mStartupMobileWin),this,
-                         topFrame);
+  startupMobile = addWidBool( i18n("Open Mobile Window On Startup"),
+                              &(KandyPrefs::instance()->mStartupMobileWin),
+                              topFrame );
   topLayout->addWidget(startupMobile->checkBox(),1,0);
   
   topLayout->setRowStretch(2,1);

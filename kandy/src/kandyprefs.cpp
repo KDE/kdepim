@@ -16,19 +16,15 @@ KandyPrefs *KandyPrefs::mInstance = 0;
 KandyPrefs::KandyPrefs() :
   KPrefs("kandyrc")
 {
-  KPrefsItem::setCurrentGroup("Serial Port");
+  KPrefs::setCurrentGroup("Serial Port");
   
-  addPrefsItem(new KPrefsItemString("Serial Device",
-                                    &mSerialDevice,"/dev/ttyS1"));
-  addPrefsItem(new KPrefsItemBool("StartupModem",&mStartupModem,
-                                  false));
+  addItemString( "Serial Device", &mSerialDevice, "/dev/ttyS1");
+  addItemBool( "StartupModem", &mStartupModem, false );
                                   
-  KPrefsItem::setCurrentGroup("Windows");
+  KPrefs::setCurrentGroup("Windows");
                                   
-  addPrefsItem(new KPrefsItemBool("StartupTerminalWin",&mStartupTerminalWin,
-                                  false));
-  addPrefsItem(new KPrefsItemBool("StartupMobileWin",&mStartupMobileWin,
-                                  true));
+  addItemBool( "StartupTerminalWin", &mStartupTerminalWin, false );
+  addItemBool( "StartupMobileWin", &mStartupMobileWin, true );
 }
 
 KandyPrefs::~KandyPrefs()

@@ -13,7 +13,7 @@
 
 #include <kdialogbase.h>
 
-#include "kprefsdialog.h"
+#include <libkdepim/kprefsdialog.h>
 
 /**
   Dialog to change the kandy configuration.

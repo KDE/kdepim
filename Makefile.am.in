@@ -1,7 +1,7 @@
 ## kdepim/Makefile.am
 ## (C) 1997 Stephan Kulow
 
-COMPILE_FIRST = libical libkcal kgantt kalarmd
+COMPILE_FIRST = libical libkcal libkdepim kgantt kalarmd
 
 AUTOMAKE_OPTIONS = foreign 1.4
 DISTCLEANFILES = inst-apps
