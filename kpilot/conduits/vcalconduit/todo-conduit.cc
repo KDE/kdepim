@@ -76,7 +76,6 @@ TodoConduitPrivate::TodoConduitPrivate(KCal::Calendar *b) :
 	fAllTodos.setAutoDelete(false);
 }
 
-
 void TodoConduitPrivate::addIncidence(KCal::Incidence*e)
 {
 	fAllTodos.append(static_cast<KCal::Todo*>(e));
@@ -163,11 +162,56 @@ TodoConduit::~TodoConduit()
 //	FUNCTIONSETUP;
 }
 
+void TodoConduit::_setAppInfo()
+{
+	FUNCTIONSETUP;
+	// get the address application header information
+	unsigned char *buffer =
+		new unsigned char[PilotTodoEntry::APP_BUFFER_SIZE];
+	int appLen = fDatabase->readAppBlock(buffer,PilotTodoEntry::APP_BUFFER_SIZE);
+
+	unpack_ToDoAppInfo(&fTodoAppInfo, buffer, appLen);
+	delete[]buffer;
+	buffer = NULL;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " lastUniqueId"
+		<< fTodoAppInfo.category.lastUniqueID << endl;
+#endif
+	for (int i = 0; i < 16; i++)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " cat " << i << " =" <<
+			fTodoAppInfo.category.name[i] << endl;
+#endif
+	}
+
+}
+
+
+
 const QString TodoConduit::getTitle(PilotAppCategory*de)
 {
 	PilotTodoEntry*d=dynamic_cast<PilotTodoEntry*>(de);
 	if (d) return QString(d->getDescription());
 	return "";
+}
+
+void TodoConduit::readConfig()
+{
+	VCalConduitBase::readConfig();
+	// determine if the categories have ever been synce. Needed to prevent loosing the categories on the desktop.
+	// also use a full sync for the first time to make sure the palm categories are really transferred to the desktop
+	categoriesSynced = fConfig->readBoolEntry("Categories already synced");
+	if (!categoriesSynced) fFullSync=true;
+}
+
+void TodoConduit::postSync()
+{
+	VCalConduitBase::postSync();
+	fConfig->setGroup(configGroup());
+	// after this successful sync the categories have been synced for sure
+	fConfig->writeEntry("Categories already synced", true);
 }
 
 PilotRecord*TodoConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
@@ -201,6 +245,8 @@ PilotRecord*TodoConduit::recordFromIncidence(PilotTodoEntry*de, const KCal::Todo
 	
 	// TODO: take recurrence (code in VCAlConduit) from ActionNames
 	// TODO: take categories from the pilot
+	de->setCat(_getCat(de->getCat(), todo->categories()));
+	
 	// TODO: sync the alarm from ActionNames. Need to extend PilotTodoEntry
 	de->setPriority(todo->priority());
 
@@ -218,6 +264,28 @@ DEBUGCONDUIT<<"-------- "<<todo->summary()<<endl;
 	return de->pack();
 }
 
+
+/** 
+ * _getCat returns the id of the category from the given categories list. If none of the categories exist 
+ * on the palm, the "Nicht abgelegt" (don't know the english name) is used.
+ */
+int TodoConduit::_getCat(int cat, const QStringList cats) const
+{
+	FUNCTIONSETUP;
+	int j;
+	if (cats.contains(fTodoAppInfo.category.name[cat])) 
+		return cat;
+	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
+		for (j=1; j<=15; j++) 
+		{
+			if (!(*it).isEmpty() && ! (*it).compare( fTodoAppInfo.category.name[j] ) ) 
+			{
+				return j;
+			}
+		}
+	}
+	return 0;
+}
 
 KCal::Incidence *TodoConduit::incidenceFromRecord(KCal::Incidence *e, const PilotAppCategory *de)
 {
@@ -257,6 +325,26 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 		e->setDtDue(readTm(de->getDueDate()));
 		e->setHasDueDate(true);
 	}
+	
+	// Categories
+	// TODO: Sync categories
+	// first remove all categories and then add only the appropriate one
+	QStringList cats=e->categories();
+	if (!categoriesSynced)
+	{
+		// TODO: This is not optimal because it has the consequence that only one of the
+		// palm categories can be set on the desktop, all others will be deleted from the desktop entry!
+		for (int j=1; j<=15; j++) 
+		{
+			cats.remove(fTodoAppInfo.category.name[j]);
+		}
+	}
+	int cat=de->getCat();
+	if (0<cat && cat<=15) 
+	{
+		cats.append( fTodoAppInfo.category.name[cat] );
+	}
+	e->setCategories(cats);
 
 	// PRIORITY //
 	e->setPriority(de->getPriority());
@@ -275,6 +363,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 
 // $Log$
+// Revision 1.15  2002/06/12 22:11:17  kainhofe
+// Proper cleanup, libkcal still has some problems marking records modified on loading
+//
 // Revision 1.14  2002/05/14 23:07:49  kainhofe
 // Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
 //

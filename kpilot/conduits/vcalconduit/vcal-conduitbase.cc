@@ -235,6 +235,8 @@ there are two special cases: a full and a first sync.
 
 	if (!openDatabases(dbname(), &fFullSync) ) goto error;
 	if (!openCalendar() ) goto error;
+	
+	preSync();
 
 
 #ifdef DEBUG
@@ -494,6 +496,7 @@ void VCalConduitBase::syncDeletedIncidence()
 void VCalConduitBase::cleanup()
 {
 	FUNCTIONSETUP;
+	postSync();
 
 	if (fDatabase) 
 	{
@@ -668,6 +671,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.13  2002/07/05 00:00:00  kainhofe
+// Add deleted record only if archived are supposed to be synced
+//
 // Revision 1.12  2002/06/12 22:11:17  kainhofe
 // Proper cleanup, libkcal still has some problems marking records modified on loading
 //

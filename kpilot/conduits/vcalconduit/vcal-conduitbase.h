@@ -134,6 +134,11 @@ protected:
 	
 	virtual const QString getTitle(PilotAppCategory*de)=0;
 
+	// THESE *CAN* BE IMPLEMTED BY CHILD CLASSES
+	// execute something at the beginning or end of the sync.
+	virtual void preSync(){};
+	virtual void postSync(){};
+
 protected:
 	KCal::Calendar *fCalendar;
 
@@ -151,6 +156,9 @@ protected:
 
 
 // $Log$
+// Revision 1.7  2002/06/09 21:08:06  kainhofe
+// Use the openDatabases() function and the fDatabase/fLocalDatabase instead of our own fCurrentDatabase/fBackupDatabase
+//
 // Revision 1.6  2002/06/07 07:13:24  adridg
 // Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
 // Extend *Database classes with dbPathName() for consistency.

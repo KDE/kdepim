@@ -33,7 +33,11 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// TODO: Remove this!!!!! Had to add this because I misconfigured kdepim!!!!!
+#define DEBUG
+
 #include <plugin.h>
+#include <kconfig.h>
 
 #include <todo.h>
 #include <calendar.h>
@@ -90,11 +94,15 @@ protected:
 	
 	virtual const QString configGroup() { return ToDoConduitFactory::group; };
 	virtual const QString dbname() { return "ToDoDB"; };
+	virtual void preSync() {_setAppInfo(); };
+	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { return new TodoConduitPrivate(fCalendar);};
 
-   virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { return new TodoConduitPrivate(fCalendar);};
+	virtual void readConfig();
+	void _setAppInfo();
+	virtual void postSync();
+	int _getCat(int cat, const QStringList cats) const;
 
-
-	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {FUNCTIONSETUP; if (r) return new PilotTodoEntry(r); else return new PilotTodoEntry;};
+	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {FUNCTIONSETUP; if (r) return new PilotTodoEntry(fTodoAppInfo, r); else return new PilotTodoEntry(fTodoAppInfo);};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
 
 protected:
@@ -104,9 +112,14 @@ protected:
 	KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotAppCategory *);
 	KCal::Todo *incidenceFromRecord(KCal::Todo *, const PilotTodoEntry *);
 
+	struct ToDoAppInfo fTodoAppInfo;
+	bool categoriesSynced;
 } ;
 
 // $Log$
+// Revision 1.9  2002/05/14 23:07:49  kainhofe
+// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
+//
 // Revision 1.7  2002/05/01 21:18:23  kainhofe
 // Reworked the settings dialog, added various different sync options
 //
