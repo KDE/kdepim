@@ -584,20 +584,10 @@ void AddresseeEditorWidget::save()
                              mAnniversaryPicker->date().toString( Qt::ISODate ) );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-Anniversary" );
-                          
+
   // Save the email addresses
-  QStringList emails = mAddressee.emails();
-  QStringList::Iterator iter;
-  for ( iter = emails.begin(); iter != emails.end(); ++iter )
-    mAddressee.removeEmail( *iter );
-  
-  emails = mEmailWidget->emails();
-  bool first = true;
-  for ( iter = emails.begin(); iter != emails.end(); ++iter ) {
-    mAddressee.insertEmail( *iter, first );
-    first = false;
-  }
-  
+  mAddressee.setEmails( mEmailWidget->emails() );
+
   // Save the phone numbers
   KABC::PhoneNumber::List phoneNumbers;
   KABC::PhoneNumber::List::Iterator phoneIter;
@@ -605,7 +595,7 @@ void AddresseeEditorWidget::save()
   for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
         ++phoneIter )
     mAddressee.removePhoneNumber( *phoneIter );
-    
+
   phoneNumbers = mPhoneEditWidget->phoneNumbers();
   for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
         ++phoneIter )
@@ -770,6 +760,10 @@ void AddresseeEditorWidget::emitModified()
 
     save();
     list.append( mAddressee );
+
+    // I hate these hacks...
+    if ( !isExtension() )
+      mDirty = true;
 
     emit modified( list );
   }
