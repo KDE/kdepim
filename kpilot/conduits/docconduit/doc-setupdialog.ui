@@ -76,7 +76,7 @@
                             <cstring>fTXTDir</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Enter the name of the directory where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
+                            <string>Enter the name of the folder where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
                         </property>
                     </widget>
                     <widget class="QButtonGroup" row="2" column="0" rowspan="1" colspan="2">
@@ -162,7 +162,7 @@
                             <cstring>fPDBDir</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Enter the directory where copies of the handheld databases are kept. Local copies are only made if the box is checked as well.</string>
+                            <string>Enter the folder where copies of the handheld databases are kept. Local copies are only made if the box is checked as well.</string>
                         </property>
                     </widget>
                 </grid>

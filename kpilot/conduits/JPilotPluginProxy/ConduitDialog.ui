@@ -112,7 +112,7 @@
                             <cstring>TextLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>JPilot plugin directories:</string>
+                            <string>JPilot plugin folders:</string>
                         </property>
                     </widget>
                     <spacer row="3" column="0">

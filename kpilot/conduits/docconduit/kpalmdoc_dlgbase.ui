@@ -74,7 +74,7 @@
                             <cstring>fDirectories</cstring>
                         </property>
                         <property name="text">
-                            <string>Convert whole &amp;directories</string>
+                            <string>Convert whole &amp;folders</string>
                         </property>
                     </widget>
                     <widget class="KURLRequester" row="1" column="1" rowspan="1" colspan="2">
@@ -82,7 +82,7 @@
                             <cstring>fPDBDir</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Directory where copies of the handheld databases are kept. You can install them to any PalmOS handheld, and distribute these copies to other people (but beware of copyright infringement!).</string>
+                            <string>Folder where copies of the handheld databases are kept. You can install them to any PalmOS handheld, and distribute these copies to other people (but beware of copyright infringement!).</string>
                         </property>
                     </widget>
                     <widget class="KURLRequester" row="0" column="1" rowspan="1" colspan="2">
@@ -90,7 +90,7 @@
                             <cstring>fTXTDir</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Enter the name of the directory where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
+                            <string>Enter the name of the folder where the text files reside on the PC. All files with extension .txt will be synced to the handheld.</string>
                         </property>
                     </widget>
                     <widget class="KPushButton" row="6" column="0" rowspan="1" colspan="2">
