@@ -93,7 +93,7 @@ KAboutData *KAddressbookPart::createAboutData()
   about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
   about->addAuthor( "Don Sanders", I18N_NOOP( "Original author" ) );
   about->addAuthor( "Cornelius Schumacher",
-                    I18N_NOOP( "Co-maintainer, libkabc port, csv import/export" ),
+                    I18N_NOOP( "Co-maintainer, libkabc port, CSV import/export" ),
                     "schumacher@kde.org" );
   about->addAuthor( "Mike Pilone", I18N_NOOP( "GUI and framework redesign" ),
                     "mpilone@slac.com" );
