@@ -45,8 +45,10 @@ QString KFolderTreeItem::key(int column, bool) const
     thiskey = "\t3";
   else if (mProtocol == News)
     thiskey = "\t4";
-  else
+  else if (mProtocol == Search)
     thiskey = "\t5";
+  else
+    thiskey = "\t6";
 
   // make sure system folders come first when sorting
   if (mType == Inbox)
