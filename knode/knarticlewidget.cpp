@@ -22,7 +22,7 @@
 #include <qclipboard.h>
 #include <qfileinfo.h>
 #include <qdir.h>
-#include <qprinter.h>
+#include <kprinter.h>
 #include <qpaintdevicemetrics.h>
 #include <qstylesheet.h>
 
@@ -1283,7 +1283,7 @@ void KNArticleWidget::slotSave()
 void KNArticleWidget::slotPrint()
 {
   kdDebug(5003) << "KNArticleWidget::slotPrint()" << endl;
-  QPrinter *printer=new QPrinter();
+  KPrinter *printer=new KPrinter();
 
   if(printer->setup(this)) {
 
