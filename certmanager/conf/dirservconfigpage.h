@@ -33,7 +33,11 @@
 #define DIRSERVCONFIGPAGE_H
 
 #include <kcmodule.h>
+#include <kleo/cryptoconfig.h>
 
+class QCheckBox;
+class QTimeEdit;
+class KIntNumInput;
 namespace Kleo {
   class CryptoConfig;
   class CryptoConfigEntry;
@@ -58,9 +62,21 @@ private slots:
   void slotChanged();
 
 private:
-  Kleo::CryptoConfigEntry* configEntry();
+  Kleo::CryptoConfigEntry* configEntry( const char* componentName,
+                                        const char* groupName,
+                                        const char* entryName,
+                                        Kleo::CryptoConfigEntry::ArgType argType,
+                                        bool isList );
 
   Kleo::DirectoryServicesWidget* mWidget;
+  QTimeEdit* mTimeout;
+  KIntNumInput* mMaxItems;
+  QCheckBox* mAddNewServersCB;
+
+  Kleo::CryptoConfigEntry* mTimeoutConfigEntry;
+  Kleo::CryptoConfigEntry* mMaxItemsConfigEntry;
+  Kleo::CryptoConfigEntry* mAddNewServersConfigEntry;
+
   Kleo::CryptoConfig* mConfig;
 };
 

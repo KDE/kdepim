@@ -33,11 +33,16 @@
 #include <qlayout.h>
 #include "directoryserviceswidget.h"
 #include <cryptplugfactory.h>
-#include <kleo/cryptoconfig.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kconfig.h>
+#include <qhbox.h>
+#include <qlabel.h>
+#include <qdatetimeedit.h>
+#include <qcheckbox.h>
+#include <knuminput.h>
+#include <kdialog.h>
 
 // For sync'ing kabldaprc
 class KABSynchronizer
@@ -112,43 +117,100 @@ static const char s_dirserv_componentName[] = "dirmngr";
 static const char s_dirserv_groupName[] = "LDAP";
 static const char s_dirserv_entryName[] = "LDAP Server";
 
+static const char s_timeout_componentName[] = "dirmngr";
+static const char s_timeout_groupName[] = "LDAP";
+static const char s_timeout_entryName[] = "ldaptimeout";
+
+static const char s_maxitems_componentName[] = "dirmngr";
+static const char s_maxitems_groupName[] = "CRL"; // bug?
+static const char s_maxitems_entryName[] = "max-replies";
+
+static const char s_addnewservers_componentName[] = "dirmngr";
+static const char s_addnewservers_groupName[] = "LDAP";
+static const char s_addnewservers_entryName[] = "add-servers";
+
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget * parent, const char * name )
     : KCModule( parent, name )
 {
   mConfig = Kleo::CryptPlugFactory::instance()->config();
-  QVBoxLayout* lay = new QVBoxLayout( this );
-  mWidget = new Kleo::DirectoryServicesWidget( configEntry(), this );
+  QVBoxLayout* lay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  Kleo::CryptoConfigEntry* entry = configEntry( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName,
+                                                Kleo::CryptoConfigEntry::ArgType_LDAPURL, true );
+  mWidget = new Kleo::DirectoryServicesWidget( entry, this );
   lay->addWidget( mWidget );
   connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
-}
 
-// Helper method for load/save/defaults. Implements runtime checks on the configuration option.
-Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry() {
-    Kleo::CryptoConfigEntry* entry = mConfig->entry( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName );
-    if ( !entry ) {
-        KMessageBox::error( this, i18n( "Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName ) );
-        return 0;
-    }
-    if( entry->argType() != Kleo::CryptoConfigEntry::ArgType_LDAPURL || !entry->isList() ) {
-        KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName ).arg( entry->argType() ).arg( entry->isList() ) );
-        return 0;
-    }
-    return entry;
+  // LDAP timeout
+  QHBox* box = new QHBox( this );
+  box->setSpacing( KDialog::spacingHint() );
+  lay->addWidget( box );
+  QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds)" ), box );
+  mTimeout = new QTimeEdit( box );
+  mTimeout->setDisplay( QTimeEdit::Minutes | QTimeEdit::Seconds );
+  connect( mTimeout, SIGNAL( valueChanged( const QTime& ) ), this, SLOT( slotChanged() ) );
+  label->setBuddy( mTimeout );
+  QWidget* stretch = new QWidget( box );
+  box->setStretchFactor( stretch, 2 );
+
+  // Max number of items returned by queries
+  box = new QHBox( this );
+  box->setSpacing( KDialog::spacingHint() );
+  lay->addWidget( box );
+  mMaxItems = new KIntNumInput( box );
+  mMaxItems->setLabel( i18n( "&Maximum number of items returned by query" ), Qt::AlignLeft | Qt::AlignVCenter );
+  mMaxItems->setMinValue( 0 );
+  connect( mMaxItems, SIGNAL( valueChanged(int) ), this, SLOT( slotChanged() ) );
+  stretch = new QWidget( box );
+  box->setStretchFactor( stretch, 2 );
+
+  // 'Add new servers' checkbox
+  mAddNewServersCB = new QCheckBox( i18n( "Automatically add &new servers discovered in CRL distribution points" ), this );
+  connect( mAddNewServersCB, SIGNAL( clicked() ), this, SLOT( slotChanged() ) );
+  lay->addWidget( mAddNewServersCB );
 }
 
 void DirectoryServicesConfigurationPage::load()
 {
   mWidget->load();
+
+  mTimeoutConfigEntry = configEntry( s_timeout_componentName, s_timeout_groupName, s_timeout_entryName, Kleo::CryptoConfigEntry::ArgType_UInt, false );
+  if ( mTimeoutConfigEntry ) {
+    QTime time = QTime().addSecs( mTimeoutConfigEntry->uintValue() );
+    //kdDebug() << "timeout:" << mTimeoutConfigEntry->uintValue() << "  -> " << time << endl;
+    mTimeout->setTime( time );
+  }
+
+  mMaxItemsConfigEntry = configEntry( s_maxitems_componentName, s_maxitems_groupName, s_maxitems_entryName, Kleo::CryptoConfigEntry::ArgType_UInt, false );
+  if ( mMaxItemsConfigEntry ) {
+    mMaxItems->blockSignals( true ); // KNumInput emits valueChanged from setValue!
+    mMaxItems->setValue( mMaxItemsConfigEntry->uintValue() );
+    mMaxItems->blockSignals( false );
+  }
+
+  mAddNewServersConfigEntry = configEntry( s_addnewservers_componentName, s_addnewservers_groupName, s_addnewservers_entryName, Kleo::CryptoConfigEntry::ArgType_None, false );
+  if ( mAddNewServersConfigEntry ) {
+    mAddNewServersCB->setChecked( mAddNewServersConfigEntry->boolValue() );
+  }
 }
 
 void DirectoryServicesConfigurationPage::save()
 {
   mWidget->save();
+
+  QTime time( mTimeout->time() );
+  unsigned int timeout = time.minute() * 60 + time.second();
+  if ( mTimeoutConfigEntry && mTimeoutConfigEntry->uintValue() != timeout )
+    mTimeoutConfigEntry->setUIntValue( timeout );
+  if ( mMaxItemsConfigEntry && mMaxItemsConfigEntry->uintValue() != (uint)mMaxItems->value() )
+    mMaxItemsConfigEntry->setUIntValue( mMaxItems->value() );
+  if ( mAddNewServersConfigEntry && mAddNewServersConfigEntry->boolValue() != mAddNewServersCB->isChecked() )
+    mAddNewServersConfigEntry->setBoolValue( mAddNewServersCB->isChecked() );
+
   mConfig->sync( true );
 
   // Also write the LDAP URLs to kabldaprc so that they are used by kaddressbook
   KABSynchronizer sync;
-  KURL::List toAdd = mWidget->urlList();
+  const KURL::List toAdd = mWidget->urlList();
   KURL::List currentList = sync.readCurrentList();
 
   KURL::List::const_iterator it = toAdd.begin();
@@ -165,6 +227,13 @@ void DirectoryServicesConfigurationPage::save()
 void DirectoryServicesConfigurationPage::defaults()
 {
   mWidget->defaults();
+  if ( mTimeoutConfigEntry )
+    mTimeoutConfigEntry->resetToDefault();
+  if ( mMaxItemsConfigEntry )
+    mMaxItemsConfigEntry->resetToDefault();
+  if ( mAddNewServersConfigEntry )
+    mAddNewServersConfigEntry->resetToDefault();
+  load();
 }
 
 extern "C"
@@ -181,6 +250,26 @@ extern "C"
 void DirectoryServicesConfigurationPage::slotChanged()
 {
   emit changed(true);
+}
+
+
+// Find config entry for ldap servers. Implements runtime checks on the configuration option.
+Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry( const char* componentName,
+                                                                          const char* groupName,
+                                                                          const char* entryName,
+                                                                          Kleo::CryptoConfigEntry::ArgType argType,
+                                                                          bool isList )
+{
+    Kleo::CryptoConfigEntry* entry = mConfig->entry( componentName, groupName, entryName );
+    if ( !entry ) {
+        KMessageBox::error( this, i18n( "Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName ) );
+        return 0;
+    }
+    if( entry->argType() != argType || entry->isList() != isList ) {
+        KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() ) );
+        return 0;
+    }
+    return entry;
 }
 
 #include "dirservconfigpage.moc"
