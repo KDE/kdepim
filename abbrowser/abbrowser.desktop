@@ -1,13 +1,16 @@
 # KDE Config File 
 [KDE Desktop Entry]
 Name=abbrowser
+Name[da]=Abbrowser
 Name[eo]=Adresarorigardilo
+Name[es]=Abbrowser
 Name[et]=Aadressiraamatu lehitseja
 Name[fr]=Carnet d'adresses (abbrowser)
 Name[hu]=Címjegyzék-nézegető
 Name[is]=ab-flakkari
 Name[it]=Browser rubrica
 Name[ja]=アドレスブックブラウザー
+Name[lv]=abpārlūks
 Name[no_NY]=Adresseboklesar
 Name[pl]=Przeglądarka bazy adresowej
 Name[sk]=pridať prehliadač
