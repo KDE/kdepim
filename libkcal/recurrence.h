@@ -80,7 +80,7 @@ class Recurrence
      * N.B. This property is derived by default from the parent incidence,
      * or according to whether a time is specified in setRecurStart(). */
     void setFloats(bool f);
-    /** 
+    /**
       Returns whether the recurrence has no time, just a date.
     */
     bool doesFloat() const { return mFloats; }

@@ -41,74 +41,121 @@ class Todo : public Incidence
     QCString type() const { return "Todo"; }
 
     /**
-      Return an exact copy of this todo. The returned object is owned by the
+      Returns an exact copy of this todo. The returned object is owned by the
       caller.
     */
     Todo *clone();
 
     /**
-      Set due date and time.
+      Sets due date and time.
+
+      @param dtDue The due date/time.
+      @param first Set the date of the first occurence (if the todo is recurrent).
     */
-    void setDtDue(const QDateTime &dtDue);
+    void setDtDue(const QDateTime &dtDue, bool first = false);
     /**
-      Return due date and time.
+      Returns due date and time.
+
+      @param first If true and the todo recurs, the due date of the first
+      occurence will be returned.If false and recurrent, the date of the
+      current occurence will be returned. If non-recurrent, the normal due date
+      will be returned.
     */
-    QDateTime dtDue() const;
+    QDateTime dtDue( bool first = false ) const;
     /**
-      Return due time as string formatted according to the users locale
+      Returns due time as string formatted according to the users locale
       settings.
     */
     QString dtDueTimeStr() const;
     /**
-      Return due date as string formatted according to the users locale
+      Returns due date as string formatted according to the users locale
       settings.
-      
+
       @param shortfmt If set to true, use short date format, if set to false use
                       long format.
     */
     QString dtDueDateStr( bool shortfmt = true ) const;
     /**
-      Return due date and time as string formatted according to the users locale
+      Returns due date and time as string formatted according to the users locale
       settings.
     */
     QString dtDueStr() const;
 
     /**
-      Return true if the todo has a due date, otherwise return false.
+      Returns true if the todo has a due date, otherwise return false.
     */
     bool hasDueDate() const;
     /**
       Set if the todo has a due date.
-      
+
       @param hasDueDate true if todo has a due date, otherwise false
     */
     void setHasDueDate( bool hasDueDate );
 
     /**
-      Return true if the todo has a start date, otherwise return false.
+      Returns true if the todo has a start date, otherwise return false.
     */
     bool hasStartDate() const;
     /**
       Set if the todo has a start date.
-      
+
       @param hasDueDate true if todo has a start date, otherwise false
     */
     void setHasStartDate( bool hasStartDate );
 
     /**
-      Return true if the todo is 100% completed, otherwise return false.
+      Returns the startdate of the todo.
+      @param first If true, the startdate of the todo will be returned. If the
+      todo recurs, the startdate of the first occurence will be returned.
+      If false and the todo recurs, the relative startdate will be returned,
+      based on the date returned by dtRecurrence().
+    */
+    QDateTime dtStart( bool first = false ) const;
+
+    /**
+      Sets the startdate of the todo.
+    */
+    void setDtStart( const QDateTime &dtStart );
+
+    /** Returns an todo's starting time as a string formatted according to the
+     users locale settings.
+     @param first If true, the startdate of the todo will be returned. If the
+     todo recurs, the startdate of the first occurence will be returned.
+     If false and the todo recurs, the relative startdate will be returned,
+     based on the date returned by dtRecurrence().
+    */
+    QString dtStartTimeStr( bool first = false ) const;
+    /** Returns an todo's starting date as a string formatted according to the
+     users locale settings.
+     @param first If true, the startdate of the todo will be returned. If the
+     todo recurs, the startdate of the first occurence will be returned.
+     If false and the todo recurs, the relative startdate will be returned,
+     based on the date returned by dtRecurrence().
+    */
+    QString dtStartDateStr( bool shortfmt = true, bool first = false ) const;
+    /** Returns an todo's starting date and time as a string formatted according
+     to the users locale settings.
+     @param first If true, the startdate of the todo will be returned. If the
+     todo recurs, the startdate of the first occurence will be returned.
+     If false and the todo recurs, the relative startdate will be returned,
+     based on the date returned by dtRecurrence().
+    */
+    QString dtStartStr( bool first = false ) const;
+
+    /**
+      Returns true if the todo is 100% completed, otherwise return false.
     */
     bool isCompleted() const;
     /**
       Set completed state.
-      
+
       @param completed If true set completed state to 100%, if false set
                        completed state to 0%.
     */
     void setCompleted( bool completed );
-    
+
     /**
-      Return how many percent of the task are completed. Returns a value
+      Returns how many percent of the task are completed. Returns a value
       between 0 and 100.
     */
     int percentComplete() const;
@@ -119,11 +166,11 @@ class Todo : public Incidence
     void setPercentComplete( int );
 
     /**
-      Return date and time when todo was completed.
+      Returns date and time when todo was completed.
     */
     QDateTime completed() const;
     /**
-      Return string contaiting date and time when the todo was completed
+      Returns string contaiting date and time when the todo was completed
       formatted according to the users locale settings.
     */
     QString completedStr() const;
@@ -133,15 +180,27 @@ class Todo : public Incidence
     void setCompleted( const QDateTime &completed );
 
     /**
-      Return true, if todo has a date associated with completion, otherwise
+      Returns true, if todo has a date associated with completion, otherwise
       return false.
     */
     bool hasCompletedDate() const;
-    
+
+    /**
+      Sets the due date/time of the current occurence if recurrent.
+    */
+    void setDtRecurrence( const QDateTime &dt );
+
+    /**
+      Returns the due date/time of the current occurence if recurrent.
+    */
+    QDateTime dtRecurrence() const;
+
   private:
     bool accept(Visitor &v) { return v.visit( this ); }
 
     QDateTime mDtDue;                    // due date of todo
+                                         // (first occurence if recurrent)
+    QDateTime mDtRecurrence;             // due date of recurrence
 
     bool mHasDueDate;                    // if todo has associated due date
     bool mHasStartDate;                  // if todo has associated start date

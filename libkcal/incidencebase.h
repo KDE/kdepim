@@ -74,16 +74,16 @@ class IncidenceBase : public CustomProperties
     /** for setting the event's starting date/time with a QDateTime. */
     virtual void setDtStart( const QDateTime &dtStart );
     /** returns an event's starting date/time as a QDateTime. */
-    QDateTime dtStart() const;
+    virtual QDateTime dtStart() const;
     /** returns an event's starting time as a string formatted according to the
      users locale settings */
-    QString dtStartTimeStr() const;
+    virtual QString dtStartTimeStr() const;
     /** returns an event's starting date as a string formatted according to the
      users locale settings */
-    QString dtStartDateStr( bool shortfmt = true ) const;
+    virtual QString dtStartDateStr( bool shortfmt = true ) const;
     /** returns an event's starting date and time as a string formatted according
      to the users locale settings */
-    QString dtStartStr() const;
+    virtual QString dtStartStr() const;
 
     virtual void setDuration( int seconds );
     int duration() const;
@@ -99,9 +99,9 @@ class IncidenceBase : public CustomProperties
     //
     // Comments
     //
-    
-    /** 
-     * Add a comment to this incidence.  
+
+    /**
+     * Add a comment to this incidence.
      *
      * Does not add a linefeed character.  Just appends the text as passed in.
      *
@@ -109,7 +109,7 @@ class IncidenceBase : public CustomProperties
      */
     void addComment(const QString& comment);
 
-    /** 
+    /**
      * Remove a comment from the event.
      *
      * Removes first comment whose string is an exact match for the string
@@ -128,7 +128,7 @@ class IncidenceBase : public CustomProperties
     /**
       Add Attendee to this incidence. IncidenceBase takes ownership of the
       Attendee object.
-    
+
       @param doUpdate If true the Observers are notified, if false they are not.
     */
     void addAttendee( Attendee *a, bool doUpdate = true );

@@ -187,7 +187,7 @@ int Incidence::revision() const
 void Incidence::setDtStart(const QDateTime &dtStart)
 {
   if (mRecurrence)
-    mRecurrence->setRecurStart( dtStart);
+    mRecurrence->setRecurStart( dtStart );
   IncidenceBase::setDtStart( dtStart );
 }
 
