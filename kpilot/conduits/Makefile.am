@@ -11,10 +11,11 @@ MALSUBDIR=malconduit
 endif
 
 
-SUBDIRS = knotes \
-	expense \
+SUBDIRS = expense \
+	knotes \
 	null \
-	vcalconduit \
 	popmail \
+	timeconduit \
+	vcalconduit \
 	$(MALSUBDIR)
 
