@@ -27,30 +27,22 @@
 Mark - 3.2
 --------------------------
 
-  * 2003-10-22: Default history report to current month.
-
   * 2003-10-15: BUG: Fix auto-save!!  Write event every n minutes.
-
-  * 2003-09-26: Decide on a page width and then rtrim task descriptions to fit.
-    7pt Courier in Kate as design target?
-
-  * 2003-09-26: Add totals table across entire date range.
-
-  * 2003-09-19: If task active, editing task stops timer.  Necessary?
 
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
 
+  * 2003-09-23: BUG: Auto-save should write events.
+  
   * 2003-09-24: UPDATE DOCS!!
 
   * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
 
-  * ONGOING: Update feature plan.
+Mark - 3.3
+--------------------------
 
   * 2003-09-24: Change menu entry from KArm to Time Clock.
 
-  * 2003-09-23: Auto-save should write events.
-  
   * 2003-08-15: Remove code that is causing compiler warnings.
 
   * 2003-08-15: Go over code and delete all cruft.  In particular, take a look
@@ -61,9 +53,13 @@ Mark - 3.2
       - KarmStorage::addComment()
 
   * 2003-09-17: Run through Valgrind.
+  
+  * 2003-09-26: Decide on a page width and then rtrim task descriptions to fit.
+    7pt Courier in Kate as design target?
 
-Mark - 3.3
---------------------------
+  * 2003-09-26: Add totals table across entire date range.
+
+  * 2003-09-19: If task active, editing task stops timer.  Necessary?
 
   * 2003-09-17: Modify KarmStorage to raise exceptions instead of returning
     empty string.  See DF's not in KarmStorage on the required mod to the
