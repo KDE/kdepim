@@ -47,6 +47,7 @@
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
+#include <libkdepim/categoryselectdialog.h>
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"
@@ -54,6 +55,7 @@
 #include "extensionmanager.h"
 #include "incsearchwidget.h"
 #include "jumpbuttonbar.h"
+#include "kabprefs.h"
 #include "ldapsearchdialog.h"
 #include "printing/printingwizard.h"
 #include "undocmds.h"
@@ -230,6 +232,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
   mActionWhoAmI->setEnabled( selected );
+  mActionCategories->setEnabled( selected );
 }
 
 void KABCore::sendMail()
@@ -379,6 +382,28 @@ void KABCore::setWhoAmI()
   KABC::Addressee addr = mAddressBook->findByUid( uidList[ 0 ] );
   if ( KMessageBox::questionYesNo( this, text.arg( addr.assembledName() ) ) == KMessageBox::Yes )
     KABC::StdAddressBook::setUsersContact( addr.uid() );
+}
+
+void KABCore::setCategories()
+{
+  KPIM::CategorySelectDialog dlg( KABPrefs::instance(), this, "", true );
+  if ( !dlg.exec() )
+    return;
+
+  QStringList categories = dlg.selectedCategories();
+
+  QStringList uids = mViewManager->selectedUids();
+  QStringList::Iterator it;
+  for ( it = uids.begin(); it != uids.end(); ++it ) {
+    KABC::Addressee addr = mAddressBook->findByUid( *it );
+    if ( !addr.isEmpty() ) {
+      addr.setCategories( categories );
+      mAddressBook->insertAddressee( addr );
+    }
+  }
+
+  if ( uids.count() > 0 )
+    setModified( true );
 }
 
 void KABCore::setSearchFields( const KABC::Field::List &fields )
@@ -885,6 +910,9 @@ void KABCore::initActions()
                                SLOT( setWhoAmI() ), actionCollection(),
                                "set_personal" );
 
+  mActionCategories = new KAction( i18n( "Set Categories" ), 0, this,
+                                   SLOT( setCategories() ), actionCollection(),
+                                   "edit_set_categories" );
 
   clipboardDataChanged();
 

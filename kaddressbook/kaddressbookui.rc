@@ -19,6 +19,7 @@
 
     <Menu name="edit"><text>&amp;Edit</text>
       <Action name="edit_delete" append="edit_paste_merge"/>
+      <Action name="edit_set_categories"/>
     </Menu>
 
     <Menu name="view"><text>&amp;View</text>

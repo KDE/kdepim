@@ -155,6 +155,12 @@ class KABCore : public QWidget
     void setWhoAmI();
 
     /**
+      Displays the category dialog and applies the result to all
+      selected contacts.
+     */
+    void setCategories();
+
+    /**
       Sets the field list of the Incremental Search Widget.
      */
     void setSearchFields( const KABC::Field::List &fields );
@@ -293,6 +299,7 @@ class KABCore : public QWidget
     KAction *mActionSave;
     KAction *mActionDeleteView;
     KAction *mActionWhoAmI;
+    KAction *mActionCategories;
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
 };
