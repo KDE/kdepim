@@ -186,9 +186,103 @@ QListViewItem *ListCategorizer::addItem(const QString & category,
 	return new QListViewItem(p, name, description);
 }
 
+#define RVPAD	(4)
+
+RichListViewItem::RichListViewItem(QListViewItem *p,
+	QString l,
+	int c) :
+	QListViewItem(p,l)
+{
+	FUNCTIONSETUP;
+
+	fColumns=c;
+	fIsRich = new bool[c];
+	fRect = new QRect[c];
+
+	for (int i=0; i<c; i++)
+	{
+		fIsRich[i]=false;
+	}
+}
+
+RichListViewItem::~RichListViewItem()
+{
+	FUNCTIONSETUP;
+
+	delete[] fIsRich;
+	delete[] fRect;
+}
+
+void RichListViewItem::computeHeight(int c)
+{
+	FUNCTIONSETUP;
+
+	if (!fIsRich[c]) return;
+
+	QListView *v = listView();
+	
+	fRect[c] = v->fontMetrics().boundingRect(v->itemMargin()+RVPAD,0+RVPAD,
+		v->columnWidth(c)-v->itemMargin()-RVPAD,300,
+		AlignLeft | AlignTop | WordBreak,
+		text(c));
+}
+
+
+/* virtual */ void RichListViewItem::setup()
+{
+	FUNCTIONSETUP;
+
+	QListViewItem::setup();
+
+	QListView *v = listView();
+	int h = height();
+
+	for (int i=0; i<fColumns; i++)
+	{
+		computeHeight(i);
+		h = QMAX(h,fRect[i].height()+2*RVPAD);
+	}
+
+	setHeight(h);
+}
+
+
+/* virtual */ void RichListViewItem::paintCell(QPainter *p,
+	const QColorGroup &gc,
+	int column,
+	int width,
+	int alignment)
+{
+	FUNCTIONSETUP;
+
+	if ((!column) || (!fIsRich[column]))
+	{
+		QListViewItem::paintCell(p,gc,column,width,alignment);
+		return;
+	}
+
+	QListView *v = listView();
+
+	p->eraseRect(0,0,width,height());
+	p->setBackgroundColor(gc.background());
+	p->eraseRect(RVPAD,RVPAD,width-RVPAD,height()-RVPAD);
+	p->setPen(gc.text());
+	p->drawText(v->itemMargin()+RVPAD,0+RVPAD,
+		width-v->itemMargin()-RVPAD,height()-RVPAD,
+		AlignTop | AlignLeft | WordBreak,
+		text(column),
+		-1,
+		&fRect[column]);
+}
+
+
+
 
 
 // $Log$
+// Revision 1.6  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.5  2001/09/29 16:26:18  adridg
 // The big layout change
 //

@@ -25,7 +25,7 @@ INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
 ### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS, if
 ### you want any debugging at all.
 ###
-CXXFLAGS+=-DNO_DEBUG -DNDEBUG -O3
+CXXFLAGS+=-DDEBUG -DDEBUG_CERR -O3
 
 ###
 ### Non-automake variables
@@ -54,7 +54,7 @@ kpilotTest_SOURCES = options.cc kpilotConfig.cc kpilotlink.cc \
 
 kpilotConfig_SOURCES = options.cc kpilotConfig.cc \
 	uiDialog.cc kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
-	main-config.cc
+	listCat.cc conduitSetup.cc main-config.cc
 
 
 kpilot_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)

@@ -43,6 +43,7 @@
 #ifndef QTOOLTIP_H
 #include <qtooltip.h>
 #endif
+#include <qheader.h>
 
 #ifndef _KSIMPLECONFIG_H
 #include <ksimpleconfig.h>
@@ -120,6 +121,10 @@ CConduitSetup::CConduitSetup(QWidget * parent,
 		i18n("Conduits that will run when a hot-sync is done"));
 	available = categories->addCategory(i18n("Available"),
 		i18n("Conduits installed on your system but not active"));
+
+	categories->adjustSize();
+	categories->setColumnWidthMode(CONDUIT_COMMENT,QListView::Manual);
+	categories->header()->setResizeEnabled(false,CONDUIT_COMMENT);
 
 	connect(categories, SIGNAL(selectionChanged(QListViewItem *)),
 		this, SLOT(conduitSelected(QListViewItem *)));
@@ -372,19 +377,24 @@ void CConduitSetup::fillLists()
 			<< o->desktopEntryName()
 			<< " = " << o->name() << endl;
 #endif
+
+		RichListViewItem *p = 0L;
+
 		if (potentiallyInstalled.contains(o->desktopEntryName()) == 0)
 		{
-			(void) new QListViewItem(available,
-				o->name(),
-				o->comment(),
-				o->desktopEntryName(), o->exec());
+			p=new RichListViewItem(available,o->name(),6);
 		}
 		else
 		{
-			(void) new QListViewItem(active,
-				o->name(),
-				o->comment(),
-				o->desktopEntryName(), o->exec());
+			p=new RichListViewItem(active,o->name(),6);
+		}
+		if (p)
+		{
+			p->setText(CONDUIT_COMMENT,o->comment());
+			p->setText(CONDUIT_DESKTOP,o->desktopEntryName());
+			p->setText(CONDUIT_EXEC,o->exec());
+
+			p->setRich(CONDUIT_COMMENT,true);
 		}
 
 		++availList;
@@ -606,6 +616,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.29  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.28  2001/09/30 16:59:54  adridg
 // Implemented actions with buttons
 //

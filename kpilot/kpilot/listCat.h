@@ -1,3 +1,5 @@
+#ifndef LISTCAT_H
+#define LISTCAT_H
 /* listCat.h			KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
@@ -27,10 +29,9 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef LISTCAT_H
-#define LISTCAT_H
 
 #include <qstringlist.h>
+#include <qlistview.h>
 
 #include <klistview.h>
 
@@ -57,6 +58,7 @@
  *
  * @version $Id$
  */
+
 class ListCategorizer : public KListView
 {
 	Q_OBJECT
@@ -192,14 +194,41 @@ private:
 	bool fStartOpen:1;
 } ;
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
+
+class RichListViewItem : public QListViewItem
+{
+public:
+	RichListViewItem(QListViewItem *parent,
+		QString,
+		int);
+	virtual ~RichListViewItem();
+
+	virtual void paintCell(QPainter *,
+		const QColorGroup &,
+		int column,
+		int width,
+		int alignment);
+
+	virtual void setup();
+
+	bool isRich(int c) const { return fIsRich[c]; } ;
+	void setRich(int c,bool b) { fIsRich[c]=b; } ;
+
+protected:
+	void computeHeight(int c);
+
+protected:
+	bool *fIsRich;
+	QRect *fRect;
+	int fColumns;
+
+} ;
 
 
 // $Log$
+// Revision 1.6  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.5  2001/09/24 10:43:19  cschumac
 // Compile fixes.
 //
@@ -212,3 +241,4 @@ private:
 // Revision 1.2  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
+#endif
