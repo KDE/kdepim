@@ -180,7 +180,7 @@ void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 		}
 		else
 		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+			kdError() << __FUNCTION__
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
@@ -214,7 +214,7 @@ void PilotTodoEntry::setNoteP(const char *note, int len)
 		}
 		else
 		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+			kdError() << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
 	}
