@@ -261,7 +261,8 @@ QCString encodeRFC2047String(const QString &src, const char *charset,
   if(allow8BitHeaders)
     return encoded8Bit;
 
-  for (unsigned int i=0; i<encoded8Bit.length(); i++) {
+  uint encoded8BitLength = encoded8Bit.length();
+  for (unsigned int i=0; i<encoded8BitLength; i++) {
     if (encoded8Bit[i]==' ')    // encoding starts at word boundaries
       start = i+1;
 
