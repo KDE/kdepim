@@ -141,6 +141,10 @@ ASYNC KAddressBook::showContactEditor ( QString uid )
 
 void KAddressBook::editAddressee(QString uid)
 {
+  if ( mViewManager->isQuickEditVisible() ) {
+    return;
+  }
+
   // First, locate the contact entry
   if (uid == QString::null)
   {
