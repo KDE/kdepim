@@ -144,8 +144,7 @@ void AbbrowserConduit::_mapContactsToPilot(QMap < recordid_t, QString > &idConta
 	}
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Loaded " << idContactMap.size() <<
-	    " addresses from the addressbook " <<
-			dynamic_cast <KABC::StdAddressBook*>(aBook)->fileName() << endl;
+	    " addresses from the addressbook. " << endl;
 #endif
 }
 
@@ -327,6 +326,17 @@ bool AbbrowserConduit::_saveAddressBook()
 
 
 void AbbrowserConduit::_setAppInfo()
+{
+	FUNCTIONSETUP;
+	// get the address application header information
+	int appLen = pack_AddressAppInfo(&fAddressAppInfo, 0, 0);
+	unsigned char *buffer = new unsigned char[appLen];
+	pack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
+	if (fDatabase) fDatabase->writeAppBlock(buffer, appLen);
+	if (fLocalDatabase) fLocalDatabase->writeAppBlock(buffer, appLen);
+	delete[] buffer;
+}
+void AbbrowserConduit::_getAppInfo()
 {
 	FUNCTIONSETUP;
 	// get the address application header information
@@ -597,7 +607,7 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 		emit logError(i18n("Unable to open the addressbook databases on the handheld."));
 		return false;
 	}
-	_setAppInfo();
+	_getAppInfo();
 	if(!_loadAddressBook())
 	{
 		emit logError(i18n("Unable to open the addressbook."));
@@ -856,6 +866,8 @@ void AbbrowserConduit::cleanup()
 {
 	FUNCTIONSETUP;
 
+	// Set the appInfoBlock, just in case the category labels changed
+	_setAppInfo();
 	if(fDatabase)
 	{
 		fDatabase->resetSyncFlags();
@@ -1241,11 +1253,10 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress, KABC::Addressee & 
 	if(_compare(abEntry.title(), piAddress.getField(entryTitle))) return false;
 	if(_compare(abEntry.organization(), piAddress.getField(entryCompany))) return false;
 	if(_compare(abEntry.note(), piAddress.getField(entryNote))) return false;
-	int cat = _getCat(abEntry.categories());
-	// TODO: Add general getCategoryName() to pilotAppCategory to
-	// retrieve category names.
-	if(_compare(PilotAppCategory::codec()->toUnicode(fAddressAppInfo.category.name[cat]),
-		piAddress.getCategoryLabel())) return false;
+
+	QString cat = _getCatForHH(abEntry.categories(), piAddress.getCategoryLabel());
+	if(_compare(cat, piAddress.getCategoryLabel())) return false;
+
 	if(_compare(abEntry.phoneNumber(KABC::PhoneNumber::Work).number(),
 			piAddress.getPhoneField(PilotAddress::eWork))) return false;
 	if(_compare(abEntry.phoneNumber(KABC::PhoneNumber::Home).number(),
@@ -1274,8 +1285,6 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress, KABC::Addressee & 
 	{
 		return false;
 	}
-
-	if (piAddress.getCat()!=_getCat(abEntry.categories())) return false;
 
 	return true;
 }
@@ -1318,7 +1327,7 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	toPilotAddr.setField(entryCustom3, getCustomField(fromAbEntry, 2));
 	toPilotAddr.setField(entryCustom4, getCustomField(fromAbEntry, 3));
 
-	toPilotAddr.setCat(_getCat(fromAbEntry.categories()));
+	toPilotAddr.setCategory(_getCatForHH(fromAbEntry.categories(), toPilotAddr.getCategoryLabel()));
 }
 
 
@@ -1327,10 +1336,12 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
  * _getCat returns the id of the category from the given categories list. If none of the categories exist
  * on the palm, the "Nicht abgelegt"(don't know the english name) is used.
  */
-int AbbrowserConduit::_getCat(const QStringList cats) const
+QString AbbrowserConduit::_getCatForHH(const QStringList cats, const QString curr) const
 {
-//	FUNCTIONSETUP;
+	FUNCTIONSETUP;
 	int j;
+	if (cats.size()<1) return QString::null;
+	if (cats.contains(curr)) return curr;
 	for(QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it)
 	{
 		for(j = 1; j <= 15; j++)
@@ -1339,11 +1350,14 @@ int AbbrowserConduit::_getCat(const QStringList cats) const
 				toUnicode(fAddressAppInfo.category.name[j]);
 			if(!(*it).isEmpty() && !_compare(*it, catName))
 			{
-				return j;
+				return catName;
 			}
 		}
 	}
-	return 0;
+	// If we have a free label, return the first possible cat
+	QString lastName(fAddressAppInfo.category.name[15]);
+	if (lastName.isEmpty()) return cats.first();
+	return QString::null;
 }
 
 
@@ -1374,12 +1388,7 @@ void AbbrowserConduit::_copyPhone(KABC::Addressee & toAbEntry,
 
 void AbbrowserConduit::_setCategory(Addressee & abEntry, QString cat)
 {
-	for(int j = 1; j <= 15; j++)
-	{
-		abEntry.removeCategory(
-			PilotAppCategory::codec()->toUnicode(fAddressAppInfo.category.name[j]));
-	}
-	if(!cat.isEmpty()) abEntry.insertCategory(cat);
+	if(!cat.isEmpty() ) abEntry.insertCategory(cat);
 }
 
 void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & fromPiAddr)
@@ -1606,9 +1615,7 @@ int AbbrowserConduit::_smartMergeCategories(KABC::Addressee & abEntry,
 	QString thisName, QString name,
 	QString & mergedString)
 {
-	int pccat = _getCat(abEntry.categories());
-	QString abAddressCat =
-		PilotAppCategory::codec()->toUnicode(fAddressAppInfo.category.name[pccat]);
+	QString abAddressCat = _getCatForHH(abEntry.categories(), pilotAddress.getCategoryLabel());
 	bool mergeNeeded = false;
 	QString mergedStr;
 	mergedString = QString();

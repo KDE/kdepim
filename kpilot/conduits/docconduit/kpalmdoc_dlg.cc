@@ -199,16 +199,16 @@ void ConverterDlg::slotToText()
 
 
 		// Now that we have both directories, create the converter object
-cout<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-cout<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
+DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
+DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
 		QStringList pdbfiles(pdbinfo.dir().entryList("*.pdb"));
 		QStringList converted_Files;
 
-cout<<"Length of filename list: "<<pdbfiles.size()<<endl;
+DEBUGCONDUIT<<"Length of filename list: "<<pdbfiles.size()<<endl;
 		for ( QStringList::Iterator it = pdbfiles.begin(); it != pdbfiles.end(); ++it )
 		{
 			QString txtfile=QFileInfo(*it).baseName(true)+".txt";
-cout<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", txtdir="<<txturl<<endl;
+DEBUGCONDUIT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", txtdir="<<txturl<<endl;
 			if (convertPDBtoTXT(pdburl, *it, txturl, txtfile, &conv))
 			{
 				converted_Files.append(*it);
@@ -332,16 +332,16 @@ void ConverterDlg::slotToPDB()
 
 
 		// Now that we have both directories, create the converter object
-cout<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-cout<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
+DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
+DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
 		QStringList txtfiles(txtinfo.dir().entryList("*.txt"));
 		QStringList converted_Files;
 
-cout<<"Length of filename list: "<<txtfiles.size()<<endl;
+DEBUGCONDUIT<<"Length of filename list: "<<txtfiles.size()<<endl;
 		for ( QStringList::Iterator it = txtfiles.begin(); it != txtfiles.end(); ++it )
 		{
 			QString pdbfile=QFileInfo(*it).baseName(true)+".pdb";
-cout<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", txtdir="<<txturl<<endl;
+DEBUGCONDUIT<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", txtdir="<<txturl<<endl;
 			if (convertTXTtoPDB(txturl, *it, pdburl, pdbfile, &conv))
 			{
 				converted_Files.append(*it);
@@ -389,7 +389,7 @@ void ConverterDlg::slotUser1()
 
 void ConverterDlg::slotDirectories(bool dir)
 {
-	cout<<"Slot Directories: "<<dir<<endl;
+	DEBUGCONDUIT<<"Slot Directories: "<<dir<<endl;
 	if (dir)
 	{
 		dlg->fTextLabel->setText(i18n("&Text directory:"));
@@ -409,7 +409,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 {
 	bool res=false;
 	QFileInfo dbfileinfo(pdbdir, pdbfile);
-cout<<"Working  on file "<<pdbfile<<endl;
+DEBUGCONDUIT<<"Working  on file "<<pdbfile<<endl;
 	if (!dbfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The database file already <em>%1</em> exists.  Overwrite it?</qt>")
@@ -431,7 +431,7 @@ cout<<"Working  on file "<<pdbfile<<endl;
 			{
 				conv->setPDB(pdbdb);
 				conv->setTXTpath(txtdir, txtfile);
-				cout<<"Converting "<<txtfile<<" (dir "<<txtdir<<") to "<<dbfileinfo.filePath()<<endl;
+				DEBUGCONDUIT<<"Converting "<<txtfile<<" (dir "<<txtdir<<") to "<<dbfileinfo.filePath()<<endl;
 				if (conv->convertTXTtoPDB()) res=true;
 			}
 			delete pdbdb;
@@ -443,7 +443,7 @@ cout<<"Working  on file "<<pdbfile<<endl;
 	}
 	else
 	{
-		cout<<"Ignoring the file "<<txtfile<<endl;
+		DEBUGCONDUIT<<"Ignoring the file "<<txtfile<<endl;
 	}
 	return res;
 }
@@ -453,7 +453,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 {
 	bool res=false;
 	QFileInfo txtfileinfo(txtdir, txtfile);
-cout<<"Working  on file "<<txtfile<<endl;
+DEBUGCONDUIT<<"Working  on file "<<txtfile<<endl;
 	if (!txtfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
 			i18n("<qt>The text file already <em>%1</em> exists.  Overwrite it?</qt>")
@@ -466,7 +466,7 @@ cout<<"Working  on file "<<txtfile<<endl;
 			{
 				conv->setPDB(pdbdb);
 				conv->setTXTpath(txtdir, txtfile);
-				cout<<"Converting "<<txtfile<<" (dir "<<txtdir<<") from "<<pdbfile<<" (dir "<<pdbdir<<")"<<endl;
+				DEBUGCONDUIT<<"Converting "<<txtfile<<" (dir "<<txtdir<<") from "<<pdbfile<<" (dir "<<pdbdir<<")"<<endl;
 				if (conv->convertPDBtoTXT()) res=true;
 			}
 			delete pdbdb;
@@ -478,7 +478,7 @@ cout<<"Working  on file "<<txtfile<<endl;
 	}
 	else
 	{
-		cout<<"Ignoring the file "<<pdbfile<<endl;
+		DEBUGCONDUIT<<"Ignoring the file "<<pdbfile<<endl;
 	}
 	return res;
 

@@ -91,13 +91,14 @@ protected:
 	
 	virtual const QString configGroup() { return QString::fromLatin1(ToDoConduitFactory::group); };
 	virtual const QString dbname() { return CSL1("ToDoDB"); };
-	virtual void preSync() {_setAppInfo(); };
+	virtual void preSync() {_getAppInfo(); };
 	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { return new TodoConduitPrivate(fCalendar);};
 
 	virtual void readConfig();
+	void _getAppInfo();
 	void _setAppInfo();
 	virtual void postSync();
-	int _getCat(int cat, const QStringList cats) const;
+	QString _getCat(const QStringList cats, const QString curr) const;
 
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {FUNCTIONSETUP; if (r) return new PilotTodoEntry(fTodoAppInfo, r); else return new PilotTodoEntry(fTodoAppInfo);};
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };

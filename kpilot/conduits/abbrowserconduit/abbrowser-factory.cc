@@ -106,56 +106,56 @@ AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
 	char*end;
 
 	bdate=QDateTime::currentDateTime();
-	if (!bdate.isValid())  cout<<"Not valid "<< endl;
+	if (!bdate.isValid())  DEBUGCONDUIT<<"Not valid "<< endl;
 
-	cout<<"Birthdate="<<bdate.toString()<<endl;
+	DEBUGCONDUIT<<"Birthdate="<<bdate.toString()<<endl;
 
 	btime=bdate.toTime_t();
 	btmtime=localtime(&btime);
 	len=strftime(&whatever[0], 500, format, btmtime);
 	strdate=&whatever[0];
-	cout<<"Birthdate="<<strdate<<endl;
+	DEBUGCONDUIT<<"Birthdate="<<strdate<<endl;
 
 //	end=strptime(strdate.latin1(), format, &backtm);
 //	end=strptime("01.04.03 11:22:33", "%d.%m.%y %H:%M:%S", &backtm);
-cout<<"latin1: "<<strdate.latin1()<<endl;
+DEBUGCONDUIT<<"latin1: "<<strdate.latin1()<<endl;
 	end=strptime(strdate.latin1(), "%d.%m.%y", &backtm);
-	cout<< (int)end<<endl;
+	DEBUGCONDUIT<< (int)end<<endl;
 
 //if (!end) {
 	backt=mktime(&backtm);
 	backdate.setTime_t(backt);
-//} else  cout<<"Conversion failed"<<endl;
+//} else  DEBUGCONDUIT<<"Conversion failed"<<endl;
 
-	cout<<"Result of Back-conversion: "<<backdate.date().toString()<<endl;
+	DEBUGCONDUIT<<"Result of Back-conversion: "<<backdate.date().toString()<<endl;
 
 
 
-cout<<"------------------------------------------"<<endl;
+DEBUGCONDUIT<<"------------------------------------------"<<endl;
 
 
 
 	bdate=QDateTime::currentDateTime();
-	if (!bdate.isValid())  cout<<"Not valid "<< endl;
+	if (!bdate.isValid())  DEBUGCONDUIT<<"Not valid "<< endl;
 
-	cout<<"Birthdate="<<bdate.toString()<<endl;
+	DEBUGCONDUIT<<"Birthdate="<<bdate.toString()<<endl;
 
 	btime=bdate.toTime_t();
 	btmtime=localtime(&btime);
 	len=strftime(&whatever[0], 500, format, btmtime);
 	strdate=&whatever[0];
-	cout<<"Birthdate="<<strdate<<endl;
+	DEBUGCONDUIT<<"Birthdate="<<strdate<<endl;
 
 //	end=strptime(strdate.latin1(), format, &backtm);
 	end=strptime("01.04.03 11:22:33", "%d.%m.%y %H:%M:%S", &backtm);
-	cout<< (int)end<<endl;
+	DEBUGCONDUIT<< (int)end<<endl;
 
 //if (!end) {
 	backt=mktime(&backtm);
 	backdate.setTime_t(backt);
-//} else  cout<<"Conversion failed"<<endl;
+//} else  DEBUGCONDUIT<<"Conversion failed"<<endl;
 
-	cout<<"Result of Back-conversion: "<<backdate.date().toString()<<endl;
+	DEBUGCONDUIT<<"Result of Back-conversion: "<<backdate.date().toString()<<endl;
 
 */
 

@@ -1,39 +1,21 @@
-TODO LIST (Ignore the file TODO)
+TODO LIST (Moved again to the file TODO)
 
-* Update libkcal files in the KPilot tarballs.
-* GJJ: Hunt down and kill printfs. Hunt down bad i18n.
-* GJJ: move the file install widget to an iconview.
-* GJJ: Show the sync log as a KPassivePopup
-* Good junior job: the question asked when kpilot and the pilot's
-  usernames don't match isn't very intuitive. It should be changed
-  to a yes/no/cancel with "Use KPilot name" "Use Pilot name" "Cancel".
-  This is in interactiveSync.cc.
-* Should interactiveSync and syncStack be moved to lib/ ?
-* Really need to do something about all the disabled options in the
-  config dialog. Some of them might make sense.
-* Add force-first-time to the KNotes conduit.
-* Conflict resolution in Addressbook conduit not consistent
-- Add custom field sync to the addressbook conduit [HEAD, Reinhold]
-* GJJ: Replace newlines in TODO summaries (not allowed in libkabc)
-* Sync multiple email addresses in the addressbook conduit
-* Sync with the preferred address in the addressbook conduit
-* Split up events going over midnight in the calendar conduit
-* Do not store the RecordID with the vcalendar entry, but in the kpilot config
-* GJJ: Add a flag to the log{Error,Message} function
-  to prevent the addition of the trailing <br> and the date
-* GJJ: Make an application that just has a LogWidget and KPilot's dcop
-  interface (and registration!) so that you can follow the daemon's log
-  output without starting KPilot at all.
-* Update README, TODO, NEWS, AUTHORS in HEAD.
-* Merge the JPilot proxy changes (even though it's disabled).
-* Check the first-time syncing behavior of all the conduits.
-* Merge between HEAD and BRANCH (again).
-* Fix the NULL conduit's tooltip - OR - make it actually do what
-  the current tooltip says (resetSyncFlags() should be enough).
-* GJJ: Create good icons for the kpalmdoc converter application.
 
 KPilot Developer's notes for April 30th, 2003
 =============================================
+
+2003-4-22  Reinhold Kainhofer
+* Cleanup of several cout and other debug messages
+* In the addressbook and todo conduits, after the sync the AppInfoBlock
+  is written back to the databases so that adding categories to the 
+  database finally works.
+
+2003-4-21  Reinhold Kainhofer
+* Implemented different ways to convert the bookmarks in the doc
+  conduit when doing Handheld->PC sync.
+* Some tab order fixes in several conduit setup dialogs.
+* Improved the question when the handheld and the KPilot user
+  names don't match.
 
 2003-4-20  Adriaan de Groot
 * Added the sources for a generic DB viewer and a datebook viewer.
@@ -44,6 +26,9 @@ KPilot Developer's notes for April 30th, 2003
   the "description" column again.
 * uiDialog.cc Moved the addAboutPage() code to a static function so
   that it can be reused elsewhere.
+
+2003-4-19  Reinhold Kainhofer
+* Fixed the categories sync in both the addressbook and the todo conduits.
 
 2003-4-18  Adriaan de Groot
 * Laurent Montel did some compile fixes for restrictive (NO_ASCII_ ...)

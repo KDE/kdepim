@@ -140,6 +140,7 @@ private:
 
 
 	void _setAppInfo();
+	void _getAppInfo();
 	KABC::Addressee _addToAbbrowser(const PilotAddress & address);
 	int _mergeEntries(PilotAddress &pilotAddress, PilotAddress &backupAddress, KABC::Addressee &abEntry);
 	int _handleConflict(PilotAddress &piAddress, PilotAddress &backup, KABC::Addressee &abEntry);
@@ -167,7 +168,7 @@ private:
 	void _setPilotAddress(PilotAddress &toPilotAddr, const KABC::Address &abAddress);
 	bool _equal(const PilotAddress &piAddress, KABC::Addressee &abEntry) const;
 	KABC::Addressee _findMatch(const PilotAddress & pilotAddress) const;
-	int _getCat(const QStringList cats) const ;
+	QString _getCatForHH(const QStringList cats, const QString curr) const ;
 	void _setCategory(KABC::Addressee &abEntry, QString cat);
 
    /**

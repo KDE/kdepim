@@ -193,6 +193,17 @@ void TodoConduit::_setAppInfo()
 {
 	FUNCTIONSETUP;
 	// get the address application header information
+	int appLen = pack_ToDoAppInfo(&fTodoAppInfo, 0, 0);
+	unsigned char *buffer = new unsigned char[appLen];
+	pack_ToDoAppInfo(&fTodoAppInfo, buffer, appLen);
+	if (fDatabase) fDatabase->writeAppBlock(buffer, appLen);
+	if (fLocalDatabase) fLocalDatabase->writeAppBlock(buffer, appLen);
+	delete[] buffer;
+}
+void TodoConduit::_getAppInfo()
+{
+	FUNCTIONSETUP;
+	// get the address application header information
 	unsigned char *buffer =
 		new unsigned char[PilotTodoEntry::APP_BUFFER_SIZE];
 	int appLen = fDatabase->readAppBlock(buffer,PilotTodoEntry::APP_BUFFER_SIZE);
@@ -248,6 +259,7 @@ void TodoConduit::postSync()
 	fConfig->setGroup(configGroup());
 	// after this successful sync the categories have been synced for sure
 	fConfig->writeEntry("ConduitVersion", CONDUIT_VERSION);
+	_setAppInfo();
 }
 
 
@@ -334,20 +346,23 @@ void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
 QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 {
 	int j;
-	if (cats.length()<1) return QString();
+	if (cats.size()<1) return QString::null;
 	if (cats.contains(curr)) return curr;
 	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
 		for (j=1; j<=15; j++)
 		{
 			QString catName = PilotAppCategory::codec()->
-				toUnicode(fAddressAppInfo.category.name[j]);
+				toUnicode(fTodoAppInfo.category.name[j]);
 			if (!(*it).isEmpty() && !(*it).compare( catName ) )
 			{
-				return catname;
+				return catName;
 			}
 		}
 	}
-	return cats.first();
+	// If we have a free label, return the first possible cat
+	QString lastName(fTodoAppInfo.category.name[15]);
+	if (lastName.isEmpty()) return cats.first();
+	return QString::null;
 }
 
 

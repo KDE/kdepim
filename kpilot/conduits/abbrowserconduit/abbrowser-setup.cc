@@ -116,18 +116,8 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	// General page
 	fConfigWidget->fSyncDestination->setButton(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0));
-#ifdef DEBUG
-        DEBUGCONDUIT << fname << ": abookType=" 
-		<< fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0)
-		<< endl;
-#endif
 	fConfigWidget->fAbookFile->setURL(
 		fConfig->readEntry(AbbrowserConduitFactory::fAbookFile));
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": ABookFile="
-		<< fConfig->readEntry(AbbrowserConduitFactory::fAbookFile)
-		<< endl;
-#endif
 	fConfigWidget->fSyncMode->setButton(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fSyncMode, 0));
 	fConfigWidget->fArchive->setChecked(
