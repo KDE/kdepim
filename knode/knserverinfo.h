@@ -52,7 +52,7 @@ class KNServerInfo {
     void setId(int i)                 { i_d=i; }
     void setServer(const QString &s)  { s_erver=s; }
     void setUser(const QString &s)    { u_ser=s; }
-    void setPass(const QString &s)    { p_ass=s; }
+    void setPass(const QString &s);
     void setPort(int p)               { p_ort=p; }
     void setHold(int h)               { h_old=h; }
     void setTimeout(int t)            { t_imeout=t; }
@@ -73,7 +73,8 @@ class KNServerInfo {
         h_old,
         t_imeout;
 
-    bool n_eedsLogon;
+    bool n_eedsLogon,
+         p_assDirty;
 
 };
 
