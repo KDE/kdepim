@@ -98,6 +98,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     void slotStartLDAPLookup();
     void slotLDAPSearchData( const KPIM::LdapResultList& );
     void slotEditCompletionOrder();
+    void slotUserCancelled( const QString& );
 
   private:
     void init();
