@@ -479,7 +479,7 @@ int CryptPlug::caFirstLastChainCertDaysLeftToExpiry( bool bStopAtFirst,
         ++chainSize;
         // safe guard against certificate loops (paranoia factor 8 out of 10)...
         if ( chainSize > 100 ) {
-            kdWarning(5150) << "CertificateInfoWidgetImpl::startCertificateChainListing(): maximum chain length of 100 exceeded!" << endl;
+            kdWarning(5150) << "CryptPlug: maximum chain length of 100 exceeded!" << endl;
             break;
         }
       }
