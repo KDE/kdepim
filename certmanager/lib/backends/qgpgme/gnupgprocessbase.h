@@ -59,7 +59,7 @@ namespace Kleo {
     bool closeStatus();
 
   signals:
-    void receivedStatus( Kleo::GnuPGProcessBase * proc, char * buffer, int buflen );
+    void status( Kleo::GnuPGProcessBase * proc, const QString & type, const QStringList & args );
 
   protected:
     /* !\reimp */
@@ -74,6 +74,9 @@ namespace Kleo {
 
   private slots:
     void slotChildStatus( int fd );
+
+  private:
+    void parseStatusOutput();
 
   private:
     class Private;

@@ -33,8 +33,11 @@
 #include "gnupgprocessbase.h"
 
 #include <kdebug.h>
+#include <kurl.h>
 
 #include <qsocketnotifier.h>
+#include <qtextcodec.h>
+#include <qstringlist.h>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -49,6 +52,7 @@ struct Kleo::GnuPGProcessBase::Private {
   bool useStatusFD;
   int statusFD[2];
   QSocketNotifier * statnot;
+  QCString statusBuffer;
 };
 
 
@@ -138,11 +142,53 @@ int Kleo::GnuPGProcessBase::childStatus( int fd ) {
   char buf[1024];
   const int len = ::read( fd, buf, sizeof(buf)-1 );
   if ( len > 0 ) {
-    buf[len] = 0; // Just in case.
-    emit receivedStatus( this, buf, len );
-    // fixme: parse it
+    buf[len] = 0;
+    d->statusBuffer += buf;
+    parseStatusOutput();
   }
   return len;
+}
+
+static QString fromHexEscapedUtf8( const QCString & str ) {
+  return KURL::decode_string( str.data(), 106 /* utf-8 */ );
+}
+
+void Kleo::GnuPGProcessBase::parseStatusOutput() {
+  static const char startToken[] = "[GNUPG:] ";
+  static const int startTokenLen = sizeof startToken / sizeof *startToken - 1;
+
+  int lineStart = 0;
+  for ( int lineEnd = d->statusBuffer.find( '\n' ) ; lineEnd >= 0 ; lineEnd = d->statusBuffer.find( '\n', lineStart = lineEnd+1 ) ) {
+    // get next line:
+    const QCString line = d->statusBuffer.mid( lineStart, lineEnd - lineStart ).stripWhiteSpace();
+    if ( line.isEmpty() )
+      continue;
+    // check status token
+    if ( line.left( startTokenLen ) != startToken ) {
+      kdDebug( 5150 ) << "Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line doesn't begin with \""
+		      << startToken << "\"" << endl;
+      continue;
+    }
+    // remove status token:
+    const QCString command = line.mid( startTokenLen ).simplifyWhiteSpace() + ' ';
+    if ( command == " " ) {
+      kdDebug( 5150 ) << "Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line without content." << endl;
+      continue;
+    }
+    // split into base and args
+    QString cmd;
+    QStringList args;
+    int tagStart = 0;
+    for ( int tagEnd = command.find( ' ' ) ; tagEnd >= 0 ; tagEnd = command.find( ' ', tagStart = tagEnd+1 ) ) {
+      const QCString tag = command.mid( tagStart, tagEnd - tagStart );
+      if ( cmd.isNull() )
+	cmd = fromHexEscapedUtf8( tag );
+      else
+	args.push_back( fromHexEscapedUtf8( tag ) );
+    }
+    emit status( this, cmd, args );
+  }
+  d->statusBuffer = d->statusBuffer.mid( lineStart );
 }
 
 void Kleo::GnuPGProcessBase::virtual_hook( int id, void * data ) {

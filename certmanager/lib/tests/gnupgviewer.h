@@ -40,6 +40,7 @@ namespace Kleo {
   class GnuPGProcessBase;
 }
 class KProcess;
+class QStringList;
 
 class GnuPGViewer : public QTextEdit {
   Q_OBJECT
@@ -52,7 +53,7 @@ public:
 private slots:
   void slotStdout( KProcess *, char *, int );
   void slotStderr( KProcess *, char *, int );
-  void slotStatus( Kleo::GnuPGProcessBase *, char *, int );
+  void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
   void slotProcessExited( KProcess * );
 
 private:

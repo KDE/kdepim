@@ -68,8 +68,8 @@ void GnuPGViewer::setProcess( Kleo::GnuPGProcessBase * process ) {
 	   SLOT(slotStdout(KProcess*,char*,int)) );
   connect( mProcess, SIGNAL(receivedStderr(KProcess*,char*,int)),
 	   SLOT(slotStderr(KProcess*,char*,int)) );
-  connect( mProcess, SIGNAL(receivedStatus(Kleo::GnuPGProcessBase*,char*,int)),
-	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,char*,int)) );
+  connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
+	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
 }
 
 static QStringList split( char * buffer, int buflen, QString & old ) {
@@ -102,10 +102,8 @@ void GnuPGViewer::slotStderr( KProcess *, char * buffer, int buflen ) {
   for ( QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it )
     append( "<b>stderr: " + escape( *it ) + "</b>" );
 }
-void GnuPGViewer::slotStatus( Kleo::GnuPGProcessBase *, char * buffer, int buflen ) {
-  const QStringList l = split( buffer, buflen, mLastStatus );
-  for ( QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it )
-    append( "<b><font color=\"red\">status: " + escape( *it ) + "</font></b>" );
+void GnuPGViewer::slotStatus( Kleo::GnuPGProcessBase *, const QString & type, const QStringList & args ) {
+  append( "<b><font color=\"red\">status: " + escape( type + ' ' + args.join( " " ) ) + "</font></b>" );
 }
 void GnuPGViewer::slotProcessExited( KProcess * proc ) {
   if ( !proc )
@@ -121,7 +119,7 @@ int main( int argc, char** argv ) {
     qDebug( "Need at least two arguments" );
     return 1;
   }
-  KAboutData aboutData( "test_keygen", "KeyGenerationJob Test", "0.1" );
+  KAboutData aboutData( "test_gnupgprocessbase", "GnuPGProcessBase Test", "0.1" );
   KCmdLineArgs::init( &aboutData );
   KApplication app;
 
