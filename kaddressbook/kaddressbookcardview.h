@@ -1,0 +1,90 @@
+#ifndef KADDRESSBOOKCARDVIEW_H
+#define KADDRESSBOOKCARDVIEW_H
+
+/*                                                                      
+    This file is part of KAddressBook.                                  
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
+                                                                        
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or   
+    (at your option) any later version.                                 
+                                                                        
+    This program is distributed in the hope that it will be useful,     
+    but WITHOUT ANY WARRANTY; without even the implied warranty of      
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
+    GNU General Public License for more details.                        
+                                                                        
+    You should have received a copy of the GNU General Public License   
+    along with this program; if not, write to the Free Software         
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
+                                                                        
+    As a special exception, permission is given to link this program    
+    with any edition of Qt, and distribute the resulting executable,    
+    without including the source code for Qt in the source distribution.
+*/                                                                      
+
+#include <qstring.h>
+#include <kiconview.h>
+
+#include "cardview.h"
+#include "kaddressbookview.h"
+
+class QDragEntryEvent;
+class QDropEvent;
+class KConfig;
+class AddresseeCardView;
+
+namespace KABC { class AddressBook; }
+
+/** This view uses the CardView class to create a card view. At some
+* point in the future I think this will be the default view of
+* KAddressBook.
+*/
+class KAddressBookCardView : public KAddressBookView
+{
+  Q_OBJECT
+    
+  public:
+    KAddressBookCardView(KABC::AddressBook *doc, QWidget *parent,
+                         const char *name);
+    virtual ~KAddressBookCardView();
+    
+    virtual QStringList selectedUids();
+    virtual QString type() const { return "Card"; }
+    
+    virtual void readConfig(KConfig *config);
+    
+    virtual void incrementalSearch(const QString &value,KABC::Field *field );
+    
+  public slots:
+    void refresh(QString uid = QString::null);
+    void setSelected(QString uid = QString::null, bool selected = true);
+  
+  protected slots:
+    void addresseeExecuted(CardViewItem *item);
+    void addresseeSelected();
+  
+  private:
+    AddresseeCardView *mCardView;
+    KABC::AddressBook *mDocument;
+    bool mShowEmptyFields;
+};
+
+class AddresseeCardView : public CardView
+{
+  Q_OBJECT
+  public:
+    AddresseeCardView(QWidget *parent, const char *name = 0);
+    ~AddresseeCardView();
+    
+  signals:
+    void startAddresseeDrag();
+    void addresseeDropped(QDropEvent *);
+    
+  protected:
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
+    virtual void startDrag();
+};
+#endif
