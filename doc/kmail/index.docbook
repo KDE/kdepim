@@ -646,6 +646,7 @@ Reader</guilabel> window by &RMB; clicking on an email address in the
 
 <sect1 id="filters">
 <title>Filters</title>
+<anchor id="FILTERS_ID">
 
 <para>After using &kmail; for a while, you may find that you have trouble
 sorting out the new messages in your inbox when they arrive. Filters allow you
