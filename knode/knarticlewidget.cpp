@@ -499,7 +499,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
 
 void KNArticleWidget::updateContents()
 {
-  if(a_rticle)
+  if(a_rticle && a_rticle->hasContent())
     createHtmlPage();
   else
     showBlankPage();

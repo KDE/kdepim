@@ -18,6 +18,7 @@
 #include "kngroup.h"
 #include "knnntpaccount.h"
 
+
 KNCollectionViewItem::KNCollectionViewItem(KNListView *vi) :
   KNLVItemBase(vi), coll(0)
 {
@@ -25,13 +26,11 @@ KNCollectionViewItem::KNCollectionViewItem(KNListView *vi) :
 }
 
 
-
 KNCollectionViewItem::KNCollectionViewItem(KNLVItemBase *it) :
   KNLVItemBase(it), coll(0)
 {
   num[0]=num[1]=num[2]=-1;
 }
-
 
 
 KNCollectionViewItem::~KNCollectionViewItem()
@@ -67,10 +66,30 @@ QString KNCollectionViewItem::key(int c, bool ascending) const
 }
 
 
-
 bool KNCollectionViewItem::firstColBold()
 {
   if(coll->type()==KNCollection::CTgroup)
     return ( ((KNGroup*)coll)->newCount()>0 );
   else return false;
+}
+
+
+QString KNCollectionViewItem::shortString(QString text, int col, int width, QFontMetrics fm)
+{
+  if ((col!=0) || !(coll->type()==KNCollection::CTgroup))
+    return KNLVItemBase::shortString(text,col,width,fm);
+  else {
+    QString t(text);
+    int curPos=0,nextPos=0;
+    QString temp;
+    while ((fm.width(t) > width)&&(nextPos!=-1)) {
+      nextPos = t.find('.',curPos);
+      if (nextPos!=-1) {
+        temp = t[curPos];
+        t.replace(curPos,nextPos-curPos,temp);
+        curPos+=2;
+      }
+    }
+    return t;
+  }
 }

@@ -259,7 +259,7 @@ class SmtpAccountWidget : public BaseWidget {
 
 class Appearance : public Base {
 
-#define COL_CNT 8
+#define COL_CNT 11
 #define FNT_CNT 4
 #define HEX_CNT 4
 #define ICON_CNT 14
@@ -268,7 +268,8 @@ class Appearance : public Base {
 
   public:
     enum ColorIndex   { background=0, header=1, normalText=2, quoted1=3, quoted2=4,
-                        quoted3=5, url=6, readArticle=7 };
+                        quoted3=5, url=6, unreadArticle=7, readArticle=8,activeItem=9,
+                        selectedItem=10 };
 
     enum HexIndex     { quoted1Hex=0, quoted2Hex=1, quoted3Hex=2, headerHex=3 };
 
@@ -293,7 +294,10 @@ class Appearance : public Base {
     QColor quoteColor3();
     QColor linkColor();
     QColor headerDecoColor();
+    QColor unreadArticleColor();
     QColor readArticleColor();
+    QColor activeItemColor();
+    QColor selectedItemColor();
 
     const char* headerDecoHexcode()       { return h_excodes[headerHex]; }
     const char* quotedTextHexcode(int i)  { return h_excodes[i]; }
@@ -306,19 +310,16 @@ class Appearance : public Base {
 
     const QPixmap& icon(IconIndex i)     { return i_cons[i]; }
 
-
   protected:
     const QColor& color(int i)           { return c_olors[i]; }
     const QString& colorName(int i)      { return c_olorNames[i]; }
     int colorCount()                     { return COL_CNT; }
     QColor defaultColor(int i);
 
-
     const QFont& font(int i)             { return f_onts[i]; }
     const QString& fontName(int i)       { return f_ontNames[i]; }
     int fontCount()                      { return FNT_CNT; }
     QFont defaultFont(int);
-
 
     bool l_ongGroupList,
          u_seColors,

@@ -181,6 +181,18 @@ KNConfig::Appearance::Appearance()
   c_olors[readArticle]=c->readColorEntry("readArticleColor",&defCol);
   c_olorNames[readArticle]=i18n("Read Article");
 
+  defCol=kapp->palette().active().text();
+  c_olors[unreadArticle]=c->readColorEntry("unreadArticleColor",&defCol);
+  c_olorNames[unreadArticle]=i18n("Unread Article");
+
+  defCol=kapp->palette().active().highlight();
+  c_olors[activeItem]=c->readColorEntry("activeItemColor",&defCol);
+  c_olorNames[activeItem]=i18n("Active Item Background");
+
+  defCol=kapp->palette().active().background();
+  c_olors[selectedItem]=c->readColorEntry("selectedItemColor",&defCol);
+  c_olorNames[selectedItem]=i18n("Selected Item Background");
+
   //fonts
   u_seFonts = c->readBoolEntry("customFonts", false);
 
@@ -239,6 +251,9 @@ void KNConfig::Appearance::save()
   c->writeEntry("quote3Color", c_olors[quoted3]);
   c->writeEntry("URLColor", c_olors[url]);
   c->writeEntry("readArticleColor", c_olors[readArticle]);
+  c->writeEntry("unreadArticleColor", c_olors[unreadArticle]);
+  c->writeEntry("activeItemColor", c_olors[activeItem]);
+  c->writeEntry("selectedItemColor", c_olors[selectedItem]);
 
   c->writeEntry("customFonts", u_seFonts);
   c->writeEntry("articleFont", f_onts[article]);
@@ -314,12 +329,39 @@ QColor KNConfig::Appearance::headerDecoColor()
 }
 
 
+QColor KNConfig::Appearance::unreadArticleColor()
+{
+  if(u_seColors)
+    return c_olors[unreadArticle];
+  else
+    return kapp->palette().active().text();
+}
+
+
 QColor KNConfig::Appearance::readArticleColor()
 {
   if(u_seColors)
     return c_olors[readArticle];
   else
     return kapp->palette().disabled().text();
+}
+
+
+QColor KNConfig::Appearance::activeItemColor()
+{
+  if(u_seColors)
+    return c_olors[activeItem];
+  else
+    return kapp->palette().active().highlight();
+}
+
+
+QColor KNConfig::Appearance::selectedItemColor()
+{
+  if(u_seColors)
+    return c_olors[selectedItem];
+  else
+    return kapp->palette().active().background();
 }
 
 
@@ -384,6 +426,7 @@ QColor KNConfig::Appearance::defaultColor(int i)
     case quoted1:
     case quoted2:
     case quoted3:
+    case unreadArticle:
       return kapp->palette().active().text();
     break;
 
@@ -393,6 +436,14 @@ QColor KNConfig::Appearance::defaultColor(int i)
 
     case readArticle:
       return kapp->palette().disabled().text();
+    break;
+
+    case activeItem:
+      return kapp->palette().active().highlight();
+    break;
+
+    case selectedItem:
+      return kapp->palette().active().background();
     break;
   }
 

@@ -318,7 +318,7 @@ void KNArticleManager::showHdrs(bool clear)
   if(currentArt && (static_cast<KNRemoteArticle*>(currentArt))->filterResult()) {
     if(!currentArt->listItem())
       createThread(static_cast<KNRemoteArticle*>(currentArt));
-    currentArt->listItem()->setSelected(true);
+    v_iew->setActive(currentArt->listItem(),true);
     v_iew->setCurrentItem(currentArt->listItem());
     v_iew->ensureItemVisible(currentArt->listItem());
   }

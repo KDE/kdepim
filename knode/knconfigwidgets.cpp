@@ -746,7 +746,8 @@ void KNConfig::AppearanceWidget::slotColDefaultBtnClicked()
     colorItem=static_cast<ColorListItem*>(c_List->item(i));
     colorItem->setColor(d_ata->defaultColor(i));
   }
-  c_List->triggerUpdate(false);
+  c_List->triggerUpdate(true);
+  c_List->repaint(true);
 }
 
 

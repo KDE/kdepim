@@ -14,6 +14,8 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+#include "knglobals.h"
+#include "knconfigmanager.h"
 #include "knhdrviewitem.h"
 #include "knmime.h"
 #include <stdio.h>
@@ -67,5 +69,17 @@ bool KNHdrViewItem::firstColBold()
 		return ( static_cast<KNRemoteArticle*>(art)->isNew() );
 	else
 		return false;
+}
+
+
+QColor KNHdrViewItem::normalColor()
+{
+  return knGlobals.cfgManager->appearance()->unreadArticleColor();
+}
+
+
+QColor KNHdrViewItem::greyColor()
+{
+  return knGlobals.cfgManager->appearance()->readArticleColor();
 }
 

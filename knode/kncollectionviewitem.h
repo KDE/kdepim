@@ -36,6 +36,7 @@ class KNCollectionViewItem : public KNLVItemBase  {
     
   protected:
     bool firstColBold();
+    virtual QString shortString(QString text, int col, int width, QFontMetrics fm);
     int num[3];
 };
 

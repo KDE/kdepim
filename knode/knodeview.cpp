@@ -620,8 +620,9 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
           i->setOpen(true);
         knGlobals.top->setCaption(s_electedAccount->name());
       break;
-
       case KNCollection::CTgroup :
+        if (!(h_drView->hasFocus())&&!(a_rtView->hasFocus()))
+          h_drView->setFocus();
         s_electedGroup=static_cast<KNGroup*>(c);
         s_electedAccount=s_electedGroup->account();
         caption = s_electedGroup->name();
@@ -631,13 +632,14 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
       break;
 
       case KNCollection::CTfolder :
+        if (!(h_drView->hasFocus())&&!(a_rtView->hasFocus()))
+          h_drView->setFocus();
         s_electedFolder=static_cast<KNFolder*>(c);
         knGlobals.top->setCaption(s_electedFolder->name());
       break;
 
       default: break;
     }
-
   }
 
   a_ccManager->setCurrentAccount(s_electedAccount);
@@ -750,8 +752,7 @@ void KNodeView::slotNavNextArt()
   else it=h_drView->firstChild();
 
   if(it) {
-    h_drView->clearSelection();
-    h_drView->setSelected(it, true);
+    h_drView->setActive(it, true);
     h_drView->setCurrentItem(it);
     h_drView->ensureItemVisible(it);
   }
@@ -768,8 +769,7 @@ void KNodeView::slotNavPrevArt()
   else it=h_drView->firstChild();
 
   if(it) {
-    h_drView->clearSelection();
-    h_drView->setSelected(it, true);
+    h_drView->setActive(it, true);
     h_drView->setCurrentItem(it);
     h_drView->ensureItemVisible(it);
   }
@@ -798,7 +798,7 @@ void KNodeView::slotNavNextUnreadArt()
 
   art=static_cast<KNRemoteArticle*>(current->art);
 
-  if ((!current->isSelected())&&(!art->isRead()))   // take current article, if unread & not selected
+  if ((!current->isActive())&&(!art->isRead()))   // take current article, if unread & not selected
     next=current;
   else {
     if(current->isExpandable() && !current->isOpen())
@@ -817,8 +817,7 @@ void KNodeView::slotNavNextUnreadArt()
   }
 
   if(next) {
-    h_drView->clearSelection();
-    h_drView->setSelected(next, true);
+    h_drView->setActive(next, true);
     h_drView->setCurrentItem(next);
     h_drView->ensureItemVisible(next);
   }
@@ -848,7 +847,7 @@ void KNodeView::slotNavNextUnreadThread()
 
   art=static_cast<KNRemoteArticle*>(current->art);
 
-  if((current->depth()==0)&&((!current->isSelected())&&(!art->isRead() || art->hasUnreadFollowUps())))
+  if((current->depth()==0)&&((!current->isActive())&&(!art->isRead() || art->hasUnreadFollowUps())))
     next=current;                           // take current article, if unread & not selected
   else
     next=static_cast<KNHdrViewItem*>(current->itemBelow());
@@ -866,8 +865,8 @@ void KNodeView::slotNavNextUnreadThread()
     h_drView->setCurrentItem(next);
     if(art->isRead()) slotNavNextUnreadArt();
     else {
-      h_drView->clearSelection();
-      h_drView->setSelected(next, true);
+      h_drView->setActive(next, true);
+      h_drView->setCurrentItem(next);
       h_drView->ensureItemVisible(next);
     }
   }
@@ -887,7 +886,7 @@ void KNodeView::slotNavNextGroup()
 
   next=current;
   while(next) {
-    if(!next->isSelected())
+    if(!next->isActive())
       break;
     if(next->childCount()>0 && !next->isOpen()) {
       next->setOpen(true);
@@ -898,10 +897,9 @@ void KNodeView::slotNavNextGroup()
   }
 
   if(next) {
-    c_olView->clearSelection();
+    c_olView->setActive(next, true);
     c_olView->setCurrentItem(next);
     c_olView->ensureItemVisible(next);
-    c_olView->setSelected(next, true);
   }
 }
 
@@ -917,16 +915,15 @@ void KNodeView::slotNavPrevGroup()
 
   prev=current;
   while(prev) {
-    if(!prev->isSelected())
+    if(!prev->isActive())
       break;
     prev=static_cast<KNCollectionViewItem*>(prev->itemAbove());
   }
 
   if(prev) {
-    c_olView->clearSelection();
+    c_olView->setActive(prev, true);
     c_olView->setCurrentItem(prev);
     c_olView->ensureItemVisible(prev);
-    c_olView->setSelected(prev, true);
   }
 }
 

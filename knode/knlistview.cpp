@@ -30,33 +30,22 @@
 
 
 
-KNLVItemBase::KNLVItemBase(KNLVItemBase *item) : QListViewItem(item)
+KNLVItemBase::KNLVItemBase(KNLVItemBase *item) : QListViewItem(item), active(false)
 {
 }
 
 
-KNLVItemBase::KNLVItemBase(KNListView *view) : QListViewItem(view)
+KNLVItemBase::KNLVItemBase(KNListView *view) : QListViewItem(view), active(false)
 {
 }
 
 
 KNLVItemBase::~KNLVItemBase()
 {
-  if(isSelected()) {
+  if(active) {
     QListView *lv=listView();
-    if(lv && lv->isA("KNListView"))
-      (static_cast<KNListView*>(lv))->selectedRemoved();
-  }
-}
-
-
-void KNLVItemBase::setSelected(bool select)
-{
-  if(isSelected()!=select) {
-   QListViewItem::setSelected(select);
-   QListView *lv=listView();
-   if(lv && lv->isA("KNListView"))
-     (static_cast<KNListView*>(lv))->itemToggled(this, select);
+    // no need to check necessary, a KNLVItemBase objects can only be added to KNListViews
+    if(lv) (static_cast<KNListView*>(lv))->activeRemoved();
   }
 }
 
@@ -68,14 +57,17 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
   QPen pen=p->pen();
-  if (isSelected()) {
+  if (isSelected()||active) {
     pen.setColor(cg.highlightedText());
-    base=cg.highlight();
+    if (active)
+      base=app->activeItemColor();
+    else
+      base=app->selectedItemColor();
   } else {
     if (this->greyOut())
-      pen.setColor(app->readArticleColor());
+      pen.setColor(greyColor());
     else
-      pen.setColor(app->textColor());
+      pen.setColor(normalColor());
     base=cg.base();
   }
   p->setPen(pen);
@@ -106,17 +98,7 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   }
 
   if (width-xText-5 > 0) {
-    // making the string shorter when the column is to narrow
-    QFontMetrics fm( p->fontMetrics() );
-    QString t(text(column));
-    int ew = fm.width("...");
-    if (fm.width(t) > width-xText-5) {
-      for (int i=t.length();i>0;i--)
-        if (fm.width(t)+ew > width-xText-5)
-          t.truncate(i);
-      t += "...";
-    }
-
+    QString t = shortString(text(column),column,width-xText-5,p->fontMetrics());
     p->drawText(xText, 0, width-xText-5, height(), alignment | AlignVCenter,  t);
   }
 }
@@ -142,17 +124,14 @@ int KNLVItemBase::width(const QFontMetrics &fm, const QListView *, int column)
 
 void KNLVItemBase::paintFocus(QPainter *p, const QColorGroup & cg, const QRect & r)
 {
-  QListView* lv = listView();
-  if ((lv)&&(lv->hasFocus())) {
-    p->setPen(QPen(cg.foreground(),1, DotLine));
-    p->drawRect(r.x(), r.y(), r.width()-3, r.height());
-  }
+  p->setPen(QPen(cg.foreground(),1, DotLine));
+  p->drawRect(r.x(), r.y(), r.width()-3, r.height());
 }
 
 
-void KNLVItemBase::sortChildItems(int column, bool)
+void KNLVItemBase::sortChildItems(int column, bool b)
 {
-  QListViewItem::sortChildItems(column, true);
+  QListViewItem::sortChildItems(column, b);
 }
 
 
@@ -167,15 +146,44 @@ void KNLVItemBase::expandChildren()
 }
 
 
+QColor KNLVItemBase::normalColor()
+{
+  return knGlobals.cfgManager->appearance()->textColor();
+}
+
+
+QColor KNLVItemBase::greyColor()
+{
+  return knGlobals.cfgManager->appearance()->textColor();
+}
+
+
+QString KNLVItemBase::shortString(QString text, int, int width, QFontMetrics fm)
+{
+  QString t(text);
+  int ew = fm.width("...");
+  if (fm.width(t) > width) {
+    for (int i=t.length();i>0;i--)
+      if (fm.width(t)+ew > width)
+        t.truncate(i);
+    t += "...";
+  }
+  return t;
+}
+
+
 //==============================================================================
 
 
 KNListView::KNListView(QWidget *parent, const char *name)
-  : QListView(parent,name), sAsc(true), sCol(-1), s_elCount(0)
+  : QListView(parent,name), sAsc(true), sCol(-1), activeItem(0)
 {
   connect(header(), SIGNAL(sectionClicked(int)),
-    this, SLOT(slotSortList(int)));
-    
+          this, SLOT(slotSortList(int)));
+  disconnect(header(), SIGNAL(sizeChange(int,int,int)));
+  connect(header(), SIGNAL(sizeChange(int,int,int)),
+          this, SLOT(slotSizeChanged(int,int,int)));
+
   header()->setMovingEnabled(false);
   setFrameStyle(NoFrame);
   setSelectionMode(QListView::Extended);
@@ -187,13 +195,36 @@ KNListView::~KNListView()
 }
 
 
-/*void KNListView::setSelected(QListViewItem *i, bool select)
+void KNListView::setActive(QListViewItem *i, bool activate)
 {
-  kdDebug(5003) << "KNListView::setSelected(QListViewItem *i, bool select)" << endl;
-  QListView::setSelected(i, select);
-  if(i && select)
-    emit( itemSelected(i) );
-}*/
+  KNLVItemBase *item = static_cast<KNLVItemBase*>(i);
+
+  if (!item || (item->isActive() == activate))
+  	return;
+  	
+  if (activeItem) {
+    activeItem->setActive(false);
+    repaintItem(activeItem);
+    activeItem=0;
+  }
+
+  item->setActive(activate);
+
+  if (activate) {
+    clearSelection();
+    setSelected(item,true);
+    activeItem = item;
+    emit(itemSelected(item));
+  } else
+    repaintItem(item);
+}
+	
+
+void KNListView::clear()
+{
+  activeItem=0;
+  QListView::clear();
+}
 
 
 void KNListView::slotSortList(int col)
@@ -210,102 +241,60 @@ void KNListView::slotSortList(int col)
 }
 
 
-void KNListView::itemToggled(QListViewItem *i, bool selected)
+void KNListView::slotSizeChanged(int section, int, int newSize)
 {
-  if(selected) {
-    if(++s_elCount==1)
-      emit( itemSelected(i) );
-  }
-  else
-    s_elCount--;
+  viewport()->repaint( header()->sectionPos(section), 0, newSize, visibleHeight(), false);
 }
+
+
+void KNListView::contentsMousePressEvent(QMouseEvent *e)
+{
+  if (!e) return;
+
+  bool selectMode=(( e->state() & ShiftButton ) || ( e->state() & ControlButton ));
+
+  QListView::contentsMousePressEvent(e);
+  QListViewItem *i=currentItem();
+  if (i && !selectMode && i->isSelected())
+    setActive(i, true);
+}
+
 
 
 void KNListView::keyPressEvent(QKeyEvent *e)
 {
-  if ( !e )       return; // subclass bug
+  if (!e) return;
 
-  /*if (e->state() & ShiftButton) {  // lame workaround to avoid multiselection in multiselection mode ;-)
-    e->ignore();
-    return;
-  }*/
   QListViewItem *i=currentItem();
+
   switch(e->key()) {
-
-    case Key_PageDown:
-      verticalScrollBar()->addPage();
-    break;
-
-    case Key_PageUp:
-      verticalScrollBar()->subtractPage();
-    break;
-
-    case Key_Up:
-      if(i)
-        i=i->itemAbove();
-      if(i) {
-        if(e->state() & ShiftButton)
-          setSelected(i, true);
-        setCurrentItem(i);
-        ensureItemVisible(i);
-      }
-    break;
-
-    case Key_Down:
-      if(i)
-        i=i->itemBelow();
-      if(i) {
-        if(e->state() & ShiftButton)
-          setSelected(i, true);
-        setCurrentItem(i);
-        ensureItemVisible(i);
-      }
-    break;
-
-    case Key_Right:
-      if(i && !i->isOpen() && i->isExpandable())
-        i->setOpen(true);
-    break;
-
-    case Key_Left:
-      if(i && i->isOpen())
-        i->setOpen(false);
+    case Key_Backspace:
+    case Key_Delete:
+      e->ignore(); // don't eat them
     break;
 
     case Key_Enter:
     case Key_Return:
-      if( !(e->state() & ControlButton) )
-        clearSelection();
-      setSelected(i, true);
-    break;
-
-    case Key_Escape:
-      clearSelection();
+      setActive(i, true);
+      ensureItemVisible(i);
     break;
 
     default:
-      e->ignore();
+      QListView::keyPressEvent (e);
   }
 }
 
 
 void KNListView::focusInEvent(QFocusEvent *e)
 {
-  if ( currentItem() ) repaintItem(currentItem());   // show cursor marker
-
+  QListView::focusInEvent(e);
   emit focusChanged(e);
 }
 
 
 void KNListView::focusOutEvent(QFocusEvent *e)
 {
-  if ( currentItem() ) repaintItem(currentItem());   // hide cursor marker
-
-  /*if (exclusiveSelectedItem) {
-    setCurrentItem(exclusiveSelectedItem);
-    ensureItemVisible(exclusiveSelectedItem);
-  } */
-
+  QListView::focusOutEvent(e);
   emit focusChanged(e);
 }
 

@@ -131,9 +131,9 @@ void KNApplication::openURL(const KURL &url)
   }
 
   if(item) {
+    knGlobals.view->collectionView()->setActive(item, true);
     knGlobals.view->collectionView()->setCurrentItem(item);
     knGlobals.view->collectionView()->ensureItemVisible(item);
-    knGlobals.view->collectionView()->setSelected(item, true);
   }
 }
 

@@ -28,10 +28,11 @@ class KNLVItemBase : public QListViewItem  {
   
   public:
     KNLVItemBase(KNListView *view);      // restricted to KNListView to prevent that the
-    KNLVItemBase(KNLVItemBase *item);    // static_cast in ~KNLVItemBase fails. (single selection in multi-mode hack)
+    KNLVItemBase(KNLVItemBase *item);    // static_cast in ~KNLVItemBase fails.
     ~KNLVItemBase();
 
-    void setSelected(bool select);
+    void setActive(bool b)  { active = b; };
+    bool isActive()         { return active; }
 
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     int width(const QFontMetrics &fm, const QListView *lv, int column);
@@ -42,6 +43,13 @@ class KNLVItemBase : public QListViewItem  {
   protected:
     virtual bool greyOut()          { return false; }
     virtual bool firstColBold()     { return false; }
+    virtual QColor normalColor();
+    virtual QColor greyColor();
+    virtual QString shortString(QString text, int col, int width, QFontMetrics fm);
+
+  private:
+    bool active;
+
 };
 
 
@@ -59,12 +67,16 @@ class KNListView : public QListView  {
     bool ascending()                { return sAsc; }
     void setColAsc(int c, bool a)   { sCol=c; sAsc=a; }
 
+    void setActive(QListViewItem *item, bool activate);
+    void clear();
+
   public slots:
-    void slotSortList(int col);     
+    void slotSortList(int col);
+    void slotSizeChanged(int,int,int);
       
   protected:
-    void selectedRemoved()          { s_elCount--; }
-    void itemToggled(QListViewItem *i, bool selected);
+    void activeRemoved()            { activeItem = 0; }
+    void contentsMousePressEvent(QMouseEvent *e);
     void keyPressEvent(QKeyEvent *e);
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
@@ -77,7 +89,7 @@ class KNListView : public QListView  {
     void focusChanged(QFocusEvent*);
 
   private:
-    int s_elCount;
+    KNLVItemBase *activeItem;
 };
 
 

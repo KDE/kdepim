@@ -35,7 +35,8 @@ class KNHdrViewItem : public KNLVItemBase  {
   protected:
     bool greyOut();
     bool firstColBold();
-
+    QColor normalColor();
+    QColor greyColor();
 };
 
 #endif
