@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (C) 2004-05 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,6 +25,7 @@
 
 #include "calendaradaptor.h"
 #include "groupwareuploadjob.h"
+#include "API_Blog.h"
 #include <kurl.h>
 
 namespace KIO {
@@ -34,22 +36,45 @@ namespace KCal {
 
 class BloggingCalendarAdaptor : public CalendarAdaptor
 {
+Q_OBJECT
   public:
     BloggingCalendarAdaptor();
 
-    QCString identifier() const { return "KCalResourceBlogging"; }
+/**/    QCString identifier() const { return "KCalResourceBlogging"; }
+/**/    long flags() const { return GWResNeedsLogon; }
+/**/
+/**/    void setBaseUrl( const KURL &url );
+/**/    void setUser( const QString &user );
+/**/    void setPassword( const QString &password );
+/**/    // We don't want to set the username / pw for the URL!
+/**/    void setUserPassword( KURL &url );
+/**/
+/**/    KBlog::APIBlog *api() const;
+/**/    void setAPI( KBlog::APIBlog *api );
+/**/
+/**/    KIO::Job *createLoginJob( const KURL &url, const QString &user,
+/**/                              const QString &password  );
+/**/    KIO::Job *createListFoldersJob( const KURL &url );
+/**/    KIO::TransferJob *createListItemsJob( const KURL &url );
+/**/    KIO::TransferJob *createDownloadJob( const KURL &url,
+/**/                                        KPIM::GroupwareJob::ContentType ctype );
+    KIO::Job *createRemoveJob( const KURL &url,
+                                  KPIM::GroupwareUploadItem::List deleteItems );
 
-    QString extractFingerprint( KIO::TransferJob */*job*/,
-           const QString &/*rawText*/ ) { return QString::null; }
+/**/    bool interpretLoginJob( KIO::Job *job );
+/**/    void interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * );
+/**/    bool interpretListItemsJob( KIO::Job *job, const QString &jobData );
+/**/    bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData );
 
-    KIO::Job         *createListFoldersJob ( const KURL &url );
-    KIO::TransferJob *createListItemsJob   ( const KURL &url );
-    KIO::TransferJob *createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype );
-    KIO::Job         *createRemoveItemsJob ( const KURL &url, KPIM::GroupwareUploadItem::List deletedItems );
-
-    void interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister *folderLister );
-    bool interpretListItemsJob  ( KIO::Job *job,
-      QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
+/**/  public slots:
+/**/    void slotFolderInfoRetrieved( const QString &id, const QString &name );
+/**/    void slotUserInfoRetrieved( const QString &nick, const QString &user,
+/**/                            const QString &email );
+/**/
+/**/  protected:
+/**/    KBlog::APIBlog *mAPI;
+/**/    bool mAuthenticated;
+/**/    static QString mAppID;
 };
 
 }

@@ -42,9 +42,9 @@ KIO::Job *OGoGlobals::createListFoldersJob( const KURL &url )
   return KIO::davPropFind( url, doc, "1", false );
 }
 
-KIO::TransferJob *OGoGlobals::createDownloadItemJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
+KIO::TransferJob *OGoGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
 {
-kdDebug()<<"OGoGlobals::createDownloadItemJob, url="<<url.url()<<endl;
+kdDebug()<<"OGoGlobals::createDownloadJob, url="<<url.url()<<endl;
   KIO::TransferJob *job = KIO::get( url, false, false );
   if ( adaptor ) {
     QString mt = adaptor->mimeType();
@@ -54,19 +54,12 @@ kdDebug()<<"OGoGlobals::createDownloadItemJob, url="<<url.url()<<endl;
   return job;
 }
 
-QString OGoGlobals::extractFingerprint( KIO::TransferJob *job,
-          const QString &/*rawText*/ )
-{
-  const QString& headers = job->queryMetaData( "HTTP-Headers" );
-  return WebdavHandler::getEtagFromHeaders( headers );
-}
-
-KIO::Job *OGoGlobals::createRemoveItemsJob( const KURL &uploadurl,
+KIO::Job *OGoGlobals::createRemoveJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems )
 {
   QStringList urls;
   KPIM::GroupwareUploadItem::List::iterator it;
-  kdDebug(5800) << " OGoGlobals::createRemoveItemsJob: , URL="<<uploadurl.url()<<endl;
+  kdDebug(5800) << " OGoGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
     KURL url( uploadurl );

@@ -44,7 +44,12 @@ void GroupwareDownloadJob::run()
 {
   kdDebug(5800) << "GroupwareDownloadJob::run()" << endl;
 
-  if ( adaptor() && adaptor()->folderLister() ){
+  if ( !adaptor() ) {
+    error( i18n("Unable to initialize the download job.") );
+    return;
+  }
+  
+  if ( adaptor()->folderLister() ){
     mFoldersForDownload = adaptor()->folderLister()->activeFolderIds();
   } else {
     // TODO: If we don't have a folder lister, use the base URL (e.g. if all
@@ -53,6 +58,12 @@ void GroupwareDownloadJob::run()
 
   mItemsForDownload.clear();
   mCurrentlyOnServer.clear();
+  connect( adaptor(), SIGNAL( itemToDownload( const QString &, KPIM::GroupwareJob::ContentType ) ),
+           SLOT( slotItemToDownload( const QString &, KPIM::GroupwareJob::ContentType ) ) );
+  connect( adaptor(), SIGNAL( itemOnServer( const QString & ) ),
+           SLOT( slotItemOnServer( const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemDownloaded( const QString &, const QString &, const QString & ) ),
+           SLOT( slotItemDownloaded( const QString &, const QString &, const QString & ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(),
@@ -68,7 +79,7 @@ void GroupwareDownloadJob::listItems()
 {
   if ( mFoldersForDownload.isEmpty() ) {
     if ( mProgress ) {
-      mProgress->setTotalItems( mItemsForDownload.count() );
+      mProgress->setTotalItems( mItemsForDownload.count() + 1 );
       mProgress->setCompletedItems( 1 );
       mProgress->updateProgress();
     }
@@ -79,27 +90,37 @@ void GroupwareDownloadJob::listItems()
   } else {
 
     //kdDebug(7000) << "props: " << props.toString() << endl;
-
     KURL url = mFoldersForDownload.front();
     mFoldersForDownload.pop_front();
     kdDebug(5800) << "listItems: " << url.url() << endl;
 
-    adaptor()->setUserPassword( url );
     adaptor()->adaptDownloadUrl( url );
-    kdDebug(5800) << "listItems, after setUserPassword: " << url.url() << endl;
+    kdDebug(5800) << "listItems, after adaptDownloadUrl: " << url.url() << endl;
 
     kdDebug(5800) << "OpenGroupware::listIncidences(): " << url << endl;
 
+    mListItemsData = QString::null;
     mListEventsJob = adaptor()->createListItemsJob( url );
 
     connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
-             SLOT( slotListJobResult( KIO::Job * ) ) );
+             SLOT( slotListItemsResult( KIO::Job * ) ) );
+    connect( mListEventsJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+        SLOT( slotListItemsData( KIO::Job *, const QByteArray & ) ) );
   }
 }
 
-void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
+
+void GroupwareDownloadJob::slotListItemsData( KIO::Job *, const QByteArray &data )
 {
-  kdDebug(5800) << "GroupwareDownloadJob::slotListJobResult(): " << endl;
+  kdDebug(5800) << "OpenGroupware::slotListItemsData()" << endl;
+
+  mListItemsData.append( data.data() );
+}
+
+
+void GroupwareDownloadJob::slotListItemsResult( KIO::Job *job )
+{
+  kdDebug(5800) << "GroupwareDownloadJob::slotListItemsResult(): " << endl;
 
   if ( job->error() ) {
     if ( mProgress ) {
@@ -108,9 +129,10 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
     }
     error( job->errorString() );
   } else {
-    adaptor()->interpretListItemsJob( job, mCurrentlyOnServer, mItemsForDownload );
+    adaptor()->interpretListItemsJob( job, mListItemsData );
   }
 
+  mListItemsData = QString::null;
   mListEventsJob = 0;
 
   listItems();
@@ -143,13 +165,13 @@ void GroupwareDownloadJob::downloadItem()
     KURL url( href );
     adaptor()->adaptDownloadUrl( url );
 
-    mJobData = QString::null;
+    mDownloadItemsData = QString::null;
 
-    mDownloadJob = adaptor()->createDownloadItemJob( url, ctype );
+    mDownloadJob = adaptor()->createDownloadJob( url, ctype );
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-        SLOT( slotJobResult( KIO::Job * ) ) );
+        SLOT( slotDownloadItemResult( KIO::Job * ) ) );
     connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-        SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
+        SLOT( slotDownloadItemData( KIO::Job *, const QByteArray & ) ) );
   } else {
     if ( mProgress ) mProgress->setComplete();
     mProgress = 0;
@@ -157,9 +179,9 @@ void GroupwareDownloadJob::downloadItem()
   }
 }
 
-void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
+void GroupwareDownloadJob::slotDownloadItemResult( KIO::Job *job )
 {
-  kdDebug(5800) << "GroupwareDownloadJob::slotJobResult(): " << endl;
+  kdDebug(5800) << "GroupwareDownloadJob::slotDownloadItemResult(): " << endl;
 
   KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
   if ( !trfjob ) return;
@@ -167,47 +189,67 @@ void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
   if ( job->error() ) {
     error( job->errorString() );
   } else {
-    const QString &remote = KURL( trfjob->url() ).path();
-    const QString &local = adaptor()->idMapper()->localId( remote );
-
-    // remove old version, we would not have downnloaded
-    // if it were still current
-    adaptor()->deleteItem( local );
-
-    QString fingerprint; // <- will be set by addItem
-    QString id = adaptor()->addItem( trfjob, mJobData, fingerprint, local, remote );
-
-    if ( id.isEmpty() ) {
-      error( i18n("Error parsing calendar data.") );
-    } else {
-      if ( local.isEmpty() ) {
-        adaptor()->idMapper()->setRemoteId( id, remote );
-      }
-      adaptor()->idMapper()->setFingerprint( id, fingerprint );
-    }
+    adaptor()->interpretDownloadItemsJob( job, mDownloadItemsData );
   }
 
   if ( mProgress ) {
     mProgress->incCompletedItems();
     mProgress->updateProgress();
   }
-  mJobData = QString::null;
+  mDownloadItemsData = QString::null;
   mDownloadJob = 0;
 
   downloadItem();
 }
 
-void GroupwareDownloadJob::slotJobData( KIO::Job *, const QByteArray &data )
+void GroupwareDownloadJob::slotDownloadItemData( KIO::Job *, const QByteArray &data )
 {
-  kdDebug(5800) << "OpenGroupware::slotJobData()" << endl;
+  kdDebug(5800) << "OpenGroupware::slotDownloadItemData()" << endl;
 
-  mJobData.append( data.data() );
+  mDownloadItemsData.append( data.data() );
 }
+
+void GroupwareDownloadJob::slotItemToDownload( const QString &remoteURL,
+                         KPIM::GroupwareJob::ContentType type )
+{
+  if ( !mItemsForDownload.contains( remoteURL ) &&
+       !mItemsDownloaded.contains( remoteURL ) ) {
+    mItemsForDownload.insert( remoteURL, type );
+  }
+}
+
+
+void GroupwareDownloadJob::slotItemOnServer( const QString &remoteURL )
+{
+kdDebug()<<"GroupwareDownloadJob::slotItemOnServer( " << remoteURL << ")" << endl;
+  if ( !mCurrentlyOnServer.contains( remoteURL ) ) {
+    mCurrentlyOnServer.append( remoteURL );
+  }
+}
+
+
+void GroupwareDownloadJob::slotItemDownloaded( const QString &localID,
+         const QString &remoteURL, const QString &fingerprint )
+{
+kdDebug()<<"GroupwareDownloadJob::slotItemDownloaded( " << localID << ", " << remoteURL << ", " << fingerprint << ")" << endl;
+  if ( mItemsForDownload.contains( remoteURL ) ) {
+    mItemsDownloaded[ remoteURL ] = mItemsForDownload[ remoteURL ];
+    mItemsDownloaded.remove( remoteURL );
+  } else if ( !mItemsDownloaded.contains( remoteURL ) ) {
+    mItemsDownloaded[ remoteURL ] = Unknown;
+  }
+  adaptor()->idMapper()->setRemoteId( localID, remoteURL );
+  adaptor()->idMapper()->setFingerprint( localID, fingerprint );
+}
+
+
 
 void GroupwareDownloadJob::kill()
 {
   cancelLoad();
 }
+
+
 
 void GroupwareDownloadJob::cancelLoad()
 {

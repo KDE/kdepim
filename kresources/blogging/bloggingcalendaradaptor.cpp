@@ -22,9 +22,7 @@
 
 #include "bloggingcalendaradaptor.h"
 #include "bloggingglobals.h"
-#include "webdavhandler.h"
 #include <libemailfunctions/idmapper.h>
-#include "xmlrpcjob.h"
 #include <folderlister.h>
 
 #include <libkcal/calendarlocal.h>
@@ -35,79 +33,171 @@
 
 using namespace KCal;
 
-BloggingCalendarAdaptor::BloggingCalendarAdaptor()
-{
-}
-
-KIO::Job *BloggingCalendarAdaptor::createListFoldersJob( const KURL &url )
-{
-  kdDebug() << "Fetch Blogs..." << endl;
-  KURL u( url );
-  QString user( u.user() );
-  QString pw( u.pass() );
-  u.setUser( QString::null );
-  u.setPass( QString::null );
-
-  QValueList<QVariant> args( BloggingGlobals::defaultArgs( user, pw ) );
-  return KIO::xmlrpcCall( u, BloggingGlobals::getFunctionName( BloggingGlobals::bloggerGetUsersBlogs ),
-                          args, false );
-}
-
-
-
-KIO::TransferJob *BloggingCalendarAdaptor::createDownloadItemJob( const KURL &/*url*/, KPIM::GroupwareJob::ContentType /*ctype*/ )
-{
+// That terribly long app key was generated at
+// http://www.blogger.com/developers/api/1_docs/register.html
+// for the "KDE-Pim libkcal blogging resource".
 // TODO:
-return 0;
-//   return BloggingGlobals::createDownloadItemJob( this, url,ctype );
+/*QString BloggingCalendarAdaptor::mAppID =
+    QString("20ffffffd7ffffffc5ffffffbdffffff87ffffffb72d39fffffffe5c4bfffff"
+            "fcfffffff80ffffffd4665cfffffff375ffffff88ffffff871a0cffffff8029");
+*/
+
+
+BloggingCalendarAdaptor::BloggingCalendarAdaptor() : mAuthenticated( false ), mAPI( 0 )
+{
 }
 
-KIO::TransferJob *BloggingCalendarAdaptor::createListItemsJob( const KURL &/*url*/ )
+
+KBlog::APIBlog *BloggingCalendarAdaptor::api() const
 {
-// TODO:
-return 0;
-//  return BloggingGlobals::createListItemsJob( url );
+  return mAPI;
 }
 
-KIO::Job *BloggingCalendarAdaptor::createRemoveItemsJob( const KURL &/*uploadurl*/, KPIM::GroupwareUploadItem::List /*deletedItems*/ )
+void BloggingCalendarAdaptor::setAPI( KBlog::APIBlog *api )
 {
-// TODO:
-return 0;
-//  return BloggingGlobals::createRemoveItemsJob( uploadurl, deletedItems );
+  delete mAPI;
+  mAPI = api;
+  mAuthenticated = false;
+  connect( api, SIGNAL( userInfoRetrieved( const QString &, const QString &,
+                                           const QString & ) ),
+           SLOT( slotUserInfoRetrieved( const QString &, const QString &,
+                                    const QString & ) ) );
+  connect( api, SIGNAL( folderInfoRetrieved( const QString &, const QString & ) ),
+           SLOT( slotFolderInfoRetrieved( const QString &, const QString & ) ) );
+  connect( api, SIGNAL( itemOnServer( const QString & ) ),
+           SIGNAL( itemOnServer( const QString & ) ) );
+  connect( api, SIGNAL( itemDownloaded( KCal::Incidence *, const QString &,
+                                        const QString &, const QString &, const QString & ) ),
+           SLOT( calendarItemDownloaded( KCal::Incidence *, const QString &,
+                                         const QString &, const QString &, const QString & ) ) );
+
 }
 
-void BloggingCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister */*folderLister*/ )
+void BloggingCalendarAdaptor::slotFolderInfoRetrieved( const QString &id, const QString &name )
 {
-  KIO::XmlrpcJob *trfjob = dynamic_cast<KIO::XmlrpcJob*>(job);
-  if ( job->error() ) {
-    // TODO: Error handling
-  } else if ( trfjob ) {
-    QValueList<QVariant> message( trfjob->response() );
-    kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
-    
-    const QValueList<QVariant> posts = message[ 0 ].toList();
-    QValueList<QVariant>::ConstIterator it = posts.begin();
-    QValueList<QVariant>::ConstIterator end = posts.end();
-    for ( ; it != end; ++it ) {
-      kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
-      const QMap<QString, QVariant> postInfo = ( *it ).toMap();
-    
-      const QString id( postInfo[ "blogid" ].toString() );
-      const QString name( postInfo[ "blogName" ].toString() );
-      const QString url( postInfo[ "url" ].toString() );
-      
-      // Use the Blog ID instead of the URL. The ID already indicates the correct blog, and the 
-      // URL for all calls will be the XML-RPC interface, anyway.
-      if ( !id.isEmpty() && !name.isEmpty() ) 
-        emit folderInformationRetrieved( id, name, KPIM::FolderLister::JournalsFolder );
-    }
+  emit folderInfoRetrieved( id, name, KPIM::FolderLister::JournalsFolder );
+}
+
+void BloggingCalendarAdaptor::slotUserInfoRetrieved( const QString &/*nick*/,
+       const QString &/*user*/, const QString &/*email*/ )
+{
+kdDebug() << "BloggingCalendarAdaptor::slotUserInfoRetrieved"<<endl;
+  mAuthenticated = true;
+}
+
+void BloggingCalendarAdaptor::setBaseUrl( const KURL &url )
+{
+  if ( mAPI ) {
+    mAPI->setURL( url );
   }
 }
 
-bool BloggingCalendarAdaptor::interpretListItemsJob( KIO::Job */*job*/, QStringList &/*currentlyOnServer*/, QMap<QString,KPIM::GroupwareJob::ContentType> &/*itemsForDownload*/ )
+void BloggingCalendarAdaptor::setUser( const QString &user )
 {
-// TODO:
-return 0;
-//  return BloggingGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
+  CalendarAdaptor::setUser( user );
+  if ( mAPI ) {
+    mAPI->setUsername( user );
+  }
 }
 
+void BloggingCalendarAdaptor::setPassword( const QString &password )
+{
+  CalendarAdaptor::setPassword( password );
+  if ( mAPI ) {
+    mAPI->setPassword( password );
+  }
+}
+
+void BloggingCalendarAdaptor::setUserPassword( KURL & )
+{
+  kdDebug(5800) << "BloggingCalendarAdaptor::setUserPassword" << endl;
+}
+
+
+
+KIO::Job *BloggingCalendarAdaptor::createLoginJob( const KURL &url,
+                                                   const QString &user,
+                                                   const QString &password )
+{
+  if ( mAPI ) {
+    mAPI->setURL( url );
+    mAPI->setUsername( user );
+    mAPI->setPassword( password );
+    return mAPI->createUserInfoJob();
+  } else return 0;
+}
+
+KIO::Job *BloggingCalendarAdaptor::createListFoldersJob( const KURL &/*url*/ )
+{
+  if ( mAPI ) {
+    return mAPI->createListFoldersJob();
+  } else return 0;
+}
+
+KIO::TransferJob *BloggingCalendarAdaptor::createListItemsJob( const KURL &url )
+{
+  if ( mAPI ) {
+    return mAPI->createListItemsJob( url );
+  } else return 0;
+}
+
+KIO::TransferJob *BloggingCalendarAdaptor::createDownloadJob( const KURL &url,
+                                     KPIM::GroupwareJob::ContentType ctype )
+{
+  if ( mAPI && (ctype == KPIM::GroupwareJob::Journal) ) {
+    return mAPI->createDownloadJob( url );
+  } else return 0;
+}
+
+KIO::Job *BloggingCalendarAdaptor::createRemoveJob( const KURL &/*url*/,
+                               KPIM::GroupwareUploadItem::List /*deleteItem*/ )
+{
+  /* TODO: if ( mAPI ) {
+    return mAPI->createRemoveJob( deleteItem );
+  } else*/ return 0;
+}
+
+bool BloggingCalendarAdaptor::interpretLoginJob( KIO::Job *job )
+{
+kdDebug()<<"BloggingCalendarAdaptor::interpretLoginJob"<<endl;
+  if ( mAPI && job ) {
+kdDebug()<<"We have an API and a job"<<endl;
+    mAuthenticated = false;
+    mAPI->interpretUserInfoJob( job );
+kdDebug() << "authenticated=" << mAuthenticated << endl;
+    return mAuthenticated;
+  } else return false;
+}
+
+
+void BloggingCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * )
+{
+kdDebug() << "BloggingCalendarAdaptor::interpretListFoldersJob" << endl;
+  if ( mAPI && job ) {
+    mAPI->interpretListFoldersJob( job );
+  }
+}
+
+
+bool BloggingCalendarAdaptor::interpretListItemsJob( KIO::Job *job,
+                                                    const QString &/*jobData*/ )
+{
+  if ( mAPI ) {
+    return mAPI->interpretListItemsJob( job );
+  } else {
+    return false;
+  }
+}
+
+
+bool BloggingCalendarAdaptor::interpretDownloadItemsJob( KIO::Job *job,
+                                                    const QString &/*jobData*/ )
+{
+  if ( mAPI ) {
+    return mAPI->interpretDownloadItemsJob( job );
+  } else {
+    return false;
+  }
+}
+
+#include "bloggingcalendaradaptor.moc"

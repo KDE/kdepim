@@ -58,11 +58,7 @@ class ExchangeCalendarAdaptor : public DavCalendarAdaptor
     QString mimeType() const { return "message/rfc822"; }
     QCString identifier() const { return "KCalResourceExchange"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem *item );
-
-
-    
-    QString extractFingerprint( KIO::TransferJob *job, const QString &rawText )
-        { return ExchangeGlobals::extractFingerprint( job, rawText ); }
+    long flags() const { return GWResBatchDelete; }
 
 
 
@@ -71,22 +67,21 @@ class ExchangeCalendarAdaptor : public DavCalendarAdaptor
         { return ExchangeGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
         { return ExchangeGlobals::createListItemsJob( url ); }
-    KIO::TransferJob *createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype );
-    KIO::Job *createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-        { return ExchangeGlobals::createRemoveItemsJob( uploadurl, deletedItems ); }
+    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype );
+    KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+        { return ExchangeGlobals::createRemoveJob( uploadurl, deletedItems ); }
 
-        
+
     // Interpreting Jobs
-    bool interpretListItemsJob( KIO::Job *job, QStringList &currentlyOnServer,
-            QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
-        { return ExchangeGlobals::interpretListItemsJob( this, job, currentlyOnServer, itemsForDownload ); }
-    KCal::Incidence::List interpretDownloadItemJob( KIO::TransferJob *job, const QString &rawText );
+    bool interpretListItemsJob( KIO::Job *job, const QString &/*jobData*/ )
+        { return ExchangeGlobals::interpretListItemsJob( this, job ); }
+    bool interpretDownloadItemsJob( KIO::Job *job, const QString &/*rawText*/ );
 
 
-        
+
     KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it,
            KPIM::GroupwareUploadItem::UploadType type );
-    
+
 
 
     bool getFolderHasSubs( const QDomNode &folderNode )

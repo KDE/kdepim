@@ -46,29 +46,29 @@ KIO::Job *ExchangeGlobals::createListFoldersJob( const KURL &url )
 
 
 
-QString ExchangeGlobals::extractFingerprint( KIO::TransferJob *job,
-          const QString &/*rawText*/ )
-{
-  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
-  if ( !davjob ) return QString::null;
+// QString ExchangeGlobals::extractFingerprint( KIO::TransferJob *job,
+//           const QString & )
+// {
+//   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
+//   if ( !davjob ) return QString::null;
+// 
+//   QDomDocument doc = davjob->response();
+// //   kdDebug(7000) << " Doc: " << doc.toString() << endl;
+// 
+//   QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
+//   if ( fingerprints.count() == 0 ) return QString::null;
+// 
+//   QDomElement e = fingerprints.item(0).toElement();
+// kdDebug() << "Fingerprint (etag): " << e.text() << endl;
+//   return e.text();
+// }
 
-  QDomDocument doc = davjob->response();
-//   kdDebug(7000) << " Doc: " << doc.toString() << endl;
-
-  QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
-  if ( fingerprints.count() == 0 ) return QString::null;
-
-  QDomElement e = fingerprints.item(0).toElement();
-kdDebug() << "Fingerprint (etag): " << e.text() << endl;
-  return e.text();
-}
-
-KIO::Job *ExchangeGlobals::createRemoveItemsJob( const KURL &uploadurl,
+KIO::Job *ExchangeGlobals::createRemoveJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems )
 {
   QStringList urls;
   KPIM::GroupwareUploadItem::List::iterator it;
-  kdDebug(5800) << " ExchangeGlobals::createRemoveItemsJob: , URL="<<uploadurl.url()<<endl;
+  kdDebug(5800) << " ExchangeGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
     kdDebug(7000) << "Delete: " <<   (*it)->url().url() << endl;
@@ -105,7 +105,7 @@ KPIM::GroupwareJob::ContentType ExchangeGlobals::getContentType( const QString &
 
 // FIXME: This is exactly the same code, except that it calls getContentType of the ExchangeGlobals class, instead of the one from DAVGroupwareGlobals!!!!
 bool ExchangeGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
-    KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
+    KIO::Job *job )
 {
 kdDebug()<<"ExchangeGlobals::interpretListItemsJob"<<endl;
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
@@ -140,12 +140,9 @@ kdDebug()<<"ExchangeGlobals::interpretListItemsJob"<<endl;
 
     KPIM::GroupwareJob::ContentType type = getContentType( prop );
 
-    adaptor->processDownloadListItem( currentlyOnServer, itemsForDownload,
-        entry, newFingerprint, type );
+    adaptor->processDownloadListItem( entry, newFingerprint, type );
   }
 
-  kdDebug(5800)<<"currentlyOnServer="<<currentlyOnServer.join(", ")<<endl;
-  kdDebug(5800)<<"itemsForDownload="<<QStringList( itemsForDownload.keys() ).join(", ")<<endl;
   return true;
 }
 

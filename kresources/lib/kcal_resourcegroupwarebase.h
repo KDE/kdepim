@@ -27,6 +27,10 @@
 
 #include <kabc/locknull.h>
 
+namespace KIO {
+class Job;
+}
+
 namespace KPIM {
 class GroupwareJob;
 class GroupwareDownloadJob;
@@ -81,10 +85,14 @@ class ResourceGroupwareBase : public ResourceCached
     virtual KPIM::GroupwareUploadJob *createUploadJob( CalendarAdaptor *adaptor );
 
   protected slots:
+    void slotLoginJobResult( KIO::Job *job );
+    void slotLogoffJobResult( KIO::Job *job );
     void slotDownloadJobResult( KPIM::GroupwareJob * );
     void slotUploadJobResult( KPIM::GroupwareJob * );
 
   private:
+    void enter_loop();
+    
     GroupwarePrefsBase *mPrefs;
     KPIM::FolderLister *mFolderLister;
     KABC::LockNull mLock;
@@ -94,7 +102,9 @@ class ResourceGroupwareBase : public ResourceCached
     KPIM::GroupwareUploadJob *mUploadJob;
 
     bool mIsShowingError;
-    KURL mBaseUrl;
+
+    bool mLoginFinished; // temp variable for the login job
+    
 };
 
 }

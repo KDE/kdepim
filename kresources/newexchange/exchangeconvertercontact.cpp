@@ -220,6 +220,11 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
     kdDebug()<<"Addressee does not have a UID"<<endl;
     return false;
   }
+  if ( WebdavHandler::extractString( node, "getetag", tmpstr ) )
+    addressee.insertCustom( "KDEPIM-Exchange-Resource", "fingerprint", tmpstr );
+  if ( WebdavHandler::extractString( node, "href", tmpstr ) )
+    addressee.insertCustom( "KDEPIM-Exchange-Resource", "href", tmpstr );
+    
 /* KDE4: addressee does not have any creation or modification date :-(( */
 /* KDE4: read-only not supported by libkabc */
 
@@ -364,6 +369,7 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
 
 Addressee::List ExchangeConverterContact::parseWebDAV( const QDomDocument& davdata )
 {
+  // TODO: Handle multiple addressees per reply!
   Addressee::List list;
 
   QDomElement prop = davdata.documentElement().namedItem( "response" )

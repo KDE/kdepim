@@ -23,8 +23,15 @@
 #include "davgroupwareglobals.h"
 #include "webdavhandler.h"
 #include "groupwaredataadaptor.h"
+#include <calendaradaptor.h>
+#include <addressbookadaptor.h>
 
+#include <libkcal/calendarlocal.h>
+#include <libkcal/icalformat.h>
+#include <libkcal/resourcecached.h>
 #include <libemailfunctions/idmapper.h>
+
+#include <kabc/vcardconverter.h>
 #include <kio/job.h>
 #include <kio/davjob.h>
 #include <kdebug.h>
@@ -54,7 +61,7 @@ kdDebug()<<"Found content type: "<<type<<endl;
 }
 
 bool DAVGroupwareGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
-    KIO::Job *job, QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
+    KIO::Job *job )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
 
@@ -88,8 +95,7 @@ bool DAVGroupwareGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *ada
 
     KPIM::GroupwareJob::ContentType type = getContentType( prop );
 
-    adaptor->processDownloadListItem( currentlyOnServer, itemsForDownload,
-        entry, newFingerprint, type );
+    adaptor->processDownloadListItem( entry, newFingerprint, type );
 
 /*    bool download = false;
     KURL url ( entry );
@@ -184,7 +190,69 @@ bool DAVGroupwareGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *ada
     }
   }
 */
-  kdDebug(5800)<<"currentlyOnServer="<<currentlyOnServer.join(", ")<<endl;
-  kdDebug(5800)<<"itemsForDownload="<<QStringList( itemsForDownload.keys() ).join(", ")<<endl;
   return true;
 }
+
+QString DAVGroupwareGlobals::extractFingerprint( KIO::Job *job, const QString &/*jobData*/ )
+{
+  const QString& headers = job->queryMetaData( "HTTP-Headers" );
+  return WebdavHandler::getEtagFromHeaders( headers );
+}
+
+bool DAVGroupwareGlobals::interpretCalendarDownloadItemsJob( KCal::CalendarAdaptor *adaptor, KIO::Job *job, const QString &jobData )
+{
+kdDebug(5800) << "DAVGroupwareGlobals::interpretCalendarDownloadItemsJob, iCalendar=" << endl;
+kdDebug(5800) << jobData << endl;
+  if ( !adaptor || !job ) return false;
+  KCal::CalendarLocal calendar;
+  KCal::ICalFormat ical;
+  calendar.setTimeZoneId( adaptor->resource()->timeZoneId() );
+  KCal::Incidence::List incidences;
+  if ( ical.fromString( &calendar, jobData ) ) {
+    KCal::Incidence::List raw = calendar.rawIncidences();
+    KCal::Incidence::List::Iterator it = raw.begin();
+    if ( raw.count() != 1 ) {
+      kdError() << "Parsed iCalendar does not contain exactly one event." << endl;
+      return false;
+    }
+    
+    KCal::Incidence *inc = (raw.front())->clone();
+    if ( !inc ) return false;
+    KIO::SimpleJob *sjob = dynamic_cast<KIO::SimpleJob *>(job);
+    QString remoteId( QString::null );
+    if ( sjob ) remoteId = sjob->url().path();
+    QString fingerprint = extractFingerprint( job, jobData );
+    adaptor->calendarItemDownloaded( inc, inc->uid(), remoteId, fingerprint,
+                                     sjob->url().prettyURL() );
+    return true;
+  } else {
+    kdError() << "Unable to parse iCalendar" << endl;
+  }
+  return false;
+}
+
+bool DAVGroupwareGlobals::interpretAddressBookDownloadItemsJob( KABC::AddressBookAdaptor *adaptor, KIO::Job *job, const QString &jobData )
+{
+kdDebug(5800) << "DAVGroupwareGlobals::interpretAddressBookDownloadItemsJob, vCard=" << endl;
+kdDebug(5800) << jobData << endl;
+  if ( !adaptor || !job ) return false;
+  
+  KABC::VCardConverter conv;
+  KABC::Addressee::List addrs( conv.parseVCards( jobData ) );
+  
+  if ( addrs.count() != 1 ) {
+    kdError() << "Parsed vCard does not contain exactly one addressee." << endl;
+    return false;
+  }
+
+  KABC::Addressee a = addrs.first();
+
+  KIO::SimpleJob *sjob = dynamic_cast<KIO::SimpleJob*>(job);
+  QString remoteId( QString::null );
+  if ( sjob ) remoteId = sjob->url().path();
+  QString fingerprint = extractFingerprint( job, jobData );
+  adaptor->addressbookItemDownloaded( a, a.uid(), remoteId, fingerprint,
+                                      sjob->url().prettyURL() );
+  return true;
+}
+

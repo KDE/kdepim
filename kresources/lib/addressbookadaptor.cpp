@@ -31,7 +31,10 @@
 using namespace KABC;
 
 
-AddressBookUploadItem::AddressBookUploadItem( KPIM::GroupwareDataAdaptor *adaptor, KABC::Addressee addr, GroupwareUploadItem::UploadType type )
+AddressBookUploadItem::AddressBookUploadItem( 
+                                        KPIM::GroupwareDataAdaptor *adaptor, 
+                                        KABC::Addressee addr, 
+                                        GroupwareUploadItem::UploadType type )
     : GroupwareUploadItem( type )
 {
   setUrl( addr.custom( adaptor->identifier(), "storagelocation" ) );
@@ -73,12 +76,14 @@ bool AddressBookAdaptor::localItemHasChanged( const QString &localId )
   return false;
 }
 
-void AddressBookAdaptor::uploadFinished( KIO::TransferJob */*trfjob*/, KPIM::GroupwareUploadItem *item )
+void AddressBookAdaptor::uploadFinished( KIO::TransferJob */*trfjob*/, 
+                                         KPIM::GroupwareUploadItem *item )
 {
 //   OGoGlobals::uploadFinished( this, trfjob, item );
   Addressee addr( resource()->findByUid( item->uid() ) );
   if ( !addr.isEmpty() ) {
-  // FIXME: This doesn't work yet. So for now, just don't do anything and hope that the next folder refresh will clean things up nicely.
+  // FIXME: This doesn't work yet. So for now, just don't do anything and hope 
+  //        that the next folder refresh will clean things up nicely.
 //     resource()->removeAddressee( addr );
 /*    addr.insertCustom( identifier(), "storagelocation",
                idMapper()->remoteId( item->uid() ) );*/
@@ -92,61 +97,46 @@ void AddressBookAdaptor::deleteItem( const QString &localId )
   if ( !a.isEmpty() ) mResource->removeAddressee( a );
 }
 
-KABC::Addressee::List AddressBookAdaptor::interpretDownloadItemJob( KIO::TransferJob *, const QString &rawText )
+void AddressBookAdaptor::addItem( KABC::Addressee addr )
 {
-  KABC::VCardConverter conv;
-  return conv.parseVCards( rawText );
-}
-
-QString AddressBookAdaptor::addItem( KIO::TransferJob *job,
-     const QString &rawText, QString &fingerprint,
-     const QString &localId, const QString &storageLocation )
-{
-  fingerprint = extractFingerprint( job, rawText );
-
-  KABC::Addressee::List addressees( interpretDownloadItemJob( job, rawText ) );
-
-  if ( addressees.count() > 1 ) {
-    kdError() << "More than one addressee in vCard" << endl;
-    return QString::null;
-  }
-
-  if ( addressees.count() == 0 ) {
-    kdError() << "No valid addressee in vCard" << endl;
-    return QString::null;
-  }
-
-  KABC::Addressee addr = *addressees.begin();
-  if ( addr.isEmpty() ) {
-    kdError() << "Addressee is empty." << endl;
-    return QString::null;
-  } else {
-    if ( !localId.isEmpty() ) addr.setUid( localId );
+  if ( !addr.isEmpty() ) {
+//     mResource->disableChangeNotification();
     addr.setResource( mResource );
-    addr.insertCustom( identifier(), "storagelocation", storageLocation );
     mResource->insertAddressee( addr );
     clearChange( addr.uid() );
-
-    return addr.uid();
+//     mResource->enableChangeNotification();
   }
 }
 
-QString AddressBookAdaptor::extractUid( KIO::TransferJob *job, const QString &data )
+void AddressBookAdaptor::addressbookItemDownloaded( KABC::Addressee addr,
+    const QString &newLocalId, const QString &remoteId, const QString &fingerprint,
+    const QString &storagelocation )
 {
-  KABC::Addressee::List addressees = interpretDownloadItemJob( job, data );
-  if ( addressees.begin() == addressees.end() ) return QString::null;
-
-  KABC::Addressee a = *(addressees.begin());
-  return a.uid();
+  // remove the currently existing item from the cache
+  deleteItem( newLocalId );
+  QString localId = idMapper()->localId( remoteId );
+  if ( !localId.isEmpty() ) deleteItem( localId );
+  
+  // add the new item
+  addr.insertCustom( identifier(), "storagelocation", storagelocation );
+  if ( !localId.isEmpty() ) addr.setUid( localId );
+  addItem( addr );
+  
+  // update the fingerprint and the ids in the idMapper
+  idMapper()->removeRemoteId( localId );
+  idMapper()->removeRemoteId( newLocalId );
+  idMapper()->setRemoteId( addr.uid(), remoteId );
+  idMapper()->setFingerprint( addr.uid(), fingerprint );
 }
+
 
 void AddressBookAdaptor::clearChange( const QString &uid )
 {
   mResource->clearChange( uid );
 }
 
-KPIM::GroupwareUploadItem *AddressBookAdaptor::newUploadItem( KABC::Addressee addr,
-             KPIM::GroupwareUploadItem::UploadType type )
+KPIM::GroupwareUploadItem *AddressBookAdaptor::newUploadItem( 
+              KABC::Addressee addr, KPIM::GroupwareUploadItem::UploadType type )
 {
   return new AddressBookUploadItem( this, addr, type );
 }

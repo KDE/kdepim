@@ -43,15 +43,12 @@ class ExchangeGlobals
 
     static KIO::Job *createListFoldersJob( const KURL &url );
     
-
-    static QString extractFingerprint( KIO::TransferJob *job, const QString &rawText );
-    static KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
+    static KIO::Job *createRemoveJob( const KURL &uploadurl,
            KPIM::GroupwareUploadItem::List deletedItems );
     static KPIM::GroupwareJob::ContentType getContentType( const QDomElement &prop );
     static KPIM::GroupwareJob::ContentType getContentType( const QString &contentclass );
     static bool interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
-           KIO::Job *job, QStringList &currentlyOnServer,
-           QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
+           KIO::Job *job );
     static KIO::TransferJob *createListItemsJob( const KURL &url );
     static bool getFolderHasSubs( const QDomNode &folderNode );
     static KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode );

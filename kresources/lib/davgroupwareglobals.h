@@ -37,16 +37,29 @@ class GroupwareDataAdaptor;
 class GroupwareUploadItem;
 }
 
+namespace KCal {
+class CalendarAdaptor;
+}
+
+namespace KABC {
+class AddressBookAdaptor;
+}
+
 class DAVGroupwareGlobals
 {
   public:
     DAVGroupwareGlobals() {}
 
     static KIO::TransferJob *createListItemsJob( const KURL &url );
+    static QString extractFingerprint( KIO::Job *job, const QString &/*jobData*/ );
 
     static bool interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
-        KIO::Job *job, QStringList &currentlyOnServer,
-        QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
+        KIO::Job *job );
+    static bool interpretCalendarDownloadItemsJob( KCal::CalendarAdaptor *adaptor,
+        KIO::Job *job, const QString &jobData );
+    static bool interpretAddressBookDownloadItemsJob( KABC::AddressBookAdaptor *adaptor,
+        KIO::Job *job, const QString &jobData );
+    
     static KPIM::GroupwareJob::ContentType getContentType( const QDomElement &prop );
 };
 

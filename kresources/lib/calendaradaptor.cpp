@@ -92,69 +92,39 @@ void CalendarAdaptor::deleteItem( const QString &localId )
   mResource->enableChangeNotification();
 }
 
-KCal::Incidence::List CalendarAdaptor::interpretDownloadItemJob( KIO::TransferJob */*job*/, const QString &rawText )
+void CalendarAdaptor::addItem( KCal::Incidence *i)
 {
-kdDebug(5800)<<"CalendarAdaptor::interpretDownloadItemJob, iCalendar="<<endl;
-kdDebug(5800)<<rawText<<endl;
-  KCal::CalendarLocal calendar;
-  KCal::ICalFormat ical;
-  calendar.setTimeZoneId( mResource->timeZoneId() );
-  KCal::Incidence::List incidences;
-  if ( ical.fromString( &calendar, rawText ) ) {
-    KCal::Incidence::List raw = calendar.rawIncidences();
-    KCal::Incidence::List::Iterator it = raw.begin();
-    for ( ; it != raw.end(); ++it ) {
-      incidences.append( (*it)->clone() );
-    }
-  } else {
-    kdError() << "Unable to parse iCalendar" << endl;
+  if ( i ) {
+    mResource->disableChangeNotification();
+    mResource->addIncidence( i );
+    mResource->clearChange( i );
+    mResource->enableChangeNotification();
   }
-  return incidences;
 }
 
-QString CalendarAdaptor::addItem( KIO::TransferJob *job,
-     const QString &rawText, QString &fingerprint,
-     const QString &localId, const QString &storageLocation )
+
+void CalendarAdaptor::calendarItemDownloaded( KCal::Incidence *inc,
+    const QString &newLocalId, const QString &remoteId, const QString &fingerprint,
+    const QString &storagelocation )
 {
-  fingerprint = extractFingerprint( job, rawText );
+kdDebug() << "CalendarAdaptor::calendarItemDownloaded, inc=" << inc->summary() << ", local=" << newLocalId << ", remote=" << remoteId << ", fpr=" << fingerprint << ", storagelocation="<< storagelocation << endl;
+  // remove the currently existing item from the cache
+  deleteItem( newLocalId );
+  QString localId = idMapper()->localId( remoteId );
+  if ( !localId.isEmpty() ) deleteItem( localId );
+  
+  // add the new item
+  inc->setCustomProperty( identifier(), "storagelocation", storagelocation );
+  if ( !localId.isEmpty() ) inc->setUid( localId );
+  addItem( inc );
+  
+  // update the fingerprint and the ids in the idMapper
+  idMapper()->removeRemoteId( localId );
+  idMapper()->removeRemoteId( newLocalId );
 
-  KCal::Incidence::List incidences = interpretDownloadItemJob( job, rawText );
-  if ( incidences.count() < 1 ) {
-    kdError() << "Parsed iCalendar contains no event." << endl;
-    return QString::null;
-  }
-  if ( incidences.count() > 1 ) {
-    kdError() << "More than one event in iCalendar" << endl;
-    KCal::Incidence::List::Iterator it = incidences.begin();
-    for ( ; it != incidences.end(); ++it ) {
-      delete (*it);
-    }
-    return QString::null;
-  }
-
-  mResource->disableChangeNotification();
-  // TODO: Remove existing incidence. Make sure it was not changed meanwhile!
-  Incidence *inc = mResource->incidence( localId );
-  if ( inc )
-    mResource->deleteIncidence( inc );
-
-  KCal::Incidence *i = (incidences.front())->clone();
-  if ( !localId.isEmpty() ) i->setUid( localId );
-  i->setCustomProperty( identifier(), "storagelocation", storageLocation );
-  mResource->addIncidence( i );
-  mResource->enableChangeNotification();
-
-  return i->uid();
+  emit itemDownloaded( inc->uid(), remoteId, fingerprint );
 }
 
-QString CalendarAdaptor::extractUid( KIO::TransferJob *job, const QString &data )
-{
-  KCal::Incidence::List incidences = interpretDownloadItemJob( job, data );
-  if ( incidences.count() > 0 ) {
-    return incidences.first()->uid();
-  }
-  else return QString::null;
-}
 
 void CalendarAdaptor::clearChange( const QString &uid )
 {
@@ -183,3 +153,4 @@ void CalendarAdaptor::uploadFinished( KIO::TransferJob */*trfjob*/, KPIM::Groupw
   }
 }
 
+#include "calendaradaptor.moc"

@@ -34,10 +34,12 @@ class ResourceCached;
 class AddressBookUploadItem : public KPIM::GroupwareUploadItem
 {
   public:
-    AddressBookUploadItem( KPIM::GroupwareDataAdaptor *adaptor, KABC::Addressee addr, UploadType type );
+    AddressBookUploadItem( KPIM::GroupwareDataAdaptor *adaptor, 
+                           KABC::Addressee addr, UploadType type );
     virtual ~AddressBookUploadItem() {}
   protected:
-    AddressBookUploadItem( UploadType type ) : KPIM::GroupwareUploadItem( type ) {}
+    AddressBookUploadItem( UploadType type ) 
+                                          : KPIM::GroupwareUploadItem( type ) {}
 };
 
 class AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
@@ -64,17 +66,17 @@ class AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
     bool localItemExists( const QString &localId );
     bool localItemHasChanged( const QString &localId );
     void deleteItem( const QString &localId );
-    QString addItem( KIO::TransferJob *job, const QString &rawText,
-           QString &fingerprint, const QString &localId,
-           const QString &storageLocation );
-    QString extractUid( KIO::TransferJob *job, const QString &data );
+    void addItem( KABC::Addressee addr );
     void clearChange( const QString &uid );
 
-    virtual KABC::Addressee::List interpretDownloadItemJob( KIO::TransferJob *job, const QString &rawText );
     virtual KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
                      KPIM::GroupwareUploadItem::UploadType type );
-    virtual void uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
-
+    virtual void uploadFinished( KIO::TransferJob *trfjob, 
+                                 KPIM::GroupwareUploadItem *item );
+    virtual void addressbookItemDownloaded( KABC::Addressee addr,
+                const QString &newLocalId, const QString &remoteId,
+                const QString &fingerprint, const QString &storagelocation );
+    
   private:
     KABC::ResourceCached *mResource;
 };

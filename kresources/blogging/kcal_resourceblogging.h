@@ -23,6 +23,10 @@
 
 #include <kcal_resourcegroupwarebase.h>
 
+namespace KBlog {
+class APIBlog;
+}
+
 namespace KCal {
 
 /**
@@ -37,14 +41,16 @@ class ResourceBlogging : public ResourceGroupwareBase
 
     void readConfig( const KConfig *config );
     void writeConfig( KConfig *config );
-    
+
     bool addEvent( Event* ) { return false; }
     bool addTodo( Todo * ) { return false; }
     void deleteEvent( Event* ) {}
     void deleteTodo( Todo * ) {}
-  
+    static KBlog::APIBlog *api() { return mAPI; }
+
   protected:
     void init();
+    static KBlog::APIBlog *mAPI;
 };
 
 }

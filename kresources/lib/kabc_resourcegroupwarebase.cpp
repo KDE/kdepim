@@ -40,29 +40,20 @@ ResourceGroupwareBase::ResourceGroupwareBase( const KConfig *config )
   if ( config ) readConfig( config );
 }
 
-ResourceGroupwareBase::ResourceGroupwareBase( const KURL &url,
-                                      const QString &user,
-                                      const QString &password )
-  : ResourceCached( 0 ),
-    mPrefs(0), mFolderLister(0), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
-{
-  mBaseUrl = url;
-  mBaseUrl.setUser( user );
-  mBaseUrl.setPass( password );
-}
-
 ResourceGroupwareBase::~ResourceGroupwareBase()
 {
   delete mPrefs;
   mPrefs = 0;
 }
 
-KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob( AddressBookAdaptor *adaptor )
+KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob( 
+                            AddressBookAdaptor *adaptor )
 {
   return new KPIM::GroupwareDownloadJob( adaptor );
 }
 
-KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( AddressBookAdaptor *adaptor )
+KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( 
+                          AddressBookAdaptor *adaptor )
 {
   return new KPIM::GroupwareUploadJob( adaptor );
 }
@@ -75,9 +66,6 @@ void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs )
   mPrefs->addGroupPrefix( identifier() );
   
   mPrefs->readConfig();
-  mBaseUrl = KURL( prefs()->url() );
-  mBaseUrl.setUser( prefs()->user() );
-  mBaseUrl.setPass( prefs()->password() );
 }
 
 void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
@@ -101,6 +89,7 @@ void ResourceGroupwareBase::setAdaptor( AddressBookAdaptor *adaptor )
   mAdaptor->setDownloadProgressMessage( i18n("Downloading addressbook") );
   mAdaptor->setUploadProgressMessage( i18n("Uploading addressbook") );
   if ( prefs() ) {
+    mAdaptor->setBaseURL( prefs()->url() );
     mAdaptor->setUser( prefs()->user() );
     mAdaptor->setPassword( prefs()->password() );
   }
@@ -208,7 +197,7 @@ bool ResourceGroupwareBase::save( Ticket *ticket )
 bool ResourceGroupwareBase::asyncSave( Ticket* )
 {
   if ( mUploadJob ) {
-    // FIXME: If the user cancels, we need to reset the mUploadJob variable to 0.
+    // FIXME: If the user cancels, need to reset the mUploadJob variable to 0.
     kdWarning() << "Upload still in progress." << endl;
     return false;
   }
@@ -216,7 +205,6 @@ bool ResourceGroupwareBase::asyncSave( Ticket* )
   mUploadJob = createUploadJob( mAdaptor );
   connect( mUploadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
     SLOT( slotUploadJobResult( KPIM::GroupwareJob * ) ) );
-  mUploadJob->setBaseUrl( mBaseUrl );
 
   KABC::Addressee::List addr;
   KABC::Addressee::List::Iterator it;
@@ -224,18 +212,21 @@ bool ResourceGroupwareBase::asyncSave( Ticket* )
 
   addr = addedAddressees();
   for( it = addr.begin(); it != addr.end(); ++it ) {
-    addedItems.append( adaptor()->newUploadItem( *it, KPIM::GroupwareUploadItem::Added ) );
+    addedItems.append( adaptor()->newUploadItem( *it, 
+                                           KPIM::GroupwareUploadItem::Added ) );
   }
   // TODO: Check if the item has changed on the server...
   // In particular, check if the version we based our change on is still current 
   // on the server
   addr = changedAddressees();
   for( it = addr.begin(); it != addr.end(); ++it ) {
-    changedItems.append( adaptor()->newUploadItem( *it, KPIM::GroupwareUploadItem::Changed ) );
+    changedItems.append( adaptor()->newUploadItem( *it, 
+                                         KPIM::GroupwareUploadItem::Changed ) );
   }
   addr = deletedAddressees();
   for( it = addr.begin(); it != addr.end(); ++it ) {
-    deletedItems.append( adaptor()->newUploadItem( *it, KPIM::GroupwareUploadItem::Deleted ) );
+    deletedItems.append( adaptor()->newUploadItem( *it, 
+                                         KPIM::GroupwareUploadItem::Deleted ) );
   }
 
   mUploadJob->setAddedItems( addedItems );

@@ -30,7 +30,10 @@
 #include "groupwareuploadjob.h"
 
 #include <libkcal/icalformat.h>
+#include <kio/job.h>
 #include <klocale.h>
+
+#include <qapplication.h>
 
 using namespace KCal;
 
@@ -62,12 +65,14 @@ GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
 
 
 
-KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob( CalendarAdaptor *adaptor )
+KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob( 
+                            CalendarAdaptor *adaptor )
 {
   return new KPIM::GroupwareDownloadJob( adaptor );
 }
 
-KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( CalendarAdaptor *adaptor )
+KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( 
+                          CalendarAdaptor *adaptor )
 {
   return new KPIM::GroupwareUploadJob( adaptor );
 }
@@ -80,9 +85,6 @@ void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs )
   mPrefs->addGroupPrefix( identifier() );
   
   mPrefs->readConfig();
-  mBaseUrl = KURL( prefs()->url() );
-  mBaseUrl.setUser( prefs()->user() );
-  mBaseUrl.setPass( prefs()->password() );
 }
 
 void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
@@ -103,9 +105,14 @@ void ResourceGroupwareBase::setAdaptor( CalendarAdaptor *adaptor )
   mAdaptor = adaptor;
   mAdaptor->setFolderLister( mFolderLister );
   if ( mFolderLister ) mFolderLister->setAdaptor( mAdaptor );
-  mAdaptor->setDownloadProgressMessage( i18n("Downloading calendar") );
-  mAdaptor->setUploadProgressMessage( i18n("Uploading calendar") );
+  // TODO: Set the prgreess status in the up/download jobs, and set
+  //       the resource name as the label. This should be done in the
+  //       up/download jobs, but these don't have access to the resource's
+  //       name, do they?
+/*  mAdaptor->setDownloadProgressMessage( i18n("Downloading calendar") );
+  mAdaptor->setUploadProgressMessage( i18n("Uploading calendar") );*/
   if ( prefs() ) {
+    mAdaptor->setBaseURL( prefs()->url() );
     mAdaptor->setUser( prefs()->user() );
     mAdaptor->setPassword( prefs()->password() );
   }
@@ -147,13 +154,71 @@ void ResourceGroupwareBase::writeConfig( KConfig *config )
 
 bool ResourceGroupwareBase::doOpen()
 {
+  if ( !adaptor() )
+    return false;
+  if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResNeedsLogon ) {
+    KIO::Job *loginJob = adaptor()->createLoginJob( prefs()->url(), prefs()->user(), prefs()->password() );
+    if ( !loginJob ) {
+      return false;
+    } else {
+      mLoginFinished = false;
+      connect( loginJob, SIGNAL( result( KIO::Job * ) ),
+               SLOT( slotLoginJobResult( KIO::Job* ) ) );
+      enter_loop();
+      return mLoginFinished;
+    }
+  }
   return true;
+}
+
+// BEGIN:COPIED
+// TODO: Get rid of this hack, which is copied from KIO::NetAccess, which is
+// LGPL'ed and
+//     Copyright (C) 1997 Torben Weis (weis@kde.org)
+//     Copyright (C) 1998 Matthias Ettrich (ettrich@kde.org)
+//     Copyright (C) 1999 David Faure (faure@kde.org)
+// If a troll sees this, he kills me
+void qt_enter_modal( QWidget *widget );
+void qt_leave_modal( QWidget *widget );
+
+void ResourceGroupwareBase::enter_loop()
+{
+  QWidget dummy(0,0,WType_Dialog | WShowModal);
+  dummy.setFocusPolicy( QWidget::NoFocus );
+  qt_enter_modal(&dummy);
+  qApp->enter_loop();
+  qt_leave_modal(&dummy);
+}
+// END:COPIED
+
+void ResourceGroupwareBase::slotLoginJobResult( KIO::Job *job )
+{
+  if ( !adaptor() ) return;
+  mLoginFinished = adaptor()->interpretLoginJobResult( job );
+  qApp->exit_loop();
 }
 
 void ResourceGroupwareBase::doClose()
 {
   ResourceCached::doClose();
-	if ( mDownloadJob ) mDownloadJob->kill();
+  if ( mDownloadJob ) mDownloadJob->kill();
+
+  if ( adaptor() && 
+       adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResNeedsLogoff ) {
+    KIO::Job *logoffJob = adaptor()->createLogoffJob( prefs()->url(), prefs()->user(), prefs()->password() );
+    connect( logoffJob, SIGNAL( result( KIO::Job * ) ),
+             SLOT( slotLogoffJobResult( KIO::Job* ) ) );
+    // TODO: Do we really need to block while waiting for the job to return?
+    enter_loop();
+  }
+}
+
+void ResourceGroupwareBase::slotLogoffJobResult( KIO::Job *job )
+{
+  if ( !adaptor() ) return;
+  adaptor()->interpretLogoffJobResult( job );
+  // TODO: Do we really need to block while waiting for the job to return?
+  qApp->exit_loop();
 }
 
 bool ResourceGroupwareBase::doLoad()
@@ -216,31 +281,38 @@ bool ResourceGroupwareBase::doSave()
     kdDebug(5800) << "No changes" << endl;
     return true;
   }
+  // TODO: Implement confirming of single changes i.e. it should be possible
+  //       to upload only certain changes and discard the rest. This is
+  //       particularly important for resources like the blogging resource,
+  //       where uploading would mean a republication of the blog, not only
+  //       a modifications. 
   if ( !confirmSave() ) return false;
   
   mUploadJob = createUploadJob( adaptor() );
   connect( mUploadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
     SLOT( slotUploadJobResult( KPIM::GroupwareJob * ) ) );
-  mUploadJob->setBaseUrl( mBaseUrl );
-    
+
   Incidence::List inc;
   Incidence::List::Iterator it;
   KPIM::GroupwareUploadItem::List addedItems, changedItems, deletedItems;
 
   inc = addedIncidences();
   for( it = inc.begin(); it != inc.end(); ++it ) {
-    addedItems.append( adaptor()->newUploadItem( *it, KPIM::GroupwareUploadItem::Added ) );
+    addedItems.append( adaptor()->newUploadItem( *it, 
+                                           KPIM::GroupwareUploadItem::Added ) );
   }
   // TODO: Check if the item has changed on the server...
   // In particular, check if the version we based our change on is still current 
   // on the server
   inc = changedIncidences();
   for( it = inc.begin(); it != inc.end(); ++it ) {
-    changedItems.append( adaptor()->newUploadItem( *it, KPIM::GroupwareUploadItem::Changed ) );
+    changedItems.append( adaptor()->newUploadItem( *it, 
+                                         KPIM::GroupwareUploadItem::Changed ) );
   }
   inc = deletedIncidences();
   for( it = inc.begin(); it != inc.end(); ++it ) {
-    deletedItems.append( adaptor()->newUploadItem( *it, KPIM::GroupwareUploadItem::Deleted ) );
+    deletedItems.append( adaptor()->newUploadItem( *it, 
+                                         KPIM::GroupwareUploadItem::Deleted ) );
   }
 
   mUploadJob->setAddedItems( addedItems );
@@ -274,7 +346,8 @@ void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
       connect( mDownloadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
           SLOT( slotDownloadJobResult( KPIM::GroupwareJob * ) ) );
     } else {
-      kdWarning() << k_funcinfo << "Download still in progress. Can't happen. (TM)" << endl;
+      kdWarning() << k_funcinfo << "Download still in progress. "
+                                   "Can't happen. (TM)" << endl;
     }
   }
 

@@ -62,10 +62,13 @@ class GroupwareUploadItem
 
     virtual QString data() const { return mData; }
     virtual void setData( const QString &data ) { mData = data; }
-    virtual KURL adaptNewItemUrl( GroupwareDataAdaptor *adaptor, const KURL &url );
+    virtual KURL adaptNewItemUrl( GroupwareDataAdaptor *adaptor, 
+                                  const KURL &url );
 
-    virtual KIO::TransferJob *createUploadNewJob( GroupwareDataAdaptor *adaptor, const KURL &url );
-    virtual KIO::TransferJob *createUploadJob( GroupwareDataAdaptor *adaptor, const KURL &url );
+    virtual KIO::TransferJob *createUploadNewJob( 
+                               GroupwareDataAdaptor *adaptor, const KURL &url );
+    virtual KIO::TransferJob *createUploadJob( GroupwareDataAdaptor *adaptor, 
+                                               const KURL &url );
   private:
     KURL mUrl;
     QString mUid;
@@ -121,6 +124,21 @@ Q_OBJECT
     }
 
     /**
+      Set base URL.
+    */
+    void setBaseURL( const KURL &url )
+    {
+      mBaseURL = url;
+    }
+    /**
+      Get base URL. See setBaseURL().
+    */
+    KURL baseURL() const
+    {
+      return mBaseURL;
+    }
+
+    /**
       Set user name.
     */
     void setUser( const QString &v )
@@ -167,25 +185,34 @@ Q_OBJECT
 
     void setUserPassword( KURL &url );
 
-    /** Adapt the url for downloading. Sets the username and password and calls 
-        customAdaptDownloadUrl, which you can reimplement for custom adaptions. */
-    virtual void adaptDownloadUrl( KURL &url ) { setUserPassword( url ); customAdaptDownloadUrl( url );}
-    /** Adapt the url for uploading. Sets the username and password and calls 
-        customAdaptUploadUrl, which you can reimplement for custom adaptions. */
-    virtual void adaptUploadUrl( KURL &url ) { setUserPassword( url ); customAdaptUploadUrl( url );}
-    /** Apply custom adaptions to the url for downloading. Reimplement this method if you want
-        to use webdav:// instead of http:// URLs. */
+    /** Adapt the url for downloading. Sets the username and password and calls
+     *  customAdaptDownloadUrl, which you can reimplement for custom adaptions. 
+     */
+    virtual void adaptDownloadUrl( KURL &url ) 
+    {
+      setUserPassword( url ); 
+      customAdaptDownloadUrl( url );
+    }
+    /** Adapt the url for uploading. Sets the username and password and calls
+     *  customAdaptUploadUrl, which you can reimplement for custom adaptions. */
+    virtual void adaptUploadUrl( KURL &url ) 
+    {
+      setUserPassword( url ); 
+      customAdaptUploadUrl( url );
+    }
+    /** Apply custom adaptions to the url for downloading. Reimplement this 
+     *  method if you want to use webdav:// instead of http:// URLs. */
     virtual void customAdaptDownloadUrl( KURL &/*url*/ ) {}
-    /** Apply custom adaptions to the url for uploading. Reimplement this method if you want
-        to use webdav:// instead of http:// URLs. */
+    /** Apply custom adaptions to the url for uploading. Reimplement this 
+     *  method if you want to use webdav:// instead of http:// URLs. */
     virtual void customAdaptUploadUrl( KURL &/*url*/ ) {}
-    
+
     /** Return the mime-type expected by the resource. */
     virtual QString mimeType() const = 0;
     /** Identifier of the Resource. Used for the custom fields where
         resource-specific information is stored. */
     virtual QCString identifier() const = 0;
-    
+
     /** Returns whether the item with the given localId exists locally. */
     virtual bool localItemExists( const QString &localId ) = 0;
     /** Returns whether the item was changed locally since the last download
@@ -193,16 +220,7 @@ Q_OBJECT
     virtual bool localItemHasChanged( const QString &localId ) = 0;
     /** Remove the item from the local cache. */
     virtual void deleteItem( const QString &localId ) = 0;
-    /** Returns the ginerprint of the item on the server */
-    virtual QString extractFingerprint( KIO::TransferJob *job,
-           const QString &rawText ) = 0;
-           
-    /** Adds the downloaded item to the local cache (job was created by createDownloadItemJob). */
-    virtual QString addItem( KIO::TransferJob *job,
-           const QString &rawText, QString &fingerprint,
-           const QString &localId, const QString &storageLocation ) = 0;
-    /** Returns the uid of the item encoded in data. */
-    virtual QString extractUid( KIO::TransferJob *job, const QString &data ) = 0;
+
     /** Removed the changed flag for the item with the given uid. */
     virtual void clearChange( const QString &uid ) = 0;
 
@@ -210,48 +228,88 @@ Q_OBJECT
 
 
     // Creating jobs
-    
+    /** Creates the KIO::Job for logging in to the server. This is only
+     *  called if the GroupwareDataAdaptor::GWResNeedsLogin flag is set
+     *  for the resource. */
+    virtual KIO::Job *createLoginJob( const KURL &, const QString &/*user*/,
+                                      const QString &/*password*/ ) { return 0; }
+    /** Creates the KIO::Job for logging off the server. This is only
+     *  called if the GroupwareDataAdaptor::GWResNeedsLogoff flag is set
+     *  for the resource. */
+    virtual KIO::Job *createLogoffJob( const KURL &, const QString &/*user*/,
+                                      const QString &/*password*/ ) { return 0; }
     /** Creates the KIO::Job for listing all subfolders of the given url. */
-    virtual KIO::Job *createListFoldersJob ( const KURL &url ) = 0;
+    virtual KIO::Job *createListFoldersJob ( const KURL & ) = 0;
     /** Creates the KIO::TransferJob for listing all items in the given url. */
-    virtual KIO::TransferJob *createListItemsJob( const KURL &url ) = 0;
+    virtual KIO::TransferJob *createListItemsJob( const KURL & ) = 0;
     /** Creates the KIO::TransferJob for downloading one given item. */
-    virtual KIO::TransferJob *createDownloadItemJob( const KURL &url, GroupwareJob::ContentType ctype ) = 0;
+    virtual KIO::TransferJob *createDownloadJob( const KURL &,
+                                          GroupwareJob::ContentType ) = 0;
     /** Create the job to remove the deletedItems from the server. The base
-        URL of the server is passedas uploadurl. */
-    virtual KIO::Job *createRemoveItemsJob( const KURL &url, KPIM::GroupwareUploadItem::List deletedItems ) = 0;
+        URL of the server is passed as uploadurl.  */
+    virtual KIO::Job *createRemoveJob( const KURL &,
+                             KPIM::GroupwareUploadItem::List deletedItems ) = 0;
     /** Create the job to change the item on the server (at the given URL) */
-    virtual KIO::TransferJob *createUploadJob( const KURL &url, GroupwareUploadItem *item );
+    virtual KIO::TransferJob *createUploadJob( const KURL &,
+                                               GroupwareUploadItem *item );
     /** Create the job to add the item to the server (at the given baseURL) */
-    virtual KIO::TransferJob *createUploadNewJob( const KURL &url, GroupwareUploadItem *item );
+    virtual KIO::TransferJob *createUploadNewJob( const KURL &,
+                                                  GroupwareUploadItem *item );
 
 
     // Interpreting the result of the jobs
-        
-    virtual void interpretListFoldersJob( KIO::Job *job, FolderLister *folderLister) = 0;
+    /** Extract the success information from the login job, created by
+     *  createLoginJob. Return true, if the login was successfull, or false
+     *  if the user could not be authenticated or something else went wrong.
+     *  In that case the resource will not be marked as open. */
+    virtual bool interpretLoginJobResult( KIO::Job * ) { return true; }
+    /** Extract the success information from the logoff job, created by
+     *  createLogoffJob. */
+    virtual bool interpretLogoffJobResult( KIO::Job * ) { return true; }
+    
+    virtual void interpretListFoldersJob( KIO::Job *, FolderLister *) = 0;
     /** Extract the list of items on the server and the list of items to be
         downloaded from the results of the job (the job was created by
         createListitemsJob). */
-    virtual bool interpretListItemsJob( KIO::Job *job, QStringList &currentlyOnServer,
-           QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload ) = 0;
+    virtual bool interpretListItemsJob( KIO::Job *, const QString &jobData ) = 0;
+    virtual bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData ) = 0;
 
-
-    virtual void uploadFinished( KIO::TransferJob *trfjob, GroupwareUploadItem *item ) = 0;
-    virtual void processDownloadListItem( QStringList &currentlyOnServer,
-        QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload,
-        const QString &entry, const QString &newFingerprint,
-        KPIM::GroupwareJob::ContentType type );
+    virtual void uploadFinished( KIO::TransferJob *, 
+                                 GroupwareUploadItem * ) = 0;
+    virtual void processDownloadListItem(  const QString &entry,
+        const QString &newFingerprint, KPIM::GroupwareJob::ContentType type );
     /** Return the default file name for a new item. */
-    virtual QString defaultNewItemName( GroupwareUploadItem */*item*/ ) { return QString::null; }
+    virtual QString defaultNewItemName( GroupwareUploadItem * )
+    {
+      return QString::null; 
+    }
+
+    enum {
+      GWResBatchCreate = 0x0001,
+      GWResBatchModify = 0x0002,
+      GWResBatchDelete = 0x0004,
+      GWResBatchRequest = 0x0008,
+      GWResHandleSingleIncidences = 0x0020,
+      GWResNeedsLogon = 0x0040,
+      GWResNeedsLogoff = 0x0080
+    };
+    virtual long flags() const = 0;
+
 
   signals:
-    void folderInformationRetrieved( const QString &href, const QString &name, KPIM::FolderLister::FolderType );
+    void folderInfoRetrieved( const QString &href, const QString &name,
+                                     KPIM::FolderLister::FolderType );
     void folderSubitemRetrieved( const KURL &, bool isFolder );
+
+    void itemToDownload( const QString &remoteURL, KPIM::GroupwareJob::ContentType type );
+    void itemOnServer( const QString &remoteURL );
+    void itemDownloaded( const QString &localID, const QString &remoteURL, const QString &fingerprint );
 
   private:
     FolderLister *mFolderLister;
     QString mDownloadProgressMessage;
     QString mUploadProgressMessage;
+    KURL mBaseURL;
     QString mUser;
     QString mPassword;
     KPIM::IdMapper *mIdMapper;

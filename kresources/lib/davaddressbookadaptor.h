@@ -35,7 +35,7 @@ class DavAddressBookAdaptor : public AddressBookAdaptor
     /** Interprets the results returned by the liste job (created by
         createListFoldersJob(url) ). Typically, this adds an Entry to the mFolders list if
         the job describes a folder of the appropriate type, by emitting 
-        folderInformationRetrieved( href, displayName, type ). If the folder has
+        folderInfoRetrieved( href, displayName, type ). If the folder has
         subfolders, just emit retrieveSubfolder( href ) for each of them. */
     virtual void interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister *folderLister );
     /** Returns the type of folder retrieved in the dom node. Typically, you'll

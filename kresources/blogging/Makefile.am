@@ -1,18 +1,16 @@
-SUBDIRS = libkblog
-
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/lib -I../lib -I$(top_srcdir)/kresources/blogging/libkblog/ -I$(top_srcdir)/libkdepim $(all_includes)
 
 lib_LTLIBRARIES = libkcal_blogging.la
 kde_module_LTLIBRARIES = kcal_blogging.la
 
-libkcal_blogging_la_SOURCES = \
+libkcal_blogging_la_SOURCES = API_Blog.cpp API_Blogger.cpp xmlrpcjob.cpp \
   resourcebloggingsettings.ui kcal_resourcebloggingconfig.cpp \
-  bloggingglobals.cpp bloggingcalendaradaptor.cpp \
+  bloggingcalendaradaptor.cpp \
   kcal_resourceblogging.cpp 
 libkcal_blogging_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) \
   -version-info 1:0:0 -no-undefined
 libkcal_blogging_la_LIBADD = \
-  ../lib/libkgroupwarebase.la libkblog/libkblog.la \
+  ../lib/libkgroupwarebase.la \
   $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la 
 
 

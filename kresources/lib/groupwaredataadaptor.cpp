@@ -37,7 +37,9 @@ KIO::TransferJob *GroupwareUploadItem::createUploadNewJob(
   return createUploadJob( adaptor, adaptNewItemUrl( adaptor, url ) );
 }
 
-KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor, const KURL &url ) {
+KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor, 
+                                           const KURL &url ) 
+{
   if ( adaptor ) {
     QString path( adaptor->defaultNewItemName( this ) );
     KURL u( url );
@@ -49,14 +51,16 @@ KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor, const 
   } else return url;
 }
 
-KIO::TransferJob *GroupwareUploadItem::createUploadJob( GroupwareDataAdaptor *adaptor, const KURL &url )
+KIO::TransferJob *GroupwareUploadItem::createUploadJob( 
+                                GroupwareDataAdaptor *adaptor, const KURL &url )
 {
   Q_ASSERT( adaptor );
   if ( !adaptor ) return 0;
   const QString dta = data();
   //kdDebug(7000) << "Uploading: " << data << endl;
   //kdDebug(7000) << "Uploading to: " << url.prettyURL() << endl;
-  KIO::TransferJob *job = KIO::storedPut( dta.utf8(), url, -1, true, false, false );
+  KIO::TransferJob *job = KIO::storedPut( dta.utf8(), url, -1, true, 
+                                          false, false );
   job->addMetaData( "PropagateHttpHeader", "true" );
   if ( adaptor )
     job->addMetaData( "content-type", adaptor->mimeType() );
@@ -75,7 +79,8 @@ GroupwareDataAdaptor::~GroupwareDataAdaptor()
 
 void GroupwareDataAdaptor::setUserPassword( KURL &url )
 {
-  kdDebug(5800) << "GroupwareDataAdaptor::setUserPassword, mUser=" << mUser << endl;
+  kdDebug(5800) << "GroupwareDataAdaptor::setUserPassword, mUser=" 
+                << mUser << endl;
   url.setUser( mUser );
   url.setPass( mPassword );
 }
@@ -85,33 +90,34 @@ FolderLister::Entry::List GroupwareDataAdaptor::defaultFolders()
   return FolderLister::Entry::List();
 }
 
-KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url, GroupwareUploadItem *item )
+KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url, 
+                                                     GroupwareUploadItem *item )
 {
   if ( item )
     return item->createUploadJob( this, url );
   else return 0;
 }
 
-KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url, GroupwareUploadItem *item )
+KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url, 
+                                                     GroupwareUploadItem *item )
 {
   if ( item )
     return item->createUploadNewJob( this, url );
   else return 0;
 }
 
-void GroupwareDataAdaptor::processDownloadListItem( QStringList &currentlyOnServer,
-        QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload,
-        const QString &entry, const QString &newFingerprint,
-        KPIM::GroupwareJob::ContentType type )
+void GroupwareDataAdaptor::processDownloadListItem( const QString &entry,
+        const QString &newFingerprint, KPIM::GroupwareJob::ContentType type )
 {
   bool download = false;
   KURL url ( entry );
   const QString &location = url.path();
 
-  currentlyOnServer << location;
+  emit itemOnServer( location );
   // if not locally present, download
   const QString &localId = idMapper()->localId( location );
-  kdDebug(5800) << "Looking up remote: " << location << " found: " << localId << endl;
+  kdDebug(5800) << "Looking up remote: " << location 
+                << " found: " << localId << endl;
   if ( localId.isEmpty() || !localItemExists( localId ) ) {
     //kdDebug(7000) << "Not locally present, download: " << location << endl;
     download = true;
@@ -122,7 +128,7 @@ void GroupwareDataAdaptor::processDownloadListItem( QStringList &currentlyOnServ
       if ( oldFingerprint != newFingerprint ) {
       kdDebug(5800) << "Fingerprint changed old: " << oldFingerprint <<
         " new: " << newFingerprint << endl;
-      // something changed on the server, let's see if we also changed it locally
+      // something changed on the server, check if we also changed it locally
       if ( localItemHasChanged( localId ) ) {
         // TODO conflict resolution
         kdDebug(5800) << "TODO conflict resolution" << endl;
@@ -131,11 +137,11 @@ void GroupwareDataAdaptor::processDownloadListItem( QStringList &currentlyOnServ
         download = true;
       }
     } else {
-      kdDebug(5800) << "Fingerprint did not change, don't download this one " << endl;
+      kdDebug(5800) << "Fingerprint not changed, don't download this " << endl;
     }
   }
   if ( download ) {
-    itemsForDownload[ entry ] = type;
+    emit itemToDownload( entry, type );
   }
 }
 

@@ -38,7 +38,8 @@
 
 using namespace KCal;
 
-ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,  const char* name )
+ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,  
+                                                          const char* name )
     : KRES::ConfigWidget( parent, name )
 {
   resize( 245, 115 );
@@ -94,7 +95,8 @@ void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *resource )
     mFolderConfig->setFolderLister( res->folderLister() );
     mFolderConfig->updateFolderList();
   } else {
-    kdError(5700) << "KCalResourceGroupwareBaseConfig::loadSettings(): no KCalOpenGroupware, cast failed" << endl;
+    kdError(5700) << "KCalResourceGroupwareBaseConfig::loadSettings(): "
+                     "no KCalOpenGroupware, cast failed" << endl;
   }
 }
 
@@ -110,7 +112,8 @@ void ResourceGroupwareBaseConfig::saveSettings( KRES::Resource *resource )
     
     mFolderConfig->saveSettings();
   } else {
-    kdError(5700) << "KCalResourceGroupwareBaseConfig::saveSettings(): no KCalOpenGroupware, cast failed" << endl;
+    kdError(5700) << "KCalResourceGroupwareBaseConfig::saveSettings(): "
+                     "no KCalOpenGroupware, cast failed" << endl;
   }
 }
 

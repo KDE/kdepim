@@ -49,26 +49,29 @@ class GroupwareUploadJob : public GroupwareJob
   public:
     GroupwareUploadJob( GroupwareDataAdaptor *adaptor );
 
-    KPIM::GroupwareUploadItem::List addedItems() const { return mAddedItems; }
-    void setAddedItems( KPIM::GroupwareUploadItem::List items ) { mAddedItems = items; }
-    KPIM::GroupwareUploadItem::List changedItems() const { return mChangedItems; }
-    void setChangedItems( KPIM::GroupwareUploadItem::List items ) { mChangedItems = items; }
-    KPIM::GroupwareUploadItem::List deletedItems() const { return mDeletedItems; }
-    void setDeletedItems( KPIM::GroupwareUploadItem::List items ) { mDeletedItems = items; }
-
-    /**
-      Set base URL.
-    */
-    void setBaseUrl( const KURL &v )
-    {
-      mBaseUrl = v;
+    KPIM::GroupwareUploadItem::List addedItems() const 
+    { 
+      return mAddedItems; 
     }
-    /**
-      Get baseUrl. See setBaseUrl().
-    */
-    KURL baseUrl() const
-    {
-      return mBaseUrl;
+    void setAddedItems( KPIM::GroupwareUploadItem::List items ) 
+    { 
+      mAddedItems = items; 
+    }
+    KPIM::GroupwareUploadItem::List changedItems() const 
+    { 
+      return mChangedItems;
+    }
+    void setChangedItems( KPIM::GroupwareUploadItem::List items ) 
+    { 
+      mChangedItems = items;
+    }
+    KPIM::GroupwareUploadItem::List deletedItems() const 
+    { 
+      return mDeletedItems;
+    }
+    void setDeletedItems( KPIM::GroupwareUploadItem::List items ) 
+    { 
+      mDeletedItems = items;
     }
 
     void kill();

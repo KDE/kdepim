@@ -1,12 +1,12 @@
 /* This file is part of the KDE libraries
     Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    
+
     Based on the davjob:
     Copyright (C) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
     XML-RPC specific parts taken from the xmlrpciface:
     Copyright (C) 2003 - 2004 by Frerich Raabe <raabe@kde.org>
                                  Tobias Koenig <tokoe@kde.org>
-    
+
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -36,7 +36,8 @@
 #include <kio/davjob.h>
 
 
-#define KIO_ARGS QByteArray packedArgs; QDataStream stream( packedArgs, IO_WriteOnly ); stream
+#define KIO_ARGS QByteArray packedArgs; \
+                 QDataStream stream( packedArgs, IO_WriteOnly ); stream
 
 using namespace KIO;
 
@@ -63,18 +64,18 @@ class XmlrpcJob::XmlrpcJobPrivate
 public:
 //   QByteArray savedStaticData;
 };
-  
-  
-XmlrpcJob::XmlrpcJob( const KURL& url, const QString& method, const QValueList<QVariant> &params, bool showProgressInfo )
-  : TransferJob( url, KIO::CMD_SPECIAL, QByteArray(), QByteArray(), showProgressInfo )
-//   TransferJob( url, KIO::HTTP_POST, QByteArray(), QByteArray(), showProgressInfo )
+
+
+XmlrpcJob::XmlrpcJob( const KURL& url, const QString& method,
+                      const QValueList<QVariant> &params, bool showProgressInfo)
+  : TransferJob( url, KIO::CMD_SPECIAL, QByteArray(), QByteArray(),
+                 showProgressInfo )
 {
   d = new XmlrpcJobPrivate;
   // We couldn't set the args when calling the parent constructor,
   // so do it now.
   QDataStream stream( m_packedArgs, IO_WriteOnly );
-//   stream << (int)1 << url << method;
-   stream << (int)1 << url/* << KIO::HTTP_POST*/;
+   stream << (int)1 << url;
 kdDebug()<<"XMLrpcJob::url="<<url.url()<<endl;
 kdDebug()<<"XmlrpcJob::XmlrpcJob, method="<<method<<endl;
   // Same for static data
@@ -98,7 +99,8 @@ XmlrpcJob::~XmlrpcJob()
   d = 0;
 }
 
-QString XmlrpcJob::markupCall( const QString &cmd, const QValueList<QVariant> &args )
+QString XmlrpcJob::markupCall( const QString &cmd,
+                               const QValueList<QVariant> &args )
 {
 kdDebug()<<"XmlrpcJob::markupCall, cmd="<<cmd<<endl;
   QString markup = "<?xml version=\"1.0\" ?>\r\n<methodCall>\r\n";
@@ -129,14 +131,13 @@ void XmlrpcJob::slotData( const QByteArray& data )
 kdDebug()<<"XmlrpcJob::slotData()"<<endl;
   if ( m_redirectionURL.isEmpty() || !m_redirectionURL.isValid() || m_error )
     m_str_response.append( QString( data ) );
-kdDebug()<<"XmlrpcJob::slotData, m_str_response= "<<m_str_response<<endl;
 }
 
 void XmlrpcJob::slotFinished()
 {
 kdDebug() << "XmlrpcJob::slotFinished()" << endl;
 kdDebug() << m_str_response << endl;
-  
+
   // TODO: Redirection with XML-RPC??
 /*  if (! m_redirectionURL.isEmpty() && m_redirectionURL.isValid() ) {
     QDataStream istream( m_packedArgs, IO_ReadOnly );
@@ -173,15 +174,16 @@ kdDebug() << m_str_response << endl;
                     "Markup: \n %1" ).arg( m_str_response ) );
       m_responseType = XMLRPCUnknownResponse;
     }
-  
+
   } else {
     // TODO: if we can't parse the XML response, set the correct error message!
 //     emit fault( -1, i18n( "Received invalid XML markup: %1 at %2:%3" )
 //                         .arg( errMsg ).arg( errLine ).arg( errCol ), m_id );
   }
-  
+
   TransferJob::slotFinished();
-// TODO: Redirect:   if( d ) staticData = d->savedStaticData.copy(); // Need to send XMLRPC request to this host too
+// TODO: Redirect:   if( d ) staticData = d->savedStaticData.copy();
+// Need to send XMLRPC request to this host too
 }
 
 
@@ -190,7 +192,8 @@ kdDebug() << m_str_response << endl;
 
 bool XmlrpcJob::isMessageResponse( const QDomDocument &doc )
 {
-  return doc.documentElement().firstChild().toElement().tagName().lower() == "params";
+  return doc.documentElement().firstChild().toElement()
+            .tagName().lower() == "params";
 }
 
 XMLRPCResult XmlrpcJob::parseMessageResponse( const QDomDocument &doc )
@@ -213,7 +216,8 @@ XMLRPCResult XmlrpcJob::parseMessageResponse( const QDomDocument &doc )
 
 bool XmlrpcJob::isFaultResponse( const QDomDocument &doc )
 {
-  return doc.documentElement().firstChild().toElement().tagName().lower() == "fault";
+  return doc.documentElement().firstChild().toElement()
+            .tagName().lower() == "fault";
 }
 
 XMLRPCResult XmlrpcJob::parseFaultResponse( const QDomDocument &doc )
@@ -237,54 +241,59 @@ QString XmlrpcJob::marshal( const QVariant &arg )
 {
   switch ( arg.type() )
   {
-      case QVariant::String:
-      case QVariant::CString:
-          return "<value><string>" + arg.toString() + "</string></value>\r\n";
-//           return "<value>" + arg.toString() + "</value>\r\n";
-      case QVariant::Int:
-          return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
-      case QVariant::Double:
-          return "<value><double>" + QString::number( arg.toDouble() ) + "</double></value>\r\n";
-      case QVariant::Bool:
-          {
-            QString markup = "<value><boolean>";
-            markup += arg.toBool() ? "1" : "0";
-            markup += "</boolean></value>\r\n";
-            return markup;
-          }
-      case QVariant::ByteArray:
-          return "<value><base64>" + KCodecs::base64Encode( arg.toByteArray() ) + "</base64></value>\r\n";
-      case QVariant::DateTime:
-          return "<value><datetime.iso8601>" + arg.toDateTime().toString( Qt::ISODate ) + "</datetime.iso8601></value>\r\n";
-      case QVariant::List:
-          {
-            QString markup = "<value><array><data>\r\n";
-            const QValueList<QVariant> args = arg.toList();
-            QValueList<QVariant>::ConstIterator it = args.begin();
-            QValueList<QVariant>::ConstIterator end = args.end();
-            for ( ; it != end; ++it )
-              markup += marshal( *it );
-            markup += "</data></array></value>\r\n";
-            return markup;
-          }
-      case QVariant::Map:
-          {
-            QString markup = "<value><struct>\r\n";
-            QMap<QString, QVariant> map = arg.toMap();
-            QMap<QString, QVariant>::ConstIterator it = map.begin();
-            QMap<QString, QVariant>::ConstIterator end = map.end();
-            for ( ; it != end; ++it )
-            {
-              markup += "<member>\r\n";
-              markup += "<name>" + it.key() + "</name>\r\n";
-              markup += marshal( it.data() );
-              markup += "</member>\r\n";
-            }
-            markup += "</struct></value>\r\n";
-            return markup;
-          }
-      default:
-          kdWarning() << "Failed to marshal unknown variant type: " << arg.type() << endl;
+    case QVariant::String:
+    case QVariant::CString:
+      return "<value><string>" + arg.toString() + "</string></value>\r\n";
+    case QVariant::Int:
+      return "<value><int>" + QString::number( arg.toInt() ) +
+             "</int></value>\r\n";
+    case QVariant::Double:
+      return "<value><double>" + QString::number( arg.toDouble() ) +
+             "</double></value>\r\n";
+    case QVariant::Bool:
+      {
+        QString markup = "<value><boolean>";
+        markup += arg.toBool() ? "1" : "0";
+        markup += "</boolean></value>\r\n";
+        return markup;
+      }
+    case QVariant::ByteArray:
+      return "<value><base64>" + KCodecs::base64Encode( arg.toByteArray() ) +
+             "</base64></value>\r\n";
+    case QVariant::DateTime:
+      return "<value><datetime.iso8601>" +
+             arg.toDateTime().toString( Qt::ISODate ) +
+             "</datetime.iso8601></value>\r\n";
+    case QVariant::List:
+      {
+        QString markup = "<value><array><data>\r\n";
+        const QValueList<QVariant> args = arg.toList();
+        QValueList<QVariant>::ConstIterator it = args.begin();
+        QValueList<QVariant>::ConstIterator end = args.end();
+        for ( ; it != end; ++it )
+          markup += marshal( *it );
+        markup += "</data></array></value>\r\n";
+        return markup;
+      }
+    case QVariant::Map:
+      {
+        QString markup = "<value><struct>\r\n";
+        QMap<QString, QVariant> map = arg.toMap();
+        QMap<QString, QVariant>::ConstIterator it = map.begin();
+        QMap<QString, QVariant>::ConstIterator end = map.end();
+        for ( ; it != end; ++it )
+        {
+          markup += "<member>\r\n";
+          markup += "<name>" + it.key() + "</name>\r\n";
+          markup += marshal( it.data() );
+          markup += "</member>\r\n";
+        }
+        markup += "</struct></value>\r\n";
+        return markup;
+      }
+    default:
+      kdWarning() << "Failed to marshal unknown variant type: "
+                  << arg.type() << endl;
   };
   return QString::null;
 }
@@ -294,12 +303,12 @@ QVariant XmlrpcJob::demarshal( const QDomElement &elem )
   Q_ASSERT( elem.tagName().lower() == "value" );
 
   if ( !elem.hasChildNodes() ) {
-    // it doesn't have child nodes, so no explicit type name was given, 
+    // it doesn't have child nodes, so no explicit type name was given,
     // i.e. <value>here comes the value</value> instead of
     //      <value><string>here comes the value</string></value>
     // Assume <string> in that case:
-    // Actually, the element will still have a child node, so this will not help here. 
-    // The dirty hack is at the end of this method. 
+    // Actually, the element will still have a child node, so this will not help here.
+    // The dirty hack is at the end of this method.
 kdDebug()<<"XmlrpcJob::demarshal: No child nodes, assume type=string. Text: "<<elem.text()<<endl;
     return QVariant( elem.text() );
   }
@@ -324,20 +333,20 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
   }
   else if ( typeName == "base64" )
     return QVariant( KCodecs::base64Decode( typeElement.text().latin1() ) );
-  
+
   else if ( typeName == "datetime" || typeName == "datetime.iso8601" ) {
-    
+
     QString text( typeElement.text() );
     if ( text.find( QRegExp("^[0-9]{8,8}T") ) >= 0 ) {
-      // It's in the format 20041120T...., so adjust it to correct 
+      // It's in the format 20041120T...., so adjust it to correct
       // ISO 8601 Format 2004-11-20T..., else QDateTime::fromString won't work:
       text = text.insert( 6, '-' );
       text = text.insert( 4, '-' );
     }
     return QVariant( QDateTime::fromString( text, Qt::ISODate ) );
-    
+
   } else if ( typeName == "array" ) {
-  
+
     QValueList<QVariant> values;
     QDomNode valueNode = typeElement.firstChild().firstChild();
     while ( !valueNode.isNull() ) {
@@ -345,9 +354,9 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
       valueNode = valueNode.nextSibling();
     }
     return QVariant( values );
-    
+
   } else if ( typeName == "struct" ) {
-  
+
     QMap<QString, QVariant> map;
     QDomNode memberNode = typeElement.firstChild();
     while ( !memberNode.isNull() ) {
@@ -357,11 +366,11 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
       memberNode = memberNode.nextSibling();
     }
     return QVariant( map );
-    
+
   } else {
-  
+
     kdWarning() << "Cannot demarshal unknown type " << typeName << ", text= " << typeElement.text() << endl;
-    // FIXME: This is just a workaround, for the issue mentioned at the beginning of this method. 
+    // FIXME: This is just a workaround, for the issue mentioned at the beginning of this method.
     return QVariant( elem.text() );
   }
 
@@ -376,63 +385,27 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
 
 XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QValueList<QVariant> &params, bool showProgressInfo )
 {
-  if ( url.isEmpty() )
-  {
+  if ( url.isEmpty() ) {
     kdWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
     return 0;
   }
-//   return (XmlrpcJob*)(new DavJob( url, (int) KIO::DAV_PROPPATCH, XmlrpcJob::markupCall( method, params), showProgressInfo ));
   XmlrpcJob *job = new XmlrpcJob( url, method, params, showProgressInfo );
-kdDebug()<<"Created XMLRPC-Job: "<<job<<endl;
 //   job->addMetaData( "xmlrpcDepth", depth );
 
   return job;
 }
 
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QVariant &arg, bool showProgressInfo )
+XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
+		                        const QVariant &arg, bool showProgressInfo )
 {
   QValueList<QVariant> args;
   args << arg;
-  return KIO::xmlrpcCall( url, method, args, showProgressInfo );  
+  return KIO::xmlrpcCall( url, method, args, showProgressInfo );
 }
 
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, int arg, bool showProgressInfo )
+XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
+		                        const QStringList &arg, bool showProgressInfo )
 {
-  return KIO::xmlrpcCall( url, method, QVariant( arg ), showProgressInfo );
-}
-
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, bool arg, bool showProgressInfo )
-{
-  return KIO::xmlrpcCall( url, method, QVariant( arg ), showProgressInfo );
-}
-
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, double arg, bool showProgressInfo )
-{
-  return KIO::xmlrpcCall( url, method, QVariant( arg ), showProgressInfo );
-}
-
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QString &arg, bool showProgressInfo )
-{
-  return KIO::xmlrpcCall( url, method, QVariant( arg ), showProgressInfo );
-}
-
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QCString &arg, bool showProgressInfo )
-{
-  return KIO::xmlrpcCall( url, method, QVariant( arg ), showProgressInfo );
-}
-
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QByteArray &arg, bool showProgressInfo )
-{
-  return KIO::xmlrpcCall( url, method, QVariant( arg ), showProgressInfo );
-}
-
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QDateTime &arg, bool showProgressInfo )
-{
-  return KIO::xmlrpcCall( url, method, QVariant( arg ), showProgressInfo );
-}
-
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QStringList &arg, bool showProgressInfo )
-{  
   QValueList<QVariant> args;
   QStringList::ConstIterator it = arg.begin();
   QStringList::ConstIterator end = arg.end();
@@ -442,7 +415,8 @@ XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QStrin
 }
 
 template <typename T>
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QValueList<T>&arg,bool showProgressInfo )
+XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
+		                        const QValueList<T>&arg, bool showProgressInfo )
 {
   QValueList<QVariant> args;
 
@@ -452,7 +426,5 @@ XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QValue
     args << QVariant( *it );
   return KIO::xmlrpcCall( url, method, args, showProgressInfo );
 }
-
-
 
 #include "xmlrpcjob.moc"

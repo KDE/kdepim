@@ -19,10 +19,14 @@
 */
 
 #include "bloggingcalendaradaptor.h"
+#include "API_Blogger.h"
 
 #include "kcal_resourceblogging.h"
+#include <kcal_groupwareprefs.h>
 
 using namespace KCal;
+    
+KBlog::APIBlog *ResourceBlogging::mAPI = 0;
 
 ResourceBlogging::ResourceBlogging()
   : ResourceGroupwareBase()
@@ -42,14 +46,23 @@ void ResourceBlogging::init()
   setType( "ResourceBlogging" );
   setPrefs( createPrefs() );
   setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::Calendar ) );
-  setAdaptor( new BloggingCalendarAdaptor() );
+  BloggingCalendarAdaptor *ad = new BloggingCalendarAdaptor();
+  setAdaptor( ad );
+  ad->setAPI( new KBlog::APIBlogger( prefs()->url(), this ) );
   
   ResourceGroupwareBase::init();
 }
 
 void ResourceBlogging::readConfig( const KConfig *config )
 {
-  QString url = config->readEntry( "URL" );
+  BloggingCalendarAdaptor *ad = dynamic_cast<BloggingCalendarAdaptor*>( adaptor() );
+  ResourceGroupwareBase::readConfig( config );
+  if ( ad && prefs() ) {
+    ad->setUser( prefs()->user() );
+    ad->setPassword( prefs()->password() );
+    ad->setBaseURL( prefs()->url() );
+  }
+//   QString url = config->readEntry( "URL" );
 //   mUrl = KURL( url );
   
 //   mServerAPI = config->readNumEntry( "ServerAPI" );
@@ -58,7 +71,6 @@ void ResourceBlogging::readConfig( const KConfig *config )
 //   mTemplate.setTitleTagOpen( config->readEntry( "TitleTagOpen", "<TITLE>" ) );
 //   mTemplate.setTitleTagClose( config->readEntry( "TitleTagClose", "</TITLE>" ) );
 
-  ResourceGroupwareBase::readConfig( config );
 }
 
 void ResourceBlogging::writeConfig( KConfig *config )

@@ -64,20 +64,32 @@ void ExchangeAddressBookAdaptor::adaptUploadUrl( KURL &url )
 //   url.setPath( url.path() + "/NewItem.EML" );
 }
 
-KABC::Addressee::List ExchangeAddressBookAdaptor::interpretDownloadItemJob( KIO::TransferJob *job, const QString &/*rawText*/ )
+bool ExchangeAddressBookAdaptor::interpretDownloadItemsJob(
+                 KIO::Job *job, const QString &/*rawText*/ )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
-  if (!davjob) return KABC::Addressee::List();
+  if ( !davjob ) return false;
 
-kdDebug() << "ExchangeAddressBookAdaptor::interpretDownloadItemJob(): QDomDocument=" << endl << davjob->response().toString() << endl;
+kdDebug() << "ExchangeAddressBookAdaptor::interpretDownloadItemsJob(): QDomDocument=" << endl << davjob->response().toString() << endl;
   KABC::ExchangeConverterContact conv;
   KABC::Addressee::List addressees = conv.parseWebDAV( davjob->response() );
-  return addressees;
+  // TODO: Let the ExchangeConverterContact store the fingerprint into a custom field!
+
+  bool res = false;
+  KABC::Addressee::List::Iterator it = addressees.begin();
+  for ( ; it != addressees.end(); ++it ) {
+    QString fpr = (*it).custom( "KDEPIM-Exchange-Resource", "fingerprint" );
+    QString href = (*it).custom( "KDEPIM-Exchange-Resource", "href" );
+    KURL u( href );
+    addressbookItemDownloaded( (*it), (*it).uid(), u.path(), fpr, u.prettyURL() );
+    res = true;
+  }
+  return res;
 }
 
-KIO::TransferJob *ExchangeAddressBookAdaptor::createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+KIO::TransferJob *ExchangeAddressBookAdaptor::createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
 {
-kdDebug()<<"ExchangeAddressBookAdaptor::createDownloadItemJob()"<<endl;
+kdDebug()<<"ExchangeAddressBookAdaptor::createDownloadJob()"<<endl;
   // Don't use an <allprop/> request!
   KIO::DavJob *job = 0;
   QDomDocument doc;

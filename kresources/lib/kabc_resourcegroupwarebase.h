@@ -44,8 +44,6 @@ class ResourceGroupwareBase : public ResourceCached
 
   public:
     ResourceGroupwareBase( const KConfig * );
-    ResourceGroupwareBase( const KURL &url,
-                       const QString &user, const QString &password );
     ~ResourceGroupwareBase();
 
     void readConfig( const KConfig * );
@@ -53,10 +51,10 @@ class ResourceGroupwareBase : public ResourceCached
 
     GroupwarePrefsBase *prefs() const { return mPrefs; }
     void setPrefs( GroupwarePrefsBase *prefs );
-    
+
     KPIM::FolderLister *folderLister() const { return mFolderLister; }
     void setFolderLister( KPIM::FolderLister *folderLister );
-    
+
     AddressBookAdaptor *adaptor() const { return mAdaptor; }
     void setAdaptor( AddressBookAdaptor *adaptor );
 
@@ -75,8 +73,10 @@ class ResourceGroupwareBase : public ResourceCached
     void init();
 
     GroupwarePrefsBase *createPrefs();
-    virtual KPIM::GroupwareDownloadJob *createDownloadJob( AddressBookAdaptor *adaptor );
-    virtual KPIM::GroupwareUploadJob *createUploadJob( AddressBookAdaptor *adaptor );
+    virtual KPIM::GroupwareDownloadJob *createDownloadJob( 
+                                                  AddressBookAdaptor *adaptor );
+    virtual KPIM::GroupwareUploadJob *createUploadJob( 
+                                                  AddressBookAdaptor *adaptor );
 
   private slots:
     void slotDownloadJobResult( KPIM::GroupwareJob * );
@@ -89,8 +89,6 @@ class ResourceGroupwareBase : public ResourceCached
 
     KPIM::GroupwareDownloadJob *mDownloadJob;
     KPIM::GroupwareUploadJob *mUploadJob;
-
-    KURL mBaseUrl;
 };
 
 }

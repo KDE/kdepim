@@ -31,8 +31,8 @@ class ResourceExchange : public ResourceGroupwareBase
 
   public:
     ResourceExchange( const KConfig * );
-    ResourceExchange( const KURL &url,
-                       const QString &user, const QString &password );
+/*    ResourceExchange( const KURL &url,
+                       const QString &user, const QString &password );*/
   protected:
     void init();
 };

@@ -42,10 +42,7 @@ class OGoAddressBookAdaptor : public DavAddressBookAdaptor
     QString mimeType() const { return "text/x-vcard"; }
     QCString identifier() const { return "KABCResourceOpengroupware"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.vcf"; }
-
-
-    QString extractFingerprint( KIO::TransferJob *job, const QString &rawText )
-        { return OGoGlobals::extractFingerprint( job, rawText ); }
+    long flags() const { return GWResBatchDelete; }
 
 
     // Creating Jobs
@@ -53,19 +50,20 @@ class OGoAddressBookAdaptor : public DavAddressBookAdaptor
         { return OGoGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
         { return DAVGroupwareGlobals::createListItemsJob( url ); }
-    KIO::TransferJob *createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
-        { return OGoGlobals::createDownloadItemJob( this, url, ctype ); }
-    KIO::Job *createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-        { return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems ); }
+    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+        { return OGoGlobals::createDownloadJob( this, url, ctype ); }
+    KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+        { return OGoGlobals::createRemoveJob( uploadurl, deletedItems ); }
 
-        
+
     // Interpreting Jobs
-    bool interpretListItemsJob( KIO::Job *job, QStringList &currentlyOnServer,
-            QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
-        { return DAVGroupwareGlobals::interpretListItemsJob( this, job, currentlyOnServer, itemsForDownload ); }
-    KABC::Addressee::List interpretDownloadItemJob( KIO::TransferJob *job, const QString &rawText );
+    bool interpretListItemsJob( KIO::Job *job, const QString &/*jobData*/ )
+        { return DAVGroupwareGlobals::interpretListItemsJob( this, job ); }
+    bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData )
+        { return DAVGroupwareGlobals::interpretAddressBookDownloadItemsJob(
+           this, job, jobData ); }
 
-        
+
     bool getFolderHasSubs( const QDomNode &folderNode )
         { return OGoGlobals::getFolderHasSubs( folderNode ); }
     KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode )

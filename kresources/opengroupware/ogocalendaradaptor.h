@@ -44,27 +44,26 @@ class OGoCalendarAdaptor : public DavCalendarAdaptor
     void customAdaptUploadUrl( KURL &url );
     QCString identifier() const { return "KCalResourceOpengroupware"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.ics"; }
+    long flags() const { return GWResBatchDelete; }
 
-    
-    QString extractFingerprint( KIO::TransferJob *job, const QString &rawText )
-        { return OGoGlobals::extractFingerprint( job, rawText ); }
 
-        
     // Creating Jobs
     KIO::Job *createListFoldersJob( const KURL &url )
         { return OGoGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
         { return DAVGroupwareGlobals::createListItemsJob( url ); }
-    KIO::TransferJob *createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
-        { return OGoGlobals::createDownloadItemJob( this, url,ctype ); }
-    KIO::Job *createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-        { return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems ); }
+    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+        { return OGoGlobals::createDownloadJob( this, url,ctype ); }
+    KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+        { return OGoGlobals::createRemoveJob( uploadurl, deletedItems ); }
 
-        
+
     // Interpreting Jobs
-    bool interpretListItemsJob( KIO::Job *job, QStringList &currentlyOnServer,
-             QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload )
-        { return DAVGroupwareGlobals::interpretListItemsJob( this, job, currentlyOnServer, itemsForDownload ); }
+    bool interpretListItemsJob( KIO::Job *job, const QString &/*jobData*/ )
+        { return DAVGroupwareGlobals::interpretListItemsJob( this, job ); }
+    bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData )
+        { return DAVGroupwareGlobals::interpretCalendarDownloadItemsJob( this, job, jobData );  }
+    
 
     bool getFolderHasSubs( const QDomNode &folderNode )
         { return OGoGlobals::getFolderHasSubs( folderNode ); }

@@ -31,8 +31,8 @@ class ResourceOpenGroupware : public ResourceGroupwareBase
 
   public:
     ResourceOpenGroupware( const KConfig * );
-    ResourceOpenGroupware( const KURL &url,
-            const QString &user, const QString &password );
+//     ResourceOpenGroupware( const KURL &url,
+//             const QString &user, const QString &password );
   protected:
     void init();
 };

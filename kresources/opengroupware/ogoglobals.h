@@ -41,11 +41,9 @@ class OGoGlobals
   public:
     OGoGlobals() {}
     static KIO::Job *createListFoldersJob( const KURL &url );
-    static KIO::TransferJob *createDownloadItemJob(
-          KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType ctype );
+    static KIO::TransferJob *createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType ctype );
 
-    static QString extractFingerprint( KIO::TransferJob *job, const QString &rawText );
-    static KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
+    static KIO::Job *createRemoveJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems );
     static bool getFolderHasSubs( const QDomNode &folderNode );
     static KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode );

@@ -68,11 +68,10 @@ void GroupwareUploadJob::deleteItem()
     kdDebug(7000) << " Deleting " << mDeletedItems.size() << " items from the server " << endl;
 
     KURL url( mBaseUrl );
-    
+
     adaptor()->adaptUploadUrl( url );
 
-    // TODO: What to do with servers that don't allow you to remove all incidences at once?
-    mDeletionJob = adaptor()->createRemoveItemsJob( url, mDeletedItems );
+    mDeletionJob = adaptor()->createRemoveJob( url, mDeletedItems );
     connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
              SLOT( slotDeletionResult( KIO::Job* ) ) );
   }

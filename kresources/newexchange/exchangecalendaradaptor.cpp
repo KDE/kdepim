@@ -78,20 +78,33 @@ void ExchangeCalendarAdaptor::adaptUploadUrl( KURL &url )
 //   url.setPath( url.path() + "/NewItem.EML" );
 }
 
-KCal::Incidence::List ExchangeCalendarAdaptor::interpretDownloadItemJob( KIO::TransferJob *job, const QString &/*rawText*/ )
+bool ExchangeCalendarAdaptor::interpretDownloadItemsJob(
+                 KIO::Job *job, const QString &/*rawText*/ )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
-  if (!davjob) return KCal::Incidence::List();
+  if ( !davjob ) return false;
 
-kdDebug() << "ExchangeCalendarAdaptor::interpretDownloadItemJob(): QDomDocument=" << endl << davjob->response().toString() << endl;
+kdDebug() << "ExchangeCalendarAdaptor::interpretDownloadItemsJob(): QDomDocument=" << endl << davjob->response().toString() << endl;
   KCal::ExchangeConverterCalendar conv;
   KCal::Incidence::List incidences = conv.parseWebDAV( davjob->response() );
-  return incidences;
+
+  bool res = false;
+  KCal::Incidence::List::Iterator it = incidences.begin();
+  for ( ; it != incidences.end(); ++it ) {
+    QString fpr = (*it)->customProperty( "KDEPIM-Exchange-Resource", "fingerprint" );
+    QString href = (*it)->customProperty( "KDEPIM-Exchange-Resource", "href" );
+    KURL u( href );
+    calendarItemDownloaded( (*it), (*it)->uid(), u.path(), fpr, u.prettyURL() );
+    res = true;
+  }
+  return res;
 }
 
-KIO::TransferJob *ExchangeCalendarAdaptor::createDownloadItemJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
+
+
+KIO::TransferJob *ExchangeCalendarAdaptor::createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
 {
-kdDebug()<<"ExchangeGlobals::createDownloadItemJob()"<<endl;
+kdDebug()<<"ExchangeGlobals::createDownloadJob()"<<endl;
 kdDebug()<<"ctype="<<ctype<<endl;
 kdDebug()<<"Appointment="<<KPIM::GroupwareJob::Appointment<<", Task="<<KPIM::GroupwareJob::Task<<", Journal="<<KPIM::GroupwareJob::Journal<<", Message="<<KPIM::GroupwareJob::Message<<endl;
   // Don't use an <allprop/> request!

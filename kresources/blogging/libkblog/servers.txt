@@ -1,5 +1,0 @@
-Blogger Pro: http://plant.blogger.com/api/RPC2, Blogger API 1.0 (returns only the content in the recent blogs, no title or description)
-Blogger Pro: http://plant.blogger.com/api/RPC2, Blogger API 2 (ATOM), not implemented
-KDE Developers: http://www.kdedevelopers.org/xmlrpc.php, Blogger 1.0 (it's Drupal with custom methods, e.g. works fine with the current resource)
-Drupal: http://www.drupal.org/xmlrpc.php, Drupal (doesn't work at all)
-

@@ -59,7 +59,8 @@ Q_OBJECT
      * Use KIO::xmlrpcPropFind(), KIO::xmlrpcPropPatch() and
      * KIO::xmlrpcSearch() to create a new XmlrpcJob.
      */
-    XmlrpcJob( const KURL& url, const QString& method, const QValueList<QVariant> &params, bool showProgressInfo );
+    XmlrpcJob( const KURL& url, const QString& method,
+				       const QValueList<QVariant> &params, bool showProgressInfo );
     virtual ~XmlrpcJob();
     /**
      * Returns the response as a QDomDocument.
@@ -72,7 +73,8 @@ Q_OBJECT
      */
     XMLRPCResponseType responseType() const { return m_responseType; }
 
-    static QString markupCall( const QString &cmd, const QValueList<QVariant> &args );
+    static QString markupCall( const QString &cmd,
+                               const QValueList<QVariant> &args );
   protected slots:
     virtual void slotFinished();
     virtual void slotData( const QByteArray &data);
@@ -80,14 +82,14 @@ Q_OBJECT
   protected:
     static QString marshal( const QVariant &arg );
     static QVariant demarshal( const QDomElement &e );
-    
+
     static bool isMessageResponse( const QDomDocument &doc );
     static bool isFaultResponse( const QDomDocument &doc );
 
     static XMLRPCResult parseMessageResponse( const QDomDocument &doc );
     static XMLRPCResult parseFaultResponse( const QDomDocument &doc );
 
-    
+
   private:
     class XmlrpcJobPrivate;
     XmlrpcJobPrivate *d;
@@ -97,28 +99,25 @@ Q_OBJECT
 };
 
 /**
- * Creates a new XmlrpcJob that calls a remote @p method of the API at the given @p url.
+ * Creates a XmlrpcJob that calls a @p method of the API at the given @p url.
  *
  * @param url the URL of the XML-RPC Interface of the server
  * @param method the name of the method to call
- * @param params the arguments (as QValueList<QVariant>) for the method call. 
+ * @param params the arguments (as QValueList<QVariant>) for the method call.
  * @param showProgressInfo true to show progress information
  * @return the new XmlrpcJob
  */
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method, const QValueList<QVariant> &params, bool showProgressInfo = true );
+XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
+                       const QValueList<QVariant> &params,
+                       bool showProgressInfo = true );
 
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method, const QVariant    &arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,       int          arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,       bool         arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,       double       arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method, const QString     &arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method, const QCString    &arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method, const QByteArray  &arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method, const QDateTime   &arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method, const QStringList &arg, bool showProgressInfo = true );
+XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
+                       const QVariant &arg, bool showProgressInfo = true );
+XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
+                       const QStringList &arg, bool showProgressInfo = true );
 template <typename T>
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method, const QValueList<T>&arg,bool showProgressInfo = true );
+XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
+                       const QValueList<T>&arg,bool showProgressInfo = true );
 }
 
 #endif
-

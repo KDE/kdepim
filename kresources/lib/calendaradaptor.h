@@ -50,6 +50,7 @@ class CalendarUploadItem : public KPIM::GroupwareUploadItem
 
 class CalendarAdaptor : public KPIM::GroupwareDataAdaptor
 {
+  Q_OBJECT
   public:
     CalendarAdaptor();
 
@@ -72,18 +73,20 @@ class CalendarAdaptor : public KPIM::GroupwareDataAdaptor
     bool localItemExists( const QString &localId );
     bool localItemHasChanged( const QString &localId );
     void deleteItem( const QString &localId );
-    QString addItem( KIO::TransferJob *job, const QString &rawText,
-           QString &fingerprint, const QString &localId,
-           const QString &storageLocation );
-    QString extractUid( KIO::TransferJob *job, const QString &data );
     void clearChange( const QString &uid );
 
-    virtual KCal::Incidence::List interpretDownloadItemJob( KIO::TransferJob *job,
-                                             const QString &rawText );
     virtual KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it,
            KPIM::GroupwareUploadItem::UploadType type );
     virtual void uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
 
+  public slots:
+    /** newLocalId is the new id that was (randomly) assigned to the item */
+    virtual void calendarItemDownloaded( KCal::Incidence *inc,
+           const QString &newLocalId, const QString &remoteId,
+           const QString &fingerprint, const QString &storagelocation );
+
+  protected:
+    void addItem( KCal::Incidence *i );
   private:
     KCal::ResourceCached *mResource;
 

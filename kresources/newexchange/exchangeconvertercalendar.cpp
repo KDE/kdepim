@@ -218,6 +218,11 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidencd"<<endl;
 
   readTZ( node, incidence );
 
+  if ( WebdavHandler::extractString( node, "getetag", tmpstr ) )
+    incidence->setCustomProperty( "KDEPIM-Exchange-Resource", "fingerprint", tmpstr );
+  if ( WebdavHandler::extractString( node, "href", tmpstr ) )
+    incidence->setCustomProperty( "KDEPIM-Exchange-Resource", "href", tmpstr );
+  
   // FIXME: use repl-uid as scheduling id?
   if ( WebdavHandler::extractString( node, "textdescription", tmpstr ) )
     incidence->setDescription( tmpstr );

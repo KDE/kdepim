@@ -51,10 +51,3 @@ kdDebug()<<"OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
 // url.addPath( "new.vcf" );
 kdDebug()<<"after OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
 }
-
-KABC::Addressee::List OGoAddressBookAdaptor::interpretDownloadItemJob( KIO::TransferJob */*job*/, const QString &rawText )
-{
-  KABC::VCardConverter conv;
-  return conv.parseVCards( rawText );
-}
-

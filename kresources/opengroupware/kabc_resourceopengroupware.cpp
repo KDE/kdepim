@@ -33,14 +33,14 @@ ResourceOpenGroupware::ResourceOpenGroupware( const KConfig *config )
   if ( config ) readConfig( config );
 }
 
-ResourceOpenGroupware::ResourceOpenGroupware( const KURL &url, const QString &user, 
+/*ResourceOpenGroupware::ResourceOpenGroupware( const KURL &url, const QString &user, 
    const QString &password ) : ResourceGroupwareBase( url, user, password )
 {
   init();
   prefs()->setUrl( url.url() );
   prefs()->setUser( user );
   prefs()->setPassword( password );
-}
+}*/
 
 void ResourceOpenGroupware::init()
 {

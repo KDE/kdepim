@@ -56,21 +56,31 @@ class GroupwareDownloadJob : public GroupwareJob
 
     void cancelLoad();
 
-    void slotListJobResult( KIO::Job * );
-    void slotJobResult( KIO::Job * );
-    void slotJobData( KIO::Job *, const QByteArray & );
+    void slotListItemsResult( KIO::Job * );
+    void slotListItemsData( KIO::Job *, const QByteArray & );
+    void slotDownloadItemResult( KIO::Job * );
+    void slotDownloadItemData( KIO::Job *, const QByteArray & );
+    
+    void slotItemToDownload( const QString &remoteURL,
+                             KPIM::GroupwareJob::ContentType type );
+    void slotItemOnServer( const QString &remoteURL );
+    void slotItemDownloaded( const QString &localID, const QString &remoteURL,
+                             const QString &fingerprint );
 
   private:
     QStringList mFoldersForDownload;
     QStringList mCurrentlyOnServer;
 
     QMap<QString,ContentType> mItemsForDownload;
+    QMap<QString,ContentType> mItemsDownloaded;
 
     KPIM::ProgressItem *mProgress;
 
     KIO::TransferJob *mDownloadJob;
     KIO::TransferJob *mListEventsJob;
-    QString mJobData;
+    
+    QString mListItemsData;
+    QString mDownloadItemsData;
 };
 
 }
