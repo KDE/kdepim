@@ -34,7 +34,6 @@ void MainWindow::init()
 {
   mAddressBook = new KABC::AddressBook;
   mResourceFile = new ResourceFile( mAddressBook, QString::null );
-  mAddressBook->addResource( mResourceFile );
   
   mCurrentItem = 0;
 
