@@ -932,7 +932,7 @@ launch:
 	}
 	else
 	{
-		QTimer::singleShot(2000,fPilotLink,SLOT(reset()));
+		QTimer::singleShot(KPilotSettings::postSyncDelay()*1000,fPilotLink,SLOT(reset()));
 	}
 
 	fPostSyncAction = None;

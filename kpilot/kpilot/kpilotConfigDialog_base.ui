@@ -11,7 +11,7 @@
             <x>0</x>
             <y>0</y>
             <width>383</width>
-            <height>324</height>
+            <height>326</height>
         </rect>
     </property>
     <property name="caption">
@@ -56,25 +56,6 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fPilotEncoding</cstring>
-                        </property>
-                        <property name="editable">
-                            <bool>true</bool>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;This box lets you select the encoding that your Pilot uses. If your Pilot accepts input in one of the languages listed, choose it. If your Pilot is a European or North American model, choose Western (ISO8859-1).&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fUserName</cstring>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
                     <widget class="QLabel" row="3" column="0">
                         <property name="name">
                             <cstring>TextLabel2</cstring>
@@ -103,18 +84,57 @@
                             <cstring>fPilotEncoding</cstring>
                         </property>
                     </widget>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>TextLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Pilot &amp;device:</string>
+                        </property>
+                        <property name="alignment">
+                            <set>AlignVCenter|AlignRight</set>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>fPilotDevice</cstring>
+                        </property>
+                    </widget>
+                    <spacer row="5" column="1">
+                        <property name="name">
+                            <cstring>spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>80</height>
+                            </size>
+                        </property>
+                    </spacer>
                     <widget class="QLabel" row="1" column="0">
                         <property name="name">
                             <cstring>TextLabel4</cstring>
                         </property>
                         <property name="text">
-                            <string>Spee&amp;d:</string>
+                            <string>&amp;Speed:</string>
                         </property>
                         <property name="alignment">
                             <set>AlignVCenter|AlignRight</set>
                         </property>
                         <property name="buddy" stdset="0">
                             <cstring>fPilotSpeed</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="0" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fPilotDevice</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="1" column="1">
@@ -150,43 +170,51 @@
                             <string>&lt;qt&gt;Sets the speed of the connection to your Pilot. This is only important for serial devices.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <spacer row="4" column="1">
+                    <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>spacer2</cstring>
+                            <cstring>fPilotEncoding</cstring>
                         </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>81</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QLineEdit" row="0" column="1" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fPilotDevice</cstring>
+                        <property name="editable">
+                            <bool>true</bool>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Enter the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;This box lets you select the encoding that your Pilot uses. If your Pilot accepts input in one of the languages listed, choose it. If your Pilot is a European or North American model, choose Western (ISO8859-1).&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>TextLabel1</cstring>
+                            <cstring>fUserName</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QSpinBox" row="4" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>fDelay</cstring>
+                        </property>
+                        <property name="maxValue">
+                            <number>10</number>
+                        </property>
+                        <property name="minValue">
+                            <number>1</number>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Enter the number of seconds to wait at the end of a HotSync before trying to open the device again. For most devices, 2 seconds is enough. For the T3 with some Linux kernels, setting this to 5 seconds is needed.</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_2</cstring>
                         </property>
                         <property name="text">
-                            <string>Pilot &amp;device:</string>
+                            <string>Post-Sync De&amp;lay:</string>
                         </property>
                         <property name="alignment">
                             <set>AlignVCenter|AlignRight</set>
                         </property>
                         <property name="buddy" stdset="0">
-                            <cstring>fPilotDevice</cstring>
+                            <cstring>fDelay</cstring>
                         </property>
                     </widget>
                 </grid>
