@@ -54,7 +54,7 @@ Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
   setAutoReset( false );
   setAutoClose( false );
   setLabelText( baseText );
-  setTotalSteps( 0 );
+  setProgress( 0, 0 ); // activate busy indicator
 
   connect( job, SIGNAL(progress(const QString&,int,int,int)),
 	   SLOT(slotProgress(const QString&,int,int,int)) );
