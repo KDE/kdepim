@@ -8,8 +8,10 @@
 #include "desktoplist.h"
 
 class Task;
+class QTimer;
 
 typedef std::vector<Task *> TaskVector;
+const int maxDesktops = 16;
 
 /** A utility to associate tasks with desktops
  *  As soon as a desktop is activated/left - an signal is emited for
@@ -33,9 +35,11 @@ class DesktopTracker: public QObject
     // define vectors for at most 16 virtual desktops
     // E.g.: desktopTrackerStop[3] contains a vector with
     // all tasks to be notified, when switching to/from desk 3.
-    TaskVector desktopTracker[16];
+    TaskVector desktopTracker[maxDesktops];
     int _previousDesktop;
     int _desktopCount;
+    int _desktop;
+    QTimer *_timer;
 
   signals:
     void reachedtActiveDesktop( Task* task );
@@ -44,6 +48,8 @@ class DesktopTracker: public QObject
   public slots:
     void handleDesktopChange( int desktop );
 
+  private slots:
+    void changeTimers();
 };
 
 #endif // KARM_DESKTOP_TRACKER_H
