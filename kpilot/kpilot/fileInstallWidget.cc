@@ -214,7 +214,14 @@ void FileInstallWidget::refreshFileInstallList()
 
 	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
 	{
-		new KIconViewItem(fIconView, *fileName, kpilotIcon);
+		if((*fileName).endsWith("prc", FALSE) || (*fileName).endsWith("pdb", FALSE))
+		{
+			new KIconViewItem(fIconView, *fileName, kpilotIcon);
+		}
+		else
+		{
+			new KIconViewItem(fIconView, *fileName);
+		}
 	}
 }
 
