@@ -80,7 +80,7 @@ JPilotProxyConduitFactory::JPilotProxyConduitFactory(QObject *p, const char *n) 
 		KAboutData::License_GPL,
 		"(C) 2002, Reinhold F. Kainhofer");
 	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Original author and maintainer of this conduit"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
-	fAbout->addAuthor("Judd Montgomery", I18N_NOOP("Author of JPilot"), 	"judd@engineer.com", "http://www.jpilot.org/");
+	fAbout->addCredit("Judd Montgomery", I18N_NOOP("Author of JPilot"), 	"judd@engineer.com", "http://www.jpilot.org/");
 }
 
 JPilotProxyConduitFactory::~JPilotProxyConduitFactory() {
