@@ -587,10 +587,10 @@ kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
           {
             const QString& eventID = event->VUID();
             kdDebug() << "AlarmDaemon::checkAlarms(): KALARM event " << eventID  << endl;
-            if (!cal->eventHandled(eventID))
+            if (!cal->eventHandled(event))
             {
               if (notifyEvent(cal, eventID))
-                cal->setEventHandled(eventID);
+                cal->setEventHandled(event);
               else
                 cal->setEventPending(eventID);
             }
@@ -698,7 +698,7 @@ void AlarmDaemon::checkIfSessionStarted()
         while (cal->getEventPending(eventID))
         {
           notifyEvent(cal, eventID);
-          cal->setEventHandled(eventID);
+          cal->setEventHandled(cal->getEvent(eventID));
         }
       }
     }
@@ -902,7 +902,7 @@ bool ADCalendar::loadFile(bool quiet)
       // Remove all now non-existent events from the handled list
       for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
       {
-        if (it.data() == urlString_  &&  !getEvent(it.key()))
+        if (it.data().calendarURL == urlString_  &&  !getEvent(it.key()))
         {
           // Event belonged to this calendar, but can't find it any more
           EventsMap::Iterator i = it;
@@ -922,18 +922,19 @@ bool ADCalendar::loadFile(bool quiet)
 /*
  * Check whether the event with the given ID has already been handled.
  */
-bool ADCalendar::eventHandled(const QString& ID)
+bool ADCalendar::eventHandled(const Event* event)
 {
-  return eventsHandled_.contains(ID);
+  EventsMap::ConstIterator it = eventsHandled_.find(event->VUID());
+  return (it != eventsHandled_.end()  &&  it.data().eventSequence == event->revision());
 }
 
 /*
  * Remember that the event with the given ID has been handled.
  */
-void ADCalendar::setEventHandled(const QString& ID)
+void ADCalendar::setEventHandled(const Event* event)
 {
-  if (!eventsHandled_.contains(ID))
-    eventsHandled_.insert(ID, urlString_);
+  if (event)
+    eventsHandled_.replace(event->VUID(), EventItem(urlString_, event->revision()));
 }
 
 /*
@@ -943,7 +944,7 @@ void ADCalendar::clearEventsHandled(const QString& calendarURL)
 {
   for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
   {
-    if (it.data() == calendarURL)
+    if (it.data().calendarURL == calendarURL)
     {
       EventsMap::Iterator i = it;
       ++it;                      // prevent iterator becoming invalid with remove()

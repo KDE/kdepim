@@ -23,8 +23,8 @@
 #ifndef _ALARMDAEMON_H
 #define _ALARMDAEMON_H
 
-#include "qfont.h"
-#include "qstrlist.h"
+#include <qfont.h>
+#include <qstrlist.h>
 
 #include <libkcal/calendarlocal.h>
 
@@ -78,8 +78,8 @@ class ADCalendar : public CalendarLocal
     bool           enabled() const     { return enabled_ && !unregistered; }
     bool           available() const   { return loaded_ && !unregistered; }
     Type           actionType() const  { return actionType_; }
-    static bool    eventHandled(const QString& ID);
-    void           setEventHandled(const QString& ID);
+    static bool    eventHandled(const Event*);
+    void           setEventHandled(const Event*);
     static void    clearEventsHandled(const QString& calendarURL);
     void           setEventPending(const QString& ID);
     bool           getEventPending(QString& ID);
@@ -98,7 +98,14 @@ class ADCalendar : public CalendarLocal
     QPtrList<QString>   eventsPending_; // IDs of pending KALARM type events
     Type             actionType_;    // action to take on event
     bool             loaded_;        // true if calendar file is currently loaded
-    typedef QMap<QString, QString>  EventsMap;   // event ID, calendar URL
+    struct EventItem
+    {
+      EventItem() : eventSequence(0) { }
+      EventItem(const QString& url, int seqno)  : calendarURL(url), eventSequence(seqno) { }
+      QString   calendarURL;
+      int       eventSequence;
+    };
+    typedef QMap<QString, EventItem>  EventsMap;   // event ID, calendar URL/event sequence num
     static EventsMap  eventsHandled_; // IDs of displayed KALARM type events
 };
 
