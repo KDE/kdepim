@@ -1,20 +1,21 @@
 AM_CPPFLAGS = -I$(top_srcdir)/libkdepim $(all_includes)
+AM_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-check_PROGRAMS = testwizard testaddresseelineedit testdistrlist
+check_PROGRAMS = testwizard testaddresseelineedit testdistrlist testemail
 
-testwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testwizard_LDADD = ../libkdepim.la $(LIB_KDECORE)
 testwizard_SOURCES = testwizard.cpp myconfig.kcfgc
 
-testaddresseelineedit_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testaddresseelineedit_LDADD = ../libkdepim.la $(LIB_KDECORE)
 testaddresseelineedit_SOURCES = testaddresseelineedit.cpp
 
-testdistrlist_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testdistrlist_LDADD = ../libkdepim.la
 testdistrlist_SOURCES = testdistrlist.cpp
 
-TESTS = testdistrlist
+testemail_LDADD = ../libkdepim.la
+testemail_SOURCES = testemail.cpp
+
+TESTS = testdistrlist testemail
 
 METASOURCES = AUTO
 
