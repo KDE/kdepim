@@ -17,9 +17,16 @@ libkitchensyncui_la_LDFLAGS = $(all_libraries) -no-undefined
 libkitchensyncui_la_LIBADD = \
   $(top_builddir)/kitchensync/libkonnector2/libkonnector.la \
   -lkutils $(LIB_KPARTS) 
+
 ksyncincludedir = $(includedir)/kitchensync
 ksyncinclude_HEADERS = partbar.h actionpart.h systemtray.h mainwindow.h \
   profile.h konnectorview.h
+
+ksyncinclude_HEADERS = actionpart.h actionpartservice.h \
+                       core.h profilecheckitem.h        \
+                       profile.h profileitem.h          \
+                       syncconfig.h systemtray.h        
+
 
 METASOURCES = AUTO
 

@@ -21,3 +21,13 @@ servicetypedir = $(kde_servicetypesdir)
 METASOURCES = AUTO
 SUBDIRS = .  plugins test
 #include_HEADERS = koperations.h kapabilities.h kdevice.h konnectormanager.h konnector.h idhelper.h configpart.h error.h 
+
+ksincludedir      = $(includedir)/kitchensync/
+ksinclude_HEADERS = configpart.h configwidget.h         \
+                    error.h filter.h                    \
+                    idhelper.h kapabilities.h           \
+                    kdevice.h konnector.h               \
+                    konnectorhandle.h konnectorinfo.h   \
+                    konnectormanager.h notify.h         \
+                    progress.h stderror.h               \
+                    stdprogress.h

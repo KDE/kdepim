@@ -18,6 +18,17 @@ libksync2_la_SOURCES = \
   bookmarksyncee.cpp \
   conflictdialog.cpp \
   synchistory.cpp
- 
+
+ksincludedir = $(includedir)/kitchensync/
+ksinclude_HEADERS = addressbookmerger.h addressbooksyncee.h  \
+                    bookmarksyncee.h calendarmerger.h        \
+                    calendarsyncee.h conflictdialog.h        \
+                    kontainer.h merger.h opiedesktopsyncee.h \
+                    standardsync.h syncalgorithm.h syncee.h  \
+                    synceelist.h syncentry.h syncer.h        \
+                    synchistory.h syncui.h syncuikde.h       \
+                    syncuikdeplugin.h unknownsyncee.h
+
+noinst_HEADERS    = debug.h
 
 METASOURCES = AUTO

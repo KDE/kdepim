@@ -21,7 +21,6 @@
 
 #include "merger.h"
 
-#include "syncentry.h"
 #include "syncee.h"
 
 namespace KSync {

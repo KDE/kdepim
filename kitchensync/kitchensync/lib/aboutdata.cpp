@@ -30,10 +30,10 @@ AboutData *AboutData::mSelf = 0;
 
 AboutData::AboutData()
   : KAboutData( "kitchensync", I18N_NOOP("KitchenSync"),
-                "0.1",
+                "0.8",
                 I18N_NOOP("Synchronize Data with KDE"),
                 KAboutData::License_GPL,
-                "(c) 2001-2002 Holger Freyther\n"
+                "(c) 2001-2002,2003,2004 Holger Freyther\n"
                 "(c) 2002 Maximilian Reiss\n"
                 "(c) 2003 Cornelius Schumacher",
                 0,
