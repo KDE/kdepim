@@ -1,0 +1,280 @@
+<chapter id="exchange-plugin">
+
+<chapterinfo>
+<authorgroup>
+
+<author>
+<firstname>Jan-Pascal</firstname> <surname>van Best</surname>
+<affiliation><address><email>janpascal@vanbest.org</email></address></affiliation>
+<contrib>Original author</contrib>
+</author>
+
+<author>
+<firstname>Klaus</firstname> <surname>St&auml;rk</surname>
+<affiliation><address><email>staerk@kde.org</email></address></affiliation>
+<contrib>Additionals texts</contrib>
+</author>
+
+<othercredit role="reviewer">
+<firstname>Eric</firstname> <surname>Bischoff</surname>
+<affiliation><address><email>e.bischoff@noos.fr</email></address></affiliation>
+<contrib>Editor</contrib>
+</othercredit>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+</authorgroup>
+
+<keywordset>
+<keyword>kdepim</keyword>
+<keyword>KOrganizer</keyword>
+<keyword>KOrganizer workshop</keyword>
+<keyword>Exchange</keyword>
+<keyword>Outlook</keyword>
+</keywordset>
+
+<date>2002-11-02</date>
+<releaseinfo>3.1</releaseinfo>
+</chapterinfo>
+
+<title>KOrganizer workshop: Exchange Plugin</title>
+
+<sect1 id="exchange-plugin-overview">
+<title>Overview</title>
+
+<para>
+The &korganizer; Exchange plugin allows you to access your calendar on an
+Microsoft Exchange&reg; server from &korganizer;. You can import the
+appointments in a certain date range into your &korganizer; calendar,
+you can export appointments (one at a time) from your &korganizer; calendar
+to the Exchange server&reg; and you can delete appointments (also one at
+a time) from the Exchange server&reg;. The plugin uses the WebDAV protocol
+to access the Exchange server&reg;.
+</para>
+
+</sect1>
+
+<sect1 id="exchange-plugin-requirements">
+<title>Requirements</title>
+
+<itemizedlist>
+<listitem><para>&korganizer; version 3.1 beta2 or later</para></listitem>
+<listitem><para>Microsoft Exchange Server 2000&reg;</para></listitem>
+<listitem><para>On the Exchange Server&reg;, Outlook Web Access needs to be enabled,
+since this also enables the WebDAV protocol</para></listitem>
+</itemizedlist>
+
+</sect1>
+
+<sect1 id="exchange-plugin-enabling">
+<title>Enabling the Exchange Plugin</title>
+
+<para>
+The Exchange Plugin is disabled by default, so you need to enable
+the plugin by accessing <menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure Plugins</guimenuitem></menuchoice>
+from &korganizer;. You should see this dialog appear:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="ep_enable.png" format="PNG"/></imageobject>
+<textobject><para>Enabling the Exchange Plugin</para></textobject>
+</mediaobject>
+
+<para>
+In this dialog, enable the <guilabel>Microsoft Exchange 2000 plugin
+for &korganizer;</guilabel> and click <guibutton>OK</guibutton>. This
+should enable a new <guimenu>Exchange</guimenu> menu in &korganizer;,
+as in the following screenshot:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="ep_menu.png" format="PNG"/></imageobject>
+<textobject><para>Exchange menu</para></textobject>
+</mediaobject>
+
+</sect1>
+
+<sect1 id="exchange-plugin-configuration">
+<title>Configuration</title>
+
+<para>
+After the plugin is enabled, you should configure it. Choose
+<guimenuitem>Configure...</guimenuitem> from the
+<guimenu>Exchange</guimenu> menu. You should see this dialog appear:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="ep_config" format="PNG"/></imageobject>
+<textobject><para>Configuration</para></textobject>
+</mediaobject>
+
+<para>
+In this dialog, you need to fill in:
+<itemizedlist>
+<listitem><para>the address of your Exchange server&reg;, &eg;
+  <userinput>mail.mycompany.com</userinput></para></listitem>
+<listitem><para>your account, or Exchange Mailbox, &eg;
+  <userinput>joe</userinput>. Do not put in your domain
+  here!</para></listitem>
+<listitem><para>your password. If you fill in your
+  password here, it is stored in encrypted format in
+  <filename>~/.kde/share/config/korganizerrc</filename></para></listitem>
+</itemizedlist>
+</para>
+
+</sect1>
+
+<sect1 id="exchange-plugin-downloading">
+<title>Downloading Appointments</title>
+
+<para>
+When you have configured the plugin, you can download events from your
+account on the Exchange server&reg; into &korganizer;. Choose
+<guimenuitem>Download...</guimenuitem> from the <guimenu>Exchange</guimenu>
+menu. Now the following dialog will pop up:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="ep_download" format="PNG"/></imageobject>
+<textobject><para>Downloading Appointments</para></textobject>
+</mediaobject>
+
+<para>
+In this dialog you need to fill in the date range you want to download
+from the server. It defaults to the date range currently shown in
+&korganizer;'s main window. When you click <guibutton>OK</guibutton>,
+a progress dialog pops up:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="ep_progress.png" format="PNG"/></imageobject>
+<textobject><para>Progress Dialog</para></textobject>
+</mediaobject>
+
+<para>
+The progress shown in this dialog does not correspond to the number of
+appointments downloaded, but to the total number of accesses to the
+Exchange server.
+</para>
+
+<para>
+When download is finished, the downloaded appointments will show up in
+the &korganizer; main window.
+</para>
+
+</sect1>
+
+<sect1 id="exchange-plugin-updloading">
+<title>Uploading Appointments</title>
+
+<para>
+You can upload appointments one at a time. First select an appointment
+in &korganizer; by clicking on it. Then choose <guimenuitem>Upload
+Event</guimenuitem> from the <guimenu>Exchange</guimenu> menu. A warning
+message pops up, which is only important if you overwrite an existing
+appointment on the Exchange server&reg; with an edited version of
+the same appointment. If you click <guibutton>OK</guibutton>, your
+appointment will be uploaded to the Exchange server&reg;.
+</para>
+
+</sect1>
+
+<sect1 id="exchange-plugin-deleting">
+<title>Deleting Appointments</title>
+
+<para>
+You can delete appointments also one at a time. First select
+an appointment in &korganizer; by clicking on it. Then
+choose <guimenuitem>Delete Event</guimenuitem> from the
+<guimenu>Exchange</guimenu> menu. This also shows a warning message:
+<computeroutput>Deleting a single appointment from a list of recurrent
+appointments will delete all recurrences of the appointments</computeroutput>.
+If you are OK with this, the appointment is deleted from the server
+and from the &korganizer; calendar.
+</para>
+
+</sect1>
+
+<sect1 id="exchange-plugin-debugging">
+<title>Debugging</title>
+
+<para>
+If you find problems with the Exchange Plugin, please report them to the
+<ulink url="mailto:kde-pim@mail.kde.org">kde-pim mailing list</ulink> or
+to the KDE bug repository at <email>bugs.kde.org</email>.
+</para>
+
+<para>
+Please include a full debug log from ~/.xsession-errors or from the
+console from which you started X.
+</para>
+
+<para>
+If you have compiled &korganizer; from source, please recompile will
+full debug enabled:
+<literallayout>
+~$ cd src/kdepim
+~/src/kdepim$ ./configure --enable-debug=full
+~/src/kdepim$ cd libkpimexchange
+~/src/kdepim/libkpimexchange$ make clean
+~/src/kdepim/libkpimexchange$ make install
+~/src/kdepim/libkpimexchange$ cd ../korganizer/plugins/exchange
+~/src/kdepim/korganizer/plugins/exchange$ make clean
+~/src/kdepim/korganizer/plugins/exchange$ make install
+</literallayout>
+</para>
+
+<para>
+You should see lines like
+<literallayout>
+korganizer: Registering Exchange Plugin...
+korganizer: Creating Exchange Plugin...
+korganizer: Creating ExchangeClient...
+</literallayout>
+in the log file.
+</para>
+
+<para>
+Your help in improving the Exchange plugin is greatly appreciated.
+</para>
+
+</sect1>
+
+<sect1 id="exchange-plugin-credits">
+<title>Credits and license</title>
+
+<para>
+This version of the &korganizer; workshop <quote>Exchange Plugin</quote>
+was released on November 3, 2002. See the <filename>ChangeLog</filename> for details.
+</para>
+
+<para>Contributors:</para>
+
+<variablelist>
+<varlistentry>
+<term>Original author</term>
+<listitem><para>Jan-Pascal van Best
+  <email>janpascal@vanbest.org</email></para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Additionals texts</term>
+<listitem><para>Klaus St&auml;rk
+  <email>staerk@kde.org</email></para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Conversion to DocBook</term>
+<listitem><para>Eric Bischoff
+  <email>e.bischoff@noos.fr</email></para></listitem>
+</varlistentry>
+</variablelist>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+&underFDL;
+
+</sect1>
+
+</chapter>
