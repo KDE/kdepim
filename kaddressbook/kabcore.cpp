@@ -910,6 +910,7 @@ void KABCore::addressBookChanged()
   mJumpButtonBar->updateButtons();
   mSearchManager->reload();
   mViewManager->setSelected( QString::null, false );
+  setContactSelected( QString::null );
 }
 
 AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
@@ -927,9 +928,9 @@ AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
 
 void KABCore::slotEditorDestroyed( const QString &uid )
 {
-  mEditorDict.remove( uid );
+  AddresseeEditorDialog *dialog = mEditorDict.take( uid );
 
-  KABC::Addressee addr = mAddressBook->findByUid( uid );
+  KABC::Addressee addr = dialog->addressee();
 
   if ( !addr.resource()->readOnly() ) {
     QApplication::setOverrideCursor( Qt::waitCursor );
