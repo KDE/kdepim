@@ -35,45 +35,54 @@
 // Local includes
 #include "Empath.h"
 #include "EmpathIndexRecord.h"
+#include <RMM_Enum.h>
+#include <RMM_MessageID.h>
+#include <RMM_Address.h>
+#include <RMM_DateTime.h>
 
 EmpathIndexRecord::EmpathIndexRecord()
-    :   id_                 (QString::null),
-        subject_            (""),
-        sender_             (""),
-        date_               (""),
-        status_             (RMM::MessageStatus(0)),
-        size_               (0),
-        messageId_          (""),
-        parentMessageId_    (""),
-        tagged_             (false)
+    :   id_             (QString::null),
+        subject_        (""),
+        senderName_     (""),
+        senderAddress_  (""),
+        timeZone_       (0),
+        status_         (0),
+        size_           (0),
+        messageID_      (""),
+        parentID_       (""),
+        tagged_         (false)
 {
-    // Empty
+    date_.setTime_t(0);
 }
         
 EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
-    :   id_                 (i.id_),
-        subject_            (i.subject_),
-        sender_             (i.sender_),
-        date_               (i.date_),
-        status_             (i.status_),
-        size_               (i.size_),
-        messageId_          (i.messageId_),
-        parentMessageId_    (i.parentMessageId_),
-        tagged_             (i.tagged_)
+    :   id_             (i.id_),
+        subject_        (i.subject_),
+        senderName_     (i.senderName_),
+        senderAddress_  (i.senderAddress_),
+        date_           (i.date_),
+        timeZone_       (i.timeZone_),
+        status_         (i.status_),
+        size_           (i.size_),
+        messageID_      (i.messageID_),
+        parentID_       (i.parentID_),
+        tagged_         (i.tagged_)
 {
     // Empty.
 }
 
 EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
-    :   id_                 (id),
-        subject_            (m.envelope().subject().asString()),
-        sender_             (m.envelope().firstSender()),
-        date_               (m.envelope().date()),
-        status_             (m.status()),
-        size_               (m.size()),
-        messageId_          (m.envelope().messageID()),
-        parentMessageId_    (m.envelope().parentMessageId()),
-        tagged_             (false)
+    :   id_             (id),
+        subject_        (m.envelope().subject().asString()),
+        senderName_     (m.envelope().firstSender().phrase()),
+        senderAddress_  (m.envelope().firstSender().route()),
+        date_           (m.envelope().date().qdt()),
+        timeZone_       (0), // TODO m.envelope().date().timeZone()),
+        status_         ((unsigned int)(m.status())),
+        size_           (m.size()),
+        messageID_      (m.envelope().messageID().asString()),
+        parentID_       (m.envelope().parentMessageId().asString()),
+        tagged_         (false)
 {
     if (!subject_)
         subject_ = QString::fromUtf8("");
@@ -82,22 +91,26 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
 EmpathIndexRecord::EmpathIndexRecord(
         const QString &     id,
         const QString &     subject,
-        RMM::RAddress &     sender,
-        RMM::RDateTime &    date,
-        RMM::MessageStatus  status,
-        Q_UINT32            size,
-        RMM::RMessageID &   messageId,
-        RMM::RMessageID &   parentMessageId)
+        const QString &     senderName,
+        const QString &     senderAddress,
+        const QDateTime &   date,
+        int                 timeZone,
+        unsigned int        status,
+        unsigned int        size,
+        const QString &     messageID,
+        const QString &     parentID)
     :
-        id_                 (id),
-        subject_            (subject),
-        sender_             (sender),
-        date_               (date),
-        status_             (status),
-        size_               (size),
-        messageId_          (messageId),
-        parentMessageId_    (parentMessageId),
-        tagged_             (false)
+        id_             (id),
+        subject_        (subject),
+        senderName_     (senderName),
+        senderAddress_  (senderAddress),
+        date_           (date),
+        timeZone_       (timeZone),
+        status_         (status),
+        size_           (size),
+        messageID_      (messageID),
+        parentID_       (parentID),
+        tagged_         (false)
 {
     if (!subject_)
         subject_ = QString::fromUtf8("");
@@ -109,15 +122,17 @@ EmpathIndexRecord::operator = (const EmpathIndexRecord & i)
     if (this == &i) // Avoid a = a.
         return *this;
     
-    id_                 = i.id_;
-    subject_            = i.subject_;
-    sender_             = i.sender_;
-    date_               = i.date_;
-    status_             = i.status_;
-    size_               = i.size_;
-    messageId_          = i.messageId_;
-    parentMessageId_    = i.parentMessageId_;
-    tagged_             = i.tagged_;
+    id_             = i.id_;
+    subject_        = i.subject_;
+    senderName_     = i.senderName_;
+    senderAddress_  = i.senderAddress_;
+    date_           = i.date_;
+    timeZone_       = i.timeZone_,
+    status_         = i.status_;
+    size_           = i.size_;
+    messageID_      = i.messageID_;
+    parentID_       = i.parentID_;
+    tagged_         = i.tagged_;
 
     return *this;
 }
@@ -170,26 +185,17 @@ EmpathIndexRecord::niceDate(bool twelveHour)
     QDataStream &
 operator << (QDataStream & s, EmpathIndexRecord & rec)
 {
-    s   << rec.id_;
-
-    s   << (Q_UINT8)rec.tagged_;
-
-    if (rec.subject_.isNull())
-        rec.subject_ = QString::fromUtf8("");
-
-    s   << rec.subject_;
-
-    s   << rec.sender_;
-
-    s   << rec.date_;
-
-    s   << (Q_UINT8)rec.status_;
-
-    s   << rec.size_;
-
-    s   << rec.messageId_;
-
-    s   << rec.parentMessageId_;
+    s   << rec.id_
+        << (Q_UINT8)rec.tagged_
+        << rec.subject_
+        << rec.senderName_
+        << rec.senderAddress_
+        << rec.date_
+        << rec.timeZone_
+        << (Q_UINT8)rec.status_
+        << rec.size_
+        << rec.messageID_
+        << rec.parentID_;
 
     return s;
 }
@@ -203,17 +209,16 @@ operator >> (QDataStream & s, EmpathIndexRecord & rec)
     s   >> rec.id_
         >> taggedAsInt
         >> rec.subject_
-        >> rec.sender_
+        >> rec.senderName_
+        >> rec.senderAddress_
         >> rec.date_
+        >> rec.timeZone_
         >> statusAsInt
         >> rec.size_
-        >> rec.messageId_
-        >> rec.parentMessageId_;
+        >> rec.messageID_
+        >> rec.parentID_;
 
-    if (rec.subject_.isNull())
-        rec.subject_ = QString::fromUtf8("");
-
-    rec.status_ = (RMM::MessageStatus)statusAsInt;
+    rec.status_ = (unsigned int)statusAsInt;
     rec.tagged_ = (bool)taggedAsInt;
     
     return s;

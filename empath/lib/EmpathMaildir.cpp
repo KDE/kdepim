@@ -77,14 +77,14 @@ EmpathMaildir::~EmpathMaildir()
     void
 EmpathMaildir::init()
 {
-    mtime_ = QFileInfo(path_ + "/cur").lastModified();
-
     QDir d(path_ + "/cur",
         QString::null,
         QDir::Unsorted,
         QDir::Files | QDir::NoSymLinks);
 
     cachedEntryList_ = d.entryList();
+    
+    mtime_ = QFileInfo(path_ + "/cur").lastModified();
 
     if (_checkDirs()) {
         _clearTmp();
@@ -104,11 +104,6 @@ EmpathMaildir::sync(bool force)
     if (!force && !_touched(f))
         return;
 
-    if (!f->index()->lock()) {
-        empathDebug("Cannot lock index - don't worry, this may be a Good Thing");
-        return;
-    }
-        
     tagList_.clear();
     
     _markNewMailAsSeen();
@@ -117,11 +112,7 @@ EmpathMaildir::sync(bool force)
     _recalculateCounters(f);
     
     f->index()->setInitialised(true);
-
-    if (!f->index()->unlock()) {
-        empathDebug("Cannot unlock index");
-        return;
-    }
+    f->index()->setLastSync(QDateTime::currentDateTime());
 }
 
     EmpathSuccessMap
@@ -344,7 +335,7 @@ EmpathMaildir::_recalculateCounters(EmpathFolder * f)
         }
     }
 
-    f->index()->setUnread(unread);
+//    f->index()->setUnread(unread);
 }
 
     void
@@ -358,14 +349,9 @@ EmpathMaildir::_markNewMailAsSeen()
 
     QStringList l(dn.entryList());
     
-    for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it) {
-
-        if ((*it)[0] != '.') {
-
+    for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
+        if ((*it)[0] != '.')
             _markAsSeen(*it);
-            kapp->processEvents();
-        }
-    }
 }
 
     void
@@ -392,22 +378,10 @@ EmpathMaildir::_clearTmp()
 
     const QFileInfoList * infoList = tmpDir.entryInfoList();
 
-    if (infoList) {
-        
-        QFileInfoListIterator it(*infoList);
-        
-        for (; it.current(); ++it) {
-            
-            if (it.current()->lastRead().daysTo(now) > 2) {
-                
-                if (!tmpDir.remove(it.current()->filePath(), true)) {
-                    empathDebug("Couldn't delete " + it.current()->filePath());
-                }
-            }
-            
-            kapp->processEvents();
-        }
-    }
+    if (infoList)
+        for (QFileInfoListIterator it(*infoList); it.current(); ++it)
+            if (it.current()->lastRead().daysTo(now) > 2)
+                tmpDir.remove(it.current()->filePath(), true);
 }
 
     bool
@@ -453,16 +427,18 @@ EmpathMaildir::_write(RMM::RMessage msg)
     if (f.exists()) {
         
         for (int i = 0 ; i < 20 ; i++) {
-            usleep(100);
+            usleep(100000);
             kapp->processEvents();
         }
     
-        if (f.exists())
+        if (f.exists()) {
+            empathDebug("File exists");
             return QString::null;
+        }
     }
 
     if (!f.open(IO_WriteOnly)) {
-        empathDebug("Couldn't open file for writing.");
+        empathDebug("Couldn't open file for writing");
         return QString::null;
     }
 
@@ -544,15 +520,15 @@ EmpathMaildir::_touched(EmpathFolder * f)
     
     QFileInfo fiDir(path_ + "/cur/");
     
-    if (fiDir.lastModified() > f->index()->lastModified()) {
-        empathDebug("Index file is older than Maildir/cur");
+    if (fiDir.lastModified() > f->index()->lastSync()) {
+        empathDebug("Index is older than " + path_ + "/cur");
         return true;
     }
     
     fiDir = (path_ + "/new/");
     
-    if (fiDir.lastModified() > f->index()->lastModified()) {
-        empathDebug("Index file is older than Maildir/new");
+    if (fiDir.lastModified() > f->index()->lastSync()) {
+        empathDebug("Index is older than " + path_ + "/new");
         return true;
     }
  
@@ -593,7 +569,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         
         s.replace(re_flags, QString::null);
         
-        tagList_.append(QString(s));
+        tagList_.append(s);
 
         bool exists = f->index()->contains(s);
 

@@ -55,7 +55,8 @@
 #include "EmpathUIUtils.h"
 #include "EmpathTask.h"
     
-QListViewItem * EmpathMessageListWidget::lastSelected_ = 0;
+QList<EmpathMessageListItem> * EmpathMessageListWidget::listItemPool_ = 0L;
+QListViewItem * EmpathMessageListWidget::lastSelected_ = 0L;
 
 EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     :   EmpathListView      (parent, "MessageListWidget"),
@@ -64,9 +65,7 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
         lastHeaderClicked_  (-1),
         hideRead_           (false)
 {
-    _initStatic();
-    
-    markAsReadTimer_ = new EmpathMarkAsReadTimer(this);
+    _init();
 
     setFrameStyle(QFrame::NoFrame);
     setShowSortIndicator(true);
@@ -95,8 +94,11 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
 }
 
     void
-EmpathMessageListWidget::_initStatic()
+EmpathMessageListWidget::_init()
 {
+    markAsReadTimer_ = new EmpathMarkAsReadTimer(this);
+    listItemPool_ = new QList<EmpathMessageListItem>;
+
     px_xxx_    = empathIcon("tree");
     px_Sxx_    = empathIcon("tree-read");
     px_xMx_    = empathIcon("tree-marked");
@@ -133,9 +135,9 @@ EmpathMessageListWidget::_connectUp()
         SLOT(s_rightButtonPressed(QListViewItem *, const QPoint &, int, Area)));
     
     //XXX Is this now necessary ?
-//    // Connect the header's section clicked signal so we can sort properly
-//    QObject::connect(header(), SIGNAL(sectionClicked(int)),
-//        this, SLOT(s_headerClicked(int)));
+    //Yes ! We want to know which column we're sorting by.
+    QObject::connect(header(), SIGNAL(sectionClicked(int)),
+        this, SLOT(s_headerClicked(int)));
 
     QObject::connect(
         empath, SIGNAL(showFolder(const EmpathURL &, unsigned int)),
@@ -208,7 +210,9 @@ EmpathMessageListWidget::findRecursive(
         if (found != 0) return found;
     }
 
-    if (initialItem->messageID() == msgId) return initialItem;
+    if (initialItem->messageID() == QString::fromUtf8(msgId.asString()))
+        return initialItem;
+
     return 0;
 }
 
@@ -230,33 +234,23 @@ EmpathMessageListWidget::_threadItem(EmpathIndexRecord & rec)
         return 0;
     }
 
-    EmpathMessageListItem * parentItem = 0;
+    EmpathMessageListItem * parentItem = 0L;
     
     // Find parent of this item.
-    if (!rec.parentID().localPart().isEmpty()) {
+    if (rec.hasParent())
 
         for (QListViewItemIterator it(this); it.current(); ++it) {
             
             EmpathMessageListItem * i =
                 static_cast<EmpathMessageListItem *>(it.current());
-
         
-//  empathDebug("looking at item with id `" + i->messageID().asString() + "'");
             if (i->messageID() == rec.parentID()) {
                 parentItem = i;
                 break;
             }
         }
-    }
 
-    EmpathMessageListItem * newItem;
-
-    if (parentItem == 0)
-        newItem = new EmpathMessageListItem(this, rec);
-    else
-        newItem = new EmpathMessageListItem(parentItem, rec);
-
-    return newItem;
+    return _createListItem(rec, 0L, parentItem);
 }
 
     EmpathURL
@@ -286,11 +280,10 @@ EmpathMessageListWidget::markOne(RMM::MessageStatus status)
 
     EmpathURL u(url_.mailboxName(), url_.folderPath(), item->id());
     
-    RMM::MessageStatus stat = item->status();
+    RMM::MessageStatus stat = RMM::MessageStatus(item->status());
     
     RMM::MessageStatus s =
-        (RMM::MessageStatus)
-        (stat & status ? stat ^ status : stat | status);
+        RMM::MessageStatus(stat & status ? stat ^ status : stat | status);
     
     setStatus(item, s);
     kapp->processEvents();
@@ -314,8 +307,6 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
         l.append(it.current()->id());
         setStatus(it.current(), status);
     }
-
-    kapp->processEvents();
 
     empath->mark(url_, l, status);
 }
@@ -588,6 +579,7 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem *i)
     void
 EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
 {
+    markAsReadTimer_->cancel();
     EmpathURL u(url_.mailboxName(), url_.folderPath(), item->id());
     // XXX RETVAL ?
     empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read));
@@ -664,12 +656,12 @@ EmpathMessageListWidget::s_headerClicked(int i)
     KConfig * c(KGlobal::config());
 
     using namespace EmpathConfig;
-
-    c->setGroup(GROUP_DISPLAY);
     
+    c->setGroup("Folder_" + url_.mailboxName() + "/" + url_.folderPath());
+   
     c->writeEntry(UI_SORT_COLUMN, i);
     c->writeEntry(UI_SORT_ASCENDING, sortType_);
-    
+   
     lastHeaderClicked_ = i;
 }
 
@@ -1005,7 +997,7 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
     if (c->readBoolEntry(UI_THREAD))
         _threadItem(rec);
     else
-        new EmpathMessageListItem(this, rec);
+        _createListItem(rec);
 }
 
     void
@@ -1013,9 +1005,7 @@ EmpathMessageListWidget::_fillDisplay()
 {
     filling_ = true;
     
-    setUpdatesEnabled(false);
-    clear();
-    setUpdatesEnabled(true);
+    _clear();
     triggerUpdate();
     kapp->processEvents();
 
@@ -1023,13 +1013,6 @@ EmpathMessageListWidget::_fillDisplay()
     viewport()->setUpdatesEnabled(false);
     setSorting(-1);
 
-    EmpathFolder * f = empath->folder(url_);
-
-    if (!f) {
-        empathDebug("Can't find folder");
-        return;
-    }
- 
     KConfig * c(KGlobal::config());
     
     using namespace EmpathConfig;
@@ -1042,6 +1025,8 @@ EmpathMessageListWidget::_fillDisplay()
         _fillNormal();
 
     if (filling_) {
+ 
+        c->setGroup("Folder_" + url_.mailboxName() + "/" + url_.folderPath());
    
         setSorting(
             c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
@@ -1082,7 +1067,8 @@ EmpathMessageListWidget::_fillThreading()
     {
         EmpathIndexRecord * rec =
             new EmpathIndexRecord(f->index()->record(*it));
-        allDict.insert(rec->messageID().asString(), new ThreadNode(rec));
+
+        allDict.insert(rec->messageID(), new ThreadNode(rec));
     }
     
     QDict<ThreadNode> rootDict;
@@ -1093,47 +1079,84 @@ EmpathMessageListWidget::_fillThreading()
     // If not, add this item to rootDict.
     for (QDictIterator<ThreadNode> it(allDict); it.current(); ++it) {
 
-        ThreadNode * parentNode =
-            allDict[it.current()->data()->parentID().asString()];
+        ThreadNode * parentNode = allDict[it.current()->data()->parentID()];
 
         if (0 != parentNode)
             parentNode->addChild(it.current());
         else
-            rootDict.insert(
-                it.current()->data()->messageID().asString(),
-                it.current()
-            );
+            rootDict.insert(it.current()->data()->messageID(), it.current());
     }
 
     // Now go through every node in rootDict, adding the threads below it.
     for (QDictIterator<ThreadNode> it(rootDict); it.current(); ++it)
-        _createThreads(it.current(), this, t);
+        _createThreads(it.current(), &t);
 }
 
     void
 EmpathMessageListWidget::_createThreads(
     ThreadNode * root,
-    EmpathMessageListWidget * parent,
-    EmpathTask & t
+    EmpathTask * t,
+    EmpathMessageListItem * parent
 )
 {
-    EmpathMessageListItem * i = _createListItem(parent, *(root->data()), t);
+    EmpathMessageListItem * i = _createListItem(*(root->data()), t, parent);
 
     for (QListIterator<ThreadNode> it(root->childList()); it.current(); ++it)
-        _createThreads(it.current(), i, t);
+        _createThreads(it.current(), t, i);
 }
 
-    void
-EmpathMessageListWidget::_createThreads(
-    ThreadNode * root,
-    EmpathMessageListItem * parent,
-    EmpathTask & t
+    EmpathMessageListItem *
+EmpathMessageListWidget::_createListItem(
+    EmpathIndexRecord & rec,
+    EmpathTask * t,
+    EmpathMessageListItem * parent
 )
 {
-    EmpathMessageListItem * i = _createListItem(parent, *(root->data()), t);
+    if (0 != t)
+        t->doneOne();
 
-    for (QListIterator<ThreadNode> it(root->childList()); it.current(); ++it)
-        _createThreads(it.current(), i, t);
+    return _pool(rec, parent);
+}
+
+    EmpathMessageListItem *
+EmpathMessageListWidget::_pool(
+    EmpathIndexRecord & rec,
+    EmpathMessageListItem * parent
+)
+{
+    EmpathMessageListItem * retval = 0L;
+
+#if 0
+    if (listItemPool_->isEmpty()) {
+#endif
+
+        if (0 == parent)
+            retval = new EmpathMessageListItem(this, rec);
+        else
+            retval = new EmpathMessageListItem(parent, rec);
+
+#if 0
+    } else {
+
+        empathDebug("reusing");
+
+        empathDebug("getting pointer to first item");
+        retval = listItemPool_->getFirst();
+        empathDebug("setting record");
+        retval->setRecord(rec);
+
+        empathDebug("removing first item from pool");
+        listItemPool_->removeFirst();
+
+        empathDebug("inserting item");
+        if (0 == parent)
+            insertItem(retval);
+        else
+            parent->insertItem(retval);
+    }
+#endif
+
+    return retval;
 }
 
     void
@@ -1153,27 +1176,12 @@ EmpathMessageListWidget::_fillNormal()
     
     QStringList index(f->index()->allKeys());
     QStringList::ConstIterator it(index.begin());
-        
+    
     EmpathIndexRecord rec;
 
-    if (hideRead_) {
-
-        for (; it != index.end() && filling_; ++it) {
-            
-            rec = f->index()->record(*it);
-            if (!(rec.status() & RMM::Read))
-                (void) new EmpathMessageListItem(this, rec);
-            t.doneOne();
-        }
-
-    } else {
-
-        for (; it != index.end() && filling_; ++it) {
-            
-            (void) new EmpathMessageListItem(this, f->index()->record(*it));
-            t.doneOne();
-        }
-    }
+    if (!rec.isNull())
+       if (!hideRead_ || !(rec.status() & RMM::Read))
+            _createListItem(rec, &t);
     
     t.done();
 }
@@ -1309,26 +1317,37 @@ EmpathMessageListWidget::listenTo(unsigned int id)
     listenTo_ = id;
 }
 
-    EmpathMessageListItem *
-EmpathMessageListWidget::_createListItem(
-    EmpathMessageListWidget * parent,
-    EmpathIndexRecord rec,
-    EmpathTask & t
-)
+    void
+EmpathMessageListWidget::_clear()
 {
-    t.doneOne();
-    return new EmpathMessageListItem(parent, rec);
-}
+    setUpdatesEnabled(false);
+    clear();
+    setUpdatesEnabled(true);
+    return;
+    // STUB
 
-    EmpathMessageListItem *
-EmpathMessageListWidget::_createListItem(
-    EmpathMessageListItem * parent,
-    EmpathIndexRecord rec,
-    EmpathTask & t
-)
-{
-    t.doneOne();
-    return new EmpathMessageListItem(parent, rec);
+
+    empathDebug("clearing pool");
+    listItemPool_->clear();
+
+    empathDebug("taking items and placing in pool");
+    QListViewItemIterator it(this);
+    
+    while (it.current()) {
+
+        empathDebug(".");
+
+        listItemPool_
+            ->append(static_cast<EmpathMessageListItem *>(it.current()));
+
+        takeItem(it.current());
+
+        ++it;
+    }
+
+    empathDebug("clearing");
+    clear();
+    setUpdatesEnabled(true);
 }
 
 // vim:ts=4:sw=4:tw=78

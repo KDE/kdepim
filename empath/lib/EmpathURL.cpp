@@ -79,8 +79,6 @@ EmpathURL::EmpathURL(const EmpathURL & url)
     void
 EmpathURL::_parse()
 {
-    empathDebug("Parsing `" + strRep_ + "'");
-
     if (strRep_.left(9) != "empath://") {
         isValid_ = false;
         return;

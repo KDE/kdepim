@@ -38,6 +38,7 @@
 #include "EmpathMessageListItem.h"
 #include "EmpathUIUtils.h"
 #include "EmpathConfig.h"
+#include "RMM_Enum.h"
 
 QPixmap * EmpathMessageListItem::px_                      = 0L;
 QPixmap * EmpathMessageListItem::px_read_                 = 0L;
@@ -52,7 +53,7 @@ QColor  * EmpathMessageListItem::unreadColour_            = 0L;
 
 EmpathMessageListItem::EmpathMessageListItem(
         EmpathMessageListWidget * parent,
-        EmpathIndexRecord rec)
+        EmpathIndexRecord & rec)
     :    
         QListViewItem(parent),
         m_(rec)
@@ -62,7 +63,7 @@ EmpathMessageListItem::EmpathMessageListItem(
 
 EmpathMessageListItem::EmpathMessageListItem(
         EmpathMessageListItem * parent,
-        EmpathIndexRecord rec)
+        EmpathIndexRecord & rec)
     :    
         QListViewItem(parent),
         m_(rec)
@@ -72,6 +73,14 @@ EmpathMessageListItem::EmpathMessageListItem(
 
 EmpathMessageListItem::~EmpathMessageListItem()
 {
+    // Empty.
+}
+
+    void
+EmpathMessageListItem::setRecord(EmpathIndexRecord & rec)
+{
+    m_ = rec;
+    _init();
 }
 
     void
@@ -85,15 +94,12 @@ EmpathMessageListItem::_init()
     // Status
     setPixmap(1, _statusIcon(m_.status()));
  
-    // Sender
-    RMM::RAddress sender_(m_.sender());
+    QString s = m_.senderName();
 
-    if (sender_.phrase().isEmpty())
-        setText(2, sender_.asString());
+    if (s.isEmpty())
+        setText(2, m_.senderAddress());
         
     else {
-
-        QString s = sender_.phrase();
 
         if (s.left(1) == "\"") {
             s.remove(0, 1);
@@ -104,9 +110,13 @@ EmpathMessageListItem::_init()
         setText(2, s);
     }
 
+    QDateTime dt = m_.date();
+
+    // Adjust for time zone. TODO: Adjust for _local_ time zone.
+    dt.setTime(dt.time().addSecs(60 * m_.timeZone()));
+
     // Date 
-    QString niceDate = KGlobal::locale()->formatDate(m_.date().qdt().date(), true);
-    setText(3, niceDate);
+    setText(3, KGlobal::locale()->formatDate(dt.date(), true));
    
     // Size
     QString sizeStr;
@@ -137,9 +147,11 @@ EmpathMessageListItem::_init()
     }
     
     setText(4, sizeStr);
+    
+    int sinceEpoch = QDateTime().secsTo(dt);
 
-   // These are used only for sorting.
-    dateStr_.sprintf("%016x", m_.date().asUnixTime());
+    // These are used only for sorting.
+    dateStr_.sprintf("%016x", sinceEpoch);
     sizeStr_.sprintf("%016x", size_);
 }
 
@@ -160,7 +172,7 @@ EmpathMessageListItem::key(int column, bool) const
     switch (column) {
         
         case 0:
-            s = text(0);
+            s = m_.subject(); 
             break;
             
         case 1:
@@ -187,14 +199,14 @@ EmpathMessageListItem::key(int column, bool) const
 }
 
     void
-EmpathMessageListItem::setStatus(RMM::MessageStatus status)
+EmpathMessageListItem::setStatus(unsigned int status)
 {
     m_.setStatus(status);
     setPixmap(1, _statusIcon(status));
 }
 
     QPixmap &
-EmpathMessageListItem::_statusIcon(RMM::MessageStatus status)
+EmpathMessageListItem::_statusIcon(unsigned int status)
 {
     bool read = status & RMM::Read;
     bool marked = status & RMM::Marked;

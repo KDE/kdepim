@@ -34,10 +34,6 @@
 // Local includes
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
-#include <RMM_MessageID.h>
-#include <RMM_Address.h>
-#include <RMM_DateTime.h>
-#include <RMM_Enum.h>
 
 class EmpathMessageListWidget;
 
@@ -51,28 +47,32 @@ class EmpathMessageListItem : public QListViewItem
     
         EmpathMessageListItem(
             EmpathMessageListWidget * parent,
-            EmpathIndexRecord rec);
+            EmpathIndexRecord & rec);
 
         EmpathMessageListItem(
             EmpathMessageListItem * parent,
-            EmpathIndexRecord rec);
+            EmpathIndexRecord & rec);
 
         ~EmpathMessageListItem();
+
+        void setRecord(EmpathIndexRecord &);
         
         virtual void setup();
 
         QString key(int, bool) const;
 
-        QString             id()        const   { return m_.id();        }
-        RMM::RMessageID &   messageID()         { return m_.messageID(); }
-        RMM::RMessageID &   parentID()          { return m_.parentID();  }
-        QString             subject()   const   { return m_.subject();   }
-        RMM::RAddress &     sender()            { return m_.sender();    }
-        RMM::RDateTime &    date()              { return m_.date();      }
-        RMM::MessageStatus  status()    const   { return m_.status();    }
-        Q_UINT32            size()      const   { return m_.size();      }
+        QString         id()            const { return m_.id();             }
+        QString         messageID()     const { return m_.messageID();      }
+        QString         parentID()      const { return m_.parentID();       }
+        QString         subject()       const { return m_.subject();        }
+        QString         senderName()    const { return m_.senderName();     }
+        QString         senderAddress() const { return m_.senderAddress();  }
+        QDateTime       date()          const { return m_.date();           }
+        int             timeZone()      const { return m_.timeZone();       }
+        unsigned int    status()        const { return m_.status();         }
+        unsigned int    size()          const { return m_.size();           }
         
-        void setStatus(RMM::MessageStatus);
+        void setStatus(unsigned int);
         
         static void initStatic();
         
@@ -86,7 +86,7 @@ class EmpathMessageListItem : public QListViewItem
 
         void _init();
 
-        QPixmap & _statusIcon(RMM::MessageStatus);
+        QPixmap & _statusIcon(unsigned int);
 
         static QPixmap * px_;
         static QPixmap * px_read_;

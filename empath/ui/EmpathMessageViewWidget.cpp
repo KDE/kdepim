@@ -69,6 +69,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
     messageWidget_ = new EmpathMessageHTMLWidget(this);
     
     attachmentViewWidget_ = new EmpathAttachmentViewWidget(this);
+    attachmentViewWidget_->hide();
     
     QObject::connect(
         headerViewWidget_,  SIGNAL(clipClicked()),

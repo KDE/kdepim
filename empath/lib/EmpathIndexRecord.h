@@ -29,19 +29,10 @@
 
 // Qt includes
 #include <qstring.h>
-#include <qlist.h>
-
-// KDE includes
-#include <ksharedptr.h>
+#include <qdatetime.h>
 
 // Local includes
-#include "EmpathDefines.h"
-#include <RMM_Enum.h>
 #include <RMM_Message.h>
-#include <RMM_MessageID.h>
-#include <RMM_Address.h>
-#include <RMM_DateTime.h>
-
 
 /**
  * @short An index record
@@ -73,12 +64,14 @@ class EmpathIndexRecord
         EmpathIndexRecord(
                 const QString &     id,
                 const QString &     subject,
-                RMM::RAddress &     sender,
-                RMM::RDateTime &    date,
-                RMM::MessageStatus  status,
-                Q_UINT32            size,
-                RMM::RMessageID &   messageID,
-                RMM::RMessageID &   parentMessageID);
+                const QString &     senderName,
+                const QString &     senderAddress,
+                const QDateTime &   date,
+                int                 timezone,
+                unsigned int        status,
+                unsigned int        size,
+                const QString &     messageID,
+                const QString &     parentMessageID);
 
         EmpathIndexRecord & operator = (const EmpathIndexRecord &);
         
@@ -105,55 +98,68 @@ class EmpathIndexRecord
          */
         QString subject() const
         { return subject_; }
-        
+ 
         /**
-         * The sender of the related message. This is usually the first
-         * sender mentioned in 'From:' but may be that referenced in 'Sender:'
-         * if there's no 'From:' header.
+         * The name of the sender of the related message. This is usually
+         * the first sender mentioned in 'From:' but may be that referenced
+         * in 'Sender:' if there's no 'From:' header.
          */
-        RMM::RAddress & sender()
-        { return sender_; }
+        QString senderName() const
+        { return senderName_; }
+ 
+        /**
+         * The address of the sender of the related message.
+         * @see senderName
+         */
+        QString senderAddress() const
+        { return senderAddress_; }
         
         /**
          * The date of sending of the related message.
          */
-        RMM::RDateTime & date()
+        QDateTime date() const
         { return date_; }
+
+        /**
+         * Timezone, expressed in minutes.
+         */
+        int timeZone() const
+        { return timeZone_; }
         
         /**
          * The status of the related message (Read, Marked, ...).
          */
-        RMM::MessageStatus status() const
+        unsigned int status() const
         { return status_; }
         
         /**
          * The size of the related message.
          */
-        Q_UINT32 size() const
+        unsigned int size() const
         { return size_; }
         
         /**
          * The message-id of the related message.
          */
-        RMM::RMessageID & messageID()
-        { return messageId_; }
+        QString messageID() const
+        { return messageID_; }
         
         /**
          * The message-id of the previous message (for threading).
          */
-        RMM::RMessageID & parentID()
-        { return parentMessageId_; }
+        QString parentID() const
+        { return parentID_; }
         
         /**
          * Find out if there's a previous message (for threading).
          */
-        bool hasParent()
-        { return !parentMessageId_.asString().isEmpty(); }
+        bool hasParent() const
+        { return !(parentID_ == "<@>"); }
         
         /**
          * Change the status of this record.
          */
-        void setStatus(RMM::MessageStatus s)
+        void setStatus(unsigned int s)
         { status_ = s; }
         
         /**
@@ -170,6 +176,9 @@ class EmpathIndexRecord
 
         bool isNull() const
         { return id_.isNull(); }
+
+        bool operator ! () const
+        { return isNull(); }
         
         /**
          * @internal
@@ -179,37 +188,18 @@ class EmpathIndexRecord
     private:
         
         // Order dependency
-        QString             id_;
-        QString             subject_;
-        RMM::RAddress       sender_;
-        RMM::RDateTime      date_;
-        RMM::MessageStatus  status_;
-        Q_UINT32            size_;
-        RMM::RMessageID     messageId_;
-        RMM::RMessageID     parentMessageId_;
+        QString         id_;
+        QString         subject_;
+        QString         senderName_;
+        QString         senderAddress_;
+        QDateTime       date_;
+        int             timeZone_;
+        unsigned int    status_;
+        unsigned int    size_;
+        QString         messageID_;
+        QString         parentID_;
         
-        bool                tagged_;
-
-        bool                isNull_;
-};
-
-/**
- * @internal
- * @author Rikkus
- */
-class EmpathIndexRecordList : public QList<EmpathIndexRecord>
-{
-    public:
-        EmpathIndexRecordList() : QList<EmpathIndexRecord>() {}
-        virtual ~EmpathIndexRecordList() {}
-        
-    protected:
-        virtual int compareItems(void * i1, void * i2)
-        {
-            return
-                ((EmpathIndexRecord *)i1)->date().qdt() >
-                ((EmpathIndexRecord *)i2)->date().qdt() ? 1 : -1;
-        }
+        bool            tagged_;
 };
 
 #endif

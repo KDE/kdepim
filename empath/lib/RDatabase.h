@@ -93,7 +93,7 @@ class Database
      * @return the record referenced by the key. The record will be null
      * (use QByteArray::isNull() to test) if the record didn't exist.
      */
-    QByteArray retrieve(const QString & key);
+    QByteArray retrieve(const QString & key) const;
     
     /**
      * @return true if the key is in the index.
@@ -136,10 +136,6 @@ class Database
     
     void saveIndex() { _saveIndex(); }
 
-    bool locked() const { return locked_; }
-    bool lock() { if (locked_) return false; locked_ = true; return true; }
-    bool unlock() { if (!locked_) return false; locked_ = false; return true; }
-
   private:
 
     // Disabled default ctor, copy ctor and xxref.
@@ -147,18 +143,18 @@ class Database
     Database(const Database &);
     Database & operator = (const Database &);
 
-    void _setError(const QString & s);
+    void _setError(const QString & s) const;
     void _open();
     void _close();
     void _loadIndex();
     void _saveIndex();
 
     // Order dependency
-    bool ok_;
+    mutable bool ok_;
     bool indexLoaded_;
     bool indexDirty_;
-    QString error_;
-    QFile dataFile_;
+    mutable QString error_;
+    mutable QFile dataFile_;
     QFile indexFile_;
     Q_UINT32 offset_;
     Q_UINT32 indexFileSize_;
@@ -168,13 +164,11 @@ class Database
     Index index_;
 
     QDataStream indexStream_;
-    QDataStream dataStream_;
+    mutable QDataStream dataStream_;
 
     QDateTime touched_;
 
     unsigned int unreadCount_;
-
-    bool locked_;
 };
 
 } // End namespace

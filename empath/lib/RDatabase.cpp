@@ -37,8 +37,7 @@ Database::Database(const QString & filename)
     error_("No error"),
     offset_(0),
     indexFileSize_(0),
-    dataFileSize_(0),
-    locked_(false)
+    dataFileSize_(0)
 {
   indexFile_.setName(filename + ".idx");
   dataFile_.setName(filename + ".rdb");
@@ -56,7 +55,7 @@ Database::~Database()
 }
 
   void
-Database::_setError(const QString & s)
+Database::_setError(const QString & s) const
 {
   ok_ = false;
   error_ = s;
@@ -185,7 +184,13 @@ Database::insert(const QString & key, const QByteArray & data)
   index_.insert(key, new Q_UINT32(dataFileSize_));
   indexDirty_ = true;
   
-  dataFile_.at(dataFileSize_);
+  bool seekOK = dataFile_.at(dataFileSize_);
+
+  if (!seekOK) {
+    _setError("Unable to seek");
+    return false;
+  }
+
   dataStream_ << data;
 
   dataFileSize_ = dataFile_.at();
@@ -201,7 +206,7 @@ Database::exists(const QString & key) const
 }
 
   QByteArray
-Database::retrieve(const QString & key)
+Database::retrieve(const QString & key) const
 {
   ok_ = true;
 
@@ -219,7 +224,12 @@ Database::retrieve(const QString & key)
     return data;
   }
 
-  dataFile_.at(*ofs);
+  bool seekOK = dataFile_.at(*ofs);
+
+  if (!seekOK) {
+    _setError("Unable to seek");
+    return data;
+  }
 
   dataStream_ >> data;
 
@@ -264,7 +274,13 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
     index_.insert(key, new Q_UINT32(dataFileSize_));
     indexDirty_ = true;
   
-    dataFile_.at(dataFileSize_);
+    bool seekOK = dataFile_.at(dataFileSize_);
+
+    if (!seekOK) {
+      _setError("Unable to seek");
+      return false;
+    }
+
     dataStream_ << data;
 
     dataFileSize_ = dataFile_.at();
@@ -277,7 +293,12 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
 
   QByteArray originalRecord;
   
-  dataFile_.at(*ofs);
+  bool seekOK = dataFile_.at(dataFileSize_);
+
+  if (!seekOK) {
+    _setError("Unable to seek");
+    return false;
+  }
 
   Q_UINT32 originalRecordLength;
 
@@ -311,7 +332,13 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
     index_.replace(key, new Q_UINT32(dataFileSize_));
     indexDirty_ = true;
     
-    dataFile_.at(dataFileSize_);
+    bool seekOK = dataFile_.at(dataFileSize_);
+
+    if (!seekOK) {
+      _setError("Unable to seek");
+      return false;
+    }
+
     dataStream_ << data;
   
     dataFileSize_ = dataFile_.at();
@@ -321,8 +348,14 @@ Database::replace(const QString & key, const QByteArray & data, bool & ow)
 
   // The replacement is the same size as, or smaller than, the original.
   // We may overwrite the original.
+  
+  seekOK = dataFile_.at(*ofs);
 
-  dataFile_.at(*ofs);
+  if (!seekOK) {
+    _setError("Unable to seek");
+    return false;
+  }
+
   dataStream_ << data;
 
   return true;
@@ -377,7 +410,12 @@ Database::reorganise()
 
     QByteArray data;
 
-    dataFile_.at(*(it.current()));
+    bool seekOK = dataFile_.at(*(it.current()));
+
+    if (!seekOK) {
+      _setError("Unable to seek");
+      return;
+    }
 
     dataStream_ >> data;
 

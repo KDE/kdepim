@@ -32,9 +32,10 @@
 #include <qstring.h>
 
 // Local includes
-#include "RMM_Message.h"
-#include "EmpathURL.h"
+#include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
+#include "EmpathURL.h"
+#include "RMM_Message.h"
 
 class EmpathIndex;
 class EmpathMailbox;
@@ -95,7 +96,7 @@ class EmpathFolder : public QObject
 
         /**
          */
-        bool markMessage(const QString & id,RMM::MessageStatus);
+        bool markMessage(const QString & id, RMM::MessageStatus);
         
         /**
          */
@@ -140,8 +141,6 @@ class EmpathFolder : public QObject
          * Call this when a new item appears in the index.
          */
         void itemCome(const QString & s) { emit(itemArrived(s));    }
-        
-        void setStatus(const QString & id, RMM::MessageStatus);
 
         void setContainer(bool);
         bool isContainer() const;

@@ -32,6 +32,7 @@
 
 // Local includes
 #include <RMM_Message.h>
+#include "EmpathDefines.h"
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "config.h"

@@ -32,7 +32,6 @@
 #include <qdatetime.h>
 
 // Local includes
-#include "RDatabase.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathURL.h"
 
@@ -44,7 +43,6 @@ class EmpathIndex
 {
     public:
         
-        EmpathIndex();
         EmpathIndex(const EmpathURL & folder);
 								
         ~EmpathIndex();
@@ -52,13 +50,16 @@ class EmpathIndex
         /**
          * Get the index record using the given key.
          */
-        EmpathIndexRecord record(const QString & key);
+        EmpathIndexRecord record(const QString & key) const;
 
         /**
          * Find out if the record exists
          */
-        bool contains(const QString & key) const;
-        
+        bool contains(const QString & key) const
+        {
+            return (0 != dict_.find(key));
+        }
+
         /**
          * Set the index to talk to the given folder.
          */
@@ -77,12 +78,15 @@ class EmpathIndex
         /**
          * Count the number of messages stored.
          */
-        Q_UINT32 count() const;
+        unsigned int count() const
+        {
+            return dict_.count();
+        }
 
         /**
          * Count the number of unread messages stored.
          */
-        Q_UINT32 countUnread() const;
+        unsigned int countUnread() const;
 
         /**
          * Sync up the message list with the mailbox.
@@ -111,36 +115,35 @@ class EmpathIndex
 		
         QString indexFileName() const { return filename_; }
 		
-        QDateTime lastModified() const;
-		
         QStringList allKeys() const;
 
-        void setStatus(const QString & key, RMM::MessageStatus status);
-        
         bool initialised() const { return initialised_; }
-        void setInitialised(bool i) { initialised_ = i; dbf_->saveIndex(); }
+        void setInitialised(bool i) { initialised_ = i; }
 
-        void setUnread(unsigned int);
+        void setStatus(const QString & id, RMM::MessageStatus);
+
+        QDateTime lastSync() const { return lastSync_; }
+        QDateTime setLastSync(QDateTime dt) { lastSync_ = dt; }
 
         const char * className() const { return "EmpathIndex"; }
 
-        bool locked() const { return dbf_->locked(); }
-        bool lock() { return dbf_->lock(); }
-        bool unlock() { return dbf_->unlock(); }
-
-    protected:
+    private:
+        
+        EmpathIndex();
         
         bool _open();
         void _close();
+        void _setDirty();
         
-        int blockSize_;
-        EmpathURL folder_;
-        QDateTime mtime_;
-        int mode_;
         QString filename_;
-        RDB::Database * dbf_;
-        
+        QDict<EmpathIndexRecord> dict_;
+        QDateTime lastSync_;
+
+        // Order dependency
+        EmpathURL folder_;
         bool initialised_;
+        bool dirty_;
+        // End order dependency
 };
 
 #endif

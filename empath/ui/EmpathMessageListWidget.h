@@ -211,29 +211,22 @@ class EmpathMessageListWidget : public EmpathListView
        
         void _createThreads(
             ThreadNode * root,
-            EmpathMessageListWidget * parent,
-            EmpathTask &
-        );
-       
-        void _createThreads(
-            ThreadNode * root,
-            EmpathMessageListItem * parent,
-            EmpathTask &
+            EmpathTask * = 0L,
+            EmpathMessageListItem * parent = 0L
         );
        
         EmpathMessageListItem * _createListItem(
-            EmpathMessageListWidget *,
-            EmpathIndexRecord,
-            EmpathTask &
+            EmpathIndexRecord &,
+            EmpathTask * = 0L,
+            EmpathMessageListItem * = 0L
         );
 
-        EmpathMessageListItem * _createListItem(
-            EmpathMessageListItem *,
-            EmpathIndexRecord,
-            EmpathTask &
-        );
+        EmpathMessageListItem *
+            _pool(EmpathIndexRecord &, EmpathMessageListItem * = 0L);
         
-        void _initStatic();
+        void _clear();
+        
+        void _init();
         void _initActions();
         void _connectUp();
     
@@ -326,6 +319,8 @@ class EmpathMessageListWidget : public EmpathListView
         unsigned int listenTo_;
 
         bool hideRead_;
+
+        static QList<EmpathMessageListItem> * listItemPool_;
         
         // Order dependency
         bool                filling_;

@@ -24,6 +24,10 @@
 # pragma implementation "EmpathIndex.h"
 #endif
 
+// System includes
+#include <sys/file.h>
+#include <unistd.h>
+
 // Qt includes
 #include <qdatastream.h>
 #include <qregexp.h>
@@ -40,17 +44,10 @@
 #include "EmpathFolder.h"
 #include "Empath.h"
 
-EmpathIndex::EmpathIndex()
-    :   dbf_(0),
-        initialised_(false)
-{
-    mtime_ = QDateTime::currentDateTime();
-}
-
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
     :   folder_(folder),
-        dbf_(0),
-        initialised_(false)
+        initialised_(false),
+        dirty_(false)
 {
     QString resDir =
         KGlobal::dirs()->saveLocation("indices", folder.mailboxName(), true);
@@ -65,11 +62,6 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
     }
 
     filename_ = path + "/index";
-    
-    QFileInfo fi(filename_);
-
-    if (!fi.exists())
-        initialised_ = false;
     
     _open();
 }
@@ -94,51 +86,34 @@ EmpathIndex::setFolder(const EmpathURL & folder)
 }
 
     EmpathIndexRecord
-EmpathIndex::record(const QString & key)
+EmpathIndex::record(const QString & key) const
 {
     EmpathIndexRecord rec;
+   
+    EmpathIndexRecord * found = dict_[key];
 
-    if (dbf_ == 0) {
-        empathDebug("Index not open!");
-        return rec;
-    }
+    if (0 != found)
+        rec = *found;
 
-    if (key.isEmpty()) {
-        empathDebug("I'm not retrieving using an empty key");
-        return rec;
-    }
-
-    QByteArray a = dbf_->retrieve(key);
-
-    if (a.isNull())
-        return rec;
-    
-    QDataStream s(a, IO_ReadOnly);
-    s >> rec;
-    
     return rec;
 }
 
-    Q_UINT32
+    unsigned int
 EmpathIndex::countUnread() const
 {
-    return dbf_->unreadCount();
+    unsigned int unreadCount = 0;
+
+    QDictIterator<EmpathIndexRecord> it(dict_);
+
+    for (; it.current(); ++it)
+        unreadCount += ((it.current()->status() & RMM::Read) ? 0 : 1);
+
+    return unreadCount;
 }
 
-     Q_UINT32
-EmpathIndex::count() const
-{
-    return dbf_->index().count();
-}
-    
     void
 EmpathIndex::sync()
 {
-    if ((dbf_ == 0) && !_open()) {
-        empathDebug("Index not open!");
-        return;
-    }
-
     EmpathFolder * f = empath->folder(folder_);
     
     if (!f) {
@@ -152,26 +127,73 @@ EmpathIndex::sync()
     void
 EmpathIndex::_close()
 {
-    if (dbf_ == 0) {
-        empathDebug("dbf is not open");
+    if (!dirty_ && QFile(filename_).exists())
         return;
+
+    QString tempFilename = filename_ + "." + QString::number(getpid());
+
+    QFile f(tempFilename);
+
+    if (!f.open(IO_WriteOnly))
+        return;
+
+    QDataStream d(&f);
+
+    QDictIterator<EmpathIndexRecord> it(dict_);
+
+    for (; it.current(); ++it)
+        d << *(it.current());
+
+    f.flush();
+    f.close();
+
+    if (f.status() != IO_Ok) {
+
+        empathDebug("Couldn't close() file");
+        return;
+
+    } else {
+
+        QFile oldIndex(filename_);
+
+        if (oldIndex.exists())
+            oldIndex.remove();
+    }
+
+    if (0 !=
+        ::link(QFile::encodeName(tempFilename), QFile::encodeName(filename_)))
+    {
+
+        empathDebug("Couldn't write index (`" + filename_ + "')");
+
+    } else {
+
+        empathDebug("Index written successfully (` " + filename_ + "')");
+
     }
     
-    delete dbf_;
-    dbf_ = 0;
+    f.remove();
 }
 
     bool
 EmpathIndex::_open()
 {
-    if (dbf_ != 0) {
-        empathDebug("Already open");
-        return true;
-    }
+    QFile f(filename_);
 
-    dbf_ = new RDB::Database(filename_);
+    if (!f.open(IO_ReadOnly))
+        return false;
+
+    QDataStream d(&f);
+
+    EmpathIndexRecord rec;
+
+    while (!d.eof()) {
+        d >> rec;
+        dict_.insert(rec.id(), new EmpathIndexRecord(rec));
+    }
     
-    mtime_ = dbf_->lastModified();
+    f.close();
+
     return true;
 }
 
@@ -179,16 +201,11 @@ EmpathIndex::_open()
 EmpathIndex::allKeys() const
 {
     QStringList l;
-
-    if (dbf_ == 0) {
-        empathDebug("Index not open!");
-        return l;
-    }
  
-    RDB::IndexIterator it(dbf_->index());
+    QDictIterator<EmpathIndexRecord> it(dict_);
 
     for (; it.current(); ++it)
-        l.append(it.currentKey());
+        l << it.currentKey();
 
     return l;
 }
@@ -196,168 +213,75 @@ EmpathIndex::allKeys() const
     bool
 EmpathIndex::insert(const QString & key, EmpathIndexRecord & rec)
 {
-    if (dbf_ == 0) {
-        empathDebug("Index not open!");
-        return false;
-    }
-
     if (key.isEmpty()) {
         empathDebug("Key is empty !");
         return false;
     }
 
-    QByteArray a;
-    QDataStream s(a, IO_WriteOnly);
-    s << rec;
+    dict_.insert(key, new EmpathIndexRecord(rec));
     
-    bool ok = dbf_->insert(key, a);
-    
-    if (!ok) {
-        empathDebug("Could not insert record !");
-        return false;
-    }
-
-    if (!(rec.status() & RMM::Read))
-        dbf_->increaseUnreadCount();
-    
-    mtime_ = QDateTime::currentDateTime();
     return true;
 }
 
     bool
 EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
 {
-    if (dbf_ == 0) {
-        empathDebug("Index not open!");
-        return false;
-    }
-
     if (key.isEmpty()) {
         empathDebug("Key is empty !");
         return false;
     }
-    
-
-    QByteArray a;
-    QDataStream s(a, IO_WriteOnly);
-    s << rec;
-    
-    bool dummy;
 
     // Save old record first.
     EmpathIndexRecord oldrec = record(key);
 
-    bool ok = dbf_->replace(key, a, dummy);
-    
-    if (!ok) {
-        empathDebug("Could not replace record !");
-        return false;
-    }
+    dict_.replace(key, new EmpathIndexRecord(rec));
 
-    if (!oldrec.isNull()) {
-
-        bool wasRead = oldrec.status() & RMM::Read;
-        bool nowRead = rec.status() & RMM::Read;
-
-        bool readToUnread = wasRead && !nowRead;
-
-        bool unreadToRead = !wasRead && nowRead;
-
-        if (readToUnread) {
-            empathDebug("Was read, now unread");
-            dbf_->increaseUnreadCount();
-        }
-
-        else if (unreadToRead) {
-            empathDebug("Was unread, now read");
-            dbf_->decreaseUnreadCount();
-        }
-    }
-
-    mtime_ = QDateTime::currentDateTime();
-    return true;
+    _setDirty();
 }
 
     bool
 EmpathIndex::remove(const QString & key)
 {  
-    if (dbf_ == 0) {
-        empathDebug("Index not open!");
-        return false;
-    }
-    
     EmpathIndexRecord r = record(key);
 
-    bool ok = dbf_->remove(key);
-    
-    if (ok) {
+    bool ok = dict_.remove(key);
 
-        if (!r.isNull() && !(r.status() & RMM::Read))
-            dbf_->decreaseUnreadCount();
-        
-        mtime_ = QDateTime::currentDateTime();
-    
-    } else {
-        empathDebug("Could not delete record");
-    }
-    
+    if (ok)
+        _setDirty();
+
     return ok;
-    
 }
 
     void
 EmpathIndex::clear()
 {
-    if (dbf_ == 0) {
-        empathDebug("Index not open!");
-        return;
-    }
-    
-    dbf_->clear();
-
-    mtime_ = QDateTime::currentDateTime();
+    dict_.clear();
+    _setDirty();
 }
 
     void
 EmpathIndex::setStatus(const QString & key, RMM::MessageStatus status)
 {
-    empathDebug("");
-
-    if (dbf_ == 0) {
-        empathDebug("Index not open!");
-        return;
-    }
-
-    EmpathIndexRecord rec = record(key);
+    EmpathIndexRecord * rec = dict_.find(key);
     
-    if (rec.isNull()) {
+    if (0 == rec) {
         empathDebug("Couldn't find record");
         return;
     }
     
-    rec.setStatus(status);
+    unsigned int oldStatus = rec->status();
 
-    replace(key, rec);
-
-    mtime_ = QDateTime::currentDateTime();
-}
-    
-    QDateTime
-EmpathIndex::lastModified() const
-{
-    return mtime_;
-}	 
-
-    bool
-EmpathIndex::contains(const QString & s) const
-{
-    return dbf_->exists(s);
+    if (oldStatus != status) {
+ 
+        rec->setStatus(status);
+        _setDirty();
+    }
 }
 
     void
-EmpathIndex::setUnread(unsigned int i)
+EmpathIndex::_setDirty()
 {
-    dbf_->setUnread(i);
+    dirty_ = true;
 }
-
+    
 // vim:ts=4:sw=4:tw=78
