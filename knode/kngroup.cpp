@@ -198,9 +198,6 @@ bool KNGroup::loadHdrs()
         return false;
       }
 
-      QTime timer;
-      timer.start();
-
       while(!f.atEnd()) {
         buff=f.readLine();    
         if(buff.isEmpty()){
@@ -247,8 +244,6 @@ bool KNGroup::loadHdrs()
           return false;
         }
       }
-
-      qDebug("%d msec",timer.elapsed());
 
       setLastID();
       f.close();
