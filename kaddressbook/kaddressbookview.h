@@ -24,6 +24,8 @@
 #ifndef KADDRESSBOOKVIEW_H
 #define KADDRESSBOOKVIEW_H
 
+#define KAB_VIEW_PLUGIN_VERSION 1
+
 #include <qstringlist.h>
 #include <qwidget.h>
 

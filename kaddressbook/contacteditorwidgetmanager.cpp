@@ -75,7 +75,9 @@ void ContactEditorWidgetManager::reload()
 {
   mFactories.clear();
   kdDebug(5720) << "ContactEditorWidgetManager::reload()" << endl;
-  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget" );
+  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget", 
+    QString( "[X-KDE-KAddressBook-CEWPluginVersion] == %1" ).arg( KAB_CEW_PLUGIN_VERSION ) );
+
   KTrader::OfferList::ConstIterator it;
 
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {

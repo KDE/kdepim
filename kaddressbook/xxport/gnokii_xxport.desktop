@@ -76,3 +76,4 @@ Comment[xx]=xxMobile Phone Plugin to Import and Export Addressbook Entriesxx
 Comment[zh_CN]=导入和导出地址簿项的移动电话插件
 Type=Service
 ServiceTypes=KAddressBook/XXPort
+X-KDE-KAddressBook-XXPortPluginVersion=1

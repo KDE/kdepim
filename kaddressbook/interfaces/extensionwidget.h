@@ -29,6 +29,7 @@
 #include <kabc/addressbook.h>
 #include <klibloader.h>
 
+#define KAB_EXTENSIONWIDGET_PLUGIN_VERSION 1
 
 namespace KAB {
 class Core;

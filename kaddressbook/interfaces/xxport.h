@@ -31,6 +31,8 @@
 #include <klibloader.h>
 #include <kxmlguiclient.h>
 
+#define KAB_XXPORT_PLUGIN_VERSION 1
+
 class KApplication;
 
 /**

@@ -41,3 +41,7 @@ Comment[uk]=Втулок імпорту/експорту адресної кни
 Comment[uz]=Манзиллар дафтари учун импорт/экспорт плагини
 Comment[xx]=xxKAddressBook Import/Export Pluginxx
 Comment[zh_CN]=KAddressBook 导入/导出插件
+
+[PropertyDef::X-KDE-KAddressBook-XXPortPluginVersion]
+Type=int
+

@@ -75,3 +75,4 @@ Comment[xx]=xxPlugin to import Opera contactsxx
 Comment[zh_CN]=导入 Opera 联系人的插件
 Type=Service
 ServiceTypes=KAddressBook/XXPort
+X-KDE-KAddressBook-XXPortPluginVersion=1

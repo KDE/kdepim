@@ -45,3 +45,4 @@ Name[xx]=xxTable Viewxx
 Name[zh_CN]=表格视图
 Type=Service
 ServiceTypes=KAddressBook/View
+X-KDE-KAddressBook-ViewPluginVersion=1

@@ -77,3 +77,4 @@ Comment[xx]=xxPlugin to import and export contacts in Netscape and Mozilla LDIF 
 Comment[zh_CN]=导入和导出 Netscape 和 Mozilla LDIF 格式联系人的插件
 Type=Service
 ServiceTypes=KAddressBook/XXPort
+X-KDE-KAddressBook-XXPortPluginVersion=1

@@ -77,3 +77,4 @@ Comment[xx]=xxPlugin to import and export Eudora contactsxx
 Comment[zh_CN]=导入和导出 Eudora 联系人的插件
 Type=Service
 ServiceTypes=KAddressBook/XXPort
+X-KDE-KAddressBook-XXPortPluginVersion=1

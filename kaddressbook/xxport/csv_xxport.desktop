@@ -75,3 +75,4 @@ Comment[xx]=xxPlugin to import and export contacts in CSV formatxx
 Comment[zh_CN]=导入和导出 CSV 格式联系人的插件
 Type=Service
 ServiceTypes=KAddressBook/XXPort
+X-KDE-KAddressBook-XXPortPluginVersion=1

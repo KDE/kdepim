@@ -128,7 +128,8 @@ void XXPortManager::loadPlugins()
 {
   mXXPortObjects.clear();
 
-  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/XXPort" );
+  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/XXPort",
+    QString( "[X-KDE-KAddressBook-XXPortPluginVersion] == %1" ).arg( KAB_XXPORT_PLUGIN_VERSION ) );
   KTrader::OfferList::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     if ( !(*it)->hasServiceType( "KAddressBook/XXPort" ) )

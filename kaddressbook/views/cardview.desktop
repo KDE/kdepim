@@ -44,3 +44,4 @@ Name[xx]=xxCard Viewxx
 Name[zh_CN]=卡片视图
 Type=Service
 ServiceTypes=KAddressBook/View
+X-KDE-KAddressBook-ViewPluginVersion=1

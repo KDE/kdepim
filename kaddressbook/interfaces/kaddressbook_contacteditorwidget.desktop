@@ -4,6 +4,7 @@ Type=ServiceType
 X-KDE-ServiceType=KAddressBook/ContactEditorWidget
 Comment=KAddressBook Contact Editor Widget Plugin
 Comment[bg]=Приставка за редактиране на контактите от адресника
+Comment[bs]=KAddressBook dodatak za prozor za izmjenu kontakta
 Comment[da]=KAddressBook plugin til kontakteditorkontrol
 Comment[de]=Addressbuch Kontakteditor-Widget Plugin
 Comment[es]=Accesorio de elemento de editor de contactos para KAddressBook
@@ -25,3 +26,6 @@ Comment[ta]=கேமுகவரிபுத்தகம் தொடர்ப�
 Comment[tg]=Муҳаррири алоқоти китоби адресии KDE
 Comment[xx]=xxKAddressBook Contact Editor Widget Pluginxx
 Comment[zh_CN]=KAddressBook 联系人编辑部件插件
+
+[PropertyDef::X-KDE-KAddressBook-CEWPluginVersion]
+Type=int

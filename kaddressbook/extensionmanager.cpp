@@ -157,7 +157,8 @@ void ExtensionManager::createExtensionWidgets()
   }
 
   // load the other extensions
-  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension" );
+  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension",
+    QString( "[X-KDE-KAddressBook-ExtensionPluginVersion] == %1" ).arg( KAB_EXTENSIONWIDGET_PLUGIN_VERSION ) );
   KTrader::OfferList::ConstIterator it;
 
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {

@@ -373,7 +373,8 @@ void ViewManager::addView()
 
 void ViewManager::createViewFactories()
 {
-  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/View" );
+  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/View", 
+    QString( "[X-KDE-KAddressBook-ViewPluginVersion] == %1" ).arg(  KAB_VIEW_PLUGIN_VERSION ) );
   KTrader::OfferList::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     if ( !(*it)->hasServiceType( "KAddressBook/View" ) )
