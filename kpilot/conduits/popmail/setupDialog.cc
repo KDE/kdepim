@@ -108,6 +108,8 @@ static const char *setupDialog_id=
 #include <qvbuttongroup.h>
 #endif
 
+#include "kfiledialog.h"
+
 #include "popmail-factory.h"
 #include "setupDialog.moc"
 
@@ -343,7 +345,7 @@ void PopMailSendPage::browseSignature()
 		filename=QFileInfo( filename ).dirPath();
 	}
 
-	filename = QFileDialog::getOpenFileName(filename,"*");
+	filename = KFileDialog::getOpenFileName(filename,"*");
 
 #ifdef DEBUG
 	{
@@ -603,7 +605,7 @@ void PopMailReceivePage::setMode(RetrievalMode m)
 		filename=QFileInfo( filename ).dirPath();
 	}
 
-	filename = QFileDialog::getOpenFileName(filename,"*");
+	filename = KFileDialog::getOpenFileName(filename,"*");
 
 #ifdef DEBUG
 	{
@@ -674,6 +676,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.30  2002/08/01 16:05:03  binner
+// CVS_SILENT Style guide fix
+//
 // Revision 1.29  2002/07/11 13:27:28  mhunter
 // Corrected typographical errors
 //
