@@ -21,12 +21,10 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef CSV_XXPORT_H
-#define CSV_XXPORT_H
+#ifndef EUDORA_XXPORT_H
+#define EUDORA_XXPORT_H
 
 #include <xxportobject.h>
-
-class QFile;
 
 class EudoraXXPort : public XXPortObject
 {

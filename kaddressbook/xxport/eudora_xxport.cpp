@@ -32,8 +32,6 @@
 
 #include <kdebug.h>
 
-#include "importdialog.h"
-
 #include "eudora_xxport.h"
 
 #define CTRL_C 3
@@ -59,7 +57,7 @@ extern "C"
 EudoraXXPort::EudoraXXPort( KABCore *core, QObject *parent, const char *name )
   : XXPortObject( core, parent, name )
 {
-  createImportAction( i18n( "Import Eudora Addressbook ..." ) );
+  createImportAction( i18n( "Import Eudora Addressbook..." ) );
 }
 
 KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
@@ -121,7 +119,7 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
       }
 
       tmp = get( line, "phone" ).stripWhiteSpace();
-      if ( tmp.isEmpty() )
+      if ( !tmp.isEmpty() )
          a->insertPhoneNumber( KABC::PhoneNumber( tmp, KABC::PhoneNumber::Home ) );
     }
   }
