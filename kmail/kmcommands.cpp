@@ -629,7 +629,7 @@ KURL KMSaveMsgCommand::url()
 
 void KMSaveMsgCommand::execute()
 {
-  mJob = KIO::put( mUrl, -1, false, false );
+  mJob = KIO::put( mUrl, S_IRUSR|S_IWUSR, false, false );
   mJob->slotTotalSize( mTotalSize );
   mJob->setAsyncDataEnabled( true );
   mJob->setReportDataSent( true );
@@ -734,7 +734,7 @@ void KMSaveMsgCommand::slotSaveResult(KIO::Job *job)
         == KMessageBox::Continue) {
         mOffset = 0;
 
-        mJob = KIO::put( mUrl, -1, true, false );
+        mJob = KIO::put( mUrl, S_IRUSR|S_IWUSR, true, false );
         mJob->slotTotalSize( mTotalSize );
         mJob->setAsyncDataEnabled( true );
         mJob->setReportDataSent( true );
@@ -1862,6 +1862,7 @@ void KMSaveAttachmentsCommand::saveItem( partNode *node, const QString& filename
 
     QFile file( filename );
     if( file.open( IO_WriteOnly ) ) {
+      fchmod( file.handle(), S_IRUSR | S_IWUSR );
       if ( mEncoded )
       {
         // This does not decode the Message Content-Transfer-Encoding
