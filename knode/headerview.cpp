@@ -18,6 +18,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kdeversion.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -45,6 +46,9 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   setAllColumnsShowFocus( true );
   setSelectionMode( QListView::Extended );
   setShowSortIndicator( true );
+#if KDE_IS_VERSION( 3, 3, 90 )
+  setShadeSortColumn ( true );
+#endif
   setRootIsDecorated( true );
   setSorting( 4 /* date */ );
   header()->setMovingEnabled( true );
@@ -257,6 +261,7 @@ void KNHeaderView::incCurrentArticle()
   if ( lvi && lvi->itemBelow() ) {
     setCurrentItem( lvi->itemBelow() );
     ensureItemVisible( currentItem() );
+    setFocus();
   }
 }
 
@@ -268,6 +273,7 @@ void KNHeaderView::decCurrentArticle()
       lvi->itemAbove()->setOpen( true );
     setCurrentItem( lvi->itemAbove() );
     ensureItemVisible( currentItem() );
+    setFocus();
   }
 }
 
