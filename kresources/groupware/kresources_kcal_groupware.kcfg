@@ -1,0 +1,19 @@
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+ <kcfgfile name="kresources_kcal_groupwarerc" />
+ <group name="General" >
+  <entry key="Url" type="String" >
+   <label>Server URL</label>
+  </entry>
+  <entry key="User" type="String" >
+   <label>User Name</label>
+  </entry>
+  <entry key="Password" type="String" >
+   <label>Password</label>
+  </entry>
+  <entry key="Port" type="UInt" >
+   <label>TCP Port</label>
+   <default>80</default>
+  </entry>
+ </group>
+</kcfg>
