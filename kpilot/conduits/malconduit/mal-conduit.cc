@@ -105,8 +105,12 @@ MALConduit::~MALConduit()
 void MALConduit::readConfig()
 {
 	FUNCTIONSETUP;
+	QDateTime dt;
 	KConfigGroupSaver g(fConfig, MALConduitFactory::group());
-	fLastSync = fConfig->readDateTimeEntry(MALConduitFactory::lastSync());
+	fLastSync = fConfig->readDateTimeEntry(MALConduitFactory::lastSync(), &dt);
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Last sync was "<<fLastSync.toString()<<endl;
+#endif
 	
 	eSyncTime=fConfig->readNumEntry(MALConduitFactory::syncTime(), 0);
 	
@@ -241,6 +245,9 @@ void MALConduit::printLogMessage(QString msg)
 
 
 // $Log$
+// Revision 1.5  2002/08/24 18:02:58  kainhofe
+// Skipping the malconduit doesn't lock up kpilotDaemon any more...
+//
 // Revision 1.4  2002/08/23 22:59:29  kainhofe
 // Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
 //
