@@ -10,6 +10,7 @@ using std::cout;
 using std::cerr;
 #include <cstdlib>
 using std::exit;
+using std::endl;
 
 #define _GNU_SOURCE 1
 #include <getopt.h>
@@ -137,7 +138,7 @@ int main( int argc, char * argv[] ) {
     usage( "too many arguments!" );
 
   QCString result = dispositionNotificationBodyContent( finalRecipient,
-						       originalRecipient,
+						       originalRecipient.latin1(),
 						       originalMessageId,
 						       dispositionType,
 						       actionMode,

@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <iostream.h>
 
-void main( int argc, char * argv[] ) {
+int main( int argc, char * argv[] ) {
   if ( argc == 1 ) {
     (void)new QUtf7Codec;
 
