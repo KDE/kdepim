@@ -88,23 +88,22 @@ DBAppInfoEditor::~DBAppInfoEditor()
 
 void DBAppInfoEditor::slotOk()
 {
-	if (KMessageBox::questionYesNo(this, i18n("Changing the AppInfo block "
+	KMessageBox::sorry(this, i18n("Changing the AppInfo block isn't yet supported by KPilot!"));
+/*	if (KMessageBox::questionYesNo(this, i18n("Changing the AppInfo block "
 		"might corrupt the whole database. \n\nReally assign the new AppInfo "
 		"block?"), i18n("Changing AppInfo Block"))==KMessageBox::Yes)
 	{
 		// TODO: Copy the data over
 		// TODO: set the length
 		// (*len)=..;
-/*
-#ifdef USE_KHEXEDIT
-		len = fAppInfoEdit->dataSize();
-		appInfo = fAppInfoEdit->data();
-		// don't delete the buffer. It will be used in the database!
-		fAppInfoEdit->setAutoDelete( false );
-#endif
-*/
-		KDialogBase::slotOk();
-	}
+//#ifdef USE_KHEXEDIT
+//		len = fAppInfoEdit->dataSize();
+//		appInfo = fAppInfoEdit->data();
+//		// don't delete the buffer. It will be used in the database!
+//		fAppInfoEdit->setAutoDelete( false );
+//#endif
+	}*/
+	KDialogBase::slotOk();
 }
 
 void DBAppInfoEditor::fillWidgets()
