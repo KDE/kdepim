@@ -101,7 +101,7 @@ public:
 // KTimeWidget/QTimeEdit provide nicer editing, but don't provide a combobox.
 // Difficult to get all in one...
 // But Qt-3.2 will offer QLineEdit::setMask, so a "99:99" mask would help.
-KOTimeEdit::KOTimeEdit( QWidget *parent, QTime qt, const char *name )
+KTimeEdit::KTimeEdit( QWidget *parent, QTime qt, const char *name )
   : QComboBox( true, parent, name )
 {
   setInsertionPolicy( NoInsertion );
@@ -129,11 +129,11 @@ KOTimeEdit::KOTimeEdit( QWidget *parent, QTime qt, const char *name )
   connect(this, SIGNAL(textChanged(const QString&)),this,SLOT(changedText()));
 }
 
-KOTimeEdit::~KOTimeEdit()
+KTimeEdit::~KTimeEdit()
 {
 }
 
-bool KOTimeEdit::hasTime() const
+bool KTimeEdit::hasTime() const
 {
   // Can't happen
   if ( currentText().isEmpty() ) return false;
@@ -142,9 +142,9 @@ bool KOTimeEdit::hasTime() const
   return true; // always
 }
 
-QTime KOTimeEdit::getTime() const
+QTime KTimeEdit::getTime() const
 {
-  //kdDebug(5850) << "KOTimeEdit::getTime(), currentText() = " << currentText() << endl;
+  //kdDebug(5850) << "KTimeEdit::getTime(), currentText() = " << currentText() << endl;
   // TODO use KLocale::WithoutSeconds in HEAD
   bool ok = false;
   QTime time = KGlobal::locale()->readTime( currentText(), KLocale::WithoutSeconds, &ok );
@@ -157,11 +157,11 @@ QTime KOTimeEdit::getTime() const
       ok = false;
     }
   }
-  kdDebug(5850) << "KOTimeEdit::getTime(): " << time.toString() << endl;
+  kdDebug(5850) << "KTimeEdit::getTime(): " << time.toString() << endl;
   return time;
 }
 
-QSizePolicy  KOTimeEdit::sizePolicy() const
+QSizePolicy  KTimeEdit::sizePolicy() const
 {
   // Set size policy to Fixed, because edit cannot contain more text than the
   // string representing the time. It doesn't make sense to provide more space.
@@ -170,18 +170,18 @@ QSizePolicy  KOTimeEdit::sizePolicy() const
   return sizePolicy;
 }
 
-void KOTimeEdit::setTime(QTime newTime)
+void KTimeEdit::setTime(QTime newTime)
 {
   if ( mTime != newTime )
   {
-    kdDebug(5850) << "KOTimeEdit::setTime(): " << newTime.toString() << endl;
+    kdDebug(5850) << "KTimeEdit::setTime(): " << newTime.toString() << endl;
 
     mTime = newTime;
     updateText();
   }
 }
 
-void KOTimeEdit::active(int i)
+void KTimeEdit::active(int i)
 {
     // The last entry, 23:59, is a special case
     if( i == count() - 1 )
@@ -191,12 +191,12 @@ void KOTimeEdit::active(int i)
     emit timeChanged(mTime);
 }
 
-void KOTimeEdit::hilit(int )
+void KTimeEdit::hilit(int )
 {
   // we don't currently need to do anything here.
 }
 
-void KOTimeEdit::addTime(QTime qt)
+void KTimeEdit::addTime(QTime qt)
 {
   // Calculate the new time.
   mTime = qt.addSecs(mTime.minute()*60+mTime.hour()*3600);
@@ -204,7 +204,7 @@ void KOTimeEdit::addTime(QTime qt)
   emit timeChanged(mTime);
 }
 
-void KOTimeEdit::subTime(QTime qt)
+void KTimeEdit::subTime(QTime qt)
 {
   int h, m;
 
@@ -229,7 +229,7 @@ void KOTimeEdit::subTime(QTime qt)
   emit timeChanged(mTime);
 }
 
-void KOTimeEdit::keyPressEvent(QKeyEvent *qke)
+void KTimeEdit::keyPressEvent(QKeyEvent *qke)
 {
   switch(qke->key()) {
   case Key_Down:
@@ -250,9 +250,9 @@ void KOTimeEdit::keyPressEvent(QKeyEvent *qke)
   } // switch
 }
 
-void KOTimeEdit::updateText()
+void KTimeEdit::updateText()
 {
-//  kdDebug(5850) << "KOTimeEdit::updateText() " << endl;
+//  kdDebug(5850) << "KTimeEdit::updateText() " << endl;
   QString s = KGlobal::locale()->formatTime(mTime);
   // Set the text but without emitting signals, nor losing the cursor position
   QLineEdit *line = lineEdit();
@@ -262,23 +262,23 @@ void KOTimeEdit::updateText()
   line->setCursorPosition(pos);
   line->blockSignals(false);
 
-//  kdDebug(5850) << "KOTimeEdit::updateText(): " << s << endl;
+//  kdDebug(5850) << "KTimeEdit::updateText(): " << s << endl;
 
   if (!mTime.minute() % 15) {
     setCurrentItem((mTime.hour()*4)+(mTime.minute()/15));
   }
 }
 
-bool KOTimeEdit::inputIsValid() const
+bool KTimeEdit::inputIsValid() const
 {
   int cursorPos = lineEdit()->cursorPosition();
   QString str = currentText();
   return validator()->validate( str, cursorPos ) == QValidator::Acceptable;
 }
 
-void KOTimeEdit::changedText()
+void KTimeEdit::changedText()
 {
-  //kdDebug(5850) << "KOTimeEdit::changedText()" << endl;
+  //kdDebug(5850) << "KTimeEdit::changedText()" << endl;
   if ( inputIsValid() )
   {
     mTime = getTime();

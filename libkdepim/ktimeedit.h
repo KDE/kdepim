@@ -38,14 +38,14 @@
   @short Provides a way to edit times in a user-friendly manner.
   @author Preston Brown, Ian Dawes
 */
-class KOTimeEdit : public QComboBox
+class KTimeEdit : public QComboBox
 {
     Q_OBJECT
   public:
     /** constructs a new time edit. */
-    KOTimeEdit(QWidget *parent=0, QTime qt=QTime(12,0), const char *name=0);
+    KTimeEdit(QWidget *parent=0, QTime qt=QTime(12,0), const char *name=0);
 
-    virtual ~KOTimeEdit();
+    virtual ~KTimeEdit();
 
     /**
       Returns, if a time is selected. Can not return false anymore....
@@ -55,7 +55,7 @@ class KOTimeEdit : public QComboBox
     /** returns the time that is currently set in the timeLineEdit. */
     QTime getTime() const;
 
-    /** returns the preferred size policy of the KOTimeEdit */
+    /** returns the preferred size policy of the KTimeEdit */
     QSizePolicy sizePolicy() const;
 
     /** return true if input is a valid time and false if not */
