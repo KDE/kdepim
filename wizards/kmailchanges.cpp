@@ -52,6 +52,17 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
     void apply()
     {
+      QString email;
+      QString user = KolabConfig::self()->user();
+      int pos = user.find( "@" );
+      // with kolab the userid _is_ the full email
+      if ( pos > 0 )
+        // The user typed in a full email address. Assume it's correct
+        email = pos;
+      else
+        // Construct the email address. And use it for the username also
+        user = email = user+"@"+KolabConfig::self()->server();
+
       KConfig c( "kmailrc" );
       c.setGroup( "General" );
       c.writeEntry( "checkmail-startup", true );
@@ -69,7 +80,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       c.writeEntry( "Name", "Kolab Server" );
       c.writeEntry( "host", KolabConfig::self()->server() );
 
-      c.writeEntry( "login", KolabConfig::self()->user() );
+      c.writeEntry( "login", user );
 
       if ( KolabConfig::self()->savePassword() ) {
         c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
@@ -79,13 +90,6 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       c.writeEntry( "use-ssl", true );
 
       c.writeEntry( "sieve-support", "true" );
-
-      QString user = KolabConfig::self()->user();
-      int pos = user.find( "@" );
-      if ( pos > 0 ) user = user.left( pos );
-
-      QString email = user+"@"+KolabConfig::self()->server();
-      user = email; // with kolab the userid _is_ the full email
 
       c.setGroup( QString("Folder-%1").arg( uid ) );
       c.writeEntry( "isOpen", true );
