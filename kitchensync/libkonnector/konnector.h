@@ -35,8 +35,7 @@ class KonnectorPlugin;
 class Konnector : public QObject{
 Q_OBJECT
  public:
-  Konnector();
-  Konnector(QObject *, const char*);
+  Konnector(QObject * obj= 0, const char* ch= 0);
   ~Konnector();
   QValueList<KDevice> query(const QString &category= QString::null );
   QString /*runtime unique-dev-id*/ registerKonnector(const QString &DeviceIdentification );

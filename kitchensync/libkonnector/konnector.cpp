@@ -33,10 +33,6 @@ Konnector::Konnector( QObject *object, const char *name ) : QObject( object, nam
 {
   // initialize
 }
-Konnector::Konnector()
-{
-
-}
 Konnector::~Konnector()
 {
 
