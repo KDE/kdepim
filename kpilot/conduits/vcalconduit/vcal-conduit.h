@@ -1,5 +1,33 @@
-// Conduit for KPilot <--> KOrganizer 
-// (c) 1998 Dan Pilone, Preston Brown, Herwin Jan Steehouwer
+/* vcal-conduit.c		VCalendar Conduit 
+**
+**
+** Copyright (C) 1998-2000 by Dan Pilone, Preston Brown, and
+**	Herwin Jan Steehouwer
+**
+** A program to synchronize KOrganizer's date book with the Palm
+** Pilot / KPilot. This program is part of KPilot.
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 
 #ifndef _VCALCONDUIT_H
 #define _VCALCONDUIT_H
@@ -70,6 +98,32 @@ private:
 	* no fix for that.
 	*/
 	void repeatForever(PilotDateEntry *p,int rFreq,VObject *v=0L);
+
+	/**
+	* The following enums distinguish various repeat-by
+	* possiblities. Sometimes the specific value of the
+	* enum (like DailyPeriod) encodes something special,
+	* so these shouldn't be changed at whim without
+	* changing @ref repeatUntil as well.
+	*/
+	typedef enum { DailyPeriod=60*60*24, 	/* seconds per day */
+		WeeklyPeriod=60*60*24*7,	/* seconds per week */
+		MonthlyByPosPeriod=1,		/* just a constant */
+		MonthlyByDayPeriod=2,
+		YearlyByDayPeriod=3
+		} PeriodConstants;
+
+	/**
+	* Set the date entry to repeat every rFreq periods,
+	* rDuration times, starting at start. 
+	*
+	* This function contains code by Dag Nygren.
+	*/
+	void repeatUntil(PilotDateEntry *dateEntry,
+		struct tm *start,
+		int rFreq,
+		int rDuration,
+		PeriodConstants period);
 
 	QString calName;
 };

@@ -1,5 +1,34 @@
-// Conduit for KPilot <--> KOrganizer
-// (c) 1998, 1999, 2000  Preston Brown, Herwin Jan Steehouwer, and Dan Pilone
+/* vcal-conduit.cc		VCalendar Conduit
+**
+** Copyright (C) 1998-2000 by Dan Pilone, Preston Brown, and
+**	Herwin Jan Steehouwer
+**
+** A program to synchronize KOrganizer's date book with the Palm
+** Pilot / KPilot. This program is part of KPilot.
+*/
+
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
+
 
 // I have noticed that this is full of memory leaks, but since it is
 // short lived, it shouldn't matter so much. -- PGB
@@ -244,7 +273,7 @@ void VCalConduit::repeatForever(
 	int rFreq,
 	VObject *vevent)
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	const char *s = "<no description>";
 
@@ -264,6 +293,51 @@ void VCalConduit::repeatForever(
 		<< ": repeat duration is forever for "
 		<< s
 		<< endl;
+}
+
+void VCalConduit::repeatUntil(
+	PilotDateEntry *dateEntry,
+	struct tm *start,
+	int rFreq,
+	int rDuration,
+	PeriodConstants period)
+{
+	EFUNCTIONSETUP;
+	time_t end_time = mktime(start);
+	struct tm rEnd = *start;
+
+	switch(period)
+	{
+	case DailyPeriod:
+	case WeeklyPeriod:
+		// Calculate the end time by adding the right number of
+		// repeat periods.
+		//
+		//
+		end_time += rFreq * (rDuration-1) * (int) period;
+
+		dateEntry->setRepeatFrequency(rFreq);
+		dateEntry->setRepeatEnd(*localtime(&end_time));
+		break;
+	case MonthlyByDayPeriod:
+	case MonthlyByPosPeriod:
+		dateEntry->setRepeatFrequency(rFreq);
+		rEnd.tm_mon += rFreq * (rDuration - 1);
+		rEnd.tm_year += rEnd.tm_mon / 12;
+		rEnd.tm_mon %= 12;
+		dateEntry->setRepeatEnd(rEnd);
+		break;
+	case YearlyByDayPeriod:
+		dateEntry->setRepeatFrequency(rFreq);
+		rEnd.tm_year += rFreq * (rDuration - 1);
+		dateEntry->setRepeatEnd(rEnd);
+		break;
+	default:
+		kdWarning() << fname
+			<< ": Unknown repeat period "
+			<< (int) period
+			<< endl;
+	}
 }
 
 /*****************************************************************************/
@@ -1177,7 +1251,8 @@ void VCalConduit::doLocalSync()
 	      } else {
 		// we could calculate an end date here, but too lazy right now.
 		// pilot doesn't understand concept of repeat n times.
-		repeatForever(dateEntry,rFreq,vevent);
+		// repeatForever(dateEntry,rFreq,vevent);
+		repeatUntil(dateEntry,&start,rFreq,rDuration,DailyPeriod);
 	      }
 	    }
 	  }
@@ -1215,7 +1290,7 @@ void VCalConduit::doLocalSync()
 		dateEntry->setRepeatFrequency(rFreq);
 		dateEntry->setRepeatForever();
 	      } else {
-		repeatForever(dateEntry,rFreq,vevent);
+		repeatUntil(dateEntry,&start,rFreq,rDuration,WeeklyPeriod);
 	      }
 	    }
 	  }
@@ -1265,7 +1340,8 @@ void VCalConduit::doLocalSync()
 		dateEntry->setRepeatFrequency(rFreq);
 		dateEntry->setRepeatForever();
 	      } else {
-			repeatForever(dateEntry,rFreq,vevent);
+			repeatUntil(dateEntry,&start,rFreq,rDuration,
+				MonthlyByPosPeriod);
 	      }
 	    }
 	    
@@ -1302,7 +1378,8 @@ void VCalConduit::doLocalSync()
 		dateEntry->setRepeatFrequency(rFreq);
 		dateEntry->setRepeatForever();
 	      } else {
-			repeatForever(dateEntry,rFreq,vevent);
+			repeatUntil(dateEntry,&start,rFreq,rDuration,
+				MonthlyByDayPeriod);
 	      }
 	    }
 	  }
@@ -1334,7 +1411,8 @@ void VCalConduit::doLocalSync()
 		dateEntry->setRepeatFrequency(rFreq);
 		dateEntry->setRepeatForever();
 	      } else {
-			repeatForever(dateEntry,rFreq,vevent);
+			repeatUntil(dateEntry,&start,rFreq,rDuration,
+				YearlyByDayPeriod);
 	      }
 	    }
 	  }
@@ -1473,13 +1551,10 @@ void VCalConduit::doLocalSync()
 			i18n("&Insert"),i18n("&Delete"), i18n("Insert &All")
 			,0);
 
-		if (debug_level & SYNC_MINOR)
-		{
-			cerr << fname 
-				<< ": Event disposition "
-				<< response
-				<< endl;
-		}
+		DEBUGCONDUIT << fname 
+			<< ": Event disposition "
+			<< response
+			<< endl;
 
 		switch(response) 
 		{
@@ -1639,6 +1714,9 @@ int VCalConduit::numFromDay(const QString &day)
 } 
 
 // $Log$
+// Revision 1.16  2000/12/09 12:51:07  adridg
+// New patches
+//
 // Revision 1.15  2000/12/05 07:47:27  adridg
 // New debugging stuff
 //
