@@ -26,45 +26,50 @@
 
 */
 
-#include <qptrlist.h>
-#include <kparts/mainwindow.h>
 
-#include <manipulatorpart.h>
-#include <ksync_systemtray.h>
+#include <qpixmap.h>
+#include <qpoint.h>
+#include <qcursor.h>
 
-class PartBar;
-class QHBox;
-class QWidgetStack;
+#include <kdebug.h>
+#include <kpopupmenu.h>
+#include <kglobal.h>
+#include <kiconloader.h>
 
+#include "ksync_systemtray.h"
 
-namespace KitchenSync {
-    // no idea why we have this window
-    class KSyncMainWindow : public KParts::MainWindow /*, public KSyncInterface */
-    {
-        Q_OBJECT
-    public:
-        KSyncMainWindow(QWidget *widget =0l, const char *name = 0l, WFlags f = WType_TopLevel );
-        ~KSyncMainWindow();
+using namespace KitchenSync;
 
+KSyncSystemTray::KSyncSystemTray(QWidget* parent,  const char* name)
+    : KSystemTray(parent,name) {
 
-        KSyncSystemTray *tray;
-    private:
-        virtual void initActions();
-        void addModPart( ManipulatorPart * );
-        void initSystray ( void );
-        PartBar *m_bar;
-        QHBox *m_lay;
-        QWidgetStack *m_stack;
-        QPtrList<ManipulatorPart> m_parts;
+    bool gotDeviceConnection = false;
 
-private slots:
-        void initPlugins();
-        void slotSync();
-        void slotBackup();
-        void slotRestore();
-        void slotConfigure();
-        void slotActivated(ManipulatorPart *);
-        void slotQuit();
+    ksyncIconConnected =  KGlobal::iconLoader()->loadIcon("newmsg", KIcon::User);
+    ksyncIconDisconnected = KGlobal::iconLoader()->loadIcon("newmsg", KIcon::User);
 
-  };
-};
+    setPixmap(ksyncIconDisconnected);
+
+}
+
+//void KSyncSystemTray::mousePressEvent( QMouseEvent *mEvent ) {
+//
+//    if ( mEvent->button() == QEvent::LeftButton) {
+//       emit leftClicked ( QPoint(mEvent->x(), mEvent->y()) );
+//    } else if ( mEvent->button() == QEvent::RightButton ) {
+//        emit rightClicked ( QPoint(mEvent->x(), mEvent->y()) );
+//        //contextMenu()->popup(QCursor::pos());
+//    } else {}
+//}
+
+void KSyncSystemTray::slotPixmap() {
+
+    if (gotDeviceConnection) {
+        setPixmap(ksyncIconConnected);
+    } else {
+      setPixmap(ksyncIconDisconnected);
+    }
+}
+
+KSyncSystemTray::~KSyncSystemTray() {
+}

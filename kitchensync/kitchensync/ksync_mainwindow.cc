@@ -7,9 +7,11 @@
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kdebug.h>
+#include <kpopupmenu.h>
 
 #include "partbar.h"
 #include "ksync_mainwindow.h"
+//#include "ksync_systemtray.h"
 
 #include <ksync_configuredialog.h>
 #include "organizer/ksync_organizerpart.h"
@@ -44,6 +46,9 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   resize(600,400);
   m_parts.setAutoDelete( true );
   initPlugins();
+  // show systemtraypart
+  initSystray();
+  tray->show();
 
 };
 
@@ -99,6 +104,14 @@ void KSyncMainWindow::addModPart(ManipulatorPart *part)
   m_parts.append( part );
   m_stack->addWidget( part->widget(), id );
   id++;
+}
+
+void KSyncMainWindow::initSystray( void ) {
+
+    tray = new KSyncSystemTray( this, "KSyncSystemTray");
+    KPopupMenu *popMenu = tray->getContextMenu();
+    popMenu->insertSeparator();
+
 }
 
 void KSyncMainWindow::slotSync() {

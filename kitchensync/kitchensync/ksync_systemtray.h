@@ -26,45 +26,56 @@
 
 */
 
-#include <qptrlist.h>
-#include <kparts/mainwindow.h>
+/*
+ since it is not clear yet, how the connection notification is done,
+ not really usefull yet and these part are not yet in.
+*/
 
-#include <manipulatorpart.h>
-#include <ksync_systemtray.h>
+#ifndef KSYNC_SYSTEMTRAY_H
+#define KSYNC_SYSTEMTRAY_H
 
-class PartBar;
-class QHBox;
-class QWidgetStack;
 
+#include <ksystemtray.h>
+#include <kpixmap.h>
+
+class QTimer;
+class QPoint;
+
+class KPopupMenu;
 
 namespace KitchenSync {
-    // no idea why we have this window
-    class KSyncMainWindow : public KParts::MainWindow /*, public KSyncInterface */
-    {
+
+    class KSyncSystemTray : public KSystemTray {
+
         Q_OBJECT
+
     public:
-        KSyncMainWindow(QWidget *widget =0l, const char *name = 0l, WFlags f = WType_TopLevel );
-        ~KSyncMainWindow();
+        KSyncSystemTray(QWidget* parent = 0,  const char* name = 0);
+        ~KSyncSystemTray();
 
+        KPopupMenu *getContextMenu() const { return contextMenu(); };
 
-        KSyncSystemTray *tray;
+        void gotConnection( QPixmap );
+        void noConnection();
+
     private:
-        virtual void initActions();
-        void addModPart( ManipulatorPart * );
-        void initSystray ( void );
-        PartBar *m_bar;
-        QHBox *m_lay;
-        QWidgetStack *m_stack;
-        QPtrList<ManipulatorPart> m_parts;
+        QPixmap ksyncIconConnected;
+        QPixmap ksyncIconDisconnected;
 
-private slots:
-        void initPlugins();
-        void slotSync();
-        void slotBackup();
-        void slotRestore();
-        void slotConfigure();
-        void slotActivated(ManipulatorPart *);
-        void slotQuit();
+        bool gotDeviceConnection;
 
-  };
+        //   protected:
+        // virtual void mousePressEvent( QMouseEvent *mEvent);
+
+    private slots:
+        void slotPixmap();
+
+        //signals:
+        //   void leftClicked ( const QPoint );
+        // void rightClicked ( const QPoint );
+    };
+
 };
+
+#endif
+
