@@ -7,6 +7,8 @@
 # replace the sleep statements by something more elegant
 # find out if this program runs in the background, if not, start it there
 # decide: english version is <Alt> T for Task, german: <Alt> A for Aufgabe what to do here ?
+#   Let's stick with English, it's what we use for programming and 
+#   documentation. -- Mark
 
 #echo $PPID
 #echo $PID
