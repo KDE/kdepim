@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -46,7 +46,7 @@ PilotSerialDatabase::PilotSerialDatabase(int linksocket,
 	const QString &dbName,
 	QObject *p,const char *n) :
 	PilotDatabase(p,n),
-	fDBName(0L), 
+	fDBName(QString::null),
 	fDBHandle(-1),
 	fDBSocket(linksocket)
 {
@@ -97,7 +97,7 @@ int PilotSerialDatabase::writeAppBlock(unsigned char *buffer, int len)
 	return dlp_WriteAppBlock(fDBSocket, getDBHandle(), buffer, len);
 }
 
-	// returns the number of records in the database 
+	// returns the number of records in the database
 int PilotSerialDatabase::recordCount()
 {
 	int idlen;
@@ -110,19 +110,19 @@ int PilotSerialDatabase::recordCount()
 }
 
 
-// Returns a QValueList of all record ids in the database. 
+// Returns a QValueList of all record ids in the database.
 QValueList<recordid_t> PilotSerialDatabase::idList()
 {
 	QValueList<recordid_t> idlist;
 	int idlen=recordCount();
 	if (idlen<=0) return idlist;
-	
+
 	recordid_t *idarr=new recordid_t[idlen];
 	int idlenread;
-	dlp_ReadRecordIDList (fDBSocket, getDBHandle(), 0, 0, idlen, idarr, &idlenread); 
-	
+	dlp_ReadRecordIDList (fDBSocket, getDBHandle(), 0, 0, idlen, idarr, &idlenread);
+
 	// now create the QValue list from the idarr:
-	for (idlen=0; idlen<idlenread; idlen++) 
+	for (idlen=0; idlen<idlenread; idlen++)
 	{
 		idlist.append(idarr[idlen]);
 	}
@@ -271,7 +271,7 @@ void PilotSerialDatabase::openDatabase()
 	FUNCTIONSETUP;
 	int db;
 
-	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite, 
+	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite,
 		QFile::encodeName(getDBName()).data(), &db) < 0)
 	{
 		kdError() << k_funcinfo
