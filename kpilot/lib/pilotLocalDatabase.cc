@@ -172,7 +172,7 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 	fPendingRec = -1;
 	if (isDBOpen() == false)
 	{
-		DEBUGKPILOT << fname << ": DB not open!" << endl;
+		DEBUGKPILOT << fDBName << ": DB not open!" << endl;
 		return 0L;
 	}
 	for (i = 0; i < fNumRecords; i++)
@@ -491,6 +491,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.4  2002/05/22 20:40:13  adridg
+// Renaming for sensibility
+//
 // Revision 1.3  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //
