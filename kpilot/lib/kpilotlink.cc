@@ -616,10 +616,11 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 	return dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,dbinfo);
 }
 
+// Find a database with the given name. Info about the DB is stored into dbinfo (e.g. to be used later on with retrieveDatabase).
 int KPilotDeviceLink::findDatabase(char*name, struct DBInfo*dbinfo) 
 {
 	FUNCTIONSETUP;
-	return dlp_FindDBInfo(pilotSocket(), 0, 0, name, dlpDBListRAM, 0, dbinfo);
+	return dlp_FindDBInfo(pilotSocket(), 0, 0, name, 0, 0, dbinfo);
 }
 
 bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 
@@ -678,6 +679,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.11  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.10  2002/05/03 17:21:51  kainhofe
 // Added a method findDatabase to KPilotDeviceLink to look up a single db on the palm
 //
