@@ -1,4 +1,19 @@
-debian/tmp/usr/include/kde
+debian/tmp/usr/include/kde/KDGanttView.h
+debian/tmp/usr/include/kde/KDGanttViewEventItem.h
+debian/tmp/usr/include/kde/KDGanttViewItem.h
+debian/tmp/usr/include/kde/KDGanttViewSummaryItem.h
+debian/tmp/usr/include/kde/KDGanttViewTaskItem.h
+debian/tmp/usr/include/kde/KDGanttViewTaskLink.h
+debian/tmp/usr/include/kde/KDGanttViewTaskLinkGroup.h
+debian/tmp/usr/include/kde/KDXMLTools.h
+debian/tmp/usr/include/kde/kgantt
+debian/tmp/usr/include/kde/ktnef
+debian/tmp/usr/include/kde/KNotesIface.h
+debian/tmp/usr/include/kde/kpilot
+debian/tmp/usr/include/kde/kdepim
+debian/tmp/usr/include/kde/calendar
+debian/tmp/usr/include/kde/korganizer
+debian/tmp/usr/include/kde/kontact
 debian/tmp/usr/lib/kde3/libaddressconduit.so
 debian/tmp/usr/lib/kde3/libknotesconduit.so
 debian/tmp/usr/lib/kde3/libexpenseconduit.so
@@ -17,3 +32,5 @@ debian/tmp/usr/lib/libkcalsystem.so
 debian/tmp/usr/lib/libkdepim.so
 debian/tmp/usr/lib/libknewstuff.so
 debian/tmp/usr/lib/libksync.so
+debian/tmp/usr/lib/libktnef.la
+debian/tmp/usr/lib/libktnef.so
