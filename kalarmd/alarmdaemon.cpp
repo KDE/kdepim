@@ -642,9 +642,9 @@ kdDebug()<<"Kalarm alarms="<<alarmEvents.count()<<endl;
 void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes)
 {
   alarmtimes.clear();
-  const KOAlarm* alarm;
+  const Alarm* alarm;
   QDateTime now = QDateTime::currentDateTime();
-  for (QPtrListIterator<KOAlarm> it(event.alarms());  (alarm = it.current()) != 0;  ++it) {
+  for (QPtrListIterator<Alarm> it(event.alarms());  (alarm = it.current()) != 0;  ++it) {
     alarmtimes.append((alarm->enabled()  &&  alarm->time() <= now) ? alarm->time() : QDateTime());
   }
 }
