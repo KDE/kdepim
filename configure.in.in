@@ -62,15 +62,7 @@ AC_CHECK_HEADERS(fcntl.h unistd.h fnmatch.h sysent.h strings.h paths.h)
 AC_CHECK_HEADERS(utmp.h re_comp.h getopt.h byteswap.h)
 AC_CHECK_HEADER([resolv.h],,,[#include <netinet/in.h>])
 
-
-AC_SYS_LARGEFILE
-if test "$ac_cv_sys_file_offset_bits" != no; then
-  CPPFLAGS="$CPPFLAGS -D_FILE_OFFSET_BITS=$ac_cv_sys_file_offset_bits"
-fi
-
-if test "x$ac_cv_sys_large_files" != "xno"; then
-  CPPFLAGS="$CPPFLAGS -D_LARGE_FILES=1"
-fi
+KDE_CHECK_LARGEFILE
 
 AC_CHECK_FUNCS(flock)
 AC_CHECK_USLEEP
