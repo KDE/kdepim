@@ -256,7 +256,7 @@ the toolbar handle and drag the toolbar to a new place on your screen.</para>
 
 <para>Localisation information like date and time formats can be configured from
 <application>KDE Control Center</application> within the <menuchoice>
-<guisubmenu>Personalization</guisubmenu> <guimenuitem>Country &
+<guisubmenu>Personalization</guisubmenu> <guimenuitem>Country &amp;
 Language</guimenuitem> </menuchoice> module. &korganizer; has to be restarted for changes
 done in <application>KDE Control Center</application> to take effect.</para>
 
@@ -763,7 +763,7 @@ Categories. Click the <guilabel>Add>></guilabel> button. Then click the
 setup by clicking on the <guilabel>General</guilabel>,
 <guilabel>Attendees</guilabel>, and <guilabel>Recurrence</guilabel> tabs. If you
 are satisfied, click <guibutton>OK</guibutton>.</para></step>
-</procedure
+</procedure>
 
 <para>Congratulations, you've scheduled your first event!</para>
 
@@ -1035,7 +1035,7 @@ and weekends are displayed in red color.</para></listitem>
 </sect3>
 
 <sect3 id="preferences-time-and-date">
-<title>Time & Date</title>
+<title>Time &amp; Date</title>
 
 <variablelist>
 <varlistentry>
@@ -1406,7 +1406,7 @@ to quit each calendar window individually.</para> </listitem>
 <title>Edit</title>
 
 <para>With the <guilabel>Edit</guilabel> menu you can edit and search events and
-To-Do entries.</para
+To-Do entries.</para>
 
 <para><guimenuitem>Cut</guimenuitem>, <guimenuitem>Copy</guimenuitem>, and
 <guimenuitem>Paste</guimenuitem> menu items behave in the same fashion as in other
