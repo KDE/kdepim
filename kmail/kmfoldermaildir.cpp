@@ -134,7 +134,7 @@ int KMFolderMaildir::create(bool imap)
 
   assert(!name().isEmpty());
   assert(mOpenCount == 0);
-  
+
   // Make sure that neither a new, cur or tmp subfolder exists already.
   QFileInfo dirinfo;
   dirinfo.setFile(location() + "/new");
@@ -143,7 +143,7 @@ int KMFolderMaildir::create(bool imap)
   if (dirinfo.exists()) return 1;
   dirinfo.setFile(location() + "/tmp");
   if (dirinfo.exists()) return 1;
-  
+
   // create the maildir directory structure
   if (::mkdir(QFile::encodeName(location()), S_IRWXU) > 0)
   {
@@ -509,7 +509,7 @@ DwString KMFolderMaildir::getDwString(int idx)
   {
     FILE* stream = fopen(QFile::encodeName(abs_file), "r+");
     if (stream) {
-      size_t msgSize = mi->msgSize();
+      size_t msgSize = fi.size();
       char* msgText = new char[ msgSize + 1 ];
       fread(msgText, msgSize, 1, stream);
       fclose( stream );
@@ -541,9 +541,10 @@ QCString& KMFolderMaildir::getMsgString(int idx, QCString& mDest)
     return mDest;
   }
 
-  mDest.resize(mi->msgSize()+2);
+  QFileInfo fi( abs_file );
+  mDest.resize(fi.size()+2);
   mDest = kFileToString(abs_file, false, false);
-  size_t newMsgSize = crlf2lf( mDest.data(), mi->msgSize() );
+  size_t newMsgSize = crlf2lf( mDest.data(), fi.size() );
   mDest[newMsgSize] = '\0';
   return mDest;
 }
@@ -905,7 +906,7 @@ int KMFolderMaildir::removeContents()
         return 1;
 
     /* The subdirs are removed now. Check if there is anything else in the dir
-     * and only if not delete the dir itself. The user could have data stored 
+     * and only if not delete the dir itself. The user could have data stored
      * that would otherwise be deleted. */
     QDir dir(location());
     if ( dir.count() == 2 ) { // only . and ..
