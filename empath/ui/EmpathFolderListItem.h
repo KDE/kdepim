@@ -60,7 +60,7 @@ class EmpathFolderListItem : public QObject, public QListViewItem
         
     protected slots:
 
-        void s_setCount(int, int);
+        void s_setCount(Q_UINT32, Q_UINT32);
     
     public slots:
 

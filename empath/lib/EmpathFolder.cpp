@@ -36,9 +36,7 @@
 #include "EmpathIndexAllocator.h"
 
 EmpathFolder::EmpathFolder()
-    :    QObject(),
-        messageCount_(0),
-        unreadMessageCount_(0)
+    :    QObject()
 {
     empathDebug("default ctor !");
     pixmapName_ = "mini-folder-grey";
@@ -46,16 +44,14 @@ EmpathFolder::EmpathFolder()
 
 EmpathFolder::EmpathFolder(const EmpathURL & url)
     :   QObject(),
-        messageCount_(0),
-        unreadMessageCount_(0),
         url_(url)
 {
     empathDebug("ctor with url == \"" + url_.asString() + "\"");
     
     index_ = new EmpathIndex(url);
 	
-    QObject::connect(this, SIGNAL(countUpdated(int, int)),
-        empath->mailbox(url_), SLOT(s_countUpdated(int, int)));
+    QObject::connect(this, SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
+        empath->mailbox(url_), SLOT(s_countUpdated(Q_UINT32, Q_UINT32)));
     
     pixmapName_ = "mini-folder-grey";
 }

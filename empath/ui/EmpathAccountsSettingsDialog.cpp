@@ -63,7 +63,7 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
     :    QDialog(parent, name, false)
 {
     empathDebug("ctor");
-    setCaption(i18n("Accounts Settings - ") + kapp->getCaption());
+    setCaption(i18n("Accounts Settings"));
 
     rgb_account_    = new RikGroupBox(i18n("Account"), 8, this, "rgb_account");
     CHECK_PTR(rgb_account_);

@@ -75,12 +75,10 @@ EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog(
     mainLayout_->setRowStretch(0, 7);
     mainLayout_->setRowStretch(1, 1);
     
-    mainLayout_->addWidget(settingsWidget_,    0, 0);
+    mainLayout_->addWidget(settingsWidget_,   0, 0);
     mainLayout_->addWidget(buttonBox_,        1, 0);
     
     mainLayout_->activate();
-    setMinimumSize(490,537);
-    resize(490,537);
 }
 
     void

@@ -56,7 +56,7 @@ EmpathMessageViewWindow::EmpathMessageViewWindow(
     setupMenuBar();
     setupToolBar();
     
-    setCaption(i18n("Message View - ") + kapp->getCaption());
+    setCaption(i18n("Message View"));
     
     updateRects();
     kapp->processEvents();

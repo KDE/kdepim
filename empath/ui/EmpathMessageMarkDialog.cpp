@@ -40,7 +40,7 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
     :    QDialog(parent, name, true)
 {
     empathDebug("ctor");
-    setCaption(i18n("Mark Messages - ") + kapp->getCaption());
+    setCaption(i18n("Mark Messages"));
 
     typeButtonGroup_    = new QButtonGroup(this, "typeButtonGroup");
     CHECK_PTR(typeButtonGroup_);

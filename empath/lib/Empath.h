@@ -37,6 +37,7 @@
 #include "EmpathURL.h"
 #include "EmpathMailboxList.h"
 #include "EmpathFilterList.h"
+#include "EmpathCache.h"
 
 #include "RMM_Enum.h"
 #include "RMM_Message.h"
@@ -47,8 +48,6 @@ class EmpathMailSender;
 class EmpathFolder;
 class EmpathIndexRecord;
 class EmpathTask;
-
-typedef QCache<RMM::RMessage> EmpathMessageDataCache;
 
 /**
  * Empath is the controller class for Empath's kernel.
@@ -700,7 +699,8 @@ class Empath : public QObject
         EmpathFilterList        filterList_;
         
         EmpathMailSender        * mailSender_;
-        EmpathMessageDataCache  cache_;
+        EmpathCache             cache_;
+
         QString                 hostName_;
         pid_t                   processID_;
         Q_UINT32                startupSeconds_;
@@ -711,6 +711,7 @@ class Empath : public QObject
         
         QString startupSecondsStr_;
         QString pidStr_;
+        
 };
 
 #endif

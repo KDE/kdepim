@@ -101,10 +101,9 @@ Empath::init()
     _setStartTime();
     mailboxList_.init();
     filterList_.load();
-    // FIXME: Duh..
-    cache_ = new EmpathCache("/tmp/.empath");
-
-    QString userName = KGlobal::config()->readEntry(EmpathConfig::KEY_NAME);
+    KConfig * c = KGlobal::config();
+    c->setGroup("Identity");
+    QString userName = c->readEntry(EmpathConfig::KEY_NAME);
     if (!userName)
         emit(setupWizard());
 }
@@ -196,7 +195,6 @@ Empath::mailbox(const EmpathURL & url)
     EmpathFolder *
 Empath::folder(const EmpathURL & url)
 {
-    empathDebug("folder(" + url.asString() + ") called");
     EmpathMailbox * m = mailbox(url);
     if (m == 0) {
         empathDebug("Can't find mailbox " + url.asString());
@@ -394,7 +392,7 @@ Empath::generateUnique()
     void
 Empath::cacheMessage(const EmpathURL & url, RMM::RMessage * m)
 {
-    cache_.store(url.messageID(), m);
+    cache_.store(m, url.messageID());
 }
 
     void

@@ -66,9 +66,9 @@ class EmpathMaildir : public QObject
         
         void init();
         
-        const QString & basePath() const { return basePath_; }
-        const EmpathURL & url() const { return url_; }
-        const QString & path() const { return path_; }
+        const QString & basePath() const    { return basePath_; }
+        const EmpathURL & url() const       { return url_; }
+        const QString & path() const        { return path_; }
         
         bool mark(const QString &, RMM::MessageStatus);
         bool mark(const QStringList &, RMM::MessageStatus);
@@ -80,7 +80,7 @@ class EmpathMaildir : public QObject
         bool removeMessage (const QString &);
         bool removeMessage (const QStringList &);
         
-        void sync(bool ignoreMtime = false);
+        void sync(bool force = false);
         
     protected slots:
         

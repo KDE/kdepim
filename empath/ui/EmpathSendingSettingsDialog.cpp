@@ -37,6 +37,7 @@
 #include "EmpathFolderChooserWidget.h"
 #include "EmpathConfig.h"
 #include "EmpathUtilities.h"
+#include "EmpathMailSender.h"
 #include "EmpathUIUtils.h"
 #include "Empath.h"
 #include "RikGroupBox.h"
@@ -62,7 +63,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
         applied_(false)
 {
     empathDebug("ctor");
-    setCaption(i18n("Sending Settings - ") + kapp->getCaption());
+    setCaption(i18n("Sending Settings"));
     
     QLineEdit    tempLineEdit((QWidget *)0);
     Q_UINT32 h    = tempLineEdit.sizeHint().height();

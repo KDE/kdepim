@@ -52,8 +52,6 @@ EmpathFolderWidget::EmpathFolderWidget(
         waitForShown_(wait),
         wantScreenUpdates_(true)
 {
-    empathDebug("ctor");
-
     setFrameStyle(QFrame::NoFrame);
     viewport()->setAcceptDrops(true);
     
@@ -125,11 +123,8 @@ EmpathFolderWidget::update()
     
     EmpathMailboxListIterator mit(empath->mailboxList());
 
-    for (; mit.current(); ++mit) {
-        
-        empathDebug("Adding mailbox " + mit.current()->name());
+    for (; mit.current(); ++mit)
         _addMailbox(*mit.current());
-    }
     
     QListIterator<EmpathFolderListItem> it(itemList_);
     
@@ -148,10 +143,6 @@ EmpathFolderWidget::update()
     void
 EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
 {
-    empathDebug("============================================================");
-    empathDebug("Add mailbox called for mailbox \"" +
-        mailbox.name() + "\"");
-    
     EmpathFolderListItem * newItem;
     EmpathFolderListItem * found = find(mailbox.url());
 
@@ -174,8 +165,6 @@ EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
         itemList_.append(newItem);
     }
     
-    empathDebug("============================================================");
-    empathDebug("Adding folders of mailbox \"" + mailbox.name() + "\"");
     EmpathFolderListIterator fit(mailbox.folderList());
 
     for (; fit.current(); ++fit) {
@@ -183,7 +172,6 @@ EmpathFolderWidget::_addMailbox(const EmpathMailbox & mailbox)
         if (fit.current()->parent() == 0)
             _addChildren(fit.current(), newItem);
     }
-    empathDebug("============================================================");
 }
 
     void
@@ -191,8 +179,6 @@ EmpathFolderWidget::_addChildren(
     EmpathFolder * item,
     EmpathFolderListItem * parent)
 {
-    empathDebug("_addChildren(" + item->url().folderPath() + ") called");
-    
     // Add this item first.
 
     EmpathFolderListItem * newItem;
@@ -280,8 +266,6 @@ EmpathFolderWidget::s_rightButtonPressed(
     void
 EmpathFolderWidget::s_folderProperties()
 {
-    empathDebug("s_folderProperties() called");
-    
     if (popupMenuOverType != Folder) {
         empathDebug("The popup menu wasn't over a folder !");
         return;
@@ -401,11 +385,8 @@ EmpathFolderWidget::find(const EmpathURL & url)
     QListIterator<EmpathFolderListItem> it(itemList_);
     
     for (; it.current(); ++it)
-        if (it.current()->url() == url) {
-            empathDebug("Found a folder list item with url \""
-                + url.asString() + "\" already in list");
+        if (it.current()->url() == url)
             return it.current();
-        }
     
     return 0;
 }

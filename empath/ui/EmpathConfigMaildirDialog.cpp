@@ -45,8 +45,7 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog(
 {
     empathDebug("ctor");
     
-    setCaption(i18n("Settings for mailbox") + " \"" + mailbox->name() + "\" - "
-        + kapp->getCaption());
+    setCaption(i18n("Settings for mailbox") + " \"" + mailbox->name());
 
     rgb_server_                = new RikGroupBox(i18n("Server"), 8, this,
             "rgb_server");

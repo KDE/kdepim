@@ -62,7 +62,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
         applied_(false)
 {
     empathDebug("ctor");
-    setCaption(i18n("Display Settings - ") + kapp->getCaption());
+    setCaption(i18n("Display Settings"));
     
     QLineEdit    tempLineEdit((QWidget *)0);
     Q_UINT32 h    = tempLineEdit.sizeHint().height();

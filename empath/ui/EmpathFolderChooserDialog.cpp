@@ -42,7 +42,7 @@ EmpathFolderChooserDialog::EmpathFolderChooserDialog(
     :    QDialog(parent, name, true)
 {
     empathDebug("ctor");
-    setCaption(i18n("Folder Chooser - ") + kapp->getCaption());
+    setCaption(i18n("Folder Chooser"));
     folderWidget_    =
         new EmpathFolderWidget(this, "folderWidget");
     CHECK_PTR(folderWidget_);

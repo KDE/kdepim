@@ -79,6 +79,7 @@ empathMain(int argc, char ** argv, bool server)
     CHECK_PTR(app);
     
     KGlobal::dirs()->addResourceType("indices", "/share/apps/empath/indices");
+    KGlobal::dirs()->addResourceType("cache", "/share/apps/empath/cache");
     
     // Don't do dollar expansion by default.
     KGlobal::config()->setDollarExpansion(false);    

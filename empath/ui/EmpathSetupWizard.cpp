@@ -45,7 +45,7 @@ EmpathSetupWizard::~EmpathSetupWizard()
 EmpathSetupWizard::EmpathSetupWizard()
     :   QWizard(0, "SetupWizard")
 {
-    setCaption(i18n("Setup Wizard - ") + kapp->getCaption());
+    setCaption(i18n("Setup Wizard"));
 
     welcomePage_    = new EmpathWelcomePage(this);
     userPage_       = new EmpathUserInfoPage(this);

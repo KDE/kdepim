@@ -70,6 +70,8 @@ EmpathConfigPOP3Widget::EmpathConfigPOP3Widget(
     passwordWidget_->loadData();
     loggingWidget_->loadData();
 
+    setMinimumSize(minimumSizeHint());
+    resize(minimumSizeHint());
 };
 
     void

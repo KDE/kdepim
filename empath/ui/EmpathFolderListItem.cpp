@@ -50,8 +50,6 @@ EmpathFolderListItem::EmpathFolderListItem(
         url_(url),
         tagged_(false)
 {
-    empathDebug("ctor with mailbox");
-
     KConfig * c(KGlobal::config());
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
@@ -70,8 +68,8 @@ EmpathFolderListItem::EmpathFolderListItem(
         return;
     }
 
-    QObject::connect(m, SIGNAL(countUpdated(int, int)),
-        this, SLOT(s_setCount(int, int)));
+    QObject::connect(m, SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
+        this, SLOT(s_setCount(Q_UINT32, Q_UINT32)));
     
     setText(0, m->name());
     setText(1, QString().setNum(m->unreadMessageCount()));
@@ -87,8 +85,6 @@ EmpathFolderListItem::EmpathFolderListItem(
         url_(url),
         tagged_(false)
 {
-    empathDebug("ctor with folder \"" + url_.asString() + "\"");
-
     KConfig * c(KGlobal::config());
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
 
@@ -107,8 +103,8 @@ EmpathFolderListItem::EmpathFolderListItem(
     }
 
     QObject::connect(
-        f,        SIGNAL(countUpdated(int, int)),
-        this,    SLOT(s_setCount(int, int)));
+        f,        SIGNAL(countUpdated(Q_UINT32, Q_UINT32)),
+        this,    SLOT(s_setCount(Q_UINT32, Q_UINT32)));
     
     QObject::connect(
         this,    SIGNAL(update()),
@@ -117,9 +113,7 @@ EmpathFolderListItem::EmpathFolderListItem(
     QString s = url_.folderPath();
     if (s.right(1) == "/")
         s = s.remove(s.length(), 1);
-    empathDebug("s now == " + s);
     s = s.right(s.length() - s.findRev("/") - 1);
-    empathDebug("s now == " + s);
     
     setText(0, s);
     setPixmap(0, empathIcon(f->pixmapName()));
@@ -129,7 +123,6 @@ EmpathFolderListItem::EmpathFolderListItem(
     
 EmpathFolderListItem::~EmpathFolderListItem()
 {
-    empathDebug("dtor - my url was \"" + url_.asString() + "\"");
 }
 
     QString
@@ -164,8 +157,6 @@ EmpathFolderListItem::key(int column, bool) const
     void
 EmpathFolderListItem::setup()
 {
-    empathDebug("setup() called");
-    
     widthChanged();
     
     int th = QFontMetrics(KGlobal::generalFont()).height();
@@ -177,7 +168,7 @@ EmpathFolderListItem::setup()
 }
 
     void
-EmpathFolderListItem::s_setCount(int unread, int read)
+EmpathFolderListItem::s_setCount(Q_UINT32 unread, Q_UINT32 read)
 {
     setText(1, QString().setNum(unread));
     setText(2, QString().setNum(read));

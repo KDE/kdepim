@@ -45,7 +45,7 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
 {
     empathDebug("ctor");
     
-    setCaption(i18n("Filter Action - ") + kapp->getCaption());
+    setCaption(i18n("Filter Action"));
     
     QLineEdit    tempLineEdit((QWidget *)0);
     Q_UINT32 h    = tempLineEdit.sizeHint().height();

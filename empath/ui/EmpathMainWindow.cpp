@@ -83,8 +83,6 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
     _setupToolBar();
     _setupStatusBar();
     
-    setCaption(kapp->getCaption());
-
     updateRects();
     kapp->processEvents();
     show();

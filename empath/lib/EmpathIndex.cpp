@@ -44,18 +44,15 @@ EmpathIndex::EmpathIndex()
         count_(0),
         unreadCount_(0)
 {
-    empathDebug("ctor");
     // Empty.
 }
 
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
 	:	blockSize_(1024), folder_(folder)
 {
-    empathDebug("ctor");
+    empathDebug("");
     QString resDir =
         KGlobal::dirs()->getSaveLocation("indices", folder.mailboxName(), true);
-
-    empathDebug("saveLocation: " + resDir);
 
     if (resDir.isEmpty()) {
         empathDebug("Serious problem with local indices dir");
@@ -66,8 +63,6 @@ EmpathIndex::EmpathIndex(const EmpathURL & folder)
     // filename_ = resDir + "/" + legalName;  
     filename_ = "/tmp/" + legalName;
 	
-    empathDebug("Index filename: " + filename_);
-
     _open();
 }
 
@@ -95,7 +90,7 @@ EmpathIndex::setFolder(const EmpathURL & folder)
     EmpathIndexRecord *
 EmpathIndex::record(const QCString & key)
 {
-    empathDebug(QString(key));
+//    empathDebug(QString(key));
 
     if (!dbf_) {
         empathDebug("dbf is not open");
@@ -109,7 +104,7 @@ EmpathIndex::record(const QCString & key)
     datum out = gdbm_fetch(dbf_, k);
 
     if (!out.dptr) {
-        empathDebug("does not exist");
+//        empathDebug("does not exist");
         return 0;
     }
     
@@ -151,7 +146,6 @@ EmpathIndex::countUnread()
         key = gdbm_nextkey(dbf_, key);
     }
     
-    empathDebug("done");
     touched_ = false;
     return unreadCount_;
 }
@@ -261,7 +255,7 @@ EmpathIndex::allKeys()
     bool
 EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
 {
-    empathDebug(key);
+//    empathDebug(key);
 
     if (!dbf_) {
         empathDebug("dbf is not open");
@@ -296,7 +290,7 @@ EmpathIndex::insert(const QCString & key, EmpathIndexRecord & rec)
     bool
 EmpathIndex::remove(const QCString & key)
 {  
-    empathDebug(QString(key));
+//    empathDebug(QString(key));
 
     if (!dbf_) {
         empathDebug("dbf is not open");
@@ -316,7 +310,7 @@ EmpathIndex::remove(const QCString & key)
     void
 EmpathIndex::clear()
 {
-    empathDebug("");
+//    empathDebug("");
 
     if (!dbf_) {
         empathDebug("dbf is not open");

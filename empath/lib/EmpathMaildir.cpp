@@ -74,27 +74,26 @@ EmpathMaildir::init()
     _clearTmp();            kapp->processEvents();
     _markNewMailAsSeen();   kapp->processEvents();
     
-    sync(true);
+    sync();
 }
     void
 EmpathMaildir::sync(bool force)
 {
-    empath->s_infoMessage(i18n("Reading") + ": " + url_.asString());
-
     EmpathFolder * f(empath->folder(url_));
 
-    returnIfFalse(f);
+    if (f == 0) {
+        empathDebug("Cannot access my folder !");
+        return;
+    }
 
+    if (!force && !_touched(f))
+        return;
+    
     _markNewMailAsSeen();
-   
-    if (!force)
-        returnIfFalse(_touched(f));
     
     _tagOrAdd(f);
 
     _removeUntagged(f);
-   
-    empath->s_infoMessage(i18n("Read") + ": " + url_.asString());
 }
 
     bool
@@ -317,7 +316,7 @@ EmpathMaildir::_clearTmp()
         
         aTime = it.current()->lastRead();
         
-        if (aTime.daysTo(now) < 2) {
+        if (aTime.daysTo(now) > 2) {
             
             empathDebug("Deleting \"" +
                 QString(it.current()->filePath()) + "\"");
@@ -448,12 +447,13 @@ EmpathMaildir::_touched(EmpathFolder * f)
     QFileInfo fiDir(path_ + "/cur/");
     QFileInfo fiIndex(f->index()->indexFileName());
     
-    if (fiDir.lastModified() < f->index()->lastModified()) {
-        empathDebug("Not modified");
-        return false;
-    }
+    if (!fiIndex.exists())
+        return true;
+    
+    if (fiDir.lastModified() > f->index()->lastModified())
+        return true;
 
-    return true;
+    return false;
 }
 
     void

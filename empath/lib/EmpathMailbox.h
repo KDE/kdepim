@@ -339,11 +339,11 @@ class EmpathMailbox : public QObject
         void updateFolderLists();
         void newMailArrived();
         void mailboxChangedByExternal();
-        void countUpdated(int, int);
+        void countUpdated(Q_UINT32, Q_UINT32);
         
     public slots:
 
-        void s_countUpdated(int, int);
+        void s_countUpdated(Q_UINT32, Q_UINT32);
         
     protected:
         

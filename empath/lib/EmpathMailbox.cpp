@@ -101,9 +101,9 @@ EmpathMailbox::unreadMessageCount() const
 }
 
     void
-EmpathMailbox::s_countUpdated(int, int)
+EmpathMailbox::s_countUpdated(Q_UINT32, Q_UINT32)
 {
-    emit(countUpdated((int)unreadMessageCount(), (int)messageCount()));
+    emit(countUpdated(unreadMessageCount(), messageCount()));
 }
 
     EmpathFolder *

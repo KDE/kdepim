@@ -102,7 +102,7 @@ EmpathComposeWindow::_init()
     setupStatusBar();
     setView(composeWidget_, false);
     composeWidget_->init();
-    setCaption(i18n("Compose Message - ") + kapp->getCaption());
+    setCaption(i18n("Compose Message"));
     updateRects();
 
     /*

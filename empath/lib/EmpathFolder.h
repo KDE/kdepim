@@ -150,7 +150,7 @@ class EmpathFolder : public QObject
          * @arg c Total message count.
          * @arg uc Unread message count.
          */
-        void countUpdated(int c, int uc);
+        void countUpdated(Q_UINT32 c, Q_UINT32 uc);
         /**
          * Signals a new message has arrived with given id.
          */
@@ -166,8 +166,6 @@ class EmpathFolder : public QObject
         EmpathFolder(const EmpathFolder &) : QObject() {}
 
         Q_UINT32    id_;
-        Q_UINT32    messageCount_;
-        Q_UINT32    unreadMessageCount_;
         QString     pixmapName_;
         EmpathIndex * index_;
         EmpathURL   url_;

@@ -38,7 +38,7 @@ EmpathServerTypeDialog::EmpathServerTypeDialog(
     :    QDialog(parent, name, true)
 {
     empathDebug("ctor");
-    setCaption(i18n("Mailbox type - ") + kapp->getCaption());
+    setCaption(i18n("Mailbox type"));
 
     buttonGroup_    = new QButtonGroup(this, "buttonGroup");
     CHECK_PTR(buttonGroup_);

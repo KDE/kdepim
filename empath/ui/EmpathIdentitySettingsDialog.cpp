@@ -64,7 +64,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
         applied_(false)
 {
     empathDebug("ctor");
-    setCaption(i18n("Identity Settings - ") + kapp->getCaption());
+    setCaption(i18n("Identity Settings"));
     
     rgb_main_    = new RikGroupBox(QString::null, 8, this, "rgb_font");
     CHECK_PTR(rgb_main_);

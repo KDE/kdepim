@@ -147,7 +147,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
 {
     empathDebug("ctor");
     
-    setCaption(i18n("Attachment Edit - ") + kapp->getCaption());
+    setCaption(i18n("Attachment Edit"));
     
     QLineEdit    tempLineEdit((QWidget *)0);
     Q_UINT32 h    = tempLineEdit.sizeHint().height();

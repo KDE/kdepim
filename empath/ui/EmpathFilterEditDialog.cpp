@@ -49,7 +49,7 @@ EmpathFilterEditDialog::EmpathFilterEditDialog(
         filter_(filter)
 {
     empathDebug("ctor");
-    setCaption(i18n("Edit Filters - ") + kapp->getCaption());
+    setCaption(i18n("Edit Filters"));
     ASSERT(filter_ != 0);
     
     QPushButton    tempButton((QWidget *)0);

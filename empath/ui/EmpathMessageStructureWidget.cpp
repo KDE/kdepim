@@ -41,7 +41,7 @@ EmpathMessageStructureWidget::EmpathMessageStructureWidget
     (QWidget * parent, const char * name)
     :    QListView(parent, name)
 {
-    setCaption(i18n("Message Structure - ") + kapp->getCaption());
+    setCaption(i18n("Message Structure"));
     
     addColumn(i18n("Type"));
     addColumn(i18n("Subtype"));

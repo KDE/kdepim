@@ -56,7 +56,7 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
     :    QDialog(parent, name, false)
 {
     empathDebug("ctor");
-    setCaption(i18n("Filter Settings - ") + kapp->getCaption());
+    setCaption(i18n("Filter Settings"));
 
     mainLayout_ = new QGridLayout(this, 2, 1, 10, 10);
     CHECK_PTR(mainLayout_);

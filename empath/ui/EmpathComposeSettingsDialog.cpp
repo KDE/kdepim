@@ -36,6 +36,7 @@
 
 // Local includes
 #include "EmpathComposeSettingsDialog.h"
+#include "EmpathMailSender.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathUtilities.h"
@@ -62,7 +63,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
         applied_(false)
 {
     empathDebug("ctor");
-    setCaption(i18n("Compose Settings - ") + kapp->getCaption());
+    setCaption(i18n("Compose Settings"));
 
     QLineEdit    tempLineEdit((QWidget *)0);
     Q_UINT32 h    = tempLineEdit.sizeHint().height();

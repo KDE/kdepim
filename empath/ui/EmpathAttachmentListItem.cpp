@@ -43,14 +43,11 @@ EmpathAttachmentListItem::EmpathAttachmentListItem(
     :    QListViewItem(parent),
         spec_(s)
 {
-    empathDebug("ctor");
-    
-    setText(0, spec_.filename());
+    setText(0, spec_.description());
 }
 
 EmpathAttachmentListItem::~EmpathAttachmentListItem()    
 {    
-    empathDebug("dtor");
 }
         
     void
@@ -77,7 +74,7 @@ EmpathAttachmentListItem::key(int, bool) const
 EmpathAttachmentListItem::setSpec(const EmpathAttachmentSpec & s)
 {
     spec_ = s;
-    setText(0, spec_.filename());
+    setText(0, spec_.description());
 }
 
 // vim:ts=4:sw=4:tw=78
