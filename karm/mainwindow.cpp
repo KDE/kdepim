@@ -311,7 +311,7 @@ void MainWindow::saveGeometry()
 
 bool MainWindow::queryClose()
 {
-  if ( _hideOnClose ) {
+  if ( !kapp->sessionSaving() && _hideOnClose ) {
     hide();
     return false;
   }
