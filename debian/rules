@@ -19,7 +19,7 @@ $(BUILDDIR)/build-stamp:
 	fi 
 	test -d $(BUILDDIR) || mkdir $(BUILDDIR) ;\
 	cd $(BUILDDIR) ;\
-	$$PWD/../configure $(configkde) --with-extra-includes=/usr/include/libpisock
+	$$PWD/../configure $(configkde)
 	make -C $(BUILDDIR)
 	touch $(BUILDDIR)/build-stamp
 
@@ -48,7 +48,7 @@ binary-arch: build
 	-rm -f debian/undocumented
 	make -C $(BUILDDIR) install DESTDIR=`pwd`/debian/tmp/
 	perl -w admin/debianrules
-	for i in `find debian/tmp/$(kde_bindir) | sed -e 's#^debian/tmp/$(kde_bindir)/##'  | grep -v "debian/tmp"`; do \
+	for i in `find debian/tmp/usr/bin | sed -e 's#^debian/tmp/usr/bin/##'  | grep -v "debian/tmp"`; do \
 	  echo "$$i.1" >> debian/undocumented ;\
 	done
 	for i in `cat debian/undocumented.in | grep -v "#"`; do \
@@ -60,7 +60,7 @@ binary-arch: build
 	done
 	dh_undocumented
 	list=`cd debian/tmp && find ./ -type l -name "lib*.so" | sed -e 's#^./##'` ;\
-	dh_movefiles -pkdepim-dev $$list $(kde_libdir)/*.a $(kde_libdir)/*.la
+	dh_movefiles -pkdepim-dev $$list usr/lib/*.a usr/include
 	dh_movefiles -pabbrowser usr/share/apps/abbrowser/* \
 		usr/share/icons/hicolor/32x32/apps/abbrowser.png \
 		usr/share/icons/locolor/16x16/apps/abbrowser.png \
@@ -91,10 +91,11 @@ binary-arch: build
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
-	cd debian/korganizer && find ./$(kde_confdir) -type f -print | sed -e 's#^./#/#' > DEBIAN/conffiles
-	chmod 644 debian/korganizer/DEBIAN/conffiles
+	-for package in `cat debian/control | grep Package | grep -v kdepim | sed -e 's#^Package: ##'`; do \
+		cd debian/$$package && find ./etc/kde2 -type f -print | sed -e 's#^./#/#' > DEBIAN/conffiles ;\
+		chmod 644 debian/$$package/DEBIAN/conffiles ;\
+	done
 	dh_md5sums
-	perl -w admin/debianrules update
 	dh_builddeb       	
 
 # Below here is fairly generic really
