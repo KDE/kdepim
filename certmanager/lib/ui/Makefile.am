@@ -14,7 +14,11 @@ libkleopatra_ui_la_SOURCES = \
 	keyrequester.cpp \
 	backendconfigwidget.cpp \
 	cryptoconfigmodule.cpp \
-	cryptoconfigdialog.cpp
+	cryptoconfigdialog.cpp \
+	directoryserviceswidgetbase.ui \
+	directoryserviceswidget.cpp \
+	adddirectoryservicedialog.ui \
+	adddirectoryservicedialogimpl.cpp
 
 kleodir = $(includedir)/kleo
 kleo_HEADERS = \

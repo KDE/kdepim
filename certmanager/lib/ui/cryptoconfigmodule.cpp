@@ -30,10 +30,12 @@
 */
 
 #include "cryptoconfigmodule.h"
+#include "directoryserviceswidget.h"
 #include <kleo/cryptoconfig.h>
 
 #include <klineedit.h>
-#include <kdialog.h>
+#include <klocale.h>
+#include <kdialogbase.h>
 #include <kdebug.h>
 #include <knuminput.h>
 
@@ -41,6 +43,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qvbox.h>
+#include <qpushbutton.h>
 
 using namespace Kleo;
 
@@ -218,13 +221,15 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
       return new CryptoConfigEntrySpinBox( module, entry, entryName, parent, name );
     case Kleo::CryptoConfigEntry::ArgType_Int:
     case Kleo::CryptoConfigEntry::ArgType_UInt:
+      // Let people type list of numbers (1,2,3....). Untested.
+      return new CryptoConfigEntryLineEdit( module, entry, entryName, parent, name );
     case Kleo::CryptoConfigEntry::ArgType_URL:
     case Kleo::CryptoConfigEntry::ArgType_Path:
     case Kleo::CryptoConfigEntry::ArgType_String:
       kdWarning(5150) << "No widget implemented for list of type " << entry->argType() << endl;
       return 0; // TODO when the need arises :)
     case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-      return 0; // TODO
+      return new CryptoConfigEntryLDAPURL( module, entry, entryName, parent, name );
     }
   }
 
@@ -385,6 +390,62 @@ void Kleo::CryptoConfigEntryCheckBox::doSave()
 void Kleo::CryptoConfigEntryCheckBox::doLoad()
 {
   mCheckBox->setChecked( mEntry->boolValue() );
+}
+
+Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
+  CryptoConfigModule* module,
+  Kleo::CryptoConfigEntry* entry,
+  const QString& entryName,
+  QWidget* parent, const char* name )
+  : CryptoConfigEntryGUI( module, entry, entryName, parent, name )
+{
+  setSpacing( KDialog::spacingHint() );
+  QLabel* label = new QLabel( description(), this );
+  mPushButton = new QPushButton( i18n( "Edit..." ), this );
+  mLabel = new QLabel( this );
+  connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
+  label->setBuddy( mPushButton );
+  QWidget* stretch = new QWidget( this );
+  setStretchFactor( stretch, 1 );
+}
+
+void Kleo::CryptoConfigEntryLDAPURL::doLoad()
+{
+  setURLList( mEntry->urlValueList() );
+}
+
+void Kleo::CryptoConfigEntryLDAPURL::doSave()
+{
+  mEntry->setURLValueList( mURLList );
+}
+
+void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
+{
+  // I'm a bad boy and I do it all on the stack. Enough classes already :)
+  // This is just a simple dialog around the directory-services-widget
+  KDialogBase dialog( this, 0, true /*modal*/,
+                      i18n( "Configure LDAP servers" ),
+                      KDialogBase::Default|KDialogBase::Cancel|KDialogBase::Ok,
+                      KDialogBase::Ok, true /*separator*/ );
+  DirectoryServicesWidget* dirserv = new DirectoryServicesWidget( mEntry, &dialog );
+  dirserv->load();
+  dialog.setMainWidget( dirserv );
+  connect( &dialog, SIGNAL( defaultClicked() ), dirserv, SLOT( defaults() ) );
+  if ( dialog.exec() ) {
+    // Note that we just grab the urls from the dialog, we don't call its save method,
+    // since the user hasn't confirmed the big config dialog yet.
+    setURLList( dirserv->urlList() );
+    slotChanged();
+  }
+}
+
+void Kleo::CryptoConfigEntryLDAPURL::setURLList( const KURL::List& urlList )
+{
+  mURLList = urlList;
+  if ( mURLList.isEmpty() )
+    mLabel->setText( i18n( "No server configured yet" ) );
+  else
+    mLabel->setText( i18n( "1 server configured", "%n servers configured", mURLList.count() ) );
 }
 
 #include "cryptoconfigmodule.moc"

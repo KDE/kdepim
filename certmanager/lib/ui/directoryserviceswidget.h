@@ -1,5 +1,5 @@
 /*
-    directoryservicesconfigurationdialogimpl.h
+    directoryserviceswidget.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
@@ -30,34 +30,50 @@
     your version.
 */
 
-#ifndef DIRECTORYSERVICESCONFIGURATIONDIALOGIMPL_H
-#define DIRECTORYSERVICESCONFIGURATIONDIALOGIMPL_H
-#include "directoryservicesconfigurationdialog.h"
+#ifndef DIRECTORYSERVICESWIDGET_H
+#define DIRECTORYSERVICESWIDGET_H
+#include "directoryserviceswidgetbase.h"
 #include <kurl.h>
 
 class CryptPlugWrapper;
+namespace Kleo {
 
-class DirectoryServicesConfigurationDialogImpl : public DirectoryServicesConfigurationDialog
+class CryptoConfigEntry;
+
+class DirectoryServicesWidget : public DirectoryServicesWidgetBase
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    DirectoryServicesConfigurationDialogImpl( QWidget* parent = 0, const char* name = 0, WFlags fl = 0 );
-    ~DirectoryServicesConfigurationDialogImpl();
+  DirectoryServicesWidget(
+    Kleo::CryptoConfigEntry* configEntry,
+    QWidget* parent = 0, const char* name = 0, WFlags fl = 0 );
+  ~DirectoryServicesWidget();
 
-    void enableDisable( CryptPlugWrapper* wrapper );
-    void setInitialServices( const KURL::List& urls );
-    KURL::List urlList() const;
-    void clear();
+  void load();
+  void save();
+
+  void enableDisable( CryptPlugWrapper* wrapper ); // unused?
+  void setInitialServices( const KURL::List& urls );
+  KURL::List urlList() const;
+  void clear();
+
+public slots:
+  void defaults();
 
 signals:
-    void changed();
+  void changed();
 
 protected slots:
-    void slotServiceChanged( QListViewItem* );
-    void slotServiceSelected( QListViewItem* );
-    void slotAddService();
-    void slotDeleteService();
+  void slotServiceChanged( QListViewItem* );
+  void slotServiceSelected( QListViewItem* );
+  void slotAddService();
+  void slotDeleteService();
+
+private:
+  Kleo::CryptoConfigEntry* mConfigEntry;
 };
 
-#endif // DIRECTORYSERVICESCONFIGURATIONDIALOGIMPL_H
+}
+
+#endif // DIRECTORYSERVICESWIDGET_H

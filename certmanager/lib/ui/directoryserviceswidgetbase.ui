@@ -1,8 +1,8 @@
 <!DOCTYPE UI><UI version="3.2" stdsetdef="1">
-<class>DirectoryServicesConfigurationDialog</class>
+<class>DirectoryServicesWidgetBase</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>DirectoryServicesConfigurationDialog</cstring>
+        <cstring>DirectoryServicesWidgetBase</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -227,31 +227,31 @@ By clicking this button, you can remove the currently selected directory service
     <connection>
         <sender>removeServicePB</sender>
         <signal>clicked()</signal>
-        <receiver>DirectoryServicesConfigurationDialog</receiver>
+        <receiver>DirectoryServicesWidgetBase</receiver>
         <slot>slotDeleteService()</slot>
     </connection>
     <connection>
         <sender>x500LV</sender>
         <signal>returnPressed(QListViewItem*)</signal>
-        <receiver>DirectoryServicesConfigurationDialog</receiver>
+        <receiver>DirectoryServicesWidgetBase</receiver>
         <slot>slotServiceSelected(QListViewItem*)</slot>
     </connection>
     <connection>
         <sender>x500LV</sender>
         <signal>doubleClicked(QListViewItem*)</signal>
-        <receiver>DirectoryServicesConfigurationDialog</receiver>
+        <receiver>DirectoryServicesWidgetBase</receiver>
         <slot>slotServiceSelected(QListViewItem*)</slot>
     </connection>
     <connection>
         <sender>x500LV</sender>
         <signal>selectionChanged(QListViewItem*)</signal>
-        <receiver>DirectoryServicesConfigurationDialog</receiver>
+        <receiver>DirectoryServicesWidgetBase</receiver>
         <slot>slotServiceChanged(QListViewItem*)</slot>
     </connection>
     <connection>
         <sender>addServicePB</sender>
         <signal>clicked()</signal>
-        <receiver>DirectoryServicesConfigurationDialog</receiver>
+        <receiver>DirectoryServicesWidgetBase</receiver>
         <slot>slotAddService()</slot>
     </connection>
 </connections>

@@ -31,11 +31,12 @@
 
 #include "configuredialog_p.h"
 #include <qlayout.h>
-#include "directoryservicesconfigurationdialogimpl.h"
+#include "directoryserviceswidget.h"
 #include <cryptplugfactory.h>
 #include <kleo/cryptoconfig.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 static const char s_dirserv_componentName[] = "dirmngr";
 static const char s_dirserv_groupName[] = "LDAP";
@@ -44,10 +45,10 @@ static const char s_dirserv_entryName[] = "LDAP Server";
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget * parent, const char * name )
     : KCModule( parent, name )
 {
-  QVBoxLayout* lay = new QVBoxLayout( this );
-  mWidget = new DirectoryServicesConfigurationDialogImpl( this );
-  lay->addWidget( mWidget );
   mConfig = Kleo::CryptPlugFactory::instance()->config();
+  QVBoxLayout* lay = new QVBoxLayout( this );
+  mWidget = new Kleo::DirectoryServicesWidget( configEntry(), this );
+  lay->addWidget( mWidget );
   connect( mWidget, SIGNAL( changed() ), this, SLOT( changed() ) );
 }
 
@@ -67,36 +68,18 @@ Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry() {
 
 void DirectoryServicesConfigurationPage::load()
 {
-    Kleo::CryptoConfigEntry* entry = configEntry();
-    if ( entry ) {
-        KURL::List urls = entry->urlValueList();
-        mWidget->setInitialServices( urls );
-    }
+  mWidget->load();
 }
 
 void DirectoryServicesConfigurationPage::save()
 {
-    Kleo::CryptoConfigEntry* entry = configEntry();
-    if ( entry ) {
-        KURL::List urls = mWidget->urlList();
-        entry->setURLValueList( urls );
-        mConfig->sync( true );
-    }
+  mWidget->save();
+  mConfig->sync( true );
 }
 
 void DirectoryServicesConfigurationPage::defaults()
 {
-    // ## We can't use  entry->resetToDefault() here. It would reset to default before the user has a chance to click OK or Cancel.
-#if 0
-    Kleo::CryptoConfigEntry* entry = configEntry();
-    if ( entry ) {
-        entry->resetToDefault();
-      mConfig->sync( true );
-      mConfig->clear();
-      load();
-    }
-#endif
-    mWidget->clear(); // the default is an empty list.
+  mWidget->defaults();
 }
 
 extern "C"

@@ -39,10 +39,10 @@
 
 #include <kcmodule.h>
 
-class DirectoryServicesConfigurationDialogImpl;
 namespace Kleo {
   class CryptoConfig;
   class CryptoConfigEntry;
+  class DirectoryServicesWidget;
 }
 
 /**
@@ -60,7 +60,7 @@ public:
 private:
   Kleo::CryptoConfigEntry* configEntry();
 
-  DirectoryServicesConfigurationDialogImpl* mWidget;
+  Kleo::DirectoryServicesWidget* mWidget;
   Kleo::CryptoConfig* mConfig;
 };
 

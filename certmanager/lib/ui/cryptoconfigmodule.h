@@ -37,8 +37,11 @@
 #include <qtabwidget.h>
 #include <qhbox.h>
 #include <qcheckbox.h>
+#include <kurl.h>
+
 class KLineEdit;
 class KIntNumInput;
+class QPushButton;
 
 namespace Kleo {
 
@@ -212,6 +215,27 @@ namespace Kleo {
     QCheckBox* mCheckBox;
   };
 
+  /**
+   * A widget for a bool entry in the crypto config
+   */
+  class CryptoConfigEntryLDAPURL : public CryptoConfigEntryGUI {
+    Q_OBJECT
+
+  public:
+    CryptoConfigEntryLDAPURL( CryptoConfigModule* module,
+                              Kleo::CryptoConfigEntry* entry,
+                              const QString& entryName,
+                              QWidget* parent, const char* name = 0 );
+    virtual void doSave();
+    virtual void doLoad();
+  private slots:
+    void slotOpenDialog();
+  private:
+    void setURLList( const KURL::List& urlList );
+    QLabel* mLabel;
+    QPushButton* mPushButton;
+    KURL::List mURLList;
+  };
 }
 
 #endif

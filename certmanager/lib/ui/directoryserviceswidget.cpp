@@ -1,5 +1,5 @@
 /*
-    directoryservicesconfigurationdialogimpl.cpp
+    directoryserviceswidget.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
@@ -31,15 +31,20 @@
 */
 
 #include <config.h>
-#include "directoryservicesconfigurationdialogimpl.h"
+
+#include "directoryserviceswidget.h"
 #include "adddirectoryservicedialogimpl.h"
 #include "cryptplugwrapper.h"
 
+#include <klineedit.h>
+#include <kleo/cryptoconfig.h>
+#include <kdebug.h>
+
+#include <qbuttongroup.h>
 #include <qlistview.h>
 #include <qpushbutton.h>
-#include <klineedit.h>
-#include <qbuttongroup.h>
-#include <kdebug.h>
+
+using namespace Kleo;
 
 class QX500ListViewItem : public QListViewItem
 {
@@ -65,12 +70,11 @@ private:
   QString mPassword;
 };
 
-/*
- *  Constructs a DirectoryServicesConfigurationDialogImpl which is a child of 'parent', with the
- *  name 'name' and widget flags set to 'f'
- */
-DirectoryServicesConfigurationDialogImpl::DirectoryServicesConfigurationDialogImpl( QWidget* parent,  const char* name, WFlags fl )
-    : DirectoryServicesConfigurationDialog( parent, name, fl )
+Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
+  Kleo::CryptoConfigEntry* configEntry,
+  QWidget* parent,  const char* name, WFlags fl )
+    : DirectoryServicesWidgetBase( parent, name, fl ),
+      mConfigEntry( configEntry )
 {
     x500LV->setSorting( -1 );
 }
@@ -79,7 +83,7 @@ DirectoryServicesConfigurationDialogImpl::DirectoryServicesConfigurationDialogIm
 /*
  *  Destroys the object and frees any allocated resources
  */
-DirectoryServicesConfigurationDialogImpl::~DirectoryServicesConfigurationDialogImpl()
+DirectoryServicesWidget::~DirectoryServicesWidget()
 {
     // no need to delete child widgets, Qt does it all for us
 }
@@ -89,7 +93,7 @@ DirectoryServicesConfigurationDialogImpl::~DirectoryServicesConfigurationDialogI
    Enables or disables the widgets in this dialog according to the
    capabilities of the current plugin passed as a parameter.
 */
-void DirectoryServicesConfigurationDialogImpl::enableDisable( CryptPlugWrapper* cryptPlug )
+void DirectoryServicesWidget::enableDisable( CryptPlugWrapper* cryptPlug ) // unused?
 {
     // disable the whole page if the plugin does not support the use
     // of directory services
@@ -101,7 +105,7 @@ void DirectoryServicesConfigurationDialogImpl::enableDisable( CryptPlugWrapper* 
 /*
  * protected slot
  */
-void DirectoryServicesConfigurationDialogImpl::slotServiceChanged( QListViewItem* item )
+void DirectoryServicesWidget::slotServiceChanged( QListViewItem* item )
 {
     if( item )
         removeServicePB->setEnabled( true );
@@ -113,7 +117,7 @@ void DirectoryServicesConfigurationDialogImpl::slotServiceChanged( QListViewItem
 /*
  * protected slot
  */
-void DirectoryServicesConfigurationDialogImpl::slotServiceSelected( QListViewItem* item )
+void DirectoryServicesWidget::slotServiceSelected( QListViewItem* item )
 {
     AddDirectoryServiceDialogImpl* dlg = new AddDirectoryServiceDialogImpl( this );
     dlg->serverNameED->setText( item->text( 0 ) );
@@ -138,7 +142,7 @@ void DirectoryServicesConfigurationDialogImpl::slotServiceSelected( QListViewIte
 /*
  * protected slot
  */
-void DirectoryServicesConfigurationDialogImpl::slotAddService()
+void DirectoryServicesWidget::slotAddService()
 {
     AddDirectoryServiceDialogImpl* dlg = new AddDirectoryServiceDialogImpl( this );
     if( dlg->exec() == QDialog::Accepted ) {
@@ -155,7 +159,7 @@ void DirectoryServicesConfigurationDialogImpl::slotAddService()
 /*
  * protected slot
  */
-void DirectoryServicesConfigurationDialogImpl::slotDeleteService()
+void DirectoryServicesWidget::slotDeleteService()
 {
     QListViewItem* item = x500LV->selectedItem();
     Q_ASSERT( item );
@@ -169,7 +173,7 @@ void DirectoryServicesConfigurationDialogImpl::slotDeleteService()
 }
 
 
-void DirectoryServicesConfigurationDialogImpl::setInitialServices( const KURL::List& urls )
+void DirectoryServicesWidget::setInitialServices( const KURL::List& urls )
 {
     x500LV->clear();
     for( KURL::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
@@ -183,7 +187,7 @@ void DirectoryServicesConfigurationDialogImpl::setInitialServices( const KURL::L
     }
 }
 
-KURL::List DirectoryServicesConfigurationDialogImpl::urlList() const
+KURL::List DirectoryServicesWidget::urlList() const
 {
     KURL::List lst;
     QListViewItemIterator it( x500LV );
@@ -202,10 +206,34 @@ KURL::List DirectoryServicesConfigurationDialogImpl::urlList() const
     return lst;
 }
 
-void DirectoryServicesConfigurationDialogImpl::clear()
+void DirectoryServicesWidget::clear()
 {
     x500LV->clear();
     emit changed();
 }
 
-#include "directoryservicesconfigurationdialogimpl.moc"
+void DirectoryServicesWidget::load()
+{
+  if ( mConfigEntry ) {
+    setInitialServices( mConfigEntry->urlValueList() );
+  }
+}
+
+void DirectoryServicesWidget::save()
+{
+  if ( mConfigEntry ) {
+    mConfigEntry->setURLValueList( urlList() );
+  }
+}
+
+void DirectoryServicesWidget::defaults()
+{
+  if ( mConfigEntry ) {
+    // resetToDefault doesn't work since gpgconf doesn't know any defaults for this entry.
+    //mConfigEntry->resetToDefault();
+    //load();
+    clear(); // the default is an empty list.
+  }
+}
+
+#include "directoryserviceswidget.moc"
