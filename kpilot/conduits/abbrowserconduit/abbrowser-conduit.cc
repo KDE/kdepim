@@ -166,7 +166,7 @@ void AbbrowserConduit::_stopAbbrowser(bool abAlreadyRunning)
 void AbbrowserConduit::
 _mapContactsToPilot(const QDict<ContactEntry> &contacts,
 		    QMap<recordid_t, QString> &idContactMap,
-		    QList<ContactEntry> &newContacts) const
+		    QDict<ContactEntry> &newContacts) const
     {
     FUNCTIONSETUP;
     
@@ -177,7 +177,7 @@ _mapContactsToPilot(const QDict<ContactEntry> &contacts,
 	{
 	ContactEntry *aContact = contactIter.current();
 	if (aContact->isNew())
-	    newContacts.append(aContact);
+	    newContacts.insert(contactIter.currentKey(), aContact);
 	else
 	    {
 	    QString idStr = aContact->getCustomField("KPILOT_ID");
@@ -189,7 +189,7 @@ _mapContactsToPilot(const QDict<ContactEntry> &contacts,
 	    else
 		{
 		kdDebug() << fname << " contact is new but KPILOT_ID is not found in abbrowser contact; BUG!" << endl;
-		newContacts.append(aContact);
+		newContacts.insert(contactIter.currentKey(),aContact);
 		}
 	    }
 	}
@@ -376,12 +376,12 @@ void AbbrowserConduit::_addToAbbrowser(const PilotAddress &address)
     _saveAbEntry(entry, QString::null);
     }
 
-void AbbrowserConduit::_addToPalm(ContactEntry &entry)
+void AbbrowserConduit::_addToPalm(const QString &key, ContactEntry &entry)
     {
     PilotAddress pilotAddress(fAddressAppInfo);
     _copy(pilotAddress, entry);
     if (_savePilotAddress(pilotAddress, entry))
-	_saveAbEntry(entry, QString::null);
+	_saveAbEntry(entry, key);
     }
 
 bool AbbrowserConduit::_conflict(const QString &str1,
@@ -651,7 +651,7 @@ void AbbrowserConduit::_handleConflict(PilotAddress *pilotAddress,
 		    // deconfliction; for now will just keep both
 		    if (getMode() != BaseConduit::Backup)
 			{
-			_addToPalm(*abEntry);
+			_addToPalm(abKey, *abEntry);
 			_removePilotAddress(*pilotAddress);
 			}
 		    break;
@@ -678,16 +678,39 @@ void AbbrowserConduit::_removePilotAddress(PilotAddress &address)
     {
     FUNCTIONSETUP;
     
-    kdDebug() << fname << endl;
+    kdDebug() << fname << " deleting from palm pilot " << endl;
     showPilotAddress(address);
+
+    address.makeDeleted();
+    PilotRecord *pilotRec = address.pack();
+    writeRecord(pilotRec);
+    
+    delete pilotRec;
+    pilotRec = 0L;
     }
 
-void AbbrowserConduit::_removeAbEntry(const QString & ) // key
+void AbbrowserConduit::_removeAbEntry(const QString & key)
     {
     FUNCTIONSETUP;
     
-    kdDebug() << fname << endl;
-    //showContactEntry(abEntry);
+    kdDebug() << fname << " removing key " << key << endl;
+
+    QByteArray sendData;
+    QByteArray replyData;
+    QCString replyTypeStr;
+    QDataStream out(sendData, IO_WriteOnly);
+    if (!key.isEmpty())
+	{
+	// new entry; just send the contact entry
+	out << key;
+	if (!fDcop->call("abbrowser", "AbBrowserIface",
+			 "removeEntry(QString)",
+			 sendData, replyTypeStr, replyData))
+	    {
+	    kdWarning() << "Unable to call abbrowser removeEnty" << endl;
+	    qApp->exit(1);
+	    }
+	}
     }
 
 void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry,
@@ -931,10 +954,13 @@ AbbrowserConduit::_findMatch(const QDict<ContactEntry> &entries,
     return 0L;
     }
 
-ContactEntry *AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
-		     const QDict<ContactEntry> &abbrowserContacts)
+ContactEntry *
+AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
+			       const QDict<ContactEntry> &abbrowserContacts,
+				  QString *outAbKey)
     {
     FUNCTIONSETUP;
+    kdDebug() << fname << " trying to sync the existing pilotAddress to the abbrowser entries" << endl;
     
     QString abKey;
     // look for the possible match of names
@@ -964,12 +990,14 @@ ContactEntry *AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
 	showPilotAddress(pilotAddress);
 	_addToAbbrowser(pilotAddress);
 	}
+    if (outAbKey)
+	*outAbKey = abKey;
     return abEntry;
     }
 
 bool AbbrowserConduit::_prepare(QDict<ContactEntry> &abbrowserContacts,
 				QMap<recordid_t, QString> &idContactMap,
-				QList<ContactEntry> &newContacts,
+				QDict<ContactEntry> &newContacts,
 				bool &abAlreadyRunning)
     {
     FUNCTIONSETUP;
@@ -1032,7 +1060,7 @@ void AbbrowserConduit::doBackup()
     
     QDict<ContactEntry> abbrowserContacts;
     QMap<recordid_t, QString> idContactMap;
-    QList<ContactEntry> newContacts;
+    QDict<ContactEntry> newContacts;
     bool abAlreadyRunning;
     if (!_prepare(abbrowserContacts, idContactMap, newContacts,
 		  abAlreadyRunning))
@@ -1096,117 +1124,119 @@ void AbbrowserConduit::doSync()
 	
     QDict<ContactEntry> abbrowserContacts;
     QMap<recordid_t, QString> idContactMap;
-    QList<ContactEntry> newContacts;
+    QDict<ContactEntry> newContacts;
     bool abAlreadyRunning;
     if (!_prepare(abbrowserContacts, idContactMap, newContacts,
 		  abAlreadyRunning))
 	return ;
+
 
     // perform syncing from palm to abbrowser
     PilotRecord *record = 0L;
     
     // iterate through all records in palm pilot
      int recIndex = 0;
-    //for (int catIndex = 0; catIndex < 16;catIndex++)
-    //for (record = readNextRecordInCategory(_getCatId(catIndex));
-    //record != NULL;
-    //record = readNextRecordInCategory(_getCatId(catIndex)))
-    for (record = readRecordByIndex(recIndex); record != NULL;
-	 ++recIndex, record = readRecordByIndex(recIndex))
-	{
-	    PilotAddress pilotAddress(fAddressAppInfo, record);
-	    QString abKey = QString::null;
-	    
-	    //   if record not in abbrowser
-	    if (!idContactMap.contains( pilotAddress.id() ))
-		{
-		//  ** I would like to use the the below algorithm, but there
-		//  ** is no way currenty to know if a address has been deleted
-		//  ** in abbrowser (unless the trash can functionality is
-		//  ** done)
-		//if record has been deleted in abbrowser
-		//        then query user what to do
-		//     else // not been deleted, so must be new
-		//        add record to abbrowser
+     kdDebug() << fname << " about to readRecordByIndex " << recIndex << endl;
+     for (record = readRecordByIndex(recIndex); record != NULL;
+	  ++recIndex, record = readRecordByIndex(recIndex))
+	 {
+	 PilotAddress pilotAddress(fAddressAppInfo, record);
+	 QString abKey = QString::null;
+	 
+	 //   if record not in abbrowser
+	 if (!idContactMap.contains( pilotAddress.id() ))
+	     {
+	     //  ** I would like to use the the below algorithm, but there
+	     //  ** is no way currenty to know if a address has been deleted
+	     //  ** in abbrowser (unless the trash can functionality is
+	     //  ** done)
+	     //if record has been deleted in abbrowser
+	     //        then query user what to do
+	     //     else // not been deleted, so must be new
+	     //        add record to abbrowser
+	     
+	     // if pilotAddress id == 0, then probably syncing locally
+	     // and the pilotAddress has already been added
+	     if (pilotAddress.id() != 0)
+		 {
+		 // assume that it was deleted from the abbrowser since a
+		 // backup should have been done before the first sync;
+		 // if the pilot address was modified, then query the
+		 // user what to do?
+		 if (fBackupDone)
+		     {
+		     if (pilotAddress.isModified())
+			 _handleConflict(&pilotAddress, NULL, abKey);
+		     else
+			 _removePilotAddress(pilotAddress);
+		     }
+		 else
+		     {
+		     QString abKey;
+		     ContactEntry *syncedContact = 
+			 _syncPilotEntry(pilotAddress, abbrowserContacts,
+					 &abKey);
+		     kdDebug() << fname << " SYNCED THE PILOT TO ABBROWSER"
+			       << endl;
+		     if (syncedContact)
+			 newContacts.remove(abKey);
+		     }
+		 }
+	     }
+	 else 
+	     {
+	     abKey = idContactMap[pilotAddress.id()];
+	     ContactEntry *abEntry = abbrowserContacts[abKey];
+	     assert(abEntry != NULL);
+	     // the record exists in the abbrowser and the palm
+	     if (pilotAddress.isModified() && abEntry->isModified())
+		 {
+		 // query the user what to do...
+		 _handleConflict(&pilotAddress, abEntry, abKey);
+		 }
+	     else  // record is either modified in the abbrowser or the palm
+		 // or not modified at all
+		 if (pilotAddress.isModified())
+		     {
+		     if (pilotAddress.isDeleted())
+			 _removeAbEntry(abKey);
+		     else
+			 {
+			 // update abbrowser
+			 _copy(*abEntry, pilotAddress);
+			 _saveAbEntry( *abEntry, abKey );
+			 }
+		     }
+		 else if (abEntry->isModified())
+		     {
+		     kdDebug() << fname <<
+			 "abEntry is modified but pilot wasn't; abEntry => "
+			       << endl;
+		     showContactEntry(*abEntry);
+		     // update pilot
+		     _copy(pilotAddress, *abEntry);
+		     _savePilotAddress( pilotAddress, *abEntry );
+		     // set modified to false and save abEntry
+		     abEntry->setModified(false);
+		     _saveAbEntry(*abEntry, abKey);
+		     }
+	     // else not modified at either end, leave alone
+	     }
+	 delete record;
+	 record = NULL;
+	 } // end pilot record loop
 
-		// if pilotAddress id == 0, then probably syncing locally
-		// and the pilotAddress has already been added
-		if (pilotAddress.id() != 0)
-		    {
-		    // assume that it was deleted from the abbrowser since a
-		    // backup should have been done before the first sync;
-		    // if the pilot address was modified, then query the
-		    // user what to do?
-		    if (fBackupDone)
-			{
-			if (pilotAddress.isModified())
-			    _handleConflict(&pilotAddress, NULL, abKey);
-			else
-			    _removePilotAddress(pilotAddress);
-			}
-		    else
-			{
-			ContactEntry *syncedContact = 
-			    _syncPilotEntry(pilotAddress, abbrowserContacts);
-			kdDebug() << fname << " SYNCED THE PILOT TO ABBROWSER"
-				  << endl;
-			if (syncedContact)
-			    newContacts.remove(syncedContact);
-			}
-		    }
-		}
-	    else 
-		{
-		abKey = idContactMap[pilotAddress.id()];
-		ContactEntry *abEntry = abbrowserContacts[abKey];
-		assert(abEntry != NULL);
-		// the record exists in the abbrowser and the palm
-		if (pilotAddress.isModified() && abEntry->isModified())
-		    {
-		    // query the user what to do...
-		    _handleConflict(&pilotAddress, abEntry, abKey);
-		    }
-		else  // record is either modified in the abbrowser or the palm
-		    // or not modified at all
-		    if (pilotAddress.isModified())
-			{
-			if (pilotAddress.isDeleted())
-			    _removeAbEntry(abKey);
-			else
-			    {
-			    // update abbrowser
-			    _copy(*abEntry, pilotAddress);
-			    _saveAbEntry( *abEntry, abKey );
-			    }
-			}
-		    else if (abEntry->isModified())
-			{
-			kdDebug() << fname <<
-			    "abEntry is modified but pilot wasn't; abEntry => "
-				  << endl;
-			showContactEntry(*abEntry);
-			// update pilot
-			_copy(pilotAddress, *abEntry);
-			_savePilotAddress( pilotAddress, *abEntry );
-			// set modified to false and save abEntry
-			abEntry->setModified(false);
-			_saveAbEntry(*abEntry, abKey);
-			}
-		// else not modified at either end, leave alone
-		}
-	    } // end pilot record loop
-
-    // add all new entries from abbrowser to the palm pilot
-    for (QListIterator<ContactEntry> newAbIter(newContacts);
-	 newAbIter.current();++newAbIter)
-	_addToPalm(*newAbIter.current());
+     // add all new entries from abbrowser to the palm pilot
+     for (QDictIterator<ContactEntry> newAbIter(newContacts);
+	  newAbIter.current();++newAbIter)
+	 _addToPalm(newAbIter.currentKey(), *newAbIter.current());
     
-    // add everything from pilot to abbrowser that is modified (or new)
-    // add everything from abbrowser to pilot that is modified (or new) 
-    // delete anything in pilot that is not in abbrowser
-    //   (this assumes a backup has been done prior to the sync)
-    _saveAbChanges();
-    _backupDone();
+     // add everything from pilot to abbrowser that is modified (or new)
+     // add everything from abbrowser to pilot that is modified (or new) 
+     // delete anything in pilot that is not in abbrowser
+     //   (this assumes a backup has been done prior to the sync)
+     _saveAbChanges();
+     _backupDone();
     }
 
 void AbbrowserConduit::doTest()
@@ -1217,7 +1247,7 @@ void AbbrowserConduit::doTest()
     
     QDict<ContactEntry> abbrowserContacts;
     QMap<recordid_t, QString> idContactMap;
-    QList<ContactEntry> newContacts;
+    QDict<ContactEntry> newContacts;
     bool abAlreadyRunning;
     if (!_prepare(abbrowserContacts, idContactMap, newContacts,
 		  abAlreadyRunning))

@@ -59,7 +59,7 @@ class AbbrowserConduit : public BaseConduit
        *  and get the contacts from abbrowser over dcop */
       bool _prepare(QDict<ContactEntry> &abbrowserContacts,
 		    QMap<recordid_t, QString> &idContactMap,
-		    QList<ContactEntry> &newContacts,
+		    QDict<ContactEntry> &newContacts,
 		    bool &abAlreadyRunning);
       /**
        * Read the global KPilot config file for settings
@@ -74,7 +74,7 @@ class AbbrowserConduit : public BaseConduit
       void _saveAbChanges();
       void _setAppInfo();
       void _addToAbbrowser(const PilotAddress &address);
-      void _addToPalm(ContactEntry &entry);
+      void _addToPalm(const QString &key, ContactEntry &entry);
       void _handleConflict(PilotAddress *piAddress, ContactEntry *abEntry,
 			   const QString &abKey);
       void _removePilotAddress(PilotAddress &address);
@@ -97,7 +97,7 @@ class AbbrowserConduit : public BaseConduit
        */
       void _mapContactsToPilot(const QDict<ContactEntry> &contacts,
 			       QMap<recordid_t, QString> &idContactMap,
-			       QList<ContactEntry> &newContacts) const;
+			       QDict<ContactEntry> &newContacts) const;
 
       /** Output to console, for debugging only */
       static void showContactEntry(const ContactEntry &abAddress);
@@ -106,7 +106,8 @@ class AbbrowserConduit : public BaseConduit
       bool _conflict(const QString &str1, const QString &str2,
 		     bool &mergeNeeded, QString &mergedStr) const;
       ContactEntry *_syncPilotEntry(PilotAddress &pilotAddress,
-		  const QDict<ContactEntry> &abbrowserContacts);
+		  const QDict<ContactEntry> &abbrowserContacts,
+				    QString *outAbKey = NULL);
       bool _smartMerge(PilotAddress &pilotAddress, ContactEntry &abEntry);
       void _backupDone();
       const char *_getKabFieldForOther(const QString &desc) const;
