@@ -20,7 +20,7 @@ public:
   virtual void doBackup();
   virtual QWidget* aboutAndSetup();
 
-  virtual const char* dbInfo() { return "TodoDB"; }
+  virtual const char* dbInfo() { return "TodoDB,ToDoDB"; }
   
 	static const char *version();
 
