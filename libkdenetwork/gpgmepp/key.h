@@ -68,7 +68,8 @@ namespace GpgME {
     bool canCertify() const;
     bool canAuthenticate() const;
 
-    bool isSecret() const;
+    bool hasSecret() const;
+    bool isSecret() const { return hasSecret(); }
 
     enum OwnerTrust { Unknown=0, Undefined=1, Never=2,
 		    Marginal=3, Full=4, Ultimate=5 };

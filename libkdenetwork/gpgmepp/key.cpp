@@ -189,7 +189,7 @@ namespace GpgME {
     return d->key && d->key->invalid;
   }
 
-  bool Key::isSecret() const {
+  bool Key::hasSecret() const {
     return d->key && d->key->secret;
   }
 
