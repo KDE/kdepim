@@ -263,6 +263,7 @@ KFolderTree::KFolderTree( QWidget *parent, const char* name )
   setSelectionModeExt(Extended);
   setAlternateBackground(QColor());
   setFullWidth(true);
+  disableAutoSelection();
 }
 
 //-----------------------------------------------------------------------------
