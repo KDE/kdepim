@@ -65,17 +65,20 @@ public:
     void Assign(const DwString& aStr);
     //. Sets the string to search for.
 
-    size_t FindIn(const DwString& aStr, size_t aPos) const;
+    size_t FindIn(const DwString& aStr, size_t aPos, bool aCs = true) const;
     //. Searches for the search string in {\tt aStr} starting at position
     //. {\tt aPos}.  If found, the function returns the first position in
     //. {\tt aStr} where the search string was found.  If not found, the
-	//. function returns {\tt DwString::npos}.
+    //. function returns {\tt DwString::npos}. Search is case sensitive iff
+    //. {\tt aCs} is true.
 
 private:
 
     size_t mPatLen;
     char* mPat;
+    char* mCiPat;
     unsigned char mSkipAmt[256];
+    unsigned char mCiSkipAmt[256]; // case insensitive skip table
 
     void _Assign(const char* aPat, size_t aPatLen);
 };

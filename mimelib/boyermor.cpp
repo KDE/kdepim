@@ -32,21 +32,21 @@
 
 
 DwBoyerMoore::DwBoyerMoore(const char* aCstr)
-  : mPat( 0 )
+  : mPat( 0 ), mCiPat( 0 )
 {
     size_t len = strlen(aCstr);
-	_Assign(aCstr, len);
+    _Assign(aCstr, len);
 }
 
 
 DwBoyerMoore::DwBoyerMoore(const DwString& aStr)
-  : mPat( 0 )
+  : mPat( 0 ), mCiPat( 0 )
 {
     _Assign(aStr.data(), aStr.length());
 }
 
 DwBoyerMoore::DwBoyerMoore(const DwBoyerMoore & other)
-  : mPat( 0 )
+  : mPat( 0 ), mCiPat( 0 )
 {
     _Assign(other.mPat, other.mPatLen);
 }
@@ -55,6 +55,7 @@ DwBoyerMoore::DwBoyerMoore(const DwBoyerMoore & other)
 DwBoyerMoore::~DwBoyerMoore()
 {
     delete[] mPat; mPat = 0;
+    delete[] mCiPat; mCiPat = 0;
 }
 
 const DwBoyerMoore & DwBoyerMoore::operator=( const DwBoyerMoore & other )
@@ -82,38 +83,46 @@ void DwBoyerMoore::_Assign(const char* aPat, size_t aPatLen)
 {
     mPatLen = 0;
     delete[] mPat; mPat = 0;
+    delete[] mCiPat; mCiPat = 0;
     mPat = new char[aPatLen+1];
-    if (mPat != 0) {
+    mCiPat = new char[aPatLen+1];
+    if (mPat != 0 && aPatLen) {
         mPatLen = aPatLen;
         strncpy(mPat, aPat, mPatLen);
-        mPat[mPatLen] = 0;
+        mCiPat[mPatLen] = mPat[mPatLen] = 0;
         // Initialize the jump table for Boyer-Moore-Horspool algorithm
         size_t i;
-        for (i=0; i < 256; ++i) {
-            mSkipAmt[i] = (unsigned char) mPatLen;
-        }
+        for (i=0; i < 256; ++i)
+            mSkipAmt[i] = mCiSkipAmt[i] = (unsigned char) mPatLen;
         for (i=0; i < mPatLen-1; ++i) {
-            mSkipAmt[(unsigned)mPat[i]] = (unsigned char) (mPatLen - i - 1);
-        }
+	    unsigned char skip = mPatLen - i - 1;
+	    mCiPat[i] = tolower(mPat[i]);
+	    mCiSkipAmt[(unsigned)mCiPat[i]] = skip;
+	    mCiSkipAmt[(unsigned)toupper(mCiPat[i])] = skip;
+	    mSkipAmt[(unsigned)mPat[i]] = skip;
+	}
+	mCiPat[i] = tolower(mPat[i]);
     }
 }
 
 
-size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos) const
+size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos, bool aCs) const
 {
+    char *pat = aCs ? mPat : mCiPat;
+    const unsigned char *skipAmt = aCs ? mSkipAmt : mCiSkipAmt;
     if (aStr.length() <= aPos) {
         return (size_t) -1;
     }
-    if (mPat == 0 || mPatLen == 0) {
+    if (pat == 0 || mPatLen == 0) {
         return 0;
     }
     size_t bufLen = aStr.length() - aPos;
     const char* buf = aStr.data() + aPos;
     size_t i;
-    for (i=mPatLen-1; i < bufLen; i += mSkipAmt[(unsigned char)buf[i]]) {
+    for (i=mPatLen-1; i < bufLen; i += skipAmt[(unsigned char)buf[i]]) {
         int iBuf = i;
         int iPat = mPatLen - 1;
-        while (iPat >= 0 && buf[iBuf] == mPat[iPat]) {
+        while (iPat >= 0 && (aCs ? buf[iBuf] : tolower(buf[iBuf])) == pat[iPat]) {
             --iBuf;
             --iPat;
         }
