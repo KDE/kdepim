@@ -71,6 +71,8 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
                             &actionCollection, "article_read");
   actMarkUnread = new KAction(i18n("Mark as &unread"), Key_U , this, SLOT(slotMarkUnread()),
                               &actionCollection, "article_unread");
+  actThreadRead = new KAction(i18n("Mark as &read"), ALT+Key_U , this, SLOT(slotThreadRead()),
+                              &actionCollection, "thread_read");
   actThreadUnread = new KAction(i18n("Mark as &unread"), ALT+Key_U , this, SLOT(slotThreadUnread()),
                                 &actionCollection, "thread_unread");
   actThreadSetScore = new KAction(i18n("Set &score"), Key_S , this, SLOT(slotThreadScore()),
@@ -409,6 +411,7 @@ void KNFetchArticleManager::showError(KNArticle *a, const QString &error)
 
 
 
+
 void KNFetchArticleManager::createHdrItem(KNFetchArticle *a)
 {
 	a->setListItem(new KNHdrViewItem(view));
@@ -564,6 +567,7 @@ void KNFetchArticleManager::updateStatusString()
     xTop->setCaption(g_roup->name());		
 	}	
 }
+
 
 
 // -----------------------------------------------------------------------------
