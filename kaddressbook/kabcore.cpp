@@ -81,11 +81,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mAddressBook = KABC::StdAddressBook::self( true );
   mAddressBook->setErrorHandler( new KABC::GuiErrorHandler( mWidget ) );
 
-  connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
-           SLOT( addressBookChanged() ) );
-  connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
-           SLOT( addressBookChanged() ) );
-
   mAddressBook->addCustomField( i18n( "Department" ), KABC::Field::Organization,
                                 "X-Department", "KADDRESSBOOK" );
   mAddressBook->addCustomField( i18n( "Profession" ), KABC::Field::Organization,
@@ -104,6 +99,15 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                                 "X-Anniversary", "KADDRESSBOOK" );
 
   initGUI();
+
+// BUG 58583: Grzegorz Jaskiewicz gj AT pointblue.com.pl
+// init it here, as addresssBookChaned() uses mViewManager
+// which is initialised in initGUI(); 
+  
+  connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
+	  SLOT( addressBookChanged() ) );
+  connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
+	  SLOT( addressBookChanged() ) );
 
   mIncSearchWidget->setFocus();
 
