@@ -33,31 +33,29 @@ ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
                                          QWidget *parent)
         : KImportDialog(parent), mDocument(doc)
 {
-  // These should be ported to use the KABC::Field labels to be consistant.
-  
-    mFirstName = new KImportColumn(this,i18n("First Name"),1);
-    mLastName = new KImportColumn(this,i18n("Last Name"),1);
-//      mFullName = new KImportColumn(this,i18n("Full Name"));
-    mEmail = new KImportColumn(this,i18n("Email"));
-    mPhoneHome = new KImportColumn(this,i18n("Phone Home"));
-    mPhoneBusiness = new KImportColumn(this,i18n("Phone Business"));
-    mPhoneMobile = new KImportColumn(this,i18n("Phone Mobile"));
-    mFaxHome = new KImportColumn(this,i18n("Fax Home"));
-    mFaxBusiness = new KImportColumn(this,i18n("Fax Business"));
-    mJobTitle = new KImportColumn(this,i18n("Job Title"));
-    mCompany = new KImportColumn(this,i18n("Company"));
+    mFirstName = new KImportColumn(this, KABC::Addressee::givenNameLabel(), 1);
+    mLastName = new KImportColumn(this, KABC::Addressee::familyNameLabel(), 1);
+    mBirthday = new KImportColumn(this, KABC::Addressee::birthdayLabel());
+    mEmail = new KImportColumn(this, KABC::Addressee::emailLabel());
+    mPhoneHome = new KImportColumn(this, KABC::Addressee::homePhoneLabel());
+    mPhoneBusiness = new KImportColumn(this, KABC::Addressee::businessPhoneLabel());
+    mPhoneMobile = new KImportColumn(this, KABC::Addressee::mobilePhoneLabel());
+    mFaxHome = new KImportColumn(this, KABC::Addressee::homeFaxLabel());
+    mFaxBusiness = new KImportColumn(this, KABC::Addressee::businessFaxLabel());
+    mJobTitle = new KImportColumn(this, KABC::Addressee::titleLabel());
+    mCompany = new KImportColumn(this, KABC::Addressee::organizationLabel());
 
-    mAddressHomeCity = new KImportColumn(this,i18n("Home Address City"));
-    mAddressHomeStreet = new KImportColumn(this,i18n("Home Address Street"));
-    mAddressHomeZip = new KImportColumn(this,i18n("Home Address Postal Code"));
-    mAddressHomeState = new KImportColumn(this,i18n("Home Address State"));
-    mAddressHomeCountry = new KImportColumn(this,i18n("Home Address Country"));
+    mAddressHomeCity = new KImportColumn(this, KABC::Addressee::homeAddressLocalityLabel());
+    mAddressHomeStreet = new KImportColumn(this, KABC::Addressee::homeAddressStreetLabel());
+    mAddressHomeZip = new KImportColumn(this, KABC::Addressee::homeAddressPostalCodeLabel());
+    mAddressHomeState = new KImportColumn(this, KABC::Addressee::homeAddressRegionLabel());
+    mAddressHomeCountry = new KImportColumn(this, KABC::Addressee::homeAddressCountryLabel());
 
-    mAddressBusinessCity = new KImportColumn(this,i18n("Business Address City"));
-    mAddressBusinessStreet = new KImportColumn(this,i18n("Business Address Street"));
-    mAddressBusinessZip = new KImportColumn(this,i18n("Business Address Postal Code"));
-    mAddressBusinessState = new KImportColumn(this,i18n("Business Address State"));
-    mAddressBusinessCountry = new KImportColumn(this,i18n("Business Address Country"));
+    mAddressBusinessCity = new KImportColumn(this, KABC::Addressee::businessAddressLocalityLabel());
+    mAddressBusinessStreet = new KImportColumn(this, KABC::Addressee::businessAddressStreetLabel());
+    mAddressBusinessZip = new KImportColumn(this, KABC::Addressee::businessAddressPostalCodeLabel());
+    mAddressBusinessState = new KImportColumn(this, KABC::Addressee::businessAddressRegionLabel());
+    mAddressBusinessCountry = new KImportColumn(this, KABC::Addressee::businessAddressCountryLabel());
 
     registerColumns();
 }
@@ -67,6 +65,7 @@ void ContactImportDialog::convertRow()
   KABC::Addressee a;
   a.setGivenName(mFirstName->convert());
   a.setFamilyName(mLastName->convert());
+  a.setBirthday( QDateTime::fromString( mBirthday->convert() ) );
   a.insertEmail(mEmail->convert(), true);
   a.setRole(mJobTitle->convert());
   

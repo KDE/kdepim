@@ -44,7 +44,7 @@ class ContactImportDialog : public KImportDialog
   private:
     KImportColumn *mFirstName;
     KImportColumn *mLastName;
-//    KImportColumn *mFullName;
+    KImportColumn *mBirthday;
     KImportColumn *mEmail;
     KImportColumn *mJobTitle;
     KImportColumn *mPhoneBusiness;
