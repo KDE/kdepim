@@ -293,7 +293,7 @@ DIST_COMMON =  Makefile.am Makefile.in
 
 #>- DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=hi32-app-kmailcvt.png hi48-app-kmailcvt.png mapitags.h lo32-app-kmailcvt.png lo16-app-kmailcvt.png oe5_2mbox.hxx mapidefs.h 
+KDE_DIST=oe5_2mbox.hxx hi32-app-kmailcvt.png hi48-app-kmailcvt.png lo32-app-kmailcvt.png lo16-app-kmailcvt.png mapitags.h mapidefs.h 
 
 DISTFILES= $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 

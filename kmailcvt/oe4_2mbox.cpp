@@ -89,8 +89,8 @@ char s[1024];
     }
   }
   else {QString msg,m,a;
-    m.sprintf("%ul ",mails);
-    a.sprintf("%ul ",added);
+    m.sprintf("%lu ",mails);
+    a.sprintf("%lu ",added);
     msg=m+i18n("mails read, ")+a+i18n("were new to kmail folder");
     info->log(msg);
   }

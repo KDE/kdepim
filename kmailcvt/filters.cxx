@@ -343,7 +343,9 @@ int     result;
     info->alert(cap,msg);
     return false;
   }
-  else if (result==1) { added+=1; }
+
+  if (result>0) { added+=1; }//fprintf(stderr,"added+1\n"); }  
+  
 return true;
 
 #else

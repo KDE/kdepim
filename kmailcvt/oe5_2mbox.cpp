@@ -89,8 +89,8 @@ char s[1024];
     }
   }
   else {QString msg,m,a;
-    m.sprintf("%ul ",mails);
-    a.sprintf("%ul ",added);
+    m.sprintf("%lu ",mails);
+    a.sprintf("%lu ",added);
     msg=m+i18n("mails read, ")+a+i18n("were new to kmail folder");
     info->log(msg);
   }
@@ -103,8 +103,6 @@ void addMessage(const char *string,int code)
 static FILE *f=NULL;
 static int status=-1;
 static float perc=0.0;
-static unsigned long added=0;
-
 
   switch(code) {
     case 1: // begin new message
@@ -171,7 +169,7 @@ static unsigned long added=0;
           }
           else {
             fclose(f);
-            F->kmailMessage(INFO,(char *) FOLDER,s,added);
+            F->kmailMessage(INFO,(char *) FOLDER,s,added);mails+=1;
             unlink(s);
             status=-1; // skip to next message.
           }
