@@ -347,6 +347,6 @@ void AlarmDockWindow::addToolTip(const QString& filename)
 
   if (!filename.isEmpty())
     apps += "\n" + filename;
-
+  QToolTip::remove(this);
   QToolTip::add(this, apps);
 }
