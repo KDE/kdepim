@@ -37,6 +37,8 @@
 #include <qstring.h>
 #include <qmap.h>
 
+#include "subresource.h"
+
 class QCString;
 class QStringList;
 class KURL;
@@ -129,11 +131,7 @@ protected:
   QString configFile( const QString& type ) const;
 
   /// If only one of these is writable, return that. Otherwise return null.
-  QString findWritableResource( const QMap<QString, bool>& resources,
-                                const QString& type );
-  /// If only one of these is writable, return that. Otherwise return null.
-  QString findWritableResource( const QStringList& resources,
-                                const QString& type );
+  QString findWritableResource( const ResourceMap& resources );
 
   bool mSilent;
 

@@ -128,30 +128,14 @@ bool ResourceKolabBase::connectToKMail() const
   return mConnection->connectToKMail();
 }
 
-QString ResourceKolabBase::findWritableResource( const QMap<QString, bool>& resources,
-                                                 const QString& type )
+QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
 {
-  QStringList possible;
-  QMap<QString, bool>::ConstIterator it;
-  for ( it = resources.begin(); it != resources.end(); ++it )
-    if ( it.data() )
-      // Writable possibility
-      possible << it.key();
-  return findWritableResource( possible, type );
-}
-
-QString ResourceKolabBase::findWritableResource( const QStringList& resources,
-                                                 const QString& type )
-{
-  QStringList possible;
-  QStringList::ConstIterator it;
+  ResourceMap possible;
+  ResourceMap::ConstIterator it;
   for ( it = resources.begin(); it != resources.end(); ++it ) {
-    // Ask KMail if this one is writable
-
-// TODO: This is done some other way
-//    if ( kmailIsWritableFolder( type, *it ) )
-      // Writable possibility
-      possible << *it;
+    if ( it.data().writable() && it.data().active() )
+      // Writable and active possibility
+      possible[ it.key() ] = it.data();
   }
 
   if ( possible.isEmpty() )
@@ -159,11 +143,12 @@ QString ResourceKolabBase::findWritableResource( const QStringList& resources,
     return QString::null;
   if ( possible.count() == 1 )
     // Just one found
-    return possible[ 0 ];
+    return possible.begin().key();
 
   // Several found, ask the user
+  // TODO: Show the label instead of the resource name
   return KInputDialog::getItem( i18n( "Select Resource Folder" ),
                                 i18n( "You have more than one writable resource folder. "
                                       "Please select the one you want to write to." ),
-                                possible );
+                                possible.keys() );
 }
