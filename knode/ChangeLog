@@ -2,15 +2,23 @@ changes between 0.4 and 0.6
 - real scoring
 - full-fledged regular expressions can be used for scoring
   and filter rules.
+- filter rules for numerical values are more flexible now,
+  its possible to filter something like "x < value" or
+  "x > value", not just ranges.
+- its now possible to filter on the message-id and references header
+- the search functionally can show complete threads now (optionally)
 - support for customizable folders
 - DnD between folders and groups
 - convenient mbox-folder import/export
 - Introduced a caching-mechanism that allows one to
-  specify how many article-bodies may be kept in memory
-  and how much RAM may be used by the cache
+  specify how much RAM may be used by the cached
+  article bodies and headers.
 - basic KMail integration
+- enabled forwarding of articles with attachments
 - proper handling of crossposts, crossposted articles
   are marked as read
+- new expire-feature: delete article headers that
+  aren't available on the server
 - new menu option: fetch an article by message-id
 - added option to retreive an article from groups.google.com
   if it's unavaiable on the local server
@@ -21,6 +29,7 @@ changes between 0.4 and 0.6
 - shows a password-dialog when the server requests authentication
 - articles are no fetched via article number instead of article-id
   to avoid problems with broken newsservers
+- support for IPv6 and SOCKS-proxies
 - highlighting of "news:" and "mailto:" urls
 - highlight all email-addresses and msgids (and ask the user if its
   an address or a id)

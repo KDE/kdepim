@@ -16,16 +16,8 @@
 
 #include <config.h>
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-
-#include <netinet/in.h>
-#include <arpa/inet.h>
-
 #include <errno.h>
 #include <fcntl.h>
-#include <netdb.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <signal.h>
@@ -34,6 +26,8 @@
 
 #include <qstrlist.h>
 #include <klocale.h>
+#include <kextsock.h>
+#include <ksocks.h>
 
 #include "knserverinfo.h"
 #include "knjobdata.h"
@@ -107,7 +101,7 @@ void KNProtocolClient::waitForWork()
       FD_SET(tcpSocket, &fdsE);
       tv.tv_sec = account.hold();
       tv.tv_usec = 0;
-      selectRet = select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
+      selectRet = KSocks::self()->select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
       if (selectRet == 0) {
 #ifndef NDEBUG
         qDebug("knode: KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
@@ -126,7 +120,7 @@ void KNProtocolClient::waitForWork()
     do {
       FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
-    } while (select(FD_SETSIZE, &fdsR, NULL, NULL, NULL)<0);  // don't get tricked by signals
+    } while (KSocks::self()->select(FD_SETSIZE, &fdsR, NULL, NULL, NULL)<0);  // don't get tricked by signals
 
     clearPipe();      // remove start signal
 
@@ -188,54 +182,27 @@ bool KNProtocolClient::openConnection()
     return false;
   }
 
-  tcpSocket = socket(PF_INET,SOCK_STREAM,0);
-  if (-1 == tcpSocket) {
-    QString str = i18n("Communication error:\n");
-    str += strerror(errno);
-    job->setErrorString(str);
-    return false;
-  }
+  KExtendedSocket ks;
 
-  // use non-blocking sockets only if we are sure that
-  // they work reliable. (i.e. on linux/glibc>=2.0 and Solaris)
-#if ((defined(__linux__) && (__GNU_LIBRARY__ != 1)) || defined(__sun__))
-  if (-1 == fcntl(tcpSocket,F_SETFL,O_NONBLOCK)) {  // make socket non-blocking
-    QString str = i18n("Communication error:\n");
-    str += strerror(errno);
-    job->setErrorString(str);
+  ks.setAddress(account.server(), account.port());
+  ks.setTimeout(account.timeout());
+  if (ks.connect() < 0) {
+    if (ks.status() == IO_LookupError) {
+      job->setErrorString(i18n("Unable to resolve hostname"));
+    } else if (ks.status() == IO_ConnectError) {
+      job->setErrorString(i18n("Unable to connect:\n%1").arg(KExtendedSocket::strError(ks.status(), errno)));
+    } else if (ks.status() == IO_TimeOutError)
+      job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
+    else
+      job->setErrorString(i18n("Unable to connect:\n%1").arg(KExtendedSocket::strError(ks.status(), errno)));
+
     closeSocket();
     return false;
   }
-#endif
 
-  in_addr address;
+  tcpSocket = ks.fd();
+  ks.release();
 
-  // can only use inet_addr because of portability problem on Solaris
-  // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
-  address.s_addr = inet_addr(account.server().local8Bit().data());
-  // unsigned int is ok because its uint/32bit in fact
-  if ( (unsigned int) address.s_addr != (unsigned int)-1 ) {
-    if (!conRawIP(&address)) {
-      closeSocket();
-      return false;
-    }
-  } else {               // host name lookup....
-    struct hostent* hostData = gethostbyname(account.server().local8Bit().data());
-
-    if (NULL==hostData) {
-      job->setErrorString(i18n("Unable to resolve hostname"));
-      closeSocket();
-      return false;
-    }
-
-    char** addr_list = hostData->h_addr_list;  // Try every IP
-    while ((*addr_list)&&(!conRawIP((struct in_addr*)*addr_list)))
-      ++addr_list;
-    if (!(*addr_list)) {
-      closeSocket();
-      return false;
-    }
-  }
   return true;
 }
 
@@ -254,12 +221,12 @@ void KNProtocolClient::closeConnection()
   FD_SET(tcpSocket, &fdsW);
   tv.tv_sec = 0;
   tv.tv_usec = 0;
-  int ret = select(FD_SETSIZE, NULL, &fdsW, NULL, &tv);
+  int ret = KSocks::self()->select(FD_SETSIZE, NULL, &fdsW, NULL, &tv);
 
   if (ret > 0) {    // we can write...
     QCString cmd = "QUIT\r\n";
     int todo = cmd.length();
-    write(tcpSocket,&cmd.data()[0],todo);
+    KSocks::self()->write(tcpSocket,&cmd.data()[0],todo);
   }
   closeSocket();
 }
@@ -365,7 +332,7 @@ bool KNProtocolClient::getNextLine()
 
     int received;
     do {
-      received = read(tcpSocket, inputEnd, inputSize-(inputEnd-input)-1);
+      received = KSocks::self()->read(tcpSocket, inputEnd, inputSize-(inputEnd-input)-1);
     } while ((received<0)&&(errno==EINTR));       // don't get tricked by signals
 
     if (received <= 0) {
@@ -465,7 +432,7 @@ void KNProtocolClient::sendSignal(threadSignal s)
 {
   int signal=(int)s;
   // qDebug("knode: KNProtcolClient::sendSignal() : sending signal to main thread");
-  write(fdPipeOut, &signal, sizeof(int));
+  KSocks::self()->write(fdPipeOut, &signal, sizeof(int));
 }
 
 
@@ -485,7 +452,7 @@ bool KNProtocolClient::waitForRead()
     FD_SET(fdPipeIn, &fdsE);
     tv.tv_sec = account.timeout();
     tv.tv_usec = 0;
-    ret = select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
+    ret = KSocks::self()->select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
   } while ((ret<0)&&(errno==EINTR));             // don't get tricked by signals
 
   if (ret == -1) {     // select failed
@@ -546,7 +513,7 @@ bool KNProtocolClient::waitForWrite()
     FD_SET(fdPipeIn, &fdsE);
     tv.tv_sec = account.timeout();
     tv.tv_usec = 0;
-    ret = select(FD_SETSIZE, &fdsR, &fdsW, &fdsE, &tv);
+    ret = KSocks::self()->select(FD_SETSIZE, &fdsR, &fdsW, &fdsE, &tv);
   } while ((ret<0)&&(errno==EINTR));             // don't get tricked by signals
 
 
@@ -590,108 +557,6 @@ bool KNProtocolClient::waitForWrite()
 }
 
 
-// used by openConnection()
-bool KNProtocolClient::conRawIP(in_addr* ip)
-{
-  fd_set fdsR,fdsW;
-  timeval tv;
-
-  job->setErrorString(QString::null);
-  sockaddr_in address;
-  address.sin_family = AF_INET;
-  address.sin_port = htons(account.port());
-  address.sin_addr = *ip;
-  if (-1 == ::connect(tcpSocket,(struct sockaddr*)&address,sizeof(struct sockaddr_in))) {
-    if (errno == EINPROGRESS) {
-      int ret;
-      do {
-        FD_ZERO(&fdsR);
-        FD_SET(fdPipeIn, &fdsR);
-        FD_ZERO(&fdsW);
-        FD_SET(tcpSocket, &fdsW);
-        tv.tv_sec = account.timeout();
-        tv.tv_usec = 0;
-        ret = select(FD_SETSIZE, &fdsR, &fdsW, NULL, &tv);
-      } while ((ret<0)&&(errno==EINTR));       // don't get tricked by signals
-
-      if (ret == -1) {     // select failed
-        QString str = i18n("Communication error:\n");
-        str += strerror(errno);
-        job->setErrorString(str);
-        return false;
-      }
-
-      if (ret == 0) {      // nothing happend, timeout
-        job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
-        return false;
-      }
-
-      if ((ret > 0)&&(FD_ISSET(fdPipeIn,&fdsR)))   // stop signal
-        return false;
-
-      // the getsockopt() stuff doesn't work on solaris...
-#ifdef __sun__
-      if (-1 == ::connect(tcpSocket,(struct sockaddr*)&address,sizeof(struct sockaddr_in))) {
-        switch (errno) {
-          case EISCONN:
-          case 0:
-            return true;   // success!!
-          case ECONNREFUSED:
-            job->setErrorString(i18n("The server refused the connection."));
-            return false;
-          case ETIMEDOUT:
-            job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
-            return false;
-          default:
-            job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(errno)));
-            return false;
-        }
-      } else
-        return true;
-#else
-      int err = 0;
-      ksize_t len = 1;
-      if (getsockopt(tcpSocket,SOL_SOCKET,SO_ERROR,(char*)&err,&len)!=0) {
-        QString str = i18n("Communication error:\n");
-        str += strerror(errno);
-        job->setErrorString(str);
-        return false;
-      } else {
-        QCString str;
-        switch (err) {
-          case 0: return true;   // success!!
-          case ECONNREFUSED:
-            job->setErrorString(i18n("The server refused the connection."));
-            return false;
-          case ETIMEDOUT:
-            job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
-            return false;
-          default:
-            job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(err)));
-            return false;
-        }
-      }
-#endif
-    } else {
-      QCString str;
-      switch (errno) {
-        case 0: return true;   // success!!
-        case ECONNREFUSED:
-          job->setErrorString(i18n("The server refused the connection."));
-          return false;
-        case ETIMEDOUT:
-          job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
-          return false;
-        default:
-            job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(errno)));
-          return false;
-      }
-    }
-  }
-  return true;
-}
-
-
 void KNProtocolClient::closeSocket()
 {
   if (-1 != tcpSocket) {
@@ -711,7 +576,7 @@ bool KNProtocolClient::sendStr(const QCString &str)
   while (todo > 0) {
     if (!waitForWrite())
       return false;
-    ret = write(tcpSocket,&str.data()[done],todo);
+    ret = KSocks::self()->write(tcpSocket,&str.data()[done],todo);
     if (ret <= 0) {
       if (job) {
         QString str = i18n("Communication error:\n");
@@ -749,8 +614,8 @@ void KNProtocolClient::clearPipe()
   do {
     FD_ZERO(&fdsR);
     FD_SET(fdPipeIn,&fdsR);
-    if (1==(selectRet=select(FD_SETSIZE,&fdsR,NULL,NULL,&tv)))
-      if ( ::read(fdPipeIn, &buf, 1 ) == -1 )
+    if (1==(selectRet=KSocks::self()->select(FD_SETSIZE,&fdsR,NULL,NULL,&tv)))
+      if ( KSocks::self()->read(fdPipeIn, &buf, 1 ) == -1 )
   ::perror( "clearPipe()" );
   } while (selectRet == 1);
 }

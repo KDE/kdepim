@@ -84,7 +84,6 @@ class KNProtocolClient : public QObject  {
 
     bool waitForRead();          // waits until socket is readable
     bool waitForWrite();         // waits until socket is writeable
-    bool conRawIP(in_addr* ip);  // used by openConnection()
     void closeSocket();
     bool sendStr(const QCString &str);   // sends str to the server
     void clearPipe();            // removes start/stop signal
