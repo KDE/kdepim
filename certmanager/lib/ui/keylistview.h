@@ -52,6 +52,7 @@ namespace Kleo {
     KeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Key & key );
     KeyListViewItem( KeyListViewItem * parent, const GpgME::Key & key );
     KeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::Key & key );
+    ~KeyListViewItem();
 
     void setKey( const GpgME::Key & key );
     const GpgME::Key & key() const { return mKey; }
@@ -179,6 +180,7 @@ namespace Kleo {
 
   class KeyListView : public KListView {
     Q_OBJECT
+    friend class KeyListViewItem;
   public:
     class ColumnStrategy;
     class DisplayStrategy;
@@ -236,6 +238,7 @@ namespace Kleo {
     void scatterGathered( QListViewItem * );
     void refillFingerprintDictionary();
     KeyListViewItem * parentFor( const QCString & ) const;
+    void deregisterItem( const KeyListViewItem * );
 
   private:
     const ColumnStrategy * mColumnStrategy;

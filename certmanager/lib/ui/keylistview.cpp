@@ -228,6 +228,19 @@ void Kleo::KeyListView::clear() {
   KListView::clear();
 }
 
+void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
+  if ( !item )
+    return;
+  std::map<QCString,KeyListViewItem*>::iterator it
+    = d->itemMap.find( item->key().subkey(0).fingerprint() );
+  if ( it == d->itemMap.end() )
+    return;
+  Q_ASSERT( it->second != item );
+  if ( it->second != item )
+    return;
+  d->itemMap.erase( it );
+}
+
 void Kleo::KeyListView::doHierarchicalInsert( const GpgME::Key & key ) {
   const QCString fpr = key.subkey(0).fingerprint();
   if ( fpr.isEmpty() )
@@ -363,6 +376,11 @@ Kleo::KeyListViewItem::KeyListViewItem( KeyListViewItem * parent, KeyListViewIte
   : QListViewItem( parent, after )
 {
   setKey( key );
+}
+
+Kleo::KeyListViewItem::~KeyListViewItem() {
+  if ( KeyListView * lv = listView() )
+    lv->deregisterItem( this );
 }
 
 void Kleo::KeyListViewItem::setKey( const GpgME::Key & key ) {
