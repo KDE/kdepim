@@ -41,6 +41,8 @@
 #ifdef HAVE_GNOKII_H
 extern "C" {
 #include <gnokii.h>
+#define GNOKII_VERSION 0x060  // gnokii.h should provide this !
+//#define GNOKII_VERSION 0x061  // gnokii.h should provide this !
 }
 #endif
 
@@ -59,6 +61,10 @@ extern "C" {
 			kdError() << QString("ERROR %1: %2\n").arg(error).arg(gn_error_print(error));\
 	} while (0)
 
+// Locale conversion routines:
+// Gnokii uses the local 8 Bit encoding (based on LC_ALL), kaddressbook uses Unicode
+#define GN_FROM(x)	QString::fromLocal8Bit(x)
+#define GN_TO(x)	QString(x).local8Bit()
 
 class GNOKIIXXPortFactory : public KAB::XXPortFactory
 {
@@ -107,8 +113,15 @@ static QString businit(void)
 	gn_error error;
 	char *aux;
 
-	if (gn_cfg_read(&BinDir)<0 || !gn_cfg_phone_load("", &state))
-		return i18n("GNOKII is not yet configured.");
+#if GNOKII_VERSION >= 0x061
+	if (gn_cfg_read_default(&BinDir)<0)
+#else
+	if (gn_cfg_read(&BinDir)<0)
+#endif
+		return i18n("Failed to initialize the Gnokii library.");
+
+	if (!gn_cfg_phone_load("", &state))
+		return i18n("Gnokii is not yet configured.");
 
 	gn_data_clear(&data);
 
@@ -141,7 +154,7 @@ static QString businit(void)
 	error = gn_sm_functions(GN_OP_GetModel, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 	if (model[0] == 0)
-		strcpy(model, i18n("unknown").utf8());
+		strcpy(model, GN_TO(i18n("unknown")));
 	data.model = NULL;
 
 	// revision
@@ -252,12 +265,12 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 	if (error == GN_ERR_INVALIDMEMORYTYPE)
 		break;
 	if (error == GN_ERR_NONE) {
-		GNOKII_DEBUG(QString("%1: %2, num=%3, location=%4, group=%5, count=%6\n").arg(i).arg(entry.name)
-			.arg(entry.number).arg(entry.location).arg(entry.caller_group).arg(entry.subentries_count));
+		GNOKII_DEBUG(QString("%1: %2, num=%3, location=%4, group=%5, count=%6\n").arg(i).arg(GN_FROM(entry.name))
+			.arg(GN_FROM(entry.number)).arg(entry.location).arg(entry.caller_group).arg(entry.subentries_count));
 		KABC::Addressee *a = new KABC::Addressee();
 		
 		// try to split Name into FamilyName and GivenName
-		s = QString(entry.name).simplifyWhiteSpace();
+		s = GN_FROM(entry.name).simplifyWhiteSpace();
 		if (s.find(',')!=-1) {
 		  addrlist = QStringList::split(',', s);
 		  if (addrlist.count()==2) {
@@ -297,7 +310,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		/* scan sub-entries */
 		if (entry.subentries_count)
 		 for (int n=0; n<entry.subentries_count; n++) {
-		  QString s = QString(entry.subentries[n].data.number).simplifyWhiteSpace();
+		  QString s = GN_FROM(entry.subentries[n].data.number).simplifyWhiteSpace();
 		  GNOKII_DEBUG(QString(" Subentry#%1, entry_type=%2, number_type=%3, number=%4\n")
 				.arg(n).arg(entry.subentries[n].entry_type)
 				.arg(entry.subentries[n].number_type).arg(s));
@@ -311,7 +324,6 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			a->insertEmail(s);
 			break;
 		   case GN_PHONEBOOK_ENTRY_Postal:
-			s = s.simplifyWhiteSpace();
 			addrlist = QStringList::split(';', s, true);
 			addr = new KABC::Address(KABC::Address::Work);
 			if (addrlist.count() <= 1 ) {
@@ -325,7 +337,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 				addr->setPostalCode(addrlist[5]);
 				country = addrlist[6];
 				if (!country.isEmpty())
-					addr->setCountry(i18n(country.utf8()));
+					addr->setCountry(i18n(GN_TO(country)));
 			}
 			a->insertAddress(*addr);
 			delete addr;
@@ -423,7 +435,7 @@ static QString makeValidPhone( const QString &number )
 {
 	// allowed chars: 0-9, *, #, p, w, +
 	QString num = number.simplifyWhiteSpace();
-	QString allowed("+0123456789*#pw");
+	QString allowed("0123456789*+#pw");
 	for (unsigned int i=num.length(); i>=1; i--) 
 		if (allowed.find(num[i-1])==-1)
 			num.remove(i-1,1);
@@ -439,7 +451,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	QString s;
 
 	memset(&entry, 0, sizeof(entry));
-	strncpy(entry.name, addr->realName().latin1(), sizeof(entry.name)-1);
+	strncpy(entry.name, GN_TO(addr->realName()), sizeof(entry.name)-1);
 	s = addr->phoneNumber(KABC::PhoneNumber::Pref).number();
 	if (s.isEmpty())
 		s = addr->phoneNumber(KABC::PhoneNumber::Work).number();
@@ -450,7 +462,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	if (s.isEmpty() && addr->phoneNumbers().count()>0)
 		s = (*addr->phoneNumbers().at(0)).number();
 	s = makeValidPhone(s);
-	strncpy(entry.number, s.latin1(), sizeof(entry.number)-1);
+	strncpy(entry.number, s.ascii(), sizeof(entry.number)-1);
 	entry.memory_type = memtype;
 	QString cg = addr->custom(APP, "X_GSM_CALLERGROUP");
 	if (cg.isEmpty())
@@ -471,7 +483,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	entry.date.second = time.second();
 
 	GNOKII_DEBUG(QString("Write #%1: name=%2, number=%3\n").arg(phone_location)
-					.arg(entry.name).arg(entry.number));
+					.arg(GN_FROM(entry.name)).arg(GN_FROM(entry.number)));
 
 	const KABC::Address homeAddr = addr->address(KABC::Address::Home);
 	const KABC::Address workAddr = addr->address(KABC::Address::Work);
@@ -497,7 +509,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 			default:			type = GN_PHONEBOOK_NUMBER_General;	break;
 		}
 		subentry->number_type = type;
-		strncpy(subentry->data.number, makeValidPhone(s).latin1(), sizeof(subentry->data.number)-1);
+		strncpy(subentry->data.number, makeValidPhone(s).ascii(), sizeof(subentry->data.number)-1);
 		subentry->id = phone_location<<8+entry.subentries_count;
 		entry.subentries_count++;
 		subentry++;
@@ -508,7 +520,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	s = addr->url().prettyURL();
 	if (!s.isEmpty() && (entry.subentries_count<GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)) {
 		subentry->entry_type = GN_PHONEBOOK_ENTRY_URL;
-		strncpy(subentry->data.number, s.latin1(), sizeof(subentry->data.number)-1);
+		strncpy(subentry->data.number, GN_TO(s), sizeof(subentry->data.number)-1);
 		entry.subentries_count++;
 		subentry++;
 	}
@@ -526,7 +538,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 			continue;
 		}
 		subentry->entry_type  = GN_PHONEBOOK_ENTRY_Email;
-		strncpy(subentry->data.number, s.latin1(), sizeof(subentry->data.number)-1);
+		strncpy(subentry->data.number, GN_TO(s), sizeof(subentry->data.number)-1);
 		entry.subentries_count++;
 		subentry++;
 	}
@@ -550,7 +562,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		a.append( Addr->postalCode()   .replace( sem, sem_repl ) );
 		a.append( Addr->country()      .replace( sem, sem_repl ) );
 		s = a.join(sem);
-		strncpy(subentry->data.number, s.latin1(), sizeof(subentry->data.number)-1);
+		strncpy(subentry->data.number, GN_TO(s), sizeof(subentry->data.number)-1);
 		entry.subentries_count++;
 		subentry++;
 	}
@@ -558,7 +570,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	s = addr->note().simplifyWhiteSpace();
 	if (!s.isEmpty() && (entry.subentries_count<GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)) {
 		subentry->entry_type = GN_PHONEBOOK_ENTRY_Note;
-		strncpy(subentry->data.number, s.latin1(), sizeof(subentry->data.number)-1);
+		strncpy(subentry->data.number, GN_TO(s), sizeof(subentry->data.number)-1);
 		entry.subentries_count++;
 		subentry++;
 	}
@@ -568,7 +580,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		gn_phonebook_subentry *subentry = &entry.subentries[st];
 		GNOKII_DEBUG(QString(" SubTel #%1: entry_type=%2, number_type=%3, number=%4\n")
 						.arg(st).arg(subentry->entry_type)
-						.arg(subentry->number_type).arg(subentry->data.number));
+						.arg(subentry->number_type).arg(GN_FROM(subentry->data.number)));
 	}
 
 	data.phonebook_entry = &entry;
