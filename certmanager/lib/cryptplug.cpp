@@ -1245,7 +1245,7 @@ parse_dn_part (CryptPlug::DnPair *array, const unsigned char *string)
   n = s - string;
   if (!n)
     return NULL; /* empty key */
-  array->key = p = (char*)xmalloc (n+1);
+  p = (char*)xmalloc (n+1);
   
   
   memcpy (p, string, n);
@@ -1253,10 +1253,12 @@ parse_dn_part (CryptPlug::DnPair *array, const unsigned char *string)
   trim_trailing_spaces ((char*)p);
   // map OIDs to their names:
   for ( unsigned int i = 0 ; i < numOidMaps ; ++i )
-    if ( !strcmp ((char*)p, oidmap[i].oid) ) {
-      strcpy ((char*)p, oidmap[i].name);
+    if ( !strcasecmp ((char*)p, oidmap[i].oid) ) {
+      free( p );
+      p = xstrdup (oidmap[i].name);
       break;
     }
+  array->key = p;
   string = s + 1;
 
   if (*string == '#')
@@ -1398,7 +1400,7 @@ add_dn_part( QCString& result, struct CryptPlug::DnPair& dnPair )
   /* email hack */
   QCString mappedPart( dnPair.key );
   for ( unsigned int i = 0 ; i < numOidMaps ; ++i ){
-    if( !strcmp( dnPair.key, oidmap[i].oid ) ) {
+    if( !strcasecmp( dnPair.key, oidmap[i].oid ) ) {
       mappedPart = oidmap[i].name;
       break;
     }
