@@ -19,6 +19,7 @@
 #include <klocale.h>
 #include <kedittoolbar.h>
 #include <kkeydialog.h>
+#include <kconfig.h>
 
 #include "kngroup.h"
 #include "knsavedarticle.h"
@@ -31,8 +32,8 @@
 #include "knarticlewindow.h"
 
 
-KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const char *name )
-  : KMainWindow(0, name)
+KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col)
+  : KMainWindow(0, "articleWindow")
 {
   if(art)
     setCaption(art->subject());
@@ -66,21 +67,31 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   actSupersede->setEnabled(false);
 
   // settings menu
-  KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
+  actShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
+  KStdAction::saveOptions(this, SLOT(slotSaveOptions()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
   createGUI("knreaderui.rc");
 
-  restoreWindowSize("reader", this, QSize(500,400));
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("articleWindow_options");
+  applyMainWindowSettings(conf);
+  actShowToolbar->setChecked(!toolBar()->isHidden());
 }
 
 
 
 KNArticleWindow::~KNArticleWindow()
 {
-  saveWindowSize("reader", size()); 
+}
+
+
+
+QSize KNArticleWindow::sizeHint() const
+{
+  return QSize(500,400);    // default optimized for 800x600
 }
 
 
@@ -140,10 +151,19 @@ void KNArticleWindow::slotArtSupersede()
 
 void KNArticleWindow::slotToggleToolBar()
 {
-  if(toolBar("mainToolBar")->isVisible())
-    toolBar("mainToolBar")->hide();
+  if(toolBar()->isVisible())
+    toolBar()->hide();
   else
-    toolBar("mainToolBar")->show();
+    toolBar()->show();
+}
+
+
+
+void KNArticleWindow::slotSaveOptions()
+{
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("articleWindow_options");
+  saveMainWindowSettings(conf);
 }
 
 

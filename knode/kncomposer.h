@@ -64,7 +64,8 @@ class KNComposer : public KMainWindow  {
     void setDoneSuccess(bool b)           { doneSuccess = b; }
     void setConfig();
     void applyChanges();      
-  
+
+    virtual QSize sizeHint() const;   // useful default value
             
   protected:
     void closeEvent(QCloseEvent *e);
@@ -98,6 +99,8 @@ class KNComposer : public KMainWindow  {
         void hideAttachmentView();
         void showExternalNotification();
         void hideExternalNotification();
+
+        void saveOptions();
       
         Editor *edit;
         QGroupBox *notification;
@@ -122,6 +125,7 @@ class KNComposer : public KMainWindow  {
     bool doneSuccess, externalEdited, attChanged;
     KAction *actExternalEditor, *actSpellCheck,
             *actRemoveAttachment, *actAttachmentProperties;
+    KToggleAction *actShowToolbar;
     KProcess *externalEditor;
     KTempFile *editorTempfile;
     QList<KNAttachment> *delAttList;
@@ -152,6 +156,7 @@ class KNComposer : public KMainWindow  {
     void slotRemoveAttachment();
     void slotAttachmentProperties();    
     void slotToggleToolBar();
+    void slotSaveOptions();
     void slotConfKeys();
     void slotConfToolbar();
     

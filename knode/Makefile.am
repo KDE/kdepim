@@ -23,13 +23,13 @@ knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
 	knscoredialog.cpp knthread.cpp knfiltermanager.cpp \
 	knstatusfilter.cpp knstringfilter.cpp knrangefilter.cpp \
 	knfilterdialog.cpp kngroupdialog.cpp  knstringsplitter.cpp \
-        knhdrviewitem.cpp knlistview.cpp knlistbox.cpp 	utilities.cpp \
-        knodeview.cpp knode.cpp main.cpp
+	knhdrviewitem.cpp knlistview.cpp knlistbox.cpp 	utilities.cpp \
+	knodeview.cpp knode.cpp knapplication.cpp main.cpp
 
 noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter.h \
 	knaccnewssettings.h      kngroup.h                knappsettings.h \
 	knaccountmanager.h       kngroupdialog.h          knreadgensettings.h \
-	knarticle.h              knreadhdrsettings.h \
+	knarticle.h              knreadhdrsettings.h      knapplication.h \
 	knarticlebase.h          kngroupmanager.h         knsavedarticle.h \
 	knarticlecollection.h    kngrouppropdlg.h         knsavedarticlemanager.h \
 	knarticlefilter.h        kngroupselectdialog.h    knscoredialog.h \

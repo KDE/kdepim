@@ -198,7 +198,11 @@ KNodeApp::KNodeApp()
   initActions();
   initPopups();
 
-  restoreWindowSize("main", this, QSize(759,478));    // default optimized for 800x600
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("mainWindow_options");
+  applyMainWindowSettings(conf);
+  actShowToolbar->setChecked(!statusBar()->isHidden());
+  actShowStatusbar->setChecked(!toolBar()->isHidden());
 
   // set the keyboard focus indicator on the first item in the collectionView
   if(view->collectionView->firstChild())
@@ -301,6 +305,12 @@ void KNodeApp::secureProcessEvents()
 
 
 
+QSize KNodeApp::sizeHint() const
+{
+  return QSize(759,478);    // default optimized for 800x600
+}
+
+
 //============================ INIT && UPDATE ============================
 
 
@@ -368,8 +378,9 @@ void KNodeApp::initActions()
   connect(FAManager, SIGNAL(currentArticleChanged()), SLOT(slotCurrentArticleChanged()));
   connect(SAManager, SIGNAL(currentArticleChanged()), SLOT(slotCurrentArticleChanged()));
 
-  KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
-  KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
+  actShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
+  actShowStatusbar = KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
+  KStdAction::saveOptions(this, SLOT(slotSaveOptions()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
@@ -405,10 +416,8 @@ void KNodeApp::initPopups()
 
 
 
-void KNodeApp::saveOptions()
+void KNodeApp::saveSettings()
 {
-  saveWindowSize("main", size());
-  view->saveOptions();
   FiManager->saveOptions();
   FAManager->saveOptions();
   KNArticleWidget::saveOptions();
@@ -483,10 +492,10 @@ void KNodeApp::slotSupersede()
 
 void KNodeApp::slotToggleToolBar()
 {
-  if(toolBar("mainToolBar")->isVisible())
-    toolBar("mainToolBar")->hide();
+  if(toolBar()->isVisible())
+    toolBar()->hide();
   else
-    toolBar("mainToolBar")->show();
+    toolBar()->show();
 }
 
 
@@ -496,6 +505,15 @@ void KNodeApp::slotToggleStatusBar()
     statusBar()->hide();
   else
     statusBar()->show();
+}
+
+
+void KNodeApp::slotSaveOptions()
+{
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("mainWindow_options");
+  saveMainWindowSettings(conf);
+  view->saveOptions();
 }
 
 
@@ -689,7 +707,7 @@ void KNodeApp::cleanup()
 {
   KNPurgeProgressDialog *ppdlg=0;
 
-  saveOptions();
+  saveSettings();
 
   if(GManager->timeToExpire()) {
     ppdlg=new KNPurgeProgressDialog();

@@ -32,13 +32,16 @@ class KNArticleWindow : public KMainWindow  {
   Q_OBJECT
   
   public:
-    KNArticleWindow(KNArticle *art=0, KNArticleCollection *col=0, const char *name=0);
+    KNArticleWindow(KNArticle *art=0, KNArticleCollection *col=0);
     ~KNArticleWindow();
     KNArticleWidget* artWidget()        { return artW; }
+
+    virtual QSize sizeHint() const;   // useful default value
       
   protected:
     KNArticleWidget *artW;
     KAction *actPostReply, *actMailReply, *actForward, *actCancel, *actSupersede;
+    KToggleAction *actShowToolbar;
     
   protected slots:
     void slotArticleLoaded();
@@ -49,6 +52,7 @@ class KNArticleWindow : public KMainWindow  {
     void slotArtCancel();
     void slotArtSupersede();
     void slotToggleToolBar();
+    void slotSaveOptions();
     void slotConfKeys();
     void slotConfToolbar();
 };

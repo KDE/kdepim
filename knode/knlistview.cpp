@@ -275,6 +275,11 @@ void KNListView::keyPressEvent(QKeyEvent *e)
 {
   if ( !e )       return; // subclass bug
 
+  if (e->state() & ShiftButton) {  // lame workaround to avoid multiselection in multiselection mode ;-)
+    e->ignore();
+    return;
+  }
+
   switch(e->key()) {
    case Key_Enter:
    case Key_Return:

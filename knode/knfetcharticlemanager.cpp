@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <pthread.h>
+
 #include <qheader.h>
 
 #include <klocale.h>
@@ -152,10 +154,6 @@ void KNFetchArticleManager::setGroup(KNGroup *g)
 {
   if(g!=0) {
     if(g_roup==0) view->header()->setLabel(1, i18n("From"));   // switch back from a folder
-    if(sDlg) {                        // search dialog was open, hide it and restore filter
-      sDlg->hide();
-      if(f_ilter==sDlg->filter()) slotFilterChanged(0);
-    }
     actShowThreads->setEnabled(true);
     actExpandAll->setEnabled(true);
     actCollapseAll->setEnabled(true);
@@ -194,6 +192,17 @@ void KNFetchArticleManager::showHdrs(bool clear)
     view->clear();
     setCurrentArticle(0);
   }
+
+  if (g_roup->locked()) {
+    if (0!=pthread_mutex_lock(knGlobals.netAccess->nntpMutex())) {
+      kdDebug(5003) << "failed to lock nntp mutex" << endl;
+      knGlobals.top->setStatusMsg("");
+      updateStatusString();
+      knGlobals.top->setCursorBusy(false);
+      return;
+    }
+  }
+
   if(f_ilter) f_ilter->doFilter(g_roup);
   else
     for (int i=0; i<g_roup->length(); i++)
@@ -219,6 +228,10 @@ void KNFetchArticleManager::showHdrs(bool clear)
         art->updateListItem();
     }
   }
+
+  if (g_roup->locked() && (0!=pthread_mutex_unlock(knGlobals.netAccess->nntpMutex())))
+    kdDebug(5003) << "failed to unlock nntp mutex" << endl;
+
   if(view->firstChild())
     view->setCurrentItem(view->firstChild());
 

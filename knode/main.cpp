@@ -17,13 +17,12 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
-#include "knode.h"
+#include "knapplication.h"
 #include "resource.h"
 
 
 int main(int argc, char* argv[])
 {
-
   KAboutData aboutData("knode",
                         I18N_NOOP("KNode"),
                         KNODE_VERSION,
@@ -36,25 +35,16 @@ int main(int argc, char* argv[])
   aboutData.addAuthor("Christian Thurner",I18N_NOOP("Maintainer"),"cthurner@freepage.de");
   aboutData.addAuthor("Christian Gebauer",0,"gebauer@bigfoot.com");
   aboutData.addAuthor("Dirk Mueller",0,"mueller@kde.org");
-  aboutData.addAuthor("Matthias Kalle Dalheimer",0,"kalle@kde.org");
+  aboutData.addCredit("Stephan Johach",0,"lucardus@onlinehome.de");
+  aboutData.addCredit("Matthias Kalle Dalheimer",0,"kalle@kde.org");
+
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication::addCmdLineOptions();
+  KUniqueApplication::addCmdLineOptions();
 
-  KApplication app;
+  if (!KNApplication::start())
+    exit(0);
 
-  if (app.isRestored()) {
-    int n = 1;
-    while (KMainWindow::canBeRestored(n)){
-      if (KMainWindow::classNameOfToplevel(n)=="KNodeApp")
-        (new KNodeApp)->restore(n);
-      n++;
-    }
-  } else {
-    KNodeApp* knode = new KNodeApp;
-    knode->show();
-  }
+  KNApplication app;
 
-  int ret=app.exec();
-
-  return ret;
+  return app.exec();
 }

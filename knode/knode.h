@@ -83,6 +83,8 @@ class KNodeApp : public KMainWindow
     void blockUI(bool b=true);
     void secureProcessEvents();  // processEvents with some blocking
 
+    virtual QSize sizeHint() const;   // useful default value
+
     //network
     void jobDone(KNJobData *j);
 
@@ -98,7 +100,7 @@ class KNodeApp : public KMainWindow
     void initActions();
     void initPopups();        
     
-    void saveOptions();
+    void saveSettings();
 
     // checks if run for the first time, sets some global defaults (email configuration)
     bool firstStart();
@@ -111,7 +113,7 @@ class KNodeApp : public KMainWindow
 
     //actions
     KAction *actCancel, *actSupersede;
-    KToggleAction *actShowAllHdrs;
+    KToggleAction *actShowAllHdrs, *actShowToolbar, *actShowStatusbar;
 
     //popups
     QPopupMenu  *accPopup, *groupPopup, *folderPopup,
@@ -141,6 +143,7 @@ class KNodeApp : public KMainWindow
     void slotSupersede();
     void slotToggleToolBar();
     void slotToggleStatusBar();
+    void slotSaveOptions();
     void slotConfKeys();
     void slotConfToolbar();
     void slotSettingsFinished();

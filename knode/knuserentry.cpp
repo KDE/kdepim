@@ -25,6 +25,7 @@
 
 
 KNUserEntry::KNUserEntry()
+ : u_seSigFile(false)
 {
 }
 
@@ -52,7 +53,7 @@ const QCString& KNUserEntry::getSignature()
   } else
     s_igContents = s_igText;
 
-  if (!s_igContents.contains("\n-- \n") && !(s_igContents.left(4) == "-- \n"))
+  if (!s_igContents.isEmpty() && !s_igContents.contains("\n-- \n") && !(s_igContents.left(4) == "-- \n"))
     s_igContents.prepend("-- \n");
   
   return s_igContents;

@@ -27,9 +27,11 @@
 #include "knnntpclient.h"
 
 
-KNNntpClient::KNNntpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent, const char *name)
+KNNntpClient::KNNntpClient(int NfdPipeIn, int NfdPipeOut, pthread_mutex_t *nntpMutex, QObject *parent, const char *name)
 : KNProtocolClient(NfdPipeIn,NfdPipeOut,parent,name)
-{}
+{
+  mutex = nntpMutex;
+}
 
 
 KNNntpClient::~KNNntpClient()
@@ -348,8 +350,14 @@ void KNNntpClient::doFetchNewHeaders()
   sendSignal(TSprogressUpdate);
     
   sendSignal(TSsortNew);
-  target->insortNewHeaders(&headers);
-  target->setLastNr(last);
+
+  if (0==pthread_mutex_lock(mutex)) {
+    target->insortNewHeaders(&headers);
+    target->setLastNr(last);
+    if (0!=pthread_mutex_unlock(mutex))
+      qDebug("knode: failed to unlock nntp mutex");
+  } else
+    qDebug("knode: failed to lock nntp mutex");
 }
 
 

@@ -58,9 +58,13 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
   smtpNotifier=new QSocketNotifier(smtpInPipe[0], QSocketNotifier::Read);
   connect(smtpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
 
-  nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],this);
+  nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],&nntp_Mutex,this);
   smtpClient=new KNSmtpClient(smtpOutPipe[0],smtpInPipe[1],this);
   
+  if(pthread_mutex_init(&nntp_Mutex, NULL)!=0) {
+    KMessageBox::error(knGlobals.topWidget, "Internal error:\nCannot initialize the nntp mutex!");  // i18n missing
+    kapp->exit(1);
+  }
   if(pthread_create(&nntpThread, 0,&(nntpClient->startThread), nntpClient)!=0) {
     KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nCannot create the nntp-network-thread!"));
     kapp->exit(1);
@@ -86,13 +90,15 @@ KNNetAccess::~KNNetAccess()
   disconnect(smtpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
   
   if(pthread_cancel(nntpThread)!=0)
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot cancel thread" << endl;
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot cancel nntp thread" << endl;
   if (0!=pthread_join(nntpThread,NULL))                         // join is important...
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot join thread" << endl;
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot join nntp thread" << endl;
+  if (0!=pthread_mutex_destroy(&nntp_Mutex))
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot destroy nntp mutex" << endl;
   if(pthread_cancel(smtpThread)!=0)
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot cancel thread" << endl;
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot cancel smtp thread" << endl;
   if (0!=pthread_join(smtpThread,NULL))                         // join is important...
-    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot join thread" << endl;
+    kdWarning(5003) << "KNNetAccess::~KNNetAccess() : cannot join smtp thread" << endl;
     
   delete nntpClient;
   delete smtpClient;

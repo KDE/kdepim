@@ -19,6 +19,8 @@
 #ifndef KNNNTPCLIENT_H
 #define KNNNTPCLIENT_H
 
+#include <pthread.h>
+
 #include <knprotocolclient.h>
 
 
@@ -28,7 +30,7 @@ class KNNntpClient : public KNProtocolClient  {
 
   public:
     
-    KNNntpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
+    KNNntpClient(int NfdPipeIn, int NfdPipeOut, pthread_mutex_t *nntpMutex, QObject *parent=0, const char *name=0);
     ~KNNntpClient();
     
   protected:
@@ -45,6 +47,8 @@ class KNNntpClient : public KNProtocolClient  {
     virtual bool openConnection();     // connect, handshake
     virtual bool sendCommand(const QCString &cmd, int &rep);  // authentication on demand
     virtual void handleErrors();
+
+    pthread_mutex_t *mutex;
     
 };
 

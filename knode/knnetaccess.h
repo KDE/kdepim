@@ -46,7 +46,9 @@ class KNNetAccess : public QObject  {
     
     void addJob(KNJobData *job);
     void stopJobsNntp(int type);         // type==0 => all jobs
-    void stopJobsSmtp(int type);         // type==0 => all jobs   
+    void stopJobsSmtp(int type);         // type==0 => all jobs
+
+    pthread_mutex_t* nntpMutex() { return &nntp_Mutex; }
 
   protected:
     void triggerAsyncThread(int pipeFd);     // passes a signal through the ipc-pipe to the net-thread
@@ -63,6 +65,7 @@ class KNNetAccess : public QObject  {
     QQueue<KNJobData> nntpJobQueue, smtpJobQueue;
     KNJobData *currentNntpJob, *currentSmtpJob;
     pthread_t nntpThread, smtpThread;
+    pthread_mutex_t nntp_Mutex;
     int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
     QSocketNotifier *nntpNotifier,*smtpNotifier;
     KAction* actNetStop;
