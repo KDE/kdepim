@@ -217,7 +217,7 @@ namespace GpgME {
   bool Context::managedByEventLoopInteractor() const {
     return d->iocbs != 0;
   }
-      
+
 
   void Context::installIOCallbacks( gpgme_io_cbs * iocbs ) {
     if ( !iocbs ) {
@@ -233,6 +233,10 @@ namespace GpgME {
     // io.add == 0 means disable io callbacks:
     gpgme_set_io_cbs( d->ctx, &noiocbs );
     delete d->iocbs; d->iocbs = 0;
+  }
+
+  Error Context::setLocale( int cat, const char * val ) {
+    return d->lasterr = gpgme_set_locale( d->ctx, cat, val );
   }
 
   //
@@ -598,4 +602,9 @@ namespace GpgME {
     return d->lasterr;
   }
 
+
 } // namespace GpgME
+
+GpgME::Error GpgME::setDefaultLocale( int cat, const char * val ) {
+  return gpgme_set_locale( 0, cat, val );
+}

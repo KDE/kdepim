@@ -108,6 +108,8 @@ namespace GpgME {
     void setManagedByEventLoopInteractor( bool managed );
     bool managedByEventLoopInteractor() const;
 
+    GpgME::Error setLocale( int category, const char * value );
+
   private:
     friend class EventLoopInteractor;
     void installIOCallbacks( gpgme_io_cbs * iocbs );
@@ -262,6 +264,8 @@ namespace GpgME {
   // Globals
   //
   //
+
+  GpgME::Error setDefaultLocale( int category, const char * value );
 
   Context * wait( GpgME::Error & e, bool hang=true );
   typedef void (*IdleFunction)(void);
