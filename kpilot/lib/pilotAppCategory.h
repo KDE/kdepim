@@ -117,12 +117,8 @@ public:
 		int len = PilotRecord::APP_BUFFER_SIZE;
 		void* buff = new unsigned char[len];
 		pack(buff, &len);
-#ifdef HANDOFF_BUFFERS
-		PilotRecord *rec = new PilotRecord(len,buff,getAttrib(),getCat(),id());
-#else
 		PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
 		delete [] (unsigned char*)buff;
-#endif
 		return rec;
 	}
 
