@@ -294,7 +294,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   // ####### TODO error handling (message box).
   if ( rc == -1 )
   {
-    QString wmsg = i18n( "Couldn't start gpgconf\nCheck that gpgconf is in the PATH and that it can be started" );
+    QString wmsg = i18n( "Could not start gpgconf\nCheck that gpgconf is in the PATH and that it can be started" );
     kdWarning(5150) << wmsg << endl;
     KMessageBox::error(0, wmsg);
   }
