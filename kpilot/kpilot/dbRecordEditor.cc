@@ -32,9 +32,7 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 #include <qbuttongroup.h>
-#include <qcheckbox.h>
 #include <qlabel.h>
-#include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 

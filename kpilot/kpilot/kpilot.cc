@@ -49,7 +49,7 @@ static const char *kpilot_id =
 #include <kwin.h>
 #include <kcombobox.h>
 #include <kmenubar.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kiconloader.h>
@@ -57,7 +57,7 @@ static const char *kpilot_id =
 #include <kaction.h>
 #include <kactionclasses.h>
 #include <kstdaction.h>
-#include <kuniqueapp.h>
+#include <kuniqueapplication.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
 #include <kcmultidialog.h>

@@ -44,7 +44,6 @@ static const char *conduitconfigdialog_id =
 #include <qvbox.h>
 #include <qsplitter.h>
 #include <qheader.h>
-#include <qlabel.h>
 #include <qtimer.h>
 
 #include <kservice.h>

@@ -46,7 +46,6 @@
 #include "pilotLocalDatabase.h"
 #include "recordConduit.h"
 
-#include "recordConduit.h"
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.

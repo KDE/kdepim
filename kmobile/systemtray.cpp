@@ -22,7 +22,6 @@
 #include <kaction.h>
 #include <kmainwindow.h>
 #include <kiconeffect.h>
-#include <kiconloader.h>
 #include <kdebug.h>
 
 #include <qhbox.h>

@@ -42,8 +42,7 @@
 
 #include <kpushbutton.h>
 #include <kdebug.h>
-#include <klocale.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 #include "kmobile.h"
 #include "pref.h"

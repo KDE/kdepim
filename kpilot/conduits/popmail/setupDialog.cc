@@ -44,7 +44,7 @@ static const char *setupDialog_id=
 #include <stdlib.h>
 
 #include <kconfig.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <klineedit.h>
 
 #include <qcheckbox.h>

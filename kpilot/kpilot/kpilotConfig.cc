@@ -35,7 +35,7 @@
 #include <qcombobox.h>
 #include <qcheckbox.h>
 
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kconfig.h>
 #include <ksimpleconfig.h>
 #include <kcmdlineargs.h>

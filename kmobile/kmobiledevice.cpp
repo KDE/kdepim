@@ -32,7 +32,7 @@
 
 #include <klibloader.h>
 #include <kstandarddirs.h>
-#include <kmobiledevice.h>
+#include "kmobiledevice.h"
 #include <kmessagebox.h>
 #include <kconfig.h>
 

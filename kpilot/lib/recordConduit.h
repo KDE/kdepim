@@ -33,7 +33,7 @@
 
 
 #include <plugin.h>
-#include <pilotAppCategory.h>
+#include "pilotAppCategory.h"
 
 
 typedef QValueList<recordid_t> RecordIDList;
