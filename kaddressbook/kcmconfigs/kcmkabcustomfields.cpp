@@ -304,10 +304,10 @@ void KCMKabCustomFields::initGUI()
                          "<p><b>Important:</b> The name of each input widget you place within"
                          " the form must start with '<i>X_</i>'; so if you want the widget to"
                          " correspond to your custom entry '<i>X-Foo</i>', set the widget's"
-                         " <i>name</i> property to '<i>X_Foo</i>'.</p></qt>"
+                         " <i>name</i> property to '<i>X_Foo</i>'.</p>"
                          "<p><b>Important:</b> The widget will edit custom fields with an"
                          " application name of KADDRESSBOOK.  To change the application name"
-                         " to be edited, set the widget name in Qt Designer.</p>" );
+                         " to be edited, set the widget name in Qt Designer.</p></qt>" );
 
   KActiveLabel *activeLabel = new KActiveLabel(
       i18n( "<a href=\"whatsthis:%1\">How does this work?</a>" ).arg(cwHowto), this );
