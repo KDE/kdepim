@@ -26,6 +26,8 @@
 
 #include <RMM_MessageComponent.h>
 
+namespace RMM {
+
 RMessageComponent::RMessageComponent()
 	:	parsed_		(false),
 		assembled_	(false)
@@ -86,4 +88,5 @@ RMessageComponent::operator == (const QCString & s)
 	return (strRep_ == s);
 }
 
+};
 

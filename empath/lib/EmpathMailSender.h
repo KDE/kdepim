@@ -30,9 +30,9 @@
 #include <qobject.h>
 
 // Local includes
-#include "RMM_Message.h"
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
+#include <RMM_Message.h>
 
 /**
  * Base class for any 'real' sender. This one's only responsibility
@@ -50,7 +50,7 @@ class EmpathMailSender : public QObject
 
 		virtual ~EmpathMailSender() = 0L;
 		
-		void queue(RMessage &);
+		void queue(RMM::RMessage &);
 
 		/**
 		 * Send one message.
@@ -60,9 +60,9 @@ class EmpathMailSender : public QObject
 		 * Message will be returned to user on failure. FIXME: How ?
 		 */
 
-		bool send(RMessage &);
+		bool send(RMM::RMessage &);
 
-		virtual bool sendOne(RMessage & message) = 0L;
+		virtual bool sendOne(RMM::RMessage & message) = 0L;
 		
 
 		/**
@@ -85,7 +85,7 @@ class EmpathMailSender : public QObject
 		
 	private:
 		
-		void emergencyBackup(RMessage &);
+		void emergencyBackup(RMM::RMessage &);
 };
 
 #endif

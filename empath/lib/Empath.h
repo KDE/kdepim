@@ -46,10 +46,9 @@
 
 class EmpathFolder;
 class EmpathIndexRecord;
-class RMessage;
 class EmpathTask;
 
-typedef QCache<RMessage> EmpathMessageDataCache;
+typedef QCache<RMM::RMessage> EmpathMessageDataCache;
 
 /**
  * Empath is the main class for the app
@@ -144,7 +143,7 @@ class Empath : public QObject
 		 * you can forget about it as it will be deleted later.
 		 * If the message can't be retrieved, returns 0.
 		 */
-		RMessage 		* message(const EmpathURL &);
+		RMM::RMessage 	* message(const EmpathURL &);
 		
 		/**
 		 * Gets a pointer to the folder specified in the url, or 0.
@@ -167,13 +166,13 @@ class Empath : public QObject
 		/**
 		 * Queue a new message for sending later.
 		 */
-		void queue(RMessage &);
+		void queue(RMM::RMessage &);
 		
 		/**
 		 * Send a message. If the user set queueing as the default,
 		 * it'll be queued, surprisingly.
 		 */
-		void send(RMessage &);
+		void send(RMM::RMessage &);
 		
 		/**
 		 * Attempt to send all queued messages.
@@ -285,8 +284,8 @@ class Empath : public QObject
 		Q_UINT32				startupSeconds_;
 };
 
-inline void Empath::send(RMessage & m)			{ mailSender_->send(m);		}
-inline void Empath::queue(RMessage & m)			{ mailSender_->queue(m);	}
+inline void Empath::send(RMM::RMessage & m)		{ mailSender_->send(m);		}
+inline void Empath::queue(RMM::RMessage & m)	{ mailSender_->queue(m);	}
 inline void Empath::sendQueued()				{ mailSender_->sendQueued();}
 inline void Empath::s_setupDisplay()			{ emit(setupDisplay());		}
 inline void Empath::s_setupIdentity()			{ emit(setupIdentity());	}

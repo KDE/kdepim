@@ -9,7 +9,7 @@ EmpathLeftSideWidget::EmpathLeftSideWidget(
 	:	QWidget(parent, name)
 {
 	empathDebug("ctor");
-	
+
 	layout_ = new QGridLayout(this, 2, 1, 0, 0);
 	CHECK_PTR(layout_);
 	

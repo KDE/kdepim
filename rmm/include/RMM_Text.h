@@ -28,6 +28,8 @@
 #include <RMM_Defines.h>
 #include <RMM_HeaderBody.h>
 
+namespace RMM {
+
 /**
  * A simple encapsulation of a text header field.
  */
@@ -36,6 +38,8 @@ class RText : public RHeaderBody {
 	public:
 
 #include "generated/RText_generated.h"		
+
+};
 
 };
 

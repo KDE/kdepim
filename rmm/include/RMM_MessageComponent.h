@@ -28,6 +28,8 @@
 #include <qstring.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 /**
  * @short Base class of all message components.
  * An RMessageComponent is the base class of all parts of a message.
@@ -69,6 +71,8 @@ class RMessageComponent {
 		QCString			strRep_;
 		bool				parsed_;
 		bool				assembled_;
+};
+
 };
 
 #endif

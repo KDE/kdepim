@@ -32,7 +32,6 @@
 // KDE includes
 #include <kconfig.h>
 #include <kglobal.h>
-#include <kapp.h>
 
 // Local includes
 #include "EmpathConfig.h"
@@ -168,7 +167,7 @@ EmpathFolderListItem::setup()
 	
 	widthChanged();
 	
-	int th = QFontMetrics(kapp->generalFont()).height();
+	int th = QFontMetrics(KGlobal::generalFont()).height();
 	
 	if (!pixmap(0))
 		setHeight(th);

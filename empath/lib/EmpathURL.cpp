@@ -30,7 +30,7 @@
 
 // Local includes
 #include "EmpathURL.h"
-#include "RMM_Token.h"
+#include <RMM_Token.h>
 
 EmpathURL::EmpathURL()
 	:	mailboxName_	(QString::null),
@@ -38,7 +38,6 @@ EmpathURL::EmpathURL()
 		messageID_		(QString::null),
 		strRep_			(QString::null)
 {
-	empathDebug("ctor");
 }
 
 EmpathURL::EmpathURL(
@@ -51,15 +50,12 @@ EmpathURL::EmpathURL(
 		messageID_		(messageID),
 		strRep_			(QString::null)
 {
-	empathDebug("ctor with \"" +
-		mailboxName_ + "\", \"" + folderPath_ + "\", \"" + messageID_ + "\"");
 	_assemble();
 }
 
 EmpathURL::EmpathURL(const QString & fullPath)
 	:	strRep_(fullPath)
 {
-	empathDebug("ctor with \"" + QString(fullPath) + "\"");
 	_parse();
 	_assemble();
 }
@@ -70,7 +66,6 @@ EmpathURL::EmpathURL(const EmpathURL & url)
 		folderPath_(url.folderPath_),
 		messageID_(url.messageID_)
 {
-	empathDebug("copy ctor");
 	_assemble();
 }
 
@@ -115,13 +110,11 @@ EmpathURL::_parse()
 
 EmpathURL::~EmpathURL()
 {
-	empathDebug("dtor");
 }
 
 	EmpathURL &
 EmpathURL::operator = (const EmpathURL & url)
 {
-	empathDebug("operator = ");
 	mailboxName_	= url.mailboxName_;
 	folderPath_		= url.folderPath_;
 	messageID_		= url.messageID_;
@@ -132,7 +125,6 @@ EmpathURL::operator = (const EmpathURL & url)
 	EmpathURL &
 EmpathURL::operator = (const QString & url)
 {
-	empathDebug("operator = \"" + url + "\"");
 	strRep_ = url;
 	_parse();
 	_assemble();
@@ -142,7 +134,6 @@ EmpathURL::operator = (const QString & url)
 	bool
 EmpathURL::operator == (const EmpathURL & b) const
 {
-	empathDebug("operator ==");
 	return (
 			mailboxName_	== b.mailboxName_	&&
 			folderPath_		== b.folderPath_	&&
@@ -152,7 +143,6 @@ EmpathURL::operator == (const EmpathURL & b) const
 	bool
 EmpathURL::operator == (const QString & s) const
 {
-	empathDebug("operator ==");
 	EmpathURL url(s);
 	
 	return (*this == url);
@@ -186,14 +176,13 @@ EmpathURL::_assemble()
 	QString s = mailboxName_ + "/" + folderPath_ + "/" + messageID_;
 	s.replace(QRegExp("//"), "/");
 	strRep_ = "empath://" + s;
-	empathDebug("Assembled to \"" + strRep_ + "\"");
 }
 
 	QStrList
 EmpathURL::folderPathList()
 {
 	QStrList sl_f;
-	RTokenise(folderPath_.ascii(), "/", sl_f);
+	RMM::RTokenise(folderPath_.ascii(), "/", sl_f);
 	return sl_f;
 }
 

@@ -29,18 +29,16 @@
 #include <qstring.h>
 #include <qlist.h>
 
-// KDE includes
+// Local includes
+#include "EmpathIndexAllocator.h"
+#include "EmpathDefines.h"
 #include <RMM_Enum.h>
+#include <RMM_Message.h>
 #include <RMM_MessageID.h>
 #include <RMM_Mailbox.h>
 #include <RMM_DateTime.h>
 
-// Local includes
-#include "EmpathIndexAllocator.h"
-#include "EmpathDefines.h"
 
-class RMessage;
-	
 class EmpathIndexRecord
 {
 	public:
@@ -52,18 +50,18 @@ class EmpathIndexRecord
 		
 		EmpathIndexRecord();
 			
-		EmpathIndexRecord(const QString & id, RMessage &);
+		EmpathIndexRecord(const QString & id, RMM::RMessage &);
 		EmpathIndexRecord(const EmpathIndexRecord &);
 
 		EmpathIndexRecord(
 				const QString &		id,
 				const QString &		subject,
-				RMailbox &			sender,
-				RDateTime &			date,
+				RMM::RMailbox &		sender,
+				RMM::RDateTime &	date,
 				RMM::MessageStatus	status,
 				Q_UINT32			size,
-				RMessageID &		messageID,
-				RMessageID &		parentMessageID);
+				RMM::RMessageID &	messageID,
+				RMM::RMessageID &	parentMessageID);
 
 		~EmpathIndexRecord();
 		
@@ -77,12 +75,12 @@ class EmpathIndexRecord
 
 		const QString & 	id()		const	{ return id_;				}
 		const QString &		subject()	const	{ return subject_;			}
-		RMailbox &			sender()			{ return sender_;			}
-		RDateTime &			date()				{ return date_;				}
+		RMM::RMailbox &		sender()			{ return sender_;			}
+		RMM::RDateTime &	date()				{ return date_;				}
 		RMM::MessageStatus	status()	const	{ return status_;			}
 		Q_UINT32			size()		const	{ return size_;				}
-		RMessageID &		messageID()			{ return messageId_;		}
-		RMessageID &		parentID()			{ return parentMessageId_;	}
+		RMM::RMessageID &	messageID()			{ return messageId_;		}
+		RMM::RMessageID &	parentID()			{ return parentMessageId_;	}
 		
 		bool				hasParent();
 		QString				niceDate(bool twelveHour);
@@ -97,12 +95,12 @@ class EmpathIndexRecord
 		// Order dependency
 		QString				id_;
 		QString 			subject_;
-		RMailbox 			sender_;
-		RDateTime			date_;
+		RMM::RMailbox 		sender_;
+		RMM::RDateTime		date_;
 		RMM::MessageStatus	status_;
 		Q_UINT32			size_;
-		RMessageID			messageId_;
-		RMessageID			parentMessageId_;
+		RMM::RMessageID		messageId_;
+		RMM::RMessageID		parentMessageId_;
 		
 		bool				tagged_;
 };

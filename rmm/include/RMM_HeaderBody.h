@@ -26,6 +26,8 @@
 #include <RMM_MessageComponent.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 /**
  * Base class for RAddress, RContentType, RMailboxList etc.
  */
@@ -35,6 +37,8 @@ class RHeaderBody : public RMessageComponent {
 		
 #include "generated/RHeaderBody_generated.h"
 		
+};
+
 };
 
 #endif

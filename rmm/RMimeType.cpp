@@ -34,6 +34,8 @@
 #include <RMM_Utility.h>
 #include <RMM_Enum.h>
 
+namespace RMM {
+
 RMimeType::RMimeType()
 {
 	rmmDebug("ctor");
@@ -155,4 +157,6 @@ RMimeType::createDefault()
 {
 	rmmDebug("createDefault called");
 }
+
+};
 

@@ -43,6 +43,7 @@
 #include "EmpathMailSender.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
+#include <RMM_Message.h>
 
 EmpathComposeWindow::EmpathComposeWindow()
 	: KTMainWindow()
@@ -230,7 +231,7 @@ EmpathComposeWindow::s_fileSendMessage()
 		return;
 	}
 	
-	RMessage outMessage(composeWidget_->message());
+	RMM::RMessage outMessage(composeWidget_->message());
 
 	hide();
 	empath->send(outMessage);
@@ -252,7 +253,7 @@ EmpathComposeWindow::s_fileSendLater()
 		return;
 	}
 	
-	RMessage outMessage(composeWidget_->message());
+	RMM::RMessage outMessage(composeWidget_->message());
 
 	empathDebug("Checking if message has attachments");
 	
@@ -269,7 +270,7 @@ EmpathComposeWindow::s_fileSaveAs()
 {
 	empathDebug("s_fileSaveAs called");
 
-	RMessage message(composeWidget_->message());
+	RMM::RMessage message(composeWidget_->message());
 	
 	QString saveFilePath =
 		KFileDialog::getSaveFileName(
@@ -394,7 +395,7 @@ EmpathComposeWindow::s_messageSaveAs()
 {
 	empathDebug("s_messageSaveAs called");
 
-	RMessage message(composeWidget_->message());
+	RMM::RMessage message(composeWidget_->message());
 	
 	QString saveFilePath =
 		KFileDialog::getSaveFileName(
@@ -435,7 +436,7 @@ EmpathComposeWindow::s_messageCopyTo()
 {
 	empathDebug("s_messageCopyTo called");
 	
-	RMessage message(composeWidget_->message());
+	RMM::RMessage message(composeWidget_->message());
 	
 	EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 

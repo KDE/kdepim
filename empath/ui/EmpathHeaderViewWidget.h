@@ -18,7 +18,7 @@ class EmpathHeaderViewWidget : public QWidget
 		EmpathHeaderViewWidget(QWidget * parent, const char * name);
 		virtual ~EmpathHeaderViewWidget();
 	
-		void useEnvelope(REnvelope &);
+		void useEnvelope(RMM::REnvelope &);
 		
 	signals:
 	

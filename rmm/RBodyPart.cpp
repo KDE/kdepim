@@ -32,6 +32,8 @@
 #include <RMM_Message.h>
 #include <RMM_Enum.h>
 
+namespace RMM {
+
 RBodyPart::RBodyPart()
 	:	REntity()
 {
@@ -449,4 +451,6 @@ RBodyPart::decode()
 
 	return x;
 }
+
+};
 

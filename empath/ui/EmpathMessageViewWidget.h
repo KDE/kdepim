@@ -37,12 +37,12 @@
 #include <khtml.h>
 
 // Local includes
-#include <RMM_Message.h>
 #include "EmpathMessageStructureWidget.h"
 #include "EmpathDefines.h"
 #include "EmpathMessageHTMLView.h"
 
 class EmpathHeaderViewWidget;
+class RMM::RBodyPart;
 
 class EmpathMessageViewWidget : public QWidget
 {
@@ -67,7 +67,7 @@ class EmpathMessageViewWidget : public QWidget
 
 		void s_print();
 		void s_setMessage(const EmpathURL &);
-		void s_partChanged(RBodyPart *);
+		void s_partChanged(RMM::RBodyPart *);
 		void s_switchView();
 
 	protected slots:

@@ -27,6 +27,8 @@
 #include <RMM_Mailbox.h>
 #include <RMM_Token.h>
 
+namespace RMM {
+
 RMailbox::RMailbox()
 	:	RAddress()
 {
@@ -282,4 +284,6 @@ RMailbox::createDefault()
 	
 	assembled_ = false;
 }
+
+};
 

@@ -19,7 +19,9 @@
 */
 
 // System includes
+#include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
 
 // KDE includes
 #include <kapp.h>
@@ -33,26 +35,59 @@
 	int
 EmpathMain(int argc, char * argv[])
 {
-	if (getuid() == 0 || geteuid() == 0) {
-		exit(1);
-	}
+	fprintf(stderr, "===================== Empath: Creating KApplication\n");
 
-	KApplication app(argc, argv, "empath");
+	// Create a KApplication.
+	KApplication * app = new KApplication(argc, argv, "empath");
+	CHECK_PTR(app);
 	
+	// Don't do dollar expansion by default.
 	KGlobal::config()->setDollarExpansion(false);
 	
-	Empath		e;
-	EmpathUI	ui;
+	fprintf(stderr, "===================== Empath: Creating kernel\n");
+	
+	// Create the kernel.
+	Empath * e = new Empath;
+	
+	fprintf(stderr, "===================== Empath: Creating user interface\n");
+	
+	// Create the user interface.
+	new EmpathUI;
 
 	// Attempt to get the UI up and running quickly.
-	app.processEvents();
+	app->processEvents();
 
-	e.init();
+	fprintf(stderr, "===================== Empath: Initialising kernel\n");
 
-	return app.exec();
+	// Initialise the kernel.
+	e->init();
+
+	fprintf(stderr, "===================== Empath: Entering event loop\n");
+	// Enter the event loop.
+	return app->exec();
 }
 
+	int
 main(int argc, char * argv[])
 {
-	return EmpathMain(argc, argv);
+	fprintf(stderr, "======================================================\n");
+	fprintf(stderr, "==================== Empath Startup ==================\n");
+	fprintf(stderr, "======================================================\n");
+	
+	// Don't run if we're being run as root.
+	if (getuid() == 0 || geteuid() == 0) {
+		fprintf(stderr, "DO NOT RUN GUI APPS AS ROOT !\n");
+		return 1;
+	}	
+
+	int prev_umask = umask(077);
+	
+	EmpathMain(argc, argv);
+	
+	umask(prev_umask);
+	
+	fprintf(stderr, "======================================================\n");
+	fprintf(stderr, "=================== Empath Shutdown ==================\n");
+	fprintf(stderr, "======================================================\n");
 }
+

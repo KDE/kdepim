@@ -31,6 +31,8 @@
 #include <RMM_Defines.h>
 #include <RMM_Enum.h>
 
+namespace RMM {
+
 class RMessage : public RBodyPart {
 
 	public:
@@ -51,6 +53,8 @@ class RMessage : public RBodyPart {
 		
 		RMM::MessageStatus	status_;
 };
+
+}
 
 #endif
 

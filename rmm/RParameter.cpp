@@ -29,6 +29,8 @@
 #include <RMM_Parameter.h>
 #include <RMM_Token.h>
 
+namespace RMM {
+
 RParameter::RParameter()
 	:	RMessageComponent()
 {
@@ -140,3 +142,5 @@ RParameter::setValue(const QCString & value)
 	assembled_ = false;
 }
 	
+};
+

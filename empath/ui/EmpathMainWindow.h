@@ -36,6 +36,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include <RMM_Message.h>
 
 class EmpathSettingsDialog;
 class EmpathFolderWidget;
@@ -44,7 +45,6 @@ class EmpathMessageWidget;
 class EmpathComposeWindow;
 class EmpathAboutBox;
 class EmpathMainWidget;
-class RMessage;
 
 enum BarPosition {};
 
@@ -143,7 +143,7 @@ class EmpathMainWindow : public KTMainWindow
 		bool queryExit();
 		bool _messageSelected();
 		
-		RMessage * _getFirstSelectedMessage() const;
+		RMM::RMessage * _getFirstSelectedMessage() const;
 };
 
 #endif

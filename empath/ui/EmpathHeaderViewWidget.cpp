@@ -36,7 +36,7 @@ EmpathHeaderViewWidget::~EmpathHeaderViewWidget()
 }
 
 	void
-EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
+EmpathHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
 {
 	empathDebug("useEnvelope()");
 	headerList_.clear();
@@ -55,7 +55,7 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 		s = s.stripWhiteSpace();
 		empathDebug("Using header: " + QString::fromLatin1(s));
 	
-		RHeader * h(e.get(s));
+		RMM::RHeader * h(e.get(s));
 		if (h == 0) continue;
 		
 		headerList_.append(h->headerName() + ":");

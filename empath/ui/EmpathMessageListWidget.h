@@ -83,9 +83,9 @@ class EmpathMessageListWidget : public QListView
 		
 		~EmpathMessageListWidget();
 		
-		EmpathMessageListItem * find(RMessageID & msgId);
+		EmpathMessageListItem * find(RMM::RMessageID & msgId);
 		EmpathMessageListItem * findRecursive(
-				EmpathMessageListItem * initialItem, RMessageID & msgId);
+				EmpathMessageListItem * initialItem, RMM::RMessageID & msgId);
 		
 		void addItem(EmpathIndexRecord * item);
 		EmpathURL firstSelectedMessage();

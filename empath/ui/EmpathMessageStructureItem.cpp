@@ -25,9 +25,10 @@
 // Qt includes
 #include <qstring.h>
 #include <qpixmap.h>
+#include <qfont.h>
 
 // KDE includes
-#include <kapp.h>
+#include <kglobal.h>
 
 // Local includes
 #include "EmpathMessageStructureItem.h"
@@ -35,7 +36,7 @@
 
 EmpathMessageStructureItem::EmpathMessageStructureItem(
 		EmpathMessageStructureItem	* parent,
-		RBodyPart				& part)
+		RMM::RBodyPart				& part)
 	:	
 		QListViewItem	(parent),
 		part_			(part)
@@ -46,7 +47,7 @@ EmpathMessageStructureItem::EmpathMessageStructureItem(
 
 EmpathMessageStructureItem::EmpathMessageStructureItem(
 		QListView		* parent,
-		RBodyPart		& part)
+		RMM::RBodyPart	& part)
 	:	
 		QListViewItem	(parent),
 		part_			(part)
@@ -103,7 +104,7 @@ EmpathMessageStructureItem::setup()
 	
 	widthChanged();
 	int ph = pixmap(0) ? pixmap(0)->height() : 0;
-	int th = QFontMetrics(kapp->generalFont()).height();
+	int th = QFontMetrics(KGlobal::generalFont()).height();
 	setHeight(QMAX(ph, th));
 }
 

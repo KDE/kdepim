@@ -30,13 +30,15 @@
 #include <krun.h>
 
 // Local includes
-#include <RMM_Message.h>
 #include "EmpathHeaderViewWidget.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathComposeWindow.h"
 #include "EmpathUtilities.h"
 #include "EmpathUIUtils.h"
 #include "Empath.h"
+#include <RMM_Message.h>
+#include <RMM_BodyPart.h>
+#include <RMM_ContentType.h>
 	
 EmpathMessageViewWidget::EmpathMessageViewWidget(
 		const EmpathURL & url,
@@ -47,14 +49,14 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 		viewingSource_(false)
 {
 	empathDebug("ctor");
-	
+
 	structureWidget_ =
 		new EmpathMessageStructureWidget(0, "structureWidget");
 	CHECK_PTR(structureWidget_);
 	
 	connect(
-		structureWidget_,	SIGNAL(partChanged(RBodyPart *)),
-		this,				SLOT(s_partChanged(RBodyPart *)));
+		structureWidget_,	SIGNAL(partChanged(RMM::RBodyPart *)),
+		this,				SLOT(s_partChanged(RMM::RBodyPart *)));
 
 
 	mainLayout_ = new QGridLayout(this, 3, 2, 0, 0);
@@ -66,12 +68,9 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 	mainLayout_->setRowStretch(1, 10);
 	mainLayout_->setRowStretch(2, 0);
 	
-	empathDebug("Creating HTML widget");
-	
 	messageWidget_ = new EmpathMessageHTMLWidget(this, "messageWidget");
 	CHECK_PTR(messageWidget_);
 	
-	empathDebug("Creating scrollbars");
 	verticalScrollBar_ = new QScrollBar(QScrollBar::Vertical, this, "hScBar");
 	CHECK_PTR(verticalScrollBar_);
 
@@ -93,7 +92,6 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 		this,				SLOT(s_clipClicked()));
 	
 
-	empathDebug("Adding widgets to layout");
 	mainLayout_->addMultiCellWidget(headerViewWidget_,	0, 0, 0, 1);
 	mainLayout_->addWidget(messageWidget_,				1, 0);
 	mainLayout_->addWidget(verticalScrollBar_,			1, 1);
@@ -111,12 +109,12 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 	QObject::connect(horizontalScrollBar_, SIGNAL(valueChanged(int)),
 			messageWidget_, SLOT(slotScrollHorz(int)));
 	
-	QObject::connect(messageWidget_, SIGNAL(documentChanged()), SLOT(s_docChanged()));
+	QObject::connect(
+		messageWidget_, SIGNAL(documentChanged()), SLOT(s_docChanged()));
 
 	QObject::connect(messageWidget_, SIGNAL(URLSelected(QString, int)),
 			SLOT(s_URLSelected(QString, int)));
 	
-	s_docChanged();
 	mainLayout_->activate();
 	QWidget::show();	
 }
@@ -127,14 +125,14 @@ EmpathMessageViewWidget::go()
 	empathDebug("go() called");
 
 	QCString s;
-	RMessage * m(empath->message(url_));
+	RMM::RMessage * m(empath->message(url_));
 	
 	if (m == 0) {
 		empathDebug("Can't load message from \"" + url_.asString() + "\"");
 		return;
 	}
 	
-	RBodyPart message(m->decode());
+	RMM::RBodyPart message(m->decode());
 	structureWidget_->setMessage(message);
 	
 	// Ok I'm going to try and get the viewable body parts now.
@@ -187,7 +185,7 @@ EmpathMessageViewWidget::go()
 		
 		empathDebug("===================== MULTIPART ====================");
 		
-		QListIterator<RBodyPart> it(message.body());
+		QListIterator<RMM::RBodyPart> it(message.body());
 		
 		int i = 0;
 		for (; it.current(); ++it) {
@@ -203,7 +201,7 @@ EmpathMessageViewWidget::go()
 				
 				empathDebug("Ok this part has a Content-Type");                            
 					
-				RContentType t = it.current()->envelope().contentType();
+				RMM::RContentType t = it.current()->envelope().contentType();
 				
 				empathDebug("   Type of this part is \"" + t.type() + "\"");
 				empathDebug("SubType of this part is \"" + t.subType() + "\"");
@@ -214,7 +212,7 @@ EmpathMessageViewWidget::go()
 
 						empathDebug("Using this part as body");
 
-						RBodyPart p(*it.current());
+						RMM::RBodyPart p(*it.current());
 					
 						s = p.decode().data();
 						show(s, true);
@@ -224,7 +222,7 @@ EmpathMessageViewWidget::go()
 					
 						empathDebug("Using this part as body");
 
-						RBodyPart p(*it.current());
+						RMM::RBodyPart p(*it.current());
 					
 						s = p.decode().data();
 						show(s);
@@ -234,7 +232,7 @@ EmpathMessageViewWidget::go()
 				} else {
 
 					empathDebug("Haven't decided what to do with this part yet");
-					RBodyPart p(*it.current());
+					RMM::RBodyPart p(*it.current());
 					s = p.decode().data();
 					show(s);
 				}
@@ -272,8 +270,14 @@ EmpathMessageViewWidget::s_docChanged()
 {
 	// Hide scrollbars if they're not necessary
 
-	if (messageWidget_->docHeight() > messageWidget_->height() ||
-		verticalScrollBar_->value() != 0) {
+	int docHeight	= messageWidget_->docHeight();
+	int docWidth	= messageWidget_->docWidth();
+	
+	int h = messageWidget_->height();
+	int w = messageWidget_->width();
+
+
+	if (docHeight > h || verticalScrollBar_->value() != 0) {
 		verticalScrollBar_->show();
 		verticalScrollBar_->setFixedWidth(scrollbarSize_);
 	} else {
@@ -281,8 +285,7 @@ EmpathMessageViewWidget::s_docChanged()
 		verticalScrollBar_->setFixedWidth(0);
 	}
 	
-	if (messageWidget_->docWidth() > messageWidget_->width() ||
-		horizontalScrollBar_->value() != 0) {
+	if (docWidth > w || horizontalScrollBar_->value() != 0) {
 		horizontalScrollBar_->show();
 		horizontalScrollBar_->setFixedHeight(scrollbarSize_);
 	} else {
@@ -290,14 +293,15 @@ EmpathMessageViewWidget::s_docChanged()
 		horizontalScrollBar_->setFixedHeight(0);
 	}
 	
-	verticalScrollBar_->setRange(0,
-		messageWidget_->docHeight() - messageWidget_->height());
-	verticalScrollBar_->setSteps(12, messageWidget_->height() - 24);
-
+	if (docHeight > h) {
+		verticalScrollBar_->setRange(0,		docHeight - h);
+		verticalScrollBar_->setSteps(12,	messageWidget_->height() - 24);
+	}
 	
-	horizontalScrollBar_->setRange(0,
-		messageWidget_->docWidth() - messageWidget_->width());
-	horizontalScrollBar_->setSteps(12, messageWidget_->width() - 24);
+	if (docWidth > w) {
+		horizontalScrollBar_->setRange(0,	docWidth - w);
+		horizontalScrollBar_->setSteps(12,	messageWidget_->width() - 24);
+	}
 }
 
 	void
@@ -310,14 +314,12 @@ EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 	void
 EmpathMessageViewWidget::s_vScrollbarSetValue(int val)
 {
-	empathDebug("vScrollbarSetValue(" + QString().setNum(val) + ") called");
 	verticalScrollBar_->setValue(val);
 }
 
 	void
 EmpathMessageViewWidget::s_hScrollbarSetValue(int val)
 {
-	empathDebug("hScrollbarSetValue(" + QString().setNum(val) + ") called");
 	horizontalScrollBar_->setValue(val);
 }
 
@@ -352,10 +354,10 @@ EmpathMessageViewWidget::s_clipClicked()
 }
 
 	void
-EmpathMessageViewWidget::s_partChanged(RBodyPart * part)
+EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart * part)
 {
 	empathDebug("s_partChanged() called");
-	RBodyPart p(*part);
+	RMM::RBodyPart p(*part);
 	QCString s(p.data());
 	show(s, true);
 }
@@ -375,7 +377,7 @@ EmpathMessageViewWidget::s_switchView()
 		empathDebug("Doing source view");
 		viewingSource_ = true;
 	
-		RMessage * m(empath->message(url_));
+		RMM::RMessage * m(empath->message(url_));
 	
 		if (m == 0) {
 			empathDebug("Can't load message from \"" + url_.asString() + "\"");

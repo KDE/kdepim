@@ -26,6 +26,8 @@
 
 #include <RMM_Cte.h>
 
+namespace RMM {
+
 RCte::RCte()
 	:	RHeaderBody()
 {
@@ -153,3 +155,6 @@ RCte::setMechanism(RMM::CteType t)
 	mechanism_ = t;
 	assembled_	= false;
 }
+
+};
+

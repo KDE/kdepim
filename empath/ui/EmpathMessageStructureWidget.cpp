@@ -36,13 +36,11 @@
 #include "EmpathMessageStructureWidget.h"
 #include "EmpathMessageStructureItem.h"
 #include "EmpathUIUtils.h"
-#include <RMM_Enum.h>
 
 EmpathMessageStructureWidget::EmpathMessageStructureWidget
 	(QWidget * parent, const char * name)
 	:	QListView(parent, name)
 {
-	empathDebug("ctor");
 	setCaption(i18n("Message Structure - ") + kapp->getCaption());
 	
 	addColumn(i18n("Type"));
@@ -73,14 +71,14 @@ EmpathMessageStructureWidget::EmpathMessageStructureWidget
 }
 
 	void
-EmpathMessageStructureWidget::setMessage(RBodyPart & m)
+EmpathMessageStructureWidget::setMessage(RMM::RBodyPart & m)
 {
 	clear();
 	
 	EmpathMessageStructureItem * i = new EmpathMessageStructureItem(this, m);
 	CHECK_PTR(i);
 	
-	QListIterator<RBodyPart> it(m.body());
+	QListIterator<RMM::RBodyPart> it(m.body());
 	
 	for (; it.current(); ++it) {
 		
@@ -93,9 +91,9 @@ EmpathMessageStructureWidget::setMessage(RBodyPart & m)
 }
 
 	void
-EmpathMessageStructureWidget::_addChildren(RBodyPart * p, QListViewItem * i)
+EmpathMessageStructureWidget::_addChildren(RMM::RBodyPart *p, QListViewItem *i)
 {
-	QListIterator<RBodyPart> it(p->body());
+	QListIterator<RMM::RBodyPart> it(p->body());
 	
 	for (; it.current(); ++it) {
 

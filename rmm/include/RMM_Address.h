@@ -29,6 +29,8 @@
 #include <RMM_HeaderBody.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 class RGroup;
 class RMailbox;
 
@@ -49,6 +51,8 @@ class RAddress : public RHeaderBody {
 		
 		RMailbox	* mailbox_;
 		RGroup		* group_;
+};
+
 };
 
 #endif //RADDRESS_H

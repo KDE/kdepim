@@ -30,7 +30,11 @@
 #include <RMM_Header.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 typedef QListIterator<RHeader> RHeaderListIterator;
 typedef QList<RHeader> RHeaderList;
+
+};
 
 #endif

@@ -34,7 +34,6 @@
 #include <kstdaccel.h>
 
 // Local includes
-#include <RMM_Message.h>
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 

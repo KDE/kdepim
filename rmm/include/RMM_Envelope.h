@@ -48,6 +48,8 @@
 #include <RMM_Cte.h>
 #include <RMM_HeaderBody.h>
 
+namespace RMM {
+
 /**
  * @short An REnvelope encapsulates the envelope of an RFC822 message.
  * An REnvelope encapsulates the envelope of an RFC822 message.
@@ -161,5 +163,7 @@ class REnvelope : public RMessageComponent
 
 		RHeaderList headerList_;
 };
+
+}
 
 #endif // RMM_ENVELOPE_H

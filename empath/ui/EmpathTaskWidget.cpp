@@ -40,8 +40,7 @@ EmpathTaskWidget::EmpathTaskWidget(QWidget * parent, const char * name)
 	:	QWidget(parent, name)
 {
 	empathDebug("ctor");
-//	setCaption(i18n("Pending tasks - ") + kapp->getCaption());
-	
+
 	KPixmap px;
 	px.resize(width(), 20);
 	px.gradientFill(

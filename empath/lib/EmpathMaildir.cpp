@@ -24,6 +24,7 @@
 
 // System includes
 #include <sys/file.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
@@ -179,7 +180,7 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 			// New file to add.
 			
 			// Read the file to an RMessage
-			RMessage m(_messageData(s));
+			RMM::RMessage m(_messageData(s));
 			
 			// Create an index record.
 			EmpathIndexRecord * ir =
@@ -273,7 +274,7 @@ EmpathMaildir::mark(const EmpathURL & message, RMM::MessageStatus msgStat)
 }
 
 	QString
-EmpathMaildir::writeMessage(RMessage & m)
+EmpathMaildir::writeMessage(RMM::RMessage & m)
 {
 	empathDebug("writeMessage called");
 	return _write(m);
@@ -294,20 +295,20 @@ EmpathMaildir::plainBodyOfMessage(const QString &)
 	return QString::null;
 }
 
-	REnvelope *
+	RMM::REnvelope *
 EmpathMaildir::envelopeOfMessage(const QString &)
 {
-	REnvelope * e = 0;
+	RMM::REnvelope * e = 0;
 	return e;
 }
 
-	RBodyPart::PartType
+	RMM::RBodyPart::PartType
 EmpathMaildir::typeOfMessage(const QString &)
 {
-	return RBodyPart::Basic;
+	return RMM::RBodyPart::Basic;
 }
 
-	RMessage *
+	RMM::RMessage *
 EmpathMaildir::message(const QString & id)
 {
 	QCString s = _messageData(id);
@@ -317,7 +318,7 @@ EmpathMaildir::message(const QString & id)
 		return 0;
 	}
 	
-	RMessage * m = new RMessage(s);
+	RMM::RMessage * m = new RMM::RMessage(s);
 	CHECK_PTR(m);
 	return m;
 }
@@ -359,8 +360,8 @@ EmpathMaildir::_messageData(const QString & filename)
 		return "";
 	}
 
-	// Now we need to locate the actual file, by looking for the basename with the
-	// flags section appended.
+	// Now we need to locate the actual file, by looking for the basename with
+	// the flags section appended.
 	
 	QDir cur(path_ + "/cur/", filename + "*");
 	
@@ -563,7 +564,7 @@ EmpathMaildir::_setupDirs()
 }
 
 	QString
-EmpathMaildir::_write(RMessage & msg)
+EmpathMaildir::_write(RMM::RMessage & msg)
 {
 	empathDebug("_write() called");
 

@@ -51,7 +51,7 @@ EmpathAttachmentListWidget::~EmpathAttachmentListWidget()
 }
 
 	void
-EmpathAttachmentListWidget::use(const RMessage &)
+EmpathAttachmentListWidget::use(const RMM::RMessage &)
 {
 }
 

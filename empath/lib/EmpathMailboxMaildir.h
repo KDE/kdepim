@@ -44,7 +44,7 @@ class EmpathMailboxMaildir : public EmpathMailbox
 	public:
 
 		EmpathMailboxMaildir(const QString & name);
-		QString writeNewMail(RMessage & message);
+		QString writeNewMail(RMM::RMessage & message);
 		
 		virtual ~EmpathMailboxMaildir();
 	

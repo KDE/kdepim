@@ -82,13 +82,13 @@ EmpathFolder::removeMessage(const EmpathURL & id)
 }
 
 	const EmpathIndexRecord *
-EmpathFolder::messageDescription(RMessageID & id) const
+EmpathFolder::messageDescription(RMM::RMessageID & id) const
 {
 	empathDebug("messageWithID(" + id.asString() + ") called");
 	return messageList_.messageDescription(id);
 }
 
-	RMessage *
+	RMM::RMessage *
 EmpathFolder::message(const EmpathURL & url)
 {
 	EmpathMailbox * m = empath->mailbox(url_);
@@ -119,7 +119,7 @@ EmpathFolder::update()
 }
 
 	QString
-EmpathFolder::writeMessage(RMessage & message)
+EmpathFolder::writeMessage(RMM::RMessage & message)
 {
 	empathDebug("writeMessage() called");
 

@@ -32,8 +32,6 @@
 #include "Empath.h"
 #include "EmpathURL.h"
 
-class RMessage;
-
 class EmpathUI : public QObject
 {
 	Q_OBJECT

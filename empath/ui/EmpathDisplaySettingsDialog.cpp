@@ -447,7 +447,7 @@ EmpathDisplaySettingsDialog::loadData()
 	
 	QFont font; QColor col;
 
-	font = kapp->fixedFont();
+	font = KGlobal::fixedFont();
 	
 	l_sampleFixed_->setFont(
 		c->readFontEntry(EmpathConfig::KEY_FIXED_FONT, &font));
@@ -558,7 +558,7 @@ EmpathDisplaySettingsDialog::s_apply()
 	void
 EmpathDisplaySettingsDialog::s_default()
 {
-	l_sampleFixed_->setFont(kapp->fixedFont());
+	l_sampleFixed_->setFont(KGlobal::fixedFont());
 	cb_underlineLinks_->setChecked(true);
 	kcb_quoteColourOne_->setColor(Qt::darkBlue);
 	kcb_quoteColourTwo_->setColor(Qt::darkGreen);

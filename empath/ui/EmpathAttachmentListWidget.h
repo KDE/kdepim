@@ -33,9 +33,9 @@
 #include <qpushbutton.h>
 
 // Local includes
-#include <RMM_Message.h>
 #include "EmpathDefines.h"
 #include "EmpathAttachmentListItem.h"
+#include <RMM_Message.h>
 
 /**
  * This widget shows the structure of a message.
@@ -51,7 +51,7 @@ class EmpathAttachmentListWidget : public QListView
 
 		~EmpathAttachmentListWidget();
 
-		void use(const RMessage &);
+		void use(const RMM::RMessage &);
 		
 		void addAttachment();
 		void editAttachment();
@@ -60,7 +60,7 @@ class EmpathAttachmentListWidget : public QListView
 	private:
 
 		QListView	* lv_attachments_;
-		RMessage	message_;
+		RMM::RMessage	message_;
 };
 
 #endif

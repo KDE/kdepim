@@ -69,13 +69,12 @@ Empath::Empath()
 	void
 Empath::init()
 {
-	empathDebug("====================== INIT  START ========================");	
+	empathDebug("init() called");
 	processID_ = getpid();
 	_saveHostName();
 	_setStartTime();
 	mailboxList_.init();
 	filterList_.load();
-	empathDebug("======================= INIT END =========================");	
 }
 
 Empath::~Empath()
@@ -132,14 +131,14 @@ Empath::updateOutgoingServer()
 	mailSender_->readConfig();
 }
 
-	RMessage *
+	RMM::RMessage *
 Empath::message(const EmpathURL & source)
 {
 	empathDebug("message(" + source.asString() + ") called");
 	
 	// Try and get the message from the cache.
 	
-	RMessage * message(cache_[source.messageID()]);
+	RMM::RMessage * message(cache_[source.messageID()]);
 	
 	if (message != 0) {
 		empathDebug("message \"" + source.asString() + "\" found in cache");

@@ -37,6 +37,8 @@
 #include <RMM_MessageID.h>
 #include <RMM_Text.h>
 
+namespace RMM {
+
 RHeader::RHeader()
 	:	RMessageComponent(),
 		headerType_(RMM::HeaderUnknown),
@@ -237,4 +239,6 @@ RHeader::_assemble()
 RHeader::createDefault()
 {
 }
+
+};
 

@@ -30,13 +30,13 @@
 #include <qtimer.h>
 
 // Local includes
-#include "RMM_Message.h"
-#include "RMM_Envelope.h"
-#include "RMM_Message.h"
-#include "RMM_MessageID.h"
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 #include "EmpathFolderList.h"
+#include <RMM_Message.h>
+#include <RMM_Envelope.h>
+#include <RMM_Message.h>
+#include <RMM_MessageID.h>
 
 class EmpathFolder;
 
@@ -85,7 +85,7 @@ class EmpathMailbox : public QObject
 		 * @short Write a new message to the specified folder.
 		 */
 		virtual QString
-			writeMessage(const EmpathURL & folder, RMessage & msg) = 0;
+			writeMessage(const EmpathURL & folder, RMM::RMessage & msg) = 0;
 		
 		/**
 		 * @short Get the size of the message specified in the url.
@@ -102,13 +102,13 @@ class EmpathMailbox : public QObject
 		/**
 		 * @short Get the envelope of the message specified in the url.
 		 */
-		virtual REnvelope *
+		virtual RMM::REnvelope *
 			envelopeOfMessage	(const EmpathURL &) = 0;
 		
 		/**
 		 * @short Get the message specified in the url.
 		 */
-		virtual RMessage *
+		virtual RMM::RMessage *
 			message				(const EmpathURL &) = 0;
 		
 		/**
@@ -120,7 +120,7 @@ class EmpathMailbox : public QObject
 		/**
 		 * @short Get the type of the message specified in the url.
 		 */
-		virtual RBodyPart::PartType
+		virtual RMM::RBodyPart::PartType
 			typeOfMessage		(const EmpathURL &) = 0;
 		
 		/**

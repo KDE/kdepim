@@ -32,12 +32,12 @@
 // Local includes
 #include "EmpathIndex.h"
 #include "EmpathURL.h"
-#include "RMM_MessageID.h"
+#include <RMM_Message.h>
+#include <RMM_MessageID.h>
 
 class EmpathMailbox;
 class EmpathIndexRecord;
 class EmpathIndex;
-class RMessage;
 class EmpathIndexAllocator;
 
 class EmpathFolder : public QObject
@@ -74,9 +74,9 @@ class EmpathFolder : public QObject
 		EmpathIndex & messageList() { return messageList_; }
 
 		const EmpathIndexRecord *
-			messageDescription(RMessageID & messageID) const;
+			messageDescription(RMM::RMessageID & messageID) const;
 
-		QString writeMessage(RMessage & message);
+		QString writeMessage(RMM::RMessage & message);
 		bool removeMessage(const EmpathURL &);
 
 		void update();
@@ -87,7 +87,7 @@ class EmpathFolder : public QObject
 		 * delete it.
 		 */
 
-		RMessage * message(const EmpathURL & url);
+		RMM::RMessage * message(const EmpathURL & url);
 
 		bool mark(const EmpathURL &, RMM::MessageStatus);
 		

@@ -27,6 +27,8 @@
 
 #include <RMM_Enum.h>
 
+namespace RMM {
+
 QCString			RToCrLfEol				(const QCString &);
 QCString			RToLfEol				(const QCString &);
 QCString			RToCrEol				(const QCString &);
@@ -37,5 +39,7 @@ QCString			RDecodeBase64			(const QCString &);
 
 QCString			REncodeQuotedPrintable	(const QCString &);
 QCString			RDecodeQuotedPrintable	(const QCString &);
+
+};
 
 #endif

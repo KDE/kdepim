@@ -42,7 +42,7 @@
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 #include "EmpathHeaderSpecWidget.h"
-#include "RMM_Message.h"
+#include <RMM_Message.h>
 
 class EmpathAttachmentListWidget;
 
@@ -76,7 +76,7 @@ class EmpathComposeWidget : public QWidget
 		/**
 		 * The message we're editing.
 		 */
-		RMessage message();
+		RMM::RMessage message();
 
 		/**
 		 * Test if there are any attachments for this message.

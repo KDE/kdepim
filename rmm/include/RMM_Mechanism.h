@@ -30,11 +30,15 @@
 #include <RMM_HeaderBody.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 class RMechanism : public RHeaderBody {
 
 	public:
 		
 #include "generated/RMechanism_generated.h"
+
+};
 
 };
 

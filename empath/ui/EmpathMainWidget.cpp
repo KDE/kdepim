@@ -40,7 +40,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
 	: QWidget(parent, name)
 {
 	empathDebug("ctor");
-	
+
 	hSplit = new KNewPanner(this, "hSplit", KNewPanner::Vertical);
 	
 	CHECK_PTR(hSplit);
@@ -61,7 +61,6 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
 		new EmpathLeftSideWidget(messageListWidget_, hSplit, "leftSideWidget");
 	CHECK_PTR(leftSideWidget_);
 
-	empathDebug("Updating message list widget");
 	messageListWidget_->update();
 	
 	QObject::connect(messageListWidget_, SIGNAL(changeView(const EmpathURL &)),

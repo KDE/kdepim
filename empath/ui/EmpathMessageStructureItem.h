@@ -31,8 +31,8 @@
 
 // Local includes
 #include "EmpathDefines.h"
-#include "RMM_BodyPart.h"
-#include "RMM_Enum.h"
+#include <RMM_BodyPart.h>
+#include <RMM_Enum.h>
 
 /**
  * @internal
@@ -41,19 +41,17 @@ class EmpathMessageStructureItem : public QListViewItem
 {
 	public:
 	
-		EmpathMessageStructureItem(
-			QListView * parent,
-			RBodyPart &);
+		EmpathMessageStructureItem(QListView * parent, RMM::RBodyPart &);
 
 		EmpathMessageStructureItem(
 			EmpathMessageStructureItem * parent,
-			RBodyPart &);
+			RMM::RBodyPart &);
 
 		~EmpathMessageStructureItem();
 		
 		virtual void setup();
 		
-		RBodyPart * part() { return &part_; }
+		RMM::RBodyPart * part() { return &part_; }
 
 		const char * className() const { return "EmpathStructureListItem"; }
 		
@@ -61,7 +59,7 @@ class EmpathMessageStructureItem : public QListViewItem
 
 		void _init();
 		
-		RBodyPart part_;
+		RMM::RBodyPart part_;
 };
 
 #endif

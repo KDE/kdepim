@@ -32,10 +32,10 @@
 // Local includes
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
-#include "RMM_MessageID.h"
-#include "RMM_Mailbox.h"
-#include "RMM_DateTime.h"
-#include "RMM_Enum.h"
+#include <RMM_MessageID.h>
+#include <RMM_Mailbox.h>
+#include <RMM_DateTime.h>
+#include <RMM_Enum.h>
 
 class EmpathMessageListWidget;
 
@@ -61,11 +61,11 @@ class EmpathMessageListItem : public QListViewItem
 		QString key(int, bool) const;
 
 		const QString &		id()		const	{ return m.id();		}
-		RMessageID &		messageID() 		{ return m.messageID();	}
-		RMessageID &		parentID()			{ return m.parentID();	}
+		RMM::RMessageID &	messageID() 		{ return m.messageID();	}
+		RMM::RMessageID &	parentID()			{ return m.parentID();	}
 		const QString &		subject()	const	{ return m.subject();	}
-		RMailbox &			sender()			{ return m.sender();	}
-		RDateTime &			date()				{ return m.date();		}
+		RMM::RMailbox &		sender()			{ return m.sender();	}
+		RMM::RDateTime &	date()				{ return m.date();		}
 		RMM::MessageStatus	status()	const	{ return m.status();	}
 		Q_UINT32			size()		const	{ return m.size();		}
 		

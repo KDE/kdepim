@@ -33,13 +33,13 @@
 #include <kfiledialog.h>
 
 // Local includes
-#include <RMM_Message.h>
 #include "Empath.h"
 #include "EmpathUIUtils.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageViewWindow.h"
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathMessageSourceView.h"
+#include <RMM_Message.h>
 
 EmpathMessageViewWindow::EmpathMessageViewWindow(
 		const EmpathURL & url, const char * name)
@@ -227,17 +227,19 @@ EmpathMessageViewWindow::s_messageSaveAs()
 {
 	empathDebug("s_messageSaveAs called");
 	
-	RMessage * m = empath->message(url_);
+	RMM::RMessage * m = empath->message(url_);
 	
 	if (m == 0) {
 		return;
 	}
 	
-	RMessage message(*m);
+	RMM::RMessage message(*m);
 
 	QString saveFilePath =
 		KFileDialog::getSaveFileName(
-			QString::null, QString::null, this, i18n("Empath: Save Message").ascii());
+			QString::null, QString::null,
+			this, i18n("Empath: Save Message").ascii());
+
 	empathDebug(saveFilePath);
 	
 	if (saveFilePath.isEmpty()) {
@@ -249,7 +251,9 @@ EmpathMessageViewWindow::s_messageSaveAs()
 	if (!f.open(IO_WriteOnly)) {
 		// Warn user file cannot be opened.
 		empathDebug("Couldn't open file for writing");
-		KMsgBox(this, "Empath", i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
+		KMsgBox(this, "Empath",
+	i18n("Sorry I can't write to that file. Please try another filename."),
+		KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
 	empathDebug("Opened " + saveFilePath + " OK");
@@ -267,13 +271,13 @@ EmpathMessageViewWindow::s_messageCopyTo()
 {
 	empathDebug("s_messageCopyTo called");
 
-	RMessage * m(empath->message(url_));
+	RMM::RMessage * m(empath->message(url_));
 	
 	if (m == 0) {
 		return;
 	}
 	
-	RMessage message(*m);
+	RMM::RMessage message(*m);
 	
 	EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 

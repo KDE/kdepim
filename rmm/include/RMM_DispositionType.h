@@ -33,6 +33,8 @@
 #include <RMM_Parameter.h>
 #include <RMM_ParameterList.h>
 
+namespace RMM {
+
 class RDispositionType : public RHeaderBody {
 
 	public:
@@ -50,6 +52,8 @@ class RDispositionType : public RHeaderBody {
 		RParameterList		parameterList_;
 		RMM::DispType		dispType_;
 		QCString			filename_;
+};
+
 };
 
 #endif //RDISPOSITIONTYPE_H

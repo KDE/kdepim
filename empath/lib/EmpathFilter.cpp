@@ -32,7 +32,6 @@
 #include "EmpathFilter.h"
 #include "EmpathDefines.h"
 #include "EmpathConfig.h"
-#include "Empath.h"
 
 EmpathFilter::EmpathFilter(const QString & name)
 	:	priority_(0),

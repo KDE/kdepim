@@ -42,10 +42,9 @@
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathMailSender.h"
-#include "RMM_DateTime.h"
-#include "RMM_MailboxList.h"
-#include "RMM_Mailbox.h"
-#include "RMM_Address.h"
+#include <RMM_DateTime.h>
+#include <RMM_Mailbox.h>
+#include <RMM_Address.h>
 
 EmpathComposeWidget::EmpathComposeWidget(
 		QWidget *			parent,
@@ -191,7 +190,7 @@ EmpathComposeWidget::~EmpathComposeWidget()
 	empathDebug("dtor");
 }
 
-	RMessage
+	RMM::RMessage
 EmpathComposeWidget::message()
 {
 	empathDebug("message called");
@@ -212,14 +211,14 @@ EmpathComposeWidget::message()
 	if (composeType_ == Empath::ComposeReply	||
 		composeType_ == Empath::ComposeReplyAll) {
 		
-		RMessage * m(empath->message(url_));
+		RMM::RMessage * m(empath->message(url_));
 		if (m == 0) {
 			empathDebug("No message to reply to");
-			RMessage x;
+			RMM::RMessage x;
 			return x;
 		}
 		
-		RMessage message(*m);
+		RMM::RMessage message(*m);
 		
 		// If there is a references header in the message we're replying to,
 		// we add the message id of that message to the references list.
@@ -259,12 +258,12 @@ EmpathComposeWidget::message()
 	s += QCString(">");
 	s += "\n";
 	
-	RDateTime dt;
+	RMM::RDateTime dt;
 	dt.createDefault();
 	s += "Date: " + dt.asString();
 	s += "\n";
 	
-	RMessageID id;
+	RMM::RMessageID id;
 	id.createDefault();
 	
 	s += "Message-Id: " + id.asString();
@@ -294,7 +293,7 @@ EmpathComposeWidget::message()
 
 	
 	empathDebug(s);
-	RMessage msg(s);
+	RMM::RMessage msg(s);
 	empathDebug(msg.asString());
 
 	return msg;
@@ -327,10 +326,10 @@ EmpathComposeWidget::_reply(bool toAll)
 {
 	empathDebug("Replying");
 	
-	RMessage * m(empath->message(url_));
+	RMM::RMessage * m(empath->message(url_));
 	if (m == 0) return;
 	
-	RMessage message(*m);
+	RMM::RMessage message(*m);
 	
 	QCString to, cc;
 	
@@ -389,7 +388,7 @@ EmpathComposeWidget::_reply(bool toAll)
 		KConfig * c(KGlobal::config());
 		c->setGroup(EmpathConfig::GROUP_IDENTITY);
 		
-		RAddress me(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
+		RMM::RAddress me(c->readEntry(EmpathConfig::KEY_EMAIL).ascii());
 		
 		if (!(me == *(message.envelope().to().at(0))))
 			if (!cc.isEmpty())
@@ -458,10 +457,10 @@ EmpathComposeWidget::_forward()
 {
 	empathDebug("Forwarding");
 	
-	RMessage * m(empath->message(url_));
+	RMM::RMessage * m(empath->message(url_));
 	if (m == 0) return;
 	
-	RMessage message(*m);
+	RMM::RMessage message(*m);
 	
 	QString s;
 

@@ -59,7 +59,7 @@ EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
 }
 
 
-EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMessage & m)
+EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
 	:	id_					(id),
 		subject_			(m.envelope().subject().asString()),
 		sender_				(m.envelope().firstSender()),
@@ -76,12 +76,12 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMessage & m)
 EmpathIndexRecord::EmpathIndexRecord(
 		const QString &		id,
 		const QString &		subject,
-		RMailbox &			sender,
-		RDateTime &			date,
+		RMM::RMailbox &		sender,
+		RMM::RDateTime &	date,
 		RMM::MessageStatus	status,
 		Q_UINT32			size,
-		RMessageID &		messageId,
-		RMessageID &		parentMessageId)
+		RMM::RMessageID &	messageId,
+		RMM::RMessageID &	parentMessageId)
 	:
 		id_					(id),
 		subject_			(subject),

@@ -33,6 +33,8 @@
 #include <RMM_Parameter.h>
 #include <RMM_HeaderBody.h>
 
+namespace RMM {
+
 /**
  * An RCte holds a Content-Transfer-Encoding header body. It contains a
  * mechanism. This is likely to be "7bit, "quoted-printable", "base64", "8bit",
@@ -51,6 +53,8 @@ class RCte : public RHeaderBody {
 	private:
 
 		RMM::CteType mechanism_;
+};
+
 };
 
 #endif

@@ -29,6 +29,8 @@
 #include <RMM_Group.h>
 #include <RMM_Mailbox.h>
 
+namespace RMM {
+
 RAddress::RAddress()
 	:	RHeaderBody(),
 		mailbox_(0),
@@ -221,4 +223,6 @@ RAddress::createDefault()
 		mailbox_->createDefault();
 	}
 }
+
+};
 

@@ -37,6 +37,8 @@
 #include <RMM_Enum.h>
 #include <RMM_Token.h>
 
+namespace RMM {
+
 RDateTime::RDateTime()
 	:	RHeaderBody(),
 		zone_("")
@@ -257,4 +259,6 @@ RDateTime::asUnixTime()
 
 	return (Q_UINT32)timeT;	
 }
+
+};
 

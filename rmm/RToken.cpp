@@ -29,6 +29,8 @@
 
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 	Q_UINT32
 RTokenise(
 	const char * str,
@@ -150,4 +152,6 @@ RTokenise(
 
 	return l.count();
 }
+
+};
 

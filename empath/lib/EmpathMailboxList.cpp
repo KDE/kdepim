@@ -136,7 +136,7 @@ EmpathMailboxList::init()
 	void
 EmpathMailboxList::readConfig()
 {
-	KConfig * c = KGlobal::config();
+	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	QStrList l;
@@ -146,7 +146,8 @@ EmpathMailboxList::readConfig()
 		empath, SLOT(s_updateFolderLists()));
 
 	// Load each mailbox ( make new, tell it to read config )
-	empathDebug("Reading " + QString().setNum(l.count()) + " mailboxes into list");
+	empathDebug("Reading " + QString().setNum(l.count()) +
+		" mailboxes into list");
 
 	EmpathMailbox::AccountType mailboxType = EmpathMailbox::Maildir;
 	

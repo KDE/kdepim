@@ -141,10 +141,10 @@ EmpathMatcher::match(const EmpathURL & id)
 				empathDebug("Matching message by size > " +
 					QString().setNum(size_));
 
-				RMessage * m(empath->message(id));
+				RMM::RMessage * m(empath->message(id));
 				if (m == 0) return false;
 
-				RMessage message(*m);
+				RMM::RMessage message(*m);
 				
 				Q_UINT32 sizeOfMessage = message.size();
 
@@ -159,10 +159,10 @@ EmpathMatcher::match(const EmpathURL & id)
 		case BodyExpr:
 			{
 				empathDebug("Matching message by body expr \"" + matchExpr_ + "\"");
-				RMessage * m(empath->message(id));
+				RMM::RMessage * m(empath->message(id));
 				if (m == 0) return false;
 				
-				RMessage message(*m);
+				RMM::RMessage message(*m);
 				
 				QString s; // FIXME -- = m->firstPlainBodyPart ?
 				
@@ -176,10 +176,10 @@ EmpathMatcher::match(const EmpathURL & id)
 			{
 				empathDebug("Matching message by header expr \"" + matchExpr_ + "\"");
 				
-				RMessage * m(empath->message(id));
+				RMM::RMessage * m(empath->message(id));
 				if (m == 0) return false;
 				
-				RMessage message(*m);
+				RMM::RMessage message(*m);
 				
 				QString s = message.envelope().asString();
 				QRegExp r(matchExpr_);
@@ -191,12 +191,12 @@ EmpathMatcher::match(const EmpathURL & id)
 		case HasAttachments:	
 			empathDebug("Matching message by attachments");
 			{
-				RMessage * m(empath->message(id));
+				RMM::RMessage * m(empath->message(id));
 				if (m == 0) return false;
 				
-				RMessage message(*m);
+				RMM::RMessage message(*m);
 				
-				return (message.type() == RBodyPart::Mime);
+				return (message.type() == RMM::RBodyPart::Mime);
 			}
 			break;
 			

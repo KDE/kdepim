@@ -32,6 +32,8 @@
 #include <RMM_Address.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 /**
  * An RGroup holds a name and a phrase, as per RFC822.
  */
@@ -57,6 +59,8 @@ class RGroup : public RAddress {
 		RMailboxList	mailboxList_;
 		QCString		name_;
 		QCString		phrase_;
+};
+
 };
 
 #endif

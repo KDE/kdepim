@@ -25,6 +25,7 @@
 // Qt includes
 #include <qmessagebox.h>
 #include <qstring.h>
+#include <qpngio.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -55,17 +56,14 @@ EmpathUI::EmpathUI()
 	: QObject()
 {
 	empathDebug("ctor");
+
+	qInitPngIO();
 	
 	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
 	QString iconSetPath(c->readEntry(EmpathConfig::KEY_ICON_SET, "standard"));
 
-	KGlobal::dirs()->addResourceDir("toolbar", "/x/kde/share/apps/empath/pics/" + iconSetPath);
-//		kapp->kde_datadir() + "/empath/pics/" + iconSetPath);
-//	KGlobal::iconLoader()->insertDirectory(0,
-//		kapp->kde_datadir() + "/empath/pics/mime");
-	
 	QObject::connect(
 		empath,	SIGNAL(newComposer(Empath::ComposeType, const EmpathURL &)),
 		this,	SLOT(s_newComposer(Empath::ComposeType, const EmpathURL &)));
@@ -140,7 +138,7 @@ EmpathUI::_showTipOfTheDay() const
 	
 	if (!c->readBoolEntry(EmpathConfig::KEY_TIP_OF_THE_DAY_AT_STARTUP, false))
 		return;
-
+#if 0
 	EmpathTipOfTheDay totd(
 			(QWidget *)0L,
 			"tipWidget",
@@ -148,6 +146,7 @@ EmpathUI::_showTipOfTheDay() const
 			QString::null,
 			0);
 	totd.exec();
+#endif
 }
 
 	void

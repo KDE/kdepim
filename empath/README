@@ -1,9 +1,6 @@
 OI !
 
-** TODAY'S WARNING **
-Empath's deliveries aren't done with correct permissions (0600) yet.
-Your mail will be readable by anyone, so take care !
-*********************
+Note: umask is now used :)
 
 Potential developers:
 

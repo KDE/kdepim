@@ -27,6 +27,8 @@
 #include <RMM_Mechanism.h>
 #include <RMM_Enum.h>
 
+namespace RMM {
+
 RMechanism::RMechanism()
 {
 	rmmDebug("ctor");
@@ -90,4 +92,6 @@ RMechanism::createDefault()
 {
 	rmmDebug("createDefault() called");
 }
+
+};
 

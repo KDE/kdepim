@@ -32,6 +32,8 @@
 #include <RMM_Parameter.h>
 #include <RMM_HeaderBody.h>
 
+namespace RMM {
+
 typedef QListIterator<RParameter> RParameterListIterator;
 
 /**
@@ -43,6 +45,8 @@ class RParameterList : public QList<RParameter>, public RHeaderBody {
 	public:
 		
 #include "generated/RParameterList_generated.h"
+
+};
 
 };
 

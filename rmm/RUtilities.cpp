@@ -25,6 +25,8 @@
 #include <RMM_Utility.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 static const char * B64Chars =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -268,3 +270,6 @@ main()
     exit(errors ? 1 : 0);
 }
 */
+
+};
+

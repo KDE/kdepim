@@ -35,18 +35,20 @@ virtual bool newMail() const;
 virtual void saveConfig();
 virtual void readConfig();
 		
-virtual QString writeMessage(const EmpathURL & folder, RMessage &);
+virtual QString writeMessage(const EmpathURL & folder, RMM::RMessage &);
 		
-virtual Q_UINT32				sizeOfMessage		(const EmpathURL &);
-virtual QString					plainBodyOfMessage	(const EmpathURL &);
-virtual REnvelope *				envelopeOfMessage	(const EmpathURL &);
-virtual RBodyPart::PartType		typeOfMessage		(const EmpathURL &);
-virtual RMessage *				message				(const EmpathURL &);
-virtual bool 					removeMessage		(const EmpathURL &);
-virtual bool					addFolder			(const EmpathURL &);
-virtual bool					removeFolder		(const EmpathURL &);
-virtual void					syncIndex			(const EmpathURL &);
-virtual bool					mark	(const EmpathURL &, RMM::MessageStatus);
+virtual Q_UINT32					sizeOfMessage		(const EmpathURL &);
+virtual QString						plainBodyOfMessage	(const EmpathURL &);
+virtual RMM::REnvelope *			envelopeOfMessage	(const EmpathURL &);
+virtual RMM::RBodyPart::PartType	typeOfMessage		(const EmpathURL &);
+virtual RMM::RMessage *				message				(const EmpathURL &);
+virtual bool						removeMessage		(const EmpathURL &);
+
+virtual bool	addFolder		(const EmpathURL &);
+virtual bool	removeFolder	(const EmpathURL &);
+
+virtual void	syncIndex		(const EmpathURL &);
+virtual bool	mark(const EmpathURL &, RMM::MessageStatus);
 
 virtual void init();
 		

@@ -97,7 +97,7 @@ EmpathMessageListItem::_init()
 	
 	setText(3, sizeStr);
 	
-	RMailbox sender_(m.sender());
+	RMM::RMailbox sender_(m.sender());
 	
 	if (sender_.phrase().isEmpty()) {
 		sender_.assemble();

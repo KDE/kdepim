@@ -49,7 +49,7 @@ EmpathMailSenderSMTP::setServer(const QString & name, const Q_UINT32 port)
 }
 
 	bool
-EmpathMailSenderSMTP::sendOne(RMessage &)
+EmpathMailSenderSMTP::sendOne(RMM::RMessage &)
 {
 	return false;
 }

@@ -52,7 +52,7 @@ EmpathFolderWidget::EmpathFolderWidget(
 		waitForShown_(wait)
 {
 	empathDebug("ctor");
-	
+
 	setAcceptDrops(true);
 	viewport()->setAcceptDrops(true);
 	
@@ -115,9 +115,7 @@ EmpathFolderWidget::EmpathFolderWidget(
 	void
 EmpathFolderWidget::update()
 {
-	empathDebug("update() called");
 	setUpdatesEnabled(false);
-	empathDebug("set updates to disabled");
 	
 	EmpathMailboxListIterator mit(empath->mailboxList());
 

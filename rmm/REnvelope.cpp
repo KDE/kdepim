@@ -28,6 +28,8 @@
 #include <RMM_Envelope.h>
 #include <RMM_Enum.h>
 
+namespace RMM {
+
 REnvelope::REnvelope()
 {
 	rmmDebug("ctor");
@@ -634,3 +636,6 @@ REnvelope::addHeader(const QCString & s)
 	headerList_.append(newHeader);
 	assembled_ = false;
 }
+
+};
+

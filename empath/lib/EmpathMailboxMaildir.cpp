@@ -140,7 +140,7 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 }
 	
 	QString
-EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, RMessage & m)
+EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, RMM::RMessage & m)
 {
 	empathDebug("writeMessage() called");
 	
@@ -307,7 +307,7 @@ EmpathMailboxMaildir::plainBodyOfMessage(const EmpathURL & id)
 	return m->plainBodyOfMessage(id.messageID());
 }
 
-	REnvelope *
+	RMM::REnvelope *
 EmpathMailboxMaildir::envelopeOfMessage(const EmpathURL & id)
 {
 	EmpathMaildir * m = _box(id);
@@ -315,11 +315,11 @@ EmpathMailboxMaildir::envelopeOfMessage(const EmpathURL & id)
 	return m->envelopeOfMessage(id.messageID());
 }
 
-	RBodyPart::PartType
+	RMM::RBodyPart::PartType
 EmpathMailboxMaildir::typeOfMessage(const EmpathURL & id)
 {	
 	EmpathMaildir * m = _box(id);
-	if (m == 0) return RBodyPart::Basic;
+	if (m == 0) return RMM::RBodyPart::Basic;
 	return m->typeOfMessage(id.messageID());
 }
 
@@ -336,7 +336,7 @@ EmpathMailboxMaildir::init()
 		}
 }
 
-	RMessage *
+	RMM::RMessage *
 EmpathMailboxMaildir::message(const EmpathURL & id)
 {
 	empathDebug("message(" + id.asString() + ") called");

@@ -33,6 +33,8 @@
 #include <RMM_Defines.h>
 #include <RMM_Envelope.h>
 
+namespace RMM {
+
 class RBodyPart : public REntity {
 	
 	public:
@@ -95,6 +97,8 @@ class RBodyPart : public REntity {
 
 typedef QList<RBodyPart>			RBodyPartList;
 typedef QListIterator<RBodyPart>	RBodyPartListIterator;
+
+}
 
 #endif
 

@@ -58,7 +58,7 @@ class EmpathMailSenderSendmail : public EmpathMailSender
 		EmpathMailSenderSendmail();
 		~EmpathMailSenderSendmail();
 
-		bool sendOne(RMessage & message);
+		bool sendOne(RMM::RMessage & message);
 
 		void setSendmailLocation(const QString & location);
 		

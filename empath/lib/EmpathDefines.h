@@ -31,9 +31,9 @@ static const int		EMPATH_VERSION_MINOR	= 8;
 static const int		EMPATH_VERSION_RELEASE	= 1;
 
 #ifdef DEBUG
-#include <iostream.h>
-#	define empathDebug(a)	cerr << className() << ": " << \
-							QString((a)).ascii() << endl;
+#include <iostream>
+#	define empathDebug(a)	std::cerr << className() << ": " << \
+							QString((a)).ascii() << std::endl;
 #else
 #	define empathDebug(a)
 #endif

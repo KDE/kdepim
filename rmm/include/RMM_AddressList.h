@@ -30,6 +30,8 @@
 #include <RMM_Address.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 typedef QListIterator<RAddress> RAddressListIterator;
 
 /**
@@ -48,6 +50,8 @@ class RAddressList : public RHeaderBody {
 	private:
 		
 		QList<RAddress> list_;
+};
+
 };
 
 #endif //RADDRESSLIST_H

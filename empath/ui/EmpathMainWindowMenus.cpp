@@ -1,8 +1,6 @@
 	void
 EmpathMainWindow::_setupMenuBar()
 {
-	empathDebug("setting up menu bar");
-
 	fileMenu_		= new QPopupMenu;
 	CHECK_PTR(fileMenu_);
 

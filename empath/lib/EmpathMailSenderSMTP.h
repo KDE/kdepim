@@ -50,7 +50,7 @@ class EmpathMailSenderSMTP : public EmpathMailSender
 		~EmpathMailSenderSMTP();
 
 		void setServer(const QString & name, const Q_UINT32 port);
-		bool sendOne(RMessage & message);
+		bool sendOne(RMM::RMessage & message);
 		
 		virtual void saveConfig();
 		virtual void readConfig();

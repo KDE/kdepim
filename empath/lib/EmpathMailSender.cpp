@@ -23,7 +23,6 @@
 #endif
 
 // System includes
-#include <sys/stat.h>
 #include <unistd.h>
 
 // Qt includes
@@ -57,7 +56,7 @@ EmpathMailSender::~EmpathMailSender()
 }
 
 	bool
-EmpathMailSender::send(RMessage & message)
+EmpathMailSender::send(RMM::RMessage & message)
 {
 	EmpathTask * t(empath->addTask("Sending message"));
 
@@ -163,7 +162,7 @@ EmpathMailSender::sendQueued()
 		url = queueFolder->url();
 		url.setMessageID(it.current()->id());
 		
-		RMessage * m(empath->message(url));
+		RMM::RMessage * m(empath->message(url));
 		
 		if (m == 0) {
 			empathDebug("Can't find message \"" + url.asString() + "\"");
@@ -171,7 +170,7 @@ EmpathMailSender::sendQueued()
 			return;
 		}
 		
-		RMessage message(*m);
+		RMM::RMessage message(*m);
 		if (!sendOne(message))
 			status = false;
 		else
@@ -188,7 +187,7 @@ EmpathMailSender::sendQueued()
 }
 
 	void
-EmpathMailSender::queue(RMessage & message)
+EmpathMailSender::queue(RMM::RMessage & message)
 {
 	KConfig * c(KGlobal::config());
 	c->setGroup(EmpathConfig::GROUP_SENDING);
@@ -217,7 +216,7 @@ EmpathMailSender::queue(RMessage & message)
 }
 
 	void
-EmpathMailSender::emergencyBackup(RMessage & message)
+EmpathMailSender::emergencyBackup(RMM::RMessage & message)
 {
 	empathDebug("Couldn't queue message ! Writing to emergency backup");
 

@@ -34,6 +34,8 @@
 #include <RMM_Enum.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 class RMimeType : public RHeaderBody {
 
 	public:
@@ -63,6 +65,8 @@ class RMimeType : public RHeaderBody {
 		RMM::MimeSubType	subType_;
 		
 		RParameterList		parameterList_;
+};
+
 };
 
 #endif

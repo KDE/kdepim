@@ -176,7 +176,7 @@ EmpathMailboxIMAP4::maxLogFileSize()
 }
 
 	QString
-EmpathMailboxIMAP4::writeMessage(const EmpathURL &, RMessage &)
+EmpathMailboxIMAP4::writeMessage(const EmpathURL &, RMM::RMessage &)
 {
 	return QString::null;
 }
@@ -191,7 +191,7 @@ EmpathMailboxIMAP4::syncIndex(const EmpathURL &)
 {
 }
 
-	RMessage *
+	RMM::RMessage *
 EmpathMailboxIMAP4::message(const EmpathURL &)
 {
 	return 0;
@@ -209,16 +209,16 @@ EmpathMailboxIMAP4::plainBodyOfMessage(const EmpathURL &)
 	return QString::null;
 }
 
-	REnvelope *
+	RMM::REnvelope *
 EmpathMailboxIMAP4::envelopeOfMessage(const EmpathURL &)
 {
 	return 0;
 }
 
-	RBodyPart::PartType
+	RMM::RBodyPart::PartType
 EmpathMailboxIMAP4::typeOfMessage(const EmpathURL &)
 {
-	return RBodyPart::Basic;
+	return RMM::RBodyPart::Basic;
 }
 
 	void

@@ -29,6 +29,8 @@
 #include <RMM_MessageComponent.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 /**
  * @short An REntity is the base class of an RBodyPart and an RMessage.
  * An REntity is the base class of an RBodyPart and an RMessage. Note that the
@@ -51,5 +53,7 @@ class REntity : public RMessageComponent
 		
 		virtual const char * className() const { return "REntity"; }
 };
+
+}
 
 #endif

@@ -67,14 +67,14 @@ class EmpathMaildir : public QObject
 		
 		bool		mark(const EmpathURL &, RMM::MessageStatus);
 		
-		QString		writeMessage(RMessage & msg);
+		QString		writeMessage(RMM::RMessage & msg);
 		
-		Q_UINT32				sizeOfMessage			(const QString & id);
-		QString					plainBodyOfMessage		(const QString & id);
-		REnvelope *				envelopeOfMessage		(const QString & id);
-		RMessage *				message					(const QString & id);
-		bool					removeMessage			(const QString & id);
-		RBodyPart::PartType		typeOfMessage			(const QString & id);
+		Q_UINT32					sizeOfMessage		(const QString & id);
+		QString						plainBodyOfMessage	(const QString & id);
+		RMM::REnvelope *			envelopeOfMessage	(const QString & id);
+		RMM::RMessage *				message				(const QString & id);
+		bool						removeMessage		(const QString & id);
+		RMM::RBodyPart::PartType	typeOfMessage		(const QString & id);
 		
 		void sync(const EmpathURL & url, bool ignoreMtime = false);
 		
@@ -84,7 +84,7 @@ class EmpathMaildir : public QObject
 		
 	private:
 		
-		QString		_write(RMessage & msg);
+		QString		_write(RMM::RMessage & msg);
 		QCString	_messageData(const QString & filename);
 		void		_markNewMailAsSeen();
 		void 		_markAsSeen(const QString & name);

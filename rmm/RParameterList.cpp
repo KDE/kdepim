@@ -30,6 +30,8 @@
 #include <RMM_ParameterList.h>
 #include <RMM_Token.h>
 
+namespace RMM {
+
 RParameterList::RParameterList()
 	:	QList<RParameter>(),
 		RHeaderBody()
@@ -129,4 +131,6 @@ RParameterList::createDefault()
 {
 	rmmDebug("createDefault() called");
 }
+
+};
 

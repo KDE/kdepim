@@ -31,6 +31,8 @@
 #include <RMM_Message.h>
 #include <RMM_Envelope.h>
 
+namespace RMM {
+
 RMessage::RMessage()
 	:	RBodyPart()
 {
@@ -113,4 +115,7 @@ RMessage::createDefault()
 {
 	RBodyPart::createDefault();
 }
+
+
+};
 

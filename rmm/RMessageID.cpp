@@ -34,6 +34,8 @@
 #include <RMM_MessageID.h>
 #include <RMM_Token.h>
 
+namespace RMM {
+
 int RMessageID::seq_ = 0;
 
 RMessageID::RMessageID()
@@ -205,4 +207,6 @@ RMessageID::createDefault()
 	parsed_ = true;
 	assembled_ = false;
 }
+
+};
 

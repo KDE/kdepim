@@ -30,6 +30,8 @@
 #include <RMM_Address.h>
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 /**
  * An RMailbox holds either a (phrase route-addr) or (localpart domain).
  * (localpart domain) is called an addr-spec by RFC822.
@@ -63,5 +65,7 @@ class RMailbox : public RAddress {
 		QCString localPart_;
 		QCString domain_;
 };
+
+}
 
 #endif //RMAILBOX_H

@@ -55,7 +55,7 @@ EmpathIndex::compareItems(void * item1, void * item2)
 }
 
 	EmpathIndexRecord *
-EmpathIndex::messageDescription(RMessageID & id) const
+EmpathIndex::messageDescription(RMM::RMessageID & id) const
 {
 	EmpathIndexIterator it(*this);
 	

@@ -112,7 +112,7 @@ EmpathMailboxPOP3::s_checkNewMail()
 }
 
 	QString
-EmpathMailboxPOP3::writeMessage(const EmpathURL &, RMessage &)
+EmpathMailboxPOP3::writeMessage(const EmpathURL &, RMM::RMessage &)
 {
 	empathDebug("writeMessage() called");
 	empathDebug("This mailbox is READ ONLY !");
@@ -143,18 +143,18 @@ EmpathMailboxPOP3::plainBodyOfMessage(const EmpathURL &)
 	return "";
 }
 
-	REnvelope *
+	RMM::REnvelope *
 EmpathMailboxPOP3::envelopeOfMessage(const EmpathURL & _id)
 {
 	empathDebug("getEnvelopeOfMessage(" + _id.asString() + ") called");
 	return 0;
 }
 
-	RBodyPart::PartType
+	RMM::RBodyPart::PartType
 EmpathMailboxPOP3::typeOfMessage(const EmpathURL & _id)
 {
 	empathDebug("getTypeOfMessage(" + _id.asString() + ") called");
-	return RBodyPart::Basic;
+	return RMM::RBodyPart::Basic;
 }
 
 	EmpathURL
@@ -163,7 +163,7 @@ EmpathMailboxPOP3::path()
 	return url_;
 }
 
-	RMessage *
+	RMM::RMessage *
 EmpathMailboxPOP3::message(const EmpathURL &)
 {
 	return 0;

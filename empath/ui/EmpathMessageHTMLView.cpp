@@ -28,7 +28,6 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qstring.h>
-#include <qpngio.h>
 
 // KDE includes
 #include <klocale.h>
@@ -38,13 +37,13 @@
 #include <kglobal.h>
 
 // Local includes
-#include "RMM_Message.h"
-#include "RMM_Enum.h"
 #include "EmpathMessageHTMLView.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 #include "EmpathUIUtils.h"
 #include "EmpathUtilities.h"
+#include <RMM_Message.h>
+#include <RMM_Enum.h>
 
 
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
@@ -54,7 +53,6 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 		busy_(false)
 {
 	empathDebug("ctor");
-	qInitPngIO();
 	
 	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_DISPLAY);
@@ -80,8 +78,6 @@ EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
 	QObject::connect(
 		this, SIGNAL(popupMenu(QString, const QPoint &)),
 		this, SLOT(s_popupMenu(QString, const QPoint &)));
-	
-	empathDebug("ctor finished");
 }
 
 EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
@@ -102,7 +98,7 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 	KConfig * config(KGlobal::config());
 	config->setGroup(EmpathConfig::GROUP_DISPLAY);
 	
-	QFont defaultFixed(kapp->fixedFont());
+	QFont defaultFixed(KGlobal::fixedFont());
 	
 	QFont f =
 		config->readFontEntry(
@@ -115,7 +111,7 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool markup)
 	int fsizes[7] = { fs, fs, fs, fs, fs, fs, fs };
 	setFontSizes(fsizes);
 	
-	setStandardFont(kapp->generalFont().family().ascii());
+	setStandardFont(KGlobal::generalFont().family().ascii());
 
 	setURLCursor(KCursor::handCursor());
 	setFocusPolicy(QWidget::StrongFocus);

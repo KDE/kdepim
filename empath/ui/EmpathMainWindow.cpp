@@ -106,8 +106,6 @@ EmpathMainWindow::~EmpathMainWindow()
 	void
 EmpathMainWindow::_setupToolBar()
 {
-	empathDebug("setting up tool bar");
-
 	QPixmap p = empathIcon("compose.png");
 	int i = QMAX(p.width(), p.height());
 
@@ -159,8 +157,7 @@ EmpathMainWindow::_setupToolBar()
 	void
 EmpathMainWindow::_setupStatusBar()
 {
-	empathDebug("setting up status bar");
-	status_->message("Ready");
+	status_->message("Welcome to Empath");
 }
 
 // If the user presses the close button on the title bar, or tries
@@ -303,9 +300,9 @@ EmpathMainWindow::s_messageSaveAs()
 {
 	if (!_messageSelected()) return;
 	
-	RMessage * m = _getFirstSelectedMessage();
+	RMM::RMessage * m = _getFirstSelectedMessage();
 	
-	RMessage message(*m);
+	RMM::RMessage message(*m);
 
 	QString saveFilePath =
 		KFileDialog::getSaveFileName(
@@ -340,9 +337,9 @@ EmpathMainWindow::s_messageCopyTo()
 {
 	if (!_messageSelected()) return;
 
-	RMessage * m(_getFirstSelectedMessage());
+	RMM::RMessage * m(_getFirstSelectedMessage());
 	
-	RMessage message(*m);
+	RMM::RMessage message(*m);
 	
 	EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
@@ -365,14 +362,14 @@ EmpathMainWindow::s_messageMoveTo()
 {
 	empathDebug("s_messageMoveTo called");
 
-	RMessage * m(_getFirstSelectedMessage());
+	RMM::RMessage * m(_getFirstSelectedMessage());
 	
 	if (m == 0) {
 		KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
 	
-	RMessage message(*m);
+	RMM::RMessage message(*m);
 	
 	EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
@@ -468,7 +465,7 @@ EmpathMainWindow::s_dumpWidgetList()
 //	d.exec();
 }
 
-	RMessage *
+	RMM::RMessage *
 EmpathMainWindow::_getFirstSelectedMessage() const
 {
 	return empath->message(messageListWidget_->firstSelectedMessage());
@@ -501,7 +498,7 @@ EmpathMainWindow::s_editInvertSelection()
 	bool
 EmpathMainWindow::_messageSelected()
 {
-	RMessage * m(_getFirstSelectedMessage());
+	RMM::RMessage * m(_getFirstSelectedMessage());
 	
 	if (m == 0) {
 		KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));

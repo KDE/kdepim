@@ -27,6 +27,8 @@
 #include <RMM_Group.h>
 #include <RMM_Token.h>
 
+namespace RMM {
+
 RGroup::RGroup()
 {
 	rmmDebug("ctor");
@@ -158,4 +160,6 @@ RGroup::createDefault()
 	name_ = "unnamed";
 	assembled_ = false;
 }
+
+};
 

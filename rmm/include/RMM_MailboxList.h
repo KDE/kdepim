@@ -30,6 +30,8 @@
 
 #include <RMM_Defines.h>
 
+namespace RMM {
+
 typedef QListIterator<RMailbox> RMailboxListIterator;
 
 /**
@@ -49,6 +51,8 @@ class RMailboxList : public RHeaderBody {
 	private:
 		
 		QList<RMailbox> list_;
+};
+
 };
 
 #endif //RMAILBOXLIST_H

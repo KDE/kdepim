@@ -62,6 +62,8 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 		wantScreenUpdates_	(false),
 		filling_			(false)
 {
+	empathDebug("ctor");
+
 	parent_ = (EmpathMainWindow *)parent;
 	wantScreenUpdates_ = false;
 	setMultiSelection(true);
@@ -90,8 +92,6 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 	px_xMR_	= empathIcon("tree-marked-replied.png");
 	px_SMR_	= empathIcon("tree-read-marked-replied.png");
 
-	empathDebug("Restoring column sizes");
-	
 	KConfig * c = KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
@@ -150,7 +150,7 @@ EmpathMessageListWidget::~EmpathMessageListWidget()
 
 	EmpathMessageListItem *
 EmpathMessageListWidget::findRecursive(
-		EmpathMessageListItem * initialItem, RMessageID & msgId)
+		EmpathMessageListItem * initialItem, RMM::RMessageID & msgId)
 {
 	ASSERT(initialItem);
 
@@ -175,7 +175,7 @@ EmpathMessageListWidget::findRecursive(
 }
 
 	EmpathMessageListItem *
-EmpathMessageListWidget::find(RMessageID & msgId)
+EmpathMessageListWidget::find(RMM::RMessageID & msgId)
 {
 	empathDebug("find (" + msgId.asString() + ") called");
 	if (!firstChild()) return 0;
@@ -398,7 +398,7 @@ EmpathMessageListWidget::s_messageSaveAs()
 	EmpathFolder * folder(empath->folder(url_));
 	if (folder == 0) return;
 	
-	RMessage * message(folder->message(firstSelectedMessage()));
+	RMM::RMessage * message(folder->message(firstSelectedMessage()));
 	if (message == 0) return;
 	
 	QCString s =
@@ -538,7 +538,6 @@ EmpathMessageListWidget::s_currentChanged(QListViewItem * i)
 	void
 EmpathMessageListWidget::setSignalUpdates(bool yn)
 {
-	empathDebug("Setting signal updates to " + QString(yn ? "true" : "false"));
 	wantScreenUpdates_ = yn;
 }
 
@@ -735,8 +734,6 @@ EmpathMarkAsReadTimer::EmpathMarkAsReadTimer(EmpathMessageListWidget * parent)
 	:	QObject(),
 		parent_(parent)
 {
-	empathDebug("ctor");
-
 	QObject::connect(
 		&timer_,	SIGNAL(timeout()),
 		this,		SLOT(s_timeout()));

@@ -25,8 +25,6 @@
 #ifndef EMPATHMATCHER_H
 #define EMPATHMATCHER_H
 
-#include "RMM_Message.h"
-#include "EmpathMatcher.h"
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
 

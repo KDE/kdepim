@@ -22,9 +22,6 @@
 # pragma implementation "EmpathFilterEventHandler.h"
 #endif
 
-// Qt includes
-#include <qsmartptr.h>
-
 // KDE includes
 #include <klocale.h>
 #include <kglobal.h>
@@ -32,9 +29,9 @@
 
 // Local includes
 #include "EmpathFilterEventHandler.h"
-#include "Empath.h"
 #include "EmpathConfig.h"
 #include "EmpathDefines.h"
+#include "Empath.h"
 
 EmpathFilterEventHandler::EmpathFilterEventHandler()
 	:	actionType_(MoveFolder)
@@ -124,10 +121,10 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 				empathDebug("Moving message " + QString(id.asString()) +
 					" to " + moveCopyFolder_.withoutMessageID().asString());
 
-				RMessage * r = empath->message(id);
+				RMM::RMessage * r = empath->message(id);
 				if (r == 0) return;
 				
-				RMessage message(*r);
+				RMM::RMessage message(*r);
 				
 				if (!mcf->writeMessage(message)) return;
 				
@@ -147,10 +144,10 @@ EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 				empathDebug("Copying message " + QString(id.asString()) +
 					" to " + mcf->url().asString());
 
-				RMessage * r = empath->message(id);
+				RMM::RMessage * r = empath->message(id);
 				if (r == 0) return;
 				
-				RMessage message(*r);
+				RMM::RMessage message(*r);
 				
 				mcf->writeMessage(message);
 			}

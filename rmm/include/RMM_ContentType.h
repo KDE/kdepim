@@ -30,6 +30,8 @@
 #include <RMM_HeaderBody.h>
 #include <RMM_ParameterList.h>
 
+namespace RMM {
+
 /**
  * An RContentType has a mime type, a mime subtype, and a parameter list.
  */
@@ -52,6 +54,8 @@ class RContentType : public RHeaderBody {
 		QCString		type_;
 		QCString 		subType_;
 		RParameterList	parameterList_;
+};
+
 };
 
 #endif //RMM_CONTENTTYPE_H
