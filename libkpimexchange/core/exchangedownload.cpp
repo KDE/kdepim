@@ -238,7 +238,10 @@ void ExchangeDownload::readAppointment( const KURL& url )
   addElement( doc, prop, "urn:schemas:calendar:", "organizer" );
   addElement( doc, prop, "urn:schemas:calendar:", "contact" );
   addElement( doc, prop, "urn:schemas:httpmail:", "to" );
+  addElement( doc, prop, "urn:schemas:calendar:", "attendeestatus" );
+  addElement( doc, prop, "urn:schemas:calendar:", "attendeerole" );
   addElement( doc, prop, "DAV:", "isreadonly" );
+  addElement( doc, prop, "urn:schemas:calendar:", "instancetype" );
   addElement( doc, prop, "urn:schemas:calendar:", "created" );
   addElement( doc, prop, "urn:schemas:calendar:", "dtstart" );
   addElement( doc, prop, "urn:schemas:calendar:", "dtend" );
@@ -322,8 +325,19 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
 
   // This looks promising for finding attendees
   QString to = QString::fromUtf8( prop.namedItem( "to" ).toElement().text() );
-//  event->setOrganizer( organizer );
   kdDebug() << "DEBUG: Got to: " << to << endl;
+  QStringList attn = QStringList::split( ",", to ); // This doesn't work: there can be commas between ""
+  QStringList::iterator it;
+  for ( it = attn.begin(); it != attn.end(); ++it ) {
+    kdDebug() << "    attendee: " << (*it) << endl;
+    QString name = "";
+    // KCal::Attendee* a = new KCal::Attendee( name, email );
+
+    // event->addAttendee( a );
+  }
+
+
+    //void addAttendee(Attendee *a, bool doupdate=true );
 
   QString readonly = prop.namedItem( "isreadonly" ).toElement().text();
   event->setReadOnly( readonly != "0" );
@@ -448,9 +462,14 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
     /** set the number of revisions this event has seen */
     //void setRevision(int rev);
 
+  // Problem: When you sync Outlook to a Palm, the conduit splits up
+  // multi-day events into single-day events WITH ALL THE SAME UID
+  // Grrrrrrr.
   KCal::Event* oldEvent = mCalendar->event( event->uid() );
   if ( oldEvent ) {
-    *oldEvent = *event;
+    kdDebug() << "Already got his event, keeping old version..." << endl;
+    // This doesn't work
+    // *oldEvent = *event;
   } else {
     mCalendar->addEvent( event );
   }

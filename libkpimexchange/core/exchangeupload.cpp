@@ -32,12 +32,16 @@
 #include <kio/davjob.h>
 #include <kio/http.h>
 
-#include <libkcal/event.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/icalformatimpl.h>
 extern "C" {
   #include <ical.h>
 }
+
+#include <libkcal/event.h>
+#include <libkcal/icalformat.h>
+#include <libkcal/icalformatimpl.h>
+#include <libkcal/recurrence.h>
+#include <libkcal/incidence.h>
+#include <libkcal/event.h>
 
 #include "exchangeprogress.h"
 #include "exchangeupload.h"
@@ -46,8 +50,8 @@ extern "C" {
 
 using namespace KPIM;
 
-ExchangeUpload::ExchangeUpload( KCal::Event* event, ExchangeAccount* account, QWidget* window ) :
-  mWindow( window )
+ExchangeUpload::ExchangeUpload( KCal::Event* event, ExchangeAccount* account, const QString& timeZoneId, QWidget* window ) :
+  mTimeZoneId( timeZoneId), mWindow( window )
 {
   kdDebug() << "Called ExchangeUpload" << endl;
 
@@ -236,18 +240,22 @@ void ExchangeUpload::startUpload( KURL& url )
   offsetString = offsetString.replace( QRegExp(" "), "0" );
 
   kdDebug() << "Timezone offset: " << tzOffset << " : " << offsetString << endl;
+
   addElement( doc, prop, "urn:schemas:calendar:", "dtstart", 
       event->dtStart().toString( "yyyy-MM-ddThh:mm:ss.zzz" )+ offsetString );
   //    event->dtStart().toString( "yyyy-MM-ddThh:mm:ss.zzzZ" ) );
   //    2002-06-04T08:00:00.000Z" );
   addElement( doc, prop, "urn:schemas:calendar:", "dtend", 
       event->dtEnd().toString( "yyyy-MM-ddThh:mm:ss.zzz" ) + offsetString );
+  addElement( doc, prop, "urn:schemas:calendar:", "lastmodified", zoneAsUtc( event->lastModified(), mTimeZoneId ).toString( Qt::ISODate )+"Z" );
+
 //  addElement( doc, prop, "urn:schemas:calendar:", "meetingstatus", "confirmed" );
   addElement( doc, prop, "urn:schemas:httpmail:", "textdescription", event->description() );
   addElement( doc, prop, "urn:schemas:httpmail:", "subject", event->summary() );
   addElement( doc, prop, "urn:schemas:calendar:", "location", event->location() );
   // addElement( doc, prop, "urn:schemas:mailheader:", "subject", event->summary() );
   addElement( doc, prop, "urn:schemas:calendar:", "uid", event->uid() );
+//  addElement( doc, prop, "urn:schemas:calendar:", "organizer", event->organizer() );
 
   KCal::Recurrence *recurrence = event->recurrence();
   kdDebug() << "Recurrence->doesRecur(): " << recurrence->doesRecur() << endl;
@@ -265,7 +273,20 @@ void ExchangeUpload::startUpload( KURL& url )
   } else {
     addElement( doc, prop, "urn:schemas:calendar:", "instancetype", "0" );
   }
-  // kdDebug() << doc.toString() << endl;
+
+  KCal::DateList exdates = event->exDates();
+  if ( !exdates.isEmpty() ) {
+    QDomElement exdate = addElement( doc, prop, "urn:schemas:calendar:", "exdate" );
+    KCal::DateList::iterator it;
+    for ( it = exdates.begin(); it != exdates.end(); ++it ) {
+      QString date = (*it).toString( "yyyy-MM-ddT00:00:00.000" )+ offsetString;
+//      QString date = zoneAsUtc( (*it), mTimeZoneId ).toString( Qt::ISODate );
+      addElement( doc, exdate, "xml:", "v", date );
+    }
+  }
+
+  kdDebug() << "Uploading event: " << endl;
+  kdDebug() << doc.toString() << endl;
 
   KIO::DavJob *job = KIO::davPropPatch( url, doc, false );
   job->setWindow( mWindow );

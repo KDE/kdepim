@@ -57,3 +57,13 @@ QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId )
   int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
   return utc.addSecs( offset );
 }
+
+QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
+{
+  QDateTime epoch;
+  epoch.setTime_t( 0 );
+  time_t v = epoch.secsTo( zone );
+  struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
+  int offset = icaltime_utc_offset( tt, timeZoneId.local8Bit() );
+  return zone.addSecs( - offset );
+}

@@ -39,5 +39,10 @@ QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, co
  */
 QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId );
 
+/**
+ * Return the UTC representation of local time in the time zone indicated by timeZoneId 
+ */
+QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId );
+
 #endif
 

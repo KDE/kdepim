@@ -33,11 +33,14 @@
 
 using namespace KPIM;
 
-ExchangeClient::ExchangeClient( ExchangeAccount* account ) :
-  mWindow( 0 )
+ExchangeClient::ExchangeClient( ExchangeAccount* account, const QString& timeZoneId ) :
+  mWindow( 0 ), mTimeZoneId( timeZoneId )
 {
   kdDebug() << "Creating ExchangeClient...\n";
   mAccount = account;
+  if ( timeZoneId.isNull() ) {
+    setTimeZoneId( "UTC" );
+  }
 }
 
 ExchangeClient::~ExchangeClient()
@@ -53,6 +56,16 @@ void ExchangeClient::setWindow(QWidget *window)
 QWidget *ExchangeClient::window() const
 {
   return mWindow;
+}
+
+void ExchangeClient::setTimeZoneId( const QString& timeZoneId )
+{
+  mTimeZoneId = timeZoneId;
+}
+
+QString ExchangeClient::timeZoneId()
+{
+  return mTimeZoneId;
 }
 
 void ExchangeClient::test()
@@ -78,7 +91,7 @@ void ExchangeClient::download( KCal::Calendar* calendar, const QDate& start, con
 void ExchangeClient::upload( KCal::Event* event )
 {
   mAccount->authenticate( mWindow );
-  ExchangeUpload* worker = new ExchangeUpload( event, mAccount, mWindow );
+  ExchangeUpload* worker = new ExchangeUpload( event, mAccount, mTimeZoneId, mWindow );
   connect( worker, SIGNAL( finished( ExchangeUpload* ) ), this, SLOT( slotUploadFinished( ExchangeUpload* ) ) );
 }
 

@@ -34,7 +34,7 @@ class ExchangeAccount;
 class ExchangeUpload : public QObject {
     Q_OBJECT
   public:
-    ExchangeUpload( KCal::Event* event, ExchangeAccount* account, QWidget* window=0 );
+    ExchangeUpload( KCal::Event* event, ExchangeAccount* account, const QString& timeZoneId, QWidget* window=0 );
     ~ExchangeUpload();
 
   private slots:
@@ -55,6 +55,7 @@ class ExchangeUpload : public QObject {
     ExchangeAccount* mAccount;
     KCal::Event* m_currentUpload;
     int m_currentUploadNumber;
+    QString mTimeZoneId;
     QWidget* mWindow;
 };
 

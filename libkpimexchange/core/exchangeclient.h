@@ -43,7 +43,7 @@ class ExchangeDelete;
 class ExchangeClient : public QObject {
     Q_OBJECT
   public:
-    ExchangeClient( ExchangeAccount* account );
+    ExchangeClient( ExchangeAccount* account, const QString& mTimeZoneId=QString::null );
     ~ExchangeClient();
 
     /**
@@ -55,6 +55,12 @@ class ExchangeClient : public QObject {
      * Returns the window this client is associated with.
      */
     QWidget *window() const;
+
+    /**
+     * Set the time zone to use 
+     */
+    void setTimeZoneId( const QString& timeZoneId );
+    QString timeZoneId();
         
     // synchronous functions
     enum { ResultOK, UnknownError };
@@ -96,6 +102,7 @@ class ExchangeClient : public QObject {
     int mSyncResult;
     QWidget* mWindow;
     ExchangeAccount* mAccount;
+    QString mTimeZoneId;
 };
 
 }
