@@ -30,6 +30,7 @@
 #include <klocale.h>
 
 #include <qpixmap.h>
+#include <qmap.h>
 
 class KAboutData;
 
@@ -67,7 +68,7 @@ class Debugger : public ManipulatorPart
     void readSyncees();
     void writeSyncees();
 
-    void slotReceiveData( Konnector *, SynceeList syncees );
+    void slotReceiveData( Konnector *, const SynceeList &syncees );
 
   private:
     QPixmap m_pixmap;
@@ -79,6 +80,8 @@ class Debugger : public ManipulatorPart
     KCal::CalendarLocal mCalendar;
 
     SynceeList mSynceeList;
+
+    QMap<QString,Konnector *> mKonnectorMap;
 };
 
 }

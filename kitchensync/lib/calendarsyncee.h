@@ -76,6 +76,8 @@ class CalendarSyncee : public Syncee
     SyncEntry::PtrList removed() { return SyncEntry::PtrList(); }
     Syncee *clone() { return 0; }
 
+    KCal::CalendarLocal *calendar() const { return mCalendar; }
+
   private:
     CalendarSyncEntry *createEntry( KCal::Incidence * );
   

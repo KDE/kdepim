@@ -188,15 +188,19 @@ Konnector *Debugger::currentKonnector()
 
   if ( it == konnectors.end() ) return 0;
 
-  if ( !(*it).konnector() ) {
+  Konnector *k = 0;
+  QMap<QString,Konnector *>::ConstIterator itK;
+  itK = mKonnectorMap.find( konnectorName );
+  if ( itK != mKonnectorMap.end() ) k = *itK;
+  if ( !k ) {
     kdDebug() << "Create Konnector" << endl;
-    Konnector *k = core()->konnectorManager()->load( (*it).device() );
-    connect( k, SIGNAL( sync( Konnector *, Syncee::PtrList ) ),
-             SLOT( slotReceiveData( Konnector *, Syncee::PtrList ) ) );
-    return k;
+    k = core()->konnectorManager()->load( (*it).device() );
+    connect( k, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
+             SLOT( slotReceiveData( Konnector *, const SynceeList & ) ) );
+    mKonnectorMap.insert( konnectorName, k );
   }
 
-  return (*it).konnector();
+  return k;
 }
 
 void Debugger::readSyncees()
@@ -208,8 +212,10 @@ void Debugger::readSyncees()
   if ( k ) k->readSyncees();
 }
 
-void Debugger::slotReceiveData( Konnector *, SynceeList syncees )
+void Debugger::slotReceiveData( Konnector *, const SynceeList &syncees )
 {
+  mSynceeList = syncees;
+
   SynceeList::ConstIterator it;
   for( it = syncees.begin(); it != syncees.end(); ++it ) {
     Syncee *syncee = *it;
@@ -234,10 +240,18 @@ void Debugger::writeSyncees()
   int result = dialog.exec();
   if ( result == QDialog::Accepted ) {
     logMessage( i18n("Write Syncees") );
-    SynceeList syncees;
     if ( mEventCheck.isChecked() ) {
       logMessage( i18n("Write events") );
-      syncees.append( new CalendarSyncee( &mCalendar ) );
+      CalendarSyncee *calendarSyncee = mSynceeList.calendarSyncee();
+      if ( !calendarSyncee ) {
+        logMessage( i18n("No calendar syncee.") );
+      } else {
+        Calendar *cal = calendarSyncee->calendar();
+        Event *e = new Event();
+        e->setSummary( "Debugger was here (" + QTime::currentTime().toString()
+                       + ")" );
+        cal->addEvent( e );
+      }
     }
     if ( mAddresseeCheck.isChecked() ) {
       logMessage( i18n("Write Addressees") );
