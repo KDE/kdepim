@@ -27,8 +27,13 @@
 #include <kio/job.h>
 
 class KConfig;
+
 namespace KCal {
 class FolderLister;
+}
+
+namespace KIO {
+class DavJob;
 }
 
 namespace KABC {
@@ -48,11 +53,6 @@ class ResourceOpenGroupware : public ResourceCached
     void readConfig( const KConfig * );
     void writeConfig( KConfig * );
 
-    void readAddressBooks();
-    void writeAddressBooks();
-
-    void retrieveAddressBooks();
-
     OpenGroupwarePrefs *prefs() const { return mPrefs; }
     KCal::FolderLister *folderLister() const { return mFolderLister; }
 
@@ -70,10 +70,13 @@ class ResourceOpenGroupware : public ResourceCached
   protected:
     void init();
 
+    void listItems();
+    void downloadItem();
+
   private slots:
+    void slotListJobResult( KIO::Job *job );
     void slotJobResult( KIO::Job * );
     void slotJobData( KIO::Job *, const QByteArray & );
-    void slotJobPercent( KIO::Job *job, unsigned long percent );
 
     void cancelLoad();
 
@@ -81,6 +84,10 @@ class ResourceOpenGroupware : public ResourceCached
     OpenGroupwarePrefs *mPrefs;
     KCal::FolderLister *mFolderLister;
 
+    QStringList mFoldersForDownload;
+    QStringList mItemsForDownload;
+
+    KIO::DavJob *mListEventsJob;
     KIO::TransferJob *mDownloadJob;
     KPIM::ProgressItem *mProgress;
     QString mJobData;

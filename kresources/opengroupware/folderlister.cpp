@@ -47,6 +47,20 @@ void FolderLister::setWriteDestinationId( const QString &id )
   mWriteDestinationId = id;
 }
 
+QStringList FolderLister::activeFolderIds() const
+{
+  QStringList ids;
+
+  FolderLister::Entry::List::ConstIterator it;
+  for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
+    if ( (*it).active ) {
+      ids.append( (*it).id );
+    }
+  }
+  
+  return ids;
+}
+
 void FolderLister::readConfig( const KConfig *config )
 {
   kdDebug() << "FolderLister::readConfig()" << endl;
@@ -105,7 +119,7 @@ void FolderLister::retrieveFolders( const KURL &u )
   if ( mType == Calendar ) {
     url.addPath( "Groups" );
   } else {
-    url.addPath( "Contacts" );
+    url.addPath( "public" );
   }
 
   mListEventsJob = KIO::davPropFind( url, props, "1", false );
@@ -123,7 +137,7 @@ void FolderLister::slotListJobResult( KIO::Job *job )
   } else {
     QDomDocument doc = mListEventsJob->response();
 
-//    kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
     mFolders.clear();
 

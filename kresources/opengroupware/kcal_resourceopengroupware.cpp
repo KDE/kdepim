@@ -159,15 +159,8 @@ bool OpenGroupware::doLoad()
   loadCache();
   enableChangeNotification();
   emit resourceChanged( this );
-
-  mFoldersForDownload.clear();
-  FolderLister::Entry::List folders = mFolderLister->folders();
-  FolderLister::Entry::List::ConstIterator it;
-  for( it = folders.begin(); it != folders.end(); ++it ) {
-    if ( (*it).active ) {
-      mFoldersForDownload.append( (*it).id );
-    }
-  }
+  
+  mFoldersForDownload = mFolderLister->activeFolderIds();
 
   mIncidencesForDownload.clear();
 
