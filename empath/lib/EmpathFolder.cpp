@@ -184,12 +184,13 @@ EmpathFolder::mark(
 	if (m == 0)
 		return false;
 	
-#if 0
-	if (m->mark(l, s))
-		messageList_[message.messageID()]->setStatus(s);
-	else
-		retval = false;
-#endif	
+	retval = m->mark(url, l, s);
+	
+	QStringList::ConstIterator it(l.begin());
+	
+	for (; it != l.end(); ++it)
+		messageList_[*it]->setStatus(s);
+		
 	emit(countUpdated(messageList_.countUnread(), messageList_.count()));
 	
 	return retval;

@@ -280,10 +280,9 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	l_smtpServerPort_->setFixedHeight(h);
 
 	sb_smtpPort_	=
-		new KNumericSpinBox(w_server_, "sb_smtpPort");
+		new QSpinBox(1, 99999999, 1, w_server_, "sb_smtpPort");
 	CHECK_PTR(sb_smtpPort_);
-	sb_smtpPort_->setEditable(true);
-	sb_smtpPort_->setRange(1, 99999999);
+
 	sb_smtpPort_->setValue(25);
 
 	sb_smtpPort_->setFixedHeight(h);
@@ -462,7 +461,7 @@ EmpathSendingSettingsDialog::saveData()
 	
 	CWE( EmpathConfig::KEY_SMTP_SERVER_LOCATION,le_smtpServer_->text());
 
-	CWE( EmpathConfig::KEY_SMTP_SERVER_PORT,	sb_smtpPort_->getValue());
+	CWE( EmpathConfig::KEY_SMTP_SERVER_PORT,	sb_smtpPort_->value());
 	
 	CWE( EmpathConfig::KEY_CC_OTHER,			cb_copyOther_->isChecked());
 	

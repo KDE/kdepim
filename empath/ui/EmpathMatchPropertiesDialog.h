@@ -36,10 +36,10 @@
 #include <qcombobox.h>
 #include <qpushbutton.h>
 #include <qlineedit.h>
+#include <qspinbox.h>
 
 // KDE includes
 #include <kbuttonbox.h>
-#include <kspinbox.h>
 
 class RikGroupBox;
 class EmpathMatcher;
@@ -89,14 +89,12 @@ class EmpathMatchPropertiesDialog : public QDialog
 		QRadioButton	* rb_attached_;
 		QRadioButton	* rb_all_;
 
-		QLabel			* l_kb_;
-
 		QLineEdit		* le_exprBody_;
 		QLineEdit		* le_exprHeader_;
 
 		QComboBox		* cb_header_;
 
-		KNumericSpinBox	* sb_size_;
+		QSpinBox		* sb_size_;
 		
 		int idx_size_, idx_exprBody_, idx_exprHeader_, idx_attached_, idx_all_;
 };

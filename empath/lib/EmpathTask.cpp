@@ -31,6 +31,8 @@
 EmpathTask::EmpathTask(const QString & name)
 	:	QObject(),
 		name_(name),
+		max_(0),
+		pos_(0),
 		done_(false)
 {
 	empathDebug("ctor");

@@ -136,18 +136,11 @@ EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
 	idx_attached_	= bg_choices_->insert(rb_attached_);	
 	idx_all_		= bg_choices_->insert(rb_all_);	
 
-	sb_size_ = new KNumericSpinBox(w_choices_, "sb_size");
+	sb_size_ = new QSpinBox(1, 1000, 1, w_choices_, "sb_size");
 	CHECK_PTR(sb_size_);
-	sb_size_->setRange(1, 1000);
-	sb_size_->setEditable(true);
+	sb_size_->setFixedWidth(sb_size_->sizeHint().width());
+	sb_size_->setSuffix(" kB");
 
-	sb_size_->setFixedWidth(sb_size_->sizeHint().height() * 3);
-
-	l_kb_ = new QLabel("Kb", w_choices_, "l_kb");
-	CHECK_PTR(l_kb_);
-
-	l_kb_->setFixedWidth(l_kb_->sizeHint().width());
-	
 	le_exprBody_ = new QLineEdit(w_choices_, "le_exprBody_");
 	CHECK_PTR(le_exprBody_);
 
@@ -161,9 +154,6 @@ EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
 	
 	QObject::connect(rb_size_, SIGNAL(toggled(bool)),
 			sb_size_, SLOT(setEnabled(bool)));
-	
-	QObject::connect(rb_size_, SIGNAL(toggled(bool)),
-			l_kb_, SLOT(setEnabled(bool)));
 	
 	QObject::connect(rb_exprBody_, SIGNAL(toggled(bool)),
 			le_exprBody_, SLOT(setEnabled(bool)));
@@ -198,7 +188,7 @@ EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
 	layout_				= new QGridLayout(w_choices_, 5, 1, 10, 10);
 	CHECK_PTR(layout_);
 
-	size_subLayout_				= new QGridLayout(1, 3);
+	size_subLayout_				= new QGridLayout(1, 2);
 	exprBody_subLayout_			= new QGridLayout(1, 2);
 	exprHeader_subLayout_		= new QGridLayout(1, 3);
 	
@@ -210,10 +200,6 @@ EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
 
 	size_subLayout_->addWidget(rb_size_,	0, 0);
 	size_subLayout_->addWidget(sb_size_,	0, 1);
-	size_subLayout_->addWidget(l_kb_,		0, 2);
-	size_subLayout_->setColStretch(0, 20);
-	size_subLayout_->setColStretch(1, 1);
-	size_subLayout_->setColStretch(2, 1);
 	
 	exprBody_subLayout_->addWidget(rb_exprBody_,	0, 0);
 	exprBody_subLayout_->addWidget(le_exprBody_,	0, 1);
@@ -302,7 +288,7 @@ EmpathMatchPropertiesDialog::s_OK()
 		matcher_->setType(EmpathMatcher::HasAttachments);
 	else if (rb_size_->isChecked()) {
 		matcher_->setType(EmpathMatcher::Size);
-		matcher_->setSize(sb_size_->getValue());
+		matcher_->setSize(sb_size_->value());
 	}
 	else if (rb_exprBody_->isChecked()) {
 		matcher_->setType(EmpathMatcher::BodyExpr);

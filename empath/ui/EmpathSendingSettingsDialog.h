@@ -36,9 +36,9 @@
 #include <qradiobutton.h>
 #include <qpushbutton.h>
 #include <qbuttongroup.h>
+#include <qspinbox.h>
 
 // KDE includes
-#include <kspinbox.h>
 #include <kbuttonbox.h>
 
 // Local includes
@@ -110,7 +110,7 @@ class EmpathSendingSettingsDialog : public QDialog
 
 		QLabel				* l_smtpServerPort_;
 
-		KNumericSpinBox		* sb_smtpPort_;
+		QSpinBox			* sb_smtpPort_;
 		
 		EmpathAddressSelectionWidget	* asw_copyOther_;
 

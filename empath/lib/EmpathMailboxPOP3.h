@@ -29,8 +29,10 @@
 #include <qstring.h>
 #include <qcstring.h>
 #include <qfile.h>
-#include <qdict.h>
+#include <qintdict.h>
 #include <qstrlist.h>
+#include <qlist.h>
+#include <qqueue.h>
 
 // Local includes
 #include "EmpathMailbox.h"
@@ -39,6 +41,58 @@
 class EmpathConfig;
 class Empath;
 class KIOJob;
+
+class EmpathPOPCommand
+{
+	public:
+		
+		enum Type { Stat, List, UIDL, Get, Remove };
+
+		EmpathPOPCommand(Type, int = -1);
+		~EmpathPOPCommand(); 
+		
+		QString	command();
+		Type	type();
+		
+		const char * className() const { return "EmpathPOPCommand"; }
+
+	private:
+	
+		QString	command_;
+		Type	type_;
+		int		msgNo_;
+};
+
+class EmpathPOPIndexEntry
+{
+	public:
+		
+		EmpathPOPIndexEntry(int, const QString &);
+		~EmpathPOPIndexEntry();
+		
+		int		number();
+		QString	uidl();
+		
+		const char * className() const { return "EmpathPOPIndexEntry"; }
+		
+	private:
+		
+		int		number_;
+		QString	uidl_;
+};
+
+class EmpathPOPIndex : public QList<EmpathPOPIndexEntry>
+{
+	public:
+		
+		EmpathPOPIndex();
+		~EmpathPOPIndex();
+		int compareItems(EmpathPOPIndexEntry * i1, EmpathPOPIndexEntry * i2);
+};
+
+typedef QListIterator<EmpathPOPIndexEntry>	EmpathPOPIndexIterator;
+
+typedef QQueue<EmpathPOPCommand>			EmpathPOPQueue;
 
 class EmpathMailboxPOP3 : public EmpathMailbox
 {
@@ -102,7 +156,11 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 
 		// The pop3 server is a state machine, sort of.
 		// It can either be in the Transaction or Authorisation state.
-		// We, on the other hand, have another state - Not connected to the server.
+		// We, on the other hand, have another state -
+		// Not connected to the server.
+	
+		void _enqueue(EmpathPOPCommand::Type, int = -1);
+		void _nextCommand();
 	
 		// Order dependency
 		QString				serverAddress_;
@@ -140,6 +198,9 @@ class EmpathMailboxPOP3 : public EmpathMailbox
 			WaitForList,
 			WaitForUIDL,
 			WaitForData };
+			
+		EmpathPOPIndex	index_;
+		EmpathPOPQueue	commandQueue_;
 };
 
 

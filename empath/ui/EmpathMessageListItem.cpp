@@ -78,19 +78,19 @@ EmpathMessageListItem::_init()
 
 	if (size_ < 1024) {
 		
-		sizeStr = "%1 bytes";
+		sizeStr = "%1 B";
 		sizeStr = sizeStr.arg((Q_UINT32)size_, 4);
 	
 	} else {
 	
 		if (size_ < 1048576) {
 	
-			sizeStr = "%1 Kb";
+			sizeStr = "%1 kB";
 			sizeStr = sizeStr.arg((Q_UINT32)(size_ / 1024.0), 4);
 	
 		} else {
 	
-			sizeStr = "%1 Mb";
+			sizeStr = "%1 MB";
 			sizeStr = sizeStr.arg((Q_UINT32)(size_ / 1048576.0), 4);
 		}
 	}

@@ -323,8 +323,10 @@ EmpathMessageListWidget::mark(RMM::MessageStatus status)
 
 	EmpathMessageListItemIterator it(selected_);
 	
-	for (; it.current(); ++it)
+	for (; it.current(); ++it) {
+		empathDebug("Adding " + it.current()->id());
 		l.append(it.current()->id());
+	}
 		
 	empath->mark(url_, l, status);
 	
@@ -1273,7 +1275,7 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 	
 	t->done();
 	setUpdatesEnabled(true);
-	triggerUpdate();
+//	triggerUpdate();
 	empath->s_infoMessage(
 		i18n("Finished reading mailbox") + " " + url_.asString());
 }
@@ -1342,7 +1344,7 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
 	
 	t->done();
 	setUpdatesEnabled(true);
-	triggerUpdate();
+//	triggerUpdate();
 	empath->s_infoMessage(
 		i18n("Finished reading mailbox") + " " + url_.asString());
 }
@@ -1373,8 +1375,6 @@ EmpathMessageListWidget::s_messageMarkMany()
 
 	RMM::MessageStatus s = d.status();
 	
-	empathDebug("SERVICE");
-	
 	if (s == RMM::Marked)
 		empathDebug("Tag");
 	
@@ -1396,6 +1396,8 @@ EmpathMessageListWidget::s_messageMarkMany()
 	_updateSelected();
 	
 	QStringList l;
+
+	empathDebug("There are " + QString().setNum(selected_.count()) + " selected messages");
 
 	EmpathMessageListItemIterator it(selected_);
 	
