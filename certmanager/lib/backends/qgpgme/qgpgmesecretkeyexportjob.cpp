@@ -53,10 +53,6 @@
 #include <string.h>
 #include <assert.h>
 
-static inline int make_error( int src, int code ) {
-  return gpg_err_make( (gpg_err_source_t)src, (gpg_err_code_t)code );
-}
-
 Kleo::QGpgMESecretKeyExportJob::QGpgMESecretKeyExportJob( bool armour )
   : ExportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMESecretKeyExportJob" ),
     mProcess( 0 ),
@@ -135,7 +131,7 @@ void Kleo::QGpgMESecretKeyExportJob::slotStatus( GnuPGProcessBase * proc, const 
       kdDebug( 5150 ) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() expected number for second ERROR arg, got something else" << endl;
       return;
     }
-    mError = make_error( source, code );
+    mError = gpg_err_make( (gpg_err_source_t)source, (gpg_err_code_t)code );
 
 
   } else if ( type == "PROGRESS" ) {
