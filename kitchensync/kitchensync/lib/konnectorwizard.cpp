@@ -69,11 +69,13 @@ KonnectorWizard::~KonnectorWizard()
 KonnectorProfile KonnectorWizard::profile() const
 {
     KonnectorProfile prof;
+
     if ( m_conf ) {
         prof.setKapabilities( m_conf->capabilities() );
-        prof.setDevice( byString( m_intro->cmbDevice->currentText() ) );
-        prof.setName( m_outro->lneName->text() );
     }
+
+    prof.setDevice( byString( m_intro->cmbDevice->currentText() ) );
+    prof.setName( m_outro->lneName->text() );
 
     return prof;
 }
