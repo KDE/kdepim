@@ -95,6 +95,8 @@ class EmailEditDialog : public KDialogBase
     QPushButton *mStandardButton;
 
     bool mChanged;
+    bool mIsEdit;
+    int mEditPos;
 };
 
 #endif

@@ -24,6 +24,7 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qpainter.h>
 #include <qpushbutton.h>
 #include <qstring.h>
 #include <qtoolbutton.h>
@@ -40,6 +41,37 @@
 #include <kmessagebox.h>
 
 #include "emaileditwidget.h"
+
+class EmailItem : public QListBoxText
+{
+  public:
+    EmailItem( QListBox *parent, const QString &text, bool preferred )
+      : QListBoxText( parent, text ), mPreferred( preferred )
+    {}
+
+    void setPreferred( bool preferred ) { mPreferred = preferred; }
+    bool preferred() const { return mPreferred; }
+
+    void setText( const QString &text )
+    {
+      QListBoxText::setText( text );
+    }
+
+  protected:
+    virtual void paint( QPainter *p )
+    {
+      if ( mPreferred ) {
+        QFont font = p->font();
+        font.setBold( true );
+        p->setFont( font );
+      }
+
+      QListBoxText::paint( p );
+    }
+
+  private:
+    bool mPreferred;
+};
 
 EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
@@ -122,8 +154,8 @@ void EmailEditWidget::textChanged( const QString &text )
 EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
                                   const char *name )
   : KDialogBase( KDialogBase::Plain, i18n( "Edit Email Addresses" ),
-                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
-                 parent, name, true )
+                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Help,
+                 parent, name, true ), mIsEdit( false )
 {
   QWidget *page = plainPage();
 
@@ -136,7 +168,6 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
   mEmailEdit = new KLineEdit( page );
   label->setBuddy( mEmailEdit );
   topLayout->addWidget( mEmailEdit, 0, 1 );
-  connect( mEmailEdit, SIGNAL( returnPressed() ), SLOT( add() ) );
   connect( mEmailEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( emailChanged() ) );
 
@@ -151,6 +182,8 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
   mEmailListBox->setMinimumHeight( mEmailListBox->sizeHint().height() + 30 );
   connect( mEmailListBox, SIGNAL( highlighted( int ) ),
            SLOT( selectionChanged( int ) ) );
+  connect( mEmailListBox, SIGNAL( selected( int ) ),
+           SLOT( edit() ) );
   topLayout->addMultiCellWidget( mEmailListBox, 1, 3, 0, 1 );
 
   mEditButton = new QPushButton( i18n( "Change" ), page );
@@ -172,12 +205,20 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
     mChanged = true;
   else
     mChanged = false;
-  mEmailListBox->insertStringList( items );
+
+  QStringList::Iterator it;
+  bool preferred = true;
+  for ( it = items.begin(); it != items.end(); ++it ) {
+    new EmailItem( mEmailListBox, *it, preferred );
+    preferred = false;
+  }
 
   // set default state
   selectionChanged( -1 );
   mEmailEdit->setFocus();
   KAcceleratorManager::manage( this );
+
+  actionButton( Ok )->setDefault( true );
 }
 
 EmailEditDialog::~EmailEditDialog()
@@ -188,8 +229,13 @@ QStringList EmailEditDialog::emails() const
 {
   QStringList emails;
 
-  for ( uint i = 0; i < mEmailListBox->count(); ++i )
-    emails << mEmailListBox->text( i );
+  for ( uint i = 0; i < mEmailListBox->count(); ++i ) {
+    EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( i ) );
+    if ( (int)i == mEmailListBox->currentItem() )
+      emails.prepend( item->text() );
+    else
+      emails.append( item->text() );
+  }
 
   return emails;
 }
@@ -205,7 +251,15 @@ void EmailEditDialog::add()
     }
   }
 
-  mEmailListBox->insertItem( mEmailEdit->text() );
+  if ( !mIsEdit ) {
+    new EmailItem( mEmailListBox, mEmailEdit->text(),
+                   (mEmailListBox->count() == 0) );
+  } else {
+    EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( mEditPos ) );
+    item->setText( mEmailEdit->text() );
+    mIsEdit = false;
+    mEmailListBox->triggerUpdate( true );
+  }
 
   mEmailEdit->clear();
   mEmailEdit->setFocus();
@@ -215,6 +269,8 @@ void EmailEditDialog::add()
 
 void EmailEditDialog::edit()
 {
+  mIsEdit = true;
+  mEditPos = mEmailListBox->currentItem();
   mEmailEdit->setText( mEmailListBox->currentText() );
   mEmailEdit->setFocus();
 }
@@ -227,7 +283,15 @@ void EmailEditDialog::remove()
   QString caption = i18n( "Confirm Remove" );
 
   if ( KMessageBox::questionYesNo( this, text, caption ) == KMessageBox::Yes ) {
+    EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( mEmailListBox->currentItem() ) );
+
+    bool preferred = item->preferred();
     mEmailListBox->removeItem( mEmailListBox->currentItem() );
+    if ( preferred ) {
+      item = dynamic_cast<EmailItem*>( mEmailListBox->item( 0 ) );
+      if ( item )
+        item->setPreferred( true );
+    }
     mChanged = true;
   }
 }
@@ -239,10 +303,15 @@ bool EmailEditDialog::changed() const
 
 void EmailEditDialog::standard()
 {
-  QString text = mEmailListBox->currentText();
-  mEmailListBox->removeItem( mEmailListBox->currentItem() );
-  mEmailListBox->insertItem( text, 0 );
-  mEmailListBox->setSelected( 0, true );
+  for ( uint i = 0; i < mEmailListBox->count(); ++i ) {
+    EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( i ) );
+    if ( (int)i == mEmailListBox->currentItem() )
+      item->setPreferred( true );
+    else
+      item->setPreferred( false );
+  }
+
+  mEmailListBox->triggerUpdate( true );
 
   mChanged = true;
 }
@@ -258,7 +327,17 @@ void EmailEditDialog::selectionChanged( int index )
 
 void EmailEditDialog::emailChanged()
 {
-  mAddButton->setEnabled( !mEmailEdit->text().isEmpty() );
+  bool state = mEmailEdit->text().contains( '@' );
+
+  mAddButton->setEnabled( state );
+
+  if ( state ) {
+    actionButton( Ok )->setDefault( false );
+  } else {
+    actionButton( Ok )->setDefault( true );
+  }
+
+  mAddButton->setDefault( state );
 }
 
 #include "emaileditwidget.moc"
