@@ -1,5 +1,9 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook/interfaces \
-           -I$(top_srcdir)/kaddressbook $(all_includes) 
+INCLUDES = -I$(top_srcdir) \
+           -I$(top_srcdir)/kaddressbook/interfaces \
+           -I$(top_srcdir)/kaddressbook \
+           -I$(top_srcdir)/libkdenetwork \
+           $(GPGME_CFLAGS) \
+           $(all_includes) 
 
 if compile_GNOKIIXXPORT
   gnokii_MODULE = libkaddrbk_gnokii_xxport.la
@@ -21,7 +25,8 @@ libkaddrbk_csv_xxport_la_LIBADD = $(XXLIBS)
 
 libkaddrbk_vcard_xxport_la_SOURCES = vcard_xxport.cpp
 libkaddrbk_vcard_xxport_la_LIBADD = $(XXLIBS) \
-                                    $(top_builddir)/kaddressbook/libkaddressbook.la
+                                    $(top_builddir)/kaddressbook/libkaddressbook.la \
+                                    $(top_builddir)/libkdenetwork/qgpgme/libqgpgme.la
 
 libkaddrbk_kde2_xxport_la_SOURCES = kde2_xxport.cpp
 libkaddrbk_kde2_xxport_la_LIBADD = $(XXLIBS)

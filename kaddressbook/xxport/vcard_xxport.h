@@ -42,6 +42,8 @@ class VCardXXPort : public KAB::XXPort
   private:
     KABC::AddresseeList parseVCard( const QString &data ) const;
     bool doExport( const KURL &url, const QString &data );
+    void addKey( KABC::Addressee &addr, KABC::Key::Types type );
+
     KABC::AddresseeList filterContacts( const KABC::AddresseeList& );
 };
 

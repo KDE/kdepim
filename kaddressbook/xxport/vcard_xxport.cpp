@@ -38,6 +38,13 @@
 #include <kurl.h>
 #include <libkdepim/addresseeview.h>
 
+#include "config.h" // ??
+
+#include "gpgmepp/context.h"
+#include "gpgmepp/data.h"
+#include "gpgmepp/key.h"
+#include "qgpgme/dataprovider.h"
+
 #include "xxportmanager.h"
 
 #include "vcard_xxport.h"
@@ -91,11 +98,13 @@ class VCardExportSelectionDialog : public KDialogBase
     bool exportPrivateFields() const;
     bool exportBusinessFields() const;
     bool exportOtherFields() const;
+    bool exportEncryptionKeys() const;
 
   private:
     QCheckBox *mPrivateBox;
     QCheckBox *mBusinessBox;
     QCheckBox *mOtherBox;
+    QCheckBox *mEncryptionKeys;
 };
 
 VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
@@ -278,18 +287,6 @@ KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addr
       addr.setBirthday( (*it).birthday() );
       addr.setNote( (*it).note() );
       addr.setPhoto( (*it).photo() );
-
-      // TODO: add all numbers with type != WORK
-      KABC::PhoneNumber::List phones = (*it).phoneNumbers( KABC::PhoneNumber::Home );
-      KABC::PhoneNumber::List::Iterator phoneIt;
-      for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt )
-        addr.insertPhoneNumber( *phoneIt );
-
-      // TODO: add all addresses with type != WORK
-      KABC::Address::List addresses = (*it).addresses( KABC::Address::Home );
-      KABC::Address::List::Iterator addrIt;
-      for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt )
-        addr.insertAddress( *addrIt );
     }
 
     if ( dlg.exportBusinessFields() ) {
@@ -310,13 +307,76 @@ KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addr
         addr.insertAddress( *addrIt );
     }
 
+    KABC::PhoneNumber::List phones = (*it).phoneNumbers();
+    KABC::PhoneNumber::List::Iterator phoneIt;
+    for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt ) {
+      int type = (*phoneIt).type();
+
+      if ( type & KABC::PhoneNumber::Home && dlg.exportPrivateFields() )
+        addr.insertPhoneNumber( *phoneIt );
+      else if ( type & KABC::PhoneNumber::Work && dlg.exportBusinessFields() )
+        addr.insertPhoneNumber( *phoneIt );
+      else if ( dlg.exportOtherFields() )
+        addr.insertPhoneNumber( *phoneIt );
+    }
+
+    KABC::Address::List addresses = (*it).addresses();
+    KABC::Address::List::Iterator addrIt;
+    for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
+      int type = (*addrIt).type();
+
+      if ( type & KABC::Address::Home && dlg.exportPrivateFields() )
+        addr.insertAddress( *addrIt );
+      else if ( type & KABC::Address::Work && dlg.exportBusinessFields() )
+        addr.insertAddress( *addrIt );
+      else if ( dlg.exportOtherFields() )
+        addr.insertAddress( *addrIt );
+    }
+
     if ( dlg.exportOtherFields() )
       addr.setCustoms( (*it).customs() );
+
+    if ( dlg.exportEncryptionKeys() ) {
+      addKey( addr, KABC::Key::PGP );
+      addKey( addr, KABC::Key::X509 );
+    }
 
     list.append( addr );
   }
 
   return list;
+}
+
+void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Types type )
+{
+	QString fingerprint = addr.custom( "KADDRESSBOOK",
+                                     (type == KABC::Key::PGP ? "OPENPGPFP" : "SMIMEFP") );
+  if ( fingerprint.isEmpty() )
+    return;
+
+  GpgME::Context * context = GpgME::Context::createForProtocol( GpgME::Context::OpenPGP );
+  if ( !context ) {
+    kdError() << "No context available" << endl;
+    return;
+  }
+
+  context->setArmor( false );
+  context->setTextMode( false );
+
+  QGpgME::QByteArrayDataProvider dataProvider;
+  GpgME::Data dataObj( &dataProvider );
+  GpgME::Error error = context->exportPublicKeys( fingerprint.latin1(), dataObj );
+
+  if ( error ) {
+    kdError() << error.asString() << endl;
+    return;
+  }
+
+  KABC::Key key;
+  key.setType( type );
+  key.setBinaryData( dataProvider.data() );
+
+  addr.insertKey( key );
 }
 
 // ---------- VCardViewer Dialog ---------------- //
@@ -414,12 +474,16 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
   mOtherBox = new QCheckBox( i18n( "Other fields" ), page );
   layout->addWidget( mOtherBox );
 
+  mEncryptionKeys = new QCheckBox( i18n( "Encryption Keys" ), page );
+  layout->addWidget( mEncryptionKeys );
+
   KConfig config( "kaddressbookrc" );
   config.setGroup( "XXPortVCard" );
 
   mPrivateBox->setChecked( config.readBoolEntry( "ExportPrivateFields", true ) );
   mBusinessBox->setChecked( config.readBoolEntry( "ExportBusinessFields", false ) );
   mOtherBox->setChecked( config.readBoolEntry( "ExportOtherFields", false ) );
+  mEncryptionKeys->setChecked( config.readBoolEntry( "ExportEncryptionKeys", false ) );
 }
 
 VCardExportSelectionDialog::~VCardExportSelectionDialog()
@@ -430,6 +494,7 @@ VCardExportSelectionDialog::~VCardExportSelectionDialog()
   config.writeEntry( "ExportPrivateFields", mPrivateBox->isChecked() );
   config.writeEntry( "ExportBusinessFields", mBusinessBox->isChecked() );
   config.writeEntry( "ExportOtherFields", mOtherBox->isChecked() );
+  config.writeEntry( "ExportEncryptionKeys", mEncryptionKeys->isChecked() );
 }
 
 bool VCardExportSelectionDialog::exportPrivateFields() const
@@ -445,6 +510,11 @@ bool VCardExportSelectionDialog::exportBusinessFields() const
 bool VCardExportSelectionDialog::exportOtherFields() const
 {
   return mOtherBox->isChecked();
+}
+
+bool VCardExportSelectionDialog::exportEncryptionKeys() const
+{
+  return mEncryptionKeys->isChecked();
 }
 
 #include "vcard_xxport.moc"
