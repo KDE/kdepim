@@ -25,9 +25,10 @@
 #define ADDHOSTDIALOG_H
 
 #include <kdialogbase.h>
+#include <kabc/ldapconfigwidget.h>
+#include <libkdepim/ldapclient.h>
 
 class KLineEdit;
-
 class QPushButton;
 class QSpinBox;
 
@@ -36,33 +37,18 @@ class AddHostDialog : public KDialogBase
     Q_OBJECT
 
   public:
-    AddHostDialog( QWidget* parent = 0, const char* name = 0 );
+    AddHostDialog( KPIM::LdapServer* server, QWidget* parent = 0, const char* name = 0 );
     ~AddHostDialog();
-
-    void setHost( const QString &host );
-    void setPort( int port );
-    void setBaseDN( const QString &baseDN );
-    void setBindDN( const QString &bindDN );
-    void setPwdBindDN( const QString &pwdBindDN );
-
-    QString host() const;
-    int port() const;
-    QString baseDN() const;
-    QString bindDN() const;
-    QString pwdBindDN() const;
 
   signals:
     void changed( bool );
 
   private slots:
     void slotHostEditChanged( const QString& );
-
+    virtual void slotOk();
   private:
-    KLineEdit* mHostEdit;
-    QSpinBox* mPortSpinBox;
-    KLineEdit* mBaseEdit;
-    KLineEdit* mBindEdit;
-    KLineEdit* mPwdBindEdit;
+    KABC::LdapConfigWidget *mCfg;
+    KPIM::LdapServer *mServer;
 };
 
 #endif // ADDHOSTDIALOG_H

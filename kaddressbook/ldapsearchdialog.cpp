@@ -213,7 +213,7 @@ void LDAPSearchDialog::restoreSettings()
 
   // then read the config file and register all selected 
   // server in the list
-  KConfig* config = KPIM::AddresseeLineEdit::config();
+  KConfig* config = KPIM::LdapSearch::config();
   KConfigGroupSaver saver( config, "LDAP" );
   mNumHosts = config->readUnsignedNumEntry( "NumSelectedHosts" ); 
   if ( !mNumHosts ) {
@@ -223,27 +223,9 @@ void LDAPSearchDialog::restoreSettings()
     mIsOK = true;
     for ( int j = 0; j < mNumHosts; ++j ) {
       KPIM::LdapClient* ldapClient = new KPIM::LdapClient( 0, this, "ldapclient" );
-    
-      QString host = config->readEntry( QString( "SelectedHost%1" ).arg( j ), "" );
-      if ( !host.isEmpty() )
-        ldapClient->setHost( host );
-
-      QString port = QString::number( config->readUnsignedNumEntry( QString( "SelectedPort%1" ).arg( j ) ) );
-      if ( !port.isEmpty() )
-        ldapClient->setPort( port );
-
-      QString base = config->readEntry( QString( "SelectedBase%1" ).arg( j ), "" );
-      if ( !base.isEmpty() )
-        ldapClient->setBase( base );
-
-      QString bindDN = config->readEntry( QString( "SelectedBind%1" ).arg( j ), "" );
-      if ( !bindDN.isEmpty() )
-        ldapClient->setBindDN( bindDN );
-
-      QString pwdBindDN = config->readEntry( QString( "SelectedPwdBind%1" ).arg( j ), "" );
-      if ( !pwdBindDN.isEmpty() )
-        ldapClient->setPwdBindDN( pwdBindDN );
-
+      KPIM::LdapServer ldapServer;
+      KPIM::LdapSearch::readConfig( ldapServer, config, j, true );
+      ldapClient->setServer( ldapServer );
       QStringList attrs;
 
       for ( QMap<QString,QString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )

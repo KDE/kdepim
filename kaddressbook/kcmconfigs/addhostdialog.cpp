@@ -31,65 +31,67 @@
 #include <kbuttonbox.h>
 #include <klineedit.h>
 #include <klocale.h>
-
 #include "addhostdialog.h"
 
-AddHostDialog::AddHostDialog( QWidget* parent,  const char* name )
+AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent,  const char* name )
   : KDialogBase( Plain, i18n( "Add Host" ), Ok | Cancel, Ok, parent, name, true, true )
 {
+  mServer = server;
+
   QWidget *page = plainPage();
+  QHBoxLayout *layout = new QHBoxLayout( page, marginHint(), spacingHint() );
 
-  QGridLayout *layout = new QGridLayout( page, 3, 5, 0, spacingHint() );
+  mCfg = new KABC::LdapConfigWidget(
+       KABC::LdapConfigWidget::W_USER |
+       KABC::LdapConfigWidget::W_PASS |
+       KABC::LdapConfigWidget::W_BINDDN |
+       KABC::LdapConfigWidget::W_REALM |
+       KABC::LdapConfigWidget::W_HOST |
+       KABC::LdapConfigWidget::W_PORT |
+       KABC::LdapConfigWidget::W_VER |
+       KABC::LdapConfigWidget::W_TIMELIMIT |
+       KABC::LdapConfigWidget::W_SIZELIMIT |
+       KABC::LdapConfigWidget::W_DN |
+       KABC::LdapConfigWidget::W_SECBOX |
+       KABC::LdapConfigWidget::W_AUTHBOX,
+        page );
 
-  mHostEdit = new KLineEdit( page );
-  layout->addMultiCellWidget( mHostEdit, 0, 0, 1, 2 );
-  connect( mHostEdit, SIGNAL( textChanged( const QString& ) ),
-           SLOT( slotHostEditChanged( const QString& ) ) );
-
-  QLabel *label = new QLabel( i18n( "Host:" ), page );
-  label->setBuddy( mHostEdit );
-  layout->addWidget( label, 0, 0 );
-
-  mPortSpinBox = new QSpinBox( page );
-  mPortSpinBox->setMaxValue( 65535 );
-  mPortSpinBox->setValue( 389 );
-  layout->addWidget( mPortSpinBox, 1, 1 );
-
-  label = new QLabel( i18n( "Port:" ), page );
-  QToolTip::add( label, i18n( "The port number of the directory server if it is using a non-standard port (389 is the standard)" ) );
-  label->setBuddy( mPortSpinBox );
-  layout->addWidget( label, 1, 0 );
-
-  mBaseEdit = new KLineEdit( page );
-  layout->addMultiCellWidget( mBaseEdit, 2, 2, 1, 2 );
-
-  label = new QLabel( i18n( "Base DN:" ), page );
-  QToolTip::add( label, i18n( "The base DN used for searching" ) );
-  label->setBuddy( mBaseEdit );
-  layout->addWidget( label, 2, 0 );
-
-  mBindEdit = new KLineEdit( page );
-  layout->addMultiCellWidget( mBindEdit, 3, 3, 1, 2 );
-
-  label = new QLabel( i18n( "Bind DN:" ), page );
-  QToolTip::add( label, i18n( "The bind DN used for searching" ) );
-  label->setBuddy( mBindEdit );
-  layout->addWidget( label, 3, 0 );
-
-  mPwdBindEdit = new KLineEdit( page );
-  mPwdBindEdit->setEchoMode( QLineEdit::Password );
-  layout->addMultiCellWidget( mPwdBindEdit, 4, 4, 1, 2 );
-
-  label = new QLabel( i18n( "Password:" ), page );
-  QToolTip::add( label, i18n( "The password used for searching" ) );
-  label->setBuddy( mPwdBindEdit );
-  layout->addWidget( label, 4, 0 );
-
-  resize( QSize( 380, 150 ).expandedTo( sizeHint() ) );
-  enableButtonOK( !mHostEdit->text().isEmpty());
-  mHostEdit->setFocus();
+  layout->addWidget( mCfg );
+  mCfg->setHost( mServer->host() );
+  mCfg->setPort( mServer->port() );
+  mCfg->setDn( mServer->baseDN() );
+  mCfg->setUser( mServer->user() );
+  mCfg->setBindDN( mServer->bindDN() );
+  mCfg->setPassword( mServer->pwdBindDN() );
+  mCfg->setTimeLimit( mServer->timeLimit() );
+  mCfg->setSizeLimit( mServer->sizeLimit() );
+  mCfg->setVer( mServer->version() );
+ //0-No, 1-TLS, 2-SSL - KDE4: add an enum to LdapConfigWidget
+  switch ( mServer->security() ) {
+    case 1:
+      mCfg->setSecTLS();
+      break;
+    case 2:
+      mCfg->setSecSSL();
+      break;
+    default:
+      mCfg->setSecNO();
+  }
+ //0-Anonymous, 1-simple, 2-SASL - KDE4: add an enum to LdapConfigWidget
+  switch ( mServer->auth() ) {
+    case 1:
+      mCfg->setAuthSimple();
+      break;
+    case 2:
+      mCfg->setAuthSASL();
+      break;
+    default:
+      mCfg->setAuthAnon();
+  }
+  mCfg->setMech( mServer->mech() );
 
   KAcceleratorManager::manage( this );
+
 }
 
 AddHostDialog::~AddHostDialog()
@@ -101,54 +103,25 @@ void AddHostDialog::slotHostEditChanged( const QString &text )
   enableButtonOK( !text.isEmpty() );
 }
 
-void AddHostDialog::setHost( const QString &host )
+void AddHostDialog::slotOk()
 {
-  mHostEdit->setText( host );
-}
-
-void AddHostDialog::setPort( int port )
-{
-  mPortSpinBox->setValue( port );
-}
-
-void AddHostDialog::setBaseDN( const QString &baseDN )
-{
-  mBaseEdit->setText( baseDN );
-}
-
-void AddHostDialog::setBindDN( const QString &bindDN )
-{
-  mBindEdit->setText( bindDN );
-}
-
-void AddHostDialog::setPwdBindDN( const QString &pwdBindDN )
-{
-  mPwdBindEdit->setText( pwdBindDN );
-}
-
-QString AddHostDialog::host() const
-{
-  return mHostEdit->text().stripWhiteSpace();
-}
-
-int AddHostDialog::port() const
-{
-  return mPortSpinBox->value();
-}
-
-QString AddHostDialog::baseDN() const
-{
-  return mBaseEdit->text().stripWhiteSpace();
-}
-
-QString AddHostDialog::bindDN() const
-{
-  return mBindEdit->text().stripWhiteSpace();
-}
-
-QString AddHostDialog::pwdBindDN() const
-{
-  return mPwdBindEdit->text().stripWhiteSpace();
+  mServer->setHost( mCfg->host() );
+  mServer->setPort( mCfg->port() );  
+  mServer->setBaseDN( mCfg->dn().stripWhiteSpace() );
+  mServer->setUser( mCfg->user() );
+  mServer->setBindDN( mCfg->bindDN() );
+  mServer->setPwdBindDN( mCfg->password() );
+  mServer->setTimeLimit( mCfg->timeLimit() );
+  mServer->setSizeLimit( mCfg->sizeLimit() );
+  mServer->setVersion( mCfg->ver() );
+  mServer->setSecurity( 0 );
+  if ( mCfg->isSecTLS() ) mServer->setSecurity( 1 );
+  if ( mCfg->isSecSSL() ) mServer->setSecurity( 2 );
+  mServer->setAuth( 0 );
+  if ( mCfg->isAuthSimple() ) mServer->setSecurity( 1 );
+  if ( mCfg->isAuthSASL() ) mServer->setSecurity( 2 );
+  mServer->setMech( mCfg->mech() );
+  KDialog::accept();
 }
 
 #include "addhostdialog.moc"

@@ -29,7 +29,6 @@
 #include <qtoolbutton.h>
 #include <qstring.h>
 
-#include <kabc/addresslineedit.h>
 #include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kconfig.h>
@@ -43,60 +42,30 @@
 #include <qvbox.h>
 #include <kiconloader.h>
 
-class LDAPServer
-{
-  public:
-    LDAPServer() : mPort( 389 ) {}
-    LDAPServer( const QString &host, int port, const QString &baseDN,
-                const QString &bindDN, const QString &pwdBindDN )
-      : mHost( host ), mPort( port ), mBaseDN( baseDN ), mBindDN( bindDN ),
-        mPwdBindDN( pwdBindDN )
-    { }
-
-    QString host() const { return mHost; }
-    int port() const { return mPort; }
-    QString baseDN() const { return mBaseDN; }
-    QString bindDN() const { return mBindDN; }
-    QString pwdBindDN() const { return mPwdBindDN; }
-
-    void setHost( const QString &host ) { mHost = host; }
-    void setPort( int port ) { mPort = port; }
-    void setBaseDN( const QString &baseDN ) {  mBaseDN = baseDN; }
-    void setBindDN( const QString &bindDN ) {  mBindDN = bindDN; }
-    void setPwdBindDN( const QString &pwdBindDN ) {  mPwdBindDN = pwdBindDN; }
-
-  private:
-    QString mHost;
-    int mPort;
-    QString mBaseDN;
-    QString mBindDN;
-    QString mPwdBindDN;
-};
-
 class LDAPItem : public QCheckListItem
 {
   public:
-    LDAPItem( QListView *parent, const LDAPServer &server, bool isActive = false )
+    LDAPItem( QListView *parent, const KPIM::LdapServer &server, bool isActive = false )
       : QCheckListItem( parent, parent->lastItem(), QString::null, QCheckListItem::CheckBox ),
         mIsActive( isActive )
     {
       setServer( server );
     }
 
-    void setServer( const LDAPServer &server )
+    void setServer( const KPIM::LdapServer &server )
     {
       mServer = server;
 
       setText( 0, mServer.host() );
     }
 
-    LDAPServer server() const { return mServer; }
+    KPIM::LdapServer server() const { return mServer; }
 
     void setIsActive( bool isActive ) { mIsActive = isActive; }
     bool isActive() const { return mIsActive; }
 
   private:
-    LDAPServer mServer;
+    KPIM::LdapServer mServer;
     bool mIsActive;
 };
 
@@ -146,11 +115,10 @@ void LDAPOptionsWidget::slotItemClicked( QListViewItem *item )
 
 void LDAPOptionsWidget::slotAddHost()
 {
-  AddHostDialog dlg( this );
+  KPIM::LdapServer server;
+  AddHostDialog dlg( &server, this );
 
-  if ( dlg.exec() && !dlg.host().isEmpty() ) {
-    LDAPServer server( dlg.host(), dlg.port(), dlg.baseDN(),
-                       dlg.bindDN(), dlg.pwdBindDN() );
+  if ( dlg.exec() && !server.host().isEmpty() ) {
     new LDAPItem( mHostListView, server );
 
     emit changed( true );
@@ -163,18 +131,11 @@ void LDAPOptionsWidget::slotEditHost()
   if ( !item )
     return;
 
-  AddHostDialog dlg( this );
+  KPIM::LdapServer server = item->server();
+  AddHostDialog dlg( &server, this );
   dlg.setCaption( i18n( "Edit Host" ) );
 
-  dlg.setHost( item->server().host() );
-  dlg.setPort( item->server().port() );
-  dlg.setBaseDN( item->server().baseDN() );
-  dlg.setBindDN( item->server().bindDN() );
-  dlg.setPwdBindDN( item->server().pwdBindDN() );
-
-  if ( dlg.exec() && !dlg.host().isEmpty() ) {
-    LDAPServer server( dlg.host(), dlg.port(), dlg.baseDN(),
-                       dlg.bindDN(), dlg.pwdBindDN() );
+  if ( dlg.exec() && !server.host().isEmpty() ) {
     item->setServer( server );
 
     emit changed( true );
@@ -197,7 +158,7 @@ void LDAPOptionsWidget::slotRemoveHost()
 
 static void swapItems( LDAPItem *item, LDAPItem *other )
 {
-  LDAPServer server = item->server();
+  KPIM::LdapServer server = item->server();
   bool isActive = item->isActive();
   item->setServer( other->server() );
   item->setIsActive( other->isActive() );
@@ -232,33 +193,23 @@ void LDAPOptionsWidget::slotMoveDown()
 void LDAPOptionsWidget::restoreSettings()
 {
   mHostListView->clear();
-  KConfig *config = KABC::AddressLineEdit::config();
+  KConfig *config = KPIM::LdapSearch::config();
   KConfigGroupSaver saver( config, "LDAP" );
 
   QString host;
 
   uint count = config->readUnsignedNumEntry( "NumSelectedHosts");
   for ( uint i = 0; i < count; ++i ) {
-    LDAPServer server;
-    server.setHost( config->readEntry( QString( "SelectedHost%1").arg( i ) ) );
-    server.setPort( config->readUnsignedNumEntry( QString( "SelectedPort%1" ).arg( i ) ) );
-    server.setBaseDN( config->readEntry( QString( "SelectedBase%1" ).arg( i ) ) );
-    server.setBindDN( config->readEntry( QString( "SelectedBind%1" ).arg( i ) ) );
-    server.setPwdBindDN( config->readEntry( QString( "SelectedPwdBind%1" ).arg( i ) ) );
-
+    KPIM::LdapServer server;
+    KPIM::LdapSearch::readConfig( server, config, i, true );
     LDAPItem *item = new LDAPItem( mHostListView, server, true );
     item->setOn( true );
   }
 
   count = config->readUnsignedNumEntry( "NumHosts" );
   for ( uint i = 0; i < count; ++i ) {
-    LDAPServer server;
-    server.setHost( config->readEntry( QString( "Host%1" ).arg( i ) ) );
-    server.setPort( config->readUnsignedNumEntry( QString( "Port%1" ).arg( i ) ) );
-    server.setBaseDN( config->readEntry( QString( "Base%1" ).arg( i ) ) );
-    server.setBindDN( config->readEntry( QString( "Bind%1" ).arg( i ) ) );
-    server.setPwdBindDN( config->readEntry( QString( "PwdBind%1" ).arg( i ) ) );
-
+    KPIM::LdapServer server;
+    KPIM::LdapSearch::readConfig( server, config, i, false );
     new LDAPItem( mHostListView, server );
   }
 
@@ -267,7 +218,7 @@ void LDAPOptionsWidget::restoreSettings()
 
 void LDAPOptionsWidget::saveSettings()
 {
-  KConfig *config = KABC::AddressLineEdit::config();
+  KConfig *config = KPIM::LdapSearch::config();
   config->deleteGroup( "LDAP" );
 
   KConfigGroupSaver saver( config, "LDAP" );
@@ -279,20 +230,12 @@ void LDAPOptionsWidget::saveSettings()
     if ( !item )
       continue;
 
-    LDAPServer server = item->server();
+    KPIM::LdapServer server = item->server();
     if ( item->isOn() ) {
-      config->writeEntry( QString( "SelectedHost%1" ).arg( selected ), server.host() );
-      config->writeEntry( QString( "SelectedPort%1" ).arg( selected ), server.port() );
-      config->writeEntry( QString( "SelectedBase%1" ).arg( selected ), server.baseDN() );
-      config->writeEntry( QString( "SelectedBind%1" ).arg( selected ), server.bindDN() );
-      config->writeEntry( QString( "SelectedPwdBind%1" ).arg( selected ), server.pwdBindDN() );
+      KPIM::LdapSearch::writeConfig( server, config, selected, true );
       selected++;
     } else {
-      config->writeEntry( QString( "Host%1" ).arg( unselected ), server.host() );
-      config->writeEntry( QString( "Port%1" ).arg( unselected ), server.port() );
-      config->writeEntry( QString( "Base%1" ).arg( unselected ), server.baseDN() );
-      config->writeEntry( QString( "Bind%1" ).arg( unselected ), server.bindDN() );
-      config->writeEntry( QString( "PwdBind%1" ).arg( unselected ), server.pwdBindDN() );
+      KPIM::LdapSearch::writeConfig( server, config, unselected, false );
       unselected++;
     }
   }

@@ -20,7 +20,7 @@ kcm_kabldapconfig_la_SOURCES = addhostdialog.cpp kcmkabldapconfig.cpp \
                                ldapoptionswidget.cpp
 kcm_kabldapconfig_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) \
                                -avoid-version -no-undefined
-kcm_kabldapconfig_la_LIBADD = $(LIB_KIO) $(LIB_KABC)
+kcm_kabldapconfig_la_LIBADD = $(LIB_KIO) $(LIB_KABC) $(top_builddir)/libkdepim/libkdepim.la
 
 kcm_kabcustomfields_la_SOURCES = kcmkabcustomfields.cpp
 kcm_kabcustomfields_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) \
