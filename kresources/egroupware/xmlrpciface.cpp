@@ -62,7 +62,7 @@ void Query::call( const QString &server, const QString &method,
                   const QValueList<QVariant> &args, const QString &userAgent )
 {
   const QString xmlMarkup = markupCall( method, args );
-  qDebug( "\033[34;40mQuery: %s\033[0;0m", xmlMarkup.latin1() );
+  // qDebug( "\033[34;40mQuery: %s\033[0;0m", xmlMarkup.latin1() );
   QByteArray postData;
   QDataStream stream( postData, IO_WriteOnly );
   stream.writeRawBytes( xmlMarkup.utf8(), xmlMarkup.utf8().length() );
