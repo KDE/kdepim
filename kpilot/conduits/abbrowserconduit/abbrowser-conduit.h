@@ -45,25 +45,28 @@ class AbbrowserConduit : public BaseConduit
       void _setAppInfo();
       void _addToAbbrowser(const PilotAddress &address);
       void _addToPalm(ContactEntry &entry);
-      void _handleConflict(PilotAddress *piAddress, ContactEntry *abEntry);
+      void _handleConflict(PilotAddress *piAddress, ContactEntry *abEntry,
+			   const QString &abKey);
       void _removePilotAddress(PilotAddress &address);
-      void _removeAbEntry(ContactEntry &abEntry);
-      void _saveAbEntry(ContactEntry &abEntry);
-      void _savePilotAddress(PilotAddress &address, ContactEntry &abEntry);
+      void _removeAbEntry(const QString &key);
+      void _saveAbEntry(ContactEntry &abEntry, const QString &key);
+      /** @return true if the abbEntry's pilot id was changed */
+      bool _savePilotAddress(PilotAddress &address, ContactEntry &abEntry);
       bool _getAbbrowserContacts(QDict<ContactEntry> &contacts);
-      void _copy(PilotAddress &toPilotAddr, const ContactEntry &fromAbEntry);
+      void _copy(PilotAddress &toPilotAddr, ContactEntry &fromAbEntry);
       void _copy(ContactEntry &toAbEntry, const PilotAddress &fromPilotAddr);
       void _setPilotAddress(PilotAddress &toPilotAddr,
 			    const ContactEntry::Address &abAddress);
       bool _equal(const PilotAddress &piAddress,
-		  const ContactEntry &abEntry) const;
+		  ContactEntry &abEntry) const;
       ContactEntry *_findMatch(const QDict<ContactEntry> entries,
-			       const PilotAddress &pilotAddress) const;
-      /** Given a list of contacts, creates the pilot id to contact map
-       *  and a list of new contacts in O(n) time
+			       const PilotAddress &pilotAddress,
+			       QString &contactKey) const;
+      /** Given a list of contacts, creates the pilot id to contact key map
+       *  and a list of new contacts in O(n) time (single pass)
        */
       void _mapContactsToPilot(const QDict<ContactEntry> &contacts,
-			       QMap<recordid_t, ContactEntry *> &idContactMap,
+			       QMap<recordid_t, QString> &idContactMap,
 			       QList<ContactEntry> &newContacts) const;
 
       /** Output to console, for debugging only */
