@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Synchronization
+Exec=multisynk
+Icon=multisynk
+Type=Application
+DocPath=multisynk/index.html
+Terminal=false
+X-KDE-StartupNotify=true
+X-DCOP-ServiceType=Unique
+X-DCOP-ServiceName=multisynk
+MimeType=text/x-vcard;text/x-ldif
+ServiceTypes=KParts/ReadOnlyPart
+X-KDE-Library=libmultisynkpart
+Categories=Qt;KDE;Utility;

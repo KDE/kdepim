@@ -13,6 +13,8 @@ multisynk_SOURCES = main.cpp multisynk_main.cpp
 multisynk_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 multisynk_LDADD = libmultisynk.la
 
+xdg_apps_DATA = multisynk.desktop
+
 # Library
 lib_LTLIBRARIES = libmultisynk.la
 
