@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_cryptosettings
-Name=Crypto Preferrences
+Name=Crypto Preferences
 Name[da]=Krypto-indstillinger
 Name[es]=Preferencias de cifrado
 Name[et]=Krüptoseadistused
@@ -9,5 +9,6 @@ Name[fr]=Préférences de chiffrement
 Name[nl]=Versleutelingsinstellinge
 Name[pt_BR]=Configurações de Criptografia
 Name[sv]=Krypteringsinställningar
+Name[xx]=xxCrypto Preferrencesxx
 Type=Service
 ServiceTypes=KAddressBook/ContactEditorWidget
