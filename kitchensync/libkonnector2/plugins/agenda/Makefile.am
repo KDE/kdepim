@@ -23,7 +23,7 @@ lib_LTLIBRARIES = libagendakonnector.la
 INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/libkcal $(all_includes)
 
 libagendakonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
-libagendakonnector_la_LIBDADD = ../../libkonnector.la ../../../libksync.la
+libagendakonnector_la_LIBDADD = ../../libkonnector.la ../../../libksync2.la
 libagendakonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module
 libagendakonnector_la_SOURCES = configwidget.cpp converterbase.cpp \
 	dbwrapper.cpp socket.cpp konnector.cpp md5map.cpp

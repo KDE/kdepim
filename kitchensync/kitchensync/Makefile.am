@@ -12,5 +12,6 @@ bin_PROGRAMS = kitchensync
 
 kitchensync_SOURCES = main.cpp splash.cpp
 
-kitchensync_LDADD =  ../libkonnector2/libkonnector.la ./lib/libkitchensyncui.la ../lib/libksync.la
+kitchensync_LDADD = ../libkonnector2/libkonnector.la ./lib/libkitchensyncui.la \
+  ../lib/libksync2.la
 kitchensync_LDFLAGS = $(KDE_RPATH) $(all_libraries)
