@@ -117,10 +117,9 @@ void KAddressBookTableView::reconstructListView()
     }
 
   mListView = new ContactListView( this, core()->addressBook(), viewWidget() );
-  mListView->setFullWidth( true );
-  
+
   mListView->setShowIM( mIMProxy != 0 );
-  
+
   // Add the columns
   KABC::Field::List fieldList = fields();
   KABC::Field::List::ConstIterator it;
@@ -139,6 +138,8 @@ void KAddressBookTableView::reconstructListView()
     mListView->addColumn( i18n( "Presence" ) );
     mListView->setIMColumn( c++ );
   }
+
+  mListView->setFullWidth( true );
 
   connect(mListView, SIGNAL(selectionChanged()),
           this, SLOT(addresseeSelected()));
