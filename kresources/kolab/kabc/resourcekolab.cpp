@@ -158,7 +158,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
     return false;
   }
 
-  kdDebug(5500) << "Contacts kolab resource: got " << lst.count() << " contacts in " << subResource << endl;
+  kdDebug(5650) << "Contacts kolab resource: got " << lst.count() << " contacts in " << subResource << endl;
 
   for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     loadContact( it.data(), subResource, it.key() );
@@ -195,7 +195,7 @@ bool KABC::ResourceKolab::save( Ticket* )
     }
 
   if ( !rc )
-    kdDebug() << k_funcinfo << " failed." << endl;
+    kdDebug(5650) << k_funcinfo << " failed." << endl;
   return rc;
 }
 
@@ -211,12 +211,14 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   QStringList deletedAttachments;
   QValueList<KTempFile *> tempFiles;
   QImage pic = contact.picture();
+
   if ( !pic.isNull() ) {
     KTempFile* tempFile = new KTempFile;
-    tempFile->setAutoDelete( true );
     pic.save( tempFile->file(), "PNG" );
+    tempFile->close();
     KURL url;
     url.setPath( tempFile->name() );
+    kdDebug(5650) << "picture saved to " << url.path() << endl;
     attachmentURLs.append( url.url() );
     attachmentMimeTypes.append( "image/png" );
     attachmentNames.append( Contact::s_pictureAttachmentName );
@@ -238,7 +240,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
                          attachmentURLs, attachmentMimeTypes, attachmentNames,
                          deletedAttachments );
   if ( !rc )
-    kdDebug(5500) << "kmailUpdate returned false!" << endl;
+    kdDebug(5650) << "kmailUpdate returned false!" << endl;
   if ( rc ) {
     mUidMap[ uid ] = StorageReference( subResource, sernum );
     // This is ugly, but it's faster than doing
@@ -249,6 +251,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   }
 
   for( QValueList<KTempFile *>::Iterator it = tempFiles.begin(); it != tempFiles.end(); ++it ) {
+    (*it)->setAutoDelete( true );
     delete (*it);
   }
   return rc;

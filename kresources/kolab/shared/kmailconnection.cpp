@@ -217,7 +217,6 @@ bool KMailConnection::kmailUpdate( const QString& resource,
     sernum = mKMailIcalIfaceStub->update( resource, sernum, subject,
                                           attachmentURLs, attachmentMimetypes, attachmentNames,
                                           deletedAttachments );
-    kdDebug() << k_funcinfo << "sernum=" << sernum << " ok=" << mKMailIcalIfaceStub->ok() << endl;
     return sernum && mKMailIcalIfaceStub->ok();
   } else
     return false;
