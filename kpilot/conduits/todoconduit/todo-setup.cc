@@ -33,10 +33,13 @@ TodoSetup::TodoSetup(QWidget *parent)
 	FUNCTIONSETUP;
 	KConfig *config=KPilotLink::getConfig(TodoGroup);
 	addPage(new TodoSetupPage(this,config));
+	/*
 	addPage(new setupInfoPage(this,
-		TodoConduit::version(),
-		i18n("By Preston Brown")
-		));
+		    TodoConduit::version(),
+		    i18n("By Preston Brown")
+	       ));
+	*/
+	addPage(new setupInfoPage(this));
 	setupDialog::setupWidget();
 }
 

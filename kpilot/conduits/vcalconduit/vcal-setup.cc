@@ -92,9 +92,9 @@ VCalSetup::VCalSetup(QWidget *parent) :
 	FUNCTIONSETUP;
 	KConfig *config=KPilotLink::getConfig(VCalGroup);
 	addPage(new VCalSetupPage(this,config));
-	addPage(new setupInfoPage(this,
+	addPage(new setupInfoPage(this /*,
 		VCalConduit::version(),
-		i18n("By D. Pilone, P. Brown & H.J. Steehouwer")
+		i18n("By D. Pilone, P. Brown & H.J. Steehouwer") */
 		));
 
 	setupDialog::setupWidget();

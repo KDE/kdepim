@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I../../kpilot -I../../kpilot/libpilot/include
+INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/kpilot/kpilot/libpilot/include
 METASOURCES = AUTO
 
 ####### This part is very kpilot specific

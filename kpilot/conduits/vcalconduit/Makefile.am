@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I../../kpilot -Iversit -I../../kpilot/libpilot/include
+INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/versit -I$(top_srcdir)/kpilot/kpilot/libpilot/include
 SUBDIRS = versit
 METASOURCES = AUTO
 

@@ -21,7 +21,6 @@ class QComboBox;
 class QRadioButton;
 class QGroupBox;
 class QButtonGroup;
-class KIO::Job;
 
 
 // This config page is now being used for

@@ -74,13 +74,16 @@ NullOptions::NullOptions(QWidget *parent) :
 	KConfig *config=KPilotLink::getConfig(NullGroup);
 
 	addPage(new NullPage(this,config));
-	addPage(new setupInfoPage(this,
-		"NULL Conduit",
-		"Adriaan de Groot",
-		i18n("A totally useless conduit used "
-			"as a programming example.\n"
-			"You can attach it to databases you don't want "
-			"to synchronize.")));
+	/*
+	   addPage(new setupInfoPage(this,
+	     "NULL Conduit",
+	     "Adriaan de Groot",
+	     i18n("A totally useless conduit used "
+	          "as a programming example.\n"
+	          "You can attach it to databases you don't want "
+	          "to synchronize.")));
+	 */
+	addPage(new setupInfoPage(this));
 	setupDialog::setupWidget();
 
 	delete config;
@@ -127,6 +130,10 @@ NullPage::NullPage(setupDialog *parent, KConfig *config) :
 
 
 // $Log$
+// Revision 1.5  2000/07/27 23:07:16  pilone
+// 	Ported the conduits.  They build.  Don't know if they work, but they
+// build.
+//
 // Revision 1.7  2000/07/19 20:12:06  adridg
 // Added KDE2 code
 //

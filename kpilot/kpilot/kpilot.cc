@@ -983,7 +983,7 @@ int main(int argc, char** argv)
                          "(c) 1998-2000, Dan Pilone");
 
         KCmdLineArgs::init(argc, argv, &about);
-	KApplication a(argc, argv, "kpilot");
+	KApplication a;
 	handleOptions(argc,argv);
 
 	if (run_mode=='s')

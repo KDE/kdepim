@@ -571,10 +571,13 @@ PopMailOptions::setupWidget()
 	addPage(psend);
 	addPage(ppop);
 	addPage(punix);
+	/*
 	addPage(new setupInfoPage(this,
-		"Popmail conduit",
-		"By Michael Kropfberger, and\n"
-		"Dan Pilone, Adriaan de Groot"));
+		    "Popmail conduit",
+		    "By Michael Kropfberger, and\n"
+		    "Dan Pilone, Adriaan de Groot"));
+	*/
+	addPage(new setupInfoPage(this));
 
 	modeChangeReceive();
 	modeChangeSend();
