@@ -22,3 +22,6 @@ libkcal_la_SOURCES = \
         person.cpp period.cpp duration.cpp
 
 METASOURCES = AUTO
+
+messages:
+	$(XGETTEXT) *.cpp -o $(podir)/libkcal.pot
