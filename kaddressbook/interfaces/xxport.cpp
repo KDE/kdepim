@@ -26,7 +26,7 @@
 
 #include <kaction.h>
 #include <kmessagebox.h>
-
+#include <kinstance.h>
 #include "xxport.h"
 
 using namespace KAB;
