@@ -34,6 +34,20 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 
+class CreateImapResource : public KConfigPropagator::Change
+{
+  public:
+    CreateImapResource()
+      : KConfigPropagator::Change( i18n("Create IMAP Resource") )
+    {
+    }
+    
+    void apply()
+    {
+      kdDebug() << "Create IMAP Resource" << endl;
+    }
+};
+
 class KolabPropagator : public KConfigPropagator
 {
   public:
@@ -48,26 +62,31 @@ class KolabPropagator : public KConfigPropagator
       QString freeBusyBaseUrl = "webdavs://" + KolabConfig::self()->server() +
                                 "/freebusy/";
 
-      Change c;
-      c.file = "korganizerrc";
-      c.group = "FreeBusy";
+      ChangeConfig *c = new ChangeConfig;
+      c->file = "korganizerrc";
+      c->group = "FreeBusy";
 
-      c.name = "FreeBusyPublishUrl";
-      c.label = "";
+      c->name = "FreeBusyPublishUrl";
+      c->label = "";
 
       QString user = KolabConfig::self()->user();
       int pos = user.find( "@" );
       if ( pos > 0 ) user = user.left( pos );
 
-      c.value = freeBusyBaseUrl + user + ".vfb";
+      c->value = freeBusyBaseUrl + user + ".vfb";
 
       changes.append( c );
 
+      c = new ChangeConfig;
+      c->file = "korganizerrc";
+      c->group = "FreeBusy";
 
-      c.name = "FreeBusyRetrieveUrl";
-      c.value = freeBusyBaseUrl;
+      c->name = "FreeBusyRetrieveUrl";
+      c->value = freeBusyBaseUrl;
 
       changes.append( c );
+    
+      changes.append( new CreateImapResource );
     }
 };
 
