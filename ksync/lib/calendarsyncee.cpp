@@ -99,7 +99,7 @@ void CalendarSyncee::addEntry(KSyncEntry *entry)
                 << endl;
     } else {
       kdDebug() << "Cloning..." << endl;
-      Event *event = sourceEvent->clone();
+      Event *event = dynamic_cast<Event *>(sourceEvent->clone());
       kdDebug() << "Cloning...." << endl;
       mCalendar->addEvent(event);
       kdDebug() << "Cloning....." << endl;
