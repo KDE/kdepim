@@ -790,7 +790,7 @@ KNConfig::DisplayedHeaders::DisplayedHeaders()
 {
   h_drList.setAutoDelete(true);
 
-  QString fname( locateLocal("data","knode/") + "headers.rc");
+  QString fname( locate("data","knode/headers.rc") );
 
   if (!fname.isNull()) {
     KSimpleConfig headerConf(fname,true);
