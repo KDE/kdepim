@@ -31,6 +31,7 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kglobalsettings.h>
+#include <kpimprefs.h>
 
 #include <qdatetime.h>
 #include <qstring.h>
@@ -68,49 +69,10 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bIsCalendarResources = false;
 }
 
-// This function is taken from korganizer's KOPrefs::setTimeZoneIdDefault(),
-// joined with some code to read the TimeZoneId from korganizerrc.
 void KonsoleKalendarVariables::setTimeZoneId()
 {
-  // TODO: this function will be re-written when a
-  // KDE-wide viewing timezone property becomes available.
-
-  QString zone;
-
-  // Get the system's default timezone.
-  char zonefilebuf[100];
-  int len = readlink("/etc/localtime",zonefilebuf,100);
-  if (len > 0 && len < 100) {
-    zonefilebuf[len] = '\0';
-    zone = zonefilebuf;
-    zone = zone.mid(zone.find("zoneinfo/") + 9);
-    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | "
-              << "system timezone from /etc/localtime is "
-              << zone
-              << endl;
-  } else {
-    tzset();
-    zone = tzname[0];
-    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | "
-              << "system timezone from tzset() is "
-              << zone
-              << endl;
-  }
-
-  // Read TimeZoneId from korganizerrc. This will override the system default
-  KConfig korgcfg( locate( "config", QString::fromLatin1("korganizerrc") ) );
-  korgcfg.setGroup( "Time & Date" );
-  QString tz(korgcfg.readEntry( "TimeZoneId" ) );
-  if ( ! tz.isEmpty() ) {
-    zone = tz;
-    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | "
-              << "timezone from korganizerrc is "
-              << zone
-              << endl;
-  }
-
   m_bIsTimeZoneId = true;
-  m_TimeZoneId = zone;
+  m_TimeZoneId = KPimPrefs::timezone();
 }
 
 QString KonsoleKalendarVariables::getTimeZoneId()

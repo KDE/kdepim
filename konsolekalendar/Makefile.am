@@ -1,6 +1,6 @@
 SUBDIRS = pixmaps
 
-INCLUDES= -I$(top_srcdir) $(all_includes)
+INCLUDES= -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim -I$(top_srcdir) $(all_includes)
 
 METASOURCES = AUTO
 
@@ -10,7 +10,7 @@ konsolekalendar_SOURCES = konsolekalendarepoch.cpp konsolekalendardelete.cpp \
   konsolekalendarchange.cpp konsolekalendarvariables.cpp \
   konsolekalendaradd.cpp konsolekalendarexports.cpp konsolekalendar.cpp \
   main.cpp 
-konsolekalendar_LDADD = $(top_builddir)/libkcal/libkcal.la
+konsolekalendar_LDADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la
 konsolekalendar_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 appsdir = $(kde_appsdir)/Utilities
