@@ -69,7 +69,7 @@ public:
 };
 
 ResourceExchange::ResourceExchange( const KConfig *config )
-  : ResourceCalendar( config ), mCache(0), mDates(0), mClient(0), mMonitor(0), 
+  : ResourceCalendar( config ), mClient(0), mMonitor(0), mCache(0), mDates(0), 
     mEventDates(0), mCacheDates(0)
 {
   mLock = new KABC::LockNull( true );
