@@ -4,8 +4,6 @@
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"><!-- change language only here -->
-  
-  
 ]>
 
 <!-- The language must NOT be changed here. -->
@@ -29,7 +27,7 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 
 <copyright>
-<year>2001</year>
+<year>2001</year><year>2002</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -41,8 +39,6 @@
 <releaseinfo>0.05.00</releaseinfo>
 
 <abstract>
-<para>This handbook describes &kalarm; version 0.5.</para>
-
 <para>&kalarm; is an alarm/reminder message scheduler for &kde;.</para>
 </abstract>
 
@@ -99,15 +95,16 @@ displayed again later. An example of an alarm message:</para>
 </mediaobject>
 </screenshot>
 
-<para>&kalarm; can run in either of two modes: 'continuous' (the
-default) where it runs from the &kde; system tray, or 'on-demand'
-where it runs as and when required (with the option of
-displaying an independent system tray icon).</para>
+<para>&kalarm; can run in either of two modes:
+<quote>continuous</quote> (the default) where it runs from the &kde;
+system tray, or <quote>on-demand</quote> where it runs as and when
+required (with the option of displaying an independent system tray
+icon).</para>
 
-<para>This document makes various references to the "alarm daemon".
-This is an application which runs in the background, checking
-pending alarms and telling &kalarm; to display them when they
-become due.</para>
+<para>This document makes various references to the <application>alarm
+daemon</application>.  This is an application which runs in the
+background, checking pending alarms and telling &kalarm; to display
+them when they become due.</para>
 
 </chapter>
 
@@ -143,8 +140,8 @@ message text by clicking on the title bar for the appropriate column.
 To reverse the sort order, click the column title bar again.</para>
 
 <para>When &kalarm; starts in graphical mode, it checks whether the
-alarm daemon is running.  If it is not already running, &kalarm;
-starts it.</para>
+<application>alarm daemon</application> is running.  If it is not
+already running, &kalarm; starts it.</para>
 
 <sect2>
 <title>Adding a new alarm</title>
@@ -297,11 +294,11 @@ alarm message window.</para>
 <title>Displaying &kalarm; in the system tray</title>
 
 <para>You must be running the &kde; desktop in order to display
-&kalarm; in the system tray. If &kalarm; is running in 'continuous'
-mode, the system tray icon is always displayed. These instructions
-apply only to 'on-demand' mode. (See
-<link linkend="preferences">Configuring default options</link> for a
-description of run modes.)</para>
+&kalarm; in the system tray. If &kalarm; is running in
+<quote>continuous</quote> mode, the system tray icon is always
+displayed. These instructions apply only to <quote>on-demand</quote>
+mode. (See <link linkend="preferences">Configuring default
+options</link> for a description of run modes.)</para>
 
 <para>To display &kalarm; in the &kde; system tray, select <menuchoice>
 <guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
@@ -334,10 +331,11 @@ from the context menu.</para>
 <sect3>
 <title>Enabling alarm monitoring</title>
 
-<para>First, if &kalarm;'s run mode is 'continuous' and you have
-selected <guilabel>Disable alarms while not running</guilabel> in the
-Preferences dialog, you must ensure that &kalarm; is running in order
-for alarm monitoring to take place.</para>
+<para>First, if &kalarm;'s run mode is <quote>continuous</quote> and
+you have selected <guilabel>Disable alarms while not
+running</guilabel> in the Preferences dialog, you must ensure that
+&kalarm; is running in order for alarm monitoring to take
+place.</para>
 
 <para>Then if alarm monitoring is currently disabled, do one of the
 following:</para>
@@ -429,20 +427,20 @@ become due, since it is the alarm daemon and not &kalarm; which
 monitors the alarm list. Running &kalarm; in the system tray makes the
 application more accessible and displays an alarm-enabled indication,
 but running an application continuously does consume some system
-resources. So if system performance is of concern, the 'on-demand'
-option may be preferable.</para>
+resources. So if system performance is of concern, the
+<quote>on-demand</quote> option may be preferable.</para>
 
-<para>When running in 'on-demand' mode, the system tray icon can still
-be displayed. The main difference in operation between the two modes
-is the effect of closing the system tray icon: in 'on-demand' mode,
-closing it has no effect on any &kalarm; windows, while in
-'continuous' mode, closing it also closes all &kalarm; main
-windows.</para>
+<para>When running in <quote>on-demand</quote> mode, the system tray
+icon can still be displayed. The main difference in operation between
+the two modes is the effect of closing the system tray icon: in
+<quote>on-demand</quote> mode, closing it has no effect on any
+&kalarm; windows, while in <quote>continuous</quote> mode, closing it
+also closes all &kalarm; main windows.</para>
 </listitem>
 
 <listitem><para>If you specified that &kalarm; should run in
-'continuous' mode, you can disable all alarms due for display while
-&kalarm; is not running.</para>
+<quote>continuous</quote> mode, you can disable all alarms due for
+display while &kalarm; is not running.</para>
 </listitem>
 
 <listitem><para>Specify that the &kalarm; system tray icon should be
@@ -482,11 +480,12 @@ windows and selecting
 system tray icon context menu.</para>
 
 <para><menuchoice><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem>
-</menuchoice> closes only the window concerned. The effect of the system
-tray icon context menu item
+</menuchoice> closes only the window concerned. The effect of the
+system tray icon context menu item
 <menuchoice><guimenuitem>Quit</guimenuitem></menuchoice> depends on
-the run mode: in 'on-demand' mode it hides the system tray icon, while
-in 'continuous' mode it quits the program.</para>
+the run mode: in <quote>on-demand</quote> mode it hides the system
+tray icon, while in <quote>continuous</quote> mode it quits the
+program.</para>
 
 <tip><para>Quitting &kalarm; has no effect on the alarm daemon, which
 if already active will continue to monitor scheduled alarms and
@@ -557,11 +556,12 @@ for a description of run modes.)</para>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Quit</guimenuitem></menuchoice></term>
-<listitem><para><action>Closes the &kalarm; system tray icon.</action></para>
-<para>In 'continuous' run mode only, it also closes all &kalarm; main
-windows. It has no effect on the monitoring of alarms by the alarm
-daemon (unless you have selected <guilabel>Disable alarms while not
-running</guilabel> in the Preferences dialog).</para>
+<listitem><para><action>Closes the &kalarm; system tray
+icon.</action></para> <para>In <quote>continuous</quote> run mode
+only, it also closes all &kalarm; main windows. It has no effect on
+the monitoring of alarms by the alarm daemon (unless you have selected
+<guilabel>Disable alarms while not running</guilabel> in the
+Preferences dialog).</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1374,6 +1374,7 @@ only, there is a small application
 </answer>
 </qandaentry>
 
+<!-- 
 <qandaentry>
 <question>
 <para>Why doesn't &kalarm; work since I installed &package; 2.2.x?</para>
@@ -1385,6 +1386,7 @@ library <filename>libkcal</filename>. &package; will work happily with
 simply reinstall &kalarm;.</para>
 </answer>
 </qandaentry>
+-->
 
 </qandaset>
 </chapter>
@@ -1501,7 +1503,6 @@ if your &kde; is installed in <filename>/opt/kde2</filename>:</para>
 
 <para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde2</replaceable></userinput></para>
 </note>
-
 
 <important><para>If you install &kalarm; as a standalone package along
 with &package; 2.2.x, you must install &package; first and &kalarm;
