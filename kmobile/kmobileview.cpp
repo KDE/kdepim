@@ -26,6 +26,7 @@
 #include <kabc/vcardconverter.h>
 #include <kprocess.h>
 #include <kdebug.h>
+#include <kconfig.h>
 
 #include "kmobileview.h"
 #include "kmobileitem.h"
@@ -154,7 +155,7 @@ bool KMobileView::connectDevice( QString deviceName )
    MUTEX_LOCK(dev->m_dev);
    connected = dev->m_dev->connectDevice();
    MUTEX_UNLOCK(dev->m_dev);
-   emit signalChangeStatusbar( 
+   emit signalChangeStatusbar(
 	connected ? i18n("Connection to %1 established").arg(deviceName)
 	          : i18n("Connection to %1 failed").arg(deviceName) );
    return connected;
@@ -169,7 +170,7 @@ bool KMobileView::disconnectDevice( QString deviceName )
    MUTEX_LOCK(dev->m_dev);
    disconnected = dev->m_dev->disconnectDevice();
    MUTEX_UNLOCK(dev->m_dev);
-   emit signalChangeStatusbar( 
+   emit signalChangeStatusbar(
 	disconnected ? i18n("%1 disconnected").arg(deviceName)
 	             : i18n("Disconnection of %1 failed").arg(deviceName) );
    return disconnected;
@@ -324,7 +325,7 @@ bool KMobileView::storeAddress( QString deviceName, int index, QString vcard, bo
    MUTEX_LOCK(dev->m_dev);
    err = dev->m_dev->storeAddress(index, adr, append);
    MUTEX_UNLOCK(dev->m_dev);
-   emit signalChangeStatusbar( 
+   emit signalChangeStatusbar(
 	err ? i18n("Storing contact %1 on %2 failed").arg(index).arg(deviceName)
 	    : i18n("Contact %1 stored on %2").arg(index).arg(deviceName) );
    return (err == 0);
@@ -349,7 +350,7 @@ int KMobileView::numNotes( QString deviceName )
 	return 0;
    int num;
    MUTEX_LOCK(dev->m_dev);
-   num = dev->m_dev->numNotes(); 
+   num = dev->m_dev->numNotes();
    MUTEX_UNLOCK(dev->m_dev);
    return num;
 }
@@ -399,8 +400,8 @@ bool KMobileView::storeNote( QString deviceName, int index, QString note )
  * returns the information for the given deviceName for usage in the
  * the devices kioslave. The QStringList returned is comparable to the
  * format of /etc/fstab file. Please refer to the devices kioslave for
- * further information. 
- * If deviceName is empty, this functions returns information for all 
+ * further information.
+ * If deviceName is empty, this functions returns information for all
  * active mobile devices.
  * (function is only used by the devices kioslave - don't use elsewhere !)
  */
@@ -415,7 +416,7 @@ QStringList KMobileView::kio_devices_deviceInfo(QString deviceName)
 	QString name = *it;
 
 	if (deviceName.isEmpty())
-		mountList << name; 
+		mountList << name;
 	else
 		if (deviceName!=name)
 			continue;

@@ -70,7 +70,7 @@ bool KMobileClient::startKMobileApplication()
   QStringList params;
   params << "--minimized";
   arg << QString("kmobile") << params;
-  QCString replyType; 
+  QCString replyType;
   QByteArray replyData;
   bool ok = call("klauncher", "klauncher", "kdeinit_exec_wait(QString,QStringList)", data, replyType, replyData);
   PRINT_DEBUG << QString("DCOP-CALL to klauncher: %1\n").arg(ok?"ok.":"failed.");
@@ -94,7 +94,7 @@ bool KMobileClient::startKMobileApplication()
   QByteArray replyData; \
   bool ok = call(m_kmobileApp, m_kmobileObj, FUNC, data, replyType, replyData, KMOBILECLIENT_USE_EVENTLOOP, KMOBILECLIENT_TIMEOUT); \
   PRINT_DEBUG << QString("DCOP-CALL to %1: %2\n").arg(FUNC).arg(ok?"ok.":"FAILED.")
-  
+
 #define RETURN_TYPE( FUNC, PARAMS, RETURN_TYPE ) \
   PREPARE( FUNC, PARAMS ); \
   QDataStream reply(replyData, IO_ReadOnly); \

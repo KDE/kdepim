@@ -34,6 +34,7 @@
 #include <kstandarddirs.h>
 #include <kmobiledevice.h>
 #include <kmessagebox.h>
+#include <kconfig.h>
 
 #include <kio/global.h>
 #include <kdebug.h>
@@ -43,7 +44,7 @@
 #define PRINT_DEBUG kdDebug(KMOBILEDEVICE_DEBUG_AREA) << "KMobileDevice: "
 
 /**
- *  The base plugin class of all mobile device drivers. 
+ *  The base plugin class of all mobile device drivers.
  */
 
 KMobileDevice::KMobileDevice(QObject *obj, const char *name, const QStringList &args)
@@ -58,7 +59,7 @@ KMobileDevice::KMobileDevice(QObject *obj, const char *name, const QStringList &
 
   // set the config file name
   m_configFileName = args[0];
-  if (m_configFileName.isEmpty()) 
+  if (m_configFileName.isEmpty())
 	m_config = new KConfig();
   else
 	m_config = new KConfig(m_configFileName);
@@ -105,9 +106,9 @@ bool KMobileDevice::isReadOnly() const
 
 bool KMobileDevice::configDialog( QWidget *parent )
 {
-  KMessageBox::information( parent, 
+  KMessageBox::information( parent,
 		i18n("This device does not need any configuration."),
-		deviceName() );		 
+		deviceName() );
   return true;
 }
 
@@ -258,7 +259,7 @@ void KMobileDevice::createDirEntry(KIO::UDSEntry& entry, const QString& name, co
 	addAtom(entry, KIO::UDS_GUESSED_MIME_TYPE, 0, mime);
 }
 
-void KMobileDevice::createFileEntry(KIO::UDSEntry& entry, const QString& name, const QString& url, const QString& mime, 
+void KMobileDevice::createFileEntry(KIO::UDSEntry& entry, const QString& name, const QString& url, const QString& mime,
 		const unsigned long size) const
 {
 	entry.clear();
@@ -331,7 +332,7 @@ void KMobileDevice::special( const QByteArray & )
 
 
 
-/* 
+/*
  * device locking/unlocking functions
  */
 
@@ -370,7 +371,7 @@ bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
 		PRINT_DEBUG << QString("Cannot lock device %1\n").arg(device);
 		err_reason = i18n("Lockfile %1 is stale. Please check permissions.").arg(lockName);
 		return false;
-	} 
+	}
      } else {
 	err_reason = i18n("Device %1 already locked.").arg(device);
 	return false;

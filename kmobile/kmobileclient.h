@@ -14,7 +14,7 @@ public:
     KMobileClient();
     virtual ~KMobileClient();
 
-    QCString appId() { return m_clientAppId; };
+    QCString appId() const { return m_clientAppId; };
 
     bool isKMobileAvailable();
     bool startKMobileApplication();

@@ -25,7 +25,6 @@
 #include <qmutex.h>
 
 #include <klibloader.h>
-#include <kconfig.h>
 
 #include <kabc/addressee.h>
 #include <kabc/addresseelist.h>
@@ -33,6 +32,7 @@
 #include <kio/global.h>
 #include <kio/authinfo.h>
 
+class KConfig;
 
 #define KMOBILE_MIMETYPE_DEVICE			"kdedevice/mobiledevice"
 #define KMOBILE_MIMETYPE_DEVICE_KONQUEROR(name) QString("kdedevice/kmobile_%1").arg(name)
@@ -208,7 +208,7 @@ public:
     void createDirEntry(KIO::UDSEntry& entry, const QString& name,
 		const QString& url, const QString& mime) const;
     void createFileEntry(KIO::UDSEntry& entry, const QString& name,
-		const QString& url, const QString& mime, 
+		const QString& url, const QString& mime,
 		const unsigned long size = 0) const;
     /**
      * Lists the contents of @p path.
@@ -373,7 +373,7 @@ signals:
      * }
      * </pre>
      *
-     * NOTE: A call to this function can fail and return @p false, 
+     * NOTE: A call to this function can fail and return @p false,
      * if the UIServer could not be started for whatever reason.
      *
      * @param info  See @ref AuthInfo.
@@ -426,7 +426,7 @@ signals:
     void finished();
 
 
-    enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3, 
+    enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3,
 		WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6 };
 
     /**
@@ -473,7 +473,7 @@ protected:
     KConfig *config() const { return m_config; };
     QString configFileName() const { return m_configFileName; };
 
-   
+
     /**
      * Lock/Unlock serial ports and other devices
      * @param device Name of a device port (e.g. /dev/ttyS1, ttyS1, /dev/ircomm0)

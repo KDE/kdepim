@@ -22,6 +22,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kconfig.h>
 
 #include "kmobileitem.h"
 
@@ -44,7 +45,7 @@ KMobileItem::KMobileItem(QIconView *parent, KConfig *_config, KService::Ptr serv
 
    if (m_iconName.isEmpty())
         m_iconName = KMOBILE_ICON_UNKNOWN;
-   
+
    setPixmap(getIcon());
    setRenameEnabled(true);
 }
@@ -88,7 +89,7 @@ bool KMobileItem::configLoad(int idx)
    m_deviceDesktopFile	= config->readEntry( "DesktopFile" );
    m_iconName		= config->readEntry( "IconName" );
 
-   if (text().isEmpty() || m_deviceConfigFile.isEmpty() || 
+   if (text().isEmpty() || m_deviceConfigFile.isEmpty() ||
 	m_deviceDesktopFile.isEmpty() || m_iconName.isEmpty() )
 	return false;
 
@@ -144,7 +145,7 @@ void KMobileItem::writeKonquMimeFile() const
  * get a list of all services providing a libkmobile device driver
  */
 KTrader::OfferList KMobileItem::getMobileDevicesList()
-{ 
+{
   KTrader::OfferList offers = KTrader::self()->query(KMOBILE_MIMETYPE_DEVICE);
   return offers;
 }

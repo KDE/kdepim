@@ -34,7 +34,7 @@ public:
      */
     virtual ~KMobile();
 
-    KMobileView * mainView() { return m_view; };
+    KMobileView * mainView() const { return m_view; };
 
 protected:
     /**
