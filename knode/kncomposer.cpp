@@ -1175,7 +1175,7 @@ void KNComposer::slotToBtnClicked()
     }
     else {
       QString to=v_iew->t_o->text();
-      if(!to.isEmpty()) to+=",";
+      if(!to.isEmpty()) to+=", ";
       to+=entry.emails.first().latin1();
       v_iew->t_o->setText(to);
     }

@@ -785,11 +785,11 @@ void KNArticleWidget::createHtmlPage()
       html+="<tr><td align=right>";
       temp=QString::fromLatin1(split.string().data(), split.string().length());
       if( (pos=temp.find(':'))==-1 )
-        html+=QString("</td><td width=\"100%\">%1</td></tr>").arg(toHtmlString(temp));
+        html+=QString("</td><td width=\"100%\">%1</td></tr>").arg(toHtmlString(temp,true));
       else
         html+=QString("<b>%1</b></td><td width=\"100%\">%2</td></tr>")
                       .arg(toHtmlString(temp.left(pos+1)))
-                      .arg(toHtmlString(temp.right(temp.length()-pos-2)));
+                      .arg(toHtmlString(temp.right(temp.length()-pos-2),true));
       splitOk=split.next();
     }
   }
@@ -812,15 +812,15 @@ void KNArticleWidget::createHtmlPage()
 
       html+=dh->headerOpenTag();
 
-      if(hb->is("From"))
+      if(hb->is("From")) {
         html+=QString("<a href=\"internal:author\">%1</a>")
                 .arg(toHtmlString(hb->asUnicodeString()));
-      else if(hb->is("Date")) {
+      } else if(hb->is("Date")) {
         KNHeaders::Date *date=static_cast<KNHeaders::Date*>(hb);
         html+=toHtmlString(KGlobal::locale()->formatDateTime(date->qdt(), false, true));
       }
       else
-        html+=toHtmlString(hb->asUnicodeString());
+        html+=toHtmlString(hb->asUnicodeString(),true);
 
       html += dh->headerCloseTag()+"</td></tr>";
     }
