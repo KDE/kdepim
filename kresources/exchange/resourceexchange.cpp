@@ -69,7 +69,8 @@ public:
 };
 
 ResourceExchange::ResourceExchange( const KConfig *config )
-  : ResourceCalendar( config ), mCache(0), mDates(0)
+  : ResourceCalendar( config ), mClient(0), mMonitor(0), mCache(0), mDates(0), 
+    mEventDates(0), mCacheDates(0)
 {
   mLock = new KABC::LockNull( true );
 
@@ -116,7 +117,7 @@ bool ResourceExchange::doOpen()
 {
   kdDebug() << "ResourceExchange::doOpen()" << endl;
 
-  mClient = new ExchangeClient( mAccount );
+  mClient = new ExchangeClient( mAccount, mTimeZoneId );
   connect( mClient, SIGNAL( downloadFinished( int, const QString & ) ),
            SLOT( slotDownloadFinished( int, const QString & ) ) );
   connect( mClient, SIGNAL( event( KCal::Event *, const KURL & ) ),
@@ -549,6 +550,7 @@ void ResourceExchange::setTimeZoneId( const QString &tzid )
 {
   mTimeZoneId = tzid;
   if ( mCache ) mCache->setTimeZoneId( tzid );
+  if ( mClient ) mClient->setTimeZoneId( tzid );
 }
 
 #include "resourceexchange.moc"
