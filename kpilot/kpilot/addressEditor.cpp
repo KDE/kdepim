@@ -1,8 +1,11 @@
+#include "options.h"
+#include <kdebug.h>
 #include "addressEditor.h"
 
 AddressEditor::AddressEditor(PilotAddress* address, QWidget *parent, const char *name) 
   : QWidget(parent, name), fAddress(address), fDeleteOnCancel(false)
 {
+	FUNCTIONSETUP;
   initMetaObject();
   initLayout();
   fillFields();
@@ -72,6 +75,6 @@ AddressEditor::commitChanges()
 }
 
 AddressEditor::~AddressEditor() {
-	;
+	FUNCTIONSETUP;
 }
 

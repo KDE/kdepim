@@ -57,7 +57,7 @@
 #define SYNC_TEDIOUS	(512)
 
 #define FUNCTIONSETUP	static const char *fname=__FUNCTION__; \
-			if (debug_level & DEBUG_FUNCTIONS) { cerr << \
+			if (debug_level & DEBUG_FUNCTIONS) { kdDebug() << \
 			fname << tabs+(strlen(fname)>>3) \
 				<< "(" << __FILE__ << ':' << \
 				__LINE__ << ")\n"; } 

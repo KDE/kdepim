@@ -168,16 +168,17 @@ void CConduitSetup::slotOk()
 {
 	FUNCTIONSETUP;
 	writeInstalledConduits();
-	setResult(1);
-	close();
+	KDialogBase::slotOk();
 }
 
+#if 0
 void CConduitSetup::slotCancel()
 {
 	FUNCTIONSETUP;
 	setResult(0);
 	close();
 }
+#endif
 
 void
 CConduitSetup::fillLists()

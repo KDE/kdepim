@@ -64,28 +64,6 @@ static const char *id="$Id$";
 #include "pilotDaemon.h"
 
 
-#if 0
-const int KPilotInstaller::ID_FILE_QUIT = 1;
-const int KPilotInstaller::ID_FILE_SETTINGS = 2;
-const int KPilotInstaller::ID_FILE_BACKUP = 3;
-const int KPilotInstaller::ID_FILE_RESTORE = 4;
-const int KPilotInstaller::ID_FILE_HOTSYNC = 9;
-const int KPilotInstaller::ID_FILE_FASTSYNC = 10;
-const int KPilotInstaller::ID_HELP_HELP = 5;
-const int KPilotInstaller::ID_HELP_ABOUT = 6;
-const int KPilotInstaller::ID_CONDUITS_ENABLE = 7;
-const int KPilotInstaller::ID_CONDUITS_SETUP = 8;
-// Components that go in the "Conduits" menu -- ie.
-// address conduit, memo conduit, and file installer --
-// get a menu id derived from ID_COMBO+n, where n is
-// the number of installed components.
-// This is why we choose ID_COMBO a long way
-// away from ther ids: so that we have lots
-// of ids free for the components.
-// Remember to catch this in the menu handler.
-const int KPilotInstaller::ID_COMBO = 1000;
-#endif
-
 KPilotInstaller::KPilotInstaller()
   : KTMainWindow(), fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
@@ -116,17 +94,19 @@ KPilotInstaller::KPilotInstaller()
 	config.sync();
       }
 
+	// Just a block to isolate the config file.
+	//
+	//
 	{
-	KConfig *KDEGlobalConfig = new KConfig(QString::null);
-	KDEGlobalConfig->setGroup("General");
-	fixedFont = KDEGlobalConfig->readFontEntry("fixed");
-	delete KDEGlobalConfig;
+	KConfig KDEGlobalConfig(QString::null);
+	KDEGlobalConfig.setGroup("General");
+	fixedFont = KDEGlobalConfig.readFontEntry("fixed");
 	}
 
     initPilotLink();
 	if (!fPilotCommandSocket)
 	{
-		cerr << fname << ": Couldn't connect to daemon -- quitting"
+		kdError() << fname << ": Couldn't connect to daemon -- quitting"
 			<< endl;
 		exit(1);
 	}
@@ -185,7 +165,7 @@ KPilotInstaller::setupWidget()
     // KWM::setIcon(winId(), kapp->getIcon());
     setCaption("KPilot");
     setMinimumSize(500,405);
-    setMaximumSize(500,405);
+    // setMaximumSize(500,405);
     initIcons();
     initMenu();
     initStatusBar();
@@ -385,6 +365,7 @@ void
 KPilotInstaller::slotModeSelected(int selected)
 {
 	FUNCTIONSETUP;
+	int current = 0 ;
 
 #ifdef DEBUG
 	if (debug_level& UI_TEDIOUS)
@@ -402,14 +383,23 @@ KPilotInstaller::slotModeSelected(int selected)
 	}
 
 
+	current=0;
 	for (fVisibleWidgetList.first();
 		fVisibleWidgetList.current();
 		fVisibleWidgetList.next())
 	{
-		fVisibleWidgetList.current()->hide();
+		if (selected != current)
+		{
+			fVisibleWidgetList.current()->hide();
+		}
+		else
+		{
+			fVisibleWidgetList.at(selected)->show();
+		}
+
+		current++;
 	}
 		
-	fVisibleWidgetList.at(selected)->show();
 
 	fStatusBar->changeItem(conduitCombo->text(selected),0);
 }
@@ -441,14 +431,14 @@ KPilotInstaller::initPilotLink()
 
 	if(fPilotLink)
 	{
-		cerr << fname << ": Pilot Link already created?\n" ;
+		kdWarning() << fname << ": Pilot Link already created?\n" ;
 		return;
 	}
 
 	fPilotLink = new KPilotLink();
 	if (fPilotLink==NULL)
 	{
-		cerr << fname << ": Can't allocate fPilotLink.\n";
+		kdError() << fname << ": Can't allocate fPilotLink.\n";
 		KMessageBox::error(this,
 				   i18n("Allocating PilotLink failed."),
 				   i18n("Cannot create link to Daemon"));
@@ -465,10 +455,12 @@ KPilotInstaller::initPilotLink()
 		// We were called after a reconfigure
 		//
 		//
-		if (debug_level)
+#ifdef DEBUG
+		if (debug_level && SYNC_MAJOR)
 		{
-			cerr << fname << ": Reconfiguring daemon.\n" ;
+			kdDebug() << fname << ": Reconfiguring daemon.\n" ;
 		}
+#endif
 
 		ofstream out(fPilotCommandSocket->socket());
 		out << "-2" << endl;
@@ -483,21 +475,26 @@ void KPilotInstaller::initCommandSocket()
 
 	if (fPilotCommandSocket)
 	{
+		kdWarning() << fname 
+			<< ": We already have a command socket"
+			<< endl;
 		return;
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
-		cerr << fname
+		kdDebug() << fname
 			<< ": Creating command socket"
 			<< endl ;
 	}
+#endif
 
 	fPilotCommandSocket = new KSocket("localhost", 
 		PILOTDAEMON_COMMAND_PORT);
 	if (fPilotCommandSocket==NULL)
 	{
-		cerr << fname << ": Can't allocate fPilotCommandSocket.\n";
+		kdError() << fname << ": Can't allocate fPilotCommandSocket.\n";
 		KMessageBox::error(this,
 				   i18n("Allocating fPilotCommandSocket failed."),
 				   i18n("Cannot create link to Daemon"));
@@ -507,13 +504,15 @@ void KPilotInstaller::initCommandSocket()
 		return;
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_TEDIOUS)
 	{
-		cerr << fname
+		kdDebug() << fname
 			<< ": Got socket " 
 			<< fPilotCommandSocket->socket()
 			<< endl ;
 	}
+#endif
 
 	
 	if((fPilotCommandSocket->socket() < 0) ||
@@ -521,12 +520,14 @@ void KPilotInstaller::initCommandSocket()
 	{
 		int i;
 
+#ifdef DEBUG
 		if (debug_level & SYNC_MAJOR)
 		{
-			cerr << fname
-				<< ": Starting daemon"
+			kdDebug() << fname
+				<< ": Socket not OK, starting daemon"
 				<< endl;
 		}
+#endif
 
 		// It wasn't running...
 		messageDialog = 
@@ -573,8 +574,24 @@ void KPilotInstaller::initCommandSocket()
 			sleep(1);
 			kapp->processEvents();
 
+#ifdef DEBUG
+			if (debug_level & SYNC_TEDIOUS)
+			{
+				kdDebug() << fname
+					<< ": Trying to connect"
+					<< endl;
+			}
+#endif
 			fPilotCommandSocket = new KSocket("localhost",
 				PILOTDAEMON_COMMAND_PORT);
+			if (!fPilotCommandSocket)
+			{
+				kdError() << fname
+					<< ": Couldn't allocate KSocket"
+					<< endl;
+				continue;
+			}
+
 			if ((fPilotCommandSocket->socket() >= 0) &&
 				testSocket(fPilotCommandSocket))
 			{
@@ -587,10 +604,20 @@ void KPilotInstaller::initCommandSocket()
 			}
 		}
 
+#ifdef DEBUG
+		if (debug_level & UI_MINOR)
+		{
+			kdDebug() << fname
+				<< ": Halfway result "
+				<< "PilotCommandSocket="
+				<< (int)fPilotCommandSocket
+				<< endl;
+		}
+#endif
 			
 		if(!fPilotCommandSocket)
 		{
-			kdDebug() << fname 
+			kdError() << fname 
 				<< ": Can't connect to daemon"
 				<< endl ;
 
@@ -601,29 +628,64 @@ void KPilotInstaller::initCommandSocket()
 					   i18n("Cannot connect to Daemon"));
 					   
 
-			KPilotOptions* options = new KPilotOptions(this);
-			options->show(); // It's modal..
 #ifdef DEBUG
 			if (debug_level & UI_TEDIOUS)
 			{
-				cerr << fname << ": User said "
-					<< options->result()
+				kdDebug() << fname << ": creating options "
 					<< endl;
 			}
 #endif
-			delete options;
+			KPilotOptions* options = new KPilotOptions(this);
+			if (options)
+			{
+				options->exec();
+#ifdef DEBUG
+				if (debug_level & UI_TEDIOUS)
+				{
+					kdDebug() << fname << ": User said "
+						<< options->result()
+						<< endl;
+				}
+#endif
+				delete options;
+			}
+			else
+			{
+				kdError() << fname
+					<< ": Couldn't create options window."
+					<< endl;
+			}
 		}
 
 		fKillDaemonOnExit = true;
 
 		if (messageDialog!=NULL)
 		{
-			messageDialog->hide();
+#ifdef DEBUG
+			if (debug_level & UI_TEDIOUS)
+			{
+				kdDebug() << fname
+					<< ": Closing and deleting msg dialog"
+					<< endl;
+			}
+#endif
+			messageDialog->close();
 			delete messageDialog;
 		}
 	}
 
 	fLinkCommand[0] = 0L;
+
+#ifdef DEBUG
+	if (debug_level & UI_MINOR)
+	{
+		kdDebug() << fname
+			<< ": End result "
+			<< "PilotCommandSocket="
+			<< (int)fPilotCommandSocket
+			<< endl;
+	}
+#endif
 }
 
 
@@ -663,11 +725,13 @@ KPilotInstaller::initStatusLink()
 		PILOTDAEMON_STATUS_PORT);
 	if (fPilotStatusSocket->socket()!=-1)
 	{
+#ifdef DEBUG
 		if (debug_level& SYNC_TEDIOUS)
 		{
-			cerr << fname <<
+			kdDebug() << fname <<
 				": Connected socket successfully.\n";
 		}
+#endif
 
 		connect(fPilotStatusSocket, SIGNAL(readEvent(KSocket*)),
 			this, SLOT(slotDaemonStatus(KSocket*)));
@@ -675,7 +739,7 @@ KPilotInstaller::initStatusLink()
 	}
 	else
 	{
-		cerr << fname <<
+		kdError() << fname <<
 			": Failed to connect socket to daemon.\n";
 	}
 }
@@ -796,20 +860,6 @@ void KPilotInstaller::setupSync(int kind,const QString& message)
 	}
 }
 
-#if 0
-void
-KPilotInstaller::doHotSync()
-{
-	FUNCTIONSETUP;
-
-
-	showTitlePage();
-	fStatusBar->changeItem(i18n(
-		"Hot-Syncing.  "
-		"Please press the hot-sync button."), 0);
-	setupSync(KPilotLink::HotSync);
-}
-#endif
 
 void
 KPilotInstaller::closeEvent(QCloseEvent *e)
@@ -925,11 +975,13 @@ void KPilotInstaller::menuCallback(int item)
 	KPilotOptions* options = 0L;
 	CConduitSetup* conSetup = 0L;
 
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": Responding to callback " << item
+		kdDebug() << fname << ": Responding to callback " << item
 			<< endl;
 	}
+#endif
 
 	if ((item>=ID_COMBO) && 
 		(item<ID_COMBO+(int)fVisibleWidgetList.count()))
@@ -962,29 +1014,36 @@ void KPilotInstaller::menuCallback(int item)
 		options = new KPilotOptions(this);
 		if (options==NULL)
 		{
-			cerr << fname << 
+			kdError() << fname << 
 				": Can't allocate KPilotOptions object\n";
 			break;
 		}
 
+#ifdef DEBUG
 		if (debug_level & UI_MINOR)
 		{
-			cerr << fname << ": Running options dialog." 
+			kdDebug() << fname << ": Running options dialog." 
 				<< endl;
 		}
-		options->show();
+#endif
+		options->exec();
+#ifdef DEBUG
 		if (debug_level & UI_MINOR)
 		{
-			cerr << fname << ": dialog result "
-			<< options->result() << endl;
+			kdDebug() << fname << ": dialog result "
+				<< options->result() << endl;
 		}
+#endif
 
 		if (options->result())
 		{
+#ifdef DEBUG
 			if (debug_level & UI_TEDIOUS)
 			{
-				cerr << fname << ": Updating link." << endl;
+				kdDebug() << fname 
+					<< ": Updating link." << endl;
 			}
+#endif
 
 			readConfig(KPilotLink::getConfig());
 
@@ -1001,12 +1060,14 @@ void KPilotInstaller::menuCallback(int item)
 			fPilotComponentList.current();
 			fPilotComponentList.next())
 			{
+#ifdef DEBUG
 				if (debug_level & UI_TEDIOUS)
 				{
-					cerr << fname 
+					kdDebug() << fname 
 						<< ": Updating components." 
 						<< endl;
 				}
+#endif
 
 				fPilotComponentList.current()->initialize();
 			}
@@ -1014,10 +1075,12 @@ void KPilotInstaller::menuCallback(int item)
 
 		delete options;
 		options=NULL;
+#ifdef DEBUG
 		if (debug_level & UI_MINOR)
 		{
-			cerr << fname << ": Done with options." << endl;
+			kdDebug() << fname << ": Done with options." << endl;
 		}
+#endif
 		break;
 
 	case KPilotInstaller::ID_FILE_BACKUP:
@@ -1039,16 +1102,18 @@ void KPilotInstaller::menuCallback(int item)
 	case KPilotInstaller::ID_CONDUITS_SETUP:
 		showTitlePage();
 		conSetup = new CConduitSetup(this);
-		conSetup->show();
+		conSetup->exec();
 		delete conSetup;
 		break;
 	}
 
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
-		cerr << fname << ": Done responding to item " << item
+		kdDebug() << fname << ": Done responding to item " << item
 			<< endl;
 	}
+#endif
 }
 
 void 
@@ -1063,23 +1128,7 @@ KPilotInstaller::slotSyncDone(KProcess*)
   fStatusBar->changeItem(i18n("Hot-Sync complete."),0);
 }
 
-void 
-KPilotInstaller::testDir(QString name)
-    {
-	FUNCTIONSETUP;
-
-    DIR *dp = NULL;
-    dp = opendir(name.latin1());
-    if(dp == 0L)
-	{
-	::mkdir (name.latin1(), S_IRWXU);
-	}
-    else
-    	{
-	closedir( dp );
-	}
-    }
-    
+ 
 /* static */ const char *KPilotInstaller::version(int kind)
 {
   // I don't think the program title needs to be translated. (ADE)
@@ -1178,7 +1227,7 @@ int main(int argc, char** argv)
 	if (run_mode=='c')
 	{
 		CConduitSetup *cs = new CConduitSetup(0L);
-		cs->show();
+		cs->exec();
 		exit(2);
 	}
 #endif
@@ -1193,7 +1242,7 @@ int main(int argc, char** argv)
 		}
 
 		KPilotOptions* options = new KPilotOptions(0L);
-		options->show();
+		options->exec();
 		// gsetupDialog uses result 0 for cancel
 		//
 		if (!options->result()) return 0;
@@ -1207,7 +1256,7 @@ int main(int argc, char** argv)
 
 	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
 	{
-		cerr << fname << ": Is still not configured for use."
+		kdWarning() << fname << ": Is still not configured for use."
 			<< endl;
 		return 1;
 	}

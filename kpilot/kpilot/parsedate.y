@@ -374,65 +374,6 @@ static TABLE	TimezoneTable[] = {
     { "nzdt",	tDAYZONE,  -HOUR(12) },	/* New Zealand Daylight */
 
     /* For completeness we include the following entries. */
-#if 0
-
-    /* Duplicate names.  Either they conflict with a zone listed above
-     * (which is either more likely to be seen or just been in circulation
-     * longer), or they conflict with another zone in this section and
-     * we could not reasonably choose one over the other. */
-    { "fst",	tZONE,     HOUR( 2) },	/* Fernando De Noronha Standard */
-    { "fdt",	tDAYZONE,  HOUR( 2) },	/* Fernando De Noronha Daylight */
-    { "bst",	tZONE,     HOUR( 3) },	/* Brazil Standard */
-    { "est",	tZONE,     HOUR( 3) },	/* Eastern Standard (Brazil) */
-    { "edt",	tDAYZONE,  HOUR( 3) },	/* Eastern Daylight (Brazil) */
-    { "wst",	tZONE,     HOUR( 4) },	/* Western Standard (Brazil) */
-    { "wdt",	tDAYZONE,  HOUR( 4) },	/* Western Daylight (Brazil) */
-    { "cst",	tZONE,     HOUR( 5) },	/* Chile Standard */
-    { "cdt",	tDAYZONE,  HOUR( 5) },	/* Chile Daylight */
-    { "ast",	tZONE,     HOUR( 5) },	/* Acre Standard */
-    { "adt",	tDAYZONE,  HOUR( 5) },	/* Acre Daylight */
-    { "cst",	tZONE,     HOUR( 5) },	/* Cuba Standard */
-    { "cdt",	tDAYZONE,  HOUR( 5) },	/* Cuba Daylight */
-    { "est",	tZONE,     HOUR( 6) },	/* Easter Island Standard */
-    { "edt",	tDAYZONE,  HOUR( 6) },	/* Easter Island Daylight */
-    { "sst",	tZONE,     HOUR(11) },	/* Samoa Standard */
-    { "ist",	tZONE,     -HOUR(2) },	/* Israel Standard */
-    { "idt",	tDAYZONE,  -HOUR(2) },	/* Israel Daylight */
-    { "idt",	tDAYZONE,  -(HOUR(3)+30) }, /* Iran Daylight */
-    { "ist",	tZONE,     -(HOUR(3)+30) }, /* Iran Standard */
-    { "cst",	 tZONE,     -HOUR(8) },	/* China Standard */
-    { "cdt",	 tDAYZONE,  -HOUR(8) },	/* China Daylight */
-    { "sst",	 tZONE,     -HOUR(8) },	/* Singapore Standard */
-
-    /* Dubious (e.g., not in Olson's TIMEZONE package) or obsolete. */
-    { "gst",	tZONE,     HOUR( 3) },	/* Greenland Standard */
-    { "wat",	tZONE,     -HOUR(1) },	/* West Africa */
-    { "at",	tZONE,     HOUR( 2) },	/* Azores */
-    { "gst",	tZONE,     -HOUR(10) },	/* Guam Standard */
-    { "nft",	tZONE,     HOUR(3)+30 }, /* Newfoundland */
-    { "idlw",	tZONE,     HOUR(12) },	/* International Date Line West */
-    { "mewt",	tZONE,     -HOUR(1) },	/* Middle European Winter */
-    { "mest",	tDAYZONE,  -HOUR(1) },	/* Middle European Summer */
-    { "swt",	tZONE,     -HOUR(1) },	/* Swedish Winter */
-    { "sst",	tDAYZONE,  -HOUR(1) },	/* Swedish Summer */
-    { "fwt",	tZONE,     -HOUR(1) },	/* French Winter */
-    { "fst",	tDAYZONE,  -HOUR(1) },	/* French Summer */
-    { "bt",	tZONE,     -HOUR(3) },	/* Baghdad */
-    { "it",	tZONE,     -(HOUR(3)+30) }, /* Iran */
-    { "zp4",	tZONE,     -HOUR(4) },	/* USSR Zone 3 */
-    { "zp5",	tZONE,     -HOUR(5) },	/* USSR Zone 4 */
-    { "ist",	tZONE,     -(HOUR(5)+30) }, /* Indian Standard */
-    { "zp6",	tZONE,     -HOUR(6) },	/* USSR Zone 5 */
-    { "nst",	tZONE,     -HOUR(7) },	/* North Sumatra */
-    { "sst",	tZONE,     -HOUR(7) },	/* South Sumatra */
-    { "jt",	tZONE,     -(HOUR(7)+30) }, /* Java (3pm in Cronusland!) */
-    { "nzt",	tZONE,     -HOUR(12) },	/* New Zealand */
-    { "idle",	tZONE,     -HOUR(12) },	/* International Date Line East */
-    { "cat",	tZONE,     HOUR(10) },	/* -- expired 1967 */
-    { "nt",	tZONE,     HOUR(11) },	/* -- expired 1967 */
-    { "ahst",	tZONE,     HOUR(10) },	/* -- expired 1983 */
-    { "hdt",	tDAYZONE,  HOUR(10) },	/* -- expired 1986 */
-#endif /* 0 */
 };
 
 

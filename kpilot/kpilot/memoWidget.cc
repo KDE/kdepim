@@ -384,17 +384,6 @@ MemoWidget::updateWidget()
 			//
 			//
 			fListBox->insertItem(fMemoList.current()->shortTitle());
-#if 0
-			const char *s = fMemoList.current()->getTitle() ;
-			if (s && *s)
-			{
-				fListBox->insertItem(s);
-			}
-			else
-			{
-				fListBox->insertItem(i18n("[unknown]"));
-			}
-#endif
 
 			fLookupTable[currentEntry++] = listIndex;
 			if (debug_level & UI_TEDIOUS)

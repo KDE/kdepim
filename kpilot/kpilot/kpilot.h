@@ -73,7 +73,6 @@ class KPilotInstaller : public KTMainWindow
 	*/
 	const QFont& fixed() const { return fixedFont; }  ;
 
-    void testDir(QString name);
     bool getQuitAfterCopyComplete() const { return fQuitAfterCopyComplete; }
     // Adds 'name' to the pull down menu of components
     void addComponentPage(QWidget* widget, QString name);

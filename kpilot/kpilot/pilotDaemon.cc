@@ -258,7 +258,18 @@ PilotDaemon::PilotDaemon() :
 	fStatusConnections.setAutoDelete(true);
 
 	setupConnections();
-	if (fStatus == ERROR) return;
+	if (fStatus == ERROR) 
+	{
+#ifdef DEBUG
+		if (debug_level & SYNC_MAJOR)
+		{
+			kdDebug() << fname
+				<< ": Setting up connections failed."
+				<< endl;
+		}
+#endif
+		return;
+	}
 	setupSubProcesses();
 
 	if (config.readBoolEntry("DockDaemon",false))
@@ -288,19 +299,6 @@ void PilotDaemon::showTray()
 }
 
 void
-PilotDaemon::testDir(QString name)
-{
-	FUNCTIONSETUP;
-
-    DIR *dp = NULL;
-    dp = opendir(name.latin1());
-    if(dp == 0L)
-        ::mkdir (name.latin1(), S_IRWXU);
-    else
-        closedir( dp );
-}
-
-void
 PilotDaemon::reloadSettings()
 {
 	FUNCTIONSETUP;
@@ -323,7 +321,7 @@ PilotDaemon::reloadSettings()
 			<< endl;
 	}
 
-	fPilotLink->changePilotPath(fPilotDevice.latin1());
+	fPilotLink->changePilotPath(QFile::encodeName(fPilotDevice));
 	setupSubProcesses();
 }
 
@@ -337,7 +335,7 @@ PilotDaemon::setupConnections()
 	fCommandSocket = 0L;
 	fStatusSocket = 0L;
 
-	fPilotLink = new KPilotLink(0L, 0L, fPilotDevice.latin1());
+	fPilotLink = new KPilotLink(0L, 0L, QFile::encodeName(fPilotDevice));
 	fCommandSocket = new KServerSocket(PilotDaemon::COMMAND_PORT);
 	if (fCommandSocket && (fCommandSocket->socket() < 0 )) 
 	{
@@ -364,19 +362,10 @@ PilotDaemon::setupConnections()
 	return;
 
 ErrConn:
-	if (e)
-	{
-		kdDebug() << fname
-			<< ": Error connecting to daemon: "
-			<< strerror(e)
-			<< endl;
-	}
-	else
-	{
-		kdDebug() << fname
-			<< ": Couldn't create sockets for daemon"
-			<< endl;
-	}
+	kdDebug() << fname
+		<< ": Error creating socket for daemon: "
+		<< strerror(e)
+		<< endl;
 
 	if (fPilotLink) delete fPilotLink;
 	if (fCommandSocket) delete fCommandSocket;
@@ -984,7 +973,7 @@ int main(int argc, char* argv[])
 
 	if (gPilotDaemon->status()==PilotDaemon::ERROR)
 	{
-		cerr << fname 
+		kdError() << fname 
 			<< ": Failed to start up daemon"
 			<< endl;
 		exit(2);

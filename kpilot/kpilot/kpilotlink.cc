@@ -67,28 +67,6 @@ KPilotLink* KPilotLink::fKPilotLink = 0L;
 
 const QString KPilotLink::BACKUP_DIR = "/share/apps/kpilot/DBBackup/";
 
-#if 0
-// I know this is a bad place for them, but the only source file guaranteed
-// to be in every program that needs statusMessages
-const int CStatusMessages::CONDUIT_READY = 0;
-const int CStatusMessages::SYNC_STARTING = 1;
-const int CStatusMessages::SYNC_COMPLETED = 2;
-const int CStatusMessages::SYNCING_DATABASE = 3;
-const int CStatusMessages::RECORD_MODIFIED = 4;
-const int CStatusMessages::RECORD_DELETED = 5;
-const int CStatusMessages::FILE_INSTALL_REQUEST = 6;
-
-const int CStatusMessages::NEW_RECORD_ID = 7;
-const int CStatusMessages::WRITE_RECORD = 8;
-const int CStatusMessages::NEXT_MODIFIED_REC = 9;
-const int CStatusMessages::READ_REC_BY_INDEX = 10;
-const int CStatusMessages::NO_SUCH_RECORD = 11;
-const int CStatusMessages::REC_DATA = 12;
-const int CStatusMessages::READ_REC_BY_ID = 13;
-const int CStatusMessages::NEXT_REC_IN_CAT = 14;
-
-const int CStatusMessages::LOG_MESSAGE = 17;
-#endif
 
 
 // This is a number indicating what configuration version
@@ -196,7 +174,7 @@ KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
 {
   fKPilotLink = this;
 	readConfig();
-  initPilotSocket(devicePath.latin1());
+  initPilotSocket(devicePath);
   initConduitSocket();
   fMessageDialog = new MessageDialog(i18n("Sync Status"));
 
@@ -222,7 +200,7 @@ KPilotLink::~KPilotLink()
 
 
 void
-KPilotLink::initPilotSocket(const char* devicePath)
+KPilotLink::initPilotSocket(const QString& devicePath)
 {
 	FUNCTIONSETUP;
 
@@ -254,7 +232,7 @@ KPilotLink::initPilotSocket(const char* devicePath)
 	}
 
 	addr.pi_family = PI_AF_SLP;
-	strcpy(addr.pi_device, fPilotPath.ascii());
+	strcpy(addr.pi_device, QFile::encodeName(fPilotPath));
 
 	ret = pi_bind(fPilotMasterSocket, 
 		(struct sockaddr*)&addr, sizeof(addr));
@@ -1655,6 +1633,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.22  2000/11/27 02:20:20  adridg
+// Internal cleanup
+//
 // Revision 1.21  2000/11/26 01:44:54  adridg
 // Last of Heiko's patches
 //

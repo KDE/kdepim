@@ -130,7 +130,6 @@ private:
   void reloadSettings();
   void saveProperties(KConfig&);
   void sendRecord(PilotRecord* rec);
-  void testDir(QString name);
   bool quit() { return fQuit; }
   KPilotLink* getPilotLink() { return fPilotLink; }
 

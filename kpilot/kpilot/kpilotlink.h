@@ -117,7 +117,8 @@ public:
   /**
    * Changes the path (port) that the link should work with.
    */
-  void changePilotPath(const char* devicePath) { initPilotSocket(devicePath); }
+  void changePilotPath(const QString& devicePath) 
+	{ initPilotSocket(devicePath); }
 
   /**
    * This is merely a flag for any widget that should run.  Will be set by KPilot when doing
@@ -315,7 +316,7 @@ private:
 
   int compare(struct db* d1, struct db* d2); // Compares two database infos..
   void initConduitSocket();         // Sets up fConduitSocket
-  void initPilotSocket(const char* devicePath);
+  void initPilotSocket(const QString& devicePath);
 
   int         fPilotMasterSocket;   // This is the master one created with the class
   int         fCurrentPilotSocket;  // This changes with each connect()/disconnect()

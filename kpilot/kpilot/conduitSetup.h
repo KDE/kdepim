@@ -43,7 +43,7 @@ protected slots:
 	void conduitExecuted(QListViewItem *);
 	void setupDone(KProcess *);
 	void slotOk();
-	void slotCancel();
+	// void slotCancel();
 
 private:
 	void warnNoExec(const QListViewItem *);

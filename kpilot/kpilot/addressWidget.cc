@@ -90,6 +90,7 @@ void AddressWidget::setupCategories()
 	{
 		if(strlen(fAddressAppInfo.category.name[i]))
 		{
+#ifdef DEBUG
 			if (debug_level & UI_MINOR)
 			{
 				kdDebug() << fname << 
@@ -99,6 +100,7 @@ void AddressWidget::setupCategories()
 				(int)fAddressAppInfo.category.ID[i] << 
 				endl;
 			}
+#endif
 			fCatList->insertItem(
 				fAddressAppInfo.category.name[i]);
 		}
@@ -119,11 +121,13 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 
 
 
+#ifdef DEBUG
 	if (debug_level & DB_TEDIOUS)
 	{
 		kdDebug() << fname << ": Reading AddressDB..."
 			<< endl;
 	}
+#endif
 
 	while((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
 	{
@@ -133,7 +137,7 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 			address = new PilotAddress(pilotRec);
 			if (address == 0L)
 			{
-				kdDebug() << fname << ": Couldn't allocate "
+				kdWarning() << fname << ": Couldn't allocate "
 					"record " << currentRecord++ <<
 					endl;
 				break;
@@ -144,11 +148,13 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 		currentRecord++;
 	}
 
+#ifdef DEBUG
 	if (debug_level & DB_TEDIOUS)
 	{
 		kdDebug() << fname 
 			<< ": Total " << currentRecord << " records" << endl;
 	}
+#endif
 
 	return currentRecord;
 #ifdef DEBUG
@@ -184,7 +190,8 @@ AddressWidget::initialize()
 	else
 	{
 		populateCategories(fCatList,0L);
-		kdDebug() << fname << ": Could not open local AddressDB" << endl;
+		kdWarning() << fname 
+			<< ": Could not open local AddressDB" << endl;
 	}
 
 
@@ -277,22 +284,26 @@ AddressWidget::updateWidget()
 	int listIndex = 0;
 	int currentEntry = 0;
 
+#ifdef DEBUG
 	if (debug_level & UI_MINOR)
 	{
 		kdDebug() << fname << ": Display Mode=" << 
 			addressDisplayMode << endl ;
 	}
+#endif
 
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fAddressAppInfo.category));
 
 	fListBox->clear();
 	fAddressList.first();
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname << ": Adding records..."
 			<< endl;
 	}
+#endif
 
 	while(fAddressList.current())
 	{
@@ -318,11 +329,13 @@ AddressWidget::updateWidget()
 		fAddressList.next();
 	}
 	fTextWidget->clear();
+#ifdef DEBUG
 	if (debug_level & UI_TEDIOUS)
 	{
 		kdDebug() << fname
 			<< ": " << listIndex << " records" << endl;
 	}
+#endif
 
 	slotUpdateButtons();
 }
@@ -337,7 +350,8 @@ char *AddressWidget::createTitle(PilotAddress *address,int displayMode)
 	char *title = new char[255];
 	if (title == 0L)
 	{
-		kdDebug() << fname << ": Cannot allocate title string." << endl;
+		kdWarning() << fname 
+			<< ": Cannot allocate title string." << endl;
 		return 0L;
 	}
 
@@ -869,6 +883,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.19  2000/12/05 07:43:28  adridg
+// Fixed UI weirdness?
+//
 // Revision 1.18  2000/11/26 01:44:54  adridg
 // Last of Heiko's patches
 //
