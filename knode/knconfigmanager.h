@@ -29,23 +29,23 @@ class KNConfigManager : QObject {
     KNConfigManager(QObject *p=0, const char *n=0);
     ~KNConfigManager();
 
-
     KNConfig::Identity*             identity()            { return i_dentity; }
     KNConfig::Appearance*           appearance()          { return a_ppearance; }
     KNConfig::ReadNewsGeneral*      readNewsGeneral()     { return r_eadNewsGeneral; }
+    KNConfig::ReadNewsViewer*       readNewsViewer()      { return r_eadNewsViewer; }
     KNConfig::DisplayedHeaders*     displayedHeaders()    { return d_isplayedHeaders; }
     KNConfig::PostNewsTechnical*    postNewsTechnical()   { return p_ostNewsTechnical; }
     KNConfig::PostNewsComposer*     postNewsComposer()    { return p_ostNewsCompose; }
     KNConfig::Cleanup*              cleanup()             { return c_leanup; }
-    KNConfig::Privacy*             privacy()             { return p_rivacy; }
+    KNConfig::Privacy*             privacy()              { return p_rivacy; }
 
     void configure();
-
 
   protected:
     KNConfig::Identity             *i_dentity;
     KNConfig::Appearance           *a_ppearance;
     KNConfig::ReadNewsGeneral      *r_eadNewsGeneral;
+    KNConfig::ReadNewsViewer       *r_eadNewsViewer;
     KNConfig::DisplayedHeaders     *d_isplayedHeaders;
     KNConfig::PostNewsTechnical    *p_ostNewsTechnical;
     KNConfig::PostNewsComposer     *p_ostNewsCompose;
@@ -53,7 +53,6 @@ class KNConfigManager : QObject {
     KNConfig::Privacy              *p_rivacy;
 
     KNConfigDialog  *d_ialog;
-
 
   protected slots:
     void slotDialogDone();
@@ -76,14 +75,6 @@ class KNConfigDialog : public KDialogBase {
     void slotApply();
     void slotOk();
 
-
-
 };
 
-
-
 #endif //KNCONFIGMANAGER_H
-
-
-
-

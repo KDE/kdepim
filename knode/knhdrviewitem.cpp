@@ -47,11 +47,15 @@ KNHdrViewItem::~KNHdrViewItem()
 
 QString KNHdrViewItem::key(int col, bool) const
 {
-  if(col==3) {
+  if ((col==2)||(col==3)) {   // score, lines
+    QString tmpString;
+    return tmpString.sprintf("%08d",text(col).toInt());
+  }
+  if (col==4) {               // date
     QString tmpString;
     return tmpString.sprintf("%08d",(uint)art->date()->unixTime());
-  } else
-    return text(col);
+  }
+  return text(col);
 }
 
 

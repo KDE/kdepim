@@ -181,7 +181,7 @@ KNListView::KNListView(QWidget *parent, const char *name)
   : QListView(parent,name), sAsc(true), sCol(-1), activeItem(0)
 {
   connect(header(), SIGNAL(sectionClicked(int)),
-          this, SLOT(slotSortList(int)));
+          this, SLOT(slotSectionClicked(int)));
   disconnect(header(), SIGNAL(sizeChange(int,int,int)));
   connect(header(), SIGNAL(sizeChange(int,int,int)),
           this, SLOT(slotSizeChanged(int,int,int)));
@@ -229,17 +229,22 @@ void KNListView::clear()
 }
 
 
-void KNListView::slotSortList(int section)
+void KNListView::slotSectionClicked(int section)
 {
   int col = header()->mapToIndex(section);
+  slotSortList(col);
+}
 
+
+void KNListView::slotSortList(int col)
+{
   if(col==sCol) sAsc=!sAsc;
   else {
     emit sortingChanged(col);
     sCol=col;
   }
       
-  setSorting(sCol, sAsc);
+  setSorting(col, sAsc);
   
   if(currentItem()!=0) ensureItemVisible(currentItem());  
 }

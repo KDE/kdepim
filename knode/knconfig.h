@@ -420,8 +420,6 @@ class ReadNewsGeneral : public Base {
   friend class ReadNewsGeneralWidget;
 
   public:
-    enum browserType { BTkonq=0, BTnetscape=1, BTmozilla=2, BTopera=3, BTother=4 };
-
     ReadNewsGeneral();
     ~ReadNewsGeneral();
 
@@ -433,6 +431,56 @@ class ReadNewsGeneral : public Base {
     int autoMarkSeconds()            { return m_arkSecs; }
 
     bool totalExpandThreads()        { return t_otalExpand; }
+    bool showLines()                 { return s_howLines; }
+    bool showScore()                 { return s_howScore; }
+
+  protected:
+    bool  a_utoCheck,
+          a_utoMark,
+          t_otalExpand,
+          s_howLines,
+          s_howScore;
+
+    int   m_axFetch,
+          m_arkSecs;
+
+};
+
+
+class ReadNewsGeneralWidget : public BaseWidget {
+
+  public:
+    ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p=0, const char *n=0);
+    ~ReadNewsGeneralWidget();
+
+    void apply();
+
+  protected:
+    QCheckBox   *a_utoCB,
+                *m_arkCB,
+                *e_xpThrCB,
+                *l_inesCB,
+                *s_coreCB;
+    KIntSpinBox *m_arkSecs,
+                *m_axFetch;
+
+    ReadNewsGeneral *d_ata;
+
+};
+
+
+class ReadNewsViewer : public Base {
+
+  friend class ReadNewsViewerWidget;
+
+  public:
+    enum browserType { BTkonq=0, BTnetscape=1, BTmozilla=2, BTopera=3, BTother=4 };
+
+    ReadNewsViewer();
+    ~ReadNewsViewer();
+
+    void save();
+
     bool showSignature()             { return s_howSig; }
     bool interpretFormatTags()       { return i_nterpretFormatTags; }
 
@@ -444,17 +492,11 @@ class ReadNewsGeneral : public Base {
     QString browserCommand()         { return b_rowserCommand; }
 
   protected:
-    bool  a_utoCheck,
-          a_utoMark,
-          t_otalExpand,
-          s_howSig,
+    bool  s_howSig,
           i_nterpretFormatTags,
           i_nlineAtt,
           o_penAtt,
           s_howAlts;
-
-    int   m_axFetch,
-          m_arkSecs;
 
     browserType b_rowser;
     QString b_rowserCommand;
@@ -462,39 +504,34 @@ class ReadNewsGeneral : public Base {
 };
 
 
-class ReadNewsGeneralWidget : public BaseWidget {
+class ReadNewsViewerWidget : public BaseWidget {
 
   Q_OBJECT
 
   public:
-    ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p=0, const char *n=0);
-    ~ReadNewsGeneralWidget();
+    ReadNewsViewerWidget(ReadNewsViewer *d, QWidget *p=0, const char *n=0);
+    ~ReadNewsViewerWidget();
 
     void apply();
 
   protected:
-    QCheckBox   *a_utoCB,
-                *m_arkCB,
-                *s_igCB,
+    QCheckBox   *s_igCB,
                 *i_nlineCB,
                 *o_penAttCB,
-                *e_xpThrCB,
                 *a_ltAttCB,
                 *f_ormatCB;
-    KIntSpinBox *m_arkSecs,
-                *m_axFetch;
     QComboBox   *b_rowser;
     QLineEdit   *b_rowserCommand;
     QPushButton *c_hooseBrowser;
 
-    ReadNewsGeneral *d_ata;
+    ReadNewsViewer *d_ata;
 
   protected slots:
-    void slotMarkReadToggled(bool);
     void slotBrowserTypeChanged(int);
     void slotChooseBrowser();
 
 };
+
 
 
 class DisplayedHeaders : public Base {

@@ -72,6 +72,7 @@ class KNListView : public QListView  {
     void clear();
 
   public slots:
+    void slotSectionClicked(int section);
     void slotSortList(int col);
     void slotSizeChanged(int,int,int);
       

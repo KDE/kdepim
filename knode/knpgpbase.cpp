@@ -690,7 +690,7 @@ KNPgpBaseG::decrypt(const char *passphrase)
     {
       status |= UNKNOWN_SIG;
       status |= GOODSIG; // this is a hack...
-      signature = i18n("??? (file ~/.gnupg/pubring.gpg not found)");
+      signature = i18n("unknown (file ~/.gnupg/pubring.gpg not found)");
       signatureID = "???";
     }
     else
@@ -1041,7 +1041,7 @@ KNPgpBase2::decrypt(const char *passphrase)
     {
       status |= UNKNOWN_SIG;
       status |= GOODSIG; // this is a hack...
-      signature = i18n("??? (file ~/.pgp/pubring.pgp not found)");
+      signature = i18n("unknown (file ~/.pgp/pubring.pgp not found)");
       signatureID = "???";
     }
     else
@@ -1540,7 +1540,7 @@ KNPgpBase6::decrypt(const char *passphrase)
     {
       status |= UNKNOWN_SIG;
       status |= GOODSIG; // this is a hack...
-      signature = i18n("??? (file ~/.pgp/pubring.pkr not found)");
+      signature = i18n("unknown (file ~/.pgp/pubring.pkr not found)");
       signatureID = "???";
     }
     else

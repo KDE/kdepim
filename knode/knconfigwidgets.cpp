@@ -818,87 +818,54 @@ void KNConfig::AppearanceWidget::slotFontSelectionChanged()
 KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p, const char *n)
   : BaseWidget(p, n), d_ata(d)
 {
-  QGroupBox *mgb=new QGroupBox(i18n("Misc"), this);
-  QGroupBox *vgb=new QGroupBox(i18n("View"), this);
-  QGroupBox *agb=new QGroupBox(i18n("Attachments"), this);
-  QGroupBox *bgb=new QGroupBox(i18n("Browser"), this);
-  QLabel *l1,*l3;
+  QGroupBox *hgb=new QGroupBox(i18n("Article Handling"), this);
+  QGroupBox *lgb=new QGroupBox(i18n("Article List"), this);
+  QLabel *l1;
 
-  a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), mgb);
-  m_axFetch=new KIntSpinBox(0, 20000, 1, 0, 10, mgb);
-  l1=new QLabel(m_axFetch, i18n("&Maximal number of articles to fetch"), mgb);
-  m_arkCB=new QCheckBox(i18n("Mar&k article as read after"), mgb);
-  m_arkSecs=new KIntSpinBox(0, 9999, 1, 0, 10, mgb);
-  connect(m_arkCB, SIGNAL(toggled(bool)), SLOT(slotMarkReadToggled(bool)));
+  a_utoCB=new QCheckBox(i18n("Check for new articles a&utomatically"), hgb);
+  m_axFetch=new KIntSpinBox(0, 20000, 1, 0, 10, hgb);
+  l1=new QLabel(m_axFetch, i18n("&Maximal number of articles to fetch"), hgb);
+  m_arkCB=new QCheckBox(i18n("Mar&k article as read after"), hgb);
+  m_arkSecs=new KIntSpinBox(0, 9999, 1, 0, 10, hgb);
+  connect(m_arkCB, SIGNAL(toggled(bool)), m_arkSecs, SLOT(setEnabled(bool)));
   m_arkSecs->setSuffix(i18n(" sec"));
-  e_xpThrCB=new QCheckBox(i18n("Show &whole thread on expanding"), vgb);
-  s_igCB=new QCheckBox(i18n("Show sig&nature"), vgb);
-  f_ormatCB=new QCheckBox(i18n("Interpret te&xt format tags"), vgb);
 
-  i_nlineCB=new QCheckBox(i18n("Show attachments &inline if possible"), agb);
-  o_penAttCB=new QCheckBox(i18n("Open a&ttachments on click"), agb);
-  a_ltAttCB=new QCheckBox(i18n("Show alternati&ve contents as attachments"), agb);
-  b_rowser=new QComboBox(bgb);
-  b_rowser->insertItem("Konqueror");
-  b_rowser->insertItem("Netscape");
-  b_rowser->insertItem("Mozilla");
-  b_rowser->insertItem("Opera");
-  b_rowser->insertItem("Other");
-  connect(b_rowser, SIGNAL(activated(int)), SLOT(slotBrowserTypeChanged(int)));
-  l3=new QLabel(b_rowser, i18n("Open &links with"), bgb);
-  b_rowserCommand = new QLineEdit(bgb);
-  c_hooseBrowser= new QPushButton(i18n("Choo&se..."),bgb);
-  connect(c_hooseBrowser, SIGNAL(clicked()), SLOT(slotChooseBrowser()));
+  e_xpThrCB=new QCheckBox(i18n("Show &whole thread on expanding"), lgb);
+  s_coreCB=new QCheckBox(i18n("Show article &score"), lgb);
+  l_inesCB=new QCheckBox(i18n("Show &line count"), lgb);
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
-  QGridLayout *mgbL=new QGridLayout(mgb, 4,2, 8,5);
-  QVBoxLayout *vgbL=new QVBoxLayout(vgb, 8, 5);
-  QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
-  QGridLayout *bgbL=new QGridLayout(bgb, 3,3, 8,5);
+  QGridLayout *hgbL=new QGridLayout(hgb, 4,2, 8,5);
+  QVBoxLayout *lgbL=new QVBoxLayout(lgb, 8, 5);
 
-  topL->addWidget(mgb);
-  topL->addWidget(vgb);
-  topL->addWidget(agb);
-  topL->addWidget(bgb);
+  topL->addWidget(hgb);
+  topL->addWidget(lgb);
   topL->addStretch(1);
-  mgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  mgbL->addWidget(a_utoCB, 1,0);
-  mgbL->addWidget(l1, 2, 0);
-  mgbL->addWidget(m_axFetch, 2,1);
-  mgbL->addWidget(m_arkCB, 3,0);
-  mgbL->addWidget(m_arkSecs, 3,1);
-  mgbL->setColStretch(0,1);
-  vgbL->addSpacing(fontMetrics().lineSpacing()-4);
-  vgbL->addWidget(e_xpThrCB);
-  vgbL->addWidget(s_igCB);
-  vgbL->addWidget(f_ormatCB);
-  agbL->addSpacing(fontMetrics().lineSpacing()-4);
-  agbL->addWidget(i_nlineCB);
-  agbL->addWidget(o_penAttCB);
-  agbL->addWidget(a_ltAttCB);
-  bgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  bgbL->addWidget(l3, 1,0);
-  bgbL->addMultiCellWidget(b_rowser,1,1,1,2);
-  bgbL->addMultiCellWidget(b_rowserCommand,2,2,0,1);
-  bgbL->addWidget(c_hooseBrowser,2,2);
-  bgbL->setColStretch(1,1);
+
+  hgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  hgbL->addWidget(a_utoCB, 1,0);
+  hgbL->addWidget(l1, 2, 0);
+  hgbL->addWidget(m_axFetch, 2,1);
+  hgbL->addWidget(m_arkCB, 3,0);
+  hgbL->addWidget(m_arkSecs, 3,1);
+  hgbL->setColStretch(0,1);
+
+  lgbL->addSpacing(fontMetrics().lineSpacing()-4);
+  lgbL->addWidget(e_xpThrCB);
+  lgbL->addWidget(s_coreCB);
+  lgbL->addWidget(l_inesCB);
+
   topL->setResizeMode(QLayout::Minimum);
 
   //init
   a_utoCB->setChecked(d->a_utoCheck);
-  m_arkCB->setChecked(d->a_utoMark);
-  b_rowser->setCurrentItem((int)(d->b_rowser));
-  b_rowserCommand->setText(d->b_rowserCommand);
-  b_rowserCommand->setEnabled(d->b_rowser==ReadNewsGeneral::BTother);
-  c_hooseBrowser->setEnabled(d->b_rowser==ReadNewsGeneral::BTother);
-  i_nlineCB->setChecked(d->i_nlineAtt);
-  o_penAttCB->setChecked(d->o_penAtt);
-  a_ltAttCB->setChecked(d->s_howAlts);
-  s_igCB->setChecked(d->s_howSig);
-  f_ormatCB->setChecked(d->i_nterpretFormatTags);
-  e_xpThrCB->setChecked(d->t_otalExpand);
   m_axFetch->setValue(d->m_axFetch);
+  m_arkCB->setChecked(d->a_utoMark);
   m_arkSecs->setValue(d->m_arkSecs);
+  m_arkSecs->setEnabled(d->a_utoMark);
+  e_xpThrCB->setChecked(d->t_otalExpand);
+  l_inesCB->setChecked(d->s_howLines);
+  s_coreCB->setChecked(d->s_howScore);
 }
 
 
@@ -913,38 +880,119 @@ void KNConfig::ReadNewsGeneralWidget::apply()
     return;
 
   d_ata->a_utoCheck=a_utoCB->isChecked();
-  d_ata->s_howSig=s_igCB->isChecked();
-  d_ata->i_nterpretFormatTags=f_ormatCB->isChecked();
-  d_ata->t_otalExpand=e_xpThrCB->isChecked();
   d_ata->m_axFetch=m_axFetch->value();
   d_ata->a_utoMark=m_arkCB->isChecked();
   d_ata->m_arkSecs=m_arkSecs->value();
+  d_ata->t_otalExpand=e_xpThrCB->isChecked();
+  d_ata->s_howLines=l_inesCB->isChecked();
+  d_ata->s_howScore=s_coreCB->isChecked();
+
+  d_ata->save();
+}
+
+
+//=============================================================================================
+
+
+KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget *p, const char *n)
+  : BaseWidget(p, n), d_ata(d)
+{
+  QGroupBox *appgb=new QGroupBox(i18n("Appearance"), this);
+  QGroupBox *agb=new QGroupBox(i18n("Attachments"), this);
+  QGroupBox *bgb=new QGroupBox(i18n("Browser"), this);
+  QLabel *l1;
+
+  s_igCB=new QCheckBox(i18n("Show sig&nature"), appgb);
+  f_ormatCB=new QCheckBox(i18n("Interpret te&xt format tags"), appgb);
+
+  i_nlineCB=new QCheckBox(i18n("Show attachments &inline if possible"), agb);
+  o_penAttCB=new QCheckBox(i18n("Open a&ttachments on click"), agb);
+  a_ltAttCB=new QCheckBox(i18n("Show alternati&ve contents as attachments"), agb);
+
+  b_rowser=new QComboBox(bgb);
+  b_rowser->insertItem("Konqueror");
+  b_rowser->insertItem("Netscape");
+  b_rowser->insertItem("Mozilla");
+  b_rowser->insertItem("Opera");
+  b_rowser->insertItem("Other");
+  connect(b_rowser, SIGNAL(activated(int)), SLOT(slotBrowserTypeChanged(int)));
+  l1=new QLabel(b_rowser, i18n("Open &links with"), bgb);
+  b_rowserCommand = new QLineEdit(bgb);
+  c_hooseBrowser= new QPushButton(i18n("Choo&se..."),bgb);
+  connect(c_hooseBrowser, SIGNAL(clicked()), SLOT(slotChooseBrowser()));
+
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+  QVBoxLayout *appgbL=new QVBoxLayout(appgb, 8, 5);
+  QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
+  QGridLayout *bgbL=new QGridLayout(bgb, 3,3, 8,5);
+
+  topL->addWidget(appgb);
+  topL->addWidget(agb);
+  topL->addWidget(bgb);
+  topL->addStretch(1);
+
+  appgbL->addSpacing(fontMetrics().lineSpacing()-4);
+  appgbL->addWidget(s_igCB);
+  appgbL->addWidget(f_ormatCB);
+
+  agbL->addSpacing(fontMetrics().lineSpacing()-4);
+  agbL->addWidget(i_nlineCB);
+  agbL->addWidget(o_penAttCB);
+  agbL->addWidget(a_ltAttCB);
+
+  bgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  bgbL->addWidget(l1, 1,0);
+  bgbL->addMultiCellWidget(b_rowser,1,1,1,2);
+  bgbL->addMultiCellWidget(b_rowserCommand,2,2,0,1);
+  bgbL->addWidget(c_hooseBrowser,2,2);
+  bgbL->setColStretch(1,1);
+
+  topL->setResizeMode(QLayout::Minimum);
+
+  //init
+  s_igCB->setChecked(d->s_howSig);
+  f_ormatCB->setChecked(d->i_nterpretFormatTags);
+  i_nlineCB->setChecked(d->i_nlineAtt);
+  o_penAttCB->setChecked(d->o_penAtt);
+  a_ltAttCB->setChecked(d->s_howAlts);
+  b_rowser->setCurrentItem((int)(d->b_rowser));
+  b_rowserCommand->setText(d->b_rowserCommand);
+  b_rowserCommand->setEnabled(d->b_rowser==ReadNewsViewer::BTother);
+  c_hooseBrowser->setEnabled(d->b_rowser==ReadNewsViewer::BTother);
+}
+
+
+KNConfig::ReadNewsViewerWidget::~ReadNewsViewerWidget()
+{
+}
+
+
+void KNConfig::ReadNewsViewerWidget::apply()
+{
+  if(!d_irty)
+    return;
+
+  d_ata->s_howSig=s_igCB->isChecked();
+  d_ata->i_nterpretFormatTags=f_ormatCB->isChecked();
   d_ata->i_nlineAtt=i_nlineCB->isChecked();
   d_ata->o_penAtt=o_penAttCB->isChecked();
   d_ata->s_howAlts=a_ltAttCB->isChecked();
-  d_ata->b_rowser=(ReadNewsGeneral::browserType)(b_rowser->currentItem());
+  d_ata->b_rowser=(ReadNewsViewer::browserType)(b_rowser->currentItem());
   d_ata->b_rowserCommand=b_rowserCommand->text();
 
   d_ata->save();
 }
 
 
-void KNConfig::ReadNewsGeneralWidget::slotMarkReadToggled(bool b)
+void KNConfig::ReadNewsViewerWidget::slotBrowserTypeChanged(int i)
 {
-  m_arkSecs->setEnabled(b);
-  if (b) m_arkSecs->setFocus();
-}
-
-
-void KNConfig::ReadNewsGeneralWidget::slotBrowserTypeChanged(int i)
-{
-  bool enabled=((ReadNewsGeneral::browserType)(i)==ReadNewsGeneral::BTother);
+  bool enabled=((ReadNewsViewer::browserType)(i)==ReadNewsViewer::BTother);
   b_rowserCommand->setEnabled(enabled);
   c_hooseBrowser->setEnabled(enabled);
 }
 
 
-void KNConfig::ReadNewsGeneralWidget::slotChooseBrowser()
+void KNConfig::ReadNewsViewerWidget::slotChooseBrowser()
 {
   QString path=b_rowserCommand->text().simplifyWhiteSpace();
   if (path.right(3) == " %u")

@@ -469,29 +469,14 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   conf->setGroup("READNEWS");
 
   a_utoCheck=conf->readBoolEntry("autoCheck", true);
-  a_utoMark=conf->readBoolEntry("autoMark", true);
-  t_otalExpand=conf->readBoolEntry("totalExpand", true);
-  s_howSig=conf->readBoolEntry("showSig", true);
-  i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
-  i_nlineAtt=conf->readBoolEntry("inlineAtt", true);
-  o_penAtt=conf->readBoolEntry("openAtt", false) ;
-  s_howAlts=conf->readBoolEntry("showAlts", false);
   m_axFetch=conf->readNumEntry("maxFetch", 1000);
   if (m_axFetch<0) m_axFetch = 0;
+  a_utoMark=conf->readBoolEntry("autoMark", true);
   m_arkSecs=conf->readNumEntry("markSecs", 5);
   if (m_arkSecs<0) m_arkSecs = 0;
-  QString s = conf->readEntry("Browser","Konqueror");
-  if (s=="Netscape")
-    b_rowser = BTnetscape;
-  else if (s=="Mozilla")
-    b_rowser = BTmozilla;
-  else if (s=="Opera")
-    b_rowser = BTopera;
-  else if (s=="Other")
-    b_rowser = BTother;
-  else
-    b_rowser = BTkonq;
-  b_rowserCommand=conf->readEntry("BrowserCommand","netscape %u");
+  t_otalExpand=conf->readBoolEntry("totalExpand", true);
+  s_howLines=conf->readBoolEntry("showLines", false);
+  s_howScore=conf->readBoolEntry("showScore", true);
 }
 
 
@@ -508,15 +493,60 @@ void KNConfig::ReadNewsGeneral::save()
   conf->setGroup("READNEWS");
 
   conf->writeEntry("autoCheck", a_utoCheck);
+  conf->writeEntry("maxFetch", m_axFetch);
   conf->writeEntry("autoMark", a_utoMark);
+  conf->writeEntry("markSecs", m_arkSecs);
   conf->writeEntry("totalExpand", t_otalExpand);
+  conf->writeEntry("showLines", s_howLines);
+  conf->writeEntry("showScore", s_howScore);
+}
+
+
+//==============================================================================================================
+
+
+KNConfig::ReadNewsViewer::ReadNewsViewer()
+{
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("READNEWS");
+
+  s_howSig=conf->readBoolEntry("showSig", true);
+  i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
+  i_nlineAtt=conf->readBoolEntry("inlineAtt", true);
+  o_penAtt=conf->readBoolEntry("openAtt", false) ;
+  s_howAlts=conf->readBoolEntry("showAlts", false);
+  QString s = conf->readEntry("Browser","Konqueror");
+  if (s=="Netscape")
+    b_rowser = BTnetscape;
+  else if (s=="Mozilla")
+    b_rowser = BTmozilla;
+  else if (s=="Opera")
+    b_rowser = BTopera;
+  else if (s=="Other")
+    b_rowser = BTother;
+  else
+    b_rowser = BTkonq;
+  b_rowserCommand=conf->readEntry("BrowserCommand","netscape %u");
+}
+
+
+KNConfig::ReadNewsViewer::~ReadNewsViewer()
+{
+}
+
+
+void KNConfig::ReadNewsViewer::save()
+{
+  kdDebug(5003) << "KNConfig::ReadNewsViewer::save()" << endl;
+
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("READNEWS");
+
   conf->writeEntry("showSig", s_howSig);
   conf->writeEntry("interpretFormatTags", i_nterpretFormatTags);
   conf->writeEntry("inlineAtt", i_nlineAtt);
   conf->writeEntry("openAtt", o_penAtt);
   conf->writeEntry("showAlts", s_howAlts);
-  conf->writeEntry("maxFetch", m_axFetch);
-  conf->writeEntry("markSecs", m_arkSecs);
   switch (b_rowser) {
     case BTkonq: conf->writeEntry("Browser","Konqueror");
                  break;

@@ -101,8 +101,8 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   h_drView->addColumn(i18n("Subject"),207);
   h_drView->addColumn(i18n("From"),115);
   h_drView->addColumn(i18n("Score"),42);
-  h_drView->addColumn(i18n("Date (Time)"),102);
-  h_drView->setColumnAlignment(2, AlignCenter);
+  h_drView->addColumn(i18n("Lines"),42);
+  h_drView->addColumn(i18n("Date"),102);
 
 	connect(h_drView, SIGNAL(itemSelected(QListViewItem*)),
 	  this, SLOT(slotArticleSelected(QListViewItem*)));
@@ -232,7 +232,7 @@ void KNodeView::readOptions()
     setSizes(lst);
 
   lst = conf->readIntListEntry("Hdrs_Size");
-  if (lst.count()==7) {
+  if (lst.count()==8) {
     QValueList<int>::Iterator it = lst.begin();
 
     QHeader *h=c_olView->header();
@@ -242,14 +242,14 @@ void KNodeView::readOptions()
     }
 
     h=h_drView->header();
-    for (int i=0; i<4; i++) {
+    for (int i=0; i<5; i++) {
       h->resizeSection(i,(*it));
       ++it;
     }
   }
 
   lst = conf->readIntListEntry("Hdr_Order");
-  if (lst.count()==7) {
+  if (lst.count()==8) {
     QValueList<int>::Iterator it = lst.begin();
 
     QHeader *h=c_olView->header();
@@ -259,7 +259,7 @@ void KNodeView::readOptions()
     }
 
     h=h_drView->header();
-    for (int i=0; i<4; i++) {
+    for (int i=0; i<5; i++) {
       h->moveSection(i,(*it));
       ++it;
     }
@@ -303,7 +303,7 @@ void KNodeView::saveOptions()
     lst << h->sectionSize(i);
 
   h=h_drView->header();
-  for (int i=0; i<4; i++)
+  for (int i=0; i<5; i++)
     lst << h->sectionSize(i);
   conf->writeEntry("Hdrs_Size", lst);
 
@@ -314,7 +314,7 @@ void KNodeView::saveOptions()
     lst << h->mapToIndex(i);
 
   h=h_drView->header();
-  for (int i=0; i<4; i++)
+  for (int i=0; i<5; i++)
     lst << h->mapToIndex(i);
   conf->writeEntry("Hdr_Order", lst);
 
@@ -403,6 +403,7 @@ void KNodeView::configChanged()
   }
 
   c_olView->setFont(app->groupListFont());
+  KNHdrViewItem::clearFontCache();
   h_drView->setFont(app->articleListFont());
 
   QPalette p = palette();
@@ -410,6 +411,24 @@ void KNodeView::configChanged()
   c_olView->setPalette(p);
   h_drView->setPalette(p);
 
+  if (knGlobals.cfgManager->readNewsGeneral()->showScore()) {
+    if (!h_drView->header()->isResizeEnabled(2)) {
+      h_drView->header()->setResizeEnabled(true,2);
+      h_drView->header()->resizeSection(2,42);
+    }
+  } else {
+    h_drView->header()->resizeSection(2,0);
+    h_drView->header()->setResizeEnabled(false,2);
+  }
+  if (knGlobals.cfgManager->readNewsGeneral()->showLines()) {
+    if (!h_drView->header()->isResizeEnabled(3)) {
+      h_drView->header()->setResizeEnabled(true,3);
+      h_drView->header()->resizeSection(3,42);
+    }
+  } else {
+    h_drView->header()->resizeSection(3,0);
+    h_drView->header()->setResizeEnabled(false,3);
+  }
 }
 
 
@@ -473,6 +492,7 @@ void KNodeView::initActions()
   items += i18n("By &Subject");
   items += i18n("By S&ender");
   items += i18n("By S&core");
+  items += i18n("By &Lines");
   items += i18n("By &Date");
   a_ctArtSortHeaders->setItems(items);
 	connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
@@ -708,13 +728,12 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctGrpUnsubscribe->setEnabled(enabled);
     a_ctGrpSetAllRead->setEnabled(enabled);
   	a_ctGrpSetAllUnread->setEnabled(enabled);
-  	a_ctArtSortHeaders->setEnabled(enabled);
 		a_ctArtFilter->setEnabled(enabled);
 		a_ctArtSearch->setEnabled(enabled);
 		a_ctArtRefreshList->setEnabled(enabled);
 		a_ctArtCollapseAll->setEnabled(enabled);
 		a_ctArtExpandAll->setEnabled(enabled);
-		a_ctArtToggleShowThreads->setEnabled(enabled);
+  	a_ctArtToggleShowThreads->setEnabled(enabled);		
   }
 	
 	enabled=( s_electedFolder!=0 );

@@ -554,7 +554,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
   if(!sent.isEmpty()) {
     showSendErrorDialog();
     for(KNLocalArticle *a=sent.first(); a; a=sent.next())
-      s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Article has been sent already"));
+      s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Article has already been sent."));
   }
 
   if(!now) {
@@ -572,7 +572,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
       KNFolder *f=static_cast<KNFolder*>(a->collection());
       if(!f->loadArticle(a)) {
         showSendErrorDialog();
-        s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Could not load article"));
+        s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Unable to load article!"));
         continue;
       }
     }
@@ -597,7 +597,7 @@ void KNArticleFactory::sendOutbox()
   KNFolder *ob=f_olManager->outbox();
 
   if(!ob->loadHdrs()) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Could not load the outbox!"));
+    KMessageBox::error(knGlobals.topWidget, i18n("Unable to load the outbox-folder!"));
     return;
   }
 

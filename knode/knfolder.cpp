@@ -195,15 +195,40 @@ bool KNFolder::loadHdrs()
     }
 
     //set overview
+    bool end=false;
     pos1=tmp.find(' ')+1;
     pos2=tmp.find('\t', pos1);
+    if (pos2 == -1) {
+      pos2=tmp.length();
+      end=true;
+    }
     art->subject()->from7BitString(tmp.mid(pos1, pos2-pos1), art->defaultCharset(),false);
-    pos1=pos2+1;
-    pos2=tmp.find('\t', pos1);
-    art->newsgroups()->from7BitString(tmp.mid(pos1, pos2-pos1), art->defaultCharset(),false);
-    pos1=pos2+1;
-    pos2=tmp.length();
-    art->to()->from7BitString(tmp.mid(pos1,pos2-pos1), art->defaultCharset(),false);
+
+    if (!end) {
+      pos1=pos2+1;
+      pos2=tmp.find('\t', pos1);
+      if (pos2 == -1) {
+        pos2=tmp.length();
+        end=true;
+      }
+      art->newsgroups()->from7BitString(tmp.mid(pos1, pos2-pos1), art->defaultCharset(),false);
+    }
+
+    if (!end) {
+      pos1=pos2+1;
+      pos2=tmp.find('\t', pos1);
+      if (pos2 == -1) {
+        pos2=tmp.length();
+        end=true;
+      }
+      art->to()->from7BitString(tmp.mid(pos1,pos2-pos1), art->defaultCharset(),false);
+    }
+
+    if (!end) {
+      pos1=pos2+1;
+      pos2=tmp.length();
+      art->lines()->from7BitString(tmp.mid(pos1,pos2-pos1), art->defaultCharset(),false);
+    }
 
     if(!append(art)) {
       kdError(5003) << "KNFolder::loadHdrs() : cannot append article!"<< endl;
@@ -326,7 +351,9 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 
       if( (h=a->to(false))!=0 )
         ts << h->as7BitString(false);
-      ts << '\n';
+      ts << '\t';
+
+      ts << a->lines()->as7BitString(false) << '\n';
 
       //write article
       a->toStream(ts);

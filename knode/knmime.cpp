@@ -1482,13 +1482,16 @@ void KNRemoteArticle::initListItem()
 {
   i_tem->setText(0, s_ubject.asUnicodeString());
   i_tem->subjectCS = s_ubject.rfc2047Charset();
+
 	if(f_rom.hasName())
   	i_tem->setText(1, f_rom.name());
   else
   	i_tem->setText(1, QString(f_rom.email()));
   i_tem->nameCS = f_rom.rfc2047Charset();  	
 
-  i_tem->setText(3, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
+  i_tem->setText(3, QString("%1").arg(lines()->numberOfLines(),3));
+
+  i_tem->setText(4, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
   updateListItem();
 }
 
@@ -1681,7 +1684,11 @@ void KNLocalArticle::updateListItem()
 
   i_tem->setText(1, tmp);
   i_tem->setText(2, QString::null);
-  i_tem->setText(3, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
+  if (lines()->numberOfLines()!=-1)
+    i_tem->setText(3, QString("%1").arg(lines()->numberOfLines(),3));
+  else
+    i_tem->setText(3, QString::null);
+  i_tem->setText(4, KGlobal::locale()->formatDateTime(d_ate.qdt(), true));
 }
 
 

@@ -257,7 +257,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   else
     text = line;
 
-  if (!knGlobals.cfgManager->readNewsGeneral()->interpretFormatTags())
+  if (!knGlobals.cfgManager->readNewsViewer()->interpretFormatTags())
     beautification=false;
 
   for(uint idx=0; idx<len; idx++){
@@ -379,9 +379,9 @@ void KNArticleWidget::openURL(const QString &url)
 {
   if(url.isEmpty()) return;
 
-  if (knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTkonq)
+  if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTkonq)
     kapp->invokeBrowser(url);
-  else if (knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTnetscape){
+  else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTnetscape){
     KProcess proc;
     proc << "netscape";
   
@@ -393,14 +393,14 @@ void KNArticleWidget::openURL(const QString &url)
 
     proc.start(KProcess::DontCare);
   }
-  else if (knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTmozilla){
+  else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTmozilla){
     KProcess proc;
     proc << "run-mozilla.sh";
     proc << "mozilla-bin";
     proc << url;
     proc.start(KProcess::DontCare);
   }
-  else if (knGlobals.cfgManager->readNewsGeneral()->browser()==KNConfig::ReadNewsGeneral::BTopera){
+  else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTopera){
     KProcess proc;
     proc << "opera";
     proc << QString("-page=%1").arg(url);
@@ -409,7 +409,7 @@ void KNArticleWidget::openURL(const QString &url)
   } else {
     KProcess proc;
 
-    QStringList command = QStringList::split(' ',knGlobals.cfgManager->readNewsGeneral()->browserCommand());
+    QStringList command = QStringList::split(' ',knGlobals.cfgManager->readNewsViewer()->browserCommand());
     bool urlAdded=false;
     for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
       if ((*it).contains("%u")) {
@@ -597,7 +597,7 @@ void KNArticleWidget::createHtmlPage()
   }
 
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
-  KNConfig::ReadNewsGeneral *rng=knGlobals.cfgManager->readNewsGeneral();
+  KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
 
   //----------------------------------- <Header> ---------------------------------------
 
@@ -709,7 +709,7 @@ void KNArticleWidget::createHtmlPage()
       a_tt->setAutoDelete(false);
     }
 
-    a_rticle->attachments(a_tt, rng->showAlternativeContents());
+    a_rticle->attachments(a_tt, rnv->showAlternativeContents());
   } else {
     delete a_tt;
     a_tt=0;
@@ -757,7 +757,7 @@ void KNArticleWidget::createHtmlPage()
               newLevel=0;
               html+="</font>";
             }
-            if(rng->showSignature()) {
+            if(rnv->showSignature()) {
               html+="<hr size=2>";
               continue;
             }
@@ -813,7 +813,7 @@ void KNArticleWidget::createHtmlPage()
               .arg(toHtmlString(var->contentDescription()->asUnicodeString()));
 
 
-        if(rng->showAttachmentsInline() && inlinePossible(var)) {
+        if(rnv->showAttachmentsInline() && inlinePossible(var)) {
           html+="<tr><td colspan=3>";
           if(ct->isImage()) { //image
             path=knGlobals.artManager->saveContentToTemp(var);
@@ -863,8 +863,8 @@ void KNArticleWidget::createHtmlPage()
   a_ctSetCharset->setEnabled(true);
 
   //start automark-timer
-  if(a_rticle->type()==KNMimeBase::ATremote && rng->autoMark())
-    t_imer->start( (rng->autoMarkSeconds()*1000), true);
+  if(a_rticle->type()==KNMimeBase::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
+    t_imer->start( (knGlobals.cfgManager->readNewsGeneral()->autoMarkSeconds()*1000), true);
 }
 
 
@@ -920,7 +920,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       break;
       case ATattachment:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : attachment " << target << endl;
-        if(knGlobals.cfgManager->readNewsGeneral()->openAttachmentsOnClick())
+        if(knGlobals.cfgManager->readNewsViewer()->openAttachmentsOnClick())
           openAttachment(target.toInt());
         else
           saveAttachment(target.toInt());

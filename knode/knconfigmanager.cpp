@@ -29,11 +29,13 @@
 #include "knarticlefactory.h"
 #include "knodeview.h"
 
+
 KNConfigManager::KNConfigManager(QObject *p, const char *n) : QObject(p, n), d_ialog(0)
 {
   i_dentity           = new KNConfig::Identity();
   a_ppearance         = new KNConfig::Appearance();
   r_eadNewsGeneral    = new KNConfig::ReadNewsGeneral();
+  r_eadNewsViewer     = new KNConfig::ReadNewsViewer();
   d_isplayedHeaders   = new KNConfig::DisplayedHeaders();
   p_ostNewsTechnical  = new KNConfig::PostNewsTechnical();
   p_ostNewsCompose    = new KNConfig::PostNewsComposer();
@@ -47,6 +49,7 @@ KNConfigManager::~KNConfigManager()
   delete i_dentity;
   delete a_ppearance;
   delete r_eadNewsGeneral;
+  delete r_eadNewsViewer;
   delete d_isplayedHeaders;
   delete p_ostNewsTechnical;
   delete p_ostNewsCompose;
@@ -123,17 +126,23 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   frame = addHBoxPage(list, i18n("General Options"), BarIcon("misc"));
   w_idgets.append(new KNConfig::ReadNewsGeneralWidget(m->readNewsGeneral(), frame));
 
-  // Read News // Headers
-  list.clear();
-  list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Headers");
-  frame = addHBoxPage(list, i18n("Customize displayed article headers"), BarIcon("text_block"));
-  w_idgets.append(new KNConfig::DisplayedHeadersWidget(m->displayedHeaders(), frame));
-
   // Read News / Filters
   list.clear();
   list << QString(" ")+i18n("Reading News") << i18n(" Filters");
   frame = addHBoxPage(list,i18n("Article Filters"),BarIcon("filter"));
   w_idgets.append(new KNConfig::FilterListWidget(frame));
+
+  // Read News / Headers
+  list.clear();
+  list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Headers");
+  frame = addHBoxPage(list, i18n("Customize displayed article headers"), BarIcon("text_block"));
+  w_idgets.append(new KNConfig::DisplayedHeadersWidget(m->displayedHeaders(), frame));
+
+  // Read News / Viewer
+  list.clear();
+  list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Viewer");
+  frame = addHBoxPage(list, i18n("Customize article viewer behaviour"), BarIcon("contents"));
+  w_idgets.append(new KNConfig::ReadNewsViewerWidget(m->readNewsViewer(), frame));
 
   // Post News / Technical
   list.clear();
