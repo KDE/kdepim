@@ -561,7 +561,7 @@ void ViewManager::dropped(QDropEvent *e)
      if (c>1)
      {
        QString questionString = i18n("Import one contact into your addressbook?","Import %n contacts into your addressbook?",c);
-       if (KMessageBox::questionYesNo(this,questionString,i18n("Import contacts?"))==KMessageBox::Yes)
+       if (KMessageBox::questionYesNo(this,questionString,i18n("Import Contacts?"))==KMessageBox::Yes)
         {
           for ( ; it.current(); ++it)
           {
