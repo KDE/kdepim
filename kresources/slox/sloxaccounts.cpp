@@ -133,6 +133,8 @@ void SloxAccounts::requestAccounts()
   KURL url( "http://" + mServer + "/servlet/webdav.groupuser?" +
             "user=*&group=*&groupres=*&res=*&details=t" );
 
+  kdDebug() << "SloxAccounts::requestAccounts() URL: " << url << endl;
+
   KConfig cfg( "sloxrc" );
   cfg.setGroup( "General" );
   QString user = cfg.readEntry( "User" );
@@ -204,6 +206,7 @@ void SloxAccounts::readAccounts()
         else if ( tag == "forename" ) a.setGivenName( value );
         else if ( tag == "surename" ) a.setFamilyName( value );
       }
+//      kdDebug() << "MAIL: " << a.preferredEmail() << endl;
       insertUser( id, a );
     }
   }

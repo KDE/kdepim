@@ -420,6 +420,8 @@ void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
 
   if ( event->doesFloat() ) {
     WebdavHandler::addSloxElement( doc, parent, "S:full_time", "yes" );
+  } else {
+    WebdavHandler::addSloxElement( doc, parent, "S:full_time", "no" );
   }
 }
 
@@ -863,6 +865,21 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
         if ( propstat.isNull() ) {
           kdError() << "Unable to find propstat tag." << endl;
           continue;
+        }
+        
+        QDomNode status = propstat.namedItem( "status" );
+        if ( !status.isNull() ) {
+          QDomElement statusElement = status.toElement();
+          QString response = statusElement.text();
+          if ( response != "HTTP/1.1 200 OK" ) {
+            QString error = "'" + mUploadedIncidence->summary() + "'\n";
+            error += response;
+            QDomNode dn = propstat.namedItem( "responsedescription" );
+            QString d = dn.toElement().text();
+            if ( !d.isEmpty() ) error += "\n" + d;
+            saveError( error );
+            continue;
+          }
         }
 
         QDomNode prop = propstat.namedItem( "prop" );
