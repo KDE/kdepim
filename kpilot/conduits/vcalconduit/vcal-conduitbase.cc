@@ -241,7 +241,7 @@ error:
 
 	// Need a subclass ptr. for the ResourceCalendar methods
 	KCal::CalendarResources *rescal = 0L;
-	
+
 	switch(config()->calendarType())
 	{
 		case VCalConduitSettings::eCalendarLocal:
@@ -562,6 +562,8 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 	recordid_t id=fLocalDatabase->writeRecord(r);
 #ifdef DEBUG
 	DEBUGCONDUIT<<fname<<": Pilot Record ID="<<r->getID()<<", backup ID="<<id<<endl;
+#else
+	Q_UNUSED(id);
 #endif
 
 	PilotAppCategory *de=newPilotEntry(r);
@@ -678,7 +680,6 @@ void VCalConduitBase::deletePalmRecord(KCal::Incidence*e, PilotRecord*s)
 		DEBUGCONDUIT << fname << ": deleting record " << s->getID() << endl;
 #endif
 		s->makeDeleted();
-//		s->setAttrib(s->getAttrib() & ~dlpRecAttrDeleted);
 		fDatabase->writeRecord(s);
 		fLocalDatabase->writeRecord(s);
 	}
@@ -688,6 +689,8 @@ void VCalConduitBase::deletePalmRecord(KCal::Incidence*e, PilotRecord*s)
 		DEBUGCONDUIT << fname << ": could not find record to delete (" << e->pilotId() << ")" << endl;
 #endif
 	}
+
+	Q_UNUSED(e);
 }
 
 
