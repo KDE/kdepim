@@ -117,6 +117,7 @@ public:
 
     /**
      * Return value as a string (mostly meaningful for String, Path and URL datatypes)
+     * The returned string can be empty (explicitely set to empty) or null (not set).
      */
     virtual QString stringValue() const = 0;
 
@@ -134,6 +135,32 @@ public:
      * Return value as a URL (only meaningful for Path and URL datatypes)
      */
     virtual KURL urlValue() const = 0;
+
+    /**
+     * Return value as a list of bools (only valid for Bool datatype, if isList())
+     */
+    virtual QValueList<bool> boolValueList() const = 0;
+
+    /**
+     * Return value as a list of strings (mostly meaningful for String, Path and URL datatypes, if isList())
+     */
+    virtual QStringList stringValueList() const = 0;
+
+    /**
+     * Return value as a list of signed ints
+     */
+    virtual QValueList<int> intValueList() const = 0;
+
+    /**
+     * Return value as a list of unsigned ints
+     */
+    virtual QValueList<unsigned int> uintValueList() const = 0;
+
+    /**
+     * Return value as a list of URLs (only meaningful for Path and URL datatypes, if isList())
+     */
+    virtual KURL::List urlValueList() const = 0;
+
 
     /**
      * Set a new boolean value (only valid for Bool datatype)
@@ -179,6 +206,31 @@ public:
      * start of the respective backend programs.
      */
     virtual void setURLValue( const KURL&, bool /*runtime*/ = true ) = 0;
+
+    /**
+     * Set a new list of boolean values (only valid for Bool datatype, if isList())
+     */
+    virtual void setBoolValueList( QValueList<bool>, bool /*runtime*/ = true ) = 0;
+
+    /**
+     * Set a new string-list value (only allowed for String, Path and URL datatypes, if isList())
+     */
+    virtual void setStringValueList( const QStringList&, bool /*runtime*/ = true ) = 0;
+
+    /**
+     * Set a new list of signed int values
+     */
+    virtual void setIntValueList( const QValueList<int>&, bool /*runtime*/ = true ) = 0;
+
+    /**
+     * Set a new list of unsigned int values
+     */
+    virtual void setUIntValueList( const QValueList<unsigned int>&, bool /*runtime*/ = true ) = 0;
+
+    /**
+     * Set value as a URL list (only meaningful for Path (if all URLs are local) and URL datatypes, if isList())
+     */
+    virtual void setURLValueList( const KURL::List&, bool /*runtime*/ = true ) = 0;
 };
 
 /**

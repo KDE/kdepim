@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*  -*- mode: C++; c-file-style: "gnu"; c-basic-offset: 2 -*-
     test_cryptoconfig.cpp
 
     This file is part of libkleopatra's test suite.
@@ -50,28 +50,157 @@ int main( int argc, char** argv ) {
   QStringList components = config->componentList();
 
   for( QStringList::Iterator compit = components.begin(); compit != components.end(); ++compit ) {
-      cout << "Component " << (*compit).local8Bit() << ":" << endl;
-      const Kleo::CryptoConfigComponent* comp = config->component( *compit );
-      assert( comp );
-      QStringList groups = comp->groupList();
-      for( QStringList::Iterator groupit = groups.begin(); groupit != groups.end(); ++groupit ) {
-          cout << " Group [" << (*groupit).local8Bit() << "] :" << endl;
-          const Kleo::CryptoConfigGroup* group = comp->group( *groupit );
-          assert( group );
-          QStringList entries = group->entryList();
-          cout << "  " << (entries.join( " " )).local8Bit() << endl;
-          // ...
+    cout << "Component " << (*compit).local8Bit() << ":" << endl;
+    const Kleo::CryptoConfigComponent* comp = config->component( *compit );
+    assert( comp );
+    QStringList groups = comp->groupList();
+    for( QStringList::Iterator groupit = groups.begin(); groupit != groups.end(); ++groupit ) {
+      const Kleo::CryptoConfigGroup* group = comp->group( *groupit );
+      assert( group );
+      cout << " Group " << (*groupit).local8Bit() << ": descr=" << group->description().local8Bit()
+           << " level=" << group->level() << endl;
+      QStringList entries = group->entryList();
+      for( QStringList::Iterator entryit = entries.begin(); entryit != entries.end(); ++entryit ) {
+        const Kleo::CryptoConfigEntry* entry = group->entry( *entryit );
+        assert( entry );
+        cout << "  Entry " << (*entryit).local8Bit() << ":"
+             << " descr=\"" << entry->description().local8Bit() << "\"";
+        if ( !entry->isList() )
+          switch( entry->dataType() ) {
+          case Kleo::CryptoConfigEntry::DataType_Bool:
+            cout << " boolean value=" << ( entry->boolValue()?"true":"false");
+            break;
+          case Kleo::CryptoConfigEntry::DataType_Int:
+            cout << " int value=" << entry->intValue();
+            break;
+          case Kleo::CryptoConfigEntry::DataType_UInt:
+            cout << " uint value=" << entry->uintValue();
+            break;
+          case Kleo::CryptoConfigEntry::DataType_URL:
+            cout << " URL value=" << entry->urlValue().prettyURL().local8Bit();
+            // fallthrough
+          case Kleo::CryptoConfigEntry::DataType_Path:
+            // fallthrough
+          case Kleo::CryptoConfigEntry::DataType_String:
+
+            cout << " string value=" << entry->stringValue().local8Bit();
+            break;
+          }
+        else // lists
+          switch( entry->dataType() ) {
+          case Kleo::CryptoConfigEntry::DataType_Bool: {
+            QValueList<bool> lst = entry->boolValueList();
+            QString str;
+            for( QValueList<bool>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+              str += ( *it ) ? "true" : "false";
+            }
+            cout << " boolean values=" << str.local8Bit();
+            break;
+          }
+          case Kleo::CryptoConfigEntry::DataType_Int: {
+            QValueList<int> lst = entry->intValueList();
+            QString str;
+            for( QValueList<int>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+              str += QString::number( *it );
+            }
+            cout << " int values=" << str.local8Bit();
+            break;
+          }
+          case Kleo::CryptoConfigEntry::DataType_UInt: {
+            QValueList<uint> lst = entry->uintValueList();
+            QString str;
+            for( QValueList<uint>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+              str += QString::number( *it );
+            }
+            cout << " uint values=" << str.local8Bit();
+            break;
+          }
+          case Kleo::CryptoConfigEntry::DataType_URL:
+            // fallthrough
+          case Kleo::CryptoConfigEntry::DataType_Path:
+            // fallthrough
+          case Kleo::CryptoConfigEntry::DataType_String: {
+            QStringList lst = entry->stringValueList();
+            cout << " string values=" << lst.join(" ").local8Bit();
+            break;
+          }
+          }
+        cout << endl;
       }
+      // ...
+    }
   }
 
-  // Static querying of a single option
-  const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
-  if ( entry ) {
+  {
+    // Static querying of a single boolean option
+    const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
+    if ( entry ) {
+      assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_UInt );
+      uint val = entry->uintValue();
+      cout << "LDAP timeout: " << val << " seconds." << endl;
+
+      // Test setting the option directly, then querying again
+      system( "echo 'ldaptimeout:101' | gpgconf --change-options dirmngr" );
+
+      // Clear cached values!
+      // Hmm, should clear() be const? It sounds strange, but since it's only about discarding cached data...
+      // Bah, I guess config shouldn't be a const pointer.
+      const_cast<Kleo::CryptoConfig*>( config )->clear();
+
+      // Check new value
+      const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
+      assert( entry );
       assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_UInt );
       cout << "LDAP timeout: " << entry->uintValue() << " seconds." << endl;
-  }
-  else
+      assert( entry->uintValue() == 101 );
+
+      // Reset old value
+      QCString sys;
+      sys.sprintf( "echo 'ldaptimeout:%d' | gpgconf --change-options dirmngr", val );
+      system( sys.data() );
+
+      cout << "LDAP timeout reset to " << val << " seconds." << endl;
+    }
+    else
       cout << "Entry dirmngr/<nogroup>/ldaptimeout not found" << endl;
+  }
+
+  {
+    // Static querying of a single string option
+    const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
+    if ( entry ) {
+      assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_Path );
+      QString val = entry->stringValue();
+      cout << "Log-file: " << val.local8Bit() << endl;
+
+      // Test setting the option directly, then querying again
+      system( "echo 'log-file:\"/tmp/log' | gpgconf --change-options dirmngr" );
+
+      // Clear cached values!
+      // Hmm, should clear() be const? It sounds strange, but since it's only about discarding cached data...
+      // Bah, I guess config shouldn't be a const pointer.
+      const_cast<Kleo::CryptoConfig*>( config )->clear();
+
+      // Check new value
+      const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
+      assert( entry );
+      assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_Path );
+      cout << "Log-file: " << entry->stringValue().local8Bit() << endl;
+      assert( entry->stringValue() == "/tmp/log" );
+
+      // Reset old value
+      QString arg( val );
+      if ( !arg.isEmpty() )
+        arg.prepend( '"' );
+      QCString sys;
+      sys.sprintf( "echo 'log-file:%s' | gpgconf --change-options dirmngr", arg.local8Bit().data() );
+      system( sys.data() );
+
+      cout << "Log-file reset to " << val.local8Bit() << endl;
+    }
+    else
+      cout << "Entry dirmngr/<nogroup>/log-file not found" << endl;
+  }
 
   // TODO setting options
 
