@@ -309,12 +309,13 @@ and <guilabel>TLS</guilabel>.</para>
 
 <para>For POP3 &kmail; supports <guilabel>Clear text</guilabel>, 
 <guilabel>PLAIN</guilabel>, <guilabel>CRAM-MD5</guilabel> and
-<guilabel>APOP</guilabel> authentificaton. You should only use
-<guilabel>Clear text</guilabel> if your server doesn't support any of the
-other  authentification methods. These other methods transfer the password
-encrypted over the  network, which is more secure. <!-- fixme? plain also
-secure? --> Additionally, for IMAP <guilabel>Anonymous</guilabel> is
-supported.</para> <!-- fixme: explain? -->
+<guilabel>APOP</guilabel> authentificaton. 
+<guilabel>APOP</guilabel> and <guilabel>CRAM-MD5</guilabel> are secure 
+on their own, all the other options are only secure when used together
+with <guilabel>SSL</guilabel> or <guilabel>TLS</guilabel>.
+You should only use <guilabel>Clear text</guilabel> if your server doesn't support any 
+of the other authentification methods. Additionally, for IMAP
+<guilabel>Anonymous</guilabel> is supported.</para>
 
 <para>You are now ready to send and receive mail! For IMAP,
 click on the <guilabel>+</guilabel> sign in the folder tree in
@@ -994,9 +995,9 @@ folder</guilabel>. Here's a list of all possible actions:</para>
 <term><guilabel>copy to folder</guilabel></term>
 <listitem>
 <para>This will copy the message to another folder.</para>
-<!-- fixme?: -->
-<caution><para>This currently doesn't work for <acronym>IMAP</acronym>
-folders as target or source.</para></caution>
+<!-- TODO: still correct? -->
+<caution><para>You currently cannot use <acronym>IMAP</acronym>
+folders as a target.</para></caution>
 </listitem>
 </varlistentry>
 <varlistentry>
