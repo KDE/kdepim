@@ -290,7 +290,7 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, ExtraMap& map
             KABC::PhoneNumber homeFax = ab.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
             *stream << "HomeFax=\"" << escape( homeFax.number() ) << "\" ";
 
-            KABC::PhoneNumber homeMobile = ab.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Cell );
+            KABC::PhoneNumber homeMobile = ab.phoneNumber( KABC::PhoneNumber::Cell );
             *stream << "HomeMobile=\"" << escape( homeMobile.number() ) << "\" ";
 
             KABC::Address business = ab.address(KABC::Address::Work  );
