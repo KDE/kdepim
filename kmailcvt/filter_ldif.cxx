@@ -18,6 +18,7 @@
 #include <iostream>
 #include <stdlib.h>
 
+#include <qdir.h>
 
 #include <kfiledialog.h>
 #include <klocale.h>
@@ -33,7 +34,7 @@ filter_ldif::~filter_ldif()
 void filter_ldif::import(filterInfo *info) {
    QWidget *parent=info->parent();
 
-   QString filename = KFileDialog::getOpenFileName( getenv("HOME"), 
+   QString filename = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
 		   	"*.ldif *.LDIF *.Ldif", parent);
    if (filename.isEmpty()) {
      info->alert(name(),i18n("No Addressbook chosen"));
@@ -64,7 +65,6 @@ bool filter_ldif::convert(const QString &filename, filterInfo *info) {
    QFile f(filename);
    if ( !f.open(IO_ReadOnly) ) {
 	QString msg =  i18n("Can't open '%1' for reading").arg(filename);
-	//lukas: noooo! no sprintf nor .latin1() please!!!
 	info->alert(caption,msg);
 	return false;
    }
@@ -209,7 +209,7 @@ bool filter_ldif::convert(const QString &filename, filterInfo *info) {
 */
 QString filter_ldif::decodeBase64(QString input)
 {
-    QString result;
+    QCString result;
 
     int tempLen = input.length();
     for(unsigned int i=0; i<input.length(); i++) {
@@ -249,9 +249,7 @@ QString filter_ldif::decodeBase64(QString input)
 
     // Remove any linefeeds, tabs and multiple space from decoded string and
     // convert to unicode.
-    result = QString::fromUtf8(result.latin1());	//lukas: nah!!! FIXME
-    result = result.simplifyWhiteSpace();
-    return result;
+    return QString::fromUtf8(result).simplifyWhiteSpace();
 }
 
 

@@ -189,7 +189,7 @@ pabfields_t::pabfields_t(pabrec & R,filterInfo *info,QWidget */*parent*/)
        }
 
        {char m[1024];
-          sprintf(m,"%d %d %04x %08lx %d %s %d %d",i,k,literal(k),order(k),e,E.latin1(),E[0].latin1(),E.length());
+          snprintf(m, sizeof(m), "%d %d %04x %08lx %d %s %d %d",i,k,literal(k),order(k),e,E.latin1(),E[0].latin1(),E.length());
           info->log(m);
        }
 
@@ -245,7 +245,7 @@ pabfields_t::pabfields_t(pabrec & R,filterInfo *info,QWidget */*parent*/)
            case pr_notused:
            break;
            default:            {/*char m[250];
-                                  sprintf(m,"unknown tag '%x'",literal(k));
+                                  snprintf(m,sizeof(m),"unknown tag '%x'",literal(k));
                                   info->log(m);*/
                                }
            break;

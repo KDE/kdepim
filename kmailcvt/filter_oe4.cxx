@@ -39,18 +39,12 @@ filter_oe4::~filter_oe4()
 
 void filter_oe4::import(filterInfo *info)
 {
-char     dir[1024];
-QString  choosen;
 QString  msg;
 QWidget *parent=info->parent();
 
    if (!kmailStart(info)) { return; }
 
-   sprintf(dir,getenv("HOME"));
-
-   {QString m;
-
-    m=i18n("Stephan B. Nedregard kindly contributed the Outlook Express 4/5\n"
+   msg = i18n("Stephan B. Nedregard kindly contributed the Outlook Express 4/5\n"
 	   "import code.\n\n"
            "Select the Outlook Express 4 directory on your system.\n\n"
            "This import filter will search for folders (the '.mbx' files).\n\n"
@@ -64,20 +58,19 @@ QWidget *parent=info->parent();
 	   "that) and rename the existing KMail folders."
            );
 
-    info->alert(CAP,m);
-   }
-   choosen=KFileDialog::getExistingDirectory(dir,parent,"Importoe4");
-   if (choosen.length()==0) { return; } // No directory choosen here!
-   strcpy(dir,choosen.latin1());
+   info->alert(CAP,msg);
 
-   msg=i18n("Searching for Outlook Express 4 '.mbx' folders in directory %1").arg(dir);
+   QString choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),parent,"Importoe4");
+   if (choosen.isEmpty()) { return; } // No directory choosen here!
+
+   msg=i18n("Searching for Outlook Express 4 '.mbx' folders in directory %1").arg(choosen);
    info->log(msg);
 
    {DIR *d;
     struct dirent *entry;
-      d=opendir(dir);
+      d=opendir(QFile::encodeName(choosen));
       if (d==NULL) {QString msg;
-        msg=i18n("Can't open directory %1").arg(dir);
+        msg=i18n("Can't open directory %1").arg(choosen);
         info->alert(CAP,msg);
       }
       else {int   N=0,n=0;
@@ -107,10 +100,10 @@ QWidget *parent=info->parent();
 
           if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],".mbx")==0) {
             {
-              char fldr[1024],name[256];
+              char fldr[PATH_MAX],name[256];
 
-              sprintf(fldr,"%s/%s",dir,file);
-              sprintf(name,"%s",file);name[strlen(name)-4]='\0';
+              snprintf(fldr, sizeof(fldr), "%s/%s",QFile::encodeName(choosen).data(),file);
+              snprintf(name, sizeof(name), "%s",file);name[strlen(name)-4]='\0';
 
               {QString s;
                  s.sprintf("\t%s",fldr);

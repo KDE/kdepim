@@ -57,7 +57,7 @@ oe_data *result;
 char s[1024];
   F=f;
 
-  sprintf(s,"OE5-%s",folderTo);
+  snprintf(s,sizeof(s),"OE5-%s",folderTo);
   FOLDER=s;
   INFO=info;
 

@@ -18,11 +18,14 @@
 #include "filter_eudora_ab.hxx"
 #include "harray.hxx"
 
-#include <kfiledialog.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <dirent.h>
+
+#include <qdir.h>
+
 #include <klocale.h>
+#include <kfiledialog.h>
 
 #define CTRL_C	3
 
@@ -40,13 +43,12 @@ filter_eudora_ab::~filter_eudora_ab()
 void filter_eudora_ab::import(filterInfo *info)
 {
 QString file;
-char    dir[1024];
 QWidget *parent=info->parent();
 FILE   *F;
 
    if (!kabStart(info)) return;
 
-   sprintf(dir,getenv("HOME"));
+   QString dir = QDir::homeDirPath();
  
    file=KFileDialog::getOpenFileName(dir,"*.txt *.TXT *.Txt",parent);
    if (file.length()==0) {

@@ -63,10 +63,9 @@ void filter_pmail::import(filterInfo *info)
    info->alert(CAP,msg);
 
    // Select directory from where I have to import files
-   sprintf(dir,getenv("HOME"));	//lukas: noooooo! this breaks i18n, no sprintf please! use QDir instead
-   choosen=KFileDialog::getExistingDirectory(dir,par);
-   if (choosen.length()==0) { return; } // No directory choosen here!
-   strcpy(dir,choosen.latin1());
+   choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),par);
+   if (choosen.isEmpty()) { return; } // No directory choosen here!
+   dir = choosen;
 
    // Count total number of files to be processed
    info->log(i18n("Counting files..."));
@@ -76,7 +75,7 @@ void filter_pmail::import(filterInfo *info)
 
    //msg=i18n("Searching for distribution lists ('.pml')...");
    //info->log(msg);
-   //totalFiles += countFiles(dir, "*.pml");
+   //totalFiles += countFiles(choosen, "*.pml");
 
    if (!kmailStart(info))
       return;
@@ -96,7 +95,7 @@ int filter_pmail::countFiles(const char *mask)
 {
    DIR *d;
    struct dirent *entry;
-   d = opendir(dir);
+   d = opendir(QFile::encodeName(dir));
    int n = 0;
 
    entry=readdir(d);
@@ -128,7 +127,7 @@ void filter_pmail::processFiles(const char *mask, void(filter_pmail::* workFunc)
 {
    DIR *d;
    struct dirent *entry;
-   d = opendir(dir);
+   d = opendir(QFile::encodeName(dir));
 
    entry=readdir(d);
    while (entry!=NULL) {
@@ -152,7 +151,7 @@ void filter_pmail::processFiles(const char *mask, void(filter_pmail::* workFunc)
          path.append(file);
 
          // call worker function, increase progressbar
-         (this->*workFunc)(path.latin1());	//lukas: noooooo! no .latin1() in paths!!!
+         (this->*workFunc)(QFile::encodeName(path));
          nextFile();
       }
       entry=readdir(d);
@@ -307,7 +306,7 @@ void filter_pmail::importUnixMailFolder(const char *file)
    // Get folder name
    s.replace( QRegExp("mbx$"), "pmg");
    s.replace( QRegExp("MBX$"), "PMG");
-   f = fopen(s.latin1(), "rb");		//lukas: noooooo! no fopen nor .latin1() for files!!!
+   f = fopen(QFile::encodeName(s), "rb");
    fread(&pmg_head, sizeof(pmg_head), 1, f);
    fclose(f);
    folder = "PMail-";

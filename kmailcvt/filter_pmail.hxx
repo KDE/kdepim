@@ -26,9 +26,9 @@
 
 class filter_pmail : public filter  {
 private:
-   QString CAP;
+  QString CAP;
   /** the working directory */
-  char dir[1024];
+  QString dir;
   /**  */
   filterInfo * inf;
   /** which file (of totalFiles) is now in the work? */

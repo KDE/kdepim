@@ -316,15 +316,16 @@ bool  kmail::kmailMessage(filterInfo *info,char *folder,char *_msg,unsigned long
 #else
 
 FILE *f,*msg;
-char  FOLDER[1024];
+QString FOLDER;
 int   fh,bytes;
 char  buf[4096];
 //QWidget *parent=info->parent();
 
-  sprintf(FOLDER,"%s/Mail",getenv("HOME"));
-  mkdir(FOLDER,S_IRUSR|S_IWUSR|S_IXUSR);    // This makes $HOME/Mail if itdoesn't exist
-  sprintf(FOLDER,"%s/Mail/%s",getenv("HOME"),folder);
-  f=fopen(FOLDER,"ab");
+  FOLDER = QDir::homeDirPath() + "/Mail";
+
+  mkdir(QFile::encodeName(FOLDER),S_IRUSR|S_IWUSR|S_IXUSR);    // This makes $HOME/Mail if itdoesn't exist
+  FOLDER = FOLDER + "/" + folder;
+  f=fopen(QFile::encodeName(FOLDER),"ab");
   msg=fopen(_msg,"rb");
   fseek(msg,0,SEEK_SET);
   fh=fileno(msg);

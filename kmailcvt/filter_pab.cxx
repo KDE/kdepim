@@ -28,20 +28,16 @@ filter_pab::~filter_pab()
 
 void filter_pab::import(filterInfo *info)
 {
-QString _file;
-char     file[1024];
-char     dir[1024];
+QString  file;
 QWidget *parent=info->parent();
-   sprintf(dir,getenv("HOME"));
 
-   _file=KFileDialog::getOpenFileName(dir,"*.pab *.PAB *.Pab",parent);
-   if (_file.length()==0) {
+   file=KFileDialog::getOpenFileName(QDir::homeDirPath(),"*.pab *.PAB *.Pab",parent);
+   if (file.isEmpty()) {
      info->alert(name(),i18n("No address book chosen"));
      return;
    }
-   strcpy(file,_file.latin1());
 
-   {pab PAB(file,this,info);
+   {pab PAB(QFile::encodeName(file),this,info);
     QString from=i18n("Source: "),to=i18n("Destination: ");
       from+="\t";
       from+=file;
