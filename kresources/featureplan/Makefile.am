@@ -18,7 +18,8 @@ libkcal_resourcefeatureplan_la_COMPILE_FIRST = kde-features.h
 
 kde_module_LTLIBRARIES = kcal_resourcefeatureplan.la
 
-kcal_resourcefeatureplan_la_SOURCES = kcal_resourcefeatureplanplugin.cpp
+kcal_resourcefeatureplan_la_SOURCES = kcal_resourcefeatureplanplugin.cpp \
+                                      prefs.kcfgc
 kcal_resourcefeatureplan_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kcal_resourcefeatureplan_la_LIBADD = libkcal_resourcefeatureplan.la
 kcal_resourcefeatureplan_la_COMPILE_FIRST = kde-features.h
