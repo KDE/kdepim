@@ -1,6 +1,8 @@
 #ifndef KARM_UTILITY_H
 #define KARM_UTILITY_H
 
+#include <stdlib.h>
+
 #include "karmutility.h"
 
 QString formatTime( long minutes )
