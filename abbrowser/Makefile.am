@@ -18,7 +18,7 @@ abbrowser_METASOURCES = AUTO
 
 abbrowser_LDFLAGS = -L$(top_builddir)/kab2/lib $(all_libraries) $(KDE_RPATH)
 
-abbrowser_LDADD = -lKAddressBook -lkimgio $(LIB_KFILE)
+abbrowser_LDADD = -lKAddressBook $(LIB_KFILE)
 
 noinst_HEADERS = abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
 
