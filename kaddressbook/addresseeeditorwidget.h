@@ -121,7 +121,6 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     KABC::Addressee mAddressee;
     int mFormattedNameType;
     bool mDirty;
-    bool mIsExtension;
     bool mBlockSignals;
     bool mReadOnly;
 

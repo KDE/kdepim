@@ -733,7 +733,7 @@ void AddresseeEditorWidget::emitModified()
 
   KABC::Addressee::List list;
 
-  if ( mIsExtension && !mBlockSignals ) {
+  if ( isExtension() && !mBlockSignals ) {
     save();
     list.append( mAddressee );
   }
