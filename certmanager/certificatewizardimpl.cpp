@@ -450,6 +450,8 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
                         i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
     return;
   }
+  // All good, close dialog
+  CertificateWizard::accept();
 }
 
 // Called when pressing Finish
