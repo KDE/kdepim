@@ -157,7 +157,6 @@ void ViewManager::browse(const QString& url)
 
 void ViewManager::deleteAddressee()
 {
-
   KABC::Addressee a;
 
   // Get the selected uids
@@ -171,6 +170,9 @@ void ViewManager::deleteAddressee()
 
     // now if we deleted anything, refresh
     mActiveView->refresh();
+    emit selected( QString::null );
+    addresseeSelected( QString::null );
+
     emit modified();
   }
 }
