@@ -361,7 +361,16 @@ void KPilotInstaller::resizeEvent(QResizeEvent *e)
 {
 	FUNCTIONSETUP;
 
-	KMainWindow::resizeEvent(e);
+	// Real resize events should be handled by the real
+	// resizing code. If we are passed a NULL Event
+	// from local KPilot code, certainly don't change
+	// the main window's size.
+	//
+	//
+	if (e) 
+	{
+		KMainWindow::resizeEvent(e);
+	}
 
 	if (fManagingWidget)
 	{
@@ -475,7 +484,12 @@ void KPilotInstaller::showTitlePage(const QString& msg,bool force)
 		slotModeSelected(0);
 	}
 #else
-	slotModeSelected(0);
+	// Silly ternary operator just to *use* the
+	// parameter force, should be optimised away
+	// by the compiler.
+	//
+	//
+	slotModeSelected(force ? 0 : 0);
 #endif
 
 	if (!msg.isNull())
@@ -1275,19 +1289,33 @@ void KPilotInstaller::menuCallback(int item)
 
 void KPilotInstaller::optionsShowStatusbar()
 {
-    if (m_statusbarAction->isChecked())
-        statusBar()->show();
-    else
-        statusBar()->hide();
+	if (m_statusbarAction->isChecked())
+	{
+		statusBar()->show();
+	}
+	else
+	{
+		statusBar()->hide();
+	}
+
+	kapp->processEvents();
+	resizeEvent(0);
 }
 
 
 void KPilotInstaller::optionsShowToolbar()
 {
-    if (m_toolbarAction->isChecked())
-        toolBar()->show();
-    else
-        toolBar()->hide();
+	if (m_toolbarAction->isChecked())
+	{
+		toolBar()->show();
+	}
+	else
+	{
+		toolBar()->hide();
+	}
+	
+	kapp->processEvents();
+	resizeEvent(0);
 }
 
 
@@ -1601,6 +1629,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.48  2001/04/23 06:30:38  adridg
+// XML UI updates
+//
 // Revision 1.47  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //
