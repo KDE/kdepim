@@ -120,21 +120,23 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 
 KCal::Incidence *TodoConduitPrivate::getNextIncidence()
 {
+	FUNCTIONSETUP;
 	if (reading) {
-                ++fAllTodosIterator;
-                if ( fAllTodosIterator == fAllTodos.end() ) return 0;
-        } else {
-	        reading=true;
-                fAllTodosIterator = fAllTodos.begin();
-        }
-        return *fAllTodosIterator;
+		++fAllTodosIterator;
+	} 
+	else {
+		reading=true;
+		fAllTodosIterator = fAllTodos.begin();
+	}
+	
+	return(fAllTodosIterator == fAllTodos.end()) ? 0L : *fAllTodosIterator;
 }
 
 
 
 KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
 {
-FUNCTIONSETUP;
+	FUNCTIONSETUP;
 	KCal::Todo*e=0L;
 	if (!reading)
 	{
@@ -158,10 +160,7 @@ FUNCTIONSETUP;
 
 	}
 
-	if ( fAllTodosIterator == fAllTodos.end() ) 
-		return 0;
-	else 
-		return *fAllTodosIterator;
+	return (fAllTodosIterator == fAllTodos.end()) ? 0L : *fAllTodosIterator;
 }
 
 

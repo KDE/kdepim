@@ -108,6 +108,7 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 KCal::Incidence *VCalConduitPrivate::getNextIncidence()
 {
 	FUNCTIONSETUP;
+
 	if (reading) {
 		++fAllEventsIterator;
 	} else {
@@ -115,8 +116,7 @@ KCal::Incidence *VCalConduitPrivate::getNextIncidence()
 		fAllEventsIterator = fAllEvents.begin();
 	}
 	// At end of list, or empty list.
-	if ( fAllEventsIterator == fAllEvents.end() ) return 0;
-	return *fAllEventsIterator;
+	return (fAllEventsIterator == fAllEvents.end()) ? 0L : *fAllEventsIterator;
 }
 
 /** Find the next incidence in the list which ddoes not have the SYNCNONE flag set. The
@@ -143,8 +143,7 @@ KCal::Incidence *VCalConduitPrivate::getNextModifiedIncidence()
 		++fAllEventsIterator;
 		e=*fAllEventsIterator;
 	}
-	if ( fAllEventsIterator == fAllEvents.end() ) return 0;
-	else return *fAllEventsIterator;
+	return (fAllEventsIterator == fAllEvents.end()) ? 0L : 	*fAllEventsIterator;
 }
 
 
