@@ -863,11 +863,16 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
   }
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL(parentUrl, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
-  newBox = (newBox.isEmpty()) ? aBox : aBox + aDelimiter + newBox;
+  if ( newBox.isEmpty() )
+    newBox = aBox;
+  else if ( !aBox.isEmpty() )
+    newBox = aBox + aDelimiter + newBox;
+  kdDebug(7116) << "IMAP4::mkdir - create " << newBox << endl;
   imapCommand *cmd = doCommand (imapCommand::clientCreate(newBox));
 
   if (cmd->result () != "OK")
   {
+    kdDebug(7116) << "IMAP4::mkdir - " << cmd->resultInfo() << endl;
     error (ERR_COULD_NOT_MKDIR, _url.prettyURL());
     completeQueue.removeRef (cmd);
     return;
@@ -1449,6 +1454,21 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
     case ITYPE_DIR:
     case ITYPE_DIR_AND_BOX:
       {
+        if (getState() == ISTATE_SELECT && sBox == getCurrentBox())
+        {
+          kdDebug(7116) << "IMAP4::rename - close " << getCurrentBox() << endl;
+          // mailbox can only be renamed if it is closed
+          imapCommand *cmd = doCommand (imapCommand::clientClose());
+          bool ok = cmd->result() == "OK";
+          completeQueue.removeRef(cmd);
+          if (!ok)
+          {
+            error(ERR_CANNOT_RENAME, i18n("Unable to close mailbox."));
+            finished ();
+            return;
+          }
+          setState(ISTATE_LOGIN);
+        }
         imapCommand *cmd = doCommand (imapCommand::clientRename (sBox, dBox));
         if (cmd->result () != "OK")
           error (ERR_CANNOT_RENAME, cmd->result ());
@@ -2096,7 +2116,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
           completeQueue.removeRef (cmd);
         } // cache
       }
-      else
+      else // current == box
       {
         retVal = ITYPE_BOX;
       }
@@ -2108,6 +2128,24 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
   else
   {
     kdDebug(7116) << "IMAP4: parseURL: box [root]" << endl;
+    QString myNamespace = QString::null; // until namespace is supported
+    if (!mHierarchyDelim.contains(myNamespace))
+    {
+      // get the hierarchydelimiter (empty listing) and put it in the cache
+      imapCommand *cmd = doCommand (imapCommand::clientList ("", ""));
+      if (cmd->result () == "OK")
+      {
+        for (QValueListIterator < imapList > it = listResponses.begin ();
+             it != listResponses.end (); ++it)
+        {
+          _hierarchyDelimiter = (*it).hierarchyDelimiter();
+          mHierarchyDelim[myNamespace] = _hierarchyDelimiter;
+          kdDebug(7116) << "IMAP4: parseURL - got delimiter " << 
+            _hierarchyDelimiter << endl;
+        }
+      }
+      completeQueue.removeRef (cmd);
+    }
     retVal = ITYPE_DIR;
   }
 
