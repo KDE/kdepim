@@ -4,6 +4,8 @@
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"><!-- change language only here -->
+  
+  
 ]>
 
 <!-- The language must NOT be changed here. -->
@@ -27,7 +29,7 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 
 <copyright>
-<year>2001</year><year>2002</year>
+<year>2001</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -35,12 +37,15 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-10-01</date>
+<date>2002-01-18</date>
 <releaseinfo>0.05.00</releaseinfo>
 
 <abstract>
+<para>This handbook describes &kalarm; version 0.5.</para>
+
 <para>&kalarm; is an alarm/reminder message scheduler for &kde;.</para>
 </abstract>
+
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -51,6 +56,7 @@
 </keywordset>
 
 </bookinfo>
+
 
 <chapter id="introduction">
 <title>Introduction</title>
@@ -139,10 +145,9 @@ starts it.</para>
 <title>Adding a new alarm</title>
 
 <para>To add a new alarm message, select <menuchoice>
-<shortcut><keycap>Ins</keycap></shortcut>
-<guimenu><accel>A</accel>ctions</guimenu><guimenuitem><accel>N</accel>ew</guimenuitem>
-</menuchoice>.
-This displays the alarm message edit window:</para>
+<guimenu>Actions</guimenu><guimenuitem>New</guimenuitem></menuchoice>
+from the menu or use the keybinding <keycap>Ins</keycap>. This
+displays the alarm message edit window:</para>
 
 <screenshot>
 <screeninfo>Screenshot of the alarm edit window</screeninfo>
@@ -217,8 +222,9 @@ action="simul">&Ctrl;<keycap>M</keycap></keycombo>.</para>
 
 <listitem>
 <para><mousebutton>Right</mousebutton> click on its entry in the alarm
-list and choose <guimenuitem>Modify</guimenuitem>
-from the context menu.</para>
+list and choose
+<menuchoice><guimenuitem>Modify</guimenuitem></menuchoice> from the
+context menu.</para>
 </listitem>
 </itemizedlist>
 
@@ -270,12 +276,12 @@ button. This closes the alarm message window.</para>
 when the message is to be redisplayed, or select <guilabel>Defer for
 time interval</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
-<guibutton>Defer</guibutton> to defer the alarm
-message. If you don't want to defer it after all, just click
+<guibutton>Defer</guibutton> to defer the alarm message. If you don't
+want to defer it after all, just click
 <guibutton>OK</guibutton>.</para>
 
-<note><para>The <guibutton>Defer...</guibutton> button
-is not available for alarms which are displayed at login due to the
+<note><para>The <guibutton>Defer...</guibutton> button is not
+available for alarms which are displayed at login due to the
 <guilabel>Repeat at login</guilabel> option having been
 selected.</para></note>
 </listitem>
@@ -287,28 +293,145 @@ alarm message window.</para>
 
 </sect2>
 
-<sect2 id="gui-reset">
+<sect2>
+<title>Displaying &kalarm; in the system tray</title>
+
+<para>To display &kalarm; in the &kde; system tray when it is not
+currently displayed, select <menuchoice>
+<guimenu>Actions</guimenu><guimenuitem>Show System Tray Icon</guimenuitem>
+</menuchoice> or use the keybinding
+<keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>. This
+menu option is available only if you are currently running the &kde;
+desktop.</para>
+
+<para>To remove &kalarm; from the &kde; system tray when it is
+currently displayed, do one of the following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Select <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Hide System Tray Icon</guimenuitem></menuchoice>
+or use the keybinding
+<keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the system tray icon
+and choose <menuchoice><guimenuitem>Quit</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+</itemizedlist>
+
+<para>Use of the system tray icon is described
+<link linkend="system-tray">below</link>.</para>
+
+</sect2>
+
+<sect2 id="enable-disable">
+<title>Enabling/disabling alarm monitoring</title>
+
+<para>To enable alarm monitoring if monitoring is currently disabled,
+do one of the following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Select <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Enable Alarms</guimenuitem></menuchoice> or use the
+keybinding
+<keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the system tray icon
+and choose
+<menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+</itemizedlist>
+
+<para>The alarm daemon is started if necessary and alarms will be
+monitored for when they become due.</para>
+<warning><para>When the alarm daemon starts, this will affect any
+other applications which use the alarm daemon.</para></warning>
+
+<para>To disable alarm monitoring if monitoring is currently enabled,
+do one of the following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Select <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Alarms Enabled</guimenuitem></menuchoice> or use the
+keybinding
+<keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on the system tray icon
+and choose
+<menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice>
+from the context menu.</para>
+</listitem>
+</itemizedlist>
+
+<para>The alarm daemon stops monitoring &kalarm;'s alarms. &kalarm;
+will not display any further alarms until alarms are re-enabled.</para>
+
+<note><para>The alarm daemon is not stopped by this operation: it
+simply stops monitoring &kalarm;'s alarms. So there will be no effect
+on the functioning of any other applications which use the alarm
+daemon.</para></note>
+
+<para>The above menu items change according to the current alarm
+monitoring status.</para>
+
+</sect2>
+
+<sect2>
 <title>Resetting the alarm daemon</title>
 
-<para>To reset the alarm daemon, select
-<menuchoice>
+<para>To reset the alarm daemon, select <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
-</menuchoice> or use the keybinding <keycombo
-action="simul">&Ctrl;<keycap>R</keycap></keycombo>.</para>
+</menuchoice> or use the keybinding
+<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>.</para>
 
 <para>See the <link linkend="daemon-reset">Alarm daemon</link> section
 for a discussion about resetting the alarm daemon.</para>
 
 </sect2>
 
-<sect2>
+<sect2 id="preferences">
 <title>Configuring default options</title>
 
 <para>To set default options for &kalarm;, select
-<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kalarm;
-...</guimenuitem> </menuchoice>. This displays the configuration
-dialog. Here, you can set the default font and background colour to
-use for alarm message display.</para>
+<menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
+This displays the configuration dialog. Here, you can:</para>
+
+<itemizedlist>
+<listitem><para>Set the default font and background colour to use for
+alarm message display.</para>
+</listitem>
+
+<listitem><para>Specify that the &kalarm; system tray icon should be
+displayed at &kde; session login.</para>
+</listitem>
+
+<listitem><para>Set the frequency at which the &kalarm; system tray
+icon is updated to reflect whether alarms are currently being
+monitored. This involves checking whether the alarm daemon is
+running.</para>
+</listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>Configuring the alarm daemon</title>
+
+<para>To set options for the alarm daemon, select
+<menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure Alarm Daemon...</guimenuitem></menuchoice>.
+This displays the alarm daemon configuration dialog.</para>
 
 </sect2>
 
@@ -316,9 +439,9 @@ use for alarm message display.</para>
 <title>Quitting the program</title>
 
 <para>To exit from &kalarm;, select <menuchoice>
-<guimenu>File</guimenu><guimenuitem>Quit</guimenuitem> </menuchoice>
-or use the keybinding <keycombo
-action="simul">&Ctrl;<keycap>Q</keycap></keycombo>.</para>
+<guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>
+or use the keybinding
+<keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>.</para>
 
 <tip><para>This has no effect on the alarm daemon, which if already
 active will continue to monitor scheduled alarms and request their
@@ -327,12 +450,72 @@ display when they become due.</para></tip>
 </sect2>
 </sect1>
 
+<sect1 id="system-tray">
+<title>System tray icon</title>
+
+<para>&kalarm; may be run as an icon in the &kde; system tray. This
+icon allows one-click activation of &kalarm;, and provides both
+control and status indication of alarm monitoring. A normal &kalarm;
+icon indicates that alarms are being monitored, while a red cross
+through the icon indicates that alarms are not being monitored.</para>
+
+<para><mousebutton>Left</mousebutton> click on the system tray icon to
+activate &kalarm;.</para>
+
+<para><mousebutton>Right</mousebutton> click on the system tray icon to
+display its context menu:</para>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice></term>
+<listitem><para><action>Enables monitoring of alarms.</action></para>
+<para>See
+<link linkend="enable-disable">Enabling/disabling alarm monitoring</link>
+for details.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice></term>
+<listitem><para><action>Disables monitoring of alarms.</action></para>
+<para>See
+<link linkend="enable-disable">Enabling/disabling alarm monitoring</link>
+for details.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice></term>
+<listitem><para><action>Displays the &kalarm; preferences dialog.</action></para>
+<para>The preferences dialog is described in
+<link linkend="preferences">Configuring default options</link>. It
+includes options relating to the &kalarm; system tray icon.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Configure Alarm Daemon...</guimenuitem></menuchoice></term>
+<listitem><para><action>Displays the alarm daemon's configuration dialog.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Quit</guimenuitem></menuchoice></term>
+<listitem><para><action>Closes the &kalarm; system tray icon.</action></para>
+<para>This has no effect on other &kalarm; windows or on the
+monitoring of alarms by the alarm daemon.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
+
 <sect1 id="cmdline-operation">
 <title>Command line operation</title>
 
 <para>When command line parameters are supplied, &kalarm; does not
 display the list of scheduled alarms as described in <link
-linkend="graphmode">Graphical mode</link> above.  Command line options
+linkend="graphmode">Graphical mode</link> above. Command line options
 specific to &kalarm; may be used to perform the following
 operations:</para>
 
@@ -340,6 +523,10 @@ operations:</para>
 <listitem><para>schedule a new alarm message</para>
 </listitem>
 <listitem><para>control the alarm daemon</para>
+</listitem>
+<listitem><para>control &kalarm;'s display mode</para>
+</listitem>
+<listitem><para>obtain help</para>
 </listitem>
 </itemizedlist>
 
@@ -380,8 +567,9 @@ display by &kalarm;:</para>
 </row>
 <row>
   <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the name or &URL; of a text file whose contents are to form the alarm message.
-  <replaceable>message</replaceable> must not be present if this option is specified.</entry>
+  <entry>Specify the name or &URL; of a text file whose contents are
+  to form the alarm message. <replaceable>message</replaceable> must
+  not be present if this option is specified.</entry>
 </row>
 <row>
   <entry><option>-i</option>, <option>--interval
@@ -435,10 +623,10 @@ a red background at 10 p.m. on the 27th of this month are:</para>
 </sect2>
 
 <sect2>
-<title>Control the alarm daemon</title>
+<title>Other options</title>
 
 <para>The following options are used to reset or halt the alarm
-daemon.</para>
+daemon, or to control &kalarm;'s display mode.</para>
 
 <para>See the <link linkend="daemon-reset">Alarm daemon</link> section
 for a discussion about resetting and stopping the alarm daemon.</para>
@@ -460,21 +648,18 @@ for a discussion about resetting and stopping the alarm daemon.</para>
   <entry><option>--stop</option></entry>
   <entry>Stop the alarm daemon.</entry>
 </row>
+<row>
+  <entry><option>--tray</option></entry>
+  <entry>Display &kalarm; as an icon in the &kde; system tray.</entry>
+</row>
 </tbody>
 </tgroup>
 </informaltable>
 
-<para>The following command will reset the alarm daemon.</para>
+<para>For example, to reset the alarm daemon:</para>
 
 <informalexample><screen>
 <prompt>%</prompt> <userinput><command>kalarm</command> <option>--reset</option></userinput>
-</screen>
-</informalexample>
-
-<para>The following command will halt the alarm daemon.</para>
-
-<informalexample><screen>
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>--stop</option></userinput>
 </screen>
 </informalexample>
 
@@ -539,111 +724,21 @@ for alarms becoming due. When it determines that an alarm is due, it
 tells &kalarm; to display it, or to cancel it if it is late and late
 display was not selected for that alarm message.</para>
 
-<para>The alarm daemon may also be used by other applications.</para>
+<para>Under &kde3;3, the alarm daemon may also be used by other
+applications, including KOrganizer.</para>
 
-<para>The alarm daemon runs in the background. A separate &kde; panel
-application, the alarm daemon &GUI;, provides both a status indication
-and a control menu for the alarm daemon. The menu is accessed by
-<mousebutton>right</mousebutton> clicking on the icon in the &kde;
-panel.</para>
-
-<para>You can activate &kalarm; by <mousebutton>left</mousebutton>
-clicking on the alarm daemon &GUI; icon in the &kde; panel, provided
-either that &kalarm; is the only application which uses the daemon, or
-that &kalarm; is selected for activation in the alarm daemon &GUI;'s
-menu.</para>
-
-<sect2>
-<title>Alarm daemon &GUI; menu</title>
-
-<variablelist>
-<varlistentry>
-<term><guimenuitem>Alarms Enabled</guimenuitem></term>
-<listitem><para><action>Toggles alarms enabled / disabled.</action></para>
-<para>When alarms are enabled, the alarm daemon is started and calendar
-files marked in the menu as selected will be monitored for alarms
-becoming due. When alarms are not enabled, the alarm daemon is halted
-and no further alarm monitoring is performed and &kalarm; will not
-display any alarms, until the alarm daemon is restarted.</para>
-<warning><para>Changing this option will also affect the functioning
-of any other applications which use the alarm daemon.</para></warning>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guimenuitem>Start alarm daemon automatically at login</guimenuitem></term>
-<listitem><para><action>Toggles on / off automatically running the
-alarm daemon at login.</action></para>
-<para>When auto start is enabled, the alarm daemon will automatically
-run whenever you log on. This is the normal mode which ensures that
-alarms are monitored. If you want to disable alarm monitoring after
-you next log off, deselect this option; the alarm daemon will no
-longer be started at login.</para>
-<note><para>Whenever the alarm daemon is started up, whether by
-&kalarm; or any other application which uses the daemon or by other
-means, auto start is re-enabled. The facility to disable auto start is
-provided primarily to allow you to disable the alarm daemon if you do
-not expect to use &kalarm; or any other client applications for a
-while.</para></note>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guimenuitem>Display this tray icon at login</guimenuitem></term>
-<listitem><para><action>Toggles on / off automatically running the
-alarm daemon &GUI; at login.</action></para>
-<para>When this option is enabled, the alarm daemon GUI will
-automatically be displayed in the system tray whenever you log
-on.</para>
-<note><para>This option has no effect on the the alarm daemon, so you
-may safely switch off display of the alarm daemon GUI without
-affecting the monitoring and display of alarms.</para></note>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guimenuitem>Click starts <replaceable>application</replaceable></guimenuitem></term>
-<listitem><para><action>Selects the application to be activated</action> when
-the panel icon is <mousebutton>left</mousebutton> clicked.</para>
-
-<note><para>There is one menu entry for each application registered
-with the alarm daemon. If &kalarm; is the only application registered
-with the alarm daemon &GUI;, this menu option will not appear, and
-&kalarm; will be activated whenever the icon is
-<mousebutton>left</mousebutton> clicked.</para></note>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guimenuitem><replaceable>calendar file</replaceable></guimenuitem></term><listitem><para><action>Toggles the calendar file enabled /
-disabled.</action></para>
-<para>When the given calendar file is enabled, it will be monitored
-for alarms becoming due. When it is not enabled, no alarm monitoring
-is performed for that calendar file, and &kalarm; will not display any
-alarms from it.</para>
-<note><para>There is one menu entry for each calendar file being
-monitored by the alarm daemon. &kalarm; always uses a single calendar
-file. Any additional calendar files shown in the menu will belong to
-other applications which are registered with the alarm
-daemon.</para></note>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guimenuitem>Quit</guimenuitem></term>
-<listitem><para><action>Quits the alarm daemon &GUI;.</action></para>
-<para>This has no effect on the monitoring of alarms by the alarm
-daemon.</para>
-</listitem>
-</varlistentry>
-</variablelist>
-</sect2>
+<para>The alarm daemon runs in the background, with no user interface.
+Its configuration dialog may be accessed either via the &kde; control
+centre, or via the &kalarm; menu option
+<menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure Alarm Daemon...</guimenuitem>
+</menuchoice>.</para>
 
 <sect2>
 <title>Starting, resetting and stopping the alarm daemon</title>
 
 <para>The alarm daemon is normally started at &kde; session login
-(unless you use the alarm daemon &GUI; menu to disable auto start), and
+(unless you use its configuration dialog to disable auto start), and
 runs continuously until logout. If for any reason it is not running,
 alarm monitoring will not occur and &kalarm; will not display any
 alarms.</para>
@@ -652,9 +747,9 @@ alarms.</para>
 <title>Starting the alarm daemon</title>
 <para>To start the alarm daemon, you can either run &kalarm; in its
 default graphical mode (&ie; without any command line parameters),
-reset the daemon as described <link linkend="daemon-reset">below</link>,
-enable alarms using the alarm daemon &GUI;'s menu, or you can run the
-alarm daemon directly from the command line:</para>
+enable alarms using &kalarm;'s system tray icon menu, reset the daemon
+as described <link linkend="daemon-reset">below</link>, or you can run
+the alarm daemon directly from the command line:</para>
 
 <screen width="40">
 <prompt>%</prompt> <userinput><command>kalarmd</command></userinput>
@@ -684,7 +779,8 @@ running.</para></tip>
 <para>To reset the alarm daemon, either use the menu command
 <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
-</menuchoice>, the keybinding <keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>,
+</menuchoice>, the keybinding
+<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>,
 or type the following command:</para>
 
 <screen width="40">
@@ -703,8 +799,7 @@ scheduled alarm messages until the daemon is restarted.</para>
 applications which also use the alarm daemon. Consider resetting the
 daemon instead.</para></warning>
 
-<para>To stop the alarm daemon, either use the alarm daemon &GUI;'s
-menu to disable alarms, or type the following command:</para>
+<para>To stop the alarm daemon, type the following command:</para>
 
 <screen width="40">
 <prompt>%</prompt> <userinput><command>kalarm</command> <option>--stop</option></userinput>
@@ -1196,14 +1291,11 @@ a different calendar file is specified in the preferences file.</para>
 
 <qandaentry>
 <question>
-<para>What configuration files do the alarm daemon and the alarm
-daemon GUI use?</para>
+<para>What configuration files does the alarm daemon use?</para>
 </question>
 <answer>
 <para>The file <filename>~/.kde2/share/config/kalarmdrc</filename>
-holds your alarm daemon preferences, and
-<filename>~/.kde2/share/config/kalarmdguirc</filename>
-holds your alarm daemon GUI preferences.</para>
+holds your alarm daemon preferences.</para>
 
 <para>The file <filename>~/.kde2/share/apps/kalarmd/clients</filename>
 holds details of client applications which have previously been
@@ -1213,14 +1305,15 @@ registered with the alarm daemon, and their calendar files.</para>
 
 <qandaentry>
 <question>
-<para>What are the application names of &kalarm;, the alarm daemon and
-the alarm daemon &GUI;?</para>
+<para>What are the application names of &kalarm; and the alarm
+daemon?</para>
 </question>
 <answer>
-<para>&kalarm;'s application name is <command>kalarm</command>,
-the alarm daemon's application name is
-<command>kalarmd</command>, and the alarm daemon &GUI;'s
-application name is <command>kalarmdgui</command>.</para>
+<para>&kalarm;'s application name is <application>kalarm</application>,
+and the alarm daemon's application name is
+<application>kalarmd</application>. In addition, there is a small
+application <application>kalarmautostart</application> whose function
+is to start &kalarm;'s system tray icon at login.</para>
 </answer>
 </qandaentry>
 
@@ -1248,10 +1341,10 @@ simply reinstall &kalarm;.</para>
 &kalarm;
 </para>
 <para>
-Program copyright 2001,2002 David Jarvie <email>software@astrojar.org.uk</email>
+Program copyright 2001, 2002 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 <para>
-Alarm daemon and alarm daemon &GUI; authors:
+Alarm daemon authors:
 <itemizedlist>
 <listitem><para>Preston Brown <email>pbrown@kde.org</email></para>
 </listitem>
@@ -1263,15 +1356,15 @@ Alarm daemon and alarm daemon &GUI; authors:
 </para>
 
 <para>
-Documentation copyright 2001,2002 David Jarvie <email>software@astrojar.org.uk</email>
+Documentation copyright 2001, 2002 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
-<para>Thanks go to the author of the &kde; 1 KAlarm application,
+<para>Thanks go to the author of the &kde;1 KAlarm application,
 Stefan Nikolaus <email>stefan.nikolaus@stuco.uni-oldenburg.de</email>,
-who kindly agreed to allow the name &kalarm; to be used by this &kde;
-2 application.
+who kindly agreed to allow the name &kalarm; to be used by this
+&kde;2/&kde;3 application.
 </para>
 
 &underFDL;               <!-- FDL: do not remove -->
@@ -1291,6 +1384,7 @@ who kindly agreed to allow the name &kalarm; to be used by this &kde;
 <para>&kalarm; is available as a standalone package from
 <ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
 </para>
+
 </sect1>
 
 <sect1 id="requirements">
@@ -1350,6 +1444,7 @@ if your &kde; is installed in <filename>/opt/kde2</filename>:</para>
 
 <para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde2</replaceable></userinput></para>
 </note>
+
 
 <important><para>If you install &kalarm; as a standalone package along
 with &package; 2.2.x, you must install &package; first and &kalarm;
