@@ -125,7 +125,8 @@ void Incidence::setOrganizer(const QString &o)
   mOrganizer = o;
   if (mOrganizer.left(7).upper() == "MAILTO:")
     mOrganizer = mOrganizer.remove(0,7);
-  emit eventUpdated(this);  
+
+  emit eventUpdated(this);
 }
 
 const QString &Incidence::organizer() const
@@ -317,7 +318,6 @@ void Incidence::setRelatedTo(Incidence *relatedTo)
   }
   mRelatedTo = relatedTo;
   if (mRelatedTo) mRelatedTo->addRelation(this);
-  emit eventUpdated(this);
 }
 
 Incidence *Incidence::relatedTo() const
@@ -340,7 +340,6 @@ void Incidence::removeRelation(Incidence *event)
 {
   mRelations.removeRef(event);
 //  if (event->getRelatedTo() == this) event->setRelatedTo(0);
-  emit eventUpdated(this);
 }
 
 bool Incidence::recursOn(const QDate &qd) const
