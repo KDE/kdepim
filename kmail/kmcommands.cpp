@@ -1703,19 +1703,22 @@ KMSaveAttachmentsCommand::KMSaveAttachmentsCommand( QWidget *parent, QPtrList<pa
   : KMCommand( parent, msg ), mParent( parent ), mAttachments( attachments ), mEncoded( encoded )
 {
   // do not load the complete message but only parts
+  mMessageComplete = msg->isComplete();
   msg->setComplete( true );
   setDeletesItself( true );
 }
 
 void KMSaveAttachmentsCommand::execute()
 {
+  QPtrList<KMMessage> lst = retrievedMsgs();
+  if ( lst.count() == 1 ) // restore original complete state
+    lst.first()->setComplete(mMessageComplete);
   if ( mAttachments.count() > 0 )
   {
     saveAll( mAttachments );
     return;
   }
   KMMessage *msg = 0;
-  QPtrList<KMMessage> lst = retrievedMsgs();
   QPtrListIterator<KMMessage> itr( lst );
 
   while ( itr.current() ) {
