@@ -51,8 +51,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-07-13</date>
-<releaseinfo>1.4.0</releaseinfo>
+<date>2004-10-16</date>
+<releaseinfo>1.4.1</releaseinfo>
 
 <abstract><para>&karm; tracks time spent on various tasks.</para></abstract>
 
@@ -148,6 +148,8 @@ To create a subtask, pick the parent task and select
 <guimenuitem>Configure KArm</guimenuitem>
 </menuchoice>.
 When it next opens, it reloads the task list from the same file.</para>
+
+<para>&karm; can import and export tasks to minimize your work. See <link linkend="interfaces">Other Systems</link>.</para>
 
 </sect1>
 
@@ -435,12 +437,26 @@ indented to indicate the task/sub-task relationships.</para>
 <para>&karm;, like KOrganizer and Apple's iCal, uses the industry standard
 <ulink
 url="http://developer.kde.org/documentation/standards/index.html">iCalendar</ulink>
-format for it's data.  &karm; can read and write the to do lists created by
+format for its data.  &karm; can read and write the to do lists created by
 these two applications.</para>
 
 <warning><para>If both &karm; and KOrganizer have the same file open, if you
 edit the file with KOrganizer, you risk losing data.  To be safe,
 only edit the file with one application or the other.</para></warning>
+
+</sect2>
+
+<sect2 id="planner"><title>Planner</title>
+
+<para>As a typical usecase, you might want to plan a project with the project 
+management tool Imendio Planner 
+(from <ulink url="http://planner.imendio.org">planner.imendio.org</ulink>) 
+and import its tasks to &karm;, to have them in the industry 
+standard <ulink
+url="http://developer.kde.org/documentation/standards/index.html">iCalendar</ulink> 
+format. Having done so, you are able to schedule the tasks in KOrganizer, and account your time 
+to them in &karm;. That's a way of controlling if your project stays in its 
+budget and time thresholds.</para>
 
 </sect2>
 
@@ -640,6 +656,18 @@ times</action></para>
 <listitem>
 <para><action>Import </action>old style &karm; save files (&karm; 
 now uses iCalendar-style save files.)</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guisubmenu>Import/Export</guisubmenu>
+<guimenuitem>Import Tasks from Planner...</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para><action>Import </action>an imendio planner project (see <ulink
+url="http://planner.imendio.org">planner.imendio.org</ulink>). All tasks, subtasks and their "completed" flag will be imported from a .planner-file. You can import them as a subtask by creating a subtask, leaving it marked, and then importing. </para>
 </listitem>
 </varlistentry>
 
