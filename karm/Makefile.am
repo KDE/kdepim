@@ -1,6 +1,6 @@
 
 ############ Autoconf-generated variables  ###################
-INCLUDES = -I$(top_srcdir)/libkcal -I$(top_builddir)/libkdepim -I$(top_srcdir)/kresources/remote -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkcal -I$(top_builddir)/libkdepim -I$(top_srcdir)/libkdepim -I$(top_srcdir)/kresources/remote -I$(top_srcdir) $(all_includes)
 
 bin_PROGRAMS = karm
 SUBDIRS = support pics test
