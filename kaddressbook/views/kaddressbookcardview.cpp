@@ -1,25 +1,25 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include "kaddressbookcardview.h"
 
@@ -43,9 +43,9 @@ class AddresseeCardViewItem : public CardViewItem
   public:
     AddresseeCardViewItem(const KABC::Field::List &fields,
                           bool showEmptyFields,
-                          KABC::AddressBook *doc, const KABC::Addressee &a, 
+                          KABC::AddressBook *doc, const KABC::Addressee &a,
                           CardView *parent)
-      : CardViewItem(parent, a.formattedName()), 
+      : CardViewItem(parent, a.formattedName()),
         mFields( fields ), mShowEmptyFields(showEmptyFields),
         mDocument(doc), mAddressee(a)
       {
@@ -54,18 +54,18 @@ class AddresseeCardViewItem : public CardViewItem
           }
           refresh();
       }
-      
+
     const KABC::Addressee &addressee() const { return mAddressee; }
-    
+
     void refresh()
     {
         // Update our addressee, since it may have changed elsewhere
         mAddressee = mDocument->findByUid(mAddressee.uid());
-        
+
         if (!mAddressee.isEmpty())
         {
           clearFields();
-          
+
           // Try all the selected fields until we find one with text.
           // This will limit the number of unlabeled icons in the view
           KABC::Field::List::Iterator iter;
@@ -79,7 +79,7 @@ class AddresseeCardViewItem : public CardViewItem
           setCaption( mAddressee.realName() );
         }
     }
-    
+
   private:
     KABC::Field::List mFields;
     bool mShowEmptyFields;
@@ -95,7 +95,7 @@ AddresseeCardView::AddresseeCardView(QWidget *parent, const char *name)
 {
   setAcceptDrops(true);
 }
-  
+
 AddresseeCardView::~AddresseeCardView()
 {
 }
@@ -116,24 +116,24 @@ void AddresseeCardView::startDrag()
   emit startAddresseeDrag();
 }
 
-    
+
 ///////////////////////////////
 // KAddressBookCardView
 
-KAddressBookCardView::KAddressBookCardView(KABC::AddressBook *doc, 
+KAddressBookCardView::KAddressBookCardView(KABC::AddressBook *doc,
                                            QWidget *parent,
                                            const char *name)
     : KAddressBookView(doc, parent, name)
 {
     mShowEmptyFields = true;
-    
+
     // Init the GUI
     QVBoxLayout *layout = new QVBoxLayout(viewWidget());
-    
+
     mCardView = new AddresseeCardView(viewWidget(), "mCardView");
     mCardView->setSelectionMode(CardView::Extended);
     layout->addWidget(mCardView);
-    
+
     // Connect up the signals
     connect(mCardView, SIGNAL(executed(CardViewItem *)),
             this, SLOT(addresseeExecuted(CardViewItem *)));
@@ -148,20 +148,20 @@ KAddressBookCardView::KAddressBookCardView(KABC::AddressBook *doc,
 KAddressBookCardView::~KAddressBookCardView()
 {
 }
-    
+
 void KAddressBookCardView::readConfig(KConfig *config)
 {
   KAddressBookView::readConfig(config);
-  
+
   mCardView->setDrawCardBorder(config->readBoolEntry("DrawBorder", true));
-  mCardView->setDrawColSeparators(config->readBoolEntry("DrawSeparators", 
+  mCardView->setDrawColSeparators(config->readBoolEntry("DrawSeparators",
                                                         true));
   mCardView->setDrawFieldLabels(config->readBoolEntry("DrawFieldLabels",true));
   mShowEmptyFields = config->readBoolEntry("ShowEmptyFields", true);
-  
+
   disconnect(mCardView, SIGNAL(executed(CardViewItem *)),
             this, SLOT(addresseeExecuted(CardViewItem *)));
-            
+
   if (KABPrefs::instance()->mHonorSingleClick)
     connect(mCardView, SIGNAL(executed(CardViewItem *)),
             this, SLOT(addresseeExecuted(CardViewItem *)));
@@ -169,13 +169,13 @@ void KAddressBookCardView::readConfig(KConfig *config)
     connect(mCardView, SIGNAL(doubleClicked(CardViewItem *)),
             this, SLOT(addresseeExecuted(CardViewItem *)));
 }
-  
+
 QStringList KAddressBookCardView::selectedUids()
 {
     QStringList uidList;
     CardViewItem *item;
     AddresseeCardViewItem *aItem;
-    
+
     for (item = mCardView->firstItem(); item; item = item->nextItem())
     {
         if (item->isSelected())
@@ -188,18 +188,18 @@ QStringList KAddressBookCardView::selectedUids()
 
     return uidList;
 }
-    
+
 void KAddressBookCardView::refresh(QString uid)
 {
     CardViewItem *item;
     AddresseeCardViewItem *aItem;
-    
+
     if (uid == QString::null)
     {
         // Rebuild the view
         mCardView->viewport()->setUpdatesEnabled( false );
         mCardView->clear();
-        
+
         KABC::Addressee::List addresseeList = addressees();
         KABC::Addressee::List::Iterator iter;
         for (iter = addresseeList.begin(); iter != addresseeList.end(); ++iter)
@@ -209,7 +209,7 @@ void KAddressBookCardView::refresh(QString uid)
         }
         mCardView->viewport()->setUpdatesEnabled( true );
         mCardView->viewport()->update();
-        
+
         // by default nothing is selected
         emit selected(QString::null);
     }
@@ -217,7 +217,7 @@ void KAddressBookCardView::refresh(QString uid)
     {
         // Try to find the one to refresh
         bool found = false;
-        for (item = mCardView->firstItem(); item && !found; 
+        for (item = mCardView->firstItem(); item && !found;
              item = item->nextItem())
         {
             aItem = dynamic_cast<AddresseeCardViewItem*>(item);
@@ -225,7 +225,7 @@ void KAddressBookCardView::refresh(QString uid)
             {
                 aItem->refresh();
                 found = true;
-            }    
+            }
         }
     }
 }
@@ -234,7 +234,7 @@ void KAddressBookCardView::setSelected(QString uid, bool selected)
 {
     CardViewItem *item;
     AddresseeCardViewItem *aItem;
-    
+
     if (uid == QString::null)
     {
         mCardView->selectAll(selected);
@@ -242,11 +242,11 @@ void KAddressBookCardView::setSelected(QString uid, bool selected)
     else
     {
         bool found = false;
-        for (item = mCardView->firstItem(); item && !found; 
+        for (item = mCardView->firstItem(); item && !found;
              item = item->nextItem())
          {
              aItem = dynamic_cast<AddresseeCardViewItem*>(item);
-             
+
              if ((aItem) && (aItem->addressee().uid() == uid))
              {
                  mCardView->setSelected(aItem, selected);
@@ -255,44 +255,47 @@ void KAddressBookCardView::setSelected(QString uid, bool selected)
          }
     }
 }
-   
+
 void KAddressBookCardView::addresseeExecuted(CardViewItem *item)
 {
     AddresseeCardViewItem *aItem = dynamic_cast<AddresseeCardViewItem*>(item);
-    
+
     if (aItem)
     {
       emit executed(aItem->addressee().uid());
-    }     
+    }
 }
 
 void KAddressBookCardView::addresseeSelected()
 {
     CardViewItem *item;
     AddresseeCardViewItem *aItem;
-    
+
     bool found = false;
-    for (item = mCardView->firstItem(); item && !found; 
+    for (item = mCardView->firstItem(); item && !found;
          item = item->nextItem())
     {
         if (item->isSelected())
         {
             aItem = dynamic_cast<AddresseeCardViewItem*>(item);
-            emit selected(aItem->addressee().uid()); 
-            found = true;
+            if ( aItem )
+            {
+                emit selected(aItem->addressee().uid());
+                found = true;
+            }
         }
     }
-    
+
     if (!found)
         emit selected(QString::null);
-        
+
 }
 
-void KAddressBookCardView::incrementalSearch(const QString &value, 
+void KAddressBookCardView::incrementalSearch(const QString &value,
                                              KABC::Field *field)
 {
   CardViewItem *item = mCardView->findItem(value, field->label());
-    
+
   if (item)
   {
     // avoid flickering in details page
