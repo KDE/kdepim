@@ -21,7 +21,7 @@ lib_LTLIBRARIES = libphonekonnector.la
 INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal $(all_includes)
 
 libphonekonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
-libphonekonnector_la_LIBDADD = ../../libkonnector.la ../../../libksyncentries.la
+libphonekonnector_la_LIBADD = ../../libkonnector.la ../../../libksyncentries.la
 libphonekonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module 
 libphonekonnector_la_SOURCES = phonekonnector.cpp modemhandler.cpp
 
