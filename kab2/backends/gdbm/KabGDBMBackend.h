@@ -1,7 +1,6 @@
 #include <gdbm.h>
 #include <qstring.h>
-#include <qcstring.h>
-#include <qstrlist.h>
+#include <qstringlist.h>
 #include <kurl.h>
 
 #include "KabBackend.h"
@@ -13,28 +12,18 @@ class KabGDBMBackend : public KabBackend
 {
   public:
     
-    KabGDBMBackend();
+    KabGDBMBackend(const KURL &);
     virtual ~KabGDBMBackend();
     
-    virtual bool init   (const KURL &);
-    virtual bool read   (const QCString &, QByteArray &);
-    virtual bool write  (const QCString &, const QByteArray &);
-    virtual bool remove (const QCString &);
+    virtual bool read   (const QString &, QByteArray &);
+    virtual bool write  (const QString &, const QByteArray &);
+    virtual bool remove (const QString &);
     
-    virtual QStrList allKeys();
+    virtual QStringList allKeys();
     
   private:
-    
-    void _openForWriting();
-    void _openForReading();
-    void _create();
-    void _close();
-    
-    enum State { Read, Write, Closed };
-    State state_;
+
     GDBM_FILE dbf_;
-    int blockSize_;
-    int mode_;
     QString filename_;
 };
 

@@ -2,10 +2,10 @@
 
 extern "C" {
 void KabBackendInit(const KURL &);
-bool KabBackendRead (const QCString &, QByteArray &);
-bool KabBackendWrite(const QCString &, const QByteArray &);
-bool KabBackendRemove(const QCString &);
-void KabBackendAllKeys(QStrList &);
+bool KabBackendRead (const QString &, QByteArray &);
+bool KabBackendWrite(const QString &, const QByteArray &);
+bool KabBackendRemove(const QString &);
+QStringList KabBackendAllKeys();
 }
 
 KabGDBMBackend * backend = 0;
@@ -13,35 +13,35 @@ KabGDBMBackend * backend = 0;
   void
 KabBackendInit(const KURL & url)
 {
-  backend = new KabGDBMBackend;
-  backend->init(url);
+  backend = new KabGDBMBackend(url);
 }
 
   bool
-KabBackendRead (const QCString & s, QByteArray & a)
+KabBackendRead (const QString & s, QByteArray & a)
 {
   ASSERT(backend != 0);
   return backend->read(s, a);
 }
 
   bool
-KabBackendWrite(const QCString & s, const QByteArray & a)
+KabBackendWrite(const QString & s, const QByteArray & a)
 {
   ASSERT(backend != 0);
   return backend->write(s, a);
 }
 
-  void
-KabBackendAllKeys(QStrList & l)
-{
-  ASSERT(backend != 0);
-  l = backend->allKeys();
-} 
-
   bool
-KabBackendRemove(const QCString & s)
+KabBackendRemove(const QString & s)
 {
   ASSERT(backend != 0);
   return backend->remove(s);
 }
+
+  QStringList
+KabBackendAllKeys()
+{
+  ASSERT(backend != 0);
+  return backend->allKeys();
+} 
+
 

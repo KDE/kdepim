@@ -100,5 +100,6 @@ kab2/backends/gdbm/Makefile \
 kab2/UI/TypeMapEditor/Makefile \
 kab2/UI/AddressBookEditor/Makefile \
 corba/kab/server/Makefile \
+corba/kab/client/Makefile \
 abbrowser/doc/en/Makefile \
 )
