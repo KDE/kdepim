@@ -19,7 +19,6 @@
 #include "dcopdrop.h"
 
 #include "dcopdropif.h"
-#include "dropdlg.h"
 #include "intid.h"
 #include "mailid.h"
 #include "mailsubject.h"

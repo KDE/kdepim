@@ -13,9 +13,6 @@
 
 #include"utils.h"
 #include"maildrop.h"
-#include"gencfg.h"
-#include"comcfg.h"
-#include"dropdlg.h"
 #include"mailsubject.h"
 
 const char *KMailDrop::TypeConfigKey = "type";

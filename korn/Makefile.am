@@ -56,44 +56,18 @@ noinst_HEADERS = \
   dcopdrop.h \
   dcopdropif.h \
   dockeditem.h \
-  dropdlg.h \
-  dropman.h \
-  ecfg.h \
-  edrop.h \
-  gencfg.h \
   hvcontainer.h \
   hvitem.h \
-  comcfg.h \
-  imap.h \
-  imapcfg.h \
-  kbiffimap.h \
   keditlistboxman.h \
-  kfbrowsebtn.h \
   kornaccountcfgimpl.h \
-  kornbutt.h \
   kornboxcfg.h \
   kornboxcfgimpl.h \
   korncfg.h \
   korncfgimpl.h \
-  kornset.h \
   maildrop.h \
-  moncfg.h \
-  news.h \
-  newscfg.h \
-  optdlg.h \
-  pollcfg.h \
-  polldrop.h \
-  pop.h \
-  popcfg.h \
   progress_dialog.ui.h \
   protocols.h \
-  qmail.h \
-  qmailcfg.h \
   kornshell.h \
-  typedlg.h \
-  unixcfg.h \
-  unixdrop.h \
-  btnstyle.h \
   subjectsdlg.h \
   maildlg.h \
   mailid.h \
@@ -108,7 +82,6 @@ noinst_HEADERS = \
   kio_single_subject.h \
   kio_read.h \
   kio_delete.h \
-  kiocfg.h \
   sortedmailsubject.h \
   imap_proto.h \
   imaps_proto.h \

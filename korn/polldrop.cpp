@@ -10,8 +10,6 @@
 
 #include"utils.h"
 #include"polldrop.h"
-#include"pollcfg.h"
-#include"dropdlg.h"
 
 KPollableDrop::KPollableDrop()
 	: KMailDrop()
