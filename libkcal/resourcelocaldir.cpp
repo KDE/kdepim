@@ -29,6 +29,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kstandarddirs.h>
 
 #include "vcaldrag.h"
 #include "vcalformat.h"
@@ -86,8 +87,6 @@ void ResourceLocalDir::init()
 {
   setType( "dir" );
 
-  mOpen = false;
-
   connect( &mDirWatch, SIGNAL( dirty( const QString & ) ),
            SLOT( reload( const QString & ) ) );
   connect( &mDirWatch, SIGNAL( created( const QString & ) ),
@@ -109,53 +108,52 @@ ResourceLocalDir::~ResourceLocalDir()
   delete mLock;
 }
 
-bool ResourceLocalDir::doOpen()
-{
-  kdDebug(5800) << "Opening resource " << resourceName() << " with URL " << mURL.prettyURL() << endl;
-
-  mOpen = true;
-
-  return true;
-}
-
 bool ResourceLocalDir::doLoad()
 {
   kdDebug(5800) << "ResourceLocalDir::load()" << endl;
 
-  if ( !mOpen ) return true;
-
   mCalendar.close();
-
   QString dirName = mURL.path();
+  bool success = true;
+  
+  if ( !KStandardDirs::exists( dirName ) ) {
+    kdDebug(5800) << "ResourceLocalDir::load(): Directory doesn't exist yet. Creating it..." << endl;
+    
+    // Create the directory. Use 0775 to allow group-writable if the umask 
+    // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
+    // group-shared directories!
+    success = KStandardDirs::makeDir( dirName, 0775 );
+  } else {
 
-  kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
+    kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
+    QDir dir( dirName );
 
-  QDir dir( dirName );
+    QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
 
-  QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
+    QStringList::ConstIterator it;
+    for( it = entries.begin(); it != entries.end(); ++it ) {
+      if ( (*it).endsWith( "~" ) ) // is backup file, ignore it
+        continue;
 
-  QStringList::ConstIterator it;
-  for( it = entries.begin(); it != entries.end(); ++it ) {
-    if ( (*it).endsWith( "~" ) ) // is backup file, ignore it
-      continue;
-
-    QString fileName = dirName + "/" + *it;
-    kdDebug(5800) << " read '" << fileName << "'" << endl;
-    CalendarLocal cal( mCalendar.timeZoneId() );
-    cal.load( fileName );
-    Incidence::List incidences = cal.rawIncidences();
-    Incidence *i = incidences.first();
-    if ( i ) mCalendar.addIncidence( i->clone() );
+      QString fileName = dirName + "/" + *it;
+      kdDebug(5800) << " read '" << fileName << "'" << endl;
+      CalendarLocal cal( mCalendar.timeZoneId() );
+      success &= cal.load( fileName );
+      Incidence::List incidences = cal.rawIncidences();
+      Incidence::List::ConstIterator it;
+      for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
+        Incidence *i = *it;
+        if ( i ) mCalendar.addIncidence( i->clone() );
+      }
+    }
   }
 
-  return true;
+  return success;
 }
 
 bool ResourceLocalDir::doSave()
 {
   kdDebug(5800) << "ResourceLocalDir::save()" << endl;
-
-  if ( !mOpen ) return true;
 
   Incidence::List incidences = mCalendar.rawIncidences();
 
@@ -182,7 +180,7 @@ void ResourceLocalDir::reload( const QString &file )
 {
   kdDebug(5800) << "ResourceLocalDir::reload()" << endl;
 
-  if ( !mOpen ) return;
+  if ( !isOpen() ) return;
 
   kdDebug(5800) << "  File: '" << file << "'" << endl;
 
@@ -190,14 +188,6 @@ void ResourceLocalDir::reload( const QString &file )
   load();
 
   emit resourceChanged( this );
-}
-
-void ResourceLocalDir::doClose()
-{
-  if ( !mOpen ) return;
-
-  mCalendar.close();
-  mOpen = false;
 }
 
 

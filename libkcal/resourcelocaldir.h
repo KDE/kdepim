@@ -72,9 +72,6 @@ class ResourceLocalDir : public ResourceCached
     void reload( const QString & );
 
   protected:
-    bool doOpen();
-    void doClose();
-
     bool doLoad();
     bool doSave();
 
@@ -84,8 +81,6 @@ class ResourceLocalDir : public ResourceCached
 
     KURL mURL;
     ICalFormat mFormat;
-
-    bool mOpen;
 
     KDirWatch mDirWatch;
     
