@@ -405,6 +405,7 @@ Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
 
 Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 {
+  kdDebug(5800) << "CalendarLocal::alarms(" << from.toString() << " - " << to.toString() << ")\n";
   Alarm::List alarms;
 
   // Check all non-recurring events.
@@ -438,12 +439,12 @@ void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
   QPtrList<Alarm> alarmList = incidence->alarms();
   Alarm *alarm;
   for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
-    kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
-                  << "': " << alarm->time().toString() << " - " << alarm->enabled() << endl;
+//    kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
+//                  << "': " << alarm->time().toString() << " - " << alarm->enabled() << endl;
     if ( alarm->enabled() ) {
-//      kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
-//                    << "': " << alarm->time().toString() << endl;
       if ( alarm->time() >= from && alarm->time() <= to ) {
+        kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
+                      << "': " << alarm->time().toString() << endl;
         alarms.append( alarm );
       }
     }
