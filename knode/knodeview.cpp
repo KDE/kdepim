@@ -233,7 +233,7 @@ void KNodeView::readOptions()
   else
     setSizes(lst);
 
-  lst = conf->readIntListEntry("Hdrs_Size");
+  lst = conf->readIntListEntry("Hdrs_Size3");
   if (lst.count()==8) {
     QValueList<int>::Iterator it = lst.begin();
     QHeader *h=c_olView->header();
@@ -306,7 +306,7 @@ void KNodeView::saveOptions()
   h=h_drView->header();
   for (int i=0; i<5; i++)
     lst << h->sectionSize(i);
-  conf->writeEntry("Hdrs_Size", lst);
+  conf->writeEntry("Hdrs_Size3", lst);
 
   // store section order
   lst.clear();

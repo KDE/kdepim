@@ -534,8 +534,8 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   m_arkSecs=conf->readNumEntry("markSecs", 5);
   if (m_arkSecs<0) m_arkSecs = 0;
   t_otalExpand=conf->readBoolEntry("totalExpand", true);
-  s_howLines=conf->readBoolEntry("showLines2", true);
-  s_howScore=conf->readBoolEntry("showScore", true);
+  s_howLines=conf->readBoolEntry("showLines3", true);
+  s_howScore=conf->readBoolEntry("showScore3", true);
 }
 
 
@@ -556,8 +556,8 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("autoMark", a_utoMark);
   conf->writeEntry("markSecs", m_arkSecs);
   conf->writeEntry("totalExpand", t_otalExpand);
-  conf->writeEntry("showLines2", s_howLines);
-  conf->writeEntry("showScore", s_howScore);
+  conf->writeEntry("showLines3", s_howLines);
+  conf->writeEntry("showScore3", s_howScore);
 }
 
 
