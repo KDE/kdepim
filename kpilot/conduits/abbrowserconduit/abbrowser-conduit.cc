@@ -1336,8 +1336,8 @@ bool AbbrowserConduit::_savePalmAddr(PilotAddress *palmAddr, Addressee &pcAddr)
 
 
 
-bool AbbrowserConduit::_savePCAddr(Addressee &pcAddr, PilotAddress*backupAddr,
-		PilotAddress*palmAddr)
+bool AbbrowserConduit::_savePCAddr(Addressee &pcAddr, PilotAddress*, 
+	PilotAddress*)
 {
 	FUNCTIONSETUP;
 
