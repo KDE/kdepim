@@ -1,0 +1,61 @@
+The Concept of Generic Syncing!!
+
+
+Goals:
+    -One sync algorithm
+    -Device Independent
+    -Extandable
+    -Easy to write plugins
+    
+
+We achieve the goal of one sync algorithm by having a special container set.
+It is a Syncee and this Syncee contains SyncEntry. The Syncee provides
+at least cloning and iterating through the SyncEntries. 
+
+Device Independent:
+    There are different kind of devices and different situations to use them.
+You can have a one way copy or two way blind copy where all records are just
+copied. Then we also support the concept of MetaSync. In MetaSync we collect
+and then can recognize changes and do merging on them.
+    Also there are limitations of the different device. For example with KDE 
+Addressbook you can save Geo Data and Keys but the Opie Addressbook is not capable
+of saving this data. So we need a way not to lose these attributes. This is why
+a Syncee carries a map of supported attributes so before we copy over a change
+from a device to another we merge the not supported attributes into the new record.
+But then there is a different limitation some devices may support the same attributes
+but have a limitation of the width. This should be handled in the actual backend.
+We call the backend "Konnector" and it is responsible for getting the data and
+transforming them into the Container classes and after a sync back. Then there are 
+utility classes (will be) to assist using MetaSyncing and Attribute Substituition.
+
+
+CASES:
+    Sync an Apple iCalendar:
+	-No Manipulator Parts
+	-KDE Cal backend
+	-WebCal Backend
+	-One way think CAl->KDE
+
+    Sync two-n Desktops:
+	-No Manipulator
+	-KDE Backends 
+	-KDE Remote Backend
+	-KDE Remote Backend
+	-Sync ask all to fetch data and call SyncAlgo
+	-MetaSync
+	
+Problems:
+    KDE ABook with Geo Data.
+    Sync with Opie (stores Geo Data seperately)
+    Opie changes Name and KDE GeoData
+    Conflicting two records Name can be merged but GeoData still conflicts
+    
+    Solution: AttributeMAP and set GeoData to unsupported
+    
+
+
+TODO:
+ We need to group Konnectors to Manipulator Parts and have a SyncGroup eacht other 
+ can access.
+ 
+    -holgar
