@@ -157,8 +157,8 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
     // reply to this request is handled in korganizer's incomingdialog
     return true;
   } else {
-    switch (status) {
-    case ScheduleMessage::Obsolete: {
+//    switch (status) {
+//    case ScheduleMessage::Obsolete: {
       // why the same s "RequestUpdate?
       Event *even = mCalendar->event(incidence->uid());
       if (even) {
@@ -172,7 +172,7 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
       mCalendar->addIncidence(inc);
       deleteTransaction(incidence);
       return true;
-    }
+/*    }
     case ScheduleMessage::RequestNew:
       mCalendar->addIncidence(inc);
       deleteTransaction(incidence);
@@ -196,7 +196,7 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
     }
   }
   deleteTransaction(incidence);
-  return false;
+  return false;*/
 }
 
 bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status status)
