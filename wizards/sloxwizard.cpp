@@ -70,7 +70,7 @@ class CreateSloxKabcResource : public KConfigPropagator::Change
     {
       kdDebug() << "Create SLOX Addressbook Resource" << endl;
 
-      KCal::CalendarResourceManager m( "contact" );
+      KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
 
       KURL url( "https://" + SloxConfig::self()->server() );
