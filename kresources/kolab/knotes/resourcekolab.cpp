@@ -173,14 +173,15 @@ bool ResourceKolab::addNote( const QString xml, const QString& subresource,
 bool ResourceKolab::addNote( KCal::Journal* journal,
                              const QString& subresource, Q_UINT32 sernum )
 {
-  kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal* )\n";
+  kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal*, '" << subresource << "', " << sernum << " )\n";
+
+  manager()->registerNote( this, journal );
 
   // Find out if this note was previously stored in KMail
   bool newNote = subresource.isEmpty();
 
   if ( !newNote ) {
     mCalendar.addJournal( journal );
-    manager()->registerNote( this, journal );
     journal->registerObserver( this );
   }
 
