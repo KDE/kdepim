@@ -337,7 +337,7 @@ void VCalConduit::setAlarms(KCal::Event *e, const PilotDateEntry *de)
 	KCal::Alarm*alm=e->newAlarm();
 	if (!alm) return;
 
-	alm->setOffset(adv);
+	alm->setStartOffset(adv);
 	alm->setEnabled(true);
 }
 
@@ -378,7 +378,7 @@ void VCalConduit::setAlarms(PilotDateEntry*de, const KCal::Event *e)
 	}
 
 	// palm and PC offsets have a different sign!!
-	int aoffs=-alm->offset().asSeconds()/60;
+	int aoffs=-alm->startOffset().asSeconds()/60;
 	int offs=(aoffs>0)?aoffs:-aoffs;
 
 	// find the best Advance Unit
