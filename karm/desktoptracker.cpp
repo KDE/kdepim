@@ -43,13 +43,13 @@ void DesktopTracker::changeTimers()
 
   // stop trackers for _previousDesktop
   TaskVector tv = desktopTracker[_previousDesktop];
-  for (it = tv.begin(); it != tv.end(); it++) {
+  for (it = tv.begin(); it != tv.end(); ++it) {
     emit leftActiveDesktop(*it);
   }
 
   // start trackers for desktop
   tv = desktopTracker[_desktop];
-  for (it = tv.begin(); it != tv.end(); it++) {
+  for (it = tv.begin(); it != tv.end(); ++it) {
     emit reachedtActiveDesktop(*it);
   }
   _previousDesktop = _desktop;
