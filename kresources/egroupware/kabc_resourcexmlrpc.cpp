@@ -370,7 +370,8 @@ void ResourceXMLRPC::fault( int error, const QString &errorMsg,
                             const QVariant& )
 {
   QString msg = i18n( "<qt>Server sent error %1: <b>%2</b></qt>" ).arg( error ).arg( errorMsg );
-  addressBook()->error( msg );
+  if ( addressBook() )
+    addressBook()->error( msg );
 
   mSynchronizer->stop();
 }
