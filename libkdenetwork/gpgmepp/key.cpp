@@ -23,6 +23,8 @@
 
 #include <gpgmepp/key.h>
 
+#include "util.h"
+
 #include <gpgme.h>
 
 #include <string.h>
@@ -35,7 +37,13 @@ namespace GpgME {
 
   struct Key::Private {
     Private( gpgme_key_t aKey, unsigned int aMode )
-      : key( aKey ), mode( aMode ) {}
+      : key( aKey ),
+#ifdef HAVE_GPGME_KEY_T_KEYLIST_MODE
+	mode( 0 )
+#else
+	mode( aMode )
+#endif
+    {}
     gpgme_key_t key;
     unsigned int mode;
   };
@@ -257,7 +265,11 @@ namespace GpgME {
   }
 
   unsigned int Key::keyListMode() const {
+#ifdef HAVE_GPGME_KEY_T_KEYLIST_MODE
+    return d->key ? convert_from_gpgme_keylist_mode_t( d->key->keylist_mode ) : 0 ;
+#else
     return d ? d->mode : 0 ;
+#endif
   }
 
   //

@@ -22,7 +22,7 @@ gpgmepp_HEADERS = context.h \
 		encryptionresult.h \
 		engineinfo.h
 
-noinst_HEADERS = context_p.h data_p.h shared.h callbacks.h gpgme-0-3-compat.h result_p.h
+noinst_HEADERS = context_p.h data_p.h shared.h callbacks.h gpgme-0-3-compat.h result_p.h util.h
 
 lib_LTLIBRARIES = libgpgme++.la
 libgpgme___la_SOURCES = context.cpp \
@@ -44,4 +44,3 @@ libgpgme___la_LDFLAGS = -no-undefined -version-info 0:0:0
 libgpgme___la_LIBADD = $(GPGME_LIBS)
 libgpgme___la_DEPENDENCIES = $(GPGME_LIBS_DEP)
 
-include ../../admin/Doxyfile.am

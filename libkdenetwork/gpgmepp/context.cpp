@@ -36,6 +36,7 @@
 #include "callbacks.h"
 #include "data_p.h"
 #include "context_p.h"
+#include "util.h"
 
 #include <gpgme.h>
 
@@ -130,27 +131,9 @@ namespace GpgME {
     assert( which >= -2 );
     gpgme_set_include_certs( d->ctx, which );
   }
+
   int Context::includeCertificates() const {
     return gpgme_get_include_certs( d->ctx );
-  }
-
-  static inline gpgme_keylist_mode_t add_to_gpgme_keylist_mode_t( unsigned int oldmode, unsigned int newmodes ) {
-    if ( newmodes & Context::Local ) oldmode |= GPGME_KEYLIST_MODE_LOCAL;
-    if ( newmodes & Context::Extern ) oldmode |= GPGME_KEYLIST_MODE_EXTERN;
-    if ( newmodes & Context::Signatures ) oldmode |= GPGME_KEYLIST_MODE_SIGS;
-    if ( newmodes & Context::Validate ) {
-#ifdef HAVE_GPGME_KEYLIST_MODE_VALIDATE
-      oldmode |= GPGME_KEYLIST_MODE_VALIDATE;
-#elif !defined(NDEBUG)
-      std::cerr << "GpgME::Context: ignoring Valdidate keylist flag (gpgme too old)." << std::endl;
-#endif
-    }
-#ifndef NDEBUG
-    if ( newmodes & ~(Context::Local|Context::Extern|Context::Signatures|Context::Validate) )
-      cerr << "GpgME::Context: keylist mode must be one of Local, "
-	"Extern, Signatures, or Validate, or a combination thereof!" << endl;
-#endif
-    return static_cast<gpgme_keylist_mode_t>( oldmode );
   }
 
   void Context::setKeyListMode( unsigned int mode ) {
@@ -164,24 +147,7 @@ namespace GpgME {
     
 
   unsigned int Context::keyListMode() const {
-    const unsigned int cur = gpgme_get_keylist_mode( d->ctx );
-    unsigned int result = 0;
-    if ( cur & GPGME_KEYLIST_MODE_LOCAL ) result |= Local;
-    if ( cur & GPGME_KEYLIST_MODE_EXTERN ) result |= Extern;
-    if ( cur & GPGME_KEYLIST_MODE_SIGS ) result |= Signatures;
-#ifdef HAVE_GPGME_KEYLIST_MODE_VALIDATE
-    if ( cur & GPGME_KEYLIST_MODE_VALIDATE ) result |= Validate;
-#endif
-#ifndef NDEBUG
-    if ( cur & ~(GPGME_KEYLIST_MODE_LOCAL|
-		 GPGME_KEYLIST_MODE_EXTERN|
-#ifdef HAVE_GPGME_KEYLIST_MODE_VALIDATE
-		 GPGME_KEYLIST_MODE_VALIDATE|
-#endif
-		 GPGME_KEYLIST_MODE_SIGS) )
-      std::cerr << "GpgME::Context: WARNING: gpgme_get_keylist_mode() returned an unknown flag!" << std::endl;
-#endif // NDEBUG
-    return result;
+    return convert_from_gpgme_keylist_mode_t( gpgme_get_keylist_mode( d->ctx ) );
   }
 
   void Context::setProgressProvider( ProgressProvider * provider ) {

@@ -110,6 +110,17 @@ KDEPIM_PATH_GPGME(0.4.4,[
 	], [
 		AC_MSG_RESULT([no])
 	])
+
+	AC_MSG_CHECKING([if gpgme has gpgme_key_t->keylist_mode])
+	AC_TRY_COMPILE([#include <gpgme.h>], [
+		gpgme_key_t key = 0;
+		key->keylist_mode = 0;
+	], [
+		AC_DEFINE(HAVE_GPGME_KEY_T_KEYLIST_MODE, 1, [Define to 1 if your gpgme's gpgme_key_t has the keylist_mode member])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
 	CFLAGS="$kdepim_gpgmepp_save_cflags"
 	LIBS="$kdepim_gpgmepp_save_libs"
 	AC_LANG_RESTORE
