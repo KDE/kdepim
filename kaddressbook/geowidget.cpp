@@ -60,16 +60,18 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
   label = new QLabel( i18n( "Latitude:" ), this );
   topLayout->addWidget( label, 0, 1 );
 
-  mLatitudeBox = new KDoubleSpinBox( -90, 90, 0.5, 0, 6, this );
+  mLatitudeBox = new KDoubleSpinBox( -91, 90, 1, -91, 6, this );
   mLatitudeBox->setSuffix( "°" );
+  mLatitudeBox->setSpecialValueText( i18n( "undefined" ) );
   topLayout->addWidget( mLatitudeBox, 0, 2 );
   label->setBuddy( mLatitudeBox );
 
   label = new QLabel( i18n( "Longitude:" ), this );
   topLayout->addWidget( label, 1, 1 );
 
-  mLongitudeBox = new KDoubleSpinBox( -180, 180, 0.5, 0, 6, this );
+  mLongitudeBox = new KDoubleSpinBox( -181, 180, 1, -181, 6, this );
   mLongitudeBox->setSuffix( "°" );
+  mLongitudeBox->setSpecialValueText( i18n( "undefined" ) );
   topLayout->addWidget( mLongitudeBox, 1, 2 );
   label->setBuddy( mLongitudeBox );
 
@@ -92,8 +94,13 @@ GeoWidget::~GeoWidget()
 
 void GeoWidget::setGeo( const KABC::Geo &geo )
 {
-  mLatitudeBox->setValue( geo.latitude() );
-  mLongitudeBox->setValue( geo.longitude() );
+  if ( geo.isValid() ) {
+    mLatitudeBox->setValue( geo.latitude() );
+    mLongitudeBox->setValue( geo.longitude() );
+  } else {
+    mLatitudeBox->setValue( -91 );
+    mLongitudeBox->setValue( -181 );
+  }
 }
 
 KABC::Geo GeoWidget::geo() const
