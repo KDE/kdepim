@@ -41,13 +41,17 @@ class KNFolder : public KNArticleCollection  {
     int id()                            { return i_d; }
     void setId(int i)                   { i_d=i; }
     int parentId()                      { return p_arentId; }
+    bool isStandardFolder()             { return (i_d > 0) && (i_d <=3); }
+    bool isRootFolder()                 { return i_d==0; }
 
     //list item handling
     void updateListItem();
+    bool wasOpen()                      { return w_asOpen; }
 
     //info
     QString path();
     bool readInfo(const QString &confPath);
+    bool readInfo();
     void saveInfo();
 
     //article access
@@ -73,9 +77,10 @@ class KNFolder : public KNArticleCollection  {
 
     protected:
       void closeFiles();
-      int i_d;            //unique id
-      int p_arentId;      //-1 for toplevel
-      bool i_ndexDirty;   //do we need to sync?
+      int i_d;            // unique id: 0: root folder 1-3: standard folders
+      int p_arentId;      // -1 for the root folder
+      bool i_ndexDirty;   // do we need to sync?
+      bool w_asOpen;      // was this folder open in the listview on the last shutdown?
       KNFile m_boxFile;
       QFile i_ndexFile;
       QString i_nfoPath;
@@ -96,7 +101,5 @@ class KNFolder : public KNArticleCollection  {
           bool flags[6];
       };
 };
-
-
 
 #endif

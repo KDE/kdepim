@@ -114,7 +114,6 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);
 
   //view
-  setCaption(i18n("KDE News Reader"));
   v_iew=new KNodeView(this, "knodeView");
   setCentralWidget(v_iew);
   knGlobals.view=v_iew;
@@ -204,8 +203,24 @@ void KNMainWindow::blockUI(bool b)
   b_lockInput = b;
   menuBar()->setEnabled(!b);
   a_ccel->setEnabled(!b);
+  accel()->setEnabled(!b);
+  if (b)
+    installEventFilter(this);
+  else
+    removeEventFilter(this);
   v_iew->blockUI(b);
   setCursorBusy(b);
+}
+
+
+void KNMainWindow::disableAccels(bool b)
+{
+  a_ccel->setEnabled(!b);
+  accel()->setEnabled(!b);
+  if (b)
+    installEventFilter(this);
+  else
+    removeEventFilter(this);
 }
 
 
@@ -215,7 +230,9 @@ void KNMainWindow::secureProcessEvents()
   b_lockInput = true;
   menuBar()->setEnabled(false);
   a_ccel->setEnabled(false);
+  accel()->setEnabled(false);
   v_iew->blockUI(true);
+  installEventFilter(this);
 
   kapp->processEvents();
 
@@ -223,6 +240,8 @@ void KNMainWindow::secureProcessEvents()
   v_iew->blockUI(false);
   menuBar()->setEnabled(true);
   a_ccel->setEnabled(true);
+  accel()->setEnabled(true);
+  removeEventFilter(this);
 }
 
 
@@ -283,11 +302,8 @@ void KNMainWindow::openURL(const KURL &url)
 
   }
 
-  if(item) {
+  if (item)
     v_iew->collectionView()->setActive(item, true);
-    v_iew->collectionView()->setCurrentItem(item);
-    v_iew->collectionView()->ensureItemVisible(item);
-  }
 }
 
 
@@ -339,6 +355,17 @@ void KNMainWindow::slotConfToolbar()
 void KNMainWindow::slotSettings()
 {
   v_iew->c_fgManager->configure();
+}
+
+
+bool KNMainWindow::eventFilter(QObject *, QEvent *e)
+{
+  if ((e->type() == QEvent::KeyPress) ||
+      (e->type() == QEvent::KeyRelease) ||
+      (e->type() == QEvent::Accel) ||
+      (e->type() == QEvent::AccelOverride))
+    return true;
+  return false;
 }
 
 

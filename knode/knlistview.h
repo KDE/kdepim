@@ -17,10 +17,11 @@
 #ifndef KNLISTVIEW_H
 #define KNLISTVIEW_H
 
-#include <qlistview.h>
+#include <qbitarray.h>
+
+#include <klistview.h>
 
 class KNListView;
-class KNDragHandler;
 
 
 class KNLVItemBase : public QListViewItem  {
@@ -33,13 +34,15 @@ class KNLVItemBase : public QListViewItem  {
     void setActive(bool b)  { a_ctive = b; };
     bool isActive()         { return a_ctive; }
 
-    void hover(bool b)      { h_over=b; }
-
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     int width(const QFontMetrics &fm, const QListView *lv, int column);
     void paintFocus(QPainter *, const QColorGroup & cg, const QRect & r);
     void sortChildItems(int column, bool a);
     void expandChildren();
+
+    // DND
+    virtual QDragObject *dragObject() const             { return 0; };
+    virtual bool acceptDrag(QDropEvent* ) const    { return false; };
 
   protected:
     virtual bool greyOut()          { return false; }
@@ -50,19 +53,19 @@ class KNLVItemBase : public QListViewItem  {
     virtual const QFont& fontForColumn(int, const QFont &font)    { return font; }
 
   private:
-    bool a_ctive, h_over;
+    bool a_ctive;
 
 };
 
 
-class KNListView : public QListView  {
+class KNListView : public KListView  {
 
   Q_OBJECT
 
   friend class KNLVItemBase;
 
   public:
-    KNListView(QWidget *parent, const char *name=0, KNDragHandler *dh=0);
+    KNListView(QWidget *parent, const char *name=0);
     ~KNListView();
 
     int sortColumn()                { return s_ortCol; }
@@ -71,8 +74,13 @@ class KNListView : public QListView  {
 
     void setActive(QListViewItem *item, bool activate);
     void clear();
+    void clearSelection();
 
-    void triggerDropError(const QString &e);
+    void ensureItemVisibleWithMargin(const QListViewItem *i);
+
+    // outsideOk == accept drops of this type even if
+    //              the mouse cursor is not on top of an item
+    void addAcceptableDropMimetype(const char *mimeType, bool outsideOk);
 
   public slots:
     void slotSortList(int col);
@@ -81,38 +89,29 @@ class KNListView : public QListView  {
   protected:
     void activeRemoved()            { a_ctiveItem = 0; }
     void contentsMousePressEvent(QMouseEvent *e);
-    void contentsMouseMoveEvent(QMouseEvent *e);
-    void contentsMouseReleaseEvent(QMouseEvent *e);
-    void contentsDragEnterEvent(QDragEnterEvent *e);
-    void contentsDragMoveEvent(QDragMoveEvent *e);
-    void contentsDragLeaveEvent(QDragLeaveEvent *e);
-    void contentsDropEvent(QDropEvent *e);
+    void contentsMouseDoubleClickEvent(QMouseEvent *e);
     void keyPressEvent(QKeyEvent *e);
     void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
+    QDragObject* dragObject() const;
+    bool acceptDrag(QDropEvent* event) const;
 
     bool s_ortAsc;
-    int s_ortCol;
+    int s_ortCol, d_elayedCenter;
     KNLVItemBase *a_ctiveItem;
-    KNDragHandler *d_handler;
-    QPoint d_ragStartPos;
-    bool d_ragMousePressed;
-    KNLVItemBase *d_ragHoverItem;
-    QString d_ropError;
+    QArray<const char*> a_cceptableDropMimetypes;
+    QBitArray a_cceptOutside;
+    bool k_eepSelection;
 
   protected slots:
-    void slotShowDropError();
+    void slotCenterDelayed();
 
   signals:
     void itemSelected(QListViewItem*);
     void middleMBClick(QListViewItem*);
     void sortingChanged(int);
     void focusChanged(QFocusEvent*);
-    void dropReceived(const char*,QListViewItem*);
 
 };
 
-
-
 #endif
-

@@ -268,16 +268,12 @@ void KNArticleManager::showHdrs(bool clear)
 
     }
 
-
     if(current && current->filterResult()) {
       if(!current->listItem())
         createThread(current);
       v_iew->setActive(current->listItem(),true);
-      v_iew->setCurrentItem(current->listItem());
-      v_iew->ensureItemVisible(current->listItem());
       setFirstChild=false;
     }
-
 
     if (g_roup->isLocked() && (0!=pthread_mutex_unlock(knGlobals.netAccess->nntpMutex())))
       kdDebug(5003) << "failed to unlock nntp mutex" << endl;
@@ -483,20 +479,20 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
 }
 
 
-void KNArticleManager::saveInFolder(KNRemoteArticle::List &l, KNFolder *f)
+void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
 {
   if(!f) return;
 
-  KNRemoteArticle *rem;
+  KNArticle *org;
   KNLocalArticle *loc;
   KNLocalArticle::List l2;
 
-  for(rem=l.first(); rem; rem=l.next()) {
-    if(!rem->hasContent())
+  for(org=l.first(); org; org=l.next()) {
+    if(!org->hasContent())
       continue;
     loc=new KNLocalArticle(0);
     loc->setEditDisabled(true);
-    loc->setContent(rem->encodedContent());
+    loc->setContent(org->encodedContent());
     loc->parse();
     l2.append(loc);
   }
@@ -531,7 +527,7 @@ void KNArticleManager::saveInFolder(KNRemoteArticle::List &l, KNFolder *f)
 }
 
 
-void KNArticleManager::saveInFolder(KNLocalArticle::List &l, KNFolder *f)
+void KNArticleManager::moveIntoFolder(KNLocalArticle::List &l, KNFolder *f)
 {
   if(!f) return;
 

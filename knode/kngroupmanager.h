@@ -102,7 +102,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     // group handling
     void showGroupDialog(KNNntpAccount *a, QWidget *parent=0);
     void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
-    void unsubscribeGroup(KNGroup *g=0);
+    bool unsubscribeGroup(KNGroup *g=0);
     void showGroupProperties(KNGroup *g=0);
     void checkGroupForNewHeaders(KNGroup *g=0);
     void expireGroupNow(KNGroup *g=0);
@@ -110,6 +110,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
 
     void checkAll(KNNntpAccount *a);
     void expireAll(KNCleanUp *cup);
+    void expireAll(KNNntpAccount *a);
     void syncGroups();    
 
     // job handling

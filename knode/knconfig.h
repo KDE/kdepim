@@ -281,7 +281,7 @@ class Appearance : public Base {
 #define COL_CNT 13
 #define FNT_CNT 4
 #define HEX_CNT 4
-#define ICON_CNT 15
+#define ICON_CNT 17
 
   friend class AppearanceWidget;
 
@@ -298,7 +298,8 @@ class Appearance : public Base {
                         redBallChkd=3,    newFups=4,      eyes=5,
                         mail=6,           posting=7,      canceledPosting=8,
                         savedRemote=9,    nntp=10,        group=11,
-                        folder=12,        sendErr=13,     null=14 };
+                        folder=12,        rootFolder=13,  customFolder=14,
+                        sendErr=15,       null=16 };
     Appearance();
     ~Appearance();
 
@@ -458,6 +459,7 @@ class ReadNewsGeneral : public Base {
     int autoMarkSeconds()            { return m_arkSecs; }
     bool markCrossposts()            { return m_arkCrossposts; }
 
+    bool smartScrolling()            { return s_martScrolling; }
     bool totalExpandThreads()        { return t_otalExpand; }
     bool showLines()                 { return s_howLines; }
     bool showScore()                 { return s_howScore; }
@@ -469,6 +471,7 @@ class ReadNewsGeneral : public Base {
     bool  a_utoCheck,
           a_utoMark,
           m_arkCrossposts,
+          s_martScrolling,
           t_otalExpand,
           s_howLines,
           s_howScore;
@@ -493,6 +496,7 @@ class ReadNewsGeneralWidget : public BaseWidget {
     QCheckBox   *a_utoCB,
                 *m_arkCB,
                 *m_arkCrossCB,
+                *s_martScrollingCB,
                 *e_xpThrCB,
                 *l_inesCB,
                 *s_coreCB;

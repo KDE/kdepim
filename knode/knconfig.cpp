@@ -265,7 +265,9 @@ KNConfig::Appearance::Appearance()
   i_cons[savedRemote]     = SmallIcon("editcopy");
   i_cons[nntp]            = UserIcon("server");
   i_cons[group]           = UserIcon("group");
-  i_cons[folder]          = SmallIcon("folder");
+  i_cons[folder]          = SmallIcon("folder_cyan");
+  i_cons[rootFolder]      = SmallIcon("folder");
+  i_cons[customFolder]    = SmallIcon("folder_green");
   i_cons[sendErr]         = UserIcon("snderr");
 }
 
@@ -566,6 +568,7 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   m_arkSecs=conf->readNumEntry("markSecs", 5);
   if (m_arkSecs<0) m_arkSecs = 0;
   m_arkCrossposts=conf->readBoolEntry("markCrossposts", true);
+  s_martScrolling=conf->readBoolEntry("smartScrolling", true);
   t_otalExpand=conf->readBoolEntry("totalExpand", true);
   s_howLines=conf->readBoolEntry("showLines3", true);
   s_howScore=conf->readBoolEntry("showScore3", true);
@@ -594,6 +597,7 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("autoMark", a_utoMark);
   conf->writeEntry("markSecs", m_arkSecs);
   conf->writeEntry("markCrossposts", m_arkCrossposts);
+  conf->writeEntry("smartScrolling", s_martScrolling);
   conf->writeEntry("totalExpand", t_otalExpand);
   conf->writeEntry("showLines3", s_howLines);
   conf->writeEntry("showScore3", s_howScore);

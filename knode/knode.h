@@ -64,6 +64,7 @@ class KNMainWindow : public KMainWindow
     void setStatusHelpMsg(const QString& text);
     void setCursorBusy(bool b=true);
     void blockUI(bool b=true);
+    void disableAccels(bool b=true);
     void secureProcessEvents();  // processEvents with some blocking
 
     virtual QSize sizeHint() const;   // useful default value
@@ -72,6 +73,8 @@ class KNMainWindow : public KMainWindow
     void openURL(const KURL &url);
 
   protected:
+
+    bool eventFilter(QObject *, QEvent *);
 
     //checks if run for the first time, sets some global defaults (email configuration)
     bool firstStart();

@@ -39,17 +39,17 @@
 
 
 KNFolder::KNFolder()
-  : KNArticleCollection(0), i_d(-1), p_arentId(-1), i_ndexDirty(false)
+  : KNArticleCollection(0), i_d(-1), p_arentId(-1), i_ndexDirty(false), w_asOpen(true)
 {
 }
 
 
 KNFolder::KNFolder(int id, const QString &name, KNFolder *parent)
-  : KNArticleCollection(parent) , i_d(id), i_ndexDirty(false)
+  : KNArticleCollection(parent), i_d(id), i_ndexDirty(false), w_asOpen(true)
 {
-  QString fname=path()+QString("custom_%2").arg(i_d);
+  QString fname=path()+QString("custom_%1").arg(i_d);
 
-  n_ame=name;
+  n_ame = name;
   m_boxFile.setName(fname+".mbox");
   i_ndexFile.setName(fname+".idx");
   i_nfoPath=fname+".info";
@@ -64,11 +64,11 @@ KNFolder::KNFolder(int id, const QString &name, KNFolder *parent)
 
 
 KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNFolder *parent)
-  : KNArticleCollection(parent) , i_d(id), i_ndexDirty(false)
+  : KNArticleCollection(parent), i_d(id), i_ndexDirty(false), w_asOpen(true)
 {
   QString fname=path()+QString("%1_%2").arg(prefix).arg(i_d);
 
-  n_ame=name;
+  n_ame = name;
   m_boxFile.setName(fname+".mbox");
   i_ndexFile.setName(fname+".idx");
   i_nfoPath=fname+".info";
@@ -92,7 +92,8 @@ void KNFolder::updateListItem()
 {
   if(l_istItem) {
     l_istItem->setText(0, n_ame);
-    l_istItem->setNumber(1, c_ount);
+    if (!isRootFolder())
+      l_istItem->setNumber(1, c_ount);
   }
 }
 
@@ -114,9 +115,12 @@ bool KNFolder::readInfo(const QString &infoPath)
   i_nfoPath=infoPath;
 
   KSimpleConfig info(i_nfoPath);
-  n_ame=info.readEntry("name");
-  i_d=info.readNumEntry("id", -1);
-  p_arentId=info.readNumEntry("parentId", -1);
+  if (!isRootFolder() && !isStandardFolder()) {
+    n_ame=info.readEntry("name");
+    i_d=info.readNumEntry("id", -1);
+    p_arentId=info.readNumEntry("parentId", -1);
+  }
+  w_asOpen=info.readBoolEntry("wasOpen", true);
 
   if(i_d>-1) {
     QFileInfo fi(infoPath);
@@ -133,13 +137,23 @@ bool KNFolder::readInfo(const QString &infoPath)
 }
 
 
+bool KNFolder::readInfo()
+{
+  return readInfo(i_nfoPath);
+}
+
+
 void KNFolder::saveInfo()
 {
-  if(!i_nfoPath.isEmpty() && i_d>3) {  // do never save infos for standard-folders !!
+  if(!i_nfoPath.isEmpty()) {
     KSimpleConfig info(i_nfoPath);
-    info.writeEntry("name", n_ame);
-    info.writeEntry("id", i_d);
-    info.writeEntry("parentId", p_arentId);
+    if (!isRootFolder() && !isStandardFolder()) {
+      info.writeEntry("name", n_ame);
+      info.writeEntry("id", i_d);
+      info.writeEntry("parentId", p_arentId);
+    }
+    if(l_istItem)
+      info.writeEntry("wasOpen", l_istItem->isOpen());
   }
 }
 

@@ -81,8 +81,8 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     bool unloadArticle(KNArticle *a, bool force=true);
 
     //article storage
-    void saveInFolder(KNRemoteArticle::List &l, KNFolder *f);
-    void saveInFolder(KNLocalArticle::List &l, KNFolder *f);
+    void copyIntoFolder(KNArticle::List &l, KNFolder *f);
+    void moveIntoFolder(KNLocalArticle::List &l, KNFolder *f);
     bool deleteArticles(KNLocalArticle::List &l, bool ask=true);
 
     //article handling

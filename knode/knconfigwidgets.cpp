@@ -883,6 +883,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   m_arkSecs->setSuffix(i18n(" sec"));
   m_arkCrossCB=new QCheckBox(i18n("Mark c&rossposted articles as read"), hgb);
 
+  s_martScrollingCB=new QCheckBox(i18n("Smart Scrolli&ng"), lgb);
   e_xpThrCB=new QCheckBox(i18n("Show &whole thread on expanding"), lgb);
   s_coreCB=new QCheckBox(i18n("Show article &score"), lgb);
   l_inesCB=new QCheckBox(i18n("Show &line count"), lgb);
@@ -914,6 +915,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   hgbL->setColStretch(0,1);
 
   lgbL->addSpacing(fontMetrics().lineSpacing()-4);
+  lgbL->addWidget(s_martScrollingCB);
   lgbL->addWidget(e_xpThrCB);
   lgbL->addWidget(s_coreCB);
   lgbL->addWidget(l_inesCB);
@@ -934,6 +936,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   m_arkSecs->setValue(d->m_arkSecs);
   m_arkSecs->setEnabled(d->a_utoMark);
   m_arkCrossCB->setChecked(d->m_arkCrossposts);
+  s_martScrollingCB->setChecked(d->s_martScrolling);
   e_xpThrCB->setChecked(d->t_otalExpand);
   l_inesCB->setChecked(d->s_howLines);
   s_coreCB->setChecked(d->s_howScore);
@@ -957,6 +960,7 @@ void KNConfig::ReadNewsGeneralWidget::apply()
   d_ata->a_utoMark=m_arkCB->isChecked();
   d_ata->m_arkSecs=m_arkSecs->value();
   d_ata->m_arkCrossposts=m_arkCrossCB->isChecked();
+  d_ata->s_martScrolling=s_martScrollingCB->isChecked();
   d_ata->t_otalExpand=e_xpThrCB->isChecked();
   d_ata->s_howLines=l_inesCB->isChecked();
   d_ata->s_howScore=s_coreCB->isChecked();

@@ -14,10 +14,17 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#include <qdragobject.h>
+
 #include "kncollectionviewitem.h"
 #include "kngroup.h"
-#include "knnntpaccount.h"
+#include "knfolder.h"
+#include "knglobals.h"
+#include "knconfigmanager.h"
 
 
 KNCollectionViewItem::KNCollectionViewItem(KNListView *vi) :
@@ -51,35 +58,66 @@ void KNCollectionViewItem::setNumber(int column, int number)
 
 QString KNCollectionViewItem::key(int c, bool ascending) const
 {
+  if (!coll)
+    return text(c);
+
   QString prefix;
 
-  if (coll->type()==KNCollection::CTfolder)    // folders should be always on the bottom
-    prefix = (ascending)? QString("b"):QString("a");
-  else
-    prefix = (ascending)? QString("a"):QString("b");
+  if (coll->type()==KNCollection::CTfolder) {   // folders should be always on the bottom
+    if ((static_cast<KNFolder*>(coll))->isStandardFolder())  // put the standard folders above the custom folders
+      prefix = (ascending)? QString("ba"):QString("ab");
+    else
+      prefix = (ascending)? QString("bb"):QString("aa");
+  } else
+    prefix = (ascending)? QString("aa"):QString("bb");
 
   if ((c >= 1)&&(c <= 2)&&(num[c] != -1)) {
-     QString tmpString;
-     return prefix+tmpString.sprintf("%07d", num[c]);
+    QString tmpString;
+    return prefix+tmpString.sprintf("%07d", num[c]);
   } else
     return prefix+text(0);
 
 }
 
 
+QDragObject* KNCollectionViewItem::dragObject() const
+{
+  if (coll && coll->type()==KNCollection::CTfolder) {
+    if ((static_cast<KNFolder*>(coll))->isStandardFolder())
+      return 0;
+
+    QDragObject *d=new QStoredDrag("x-knode-drag/folder", listView()->viewport());
+    d->setPixmap(knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::customFolder));
+    return d;
+  }
+  return 0;
+}
+
+
+bool KNCollectionViewItem::acceptDrag(QDropEvent* event) const
+{
+  if (event && coll && coll->type()==KNCollection::CTfolder) {
+    if (event->provides("x-knode-drag/article"))
+      return !(static_cast<KNFolder*>(coll)->isRootFolder());   // don't drop articles on the root folder
+    else if (event->provides("x-knode-drag/folder"))
+      return !isSelected();             // don't drop on itself
+  }
+
+  return false;
+}
+
+
 bool KNCollectionViewItem::firstColBold()
 {
-  if(coll->type()==KNCollection::CTgroup)
-    return ( ((KNGroup*)coll)->newCount()>0 );
+  if (coll && coll->type()==KNCollection::CTgroup)
+    return ( (static_cast<KNGroup*>(coll))->newCount()>0 );
   else return false;
 }
 
 
 QString KNCollectionViewItem::shortString(QString text, int col, int width, QFontMetrics fm)
 {
-  if ((col!=0) || !(coll->type()==KNCollection::CTgroup))
-    return KNLVItemBase::shortString(text,col,width,fm);
-  else {
+  if (coll && coll->type()==KNCollection::CTgroup) {
     QString t(text);
     int curPos=0,nextPos=0;
     QString temp;
@@ -92,5 +130,6 @@ QString KNCollectionViewItem::shortString(QString text, int col, int width, QFon
       }
     }
     return t;
-  }
+  } else
+    return KNLVItemBase::shortString(text,col,width,fm);
 }

@@ -35,7 +35,6 @@
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 #include "knfocuswidget.h"
-#include "kndnd.h"
 
 //Core
 #include "knglobals.h"
@@ -69,11 +68,13 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   setOpaqueResize(true);
 
   //collection view
-  c_olFocus=new KNFocusWidget(this,"colFocus");
-  c_olView=new KNListView(c_olFocus,"collectionView", new KNCollectionDragHandler() );
+  c_olFocus=new KNFocusWidget(this, "colFocus");
+  c_olView=new KNListView(c_olFocus, "collectionView");
   c_olView->setAcceptDrops(true);
-  c_olView->viewport()->setAcceptDrops(true);
-  c_olView->setSelectionMode(QListView::Single);
+  c_olView->setDragEnabled(true);
+  c_olView->addAcceptableDropMimetype("x-knode-drag/article", false);
+  c_olView->addAcceptableDropMimetype("x-knode-drag/folder", true);
+  c_olView->setSelectionModeExt(KListView::Single);
   c_olFocus->setWidget(c_olView);
   setResizeMode(c_olFocus, QSplitter::KeepSize);
 
@@ -88,19 +89,24 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   c_olView->setColumnAlignment(2,AlignCenter);
 
   connect(c_olView, SIGNAL(itemSelected(QListViewItem*)),
-    this, SLOT(slotCollectionSelected(QListViewItem*)));
+          SLOT(slotCollectionSelected(QListViewItem*)));
   connect(c_olView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-    this, SLOT(slotCollectionRMB(QListViewItem*, const QPoint&, int)));
-  connect(c_olView, SIGNAL(dropReceived(const char*, QListViewItem*)),
-    this, SLOT(slotCollectionViewDrop(const char*, QListViewItem*)));
+          SLOT(slotCollectionRMB(QListViewItem*, const QPoint&, int)));
+  connect(c_olView, SIGNAL(dropped(QDropEvent*, QListViewItem*)),
+          SLOT(slotCollectionViewDrop(QDropEvent*, QListViewItem*)));
+  connect(c_olView, SIGNAL(itemRenamed(QListViewItem*)),
+          SLOT(slotCollectionRenamed(QListViewItem*)));
 
   //secondary splitter
   s_ecSplitter=new QSplitter(QSplitter::Vertical,this,"secSplitter");
   s_ecSplitter->setOpaqueResize(true);
 
   //header view
-  h_drFocus=new KNFocusWidget(s_ecSplitter,"hdrFocus");
-  h_drView=new KNListView(h_drFocus,"hdrView", new KNArticleDragHandler());
+  h_drFocus=new KNFocusWidget(s_ecSplitter, "hdrFocus");
+  h_drView=new KNListView(h_drFocus, "hdrView");
+  h_drView->setAcceptDrops(false);
+  h_drView->setDragEnabled(true);
+  h_drView->setSelectionModeExt(KListView::Extended);
   h_drFocus->setWidget(h_drView);
   s_ecSplitter->setResizeMode(h_drFocus, QSplitter::KeepSize);
 
@@ -114,18 +120,15 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   h_drView->addColumn(i18n("Date"),102);
 
   connect(h_drView, SIGNAL(itemSelected(QListViewItem*)),
-    this, SLOT(slotArticleSelected(QListViewItem*)));
+          SLOT(slotArticleSelected(QListViewItem*)));
   connect(h_drView, SIGNAL(selectionChanged()),
-    this, SLOT(slotArticleSelectionChanged()));
+          SLOT(slotArticleSelectionChanged()));
   connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-    this, SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
+          SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
   connect(h_drView, SIGNAL(middleMBClick(QListViewItem *)),
-    this, SLOT(slotArticleMMB(QListViewItem *)));
+          SLOT(slotArticleMMB(QListViewItem *)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
-    this, SLOT(slotHdrViewSortingChanged(int)));
-  connect(h_drView, SIGNAL(dropReceived(const char*, QListViewItem*)),
-    this, SLOT(slotHeaderViewDrop(const char*, QListViewItem*)));
-
+          SLOT(slotHdrViewSortingChanged(int)));
 
   //article view
   a_rtFocus=new KNFocusWidget(s_ecSplitter,"artFocus");
@@ -516,27 +519,33 @@ void KNodeView::initActions()
                               SLOT(slotNavReadThrough()), a_ctions, "go_readThrough");
 
   //collection-view - accounts
-  a_ctAccProperties         = new KAction(i18n("&Properties..."), 0, this,
+  a_ctAccProperties         = new KAction(i18n("Account &Properties..."), "configure", 0, this,
                               SLOT(slotAccProperties()), a_ctions, "account_properties");
-  a_ctAccSubscribe          = new KAction(i18n("&Subscribe to Newsgroups..."),"news_subscribe", 0, this,
+  a_ctAccRename             = new KAction(i18n("&Rename Account"), "text", 0, this,
+                              SLOT(slotAccRename()), a_ctions, "account_rename");
+  a_ctAccSubscribe          = new KAction(i18n("&Subscribe to Newsgroups..."), "news_subscribe", 0, this,
                               SLOT(slotAccSubscribe()), a_ctions, "account_subscribe");
-  a_ctAccGetNewHdrs         = new KAction(i18n("&Get New Articles"), "mail_get", 0, this,
+  a_ctAccExpireAll          = new KAction(i18n("&Expire All Groups"), 0, this,
+                              SLOT(slotAccExpireAll()), a_ctions, "account_expire_all");
+  a_ctAccGetNewHdrs         = new KAction(i18n("&Get New Articles in All Groups"), "mail_get", 0, this,
                               SLOT(slotAccGetNewHdrs()), a_ctions, "account_dnlHeaders");
-  a_ctAccDelete             = new KAction(i18n("&Delete"), 0, this,
+  a_ctAccDelete             = new KAction(i18n("&Delete Account"), "editdelete", 0, this,
                               SLOT(slotAccDelete()), a_ctions, "account_delete");
   a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "filenew", Key_P , this,
                               SLOT(slotAccPostNewArticle()), a_ctions, "article_postNew");
 
   //collection-view - groups
-  a_ctGrpProperties         = new KAction(i18n("&Properties..."), 0, this,
+  a_ctGrpProperties         = new KAction(i18n("Group &Properties..."), "configure", 0, this,
                               SLOT(slotGrpProperties()), a_ctions, "group_properties");
+  a_ctGrpRename             = new KAction(i18n("&Rename Group"), "text", 0, this,
+                              SLOT(slotGrpRename()), a_ctions, "group_rename");
   a_ctGrpGetNewHdrs         = new KAction(i18n("&Get New Articles"), "mail_get" , 0, this,
                               SLOT(slotGrpGetNewHdrs()), a_ctions, "group_dnlHeaders");
-  a_ctGrpExpire             = new KAction(i18n("E&xpire Now"), "wizard", 0, this,
+  a_ctGrpExpire             = new KAction(i18n("E&xpire Group"), "wizard", 0, this,
                               SLOT(slotGrpExpire()), a_ctions, "group_expire");
-  a_ctGrpReorganize         = new KAction(i18n("Re&organize"), 0, this,
+  a_ctGrpReorganize         = new KAction(i18n("Re&organize Group"), 0, this,
                               SLOT(slotGrpReorganize()), a_ctions, "group_reorg");
-  a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe"), "news_unsubscribe", 0, this,
+  a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe from Group"), "news_unsubscribe", 0, this,
                               SLOT(slotGrpUnsubscribe()), a_ctions, "group_unsubscribe");
   a_ctGrpSetAllRead         = new KAction(i18n("Mark All as &Read"), "goto", 0, this,
                               SLOT(slotGrpSetAllRead()), a_ctions, "group_allRead");
@@ -544,19 +553,19 @@ void KNodeView::initActions()
                               SLOT(slotGrpSetAllUnread()), a_ctions, "group_allUnread");
   
   //collection-view - folder
-  a_ctFolNew                = new KAction(i18n("&New"), 0, this,
+  a_ctFolNew                = new KAction(i18n("&New Folder"), "folder_new", 0, this,
                               SLOT(slotFolNew()), a_ctions, "folder_new");
-  a_ctFolNewChild           = new KAction(i18n("New &Subfolder"), 0, this,
+  a_ctFolNewChild           = new KAction(i18n("New &Subfolder"), "folder_new", 0, this,
                               SLOT(slotFolNewChild()), a_ctions, "folder_newChild");
-  a_ctFolDelete             = new KAction(i18n("&Delete"), 0, this,
+  a_ctFolDelete             = new KAction(i18n("&Delete Folder"), "editdelete", 0, this,
                               SLOT(slotFolDelete()), a_ctions, "folder_delete");
-  a_ctFolRename             = new KAction(i18n("&Rename"), 0, this,
+  a_ctFolRename             = new KAction(i18n("&Rename Folder"), "text", 0, this,
                               SLOT(slotFolRename()), a_ctions, "folder_rename");
-  a_ctFolMakeTopLevel       = new KAction(i18n("&Move to Toplevel"), 0, this,
-                              SLOT(slotFolMakeTopLevel()), a_ctions, "folder_maketoplevel");
-  a_ctFolCompact            = new KAction(i18n("C&ompact"), "wizard", 0, this,
+  a_ctFolCompact            = new KAction(i18n("C&ompact Folder"), "wizard", 0, this,
                               SLOT(slotFolCompact()), a_ctions, "folder_compact");
-  a_ctFolEmpty              = new KAction(i18n("&Empty"), 0, this,
+  a_ctFolCompactAll         = new KAction(i18n("Co&mpact All Folders"), 0, this,
+                              SLOT(slotFolCompactAll()), a_ctions, "folder_compact_all");
+  a_ctFolEmpty              = new KAction(i18n("&Empty Folder"), 0, this,
                               SLOT(slotFolEmpty()), a_ctions, "folder_empty");
   a_ctFolMboxImport         = new KAction(i18n("&Import MBox Folder"), 0, this,
                               SLOT(slotFolMBoxImport()), a_ctions, "folder_MboxImport");
@@ -601,11 +610,11 @@ void KNodeView::initActions()
                               SLOT(slotArtSetThreadRead()), a_ctions, "thread_read");
   a_ctArtSetThreadUnread    = new KAction(i18n("Mark T&hread as Unread"), CTRL+Key_U , this,
                               SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
-  a_ctArtOpenNewWindow      = new KAction(i18n("Open in own &window"), "viewmag+", Key_O , this,
+  a_ctArtOpenNewWindow      = new KAction(i18n("Open in own &Window"), "window_new", Key_O , this,
                               SLOT(slotArtOpenNewWindow()), a_ctions, "article_ownWindow");
 
   // scoring
-  a_ctScoresEdit            = new KAction(i18n("&Edit Scoring Rules..."), CTRL+Key_E, this,
+  a_ctScoresEdit            = new KAction(i18n("&Edit Scoring Rules..."), "edit", CTRL+Key_E, this,
                               SLOT(slotScoreEdit()), a_ctions, "scoreedit");
   a_ctReScore               = new KAction(i18n("Recalculate &Scores..."), 0, this,
                               SLOT(slotReScore()),a_ctions,"rescore");
@@ -621,11 +630,11 @@ void KNodeView::initActions()
   //header-view local articles
   a_ctArtSendOutbox         = new KAction(i18n("Sen&d Pending Messages"), "mail_send", 0, this,
                               SLOT(slotArtSendOutbox()), a_ctions, "net_sendPending");
-  a_ctArtDelete             = new KAction(i18n("&Delete"), "editdelete", Key_Delete, this,
+  a_ctArtDelete             = new KAction(i18n("&Delete Article"), "editdelete", Key_Delete, this,
                               SLOT(slotArtDelete()), a_ctions, "article_delete");
   a_ctArtSendNow            = new KAction(i18n("Send &Now"),"mail_send", 0 , this,
                               SLOT(slotArtSendNow()), a_ctions, "article_sendNow");
-  a_ctArtEdit               = new KAction(i18n("edit article","&Edit..."), "signature", Key_E , this,
+  a_ctArtEdit               = new KAction(i18n("edit article","&Edit Article..."), "edit", Key_E , this,
                               SLOT(slotArtEdit()), a_ctions, "article_edit");
 
   //network
@@ -648,6 +657,9 @@ void KNodeView::initPopups(KNMainWindow *w)
 
   g_roupPopup = static_cast<QPopupMenu *>(w->factory()->container("group_popup", w));
   if (!g_roupPopup) g_roupPopup = new QPopupMenu(w);
+
+  r_ootFolderPopup = static_cast<QPopupMenu *>(w->factory()->container("root_folder_popup", w));
+  if (!r_ootFolderPopup) r_ootFolderPopup = new QPopupMenu(w);
 
   f_olderPopup = static_cast<QPopupMenu *>(w->factory()->container("folder_popup", w));
   if (!f_olderPopup) f_olderPopup = new QPopupMenu(w);
@@ -680,12 +692,23 @@ void KNodeView::fontChange ( const QFont & )
 }
 
 
+void KNodeView::getSelectedArticles(KNArticle::List &l)
+{
+  if(!g_rpManager->currentGroup() && !f_olManager->currentFolder())
+    return;
+
+  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
+    if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
+      l.append( static_cast<KNArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+}
+
+
 void KNodeView::getSelectedArticles(KNRemoteArticle::List &l)
 {
   if(!g_rpManager->currentGroup()) return;
 
   for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
-    if(i->isSelected())
+    if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
       l.append( static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
 }
 
@@ -694,7 +717,7 @@ void KNodeView::getSelectedThreads(KNRemoteArticle::List &l)
 {
   KNRemoteArticle *art;
   for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
-    if(i->isSelected()) {
+    if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive())) {
       art=static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art);
       // ignore the article if it is already in the list
       // (multiple aritcles are selected in one thread)
@@ -704,12 +727,28 @@ void KNodeView::getSelectedThreads(KNRemoteArticle::List &l)
 }
 
 
+void KNodeView::updateCaption()
+{
+  QString newCaption=i18n("KDE News Reader");
+  if (g_rpManager->currentGroup()) {
+    newCaption = g_rpManager->currentGroup()->name();
+    if (g_rpManager->currentGroup()->status()==KNGroup::moderated)
+      newCaption += i18n(" (moderated)");
+  } else if (a_ccManager->currentAccount()) {
+    newCaption = a_ccManager->currentAccount()->name();
+  } else if (f_olManager->currentFolder()) {
+    newCaption = f_olManager->currentFolder()->name();
+  }
+  knGlobals.top->setCaption(newCaption);
+}
+
+
 void KNodeView::getSelectedArticles(QList<KNLocalArticle> &l)
 {
   if(!f_olManager->currentFolder()) return;
 
   for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
-    if(i->isSelected())
+    if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
       l.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
 }
 
@@ -785,7 +824,6 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
   KNNntpAccount *selectedAccount=0;
   KNGroup *selectedGroup=0;
   KNFolder *selectedFolder=0;
-  QString caption;
 
   h_drView->clear();
   slotArticleSelected(0);
@@ -797,31 +835,23 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
         selectedAccount=static_cast<KNNntpAccount*>(c);
         if(!i->isOpen())
           i->setOpen(true);
-        knGlobals.top->setCaption(selectedAccount->name());
       break;
       case KNCollection::CTgroup :
         if (!(h_drView->hasFocus())&&!(a_rtView->hasFocus()))
           h_drView->setFocus();
         selectedGroup=static_cast<KNGroup*>(c);
         selectedAccount=selectedGroup->account();
-        caption = selectedGroup->name();
-        if (selectedGroup->status()==KNGroup::moderated)
-          caption += i18n(" (moderated)");
-        knGlobals.top->setCaption(caption);
       break;
 
       case KNCollection::CTfolder :
         if (!(h_drView->hasFocus())&&!(a_rtView->hasFocus()))
           h_drView->setFocus();
         selectedFolder=static_cast<KNFolder*>(c);
-        knGlobals.top->setCaption(selectedFolder->name());
       break;
 
       default: break;
     }
   }
-  else
-    knGlobals.top->setCaption(QString::null);
 
   a_ccManager->setCurrentAccount(selectedAccount);
   g_rpManager->setCurrentGroup(selectedGroup);
@@ -829,10 +859,12 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
   if (!selectedGroup && !selectedFolder)         // called from showHeaders() otherwise
     a_rtManager->updateStatusString();
 
+  updateCaption();
+
   //actions
   bool enabled;
 
-  enabled=(selectedGroup) || (selectedFolder);
+  enabled=(selectedGroup) || (selectedFolder && !selectedFolder->isRootFolder());
   if(a_ctNavNextArt->isEnabled() != enabled) {
     a_ctNavNextArt->setEnabled(enabled);
     a_ctNavPrevArt->setEnabled(enabled);
@@ -849,7 +881,9 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
   enabled=( selectedAccount!=0 );
   if(a_ctAccProperties->isEnabled() != enabled) {
     a_ctAccProperties->setEnabled(enabled);
+    a_ctAccRename->setEnabled(enabled);
     a_ctAccSubscribe->setEnabled(enabled);
+    a_ctAccExpireAll->setEnabled(enabled);
     a_ctAccGetNewHdrs->setEnabled(enabled);
     a_ctAccDelete->setEnabled(enabled);
     a_ctAccPostNewArticle->setEnabled(enabled);
@@ -858,6 +892,7 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
   enabled=( selectedGroup!=0 );
   if(a_ctGrpProperties->isEnabled() != enabled) {
     a_ctGrpProperties->setEnabled(enabled);
+    a_ctGrpRename->setEnabled(enabled);
     a_ctGrpGetNewHdrs->setEnabled(enabled);
     a_ctGrpExpire->setEnabled(enabled);
     a_ctGrpReorganize->setEnabled(enabled);
@@ -874,17 +909,71 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctReScore->setEnabled(enabled);
   }
   
-  enabled=( selectedFolder!=0 );
-  if(a_ctFolNewChild->isEnabled() != enabled) {
-    a_ctFolNewChild->setEnabled(enabled);
-    a_ctFolRename->setEnabled(enabled);
-    a_ctFolMakeTopLevel->setEnabled(enabled);
+  a_ctFolNewChild->setEnabled(selectedFolder!=0);
+
+  enabled=( selectedFolder!=0 && !selectedFolder->isRootFolder() && !selectedFolder->isStandardFolder() );
+  if(a_ctFolDelete->isEnabled() != enabled) {
     a_ctFolDelete->setEnabled(enabled);
+    a_ctFolRename->setEnabled(enabled);
+  }
+
+  enabled=( selectedFolder!=0 &&  !selectedFolder->isRootFolder() );
+  if(a_ctFolCompact->isEnabled() != enabled) {
     a_ctFolCompact->setEnabled(enabled);
     a_ctFolEmpty->setEnabled(enabled);
     a_ctFolMboxImport->setEnabled(enabled);
     a_ctFolMboxExport->setEnabled(enabled);
   }
+}
+
+
+void KNodeView::slotCollectionRenamed(QListViewItem *i)
+{
+  kdDebug(5003) << "KNodeView::slotCollectionRenamed(QListViewItem *i)" << endl;
+
+  if (i) {
+    (static_cast<KNCollectionViewItem*>(i))->coll->setName(i->text(0));
+    updateCaption();
+    a_rtManager->updateStatusString();
+    if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTnntpAccount)
+      a_ccManager->accountRenamed(static_cast<KNNntpAccount*>((static_cast<KNCollectionViewItem*>(i))->coll));
+    knGlobals.top->disableAccels(false);
+  }
+}
+
+
+
+void KNodeView::slotCollectionViewDrop(QDropEvent* e, QListViewItem* after)
+{
+  kdDebug(5003) << "KNodeView::slotCollectionViewDrop() : type = " << e->format(0) << endl;
+
+  KNCollectionViewItem *cvi=static_cast<KNCollectionViewItem*>(after);
+  if (cvi && cvi->coll->type() != KNCollection::CTfolder)   // safety measure...
+    return;
+  KNFolder *dest=cvi ? static_cast<KNFolder*>(cvi->coll) : 0;
+
+  if (e->provides("x-knode-drag/folder") && f_olManager->currentFolder()) {
+    f_olManager->moveFolder(f_olManager->currentFolder(), dest);
+  }
+  else if(dest && e->provides("x-knode-drag/article")) {
+    if(f_olManager->currentFolder()) {
+      if (e->action() == QDropEvent::Move) {
+        KNLocalArticle::List l;
+        getSelectedArticles(l);
+        a_rtManager->moveIntoFolder(l, dest);
+      } else {
+        KNArticle::List l;
+        getSelectedArticles(l);
+        a_rtManager->copyIntoFolder(l, dest);
+      }
+    }
+    else if(g_rpManager->currentGroup()) {
+      KNArticle::List l;
+      getSelectedArticles(l);
+      a_rtManager->copyIntoFolder(l, dest);
+    }
+  }
+
 }
 
 
@@ -910,9 +999,12 @@ void KNodeView::slotCollectionRMB(QListViewItem *i, const QPoint &p, int)
   if(i) {
     if( (static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTgroup)
       g_roupPopup->popup(p);
-    else if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTfolder)
-      f_olderPopup->popup(p);
-    else
+    else if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTfolder) {
+      if (static_cast<KNFolder*>(static_cast<KNCollectionViewItem*>(i)->coll)->isRootFolder())
+        r_ootFolderPopup->popup(p);
+      else
+        f_olderPopup->popup(p);
+    } else
       a_ccPopup->popup(p);
   }
 }
@@ -945,38 +1037,6 @@ void KNodeView::slotHdrViewSortingChanged(int i)
 }
 
 
-void KNodeView::slotCollectionViewDrop(const char *type, QListViewItem *i)
-{
-  kdDebug(5003) << "KNodeView::slotCollectionViewDrop() : type = " << type << endl;
-  KNCollectionViewItem *cvi=static_cast<KNCollectionViewItem*>(i);
-  KNFolder *dest=cvi ? static_cast<KNFolder*>(cvi->coll) : 0;
-
-  if( strcmp(type, "x-knode-drag/folder")==0 && f_olManager->currentFolder() ) {
-    if( !f_olManager->moveFolder(f_olManager->currentFolder(), dest) )
-      c_olView->triggerDropError(i18n("This folder cannot be moved here."));
-  }
-  else if(dest && strcmp(type, "x-knode-drag/article")==0) {
-    if(f_olManager->currentFolder()) {
-      KNLocalArticle::List l;
-      getSelectedArticles(l);
-      a_rtManager->saveInFolder(l, dest);
-    }
-    else if(g_rpManager->currentGroup()) {
-      KNRemoteArticle::List l;
-      getSelectedArticles(l);
-      a_rtManager->saveInFolder(l, dest);
-    }
-  }
-
-}
-
-
-void KNodeView::slotHeaderViewDrop(const char *type, QListViewItem *)
-{
-  kdDebug(5003) << "KNodeView::slotHeaderViewDrop() : type = " << type << endl;
-}
-
-
 void KNodeView::slotNetworkActive(bool b)
 {
   a_ctNetCancel->setEnabled(b);
@@ -994,11 +1054,8 @@ void KNodeView::slotNavNextArt()
   if(it) it=it->itemBelow();
   else it=h_drView->firstChild();
 
-  if(it) {
+  if(it)
     h_drView->setActive(it, true);
-    h_drView->setCurrentItem(it);
-    h_drView->ensureItemVisible(it);
-  }
 }
 
 
@@ -1011,11 +1068,8 @@ void KNodeView::slotNavPrevArt()
   if(it) it=it->itemAbove();
   else it=h_drView->firstChild();
 
-  if(it) {
+  if(it)
     h_drView->setActive(it, true);
-    h_drView->setCurrentItem(it);
-    h_drView->ensureItemVisible(it);
-  }
 }
 
 
@@ -1059,11 +1113,8 @@ void KNodeView::slotNavNextUnreadArt()
     }
   }
 
-  if(next) {
+  if(next)
     h_drView->setActive(next, true);
-    h_drView->setCurrentItem(next);
-    h_drView->ensureItemVisible(next);
-  }
   else
     slotNavNextGroup();
 }
@@ -1106,12 +1157,10 @@ void KNodeView::slotNavNextUnreadThread()
 
   if(next) {
     h_drView->setCurrentItem(next);
-    if(art->isRead()) slotNavNextUnreadArt();
-    else {
+    if (art->isRead())
+      slotNavNextUnreadArt();
+    else
       h_drView->setActive(next, true);
-      h_drView->setCurrentItem(next);
-      h_drView->ensureItemVisible(next);
-    }
   }
   else
     slotNavNextGroup();
@@ -1139,11 +1188,8 @@ void KNodeView::slotNavNextGroup()
     else next=static_cast<KNCollectionViewItem*>(next->itemBelow());
   }
 
-  if(next) {
+  if (next)
     c_olView->setActive(next, true);
-    c_olView->setCurrentItem(next);
-    c_olView->ensureItemVisible(next);
-  }
 }
 
 
@@ -1163,11 +1209,8 @@ void KNodeView::slotNavPrevGroup()
     prev=static_cast<KNCollectionViewItem*>(prev->itemAbove());
   }
 
-  if(prev) {
+  if (prev)
     c_olView->setActive(prev, true);
-    c_olView->setCurrentItem(prev);
-    c_olView->ensureItemVisible(prev);
-  }
 }
 
 
@@ -1186,6 +1229,18 @@ void KNodeView::slotAccProperties()
   kdDebug(5003) << "KNodeView::slotAccProperties()" << endl;
   if(a_ccManager->currentAccount())
     a_ccManager->editProperties(a_ccManager->currentAccount());
+  updateCaption();
+  a_rtManager->updateStatusString();
+}
+
+
+void KNodeView::slotAccRename()
+{
+  kdDebug(5003) << "KNodeView::slotAccRename()" << endl;
+  if(a_ccManager->currentAccount()) {
+    knGlobals.top->disableAccels(true);   // hack: global accels break the inplace renaming
+    c_olView->rename(a_ccManager->currentAccount()->listItem(), 0);
+  }
 }
 
 
@@ -1194,6 +1249,14 @@ void KNodeView::slotAccSubscribe()
   kdDebug(5003) << "KNodeView::slotAccSubscribe()" << endl;
   if(a_ccManager->currentAccount())
     g_rpManager->showGroupDialog(a_ccManager->currentAccount());
+}
+
+
+void KNodeView::slotAccExpireAll()
+{
+  kdDebug(5003) << "KNodeView::slotAccExpireAll()" << endl;
+  if(a_ccManager->currentAccount())
+    g_rpManager->expireAll(a_ccManager->currentAccount());
 }
 
 
@@ -1208,8 +1271,10 @@ void KNodeView::slotAccGetNewHdrs()
 void KNodeView::slotAccDelete()
 {
   kdDebug(5003) << "KNodeView::slotAccDelete()" << endl;
-  if(a_ccManager->currentAccount())
-    a_ccManager->removeAccount(a_ccManager->currentAccount());
+  if(a_ccManager->currentAccount()) {
+    if (a_ccManager->removeAccount(a_ccManager->currentAccount()))
+      slotCollectionSelected(0);
+  }
 }
 
 
@@ -1228,6 +1293,18 @@ void KNodeView::slotGrpProperties()
   kdDebug(5003) << "slotGrpProperties()" << endl;
   if(g_rpManager->currentGroup())
     g_rpManager->showGroupProperties(g_rpManager->currentGroup());
+  updateCaption();
+  a_rtManager->updateStatusString();
+}
+
+
+void KNodeView::slotGrpRename()
+{
+  kdDebug(5003) << "slotGrpRename()" << endl;
+  if(g_rpManager->currentGroup()) {
+    knGlobals.top->disableAccels(true);   // hack: global accels break the inplace renaming
+    c_olView->rename(g_rpManager->currentGroup()->listItem(), 0);
+  }
 }
 
 
@@ -1257,10 +1334,12 @@ void KNodeView::slotGrpReorganize()
 void KNodeView::slotGrpUnsubscribe()
 {
   kdDebug(5003) << "KNodeView::slotGrpUnsubscribe()" << endl;
-  if(g_rpManager->currentGroup())
+  if(g_rpManager->currentGroup()) {
     if(KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
       i18n("Do you really want to unsubscribe from %1?").arg(g_rpManager->currentGroup()->groupname())))
-    g_rpManager->unsubscribeGroup(g_rpManager->currentGroup());
+      if (g_rpManager->unsubscribeGroup(g_rpManager->currentGroup()))
+        slotCollectionSelected(0);
+  }
 }
 
 
@@ -1281,15 +1360,24 @@ void KNodeView::slotGrpSetAllUnread()
 void KNodeView::slotFolNew()
 {
   kdDebug(5003) << "KNodeView::slotFolNew()" << endl;
-  f_olManager->newFolder(0);
+  KNFolder *f = f_olManager->newFolder(0);
+
+  if (f)
+    c_olView->setActive(f->listItem(), true);
 }
 
 
 void KNodeView::slotFolNewChild()
 {
   kdDebug(5003) << "KNodeView::slotFolNew()" << endl;
-  if(f_olManager->currentFolder())
-    f_olManager->newFolder(f_olManager->currentFolder());
+  if(f_olManager->currentFolder()) {
+    KNFolder *f = f_olManager->newFolder(f_olManager->currentFolder());
+
+    if (f) {
+      c_olView->setActive(f->listItem(), true);
+      slotFolRename();
+    }
+  }
 }
 
 
@@ -1297,11 +1385,11 @@ void KNodeView::slotFolDelete()
 {
   kdDebug(5003) << "KNodeView::slotFolDelete()" << endl;
 
-  if(!f_olManager->currentFolder())
+  if(!f_olManager->currentFolder() || f_olManager->currentFolder()->isRootFolder())
     return;
 
-  if(f_olManager->currentFolder()->id()<=3)
-      KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot delete a standard-folder."));
+  if(f_olManager->currentFolder()->isStandardFolder())
+    KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot delete a standard folder."));
 
   else if( KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
       i18n("Do you really want to delete this folder and all its children ?")) ) {
@@ -1318,35 +1406,37 @@ void KNodeView::slotFolDelete()
 void KNodeView::slotFolRename()
 {
   kdDebug(5003) << "KNodeView::slotFolRename()" << endl;
-  if(f_olManager->currentFolder()) {
-    if(f_olManager->currentFolder()->id()<=3)
-      KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot rename a standard-folder."));
-    else
-      f_olManager->renameFolder(f_olManager->currentFolder());
+
+  if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder()) {
+    if(f_olManager->currentFolder()->isStandardFolder())
+      KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot rename a standard folder."));
+    else {
+      knGlobals.top->disableAccels(true);   // hack: global accels break the inplace renaming
+      c_olView->rename(f_olManager->currentFolder()->listItem(), 0);
+    }
   }
-}
-
-
-void KNodeView::slotFolMakeTopLevel()
-{
-  kdDebug(5003) << "KNodeView::slotFolMakeTopLevel()" << endl;
-  if(f_olManager->currentFolder())
-    f_olManager->moveFolder(f_olManager->currentFolder(), 0);
 }
 
 
 void KNodeView::slotFolCompact()
 {
   kdDebug(5003) << "KNodeView::slotFolCompact()" << endl;
-  if(f_olManager->currentFolder())
+  if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder())
     f_olManager->compactFolder(f_olManager->currentFolder());
+}
+
+
+void KNodeView::slotFolCompactAll()
+{
+  kdDebug(5003) << "KNodeView::slotFolCompactAll()" << endl;
+  f_olManager->compactAll();
 }
 
 
 void KNodeView::slotFolEmpty()
 {
   kdDebug(5003) << "KNodeView::slotFolEmpty()" << endl;
-  if(f_olManager->currentFolder()) {
+  if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder()) {
     if(f_olManager->currentFolder()->lockedArticles()>0) {
       KMessageBox::sorry(knGlobals.topWidget,
       i18n("This folder cannot be emptied at the moment\nbecause some of its articles are currently in use.") );
@@ -1362,7 +1452,7 @@ void KNodeView::slotFolEmpty()
 void KNodeView::slotFolMBoxImport()
 {
   kdDebug(5003) << "KNodeView::slotFolMBoxImport()" << endl;
-  if(f_olManager->currentFolder()) {
+  if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder()) {
      f_olManager->importFromMBox(f_olManager->currentFolder());
   }
 }
@@ -1371,7 +1461,7 @@ void KNodeView::slotFolMBoxImport()
 void KNodeView::slotFolMBoxExport()
 {
   kdDebug(5003) << "KNodeView::slotFolMBoxExport()" << endl;
-  if(f_olManager->currentFolder()) {
+  if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder()) {
     f_olManager->exportToMBox(f_olManager->currentFolder());
   }
 }
@@ -1673,6 +1763,5 @@ void KNodeView::slotFetchArticleWithID()
 }
 
 //-------------------------------- </Actions> ----------------------------------
-
 
 #include "knodeview.moc"

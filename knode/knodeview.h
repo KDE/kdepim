@@ -84,9 +84,12 @@ class KNodeView : public QSplitter
     virtual void paletteChange ( const QPalette & );
     virtual void fontChange ( const QFont & );
 
+    void getSelectedArticles(QList<KNArticle> &l);
     void getSelectedArticles(QList<KNRemoteArticle> &l);
     void getSelectedThreads(QList<KNRemoteArticle> &l);
     void getSelectedArticles(QList<KNLocalArticle> &l);
+
+    void updateCaption();
 
     //GUI
     QSplitter       *s_ecSplitter;
@@ -98,6 +101,7 @@ class KNodeView : public QSplitter
     //Popups
     QPopupMenu  *a_ccPopup,
                 *g_roupPopup,
+                *r_ootFolderPopup,
                 *f_olderPopup,
                 *r_emotePopup,
                 *l_ocalPopup;
@@ -114,20 +118,17 @@ class KNodeView : public QSplitter
     KNScoringManager  *s_coreManager;
     KNMemoryManager   *m_emManager;
 
-
   protected slots:
     //listview slots
     void slotArticleSelected(QListViewItem*);
     void slotArticleSelectionChanged();
     void slotCollectionSelected(QListViewItem*);
+    void slotCollectionRenamed(QListViewItem*);
+    void slotCollectionViewDrop(QDropEvent* e, QListViewItem* after);
     void slotArticleRMB(QListViewItem *i, const QPoint &p, int);
     void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);
     void slotArticleMMB(QListViewItem *item);
     void slotHdrViewSortingChanged(int i);
-
-    //DnD
-    void slotCollectionViewDrop(const char *type, QListViewItem *i);
-    void slotHeaderViewDrop(const char *type, QListViewItem *i);
 
     //network slots
     void slotNetworkActive(bool b);
@@ -150,13 +151,16 @@ class KNodeView : public QSplitter
               
     //collection-view - accounts
     KAction   *a_ctAccProperties,
+              *a_ctAccRename,
               *a_ctAccSubscribe,
+              *a_ctAccExpireAll,
               *a_ctAccGetNewHdrs,
               *a_ctAccDelete,
               *a_ctAccPostNewArticle;
 
     //collection-view - groups
     KAction   *a_ctGrpProperties,
+              *a_ctGrpRename,
               *a_ctGrpGetNewHdrs,
               *a_ctGrpExpire,
               *a_ctGrpReorganize,
@@ -169,8 +173,8 @@ class KNodeView : public QSplitter
               *a_ctFolNewChild,
               *a_ctFolDelete,
               *a_ctFolRename,
-              *a_ctFolMakeTopLevel,
               *a_ctFolCompact,
+              *a_ctFolCompactAll,
               *a_ctFolEmpty,
               *a_ctFolMboxImport,
               *a_ctFolMboxExport;
@@ -223,12 +227,15 @@ class KNodeView : public QSplitter
     void slotNavReadThrough();
 
     void slotAccProperties();
+    void slotAccRename();
     void slotAccSubscribe();
+    void slotAccExpireAll();
     void slotAccGetNewHdrs();
     void slotAccDelete();
     void slotAccPostNewArticle();
 
     void slotGrpProperties();
+    void slotGrpRename();
     void slotGrpGetNewHdrs();
     void slotGrpExpire();
     void slotGrpReorganize();
@@ -240,8 +247,8 @@ class KNodeView : public QSplitter
     void slotFolNewChild();
     void slotFolDelete();
     void slotFolRename();
-    void slotFolMakeTopLevel();
     void slotFolCompact();
+    void slotFolCompactAll();
     void slotFolEmpty();
     void slotFolMBoxImport();
     void slotFolMBoxExport();

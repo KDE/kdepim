@@ -31,9 +31,13 @@ class KNCollectionViewItem : public KNLVItemBase  {
 
     void setNumber ( int column, int number );  // avoid converting back and forth in key()
     QString key(int, bool) const;
+
+    // DND
+    virtual QDragObject* dragObject() const;
+    virtual bool acceptDrag(QDropEvent* event) const;
     
     KNCollection *coll;
-    
+
   protected:
     bool firstColBold();
     virtual QString shortString(QString text, int col, int width, QFontMetrics fm);

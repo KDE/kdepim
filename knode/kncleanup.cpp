@@ -176,6 +176,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
     g->decCount(delCnt);
     g->setNewCount(newCnt);
     g->setFirstNewIndex(firstNew);
+    g->saveInfo();
     knGlobals.grpManager->unloadHeaders(g, true);
   }
   else

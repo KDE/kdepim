@@ -157,10 +157,10 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
 
 
 // a==0: remove current account
-void KNAccountManager::removeAccount(KNNntpAccount *a)
+bool KNAccountManager::removeAccount(KNNntpAccount *a)
 {
   if(!a) a=c_urrentAccount;
-  if(!a) return;
+  if(!a) return false;
 
   QList<KNGroup> *lst;
   if(knGlobals.folManager->unsentForAccount(a->id()) > 0) {
@@ -173,7 +173,7 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
     for(KNGroup *g=lst->first(); g; g=lst->next()) {
       if(g->isLocked()) {
         KMessageBox::sorry(knGlobals.topWidget, i18n("At least one group of this account is currently in use.\nThe account cannot be deleted at the moment."));
-        return;
+        return false;
       }
     }
     for(KNGroup *g=lst->first(); g; g=lst->next())
@@ -198,7 +198,10 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
     
     emit(accountRemoved(a));
     accList->removeRef(a);      // finally delete a
-  }     
+    return true;
+  }
+
+  return false;
 }
 
 
@@ -208,6 +211,15 @@ void KNAccountManager::editProperties(KNNntpAccount *a)
   if(!a) return;
 
   a->editProperties(knGlobals.topWidget);
+  emit(accountModified(a));
+}
+
+
+void KNAccountManager::accountRenamed(KNNntpAccount *a)
+{
+  if(!a) a=c_urrentAccount;
+  if(!a) return;
+
   emit(accountModified(a));
 }
 

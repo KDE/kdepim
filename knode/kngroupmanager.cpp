@@ -330,8 +330,11 @@ bool KNGroupManager::loadHeaders(KNGroup *g)
 
 bool KNGroupManager::unloadHeaders(KNGroup *g, bool force)
 {
-  if(!g || g->isLocked() || !g->isLoaded())
+  if(!g || g->isLocked())
     return false;
+
+  if(!g->isLoaded())
+    return true;
 
   if (!force && (c_urrentGroup == g))
     return false;
@@ -364,6 +367,36 @@ void KNGroupManager::expireAll(KNCleanUp *cup)
   }
 }
 
+
+void KNGroupManager::expireAll(KNNntpAccount *a)
+{
+  KNCleanUp *cup=new KNCleanUp(knGlobals.cfgManager->cleanup());
+
+  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
+    if((var->account()!=a) || (var->isLocked()) || (var->lockedArticles()>0))
+      continue;
+
+    KNArticleWindow::closeAllWindowsForCollection(var);
+    cup->appendCollection(var);
+  }
+
+  cup->start();
+
+  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
+    if((var->account()!=a) || (var->isLocked()) || (var->lockedArticles()>0))
+      continue;
+
+    var->updateListItem();
+    if(var==c_urrentGroup) {
+      if (loadHeaders(var))
+        a_rticleMgr->showHdrs();
+      else
+        a_rticleMgr->setGroup(0);
+    }
+  }
+
+  delete cup;
+}
 
 
 void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
@@ -421,16 +454,15 @@ void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
 
 
 
-void KNGroupManager::unsubscribeGroup(KNGroup *g)
+bool KNGroupManager::unsubscribeGroup(KNGroup *g)
 {
   KNNntpAccount *acc;
   if(!g) g=c_urrentGroup;
-  if(!g) return;
-
+  if(!g) return false;
 
   if((g->isLocked()) || (g->lockedArticles()>0)) {
     KMessageBox::sorry(knGlobals.topWidget, QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe it at the moment.")).arg(g->groupname()));
-    return;
+    return false;
   }
 
   KNArticleWindow::closeAllWindowsForCollection(g);
@@ -440,24 +472,29 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
 
   QDir dir(acc->path(),g->groupname()+"*");
   if (dir.exists()) {
-    if(c_urrentGroup==g) {
-      setCurrentGroup(0);
-      a_rticleMgr->updateStatusString();
-    }
+    if (unloadHeaders(g, true)) {
+      if(c_urrentGroup==g) {
+        setCurrentGroup(0);
+        a_rticleMgr->updateStatusString();
+      }
 
-    if (unloadHeaders(g, true))
       g_List->removeRef(g);
 
-    const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
-    if (list) {
-      QFileInfoListIterator it( *list );
-      while (it.current()) {
-        dir.remove(it.current()->fileName());
-        ++it;
+      const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
+      if (list) {
+        QFileInfoListIterator it( *list );
+        while (it.current()) {
+          dir.remove(it.current()->fileName());
+          ++it;
+        }
       }
+      kdDebug(5003) << "Files deleted!" << endl;
+
+      return true;
     }
-    kdDebug(5003) << "Files deleted!" << endl;
   }
+
+  return false;
 }
 
 

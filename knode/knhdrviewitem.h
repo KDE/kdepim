@@ -34,6 +34,9 @@ class KNHdrViewItem : public KNLVItemBase  {
 
     QString key(int, bool) const;
 
+    // DND
+    virtual QDragObject* dragObject() const;
+
     KNArticle *art;
 
     static void clearFontCache();

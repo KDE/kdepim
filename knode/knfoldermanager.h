@@ -38,9 +38,10 @@ class KNFolderManager
     KNFolder* folder(int id);
 
     //standard folders
-    KNFolder* drafts()                    { return f_List.at(0); }
-    KNFolder* outbox()                    { return f_List.at(1); }
-    KNFolder* sent()                      { return f_List.at(2); }
+    KNFolder* root()                      { return f_List.at(0); }
+    KNFolder* drafts()                    { return f_List.at(1); }
+    KNFolder* outbox()                    { return f_List.at(2); }
+    KNFolder* sent()                      { return f_List.at(3); }
 
     //header loading
     bool loadHeaders(KNFolder *f);
@@ -49,10 +50,10 @@ class KNFolderManager
     bool loadOutbox()                     { return loadHeaders(outbox()); }
     bool loadSent()                       { return loadHeaders(sent()); }
 
-    void newFolder(KNFolder *p);
+    // returns the new folder
+    KNFolder* newFolder(KNFolder *p);
     bool deleteFolder(KNFolder *f);
     void emptyFolder(KNFolder *f);
-    void renameFolder(KNFolder *f, bool isNew=false);
     bool moveFolder(KNFolder *f, KNFolder *p);
 
     //unsent articles
@@ -61,6 +62,7 @@ class KNFolderManager
     //compacting
     void compactFolder(KNFolder *f);
     void compactAll(KNCleanUp *cup);
+    void compactAll();
 
     // import + export
     void importFromMBox(KNFolder *f);

@@ -38,8 +38,9 @@ class KNAccountManager : public QObject
     void setCurrentAccount(KNNntpAccount *a);
     
     bool newAccount(KNNntpAccount *a);       // a is new account allocated and configured by the caller
-    void removeAccount(KNNntpAccount *a=0);  // a==0: remove current account
+    bool removeAccount(KNNntpAccount *a=0);  // a==0: remove current account
     void editProperties(KNNntpAccount *a=0);
+    void accountRenamed(KNNntpAccount *a=0);
 
     bool hasCurrentAccount()              { return (c_urrentAccount!=0); }
     KNNntpAccount* currentAccount()       { return c_urrentAccount; }

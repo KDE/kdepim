@@ -54,14 +54,21 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
 
   KNFolder *f;
 
-  f=new KNFolder(1, i18n("Drafts"), "drafts");
+  f=new KNFolder(0, i18n("Local Folders"), "root");
   f_List.append(f);
+  f->readInfo();
 
-  f=new KNFolder(2, i18n("Outbox"), "outbox");
+  f=new KNFolder(1, i18n("Drafts"), "drafts", root());
   f_List.append(f);
+  f->readInfo();
 
-  f=new KNFolder(3, i18n("Sent"), "sent");
+  f=new KNFolder(2, i18n("Outbox"), "outbox", root());
   f_List.append(f);
+  f->readInfo();
+
+  f=new KNFolder(3, i18n("Sent"), "sent", root());
+  f_List.append(f);
+  f->readInfo();
 
   l_astId=3;
 
@@ -85,7 +92,7 @@ void KNFolderManager::setCurrentFolder(KNFolder *f)
 
   kdDebug(5003) << "KNFolderManager::setCurrentFolder() : folder changed" << endl;
 
-  if(f) {
+  if(f && !f->isRootFolder()) {
     if( loadHeaders(f) )
       a_rtManager->showHdrs();
     else
@@ -96,7 +103,7 @@ void KNFolderManager::setCurrentFolder(KNFolder *f)
 
 bool KNFolderManager::loadHeaders(KNFolder *f)
 {
-  if( f && ( f->isLoaded() || f->loadHdrs() ) ) {
+  if( f && !f->isRootFolder() && ( f->isLoaded() || f->loadHdrs() ) ) {
     knGlobals.memManager->updateCacheEntry( f );
     return true;
   }
@@ -131,17 +138,20 @@ KNFolder* KNFolderManager::folder(int i)
 }
 
 
-void KNFolderManager::newFolder(KNFolder *p)
+KNFolder* KNFolderManager::newFolder(KNFolder *p)
 {
+  if (!p)
+    p = root();
   KNFolder *f=new KNFolder(++l_astId, i18n("New folder"), p);
   f_List.append(f);
-  renameFolder(f, true);
+  createListItem(f);
+  return f;
 }
 
 
 bool KNFolderManager::deleteFolder(KNFolder *f)
 {
-  if(f->lockedArticles()>0)
+  if(!f || f->isRootFolder() || f->isStandardFolder() || f->lockedArticles()>0)
     return false;
 
   QList<KNFolder> del;
@@ -180,46 +190,10 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
 
 void KNFolderManager::emptyFolder(KNFolder *f)
 {
-  if(!f)
+  if(!f || f->isRootFolder())
     return;
   knGlobals.memManager->removeCacheEntry(f);
   f->deleteAll();
-}
-
-
-void KNFolderManager::renameFolder(KNFolder *f, bool isNew)
-{
-  if(!f || f->id()<=3)
-    return;
-
-  KDialogBase *dlg =
-  new KDialogBase(
-    knGlobals.topWidget, 0,true,
-    isNew ?  i18n("New folder") : i18n("Rename folder"),
-    KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok
-  );
-
-  QHBox *page = dlg->makeHBoxMainWidget();
-
-  QLabel *label = new QLabel(i18n("&Name:"),page);
-  KLineEdit *edit = new KLineEdit(page);
-  edit->setText(f->name());
-
-  label->setBuddy(edit);
-  edit->setFocus();
-  KNHelper::restoreWindowSize("renameFolder", dlg, QSize(325,66));
-
-  if(dlg->exec()) {
-    f->setName(edit->text());
-    if(!f->listItem())
-      showListItems();
-    else
-      f->updateListItem();
-  }
-  else if(isNew)
-    f_List.removeRef(f);
-
-  delete dlg;
 }
 
 
@@ -236,7 +210,7 @@ bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
     p2=p2->parent();
   }
 
-  if( (p2 && p2==f) || f==p || f->id()<=3 ) //  no way ;-)
+  if( (p2 && p2==f) || f==p || f->isStandardFolder() || f->isRootFolder()) //  no way ;-)
     return false;
 
   // reparent
@@ -246,10 +220,8 @@ bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
   // recreate list-item
   delete f->listItem();
   showListItems();
-  if(c_urrentFolder==f) {
+  if(c_urrentFolder==f)
     v_iew->setActive(f->listItem(), true);
-    v_iew->ensureItemVisible(f->listItem());
-  }
 
   return true;
 }
@@ -273,7 +245,7 @@ int KNFolderManager::unsentForAccount(int accId)
 
 void KNFolderManager::compactFolder(KNFolder *f)
 {
-  if(!f)
+  if(!f || f->isRootFolder())
     return;
 
   KNCleanUp cup(knGlobals.cfgManager->cleanup());
@@ -284,15 +256,31 @@ void KNFolderManager::compactFolder(KNFolder *f)
 void KNFolderManager::compactAll(KNCleanUp *cup)
 {
   for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
-    if(f->lockedArticles()==0)
+    if (!f->isRootFolder() && f->lockedArticles()==0)
       cup->appendCollection(f);
   }
 }
 
 
+void KNFolderManager::compactAll()
+{
+  KNCleanUp *cup = new KNCleanUp(knGlobals.cfgManager->cleanup());
+
+  for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
+    if (!f->isRootFolder() && f->lockedArticles()==0)
+      cup->appendCollection(f);
+  }
+
+  cup->start();
+
+  knGlobals.cfgManager->cleanup()->setLastCompactDate();
+  delete cup;
+}
+
+
 void KNFolderManager::importFromMBox(KNFolder *f)
 {
-  if(!f)
+  if(!f || f->isRootFolder())
     return;
 
   f->setNotUnloadable(true);
@@ -382,7 +370,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
     knGlobals.top->secureProcessEvents();
 
     if (!list.isEmpty())
-      knGlobals.artManager->saveInFolder(list, f);
+      knGlobals.artManager->moveIntoFolder(list, f);
 
     knGlobals.top->setStatusMsg(QString::null);
     knGlobals.top->setCursorBusy(false);
@@ -394,7 +382,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
 
 void KNFolderManager::exportToMBox(KNFolder *f)
 {
-  if(!f)
+  if(!f || f->isRootFolder())
     return;
 
   f->setNotUnloadable(true);
@@ -448,11 +436,10 @@ void KNFolderManager::syncFolders()
   }
 
   //sync
-  int idx=0;
   for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
-    f->syncIndex();
-    if(idx++>2) //do not save info for standard folders
-      f->saveInfo();
+    if (!f->isRootFolder())
+      f->syncIndex();
+    f->saveInfo();
   }
 }
 
@@ -469,7 +456,7 @@ int KNFolderManager::loadCustomFolders()
   }
 
   QDir d(dir);
-  QStringList entries(d.entryList("*.info"));
+  QStringList entries(d.entryList("custom_*.info"));  // ignore info files of standard folders
   for(QStringList::Iterator it=entries.begin(); it != entries.end(); it++) {
     f=new KNFolder();
     if(f->readInfo(d.absFilePath(*it))) {
@@ -487,10 +474,12 @@ int KNFolderManager::loadCustomFolders()
     QList<KNFolder> l(f_List);
     l.setAutoDelete(false);
     for(f=l.first(); f; f=l.next()) {
-      if(f->parentId()>-1)
-        f->setParent( folder(f->parentId()) );
-      else
-        f->setParent(0);
+      if (!f->isRootFolder()) {   // the root folder has no parent
+        KNFolder *par = folder(f->parentId());
+        if (!par)
+          par = root();
+        f->setParent(par);
+      }
     }
   }
 
@@ -502,6 +491,9 @@ void KNFolderManager::showListItems()
 {
   for(KNFolder *f=f_List.first(); f; f=f_List.next())
     if(!f->listItem()) createListItem(f);
+  // now open the folders if they were open in the last session
+  for(KNFolder *f=f_List.first(); f; f=f_List.next())
+    if (f->listItem()) f->listItem()->setOpen(f->wasOpen());
 }
 
 
@@ -510,14 +502,22 @@ void KNFolderManager::createListItem(KNFolder *f)
   KNCollectionViewItem *it;
   if(f->parent()==0) {
     it=new KNCollectionViewItem(v_iew);
-    f->setListItem(it);
   }
   else {
-    if(!f->parent()->listItem()) createListItem(static_cast<KNFolder*>(f->parent()));
+    if(!f->parent()->listItem())
+      createListItem(static_cast<KNFolder*>(f->parent()));
     it=new KNCollectionViewItem(f->parent()->listItem());
-    f->setListItem(it);
   }
   f->setListItem(it);
-  it->setPixmap(0, knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::folder));
+  QPixmap pix;
+  if (f->isRootFolder())
+    pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::rootFolder);
+  else
+    if (f->isStandardFolder())
+      pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::customFolder);
+    else
+      pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::folder);
+  it->setPixmap(0, pix);
   f->updateListItem();
 }
+

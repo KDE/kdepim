@@ -169,9 +169,9 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotRemail()), a_ctions, "article_mailReply");
   a_ctForward           = new KAction(i18n("Forw&ard by E-Mail..."),"mail_forward", Key_F , this,
                           SLOT(slotForward()), a_ctions, "article_forward");
-  a_ctCancel            = new KAction(i18n("article","&Cancel"), 0 , this,
+  a_ctCancel            = new KAction(i18n("article","&Cancel Article"), 0 , this,
                           SLOT(slotCancel()), a_ctions, "article_cancel");
-  a_ctSupersede         = new KAction(i18n("S&upersede..."), 0 , this,
+  a_ctSupersede         = new KAction(i18n("S&upersede Article..."), 0 , this,
                           SLOT(slotSupersede()), a_ctions, "article_supersede");
   a_ctVerify            = new KAction(i18n("&Verify PGP Signature"), 0, this,
                           SLOT(slotVerify()), a_ctions, "article_verify");
@@ -179,7 +179,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
                           SLOT(slotToggleRot13()), a_ctions, "view_rot13");
-  a_ctViewSource        = new KAction(i18n("&View Source..."),  0 , this,
+  a_ctViewSource        = new KAction(i18n("&View Source"),  0 , this,
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
 
   a_ctSetCharset = new KSelectAction(i18n("Chars&et"), 0, a_ctions, "set_charset");
@@ -1106,10 +1106,8 @@ void KNArticleWidget::createHtmlPage()
   a_ctReply->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctRemail->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctForward->setEnabled(true);
-  a_ctCancel->setEnabled( (knGlobals.folManager->currentFolder()!=knGlobals.folManager->outbox())
-                           && (knGlobals.folManager->currentFolder()!=knGlobals.folManager->drafts()));
-  a_ctSupersede->setEnabled( (knGlobals.folManager->currentFolder()!=knGlobals.folManager->outbox())
-                              && (knGlobals.folManager->currentFolder()!=knGlobals.folManager->drafts()));
+  a_ctCancel->setEnabled(knGlobals.folManager->currentFolder()==knGlobals.folManager->sent());
+  a_ctSupersede->setEnabled(knGlobals.folManager->currentFolder()==knGlobals.folManager->sent());
   a_ctVerify->setEnabled(true);
   a_ctToggleFullHdrs->setEnabled(true);
   a_ctToggleRot13->setEnabled(true);

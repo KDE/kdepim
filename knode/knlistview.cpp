@@ -29,18 +29,16 @@
 #include "knlistview.h"
 #include "knmime.h"
 #include "knhdrviewitem.h"
-#include "kndnd.h"
-
 
 
 KNLVItemBase::KNLVItemBase(KNLVItemBase *item)
-  : QListViewItem(item), a_ctive(false), h_over(false)
+  : QListViewItem(item), a_ctive(false)
 {
 }
 
 
 KNLVItemBase::KNLVItemBase(KNListView *view)
-  : QListViewItem(view), a_ctive(false), h_over(false)
+  : QListViewItem(view), a_ctive(false)
 {
 }
 
@@ -85,7 +83,6 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   if(column==0) {
     QFont font=p->font();
     font.setBold( this->firstColBold() );
-    font.setUnderline(h_over);
     p->setFont(font);
     const QPixmap *pm;
     
@@ -180,9 +177,8 @@ QString KNLVItemBase::shortString(QString text, int, int width, QFontMetrics fm)
 //==============================================================================
 
 
-KNListView::KNListView(QWidget *parent, const char *name, KNDragHandler *dh)
-  : QListView(parent,name), s_ortAsc(true), s_ortCol(-1), a_ctiveItem(0), d_handler(dh),
-    d_ragMousePressed(false), d_ragHoverItem(0), d_ropError(QString::null)
+KNListView::KNListView(QWidget *parent, const char *name)
+  : KListView(parent,name), s_ortAsc(true), s_ortCol(-1), d_elayedCenter(-1), a_ctiveItem(0)
 {
   connect(header(), SIGNAL(clicked(int)),
           this, SLOT(slotSortList(int)));
@@ -192,16 +188,16 @@ KNListView::KNListView(QWidget *parent, const char *name, KNDragHandler *dh)
 
   header()->setMovingEnabled(true);
   setFrameStyle(NoFrame);
-  setSelectionMode(QListView::Extended);
 
-  if(dh)
-    dh->setWidget(this);
+  setDropVisualizer(false);
+  setDropHighlighter(true);
+  setItemsRenameable(false);
+  setItemsMovable(false);
 }
 
 
 KNListView::~KNListView()
 {
-  delete d_handler;
 }
 
 
@@ -223,6 +219,8 @@ void KNListView::setActive(QListViewItem *i, bool activate)
   if (activate) {
     clearSelection();
     setSelected(item,true);
+    setCurrentItem(i);
+    ensureItemVisibleWithMargin(i);
     a_ctiveItem = item;
     emit(itemSelected(item));
   } else
@@ -237,12 +235,43 @@ void KNListView::clear()
 }
 
 
-void KNListView::triggerDropError(const QString &e)
+void KNListView::clearSelection()
 {
-  /* show a message-box with a little delay, so
-     the drop-operation can be completed first */
-  d_ropError=e;
-  QTimer::singleShot(50, this, SLOT(slotShowDropError()));
+  if (!k_eepSelection)
+    KListView::clearSelection();
+}
+
+
+void KNListView::ensureItemVisibleWithMargin(const QListViewItem *i)
+{
+  if (!i)
+  	return;
+  	
+  d_elayedCenter = -1;
+  int y = itemPos(i);
+  int h = i->height();
+
+  if (knGlobals.cfgManager->readNewsGeneral()->smartScrolling() &&
+      ((y+h+5) >= (contentsY()+visibleHeight()) ||
+       (y-5 < contentsY())))
+  {
+    ensureVisible(contentsX(), y+h/2, 0, h/2);
+    d_elayedCenter = y+h/2;
+    QTimer::singleShot(300, this, SLOT(slotCenterDelayed()));
+  } else {
+    ensureVisible(contentsX(), y+h/2, 0, h/2);
+  }
+}
+
+
+void KNListView::addAcceptableDropMimetype(const char *mimeType, bool outsideOk)
+{
+  int oldSize = a_cceptableDropMimetypes.size();
+  a_cceptableDropMimetypes.resize(oldSize+1);
+  a_cceptOutside.resize(oldSize+1);
+
+  a_cceptableDropMimetypes.at(oldSize) =  mimeType;
+  a_cceptOutside.setBit(oldSize, outsideOk);
 }
 
 
@@ -270,155 +299,39 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
 {
   if (!e) return;
 
-  bool selectMode=(
-                    ( ( e->state() & ShiftButton ) || ( e->state() & ControlButton ) ) &&
-                    selectionMode()!=Single
-                  );
+  bool selectMode=(( e->state() & ShiftButton ) || ( e->state() & ControlButton ));
 
-  QPoint vp = contentsToViewport( e->pos() );
-  QListViewItem * i = itemAt( vp );
+  QPoint vp = contentsToViewport(e->pos());
+  QListViewItem *i = itemAt(vp);
 
-  if ( (e->button() == RightButton) && i && (i->isSelected()) ) {
-    emit rightButtonPressed( i, viewport()->mapToGlobal(vp), -1 );
+  if ((e->button() == RightButton) && i && (i->isSelected())) {
+    emit rightButtonPressed(i, viewport()->mapToGlobal(vp), -1);
     return;
   }
 
-  if ((e->button() == MidButton) && i)
+  if ((e->button() == MidButton) && i) {
     emit middleMBClick(i);
-
-  // select item ?
-  if(!i || !i->isSelected() || selectMode) {
-    QListView::contentsMousePressEvent(e);
-    i=currentItem();
-    if(i && !selectMode && i->isSelected())
-      setActive(i, true);
-  }
-  // open item ?
-  else if(i) {
-  if( vp.x() >= header()->sectionPos(0) &&
-          vp.x() < ((i->depth()+1)*treeStepSize() + header()->sectionPos(0))
-    )
-    QListView::contentsMousePressEvent(e);
+    return;
   }
 
-  if(i && !selectMode && i->isSelected() && e->button()==LeftButton) {
-    d_ragStartPos=e->pos();
-    d_ragMousePressed=true;
-  }
-}
+  // hack: block clearSelection()...
+  if (i && i->isSelected() && !selectMode &&
+      ((vp.x() < header()->sectionPos(0)) ||
+       (vp.x() >= ((i->depth()+1)*treeStepSize() + header()->sectionPos(0)))))
+    k_eepSelection = true;
 
-
-void KNListView::contentsMouseMoveEvent(QMouseEvent *e)
-{
-  if( d_handler && d_ragMousePressed && (e->pos() - d_ragStartPos).manhattanLength() > 8 ) {
-    d_ragMousePressed=false;
-     kdDebug(5003) << "KNListView::contentsMouseMoveEvent() : start drag" << endl;
-    d_handler->startDrag(currentItem());
-  }
-}
-
-
-void KNListView::contentsMouseReleaseEvent(QMouseEvent *e)
-{
-  //kdDebug(5003) << "KNListView::contentsMouseReleaseEvent()" << endl;
-  if(e->button()==LeftButton)
-    d_ragMousePressed=false;
-
-  bool selectMode=(
-                    ( ( e->state() & ShiftButton ) || ( e->state() & ControlButton ) ) &&
-                    selectionMode()!=Single
-                  );
-
-  QPoint vp = contentsToViewport( e->pos() );
-  QListViewItem * i = itemAt( vp );
-
+  KListView::contentsMousePressEvent(e);
+  i=currentItem();
   if(i && !selectMode && i->isSelected())
     setActive(i, true);
 
-  QListView::contentsMouseReleaseEvent(e);
+  k_eepSelection = false;
 }
 
 
-void KNListView::contentsDragEnterEvent(QDragEnterEvent *e)
+void KNListView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 {
-  kdDebug(5003) << "KNListView::contentsDragEnterEvent()" << endl;
-  if(!e) return;
-
-  if(d_handler && d_handler->accept(e)) {
-    e->accept(rect());
-  }
-  else {
-    e->ignore(rect());
-  }
-}
-
-
-void KNListView::contentsDragMoveEvent(QDragMoveEvent *e)
-{
-  if(!e) return;
-  QPoint vp = contentsToViewport( e->pos() );
-  QListViewItem *i=itemAt(vp);
-  //kdDebug(5003) << "KNListView::contentsDragMoveEvent() : type = " << e->format(0) << endl;
-
-  if(d_ragHoverItem!=i && d_ragHoverItem) {
-    d_ragHoverItem->hover(false);
-    repaintItem(d_ragHoverItem);
-    d_ragHoverItem=0;
-  }
-
-
-  if( d_handler && d_handler->accept(e, i) ) {
-    if(i && d_ragHoverItem!=i) {
-      d_ragHoverItem=static_cast<KNLVItemBase*>(i);
-      d_ragHoverItem->hover(true);
-      repaintItem(d_ragHoverItem);
-    }
-    e->accept(QRect(0,0,0,0));
-  }
-  else {
-    d_ragHoverItem=0;
-    e->ignore(QRect(0,0,0,0));
-  }
-}
-
-
-void KNListView::contentsDragLeaveEvent(QDragLeaveEvent *)
-{
-  if(d_ragHoverItem) {
-    d_ragHoverItem->hover(false);
-    repaintItem(d_ragHoverItem);
-  }
-  d_ragHoverItem=0;
-
-  d_ragMousePressed=false;
-}
-
-
-void KNListView::contentsDropEvent(QDropEvent *e)
-{
-  if(!e) return;
-  QPoint vp = contentsToViewport( e->pos() );
-  QListViewItem *i=itemAt(vp);
-
-  kdDebug(5003) << "KNListView::contentsDropEvent() : type = " << e->format(0) << endl;
-
-  if( d_handler && d_handler->accept(e, i) )
-    e->acceptAction(true);
-  else
-    e->ignore();
-
-  if(d_ragHoverItem) {
-    d_ragHoverItem->hover(false);
-    repaintItem(d_ragHoverItem);
-  }
-  d_ragHoverItem=0;
-
-  if(e->isAccepted()) {
-    kapp->processEvents();
-    emit( dropReceived(e->format(0), i) );
-  }
-
-  d_ragMousePressed=false;
+  QListView::contentsMouseDoubleClickEvent(e);
 }
 
 
@@ -438,11 +351,10 @@ void KNListView::keyPressEvent(QKeyEvent *e)
     case Key_Enter:
     case Key_Return:
       setActive(i, true);
-      ensureItemVisible(i);
     break;
 
     default:
-      QListView::keyPressEvent (e);
+      KListView::keyPressEvent (e);
   }
 }
 
@@ -461,15 +373,39 @@ void KNListView::focusOutEvent(QFocusEvent *e)
 }
 
 
-void KNListView::slotShowDropError()
+QDragObject* KNListView::dragObject() const
 {
-  if(!d_ropError.isEmpty()) {
-    KMessageBox::error(knGlobals.topWidget, d_ropError);
-    d_ropError=QString::null;
-  }
+  KNLVItemBase *item = static_cast<KNLVItemBase*>(itemAt(viewport()->mapFromGlobal(QCursor::pos())));
+  if (item)
+    return item->dragObject();
+  else
+    return 0;
 }
 
 
+bool KNListView::acceptDrag(QDropEvent* event) const
+{
+  QListViewItem *after=0, *parent=0;
+  // why isn't ::findDrop const??? grrr...
+  const_cast<KNListView*>(this)->findDrop(event->pos(), parent, after);
+
+  for (uint i=0; i < a_cceptableDropMimetypes.size(); i++) {
+    if (event->provides(a_cceptableDropMimetypes[i])) {
+      if (after)
+        return (static_cast<KNLVItemBase*>(after))->acceptDrag(event);
+      else
+        return a_cceptOutside[i];
+    }
+  }
+  return false;
+}
+
+
+void KNListView::slotCenterDelayed()
+{
+  if (d_elayedCenter != -1)
+    ensureVisible(contentsX(), d_elayedCenter, 0, visibleHeight()/2);
+}
 
 //--------------------------------
 

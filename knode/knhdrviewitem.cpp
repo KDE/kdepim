@@ -14,6 +14,8 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+#include <qdragobject.h>
+
 #include <kglobal.h>
 #include <kcharsets.h>
 
@@ -23,12 +25,10 @@
 #include "knmime.h"
 
 
-
 KNHdrViewItem::KNHdrViewItem(KNListView *ref, KNArticle *a) :
   KNLVItemBase(ref), art(a)
 {
 }
-
 
 
 KNHdrViewItem::KNHdrViewItem(KNLVItemBase *ref, KNArticle *a) :
@@ -37,12 +37,10 @@ KNHdrViewItem::KNHdrViewItem(KNLVItemBase *ref, KNArticle *a) :
 }
 
 
-
 KNHdrViewItem::~KNHdrViewItem()
 {
   if(art) art->setListItem(0);
 }
-
 
 
 QString KNHdrViewItem::key(int col, bool) const
@@ -56,6 +54,14 @@ QString KNHdrViewItem::key(int col, bool) const
     return tmpString.sprintf("%08d",(uint)art->date()->unixTime());
   }
   return text(col);
+}
+
+
+QDragObject* KNHdrViewItem::dragObject() const
+{
+  QDragObject *d=new QStoredDrag( "x-knode-drag/article" , listView()->viewport());
+  d->setPixmap(knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::posting));
+  return d;
 }
 
 
@@ -75,7 +81,6 @@ bool KNHdrViewItem::greyOut()
               ((KNRemoteArticle*)art)->isRead() );
   else return false;  
 }
-
 
 
 bool KNHdrViewItem::firstColBold()

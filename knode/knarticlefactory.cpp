@@ -603,7 +603,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
   }
 
   if(!now) {
-    knGlobals.artManager->saveInFolder(unsent, knGlobals.folManager->outbox());
+    knGlobals.artManager->moveIntoFolder(unsent, knGlobals.folManager->outbox());
     return;
   }
 
@@ -720,7 +720,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 
     //sending of this article failed => move it to the "Outbox-Folder"
     if(art->collection()!=knGlobals.folManager->outbox())
-      knGlobals.artManager->saveInFolder(lst, knGlobals.folManager->outbox());
+      knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->outbox());
   }
   else {
 
@@ -747,8 +747,7 @@ void KNArticleFactory::processJob(KNJobData *j)
     };
 
     //article has been sent successfully => move it to the "Sent-folder"
-
-    knGlobals.artManager->saveInFolder(lst, knGlobals.folManager->sent());
+    knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->sent());
   }
 }
 
@@ -990,7 +989,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
 
     case KNComposer::CRsave :
       com->applyChanges();
-      knGlobals.artManager->saveInFolder(lst, knGlobals.folManager->drafts());
+      knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->drafts());
     break;
 
     case KNComposer::CRdelAsk:
