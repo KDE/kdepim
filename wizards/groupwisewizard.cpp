@@ -320,13 +320,13 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   QGridLayout *accountLayout= new QGridLayout( mEmailWidget );
   accountLayout->setSpacing( spacingHint() );
   
-  label = new QLabel( i18n("Email Address:"), mEmailWidget );
+  label = new QLabel( i18n("Email address:"), mEmailWidget );
   accountLayout->addWidget( label, 0, 0 );
   
   mEmailEdit = new KLineEdit( mEmailWidget );
   accountLayout->addWidget( mEmailEdit, 0, 1 );
 
-  label = new QLabel( i18n("Full Name:"), mEmailWidget );
+  label = new QLabel( i18n("Full name:"), mEmailWidget );
   accountLayout->addWidget( label, 1, 0 );
 
   mFullNameEdit = new KLineEdit( mEmailWidget );

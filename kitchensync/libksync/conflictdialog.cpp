@@ -45,7 +45,7 @@ ConflictDialog::ConflictDialog( SyncEntry *syncEntry, SyncEntry *targetEntry,
 
   setButtonText( User1, targetEntry->syncee()->title() );
   setButtonText( User2, syncEntry->syncee()->title() );
-  setButtonText( Cancel, i18n( "Keep both" ) );
+  setButtonText( Cancel, i18n( "Keep Both" ) );
 
   if ( mDiffAlgo ) {
     mDiffAlgo->addDisplay( mDisplay );

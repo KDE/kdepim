@@ -87,7 +87,7 @@ ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* 
 
   mainLayout->addMultiCellWidget( hline, 3, 3, 0, 1 );
 
-  QPushButton *updateButton = new QPushButton( i18n( "Retrieve Address Book List from Server" ), this );
+  QPushButton *updateButton = new QPushButton( i18n( "Retrieve Address Book List From Server" ), this );
   mainLayout->addMultiCellWidget( updateButton, 4, 4, 0, 1 );
 
   mAddressBookView = new KListView( this );
@@ -100,7 +100,7 @@ ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* 
 
   mainLayout->addMultiCellWidget( mAddressBookView, 5, 5, 0, 1 );
 
-  label = new QLabel( i18n( "Address Book for new Contacts:" ), this );
+  label = new QLabel( i18n( "Address book for new contacts:" ), this );
   mAddressBookBox = new KComboBox( this );
 
   mainLayout->addWidget( label, 6, 0 );

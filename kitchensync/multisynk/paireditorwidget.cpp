@@ -123,16 +123,16 @@ QWidget *PairEditorWidget::createPluginTab()
   QWidget *widget = new QWidget( this );
   QVBoxLayout *layout = new QVBoxLayout( widget, KDialog::marginHint(), KDialog::spacingHint() );
 
-  QLabel *label = new QLabel( "<h2><b>" + i18n( "Synchronization Plugins:" ) + "</b></h2>", widget );
+  QLabel *label = new QLabel( "<h2><b>" + i18n( "Synchronization plugins:" ) + "</b></h2>", widget );
   layout->addWidget( label );
 
   QVBoxLayout *pluginLayout = new QVBoxLayout( widget, KDialog::marginHint(), KDialog::spacingHint() );
 
   PluginEditorWidget *firstPlugin = new PluginEditorWidget( widget );
-  firstPlugin->setLabel( i18n( "First Plugin:" ) );
+  firstPlugin->setLabel( i18n( "First plugin:" ) );
 
   PluginEditorWidget *secondPlugin = new PluginEditorWidget( widget );
-  secondPlugin->setLabel( i18n( "Second Plugin:" ) );
+  secondPlugin->setLabel( i18n( "Second plugin:" ) );
 
   mEditorWidgets.append( firstPlugin );
   mEditorWidgets.append( secondPlugin );
@@ -141,7 +141,7 @@ QWidget *PairEditorWidget::createPluginTab()
   pluginLayout->addWidget( secondPlugin );
 
   QHBoxLayout *displayLayout = new QHBoxLayout( widget, KDialog::marginHint(), KDialog::spacingHint() );
-  label = new QLabel( i18n( "Display Name:" ), widget );
+  label = new QLabel( i18n( "Display name:" ), widget );
   displayLayout->addWidget( label );
 
   mPairNameEdit = new KLineEdit( widget );

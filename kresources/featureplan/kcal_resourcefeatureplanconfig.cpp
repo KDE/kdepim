@@ -48,7 +48,7 @@ ResourceFeaturePlanConfig::ResourceFeaturePlanConfig( QWidget *parent,
   topLayout->addWidget( label, 0, 0 );
   topLayout->addWidget( mFilename, 0, 1 );
 
-  label = new QLabel( i18n( "Filter Email:" ), this );
+  label = new QLabel( i18n( "Filter email:" ), this );
   mFilterEmail = new KLineEdit( this );
 
   topLayout->addWidget( label, 1, 0 );
