@@ -183,6 +183,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void slotFindStart();
     void slotFindDone();
     void addAddressbook(const QString &);
+    void openAddressbook(const QString &);
+
   //-------------------------- </Actions> --------------------------
 
     void slotTimeout();

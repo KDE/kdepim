@@ -67,6 +67,7 @@
 
 #define PUP_ADDRESSBOOK 7000
 #define PUP_COPYTOCLIPBOARD 8000
+#define PUP_OPENADDRESSBOOK 9000
 
 #define HDR_COL   0
 #define QCOL_1    1
@@ -155,6 +156,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
 
   u_mailtoPopup=new KPopupMenu();
   u_mailtoPopup->insertItem(i18n("Add to Address Book"), PUP_ADDRESSBOOK);
+  u_mailtoPopup->insertItem(i18n("Open in Address Book"), PUP_OPENADDRESSBOOK);
   u_mailtoPopup->insertItem(i18n("Copy to Clipboard"), PUP_COPYTOCLIPBOARD);
 
   a_ttPopup=new KPopupMenu();
@@ -1604,6 +1606,9 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         case PUP_ADDRESSBOOK:
             addAddressbook(target);
             break;
+        case PUP_OPENADDRESSBOOK:
+            openAddressbook(target);
+            break;
         case PUP_COPYTOCLIPBOARD:
             QApplication::clipboard()->setText(target);
             break;
@@ -1628,6 +1633,11 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
 }
 
 void KNArticleWidget::addAddressbook(const QString & target)
+{
+    KAddrBookExternal::addEmail( target, this );
+}
+
+void KNArticleWidget::openAddressbook(const QString & target)
 {
     KAddrBookExternal::openEmail( target, target, this );
 }
