@@ -64,7 +64,7 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.3.0";
+static const char progVersion[] = "1.1.1";
 static const char description[] = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
@@ -422,7 +422,7 @@ int main(int argc, char *argv[])
     kdDebug() << "main | parse options | Show " << option << " days ahead" << endl;
     variables.setDaysCount( option.toInt( &ok, 10 ) );
 
-    if( !ok ){
+    if( !ok ) {
       cout << i18n("Invalid Date Count Specified: ").local8Bit()
            << option.local8Bit() << endl;
       return(1);
