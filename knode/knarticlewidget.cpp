@@ -140,7 +140,7 @@ QByteArray KNMimeSource::encodedData(const char *) const
 KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiClient,
     QWidget *parent, const char *name )
     : KTextBrowser(parent, name), a_rticle(0), a_tt(0), h_tmlDone(false),
-      emuKMail(false), f_inddialog(0), a_ctions(actColl), mGuiClient(guiClient)
+      f_inddialog(0), a_ctions(actColl), mGuiClient(guiClient)
 {
   instances()->append(this);
   setNotifyClick( true );
@@ -367,18 +367,6 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
     case Key_Next:
       scrollBy( 0, visibleHeight()-offs);
       break;
-    case Key_Left:
-      if (emuKMail)
-        emit(keyLeftPressed());
-      else
-        QTextBrowser::keyPressEvent(e);
-      break;
-    case Key_Right:
-      if (emuKMail)
-        emit(keyRightPressed());
-      else
-        QTextBrowser::keyPressEvent(e);
-      break;
     default:
       QTextBrowser::keyPressEvent(e);
   }
@@ -482,7 +470,6 @@ void KNArticleWidget::applyConfig()
   if(!knGlobals.configManager()->readNewsGeneral()->autoMark())
     t_imer->stop();
 
-  emuKMail = ((this==knGlobals.artWidget) && knGlobals.configManager()->readNewsNavigation()->emulateKMail());
   updateContents();
 }
 

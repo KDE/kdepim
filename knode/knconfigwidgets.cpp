@@ -1118,22 +1118,10 @@ KNConfig::ReadNewsNavigationWidget::ReadNewsNavigationWidget(ReadNewsNavigation 
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 
-  // ==== General =============================================================
-
-  QGroupBox *gb=new QGroupBox(i18n("General"), this);
-  QVBoxLayout *gbL=new QVBoxLayout(gb, 8, 5);
-  topL->addWidget(gb);
-
-  gbL->addSpacing(fontMetrics().lineSpacing()-4);
-  e_muKMailCB=new QCheckBox(i18n("Emulate the &keyboard behavior of KMail"), gb);
-  gbL->addWidget(e_muKMailCB);
-
-  connect(e_muKMailCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
-
   // ==== Mark All as Read ====================================================
 
-  gb=new QGroupBox(i18n("\"Mark All as Read\" Triggers Following Actions"), this);
-  gbL=new QVBoxLayout(gb, 8, 5);
+  QGroupBox *gb=new QGroupBox(i18n("\"Mark All as Read\" Triggers Following Actions"), this);
+  QVBoxLayout *gbL=new QVBoxLayout(gb, 8, 5);
   topL->addWidget(gb);
 
   gbL->addSpacing(fontMetrics().lineSpacing()-4);
@@ -1186,7 +1174,6 @@ KNConfig::ReadNewsNavigationWidget::~ReadNewsNavigationWidget()
 
 void KNConfig::ReadNewsNavigationWidget::load()
 {
-  e_muKMailCB->setChecked(d_ata->e_muKMail);
   m_arkAllReadGoNextCB->setChecked(d_ata->m_arkAllReadGoNext);
   m_arkThreadReadGoNextCB->setChecked(d_ata->m_arkThreadReadGoNext);
   m_arkThreadReadCloseThreadCB->setChecked(d_ata->m_arkThreadReadCloseThread);
@@ -1199,7 +1186,6 @@ void KNConfig::ReadNewsNavigationWidget::save()
   if(!d_irty)
     return;
 
-  d_ata->e_muKMail = e_muKMailCB->isChecked();
   d_ata->m_arkAllReadGoNext = m_arkAllReadGoNextCB->isChecked();
   d_ata->m_arkThreadReadGoNext = m_arkThreadReadGoNextCB->isChecked();
   d_ata->m_arkThreadReadCloseThread = m_arkThreadReadCloseThreadCB->isChecked();
@@ -2675,5 +2661,3 @@ void KNConfig::CacheWidget::apply()
 
 //------------------------
 #include "knconfig.moc"
-
-// kate: space-indent on; indent-width 2;

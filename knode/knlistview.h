@@ -125,16 +125,7 @@ class KNListView : public KListView  {
     void focusChanged(QFocusEvent*);
     void focusChangeRequest(QWidget*);
 
-    void keyPriorPressed();
-    void keyNextPressed();
-    void keyLeftPressed();
-    void keyRightPressed();
-    void keyUpPressed();
-    void keyDownPressed();
-
     void reparented();
 };
 
 #endif
-
-// kate: space-indent on; indent-width 2;

@@ -671,7 +671,6 @@ KNConfig::ReadNewsNavigation::ReadNewsNavigation()
   KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS_NAVIGATION");
 
-  e_muKMail=conf->readBoolEntry("emuKMail", false);
   m_arkAllReadGoNext=conf->readBoolEntry("markAllReadGoNext", false);
   m_arkThreadReadGoNext=conf->readBoolEntry("markThreadReadGoNext", false);
   m_arkThreadReadCloseThread=conf->readBoolEntry("markThreadReadCloseThread", false);
@@ -695,7 +694,6 @@ void KNConfig::ReadNewsNavigation::save()
   KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS_NAVIGATION");
 
-  conf->writeEntry("emuKMail", e_muKMail);
   conf->writeEntry("markAllReadGoNext", m_arkAllReadGoNext);
   conf->writeEntry("markThreadReadGoNext", m_arkThreadReadGoNext);
   conf->writeEntry("markThreadReadCloseThread", m_arkThreadReadCloseThread);
@@ -1344,5 +1342,3 @@ void KNConfig::Cache::save()
   d_irty = false;
 }
 */
-
-// kate: space-indent on; indent-width 2;

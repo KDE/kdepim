@@ -392,42 +392,6 @@ void KNListView::keyPressEvent(QKeyEvent *e)
     case Key_Return:
       setActive(i, true);
     break;
-    case Key_Left:
-      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
-        emit(keyLeftPressed());
-      else
-        KListView::keyPressEvent(e);
-      break;
-    case Key_Right:
-      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
-        emit(keyRightPressed());
-      else
-        KListView::keyPressEvent(e);
-      break;
-    case Key_Up:
-      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
-        emit(keyUpPressed());
-      else
-        KListView::keyPressEvent(e);
-      break;
-    case Key_Down:
-      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
-        emit(keyDownPressed());
-      else
-        KListView::keyPressEvent(e);
-      break;
-    case Key_Next:
-      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
-        emit(keyNextPressed());
-      else
-        KListView::keyPressEvent(e);
-      break;
-    case Key_Prior:
-      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
-        emit(keyPriorPressed());
-      else
-        KListView::keyPressEvent(e);
-      break;
 
     default:
       KListView::keyPressEvent (e);
@@ -503,5 +467,3 @@ void KNListView::reparent(QWidget *parent, WFlags f, const QPoint &p, bool showI
 
 //--------------------------------
 #include "knlistview.moc"
-
-// kate: space-indent on; indent-width 2;

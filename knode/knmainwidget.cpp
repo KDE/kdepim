@@ -82,6 +82,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   //------------------------------- </CONFIG> ----------------------------------
 
   //-------------------------------- <GUI> ------------------------------------
+  QAccel *accel = new QAccel( this );
   initStatusBar();
 
   //setup splitter behavior
@@ -106,9 +107,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   connect(a_rtDock, SIGNAL(iMBeingClosed()), SLOT(slotArticleDockHidden()));
   connect(a_rtDock, SIGNAL(hasUndocked()), SLOT(slotArticleDockHidden()));
   connect(a_rtView, SIGNAL(focusChangeRequest(QWidget *)), SLOT(slotDockWidgetFocusChangeRequest(QWidget *)));
-  // KMail emulation...
-  connect(a_rtView, SIGNAL(keyLeftPressed()), SLOT(slotNavPrevArt()));
-  connect(a_rtView, SIGNAL(keyRightPressed()), SLOT(slotNavNextArt()));
 
   //collection view
   c_olDock = createDockWidget("group_view", UserIcon("group"), 0,
@@ -135,13 +133,11 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   connect(c_olView, SIGNAL(itemRenamed(QListViewItem*)),
           SLOT(slotCollectionRenamed(QListViewItem*)));
   connect(c_olView, SIGNAL(reparented()), SLOT(slotReparented()));
-  // KMail emulation...
-  connect(c_olView, SIGNAL(keyLeftPressed()), SLOT(slotNavPrevArt()));
-  connect(c_olView, SIGNAL(keyRightPressed()), SLOT(slotNavNextArt()));
-  connect(c_olView, SIGNAL(keyUpPressed()), a_rtView, SLOT(slotKeyUp()));
-  connect(c_olView, SIGNAL(keyDownPressed()), a_rtView, SLOT(slotKeyDown()));
-  connect(c_olView, SIGNAL(keyPriorPressed()), a_rtView, SLOT(slotKeyPrior()));
-  connect(c_olView, SIGNAL(keyNextPressed()), a_rtView, SLOT(slotKeyNext()));
+
+  accel->connectItem( accel->insertItem(Key_Up), a_rtView, SLOT(slotKeyUp()) );
+  accel->connectItem( accel->insertItem(Key_Down), a_rtView, SLOT(slotKeyDown()) );
+  accel->connectItem( accel->insertItem(Key_Prior), a_rtView, SLOT(slotKeyPrior()) );
+  accel->connectItem( accel->insertItem(Key_Next), a_rtView, SLOT(slotKeyNext()) );
 
   //header view
   h_drDock = createDockWidget("header_view", SmallIcon("text_block"), 0,
@@ -206,13 +202,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
           SLOT(slotOpenArticle(QListViewItem *)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
           SLOT(slotHdrViewSortingChanged(int)));
-  // KMail emulation...
-  connect(h_drView, SIGNAL(keyLeftPressed()), SLOT(slotNavPrevArt()));
-  connect(h_drView, SIGNAL(keyRightPressed()), SLOT(slotNavNextArt()));
-  connect(h_drView, SIGNAL(keyUpPressed()), a_rtView, SLOT(slotKeyUp()));
-  connect(h_drView, SIGNAL(keyDownPressed()), a_rtView, SLOT(slotKeyDown()));
-  connect(h_drView, SIGNAL(keyPriorPressed()), a_rtView, SLOT(slotKeyPrior()));
-  connect(h_drView, SIGNAL(keyNextPressed()), a_rtView, SLOT(slotKeyNext()));
 
   //actions
   initActions();
@@ -604,10 +593,12 @@ void KNMainWidget::initActions()
   a_rtView->setCharsetKeyboardAction()->plugAccel(a_ccel);
 
   //navigation
-  a_ctNavNextArt            = new KAction(i18n("&Next Article"), "next", Key_N , this,
-                              SLOT(slotNavNextArt()), actionCollection(), "go_nextArticle");
-  a_ctNavPrevArt            = new KAction(i18n("&Previous Article"), "previous", Key_B , this,
-                              SLOT(slotNavPrevArt()), actionCollection(), "go_prevArticle");
+  a_ctNavNextArt            = new KAction( KGuiItem(i18n("&Next Article"), "next",
+                              i18n("Go to next article")), "N;Right", this,
+                              SLOT(slotNavNextArt()), actionCollection(), "go_nextArticle" );
+  a_ctNavPrevArt            = new KAction( KGuiItem(i18n("&Previous Article"), "previous",
+                              i18n("Go to previous article")), "P;Left" , this,
+                              SLOT(slotNavPrevArt()), actionCollection(), "go_prevArticle" );
   a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", ALT+Key_Space , this,
                               SLOT(slotNavNextUnreadArt()), actionCollection(), "go_nextUnreadArticle");
   a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", CTRL+Key_Space , this,
@@ -635,7 +626,7 @@ void KNMainWidget::initActions()
                                           SLOT(slotAccGetNewHdrsAll()), actionCollection(), "account_dnlAllHeaders");
   a_ctAccDelete             = new KAction(i18n("&Delete Account"), "editdelete", 0, this,
                               SLOT(slotAccDelete()), actionCollection(), "account_delete");
-  a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "mail_new", Key_P , this,
+  a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "mail_new", CTRL+Key_N, this,
                               SLOT(slotAccPostNewArticle()), actionCollection(), "article_postNew");
 
   //collection-view - groups
@@ -2482,5 +2473,3 @@ bool KNMainWidget::handleCommandLine()
 ////////////////////////////////////////////////////////////////////////
 
 #include "knmainwidget.moc"
-
-// kate: space-indent on; indent-width 2;

@@ -566,7 +566,6 @@ class ReadNewsNavigation : public Base {
 
     void save();
 
-    bool emulateKMail()const               { return e_muKMail; }
     bool markAllReadGoNext()const          { return m_arkAllReadGoNext; }
     bool markThreadReadGoNext() const      { return m_arkThreadReadGoNext; }
     bool markThreadReadCloseThread()const  { return m_arkThreadReadCloseThread; }
@@ -574,8 +573,7 @@ class ReadNewsNavigation : public Base {
     bool ignoreThreadCloseThread()const   { return i_gnoreThreadCloseThread; }
 
   protected:
-    bool  e_muKMail,
-          m_arkAllReadGoNext,
+    bool  m_arkAllReadGoNext,
           m_arkThreadReadGoNext,
           m_arkThreadReadCloseThread,
           i_gnoreThreadGoNext,
@@ -594,8 +592,7 @@ class ReadNewsNavigationWidget : public BaseWidget {
     void save();
 
   protected:
-    QCheckBox   *e_muKMailCB,
-                *m_arkAllReadGoNextCB,
+    QCheckBox   *m_arkAllReadGoNextCB,
                 *m_arkThreadReadGoNextCB,
                 *m_arkThreadReadCloseThreadCB,
                 *i_gnoreThreadGoNextCB,
@@ -1276,5 +1273,3 @@ class CacheWidget : public BaseWidget  {
 } //KNConfig
 
 #endif //KNCONFIG_H
-
-// kate: space-indent on; indent-width 2;

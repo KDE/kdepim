@@ -2,7 +2,7 @@
     knarticlewidget.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -77,7 +77,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     enum browserType  { BTkonqueror=0 , BTnetscape=1 };
     enum anchorType   { ATurl, ATauthor, ATattachment, ATnews, ATmsgid, ATmailto, ATunknown };
 
-    KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiClient, 
+    KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiClient,
       QWidget *parent=0, const char *name=0 );
     ~KNArticleWidget();
 
@@ -131,7 +131,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool h_tmlDone, r_ot13;
     QTimer *t_imer;
     QCString o_verrideCS;
-    bool f_orceCS, emuKMail;
+    bool f_orceCS;
 
     KPopupMenu *u_rlPopup, *a_ttPopup, *u_mailtoPopup;
 
@@ -194,8 +194,6 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
   signals:
     void focusChanged(QFocusEvent*);
     void focusChangeRequest(QWidget*);
-    void keyLeftPressed();
-    void keyRightPressed();
 
   //----------------------- Static members -------------------------
   public:
