@@ -438,8 +438,17 @@ void KPilotDeviceLink::acceptDevice()
 
 	if (!fSocketNotifierActive) 
 	{
+		if (!fAcceptedCount)
+		{
 		kdWarning() << k_funcinfo << ": Accidentally in acceptDevice()"
 			<< endl;
+		}
+		fAcceptedCount++;
+		if (fAcceptedCount>10)
+		{
+			// Damn the torpedoes
+			KPILOT_DELETE(fSocketNotifier);
+		}
 		return;
 	}
 

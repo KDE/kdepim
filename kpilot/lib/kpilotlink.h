@@ -278,6 +278,11 @@ private:
 	int fPilotMasterSocket;
 	int fCurrentPilotSocket;
 
+	/**
+	* Handle cases where we can't accept or open the device,
+	* and data remains available on the pilot socket.
+	*/
+	int fAcceptedCount;
 signals:
 	/**
 	* Whenever a conduit adds a Sync log entry (actually,
