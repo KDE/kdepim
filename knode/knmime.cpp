@@ -1413,11 +1413,18 @@ bool KNMimeContent::decodeText()
   if(!contentType()->isText())
     return false; //non textual data cannot be decoded here => use decodedContent() instead
 
-  if(enc->cte()==KNHeaders::CEquPr)
-    b_ody=KCodecs::quotedPrintableDecode(b_ody);
-  else {
-    if (enc->cte()==KNHeaders::CEbase64)
+  switch(enc->cte()) {
+    case KNHeaders::CEbase64 :
       b_ody=KCodecs::base64Decode(b_ody);
+    break;
+    case KNHeaders::CEquPr :
+      b_ody=KCodecs::quotedPrintableDecode(b_ody);
+    break;
+    case KNHeaders::CEuuenc :
+      b_ody=KCodecs::uudecode(b_ody);
+    break;
+    default :
+    break;
   }
 
   enc->setDecoded(true);
