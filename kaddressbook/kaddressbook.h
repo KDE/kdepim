@@ -15,7 +15,7 @@ class AddresseeEditorDialog;
 class IncSearchWidget;
 
 namespace KABC {
-  class DistributionListEditor;
+  class DistributionListDialog;
   class AddressBook;
   class Addressee;
 }
@@ -207,7 +207,7 @@ class KAddressBook : public QWidget
     void parseEmailAddress(QString rawEmail, QString &fullName, QString &email);
 
     KABC::AddressBook *mDocument;
-    KABC::DistributionListEditor *mDistEditor;
+    KABC::DistributionListDialog *mDistEditor;
     PrefsDialog *mPrefsDialog;
     LDAPSearchDialogImpl *mLdapSearchDialog;
     ViewManager *mViewManager;

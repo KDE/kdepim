@@ -23,7 +23,7 @@
 #include <kprotocolinfo.h>
 #include <kprinter.h>
 #include <kabc/stdaddressbook.h>
-#include <kabc/distributionlisteditor.h>
+#include <kabc/distributionlistdialog.h>
 #include <kabc/distributionlist.h>
 #include <kabc/field.h>
 #include <kabc/resourceselectdialog.h>
@@ -98,7 +98,7 @@ void KAddressBook::slotDistributionList()
 {
   save();
   if (!mDistEditor)
-      mDistEditor = new KABC::DistributionListEditor(
+      mDistEditor = new KABC::DistributionListDialog(
 	  KABC::StdAddressBook::self(), this );
 
   mDistEditor->exec();
