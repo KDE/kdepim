@@ -395,14 +395,14 @@ void VCalConduitBase::slotPalmRecToPC()
 //	DEBUGCONDUIT<<fname<<": Time: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
 	bool archiveRecord=(r->isArchived());
 
-	s = fLocalDatabase->readRecordById(r->getID());
+	s = fLocalDatabase->readRecordById(r->id());
 	if (!s || isFirstSync())
 	{
 #ifdef DEBUG
-		if (r->getID()>0 && !s)
+		if (r->id()>0 && !s)
 		{
 			DEBUGCONDUIT<<"---------------------------------------------------------------------------"<<endl;
-			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<r->getID()<<endl;
+			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<r->id()<<endl;
 		}
 #endif
 		if (!r->isDeleted() || (config()->syncArchived() && archiveRecord))
@@ -505,24 +505,24 @@ void VCalConduitBase::slotDeletedIncidence()
 		return;
 	}
 
-	KCal::Incidence *e = fP->findIncidence(r->getID());
+	KCal::Incidence *e = fP->findIncidence(r->id());
 	if (!e)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT<<"didn't find incidence with id="<<r->getID()<<", deleting it"<<endl;
+		DEBUGCONDUIT<<"didn't find incidence with id="<<r->id()<<", deleting it"<<endl;
 #endif
 		// entry was deleted from Calendar, so delete it from the palm
-//		PilotRecord*s=fLocalDatabase->readRecordById(r->getID());
+//		PilotRecord*s=fLocalDatabase->readRecordById(r->id());
 //		if (s)
 //		{
 //			// delete the record from the palm
-//			s->makeDeleted();
+//			s->setDeleted();
 ////			s->setAttrib(s->getAttrib() & ~dlpRecAttrDeleted & ~dlpRecAttrDirty);
 //			fDatabase->writeRecord(s);
 //			KPILOT_DELETE(s);
 //		}
 		deletePalmRecord(NULL, r);
-//		r->makeDeleted();
+//		r->setDeleted();
 ////		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted & ~dlpRecAttrDirty);
 //		fLocalDatabase->writeRecord(r);
 //		fDatabase->writeRecord(r);
@@ -599,7 +599,7 @@ KCal::Incidence* VCalConduitBase::addRecord(PilotRecord *r)
 
 	recordid_t id=fLocalDatabase->writeRecord(r);
 #ifdef DEBUG
-	DEBUGCONDUIT<<fname<<": Pilot Record ID="<<r->getID()<<", backup ID="<<id<<endl;
+	DEBUGCONDUIT<<fname<<": Pilot Record ID="<<r->id()<<", backup ID="<<id<<endl;
 #else
 	Q_UNUSED(id);
 #endif
@@ -646,7 +646,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 	FUNCTIONSETUP;
 
 	PilotAppCategory*de=newPilotEntry(r);
-	KCal::Incidence *e = fP->findIncidence(r->getID());
+	KCal::Incidence *e = fP->findIncidence(r->id());
 
 	if (e && de)
 	{
@@ -680,7 +680,7 @@ KCal::Incidence*VCalConduitBase::deleteRecord(PilotRecord *r, PilotRecord *)
 {
 	FUNCTIONSETUP;
 
-	KCal::Incidence *e = fP->findIncidence(r->getID());
+	KCal::Incidence *e = fP->findIncidence(r->id());
 	if (e)
 	{
 		// RemoveEvent also takes it out of the calendar.
@@ -715,9 +715,9 @@ void VCalConduitBase::deletePalmRecord(KCal::Incidence*e, PilotRecord*s)
 	if (s)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": deleting record " << s->getID() << endl;
+		DEBUGCONDUIT << fname << ": deleting record " << s->id() << endl;
 #endif
-		s->makeDeleted();
+		s->setDeleted();
 		fDatabase->writeRecord(s);
 		fLocalDatabase->writeRecord(s);
 	}
