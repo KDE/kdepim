@@ -44,6 +44,7 @@ bool KNConvert::needToConvert(const QString &oldVersion)
 KNConvert::KNConvert(const QString &version)
   : QDialog(0,0,true), l_ogList(0), c_onversionDone(false), v_ersion(version)
 {
+  setCaption(kapp->makeStdCaption(i18n("Conversion")));
   QVBoxLayout *topL=new QVBoxLayout(this, 5,5);
   s_tack=new QWidgetStack(this);
   topL->addWidget(s_tack, 1);
@@ -64,7 +65,7 @@ KNConvert::KNConvert(const QString &version)
   QGridLayout *w1L=new QGridLayout(w_1, 5,3, 5,5);
 
   QLabel *l1=new QLabel(i18n(
-"<b>Congratulations, you have upgraded to KNode version %1 !</b><br>\
+"<b>Congratulations, you have upgraded to KNode version %1!</b><br>\
 Unfortunately this version uses a different format for some data-files, so \
 in order to keep your existing data it is necessary to convert it first. This is \
 now done automatically by KNode. If you want to, a backup of your existing data \
@@ -126,11 +127,11 @@ void KNConvert::convert()
   if(errors>0)
     r_esultLabel->setText(i18n(
 "<b>Some errors occured during the converison!</b>\
-<br>You should now view the log to find out what went wrong."));
+<br>You should now examine the log to find out what went wrong."));
   else
     r_esultLabel->setText(i18n(
 "<b>The conversion was successful.</b>\
-<br>Have a lot of fun with this new Version of KNode ;-)"));
+<br>Have a lot of fun with this new Version of KNode. ;-)"));
 
   s_tartBtn->setText(i18n("Start KNode"));
   s_tartBtn->setEnabled(true);
