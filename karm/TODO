@@ -51,7 +51,7 @@ X * 2003-09-24: Add my name as maintainer to About box.
   * 2003-09-24: Add new task action--mark as complete.  Don't load completed
     tasks.
 
-  * 2003-09-24: Add date to clipboard reports.
+X * 2003-09-24: Add date to clipboard reports.
 
 X * 2003-09-18: Remove "Active: " from systray tooltip text.
 

@@ -30,16 +30,17 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
   QString buf;
   long sum;
 
-        
   line.fill('-', reportWidth);
-  line += '\n';
+  line += cr;
 
   // header
-  retval += i18n("Task Totals");
-  retval += QString::fromLatin1("\n\n");
-  retval += QString(QString::fromLatin1("%1    %2\n"))
+  retval += i18n("Task Totals") + cr;
+  retval += KGlobal::locale()->formatDateTime(QDateTime::currentDateTime());
+  retval += cr + cr;
+  retval += QString(QString::fromLatin1("%1    %2"))
     .arg(i18n("Time"), timeWidth)
     .arg(i18n("Task"), -taskWidth);
+  retval += cr;
   retval += line;
 
   // tasks
@@ -64,7 +65,7 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
 
     // total
     buf.fill('-', timeWidth + 4);
-    retval += QString(QString::fromLatin1("%1\n")).arg(buf, timeWidth);
+    retval += QString(QString::fromLatin1("%1")).arg(buf, timeWidth) + cr;
     retval += QString(QString::fromLatin1("%1 %2"))
       .arg(formatTime(sum),timeWidth)
       .arg(i18n("Total"), -taskWidth);
@@ -80,9 +81,10 @@ void TimeKard::printTask(Task *task, QString &s, int level)
   QString buf;
 
   s += buf.fill(' ', level);
-  s += QString(QString::fromLatin1("%1    %2\n"))
+  s += QString(QString::fromLatin1("%1    %2"))
     .arg(formatTime(task->totalTime()), timeWidth)
     .arg(task->name(), -taskWidth);
+  s += cr;
 
   for (Task* subTask = task->firstChild();
       subTask;
@@ -159,7 +161,8 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
   line += cr;
 
   // header
-  retval += i18n("Task History");
+  retval += i18n("Task History") + cr;
+  retval += KGlobal::locale()->formatDateTime(QDateTime::currentDateTime());
 
   // output one time card table for each week in the date range
   QValueList<Week> weeks = Week::weeksFromDateRange(from, to);

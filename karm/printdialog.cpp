@@ -66,9 +66,6 @@ PrintDialog::PrintDialog()
   layout->addSpacing(10);
   layout->addStretch(1);
 
-  layout->addWidget(new QLabel(QString::fromLatin1("STUB: "
-          "This report doesn't work yet."), page));
-
   layout->addSpacing(10);
   layout->addStretch(1);
 }
