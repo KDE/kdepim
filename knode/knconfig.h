@@ -36,6 +36,7 @@ class KLineEdit;
 class KComboBox;
 class KIntSpinBox;
 class KSpellConfig;
+class KURLCompletion;
 namespace Kpgp {
   class Config;
   class SecretKeyRequester;
@@ -166,7 +167,6 @@ class IdentityWidget : public BaseWidget {
 
     void apply();
 
-
   protected:
     QLabel          *f_ileName;
     KLineEdit       *n_ame,
@@ -184,6 +184,7 @@ class IdentityWidget : public BaseWidget {
     QButtonGroup    *b_uttonGroup;
     Kpgp::SecretKeyRequester
                     *s_igningKey;
+    KURLCompletion  *c_ompletion;
 
     Identity        *d_ata;
 
@@ -191,7 +192,7 @@ class IdentityWidget : public BaseWidget {
     void slotSignatureType(int type);
     void slotSignatureChoose();
     void slotSignatureEdit();
-    void textFileNameChanged(const QString &);
+    void textFileNameChanged(const QString &);    
 
 };
 

@@ -18,6 +18,7 @@
 #include <qvbox.h>
 #include <qpainter.h>
 #include <qwhatsthis.h>
+#include <qlabel.h>
 
 #include <klocale.h>
 #include <knumvalidator.h>
@@ -31,6 +32,8 @@
 #include <kspell.h>
 #include <kcombobox.h>
 #include <kpgpui.h>
+#include <kurlcompletion.h>
+#include <kiconloader.h>
 
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -43,8 +46,6 @@
 #include "knscoring.h"
 #include "knconfigmanager.h"
 #include "knpgp.h"
-#include <qlabel.h>
-#include <kiconloader.h>
 
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
@@ -111,6 +112,8 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addWidget(f_ileName, 7, 0 );
   topL->addWidget(s_ig, 7, 1 );
   s_ig->setText(d_ata->s_igPath);
+  c_ompletion = new KURLCompletion();
+  s_ig->setCompletionObject(c_ompletion);
 
   c_hooseBtn = new QPushButton( i18n("Choo&se..."), this);
   connect(c_hooseBtn, SIGNAL(clicked()),
@@ -144,6 +147,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 
 KNConfig::IdentityWidget::~IdentityWidget()
 {
+  delete c_ompletion;
 }
 
 void KNConfig::IdentityWidget::textFileNameChanged(const QString &text)
@@ -164,13 +168,12 @@ void KNConfig::IdentityWidget::apply()
   d_ata->s_igningKey = s_igningKey->keyIDs().first();
   d_ata->u_seSigFile=s_igFile->isChecked();
   d_ata->u_seSigGenerator=s_igGenerator->isChecked();
-  d_ata->s_igPath=s_ig->text();
+  d_ata->s_igPath=c_ompletion->replacedPath(s_ig->text());
   d_ata->s_igText=s_igEditor->text();
 
   if(d_ata->isGlobal())
     d_ata->save();
 }
-
 
 void KNConfig::IdentityWidget::slotSignatureType(int type)
 {
@@ -193,14 +196,14 @@ void KNConfig::IdentityWidget::slotSignatureType(int type)
 
 void KNConfig::IdentityWidget::slotSignatureChoose()
 {
-  QString tmp=KFileDialog::getOpenFileName(s_ig->text(),QString::null,this,i18n("Choose Signature"));
+  QString tmp=KFileDialog::getOpenFileName(c_ompletion->replacedPath(s_ig->text()),QString::null,this,i18n("Choose Signature"));
   if(!tmp.isEmpty()) s_ig->setText(tmp);
 }
 
 
 void KNConfig::IdentityWidget::slotSignatureEdit()
 {
-  QString fileName = s_ig->text().stripWhiteSpace();
+  QString fileName = c_ompletion->replacedPath(s_ig->text()).stripWhiteSpace();
 
   if (fileName.isEmpty()) {
     KMessageBox::sorry(this, i18n("You must specify a filename!"));
