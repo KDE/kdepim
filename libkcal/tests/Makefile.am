@@ -20,7 +20,7 @@ readandwrite_SOURCES = readandwrite.cpp
 readandwrite_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 readandwrite_LDADD = ../libkcal.la
 
-TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics
+TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics test_Mozilla.ics
 
 check: readandwrite
 	rm -f FAILED; \
