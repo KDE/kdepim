@@ -618,7 +618,7 @@ if any).</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>&lt;size&gt;</guilabel></term>
+<term><guilabel>&lt;size in bytes&gt;</guilabel></term>
 <listitem>
 <para>Sets upper or lower bounds on the message size.</para>
 </listitem>
