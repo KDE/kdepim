@@ -11,7 +11,6 @@ input=stream
 output=filesystem
 
 # Headings for file listings?
-#listing=Name,Type,Size
 listing=Name,Type,Size,Owner
 deleting=true
 linking=false
