@@ -942,11 +942,13 @@ void KNArticleWidget::createHtmlPage()
     if(a_rticle->type()==KNMimeBase::ATremote && refs) {
       int refCnt=refs->count(), i=1;
       QCString id = refs->first();
+      id = id.mid(1, id.length()-2);  // remove <>
       html+=QString("<b>%1</b>").arg(i18n("References:"));
 
       while (i <= refCnt) {
         html+=QString(" <a href=\"news:%1\">%2</a>").arg(id).arg(i);
         id = refs->next();
+        id = id.mid(1, id.length()-2);  // remove <>
         i++;
       }
     }
