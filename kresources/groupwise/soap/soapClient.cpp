@@ -8,7 +8,7 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.6.2 2004-10-01 12:22:58 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.6.2 2004-10-07 12:56:01 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns10__modifyItemRequest(struct soap *soap, const char *URL, const char *action, _ns1__modifyItemRequest *ns1__modifyItemRequest, _ns1__modifyItemResponse *ns1__modifyItemResponse)

@@ -107,6 +107,7 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   } else
     contact->emailList = 0;
 
+#if 0
   // Phone numbers
   if ( !addr.phoneNumbers().isEmpty() ) {
     ns1__PhoneList* phoneList = soap_new_ns1__PhoneList( soap(), -1 );
@@ -129,6 +130,7 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     contact->phoneList = phoneList;
   } else
     contact->phoneList = 0;
+#endif
 
   // Addresses
   if ( !addr.addresses().isEmpty() ) {
@@ -244,6 +246,7 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
     addr.setEmails( emails );
   }
 
+#if 0
   // Phone numbers
   if ( contact->phoneList && contact->phoneList->phone ) {
     QString defaultNumber = stringToQString( contact->phoneList->default_ );
@@ -259,6 +262,7 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
       }
     }
   }
+#endif
 
   // Addresses
   if ( contact->addressList && contact->addressList->address ) {
@@ -305,6 +309,7 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
   return addr;
 }
 
+#if 0
 KABC::PhoneNumber ContactConverter::convertPhoneNumber( ns1__PhoneNumber *phone ) const
 {
   KABC::PhoneNumber phoneNumber;
@@ -354,6 +359,7 @@ ns1__PhoneNumber* ContactConverter::convertPhoneNumber( const KABC::PhoneNumber 
 
   return phoneNumber;
 }
+#endif
 
 KABC::Address ContactConverter::convertPostalAddress( ns1__PostalAddress *addr ) const
 {
@@ -380,6 +386,7 @@ KABC::Address ContactConverter::convertPostalAddress( ns1__PostalAddress *addr )
   if ( addr->country )
     address.setCountry( stringToQString( addr->country ) );
 
+#if 0
   if ( addr->type == Home_ ) {
     address.setType( KABC::Address::Home );
   } else if ( addr->type == Office_ ) {
@@ -387,6 +394,7 @@ KABC::Address ContactConverter::convertPostalAddress( ns1__PostalAddress *addr )
   } else {
     // should never been reached, addresses have always a type set...
   }
+#endif
 
   return address;
 }
@@ -428,6 +436,7 @@ ns1__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address 
   else
     postalAddress->country = 0;
 
+#if 0
   if ( address.type() & KABC::Address::Home ) {
     postalAddress->type = Home_;
   } else if ( address.type() & KABC::Address::Work ) {
@@ -435,6 +444,7 @@ ns1__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address 
   } else {
     // TODO: cache unsupported types
   }
+#endif
 
   return postalAddress;
 }

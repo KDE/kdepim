@@ -76,14 +76,9 @@ enum ns1__ItemSource {received = 0, sent = 1, draft = 2, personal = 3};
 enum ns1__OccurrenceType {First = 0, Second = 1, Third = 2, Fourth = 3, Last = 4};
 #endif
 
-#ifndef _SOAP_ns1__PhoneNumberType
-#define _SOAP_ns1__PhoneNumberType
-enum ns1__PhoneNumberType {Fax = 0, Home = 1, Mobile = 2, Office = 3, Pager = 4};
-#endif
-
 #ifndef _SOAP_ns1__PostalAddressType
 #define _SOAP_ns1__PostalAddressType
-enum ns1__PostalAddressType {Home_ = 0, Office_ = 1};
+enum ns1__PostalAddressType {Home = 0, Office = 1};
 #endif
 
 #ifndef _SOAP_ns1__RecipientType
@@ -901,25 +896,6 @@ public:
 	virtual void *soap_in(struct soap*, const char*, const char*); 
 };
 
-/* ns1:PhoneList: */
-class SOAP_CMAC ns1__PhoneList
-{
-public:
-	std::vector<class ns1__PhoneNumber * >*phone;
-	std::string default_;	/* attribute */
-public:
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 93; } // = unique id SOAP_TYPE_ns1__PhoneList
-	virtual void soap_default(struct soap*); 
-	virtual void soap_serialize(struct soap*) const;
-	virtual void soap_mark(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*); 
-};
-
 /* ns1:PostalAddress: */
 class SOAP_CMAC ns1__PostalAddress
 {
@@ -935,7 +911,7 @@ public:
 	enum ns1__PostalAddressType type;	/* attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 97; } // = unique id SOAP_TYPE_ns1__PostalAddress
+	virtual int soap_type() const { return 95; } // = unique id SOAP_TYPE_ns1__PostalAddress
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -952,7 +928,7 @@ public:
 	std::vector<ns1__PostalAddress * >*address;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 98; } // = unique id SOAP_TYPE_ns1__PostalAddressList
+	virtual int soap_type() const { return 96; } // = unique id SOAP_TYPE_ns1__PostalAddressList
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -972,7 +948,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 99; } // = unique id SOAP_TYPE_ns1__ProblemEntry
+	virtual int soap_type() const { return 97; } // = unique id SOAP_TYPE_ns1__ProblemEntry
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -989,7 +965,7 @@ public:
 	std::vector<ns1__ProblemEntry * >*entry;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 100; } // = unique id SOAP_TYPE_ns1__ProblemList
+	virtual int soap_type() const { return 98; } // = unique id SOAP_TYPE_ns1__ProblemList
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1006,7 +982,7 @@ public:
 	std::vector<ns1__NameAndEmail * >*proxy;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 102; } // = unique id SOAP_TYPE_ns1__ProxyList
+	virtual int soap_type() const { return 100; } // = unique id SOAP_TYPE_ns1__ProxyList
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1024,7 +1000,7 @@ public:
 	ns1__Filter *filter;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 103; } // = unique id SOAP_TYPE_ns1__Query
+	virtual int soap_type() const { return 101; } // = unique id SOAP_TYPE_ns1__Query
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1042,7 +1018,7 @@ public:
 	std::vector<std::string >*container;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 105; } // = unique id SOAP_TYPE_ns1__QueryTarget
+	virtual int soap_type() const { return 103; } // = unique id SOAP_TYPE_ns1__QueryTarget
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1059,7 +1035,7 @@ public:
 	std::vector<class ns1__Recipient * >*recipient;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 107; } // = unique id SOAP_TYPE_ns1__RecipientList
+	virtual int soap_type() const { return 105; } // = unique id SOAP_TYPE_ns1__RecipientList
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1096,7 +1072,7 @@ public:
 	class ns1__DelegateeStatus *delegateeStatus;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 108; } // = unique id SOAP_TYPE_ns1__RecipientStatus
+	virtual int soap_type() const { return 106; } // = unique id SOAP_TYPE_ns1__RecipientStatus
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1113,7 +1089,7 @@ public:
 	std::vector<char * >*date;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 109; } // = unique id SOAP_TYPE_ns1__RecurrenceDateType
+	virtual int soap_type() const { return 107; } // = unique id SOAP_TYPE_ns1__RecurrenceDateType
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1133,7 +1109,7 @@ public:
 	ns1__ReturnNotificationOptions *declined;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 111; } // = unique id SOAP_TYPE_ns1__ReturnNotification
+	virtual int soap_type() const { return 109; } // = unique id SOAP_TYPE_ns1__ReturnNotification
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1151,7 +1127,7 @@ public:
 	bool notify;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 112; } // = unique id SOAP_TYPE_ns1__ReturnNotificationOptions
+	virtual int soap_type() const { return 110; } // = unique id SOAP_TYPE_ns1__ReturnNotificationOptions
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1173,7 +1149,7 @@ public:
 	bool *manage;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 113; } // = unique id SOAP_TYPE_ns1__Rights
+	virtual int soap_type() const { return 111; } // = unique id SOAP_TYPE_ns1__Rights
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1190,7 +1166,7 @@ public:
 	unsigned long withinNDays;	/* attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 114; } // = unique id SOAP_TYPE_ns1__SendOptionsRequestReply
+	virtual int soap_type() const { return 112; } // = unique id SOAP_TYPE_ns1__SendOptionsRequestReply
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1210,7 +1186,7 @@ public:
 	ns1__ReturnNotification *notification;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 115; } // = unique id SOAP_TYPE_ns1__SendOptions
+	virtual int soap_type() const { return 113; } // = unique id SOAP_TYPE_ns1__SendOptions
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1228,7 +1204,7 @@ public:
 	std::vector<ns1__Custom * >*setting;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 116; } // = unique id SOAP_TYPE_ns1__Settings
+	virtual int soap_type() const { return 114; } // = unique id SOAP_TYPE_ns1__Settings
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1247,7 +1223,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 117; } // = unique id SOAP_TYPE_ns1__SettingsGroup
+	virtual int soap_type() const { return 115; } // = unique id SOAP_TYPE_ns1__SettingsGroup
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1264,7 +1240,7 @@ public:
 	std::vector<ns1__Custom * >*setting;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 118; } // = unique id SOAP_TYPE_ns1__SettingsList
+	virtual int soap_type() const { return 116; } // = unique id SOAP_TYPE_ns1__SettingsList
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1285,7 +1261,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 120; } // = unique id SOAP_TYPE_ns1__SharedFolderNotification
+	virtual int soap_type() const { return 118; } // = unique id SOAP_TYPE_ns1__SharedFolderNotification
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1306,7 +1282,7 @@ public:
 	ns1__ProblemList *problems;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 121; } // = unique id SOAP_TYPE_ns1__Status
+	virtual int soap_type() const { return 119; } // = unique id SOAP_TYPE_ns1__Status
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1327,7 +1303,7 @@ public:
 	ns1__TimezoneComponent *standard;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 125; } // = unique id SOAP_TYPE_ns1__Timezone
+	virtual int soap_type() const { return 123; } // = unique id SOAP_TYPE_ns1__Timezone
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1351,7 +1327,7 @@ public:
 	class ns1__DayOfWeek *dayOfWeek;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 126; } // = unique id SOAP_TYPE_ns1__TimezoneComponent
+	virtual int soap_type() const { return 124; } // = unique id SOAP_TYPE_ns1__TimezoneComponent
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1368,7 +1344,7 @@ public:
 	std::vector<ns1__Timezone * >*timezone;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 127; } // = unique id SOAP_TYPE_ns1__TimezoneList
+	virtual int soap_type() const { return 125; } // = unique id SOAP_TYPE_ns1__TimezoneList
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1388,7 +1364,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 129; } // = unique id SOAP_TYPE_ns1__UserInfo
+	virtual int soap_type() const { return 127; } // = unique id SOAP_TYPE_ns1__UserInfo
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1409,7 +1385,7 @@ public:
 	bool *recurrenceAllInstances;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 130; } // = unique id SOAP_TYPE__ns1__acceptRequest
+	virtual int soap_type() const { return 128; } // = unique id SOAP_TYPE__ns1__acceptRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1426,7 +1402,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 131; } // = unique id SOAP_TYPE__ns1__acceptResponse
+	virtual int soap_type() const { return 129; } // = unique id SOAP_TYPE__ns1__acceptResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1445,7 +1421,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 132; } // = unique id SOAP_TYPE__ns1__addItemRequest
+	virtual int soap_type() const { return 130; } // = unique id SOAP_TYPE__ns1__addItemRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1462,7 +1438,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 133; } // = unique id SOAP_TYPE__ns1__addItemResponse
+	virtual int soap_type() const { return 131; } // = unique id SOAP_TYPE__ns1__addItemResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1481,7 +1457,7 @@ public:
 	ns1__ItemRefList *items;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 134; } // = unique id SOAP_TYPE__ns1__addItemsRequest
+	virtual int soap_type() const { return 132; } // = unique id SOAP_TYPE__ns1__addItemsRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1498,7 +1474,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 135; } // = unique id SOAP_TYPE__ns1__addItemsResponse
+	virtual int soap_type() const { return 133; } // = unique id SOAP_TYPE__ns1__addItemsResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1517,7 +1493,7 @@ public:
 	ns1__GroupMemberList *members;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 136; } // = unique id SOAP_TYPE__ns1__addMembersRequest
+	virtual int soap_type() const { return 134; } // = unique id SOAP_TYPE__ns1__addMembersRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1534,7 +1510,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 137; } // = unique id SOAP_TYPE__ns1__addMembersResponse
+	virtual int soap_type() const { return 135; } // = unique id SOAP_TYPE__ns1__addMembersResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1551,7 +1527,7 @@ public:
 	int freeBusySessionId;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 138; } // = unique id SOAP_TYPE__ns1__closeFreeBusySessionRequest
+	virtual int soap_type() const { return 136; } // = unique id SOAP_TYPE__ns1__closeFreeBusySessionRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1568,7 +1544,7 @@ public:
 	ns1__Status *status;	/* return */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 139; } // = unique id SOAP_TYPE__ns1__closeFreeBusySessionResponse
+	virtual int soap_type() const { return 137; } // = unique id SOAP_TYPE__ns1__closeFreeBusySessionResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1585,7 +1561,7 @@ public:
 	ns1__ItemRefList *items;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 140; } // = unique id SOAP_TYPE__ns1__completeRequest
+	virtual int soap_type() const { return 138; } // = unique id SOAP_TYPE__ns1__completeRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1602,7 +1578,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 141; } // = unique id SOAP_TYPE__ns1__completeResponse
+	virtual int soap_type() const { return 139; } // = unique id SOAP_TYPE__ns1__completeResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1622,7 +1598,7 @@ public:
 	ns1__Filter *filter;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 142; } // = unique id SOAP_TYPE__ns1__createCursorRequest
+	virtual int soap_type() const { return 140; } // = unique id SOAP_TYPE__ns1__createCursorRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1640,7 +1616,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 143; } // = unique id SOAP_TYPE__ns1__createCursorResponse
+	virtual int soap_type() const { return 141; } // = unique id SOAP_TYPE__ns1__createCursorResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1657,7 +1633,7 @@ public:
 	ns1__Item *item;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 144; } // = unique id SOAP_TYPE__ns1__createItemRequest
+	virtual int soap_type() const { return 142; } // = unique id SOAP_TYPE__ns1__createItemRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1676,7 +1652,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 145; } // = unique id SOAP_TYPE__ns1__createItemResponse
+	virtual int soap_type() const { return 143; } // = unique id SOAP_TYPE__ns1__createItemResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1693,7 +1669,7 @@ public:
 	ns1__AccessRightEntry *entry;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 146; } // = unique id SOAP_TYPE__ns1__createProxyAccessRequest
+	virtual int soap_type() const { return 144; } // = unique id SOAP_TYPE__ns1__createProxyAccessRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1712,7 +1688,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 147; } // = unique id SOAP_TYPE__ns1__createProxyAccessResponse
+	virtual int soap_type() const { return 145; } // = unique id SOAP_TYPE__ns1__createProxyAccessResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1732,7 +1708,7 @@ public:
 	bool *recurrenceAllInstances;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 148; } // = unique id SOAP_TYPE__ns1__declineRequest
+	virtual int soap_type() const { return 146; } // = unique id SOAP_TYPE__ns1__declineRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1749,7 +1725,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 149; } // = unique id SOAP_TYPE__ns1__declineResponse
+	virtual int soap_type() const { return 147; } // = unique id SOAP_TYPE__ns1__declineResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1771,7 +1747,7 @@ public:
 	bool *recurrenceAllInstances;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 150; } // = unique id SOAP_TYPE__ns1__delegateRequest
+	virtual int soap_type() const { return 148; } // = unique id SOAP_TYPE__ns1__delegateRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1788,7 +1764,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 151; } // = unique id SOAP_TYPE__ns1__delegateResponse
+	virtual int soap_type() const { return 149; } // = unique id SOAP_TYPE__ns1__delegateResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1805,7 +1781,7 @@ public:
 	int cursor;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 152; } // = unique id SOAP_TYPE__ns1__destroyCursorRequest
+	virtual int soap_type() const { return 150; } // = unique id SOAP_TYPE__ns1__destroyCursorRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1822,7 +1798,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 153; } // = unique id SOAP_TYPE__ns1__destroyCursorResponse
+	virtual int soap_type() const { return 151; } // = unique id SOAP_TYPE__ns1__destroyCursorResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1840,7 +1816,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 154; } // = unique id SOAP_TYPE__ns1__getAddressBookListResponse
+	virtual int soap_type() const { return 152; } // = unique id SOAP_TYPE__ns1__getAddressBookListResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1860,7 +1836,7 @@ public:
 	int length;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 155; } // = unique id SOAP_TYPE__ns1__getAttachmentRequest
+	virtual int soap_type() const { return 153; } // = unique id SOAP_TYPE__ns1__getAttachmentRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1878,7 +1854,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 156; } // = unique id SOAP_TYPE__ns1__getAttachmentResponse
+	virtual int soap_type() const { return 154; } // = unique id SOAP_TYPE__ns1__getAttachmentResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1896,7 +1872,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 157; } // = unique id SOAP_TYPE__ns1__getCategoryListResponse
+	virtual int soap_type() const { return 155; } // = unique id SOAP_TYPE__ns1__getCategoryListResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1914,7 +1890,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 158; } // = unique id SOAP_TYPE__ns1__getCustomListResponse
+	virtual int soap_type() const { return 156; } // = unique id SOAP_TYPE__ns1__getCustomListResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1941,7 +1917,7 @@ public:
 	std::string *Task;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 159; } // = unique id SOAP_TYPE__ns1__getDeltaRequest
+	virtual int soap_type() const { return 157; } // = unique id SOAP_TYPE__ns1__getDeltaRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1961,7 +1937,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 160; } // = unique id SOAP_TYPE__ns1__getDeltaResponse
+	virtual int soap_type() const { return 158; } // = unique id SOAP_TYPE__ns1__getDeltaResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1981,7 +1957,7 @@ public:
 	bool recurse;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 161; } // = unique id SOAP_TYPE__ns1__getFolderListRequest
+	virtual int soap_type() const { return 159; } // = unique id SOAP_TYPE__ns1__getFolderListRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -1999,7 +1975,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 162; } // = unique id SOAP_TYPE__ns1__getFolderListResponse
+	virtual int soap_type() const { return 160; } // = unique id SOAP_TYPE__ns1__getFolderListResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2017,7 +1993,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 163; } // = unique id SOAP_TYPE__ns1__getFreeBusyRequest
+	virtual int soap_type() const { return 161; } // = unique id SOAP_TYPE__ns1__getFreeBusyRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2036,7 +2012,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 164; } // = unique id SOAP_TYPE__ns1__getFreeBusyResponse
+	virtual int soap_type() const { return 162; } // = unique id SOAP_TYPE__ns1__getFreeBusyResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2055,7 +2031,7 @@ public:
 	std::string *view;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 165; } // = unique id SOAP_TYPE__ns1__getItemRequest
+	virtual int soap_type() const { return 163; } // = unique id SOAP_TYPE__ns1__getItemRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2073,7 +2049,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 166; } // = unique id SOAP_TYPE__ns1__getItemResponse
+	virtual int soap_type() const { return 164; } // = unique id SOAP_TYPE__ns1__getItemResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2094,7 +2070,7 @@ public:
 	ns1__ItemRefList *items;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 167; } // = unique id SOAP_TYPE__ns1__getItemsRequest
+	virtual int soap_type() const { return 165; } // = unique id SOAP_TYPE__ns1__getItemsRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2112,7 +2088,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 168; } // = unique id SOAP_TYPE__ns1__getItemsResponse
+	virtual int soap_type() const { return 166; } // = unique id SOAP_TYPE__ns1__getItemsResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2130,7 +2106,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 169; } // = unique id SOAP_TYPE__ns1__getProxyAccessListResponse
+	virtual int soap_type() const { return 167; } // = unique id SOAP_TYPE__ns1__getProxyAccessListResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2148,7 +2124,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 170; } // = unique id SOAP_TYPE__ns1__getProxyListResponse
+	virtual int soap_type() const { return 168; } // = unique id SOAP_TYPE__ns1__getProxyListResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2165,7 +2141,7 @@ public:
 	std::string *id;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 171; } // = unique id SOAP_TYPE__ns1__getSettingsRequest
+	virtual int soap_type() const { return 169; } // = unique id SOAP_TYPE__ns1__getSettingsRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2183,7 +2159,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 172; } // = unique id SOAP_TYPE__ns1__getSettingsResponse
+	virtual int soap_type() const { return 170; } // = unique id SOAP_TYPE__ns1__getSettingsResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2201,7 +2177,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 173; } // = unique id SOAP_TYPE__ns1__getTimezoneListResponse
+	virtual int soap_type() const { return 171; } // = unique id SOAP_TYPE__ns1__getTimezoneListResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2220,7 +2196,7 @@ public:
 	char *version;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 174; } // = unique id SOAP_TYPE__ns1__loginRequest
+	virtual int soap_type() const { return 172; } // = unique id SOAP_TYPE__ns1__loginRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2240,7 +2216,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 175; } // = unique id SOAP_TYPE__ns1__loginResponse
+	virtual int soap_type() const { return 173; } // = unique id SOAP_TYPE__ns1__loginResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2257,7 +2233,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 176; } // = unique id SOAP_TYPE__ns1__logoutResponse
+	virtual int soap_type() const { return 174; } // = unique id SOAP_TYPE__ns1__logoutResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2274,7 +2250,7 @@ public:
 	ns1__ItemRefList *items;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 177; } // = unique id SOAP_TYPE__ns1__markReadRequest
+	virtual int soap_type() const { return 175; } // = unique id SOAP_TYPE__ns1__markReadRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2291,7 +2267,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 178; } // = unique id SOAP_TYPE__ns1__markReadResponse
+	virtual int soap_type() const { return 176; } // = unique id SOAP_TYPE__ns1__markReadResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2308,7 +2284,7 @@ public:
 	ns1__ItemRefList *items;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 179; } // = unique id SOAP_TYPE__ns1__markUnReadRequest
+	virtual int soap_type() const { return 177; } // = unique id SOAP_TYPE__ns1__markUnReadRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2325,7 +2301,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 180; } // = unique id SOAP_TYPE__ns1__markUnReadResponse
+	virtual int soap_type() const { return 178; } // = unique id SOAP_TYPE__ns1__markUnReadResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2344,7 +2320,7 @@ public:
 	ns1__ItemChanges *updates;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 181; } // = unique id SOAP_TYPE__ns1__modifyItemRequest
+	virtual int soap_type() const { return 179; } // = unique id SOAP_TYPE__ns1__modifyItemRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2361,7 +2337,7 @@ public:
 	ns1__Status *status;	/* return */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 182; } // = unique id SOAP_TYPE__ns1__modifyItemResponse
+	virtual int soap_type() const { return 180; } // = unique id SOAP_TYPE__ns1__modifyItemResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2380,7 +2356,7 @@ public:
 	ns1__AccessRightChanges *updates;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 183; } // = unique id SOAP_TYPE__ns1__modifyProxyAccessRequest
+	virtual int soap_type() const { return 181; } // = unique id SOAP_TYPE__ns1__modifyProxyAccessRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2397,7 +2373,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 184; } // = unique id SOAP_TYPE__ns1__modifyProxyAccessResponse
+	virtual int soap_type() const { return 182; } // = unique id SOAP_TYPE__ns1__modifyProxyAccessResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2414,7 +2390,7 @@ public:
 	ns1__SettingsList *settings;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 185; } // = unique id SOAP_TYPE__ns1__modifySettingsRequest
+	virtual int soap_type() const { return 183; } // = unique id SOAP_TYPE__ns1__modifySettingsRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2431,7 +2407,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 186; } // = unique id SOAP_TYPE__ns1__modifySettingsResponse
+	virtual int soap_type() const { return 184; } // = unique id SOAP_TYPE__ns1__modifySettingsResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2450,7 +2426,7 @@ public:
 	int offset;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 187; } // = unique id SOAP_TYPE__ns1__positionCursorRequest
+	virtual int soap_type() const { return 185; } // = unique id SOAP_TYPE__ns1__positionCursorRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2467,7 +2443,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 188; } // = unique id SOAP_TYPE__ns1__positionCursorResponse
+	virtual int soap_type() const { return 186; } // = unique id SOAP_TYPE__ns1__positionCursorResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2483,7 +2459,7 @@ class SOAP_CMAC _ns1__purgeDeletedItemsRequest
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 189; } // = unique id SOAP_TYPE__ns1__purgeDeletedItemsRequest
+	virtual int soap_type() const { return 187; } // = unique id SOAP_TYPE__ns1__purgeDeletedItemsRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2500,7 +2476,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 190; } // = unique id SOAP_TYPE__ns1__purgeDeletedItemsResponse
+	virtual int soap_type() const { return 188; } // = unique id SOAP_TYPE__ns1__purgeDeletedItemsResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2519,7 +2495,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 191; } // = unique id SOAP_TYPE__ns1__purgeItemRequest
+	virtual int soap_type() const { return 189; } // = unique id SOAP_TYPE__ns1__purgeItemRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2536,7 +2512,7 @@ public:
 	ns1__Status *status;	/* return */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 192; } // = unique id SOAP_TYPE__ns1__purgeItemResponse
+	virtual int soap_type() const { return 190; } // = unique id SOAP_TYPE__ns1__purgeItemResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2555,7 +2531,7 @@ public:
 	int count;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 193; } // = unique id SOAP_TYPE__ns1__readCursorRequest
+	virtual int soap_type() const { return 191; } // = unique id SOAP_TYPE__ns1__readCursorRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2573,7 +2549,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 194; } // = unique id SOAP_TYPE__ns1__readCursorResponse
+	virtual int soap_type() const { return 192; } // = unique id SOAP_TYPE__ns1__readCursorResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2592,7 +2568,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 195; } // = unique id SOAP_TYPE__ns1__removeItemRequest
+	virtual int soap_type() const { return 193; } // = unique id SOAP_TYPE__ns1__removeItemRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2609,7 +2585,7 @@ public:
 	ns1__Status *status;	/* return */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 196; } // = unique id SOAP_TYPE__ns1__removeItemResponse
+	virtual int soap_type() const { return 194; } // = unique id SOAP_TYPE__ns1__removeItemResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2628,7 +2604,7 @@ public:
 	ns1__ItemRefList *items;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 197; } // = unique id SOAP_TYPE__ns1__removeItemsRequest
+	virtual int soap_type() const { return 195; } // = unique id SOAP_TYPE__ns1__removeItemsRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2645,7 +2621,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 198; } // = unique id SOAP_TYPE__ns1__removeItemsResponse
+	virtual int soap_type() const { return 196; } // = unique id SOAP_TYPE__ns1__removeItemsResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2664,7 +2640,7 @@ public:
 	ns1__GroupMemberList *members;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 199; } // = unique id SOAP_TYPE__ns1__removeMembersRequest
+	virtual int soap_type() const { return 197; } // = unique id SOAP_TYPE__ns1__removeMembersRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2681,7 +2657,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 200; } // = unique id SOAP_TYPE__ns1__removeMembersResponse
+	virtual int soap_type() const { return 198; } // = unique id SOAP_TYPE__ns1__removeMembersResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2699,7 +2675,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 201; } // = unique id SOAP_TYPE__ns1__removeProxyAccessRequest
+	virtual int soap_type() const { return 199; } // = unique id SOAP_TYPE__ns1__removeProxyAccessRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2716,7 +2692,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 202; } // = unique id SOAP_TYPE__ns1__removeProxyAccessResponse
+	virtual int soap_type() const { return 200; } // = unique id SOAP_TYPE__ns1__removeProxyAccessResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2736,7 +2712,7 @@ public:
 	char *retractCausedByResend;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 203; } // = unique id SOAP_TYPE__ns1__retractRequest
+	virtual int soap_type() const { return 201; } // = unique id SOAP_TYPE__ns1__retractRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2753,7 +2729,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 204; } // = unique id SOAP_TYPE__ns1__retractResponse
+	virtual int soap_type() const { return 202; } // = unique id SOAP_TYPE__ns1__retractResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2770,7 +2746,7 @@ public:
 	ns1__Item *item;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 205; } // = unique id SOAP_TYPE__ns1__sendItemRequest
+	virtual int soap_type() const { return 203; } // = unique id SOAP_TYPE__ns1__sendItemRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2789,7 +2765,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 206; } // = unique id SOAP_TYPE__ns1__sendItemResponse
+	virtual int soap_type() const { return 204; } // = unique id SOAP_TYPE__ns1__sendItemResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2808,7 +2784,7 @@ public:
 	char *endDate;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 207; } // = unique id SOAP_TYPE__ns1__startFreeBusySessionRequest
+	virtual int soap_type() const { return 205; } // = unique id SOAP_TYPE__ns1__startFreeBusySessionRequest
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -2826,7 +2802,7 @@ public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 208; } // = unique id SOAP_TYPE__ns1__startFreeBusySessionResponse
+	virtual int soap_type() const { return 206; } // = unique id SOAP_TYPE__ns1__startFreeBusySessionResponse
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3180,25 +3156,6 @@ public:
 	virtual void *soap_in(struct soap*, const char*, const char*); 
 };
 
-/* Primitive ns1:PhoneNumber schema type: */
-class SOAP_CMAC ns1__PhoneNumber
-{
-public:
-	std::string __item;
-public:
-	enum ns1__PhoneNumberType type;	/* attribute */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 95; } // = unique id SOAP_TYPE_ns1__PhoneNumber
-	virtual void soap_default(struct soap*); 
-	virtual void soap_serialize(struct soap*) const;
-	virtual void soap_mark(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*); 
-};
-
 /* ns1:PlainText: */
 class SOAP_CMAC ns1__PlainText : public ns1__Authentication
 {
@@ -3208,7 +3165,7 @@ public:
 	std::string *password;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 96; } // = unique id SOAP_TYPE_ns1__PlainText
+	virtual int soap_type() const { return 94; } // = unique id SOAP_TYPE_ns1__PlainText
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3227,7 +3184,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 101; } // = unique id SOAP_TYPE_ns1__Proxy
+	virtual int soap_type() const { return 99; } // = unique id SOAP_TYPE_ns1__Proxy
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3246,7 +3203,7 @@ public:
 	ns1__RecipientStatus *recipientStatus;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 106; } // = unique id SOAP_TYPE_ns1__Recipient
+	virtual int soap_type() const { return 104; } // = unique id SOAP_TYPE_ns1__Recipient
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3265,7 +3222,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 128; } // = unique id SOAP_TYPE_ns1__TrustedApplication
+	virtual int soap_type() const { return 126; } // = unique id SOAP_TYPE_ns1__TrustedApplication
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3394,7 +3351,7 @@ public:
 	ns1__Query *query;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 104; } // = unique id SOAP_TYPE_ns1__QueryFolder
+	virtual int soap_type() const { return 102; } // = unique id SOAP_TYPE_ns1__QueryFolder
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3415,7 +3372,7 @@ public:
 	bool *isSharedToMe;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 119; } // = unique id SOAP_TYPE_ns1__SharedFolder
+	virtual int soap_type() const { return 117; } // = unique id SOAP_TYPE_ns1__SharedFolder
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3433,7 +3390,7 @@ public:
 	bool autoDelete;	/* attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 122; } // = unique id SOAP_TYPE_ns1__StatusTracking
+	virtual int soap_type() const { return 120; } // = unique id SOAP_TYPE_ns1__StatusTracking
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3451,7 +3408,7 @@ public:
 	enum ns1__FolderType folder_USCOREtype;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 123; } // = unique id SOAP_TYPE_ns1__SystemFolder
+	virtual int soap_type() const { return 121; } // = unique id SOAP_TYPE_ns1__SystemFolder
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3468,7 +3425,6 @@ public:
 	ns1__FullName *fullName;
 	ns1__EmailAddressList *emailList;
 	ns1__ImAddressList *imList;
-	ns1__PhoneList *phoneList;
 	ns1__PostalAddressList *addressList;
 	ns1__OfficeInfo *officeInfo;
 	ns1__PersonalInfo *personalInfo;
@@ -3573,7 +3529,7 @@ public:
 	ns1__ItemRef *owner;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 110; } // = unique id SOAP_TYPE_ns1__Resource
+	virtual int soap_type() const { return 108; } // = unique id SOAP_TYPE_ns1__Resource
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3643,7 +3599,7 @@ public:
 	ns1__PhoneFlags *flags;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 94; } // = unique id SOAP_TYPE_ns1__PhoneMessage
+	virtual int soap_type() const { return 93; } // = unique id SOAP_TYPE_ns1__PhoneMessage
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;
@@ -3700,7 +3656,7 @@ public:
 	bool *completed;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 124; } // = unique id SOAP_TYPE_ns1__Task
+	virtual int soap_type() const { return 122; } // = unique id SOAP_TYPE_ns1__Task
 	virtual void soap_default(struct soap*); 
 	virtual void soap_serialize(struct soap*) const;
 	virtual void soap_mark(struct soap*) const;

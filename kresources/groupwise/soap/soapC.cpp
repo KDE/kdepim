@@ -8,7 +8,7 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.6.2 2004-10-01 12:22:58 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.6.2 2004-10-07 12:56:01 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -152,8 +152,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ns1__RecipientType(soap, NULL, NULL, "ns1:RecipientType");
 	case SOAP_TYPE_ns1__PostalAddressType:
 		return soap_in_ns1__PostalAddressType(soap, NULL, NULL, "ns1:PostalAddressType");
-	case SOAP_TYPE_ns1__PhoneNumberType:
-		return soap_in_ns1__PhoneNumberType(soap, NULL, NULL, "ns1:PhoneNumberType");
 	case SOAP_TYPE_ns1__OccurrenceType:
 		return soap_in_ns1__OccurrenceType(soap, NULL, NULL, "ns1:OccurrenceType");
 	case SOAP_TYPE_ns1__ItemSource:
@@ -412,12 +410,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ns1__PostalAddress(soap, NULL, NULL, "ns1:PostalAddress");
 	case SOAP_TYPE_ns1__PlainText:
 		return soap_in_ns1__PlainText(soap, NULL, NULL, "ns1:PlainText");
-	case SOAP_TYPE_ns1__PhoneNumber:
-		return soap_in_ns1__PhoneNumber(soap, NULL, NULL, "ns1:PhoneNumber");
 	case SOAP_TYPE_ns1__PhoneMessage:
 		return soap_in_ns1__PhoneMessage(soap, NULL, NULL, "ns1:PhoneMessage");
-	case SOAP_TYPE_ns1__PhoneList:
-		return soap_in_ns1__PhoneList(soap, NULL, NULL, "ns1:PhoneList");
 	case SOAP_TYPE_ns1__PhoneFlags:
 		return soap_in_ns1__PhoneFlags(soap, NULL, NULL, "ns1:PhoneFlags");
 	case SOAP_TYPE_ns1__PersonalInfo:
@@ -644,8 +638,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTons1__OfficeInfo(soap, NULL, NULL, "ns1:OfficeInfo");
 	case SOAP_TYPE_PointerTons1__PostalAddressList:
 		return soap_in_PointerTons1__PostalAddressList(soap, NULL, NULL, "ns1:PostalAddressList");
-	case SOAP_TYPE_PointerTons1__PhoneList:
-		return soap_in_PointerTons1__PhoneList(soap, NULL, NULL, "ns1:PhoneList");
 	case SOAP_TYPE_PointerTons1__ImAddressList:
 		return soap_in_PointerTons1__ImAddressList(soap, NULL, NULL, "ns1:ImAddressList");
 	case SOAP_TYPE_PointerTons1__EmailAddressList:
@@ -776,8 +768,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTons1__ProblemEntry(soap, NULL, NULL, "ns1:ProblemEntry");
 	case SOAP_TYPE_PointerTons1__PostalAddress:
 		return soap_in_PointerTons1__PostalAddress(soap, NULL, NULL, "ns1:PostalAddress");
-	case SOAP_TYPE_PointerTons1__PhoneNumber:
-		return soap_in_PointerTons1__PhoneNumber(soap, NULL, NULL, "ns1:PhoneNumber");
 	case SOAP_TYPE_PointerTons1__ItemRef:
 		return soap_in_PointerTons1__ItemRef(soap, NULL, NULL, "ns1:ItemRef");
 	case SOAP_TYPE_PointerTons1__MessagePart:
@@ -934,10 +924,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ns1:PostalAddressType"))
 		{	*type = SOAP_TYPE_ns1__PostalAddressType;
 			return soap_in_ns1__PostalAddressType(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns1:PhoneNumberType"))
-		{	*type = SOAP_TYPE_ns1__PhoneNumberType;
-			return soap_in_ns1__PhoneNumberType(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ns1:OccurrenceType"))
 		{	*type = SOAP_TYPE_ns1__OccurrenceType;
@@ -1455,17 +1441,9 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_ns1__PlainText;
 			return soap_in_ns1__PlainText(soap, NULL, NULL, NULL);
 		}
-		if (!soap_match_tag(soap, t, "ns1:PhoneNumber"))
-		{	*type = SOAP_TYPE_ns1__PhoneNumber;
-			return soap_in_ns1__PhoneNumber(soap, NULL, NULL, NULL);
-		}
 		if (!soap_match_tag(soap, t, "ns1:PhoneMessage"))
 		{	*type = SOAP_TYPE_ns1__PhoneMessage;
 			return soap_in_ns1__PhoneMessage(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns1:PhoneList"))
-		{	*type = SOAP_TYPE_ns1__PhoneList;
-			return soap_in_ns1__PhoneList(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ns1:PhoneFlags"))
 		{	*type = SOAP_TYPE_ns1__PhoneFlags;
@@ -1890,8 +1868,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ns1__RecipientType(soap, tag, id, (const enum ns1__RecipientType *)ptr, "ns1:RecipientType");
 	case SOAP_TYPE_ns1__PostalAddressType:
 		return soap_out_ns1__PostalAddressType(soap, tag, id, (const enum ns1__PostalAddressType *)ptr, "ns1:PostalAddressType");
-	case SOAP_TYPE_ns1__PhoneNumberType:
-		return soap_out_ns1__PhoneNumberType(soap, tag, id, (const enum ns1__PhoneNumberType *)ptr, "ns1:PhoneNumberType");
 	case SOAP_TYPE_ns1__OccurrenceType:
 		return soap_out_ns1__OccurrenceType(soap, tag, id, (const enum ns1__OccurrenceType *)ptr, "ns1:OccurrenceType");
 	case SOAP_TYPE_ns1__ItemSource:
@@ -2150,12 +2126,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((ns1__PostalAddress *)ptr)->soap_out(soap, tag, id, "ns1:PostalAddress");
 	case SOAP_TYPE_ns1__PlainText:
 		return ((ns1__PlainText *)ptr)->soap_out(soap, tag, id, "ns1:PlainText");
-	case SOAP_TYPE_ns1__PhoneNumber:
-		return ((ns1__PhoneNumber *)ptr)->soap_out(soap, tag, id, "ns1:PhoneNumber");
 	case SOAP_TYPE_ns1__PhoneMessage:
 		return ((ns1__PhoneMessage *)ptr)->soap_out(soap, tag, id, "ns1:PhoneMessage");
-	case SOAP_TYPE_ns1__PhoneList:
-		return ((ns1__PhoneList *)ptr)->soap_out(soap, tag, id, "ns1:PhoneList");
 	case SOAP_TYPE_ns1__PhoneFlags:
 		return ((ns1__PhoneFlags *)ptr)->soap_out(soap, tag, id, "ns1:PhoneFlags");
 	case SOAP_TYPE_ns1__PersonalInfo:
@@ -2382,8 +2354,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTons1__OfficeInfo(soap, tag, id, (ns1__OfficeInfo *const*)ptr, "ns1:OfficeInfo");
 	case SOAP_TYPE_PointerTons1__PostalAddressList:
 		return soap_out_PointerTons1__PostalAddressList(soap, tag, id, (ns1__PostalAddressList *const*)ptr, "ns1:PostalAddressList");
-	case SOAP_TYPE_PointerTons1__PhoneList:
-		return soap_out_PointerTons1__PhoneList(soap, tag, id, (ns1__PhoneList *const*)ptr, "ns1:PhoneList");
 	case SOAP_TYPE_PointerTons1__ImAddressList:
 		return soap_out_PointerTons1__ImAddressList(soap, tag, id, (ns1__ImAddressList *const*)ptr, "ns1:ImAddressList");
 	case SOAP_TYPE_PointerTons1__EmailAddressList:
@@ -2514,8 +2484,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTons1__ProblemEntry(soap, tag, id, (ns1__ProblemEntry *const*)ptr, "ns1:ProblemEntry");
 	case SOAP_TYPE_PointerTons1__PostalAddress:
 		return soap_out_PointerTons1__PostalAddress(soap, tag, id, (ns1__PostalAddress *const*)ptr, "ns1:PostalAddress");
-	case SOAP_TYPE_PointerTons1__PhoneNumber:
-		return soap_out_PointerTons1__PhoneNumber(soap, tag, id, (ns1__PhoneNumber *const*)ptr, "ns1:PhoneNumber");
 	case SOAP_TYPE_PointerTons1__ItemRef:
 		return soap_out_PointerTons1__ItemRef(soap, tag, id, (ns1__ItemRef *const*)ptr, "ns1:ItemRef");
 	case SOAP_TYPE_PointerTons1__MessagePart:
@@ -2943,14 +2911,8 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_ns1__PlainText:
 		((ns1__PlainText *)ptr)->soap_mark(soap);
 		break;
-	case SOAP_TYPE_ns1__PhoneNumber:
-		((ns1__PhoneNumber *)ptr)->soap_mark(soap);
-		break;
 	case SOAP_TYPE_ns1__PhoneMessage:
 		((ns1__PhoneMessage *)ptr)->soap_mark(soap);
-		break;
-	case SOAP_TYPE_ns1__PhoneList:
-		((ns1__PhoneList *)ptr)->soap_mark(soap);
 		break;
 	case SOAP_TYPE_ns1__PhoneFlags:
 		((ns1__PhoneFlags *)ptr)->soap_mark(soap);
@@ -3336,9 +3298,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTons1__PostalAddressList:
 		soap_mark_PointerTons1__PostalAddressList(soap, (ns1__PostalAddressList *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerTons1__PhoneList:
-		soap_mark_PointerTons1__PhoneList(soap, (ns1__PhoneList *const*)ptr);
-		break;
 	case SOAP_TYPE_PointerTons1__ImAddressList:
 		soap_mark_PointerTons1__ImAddressList(soap, (ns1__ImAddressList *const*)ptr);
 		break;
@@ -3533,9 +3492,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTons1__PostalAddress:
 		soap_mark_PointerTons1__PostalAddress(soap, (ns1__PostalAddress *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons1__PhoneNumber:
-		soap_mark_PointerTons1__PhoneNumber(soap, (ns1__PhoneNumber *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTons1__ItemRef:
 		soap_mark_PointerTons1__ItemRef(soap, (ns1__ItemRef *const*)ptr);
@@ -3836,8 +3792,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ns1__PersonalInfo(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns1__PhoneFlags:
 		return (void*)soap_instantiate_ns1__PhoneFlags(soap, -1, type, arrayType, n);
-	case SOAP_TYPE_ns1__PhoneList:
-		return (void*)soap_instantiate_ns1__PhoneList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns1__PostalAddress:
 		return (void*)soap_instantiate_ns1__PostalAddress(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns1__PostalAddressList:
@@ -4080,8 +4034,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ns1__ItemRef(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns1__MessagePart:
 		return (void*)soap_instantiate_ns1__MessagePart(soap, -1, type, arrayType, n);
-	case SOAP_TYPE_ns1__PhoneNumber:
-		return (void*)soap_instantiate_ns1__PhoneNumber(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns1__PlainText:
 		return (void*)soap_instantiate_ns1__PlainText(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns1__Proxy:
@@ -4164,8 +4116,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTons1__ProblemEntry(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__PostalAddress:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTons1__PostalAddress(soap, -1, type, arrayType, n);
-	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber:
-		return (void*)soap_instantiate_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__MessagePart:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTons1__MessagePart(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__Item:
@@ -4464,12 +4414,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (ns1__PhoneFlags*)p->ptr;
 		else
 			delete[] (ns1__PhoneFlags*)p->ptr;
-		break;
-	case SOAP_TYPE_ns1__PhoneList:
-		if (p->size < 0)
-			delete (ns1__PhoneList*)p->ptr;
-		else
-			delete[] (ns1__PhoneList*)p->ptr;
 		break;
 	case SOAP_TYPE_ns1__PostalAddress:
 		if (p->size < 0)
@@ -5197,12 +5141,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (ns1__MessagePart*)p->ptr;
 		break;
-	case SOAP_TYPE_ns1__PhoneNumber:
-		if (p->size < 0)
-			delete (ns1__PhoneNumber*)p->ptr;
-		else
-			delete[] (ns1__PhoneNumber*)p->ptr;
-		break;
 	case SOAP_TYPE_ns1__PlainText:
 		if (p->size < 0)
 			delete (ns1__PlainText*)p->ptr;
@@ -5458,13 +5396,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (std::vector<ns1__PostalAddress * >*)p->ptr;
 		break;
-	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber:
-
-		if (p->size < 0)
-			delete (std::vector<ns1__PhoneNumber * >*)p->ptr;
-		else
-			delete[] (std::vector<ns1__PhoneNumber * >*)p->ptr;
-		break;
 	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__MessagePart:
 
 		if (p->size < 0)
@@ -5686,10 +5617,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_container_insert(struct soap *soap, int t, void 
 	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__PostalAddress:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d location=%p\n", t, p));
 		((std::vector<ns1__PostalAddress * >*)p)->insert(((std::vector<ns1__PostalAddress * >*)p)->end(), *(ns1__PostalAddress **)q);
-		break;
-	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber:
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d location=%p\n", t, p));
-		((std::vector<ns1__PhoneNumber * >*)p)->insert(((std::vector<ns1__PhoneNumber * >*)p)->end(), *(ns1__PhoneNumber **)q);
 		break;
 	case SOAP_TYPE_std__vectorTemplateOfPointerTons1__MessagePart:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d location=%p\n", t, p));
@@ -6605,8 +6532,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns1__PostalAddressType(struct soap *soap, con
 }
 
 static const struct soap_code_map soap_codes_ns1__PostalAddressType[] =
-{	{ (long)Home_, "Home" },
-	{ (long)Office_, "Office" },
+{	{ (long)Home, "Home" },
+	{ (long)Office, "Office" },
 	{ 0, NULL }
 };
 
@@ -6675,107 +6602,6 @@ SOAP_FMAC3 enum ns1__PostalAddressType * SOAP_FMAC4 soap_in_ns1__PostalAddressTy
 	{	a = (enum ns1__PostalAddressType *)soap_id_forward(soap, soap->href, (void**)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns1__PostalAddressType, sizeof(enum ns1__PostalAddressType), 0), SOAP_TYPE_ns1__PostalAddressType, sizeof(enum ns1__PostalAddressType));
 		if (a && soap->alloced)
 			soap_default_ns1__PostalAddressType(soap, a);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns1__PhoneNumberType(struct soap *soap, enum ns1__PhoneNumberType *a)
-{
-#ifdef SOAP_DEFAULT_ns1__PhoneNumberType
-	*a = SOAP_DEFAULT_ns1__PhoneNumberType;
-#else
-	*a = (enum ns1__PhoneNumberType)0;
-#endif
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns1__PhoneNumberType(struct soap *soap, enum ns1__PhoneNumberType const*a)
-{
-	soap_reference(soap, a, SOAP_TYPE_ns1__PhoneNumberType);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns1__PhoneNumberType(struct soap *soap, const enum ns1__PhoneNumberType *a, const char *tag, const char *type)
-{
-	int i = soap_embed_element(soap, (void*)a, tag, SOAP_TYPE_ns1__PhoneNumberType);
-	soap_out_ns1__PhoneNumberType(soap, tag, i, a, type);
-	return soap_putindependent(soap);
-}
-
-static const struct soap_code_map soap_codes_ns1__PhoneNumberType[] =
-{	{ (long)Fax, "Fax" },
-	{ (long)Home, "Home" },
-	{ (long)Mobile, "Mobile" },
-	{ (long)Office, "Office" },
-	{ (long)Pager, "Pager" },
-	{ 0, NULL }
-};
-
-SOAP_FMAC3 const char* SOAP_FMAC4 soap_ns1__PhoneNumberType2s(struct soap *soap, enum ns1__PhoneNumberType n)
-{	const char *s = soap_str_code(soap_codes_ns1__PhoneNumberType, (long)n);
-	if (s)
-		return s;
-	return soap_long2s(soap, (long)n);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__PhoneNumberType(struct soap *soap, const char *tag, int id, const enum ns1__PhoneNumberType *a, const char *type)
-{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__PhoneNumberType), type);
-	soap_send(soap, soap_ns1__PhoneNumberType2s(soap, *a));
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 enum ns1__PhoneNumberType * SOAP_FMAC4 soap_get_ns1__PhoneNumberType(struct soap *soap, enum ns1__PhoneNumberType *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns1__PhoneNumberType(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_s2ns1__PhoneNumberType(struct soap *soap, const char *s, enum ns1__PhoneNumberType *a)
-{
-	const struct soap_code_map *map;
-	if (!s)
-		return SOAP_OK;
-	map = soap_code(soap_codes_ns1__PhoneNumberType, s);
-	if (map)
-		*a = (enum ns1__PhoneNumberType)map->code;
-	else
-	{	long n;
-		if (soap_s2long(soap, s, &n))
-				return soap->error;
-			*a = (enum ns1__PhoneNumberType)n;
-	}
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 enum ns1__PhoneNumberType * SOAP_FMAC4 soap_in_ns1__PhoneNumberType(struct soap *soap, const char *tag, enum ns1__PhoneNumberType *a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag))
-		return NULL;
-	if (*soap->type && soap_match_tag(soap, soap->type, type))
-	{	soap->error = SOAP_TYPE;
-		soap_revert(soap);
-		return NULL;
-	}
-	if (soap->null)
-	{	if (soap->mode & SOAP_XML_NIL)
-		{	soap->error = SOAP_NULL;
-			return NULL;
-		}
-		else
-			return a;
-	}
-	if (soap->body && !*soap->href)
-	{	a = (enum ns1__PhoneNumberType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns1__PhoneNumberType, sizeof(enum ns1__PhoneNumberType), 0);
-		if (!a || soap_s2ns1__PhoneNumberType(soap, soap_value(soap), a))
-			return NULL;
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (enum ns1__PhoneNumberType *)soap_id_forward(soap, soap->href, (void**)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns1__PhoneNumberType, sizeof(enum ns1__PhoneNumberType), 0), SOAP_TYPE_ns1__PhoneNumberType, sizeof(enum ns1__PhoneNumberType));
-		if (a && soap->alloced)
-			soap_default_ns1__PhoneNumberType(soap, a);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -27206,117 +27032,6 @@ DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns1__PlainText(%d, %s, %s)\n
 	return (ns1__PlainText*)cp->ptr;
 }
 
-void ns1__PhoneNumber::soap_serialize(struct soap *soap) const
-{
-		this->soap_mark(soap);
-}
-
-void ns1__PhoneNumber::soap_mark(struct soap *soap) const
-{
-	soap_embedded(soap, &((ns1__PhoneNumber*)this)->__item, SOAP_TYPE_std__string);
-	soap_mark_std__string(soap, &((ns1__PhoneNumber*)this)->__item);
-	/* transient soap skipped */
-}
-
-void ns1__PhoneNumber::soap_default(struct soap *soap)
-{
-	this->soap = soap;
-	soap_default_std__string(soap, &((ns1__PhoneNumber*)this)->__item);
-	soap_default_ns1__PhoneNumberType(soap, &((ns1__PhoneNumber*)this)->type);
-	/* transient soap skipped */
-}
-
-int ns1__PhoneNumber::soap_put(struct soap *soap, const char *tag, const  char *type) const
-{
-	int i = soap_embed_element(soap, (void*)this, tag, SOAP_TYPE_ns1__PhoneNumber);
-	this->soap_out(soap, tag, i, type);
-	return soap_putindependent(soap);
-}
-
-int ns1__PhoneNumber::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
-{
-	return soap_out_ns1__PhoneNumber(soap, tag, id, this, type);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__PhoneNumber(struct soap *soap, const char *tag, int id, const ns1__PhoneNumber *a, const char *type)
-{
-	soap_set_attr(soap, "type", soap_ns1__PhoneNumberType2s(soap, ((ns1__PhoneNumber *)a)->type));
-	soap_out_std__string(soap, tag, id, &(((ns1__PhoneNumber*)a)->__item), "ns1:PhoneNumber");
-	return SOAP_OK;
-}
-
-void *ns1__PhoneNumber::soap_get(struct soap *soap, const char *tag, const char *type)
-{
-	return soap_get_ns1__PhoneNumber(soap, this, tag, type);
-}
-
-SOAP_FMAC3 ns1__PhoneNumber * SOAP_FMAC4 soap_get_ns1__PhoneNumber(struct soap *soap, ns1__PhoneNumber *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns1__PhoneNumber(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-void *ns1__PhoneNumber::soap_in(struct soap *soap, const char *tag, const char *type)
-{	return soap_in_ns1__PhoneNumber(soap, tag, this, type);
-}
-
-SOAP_FMAC3 ns1__PhoneNumber * SOAP_FMAC4 soap_in_ns1__PhoneNumber(struct soap *soap, const char *tag, ns1__PhoneNumber *a, const char *type)
-{
-	if (soap_peek_element(soap))
-		return NULL;
-	if (!(a = (ns1__PhoneNumber *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ns1__PhoneNumber, sizeof(ns1__PhoneNumber), soap->type, soap->arrayType)))
-	{	soap->error = SOAP_TAG_MISMATCH;
-		return NULL;
-	}
-	*soap->id = '\0';
-	if (soap->alloced)
-	{	a->soap_default(soap);
-		if (soap->clist->type != SOAP_TYPE_ns1__PhoneNumber)
-			return (ns1__PhoneNumber *)a->soap_in(soap, tag, type);
-	}
-		if (soap_s2ns1__PhoneNumberType(soap, soap_attr_value(soap, "type"), &((ns1__PhoneNumber *)a)->type))
-			return NULL;
-		else if (soap->mode & SOAP_XML_STRICT)
-		{	soap->error = SOAP_REQUIRED;
-			return NULL;
-		}
-	if (!soap_in_std__string(soap, tag, &(((ns1__PhoneNumber*)a)->__item), "ns1:PhoneNumber"))
-		return NULL;
-	return a;
-}
-
-SOAP_FMAC5 ns1__PhoneNumber * SOAP_FMAC6 soap_new_ns1__PhoneNumber(struct soap *soap, int n)
-{	return soap_instantiate_ns1__PhoneNumber(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ns1__PhoneNumber(struct soap *soap, ns1__PhoneNumber *p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC5 ns1__PhoneNumber * SOAP_FMAC6 soap_instantiate_ns1__PhoneNumber(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns1__PhoneNumber(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ns1__PhoneNumber, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	soap->alloced = 1;
-	if (n < 0)
-	{	cp->ptr = (void*)new ns1__PhoneNumber;
-		if (size)
-			*size = sizeof(ns1__PhoneNumber);
-		((ns1__PhoneNumber*)cp->ptr)->soap = soap;
-	}
-	else
-	{	cp->ptr = (void*)new ns1__PhoneNumber[n];
-		if (size)
-			*size = n * sizeof(ns1__PhoneNumber);
-		for (int i = 0; i < n; i++)
-			((ns1__PhoneNumber*)cp->ptr)[i].soap = soap;
-	}
-	return (ns1__PhoneNumber*)cp->ptr;
-}
-
 void ns1__PhoneMessage::soap_serialize(struct soap *soap) const
 {
 	if (!soap_reference(soap, this, SOAP_TYPE_ns1__PhoneMessage))
@@ -27726,158 +27441,6 @@ DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns1__PhoneMessage(%d, %s, %s
 			((ns1__PhoneMessage*)cp->ptr)[i].soap = soap;
 	}
 	return (ns1__PhoneMessage*)cp->ptr;
-}
-
-void ns1__PhoneList::soap_serialize(struct soap *soap) const
-{
-	if (!soap_reference(soap, this, SOAP_TYPE_ns1__PhoneList))
-		this->soap_mark(soap);
-}
-
-void ns1__PhoneList::soap_mark(struct soap *soap) const
-{
-	soap_embedded(soap, &((ns1__PhoneList*)this)->phone, SOAP_TYPE_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber);
-	soap_mark_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(soap, &((ns1__PhoneList*)this)->phone);
-	/* transient soap skipped */
-}
-
-void ns1__PhoneList::soap_default(struct soap *soap)
-{
-	this->soap = soap;
-	soap_default_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(soap, &((ns1__PhoneList*)this)->phone);
-	soap_default_std__string(soap, &((ns1__PhoneList*)this)->default_);
-	/* transient soap skipped */
-}
-
-int ns1__PhoneList::soap_put(struct soap *soap, const char *tag, const  char *type) const
-{
-	int i = soap_embed_element(soap, (void*)this, tag, SOAP_TYPE_ns1__PhoneList);
-	this->soap_out(soap, tag, i, type);
-	return soap_putindependent(soap);
-}
-
-int ns1__PhoneList::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
-{
-	return soap_out_ns1__PhoneList(soap, tag, id, this, type);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__PhoneList(struct soap *soap, const char *tag, int id, const ns1__PhoneList *a, const char *type)
-{
-	if (!((ns1__PhoneList *)a)->default_.empty())
-		soap_set_attr(soap, "default", ((ns1__PhoneList *)a)->default_.c_str());
-	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__PhoneList), "ns1:PhoneList");
-	soap_out_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(soap, "phone", -1, &(((ns1__PhoneList*)a)->phone), "ns1:PhoneNumber");
-	/* transient soap skipped */
-	soap_element_end_out(soap, tag);
-	return SOAP_OK;
-}
-
-void *ns1__PhoneList::soap_get(struct soap *soap, const char *tag, const char *type)
-{
-	return soap_get_ns1__PhoneList(soap, this, tag, type);
-}
-
-SOAP_FMAC3 ns1__PhoneList * SOAP_FMAC4 soap_get_ns1__PhoneList(struct soap *soap, ns1__PhoneList *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns1__PhoneList(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-void *ns1__PhoneList::soap_in(struct soap *soap, const char *tag, const char *type)
-{	return soap_in_ns1__PhoneList(soap, tag, this, type);
-}
-
-SOAP_FMAC3 ns1__PhoneList * SOAP_FMAC4 soap_in_ns1__PhoneList(struct soap *soap, const char *tag, ns1__PhoneList *a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag))
-		return NULL;
-	if (soap->null)
-		if (soap->mode & SOAP_XML_NIL)
-		{	soap->error = SOAP_NULL;
-			return NULL;
-		}	else
-			return a;
-	if (!*soap->href)
-	{	if (!(a = (ns1__PhoneList *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ns1__PhoneList, sizeof(ns1__PhoneList), soap->type, soap->arrayType)))
-		{	soap->error = SOAP_TAG_MISMATCH;
-			return NULL;
-		}
-		if (soap->alloced)
-		{	a->soap_default(soap);
-			if (soap->clist->type != SOAP_TYPE_ns1__PhoneList)
-			{	soap_revert(soap);
-				*soap->id = '\0';
-				return (ns1__PhoneList *)a->soap_in(soap, tag, type);
-			}
-		}
-		{	const char *t = soap_attr_value(soap, "default");
-			if (t)
-			{	char *s;
-				if (soap_s2string(soap, t, &s))
-					return NULL;
-				((ns1__PhoneList *)a)->default_.assign(s);
-			}
-		};
-		if (soap->body)
-		{	for (;;)
-			{
-			soap->error = SOAP_TAG_MISMATCH;
-
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(soap, "phone", &(((ns1__PhoneList*)a)->phone), "ns1:PhoneNumber"))
-					continue;
-			/* transient soap skipped */
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-			return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-		}
-	}
-	else
-	{	a = (ns1__PhoneList *)soap_id_forward(soap, soap->href, (void**)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ns1__PhoneList, sizeof(ns1__PhoneList), soap->type, soap->arrayType), SOAP_TYPE_ns1__PhoneList, sizeof(ns1__PhoneList));
-		if (a && soap->alloced)
-			a->soap_default(soap);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC5 ns1__PhoneList * SOAP_FMAC6 soap_new_ns1__PhoneList(struct soap *soap, int n)
-{	return soap_instantiate_ns1__PhoneList(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ns1__PhoneList(struct soap *soap, ns1__PhoneList *p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC5 ns1__PhoneList * SOAP_FMAC6 soap_instantiate_ns1__PhoneList(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns1__PhoneList(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ns1__PhoneList, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	soap->alloced = 1;
-	if (n < 0)
-	{	cp->ptr = (void*)new ns1__PhoneList;
-		if (size)
-			*size = sizeof(ns1__PhoneList);
-		((ns1__PhoneList*)cp->ptr)->soap = soap;
-	}
-	else
-	{	cp->ptr = (void*)new ns1__PhoneList[n];
-		if (size)
-			*size = n * sizeof(ns1__PhoneList);
-		for (int i = 0; i < n; i++)
-			((ns1__PhoneList*)cp->ptr)[i].soap = soap;
-	}
-	return (ns1__PhoneList*)cp->ptr;
 }
 
 void ns1__PhoneFlags::soap_serialize(struct soap *soap) const
@@ -38549,8 +38112,6 @@ void ns1__Contact::soap_mark(struct soap *soap) const
 	soap_mark_PointerTons1__EmailAddressList(soap, &((ns1__Contact*)this)->emailList);
 	soap_embedded(soap, &((ns1__Contact*)this)->imList, SOAP_TYPE_PointerTons1__ImAddressList);
 	soap_mark_PointerTons1__ImAddressList(soap, &((ns1__Contact*)this)->imList);
-	soap_embedded(soap, &((ns1__Contact*)this)->phoneList, SOAP_TYPE_PointerTons1__PhoneList);
-	soap_mark_PointerTons1__PhoneList(soap, &((ns1__Contact*)this)->phoneList);
 	soap_embedded(soap, &((ns1__Contact*)this)->addressList, SOAP_TYPE_PointerTons1__PostalAddressList);
 	soap_mark_PointerTons1__PostalAddressList(soap, &((ns1__Contact*)this)->addressList);
 	soap_embedded(soap, &((ns1__Contact*)this)->officeInfo, SOAP_TYPE_PointerTons1__OfficeInfo);
@@ -38592,7 +38153,6 @@ void ns1__Contact::soap_default(struct soap *soap)
 	soap_default_PointerTons1__FullName(soap, &((ns1__Contact*)this)->fullName);
 	soap_default_PointerTons1__EmailAddressList(soap, &((ns1__Contact*)this)->emailList);
 	soap_default_PointerTons1__ImAddressList(soap, &((ns1__Contact*)this)->imList);
-	soap_default_PointerTons1__PhoneList(soap, &((ns1__Contact*)this)->phoneList);
 	soap_default_PointerTons1__PostalAddressList(soap, &((ns1__Contact*)this)->addressList);
 	soap_default_PointerTons1__OfficeInfo(soap, &((ns1__Contact*)this)->officeInfo);
 	soap_default_PointerTons1__PersonalInfo(soap, &((ns1__Contact*)this)->personalInfo);
@@ -38647,7 +38207,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__Contact(struct soap *soap, const char *t
 	soap_out_PointerTons1__FullName(soap, "fullName", -1, &(((ns1__Contact*)a)->fullName), "ns1:FullName");
 	soap_out_PointerTons1__EmailAddressList(soap, "emailList", -1, &(((ns1__Contact*)a)->emailList), "ns1:EmailAddressList");
 	soap_out_PointerTons1__ImAddressList(soap, "imList", -1, &(((ns1__Contact*)a)->imList), "ns1:ImAddressList");
-	soap_out_PointerTons1__PhoneList(soap, "phoneList", -1, &(((ns1__Contact*)a)->phoneList), "ns1:PhoneList");
 	soap_out_PointerTons1__PostalAddressList(soap, "addressList", -1, &(((ns1__Contact*)a)->addressList), "ns1:PostalAddressList");
 	soap_out_PointerTons1__OfficeInfo(soap, "officeInfo", -1, &(((ns1__Contact*)a)->officeInfo), "ns1:OfficeInfo");
 	soap_out_PointerTons1__PersonalInfo(soap, "personalInfo", -1, &(((ns1__Contact*)a)->personalInfo), "ns1:PersonalInfo");
@@ -38695,7 +38254,7 @@ SOAP_FMAC3 ns1__Contact * SOAP_FMAC4 soap_in_ns1__Contact(struct soap *soap, con
 				return (ns1__Contact *)a->soap_in(soap, tag, type);
 			}
 		}
-		short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_type4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_fullName1 = 1, soap_flag_emailList1 = 1, soap_flag_imList1 = 1, soap_flag_phoneList1 = 1, soap_flag_addressList1 = 1, soap_flag_officeInfo1 = 1, soap_flag_personalInfo1 = 1;
+		short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_type4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_fullName1 = 1, soap_flag_emailList1 = 1, soap_flag_imList1 = 1, soap_flag_addressList1 = 1, soap_flag_officeInfo1 = 1, soap_flag_personalInfo1 = 1;
 		if (soap->body)
 		{	for (;;)
 			{
@@ -38788,12 +38347,6 @@ SOAP_FMAC3 ns1__Contact * SOAP_FMAC4 soap_in_ns1__Contact(struct soap *soap, con
 			if (soap_flag_imList1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTons1__ImAddressList(soap, "imList", &(((ns1__Contact*)a)->imList), "ns1:ImAddressList"))
 				{	soap_flag_imList1 = 0;
-					continue;
-				}
-
-			if (soap_flag_phoneList1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons1__PhoneList(soap, "phoneList", &(((ns1__Contact*)a)->phoneList), "ns1:PhoneList"))
-				{	soap_flag_phoneList1 = 0;
 					continue;
 				}
 
@@ -49008,90 +48561,6 @@ SOAP_FMAC3 ns1__PostalAddressList ** SOAP_FMAC4 soap_in_PointerTons1__PostalAddr
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons1__PhoneList(struct soap *soap, ns1__PhoneList *const*a)
-{
-	if (!soap_reference(soap, a, SOAP_TYPE_PointerTons1__PhoneList))
-		soap_mark_PointerTons1__PhoneList(soap, a);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_mark_PointerTons1__PhoneList(struct soap *soap, ns1__PhoneList *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns1__PhoneList))
-		(*a)->soap_mark(soap);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_PointerTons1__PhoneList(struct soap *soap, ns1__PhoneList **a)
-{
-	*a = NULL;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons1__PhoneList(struct soap *soap, ns1__PhoneList *const*a, const char *tag, const char *type)
-{
-	int i = soap_embed_element(soap, (void*)a, tag, SOAP_TYPE_PointerTons1__PhoneList);
-	soap_out_PointerTons1__PhoneList(soap, tag, i, a, type);
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons1__PhoneList(struct soap *soap, const char *tag, int id, ns1__PhoneList *const*a, const char *type)
-{
-	struct soap_plist *pp;
-	register int i;
-	id = soap_embedded_id(soap, id, a, SOAP_TYPE_PointerTons1__PhoneList);
-	if (!*a)
-		return soap_element_null(soap, tag, id, type);
-	i = soap_pointer_lookup(soap, *a, SOAP_TYPE_ns1__PhoneList, &pp);
-	if (i)
-	{	if (soap_is_embedded(soap, pp))
-			return soap_element_ref(soap, tag, id, i);
-		if (soap_is_single(soap, pp))
-			return (*a)->soap_out(soap, tag, 0, type);
-		soap_set_embedded(soap, pp);
-		return (*a)->soap_out(soap, tag, i, type);
-	}
-	return (*a)->soap_out(soap, tag, soap_pointer_enter(soap, *a, SOAP_TYPE_ns1__PhoneList, &pp), type);
-}
-
-SOAP_FMAC3 ns1__PhoneList ** SOAP_FMAC4 soap_get_PointerTons1__PhoneList(struct soap *soap, ns1__PhoneList **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons1__PhoneList(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 ns1__PhoneList ** SOAP_FMAC4 soap_in_PointerTons1__PhoneList(struct soap *soap, const char *tag, ns1__PhoneList **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag))
-		return NULL;
-	if (soap->null)
-	{	a = (ns1__PhoneList **)soap_id_enter(soap, soap->id, a, SOAP_TYPE_PointerTons1__PhoneList, sizeof(ns1__PhoneList *), 1);
-		if (a)
-			*a = NULL;
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else if (!*soap->href)
-	{	soap_revert(soap);
-		a = (ns1__PhoneList **)soap_id_enter(soap, "", a, SOAP_TYPE_PointerTons1__PhoneList, sizeof(ns1__PhoneList *), 0);
-		if (a)
-		{	if (soap->alloced || !*a)
-				*a = (ns1__PhoneList *)soap_instantiate_ns1__PhoneList(soap, -1, soap->type, soap->arrayType, NULL);
-			if (!*a)
-				a = NULL;
-			else
-			{	(*a)->soap_default(soap);
-				if (!(*a)->soap_in(soap, tag, NULL))
-					a = NULL;
-			}
-		}
-	}
-	else
-	{	a = (ns1__PhoneList **)soap_id_lookup(soap, soap->href, (void**)soap_id_enter(soap, soap->id, a, SOAP_TYPE_PointerTons1__PhoneList, sizeof(ns1__PhoneList *), 1), SOAP_TYPE_ns1__PhoneList, sizeof(ns1__PhoneList), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons1__ImAddressList(struct soap *soap, ns1__ImAddressList *const*a)
 {
 	if (!soap_reference(soap, a, SOAP_TYPE_PointerTons1__ImAddressList))
@@ -55123,154 +54592,6 @@ SOAP_FMAC3 ns1__PostalAddress ** SOAP_FMAC4 soap_in_PointerTons1__PostalAddress(
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >*const*a)
-{
-	if (!soap_reference(soap, a, SOAP_TYPE_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber))
-		soap_mark_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(soap, a);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_mark_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >*const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber))
-		soap_mark_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, *a);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >**a)
-{
-	*a = NULL;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >*const*a, const char *tag, const char *type)
-{
-	int i = soap_embed_element(soap, (void*)a, tag, SOAP_TYPE_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber);
-	soap_out_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(soap, tag, i, a, type);
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, const char *tag, int id, std::vector<ns1__PhoneNumber * >*const*a, const char *type)
-{
-	struct soap_plist *pp;
-	register int i;
-	id = soap_embedded_id(soap, id, a, SOAP_TYPE_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber);
-	if (!*a)
-		return soap_element_null(soap, tag, id, type);
-	i = soap_pointer_lookup(soap, *a, SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber, &pp);
-	if (i)
-	{	if (soap_is_embedded(soap, pp))
-			return soap_element_ref(soap, tag, id, i);
-		if (soap_is_single(soap, pp))
-			return soap_out_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, tag, 0, *a, type);
-		soap_set_embedded(soap, pp);
-		return soap_out_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, tag, i, *a, type);
-	}
-	return soap_out_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, tag, soap_pointer_enter(soap, *a, SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber, &pp), *a, type);
-}
-
-SOAP_FMAC3 std::vector<ns1__PhoneNumber * >** SOAP_FMAC4 soap_get_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >**p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 std::vector<ns1__PhoneNumber * >** SOAP_FMAC4 soap_in_PointerTostd__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, const char *tag, std::vector<ns1__PhoneNumber * >**a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag))
-		return NULL;
-	soap_revert(soap);
-	if (!a)
-		if ((a = (std::vector<ns1__PhoneNumber * >**)soap_malloc(soap, sizeof(std::vector<ns1__PhoneNumber * >*))))
-			*a = NULL;
-			else
-			return NULL;
-	if (!(*a = soap_in_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, tag, *a, type)))
-		return NULL;
-	return a;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons1__PhoneNumber(struct soap *soap, ns1__PhoneNumber *const*a)
-{
-		soap_mark_PointerTons1__PhoneNumber(soap, a);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_mark_PointerTons1__PhoneNumber(struct soap *soap, ns1__PhoneNumber *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns1__PhoneNumber))
-		(*a)->soap_mark(soap);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_PointerTons1__PhoneNumber(struct soap *soap, ns1__PhoneNumber **a)
-{
-	*a = NULL;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons1__PhoneNumber(struct soap *soap, ns1__PhoneNumber *const*a, const char *tag, const char *type)
-{
-	int i = soap_embed_element(soap, (void*)a, tag, SOAP_TYPE_PointerTons1__PhoneNumber);
-	soap_out_PointerTons1__PhoneNumber(soap, tag, i, a, type);
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons1__PhoneNumber(struct soap *soap, const char *tag, int id, ns1__PhoneNumber *const*a, const char *type)
-{
-	struct soap_plist *pp;
-	register int i;
-	id = soap_embedded_id(soap, id, a, SOAP_TYPE_PointerTons1__PhoneNumber);
-	if (!*a)
-		return soap_element_null(soap, tag, id, type);
-	i = soap_pointer_lookup(soap, *a, SOAP_TYPE_ns1__PhoneNumber, &pp);
-	if (i)
-	{	if (soap_is_embedded(soap, pp))
-			return soap_element_ref(soap, tag, id, i);
-		if (soap_is_single(soap, pp))
-			return (*a)->soap_out(soap, tag, 0, type);
-		soap_set_embedded(soap, pp);
-		return (*a)->soap_out(soap, tag, i, type);
-	}
-	return (*a)->soap_out(soap, tag, soap_pointer_enter(soap, *a, SOAP_TYPE_ns1__PhoneNumber, &pp), type);
-}
-
-SOAP_FMAC3 ns1__PhoneNumber ** SOAP_FMAC4 soap_get_PointerTons1__PhoneNumber(struct soap *soap, ns1__PhoneNumber **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons1__PhoneNumber(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 ns1__PhoneNumber ** SOAP_FMAC4 soap_in_PointerTons1__PhoneNumber(struct soap *soap, const char *tag, ns1__PhoneNumber **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag))
-		return NULL;
-	if (soap->null)
-	{	a = (ns1__PhoneNumber **)soap_id_enter(soap, soap->id, a, SOAP_TYPE_PointerTons1__PhoneNumber, sizeof(ns1__PhoneNumber *), 1);
-		if (a)
-			*a = NULL;
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else if (!*soap->href)
-	{	soap_revert(soap);
-		a = (ns1__PhoneNumber **)soap_id_enter(soap, "", a, SOAP_TYPE_PointerTons1__PhoneNumber, sizeof(ns1__PhoneNumber *), 0);
-		if (a)
-		{	if (soap->alloced || !*a)
-				*a = (ns1__PhoneNumber *)soap_instantiate_ns1__PhoneNumber(soap, -1, soap->type, soap->arrayType, NULL);
-			if (!*a)
-				a = NULL;
-			else
-			{	(*a)->soap_default(soap);
-				if (!(*a)->soap_in(soap, tag, NULL))
-					a = NULL;
-			}
-		}
-	}
-	else
-	{	a = (ns1__PhoneNumber **)soap_id_lookup(soap, soap->href, (void**)soap_id_enter(soap, soap->id, a, SOAP_TYPE_PointerTons1__PhoneNumber, sizeof(ns1__PhoneNumber *), 1), SOAP_TYPE_ns1__PhoneNumber, sizeof(ns1__PhoneNumber), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons1__ItemRef(struct soap *soap, ns1__ItemRef *const*a)
 {
 		soap_mark_PointerTons1__ItemRef(soap, a);
@@ -59847,107 +59168,6 @@ DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointer
 			*size = n * sizeof(std::vector<ns1__PostalAddress * >);
 	}
 	return (std::vector<ns1__PostalAddress * >*)cp->ptr;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >const*a)
-{
-	if (!soap_reference(soap, a, SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber))
-		soap_mark_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, a);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_mark_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, const std::vector<ns1__PhoneNumber * >*a)
-{
-	for (std::vector<ns1__PhoneNumber * >::const_iterator i = a->begin(); i != a->end(); ++i)
-		soap_mark_PointerTons1__PhoneNumber(soap, &(*i));
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >*p)
-{
-	p->clear();
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, const std::vector<ns1__PhoneNumber * >*a, const char *tag, const char *type)
-{
-	int i = soap_embed_element(soap, (void*)a, tag, SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber);
-	soap_out_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, tag, i, a, type);
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, const char *tag, int id, const std::vector<ns1__PhoneNumber * >*a, const char *type)
-{
-	for (std::vector<ns1__PhoneNumber * >::const_iterator i = a->begin(); i != a->end(); ++i)
-		if (soap_out_PointerTons1__PhoneNumber(soap, tag, id, &(*i), "ns1:PhoneNumber"))
-			return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 std::vector<ns1__PhoneNumber * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >*p, const char *tag, const char *type)
-{
-	if ((p = soap_in_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 std::vector<ns1__PhoneNumber * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, const char *tag, std::vector<ns1__PhoneNumber * >*a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag))
-		return NULL;
-	soap_revert(soap);
-	if (!a)
-		if (!(a = soap_new_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, -1)))
-			return NULL;
-	ns1__PhoneNumber *n;
-	ns1__PhoneNumber **p;
-	do
-	{	if (*soap->id || *soap->href)
-		{	if (!(p = soap_in_PointerTons1__PhoneNumber(soap, tag, NULL, "ns1:PhoneNumber")))
-				break;
-			if (*p)
-				a->insert(a->end(), *p);
-			else
-				soap_container_id_forward(soap, soap->href, SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber, a, 1);
-		}
-		else
-		{	soap_default_PointerTons1__PhoneNumber(soap, &n);
-			if (!soap_in_PointerTons1__PhoneNumber(soap, tag, &n, "ns1:PhoneNumber"))
-				break;
-			a->insert(a->end(), n);
-		}
-	}
-	while (!soap_peek_element(soap));
-	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
-	{	soap->error = SOAP_OK;
-		return a;
-	}
-	return NULL;
-}
-
-SOAP_FMAC5 std::vector<ns1__PhoneNumber * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, int n)
-{	return soap_instantiate_std__vectorTemplateOfPointerTons1__PhoneNumber(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, std::vector<ns1__PhoneNumber * >*p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC5 std::vector<ns1__PhoneNumber * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTons1__PhoneNumber(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTons1__PhoneNumber(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTons1__PhoneNumber, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	soap->alloced = 1;
-	if (n < 0)
-	{	cp->ptr = (void*)new std::vector<ns1__PhoneNumber * >;
-		if (size)
-			*size = sizeof(std::vector<ns1__PhoneNumber * >);
-	}
-	else
-	{	cp->ptr = (void*)new std::vector<ns1__PhoneNumber * >[n];
-		if (size)
-			*size = n * sizeof(std::vector<ns1__PhoneNumber * >);
-	}
-	return (std::vector<ns1__PhoneNumber * >*)cp->ptr;
 }
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTons1__MessagePart(struct soap *soap, std::vector<ns1__MessagePart * >const*a)

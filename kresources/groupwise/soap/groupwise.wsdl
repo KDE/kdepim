@@ -256,7 +256,7 @@
 					<xs:element name="fullName" type="tns:FullName" minOccurs="0"/>
 					<xs:element name="emailList" type="tns:EmailAddressList" minOccurs="0"/>
 					<xs:element name="imList" type="tns:ImAddressList" minOccurs="0"/>
-					<xs:element name="phoneList" type="tns:PhoneList" minOccurs="0"/>
+<!--					<xs:element name="phoneList" type="tns:PhoneList" minOccurs="0"/>-->
 					<xs:element name="addressList" type="tns:PostalAddressList" minOccurs="0"/>
 					<xs:element name="officeInfo" type="tns:OfficeInfo" minOccurs="0"/>
 					<xs:element name="personalInfo" type="tns:PersonalInfo" minOccurs="0"/>
@@ -874,13 +874,14 @@
 		</xs:sequence>
 	</xs:complexType>
 
+<!--
 	<xs:complexType name="PhoneList">
 		<xs:sequence>
 			<xs:element name="phone" type="tns:PhoneNumber" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="default" type="xs:string"/>
 	</xs:complexType>
-
+-->
 	<xs:complexType name="PhoneMessage">
 		<xs:complexContent>
 			<xs:extension base="tns:Mail">
@@ -894,6 +895,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+<!--
 	<xs:complexType name="PhoneNumber">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
@@ -911,6 +913,7 @@
 			<xs:enumeration value="Pager"/>
 		</xs:restriction>
 	</xs:simpleType>
+-->
 
 	<xs:complexType name="PlainText">
 		<xs:complexContent>
