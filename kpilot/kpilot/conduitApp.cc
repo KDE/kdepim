@@ -140,6 +140,10 @@ KCmdLineArgs *ConduitApp::getOptions()
 	debug_level = atoi(p->getOption("debug"));
 
 	return p;
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
 }
 
 
@@ -216,12 +220,6 @@ int ConduitApp::exec()
 	fApp=new KApplication(fMode==BaseConduit::Setup,
 		fMode==BaseConduit::Setup);
 
-	kdDebug() << fname << ": App mode="
-		<< (int) fMode
-		<< " conduit mode="
-		<< (int) fConduit->getMode()
-		<< endl;
-
 	switch(fMode)
 	{
 	case BaseConduit::DBInfo : cout << fConduit->dbInfo(); break;
@@ -256,6 +254,9 @@ int ConduitApp::exec()
 
 
 // $Log$
+// Revision 1.10  2000/11/14 06:32:26  adridg
+// Ditched KDE1 stuff
+//
 // Revision 1.9  2000/10/29 22:11:06  adridg
 // Added debug-merge feature to conduits
 //

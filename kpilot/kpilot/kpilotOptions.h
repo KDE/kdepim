@@ -51,6 +51,8 @@ public:
 	virtual int commitChanges(KConfig&);
 
 private:
+	QCheckBox* fSyncFiles;
+	QCheckBox* fOverwriteRemote;
 	QCheckBox *fSyncLastPC;
 	QCheckBox *fForceFirstTime;
 } ;
@@ -70,13 +72,11 @@ private:
 	QComboBox* fPilotSpeed;
 	QLineEdit* fUserName;
 
-	QCheckBox* fSyncFiles;
 
 	QCheckBox* fStartDaemonAtLogin;
+	QCheckBox *fKillDaemonOnExit;
 	QCheckBox* fStartKPilotAtHotSync;
 	QCheckBox* fDockDaemon;
-
-	QCheckBox* fOverwriteRemote;
 } ;
 
 /**

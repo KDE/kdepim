@@ -132,6 +132,7 @@ protected:
 	*/
 	int addSyncLogMessage(const char *s);
 
+#ifdef DEBUG
 	/**
 	* Conduits can have an additional Debug= line in their
 	* config which may be read and ORed with the user-specified
@@ -141,7 +142,8 @@ protected:
 	*
 	* @ret resulting debug level
 	*/
-	int getDebugLevel(KConfig&);
+	int getDebugLevel(KConfig&) ;
+#endif
 
 	/**
 	* Conduits can have a "first time" setting that causes

@@ -81,7 +81,7 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig& c) :
 
 	fuseSecret->adjustSize();
 	grid->addWidget(fuseSecret,0,fieldCol);
-	fuseSecret->setChecked(c.readNumEntry("ShowSecrets"));
+	fuseSecret->setChecked(c.readBoolEntry("ShowSecrets"));
 
 
 
@@ -117,7 +117,7 @@ int KPilotOptionsPrivacy::commitChanges(KConfig& config)
 
 	config.setGroup(QString::null);
 
-	config.writeEntry("ShowSecrets",fuseSecret->isChecked());
+	config.writeEntry("ShowSecrets",(bool)fuseSecret->isChecked());
 	config.writeEntry("BackupForSync",fBackupOnly->text());
 	config.writeEntry("SkipSync",fSkipDB->text());
 
@@ -189,7 +189,7 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig& c) :
 	fUseKeyField = new QCheckBox(i18n("Use &Key Field"), 
 		formatGroup);
 	fUseKeyField->adjustSize();
-	fUseKeyField->setChecked(c.readNumEntry("UseKeyField", 0));
+	fUseKeyField->setChecked(c.readBoolEntry("UseKeyField", false));
 	grid->addWidget(fUseKeyField,3,1);
 
 
@@ -406,28 +406,17 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 	grid->addWidget(currentLabel,1,labelCol);
 	grid->addMultiCellWidget(fUserName,1,1,fieldCol,fieldCol+2);
 
-	currentLabel = new QLabel(i18n("Sync Options:"), this);
+	currentLabel = new QLabel(i18n("Startup Options:"), this);
 	currentLabel->adjustSize();
-	fSyncFiles = new QCheckBox(i18n("Sync &Files"), this);
-	fSyncFiles->adjustSize();
-	fSyncFiles->setChecked(config.readNumEntry("SyncFiles", 1));
 	grid->addWidget(currentLabel,2,labelCol);
-	grid->addMultiCellWidget(fSyncFiles,2,2,fieldCol,fieldCol+2);
-
-	fOverwriteRemote = new QCheckBox(
-		i18n("Local &overrides Pilot."), this);
-	fOverwriteRemote->adjustSize();
-	fOverwriteRemote->setChecked(
-		config.readNumEntry("OverwriteRemote", 0));
-	grid->addMultiCellWidget(fOverwriteRemote,3,3,fieldCol,fieldCol+2);
 
 	fStartDaemonAtLogin = new QCheckBox(
 		i18n("Start Hot-Sync Daemon at login. "), 
 		this);
 	fStartDaemonAtLogin->adjustSize();
 	fStartDaemonAtLogin->setChecked(
-		config.readNumEntry("StartDaemonAtLogin", 0));
-	grid->addMultiCellWidget(fStartDaemonAtLogin,4,4,fieldCol,fieldCol+2);
+		config.readBoolEntry("StartDaemonAtLogin", false));
+	grid->addMultiCellWidget(fStartDaemonAtLogin,2,2,fieldCol,fieldCol+2);
 	t = locate("apps","Utilities/KPilotDaemon.desktop");
 	if (t.isNull())
 	{
@@ -439,16 +428,22 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 		i18n("Start KPilot at Hot-Sync."), this);
 	fStartKPilotAtHotSync->adjustSize();
 	fStartKPilotAtHotSync->setChecked(
-		config.readNumEntry("StartKPilotAtHotSync", 0));
-	grid->addMultiCellWidget(fStartKPilotAtHotSync,5,5,fieldCol,fieldCol+2);
+		config.readBoolEntry("StartKPilotAtHotSync", false));
+	grid->addMultiCellWidget(fStartKPilotAtHotSync,3,3,fieldCol,fieldCol+2);
 
 	fDockDaemon = new QCheckBox(
 		i18n("Show Daemon in KPanel. "
 			"(Only available with KWM.)"), 
 				this);
 	fDockDaemon->adjustSize();
-	fDockDaemon->setChecked(config.readNumEntry("DockDaemon", 0));
-	grid->addMultiCellWidget(fDockDaemon,6,6,fieldCol,fieldCol+2);
+	fDockDaemon->setChecked(config.readBoolEntry("DockDaemon", false));
+	grid->addMultiCellWidget(fDockDaemon,4,4,fieldCol,fieldCol+2);
+
+	fKillDaemonOnExit = new QCheckBox(
+		i18n("Stop Daemon on exit"),this);
+	fKillDaemonOnExit->setChecked(
+		config.readBoolEntry("StopDaemonAtExit",false));
+	grid->addMultiCellWidget(fKillDaemonOnExit,5,5,fieldCol,fieldCol+2);
 
 	grid->activate();
 }
@@ -489,14 +484,14 @@ int KPilotOptionsGeneral::commitChanges(KConfig& config)
 	config.writeEntry("PilotDevice", fPilotDevice->text());
 	config.writeEntry("PilotSpeed", fPilotSpeed->currentItem());
 	config.writeEntry("UserName", fUserName->text());
-	config.writeEntry("SyncFiles", (int)fSyncFiles->isChecked());
-	config.writeEntry("OverwriteRemote", 
-		(int)fOverwriteRemote->isChecked());
 	config.writeEntry("StartDaemonAtLogin", 
-		(int)fStartDaemonAtLogin->isChecked());
+		(bool)fStartDaemonAtLogin->isChecked());
+	config.writeEntry("StopDaemonAtExit",
+		(bool)fKillDaemonOnExit->isChecked());
 	config.writeEntry("StartKPilotAtHotSync", 
-		(int)fStartKPilotAtHotSync->isChecked());
-	config.writeEntry("DockDaemon", (int)fDockDaemon->isChecked());
+		(bool)fStartKPilotAtHotSync->isChecked());
+	config.writeEntry("DockDaemon", 
+		(bool)fDockDaemon->isChecked());
 
 	if (fStartDaemonAtLogin->isChecked())
 	{
@@ -525,23 +520,34 @@ int KPilotOptionsGeneral::commitChanges(KConfig& config)
 
 
 KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
-	setupDialogPage(i18n("Advanced Sync"),s)
+	setupDialogPage(i18n("Sync"),s)
 {
 	FUNCTIONSETUP;
 
 	QGridLayout *grid = new QGridLayout(this,5,3,SPACING);
 
+	fSyncFiles = new QCheckBox(i18n("Sync &Files"), this);
+	fSyncFiles->setChecked(config.readBoolEntry("SyncFiles", false));
+	grid->addWidget(fSyncFiles,0,1);
+
+	fOverwriteRemote = new QCheckBox(
+		i18n("Local &overrides Pilot."), this);
+	fOverwriteRemote->setChecked(
+		config.readBoolEntry("OverwriteRemote", false));
+	grid->addWidget(fOverwriteRemote,1,1);
+
 	fForceFirstTime = new QCheckBox(
 		i18n("Force first-time sync every time"),this);
 	fForceFirstTime -> setChecked(
-		config.readNumEntry("ForceFirst",0));
+		config.readBoolEntry("ForceFirst",false));
+	grid->addWidget(fForceFirstTime,2,1);
+
 	fSyncLastPC = new QCheckBox(
 		i18n("Do full backup when changing PCs"),this);
 	fSyncLastPC -> setChecked(
-		config.readNumEntry("SyncLastPC",1));
+		config.readBoolEntry("SyncLastPC",true));
+	grid->addWidget(fSyncLastPC,3,1);
 
-	grid->addWidget(fSyncLastPC,0,1);
-	grid->addWidget(fForceFirstTime,1,1);
 	grid->setRowStretch(4,100);
 	grid->setColStretch(2,100);
 	grid->addColSpacing(2,SPACING);
@@ -552,12 +558,18 @@ KPilotOptionsSync::KPilotOptionsSync(setupDialog *s,KConfig& config) :
 {
 	FUNCTIONSETUP;
 
-	c.writeEntry("ForceFirst",(int)fForceFirstTime->isChecked());
-	c.writeEntry("SyncLastPC",(int)fSyncLastPC->isChecked());
+	c.writeEntry("SyncFiles", (bool)fSyncFiles->isChecked());
+	c.writeEntry("OverwriteRemote", 
+		(bool)fOverwriteRemote->isChecked());
+	c.writeEntry("ForceFirst",(bool)fForceFirstTime->isChecked());
+	c.writeEntry("SyncLastPC",(bool)fSyncLastPC->isChecked());
 
 	c.sync();
 
 	return 0;
+
+	/* NOTREACHED */
+	(void) id;
 }
 
 // ----------------------------------------------------
@@ -661,6 +673,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.14  2000/11/14 23:03:28  adridg
+// Feature creep: ForceFirst and SyncLastPC
+//
 // Revision 1.13  2000/11/14 06:32:26  adridg
 // Ditched KDE1 stuff
 //

@@ -28,6 +28,9 @@
 #include <qpixmap.h>
 #include <ksock.h>
 #include <kconfig.h>
+#include <kdebug.h>
+
+#include "kpilotlink.h"
 
 #include "baseConduit.moc"
 #include "statusMessages.h"
@@ -78,6 +81,13 @@ BaseConduit::~BaseConduit()
 		delete fDaemonSocket;
 		fDaemonSocket=0L;
 	}
+}
+
+int BaseConduit::getDebugLevel(KConfig& c)
+{
+	return KPilotLink::getDebugLevel(c);
+	/* NOTREACHED */
+	(void) id;
 }
 
 // For a description of the protocol used to
@@ -273,13 +283,6 @@ BaseConduit::getRecord(KSocket* in)
 }
 
 
-int BaseConduit::getDebugLevel(KConfig& c)
-{
-	int d=c.readNumEntry("Debug",0);
-	debug_level |= d;
-	return debug_level ;
-}
-
 bool BaseConduit::getFirstTime(KConfig& c)
 {
 	bool b = c.readBoolEntry("FirstTime",true);
@@ -298,6 +301,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.8  2000/11/14 23:01:51  adridg
+// Proper first-time handling
+//
 // Revision 1.7  2000/11/14 06:32:26  adridg
 // Ditched KDE1 stuff
 //

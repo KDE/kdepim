@@ -114,6 +114,10 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 	grid->addWidget(fSetupConduit,5,2);
   connect(fSetupConduit, SIGNAL(clicked()), this, SLOT(slotSetupConduit()));
 	  fillLists();
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
 }
 
 CConduitSetup::~CConduitSetup()
@@ -358,6 +362,17 @@ CConduitSetup::slotOk()
 					"author to correct it.").arg(iter);
 
 		  KMessageBox::error(this, tmpMessage, i18n("Conduit error."));
+		}
+	      else if (strcmp(dbName,"<none>")==0)
+	      {
+			if (debug_level & SYNC_TEDIOUS)
+			{
+				kdDebug() << fname
+					<< ": Conduit "
+					<< iter
+					<< " supports no databases."
+					<< endl;
+			}
 		}
 	      else
 		{
