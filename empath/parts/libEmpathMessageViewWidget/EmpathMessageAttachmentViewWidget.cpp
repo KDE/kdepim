@@ -70,7 +70,7 @@ EmpathMessageAttachmentViewWidget::setMessage(RMM::RBodyPart & message)
         KMimeType::Ptr mimeType = KMimeType::mimeType(typeString);
 
         QIconViewItem * item = new QIconViewItem(this);
-        item->setPixmap(mimeType->pixmap(KIconLoader::Medium));
+        item->setPixmap(mimeType->pixmap(KIcon::SizeMedium));
 
         QString text = QString::fromUtf8(
                 it.current()->envelope().contentDescription().asString());
