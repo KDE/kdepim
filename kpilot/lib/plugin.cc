@@ -39,6 +39,7 @@
 #include <qdir.h>
 
 #include <dcopclient.h>
+#include <kapplication.h>
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -265,6 +266,11 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.13  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.12  2002/07/05 00:15:22  kainhofe
 // Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
 //

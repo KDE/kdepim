@@ -90,7 +90,6 @@ ostream & operator << (ostream & o, const QSize & s)
 	return o;
 }
 
-#if KDE_VERSION < 319
 kdbgstream & operator << (kdbgstream & o, const QSize & s)
 {
 	o << s.width() << "x" << s.height();
@@ -101,7 +100,6 @@ kndbgstream & operator << (kndbgstream & o, const QSize &)
 {
 	return o;
 }
-#endif
 
 static KCmdLineOptions debug_options_[] = {
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},

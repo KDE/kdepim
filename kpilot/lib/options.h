@@ -50,7 +50,7 @@
 #endif
 
 #ifndef KDE_VERSION
-#include <kapplication.h>
+#include <kdeversion.h>
 #endif
 
 #if KDE_VERSION > 289
@@ -73,10 +73,13 @@
 #define DEBUGFUNC	kdDebug()
 #endif
 
+// For ostream
 #include <iostream.h>
+// For QString, and everything else needs it anyway.
 #include <qstring.h>
-#include <qstrlist.h>
+// Dunno, really. Probably because everything needs it.
 #include <klocale.h>
+// For the debug stuff.
 #include <kdebug.h>
 
 
@@ -192,10 +195,8 @@ QString charExpansion(const char *);
 
 class QSize;
 ostream& operator << (ostream&,const QSize &) ;
-#if KDE_VERSION < 319
 kdbgstream& operator << (kdbgstream&,const QSize &);
 kndbgstream& operator << (kndbgstream&,const QSize &);
-#endif
 
 // class QStringList;
 // ostream& operator <<(ostream&,const QStringList &);
