@@ -168,7 +168,7 @@ void KroupwareSync::start_syncAddWithKMail()
     KPilotConfigSettings &c = KPilotConfig::getConfig();
     logMessage(CSL1("Calling addresses over DCOP succeeded"));
     c.setGroup("Abbrowser-conduit");
-    c.writepathEntry( "KMailTempFile" , filename );
+    c.writePathEntry( "KMailTempFile" , filename );
     c.sync();
   }
 }
