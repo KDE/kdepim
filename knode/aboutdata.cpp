@@ -27,11 +27,11 @@ namespace KNode
   };
 
   static const about_authors authors[] = {
-    { "Christian Gebauer", I18N_NOOP("Maintainer"), "gebauer@kde.org" },
+    { "Roberto Selbach Teixeira", I18N_NOOP("Maintainer"), "maragato@kde.org" },
+    { "Christian Gebauer", 0, "gebauer@kde.org" },
     { "Christian Thurner", 0, "cthurner@web.de" },
     { "Dirk Mueller", 0, "mueller@kde.org" },
     { "Marc Mutz", 0, "mutz@kde.org" },
-    { "Roberto Teixeira", 0, "roberto@kde.org" },
     { "Mathias Waack", 0, "mathias@atoll-net.de" },
     { "Laurent Montel", 0, "montel@kde.org" },
     { "Stephan Johach", 0, "lucardus@onlinehome.de" },
