@@ -37,7 +37,7 @@ class XXPort::XXPortPrivate
   public:
     QSignalMapper *mExportMapper;
     QSignalMapper *mImportMapper;
-    KApplication *kApp;
+    KApplication *mKApp;
 };
 
 XXPort::XXPort( KABC::AddressBook *ab, QWidget *parent,
@@ -106,13 +106,13 @@ QWidget *XXPort::parentWidget() const
 
 void XXPort::setKApplication( KApplication *app )
 {
-  d->kApp = app;
+  d->mKApp = app;
 }
 
 void XXPort::processEvents() const
 {
-  if (d->kApp)
-	d->kApp->processEvents();
+  if ( d->mKApp )
+    d->mKApp->processEvents();
 }
 
 void XXPort::slotExportActivated( const QString &data )
