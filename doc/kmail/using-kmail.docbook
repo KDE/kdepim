@@ -1317,12 +1317,127 @@ you cannot use it to encrypt messages unless you have signed the key with your k
 </sect2>
 
 </sect1>
+
+<sect1 id="the-anti-spam-wizard">
+<title>The Anti Spam Wizard</title>
+
+<sect2 id="spam-wizard-basics">
+<title>Basics</title>
+
+<para>&kmail; doesn't have a built in spam detection solution. The developers believe 
+using external but specialized tools is the better approach. &kmail; uses these tools 
+by it's flexible filter architecture. And to make the initial setup of the filters 
+easy for you, &kmail; has an Anti Spam Wizard.
+</para>
+
+<variablelist>
+<varlistentry>
+<term>What can the wizard do to help you?</term>
+<listitem>
+<para>It will give you some choices how you want the spam filtering to be set up. 
+Afterwards it will automatically create the appropriate filter rules.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>What are the limitations of the wizard?</term>
+<listitem>
+<para>It can only initially set up the filters for you. And it will provide a 
+standard setup. Modifying existing filters is not yet possible in this version.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>You reach the wizard via <menuchoice><guimenu>Settings</guimenu>
+<guisubmenu>Anti Spam Wizard...</guisubmenu></menuchoice>.</para>
+
+</sect2>
+
+<sect2 id="spam-wizard-advanced">
+<title>Advanced</title>
+
+<para>Here are the details of how the wizard works. &kmail; can use several 
+external tools to detect spam messages. It will try to automatically find 
+out whether those tools are installed on your box. It will show you the 
+result of the search for each tool. You can mark the tools which you want 
+to be used by &kmail; to detect spam. Marking tools which were not found is 
+possible but not recommended. Of course, you can close the wizard, install 
+a tool, and restart the wizard again.
+</para>
+
+<para>If you have marked at least one tool you're able to select some actions 
+to be done in &kmail; with regard to spam messages. To let &kmail; detect spam 
+messages you definitly should mark the <guilabel>Pipe messages through the 
+anti spam tools</guilabel> option. If you want to let messages detected as 
+spam be moved into a certain folder, then please select this folder and 
+mark the <guilabel>Move detected spam messages to the selected folder</guilabel> 
+option.
+</para>
+
+<para>If you want to be able to manually mark messages as spam or not spam 
+(ham) you should check the <guilabel>Classify messages manually as spam / 
+not spam</guilabel> option. Note that you can achive optically the same 
+result when you only change the status of the appropriate messages. 
+But if any of the tools you selected before supports bayesian filtering 
+(i.e. a method to detect spam based on statistical analysis of the 
+messages) then these messages are not only marked but additionally 
+transfered to the tools to let them learn and thus to improve the detection rate.
+</para>
+
+<para>Having checked at least one of these last options will allow you to 
+let the wizard finish the filter setup. The wizard will not take any existing 
+filter rules into consideration but will append new rules in any case. You 
+may want to inspect the result of this process in the 
+<link linkend="filter-dialog">Filter Dialog</link>. Having checked the 
+<guilabel>Classif messages manually as spam / not spam</guilabel> option 
+the wizard will create toolbar buttons for marking messages as spam resp. 
+as ham. Keep in mind that classifying messages as spam will also move that 
+messages to the folder you had specified for spam messages.
+</para>
+
+</sect2>
+
+<sect2 id="spam-wizard-details">
+<title>Details</title>
+
+<para>The wizard uses information stored in a special configuration file named 
+<emphasis>kmail.antispamrc</emphasis> (stored in the global resp. local KDE 
+config directory). It will first check the global config file and then the local 
+config file. If the local config file contains entries with higher (newer) 
+version number per tool the configuration data from the local file for that 
+tool is used. That allows updating of the configuration for the wizard both 
+from administrator's or user's side.
+</para>
+
+<para>The detection of spam messages is achived by creating 
+<guilabel>pipe through</guilabel> actions per tool within a 
+special filter. Another filter contains rules to check for detected spam 
+messages and actions to mark them and (optionally depending on the choise 
+in the wizard) to move them into a folder. Both filters are configured to 
+be applied on incoming messages and on manual filtering.
+</para>
+
+<para>Two filters are needed for the classification of ham and spam. They 
+contain actions tomark the messages appropriatly. As written above, the filter 
+for classification as spam has another action to move the message into a 
+predefined folder. Given that the selected tools support bayesian filtering, 
+the wizard will create additional filter actions to pass the messages to the 
+tools (<guilabel>execute command</guilabel> actions) in the 
+appropriate learn mode.
+</para>
+
+</sect2>
+
+</sect1>
+
 <sect1 id="using-kmail-authors">
 <title>Section Authors</title>
 
 <para>This section written by:
-Daniel Naber <email>daniel.naber@t-online.de</email> and
-David Rugge <email>davidrugge@mediaone.net</email>.</para>
+Daniel Naber <email>daniel.naber@t-online.de</email>,
+David Rugge <email>davidrugge@mediaone.net</email> and
+Andreas Gungl <email>a.gungl@gmx.de</email>.</para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
