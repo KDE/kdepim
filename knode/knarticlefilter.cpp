@@ -211,6 +211,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
         ref=g->byId(idRef);
         ref->setFilterResult(true);
         ref->setFiltered(true);
+        if ( idRef==ref->idRef() ) break;
         idRef=ref->idRef();
       }
     }
