@@ -31,8 +31,8 @@
 #include <qfile.h>
 #include <qdatetime.h>
 
-#include <kapp.h>
-#include <kstddirs.h>
+#include <kapplication.h>
+#include <kstandarddirs.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <ksimpleconfig.h>

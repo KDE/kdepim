@@ -23,7 +23,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
