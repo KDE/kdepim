@@ -1,6 +1,15 @@
+kdepim (4:2.2.0-0beta1-1) unstable; urgency=low
+ 
+  * Fix overwrites (Closes: #102855)
+  * sync with upstream
+  * build fixes for mips
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sat, 30 Jun 2001 20:48:00 -0700
+
 kdepim (4:2.2-cvs20010622-1) unstable; urgency=low
  
   * New upstream cvs pull
+  * 2.2 beta1
   * Adding in Enhances
   * abbrowser moved to kdelibs
   * New package: kandy
