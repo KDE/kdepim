@@ -45,5 +45,5 @@ kabc_service_DATA = kabc_slox.desktop
 
 METASOURCES = AUTO
 
-messages:
-	$(XGETTEXT) *.cpp -o $(podir)/libkcal.pot
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/kabc_slox.pot
