@@ -79,9 +79,9 @@ function funkeysim($s, $count=1)
 {
   for ($i=1; $i<=$count; $i++) 
   {
-    usleep(100000);            # this is heuristic, its need is related to X.org bug #2710
+    usleep(10000);            # this is heuristic, its need is related to X.org bug #2710
     $rc=exec("xte 'key $s'");
-    usleep(100000);            # this is heuristic, its need is related to X.org bug #2710
+    usleep(10000);            # this is heuristic, its need is related to X.org bug #2710
   }
   return $rc;
 }
@@ -137,7 +137,8 @@ else
     
     
     sleep (1);
-
+    # the mouse can be in the way, so, move it out!
+    system("xte 'mousemove 1 1'");
     
     funkeysim("Alt_L");
     
@@ -154,7 +155,7 @@ else
     funkeysim("Return");
     sleep (1);
 
-    # 1. add a new task
+    # add a new task
     funkeysim("Alt_L");
     funkeysim("Right",2);
     funkeysim("Down");
@@ -168,18 +169,36 @@ else
     echo "\nCreating a planner project file...";
     createplannerexample();
     
+    # import planner project file
     funkeysim("Alt_L");
     funkeysim("Down",5);
     funkeysim("Right");
     funkeysim("Down");
-    system("xte 'key Return'");
+    funkeysim("Return");
     sleep (2);
     keysim("/tmp/example.planner");
     sleep (1);
-    system("xte 'key Return'");
+    funkeysim("Return");
     sleep (2);
-    while ($line=fgetc($pipes[2])) ;
+    while ($line=fgetc($pipes[2]));
     
+    # export to CSV file
+    funkeysim("Alt_L");
+    funkeysim("Down",5);
+    funkeysim("Right");
+    funkeysim("Down",2);
+    funkeysim("Return");
+    sleep(1);
+    keysim("/tmp/exporttest.csv");
+    sleep(1);
+    funkeysim("Tab",6);
+    system ("xte 'keydown Alt_L'");
+    system ("xte 'key m'");
+    system ("xte 'keyup Alt_L'");
+    sleep(1);
+    funkeysim("Return");
+    
+    # send CTRL_Q
     sleep (2);
     echo "\nsending CTRL_Q...\n";
     system ("xte 'keydown Control_L'");
@@ -193,7 +212,12 @@ else
     if ($lines[16]<>"END:VTODO") $err.="iCal file: wrong end of vtodo";
     if ($lines[27]<>"SUMMARY:task 1") $err.="iCal file: wrong task task 1";
     if (!preg_match("/^UID:libkcal-[0-9]{1,8}.[0-9]{1,3}/", $lines[39])) $err.="iCal file: wrong uid";
-
+    $content=file_get_contents("/tmp/exporttest.csv");
+    $lines=explode("\n",$content);
+    if (!preg_match("/\"example 1\",,0[,|.]00,0[,|.]00,0[,|.]00,0[,|.]00/", $lines[0])) $err.="csv export is wrong";
+    unlink ("/tmp/karmtest.ics");
+    unlink ("/tmp/example.planner");
+    unlink ("/tmp/exporttest.csv");
   }
 }
   echo $err;
