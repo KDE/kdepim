@@ -39,6 +39,7 @@ class KolabWizard : public KConfigWizard
   private:
     KLineEdit *mServerEdit;
     KLineEdit *mUserEdit;
+    KLineEdit *mRealNameEdit;
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;
 };

@@ -13,6 +13,10 @@
       <label>Kolab user name</label>
       <default></default>
     </entry>
+    <entry name="RealName" type="String">
+      <label>Real user name</label>
+      <default></default>
+    </entry>
     <entry name="Password" type="Password">
       <label>Kolab user password</label>
       <default></default>

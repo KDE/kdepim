@@ -32,6 +32,7 @@
 #include "kresources/imap/kabc/resourceimap.h"
 #include "kresources/imap/knotes/resourceimap.h"
 
+#include <qwhatsthis.h>
 #include <klineedit.h>
 #include <klocale.h>
 
@@ -194,19 +195,26 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   mServerEdit = new KLineEdit( page );
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n("User name:"), page );
+  label = new QLabel( i18n("Kolab user name:"), page );
   topLayout->addWidget( label, 1, 0 );
   mUserEdit = new KLineEdit( page );
   topLayout->addWidget( mUserEdit, 1, 1 );
+  QWhatsThis::add(mUserEdit, i18n("Your Kolab Server user ID. "
+                        "Format: <i>name@server.domain.tld</i>"));
+
+  label = new QLabel( i18n("Real name:"), page );
+  topLayout->addWidget( label, 2, 0 );
+  mRealNameEdit = new KLineEdit( page );
+  topLayout->addWidget( mRealNameEdit, 2, 1 );
 
   label = new QLabel( i18n("Password:"), page );
-  topLayout->addWidget( label, 2, 0 );
+  topLayout->addWidget( label, 3, 0 );
   mPasswordEdit = new KLineEdit( page );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
-  topLayout->addWidget( mPasswordEdit, 2, 1 );
+  topLayout->addWidget( mPasswordEdit, 3, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addMultiCellWidget( mSavePasswordCheck, 3, 3, 0, 1 );
+  topLayout->addMultiCellWidget( mSavePasswordCheck, 4, 4, 0, 1 );
 
   topLayout->setRowStretch( 4, 1 );
 
@@ -224,6 +232,7 @@ void KolabWizard::usrReadConfig()
 {
   mServerEdit->setText( KolabConfig::self()->server() );
   mUserEdit->setText( KolabConfig::self()->user() );
+  mRealNameEdit->setText( KolabConfig::self()->realName() );
   mPasswordEdit->setText( KolabConfig::self()->password() );
   mSavePasswordCheck->setChecked( KolabConfig::self()->savePassword() );
 }
@@ -232,6 +241,7 @@ void KolabWizard::usrWriteConfig()
 {
   KolabConfig::self()->setServer( mServerEdit->text() );
   KolabConfig::self()->setUser( mUserEdit->text() );
+  KolabConfig::self()->setRealName( mRealNameEdit->text() );
   KolabConfig::self()->setPassword( mPasswordEdit->text() );
   KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
 }
