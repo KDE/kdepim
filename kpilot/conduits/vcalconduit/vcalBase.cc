@@ -99,8 +99,7 @@ bool VCalBaseConduit::getCalendar(const QString &group)
 void VCalBaseConduit::saveVCal()
 {
   if (fCalendar) {
-    ICalFormat *format = new ICalFormat(fCalendar);
-    fCalendar->save(QFile::encodeName(calName),format);
+    fCalendar->save(QFile::encodeName(calName));
   }
 
   fFirstTime = false;
@@ -245,6 +244,10 @@ Event *VCalBaseConduit::findEvent(recordid_t id)
 }
 
 // $Log$
+// Revision 1.9  2001/06/18 19:51:40  cschumac
+// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
+// They use libkcal now.
+//
 // Revision 1.8  2001/06/05 22:58:40  adridg
 // General rewrite, cleanup thx. Philipp Hullmann
 //
