@@ -159,7 +159,7 @@ class TaskView : public KListView
   private:
     void updateParents( Task* task, long totalDiff, long sesssionDiff);
     void deleteChildTasks( Task *item );
-    void addTimeToActiveTasks( int minutes );
+    void addTimeToActiveTasks( int minutes, bool save_data = true );
 
   protected slots:
     void autoSaveChanged( bool );

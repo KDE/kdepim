@@ -333,13 +333,13 @@ void TaskView::changeTimer(QListViewItem *)
 
 void TaskView::minuteUpdate()
 {
-  addTimeToActiveTasks(1);
+  addTimeToActiveTasks(1, false);
 }
 
-void TaskView::addTimeToActiveTasks(int minutes)
+void TaskView::addTimeToActiveTasks(int minutes, bool save_data)
 {
-  for(unsigned int i=0; i<activeTasks.count();i++)
-    activeTasks.at(i)->changeTime(minutes, _storage);
+  for( unsigned int i = 0; i < activeTasks.count(); i++ )
+    activeTasks.at(i)->changeTime(minutes, ( save_data ? _storage : 0 ) );
 }
 
 void TaskView::newTask()
@@ -510,13 +510,9 @@ void TaskView::deleteTask(bool markingascomplete)
     }
     else
     {
-      //kdDebug(5970) << "TaskView::deleteTask - 1" << endl;
       task->remove(activeTasks, _storage);
-      //kdDebug(5970) << "TaskView::deleteTask - 2" << endl;
       task->removeFromView();
-      //kdDebug(5970) << "TaskView::deleteTask - 3" << endl;
       save();
-      //kdDebug(5970) << "TaskView::deleteTask - 4" << endl;
     }
 
     // remove root decoration if there is no more children.
@@ -550,14 +546,8 @@ void TaskView::extractTime(int minutes)
 
 void TaskView::autoSaveChanged(bool on)
 {
-  if (on) {
-    _autoSaveTimer->start(_preferences->autoSavePeriod()*1000*secsPerMinute);
-  }
-  else {
-    if (_autoSaveTimer->isActive()) {
-      _autoSaveTimer->stop();
-    }
-  }
+  if (on) _autoSaveTimer->start(_preferences->autoSavePeriod()*1000*secsPerMinute);
+  else if (_autoSaveTimer->isActive()) _autoSaveTimer->stop();
 }
 
 void TaskView::autoSavePeriodChanged(int /*minutes*/)

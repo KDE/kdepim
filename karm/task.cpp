@@ -187,13 +187,18 @@ void Task::setDesktopList ( DesktopList desktopList )
   _desktops = desktopList;
 }
 
+void Task::changeTime( long minutes, KarmStorage* storage )
+{
+  changeTimes( minutes, minutes, storage); 
+}
+
 void Task::changeTimes( long minutesSession, long minutes, KarmStorage* storage)
 {
   if( minutesSession != 0 || minutes != 0) 
   {
     _sessionTime += minutesSession;
     _time += minutes;
-    storage->changeTime(this, minutes * gSecondsPerMinute);
+    if ( storage ) storage->changeTime(this, minutes * gSecondsPerMinute);
     noNegativeTimes();
     changeTotalTimes( minutesSession, minutes );
   }
