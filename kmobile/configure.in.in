@@ -13,3 +13,4 @@ dnl We don't need liblockdev if we have baudboy working
 if [[ -n "$HAVE_BAUDBOY_H" ]]; then
   LIB_LOCKDEV=""
 fi
+AC_SUBST(LIB_LOCKDEV)
