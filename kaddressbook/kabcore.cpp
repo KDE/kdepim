@@ -77,8 +77,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
     mExtensionManager( 0 ), mCategorySelectDialog( 0 ), mCategoryEditDialog( 0 ),
-    mConfigureDialog( 0 ), mLdapSearchDialog( 0 ), mReadWrite( readWrite ),
-    mModified( false )
+    mLdapSearchDialog( 0 ), mReadWrite( readWrite ), mModified( false )
 {
   mWidget = new QWidget( parent, name );
 
@@ -819,17 +818,14 @@ void KABCore::configure()
   // Save the current config so we do not loose anything if the user accepts
   saveSettings();
 
-  if ( !mConfigureDialog ) {
-    mConfigureDialog = new KCMultiDialog( mWidget );
+  KCMultiDialog dlg( mWidget, "", true );
+  connect( &dlg, SIGNAL( configCommitted() ),
+           this, SLOT( configurationChanged() ) );
 
-    connect( mConfigureDialog, SIGNAL( configCommitted() ),
-             this, SLOT( configurationChanged() ) );
+  dlg.addModule( "kabconfig.desktop" );
+  dlg.addModule( "kabldapconfig.desktop" );
 
-    mConfigureDialog->addModule( "kabconfig.desktop" );
-    mConfigureDialog->addModule( "kabldapconfig.desktop" );
-  }
-
-  mConfigureDialog->show();
+  dlg.exec();
 }
 
 void KABCore::print()

@@ -46,7 +46,6 @@ class KAboutData;
 class KAction;
 class KActionCollection;
 class KConfig;
-class KCMultiDialog;
 class KToggleAction;
 class KXMLGUIClient;
 
@@ -368,7 +367,6 @@ class KABCore : public KAB::Core
     QSplitter *mDetailsSplitter;
     QSplitter *mExtensionBarSplitter;
 
-    KCMultiDialog *mConfigureDialog;
     LDAPSearchDialog *mLdapSearchDialog;
     QDict<AddresseeEditorDialog> mEditorDict;
 
