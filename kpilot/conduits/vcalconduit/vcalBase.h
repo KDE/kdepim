@@ -90,6 +90,13 @@ public:
 		const QDateTime &dt,
 		bool truncateTime=false);
 
+	// General set and reset function for numeric properties.
+	//
+	//
+	static void setNumProperty(VObject *vevent,
+		const char *property,
+		int num);
+
 	// More *static* utility functions. Setting
 	// truncateTime to true discards the time
 	// part and sets the time in the returned

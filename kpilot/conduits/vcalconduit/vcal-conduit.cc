@@ -780,9 +780,14 @@ void VCalConduit::doLocalSync()
 #endif
     
     if (vo && (strcmp(vObjectName(vevent), VCEventProp) == 0)) {
-      status = 0;
-      status = atoi(s = fakeCString(vObjectUStringZValue(vo)));
-      deleteStr(s);
+	s = fakeCString(vObjectUStringZValue(vo));
+	DEBUGCONDUIT << fname
+		<< ": Got KPilotStatusProp="
+		<< s
+		<< endl;
+
+	status = atoi(s);
+	deleteStr(s);
       
       if (status == 1) {
 	// the event has been modified, need to write it to the pilot
@@ -1231,6 +1236,7 @@ void VCalConduit::doLocalSync()
 	{
 	}
       }
+	setNumProperty(vevent,KPilotStatusProp,0);
     }
   }
 
@@ -1448,6 +1454,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.36  2001/04/18 07:46:37  adridg
+// Fix for part of bug #23385 by Philipp Hullman
+//
 // Revision 1.35  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

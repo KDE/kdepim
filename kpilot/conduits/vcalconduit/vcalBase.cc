@@ -361,6 +361,25 @@ VObject* VCalBaseConduit::findEntryInCalendar(unsigned int id)
 	return 0L;
 }
 
+void VCalBaseConduit::setNumProperty(VObject *vevent,
+	const char *propertyname,
+	int num)
+{
+	FUNCTIONSETUP;
+
+	VObject *vo = isAPropertyOf(vevent,propertyname);
+	QString s;
+	s.setNum(num);
+
+	if (vo)
+	{
+		setVObjectUStringZValue_(vo,fakeUnicode(s.latin1(),0));
+	}
+	else
+	{
+		addPropValue(vevent,propertyname,s.latin1());
+	}
+}
 
 void VCalBaseConduit::setSecret(VObject *vevent,bool secret)
 {
@@ -557,6 +576,9 @@ void VCalBaseConduit::deleteVObject(PilotRecord *rec)
 }
 
 // $Log$
+// Revision 1.4  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.3  2001/04/01 17:32:06  adridg
 // Fiddling around with date properties
 //
