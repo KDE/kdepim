@@ -37,6 +37,8 @@
 #include "knconfigmanager.h"
 #include "utilities.h"
 #include "knarticlemanager.h"
+#include "knodeview.h"
+#include "knarticlewidget.h"
 #include "knsearchdialog.h"
 #include "knlistview.h"
 #include "knfiltermanager.h"
@@ -229,6 +231,12 @@ void KNArticleManager::showHdrs(bool clear)
 {
 	if(!g_roup && !f_older) return;
 
+	KNArticle *currentArt=knGlobals.view->articleView()->article();
+	if(currentArt && !currentArt->listItem()) {
+	  currentArt=0;
+	  knGlobals.view->articleView()->setArticle(0);
+	}
+	
   if(clear)
   	v_iew->clear();
 
@@ -307,8 +315,17 @@ void KNArticleManager::showHdrs(bool clear)
     }
   }
 
-  if(v_iew->firstChild())
+  if(currentArt && (static_cast<KNRemoteArticle*>(currentArt))->filterResult()) {
+    if(!currentArt->listItem())
+      createThread(static_cast<KNRemoteArticle*>(currentArt));
+    currentArt->listItem()->setSelected(true);
+    v_iew->setCurrentItem(currentArt->listItem());
+    v_iew->ensureItemVisible(currentArt->listItem());
+  }
+  else if(v_iew->firstChild()) {
     v_iew->setCurrentItem(v_iew->firstChild());
+    knGlobals.view->articleView()->setArticle(0);
+  }
 
   knGlobals.top->setStatusMsg(QString::null);
   updateStatusString();

@@ -52,10 +52,12 @@ KNLVItemBase::~KNLVItemBase()
 
 void KNLVItemBase::setSelected(bool select)
 {
-  QListViewItem::setSelected(select);
-  QListView *lv=listView();
-  if(lv && lv->isA("KNListView"))
-    (static_cast<KNListView*>(lv))->itemToggled(this, select);
+  if(isSelected()!=select) {
+   QListViewItem::setSelected(select);
+   QListView *lv=listView();
+   if(lv && lv->isA("KNListView"))
+     (static_cast<KNListView*>(lv))->itemToggled(this, select);
+  }
 }
 
 
