@@ -50,8 +50,7 @@ QString KNHdrViewItem::key(int col, bool) const
     return tmpString.sprintf("%08d",text(col).toInt());
   }
   if (col==4) {               // date
-    QString tmpString;
-    return tmpString.sprintf("%08d",(uint)art->date()->unixTime());
+    return QString::number((uint)art->date()->unixTime()).rightJustify(15, '0');
   }
   return text(col);
 }
