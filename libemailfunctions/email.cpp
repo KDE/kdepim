@@ -295,12 +295,32 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 //-----------------------------------------------------------------------------
 bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
 {
-  int atChar = aStr.find( '@' );
+  int atChar = aStr.findRev( '@' );
   QString domainPart = aStr.mid( atChar + 1);
   QString localPart = aStr.left( atChar );
+  bool tooManyAtsFlag = false;
+  bool inQuotedString = false;
+  int atCount = localPart.contains( '@' );
+
+  unsigned int strlen = localPart.length();
+  for ( unsigned int index=0; index < strlen; index++ ) {
+    switch( localPart[ index ].latin1() ) {
+      case '"' : inQuotedString = !inQuotedString;
+        break;
+      case '@' :
+        if ( inQuotedString ) {
+          --atCount;
+          if ( atCount == 0 ) {
+            tooManyAtsFlag = false;
+          }
+        }
+        break;
+      }
+  }
+
   QString addrRx = "[a-zA-Z]*[\\w.-]*[a-zA-Z0-9]@";
   if ( localPart[ 0 ] == '\"' || localPart[ localPart.length()-1 ] == '\"' ) {
-    addrRx = "\"[a-zA-Z]*[\\w.-]*[a-zA-Z0-9]\"@";
+    addrRx = "\"[a-zA-Z@]*[\\w.@-]*[a-zA-Z0-9@]\"@";
   }
   if ( domainPart[ 0 ] == '[' || domainPart[ domainPart.length()-1 ] == ']' ) {
     addrRx += "\\[[0-9]{,3}(\\.[0-9]{,3}){3}\\]";
@@ -308,7 +328,7 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
     addrRx += "[\\w-]+(\\.[\\w-]+)";
   }
   QRegExp rx( addrRx );
-  return rx.exactMatch( aStr );
+  return  rx.exactMatch( aStr ) && !tooManyAtsFlag;
 }
 
 //-----------------------------------------------------------------------------
