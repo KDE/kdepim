@@ -70,6 +70,7 @@
 #include <kmessagebox.h>
 
 // Qt
+#include <qapplication.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qtooltip.h>
@@ -118,7 +119,7 @@ void Kleo::KeyRequester::init()
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
 					    QSizePolicy::Minimum ) );
-  mEraseButton->setPixmap( SmallIcon( "clear_left" ) );
+  mEraseButton->setPixmap( SmallIcon( QApplication::reverseLayout() ? "locationbar_erase" : "clear_left" ) );
   QToolTip::add( mEraseButton, i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
