@@ -315,18 +315,18 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
   //KonsoleKalendarExports exports;
   QString output;
   QString floating = "location %location, summary %summary\r\n";
-  QString sameday = "time is %start-time, location %location, summary %summary\r\n";
-  QString newday = "date is %start-date, time is %start-time, location %location, summary %summary\r\n";
+  QString sameday = "time is %starttime, location %location, summary %summary\r\n";
+  QString newday = "date is %startdate, time is %starttime, location %location, summary %summary\r\n";
   
   QMap<QString, QString> macros;
   
   
-  macros["start-date"] = KGlobal::locale()->formatDate( event->dtStart().date() );
-  macros["end-date"] = KGlobal::locale()->formatDate( event->dtEnd().date() );
+  macros["startdate"] = KGlobal::locale()->formatDate( event->dtStart().date() );
+  macros["enddate"] = KGlobal::locale()->formatDate( event->dtEnd().date() );
   
   if ( !event->doesFloat() ) {
-   macros["start-time"] = KGlobal::locale()->formatTime( event->dtStart().time() );
-   macros["end-time"] = KGlobal::locale()->formatTime( event->dtEnd().time() );
+   macros["starttime"] = KGlobal::locale()->formatTime( event->dtStart().time() );
+   macros["endtime"] = KGlobal::locale()->formatTime( event->dtEnd().time() );
   } // if
   
   macros["summary"] = event->summary();
