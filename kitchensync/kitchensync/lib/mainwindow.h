@@ -55,7 +55,6 @@ class KSelectAction;
 namespace KSync
 {
 
-typedef QString UDI;
 class KonnectorManager;
 class SyncUi;
 class SyncAlgorithm;
@@ -172,9 +171,9 @@ class KSyncMainWindow : public KParts::MainWindow
     /**
      * This signal gets emitted whenever the Profile
      * is changed.
-     * @param udi The old UDI of the previously enabled profile
+     * @param udi The old Konnector of the previously enabled profile
      */
-    void konnectorChanged( const UDI &udi );
+    void konnectorChanged( Konnector * );
 
     /**
      * This signals gets emitted on KonnectorProfile switch.
@@ -184,44 +183,44 @@ class KSyncMainWindow : public KParts::MainWindow
 
     /**
      * signal emitted when progress from the konnectorProgress arrived
-     * @param udi The UDI of the KonnectorPlugin
-     * @param prog The Progress
+     * @param konnector pointer to Konnector object
+     * @param prog the Progress
      */
-    void konnectorProgress( const UDI& udi , const Progress& prog );
+    void konnectorProgress( Konnector *konnector , const Progress &prog );
 
     /**
-     * @param UDI the UDI of the KonnectorPlugin
+     * @param konnector pointer to Konnector object
      * @param err the error
      */
-    void konnectorError( const UDI&, const Error& err );
+    void konnectorError( Konnector *konnector, const Error &err );
 
     /**
      * This signal gets emitted when the KonnectorManager
      * downloaded a list of files
-     * @param udi The UDI where the Syncee comes from
+     * @param konnector pointer to Konnector object
      * @param lst The downloaded Syncee
      */
-    void konnectorDownloaded( const UDI& udi, Syncee::PtrList lst );
+    void konnectorDownloaded( Konnector *, Syncee::PtrList lst );
 
     /**
      * Whenever the currently activated parts changed
      * @param newPart the newly activated part
      */
-    void partChanged( ManipulatorPart* newPart );
+    void partChanged( ManipulatorPart *newPart );
 
     /**
      * progress coming from one part
      * @param part where the progress comes from, 0 if from MainWindow
      * @param prog The progress
      */
-    void partProgress( ManipulatorPart* part, const Progress& prog );
+    void partProgress( ManipulatorPart *part, const Progress &prog );
 
     /**
      * error coming from one part
      * @param part where the error comes from, 0 if from MainWindow
      * @param err The error
      */
-    void partError( ManipulatorPart* part, const Error& error );
+    void partError( ManipulatorPart *part, const Error &error );
 
     /**
      * emitted when ever sync starts
@@ -266,15 +265,15 @@ class KSyncMainWindow : public KParts::MainWindow
 
     /* slots for the KonnectorManager */
   private slots:
-    void slotSync(const QString &udi, Syncee::PtrList );
-    void slotKonnectorProg( const UDI&, const Progress& );
-    void slotKonnectorErr( const UDI&, const Error& );
+    void slotSync( Konnector *, Syncee::PtrList );
+    void slotKonnectorProg( Konnector *, const Progress & );
+    void slotKonnectorErr( Konnector *, const Error & );
 
     /* slots for the ManipulatorParts */
-    void slotPartProg( ManipulatorPart*, int );
-    void slotPartProg( ManipulatorPart*, const Progress& );
-    void slotPartErr( ManipulatorPart*, const Error& );
-    void slotPartSyncStatus( ManipulatorPart*, int );
+    void slotPartProg( ManipulatorPart *, int );
+    void slotPartProg( ManipulatorPart *, const Progress & );
+    void slotPartErr( ManipulatorPart *, const Error & );
+    void slotPartSyncStatus( ManipulatorPart *, int );
 
   private:
     PartBar *m_bar;
@@ -298,12 +297,7 @@ class KSyncMainWindow : public KParts::MainWindow
     SyncUi *m_syncUi;
     SyncAlgorithm *m_syncAlg;
     QString m_currentId;
-    // udi + Identify
-    QMap<QString, QString> m_ids;
     KonnectorBar *m_konBar;
-
-    struct Data;
-    Data *d;
 };
 
 }

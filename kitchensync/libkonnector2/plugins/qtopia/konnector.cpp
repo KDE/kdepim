@@ -111,7 +111,7 @@ void QtopiaPlugin::write( Syncee::PtrList lst) {
 }
 /* private slots for communication here */
 void QtopiaPlugin::slotSync(Syncee::PtrList lst ) {
-    emit sync( udi() , lst );
+    emit sync( this , lst );
 }
 void QtopiaPlugin::slotError( const Error& err ) {
     error( err );
@@ -125,7 +125,6 @@ KonnectorInfo QtopiaPlugin::info()const {
                          QString::fromLatin1("Qtopia1.5"),
                          metaId(),
                          iconName(),
-                         udi(),
                          d->socket->isConnected() );
 
 }

@@ -70,13 +70,13 @@ void Widget::setProfile( const QString& name, const QPixmap& pix) {
     m_logo->setPixmap( pix );
     cleanView();
 }
-void Widget::addProgress( const UDI&, const Progress& prog) {
+void Widget::addProgress( Konnector *, const Progress& prog) {
     m_edit->append( "<b>"+QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
-void Widget::addProgress( ManipulatorPart* part, const Progress& prog) {
+void Widget::addProgress( ManipulatorPart *, const Progress& prog) {
     m_edit->append( "<b>" + QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
-void Widget::syncProgress( ManipulatorPart* part, int status, int percent )  {
+void Widget::syncProgress( ManipulatorPart * part, int status, int )  {
 
     OverViewProgressEntry* it;
     for ( it = m_messageList.first(); it; it = m_messageList.next() )  {
@@ -101,7 +101,7 @@ void Widget::syncProgress( ManipulatorPart* part, int status, int percent )  {
     test->show();
 }
 
-void Widget::addError( const UDI&, const Error& prog) {
+void Widget::addError( Konnector *, const Error& prog) {
     m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
 void Widget::addError( ManipulatorPart*, const Error& prog) {

@@ -144,13 +144,13 @@ void ManipulatorPart::connectPartError( const char* slot )
 
 void ManipulatorPart::connectKonnectorProgress( const char* slot )
 {
-    connect( core(), SIGNAL(konnectorProgress(const UDI&, const Progress& ) ),
+    connect( core(), SIGNAL(konnectorProgress( Konnector *, const Progress& ) ),
              slot );
 }
 
 void ManipulatorPart::connectKonnectorError( const char* slot )
 {
-    connect( core(), SIGNAL( konnectorError( const UDI &, const Error & ) ),
+    connect( core(), SIGNAL( konnectorError( Konnector *, const Error & ) ),
              slot );
 }
 
@@ -166,12 +166,12 @@ void ManipulatorPart::connectProfileChanged( const char* slot )
 
 void ManipulatorPart::connectKonnectorChanged( const char* slot )
 {
-    connect( core(), SIGNAL( konnectorChanged( const UDI & ) ), slot );
+    connect( core(), SIGNAL( konnectorChanged( Konnector * ) ), slot );
 }
 
 void ManipulatorPart::connectKonnectorDownloaded( const char* slot )
 {
-    connect( core(), SIGNAL(konnectorDownloaded(const UDI&, Syncee::PtrList ) ),
+    connect( core(), SIGNAL(konnectorDownloaded( Konnector *, Syncee::PtrList ) ),
              slot );
 }
 

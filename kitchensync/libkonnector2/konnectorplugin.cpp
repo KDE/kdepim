@@ -13,44 +13,34 @@ Konnector::~Konnector()
 {
 }
 
-void Konnector::setUDI( const QString& udi )
-{
-    m_udi = udi;
-}
-
-QString Konnector::udi() const
-{
-    return m_udi;
-}
-
 void Konnector::add( const QString& res )
 {
-    m_adds << res;
+    m_resources << res;
 }
 
 void Konnector::remove( const QString& res )
 {
-    m_adds.remove( res );
+    m_resources.remove( res );
 }
 
 QStringList Konnector::resources() const
 {
-    return m_adds;
+    return m_resources;
 }
 
 bool Konnector::isConnected() const
 {
-    return  info().isConnected();
+    return info().isConnected();
 }
 
 void Konnector::progress( const Progress& prog )
 {
-    emit sig_progress( m_udi, prog );
+    emit sig_progress( this, prog );
 }
 
 void Konnector::error( const Error& err )
 {
-    emit sig_error( m_udi, err );
+    emit sig_error( this, err );
 }
 
 ConfigWidget *Konnector::configWidget( const Kapabilities&, QWidget*, const char* )

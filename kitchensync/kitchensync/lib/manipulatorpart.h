@@ -190,10 +190,10 @@ class ManipulatorPart : public KParts::Part
     /* ManipulatorPart* part, const Error& */
     void connectPartError( const char* slot );
 
-    /* const QString& udi,const Progress& */
+    /* Konnector *,const Progress& */
     void connectKonnectorProgress(const char* slot );
 
-    /* const QString& udi, const Error& */
+    /* Konnector *, const Error& */
     void connectKonnectorError( const char* slot );
 
     /* ManipulatorPart*,int status,int prog */
@@ -202,10 +202,10 @@ class ManipulatorPart : public KParts::Part
     /* const Profile& */
     void connectProfileChanged( const char* slot );
 
-    /* const UDI& */
+    /* Konnector * */
     void connectKonnectorChanged( const char* slot );
 
-    /* const UDI&,Syncee::PtrList */
+    /* Konnector *,Syncee::PtrList */
     void connectKonnectorDownloaded( const char* slot );
 
     /* connectStartSync */

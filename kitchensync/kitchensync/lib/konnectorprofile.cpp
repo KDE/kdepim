@@ -9,92 +9,133 @@ using namespace KSync;
 KonnectorProfile::KonnectorProfile( const QString& name,
                                     const QString& icon,
                                     const Device& dev )
-    : m_name( name), m_icon( icon ),  m_dev( dev )
+    : m_name( name), m_icon( icon ),  m_dev( dev ), m_konnector( 0 )
 {
     m_uid = kapp->randomString(8 );
     m_wasLoaded = false;
 }
-KonnectorProfile::KonnectorProfile() {
+
+KonnectorProfile::KonnectorProfile()
+  : m_konnector( 0 )
+{
     m_uid = kapp->randomString( 8 );
     m_wasLoaded = false;
 }
-KonnectorProfile::KonnectorProfile( const KonnectorProfile& prof ) {
+
+KonnectorProfile::KonnectorProfile( const KonnectorProfile& prof )
+{
     (*this) = prof;
 }
-KonnectorProfile::~KonnectorProfile() {
 
+KonnectorProfile::~KonnectorProfile()
+{
 }
-bool KonnectorProfile::operator==( const KonnectorProfile& other ) {
+
+bool KonnectorProfile::operator==( const KonnectorProfile& other )
+{
     if ( m_uid != other.m_uid ) return false;
-    if ( m_udi != other.m_udi ) return false;
+    if ( m_konnector != other.m_konnector ) return false;
     if ( m_name != other.m_name ) return false;
     if ( !(m_dev == other.m_dev) ) return false; // fixme
 
     return true;
 }
-bool KonnectorProfile::operator==( const KonnectorProfile& other ) const{
-    if (m_uid != other.m_uid ) return false;
-    if (m_udi != other.m_udi ) return false;
-    if (m_name != other.m_name ) return false;
+
+bool KonnectorProfile::operator==( const KonnectorProfile& other ) const
+{
+    if ( m_uid != other.m_uid ) return false;
+    if ( m_konnector != other.m_konnector ) return false;
+    if ( m_name != other.m_name ) return false;
     //if (!(m_dev == other.m_dev) ) return false; fixme const
 
     return true;
 }
-KonnectorProfile &KonnectorProfile::operator=( const KonnectorProfile& other ) {
+
+KonnectorProfile &KonnectorProfile::operator=( const KonnectorProfile& other )
+{
     m_name = other.m_name;
     m_icon = other.m_icon;
     m_dev = other.m_dev;
     m_uid = other.m_uid;
-    m_udi = other.m_udi;
+    m_konnector = other.m_konnector;
     m_caps = other.m_caps;
     m_wasLoaded = other.m_wasLoaded;
 
     return *this;
 }
-QString KonnectorProfile::uid() const {
+
+QString KonnectorProfile::uid() const
+{
     return m_uid;
 }
-QString KonnectorProfile::name() const {
+
+QString KonnectorProfile::name() const
+{
     return m_name;
 }
-QString KonnectorProfile::icon() const {
+
+QString KonnectorProfile::icon() const
+{
     return m_icon;
 }
-Device KonnectorProfile::device() const {
+
+Device KonnectorProfile::device() const
+{
     return m_dev;
 }
-QString KonnectorProfile::udi() const {
-    return m_udi;
+
+Konnector *KonnectorProfile::konnector() const
+{
+    return m_konnector;
 }
-Kapabilities KonnectorProfile::kapabilities() const {
+
+Kapabilities KonnectorProfile::kapabilities() const
+{
     return m_caps;
 }
-bool KonnectorProfile::wasLoaded() const {
+
+bool KonnectorProfile::wasLoaded() const
+{
     return m_wasLoaded;
 }
 
-void KonnectorProfile::setUid( const QString& uid ) {
+void KonnectorProfile::setUid( const QString& uid )
+{
     m_uid = uid;
 }
-void KonnectorProfile::setName( const QString& name ) {
+
+void KonnectorProfile::setName( const QString& name )
+{
     m_name = name;
 }
-void KonnectorProfile::setIcon( const QString& icon ) {
+
+void KonnectorProfile::setIcon( const QString& icon )
+{
     m_icon = icon;
 }
-void KonnectorProfile::setDevice( const Device& dev ) {
+
+void KonnectorProfile::setDevice( const Device& dev )
+{
     m_dev = dev;
 }
-void KonnectorProfile::setUdi( const QString& udi ) {
-    m_udi = udi;
+
+void KonnectorProfile::setKonnector( Konnector *k )
+{
+    m_konnector = k;
 }
-void KonnectorProfile::setKapabilities( const Kapabilities& caps ) {
+
+void KonnectorProfile::setKapabilities( const Kapabilities& caps )
+{
     m_caps = caps;
 }
-bool KonnectorProfile::isValid()const {
+
+bool KonnectorProfile::isValid() const
+{
     return !m_dev.identify().stripWhiteSpace().isEmpty();
 }
-void KonnectorProfile::saveToConfig( KConfig* config ) const{
+
+void KonnectorProfile::saveToConfig( KConfig* config ) const
+{
     config->setGroup(m_uid );
     config->writeEntry("Name", m_name );
     config->writeEntry("Icon", m_icon );
@@ -104,12 +145,15 @@ void KonnectorProfile::saveToConfig( KConfig* config ) const{
     config->writeEntry("Vendor", m_dev.vendor() );
     config->writeEntry("DevName", m_dev.name() );
     config->writeEntry("Lib", m_dev.library() );
+#if fixsaveconfig
     config->writeEntry("UDI", udi() );
+#endif
 
     saveKaps( config );
-
 }
-void KonnectorProfile::saveKaps( KConfig* conf ) const{
+
+void KonnectorProfile::saveKaps( KConfig* conf ) const
+{
     //let's save the Kapabilities object
     conf->writeEntry("Meta", m_caps.isMetaSyncingEnabled() );
     conf->writeEntry("Push", m_caps.supportsPushSync() );
@@ -145,7 +189,9 @@ void KonnectorProfile::saveKaps( KConfig* conf ) const{
     }
     conf->writeEntry("Extras", Extras );
 }
-void KonnectorProfile::loadFromConfig( KConfig* conf ) {
+
+void KonnectorProfile::loadFromConfig( KConfig* conf )
+{
     m_uid = conf->group();
     m_icon = conf->readEntry("Icon");
     m_name = conf->readEntry("Name");
@@ -158,14 +204,18 @@ void KonnectorProfile::loadFromConfig( KConfig* conf ) {
     lib = conf->readEntry("Lib");
     m_dev = Device( name, grp,  vend,  lib,  ident );
 
+#if fixloadconfig
     // get the udi
     QString udi = conf->readEntry("UDI");
     if (!udi.isEmpty() )
         m_wasLoaded = true;
+#endif
 
     m_caps = readKaps( conf );
 }
-Kapabilities KonnectorProfile::readKaps( KConfig* conf) {
+
+Kapabilities KonnectorProfile::readKaps( KConfig* conf )
+{
     Kapabilities caps;
     bool dummy;
     caps.setMetaSyncingEnabled( conf->readBoolEntry("Meta") );
@@ -194,7 +244,6 @@ Kapabilities KonnectorProfile::readKaps( KConfig* conf) {
         caps.setNeedsModelName( true );
         caps.setModelName( str );
     }
-
 
     caps.setCurrentConnectionMode( conf->readEntry("ConMode") );
 

@@ -4,6 +4,7 @@
 
 #include <konnectormanager.h>
 #include <konnectorinfo.h>
+#include <konnectorplugin.h>
 
 #include <mainwindow.h>
 
@@ -41,10 +42,10 @@ OverviewPart::OverviewPart(QWidget *parent, const char *name,
   connectPartChange(SLOT(slotPartChanged(ManipulatorPart*) ) );
   connectPartProgress(SLOT(slotPartProgress(ManipulatorPart*, const Progress& ) ) );
   connectPartError(SLOT(slotPartError(ManipulatorPart*, const Error& ) ) );
-  connectKonnectorProgress(SLOT(slotKonnectorProgress(const UDI&, const Progress& ) ) );
-  connectKonnectorError(SLOT(slotKonnectorError(const UDI&, const Error& ) ) );
+  connectKonnectorProgress(SLOT(slotKonnectorProgress(Konnector *, const Progress& ) ) );
+  connectKonnectorError(SLOT(slotKonnectorError(Konnector *, const Error& ) ) );
   connectProfileChanged(SLOT(slotProfileChanged(const Profile& ) ) );
-  connectKonnectorChanged(SLOT(slotKonnectorChanged(const UDI& ) ) );
+  connectKonnectorChanged(SLOT(slotKonnectorChanged( Konnector * ) ) );
   connectSyncProgress(SLOT(slotSyncProgress( ManipulatorPart*, int, int) ) );
   connectStartSync(SLOT(slotStartSync() ) );
   connectDoneSync(SLOT(slotDoneSync() ) );
@@ -115,31 +116,31 @@ void OverviewPart::slotPartError( ManipulatorPart* part, const Error& err)
     m_widget->addError( part, err );
 }
 
-void OverviewPart::slotKonnectorProgress(const UDI& udi, const Progress& prog)
+void OverviewPart::slotKonnectorProgress( Konnector *k, const Progress& prog)
 {
-    kdDebug(5210) << "KonnectorProgress: " << udi << " " << prog << endl;
-    m_widget->addProgress( udi, prog );
+    kdDebug(5210) << "KonnectorProgress: " << prog << endl;
+    m_widget->addProgress( k, prog );
 }
 
-void OverviewPart::slotKonnectorError(const UDI& udi, const Error& prog)
+void OverviewPart::slotKonnectorError( Konnector *k, const Error& prog)
 {
-    kdDebug(5210) << "KonnectorError : " << udi << " " << prog << endl;
-    m_widget->addError( udi, prog );
+    kdDebug(5210) << "KonnectorError : " << prog << endl;
+    m_widget->addError( k, prog );
 }
 
 void OverviewPart::slotProfileChanged(const Profile& )
 {
     m_widget->setProfile( core()->currentProfile() );
-    slotKonnectorChanged( core()->konnectorProfile().udi() );
+    slotKonnectorChanged( core()->konnectorProfile().konnector() );
     kdDebug(5210) << "Profile changed " << endl;
 }
 
-void OverviewPart::slotKonnectorChanged(const UDI& udi)
+void OverviewPart::slotKonnectorChanged( Konnector * )
 {
     KonnectorProfile prof = core()->konnectorProfile();
-    QPixmap pix = DesktopIcon( core()->konnectorManager()->info( prof.udi() ).iconName(), KIcon::User );
+    QPixmap pix = DesktopIcon( prof.konnector()->info().iconName(), KIcon::User );
     m_widget->setProfile( prof.name(), pix );
-    kdDebug(5210) << "Konnector Changed " << udi << endl;
+    kdDebug(5210) << "Konnector Changed " << endl;
 }
 
 void OverviewPart::slotSyncProgress( ManipulatorPart* part, int status, int percent )

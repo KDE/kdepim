@@ -15,34 +15,40 @@
 using namespace KSync;
 
 namespace {
-    const int AREA = 5210;
 
-    void setCurrent( const QString& str, QComboBox* box, bool insert = true ) {
-        if (str.isEmpty() ) return;
-        uint b = box->count();
-        for ( uint i = 0; i < b; i++ ) {
-            if ( box->text(i) == str ) {
-                box->setCurrentItem(i );
-                return;
-            }
+const int AREA = 5210;
+
+void setCurrent( const QString& str, QComboBox* box, bool insert = true )
+{
+    if ( str.isEmpty() ) return;
+    uint b = box->count();
+    for ( uint i = 0; i < b; i++ ) {
+        if ( box->text(i) == str ) {
+            box->setCurrentItem( i );
+            return;
         }
-        if (!insert ) return;
-
-        box->insertItem( str );
-        box->setCurrentItem( b );
     }
+    if ( !insert ) return;
+
+    box->insertItem( str );
+    box->setCurrentItem( b );
+}
+
 }
 
 
-KonnectorWizard::KonnectorWizard(KonnectorManager* manager)
-    : KWizard(0, "wizard", true), m_manager( manager ) {
+KonnectorWizard::KonnectorWizard( KonnectorManager *manager )
+    : KWizard( 0, "wizard", true ), m_manager( manager )
+{
     m_isEdit = false;
     m_conf = 0;
     initUI();
 }
-KonnectorWizard::KonnectorWizard(KonnectorManager* manager,
-                                 const KonnectorProfile& prof)
-    : KWizard(0, "wizard", true ), m_manager( manager) {
+
+KonnectorWizard::KonnectorWizard( KonnectorManager* manager,
+                                  const KonnectorProfile &prof )
+    : KWizard( 0, "wizard", true ), m_manager( manager)
+{
     m_isEdit = true;
     m_kaps = prof.kapabilities();
     m_conf = 0;
@@ -55,26 +61,32 @@ KonnectorWizard::KonnectorWizard(KonnectorManager* manager,
     kdDebug(AREA) << "Current entry is now  " << m_intro->cmbDevice->currentText() << endl;
     slotKonChanged( m_intro->cmbDevice->currentText() );
 }
-KonnectorWizard::~KonnectorWizard() {
+
+KonnectorWizard::~KonnectorWizard()
+{
 }
-KonnectorProfile KonnectorWizard::profile()const {
+
+KonnectorProfile KonnectorWizard::profile() const
+{
     KonnectorProfile prof;
-    if (m_conf) {
+    if ( m_conf ) {
         prof.setKapabilities( m_conf->capabilities() );
-        prof.setDevice( byString( m_intro->cmbDevice->currentText()   ) );
+        prof.setDevice( byString( m_intro->cmbDevice->currentText() ) );
         prof.setName( m_outro->lneName->text() );
     }
 
     return prof;
 }
+
 /*
  * let's add some pages
  * and make the Configure widget be kewl
  * basicly we need to recreate it on
  *
  */
-void KonnectorWizard::initUI() {
-    m_conf = 0l;
+void KonnectorWizard::initUI()
+{
+    m_conf = 0;
     m_intro = new KonnectorProfileWizardIntro();
     m_outro = new KonnectorWizardOutro();
     addPage( m_intro, "Profile");
@@ -92,8 +104,9 @@ void KonnectorWizard::initUI() {
     }
     // connect to textchanges
     connect(m_intro->cmbDevice, SIGNAL(activated(const QString&) ),
-            this, SLOT(slotKonChanged(const QString&) ) );
+            SLOT(slotKonChanged(const QString&) ) );
 }
+
 /*
  * If the Device Combobox changed we need to update the
  * Configuration Tab
@@ -102,7 +115,8 @@ void KonnectorWizard::initUI() {
  * giving as parameter
  * then recreate the widget
  */
-void KonnectorWizard::slotKonChanged( const QString& str) {
+void KonnectorWizard::slotKonChanged( const QString& str)
+{
     if ( str == m_current )  // the selection was not changed
         return;
     if ( str == i18n("Please choose a Konnector") ) {
@@ -119,18 +133,20 @@ void KonnectorWizard::slotKonChanged( const QString& str) {
     Device dev = byString( str );
 
     // load the Konnector for getting a ConfigureWidget
-    QString udi = m_manager->load( dev );
-    if (udi.isEmpty() ) return;
+    Konnector *k = m_manager->load( dev );
+    if ( !k ) return;
 
-    if(!m_isEdit)
-        m_conf = m_manager->configWidget(udi, this, "config"); // never 0l
+    if( !m_isEdit )
+        m_conf = m_manager->configWidget( k, this, "config" ); // never 0
     else
-        m_conf = m_manager->configWidget(udi, m_kaps,this,"config");
+        m_conf = m_manager->configWidget( k, m_kaps, this, "config" );
 
     insertPage(m_conf, i18n("Configure"), 1 );
-    m_manager->unload( udi );
+    m_manager->unload( k );
 }
-Device KonnectorWizard::byString( const QString& str )const {
+
+Device KonnectorWizard::byString( const QString& str ) const
+{
     return m_devices[str];
 }
 

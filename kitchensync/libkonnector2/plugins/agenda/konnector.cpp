@@ -74,7 +74,6 @@ KSync::KonnectorInfo AgendaPlugin::info()const {
                           QString::fromLatin1("AgendaVr3"),  // same as the .desktop file
                           m_socket->metaName(),
                           "agenda", // icon name
-                          udi(),
                           m_socket->isConnected() );
 }
 void AgendaPlugin::download( const QString& ) {
@@ -93,7 +92,7 @@ void AgendaPlugin::write( Syncee::PtrList lst ) {
     m_socket->write( lst );
 }
 void AgendaPlugin::slotSync( Syncee::PtrList lst) {
-    emit sync( udi(), lst );
+    emit sync( this, lst );
 }
 void AgendaPlugin::slotError( const Error& err ) {
     error( err );

@@ -5,44 +5,46 @@
 #include <qstring.h>
 
 namespace KSync {
-    /**
-     * Some informations about a konnector....
-     */
-    class KonnectorInfo {
-    public:
-        KonnectorInfo( const QString& name = QString::null,
-                       const QIconSet& = QIconSet(),
-                       const QString& id       = QString::null,
-                       const QString& metaId   = QString::null,
-                       const QString& iconName = QString::null,
-                       const QString& udi      = QString::null,
-                       bool isCon = false);
 
-        ~KonnectorInfo();
+/**
+ * Some informations about a konnector....
+ */
+class KonnectorInfo
+{
+  public:
+    KonnectorInfo( const QString& name = QString::null,
+                   const QIconSet& = QIconSet(),
+                   const QString& id       = QString::null,
+                   const QString& metaId   = QString::null,
+                   const QString& iconName = QString::null,
+                   bool isCon = false);
 
-        bool operator==( const KonnectorInfo& );
+    ~KonnectorInfo();
 
-        QString name()const;
-        QIconSet iconSet()const;
-        QString id()const;
-        QString metaId()const;
-        QString iconName()const;
-        QString udi()const;
-        bool isConnected()const;
-    private:
-        QString m_na;
-        QIconSet m_icon;
-        QString m_id;
-        QString m_meta;
-        QString m_name;
-        QString m_udi;
-        bool m_con : 1;
-        struct Data;
-        Data *data;
-        class Private;
-        Private* d;
-    };
+    bool operator==( const KonnectorInfo& );
+
+    QString name() const;
+    QIconSet iconSet() const;
+    QString id() const;
+    QString metaId() const;
+    QString iconName() const;
+    bool isConnected() const;
+
+  private:
+    QString m_na;
+    QIconSet m_icon;
+    QString m_id;
+    QString m_meta;
+    QString m_name;
+    bool m_con : 1;
+
+    struct Data;
+    Data *data;
+
+    class Private;
+    Private* d;
+};
+
 }
-
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef KSYNC_OVERVIEWPART
-#define KSYNC_OVERVIEWPART
+#ifndef KSYNC_OVERVIEWPART_H
+#define KSYNC_OVERVIEWPART_H
 
 #include <klocale.h>
 #include <qpixmap.h>
@@ -17,6 +17,7 @@ namespace KSync {
 		 QObject *object=0, const char *name2 = 0, // make GenericFactory loading possible
 		 const QStringList & = QStringList() );
     virtual ~OverviewPart();
+
     static KAboutData *createAboutData();
 
     QString type()const;
@@ -32,17 +33,18 @@ namespace KSync {
       void slotPartProgress( ManipulatorPart* part, const Progress& );
       void slotPartError( ManipulatorPart*, const Error& );
       void slotSyncProgress( ManipulatorPart*, int, int );
-      void slotKonnectorProgress(const UDI&, const Progress& );
-      void slotKonnectorError(const UDI&, const Error& );
+      void slotKonnectorProgress( Konnector *, const Progress& );
+      void slotKonnectorError( Konnector *, const Error& );
       void slotProfileChanged(const Profile& );
-      void slotKonnectorChanged(const UDI& );
+      void slotKonnectorChanged( Konnector * );
       void slotStartSync();
       void slotDoneSync();
+
   private:
       QPixmap m_pixmap;
       OverView::Widget* m_widget;
   };
-};
 
+}
 
 #endif

@@ -15,7 +15,6 @@ namespace KSync {
     class Profile;
     class Error;
     class Progress;
-    typedef QString UDI;
 
 namespace OverView {
 
@@ -31,9 +30,9 @@ namespace OverView {
 
         void setProfile( const Profile& );
         void setProfile( const QString&,const QPixmap& pix );
-        void addProgress( const UDI&, const Progress& );
+        void addProgress( Konnector *, const Progress& );
         void addProgress( ManipulatorPart*, const Progress& );
-        void addError( const UDI&, const Error& );
+        void addError( Konnector *, const Error& );
         void addError( ManipulatorPart*, const Error& );
 	void syncProgress( ManipulatorPart*, int, int);
         void startSync();

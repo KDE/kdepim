@@ -38,8 +38,6 @@ class KonnectorInfo;
 class Kapabilities;
 class ConfigWidget;
 
-typedef QString UDI;
-
 /**
  *  The base class of all plugins. The functions are
  *  the same as in konnector
@@ -52,31 +50,28 @@ class Konnector : public QObject
                const QStringList &args = QStringList() );
     virtual ~Konnector();
 
-    virtual void setUDI( const QString & );
-    virtual QString udi() const;
     virtual Kapabilities capabilities() = 0;
     virtual void setCapabilities( const Kapabilities &kaps ) = 0;
     virtual bool startSync() = 0;
-    virtual bool startRestore( const QString& path ) = 0;
-    virtual bool startBackup( const QString& path ) = 0;
+    virtual bool startRestore( const QString &path ) = 0;
+    virtual bool startBackup( const QString &path ) = 0;
     virtual bool connectDevice() = 0;
     virtual bool disconnectDevice() = 0;
 
     virtual KonnectorInfo info() const = 0;
 
-    virtual ConfigWidget* configWidget( const Kapabilities &, QWidget *parent,
+    virtual ConfigWidget *configWidget( const Kapabilities &, QWidget *parent,
                                         const char *name );
-    virtual ConfigWidget* configWidget( QWidget *parent, const char *name );
+    virtual ConfigWidget *configWidget( QWidget *parent, const char *name );
 
-    virtual void add( const QString& res );
-    virtual void remove( const QString& res );
+    virtual void add( const QString &res );
+    virtual void remove( const QString &res );
     virtual QStringList resources() const;
-
 
     /**
      * can be a file, a resource, a Syncee...
      */
-    virtual void download( const QString& resource ) = 0;
+    virtual void download( const QString &resource ) = 0;
 
     /**
      * the Syncees that are supported builtIn
@@ -86,8 +81,8 @@ class Konnector : public QObject
     void doWrite( Syncee::PtrList );
 
   protected:
-    void progress( const Progress& );
-    void error( const Error& );
+    void progress( const Progress & );
+    void error( const Error & );
 
     //virtual QString metaId() const = 0;
 
@@ -99,14 +94,13 @@ class Konnector : public QObject
 //    virtual void slotWrite(KOperations::ValueList ) = 0;
 
   signals:
-    void sync( const UDI&,  Syncee::PtrList );
-    void sig_progress( const UDI&, const Progress& );
-    void sig_error( const UDI&, const Error& );
-    void sig_downloaded( const UDI&, Syncee::PtrList );
+    void sync( Konnector *,  Syncee::PtrList );
+    void sig_progress( Konnector *, const Progress & );
+    void sig_error( Konnector *, const Error & );
+    void sig_downloaded( Konnector *, Syncee::PtrList );
 
   private:
-    QStringList m_adds;
-    QString m_udi;
+    QStringList m_resources;
     bool m_isCon : 1;
 };
 
