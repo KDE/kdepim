@@ -129,13 +129,7 @@ void KSyncMainWindow::initPlugins()
 	continue;
       addModPart( plugin );
   }
-  /*
-  OrganizerPart *org = new OrganizerPart(this, "wallah" );
 
-  OverviewPart *view = new OverviewPart(this, "hallaw" );
-  addModPart(view);
-  addModPart(org);
-  */
 }
 
 void KSyncMainWindow::addModPart(ManipulatorPart *part)
@@ -170,6 +164,7 @@ void KSyncMainWindow::initSystray( void ) {
 
 void KSyncMainWindow::slotSync()
 {
+    /*
     kdDebug(5210) << "slotSync " << endl;
     if (m_currentId.isEmpty() ) {
         kdDebug(5210) << "Current Id empty" << endl;
@@ -186,6 +181,7 @@ void KSyncMainWindow::slotSync()
     }
     kdDebug(5210) << "Ok starting sync" << endl;
     m_konnector->startSync( m_currentId );
+    */
 }
 void KSyncMainWindow::slotBackup() {
 }
@@ -194,6 +190,7 @@ void KSyncMainWindow::slotRestore() {
 }
 
 void KSyncMainWindow::slotConfigure() {
+    /*
   ConfigureDialog *dlg = new ConfigureDialog(this);
   ManipulatorPart *part = 0l;
   // get the kapabilities and update with the ones from the Profile
@@ -223,6 +220,7 @@ void KSyncMainWindow::slotConfigure() {
        part->slotConfigOk();
      }
   }
+    */
 }
 
 void KSyncMainWindow::slotActivated(ManipulatorPart *part) {
@@ -232,7 +230,7 @@ void KSyncMainWindow::slotActivated(ManipulatorPart *part) {
 }
 
 void KSyncMainWindow::slotQuit() {
-  close();
+    close();
 }
 KSyncSystemTray* KSyncMainWindow::tray()
 {
@@ -254,6 +252,7 @@ void KSyncMainWindow::initKonnector()
 {
     kdDebug(5210) << "init konnector" << endl;
     m_konnector = new KonnectorManager(this,  "Konnector");
+
     connect(m_konnector,SIGNAL(wantsToSync(const QString&, Syncee::PtrList ) ),
             this, SLOT(slotSync( const QString&,  Syncee::PtrList) ) );
 
@@ -272,12 +271,6 @@ void KSyncMainWindow::initKonnector()
         kdDebug(5210) << "Vendor " << (*it).vendor() << endl;
         kdDebug(5210) << "UNIX " << (*it).id() << endl;
         if ( (*it).id() == QString::fromLatin1("Opie-1") ) {
-            QString tmp = m_konnector->registerKonnector( (*it) );
-            if ( !tmp.isEmpty() ) { // loaded successfull
-                m_currentId = tmp;
-                setupKonnector( (*it), "Opie-1" );
-
-            }
         }
     }
 }
@@ -346,33 +339,10 @@ void KSyncMainWindow::slotKonnectorError( const QString& udi,
 // It's fairly easy cause we only allow one at a time
 void KSyncMainWindow::setupKonnector( const Device& udi,  const QString &id )
 {
-    bool config=false;
-    Kapabilities cap;
-    KConfig* conf = kapp->config();
-    conf->setGroup("Opie-Konnector");
-    QString name = conf->readEntry("name",  "Opie StandardProfile");
-    if ( !name.isEmpty() ) { // we already configured
-        cap.setSrcIP( conf->readEntry("srcIP") );
-        cap.setDestIP( conf->readEntry("destIP") );
-        cap.setUser( conf->readEntry("user") );
-        cap.setPassword( conf->readEntry("pass") );
-        cap.setCurrentPort( conf->readNumEntry("port") );
-        // model specific
-        cap.setCurrentModel( conf->readEntry("model") );
-        cap.setConnectionMode( conf->readEntry("mode") );
-        // meta
-        cap.setMetaSyncingEnabled( conf->readBoolEntry("meta") );
-        cap.setSupportsPushSync( conf->readBoolEntry("push") );
-        // device specific later
-        config = true;
-        kdDebug(5210) << "Config true" << endl;
-        m_konnector->setCapabilities( m_currentId,  cap );
-    }
-    m_profile = Profile(udi, cap, "Opie-1",  config); // hard code for now
 }
 void KSyncMainWindow::saveCurrentProfile()
 {
-    KConfig *cfg = kapp->config();
+/*    KConfig *cfg = kapp->config();
     Kapabilities cap = m_profile.caps();
     cfg->setGroup("Opie-Konnector");
     cfg->writeEntry( "name",  "Opie StandardProfile");
@@ -385,6 +355,6 @@ void KSyncMainWindow::saveCurrentProfile()
     cfg->writeEntry( "mode",  cap.currentConnectionMode() );
     cfg->writeEntry( "meta",  cap.isMetaSyncingEnabled() );
     cfg->writeEntry( "push",  cap.supportsPushSync() );
-
+*/
 }
 #include "ksync_mainwindow.moc"

@@ -2,7 +2,11 @@ INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnec
 
 lib_LTLIBRARIES = libkitchensyncui.la
 
-libkitchensyncui_la_SOURCES = partbar.cc manipulatorpart.cc ksync_configuredialog.cc ksync_systemtray.cc ksync_mainwindow.cc ksync_configpart.cc ksync_profile.cc
+libkitchensyncui_la_SOURCES = partbar.cc manipulatorpart.cc \
+    ksync_configuredialog.cc \
+    ksync_systemtray.cc ksync_mainwindow.cc \
+    ksync_configpart.cc ksync_profile.cc \
+    manpartservice.cpp profilemanager.cpp
 libkitchensyncui_la_LDFLAGS = $(all_libraries) -no-undefined 
 libkitchensyncui_la_LIBADD = $(LIB_KPARTS) $(top_builddir)/kitchensync/libkonnector/libkonnector.la
 
