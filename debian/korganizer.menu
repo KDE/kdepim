@@ -4,5 +4,5 @@
 	hints="KDE"\
 	kderemove="y"\
 	title="KOrganizer"\
-	command=korganizer
+	command=/usr/bin/korganizer
 
