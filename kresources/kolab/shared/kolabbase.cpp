@@ -205,30 +205,22 @@ QDomDocument KolabBase::domTree()
 
 QString KolabBase::dateTimeToString( const QDateTime& time )
 {
-  return time.toString( "yyyyMMddhhmmss" );
+  return time.toString( Qt::ISODate );
 }
 
 QString KolabBase::dateToString( const QDate& date )
 {
-  return date.toString( "yyyyMMdd" );
+  return date.toString( Qt::ISODate );
 }
 
 QDateTime KolabBase::stringToDateTime( const QString& date )
 {
-  int h = date.mid( 8, 2 ).toInt();
-  int m = date.mid( 10, 2 ).toInt();
-  int s = date.mid( 12, 2 ).toInt();
-
-  return QDateTime( stringToDate( date ), QTime( h, m, s ) );
+  return QDateTime::fromString( date, Qt::ISODate );
 }
 
 QDate KolabBase::stringToDate( const QString& date )
 {
-  int y = date.left( 4 ).toInt();
-  int m = date.mid( 4, 2 ).toInt();
-  int d = date.mid( 6, 2 ).toInt();
-
-  return QDate( y, m, d );
+  return QDate::fromString( date, Qt::ISODate );
 }
 
 QString KolabBase::sensitivityToString( Sensitivity s )
@@ -253,13 +245,13 @@ KolabBase::Sensitivity KolabBase::stringToSensitivity( const QString& s )
 
 QString KolabBase::colorToString( const QColor& color )
 {
-  // Color is in the format "0xRRGGBB"
-  return "0x" + color.name().mid( 1 );
+  // Color is in the format "#RRGGBB"
+  return color.name();
 }
 
 QColor KolabBase::stringToColor( const QString& s )
 {
-  return QColor( "#" + s.mid( 2 ) );
+  return QColor( s );
 }
 
 void KolabBase::writeString( QDomElement& element, const QString& tag,
