@@ -125,8 +125,9 @@ install: build
 
 	# symlinks must be relative
 	find debian/tmp -name common -type l \
-		-exec echo REMOVING SYMLINK\: \{\} \; \
-		-exec rm \{\} \;
+		-exec echo CORRECTING SYMLINK\: \{\} \; \
+		-exec rm \{\} \; \
+		-exec ln -s ../common \{\} \;
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -160,7 +161,7 @@ binary-arch: build install
 	dh_fixperms -a
 	dh_makeshlibs -a -V
 	dh_installdeb -a
-	dh_shlibdeps -a -ldebian/kalarm/usr/lib:debian/kdepim4/usr/lib:debian/korganizer/usr/lib:debian/kpilot/usr/lib
+	dh_shlibdeps -a -ldebian/kalarmd/usr/lib:debian/kgantt/usr/lib:debian/korganizer/usr/lib:debian/kpilot/usr/lib:debian/libkcal2/usr/lib
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a

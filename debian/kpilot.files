@@ -1,7 +1,5 @@
 usr/bin/kpilot
 usr/bin/kpilotDaemon
-usr/lib/libkpilot.la
-usr/lib/libkpilot.so.*
 usr/lib/kde3/libabbrowserconduit.la
 usr/lib/kde3/libabbrowserconduit.so.*
 usr/lib/kde3/libexpenseconduit.la
@@ -14,6 +12,8 @@ usr/lib/kde3/libpopmailconduit.la
 usr/lib/kde3/libpopmailconduit.so.*
 usr/lib/kde3/libvcalconduit.la
 usr/lib/kde3/libvcalconduit.so.*
+usr/lib/libkpilot.la
+usr/lib/libkpilot.so.*
 usr/share/applnk/Utilities/kpilot.desktop
 usr/share/applnk/Utilities/kpilotdaemon.desktop
 usr/share/apps/kpilot

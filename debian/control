@@ -2,12 +2,12 @@ Source: kdepim
 Section: x11
 Priority: optional
 Maintainer: Christopher L Cheney <ccheney@debian.org>
-Build-Depends: debhelper (>> 3.0.0), automake, bison, byacc, flex, gettext, kdelibs4-dev, libfam-dev, libpisock-dev, libqt3-mt-dev, libtiff3g-dev, texinfo, xlibs-dev, zlib1g-dev
+Build-Depends: debhelper (>> 3.0.0), automake1.5, bison, byacc, flex, gettext, kdelibs4-dev, libfam-dev, libpisock-dev, libqt3-mt-dev, libtiff3g-dev, texinfo, xlibs-dev, zlib1g-dev
 Standards-Version: 3.5.6.0
 
 Package: kdepim
 Architecture: all
-Depends: kalarm (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), kdepim4 (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version})
+Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), kgantt (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version})
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for
  the K Desktop Enviromnent (KDE).
@@ -18,6 +18,13 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Description: KDE alarm message scheduler
  KDE alarm message scheduler.
+
+Package: kalarmd
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE alarm message scheduler daemon
+ KDE alarm message scheduler daemon.
 
 Package: kandy
 Section: utils
@@ -39,19 +46,19 @@ Description: KDE time tracker tool
  KArm is a time tracker for busy people who need to keep track of the amount of
  time they spend on various tasks.
 
-Package: kdepim4
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: KDE Personal Information Management (common libraries)
- This package contains libraries needed for kdepim applications.
-
 Package: kdepim4-dev
 Section: devel
 Architecture: any
-Depends: kdepim4 (= ${Source-Version})
+Depends: kalarmd (= ${Source-Version}), kgantt (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal (= ${Source-Version})
 Description: KDE Personal Information Management (development files)
  This package contains development files needed to compile kdepim applications.
+
+Package: kgantt
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: library to display and manage Gantt diagrams
+ library to display and manage Gantt diagrams
 
 Package: knotes
 Section: utils
@@ -92,3 +99,10 @@ Depends: ${shlibs:Depends}
 Suggests: knotes, korganizer
 Description: KDE Palm Pilot hot-sync tool
  KDE Palm Pilot hot-sync tool.
+
+Package: libkcal2
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: iCalendar and vCalendar library
+ iCalendar and vCalendar library
