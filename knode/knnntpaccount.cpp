@@ -18,11 +18,12 @@
 #include <kstddirs.h>
 
 #include "utilities.h"
+#include "kncollectionviewitem.h"
 #include "knnntpaccount.h"
 
 
 KNNntpAccount::KNNntpAccount()
-  : KNCollection(0), KNServerInfo(), f_etchDescriptions(true)
+  : KNCollection(0), KNServerInfo(), f_etchDescriptions(true), w_asOpen(false)
 {
   l_astNewFetch = QDate::currentDate();
 }
@@ -44,7 +45,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   //u_nsentCount = conf.readNumEntry("unsentCnt", 0);
   f_etchDescriptions = conf.readBoolEntry("fetchDescriptions", true);
   l_astNewFetch = conf.readDateTimeEntry("lastNewFetch").date();
-
+  w_asOpen = conf.readBoolEntry("listItemOpen", false);
   KNServerInfo::readConf(&conf);
 
   if (n_ame.isEmpty() || s_erver.isEmpty() || i_d == -1)
@@ -67,6 +68,8 @@ void KNNntpAccount::saveInfo()
   //conf.writeEntry("unsentCnt", u_nsentCount);
   conf.writeEntry("fetchDescriptions", f_etchDescriptions);
   conf.writeEntry("lastNewFetch", QDateTime(l_astNewFetch));
+  if (l_istItem)
+    conf.writeEntry("listItemOpen", l_istItem->isOpen());
   KNServerInfo::saveConf(&conf);      // save not KNNntpAccount specific settings
 }
 

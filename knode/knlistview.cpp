@@ -268,6 +268,7 @@ void KNListView::keyPressEvent(QKeyEvent *e)
   QListViewItem *i=currentItem();
 
   switch(e->key()) {
+    case Key_Space:
     case Key_Backspace:
     case Key_Delete:
       e->ignore(); // don't eat them

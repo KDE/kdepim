@@ -40,6 +40,7 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     //get
     bool fetchDescriptions()          { return f_etchDescriptions; }
     QDate lastNewFetch()              { return l_astNewFetch; }
+    bool wasOpen()                    { return w_asOpen; }
   
     //set
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
@@ -48,7 +49,8 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
   protected:
     bool f_etchDescriptions;          // use an additional "list newsgroups" command to fetch the newsgroup descriptions
     QDate l_astNewFetch;              // last use of "newgroups"
-      
+    bool w_asOpen;                    // was the server open in the listview on the last shutdown?
+
 };
 
 #endif

@@ -169,6 +169,12 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   //apply configuration
   configChanged();
 
+  // open all accounts that were open on the last shutdown
+  KNNntpAccount *acc;
+  for (acc=knGlobals.accManager->first(); acc; acc=knGlobals.accManager->next())
+    if( acc->wasOpen() && acc->listItem() )
+      acc->listItem()->setOpen(true);
+
   //set the keyboard focus indicator on the first item in the Collection View
   if(c_olView->firstChild())
     c_olView->setCurrentItem(c_olView->firstChild());

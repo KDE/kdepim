@@ -58,6 +58,9 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * 
 
 KNAccountManager::~KNAccountManager()
 {
+  for(KNNntpAccount *a=accList->first(); a; a=accList->next())
+    a->saveInfo();
+
   delete accList;
   delete s_mtp;
 }
@@ -157,7 +160,6 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
 // commit changes on a the caller made
 void KNAccountManager::applySettings(KNNntpAccount *a)
 {
-  a->saveInfo();
   a->updateListItem();
   emit(accountModified(a));
 }
