@@ -288,25 +288,28 @@ bool CryptPlug::hasFeature( Feature flag )
 {
   /* our own plugins are supposed to support everything */
   switch ( flag ) {
-  case Feature_SignMessages:              return true;
-  case Feature_VerifySignatures:          return true;
-  case Feature_EncryptMessages:           return true;
-  case Feature_DecryptMessages:           return true;
-  case Feature_SendCertificates:          return true;
-  case Feature_WarnSignCertificateExpiry: return true;
-  case Feature_WarnSignEmailNotInCertificate: return true;
-  case Feature_PinEntrySettings:          return true;
-  case Feature_StoreMessagesWithSigs:     return true;
-  case Feature_EncryptionCRLs:            return true;
-  case Feature_WarnEncryptCertificateExpiry: return true;
-  case Feature_WarnEncryptEmailNotInCertificate: return true;
-  case Feature_StoreMessagesEncrypted:    return true;
-  case Feature_CheckCertificatePath:      return true;
-  case Feature_CertificateDirectoryService: return false;
-  case Feature_CRLDirectoryService:       return false;
+  case Feature_SignMessages:
+  case Feature_VerifySignatures:
+  case Feature_EncryptMessages:
+  case Feature_DecryptMessages:
+  case Feature_SendCertificates:
+  case Feature_PinEntrySettings:
+  case Feature_StoreMessagesWithSigs:
+  case Feature_EncryptionCRLs:
+  case Feature_StoreMessagesEncrypted:
+  case Feature_CheckCertificatePath:
+    return true;
+  case Feature_WarnSignCertificateExpiry:
+  case Feature_WarnSignEmailNotInCertificate:
+  case Feature_WarnEncryptCertificateExpiry:
+  case Feature_WarnEncryptEmailNotInCertificate:
+     return GPGMEPLUG_PROTOCOL == GPGME_PROTOCOL_CMS;
   /* undefined or not yet implemented: */
-  case Feature_undef:                     return false;
-  default:                                      return false;
+  case Feature_CRLDirectoryService:
+  case Feature_CertificateDirectoryService:
+  case Feature_undef:
+  default:
+    return false;
   }
 }
 
