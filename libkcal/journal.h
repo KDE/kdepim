@@ -25,6 +25,7 @@
 
 #include "incidence.h"
 
+
 namespace KCal {
 
 /**
@@ -37,6 +38,7 @@ class Journal : public Incidence
   
     Journal();
     ~Journal();
+    bool accept( Visitor &v ) { return v.visit(this); }
     bool operator==( const Journal& ) const;
 
     QCString type() const { return "Journal"; }
