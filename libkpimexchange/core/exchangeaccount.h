@@ -26,10 +26,12 @@
 #include <qstring.h>
 
 #include <kurl.h>
+#include <kio/job.h>
 
 namespace KPIM {
 	
-class ExchangeAccount {
+class ExchangeAccount : public QObject {
+  Q_OBJECT
   public:
     ExchangeAccount( QString host, QString account, QString password );
     /** 
@@ -59,10 +61,17 @@ class ExchangeAccount {
 
   private:
     void authenticate( int windowId );
+    void calcFolderURLs();
 
+  private slots:
+    void slotFolderResult( KIO::Job * );
+
+  private:
     QString mHost;
     QString mAccount;
     QString mPassword;
+
+    KURL* mCalendarURL;
 };
 
 }

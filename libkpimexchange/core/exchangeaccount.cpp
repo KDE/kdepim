@@ -20,6 +20,7 @@
 
 #include <qstring.h>
 #include <qapplication.h>
+#include <qdom.h>
 #include <qwidgetlist.h>
 #include <qwidget.h>
 
@@ -28,9 +29,14 @@
 #include <kdebug.h>
 #include <kconfig.h>
 #include <dcopclient.h>
+#include <kcursor.h>
+
 #include <kio/authinfo.h>
+#include <kio/davjob.h>
+#include <kio/job.h>
 
 #include "exchangeaccount.h"
+#include "utils.h"
 
 using namespace KPIM;
 
@@ -39,6 +45,8 @@ ExchangeAccount::ExchangeAccount( QString host, QString account, QString passwor
   mHost = host;
   mAccount = account;
   mPassword = password;
+
+  mCalendarURL = 0;
 }
 
 ExchangeAccount::ExchangeAccount( QString group )
@@ -96,9 +104,13 @@ KURL ExchangeAccount::baseURL()
 
 KURL ExchangeAccount::calendarURL()
 {
-  KURL url = baseURL();
-  url.addPath( "Calendar" );
-  return url;
+  if ( mCalendarURL ) {
+    return *mCalendarURL;
+  } else {
+    KURL url = baseURL();
+    url.addPath( "Calendar" );
+    return url;
+  }
 }
 
 void ExchangeAccount::authenticate( QWidget* window )
@@ -145,4 +157,64 @@ void ExchangeAccount::authenticate( int windowId )
 
   dcopClient->detach();
   delete dcopClient;
+
+  mCalendarURL = 0;
+
+  calcFolderURLs();
+
+  QApplication::setOverrideCursor( KCursor::waitCursor() );
+  do {
+    qApp->processEvents();
+  } while ( !mCalendarURL );
+  QApplication::restoreOverrideCursor();  
 }
+
+void ExchangeAccount::calcFolderURLs()
+{
+  kdDebug() << "Calculating folder URLs" << endl;
+  QDomDocument doc;
+  QDomElement root = addElement( doc, doc, "DAV:", "propfind" );
+  QDomElement prop = addElement( doc, root, "DAV:", "prop" );
+  addElement( doc, prop, "urn:schemas:httpmail:", "calendar" );
+// For later use:
+// urn:schemas:httpmail:contacts Contacts 
+// urn:schemas:httpmail:deleteditems Deleted Items 
+// urn:schemas:httpmail:drafts Drafts 
+// urn:schemas:httpmail:inbox Inbox 
+// urn:schemas:httpmail:journal Journal 
+// urn:schemas:httpmail:notes Notes 
+// urn:schemas:httpmail:outbox Outbox 
+// urn:schemas:httpmail:sentitems Sent Items 
+// urn:schemas:httpmail:tasks Tasks 
+// urn:schemas:httpmail:sendmsg Exchange Mail Submission URI 
+// urn:schemas:httpmail:msgfolderroot Mailbox folder (root) 
+
+  KIO::DavJob* job = KIO::davPropFind( baseURL(), doc, "0", false );
+  job->addMetaData( "errorPage", "false" );
+  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotFolderResult( KIO::Job * ) ) );
+}
+
+void ExchangeAccount::slotFolderResult( KIO::Job * job ) 
+{
+  kdDebug() << "ExchangeAccount::slotFolderResult()" << endl;
+  if ( job->error() ) {
+    kdError() << "Error: Cannot get well-know folder names; " << job->error() << endl;
+    job->showErrorDialog( 0L );
+    return;
+  }
+  QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
+
+  QDomElement prop = response.documentElement().namedItem( "response" ).namedItem( "propstat" ).namedItem( "prop" ).toElement();
+ 
+  QDomElement calElement = prop.namedItem( "calendar" ).toElement();
+  if ( calElement.isNull() ) {
+    kdError() << "Error: no calendar URL in Exchange server reply" << endl;
+    return;
+  }
+  QString calendar = calElement.text();
+  mCalendarURL = new KURL( calendar );
+  mCalendarURL->setProtocol("webdav");
+  kdDebug() << "Calendar URL: " << mCalendarURL->url() << endl;
+}
+
+#include "exchangeaccount.moc"
