@@ -684,11 +684,18 @@ void PilotLocalDatabase::closeDatabase()
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 	for (i = 0; i < fNumRecords; i++)
 	{
-		pi_file_append_record(dbFile,
-			fRecords[i]->getData(),
-			fRecords[i]->getLen(),
-			fRecords[i]->getAttrib(), fRecords[i]->category(),
-			fRecords[i]->id());
+		if ((fRecords[i]->id() == 0) && (fRecords[i]->isDeleted()))
+		{
+			// Just ignore it
+		}
+		else
+		{
+			pi_file_append_record(dbFile,
+				fRecords[i]->getData(),
+				fRecords[i]->getLen(),
+				fRecords[i]->getAttrib(), fRecords[i]->category(),
+				fRecords[i]->id());
+		}
 	}
 
 	pi_file_close(dbFile);
