@@ -4,19 +4,15 @@ lib_LTLIBRARIES = libkalarmd.la
 
 libkalarmd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 libkalarmd_la_LIBADD  = $(LIB_KDECORE)
-libkalarmd_la_SOURCES =  alarmdaemoniface.stub alarmguiiface.stub dummy.cpp
-
-DISTCLEANFILES = dummy.cpp
-
-dummy.cpp:
-	touch dummy.cpp
+libkalarmd_la_SOURCES =  alarmdaemoniface.stub alarmguiiface.stub \
+	adcalendarbase.cpp
 
 bin_PROGRAMS = kalarmd
 
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
 kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
-        adcalendarbase.cpp adcalendar.cpp adconfigdatabase.cpp clientinfo.cpp \
+        adcalendar.cpp adconfigdatabase.cpp clientinfo.cpp \
         adconfigdatarw.cpp \
         alarmdaemoniface.skel
 kalamd_COMPILE_FIRST = alarmguiiface_stub.h
