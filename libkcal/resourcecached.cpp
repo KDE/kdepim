@@ -26,6 +26,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kstandarddirs.h>
 
 #include "exceptions.h"
 #include "incidence.h"
@@ -271,6 +272,21 @@ void ResourceCached::clearChanges()
   mAddedIncidences.clear();
   mChangedIncidences.clear();
   mDeletedIncidences.clear();
+}
+
+void ResourceCached::loadCache()
+{
+  mCalendar.load( cacheFile() );
+}
+
+void ResourceCached::saveCache()
+{
+  mCalendar.save( cacheFile() );
+}
+
+QString ResourceCached::cacheFile() const
+{
+  return locateLocal( "cache", "kcal/kresources/" + identifier() );
 }
 
 void ResourceCached::calendarIncidenceAdded( Incidence *i )

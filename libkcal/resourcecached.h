@@ -247,6 +247,16 @@ class ResourceCached : public ResourceCalendar,
     Incidence::List changedIncidences() const;
     Incidence::List deletedIncidences() const;
 
+    /**
+      Loads the cache, this method should be called on load.
+     */
+    void loadCache();
+
+    /**
+      Saves the cache back.
+     */
+    void saveCache();
+
   protected:
     // From Calendar::Observer
     void calendarIncidenceAdded( KCal::Incidence * );
@@ -270,6 +280,12 @@ class ResourceCached : public ResourceCalendar,
 
     void setupSaveTimer();
     void setupReloadTimer();
+
+    /**
+      This method is used by loadCache() and saveCache(), reimplement
+      it to change the location of the cache.
+     */
+    virtual QString cacheFile() const;
 
   protected slots:
     void slotReload();
