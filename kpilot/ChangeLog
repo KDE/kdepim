@@ -1,6 +1,22 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-11-17  Adriaan de Groot
+* Hiatus in KPilot due to working upstream on pilot-link.
+* Patches from Olivier, merci.
+
+2004-10-11  Adriaan de Groot
+* Made an actual CVS tag for KPilot, kpilot_4_4_6. Uploaded new 4.4.6
+  tarballs. Updated the site. Posted more developer's notes.
+* Added initial encoding-selection boxes to the doc conduit, to indicate
+  that the input text files are not UTF-8 but something else.
+* Started revamping PilotLocalDatabase so we can get rid of the must-
+  sync-to-delete-new-(memo|address|whatever) in the internal viewers.
+* All the bugs in the database really need a "can you check this again"?
+  added. Till Adam has been messing with recent code and is reporting
+  new crashes and bugs.
+
+
 2004-10-07  Adriaan de Groot
 * Started adding encoding support to PalmDOC conduit dialogs. Not
   sure how to proceed there.

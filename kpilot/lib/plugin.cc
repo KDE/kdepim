@@ -193,6 +193,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
 		QString path(QFileInfo(dbpath).dir(TRUE).absPath());
+		if (!path.endsWith("/")) path.append(CSL1("/"));
 		if (!KStandardDirs::exists(path))
 		{
 #ifdef DEBUG
