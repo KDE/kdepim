@@ -51,7 +51,7 @@ KNProtocolClient::~KNProtocolClient()
 {
   if (isConnected())
     closeConnection();
-  delete input;
+  delete [] input;
 }
 
 
