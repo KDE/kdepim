@@ -229,7 +229,7 @@ namespace {
 
   QString ColumnStrategy::toolTip( const GpgME::Key & key, int ) const {
     const char * uid = key.userID(0).id();
-    const char * fpr = key.subkey(0).fingerprint();
+    const char * fpr = key.primaryFingerprint();
     const char * issuer = key.issuerName();
     const GpgME::Subkey subkey = key.subkey(0);
     const QString expiry = subkey.neverExpires() ? i18n("never") : time_t2string( subkey.expirationTime() ) ;
@@ -429,13 +429,13 @@ const GpgME::Key & Kleo::KeySelectionDialog::selectedKey() const {
 }
 
 QString Kleo::KeySelectionDialog::fingerprint() const {
-  return selectedKey().subkey(0).fingerprint();
+  return selectedKey().primaryFingerprint();
 }
 
 QStringList Kleo::KeySelectionDialog::fingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
-    if ( const char * fpr = it->subkey(0).fingerprint() )
+    if ( const char * fpr = it->primaryFingerprint() )
       result.push_back( fpr );
   return result;
 }
@@ -444,7 +444,7 @@ QStringList Kleo::KeySelectionDialog::pgpKeyFingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
     if ( it->protocol() == GpgME::Context::OpenPGP )
-      if ( const char * fpr = it->subkey(0).fingerprint() )
+      if ( const char * fpr = it->primaryFingerprint() )
         result.push_back( fpr );
   return result;
 }
@@ -453,7 +453,7 @@ QStringList Kleo::KeySelectionDialog::smimeFingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it )
     if ( it->protocol() == GpgME::Context::CMS )
-      if ( const char * fpr = it->subkey(0).fingerprint() )
+      if ( const char * fpr = it->primaryFingerprint() )
         result.push_back( fpr );
   return result;
 }
@@ -496,7 +496,7 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
 namespace {
   struct ExtractFingerprint {
     QString operator()( const GpgME::Key & key ) {
-      return key.subkey(0).fingerprint();
+      return key.primaryFingerprint();
     }
   };
 }
@@ -531,11 +531,11 @@ static void selectKeys( Kleo::KeyListView * klv, const std::vector<GpgME::Key> &
     return;
   int selectedKeysCount = selectedKeys.size();
   for ( Kleo::KeyListViewItem * item = klv->firstChild() ; item ; item = item->nextSibling() ) {
-    const char * fpr = item->key().subkey(0).fingerprint();
+    const char * fpr = item->key().primaryFingerprint();
     if ( !fpr || !*fpr )
       continue;
     for ( std::vector<GpgME::Key>::const_iterator it = selectedKeys.begin() ; it != selectedKeys.end() ; ++it )
-      if ( qstrcmp( fpr, it->subkey(0).fingerprint() ) == 0 ) {
+      if ( qstrcmp( fpr, it->primaryFingerprint() ) == 0 ) {
 	item->setSelected( true );
 	if ( --selectedKeysCount <= 0 )
 	  return;

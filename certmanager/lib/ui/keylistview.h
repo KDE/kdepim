@@ -44,6 +44,21 @@ class QColor;
 
 namespace Kleo {
 
+  // work around moc parser bug...
+#define TEMPLATE_TYPENAME(T) template <typename T>
+  TEMPLATE_TYPENAME(T)
+  inline T * lvi_cast( QListViewItem * item ) {
+    return item && (item->rtti() & T::RTTI_MASK) == T::RTTI
+      ? static_cast<T*>( item ) : 0 ;
+  }
+
+  TEMPLATE_TYPENAME(T)
+  inline const T * lvi_cast( const QListViewItem * item ) {
+    return item && (item->rtti() & T::RTTI_MASK) == T::RTTI
+      ? static_cast<const T*>( item ) : 0 ;
+  }
+#undef TEMPLATE_TYPENAME
+
   class KeyListView;
 
   class KeyListViewItem : public QListViewItem {
@@ -76,6 +91,10 @@ namespace Kleo {
     int rtti() const { return RTTI; }
     /*! \reimp */
     void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
+    /*! \reimp */
+    void insertItem( QListViewItem * item );
+    /*! \reimp */
+    void takeItem( QListViewItem * item );
 
   private:
     GpgME::Key mKey;
@@ -231,6 +250,10 @@ namespace Kleo {
     KeyListViewItem * firstChild() const;
     /*! \reimp */
     void clear();
+    /*! \reimp */
+    void insertItem( QListViewItem * );
+    /*! \reimp */
+    void takeItem( QListViewItem * );
 
   private:
     void doHierarchicalInsert( const GpgME::Key & );
@@ -238,6 +261,7 @@ namespace Kleo {
     void scatterGathered( QListViewItem * );
     void refillFingerprintDictionary();
     KeyListViewItem * parentFor( const QCString & ) const;
+    void registerItem( KeyListViewItem * );
     void deregisterItem( const KeyListViewItem * );
 
   private:

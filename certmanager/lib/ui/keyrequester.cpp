@@ -172,14 +172,14 @@ QString Kleo::KeyRequester::fingerprint() const {
   if ( mKeys.empty() )
     return QString::null;
   else
-    return mKeys.front().subkey(0).fingerprint();
+    return mKeys.front().primaryFingerprint();
 }
 
 QStringList Kleo::KeyRequester::fingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it )
     if ( !it->isNull() )
-      if ( const char * fpr = it->subkey(0).fingerprint() )
+      if ( const char * fpr = it->primaryFingerprint() )
 	result.push_back( fpr );
   return result;
 }
@@ -205,7 +205,7 @@ void Kleo::KeyRequester::updateKeys() {
   for ( std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it ) {
     if ( it->isNull() )
       continue;
-    const QString fpr = it->subkey(0).fingerprint();
+    const QString fpr = it->primaryFingerprint();
     labelTexts.push_back( fpr.right(8) );
     toolTipText += fpr.right(8) + ": ";
     if ( const char * uid = it->userID(0).id() )

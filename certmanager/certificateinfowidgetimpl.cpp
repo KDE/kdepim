@@ -132,7 +132,7 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
 			    key.canCertify() ? i18n("Yes") : i18n("No") );
   item = new QListViewItem( listView, item, i18n("Can be used for authentication"),
 			    key.canAuthenticate() ? i18n("Yes") : i18n("No" ) );
-  item = new QListViewItem( listView, item, i18n("Fingerprint"), key.subkey(0).fingerprint() );
+  item = new QListViewItem( listView, item, i18n("Fingerprint"), key.primaryFingerprint() );
   item = new QListViewItem( listView, item, i18n("Issuer"), Kleo::DN( key.issuerName() ).prettyDN() );
   item = new QListViewItem( listView, item, i18n("Serial Number"), key.issuerSerial() );
 
@@ -202,7 +202,7 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
     kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): empty chain ID - root not found" << endl;
     return;
   }
-  const char * fpr = mChain.front().subkey(0).fingerprint();
+  const char * fpr = mChain.front().primaryFingerprint();
   if ( qstricmp( fpr, chainID ) == 0 ) {
     kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): chain_id equals fingerprint -> found root" << endl;
     return;
@@ -238,7 +238,7 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
 	    << "  chain id: " << mChain.front().chainID() << endl
 	    << "for" << endl
 	    << "  subject : \"" << mChain.front().userID(0).id() << "\"" << endl
-	    << "  subj.fpr: " << mChain.front().subkey(0).fingerprint() << endl;
+	    << "  subj.fpr: " << mChain.front().primaryFingerprint() << endl;
 
   const GpgME::Error err = job->start( mChain.front().chainID() );
 
@@ -252,7 +252,7 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
   KProcess* proc = new KProcess( this );
   (*proc) << "gpgsm"; // must be in the PATH
   (*proc) << "--dump-keys";
-  (*proc) << mChain.front().subkey(0).fingerprint();
+  (*proc) << mChain.front().primaryFingerprint();
 
   QObject::connect( proc, SIGNAL( receivedStdout(KProcess *, char *, int) ),
                     this, SLOT( slotCollectStdout(KProcess *, char *, int) ) );
@@ -319,7 +319,7 @@ void CertificateInfoWidgetImpl::updateChainView() {
 
   QValueList<GpgME::Key>::const_iterator it = mChain.begin();
   // root item:
-  if ( (*it).chainID() && qstrcmp( (*it).chainID(), (*it).subkey(0).fingerprint() ) == 0 )
+  if ( (*it).chainID() && qstrcmp( (*it).chainID(), (*it).primaryFingerprint() ) == 0 )
     item = new QListViewItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
   else {
     item = new QListViewItem( pathView, i18n("Issuer certificate not found ( %1)")
@@ -389,7 +389,7 @@ void CertificateInfoWidgetImpl::slotImportCertificate()
   if ( mChain.empty() || mChain.back().isNull() )
     return;
   const Kleo::DN dn = mChain.back().userID( 0 ).id();
-  emit requestCertificateDownload( mChain.back().subkey(0).fingerprint(), dn.prettyDN() );
+  emit requestCertificateDownload( mChain.back().primaryFingerprint(), dn.prettyDN() );
   importButton->setEnabled( false );
 }
 
@@ -400,7 +400,7 @@ void CertificateInfoWidgetImpl::startKeyExistanceCheck() {
   if ( mChain.empty() || mChain.back().isNull() )
     // need a key to look for
     return;
-  const QString fingerprint = mChain.back().subkey(0).fingerprint();
+  const QString fingerprint = mChain.back().primaryFingerprint();
   if ( fingerprint.isEmpty() )
     // empty pattern means list all keys. We don't want that
     return;
@@ -419,11 +419,11 @@ void CertificateInfoWidgetImpl::startKeyExistanceCheck() {
 }
 
 void CertificateInfoWidgetImpl::slotKeyExistanceCheckNextCandidate( const GpgME::Key & key ) {
-  if ( key.isNull() || mChain.empty() || !key.subkey(0).fingerprint() )
+  if ( key.isNull() || mChain.empty() || !key.primaryFingerprint() )
     return;
 
-  if ( qstrcmp( key.subkey(0).fingerprint(),
-		mChain.back().subkey(0).fingerprint() ) == 0 )
+  if ( qstrcmp( key.primaryFingerprint(),
+		mChain.back().primaryFingerprint() ) == 0 )
     mHaveKeyLocally = true;
 }
 

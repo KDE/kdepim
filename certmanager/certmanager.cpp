@@ -454,7 +454,7 @@ void CertManager::updateStatusBarLabels() {
 static std::set<std::string> extractKeyFingerprints( const QPtrList<Kleo::KeyListViewItem> & items ) {
   std::set<std::string> result;
   for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
-    if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
+    if ( const char * fpr = it.current()->key().primaryFingerprint() )
       result.insert( fpr );
   return result;
 }
@@ -554,9 +554,8 @@ static void selectKeys( Kleo::KeyListView * lv, const std::set<std::string> & fp
   if ( !lv || fprs.empty() )
     return;
   for  ( QListViewItemIterator it( lv ) ; it.current() ; ++it )
-    if ( ( it.current()->rtti() & Kleo::KeyListViewItem::RTTI_MASK ) == Kleo::KeyListViewItem::RTTI ) {
-      Kleo::KeyListViewItem * item = static_cast<Kleo::KeyListViewItem*>( it.current() );
-      const char * fpr = item->key().subkey(0).fingerprint();
+    if ( Kleo::KeyListViewItem * item = Kleo::lvi_cast<Kleo::KeyListViewItem>( it.current() ) ) {
+      const char * fpr = item->key().primaryFingerprint();
       item->setSelected( fpr && fprs.find( fpr ) != fprs.end() );
     }
 }
@@ -681,7 +680,7 @@ void CertManager::slotDownloadCertificate() {
   QPtrList<Kleo::KeyListViewItem> items = mKeyListView->selectedItems();
   for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
     if ( !it.current()->key().isNull() )
-      if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
+      if ( const char * fpr = it.current()->key().primaryFingerprint() )
         slotStartCertificateDownload( fpr, it.current()->text(0) );
 }
 
@@ -1015,7 +1014,7 @@ void CertManager::slotDeleteCertificate() {
   for ( std::vector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it )
     if ( !it->isNull() ) {
       const std::vector<GpgME::Key> subjects
-	= mHierarchyAnalyser->subjectsForIssuerRecursive( it->subkey(0).fingerprint() );
+	= mHierarchyAnalyser->subjectsForIssuerRecursive( it->primaryFingerprint() );
       keysToDelete.insert( keysToDelete.end(), subjects.begin(), subjects.end() );
     }
 
@@ -1140,7 +1139,7 @@ void CertManager::slotExportCertificate() {
   QStringList fingerprints;
   for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
     if ( !it.current()->key().isNull() )
-      if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
+      if ( const char * fpr = it.current()->key().primaryFingerprint() )
 	fingerprints.push_back( fpr );
 
   startCertificateExport( fingerprints );
