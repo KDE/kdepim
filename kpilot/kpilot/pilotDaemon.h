@@ -32,6 +32,7 @@
 #include <ksystemtray.h>
 
 #include "kpilotlink.h"
+#include "syncAction.h"
 #include "pilotDaemonDCOP.h"
 
 class PilotDaemon;
@@ -125,7 +126,7 @@ public:
 	DaemonStatus status() const { return fDaemonStatus; } ;
 	/* DCOP */ virtual QString statusString();
 	/* DCOP */ virtual QString shortStatusString();
-	QString  syncTypeString(int i) const;
+	QString  syncTypeString(SyncAction::SyncMode i) const;
 
 	/**
 	* Display the daemon's system tray icon
@@ -187,7 +188,7 @@ private:
 
 	KPilotDeviceLink::DeviceType fPilotType;
 	// TODO!!! get rid of the next sync type
-	int fNextSyncType;
+	SyncAction::SyncMode fNextSyncType;
 
 	ActionQueue *fSyncStack;
 

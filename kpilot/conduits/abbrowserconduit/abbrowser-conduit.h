@@ -40,7 +40,7 @@
 #define SYNCDEL 3
 
 class ResolutionTable;
-namespace KABC 
+namespace KABC
 {
 class Addressee;
 class Address;
@@ -204,7 +204,7 @@ private:
 	 *  @returns string of the merged entries.
 	 */
 	QString _smartMergeString(const QString &pc, const QString & backup,
-		const QString & palm, eConflictResolution confRes);
+		const QString & palm, ConflictResolution confRes);
 	bool _buildResolutionTable(ResolutionTable*tab, const Addressee &pcAddr,
 		PilotAddress *backupAddr, PilotAddress *palmAddr);
 	bool _applyResolutionTable(ResolutionTable*tab, Addressee &pcAddr,

@@ -28,9 +28,6 @@
             <property name="text">
                 <string>Pilot &amp;device:</string>
             </property>
-            <property name="alignment">
-                <set>AlignVCenter|AlignLeft</set>
-            </property>
             <property name="buddy" stdset="0">
                 <cstring>fPilotDevice</cstring>
             </property>
@@ -49,9 +46,6 @@
             </property>
             <property name="text">
                 <string>&amp;Speed:</string>
-            </property>
-            <property name="alignment">
-                <set>AlignVCenter|AlignLeft</set>
             </property>
             <property name="buddy" stdset="0">
                 <cstring>fPilotSpeed</cstring>
@@ -97,9 +91,6 @@
             <property name="text">
                 <string>En&amp;coding:</string>
             </property>
-            <property name="alignment">
-                <set>AlignVCenter|AlignLeft</set>
-            </property>
             <property name="buddy" stdset="0">
                 <cstring>fPilotEncoding</cstring>
             </property>
@@ -121,9 +112,6 @@
             </property>
             <property name="text">
                 <string>Pilot &amp;user:</string>
-            </property>
-            <property name="alignment">
-                <set>AlignVCenter|AlignLeft</set>
             </property>
             <property name="buddy" stdset="0">
                 <cstring>fUserName</cstring>

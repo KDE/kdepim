@@ -156,7 +156,7 @@ void AbbrowserConduit::readConfig()
 	AbbrowserSettings::self()->readConfig();
 
 	// Conflict page
-	SyncAction::eConflictResolution res = (SyncAction::eConflictResolution)AbbrowserSettings::conflictResolution();
+	SyncAction::ConflictResolution res = (SyncAction::ConflictResolution)AbbrowserSettings::conflictResolution();
 	setConflictResolution(res);
 
 #ifdef DEBUG
@@ -178,7 +178,7 @@ void AbbrowserConduit::readConfig()
 
 
 bool AbbrowserConduit::isDeleted(const PilotAddress*addr)
-{	
+{
 	if (!addr) return true;
 	if (addr->isDeleted() && !addr->isArchived()) return true;
 	if (addr->isArchived()) return !AbbrowserSettings::archiveDeleted();
@@ -267,7 +267,7 @@ bool AbbrowserConduit::_saveAddressBook()
 
 	if (ticket)
 	{
-		if (abChanged) 
+		if (abChanged)
 		{
 			res=aBook->save(ticket);
 		}
@@ -362,7 +362,7 @@ int AbbrowserConduit::getCustom(const int index)
 	}
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << "Index: " << index << " -> customEnum: " 
+	DEBUGCONDUIT << fname << "Index: " << index << " -> customEnum: "
 		<< customEnum << endl;
 #endif
 
@@ -376,7 +376,7 @@ QString AbbrowserConduit::getCustomField(const Addressee &abEntry, const int ind
 	switch (getCustom(index)) {
 		case AbbrowserSettings::eCustomBirthdate: {
 			QDateTime bdate(abEntry.birthday().date());
-			if (!bdate.isValid()) 
+			if (!bdate.isValid())
 				return abEntry.custom(appString, CSL1("CUSTOM")+QString::number(index));
 			QString tmpfmt(KGlobal::locale()->dateFormat());
 			if (!AbbrowserSettings::customDateFormat().isEmpty())
@@ -1582,7 +1582,7 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 	@returns string of the merged entries.
 */
 QString AbbrowserConduit::_smartMergeString(const QString &pc, const QString & backup,
-	const QString & palm, eConflictResolution confRes)
+	const QString & palm, ConflictResolution confRes)
 {
 	FUNCTIONSETUP;
 

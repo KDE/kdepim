@@ -114,7 +114,7 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	QString cResolution(args.grep(QRegExp("--conflictResolution \\d*")).first());
 	if (cResolution.isEmpty())
 	{
-		fConflictResolution=(SyncAction::eConflictResolution)
+		fConflictResolution=(SyncAction::ConflictResolution)
 			cResolution.replace(QRegExp("--conflictResolution (\\d*)"), "\\1").toInt();
 	}
 

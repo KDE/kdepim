@@ -51,7 +51,7 @@ class KLibrary;
 * and it's what is used in the KPilot conduit configuration dialog.
 * The factory is asked for a "ConduitConfigBase" object.
 *
-* NB. The reason that this is a QObject which needs to create a 
+* NB. The reason that this is a QObject which needs to create a
 * separate widget - instead of a QWidget subclass - has to do with
 * layouting. If you make the widget with designer then the easiest
 * thing to do is to use a grid layout there. Making ConduitConfigBase
@@ -146,9 +146,9 @@ protected:
 	bool isTest() const { return fTest; } ;
 	bool isBackup() const { return fBackup; } ;
 	bool isLocal() const { return fLocal; } ;
-	
+
 	int getSyncDirection() const { return fSyncDirection; };
-	eConflictResolution getConflictResolution() const 
+	ConflictResolution getConflictResolution() const
 		{ return fConflictResolution; };
 
 	// Set the conflict resolution, except if the resolution
@@ -156,31 +156,32 @@ protected:
 	// (assumes then that the resolution form is already set
 	// according to that global setting).
 	//
-	void setConflictResolution(eConflictResolution res)
-	{ 
-		if (SyncAction::eUseGlobalSetting != res) 
-			fConflictResolution=res; 
+	void setConflictResolution(ConflictResolution res)
+	{
+		if (SyncAction::eUseGlobalSetting != res)
+			fConflictResolution=res;
 	}
-	void setSyncDirection(int dir)
+	void setSyncDirection(SyncMode dir)
 		{ fSyncDirection=dir; }
 
 	/**
-	* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It 
-	* completely ignores all modified flags and walks through all records 
+	* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It
+	* completely ignores all modified flags and walks through all records
 	* in the database.
 	*/
-	bool isFullSync() const 
-	{ 
-		return fFirstSync || 
-			(fSyncDirection!=SyncAction::eFastSync && 
-			fSyncDirection!=SyncAction::eHotSync);
+	bool isFullSync() const
+	{
+		return fFirstSync ||
+			( (fSyncDirection==SyncAction::eFullSync  ) ||
+			(fSyncDirection==SyncAction::eCopyPCToHH) ||
+			(fSyncDirection==SyncAction::eCopyHHToPC) ) ;
 	}
 
 	/**
 	* A first sync (i.e. database newly fetched from the handheld )
 	* does not check for deleted records, but understands them as
 	* added on the other side. The flag is set by the conduits
-	* when opening the local database, or the calendar/addressbook 
+	* when opening the local database, or the calendar/addressbook
 	* (if it is empty). This also implies a full sync.
 	*/
 	bool isFirstSync() const {
@@ -201,8 +202,8 @@ private:
 	bool fTest;	// Do some kind of test run on the pilot
 	bool fBackup;	// Do a backup of the database
 	bool fLocal;	// Local test without a Pilot
-	int fSyncDirection; // Stores fast, full, PCToHH or HHToPC 
-	eConflictResolution fConflictResolution;
+	SyncMode fSyncDirection; // Stores fast, full, PCToHH or HHToPC
+	ConflictResolution fConflictResolution;
 
 	// Make these only protected so the conduit can change the variable
 protected:

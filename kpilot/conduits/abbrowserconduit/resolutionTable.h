@@ -61,7 +61,7 @@ public:
 
 	~ResolutionTable() {};
 
-	SyncAction::eConflictResolution fResolution;
+	SyncAction::ConflictResolution fResolution;
 	QString labels[3];
 	enum eExistItems fExistItems;
 };

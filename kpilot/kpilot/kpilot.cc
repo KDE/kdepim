@@ -398,41 +398,39 @@ void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 void KPilotInstaller::slotBackupRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(PilotDaemonDCOP::Backup,
-		i18n("Backing up Pilot. ") +
+	setupSync(SyncAction::eBackup,
+		i18n("Next sync will be a backup. ") +
 		i18n("Please press the HotSync button."));
 }
 
 void KPilotInstaller::slotRestoreRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(PilotDaemonDCOP::Restore,
-		i18n("Restoring Pilot. ") +
+	setupSync(SyncAction::eRestore,
+		i18n("Next sync will restort the Pilot from backup. ") +
 		i18n("Please press the HotSync button."));
 }
 
 void KPilotInstaller::slotHotSyncRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(PilotDaemonDCOP::HotSync,
-		i18n("HotSyncing. ") +
+	setupSync(SyncAction::eHotSync,
+		i18n("Next sync will be a regular HotSync. ") +
 		i18n("Please press the HotSync button."));
 }
 
-#if 0
 void KPilotInstaller::slotFastSyncRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(PilotDaemonDCOP::FastSync,
-		i18n("FastSyncing. ") +
+	setupSync(SyncAction::eFastSync,
+		i18n("Next sync will be a Fast Sync. ") +
 		i18n("Please press the HotSync button."));
 }
-#endif
 
 void KPilotInstaller::slotListSyncRequested()
 {
 	FUNCTIONSETUP;
-	setupSync(PilotDaemonDCOP::Test,
+	setupSync(SyncAction::eTest,
 		QString::fromLatin1("Listing Pilot databases."));
 }
 
@@ -566,11 +564,19 @@ void KPilotInstaller::initMenu()
 		actionCollection(), "file_hotsync");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a normal HotSync."));
-#if 0
-	(void) new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
-		this, SLOT(slotHotSyncRequested()),
+
+	a = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
+		this, SLOT(slotFastSyncRequested()),
 		actionCollection(), "file_fastsync");
-#endif
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should be a FastSync (run conduits only)."));
+
+	a = new KAction(i18n("Full&Sync"), CSL1("fullsync"), 0,
+		this, SLOT(slotFullSyncRequested()),
+		actionCollection(), "file_fullsync");
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should be a FullSync (check data on both sides)."));
+
 #ifdef DEBUG
 	a = new KAction(i18n("&List only"),CSL1("list"),0,
 		this,SLOT(slotListSyncRequested()),

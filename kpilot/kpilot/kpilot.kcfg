@@ -18,13 +18,6 @@
         </label>
         <default>QDateTime()</default>
     </entry>
-    <entry name="NextSyncType" type="Enum">
-        <label>
-        </label>
-        <choices>
-        </choices>
-        <default></default>
-    </entry>
 
     <entry name="PilotDevice" type="String">
         <label>
@@ -76,7 +69,7 @@
     <entry name="SyncType" type="UInt">
         <label>
         </label>
-        <default>1</default>
+        <default>6</default>
     </entry>
     <entry name="FullSyncOnPCChange" type="Bool">
         <label>

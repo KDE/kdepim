@@ -189,7 +189,7 @@ error:
 /* virtual */ void VCalConduitBase::readConfig()
 {
 	config()->readConfig();
-	SyncAction::eConflictResolution res=(SyncAction::eConflictResolution)(config()->conflictResolution());
+	SyncAction::ConflictResolution res=(SyncAction::ConflictResolution)(config()->conflictResolution());
 	setConflictResolution(res);
 }
 

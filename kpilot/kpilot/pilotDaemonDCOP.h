@@ -41,20 +41,11 @@ class PilotDaemonDCOP : virtual public DCOPObject
 {
 	K_DCOP
 public:
-	/**
-	* You can pass values of this type to requestSync; since
-	* you pass an int, all the values are explicitly defined here.
-	*/
-	enum HotSyncTypes { Test=0,
-		HotSync=1,
-		FastSync=2,
-		Backup=3,
-		Restore=4
-		 } ;
 k_dcop:
 	/**
 	* Start a HotSync. What kind of HotSync is determined
-	* by the int parameter (use the enum above!):
+	* by the int parameter (use the enum in kpilot.kcfg, or
+	* better yet, use requestSyncType and pass the name) :
 	*/
 	virtual ASYNC requestSync(int) = 0;
 	virtual ASYNC requestSyncType(QString) = 0;

@@ -39,7 +39,7 @@ class InternalEditorAction : public SyncAction
 Q_OBJECT
 
 public:
-	InternalEditorAction(KPilotDeviceLink *, int mode=ActionQueue::BackupMode);
+	InternalEditorAction(KPilotDeviceLink *);
 	~InternalEditorAction() {}
 
 protected:

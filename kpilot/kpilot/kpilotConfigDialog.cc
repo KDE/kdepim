@@ -209,7 +209,6 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 	fWidget = fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fSyncMode, SIGNAL(clicked(int)));
 	CM(fSpecialSync, SIGNAL(textChanged(const QString &)));
 	CM(fFullBackupCheck, SIGNAL(toggled(bool)));
 	CM(fConflictResolution, SIGNAL(activated(int)));
@@ -225,13 +224,7 @@ void SyncConfigPage::load()
 
 	/* Sync tab */
 	int synctype=KPilotSettings::syncType();
-	if (synctype < SyncAction::eSyncModeLastRadiobutton)
-		fConfigWidget->fSyncMode->setButton(synctype);
-	else
-	{
-		fConfigWidget->fSyncMode->setButton(SyncAction::eSyncModeLastRadiobutton);
-		fConfigWidget->fSpecialSync->setCurrentItem(synctype-SyncAction::eSyncModeLastRadiobutton);
-	}
+	fConfigWidget->fSpecialSync->setCurrentItem(synctype);
 
 	fConfigWidget->fFullBackupCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
 	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
@@ -244,10 +237,7 @@ void SyncConfigPage::load()
 	FUNCTIONSETUP;
 
 	/* Sync tab */
-	int syncmode=fConfigWidget->fSyncMode->id(fConfigWidget->fSyncMode->selected());
-	if (syncmode==SyncAction::eSyncModeLastRadiobutton)
-		syncmode+=fConfigWidget->fSpecialSync->currentItem();
-	KPilotSettings::setSyncType(syncmode);
+	KPilotSettings::setSyncType(fConfigWidget->fSpecialSync->currentItem());
 	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
 	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
 

@@ -109,16 +109,18 @@ protected:
 
 	int openConduit() { return fHandle->openConduit(); } ;
 public:
-	enum eSyncMode
+	enum SyncMode
 	{
-		eFastSync=0,
+		eTest=0,
+		eFastSync,
 		eHotSync,
 		eFullSync,
 		eCopyPCToHH,
 		eCopyHHToPC,
-		eSyncModeLastRadiobutton=eFullSync
+		eBackup=6,
+		eRestore
 	};
-	enum eConflictResolution
+	enum ConflictResolution
 	{
 		eUseGlobalSetting=-1,
 		eAskUser=0,

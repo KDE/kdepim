@@ -220,14 +220,19 @@ void PilotDaemonTray::slotShowNotListening()
 	changeIcon( NotListening );
 }
 
-
+static SyncAction::SyncMode getSyncType()
+{
+	unsigned int m = KPilotSettings::syncType();
+	if (m>SyncAction::eRestore) m=SyncAction::eTest;
+	return (SyncAction::SyncMode) m;
+}
 
 PilotDaemon::PilotDaemon() :
 	DCOPObject("KPilotDaemonIface"),
 	fDaemonStatus(INIT),
 	fPostSyncAction(None),
 	fPilotLink(0L),
-	fNextSyncType(PilotDaemonDCOP::HotSync),
+	fNextSyncType(SyncAction::eTest),
 	fSyncStack(0L),
 	fTray(0L),
 	fInstaller(0L),
@@ -253,6 +258,7 @@ PilotDaemon::PilotDaemon() :
 	connect(fInstaller, SIGNAL(filesChanged()),
 		this, SLOT(slotFilesChanged()));
 
+	fNextSyncType = getSyncType();
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -569,12 +575,12 @@ bool PilotDaemon::setupPilotLink()
 
 /* DCOP ASYNC */ void PilotDaemon::requestRegularSyncNext()
 {
-	requestSync(PilotDaemonDCOP::HotSync);
+	requestSync(SyncAction::eHotSync);
 }
 
 /* DCOP ASYNC */ void PilotDaemon::requestFastSyncNext()
 {
-	requestSync(PilotDaemonDCOP::FastSync);
+	requestSync(SyncAction::eFastSync);
 }
 
 
@@ -582,14 +588,21 @@ bool PilotDaemon::setupPilotLink()
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Next sync is: "
-		<< syncTypeString(mode)
-		<< endl ;
-#endif
 
-	fNextSyncType = mode;
+	if ( (mode>=0) && (mode<=SyncAction::eRestore))
+	{
+		fNextSyncType = (SyncAction::SyncMode) mode;
+#ifdef DEBUG
+		DEBUGDAEMON << fname
+			<< ": Next sync is: "
+			<< syncTypeString(fNextSyncType)
+			<< endl ;
+#endif
+	}
+	else
+	{
+		kdWarning() << k_funcinfo << ": Ignored fake sync type " << mode << endl;
+	}
 
 	updateTrayStatus();
 }
@@ -599,14 +612,14 @@ bool PilotDaemon::setupPilotLink()
 	FUNCTIONSETUP;
 
 	// This checks unique prefixes of the names of the various sync types.
-	if (s.startsWith(CSL1("H"))) requestSync(HotSync);
-	else if (s.startsWith(CSL1("Fa"))) requestSync(FastSync);
-	else if (s.startsWith(CSL1("Fu"))) requestSync(HotSync); // FIXME
-	else if (s.startsWith(CSL1("B"))) requestSync(Backup);
-	else if (s.startsWith(CSL1("R"))) requestSync(Restore);
-	else if (s.startsWith(CSL1("T"))) requestSync(Test);
-	else if (s.startsWith(CSL1("CopyHHToPC"))) requestSync(Test); // FIXME
-	else if (s.startsWith(CSL1("CopyPCToHH"))) requestSync(Test); // FIXME
+	if (s.startsWith(CSL1("H"))) requestSync(SyncAction::eHotSync);
+	else if (s.startsWith(CSL1("Fa"))) requestSync(SyncAction::eFastSync);
+	else if (s.startsWith(CSL1("Fu"))) requestSync(SyncAction::eFullSync);
+	else if (s.startsWith(CSL1("B"))) requestSync(SyncAction::eBackup);
+	else if (s.startsWith(CSL1("R"))) requestSync(SyncAction::eRestore);
+	else if (s.startsWith(CSL1("T"))) requestSync(SyncAction::eTest);
+	else if (s.startsWith(CSL1("CopyHHToPC"))) requestSync(SyncAction::eCopyHHToPC);
+	else if (s.startsWith(CSL1("CopyPCToHH"))) requestSync(SyncAction::eCopyPCToHH);
 	else
 	{
 		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? "<none>" : s )
@@ -619,23 +632,31 @@ bool PilotDaemon::setupPilotLink()
 	return fNextSyncType;
 }
 
-QString PilotDaemon::syncTypeString(int i) const
+QString PilotDaemon::syncTypeString(SyncAction::SyncMode i) const
 {
 	FUNCTIONSETUP;
 	switch (i)
 	{
-	case PilotDaemonDCOP::Test:
-		return QString(CSL1("Test"));
-	case PilotDaemonDCOP::HotSync:
-		return QString(CSL1("HotSync"));
-	case PilotDaemonDCOP::FastSync:
-		return QString(CSL1("FastSync"));
-	case PilotDaemonDCOP::Backup:
-		return QString(CSL1("Backup"));
-	case PilotDaemonDCOP::Restore:
-		return QString(CSL1("Restore"));
+	case SyncAction::eTest:
+		return CSL1("Test");
+	case SyncAction::eHotSync:
+		return CSL1("HotSync");
+	case SyncAction::eFastSync:
+		return CSL1("FastSync");
+	case SyncAction::eFullSync:
+		return CSL1("FullSync");
+	case SyncAction::eBackup:
+		return CSL1("Backup");
+	case SyncAction::eRestore:
+		return CSL1("Restore");
+	case SyncAction::eCopyHHToPC:
+		return CSL1("CopyHHToPC");
+	case SyncAction::eCopyPCToHH:
+		return CSL1("CopyPCToHH");
+
 	default:
-		return QString(CSL1("<unknown>"));
+		/* NOTREACHED */
+		return CSL1("<unknown>");
 	}
 }
 
@@ -887,16 +908,47 @@ static void finishKroupware(ActionQueue *fSyncStack,
 #endif
 }
 
+static void queueInstaller(ActionQueue *fSyncStack,
+	FileInstaller *fInstaller,
+	const QStringList &c)
+{
+	if (c.findIndex(CSL1("internal_fileinstaller")) >= 0)
+	{
+		fSyncStack->queueInstaller(fInstaller->dir(),
+			fInstaller->fileNames());
+	}
+}
+
+static void queueEditors(ActionQueue *fSyncStack, KPilotDeviceLink *pilotLink)
+{
+	if (KPilotSettings::internalEditors())
+	{
+		fSyncStack->addAction(new InternalEditorAction(pilotLink));
+	}
+}
+
+static void queueConduits(ActionQueue *fSyncStack,
+	const QStringList &conduits,
+	bool pcchanged,
+	int mode)
+{
+	if (conduits.count() > 0)
+	{
+		fSyncStack->queueConduits( conduits,
+			pcchanged ? (mode|ActionQueue::FlagFull) : mode);
+	}
+}
+
 /* slot */ void PilotDaemon::startHotSync(KPilotDeviceLink*pilotLink)
 {
 	FUNCTIONSETUP;
 
-	int mode=0; // Random bit flag
 	bool pcchanged=false; // If last PC to sync was a different one (implies full sync, normally)
 	QStringList conduits ; // list of conduits to run
 	bool syncWithKMail = false; // if kroupware sync is enabled
 	int _kroupwareParts = 0; // which parts to sync
 	QString s; // a generic string for stuff
+	KPilotUser *usr = 0L; // Pointer to user data on Pilot
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -924,6 +976,15 @@ static void finishKroupware(ActionQueue *fSyncStack,
 		goto launch;
 	}
 
+	// changing the PC or using a different Palm Desktop app causes a full sync
+	// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
+	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
+	usr = pilotLink->getPilotUser();
+	pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
+	if (pcchanged && KPilotSettings::fullSyncOnPCChange())
+	{
+		fNextSyncType = SyncAction::eFullSync;
+	}
 
 	// Normal case: regular sync.
 	fSyncStack->queueInit(ActionQueue::WithUserCheck);
@@ -938,43 +999,33 @@ static void finishKroupware(ActionQueue *fSyncStack,
 
 
 	conduits = KPilotSettings::installedConduits() ;
-	if ( (conduits.findIndex( CSL1("internal_fileinstall") ) >= 0) &&
-		fInstaller) mode |= ActionQueue::WithInstaller;
 
 	switch (fNextSyncType)
 	{
-	case PilotDaemonDCOP::Test:
+	case SyncAction::eTest:
 		fSyncStack->addAction(new TestLink(pilotLink));
 		// No conduits, nothing.
 		break;
-	case PilotDaemonDCOP::Backup:
-		mode |= ActionQueue::BackupMode | ActionQueue::FlagFull;
+	case SyncAction::eBackup:
 		if (KPilotSettings::runConduitsWithBackup() && (conduits.count() > 0))
 		{
-			fSyncStack->queueConduits(conduits, mode);
+			fSyncStack->queueConduits(conduits,
+				ActionQueue::BackupMode | ActionQueue::FlagFull);
 		}
-		fSyncStack->addAction(new BackupAction(pilotLink, mode));
+		fSyncStack->addAction(new BackupAction(pilotLink,
+			ActionQueue::BackupMode | ActionQueue::FlagFull));
 		break;
-	case PilotDaemonDCOP::Restore:
-		mode |= ActionQueue::RestoreMode | ActionQueue::FlagFull;
+	case SyncAction::eRestore:
 		fSyncStack->addAction(new RestoreAction(pilotLink));
-		if (mode & ActionQueue::WithInstaller)
-		{
-			fSyncStack->queueInstaller(fInstaller->dir(),
-				fInstaller->fileNames());
-		}
+		queueInstaller(fSyncStack,fInstaller,conduits);
 		break;
-	case PilotDaemonDCOP::FastSync:
-	case PilotDaemonDCOP::HotSync:
+	case SyncAction::eHotSync:
 		// first install the files, and only then do the conduits
 		// (conduits might want to sync a database that will be installed
-		mode |= ActionQueue::HotSyncMode;
-		if (mode & ActionQueue::WithInstaller)
-		{
-			fSyncStack->queueInstaller(fInstaller->dir(),
-				fInstaller->fileNames());
-		}
-
+		queueInstaller(fSyncStack,fInstaller,conduits);
+		queueEditors(fSyncStack,pilotLink);
+		queueConduits(fSyncStack,conduits,pcchanged,ActionQueue::HotSync);
+#if 0
 		if (PilotDaemonDCOP::FastSync == fNextSyncType) goto skipExtraSyncSettings;
 
 		switch (KPilotSettings::syncType())
@@ -996,25 +1047,6 @@ static void finishKroupware(ActionQueue *fSyncStack,
 		}
 skipExtraSyncSettings:
 
-		if (KPilotSettings::internalEditors() && !(mode & ActionQueue::FlagHHToPC) )
-		{
-			fSyncStack->addAction(new InternalEditorAction(pilotLink, mode));
-		}
-		// Now check for changed PC
-		{
-		KPilotUser *usr = pilotLink->getPilotUser();
-		// changing the PC or using a different Palm Desktop app causes a full sync
-		// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
-		// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
-		pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
-		}
-
-		if (conduits.count() > 0)
-		{
-			fSyncStack->queueConduits( conduits, pcchanged?(mode|ActionQueue::FlagFull):mode);
-		}
-		if (pcchanged && KPilotSettings::fullSyncOnPCChange())
-			mode |=  (ActionQueue::WithBackup | ActionQueue::FlagFull);
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Sync Mode="
@@ -1023,6 +1055,10 @@ skipExtraSyncSettings:
 		if (mode & ActionQueue::WithBackup)
 			fSyncStack->addAction(new BackupAction(pilotLink, mode));
 		break;
+#endif
+
+
+
 	default:
 #ifdef DEBUG
 		DEBUGDAEMON << fname

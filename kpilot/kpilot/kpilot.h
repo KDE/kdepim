@@ -100,6 +100,7 @@ public slots:
 	void slotBackupRequested();
 	void slotHotSyncRequested();
 	void slotListSyncRequested();
+	void slotFastSyncRequested();
 
 
 	/**

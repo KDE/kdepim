@@ -11,7 +11,7 @@
             <x>0</x>
             <y>0</y>
             <width>593</width>
-            <height>326</height>
+            <height>328</height>
         </rect>
     </property>
     <property name="caption">
@@ -24,82 +24,6 @@
         <property name="margin">
             <number>0</number>
         </property>
-        <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>fSyncMode</cstring>
-            </property>
-            <property name="title">
-                <string>Sync Mode</string>
-            </property>
-            <grid>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QComboBox" row="2" column="1">
-                    <item>
-                        <property name="text">
-                            <string>Full Sync (slow), backup</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>Copy PC to Handheld</string>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>Copy Handheld to PC</string>
-                        </property>
-                    </item>
-                    <property name="name">
-                        <cstring>fSpecialSync</cstring>
-                    </property>
-                </widget>
-                <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>radioButton3</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Fast sync (if possible), no backup</string>
-                    </property>
-                </widget>
-                <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>radioButton4</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Normal sync, do a backup</string>
-                    </property>
-                </widget>
-                <widget class="QRadioButton" row="2" column="0">
-                    <property name="name">
-                        <cstring>radioButton9</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>4</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Special sync:</string>
-                    </property>
-                </widget>
-            </grid>
-        </widget>
-        <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>fFullBackupCheck</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Do full backup when changing PCs</string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>We really do not know what this does.</string>
-            </property>
-        </widget>
         <widget class="QLabel" row="2" column="0">
             <property name="name">
                 <cstring>textLabel1</cstring>
@@ -171,6 +95,61 @@
                 </size>
             </property>
         </spacer>
+        <widget class="QCheckBox" row="1" column="1">
+            <property name="name">
+                <cstring>fFullBackupCheck</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Do full backup when changing PCs</string>
+            </property>
+            <property name="accel">
+                <string>Alt+D</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>We really do not know what this does.</string>
+            </property>
+        </widget>
+        <widget class="QComboBox" row="0" column="1">
+            <item>
+                <property name="text">
+                    <string>Hot Sync</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Fast Sync</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Full Sync</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Copy PC to Handheld</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>Copy Handheld to PC</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>fSpecialSync</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>textLabel1_2</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Default Sync:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>fSpecialSync</cstring>
+            </property>
+        </widget>
     </grid>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
