@@ -8,7 +8,7 @@ export DH_COMPAT=3
 tmp = $(shell pwd)/debian/korganizer
 ARCH = $(shell dpkg-architecture -qDEB_BUILD_ARCH)
 ifeq ($(ARCH),alpha)
-  COMPILER_FLAGS=CFLAGS=-O0 CXXFLAGS=-O0
+  COMPILER_FLAGS=CFLAGS="-O0 -mieee" CXXFLAGS="-O0 -mieee"
 else
   COMPILER_FLAGS=CXX=g++ CC=gcc
 endif
