@@ -1476,6 +1476,7 @@ void KNodeView::slotFetchArticleWithID()
   QLineEdit *edit = new QLineEdit(page);
   label->setBuddy(edit);
   edit->setFocus();
+  restoreWindowSize("fetchArticleWithID", dlg, QSize(325,66));
 
   if (dlg->exec()) {
     QString id = edit->text().simplifyWhiteSpace();
@@ -1492,6 +1493,7 @@ void KNodeView::slotFetchArticleWithID()
     }
   }
 
+  saveWindowSize("fetchArticleWithID",dlg->size());
   delete dlg;
 }
 
