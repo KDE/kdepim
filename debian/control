@@ -8,7 +8,6 @@ Standards-Version: 3.5.5
 Package: korganizer
 Architecture: any
 Section: x11
-Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}
 Recommends: kghostview, kdebase-libs
 Suggests: kpilot
@@ -60,9 +59,8 @@ Description: Mobile phone utility for KDE
 Package: kdepim-libs
 Architecture: any
 Section: libs
-Replaces: korganizer (<< 4:2.2), libical
+Replaces: libical
 Depends: ${shlibs:Depends}
-Conflicts: libical
 Description: KDE libraries amd modules for kdepim
  This package contains the different interface modules and libraries
  provided by the kdepim package.  These includes interfaces to imap and ical
@@ -70,7 +68,6 @@ Description: KDE libraries amd modules for kdepim
 Package: kdepim-dev
 Architecture: any
 Section: devel
-Replaces: korganizer (<< 4:2.1-20010116-0)
 Depends: kdepim-libs (= ${Source-Version}), kdelibs-dev
 Description: KDE PIM applications (development files)
  KDE PIM application development files
