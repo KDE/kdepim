@@ -3,6 +3,7 @@
 
 #include <klocale.h>
 #include <qpixmap.h>
+#include <kurlrequester.h>
 
 #include <manipulatorpart.h>
 

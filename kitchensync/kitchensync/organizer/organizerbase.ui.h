@@ -11,15 +11,10 @@
 
 #include "organizerbase.h"
 
-void OrganizerDialogBase::slotBrowse()
-{
-    lnePath->setText( KFileDialog::getOpenURL().prettyURL() );
-}
-
 void OrganizerDialogBase::slotDefault()
 {
 KConfig conf( "korganizerrc" );
 conf.setGroup("General" );
-lnePath->setText(conf.readEntry("Active Calendar" ) );
+urlReq->setURL(conf.readEntry("Active Calendar" ) );
 }
 

@@ -108,7 +108,7 @@ QWidget* OrganizerPart::configWidget()
     }
     kdDebug(5222) << "configWidget \n" ;
     m_config = new OrganizerDialogBase();
-    m_config->lnePath->setText( m_path );
+    m_config->urlReq->setURL( m_path );
     m_config->ckbEvo->setChecked( m_evo );
     //m_config->setBackgroundColor( Qt::green );
     //}
@@ -123,7 +123,7 @@ KAboutData *OrganizerPart::createAboutData()
 void OrganizerPart::slotConfigOk()
 {
     Profile prof = core()->currentProfile();
-    m_path = m_config->lnePath->text();
+    m_path = m_config->urlReq->url();
     m_evo = m_config->ckbEvo->isChecked();
     m_conf->setGroup( prof.name() );
     m_conf->writeEntry( "Path",  m_path );
