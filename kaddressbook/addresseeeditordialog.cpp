@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
+#include <qapplication.h>
 #include <qlayout.h>
 
 #include <kdebug.h>
@@ -92,8 +93,10 @@ bool AddresseeEditorDialog::dirty()
 void AddresseeEditorDialog::slotApply()
 {
   if ( mEditorWidget->dirty() ) {
+    QApplication::setOverrideCursor( Qt::waitCursor );
     mEditorWidget->save();
     emit contactModified( mEditorWidget->addressee() );
+    QApplication::restoreOverrideCursor();
   }
 
   enableButton( KDialogBase::Apply, false );
