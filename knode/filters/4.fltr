@@ -22,9 +22,9 @@ val1=0
 val2=0
 [SCORE]
 enabled=true
-op1=2
-op2=0
-val1=100
+op1=0
+op2=5
+val1=0
 val2=0
 [STATUS]
 DAT_N=false
