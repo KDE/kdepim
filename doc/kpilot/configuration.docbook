@@ -336,8 +336,9 @@ Select the type of synchronization that will be performed by default.
 <itemizedlist>
 
 <listitem><para>
-<guilabel>HotSync</guilabel>: run all selected conduits and sync the databases
-with a modified flag set, updating the modified records only. This option offers
+<guilabel>HotSync</guilabel>: run all selected conduits, sync the databases
+with a modified flag set, updating the modified records only. Performs a fast
+backup, backing up only the databases that were modified. This option offers
 a nice balance between speed and data safety.
 </para></listitem>
 
@@ -353,7 +354,8 @@ trade-off between speed and safety.
 <listitem><para>
 <guilabel>FullSync</guilabel>: run all selected conduits, and sync all databases,
 reading all records, and performing a full backup. It is the safest option, but
-takes the longest time to complete.
+takes the longest time to complete, as it will merge all the records from the
+&handheld; and your desktop. It is the &kpilot; equivalent of the Palm SlowSync.
 </para></listitem>
 
 <listitem><para>
@@ -1466,13 +1468,13 @@ the To Do List.
 <title>MAL (AvantGo) Conduit Setup</title>
 
 <para>
-The MAL (AvantGo) Conduit synchronizes your &handheld; with the &AvantGo; server.
+The MAL (&AvantGo;) Conduit synchronizes your &handheld; with the &AvantGo; server.
 This conduit is based on
 <ulink url="http://jasonday.home.att.net/code/libmal/libmal.html">Jason Day's libmal</ulink>.
 The &AvantGo; server offers general content (news, guides, stock quotes, &etc;)
 in a format that is suitable for reading in a &handheld;. To use this conduit,
 you need to register to a service provider, for instance,
-<ulink url="www.avantgo.com">AvantGo.com</ulink>, subscribe
+<ulink url="http://www.avantgo.com">AvantGo.com</ulink>, subscribe
 the channels you select and install the &AvantGo; software on your &handheld;,
 and configure the software on your handheld to find the MAL server.
 </para>
@@ -1491,7 +1493,7 @@ To configure the software on your handheld to find the MAL server, open the
 AGConnect application in your &handheld;, click <guilabel>Settings...</guilabel>
 and enter your MAL server address, the <guilabel>User Name</guilabel> and
 <guilabel>Password</guilabel> you got while registering. The
-<trademark>AvantGo</trademark> server address is
+&AvantGo; server address is
 <userinput>sync.avantgo.com</userinput>, and its port is
 <userinput>80</userinput>. On some instalations, you should use the MobileLink
 instead of the AGConnect application on your &handheld;.

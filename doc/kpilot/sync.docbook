@@ -226,9 +226,10 @@ submenu items change only the type of sync that will be performed <emphasis>next
 <itemizedlist>
 
 <listitem><para>
-<guilabel>HotSync</guilabel>: run all selected conduits and sync the databases
-with a modified flag set, updating the modified records only. This option offers
-a nice balance between speed and data safety. It is available on the main application
+<guilabel>HotSync</guilabel>: run all selected conduits, sync the databases
+with a modified flag set, updating the modified records only. Performs a fast
+backup, backing up only the databases that were modified. This option offers
+a nice balance between speed and data safety.
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
@@ -262,7 +263,11 @@ external applications, using <link linkend="conduits">conduits</link>.
 <listitem><para>
 <guilabel>FullSync</guilabel>: run all selected conduits, and sync all databases,
 reading all records, and performing a full backup. It is the safest option, but
-takes the longest time to complete. Available on the main application
+takes the longest time to complete, as it will merge all the records from the
+&handheld; and your desktop. It is the &kpilot; equivalent of the Palm SlowSync.
+</para>
+<para>
+Available on the main application
 <menuchoice>
 <guimenu>File</guimenu>
 </menuchoice>
@@ -362,8 +367,8 @@ applications on the &handheld;. There are many free or open source Palm
 DOC readers, and some Palm DOC editors for your handheld.</para>
 <para>
 Any plain text file can be easily converted. For instance, you can download and
-convert the public domain books provided by the <ulink url="http://www.gutemberg.org">
-Gutemberg Project</ulink> and read them in your &handheld;.
+convert the public domain books provided by the <ulink url="http://www.gutenberg.net">
+Gutenberg Project</ulink> and read them in your &handheld;.
 </para></listitem>
 </varlistentry>
 
