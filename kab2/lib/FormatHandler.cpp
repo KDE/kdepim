@@ -35,7 +35,7 @@ FormatHandler::startElement
  const QXmlAttributes & attributes
 )
 {
-  if ("kab_format" == qName)
+  if ("kab-definition" == qName)
   {
     name_ = attributes.value("name");
 
@@ -47,8 +47,19 @@ FormatHandler::startElement
 
     ff.setName(attributes.value("name"));
     ff.setUnique("true" == attributes.value("unique"));
-    ff.setType(attributes.value("type"));
-    ff.setSubType(attributes.value("subtype"));
+
+    QString mimeType = attributes.value("mimetype");
+
+    int sep = mimeType.find('/');
+
+    if (-1 == sep)
+      ff.setType(mimeType);
+
+    else
+    {
+      ff.setType(mimeType.left(sep));
+      ff.setSubType(mimeType.mid(sep + 1));
+    }
 
     spec_ << ff;
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF=8"?>
 <!DOCTYPE kab_format>
 
-<kab_format name="testing">
+<kab-definition name="testing">
 
-<field name="Title"         unique="true"   type="text" subtype="UCS-2" />
-<field name="First name"    unique="true"   type="text" subtype="UCS-2" />
-<field name="Last name"     unique="true"   type="text" subtype="UCS-2" />
-<field name="Date of birth" unique="true"   type="date" subtype="ISO-8601" />
-<field name="Email"         unique="false"  type="text" subtype="UCS-2" />
-<field name="Telephone"     unique="false"  type="text" subtype="UCS-2" />
+<field name="Title"         unique="true"   mimetype="text/UCS-2" />
+<field name="First name"    unique="true"   mimetype="text/UCS-2" />
+<field name="Last name"     unique="true"   mimetype="text/UCS-2" />
+<field name="Date of birth" unique="true"   mimetype="date/ISO-8601" />
+<field name="Email"         unique="false"  mimetype="text/UCS-2" />
+<field name="Telephone"     unique="false"  mimetype="text/UCS-2" />
 
-</kab_format>
+</kab-definition>
