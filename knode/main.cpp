@@ -21,7 +21,8 @@
 #include "knapplication.h"
 #include "resource.h"
 #include "knode.h"
-
+#include "aboutdata.h"
+using KNode::AboutData;
 
 static KCmdLineOptions knoptions[] =
 {
@@ -32,24 +33,7 @@ static KCmdLineOptions knoptions[] =
 
 int main(int argc, char* argv[])
 {
-  KAboutData aboutData("knode",
-                        I18N_NOOP("KNode"),
-                        KNODE_VERSION,
-                        I18N_NOOP("A newsreader for KDE"),
-                        KAboutData::License_GPL,
-                        I18N_NOOP("Copyright (c) 1999-2002 the KNode authors"),
-                        0,
-                        "http://knode.sourceforge.net/");
-
-  aboutData.addAuthor("Christian Gebauer",I18N_NOOP("Maintainer"),"gebauer@kde.org");
-  aboutData.addAuthor("Christian Thurner",0,"cthurner@web.de");
-  aboutData.addAuthor("Dirk Mueller",0,"mueller@kde.org");
-  aboutData.addAuthor("Marc Mutz",0,"mutz@kde.org");
-  aboutData.addAuthor("Roberto Teixeira",0,"roberto@kde.org");
-  aboutData.addAuthor("Mathias Waack",0,"mathias@atoll-net.de");
-  aboutData.addAuthor("Laurent Montel",0,"montel@kde.org");
-  aboutData.addCredit("Stephan Johach",0,"lucardus@onlinehome.de");
-  aboutData.addCredit("Matthias Kalle Dalheimer",0,"kalle@kde.org");
+  AboutData aboutData;
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( knoptions );

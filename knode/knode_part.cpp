@@ -1,5 +1,5 @@
 /*
-    This file is part of KMail.
+    This file is part of KNode.
     Copyright (c) 2003      Laurent Montel  <montel@kde.org>,
     Based on the work of Cornelius Schumacher <schumacher@kde.org>
 
@@ -24,7 +24,7 @@
 
 #include "knode_part.h"
 #include "knode.h"
-
+#include "aboutdata.h"
 
 #include <kapplication.h>
 #include <kparts/genericfactory.h>
@@ -40,35 +40,33 @@ typedef KParts::GenericFactory< KNodePart > KNodeFactory;
 K_EXPORT_COMPONENT_FACTORY( libknodepart, KNodeFactory )
 
 KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
-		     QObject *parent, const char *name, const QStringList &) :
-    KParts::ReadOnlyPart(parent, name),
+		     QObject *parent, const char *name, const QStringList &)
+  : KParts::ReadOnlyPart(parent, name),
   mParentWidget( parentWidget )
 {
   kdDebug(5003) << "KNodePart()" << endl;
   kdDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
 
-  setInstance(KNodeFactory::instance());
+  setInstance( KNodeFactory::instance() );
 
   kdDebug(5003) << "KNodePart()..." << endl;
   kdDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
 
   KGlobal::locale()->insertCatalogue("libkdenetwork");
-  KGlobal::iconLoader()->addAppDir("knode");
   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
-
-  kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget(parentWidget, widgetName);
   canvas->setFocusPolicy(QWidget::ClickFocus);
   setWidget(canvas);
 
-
-  mainWidget = new KNMainWindow();
+  mainWidget = new KNMainWindow;
   QVBoxLayout *topLayout = new QVBoxLayout(canvas);
   topLayout->addWidget(mainWidget);
   mainWidget->setFocusPolicy(QWidget::ClickFocus);
 
+  kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
+  KGlobal::iconLoader()->addAppDir("knode");
   setXMLFile( "knodeui.rc" );
 }
 
@@ -78,14 +76,14 @@ KNodePart::~KNodePart()
 
 KAboutData *KNodePart::createAboutData()
 {
-    //return new KNode::AboutData();
+  return new KNode::AboutData();
 }
 
 bool KNodePart::openFile()
 {
   kdDebug(5003) << "KNodePart:openFile()" << endl;
 
-  //mainWidget->show();
+  mainWidget->show();
   return true;
 }
 

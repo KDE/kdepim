@@ -59,8 +59,8 @@ using KRecentAddress::RecentAddresses;
 
 KNGlobals knGlobals;
 
-KNMainWindow::KNMainWindow()
-  : KDockMainWindow(0,"mainWindow"), b_lockui(false)
+KNMainWindow::KNMainWindow( QWidget* pWidget )
+  : KDockMainWindow(pWidget,"mainWindow"), b_lockui(false)
 {
   knGlobals.top=this;
   knGlobals.topWidget=this;

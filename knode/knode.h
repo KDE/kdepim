@@ -65,7 +65,7 @@ class KNMainWindow : public KDockMainWindow
 
   public:
 
-    KNMainWindow();
+    KNMainWindow( QWidget* parentWidget=0 );
     ~KNMainWindow();
 
     //GUI
