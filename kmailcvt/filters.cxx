@@ -68,7 +68,7 @@ void FilterInfo::current(QString current)
 void  FilterInfo::current(float percent)
 {
   int p=(int) (percent+0.5);
-  if (percent<0) { _dlg->_done_current->reset(); }
+  if (percent == 0) { _dlg->_done_current->reset(); }
   _dlg->_done_current->setProgress(p);
   kapp->processEvents(50);
 }
@@ -76,8 +76,9 @@ void  FilterInfo::current(float percent)
 void  FilterInfo::overall(float percent)
 {
   int p=(int) (percent+0.5);
-  if (percent<0) { _dlg->_done_overall->reset(); }
+  if (percent == 0) { _dlg->_done_overall->reset(); }
   _dlg->_done_overall->setProgress(p);
+  kapp->processEvents(50);
 }
 
 void FilterInfo::log(QString toLog)
