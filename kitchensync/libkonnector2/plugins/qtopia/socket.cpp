@@ -1,3 +1,24 @@
+/*
+    This file is part of KitchenSync.
+
+    Copyright (c) 2002,2003 Holger Freyther <freyther@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
+
 #include <qsocket.h>
 #include <qdir.h>
 #include <qtimer.h>
@@ -31,9 +52,11 @@ namespace {
     void outputIt( int area, Syncee* );
 }
 
-class QtopiaSocket::Private {
-public:
-    enum CallIt {
+class QtopiaSocket::Private
+{
+  public:
+    enum CallIt
+    {
         NotStarted = 0,
         Handshake  = 0,
         ABook,
@@ -44,6 +67,7 @@ public:
         Desktops,
         Flush
     };
+    
     enum Status {
         Start = 0,
         User,
@@ -53,6 +77,7 @@ public:
         Done,
         Connected
     };
+    
     Private(){}
 
     bool connected    : 1;
@@ -79,9 +104,11 @@ public:
     OpieHelper::Device* device;
     OpieHelper::ExtraMap extras;
 };
+
 namespace {
     void parseTZ( const QString& fileName,  QString& tz );
 };
+
 /**
  * QtopiaSocket is somehow a state machine
  * during authentication
@@ -104,23 +131,35 @@ QtopiaSocket::QtopiaSocket( QObject* obj, const char* name )
     d->device = new OpieHelper::Device;
     m_flushedApps = 0;
 }
-QtopiaSocket::~QtopiaSocket() {
+
+QtopiaSocket::~QtopiaSocket()
+{
     delete d->device;
     delete d;
 }
-void QtopiaSocket::setUser( const QString& user ) {
+
+void QtopiaSocket::setUser( const QString& user )
+{
     d->device->setUser( user );
 }
-void QtopiaSocket::setPassword( const QString& pass ) {
+
+void QtopiaSocket::setPassword( const QString& pass )
+{
     d->device->setPassword( pass );
 }
-void QtopiaSocket::setSrcIP( const QString& src) {
+
+void QtopiaSocket::setSrcIP( const QString& src)
+{
     d->src = src;
 }
-void QtopiaSocket::setDestIP( const QString& dest) {
+
+void QtopiaSocket::setDestIP( const QString& dest)
+{
     d->dest = dest;
 }
-void QtopiaSocket::setModel( const QString& model, const QString& name ){
+
+void QtopiaSocket::setModel( const QString& model, const QString& name )
+{
     if( model == QString::fromLatin1("Sharp Zaurus ROM") ){
 	kdDebug(5225) << "Sharp Zaurus ROM match " << endl;
 	d->device->setDistribution( OpieHelper::Device::Zaurus );
@@ -129,7 +168,9 @@ void QtopiaSocket::setModel( const QString& model, const QString& name ){
 
     d->device->setMeta( name );
 }
-void QtopiaSocket::startUp() {
+
+void QtopiaSocket::startUp()
+{
     kdDebug(5225) << "Start Up " << endl;
     delete d->socket;
     d->socket = new QSocket(this, "Qtopia Socket" );
@@ -152,7 +193,9 @@ void QtopiaSocket::startUp() {
     d->isSyncing = false;
     d->socket->connectToHost(d->dest, 4243 );
 }
-void QtopiaSocket::hangUP() {
+
+void QtopiaSocket::hangUP()
+{
     if (d->isSyncing ) {
         emit error( Error(Error::CouldNotDisconnect, i18n("Can not disconnect now. Try again after syncing was finished") ) );
         return;
@@ -177,10 +220,14 @@ void QtopiaSocket::hangUP() {
     d->mode = d->Start;
     emit prog( Progress(i18n("Disconnected from the device.") ) );
 }
-void QtopiaSocket::setResources( const QStringList& list ) {
+
+void QtopiaSocket::setResources( const QStringList& list )
+{
     d->files = list;
 }
-bool QtopiaSocket::startSync() {
+
+bool QtopiaSocket::startSync()
+{
     if ( d->isSyncing )
         return false;
     d->isSyncing = true;
@@ -199,16 +246,20 @@ bool QtopiaSocket::startSync() {
 
     return true;
 }
+
 /*
  * check if we're connected
  */
-bool QtopiaSocket::isConnected() {
+bool QtopiaSocket::isConnected()
+{
     if ( d->connected || d->mode == d->Call || d->mode  == d->Noop || d->mode == d->Connected )
         return true;
     else
         return false;
 }
-void QtopiaSocket::write( SynceeList list) {
+
+void QtopiaSocket::write( SynceeList list )
+{
     if (!isConnected() ) {
         emit error( Error( i18n("<qt>Can not write the data back.\n There is no connection to the device") ) );
         emit prog( StdProgress::done() );
@@ -252,34 +303,46 @@ void QtopiaSocket::write( SynceeList list) {
     d->first = false;
     emit prog(StdProgress::done() );
 }
-QString QtopiaSocket::metaId()const {
+
+QString QtopiaSocket::metaId() const
+{
     return d->partnerId;
-};
-void QtopiaSocket::slotError(int err) {
+}
+
+void QtopiaSocket::slotError( int err )
+{
     d->isSyncing = false;
     d->isConnecting = false;
     kdDebug(5225) << "Error " << err << " for ip = " << d->dest << endl;
 
     emit error( StdError::connectionLost() );
 }
-void QtopiaSocket::slotConnected() {
+
+void QtopiaSocket::slotConnected()
+{
     emit prog( StdProgress::connection() );
     d->connected = true;
     delete d->timer;
     d->mode = d->Start;
 }
-void QtopiaSocket::slotClosed() {
+
+void QtopiaSocket::slotClosed()
+{
     d->connected    = false;
     d->isConnecting = false;
     d->isSyncing    = false;
     emit error( StdError::connectionLost() );
 }
-void QtopiaSocket::slotNOOP() {
+
+void QtopiaSocket::slotNOOP()
+{
     if (!d->socket ) return;
     QTextStream stream( d->socket );
     stream << "NOOP" << endl;
 }
-void QtopiaSocket::process() {
+
+void QtopiaSocket::process()
+{
     while ( d->socket->canReadLine() ) {
         QTextStream stream( d->socket );
         QString line = d->socket->readLine();
@@ -306,7 +369,9 @@ void QtopiaSocket::process() {
         }
     }
 }
-void QtopiaSocket::slotStartSync() {
+
+void QtopiaSocket::slotStartSync()
+{
     emit prog( Progress( i18n("Starting to sync now") ) );
     d->startSync = false;
     QTextStream stream( d->socket );
@@ -314,7 +379,9 @@ void QtopiaSocket::slotStartSync() {
     d->getMode = d->Handshake;
     d->mode = d->Call;
 }
-KURL QtopiaSocket::url( Type  t) {
+
+KURL QtopiaSocket::url( Type t )
+{
     QString uri;
     uri = d->path + "/Applications/";
     switch( t ) {
@@ -330,7 +397,9 @@ KURL QtopiaSocket::url( Type  t) {
     }
     return url( uri );
 }
-KURL QtopiaSocket::url( const QString& path ) {
+
+KURL QtopiaSocket::url( const QString& path )
+{
     KURL url;
     url.setProtocol("ftp" );
     url.setUser( d->device->user() );
@@ -341,16 +410,20 @@ KURL QtopiaSocket::url( const QString& path ) {
 
     return url;
 }
+
 /*
  * write the categories file
  */
-void QtopiaSocket::writeCategory() {
+void QtopiaSocket::writeCategory()
+{
     QString fileName = QDir::homeDirPath() + "/.kitchensync/meta/" +d->partnerId + "/categories.xml";
     d->edit->save( fileName );
     KURL uri = url(  d->path + "/Settings/Categories.xml" );
     KIO::NetAccess::upload( fileName,  uri );
 }
-void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee) {
+
+void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee )
+{
     emit prog(Progress(i18n("Writing AddressBook back to the device") ) );
     OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->meta, d->device );
     KTempFile* file = abDB.fromKDE( syncee, d->extras );
@@ -367,7 +440,9 @@ void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee) {
         map.save( );
     }
 }
-void QtopiaSocket::writeDatebook( EventSyncee* syncee) {
+
+void QtopiaSocket::writeDatebook( EventSyncee* syncee )
+{
     OpieHelper::DateBook dbDB(d->edit, d->helper, d->tz, d->meta, d->device );
     KTempFile* file = dbDB.fromKDE( syncee, d->extras );
     KURL uri = url( DateBook );
@@ -383,7 +458,9 @@ void QtopiaSocket::writeDatebook( EventSyncee* syncee) {
         map.save( );
     }
 }
-void QtopiaSocket::writeTodoList( TodoSyncee* syncee) {
+
+void QtopiaSocket::writeTodoList( TodoSyncee* syncee)
+{
     OpieHelper::ToDo toDB(d->edit, d->helper, d->tz, d->meta, d->device );
     KTempFile* file = toDB.fromKDE( syncee, d->extras );
     KURL uri = url( TodoList );
@@ -399,7 +476,9 @@ void QtopiaSocket::writeTodoList( TodoSyncee* syncee) {
         map.save();
     }
 }
-void QtopiaSocket::readAddressbook() {
+
+void QtopiaSocket::readAddressbook()
+{
     KSync::AddressBookSyncee* syncee = 0;
     emit prog( StdProgress::downloading(i18n("Addressbook") ) );
     QString tempfile;
@@ -441,7 +520,9 @@ void QtopiaSocket::readAddressbook() {
     if (!tempfile.isEmpty() )
         KIO::NetAccess::removeTempFile( tempfile );
 }
-void QtopiaSocket::readDatebook() {
+
+void QtopiaSocket::readDatebook()
+{
     KSync::EventSyncee* syncee = 0;
     emit prog( StdProgress::downloading(i18n("Datebook") ) );
     QString tempfile;
@@ -484,7 +565,9 @@ void QtopiaSocket::readDatebook() {
     if (!tempfile.isEmpty() )
         KIO::NetAccess::removeTempFile( tempfile );
 }
-void QtopiaSocket::readTodoList() {
+
+void QtopiaSocket::readTodoList()
+{
     KSync::TodoSyncee* syncee = 0;
     QString tempfile;
     emit prog( StdProgress::downloading(i18n("TodoList") ) );
@@ -523,8 +606,8 @@ void QtopiaSocket::readTodoList() {
         KIO::NetAccess::removeTempFile( tempfile );
 }
 
-void QtopiaSocket::start(const QString& line ) {
-
+void QtopiaSocket::start( const QString& line )
+{
     QTextStream stream( d->socket );
     if ( line.left(3) != QString::fromLatin1("220") ) {
         emit error( Error(i18n("The device returned bogus data. giving up now.") ) );
@@ -533,14 +616,14 @@ void QtopiaSocket::start(const QString& line ) {
         d->mode = d->Done;
         d->connected    = false;
         d->isConnecting = false;
-    }else{
+    } else {
         /*
          * parse the uuid
          * here if not zaurus
          */
 	if( d->device->distribution() == OpieHelper::Device::Zaurus ){
 	    d->partnerId = d->device->meta();
-	}else{
+	} else {
             QStringList list = QStringList::split(";", line );
     	    QString uid = list[1];
             uid = uid.mid(11, uid.length()-12 );
@@ -552,7 +635,8 @@ void QtopiaSocket::start(const QString& line ) {
     }
 }
 
-void QtopiaSocket::user( const QString& line) {
+void QtopiaSocket::user( const QString &line )
+{
     emit prog( StdProgress::connected() );
 //    emit prog( StdProgress::authentication() );
     QTextStream stream( d->socket );
@@ -563,12 +647,14 @@ void QtopiaSocket::user( const QString& line) {
         d->mode = d->Done;
         d->connected    = false;
         d->isConnecting = false;
-    }else{
+    } else{
         stream << "PASS " << d->device->password() << endl;
         d->mode = d->Pass;
     }
 }
-void QtopiaSocket::pass( const QString& line) {
+
+void QtopiaSocket::pass( const QString& line)
+{
     if ( line.left(3) != QString::fromLatin1("230") ) {
         emit error( StdError::wrongPassword() );
         // wrong password
@@ -576,14 +662,16 @@ void QtopiaSocket::pass( const QString& line) {
         d->mode = d->Done;
         d->connected    = false;
         d->isConnecting = false;
-    }else {
+    } else {
         emit prog( StdProgress::authenticated() );
         kdDebug(5225) << "Konnected" << endl;
         d->mode = d->Noop;
         QTimer::singleShot(10000, this, SLOT(slotNOOP() ) );
     }
 }
-void QtopiaSocket::call( const QString& line) {
+
+void QtopiaSocket::call( const QString& line)
+{
     if ( line.contains("220 Command okay" ) &&
          ( d->getMode == d->Handshake || d->getMode == d->ABook ) )
         return;
@@ -613,14 +701,15 @@ void QtopiaSocket::call( const QString& line) {
     }
 }
 
-void QtopiaSocket::flush( const QString& _line )  {
-
-    if ( _line.startsWith("CALL QPE/Desktop flushDone(QString)") || _line.startsWith("599 ChannelNotRegistered") )  {
+void QtopiaSocket::flush( const QString& _line )
+{
+    if ( _line.startsWith("CALL QPE/Desktop flushDone(QString)") ||
+         _line.startsWith("599 ChannelNotRegistered") ) {
 
         QString line = _line.stripWhiteSpace();
         QString appName;
 
-        if ( line.endsWith( "datebook" ) )  {
+        if ( line.endsWith( "datebook" ) ) {
             readDatebook();
             appName = i18n( "datebook" );
             m_flushedApps++;
@@ -637,7 +726,7 @@ void QtopiaSocket::flush( const QString& _line )  {
     }
 
     /* all apps have been flushed or have not been running */
-    if ( m_flushedApps == 3 )  {
+    if ( m_flushedApps == 3 ) {
         /*
          * now we can progress during sync
          */
@@ -648,7 +737,8 @@ void QtopiaSocket::flush( const QString& _line )  {
     }
 }
 
-void QtopiaSocket::noop( const QString&) {
+void QtopiaSocket::noop( const QString & )
+{
     d->isConnecting = false;
     if (!d->startSync ) {
         d->mode = d->Noop;
@@ -656,7 +746,9 @@ void QtopiaSocket::noop( const QString&) {
     }else
         slotStartSync();
 }
-void QtopiaSocket::handshake( const QString& line) {
+
+void QtopiaSocket::handshake( const QString &line )
+{
     QTextStream stream( d->socket );
     QStringList list = QStringList::split( QString::fromLatin1(" "), line );
     d->path = list[3];
@@ -665,8 +757,9 @@ void QtopiaSocket::handshake( const QString& line) {
         stream << "call QPE/System startSync(QString) KitchenSync" << endl;
     }
 }
-void QtopiaSocket::download() {
 
+void QtopiaSocket::download()
+{
     /*
      * we're all set now
      * start sync
@@ -676,7 +769,9 @@ void QtopiaSocket::download() {
     d->mode = d->Noop;
     d->m_sync.clear();
 }
-void QtopiaSocket::initSync( const QString& ) {
+
+void QtopiaSocket::initSync( const QString& )
+{
     /* clear the extra map for the next round */
     d->extras.clear();
     emit prog( StdProgress::downloading("Categories.xml") );
@@ -703,12 +798,13 @@ void QtopiaSocket::initSync( const QString& ) {
     d->getMode  = d->Flush;
 }
 
-void QtopiaSocket::initFiles() {
+void QtopiaSocket::initFiles()
+{
     QDir di( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
     /*
      * if our meta path exists do not recreate it
      */
-    if (di.exists()  ) {
+    if ( di.exists() ) {
         d->first = false;
         return;
     }
@@ -719,7 +815,9 @@ void QtopiaSocket::initFiles() {
     dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta");
     dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
 }
-QString QtopiaSocket::partnerIdPath()const {
+
+QString QtopiaSocket::partnerIdPath() const
+{
     QString str = QDir::homeDirPath();
     str += "/.kitchensync/meta/";
     str += d->partnerId;
@@ -734,37 +832,49 @@ QString QtopiaSocket::partnerIdPath()const {
  * for evolution we need to fix that!!!
  *
  */
-void QtopiaSocket::readTimeZones() {
+void QtopiaSocket::readTimeZones()
+{
     KConfig conf("korganizerrc");
     conf.setGroup("Time & Date");
     d->tz = conf.readEntry("TimeZoneId", QString::fromLatin1("UTC") );
     kdDebug(5225) << "TimeZone of Korg is " << d->tz << endl;
 }
-bool QtopiaSocket::downloadFile( const QString& str, QString& dest ) {
+
+bool QtopiaSocket::downloadFile( const QString& str, QString& dest )
+{
     KURL uri = url( d->path + str );
     bool b = KIO::NetAccess::download( uri, dest );
     kdDebug(5225) << "Getting " << str << " " << b << endl;
     return b;
 }
 
+void QtopiaSocket::download( const QString& res )
+{
+  Q_UNUSED( res );
+}
+
 namespace {
-    void forAll( int area, QPtrList<SyncEntry> list) {
-        for (SyncEntry* entry = list.first(); entry != 0; entry = list.next() ) {
-            kdDebug(area) << "State " << entry->state() << endl;
-            kdDebug(area) << "Summary " << entry->name() << endl;
-            kdDebug(area) << "Uid " << entry->id() << endl;
-        }
-    }
-    void outputIt( int area,  Syncee* s) {
-        kdDebug(area) << "Added entries" << endl;
-        forAll( area, s->added() );
 
-        kdDebug(area) << "Modified " <<endl;
-        forAll( area, s->modified() );
-
-        kdDebug(area) << "Removed " << endl;
-        forAll( area, s->removed() );
+void forAll( int area, QPtrList<SyncEntry> list )
+{
+    for (SyncEntry* entry = list.first(); entry != 0; entry = list.next() ) {
+        kdDebug(area) << "State " << entry->state() << endl;
+        kdDebug(area) << "Summary " << entry->name() << endl;
+        kdDebug(area) << "Uid " << entry->id() << endl;
     }
+}
+
+void outputIt( int area, Syncee *s )
+{
+    kdDebug(area) << "Added entries" << endl;
+    forAll( area, s->added() );
+
+    kdDebug(area) << "Modified " <<endl;
+    forAll( area, s->modified() );
+
+    kdDebug(area) << "Removed " << endl;
+    forAll( area, s->removed() );
+}
 
 }
 

@@ -25,7 +25,7 @@ INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitc
 libqtopiakonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
 libqtopiakonnector_la_LIBADD = ../../libkonnector.la 
 libqtopiakonnector_la_LDFLAGS = -module $(KDE_PLUGIN)
-libqtopiakonnector_la_SOURCES = konnector.cpp socket.cpp addressbook.cpp \
+libqtopiakonnector_la_SOURCES = qtopiakonnector.cpp socket.cpp addressbook.cpp \
 				categoryedit.cpp datebook.cpp helper.cpp \
 				opiecategories.cpp todo.cpp desktop.cpp \
 				md5map.cpp metaaddressbook.cpp \
@@ -33,8 +33,8 @@ libqtopiakonnector_la_SOURCES = konnector.cpp socket.cpp addressbook.cpp \
 				qtopiaconfig.cpp device.cpp \
 				extramap.cpp
 
-qtopiadatadir = $(kde_datadir)/kitchensync
-qtopiadata_DATA = qtopia.desktop
+servicedir = $(kde_servicesdir)/kresources/konnector
+service_DATA = qtopia.desktop
 
 qtopiapicsdir = $(kde_datadir)/kitchensync/pics
 qtopiapics_DATA = opie.png

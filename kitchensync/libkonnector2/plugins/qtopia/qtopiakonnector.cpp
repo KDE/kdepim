@@ -1,3 +1,24 @@
+/*
+    This file is part of KitchenSync.
+
+    Copyright (c) 2002,2003 Holger Freyther <freyther@kde.org>
+    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -7,14 +28,35 @@
 
 #include "qtopiaconfig.h"
 #include "socket.h"
-#include "konnector.h"
 
-typedef KGenericFactory<KSync::QtopiaPlugin, QObject>  QtopiaKonnectorPlugin;
-K_EXPORT_COMPONENT_FACTORY( libqtopiakonnector,  QtopiaKonnectorPlugin );
+#include "qtopiakonnector.h"
 
 using namespace KSync;
 
-class QtopiaPlugin::Private
+class QtopiaKonnectorFactory : public KRES::PluginFactoryBase
+{
+  public:
+    KRES::Resource *resource( const KConfig *config )
+    {
+      return new QtopiaKonnector( config );
+    }
+
+    KRES::ConfigWidget *configWidget( QWidget * )
+    {
+      return 0;
+    }
+};
+
+extern "C"
+{
+  void *init_libqtopiakonnector()
+  {
+    return new QtopiaKonnectorFactory();
+  }
+}
+
+
+class QtopiaKonnector::Private
 {
   public:
     Private() : socket( 0 ) {}
@@ -22,8 +64,8 @@ class QtopiaPlugin::Private
     QtopiaSocket *socket;
 };
 
-QtopiaPlugin::QtopiaPlugin( QObject* obj, const char* name, const QStringList )
-    : Konnector(obj, name )
+QtopiaKonnector::QtopiaKonnector( const KConfig *cfg )
+    : Konnector( cfg )
 {
     d = new Private;
     d->socket = new QtopiaSocket(this, "Opie Socket" );
@@ -37,12 +79,12 @@ QtopiaPlugin::QtopiaPlugin( QObject* obj, const char* name, const QStringList )
             this, SLOT(slotProg(const Progress& ) ) );
 }
 
-QtopiaPlugin::~QtopiaPlugin()
+QtopiaKonnector::~QtopiaKonnector()
 {
     delete d;
 }
 
-Kapabilities QtopiaPlugin::capabilities()
+Kapabilities QtopiaKonnector::capabilities()
 {
     Kapabilities caps;
     caps.setSupportMetaSyncing( true );
@@ -72,7 +114,7 @@ Kapabilities QtopiaPlugin::capabilities()
     return caps;
 }
 
-void QtopiaPlugin::setCapabilities( const KSync::Kapabilities& caps )
+void QtopiaKonnector::setCapabilities( const KSync::Kapabilities& caps )
 {
     d->socket->setDestIP( caps.destIP() );
     d->socket->setUser( caps.user() );
@@ -81,30 +123,35 @@ void QtopiaPlugin::setCapabilities( const KSync::Kapabilities& caps )
     d->socket->startUp();
 }
 
-bool QtopiaPlugin::readSyncees()
+SynceeList QtopiaKonnector::syncees()
+{
+  return SynceeList();
+}
+
+bool QtopiaKonnector::readSyncees()
 {
     d->socket->setResources( resources() );
     return d->socket->startSync();
 }
 
-bool QtopiaPlugin::connectDevice()
+bool QtopiaKonnector::connectDevice()
 {
     d->socket->startUp();
     return true;
 }
 
-bool QtopiaPlugin::disconnectDevice()
+bool QtopiaKonnector::disconnectDevice()
 {
     d->socket->hangUP();
     return true;
 }
 
-QString QtopiaPlugin::metaId() const
+QString QtopiaKonnector::metaId() const
 {
     return d->socket->metaId();
 }
 
-QIconSet QtopiaPlugin::iconSet() const
+QIconSet QtopiaKonnector::iconSet() const
 {
     kdDebug(5225) << "iconSet" << endl;
     QPixmap logo;
@@ -112,12 +159,12 @@ QIconSet QtopiaPlugin::iconSet() const
     return QIconSet( logo );
 }
 
-QString QtopiaPlugin::iconName() const
+QString QtopiaKonnector::iconName() const
 {
     return QString::fromLatin1("opie.png");
 }
 
-bool QtopiaPlugin::writeSyncees()
+bool QtopiaKonnector::writeSyncees()
 {
     kdDebug(5201) << " writing it now " << endl;
     d->socket->write( SynceeList() );
@@ -125,22 +172,22 @@ bool QtopiaPlugin::writeSyncees()
 }
 
 /* private slots for communication here */
-void QtopiaPlugin::slotSync(SynceeList lst )
+void QtopiaKonnector::slotSync( SynceeList )
 {
-    emit synceesRead( this , lst );
+    emit synceesRead( this );
 }
 
-void QtopiaPlugin::slotError( const Error& err )
+void QtopiaKonnector::slotError( const Error& err )
 {
     error( err );
 }
 
-void QtopiaPlugin::slotProg( const Progress& prog )
+void QtopiaKonnector::slotProg( const Progress& prog )
 {
     progress( prog );
 }
 
-KonnectorInfo QtopiaPlugin::info() const
+KonnectorInfo QtopiaKonnector::info() const
 {
     return KonnectorInfo(QString::fromLatin1("Qtopia Konnector"),
                          iconSet(),
@@ -150,19 +197,19 @@ KonnectorInfo QtopiaPlugin::info() const
                          d->socket->isConnected() );
 }
 
-void QtopiaPlugin::download( const QString& res)
+void QtopiaKonnector::download( const QString& res)
 {
     d->socket->download( res );
 }
 
-ConfigWidget* QtopiaPlugin::configWidget( const Kapabilities& cap, QWidget* parent, const char* name )
+ConfigWidget* QtopiaKonnector::configWidget( const Kapabilities& cap, QWidget* parent, const char* name )
 {
     return new OpieHelper::QtopiaConfig( cap, parent, name );
 }
 
-ConfigWidget* QtopiaPlugin::configWidget( QWidget* parent, const char* name )
+ConfigWidget* QtopiaKonnector::configWidget( QWidget* parent, const char* name )
 {
     return new OpieHelper::QtopiaConfig( parent, name );
 }
 
-#include "konnector.moc"
+#include "qtopiakonnector.moc"
