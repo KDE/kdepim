@@ -1,10 +1,9 @@
 [Protocol]
 # The executable, of course
 #### Temporary name
-exec=kio_newimap4
+exec=kio_imap4
 # protocol that will appear in URLs
-#### This ioslave is temporarily named newimaps, while imaps remains in kdebase
-protocol=newimaps
+protocol=imap
 
 # input/output can be one of: filesystem, stream, none
 input=stream
@@ -27,4 +26,4 @@ source=true
 Capabilities=Subscription,ACL
 
 Icon=folder_inbox
-DocPath=kioslave/imaps.html
+DocPath=kioslave/imap.html

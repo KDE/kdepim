@@ -74,8 +74,8 @@
 #include <kmimetype.h>
 #include <kmdcodec.h>
 
-#define IMAP_PROTOCOL "newimap"
-#define IMAP_SSL_PROTOCOL "newimaps"
+#define IMAP_PROTOCOL "imap"
+#define IMAP_SSL_PROTOCOL "imaps"
 
 using namespace KIO;
 
@@ -90,10 +90,10 @@ kdemain (int argc, char **argv)
 {
   kdDebug(7116) << "IMAP4::kdemain" << endl;
 
-  KInstance instance ("kio_newimap4");
+  KInstance instance ("kio_imap4");
   if (argc != 4)
   {
-    fprintf(stderr, "Usage: kio_newimap4 protocol domain-socket1 domain-socket2\n");
+    fprintf(stderr, "Usage: kio_imap4 protocol domain-socket1 domain-socket2\n");
     ::exit (-1);
   }
 
