@@ -1,0 +1,105 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Jan</firstname><surname>Schaumann</surname></personname>
+<email></email></author>
+<date>April 12, 2003</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>karm</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>karm</command></refname>
+<refpurpose>A &kde; based time tracking tool.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>&karm;</command>
+<arg choice="opt">file</arg>
+<group><option>KDE Generic Options</option></group>
+<group><option>Qt Generic Options</option></group>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para>&karm; tracks time spent on various tasks.  It is useful for
+tracking hours to be billed to different clients, or just to find out
+what percentage of your day was spent playing Doom or reading
+Slashdot.</para>
+
+<para>&karm; is part of the &kde; PIM package</para>
+
+</refsect1>
+
+<refsect1>
+<title>Options</title>
+
+<variablelist>
+<varlistentry>
+<term><option>file</option></term>
+<listitem><para>The iCalendar file to open</para></listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+
+<refsect1>
+<title>Files</title>
+
+<variablelist>
+<varlistentry>
+<term><filename>$<envar>KDEHOME</envar>/share/config/karmrc</filename></term>
+<listitem><para>&karm; configuration data.  This file is not intended to be hand edited.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>$<envar>KDEHOME</envar>/share/apps/karm/karmdata.ics</filename></term>
+<listitem><para>Default location of the file &karm; saves it's data to.  This is a standard ICS calendar file.  The location can be changed from within the &GUI;</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>$<envar>KDEHOME</envar>/share/apps/karm/karmdata.txt</filename></term>
+<listitem><para>If you enable time logging to a text file, this is the default location.  The location of this file can be changed from within the application.</para></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+
+<para>see(1) other(2) manpages(3)</para>
+
+<para>More detailed user documentation is available from <ulink
+url="help:/karm">help:/karm</ulink> (either enter this
+<acronym>URL</acronym> into &konqueror;, or run
+<userinput><command>khelpcenter</command>
+<parameter>help:/karm</parameter></userinput>).</para>
+
+</refsect1>
+
+<!-- <refsect1>
+<title>Standards</title>
+
+<para></para>
+
+Investigate if the ICS files have an RFC (I am pretty sure they do)
+
+</refsect1> -->
+
+<refsect1>
+<title>Authors</title>
+
+<para>Author information of the developer and man page writer</para>
+</refsect1>
+
+
+</refentry>
