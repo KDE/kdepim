@@ -129,7 +129,7 @@ class CreateGroupwiseKabcResource : public KConfigPropagator::Change
                                                                 password,
                                                                 QStringList(),
                                                                 QString::null );
-      r->setResourceName( i18n("Groupwise") );
+      r->setResourceName( i18n("GroupWise") );
       m.add( r );
       m.writeConfig();
 
