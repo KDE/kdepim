@@ -89,6 +89,7 @@ class Kandy : public KMainWindow
     void optionsPreferences();
     void modemDisconnect();
     void showMobileGui();
+    void newToolbarConfig();
 
     void changeStatusbar(const QString& text);
     void changeCaption(const QString& text);

@@ -3,11 +3,11 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif 
+#endif
 
 #include <kapplication.h>
 #include <kmainwindow.h>
- 
+
 class KToggleAction;
 
 class CommandScheduler;
@@ -50,7 +50,7 @@ class MobileMain : public KMainWindow
      */
     virtual void dragEnterEvent(QDragEnterEvent *event);
     virtual void dropEvent(QDropEvent *event);
-    
+
     bool queryClose();
 
   protected:
@@ -75,6 +75,7 @@ class MobileMain : public KMainWindow
     void optionsConfigureKeys();
     void optionsConfigureToolbars();
     void optionsPreferences();
+    void newToolbarConfig();
 
     void showStatusMessage(const QString& text);
     void showTransientStatusMessage(const QString& text);
@@ -86,7 +87,7 @@ class MobileMain : public KMainWindow
 
   private:
     MobileGui *mView;
-  
+
     KToggleAction *m_toolbarAction;
     KToggleAction *m_statusbarAction;
 };

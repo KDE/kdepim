@@ -41,6 +41,8 @@ MobileMain::MobileMain(CommandScheduler *scheduler)
   connect(mView,SIGNAL(transientStatusMessage(const QString &)),
           SLOT(showTransientStatusMessage(const QString &)));
   statusBar()->show();
+
+  setAutoSaveSettings();
 }
 
 MobileMain::~MobileMain()
@@ -146,12 +148,17 @@ void MobileMain::optionsConfigureKeys()
 void MobileMain::optionsConfigureToolbars()
 {
     // use the standard toolbar editor
+    saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
     KEditToolbar dlg(actionCollection());
-    if (dlg.exec())
-    {
-        // recreate our GUI
-        createGUI("kandymobileui.rc");
-    }
+    connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
+    dlg.exec();
+}
+
+void MobileMain::newToolbarConfig()
+{
+    // recreate our GUI
+    createGUI("kandymobileui.rc");
+    applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 }
 
 void MobileMain::optionsPreferences()

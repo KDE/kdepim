@@ -1,7 +1,7 @@
 /*
 
  kandy.cpp
- 
+
  Copyright (C) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
 
 */
@@ -65,6 +65,8 @@ Kandy::Kandy(CommandScheduler *scheduler)
   // and a status bar
   statusBar()->show();
 
+  setAutoSaveSettings();
+
   // allow the view to change the statusbar and caption
   connect(mView, SIGNAL(signalChangeStatusbar(const QString&)),
           this,   SLOT(changeStatusbar(const QString&)));
@@ -98,7 +100,7 @@ void Kandy::save(const QString & filename)
 {
   if (!filename.isEmpty()) {
     if (!mView->saveFile(filename)) {
-      KMessageBox::error(this,i18n("Couldn't save file %1.").arg(filename)); 
+      KMessageBox::error(this,i18n("Couldn't save file %1.").arg(filename));
     } else {
       mFilename = filename;
       setTitle();
@@ -253,12 +255,18 @@ void Kandy::optionsConfigureKeys()
 void Kandy::optionsConfigureToolbars()
 {
     // use the standard toolbar editor
+    saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
     KEditToolbar dlg(actionCollection());
-    if (dlg.exec())
-    {
-        // recreate our GUI
-        createGUI();
-    }
+    connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
+    dlg.exec();
+}
+
+void Kandy::newToolbarConfig()
+{
+    // this slot is called when user clicks "Ok" or "Apply" in the toolbar editor.
+    // recreate our GUI, and re-apply the settings (e.g. "text under icons", etc.)
+    createGUI();
+    applyMainWindowSettings( KGlobal::config(),  autoSaveGroup() );
 }
 
 void Kandy::optionsPreferences()
@@ -267,7 +275,7 @@ void Kandy::optionsPreferences()
     mPreferencesDialog = new KandyPrefsDialog(this);
     mPreferencesDialog->readConfig();
   }
-  
+
   mPreferencesDialog->show();
   mPreferencesDialog->raise();
 }
@@ -319,9 +327,9 @@ void Kandy::modemConnect()
         .arg(KandyPrefs::instance()->mSerialDevice), i18n("Modem Error"));
     return;
   }
-  
+
   statusBar()->changeItem(i18n(" Connected "),0);
-  
+
   emit connectStateChanged(true);
 }
 
