@@ -31,9 +31,6 @@
 #include <qfile.h>
 #include <qdatastream.h>
 
-// KDE includes
-#include <kapp.h>
-
 // Local includes
 #include "KAddressBookInterface.h"
 #include "Entity.h"
@@ -43,8 +40,8 @@ int KABUniqueEntityID = 0;
 
 // Addressbook /////////////////////////////////////////////////////////////
 
-KAddressBook::KAddressBook(QCString name, QString path)
-  : DCOPObject(name),
+KAddressBook::KAddressBook(QString name, QString path)
+  : DCOPObject(name.utf8()),
     path_(path)
 {
   _init();

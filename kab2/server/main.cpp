@@ -26,23 +26,16 @@
 #include <iostream.h>
 
 // KDE includes
-#include <kapp.h>
-#include <kcmdlineargs.h>
+#include <kuniqueapp.h>
 #include <klocale.h>
 #include <kaboutdata.h>
+#include <kcmdlineargs.h>
 
 // Local includes
 #include "KAddressBookInterface.h"
 
-static const char *description=I18N_NOOP("Addressbook Server for KDE");
-static const char *version="2.0pre";
-static const KCmdLineOptions options[] =
-{
-        {"+server", I18N_NOOP("Name of addressbook server"), 0},
-	{"+path", I18N_NOOP("Addressbook server directory"), 0},
-	{0,0,0}
-};
-
+static const char* description=I18N_NOOP("Kab, The KDE addressbook");
+static const char* VERSION="0.0.1";
 
   int
 main(int argc, char * argv[])
@@ -55,45 +48,36 @@ main(int argc, char * argv[])
 
   int prev_umask = umask(077);
 
-  KAboutData aboutData("kab_server", I18N_NOOP("KAB2 Server"),
-    version, description, KAboutData::License_GPL,
-    "(c) 1999, Rik Hemsley");
-  aboutData.addAuthor("Rik Hemsley",0, "rik@kde.org");
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KApplication::addCmdLineOptions();
+  KAboutData aboutData(
+    "KAddressBook",
+    I18N_NOOP("KAddressBook"),
+    VERSION,
+    description,
+    KAboutData::License_GPL,
+    "(c) 1999-2000, The KDE-PIM Team",
+    0,
+    "http://without.netpedia.net",
+    "kde-pim@kde.org"
+  );
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  aboutData.addAuthor(
+    "Rik Hemsley",
+    I18N_NOOP("Design and coding"),
+    "rik@kde.org",
+    "http://without.netpedia.net"
+  );
 
-/*
-  KStartParams args(argc, argv);
+  KCmdLineArgs::init(argc, argv, &aboutData);
 
-  QStringList::Iterator name_it;
-  QStringList::Iterator path_it;
-
-  bool haveName = args.find("--name", "-n", true, name_it);
-  bool havePath = args.find("--path", "-p", true, path_it);
-
-  if (!haveName || !havePath) {
-    qDebug("Usage: " + QString(argv[0]) + " --name <name> --path <path>");
+  if (!KUniqueApplication::start())
     exit(1);
-  }
-
-  ++name_it;
-  ++path_it;
-*/
-  if (args->count() != 2) KCmdLineArgs::usage();
-
-  cerr << "Addressbook server `" << args->arg(0) << "' started" << endl;
-  
-  if (fork() == 0) {
     
-    KApplication * app = new KApplication(argc, argv, "kab");
-    KAddressBook * ab = new KAddressBook(args->arg(0), args->arg(1));
-    app->exec();
-  }
-  
+  KUniqueApplication app;
+
+  int retval = app.exec();
+
   umask(prev_umask);
-  return 0;
+
+  return retval;
 }
 
