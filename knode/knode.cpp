@@ -14,7 +14,7 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 #include "knode.h"
-
+#include "knglobals.h"
 
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
@@ -54,7 +54,7 @@ KNMainWindow::KNMainWindow( QWidget* pWidget )
 
 KNMainWindow::~KNMainWindow()
 {
-  saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
+  saveMainWindowSettings(KNGlobals::config(),"mainWindow_options");
 }
 
 void KNMainWindow::openURL( const KURL& url )
@@ -64,7 +64,7 @@ void KNMainWindow::openURL( const KURL& url )
 
 void KNMainWindow::slotConfToolbar()
 {
-  saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
+  saveMainWindowSettings(KNGlobals::config(),"mainWindow_options");
   KEditToolbar dlg(actionCollection(), "knodeui.rc");
   connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
   dlg.exec();
@@ -74,7 +74,7 @@ void KNMainWindow::slotNewToolbarConfig()
 {
   createGUI("knodeui.rc");
   //initPopups();
-  applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
+  applyMainWindowSettings(KNGlobals::config(),"mainWindow_options");
 }
 
 #include "knode.moc"

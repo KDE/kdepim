@@ -38,7 +38,7 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
   f_List.setAutoDelete(true);
 
   //standard folders
-  QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
+  QString dir(locateLocal("data","knode/")+"folders/");
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
@@ -430,7 +430,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
 
 void KNFolderManager::syncFolders()
 {
-  QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
+  QString dir(locateLocal("data","knode/")+"folders/");
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
@@ -448,7 +448,7 @@ void KNFolderManager::syncFolders()
 int KNFolderManager::loadCustomFolders()
 {
   int cnt=0;
-  QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
+  QString dir(locateLocal("data","knode/")+"folders/");
   KNFolder *f;
 
   if (dir.isNull()) {

@@ -57,6 +57,7 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
 
   KGlobal::locale()->insertCatalogue("libkdenetwork");
   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
+  KGlobal::iconLoader()->addAppDir("knode");
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget(parentWidget, widgetName);
@@ -73,7 +74,6 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
   new KParts::SideBarExtension( mainWidget->collectionView(),
                                 this,
                                 "KNodeSidebar" );
-  KGlobal::iconLoader()->addAppDir("knode");
   setXMLFile( "knodeui.rc" );
 }
 

@@ -76,6 +76,7 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knlistview.cpp \
 		  knmainwidget.cpp    \
 		  aboutdata.cpp \
+		  knglobals.cpp \
 		  knodecomposeriface.skel
 
 knode_SOURCES = knode.cpp knapplication.cpp main.cpp

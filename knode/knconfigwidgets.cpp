@@ -467,7 +467,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   topL->addMultiCellWidget(i_nterval, 9,9, 0,3);
 
   c_heckInterval=new KIntSpinBox(1,10000,1,1,10,page);
-  c_heckIntervalLabel=new QLabel(c_heckInterval, i18n("Check inter&val"), page);  
+  c_heckIntervalLabel=new QLabel(c_heckInterval, i18n("Check inter&val"), page);
   c_heckInterval->setSuffix(i18n(" min") );
   c_heckInterval->setValue(a->checkInterval());
   c_heckIntervalLabel->setBuddy(c_heckInterval);
@@ -605,7 +605,7 @@ void KNConfig::SmtpAccountWidget::apply()
   s_erverInfo->setHold(h_old->value());
   s_erverInfo->setTimeout(t_imeout->value());
 
-  KConfig *conf=KGlobal::config();
+  KConfig *conf=KNGlobals::config();
   conf->setGroup("MAILSERVER");
   s_erverInfo->saveConf(conf);
 }

@@ -30,6 +30,7 @@ class KNFilterManager;
 class KNMainWidget;
 class KNScoringManager;
 class KNMemoryManager;
+class KConfig;
 namespace Kpgp {
    class Module;
 }
@@ -60,6 +61,9 @@ class KNGlobals {
     KNScoringManager      *scoreManager;
     KNMemoryManager       *memManager;
     Kpgp::Module                 *pgp;
+    static KConfig               *config();
+private:
+    static KConfig               *c_onfig;
 };
 
 

@@ -22,6 +22,7 @@
 #include "knode.h"
 #include "knapplication.h"
 #include "knconvert.h"
+#include "knglobals.h"
 #include "knapplication.moc"
 
 
@@ -29,7 +30,7 @@ int KNApplication::newInstance()
 {
   kdDebug(5003) << "KNApplication::newInstance()" << endl;
 
-  KConfig *conf=KGlobal::config();
+  KConfig *conf=KNGlobals::config();
   conf->setGroup("GENERAL");
   QString ver=conf->readEntry("Version");
 

@@ -42,7 +42,7 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * 
   s_mtp=new KNServerInfo();
   s_mtp->setType(KNServerInfo::STsmtp);
   s_mtp->setId(0);
-  KConfig *conf=KGlobal::config();
+  KConfig *conf=KNGlobals::config();
   conf->setGroup("MAILSERVER");
   s_mtp->readConf(conf);
 
@@ -66,7 +66,7 @@ void KNAccountManager::prepareShutdown()
 
 void KNAccountManager::loadAccounts()
 {
-  QString dir(KGlobal::dirs()->saveLocation("appdata"));
+  QString dir(locateLocal("data","knode/"));
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
@@ -106,7 +106,7 @@ KNNntpAccount* KNAccountManager::account(int i)
       }
     }
   }
-  return ret; 
+  return ret;
 }
 
 
@@ -120,7 +120,7 @@ void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
 bool KNAccountManager::newAccount(KNNntpAccount *a)
 {
   // find a unused id for the new account...
-  QString dir(KGlobal::dirs()->saveLocation("appdata"));
+  QString dir(locateLocal("data","knode/"));
   if (dir.isNull()) {
     delete a;
     KNHelper::displayInternalFileError();
@@ -132,10 +132,10 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
   int id = 1;
   while (entries.findIndex(QString("nntp.%1").arg(id))!=-1)
     ++id;
-  
+
   a->setId(id);
-    
-  dir = KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(a->id()));
+
+  dir = locateLocal("data","knode/") + QString("nntp.%1/").arg(a->id());
   if (!dir.isNull()) {
     accList->append(a);
     KNCollectionViewItem *it = new KNCollectionViewItem(view);
@@ -174,7 +174,7 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
     for(KNGroup *g=lst->first(); g; g=lst->next())
       gManager->unsubscribeGroup(g);
     delete lst;
-    
+
     QDir dir(a->path());
     if (dir.exists()) {
       const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
@@ -188,9 +188,9 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
       dir.cdUp();                                       // directory should now be empty, deleting it
       dir.rmdir(QString("nntp.%1/").arg(a->id()));
     }
-    
+
     if(c_urrentAccount==a) setCurrentAccount(0);
-    
+
     emit(accountRemoved(a));
     accList->removeRef(a);      // finally delete a
     return true;

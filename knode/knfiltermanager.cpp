@@ -72,7 +72,7 @@ KNFilterManager::KNFilterManager(KNFilterSelectAction *a, KAction *keybA, QObjec
   connect(keybA, SIGNAL(activated()), this,  SLOT(slotShowFilterChooser()));
   loadFilters();
 
-  KConfig *conf=KGlobal::config();
+  KConfig *conf=KNGlobals::config();
   conf->setGroup("READNEWS");
   setFilter(conf->readNumEntry("lastFilterID", 1));
 }
@@ -99,7 +99,7 @@ void KNFilterManager::saveOptions()
 void KNFilterManager::prepareShutdown()
 {
   if (currFilter) {
-    KConfig *conf=KGlobal::config();
+    KConfig *conf=KNGlobals::config();
     conf->setGroup("READNEWS");
     conf->writeEntry("lastFilterID", currFilter->id());
   }
@@ -108,31 +108,31 @@ void KNFilterManager::prepareShutdown()
 
 void KNFilterManager::loadFilters()
 {
-  QString fname(KGlobal::dirs()->findResource("appdata","filters/filters.rc"));
+  QString fname(locateLocal("data","knode/")+"filters/filters.rc");
   if (!fname.isNull()) {
     KSimpleConfig conf(fname,true);
-  
+
     QValueList<int> activeFilters = conf.readIntListEntry("Active");
     menuOrder = conf.readIntListEntry("Menu");
-  
+
     QValueList<int>::Iterator it = activeFilters.begin();
     while (it != activeFilters.end()) {
       KNArticleFilter *f=new KNArticleFilter((*it));
       if (f->loadInfo())
         addFilter(f);
       else
-        delete f; 
+        delete f;
       it++;
-    } 
+    }
   }
-  updateMenu(); 
+  updateMenu();
 }
 
 
 
 void KNFilterManager::saveFilterLists()
 {
-  QString dir(KGlobal::dirs()->saveLocation("appdata","filters/"));
+  QString dir(locateLocal("data","knode/")+"filters/");
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
@@ -155,8 +155,8 @@ void KNFilterManager::startConfig(KNConfig::FilterListWidget *fs)
   commitNeeded = false;
 
   for(KNArticleFilter *f=fList.first(); f; f=fList.next())
-    fset->addItem(f); 
-  
+    fset->addItem(f);
+
   QValueList<int>::Iterator it = menuOrder.begin();
   while (it != menuOrder.end()) {
     if ((*it)!=-1)
@@ -223,7 +223,7 @@ void KNFilterManager::editFilter(KNArticleFilter *f)
     f->load();
 
   KNFilterDialog *fdlg=new KNFilterDialog(f,(fset)? fset:knGlobals.topWidget);
-  
+
   if (fdlg->exec()) {
     commitNeeded = true;
     if(f->id()==-1) {  // new filter
@@ -243,12 +243,12 @@ void KNFilterManager::editFilter(KNArticleFilter *f)
         fset->updateItem(f);
       }
     }
-    f->save();      
+    f->save();
   } else {
     if(f->id()==-1)   // new filter
       delete f;
   }
-    
+
   delete fdlg;
 }
 
@@ -283,7 +283,7 @@ bool KNFilterManager::newNameIsOK(KNArticleFilter *f, const QString &newName)
 {
   KNArticleFilter *var=fList.first();
   bool found=false;
-  
+
   while(var && !found) {
     if(var!=f) found=(newName==var->translatedName());
     var=fList.next();
@@ -297,16 +297,16 @@ bool KNFilterManager::newNameIsOK(KNArticleFilter *f, const QString &newName)
 KNArticleFilter* KNFilterManager::setFilter(const int id)
 {
   KNArticleFilter *bak=currFilter;
-  
-  currFilter=byID(id);  
-  
+
+  currFilter=byID(id);
+
   if(currFilter) {
     a_ctFilter->setCurrentItem(currFilter->id());
     emit(filterChanged(currFilter));
   } else
     currFilter=bak;
-  
-  return currFilter;    
+
+  return currFilter;
 }
 
 
@@ -314,11 +314,11 @@ KNArticleFilter* KNFilterManager::setFilter(const int id)
 KNArticleFilter* KNFilterManager::byID(int id)
 {
   KNArticleFilter *ret=0;
-  
+
   for(ret=fList.first(); ret; ret=fList.next())
     if(ret->id()==id) break;
-    
-  return ret; 
+
+  return ret;
 }
 
 
@@ -337,7 +337,7 @@ void KNFilterManager::updateMenu()
     else a_ctFilter->popupMenu()->insertSeparator();
     ++it;
   }
-  
+
   if(currFilter)
     a_ctFilter->setCurrentItem(currFilter->id());
 }

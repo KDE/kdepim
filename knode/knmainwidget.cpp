@@ -65,7 +65,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
 {
   knGlobals.top=this;
   knGlobals.topWidget=this;
-  kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
+  if ( detachable )
+    kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
 
   //------------------------------- <CONFIG> ----------------------------------
   c_fgManager = new KNConfigManager();
@@ -808,7 +809,7 @@ void KNMainWidget::initPopups()
 
 bool KNMainWidget::firstStart()
 {
-  KConfig *conf=KGlobal::config();
+  KConfig *conf=KNGlobals::config();
   conf->setGroup("GENERAL");
   QString ver = conf->readEntry("Version");
   if(!ver.isEmpty())
@@ -842,7 +843,7 @@ bool KNMainWidget::firstStart()
 
 void KNMainWidget::readOptions()
 {
-  KConfig *conf=KGlobal::config();
+  KConfig *conf=KNGlobals::config();
   conf->setGroup("APPEARANCE");
 
   QValueList<int> lst = conf->readIntListEntry("Hdrs_Size3");
@@ -899,13 +900,13 @@ void KNMainWidget::readOptions()
   //applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
   // restore dock configuration
-  manager()->readConfig(KGlobal::config(),"dock_configuration");
+  manager()->readConfig(KNGlobals::config(),"dock_configuration");
 }
 
 
 void KNMainWidget::saveOptions()
 {
-  KConfig *conf=KGlobal::config();
+  KConfig *conf=KNGlobals::config();
   conf->setGroup("APPEARANCE");
 
   // store section sizes
@@ -940,7 +941,7 @@ void KNMainWidget::saveOptions()
   //saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
   // store dock configuration
-  manager()->writeConfig(KGlobal::config(),"dock_configuration");
+  manager()->writeConfig(KNGlobals::config(),"dock_configuration");
 }
 
 
@@ -993,7 +994,7 @@ void KNMainWidget::prepareShutdown()
   delete cup;
 
   saveOptions();
-  RecentAddresses::self()->save( kapp->config() );
+  RecentAddresses::self()->save( KNGlobals::config() );
   c_fgManager->syncConfig();
   a_rtManager->deleteTempFiles();
   g_rpManager->syncGroups();

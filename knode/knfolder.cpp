@@ -97,7 +97,7 @@ void KNFolder::updateListItem()
 
 QString KNFolder::path()
 {
-  QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
+  QString dir(locateLocal("data","knode/")+"folders/");
   /*if (dir.isNull())
     KNHelper::displayInternalFileError();*/
   return dir;
@@ -281,7 +281,7 @@ bool KNFolder::loadHdrs()
       clear();
       closeFiles();
 
-      knGlobals.top->setStatusMsg(QString::null);   
+      knGlobals.top->setStatusMsg(QString::null);
       knGlobals.top->setCursorBusy(false);
       return false;
     }
@@ -294,7 +294,7 @@ bool KNFolder::loadHdrs()
   c_ount=cnt;
   updateListItem();
 
-  knGlobals.top->setStatusMsg(QString::null);   
+  knGlobals.top->setStatusMsg(QString::null);
   knGlobals.top->setCursorBusy(false);
 
   return true;

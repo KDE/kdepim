@@ -76,7 +76,7 @@ KNArticleFilter::~KNArticleFilter()
 bool KNArticleFilter::loadInfo()
 {
   if (i_d!=-1) {
-    QString fname(KGlobal::dirs()->findResource("appdata",QString("filters/%1.fltr").arg(i_d)));
+    QString fname(locateLocal("data","knode/") + QString("filters/%1.fltr").arg(i_d));
     if (fname.isNull())
       return false;
     KSimpleConfig conf(fname,true);
@@ -95,26 +95,26 @@ bool KNArticleFilter::loadInfo()
 
 void KNArticleFilter::load()
 {
-  QString fname(KGlobal::dirs()->findResource("appdata",QString("filters/%1.fltr").arg(i_d)));
+  QString fname(locateLocal("data","knode/") + QString("filters/%1.fltr").arg(i_d));
   if (fname.isNull())
     return;
   KSimpleConfig conf(fname,true);
-  
+
   conf.setGroup("STATUS");
   status.load(&conf);
-  
+
   conf.setGroup("SCORE");
   score.load(&conf);
-  
+
   conf.setGroup("AGE");
   age.load(&conf);
-  
+
   conf.setGroup("LINES");
   lines.load(&conf);
-  
+
   conf.setGroup("SUBJECT");
   subject.load(&conf);
-  
+
   conf.setGroup("FROM");
   from.load(&conf);
 
@@ -123,11 +123,11 @@ void KNArticleFilter::load()
 
   conf.setGroup("REFERENCES");
   references.load(&conf);
-  
+
   l_oaded=true;
-  
+
   kdDebug(5003) << "KNMessageFilter: filter loaded \"" << n_ame << "\" " << endl;
-  
+
 }
 
 
@@ -136,34 +136,34 @@ void KNArticleFilter::save()
 {
   if (i_d==-1)
     return;
-  QString dir(KGlobal::dirs()->saveLocation("appdata","filters/"));
+  QString dir(locateLocal("data","knode/")+"filters/");
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
   }
   KSimpleConfig conf(dir+QString("%1.fltr").arg(i_d));
-  
+
   conf.setGroup("GENERAL");
   conf.writeEntry("name", QString(n_ame));
   conf.writeEntry("Translate_Name",translateName);
   conf.writeEntry("enabled", e_nabled);
   conf.writeEntry("applyOn", (int) apon);
-  
+
   conf.setGroup("STATUS");
   status.save(&conf);
-  
+
   conf.setGroup("SCORE");
   score.save(&conf);
-  
+
   conf.setGroup("AGE");
   age.save(&conf);
-  
+
   conf.setGroup("LINES");
   lines.save(&conf);
-  
+
   conf.setGroup("SUBJECT");
   subject.save(&conf);
-  
+
   conf.setGroup("FROM");
   from.save(&conf);
 
@@ -172,7 +172,7 @@ void KNArticleFilter::save()
 
   conf.setGroup("REFERENCES");
   references.save(&conf);
-  
+
   kdDebug(5003) << "KNMessageFilter: filter saved \"" << n_ame << "\" " << endl;
 }
 
@@ -202,7 +202,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
   }
 
   for(int idx=0; idx<g->length(); idx++) {
-  
+
     art=g->at(idx);
 
     if(!art->isFiltered() && applyFilter(art) && apon==threads) {
@@ -341,7 +341,7 @@ void KNArticleFilter::setTranslatedName(const QString &s)
 bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
 {
   bool result=true;
-  
+
   if(result) result=status.doFilter(a);
   if(result) result=score.doFilter(a->score());
   if(result) result=lines.doFilter(a->lines()->numberOfLines());
@@ -356,7 +356,7 @@ bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
 
   a->setFilterResult(result);
   a->setFiltered(true);
-    
+
   return result;
 }
 
