@@ -412,7 +412,7 @@ void ViewManager::startDrag()
   // Get the list of all the selected addressees
   KABC::Addressee::List addrList;
   QStringList uidList = selectedUids();
-  if (  uidList.count() == 0 )
+  if (  uidList.isEmpty() )
       return;
   kdDebug(5720) << "ViewManager::startDrag: starting to drag" << endl;
 

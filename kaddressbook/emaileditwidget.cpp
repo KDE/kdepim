@@ -293,6 +293,7 @@ void EmailEditDialog::remove()
 
     bool preferred = item->preferred();
     mEmailListBox->removeItem( mEmailListBox->currentItem() );
+    mEmailEdit->clear();
     if ( preferred ) {
       item = dynamic_cast<EmailItem*>( mEmailListBox->item( 0 ) );
       if ( item )
