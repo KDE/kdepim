@@ -264,8 +264,6 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     StandardDestinationPolicy *mStandardPolicy;
     AskDestinationPolicy *mAskPolicy;
 
-    KConfig *mConfig;
-
     QMap<ResourceCalendar *, Ticket *> mTickets;
     QMap<ResourceCalendar *, int> mChangeCounts;
 };
