@@ -154,7 +154,7 @@ void PIMSyncAlg::addEntry( Syncee* in, Syncee* out, SyncEntry* add ) {
 void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                         Syncee* target,
                         bool over ) {
-    kdDebug() << "For All" << endl;
+    kdDebug(5231) << "For All" << endl;
     SyncEntry* entry;
     SyncEntry* other;
     SyncEntry* result;

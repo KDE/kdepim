@@ -211,11 +211,13 @@ void QtopiaSocket::write( Syncee::PtrList list) {
     }
     Syncee *syncee;
 
+    kdDebug(5225) << "Writing informations back now. Count is " << list.count() << endl;
     /*
      * For all Syncees we see if it
      * is one of the Opie built in functionality
      */
     for ( syncee = list.first(); syncee != 0l; syncee = list.next() ) {
+        kdDebug(5225) << " Trying to write " << syncee->type() << endl;
         if ( syncee->type() == QString::fromLatin1("AddressBookSyncee") ) {
             AddressBookSyncee* abSyncee = static_cast<AddressBookSyncee*>(syncee );
             writeAddressbook( abSyncee );
@@ -350,6 +352,7 @@ void QtopiaSocket::writeCategory() {
     KIO::NetAccess::upload( fileName,  uri );
 }
 void QtopiaSocket::writeAddressbook( AddressBookSyncee* syncee) {
+    emit prog(Progress(i18n("Writing AddressBook back to the device") ) );
     OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->meta );
     KTempFile* file = abDB.fromKDE( syncee );
     KURL uri = url( AddressBook );

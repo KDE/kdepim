@@ -15,14 +15,13 @@ AddressBookSyncEntry::AddressBookSyncEntry( const KABC::Addressee &a ) :
 AddressBookSyncEntry::AddressBookSyncEntry( const AddressBookSyncEntry& entry )
 : SyncEntry( entry ) {
     mAddressee = entry.mAddressee;
+    m_res = entry.m_res;
 }
-QString AddressBookSyncEntry::name()
-{
+QString AddressBookSyncEntry::name(){
   return mAddressee.realName();
 }
 
-QString AddressBookSyncEntry::id()
-{
+QString AddressBookSyncEntry::id(){
   return mAddressee.uid();
 }
 void AddressBookSyncEntry::setId(const QString& id) {
@@ -31,15 +30,13 @@ void AddressBookSyncEntry::setId(const QString& id) {
 SyncEntry* AddressBookSyncEntry::clone() {
     return new AddressBookSyncEntry( *this );
 }
-QString AddressBookSyncEntry::timestamp()
-{
+QString AddressBookSyncEntry::timestamp(){
   return mAddressee.revision().toString();
 }
 QString AddressBookSyncEntry::type() const{
     return QString::fromLatin1("AddressBookSyncEntry");
 }
-bool AddressBookSyncEntry::equals( SyncEntry *entry )
-{
+bool AddressBookSyncEntry::equals( SyncEntry *entry ){
   AddressBookSyncEntry *abEntry = dynamic_cast<AddressBookSyncEntry *>(entry);
   if ( !abEntry ) {
     kdDebug(5228) << "AddressBookSyncee::equals(): Wrong type." << endl;
@@ -56,7 +53,12 @@ bool AddressBookSyncEntry::equals( SyncEntry *entry )
     return false;
   }
 }
-
+QString AddressBookSyncEntry::resource()const {
+    return m_res;
+}
+void AddressBookSyncEntry::setResource( const QString& str ) {
+    m_res = str;
+}
 /*
  * mergeWith hell :)
  * I hope it's worth the effort

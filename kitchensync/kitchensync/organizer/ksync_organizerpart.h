@@ -32,18 +32,18 @@ namespace KSync {
 
     static KAboutData *createAboutData();
 
-    QString type()const { return QString::fromLatin1("Organizer"); };
-    int progress()const { return 0; };
-    QString name()const { return i18n("Organizer" ); };
-    QString description()const { return i18n("This part is responsible for syncing your\n Calendar."); };
+    QString type()const;
+    QString name()const;
+    QString description()const;
+    QString iconName()const;
     QPixmap *pixmap();
-    bool partIsVisible()const { return false; };
-    QWidget* widget();
+    bool partIsVisible()const;
+    bool configIsVisible()const;
     QWidget* configWidget();
-    void processEntry( const Syncee::PtrList&,  Syncee::PtrList& );
+    void sync( const Syncee::PtrList&,  Syncee::PtrList& );
   public:
 
-      void slotConfigOk();
+    void slotConfigOk();
   private:
     enum Data{ Calendar = 0,
                Todo };

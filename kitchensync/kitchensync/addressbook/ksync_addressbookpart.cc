@@ -34,43 +34,38 @@ using namespace KSync;
 
 
 AddressBookPart::AddressBookPart( QWidget* parent,  const char* name,
-                                  QObject* obj,  const char* name2,
+                                  QObject* obj,  const char* ,
                                   const QStringList & )
     : ManipulatorPart( parent ? parent : obj ,  name )
 {
     setInstance( AddressBookPartFactory::instance() );
     m_pixmap = KGlobal::iconLoader()->loadIcon("kaddressbook",  KIcon::Desktop,  48 );
-    m_widget = 0;
 }
-AddressBookPart::~AddressBookPart()
-{
+AddressBookPart::~AddressBookPart(){
 }
-KAboutData *AddressBookPart::createAboutData()
-{
+KAboutData *AddressBookPart::createAboutData(){
   return new KAboutData("KSyncAddressBookPart", I18N_NOOP("Sync AddressBook Part"), "0.0" );
 }
-QPixmap* AddressBookPart::pixmap()
-{
+QPixmap* AddressBookPart::pixmap(){
     return &m_pixmap;
 }
-QWidget* AddressBookPart::widget()
-{
-    return 0l;
+QString AddressBookPart::type()const {
+    return QString::fromLatin1("Addressbook");
 }
-QWidget* AddressBookPart::configWidget()
-{
-    Profile prof = core()->currentProfile();
-    QString path = prof.path("AddressBook");
-
-    m_widget = new AddressBookConfigBase();
-    if ( QString::fromLatin1("evolution") == path ) {
-        m_widget->ckbEvo->setChecked( true );
-    }else {
-        m_widget->ckbEvo->setChecked( false );
-        m_widget->urlReq->setURL( path );
-    }
-
-    return m_widget;
+QString AddressBookPart::name()const{
+    return i18n("Addressbook");
+}
+QString AddressBookPart::iconName()const {
+    return QString::fromLatin1("kaddressbook");
+}
+QString AddressBookPart::description()const {
+    return i18n("The Addressbook Part");
+}
+bool AddressBookPart::configIsVisible()const {
+    return false;
+}
+bool AddressBookPart::canSync()const{
+    return true;
 }
 /*
  * SYnc it aye?
@@ -85,16 +80,14 @@ QWidget* AddressBookPart::configWidget()
  * 9. write back
  * 10. party
  */
-void AddressBookPart::processEntry( const Syncee::PtrList& in,
-                                    Syncee::PtrList& out )
-{
+void AddressBookPart::sync( const Syncee::PtrList& in,
+                            Syncee::PtrList& out ){
     kdDebug(5228) << "processEntry in AddressBookPart aye" << endl;
     /* 1. */
     Profile prof = core()->currentProfile();
     KonnectorProfile kon = core()->konnectorProfile();
 
     /* 2. */
-    QString path = prof.path("AddressBook");
     QString meta = kon.uid() + "/" + prof.uid() + "addressbook.rc";
     bool met = kon.kapabilities().isMetaSyncingEnabled();
     kdDebug(5228) << "Is meta syncing enabled? " << met << endl;
@@ -112,16 +105,22 @@ void AddressBookPart::processEntry( const Syncee::PtrList& in,
         }
 
     }
-    if (!aBook) return;
+    if (!aBook) {done(); return;}
 
+    progress( Progress(i18n("Going to load AddressBook") ) );
     /* 4. */
     AddressBookSyncee* ourbook;
-    ourbook = load(path );
+    ourbook = load();
+    if (!ourbook) {
+        error( Error(i18n("Could not load the AddressBook") ) );
+        done();
+    }
 
     /* 5. */
     if (met)
       doMeta( ourbook, meta );
 
+    progress( Progress(i18n("Going to sync AddressBook") ) );
     /* 6. */
     Syncer sync( core()->syncUi(), core()->syncAlgorithm() );
     sync.addSyncee( aBook );
@@ -133,49 +132,30 @@ void AddressBookPart::processEntry( const Syncee::PtrList& in,
       writeMeta( ourbook, meta );
 */
 
+    progress( Progress(i18n("Going to save AddressBook") ) );
     /* 8. */
-    save( ourbook, path, met ? meta : QString::null );
+    save( ourbook, met ? meta : QString::null );
 
     /* writeback */
     out.append( ourbook );
+    done();
 }
-void AddressBookPart::slotConfigOk()
-{
-    Profile prof = core()->currentProfile();
-    if ( m_widget->ckbEvo->isChecked() ) {
-        prof.setPath( "AddressBook", "evolution" );
-    }else {
-        prof.setPath("AddressBook",m_widget->urlReq->url() );
-    }
-    core()->profileManager()->replaceProfile( prof );
-    core()->profileManager()->setCurrentProfile( prof );
-
-
+void AddressBookPart::slotConfigOk(){
 }
 /*
  * let's load it
  * if path is empty or default Take KStdAddressBook
  * otherwise load the file
  */
-AddressBookSyncee* AddressBookPart::load( const QString& path ) {
-    kdDebug(5228) << "load abook" << path << endl;
+AddressBookSyncee* AddressBookPart::load() {
     KABC::AddressBook* book;
     AddressBookSyncee* sync;
-    if ( pathIsDefault( path ) ) {
-        kdDebug(5228) << "use default one " << endl;
-        book =  KABC::StdAddressBook::self();
-        sync = book2syncee( book );
-        return sync;
-    }else {
-        kdDebug(5228) << "use non default" << endl;
-        book = new KABC::AddressBook();
-        KABC::ResourceFile *res = new KABC::ResourceFile( book, path );
-        book->addResource(res);
-        book->load();
-        sync = book2syncee( book );
-        delete book;
-        return sync;
-    }
+    kdDebug(5228) << "use default one " << endl;
+    book =  KABC::StdAddressBook::self();
+    if (!book->load() )
+        return 0l;
+    sync = book2syncee( book );
+    return sync;
 }
 void AddressBookPart::doMeta( Syncee* syncee, const QString& path ) {
     kdDebug(5228) << "Do Meta" << endl;
@@ -258,63 +238,59 @@ void AddressBookPart::writeMeta( KABC::AddressBook* book, const QString& path ) 
         kdDebug(5228) << "Name " << (*aIt).realName() << endl;
         kdDebug(5228) << "UID  " << (*aIt).uid() << endl;
         kdDebug(5228) << "Timestamp " << (*aIt).revision().toString() << endl;
+
         conf.setGroup( (*aIt).uid() );
         conf.writeEntry( "time", (*aIt).revision().toString() );
     }
 }
-void AddressBookPart::save( AddressBookSyncee* sync, const QString& path,  const QString& meta) {
-    bool pIsDefault = false;
+void AddressBookPart::save( AddressBookSyncee* sync, const QString& meta) {
     AddressBookSyncEntry* entry;
     KABC::AddressBook* book;
 
-    pIsDefault = pathIsDefault( path );
 
     // save to the std. addressbook
-    if ( pIsDefault ) {
-        book = KABC::StdAddressBook::self();
-    }else {
-        book = new KABC::AddressBook() ;
-        /* resource get's deleted for us */
-        KABC::ResourceFile *file = new KABC::ResourceFile(book, path );
-        book->addResource(file );
-    }
+    book = KABC::StdAddressBook::self();
     /* clear the old book first */
     book->clear();
 
     for ( entry = (AddressBookSyncEntry*)sync->firstEntry();
           entry;
           entry= (AddressBookSyncEntry*) sync->nextEntry() ) {
-        if( entry->state() != SyncEntry::Removed )
-            book->insertAddressee( entry->addressee() );
+        if( entry->state() != SyncEntry::Removed ) {
+            KABC::Addressee adr = entry->addressee();
+            adr.setResource( resource(entry->resource() ) );
+            // ##TEST### REMOVE LATER
+            adr.setOrganization( "Test Syncing!");
+            book->insertAddressee( adr );
+        }
     }
-    saveAll( book );
+    KABC::StdAddressBook::save();
     kdDebug(5228) << "dumped abook " << endl;
     writeMeta( book, meta );
 
-    if (!pIsDefault )
-        delete book;
-    else
-        KABC::StdAddressBook::close();
+    KABC::StdAddressBook::close();
 }
-bool AddressBookPart::pathIsDefault( const QString& path ) {
+/*bool AddressBookPart::pathIsDefault( const QString& path ) {
     if ( path.isEmpty() ) return true;
     if ( path.stripWhiteSpace() == QString::fromLatin1("default") )
         return true;
 
     kdDebug(5228) << "Path is not default" << endl;
     return false;
-}
+    }*/
 AddressBookSyncee* AddressBookPart::book2syncee( KABC::AddressBook* book) {
     AddressBookSyncee* syncee = new AddressBookSyncee();
     AddressBookSyncEntry* entry=0l;
     KABC::AddressBook::Iterator it = book->begin();
     for ( ; it != book->end(); ++it ) {
         entry = new AddressBookSyncEntry( (*it) );
+        QString res = (*it).resource() ? (*it).resource()->type() : QString::null;
+        entry->setResource( res );
         syncee->addEntry( entry );
     }
     return syncee;
 }
-void AddressBookPart::saveAll( KABC::AddressBook* ab) {
+/*void AddressBookPart::saveAll( KABC::AddressBook* ab) {
     KABC::Resource *res = 0l;
     QPtrList<KABC::Resource> list = ab->resources();
     for (uint i = 0; i < list.count(); ++i ) {
@@ -325,5 +301,16 @@ void AddressBookPart::saveAll( KABC::AddressBook* ab) {
                 ab->save( ticket );
         }
     }
+    }*/
+
+KABC::Resource* AddressBookPart::resource( const QString& type ) {
+    QPtrListIterator<KABC::Resource> it(KABC::StdAddressBook::self()->resources() );
+    KABC::Resource* res = 0l;
+    while ( (res = it.current()) ) {
+        ++it;
+        if ( res->type() == type )
+            return res;
+    }
+    return 0;
 }
 #include "ksync_addressbookpart.moc"

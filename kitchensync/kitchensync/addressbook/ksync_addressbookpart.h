@@ -2,6 +2,7 @@
 #define ksync_addressbookpart_h
 
 #include <kglobal.h>
+#include <kabc/resource.h>
 
 #include <manipulatorpart.h>
 
@@ -28,32 +29,28 @@ namespace KSync {
         virtual ~AddressBookPart();
         static KAboutData *createAboutData();
 
-        QString type()const { return QString::fromLatin1("Addressbook"); };
-        int progress()const { return 0; };
-        QString name()const { return i18n("Addressbook"); };
-        QString description()const { return i18n("The addressbook part"); };
+        QString type()const;
+        QString name()const;
+        QString description()const;
         QPixmap *pixmap();
-        bool partIsVisible() const { return false; };
-        QWidget* widget();
-        QWidget* configWidget();
-        void processEntry( const Syncee::PtrList&,  Syncee::PtrList& );
+        QString iconName()const;
+        bool configIsVisible()const;
+        bool canSync()const;
+        void sync( const Syncee::PtrList& , Syncee::PtrList& );
     public:
         void slotConfigOk();
     private:
-        AddressBookSyncee* load( const QString& path );
+        AddressBookSyncee* load();
         void doMeta( Syncee*,  const QString& path );
         void writeMeta( KABC::AddressBook*, const QString& path );
-        void save( AddressBookSyncee*, const QString& path, const QString& metapath );
-        bool pathIsDefault( const QString& path );
-        void saveAll( KABC::AddressBook* );
+        void save( AddressBookSyncee*, const QString& metapath );
 
         AddressBookSyncee* book2syncee( KABC::AddressBook* );
         QPixmap m_pixmap;
-        AddressBookConfigBase* m_widget;
         QString m_path;
         bool m_evo:1;
         bool m_configured:1;
-        KConfig *m_config;
+        KABC::Resource* resource( const QString& type );
     };
 };
 

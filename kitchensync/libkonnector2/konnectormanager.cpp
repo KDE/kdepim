@@ -221,8 +221,7 @@ void KonnectorManager::write( const QString& udi, const Syncee::PtrList&  lst) {
         return;
     }
     kdDebug(5201) << "Plugin is " << plugin << " " << plugin->info().name() << endl;
-    Syncee::PtrList list;
-    plugin->doWrite( list );
+    plugin->doWrite( lst );
 }
 
 /*

@@ -48,6 +48,7 @@
 #include <syncer.h>
 #include <error.h>
 #include <progress.h>
+
 //#include "ksync_mainwindow.h"
 #include "ksync_profile.h"
 
@@ -97,7 +98,7 @@ namespace KSync {
         /* during sync */
         void progress( int );
 
-
+    protected slots:
         void progress( const Progress& );
         void error( const Error& );
         void done();

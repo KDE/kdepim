@@ -47,17 +47,27 @@ OrganizerPart::OrganizerPart(QWidget *parent, const char *name,
 OrganizerPart::~OrganizerPart()
 {
 }
+QString OrganizerPart::iconName()const {
+    return QString::fromLatin1("korganizer");
+}
 QPixmap* OrganizerPart::pixmap()
 {
-    return new QPixmap(m_pixmap);
+    return &m_pixmap;
 }
-QWidget* OrganizerPart::widget()
-{
-  if(m_widget==0 ){
-    m_widget = new QWidget();
-    m_widget->setBackgroundColor(Qt::green);
-  }
-  return m_widget;
+QString OrganizerPart::type()const {
+    return QString::fromLatin1("Organizer");
+}
+QString OrganizerPart::name()const {
+    return i18n("Organizer");
+}
+QString OrganizerPart::description()const {
+    return i18n("This part is responsible for syncing your Calendar.");
+}
+bool OrganizerPart::partIsVisible()const {
+    return false;
+}
+bool OrganizerPart::configIsVisible()const {
+    return true;
 }
 QWidget* OrganizerPart::configWidget()
 {
@@ -67,7 +77,6 @@ QWidget* OrganizerPart::configWidget()
         m_config->ckbEvo->setChecked( true );
     else{
         m_config->urlReq->setURL( core()->currentProfile().path("OrganizerPart") );
-
     }
 
   return (QWidget*) m_config;
@@ -111,7 +120,7 @@ void OrganizerPart::slotConfigOk()
  * 9. append the Syncee to the out list
  * 10. have a party and get drunk
  */
-void OrganizerPart::processEntry( const Syncee::PtrList& in,
+void OrganizerPart::sync( const Syncee::PtrList& in,
                                   Syncee::PtrList& out )
 {
     /* 0. */
@@ -145,7 +154,10 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
         /* we got both now we can break the loop */
         if ( evSyncee && toSyncee ) break;
     }
-    if (!evSyncee && !toSyncee) return; // did not find both of them
+    if (!evSyncee && !toSyncee) {
+        done();
+        return; // did not find both of them
+    }
 
     /* 4. load */
     EventSyncee* events =0l;
@@ -191,7 +203,7 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
 
     if (todos)
       out.append( todos );
-
+    done();
 }
 
 //AddressBookSyncee* ANY

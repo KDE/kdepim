@@ -25,9 +25,14 @@ namespace KSync {
         bool equals( SyncEntry *entry );
 
         KABC::Addressee addressee() { return mAddressee; }
+        QString resource()const;
+        void setResource( const QString& str );
 
     private:
         KABC::Addressee mAddressee;
+        QString m_res;
+        struct Data;
+        Data* data;
     };
 
 /**

@@ -704,7 +704,9 @@ void KSyncMainWindow::slotPartSyncStatus( ManipulatorPart* par, int err) {
         m_inSyncee.setAutoDelete( true );
         m_inSyncee.clear();
         delete m_partsIt;
+        kdDebug(5210) << "Going to write back " << m_outSyncee.count() << endl;
         m_konnector->write( konnectorProfile().udi(), m_outSyncee );
+        m_outSyncee.setAutoDelete( false );
         m_outSyncee.clear();
         // now we only wait for the done
     }
