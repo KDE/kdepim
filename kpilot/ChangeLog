@@ -1,6 +1,8 @@
 KPilot Developer's notes for january 9th 2001
 ===============================================
 
+NOTE: KPILOT IS IN A MAJOR STATE OF FLUX AND MAY NOT COMPILE RIGHT NOW.
+
 Happy Millennium. I ([ade]) am off on a two-week vacation to
 Calgary, so no KPilot news from me till february. Done this week:
 
@@ -17,6 +19,10 @@ Calgary, so no KPilot news from me till february. Done this week:
   a GUI :( Changed the default values.
 * Tried fixing some ugly icons. I'm no artist though.
 * Teeny-tiny layout change in Address page of setup dialog.
+* If you try to add records to the address book before you've done
+  a HotSync / Backup KPilot has an empty AddressDB and doesn't deal
+  with the address very well. Added a sorry() there.
+* Added a doTest() to vcal-conduit.
 * More cleanups in the debugging code. There's still a weird mix of
   code controlled by --debug and kdebugdialog style stuff. Functions
   kdWarning() and kdError() should be given __FUNCTION__ as their
@@ -25,17 +31,17 @@ Calgary, so no KPilot news from me till february. Done this week:
   the warnings and error messages. Since messages may change status some
   time there's now a #define TEST_DEBUG that makes fname a weird object
   that can only be passed to kndbgstreams. So sensible combinations are:
-
   	production:	NDEBUG defined, DEBUG undefined, TEST_DEBUG undefined
   	test nodebug:	NDEBUG defined, DEBUG undefined, TEST_DEBUG defined
   	testing:	NDEBUG undefined, DEBUG defined, TEST_DEBUG defined
-
 * Actually KPilotLink::doFullBackup wasn't all that bad. Still, all the
   code needs going-over for i18n yuckiness. doFullRestore() was worse;
   also fixed up directory yuckiness.
-  
-  Note to self: text for user is i18n()ed, kdDebug() &c. is in 
-  english ('cause Dan or I have to read it :) )
+	  Note to self: text for user is i18n()ed, kdDebug() &c. is in 
+	  english ('cause Dan or I have to read it :) )
+* Finished integrating Heiko's patches. I believe that both HotSync and
+  FastSync now do what the ought to do.
+* Started adding a DCOP interface to the daemon.
   
 
 Other stuff:
@@ -49,7 +55,6 @@ Todo:
   of user settings instead of copying them from the config file to
   local variables, since this is just asking for inconsistency.
 * Close bug 16457.html in some way.
-* Finish integrating Heiko's patches
 * More vcal work
 * Clean up more of the butt-ugly parts of the code base (less of this now!)
 * Tell the KOrganizer docs people about KPilot
