@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Perl (Sample)
+Comment=This sample conduit runs a Perl interpreter.
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=conduit_perl
