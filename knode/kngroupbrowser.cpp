@@ -386,7 +386,7 @@ void KNGroupBrowser::slotNewCBToggled()
 }
 
 
-void KNGroupBrowser::slotFilterTextChanged(const QString &txt)
+void KNGroupBrowser::slotFilterTextChanged(const QString &)
 {
   if (subCB->isChecked() || newCB->isChecked())
     slotRefilter();
