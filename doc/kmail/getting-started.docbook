@@ -130,7 +130,7 @@ transport</guilabel> checkbox in the <guilabel>Advanced</guilabel>
 tab of the <guilabel>Identities</guilabel> section.</para>
 
 <para>A description of the other options can be found
-in the <link linkend="configure-network-sending">Configuration</link>
+in the <link linkend="configure-accounts-sending">Configuration</link>
 chapter.</para>
 
 </sect2>

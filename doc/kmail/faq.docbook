@@ -200,7 +200,7 @@ Some other headers might also be changed.</para>
 <answer>
 <para>If &kmail; should always check for new messages at startup then
 enable <guilabel>Check mail on startup</guilabel> on the
-<link linkend="configure-network-receiving">Network configuration page</link>.
+<link linkend="configure-accounts-receiving">Accounts configuration page</link>.
 Otherwise start &kmail; with <command>kmail <option>--check</option></command>.</para>
 </answer>
 </qandaentry>
@@ -361,7 +361,7 @@ To use <quote>SMTP after POP3</quote> you have to collect all your messages in t
 <guilabel>outbox</guilabel> and send them just after you have fetched new mail.
 You can make &kmail; send the queued messages automatically with the
 <guilabel>Send messages in outbox folder</guilabel> option on the 
-<link linkend="configure-network-sending">Network configuration page</link>.
+<link linkend="configure-accounts-sending">Accounts configuration page</link>.
 </para></answer>
 </qandaentry>
 
