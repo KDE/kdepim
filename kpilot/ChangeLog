@@ -1,6 +1,15 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-10  Adriaan de Groot
+* Move about in config dialog to sensible spot. Follow suggestions by Carlos
+  to simplify the config dialog a bit. Default general setup to open, even
+  if the message says it it for esoteric stuff.
+
+2004-04-09  Adriaan de Groot
+* Work on docs. Accept patch from Jörn for broken config in abbrowser
+  conduit. Receive docs patches from Carlos.
+
 2004-04-05  Adriaan de Groot
 * Work on the Kontact plugin for KPilot, make daemon's installedConduits
   DCOP call return human-readable names instead of internal stuff.

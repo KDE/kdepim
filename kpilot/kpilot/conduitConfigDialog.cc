@@ -242,13 +242,6 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	addDescriptionPage(fStack,INTERNAL_CONDUIT,
 		QString::null,0L,&fActionDescription);
 
-	// Page 4 - explanation of what "actions" are.
-	addDescriptionPage(fStack,INTERNAL_EXPLN,
-		i18n("<qt><i>Actions</i> lists actions that can occur "
-		"during a HotSync but that require no further configuration. "
-		"Checked actions will be performed during a HotSync. "
-		"</qt>"));
-
 	// Page 5 - explanation about conduits
 	addDescriptionPage(fStack,CONDUIT_EXPLN,
 		i18n("<qt><i>Conduits</i> are external (possibly third-party) "
@@ -340,42 +333,32 @@ void ConduitConfigWidget::fillLists()
 	FUNCTIONSETUP;
 
 	// 3 QListViewItems for the three headings in the list
-	QListViewItem *general,*conduits,*actions;
+	QListViewItem *general,*conduits;
 
 	// And two generic pointers for the rest.
 	QListViewItem *q = 0L;
 	QCheckListItem *p = 0L;
 
-
-	conduits = new QListViewItem(fConduitList, i18n("Conduits"));
-	actions = new QListViewItem(fConduitList, i18n("Actions"));
-
 	q = new QListViewItem(fConduitList, i18n("About"));
 	q->setText(CONDUIT_COMMENT, i18n("About KPilot. Credits."));
 	q->setText(CONDUIT_LIBRARY, CSL1("general_about"));
+
+	conduits = new QListViewItem(fConduitList, i18n("Conduits"));
 
 	general = new QListViewItem( fConduitList, i18n("General Setup" ) );
 	fGeneralPage = general;
 
 	// Give them identifiers so they can be handled specially when selected.
 	conduits->setText(CONDUIT_LIBRARY,CSL1("expln_conduits"));
-	actions->setText(CONDUIT_LIBRARY,CSL1("expln_actions"));
 	general->setText( CONDUIT_LIBRARY, CSL1("expln_general") );
 
 	general->setText( CONDUIT_COMMENT,
 		i18n("General setup of KPilot (User name, port, general sync settings)") );
-	actions->setText( CONDUIT_COMMENT,
-		i18n("Simple actions for HotSync with no configuration."));
 	conduits->setText( CONDUIT_COMMENT,
 		i18n("Actions for HotSync with individual configuration."));
 
 	conduits->setOpen(true);
-	actions->setOpen(true);
-	general->setOpen(false);
-
-	// Prevent items from being collapsed by the user.
-	// connect(fConduitList,SIGNAL(collapsed(QListViewItem *)),
-	//	this,SLOT(reopenItem(QListViewItem *)));
+	general->setOpen(true);
 
 
 	// Create entries under general.
@@ -415,7 +398,7 @@ void ConduitConfigWidget::fillLists()
 	//
 	//
 
-#define IC(a,b,c) p = new QCheckListItem(actions,i18n(a),QCheckListItem::CheckBox); \
+#define IC(a,b,c) p = new QCheckListItem(conduits,i18n(a),QCheckListItem::CheckBox); \
 	p->setText(CONDUIT_COMMENT,i18n(c)); \
 	p->setText(CONDUIT_LIBRARY,"internal_" b); \
 	p->setText(CONDUIT_DESKTOP,"internal_" b); \
@@ -549,11 +532,6 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		return;
 	}
 
-	if (p->text(CONDUIT_LIBRARY) == CSL1("expln_actions"))
-	{
-		fStack->raiseWidget(INTERNAL_EXPLN);
-		return;
-	}
 	if (p->text(CONDUIT_LIBRARY) == CSL1("expln_conduits"))
 	{
 		fStack->raiseWidget(CONDUIT_EXPLN);
