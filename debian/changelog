@@ -1,3 +1,16 @@
+kdepim (2.0-20001006-0) unstable; urgency=low
+ 
+  * More upstream fixes
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Fri, 06 Sep 2000 22:00:00 -0700
+                                                                                
+kdepim (2.0-20001005-0) unstable; urgency=low
+ 
+  * More upstream fixes
+  * Compiling against non-versioned kdelibs once again
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Thu, 05 Sep 2000 15:00:00 -0700
+                                                                                
 kdepim (2.0-20001002-0) unstable; urgency=low
  
   * KDE 2.0 RC1

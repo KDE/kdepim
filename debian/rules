@@ -5,34 +5,31 @@
 
 BUILDDIR = ./build
 
-build: $(BUILDDIR)/build-stamp
+build: build-stamp
 
 -include debian/debiandirs
 
 debian/debiandirs: admin/debianrules
 	perl -w admin/debianrules echodirs > debian/debiandirs
 
-$(BUILDDIR)/build-stamp:
+build-stamp:
 	dh_testdir
 	if test ! -f configure; then \
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi 
-	test -d $(BUILDDIR) || mkdir $(BUILDDIR) ;\
-	cd $(BUILDDIR) ;\
-	$$PWD/../configure $(configkde)
-	make -C $(BUILDDIR)
-	touch $(BUILDDIR)/build-stamp
+	./configure $(configkde)
+	make
+	touch build-stamp
 
 clean: debian-clean
-	-rm -rf $(BUILDDIR)
 	dh_clean
 
 debian-clean:
 	dh_testdir
-	-rm -rf $(BUILDDIR)
 	if test -d CVS; then \
 	  make -f admin/Makefile.common cvs-clean ;\
 	fi
+	-make distclean
 
 binary-indep: build
 	dh_testroot
@@ -47,7 +44,7 @@ binary-arch: build
 	dh_clean -k
 	-rm -f debian/undocumented
 	mkdir -p debian/tmp/etc/kde2
-	make -C $(BUILDDIR) install DESTDIR=`pwd`/debian/tmp/
+	make install DESTDIR=`pwd`/debian/tmp/
 	perl -w admin/debianrules cleanup
 	for i in `find debian/tmp/usr/bin | sed -e 's#^debian/tmp/usr/bin/##'  | grep -v "debian/tmp"`; do \
 	  echo "$$i.1" >> debian/undocumented ;\
@@ -78,7 +75,6 @@ binary-arch: build
 		usr/share/man/man1/korganizer* usr/lib/*korganizer* \
 		usr/share/man/man1/alarmd* \
 		usr/share/man/man1/ical2vcal*
-	-rm -rf debian/tmp/usr debian/tmp/etc
 	dh_installdocs
 	dh_installmenu
 	dh_installmime
