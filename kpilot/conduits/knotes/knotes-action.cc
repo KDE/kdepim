@@ -56,7 +56,7 @@ extern "C"
 {
 
 long version_conduit_knotes = KPILOT_PLUGIN_API;
-const char *id_conduit_knotes = "$Id:$" ;
+const char *id_conduit_knotes = "$Id$" ;
 
 }
 
@@ -154,6 +154,7 @@ public:
 	// Some counter that needs to be preserved between calls to
 	// process(). Typically used to note how much work is done.
 	int fCounter;
+	int fDeleteCounter; // Count deleted memos as well.
 
 	// We need to translate between the ids that KNotes uses and
 	// Pilot id's, so we make a list of pairs.
@@ -244,6 +245,7 @@ void KNotesAction::resetIndexes()
 	FUNCTIONSETUP;
 
 	fP->fCounter = 0;
+	fP->fDeleteCounter = 0;
 	fP->fRecordIndex = 0;
 	fP->fIndex = fP->fNotes.begin();
 }
@@ -537,6 +539,11 @@ bool KNotesAction::syncMemoToKNotes()
 		{
 			addSyncLogEntry(i18n("No memos added to KNotes."));
 		}
+		if (fP->fDeleteCounter)
+		{
+			addSyncLogEntry(i18n("Deleted one memo from KNotes.",
+				"Deleted %n memos from KNotes.",fP->fDeleteCounter));
+		}
 		return true;
 	}
 
@@ -565,6 +572,7 @@ bool KNotesAction::syncMemoToKNotes()
 		if (fP->fDeleteNoteForMemo)
 		{
 			fP->fKNotes->killNote(m.note());
+			fP->fDeleteCounter++;
 		}
 
 		fLocalDatabase->deleteRecord(rec->getID());
