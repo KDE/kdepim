@@ -46,7 +46,11 @@ class QDateTime;
 class KSyncEntry
 {
   public:
-  enum SyncMode {SYNC_NORMAL=1, SYNC_SUB };
+    /** SYNC_NORMAL = no metainformation available
+     *  SYNC_META  = sync with Meta Data available
+     *
+     */
+  enum SyncMode {SYNC_NORMAL=1, SYNC_META };
     KSyncEntry();
     virtual ~KSyncEntry();
 

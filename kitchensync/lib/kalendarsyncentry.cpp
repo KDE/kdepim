@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
     Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -24,19 +24,53 @@
 
 #include "kalendarsyncentry.h"
 
+namespace {
+
+    void cloneEntry( KCal::CalendarLocal *dest,
+                KCal::CalendarLocal *src )
+    {
+        QPtrList<KCal::Event> events  = src->getAllEvents();
+        KCal::Event *e;
+        for(e = events.first(); e != 0; e = events.next() ){
+            dest->addEvent((KCal::Event*)e->clone() );
+        };
+        QPtrList<KCal::Todo> todos = src->getTodoList();
+        KCal::Todo *t;
+        for(t = todos.first(); t != 0; t = todos.next() ){
+            dest->addTodo( (KCal::Todo*)t->clone() );
+        };
+
+        QPtrList<KCal::Journal> journal = src->journalList();
+        KCal::Journal *j;
+        for(j = journal.first(); j !=0; j = journal.next() ){
+            dest->addJournal((KCal::Journal*)j->clone()  );
+        }
+
+    }
+};
+
 KAlendarSyncEntry::KAlendarSyncEntry()
 {
   m_calendar = 0;
+  m_modified = 0;
+  m_added = 0;
+  m_removed = 0;
   setSyncMode(SYNC_NORMAL );
 }
 KAlendarSyncEntry::~KAlendarSyncEntry()
 {
   delete m_calendar;
+  delete m_modified;
+  delete m_added;
+  delete m_removed;
 }
 KAlendarSyncEntry::KAlendarSyncEntry(KCal::CalendarLocal *cal,const QString &name)
 {
   this->m_calendar = cal;
   this->m_name = name;
+  m_added = 0;
+  m_modified = 0;
+  m_removed = 0;
   setSyncMode(SYNC_NORMAL );
 }
 QString KAlendarSyncEntry::name()
@@ -58,7 +92,7 @@ QString KAlendarSyncEntry::id()
   myId.append(m_calendar->getEmail()  );
   return myId;
 }
-void KAlendarSyncEntry::setId(const QString &id )
+void KAlendarSyncEntry::setId(const QString & )
 {
   // nothing here though
 }
@@ -86,7 +120,31 @@ void KAlendarSyncEntry::setCalendar(KCal::CalendarLocal *cal )
 {
   m_calendar = cal;
 }
-bool KAlendarSyncEntry::equals(KSyncEntry *sync )
+KCal::CalendarLocal* KAlendarSyncEntry::modified()
+{
+    return m_modified;
+}
+void KAlendarSyncEntry::setModified( KCal::CalendarLocal* mod )
+{
+    m_modified = mod;
+}
+KCal::CalendarLocal* KAlendarSyncEntry::added()
+{
+    return m_added;
+}
+void KAlendarSyncEntry::setAdded( KCal::CalendarLocal* add )
+{
+    m_added = add;
+}
+KCal::CalendarLocal* KAlendarSyncEntry::removed()
+{
+    return m_removed;
+}
+void KAlendarSyncEntry::setRemoved( KCal::CalendarLocal *rem )
+{
+    m_removed = rem;
+}
+bool KAlendarSyncEntry::equals(KSyncEntry * )
 {
   return false;
 }
@@ -99,21 +157,23 @@ KSyncEntry* KAlendarSyncEntry::clone()
   entry->m_oldId = m_oldId;
   entry->m_time = m_time;
 
-  QPtrList<KCal::Event> events  = m_calendar->getAllEvents();
-  KCal::Event *e;
-  for(e = events.first(); e != 0; e = events.next() ){
-    cal->addEvent((KCal::Event*)e->clone() );
-  };
-  QPtrList<KCal::Todo> todos = m_calendar->getTodoList();
-  KCal::Todo *t;
-  for(t = todos.first(); t != 0; t = todos.next() ){
-    cal->addTodo( (KCal::Todo*)t->clone() );
-  };
+  if ( m_calendar != 0 )
+      cloneEntry ( cal,  m_calendar );
 
-  QPtrList<KCal::Journal> journal = m_calendar->journalList();
-  KCal::Journal *j;
-  for(j = journal.first(); j !=0; j = journal.next() ){
-    cal->addJournal((KCal::Journal*)j->clone()  );
+  if ( m_modified != 0 ) {
+      KCal::CalendarLocal *mod = new KCal::CalendarLocal();
+      entry->setModified( mod );
+      cloneEntry( mod,  m_modified );
+  }
+  if ( m_added != 0 ) {
+      KCal::CalendarLocal *add = new KCal::CalendarLocal();
+      entry->setAdded( add );
+      cloneEntry( add,  m_added );
+  }
+  if ( m_removed != 0 ) {
+      KCal::CalendarLocal *rem = new KCal::CalendarLocal();
+      entry->setRemoved( rem );
+      cloneEntry( rem,  m_removed );
   }
   return entry;
 }
