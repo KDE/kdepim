@@ -1,16 +1,16 @@
-INCLUDES = $(all_includes)
+METASOURCES = AUTO
 
-# these are the headers for your project
-noinst_HEADERS   = resourceimap.h
+INCLUDES = $(all_includes)
 
 kde_module_LTLIBRARIES = kabc_imap.la
 
-kabc_imap_la_SOURCES = resourceimap.cpp
+noinst_HEADERS   = resourceimap.h
 
+kabc_imap_la_SOURCES = resourceimap.cpp resourceimap.skel kmailicalIface.stub
 kabc_imap_la_LDFLAGS	= $(all_libraries) -module $(KDE_PLUGIN)
-kabc_imap_la_LIBADD	= $(LIB_KABC) $(LIB_KDEUI)
+kabc_imap_la_LIBADD	= -lkresources -lkabc
 
-METASOURCES = AUTO
+kmailicalIface_DIR = $(top_srcdir)/kmail
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kabc_imap.pot

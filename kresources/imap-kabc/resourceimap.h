@@ -23,18 +23,29 @@
 #define RESOURCEIMAP_H
 
 #include <kabc/resource.h>
+#include <dcopobject.h>
+
+class KMailICalIface_stub;
 
 namespace KABC {
 
-    class FormatPlugin;
+  class FormatPlugin;
 
 /**
  * This class implements a KAddressBook resource that keeps its
  * addresses in an IMAP folder in KMail (or other conforming email
  * clients).
  */
-class ResourceIMAP : public Resource
+  class ResourceIMAP : public Resource, virtual public DCOPObject
 {
+  Q_OBJECT
+  K_DCOP
+
+  k_dcop:
+    virtual bool addIncidence( const QString& type, const QString& ical );
+    virtual void deleteIncidence( const QString& type, const QString& uid );
+    virtual void slotRefresh( const QString& type );
+
 public:
   /**
    * Constructor
@@ -45,11 +56,6 @@ public:
    * Destructor.
    */
   virtual ~ResourceIMAP();
-
-  /**
-   * Writes back all settings to config file.
-   */
-  virtual void writeConfig( KConfig* );
 
   /**
    * Open the resource and returns if it was successfully
@@ -106,15 +112,31 @@ public:
   virtual bool asyncSave( Ticket *ticket );
 
   /**
-   * Removes a addressee from resource. This method is mainly
+     Insert an addressee into the resource.
+  */
+  virtual void insertAddressee( const Addressee& );
+
+  /**
+  * Removes a addressee from resource. This method is mainly
    * used by record-based resources like LDAP or SQL.
    */
   virtual void removeAddressee( const Addressee& addr );
 
+  protected slots:
+    void unregisteredFromDCOP( const QCString& );
+
 private:
-    FormatPlugin* mFormat;
-    QStringList mDeletedAddressees;
-    QCString mAppId;
+  bool connectKMailSignal( const QCString&, const QCString& ) const;
+  bool connectToKMail() const;
+
+  DCOPClient* mDCOPClient;
+  bool mSilent;
+
+  FormatPlugin* mFormat;
+  QStringList mDeletedAddressees;
+  QCString mAppId;
+
+  mutable KMailICalIface_stub* mKMailIcalIfaceStub;
 };
 
 }
