@@ -6,7 +6,7 @@ service_DATA = todo-conduit.desktop
 
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed 
-noinst_PROGRAMS = todoconduit
+bin_PROGRAMS = todoconduit
 
 # Which sources should be compiled for todoconduit
 todoconduit_SOURCES= todo-conduit.cc todo-setup.cc
