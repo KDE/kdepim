@@ -69,12 +69,8 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <pilotLocalDatabase.h>
 #include <pilotDateEntry.h>
 
-//#include "vcal-conduitbase.h"
 #include "vcal-factorybase.h"
 #include "vcal-conduitbase.moc"
-
-//#define fCurrentDatabase fDatabase
-//#define fBackupDatabase fLocalDatabase
 
 QDateTime readTm(const struct tm &t)
 {
@@ -468,7 +464,7 @@ void VCalConduitBase::syncPCRecToPalm()
 
 void VCalConduitBase::syncDeletedIncidence()
 {
-	FUNCTIONSETUP;
+//	FUNCTIONSETUP;
 
 	PilotRecord *r = fLocalDatabase->readRecordByIndex(pilotindex++);
 	if (!r || fFullSync || fFirstTime)
@@ -502,8 +498,16 @@ void VCalConduitBase::cleanup()
 {
 	FUNCTIONSETUP;
 
-	if (fDatabase) fDatabase->resetSyncFlags();
-	if (fLocalDatabase) fLocalDatabase->resetSyncFlags();
+	if (fDatabase) 
+	{
+		fDatabase->resetSyncFlags();
+		fDatabase->cleanup();
+	}
+	if (fLocalDatabase) 
+	{
+		fLocalDatabase->resetSyncFlags();
+		fLocalDatabase->cleanup();
+	}
 	KPILOT_DELETE(fDatabase);
 	KPILOT_DELETE(fLocalDatabase);
 	if (fCalendar) fCalendar->save(fCalendarFile);
@@ -651,7 +655,7 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 	}
 	PilotRecord*r=recordFromIncidence(de, e);
 
-	// TODO: CHeck for conflict!
+	// TODO: Check for conflict!
 	if (r)
 	{
 		recordid_t id=fDatabase->writeRecord(r);
@@ -667,6 +671,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.11  2002/06/09 21:08:06  kainhofe
+// Use the openDatabases() function and the fDatabase/fLocalDatabase instead of our own fCurrentDatabase/fBackupDatabase
+//
 // Revision 1.10  2002/06/07 07:13:24  adridg
 // Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
 // Extend *Database classes with dbPathName() for consistency.

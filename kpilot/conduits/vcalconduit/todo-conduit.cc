@@ -121,6 +121,7 @@ KCal::Incidence *TodoConduitPrivate::getNextIncidence()
 
 KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
 {
+FUNCTIONSETUP;
 	KCal::Todo*e=0L;
 	if (!reading)
 	{
@@ -131,9 +132,13 @@ KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
 	{
 		e=fAllTodos.next();
 	}
-	while (e && e->syncStatus()==KCal::Incidence::SYNCNONE)
+	while (e && e->syncStatus()!=KCal::Incidence::SYNCMOD)
 	{
 		e=fAllTodos.next();
+#ifdef DEBUG
+if (e)
+DEBUGCONDUIT<< e->summary()<<" had SyncStatus="<<e->syncStatus()<<endl;
+#endif
 	}
 	return e;
 }
@@ -167,14 +172,7 @@ const QString TodoConduit::getTitle(PilotAppCategory*de)
 
 PilotRecord*TodoConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
 {
-	FUNCTIONSETUP;
-	if (!de || !e)
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": got null entry or null incidence."<<endl;
-#endif
-		return NULL;
-	}
+	// don't need to chech for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.
 	return recordFromIncidence(dynamic_cast<PilotTodoEntry*>(de), dynamic_cast<const KCal::Todo*>(e));
 }
 
@@ -214,7 +212,9 @@ PilotRecord*TodoConduit::recordFromIncidence(PilotTodoEntry*de, const KCal::Todo
 	// what we call description pilot puts as a separate note
 	de->setNote(todo->description());
 
+#ifdef DEBUG
 DEBUGCONDUIT<<"-------- "<<todo->summary()<<endl;
+#endif
 	return de->pack();
 }
 
@@ -275,6 +275,9 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 
 // $Log$
+// Revision 1.14  2002/05/14 23:07:49  kainhofe
+// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
+//
 // Revision 1.13  2002/05/01 21:18:23  kainhofe
 // Reworked the settings dialog, added various different sync options
 //

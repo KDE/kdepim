@@ -238,6 +238,9 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 	setExceptions(e,de);
 
 	e->setSummary(de->getDescription());
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": DESCRIPTION: "<<de->getDescription()<<"  ---------------------------------------------------"<<endl;
+#endif
 	e->setDescription(de->getNote());
 
 	return e;
@@ -687,6 +690,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.67  2002/05/18 13:08:56  kainhofe
+// dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
+//
 // Revision 1.66  2002/05/14 23:07:49  kainhofe
 // Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
 //
