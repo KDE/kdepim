@@ -33,6 +33,7 @@
 
 #include "resourcekolab.h"
 #include "event.h"
+#include "task.h"
 
 #include <kabc/locknull.h>
 
@@ -307,37 +308,73 @@ KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
 
 bool ResourceKolab::addTodo( KCal::Todo* todo )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return addTodo( todo, QString::null, 0 );
 }
+
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
                              Q_UINT32 sernum )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  KCal::Todo* todo = Task::xmlToTask( xml );
+  Q_ASSERT( todo );
+  if( todo && !mUidMap.contains( todo->uid() ) )
+    addTodo( todo, subresource, sernum );
 }
+
 bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& subresource,
                              Q_UINT32 sernum )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  todo->registerObserver( this );
+
+  // Find out if this todo was previously stored in KMail
+  bool newTodo = subresource.isEmpty();
+  mCalendar.addTodo( todo );
+
+  QString resource =
+    newTodo ? findWritableResource( mTodoSubResources ) : subresource;
+
+  if ( !mSilent ) {
+    QString xml = Task::taskToXML( todo );
+    kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
+
+    if( !kmailUpdate( resource, sernum, xml, todoAttachmentMimeType,
+                      todo->uid() ) ) {
+      kdError(5500) << "Communication problem in ResourceKolab::addTodo()\n";
+      return false;
+    }
+  }
+
+  if ( !resource.isEmpty() && sernum != 0 ) {
+    mUidMap[ todo->uid() ] = StorageReference( resource, sernum );
+    return true;
+  }
+
   return false;
 }
-void ResourceKolab::deleteTodo( KCal::Todo* )
+
+void ResourceKolab::deleteTodo( KCal::Todo* todo )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  const QString uid = todo->uid();
+  if( !mUidMap.contains( uid ) ) return; // Odd
+  if ( !mSilent )
+    kmailDeleteIncidence( mUidMap[ uid ].resource(),
+                          mUidMap[ uid ].serialNumber() );
+  mUidMap.remove( uid );
+  mCalendar.deleteTodo( todo );
 }
+
 KCal::Todo* ResourceKolab::todo( const QString& uid )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return 0;
+  return mCalendar.todo( uid );
 }
+
 KCal::Todo::List ResourceKolab::rawTodos()
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Todo::List();
+  return mCalendar.rawTodos();
 }
+
 KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Todo::List();
+  return mCalendar.rawTodosForDate( date );
 }
 
 bool ResourceKolab::addJournal( KCal::Journal* )
