@@ -87,7 +87,7 @@ KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am)
 	connect(okBtn, SIGNAL(clicked()), this, SLOT(slotOkBtnClicked()));
 	connect(logonCB, SIGNAL(toggled(bool)), this, SLOT(slotLogonChecked(bool)));
 	
-	pm=UserIcon("server.xpm");
+	pm=UserIcon("server");
 	aManager=am;
 	am->startConfig(this);
 	currentItem=-1;

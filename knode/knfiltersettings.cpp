@@ -87,8 +87,8 @@ KNFilterSettings::~KNFilterSettings()
 void KNFilterSettings::addItem(KNArticleFilter *f)
 {
 	QPixmap pm;
-	if(f->isEnabled()) pm=UserIcon("fltrblue.xpm");
-	else pm=UserIcon("fltrgrey.xpm");
+	if(f->isEnabled()) pm=UserIcon("fltrblue");
+	else pm=UserIcon("fltrgrey");
 	
 	KNLBoxItem *it=new KNLBoxItem(f->name(),f,&pm);
 	flb->insertItem(it);
@@ -110,8 +110,8 @@ void KNFilterSettings::updateItem(KNArticleFilter *f)
 	
 	if(i!=-1) {
 		QPixmap pm;
-		if(f->isEnabled()) pm=UserIcon("fltrblue.xpm");	
-	  else pm=UserIcon("fltrgrey.xpm");
+		if(f->isEnabled()) pm=UserIcon("fltrblue");	
+	  else pm=UserIcon("fltrgrey");
 	  flb->changeItem(new KNLBoxItem(f->name(),f,&pm), i);
 	}
 

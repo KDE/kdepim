@@ -70,10 +70,10 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
 	
 	KToolBar* tb=new KToolBar(this,0,32);
   addToolBar(tb);
-  tb->insertButton(UserIcon("send.xpm"), FILE_SEND, true, i18n("send now"));
-  tb->insertButton(UserIcon("save.xpm"), FILE_SAVE, true, i18n("save"));
-  tb->insertButton(UserIcon("signature.xpm"), APP_SIG, true, i18n("append signature"));
-  tb->insertButton(UserIcon("delete.xpm"), FILE_DELETE, true, i18n("delete"));
+  tb->insertButton(UserIcon("send"), FILE_SEND, true, i18n("send now"));
+  tb->insertButton(UserIcon("save"), FILE_SAVE, true, i18n("save"));
+  tb->insertButton(UserIcon("signature"), APP_SIG, true, i18n("append signature"));
+  tb->insertButton(UserIcon("delete"), FILE_DELETE, true, i18n("delete"));
   connect(tb, SIGNAL(clicked(int)), this, SLOT(slotCallback(int)));
 
   //init view

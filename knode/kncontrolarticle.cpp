@@ -41,5 +41,5 @@ void KNControlArticle::updateListItem()
 	i_tem->setText(1, d_estination);
 	i_tem->setText(0, s_ubject);
 	i_tem->setText(3, timeString());
-	i_tem->setPixmap(0, UserIcon("ctlart.xpm"));
+	i_tem->setPixmap(0, UserIcon("ctlart"));
 }

@@ -509,7 +509,7 @@ void KNodeApp::initActions()
                               actionCollection(), "article_sendNow");
   actArtSendLater = new KAction(i18n("Send &later"), 0 , this, SLOT(slotArtSendLater()),
                                 actionCollection(), "article_sendLater");
-  actArtSearch = new KAction(i18n("&Search"),"srch" , Key_F4 , this, SLOT(slotArtSearch()),
+  actArtSearch = new KAction(i18n("&Search"),"search" , Key_F4 , this, SLOT(slotArtSearch()),
                              actionCollection(), "article_search");
 
   // go menu

@@ -58,7 +58,7 @@ KNSendErrorDialog::~KNSendErrorDialog()
 
 void KNSendErrorDialog::appendJob(KNJobData *job)
 {
-	static QPixmap pm=UserIcon("snderr.xpm");
+	static QPixmap pm=UserIcon("snderr");
 	KNLBoxItem *it;
 	KNSavedArticle *art=(KNSavedArticle*)job->data();
 	jobList.append(job);

@@ -60,7 +60,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, QWidg
 	menu->insertItem(i18n("&Article"), article);
 		
 	connect(menu, SIGNAL(activated(int)), this, SLOT(slotMenu(int)));	
-	setIcon(UserIcon("posting.xpm"));
+	setIcon(UserIcon("posting"));
 }
 
 

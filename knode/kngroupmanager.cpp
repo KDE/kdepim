@@ -235,7 +235,7 @@ void KNGroupManager::subscribeGroup(const QCString &gName, KNNntpAccount *a)
 	grp->saveInfo();
 	gList->append(grp);
 	it=new KNCollectionViewItem(a->listItem());
-	it->setPixmap(0,UserIcon("group.xpm"));
+	it->setPixmap(0,UserIcon("group"));
 	grp->setListItem(it);
 	grp->updateListItem();
 }

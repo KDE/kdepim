@@ -157,7 +157,7 @@ void KNAccountManager::newAccount()
 		applySettings(a);
 		set->addItem(a);
 		KNCollectionViewItem *it = new KNCollectionViewItem(view);
-  	it->setPixmap(0, UserIcon("server.xpm"));
+  	it->setPixmap(0, UserIcon("server"));
   	a->setListItem(it);
 	}
 	else {

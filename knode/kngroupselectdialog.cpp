@@ -38,11 +38,11 @@ KNGroupSelectDialog::KNGroupSelectDialog(KNNntpAccount *a, QCString &groups, QWi
 	glw=new KNGroupListWidget(a, gb1);
 		
 	add=new QPushButton(QString::null,this);
-	add->setPixmap(UserIcon("arrow_right.xpm"));
+	add->setPixmap(UserIcon("arrow_right"));
 	add->setFixedSize(50,35);
 		
 	del=new QPushButton(QString::null,this);
-	del->setPixmap(UserIcon("arrow_left.xpm"));
+	del->setPixmap(UserIcon("arrow_left"));
 	del->setFixedSize(50,35);
 	
 	lb=new QListBox(gb2);
