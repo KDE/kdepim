@@ -794,6 +794,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
           disableChangeNotification();
           mCalendar.deleteIncidence( mUploadedIncidence );
           mCalendar.addIncidence( i );
+          mCalendar.save( cacheFile() );
           enableChangeNotification();
         }
       }
