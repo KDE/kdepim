@@ -38,7 +38,7 @@
 
 </authorgroup>
 
-<date>2001-07-19</date>
+<date>2001-07-21</date>
 <releaseinfo>1.03.00</releaseinfo>
 
 <copyright>
@@ -1016,15 +1016,16 @@ folder</guilabel>. Here's a list of all possible actions:</para>
 <para>This will move the message to another folder.</para>
 </listitem>
 </varlistentry>
+<!-- TODO: does not exist yet
 <varlistentry>
 <term><guilabel>copy to folder</guilabel></term>
 <listitem>
 <para>This will copy the message to another folder.</para>
-<!-- TODO: still correct? -->
 <caution><para>You currently cannot use <acronym>IMAP</acronym>
 folders as a target.</para></caution>
 </listitem>
 </varlistentry>
+-->
 <varlistentry>
 <term><guilabel>mark as</guilabel></term>
 <listitem>
