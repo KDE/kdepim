@@ -38,16 +38,19 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktempfile.h>
+#include <kio/observer.h>
+#include <kio/uiserver_stub.h>
 
 #include <qobject.h>
 #include <qtimer.h>
 #include <qstring.h>
 #include <qfile.h>
-#include <qprogressdialog.h>
 #include <qapplication.h>
 
 #include <assert.h>
 #include <kmainwindow.h>
+#include <kapplication.h>
+#include <dcopclient.h>
 
 using namespace Kolab;
 
@@ -181,35 +184,44 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
   // If it's too big the progressbar is jumpy.
   const int nbMessages = 200;
 
-  // ### There should be a better way to associate a widget with a resource
-  KMainWindow* mw = KMainWindow::memberList ? KMainWindow::memberList->first() : 0;
-  QProgressDialog progress( mw, 0, true /*modal*/ );
-  progress.setLabelText( i18n( "Loading contacts..." ) );
-  progress.setTotalSteps( count );
+  (void)Observer::self(); // ensure kio_uiserver is running
+  UIServer_stub uiserver( "kio_uiserver", "UIServer" );
+  int progressId = 0;
+  if ( count > 200 ) {
+    progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
+    uiserver.totalFiles( progressId, count );
+    uiserver.infoMessage( progressId, i18n( "Loading contacts..." ) );
+    uiserver.transferring( progressId, "Contacts" );
+  }
 
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
     QMap<Q_UINT32, QString> lst;
 
     if ( !kmailIncidences( lst, s_attachmentMimeType, subResource, startIndex, nbMessages ) ) {
       kdError() << "Communication problem in ResourceKolab::load()\n";
+      if ( progressId )
+        uiserver.jobFinished( progressId );
       return false;
     }
 
     for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
       loadContact( it.data(), subResource, it.key() );
     }
-    progress.setProgress( startIndex );
-    // Note that this is a case where processEvents is OK - we have a modal dialog,
-    // the only thing the user can do is cancel the dialog.
-    // WRONG - repainting happens, which triggers loading again
-    //qApp->processEvents();
-    progress.repaint();
-    if ( progress.wasCanceled() )
-      return false;
+    if ( progressId ) {
+      uiserver.processedFiles( progressId, startIndex );
+      uiserver.percent( progressId, 100 * startIndex / count );
+    }
+
+//    if ( progress.wasCanceled() ) {
+//      uiserver.jobFinished( progressId );
+//      return false;
+//    }
   }
 
   kdDebug(5650) << "Contacts kolab resource: got " << count << " contacts in " << subResource << endl;
 
+  if ( progressId )
+    uiserver.jobFinished( progressId );
   return true;
 }
 

@@ -37,6 +37,10 @@
 #include "task.h"
 #include "journal.h"
 
+#include <kio/observer.h>
+#include <kio/uiserver_stub.h>
+#include <kapplication.h>
+#include <dcopclient.h>
 #include <libkdepim/kincidencechooser.h>
 #include <kabc/locknull.h>
 #include <kmainwindow.h>
@@ -44,7 +48,6 @@
 
 #include <qobject.h>
 #include <qtimer.h>
-#include <qprogressdialog.h>
 #include <qapplication.h>
 
 #include <assert.h>
@@ -155,19 +158,26 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
   const int nbMessages = 200; // read 200 mails at a time (see kabc resource)
 
-  // ### There should be a better way to associate a widget with a resource
-  KMainWindow* mw = KMainWindow::memberList ? KMainWindow::memberList->first() : 0;
-  QProgressDialog progress( mw, 0, true /*modal*/ );
   const QString labelTxt = mimetype == "application/x-vnd.kolab.task" ? i18n( "Loading tasks..." )
                       : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
                       : i18n( "Loading events..." );
-  progress.setLabelText( labelTxt );
-  progress.setTotalSteps( count );
+
+  (void)::Observer::self(); // ensure kio_uiserver is running
+  UIServer_stub uiserver( "kio_uiserver", "UIServer" );
+  int progressId = 0;
+  if ( count > 200 ) {
+    progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
+    uiserver.totalFiles( progressId, count );
+    uiserver.infoMessage( progressId, labelTxt );
+    uiserver.transferring( progressId, labelTxt );
+  }
 
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
     QMap<Q_UINT32, QString> lst;
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
       kdError() << "Communication problem in ResourceKolab::load()\n";
+      if ( progressId )
+        uiserver.jobFinished( progressId );
       return false;
     }
 
@@ -177,19 +187,22 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
       addIncidence( mimetype, it.data(), subResource, it.key() );
     mSilent = silent;
 
-    progress.setProgress( startIndex );
-    // Note that this is a case where processEvents is OK - we have a modal dialog,
-    // the only thing the user can do is cancel the dialog.
-    // WRONG: repainting happens too...
-    //qApp->processEvents();
-    progress.repaint();
-    if ( progress.wasCanceled() )
-      return false;
+    if ( progressId ) {
+      uiserver.processedFiles( progressId, startIndex );
+      uiserver.percent( progressId, 100 * startIndex / count );
+    }
+
+//    if ( progress.wasCanceled() ) {
+//      uiserver.jobFinished( progressId );
+//      return false;
+//    }
   }
 
   kdDebug() << "KCal Kolab resource: got " << count << " in "
             << subResource << " of type " << mimetype << endl;
 
+  if ( progressId )
+    uiserver.jobFinished( progressId );
   return true;
 }
 
@@ -270,6 +283,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   // need to verify with ical documentation.
 
   const QString uid = incidencebase->uid();
+  kdDebug() << k_funcinfo << uid << endl;
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
     /* We are currently processing this event ( removing and readding or
@@ -292,6 +306,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 
 void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
 {
+  kdDebug() << k_funcinfo << subresource << " " << sernum << endl;
     if ( ! inc )
         return;
     if ( ! mResolveConflict ) {
@@ -340,6 +355,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
                                   const QString& subResource, Q_UINT32 sernum )
 {
+  kdDebug() << k_funcinfo << mimetype << " " << subResource << endl;
   // This uses pointer comparison, so it only works if we use the static
   // objects defined in the top of the file
   if ( mimetype == eventAttachmentMimeType )
@@ -386,7 +402,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
                                   Q_UINT32 sernum )
 {
-
+  kdDebug() << k_funcinfo << _subresource << " " << sernum << endl;
   const QString &uid = incidence->uid();
   QString subResource = _subresource;
   Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
@@ -514,6 +530,7 @@ bool ResourceKolab::addEvent( KCal::Event* event )
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
                               Q_UINT32 sernum )
 {
+  kdDebug() << k_funcinfo << subresource << " " << sernum << endl;
   KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId() );
   Q_ASSERT( event );
   if( event ) {
@@ -524,6 +541,7 @@ void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
 bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
 {
   const QString uid = incidence->uid();
+  kdDebug() << k_funcinfo << uid << endl;
   if( !mUidMap.contains( uid ) ) return false; // Odd
   /* The user told us to delete, tell KMail */
   if ( !mSilent ) {
@@ -858,6 +876,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map
                                               const QString& type,
                                               const QString& folder )
 {
+  kdDebug() << k_funcinfo << type << " " << folder << endl;
   const bool silent = mSilent;
   mSilent = true;
   for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
