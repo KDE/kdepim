@@ -46,7 +46,7 @@ public slots:
   virtual void saveSettings( KRES::Resource *resource );
 
 protected slots:
-  void slotToggleEquals( bool on );
+  void slotToggleAuto( bool on );
   void slotUserChanged( const QString& text );
   void slotFindClicked();
 
@@ -54,7 +54,7 @@ private:
   KLineEdit* mHostEdit;
   KLineEdit* mAccountEdit;
   KLineEdit* mPasswordEdit;
-  QCheckBox *mMailboxEqualsUser;
+  QCheckBox *mAutoMailbox;
   KLineEdit* mMailboxEdit;
   QPushButton* mTryFindMailbox;
   KIntNumInput* mCacheEdit;

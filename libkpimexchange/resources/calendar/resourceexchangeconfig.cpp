@@ -55,9 +55,9 @@ ResourceExchangeConfig::ResourceExchangeConfig( QWidget* parent,  const char* na
   mainLayout->addWidget( label, 3, 0 );
   mainLayout->addWidget( mPasswordEdit, 3, 1 );
 
-  mMailboxEqualsUser = new QCheckBox( i18n( "Exchange Mailbox is &equal to User" ), this );
-  mainLayout->addMultiCellWidget( mMailboxEqualsUser, 4, 4, 0, 1 );
-  connect( mMailboxEqualsUser, SIGNAL(toggled(bool)), this, SLOT(slotToggleEquals(bool)) );
+  mAutoMailbox = new QCheckBox( i18n( "Determine mailbox &automatically" ), this );
+  mainLayout->addMultiCellWidget( mAutoMailbox, 4, 4, 0, 1 );
+  connect( mAutoMailbox, SIGNAL(toggled(bool)), this, SLOT(slotToggleAuto(bool)) );
 
   mMailboxEdit = new KLineEdit( this );
   mainLayout->addWidget( new QLabel( i18n( "Mailbox URL:" ), this ), 5, 0 );
@@ -82,7 +82,8 @@ void ResourceExchangeConfig::loadSettings( KRES::Resource *resource )
     mHostEdit->setText( res->mAccount->host() );
     mAccountEdit->setText( res->mAccount->account() );
     mPasswordEdit->setText( res->mAccount->password() );
-    mMailboxEqualsUser->setChecked( res->mAccount->mailbox() == ("webdav://"+res->mAccount->host()+"/exchange/"+res->mAccount->account() ) );
+    // FIXME: store this in some config file
+    mAutoMailbox->setChecked( true );
     mMailboxEdit->setText( res->mAccount->mailbox() );
     mCacheEdit->setValue( res->mCachedSeconds );
   } else
@@ -91,42 +92,44 @@ void ResourceExchangeConfig::loadSettings( KRES::Resource *resource )
 
 void ResourceExchangeConfig::saveSettings( KRES::Resource *resource )
 {
+  kdDebug() << "Saving settings to resource " << resource->resourceName() << endl;
   ResourceExchange* res = dynamic_cast<ResourceExchange*>( resource );
   if (res) {
+    if ( mAutoMailbox->isChecked() ) {
+      mMailboxEdit->setText( QString::null );
+      slotFindClicked();
+      if ( mMailboxEdit->text().isNull() ) {
+        kdWarning() << "Could not find Exchange mailbox URL, incomplete settings!" << endl;
+      }
+    }
+
     res->mAccount->setHost(mHostEdit->text());
     res->mAccount->setAccount(mAccountEdit->text());
     res->mAccount->setPassword(mPasswordEdit->text());
-    if ( mMailboxEqualsUser->isChecked() ) {
-      res->mAccount->setMailbox( "webdav://" + mHostEdit->text() + "/exchange/" + mAccountEdit->text() );
-    } else {
-      res->mAccount->setMailbox( mMailboxEdit->text() );
-    }
+    res->mAccount->setMailbox( mMailboxEdit->text() );
     res->mCachedSeconds = mCacheEdit->value();
   } else
     kdDebug(5700) << "ERROR: ResourceExchangeConfig::saveSettings(): no ResourceExchange, cast failed" << endl;
 }
 
-void ResourceExchangeConfig::slotToggleEquals( bool on )
+void ResourceExchangeConfig::slotToggleAuto( bool on )
 {
   mMailboxEdit->setEnabled( ! on );
-  mTryFindMailbox->setEnabled( ! on );
-  if ( on ) {
-    mMailboxEdit->setText( "webdav://" + mHostEdit->text() + "/exchange/" + mAccountEdit->text() );
-  }
+//  mTryFindMailbox->setEnabled( ! on );
 }
 
-void ResourceExchangeConfig::slotUserChanged( const QString& text )
+void ResourceExchangeConfig::slotUserChanged( const QString& /*text*/ )
 {
-  if ( mMailboxEqualsUser->isChecked() ) {
-    mMailboxEdit->setText( "webdav://" + mHostEdit->text() + "/exchange/" + text );
-  }
+//  if ( mMailboxEqualsUser->isChecked() ) {
+//    mMailboxEdit->setText( "webdav://" + mHostEdit->text() + "/exchange/" + text );
+//  }
 }
 
 void ResourceExchangeConfig::slotFindClicked()
 {
   QString mailbox = KPIM::ExchangeAccount::tryFindMailbox( mHostEdit->text(), mAccountEdit->text(), mPasswordEdit->text() );
   if ( mailbox.isNull() ) {
-    KMessageBox::sorry( this, "Could not determine mailbox URL" );
+    KMessageBox::sorry( this, i18n( "Could not determine mailbox URL, please check your account settings." ) );
   } else {
     mMailboxEdit->setText( mailbox );
   }
