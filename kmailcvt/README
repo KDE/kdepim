@@ -24,19 +24,23 @@ the following methods that you may want to use:
     void addLog( const QString& log ); // Add a message for the user to see
     void alert( const QString& message ); // Tell user something has gone wrong
     QWidget *parent(); // The parent widget
-
+    
+    bool removeDupMsg; // true, if user selected 'remove duplicated messages'
+    
 Also, every now and again you should check to see if the shouldTerminate method
 returns true, if it does the user has pressed cancel and your import method
 should return.
 
 To add messages, extract the email (including all headers) into a KTempFile.
-Then call the following inherited method:
+Then use the following:
 
-addMessage(info, folderName, tempfilepath);
+if(info->removeDupMsg) addMessage( info, folderName, tempfilepath );
+else addMessage_fastImport( info, folderName, tempfilepath );
 
 For a simple example, look at filter_plain
 
 Finally for the filter to appear in the combo box in the wizard you need to edit
 kselfilterpage.cpp and add an appropriate addFilter() function call.
 
+Danny Kukawka, February 2005
 Laurence Anderson, April 2003.
