@@ -54,7 +54,8 @@ static QMap<QString, QString>& adrbookattr2ldap()
     keys[ i18n( "Title" ) ] = "title";
     keys[ i18n( "Full Name" ) ] = "cn";
     keys[ i18n( "Email" ) ] = "mail";
-    keys[ i18n( "Phone Number" ) ] = "telephoneNumber";
+    keys[ i18n( "Home Number" ) ] = "homePhone";
+    keys[ i18n( "Work Number" ) ] = "telephoneNumber";
     keys[ i18n( "Mobile Number" ) ] = "mobile";
     keys[ i18n( "Fax Number" ) ] = "facsimileTelephoneNumber";
     keys[ i18n( "Pager" ) ] = "pager";
@@ -98,7 +99,8 @@ LDAPSearchDialogImpl::LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* pare
 
   filterCombo->insertItem( i18n( "Name" ) );
   filterCombo->insertItem( i18n( "Email" ) );
-  filterCombo->insertItem( i18n( "Phone Number" ) );
+  filterCombo->insertItem( i18n( "Home Number" ) );
+  filterCombo->insertItem( i18n( "Work Number" ) );
  
   resultListView->setSelectionMode( QListView::Multi );
   resultListView->setAllColumnsShowFocus( true );
@@ -178,7 +180,8 @@ void LDAPSearchDialogImpl::rereadConfig()
 
     resultListView->addColumn( i18n( "Full Name" ) );
     resultListView->addColumn( i18n( "Email" ) );
-    resultListView->addColumn( i18n( "Phone Number" ) );
+    resultListView->addColumn( i18n( "Home Number" ) );
+    resultListView->addColumn( i18n( "Work Number" ) );
     resultListView->addColumn( i18n( "Mobile Number" ) );
     resultListView->addColumn( i18n( "Fax Number" ) );
     resultListView->addColumn( i18n( "Company" ) );
@@ -237,7 +240,9 @@ QString LDAPSearchDialogImpl::makeFilter( const QString& query, const QString& a
     result = result.arg( "cn" ).arg( query );
   } else if ( attr == i18n( "Email" ) ) {
     result = result.arg( "mail" ).arg( query );
-  } else if ( attr == i18n( "Phone Number" ) ) {
+  } else if ( attr == i18n( "Home Number" ) ) {
+    result = result.arg( "homePhone" ).arg( query );
+  } else if ( attr == i18n( "Work Number" ) ) {
     result = result.arg( "telephoneNumber" ).arg( query );
   } else {
     // Error?
@@ -333,17 +338,20 @@ void LDAPSearchDialogImpl::slotAddSelectedContacts()
 
       workAddr.setStreet(QString::fromUtf8( cli->mAttrs[ "street" ].first()) );
       workAddr.setLocality(QString::fromUtf8( cli->mAttrs[ "l" ].first()) );
-    workAddr.setRegion(QString::fromUtf8(  cli->mAttrs[ "address" ].first()));
+      workAddr.setRegion(QString::fromUtf8( cli->mAttrs[ "st" ].first()));
       workAddr.setPostalCode(QString::fromUtf8( cli->mAttrs[ "postalCode" ].first()) );
       workAddr.setCountry(QString::fromUtf8( cli->mAttrs[ "co" ].first()) );
 
       addr.insertAddress( workAddr );
 
       // phone
+      KABC::PhoneNumber homeNr = QString::fromUtf8( cli->mAttrs[  "homePhone" ].first() );
+      homeNr.setType(KABC::PhoneNumber::Home);
+      addr.insertPhoneNumber(homeNr);
 
-      KABC::PhoneNumber telNr = QString::fromUtf8( cli->mAttrs[  "telephoneNumber" ].first() );
-      telNr.setType(KABC::PhoneNumber::Work);
-      addr.insertPhoneNumber(telNr);
+      KABC::PhoneNumber workNr = QString::fromUtf8( cli->mAttrs[  "telephoneNumber" ].first() );
+      workNr.setType(KABC::PhoneNumber::Work);
+      addr.insertPhoneNumber(workNr);
 
       KABC::PhoneNumber faxNr = QString::fromUtf8( cli->mAttrs[  "facsimileTelephoneNumber" ].first() );
       faxNr.setType(KABC::PhoneNumber::Fax);
