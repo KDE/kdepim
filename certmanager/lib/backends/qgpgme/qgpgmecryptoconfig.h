@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu"; c-basic-offset: 2 -*-
+/*
     qgpgmecryptoconfig.h
 
     This file is part of libkleopatra, the KDE keymanagement library

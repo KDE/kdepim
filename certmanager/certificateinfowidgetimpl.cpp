@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*
     certificateinfowidgetimpl.cpp
 
     This file is part of Kleopatra, the KDE keymanager

@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*
     test_keylister.cpp
 
     This file is part of libkleopatra's test suite.

@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*
     qgpgmedownloadjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library

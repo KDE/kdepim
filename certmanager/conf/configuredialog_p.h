@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu"; c-basic-offset: 2 -*-
+/*
     configuredialog_p.h
 
     This file is part of kgpgcertmanager

@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu"; c-basic-offset: 2 -*-
+/*
     test_cryptoconfig.cpp
 
     This file is part of libkleopatra's test suite.

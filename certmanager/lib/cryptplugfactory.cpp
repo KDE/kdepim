@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*
     cryptplugfactory.cpp
 
     This file is part of libkleopatra, the KDE key management library

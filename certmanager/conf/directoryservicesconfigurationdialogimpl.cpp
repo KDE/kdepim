@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu"; c-basic-offset: 4 -*-
+/*
     directoryservicesconfigurationdialogimpl.cpp
 
     This file is part of Kleopatra, the KDE keymanager

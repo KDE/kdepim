@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*
     gnupgviewer.h
 
     This file is part of libkleopatra's test suite.
