@@ -113,7 +113,7 @@ KIO::TransferJob *ExchangeGlobals::createListItemsJob( const KURL &url )
 }
 
 
-KIO::TransferJob *ExchangeGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor */*adaptor*/,
+KIO::TransferJob *ExchangeGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
                         const KURL &url, KPIM::FolderLister::ContentType ctype )
 {
 kdDebug() << "ExchangeGlobals::createDownloadJob()" << endl;
@@ -155,7 +155,10 @@ kdDebug() << "Person=" << KPIM::FolderLister::Contact << ", "
   }
 
   kdDebug(7000) << "doc: " << doc.toString() << endl;
-  KIO::DavJob *job = KIO::davPropFind( url, doc, "0", false );
+  KURL authURL = url;
+  authURL.setUser(adaptor->user());
+  authURL.setPass(adaptor->password());
+  KIO::DavJob *job = KIO::davPropFind( authURL, doc, "0", false );
   return job;
 }
 

@@ -56,7 +56,10 @@ kdDebug()<<"ExchangeCalendarUploadItem::createUploadJob, adaptor="<<adaptor<<", 
   if ( !adaptor ) return 0;
   KURL upUrl( url() );
   adaptor->adaptUploadUrl( upUrl );
+  upUrl.setUser(adaptor->user());
+  upUrl.setPass(adaptor->password());
   kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
+ 
   KIO::DavJob *job = KIO::davPropPatch( upUrl, mDavData, false );
   return job;
 }
