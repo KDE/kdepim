@@ -121,6 +121,10 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
         addr->setNote( value.replace( QRegExp( "\x02\x02" ), "\n" ) );
       else if ( key == QString::fromLatin1( "url" ) )
         addr->setUrl( value );
+      else if ( key == QString::fromLatin1( "pictureurl" ) ) {
+        KABC::Picture pic( value );
+	addr->setPhoto( pic );
+      }
     }
   }
 
