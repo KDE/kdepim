@@ -200,7 +200,6 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 {
   VObject *vtodo;
   QString tmpStr;
-  QStringList tmpStrList;
 
   vtodo = newVObject(VCTodoProp);
 
@@ -301,7 +300,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   }
 
   // categories
-  tmpStrList = anEvent->categories();
+  QStringList tmpStrList = anEvent->categories();
   tmpStr = "";
   QString catStr;
   for ( QStringList::Iterator it = tmpStrList.begin();
@@ -363,7 +362,6 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 {
   VObject *vevent;
   QString tmpStr;
-  QStringList tmpStrList;
 
   vevent = newVObject(VCEventProp);
 
@@ -569,7 +567,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   }
 
   // categories
-  tmpStrList = anEvent->categories();
+  QStringList tmpStrList = anEvent->categories();
   tmpStr = "";
   QString catStr;
   for ( QStringList::Iterator it = tmpStrList.begin();
@@ -833,24 +831,11 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   }
 
   // categories
-  QStringList tmpStrList;
-  int index1 = 0;
-  int index2 = 0;
   if ((vo = isAPropertyOf(vtodo, VCCategoriesProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
     QString categories = QString::fromLocal8Bit(s);
     deleteStr(s);
-    //const char* category;
-    QString category;
-    while ((index2 = categories.find(',', index1)) != -1) {
-        //category = (const char *) categories.mid(index1, (index2 - index1));
-      category = categories.mid(index1, (index2 - index1));
-      tmpStrList.append(category);
-      index1 = index2+1;
-    }
-    // get last category
-    category = categories.mid(index1, (categories.length()-index1));
-    tmpStrList.append(category);
+    QStringList tmpStrList = QStringList::split( ';', categories );
     anEvent->setCategories(tmpStrList);
   }
 
@@ -1289,29 +1274,15 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   anEvent->setSecrecy(secrecy);
 
   // categories
-  QStringList tmpStrList;
-  int index1 = 0;
-  int index2 = 0;
   if ((vo = isAPropertyOf(vevent, VCCategoriesProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
     QString categories = QString::fromLocal8Bit(s);
     deleteStr(s);
-    //const char* category;
-    QString category;
-    while ((index2 = categories.find(',', index1)) != -1) {
-        //category = (const char *) categories.mid(index1, (index2 - index1));
-      category = categories.mid(index1, (index2 - index1));
-      tmpStrList.append(category);
-      index1 = index2+1;
-    }
-    // get last category
-    category = categories.mid(index1, (categories.length()-index1));
-    tmpStrList.append(category);
+    QStringList tmpStrList = QStringList::split( ',', categories );
     anEvent->setCategories(tmpStrList);
   }
 
   // attachments
-  tmpStrList.clear();
   initPropIterator(&voi, vevent);
   while (moreIteration(&voi)) {
     vo = nextVObject(&voi);
@@ -1326,15 +1297,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   if ((vo = isAPropertyOf(vevent, VCResourcesProp)) != 0) {
     QString resources = (s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
-    tmpStrList.clear();
-    index1 = 0;
-    index2 = 0;
-    QString resource;
-    while ((index2 = resources.find(';', index1)) != -1) {
-      resource = resources.mid(index1, (index2 - index1));
-      tmpStrList.append(resource);
-      index1 = index2;
-    }
+    QStringList tmpStrList = QStringList::split( ';', resources );
     anEvent->setResources(tmpStrList);
   }
 
