@@ -1,4 +1,4 @@
-/* main-test.cc                         KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2001,2002,2003,2004 by Adriaan de Groot
@@ -89,6 +89,12 @@ static KCmdLineOptions kpilotoptions[] = {
 	{ "PCtoHH",
 		I18N_NOOP("Copy Desktop to Pilot."),
 		0 } ,
+	{ "test-timeout",
+		I18N_NOOP("Run conduit specially designed to timeout."),
+		0 } ,
+	{ "test-usercheck",
+		I18N_NOOP("Run conduit specially designed to timeout."),
+		0 } ,
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
@@ -98,6 +104,50 @@ static KCmdLineOptions kpilotoptions[] = {
 
 static LogWidget *logWidget = 0L;
 static QPushButton *resetButton = 0L;
+
+
+
+/**
+*** Conduits - sync actions - for testing specific scenarios.
+**/
+
+class TimeoutAction : public SyncAction
+{
+public:
+	TimeoutAction(KPilotDeviceLink *p) ;
+protected:
+	virtual bool exec();
+} ;
+
+TimeoutAction::TimeoutAction(KPilotDeviceLink *p) :
+	SyncAction(p)
+{
+	FUNCTIONSETUP;
+}
+
+bool TimeoutAction::exec()
+{
+	FUNCTIONSETUP;
+
+	for (int i = 0; i<3; i++)
+	{
+		logMessage( CSL1("Hup two %1").arg(i) );
+		fHandle->tickle();
+		qApp->processEvents();
+		sleep(1);
+	}
+
+	logMessage( CSL1("Now sleeping 65") );
+	qApp->processEvents();
+	sleep(65);
+	return delayDone();
+}
+
+
+
+
+
+
 
 void createLogWidget()
 {
@@ -185,9 +235,15 @@ int syncTest(KCmdLineArgs *p)
 		syncStack->queueInit(0);
 		syncStack->addAction(new RestoreAction(deviceLink));
 	}
-	else
+	else if (p->isSet("test-timeout"))
 	{
 		syncStack->queueInit();
+		syncStack->addAction( new TimeoutAction(deviceLink) );
+		syncStack->addAction( new TimeoutAction(deviceLink) );
+	}
+	else
+	{
+		syncStack->queueInit(p->isSet("test-usercheck") /* whether to run usercheck */);
 		syncStack->addAction(new TestLink(deviceLink));
 	}
 	syncStack->queueCleanup();
@@ -217,7 +273,7 @@ int execConduit(KCmdLineArgs *p)
 
 	syncStack = new ActionQueue(deviceLink);
 	syncStack->queueInit();
-	syncStack->queueConduits(l,syncMode, p->isSet("local"));
+	syncStack->queueConduits(l,syncMode,false);
 	syncStack->queueCleanup();
 
 	connectStack();
@@ -303,7 +359,11 @@ int main(int argc, char **argv)
 	KPilotConfig::getDebugLevel(p);
 #endif
 
-	if (p->isSet("backup") || p->isSet("restore") || p->isSet("list"))
+	if ( p->isSet("backup") ||
+		p->isSet("restore") ||
+		p->isSet("list") ||
+		p->isSet("test-timeout") ||
+		p->isSet("test-usercheck") )
 	{
 		return syncTest(p);
 	}

@@ -1,4 +1,4 @@
-/* popmail-conduit.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 Dan Pilone
 ** Copyright (C) 1999,2000 Michael Kropfberger
@@ -318,7 +318,7 @@ int PopMailConduit::sendViaKMail()
 #endif
 
 		// Mark it as filed...
-		pilotRec->setCat(3);
+		pilotRec->setCategory(3);
 		pilotRec->setAttrib(pilotRec->getAttrib() & ~dlpRecAttrDirty);
 		fDatabase->writeRecord(pilotRec);
 		delete pilotRec;

@@ -61,6 +61,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <assert.h>
 #include <errno.h>
 #include <time.h>
@@ -282,7 +283,7 @@ bool CryptPlug::initialize() {
   GpgME::setDefaultLocale( LC_CTYPE, setlocale( LC_CTYPE, 0 ) );
   GpgME::setDefaultLocale( LC_MESSAGES, setlocale( LC_MESSAGES, 0 ) );
   return (gpgme_engine_check_version (GPGMEPLUG_PROTOCOL) == GPG_ERR_NO_ERROR);
-};
+}
 
 
 bool CryptPlug::hasFeature( Feature flag )
@@ -326,71 +327,6 @@ int CryptPlug::interfaceVersion (int *min_version)
   return 1;
 }
 
-bool CryptPlug::isEmailInCertificate( const char* searchEmail, const char* fingerprint )
-{
-  bool bOk = false;
-  if( searchEmail && fingerprint ){
-    gpgme_ctx_t ctx;
-    gpgme_error_t err;
-    gpgme_key_t rKey;
-    const char* attr_string;
-    const char* email = searchEmail;
-    int emailLen = strlen( email );
-    int emailCount = 0;
-
-    if (email && *email == '<'){
-      ++email;
-      emailLen -= 2;
-    }
-
-    fprintf( stderr, "gpgmeplug isEmailInCertificate looking address %s\nin certificate with fingerprint %s\n", email, fingerprint );
-
-    gpgme_new( &ctx );
-    gpgme_set_protocol( ctx, GPGMEPLUG_PROTOCOL );
-
-    err = gpgme_op_keylist_start( ctx, fingerprint, 0 );
-    if ( !err ) {
-      err = gpgme_op_keylist_next( ctx, &rKey );
-      gpgme_op_keylist_end( ctx );
-      if ( !err ) {
-        /* extract email(s) */
-	for ( gpgme_user_id_t uid = rKey->uids ; uid ; uid = uid->next ) {
-	  attr_string = uid->email && *uid->email ? uid->email : uid->uid ;
-          if( attr_string ){
-            if( *attr_string == '<' )
-              ++attr_string;
-            if( *attr_string ){
-              ++emailCount;
-              fprintf( stderr, "gpgmeplug isEmailInCertificate found email: %s\n", attr_string );
-              if( 0 == strncasecmp(attr_string, email, emailLen) ){
-                bOk = true;
-                break;
-              }
-            }
-          }
-        }
-        if( !emailCount )
-          fprintf( stderr, "gpgmeplug isEmailInCertificate found NO EMAIL\n" );
-        else if( !bOk )
-          fprintf( stderr, "gpgmeplug isEmailInCertificate found NO MATCHING email\n" );
-        my_gpgme_key_release( rKey );
-      }else{
-        fprintf( stderr, "gpgmeplug isEmailInCertificate found NO CERTIFICATE for fingerprint %s\n", fingerprint );
-      }
-    }else{
-      fprintf( stderr, "gpgmeplug isEmailInCertificate could NOT open KEYLIST for fingerprint %s\n", fingerprint );
-    }
-    gpgme_release( ctx );
-  }else{
-    if( searchEmail )
-      fprintf( stderr, "gpgmeplug isEmailInCertificate called with parameter FINGERPRINT being EMPTY\n" );
-    else
-      fprintf( stderr, "gpgmeplug isEmailInCertificate called with parameter EMAIL being EMPTY\n" );
-  }
-  return bOk;
-}
-
-
 static
 int getAttrExpireFormKey( gpgme_key_t* rKey)
 {
@@ -408,185 +344,6 @@ int getAttrExpireFormKey( gpgme_key_t* rKey)
   return daysLeft;
 }
 
-
-int CryptPlug::signatureCertificateDaysLeftToExpiry( const char* certificate )
-{
-  gpgme_ctx_t ctx;
-  gpgme_error_t err;
-  gpgme_key_t rKey;
-  int daysLeft = CRYPTPLUG_CERT_DOES_NEVER_EXPIRE;
-
-  gpgme_new( &ctx );
-  gpgme_set_protocol( ctx, GPGMEPLUG_PROTOCOL );
-
-  err = gpgme_op_keylist_start( ctx, certificate, 0 );
-  if ( !err ) {
-    err = gpgme_op_keylist_next( ctx, &rKey );
-    gpgme_op_keylist_end( ctx );
-    if ( !err ) {
-      daysLeft = getAttrExpireFormKey( &rKey );
-      my_gpgme_key_release( rKey );
-    }
-  }
-  gpgme_release( ctx );
-
-  /*
-  fprintf( stderr, "gpgmeplug signatureCertificateDaysLeftToExpiry returned %d\n", daysLeft );
-  */
-
-  return daysLeft;
-}
-
-
-int CryptPlug::caFirstLastChainCertDaysLeftToExpiry( bool bStopAtFirst,
-                                          const char* certificate )
-{
-  gpgme_ctx_t ctx;
-  gpgme_error_t err;
-  gpgme_key_t rKey;
-  const char *sChainID;
-  int daysLeft = CRYPTPLUG_CERT_DOES_NEVER_EXPIRE;
-
-  gpgme_new( &ctx );
-  gpgme_set_protocol( ctx, GPGMEPLUG_PROTOCOL );
-
-  err = gpgme_op_keylist_start( ctx, certificate, 0 );
-  if ( !err ) {
-    err = gpgme_op_keylist_next( ctx, &rKey );
-    gpgme_op_keylist_end( ctx );
-    if ( !err ) {
-      // we found the key, now lets look for the CA key
-      int chainSize = 0;
-      while ( rKey && rKey->chain_id ) {
-	sChainID = rKey->chain_id;
-        // start new key list run
-        err = gpgme_op_keylist_start(ctx, sChainID, 0);
-        my_gpgme_key_release (rKey);
-        rKey = NULL;
-        if (!err)
-          err = gpgme_op_keylist_next (ctx, &rKey);
-        if (err){
-          fprintf( stderr, "Error finding issuer key: %s\n",
-                  gpgme_strerror (err) );
-          break;
-        }else{
-          // stop this key list run
-          gpgme_op_keylist_end(ctx);
-          daysLeft = getAttrExpireFormKey( &rKey );
-          if( bStopAtFirst )
-            break; // the first key was found, let us stop here
-        }
-        ++chainSize;
-        // safe guard against certificate loops (paranoia factor 8 out of 10)...
-        if ( chainSize > 100 ) {
-            kdWarning(5150) << "CryptPlug: maximum chain length of 100 exceeded!" << endl;
-            break;
-        }
-	if ( strcmp( sChainID, rKey->subkeys->fpr ) == 0 ) {
-	  // root found"
-	  break;
-	}
-      }
-      my_gpgme_key_release( rKey );
-    }
-  }
-  gpgme_release( ctx );
-
-  return daysLeft;
-}
-
-int CryptPlug::caCertificateDaysLeftToExpiry( const char* certificate )
-{
-  // retrieve the expire time of the FIRST certificate in this chain
-  // (not counting the original certificate)
-  return caFirstLastChainCertDaysLeftToExpiry( true, certificate );
-}
-
-
-int CryptPlug::rootCertificateDaysLeftToExpiry( const char* certificate )
-{
-  // retrieve the expire time of the LAST certificate in this chain
-  return caFirstLastChainCertDaysLeftToExpiry( false, certificate );
-}
-
-int CryptPlug::receiverCertificateDaysLeftToExpiry( const char* certificate )
-{
-  gpgme_ctx_t ctx;
-  gpgme_error_t err;
-  gpgme_key_t rKey;
-  int daysLeft = CRYPTPLUG_CERT_DOES_NEVER_EXPIRE;
-
-  gpgme_new( &ctx );
-  gpgme_set_protocol( ctx, GPGMEPLUG_PROTOCOL );
-
-  err = gpgme_op_keylist_start( ctx, certificate, 0 );
-  if ( !err ) {
-    err = gpgme_op_keylist_next( ctx, &rKey );
-    gpgme_op_keylist_end( ctx );
-    if ( !err ) {
-      if ( rKey && rKey->subkeys && rKey->subkeys->expires >= 0 ) {
-	time_t expire_time = rKey->subkeys->expires;
-        time_t cur_time = time (NULL);
-        if( cur_time > expire_time ) {
-          daysLeft = days_from_seconds(cur_time - expire_time);
-          daysLeft *= -1;
-        }
-        else
-          daysLeft = days_from_seconds(expire_time - cur_time);
-      }
-      my_gpgme_key_release( rKey );
-    }
-  }
-  gpgme_release( ctx );
-
-  /*
-  fprintf( stderr, "gpgmeplug receiverCertificateDaysLeftToExpiry returned %d\n", daysLeft );
-  */
-
-  return daysLeft;
-}
-
-
-int CryptPlug::certificateInChainDaysLeftToExpiry( const char* certificate )
-{
-  gpgme_ctx_t ctx;
-  gpgme_error_t err;
-  int daysLeft = CRYPTPLUG_CERT_DOES_NEVER_EXPIRE;
-
-  gpgme_new (&ctx);
-  gpgme_set_protocol (ctx, GPGMEPLUG_PROTOCOL);
-
-  do
-    {
-      gpgme_key_t rKey;
-      int days;
-
-      err = gpgme_op_keylist_start (ctx, certificate, 0);
-      if (!err)
-	err = gpgme_op_keylist_next (ctx, &rKey);
-      if (!err)
-	err = gpgme_op_keylist_end (ctx);
-      if (err)
-	break;
-      certificate = rKey ? rKey->chain_id : 0 ;
-      days = getAttrExpireFormKey (&rKey);
-      if (days < daysLeft)
-        daysLeft = days;
-
-      my_gpgme_key_release (rKey);
-    }
-  while (certificate);
-
-  if (err)
-    fprintf (stderr, "Error listing certificate chain: %s\n",
-	     gpgme_strerror (err));
-
-  gpgme_release (ctx);
-  return daysLeft;
-}
-
-
-bool CryptPlug::certificateValidity( const char*, int* ){ return true; }
 
 static
 void storeNewCharPtr( char** dest, const char* src )
@@ -2010,11 +1767,13 @@ void obtain_signature_information( gpgme_ctx_t ctx,
     memset( &this_info, 0, sizeof (CryptPlug::SignatureMetaDataExtendedInfo) );
 
     /* the creation time */
-    this_info.creation_time = (tm*)malloc( sizeof( struct tm ) );
-    if ( this_info.creation_time ) {
-      struct tm * ctime_val = localtime( (time_t*)&signature->timestamp );
-      memcpy( this_info.creation_time,
-	      ctime_val, sizeof( struct tm ) );
+    if ( signature->timestamp ) {
+      this_info.creation_time = (tm*)malloc( sizeof( struct tm ) );
+      if ( this_info.creation_time ) {
+        struct tm * ctime_val = localtime( (time_t*)&signature->timestamp );
+        memcpy( this_info.creation_time,
+                ctime_val, sizeof( struct tm ) );
+      }
     }
 
     /* the extended signature verification status */
@@ -2035,7 +1794,7 @@ void obtain_signature_information( gpgme_ctx_t ctx,
     convert(BAD_POLICY);
     convert(SYS_ERROR);
 #undef convert
-    if( !sumPlug )
+    if( sumGPGME && !sumPlug )
       sumPlug = SigStat_NUMERICAL_CODE | sumGPGME;
     this_info.sigStatusFlags = sumPlug;
 
@@ -2230,11 +1989,13 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
 {
   gpgme_ctx_t ctx;
   gpgme_error_t err;
+  gpgme_decrypt_result_t decryptresult;
   gpgme_data_t gCiphertext, gPlaintext;
   gpgme_sig_stat_t sigstatus = GPGME_SIG_STAT_NONE;
   size_t rCLen = 0;
   char*  rCiph = 0;
   bool bOk = false;
+  bool bWrongKeyUsage = false;
 
   if( !ciphertext )
     return false;
@@ -2259,6 +2020,13 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
 
   err = gpgme_op_decrypt_verify( ctx, gCiphertext, gPlaintext );
   gpgme_data_release( gCiphertext );
+  
+  decryptresult = gpgme_op_decrypt_result( ctx );
+#ifdef HAVE_GPGME_WRONG_KEY_USAGE
+  if( decryptresult->wrong_key_usage )
+    bWrongKeyUsage = true;
+#endif
+  
   if( err ) {
     fprintf( stderr, "\ngpgme_op_decrypt_verify() returned this error code:  %i\n\n", err );
     if( errId )
@@ -2273,7 +2041,12 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
     gpgme_release( ctx );
     return bOk;
   }
-
+  
+  if( bWrongKeyUsage ) {
+    if( errId )
+      *errId = CRYPTPLUG_ERR_WRONG_KEY_USAGE; // report the wrong key usage
+  }  
+  
   rCiph = gpgme_data_release_and_get_mem( gPlaintext,  &rCLen );
 
   *cleartext = (char*)malloc( rCLen + 1 );

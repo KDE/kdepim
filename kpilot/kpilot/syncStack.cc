@@ -1,6 +1,7 @@
-/* syncStack.cc                       KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This defines the "ActionQueue", which is the pile of actions
 ** that will occur during a HotSync.
@@ -34,17 +35,21 @@ static const char *syncStack_id = "$Id$";
 
 #include <qtimer.h>
 #include <qfile.h>
+#include <qdir.h>
+#include <qtextcodec.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
 #include <kuserprofile.h>
 #include <klibloader.h>
+#include <ksavefile.h>
 
 #include "pilotUser.h"
 #include "hotSync.h"
 #include "interactiveSync.h"
 #include "fileInstaller.h"
 #include "kpilotSettings.h"
+#include "pilotAppCategory.h"
 
 #include "syncStack.moc"
 
@@ -64,6 +69,7 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 
 	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
 		.arg(QString::fromLatin1(KPILOT_VERSION)));
+	emit logMessage( i18n("Using encoding %1 on the handheld.").arg(PilotAppCategory::codecName()) );
 	emit syncDone(this);
 	return true;
 }
@@ -86,6 +92,48 @@ bool SorryAction::exec()
 	addSyncLogEntry(fMessage);
 	return delayDone();
 }
+
+LocalBackupAction::LocalBackupAction(KPilotDeviceLink *p, const QString &d) :
+	SyncAction(p,"LocalBackupAction"),
+	fDir(d)
+{
+}
+
+bool LocalBackupAction::exec()
+{
+	FUNCTIONSETUP;
+
+	startTickle();
+
+	QString dirname = fDir +
+		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
+		CSL1("/");
+	QDir dir(dirname,QString::null,QDir::Unsorted,QDir::Files);
+
+	if (!dir.exists())
+	{
+		emit logMessage( i18n("Cannot create local backup.") );
+		return false;
+	}
+
+	logMessage( i18n("Creating local backup of databases in %1.").arg(dirname) );
+	addSyncLogEntry( i18n("Creating local backup ..") );
+	qApp->processEvents();
+
+	QStringList files = dir.entryList();
+
+	for (QStringList::Iterator i = files.begin() ;
+		i != files.end();
+		++i)
+	{
+		KSaveFile::backupFile(dirname + (*i));
+	}
+
+	stopTickle();
+
+	return delayDone();
+}
+
 
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,
@@ -127,6 +175,9 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	case eRestore:
 		kdWarning() << k_funcinfo << ": Running conduits during restore." << endl;
 		l.append(CSL1("--test"));
+		break;
+	case eDefaultSync:
+		Q_ASSERT(eDefaultSync != m); // Bail
 		break;
 	}
 	return l;
@@ -303,9 +354,9 @@ void ActionQueue::queueConduits(const QStringList &l,SyncAction::SyncMode m, boo
 	}
 }
 
-void ActionQueue::queueInstaller(const QString &dir, const QStringList &files)
+void ActionQueue::queueInstaller(const QString &dir)
 {
-	addAction(new FileInstallAction(fHandle,dir,files));
+	addAction(new FileInstallAction(fHandle,dir));
 }
 
 void ActionQueue::queueCleanup()
@@ -336,7 +387,19 @@ void ActionQueue::actionCompleted(SyncAction *b)
 
 	if (isEmpty())
 	{
-		emit syncDone(this);
+		delayDone();
+		return;
+	}
+	if (!fHandle->tickle())
+	{
+		emit logError(i18n("The connection to the handheld "
+			"was lost. Synchronization cannot continue."));
+		SyncAction *del = 0L;
+		while ( (del = nextAction()) )
+		{
+			delete del;
+		}
+		delayDone();
 		return;
 	}
 

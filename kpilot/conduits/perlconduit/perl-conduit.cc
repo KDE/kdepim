@@ -1,4 +1,4 @@
-/* perl-conduit.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 2004 by Adriaan de Groot
 **
@@ -25,6 +25,11 @@
 
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+
+/*
+** This file is based on the perlembed examples, from
+** http://search.cpan.org/dist/perl/pod/perlembed.pod
 */
 
 #ifdef DEBUG
@@ -64,7 +69,10 @@ Am Dienstag, 13. April 2004 22:26 schrieb Adriaan de Groot:
 class PerlThread : public QThread
 {
 public:
-	PerlThread(QObject *parent) : fParent(parent) { } ;
+	PerlThread(QObject *parent,
+		const QString &pilotPath,
+		int fd) : fParent(parent),
+		fPath(pilotPath),fSocket(fd) { } ;
 	virtual void run();
 
 	QString result() const { return fResult; } ;
@@ -72,6 +80,8 @@ public:
 protected:
 	QObject *fParent;
 	PerlInterpreter *my_perl;
+	QString fPath;
+	int fSocket;
 
 	QString fResult;
 } ;
@@ -104,8 +114,11 @@ PerlConduit::~PerlConduit()
 	DEBUGCONDUIT << fname << ": In exec() @" << (unsigned long) this << endl;
 #endif
 
-	fThread = new PerlThread(this) ;
+	fThread = new PerlThread(this,
+		fHandle->pilotPath(),
+		/* fHandle-> */pilotSocket()) ;
 	fThread->start();
+	startTickle();
 	return true;
 }
 
@@ -120,6 +133,7 @@ PerlConduit::~PerlConduit()
 #endif
 		QString r;
 		addSyncLogEntry(i18n("Perl returned %1.").arg(fThread->result()));
+		stopTickle();
 		delayDone();
 		return true;
 	}
@@ -141,13 +155,30 @@ void PerlThread::run()
 	perl_parse(my_perl, NULL, 3, const_cast<char **>(perl_args), NULL);
 	perl_run(my_perl);
 
+	eval_pv( (CSL1("%kpilot=(") +
+		CSL1("device=>\"%1\",").arg(fPath) +
+		CSL1("socket=%1,").arg(fSocket) +
+		// Add more data here in same style, don't forget " and ,
+		CSL1("version=%1);").arg(KPILOT_PLUGIN_API)).latin1(),
+		TRUE);
+
 	eval_pv(PerlConduitSettings::expression().latin1(),TRUE);
 
+	SV *retval = get_sv("a",FALSE);
+	if (retval)
+	{
+		fResult.setNum(SvIV(retval));
+	}
+	else
+	{
+		fResult = i18n("No value");
+	}
+
+
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Thread woken with " << SvIV(get_sv("a",FALSE)) << endl;
+	DEBUGCONDUIT << fname << ": Thread woken with " << fResult << endl;
 #endif
 
-	fResult.setNum(SvIV(get_sv("a",FALSE)));
 
 	perl_destruct(my_perl);
 	perl_free(my_perl);

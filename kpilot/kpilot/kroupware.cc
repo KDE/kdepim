@@ -1,4 +1,4 @@
-/* kroupware.cc			KPilot
+/* KPilot
 **
 ** Copyright still to be determined.
 **
@@ -118,15 +118,15 @@ void KroupwareSync::start_syncCal_TodosWithKMail( bool cal, bool todos )
 		     reply_type,
 		     reply_data)) {
     logMessage( CSL1("Calling KMail over DCOP failed!" ));
-    logMessage(CSL1("Not syncing Calendars with KMail"));
-    logMessage(CSL1("Not syncing Todos with KMail"));
+    logMessage(CSL1("Not syncing calendars with KMail"));
+    logMessage(CSL1("Not syncing to-dos with KMail"));
   }
   else {
     logMessage(CSL1("Calling Cal/Todo over DCOP succeeded"));
     // now prepare for syncing
     _syncWithKMail = true;
     if ( todos ) {
-      logMessage( i18n("Syncing todos with KMail" ));
+      logMessage( i18n("Syncing to-dos with KMail" ));
       c->setGroup("todoOptions");
       QString fn = c->readPathEntry( "CalFile" );
       c->writePathEntry( "CalFileBackup" ,fn );
@@ -188,7 +188,7 @@ void KroupwareSync::end_syncCal_TodosWithKMail( bool cal, bool todos)
  QString filename;
  KConfig*c=KPilotSettings::self()->config();
  if ( todos ) {
-   logMessage( i18n("Rewriting Todos to KMail..." ));
+   logMessage( i18n("Rewriting to-dos to KMail..." ));
    c->setGroup("todoOptions");
    filename = c->readPathEntry( "CalFile" );
    c->writePathEntry( "CalFile", c->readPathEntry( "CalFileBackup" ) );

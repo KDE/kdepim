@@ -1,8 +1,9 @@
 /* KPilot
 **
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 **
-** This file defines the factory for the popmail-conduit plugin.
+** This file defines the factory for the vcal-conduit plugin.
 */
 
 /*
@@ -28,65 +29,75 @@
 
 #include "options.h"
 
-#include <qtabwidget.h>
-#include <qlineedit.h>
-
-#include <kconfig.h>
-#include <kinstance.h>
 #include <kaboutdata.h>
 
-#include "setupDialog.h"
-#include "popmail-conduit.h"
-#include "popmail-factory.moc"
-
+#include "vcal-setup.h"
+#include "vcal-conduit.h"
+#include "vcal-factory.moc"
+#include <vcalconduitSettings.h>
 
 extern "C"
 {
 
-void *init_conduit_popmail()
+void *init_conduit_vcal()
 {
-	return new PopMailConduitFactory;
+	return new VCalConduitFactory;
 }
 
 }
 
 
-KAboutData *PopMailConduitFactory::fAbout = 0L;
-PopMailConduitFactory::PopMailConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+VCalConduitSettings* VCalConduitFactory::fConfig=0L;
+
+VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
+	VCalConduitFactoryBase(p,n)
 {
 	FUNCTIONSETUP;
 
-	fInstance = new KInstance("popmailconduit");
-	fAbout = new KAboutData("popmailConduit",
-		I18N_NOOP("Mail Conduit for KPilot"),
+	fInstance = new KInstance("vcalconduit");
+	fAbout = new KAboutData("vcalConduit",
+		I18N_NOOP("VCal Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the Mail Conduit for KPilot"),
+		I18N_NOOP("Configures the VCal Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, Dan Pilone, Michael Kropfberger, Adriaan de Groot");
+		"(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
 	fAbout->addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Maintainer"),
+		"reinhold@kainhofer.com",
+		"http://reinhold.kainhofer.com/Linux/");
 	fAbout->addAuthor("Dan Pilone",
 		I18N_NOOP("Original Author"));
-	fAbout->addCredit("Michael Kropfberger",
-		I18N_NOOP("POP3 code"));
-	fAbout->addCredit("Marko Gr&ouml;nroos",
-		I18N_NOOP("SMTP support and redesign"),
-		"magi@iki.fi",
-		"http://www/iki.fi/magi/");
+	fAbout->addAuthor("Preston Brown",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Herwin-Jan Steehouwer",
+		I18N_NOOP("Original Author"));
+	fAbout->addCredit("Cornelius Schumacher",
+		I18N_NOOP("iCalendar port"));
+	fAbout->addCredit("Philipp Hullmann",
+		I18N_NOOP("Bugfixer"));
 }
 
-PopMailConduitFactory::~PopMailConduitFactory()
+VCalConduitFactory::~VCalConduitFactory()
 {
 	FUNCTIONSETUP;
 
 	KPILOT_DELETE(fInstance);
-	KPILOT_DELETE(fAbout);
 }
 
-/* virtual */ QObject *PopMailConduitFactory::createObject( QObject *p,
+VCalConduitSettings* VCalConduitFactory::config()
+{
+	if (!fConfig) {
+		fConfig = new VCalConduitSettings("Calendar");
+		if (fConfig) fConfig->readConfig();
+	}
+	return fConfig;
+}
+
+/* virtual */ QObject *VCalConduitFactory::createObject( QObject *p,
 	const char *n,
 	const char *c,
 	const QStringList &a)
@@ -106,7 +117,7 @@ PopMailConduitFactory::~PopMailConduitFactory()
 
 		if (w)
 		{
-			return new PopMailWidgetConfig(w,n);
+			return new VCalWidgetSetup(w,n);
 		}
 		else
 		{
@@ -118,23 +129,22 @@ PopMailConduitFactory::~PopMailConduitFactory()
 			return 0L;
 		}
 	}
-
+	else
 	if (qstrcmp(c,"SyncAction")==0)
 	{
 		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
 
 		if (d)
 		{
-			return new PopMailConduit(d,n,a);
+			return new VCalConduit(d,n,a);
 		}
 		else
 		{
 			kdError() << k_funcinfo
-				<< ": Couldn't cast to KPilotDeviceLink"
+				<< ": Couldn't cast to KPilotDeviceLink."
 				<< endl;
-			return 0L;
 		}
 	}
+
 	return 0L;
 }
-

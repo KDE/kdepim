@@ -1,8 +1,9 @@
 /* KPilot
 **
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 **
-** This file defines the factory for the popmail-conduit plugin.
+** This file defines the factory for the todo-conduit plugin.
 */
 
 /*
@@ -28,57 +29,54 @@
 
 #include "options.h"
 
-#include <qtabwidget.h>
-#include <qlineedit.h>
-
-#include <kconfig.h>
-#include <kinstance.h>
 #include <kaboutdata.h>
 
-#include "setupDialog.h"
-#include "popmail-conduit.h"
-#include "popmail-factory.moc"
-
+#include "todo-setup.h"
+#include "todo-conduit.h"
+#include "todo-factory.moc"
+#include "vcalconduitSettings.h"
 
 extern "C"
 {
 
-void *init_conduit_popmail()
+void *init_conduit_todo()
 {
-	return new PopMailConduitFactory;
+	return new ToDoConduitFactory;
 }
 
 }
 
+VCalConduitSettings* ToDoConduitFactory::fConfig=0L;
 
-KAboutData *PopMailConduitFactory::fAbout = 0L;
-PopMailConduitFactory::PopMailConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
+	VCalConduitFactoryBase(p,n)
 {
 	FUNCTIONSETUP;
 
-	fInstance = new KInstance("popmailconduit");
-	fAbout = new KAboutData("popmailConduit",
-		I18N_NOOP("Mail Conduit for KPilot"),
+	fInstance = new KInstance("todoconduit");
+	fAbout = new KAboutData("todoConduit",
+		I18N_NOOP("To-do Conduit for KPilot"),
 		KPILOT_VERSION,
-		I18N_NOOP("Configures the Mail Conduit for KPilot"),
+		I18N_NOOP("Configures the To-do Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, Dan Pilone, Michael Kropfberger, Adriaan de Groot");
+		"(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
+	fAbout->addAuthor("Dan Pilone",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Preston Brown",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Herwin-Jan Steehouwer",
+		I18N_NOOP("Original Author"));
 	fAbout->addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
-	fAbout->addAuthor("Dan Pilone",
-		I18N_NOOP("Original Author"));
-	fAbout->addCredit("Michael Kropfberger",
-		I18N_NOOP("POP3 code"));
-	fAbout->addCredit("Marko Gr&ouml;nroos",
-		I18N_NOOP("SMTP support and redesign"),
-		"magi@iki.fi",
-		"http://www/iki.fi/magi/");
+	fAbout->addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Maintainer"),
+		"reinhold@kainhofer.com",
+		"http://reinhold.kainhofer.com/Linux/");
 }
 
-PopMailConduitFactory::~PopMailConduitFactory()
+ToDoConduitFactory::~ToDoConduitFactory()
 {
 	FUNCTIONSETUP;
 
@@ -86,7 +84,16 @@ PopMailConduitFactory::~PopMailConduitFactory()
 	KPILOT_DELETE(fAbout);
 }
 
-/* virtual */ QObject *PopMailConduitFactory::createObject( QObject *p,
+VCalConduitSettings* ToDoConduitFactory::config()
+{
+	if (!fConfig) {
+ 		fConfig = new VCalConduitSettings("ToDo");
+ 		if (fConfig) fConfig->readConfig();
+	}
+	return fConfig;
+}
+
+/* virtual */ QObject *ToDoConduitFactory::createObject( QObject *p,
 	const char *n,
 	const char *c,
 	const QStringList &a)
@@ -106,7 +113,7 @@ PopMailConduitFactory::~PopMailConduitFactory()
 
 		if (w)
 		{
-			return new PopMailWidgetConfig(w,n);
+			return new ToDoWidgetSetup(w,n);
 		}
 		else
 		{
@@ -118,23 +125,22 @@ PopMailConduitFactory::~PopMailConduitFactory()
 			return 0L;
 		}
 	}
-
+	else
 	if (qstrcmp(c,"SyncAction")==0)
 	{
 		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
 
 		if (d)
 		{
-			return new PopMailConduit(d,n,a);
+			return new TodoConduit(d,n,a);
 		}
 		else
 		{
 			kdError() << k_funcinfo
-				<< ": Couldn't cast to KPilotDeviceLink"
+				<< ": Couldn't cast to KPilotDeviceLink."
 				<< endl;
-			return 0L;
 		}
 	}
+
 	return 0L;
 }
-

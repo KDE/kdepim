@@ -1,4 +1,4 @@
-/* logFile.cc                         KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2004 by Reinhold Kainhofer
@@ -59,7 +59,6 @@ LogFile::LogFile() : DCOPObject("LogIface"), QObject(), fOutfile(0L), fSyncing(f
 	FUNCTIONSETUP;
 	// If a sync is already running (something went wrong then!), close that old log
 	if (fSyncing) logEndSync();
-kdDebug()<<" log file name "<<KPilotSettings::logFileName()<<endl;
 	
 	fOutfile = new QFile(KPilotSettings::logFileName());
 	

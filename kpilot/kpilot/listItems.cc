@@ -1,7 +1,7 @@
-/* listItem.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
-** Modifications 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 by Reinhold Kainhofer
 **
 ** Program description
 */

@@ -1,5 +1,5 @@
 // -*- C++ -*-
-/* addressEditor.cc		KPilot
+/* KPilot
 **
 ** Copyright (C) 2000 by Dan Pilone
 **

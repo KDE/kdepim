@@ -1,7 +1,6 @@
-/* dbRecordEditor.cc                KPilot
+/* KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
-** Written 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 **/
 
@@ -33,9 +32,7 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 #include <qbuttongroup.h>
-#include <qcheckbox.h>
 #include <qlabel.h>
-#include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 
@@ -55,7 +52,7 @@ using namespace KHE;
 
 
 DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
-	: KDialogBase(parent, "RecordEditor",false,i18n("Edit Record..."),
+	: KDialogBase(parent, "RecordEditor",false,i18n("Edit Record"),
 				Ok|Cancel), rec(r), nr(n)
 {
 //	fWidget=new DBRecordEditorBase(this);
@@ -67,7 +64,7 @@ DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
 	fillWidgets();
 }
 
- 
+
 DBRecordEditor::~DBRecordEditor()
 {
 	KPILOT_DELETE( fBuffer );
@@ -77,7 +74,7 @@ DBRecordEditor::~DBRecordEditor()
 void DBRecordEditor::slotOk()
 {
 	FUNCTIONSETUP;
-	if (KMessageBox::questionYesNo(this, i18n("Changing the record data and flags might corrupt the whole record, or even make the database unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing record"))==KMessageBox::Yes)
+	if (KMessageBox::questionYesNo(this, i18n("Changing the record data and flags might corrupt the whole record, or even make the database unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing Record"))==KMessageBox::Yes)
 	{
 		int att=rec->getAttrib();
 #define setFlag(ctrl, flag) if (ctrl->isChecked()) att|=flag; else att &= ~flag;
@@ -93,7 +90,7 @@ void DBRecordEditor::slotOk()
 		if ( fRecordDataIf->isModified() )
 		{
 #ifdef DEBUG
-			DEBUGKPILOT << "record data changed, new Length of record: " << 
+			DEBUGKPILOT << "record data changed, new Length of record: " <<
 				fRecordDataIf->dataSize() << endl;
 #endif
 			// take over data
@@ -208,7 +205,7 @@ void DBRecordEditor::initWidgets()
 		fRecordData = tmpW;
 		fRecordDataIf = 0;
 	}
- 
+
 	DBRecordEditorBaseLayout->addMultiCellWidget( fRecordData, 2, 2, 0, 3 );
 #endif
 
@@ -221,7 +218,7 @@ void DBRecordEditor::fillWidgets()
 	// FUNCTIONSETUP
 
 	fRecordIndex->setText(QString::number(nr));
-	fRecordID->setText(QString::number(rec->getID()));
+	fRecordID->setText(QString::number(rec->id()));
 
 	int att=rec->getAttrib();
 	fDirty->setChecked(att & dlpRecAttrDirty);
@@ -239,7 +236,7 @@ void DBRecordEditor::fillWidgets()
 		fRecordDataIf->setMaxDataSize( 4096 );
 		fRecordDataIf->setReadOnly( false );
 		// We are managing the buffer ourselves:
-		fRecordDataIf->setAutoDelete( false ); 
+		fRecordDataIf->setAutoDelete( false );
 	}
 #endif
 }

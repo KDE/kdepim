@@ -1,102 +1,67 @@
-	One of the greatest assets of the Palm Pilot is its ability to
+One of the greatest assets of the Palm Pilot is its ability to
 interconnect with other applications.  KPilot supports this capabilty
-through conduits.  A conduit is a small seperate program that talks to
-KPilot during the hot sync.  The conduit translates between the Palm
+through conduits.  A conduit is a small shared library that is loaded by
+the daemon during the hot sync.  The conduit translates between the Palm
 Pilot and the application you're syncing with.
 
-How it works
+*** How it works
 
-	KPilot is divided into three major components: the gui, the
-syncing daemon, and the conduits.  When the gui is started it attempts
-to make a connection to the syncing daemon.  If it can't it starts the
-daemon then makes the socket connection.  When the user hits the
-hot-sync button on the cradle the daemon checks to see if the gui is
-connected.  If it is, the daemon notifies the gui that a hot-sync has
-started.  The daemon then steps through each database on the pilot
-synchronizing it with a local copy.  The daemon checks the list of
-installed conduits to see if any match the current database.  If it
-finds a match, the conduit is started.  When the conduit is started it
-makes a connection back to the daemon and asks the daemon to read and
-write entries into the database.  When the conduit finishes it exits
-and the daemon continues on to the next database.  Once all the
-databases have been synced the daemon alerts the gui that it has
-finished and goes back to waiting for a sync to start.
+KPilot is divided into three major components: the GUI, the
+syncing daemon, and the conduits.  The GUI part is actually irrelevant
+for the operation of the daemon, although it _is_ required for the
+configuration dialog (and possibly viewing databases). In theory
+you could run the daemon on a box without even starting X, although
+that is difficult (in particular, how would you do conflict resolution?).
 
-How the conduits work
+The daemon sits around and polls the configured device every second or
+so (there are devices where this should be more often, I think). Once
+data arrives (and the device exists, consider hotplug with USB), the
+daemon enters sync mode, and constructs a queue of SyncActions to perform.
+These vary from checking the Pilot's username to performing full backups
+to -- whatever sync actions the conduits provide. This means that during
+a sync the shared library containing a conduit is loaded, a factory
+function is called to produce an Action, this action is run, and the
+library unloaded.
 
-	First a little background on pilot databases would be useful.
-Each database on the pilot is divided into multiple records.  Each
-record is a specific entry into the database.  For example, one
-address in the Address Book corresponds to one record in AddressDB.
-Each record has a unique id assigned by the pilot when the record is
-created, and an index number in the database.  The index numbers get
-reused, for example if you delete the second record from the database
-then create a new one it will fill in the empty slot and become index
-number two.  However, it will have a unique ID number.  (The moral of
-this story is only use index numbers when you need to iterate through
-the whole Database, otherwise use the unique record id.)
-	When a new record is created by the user on the local side, it 
-is inserted into the backed up copy of the databases but given a
-unique ID of 0.  When the syncing occurs this record is installed on
-the pilot and the pilot will return with the new unique id for it.
-This same process happens with a conduit.  If two records have the
-same unique id they will overwrite each other.
-	The basic conduit implements three important features:
-info/setup, backup, and normal hot-sync.  If the user clicks the setup 
-button in KPilot's conduit menu the conduit is started and requested
-to show a settings dialog.  If the conduit doesn't have any settings
-to adjust then it should simply display an about dialog.  When the
-dialog is closed the conduit will exit.  Next, if the user requested
-KPilot back up the pilot the conduit will be given the opportunity to
-grab everything off the pilot.  This is useful if this is the first
-time the conduit is being used.  For example if the user had never
-synced before this would be a good time to copy the data into the
-calendar, money database, etc.  Lastly, the conduit is requested to
-hot-sync whenever KPilot is hot-syncing with the pilot.  During this
-time the conduit asks KPilot if there are any modified records on the
-pilot and should back them up into the program the conduit syncs
-with.   Then, the conduit checks to see if there are any locally
-modified records and asks KPilot to put those on the pilot.  Once
-finished, it exits gracefully and KPilot will clean up and close the
-database.
+*** How the conduits work
 
-Write your very own conduit
+The conduits can actually be divided into two parts: the configuration
+widget, and the Action. Both are produced by a factory function in
+the shared library. The conduits have only one really interesting method
+that they must override, and that is exec(). When this is called the 
+conduit is already set up with a socket descriptor and the conduit should
+quickly do its thing. In particular, conduits can't just sleep(45) and
+continue, since the connection with the Pilot will time out.
 
-	Writing a conduit is actually rather easy.  The conduit class
-should inherit from BaseConuit and override the followiing methods:
-	o dbInfo()
-	o doSync()
-	o doBackup()
-	o aboutAndSetup()
+*** Write your very own conduit
 
-	And possibly the construtor and destructor depending on what
-you need to do.  The dbInfo() method returns a const char* which is
-the name of the database that conduit works with.  For example, the
-vcal conduit returns DatebookDB.  One that would sync with kab (KDE
-Address Book) would return AddressDB.  This is specific to the pilot
-application and you'll need to know the name the pilot app uses for
-it's database.  (You might be able to guess if you look at the
-~/.kde/share/apps/kpilot/DBBackup/<user> directory and find one that
-looks close.  Note that you don't use any extension in the dbInfo
-string.)
-	The doSync() method makes use of the protected methods of base 
-conduit.  These can be used to request the next modified record, the
-record located at a particular index, a particular record by id, or to 
-write a new record.
-	The doBackup() method works pretty much the same way but
-should not write any records to the pilot.
-	The aboutAndSetup() method was described earlier.
-	Note that base conduit is KDoc'd and should be pretty self
-explanatory.  Note that each accessor method returns a PilotRecord.
-This is a generic pilot record as KPilot has no idea what each
-individual app does with its records.  You can get the data from the
-pilot record and parse it any way you see fit.  For example, a memo is 
-more or less just a long text string in the data field, however an
-address is a specific sized structure.  A lot of the databases are
-described in the pi-dlp.h headers (pilot-link) and a good number of
-pilot-app authors are willing to let you in on how the database is set 
-up.
-	Take a look at the vcal conduit for an example of how all this 
-works together and remember that you'll need to link to libconduit.a
-to get all these methods.  Good luck -- Dan (12/8/98)
+Writing a conduit is actually rather easy.  The conduit class
+should inherit from ConduitAction and override the exec() method
+(which actually comes from SyncAction).
 
+
+*** Debugging things
+
+lib/options.h contains two defines that are really important for
+debugging. These are
+
+	// #define DEBUG                        (1)
+	// #define DEBUG_CERR                   (1)
+
+Uncommenting DEBUG will enable most of the debug information in
+KPilot. Uncommenting DEBUG_CERR will make debug output go direct
+to stderr (cerr) instead of through kdDebug. If in addition, you
+pass --debug N (say, N=1 or N=4) to KPilot or the daemon when you
+start them, they will print call traces (that's what FUNCTIONSETUP
+does, which you will see at the beginning of every function).
+
+Another useful tool is kpilotTest, which is in kpilot/kpilot. It
+is an uninstalled binary, which behaves like the daemon with a
+log window and which will run a single conduit. Something like:
+
+	kpilotTest -p /dev/ucom0 \		# port
+		-E conduit_knotes \		# .desktop file
+		-T				# _really_ run
+
+use kpilotTest -L to list the installed conduits and their
+desktop files (look at the "In ..." lines).

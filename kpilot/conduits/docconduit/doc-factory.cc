@@ -1,4 +1,4 @@
-/* doc-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
