@@ -125,7 +125,8 @@ QStringList ViewManager::selectedEmails() const
 
 void ViewManager::setSelected( const QString &uid, bool selected )
 {
-  mActiveView->setSelected( uid, selected );
+    if ( mActiveView )
+        mActiveView->setSelected( uid, selected );
 }
 
 void ViewManager::unloadViews()
