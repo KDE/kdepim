@@ -58,7 +58,7 @@ KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
 KPilotDeviceLink::KPilotDeviceLink() :
 	KPilotLink("deviceLink"),
 	fPilotPath(QString::null),
-	fTransientDevice(false),
+	fDeviceType(None),
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
@@ -75,7 +75,6 @@ KPilotDeviceLink::KPilotDeviceLink() :
 KPilotDeviceLink::~KPilotDeviceLink()
 {
 	FUNCTIONSETUP;
-
 	close();
 }
 
@@ -85,12 +84,11 @@ void KPilotDeviceLink::close()
 
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
-
 	pi_close(fCurrentPilotSocket);
 	pi_close(fPilotMasterSocket);
 }
 
-void KPilotDeviceLink::reset(const QString &dP)
+void KPilotDeviceLink::reset(DeviceType t,const QString &dP)
 {
 	FUNCTIONSETUP;
 
@@ -106,6 +104,10 @@ void KPilotDeviceLink::reset(const QString &dP)
 	if (fPilotMasterSocket!=-1) pi_close(fPilotMasterSocket);
 	fPilotMasterSocket = -1;
 	fCurrentPilotSocket = -1;
+	fPilotPath=QString::null;
+
+	fDeviceType=t;
+	if (t==None) return;
 
 	fPilotPath=dP;
 	if (fPilotPath.isEmpty()) return;
@@ -123,7 +125,7 @@ void KPilotDeviceLink::openDevice()
 {
 	FUNCTIONSETUP;
 
-	if (fTransientDevice)
+	if (isTransient())
 	{
 		if (!QFile::exists(fPilotPath))
 		{
@@ -131,12 +133,13 @@ void KPilotDeviceLink::openDevice()
 		}
 	}
 
-	if (fOpenTimer)
+	// This transition (from Waiting to Found) can only be
+	// taken once.
+	//
+	if (fStatus==WaitingForDevice)
 	{
-		fOpenTimer->stop();
+		fStatus = FoundDevice;
 	}
-
-	fStatus = FoundDevice;
 
 	emit logMessage(i18n("Trying to open device ..."));
 	if (open())
@@ -197,10 +200,7 @@ KPilotDeviceLink::open()
 		fStatus = CreatedSocket;
 	}
 
-	if (!(fStatus == CreatedSocket))
-	{
-		ASSERT(fStatus == CreatedSocket);
-	}
+	ASSERT(fStatus == CreatedSocket);
 
 	DEBUGDAEMON << fname
 		<< ": Binding to path "
@@ -226,7 +226,7 @@ KPilotDeviceLink::open()
 	}
 	else
 	{
-		if (fTransientDevice && (fRetries<5))
+		if (isTransient() && (fRetries<5))
 		{
 			return false;
 		}
@@ -319,28 +319,6 @@ void KPilotDeviceLink::acceptDevice()
 		return;
 	}
 
-	emit logMessage(i18n("Starting HotSync..."));
-	emit logProgress(i18n("Reading user information..."), 0);
-
-
-	ret = pi_listen(fPilotMasterSocket, 1);
-	if (ret == -1)
-	{
-		fStatus=PilotLinkError;
-		kdError() << __FUNCTION__
-			<< ": pi_listen failed: " << perror << endl;
-		return;
-	}
-
-	fCurrentPilotSocket = pi_accept(fPilotMasterSocket, 0, 0);
-	if (fCurrentPilotSocket == -1)
-	{
-		fStatus=PilotLinkError;
-		kdError() << __FUNCTION__
-			<< ": pi_accept failed: " << perror << endl;
-		return;
-	}
-
 	emit logProgress(QString::null,30);
 
 	fPilotUser = new KPilotUser;
@@ -364,9 +342,70 @@ void KPilotDeviceLink::acceptDevice()
 	emit logProgress(QString::null,100);
 
 	addSyncLogEntry("Sync started with KPilot-v" KPILOT_VERSION "\n");
-
 	emit deviceReady();
 }
+
+int KPilotDeviceLink::installFiles(const QStringList &l)
+{
+	FUNCTIONSETUP;
+
+	QStringList::ConstIterator i;
+	int k=0;
+	int n=0;
+
+	for (i=l.begin(); i!=l.end(); ++i)
+	{
+		emit logProgress(QString::null, 
+			(int)((100.0 / l.count()) *(float) n));
+
+		if (installFile(*i)) k++;
+		n++;
+	}
+	emit logProgress(QString::null,100);
+
+	return k;
+}
+
+bool KPilotDeviceLink::installFile(const QString &f)
+{
+	FUNCTIONSETUP;
+
+	DEBUGDAEMON << fname
+		<< ": Installing file "
+		<< f
+		<< endl;
+
+	if (!QFile::exists(f)) return false;
+
+	struct pi_file *pf = pi_file_open(
+		const_cast<char *>((const char *)QFile::encodeName(f)));
+	
+	if (!f)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Can't open file "
+			<< f
+			<< endl;
+		emit logError(i18n("<qt>Can't install the file &quot;%1&quot;.</qt>").arg(f));
+		return false;
+	}
+
+	if (pi_file_install(pf,fCurrentPilotSocket,0) < 0)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Can't pi_file_install "
+			<< f
+			<< endl;
+		emit logError(i18n("<qt>Can't install the file &quot;%1&quot;.</qt>").arg(f));
+		return false;
+	}
+
+	pi_file_close(pf);
+	QFile::remove(f);
+
+	return true;
+}
+
 
 void KPilotDeviceLink::addSyncLogEntry(const QString &entry)
 {
@@ -396,6 +435,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.54  2001/09/06 22:04:27  adridg
+// Enforce singleton-ness & retry pi_bind()
+//
 // Revision 1.53  2001/09/05 21:53:51  adridg
 // Major cleanup and architectural changes. New applications kpilotTest
 // and kpilotConfig are not installed by default but can be used to test

@@ -1,3 +1,5 @@
+#ifndef _KPILOT_KPILOTLINK_H
+#define _KPILOT_KPILOTLINK_H
 /* kpilotlink.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -28,8 +30,6 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef _KPILOT_KPILOTLINK_H
-#define _KPILOT_KPILOTLINK_H
 
 #include <pi-dlp.h>
 
@@ -37,10 +37,13 @@
 #include <qobject.h>
 #endif
 
-
 class QTimer;
 class QSocketNotifier;
 class KPilotUser;
+
+#ifndef _KPILOT_STATUSMESSAGES_H
+#include "statusMessages.h"
+#endif
 
 /*
 ** The KPilotLink class was originally a kind of C++ wrapper
@@ -171,23 +174,35 @@ private:
 */
 public:
 	/**
+	* Information on what kind of device we're dealing with.
+	*/
+	typedef enum { None,
+		Serial,
+		OldStyleUSB,
+		DevFSUSB
+		} DeviceType;
+
+	DeviceType deviceType() const { return fDeviceType; } ;
+	bool isTransient() const 
+	{ 
+		return (fDeviceType==OldStyleUSB) ||
+			(fDeviceType==DevFSUSB);
+	}
+
+	QString pilotPath() const { return fPilotPath; } ;
+
+	/**
 	* Return the device link to the Init state and try connecting
 	* to the given device path (if it's non-empty).
 	*/
-	void reset(const QString &pilotPath = QString::null);
+	void reset(DeviceType t,const QString &pilotPath = QString::null);
+
 
 	/**
 	* Release all resources, including the master pilot socket,
 	* timers, notifiers, etc.
 	*/
 	void close();
-
-	/**
-	* All sorts of device and connection information.
-	*/
-	QString pilotPath() const { return fPilotPath; } ;
-	bool isTransient() const { return fTransientDevice; } ;
-	void setTransient(bool b) { fTransientDevice=b; } ;
 
 protected slots:
 	/**
@@ -228,9 +243,9 @@ private:
 	QString fPilotPath;
 
 	/**
-	* Is this a transient (USB) style device?
+	* What kind of device is this?
 	*/
-	bool fTransientDevice;
+	DeviceType fDeviceType;
 
 	/**
 	* For transient devices: how often have we tried pi_bind()?
@@ -249,10 +264,22 @@ private:
 	int fPilotMasterSocket;
 	int fCurrentPilotSocket;
 
+signals:
+	/**
+	* Whenever a conduit adds a Sync log entry (actually,
+	* KPilotLink itself adds some log entries itself),
+	* this signal is emitted.
+	*/
+	void logEntry(const char *);
+
 /*
-** Utility functions for during a Sync.
+** File installation.
 */
 public:
+	int installFiles(const QStringList &);
+protected:
+	bool installFile(const QString &);
+
  	/**
  	* Write a log entry to the pilot. Note that the library
  	* function takes a char *, not const char * (which is
@@ -287,14 +314,10 @@ protected:
 	KPilotUser  *fPilotUser;
 } ;
 
-
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
-#endif
-
 // $Log$
+// Revision 1.30  2001/09/07 20:46:40  adridg
+// Cleaned up some methods
+//
 // Revision 1.29  2001/09/06 22:04:27  adridg
 // Enforce singleton-ness & retry pi_bind()
 //
@@ -303,3 +326,4 @@ protected:
 // and kpilotConfig are not installed by default but can be used to test
 // the codebase. Note that nothing else will actually compile right now.
 //
+#endif
