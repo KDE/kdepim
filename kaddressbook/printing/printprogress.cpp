@@ -1,63 +1,83 @@
-/* -*- C++ -*-
-   This file implements the printing progress widget.
-
-   the KDE addressbook
-
-   $ Author: Mirko Boehm $
-   $ Copyright: (C) 1996-2002, Mirko Boehm $
-   $ Contact: mirko@kde.org
-         http://www.kde.org $
-   $ License: LGPL with the following explicit clarification:
-         This code may be linked against any version of the Qt toolkit
-         from Troll Tech, Norway. $
-
-   $Revision$
-*/
+/*                                                                      
+    This file is part of KAddressBook.
+    Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+                                                                        
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or   
+    (at your option) any later version.                                 
+                                                                        
+    This program is distributed in the hope that it will be useful,     
+    but WITHOUT ANY WARRANTY; without even the implied warranty of      
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
+    GNU General Public License for more details.                        
+                                                                        
+    You should have received a copy of the GNU General Public License   
+    along with this program; if not, write to the Free Software         
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.           
+                                                                        
+    As a special exception, permission is given to link this program    
+    with any edition of Qt, and distribute the resulting executable,    
+    without including the source code for Qt in the source distribution.
+*/                                                                      
 
 #include <qlayout.h>
-#include <qtextbrowser.h>
 #include <qprogressbar.h>
+#include <qtextbrowser.h>
+
 #include <kapplication.h>
+#include <kdebug.h>
 #include <kdialog.h>
 #include <klocale.h>
-#include <kdebug.h>
+
 #include "printprogress.h"
 
-namespace KABPrinting {
+using namespace KABPrinting;
 
-    PrintProgress::PrintProgress(QWidget *parent)
-        : PrintProgressBase(parent)
-    {
-        // <HACK reason="Designers fixed layout spacings">
-        layout()->setMargin(KDialog::marginHint());
-        layout()->setSpacing(KDialog::spacingHint());
-        // </HACK>
-    }
+PrintProgress::PrintProgress( QWidget *parent, const char *name )
+  : QWidget( parent, name )
+{
+  setCaption( i18n( "Printing: Progress" ) );
 
-    PrintProgress::~PrintProgress()
-    {
-    }
+  QGridLayout *topLayout = new QGridLayout( this, 1, 1, KDialog::marginHint(),
+                                            KDialog::spacingHint() ); 
 
-    void PrintProgress::addMessage(const QString &msg)
-    {
-        messages.append(msg);
-        QString head=QString("<qt><b>") + i18n("Progress") + QString(":</b><ul>");
-        QString foot=QString("</ul></qt>");
-        QString body;
-        QStringList::Iterator it;
-        for(it=messages.begin(); it!=messages.end(); ++it)
-        {
-            body.append(QString("<li>")+(*it)+QString("</li>"));
-        }
-        tbLog->setText(head+body+foot);
-        kapp->processEvents();
-    }
+  mLogBrowser = new QTextBrowser( this );
+  topLayout->addWidget( mLogBrowser, 0, 0 );
 
-    void PrintProgress::setProgress(int step)
-    {
-        pbProgress->setProgress(step);
-        kapp->processEvents();
-    }
+  mProgressBar = new QProgressBar( this );
+  mProgressBar->setProgress( 0 );
+  topLayout->addWidget( mProgressBar, 1, 0 );
+
+  resize( QSize( 370, 220 ).expandedTo( minimumSizeHint() ) );
+}
+
+PrintProgress::~PrintProgress()
+{
+}
+
+void PrintProgress::addMessage( const QString &msg )
+{
+  mMessages.append( msg );
+
+  QString head = QString( "<qt><b>" ) + i18n( "Progress" ) +
+                 QString( ":</b><ul>" );
+
+  QString foot = QString( "</ul></qt>" );
+
+  QString body;
+  QStringList::Iterator it;
+  for ( it = mMessages.begin(); it != mMessages.end(); ++it )
+    body.append( QString( "<li>" ) + (*it) + QString( "</li>" ) );
+
+  mLogBrowser->setText( head + body + foot );
+  kapp->processEvents();
+}
+
+void PrintProgress::setProgress( int step )
+{
+  mProgressBar->setProgress( step );
+  kapp->processEvents();
 }
 
 #include "printprogress.moc"

@@ -72,7 +72,7 @@ namespace KABPrinting {
 
         setPreview( "detailed-style.png" );
 
-        addPage( mPageAppearance, i18n("Appearance") );
+        addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );
         // ----- set some values in the pages:
         // ----- now try to load previous settings from the
         // configuration file and set the UI items accordingly:

@@ -10,7 +10,7 @@ libprinter_la_SOURCES = \
 	ds_appearance.ui \
 	mikesstyle.cpp \
 	printingwizard.cpp \
-	printprogress_base.ui printprogress.cpp \
+	printprogress.cpp \
 	printstyle.cpp \
 	selectionpage.cpp \
 	stylepage.cpp
