@@ -210,6 +210,14 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* )
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
                                   const QString& subResource, Q_UINT32 sernum )
 {
+  // This uses pointer comparison, so it only works if we use the static
+  // objects defined in the top of the file
+  if ( mimetype == eventAttachmentMimeType )
+    addEvent( xml, subResource, sernum );
+  else if ( mimetype == todoAttachmentMimeType )
+    addTodo( xml, subResource, sernum );
+  else if ( mimetype == journalAttachmentMimeType )
+    addJournal( xml, subResource, sernum );
 }
 
 bool ResourceKolab::addEvent( KCal::Event* event )
@@ -234,6 +242,128 @@ bool ResourceKolab::addEvent( KCal::Event* event, const QString& subresource,
   kdDebug() << "NYI: " << k_funcinfo << endl;
   return true;
 }
+
+void ResourceKolab::deleteEvent( KCal::Event* )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+}
+KCal::Event* ResourceKolab::event( const QString& )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return 0;
+}
+KCal::Event::List ResourceKolab::rawEvents()
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Event::List();
+}
+KCal::Event::List ResourceKolab::rawEventsForDate( const QDate& date,
+                                                   bool sorted )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Event::List();
+}
+KCal::Event::List ResourceKolab::rawEventsForDate( const QDateTime& qdt )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Event::List();
+}
+KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
+                                            const QDate& end,
+                                            bool inclusive )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Event::List();
+}
+
+bool ResourceKolab::addTodo( KCal::Todo* todo )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+}
+void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
+                             Q_UINT32 sernum )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+}
+bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& subresource,
+                             Q_UINT32 sernum )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+void ResourceKolab::deleteTodo( KCal::Todo* )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+}
+KCal::Todo* ResourceKolab::todo( const QString& uid )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return 0;
+}
+KCal::Todo::List ResourceKolab::rawTodos()
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Todo::List();
+}
+KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Todo::List();
+}
+
+bool ResourceKolab::addJournal( KCal::Journal* )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
+                                Q_UINT32 sernum )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+}
+bool ResourceKolab::addJournal( KCal::Journal* journal,
+                                const QString& subresource, Q_UINT32 sernum )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return false;
+}
+void ResourceKolab::deleteJournal( KCal::Journal* )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+}
+KCal::Journal* ResourceKolab::journal( const QDate& )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return 0;
+}
+KCal::Journal* ResourceKolab::journal( const QString& uid )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return 0;
+}
+KCal::Journal::List ResourceKolab::journals()
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Journal::List();
+}
+
+KCal::Alarm::List ResourceKolab::alarms( const QDateTime& from,
+                                         const QDateTime& to )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Alarm::List();
+}
+KCal::Alarm::List ResourceKolab::alarmsTo( const QDateTime& to )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+  return KCal::Alarm::List();
+}
+
+void ResourceKolab::setTimeZoneId( const QString& tzid )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+}
+
 
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            const QString& subResource,

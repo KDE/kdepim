@@ -61,85 +61,29 @@ public:
   /// Close the notes resource.
   void doClose();
 
-  /** Add Event to calendar. */
+  // The libkcal functions. See the resource for descriptions
   bool addEvent( KCal::Event* anEvent );
-  /** deletes an event from this calendar. */
   void deleteEvent( KCal::Event* );
-
-  /**
-     Retrieves an event on the basis of the unique string ID.
-  */
   KCal::Event* event( const QString &UniqueStr );
-  /**
-     Return filtered list of all events in calendar.
-  */
-//    Event::List events();
-  /**
-     Return unfiltered list of all events in calendar.
-  */
   KCal::Event::List rawEvents();
-  /**
-     Builds and then returns a list of all events that match for the
-     date specified. useful for dayView, etc. etc.
-  */
   KCal::Event::List rawEventsForDate( const QDate& date, bool sorted = false );
-  /**
-     Get unfiltered events for date \a qdt.
-  */
   KCal::Event::List rawEventsForDate( const QDateTime& qdt );
-  /**
-     Get unfiltered events in a range of dates. If inclusive is set to true,
-     only events are returned, which are completely included in the range.
-  */
   KCal::Event::List rawEvents( const QDate& start, const QDate& end,
                                bool inclusive = false );
 
-  /*
-    Returns a QString with the text of the holiday (if any) that falls
-    on the specified date.
-  */
-  // QString getHolidayForDate(const QDate &qd);
-
-  /**
-     Add a todo to the todolist.
-  */
   bool addTodo( KCal::Todo* todo );
-  bool addTodo( KCal::Todo* todo, const QString& resource );
-  /**
-     Remove a todo from the todolist.
-  */
   void deleteTodo( KCal::Todo* );
-  /**
-     Searches todolist for an event with this unique string identifier,
-     returns a pointer or null.
-  */
   KCal::Todo* todo( const QString& uid );
-  /**
-     Return list of all todos.
-  */
   KCal::Todo::List rawTodos();
-  /**
-     Returns list of todos due on the specified date.
-  */
   KCal::Todo::List rawTodosForDate( const QDate& date );
-  /** Add a Journal entry to calendar */
+
   bool addJournal( KCal::Journal* );
-  bool addJournal( KCal::Journal*, const QString& resource);
-  /**
-     Remove a journal entry from the journal.
-  */
   void deleteJournal( KCal::Journal* );
-  /** Return Journal for given date */
-  virtual KCal::Journal* journal( const QDate& );
-  /** Return Journal with given UID */
-  virtual KCal::Journal* journal( const QString& uid );
-  /** Return list of all Journals stored in calendar */
+  KCal::Journal* journal( const QDate& );
+  KCal::Journal* journal( const QString& uid );
   KCal::Journal::List journals();
 
-  /** Return all alarms, which ocur in the given time interval. */
   KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
-
-  /** Return all alarms, which ocur before given date. */
   KCal::Alarm::List alarmsTo( const QDateTime& to );
 
   void setTimeZoneId( const QString& tzid );
@@ -175,8 +119,16 @@ private:
 
   void addEvent( const QString& xml, const QString& subresource,
                  Q_UINT32 sernum );
-  bool addEvent( KCal::Event* anEvent, const QString& subresource,
+  bool addEvent( KCal::Event* event, const QString& subresource,
                  Q_UINT32 sernum );
+  void addTodo( const QString& xml, const QString& subresource,
+                Q_UINT32 sernum );
+  bool addTodo( KCal::Todo* todo, const QString& subresource,
+                 Q_UINT32 sernum );
+  void addJournal( const QString& xml, const QString& subresource,
+                   Q_UINT32 sernum );
+  bool addJournal( KCal::Journal* journal, const QString& subresource,
+                   Q_UINT32 sernum );
 
   bool loadAllEvents();
   bool loadAllTodos();
