@@ -40,6 +40,7 @@
 
 #include <kdebug.h>
 
+#include "kpilotConfig.h"
 #include "pilotAppCategory.h"
 #include "pilotComponent.moc"
 
@@ -75,13 +76,13 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 {
 	FUNCTIONSETUP;
 
-	// Semantics of currentCatID are: 
+	// Semantics of currentCatID are:
 	//
-	// >=0          is a specific category based on the text -> 
-	//              category number mapping defined by the Pilot, 
-	// ==-1         means "All" category selected when 
+	// >=0          is a specific category based on the text ->
+	//              category number mapping defined by the Pilot,
+	// ==-1         means "All" category selected when
 	//              AllIsUnfiled is true.
-	// == 0         == Unfiled means "All" category selected when 
+	// == 0         == Unfiled means "All" category selected when
 	//              AllIsUnfiled is false.
 	//
 	//
@@ -246,8 +247,8 @@ void PilotComponent::populateCategories(QComboBox * c,
 		goto CategoryAll;
 
 	// Fill up the categories list box with
-	// the categories defined by the user. 
-	// These presumably are in the language 
+	// the categories defined by the user.
+	// These presumably are in the language
 	// the user uses, so no translation is necessary.
 	//
 	//
@@ -287,5 +288,11 @@ void PilotComponent::slotShowComponent()
 	FUNCTIONSETUP;
 
 	return true;
+}
+
+void PilotComponent::markDBDirty(const QString db)
+{
+	FUNCTIONSETUP;
+	KPilotConfig::getConfig().addDirtyDatabase(db);
 }
 

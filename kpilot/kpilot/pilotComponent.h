@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -47,7 +47,7 @@ class PilotComponent : public QWidget
 Q_OBJECT
 
 public:
-	PilotComponent(QWidget* parent, 
+	PilotComponent(QWidget* parent,
 		const char *id,
 		const QString& dbPath);
 
@@ -66,9 +66,9 @@ public:
 	* The default implementation returns true.
 	*
 	* If the function returns false, it can also put a string
-	* stating the reason why into @p s. This string will be 
+	* stating the reason why into @p s. This string will be
 	* displayed to the user:
-	*     "Can't start HotSync. %1" 
+	*     "Can't start HotSync. %1"
 	* where %1 is replaced by s.
 	*/
 	virtual bool preHotSync(QString &s) ;
@@ -99,7 +99,7 @@ protected:
 	/**
 	* Populate the combo box with the categories found in
 	* the Pilot's application categories block. Erases
-	* combo box's contents first. 
+	* combo box's contents first.
 	*
 	* Always includes the category "All" as the first
 	* entry in the combo box.
@@ -110,6 +110,7 @@ protected:
 		CategoryAppInfo *info=0);
 
 	const QString& dbPath() const { return fDBPath; } ;
+	void markDBDirty(const QString db);
 
 public slots:
 	void slotShowComponent();
