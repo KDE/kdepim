@@ -33,7 +33,9 @@
 #include <qlineedit.h>
 #include <qcheckbox.h>
 #include <kdatewidget.h>
+#if KDE_VERSION > 0x30109
 #include <ktimewidget.h>
+#endif
 #include <kmessagebox.h>
 
 #include "dbFlagsEditor.h"
@@ -84,15 +86,21 @@ void DBFlagsEditor::slotOk()
 
 		QDateTime ttime;
 		ttime.setDate(widget->fCreationDate->date());
+#if KDE_VERSION > 0x30109
 		ttime.setTime(widget->fCreationTime->time());
+#endif
 		dbi->createDate=ttime.toTime_t();
 
 		ttime.setDate(widget->fModificationDate->date());
+#if KDE_VERSION > 0x30109
 		ttime.setTime(widget->fModificationTime->time());
+#endif
 		dbi->modifyDate=ttime.toTime_t();
 
 		ttime.setDate(widget->fBackupDate->date());
+#if KDE_VERSION > 0x30109
 		ttime.setTime(widget->fBackupTime->time());
+#endif
 		dbi->backupDate=ttime.toTime_t();
 
 		KDialogBase::slotOk();
@@ -129,15 +137,21 @@ void DBFlagsEditor::fillWidgets()
 	QDateTime ttime;
 	ttime.setTime_t(dbi->createDate);
 	widget->fCreationDate->setDate(ttime.date());
+#if KDE_VERSION > 0x30109
 	widget->fCreationTime->setTime(ttime.time());
+#endif
 
 	ttime.setTime_t(dbi->modifyDate);
 	widget->fModificationDate->setDate(ttime.date());
+#if KDE_VERSION > 0x30109
 	widget->fModificationTime->setTime(ttime.time());
+#endif
 
 	ttime.setTime_t(dbi->backupDate);
 	widget->fBackupDate->setDate(ttime.date());
+#if KDE_VERSION > 0x30109
 	widget->fBackupTime->setTime(ttime.time());
+#endif
 }
 
 

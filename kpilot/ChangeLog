@@ -2,10 +2,14 @@ TODO LIST (Moved again to the file TODO)
 
 2003-6-20  Adriaan de Groot
 * Updated the hardware lists on the website.
+* Updated some "What's This?" texts.
+* Removed evil static QStrings in kpilotConfigDialog.cc.
+* Discovered that the "start at login" functionality has been broken forever.
+* Added a workaround for KTimeWidget not present in KDE 3.1.x.
 
 2003-6-20  Reinhold Kainhofer
 * Implemented the dialog to change the database flags and the dates (DBInfo 
-  struct) in the internal generic DB viewer. PilotLocalDatabase got a new 
+  struct) in the internal generic DB viewer. PilotLocalDatabase got a new
   method setDBInfo for this.
 
 
