@@ -29,7 +29,6 @@
  * and @ref #user1Clicked() (to reload the list)
  * You can hide unwanted checkboxes via the respective hide<checkboxname> methods
  *
- * @version $Id$
  */
 
 #include <qlistview.h>

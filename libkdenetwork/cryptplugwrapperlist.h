@@ -1,7 +1,5 @@
 /* -*- Mode: C++ -*-
 
-  $Id$
-
   CRYPTPLUG - an independent cryptography plug-in
   API. CryptPlugWrapperList holds any number of crypto plug-ins.
 

@@ -1,7 +1,5 @@
 /* -*- Mode: C -*-
 
-  $Id$
-  
   CRYPTPLUG - an independent cryptography plug-in API
 
   Copyright (C) 2001 by Klarälvdalens Datakonsult AB
