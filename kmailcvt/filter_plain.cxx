@@ -35,65 +35,36 @@ FilterPlain::FilterPlain() :
                "Laurence Anderson",
               i18n("<p>Select the directory containing the emails on your system. "
               "The emails are placed in a folder with the same name as the "
-              "directory they were in.</p>"
-              "<p>This filter will import all .msg, .eml and .txt emails. "
-              "If this causes problems for you (ie. you have KMail folders "
-              "with that name, or there are some non-email txt files), "
-              "cancel this import function (the next dialog "
-              "will allow you to do that) and rename the existing KMail "
-              "folders, or move the non-email txt files.</p>"))
+              "directory they were in, prefixed by PLAIN-</p>"
+              "<p>This filter will import all .msg, .eml and .txt emails.</p>"))
 {
 }
-
-
 
 FilterPlain::~FilterPlain()
 {
 }
 
-
-
 void FilterPlain::import(FilterInfo *info)
 {
-   inf = info;
-
    // Select directory containing plain text emails
-   mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(),inf->parent());
+   QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(),info->parent());
    if (mailDir.isEmpty()) { // No directory selected
    	info->alert(i18n("No directory selected"));
    	return;
    }
+   QDir dir (mailDir);
+   QStringList files = dir.entryList("*.[eE][mM][lL]; *.[tT][xX][tT]; *.[mM][sS][gG]", QDir::Files, QDir::Name);
 
    // Count total number of files to be processed
-   inf->log(i18n("Counting files..."));
-   totalFiles = countFiles("*.msg; *.eml; *.txt");
-   currentFile = 0;
+   info->log(i18n("Counting files..."));
+   int totalFiles = files.count();
+   int currentFile = 0;
 
-   inf->log(i18n("Importing new mail files..."));
-   processFiles("*.msg; *.eml; *.txt");
-}
-
-
-/** counts all files which match filter in mail directory */
-int FilterPlain::countFiles(QString filter)
-{
-   QDir dir (mailDir);
-   QStringList files = dir.entryList(filter, QDir::Files, QDir::Name);
-   return files.count();
-}
-
-
-/** process files that match filter */
-void FilterPlain::processFiles(QString filter)
-{
-   QDir dir (mailDir);
-   QStringList files = dir.entryList(filter, QDir::Files, QDir::Name);
-
+   info->log(i18n("Importing new mail files..."));
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
-	inf->from(*mailFile);
-	inf->to(dir.dirName());
-	addMessage(inf, dir.dirName(), dir.filePath(*mailFile));
-        
-	inf->overall(100 * ++currentFile/ totalFiles);
+      info->from(*mailFile);
+      info->to(dir.dirName());
+      addMessage(info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile));
+      info->overall(100 * ++currentFile/ totalFiles);
    }
 }

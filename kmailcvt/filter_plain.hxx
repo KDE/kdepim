@@ -30,20 +30,6 @@ public:
 	~FilterPlain();
 	
   void import(FilterInfo *info);
-  
-private:
-  /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-  void processFiles(QString filter);
-  /** counts all files with mask (e.g. '*.cnm') in in a directory */
-  int countFiles(QString filter);
-  /** the working directory */
-  QString mailDir;
-  /**  */
-  FilterInfo * inf;
-  /** which file (of totalFiles) is now in the work? */
-  int currentFile;
-  /** total number of files that get imported */
-  int totalFiles;
 };
 
 #endif
