@@ -53,7 +53,8 @@ class QSpacer;
 class QSpacerItem;
 class QPushButton;
 class QListView;
-namespace KitchenSync {
+
+namespace KSync {
 
     // responsible for configuring
     class ConfigPart : public QWidget{  // no real part yet

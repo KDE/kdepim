@@ -47,7 +47,7 @@
 
 #include "ksync_configpart.h"
 
-using namespace KitchenSync;
+using namespace KSync;
 
 ConfigPart::ConfigPart(const Kapabilities &kaps, QWidget *parent, const char *name )
   : QWidget( parent, name )

@@ -44,7 +44,8 @@
 #include <qevent.h>
 
 //#include "manipulatorpart.h"
-namespace KitchenSync {
+
+namespace KSync {
 
   /* forward declaration */
     class PartBar;

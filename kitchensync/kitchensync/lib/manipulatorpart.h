@@ -45,13 +45,15 @@
 
 #include <kdebug.h>
 
-#include <ksyncentry.h>
+#include <syncer.h>
 //#include "ksync_mainwindow.h"
 #include "ksync_profile.h"
 
-namespace KitchenSync {
+namespace KSync {
     class KSyncMainWindow;
+    
     enum SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
+    
     class ManipulatorPart : public KParts::Part {
         Q_OBJECT
     public:
@@ -76,7 +78,7 @@ namespace KitchenSync {
         virtual QWidget *configWidget(){ return 0l; };
 
         // take items
-        virtual void processEntry(const KSyncEntry::List&, KSyncEntry::List& ) {
+        virtual void processEntry(const Syncee::PtrList&, Syncee::PtrList& ) {
             kdDebug(5220) << "ProcessEntries " << name() << endl;
         };
     signals:

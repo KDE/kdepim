@@ -41,7 +41,7 @@
 
 #include "ksync_mainwindow.h"
 
-using namespace KitchenSync;
+using namespace KSync;
 
 ManipulatorPart::ManipulatorPart(QObject *parent, const char *name )
   : KParts::Part(parent, name )

@@ -39,7 +39,7 @@
 
 #include <kdialogbase.h>
 
-namespace KitchenSync {
+namespace KSync {
 
   class ConfigureDialog : public KDialogBase {
     Q_OBJECT

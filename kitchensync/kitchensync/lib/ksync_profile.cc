@@ -1,14 +1,14 @@
 
 #include "ksync_profile.h"
 
-using namespace KitchenSync;
+using namespace KSync;
 
 Profile::Profile()
 {
 
 }
 
-Profile::Profile( const KDevice& dev,  const Kapabilities& caps,  const QString& name,  bool enable )
+Profile::Profile( const Device& dev,  const Kapabilities& caps,  const QString& name,  bool enable )
 {
     m_device = dev;
     m_caps = caps;
@@ -23,7 +23,7 @@ Profile::~Profile()
 {
 
 }
-KDevice Profile::device() const
+Device Profile::device() const
 {
     return m_device;
 }

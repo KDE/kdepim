@@ -49,34 +49,35 @@ class PartBar;
 class QHBox;
 class QWidgetStack;
 
-class Konnector;
 
-namespace KitchenSync {
+namespace KSync {
+    class KonnectorManager;
     // no idea why we have this window
 //    enum SyncStatus {SYNC_START=0, SYNC_SYNC, SYNC_STOP };
     enum KonnectorMode { KONNECTOR_ONLINE=0,  KONNECTOR_OFFLINE };
+
     class KSyncMainWindow : public KParts::MainWindow {
        Q_OBJECT
     public:
         KSyncMainWindow(QWidget *widget =0l, const char *name = 0l, WFlags f = WType_TopLevel );
         ~KSyncMainWindow();
         KSyncSystemTray *tray();
-        Konnector*  konnector();
+        KonnectorManager*  konnector();
         QString  currentId()const;
         QMap<QString,QString> ids()const;
-        Profile currentProfile()const { kdDebug()<< "Copy profile" << endl; return m_profile; }
+        Profile currentProfile()const { return m_profile; }
     private:
         virtual void initActions();
         void saveCurrentProfile();
         void addModPart( ManipulatorPart * );
         void initSystray ( void );
-        void setupKonnector(const KDevice &udi,  const QString &id);
+        void setupKonnector(const Device &udi,  const QString &id);
         PartBar *m_bar;
         QHBox *m_lay;
         QWidgetStack *m_stack;
         QPtrList<ManipulatorPart> m_parts;
         KSyncSystemTray *m_tray;
-        Konnector *m_konnector;
+        KonnectorManager *m_konnector;
         QString m_currentId;
         // udi + Identify
         QMap<QString, QString> m_ids;
@@ -94,7 +95,7 @@ namespace KitchenSync {
         void slotConfigure();
         void slotActivated(ManipulatorPart *);
         void slotQuit();
-        void slotSync(const QString &udi, KSyncEntry::List );
+        void slotSync(const QString &udi, Syncee::PtrList );
         void slotStateChanged( const QString& udi,  bool connected );
         void slotKonnectorError( const QString& udi,
                                  int error,

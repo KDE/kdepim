@@ -43,7 +43,7 @@
 
 #include "ksync_configuredialog.h"
 
-using namespace KitchenSync;
+using namespace KSync;
 
 
 ConfigureDialog::ConfigureDialog( QWidget *parent,

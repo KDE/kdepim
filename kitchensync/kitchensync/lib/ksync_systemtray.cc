@@ -38,7 +38,7 @@
 
 #include "ksync_systemtray.h"
 
-using namespace KitchenSync;
+using namespace KSync;
 
 KSyncSystemTray::KSyncSystemTray(QWidget* parent,  const char* name)
     : KSystemTray(parent,name) {

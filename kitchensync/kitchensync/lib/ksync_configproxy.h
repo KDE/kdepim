@@ -36,7 +36,7 @@
 
 #include <qscrollview.h>
 
-namespace KitchenSync {
+namespace KSync {
   class ConfigView : public QScrollView {
   public:
     ConfigView(QWidget *wid, QWidget *parent, const char *name );

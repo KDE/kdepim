@@ -7,27 +7,27 @@
 #include <kdevice.h>
 
 
-namespace KitchenSync {
+namespace KSync {
 
     class Profile {
     public:
         Profile();
-        Profile( const KDevice&,  const Kapabilities&,  const QString&name, bool enable );
+        Profile( const Device&,  const Kapabilities&,  const QString& name, bool enable );
         Profile(const Profile& prof );
         ~Profile();
-        KDevice device()const;
+        Device device()const;
         QString name()const;
         bool isConfigured()const;
         Kapabilities caps()const;
 
-        void setDevice( const KDevice& dev) {m_device = dev; };
+        void setDevice( const Device& dev) {m_device = dev; };
         void setName( const QString& name ) { m_name = name; };
         void setConfigured( bool conf ) { m_configured = conf; };
         void setCapability( const Kapabilities& cap ) { m_caps = cap; };
         Profile &operator=(const Profile & );
     private:
         QString m_name;
-        KDevice m_device;
+        Device m_device;
         bool m_configured:1;
         Kapabilities m_caps;
     };

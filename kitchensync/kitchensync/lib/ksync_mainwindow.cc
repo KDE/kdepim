@@ -56,7 +56,7 @@
 #include "ksync_mainwindow.h"
 
 
-using namespace KitchenSync;
+using namespace KSync;
 
 KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   :
@@ -238,7 +238,7 @@ KSyncSystemTray* KSyncMainWindow::tray()
 {
     return m_tray;
 }
-Konnector* KSyncMainWindow::konnector()
+KonnectorManager* KSyncMainWindow::konnector()
 {
     return m_konnector;
 }
@@ -253,9 +253,9 @@ QMap<QString,QString> KSyncMainWindow::ids() const
 void KSyncMainWindow::initKonnector()
 {
     kdDebug(5210) << "init konnector" << endl;
-    m_konnector = new Konnector(this,  "Konnector");
-    connect(m_konnector,SIGNAL(wantsToSync(const QString&, KSyncEntry::List ) ),
-            this, SLOT(slotSync( const QString&,  KSyncEntry::List) ) );
+    m_konnector = new KonnectorManager(this,  "Konnector");
+    connect(m_konnector,SIGNAL(wantsToSync(const QString&, Syncee::PtrList ) ),
+            this, SLOT(slotSync( const QString&,  Syncee::PtrList) ) );
 
     connect(m_konnector, SIGNAL(stateChanged(const QString&,  bool) ),
             this,  SLOT(slotStateChanged(const QString&,  bool) ) );
@@ -264,9 +264,9 @@ void KSyncMainWindow::initKonnector()
             this,  SLOT(slotKonnectorError( const QString&,  int, const QString&) ) );
 
     // ok now just load the Opie Konnector // FIXME Don't hard code
-    KDevice::List device;
+    Device::ValueList device;
     device = m_konnector->query();
-    for(KDevice::List::Iterator it = device.begin(); it != device.end(); ++it ){
+    for(Device::ValueList::Iterator it = device.begin(); it != device.end(); ++it ){
         kdDebug(5210) << "Identify "  << (*it).identify() << endl;
         kdDebug(5210) << "Group " << (*it).group() << endl;
         kdDebug(5210) << "Vendor " << (*it).vendor() << endl;
@@ -286,9 +286,9 @@ void KSyncMainWindow::initKonnector()
 // when switching to KSyncee/KSyncEntry we will make
 // it asynchronus
 void KSyncMainWindow::slotSync( const QString &udi,
-                                KSyncEntry::List lis)
+                                Syncee::PtrList lis)
 {
-    KSyncEntry::List ret;
+/*    KSyncEntry::List ret;
     kdDebug(5210) << "Some data arrived Yeah baby" << endl;
     kdDebug(5210) << "Lis got "  << lis.count() << "elements" << endl;
     KSyncEntry *entry=0;
@@ -324,6 +324,7 @@ void KSyncMainWindow::slotSync( const QString &udi,
     lis.setAutoDelete( TRUE );
     lis.clear(); //there is a bug now we will leak but not crash :(
     m_konnector->write( udi, ret );
+*/
 }
 void KSyncMainWindow::slotStateChanged( const QString &udi,
                                         bool connected )
@@ -343,7 +344,7 @@ void KSyncMainWindow::slotKonnectorError( const QString& udi,
 }
 // Check if we already configured a device with  the id
 // It's fairly easy cause we only allow one at a time
-void KSyncMainWindow::setupKonnector( const KDevice& udi,  const QString &id )
+void KSyncMainWindow::setupKonnector( const Device& udi,  const QString &id )
 {
     bool config=false;
     Kapabilities cap;

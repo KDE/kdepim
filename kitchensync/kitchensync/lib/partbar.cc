@@ -47,7 +47,7 @@
 #include "manipulatorpart.h"
 #include "partbar.h"
 
-using namespace KitchenSync;
+using namespace KSync;
 
 PartBarItem::PartBarItem( PartBar *parent, ManipulatorPart *part )
   : QListBoxPixmap(KIconLoader::unknown() ) {

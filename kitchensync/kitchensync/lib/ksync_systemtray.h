@@ -43,7 +43,7 @@ class QPoint;
 
 class KPopupMenu;
 
-namespace KitchenSync {
+namespace KSync {
 
     class KSyncSystemTray : public KSystemTray {
 
