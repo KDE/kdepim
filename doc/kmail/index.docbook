@@ -21,6 +21,7 @@
   <!ENTITY nntp "<acronym>NNTP</acronym>">
   <!ENTITY openpgp "<acronym>OpenPGP</acronym>">
   <!ENTITY smime "<acronym>S/MIME</acronym>">
+  <!ENTITY kolab "<acronym>Kolab</acronym>">
 ]>
 <book lang="&language;">
 <bookinfo>
@@ -114,6 +115,7 @@
 <keyword>PGP</keyword>
 <keyword>GnuPG</keyword>
 <keyword>GPG</keyword>
+<keyword>Kolab</keyword>
 </keywordset>
 </bookinfo>
 
