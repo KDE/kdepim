@@ -60,7 +60,8 @@ public:
 	virtual ~ExpenseConduit();
 
 
-	virtual void exec();
+protected:
+	virtual bool exec();
 
 protected:
 	/**
@@ -122,6 +123,9 @@ private:
 
 
 // $Log$
+// Revision 1.6  2001/12/28 13:03:08  adridg
+// Fixup some email addresses, random lil' things
+//
 // Revision 1.5  2001/12/02 22:03:07  adridg
 // Expense conduit finally works
 //

@@ -42,7 +42,8 @@ public:
 	CheckUser(KPilotDeviceLink *p,QWidget *w=0L);
 	virtual ~CheckUser();
 
-	virtual void exec();
+protected:
+	virtual bool exec();
 } ;
 
 class RestoreAction : public InteractiveAction
@@ -54,8 +55,8 @@ public:
 	typedef enum { InstallingFiles, GettingFileInfo,Done } Status;
 	virtual QString statusString() const;
 
-public slots:
-	virtual void exec();
+protected:
+	virtual bool exec();
 
 protected slots:
 	void getNextFileInfo();
@@ -73,6 +74,9 @@ private:
 
 
 // $Log$
+// Revision 1.3  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.2  2001/09/29 16:26:18  adridg
 // The big layout change
 //

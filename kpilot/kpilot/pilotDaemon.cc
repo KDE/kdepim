@@ -734,7 +734,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	QObject::connect(fSyncStack, SIGNAL(syncDone(SyncAction *)),
 		this, SLOT(endHotSync()));
 
-	QTimer::singleShot(0,fSyncStack,SLOT(exec()));
+	QTimer::singleShot(0,fSyncStack,SLOT(execConduit()));
 	
 	updateTrayStatus();
 }
@@ -934,6 +934,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.64  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.63  2002/07/25 15:44:03  kainhofe
 // LMB on tray icon starts kpilot, settings are reloaded when kpilot changes them
 //

@@ -47,8 +47,8 @@ Q_OBJECT
 public:
 	TestLink(KPilotDeviceLink *);
 
-public slots:
-	virtual void exec();
+protected:
+	virtual bool exec();
 } ;
 
 class BackupAction : public SyncAction
@@ -67,8 +67,8 @@ public:
 		} ;
 	virtual QString statusString() const;
 
-public slots:
-	virtual void exec();
+protected:
+	virtual bool exec();
 
 private:
 	/**
@@ -97,8 +97,8 @@ public:
 
 	virtual QString statusString() const;
 
-public slots:
-	virtual void exec();
+protected:
+	virtual bool exec();
 
 protected slots:
 	void installNextFile();
@@ -116,10 +116,14 @@ public:
 	CleanupAction(KPilotDeviceLink * p);
 	virtual ~CleanupAction();
 	
-	virtual void exec();
+protected:
+	virtual bool exec();
 } ;
 
 // $Log$
+// Revision 1.8  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.7.2.1  2002/04/04 20:28:28  adridg
 // Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
 // when using PILOT_VERSION. kpilotTest defaults to list, like the options

@@ -84,7 +84,8 @@ public:
 		const QStringList &args = QStringList());
 	virtual ~VCalConduitBase();
 
-	virtual void exec();
+protected:
+	virtual bool exec();
 
 protected slots:
 	/**
@@ -138,8 +139,8 @@ protected:
 	// execute something at the beginning or end of the sync.
 	virtual void preSync(){};
 	virtual void postSync(){};
-	virtual void preRecord(PilotRecord*r){};
-	virtual void preIncidence(KCal::Incidence *e){};
+	virtual void preRecord(PilotRecord*){};
+	virtual void preIncidence(KCal::Incidence *){};
 
 protected:
 	KCal::CalendarLocal *fCalendar;
@@ -158,6 +159,9 @@ protected:
 
 
 // $Log$
+// Revision 1.10  2002/08/15 10:47:56  kainhofe
+// Finished categories syncing for the todo conduit
+//
 // Revision 1.9  2002/07/28 17:27:54  cschumac
 // Move file loading/saving code from CalendarLocal to own class.
 //

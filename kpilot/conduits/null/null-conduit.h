@@ -43,13 +43,17 @@ public:
 		const QStringList &args = QStringList());
 	virtual ~NullConduit();
 
-	virtual void exec();
+protected:
+	virtual bool exec();
 
 protected:
 	PilotDatabase *fDatabase;
 };
 
 // $Log$
+// Revision 1.12  2002/08/21 19:24:50  adridg
+// Tail end of the license change: fixup wording and LGPL the NULL conduit.
+//
 // Revision 1.11  2002/01/17 16:24:09  adridg
 // Compile fixes on Solaris
 //

@@ -1,6 +1,6 @@
 /* knotes-action.cc                      KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001,2002 by Dan Pilone
 **
 ** This file defines the SyncAction for the knotes-conduit plugin.
 */
@@ -164,13 +164,28 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	KPILOT_DELETE(fP);
 }
 
-/* virtual */ void KNotesAction::exec()
+/* virtual */ bool KNotesAction::exec()
 {
 	FUNCTIONSETUP;
 
-	if (!fP->fDCOP) return;
-	if (!PluginUtility::isRunning("knotes")) return;
-	if (!fConfig) return;
+	QString e;
+	if (!fP->fDCOP)
+	{
+		emit logError(i18n("No DCOP connection could be made. The "
+			"conduit cannot function like this."));
+		return false;
+
+	}
+	if (!PluginUtility::isRunning("knotes"))
+	{
+		emit logError(i18n("KNotes is not running. The conduit must "
+			"be able to make a DCOP connection to KNotes "
+			"for synchronisation to take place. "
+			"Please start KNotes and try again."));
+		return false;
+	}
+
+	if (!fConfig) return false;
 
 	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
 
@@ -192,6 +207,8 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 
 		fP->fTimer->start(0,false);
 	}
+
+	return true;
 }
 
 void KNotesAction::resetIndexes()
@@ -603,6 +620,9 @@ void KNotesAction::cleanupMemos()
 
 
 // $Log$
+// Revision 1.12  2002/05/23 17:08:32  adridg
+// Some compile fixes for non-debug mode, and KNotes syncing fixes
+//
 // Revision 1.11  2002/05/23 08:01:29  adridg
 // Try to sync KNotes->Pilot
 //

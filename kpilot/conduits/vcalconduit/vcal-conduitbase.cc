@@ -134,8 +134,8 @@ VCalConduitBase::VCalConduitBase(KPilotDeviceLink *d,
 	const QStringList &a) :
 	ConduitAction(d,n,a),
 	fCalendar(0L),
-	fP(0L),
-	fFullSync(false)
+	fFullSync(false),
+	fP(0L)
 {
 	FUNCTIONSETUP;
 	(void) vcalconduitbase_id;
@@ -205,7 +205,7 @@ there are two special cases: a full and a first sync.
 
 */
 
-/* virtual */ void VCalConduitBase::exec()
+/* virtual */ bool VCalConduitBase::exec()
 {
 	FUNCTIONSETUP;
 
@@ -216,7 +216,7 @@ there are two special cases: a full and a first sync.
 		kdWarning() << k_funcinfo
 			<< ": No configuration set for vcal-conduit"
 			<< endl;
-		goto error;
+		return false;
 	}
 
 	if (PluginUtility::isRunning("korganizer") ||
@@ -224,7 +224,7 @@ there are two special cases: a full and a first sync.
 	{
 		addSyncLogEntry(i18n("KOrganizer is running, can't update datebook."));
 		emit syncDone(this);
-		return;
+		return true;
 	}
 
 	readConfig();
@@ -266,7 +266,7 @@ there are two special cases: a full and a first sync.
 	default:
 		QTimer::singleShot(0, this, SLOT(syncPalmRecToPC()));
 	}
-	return;
+	return true;
 
 error:
 
@@ -275,6 +275,7 @@ error:
 	KPILOT_DELETE(fCalendar);
 	KPILOT_DELETE(fP);
 	emit syncDone(this);
+	return true;
 }
 
 
@@ -707,6 +708,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.19  2002/08/21 17:36:17  adridg
+// Tell the user which calendar file is being used
+//
 // Revision 1.18  2002/08/15 21:51:00  kainhofe
 // Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
 //

@@ -51,8 +51,6 @@ public:
 		const QStringList &l=QStringList());
 	virtual ~PopMailConduit();
 
-	virtual void exec();
-
 	enum RetrievalMode {
 		RECV_NONE=0,
 		RECV_POP=1,
@@ -64,6 +62,8 @@ public:
 		SEND_SMTP=12
 		} ;
 
+protected:
+	virtual bool exec();
 
 	static PilotRecord *readMessage(FILE *mailbox,
 	        char *buffer,int bufferSize);
@@ -144,6 +144,9 @@ private:
 
 
 // $Log$
+// Revision 1.14  2001/12/28 13:01:16  adridg
+// Add SyncAction
+//
 // Revision 1.13  2001/05/03 06:36:34  leitner
 // the typedef is not required here, Compaq C++ even complains about it
 //

@@ -62,8 +62,8 @@ static const char *syncAction_id =
 
 
 SyncAction::SyncAction(KPilotDeviceLink  *p,
-	const char *name) : 
-	QObject(p, name), 
+	const char *name) :
+	QObject(p, name),
 	fHandle(p)
 {
 	FUNCTIONSETUP;
@@ -78,12 +78,21 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 	return s;
 }
 
+/* slot */ void SyncAction::execConduit()
+{
+	if (!this->exec())
+	{
+		emit logError(i18n("The conduit %1 could not be executed.")
+			.arg(name()));
+		emit syncDone(this);
+	}
+}
 
 InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
 	QWidget * visibleparent,
 	const char *name) :
 	SyncAction(p, name),
-	fParent(visibleparent), 
+	fParent(visibleparent),
 	fTickleTimer(0L), 
 	fTickleCount(0), 
 	fTickleTimeout(0)
@@ -254,6 +263,11 @@ int InteractiveAction::questionYesNo(const QString & text,
 }
 
 // $Log$
+// Revision 1.5  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.4  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"

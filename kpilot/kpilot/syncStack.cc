@@ -51,12 +51,13 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void WelcomeAction::exec()
+/* virtual */ bool WelcomeAction::exec()
 {
 	FUNCTIONSETUP;
 
 	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n").arg(KPILOT_VERSION));
 	emit syncDone(this);
+	return true;
 }
 
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
@@ -69,7 +70,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void ConduitProxy::exec()
+/* virtual */ bool ConduitProxy::exec()
 {
 	FUNCTIONSETUP;
 
@@ -83,7 +84,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 			<< endl;
 		addSyncLogEntry(i18n("Couldn't find conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
-		return;
+		return true;
 	}
 
 
@@ -107,7 +108,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 			<< endl;
 		addSyncLogEntry(i18n("Couldn't load conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
-		return;
+		return true;
 	}
 
 	QStringList l;
@@ -138,7 +139,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 			<< endl;
 		addSyncLogEntry(i18n("Couldn't create conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
-		return;
+		return true;
 	}
 
 	fConduit = dynamic_cast<ConduitAction *>(object);
@@ -150,7 +151,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 			<< endl;
 		addSyncLogEntry(i18n("Couldn't create conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
-		return;
+		return true;
 	}
 	fConduit->setConfig(fConfig);
 
@@ -168,7 +169,8 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	QObject::connect(fConduit,SIGNAL(logProgress(const QString &,int)),
 		this,SIGNAL(logProgress(const QString &,int)));
 
-	QTimer::singleShot(0,fConduit,SLOT(exec()));
+	QTimer::singleShot(0,fConduit,SLOT(execConduit()));
+	return true;
 }
 
 void ConduitProxy::execDone(SyncAction *p)
@@ -196,11 +198,11 @@ SyncStack::SyncStack(KPilotDeviceLink *d,
 	const QString &dir,
 	const QStringList &files) :
 	SyncAction(d,"SyncStack"),
+	fReady(false),
 	fConfig(config),
-	fConduits(conduits),
 	fInstallerDir(dir),
 	fInstallerFiles(files),
-	fReady(false)
+	fConduits(conduits)
 {
 	FUNCTIONSETUP;
 
@@ -285,9 +287,10 @@ void SyncStack::prepare(int m)
 	addAction(new WelcomeAction(fHandle));
 }
 
-void SyncStack::exec()
+bool SyncStack::exec()
 {
 	actionCompleted(0L);
+	return true;
 }
 
 void SyncStack::actionCompleted(SyncAction *b)
@@ -337,10 +340,13 @@ void SyncStack::actionCompleted(SyncAction *b)
 	QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
 		this, SLOT(actionCompleted(SyncAction *)));
 
-	QTimer::singleShot(0,a,SLOT(exec()));
+	QTimer::singleShot(0,a,SLOT(execConduit()));
 }
 
 // $Log$
+// Revision 1.7  2002/05/19 15:01:49  adridg
+// Patches for the KNotes conduit
+//
 // Revision 1.6  2002/05/18 23:28:19  adridg
 // Compile fixes
 //

@@ -479,6 +479,18 @@ void AddressWidget::slotCreateNewRecord()
 
 	if (!myDB || !myDB->isDBOpen())
 	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Tried to open "
+			<< dbPath()
+			<< "/AddressDB"
+			<< " and got pointer @"
+			<< (int) myDB
+			<< " with status "
+			<< ( myDB ? myDB->isDBOpen() : false )
+			<< endl;
+#endif
+
 		KMessageBox::sorry(this,
 			i18n("You can't add addresses to the address book "
 				"until you have done a HotSync at least once "
@@ -763,6 +775,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.53  2002/07/20 22:08:19  mhunter
+// Hot-Sync -> HotSync
+//
 // Revision 1.52  2002/07/03 12:22:08  binner
 // CVS_SILENT Style guide fixes
 //

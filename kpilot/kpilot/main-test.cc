@@ -120,7 +120,7 @@ void connectStack()
 	QObject::connect(syncStack,SIGNAL(logMessage(const QString &)),
 		logWidget, SLOT(addMessage(const QString &)));
 
-	QObject::connect(deviceLink, SIGNAL(deviceReady()), syncStack, SLOT(exec()));
+	QObject::connect(deviceLink, SIGNAL(deviceReady()), syncStack, SLOT(execConduit()));
 
 	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
 		logWidget, SLOT(syncDone()));
@@ -287,6 +287,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.18  2002/05/23 20:19:39  adridg
+// Add support for extra buttons to the logwidget; use it for reset in kpilottest
+//
 // Revision 1.17  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"

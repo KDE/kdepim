@@ -158,8 +158,8 @@ public:
 	void prepareRestore() { prepare(RestoreMode); } ;
 	void prepareSync() { prepare(HotSyncMode); } ;
 
-public slots:
-	virtual void exec();
+protected:
+	virtual bool exec();
 
 protected slots:
 	/**
@@ -179,8 +179,8 @@ Q_OBJECT
 public:
 	WelcomeAction(KPilotDeviceLink *);
 
-public slots:
-	virtual void exec();
+protected:
+	virtual bool exec();
 } ;
 
 /**
@@ -198,8 +198,8 @@ public:
 		const QString &desktopName,
 		int m);
 
-public slots:
-	virtual void exec();
+protected:
+	virtual bool exec();
 protected slots:
 	void execDone(SyncAction *);
 
@@ -212,6 +212,9 @@ protected:
 
 
 // $Log$
+// Revision 1.4  2002/05/19 15:01:49  adridg
+// Patches for the KNotes conduit
+//
 // Revision 1.3  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //

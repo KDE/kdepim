@@ -192,7 +192,7 @@ ExpenseConduit::ExpenseConduit(KPilotDeviceLink *d,
 	fCSVStream(0L)
 {
 	FUNCTIONSETUP;
-
+	(void) expense_id;
 }
 
 ExpenseConduit::~ExpenseConduit()
@@ -201,7 +201,7 @@ ExpenseConduit::~ExpenseConduit()
 	cleanup();
 }
 
-/* virtual */ void ExpenseConduit::exec()
+/* virtual */ bool ExpenseConduit::exec()
 {
 	FUNCTIONSETUP;
 
@@ -211,8 +211,7 @@ ExpenseConduit::~ExpenseConduit()
 			<< ": No configuration set for expense conduit."
 			<< endl;
 		cleanup();
-		emit syncDone(this);
-		return;
+		return false;
 	}
 
 	fDatabase=new PilotSerialDatabase(pilotSocket(),"ExpenseDB",
@@ -243,7 +242,7 @@ ExpenseConduit::~ExpenseConduit()
 		doTest();
 		cleanup();
 		emit syncDone(this);
-		return;
+		return true;
 	}
 	else
 	{
@@ -283,6 +282,7 @@ ExpenseConduit::~ExpenseConduit()
 		//
 		QTimer::singleShot(0,this,SLOT(slotNextRecord()));
 	}
+	return true;
 }
 
 void ExpenseConduit::doTest()
@@ -479,6 +479,9 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.22  2002/02/23 20:57:40  adridg
+// #ifdef DEBUG stuff
+//
 // Revision 1.21  2001/12/28 13:03:08  adridg
 // Fixup some email addresses, random lil' things
 //

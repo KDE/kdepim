@@ -39,7 +39,7 @@
 class KPilotUser
 {
 public:
-	KPilotUser() { }
+	KPilotUser() { memset(&fUser,0,sizeof(struct PilotUser)); }
 	KPilotUser(const PilotUser* user) { fUser = *user; }
 
 	PilotUser *pilotUser() { return &fUser; }
@@ -48,26 +48,26 @@ public:
 	* Ensures the names are properly terminated.  Needed incase we
 	* are syncing a new and bogus pilot.
 	*/
-	void boundsCheck() 
-	{ 
-		fUser.username[sizeof(fUser.username)-1] = 0; 
-		fUser.password[sizeof(fUser.password)-1] = 0; 
+	void boundsCheck()
+	{
+		fUser.username[sizeof(fUser.username)-1] = 0;
+		fUser.password[sizeof(fUser.password)-1] = 0;
 	}
 
 	const char* getUserName() const     { return fUser.username; }
-	void setUserName(const char* name)  
-	{ 
-		strncpy(fUser.username, name,sizeof(fUser.username)-1); 
+	void setUserName(const char* name)
+	{
+		strncpy(fUser.username, name,sizeof(fUser.username)-1);
 		boundsCheck();
 	}
-    
+
 	const int getPasswordLength() const { return fUser.passwordLength; }
 	const char* getPassword() const     { return fUser.password; }
-	void setPassword(char* password) 
-	{ 
-		strncpy(fUser.password, password,sizeof(fUser.password)-1); 
+	void setPassword(char* password)
+	{
+		strncpy(fUser.password, password,sizeof(fUser.password)-1);
 		boundsCheck();
-		fUser.passwordLength = strlen(fUser.password); 
+		fUser.passwordLength = strlen(fUser.password);
 	}
 
 	unsigned long getUserID() const     { return fUser.userID; }
@@ -77,7 +77,7 @@ public:
 	void setLastSyncPC(unsigned long pc) { fUser.lastSyncPC = pc; }
 
 	time_t getLastSuccessfulSyncDate() { return fUser.successfulSyncDate; }
-	void setLastSuccessfulSyncDate(time_t when) 
+	void setLastSuccessfulSyncDate(time_t when)
 		{ fUser.successfulSyncDate = when; }
 
 	time_t getLastSyncDate()           { return fUser.lastSyncDate; }
@@ -90,6 +90,11 @@ private:
 
 
 // $Log$
+// Revision 1.2  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //

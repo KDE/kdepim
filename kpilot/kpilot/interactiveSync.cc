@@ -66,6 +66,8 @@ CheckUser::CheckUser(KPilotDeviceLink * p, QWidget * vp):
 	InteractiveAction(p, vp, "userCheck")
 {
 	FUNCTIONSETUP;
+	
+	(void) interactivesync_id;
 }
 
 CheckUser::~CheckUser()
@@ -73,7 +75,7 @@ CheckUser::~CheckUser()
 	FUNCTIONSETUP;
 }
 
-/* virtual */ void CheckUser::exec()
+/* virtual */ bool CheckUser::exec()
 {
 	FUNCTIONSETUP;
 
@@ -200,6 +202,7 @@ CheckUser::~CheckUser()
 	PilotLocalDatabase::setDBPath(pathName);
 
 	emit syncDone(this);
+	return true;
 }
 
 class RestoreAction::RestoreActionPrivate
@@ -222,7 +225,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		QString("kpilot/DBBackup/"));
 }
 
-/* virtual */ void RestoreAction::exec()
+/* virtual */ bool RestoreAction::exec()
 {
 	FUNCTIONSETUP;
 
@@ -251,7 +254,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		addSyncLogEntry(i18n("Restore not performed."));
 		emit syncDone(this);
 
-		return;
+		return true;
 	}
 
 	QDir dir(dirname, QString::null, QDir::Name,
@@ -263,10 +266,10 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Restore directory "
 			<< dirname << " does not exist." << endl;
 		fStatus = Error;
-		return;
+		return false;
 	}
 
-	for (int i = 0; i < dir.count(); i++)
+	for (unsigned int i = 0; i < dir.count(); i++)
 	{
 		QString s;
 		struct db dbi;
@@ -316,6 +319,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		this, SLOT(getNextFileInfo()));
 
 	fP->fTimer.start(0, false);
+	return true;
 }
 
 /* slot */ void RestoreAction::getNextFileInfo()
@@ -323,7 +327,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	FUNCTIONSETUP;
 
 	ASSERT(fStatus == GettingFileInfo);
-	ASSERT(fP->fDBIndex < fP->fDBList.count());
+	ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
 
 	struct db &dbi = fP->fDBList[fP->fDBIndex];
 	pi_file *f;
@@ -374,7 +378,7 @@ nextFile:
 	if (f)
 		pi_file_close(f);
 
-	if (fP->fDBIndex >= fP->fDBList.count())
+	if ((unsigned) fP->fDBIndex >= fP->fDBList.count())
 	{
 		QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
 			this, SLOT(getNextFileInfo()));
@@ -396,7 +400,7 @@ nextFile:
 	FUNCTIONSETUP;
 
 	ASSERT(fStatus == InstallingFiles);
-	ASSERT(fP->fDBIndex < fP->fDBList.count());
+	ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
 
 	struct db &dbi = fP->fDBList[fP->fDBIndex];
 
@@ -406,7 +410,7 @@ nextFile:
 	DEBUGDAEMON << fname << ": Trying to install " << dbi.name << endl;
 #endif
 
-	if (fP->fDBIndex >= fP->fDBList.count() - 1)
+	if ((unsigned) fP->fDBIndex >= fP->fDBList.count() - 1)
 	{
 		QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
 			this, SLOT(getNextFileInfo()));
@@ -480,6 +484,14 @@ nextFile:
 
 
 // $Log$
+// Revision 1.13  2002/05/15 17:15:33  gioele
+// kapp.h -> kapplication.h
+// I have removed KDE_VERSION checks because all that files included "options.h"
+// which #includes <kapplication.h> (which is present also in KDE_2).
+// BTW you can't have KDE_VERSION defined if you do not include
+// - <kapplication.h>: KDE3 + KDE2 compatible
+// - <kdeversion.h>: KDE3 only compatible
+//
 // Revision 1.12  2002/04/20 13:03:31  binner
 // CVS_SILENT Capitalisation fixes.
 //

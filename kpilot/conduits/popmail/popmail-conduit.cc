@@ -276,6 +276,7 @@ PopMailConduit::PopMailConduit(KPilotDeviceLink *d,
 	ConduitAction(d,n,l)
 {
 	FUNCTIONSETUP;
+	(void) popmail_conduit_id;
 }
 
 PopMailConduit::~PopMailConduit()
@@ -509,7 +510,7 @@ QString getFQDomainName (const KConfig& config)
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname 
-				<< ": Got domain name " 
+				<< ": Got domain name "
 				<< namebuffer  << endl;
 #endif
 		}
@@ -541,7 +542,7 @@ QString extractAddress (const QString& address) {
 
 QString buildRFC822Headers (const QString& sender,
 	const struct Mail& theMail,
-	const PopMailConduit& conduit)
+	const PopMailConduit&)
 {
 	FUNCTIONSETUP;
 
@@ -1036,7 +1037,7 @@ int PopMailConduit::sendViaKMail()
 				<< ": DCOP call failed."
 				<< endl;
 
-			KMessageBox::error(0L, 
+			KMessageBox::error(0L,
 				i18n("DCOP connection with KMail failed."),
 				i18n("Error Sending Mail"));
 			continue;
@@ -1344,7 +1345,7 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 				continue;
 			}
 			if ((msg[0] == '.') && 
-				(msg[1] == '\n') && (msg[2] == 0)) 
+				(msg[1] == '\n') && (msg[2] == 0))
 			{
 				msg[0] = 0;
 				break; /* End of message */
@@ -1947,11 +1948,11 @@ int PopMailConduit::doUnixStyle()
 #endif
 }
 
-/* virtual */ void PopMailConduit::exec()
+/* virtual */ bool PopMailConduit::exec()
 {
 	FUNCTIONSETUP;
 
-	if (!fConfig) return;
+	if (!fConfig) return false;
 
 	KConfigGroupSaver cfgs(fConfig,PopmailConduitFactory::group);
 
@@ -1964,8 +1965,7 @@ int PopMailConduit::doUnixStyle()
 			<< ": Couldn't open database MailDB on Pilot"
 			<< endl;
 		KPILOT_DELETE(fDatabase);
-		emit syncDone(this);
-		return;
+		return false;
 	}
 
 	if (isTest())
@@ -1983,10 +1983,14 @@ int PopMailConduit::doUnixStyle()
 
 	KPILOT_DELETE(fDatabase);
 	emit syncDone(this);
+	return true;
 }
 
 
 // $Log$
+// Revision 1.41  2002/07/20 22:15:56  mhunter
+// Corrected typographical errors
+//
 // Revision 1.40  2002/05/15 16:58:02  gioele
 // kapp.h -> kapplication.h
 //

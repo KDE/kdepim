@@ -62,7 +62,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 	(void) hotsync_id;
 }
 
-/* virtual slot */ void TestLink::exec()
+/* virtual */ bool TestLink::exec()
 {
 	FUNCTIONSETUP;
 
@@ -92,6 +92,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 
 	emit logMessage(i18n("HotSync finished."));
 	emit syncDone(this);
+	return true;
 }
 
 BackupAction::BackupAction(KPilotDeviceLink * p) :
@@ -132,7 +133,7 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 }
 
 
-/* virtual */ void BackupAction::exec()
+/* virtual */ bool BackupAction::exec()
 {
 	FUNCTIONSETUP;
 
@@ -154,6 +155,7 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 	fStatus = FullBackup;
 
 	fTimer->start(0, false);
+	return true;
 }
 
 /* slot */ void BackupAction::backupOneDB()
@@ -211,8 +213,6 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 bool BackupAction::createLocalDatabase(DBInfo * info)
 {
 	FUNCTIONSETUP;
-
-	int j;
 
 	QString fullBackupDir =
 		fDatabaseDir + fHandle->getPilotUser()->getUserName() + "/";
@@ -293,10 +293,10 @@ FileInstallAction::FileInstallAction(KPilotDeviceLink * p,
 	const QString & d,
 	const QStringList & l) :
 	SyncAction(p, "fileInstall"),
-	fDir(d), 
-	fList(l),
-	fDBIndex(-1), 
-	fTimer(0L)
+	fDBIndex(-1),
+	fTimer(0L),
+	fDir(d),
+	fList(l)
 {
 	FUNCTIONSETUP;
 
@@ -320,7 +320,7 @@ FileInstallAction::~FileInstallAction()
 	KPILOT_DELETE(fTimer);
 }
 
-/* slot */ void FileInstallAction::exec()
+/* virtual */ bool FileInstallAction::exec()
 {
 	FUNCTIONSETUP;
 
@@ -337,7 +337,7 @@ FileInstallAction::~FileInstallAction()
 		emit logMessage(i18n("No Files to install"));
 		emit syncDone(this);
 
-		return;
+		return true;
 	}
 
 	fTimer = new QTimer(this);
@@ -347,6 +347,7 @@ FileInstallAction::~FileInstallAction()
 	fTimer->start(0, false);
 
 	emit logProgress(i18n("Installing Files"), 0);
+	return true;
 }
 
 /* slot */ void FileInstallAction::installNextFile()
@@ -354,7 +355,7 @@ FileInstallAction::~FileInstallAction()
 	FUNCTIONSETUP;
 
 	ASSERT(fDBIndex >= 0);
-	ASSERT(fDBIndex < fList.count());
+	ASSERT((unsigned) fDBIndex < fList.count());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -362,7 +363,7 @@ FileInstallAction::~FileInstallAction()
 		<< fDBIndex << " (of " << fList.count() << ")" << endl;
 #endif
 
-	if ((!fList.count()) || (fDBIndex >= fList.count()))
+	if ((!fList.count()) || ((unsigned) fDBIndex >= fList.count()))
 	{
 #ifdef DEBUG
 		DEBUGDAEMON << fname
@@ -381,7 +382,7 @@ FileInstallAction::~FileInstallAction()
 	DEBUGDAEMON << fname << ": Installing file " << s << endl;
 #endif
 
-	if (fDBIndex >= fList.count())
+	if ((unsigned) fDBIndex >= fList.count())
 	{
 		fDBIndex = (-1);
 		fTimer->stop();
@@ -440,7 +441,7 @@ nextFile:
 	}
 	else
 	{
-		if (fDBIndex >= fList.count())
+		if ((unsigned) fDBIndex >= fList.count())
 		{
 			return QString("Index out of range");
 		}
@@ -465,16 +466,25 @@ CleanupAction::~CleanupAction()
 #endif
 }
 
-void CleanupAction::exec()
+/* virtual */ bool CleanupAction::exec()
 {
 	FUNCTIONSETUP;
 
 	fHandle->finishSync();
 	emit syncDone(this);
+	return true;
 }
 
 
 // $Log$
+// Revision 1.16  2002/05/15 17:15:33  gioele
+// kapp.h -> kapplication.h
+// I have removed KDE_VERSION checks because all that files included "options.h"
+// which #includes <kapplication.h> (which is present also in KDE_2).
+// BTW you can't have KDE_VERSION defined if you do not include
+// - <kapplication.h>: KDE3 + KDE2 compatible
+// - <kdeversion.h>: KDE3 only compatible
+//
 // Revision 1.15  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //

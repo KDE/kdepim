@@ -56,8 +56,28 @@ public:
 	int status() const { return fStatus; } ;
 	virtual QString statusString() const;
 
+protected:
+	/**
+	* This function starts the actual processing done
+	* by the conduit. It should return false if the
+	* processing cannot be initiated, f.ex. because 
+	* some parameters were not set or a needed library
+	* is missing. This will be reported to the user.
+	* It should return true if processing is started
+	* normally. If processing starts normally, it is
+	* the _conduit's_ responsibility to eventually
+	* emit syncDone(); if processing does not start
+	* normally (ie. exec() returns false) then the
+	* environment will deal with syncDone().
+	*/
+	virtual bool exec() = 0;
+
 public slots:
-	virtual void exec() = 0;
+	/**
+	* This just calls exec() and deals with the 
+	* return code.
+	*/
+	void execConduit();
 
 signals:
 	void syncDone(SyncAction *);
@@ -145,6 +165,11 @@ protected:
 
 
 // $Log$
+// Revision 1.5  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.4  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //

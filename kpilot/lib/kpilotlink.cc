@@ -32,6 +32,14 @@ static const char *kpilotlink_id = "$Id$";
 #include <pi-socket.h>
 #include <pi-dlp.h>
 #include <pi-file.h>
+#include <pi-version.h>
+
+#ifndef PILOT_LINK_VERSION
+#error "You need at least pilot-link version 0.10.1"
+#endif
+
+#define PILOT_LINK_NUMBER	((100*PILOT_LINK_VERSION) + \
+				PILOT_LINK_MAJOR)
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -69,7 +77,7 @@ QDateTime readTm(const struct tm &t)
  	t.tm_wday = 0; // unimplemented
 	t.tm_yday = 0; // unimplemented
 	t.tm_isdst = 0; // unimplemented
- 
+
 	t.tm_year = dt.date().year() - 1900;
 	t.tm_mon = dt.date().month() - 1;
 	t.tm_mday = dt.date().day();
@@ -290,7 +298,7 @@ bool KPilotDeviceLink::open()
 			goto errInit;
 		}
 
-#if PILOT_LINK_MAJOR < 10
+#if PILOT_LINK_NUMBER < 10
 		if (!(fPilotMasterSocket = pi_socket(PI_AF_SLP,
 					PI_SOCK_STREAM, PI_PF_PADP)))
 #else
@@ -318,7 +326,7 @@ bool KPilotDeviceLink::open()
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
 #endif
 
-#if PILOT_LINK_MAJOR < 10
+#if PILOT_LINK_NUMBER < 10
 	addr.pi_family = PI_AF_SLP;
 #else
 	addr.pi_family = PI_AF_PILOT;
@@ -480,7 +488,8 @@ void KPilotDeviceLink::acceptDevice()
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Reading user info." << endl;
+	DEBUGDAEMON << fname << ": Reading user info @"
+		<< (int) fPilotUser << endl;
 #endif
 
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
@@ -586,14 +595,10 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
 
 	QString t(entry);
 
-#if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
 #if (PILOT_LINK_VERSION * 1000 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 110
 	t.append("X");
 #endif
-#else
-	// Assume that if not defined, it's a (very) old version.
-	t.append("X");
-#endif
+	
 	dlp_AddSyncLogEntry(fCurrentPilotSocket,
 		const_cast < char *>(t.latin1()));
 	if (!suppress)
@@ -782,6 +787,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.21  2002/08/21 17:20:47  adridg
+// Detect and complain about common permissions errors
+//
 // Revision 1.20  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

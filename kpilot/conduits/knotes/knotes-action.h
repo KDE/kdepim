@@ -48,8 +48,8 @@ public:
 		Done } ;
 	virtual QString statusString() const;
 
-public slots:
-	virtual void exec();
+protected:
+	virtual bool exec();
 
 protected:
 	/**
@@ -85,6 +85,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.5  2002/05/19 15:01:49  adridg
+// Patches for the KNotes conduit
+//
 // Revision 1.4  2002/01/20 22:42:43  adridg
 // CVS_SILENT: Administrative
 //

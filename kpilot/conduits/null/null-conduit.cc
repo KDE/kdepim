@@ -76,7 +76,7 @@ NullConduit::~NullConduit()
 	KPILOT_DELETE(fDatabase);
 }
 
-void NullConduit::exec()
+/* virtual */ bool NullConduit::exec()
 {
 	FUNCTIONSETUP;
 
@@ -85,8 +85,7 @@ void NullConduit::exec()
 		kdWarning() << k_funcinfo
 			<< ": No configuration set for NULL conduit."
 			<< endl;
-		emit syncDone(this);
-		return;
+		return false;
 	}
 
 	fConfig->setGroup(NullConduitFactory::group);
@@ -103,10 +102,14 @@ void NullConduit::exec()
 #endif
 
 	emit syncDone(this);
+	return true;
 }
 
 
 // $Log$
+// Revision 1.26  2002/08/21 19:24:50  adridg
+// Tail end of the license change: fixup wording and LGPL the NULL conduit.
+//
 // Revision 1.25  2002/01/25 21:43:11  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
