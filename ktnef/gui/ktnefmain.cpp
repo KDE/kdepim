@@ -15,6 +15,7 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
  */
 
+#include <kdebug.h>
 #include "ktnefmain.h"
 #include <ktnef/ktnefparser.h>
 #include "ktnefview.h"
@@ -41,7 +42,6 @@
 #include <kstdaction.h>
 #include <kdialogbase.h>
 #include <ktempfile.h>
-#include <kdebug.h>
 #include <kkeydialog.h>
 
 #ifdef KDE_NO_COMPAT
