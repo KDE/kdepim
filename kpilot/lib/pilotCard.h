@@ -55,8 +55,8 @@ public:
 	unsigned long getRomSize() const        { return fCard.romSize; }
 	unsigned long getRamSize() const        { return fCard.ramSize; }
 	unsigned long getRamFree() const        { return fCard.ramFree; }
-	const char* getCardName() const         { return &fCard.name[0]; }
-	const char* getCardManufacturer() const { return &fCard.manufacturer[0]; }
+	const char* getCardName() const         { return fCard.name; }
+	const char* getCardManufacturer() const { return fCard.manufacturer; }
 
 private:
 	struct CardInfo fCard;

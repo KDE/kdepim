@@ -293,23 +293,23 @@ public:
 protected:
 	bool installFile(const QString &, const bool deleteFile=true);
 
- 	/**
- 	* Write a log entry to the pilot. Note that the library
- 	* function takes a char *, not const char * (which is
- 	* highly dubious). Causes signal logEntry(const char *)
- 	* to be emitted if @p log is true.
- 	*/
- 	void addSyncLogEntry(const QString &entry,bool log=true);
+	/**
+	* Write a log entry to the pilot. Note that the library
+	* function takes a char *, not const char * (which is
+	* highly dubious). Causes signal logEntry(const char *)
+	* to be emitted if @p log is true.
+	*/
+	void addSyncLogEntry(const QString &entry,bool log=true);
 
 signals:
- 	/**
- 	* Whenever a conduit adds a Sync log entry (actually,
- 	* KPilotLink itself adds some log entries itself),
+	/**
+	* Whenever a conduit adds a Sync log entry (actually,
+	* KPilotLink itself adds some log entries itself),
 	* this signal is emitted.
 	*/
- 	void logMessage(const QString &);
- 	void logError(const QString &);
- 	void logProgress(const QString &, int);
+	void logMessage(const QString &);
+	void logError(const QString &);
+	void logProgress(const QString &, int);
 
 
 /*
@@ -317,7 +317,7 @@ signals:
 */
 protected:
 	KPilotUser  *fPilotUser;
-        KPilotSysInfo *fPilotSysInfo;
+	KPilotSysInfo *fPilotSysInfo;
 public:
 	/**
 	* Returns the user information as set in the KPilot settings dialog.
@@ -327,8 +327,8 @@ public:
 	* local copies of the KPilotUser structure and modify them.
 	*/
 	KPilotUser *getPilotUser() { return fPilotUser; }
-        KPilotSysInfo *getSysInfo() { return fPilotSysInfo; }
-        KPilotCard *getCardInfo(int card=0);
+	KPilotSysInfo *getSysInfo() { return fPilotSysInfo; }
+	KPilotCard *getCardInfo(int card=0);
 	void finishSync();
 
 /*
@@ -373,8 +373,6 @@ public:
 	 * Get the minor PalmOS version number
 	 */
 	unsigned long minorVersion() const;
-
-
 } ;
 
 bool operator < ( const struct db &, const struct db &) ;

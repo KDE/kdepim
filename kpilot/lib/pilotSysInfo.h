@@ -3,6 +3,7 @@
 /* sysInfo.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Written 2003 by Reinhold Kainhofer
 **
 ** Wrapper for pilot-link's SysInfo Structure
 */
@@ -51,47 +52,55 @@ public:
 	{
 	}
 
-        const unsigned long getRomVersion() const {return fSysInfo.romVersion;}
-        void setRomVersion(unsigned long newval)  {fSysInfo.romVersion=newval;}
+	const unsigned long getRomVersion() const {return fSysInfo.romVersion;}
+	void setRomVersion(unsigned long newval)  {fSysInfo.romVersion=newval;}
 
-        const unsigned long getLocale() const {return fSysInfo.locale;}
-        void setLocale(unsigned long newval)  {fSysInfo.locale=newval;}
+	const unsigned long getLocale() const {return fSysInfo.locale;}
+	void setLocale(unsigned long newval)  {fSysInfo.locale=newval;}
 
 #if (PILOT_LINK_VERSION * 1000 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100
-// Older pilot-link versions < 0.11.x don't have prodID, but name instead, 
+// Older pilot-link versions < 0.11.x don't have prodID, but name instead,
 // and they also do not have the *Version members.
 	const int getProductIDLength() const { return fSysInfo.nameLength; }
-	const char* getProductID() const     { return &fSysInfo.name[0]; }
+	const char* getProductID()
+	{
+		fSysInfo.name[fSysInfo.nameLength]='\0';
+		return fSysInfo.name;
+	}
 	void setProductID(char* prodid)
 	{
-		::memset(&fSysInfo.name[0], 0, sizeof(fSysInfo.name));
-		::strncpy(&fSysInfo.name[0], prodid, sizeof(fSysInfo.name)-1);
+		::memset(fSysInfo.name, 0, sizeof(fSysInfo.name));
+		::strncpy(fSysInfo.name, prodid, sizeof(fSysInfo.name)-1);
 		boundsCheck();
-		fSysInfo.nameLength = ::strlen(&fSysInfo.name[0]);
+		fSysInfo.nameLength = ::strlen(fSysInfo.name);
 	}
 
-        const unsigned short getMajorVersion() const {return 0;}
-        const unsigned short getMinorVersion() const {return 0;}
-        const unsigned short getCompatMajorVersion() const {return 0;}
-        const unsigned short getCompatMinorVersion() const {return 0;}
-        const unsigned short getMaxRecSize() const {return 0;}
+	const unsigned short getMajorVersion() const {return 0;}
+	const unsigned short getMinorVersion() const {return 0;}
+	const unsigned short getCompatMajorVersion() const {return 0;}
+	const unsigned short getCompatMinorVersion() const {return 0;}
+	const unsigned short getMaxRecSize() const {return 0;}
 #else
 // Newer pilot-link versions have these fields, so use them:
 	const int getProductIDLength() const { return fSysInfo.prodIDLength; }
-	const char* getProductID() const     { return &fSysInfo.prodID[0]; }
+	const char* getProductID()
+	{
+		fSysInfo.prodID[fSysInfo.prodIDLength]='\0';
+		return fSysInfo.prodID;
+	}
 	void setProductID(char* prodid)
 	{
-		::memset(&fSysInfo.prodID[0], 0, sizeof(fSysInfo.prodID));
-		::strncpy(&fSysInfo.prodID[0], prodid, sizeof(fSysInfo.prodID)-1);
+		::memset(fSysInfo.prodID, 0, sizeof(fSysInfo.prodID));
+		::strncpy(fSysInfo.prodID, prodid, sizeof(fSysInfo.prodID)-1);
 		boundsCheck();
-		fSysInfo.prodIDLength = ::strlen(&fSysInfo.prodID[0]);
+		fSysInfo.prodIDLength = ::strlen(fSysInfo.prodID);
 	}
 
-        const unsigned short getMajorVersion() const {return fSysInfo.dlpMajorVersion;}
-        const unsigned short getMinorVersion() const {return fSysInfo.dlpMinorVersion;}
-        const unsigned short getCompatMajorVersion() const {return fSysInfo.compatMajorVersion;}
-        const unsigned short getCompatMinorVersion() const {return fSysInfo.compatMinorVersion;}
-        const unsigned short getMaxRecSize() const {return fSysInfo.maxRecSize;}
+	const unsigned short getMajorVersion() const {return fSysInfo.dlpMajorVersion;}
+	const unsigned short getMinorVersion() const {return fSysInfo.dlpMinorVersion;}
+	const unsigned short getCompatMajorVersion() const {return fSysInfo.compatMajorVersion;}
+	const unsigned short getCompatMinorVersion() const {return fSysInfo.compatMinorVersion;}
+	const unsigned short getMaxRecSize() const {return fSysInfo.maxRecSize;}
 #endif
 
 private:

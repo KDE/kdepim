@@ -489,8 +489,8 @@ void KPilotDeviceLink::acceptDevice()
 
 	emit logProgress(QString::null, 30);
 
-        fPilotSysInfo = new KPilotSysInfo;
-        if (dlp_ReadSysInfo(fCurrentPilotSocket, fPilotSysInfo->sysInfo()) < 0)
+	fPilotSysInfo = new KPilotSysInfo;
+	if (dlp_ReadSysInfo(fCurrentPilotSocket, fPilotSysInfo->sysInfo()) < 0)
 	{
 		emit logError(i18n("Unable to read system information from Pilot"));
 		fStatus=PilotLinkError;
