@@ -104,6 +104,8 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
       KABC::Addressee addr = converter.convertFromContact( contact );
       if ( !addr.isEmpty() ) {
+        addr.setResource( mResource );
+      
         addr.insertCustom( "GWRESOURCE", "CONTAINER", converter.stringToQString( id ) );
 
         QString remoteUid = converter.stringToQString( (*it)->id );
