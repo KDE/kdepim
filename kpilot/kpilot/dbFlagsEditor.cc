@@ -79,6 +79,7 @@ void DBFlagsEditor::slotOk()
 		setflag(fBackupDB, dlpDBFlagBackup);
 		setflag(fCopyProtect, dlpDBFlagCopyPrevention);
 		setflag(fReset, dlpDBFlagReset);
+#undef setflag
 
 		if (widget->fExcludeDB->isChecked())
 			dbi->miscFlags |= dlpDBMiscFlagExcludeFromSync;
