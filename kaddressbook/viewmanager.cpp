@@ -566,7 +566,8 @@ void ViewManager::refreshIncrementalSearchCombo()
 void ViewManager::incSearch(const QString& text, int field)
 {
     mCurrentIncSearchField=mIncrementalSearchFields[field];
-    mActiveView->incrementalSearch(text, mCurrentIncSearchField);
+    if( mActiveView )
+        mActiveView->incrementalSearch(text, mCurrentIncSearchField);
 }
 
 void ViewManager::jumpToLetter(const QChar &ch)
