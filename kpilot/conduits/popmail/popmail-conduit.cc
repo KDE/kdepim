@@ -768,7 +768,7 @@ int PopMailConduit::sendViaSMTP ()
 		sendBuffer.sprintf("DATA\r\n");
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
 							 QRegExp("^354"),
-							 i18n("Couldn't start writing mailbody\n")))
+							 i18n("Unable to start writing mail body\n")))
             return handledCount;
 
 		// Send RFC822 mail headers
@@ -802,7 +802,7 @@ int PopMailConduit::sendViaSMTP ()
 		sendBuffer.sprintf(".\r\n");
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
 							 QRegExp("^250"),
-							 i18n("Couldn't send message.")))
+							 i18n("Unable to send message")))
             return -1;
 
 		// Mark it as filed...
@@ -1507,7 +1507,7 @@ int PopMailConduit::doPopQuery()
 		//
 		//
 		PasswordDialog* passDialog = new PasswordDialog(
-			i18n("Please Enter your POP password:"),
+			i18n("Please enter your POP password:"),
 			0L, "PopPassword", true);
 		passDialog->show();
 		if (passDialog->result()==QDialog::Accepted)
@@ -1987,6 +1987,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.40  2002/05/15 16:58:02  gioele
+// kapp.h -> kapplication.h
+//
 // Revision 1.39  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //
