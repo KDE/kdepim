@@ -112,6 +112,7 @@ QString AddressBookAdaptor::addItem( KIO::TransferJob *job,
     addr.setResource( mResource );
     addr.insertCustom( identifier(), "storagelocation", storageLocation );
     mResource->insertAddressee( addr );
+    clearChange( addr.uid() );
   
     return addr.uid();
   }
