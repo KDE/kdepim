@@ -201,7 +201,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
     progress.setProgress( startIndex );
     // Note that this is a case where processEvents is OK - we have a modal dialog,
     // the only thing the user can do is cancel the dialog.
-    qApp->processEvents();
+    //qApp->processEvents();
     if ( progress.wasCanceled() )
       return false;
   }
