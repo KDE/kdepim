@@ -103,7 +103,7 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(recordid_t id)
 	KCal::Event *event = fAllEvents.first();
 	while (event!=0)
 	{
-		if (event->pilotId() == id) return event;
+		if ((recordid_t)event->pilotId() == id) return event;
 		event = fAllEvents.next();
 	}
 	return 0L;
@@ -161,7 +161,15 @@ VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
 };
 
+const QString VCalConduit::getTitle(PilotAppCategory*de)
+{
+	PilotDateEntry*d=dynamic_cast<PilotDateEntry*>(de);
+	if (d) return QString(d->getDescription());
+	return "";
+}
 
+
+		
 PilotRecord*VCalConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
 {
 	FUNCTIONSETUP;
@@ -230,6 +238,9 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 	setExceptions(e,de);
 
 	e->setSummary(de->getDescription());
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": DESCRIPTION: "<<de->getDescription()<<"  ---------------------------------------------------"<<endl;
+#endif
 	e->setDescription(de->getNote());
 
 	return e;
@@ -679,6 +690,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.51.2.3  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
 // Revision 1.63  2002/04/22 22:51:51  kainhofe
 // Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
 //

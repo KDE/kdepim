@@ -90,20 +90,23 @@ protected slots:
 	/**
 	* This function is called to sync modified records from the Pilot to KOrganizer.
 	*/
-	void syncRecord();
+	void syncPalmRecToPC();
 	/**
 	* This function goes the other way around: KOrganizer -> Pilot.
 	*/
-	void syncIncidence();
+	void syncPCRecToPalm();
 	void syncDeletedIncidence();
 	void cleanup();
 
 	
 protected:
+
+	virtual int resolveConflict(KCal::Incidence*e, PilotAppCategory*de);
+
 	// add, change or delete events from the calendar
-	virtual void addRecord(PilotRecord *);
-	virtual void changeRecord(PilotRecord *,PilotRecord *);
-	virtual void deleteRecord(PilotRecord *,PilotRecord *);
+	virtual KCal::Incidence* addRecord(PilotRecord *);
+	virtual KCal::Incidence* changeRecord(PilotRecord *,PilotRecord *);
+	virtual KCal::Incidence* deleteRecord(PilotRecord *,PilotRecord *);
 
 	// add, change or delete records from the palm
 	virtual void addPalmRecord(KCal::Incidence*e);
@@ -111,6 +114,9 @@ protected:
 	virtual void deletePalmRecord(KCal::Incidence*e, PilotRecord*s);
 
 	virtual void updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*de);
+	
+	virtual void readConfig();
+	virtual bool openCalendar();
 
 	// THESE NEED TO BE IMPLEMENTED BY CHILD CLASSES!!!!
 	
@@ -125,11 +131,11 @@ protected:
 	// general settings, implemented by child classes for the conduits
 	virtual const QString configGroup()=0;
 	virtual const QString dbname()=0;
+	
+	virtual const QString getTitle(PilotAppCategory*de)=0;
 
 protected:
 	KCal::Calendar *fCalendar;
-	PilotSerialDatabase *fCurrentDatabase;
-	PilotLocalDatabase *fBackupDatabase;
 
 	QString fCalendarFile;
 	int syncAction, nextSyncAction, conflictResolution;
@@ -145,6 +151,9 @@ protected:
 
 
 // $Log$
+// Revision 1.1.2.2  2002/05/01 21:11:49  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //
