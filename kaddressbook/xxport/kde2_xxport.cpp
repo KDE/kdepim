@@ -66,7 +66,7 @@ KABC::AddresseeList KDE2XXPort::importContacts( const QString& ) const
 {
   QString fileName = locateLocal( "data", "kabc/std.vcf" );
   if ( !QFile::exists( fileName ) ) {
-    KMessageBox::sorry( core(), i18n( "<qt>Couldn't find a KDE 2 address book <b></b>.</qt>" ).arg( fileName ) );
+    KMessageBox::sorry( core(), i18n( "<qt>Couldn't find a KDE 2 address book <b>%1</b>.</qt>" ).arg( fileName ) );
     return KABC::AddresseeList();
   }
 
