@@ -69,9 +69,7 @@ QString rtExpand(const QString &s, bool richText)
 	if (richText)
 	{
 		QString t(s);
-		QString nl("\n");
-		QString rtnl("<br>\n");
-		return t.replace(CSL1("\n"), CSL1("<br>\nl"));
+		return t.replace(CSL1("\n"), CSL1("<br>\n"));
 	}
 	else
 		return s;
