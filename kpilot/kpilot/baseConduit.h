@@ -97,7 +97,7 @@ public:
 	 * Returns an icon for the window manager
 	 * when the conduit is in "setup" mode.
 	 */
-	 virtual QPixmap *icon() const;
+	 virtual QPixmap icon() const;
 
 	const eConduitMode getMode() const { return fMode; } ;
 

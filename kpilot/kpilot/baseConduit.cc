@@ -26,6 +26,8 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <qpixmap.h>
+#include <kglobal.h>
+#include <kiconloader.h>
 #include <ksock.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -45,18 +47,20 @@ BaseConduit::BaseConduit(eConduitMode mode)
 	if((mode == BaseConduit::HotSync) || 
 		(mode == BaseConduit::Backup))
 	{
+#ifdef DEBUG
 		if (debug_level & SYNC_MINOR)
 		{
-			cerr << fname
+			kdDebug() << fname
 				<< ": Creating kpilotlink connection"
 				<< endl;
 		}
+#endif
 
 		// KPilotDaemon Status Socket
 		fDaemonSocket = new KSocket("localhost", KPILOTLINK_PORT); 
 		if (fDaemonSocket == 0L)
 		{
-			cerr << fname
+			kdError() << fname
 				<< ": Can't create socket"
 				<< endl ;
 			fMode=BaseConduit::Error;
@@ -64,7 +68,7 @@ BaseConduit::BaseConduit(eConduitMode mode)
 		}
 		if (fDaemonSocket->socket()<0)
 		{
-			cerr << fname
+			kdError() << fname
 				<< ": Socket is not connected"
 				<< endl ;
 			fMode=BaseConduit::Error;
@@ -95,11 +99,13 @@ int BaseConduit::getDebugLevel(KConfig& c)
 // link in kpilotlink.cc.
 //
 //
+#define SYNC_MSG_SIZE	(64)
+
 int BaseConduit::addSyncLogMessage(const char *s)
 {
 	FUNCTIONSETUP;
 
-	char buffer[64];
+	char buffer[SYNC_MSG_SIZE];
 	const char *check_s;
 	char *bufp;
 	int l,r;
@@ -109,7 +115,7 @@ int BaseConduit::addSyncLogMessage(const char *s)
 	//
 	if (s == 0L) return 0;
 	l=strlen(s);
-	if (l>30) return 0;
+	if (l>(SYNC_MSG_SIZE / 2)) return 0;
 	check_s=s;
 	while (*check_s)
 	{
@@ -120,7 +126,7 @@ int BaseConduit::addSyncLogMessage(const char *s)
 		check_s++;
 	}
 
-	memset(buffer,0,64);
+	memset(buffer,0,SYNC_MSG_SIZE);
 	// Make l a multiple of sizeof(int)
 	//
 	//
@@ -143,13 +149,15 @@ int BaseConduit::addSyncLogMessage(const char *s)
 
 	return 1; // (r == (2*sizeof(int)+l));
 }
-	
+
 
 // Returns 0L if no more modified records.  User must delete
 // the returned record when finished with it.
 PilotRecord* 
 BaseConduit::readNextModifiedRecord()
 {
+	FUNCTIONSETUP;
+
   int result = 0;
 
   CStatusMessages::write(fDaemonSocket->socket(), 
@@ -158,15 +166,24 @@ BaseConduit::readNextModifiedRecord()
     {
       if(result == CStatusMessages::NO_SUCH_RECORD)
 	{
-	  cout << "BaseConduit::nextModifiedRecord() - Got NO_SUCH_RECORD" << endl;
+#ifdef DEBUG
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			kdDebug() << fname
+				<< ": Got NO_SUCH_RECORD" 
+				<< endl;
+		}
+#endif
 	  return 0L;
 	}
       else
-	return getRecord(fDaemonSocket);
+	{
+		return getRecord(fDaemonSocket);
+	}
     }
   else
     {
-      cout << "CBaseConduit::nextModifiedRecord() - Failure on read??" << endl;
+      kdWarning() << fname << ": Failure on read" << endl;
       return 0L;
     }
 }
@@ -259,6 +276,8 @@ BaseConduit::writeRecord(KSocket* theSocket, PilotRecord* rec)
 PilotRecord*
 BaseConduit::getRecord(KSocket* in)
 {
+	FUNCTIONSETUP;
+
   int len, attrib, cat;
   recordid_t uid;
   char* data;
@@ -272,20 +291,39 @@ BaseConduit::getRecord(KSocket* in)
   read(in->socket(), data, len);
   newRecord = new PilotRecord((void*)data, len, attrib, cat, uid);
   delete [] data;
-  cout << "Read:" << endl;
-  cout << "\tlen: " << len << endl;
-  cout << "\tattrib: " << hex<< attrib << endl;
-  cout << "\tcat: " << cat << endl;
-  cout << "\tuid: " << hex << uid << endl;
+#ifdef DEBUG
+	if (debug_level & SYNC_TEDIOUS)
+	{
+  		kdDebug() << fname
+			<< ": Read"
+			<< " len=" << len
+			<< " att=" << attrib
+			<< " cat=" << cat 
+			<< " UID=" << uid
+			<< endl;
+	}
+#endif
   return newRecord;
 }
 
 
 #include "kpilot_conduit.xpm"
 
-/* virtual */ QPixmap *BaseConduit::icon() const
+/* virtual */ QPixmap BaseConduit::icon() const
 {
-	return new QPixmap((const char **)kpilot_conduit);
+	FUNCTIONSETUP;
+
+	KGlobal::iconLoader()->addAppDir("kpilot");
+	QPixmap p = KGlobal::iconLoader()->loadIcon("conduit",
+		KIcon::Toolbar,0,KIcon::DefaultState,0,true);
+	if (p.isNull())
+	{
+		kdWarning() << fname 
+			<< ": Conduit icon not found."
+			<< endl;
+		p = QPixmap((const char **)kpilot_conduit);
+	}
+	return p;
 }
 
 
@@ -307,6 +345,9 @@ void BaseConduit::setFirstTime(KConfig& c,bool b)
 
 
 // $Log$
+// Revision 1.10  2000/11/27 02:20:20  adridg
+// Internal cleanup
+//
 // Revision 1.9  2000/11/17 08:31:59  adridg
 // Minor changes
 //

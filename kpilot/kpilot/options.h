@@ -44,17 +44,17 @@
 //
 //
 #define DEBUG_FUNCTIONS	(1)
-#define UI_MAJOR	(2)
-#define UI_MINOR	(2+4)
-#define UI_TEDIOUS	(2+4+8)
+#define UI_MAJOR	(2+4+8)
+#define UI_MINOR	(4+8)
+#define UI_TEDIOUS	(8)
 
-#define DB_MAJOR	(16)
-#define DB_MINOR	(16+32)
-#define DB_TEDIOUS	(16+32+64)
+#define DB_MAJOR	(16+32+64)
+#define DB_MINOR	(32+64)
+#define DB_TEDIOUS	(64)
 
-#define SYNC_MAJOR	(128)
-#define SYNC_MINOR	(128+256)
-#define SYNC_TEDIOUS	(128+256+512)
+#define SYNC_MAJOR	(128+256+512)
+#define SYNC_MINOR	(256+512)
+#define SYNC_TEDIOUS	(512)
 
 #define FUNCTIONSETUP	static const char *fname=__FUNCTION__; \
 			if (debug_level & DEBUG_FUNCTIONS) { cerr << \

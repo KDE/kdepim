@@ -215,7 +215,6 @@ int ConduitApp::exec()
 	FUNCTIONSETUP;
 
 	QWidget *widget = 0L;
-	QPixmap *icon= 0L;
 
 	(void) getMode();
 
@@ -232,15 +231,17 @@ int ConduitApp::exec()
 	case BaseConduit::Backup : fConduit->doBackup(); break;
 	case BaseConduit::Test : debug_level=-1; fConduit->doTest(); break;
 	case BaseConduit::Setup :
+		{
+		QPixmap icon = fConduit->icon();
 		widget = fConduit->aboutAndSetup();
-		icon= fConduit->icon();
 
 		fApp->setMainWidget(widget);
-		KWin::setIcons(widget->winId(),*icon,*icon);
+		KWin::setIcons(widget->winId(),icon,icon);
 
 		widget->show();
 
 		return fApp->exec();
+		}
 	case BaseConduit::Error :
 		cerr << fname << ": ConduitApp is in Error state."
 			<< endl;
@@ -260,6 +261,9 @@ int ConduitApp::exec()
 
 
 // $Log$
+// Revision 1.12  2000/11/20 00:24:27  adridg
+// Added --test
+//
 // Revision 1.11  2000/11/17 08:31:59  adridg
 // Minor changes
 //
