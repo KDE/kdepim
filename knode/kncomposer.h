@@ -50,8 +50,7 @@ class KNComposer : public KTMainWindow  {
 		bool textChanged()										{ return (view->edit->isModified()); }
 		bool attachmentsChanged()							{ return attChanged; }
 		void bodyContent(KNMimeContent *b);
-		QCString subject()
-                    { return QCString(view->subject->text().local8Bit()); }
+		QCString subject()                    { return QCString(view->subject->text().local8Bit()); }
 		QCString destination()                { return d_estination; }
 		QCString followUp2();
 		int lines()														{ return view->edit->numLines(); }
@@ -60,12 +59,8 @@ class KNComposer : public KTMainWindow  {
 	  				
 	protected:
 		void closeEvent(QCloseEvent *e);
-		void initData();
-		void appendSignature();
-		void attachFile();
-				
-		QPopupMenu *fileMenu, *editMenu, *appendMenu;
-			
+		void initData();				
+	
 		class ComposerView  : public QSplitter {
 			
 			public:
@@ -95,10 +90,25 @@ class KNComposer : public KTMainWindow  {
 		
  	protected slots:
  		void slotDestinationChanged(const QString &t);
- 		void slotCallback(int id);
  		void slotDestButtonClicked();
  		void slotFupCheckToggled(bool b);
  		void slotSubjectChanged(const QString &t);			
+ 		void slotSendNow();
+ 		void slotSendLater(); 		
+ 		void slotSaveAsDraft(); 		
+ 		void slotArtDelete();
+  	void slotFileClose();
+  	void slotFind();
+  	void slotFindNext();
+  	void slotReplace();
+  	void slotSpellcheck();
+  	void slotAppendSig();
+  	void slotInsertFile();
+  	void slotAttachFile();
+   	void slotToggleToolBar();
+  	void slotConfKeys();
+  	void slotConfToolbar();
+  	void slotConfSpellchecker();
 					
  	signals:
  		void composerDone(KNComposer*);
@@ -106,19 +116,4 @@ class KNComposer : public KTMainWindow  {
 };
 
 
-
-#define FILE_SEND					100
-#define FILE_SEND_LATER		110
-#define FILE_SAVE					120
-#define FILE_DELETE				130
-#define FILE_CLOSE					140
-#define EDIT_CUT						200
-#define EDIT_COPY					210
-#define EDIT_PASTE					220
-#define EDIT_SEL_ALL				225
-#define EDIT_FIND					230
-#define EDIT_REPLACE				240
-#define APP_SIG						300
-#define APP_FILE						310
-#define APP_ATT_FILE				320
 #endif

@@ -60,7 +60,7 @@ appsdir = $(kde_appsdir)/Internet
 apps_DATA = KNode.desktop
 
 rcdir = $(kde_datadir)/knode
-rc_DATA = headers.rc knodeui.rc knreaderui.rc
+rc_DATA = headers.rc knodeui.rc knreaderui.rc kncomposerui.rc
 
 KDE_ICON = AUTO
 

@@ -23,9 +23,11 @@
 #include <kconfig.h>
 #include <kglobalsettings.h>
 #include <kmessagebox.h>
-#include <kiconloader.h>
-#include <kmenubar.h>
 #include <kabapi.h>
+#include <kaction.h>
+#include <kstdaction.h>
+#include <kkeydialog.h>
+#include <kedittoolbar.h>
 
 #include "kncomposer.h"
 #include "kngroupselectdialog.h"
@@ -34,48 +36,10 @@
 
 
 KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
-    :	KTMainWindow(0)
+    :	KTMainWindow(0), r_esult(CRsave), a_rticle(a), nntp(n), attChanged(false)
 {
-	r_esult=CRsave;
-	attChanged=false;
-	a_rticle=a;
-	nntp=n;
 	if(!sig.isEmpty()) s_ignature=sig.copy();	
 	
-	//init GUI
-	KMenuBar *mb=menuBar();
-	QPopupMenu *fileMenu=new QPopupMenu();
-	fileMenu->insertItem(i18n("&Send"), FILE_SEND);
-	fileMenu->insertItem(i18n("Send &later"), FILE_SEND_LATER);
-	fileMenu->insertItem(i18n("Sa&ve"), FILE_SAVE);
-	fileMenu->insertSeparator();
-	fileMenu->insertItem(i18n("&Delete"), FILE_DELETE);
-	fileMenu->insertItem(i18n("&Close"), FILE_CLOSE);
-	editMenu=new QPopupMenu();
-	editMenu->insertItem(i18n("&Cut"), EDIT_CUT);
-	editMenu->insertItem(i18n("Co&py"), EDIT_COPY);
-	editMenu->insertItem(i18n("Pas&te"), EDIT_PASTE);
-	editMenu->insertItem(i18n("&Select all"), EDIT_SEL_ALL);
-	editMenu->insertSeparator();
-	editMenu->insertItem(i18n("&Find"), EDIT_FIND);
-	editMenu->insertItem(i18n("&Replace"), EDIT_REPLACE);
-	appendMenu=new QPopupMenu();
-	appendMenu->insertItem(i18n("Insert &signature"), APP_SIG);
-	appendMenu->insertItem(i18n("Insert &file"), APP_FILE);
-	appendMenu->insertItem(i18n("&Attach file"), APP_ATT_FILE);	
-	mb->insertItem(i18n("&File"), fileMenu);
-	mb->insertItem(i18n("&Edit"), editMenu);
-	mb->insertItem(i18n("&Append"), appendMenu);
-	connect(mb, SIGNAL(activated(int)), this, SLOT(slotCallback(int)));
-	
-	KToolBar* tb=new KToolBar(this,0,32);
-  addToolBar(tb);
-  tb->insertButton(UserIcon("send"), FILE_SEND, true, i18n("send now"));
-  tb->insertButton(UserIcon("save"), FILE_SAVE, true, i18n("save"));
-  tb->insertButton(UserIcon("signature"), APP_SIG, true, i18n("append signature"));
-  tb->insertButton(UserIcon("delete"), FILE_DELETE, true, i18n("delete"));
-  connect(tb, SIGNAL(clicked(int)), this, SLOT(slotCallback(int)));
-
   //init view
   view=new ComposerView(this, a_rticle->isMail());
 	setView(view);
@@ -89,21 +53,59 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
 		this, SLOT(slotDestinationChanged(const QString&)));
 	connect(view->destButton, SIGNAL(clicked()),
 		this, SLOT(slotDestButtonClicked()));
+		
+  // file menu
+  new KAction(i18n("&Send Now"),"sendnow", 0 , this, SLOT(slotSendNow()),
+              actionCollection(), "send_now");
+  new KAction(i18n("Send &Later"), 0, this, SLOT(slotSendLater()),
+              actionCollection(), "send_later");
+  new KAction(i18n("Save As &Draft"),"save", 0 , this, SLOT(slotSaveAsDraft()),
+              actionCollection(), "save_as_draft");
+  new KAction(i18n("D&elete"),"delete", 0 , this, SLOT(slotArtDelete()),
+              actionCollection(), "art_delete");
+  KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
+
+  // edit menu
+  KStdAction::undo(view->edit, SLOT(undo()), actionCollection());
+  KStdAction::redo(view->edit, SLOT(redo()), actionCollection());
+  KStdAction::cut(view->edit, SLOT(cut()), actionCollection());
+  KStdAction::copy(view->edit, SLOT(copy()), actionCollection());
+  KStdAction::paste(view->edit, SLOT(paste()), actionCollection());
+  KStdAction::selectAll(view->edit, SLOT(selectAll()), actionCollection());
+  KStdAction::find(this, SLOT(slotFind()), actionCollection());
+  KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
+  KStdAction::replace(this, SLOT(slotReplace()), actionCollection());
+  KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
+
+  // attach menu
+  new KAction(i18n("Append &Signature"), "signature", 0 , this, SLOT(slotAppendSig()),
+                   actionCollection(), "append_signature");
+  new KAction(i18n("&Insert File"), 0, this, SLOT(slotInsertFile()),
+                   actionCollection(), "insert_file");
+  new KAction(i18n("Attach &File"), 0, this, SLOT(slotAttachFile()),
+                   actionCollection(), "attach_file");
+
+  // settings menu
+  KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
+  KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
+  KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
+  new KAction(i18n("Configure &Spellchecker"), 0, this, SLOT(slotConfSpellchecker()),
+                   actionCollection(), "setup_spellchecker");
+
+  createGUI("kncomposerui.rc");
 
 	//init data	
 	initData();
-	if(appSig) appendSignature();
+	if(appSig) slotAppendSig();
 	setConfig();
 	restoreWindowSize("composer", this, sizeHint());
 }
-
 
 
 KNComposer::~KNComposer()
 {
 	saveWindowSize("composer", size());	
 }
-
 
 
 void KNComposer::setConfig()
@@ -116,7 +118,6 @@ void KNComposer::setConfig()
 }
 
 
-
 void KNComposer::closeEvent(QCloseEvent *e)
 {
 	if(a_rticle->id()==-1) r_esult=CRdel;
@@ -125,7 +126,6 @@ void KNComposer::closeEvent(QCloseEvent *e)
 	e->accept();
 	emit composerDone(this);
 }
-
 
 
 void KNComposer::initData()
@@ -147,12 +147,10 @@ void KNComposer::initData()
 }
 
 
-
 bool KNComposer::hasValidData()
 {
 	return ( (!view->subject->text().isEmpty()) && (!d_estination.isEmpty()) );
 }
-
 
 
 void KNComposer::bodyContent(KNMimeContent *b)
@@ -163,7 +161,6 @@ void KNComposer::bodyContent(KNMimeContent *b)
 }
 
 
-
 QCString KNComposer::followUp2()
 {
 	QCString ret;
@@ -171,37 +168,6 @@ QCString KNComposer::followUp2()
 		ret=view->fup2->currentText().local8Bit();
 	return ret;
 }
-
-
-
-void KNComposer::appendSignature()
-{
-	int pos=-1, cnt=0;
-	if(!s_ignature.isEmpty()) {
-		for(int i=view->edit->numLines()-1; i>=0; i--) {
-			cnt++;
-			if(view->edit->textLine(i).left(3) == "-- ") {
-				pos=i;
-				break;
-			}
-		}
-					
-		if(pos!=-1)
-			for(int i=0; i<cnt; i++) view->edit->removeLine(pos);
-		
-		view->edit->insertLine("-- ");
-  	view->edit->insertLine(s_ignature);
-  	view->edit->setModified(true);		
-	}
-}
-
-
-
-void KNComposer::attachFile()
-{
-  #warning stub - attachFile
-}
-
 
 
 void KNComposer::slotDestinationChanged(const QString &t)
@@ -226,61 +192,6 @@ void KNComposer::slotDestinationChanged(const QString &t)
 }
 
 
-
-void KNComposer::slotCallback(int id)
-{
-	switch(id) {
-		case FILE_SEND:
-			r_esult=CRsendNow;
-			emit composerDone(this);
-		break;
-		case FILE_SEND_LATER:
-			r_esult=CRsendLater;
-			emit composerDone(this);
-		break;
-		case FILE_SAVE:
-			r_esult=CRsave;
-			emit composerDone(this);
-		break;
-		case FILE_DELETE:
-			r_esult=CRdelAsk;
-			emit composerDone(this);
-		break;
-		case FILE_CLOSE:
-			close();
-		break;
-		case EDIT_CUT:
-			view->edit->cut();
-		break;
-		case EDIT_COPY:
-			view->edit->copyText();
-		break;
-		case EDIT_PASTE:
-			view->edit->paste();
-		break;
-		case EDIT_SEL_ALL:
-			view->edit->selectAll();
-		break;
-		case EDIT_FIND:
-			view->edit->search();
-		break;
-		case EDIT_REPLACE:
-			view->edit->replace();
-		break;
-		case APP_SIG:
-			appendSignature();
-		break;
-		case APP_FILE:
-		  #warning stub: attach file
-		break;
-		case APP_ATT_FILE:
-			attachFile();
-		break;		
-	}
-}
-
-
-
 /*void KNComposer::slotDestComboActivated(int idx)
 {
 	if(idx==0 && s_tatus!=KNArticleBase::AStoPost) {
@@ -297,7 +208,6 @@ void KNComposer::slotCallback(int id)
 		view->fupCheck->setEnabled(false);
 	}				
 } */
-
 
 
 void KNComposer::slotDestButtonClicked()
@@ -339,12 +249,10 @@ void KNComposer::slotDestButtonClicked()
 }
 
 
-
 void KNComposer::slotFupCheckToggled(bool b)
 {
 	view->fup2->setEnabled(b);
 }
-
 
 
 void KNComposer::slotSubjectChanged(const QString &t)
@@ -353,6 +261,127 @@ void KNComposer::slotSubjectChanged(const QString &t)
 	else setCaption(i18n("No subject"));
 }
 
+
+void KNComposer::slotSendNow()
+{
+	r_esult=CRsendNow;
+	emit composerDone(this);
+}
+
+
+void KNComposer::slotSendLater()
+{
+  r_esult=CRsendLater;
+  emit composerDone(this);
+}
+
+
+void KNComposer::slotSaveAsDraft()
+{			
+  r_esult=CRsave;
+  emit composerDone(this);
+}
+
+
+void KNComposer::slotArtDelete()
+{
+  r_esult=CRdelAsk;
+  emit composerDone(this);
+}
+
+
+void KNComposer::slotFileClose()
+{
+	close();
+}
+
+
+void KNComposer::slotFind()
+{
+	view->edit->search();
+}
+
+
+void KNComposer::slotFindNext()
+{
+	view->edit->repeatSearch();
+}
+
+
+void KNComposer::slotReplace()
+{
+  view->edit->replace();
+}
+
+
+void KNComposer::slotSpellcheck()
+{
+  #warning stub - spellcheck
+}
+
+
+void KNComposer::slotAppendSig()
+{
+	int pos=-1, cnt=0;
+	if(!s_ignature.isEmpty()) {
+		for(int i=view->edit->numLines()-1; i>=0; i--) {
+			cnt++;
+			if(view->edit->textLine(i).left(3) == "-- ") {
+				pos=i;
+				break;
+			}
+		}
+					
+		if(pos!=-1)
+			for(int i=0; i<cnt; i++) view->edit->removeLine(pos);
+		
+		view->edit->insertLine("-- ");
+  	view->edit->insertLine(s_ignature);
+  	view->edit->setModified(true);		
+	}
+}
+
+
+void KNComposer::slotInsertFile()
+{
+  #warning stub: insert file
+}
+
+
+void KNComposer::slotAttachFile()
+{
+  #warning stub - attachFile
+}
+
+
+void KNComposer::slotToggleToolBar()
+{
+  if(toolBar()->isVisible())
+    toolBar()->hide();
+  else
+    toolBar()->show();
+}
+
+  	
+void KNComposer::slotConfKeys()
+{
+  KKeyDialog::configureKeys(actionCollection(),xmlFile());
+}
+ 	
+  	
+void KNComposer::slotConfToolbar()
+{
+  KEditToolbar dlg(actionCollection());
+  if (dlg.exec()) {
+    createGUI();
+  }
+}
+
+
+void KNComposer::slotConfSpellchecker()
+{
+  #warning stub - setup Spellchecker
+}
 
 
 
