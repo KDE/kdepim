@@ -335,7 +335,7 @@ IMAP4Protocol::get (const KURL & _url)
                 outputLineStr ("X-Flags: " +
                                QString::number(cache->getFlags ()) + "\r\n");
             } else cacheOutput = true;
-            if ( lastone && !decodeContent ) 
+            if ( lastone && !decodeContent )
               lastone->outputPart (*this);
             cacheOutput = false;
             flushOutput(contentEncoding);
@@ -581,8 +581,9 @@ void
 IMAP4Protocol::setHost (const QString & _host, int _port,
                         const QString & _user, const QString & _pass)
 {
-  if (myHost != _host || myPort != _port || myUser != _user)
+  if (myHost != _host || myPort != _port || myUser != _user || myPass != _pass)
   { // what's the point of doing 4 string compares to avoid 4 string copies?
+    // DF: I guess to avoid calling closeConnection() unnecessarily.
     if (!myHost.isEmpty ())
       closeConnection ();
     myHost = _host;
