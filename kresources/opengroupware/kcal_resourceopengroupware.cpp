@@ -91,10 +91,9 @@ void OpenGroupware::init()
   mPrefs = new OpenGroupwarePrefsBase();
   mFolderLister = new FolderLister;
   
-  setType( "groupware" );
+  setType( "opengroupware" );
 
   enableChangeNotification();
-  idMapper().setIdentifier( identifier() );
 }
 
 OpenGroupwarePrefsBase *OpenGroupware::prefs()
@@ -149,17 +148,12 @@ bool OpenGroupware::doLoad()
     kdWarning() << "Download still in progress" << endl;
     return false;
   }
-
-  // FIXME: If folder list is empty retrieve it from server.
-
+  
   mCalendar.close();
   clearChanges();
-/*
   disableChangeNotification();
   loadCache();
-  idMapper().load();
   enableChangeNotification();
-*/
   emit resourceChanged( this );
 
   mBaseUrl = KURL( prefs()->url() );
@@ -208,13 +202,19 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
 //    kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
     QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
+    QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
     int c = entries.count();
     int i = 0;
     while ( i < c ) {
       QDomNode node = entries.item( i );
       QDomElement e = node.toElement();
-      mIncidencesForDownload << e.text();
+      const QString &entry = e.text();
+      mIncidencesForDownload << entry;
+      node = fingerprints.item( i );
+      e = node.toElement();
       i++;
+      KURL url ( entry );
+      idMapper().setFingerprint( url.path(), e.text() );
     }
 
     if ( mProgress ) {
@@ -328,7 +328,6 @@ void OpenGroupware::slotJobData( KIO::Job *, const QByteArray &data )
 void OpenGroupware::loadFinished()
 {
   clearChanges();
-  idMapper().save();
   saveCache();
   enableChangeNotification();
 
