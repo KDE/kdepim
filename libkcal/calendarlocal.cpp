@@ -343,7 +343,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd, bool sorted )
   for ( eit = eventList.begin(); eit != eventList.end(); ++eit ) {
     sortIt = eventListSorted.begin();
     while ( sortIt != eventListSorted.end() &&
-            (*it)->dtStart().time() >= (*sortIt)->dtStart().time() ) {
+            (*eit)->dtStart().time() >= (*sortIt)->dtStart().time() ) {
       ++sortIt;
     }
     eventListSorted.insert( sortIt, *eit );
