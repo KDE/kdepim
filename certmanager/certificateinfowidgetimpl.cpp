@@ -378,8 +378,8 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( QListViewItem * item ) 
     new CertificateInfoWidgetImpl( mChain[itemIndex], mExternal, dialog );
   dialog->setMainWidget( top );
   // proxy the signal to our receiver:
-  connect( top, SIGNAL(requestCertificateDownload(const QString&)),
-	   SIGNAL(requestCertificateDownload(const QString&)) );
+  connect( top, SIGNAL(requestCertificateDownload(const QString&, const QString&)),
+	   SIGNAL(requestCertificateDownload(const QString&, const QString&)) );
   dialog->show();
 }
 
