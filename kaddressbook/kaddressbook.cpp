@@ -315,10 +315,8 @@ void KAddressBook::importCSV()
 
   ContactImportDialog *dialog = new ContactImportDialog(mDocument, this);
 
-  dialog->exec();
-
-  mViewManager->refresh();
-
+  if ( dialog->exec() )
+      mViewManager->refresh();
   delete dialog;
 
   emit modified( true );
@@ -332,15 +330,15 @@ void KAddressBook::importVCardSimple()
 
 void KAddressBook::importVCard( const QString &file, bool showDialog )
 {
-  QString fileName; 
+  QString fileName;
 
   if ( file )
     fileName = file;
-  else 
+  else
     fileName = KFileDialog::getOpenFileName( QString::null,
                                                   "*.vcf|vCards", 0,
                                                   i18n( "Select vCard to Import" ) );
-    
+
   if ( !fileName.isEmpty() ) {
     KABC::VCardConverter converter;
     KABC::Addressee a;
@@ -350,7 +348,7 @@ void KAddressBook::importVCard( const QString &file, bool showDialog )
     QByteArray rawData = file.readAll();
     QString data = QString::fromLatin1( rawData.data(), rawData.size() + 1 );
     bool ok = false;
-    
+
     if ( data.contains( "VERSION:3.0" ) ) {
       ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v3_0 );
     } else if ( data.contains( "VERSION:2.1" ) ) {
@@ -381,7 +379,8 @@ void KAddressBook::importVCard( const QString &file, bool showDialog )
 void KAddressBook::exportCSV()
 {
   QString fileName = KFileDialog::getSaveFileName("addressbook.csv");
-
+  if ( fileName.isEmpty())
+      return;
   QFile outFile(fileName);
   if ( outFile.open(IO_WriteOnly) )
   {    // file opened successfully
@@ -607,7 +606,7 @@ void KAddressBook::slotAddressBookChanged()
 void KAddressBook::configureFilters()
 {
   FilterDialog dlg( this );
-  
+
   dlg.setFilters( mViewManager->filters() );
 
   if ( dlg.exec() )
