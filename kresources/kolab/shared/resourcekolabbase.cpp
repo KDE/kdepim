@@ -51,6 +51,7 @@ ResourceKolabBase::ResourceKolabBase( const QCString& objId )
   : mSilent( false )
 {
   KGlobal::locale()->insertCatalogue( "kres_kolab" );
+  KGlobal::locale()->insertCatalogue( "libkcal" );
   QString uniqueObjId = QString( objId ) + QString::number( uniquifier++ );
   mConnection = new KMailConnection( this, uniqueObjId.utf8() );
 }
