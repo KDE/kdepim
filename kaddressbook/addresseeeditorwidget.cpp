@@ -1,25 +1,25 @@
 /*
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
-                                                                        
+    This file is part of KAddressBook.
+    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <qcheckbox.h>
 #include <qhbox.h>
@@ -66,7 +66,7 @@
 
 #include "addresseeeditorwidget.h"
 
-AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension, 
+AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension,
                                               QWidget *parent, const char *name )
   : AddresseeEditorBase( core, isExtension, parent, name ),
     mBlockSignals( false ), mReadOnly( false )
@@ -86,11 +86,11 @@ AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension,
 AddresseeEditorWidget::~AddresseeEditorWidget()
 {
   kdDebug(5720) << "~AddresseeEditorWidget()" << endl;
-}  
+}
 
 void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
 {
-  if ( mAddressee.uid() == addr.uid() ) 
+  if ( mAddressee.uid() == addr.uid() )
 	  return;
 
   mAddressee = addr;
@@ -135,25 +135,25 @@ void AddresseeEditorWidget::setupTab1()
   QGridLayout *layout = new QGridLayout( tab1, 11, 7 );
   layout->setMargin( KDialogBase::marginHint() );
   layout->setSpacing( KDialogBase::spacingHint() );
-  
+
   QLabel *label;
   KSeparator* bar;
   QPushButton *button;
-  
+
   //////////////////////////////////
   // Upper left group (person info)
-  
+
   // Person icon
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop,
                                                       KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 0, 1, 0, 0 );
-  
+
   // First name
   button = new QPushButton( i18n( "Edit Name..." ), tab1 );
   QToolTip::add( button, i18n( "Edit the contact's name" ) );
   mNameEdit = new KLineEdit( tab1, "mNameEdit" );
-  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), 
+  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( nameTextChanged( const QString& ) ) );
   connect( button, SIGNAL( clicked() ), SLOT( nameButtonClicked() ) );
   mNameLabel = new KSqueezedTextLabel( tab1 );
@@ -176,48 +176,48 @@ void AddresseeEditorWidget::setupTab1()
   label->setBuddy( mRoleEdit );
   layout->addWidget( label, 1, 1 );
   layout->addWidget( mRoleEdit, 1, 2 );
-  
+
   // Organization
   label = new QLabel( i18n( "%1:" ).arg( KABC::Addressee::organizationLabel() ), tab1 );
   mOrgEdit = new KLineEdit( tab1 );
   label->setBuddy( mOrgEdit );
-  connect( mOrgEdit, SIGNAL( textChanged( const QString& ) ), 
+  connect( mOrgEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( organizationTextChanged( const QString& ) ) );
   layout->addWidget( label, 2, 1 );
   layout->addWidget( mOrgEdit, 2, 2 );
-  
+
   // File as (formatted name)
   label = new QLabel( i18n( "Formatted name:" ), tab1 );
   mFormattedNameLabel = new KSqueezedTextLabel( tab1 );
   layout->addWidget( label, 3, 1 );
   layout->addWidget( mFormattedNameLabel, 3, 2 );
-  
+
   // Left hand separator. This separator doesn't go all the way
   // across so the dialog still flows from top to bottom
   bar = new KSeparator( KSeparator::HLine, tab1 );
   layout->addMultiCellWidget( bar, 4, 4, 0, 2 );
-  
+
   //////////////////////////////////////
   // Phone numbers (upper right)
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "kaddressbook",
                     KIcon::Desktop, KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 0, 1, 3, 3 );
-  
+
   mPhoneEditWidget = new PhoneEditWidget( tab1 );
   connect( mPhoneEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mPhoneEditWidget, 0, 3, 4, 6 ); 
+  layout->addMultiCellWidget( mPhoneEditWidget, 0, 3, 4, 6 );
 
   bar = new KSeparator( KSeparator::HLine, tab1 );
   layout->addMultiCellWidget( bar, 4, 4, 3, 6 );
-  
+
   //////////////////////////////////////
   // Addresses (lower left)
   label = new QLabel( tab1 );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "gohome", KIcon::Desktop,
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "kfm_home", KIcon::Desktop,
                                                      KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 5, 6, 0, 0 );
-  
+
   mAddressEditWidget = new AddressEditWidget( tab1 );
   connect( mAddressEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
   layout->addMultiCellWidget( mAddressEditWidget, 5, 10, 1, 2 );
@@ -246,7 +246,7 @@ void AddresseeEditorWidget::setupTab1()
 
   label = new QLabel( i18n( "%1:" ).arg( KABC::Addressee::urlLabel() ), tab1 );
   mURLEdit = new KLineEdit( tab1 );
-  connect( mURLEdit, SIGNAL( textChanged( const QString& ) ), 
+  connect( mURLEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mURLEdit );
   homePageLayout->addWidget( label );
@@ -268,28 +268,28 @@ void AddresseeEditorWidget::setupTab1()
   layout->addMultiCellWidget( mIMWidget, 10, 10, 4, 6 );
 
   layout->addColSpacing( 6, 50 );
-  
+
   bar = new KSeparator( KSeparator::HLine, tab1 );
   layout->addMultiCellWidget( bar, 11, 11, 0, 6 );
-  
+
   ///////////////////////////////////////
   QHBox *categoryBox = new QHBox( tab1 );
   categoryBox->setSpacing( KDialogBase::spacingHint() );
-  
+
   // Categories
   mCategoryButton = new QPushButton( i18n( "Select Categories..." ), categoryBox );
   connect( mCategoryButton, SIGNAL( clicked() ), SLOT( selectCategories() ) );
 
   mCategoryEdit = new KLineEdit( categoryBox );
   mCategoryEdit->setReadOnly( true );
-  connect( mCategoryEdit, SIGNAL( textChanged( const QString& ) ), 
+  connect( mCategoryEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
 
   mSecrecyWidget = new SecrecyWidget( categoryBox );
   connect( mSecrecyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
 
   layout->addMultiCellWidget( categoryBox, 12, 12, 0, 6 );
-  
+
   // Build the layout and add to the tab widget
   layout->activate(); // required
 
@@ -304,19 +304,19 @@ void AddresseeEditorWidget::setupTab2()
   QGridLayout *layout = new QGridLayout( tab2, 6, 6 );
   layout->setMargin( KDialogBase::marginHint() );
   layout->setSpacing( KDialogBase::spacingHint() );
-  
+
   QLabel *label;
   KSeparator* bar;
-  
+
   ///////////////////////
   // Office info
-  
+
   // Department
   label = new QLabel( tab2 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "folder", KIcon::Desktop,
                                                      KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 0, 1, 0, 0 );
-  
+
   label = new QLabel( i18n( "Department:" ), tab2 );
   layout->addWidget( label, 0, 1 );
   mDepartmentEdit = new KLineEdit( tab2 );
@@ -324,7 +324,7 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mDepartmentEdit );
   layout->addWidget( mDepartmentEdit, 0, 2 );
-  
+
   label = new QLabel( i18n( "Office:" ), tab2 );
   layout->addWidget( label, 1, 1 );
   mOfficeEdit = new KLineEdit( tab2 );
@@ -332,7 +332,7 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mOfficeEdit );
   layout->addWidget( mOfficeEdit, 1, 2 );
-  
+
   label = new QLabel( i18n( "Profession:" ), tab2 );
   layout->addWidget( label, 2, 1 );
   mProfessionEdit = new KLineEdit( tab2 );
@@ -340,7 +340,7 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mProfessionEdit );
   layout->addWidget( mProfessionEdit, 2, 2 );
-  
+
   label = new QLabel( i18n( "Manager\'s name:" ), tab2 );
   layout->addWidget( label, 0, 3 );
   mManagerEdit = new KPIM::AddresseeLineEdit( tab2 );
@@ -348,7 +348,7 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mManagerEdit );
   layout->addMultiCellWidget( mManagerEdit, 0, 0, 4, 5 );
-  
+
   label = new QLabel( i18n( "Assistant's name:" ), tab2 );
   layout->addWidget( label, 1, 3 );
   mAssistantEdit = new KPIM::AddresseeLineEdit( tab2 );
@@ -356,18 +356,18 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mAssistantEdit );
   layout->addMultiCellWidget( mAssistantEdit, 1, 1, 4, 5 );
-  
+
   bar = new KSeparator( KSeparator::HLine, tab2 );
   layout->addMultiCellWidget( bar, 3, 3, 0, 5 );
-  
+
   /////////////////////////////////////////////////
   // Personal info
-  
+
   label = new QLabel( tab2 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop,
                                                      KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 4, 5, 0, 0 );
-  
+
   label = new QLabel( i18n( "Nickname:" ), tab2 );
   layout->addWidget( label, 4, 1 );
   mNicknameEdit = new KLineEdit( tab2 );
@@ -393,7 +393,7 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( emitModified() ) );
   label->setBuddy( mBirthdayPicker );
   layout->addWidget( mBirthdayPicker, 4, 4 );
-  
+
   label = new QLabel( i18n( "Anniversary:" ), tab2 );
   layout->addWidget( label, 5, 3 );
   mAnniversaryPicker = new KDateEdit( tab2 );
@@ -403,10 +403,10 @@ void AddresseeEditorWidget::setupTab2()
            SLOT( emitModified() ) );
   label->setBuddy( mAnniversaryPicker );
   layout->addWidget( mAnniversaryPicker, 5, 4 );
-  
+
   bar = new KSeparator( KSeparator::HLine, tab2 );
   layout->addMultiCellWidget( bar, 6, 6, 0, 5 );
-  
+
    //////////////////////////////////////
   // Notes
   label = new QLabel( i18n( "Note:" ), tab2 );
@@ -491,7 +491,7 @@ void AddresseeEditorWidget::load()
   // Block signals in case anything tries to emit modified
   // CS: This doesn't seem to work.
   bool block = signalsBlocked();
-  blockSignals( true ); 
+  blockSignals( true );
   mBlockSignals = true; // used for internal signal blocking
 
   mNameEdit->blockSignals( true );
@@ -635,7 +635,7 @@ void AddresseeEditorWidget::save()
   for ( addressIter = addresses.begin(); addressIter != addresses.end();
         ++addressIter )
     mAddressee.removeAddress( *addressIter );
-    
+
   addresses = mAddressEditWidget->addresses();
   for ( addressIter = addresses.begin(); addressIter != addresses.end();
         ++addressIter )
@@ -716,7 +716,7 @@ void AddresseeEditorWidget::nameButtonClicked()
 {
   // show the name dialog.
   NameEditDialog dialog( mAddressee, mFormattedNameType, mReadOnly, this );
-  
+
   if ( dialog.exec() ) {
     if ( dialog.changed() ) {
       mAddressee.setFamilyName( dialog.familyName() );
@@ -737,7 +737,7 @@ void AddresseeEditorWidget::nameButtonClicked()
 
       // Update the combo box.
       nameBoxChanged();
-    
+
       emitModified();
     }
   }

@@ -1,25 +1,25 @@
-/*                                                                      
-    This file is part of KAddressBook.                                  
-    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>                   
-                                                                        
+/*
+    This file is part of KAddressBook.
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or   
-    (at your option) any later version.                                 
-                                                                        
-    This program is distributed in the hope that it will be useful,     
-    but WITHOUT ANY WARRANTY; without even the implied warranty of      
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the        
-    GNU General Public License for more details.                        
-                                                                        
-    You should have received a copy of the GNU General Public License   
-    along with this program; if not, write to the Free Software         
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           
-                                                                        
-    As a special exception, permission is given to link this program    
-    with any edition of Qt, and distribute the resulting executable,    
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
 
 #include <kabc/picture.h>
 #include <kdebug.h>
@@ -38,6 +38,7 @@
 #include <librss/document.h>
 #include <librss/image.h>
 
+#include <qapplication.h>
 #include <qcheckbox.h>
 #include <qdragobject.h>
 #include <qgroupbox.h>
@@ -147,7 +148,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
 
   mClearButton = new QPushButton( box );
   mClearButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
-  mClearButton->setPixmap( SmallIcon( "clear_left" ) );
+  mClearButton->setPixmap( SmallIcon( QApplication::reverseLayout() ? "locationbar_erase" : "clear_left" ) );
   mClearButton->setEnabled( false );
   boxLayout->addWidget( mClearButton, 0, 2 );
 
@@ -361,8 +362,8 @@ void ImageBaseWidget::slotLoadingComplete( RSS::Loader *loader,
     return;
   }
 
-  blockSignals( true );  
-  mImageUrl->setURL( doc.image()->url().url() );  
+  blockSignals( true );
+  mImageUrl->setURL( doc.image()->url().url() );
   loadImage();
   blockSignals( false );
   imageChanged();
@@ -373,7 +374,7 @@ void ImageBaseWidget::slotLoadingComplete( RSS::Loader *loader,
 ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::ContactEditorWidget( ab, parent, name )
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(), 
+  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(),
                                          KDialog::spacingHint() );
 
   mPhotoWidget = new ImageBaseWidget( KABC::Addressee::photoLabel(), this );
