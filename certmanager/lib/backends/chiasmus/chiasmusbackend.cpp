@@ -42,6 +42,7 @@
 
 #include <klocale.h>
 #include <kconfig.h>
+#include <kshell.h>
 
 #include <qstringlist.h>
 #include <qvariant.h>
@@ -412,7 +413,7 @@ bool Kleo::ChiasmusBackend::checkForChiasmus( QString * reason ) const {
   const CryptoConfigEntry * path = config()->entry( "Chiasmus", "General", "path" );
   assert( path ); assert( path->argType() == CryptoConfigEntry::ArgType_Path );
   const QString chiasmus = path->urlValue().path();
-  const QFileInfo fi( chiasmus );
+  const QFileInfo fi( KShell::tildeExpand( chiasmus ) );
   if ( !fi.isExecutable() ) {
     if ( reason )
       *reason = i18n( "\"%1\" is not executable." ).arg( chiasmus );
