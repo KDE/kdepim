@@ -60,7 +60,7 @@ notes.</para></abstract>
 <keyword>KJots</keyword>
 <keyword>kdeutils</keyword>
 <keyword>notes</keyword>
-<keyword>organiser</keyword>
+<keyword>organizer</keyword>
 </keywordset>
 
 </bookinfo>
@@ -76,7 +76,7 @@ notes and organizes them for you.</para>
 <chapter id="using-kjots">
 <title>Using &kjots;</title>
 
-<para>&kjots; has two basic items used to organise your notes -
+<para>&kjots; has two basic items used to organize your notes -
 <quote>Books</quote> and <quote>Pages</quote>.</para>
 
 <para>You can create a number of books in &kjots;, and each book can
