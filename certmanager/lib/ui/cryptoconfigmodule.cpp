@@ -131,9 +131,6 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
 #endif
     mGroupGUIs.append( gg );
   }
-
-  // TODO accel (some auto-accel-manager)
-
 }
 
 
@@ -354,7 +351,7 @@ void Kleo::CryptoConfigEntrySpinBox::doSave()
 
 void Kleo::CryptoConfigEntrySpinBox::doLoad()
 {
-  int value;
+  int value = 0;
   switch ( mKind ) {
   case ListOfNone:
     value = mEntry->numberOfTimesSet();

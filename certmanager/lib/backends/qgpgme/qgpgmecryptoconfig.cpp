@@ -420,7 +420,8 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
           continue;
         }
         else if ( unescape ) {
-          Q_ASSERT( val[0] == '"' ); // see README.gpgconf
+          if( val[0] != '"' ) // see README.gpgconf
+            kdWarning(5150) << "String value should start with '\"' : " << val << endl;
           val = val.mid( 1 );
         }
       }

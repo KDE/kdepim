@@ -32,9 +32,13 @@
 #include "cryptoconfigdialog.h"
 #include "cryptoconfigmodule.h"
 #include <klocale.h>
+#include <kaccelmanager.h>
 
 Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent, const char* name )
-  : KDialogBase( parent, name, true /*modal*/,
+  : KDialogBase( Swallow,
+                 // Remove the "whats's this" button since we have no support for it
+                 WStyle_Customize | WStyle_DialogBorder | WStyle_Maximize | WStyle_Title | WStyle_SysMenu,
+                 parent, name, true /*modal*/,
                  i18n( "Configure" ), Default|Cancel|Apply|Ok|User1,
                  Ok, true /*separator*/, KGuiItem( i18n( "&Reset" ), "undo" ) )
 {
@@ -42,6 +46,9 @@ Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidge
   setMainWidget( mMainWidget );
   connect( mMainWidget, SIGNAL( changed() ), SLOT( slotChanged() ) );
   enableButton( Apply, false );
+
+  // Automatically assign accelerators
+  KAcceleratorManager::manage( this );
 }
 
 void Kleo::CryptoConfigDialog::slotOk()
