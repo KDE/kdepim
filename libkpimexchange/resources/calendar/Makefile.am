@@ -17,7 +17,7 @@ kde_module_LTLIBRARIES = resourcecalendarexchange.la
 
 resourcecalendarexchange_la_SOURCES = resourceexchange.cpp resourceexchangeconfig.cpp dateset.cpp dateset.h
 resourcecalendarexchange_la_LDFLAGS= $(all_libraries) -module $(KDE_PLUGIN)
-resourcecalendarexchange_la_LIBADD= $(top_builddir)/libkdepim/resources/libkderesources.la \
+resourcecalendarexchange_la_LIBADD= -lkderesources \
                                     $(top_builddir)/libkdepim/resources/calendar/libcalendarresources.la \
                                     $(top_builddir)/libkcal/libkcal.la \
                                     $(top_builddir)/libkpimexchange/libkpimexchange.la 
