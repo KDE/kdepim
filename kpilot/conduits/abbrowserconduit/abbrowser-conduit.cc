@@ -469,6 +469,14 @@ void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cu
 				// use given format
 				bdate=KGlobal::locale()->readDate(cust, AbbrowserSettings::customDateFormat(), &ok);
 			}
+			
+			if (!ok)
+			{
+				QString format = KGlobal::locale()->dateFormatShort();
+				QRegExp re(CSL1("%[yY][^%]*"));
+				format.remove(re); // Remove references to year and following punctuation
+				bdate = KGlobal::locale()->readDate(cust, format, &ok);
+			}
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Birthdate from "<<index<<"-th custom field: "<<bdate.toString()<<endl;
 			DEBUGCONDUIT<<"Is Valid: "<<bdate.isValid()<<endl;
