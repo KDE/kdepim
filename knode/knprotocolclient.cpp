@@ -200,7 +200,17 @@ bool KNProtocolClient::openConnection()
 
   in_addr address;
 
+#ifdef HAVE_INET_ATON
   if (inet_aton(account.server(),&address)) {
+#else
+ // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
+ #ifdef HAVE_INET_ADDR
+  address.s_addr = inet_addr(account.server());
+  if ( address.s_addr != (in_addr_t)-1 )
+ #else
+  #error You must have either inet_aton or inet_addr !
+ #endif
+#endif
     if (!conRawIP(&address)) {
       closeSocket();
       return false;
@@ -591,7 +601,7 @@ bool KNProtocolClient::conRawIP(in_addr* ip)
 
       int err = 0;
       unsigned int len = 1;
-      if (getsockopt(tcpSocket,SOL_SOCKET,SO_ERROR,&err,&len)!=0) {
+      if (getsockopt(tcpSocket,SOL_SOCKET,SO_ERROR,(char*)&err,&len)!=0) {
         QString str = i18n("Communication error:\n");
         str += strerror(errno);
         job->setErrorString(str);
