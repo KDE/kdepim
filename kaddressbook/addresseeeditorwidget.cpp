@@ -159,7 +159,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( button, 0, 1 );
   layout->addWidget( mNameEdit, 0, 2 );
   layout->addWidget( mNameLabel, 0, 2 );
-  label = new QLabel( i18n( "Role:" ), tab1 );
+  label = new QLabel( KABC::Addressee::roleLabel() + ":", tab1 );
   mRoleEdit = new KLineEdit( tab1 );
   connect( mRoleEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
@@ -168,7 +168,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( mRoleEdit, 1, 2 );
   
   // Organization
-  label = new QLabel( i18n( "Organization:" ), tab1 );
+  label = new QLabel( KABC::Addressee::organizationLabel() + ":", tab1 );
   mOrgEdit = new KLineEdit( tab1 );
   label->setBuddy( mOrgEdit );
   connect( mOrgEdit, SIGNAL( textChanged( const QString& ) ), 
@@ -232,7 +232,7 @@ void AddresseeEditorWidget::setupTab1()
                                                      KIcon::SizeMedium ) );
   layout->addMultiCellWidget( label, 8, 9, 3, 3 );
 
-  label = new QLabel( i18n( "URL:" ), tab1 );
+  label = new QLabel( KABC::Addressee::urlLabel() + ":", tab1 );
   mURLEdit = new KLineEdit( tab1 );
   connect( mURLEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( textChanged( const QString& ) ) );
