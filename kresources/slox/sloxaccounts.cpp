@@ -63,6 +63,8 @@ SloxAccounts::SloxAccounts()
 SloxAccounts::~SloxAccounts()
 {
   kdDebug() << "~SloxAccounts()" << endl;
+
+  if ( mDownloadJob ) mDownloadJob->kill();
 }
 
 void SloxAccounts::setServer( const QString &server )

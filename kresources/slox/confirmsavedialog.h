@@ -31,7 +31,8 @@ namespace KCal {
 class ConfirmSaveDialog : public KDialogBase
 {
   public:
-    ConfirmSaveDialog( QWidget *parent, const char *name = 0 );
+    ConfirmSaveDialog( const QString &destination, QWidget *parent,
+                       const char *name = 0 );
 
     void addIncidences( const Incidence::List &incidences,
                         const QString &operation );

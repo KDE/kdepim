@@ -846,7 +846,7 @@ bool KCalResourceSlox::confirmSave()
 {
   if ( !hasChanges() ) return true;
 
-  ConfirmSaveDialog dlg( 0 );
+  ConfirmSaveDialog dlg( resourceName(), 0 );
   
   dlg.addIncidences( addedIncidences(), i18n("Added") );
   dlg.addIncidences( changedIncidences(), i18n("Changed") );

@@ -29,15 +29,18 @@
 
 using namespace KCal;
 
-ConfirmSaveDialog::ConfirmSaveDialog( QWidget *parent, const char *name )
+ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
+                                      QWidget *parent, const char *name )
   : KDialogBase( parent, name, true, i18n("Confirm Save"), Ok | Cancel )
 {
   QFrame *topFrame = makeMainWidget();
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
+  topLayout->setSpacing( spacingHint() );
   
   QLabel *label = new QLabel(
-      i18n("You have requested to save the following objects:"), topFrame );
+      i18n("You have requested to save the following objects to '%1':")
+      .arg( destination ), topFrame );
   topLayout->addWidget( label );
   
   mListView = new KListView( topFrame );
