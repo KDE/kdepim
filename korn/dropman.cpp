@@ -66,7 +66,7 @@ bool KDropManager::readOldConfig( KConfigBase& config, const QString & group )
 
     if( drop == 0 ) {
       qWarning("KDropManager::readOldConfig: creation of unix box failed.");
-      continue;
+      return false;
     }
 
     // configure
@@ -171,6 +171,8 @@ KDropManager::writeConfig(KConfigBase & config, const QString & group) const
 bool KDropManager::createBasicConfig()
 {
 	KUnixDrop *drop = dynamic_cast<KUnixDrop *>(newMonitor(fu("mbox")));
+
+	if ( !drop ) return false;
 
 	drop->setCaption(i18n("Inbox"));
 

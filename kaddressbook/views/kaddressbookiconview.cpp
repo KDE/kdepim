@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
                                                                         
@@ -222,7 +222,10 @@ void KAddressBookIconView::refresh(QString uid)
     mIconView->arrangeItemsInGrid( true );
 
     for ( item = mIconView->firstItem(); item; item = item->nextItem() )
-      mIconList.append( dynamic_cast<AddresseeIconViewItem*>( item ) );
+	{
+	  AddresseeIconViewItem* aivi = dynamic_cast<AddresseeIconViewItem*>( item );
+      mIconList.append( aivi );
+	}
 
   } else {
     // Try to find the one to refresh
@@ -254,7 +257,7 @@ void KAddressBookIconView::setSelected(QString uid, bool selected)
              item = item->nextItem())
          {
              aItem = dynamic_cast<AddresseeIconViewItem*>(item);
-             
+
              if ((aItem) && (aItem->addressee().uid() == uid))
              {
                  mIconView->setSelected(aItem, selected);
@@ -268,7 +271,7 @@ void KAddressBookIconView::setSelected(QString uid, bool selected)
 void KAddressBookIconView::addresseeExecuted(QIconViewItem *item)
 {
     AddresseeIconViewItem *aItem = dynamic_cast<AddresseeIconViewItem*>(item);
-    
+
     if (aItem)
         emit executed(aItem->addressee().uid());
 }
@@ -285,8 +288,11 @@ void KAddressBookIconView::addresseeSelected()
         if (item->isSelected())
         {
             aItem = dynamic_cast<AddresseeIconViewItem*>(item);
-            emit selected(aItem->addressee().uid()); 
-            found = true;
+			if (aItem)
+			{
+                emit selected(aItem->addressee().uid());
+                found = true;
+			}
         }
     }
     

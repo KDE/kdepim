@@ -269,7 +269,7 @@ void KAddressBookTableView::addresseeSelected()
             found = true;
             ContactListViewItem *ceItem
                  = dynamic_cast<ContactListViewItem*>(item);
-             emit selected(ceItem->addressee().uid());
+            if ( ceItem ) emit selected(ceItem->addressee().uid());
         }
     }
 

@@ -165,7 +165,8 @@ void ConditionEditWidget::updateRule(KScoringRule *rule)
                       << "which isn't a SingleConditionWidget" << endl;
     } else {
       SingleConditionWidget *saw = dynamic_cast<SingleConditionWidget*>(w);
-      rule->addExpression(saw->createCondition());
+	  if (saw)
+	    rule->addExpression(saw->createCondition());
     }
   }
 }
@@ -322,9 +323,12 @@ void ActionEditWidget::updateRule(KScoringRule *rule)
                       << "which isn't a SingleActionWidget" << endl;
     } else {
       SingleActionWidget *saw = dynamic_cast<SingleActionWidget*>(w);
-      ActionBase *act = saw->createAction();
-      if (act)
-        rule->addAction(act);
+	  if (saw)
+	  {
+	  	ActionBase *act = saw->createAction();
+        if (act)
+          rule->addAction(act);
+      }
     }
   }
 }

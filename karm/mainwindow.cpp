@@ -367,8 +367,9 @@ bool MainWindow::queryClose()
 
 void MainWindow::contextMenuRequest( QListViewItem*, const QPoint& point, int )
 {
-    if ( QPopupMenu* pop = dynamic_cast<QPopupMenu*>(
-                    factory()->container( i18n( "task_popup" ), this ) ) )
+    QPopupMenu* pop = dynamic_cast<QPopupMenu*>(
+                                   factory()->container( i18n( "task_popup" ), this ) );
+    if ( pop )
       pop->popup( point );
 }
 

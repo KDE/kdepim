@@ -276,15 +276,21 @@ void CasioPVLink::write(Syncee::PtrList lis)
         kdDebug(5205) << syncee->type() << " found!" << endl;
         if (syncee->type() == QString::fromLatin1("AddressBookSyncee"))
         {
-          stream << (AddressBook::toXML(dynamic_cast<AddressBookSyncee*>(syncee)));
+		  AddressBookSyncee* abs = dynamic_cast<AddressBookSyncee*>(syncee);
+		  if ( abs )
+            stream << (AddressBook::toXML(abs));
         }
         else if (syncee->type() == QString::fromLatin1("EventSyncee"))
         {
-          stream << (Event::toXML(dynamic_cast<EventSyncee*>(syncee)));
+		  EventSyncee* es = dynamic_cast<EventSyncee*>(syncee);
+		  if ( es )
+          	stream << (Event::toXML(es));
         }
         else if (syncee->type() == QString::fromLatin1("TodoSyncee"))
         {
-          stream << (Todo::toXML(dynamic_cast<TodoSyncee*>(syncee)));
+		  TodoSyncee* ts = dynamic_cast<TodoSyncee*>(syncee)
+		  if (ts)
+          	stream << (Todo::toXML(ts));
         }
       }
       stream << "</pvdataentries>" << endl;

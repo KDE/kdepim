@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.
     Copyright (c) 2002 Anders Lund <anders.lund@lund.tdcadsl.dk>
                        Tobias Koenig <tokoe@kde.org>
@@ -131,7 +131,8 @@ QStringList SelectionPage::categories() const
 
   QListViewItemIterator it( mCategoriesView );
   for ( ; it.current(); ++it ) {
-    if ( dynamic_cast<QCheckListItem*>(it.current())->isOn() )
+    QCheckListItem qcli = dynamic_cast<QCheckListItem*>(it.current());
+    if ( qcli->isOn() )
       list.append( it.current()->text( 0 ) );
   }
 
@@ -160,7 +161,8 @@ void SelectionPage::filterChanged( int )
 
 void SelectionPage::categoryClicked( QListViewItem *i )
 {
-  if ( i && dynamic_cast<QCheckListItem*>( i )->isOn() )
+  QCheckListItem qcli = dynamic_cast<QCheckListItem*>( i );
+  if ( i && qcli->isOn() )
     mUseCategories->setChecked( true );
 }
 
