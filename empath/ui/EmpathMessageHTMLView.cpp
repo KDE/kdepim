@@ -113,6 +113,18 @@ EmpathMessageHTMLWidget::show(const QCString & s, bool isHTML)
 	setUnderlineLinks(c->readBoolEntry(EmpathConfig::KEY_UNDERLINE_LINKS));
 
 	QCString html(s);
+	if (html.isEmpty()) {
+		write(
+			"<HTML><BODY BGCOLOR=" +
+			QColorToHTML(empathWindowColour()) +
+			"><PRE>" +
+			i18n("This part is empty").ascii() +
+			"</PRE></BODY></HTML>");
+		setCursor(arrowCursor);
+		parse();
+		return;
+	}
+		
 	toHTML(html);
 	
 	begin();

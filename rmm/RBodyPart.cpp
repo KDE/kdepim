@@ -184,7 +184,7 @@ RBodyPart::parse()
 	rmmDebug("contentType.type() == " + contentType.type());
 	
 	// If the header say multipart, we'll need to know the boundary.
-	if (contentType.type() == "multipart") {
+	if (!stricmp(contentType.type(), "multipart")) {
 		
 		rmmDebug(" ==== This part is multipart ========================");
 	
@@ -193,7 +193,7 @@ RBodyPart::parse()
 		rmmDebug("Looking for boundary");
 		for (; it.current(); ++it) {
 		
-			if (it.current()->attribute() == "boundary")
+			if (!stricmp(it.current()->attribute(), "boundary"))
 				boundary_ = it.current()->value();
 		}
 		

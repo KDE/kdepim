@@ -18,6 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+// System includes
+#include <stdlib.h>
+
 // Qt includes
 #include <qheader.h>
 #include <qstring.h>
@@ -43,6 +46,8 @@
 #include "Empath.h"
 #include "EmpathUIUtils.h"
 #include "EmpathTask.h"
+	
+QListViewItem * EmpathMessageListWidget::lastSelected_ = 0;
 
 EmpathMessageListWidget::EmpathMessageListWidget(
 		QWidget * parent, const char * name)
@@ -50,6 +55,8 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 {
 	parent_ = (EmpathMainWindow *)parent;
 	wantScreenUpdates_ = false;
+	
+	maybeDrag_ = false;
 	
 	lastHeaderClicked_ = -1;
 
@@ -538,8 +545,10 @@ EmpathMessageListWidget::setSignalUpdates(bool yn)
 EmpathMessageListWidget::markAsRead(EmpathMessageListItem * item)
 {
 	RMM::MessageStatus status(item->status());
-	status |= RMM::Read;
-	setStatus(item, status);
+	EmpathURL u = EmpathURL(url_.mailboxName(), url_.folderPath(), item->id());
+	if (empath->mark(u, RMM::MessageStatus(item->status() ^ RMM::Read))) {
+		setStatus(item, RMM::MessageStatus(item->status() ^ RMM::Read));
+	}
 }
 
 	void
@@ -801,114 +810,229 @@ EmpathMarkAsReadTimer::s_timeout()
 
 	parent_->markAsRead(item_);	
 }
-
 	void
 EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 {
-	empathDebug("mousePressEvent");
+	// Ok, here's the method:
+	// 
+	// CASE 0:
+	// If a button other than right or left has been used, ignore.
+	// 
+	// CASE 1:
+	// If the right button has been used, we popup the menu.
+	// 
+	// So, we've got the left button.
+	// 
+	// CASE 2:
+	// If no modifier keys were used, deselect all, and select under
+	// cursor.
+	// 
+	// CASE 3:
+	// If just control key is pressed, toggle selection state of
+	// item under cursor.
+	// 
+	// CASE 4:
+	// If just shift key is pressed, find item above the one under cursor
+	// that's selected. If there is none, deselect all items (that means
+	// ones below that under cursor) and select item under cursor.
+	// 
+	// CASE 5:
+	// If there IS an item selected above that under cursor, deselect all
+	// items but that one, and then select all items from that one down to
+	// the one under cursor.
+	// 
+	// CASE 6:
+	// If control AND shift keys are pressed, find item above one under
+	// cursor that's selected. If there is none, clear all and select item
+	// under cursor.
+	// 
+	// CASE 7:
+	// If there IS an item selected above that under cursor, select all
+	// items from that above, to that under cursor.
 	
-	if (e->state() & QMouseEvent::ShiftButton) {
-		
-		QListViewItem * item = itemAt(e->pos());
-		
-		if (item == 0) {
-			empathDebug("Not over anything to drag");
-			return;
-		}
-		
-		EmpathMessageListItem * i = (EmpathMessageListItem *)item;
-			
-		empathDebug("Starting a drag");
-		QTextDrag * u  = new QTextDrag(i->id().copy(), this, "urlDrag");
-		CHECK_PTR(u);
-		
-		u->setPixmap(empathIcon("tree.png"), QPoint(-24, -24)); 
-		
-		empathDebug("Starting the drag copy");
-		u->dragCopy();
-	}
-}
-
-/*
-	void
-EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
-{
-	// Algorithm adapted from one written by Geri H. <ge_ha@yahoo.com>
 	
-	QListViewItem * lastSel = currentItem();
-	
-	newSel = itemAt( e->pos() );
-
-	if (e->button() != LeftButton)
+	// CASE 0: Neither right nor left buttons pressed
+	if (e->button() != LeftButton && e->button() != RightButton) {
+		empathDebug("CASE 0");
 		return;
+	}
 	
-	if (lastSel == 0 || !isSelected(lastSel)) {
+	// CASE 1: Right button pressed
+	
+	if (e->button() == RightButton) {
+		empathDebug("CASE 1");
+		messageMenu_.exec(QCursor::pos());
+		return;
+	}
+	
+	// Ok, it's the left button. We'll interject here and just set the
+	// flag to say we may be about to drag.
+	maybeDrag_ = true;
+	dragStart_ = e->pos();
+	
+	QListViewItem * item = itemAt(e->pos());
+
+	if (!item) {
+		empathDebug("No item under cursor");
+		return;
+	}
+	
+	// CASE 2: Left button pressed, but no modifier keys.
+	
+	if (e->state() == 0) {
 		
-		// new selection
+		empathDebug("CASE 2");
+		
+		clearSelection();
+		
 		setMultiSelection(false);
-		setSelected (newSel, true);
+		
+		setSelected(item, true);
+		lastSelected_ = item;
+		
 		return;
-	
+	}
+		
+	// CASE 3: Left button + control pressed
+	if (e->state() == ControlButton) {
+		empathDebug("CASE 3");
+		setMultiSelection(true);
+		
+		if (!item->isSelected())
+			lastSelected_ = item;
+
+		setSelected(item, !(item->isSelected()));
+
+		return;
 	}
 	
-	// if new postion select it
-	
-	if (isSelected(newSel))
-		return;
-	
+	if ((e->state() & ShiftButton) && (lastSelected_ == 0)) {
 		
-	if (e->state() == ControlButton) {
+		// CASE 4 and CASE 6:
+		// Shift button pressed, but no prior selection.
+		// Clear all selections, and select this only.
+		// For CASE 6, if control is pressed, toggle instead.
 		
-		setMultiSelection(TRUE);
-		setSelected ( newSel, TRUE);
-	
-	} else {
+		empathDebug("CASE 4/6");
 		
-		if (e->state() == ShiftButton) {
+		clearSelection();
+		
+		setMultiSelection(false);
+		
+		// For CASE 6:
+		if (e->state() & ControlButton) {
+		
+			if (!item->isSelected())
+				lastSelected_ = item;
+
+			setSelected(item, !(item->isSelected()));
 			
-			setMultiSelection(true);
-			
-			if ((itemPos(lastSel)-itemPos(newSel)) > 0) {
-				
-				QListViewItem *item = lastSel->itemAbove();
-				
-				do {
-					setSelected(item, true);
-					
-					if (item == newSel)
-						break;
-					
-					item = item->itemAbove();
-				
-				} while (item);
-			
-			} else {
-			
-				QListViewItem *item = lastSel->itemBelow();
-				
-				do {
-					setSelected(item, true);
-					
-					if (item == newSel)
-						break;
-					
-					item = item->itemBelow();
-				
-				} while (item);
-			}
 		} else {
-			// unselect current Item
-			if (isMultiSelection())
-				unselect_all();
-			setSelected (newSel, true);
+		
+			// For CASE 4:
+			setSelected(item, true);
+			lastSelected_ = item;
 		}
-	} else {
-		if (e->state() != ControlButton)
-			wasSelected = true;
-		else
-			setSelected (newSel, false);
+		
+		return;
+	}
+	
+	if (e->state() & ShiftButton) {
+		
+		// CASE 5, CASE 7:
+		// There is an item already selected, as the above test didn't
+		// hold.
+		
+		setMultiSelection(true);
+		
+		if (!(e->state() & ControlButton)) {
+			
+			// CASE 5:
+			// Control button has not been held, so we must clear the
+			// selection.
+			
+			clearSelection();
+			
+		} else {
+			
+			lastSelected_ = item;
+		}
+			
+		QListViewItem * i = lastSelected_;
+		
+		// First see if the item we're looking at is below the last selected.
+		// If so, work down. Otherwise, er... work up.
+		if (i->itemPos() < item->itemPos()) {
+		
+			while (i && i != item) {
+				
+				setSelected(i, true);
+
+				i = i->itemBelow();
+			}
+			
+		} else {
+	
+			while (i && i != item) {
+				
+				setSelected(i, true);
+
+				i = i->itemAbove();
+			}
+		}
+
+		item->setSelected(true);
 	}
 }
 
-*/
+	void
+EmpathMessageListWidget::mouseReleaseEvent(QMouseEvent *)
+{
+	maybeDrag_ = false;
+}
+
+	void
+EmpathMessageListWidget::mouseMoveEvent(QMouseEvent * e)
+{
+	empathDebug("Mouse move event in progress");
+	if (!maybeDrag_) return;
+	
+	empathDebug("We may be dragging");
+	
+	QPoint p = e->pos();
+	
+	int deltax = abs(dragStart_.x() - p.x());
+	int deltay = abs(dragStart_.y() - p.y());
+	
+	empathDebug("The delta is " + QString().setNum(deltax + deltay));
+	
+	if ((deltax + deltay) < 30) { // FIXME: Hardcoded
+		// Ignore, we haven't moved the cursor far enough.
+		return;
+	}
+	
+	empathDebug("Ok, we're dragging");
+	
+	maybeDrag_ = false;
+	
+	QListViewItem * item = itemAt(dragStart_);
+	
+	if (item == 0) {
+		empathDebug("Not over anything to drag");
+		return;
+	}
+	
+	EmpathMessageListItem * i = (EmpathMessageListItem *)item;
+		
+	empathDebug("Starting a drag");
+	char * c = new char[i->id().length() + 1];
+	strcpy(c, i->id().ascii());
+	QTextDrag * u  = new QTextDrag(c, this, "urlDrag");
+	CHECK_PTR(u);
+	
+	u->setPixmap(empathIcon("tree.png")); 
+	
+	empathDebug("Starting the drag copy");
+	u->dragCopy();
+}
 

@@ -94,6 +94,7 @@ EmpathMessageStructureWidget::_addChildren(RBodyPart * p, QListViewItem * i)
 EmpathMessageStructureWidget::s_currentChanged(QListViewItem * item)
 {
 	empathDebug("s_currentChanged() called");
+	if (item->depth() == 0) return;
 	EmpathMessageStructureItem * i = (EmpathMessageStructureItem *)item;
 	emit(partChanged(i->part()));
 }

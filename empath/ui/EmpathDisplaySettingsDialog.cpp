@@ -270,9 +270,9 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	cb_timer_->setFixedHeight(h);
 	
 	KQuickHelp::add(cb_timer_, i18n(
-			"If you check this, messages will be marked"
-			"as read after you've been looking at them for"
-			"the time specified"));
+			"If you check this, messages will be marked\n"
+			"as read after you've been looking at them for\n"
+			"the time specified\n"));
 	
 	sb_timer_ =
 		new QSpinBox(0, 60, 1, w_list_, "sb_timer");
@@ -282,9 +282,9 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	sb_timer_->setSuffix(" " + i18n("seconds"));
 	
 	KQuickHelp::add(sb_timer_, i18n(
-			"If you check this, messages will be marked"
-			"as read after you've been looking at them for"
-			"the time specified"));
+			"If you check this, messages will be marked\n"
+			"as read after you've been looking at them for\n"
+			"the time specified\n"));
 
 /////////////////////////////////////////////////////////////////////////
 	
@@ -351,10 +351,10 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	CHECK_PTR(topLevelLayout_);
 
 	listGroupLayout_			= new QGridLayout(w_list_, 4, 3, 0, 10);
-	CHECK_PTR(viewGroupLayout_);
+	CHECK_PTR(listGroupLayout_);
 	
 	viewGroupLayout_			= new QGridLayout(w_view_, 6, 2, 0, 10);
-	CHECK_PTR(listGroupLayout_);
+	CHECK_PTR(viewGroupLayout_);
 
 	topLevelLayout_->setRowStretch(0, 4);
 	topLevelLayout_->setRowStretch(1, 6);

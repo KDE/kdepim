@@ -202,11 +202,9 @@ EmpathMessageViewWidget::go()
 				empathDebug("   Type of this part is \"" + t.type() + "\"");
 				empathDebug("SubType of this part is \"" + t.subType() + "\"");
 
-				if (!stricmp(t.type(),
-							RMM::mimeTypeEnum2Str(RMM::MimeTypeText))) {
+				if (!stricmp(t.type(), "text")) {
 					
-					if (!stricmp(t.subType(),
-							RMM::mimeSubTypeEnum2Str(RMM::MimeSubTypeHTML))) {
+					if (!stricmp(t.subType(), "html")) {
 
 						empathDebug("Using this part as body");
 
@@ -216,8 +214,7 @@ EmpathMessageViewWidget::go()
 						messageWidget_->show(s, true);
 						return;
 	
-					} else if (!stricmp(t.subType(),
-							RMM::mimeSubTypeEnum2Str(RMM::MimeSubTypePlain))) {
+					} else if (!stricmp(t.subType(), "plain")) {
 					
 						empathDebug("Using this part as body");
 

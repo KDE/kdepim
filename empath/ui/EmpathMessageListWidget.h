@@ -30,6 +30,7 @@
 #include <qtimer.h>
 #include <qobject.h>
 #include <qdragobject.h>
+#include <qpoint.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -91,6 +92,8 @@ class EmpathMessageListWidget : public QListView
 	protected:
 		
 		void mousePressEvent(QMouseEvent *);
+		void mouseMoveEvent(QMouseEvent *);
+		void mouseReleaseEvent(QMouseEvent *);
 		
 	protected slots:
 	
@@ -166,6 +169,11 @@ class EmpathMessageListWidget : public QListView
 		EmpathMarkAsReadTimer * markAsReadTimer_;
 		
 		void markAsRead(EmpathMessageListItem *);
+		
+		static QListViewItem * lastSelected_;
+		
+		bool maybeDrag_;
+		QPoint dragStart_;
 };
 
 #endif
