@@ -61,6 +61,7 @@ class KFolderTreeItem : public KListViewItem
       Local, 
       News,
       CachedImap,
+      Search,
       NONE
     };
   
@@ -137,7 +138,7 @@ class KFolderTree : public KListView
   Q_OBJECT
 
   public:
-    KFolderTree( QWidget *parent, const char *name = NULL );
+    KFolderTree( QWidget *parent, const char *name=0 );
 
     /** registers MIMETypes that are handled
       @param mimeType the name of the MIMEType
