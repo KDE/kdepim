@@ -14,7 +14,7 @@
 class QListView;
 class QCheckBox;
 class QComboBox;
-
+class QPushButton;
 class KConfig;
 class KURLRequester;
 
@@ -60,7 +60,7 @@ class KSyncView : public QWidget
     void reloadSyncees();
     void finishSync();
     void jobFinished(KIO::Job *job);
-   
+    void slotSelectionChanged();  
   private:
     void checkFinish();
     KSyncee *createSyncee(const KURL &);
@@ -78,6 +78,7 @@ class KSyncView : public QWidget
     QPtrList<KTempFile> mTmpFiles;
     int mLoadCount;
     bool mLoadError;
+    QPushButton *showButton,*removeButton;
 };
 
 

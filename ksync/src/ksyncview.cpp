@@ -29,12 +29,12 @@ class SynceeListItem : public QListViewItem {
   public:
     SynceeListItem(QListView *lv,KURL url) : QListViewItem(lv,url.url()),
       mUrl(url) {}
-    
+
     void setSyncee(KSyncee *syncee) { mSyncee = syncee; }
     KSyncee *syncee() { return mSyncee; }
-    
+
     KURL url() { return mUrl; }
-    
+
   private:
     KSyncee *mSyncee;
     KURL mUrl;
@@ -57,22 +57,23 @@ KSyncView::KSyncView(QWidget *parent, const char *name) :
   QPushButton *addButton = new QPushButton(i18n("Add Source..."),this);
   connect(addButton,SIGNAL(clicked()),SLOT(addSource()));
 
-  QPushButton *removeButton = new QPushButton(i18n("Remove Source"),this);
+  removeButton = new QPushButton(i18n("Remove Source"),this);
   connect(removeButton,SIGNAL(clicked()),SLOT(removeSource()));
 
-  QPushButton *showButton = new QPushButton(i18n("Show Source..."),this);
+  showButton = new QPushButton(i18n("Show Source..."),this);
   connect(showButton,SIGNAL(clicked()),SLOT(showSource()));
 
   mSourceListView = new QListView(this);
   mSourceListView->addColumn(i18n("URL"));
 
+  connect(mSourceListView,SIGNAL(selectionChanged ()),this,SLOT(slotSelectionChanged()));
   mSyncBackCheck = new QCheckBox(i18n("Write synced data back to sources."),
                                  this);
   connect(mSyncBackCheck,SIGNAL(clicked()),SLOT(checkSyncBack()));
 
   QLabel *targetLabel = new QLabel(i18n("Target: "),this);
   mTargetReq = new KURLRequester(this);
-  
+
   QPushButton *syncButton = new QPushButton(i18n("Sync"),this);
   connect(syncButton,SIGNAL(clicked()),SLOT(doSync()));
 
@@ -91,6 +92,7 @@ KSyncView::KSyncView(QWidget *parent, const char *name) :
   topLayout->addMultiCellWidget(targetLabel,4,4,0,0);
   topLayout->addMultiCellWidget(mTargetReq,4,4,1,2);
   topLayout->addMultiCellWidget(syncButton,5,5,0,2);
+  slotSelectionChanged();
 }
 
 KSyncView::~KSyncView()
@@ -101,7 +103,7 @@ void KSyncView::print(QPrinter *pPrinter)
 {
   QPainter printpainter;
   printpainter.begin(pPrinter);
-	
+
   // TODO: add your printing code here
 
   printpainter.end();
@@ -132,35 +134,42 @@ void KSyncView::showSource()
     KSyncEntry *entry = syncee->firstEntry();
     while(entry) {
       kdDebug() << "**  '" << entry->name() << "'" << endl;
-      
+
       entry = syncee->nextEntry();
     }
     delete syncee;
   }
 }
 
+void KSyncView::slotSelectionChanged()
+{
+    bool state=(mSourceListView->currentItem()!=0);
+    showButton->setEnabled(state);
+    removeButton->setEnabled(state);
+}
+
 void KSyncView::doSync()
 {
   delete mSyncer;
   mSyncer = new KSyncer(new KSyncUiKde(this));
-  
+
   mLoadCount = 0;
   mLoadError = false;
-  
+
   SynceeListItem *item = dynamic_cast<SynceeListItem *>(mSourceListView->firstChild());
   while(item) {
     KSyncee *syncee = createSyncee(item->url());
     item->setSyncee(syncee);
     mSyncer->addSyncee(syncee);
-    
+
     item = (SynceeListItem *)item->nextSibling();
   }
-  
+
   QString url = mTargetReq->url();
 
-  kdDebug() << "target url: " << url << endl;    
+  kdDebug() << "target url: " << url << endl;
   mTarget = createSyncee(KURL(url));
-  
+
   finishSync();
 }
 
@@ -264,7 +273,7 @@ void KSyncView::synceeLoadError()
   kdDebug() << "KSyncView::synceeLoadError()" << endl;
 
   mLoadError = true;
-  
+
   KMessageBox::error(this,i18n("Can't load syncee."),i18n("Load Error"));
 }
 
@@ -308,9 +317,9 @@ void KSyncView::writeTypeConfig(KConfig *config)
     sources.append(item->text(0));
     item = item->nextSibling();
   }
-  
+
   QString typeString = mTypeCombo->text(mCurrentType);
-  
+
   config->writeEntry("Sources_" + typeString,sources);
   config->writeEntry("Target_" + typeString,mTargetReq->url());
 
