@@ -1,4 +1,4 @@
-if /bin/false ; then
+if test -z "notazerostring" ; then
 
 dnl
 dnl Configure.in.in for the JPilotPlugin proxy conduit for KPilot.

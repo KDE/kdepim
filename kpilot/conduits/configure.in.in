@@ -163,17 +163,26 @@ AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
 ])
 
 AC_DEFUN(KPILOT_CHECK_PERL,[HAVE_PERL=0
+AC_MSG_CHECKING([for Perl embedding])
 if perl -MExtUtils::Embed -e ccopts > /dev/null 2> /dev/null ; then
 	PERL_CFLAGS=`perl -MExtUtils::Embed -e ccopts 2> /dev/null`
 	PERL_LDFLAGS=`perl -MExtUtils::Embed -e ldopts 2> /dev/null`
 	HAVE_PERL=1
+	AC_MSG_RESULT(yes)
 else
 	PERL_CFLAGS=""
 	PERL_LDFLAGS=""
+	AC_MSG_RESULT(no)
 fi
 AC_SUBST(PERL_CFLAGS)
 AC_SUBST(PERL_LDFLAGS)
 AM_CONDITIONAL(include_perl, test "$HAVE_PERL" = 1)
+])
+
+AC_DEFUN(KPILOT_CHECK_PYTHON,[HAVE_PYTHON=0
+AC_MSG_CHECKING([for Python embedding])
+AM_CONDITIONAL(include_python, test "$HAVE_PYTHON" = 1)
+AC_MSG_RESULT(N/A)
 ])
 
 dnl ----------------------------------------------------------------------------
@@ -185,3 +194,4 @@ dnl ----------------------------------------------------------------------------
 KPILOT_CHECK_MAL
 KPILOT_CHECK_KABC
 KPILOT_CHECK_PERL
+KPILOT_CHECK_PYTHON
