@@ -1,4 +1,4 @@
-/* pilotDateEntry.h			KPilot
+/* pilotDateEntry.h	-*- C++ -*-	KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
@@ -56,10 +56,13 @@
 class PilotDateEntry : public PilotAppCategory
 {
 public:
-  PilotDateEntry(void) : PilotAppCategory() 
-    { memset(&fAppointmentInfo, 0, sizeof(struct Appointment)); }
+  PilotDateEntry(void);
   PilotDateEntry(PilotRecord* rec);
   ~PilotDateEntry() { free_Appointment(&fAppointmentInfo); }
+
+  PilotDateEntry(const PilotDateEntry &e);
+
+  PilotDateEntry& operator=(const PilotDateEntry &e);
   
   PilotRecord* pack() { return PilotAppCategory::pack(); }
   
@@ -116,10 +119,16 @@ public:
   void setExceptions(struct tm *e) { fAppointmentInfo.exception = e; }
 
   void  setDescription(const char* desc);
-  char* getDescription() { return fAppointmentInfo.description; }
+  const char* getDescription() const { return fAppointmentInfo.description; }
 
   void  setNote(const char* note);
-  char* getNote() { return fAppointmentInfo.note; }
+  const char* getNote() const { return fAppointmentInfo.note; }
+
+	bool isMultiDay() const 
+	{
+		return ((fAppointmentInfo.repeatType == repeatDaily) &&
+			fAppointmentInfo.event);
+	}
   
 protected:
   void *pack(void *, int *);
@@ -127,6 +136,8 @@ protected:
   
 private:
   struct Appointment fAppointmentInfo;
+
+	void _copyExceptions(const PilotDateEntry &e);
 };
 
 
@@ -140,6 +151,9 @@ private:
 
 
 // $Log$
+// Revision 1.9  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.8  2001/04/01 17:32:06  adridg
 // Fiddling around with date properties
 //

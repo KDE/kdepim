@@ -86,53 +86,30 @@
 #define KPILOT_AREA	5510
 #define DAEMON_AREA	5511
 #define CONDUIT_AREA	5512
+#define LIBPILOTDB_AREA	5513
 
 #define DEBUGKPILOT	kdDebug(KPILOT_AREA)
 #define DEBUGDAEMON	kdDebug(DAEMON_AREA)
 #define DEBUGCONDUIT	kdDebug(CONDUIT_AREA)
+#define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 
 
-#define KPILOT_VERSION	"4.2.2"
+#define KPILOT_VERSION	"4.2.3"
 
 #ifdef DEBUG
-// KPilot contains two kinds of debugging messages:
+// * KPilot debugging code looks like:
 //
-// * Old-style, with constructions like
-//
-// #ifdef DEBUG
-//	if (debug_level & UI_MINOR)
-//	{
-//		kdDebug() << fname
-//			<< ": Creating dialog window." << endl;
-//	}
-// #endif
-//
-// These debugging messages are controlled by the debug_level,
-// which can be set by the user with --debug. The number of 
-// debug levels is confusing, and practice teaches that you
-// either want debug_level 0xffffffff or 0. So this is deprecated
-// but not yet removed from all the code.
-//
-//
-// * New-style, which looks like
-//
-//	DEBUGKPILOT << fname << ": Creating dialog window." << endl;
+//      DEBUGKPILOT << fname << ": Creating dialog window." << endl;
 //
 // This uses KDE's debug areas (accessible through kdebugdialog)
-// to keep track of what to print. No extra #if or if().
+// to keep track of what to print. No extra #if or if(), since the
+// global NDEBUG flag changes all the kdDebug() calls into nops and
+// the compiler optimizes them away. There are four DEBUG* macros,
+// defined above. Use the areas *_AREA in calls to kdWarning() or
+// kdError() to make sure the right output is generated.
 
 
 
-
-// (Old-style) These are three-bit fields, basically we're defining
-// 1<<n; 3<<n; 7<<n for some n.
-//
-// This allows better selection of what you want debugged.
-//
-//
-#define UI_MAJOR	(2+4+8)
-#define UI_MINOR	(4+8)
-#define UI_TEDIOUS	(8)
 
 // (Old-style) Debug level is set to some bit pattern; if any 
 // bit in one of the debug masks (SYNC_MAJOR, for
@@ -141,28 +118,18 @@
 //
 //
 extern int debug_level;
-
-#define DB_MAJOR	(16+32+64)
-#define DB_MINOR	(32+64)
-#define DB_TEDIOUS	(64)
-
-#define SYNC_MAJOR	(128+256+512)
-#define SYNC_MINOR	(256+512)
-#define SYNC_TEDIOUS	(512)
+extern const char *debug_spaces;
 
 // Both old and new-style debugging suggest (insist?) that
 // every function be started with the macro FUNCTIONSETUP,
 // which outputs function and line information on every call.
 //
 //
-#define DEBUG_FUNCTIONS	(1)
 #define FUNCTIONSETUP	static const char *fname=__FUNCTION__; \
-			if (debug_level & DEBUG_FUNCTIONS) { kdDebug() << \
-			fname << tabs+(strlen(fname)>>3) \
+			if (debug_level) { kdDebug() << \
+			fname << debug_spaces+(strlen(fname)) \
 				<< "(" << __FILE__ << ":" << \
-				__LINE__ << ")\n"; } 
-
-extern const char *tabs;		// for indentation purposes in debug
+				__LINE__ << ")\n"; }
 
 class kdbgstream;
 class KConfig;
@@ -171,10 +138,10 @@ class KConfig;
 // added in an ad-hoc fashion.
 //
 //
-void listConfig(kdbgstream&,KConfig&);
-void listStrList(kdbgstream&,const QStringList&);
-void listStrList(kdbgstream&,QStrList&);
-QString qstringExpansion(const QString&);
+void listConfig(kdbgstream &, KConfig &);
+void listStrList(kdbgstream &, const QStringList &);
+void listStrList(kdbgstream &, QStrList &);
+QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
@@ -200,9 +167,13 @@ QString charExpansion(const char *);
 //
 #define FUNCTIONSETUP
 #ifdef TEST_DEBUG
-class debugName { public: debugName(int i) : j(i) {} ; int j; } ;
+class debugName {
+public:
+	debugName(int i) : j(i) { };
+	int j;
+};
 extern const debugName fname;
-kndbgstream operator << (kndbgstream s, const debugName&);
+kndbgstream operator << (kndbgstream s, const debugName &);
 #else
 extern const int fname;
 #endif
@@ -216,6 +187,12 @@ extern const int fname;
 //
 //
 #define SPACING		(10)
+
+// Semi-Standard safe-free expression. Argument a may be evaluated more
+// than once though, so be careful.
+//
+//
+#define KPILOT_FREE(a)	{ if (a) { ::free(a); a=0L; } }
 #else
 #ifdef DEBUG
 #warning "File doubly included"
@@ -224,6 +201,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.26  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.25  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //

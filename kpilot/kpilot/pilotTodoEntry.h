@@ -1,4 +1,4 @@
-/* pilotTodoEntry.h			KPilot
+/* pilotTodoEntry.h	-*- C++ -*-		KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
@@ -56,16 +56,18 @@
 class PilotTodoEntry : public PilotAppCategory
 {
 public:
-  PilotTodoEntry(void) : PilotAppCategory() 
-    { memset(&fTodoInfo, 0, sizeof(struct ToDo)); }
+  PilotTodoEntry(void);
+  PilotTodoEntry(const PilotTodoEntry &e);
   PilotTodoEntry(PilotRecord* rec);
   ~PilotTodoEntry() { free_ToDo(&fTodoInfo); }
+
+  PilotTodoEntry& operator=(const PilotTodoEntry &e);
   
   PilotRecord* pack() { return PilotAppCategory::pack(); }
   
   struct tm getDueDate() const { return fTodoInfo.due; }
   void setDueDate(struct tm& d) { fTodoInfo.due = d; }
-	const struct tm *getDueDate_p() const { return &fTodoInfo.due; } 
+  const struct tm *getDueDate_p() const { return &fTodoInfo.due; } 
   
   int getIndefinite() const { return fTodoInfo.indefinite; }
   void setIndefinite(int i) { fTodoInfo.indefinite = i; }
@@ -77,10 +79,10 @@ public:
   void setComplete(int c) { fTodoInfo.complete = c; }
 
   void  setDescription(const char* desc);
-  char* getDescription() { return fTodoInfo.description; }
+  const char* getDescription() const { return fTodoInfo.description; }
 
   void  setNote(const char* note);
-  char* getNote() { return fTodoInfo.note; }
+  const char* getNote() const { return fTodoInfo.note; }
   
 protected:
   void *pack(void *, int *);
@@ -100,6 +102,9 @@ private:
 
 
 // $Log$
+// Revision 1.8  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.7  2001/04/01 17:32:06  adridg
 // Fiddling around with date properties
 //

@@ -26,55 +26,128 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 #include <stdlib.h>
+
+#ifndef _KDEBUG_H_
+#include <kdebug.h>
+#endif
+
+#ifndef _KPILOT_OPTIONS_H
+#include "options.h"
+#endif
+
 #include "pilotTodoEntry.h"
 
 static const char *pilotTodoEntry_id =
 	"$Id$";
 
-PilotTodoEntry::PilotTodoEntry(PilotRecord* rec)
-  : PilotAppCategory(rec)
+
+PilotTodoEntry::PilotTodoEntry(void):PilotAppCategory()
 {
-  unpack_ToDo(&fTodoInfo, (unsigned char*)rec->getData(), rec->getLen());
-  (void) pilotTodoEntry_id;
+	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 }
 
-void* PilotTodoEntry::pack(void *buf, int *len)
+
+PilotTodoEntry::PilotTodoEntry(PilotRecord * rec):PilotAppCategory(rec)
 {
-  int i;
-  i = pack_ToDo(&fTodoInfo, (unsigned char*)buf, *len);
-  *len = i;
-  return buf;
+	unpack_ToDo(&fTodoInfo, (unsigned char *) rec->getData(),
+		rec->getLen());
+	(void) pilotTodoEntry_id;
 }
 
-void PilotTodoEntry::setDescription(const char* desc)
+
+PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotAppCategory(e)
 {
-  if(fTodoInfo.description)
-    free(fTodoInfo.description);
-  if (desc)
-    {
-      fTodoInfo.description = (char*)malloc(strlen(desc) + 1);
-      strcpy(fTodoInfo.description, desc);
-    }
-  else
-    fTodoInfo.description = 0L;
+	::memcpy(&fTodoInfo, &e.fTodoInfo, sizeof(fTodoInfo));
+	// See PilotDateEntry::operator = for details
+	fTodoInfo.description = 0L;
+	fTodoInfo.note = 0L;
+
+	setDescription(e.fTodoInfo.description);
+	setNote(e.fTodoInfo.note);
+
+}				// end of copy constructor
+
+
+PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
+{
+	if (this != &e)
+	{
+		KPILOT_FREE(fTodoInfo.description);
+		KPILOT_FREE(fTodoInfo.note);
+
+		::memcpy(&fTodoInfo, &e.fTodoInfo, sizeof(fTodoInfo));
+		// See PilotDateEntry::operator = for details
+		fTodoInfo.description = 0L;
+		fTodoInfo.note = 0L;
+
+		setDescription(e.fTodoInfo.description);
+		setNote(e.fTodoInfo.note);
+
+	}
+
+	return *this;
+}				// end of assignment operator
+
+void *PilotTodoEntry::pack(void *buf, int *len)
+{
+	int i;
+
+	i = pack_ToDo(&fTodoInfo, (unsigned char *) buf, *len);
+	*len = i;
+	return buf;
 }
 
-void PilotTodoEntry::setNote(const char* note)
+void PilotTodoEntry::setDescription(const char *desc)
 {
-  if(fTodoInfo.note)
-    free(fTodoInfo.note);
-  if (note)
-    {
-      fTodoInfo.note = (char*)malloc(strlen(note) + 1);
-      strcpy(fTodoInfo.note, note);
-    }
-  else
-    fTodoInfo.note = 0L;
+	KPILOT_FREE(fTodoInfo.description);
+	if (desc)
+	{
+		fTodoInfo.description = (char *)::malloc(::strlen(desc) + 1);
+		if (fTodoInfo.description)
+		{
+			::strcpy(fTodoInfo.description, desc);
+		}
+		else
+		{
+			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+				<< ": malloc() failed, description not set"
+				<< endl;
+		}
+	}
+	else
+	{
+		fTodoInfo.description = 0L;
+	}
+}
+
+void PilotTodoEntry::setNote(const char *note)
+{
+	KPILOT_FREE(fTodoInfo.note);
+	if (note)
+	{
+		fTodoInfo.note = (char *)::malloc(::strlen(note) + 1);
+		if (fTodoInfo.note)
+		{
+			::strcpy(fTodoInfo.note, note);
+		}
+		else
+		{
+			kdError(LIBPILOTDB_AREA) << __FUNCTION__
+				<< ": malloc() failed, note not set" << endl;
+		}
+	}
+	else
+	{
+		fTodoInfo.note = 0L;
+	}
 }
 
 
 
 // $Log$
+// Revision 1.7  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.6  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
