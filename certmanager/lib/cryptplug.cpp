@@ -2022,8 +2022,10 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
   gpgme_data_release( gCiphertext );
   
   decryptresult = gpgme_op_decrypt_result( ctx );
+#ifdef HAVE_GPGME_WRONG_KEY_USAGE
   if( decryptresult->wrong_key_usage )
     bWrongKeyUsage = true;
+#endif
   
   if( err ) {
     fprintf( stderr, "\ngpgme_op_decrypt_verify() returned this error code:  %i\n\n", err );
