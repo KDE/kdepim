@@ -120,7 +120,7 @@ namespace KSieve {
       err = i18n("Argument \"%1\" Repeated").arg(mStringOne);
       break;
     case CommandOrderingConstraintViolation:
-      err = i18n("Command \"%1\" violates command ordering contraints").arg(mStringOne);
+      err = i18n("Command \"%1\" violates command ordering constraints").arg(mStringOne);
       break;
 
       // runtime errors:

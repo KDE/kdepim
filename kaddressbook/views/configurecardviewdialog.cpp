@@ -228,7 +228,7 @@ void CardViewLookNFeelPage::initGUI()
   loTab->setStretchFactor( new QWidget( loTab ), 1 );
   
   QWhatsThis::add( sbMargin, i18n(
-        "The item margin is the distance (in pixels) between the item edge and the item data. Most notacibly, "
+        "The item margin is the distance (in pixels) between the item edge and the item data. Most noticeably, "
         "incrementing the item margin will add space between the focus rectangle and the item data."
         ) );
   QWhatsThis::add( lMargin, QWhatsThis::textFor( sbMargin ) );

@@ -266,7 +266,7 @@ void ExchangeMonitor::slotUnsubscribeResult( KIO::Job * job )
   ID id = subscriptionID.text().toLong( &ok );
   if ( ! status.text().contains( "200" ) || !ok) {
     kdError() << "UNSUBSCRIBE result is not 200 or no subscription ID found" << endl;
-    emit error( ExchangeClient::ServerResponseError, "UNSUBSCRIBE yields an error reponse: \n" + response.toString() );
+    emit error( ExchangeClient::ServerResponseError, "UNSUBSCRIBE yields an error response: \n" + response.toString() );
   }
 
   mSubscriptionMap.remove( id );
