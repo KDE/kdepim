@@ -31,71 +31,8 @@
 
 #include <klibloader.h>
 
-#include "plugin.h"
-#include "syncAction.h"
-
-class KNotesWidget;
 class KInstance;
 class KAboutData;
-
-class KNotesAction : public ConduitAction
-{
-Q_OBJECT
-public:
-	KNotesAction(
-		KPilotDeviceLink *o,
-		const char *n = 0L,
-		const QStringList &a = QStringList() );
-	virtual ~KNotesAction();
-
-	enum Status { Init,
-		NewNotesToPilot,
-		Cleanup,
-		Done } ;
-	virtual QString statusString() const;
-
-public slots:
-	virtual void exec();
-
-protected:
-	bool knotesRunning() const;
-
-	/**
-	* For test mode -- just list the notes KNotes has.
-	*/
-	void listNotes();
-
-	/**
-	* For actual processing. These are called by process
-	* and it is critical that fP->fIndex is set properly.
-	*/
-	void getAppInfo();
-	void addNewNoteToPilot();
-	void cleanupMemos();
-
-protected slots:
-	void process();
-
-private:
-	class KNotesActionPrivate;
-	KNotesActionPrivate *fP;
-} ;
-
-class KNotesWidgetSetup : public ConduitConfig
-{
-Q_OBJECT
-public:
-	KNotesWidgetSetup(QWidget *,const char *,const QStringList &);
-	virtual ~KNotesWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-private:
-	KNotesWidget *fConfigWidget;
-} ;
 
 class KNotesConduitFactory : public KLibFactory
 {
@@ -125,6 +62,9 @@ void *init_libknotesconduit();
 } ;
 
 // $Log$
+// Revision 1.2  2001/10/10 21:42:09  adridg
+// Actually do part of a sync now
+//
 // Revision 1.1  2001/10/08 22:27:41  adridg
 // New ui, moved to lib-based conduit
 //
