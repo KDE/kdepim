@@ -294,9 +294,19 @@ bool Incidence::loadAttribute( QDomElement& element )
   } else if ( tagName == "alarm" )
     // Alarms should be minutes before. Libkcal uses event time + alarm time
     setAlarm( - element.text().toInt() );
-  else
-    return KolabBase::loadAttribute( element );
-
+  else if ( tagName == "x-custom" )
+    loadCustomAttributes( element );
+  else {
+    bool ok = KolabBase::loadAttribute( element );
+    if ( !ok ) {
+        // Unhandled tag - save for later storage
+        kdDebug() << "Saving unhandled tag " << element.tagName() << endl;
+        Custom c;
+        c.key = QCString( "X-KDE-KolabUnhandled-" ) + element.tagName().latin1();
+        c.value = element.text();
+        mCustomList.append( c );
+    }
+  }
   // We handled this
   return true;
 }
@@ -321,7 +331,35 @@ bool Incidence::saveAttributes( QDomElement& element ) const
     int alarmTime = qRound( -alarm() );
     writeString( element, "alarm", QString::number( alarmTime ) );
   }
+  saveCustomAttributes( element );
   return true;
+}
+
+void Incidence::saveCustomAttributes( QDomElement& element ) const
+{
+  QValueList<Custom>::ConstIterator it = mCustomList.begin();
+  for ( ; it != mCustomList.end(); ++it ) {
+    QString key = (*it).key;
+    Q_ASSERT( !key.isEmpty() );
+    if ( key.startsWith( "X-KDE-KolabUnhandled-" ) ) {
+      key = key.mid( strlen( "X-KDE-KolabUnhandled-" ) );
+      writeString( element, key, (*it).value );
+    } else {
+      // Let's use attributes so that other tag-preserving-code doesn't need sub-elements
+      QDomElement e = element.ownerDocument().createElement( "x-custom" );
+      element.appendChild( e );
+      e.setAttribute( "key", key );
+      e.setAttribute( "value", (*it).value );
+    }
+  }
+}
+
+void Incidence::loadCustomAttributes( QDomElement& element )
+{
+  Custom custom;
+  custom.key = element.attribute( "key" ).latin1();
+  custom.value = element.attribute( "value" );
+  mCustomList.append( custom );
 }
 
 static KCal::Attendee::PartStat attendeeStringToStatus( const QString& s )
@@ -534,6 +572,16 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     setRecurrence( incidence->recurrence() );
     mRecurrence.exclusions = incidence->exDates();
   }
+
+  // Unhandled tags and other custom properties (see libkcal/customproperties.h)
+  const QMap<QCString, QString> map = incidence->customProperties();
+  QMap<QCString, QString>::ConstIterator cit = map.begin();
+  for ( ; cit != map.end() ; ++cit ) {
+    Custom c;
+    c.key = cit.key();
+    c.value = cit.data();
+    mCustomList.append( c );
+  }
 }
 
 static QBitArray daysListToBitArray( const QStringList& days )
@@ -632,6 +680,11 @@ void Incidence::saveTo( KCal::Incidence* incidence )
 
     incidence->setExDates( mRecurrence.exclusions );
   }
+
+  for( QValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
+    incidence->setNonKDECustomProperty( (*it).key, (*it).value );
+  }
+
 }
 
 QString Incidence::productID() const

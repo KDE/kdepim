@@ -164,9 +164,7 @@ bool Event::loadXML( const QDomDocument& document )
       continue;
     if ( n.isElement() ) {
       QDomElement e = n.toElement();
-      if ( !loadAttribute( e ) )
-        // TODO: Unhandled tag - save for later storage
-        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+      loadAttribute( e );
     } else
       kdDebug() << "Node is not a comment or an element???" << endl;
   }
