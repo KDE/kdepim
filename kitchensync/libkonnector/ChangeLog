@@ -1,9 +1,0 @@
-2002-02-08  Holger Freyther <freyther@kde.org>
-	* The recent days I began to implement the interface
-	* Kapabilities, KDevice are done
-	* Konnectors public interface will not change drastic I think
-	  maybe in the regards of having postprocessors...
-
-2002-01-15  Holger Freyther <freyther@kde.org>
-	* First checkin of the interface and helper
-	  classes. All not finished.
