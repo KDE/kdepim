@@ -2637,7 +2637,7 @@ but nothing happens.  What else do I need to do?</para>
 <question>
 <para>Can I use freebusy-time with &korganizer;?</para>
 </question>
-<answer><para>No, sorry. This is not implemented yet, but planned for one of 
+<answer><para>Unfortunately this is not implemented yet, but planned for one of 
 the next releases.</para>
 </answer>
 </qandaentry>
