@@ -75,10 +75,14 @@ class ICalFormatImpl {
     QDateTime readICalDateTime(icaltimetype);
     icaldurationtype writeICalDuration(int seconds);
     int readICalDuration(icaldurationtype);
-    icalcomponent *createCalendarComponent();
+    icalcomponent *createCalendarComponent(Calendar * = 0);
     icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);
 
   private:
+    void writeIncidenceBase(icalcomponent *parent,IncidenceBase *);
+    void readIncidenceBase(icalcomponent *parent,IncidenceBase *);
+    void writeCustomProperties(icalcomponent *parent,CustomProperties *);
+    void readCustomProperties(icalcomponent *parent,CustomProperties *);
     void dumpIcalRecurrence(icalrecurrencetype);
 
     ICalFormat *mParent;
