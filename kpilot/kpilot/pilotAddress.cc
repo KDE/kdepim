@@ -94,9 +94,22 @@ PilotAddress::~PilotAddress()
     }
 
 QString PilotAddress::_typeToStr(EPhoneType type) const
-    {
-    QString s;
-    switch(type)
+{
+	FUNCTIONSETUP;
+
+	QString s;
+	if ((0<=(int)type) && (type<8))
+	{
+		s=QString::fromLatin1(fAppInfo.phoneLabels[(int)type]);
+	}
+	if (!s.isEmpty()) return s;
+
+	kdWarning() << __FUNCTION__
+		<< ": No category name for category number "
+		<< (int) type
+		<< endl;
+
+	switch(type)
 	{
 	case eWork : s = "Work"; break;
 	case eHome : s = "Home"; break;
@@ -108,8 +121,8 @@ QString PilotAddress::_typeToStr(EPhoneType type) const
 	case eMain :
 	default : s = "Main"; break;
 	}
-    return s;
-    }
+	return s;
+}
 
 bool PilotAddress::setCategory(const char *label)
     {
@@ -270,6 +283,9 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.18  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.17  2001/04/13 22:13:38  stern
 // Added setShownPhoneField method
 //
