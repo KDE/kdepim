@@ -180,7 +180,7 @@ void SyncAddressbook::syncAdded( const QValueList<KABC::Addressee>& added,
                     break;
                 case SYNC_INTERACTIVE:
                 default: {
-                    QString text = i18n("Which entry fo you want to take precedence?\n");
+                    QString text = i18n("Which entry do you want to take precedence?\n");
                     text += i18n("Entry 1: '%1'\n").arg( (*it1).sortString() );
                     text += i18n("Entry 2: '%1'\n").arg( (*it2).sortString() );
                     int result = KMessageBox::questionYesNo(0l,  text,  i18n("Resolve Conflict"),
@@ -242,7 +242,7 @@ void SyncAddressbook::syncAdded( const KABC::AddressBook *added,
                     break;
                 case SYNC_INTERACTIVE:
                 default: {
-                    QString text = i18n("Which entry fo you want to take precedence?\n");
+                    QString text = i18n("Which entry do you want to take precedence?\n");
                     text += i18n("Entry 1: '%1'\n").arg( (*it1).sortString() );
                     text += i18n("Entry 2: '%1'\n").arg( (*it2).sortString() );
                     int result = KMessageBox::questionYesNo(0l,  text,  i18n("Resolve Conflict"),

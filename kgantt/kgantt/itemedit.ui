@@ -801,7 +801,7 @@
                                 </font>
                             </property>
                             <property name="text">
-                                <string>Mininum Start</string>
+                                <string>Minimum Start</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignBottom|AlignLeft</set>

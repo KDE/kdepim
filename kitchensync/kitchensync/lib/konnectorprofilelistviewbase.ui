@@ -48,7 +48,7 @@
                     <property name="text">
                         <string>Below you see the created Konnector Profiles.
 They are either activated or deactivated. A Konnector Profile stores the configuration of a Device ( Palm PDA, iPAQs ). 
-If you want to use a new Device you need to create a new Profile. Do this by hitting the Add Button and follow the wizzard.
+If you want to use a new Device you need to create a new Profile. Do this by hitting the Add Button and follow the wizard.
 
 Please send me a better text!</string>
                     </property>

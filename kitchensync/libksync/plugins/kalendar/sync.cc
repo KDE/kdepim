@@ -414,7 +414,7 @@ void SyncKalendar::syncNormal( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* en
                 case SYNC_INTERACTIVE:
                 default: {
 //                    kdDebug() << "FIXME" << endl;
-                    QString text = i18n("Which entry fo you want to take precedence?\n");
+                    QString text = i18n("Which entry do you want to take precedence?\n");
                     text += i18n("Entry 1: '%1'\n").arg( one->summary() );
                     text += i18n("Entry 2: '%1'\n").arg( two->summary() );
                     int result = KMessageBox::questionYesNo(0l,  text,  i18n("Resolve Conflict"),
@@ -494,7 +494,7 @@ void SyncKalendar::syncTodo( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* entr
                 case SYNC_INTERACTIVE:
                 default: {
                     kdDebug() << "FIXME" << endl;
-                    QString text = i18n("Which entry fo you want to take precedence?\n");
+                    QString text = i18n("Which entry do you want to take precedence?\n");
                     text += i18n("Entry 1: '%1'\n").arg( one->description() );
                     text += i18n("Entry 2: '%1'\n").arg( two->description() );
                     int result = KMessageBox::questionYesNo(0l,  text,  i18n("Resolve Conflict"),

@@ -151,7 +151,7 @@
                             <property name="text">
                                 <string>&lt;b&gt;Setup Profiles&lt;/b&gt;
 &lt;br&gt;
-A &lt;b&gt;Profile&lt;/b&gt; contains informations about which Parts should get loaded and which files to use for the synchronisation process.</string>
+A &lt;b&gt;Profile&lt;/b&gt; contains information about which Parts should get loaded and which files to use for the synchronization process.</string>
                             </property>
                             <property name="textFormat">
                                 <enum>RichText</enum>
