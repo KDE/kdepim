@@ -856,7 +856,7 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
   QString newBox;
   if (slash != -1)
   {
-    parentUrl.setPath(path.left(slash) + ";TYPE=LIST");
+    parentUrl.setPath(path.left(slash+1) + ";TYPE=LIST");
     newBox = path.mid(slash + 1);
   }
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
