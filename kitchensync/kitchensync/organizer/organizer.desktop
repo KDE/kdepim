@@ -1,7 +1,8 @@
 [Desktop Entry]
 Type=Service
-Comment=
 Name=OrganizerPart
+Name[be]=Частка "Арганізатар"
+Name[bg]=ОрганайзерЧаст
 Name[cs]=Komponenta organizéru
 Name[de]=KOrganizer-Komponente
 Name[en_GB]=OrganiserPart
