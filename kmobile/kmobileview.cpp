@@ -300,8 +300,8 @@ QString KMobileView::readAddress( QString deviceName, int index )
 	return QString::null;
 
    KABC::VCardConverter converter;
-   QString str;
-   if (!converter.addresseeToVCard(adr, str))
+   QString str = converter.createVCard(adr);
+   if (str.isEmpty())
         return QString::null;
 
    emit signalChangeStatusbar( i18n("Read addressbook entry %1 from %2")
@@ -317,8 +317,8 @@ bool KMobileView::storeAddress( QString deviceName, int index, QString vcard, bo
 	return false;
 
    KABC::VCardConverter converter;
-   KABC::Addressee adr;
-   if (!converter.vCardToAddressee(vcard, adr))
+   KABC::Addressee adr = converter.parseVCard(vcard);
+   if (adr.isEmpty())
         return false;
 
    int err;
