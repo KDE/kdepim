@@ -529,9 +529,11 @@ other actions a filter can start:</para>
 		Specify the full path to any program you want to execute. &kmail; will block
 		until the program returns.</para></listitem>
 	<listitem><para><guilabel>filter app</guilabel> will feed the message to a program. If that
-		program returns output, the message will be replaced with this output. If the
-		program doesn't return output, the message won't change. Specify the full path to 
-		the program.</para></listitem>
+		program returns output, the entire message (including the headers) will be replaced
+		with this output. If the program doesn't return output, the message won't change.
+		Specify the full path to  the program.
+		<emphasis>Be cautious with this action, as it will easily mess up your messages
+		if the filter program does return garbage or extra lines.</emphasis></para></listitem>
 </itemizedlist>
 
 </sect2>
