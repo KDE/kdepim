@@ -278,8 +278,13 @@ QString KarmStorage::save(TaskView* taskview)
     writeTaskAsTodo(task, 1, parents );
   }
 
-  if (!_calendar->save(_calendar->requestSaveTicket
-    ( _calendar->resourceManager()->standardResource() ))) err="Could not save";
+  if ( !_calendar->save( 
+        _calendar->requestSaveTicket( _calendar->resourceManager()->standardResource() )
+        )
+      ) 
+  {
+    err="Could not save";
+  }
 
   kdDebug(5970)
     << "KarmStorage::save : wrote "
