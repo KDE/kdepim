@@ -6,9 +6,8 @@
 ### installed on user systems.
 ###
 
-MALSUBDIR=""
 if include_malconduit
-        MALSUBDIR = malconduit
+MALSUBDIR=malconduit
 endif
 
 
@@ -16,5 +15,6 @@ SUBDIRS = knotes \
 	expense \
 	null \
 	vcalconduit \
-	popmail 
+	popmail \
+	$(MALSUBDIR)
 
