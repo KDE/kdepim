@@ -164,6 +164,8 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   proc << "--list-options";
   proc << mName;
 
+  //kdDebug(5150) << "Running gpgconf --list-options " << mName << endl;
+
   QObject::connect( &proc, SIGNAL( readReady(KProcIO*) ),
                     this, SLOT( slotCollectStdOut(KProcIO*) ) );
   mCurrentGroup = 0;
@@ -214,6 +216,8 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
       //kdWarning(5150) << "Parse error on gpgconf --list-options output: " << line << endl;
     }
   }
+  if ( mCurrentGroup && !mCurrentGroup->mEntries.isEmpty() ) // only add non-empty groups
+    mGroups.insert( mCurrentGroupName, mCurrentGroup );
 }
 
 QStringList QGpgMECryptoConfigComponent::groupList() const
