@@ -125,6 +125,17 @@ PhoneNumber::List Addressee::phoneNumbers() const
   return mData->phoneNumbers;
 }
 
+void Addressee::setUrl( const KURL &url )
+{
+  detach();
+  mData->url = url;
+}
+
+KURL Addressee::url() const
+{
+  return mData->url;
+}
+
 void Addressee::dump() const
 {
   kdDebug() << "Addressee {" << endl;
@@ -132,6 +143,7 @@ void Addressee::dump() const
   kdDebug() << "  Name: '" << name() << "'" << endl;
   kdDebug() << "  FormattedName: '" << formattedName() << "'" << endl;
   kdDebug() << "  Email: '" << email() << "'" << endl;
+  kdDebug() << "  URL: '" << url().url() << "'" << endl;
   
   kdDebug() << "  PhoneNumbers {" << endl;
   PhoneNumber::List p = phoneNumbers();

@@ -6,6 +6,7 @@
 #include <qstring.h>
 
 #include <ksharedptr.h>
+#include <kurl.h>
 
 #include "phonenumber.h"
 
@@ -18,6 +19,7 @@ struct AddresseeData : public KShared
   QString formattedName;
   QString email;
   PhoneNumber::List phoneNumbers;
+  KURL url;
 };
 
 
@@ -47,6 +49,9 @@ class Addressee
     void insertPhoneNumber( const PhoneNumber &phoneNumber );
     PhoneNumber phoneNumber( PhoneNumber::Type ) const;
     PhoneNumber::List phoneNumbers() const;
+
+    void setUrl( const KURL & );
+    KURL url() const;
 
     void dump() const;
   

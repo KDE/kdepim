@@ -1,5 +1,5 @@
-#ifndef KABC_SIMPLEFORMAT_H
-#define KABC_SIMPLEFORMAT_H
+#ifndef KABC_VCARDFORMAT_H
+#define KABC_VCARDFORMAT_H
 
 #include <qstring.h>
 
@@ -9,7 +9,7 @@ namespace KABC {
 
 class AddressBook;
 
-class SimpleFormat : public Format {
+class VCardFormat : public Format {
   public:
     bool load( AddressBook *, const QString &fileName );
     bool save( AddressBook *, const QString &fileName );

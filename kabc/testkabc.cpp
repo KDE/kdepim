@@ -5,6 +5,7 @@
 #include <kcmdlineargs.h>
 
 #include "addressbook.h"
+#include "vcardformat.h"
 
 using namespace KABC;
 
@@ -15,9 +16,10 @@ int main(int argc,char **argv)
 
   KApplication app;
   
-  AddressBook ab;
+  AddressBook ab( new VCardFormat );
   
   ab.load( "/home/cs/kdecvs/kdepim/kabc/my.kabc" );
+  kdDebug() << "Read addressbook from: " << ab.fileName() << endl;
   ab.dump();
   
   ab.clear();
@@ -27,27 +29,28 @@ int main(int argc,char **argv)
   a.setEmail( "hw@abc.de" );
   ab.insertAddressee( a );
 
-  ab.dump();
+//  ab.dump();
 
   Addressee b;
-  b = a;
+//  b = a;
   b.setName( "Hilde Wurst" );
-  b.insertPhoneNumber( PhoneNumber( PhoneNumber::Mobile, "12345" ) );
+  b.insertPhoneNumber( PhoneNumber( "12345", PhoneNumber::Mobile ) );
   ab.insertAddressee( b );
 
-  ab.dump();
+//  ab.dump();
   
-  Addressee c( a );
+  Addressee c( b );
   c.setName( "Klara Klossbruehe" );
-  c.insertPhoneNumber( PhoneNumber( PhoneNumber::Mobile, "00000" ) );
-  c.insertPhoneNumber( PhoneNumber( PhoneNumber::Fax, "4711" ) );
+  c.insertPhoneNumber( PhoneNumber( "00000", PhoneNumber::Mobile ) );
+  c.insertPhoneNumber( PhoneNumber( "4711", PhoneNumber::Fax ) );
   ab.insertAddressee( c );
   
-  ab.dump();
+//  ab.dump();
   
-  AddressBook::Iterator it = ab.find( a );
+  AddressBook::Iterator it = ab.find( c );
   (*it).setEmail( "neueemail@woauchimmer" );
   
+  kdDebug() << "Write addressbook to: " << ab.fileName() << endl;
   ab.dump();
   
   AddressBook::Ticket *t = ab.requestSave( "/home/cs/kdecvs/kdepim/kabc/my.kabc" );

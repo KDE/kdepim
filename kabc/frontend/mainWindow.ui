@@ -1,0 +1,336 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>MainWindow</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>MainWindow</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>576</width>
+            <height>495</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>KABC Frontend</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QListView" row="0" column="0">
+            <column>
+                <property name="text">
+                    <string>Name</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <property name="name">
+                <cstring>mAddresseeList</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+        </widget>
+        <widget class="QTabWidget" row="0" column="1">
+            <property name="name">
+                <cstring>TabWidget2</cstring>
+            </property>
+            <property name="tabPosition">
+                <enum>Top</enum>
+            </property>
+            <property name="tabShape">
+                <enum>Rounded</enum>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>General</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLineEdit" row="0" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mNameEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="1" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mEmailEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>TextLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Name</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>TextLabel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Email</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="0">
+                        <property name="name">
+                            <cstring>TextLabel3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Phone Number</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="2" column="1">
+                        <property name="name">
+                            <cstring>mPhoneNumberEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="2" column="2">
+                        <item>
+                            <property name="text">
+                                <string>Home</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Work</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Mobile</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Fax</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>mPhoneNumberCombo</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="0">
+                        <property name="name">
+                            <cstring>TextLabel1_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>URL</string>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="1">
+                        <property name="name">
+                            <cstring>Spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mUrlEdit</cstring>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Special</string>
+                </attribute>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<menubar>
+    <property name="name">
+        <cstring>menubar</cstring>
+    </property>
+    <item text="File" name="PopupMenu">
+        <action name="open"/>
+        <action name="save"/>
+    </item>
+    <item text="Addressee" name="PopupMenu_2">
+        <action name="addressee_new"/>
+        <action name="addressee_remove"/>
+    </item>
+</menubar>
+<toolbars>
+    <toolbar dock="2">
+        <property name="name">
+            <cstring>Toolbar_3</cstring>
+        </property>
+        <property name="label">
+            <string>Toolbar_3</string>
+        </property>
+        <action name="open"/>
+        <action name="save"/>
+    </toolbar>
+</toolbars>
+<actions>
+    <action>
+        <property name="name">
+            <cstring>open</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>image0</iconset>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+        <property name="menuText">
+            <string>Open</string>
+        </property>
+        <property name="statusTip">
+            <string>Open Address Book</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>save</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>image1</iconset>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+        <property name="menuText">
+            <string>Save</string>
+        </property>
+        <property name="statusTip">
+            <string>Save Address Book</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>addressee_new</cstring>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+        <property name="menuText">
+            <string>New</string>
+        </property>
+        <property name="statusTip">
+            <string>New Addressee</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>addressee_remove</cstring>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+        <property name="menuText">
+            <string>Remove</string>
+        </property>
+        <property name="statusTip">
+            <string>Remove Addressee</string>
+        </property>
+    </action>
+</actions>
+<images>
+    <image name="image0">
+        <data format="XPM.GZ" length="706">789cad92d10ac2201486ef7d8a83e76ec45623c6207a84a2cb20ba50d7a88b2da87511d1bbe7d169aed945d0ff0bfafb718e8266096c372b483276ed447752a08ee20249756b9afb6ebf7c309ee7a04701333e613c0505eb737ba035ea354e8d282a8ae5bccc6dac28aa824c5150acb52c952ed6b5691bd53f086a99f993d85da411ef86df087ae29a07c012145248f40aee8652041e9010889f6a70a8770da20ad49318f0e78c803b670cfa9a08b024067a1201ae869ec4bb3236df298d993f17ec054df19e43</data>
+    </image>
+    <image name="image1">
+        <data format="XPM.GZ" length="706">789cd3d7528808f055d0d2e72a2e492cc94c5648ce482c52d04a29cdcdad8c8eb5ade6523232520022330543251d2e253d856405bffcbc54105b19c856360003103711c4b530b13082709340dc644310047153c05c3310047193c1dcc424d31488b158015846190b80ca24262a2721012087349964a030ba69c9c9303d403e9132087b68279388ecff4414193440948c32aa71d86470bb808632a0e8d64385296099143d6c50a9d69a0b000eb5aa86</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>mAddresseeList</sender>
+        <signal>selectionChanged(QListViewItem*)</signal>
+        <receiver>MainWindow</receiver>
+        <slot>updateAddressee(QListViewItem*)</slot>
+    </connection>
+    <connection>
+        <sender>save</sender>
+        <signal>activated()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>fileSave()</slot>
+    </connection>
+    <connection>
+        <sender>open</sender>
+        <signal>activated()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>fileOpen()</slot>
+    </connection>
+    <connection>
+        <sender>addressee_remove</sender>
+        <signal>activated()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>removeEntry()</slot>
+    </connection>
+    <connection>
+        <sender>addressee_new</sender>
+        <signal>activated()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>newEntry()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in declaration">addressbook.h</include>
+    <include location="local" impldecl="in implementation">mainWindow.ui.h</include>
+</includes>
+<forwards>
+    <forward>class AddresseeItem</forward>
+</forwards>
+<variables>
+    <variable>KABC::AddressBook *mAddressBook</variable>
+    <variable>AddresseeItem *mCurrentItem</variable>
+</variables>
+<slots>
+    <slot>updateAddressee(QListViewItem * item)</slot>
+    <slot>fileSave()</slot>
+    <slot>fileOpen()</slot>
+    <slot>init()</slot>
+    <slot>removeEntry()</slot>
+    <slot>newEntry()</slot>
+    <slot>destroy()</slot>
+    <slot>readAddressee(const KABC::Addressee &amp; a)</slot>
+    <slot returnType="KABC::Addressee">writeAddressee(const KABC::Addressee &amp; addressee)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

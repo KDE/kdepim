@@ -14,7 +14,7 @@ class PhoneNumber
     enum Type { Home, Office, Mobile, Fax };
   
     PhoneNumber();
-    PhoneNumber( Type, const QString & );
+    PhoneNumber( const QString &, Type type = Home );
     ~PhoneNumber();
     
     void setNumber( const QString & );

@@ -7,7 +7,7 @@ PhoneNumber::PhoneNumber() :
 {
 }
 
-PhoneNumber::PhoneNumber( Type type, const QString &number ) :
+PhoneNumber::PhoneNumber( const QString &number, Type type ) :
   mType( type ), mNumber( number )
 {
 }

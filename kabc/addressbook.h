@@ -61,10 +61,10 @@ class AddressBook : public QObject
         QString fileName;
     };
 
-    AddressBook();
+    AddressBook( Format *format=0 );
     virtual ~AddressBook();
 
-    Ticket *requestSave( const QString &fileName );
+    Ticket *requestSaveTicket( const QString &fileName = QString::null );
     
     bool load( const QString &fileName );
     bool save( Ticket *ticket );

@@ -11,15 +11,20 @@
 #include <kdebug.h>
 
 #include "simpleformat.h"
+#include "vcardformat.h"
 
 #include "addressbook.h"
 #include "addressbook.moc"
 
 using namespace KABC;
 
-AddressBook::AddressBook()
+AddressBook::AddressBook( Format *format )
 {
-  mFormat = new SimpleFormat();
+  if ( !format ) {
+    mFormat = new VCardFormat();
+  } else {
+    mFormat = format;
+  }
 
   mFileCheckTimer = new QTimer( this );
   connect( mFileCheckTimer, SIGNAL( timeout() ), SLOT( checkFile() ) );
@@ -56,10 +61,15 @@ void AddressBook::clear()
   mAddressees.clear();
 }
 
-AddressBook::Ticket *AddressBook::requestSave( const QString &fileName )
+AddressBook::Ticket *AddressBook::requestSaveTicket( const QString &fn )
 {
-  if ( !lock( fileName ) ) return 0;
-  return new Ticket( fileName );
+  QString saveFileName;
+
+  if ( fn.isEmpty() ) saveFileName = fileName();
+  else saveFileName = fn;
+
+  if ( !lock( saveFileName ) ) return 0;
+  return new Ticket( saveFileName );
 }
 
 void AddressBook::insertAddressee( const Addressee &a )

@@ -17,7 +17,7 @@ AddressBook *StdAddressBook::self()
 
 bool StdAddressBook::save()
 {
-  Ticket *ticket = self()->requestSave( locateLocal( "data", "kabc/std.vcf" ) );
+  Ticket *ticket = self()->requestSaveTicket( locateLocal( "data", "kabc/std.vcf" ) );
   if ( !ticket ) {
     kdError() << "Can't save to standard addressbook. It's locked." << endl;
     return false;
