@@ -19,8 +19,23 @@ Todo::Todo()
   mPercentComplete = 0;
 }
 
+Todo::Todo(const Todo &t) : Incidence(t)
+{
+  mDtDue = t.mDtDue;
+  mHasDueDate = t.mHasDueDate;
+  mHasStartDate = t.mHasStartDate;
+  mCompleted = t.mCompleted;
+  mHasCompletedDate = t.mHasCompletedDate;
+  mPercentComplete = t.mPercentComplete;
+}
+
 Todo::~Todo()
 {
+}
+
+Todo *Todo::clone()
+{
+  return new Todo(*this);
 }
 
 void Todo::setDtDue(const QDateTime &dtDue)
@@ -54,9 +69,6 @@ QString Todo::dtDueStr() const
 {
   return KGlobal::locale()->formatDateTime(mDtDue);
 }
-
-
-
 
 bool Todo::hasDueDate() const
 {
@@ -183,6 +195,7 @@ void Todo::setCompleted(const QDateTime &completed)
 {
   mHasCompletedDate = true;
   mPercentComplete = 100;
+  mCompleted = completed;
 }
 
 bool Todo::hasCompletedDate() const

@@ -41,6 +41,39 @@ Incidence::Incidence()
   mPriority = 1;
 }
 
+Incidence::Incidence(const Incidence &i) : QObject()
+{
+// TODO: reenable attributes currently commented out.
+  mReadOnly = i.mReadOnly;
+  kdDebug() << "Copying start date: " << i.mDtStart.toString() << endl;
+  mDtStart = i.mDtStart;
+  mOrganizer = i.mOrganizer;
+  mVUID = i.mVUID;
+  mRevision = i.mRevision;
+//  QList<Attendee> mAttendees;     QList<Attendee> mAttendees;
+  mLastModified = i.mLastModified;
+  mCreated = i.mCreated;
+  mDescription = i.mDescription;
+  mSummary = i.mSummary;
+  mCategories = i.mCategories;
+//  Incidence *mRelatedTo;          Incidence *mRelatedTo;
+  mRelatedTo = 0;
+  mRelatedToVUID = i.mRelatedToVUID;
+//  QList<Incidence> mRelations;    QList<Incidence> mRelations;
+  mExDates = i.mExDates;
+  mAttachments = i.mAttachments;
+  mResources = i.mResources;
+  mSecrecy = i.mSecrecy;
+  mPriority = i.mPriority;
+  mPilotId = i.mPilotId;
+  mSyncStatus = i.mSyncStatus;
+  mFloats = i.mFloats;
+//  KOAlarm *mAlarm;                KOAlarm *mAlarm;
+  mAlarm = new KOAlarm(this);
+//  KORecurrence *mRecurrence;      KORecurrence *mRecurrence;
+  mRecurrence = new KORecurrence(this);
+}
+
 Incidence::~Incidence()
 {
   Incidence *ev;

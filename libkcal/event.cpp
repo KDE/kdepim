@@ -2,6 +2,7 @@
 
 #include <kglobal.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "event.h"
 
@@ -12,8 +13,20 @@ Event::Event()
   mTransparency = 0;
 }
 
+Event::Event(const Event &e) : Incidence(e)
+{
+  mDtEnd = e.mDtEnd;
+  mTransparency = e.mTransparency;
+}
+
 Event::~Event()
 {
+}
+
+Event *Event::clone()
+{
+  kdDebug() << "Event::clone()" << endl;
+  return new Event(*this);
 }
 
 void Event::setDtEnd(const QDateTime &dtEnd)

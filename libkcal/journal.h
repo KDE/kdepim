@@ -17,6 +17,8 @@ class Journal : public Incidence
   public:
     Journal();
     ~Journal();
+    
+    Journal *clone();
 };
 
 }

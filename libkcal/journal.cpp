@@ -11,3 +11,8 @@ Journal::Journal()
 Journal::~Journal()
 {
 }
+
+Journal *Journal::clone()
+{
+  return new Journal(*this);
+}

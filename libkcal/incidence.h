@@ -26,12 +26,15 @@ class Incidence : public QObject
     enum { SecrecyPublic = 0, SecrecyPrivate = 1, SecrecyConfidential = 2 };
 
     Incidence();
+    Incidence(const Incidence &);
     ~Incidence();
 
     /**
       Accept IncidenceVisitor. This function has to be overridden by all child classes.
     */
     virtual bool accept(IncidenceVisitor &) { return false; }
+    
+    virtual Incidence *clone() = 0;
     
     /**
       Recreate event. The event is made a new unique event, but already stored

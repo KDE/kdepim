@@ -16,7 +16,10 @@ class Event : public Incidence
 {
   public:
     Event();
+    Event(const Event &);
     ~Event();
+
+    Event *clone();
   
     /** for setting an event's ending date/time with a QDateTime. */
     void setDtEnd(const QDateTime &dtEnd);
