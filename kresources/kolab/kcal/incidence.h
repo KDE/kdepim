@@ -51,10 +51,44 @@ namespace Kolab {
  */
 class Incidence : public KolabBase {
 public:
+  struct Recurrence {
+    // TODO: Recurrence;
+  };
+
+  struct Attendee : Email {
+    Attendee() : requestResponse( true ), invitationSent( false ) {}
+    QString status;
+    bool requestResponse;
+    bool invitationSent;
+    QString role;
+  };
+
   explicit Incidence( KCal::Incidence* incidence = 0 );
   virtual ~Incidence();
 
   void saveTo( KCal::Incidence* incidence );
+
+  virtual void setSummary( const QString& summary );
+  virtual QString summary() const;
+
+  virtual void setLocation( const QString& location );
+  virtual QString location() const;
+
+  virtual void setOrganizer( const Email& organizer );
+  virtual Email organizer() const;
+
+  virtual void setStartDate( const QDateTime& startDate );
+  virtual QDateTime startDate() const;
+
+  virtual void setAlarm( int alarm );
+  virtual int alarm() const;
+
+  virtual void setRecurrence( const Recurrence& recurrence );
+  virtual Recurrence recurrence() const;
+
+  virtual void addAttendee( const Attendee& attendee );
+  QValueList<Attendee>& attendees();
+  const QValueList<Attendee>& attendees() const;
 
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );
@@ -65,6 +99,19 @@ public:
 protected:
   // Read all known fields from this ical incidence
   void setFields( const KCal::Incidence* );
+
+  bool loadAttendeeAttribute( QDomElement&, Attendee& );
+  void saveAttendeeAttribute( QDomElement& element,
+                              const Attendee& attendee ) const;
+  void saveAttendees( QDomElement& element ) const;
+
+  QString mSummary;
+  QString mLocation;
+  Email mOrganizer;
+  QDateTime mStartDate;
+  int mAlarm;
+  Recurrence mRecurrence;
+  QValueList<Attendee> mAttendees;
 };
 
 }
