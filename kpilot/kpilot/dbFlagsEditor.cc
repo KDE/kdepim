@@ -32,11 +32,10 @@
 #include <qlineedit.h>
 #include <qcheckbox.h>
 #include <kdatewidget.h>
-#if KDE_IS_VERSION(3,1,90)
 #include <ktimewidget.h>
-#endif
 #include <kmessagebox.h>
 
+#include "pilotAppCategory.h"
 #include "dbFlagsEditor.h"
 #include "dbFlagsEditor_base.h"
 
