@@ -547,12 +547,23 @@ void TaskView::resetSessionTimeForAllTasks()
   for ( ; item.current(); ++item ) {
     Task * task = (Task *) item.current();
     long sessionTime = task->sessionTime();
-    long totalTime   = task->totalTime();
-    long newTotal = totalTime - sessionTime;
-    long totalDiff = totalTime - newTotal;
     task->setSessionTime(0);
-    task->setTotalTime( newTotal );
-    sessionTimeChanged( -sessionTime, -totalDiff );
+    if ( !item.current()->parent() )
+      sessionTimeChanged( -sessionTime, 0 );
+  }
+}
+
+void TaskView::resetTimeForAllTasks()
+{
+  QListViewItemIterator item( firstChild());
+  for ( ; item.current(); ++item ) {
+    Task * task = (Task *) item.current();
+    long sessionTime = task->sessionTime();
+    long totalTime   = task->totalTime();
+    task->setSessionTime(0);
+    task->setTotalTime(0);
+    if ( !item.current()->parent() )
+      sessionTimeChanged( -sessionTime, -totalTime );
   }
 }
 

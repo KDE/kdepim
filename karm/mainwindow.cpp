@@ -75,14 +75,14 @@ MainWindow::MainWindow()
            this,  SLOT(contextMenuRequest( QListViewItem*, const QPoint&, int )));
 
   _tray = new KarmTray( this );
-  
+
   connect( _taskView, SIGNAL( timerActive() ),   _tray, SLOT( startClock() ) );
   connect( _taskView, SIGNAL( timerActive() ),    this, SLOT( enableStopAll() ) );
   connect( _taskView, SIGNAL( timerInactive() ), _tray, SLOT( stopClock() ) );
   connect( _taskView, SIGNAL( timerInactive() ),  this, SLOT( disableStopAll() ) );
   connect( _taskView, SIGNAL( tasksChanged( QPtrList<Task> ) ), _tray,
                    SLOT( updateToolTip( QPtrList<Task> ) ) );
-  
+
   // FIXME: this shouldnt stay. We need to check whether the
   // file exists and if not, create a blank one and ask whether
   // we want to add a task.
@@ -181,12 +181,15 @@ void MainWindow::resetSessionTime()
   _taskView->resetSessionTimeForAllTasks();
 }
 
+void MainWindow::resetAllTimes()
+{
+  _taskView->resetTimeForAllTasks();
+}
 
 void MainWindow::makeMenus()
 {
   KAction
     *actionKeyBindings,
-    *actionResetSession,
     *actionNew,
     *actionNewSub;
 
@@ -197,11 +200,16 @@ void MainWindow::makeMenus()
   actionPreferences = KStdAction::preferences( _preferences, SLOT( showDialog() ),
                                                actionCollection() );
   (void) KStdAction::save( _preferences, SLOT( save() ), actionCollection() );
-  actionResetSession = new KAction( i18n("&Reset Session Times"),
+  KAction* actionResetSession = new KAction( i18n("&Reset Session Times"),
                                     CTRL + Key_R,
                                     this,
                                     SLOT( resetSessionTime() ), actionCollection(),
                                     "reset_session_time");
+  KAction* actionResetAll = new KAction( i18n("&Reset All Times"),
+                                    0,
+                                    this,
+                                    SLOT( resetAllTimes() ), actionCollection(),
+                                    "reset_all_times");
   actionStart = new KAction( i18n("&Start"),
                              QString::fromLatin1("1rightarrow"), Key_S,
                              _taskView,
@@ -239,11 +247,11 @@ void MainWindow::makeMenus()
                             _taskView,
                             SLOT( editTask() ), actionCollection(),
                             "edit_task");
-  new KAction( i18n("Import &Todos"), 0, 
+  new KAction( i18n("Import &Todos"), 0,
                             _taskView,
                             SLOT( loadFromKOrgTodos() ), actionCollection(),
                             "import_korg_todos");
-  new KAction( i18n("Import E&vents"), 0, 
+  new KAction( i18n("Import E&vents"), 0,
                             _taskView,
                             SLOT( loadFromKOrgEvents() ), actionCollection(),
                             "import_korg_events");
@@ -255,7 +263,9 @@ void MainWindow::makeMenus()
   actionKeyBindings->setWhatsThis( i18n("This will let you configure keybindings which is specific to karm") );
 
   actionResetSession->setToolTip( i18n("Reset session time") );
-  actionResetSession->setWhatsThis( i18n("This will reset the session time for all tasks.") );
+  actionResetSession->setWhatsThis( i18n("This will reset the session time to 0 for all tasks, to start a new session, without affecting the totals.") );
+  actionResetAll->setToolTip( i18n("Reset all times") );
+  actionResetAll->setWhatsThis( i18n("This will reset the session and total time to 0 for all tasks, to restart from scratch.") );
 
   actionStart->setToolTip( i18n("Start timing for selected task") );
   actionStart->setWhatsThis( i18n("This will start timing for the selected task.\n"

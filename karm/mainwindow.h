@@ -38,7 +38,8 @@ private:
 
   protected slots:
     void keyBindings();
-    void resetSessionTime(); 
+    void resetSessionTime();
+    void resetAllTimes();
     void updateTime( long, long );
     void updateStatusBar();
     void save();
@@ -49,7 +50,7 @@ private:
     void contextMenuRequest( QListViewItem*, const QPoint&, int );
     void enableStopAll();
     void disableStopAll();
-    
+
   protected:
     void startStatusBar();
     virtual void saveProperties( KConfig* );

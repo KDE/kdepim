@@ -84,7 +84,7 @@ public slots:
     1 		number
     time	in minutes
     string	task name
-    [string]    desktops, in which to count. e.g. "1,2,5" (optional) 
+    [string]    desktops, in which to count. e.g. "1,2,5" (optional)
     */
     void load();
     void save();
@@ -101,6 +101,7 @@ public slots:
     void deleteTask();
     void extractTime(int minutes);
     void resetSessionTimeForAllTasks();
+    void resetTimeForAllTasks();
     void handleDesktopChange(int desktop);
     void loadFromKOrgTodos();
     void loadFromKOrgEvents();

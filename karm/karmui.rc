@@ -3,6 +3,7 @@
 	<Menu name="file" >
 		<text>&amp;File</text>
 		<Action name="reset_session_time" />
+		<Action name="reset_all_times" />
 	</Menu>
 	<Menu name="clock" >
 		<text>&amp;Clock</text>
