@@ -533,7 +533,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                                       true );
       QString file;
       do {
-        file = location + KApplication::randomString( 10 );
+        file = location + "/" + KApplication::randomString( 10 );
       } while ( QFile::exists( file ) );
       QFile f( file );
       if ( !f.open( IO_WriteOnly ) ) {
