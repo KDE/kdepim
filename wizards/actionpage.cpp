@@ -82,7 +82,7 @@ ActionPage::~ActionPage()
 void ActionPage::setServerType( const QString &serverType )
 {
   mServerType = ServerTypeManager::self()->serverType( serverType );
-  mTitleLabel->setText( i18n( "All available  connections for '%1'" )
+  mTitleLabel->setText( i18n( "All available connections for '%1'" )
                         .arg( ServerTypeManager::self()->title( serverType ) ) );
 
   reloadConnections();
@@ -96,8 +96,8 @@ void ActionPage::selectionChanged()
   mDeleteButton->setEnabled( state );
   mActivateButton->setEnabled( state );
 
-  QString activeMsg = i18n( "Set Passive..." );
-  QString passiveMsg = i18n( "Set Active..." );
+  QString activateMsg = i18n( "Deactivate..." );
+  QString deactivateMsg = i18n( "Activate..." );
 
   if ( state ) {
     int counter = 0;
@@ -106,16 +106,16 @@ void ActionPage::selectionChanged()
     for ( it = mConnectionInfoList.begin(); it != mConnectionInfoList.end(); ++it ) {
       if ( counter == mConnectionBox->currentItem() ) {
         if ( (*it).active )
-          mActivateButton->setText( activeMsg );
+          mActivateButton->setText( activateMsg );
         else
-          mActivateButton->setText( passiveMsg );
+          mActivateButton->setText( deactivateMsg );
         break;
       }
 
       counter++;
     }
   } else
-    mActivateButton->setText( passiveMsg );
+    mActivateButton->setText( deactivateMsg );
 }
 
 void ActionPage::addConnection()
