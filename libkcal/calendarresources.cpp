@@ -477,6 +477,11 @@ bool CalendarResources::addJournal( Journal *journal )
   return addIncidence( journal );
 }
 
+void CalendarResources::deleteJournal( Journal * )
+{
+  kdError(5800) << "CalendarResources not implemented yet." << endl;
+}
+
 bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
 {
   bool validRes = false;

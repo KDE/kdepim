@@ -136,6 +136,12 @@ class Calendar : public QObject, public CustomProperties,
     */
     virtual bool addIncidence( Incidence * );  
     /**
+      Delete an incidence from calendar.
+      
+      @return true on success, false on error.
+    */
+    virtual bool deleteIncidence( Incidence * );  
+    /**
       Return filtered list of all incidences of this calendar.
     */
     virtual QPtrList<Incidence> incidences();
@@ -221,6 +227,10 @@ class Calendar : public QObject, public CustomProperties,
       @return true on success, false on error.
     */
     virtual bool addJournal( Journal * ) = 0;
+    /**
+      Remove a journal entry from the calendar.
+    */
+    virtual void deleteJournal( Journal * ) = 0;
     /**
       Return Journal for given date.
     */

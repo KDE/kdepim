@@ -96,6 +96,24 @@ class Incidence : public IncidenceBase
         T *mResource;
     };
 
+    /**
+      This class implements a visitor for deleting an Incidence from a resource
+      supporting deleteEvent(), deleteTodo() and deleteJournal() calls.
+    */
+    template<class T>
+    class DeleteVisitor : public Visitor
+    {
+      public:
+        DeleteVisitor( T *r ) : mResource( r ) {}
+
+        bool visit( Event *e ) { return mResource->deleteEvent( e ); }
+        bool visit( Todo *t ) { return mResource->deleteTodo( t ); }
+        bool visit( Journal *j ) { return mResource->deleteJournal( j ); }
+
+      private:
+        T *mResource;
+    };
+
     /** enumeration for describing an event's secrecy. */
     enum { SecrecyPublic = 0, SecrecyPrivate = 1, SecrecyConfidential = 2 };
 

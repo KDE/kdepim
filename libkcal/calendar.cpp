@@ -299,16 +299,20 @@ bool Calendar::addIncidence(Incidence *i)
   return i->accept(v);
 }
 
-Incidence* Calendar::incidence( const QString& uid )
+bool Calendar::deleteIncidence( Incidence *i )
 {
-  Incidence* i;
+  Incidence::DeleteVisitor<Calendar> v( this );
+  return i->accept( v );
+}
 
-  if( (i = todo( uid )) != 0 )
-    return i;
-  if( (i = event( uid )) != 0 )
-    return i;
-
-  return 0;
+Incidence *Calendar::incidence( const QString& uid )
+{
+  Incidence *i = event( uid );
+  if ( i ) return i;
+  i = todo( uid );
+  if ( i ) return i;
+  i = journal( uid );
+  return i;
 }
 
 QPtrList<Todo> Calendar::todos()

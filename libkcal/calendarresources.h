@@ -170,6 +170,8 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
 
     /** Add a Journal entry to calendar */
     bool addJournal(Journal *);
+    /** Remove journal entry. */
+    void deleteJournal( Journal * );
     /** Add Event to a resource. */
     bool addJournal(Journal *journal, ResourceCalendar *resource);
     /** Return Journal for given date */
