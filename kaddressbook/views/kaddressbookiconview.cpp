@@ -117,6 +117,23 @@ class AddresseeIconViewItem : public KIconViewItem
         
         if (!mAddressee.isEmpty())
           setText( mAddressee.givenName() + " " + mAddressee.familyName() );
+
+        QPixmap icon;
+        QPixmap defaultIcon( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
+        KABC::Picture pic = mAddressee.photo();
+        if ( pic.data().isNull() )
+          pic = mAddressee.logo();
+
+        if ( pic.isIntern() && !pic.data().isNull() ) {
+          QImage img = pic.data();
+        if ( img.width() > img.height() )
+          icon = img.scaleWidth( 32 );
+        else
+          icon = img.scaleHeight( 32 );
+      } else
+        icon = defaultIcon;
+
+      setPixmap( icon );
     }
     
   private:
@@ -199,25 +216,9 @@ void KAddressBookIconView::refresh(QString uid)
         
     KABC::Addressee::List addresseeList = addressees();
     KABC::Addressee::List::Iterator iter;
-    QPixmap defaultIcon( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
-    for ( iter = addresseeList.begin(); iter != addresseeList.end(); ++iter ) {
-      QPixmap icon;
-      KABC::Picture pic = (*iter).photo();
-      if ( pic.data().isNull() )
-        pic = (*iter).logo();
-
-      if ( pic.isIntern() && !pic.data().isNull() ) {
-        QImage img = pic.data();
-        if ( img.width() > img.height() )
-          icon = img.scaleWidth( 32 );
-        else
-          icon = img.scaleHeight( 32 );
-      } else
-        icon = defaultIcon;
-
+    for ( iter = addresseeList.begin(); iter != addresseeList.end(); ++iter )
       aItem = new AddresseeIconViewItem( fields(), addressBook(), *iter, mIconView );
-      aItem->setPixmap( icon );
-    }
+
     mIconView->arrangeItemsInGrid( true );
 
     for ( item = mIconView->firstItem(); item; item = item->nextItem() )
