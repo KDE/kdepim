@@ -35,6 +35,8 @@
 
 
 class PilotRecord;
+class PilotDatabase;
+
 
 
 class ExpenseConduit : public BaseConduit
@@ -55,6 +57,9 @@ protected:
 #endif
 
 // $Log$
+// Revision 1.2  2001/03/09 09:46:14  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.1  2001/03/04 21:47:04  adridg
 // New expense conduit, non-functional but it compiles
 //
