@@ -127,6 +127,9 @@ class AddressBookSyncee : public Syncee
     QString type() const;
     QString newId()const;
 
+    bool writeBackup( const QString & ) { return false; }
+    bool restoreBackup( const QString & ) { return false; }
+
   private:
     AddressBookSyncEntry *createEntry( const KABC::Addressee & );
     SyncEntry::PtrList find( int state);

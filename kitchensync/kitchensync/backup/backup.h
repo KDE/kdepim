@@ -68,22 +68,29 @@ class Backup : public ManipulatorPart
     Konnector *currentKonnector();
 
     void updateKonnectorList();
+    void updateRestoreList();
+
+    void createBackupDir();
+
+    QString topBackupDir() const;
 
   protected slots:
     void restore();
+
+    void slotSynceesRead( Konnector *k, const SynceeList &syncees );
 
   private:
     QPixmap m_pixmap;
     QWidget *m_widget;
 
     QListView *mKonnectorList;
+    QListView *mRestoreView;
     QTextView *mLogView;
 
-    KCal::CalendarLocal mCalendar;
+    QPtrList<Konnector> mOpenedKonnectors;
+    uint mKonnectorCount;
 
-    SynceeList mSynceeList;
-
-    QPtrList<Konnector> mConnectedKonnectors;
+    QString mBackupDir;
 };
 
 }

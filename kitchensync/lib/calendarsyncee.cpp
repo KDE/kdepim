@@ -157,3 +157,14 @@ CalendarSyncEntry *CalendarSyncee::createEntry(Incidence *incidence)
     return 0;
   }  
 }
+
+bool CalendarSyncee::writeBackup( const QString &filename )
+{
+  return mCalendar->save( filename );
+}
+
+bool CalendarSyncee::restoreBackup( const QString &filename )
+{
+  mCalendar->close();
+  return mCalendar->load( filename );
+}

@@ -87,6 +87,9 @@ class OpieDesktopSyncee : public Syncee
     SyncEntry::PtrList modified();
     SyncEntry::PtrList removed();
 
+    bool writeBackup( const QString & ) { return false; }
+    bool restoreBackup( const QString & ) { return false; }
+
   private:
     OpieDesktopSyncEntry::PtrList mList;
     SyncEntry::PtrList voidi();

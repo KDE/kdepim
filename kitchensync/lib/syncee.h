@@ -280,6 +280,10 @@ class Syncee
      */
     virtual bool trustIdsOnFirstSync() const;
 
+    virtual bool writeBackup( const QString &filename ) = 0;
+    
+    virtual bool restoreBackup( const QString &filename ) = 0;
+
   private:
     QMap<QString,Kontainer::ValueList> mMaps;
     int mSyncMode;

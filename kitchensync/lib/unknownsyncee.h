@@ -133,6 +133,9 @@ class UnknownSyncee : public Syncee
     SyncEntry::PtrList removed();
     Syncee* clone();
 
+    bool writeBackup( const QString & ) { return false; }
+    bool restoreBackup( const QString & ) { return false; }
+
   private:
     /** voidi returns an empty PtrList */
     SyncEntry::PtrList voidi();

@@ -34,6 +34,7 @@
 #include <kmessagebox.h>
 #include <kdialog.h>
 #include <kdialogbase.h>
+#include <kstandarddirs.h>
 
 #include <qlabel.h>
 #include <qlistview.h>
@@ -44,6 +45,7 @@
 #include <qdatetime.h>
 #include <qcheckbox.h>
 #include <qvbox.h>
+#include <qdir.h>
 
 using namespace KCal;
 using namespace KSync;
@@ -66,6 +68,28 @@ class KonnectorCheckItem : public QCheckListItem
     Konnector *mKonnector;
 };
 
+class BackupItem : public QListViewItem
+{
+  public:
+    BackupItem( QListView *parent, const QString &filename )
+      : QListViewItem( parent )
+    {
+      QDateTime dt = QDateTime::fromString( filename, ISODate );
+      QString txt;
+      if ( dt.isValid() ) {
+        txt = KGlobal::locale()->formatDateTime( dt );
+        mFilename = filename;
+      } else {
+        txt = i18n("Invalid (\"%1\")").arg( filename );
+      }
+      setText( 0, txt );
+    }
+    
+    QString filename() const { return mFilename; }
+    
+  private:
+    QString mFilename;
+};
 
 Backup::Backup( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
@@ -132,9 +156,11 @@ QWidget *Backup::widget()
 
     QBoxLayout *restoreLayout = new QVBoxLayout( konnectorLayout );
 
-    QFrame *restoreFrame = new QFrame( m_widget );
-    restoreFrame->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-    restoreLayout->addWidget( restoreFrame, 1 );
+    mRestoreView = new QListView( m_widget );
+    mRestoreView->addColumn( i18n("Backup") );
+    restoreLayout->addWidget( mRestoreView, 1 );
+
+    updateRestoreList();
 
     QPushButton *button = new QPushButton( i18n("Restore"), m_widget );
     restoreLayout->addWidget( button );
@@ -163,6 +189,23 @@ void Backup::updateKonnectorList()
   }
 }
 
+void Backup::updateRestoreList()
+{
+  mRestoreView->clear();
+
+  QString dirName = locateLocal( "appdata", topBackupDir() );
+  QDir dir( dirName );
+
+  QStringList backups = dir.entryList( QDir::Dirs );
+  
+  QStringList::ConstIterator it;
+  for( it = backups.begin(); it != backups.end(); ++it ) {
+    if ( *it != "." && *it != ".." ) {
+      new BackupItem( mRestoreView, *it );
+    }
+  }
+}
+
 void Backup::logMessage( const QString &message )
 {
   QString text = "<b>" + QTime::currentTime().toString() + "</b>: ";
@@ -175,12 +218,99 @@ void Backup::logMessage( const QString &message )
 
 void Backup::actionSync()
 {
-  logMessage( i18n("actionSync()") );
+  logMessage( i18n("Starting backup") );
+
+  createBackupDir();
+
+  mOpenedKonnectors.clear();
+  mKonnectorCount = 0;
+
+  QListViewItemIterator it( mKonnectorList );
+  while ( it.current() ) {
+    KonnectorCheckItem *item = static_cast<KonnectorCheckItem *>( it.current() );
+    if ( item->isOn() ) {
+      Konnector *k = item->konnector();
+      logMessage( i18n("Connecting '%1'").arg( k->resourceName() ) );
+      if ( !k->connectDevice() ) {
+        logMessage( i18n("Error connecting device.") );
+      } else {
+        mOpenedKonnectors.append( k );
+        ++mKonnectorCount;
+      }
+    }
+    ++it;
+  }
+
+  Konnector *k;
+  for ( k = mOpenedKonnectors.first(); k; k = mOpenedKonnectors.next() ) {
+    logMessage( i18n("Request Syncees") );
+    if ( !k->readSyncees() ) {
+      logMessage( i18n("Request failed.") );
+    }
+  }
+}
+
+QString Backup::topBackupDir() const
+{
+  return "backup/";
+}
+
+void Backup::createBackupDir()
+{
+  QString date = QDateTime::currentDateTime().toString( ISODate );
+  mBackupDir = locateLocal( "appdata", topBackupDir() + date + "/", true );
+
+  kdDebug() << "DIRNAME: " << mBackupDir << endl;
+}
+
+void Backup::slotSynceesRead( Konnector *k, const SynceeList &syncees )
+{
+  logMessage( i18n("Syncees read from '%1'").arg( k->resourceName() ) );
+
+  if ( syncees.count() == 0 ) {
+    logMessage( i18n("Syncee list is empty.") );
+  } else {
+    logMessage( i18n("Performing backup.") );
+  
+    SynceeList::ConstIterator it;
+    for( it = syncees.begin(); it != syncees.end(); ++it ) {
+      QString filename = mBackupDir + "/" + k->identifier() + "-" +
+                         (*it)->type();
+      kdDebug() << "FILENAME: " << filename << endl;
+      QString type = (*it)->type();
+      if ( (*it)->writeBackup( filename ) ) {
+        logMessage( i18n("Wrote backup for %1.").arg( type ) );
+      } else {
+        logMessage( i18n("<b>Error:</b> Can't write backup for %1.")
+                    .arg( type ) );
+      }
+    }
+  }
+
+  mKonnectorCount--;
+
+  if ( mKonnectorCount == 0 ) {
+    logMessage( i18n("Backup finished.") );
+  }
 }
 
 void Backup::restore()
 {
-  KMessageBox::information( m_widget, i18n("Restore isn't implemented yet") );
+  BackupItem *backupItem =
+    static_cast<BackupItem *>( mRestoreView->currentItem() );
+  
+  if ( !backupItem ) {
+    KMessageBox::sorry( m_widget, i18n("No backup selected.") );
+    return;
+  }
+
+  if ( backupItem->filename().isEmpty() ) {
+    KMessageBox::sorry( m_widget, i18n("Selected backup is invalid.") );
+    return;
+  }
+
+  logMessage( i18n("Restoring backup %1").arg( backupItem->filename() ) );
+
 }
 
 #include "backup.moc"

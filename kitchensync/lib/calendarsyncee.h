@@ -75,6 +75,9 @@ class CalendarSyncee : public Syncee
 
     KCal::CalendarLocal *calendar() const { return mCalendar; }
 
+    bool writeBackup( const QString & );
+    bool restoreBackup( const QString & );
+
   private:
     CalendarSyncEntry *createEntry( KCal::Incidence * );
   

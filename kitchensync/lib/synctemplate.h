@@ -92,6 +92,9 @@ namespace KSync {
             mList.remove( tempEntry );
         }
 
+        bool writeBackup( const QString & ) { return false; }
+        bool restoreBackup( const QString & ) { return false; }
+
     protected:
         SyncEntry::PtrList find( int state ) {
             kdDebug(5230) << "find state " << state << endl;
