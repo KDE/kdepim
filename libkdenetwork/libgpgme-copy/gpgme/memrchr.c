@@ -42,8 +42,10 @@ memrchr (const void *block, int c, size_t size)
 
   /* Must examine *block as well, so instead loop on the size, not
      on a pointer comparison. */
-  for ( ; size>0 ; size --, p --)
-    if (*p == c)
+  for ( ; size>0 ; size --, p --) {
+    if (*p == c) {
       return p;
+    }
+  }
   return 0;
 }
