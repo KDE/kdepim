@@ -1622,7 +1622,7 @@ be automatically accepted as a new word.</para>
 errors</guilabel></title>
 
 <para>Here you can toggle if two known words that run together and are
-unknown if they run together should be threatens an error or
+unknown if they run together should be treated as an error or
 not.</para>
 
 </sect3>
