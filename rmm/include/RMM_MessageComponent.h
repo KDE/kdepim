@@ -54,7 +54,7 @@ class RMessageComponent {
 
 		void set(const QCString & s) { parsed_ = false; strRep_ = s.data(); }
 
-		const QCString & asString() { assemble(); return strRep_; }
+		QCString asString() { assemble(); return strRep_; }
 
 		const char * className() const { return "RMessageComponent"; }
 		

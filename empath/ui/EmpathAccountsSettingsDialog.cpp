@@ -23,6 +23,7 @@
 #include <klineeditdlg.h>
 #include <kapp.h>
 #include <kconfig.h>
+#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathAccountsSettingsDialog.h"
@@ -79,6 +80,10 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
 
 	lv_accts_			=	new QListView(w_account_, "lv_accts");
 	CHECK_PTR(lv_accts_);
+	
+	KQuickHelp::add(lv_accts_, i18n(
+			"This is a list of all the accounts (mailboxes)\n"
+			"that Empath knows about."));
 
 	lv_accts_->addColumn(i18n("Account Name"));
 	lv_accts_->addColumn(i18n("Type"));
@@ -169,6 +174,9 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(
 
 	topLevelLayout_->activate();
 
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
+	
 	updateMailboxList();
 }
 

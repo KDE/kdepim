@@ -22,6 +22,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
+#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathComposeSettingsDialog.h"
@@ -86,10 +87,18 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	l_reply_	=
 		new QLabel(i18n("Reply to sender:"), w_phrases_, "l_reply");
 	CHECK_PTR(l_reply_);
-
+	
 	le_reply_	=
 		new QLineEdit(w_phrases_, "le_reply");
 	CHECK_PTR(le_reply_);
+	
+	KQuickHelp::add(le_reply_, i18n(
+			"Choose the phrase that will be added\n"
+			"before a message when you reply.\n"
+			"%s will be replaced by the name of the\n"
+			"person who sent you the message.\n"
+			"%d will be replaced by the date that\n"
+			"the message was sent to you."));
 	
 	le_reply_->setFixedHeight(h);
 	
@@ -101,6 +110,14 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 		new QLineEdit(w_phrases_, "le_replyAll");
 	CHECK_PTR(le_replyAll_);
 	
+	KQuickHelp::add(le_replyAll_, i18n(
+			"Choose the phrase that will be added\n"
+			"before a message when you reply.\n"
+			"%s will be replaced by the name of the\n"
+			"person who sent you the message.\n"
+			"%d will be replaced by the date that\n"
+			"the message was sent to you."));
+	
 	le_replyAll_->setFixedHeight(h);
 	
 	l_forward_	=
@@ -111,6 +128,15 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 		new QLineEdit(w_phrases_, "le_forward");
 	CHECK_PTR(le_forward_);
 	
+	KQuickHelp::add(le_forward_, i18n(
+			"Choose the phrase that will be added\n"
+			"before a message when you forward the\n"
+			"message elsewhere.\n"
+			"%s will be replaced by the name of the\n"
+			"person who sent you the message.\n"
+			"%d will be replaced by the date that\n"
+			"the message was sent to you."));
+	
 	le_forward_->setFixedHeight(h);
 
 	// Quoting
@@ -120,11 +146,28 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 				w_msg_, "cb_quote");
 	CHECK_PTR(cb_quote_);
 	
+	KQuickHelp::add(cb_quote_, i18n(
+			"With this selected, when you reply to a\n"
+			"message, you'll get the text of the message\n"
+			"you're replying to in the compose window.\n"
+			"This can make it easier to provide context.\n"
+			"The text is quoted with '> '\n"));
+	
 	cb_quote_->setFixedHeight(h);
 
 	cb_addSig_	=
 		new QCheckBox(i18n("Add &signature"), w_msg_, "l_addSig");
 	CHECK_PTR(cb_addSig_);
+	
+	KQuickHelp::add(cb_addSig_, i18n(
+			"With this selected, your signature will be\n"
+			"automatically added to the end of all messages\n"
+			"you send. If you don't have a signature, use\n"
+			"Options->Sending to set one up.\n"
+			"The text '--' will be prepended to your signature.\n"
+			"This is standard behaviour and will allow other\n"
+			"people's mail programs to recognise where your\n"
+			"message ends, and your signature starts."));
 	
 	cb_addSig_->setFixedHeight(h);
 	
@@ -132,6 +175,14 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 		new QCheckBox(i18n("Add &digital Signature"), w_msg_, "cb_digSign");
 	CHECK_PTR(cb_digSign_);
 	
+	KQuickHelp::add(cb_digSign_, i18n(
+			"Adding a digital signature to a message is\n"
+			"a bit like adding your real signature, a\n"
+			"photograph, your fingerprint, and some hair\n"
+			"(for DNA analysis). In other words, you're\n"
+			"saying that this message definitely came from\n"
+			"you. This helps stops people masquerading as you."));
+
 	cb_digSign_->setFixedHeight(h);
 	
 	cb_wrap_	=
@@ -139,11 +190,33 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 				"cb_wrap");
 	CHECK_PTR(cb_wrap_);
 	
+	KQuickHelp::add(cb_wrap_, i18n(
+			"When you type a reply, you probably don't\n"
+			"press <b>Return</b> at the end of each line.\n"
+			"Internet mail messages are supposed to be read\n"
+			"in a fixed font, and any lines longer than 80\n"
+			"characters may not be 'wrapped around'.\n"
+			"This option will add carriage returns in lines\n"
+			"longer than the value set in the spin box.\n"
+			"This will ensure that messages look correct when\n"
+			"received by your recipient.\n"));
+	
 	cb_wrap_->setFixedHeight(h);
 
 	sb_wrap_	=
 		new QSpinBox(40, 240, 1, w_msg_, "cb_wrap");
 	CHECK_PTR(sb_wrap_);
+	
+	KQuickHelp::add(sb_wrap_, i18n(
+			"When you type a reply, you probably don't\n"
+			"press <b>Return</b> at the end of each line.\n"
+			"Internet mail messages are supposed to be read\n"
+			"in a fixed font, and any lines longer than 80\n"
+			"characters may not be 'wrapped around'.\n"
+			"This option will add carriage returns in lines\n"
+			"longer than the value set in the spin box.\n"
+			"This will ensure that messages look correct when\n"
+			"received by your recipient.\n"));
 
 	sb_wrap_->setFixedHeight(h);
 	sb_wrap_->setValue(76);
@@ -170,6 +243,15 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 				"rb_sendNow");
 	CHECK_PTR(rb_sendNow_);
 	
+	KQuickHelp::add(rb_sendNow_, i18n(
+			"If you choose this option, Empath will\n"
+			"try to send your message immediately when\n"
+			"you press send. Note that you won't have to\n"
+			"stop using Empath when you press send. This\n"
+			"is useful when you are permanently connected\n"
+			"to a mail server, as there's no delay between\n"
+			"pressing send and the message being despatched."));
+
 	rb_sendNow_->setFixedHeight(h);
 
 	rb_sendNow_->setChecked(true);
@@ -178,6 +260,14 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 		new QRadioButton(i18n("Send messages &later"), w_when_, "rb_sendLater");
 	CHECK_PTR(rb_sendLater_);
 	
+	KQuickHelp::add(rb_sendLater_, i18n(
+			"By choosing this option, when you press\n"
+			"'send' while composing a message, the\n"
+			"message will be placed in a queue, and\n"
+			"will only be despatched later on, when\n"
+			"you say so. This is useful when you don't\n"
+			"have a permanent connection to a mail server.\n"));
+	
 	rb_sendLater_->setFixedHeight(h);
 	
 	buttonGroup_->insert(rb_sendNow_,	SendNow);
@@ -185,6 +275,13 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	
 	cb_externalEditor_ = new QCheckBox(i18n("Use external editor"),
 		this, "cb_useExternalEditor");
+	
+	KQuickHelp::add(cb_externalEditor_, i18n(
+			"By selecting this option, you allow the use\n"
+			"of your favourite text editor to type messages.\n"
+			"The internal editor, while useful, is not incredibly\n"
+			"powerful. Some people prefer their usual editor as\n"
+			"they need the extra features, or are simply used to it."));
 
 	CHECK_PTR(cb_externalEditor_);
 	
@@ -291,6 +388,9 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(
 	externalLayout_->activate();
 	
 	topLevelLayout_->activate();
+	
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
 }
 
 	void

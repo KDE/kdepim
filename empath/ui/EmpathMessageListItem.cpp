@@ -112,11 +112,9 @@ EmpathMessageListItem::_init()
 		setText(1, s);
 	}
 	
-	dateStr_ = "%1";
-	dateStr_.arg(date_.asUnixTime());
+	dateStr_.sprintf("%08x", date_.asUnixTime());
 	
-	sizeStr_ = "%1";
-	sizeStr_.arg(size_);
+	sizeStr_.sprintf("%08x", size_);
 }
 
 	void

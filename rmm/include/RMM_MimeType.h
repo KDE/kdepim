@@ -45,8 +45,8 @@ class RMimeType : public RHeaderBody {
 		void parse();
 		void assemble();
 
-		const QCString & boundary();
-		const QCString & name();
+		QCString boundary();
+		QCString name();
 
 		RMM::MimeType type();
 		RMM::MimeSubType subType();

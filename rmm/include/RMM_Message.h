@@ -61,7 +61,7 @@ class RMessage : public REntity {
 		Q_UINT32 size();
 		
 		void set(const QCString & s)		{ REntity::set(s); }
-		const QCString & asString()			{ return REntity::asString(); }
+		QCString asString()			{ return REntity::asString(); }
 		
 		int			numberOfParts();
 		void		addPart(RBodyPart * bp);
@@ -75,8 +75,6 @@ class RMessage : public REntity {
 
 		void setStatus(RMM::MessageStatus status);
 		RMM::MessageStatus status();
-		void setFolder(const QCString & folderName);
-		const QCString & folder();
 
 		const char * className();
 

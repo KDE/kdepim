@@ -479,6 +479,7 @@ RMM::mimeSubTypeEnum2Str(MimeSubType t)
 	RMM::CteType
 RMM::RCteStr2Enum(const QCString & s)
 {
+	if (s.isEmpty()) return CteType7bit;
 	CteType cte = CteType7bit;
 
 	switch (s[0]) {

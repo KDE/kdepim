@@ -27,6 +27,7 @@
 #include <kconfig.h>
 #include <kapp.h>
 #include <kfiledialog.h>
+#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathIdentitySettingsDialog.h"
@@ -82,11 +83,18 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 		new QLabel(i18n("Your name"), w_main_, "l_name");
 	CHECK_PTR(l_name_);
 
-	l_name_->setMaximumHeight(h);
+	l_name_->setFixedHeight(h);
 	
 	le_chooseName_	=
 		new QLineEdit(w_main_, "le_chooseName");
 	CHECK_PTR(le_chooseName_);
+
+	KQuickHelp::add(le_chooseName_, i18n(
+			"This should contain your real name,\n"
+			"unless you don't like people to know\n"
+			"your identity, in which case you're\n"
+			"probably a wannabe cracker, and are\n"
+			"called '3l33t d3wd'"));
 
 	le_chooseName_->setFixedHeight(h);
 	
@@ -100,6 +108,10 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 		new QLineEdit(w_main_, "le_chooseEmail");
 	CHECK_PTR(le_chooseEmail_);
 	
+	KQuickHelp::add(le_chooseEmail_, i18n(
+			"This should contain your email address.\n"
+			"Type it correctly !"));
+
 	le_chooseEmail_->setFixedHeight(h);
 	
 	l_replyTo_	=
@@ -113,6 +125,11 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 		new QLineEdit(w_main_, "le_chooseReplyTo");
 	CHECK_PTR(le_chooseReplyTo_);
 	
+	KQuickHelp::add(le_chooseReplyTo_, i18n(
+			"If your 'real' email address isn't the\n"
+			"address you want people to reply to,\n"
+			"then simply fill this in."));
+			
 	le_chooseReplyTo_->setFixedHeight(h);
 	
 	l_org_	=
@@ -125,6 +142,12 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 		new QLineEdit(w_main_, "le_chooseOrg");
 	CHECK_PTR(le_chooseOrg_);
 	
+	KQuickHelp::add(le_chooseOrg_, i18n(
+			"This is supposed to contain the name of\n"
+			"the organisation you belong to. You can\n"
+			"type anything, or nothing. It doesn't\n"
+			"matter in the slightest."));
+	
 	le_chooseOrg_->setFixedHeight(h);
 	
 	l_sig_	=
@@ -136,6 +159,14 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	le_chooseSig_	=
 		new QLineEdit(w_main_, "le_chooseSig");
 	CHECK_PTR(le_chooseSig_);
+	
+	KQuickHelp::add(le_chooseSig_, i18n(
+			"The name of a file containing your 'signature'.\n"
+			"Your signature can be appended to the end of\n"
+			"each message you send. People generally like to\n"
+			"put some info about where they work, a quote,\n"
+			"and/or their website address here. Please try\n"
+			"to use less than four lines. It's netiquette.\n"));
 
 	le_chooseSig_->setFixedHeight(h);
 	
@@ -169,7 +200,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	mle_sigPreview_->setText(i18n("No signature set"));
 	
 	mle_sigPreview_->setMinimumHeight(h * 3);
-
+	
 ///////////////////////////////////////////////////////////////////////////////
 // Button box
 
@@ -257,6 +288,9 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	mainGroupLayout_->activate();
 	
 	topLevelLayout_->activate();
+	
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
 }
 
 	void
@@ -265,9 +299,10 @@ EmpathIdentitySettingsDialog::s_chooseSig()
 	
 	QString tempSig = KFileDialog::getOpenFileName();
 	
-	if (tempSig.length() != 0)
+	if (!tempSig.isEmpty()) {
 		sig_ = tempSig.data();
-	le_chooseSig_->setText(sig_);
+		le_chooseSig_->setText(sig_);
+	}
 	
 	// Preview the sig
 	QFile f(sig_);

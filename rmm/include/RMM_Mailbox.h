@@ -58,10 +58,10 @@ class RMailbox : public RAddress {
 		void setRoute(const QCString & route);
 		void setLocalPart(const QCString & localPart);
 		void setDomain(const QCString & domain);
-		const QCString & phrase();
-		const QCString & route();
-		const QCString & localPart();
-		const QCString & domain();
+		QCString phrase();
+		QCString route();
+		QCString localPart();
+		QCString domain();
 		
 		const char * className() const { return "RMailbox"; }
 

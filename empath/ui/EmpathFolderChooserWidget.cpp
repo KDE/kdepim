@@ -48,7 +48,9 @@ EmpathFolderChooserWidget::EmpathFolderChooserWidget(
 	QObject::connect(pb_selectFolder_, SIGNAL(clicked()),
 			this, SLOT(s_browse()));
 	l_folderName_->setText("<" + i18n("no folder selected") + ">");
-	this->setFixedHeight(pb_selectFolder_->sizeHint().height()+4);
+	this->setFixedHeight(
+		pb_selectFolder_->sizeHint().height() +
+		frameWidth() * 2);
 }
 
 EmpathFolderChooserWidget::~EmpathFolderChooserWidget()

@@ -32,6 +32,10 @@
 class RHeaderBody : public RMessageComponent {
 
 	public:
+		
+		RHeaderBody();
+		RHeaderBody(const RHeaderBody & headerBody);
+		RHeaderBody(const QCString & s) : RMessageComponent(s) { }
 
 		virtual ~RHeaderBody();
 
@@ -47,16 +51,10 @@ class RHeaderBody : public RMessageComponent {
 		virtual RHeaderBody & operator = (const RHeaderBody & h);
 
 		void set(const QCString & s) { RMessageComponent::set(s); }
-		const QCString & asString() { return RMessageComponent::asString(); }
+		QCString asString() { return RMessageComponent::asString(); }
 		
 		const char * className() const { return "RHeaderBody"; }
 
-	protected:
-
-		RHeaderBody();
-		RHeaderBody(const RHeaderBody & headerBody);
-		RHeaderBody(const QCString & s) : RMessageComponent(s) { }
-		
 	friend class RHeader; // FIXME: Hack. Remove.
 };
 

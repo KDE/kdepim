@@ -53,9 +53,9 @@ class RGroup : public RAddress {
 
 		void createDefault();
 
-		const QCString & name();
+		QCString name();
 
-		const QCString & phrase();
+		QCString phrase();
 
 		void setName(const QCString & name);
 

@@ -50,7 +50,7 @@ class RCte : public RHeaderBody {
 		
 		void createDefault();
 		
-		const QCString & mechanism();
+		QCString mechanism();
 		void setMechanism(const QCString &);
 		
 		const char * className() const { return "RCte"; }

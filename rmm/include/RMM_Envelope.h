@@ -42,6 +42,7 @@
 #include <RMM_MessageComponent.h>
 #include <RMM_ContentType.h>
 #include <RMM_Cte.h>
+#include <RMM_HeaderBody.h>
 
 /**
  * @short An REnvelope encapsulates the envelope of an RFC822 message.
@@ -76,7 +77,7 @@ class REnvelope : public RMessageComponent
 		void set(const QCString & s)
 		{ RMessageComponent::set(s); }
 		
-		const QCString & asString()
+		QCString asString()
 		{ return RMessageComponent::asString(); }
 		
 		/**
@@ -92,7 +93,7 @@ class REnvelope : public RMessageComponent
 		 * then you get the first RAddress in that header body. If there is no
 		 * 'From' header, then you get what's in 'Sender'.
 		 */
-		RMailbox & firstSender();
+		RMailbox firstSender();
 		
 		/**
 		 * @short The ID of the 'parent' message.
@@ -107,9 +108,9 @@ class REnvelope : public RMessageComponent
 		/**
 		 * Gets the specified header.
 		 */
-		RText &				get(const QCString & headerName);
+		RText 		get(const QCString & headerName);
 
-		template <class T> T get(RMM::HeaderType h, T t);
+		RHeaderBody	*get(RMM::HeaderType h);
 
 		/**
 		 * This applies to all similar methods:
@@ -119,48 +120,48 @@ class REnvelope : public RMessageComponent
 		 * Note that you can accidentally create a header you didn't want by
 		 * calling one of these. Use has() instead before you try.
 		 */
-		RText &				approved();
-		RAddressList &		bcc();
-		RMailboxList &		cc();
-		RText &				comments();
-		RText &				contentDescription();
-		RDispositionType &	contentDisposition();
-		RMessageID &		contentID();
-		RText &				contentMD5();
-		RContentType &		contentType();
-		RText &				control();
-		RCte &				contentTransferEncoding();
-		RDateTime &			date();
-		RText &				distribution();
-		RText &				encrypted();
-		RDateTime &			expires();
-		RText &				followupTo();
-		RMailboxList &		from();
-		RText &				inReplyTo();
-		RText &				keywords();
-		RText &				lines();
-		RMessageID &		messageID();
-		RText &				mimeVersion();
-		RText &				newsgroups();
-		RText &				organization();
-		RText &				path();
-		RText &				received();
-		RText &				references();
-		RAddressList &		replyTo();
-		RAddressList &		resentBcc();
-		RAddressList &		resentCc();
-		RDateTime &			resentDate();
-		RMailboxList &		resentFrom();
-		RMessageID &		resentMessageID();
-		RAddressList &		resentReplyTo();
-		RMailbox &			resentSender();
-		RAddressList &		resentTo();
-		RText &				returnPath();
-		RMailbox &			sender();
-		RText &				subject();
-		RText &				summary();
-		RAddressList &		to();
-		RText &				xref();
+		RText				approved();
+		RAddressList 		bcc();
+		RMailboxList 		cc();
+		RText 				comments();
+		RText 				contentDescription();
+		RDispositionType 	contentDisposition();
+		RMessageID 			contentID();
+		RText 				contentMD5();
+		RContentType 		contentType();
+		RText 				control();
+		RCte 				contentTransferEncoding();
+		RDateTime 			date();
+		RText 				distribution();
+		RText 				encrypted();
+		RDateTime 			expires();
+		RText 				followupTo();
+		RMailboxList 		from();
+		RText 				inReplyTo();
+		RText 				keywords();
+		RText 				lines();
+		RMessageID	 		messageID();
+		RText 				mimeVersion();
+		RText 				newsgroups();
+		RText 				organization();
+		RText 				path();
+		RText 				received();
+		RText 				references();
+		RAddressList 		replyTo();
+		RAddressList 		resentBcc();
+		RAddressList 		resentCc();
+		RDateTime 			resentDate();
+		RMailboxList 		resentFrom();
+		RMessageID 			resentMessageID();
+		RAddressList 		resentReplyTo();
+		RMailbox 			resentSender();
+		RAddressList 		resentTo();
+		RText 				returnPath();
+		RMailbox 			sender();
+		RText 				subject();
+		RText 				summary();
+		RAddressList 		to();
+		RText 				xref();
 		
 		const char * className() const { return "REnvelope"; }
 

@@ -22,6 +22,7 @@
 #include <RMM_HeaderBody.h>
 
 RHeaderBody::RHeaderBody()
+	:	RMessageComponent()
 {
 	rmmDebug("ctor");
 }
@@ -41,6 +42,7 @@ RHeaderBody::operator = (const RHeaderBody & hb)
 	strRep_ = hb.strRep_;	
 	
 	RMessageComponent::operator = (hb);
+	assembled_	= false;
 	return *this;
 }
 

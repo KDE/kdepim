@@ -57,9 +57,8 @@ class RDateTime : public QDateTime, public RHeaderBody {
 		void	setTimeZone(const QCString &);
 		void	set(Q_UINT32 unixTime);
 		
-		const QCString &	timeZone();
+		QCString 	timeZone();
 		
-		const QCString &	asString();
 		Q_UINT32	asUnixTime();
 
 		void createDefault();

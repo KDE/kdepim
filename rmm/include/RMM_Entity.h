@@ -48,7 +48,7 @@ class REntity : public RMessageComponent
 		virtual void createDefault() = 0L;
 		
 		void set(const QCString & s) { RMessageComponent::set(s); }
-		const QCString & asString() { return RMessageComponent::asString(); }
+		QCString asString() { return RMessageComponent::asString(); }
 		
 		const char * className() const { return "REntity"; }
 };

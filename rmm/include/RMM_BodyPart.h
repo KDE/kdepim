@@ -51,7 +51,7 @@ class RBodyPart : public REntity {
 		void setMimeSubType(RMM::MimeSubType);
 		void setMimeSubType(const QCString &);
 
-		const QCString & description();
+		QCString description();
 		RMM::DispType disposition();
 		
 		void setDescription(const QCString &);

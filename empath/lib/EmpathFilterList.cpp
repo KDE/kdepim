@@ -95,3 +95,61 @@ EmpathFilterList::filter(const EmpathURL & id)
 			it.current()->filter(id);
 }
 
+	void
+EmpathFilterList::raisePriority(EmpathFilter * f)
+{
+	// Remember highest priority is 0, and higher numbers make lower priority.
+	EmpathFilterListIterator it(*this);
+	
+	// If the priority is the highest possible, ignore.
+	if (f->priority() == 0)
+		return;
+	
+	// Swap this item's priority with the one next to it, that currently has
+	// a higher priority.
+	for (; it.current(); ++it)
+		if (it.current()->priority() == f->priority() - 1)
+			it.current()->setPriority(it.current()->priority() + 1);
+	
+	f->setPriority(f->priority() - 1);
+}
+
+	void
+EmpathFilterList::lowerPriority(EmpathFilter * f)
+{
+	// Remember highest priority is 0, and higher numbers make lower priority.
+	EmpathFilterListIterator it(*this);
+	
+	// If the priority is the lowest possible, ignore.
+	if (f->priority() == count() - 1)
+		return;
+	
+	// Swap this item's priority with the one next to it, that currently has
+	// a lower priority.
+	for (; it.current(); ++it)
+		if (it.current()->priority() == f->priority() + 1)
+			it.current()->setPriority(it.current()->priority() - 1);
+	
+	f->setPriority(f->priority() + 1);
+}
+
+	void
+EmpathFilterList::remove(EmpathFilter * f)
+{
+	EmpathFilterListIterator it(*this);
+	
+	// For each item that has a lower priority than this one, shift it up.
+	for (; it.current(); ++it)
+		if (it.current()->priority() > f->priority())
+			it.current()->setPriority(it.current()->priority() - 1);
+		
+	QList::remove(f);
+}
+
+	void
+EmpathFilterList::append(EmpathFilter * f)
+{
+	f->setPriority(count());
+	QList::append(f);
+}
+

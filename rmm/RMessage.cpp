@@ -168,8 +168,6 @@ RMessage::assemble()
 
 	_update();
 
-	envelope_.assemble();
-
 	strRep_ = envelope_.asString();
 
 	if (type_ == BasicMessage) {

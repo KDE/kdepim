@@ -120,7 +120,6 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	filtersButtonBox_->setFixedWidth(filtersButtonBox_->sizeHint().width());
 	filtersButtonBox_->setMinimumHeight(filtersButtonBox_->sizeHint().height());
 
-	rgb_filters_->setMinimumHeight(h * 4);  
 	rgb_filters_->setMinimumWidth(filtersButtonBox_->sizeHint().width() + 40);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -168,6 +167,9 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	mainLayout_->addWidget(rgb_filters_,	0, 0);
 	mainLayout_->addWidget(buttonBox_,		1, 0);
 	mainLayout_->activate();
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
+	
 	update();
 }
 
@@ -201,6 +203,9 @@ EmpathFilterManagerDialog::s_editFilter()
 	EmpathFilter * editedFilter =
 		((EmpathFilterListItem *)lv_filters_->currentItem())->filter();
 	
+	if (editedFilter == 0)
+		return;
+	
 	EmpathFilterEditDialog filterEditDialog(editedFilter,
 			this, "filterEditDialog");
 
@@ -213,6 +218,16 @@ EmpathFilterManagerDialog::s_editFilter()
 EmpathFilterManagerDialog::s_removeFilter()
 {
 	empathDebug("s_removeFilter() called");
+	
+	EmpathFilter * editedFilter =
+		((EmpathFilterListItem *)lv_filters_->currentItem())->filter();
+	
+	if (editedFilter == 0)
+		return;
+	
+	empath->filterList().remove(editedFilter);
+	
+	update();
 }
 
 	void

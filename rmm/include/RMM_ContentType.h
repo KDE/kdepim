@@ -54,8 +54,8 @@ class RContentType : public RHeaderBody {
 		void setType(const QCString &);
 		void setSubType(const QCString &);
 		void setParameterList(RParameterList &);
-		const QCString & type();
-		const QCString & subType();
+		QCString type();
+		QCString subType();
 		RParameterList & parameterList();
 		
 		const char * className() const { return "RContentType"; }

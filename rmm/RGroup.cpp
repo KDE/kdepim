@@ -52,6 +52,7 @@ RGroup::operator = (const RGroup & g)
 	
 	RAddress::operator = (g);
 
+	assembled_	= false;
 	return *this;
 }
 
@@ -60,6 +61,7 @@ operator >> (QDataStream & s, RGroup & group)
 {
 	s	>> group.name_
 		>> group.phrase_;
+	group.assembled_ = false;
 	return s;
 }
 	
@@ -71,17 +73,17 @@ operator << (QDataStream & s, RGroup & group)
 	return s;
 }
 
-
-
-	const QCString &
+	QCString
 RGroup::name()
 {
+	parse();
 	return name_;
 }
 
-	const QCString &
+	QCString
 RGroup::phrase()
 {
+	parse();
 	return phrase_;
 }
 
@@ -89,17 +91,20 @@ RGroup::phrase()
 RGroup::setName(const QCString & s)
 {
 	name_ = s;
+	assembled_ = false;
 }
 
 	void
 RGroup::setPhrase(const QCString & s)
 {
 	phrase_ = s;
+	assembled_ = false;
 }
 
 	RMailboxList &
 RGroup::mailboxList()
 {
+	parse();
 	return mailboxList_;
 }
 
@@ -120,5 +125,6 @@ RGroup::createDefault()
 {
 	rmmDebug("createDefault() called");
 	name_ = "unnamed";
+	assembled_ = false;
 }
 

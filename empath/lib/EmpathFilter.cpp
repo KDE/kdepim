@@ -59,11 +59,11 @@ EmpathFilter::save()
 	empathDebug("save() called");
 	
 	KConfig * config = kapp->getConfig();
-	config->setGroup(EmpathConfig::EmpathConfig::GROUP_FILTER + QString().setNum(id_));
+	config->setGroup(EmpathConfig::GROUP_FILTER + QString().setNum(id_));
 	
 	empathDebug("Saving url name == \"" + url_.asString() + "\"");
 
-	config->writeEntry(EmpathConfig::EmpathConfig::KEY_FILTER_FOLDER, url_.asString());
+	config->writeEntry(EmpathConfig::KEY_FILTER_FOLDER, url_.asString());
 	
 	empathDebug("Matchers to save: " + QString().setNum(matchExprs_.count()));
 	
@@ -74,10 +74,14 @@ EmpathFilter::save()
 	for (; it.current() ; ++it)
 		it.current()->save(id_, c++);
 	
-	config->writeEntry(EmpathConfig::EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER, c);
+	config->writeEntry(EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER, c);
 
 	empathDebug("Saving event handler");
-	fEventHandler_->save(id_);
+	if (fEventHandler_ != 0)
+		fEventHandler_->save(id_);
+	
+	empathDebug("Saving priority == " + QString().setNum(priority_));
+	config->writeEntry(EmpathConfig::KEY_FILTER_PRIORITY, priority_);
 }
 
 	void
@@ -87,14 +91,14 @@ EmpathFilter::load(Q_UINT32 id)
 	id_ = id;
 
 	KConfig * config = kapp->getConfig();
-	config->setGroup(EmpathConfig::EmpathConfig::GROUP_FILTER + QString().setNum(id_));
+	config->setGroup(EmpathConfig::GROUP_FILTER + QString().setNum(id_));
 	
-	url_ = config->readEntry(EmpathConfig::EmpathConfig::KEY_FILTER_FOLDER);
+	url_ = config->readEntry(EmpathConfig::KEY_FILTER_FOLDER);
 	empathDebug("My url is \"" + url_.asString() + "\"");
 	
 	Q_UINT32 numMatchExprs =
 		config->readUnsignedNumEntry(
-			EmpathConfig::EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER);
+			EmpathConfig::KEY_NUM_MATCH_EXPRS_FOR_FILTER);
 	
 	empathDebug("There are " + QString().setNum(numMatchExprs) +
 		" match expressions that act for this filter");
@@ -104,6 +108,9 @@ EmpathFilter::load(Q_UINT32 id)
 
 	empathDebug("Loading event handler");
 	loadEventHandler();
+	
+	priority_ =
+		config->readUnsignedNumEntry(EmpathConfig::KEY_FILTER_PRIORITY, 100);
 }
 
 	void

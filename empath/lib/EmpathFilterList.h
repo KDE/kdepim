@@ -41,7 +41,13 @@ class EmpathFilterList : public QList<EmpathFilter>
 		void load();
 		void save();
 		void filter(const EmpathURL &);
+		void raisePriority(EmpathFilter *);
+		void lowerPriority(EmpathFilter *);
+		void remove(EmpathFilter *);
+		void append(EmpathFilter *);
+			
 		const char * className() const { return "EmpathFilterList"; }
+		
 	
 	private:
 

@@ -299,6 +299,9 @@ EmpathConfig::KEY_FILTER_EVENT_HANDLER_ADDRESS = "FilterEventHandlerAddress";
 
 	const QString
 EmpathConfig::KEY_FILTER_FOLDER = "FilterSourceFolder";
+	
+	const QString
+EmpathConfig::KEY_FILTER_PRIORITY = "FilterPriority";
 
 	const bool
 EmpathConfig::DEFAULT_UNDERLINE_LINKS = true;

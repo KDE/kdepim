@@ -45,7 +45,7 @@ class RDispositionType : public RHeaderBody {
 		void set(RMM::DispType);
 		void set(const QCString & s) { RHeaderBody::set(s); }
 
-		const QCString & filename();
+		QCString filename();
 		void setFilename(const QCString &);
 		void addParameter(RParameter & p);
 		RParameterList & parameterList();

@@ -53,6 +53,7 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	:	QWidget(parent, name)
 {
 	empathDebug("ctor");
+	setCaption(i18n("Sending Settings - ") + kapp->getCaption());
 	
 	QLineEdit	tempLineEdit((QWidget *)0);
 	Q_UINT32 h	= tempLineEdit.sizeHint().height();
@@ -321,6 +322,9 @@ EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(
 	copiesGroupLayout_->activate();
 	
 	topLevelLayout_->activate();
+	
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
 }
 
 	void

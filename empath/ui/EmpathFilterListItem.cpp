@@ -49,7 +49,7 @@ EmpathFilterListItem::~EmpathFilterListItem()
 EmpathFilterListItem::key(int column, bool) const
 {
 	QString tmpString;
-		tmpString.sprintf("%08i", filter_->priority());
+	tmpString.sprintf("%08x", filter_->priority());
 	return tmpString;
 }
 

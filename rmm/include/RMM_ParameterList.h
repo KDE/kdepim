@@ -43,7 +43,7 @@ class RParameterList : public QList<RParameter>, RHeaderBody {
 		RParameterList(const QCString &);
 		RParameterList & operator = (const RParameterList &);
 		RParameterList & operator = (const QCString &);
-		const QCString & asString();
+		QCString asString();
 
 		virtual ~RParameterList();
 

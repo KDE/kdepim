@@ -29,12 +29,15 @@
 #include <RMM_Token.h>
 
 RMailboxList::RMailboxList()
+	:	QList<RMailbox>(),
+		RHeaderBody()
+		
 {
 	rmmDebug("ctor");
 }
 
 RMailboxList::RMailboxList(const RMailboxList & l)
-	:	QList<RMailbox>(),
+	:	QList<RMailbox>(l),
 		RHeaderBody()
 {
 	rmmDebug("ctor");
@@ -52,6 +55,7 @@ RMailboxList::operator = (const RMailboxList & l)
     if (this == &l) return *this; // Don't do a = a.
 	QList<RMailbox>::operator = (l);
 	RHeaderBody::operator = (l);
+	assembled_ = false;
 	return *this;
 }
 
@@ -59,6 +63,7 @@ RMailboxList::operator = (const RMailboxList & l)
 RMailboxList::parse()
 {
 	rmmDebug("parse() called");
+	if (parsed_) return;
 	// XXX Currently just adapted slightly from RAddressList - adjust further ?
 	rmmDebug("strRep_ = " + strRep_);
 
@@ -110,19 +115,15 @@ RMailboxList::parse()
 		}
 	}
 	
-	rmmDebug("Done my news");
-
-	RMailboxListIterator it(*this);
-
-	for (; it.current(); ++it)
-		it.current()->parse();
-
+	parsed_ = true;
+	assembled_ = false;
 }
 
 	void
 RMailboxList::assemble()
 {
 	rmmDebug("assemble() called");
+	if (assembled_) return;
 	// XXX Just ripped from RAddressList - adjust further ?
 	bool firstTime = true;
 	
@@ -131,8 +132,6 @@ RMailboxList::assemble()
 	strRep_ = "";
 	
 	for (; it.current(); ++it) {
-		
-		it.current()->assemble();
 		
 		if (!firstTime) {
 			strRep_ += QCString(",\n    ");
@@ -143,6 +142,8 @@ RMailboxList::assemble()
 	}
 	
 	rmmDebug("assembled to: \"" + strRep_ + "\"");
+	
+	assembled_ = true;
 }
 
 	void
@@ -154,5 +155,7 @@ RMailboxList::createDefault()
 		m->createDefault();
 		append(m);
 	}
+	
+	assembled_ = false;
 }
 

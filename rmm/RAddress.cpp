@@ -106,12 +106,9 @@ RAddress::parse()
 	if (parsed_) return;
 	
 	delete mailbox_;
-	delete group_;
-
 	mailbox_	= 0;
+	delete group_;
 	group_		= 0;
-
-	rmmDebug("Done my deletions. Should be safe if ctors work");
 
 	QCString s = strRep_.stripWhiteSpace();
 
@@ -124,7 +121,6 @@ RAddress::parse()
 
 		group_ = new RGroup;
 		CHECK_PTR(group_);
-		if (!group_) rmmDebug("!mailbox!");
 		group_->set(s);
 		group_->parse();
 
@@ -134,7 +130,6 @@ RAddress::parse()
 
 		mailbox_ = new RMailbox;
 		CHECK_PTR(mailbox_);
-		if (!mailbox_) rmmDebug("!mailbox!");
 		rmmDebug(s);
 		mailbox_->set(s);
 		mailbox_->parse();
@@ -147,6 +142,7 @@ RAddress::parse()
 	void
 RAddress::assemble()
 {
+	parse();
 	rmmDebug("assemble() called");
 
 	if (mailbox_ != 0) {

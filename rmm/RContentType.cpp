@@ -30,7 +30,7 @@ RContentType::RContentType()
 }
 
 RContentType::RContentType(const RContentType & cte)
-	:	RHeaderBody()
+	:	RHeaderBody(cte)
 {
 	rmmDebug("ctor");
 	assembled_	= false;
@@ -143,14 +143,14 @@ RContentType::setParameterList(RParameterList & p)
 	assembled_	= false;
 }
 	
-	const QCString &
+	QCString
 RContentType::type()
 {
 	parse();
 	return type_;
 }
 
-	const QCString &
+	QCString
 RContentType::subType()
 {
 	parse();

@@ -29,7 +29,7 @@ RCte::RCte()
 }
 
 RCte::RCte(const RCte & cte)
-	:	RHeaderBody()
+	:	RHeaderBody(cte)
 {
 	rmmDebug("ctor");
 	assembled_	= false;
@@ -85,7 +85,7 @@ RCte::createDefault()
 }
 
 
-	const QCString &
+	QCString
 RCte::mechanism()	
 {
 	parse();

@@ -47,7 +47,7 @@ class RHeader : public RMessageComponent
 		void assemble();
 		void createDefault();
 		
-		const QCString & headerName();
+		QCString headerName();
 		RMM::HeaderType headerType();
 		RHeaderBody * headerBody();
 

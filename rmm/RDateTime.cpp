@@ -64,6 +64,7 @@ RDateTime::operator = (const RDateTime & dt)
 	
 	RHeaderBody::operator = (dt);
 	
+	assembled_ = false;
 	return *this;
 }
 
@@ -83,8 +84,8 @@ operator << (QDataStream & s, RDateTime & dt)
 {
 	//cerr << " << is getting : " << dt.toString() << endl;
 	dt.parse();
-	s << (QDateTime)dt;
-	s << dt.zone_;
+	s	<< (QDateTime)dt
+		<< dt.zone_;
 	return s;
 }
 
@@ -195,6 +196,7 @@ RDateTime::parse()
 	void
 RDateTime::assemble()
 {
+	parse();
 	if (assembled_) return;
 	
 	rmmDebug("assemble() called");
@@ -248,13 +250,5 @@ RDateTime::asUnixTime()
 	time_t timeT = mktime(&timeStruct);	
 
 	return (Q_UINT32)timeT;	
-}
-
-
-	const QCString &
-RDateTime::asString()
-{
-	assemble();
-	return strRep_;
 }
 

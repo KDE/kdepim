@@ -46,6 +46,7 @@ RMessageID::~RMessageID()
 	bool
 RMessageID::operator == (RMessageID & msgID)
 {
+	msgID.assemble();
 	return (
 		localPart_	== msgID.localPart_ &&
 		domain_		== msgID.domain_);
@@ -54,6 +55,7 @@ RMessageID::operator == (RMessageID & msgID)
 	bool
 RMessageID::operator != (RMessageID & msgID)
 {
+	msgID.assemble();
 	return (
 		localPart_	!= msgID.localPart_ ||
 		domain_		!= msgID.domain_);
@@ -74,28 +76,33 @@ RMessageID::operator = (const RMessageID & messageID)
 	rmmDebug("domain_ == " + domain_);
 	
 	RHeaderBody::operator = (messageID);
+	
+	assembled_ = false;
 	return *this;
 }
 
 	QDataStream &
 operator >> (QDataStream & s, RMessageID & mid)
 {
-	s >> mid.localPart_;
-	s >> mid.domain_;
+	s	>> mid.localPart_
+		>> mid.domain_;
+	mid.assembled_ = false;
 	return s;
 }
 		
 	QDataStream &
 operator << (QDataStream & s, RMessageID & mid)
 {
-	s << mid.localPart_;
-	s << mid.domain_;
+	mid.parse();
+	s	<< mid.localPart_
+		<< mid.domain_;
 	return s;
 }
 	
-	const QCString &
+	QCString
 RMessageID::localPart()
 {
+	parse();
     return localPart_;
 }
 
@@ -103,11 +110,13 @@ RMessageID::localPart()
 RMessageID::setLocalPart(const QCString & localPart)
 {
 	localPart_ = localPart;
+	assembled_ = false;
 }
 
-	const QCString &
+	QCString
 RMessageID::domain()
 {
+	parse();
     return domain_;
 }
 
@@ -115,12 +124,14 @@ RMessageID::domain()
 RMessageID::setDomain(const QCString & domain)
 {
     domain_ = domain;
+	assembled_ = false;
 }
 
 	void
 RMessageID::parse()
 {
 	rmmDebug("parse() called");
+	if (parsed_) return;
 	if (strRep_.isEmpty()) {
 		rmmDebug("But there's nothing to parse !");
 		return;
@@ -134,18 +145,23 @@ RMessageID::parse()
 	localPart_.replace(QRegExp("^<"), "");
 	domain_ = b.left(b.findRev('>'));
 	rmmDebug("Done parse");
+	parsed_ = true;
+	assembled_ = false;
 }
 
 	void
 RMessageID::assemble()
 {
 	rmmDebug("assemble() called");
+	if (assembled_) return;
 	strRep_ = "<" + localPart_ + "@" + domain_ + ">";
+	assembled_ = true;
 }
 
 	void
 RMessageID::createDefault()
 {
 	rmmDebug("createDefault() called");
+	assembled_ = false;
 }
 

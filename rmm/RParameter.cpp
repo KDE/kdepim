@@ -84,13 +84,13 @@ RParameter::createDefault()
 	attribute_ = value_ = "";
 }
 
-	const QCString &
+	QCString
 RParameter::attribute()
 {
 	return attribute_;
 }
 
-	const QCString &
+	QCString
 RParameter::value()
 {
 	return value_;

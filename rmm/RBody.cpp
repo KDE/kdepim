@@ -39,7 +39,7 @@ RBody::RBody()
 
 
 RBody::RBody(const RBody & body)
-	:	RMessageComponent()
+	:	RMessageComponent(body)
 {
 	rmmDebug("ctor");
 	partList_.setAutoDelete(true);
@@ -161,6 +161,7 @@ RBody::parse()
 	void
 RBody::assemble()
 {
+	parse();
 	rmmDebug("assemble() called");
 	
 	assembled_ = true;

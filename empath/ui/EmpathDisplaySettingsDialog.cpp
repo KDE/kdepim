@@ -26,6 +26,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
+#include <kquickhelp.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
@@ -113,6 +114,15 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	QObject::connect(pb_chooseVariableFont_, SIGNAL(clicked()),
 			this, SLOT(s_chooseVariableFont()));
 	
+	KQuickHelp::add(pb_chooseVariableFont_, i18n(
+			"Empath uses two main fonts. The fixed font is\n"
+			"used for displaying and composing messages.\n"
+			"The variable font is used everywhere else that\n"
+			"the system font is unsuitable, i.e. when displaying\n"
+			"some parts of a message that don't need to be in\n"
+			"the fixed width font."));
+			
+	
 	// Fixed font
 	
 	l_fixedFont_	=
@@ -131,7 +141,15 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	QObject::connect(pb_chooseFixedFont_, SIGNAL(clicked()),
 			this, SLOT(s_chooseFixedFont()));
-
+	
+	KQuickHelp::add(pb_chooseFixedFont_, i18n(
+			"Empath uses two main fonts. The fixed font is\n"
+			"used for displaying and composing messages.\n"
+			"The variable font is used everywhere else that\n"
+			"the system font is unsuitable, i.e. when displaying\n"
+			"some parts of a message that don't need to be in\n"
+			"the fixed width font."));
+	
 	// underline links
 	
 	cb_underlineLinks_	=
@@ -139,6 +157,13 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	CHECK_PTR(cb_underlineLinks_);
 	
 	cb_underlineLinks_->setFixedHeight(h);
+	
+	KQuickHelp::add(cb_underlineLinks_, i18n(
+			"Choose whether to have links underlined.\n"
+			"Links are email addresses, http:// type\n"
+			"addresses, etc. If you're colour blind,\n"
+			"this is a smart move."));
+		
 	
 	// Message font style
 	
@@ -156,12 +181,24 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	rb_messageFontFixed_->setFixedHeight(h);
 	
+	KQuickHelp::add(rb_messageFontFixed_, i18n(
+			"Use a fixed width font for showing and\n"
+			"composing messages. This is a really good\n"
+			"idea as messages can look dreadful in a\n"
+			"variable width font."));
+	
 	rb_messageFontVariable_	=
 		new QRadioButton(i18n("Use &variable width font"),
 				w_style_, "rb_messageFontVariable");
 	CHECK_PTR(rb_messageFontVariable_);
 	
 	rb_messageFontVariable_->setFixedHeight(h);
+	
+	KQuickHelp::add(rb_messageFontFixed_, i18n(
+			"Use a variable width font for showing and\n"
+			"composing messages. Not a good plan. The\n"
+			"rest of the world uses fixed width fonts\n"
+			"for email, so you'll be the odd one out.\n"));
 	
 	buttonGroup_->insert(rb_messageFontFixed_,		Fixed);
 	buttonGroup_->insert(rb_messageFontVariable_,	Variable);
@@ -176,6 +213,14 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	
 	l_backgroundColour_->setFixedHeight(h);
 	
+	KQuickHelp::add(l_backgroundColour_, i18n(
+			"Choose the background colour for reading\n"
+			"messages. If you don't like the standard,\n"
+			"you can use this. You could instead change\n"
+			"the template for displaying messages, if you\n"
+			"know HTML. This allows for greater power,\n"
+			"but is a little trickier."));
+	
 	kcb_backgroundColour_	=
 		new KColorButton(w_colour_, "kcb_backgroundColour");
 	CHECK_PTR(kcb_backgroundColour_);
@@ -187,6 +232,14 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	CHECK_PTR(l_textColour_);
 	
 	l_textColour_->setFixedHeight(h);
+		
+	KQuickHelp::add(l_textColour_, i18n(
+			"Choose the text colour for reading\n"
+			"messages. If you don't like the standard,\n"
+			"you can use this. You could instead change\n"
+			"the template for displaying messages, if you\n"
+			"know HTML. This allows for greater power,\n"
+			"but is a little trickier."));
 	
 	kcb_textColour_	=
 		new KColorButton(w_colour_, "kcb_textColour");
@@ -199,6 +252,14 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	CHECK_PTR(l_linkColour_);
 	
 	l_linkColour_->setFixedHeight(h);
+			
+	KQuickHelp::add(l_linkColour_, i18n(
+			"Choose the link colour for reading\n"
+			"messages. If you don't like the standard,\n"
+			"you can use this. You could instead change\n"
+			"the template for displaying messages, if you\n"
+			"know HTML. This allows for greater power,\n"
+			"but is a little trickier."));
 	
 	kcb_linkColour_	=
 		new KColorButton(w_colour_, "kcb_linkColour");
@@ -211,6 +272,14 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	CHECK_PTR(l_visitedLinkColour_);
 	
 	l_visitedLinkColour_->setFixedHeight(h);
+				
+	KQuickHelp::add(l_visitedLinkColour_, i18n(
+			"Choose the visited link colour for reading\n"
+			"messages. If you don't like the standard,\n"
+			"you can use this. You could instead change\n"
+			"the template for displaying messages, if you\n"
+			"know HTML. This allows for greater power,\n"
+			"but is a little trickier."));
 	
 	kcb_visitedLinkColour_	=
 		new KColorButton(w_colour_, "kcb_visitedColour");
@@ -222,6 +291,17 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	CHECK_PTR(l_iconSet_);
 	
 	l_iconSet_->setFixedHeight(h);
+	
+	KQuickHelp::add(l_visitedLinkColour_, i18n(
+			"Here you get to choose the icon set\n"
+			"that will be used by Empath. This covers\n"
+			"the toolbars, the icons on menus, and\n"
+			"those in the message list and folder\n"
+			"tree. You can create your own icon sets\n"
+			"by simply copying one and changing it.\n"
+			"See the help for details.\n"
+			"<b>Note</b> that this change does not\n"
+			"take effect until Empath is restarted."));
 	
 	cb_iconSet_ = new QComboBox(this, "cb_iconSet");
 	CHECK_PTR(cb_iconSet_);
@@ -327,6 +407,9 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 	colourGroupLayout_->activate();
 
 	topLevelLayout_->activate();
+	
+	setMinimumSize(minimumSizeHint());
+	resize(minimumSizeHint());
 };
 
 	void

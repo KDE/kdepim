@@ -44,22 +44,11 @@ RHeader::RHeader(const RHeader & h)
 	rmmDebug("copy ctor");
 }
 
-RHeader::RHeader(const QCString & name, RHeaderBody * b)
-	:	RMessageComponent()
-{
-	rmmDebug("ctor");
-}
-
-RHeader::RHeader(RMM::HeaderType t, RHeaderBody * b)
-	:	RMessageComponent()
-{
-	rmmDebug("ctor");
-}
-
 RHeader::~RHeader()
 {
 	rmmDebug("dtor");
 	delete headerBody_;
+	headerBody_ = 0;
 }
 
 	RHeader &
@@ -71,28 +60,37 @@ RHeader::operator = (const RHeader & h)
 	headerName_ = h.headerName_;
 	headerType_ = h.headerType_;
 
-	if (headerBody_ != 0) delete headerBody_;
+	if (headerBody_ != 0) {
+		delete headerBody_;
+		headerBody_ = 0;
+	}
+	
 	headerBody_ = new RHeaderBody(*h.headerBody_);
-
+	CHECK_PTR(headerBody_);
+	
 	RMessageComponent::operator = (h);
+	assembled_	= false;
 	return *this;
 }
 
-	const QCString &
+	QCString
 RHeader::headerName()
 {
+	parse();
 	return headerName_;
 }
 
 	RMM::HeaderType
 RHeader::headerType()
 {
+	parse();
 	return headerType_;
 }
 
 	RHeaderBody *
 RHeader::headerBody()
 {
+	parse();
 	return headerBody_;
 }
 
@@ -100,27 +98,33 @@ RHeader::headerBody()
 RHeader::setName(const QCString & name)
 {
 	headerName_ = name;
+	assembled_ = false;
 }
 
 	void
 RHeader::setType(RMM::HeaderType t)
 {
 	headerType_ = t;
+	assembled_ = false;
 }
 
 	void
 RHeader::setBody(RHeaderBody * b)
 {
 	headerBody_ = b;
+	assembled_ = false;
 }
 
 	void
 RHeader::parse()
 {
 	rmmDebug("parse() called");
+	if (parsed_) return;
+	rmmDebug("Need to parse");
 	int split = strRep_.find(':');
 
-	if (headerBody_ != 0) delete headerBody_;
+	delete headerBody_;
+	headerBody_ = 0;
 	headerType_ = RMM::HeaderUnknown;
 
 	if (split == -1) return;
@@ -151,6 +155,7 @@ RHeader::parse()
 		case RMM::MessageID:		b = new RMessageID;			break;
 		case RMM::Text: default:	b = new RText;				break;
 	}
+	CHECK_PTR(b);
 
 	QCString hb = strRep_.right(strRep_.length() - split - 1);
 	hb = hb.stripWhiteSpace();
@@ -159,15 +164,22 @@ RHeader::parse()
 	headerBody_ = b;
 
 	rmmDebug("strRep == " + strRep_);
+	parsed_		= true;
+	assembled_	= false;
 }
 
 	void
 RHeader::assemble()
 {
 	rmmDebug("assemble() called");
+	if (assembled_) return;
 
-	if (headerType_ != RMM::HeaderUnknown)
+	if ((int)headerType_ > 42)
+		headerType_ = RMM::HeaderUnknown;
+	
+	if (headerType_ != RMM::HeaderUnknown) {
 		headerName_ = RMM::headerNames[headerType_];
+	}
 
 	strRep_ = headerName_;
 	strRep_ += ':';
@@ -179,6 +191,7 @@ RHeader::assemble()
 	}
 
 	rmmDebug("assembled to: \"" + strRep_ + "\"");
+	assembled_ = true;
 }
 
 	void

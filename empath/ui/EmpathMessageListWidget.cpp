@@ -83,17 +83,12 @@ EmpathMessageListWidget::EmpathMessageListWidget(
 
 	_setupMessageMenu();
 	
-	// Connect double click. Rather not have this at all.
 	QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
 			this, SLOT(s_currentChanged(QListViewItem *)));
 
-	// Connect double click. Rather not have this at all.
-	QObject::connect(this, SIGNAL(doubleClicked(QListViewItem *)),
-			this, SLOT(s_doubleClicked(QListViewItem *)));
-	
-	// Connect return press to double click, a la mutt
+	// Connect return press to view.
 	QObject::connect(this, SIGNAL(returnPressed(QListViewItem *)),
-			this, SLOT(s_doubleClicked(QListViewItem *)));
+			this, SLOT(s_messageView()));
 	
 	// Connect right button up so we can produce the popup context menu.
 	QObject::connect(
@@ -195,7 +190,7 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord & item)
 		// Child of other item
 		empathDebug("Message has parentID, looking for parent");
 //		empathDebug("MESSAGE ID: \"" + messageID.asString() + "\"");
-//		empathDebug("PARENT  ID: \"" + parentID.asString() + "\"");
+//		empathDebug("PARENTID: \"" + parentID.asString() + "\"");
 		
 		EmpathMessageListItem * parentItem = 0;
 		
@@ -631,4 +626,85 @@ EmpathMessageListWidget::_setupMessageMenu()
 		this, SLOT(s_messagePrint()));
 }
 
+/*
+	void
+EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
+{
+	// Algorithm adapted from one written by Geri H. <ge_ha@yahoo.com>
+	
+	QListViewItem * lastSel = currentItem();
+	
+	newSel = itemAt( e->pos() );
 
+	if (e->button() != LeftButton)
+		return;
+	
+	if (lastSel == 0 || !isSelected(lastSel)) {
+		
+		// new selection
+		setMultiSelection(false);
+		setSelected (newSel, true);
+		return;
+	
+	}
+	
+	// if new postion select it
+	
+	if (isSelected(newSel))
+		return;
+	
+		
+	if (e->state() == ControlButton) {
+		
+		setMultiSelection(TRUE);
+		setSelected ( newSel, TRUE);
+	
+	} else {
+		
+		if (e->state() == ShiftButton) {
+			
+			setMultiSelection(true);
+			
+			if ((itemPos(lastSel)-itemPos(newSel)) > 0) {
+				
+				QListViewItem *item = lastSel->itemAbove();
+				
+				do {
+					setSelected(item, true);
+					
+					if (item == newSel)
+						break;
+					
+					item = item->itemAbove();
+				
+				} while (item);
+			
+			} else {
+			
+				QListViewItem *item = lastSel->itemBelow();
+				
+				do {
+					setSelected(item, true);
+					
+					if (item == newSel)
+						break;
+					
+					item = item->itemBelow();
+				
+				} while (item);
+			}
+		} else {
+			// unselect current Item
+			if (isMultiSelection())
+				unselect_all();
+			setSelected (newSel, true);
+		}
+	} else {
+		if (e->state() != ControlButton)
+			wasSelected = true;
+		else
+			setSelected (newSel, false);
+	}
+}
+
+*/

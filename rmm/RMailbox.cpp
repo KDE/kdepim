@@ -55,6 +55,7 @@ RMailbox & RMailbox::operator = (const RMailbox & mailbox)
 	
 	RAddress::operator = (mailbox);
 	
+	assembled_	= false;
 	return *this;
 }
 
@@ -65,12 +66,14 @@ operator >> (QDataStream & s, RMailbox & mailbox)
 		>> mailbox.route_
 		>> mailbox.localPart_
 		>> mailbox.domain_;
+	mailbox.assembled_ = false;
 	return s;
 }
 	
 	QDataStream &
 operator << (QDataStream & s, RMailbox & mailbox)
 {
+	mailbox.parse();
 	s	<< mailbox.phrase_
 		<< mailbox.route_
 		<< mailbox.localPart_
@@ -79,9 +82,10 @@ operator << (QDataStream & s, RMailbox & mailbox)
 }
 
 
-	const QCString &
+	QCString
 RMailbox::phrase()
 {
+	parse();
 	return phrase_;
 }
 
@@ -90,11 +94,13 @@ RMailbox::phrase()
 RMailbox::setPhrase(const QCString & s)
 {
 	phrase_ = s.data();
+	assembled_ = false;
 }
 
-	const QCString &
+	QCString
 RMailbox::route()
 {
+	parse();
 	return route_;
 }
 
@@ -102,11 +108,13 @@ RMailbox::route()
 RMailbox::setRoute(const QCString & s)
 {
 	route_ = s.data();
+	assembled_ = false;
 }
 
-	const QCString &
+	QCString
 RMailbox::localPart()
 {
+	parse();
 	return localPart_;
 }
 
@@ -114,12 +122,14 @@ RMailbox::localPart()
 RMailbox::setLocalPart(const QCString & s)
 {
 	localPart_ = s.data();
+	assembled_ = false;
 }
 
 
-	const QCString &
+	QCString
 RMailbox::domain()
 {
+	parse();
 	return domain_;
 }
 
@@ -127,12 +137,14 @@ RMailbox::domain()
 RMailbox::setDomain(const QCString & s)
 {
 	domain_ = s.data();
+	assembled_ = false;
 }
 
 	void
 RMailbox::parse()
 {
 	rmmDebug("parse() called");
+	if (parsed_) return;
 	rmmDebug("strRep == \"" + strRep_ + "\"");
 
 	if (strRep_.find('@') == -1) { // Must contain '@' somewhere. (RFC822)
@@ -210,12 +222,16 @@ RMailbox::parse()
 	rmmDebug("route:     \""	+ route_		+ "\"");
 	rmmDebug("localpart: \""	+ localPart_	+ "\"");
 	rmmDebug("domain:    \""	+ domain_		+ "\"");
+	
+	parsed_ = true;
+	assembled_ = false;
 }
 
 
 	void
 RMailbox::assemble()
 {
+	if (assembled_) return;
 	strRep_ = "";
 	rmmDebug("assemble() called");
 	if (localPart_.isEmpty()) // This is 'phrase route-addr' style
@@ -223,6 +239,8 @@ RMailbox::assemble()
 	else
 		strRep_ = localPart_ + "@" + domain_;
 	rmmDebug("assembled to \"" + strRep_ + "\""); 
+	
+	assembled_ = true;
 }
 
 	void
@@ -234,5 +252,7 @@ RMailbox::createDefault()
 	localPart_	= "foo";
 	domain_		= "bar";
 	strRep_		= "<foo@bar>";
+	
+	assembled_ = false;
 }
 

@@ -127,6 +127,7 @@ class EmpathConfig
 		static const QString		KEY_FILTER_EVENT_HANDLER_FOLDER;
 		static const QString		KEY_FILTER_EVENT_HANDLER_ADDRESS;
 		static const QString		KEY_FILTER_FOLDER;
+		static const QString		KEY_FILTER_PRIORITY;
 
 		static const bool			DEFAULT_UNDERLINE_LINKS;
 		static const QString		DEFAULT_FIXED_OR_VARIABLE;

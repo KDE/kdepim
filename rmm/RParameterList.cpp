@@ -113,7 +113,7 @@ RParameterList::createDefault()
 	rmmDebug("createDefault() called");
 }
 
-	const QCString &
+	QCString
 RParameterList::asString()
 {
 	return strRep_;

@@ -184,7 +184,7 @@ EmpathMessageHTMLWidget::go()
 	///////////////////////////////////////////////////////////// Testing ///
 	// Write the HTML to a file. Useful considering HTML widget crashes.  ///
 	/////////////////////////////////////////////////////////////////////////
-#ifndef NDEBUG
+#if 0
 	empathDebug("Writing message as html to message.html");
 	QFile f("message.html");
 	if (f.open(IO_WriteOnly)) {

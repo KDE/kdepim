@@ -45,8 +45,8 @@ class RParameter : public RMessageComponent {
 		void parse();
 		void assemble();
 
-		const QCString & attribute();
-		const QCString & value();
+		QCString attribute();
+		QCString value();
 
 		void setAttribute	(const QCString & attribute);
 		void setValue		(const QCString & value);

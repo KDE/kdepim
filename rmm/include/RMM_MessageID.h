@@ -53,8 +53,8 @@ class RMessageID : public RHeaderBody {
 		
 		void createDefault();
 
-		const QCString & localPart();
-		const QCString & domain();
+		QCString localPart();
+		QCString domain();
 		void setLocalPart(const QCString & localPart);
 		void setDomain(const QCString & domain);
 		

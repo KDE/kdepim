@@ -69,7 +69,7 @@ RDispositionType::set(RMM::DispType t)
 {
 }
 
-	const QCString &
+	QCString
 RDispositionType::filename()
 {
 	parse();

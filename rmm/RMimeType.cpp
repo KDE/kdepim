@@ -95,7 +95,7 @@ RMimeType::setSubType(const QCString & s)
 {
 }
 
-	const QCString &
+	QCString
 RMimeType::boundary()
 {
 	return boundary_;
@@ -107,7 +107,7 @@ RMimeType::setBoundary(const QCString & s)
 	boundary_ = s;
 }
 
-	const QCString &
+	QCString
 RMimeType::name()
 {
 	return name_;
