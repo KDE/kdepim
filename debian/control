@@ -12,7 +12,7 @@ Depends: ${shlibs:Depends}
 Recommends: kghostview, kdebase-libs
 Suggests: kpilot
 Enhances: kdebase, kpilot
-Description: Personal organizer based on QT and KDE 
+Description: Personal organizer based on Qt and KDE 
  A complete calendar and scheduling program. KOrganizer supports
  information interchange with other calendar applications through the
  industry standard vCalendar file format.
