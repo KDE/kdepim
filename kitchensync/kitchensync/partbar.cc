@@ -168,4 +168,6 @@ PartBarItem * PartBar::currentItem() const {
 }
 
 
+//#include "partbar.moc"
+
 

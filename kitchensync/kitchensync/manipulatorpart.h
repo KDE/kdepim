@@ -12,9 +12,10 @@
 namespace KitchenSync {
 
   class ManipulatorPart : public KParts::Part {
+    Q_OBJECT
     public:
      ManipulatorPart(const QString &name = QString::null, QWidget *parent = 0, const char *name  = 0 );
-     virtual ~ManipulatorPart();
+     virtual ~ManipulatorPart() {};
      // the Type this Part understands/ is able to interpret
      virtual QString type()const {return QString::null; };
 
@@ -23,7 +24,7 @@ namespace KitchenSync {
      virtual QString name()const { return QString::null; };
 
      virtual QString description()const { return QString::null; };
-     virtual const QPixmap *pixmap()const { return 0l; };
+     virtual QPixmap *pixmap()const { return 0l; };
     public slots:
      virtual void syncEntries( const QPtrList<KSyncEntry> & ){ };     
 

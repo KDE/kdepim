@@ -1,1 +1,1 @@
-SUBDIRS = lib klockfile libkonnector
+SUBDIRS = lib klockfile libkonnector kitchensync

@@ -8,6 +8,8 @@
 #define PARTBAR_H
 
 #include <klistbox.h>
+#include <kicontheme.h>
+
 #include <qevent.h>
 
 #include "manipulatorpart.h"
@@ -76,7 +78,7 @@ namespace KitchenSync {
       Q_OBJECT
     public:
       PartBar( QWidget *parent = 0, const char *name = 0, WFlags f = 0 );
-      ~PartBar();
+      ~PartBar() {};
       
       virtual PartBarItem* insertItem( ManipulatorPart *part );
        
