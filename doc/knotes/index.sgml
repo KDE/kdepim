@@ -10,8 +10,8 @@
 
 <title>The KNotes Handbook
 <author>Bernd Johannes Wuebben, <tt/wuebben@kde.org/
-<date>Version 0.3, 1 June 1997
-<abstract>This Handbook describes KNotes Version 0.3
+<date>Version 1.0, 1 April 1998
+<abstract>This Handbook describes KNotes Version 1.0
 
 <!-- Table of contents -->
 <toc>
@@ -24,23 +24,8 @@
 <p>
 
 
-KNotes is my attempt to write a really usable and good looking 
+KNotes is my attempt to write usable and good looking 
 notes application for the KDE project.
-
-The first stage of the KNotes project has been completed. Most, if not all 
-basic functionality has been implemented. The second phase of this project will
-consist of attempting to closely integrate KNotes with the KDE desktop in
-particular 
-kwm and kpanel. Currently this integration has only been achieved in a 
-rudimentary fashion. The reason for this is that I have reached the 
-boundaries of what can currently be done with the kwm communication protocol. 
-
-This brings me to mention the second and more serious reason for implementing
-KNotes: to test and extend the kwm communications protocol. It is at present
-for example not possible for a KNotes note to remember its position AND virtual 
-desktop on exit and place itself exactly on the same position the next time
-it is maped onto the desktop. I am currently working with Matthias on this and 
-similar problems.
 
 KNotes can:
 <itemize>
@@ -54,6 +39,7 @@ KNotes can:
 <item>use an arbitrary font for a note.
 <item>do auto-indentation
 <item>do two different frame styles
+<item>open urls in a kfm browser window on double click.
 </itemize>
 <p>
 
@@ -140,6 +126,13 @@ KNotes is very simply to use. I am sure that will have no problems with KNotes.
 KNotes makes use of the KDE Drag and Drop protocol. This means that you can darg
 and drop files form the Desktop or kfm or some remote ftp site that you have
 open in one of kfm's windows on to KNotes. 
+
+<p>
+<sect1>Double Click on URL's
+<p>
+KNotes recognizes URL's. By double clicking on a URL knotes will open
+a kfm browser window and attempt to open the URL.
+<p>
 
 <sect1> Printing
 <p>
