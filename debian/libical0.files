@@ -1,0 +1,6 @@
+usr/lib/libical.so.*
+usr/lib/libical.la
+usr/lib/libicalss.so.*
+usr/lib/libicalss.la
+usr/lib/libicalvcal.so.*
+usr/lib/libicalvcal.la

@@ -3,8 +3,9 @@ kdepim (4:2.2.1-1) unstable; urgency=low
   * new upstream version 2.2.1
   * Change maintainer
   * Lintian fixes
+  * Break out libical packages again
  
- -- Ivan E. Moore II <rkrusty@debian.org>  Sat, 25 Aug 2001 14:48:00 -0700
+ -- Ivan E. Moore II <rkrusty@debian.org>  Fri, 07 Sep 2001 12:07:00 -0700
 
 kdepim (4:2.2.0-final-1) unstable; urgency=low
  
