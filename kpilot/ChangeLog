@@ -1,3 +1,14 @@
+KPilot Developer's notes for november 13th 2000
+===============================================
+
+Lots of things have changed in the class hierarchy.
+
+* Jorg's bug in the memo-import function was handled OK in addressWidget,
+  but it seemed clumsy to deal with the same problem in two different
+  places. Moved findSelectedCategory() to PilotComponent. Added some
+  other convenience functions there for the category combo box.
+
+
 Developer's notes for november 9th 2000
 =======================================
 

@@ -74,6 +74,7 @@ MemoWidget::~MemoWidget()
 
 }
 
+#if 0
 // void MemoWidget::initializeCategories(PilotDatabase *memoDB)
 //
 // Fill up the categories combobox with a list of all the
@@ -86,16 +87,15 @@ void MemoWidget::initializeCategories(PilotDatabase *memoDB)
 	int i;
 	fCatList->clear();
 	// Get all the category names. The "All" category isn't
-	// in the list of category names, so add it here by
-	// hand.
+	// in the list of category names, so add it by
+	// hand at the top of the list when all others are
+	// already in the list.
 	//
 	//
-	fCatList->insertItem(i18n("All"));
 
-	unsigned char buffer[PILOT_BUFFER_SIZE];
 
-	int appLen = memoDB->readAppBlock(buffer, sizeof(buffer));
-	unpack_MemoAppInfo(&fMemoAppInfo, buffer, appLen);
+	if (memoDB != 0)
+	{
 
 	for(i = 0; i < 15; i++)
 	{
@@ -112,7 +112,10 @@ void MemoWidget::initializeCategories(PilotDatabase *memoDB)
 			}
 		}
 	}
+	}
+	fCatList->insertItem(i18n("All"),0);
 }
+#endif
 
 // void MemoWidget::initializeMemos(PilotDatabase *memoDB)
 //
@@ -202,11 +205,19 @@ MemoWidget::initialize()
 		kdDebug() << fname << 
 			": Can't open local database MemoDB\n" ;
 
+		populateCategories(fCatList,0L);
 		updateWidget();
 		return;
 	}
 
-	initializeCategories(memoDB);
+	// Normal case: there is a database so we can read it
+	// and determine all the categories.
+	//
+	unsigned char buffer[PILOT_BUFFER_SIZE];
+	int appLen = memoDB->readAppBlock(buffer, sizeof(buffer));
+	unpack_MemoAppInfo(&fMemoAppInfo, buffer, appLen);
+
+	populateCategories(fCatList,&fMemoAppInfo.category);
 	initializeMemos(memoDB);
 
 	KPilotLink::getPilotLink()->closeDatabase(memoDB);
@@ -350,6 +361,7 @@ MemoWidget::slotDeleteMemo()
 	initialize();
 }
 
+#if 0
 int MemoWidget::findSelectedCategory(bool AllIsUnfiled)
 {
 	FUNCTIONSETUP;
@@ -436,6 +448,7 @@ int MemoWidget::findSelectedCategory(bool AllIsUnfiled)
 	if ((currentCatID==-1) && AllIsUnfiled) currentCatID=0;
 	return currentCatID;
 }
+#endif
 
 void
 MemoWidget::updateWidget()
@@ -451,7 +464,8 @@ MemoWidget::updateWidget()
 
 	int listIndex = 0;
 	int currentEntry = 0;
-	int currentCatID = findSelectedCategory(false);
+	int currentCatID = findSelectedCategory(fCatList,
+		&(fMemoAppInfo.category),false);
 
 
 	fListBox->clear();
@@ -544,7 +558,8 @@ MemoWidget::slotImportMemo()
     FUNCTIONSETUP;
     int i = 0;
     int nextChar;
-    int currentCatID = findSelectedCategory(true);
+	int currentCatID = findSelectedCategory(fCatList,
+		&(fMemoAppInfo.category),true);
   
     QString fileName = KFileDialog::getOpenFileName();
     if(fileName != NULL)

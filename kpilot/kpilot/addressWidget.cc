@@ -163,9 +163,6 @@ AddressWidget::initialize()
 
 	KConfig* config = KGlobal::config();
 
-	fCatList->clear();
-	fCatList->insertItem(i18n("All"));
-
 	fAddressList.clear();
 
 	if(addressDB->isDBOpen())
@@ -173,13 +170,14 @@ AddressWidget::initialize()
 		appLen = addressDB->readAppBlock(buffer, BUFFERSIZE);
 		unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
 
-		setupCategories();
+		populateCategories(fCatList,&fAddressAppInfo.category);
 		getAllAddresses(addressDB,config);
 
 		KPilotLink::getPilotLink()->closeDatabase(addressDB);
 	}
 	else
 	{
+		populateCategories(fCatList,0L);
 		kdDebug() << fname << ": Could not open local AddressDB" << endl;
 	}
 
@@ -267,51 +265,8 @@ AddressWidget::updateWidget()
 			addressDisplayMode << endl ;
 	}
 
-	if (fCatList->currentItem()==-1)
-	{
-		kdDebug() << fname <<
-			": No category selected in address book.\n";
-		return;
-	}
-	// Semantics of currentCatID are:
-	//
-	// >=0 is a specific category based on the text -> category number
-	//      mapping defined by the Pilot,
-	// ==-1 means "All" category selected.
-	//
-	//
-	int currentCatID = 0;
-
-	if (fCatList->currentItem()==0)
-	{
-		currentCatID=-1;
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname << 
-				": Category all selected.\n";
-		}
-	}
-	else
-	{
-		// If a category is deleted after others 
-		// have been added, none of the
-		// category numbers are changed.  
-		// So we need to find the category number
-		// for this category.
-		while(strcmp(fAddressAppInfo.category.name[currentCatID], 
-			fCatList->text(fCatList->currentItem()).latin1()) &&
-			(currentCatID < fCatList->count()))
-		{
-			currentCatID++;
-		}
-
-		if (currentCatID >= fCatList->count())
-		{
-			kdDebug() << fname << 
-				": Can't find selected category!\n";
-			currentCatID=-1; // All category
-		}
-	}
+	int currentCatID = findSelectedCategory(fCatList,
+		&(fAddressAppInfo.category));
 
 	fListBox->clear();
 	fAddressList.first();
@@ -463,14 +418,9 @@ AddressWidget::slotAddRecord(PilotAddress* address)
 {
 	FUNCTIONSETUP;
 
-  int currentCatID = 0;
+	int currentCatID = findSelectedCategory(fCatList,
+		&(fAddressAppInfo.category),true);
 
-  // If a category is deleted after others have been added, none of the
-  // category numbers are changed.  So we need to find the category number
-  // for this category.
-  while(strcmp(fAddressAppInfo.category.name[currentCatID], 
-	       fCatList->text(fCatList->currentItem()).latin1()))
-    currentCatID++;
   address->setCat(currentCatID);
   fAddressList.append(address);
   writeAddress(address);
@@ -854,6 +804,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.13  2000/11/10 08:33:24  adridg
+// General administrative
+//
 // Revision 1.12  2000/10/29 22:16:39  adridg
 // Misc fixes
 //

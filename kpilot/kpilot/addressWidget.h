@@ -10,10 +10,10 @@
 #ifndef __ADDRESS_WIDGET_H
 #define __ADDRESS_WIDGET_H
 
+class QMultiLineEdit;
+class QListBox;
+class QComboBox;
 #include "pilotComponent.h"
-#include <qmlined.h>
-#include <qlistbox.h>
-#include <qcombo.h>
 #include "pilotAddress.h"
 #include "kpilotlink.h"
 
