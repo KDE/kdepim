@@ -64,14 +64,14 @@ void KNServerInfo::readConf(KConfig *conf)
     conf->deleteEntry("pass"); //first time run, don't store it in the config file
 
     if (Wallet::folderDoesNotExist(Wallet::NetworkWallet(), "knode") ||
-        Wallet::keyDoesNotExist(Wallet::NetworkWallet(), "knode", s_erver))
+        Wallet::keyDoesNotExist(Wallet::NetworkWallet(), "knode", QString::number(i_d)))
       return;
 
     Wallet* wallet = openWallet();
-    if (!wallet || wallet->readPassword(s_erver, p_ass)) {
+    if (!wallet || wallet->readPassword(QString::number(i_d), p_ass)) {
       //Save the pass in wallet as this might be the first time it's used
       if (wallet)
-        wallet->writePassword(s_erver, p_ass);
+        wallet->writePassword(QString::number(i_d), p_ass);
     }
   }
 }
@@ -110,9 +110,9 @@ void KNServerInfo::saveConf(KConfig *conf)
     conf->writeEntry("needsLogon", n_eedsLogon);
     conf->writeEntry("user", u_ser);
     //open wallet for storing only if the user actually does have the password
-    if (!p_ass.isEmpty()) {
+    if (n_eedsLogon) {
       Wallet* wallet = openWallet();
-      if (!wallet || wallet->writePassword(s_erver, p_ass)) {
+      if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
           KMessageBox::information(0, i18n("KWallet isn't running. We strongly recommend using "
                                            "KWallet for managing your password"),
                                    i18n("KWallet isn't running!"), "KWalletWarning" );
