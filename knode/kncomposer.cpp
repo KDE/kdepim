@@ -111,13 +111,16 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   KStdAction::close(this, SLOT(close()),actionCollection());
 
   //edit menu
-  KAction *undo = KStdAction::undo(v_iew->e_dit, SLOT(undo()), actionCollection());
+  KStdAction::undo(this, SLOT(slotUndo()), actionCollection());
+#if 0
   undo->setEnabled(false);
   connect(v_iew->e_dit, SIGNAL(undoAvailable(bool)), undo, SLOT(setEnabled(bool)));
-
-  KAction *redo = KStdAction::redo(v_iew->e_dit, SLOT(redo()), actionCollection());
+#endif
+  KStdAction::redo(this, SLOT(slotRedo()), actionCollection());
+#if 0
   redo->setEnabled(false);
   connect(v_iew->e_dit, SIGNAL(redoAvailable(bool)), redo, SLOT(setEnabled(bool)));
+#endif
 
   KAction *cut =KStdAction::cut(v_iew->e_dit, SLOT(cut()), actionCollection());
 
@@ -298,6 +301,28 @@ KNComposer::~KNComposer()
   KConfig *conf = KGlobal::config();
   conf->setGroup("composerWindow_options");
   saveMainWindowSettings(conf);
+}
+
+void KNComposer::slotUndo()
+{
+    QWidget* fw = focusWidget();
+    if (!fw) return;
+
+    if (fw->inherits("KEdit"))
+        ((QMultiLineEdit*)fw)->undo();
+    else if (fw->inherits("QLineEdit"))
+        ((QLineEdit*)fw)->undo();
+}
+
+void KNComposer::slotRedo()
+{
+    QWidget* fw = focusWidget();
+    if (!fw) return;
+
+    if (fw->inherits("KEdit"))
+        ((QMultiLineEdit*)fw)->redo();
+    else if (fw->inherits("QLineEdit"))
+        ((QLineEdit*)fw)->redo();
 }
 
 

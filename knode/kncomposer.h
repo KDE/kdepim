@@ -169,6 +169,8 @@ class KNComposer : public KMainWindow  {
     // DND handling
     virtual void slotDragEnterEvent(QDragEnterEvent *);
     virtual void slotDropEvent(QDropEvent *);
+    void slotUndo();
+    void slotRedo();
 
   protected:
 
