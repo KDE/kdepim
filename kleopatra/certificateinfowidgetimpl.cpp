@@ -61,8 +61,9 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   new QListViewItem( listView, i18n("Can be used for signing"), 
 		     info.sign?i18n("Yes"):i18n("No") );
 
-  new QListViewItem( listView, i18n("Valid to"), info.expire.toString() );
-  new QListViewItem( listView, i18n("Valid from"), info.created.toString() );
+  new QListViewItem( listView, i18n("Valid"), QString("From %1 to %2")
+		     .arg( info.created.toString() ).arg(info.expire.toString()) );
+
 
   //new QListViewItem( listView, i18n("Email"), info.dn["1.2.840.113549.1.9.1"] );
   new QListViewItem( listView, i18n("Country"), info.dn["C"] );

@@ -25,6 +25,8 @@ int main( int argc, char** argv )
         {
             { "+name", I18N_NOOP("The name of the plugin"), 0 },
             { "+lib" , I18N_NOOP("The library of the plugin"), 0 },
+            { "external" , I18N_NOOP("Search for external certificates initially"), 0 },
+            { "query " , I18N_NOOP("Initial query string"), 0 },
             { 0, 0, 0 } // End of options.
         };
     KCmdLineArgs::addCmdLineOptions( options );
@@ -41,7 +43,6 @@ int main( int argc, char** argv )
   
     QString pluginName = QString::fromLocal8Bit( args->arg( 0 ) );
     QString pluginLib = QString::fromLocal8Bit( args->arg( 1 ) );
-    args->clear();
   
     pWrapper = new CryptPlugWrapper( 0, pluginName, pluginLib,
                                      QString::null, true );
@@ -53,9 +54,10 @@ int main( int argc, char** argv )
                             i18n( "Certificate Manager Error" ) );
         return -2;
     }
-    CertManager* manager = new CertManager(0);
-    manager->show();
-    
+    CertManager* manager = new CertManager( args->isSet("external"), 
+					    QString::fromLocal8Bit(args->getOption("query")));
+    args->clear();
+    manager->show();   
   
     QObject::connect( qApp, SIGNAL( lastWindowClosed() ), qApp, SLOT( quit() ) );
     int ret = app.exec();

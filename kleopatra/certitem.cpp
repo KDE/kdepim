@@ -8,26 +8,9 @@
 
 #include "certificateinfowidgetimpl.h"
 
-CertItem::CertItem( const QString& DN, 
-		    const QString& serial,
-		    const QString& issuer, 
-		    const QString& CN, 
-		    const QString& L,
-		    const QString& O,
-		    const QString& OU,
-		    const QString& C, 
-		    const QString& email, 
-		    const QDateTime& created,
-		    const QDateTime& expire,
-		    bool sign,
-		    bool encrypt,
-		    bool certify,
-		    const CryptPlugWrapper::CertificateInfo& info,
+CertItem::CertItem( const CryptPlugWrapper::CertificateInfo& info,
 		    Agent* agent,CertManager* manager, CertBox* parent )
-  : QListViewItem( parent, DN, issuer, serial /*agent?agent->shortName():""*/) , 
-   _DN(DN), _serial(serial),_issuer(issuer), _CN(CN),_L(L), _O(O), _OU(OU), _C(C), _email(email),
-    _created(created),_expire(expire),
-    _sign(sign),_encrypt(encrypt),_certify(certify),
+  : QListViewItem( parent ) , 
     _info(info),
     _agent(agent),
     _manager(manager)
@@ -35,26 +18,9 @@ CertItem::CertItem( const QString& DN,
   init();
 }
 
-CertItem::CertItem( const QString& DN, 
-		    const QString& serial,
-		    const QString& issuer, 
-		    const QString& CN, 
-		    const QString& L,
-		    const QString& O,
-		    const QString& OU,
-		    const QString& C, 
-		    const QString& email, 
-		    const QDateTime& created,
-		    const QDateTime& expire,
-		    bool sign,
-		    bool encrypt,
-		    bool certify,
-		    const CryptPlugWrapper::CertificateInfo& info,
+CertItem::CertItem( const CryptPlugWrapper::CertificateInfo& info,
 		    Agent* agent,CertManager* manager, CertItem* parent )
-  : QListViewItem( parent, DN, issuer, serial /*agent?agent->shortName():"" */), 
-   _DN(DN), _serial(serial), _issuer(issuer), _CN(CN),_L(L), _O(O), _OU(OU), _C(C), _email(email), 
-    _created(created),_expire(expire),
-    _sign(sign),_encrypt(encrypt),_certify(certify),
+  : QListViewItem( parent ), 
     _info(info),
     _agent(agent),
     _manager(manager)
@@ -65,8 +31,24 @@ CertItem::CertItem( const QString& DN,
 void CertItem::init()
 {
   setOpen( true );
-  setText( 3, _created.toString() );
-  setText( 4, _expire.toString() );
+}
+
+QString CertItem::text( int col ) const
+{
+  switch( col ) {
+  case 0:
+    return dn();
+  case 1:
+    return issuer();
+  case 2:
+    return serial();
+  case 3:
+    return created().toString();
+  case 4:
+    return expire().toString();
+  default:
+    return QListViewItem::text(col);
+  }
 }
 
 /**

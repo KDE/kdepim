@@ -13,7 +13,8 @@ class CertManager :public KMainWindow
 Q_OBJECT
 
 public:
-    CertManager( QWidget* parent = 0, const char* name = 0);
+    CertManager( bool remote = false, const QString& query = QString::null, 
+		 QWidget* parent = 0, const char* name = 0);
 
     const CryptPlugWrapper::CertificateInfoList& certList() const { return _certList; }
     
@@ -29,6 +30,7 @@ protected slots:
     void importCRLFromFile();
     void importCRLFromLDAP();
     void slotGPGSMExited();
+    void slotToggleRemote(bool);
 
 private:
   CertItem* fillInOneItem( CertBox* lv, CertItem* parent, 
@@ -38,6 +40,7 @@ private:
     KProcess* gpgsmProc;
     KToolBar* _toolbar;
     CertBox* _certBox;
+    bool     _remote;
 };
 
 #endif // _CERTMANAGER_H_

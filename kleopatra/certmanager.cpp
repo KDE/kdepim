@@ -21,6 +21,7 @@
 #include <dcopclient.h>
 #include <ktoolbar.h>
 #include <klineedit.h>
+#include <kstatusbar.h>
 
 // Qt
 #include <qtextedit.h>
@@ -36,9 +37,9 @@ static const int ID_LINEEDIT = 1;
 static const int ID_BUTTON   = 2;
 
 
-CertManager::CertManager( QWidget* parent, const char* name ) :
+CertManager::CertManager( bool remote, const QString& query, QWidget* parent, const char* name ) :
     KMainWindow( parent, name ),
-    gpgsmProc( 0 )
+    gpgsmProc( 0 ), _remote( remote )
 {
   KMenuBar* bar = menuBar();
 
@@ -49,6 +50,11 @@ CertManager::CertManager( QWidget* parent, const char* name ) :
   KAction* update = KStdAction::redisplay( this, SLOT( loadCertificates() ), actionCollection());
   update->plug( fileMenu );
 
+  KToggleAction* remoteaction = new KToggleAction( i18n("Remote lookup"), KShortcut(), this);
+  connect( remoteaction, SIGNAL( toggled(bool) ), this, SLOT( slotToggleRemote( bool ) ) );
+  remoteaction->setChecked( _remote );
+  remoteaction->plug( fileMenu );
+  
   fileMenu->insertSeparator();
 
   KAction* quit = KStdAction::quit( this, SLOT( quit() ), actionCollection());
@@ -110,19 +116,24 @@ CertManager::CertManager( QWidget* parent, const char* name ) :
   importCRLFromLDAP->plug( crlImportMenu );
   importCRLFromLDAP->setEnabled( false );
 
-  // Main Window --------------------------------------------------
+  // Toolbar
   _toolbar = toolBar( "mainToolBar" );
-  _toolbar->insertLined( "", ID_LINEEDIT, SIGNAL( returnPressed() ), this, 
+
+  _toolbar->insertLined( query, ID_LINEEDIT, SIGNAL( returnPressed() ), this, 
 			 SLOT( loadCertificates() ) );
   _toolbar->setItemAutoSized( ID_LINEEDIT, true );
+
   KAction* find = KStdAction::find( this, SLOT( loadCertificates() ), actionCollection());
   _toolbar->insertButton( find->icon(), ID_BUTTON, SIGNAL( clicked() ), this, 
 			  SLOT( loadCertificates() ), 
 			  true, i18n("Search") );
   _toolbar->alignItemRight( ID_BUTTON, true );
 
+  // Main Window --------------------------------------------------
   _certBox = new CertBox( this, "certBox" );
   setCentralWidget( _certBox );
+
+  if( !query.isEmpty() ) loadCertificates();
 }
 
 CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent, 
@@ -130,7 +141,7 @@ CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent,
 {
   if( parent ) {
     //qDebug("New with parent");
-    return new CertItem( info.userid[0].stripWhiteSpace(),
+    return new CertItem( /*info.userid[0].stripWhiteSpace(),
 			 info.serial.stripWhiteSpace(), 
 			 info.issuer.stripWhiteSpace(),
 			 info.dn["CN"], 
@@ -140,12 +151,12 @@ CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent,
 			 info.dn["C"],
 			 info.dn["1.2.840.113549.1.9.1"], 
 			 info.created,info.expire,
-			 info.sign, info.encrypt, info.certify,
+			 info.sign, info.encrypt, info.certify,*/
 			 info,
 			 0, this, parent );  
   } else {
     //qDebug("New root");
-    return new CertItem( info.userid[0].stripWhiteSpace(), 
+    return new CertItem( /*info.userid[0].stripWhiteSpace(), 
 			 info.serial.stripWhiteSpace(),
 			 info.issuer.stripWhiteSpace(),
 			 info.dn["CN"], 
@@ -155,40 +166,22 @@ CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent,
 			 info.dn["C"],
 			 info.dn["1.2.840.113549.1.9.1"], 
 			 info.created,info.expire,
-			 info.sign, info.encrypt, info.certify,
+			 info.sign, info.encrypt, info.certify,*/
 			 info,			
 			 0, this, lv );
   }
 }
 
-#if 0
-CryptPlugWrapper::CertificateInfoList fillInListView( CertBox* lv, CertItem* parent, 
-							     CryptPlugWrapper::CertificateInfoList list )
+void CertManager::slotToggleRemote(bool b)
 {
-  if( list.isEmpty() ) return list;
-  for( CryptPlugWrapper::CertificateInfoList::Iterator it = list.begin();
-       it != list.end(); ) {
-    CryptPlugWrapper::CertificateInfo info = *it;
-    qDebug("Handling %s", info.issuer.utf8().data() );
-    //info.dn.detach();
-    if( (info.issuer == info.userid) ) {
-      it = list.erase( it );
-      CertItem* item = fillInOneItem( lv, 0, info );
-      list = fillInListView( lv, item, list );
-      it = list.begin();
-    } else if( parent && (info.issuer == parent->dn()) ) {
-      it = list.erase( it );      
-      CertItem* item = fillInOneItem( lv, parent, info );
-      list = fillInListView( lv, item, list ); 
-      it = list.begin();
-    } else ++it;
-  }
-  return list;
+  _remote = b;
+  // Clear display
+  _certBox->clear();
 }
-#endif
 
 /**
-   This is an internal function, which loads the users current certificates
+   This is an internal function, which loads the certificates that 
+   match the current query, local or remote.
 */
 void CertManager::loadCertificates()
 {
@@ -209,13 +202,21 @@ void CertManager::loadCertificates()
   QString text = _toolbar->getLinedText( ID_LINEEDIT ).stripWhiteSpace();
 
   qDebug("About to query plugin");
+  bool truncated;
   if( text.isEmpty() ) {
-    _certList = pWrapper->listKeys();
+    _certList = pWrapper->listKeys(QString::null, _remote, &truncated );
   } else {
-    _certList = pWrapper->listKeys(text, false);
+    _certList = pWrapper->listKeys(text, _remote, &truncated );
   }
   qDebug("Done");
   
+  if( truncated ) {
+    //statusBar()->message();
+    KMessageBox::information( this, i18n("The server returned truncated output.\nPlease use a more specific search string to get all results.") );
+  } else {
+    //statusBar()->message( i18n("Query OK") );
+  }
+
   //lst = fillInListView( _certBox, 0, lst );
   
   for( CryptPlugWrapper::CertificateInfoList::Iterator it = _certList.begin(); 
