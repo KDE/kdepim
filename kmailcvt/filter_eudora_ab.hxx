@@ -30,7 +30,6 @@ class FilterEudoraAb : public Filter, protected FilterFactory< FilterEudoraAb >
    ~FilterEudoraAb();
 
     void import(FilterInfo *info);
-    void convert(QFile& f,FilterInfo *info);
 
   protected:
     QString get(const QString& line, const QString& key) const;
@@ -38,14 +37,6 @@ class FilterEudoraAb : public Filter, protected FilterFactory< FilterEudoraAb >
     QString email(const QString& line) const;
     QString key(const QString& line) const;
     int     find(const QString& key) const;
-
-  private:
-    QStringList keys;
-    QStringList emails;
-    QStringList names;
-    QStringList phones;
-    QStringList adr;
-    QStringList comments;
 };
 
 #endif

@@ -55,84 +55,54 @@ void FilterEudoraAb::import(FilterInfo *info)
   info->from(file);
   info->to(i18n("KAddressBook"));
   info->current(i18n("Currently converting Eudora Light addresses to address book"));
-  convert(F,info);
-  {
-    int i;
-    int lines=keys.size();
-    for(i=0;i<lines;i++) 
-    {
-      QString msg=i18n("Adding/Merging '%1' email '%2'").arg(keys[i]).arg(emails[i]);
-      info->log(msg);
+  info->current(0);
+  
+  QString line;
+  QTextStream stream(&F);
+  KABC::Addressee *a = 0;
+  int count = 0;
+  int bytesRead = 0;
 
-      QString comment;
-      if(adr[i].isEmpty())
-        comment=comments[i];
-      else 
-        comment=adr[i]+"\n"+comments[i]; 
+  while(!stream.eof()) {
+    line = stream.readLine();
+    bytesRead += line.length();
 
-      KABC::Addressee a;
-      a.setFormattedName(keys[i]);
-      if (!emails[i].isEmpty()) a.insertEmail(emails[i]);
-      if (!names[i].isEmpty()) a.setFamilyName(names[i]);
-      if (!phones[i].isNull()) a.insertPhoneNumber( KABC::PhoneNumber( phones[i], KABC::PhoneNumber::Home | KABC::PhoneNumber::Voice ) );
-      if (!comments[i].isNull()) a.setNote(comments[i]);
-
-      addContact( a );
-      { 
-        info->overall(100*i/lines);
-      }
+    if (line.left(5) == "alias") {
+      if (a) { // Write it out
+        addContact( *a );
+        delete a;
+        a = 0;
+        count++;
+        info->overall(100*bytesRead/F.size());
+        a = new KABC::Addressee();
+      } else a = new KABC::Addressee();
+      a->setFormattedName(key(line));
+      a->insertEmail(email(line));
+      info->log(i18n("Reading '%1'").arg(a->formattedName()));
     }
-    {
-      info->log(i18n("Added %1 keys").arg(keys.size()));
+    else if (line.left(4) == "note") { 
+      if (!a) break; // Must have an alias before a note
+      a->setNote(comment(line));
+      a->setFamilyName(get(line, "name"));
+      KABC::Address addr;
+      addr.setLabel(get(line, "address"));
+      a->insertAddress(addr);
+      a->insertPhoneNumber( KABC::PhoneNumber( get(line,"phone"), KABC::PhoneNumber::Voice ) );
     }
   }
+  if (a) { // Write out address
+    addContact( *a );
+    delete a;
+    a = 0;
+    count++;
+  }
+  info->current(100);
+  info->log(i18n("Added %1 keys").arg(count));
 
   closeAddressBook( );
   info->current(i18n("Finished converting Eudora Light addresses to KAddressBook"));
   F.close();
   info->overall(100);
-}
-
-void FilterEudoraAb::convert(QFile& f,FilterInfo *info)
-{
-  info->current(0);
-  
-  QString line;
-  int e;
-  QTextStream stream(&f);
-  
-  // Do the actual convert
-  while(!stream.eof()) {
-    line = stream.readLine();
-
-    if (line.left(5) == "alias") {
-      QString k = key(line);
-      e=find(k);
-      if (keys.at(e) == keys.end()) keys.append(k);
-      else keys[e]=k;
-      if (emails.at(e) == emails.end()) emails.append(email(line));
-      else emails[e]=email(line);
-      {
-        QString msg=i18n("Reading '%1', email '%2'").arg(k).arg(emails[e]);
-        info->log(msg);
-      }
-    }
-    else if (line.left(4) == "note") { 
-      QString k = key(line); 
-      e=find(k);
-      if (keys.at(e) == keys.end()) keys.append(k);
-      else keys[e]=k;
-      if (comments.at(e) == comments.end()) comments.append(comment(line));
-      else comments[e]=comment(line);
-      if (names.at(e) == names.end()) names.append(get(line,"name"));
-      else names[e]=get(line,"name");
-      if (adr.at(e) == adr.end()) adr.append(get(line, "address"));
-      else adr[e]=get(line, "address");
-      if (phones.at(e) == adr.end()) phones.append(get(line, "phone"));
-      else phones[e]=get(line, "phone");
-    }
-  }
-  info->current(100);
 }
 
 QString FilterEudoraAb::key(const QString& line) const
@@ -200,12 +170,6 @@ QString FilterEudoraAb::get(const QString& line,const QString& key) const
     if (result[i]==CTRL_C) { result[i]='\n'; }
   }
   return result;
-}
-
-int FilterEudoraAb::find(const QString& key) const
-{ // Either return the found position, or the next free one
-  int n = keys.findIndex(key);
-  return n == -1 ? keys.count() : n;
 }
 
 // vim: ts=2 sw=2 et
