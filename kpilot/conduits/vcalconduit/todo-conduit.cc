@@ -157,9 +157,11 @@ FUNCTIONSETUP;
 	{
 		++fAllTodosIterator;
 	}
-	while (e && e->syncStatus()!=KCal::Incidence::SYNCMOD)
+	while (fAllTodosIterator != fAllTodos.end() &&
+		e && e->syncStatus()!=KCal::Incidence::SYNCMOD)
 	{
 		++fAllTodosIterator;
+		e=*fAllTodosIterator;
 #ifdef DEBUG
 if (e)
 DEBUGCONDUIT<< e->summary()<<" had SyncStatus="<<e->syncStatus()<<endl;

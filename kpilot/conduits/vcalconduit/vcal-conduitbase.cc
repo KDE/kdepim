@@ -265,7 +265,8 @@ error:
 				emit logError(i18n("You selected to sync with the a iCalendar file, but did not give a filename. Please select a valid file name in the conduit's configuration dialog"));
 				return false;
 			}
-			fCalendar = new KCal::CalendarLocal(tz);
+//			fCalendar = new KCal::CalendarLocal(tz);
+			fCalendar = new KCal::CalendarLocal();
 			if ( !fCalendar)
 			{
 				kdWarning() << k_funcinfo <<
