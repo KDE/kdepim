@@ -35,7 +35,7 @@ static const KCmdLineOptions options[] =
 
 int main(int argc,char **argv)
 {
-  KAboutData aboutData( "kolabwizard", "Kolab Configuration Wizard", "0.1" );
+  KAboutData aboutData( "kolabwizard", I18N_NOOP( "Kolab Configuration Wizard" ), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 

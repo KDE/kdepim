@@ -35,7 +35,7 @@ static const KCmdLineOptions options[] =
 int main(int argc,char **argv)
 {
   KAboutData aboutData( "sloxwizard",
-                        "SUSE LINUX Openexchange Server Configuration Wizard",
+                        I18N_NOOP( "SUSE LINUX Openexchange Server Configuration Wizard" ),
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
