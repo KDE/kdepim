@@ -79,6 +79,8 @@ TaskView::TaskView( QWidget *parent, const char *name )
 
   desktopCount = kWinModule.numberOfDesktops();
   lastDesktop = kWinModule.currentDesktop()-1;
+  // currentDesktop will return 0 if no window manager is started
+  if( lastDesktop < 0 ) lastDesktop = 0;
 }
 
 TaskView::~TaskView()
@@ -291,7 +293,11 @@ void TaskView::loadFromFileFormat()
 
 void TaskView::applyTrackers()
 {
-  TaskVector &tv = desktopTracker[kWinModule.currentDesktop()-1];
+  int currentDesktop = kWinModule.currentDesktop() -1;
+  // currentDesktop will return 0 if no window manager is started
+  if ( currentDesktop < 0 ) currentDesktop = 0;
+
+  TaskVector &tv = desktopTracker[ currentDesktop ];
   TaskVector::iterator tit = tv.begin();
   while(tit!=tv.end()) {
     startTimerFor(*tit);
