@@ -22,3 +22,5 @@ debian/tmp/usr/share/icons/crystalsvg/64x64/apps/knode.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/apps/knode2.png
 debian/tmp/usr/share/services/knewsservice.protocol
 debian/tmp/usr/share/services/knode_config_*.desktop
+debian/icons/knode.xpm /usr/share/pixmaps
+debian/icons/knode-16.xpm /usr/share/pixmaps

@@ -4,3 +4,5 @@ debian/tmp/usr/share/apps/kmailcvt
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kmailcvt.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kmailcvt.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kmailcvt.png
+debian/icons/kmailcvt.xpm /usr/share/pixmaps
+debian/icons/kmailcvt-16.xpm /usr/share/pixmaps

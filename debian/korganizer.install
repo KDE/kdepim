@@ -32,3 +32,5 @@ debian/tmp/usr/share/servicetypes/calendardecoration.desktop
 debian/tmp/usr/share/servicetypes/calendarplugin.desktop
 debian/tmp/usr/share/servicetypes/dcopcalendar.desktop
 debian/tmp/usr/share/servicetypes/korganizerpart.desktop
+debian/icons/korganizer.xpm /usr/share/pixmaps
+debian/icons/korganizer-16.xpm /usr/share/pixmaps

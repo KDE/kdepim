@@ -8,3 +8,5 @@ debian/tmp/usr/share/icons/hicolor/48x48/apps/ktnef.png
 debian/tmp/usr/share/icons/locolor/16x16/apps/ktnef.png
 debian/tmp/usr/share/icons/locolor/32x32/apps/ktnef.png
 debian/tmp/usr/share/mimelnk/application/ms-tnef.desktop
+debian/icons/ktnef.xpm /usr/share/pixmaps
+debian/icons/ktnef-16.xpm /usr/share/pixmaps

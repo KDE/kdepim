@@ -21,3 +21,5 @@ debian/tmp/usr/share/icons/crystalsvg/32x32/apps/knotes.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/knotes.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/apps/knotes.png
 debian/tmp/usr/share/services/kresources/knotes
+debian/icons/knotes.xpm /usr/share/pixmaps
+debian/icons/knotes-16.xpm /usr/share/pixmaps

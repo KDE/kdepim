@@ -3,4 +3,6 @@
 	section="Apps/Tools"\
 	hints="KDE"\
 	title="KAlarm"\
+	icon32x32="/usr/share/pixmaps/kalarm.xpm"\
+	icon16x16="/usr/share/pixmaps/kalarm-16.xpm"\
 	command="/usr/bin/kalarm"

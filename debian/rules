@@ -41,7 +41,7 @@ debian/stamp-man-pages:
 	touch debian/stamp-man-pages
 
 clean::
-	rm -f debian/man/*.6
+	rm -f debian/man/*.1
 	if test -f debian/patches/karm_doc.tar.gz.uu; then \
 		rm -f `uudecode -o - debian/patches/karm_doc.tar.gz.uu | tar tfz -`; \
 	fi

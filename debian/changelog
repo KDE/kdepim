@@ -10,8 +10,13 @@ kdepim (4:3.2.92-1) experimental; urgency=low
   * Make the *.install files a bit more robust by listing directories
     clearly belonging to packages instead of listing each individual
     file.
+  * Add kdepim-doc-html package for the benefit of non-KDE users.
+  * Expand package descriptions.  Closes: #209672, #209689, #209862,
+    #209997, #210088, #210094.
+  * Add menu icons.
+  * Add doc-base files for kdepim-doc and kdepim-doc-html.
 
- -- Daniel Schepler <schepler@debian.org>  Thu,  5 Aug 2004 16:31:24 -0700
+ -- Daniel Schepler <schepler@debian.org>  Sat,  7 Aug 2004 01:50:38 -0700
 
 kdepim (4:3.2.3-1) unstable; urgency=high
 

@@ -89,14 +89,12 @@ cleanbuilddir::
 
 binary-install/$(DEB_SOURCE_PACKAGE)-doc-html::
 	set -e; \
-	for pkg in `cd debian/tmp/usr/share/doc/kde/HTML/en; echo *`; do \
-	if test -f $(CURDIR)/debian/tmp/usr/share/doc/kde/HTML/en/$$pkg/index.docbook; then \
+	for doc in `cd debian/tmp/usr/share/doc/kde/HTML/en; find . -name index.docbook`; do \
+	  pkg=$${doc%/index.docbook}; pkg=$${pkg#./}; \
 	  echo Building $$pkg HTML docs...; \
 	  mkdir -p $(CURDIR)/debian/$(DEB_SOURCE_PACKAGE)-doc-html/usr/share/doc/kde/HTML/en/$$pkg; \
 	  cd $(CURDIR)/debian/$(DEB_SOURCE_PACKAGE)-doc-html/usr/share/doc/kde/HTML/en/$$pkg; \
 	  meinproc $(CURDIR)/debian/tmp/usr/share/doc/kde/HTML/en/$$pkg/index.docbook; \
-	  mkdir -p $(CURDIR)/debian/$$pkg/usr/share/doc/$$pkg; \
-	  ln -s ../kde/HTML/en/$$pkg $(CURDIR)/debian/$$pkg/usr/share/doc/$$pkg/html; \
 	fi; \
 	done
 

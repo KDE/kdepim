@@ -48,3 +48,5 @@ debian/tmp/usr/share/icons/crystalsvg/64x64/apps/kmail.png
 debian/tmp/usr/share/services/kmail_config_*.desktop
 debian/tmp/usr/share/servicetypes/dcopimap.desktop
 debian/tmp/usr/share/servicetypes/dcopmail.desktop
+debian/icons/kmail.xpm /usr/share/pixmaps
+debian/icons/kmail-16.xpm /usr/share/pixmaps
