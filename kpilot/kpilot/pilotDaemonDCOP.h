@@ -34,8 +34,6 @@
 #include <dcopobject.h>
 #include <qdatetime.h>
 #include <qstringlist.h>
-class QDateTime;
-class QStringList;
 
 class PilotDaemonDCOP : virtual public DCOPObject
 {
@@ -78,6 +76,12 @@ k_dcop:
 	virtual QString userName() = 0;
 	virtual QString pilotDevice() = 0;
 	virtual bool killDaemonOnExit() = 0;
+   
+	/**
+	* Some other useful functionality
+	*/
+	virtual void addInstallFiles(const QStringList &) = 0;
+
 
 k_dcop_signals:
 	void kpilotDaemonStatusChanged();

@@ -128,6 +128,9 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		kdWarning() << k_funcinfo << ": Running conduits during restore." << endl;
 		l.append(CSL1("--test"));
 		break;
+	case eDefaultSync:
+		assert(m!=eDefaultSync);
+		break;
 	}
 	return l;
 }
