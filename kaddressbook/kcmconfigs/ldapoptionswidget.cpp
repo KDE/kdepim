@@ -187,6 +187,7 @@ void LDAPOptionsWidget::slotRemoveHost()
 
 void LDAPOptionsWidget::restoreSettings()
 {
+    mHostListView->clear();
   KConfig *config = KABC::AddressLineEdit::config();
   KConfigGroupSaver saver( config, "LDAP" );
 
