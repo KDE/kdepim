@@ -371,18 +371,16 @@ AddressesDialog::toAddresses()  const
   return allAddressee( d->toItem );
 }
 
-#if 0 // currently unused
 KABC::Addressee::List
 AddressesDialog::allToAddressesNoDuplicates()  const
 {
   KABC::Addressee::List aList = allAddressee( d->toItem );
   QStringList dList = toDistributionLists();
-  // TODO: port to KPIM::DistributionList
-  KABC::DistributionListManager manager( KABC::StdAddressBook::self() );
-  manager.load();
+  KABC::AddressBook* abook = KABC::StdAddressBook::self( true );
   for ( QStringList::ConstIterator it = dList.begin(); it != dList.end(); ++it ) {
-    QValueList<KABC::DistributionList::Entry> eList = manager.list( *it )->entries();
-    QValueList<KABC::DistributionList::Entry>::Iterator eit;
+    QValueList<KPIM::DistributionList::Entry> eList
+      = KPIM::DistributionList::findByName(abook, *it).entries(abook);
+    QValueList<KPIM::DistributionList::Entry>::Iterator eit;
     if ( eList.count() > 0 )
       for( eit = eList.begin(); eit != eList.end(); ++eit ) {
         KABC::Addressee a = (*eit).addressee;
@@ -403,7 +401,6 @@ AddressesDialog::allToAddressesNoDuplicates()  const
   }
   return aList;
 }
-#endif
 
 KABC::Addressee::List
 AddressesDialog::ccAddresses()  const
