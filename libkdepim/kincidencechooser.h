@@ -77,7 +77,7 @@ public:
     KCal::Incidence* choosedIncidence;
     KCal::Incidence* mInc1, *mInc2;
     QButtonGroup *mBg;
-    QPushButton *diffBut;
+    QPushButton *diffBut,*showDetails1,*showDetails2;
     QLabel* mInc1lab, *mInc2lab,* mInc1Sumlab, *mInc2Sumlab,*mMod1lab,*mMod2lab;
 
 };

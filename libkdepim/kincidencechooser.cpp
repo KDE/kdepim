@@ -73,9 +73,9 @@ KIncidenceChooser::KIncidenceChooser(QWidget *parent, char *name, bool modal) :
     topLayout->addWidget( new QLabel ( i18n("Last modified:"), topFrame) ,iii,0);
     mMod1lab = new QLabel ( "Set Last modified", topFrame); 
     topLayout->addWidget(mMod1lab,iii,1);
-    button = new QPushButton( i18n("Details..."),topFrame );
-    connect ( button, SIGNAL( clicked()), this, SLOT (showIncidence1() ) ); 
-    topLayout->addWidget(button,iii,2);
+    showDetails1 = new QPushButton( i18n("Show details..."),topFrame );
+    connect ( showDetails1, SIGNAL( clicked()), this, SLOT (showIncidence1() ) ); 
+    topLayout->addWidget(showDetails1,iii,2);
     ++iii;
 
     mInc2lab = new QLabel ( "Local incidence", topFrame); 
@@ -86,9 +86,9 @@ KIncidenceChooser::KIncidenceChooser(QWidget *parent, char *name, bool modal) :
     topLayout->addWidget( new QLabel ( i18n("Last modified:"), topFrame) ,iii,0);
     mMod2lab = new QLabel ( "Set Last modified", topFrame); 
     topLayout->addWidget(mMod2lab,iii,1);
-    button = new QPushButton( i18n("Details..."), topFrame);
-    connect ( button, SIGNAL( clicked()), this, SLOT (showIncidence2() ) ); 
-    topLayout->addWidget(button,iii,2);
+    showDetails2 = new QPushButton( i18n("Show details..."), topFrame);
+    connect ( showDetails2, SIGNAL( clicked()), this, SLOT (showIncidence2() ) ); 
+    topLayout->addWidget(showDetails2,iii,2);
     ++iii;
     //
 #if 0
@@ -117,7 +117,6 @@ KIncidenceChooser::KIncidenceChooser(QWidget *parent, char *name, bool modal) :
     connect ( button, SIGNAL( clicked()), this, SLOT ( setSyncMode() ) ); 
     topLayout->addMultiCellWidget(button, iii,iii,0,2);
 }
-
 
 KIncidenceChooser::~KIncidenceChooser()
 {
@@ -220,14 +219,23 @@ void KIncidenceChooser::setLabels()
 void KIncidenceChooser::showIncidence1()
 {   
     if ( mTbL ) {
-        mTbL->show();
-        mTbL->raise();
+        if ( mTbL->isVisible() ) {
+            showDetails1->setText( i18n("Show details..."));
+            mTbL->hide();
+        } else {
+            showDetails1->setText( i18n("Hide details"));
+            mTbL->show();
+            mTbL->raise();
+        }
         return;
     }
     mTbL =  new QTextBrowser( 0, "incviewer" );
     mTbL->setCaption(mInc1lab->text() );
     mTbL->setText( KIncidenceFormatter::instance()->getFormattedText( mInc1 )  );
+    mTbL->resize( 300, 300 );
+    showDetails1->setText( i18n("Hide details"));
     mTbL->show();
+    mTbL->raise();
 }
 void KIncidenceChooser::showDiff()
 { 
@@ -252,15 +260,24 @@ void KIncidenceChooser::showDiff()
 }
 void KIncidenceChooser::showIncidence2()
 {    
-    if ( mTbN ) {
-        mTbN->show();
-        mTbN->raise();
+   if ( mTbN ) {
+        if ( mTbN->isVisible() ) {
+            showDetails2->setText( i18n("Show details..."));
+            mTbN->hide();
+        } else {
+            showDetails2->setText( i18n("Hide details"));
+            mTbN->show();
+            mTbN->raise();
+        }
         return;
     }
     mTbN =  new QTextBrowser( 0, "incviewer" );
     mTbN->setCaption(mInc2lab->text() );
     mTbN->setText( KIncidenceFormatter::instance()->getFormattedText( mInc2 )  );
+    mTbN->resize( 300, 300 );
+    showDetails2->setText( i18n("Hide details"));
     mTbN->show();
+    mTbN->raise();
 }
 void KIncidenceChooser::takeIncidence1()
 {
