@@ -6,7 +6,7 @@
 <bookinfo>
 <title>The &kmail; Handbook</title>
 
-<!-- note from dnaber@mini.gt.owl.de, 2000-07-18: I'm working on this
+<!-- note from daniel.naber@t-online.de, 2001-01-05: I'm working on this
 "by hand" (using nedit) so please don't mix up the formatting too much. -->
 
 <authorgroup>
@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>20/12/2000</date>
+<date>05/01/2001</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -1865,7 +1865,8 @@ Mailreader window</link>.
 
 <qandaentry>
  <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
- <answer><para>Not yet. No, we have no idea when it will be ready. Currently you can still
+ <answer><para>Not yet. However, IMAP support is now in active development. Because of the
+ many changes required, it will probably not be part of KDE 2.1. Currently you can still
  receive mails via <acronym>IMAP</acronym> by using fetchmail:
  <itemizedlist>
    <listitem><para>Create a file <filename>~/.fetchmailrc</filename> which contains the following lines:
@@ -1906,6 +1907,27 @@ the following entry:
  but to some other directory which you then access by &kmail; as a <guilabel>Local Mailbox</guilabel>.
  I.e. you have to add another account in the <guilabel>Network</guilabel> tab of the
  Configuration dialog. Also see the FAQ about lockfiles.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>How do I have to set up &kmail; to use (i.e. read and write) messages with non-Latin1
+ characters?</para></question>
+ <answer><para>&kmail; 1.1.99 had some bugs in its handling of characters that are not part of
+ Latin1. The following applies to KDE 2.1(beta): In the <guilabel>Appearance</guilabel>/<guilabel>Fonts</guilabel> section
+ of the configuration dialog, select the correct <guilabel>Character set</guilabel> for the message
+ list and the folder list. If <guilabel>unicode (iso10646-1)</guilabel> is available, 
+ you should choose it. In case messages are still not shown correctly, you can always try 
+ other settings from the  <menuchoice><guimenu>Message</guimenu><guimenuitem>Set
+ Encoding</guimenuitem></menuchoice> menu.
+ For writing messages, go to <guilabel>Composer</guilabel>/<guilabel>Charset</guilabel> and 
+ configure the default charset you want to use for your own mails.</para></answer>
+</qandaentry>
+
+<qandaentry>
+ <question><para>Spellchecking doesn't recognize non-english characters.</para></question>
+ <answer><para>Before you can use spellchecking the first time, you have to configure it.
+You can do so in the <guilabel>Composer</guilabel> window's 
+menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</guimenuitem></menuchoice>.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -1971,13 +1993,6 @@ kmail.original $*
 	  </listitem>
  </itemizedlist>
  </answer>
-</qandaentry>
-
-<qandaentry>
- <question><para>Spellchecking doesn't recognize non-english characters.</para></question>
- <answer><para>Before you can use spellchecking the first time, you have to configure it.
-You can do so in the <guilabel>Composer</guilabel> window's 
-menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</guimenuitem></menuchoice>.</para></answer>
 </qandaentry>
 
 <qandaentry>
