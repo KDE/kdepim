@@ -153,6 +153,7 @@ class IncidenceBase : public CustomProperties
     Observer *mObserver;
 };
 
+bool operator==( const IncidenceBase&, const IncidenceBase& );
 }
 
 #endif

@@ -33,6 +33,7 @@ Incidence::Incidence() :
   mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3)
 {
   mRecurrence = new Recurrence(this);
+  mLocation = ""; // avoid failures in comparison
 
   recreate();
 
@@ -82,6 +83,39 @@ Incidence::~Incidence()
 
   delete mRecurrence;
 }
+
+
+bool KCal::operator==( const Incidence& i1, const Incidence& i2 )
+{
+    if( i1.alarms().count() != i2.alarms().count() ) {
+        return false; // no need to check further
+    }
+    
+    for( Alarm* a1 = i1.alarms().first(), *a2 = i2.alarms().first();
+         a1; a1 = i1.alarms().next(), a2 = i2.alarms().next() )
+        if( *a1 == *a2 ) {
+            continue;
+        } else {
+            return false;
+        }
+
+    return operator==( (const IncidenceBase&)i1, (const IncidenceBase&)i2 ) &&
+        i1.created() == i2.created() &&
+        i1.description() == i2.description() &&
+        i1.summary() == i2.summary() &&
+        i1.categories() == i2.categories() &&
+        // no need to compare mRelatedTo
+        i1.relatedToUid() == i2.relatedToUid() &&
+        i1.relations() == i2.relations() &&
+        i1.exDates() == i2.exDates() &&
+        i1.attachments() == i2.attachments() &&
+        i1.resources() == i2.resources() &&
+        i1.secrecy() == i2.secrecy() &&
+        i1.priority() == i2.priority() &&
+        *i1.recurrence() == *i2.recurrence() &&
+        i1.location() == i2.location();
+}
+
 
 void Incidence::recreate()
 {

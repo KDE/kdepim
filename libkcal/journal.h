@@ -41,6 +41,7 @@ class Journal : public Incidence
     Incidence *clone();
 };
 
+    bool operator==( const Journal&, const Journal& );
 }
 
 #endif

@@ -65,6 +65,37 @@ IncidenceBase::~IncidenceBase()
 {
 }
 
+
+bool KCal::operator==( const IncidenceBase& i1, const IncidenceBase& i2 )
+{
+    if( i1.attendees().count() != i2.attendees().count() ) {
+        return false; // no need to check further
+    }
+    
+    for( Attendee* a1 = i1.attendees().first(), *a2 = i2.attendees().first();
+         a1; a1 = i1.attendees().next(), a2 = i2.attendees().next() )
+        if( *a1 == *a2 )
+            continue;
+        else {
+            return false;
+        }
+
+    return ( i1.dtStart() == i2.dtStart() &&
+             i1.organizer() == i2.organizer() &&
+             i1.uid() == i2.uid() &&
+             // Don't compare lastModified, otherwise the operator is not
+             // of much use. We are not comparing for identity, after all.
+             i1.doesFloat() == i2.doesFloat() &&
+             i1.duration() == i2.duration() &&
+             i1.hasDuration() == i2.hasDuration() &&
+             i1.pilotId() == i2.pilotId() &&
+             i1.syncStatus() == i2.syncStatus() );
+    // no need to compare mObserver
+}
+
+        
+
+
 void IncidenceBase::setUid(const QString &uid)
 {
   mUid = uid;

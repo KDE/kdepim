@@ -248,6 +248,8 @@ class Incidence : public IncidenceBase
     QString mLocation;
 };
 
+bool operator==( const Incidence&, const Incidence& );
+
 }
 
 #endif

@@ -92,6 +92,26 @@ Recurrence::~Recurrence()
 {
 }
 
+
+bool KCal::operator==( const Recurrence& r1, const Recurrence& r2 )
+{
+    return( r1.doesRecur() == r2.doesRecur() &&
+            r1.weekStart() == r2.weekStart() &&
+            r1.days() == r2.days() &&
+            r1.monthPositions() == r2.monthPositions() &&
+            r1.monthDays() == r2.monthDays() &&
+            r1.yearNums() == r2.yearNums() &&
+            r1.frequency() == r2.frequency() &&
+            r1.duration() == r2.duration() &&
+            r1.recurStart() == r2.recurStart() &&
+            r1.doesFloat() == r2.doesFloat() &&
+            r1.recurReadOnly() == r2.recurReadOnly() &&
+            r1.recurExDatesCount() == r2.recurExDatesCount()  );
+            // no need to compare mCompat* and mParent
+            // OK to compare the pointers
+}
+
+
 void Recurrence::setCompatVersion(int version)
 {
   mCompatVersion = version ? version : INT_MAX;

@@ -119,6 +119,7 @@ class Todo : public Incidence
     int mPercentComplete;
 };
 
+    bool operator==( const Todo&, const Todo& );
 }
 
 #endif

@@ -44,6 +44,7 @@ class Person
     QString mEmail;
 };
 
+    bool operator==( const Person& p1, const Person& p2 );
 }
 
 #endif

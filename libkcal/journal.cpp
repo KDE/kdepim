@@ -34,3 +34,10 @@ Incidence *Journal::clone()
 {
   return new Journal(*this);
 }
+
+
+bool KCal::operator==( const Journal& j1, const Journal& j2 )
+{
+    return operator==( (const Incidence&)j1, (const Incidence&)j2 );
+}
+

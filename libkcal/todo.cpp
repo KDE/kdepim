@@ -56,6 +56,18 @@ Incidence *Todo::clone()
   return new Todo(*this);
 }
 
+
+bool KCal::operator==( const Todo& t1, const Todo& t2 )
+{
+    return operator==( (const Incidence&)t1, (const Incidence&)t2 ) &&
+        t1.dtDue() == t2.dtDue() &&
+        t1.hasDueDate() == t2.hasDueDate() &&
+        t1.hasStartDate() == t2.hasStartDate() &&
+        t1.completed() == t2.completed() &&
+        t1.hasCompletedDate() == t2.hasCompletedDate() &&
+        t1.percentComplete() == t2.percentComplete();
+}
+
 void Todo::setDtDue(const QDateTime &dtDue)
 {
   //int diffsecs = mDtDue.secsTo(dtDue);

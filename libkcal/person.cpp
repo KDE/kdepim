@@ -42,6 +42,14 @@ Person::Person( const QString &name, const QString &email )
   setEmail(email);
 }
 
+
+bool KCal::operator==( const Person& p1, const Person& p2 )
+{
+    return ( p1.name() == p2.name() &&
+             p1.email() == p2.email() );
+}
+
+
 QString Person::fullName() const
 {
   if( mName.isEmpty() ) {

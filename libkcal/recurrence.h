@@ -68,8 +68,21 @@ class Recurrence
      * N.B. This property is derived by default from the parent incidence,
      * or according to whether a time is specified in setRecurStart(). */
     void setFloats(bool f);
+    /** 
+        Returns whether the recurrence has no time, just a date.
+     */
+    bool doesFloat() const    {
+        return mFloats;
+    }
+
     /** Set if recurrence is read-only or can be changed. */
     void setRecurReadOnly(bool readOnly) { mRecurReadOnly = readOnly; }
+    bool recurReadOnly() const 
+    {
+        return mRecurReadOnly;
+    }
+    
+
     /** Set number of exception dates. */
     void setRecurExDatesCount(int count) { if (count >= 0) mRecurExDatesCount = count; }
     /** Set the calendar file version for backwards compatibility.
@@ -347,6 +360,7 @@ class Recurrence
     Incidence *mParent;
 };
 
+    bool operator==( const Recurrence&, const Recurrence& );
 }
 
 #endif
