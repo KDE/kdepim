@@ -294,9 +294,11 @@ void KNFetchArticleManager::setAllRead(KNGroup *g, bool r)
   KNFetchArticle *a;
   for(int i=0; i<g->length(); i++) {
     a = g->at(i);
-    if (a->isNew())
-      new_count++;
-    a->setRead(r);
+    if(a->isRead()!=r) {
+      a->setRead(r);
+      a->setHasChanged(true);
+      if(a->isNew()) new_count++;
+    }
   }
 
   g->updateThreadInfo();
