@@ -1,0 +1,412 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.61 [en] (X11; I; Linux 2.2.5 i586) [Netscape]">
+</head>
+<body>
+
+<h1>
+Introduction</h1>
+Entries in KDE address databases are stored in key-value-pairs with different
+data types. Every part of an address or personal in general is mapped to
+such a key-value-pair. For inter-application portability, the valid keys
+in such a key-value-map need to be defined. This page gives an overview
+over all field names and types used by KDE address book entries:
+<center><table BORDER COLS=5 WIDTH="90%" NOSAVE >
+<tr VALIGN=TOP NOSAVE>
+<td NOSAVE>
+<center><b>Field Key</b></center>
+</td>
+
+<td>
+<center><b>Literal Field Name</b></center>
+</td>
+
+<td>
+<center><b>Field Meaning</b></center>
+</td>
+
+<td>
+<center><b>Data Type</b></center>
+</td>
+
+<td>
+<center><b>Encoding</b></center>
+</td>
+</tr>
+
+<tr NOSAVE>
+<td>X-First_Name</td>
+
+<td>First Name</td>
+
+<td>The first name of the person.</td>
+
+<td NOSAVE>kde-string</td>
+
+<td>Unicode string</td>
+</tr>
+
+<tr>
+<td>X-Middle_Name</td>
+
+<td>Middle Name</td>
+
+<td>The middle name of the person.</td>
+
+<td>kde-string</td>
+
+<td>Unicode string</td>
+</tr>
+
+<tr>
+<td>X-Last_Name</td>
+
+<td>Last Name</td>
+
+<td>The last name of the person.</td>
+
+<td>kde-string</td>
+
+<td>Unicode string</td>
+</tr>
+
+<tr>
+<td>X-Org</td>
+
+<td>Organization</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Department</td>
+
+<td>Department</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-OfficeLocation</td>
+
+<td>Office</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Role</td>
+
+<td>Role</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Headline_1</td>
+
+<td>(none)</td>
+
+<td>The description for the address ("Home", "Weekend", whatever).</td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Street_1</td>
+
+<td>Street</td>
+
+<td>Street for the first address.</td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-ZIP_1</td>
+
+<td>Zip/Postal Code</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-City_1</td>
+
+<td>City/Town</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Country_1</td>
+
+<td>Country</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-State_1</td>
+
+<td>State/Province</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>(repeat X-Headline to X-State 4 times to get five addresses)</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Title</td>
+
+<td>Title</td>
+
+<td>Titles are academic degrees, for example.</td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Rank</td>
+
+<td>Rank</td>
+
+<td>Military or police officers ranks, also used on ships.</td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Birthday</td>
+
+<td>Birthday</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Comment</td>
+
+<td>(None)</td>
+
+<td>An optionally free-form note about the person.</td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Email_1</td>
+
+<td>Email Address 1</td>
+
+<td>The first email address. Up to 5 are supported.</td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>(repeat X-Email _X four times)</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Talk_1</td>
+
+<td>Talk Address 1</td>
+
+<td>The first email address. Up to 5 are supported.</td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>(repeat X-Talk_X four times)</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-URL_1</td>
+
+<td>Home Page Address 1</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>(repeat X_URL_X four times)</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>X-Telephone_1</td>
+
+<td>Telephone Number 1</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>(repeat X-Telephone_X four times)</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table></center>
+The following notes should guide through the columns of the table.
+<h1>
+Field Key</h1>
+The field key is used to find the value. Thus, it needs to be identifying.
+In every entry, all keys may be inserted only one time (in STL terms, the
+entries are maps, not sets). As a guideline, all valid C++ identifiers
+may be used as field keys.
+<h1>
+Literal field Name</h1>
+This values have been defined to make sure each application uses the same
+names for different fields. This should make it easier for the applications
+users to find what they look for.
+<h1>
+Some Notes</h1>
+This notes might be removed after the field names are standardized.
+<h2>
+Number of Addresses</h2>
+In this overview, the number of addresses is no more fixed by a special
+value (like MAX_ADDRESSES in the former class "Entry"). There are simply
+(currently) 3 fields named X-Street_1, X-Street_2, and X-Street_3.
+<br>Also, addresses, by now, do not have types like business, home, or
+other. It would probably be a good idea to give some patterns when entering
+the headline, but allow the user to select other names, too. This way addresses
+may be sorted in other categories than the programmer is able to anticipate
+:-)
+<h2>
+Telephone Numbers</h2>
+I would opt for the following way to store telephone (and related) numbers:
+<ul>
+<li>
+Define the types, for example, "Home", "Cellular", "Fax", "Other".</li>
+
+<li>
+Store each number as a combination of type and number. Could be done as
+a string, like "FAX: 0123456789".</li>
+</ul>
+The apps would have to parse this and find the type.
+<h2>
+The very special Fields</h2>
+It is a matter of agreement what fields are declared to be a standard and
+what would be application-specific extensions.
+<br>I chose it the following way: Everything that is part of the persons
+attributes and that we already thought of is a standard field, and everything
+completely unusable by other applications must be an application-specific
+extension.
+<br>The reason is explainable by the following examples:
+<ul>
+<li>
+The rank field is very special. But if two applications A-Book and B-Book
+store the rank of a person, it would be nonsense if one stores "A-Book-Rank",
+and the other reads "B-Book-Rank".</li>
+
+<li>
+Consider the pilot conduit interfacing the addressbook applications to
+the pilots addressbook. Here, "Pilot-Conduit-EntryID" would not make any
+sense to A-Book or B-Book. This is definitly application specific.</li>
+</ul>
+As a consequence, we will have to add more attributes that we currently
+not think of later. But this should be no problem.
+<br>&nbsp;
+</body>
+</html>
