@@ -304,8 +304,10 @@ void PilotSerialDatabase::openDatabase()
 	FUNCTIONSETUP;
 	int db;
 
+	setDBOpen(false);
+
 	QString s = getDBName();
-	if (s.isEmpty() || s.isNull())
+	if (s.isEmpty())
 	{
 		kdError() << k_funcinfo << ": Bad DB name, "
 			<< (s.isNull() ? "null" : "empty")
@@ -314,8 +316,21 @@ void PilotSerialDatabase::openDatabase()
 		return;
 	}
 
+	QCString encodedName = QFile::encodeName(s);
+	if (encodedName.isEmpty())
+	{
+		kdError() << k_funcinfo << ": Bad DB name, "
+			<< (encodedName.isNull() ? "null" : "empty")
+			<< " string given."
+			<< endl;
+		return;
+	}
+
+	char encodedNameBuffer[PATH_MAX];
+	strlcpy(encodedNameBuffer,(const char *)encodedName,PATH_MAX);
+
 	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite,
-		QFile::encodeName(getDBName()).data(), &db) < 0)
+		encodedNameBuffer, &db) < 0)
 	{
 		kdError() << k_funcinfo
 			<< i18n("Cannot open database")
