@@ -89,8 +89,6 @@ protected slots:
 	void modifyBox();
 
 signals:
-	void finished();
-
 	void listUpdated( bool hasItems );
 
 private slots:
