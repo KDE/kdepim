@@ -32,6 +32,8 @@ todoconduit_SOURCES= todo-conduit.cc todo-setup.cc
 # the library search path
 todoconduit_LDFLAGS = @all_libraries@ -L`pwd`/../vcalconduit/versit -L`pwd`/../../kpilot -L/usr/local/lib
 
+METASOURCES = AUTO
+
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
 todoconduit_LDADD   = ../../kpilot/pilotTodoEntry.o -lconduit \
@@ -39,17 +41,6 @@ todoconduit_LDADD   = ../../kpilot/pilotTodoEntry.o -lconduit \
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = todo-conduit.h todo-setup.h
-
-# just to make sure, automake makes them 
-BUILTSOURCES = todo-setup.moc
-
-# if you "make distclean", this files get removed. If you want to remove
-# them while "make clean", use CLEANFILES
-DISTCLEANFILES = $(BUILTSOURCES)
-
-# make messages.po. Move this one to ../po/ and "make merge" in po
-messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)
 
 # just install datas here. Use install-exec-data for scripts and etc.
 # the binary itself is already installed from automake
@@ -65,8 +56,3 @@ install-data-local:
 uninstall-local:
 	-rm -f $(kde_datadir)/kpilot/conduits/todoconduit
 
-# add a dependency for every moc file to be full portable
-# I've added a key binding to emacs for this. 
-todo-setup.cc: todo-setup.moc
-todo-setup.moc: todo-setup.h
-	$(MOC) todo-setup.h -o todo-setup.moc

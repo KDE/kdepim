@@ -59,18 +59,11 @@ noinst_HEADERS = kpilot.h kpilotlink.h fileInstallWidget.h pilotMemo.h memoWidge
 	logFile.h conduitApp.h conduitSetup.h busysync.h hotsync.h kpilot_on_pp.h \
 	pilotAppCategory.h pilotListEntry.h pilotUser.h statusMessages.h pilotTodoEntry.h
 
-# just to make sure, automake makes them 
-BUILTSOURCES =	kpilot.moc kpilotlink.moc fileInstallWidget.moc pilotComponent.moc \
-	kpilotOptions.moc messageDialog.moc \
-	addressWidget.moc pilotDaemon.moc addressEditor.moc conduitSetup.moc pilotTodoEntry.moc
-
-# if you "make distclean", this files get removed. If you want to remove
-# them while "make clean", use CLEANFILES
-DISTCLEANFILES = $(BUILTSOURCES)
+METASOURCES = AUTO
 
 # make messages.po. Move this one to ../po/ and "make merge" in po
 messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)
+	$(XGETTEXT) -C -ki18n -kI18N_NOOP $(kpilot_SOURCES) -x $(includedir)/kde.pot -o $(podir)/kpilot.pot
 
 # just install datas here. Use install-exec-data for scripts and etc.
 # the binary itself is already installed from automake

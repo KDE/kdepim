@@ -40,16 +40,7 @@ vcalconduit_LDADD   = ../../kpilot/pilotDateEntry.o -lconduit \
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = vcal-conduit.h vcal-setup.h
 
-# just to make sure, automake makes them 
-BUILTSOURCES = vcal-setup.moc
-
-# if you "make distclean", this files get removed. If you want to remove
-# them while "make clean", use CLEANFILES
-DISTCLEANFILES = $(BUILTSOURCES)
-
-# make messages.po. Move this one to ../po/ and "make merge" in po
-messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)
+METASOURCES = AUTO
 
 # just install datas here. Use install-exec-data for scripts and etc.
 # the binary itself is already installed from automake
@@ -57,7 +48,6 @@ messages:
 # don't install a list of file. Just one file per install.
 # if you have more of them, create a subdirectory with an extra Makefile 
 install-data-local: 
-	$(mkinstalldirs) $(kde_datadir)/kpilot
 	$(mkinstalldirs) $(kde_datadir)/kpilot/conduits
 	$(INSTALL_PROGRAM) vcalconduit $(kde_datadir)/kpilot/conduits
 
@@ -65,8 +55,3 @@ install-data-local:
 uninstall-local:
 	-rm -f $(kde_datadir)/kpilot/conduits/vcalconduit
 
-# add a dependency for every moc file to be full portable
-# I've added a key binding to emacs for this. 
-vcal-setup.cc: vcal-setup.moc
-vcal-setup.moc: vcal-setup.h
-	$(MOC) vcal-setup.h -o vcal-setup.moc
