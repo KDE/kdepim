@@ -87,7 +87,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 //    void close();
   
     /** Add Event to calendar. */
-    void addEvent(Event *anEvent);
+    bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
@@ -128,7 +128,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /**
       Add a todo to the todolist.
     */
-    void addTodo( Todo *todo );
+    bool addTodo( Todo *todo );
     /**
       Remove a todo from the todolist.
     */
@@ -148,7 +148,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     QPtrList<Todo> todos( const QDate &date );
 
     /** Add a Journal entry to calendar */
-    virtual void addJournal(Journal *);
+    virtual bool addJournal(Journal *);
     /** Return Journal for given date */
     virtual Journal *journal(const QDate &);
     /** Return Journal with given UID */

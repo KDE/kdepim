@@ -203,10 +203,10 @@ void ResourceExchange::slotMonitorError( int errorCode, const QString& moreInfo 
 }
 
 
-void ResourceExchange::addEvent(Event *anEvent)
+bool ResourceExchange::addEvent(Event *anEvent)
 {
     if( !mCache )
-        return;
+        return false;
   kdDebug() << "ResourceExchange::addEvent" << endl;
 
   // FIXME: first check of upload finished successfully, only then
@@ -218,6 +218,8 @@ void ResourceExchange::addEvent(Event *anEvent)
 
   anEvent->registerObserver( this );
 //  setModified( true );
+
+  return true;
 }
 
 void ResourceExchange::uploadEvent( Event* event )
@@ -280,15 +282,17 @@ void ResourceExchange::unsubscribeEvents( const QDate& start, const QDate& end )
   kdDebug() << "ResourceExchange::unsubscribeEvents()" << endl;
 }
 
-void ResourceExchange::addTodo(Todo *todo)
+bool ResourceExchange::addTodo(Todo *todo)
 {
     if( !mCache)
-        return;
+        return false;
   mCache->addTodo( todo );
 
   todo->registerObserver( this );
 
 //  setModified( true );
+
+  return true;
 }
 
 void ResourceExchange::deleteTodo(Todo *todo)
@@ -442,7 +446,7 @@ QPtrList<Event> ResourceExchange::rawEvents()
  return mCache->rawEvents();
 }
 
-void ResourceExchange::addJournal(Journal *journal)
+bool ResourceExchange::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
   mCache->addJournal( journal );
@@ -450,6 +454,8 @@ void ResourceExchange::addJournal(Journal *journal)
   journal->registerObserver( this );
 
 //  setModified( true );
+
+  return true;
 }
 
 Journal *ResourceExchange::journal(const QDate &date)
