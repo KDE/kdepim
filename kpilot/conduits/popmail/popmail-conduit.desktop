@@ -31,3 +31,4 @@ Name[tr]=KPilot POP E-posta Programı
 Name[uk]=Трубопровід KPilot для пошти POP
 Implemented=file
 ServiceTypes=KPilotConduit
+Exec=popmail_conduit

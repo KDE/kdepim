@@ -31,3 +31,4 @@ Name[tr]=KOrganizer Zaman Çizelgesi
 Name[uk]=Трубопровід календаря KOrganizer
 Implemented=file
 ServiceTypes=KPilotConduit
+Exec=vcalconduit

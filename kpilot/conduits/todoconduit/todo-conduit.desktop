@@ -31,3 +31,4 @@ Name[tr]=KOrganizer Yapılacaklar
 Name[uk]=Трубопровід плановика KOrganizer
 Implemented=file
 ServiceTypes=KPilotConduit
+Exec=todoconduit
