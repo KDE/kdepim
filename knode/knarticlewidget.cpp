@@ -2,7 +2,7 @@
     knarticlewidget.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -1608,7 +1608,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       }
     }
     else if ( type==ATauthor || type == ATmailto ) {
-        target = a_rticle->from()->asUnicodeString();
+        if ( type == ATauthor )
+          target = a_rticle->from()->asUnicodeString();
         switch( u_mailtoPopup->exec( *p ) ) {
         case PUP_ADDRESSBOOK:
             addAddressbook(target);
@@ -1617,7 +1618,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
             openAddressbook(target);
             break;
         case PUP_COPYTOCLIPBOARD:
-            QApplication::clipboard()->setText(target);
+            QApplication::clipboard()->setText(target, QClipboard::Clipboard);
+            QApplication::clipboard()->setText(target, QClipboard::Selection);
             break;
         }
     }
@@ -1628,7 +1630,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
           openURL(target);
         break;
         case PUP_COPYURL:
-          QApplication::clipboard()->setText(target);
+          QApplication::clipboard()->setText(target, QClipboard::Clipboard);
+          QApplication::clipboard()->setText(target, QClipboard::Selection);
         break;
       case PUP_ADDBOOKMARKS:
           addBookmarks(target );
