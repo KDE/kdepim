@@ -860,9 +860,9 @@ void KNGroup::scoreArticles(bool onlynew)
 
       defScore = 0;
       if (a->isIgnored())
-        defScore = knGlobals.cfgManager->scoring()->ignoredThreshold();
+        defScore = knGlobals.configManager()->scoring()->ignoredThreshold();
       else if (a->isWatched())
-        defScore = knGlobals.cfgManager->scoring()->watchedThreshold();
+        defScore = knGlobals.configManager()->scoring()->watchedThreshold();
 
       if (a->score() != defScore) {
         a->setScore(defScore);

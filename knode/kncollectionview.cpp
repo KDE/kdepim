@@ -78,7 +78,7 @@ void KNCollectionView::addAccount(KNNntpAccount *a)
   // add account item
   KNCollectionViewItem* it = new KNCollectionViewItem(this);
   a->setListItem(it);
-  KNConfig::Appearance *app = knGlobals.cfgManager->appearance();
+  KNConfig::Appearance *app = knGlobals.configManager()->appearance();
   it->setPixmap(0, app->icon(KNConfig::Appearance::nntp));
   it->setOpen(a->wasOpen());
   
@@ -130,7 +130,7 @@ void KNCollectionView::addGroup(KNGroup *g)
     return;
   
   KNCollectionViewItem *gitem = new KNCollectionViewItem(g->account()->listItem());
-  gitem->setPixmap(0, knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::group));
+  gitem->setPixmap(0, knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::group));
   g->setListItem(gitem);
   updateGroup(g);
 }
@@ -167,12 +167,12 @@ void KNCollectionView::addFolder(KNFolder *f)
   f->setListItem(it);
   QPixmap pix;
   if (f->isRootFolder())
-    pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::rootFolder);
+    pix = knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::rootFolder);
   else
     if (f->isStandardFolder())
-      pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::customFolder);
+      pix = knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::customFolder);
     else
-      pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::folder);
+      pix = knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::folder);
   it->setPixmap(0, pix);
   updateFolder(f);
 }

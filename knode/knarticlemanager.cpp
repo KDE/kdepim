@@ -177,8 +177,8 @@ void KNArticleManager::showHdrs(bool clear)
   if(!g_roup && !f_older) return;
 
   bool setFirstChild=true;
-  bool showThreads=knGlobals.cfgManager->readNewsGeneral()->showThreads();
-  bool expandThreads=knGlobals.cfgManager->readNewsGeneral()->defaultToExpandedThreads();
+  bool showThreads=knGlobals.configManager()->readNewsGeneral()->showThreads();
+  bool expandThreads=knGlobals.configManager()->readNewsGeneral()->defaultToExpandedThreads();
 
   if(clear)
     v_iew->clear();
@@ -677,7 +677,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
   int changeCnt=0, idRef=0;
 
   for( ; a; a=l.next()) {
-    if( r && knGlobals.cfgManager->readNewsGeneral()->markCrossposts() &&
+    if( r && knGlobals.configManager()->readNewsGeneral()->markCrossposts() &&
         handleXPosts && a->newsgroups()->isCrossposted() ) {
 
       QStringList groups = a->newsgroups()->getGroups();
@@ -886,9 +886,9 @@ void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
     for(; a; a=l.next()) {
       int defScore = 0;
       if (a->isIgnored())
-        defScore = knGlobals.cfgManager->scoring()->ignoredThreshold();
+        defScore = knGlobals.configManager()->scoring()->ignoredThreshold();
       else if (a->isWatched())
-        defScore = knGlobals.cfgManager->scoring()->watchedThreshold();
+        defScore = knGlobals.configManager()->scoring()->watchedThreshold();
       a->setScore(defScore);
 
       KNScorableArticle sa(a);
@@ -931,7 +931,7 @@ void KNArticleManager::createThread(KNRemoteArticle *a)
   else
     a->setListItem(new KNHdrViewItem(v_iew));
 
-  a->setThreadMode(knGlobals.cfgManager->readNewsGeneral()->showThreads());
+  a->setThreadMode(knGlobals.configManager()->readNewsGeneral()->showThreads());
   a->initListItem();
 }
 
@@ -940,8 +940,8 @@ void KNArticleManager::createCompleteThread(KNRemoteArticle *a)
 {
   KNRemoteArticle *ref=a->displayedReference(), *art, *top;
   bool inThread=false;
-  bool showThreads=knGlobals.cfgManager->readNewsGeneral()->showThreads();
-  KNConfig::ReadNewsGeneral *rng=knGlobals.cfgManager->readNewsGeneral();
+  bool showThreads=knGlobals.configManager()->readNewsGeneral()->showThreads();
+  KNConfig::ReadNewsGeneral *rng=knGlobals.configManager()->readNewsGeneral();
 
   while (ref->displayedReference() != 0)
     ref=ref->displayedReference();
@@ -1038,8 +1038,8 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
   KNRemoteArticle *top, *art, *ref;
   KNHdrViewItem *hdrItem;
   bool inThread=false;
-  bool showThreads=knGlobals.cfgManager->readNewsGeneral()->showThreads();
-  KNConfig::ReadNewsGeneral *rng=knGlobals.cfgManager->readNewsGeneral();
+  bool showThreads=knGlobals.configManager()->readNewsGeneral()->showThreads();
+  KNConfig::ReadNewsGeneral *rng=knGlobals.configManager()->readNewsGeneral();
   hdrItem=static_cast<KNHdrViewItem*>(p);
   top=static_cast<KNRemoteArticle*>(hdrItem->art);
 

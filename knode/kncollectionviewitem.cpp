@@ -100,7 +100,7 @@ QDragObject* KNCollectionViewItem::dragObject()
       return 0;
 
     QDragObject *d=new QStoredDrag("x-knode-drag/folder", listView()->viewport());
-    d->setPixmap(knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::customFolder));
+    d->setPixmap(knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::customFolder));
     return d;
   }
   return 0;

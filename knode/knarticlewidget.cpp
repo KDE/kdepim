@@ -79,7 +79,7 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   : KTextBrowser(0)
 {
   setWFlags(WType_TopLevel | WDestructiveClose);
-  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
+  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
 
   setCaption(kapp->makeStdCaption(i18n("Article Source")));
   setPaper( QBrush(app->backgroundColor()) );
@@ -185,12 +185,12 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotVerify()), a_ctions, "article_verify");
   a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &All Headers"), "text_block", 0 , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
-  a_ctToggleFullHdrs->setChecked(knGlobals.cfgManager->readNewsViewer()->showFullHdrs());
+  a_ctToggleFullHdrs->setChecked(knGlobals.configManager()->readNewsViewer()->showFullHdrs());
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
                           SLOT(slotToggleRot13()), a_ctions, "view_rot13");
   a_ctToggleFixedFont   = new KToggleAction(i18n("U&se Fixed Font"),  Key_X , this,
                           SLOT(slotToggleFixedFont()), a_ctions, "view_useFixedFont");
-  a_ctToggleFixedFont->setChecked(knGlobals.cfgManager->readNewsViewer()->useFixedFont());
+  a_ctToggleFixedFont->setChecked(knGlobals.configManager()->readNewsViewer()->useFixedFont());
   a_ctViewSource        = new KAction(i18n("&View Source"),  0 , this,
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
 
@@ -419,8 +419,8 @@ bool KNArticleWidget::canDecode8BitText(const QCString &charset)
 
 void KNArticleWidget::applyConfig()
 {
-  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
-  KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
+  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
+  KNConfig::ReadNewsViewer *rnv=knGlobals.configManager()->readNewsViewer();
 
   QFont f=(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
 
@@ -473,10 +473,10 @@ void KNArticleWidget::applyConfig()
   newPalette.setInactive(newColorGroup);
   setPalette(newPalette);
 
-  if(!knGlobals.cfgManager->readNewsGeneral()->autoMark())
+  if(!knGlobals.configManager()->readNewsGeneral()->autoMark())
     t_imer->stop();
 
-  emuKMail = ((this==knGlobals.artWidget) && knGlobals.cfgManager->readNewsNavigation()->emulateKMail());
+  emuKMail = ((this==knGlobals.artWidget) && knGlobals.configManager()->readNewsNavigation()->emulateKMail());
   updateContents();
 }
 
@@ -493,7 +493,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   else
     text = line;
 
-  if (!knGlobals.cfgManager->readNewsViewer()->interpretFormatTags())
+  if (!knGlobals.configManager()->readNewsViewer()->interpretFormatTags())
     beautification=false;
 
   int lastReplacement=-1;
@@ -795,11 +795,11 @@ void KNArticleWidget::openURL(const QString &url)
 {
     if(url.isEmpty()) return;
 
-    if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTdefault)
+    if (knGlobals.configManager()->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTdefault)
         (void) new KRun(KURL( url ));
-    if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTkonq)
+    if (knGlobals.configManager()->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTkonq)
         kapp->invokeBrowser(url);
-    else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTnetscape){
+    else if (knGlobals.configManager()->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTnetscape){
         QString exec("netscape");
         if ( findExec( exec))
         {
@@ -815,7 +815,7 @@ void KNArticleWidget::openURL(const QString &url)
             proc.start(KProcess::DontCare);
         }
     }
-    else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTmozilla){
+    else if (knGlobals.configManager()->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTmozilla){
         QString exec("mozilla");
         if ( findExec( exec))
         {
@@ -825,7 +825,7 @@ void KNArticleWidget::openURL(const QString &url)
             proc.start(KProcess::DontCare);
         }
     }
-    else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTopera){
+    else if (knGlobals.configManager()->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTopera){
         QString exec("opera");
         if ( findExec( exec))
         {
@@ -838,7 +838,7 @@ void KNArticleWidget::openURL(const QString &url)
     } else {
         KProcess proc;
 
-        QStringList command = QStringList::split(' ',knGlobals.cfgManager->readNewsViewer()->browserCommand());
+        QStringList command = QStringList::split(' ',knGlobals.configManager()->readNewsViewer()->browserCommand());
         bool urlAdded=false;
         for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
             if ((*it).contains("%u")) {
@@ -891,7 +891,7 @@ void KNArticleWidget::showBlankPage()
   setMimeSourceFactory(f_actory);
 
   // restore background color, might have been changed by html article
-  setPaper(QBrush(knGlobals.cfgManager->appearance()->backgroundColor()));
+  setPaper(QBrush(knGlobals.configManager()->appearance()->backgroundColor()));
 
   setText(QString::null);
 
@@ -928,7 +928,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   setMimeSourceFactory(f_actory);
 
   // restore background color, might have been changed by html article
-  setPaper(QBrush(knGlobals.cfgManager->appearance()->backgroundColor()));
+  setPaper(QBrush(knGlobals.configManager()->appearance()->backgroundColor()));
 
   QString errMsg=s;
   errMsg.replace(QRegExp("\n"),QString("<br>"));  // error messages can contain html-links, but are plain text otherwise
@@ -937,7 +937,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
 
   // mark article as read, typically the article is expired on the server, so its
   // impossible to read it later anyway.
-  if(knGlobals.cfgManager->readNewsGeneral()->autoMark() &&
+  if(knGlobals.configManager()->readNewsGeneral()->autoMark() &&
      a_rticle && a_rticle->type()==KMime::Base::ATremote && !a_rticle->isOrphant()) {
     KNRemoteArticle::List l;
     l.append((static_cast<KNRemoteArticle*>(a_rticle)));
@@ -1068,8 +1068,8 @@ void KNArticleWidget::createHtmlPage()
     a_rticle->setForceDefaultCS(f_orceCS);
   }
 
-  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
-  KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
+  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
+  KNConfig::ReadNewsViewer *rnv=knGlobals.configManager()->readNewsViewer();
 
   delete f_actory;                          // purge old image data
   f_actory = new QMimeSourceFactory();
@@ -1103,7 +1103,7 @@ void KNArticleWidget::createHtmlPage()
   else {
     KMime::Headers::Base *hb;
     KNDisplayedHeader *dh;
-    KNConfig::DisplayedHeaders::Iterator it=knGlobals.cfgManager->displayedHeaders()->iterator();
+    KNConfig::DisplayedHeaders::Iterator it=knGlobals.configManager()->displayedHeaders()->iterator();
     for(; it.current(); ++it) {
       dh=it.current();
       hb=a_rticle->getHeaderByType(dh->header().latin1());
@@ -1194,7 +1194,7 @@ void KNArticleWidget::createHtmlPage()
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
     Kpgp::Module *pgp = knGlobals.pgp;
 
-    if (knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs() || ra->isPgpSigned()) {
+    if (knGlobals.configManager()->readNewsGeneral()->autoCheckPgpSigs() || ra->isPgpSigned()) {
       QPtrList<Kpgp::Block> pgpBlocks;
       QStrList nonPgpBlocks;
       Kpgp::Module::prepareMessageForDecryption( ra->body(), pgpBlocks, nonPgpBlocks );
@@ -1206,7 +1206,7 @@ void KNArticleWidget::createHtmlPage()
         pgpBlock = 0;
       html += "<p>";
       if( !pgpBlock || !pgpBlock->isSigned() ) {
-        if (!knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs())
+        if (!knGlobals.configManager()->readNewsGeneral()->autoCheckPgpSigs())
           html += "<b>" + i18n("Cannot find a signature in this message.") + "</b>";
       }
       else {
@@ -1317,8 +1317,8 @@ void KNArticleWidget::createHtmlPage()
     a_ctViewSource->setEnabled(true);
 
     //start automark-timer
-    if(a_rticle->type()==KMime::Base::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
-      t_imer->start( (knGlobals.cfgManager->readNewsGeneral()->autoMarkSeconds()*1000), true);
+    if(a_rticle->type()==KMime::Base::ATremote && knGlobals.configManager()->readNewsGeneral()->autoMark())
+      t_imer->start( (knGlobals.configManager()->readNewsGeneral()->autoMarkSeconds()*1000), true);
     return;
   }
 
@@ -1327,7 +1327,7 @@ void KNArticleWidget::createHtmlPage()
     html+="<bodyblock>";
     if(text->contentType()->isHTMLText()) {
       QString htmlTxt;
-      text->decodedText(htmlTxt, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
+      text->decodedText(htmlTxt, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines());
       html+=htmlTxt+"</bodyblock>";
     }
     else {
@@ -1337,7 +1337,7 @@ void KNArticleWidget::createHtmlPage()
       bool isSig=false;
       QStringList lines;
       QString line;
-      text->decodedText(lines, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
+      text->decodedText(lines, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines());
       QString quoteChars = rnv->quoteCharacters().simplifyWhiteSpace();
       if (quoteChars.isEmpty()) quoteChars = ">";
 
@@ -1465,8 +1465,8 @@ void KNArticleWidget::createHtmlPage()
   a_ctViewSource->setEnabled(true);
 
   //start automark-timer
-  if(a_rticle->type()==KMime::Base::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
-    t_imer->start( (knGlobals.cfgManager->readNewsGeneral()->autoMarkSeconds()*1000), true);
+  if(a_rticle->type()==KMime::Base::ATremote && knGlobals.configManager()->readNewsGeneral()->autoMark())
+    t_imer->start( (knGlobals.configManager()->readNewsGeneral()->autoMarkSeconds()*1000), true);
 }
 
 
@@ -1564,7 +1564,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       break;
       case ATattachment:
         kdDebug(5003) << "KNArticleWidget::anchorClicked() : attachment " << target << endl;
-        if(knGlobals.cfgManager->readNewsViewer()->openAttachmentsOnClick())
+        if(knGlobals.configManager()->readNewsViewer()->openAttachmentsOnClick())
           openAttachment(target.toInt());
         else
           saveAttachment(target.toInt());
@@ -1673,7 +1673,7 @@ void KNArticleWidget::slotPrint()
     QFontMetrics fm=p.fontMetrics();
 
     KNDisplayedHeader *dh;
-    KNConfig::DisplayedHeaders::Iterator it=knGlobals.cfgManager->displayedHeaders()->iterator();
+    KNConfig::DisplayedHeaders::Iterator it=knGlobals.configManager()->displayedHeaders()->iterator();
     dh=it.current();
     while(dh) {
       hb=a_rticle->getHeaderByType(dh->header().latin1());
@@ -1712,7 +1712,7 @@ void KNArticleWidget::slotPrint()
     KMime::Content *txt=a_rticle->textContent();
 
     if(txt) {
-      txt->decodedText(lines, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
+      txt->decodedText(lines, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines());
       for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
 
         if(yPos+margin > metrics.height()) {
@@ -1786,7 +1786,7 @@ void KNArticleWidget::slotToggleFullHdrs()
 
   // ok, this is a hack
   if (knGlobals.artWidget == this)
-    knGlobals.cfgManager->readNewsViewer()->setShowFullHdrs(!knGlobals.cfgManager->readNewsViewer()->showFullHdrs());
+    knGlobals.configManager()->readNewsViewer()->setShowFullHdrs(!knGlobals.configManager()->readNewsViewer()->showFullHdrs());
   updateContents();
 }
 
@@ -1802,7 +1802,7 @@ void KNArticleWidget::slotToggleFixedFont()
 {
   // ok, this is a hack
   if (knGlobals.artWidget == this)
-    knGlobals.cfgManager->readNewsViewer()->setUseFixedFont(!knGlobals.cfgManager->readNewsViewer()->useFixedFont());
+    knGlobals.configManager()->readNewsViewer()->setUseFixedFont(!knGlobals.configManager()->readNewsViewer()->useFixedFont());
   applyConfig();
 }
 

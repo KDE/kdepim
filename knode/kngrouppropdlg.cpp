@@ -60,8 +60,8 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   grpL->addMultiCellWidget(u_seCharset,2,2,0,1);
 
   c_harset=new QComboBox(false, gb);
-  c_harset->insertStringList(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
-  c_harset->setCurrentItem(knGlobals.cfgManager->postNewsTechnical()->indexForCharset(g_rp->defaultCharset()));
+  c_harset->insertStringList(knGlobals.configManager()->postNewsTechnical()->composerCharsets());
+  c_harset->setCurrentItem(knGlobals.configManager()->postNewsTechnical()->indexForCharset(g_rp->defaultCharset()));
   c_harset->setEnabled(g_rp->useCharset());
   connect(u_seCharset, SIGNAL(toggled(bool)), c_harset, SLOT(setEnabled(bool)));
   grpL->addWidget(c_harset, 2,2);

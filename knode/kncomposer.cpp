@@ -276,7 +276,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
                    SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
 
   a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
-  a_ctSetCharset->setItems(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
+  a_ctSetCharset->setItems(knGlobals.configManager()->postNewsTechnical()->composerCharsets());
   a_ctSetCharset->setShortcutConfigurable(false);
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
   this, SLOT(slotSetCharset(const QString&)));
@@ -346,7 +346,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   setConfig(false);
 
   if (firstEdit) {   // now we place the cursor at the end of the quoted text / below the attribution line
-    if (knGlobals.cfgManager->postNewsComposer()->cursorOnTop())
+    if (knGlobals.configManager()->postNewsComposer()->cursorOnTop())
       v_iew->e_dit->setCursorPosition(1,0);
     else
       v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
@@ -367,7 +367,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     v_iew->t_o->setFocus();
   }
 
-  if(firstEdit && knGlobals.cfgManager->postNewsComposer()->appendOwnSignature())
+  if(firstEdit && knGlobals.configManager()->postNewsComposer()->appendOwnSignature())
     slotAppendSig();
 
   if (createCopy && (m_ode==news)) {
@@ -384,7 +384,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   applyMainWindowSettings(conf);
 
   // starting the external editor
-  if(knGlobals.cfgManager->postNewsComposer()->useExternalEditor())
+  if(knGlobals.configManager()->postNewsComposer()->useExternalEditor())
     slotExternalEditor();
 }
 
@@ -504,16 +504,16 @@ void KNComposer::slotSelectAll()
 void KNComposer::setConfig(bool onlyFonts)
 {
   if (!onlyFonts) {
-    v_iew->e_dit->setWordWrap(knGlobals.cfgManager->postNewsComposer()->wordWrap()?
+    v_iew->e_dit->setWordWrap(knGlobals.configManager()->postNewsComposer()->wordWrap()?
                               QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
-    v_iew->e_dit->setWrapColumnOrWidth(knGlobals.cfgManager->postNewsComposer()->maxLineLength());
-    a_ctWordWrap->setChecked(knGlobals.cfgManager->postNewsComposer()->wordWrap());
+    v_iew->e_dit->setWrapColumnOrWidth(knGlobals.configManager()->postNewsComposer()->maxLineLength());
+    a_ctWordWrap->setChecked(knGlobals.configManager()->postNewsComposer()->wordWrap());
 
     Kpgp::Module *pgp = Kpgp::Module::getKpgp();
     a_ctPGPsign->setEnabled(pgp->usePGP());
   }
 
-  QFont fnt=knGlobals.cfgManager->appearance()->composerFont();
+  QFont fnt=knGlobals.configManager()->appearance()->composerFont();
   v_iew->s_ubject->setFont(fnt);
   v_iew->t_o->setFont(fnt);
   v_iew->g_roups->setFont(fnt);
@@ -693,7 +693,7 @@ bool KNComposer::hasValidData()
   // check if article can be signed
   if ( a_ctPGPsign->isChecked() ) {
     // try to get the signing key
-    QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
+    QCString signingKey = knGlobals.configManager()->identity()->signingKey();
     KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
@@ -790,7 +790,7 @@ bool KNComposer::applyChanges()
   }
 
   //set text
-  KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
+  KNConfig::PostNewsTechnical *pnt=knGlobals.configManager()->postNewsTechnical();
   if (v_alidated) {
     if (n_eeds8Bit) {
       text->contentType()->setCharset(c_harset);
@@ -819,7 +819,7 @@ bool KNComposer::applyChanges()
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
       // first get the signing key
-      QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
+      QCString signingKey = knGlobals.configManager()->identity()->signingKey();
       KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
       if ( acc ) {
           KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
@@ -922,9 +922,9 @@ void KNComposer::initData(const QString &text)
   if(textContent)
     c_harset=textContent->contentType()->charset();
   else
-    c_harset=knGlobals.cfgManager->postNewsTechnical()->charset();
+    c_harset=knGlobals.configManager()->postNewsTechnical()->charset();
 
-  a_ctSetCharset->setCurrentItem(knGlobals.cfgManager->postNewsTechnical()->indexForCharset(c_harset));
+  a_ctSetCharset->setCurrentItem(knGlobals.configManager()->postNewsTechnical()->indexForCharset(c_harset));
 
   // initialize the message type select action
   if (a_rticle->doPost() && a_rticle->doMail())
@@ -1163,7 +1163,7 @@ void KNComposer::slotToggleDoMail()
       }
     }
 
-    if (knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+    if (knGlobals.configManager()->postNewsTechnical()->useExternalMailer()) {
       QString s = v_iew->e_dit->textLine(0);
       if (!s.contains(i18n("<posted & mailed>")))
         v_iew->e_dit->insertAt(i18n("<posted & mailed>\n\n"),0,0);
@@ -1235,7 +1235,7 @@ void KNComposer::slotExternalEditor()
   if(e_xternalEditor)   // in progress...
     return;
 
-  QString editorCommand=knGlobals.cfgManager->postNewsComposer()->externalEditor();
+  QString editorCommand=knGlobals.configManager()->postNewsComposer()->externalEditor();
 
   if(editorCommand.isEmpty())
     KMessageBox::sorry(this, i18n("No editor configured.\nPlease do this in the settings dialog."));

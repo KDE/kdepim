@@ -150,7 +150,7 @@ KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry(KNArticle *a, bool
 
 void KNMemoryManager::checkMemoryUsageCollections()
 {
-  int maxSize = knGlobals.cfgManager->readNewsGeneral()->collCacheSize() * 1024;
+  int maxSize = knGlobals.configManager()->readNewsGeneral()->collCacheSize() * 1024;
   KNArticleCollection *c=0;
 
   if (c_ollCacheSize > maxSize) {
@@ -176,7 +176,7 @@ void KNMemoryManager::checkMemoryUsageCollections()
 
 void KNMemoryManager::checkMemoryUsageArticles()
 {
-  int maxSize = knGlobals.cfgManager->readNewsGeneral()->artCacheSize() * 1024;
+  int maxSize = knGlobals.configManager()->readNewsGeneral()->artCacheSize() * 1024;
 
   if (a_rtCacheSize > maxSize) {
     QPtrList<ArticleItem> tempList(a_rtList);  // work on a copy, KNArticlemanager will

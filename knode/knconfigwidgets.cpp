@@ -654,8 +654,8 @@ KNConfig::SmtpAccountWidget::~SmtpAccountWidget()
 
 void KNConfig::SmtpAccountWidget::load()
 {
-  u_seExternalMailer->setChecked(knGlobals.cfgManager->postNewsTechnical()->useExternalMailer());
-  useExternalMailerToggled(knGlobals.cfgManager->postNewsTechnical()->useExternalMailer());
+  u_seExternalMailer->setChecked(knGlobals.configManager()->postNewsTechnical()->useExternalMailer());
+  useExternalMailerToggled(knGlobals.configManager()->postNewsTechnical()->useExternalMailer());
   s_erver->setText(s_erverInfo->server());
   p_ort->setText(QString::number(s_erverInfo->port()));
   h_old->setValue(s_erverInfo->hold());
@@ -667,8 +667,8 @@ void KNConfig::SmtpAccountWidget::save()
   if(!d_irty)
     return;
 
-  knGlobals.cfgManager->postNewsTechnical()->u_seExternalMailer = u_seExternalMailer->isChecked();
-  knGlobals.cfgManager->postNewsTechnical()->setDirty(true);
+  knGlobals.configManager()->postNewsTechnical()->u_seExternalMailer = u_seExternalMailer->isChecked();
+  knGlobals.configManager()->postNewsTechnical()->setDirty(true);
 
   s_erverInfo->setServer(s_erver->text());
   s_erverInfo->setPort(p_ort->text().toInt());
@@ -2407,7 +2407,7 @@ KNConfig::PrivacyWidget::~PrivacyWidget()
 
 void KNConfig::PrivacyWidget::load()
 {
-  a_utoCheckSigCB->setChecked(knGlobals.cfgManager->readNewsGeneral()->autoCheckPgpSigs());
+  a_utoCheckSigCB->setChecked(knGlobals.configManager()->readNewsGeneral()->autoCheckPgpSigs());
 }
 
 
@@ -2417,8 +2417,8 @@ void KNConfig::PrivacyWidget::save()
     return;
 
   c_onf->applySettings();
-  knGlobals.cfgManager->readNewsGeneral()->setAutoCheckPgpSigs(a_utoCheckSigCB->isChecked());
-  knGlobals.cfgManager->readNewsGeneral()->setDirty(true);
+  knGlobals.configManager()->readNewsGeneral()->setAutoCheckPgpSigs(a_utoCheckSigCB->isChecked());
+  knGlobals.configManager()->readNewsGeneral()->setDirty(true);
 }
 
 

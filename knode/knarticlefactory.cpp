@@ -59,7 +59,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
     return;
 
   QString sig;
-  KNLocalArticle *art=newArticle(a, sig, knGlobals.cfgManager->postNewsTechnical()->charset());
+  KNLocalArticle *art=newArticle(a, sig, knGlobals.configManager()->postNewsTechnical()->charset());
   if(!art)
     return;
 
@@ -83,7 +83,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   if (g->useCharset())
     chset = g->defaultCharset();
   else
-    chset = knGlobals.cfgManager->postNewsTechnical()->charset();
+    chset = knGlobals.configManager()->postNewsTechnical()->charset();
 
   QString sig;
   KNLocalArticle *art=newArticle(g, sig, chset);
@@ -111,13 +111,13 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   KNGroup *g=static_cast<KNGroup*>(a->collection());
 
   QCString chset;
-  if (knGlobals.cfgManager->postNewsTechnical()->useOwnCharset()) {
+  if (knGlobals.configManager()->postNewsTechnical()->useOwnCharset()) {
     if (g->useCharset())
       chset = g->defaultCharset();
     else
-      chset = knGlobals.cfgManager->postNewsTechnical()->charset();
+      chset = knGlobals.configManager()->postNewsTechnical()->charset();
   } else
-    chset = knGlobals.cfgManager->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
+    chset = knGlobals.configManager()->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
 
   //create new article
   QString sig;
@@ -207,7 +207,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   //--------------------------- <Body> -----------------------------
 
   // attribution line
-  QString attribution=knGlobals.cfgManager->postNewsComposer()->intro();
+  QString attribution=knGlobals.configManager()->postNewsComposer()->intro();
   QString name(a->from()->name());
   if (name.isEmpty())
     name = QString::fromLatin1(a->from()->email());
@@ -222,12 +222,12 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   QString notRewraped=QString::null;
   QStringList text;
   QStringList::Iterator line;
-  bool incSig=knGlobals.cfgManager->postNewsComposer()->includeSignature();
+  bool incSig=knGlobals.configManager()->postNewsComposer()->includeSignature();
 
   if (selectedText.isEmpty()) {
     KMime::Content *tc = a->textContent();
     if(tc)
-      tc->decodedText(text, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
+      tc->decodedText(text, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines());
   }
   else
     text = QStringList::split('\n',selectedText,true);
@@ -242,17 +242,17 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       quoted+="> "+(*line)+"\n";
   }
 
-  if(knGlobals.cfgManager->postNewsComposer()->rewrap()) {  //rewrap original article
+  if(knGlobals.configManager()->postNewsComposer()->rewrap()) {  //rewrap original article
 
     notRewraped=quoted;     // store the original text in here, the user can request it in the composer
     quoted=attribution;
 
-    quoted += KNHelper::rewrapStringList(text, knGlobals.cfgManager->postNewsComposer()->maxLineLength(), '>', !incSig, false);
+    quoted += KNHelper::rewrapStringList(text, knGlobals.configManager()->postNewsComposer()->maxLineLength(), '>', !incSig, false);
   }
 
   //-------------------------- </Body> -----------------------------
 
-  if (art->doMail() && knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+  if (art->doMail() && knGlobals.configManager()->postNewsTechnical()->useExternalMailer()) {
     sendMailExternal(address.asUnicodeString(), subject, quoted);
     art->setDoMail(false);
     if (!art->doPost()) {
@@ -276,16 +276,16 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   KMime::Headers::ContentType *ct=a->contentType();
   QCString chset;
-  bool incAtt = ( !knGlobals.cfgManager->postNewsTechnical()->useExternalMailer() &&
+  bool incAtt = ( !knGlobals.configManager()->postNewsTechnical()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
                   i18n("This article contains attachments. Do you want them to be forwarded as well?"))
                 );
 
-  if (knGlobals.cfgManager->postNewsTechnical()->useOwnCharset())
-    chset = knGlobals.cfgManager->postNewsTechnical()->charset();
+  if (knGlobals.configManager()->postNewsTechnical()->useOwnCharset())
+    chset = knGlobals.configManager()->postNewsTechnical()->charset();
   else
-    chset = knGlobals.cfgManager->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
+    chset = knGlobals.configManager()->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
 
   //create new article
   QString sig;
@@ -316,7 +316,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   KMime::Content *text=a->textContent();
   if(text) {
     QStringList decodedLines;
-    text->decodedText(decodedLines, true, knGlobals.cfgManager->readNewsViewer()->removeTrailingNewlines());
+    text->decodedText(decodedLines, true, knGlobals.configManager()->readNewsViewer()->removeTrailingNewlines());
     for(QStringList::Iterator it=decodedLines.begin(); it!=decodedLines.end(); ++it)
       fwd+=" "+(*it)+"\n";
   }
@@ -340,7 +340,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   //------------------------ </Attachments> ------------------------
 
 
-  if (knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+  if (knGlobals.configManager()->postNewsTechnical()->useExternalMailer()) {
     sendMailExternal(QString::null, subject, fwd);
     delete art;
     return;
@@ -465,7 +465,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
   //new article
   QString sig;
-  KNLocalArticle *art=newArticle(grp, sig, knGlobals.cfgManager->postNewsTechnical()->findComposerCharset(a->contentType()->charset()));
+  KNLocalArticle *art=newArticle(grp, sig, knGlobals.configManager()->postNewsTechnical()->findComposerCharset(a->contentType()->charset()));
   if(!art)
     return;
 
@@ -506,14 +506,14 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
 void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
 {
-  if (knGlobals.cfgManager->postNewsTechnical()->useExternalMailer()) {
+  if (knGlobals.configManager()->postNewsTechnical()->useExternalMailer()) {
     sendMailExternal(address->asUnicodeString());
     return;
   }
 
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(knGlobals.groupManager()->currentGroup(), sig, knGlobals.cfgManager->postNewsTechnical()->charset());
+  KNLocalArticle *art=newArticle(knGlobals.groupManager()->currentGroup(), sig, knGlobals.configManager()->postNewsTechnical()->charset());
   if(!art)
     return;
 
@@ -576,7 +576,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   }
 
   //find signature
-  KNConfig::Identity *id=knGlobals.cfgManager->identity();
+  KNConfig::Identity *id=knGlobals.configManager()->identity();
 
   if(a->doPost()) {
     KNNntpAccount *acc=knGlobals.accountManager()->account(a->serverId());
@@ -780,7 +780,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 
 KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders)
 {
-  KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
+  KNConfig::PostNewsTechnical *pnt=knGlobals.configManager()->postNewsTechnical();
 
   if(pnt->generateMessageID() && pnt->hostname().isEmpty()) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
@@ -803,7 +803,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
       }
   }
 
-  defId=knGlobals.cfgManager->identity();
+  defId=knGlobals.configManager()->identity();
 
   //Message-id
   if(pnt->generateMessageID())
@@ -949,7 +949,7 @@ and cancel (or supersede) it there."));
 
     KNRemoteArticle *remArt=static_cast<KNRemoteArticle*>(a);
     KNGroup *g=static_cast<KNGroup*>(a->collection());
-    KNConfig::Identity  *defId=knGlobals.cfgManager->identity(),
+    KNConfig::Identity  *defId=knGlobals.configManager()->identity(),
                         *gid=g->identity(),
                         *accId=g->account()->identity();
     bool ownArticle=true;
@@ -1063,7 +1063,7 @@ void KNArticleFactory::slotSendErrorDialogDone()
 
 KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
 {
-  p_ixmap=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::sendErr);
+  p_ixmap=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::sendErr);
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5,5);
 

@@ -69,8 +69,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   leftLabel->setFont(fnt);
   rightLabel->setFont(fnt);
 
-  pmGroup=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::group);
-  pmNew=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::redBall);
+  pmGroup=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::group);
+  pmNew=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::redBall);
   pmRight=BarIcon( QApplication::reverseLayout()? "back": "forward");
   pmLeft=BarIcon(  QApplication::reverseLayout() ? "forward" : "back");
 

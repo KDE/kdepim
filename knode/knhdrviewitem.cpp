@@ -83,7 +83,7 @@ int KNHdrViewItem::compare(QListViewItem *i, int col, bool) const
 QDragObject* KNHdrViewItem::dragObject()
 {
   QDragObject *d=new QStoredDrag( "x-knode-drag/article" , listView()->viewport());
-  d->setPixmap(knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::posting));
+  d->setPixmap(knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::posting));
   return d;
 }
 
@@ -91,7 +91,7 @@ QDragObject* KNHdrViewItem::dragObject()
 int KNHdrViewItem::countUnreadInThread()
 {
   int count = 0;
-  if(knGlobals.cfgManager->readNewsGeneral()->showUnread()) {
+  if(knGlobals.configManager()->readNewsGeneral()->showUnread()) {
     if(art->type()==KMime::Base::ATremote) {
       count = static_cast<KNRemoteArticle*>(art)->unreadFollowUps();
     }
@@ -125,12 +125,12 @@ QColor KNHdrViewItem::normalColor()
     return rart->color();
   }
   else
-    return knGlobals.cfgManager->appearance()->unreadThreadColor();
+    return knGlobals.configManager()->appearance()->unreadThreadColor();
 }
 
 
 QColor KNHdrViewItem::greyColor()
 {
-  return knGlobals.cfgManager->appearance()->readThreadColor();
+  return knGlobals.configManager()->appearance()->readThreadColor();
 }
 

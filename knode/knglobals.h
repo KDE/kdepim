@@ -53,13 +53,13 @@ class KNGlobals {
     KNMainWidget          *top;
     KXMLGUIClient         *guiClient;
     KNArticleWidget       *artWidget;
-    KNConfigManager       *cfgManager;
     KNProgress            *progressBar;
     KNArticleFactory      *artFactory;
     Kpgp::Module          *pgp;
     KConfig               *config();
     KInstance             *instance;
 
+    KNConfigManager       *configManager();
     KNNetAccess           *netAccess();
     KNAccountManager      *accountManager();
     KNGroupManager        *groupManager();
@@ -78,6 +78,7 @@ private:
     KSharedConfig::Ptr c_onfig;
 
     KNNetAccess           *mNetAccess;
+    KNConfigManager       *mCfgManager;
     KNAccountManager      *mAccManager;
     KNGroupManager        *mGrpManager;
     KNArticleManager      *mArtManager;

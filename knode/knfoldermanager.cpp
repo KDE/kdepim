@@ -250,7 +250,7 @@ void KNFolderManager::compactFolder(KNFolder *f)
   if(!f || f->isRootFolder())
     return;
 
-  KNCleanUp cup(knGlobals.cfgManager->cleanup());
+  KNCleanUp cup(knGlobals.configManager()->cleanup());
   cup.compactFolder(f);
 }
 
@@ -266,7 +266,7 @@ void KNFolderManager::compactAll(KNCleanUp *cup)
 
 void KNFolderManager::compactAll()
 {
-  KNCleanUp *cup = new KNCleanUp(knGlobals.cfgManager->cleanup());
+  KNCleanUp *cup = new KNCleanUp(knGlobals.configManager()->cleanup());
 
   for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
     if (!f->isRootFolder() && f->lockedArticles()==0)
@@ -275,7 +275,7 @@ void KNFolderManager::compactAll()
 
   cup->start();
 
-  knGlobals.cfgManager->cleanup()->setLastCompactDate();
+  knGlobals.configManager()->cleanup()->setLastCompactDate();
   delete cup;
 }
 

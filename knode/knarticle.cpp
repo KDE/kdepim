@@ -64,7 +64,7 @@ void KNArticle::setLocked(bool b)
 
 KNRemoteArticle::KNRemoteArticle(KNGroup *g)
  : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(0),
-   c_olor(knGlobals.cfgManager->appearance()->unreadThreadColor()),
+   c_olor(knGlobals.configManager()->appearance()->unreadThreadColor()),
    pgp_signed(false),
    u_nreadFups(0), n_ewFups(0), s_ubThreadChangeDate(0)
 {
@@ -75,7 +75,7 @@ KNRemoteArticle::KNRemoteArticle(KNGroup *g)
   if (g && g->useCharset())
     setDefaultCharset( g->defaultCharset() );
   else
-    setDefaultCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
+    setDefaultCharset( knGlobals.configManager()->postNewsTechnical()->charset() );
 }
 
 
@@ -183,7 +183,7 @@ void KNRemoteArticle::updateListItem()
 {
   if(!i_tem) return;
 
-  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
+  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
 
   if(isRead()) {
     if(hasContent())
@@ -258,7 +258,7 @@ void KNRemoteArticle::setForceDefaultCS(bool b)
     if (g && g->useCharset())
       setDefaultCharset( g->defaultCharset() );
     else
-      setDefaultCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
+      setDefaultCharset( knGlobals.configManager()->postNewsTechnical()->charset() );
   }
   KNArticle::setForceDefaultCS(b);
   initListItem();
@@ -292,7 +292,7 @@ KNLocalArticle::KNLocalArticle(KNArticleCollection *c)
 {
   n_ewsgroups.setParent(this);
   t_o.setParent(this);
-  setDefaultCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
+  setDefaultCharset( knGlobals.configManager()->postNewsTechnical()->charset() );
 }
 
 
@@ -370,7 +370,7 @@ void KNLocalArticle::updateListItem()
 
   QString tmp;
   int idx=0;
-  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
+  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
 
   if(isSavedRemoteArticle()) {
     i_tem->setPixmap(0, app->icon(KNConfig::Appearance::savedRemote));
@@ -411,7 +411,7 @@ void KNLocalArticle::updateListItem()
 void KNLocalArticle::setForceDefaultCS(bool b)
 {
   if (!b)  // restore default
-    setDefaultCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
+    setDefaultCharset( knGlobals.configManager()->postNewsTechnical()->charset() );
   KNArticle::setForceDefaultCS(b);
   updateListItem();
 }
@@ -474,7 +474,7 @@ void KNAttachment::setMimeType(const QString &s)
   }
   else {
     f_b64=false;
-    if (knGlobals.cfgManager->postNewsTechnical()->allow8BitBody())
+    if (knGlobals.configManager()->postNewsTechnical()->allow8BitBody())
       setCte(Headers::CE8Bit);
     else
       setCte(Headers::CEquPr);

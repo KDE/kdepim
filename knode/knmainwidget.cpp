@@ -74,8 +74,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   knGlobals.topWidget=this;
 
   //------------------------------- <CONFIG> ----------------------------------
-  c_fgManager = new KNConfigManager();
-  knGlobals.cfgManager=c_fgManager;
+  c_fgManager = knGlobals.configManager();
   //------------------------------- </CONFIG> ----------------------------------
 
   //-------------------------------- <GUI> ------------------------------------
@@ -581,7 +580,7 @@ void KNMainWidget::configChanged()
   h_drView->setPalette(p);
   h_drView->setAlternateBackground(app->alternateBackgroundColor());
 
-  if (knGlobals.cfgManager->readNewsGeneral()->showScore()) {
+  if (knGlobals.configManager()->readNewsGeneral()->showScore()) {
     if (!h_drView->header()->isResizeEnabled(2)) {
       h_drView->header()->setResizeEnabled(true,2);
       h_drView->header()->setLabel(2,i18n("Score"),42);
@@ -590,7 +589,7 @@ void KNMainWidget::configChanged()
     h_drView->header()->setLabel(2,QString::null,0);
     h_drView->header()->setResizeEnabled(false,2);
   }
-  if (knGlobals.cfgManager->readNewsGeneral()->showLines()) {
+  if (knGlobals.configManager()->readNewsGeneral()->showLines()) {
     if (!h_drView->header()->isResizeEnabled(3)) {
       h_drView->header()->setResizeEnabled(true,3);
       h_drView->header()->setLabel(3,i18n("Lines"),42);
@@ -802,7 +801,7 @@ bool KNMainWidget::firstStart()
   QString group = emailConf.readEntry("Profile","Default");
 
   emailConf.setGroup(QString("PROFILE_%1").arg(group));
-  KNConfig::Identity *id=knGlobals.cfgManager->identity();
+  KNConfig::Identity *id=knGlobals.configManager()->identity();
   id->setName(emailConf.readEntry("FullName"));
   id->setEmail(emailConf.readEntry("EmailAddress").latin1());
   id->setOrga(emailConf.readEntry("Organization"));

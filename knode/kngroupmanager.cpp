@@ -370,7 +370,7 @@ void KNGroupManager::expireAll(KNCleanUp *cup)
 
 void KNGroupManager::expireAll(KNNntpAccount *a)
 {
-  KNCleanUp *cup=new KNCleanUp(knGlobals.cfgManager->cleanup());
+  KNCleanUp *cup=new KNCleanUp(knGlobals.configManager()->cleanup());
 
   for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
     if((var->account()!=a) || (var->isLocked()) || (var->lockedArticles()>0))
@@ -513,7 +513,7 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
     return;
   }
 
-  g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
+  g->setMaxFetch(knGlobals.configManager()->readNewsGeneral()->maxToFetch());
   emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, g->account(), g) );
 }
 
@@ -530,7 +530,7 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
 
   KNArticleWindow::closeAllWindowsForCollection(g);
 
-  KNCleanUp cup(knGlobals.cfgManager->cleanup());
+  KNCleanUp cup(knGlobals.configManager()->cleanup());
   cup.expireGroup(g, true);
 
   emit groupUpdated(g);
@@ -565,7 +565,7 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
       return;
     }
     a_rticleMgr->showHdrs();
-    if(knGlobals.cfgManager->readNewsGeneral()->autoCheckGroups())
+    if(knGlobals.configManager()->readNewsGeneral()->autoCheckGroups())
       checkGroupForNewHeaders(g);
   }
 }
@@ -577,7 +577,7 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
 
   for(KNGroup *g=g_List->first(); g; g=g_List->next()) {
     if(g->account()==a) {
-      g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
+      g->setMaxFetch(knGlobals.configManager()->readNewsGeneral()->maxToFetch());
       if (silent)
         emitJob( new KNJobData(KNJobData::JTsilentFetchNewHeaders, this, g->account(), g) );
       else
@@ -682,7 +682,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
   d->path = a->path();
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
-  d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.cfgManager->postNewsTechnical()->charset());
+  d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.configManager()->postNewsTechnical()->charset());
 
   emitJob( new KNJobData(KNJobData::JTFetchGroups, this, a, d) );
 }
@@ -696,7 +696,7 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
   d->fetchSince = date;
-  d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.cfgManager->postNewsTechnical()->charset());
+  d->codecForDescriptions=KGlobal::charsets()->codecForName(knGlobals.configManager()->postNewsTechnical()->charset());
 
   emitJob( new KNJobData(KNJobData::JTCheckNewGroups, this, a, d) );
 }

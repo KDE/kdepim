@@ -50,7 +50,7 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
 {
   int xText=0, xPM=3, yPM=0;
   QColor base;
-  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
+  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
 
   p->setFont(fontForColumn(column, p->font()));
 
@@ -157,13 +157,13 @@ void KNLVItemBase::expandChildren()
 
 QColor KNLVItemBase::normalColor()
 {
-  return knGlobals.cfgManager->appearance()->textColor();
+  return knGlobals.configManager()->appearance()->textColor();
 }
 
 
 QColor KNLVItemBase::greyColor()
 {
-  return knGlobals.cfgManager->appearance()->textColor();
+  return knGlobals.configManager()->appearance()->textColor();
 }
 
 
@@ -269,7 +269,7 @@ void KNListView::ensureItemVisibleWithMargin(const QListViewItem *i)
   int y = itemPos(i);
   int h = i->height();
 
-  if (knGlobals.cfgManager->readNewsGeneral()->smartScrolling() &&
+  if (knGlobals.configManager()->readNewsGeneral()->smartScrolling() &&
       ((y+h+5) >= (contentsY()+visibleHeight()) ||
        (y-5 < contentsY())))
   {
@@ -390,37 +390,37 @@ void KNListView::keyPressEvent(QKeyEvent *e)
       setActive(i, true);
     break;
     case Key_Left:
-      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
         emit(keyLeftPressed());
       else
         KListView::keyPressEvent(e);
       break;
     case Key_Right:
-      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
         emit(keyRightPressed());
       else
         KListView::keyPressEvent(e);
       break;
     case Key_Up:
-      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
         emit(keyUpPressed());
       else
         KListView::keyPressEvent(e);
       break;
     case Key_Down:
-      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
         emit(keyDownPressed());
       else
         KListView::keyPressEvent(e);
       break;
     case Key_Next:
-      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
         emit(keyNextPressed());
       else
         KListView::keyPressEvent(e);
       break;
     case Key_Prior:
-      if (knGlobals.cfgManager->readNewsNavigation()->emulateKMail())
+      if (knGlobals.configManager()->readNewsNavigation()->emulateKMail())
         emit(keyPriorPressed());
       else
         KListView::keyPressEvent(e);
