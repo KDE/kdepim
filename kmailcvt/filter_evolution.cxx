@@ -46,17 +46,37 @@ FilterEvolution::~FilterEvolution(void) {
 void FilterEvolution::import(FilterInfo *info)
 {
   // We ask the user to choose Evolution's root directory.
-  QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
-  info->setOverall(0);
-
-  // Recursive import of the MBoxes.
-  QDir dir(mailDir);
-  QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
-  int currentDir = 1, numSubDirs = rootSubDirs.size();
-  for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
-    importDirContents(info, dir.filePath(*filename), *filename, QString::null);
-    info->setOverall((int) ((float) currentDir / numSubDirs * 100));
+  QString evolDir = QDir::homeDirPath() + "/evolution/local"; 
+  QDir d( evolDir );
+  if ( !d.exists() ) {
+    evolDir = QDir::homeDirPath();
   }
+
+  QString mailDir = KFileDialog::getExistingDirectory(evolDir, info->parent());
+
+  if (mailDir.isEmpty()) {
+    info->alert(i18n("No directory selected."));
+  }
+  /** 
+   * If the user only select homedir no import needed because 
+   * there should be no files and we shurely import wrong files.
+   */
+  else if ( mailDir == QDir::homeDirPath() || mailDir == (QDir::homeDirPath() + "/")) {	
+    info->addLog(i18n("No files found for import."));
+  }
+  else {
+    info->setOverall(0);
+    // Recursive import of the MBoxes.
+    QDir dir(mailDir);
+    QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
+    int currentDir = 1, numSubDirs = rootSubDirs.size();
+    for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+      importDirContents(info, dir.filePath(*filename), *filename, QString::null);
+      info->setOverall((int) ((float) currentDir / numSubDirs * 100));
+    }
+  }
+  info->setCurrent(100);
+  info->setOverall(100);
 }
 
 /**

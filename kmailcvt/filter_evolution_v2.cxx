@@ -48,36 +48,61 @@ void FilterEvolution_v2::import(FilterInfo *info)
    * We ask the user to choose Evolution's root directory. 
    * This should be usually ~/.evolution/mail/local/
    */
-  QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
-  info->setOverall(0);
+  QString evolDir = QDir::homeDirPath() + "/.evolution/mail/local"; 
+  QDir d( evolDir );
+  if ( !d.exists() ) {
+    evolDir = QDir::homeDirPath();
+  }
 
-  /** Recursive import of the MailArchives */
-  QDir dir(mailDir);
-  QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
-  int currentDir = 1, numSubDirs = rootSubDirs.size();
-  for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
-    importDirContents(info, dir.filePath(*filename), *filename, QString::null);
-    info->setOverall((int) ((float) currentDir / numSubDirs * 100));
+  //QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
+  KFileDialog *kfd;
+  kfd = new KFileDialog( evolDir, "", 0, "kfiledialog", true );
+  kfd->setMode(KFile::Directory | KFile::LocalOnly); 
+  kfd->exec();
+  QString mailDir  = kfd->selectedFile();
+
+   if (mailDir.isEmpty()) {
+    info->alert(i18n("No directory selected."));
   }
-  
-  /** import last but not least all archives from the root-dir */
-  QDir importDir (mailDir);
-  QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
-  for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
-    QString temp_mailfile = *mailFile;
-    if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") || 
-        temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
-    else {  
-        info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
-        importMBox(info, mailDir + "/" + temp_mailfile , temp_mailfile, QString::null);
-    }    
+  /** 
+   * If the user only select homedir no import needed because 
+   * there should be no files and we shurely import wrong files.
+   */
+  else if ( mailDir == QDir::homeDirPath() || mailDir == (QDir::homeDirPath() + "/")) {	
+    info->addLog(i18n("No files found for import."));
   }
+  else {
+    info->setOverall(0);
   
-  info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+    /** Recursive import of the MailArchives */
+    QDir dir(mailDir);
+    QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
+    int currentDir = 1, numSubDirs = rootSubDirs.size();
+    for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+      importDirContents(info, dir.filePath(*filename), *filename, QString::null);
+      info->setOverall((int) ((float) currentDir / numSubDirs * 100));
+    }
+  
+    /** import last but not least all archives from the root-dir */
+    QDir importDir (mailDir);
+    QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
+    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+      QString temp_mailfile = *mailFile;
+      if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") || 
+          temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
+      else {  
+          info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
+          importMBox(info, mailDir + "/" + temp_mailfile , temp_mailfile, QString::null);
+      }
+    }
+  
+    info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+    if(count_duplicates > 0) {
+      info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+    }
+  }
   info->setCurrent(100);
-  if(count_duplicates > 0) {
-     info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
-  }
+  info->setOverall(100);
 }
 
 /**
