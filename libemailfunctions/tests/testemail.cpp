@@ -112,11 +112,11 @@ static bool checkIsValidSimpleEmailAddress( const QString& input, const QString&
   return true;
 }
 
-static bool checkGetEmailAddr( const QString& input, const QString& expResult )
+static bool checkGetEmailAddress( const QString& input, const QString& expResult )
 {
-  QCString emailAddress = KPIM::getEmailAddr( input );
-  QString result = getEmailParseResultToString( emailAddress );
-  check( "getEmail " + input + " result ", result, expResult );
+  QString emailAddress = KPIM::getEmailAddress( input );
+  QString result = emailAddress;
+  check( "getEmailAddress " + input + " result ", result, expResult );
   return true;
 }
 
@@ -278,13 +278,14 @@ int main(int argc, char *argv[])
   // and here some insane but still valid cases
   checkIsValidSimpleEmailAddress( "\"m@tt\"@fruitsalad.org", "true" );
 
-  // check the getEmailAddr address method
-  checkGetEmailAddr( "matt@fruitsalad.org", "matt@fruitsalad.org" );
-  checkGetEmailAddr( "Matt Douhan <matt@fruitsalad.org>", "matt@fruitsalad.org" );
-  checkGetEmailAddr( "\"Matt Douhan <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
-  checkGetEmailAddr( "\"Matt <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
-  checkGetEmailAddr( "Matt Douhan (jongel) <matt@fruitsalad.org", "matt@fruitsalad.org" );
-  checkGetEmailAddr( "Matt Douhan (m@tt) <matt@fruitsalad.org>", "matt@fruitsalad.org" );
+  // check the getEmailAddress address method
+  checkGetEmailAddress( "matt@fruitsalad.org", "matt@fruitsalad.org" );
+  checkGetEmailAddress( "Matt Douhan <matt@fruitsalad.org>", "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Matt Douhan <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
+  checkGetEmailAddress( "\"Matt <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
+  checkGetEmailAddress( "Matt Douhan (jongel) <matt@fruitsalad.org", QString() );
+  checkGetEmailAddress( "Matt Douhan (m@tt) <matt@fruitsalad.org>", "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
  
   // check the splitEmailAddrList method
   checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "Matt Douhan <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
