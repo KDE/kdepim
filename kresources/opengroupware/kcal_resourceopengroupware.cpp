@@ -163,6 +163,7 @@ bool OpenGroupware::doLoad()
   mFoldersForDownload = mFolderLister->activeFolderIds();
 
   mIncidencesForDownload.clear();
+  mCurrentlyOnServer.clear();
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
@@ -183,6 +184,9 @@ void OpenGroupware::listIncidences()
       mProgress->setCompletedItems(1);
       mProgress->updateProgress();
     }
+
+    /* Delete incidences no longer present on the server */
+    deleteIncidencesGoneFromServer();
     downloadNextIncidence();
   } else {
     QDomDocument props = WebdavHandler::createItemsAndVersionsPropsRequest();
@@ -220,7 +224,6 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
     }
   } else {
     QDomDocument doc = mListEventsJob->response();
-    QStringList currentlyOnServer;
 
     //kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
@@ -242,7 +245,7 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       const QString &location = url.path();
       const QString &newFingerprint = e.text();
 
-      currentlyOnServer << location;
+      mCurrentlyOnServer << location;
       /* if not locally present, download */
       const QString &localId = idMapper().localId( location );
       Incidence *i = 0;
@@ -274,19 +277,17 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
         mIncidencesForDownload << entry;
       }
     }
-    /* Delete incidences no longer present on the server */
-    deleteIncidencesGoneFromServer( currentlyOnServer );
-  }
+      }
   mListEventsJob = 0;
 
   listIncidences();
 }
 
-void OpenGroupware::deleteIncidencesGoneFromServer( const QStringList &serverlist )
+void OpenGroupware::deleteIncidencesGoneFromServer()
 {
   QMap<QString, QString> remoteIds( idMapper().remoteIdMap() );
-  QStringList::ConstIterator it = serverlist.begin();
-  while ( it != serverlist.end() ) {
+  QStringList::ConstIterator it = mCurrentlyOnServer.begin();
+  while ( it != mCurrentlyOnServer.end() ) {
     remoteIds.remove( (*it) );
     ++it;
   }

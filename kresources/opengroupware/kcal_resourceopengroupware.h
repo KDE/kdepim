@@ -79,7 +79,7 @@ class OpenGroupware : public ResourceCached
     void doDeletions();
 
     void listIncidences();
-    void deleteIncidencesGoneFromServer( const QStringList &serverlist );
+    void deleteIncidencesGoneFromServer();
 
   protected slots:
     void loadFinished();
@@ -107,6 +107,7 @@ class OpenGroupware : public ResourceCached
     QString mJobData;
 
     QStringList mFoldersForDownload;
+    QStringList mCurrentlyOnServer;
 
     QStringList mIncidencesForDownload;
     QStringList mIncidencesForUpload;
