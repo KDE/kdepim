@@ -113,6 +113,8 @@ protected:
   virtual void deleteIncidence( const QString& type, const QString& uid );
   virtual void slotRefresh( const QString& type );
 
+  virtual void doClose();
+
   bool mSilent;
 
   FormatPlugin* mFormat;
@@ -120,6 +122,11 @@ protected:
   QCString mAppId;
 
   KABC::VCardConverter mConverter;
+
+  // The list of subresources
+  QMap<QString, bool> mResources;
+  // Mapping from uid to resource
+  QMap<QString, QString> mUidmap;
 };
 
 }

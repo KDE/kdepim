@@ -35,6 +35,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <ktempfile.h>
+#include <kstandarddirs.h>
 
 #include <qstring.h>
 
@@ -81,7 +82,33 @@ KABC::ResourceIMAP::~ResourceIMAP()
 
 bool KABC::ResourceIMAP::doOpen()
 {
-  return connectToKMail();
+  // Get the config file
+  QString configFile = locateLocal( "config", "kresources/imap/kabcrc" );
+  KConfig config( configFile );
+
+  // Read the calendar entries
+  QStringList resources;
+  if ( !kmailSubresources( resources, "Contact" ) )
+    return false;
+  config.setGroup( "Contact" );
+  QStringList::ConstIterator it;
+  mResources.clear();
+  for ( it = resources.begin(); it != resources.end(); ++it )
+    mResources[ *it ] = config.readBoolEntry( *it, true );
+
+  return true;
+}
+
+void KABC::ResourceIMAP::doClose()
+{
+  // Get the config file
+  QString configFile = locateLocal( "config", "kresources/imap/kabcrc" );
+  KConfig config( configFile );
+
+  config.setGroup( "Contact" );
+  QMap<QString, bool>::ConstIterator it;
+  for ( it = mResources.begin(); it != mResources.end(); ++it )
+    config.writeEntry( it.key(), it.data() );
 }
 
 KABC::Ticket * KABC::ResourceIMAP::requestSaveTicket()
@@ -101,17 +128,17 @@ void KABC::ResourceIMAP::releaseSaveTicket( Ticket* ticket )
 
 bool KABC::ResourceIMAP::load()
 {
+  mUidmap.clear();
   mAddrMap.clear();
 
-  // Get the list of resources
-  QStringList resources;
-  if ( !kmailSubresources( resources, "Contact" ) )
-    return false;
+  QMap<QString, bool>::ConstIterator itR;
+  for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
+    if ( !itR.data() )
+      // This resource is disabled
+      continue;
 
-  QStringList::ConstIterator itR;
-  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
     QStringList lst;
-    if ( !kmailIncidences( lst, "Contact", *itR ) ) {
+    if ( !kmailIncidences( lst, "Contact", itR.key() ) ) {
       kdError() << "Communication problem in ResourceIMAP::load()\n";
       return false;
     }
@@ -121,6 +148,7 @@ bool KABC::ResourceIMAP::load()
       addr.setResource( this );
       addr.setChanged( false );
       Resource::insertAddressee( addr );
+      mUidmap[ addr.uid() ] = itR.key();
     }
   }
 
@@ -129,21 +157,16 @@ bool KABC::ResourceIMAP::load()
 
 bool KABC::ResourceIMAP::save( Ticket* )
 {
-  // Save all vCards in a QStringList
-  QStringList vCards;
+  bool rc = true;
+
   for( ConstIterator  it = begin(); it != end(); ++it )
     if( (*it).changed() ) {
       // First the uid and then the vCard
-      vCards << (*it).uid();
-      vCards << mConverter.createVCard( *it );
+      const QString uid = (*it).uid();
+      const QString vCard = mConverter.createVCard( *it );
+      const QString resource = mUidmap[ uid ];
+      rc &= kmailUpdate( "Contact", resource, uid, vCard );
     }
-
-  if( vCards.isEmpty() )
-    // Nothing to save, so return happy
-    return true;
-
-  // Save in KMail
-  bool rc = kmailUpdate( "Contact", "FIXME", vCards );
 
   // Mark all of them as read
   for( Iterator it = begin(); it != end(); ++it )
@@ -167,15 +190,19 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
         update = true;
     }
 
-    QString vCard = mConverter.createVCard( addr );
+    const QString vCard = mConverter.createVCard( addr );
+    const QString uid = addr.uid();
 
     bool rc;
-    if( !update )
+    if( !update ) {
       // Save the new addressee
-      rc = kmailAddIncidence( "Contact", "FIXME", addr.uid(), vCard );
-    else
+      // TODO: In which resource?
+      const QString resource = mResources.begin().key();
+      rc = kmailAddIncidence( "Contact", resource, uid, vCard );
+      mUidmap[ uid ] = resource;
+    } else
       // Update existing addressee
-      rc = kmailUpdate( "Contact", "FIXME", addr.uid(), vCard );
+      rc = kmailUpdate( "Contact", mUidmap[ uid ], uid, vCard );
 
     if( rc )
         // This is ugly, but it's faster than doing
@@ -190,8 +217,10 @@ void KABC::ResourceIMAP::insertAddressee( const Addressee& addr )
 
 void KABC::ResourceIMAP::removeAddressee( const Addressee& addr )
 {
-  if ( !mSilent )
-    kmailDeleteIncidence( "Contact", "FIXME", addr.uid() );
+  if ( !mSilent ) {
+    kmailDeleteIncidence( "Contact", mUidmap[ addr.uid() ], addr.uid() );
+    mUidmap.remove( addr.uid() );
+  }
 
   Resource::removeAddressee( addr );
 }

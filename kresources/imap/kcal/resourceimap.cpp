@@ -275,7 +275,7 @@ bool ResourceIMAP::addEvent( Event *anEvent, const QString& subresource )
   QString resource = subresource;
   if ( subresource.isEmpty() )
     // TODO: Do something a bit more clever
-    resource = mEventResources[ 0 ];
+    resource = mEventResources.begin().key();
   mUidmap[ anEvent->uid() ] = resource;
 
   if ( mSilent ) return true;
