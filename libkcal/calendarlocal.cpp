@@ -379,7 +379,8 @@ int CalendarLocal::numEvents(const QDate &qd)
 
 Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
 {
-  return alarms( *mOldestDate, to );
+  if( mOldestDate )
+    return alarms( *mOldestDate, to );
 }
 
 Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
@@ -688,7 +689,8 @@ QPtrList<Event> CalendarLocal::events(const QDate &start,const QDate &end,
 
 QPtrList<Event> CalendarLocal::getAllEvents()
 {
-  return events(*mOldestDate,*mNewestDate);
+  if(mOldestDate)
+    return events(*mOldestDate,*mNewestDate);
 }
 
 
