@@ -2,22 +2,22 @@
  *   konsolekalendarexports.cpp                                                 *
  *                                                                              *
  *   KonsoleKalendar is console frontend to calendar                            *
- *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            *
  *   Copyright (C) 2003-2004  Allen Winter                                      *
  *                                                                              *
- *   This library is free software; you can redistribute it and/or              * 
+ *   This library is free software; you can redistribute it and/or              *
  *   modify it under the terms of the GNU Lesser General Public                 *
  *   License as published by the Free Software Foundation; either               *
  *   version 2.1 of the License, or (at your option) any later version.         *
  *                                                                              *
- *   This library is distributed in the hope that it will be useful,            * 
+ *   This library is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
  *   Lesser General Public License for more details.                            *
  *                                                                              *
  *   You should have received a copy of the GNU Lesser General Public           *
  *   License along with this library; if not, write to the Free Software        *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  *
  *                                                                              *
  ********************************************************************************/
 
@@ -56,37 +56,34 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event, QDate d
 
   // Print Date (in our standard format)
   *ts << I18N_NOOP("Date:") << "\t" <<  date.toString("yyyy-MM-dd") << endl;
-//  *ts << I18N_NOOP("Date:") << "\t" << KGlobal::locale()->formatDate(date).local8Bit() << endl;
 
   // Print Event Starttime - Endtime (in our standard format), for Non-Floating Events Only
   if ( !event->doesFloat() ) {
     *ts << "\t";
     *ts << event->dtStart().time().toString("hh:mm");
-//    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
     *ts << " - ";
     *ts << event->dtEnd().time().toString("hh:mm");
-//    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
   }
 
   // Print Event Summary, Description, etc.
   *ts << endl << I18N_NOOP("Summary:") << endl;
-  *ts << "\t" << event->summary().local8Bit() << endl;
-    
+  *ts << "\t" << event->summary() << endl;
+
   *ts << endl << I18N_NOOP("Location:") << endl;
   if( !event->location().isEmpty() ) {
-    *ts << "\t" <<event->location().local8Bit() << endl;
+    *ts << "\t" <<event->location() << endl;
   } else {
-    *ts << "\t" << I18N_NOOP("(no location info available)") << endl;  
+    *ts << "\t" << I18N_NOOP("(no location info available)") << endl;
   }
-  
-  *ts << I18N_NOOP("Description:") << endl;  
+
+  *ts << I18N_NOOP("Description:") << endl;
   if( !event->description().isEmpty() ) {
-    *ts << "\t" << event->description().local8Bit() << endl;
+    *ts << "\t" << event->description() << endl;
   } else {
-    *ts << "\t" << I18N_NOOP("(no description available)") << endl;  
+    *ts << "\t" << I18N_NOOP("(no description available)") << endl;
   }
-  *ts << I18N_NOOP("UID:") << endl;  
-  *ts << "\t" << event->uid().local8Bit() << endl;
+  *ts << I18N_NOOP("UID:") << endl;
+  *ts << "\t" << event->uid() << endl;
   *ts << "----------------------------------" << endl;
 
   return true;
@@ -98,8 +95,8 @@ bool KonsoleKalendarExports::exportAsHuman( QTextStream *ts, Event *event, QDate
     // Print Date (in our standard format)
     *ts << "----------------------------------" << endl;
     *ts << date.toString("yyyy-MM-dd") << endl;
-  } 
-  
+  }
+
   // Print Event Starttime - Endtime (in our standard format), for Non-Floating Events Only
   if ( !event->doesFloat() ) {
     *ts << event->dtStart().time().toString("hh:mm");
@@ -108,21 +105,21 @@ bool KonsoleKalendarExports::exportAsHuman( QTextStream *ts, Event *event, QDate
   }
 
   // Print Event Summary, Description, etc.
-  *ts << "\t" << event->summary().local8Bit();
-  
+  *ts << "\t" << event->summary();
+
   if( !event->location().isEmpty() ) {
-    *ts << ", " << event->location().local8Bit();
-  } 
-  
-  *ts << endl;
-  
-  if( !event->description().isEmpty() ) {
-    *ts << "\t\t" << event->description().local8Bit();
-  } else {
-    *ts << "\t\t" << I18N_NOOP("(no description available)");  
+    *ts << ", " << event->location();
   }
-  
-  *ts << ", " << event->uid().local8Bit() << endl;
+
+  *ts << endl;
+
+  if( !event->description().isEmpty() ) {
+    *ts << "\t\t" << event->description();
+  } else {
+    *ts << "\t\t" << I18N_NOOP("(no description available)");
+  }
+
+  *ts << ", " << event->uid() << endl;
 
   return true;
 }
@@ -146,10 +143,10 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event, QDate d
   }
 
   QString rdelim = "\\" + delim;
-  *ts << delim << event->summary().replace(delim,rdelim).local8Bit();
-  *ts << delim << event->location().replace(delim,rdelim).local8Bit();
-  *ts << delim << event->description().replace(delim,rdelim).local8Bit();
-  *ts << delim << event->uid().local8Bit();
+  *ts << delim << event->summary().replace(delim,rdelim);
+  *ts << delim << event->location().replace(delim,rdelim);
+  *ts << delim << event->description().replace(delim,rdelim);
+  *ts << delim << event->uid();
   *ts << endl;
 
   return true;
