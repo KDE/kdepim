@@ -62,10 +62,13 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&karm; tracks time spent on various tasks. It is useful for
-tracking hours to be billed to different clients or just to find out
-what percentage of your day is spent playing Doom or reading
-Slashdot.</para>
+<para>&karm; tracks time spent on various tasks.  It is useful for tracking
+	billable hours and can report the hours logged by task and day.  This
+	history report can be exported to a comma-delimited text file for import
+	into other billing and/or project management tools.  &karm; detects when
+	your keyboard and mouse go idle and can associate different tasks with
+	different desktops, two tools that can help keep the timer running on the
+	correct task.</para>
 
 <para>&karm; was originally written by Sirtaj Singh Kang. The word
 <quote>karm</quote> means <quote>work</quote> in the author's native
