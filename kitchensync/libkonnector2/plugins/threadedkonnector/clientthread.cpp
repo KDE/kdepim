@@ -122,3 +122,4 @@ void ClientThread::progress( const KSync::Progress* p )
   ce->setData( (void *)p );
   QApplication::postEvent( mReciver, ce );
 }
+#include "clientthread.moc"

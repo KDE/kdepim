@@ -249,3 +249,4 @@ void ClientManager::customEvent( QCustomEvent* ce )
     mWorker.mLock.unlock();
   }
 }
+#include "clientmanager.moc"
