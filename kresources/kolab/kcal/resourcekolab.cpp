@@ -77,7 +77,7 @@ ResourceKolab::~ResourceKolab()
 {
   // The resource is deleted on exit (StdAddressBook's KStaticDeleter),
   // and it wasn't closed before that, so close here to save the config.
-  if ( isOpen() ) {
+  if ( mOpen ) {
     close();
   }
 }
@@ -159,7 +159,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   return true;
 }
 
-bool ResourceKolab::load()
+bool ResourceKolab::doLoad()
 {
   mUidMap.clear();
 
@@ -197,8 +197,41 @@ bool ResourceKolab::loadAllJournals()
   return doLoadAll( mJournalSubResources, journalAttachmentMimeType );
 }
 
-bool ResourceKolab::save()
+bool ResourceKolab::doSave()
 {
+  return true;
+}
+
+void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
+}
+
+void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
+                                  const QString& subResource, Q_UINT32 sernum )
+{
+}
+
+bool ResourceKolab::addEvent( KCal::Event* event )
+{
+  return addEvent( event, QString::null, 0 );
+}
+
+void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
+                              Q_UINT32 sernum )
+{
+#if 0
+  KCal::Event* event = Event::xmlToEvent( xml );
+  Q_ASSERT( event );
+  if( event && !mUidMap.contains( event->uid() ) )
+    addEvent( event, subresource, sernum );
+#endif
+}
+
+bool ResourceKolab::addEvent( KCal::Event* event, const QString& subresource,
+                              Q_UINT32 sernum )
+{
+  kdDebug() << "NYI: " << k_funcinfo << endl;
   return true;
 }
 
@@ -207,25 +240,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
                                            Q_UINT32 sernum,
                                            const QString& contact )
 {
-#if 0
-  // TODO: Implement the thing
-  // Check if this is a contact
-  if( type != kmailContentsType ) return false;
-
-  const bool silent = mSilent;
-  mSilent = true;
-
-  Addressee addr = Contact::xmlToAddressee( contact );
-  addr.setResource( this );
-  addr.setChanged( false );
-  //mAddrMap.insert( addr.uid(), addr );
-  mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
-
-  addressBook()->emitAddressBookChanged();
-
-  mSilent = silent;
-#endif
-
+  kdDebug() << "NYI: " << k_funcinfo << endl;
   return true;
 }
 
@@ -233,96 +248,26 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
                                            const QString& /*subResource*/,
                                            const QString& uid )
 {
-#if 0
-  // Check if this is a contact
-  if( type != kmailContentsType ) return;
-
-  const bool silent = mSilent;
-  mSilent = true;
-
-  //mAddrMap.remove( uid );
-  mUidMap.remove( uid );
-  addressBook()->emitAddressBookChanged();
-
-  mSilent = silent;
-#endif
+  kdDebug() << "NYI: " << k_funcinfo << endl;
 }
 
 void ResourceKolab::slotRefresh( const QString& type,
                                  const QString& /*subResource*/ )
 {
-#if 0
-  // Check if this is a contact
-  if( type != kmailContentsType ) return;
-
-  const bool silent = mSilent;
-  mSilent = true;
-
-  load(); // ### should call loadSubResource(subResource) probably
-  addressBook()->emitAddressBookChanged();
-
-  mSilent = silent;
-#endif
+  kdDebug() << "NYI: " << k_funcinfo << endl;
 }
 
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& subResource,
                                              bool writable )
 {
-#if 0
-  if( type != kmailContentsType ) return;
-
-  if ( mSubResources.contains( subResource ) )
-    // Already registered
-    return;
-
-  KConfig config( configFile() );
-  config.setGroup( "Contact" );
-  loadSubResourceConfig( config, subResource, writable );
-  loadSubResource( subResource );
-  addressBook()->emitAddressBookChanged();
-  emit signalSubresourceAdded( this, type, subResource );
-#endif
+  kdDebug() << "NYI: " << k_funcinfo << endl;
 }
 
 void ResourceKolab::fromKMailDelSubresource( const QString& type,
                                              const QString& subResource )
 {
-#if 0
-  if( type != kmailContentsType ) return;
-
-  if ( !mSubResources.contains( subResource ) )
-    // Not registered
-    return;
-
-  // Ok, it's our job, and we have it here
-  mSubResources.erase( subResource );
-
-  KConfig config( configFile() );
-  config.deleteGroup( subResource );
-  config.sync();
-
-  // Make a list of all uids to remove
-  Kolab::UidMap::ConstIterator mapIt;
-  QStringList uids;
-  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
-    if ( mapIt.data().resource() == subResource )
-      // We have a match
-      uids << mapIt.key();
-
-  // Finally delete all the incidences
-  if ( !uids.isEmpty() ) {
-    QStringList::ConstIterator it;
-    for ( it = uids.begin(); it != uids.end(); ++it ) {
-      //mAddrMap.remove( *it );
-      mUidMap.remove( *it );
-    }
-
-    addressBook()->emitAddressBookChanged();
-  }
-
-  emit signalSubresourceRemoved( this, type, subResource );
-#endif
+  kdDebug() << "NYI: " << k_funcinfo << endl;
 }
 
 QStringList ResourceKolab::subresources() const

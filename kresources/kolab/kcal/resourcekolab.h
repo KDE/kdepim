@@ -51,10 +51,10 @@ public:
   virtual ~ResourceKolab();
 
   /// Load resource data.
-  bool load();
+  bool doLoad();
 
   /// Save resource data.
-  bool save();
+  bool doSave();
 
   /// Open the notes resource.
   bool doOpen();
@@ -63,7 +63,6 @@ public:
 
   /** Add Event to calendar. */
   bool addEvent( KCal::Event* anEvent );
-  bool addEvent( KCal::Event* anEvent, const QString& subresource );
   /** deletes an event from this calendar. */
   void deleteEvent( KCal::Event* );
 
@@ -173,6 +172,11 @@ signals:
 private:
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
+
+  void addEvent( const QString& xml, const QString& subresource,
+                 Q_UINT32 sernum );
+  bool addEvent( KCal::Event* anEvent, const QString& subresource,
+                 Q_UINT32 sernum );
 
   bool loadAllEvents();
   bool loadAllTodos();
