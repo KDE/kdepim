@@ -39,21 +39,21 @@
 
 namespace Kleo {
 
-/**
- * Description of a single option
- */
-class CryptoConfigEntry {
+  /**
+   * Description of a single option
+   */
+  class CryptoConfigEntry {
 
-public:
+  public:
     /**
-	@li basic	This option should always be offered to the user.
-	@li advanced	This option may be offered to advanced users.
-	@li expert	This option should only be offered to expert users.
-	@li invisible	This option should normally never be displayed,
-			not even to expert users.
-	@li internal	This option is for internal use only.  Ignore it.
-        // #### should we even have internal in the API, then?
-    */
+       @li basic	This option should always be offered to the user.
+       @li advanced	This option may be offered to advanced users.
+       @li expert	This option should only be offered to expert users.
+       @li invisible	This option should normally never be displayed,
+       not even to expert users.
+       @li internal	This option is for internal use only.  Ignore it.
+       // #### should we even have internal in the API, then?
+       */
     enum Level { Level_Basic = 0,
                  Level_Advanced = 1,
                  Level_Expert = 2,
@@ -62,14 +62,14 @@ public:
 
     /**
        Type of the argument
-	@li ArgType_None	The option is set or not set, but no argument.
-	@li ArgType_String	An unformatted string.
-	@li ArgType_Int		A signed integer number.
-	@li ArgType_UInt	An unsigned integer number.
-	@li ArgType_Path	A string that describes the pathname of a file.
-				The file does not necessarily need to exist.
-                        	Separated from string so that e.g. a KURLRequester can be used.
-	@li ArgType_URL		A URL
+       @li ArgType_None	The option is set or not set, but no argument.
+       @li ArgType_String	An unformatted string.
+       @li ArgType_Int		A signed integer number.
+       @li ArgType_UInt	An unsigned integer number.
+       @li ArgType_Path	A string that describes the pathname of a file.
+       The file does not necessarily need to exist.
+       Separated from string so that e.g. a KURLRequester can be used.
+       @li ArgType_URL		A URL
     */
     enum ArgType { ArgType_None = 0,
                    ArgType_String = 1,
@@ -226,14 +226,14 @@ public:
      * @return true if the value was changed
      */
     virtual bool isDirty() const = 0;
-};
+  };
 
-/**
- * Group containing a set of config options
- */
-class CryptoConfigGroup {
+  /**
+   * Group containing a set of config options
+   */
+  class CryptoConfigGroup {
 
-public:
+  public:
     virtual ~CryptoConfigGroup() {}
 
     /**
@@ -259,14 +259,14 @@ public:
      * Groups cannot be nested, so all entries returned here are pure entries, no groups.
      */
     virtual CryptoConfigEntry* entry( const QString& name ) const = 0;
-};
+  };
 
-/**
- * Crypto config for one component (e.g. gpg-agent, dirmngr etc.)
- */
-class CryptoConfigComponent {
+  /**
+   * Crypto config for one component (e.g. gpg-agent, dirmngr etc.)
+   */
+  class CryptoConfigComponent {
 
-public:
+  public:
     virtual ~CryptoConfigComponent() {}
 
     /**
@@ -288,14 +288,14 @@ public:
      */
     virtual CryptoConfigGroup* group( const QString& name ) const = 0;
 
-};
+  };
 
-/**
- * Main interface to crypto configuration.
- */
-class CryptoConfig {
+  /**
+   * Main interface to crypto configuration.
+   */
+  class CryptoConfig {
 
-public:
+  public:
     virtual ~CryptoConfig() {}
 
     /**
@@ -320,9 +320,9 @@ public:
      * The object is owned by CryptoConfig, don't delete it.
      */
     CryptoConfigEntry* entry( const QString& componentName, const QString& groupName, const QString& entryName ) const {
-        const Kleo::CryptoConfigComponent* comp = component( componentName );
-        const Kleo::CryptoConfigGroup* group = comp ? comp->group( groupName ) : 0;
-        return group ? group->entry( entryName ) : 0;
+      const Kleo::CryptoConfigComponent* comp = component( componentName );
+      const Kleo::CryptoConfigGroup* group = comp ? comp->group( groupName ) : 0;
+      return group ? group->entry( entryName ) : 0;
     }
 
     /**
@@ -340,7 +340,7 @@ public:
      * for some time.
      */
     virtual void clear() = 0;
-};
+  };
 
 };
 
