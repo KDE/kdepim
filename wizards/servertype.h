@@ -93,6 +93,8 @@ class ServerType : public QObject
       @param active Whether the connection shall be set active or not.
      */
     virtual void activateConnection( const QString& uid, bool active ) = 0;
+
+    virtual KConfigPropagator::Change::List changes() = 0;
 };
 
 

@@ -107,7 +107,7 @@ class KolabPropagator : public KConfigPropagator
 
 KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
 {
-  QFrame *page = createWizardPage( "Kolab Server" );
+  QFrame *page = createWizardPage( i18n("Kolab Server") );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );

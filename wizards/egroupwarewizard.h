@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,34 +19,28 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+#ifndef EGROUPWAREWIZARD_H
+#define EGROUPWAREWIZARD_H
 
-#include "kolabwizard.h"
+#include <kconfigwizard.h>
 
-#include <kaboutdata.h>
-#include <kapplication.h>
-#include <kdebug.h>
-#include <kcmdlineargs.h>
+class KLineEdit;
+class QCheckBox;
 
-static const KCmdLineOptions options[] =
+class EGroupwareWizard : public KConfigWizard
 {
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
+  public:
+    EGroupwareWizard();
+    ~EGroupwareWizard();
+
+    void usrReadConfig();
+    void usrWriteConfig();
+
+  private:
+    KLineEdit *mServerEdit;
+    KLineEdit *mUserEdit;
+    KLineEdit *mPasswordEdit;
+    QCheckBox *mSavePasswordCheck;
 };
 
-int main(int argc,char **argv)
-{
-  KAboutData aboutData( "kolabwizard", "Kolab Configuration Wizard", "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
-
-  KApplication app;
-
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-  bool verbose = false;
-  if ( args->isSet( "verbose" ) ) verbose = true;
-
-  KolabWizard wizard;
-  
-  wizard.exec();
-}
+#endif

@@ -19,7 +19,7 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "kolabwizard.h"
+#include "egroupwarewizard.h"
 
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -32,9 +32,9 @@ static const KCmdLineOptions options[] =
   KCmdLineLastOption
 };
 
-int main(int argc,char **argv)
+int main( int argc, char **argv )
 {
-  KAboutData aboutData( "kolabwizard", "Kolab Configuration Wizard", "0.1" );
+  KAboutData aboutData( "egroupwarewizard", "eGroupware Configuration Wizard", "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 
@@ -45,7 +45,7 @@ int main(int argc,char **argv)
   bool verbose = false;
   if ( args->isSet( "verbose" ) ) verbose = true;
 
-  KolabWizard wizard;
+  EGroupwareWizard wizard;
   
   wizard.exec();
 }

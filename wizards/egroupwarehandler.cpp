@@ -28,40 +28,40 @@
 #include "editdialog.h"
 #include "resourceactions.h"
 
-#include "egroupwarewizard.h"
+#include "egroupwarehandler.h"
 
-ServerType* EGroupwareWizardFactory::serverType( QObject*, const char*)
+ServerType* EGroupwareHandlerFactory::serverType( QObject*, const char*)
 {
-  return new EGroupwareWizard();
+  return new EGroupwareHandler();
 }
 
 extern "C"
 {
   void *init_libegroupwarewizard()
   {
-    return ( new EGroupwareWizardFactory() );
+    return ( new EGroupwareHandlerFactory() );
   }
 }
 
 static bool resourcesEquals( KABC::ResourceXMLRPC *kabcResource, KCal::ResourceXMLRPC *kcalResource );
 static QString createUrl( bool useSSL, const QString &server );
 
-EGroupwareWizard::EGroupwareWizard()
+EGroupwareHandler::EGroupwareHandler()
   : ServerType( 0, "egroupware" )
 {
   collectConnections();
 }
 
-EGroupwareWizard::~EGroupwareWizard()
+EGroupwareHandler::~EGroupwareHandler()
 {
 }
 
-ServerType::ConnectionInfoList EGroupwareWizard::connectionInfo() const
+ServerType::ConnectionInfoList EGroupwareHandler::connectionInfo() const
 {
   return mInfoList;
 }
 
-void EGroupwareWizard::addConnection()
+void EGroupwareHandler::addConnection()
 {
   EditDialog dlg( 0 );
 
@@ -70,27 +70,27 @@ void EGroupwareWizard::addConnection()
   if ( !dlg.exec() )
     return;
 
-  CreateKABCResource kabcResource;
-  kabcResource.setResourceName( dlg.resourceName() );
-  kabcResource.setUrl( createUrl( dlg.useSSLConnection(), dlg.server() ) );
-  kabcResource.setDomain( dlg.domain() );
-  kabcResource.setUser( dlg.user() );
-  kabcResource.setPassword( dlg.password() );
+  CreateKABCResource *kabcResource = new CreateKABCResource;
+  kabcResource->setResourceName( dlg.resourceName() );
+  kabcResource->setUrl( createUrl( dlg.useSSLConnection(), dlg.server() ) );
+  kabcResource->setDomain( dlg.domain() );
+  kabcResource->setUser( dlg.user() );
+  kabcResource->setPassword( dlg.password() );
 
-  CreateKCalResource kcalResource;
-  kcalResource.setResourceName( dlg.resourceName() );
-  kcalResource.setUrl( createUrl( dlg.useSSLConnection(), dlg.server() ) );
-  kcalResource.setDomain( dlg.domain() );
-  kcalResource.setUser( dlg.user() );
-  kcalResource.setPassword( dlg.password() );
+  CreateKCalResource *kcalResource = new CreateKCalResource;
+  kcalResource->setResourceName( dlg.resourceName() );
+  kcalResource->setUrl( createUrl( dlg.useSSLConnection(), dlg.server() ) );
+  kcalResource->setDomain( dlg.domain() );
+  kcalResource->setUser( dlg.user() );
+  kcalResource->setPassword( dlg.password() );
 
-  kabcResource.apply();
-  kcalResource.apply();
+  mChanges.append( kabcResource );
+  mChanges.append( kcalResource );
 
   collectConnections();
 }
 
-void EGroupwareWizard::editConnection( const QString& uid )
+void EGroupwareHandler::editConnection( const QString& uid )
 {
   EditDialog dlg( 0 );
 
@@ -118,67 +118,75 @@ void EGroupwareWizard::editConnection( const QString& uid )
     return;
 
   if ( !kabcUid.isEmpty() ) {
-    UpdateKABCResource kabcResource( kabcUid );
-    kabcResource.setResourceName( dlg.resourceName() );
-    kabcResource.setUrl( createUrl( dlg.useSSLConnection(), dlg.server() ) );
-    kabcResource.setDomain( dlg.domain() );
-    kabcResource.setUser( dlg.user() );
-    kabcResource.setPassword( dlg.password() );
-    kabcResource.apply();
+    UpdateKABCResource *kabcResource = new UpdateKABCResource( kabcUid );
+    kabcResource->setResourceName( dlg.resourceName() );
+    kabcResource->setUrl( createUrl( dlg.useSSLConnection(), dlg.server() ) );
+    kabcResource->setDomain( dlg.domain() );
+    kabcResource->setUser( dlg.user() );
+    kabcResource->setPassword( dlg.password() );
+    
+    mChanges.append( kabcResource );
   }
 
   if ( !kcalUid.isEmpty() ) {
-    UpdateKCalResource kcalResource( kcalUid );
-    kcalResource.setResourceName( dlg.resourceName() );
-    kcalResource.setUrl( createUrl( dlg.useSSLConnection(), dlg.server() ) );
-    kcalResource.setDomain( dlg.domain() );
-    kcalResource.setUser( dlg.user() );
-    kcalResource.setPassword( dlg.password() );
-    kcalResource.apply();
+    UpdateKCalResource *kcalResource = new UpdateKCalResource( kcalUid );
+    kcalResource->setResourceName( dlg.resourceName() );
+    kcalResource->setUrl( createUrl( dlg.useSSLConnection(), dlg.server() ) );
+    kcalResource->setDomain( dlg.domain() );
+    kcalResource->setUser( dlg.user() );
+    kcalResource->setPassword( dlg.password() );
+
+    mChanges.append( kcalResource );
   }
 
   collectConnections();
 }
 
-void EGroupwareWizard::deleteConnection( const QString& uid )
+void EGroupwareHandler::deleteConnection( const QString& uid )
 {
   int colon = uid.find( ':' );
   QString kabcUid = uid.left( colon );
   QString kcalUid = uid.mid( colon + 1 );
 
   if ( !kabcUid.isEmpty() ) {
-    DeleteKABCResource kabcResource( kabcUid );
-    kabcResource.apply();
+    DeleteKABCResource *kabcResource = new DeleteKABCResource( kabcUid );
+
+    mChanges.append( kabcResource );
   }
 
   if ( !kcalUid.isEmpty() ) {
-    DeleteKCalResource kcalResource( kcalUid );
-    kcalResource.apply();
+    DeleteKCalResource *kcalResource = new DeleteKCalResource( kcalUid );
+
+    mChanges.append( kcalResource );
   }
 
   collectConnections();
 }
 
-void EGroupwareWizard::activateConnection( const QString& uid, bool active )
+void EGroupwareHandler::activateConnection( const QString& uid, bool active )
 {
   int colon = uid.find( ':' );
   QString kabcUid = uid.left( colon );
   QString kcalUid = uid.mid( colon + 1 );
 
   if ( !kabcUid.isEmpty() ) {
-    ActivateKABCResource kabcResource( kabcUid, active );
-    kabcResource.apply();
+    ActivateKABCResource *kabcResource = new ActivateKABCResource( kabcUid,
+                                                                   active );
+
+    mChanges.append( kabcResource );
   }
 
   if ( !kcalUid.isEmpty() ) {
-    ActivateKCalResource kcalResource( kcalUid, active );
-    kcalResource.apply();
+    ActivateKCalResource *kcalResource = new ActivateKCalResource( kcalUid,
+                                                                   active );
+
+    mChanges.append( kcalResource );
   }
 
   collectConnections();
 }
 
-void EGroupwareWizard::collectConnections()
+void EGroupwareHandler::collectConnections()
 {
   mInfoList.clear();
 
@@ -270,4 +278,9 @@ QString createUrl( bool useSSL, const QString &server )
   url.setPath( "/egroupware/xmlrpc.php" );
 
   return url.url();
+}
+
+KConfigPropagator::Change::List EGroupwareHandler::changes()
+{
+  return mChanges;
 }

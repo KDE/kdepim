@@ -35,7 +35,8 @@ class OverViewPage : public QWidget
     ~OverViewPage();
 
   public slots:
-    void nextClicked();
+    void showWizardEGroupware();
+    void showWizardKolab();
 
   signals:
     void serverTypeSelected( const QString &type );

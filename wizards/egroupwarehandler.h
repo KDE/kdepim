@@ -18,19 +18,20 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+#ifndef EGROUPWAREHANDLER_H
+#define EGROUPWAREHANDLER_H
 
-#ifndef EGROUPWAREWIZARD_H
-#define EGROUPWAREWIZARD_H
+#include "servertype.h"
+
+#include <kconfigpropagator.h>
 
 #include <klocale.h>
 
-#include <wizards/servertype.h>
-
-class EGroupwareWizard : public ServerType
+class EGroupwareHandler : public ServerType
 {
   public:
-    EGroupwareWizard();
-    ~EGroupwareWizard();
+    EGroupwareHandler();
+    ~EGroupwareHandler();
 
     ServerType::ConnectionInfoList connectionInfo() const;
     void addConnection();
@@ -38,13 +39,17 @@ class EGroupwareWizard : public ServerType
     void deleteConnection( const QString& uid );
     void activateConnection( const QString& uid, bool active );
 
+    virtual KConfigPropagator::Change::List changes();
+
   private:
     void collectConnections();
 
     ServerType::ConnectionInfoList mInfoList;
+
+    KConfigPropagator::Change::List mChanges;
 };
 
-class EGroupwareWizardFactory : public ServerTypeFactory
+class EGroupwareHandlerFactory : public ServerTypeFactory
 {
   public:
     virtual ServerType *serverType( QObject *parent, const char *name = 0 );

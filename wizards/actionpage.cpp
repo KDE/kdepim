@@ -39,7 +39,7 @@
 ActionPage::ActionPage( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QGridLayout *layout = new QGridLayout( this, 8, 2, KDialog::marginHint(),
+  QGridLayout *layout = new QGridLayout( this, 8, 2, 0,
                                          KDialog::spacingHint() );
 
   mTitleLabel = new QLabel( this );
@@ -54,19 +54,12 @@ ActionPage::ActionPage( QWidget *parent, const char *name )
   mActivateButton = new QPushButton( this );
   mActivateButton->setEnabled( false );
 
-  QFrame *hline = new QFrame( this );
-  hline->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-
-  QPushButton *quitButton = new QPushButton( i18n( "Quit" ), this );
-
   layout->addMultiCellWidget( mTitleLabel, 0, 0, 0, 1 );
   layout->addMultiCellWidget( mConnectionBox, 1, 5, 0, 0 );
   layout->addWidget( mAddButton, 1, 1 );
   layout->addWidget( mEditButton, 2, 1 );
   layout->addWidget( mDeleteButton, 3, 1 );
   layout->addWidget( mActivateButton, 4, 1 );
-  layout->addMultiCellWidget( hline, 6, 6, 0, 1 );
-  layout->addWidget( quitButton, 7, 1 );
 
   connect( mConnectionBox, SIGNAL( selectionChanged() ),
            this, SLOT( selectionChanged() ) );
@@ -78,8 +71,6 @@ ActionPage::ActionPage( QWidget *parent, const char *name )
            this, SLOT( deleteConnection() ) );
   connect( mActivateButton, SIGNAL( clicked() ),
            this, SLOT( activateConnection() ) );
-  connect( quitButton, SIGNAL( clicked() ),
-           qApp, SLOT( quit() ) );
 
   KAcceleratorManager::manage( this );
 }

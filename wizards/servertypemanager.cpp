@@ -21,7 +21,7 @@
 
 #include <kstaticdeleter.h>
 
-#include "egroupware/egroupwarewizard.h"
+#include "egroupwarehandler.h"
 
 #include "servertypemanager.h"
 
@@ -84,7 +84,7 @@ void ServerTypeManager::loadPlugins()
   mServerTypeMap.clear();
   mServerTypeFactoryMap.clear();
 
-  ServerTypeFactory *factory = new EGroupwareWizardFactory();
+  ServerTypeFactory *factory = new EGroupwareHandlerFactory();
   mServerTypeFactoryMap.insert( factory->identifier(), factory );
 }
 

@@ -31,7 +31,8 @@
 #include <kiconloader.h>
 #include <klocale.h>
 
-#include "servertypemanager.h"
+#include "kolabwizard.h"
+#include "egroupwarewizard.h"
 
 #include "overviewpage.h"
 
@@ -56,26 +57,26 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   label = new QLabel( i18n( "Select the type of server you want connect your KDE to" ), this );
   layout->addMultiCellWidget( label, 2, 2, 0, 3 );
 
-  mServerTypeGroup = new QButtonGroup( 1, Vertical, this );
-  mServerTypeGroup->setFrameStyle( QFrame::NoFrame );
-  layout->addMultiCellWidget( mServerTypeGroup, 3, 3, 1, 3 );
+  QPushButton *button = new QPushButton( i18n("eGroupware"), this );
+  layout->addMultiCellWidget( button, 3, 3, 0, 3 );
+  connect( button, SIGNAL( clicked() ), SLOT( showWizardEGroupware() ) );
+
+  // FIXME: Maybe hyperlinks would be better than buttons.
+
+  button = new QPushButton( i18n("Kolab"), this );
+  layout->addMultiCellWidget( button, 4, 4, 0, 3 );
+  connect( button, SIGNAL( clicked() ), SLOT( showWizardKolab() ) );
 
   QFrame *frame = new QFrame( this );
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-  layout->addMultiCellWidget( frame, 4, 4, 0, 3 );
-
-  QPushButton *nextButton = new QPushButton( i18n( "Next >" ), this );
-  layout->addWidget( nextButton, 5, 2 );
+  layout->addMultiCellWidget( frame, 5, 5, 0, 3 );
 
   QPushButton *cancelButton = new QPushButton( i18n( "Cancel" ), this );
-  layout->addWidget( cancelButton, 5, 3 );
+  layout->addWidget( cancelButton, 7, 3 );
 
-  connect( nextButton, SIGNAL( clicked() ), this, SLOT( nextClicked() ) );
   connect( cancelButton, SIGNAL( clicked() ), this, SIGNAL( cancel() ) );
 
-  layout->setRowStretch( 3, 1 );
-
-  loadTypes();
+  layout->setRowStretch( 6, 1 );
 
   KAcceleratorManager::manage( this );
 }
@@ -84,28 +85,16 @@ OverViewPage::~OverViewPage()
 {
 }
 
-void OverViewPage::nextClicked()
+void OverViewPage::showWizardEGroupware()
 {
-  if ( mIdentifiers.count() == 0 )
-    return;
-
-  QButton *button = mServerTypeGroup->selected();
-  int pos = (button ? mServerTypeGroup->id( button ) : 0 );
-
-  emit serverTypeSelected( mIdentifiers[ pos ] );
+  EGroupwareWizard wizard;
+  wizard.exec();
 }
 
-void OverViewPage::loadTypes()
+void OverViewPage::showWizardKolab()
 {
-  mIdentifiers = ServerTypeManager::self()->identifiers();
-  QStringList::Iterator it;
-
-  uint counter = 0;
-  for ( it = mIdentifiers.begin(); it != mIdentifiers.end(); ++it, ++counter )
-    mServerTypeGroup->insert( new QRadioButton( ServerTypeManager::self()->title( *it ), mServerTypeGroup ), counter );
-
-  if ( mServerTypeGroup->count() > 0 )
-    mServerTypeGroup->find( 0 )->setDown( true );
+  KolabWizard wizard;
+  wizard.exec();
 }
 
 #include "overviewpage.moc"

@@ -27,21 +27,20 @@
 class KLineEdit;
 class QCheckBox;
 
-
 class KolabWizard : public KConfigWizard
 {
-public:
-  KolabWizard();
-  KolabWizard::~KolabWizard();
+  public:
+    KolabWizard();
+    ~KolabWizard();
 
-  void usrReadConfig();
-  void usrWriteConfig();
+    void usrReadConfig();
+    void usrWriteConfig();
 
-private:
-  KLineEdit *mServerEdit;
-  KLineEdit *mUserEdit;
-  KLineEdit *mPasswordEdit;
-  QCheckBox *mSavePasswordCheck;
+  private:
+    KLineEdit *mServerEdit;
+    KLineEdit *mUserEdit;
+    KLineEdit *mPasswordEdit;
+    QCheckBox *mSavePasswordCheck;
 };
 
 #endif

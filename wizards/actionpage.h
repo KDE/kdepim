@@ -38,6 +38,8 @@ class ActionPage : public QWidget
     ActionPage( QWidget *parent, const char *name = 0 );
     ~ActionPage();
 
+    ServerType *serverType() const { return mServerType; }
+
   public slots:
     void setServerType( const QString& );
 
