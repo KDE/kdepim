@@ -253,8 +253,7 @@ ResourceItem* ResourceSelection::selectedItem() const
 
 void ResourceSelection::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this, 2, 3, 2, 5 );
 
   mView = new KListView( this );
   mView->addColumn( i18n( "Address Books" ) );
