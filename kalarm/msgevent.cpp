@@ -360,7 +360,7 @@ void KAlarmEvent::convertKCalEvents()
 			struct tm* dtm = localtime(&t);
 			if (dtm->tm_isdst)
 			{
-				dt.addSecs(-3600);
+				dt = dt.addSecs(-3600);
 				alarm->setTime(dt);
 			}
 		}
