@@ -24,6 +24,8 @@
 
 #include "syncalgorithm.h"
 
+#include <qptrlist.h>
+
 namespace KSync {
 
 class StandardSync : public SyncAlgorithm
@@ -37,6 +39,17 @@ class StandardSync : public SyncAlgorithm
 
     virtual void syncToTarget( Syncee *syncee, Syncee *target,
                                bool override = false );
+
+ private:   
+    void syncMeta( Syncee* syncee,
+                   Syncee* target,
+                   bool over );
+    void addEntry( Syncee* in,
+                   Syncee* out,
+                   SyncEntry* entry );
+    void forAll  ( QPtrList<SyncEntry>,
+                   Syncee* syncee,
+                   Syncee* target,bool over );
 };
 
 }
