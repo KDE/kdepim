@@ -112,9 +112,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
   QFile *file = helper.getFile(i18n("Save Article"));
 
   if (file) {
-    QCString tmp=a->head().copy();
-    tmp+="\n\n";
-    tmp+=a->decodedContent();     // just use the orginal 8-Bit encoding, don't mess with local8Bit
+    QCString tmp=a->encodedContent(false);
     file->writeBlock(tmp.data(), tmp.size());
   }
 }
