@@ -25,14 +25,8 @@ class filter_ldif : public filter
   public:
     filter_ldif();
    ~filter_ldif();
-  private:
-    int codes[256];
-    char* alphabet;
-    void initCodeTable();
-  public:
     void import(filterInfo *info);
     bool convert(const QString &filename, filterInfo *info);
-    QString decodeBase64(QString aStr);
 };
 
 

@@ -22,10 +22,11 @@
 
 #include <kfiledialog.h>
 #include <klocale.h>
+#include <kmdcodec.h>
 
 #include "filter_ldif.hxx"
 
-filter_ldif::filter_ldif() : filter(i18n("Import Netscape LDIF Address Book 1(.LDIF)"),"Oliver Strutynski")
+filter_ldif::filter_ldif() : filter(i18n("Import Netscape LDIF Address Book 1 (.LDIF)"),"Oliver Strutynski")
 {}
 
 filter_ldif::~filter_ldif()
@@ -46,13 +47,13 @@ void filter_ldif::import(filterInfo *info) {
 
    info->from(from);
    info->to(to);
-   info->current(i18n("Currently converting .LDIF address file to Kab"));
+   info->current(i18n("Currently converting .LDIF address file to KABC"));
 
    convert(filename, info);
 
    info->current(100.0);
    info->overall(100.0);
-   info->current(i18n("Finished converting .LDIF address file to Kab"));
+   info->current(i18n("Finished converting .LDIF address file to KABC"));
 }
 
 
@@ -73,9 +74,6 @@ bool filter_ldif::convert(const QString &filename, filterInfo *info) {
    QString givenName, email, title, firstName, lastName, nickName,
 	street, locality, state, zipCode, country, organization,
 	department, phone, fax, mobile, homepage, comment;
-
-   // Initializing code table for base64 decoding
-   initCodeTable();
 
    QTextStream t( &f );
    QString s, fieldname;
@@ -120,7 +118,9 @@ bool filter_ldif::convert(const QString &filename, filterInfo *info) {
     	if (position != -1) {
     		// String is BASE64 encoded
     		fieldname = s.left(position).lower();
-    		s = decodeBase64(s.mid(position+3, s.length()-position-2));
+    		s = QString::fromUtf8(KCodecs::base64Decode(
+						s.mid(position+3, s.length()-position-2).latin1()))
+						.simplifyWhiteSpace();
     	} else {
     		position = s.find(":");
     		fieldname = s.left(position).lower();
@@ -200,67 +200,3 @@ bool filter_ldif::convert(const QString &filename, filterInfo *info) {
     kabStop(info);
     return true;
 }
-
-
-/*
- * Decodes a BASE-64 encoded stream to recover the original data and compacts white space.
- * Code heavily based on java code written by Kevin Kelley (kelley@ruralnet.net)
- * published unter the GNU Library Public License
-*/
-QString filter_ldif::decodeBase64(QString input)
-{
-    QCString result;
-
-    int tempLen = input.length();
-    for(unsigned int i=0; i<input.length(); i++) {
-        if(codes[ input[i].latin1() ] < 0) {
-	   // std::cout << "Invalid character in base64 string: " <<
-	   // input[i].latin1() << std::endl;
-	   --tempLen; // ignore non-valid chars and padding
-        }
-    }
-
-    // calculate required length:
-    //  -- 3 bytes for every 4 valid base64 chars
-    //  -- plus 2 bytes if there are 3 extra base64 chars,
-    //     or plus 1 byte if there are 2 extra.
-    int len = (tempLen / 4) * 3;
-    if ((tempLen % 4) == 3) len += 2;
-    if ((tempLen % 4) == 2) len += 1;
-
-    int shift = 0; // # of excess bits stored in accum
-    int accum = 0; // excess bits
-
-    // we now loop over through the entire string
-    for (unsigned int i=0; i<input.length(); i++) {
-        int value = codes[ input[i].latin1() ];
-
-        if ( value >= 0 ) {         // skip over non-code
-            accum <<= 6;            // bits shift up by 6 each time thru
-            shift += 6;             // loop, with new bits being put in
-            accum |= value;         // at the bottom.
-            if ( shift >= 8 ) {      // whenever there are 8 or more shifted in,
-                shift -= 8;          // write them out (from the top, leaving any
-                                    // excess at the bottom for next iteration.
-                result += (char) ((accum >> shift) & 0xff);
-            }
-        }
-    }
-
-    // Remove any linefeeds, tabs and multiple space from decoded string and
-    // convert to unicode.
-    return QString::fromUtf8(result).simplifyWhiteSpace();
-}
-
-
-/* Initialize lookup */
-void filter_ldif::initCodeTable() {
-    // chars for 0..63
-    for (int i=0; i<256; i++) codes[i] = -1;
-    for (int i = 'A'; i <= 'Z'; i++) codes[i] = (int)(i - 'A');
-    for (int i = 'a'; i <= 'z'; i++) codes[i] = (int)(26 + i - 'a');
-    for (int i = '0'; i <= '9'; i++) codes[i] = (int)(52 + i - '0');
-    codes['+'] = 62;
-    codes['/'] = 63;
-}
-
