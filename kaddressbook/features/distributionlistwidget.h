@@ -61,12 +61,13 @@ class DistributionListWidget : public KAB::ExtensionWidget
     void save();
     void dropped( QDropEvent*, QListViewItem* );
 
+    void removeContact();
+
   private slots:
     void createList();
     void editList();
     void removeList();
     void addContact();
-    void removeContact();
     void changeEmail();
     void updateNameCombo();
     void updateContactView();

@@ -65,6 +65,39 @@ extern "C" {
   }
 }
 
+/**
+  We have to catch when the 'Del' key is pressed, otherwise
+  the event is forwarded to the ViewManager and it tries to
+  remove a contact instead of the distribution list.
+ */
+class DeletePressedCatcher : public QObject
+{
+  public:
+    DeletePressedCatcher( DistributionListWidget *parent )
+      : QObject( parent, "DeletePressedCatcher" ), mWidget( parent )
+    {
+    }
+
+  protected:
+    bool eventFilter( QObject*, QEvent *event )
+    {
+      if ( event->type() == QEvent::AccelOverride ) {
+        QKeyEvent *keyEvent = (QKeyEvent*)event;
+        if ( keyEvent->key() == Qt::Key_Delete ) {
+          keyEvent->accept();
+          mWidget->removeContact();
+          return true;
+        } else
+          return false;
+      } else {
+        return false;
+      }
+    }
+
+  private:
+    DistributionListWidget *mWidget;
+};
+
 class ContactItem : public QListViewItem
 {
   public:
@@ -162,6 +195,10 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
            this, SLOT( updateNameCombo() ) );
 
   updateNameCombo();
+
+  QObject *catcher = new DeletePressedCatcher( this );
+  installEventFilter( catcher );
+  mContactView->installEventFilter( catcher );
 
   KAcceleratorManager::manage( this );
 }
