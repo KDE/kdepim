@@ -20,8 +20,9 @@ This section contains the KDE online class reference for the current development
 - <a href="ksync/html"><b>ksync</b></a> (<a href="ksync/html/classes.html">classes</a>)
 - <a href="libkcal/html"><b>libkcal</b></a> (<a href="libkcal/html/classes.html">classes</a>)
 - <a href="libkdepim/html"><b>libkdepim</b></a> (<a href="libkdepim/html/classes.html">classes</a>)
+- <a href="libkholidays/html"><b>libkholidays</b></a> (<a href="libkholidays/html/classes.html">classes</a>)
 - <a href="libkpimexchange/html"><b>libkpimexchange</b></a> (<a href="libkpimexchange/html/classes.html">classes</a>)
 
-More information can be found at <a href="http://kdepim.kde.org/index.php">the kde pim web site.</a>
+More information can be found at <a href="http://pim.kde.org/index.php">the KDE-PIM web site.</a>
 
 */
