@@ -56,7 +56,7 @@ GpgME::x::~x() { \
   d = 0; \
 }
 
-#define make_isNull(x) bool GpgME::x::isNull() const { return !d; }
+#define make_isNull(x) bool GpgME::x::isNull() const { return !d && !error(); }
 
 #define make_standard_stuff(x) \
 make_copy_ctor(x) \
