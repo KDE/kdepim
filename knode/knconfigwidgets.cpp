@@ -302,7 +302,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   p_ortInfo = new QLabel(gb);
 
   // buttons
-  a_ddBtn=new QPushButton(i18n("&New..."), this);
+  a_ddBtn=new QPushButton(i18n("&Add..."), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
@@ -1361,7 +1361,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   topL->addMultiCellWidget(l_box, 0,6, 0,0);
 
   // buttons
-  a_ddBtn=new QPushButton(i18n("&New..."), this);
+  a_ddBtn=new QPushButton(i18n("&Add..."), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
@@ -1703,7 +1703,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
   connect(f_lb, SIGNAL(selected(int)), SLOT(slotItemSelectedFilter(int)));
   topL->addMultiCellWidget(f_lb,1,5,0,0);
 
-  a_ddBtn=new QPushButton(i18n("&New..."), this);
+  a_ddBtn=new QPushButton(i18n("&Add..."), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn,1,1);
 
@@ -2025,7 +2025,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(l_box, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
   xgbL->addMultiCellWidget(l_box, 1,4, 0,0);
 
-  a_ddBtn=new QPushButton(i18n("&New..."), xgb);
+  a_ddBtn=new QPushButton(i18n("&Add..."), xgb);
   connect(a_ddBtn, SIGNAL(clicked()), SLOT(slotAddBtnClicked()));
   xgbL->addWidget(a_ddBtn, 1,1);
 
