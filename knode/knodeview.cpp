@@ -517,11 +517,10 @@ void KNodeView::initPopups(KNMainWindow *w)
   f_olderPopup = static_cast<QPopupMenu *>(w->factory()->container("folder_popup", w));
   if (!f_olderPopup) f_olderPopup = new QPopupMenu();
 
-#warning Update XMLGUI-file (remote, local)
-  r_emotePopup = static_cast<QPopupMenu *>(w->factory()->container("fetch_popup", w));
+  r_emotePopup = static_cast<QPopupMenu *>(w->factory()->container("remote_popup", w));
   if (!l_ocalPopup) r_emotePopup = new QPopupMenu();
 
-  l_ocalPopup = static_cast<QPopupMenu *>(w->factory()->container("saved_popup", w));
+  l_ocalPopup = static_cast<QPopupMenu *>(w->factory()->container("local_popup", w));
   if (!l_ocalPopup) l_ocalPopup = new QPopupMenu();
 }
 
@@ -794,8 +793,8 @@ void KNodeView::slotNavNextUnreadArt()
   if ((!current->isSelected())&&(!art->isRead()))   // take current article, if unread & not selected
     next=current;
   else {
-    if(next->isExpandable() && !next->isOpen())
-        h_drView->setOpen(next, true);
+    if(current->isExpandable() && !current->isOpen())
+        h_drView->setOpen(current, true);
     next=static_cast<KNHdrViewItem*>(current->itemBelow());
   }
 

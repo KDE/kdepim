@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNode" version="11">
+<kpartgui name="KNode" version="12">
 
 <MenuBar>
   <Menu noMerge="1" name="file"><text>&amp;File</text>
@@ -135,7 +135,7 @@
   <Action name="folder_empty"/>
 </Menu>
 
-<Menu name="fetch_popup">
+<Menu name="remote_popup">
   <Action name="article_postReply"/>
   <Action name="article_mailReply"/>
   <Action name="article_forward"/>
@@ -153,7 +153,7 @@
   <Action name="article_ownWindow"/>
 </Menu>  
 
-<Menu name="saved_popup">
+<Menu name="local_popup">
   <Action name="article_edit"/>
   <Action name="article_delete"/>
   <Separator/>

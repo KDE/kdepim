@@ -83,6 +83,7 @@ class KNArticleManager : public QObject {
 
     //listview handling
     void showHdrs(bool clear=true);
+    void updateViewForCollection(KNArticleCollection *c);
     void setAllThreadsOpen(bool b=true);
     void toggleShowThreads()        { s_howThreads=!s_howThreads; showHdrs(true); }
     void setViewFont();

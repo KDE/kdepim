@@ -296,8 +296,10 @@ void KNArticleManager::showHdrs(bool clear)
     KNLocalArticle *art;
     for(int idx=0; idx<f_older->length(); idx++) {
       art=f_older->at(idx);
-      art->setListItem( new KNHdrViewItem(v_iew, art) );
-      art->updateListItem();
+      if(!art->listItem()) {
+        art->setListItem( new KNHdrViewItem(v_iew, art) );
+        art->updateListItem();
+      }
     }
   }
 
@@ -307,6 +309,13 @@ void KNArticleManager::showHdrs(bool clear)
   knGlobals.top->setStatusMsg("");
   updateStatusString();
   knGlobals.top->setCursorBusy(false);
+}
+
+
+void KNArticleManager::updateViewForCollection(KNArticleCollection *c)
+{
+  if(g_roup==c || f_older==c)
+    showHdrs(false);
 }
 
 

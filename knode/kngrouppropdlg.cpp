@@ -114,12 +114,8 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
 
   c_harset=new QComboBox(false, page);
   c_harset->insertStringList(KNMimeBase::availableCharsets());
-  QString cs=QString::fromLatin1(g_rp->defaultCharset());
-  for(int i=0; i<c_harset->count(); i++)
-    if(c_harset->text(i)==cs) {
-      c_harset->setCurrentItem(i);
-      break;
-    }
+  c_harset->setCurrentItem( KNMimeBase::indexForCharset(g_rp->defaultCharset()) );
+
   c_harset->setEnabled(g_rp->useCharset());
   connect(u_seCharset, SIGNAL(toggled(bool)), c_harset, SLOT(setEnabled(bool)));
   pageL->addWidget(c_harset, 0,1);

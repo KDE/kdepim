@@ -39,7 +39,7 @@ KNHdrViewItem::~KNHdrViewItem()
 
 
 
-QString KNHdrViewItem::key(int col, bool asc) const
+QString KNHdrViewItem::key(int col, bool) const
 {
   if(col==3) {
     QString tmpString;

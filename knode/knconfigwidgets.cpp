@@ -659,12 +659,12 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   c_olorCB->setChecked(d->u_seColors);
   slotColCheckBoxToggled(d->u_seColors);
   for(int i=0; i<d->colorCount(); i++)
-    c_List->insertItem(new ColorListItem(d->c_olorNames[i], d->c_olors[i]));
+    c_List->insertItem(new ColorListItem(d->colorName(i), d->color(i)));
 
   f_ontCB->setChecked(d->u_seFonts);
   slotFontCheckBoxToggled(d->u_seFonts);
   for(int i=0; i<d->fontCount(); i++)
-    f_List->insertItem(new FontListItem(d->f_ontNames[i], d->f_onts[i]));
+    f_List->insertItem(new FontListItem(d->fontName(i), d->font(i)));
 
 }
 
@@ -720,7 +720,12 @@ void KNConfig::AppearanceWidget::slotColItemSelected(QListBoxItem *it)
 
 void KNConfig::AppearanceWidget::slotColDefaultBtnClicked()
 {
-
+  ColorListItem *colorItem;
+  for(int i=0; i < d_ata->colorCount(); i++) {
+    colorItem=static_cast<ColorListItem*>(c_List->item(i));
+    colorItem->setColor(d_ata->defaultColor(i));
+  }
+  c_List->triggerUpdate(false);
 }
 
 
@@ -763,6 +768,12 @@ void KNConfig::AppearanceWidget::slotFontItemSelected(QListBoxItem *it)
 
 void KNConfig::AppearanceWidget::slotFontDefaultBtnClicked()
 {
+  FontListItem *fontItem;
+  for(int i=0; i < d_ata->fontCount(); i++) {
+    fontItem=static_cast<FontListItem*>(f_List->item(i));
+    fontItem->setFont(d_ata->defaultFont(i));
+  }
+  f_List->triggerUpdate(false);
 }
 
 

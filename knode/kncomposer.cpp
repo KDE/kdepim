@@ -780,9 +780,6 @@ void KNComposer::slotToBtnClicked()
 
 void KNComposer::slotGroupsBtnClicked()
 {
-  if(!a_rticle->doPost())
-    return; //shouldn't happen
-
   int id=a_rticle->serverId();
   KNNntpAccount *nntp=0;
 
@@ -793,11 +790,14 @@ void KNComposer::slotGroupsBtnClicked()
     nntp=knGlobals.accManager->first();
 
   if(!nntp) {
-    KMessageBox::error(this, i18n("There is no valid news-account configured!\nThis Window will be closed now and the article will be deleted!"));
-    r_esult=CRdel;
-    emit(composerDone(this));
+    KMessageBox::error(this, i18n("You have no valid news-account configured!"));
+    v_iew->g_roups->clear();
+    v_iew->g_roupsCB->setChecked(false);
     return;
   }
+
+  if(id==-1)
+    a_rticle->setServerId(nntp->id());
 
   QCString grps=v_iew->g_roups->text().latin1();
   KNGroupSelectDialog *dlg=new KNGroupSelectDialog(this, nntp, grps);

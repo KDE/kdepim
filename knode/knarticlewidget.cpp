@@ -783,8 +783,8 @@ void KNArticleWidget::createHtmlPage()
   a_ctReply->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctRemail->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctForward->setEnabled(true);
-  a_ctCancel->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
-  a_ctSupersede->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
+  a_ctCancel->setEnabled(true);
+  a_ctSupersede->setEnabled(true);
   a_ctEdit->setEnabled(a_rticle->type()==KNMimeBase::ATlocal);
 
   a_ctToggleFullHdrs->setEnabled(true);
@@ -1023,6 +1023,7 @@ void KNArticleWidget::slotForward()
 void KNArticleWidget::slotCancel()
 {
   kdDebug(5003) << "KNArticleWidget::slotCancel()" << endl;
+  knGlobals.artFactory->createCancel(a_rticle);
 }
 
 
@@ -1030,6 +1031,7 @@ void KNArticleWidget::slotCancel()
 void KNArticleWidget::slotSupersede()
 {
   kdDebug(5003) << "KNArticleWidget::slotSupersede()" << endl;
+  knGlobals.artFactory->createSupersede(a_rticle);
 }
 
 

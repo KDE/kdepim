@@ -46,21 +46,20 @@ class KNCollection {
     virtual const QString& name()     { return n_ame; }
     KNCollectionViewItem* listItem()  { return l_istItem; }
     int count()                       { return c_ount; }
-    
+
     //set
     void setName(const QString &s)    { n_ame=s; }
     void setListItem(KNCollectionViewItem *i);
     void setCount(int i)              { c_ount=i; }
     void incCount(int i)              { c_ount+=i; }
     void decCount(int i)              { c_ount-=i; }
-    
-    
+
   protected:
     KNCollection *p_arent;
     KNCollectionViewItem *l_istItem;
     QString n_ame;
     int c_ount;
-  
+
 };
 
 #endif

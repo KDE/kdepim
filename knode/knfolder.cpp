@@ -315,8 +315,15 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
       //write overview information
       ts << "X-KNode-Overview: ";
       ts << a->subject()->as7BitString(false) << '\t';
-      ts << a->newsgroups()->as7BitString(false) << '\t';
-      ts << a->to()->as7BitString(false) << '\n';
+
+      KNHeaders::Base* h;
+      if( (h=a->newsgroups(false))!=0 )
+        ts << h->as7BitString(false);
+      ts << '\t';
+
+      if( (h=a->to(false))!=0 )
+        ts << h->as7BitString(false);
+      ts << '\n';
 
       //write article
       a->toStream(ts);
@@ -341,6 +348,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
   if(addCnt>0) {
     c_ount=len;
     updateListItem();
+    knGlobals.artManager->updateViewForCollection(this);
   }
 
   return ret;
@@ -351,6 +359,8 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
 {
   int idx=0, delCnt=0;
   for(KNLocalArticle *a=l->first(); a; a=l->next()) {
+    if(a->isLocked())
+      continue;
     idx=findId(a->id());
     if(idx!=-1 && at(idx)==a) {
       list[idx]=0;

@@ -286,13 +286,22 @@ class Appearance : public Base {
     QFont groupListFont();
     QFont articleListFont();
 
-    const QPixmap& icon(IconIndex i)      { return i_cons[i]; }
+    const QPixmap& icon(IconIndex i)     { return i_cons[i]; }
 
 
   protected:
     void updateHexcodes();
-    int colorCount()             { return COL_CNT; }
-    int fontCount()              { return FNT_CNT; }
+    const QColor& color(int i)           { return c_olors[i]; }
+    const QString& colorName(int i)      { return c_olorNames[i]; }
+    int colorCount()                     { return COL_CNT; }
+    QColor defaultColor(int i);
+
+
+    const QFont& font(int i)             { return f_onts[i]; }
+    const QString& fontName(int i)       { return f_ontNames[i]; }
+    int fontCount()                      { return FNT_CNT; }
+    QFont defaultFont(int);
+
 
     bool l_ongGroupList,
          u_seColors,

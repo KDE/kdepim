@@ -10,6 +10,7 @@
 #include "utilities.h"
 #include "knglobals.h"
 #include "knarticlewidget.h"
+#include "knarticlefactory.h"
 #include "knodeview.h"
 
 KNConfigManager::KNConfigManager(QObject *p, const char *n) : QObject(p, n), d_ialog(0)
@@ -155,9 +156,9 @@ void KNConfigDialog::slotApply()
   for(KNConfig::BaseWidget *w=w_idgets.first(); w; w=w_idgets.next())
     w->apply();
 
-#warning FIXME : honor dirty-flag
   KNArticleWidget::configChanged();
   knGlobals.view->configChanged();
+  knGlobals.artFactory->configChanged();
 }
 
 

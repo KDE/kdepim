@@ -19,7 +19,7 @@
 #ifndef KNARTICLEWIDGET_H
 #define KNARTICLEWIDGET_H
 
-//bad hack, but we need access to QTextBrowser::anchorAt() !!
+//bad hack, but we need access to QTextBrowser::anchorAt(). Obsolete with Qt 3.0.
 #define private protected
 #include <qtextbrowser.h>
 #undef private

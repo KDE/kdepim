@@ -55,6 +55,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void deleteComposersForFolder(KNFolder *f);
     void deleteComposerForArticle(KNLocalArticle *a);
     KNComposer* findComposer(KNLocalArticle *a);
+    void configChanged();
 
 
 
@@ -63,8 +64,10 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void processJob(KNJobData *j); //reimplemented from KNJobConsumer
 
     //article generation
-    KNLocalArticle* newArticle();
-    void setIdentity(KNLocalArticle *a, KNConfig::Identity *i);
+    KNLocalArticle* newArticle(KNGroup *g, QString &sig, bool withXHeaders=true);
+
+    //cancel & supersede
+    bool cancelAllowed(KNArticle *a);
 
     //rewrap procedure
     int findBreakPos(const QString &text, int start);

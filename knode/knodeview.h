@@ -131,6 +131,7 @@ class KNodeView : public QSplitter
   protected slots:
     //listview slots
     void slotArticleSelected(QListViewItem*);
+    void slotArticleDoubleClicked(QListViewItem*);
 		void slotCollectionSelected(QListViewItem*);
 		void slotArticleRMB(QListViewItem *i, const QPoint &p, int);
 		void slotCollectionRMB(QListViewItem *i, const QPoint &p, int);

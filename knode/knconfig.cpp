@@ -339,6 +339,44 @@ void KNConfig::Appearance::updateHexcodes()
 }
 
 
+QColor KNConfig::Appearance::defaultColor(int i)
+{
+  switch(i) {
+
+    case background:
+      return kapp->palette().active().base();
+    break;
+
+    case header:
+      return kapp->palette().active().background();
+    break;
+
+    case normalText:
+    case quoted1:
+    case quoted2:
+    case quoted3:
+      return kapp->palette().active().text();
+    break;
+
+    case url:
+      return KGlobalSettings::linkColor();
+    break;
+
+    case readArticle:
+      return kapp->palette().disabled().text();
+    break;
+  }
+
+  return kapp->palette().disabled().text();
+}
+
+
+QFont KNConfig::Appearance::defaultFont(int)
+{
+  return KGlobalSettings::generalFont();
+}
+
+
 //==============================================================================================================
 
 
