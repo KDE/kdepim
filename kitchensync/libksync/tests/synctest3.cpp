@@ -63,7 +63,7 @@ int main( int argc, char **argv )
 
   QString outputDir = QFile::decodeName( args->arg( 0 ) );
 
-  SyncTestHelper helper( outputDir, false );
+  SyncTestHelper helper( outputDir );
 
   KABC::AddressBook ab1;
   ab1.addResource( new KABC::ResourceNull() );
@@ -83,20 +83,20 @@ int main( int argc, char **argv )
   a2.setUid( "SYNCTEST3_ADDRESSEE_2" );
   a2.setNameFromString( "Zwerg Nase" );
   a2.insertEmail( "zn@abc.de" );
-  
+
   ab2.insertAddressee( a2 );
 
   helper.sync( &ab1, &ab2, "101", "Addressbook, sync new, no history." );
 
   a1.setNameFromString( "Haenschen Wuerstchen" );
   ab1.insertAddressee( a1 );
-  
+
   helper.sync( &ab1, &ab2, "102", "Addressbook, sync changed 1, no history" );
-  
+
   a2.setNameFromString( "Zwergchen Naeschen" );
   ab2.insertAddressee( a2 );
-  
+
   helper.sync( &ab1, &ab2, "103", "Addressbook, sync changed 2, no history" );
-  
+
   return 0;
 }

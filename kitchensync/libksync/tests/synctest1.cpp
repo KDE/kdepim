@@ -63,7 +63,7 @@ int main( int argc, char **argv )
 
   QString outputDir = QFile::decodeName( args->arg( 0 ) );
 
-  SyncTestHelper helper( outputDir, false );
+  SyncTestHelper helper( outputDir );
 
   // Force save() to save in sorted order
   extern bool KCal_CalendarLocal_saveOrdered;
@@ -78,7 +78,7 @@ int main( int argc, char **argv )
   event1->setDtStart( QDateTime( QDate( 2004, 2, 15 ), QTime( 12, 0 ) ) );
   event1->setDtEnd( QDateTime( QDate( 2004, 2, 15 ), QTime( 13, 0 ) ) );
   event1->setFloats( false );
-  
+
   cal1.addEvent( event1 );
 
   Event *event2 = new Event;
@@ -94,13 +94,13 @@ int main( int argc, char **argv )
 
   event1->setSummary( "Modified Event 1" );
   event1->setLastModified( event1->lastModified().addDays( 1 ) );
-  
+
   helper.sync( &cal1, &cal2, "002", "Calendar, sync changed 1, no history" );
-  
+
   event2->setSummary( "Modified Event 2" );
   event2->setLastModified( event2->lastModified().addDays( 1 ) );
-  
+
   helper.sync( &cal1, &cal2, "003", "Calendar, sync changed 2, no history" );
-  
+
   return 0;
 }

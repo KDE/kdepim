@@ -34,7 +34,7 @@ class TestBookmarkManager : public KBookmarkManager
 class SyncTestHelper
 {
   public:
-    SyncTestHelper( const QString &outputDir, bool loadLog );
+    SyncTestHelper( const QString &outputDir);
     
     void sync( KCal::CalendarLocal *, KCal::CalendarLocal *,
                const QString &prefix, const QString &title );
@@ -49,6 +49,5 @@ class SyncTestHelper
                         const QString &title );
 
   private:
-    QString mOutputDir;
-    bool mLoadLog;
+    QString mOutputDir;    
 };

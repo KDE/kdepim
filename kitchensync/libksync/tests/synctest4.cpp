@@ -67,7 +67,7 @@ int main( int argc, char **argv )
   QDateTime dt2 = QDateTime( QDate( 2000, 2, 1 ), QTime( 12, 0 ) );
   QDateTime dt3 = QDateTime( QDate( 2000, 3, 1 ), QTime( 12, 0 ) );
 
-  SyncTestHelper helper( outputDir, true );
+  SyncTestHelper helper( outputDir );
 
   KABC::AddressBook ab1;
   ab1.addResource( new KABC::ResourceNull() );
@@ -89,7 +89,7 @@ int main( int argc, char **argv )
   a2.setNameFromString( "Zwerg Nase" );
   a2.insertEmail( "zn@abc.de" );
   a2.setRevision( dt1 );
-  
+
   ab2.insertAddressee( a2 );
 
   helper.sync( &ab1, &ab2, "111", "Addressbook, sync new, with history." );
@@ -97,14 +97,14 @@ int main( int argc, char **argv )
   a1.setNameFromString( "Haenschen Wuerstchen" );
   a1.setRevision( dt2 );
   ab1.insertAddressee( a1 );
-  
+
   helper.sync( &ab1, &ab2, "112", "Addressbook, sync changed 1, with history" );
-  
+
   a2.setNameFromString( "Zwergchen Naeschen" );
   a2.setRevision( dt3 );
   ab2.insertAddressee( a2 );
-  
+
   helper.sync( &ab1, &ab2, "113", "Addressbook, sync changed 2, with history" );
-  
+
   return 0;
 }

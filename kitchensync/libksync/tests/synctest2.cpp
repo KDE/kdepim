@@ -67,7 +67,7 @@ int main( int argc, char **argv )
   QDateTime dt2 = QDateTime( QDate( 2000, 2, 1 ), QTime( 12, 0 ) );
   QDateTime dt3 = QDateTime( QDate( 2000, 3, 1 ), QTime( 12, 0 ) );
 
-  SyncTestHelper helper( outputDir, true );
+  SyncTestHelper helper( outputDir );
 
   // Force save() to save in sorted order
   extern bool KCal_CalendarLocal_saveOrdered;
@@ -83,7 +83,7 @@ int main( int argc, char **argv )
   event1->setDtEnd( QDateTime( QDate( 2004, 2, 15 ), QTime( 13, 0 ) ) );
   event1->setFloats( false );
   event1->setLastModified( dt1 );
-  
+
   cal1.addEvent( event1 );
 
   Event *event2 = new Event;
@@ -100,13 +100,13 @@ int main( int argc, char **argv )
 
   event1->setSummary( "Modified event 1" );
   event1->setLastModified( dt2 );
-  
+
   helper.sync( &cal1, &cal2, "012", "Calendar, sync changed 1, with history" );
-  
+
   event2->setSummary( "Modified event 2" );
   event2->setLastModified( dt3 );
-  
+
   helper.sync( &cal1, &cal2, "013", "Calendar, sync changed 2, with history" );
-  
+
   return 0;
 }

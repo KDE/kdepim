@@ -66,12 +66,12 @@ int main( int argc, char **argv )
   QDateTime dt2 = QDateTime( QDate( 2000, 2, 1 ), QTime( 12, 0 ) );
   QDateTime dt3 = QDateTime( QDate( 2000, 3, 1 ), QTime( 12, 0 ) );
 
-  SyncTestHelper helper( outputDir, true );
+  SyncTestHelper helper( outputDir );
 
 
   TestBookmarkManager bmm11;
   TestBookmarkManager bmm21;
-  
+
   bmm11.root().addBookmark( &bmm11, "Bookmark 1", "http://bookmark1.org" );
   bmm21.root().addBookmark( &bmm21, "Bookmark 2", "http://bookmark2.org" );
 
@@ -86,7 +86,7 @@ int main( int argc, char **argv )
   bmm12.root().addBookmark( &bmm12, "Bookmark 2", "http://bookmark2.org" );
   bmm22.root().addBookmark( &bmm22, "Bookmark 1", "http://bookmark1.org" );
   bmm22.root().addBookmark( &bmm22, "Bookmark 2", "http://bookmark2.org" );
-  
+
   helper.sync( &bmm12, &bmm22, "202", "Bookmarks, sync changed 1, no history." );
 
 
@@ -100,6 +100,6 @@ int main( int argc, char **argv )
 
   helper.sync( &bmm13, &bmm23, "203", "Bookmarks, sync changed 2, no history." );
 #endif
-  
+
   return 0;
 }

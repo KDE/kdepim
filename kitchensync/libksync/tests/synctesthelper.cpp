@@ -2,6 +2,7 @@
     This file is part of libksync.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (C) 2004 Holger Hans Peter Freyther <freyther@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -25,6 +26,7 @@
 #include "calendarsyncee.h"
 #include "addressbooksyncee.h"
 #include "bookmarksyncee.h"
+#include "synchistory.h"
 
 #include <libkcal/calendarlocal.h>
 #include <kabc/addressbook.h>
@@ -45,8 +47,8 @@ using namespace KCal;
 using namespace KSync;
 using namespace KABC;
 
-SyncTestHelper::SyncTestHelper( const QString &outputDir, bool loadLog )
-  : mOutputDir( outputDir ), mLoadLog( loadLog )
+SyncTestHelper::SyncTestHelper( const QString &outputDir)
+  : mOutputDir( outputDir )
 {
 }
 
@@ -74,28 +76,35 @@ void SyncTestHelper::sync( CalendarLocal *cal1, CalendarLocal *cal2,
   writeTestFile( prefix, "cal", title );
 
   Syncer syncer;
-  
+
   CalendarSyncee syncee1( cal1 );
   CalendarSyncee syncee2( cal2 );
 
   syncee1.setIdentifier( "cal1" );
   syncee2.setIdentifier( "cal2" );
 
-  if ( mLoadLog ) {
-    syncee1.loadLog();
-    syncee2.loadLog();
-  }
-  
+  CalendarSyncHistory h1( &syncee1, QString::fromLatin1("cal1-fooo.syncee"));
+  h1.load();
+
+  CalendarSyncHistory h2( &syncee2, QString::fromLatin1("cal2-fooo.syncee" ));
+  h2.load();
+
   syncer.addSyncee( &syncee1 );
   syncer.addSyncee( &syncee2 );
-  
+
   cal1->save( mOutputDir + "/" + prefix + ".cal.1.in" );
   cal2->save( mOutputDir + "/" + prefix + ".cal.2.in" );
 
+  cal1->save( mOutputDir + "/" + prefix + ".cal.1.in_a" );
+  cal2->save( mOutputDir + "/" + prefix + ".cal.2.in_b" );
+
   syncer.sync();
-  
+
   cal1->save( mOutputDir + "/" + prefix + ".cal.1.out" );
   cal2->save( mOutputDir + "/" + prefix + ".cal.2.out" );
+
+  h1.save();
+  h2.save();
 }
 
 void SyncTestHelper::sync( AddressBook *ab1, AddressBook *ab2,
@@ -104,26 +113,29 @@ void SyncTestHelper::sync( AddressBook *ab1, AddressBook *ab2,
   writeTestFile( prefix, "ab", title );
 
   Syncer syncer;
-  
+
   AddressBookSyncee syncee1( ab1 );
   AddressBookSyncee syncee2( ab2 );
 
   syncee1.setIdentifier( "ab1" );
   syncee2.setIdentifier( "ab2" );
 
-  if ( mLoadLog ) {
-    syncee1.loadLog();
-    syncee2.loadLog();
-  }
-  
+  /* Fill the Log */
+  AddressBookSyncHistory h1( &syncee1, "ab1-fooo.syncee" ); h1.load();
+  AddressBookSyncHistory h2( &syncee2, "ab2-fooo.syncee" ); h2.load();
+
   syncer.addSyncee( &syncee1 );
   syncer.addSyncee( &syncee2 );
-  
+
   saveAddressBook( ab1, mOutputDir + "/" + prefix + ".ab.1.in" );
   saveAddressBook( ab2, mOutputDir + "/" + prefix + ".ab.2.in" );
 
   syncer.sync();
-  
+
+  h1.save();
+  h2.save();
+
+
   saveAddressBook( ab1, mOutputDir + "/" + prefix + ".ab.1.out" );
   saveAddressBook( ab2, mOutputDir + "/" + prefix + ".ab.2.out" );
 }
@@ -131,7 +143,7 @@ void SyncTestHelper::sync( AddressBook *ab1, AddressBook *ab2,
 void SyncTestHelper::saveAddressBook( AddressBook *ab, const QString &filename )
 {
   Addressee::List addressees = ab->allAddressees();
-  
+
   QFile f( filename );
   if ( !f.open( IO_WriteOnly ) ) {
     std::cerr << "Unable to open file '" << QFile::encodeName( filename )
@@ -149,18 +161,17 @@ void SyncTestHelper::sync( KBookmarkManager *bmm1, KBookmarkManager *bmm2,
   writeTestFile( prefix, "bm", title );
 
   Syncer syncer;
-  
+
   BookmarkSyncee syncee1( bmm1 );
   BookmarkSyncee syncee2( bmm2 );
 
   syncee1.setIdentifier( "bmm1" );
   syncee2.setIdentifier( "bmm2" );
 
-  if ( mLoadLog ) {
-    syncee1.loadLog();
-    syncee2.loadLog();
-  }
-  
+  BookmarkSyncHistory h1( &syncee1, "bmm1-fooo.syncee" ); h1.load();
+  BookmarkSyncHistory h2( &syncee2, "bmm2-fooo.syncee" ); h2.load();
+
+
   syncer.addSyncee( &syncee1 );
   syncer.addSyncee( &syncee2 );
 
@@ -168,7 +179,10 @@ void SyncTestHelper::sync( KBookmarkManager *bmm1, KBookmarkManager *bmm2,
   bmm2->saveAs( mOutputDir + "/" + prefix + ".bm.2.in" );
 
   syncer.sync();
-  
+
+  h1.save();
+  h2.save();
+
   bmm1->saveAs( mOutputDir + "/" + prefix + ".bm.1.out" );
   bmm2->saveAs( mOutputDir + "/" + prefix + ".bm.2.out" );
 }
