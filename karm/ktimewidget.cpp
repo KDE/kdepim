@@ -7,6 +7,7 @@
 #include <qvalidator.h>
 #include <qwidget.h>
 
+#include <klocale.h>            // i18n
 #include "ktimewidget.h"
 
 enum ValidatorType { HOUR, MINUTE };
@@ -67,9 +68,9 @@ KArmTimeWidget::KArmTimeWidget( QWidget* parent, const char* name )
   QHBoxLayout *layout = new QHBoxLayout(this);
 
   _hourLE = new QLineEdit( this);
-
-  // Hours lineedit: make room for up to 5 digits
-  _hourLE->setFixedWidth( fontMetrics().maxWidth() * 5
+  // 9999 hours > 1 year!
+  // 999 hours = 41 days  (That should be enough ...)
+  _hourLE->setFixedWidth( fontMetrics().maxWidth() * 3
                           + 2 * _hourLE->frameWidth() + 2);
   layout->addWidget(_hourLE);
   TimeValidator *validator = new TimeValidator( HOUR, _hourLE,
@@ -78,8 +79,8 @@ KArmTimeWidget::KArmTimeWidget( QWidget* parent, const char* name )
   _hourLE->setAlignment( Qt::AlignRight );
 
 
-  QLabel *dot = new QLabel(QString::fromLatin1( " : " ), this);
-  layout->addWidget(dot);
+  QLabel *hr = new QLabel( i18n( "abbreviation for hours", " hr. " ), this );
+  layout->addWidget( hr );
 
   _minuteLE = new KarmLineEdit(this);
 
@@ -91,6 +92,9 @@ KArmTimeWidget::KArmTimeWidget( QWidget* parent, const char* name )
   _minuteLE->setValidator( validator );
   _minuteLE->setMaxLength(2);
   _minuteLE->setAlignment( Qt::AlignRight );
+
+  QLabel *min = new QLabel( i18n( "abbreviation for minutes", " min. " ), this );
+  layout->addWidget( min );
 
   layout->addStretch(1);
   setFocusProxy( _hourLE );

@@ -27,14 +27,12 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
-#include <qpixmap.h>
-#include <qpushbutton.h>
 #include <qradiobutton.h>
+#include <qsizepolicy.h>
 #include <qstring.h>
 #include <qwidget.h>
 #include <qwhatsthis.h>
 
-#include <kiconloader.h>
 #include <klocale.h>            // i18n
 #include <kwinmodule.h>
 
@@ -84,9 +82,22 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   QGridLayout *lay3 = new QGridLayout( 2, 2, -1, "lay3" );
   lay5->addLayout(lay3);
   
+  _sessionLA = new QLabel( i18n("&Session time: "), page, "session time" );
+
   // Time
   _timeLA = new QLabel( i18n("&Time:"), page, "time" );
   lay3->addWidget( _timeLA, 0, 0 );
+  _timeLA->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, 
+                                         (QSizePolicy::SizeType)0, 
+                                         0, 
+                                         0, 
+                                         _timeLA->sizePolicy().hasHeightForWidth()) );
+
+  // Based on measuring pixels in a screenshot, it looks like the fontmetrics
+  // call includes the ampersand when calculating the width.  To be sure
+  // things will line up (no matter what language or widget style), set all
+  // three date entry label controls to the same width.
+  _timeLA->setMinimumWidth( fontMetrics().width( _sessionLA->text() ) );
 
   _timeTW = new KArmTimeWidget( page, "_timeTW" );
   lay3->addWidget( _timeTW, 0, 1 );
@@ -94,16 +105,22 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   
 
   // Session
-  _sessionLA = new QLabel( i18n("&Session time:"), page, "session time" );
   lay3->addWidget( _sessionLA, 1, 0 );
 
   _sessionTW = new KArmTimeWidget( page, "_sessionTW" );
   lay3->addWidget( _sessionTW, 1, 1 );
   _sessionLA->setBuddy( _sessionTW );
+  _sessionLA->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, 
+                                         (QSizePolicy::SizeType)0, 
+                                         0, 
+                                         0, 
+                                         _sessionLA->sizePolicy().hasHeightForWidth()) );
+  _sessionLA->setMinimumWidth( fontMetrics().width( _sessionLA->text() ) );
 
 
   // The "Edit relative" radio button
-  lay1->addSpacing(10);lay1->addStretch(1);
+  lay1->addSpacing(10);
+  lay1->addStretch(1);
   _relativeRB = new QRadioButton( i18n( "Edit &relative (apply to both time and"
                                         " session time)" ), page, "_relativeRB" );
   lay1->addWidget( _relativeRB );
@@ -117,10 +134,15 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   _operator = new QComboBox(page);
   _operator->insertItem( QString::fromLatin1( "+" ) );
   _operator->insertItem( QString::fromLatin1( "-" ) );
+  _operator->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, 
+                                         (QSizePolicy::SizeType)0, 
+                                         0, 
+                                         0, 
+                                         _operator->sizePolicy().hasHeightForWidth()) );
+  //kdDebug() << "text width=" << fontMetrics().width( _sessionLA->text() ) << endl;
+  _operator->setMinimumWidth( fontMetrics().width( _sessionLA->text() ) );
   lay4->addWidget( _operator );
 
-  lay4->addSpacing(5);
-  
   _diffTW = new KArmTimeWidget( page, "_sessionAddTW" );
   lay4->addWidget( _diffTW );
 
@@ -187,17 +209,6 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   
   connect(_desktopCB, SIGNAL(clicked()), this, SLOT(slotAutoTrackingPressed()));
 
-  KIconLoader loader;
-  
-  QPixmap whatsThisIM = loader.loadIcon( QString::fromLatin1("contexthelp"),
-                                         KIcon::Toolbar);
-  QPushButton* whatsThisBU = new QPushButton(page, "whatsThisLA");
-  whatsThisBU->setFocusPolicy(NoFocus);
-
-  connect(whatsThisBU, SIGNAL(clicked()), this, SLOT(enterWhatsThis()));
-  whatsThisBU->setPixmap( whatsThisIM );
-  lay4->addWidget(whatsThisBU);
-  
   lay1->addStretch(1);
 
 
