@@ -20,7 +20,7 @@
 
 lib_LTLIBRARIES = libkitchensynckalendar.la
 
-INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir) $(all_includes)
 
 libkitchensynckalendar_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
 libkitchensynckalendar_la_LIBDADD =  ../../../libksyncentries.la ../../libkitchensync.la

@@ -18,9 +18,9 @@
 */
 
 #include <qptrlist.h>
-#include <todo.h>
-#include <event.h>
-#include <journal.h>
+#include <libkcal/todo.h>
+#include <libkcal/event.h>
+#include <libkcal/journal.h>
 
 #include "kalendarsyncentry.h"
 

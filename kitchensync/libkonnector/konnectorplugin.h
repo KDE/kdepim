@@ -32,11 +32,6 @@ class Kapabilities;
 class KSyncEntry;
 
 /**
- * Convinience type definition
- */
-typedef QPtrList<KSyncEntry> KSyncEntryList;
-
-/**
  *  The base class of all plugins. The functions are
  *  the same as in konnector
  */

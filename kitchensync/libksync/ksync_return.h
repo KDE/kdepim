@@ -5,6 +5,7 @@
 #include <qptrlist.h>
 
 #include <ksyncentry.h>
+#include <konnector.h>
 
 namespace KitchenSync {
     class SyncReturn{

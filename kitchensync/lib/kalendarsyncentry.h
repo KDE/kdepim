@@ -18,7 +18,7 @@
 */
 
 #include <ksyncentry.h>
-#include <calendarlocal.h>
+#include <libkcal/calendarlocal.h>
 
 #ifndef kalendarsyncentry_h
 #define kalendarsyncentry_h

@@ -37,12 +37,14 @@
 
 #include <qmap.h>
 #include <qvaluelist.h>
+#include <qptrlist.h>
 
 #include <qstring.h>
 
 #include "kontainer.h"
 
 class QDateTime;
+
 class KSyncEntry
 {
   public:
@@ -150,6 +152,12 @@ class KSyncEntry
     int m_mode;
     bool m_first:1;
 };
+
+/**
+ * Convinience type definition
+ */
+typedef QPtrList<KSyncEntry> KSyncEntryList;
+
 
 #endif
 
