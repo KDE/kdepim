@@ -1,0 +1,75 @@
+<chapter id="intro">
+
+<chapterinfo>
+<authorgroup>
+<author>
+<firstname>Daniel</firstname>
+<surname>Naber</surname>
+<affiliation><address>
+<email>daniel.naber@t-online.de</email>
+</address></affiliation>
+</author>
+<author>
+<firstname>David</firstname>
+<surname>Rugge</surname>
+<affiliation><address>
+<email>davidrugge@mediaone.net</email>
+</address></affiliation>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+<date>2002-10-03</date>
+<releaseinfo>1.5</releaseinfo>
+</chapterinfo>
+
+<title>Introduction</title>
+
+<para>The &kmail; Team welcomes you to &kmail;, a user-friendly email client for the
+K Desktop Environment. Our goal is to make &kmail; a program that is beautiful
+and intuitive without sacrificing power. </para>
+
+<para>If you have never set up an email client on a &UNIX; system
+before, we suggest that you read through the <link
+linkend="getting-started">Getting Started</link> section first so that
+your setup goes smoothly.</para>
+
+<para>Since most people do not read documentation anyway, here is a
+collection of the most helpful tips:</para>
+
+<itemizedlist>
+<listitem>
+<para>You do not have to use your mouse to use &kmail;. Everything can
+be done by using <link linkend="keyboard-shortcuts">Keyboard Shortcuts</link>.</para>
+</listitem>
+<listitem>
+<para>Although &kmail; can be considered reliable you should keep 
+backups of your messages, &ie; just copy the files and directories 
+in <filename class="directory">~/Mail</filename>
+(including the hidden ones that start with a dot) to a safe place.</para>
+</listitem>
+<!-- TODO: add other tips for "invisible" features here -->
+
+</itemizedlist>
+
+<para>&kmail;'s homepage is at <ulink
+url="http://kmail.kde.org">http://kmail.kde.org</ulink>, an archive of the
+developer's mailing list is at <ulink
+url="http://lists.kde.org/?l=kde-kmail&amp;r=1&amp;w=2">lists.kde.org</ulink>.</para>
+
+<para>Please report bugs in &kmail; using
+<menuchoice><guimenu>Help</guimenu><guimenuitem>Report
+Bug...</guimenuitem></menuchoice>.</para>
+
+<para>We hope you will enjoy &kmail;!</para>
+
+<sect1 id="intro-authors">
+<title>Section Authors</title>
+
+<para>This section written by:
+Daniel Naber <email>daniel.naber@t-online.de</email> and
+David Rugge <email>davidrugge@mediaone.net</email>.</para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+</sect1>
+</chapter>

@@ -1,0 +1,128 @@
+<chapter id="credits-and-licenses">
+
+<chapterinfo>
+<authorgroup>
+<author>
+<firstname>Daniel</firstname>
+<surname>Naber</surname>
+<affiliation><address>
+<email>daniel.naber@t-online.de</email>
+</address></affiliation>
+</author>
+<author>
+<firstname>David</firstname>
+<surname>Rugge</surname>
+<affiliation><address>
+<email>davidrugge@mediaone.net</email>
+</address></affiliation>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+<date>2002-10-03</date>
+<releaseinfo>1.5</releaseinfo>
+</chapterinfo>
+
+<title>Credits and Licenses</title>
+
+<para>&kmail;: Copyright the &kmail; developers, 1997-2002</para>
+
+&underGPL;
+&underFDL;
+
+<sect1 id="team">
+<title>Development Team and Contributors</title>
+<!-- please keep in sync with the authors list on the webpage -->
+
+<!-- This is generated with "authors2xml.pl kmail/main.cpp"
+ (except the "maintainer" comment): -->
+<itemizedlist>
+<listitem><para>Michael H&auml;ckel <email>haeckel@kde.org</email> (current release coordinator)</para></listitem>
+<listitem><para>Don Sanders <email>sanders@kde.org</email></para></listitem>
+<listitem><para>Stefan Taferner  <email>taferner@kde.org</email></para></listitem>
+<listitem><para>Ingo Kl&ouml;cker <email>kloecker@kde.de</email></para></listitem>
+<listitem><para>Marc Mutz <email>mutz@kde.org</email></para></listitem>
+<listitem><para>Daniel Naber <email>daniel.naber@t-online.de</email></para></listitem>
+<listitem><para>Andreas Gungl <email>a.gungl@gmx.de</email></para></listitem>
+<listitem><para>Toyohiro Asukai <email>toyohiro@ksmplus.com</email></para></listitem>
+<listitem><para>Waldo Bastian <email>bastian@kde.org</email></para></listitem>
+<listitem><para>Carsten Burghardt <email>carsten.burghardt@web.de</email></para></listitem>
+<listitem><para>Steven Brown <email>swbrown@ucsd.edu</email></para></listitem>
+<listitem><para>Cristi Dumitrescu <email>cristid@chip.ro</email></para></listitem>
+<listitem><para>Philippe Fremy <email>pfremy@chez.com</email></para></listitem>
+<listitem><para>Kurt Granroth <email>granroth@kde.org</email></para></listitem>
+<listitem><para>Heiko Hund <email>heiko@ist.eigentlich.net</email></para></listitem>
+<listitem><para>Igor Janssen <email>rm@linux.ru.net</email></para></listitem>
+<listitem><para>Matt Johnston <email>matt@caifex.org</email></para></listitem>
+<listitem><para>Christer Kaivo-oja <email>whizkid@telia.com</email></para></listitem>
+<listitem><para>Lars Knoll <email>knoll@kde.org</email></para></listitem>
+<listitem><para>J. Nick Koston <email>bdraco@darkorb.net</email></para></listitem>
+<listitem><para>Stephan Kulow <email>coolo@kde.org</email></para></listitem>
+<listitem><para>Guillaume Laurent <email>glaurent@telegraph-road.org</email></para></listitem>
+<listitem><para>Sam Magnuson <email>sam@trolltech.com</email></para></listitem>
+<listitem><para>Laurent Montel <email>lmontel@mandrakesoft.com</email></para></listitem>
+<listitem><para>Matt Newell <email>newellm@proaxis.com</email></para></listitem>
+<listitem><para>Denis Perchine <email>dyp@perchine.com</email></para></listitem>
+<listitem><para>Samuel Penn <email>sam@bifrost.demon.co.uk</email></para></listitem>
+<listitem><para>Carsten Pfeiffer <email>pfeiffer@kde.org</email></para></listitem>
+<listitem><para>Sven Radej <email>radej@kde.org</email></para></listitem>
+<listitem><para>Mark Roberts <email>mark@taurine.demon.co.uk</email></para></listitem>
+<listitem><para>Wolfgang Rohdewald <email>wrohdewald@dplanet.ch</email></para></listitem>
+<listitem><para>Zack Rusin <email>zack@kde.org</email></para></listitem>
+<listitem><para>Espen Sand <email>espen@kde.org</email></para></listitem>
+<listitem><para>Aaron J. Seigo <email>aseigo@olympusproject.org</email></para></listitem>
+<listitem><para>Jan Simonson <email>jan@simonson.pp.se</email></para></listitem>
+<listitem><para>George Staikos <email>staikos@kde.org</email></para></listitem>
+<listitem><para>Jason Stephenson <email>panda@mis.net</email></para></listitem>
+<listitem><para>Jacek Stolarczyk <email>jacek@mer.chemia.polsl.gliwice.pl</email></para></listitem>
+<listitem><para>Roberto S. Teixeira <email>maragato@kde.org</email></para></listitem>
+<listitem><para>Ronen Tzur <email>rtzur@shani.net</email></para></listitem>
+<listitem><para>Mario Weilguni <email>mweilguni@sime.com</email></para></listitem>
+<listitem><para>Wynn Wilkes <email>wynnw@calderasystems.com</email></para></listitem>
+<listitem><para>Robert D. Williams <email>rwilliams@kde.org</email></para></listitem>
+<listitem><para>Markus Wuebben <email>markus.wuebben@kde.org</email></para></listitem>
+<listitem><para>Thorsten Zachmann <email>t.zachmann@zagge.de</email></para></listitem>
+<listitem><para>Karl-Heinz Zimmer <email>khz@kde.org</email></para></listitem>
+</itemizedlist>
+
+</sect1>
+
+<sect1 id="documentation">
+<title>Documentation</title>
+
+<para>Update for &kmail; 1.2 to 1.5 by Daniel Naber
+<email>daniel.naber@t-online.de</email>,
+<application>OpenPGP</application> chapter by Andreas Gungl
+<email>a.gungl@gmx.de</email> and Ingo Kl&ouml;cker <email>kloecker@kde.de</email>,
+message filter chapter by Marc Mutz
+<email>mutz@kde.org</email>, download filter chapter by Thorsten
+Zachmann <email>T.Zachmann@zagge.de</email>. Other parts have been
+contributed by various &kmail; developers.</para>
+
+<para>&kmail; 1.0
+documentation by David Rugge <email>davidrugge@mediaone.net</email>.
+Original documentation by Markus Wuebben
+<email>markus.wuebben@kde.org</email>, Robert Williams
+<email>rwilliams@kde.org</email> (Editor).</para>
+
+<para>Thanks to Michael Elkins <email>me@cs.hmc.edu</email> for his excellent
+description of the different &UNIX; mail formats in the <application>Mutt</application> 
+documentation.</para>
+
+<para>Thanks to the following people for providing directions on using other
+email client mailboxes with &kmail;:</para>
+
+<itemizedlist>
+<listitem><para>Nik Gaffney <email>nik@f0.am</email>
+(<application>Mailsmith</application>)</para></listitem>
+<listitem><para>David McMillen <email>mcmillen@math.bu.edu</email> and 
+Mendel Mobach <email>mendel@mobach.nl</email> (&Netscape; mail)</para></listitem>
+<listitem><para>Ed Shapard <email>shapard@bigfoot.com</email>
+(<application>Pegasus</application> Mail)</para></listitem>
+<listitem><para>Ray Muir <email>rjmuir@ibm.net</email> (Forte
+<application>Agent</application>)</para></listitem>
+</itemizedlist>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+</sect1>
+</chapter>

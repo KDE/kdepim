@@ -1,0 +1,1852 @@
+<chapter id="menus">
+
+<chapterinfo>
+<authorgroup>
+<author>
+<firstname>Daniel</firstname>
+<surname>Naber</surname>
+<affiliation><address>
+<email>daniel.naber@t-online.de</email>
+</address></affiliation>
+</author>
+<author>
+<firstname>David</firstname>
+<surname>Rugge</surname>
+<affiliation><address>
+<email>davidrugge@mediaone.net</email>
+</address></affiliation>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+<date>2002-10-03</date>
+<releaseinfo>1.5</releaseinfo>
+</chapterinfo>
+
+<title>Menu Entries</title>
+
+<para>Each menu item is discussed below. When there is a keyboard shortcut that
+performs a menu item function, the default shortcut is listed with the menu item.</para>
+
+<sect1 id="main-mail-reader-window">
+<title>The Main Window</title>
+
+<sect2 id="reader-file-menu">
+<title><guimenu>File</guimenu> Menu</title>
+
+<variablelist>
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>New Window...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Creates a new main window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo></shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Save As...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Saves the currently displayed message to a text file, including all the headers
+and attachments.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo></shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Print...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Display a dialog that lets you prints the currently displayed message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Compact All Folders</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para>Will compact all folders, &ie; it will really move and delete the messages
+on disk according to how you have moved and deleted them in &kmail;.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Expire All Folders</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para>Delete old messages from all folders, according to the rules in
+each folder's <link linkend="folders-properties-window">Properties dialog</link>
+(the default is not to delete old messages at all).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo></shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Check Mail</guimenuitem>
+</menuchoice>
+</term>
+<listitem><para>Checks for new messages in all your accounts, except those that
+have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guisubmenu>Check Mail In</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Submenu that lets you check for new messages from a particular account.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Send Queued Messages</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para>Sends the messages that are in your outbox.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo></shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Quit</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Closes the current main window or exits
+&kmail; if there is only this one window.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="reader-edit-menu">
+<title><guimenu>Edit</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Undo</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Revoke you last move or delete action. Note that you cannot undo a deletion
+in the trash.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Copy</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Copies selected text to the clipboard.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>T</keycap></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Edit Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Edits the selected message if it is editable. Only messages in the
+<guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>D</keycap></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Move To Trash</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Moves the selected messages to the trash folder. If the selected
+messages are already in the trash folder, they will really be deleted.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Shift;<keycap>Delete</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Delete</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Deletes the selected messages. There is no way to recover the messages
+once they are deleted with this command.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Find In Message...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Lets you search for a string in the currently displayed message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>K</keycap></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Select All Messages</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects all messages in the current folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Select Message Text</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the text of the currently displayed message.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="reader-view-menu">
+<title><guimenu>View</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Headers</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Changes the number of headers that are displayed and the format of the
+headers in the <guilabel>Message pane</guilabel>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Attachments</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Changes the way that attachments appear in the <guilabel>Message
+pane</guilabel> (independent of the MIME Tree). With <guimenuitem>Icons</guimenuitem>
+all attachments appear as icons at the bottom of the message.
+<guimenuitem>Smart</guimenuitem> will show attachments as
+icons, unless their content disposition is <quote>inline</quote>.
+You can activate <quote>inline</quote> content disposition in
+your own messages when you select <guilabel>Suggest automatic display</guilabel>
+in the attachment's properties dialog.
+<guimenuitem>Inline</guimenuitem> shows the contents of the attachments
+at the bottom of the message. Attachments that cannot be displayed, &eg;
+compressed files, will still be shown as an icon.
+<guimenuitem>Hide</guimenuitem> will not show attachments.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Unread Column</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Display a column in the list of folders which shows the number 
+of unread messages per folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Total Column</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Display a column in the list of folders which shows the number 
+of messages per folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>.</keycap></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>Expand Thread</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If <menuchoice><guimenu>Folder</guimenu><guimenuitem>Thread Messages</guimenuitem>
+</menuchoice> is activated, this will display the thread of the current message, &ie;
+all messages that are replies to the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>,</keycap></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>Collapse Thread</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If <menuchoice><guimenu>Folder</guimenu><guimenuitem>Thread Messages</guimenuitem>
+</menuchoice> is activated, this will hide the thread of the current message, &ie;
+it will hide all messages that are replies to the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>.</keycap></keycombo></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>Expand All Threads</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Expands all threads in the current folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>,</keycap></keycombo></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>Collapse All Threads</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Collapses all threads in the current folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>V</keycap></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>View Source</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Shows the message and its complete headers in plain text format in a new
+window. This can be useful to find out the origin of a mail. You should know
+that it is easy to fake the <literal>From:</literal> header of a mail, but
+one can still find out which mail servers have been used to send the message by looking
+at the <literal>Received:</literal> lines in the header.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Use Fixed Font</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Uses a fixed width (monospaced) font to display the messages
+in the current folder. The font to be used can be configured in the
+<guilabel>Appearance</guilabel> section of &kmail;'s configuration
+dialog.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guisubmenu>Set Encoding</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Lets you choose the character encoding to be used in the Message
+Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="reader-go-menu">
+<title><guimenu>Go</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>N</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Next Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the next message in the Headers pane. The keyboard shortcut
+<keycap>Right Arrow</keycap> also performs this action.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>+</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Next Unread Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the next unread message in the Headers pane.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>P</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Previous Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the previous message in the Headers pane.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>-</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Previous Unread Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects the previous unread message in the Headers pane.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>+</keycap></keycombo></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Next Unread Folder</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Jumps to the the next folder with unread messages.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>-</keycap></keycombo></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Previous Unread Folder</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Jumps to the the previous folder with unread messages.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>Space</keycap></shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Next Unread Text</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Scroll down if you are not yet at the bottom of a message, otherwise jumps
+to the next unread message.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="reader-folder-menu">
+<title><guimenu>Folder</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>New Folder...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens the <link linkend="folders-properties-window">Folder Properties</link>
+dialog that lets you create a new folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Mark All Messages as Read</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Sets the status of all new and unread messages in the current folder to read.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Compact</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Compacts the folder file to reduce its disk space usage. Use this command
+if your mailboxes seem to be much larger than they ought to be.
+<!-- TODO: explain? --></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Expire</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Delete old messages from the current folder, according to the rules in
+the folder's <guilabel>Properties</guilabel> dialog (the default is
+not to delete old messages at all).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Move All Messages to Trash</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Moves all of the messages in the selected folder into the trash folder.
+If the selected folder is the trash folder, the messages are permanently
+deleted.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Delete Folder</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Removes the selected folder and all its contents, including sub folders.</para>
+<warning><para>Note that there is no way to access the contents
+of a folder after it has been removed.</para></warning>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Prefer HTML to Plain Text</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>This will show <acronym>HTML</acronym> messages using
+<acronym>HTML</acronym> rendering. For security reasons, we recommend to only
+activate this for trusted messages.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Thread Messages</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Shows the messages in the <guilabel>Header pane</guilabel>
+in a tree-like list, with replies showing up directly under the message
+they reply to.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Properties...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the <link linkend="folders-properties-window">Properties dialog</link> which lets you
+change the settings for the selected folder.</para> 
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="reader-message-menu">
+<title><guimenu>Message</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>New Message...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens the <link linkend="the-composer-window">composer window</link> so you can 
+write a new message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>New Message to Mailing-List...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens the composer window so you can write a new
+mail. If the current folder holds a mailing list and has a <guilabel>Post 
+Address</guilabel> defined, this address will be default <guilabel>To:</guilabel>
+address.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>R</keycap></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Reply...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the composer window with the contents of the
+selected message's <guilabel>Reply-To</guilabel> field in the
+<guilabel>To:</guilabel> field. By default this will automatically
+set your identity to the one which this message was sent to.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>A</keycap></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Reply All...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the composer window and copies the contents
+of the selected message's <guilabel>Reply-To:</guilabel> and
+<guilabel>To:</guilabel> fields into the <guilabel>To:</guilabel> field, and the
+<guilabel>CC:</guilabel> field into the <guilabel>CC:</guilabel> field of the
+composer window.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>L</keycap></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Reply Mailing-List...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the composer with the <guilabel>To:</guilabel>
+field set to the mailing list address. Of course this will only work
+if you configured the current folder to be associated with a mailing list.
+Otherwise the <guilabel>To:</guilabel> field will be empty.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Shift;<keycap>R</keycap></keycombo></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Reply Without Quote...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the composer to reply but does not quote the
+text of the original message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>Forward...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Forwards the message to a new recipient. Using <guimenuitem>Inline</guimenuitem>,
+the message's text and some important header fields will be copied to the body of the new message 
+with a text marking the forwarded part. Attachments will be forwarded
+as attachments of the new message. Using <guimenuitem>As Attachment</guimenuitem>
+the message and its attachments will become an attachment of the new message. The original message
+headers will be included in the forwarded message, too.
+<guimenuitem>Redirect</guimenuitem> works like forward, except that the message stays the same (even
+the <guilabel>From:</guilabel> field). The user who redirected the message is added in special
+header fields (<literal>Redirect-From</literal>, <literal>Redirect-Date</literal>, <literal>Redirect-To</literal>,
+&etc;).</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>Bounce...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Sends the message back to the sender with a notice that it cannot be
+delivered. This is nearly exactly the message you get from a mail relay if the
+user does not exist. Some people use this option to <quote>reply</quote> to spam.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>Send Again...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a composer window with this message so it can be sent again.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guisubmenu>Copy To</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Copies all of the the selected messages to a certain folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guisubmenu>Move To</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Moves all of the selected messages to a certain folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guisubmenu>Mark Message</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Allows you to change the status of the selected message to one of the
+following states (more than one status per message is currently not supported):</para>
+<!-- TODO: more than one somewhen supported? -->
+
+<!-- TODO: I think it is worth adding inline images here, at some point. LW. -->
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>Status</entry>
+<entry>Symbol</entry>
+<entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><guimenuitem>New</guimenuitem></entry>
+<entry>Red dot</entry>
+<entry>The message has been received for the first time, and is unread.</entry>
+</row>
+<row>
+<entry><guimenuitem>Unread</guimenuitem></entry>
+<entry>Green dot</entry>
+<entry>The message has already been retrieved off the server at least once, but
+has not yet been read.</entry>
+</row>
+<row>
+<entry><guimenuitem>Read</guimenuitem></entry>
+<entry>Dash</entry>
+<entry>The message has been read.</entry>
+</row>
+<row>
+<entry><guimenuitem>Replied</guimenuitem></entry>
+<entry>Blue u-turn arrow</entry>
+<entry>A reply to this message has been sent.</entry>
+</row>
+<row>
+<entry><guimenuitem>Forwarded</guimenuitem></entry>
+<entry>Blue arrow</entry>
+<entry>The message has been forwarded to someone else.</entry>
+</row>
+<row>
+<entry><guimenuitem>Queued</guimenuitem></entry>
+<entry>Envelope</entry>
+<entry>The message has been queued in the outbox to be sent later.</entry>
+</row>
+<row>
+<entry><guimenuitem>Sent</guimenuitem></entry>
+<entry>Angled envelope</entry>
+<entry>The message has been sent.</entry>
+</row>
+<row>
+<entry><guimenuitem>Important</guimenuitem></entry>
+<entry>Flag</entry>
+<entry>This status will not automatically be set by &kmail;. You can use it freely to mark 
+messages that are in some way important to you.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guisubmenu>Mark Thread</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Allows you to change the status of all messages in a thread. The possible
+states are the same as for <menuchoice><guimenu>Message</guimenu>
+<guimenuitem>Mark Message</guimenuitem></menuchoice>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Apply Filters</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Applies your filters to the selected messages.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="reader-tools-menu">
+<title><guimenu>Tools</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>S</keycap></shortcut>
+<guimenu>Tools</guimenu>
+<guimenuitem>Find Messages...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up a search window that lets you search for messages with
+certain characteristics, &eg; a certain subject. Start the search by entering
+some values and press <guibutton>Search</guibutton>. Click on one of the
+resulting messages and it will appear in the <guilabel>Message
+pane</guilabel>.</para>
+</listitem>
+</varlistentry>
+
+<!-- fixme in kmail: address book vs addressbook -->
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Address Book</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Starts up <ulink url="/kaddressbook/">&kaddressbook;</ulink>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Import...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Starts up <application>kmailcvt</application> (which is part of kdenetwork).
+This application lets you import messages from several proprietary email clients to
+&kmail;.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guisubmenu>Create Filter</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
+This new filter is based on fields of the current mail, depending on which
+sub menu you select.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="reader-settings-menu">
+<title><guimenu>Settings</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Toolbar</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icon
+to compose a new message &etc;).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Statusbar</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If enabled, the Statusbar is visible (the Statusbar is the small one on
+the bottom which shows useful short messages and link targets).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a window that lets you configure the keyboard shortcuts for many
+menu commands.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a window that lets you choose which icons are visible in the
+toolbar.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Notifications...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a window that lets you configure what happens when new mail arrives,
+like playing a sound.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure &kmail;...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens the <link linkend="configure">Configure</link> window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Filters...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens the <link linkend="filters">Message Filters</link> window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure POP Filters...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens the <link linkend="popfilters">Configure Pop Filters</link> window.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="reader-help-menu">
+<title><guimenu>Help</guimenu> Menu</title>
+
+<para>These are the &kde; standard items for the <guimenu>Help</guimenu> menu:</para>
+
+&help.menu.documentation;
+
+<para>Additionally &kmail; offers these items:</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Help</guimenu>
+<guimenuitem>&kmail; Introduction</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>This displays the welcome screen, which lists the most imortant
+differences between your version of &kmail; and the previous one.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Help</guimenu>
+<guimenuitem>Tip of the Day</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>This displays a dialog with useful hints for using &kmail;.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+</sect1>
+
+<sect1 id="composer-window-menus">
+<title>The Composer Window</title>
+
+<sect2 id="composer-file-menu">
+<title><guimenu>Message</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>New Composer...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up a new composer window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>New Main Window...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Creates a new main window.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>Return</keycap></keycombo></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Send</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Sends the message immediately. If you use SMTP to send your
+messages and the SMTP server is not reachable, the message will be put
+into the outbox and you will get an error message. You can then later send
+the messages in the outbox using <menuchoice><guimenu>File</guimenu><guimenuitem>Send
+Queued</guimenuitem></menuchoice>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>Queue</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Queues the message in the outbox for sending it later using 
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send
+Queued</guimenuitem></menuchoice>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guimenuitem>Save in Drafts Folder</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Save the message in the <guilabel>drafts</guilabel> folder so you can 
+later edit and send it.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Messages</guimenu>
+<guimenuitem>Insert File...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Inserts a text file into the message text, starting at the cursor
+position.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Print...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Prints the current text.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Close</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Closes this composer window.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="composer-edit-menu">
+<title><guimenu>Edit</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Undo</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Undo your steps in editing the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>Z</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Redo</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Redo your steps in editing the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>X</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Cut</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Cutting text works as with most editors: the selected text is
+removed and put into the clipboard. Note that you can also select text and
+drag it to a new position.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Copy</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Copying text works as with most editors: the selected text is copied to the clipboard.
+Note that you can also select text while holding the &Ctrl; key, and drag it to a new
+position to copy it.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Paste</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Pasting works the same as with most editors: the text from the
+clipboard is pasted at the current cursor position.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Select All</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Selects all of the text in your message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Find...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a dialog to search for strings in the current message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo></shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Replace...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a dialog that lets you replace strings in your message with other strings.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Clean Spaces</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>This replaces multiple line breaks resp. spaces with single line breaks resp. spaces.
+It works on the current selection or on the complete message if there is no selection.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="composer-view-menu">
+<title><guimenu>View</guimenu> Menu</title>
+
+<para>This menu lets you toggle the display of the header fields and other
+options in this composer window.</para>
+
+<para>Options available are:</para>
+
+<itemizedlist>
+<listitem>
+<para><guimenuitem>All Fields</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>Identity</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>Sent-Mail folder</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>Mail Transport</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>From</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>Reply To</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>To</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>CC</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>BCC</guimenuitem></para>
+</listitem>
+<listitem>
+<para><guimenuitem>Subject</guimenuitem></para>
+</listitem>
+</itemizedlist>
+
+<para>Currently visible items have a checkmark shown next to their name in the
+menu.</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Use Fixed Font</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Uses a fixed width (monospaced) font to display the currently
+edited message. The font to be used can be configured in the
+<guilabel>Appearance</guilabel> section of &kmail;'s configuration
+dialog.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect2>
+
+<sect2 id="composer-options-menu">
+<title><guimenu>Options</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guimenuitem>Urgent</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Sets the priority of the message to Urgent. The receiver's email client has to support
+this or it will have no effect. &kmail; itself does not support priorities for
+incoming messages.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guimenuitem>Confirm Delivery</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If you choose this option, you request a confirmation email once your
+message is successfully delivered to its destination mail server. This has to be
+also supported from the receiver's side in order to work.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guimenuitem>Confirm Read</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If you choose this option, you request a confirmation email once your
+message is downloaded and read by its recipient. This has to be supported and
+enabled by the receiver's email client in order to work.
+<!-- TODO: kmail... --></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guisubmenu>Sign Message</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Digitally sign the message using <application>OpenPGP</application>.
+You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guisubmenu>Encrypt Message</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Encrypt the message using <application>OpenPGP</application>.
+You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guisubmenu>Select Crypto Module</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>This entry will only be visible if you have installed at least one
+<link linkend="configure-security-plugins">crypto plugin</link>. It allows
+you to choose which plugin you want to use for encryption/signing or if
+you want to use the built-in OpenPGP encryption/signing.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guisubmenu>Set Encoding</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Set the charset encoding of this message. The chosen encoding will appear in the header of
+the outgoing mail. You can use <guilabel>Auto</guilabel> for almost all
+cases, &kmail; will tell you if you need to select a different encoding manually.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guimenuitem>Wordwrap</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Toggle the automatic wordwrap. It may be useful to turn it off if you want
+to paste long lines that should not wrap.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+
+<sect2 id="composer-attach-menu">
+<title><guimenu>Attach</guimenu> Menu</title>
+
+<para>This menu lets you select attachment options.</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Attach</guimenu>
+<guimenuitem>Append Signature</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Appends your signature (<quote>footer</quote>) to the end of the message.
+<!-- fixme: nothing to do with crypto stuff --></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Attach</guimenu>
+<guimenuitem>Attach Public Key...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Attaches the corresponding <application>PGP</application>/<application>GnuPG</application>
+key to your message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Attach</guimenu>
+<guimenuitem>Attach My Public Key</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Attaches your <application>PGP</application>/<application>GnuPG</application>
+public key to your message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Attach</guimenu>
+<guimenuitem>Attach File...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Attaches one or more files to the current message.</para>
+<!-- fixme: not encrypted unless... -->
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Attach</guimenu>
+<guimenuitem>Remove Attachment</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Removes the attachment that is selected in the attachment part of the composer.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Attach</guimenu>
+<guimenuitem>Save Attachment As...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Saves the attachment that is selected in the attachment window to a
+file.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Attach</guimenu>
+<guimenuitem>Attachment Properties...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Displays the <link linkend="attachments">properties of the attachment</link> that is selected in the
+attachment window.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="composer-tools-menu">
+<title><guimenu>Tools</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Spelling...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Uses <ulink url="/kspell/">&kspell;</ulink> to check the spelling in the body of your
+message. Note that
+you have to configure &kspell; with <menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Spellchecker...</guimenuitem></menuchoice> if you use it for the
+first time.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Addressbook...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens up <ulink url="/kaddressbook/">&kaddressbook;</ulink>.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="composer-settings-menu">
+<title><guimenu>Settings</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Toolbar</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If enabled, the Toolbar is visible (the Toolbar is the one with the icon
+to send the message &etc;).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Statusbar</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>If enabled, the Statusbar is visible (the Statusbar is the small one at
+the bottom which shows useful short messages).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a window that lets you configure the keyboard shortcuts for many
+menu command.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a window that allows you to decide which icons appear in the
+toolbar.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure &kmail;...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens &kmail;'s <link linkend="configure">configuration dialog</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Spellchecker...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Allows you to configure <ulink url="/kspell/">&kspell;</ulink>, &kde;'s spellchecker.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
+
+
+<sect2 id="composer-help-menu">
+<title><guimenu>Help</guimenu> Menu</title>
+
+<para>The entries in this menu have the same meaning as <link
+linkend="reader-help-menu">the entries in the Mailreader's help
+menu</link>.</para>
+
+</sect2>
+</sect1>
+<sect1 id="menus-authors">
+<title>Section Authors</title>
+
+<para>This section written by:
+Daniel Naber <email>daniel.naber@t-online.de</email> and
+David Rugge <email>davidrugge@mediaone.net</email>.</para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+</sect1>
+</chapter>

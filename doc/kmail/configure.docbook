@@ -1,0 +1,768 @@
+<chapter id="configure">
+
+<chapterinfo>
+<authorgroup>
+<author>
+<firstname>Daniel</firstname>
+<surname>Naber</surname>
+<affiliation><address>
+<email>daniel.naber@t-online.de</email>
+</address></affiliation>
+</author>
+<author>
+<firstname>David</firstname>
+<surname>Rugge</surname>
+<affiliation><address>
+<email>davidrugge@mediaone.net</email>
+</address></affiliation>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+<date>2002-10-03</date>
+<releaseinfo>1.5</releaseinfo>
+</chapterinfo>
+
+<title>Configure &kmail;</title>
+
+<para>&kmail;'s configuration window enables you to configure &kmail;
+in many ways. You can reach it via
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+&kmail;...</guimenuitem></menuchoice>.</para>
+
+<para>It is divided into six
+pages, each of them represented by one of the
+icons in the list on the left hand side of the dialog. This chapter
+will describe each page in detail.</para>
+
+<sect1 id="configure-identity">
+<title><guilabel>Identities</guilabel> Page</title>
+
+<para>You can find a quick introduction to the
+<guilabel>Identities</guilabel> page in the <link
+linkend="getting-started">Getting Started</link> section.</para>
+
+<para>This page allows you to create one or more
+<emphasis>Identities</emphasis>, &ie; combinations of name, email
+address and other settings. For example, you can create one identity
+for business communication and one for
+personal communication. If you have more than one email
+address, you can create one identity per address. You will then be
+able to select an identity on a per-message basis.</para>
+
+<para>The page consists of a list of identities and buttons to manage
+them. The identities list will always show at
+least one identity, which is then the <guilabel>Default</guilabel> 
+identity.</para>
+
+<para>To add a new identity to the identity list, click on the
+<guibutton>New...</guibutton> button. 
+The <link linkend="configure-identity-newidentitydialog">New identity</link> dialog
+will show up.</para>
+
+<sect2 id="configure-identity-newidentitydialog">
+<title>The <guilabel>New Identity</guilabel> Dialog</title>
+
+<para>You can enter the name of the new identity into the
+<guilabel>New Identity</guilabel> edit field. This will be the name
+shown in the identity list.</para>
+
+<para>You can choose how the new identity should be initialized by
+checking one of the three radio buttons in the middle of the
+dialog:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>With empty fields</guilabel></term>
+<listitem>
+<para>All fields of the new identity are cleared or preset with
+standard values.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use Control Center settings</guilabel></term>
+<listitem>
+<para>Uses the settings of the <application>Control
+Center</application>'s default email profile (you can edit that one
+under <menuchoice><guimenu>Internet &amp; Network</guimenu>
+<guimenuitem>Email</guimenuitem></menuchoice> in the
+<application>Control Center</application>).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Duplicate existing identity</guilabel></term>
+<listitem>
+<para>Copies all fields from an already existent identity. You can
+choose which identity to copy from by selecting the corresponding
+entry in the <guilabel>Existing identities</guilabel> popup.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="configure-identity-general">
+<title><guilabel>General</guilabel></title>
+
+<para>The <guilabel>General</guilabel> tab allows you to specify some
+basic settings for the currently selected identity.</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Your name</guilabel></term>
+<listitem>
+<para>Enter your full name here (sometimes also called <emphasis>display name</emphasis>).
+Although this field is not strictly mandatory, it is recommended to enter 
+the correct value here.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Organization</guilabel></term>
+<listitem>
+<para>Enter your organization here. This field is 
+optional. Most programs will show this information in a separate
+header field <guilabel>Organization</guilabel>. &kmail;, however, puts
+it between parentheses and displays is together with the email address
+in the <guilabel>From</guilabel> header field.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Email address</guilabel></term>
+<listitem>
+<para>Enter your email address here.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+<para>So if your address is <replaceable>Joe User
+&lt;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
+User</userinput> into the <guilabel>Your name</guilabel> field and
+<userinput>joe@example.com</userinput> into the <guilabel>Email
+address</guilabel> field.</para>
+</sect2>
+
+<sect2 id="configure-identity-advanced">
+<title><guilabel>Advanced</guilabel></title>
+
+<para>The <guilabel>Advanced</guilabel> tab allows you to specify some
+rarely used or otherwise specialized settings for the currently
+selected identity.</para>
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Reply-To address</guilabel></term>
+<listitem>
+<para>Enter the address to which replies to your messages should be
+sent. Only fill out this field if it is different from your normal
+address (specified using the <guilabel>Name</guilabel> and
+<guilabel>Email Address</guilabel> on the <link
+linkend="configure-identity-general"><guilabel>General</guilabel>
+tab</link>), since replies default to the sender's address
+anyway.</para>
+<note><para>This field is only useful if you want replies to your mail
+to go somewhere else than your regular email address, &eg; if you are
+using this identity to send messages from an email address that cannot
+receive messages. Note that this field will possibly be
+deprecated by newer versions of the Internet email standard. Furthermore,
+some mailing lists overwrite this header field with their post address to
+make sure that replies go to the list instead of individuals. So the
+usefulness of this field is very limited and it should only be used in
+rare cases.</para></note>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>BCC address</guilabel></term>
+<listitem>
+<para>Optionally enter an address to which blind copies of your messages
+should be sent to.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>OpenPGP key</guilabel></term>
+<listitem>
+<para>Select here the <application>OpenPGP</application> key
+key that should be used to (digitally) sign messages when this
+identity is used. When you click on the <guilabel>Change...</guilabel>
+button, a key selection dialog comes up where you can select the key
+to use from the list of secret keys found. If you do not have an
+<application>OpenPGP</application> key or do not know what that is, you
+do not need to worry about this setting.</para>
+
+<note><para>The selected key will also be used as the recipient when
+you check <link linkend="configure-security-pgp-encrypttoself">
+<guilabel>Always encrypt to self</guilabel></link> on the <link
+linkend="configure-security-pgp"><guilabel>OpenPGP</guilabel> tab</link>
+of the <link linkend="configure-security">
+<guilabel>Security</guilabel> page</link>.</para></note>
+
+<note><para>You might need to configure your
+<application>OpenPGP</application> environment first, to make the key
+selection dialog work. You can do this on the <link
+linkend="configure-security"> <guilabel>Security</guilabel>
+page</link>.</para></note>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Sent-mail folder</guilabel></term>
+<listitem>
+<para>Select the folder into which messages should be filed after sending
+when using this identity.</para>
+
+<tip><para>You can exercise more fine-grained control over where to
+file sent messages by creating a corresponding <link
+linkend="filters">message filter</link> that is applied to outgoing
+messages.</para></tip>
+
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Drafts folder</guilabel></term>
+<listitem>
+<para>Select the folder into which drafts should be filed when using 
+this identity.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Special transport</guilabel></term>
+<listitem>
+<para>Select or enter an alternative SMTP server to be used when sending
+messages using this identity.</para>
+
+<note><para>You need to configure outgoing mail servers first, before
+you can choose them from the list. You can do this on the <link
+linkend="configure-network-sending"><guilabel>Sending</guilabel>
+tab</link> of the <link linkend="configure-network">
+<guilabel>Network</guilabel> page</link>.</para></note>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
+
+<sect2 id="configure-identity-signature">
+<title><guilabel>Signature</guilabel></title>
+
+<para>This tab allows you to specify a signature (sometimes called
+<quote>footer</quote> or <quote>disclaimer</quote>)
+to be appended to each message sent using this identity.</para>
+
+<note><para>This type of signature has nothing to do with the
+(digital) signatures for which you can select the to-be-used key on
+the <link linkend="configure-identity-advanced">Advanced
+tab</link>. It is just bad wording to call this a signature, but since
+the term is already used everywhere else, we keep this notation. Just
+keep in mind that these signatures and digital signatures are two
+completely different things.</para></note>
+
+<para>Check the <guilabel>Enable signature</guilabel> option if you
+want to be able to append the signature when using this identity. To
+<emphasis>automatically</emphasis> append it to every new message
+you also have to select <guilabel>Automatically append
+signature</guilabel> in the <guilabel>Composer</guilabel> configuration page.</para>
+
+<para>&kmail; can obtain the signature text from various sources. The
+traditional way on Unix is to read the text from a file called
+<filename>.signature</filename> in your home directory. This file can
+be shared between several programs, so you get the same
+signature in each mail program you use.</para>
+
+<para>To read the text from a text file you select
+<guilabel>Obtain signature text from file</guilabel>. Enter the
+filename in the <guilabel>Specify file</guilabel> edit field or hit
+the button to the right of it to browse your filesystem. If you want
+to edit the file, hit the <guilabel>Edit File</guilabel>
+button.</para>
+
+<para>&kmail; can also read the signature text from the output of a
+command. Thus, you can use programs such as
+<command>fortune</command> to create a new signature text for
+every message. Everything the program prints onto
+<acronym>stdout</acronym> is catched and used as the signature
+text.</para>
+
+<para>To read the text from the output of a command you select
+<guilabel>Obtain signature text from Output of
+Command</guilabel>. Enter the command (preferably with full path) in
+the <guilabel>Specify command</guilabel> edit field or hit the button
+to the right of it to browse your filesystem.</para>
+
+<para>As a third option, you can enter the signature text directly in
+&kmail;'s configuration dialog. To do this, select <guilabel>Obtain
+signature text from input field below</guilabel> and enter the text
+into the appearing text box.</para>
+
+<note><para>On the Internet, signatures are by convention separated
+from the body of the message by a line containing only the three
+character <quote>-- </quote> (dash, dash, space). &kmail; will
+automatically prepend the signature text with this line if it is not
+already present in the signature text.</para>
+<para>If you do not wish the separator to be prepended
+automatically by &kmail;, simply add it to the signature 
+text yourself.</para>
+</note>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="configure-network">
+<title><guilabel>Network</guilabel> Page</title>
+
+<para>You can find a quick introduction to the
+<guilabel>Network</guilabel> page in the <link
+linkend="setting-up-your-account">Setting up your Account</link>
+section.</para>
+
+<para>This page allows you to create one or more (incoming and
+outgoing) <emphasis>accounts</emphasis>, &ie; combinations of mail
+servers, login information and other settings. Typically, you will
+create one outgoing (used for sending messages) and one incoming (used to
+retrieve messages) account. You can create as many accounts as you want, though,
+and assign each one to different <link
+linkend="configure-identity">identities</link> or decide on a per-message
+basis.</para>
+
+<sect2 id="configure-network-sending">
+<title><guilabel>Sending</guilabel></title>
+
+<para>The <guilabel>Sending</guilabel> tab allows you to define new
+outgoing mail servers and set some common options.</para>
+
+<para>For basic information, see <link
+linkend="sending-mail">Setting up your Account: Sending</link>.</para>
+
+<para>When you click <guibutton>Add...</guibutton> or <guibutton>Modify...</guibutton>
+the <guilabel>Add transport</guilabel> resp. <guilabel>Modify
+transport</guilabel> dialog will open. For sending via <command>sendmail</command> you
+can specify a name and the location of the <command>sendmail</command> program.
+For <acronym>SMTP</acronym> you can specify <guilabel>Name</guilabel>,
+<guilabel>Host</guilabel>, and <guilabel>Port</guilabel> of the server.
+<guilabel>Server requires authentication</guilabel> will enable the
+<guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields and
+the <guilabel>Authentication method</guilabel> buttons on the
+<guilabel>Security</guilabel> tab. If you are not sure about the
+security settings you can make &kmail; test for the best settings
+by using <guibutton>Check What the Server Supports</guibutton>.</para>
+
+<para><guilabel>Confirm before send</guilabel> will pop up a
+confirmation box every time you send a message.</para>
+
+<para><guilabel>Send messages in outbox folder on check</guilabel> will send
+all messages from the outbox when you check for new messages.</para>
+
+<para><guilabel>Default send method</guilabel> lets you define what
+happens when a message is sent. If <guilabel>Send now</guilabel> is
+selected, the message is sent to the mail server immediately, while if
+<guilabel>Send later</guilabel> is selected, the message is queued in
+the outbox to be sent later with the
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send
+Queued Messages</guimenuitem></menuchoice> command or automatically when you
+check your mail, depending on the setting of 
+<guilabel>Send messages in outbox folder on check</guilabel> above.</para>
+
+<para><guilabel>Message property</guilabel> lets you select how your
+message will be encoded when it is sent. <guilabel>Allow
+8-bit</guilabel> means that &kmail; will send your message in 8 bit
+<acronym>ASCII</acronym>, which means that all special characters such
+as accented letters will be sent as-is. If <guilabel>MIME Compliant
+(Quoted Printable)</guilabel> is selected, special characters will be
+encoded using standard &MIME; encodings, which may be more portable to
+other mailing systems than 8-bit <acronym>ASCII</acronym>. You normally
+do not need to change the default.<!-- TODO: advise what is better --></para>
+
+<para><guilabel>Default domain</guilabel> lets you specify which domain name
+should be used to complete email addresses that only consist of the recipient's user
+name. For example when you set the default domain to <replaceable>kde.org</replaceable>
+then messages you send to <replaceable>johndoe</replaceable> will be sent to 
+<replaceable>johndoe@kde.org</replaceable>.</para>
+
+</sect2>
+
+<sect2 id="configure-network-receiving">
+<title><guilabel>Receiving</guilabel></title>
+
+<para>For basic information, see <link
+linkend="receiving-mail">Setting up your Account: Receiving</link>.</para>
+
+<para>With <guilabel>New Mail Notification</guilabel> you can set
+how &kmail; will notify you if new messages have arrived. Of course
+this only makes sense if <guilabel>Enable interval mail checking</guilabel>
+is activated for at least one account: <guilabel>Beep</guilabel> will
+play a short beep sound, while more advanced notification options
+are available via the <guibutton>Other Actions</guibutton> button.</para>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="configure-appearance">
+<title>Appearance Page</title>
+
+<sect2 id="configure-appearance-fonts">
+<title>Fonts</title>
+
+<para>This section allows you to change the type, size and character set of the
+display fonts. <guilabel>Message Body</guilabel> sets the font for
+the reader pane, <guilabel>Composer</guilabel> sets the font for
+writing messages in the composer window.<!-- fixme in kmail: better wording? -->
+There is a separate entry for <guilabel>Message List - Date Field</guilabel>
+so you can choose a monospaced font for the date field for better readability.</para>
+
+</sect2>
+
+<sect2 id="configure-appearance-colors">
+<title>Colors</title>
+
+<para>This section allows you to change the color of the text.
+<guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
+quoted more than three times will appear in color. Note that the
+<guilabel>Quoted text</guilabel> colors only work in the message reader, not in 
+the composer.<!-- TODO --></para>
+
+</sect2>
+
+<sect2 id="configure-appearance-layout">
+<title>Layout</title>
+
+<para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
+pane that tells you if a message is HTML or not. This is important because
+HTML messages might imitate the look of a signed and encrypted message, so
+you should be aware of the fact that you are reading a HTML message. The HTML
+status bar itself cannot be influenced by the HTML code of the message.</para>
+
+<para>The <guilabel>Window Layout</guilabel> section lets choose between
+several layouts of the main window that differ with regard to the size
+of the folder list and to the position of the MIME tree. Let the mouse pointer 
+rest over the icons and you will see a tooltip that explains
+the differences between the layouts.</para>
+
+<para>The <guilabel>Show MIME Tree</guilabel> option lets you choose when
+the MIME tree will be shown: the MIME tree is a part of the main window that
+lets you access all attachments of a message. <guilabel>Never</guilabel> will
+disable the MIME tree (note that you can still access attachments as icons),
+<guilabel>Always</guilabel> will show a MIME tree even if the message does not
+have an attachment. <guilabel>Smart</guilabel> will display the MIME tree
+only if it makes sense, &ie; if the current message has at least one attachment.</para>
+
+</sect2>
+
+<sect2 id="configure-appearance-headers">
+<title>Headers</title>
+
+<para>With <guilabel>Display message sizes</guilabel> selected there will be another 
+column in the header pane that shows the messages' size.</para>
+
+<para><guilabel>Show crypto icons</guilabel> will add more status information
+to the <guilabel>Subject</guilabel> columns in the header pane: every message
+that has been signed will have a small <guiicon>Signed</guiicon> icon in front
+of the subject, every message that has been encrypted will have a small
+<guiicon>Encrypted</guiicon> icon in front of the subject. Note that you have
+to select a message once before these icons will appear, until then only
+question marks will be displayed.</para>
+
+<para><guilabel>Thread list of message headers</guilabel> will put all the messages 
+in the header pane in a kind of tree list, so that the replies to a message are 
+directly below that message.</para>
+
+<para>With <guilabel>Message header threading options</guilabel> you can select
+whether threads should appear expanded (<guilabel>open</guilabel>) by
+default or whether they should be collapsed (<guilabel>closed</guilabel>).
+You can of course still open/close threads using the  <guilabel>+</guilabel>/<guilabel>-</guilabel>
+buttons.</para> 
+
+<para>With <guilabel>Date Display</guilabel> you can choose between several
+date formats. The <guilabel>Localized Format</guilabel> is the one you can
+specify under <guilabel>Country &amp; Language</guilabel> in &kcontrol;.
+For the <guilabel>Custom</guilabel> format you can get
+a description of the possible values by pressing
+<keycombo action="simul">&Shift;<keycap>F1</keycap></keycombo>
+and then clicking on <guilabel>Custom</guilabel> option.</para>
+
+</sect2>
+
+<sect2 id="configure-appearance-profiles">
+<title>Profiles</title>
+
+<para>This section offers several default settings for &kmail;'s layout. You can
+use these as starting points for your own configuration.</para>
+
+<warning><para>Note that choosing
+one of the offered profiles will override your current layout settings.</para></warning>
+
+</sect2>
+
+<!-- fixme?: date + less than/greater than broken in kmail? -->
+<!-- fixme?: "group" wording in program -->
+
+</sect1>
+
+<sect1 id="configure-composer">
+<title>Composer Page</title>
+
+<sect2 id="configure-composer-general">
+<title>General</title>
+
+<para><guilabel>Automatically append signature</guilabel> lets you toggle
+whether to automatically include your signature as defined in the 
+<link linkend="setting-your-identity">identity page</link>.</para>
+
+<para><guilabel>Use smart quoting</guilabel> will break long lines but will try
+to keep the correct quoting (&eg; the <quote>&gt; </quote> will always be at the
+start of the line).</para>
+
+<para><guilabel>Word wrap at column</guilabel> lets you turn word wrapping on
+and off in the composer window and lets you set the column
+at which words will be wrapped (you probably should not need to change
+the default value, which is <userinput>78</userinput>).</para>
+
+<para>If you do not like the Composer you can use a
+different editor. Note that the composer window will still open and
+the external editor will open as soon as you type just one character in the body
+of the message. If you're done, save the text and exit the editor. The text will
+now appear in the composer window, where you can send
+it. Note that your editor may not return immediately, you have to
+use &eg; <userinput>gvim -f %f</userinput> for <application>gvim</application>.</para>
+
+</sect2>
+
+<sect2 id="configure-composer-phrases">
+<title>Phrases</title>
+
+<para>The <guilabel>Phrases</guilabel> tab lets you define the automatically
+generated lines that are added to message replies, forwarded messages, and the
+character that is added in front of quoted text. 
+There are special &percnt;-denoted characters that will insert certain
+values, which are also displayed at the top of the <guilabel>Phrases</guilabel> section.
+You can add reply phrases in languages other than
+your default &kde; language using the <guilabel>Language</guilabel> button.
+This will only work for languages whose i18n package you have installed.</para>
+
+</sect2>
+
+<sect2 id="configure-composer-subject">
+<title>Subject</title>
+
+<para>This section contains a list of prefixes for <quote>Reply</quote> and
+<quote>Forward</quote>. If you receive messages that use prefixes different
+to the standard ones, you can add them here so &kmail; will recognize 
+them. This way &kmail; can ignore them for sorting messages and
+when setting the subject of a reply, and optionally replace them 
+with <quote>Re:</quote>.</para>
+
+</sect2>
+
+<sect2 id="configure-composer-charset">
+<title>Charset</title>
+
+<para>Here you can manage the default charsets used for your own messages. 
+Every message you send will be checked if it is written in one of the listed
+charsets, starting at the top of the list. If it is, this charset will be used.
+If it is not, a dialog will show up and tell you that you manually have to choose
+a charset using 
+<menuchoice><guimenu>Options</guimenu><guisubmenu>Set Encoding</guisubmenu></menuchoice>.
+</para>
+
+<para>If you select <guilabel>Keep original charset when replying
+or forwarding</guilabel>, the original message's charset
+will be kept, unless there are now characters that cannot be
+represented using that charset.</para>
+
+</sect2>
+
+<sect2 id="configure-composer-headers">
+<title>Headers</title>
+
+<para>Check the <guilabel>Use custom message-id suffix</guilabel>
+checkbox if you want &kmail; to generate Message-Id's with a custom
+suffix. Enter the desired suffix in the <guilabel>Custom message-id
+suffix</guilabel> field. Please make sure that the suffix that you
+specify is world-wide unique. The best thing is to use the name of a
+domain which you are the owner of. If you do not check <guilabel>Use
+custom Message-Id suffix</guilabel> then &kmail; will automatically
+generate the complete Message-Id. If you do not know what this is all
+about do not check this option.</para>
+
+<para>The <guilabel>Define custom mime header fields</guilabel> list
+sets the headers that &kmail; will use for its outgoing messages. You
+can both invent new fields and overwrite existing ones. This feature
+is only useful for advanced users.</para>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="configure-security">
+<title>Security Page</title>
+
+<sect2 id="configure-security-general">
+<title>General</title>
+
+<para><guilabel>Prefer HTML to plain text</guilabel> will show
+<acronym>HTML</acronym> messages with their <acronym>HTML</acronym>
+formatting and layout. We strongly recommend to leave this option off, as
+security problems with <acronym>HTML</acronym> might show up. When
+this option is off, you can still read <acronym>HTML</acronym>
+messages, but only as plain text.</para>
+
+<para>With <guilabel>Allow messages to load external references from the internet</guilabel>
+turned on, &kmail; can load external images, style sheets &etc; from the Internet when
+you look at an <acronym>HTML</acronym> message. We strongly recommend
+to leave this option off (although it has no effect if you only view 
+plain text messages). By
+adding external references to their messages, people sending spam can
+detect that and when you have looked at their message. Note that this option
+has no effect on &Java;, JavaScript and Plugins - these are disabled
+anyway and cannot be enabled at all.</para>
+
+<para><guilabel>Automatically send receive- and read
+confirmations</guilabel> will automatically send a confirmation (in
+form of a new message) to the sender of a message if he requested
+that. If you leave this option off, no confirmation will be sent. We
+recommend to leave this option off. If you want to send confirmations
+to certain people you can do so by using the <guilabel>confirm
+delivery</guilabel> filter action.</para>
+
+</sect2>
+
+<sect2 id="configure-security-pgp">
+<title>OpenPGP</title>
+
+<para id="configure-security-pgp-encrypttoself">For the
+<guilabel>OpenPGP</guilabel> tab please see the <link
+linkend="pgp-settings"><application>OpenPGP</application>
+section</link>.</para>
+
+</sect2>
+
+<sect2 id="configure-security-plugins">
+<title>Crypto Plugins</title>
+
+<para>For now, please refer to the homepage of the 
+<ulink url="http://www.gnupg.org/aegypten/">&Auml;gypten project</ulink>.</para>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="configure-folders">
+<title>Folders Page</title>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Confirm before emptying folders</guilabel></term>
+<listitem>
+<para>To empty a folder means that its messages get transferred to the
+<guilabel>trash</guilabel> folder (and only get deleted if they are already in the
+<guilabel>trash</guilabel> folder).  So although you normally will not lose any
+mail, you can still activate a confirmation dialog that will ask you if you
+really want to empty the folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Warn before expiring messages</guilabel></term>
+<listitem>
+<para>This will pop up a confirmation dialog before messages are expired
+(&eg; on exit).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Loop in the current folder when trying to find unread mail</guilabel></term>
+<listitem>
+<para>When you press one of the shortcuts to find new messages (&eg; <keycap>Space</keycap>)
+and this option is activated, &kmail; will not jump to the next folder, but instead
+try to find new messages at the top of the current folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Jump to first unread message when entering a folder</guilabel></term>
+<listitem>
+<para>When you enter a folder, &kmail; will go to the next unread message
+if this option is enabled. If it is not enabled, &kmail; will go to the message
+that was selected when you left the folder.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Mark selected messages as read after...</guilabel></term>
+<listitem>
+<para>When you select a <guilabel>new</guilabel> message, &kmail; will change the
+message's status to <guilabel>read</guilabel> after the amount of seconds
+which is configured here. If you disable this option, messages will keep their
+<guilabel>new</guilabel> status.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Ask for action after dragging messages to another folder</guilabel></term>
+<listitem>
+<para>When you drag a message to a different folder, a small popup will ask
+you if you want to copy or move the message. If you disable this option,
+the message will be moved immediately, without a popup.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>By default, message folders on disk are...</guilabel></term>
+<listitem>
+<para>Here you can set the default <link linkend="folders-format">folder format</link>
+that is used when you create a new folder.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<!-- TODO: better structure needed: -->
+<para><guilabel>On program exit, perform the following tasks</guilabel>:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Compact all folders</guilabel></term>
+<listitem>
+<para>This will compact all folders every time you exit &kmail;. Compacting
+folders means that the messages you deleted will really be
+removed.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Empty trash</guilabel></term>
+<listitem>
+<para>The trash folder is cleared of messages when you quit &kmail; if this
+option is selected.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Expire old messages</guilabel></term>
+<listitem>
+<para>Delete old messages from folders, according to the rules in
+each folder's <link linkend="folders-properties-window">Properties dialog</link>.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="configure-authors">
+<title>Section Authors</title>
+
+<para>This section written by:
+Daniel Naber <email>daniel.naber@t-online.de</email> and
+David Rugge <email>davidrugge@mediaone.net</email>.</para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+</sect1>
+</chapter>
