@@ -1,6 +1,12 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2003-11-22  Reinhold Kainhofer
+* Fixed the broken conduit config dialog (wasn't able to show config 
+  widgets of more than one conduit. If you configured one conduit, and 
+  switched to another, its config widget couldn't be added to the stack).
+* Configure conduits dialog now has an apply button.
+
 2003-10-21  Adriaan de Groot
 * Updated the website some with lots of new hardware. Thanks to 
   everyone who reported new stuff.
