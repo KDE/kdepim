@@ -2433,8 +2433,11 @@ KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent
   }
 
   mExpGroup = new QGroupBox( i18n("Newsgroup Cleanup Settings"), this );
+  mExpGroup->setColumnLayout(0, Qt::Vertical );
+  mExpGroup->layout()->setSpacing( KDialog::spacingHint() );
+  mExpGroup->layout()->setMargin( KDialog::marginHint() );
   top->addWidget( mExpGroup );
-  QGridLayout *grid = new QGridLayout( mExpGroup, 7, 2, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *grid = new QGridLayout( mExpGroup->layout(), 7, 2 );
 
   grid->setRowSpacing( 0, KDialog::spacingHint() );
 
@@ -2524,8 +2527,12 @@ KNConfig::CleanupWidget::CleanupWidget(QWidget *p, const char *n)
   // === folders =========================================================
 
   QGroupBox *foldersB=new QGroupBox(i18n("Folders"), this);
+  foldersB->setColumnLayout(0, Qt::Vertical );
+  foldersB->layout()->setSpacing( KDialog::spacingHint() );
+  foldersB->layout()->setMargin( KDialog::marginHint() );
+
   topL->addWidget(foldersB);
-  QGridLayout *foldersL=new QGridLayout(foldersB, 3,2, 8,5);
+  QGridLayout *foldersL=new QGridLayout(foldersB->layout(), 3,2);
 
   foldersL->setRowSpacing( 0, KDialog::spacingHint() );
 
