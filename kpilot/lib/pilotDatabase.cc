@@ -67,7 +67,11 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	FUNCTIONSETUP;
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": " << creationCount << " databases." << endl;
-	DEBUGDAEMON << fname << ": " << createdNames->join(CSL1(",")) << endl;
+	if (createdNames)
+	{
+		DEBUGDAEMON << fname << ": " 
+			<< createdNames->join(CSL1(",")) << endl;
+	}
 #endif
 	return creationCount;
 }
