@@ -530,22 +530,12 @@ void Kleo::KeySelectionDialog::startKeyListJobForBackend( const CryptoBackend::P
 }
 
 static void selectKeys( Kleo::KeyListView * klv, const std::vector<GpgME::Key> & selectedKeys ) {
+  klv->clearSelection();
   if ( selectedKeys.empty() )
     return;
-  int selectedKeysCount = selectedKeys.size();
-  for ( Kleo::KeyListViewItem * item = klv->firstChild() ; item ; item = item->nextSibling() ) {
-    const char * fpr = item->key().primaryFingerprint();
-    if ( !fpr || !*fpr )
-      continue;
-    for ( std::vector<GpgME::Key>::const_iterator it = selectedKeys.begin() ; it != selectedKeys.end() ; ++it )
-      if ( qstrcmp( fpr, it->primaryFingerprint() ) == 0 ) {
-	item->setSelected( true );
-	if ( --selectedKeysCount <= 0 )
-	  return;
-	else
-	  break;
-      }
-  }
+  for ( std::vector<GpgME::Key>::const_iterator it = selectedKeys.begin() ; it != selectedKeys.end() ; ++it )
+    if ( Kleo::KeyListViewItem * item = klv->itemByFingerprint( it->primaryFingerprint() ) )
+      item->setSelected( true );
 }
 
 void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & res ) {
