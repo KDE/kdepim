@@ -6,6 +6,9 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qregexp.h>
+
+#include <kdebug.h>
+
 #include <iostream>
 
 #define LOG_START				1
@@ -58,7 +61,7 @@ void Loging::log( Task * task, short type, long minutes)
 			} else if( type == LOG_NEW_SESSION_TIME) {
 				out << "<new_session_time ";
 			} else {
-				std::cerr << "Programming error!";
+				kdError() << "Programming error!" << endl;
 			}
 
 			out << "task=\"" << constructTaskName(task) << "\" "
