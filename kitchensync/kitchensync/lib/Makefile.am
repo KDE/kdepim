@@ -5,7 +5,7 @@ lib_LTLIBRARIES = libkitchensyncui.la
 libkitchensyncui_la_SOURCES = partbar.cpp manipulatorpart.cpp \
     configuredialog.cpp \
     systemtray.cpp mainwindow.cpp \
-    configpart.cpp profile.cpp \
+    profile.cpp \
     manpartservice.cpp profilemanager.cpp \
     profilefilemanager.cpp konnectorprofile.cpp \
     konnectorprofilemanager.cpp \
