@@ -268,7 +268,7 @@ bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList, Q
   return( status );
 }
 
-bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt)
+bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
 {
 
   bool status = false;
@@ -277,22 +277,33 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt)
 
   if( event )
   {
-    if( m_variables->getExportType() == CSV ) {
-      status = exports.exportAsCSV( ts, event, dt );
-      kdDebug() << "konsolekalendar.cpp::printEvent() | CSV export" << endl;
-    } else if( m_variables->getExportType() ==  TEXT_KONSOLEKALENDAR ) { // Default ExportType is TEXT_KONSOLEKALENDAR
-      status = exports.exportAsTxt( ts, event, dt );
-      kdDebug() << "konsolekalendar.cpp::printEvent() | TEXT export" << endl;
-    } else {
-       if( dt.daysTo( m_saveDate ) ){
-         sameDay = false;
-         m_saveDate = dt;
-       }
+    switch ( m_variables->getExportType() ) {
 
-      status = exports.exportAsHuman( ts, event, dt, sameDay );
-      kdDebug() << "konsolekalendar.cpp::printEvent() | Human export" << endl;
-    } //else
-  } //if
+    case CSV:
+      kdDebug() << "konsolekalendar.cpp::printEvent() | CSV export" << endl;
+      status = exports.exportAsCSV( ts, event, dt );
+      break;
+
+    case TEXT_SHORT:
+      kdDebug()
+        << "konsolekalendar.cpp::printEvent() | TEXT-SHORT export" << endl;
+      if( dt.daysTo( m_saveDate ) ) {
+        sameDay = false;
+        m_saveDate = dt;
+      }
+      status = exports.exportAsTxtShort( ts, event, dt, sameDay );
+      break;
+
+    case HTML:
+      // this is handled separately for now
+      break;
+
+    default:// Default ExportType is TEXT_KONSOLEKALENDAR
+      kdDebug() << "konsolekalendar.cpp::printEvent() | TEXT export" << endl;
+      status = exports.exportAsTxt( ts, event, dt );
+      break;
+    }
+  }
 
   return( status );
 }

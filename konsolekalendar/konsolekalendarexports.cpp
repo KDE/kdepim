@@ -33,98 +33,144 @@
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
 
-
 #include "konsolekalendarexports.h"
 
 using namespace KCal;
 using namespace std;
 
-KonsoleKalendarExports::KonsoleKalendarExports( KonsoleKalendarVariables *variables )
-{
+KonsoleKalendarExports::KonsoleKalendarExports( KonsoleKalendarVariables
+                                                *variables ) {
   m_variables = variables;
   m_firstEntry = true;
 }
 
 
-KonsoleKalendarExports::~KonsoleKalendarExports()
-{
+KonsoleKalendarExports::~KonsoleKalendarExports() {
 }
 
-bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event, QDate date ){
+bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
+                                          Event *event, QDate date ) {
 
-  // Print Date (in our standard format)
-  *ts << I18N_NOOP("Date:") << "\t" <<  date.toString("yyyy-MM-dd") << endl;
+  // Export "Text" Format:
+  //
+  // Date:\t<Incidence Date>(dddd yyyy-MM-dd)
+  // [\t<Incidence Start Time>(hh:mm) - <Incidence End Time>(hh:mm)]
+  // Summary:
+  // \t<Incidence Summary | "(no summary available)">
+  // Location:
+  // \t<Incidence Location | "(no location available)">
+  // Description:
+  // \t<Incidence Description | "(no description available)">
+  // UID:
+  // \t<Incidence UID>
+  // --------------------------------------------------
 
-  // Print Event Starttime - Endtime (in our standard format), for Non-Floating Events Only
+  // Print Event Date (in our standard format)
+  *ts << i18n( "Date:" ) << "\t" <<  date.toString("dddd yyyy-MM-dd") << endl;
+
+  // Print Event Starttime - Endtime, for Non-Floating Events Only
   if ( !event->doesFloat() ) {
     *ts << "\t";
     *ts << event->dtStart().time().toString("hh:mm");
     *ts << " - ";
     *ts << event->dtEnd().time().toString("hh:mm");
   }
+  *ts << endl;
 
-  // Print Event Summary, Description, etc.
-  *ts << endl << I18N_NOOP("Summary:") << endl;
-  *ts << "\t" << event->summary() << endl;
+  // Print Event Summary
+  *ts << i18n( "Summary:" ) << endl;
+  if ( !event->summary().isEmpty() ) {
+    *ts << "\t" << event->summary() << endl;
+  } else {
+    *ts << "\t" << i18n( "(no summary available)" ) << endl;
+  }
 
-  *ts << endl << I18N_NOOP("Location:") << endl;
+  // Print Event Location
+  *ts << i18n( "Location:" ) << endl;
   if( !event->location().isEmpty() ) {
     *ts << "\t" <<event->location() << endl;
   } else {
-    *ts << "\t" << I18N_NOOP("(no location info available)") << endl;
+    *ts << "\t" << i18n( "(no location available)" ) << endl;
   }
 
-  *ts << I18N_NOOP("Description:") << endl;
+  // Print Event Description
+  *ts << i18n( "Description:" ) << endl;
   if( !event->description().isEmpty() ) {
     *ts << "\t" << event->description() << endl;
   } else {
-    *ts << "\t" << I18N_NOOP("(no description available)") << endl;
+    *ts << "\t" << i18n( "(no description available)" ) << endl;
   }
-  *ts << I18N_NOOP("UID:") << endl;
+
+  // Print Event UID
+  *ts << i18n( "UID:" ) << endl;
   *ts << "\t" << event->uid() << endl;
-  *ts << "----------------------------------" << endl;
+  *ts << "--------------------------------------------------" << endl;
 
   return true;
 }
 
-bool KonsoleKalendarExports::exportAsHuman( QTextStream *ts, Event *event, QDate date, bool sameday ){
+bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
+                                               Event *event, QDate date,
+                                               bool sameday ) {
 
-  if( !sameday ){
-    // Print Date (in our standard format)
-    *ts << "----------------------------------" << endl;
-    *ts << date.toString("yyyy-MM-dd") << endl;
+  // Export "Text-Short" Format:
+  //
+  // [--------------------------------------------------]
+  // {<Incidence Date>(dddd yyyy-MM-dd)]
+  // [<Incidence Start Time>(hh:mm) - <Incidence End Time>(hh:mm) | "\t"]
+  // \t<Incidence Summary | \t>[, <Incidence Location>]
+  // \t\t<Incidence Description | "\t">, <Incidence UID>
+
+  if( !sameday ) {
+    // If a new date, then print the day separator
+    *ts << "--------------------------------------------------" << endl;
+    // Print Event Date (in our standard format)
+    *ts << date.toString("dddd yyyy-MM-dd") << endl;
   }
 
-  // Print Event Starttime - Endtime (in our standard format), for Non-Floating Events Only
+  // Print Event Starttime - Endtime
   if ( !event->doesFloat() ) {
     *ts << event->dtStart().time().toString("hh:mm");
     *ts << " - ";
     *ts << event->dtEnd().time().toString("hh:mm");
+  } else {
+    *ts << "\t";
   }
+  *ts << "\t";
 
-  // Print Event Summary, Description, etc.
-  *ts << "\t" << event->summary();
+  // Print Event Summary
+  *ts << event->summary();
 
+  // Print Event Location
   if( !event->location().isEmpty() ) {
-    *ts << ", " << event->location();
+    if ( !event->summary().isEmpty() ) {
+      *ts << ", ";
+    }
+    *ts << event->location();
   }
-
   *ts << endl;
 
+  // Print Event Description
+  *ts << "\t\t";
   if( !event->description().isEmpty() ) {
-    *ts << "\t\t" << event->description();
-  } else {
-    *ts << "\t\t" << I18N_NOOP("(no description available)");
+    *ts << event->description();
+    *ts << ", ";
   }
 
-  *ts << ", " << event->uid() << endl;
+  // Print Event UID
+  *ts << event->uid() << endl;
+
+  *ts << endl;  // blank line between events
 
   return true;
 }
 
-bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event, QDate date ){
+bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
+                                          Event *event, QDate date ) {
 
-// startdate,starttime,enddate,endtime,summary,description,UID
+  // Export "CSV" Format:
+  //
+  // startdate,starttime,enddate,endtime,summary,location,description,UID
 
   QString delim = ",";  //TODO: the delim character can be an option??
 

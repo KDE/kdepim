@@ -2,22 +2,22 @@
  *   konsolekalendarvariables.h                                                 *
  *                                                                              *
  *   KonsoleKalendar is console frontend to calendar                            *
- *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            *
  *   Copyright (C) 2003-2004  Allen Winter                                      *
  *                                                                              *
- *   This library is free software; you can redistribute it and/or              * 
+ *   This library is free software; you can redistribute it and/or              *
  *   modify it under the terms of the GNU Lesser General Public                 *
  *   License as published by the Free Software Foundation; either               *
  *   version 2.1 of the License, or (at your option) any later version.         *
  *                                                                              *
- *   This library is distributed in the hope that it will be useful,            * 
+ *   This library is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
  *   Lesser General Public License for more details.                            *
  *                                                                              *
  *   You should have received a copy of the GNU Lesser General Public           *
  *   License along with this library; if not, write to the Free Software        *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  *
  *                                                                              *
  ********************************************************************************/
 
@@ -39,7 +39,7 @@
     */
   #define   NONE                     0
   #define   TEXT_KONSOLEKALENDAR     1
-  #define   TEXT_HUMANREADABLE	     2
+  #define   TEXT_SHORT	             2
   #define   HTML                     3
   #define   XHTML                    4
   #define   XML                      5
@@ -95,7 +95,7 @@ class KonsoleKalendarVariables
      * Sets the timezone from the user or system environment
      */
     void setTimeZoneId();
-    
+
     /**
      * Get timezone id string
      * @return timezone id string
@@ -197,13 +197,13 @@ class KonsoleKalendarVariables
      * @return description of happening
      */
     QString getDescription();
-  
+
     /**
      * is there even a description?
      * @return true is there is description false there isn't
      */
     bool isDescription();
-    
+
     /**
      * Add location information
      * @param where should this event happen
@@ -252,16 +252,16 @@ class KonsoleKalendarVariables
 
    /**
     * Set is calendar default resource
-    */ 
+    */
 
    void setDefault( bool def );
-   
-   
+
+
    /**
-    * Return if calendar is default resource 
+    * Return if calendar is default resource
     */
    bool isDefault();
-   
+
    /**
      * Set calendar file for global use
      */
@@ -277,25 +277,25 @@ class KonsoleKalendarVariables
    /**
     * Set output file
     */
-   
+
    void setExportFile( QString export_file );
-   
+
    /**
     *  To what file we'll output
     */
-   
+
    QString getExportFile();
-   
+
    /*
     * Has an Export File been set?
     */
-    
+
    bool isExportFile();
 
    /**
      * Set export type that'll we use
      */
-   
+
    void setExportType( int export_type );
 
    /**
@@ -305,35 +305,35 @@ class KonsoleKalendarVariables
    int getExportType();
 
    /**
-    * Do we use CalendarResources or LocalCalendar 
+    * Do we use CalendarResources or LocalCalendar
     */
    bool isCalendarResources();
-   
+
    /**
     * Add to Calendar Resources
     */
    CalendarResourceManager *getCalendarResourceManager();
 
    /**
-    * Add to Calendar Resources 
+    * Add to Calendar Resources
     */
    bool addCalendarResources( ResourceCalendar *cal );
-   
+
   /**
-   * Calendar resource is the new way 
+   * Calendar resource is the new way
    */
    void setCalendarResources( CalendarResources *resource );
-   
+
    /**
-   * Calendar resource is the new way 
-   */  
+   * Calendar resource is the new way
+   */
   CalendarResources *getCalendarResources();
 
-   
+
   /**
-   * Loads calendar resources 
+   * Loads calendar resources
    */
-  bool loadCalendarResources( KConfig *config ); 
+  bool loadCalendarResources( KConfig *config );
 
   void setDaysCount( int count );
   int getDaysCount();
@@ -378,10 +378,10 @@ class KonsoleKalendarVariables
    // New resource stuff will over-ride old pne
    CalendarResources *m_resource;
    // We can use this from everywhere
-   CalendarLocal *m_calendarLocal;   
+   CalendarLocal *m_calendarLocal;
 
-   
- 
+
+
 
 };
 

@@ -196,7 +196,13 @@ int main(int argc, char *argv[])
    *  Switch on export list
    */
   if ( args->isSet("export-list") ) {
-     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text [Default]\n  HTML\n  CSV (Comma-Separated Values)\n  Human (Easy to read for humans)\n").local8Bit() << endl;
+     cout << i18n(
+       "\nKonsoleKalendar supports these export formats:\n"
+       "  Text [Default]\n"
+       "  Short (like Text, but more compact)\n"
+       "  HTML\n"
+       "  CSV (Comma-Separated Values)\n"
+       ).local8Bit() << endl;
      return(0);
   }
 
@@ -214,11 +220,11 @@ int main(int argc, char *argv[])
        kdDebug() << "main | export-type | Export to CSV" << endl;
        variables.setExportType( CSV );
      } else if( option.upper() == "TEXT" ) {
-       kdDebug() << "main | exporttype | Export to TXT" << endl;
+       kdDebug() << "main | export-type | Export to TEXT (default)" << endl;
        variables.setExportType( TEXT_KONSOLEKALENDAR );
-     } else if( option.upper() == "HUMAN" ) {
-       kdDebug() << "main | exporttype | Export to Human" << endl;
-       variables.setExportType( TEXT_HUMANREADABLE );
+     } else if( option.upper() == "SHORT" ) {
+       kdDebug() << "main | export-type | Export to TEXT-SHORT" << endl;
+       variables.setExportType( TEXT_SHORT );
      } else {
        cout << i18n("Invalid Export Type Specified: ").local8Bit()
             << option.local8Bit() << endl;
@@ -233,7 +239,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("export-file") ) {
     option = args->getOption("export-file");
 
-    kdDebug() << "main | parse options | Export File: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Export File: "
+              << "(" << option << ")" << endl;
 
     variables.setExportFile(option);
   }
@@ -300,7 +307,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("summary") ) {
     option = args->getOption("summary");
 
-    kdDebug() << "main | parse options | Summary: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Summary: "
+              << "(" << option << ")" << endl;
 
     variables.setSummary(option);
   }
@@ -312,7 +320,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("description") ) {
     option = args->getOption("description");
 
-    kdDebug() << "main | parse options | Description: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Description: "
+              << "(" << option << ")" << endl;
 
     variables.setDescription(option);
   }
@@ -324,7 +333,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("location") ) {
     option = args->getOption("location");
 
-    kdDebug() << "main | parse options | Location: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Location: "
+              << "(" << option << ")" << endl;
 
     variables.setLocation(option);
   }
@@ -347,7 +357,8 @@ int main(int argc, char *argv[])
   if (args->isSet("uid") ) {
     option = args->getOption("uid");
 
-    kdDebug() << "main | parse options | Event UID: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Event UID: "
+              << "(" << option << ")" << endl;
 
     variables.setUID( option );
   }
@@ -359,7 +370,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("date") ) {
     option = args->getOption("date");
 
-    kdDebug() << "main | parse options | Start date before conversion: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Start date before conversion: "
+              << "(" << option << ")" << endl;
 
     startdate = QDate::fromString( option,  Qt::ISODate );
     if( ! startdate.isValid() ) {
@@ -367,7 +379,8 @@ int main(int argc, char *argv[])
            << option.local8Bit() << endl;
       return(1);
     }
-    kdDebug() << "main | parse options | Start date after conversion: (" << startdate.toString() << ")" << endl;
+    kdDebug() << "main | parse options | Start date after conversion: "
+              << "(" << startdate.toString() << ")" << endl;
   }
 
 
@@ -378,7 +391,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("time") ) {
     option = args->getOption("time");
 
-    kdDebug() << "main | parse options | Start time before conversion : (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Start time before conversion : "
+              << "(" << option << ")" << endl;
 
     starttime = QTime::fromString( option,  Qt::ISODate );
     if( ! starttime.isValid() ) {
@@ -386,7 +400,8 @@ int main(int argc, char *argv[])
            << option.local8Bit() << endl;
       return(1);
     }
-    kdDebug() << "main | parse options | Start time after conversion: (" << starttime.toString() << ")" << endl;
+    kdDebug() << "main | parse options | Start time after conversion: "
+              << "(" << starttime.toString() << ")" << endl;
   }
 
   /*
@@ -397,7 +412,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("end-date") ) {
     QString option = args->getOption("end-date");
 
-    kdDebug() << "main | parse options | End date before conversion: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | End date before conversion: "
+              << "(" << option << ")" << endl;
 
     enddate = QDate::fromString( option,  Qt::ISODate );
     if( ! enddate.isValid() ) {
@@ -405,7 +421,8 @@ int main(int argc, char *argv[])
            << option.local8Bit() << endl;
       return(1);
     }
-    kdDebug() << "main | parse options | End date after conversion: (" << enddate.toString() << ")" << endl;
+    kdDebug() << "main | parse options | End date after conversion: "
+              << "(" << enddate.toString() << ")" << endl;
   }
 
   /*
@@ -419,7 +436,8 @@ int main(int argc, char *argv[])
     bool ok;
 
     option = args->getOption("show-next");
-    kdDebug() << "main | parse options | Show " << option << " days ahead" << endl;
+    kdDebug() << "main | parse options | Show "
+              << option << " days ahead" << endl;
     variables.setDaysCount( option.toInt( &ok, 10 ) );
 
     if( !ok ) {
@@ -430,8 +448,8 @@ int main(int argc, char *argv[])
 
     enddate = startdate;
     enddate = enddate.addDays( variables.getDaysCount() );
-    kdDebug() << "main | parse options | End date after conversion: (" << enddate.toString() << ")" << endl;
-
+    kdDebug() << "main | parse options | End date after conversion: "
+              << "(" << enddate.toString() << ")" << endl;
   }
 
   /*
@@ -441,7 +459,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("end-time") ) {
     option = args->getOption("end-time");
 
-    kdDebug() << "main | parse options | End time before conversion: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | End time before conversion: "
+              << "(" << option << ")" << endl;
 
     endtime = QTime::fromString( option,  Qt::ISODate );
     if( ! endtime.isValid() ) {
@@ -450,7 +469,8 @@ int main(int argc, char *argv[])
       return(1);
     }
 
-    kdDebug() << "main | parse options | End time after conversion: (" << endtime.toString() << ")" << endl;
+    kdDebug() << "main | parse options | End time after conversion: "
+              << "(" << endtime.toString() << ")" << endl;
   }
 
   /*
@@ -461,7 +481,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("epoch-start") ) {
     option = args->getOption("epoch-start");
 
-    kdDebug() << "main | parse options | Epoch start: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Epoch start: "
+              << "(" << option << ")" << endl;
 
     epochstart = (time_t) option.toULong(0,10);
   }
@@ -474,7 +495,8 @@ int main(int argc, char *argv[])
   if ( args->isSet("epoch-end") ) {
     option = args->getOption("epoch-end");
 
-    kdDebug() << "main | parse options | Epoch end: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | Epoch end: "
+              << "(" << option << ")" << endl;
 
     epochend = (time_t) option.toULong(0,10);
   }
@@ -491,7 +513,8 @@ int main(int argc, char *argv[])
     option = args->getOption("import");
     variables.setImportFile( option );
 
-    kdDebug() << "main | parse options | importing file from: (" << option << ")" << endl;
+    kdDebug() << "main | parse options | importing file from: "
+              << "(" << option << ")" << endl;
   }
 
  KonsoleKalendar *konsolekalendar = new KonsoleKalendar( &variables );
