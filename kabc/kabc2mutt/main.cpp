@@ -37,6 +37,7 @@ static KCmdLineOptions k2moptions[] =
 {
     { "query <substring>", I18N_NOOP("Only show contacts where name or address matches <substring>"), 0 },
     { "format <format>", I18N_NOOP("Default format is 'alias'. 'query' returns email<tab>name<tab>, as needed by mutt's query_command"), "alias" },
+    { "ignore-case", I18N_NOOP("Make queries case insensitive"), 0 },
     KCmdLineLastOption
 };
 
@@ -66,6 +67,8 @@ int main( int argc, char **argv )
         printf( "%s\n", i18n("Searching KDE addressbook...").local8Bit().data() );
     }
 
+    bool cs = !args->isSet( "ignore-case" );
+
     KABC::AddressBook *ab = KABC::StdAddressBook::self();
     KABC::StdAddressBook::setAutomaticSave( false );
 
@@ -78,7 +81,7 @@ int main( int argc, char **argv )
 
       if ( !subString.isEmpty() )
       {
-        bool match = (name.find(subString) > -1) || ((*it).preferredEmail().find(subString) > -1 );
+        bool match = (name.find(subString, 0, cs) > -1) || ((*it).preferredEmail().find(subString, 0, cs) > -1 );
         if ( !match )
           continue;
       }
