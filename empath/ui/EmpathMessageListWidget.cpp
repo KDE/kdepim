@@ -215,22 +215,25 @@ EmpathMessageListWidget::_threadItem(EmpathIndexRecord & rec)
     EmpathMessageListItem * parentItem = 0;
     
     // Find parent of this item.
-    if (!rec.parentID().localPart().isEmpty())
+    if (!rec.parentID().localPart().isEmpty()) {
 
         for (QListViewItemIterator it(this); it.current(); ++it) {
             
             EmpathMessageListItem * i =
                 static_cast<EmpathMessageListItem *>(it.current());
 
+        
+//            empathDebug("looking at item with id `" + i->messageID().asString() + "'");
             if (i->messageID() == rec.parentID()) {
                 parentItem = i;
                 break;
             }
         }
+    }
 
     EmpathMessageListItem * newItem;
 
-    if (parentItem == 0) 
+    if (parentItem == 0)
         newItem = new EmpathMessageListItem(this, rec);
     else
         newItem = new EmpathMessageListItem(parentItem, rec);
