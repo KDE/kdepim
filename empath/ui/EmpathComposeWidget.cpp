@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
 
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,6 +26,7 @@
 
 // Qt includes
 #include <qsplitter.h>
+#include <qmultilineedit.h>
 #include <qvaluelist.h>
 
 // KDE includes
@@ -31,7 +34,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
-#include <keditcl.h>
 #include <kapp.h>
 
 // Local includes
@@ -49,9 +51,9 @@
 #include <RMM_Address.h>
 
 EmpathComposeWidget::EmpathComposeWidget(
-        const EmpathComposer::Form &    composeForm,
-        QWidget *                       parent,
-        const char *                    name)
+        EmpathComposer::Form    composeForm,
+        QWidget *               parent,
+        const char *            name)
     :
         QWidget(parent, name),
         composeForm_(composeForm)
@@ -59,11 +61,15 @@ EmpathComposeWidget::EmpathComposeWidget(
     splitter_ = new QSplitter(Vertical, this, "splitter");
  
     envelopeWidget_ = 
-            new EmpathEnvelopeWidget(composeForm_.visibleHeaders, this, "envelopeWidget");
+        new EmpathEnvelopeWidget(
+            composeForm_.visibleHeaders, this, "envelopeWidget");
+
     editorWidget_ = 
-            new QMultiLineEdit(splitter_, "editorWidget");
+        new QMultiLineEdit(splitter_, "editorWidget");
+
     attachmentWidget_ = 
-            new EmpathAttachmentListWidget(splitter_, "attachmentWidget");
+        new EmpathAttachmentListWidget(splitter_, "attachmentWidget");
+
     
     splitter_->setResizeMode(attachmentWidget_, QSplitter::FollowSizeHint);
     
@@ -79,6 +85,7 @@ EmpathComposeWidget::EmpathComposeWidget(
     // Update: We decided that it's better to not wrap text at all if the
     // user doesn't want to. Therefore we set NoWrap.
 
+
     c->setGroup(EmpathConfig::GROUP_COMPOSE);
     if (!c->readBoolEntry(EmpathConfig::C_WRAP_LINES, true))
         editorWidget_->setWordWrap(QMultiLineEdit::NoWrap);
@@ -88,10 +95,19 @@ EmpathComposeWidget::EmpathComposeWidget(
             c->readUnsignedNumEntry(EmpathConfig::C_WRAP_COLUMN, 76));
     }
         
+
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
+
+    QFont globalFixedFont = KGlobal::fixedFont();
+
     editorWidget_->setFont(
-        KGlobal::config()->readFontEntry(EmpathConfig::UI_FIXED_FONT));
-    editorWidget_->setText(composeForm_.body);
+        KGlobal::config()->readFontEntry(EmpathConfig::UI_FIXED_FONT,
+        &globalFixedFont));
+
+    QString body = composeForm_.body;
+#warning QMultiLineEdit is broken ! setText hangs !
+    empathDebug("Things stop here because QMultiLineEdit is broken !");
+//    editorWidget_->setText(body);
  
     // Layouts.
     QVBoxLayout * layout    = new QVBoxLayout(this, 4);
@@ -124,10 +140,9 @@ EmpathComposeWidget::EmpathComposeWidget(
 
 EmpathComposeWidget::~EmpathComposeWidget()
 {
-    empathDebug("dtor");
 }
 
-    EmpathComposer::Form &
+    EmpathComposer::Form
 EmpathComposeWidget::composeForm()
 {
     composeForm_.visibleHeaders = envelopeWidget_->headers();
@@ -139,15 +154,12 @@ EmpathComposeWidget::composeForm()
     bool
 EmpathComposeWidget::messageHasAttachments()
 {
-    empathDebug("messageHasAttachments() called");
     return false;
 }
 
     void
 EmpathComposeWidget::_spawnExternalEditor(const QCString & text)
 {
-    empathDebug("spawnExternalEditor() called");
-    
     EmpathEditorProcess * p = new EmpathEditorProcess(text);
     CHECK_PTR(p);
     
@@ -198,7 +210,6 @@ EmpathComposeWidget::s_selectAll()
     void
 EmpathComposeWidget::s_addAttachment()
 {
-    empathDebug("addAttachment() called");
     attachmentWidget_->addAttachment();
     QValueList<int> sizes;
     sizes   <<  editorWidget_->height()
@@ -209,14 +220,12 @@ EmpathComposeWidget::s_addAttachment()
     void
 EmpathComposeWidget::s_editAttachment()
 {
-    empathDebug("editAttachment() called");
     attachmentWidget_->editAttachment();
 }
 
     void
 EmpathComposeWidget::s_removeAttachment()
 {
-    empathDebug("removeAttachment() called");
     attachmentWidget_->removeAttachment();
     QValueList<int> sizes;
     sizes   <<  editorWidget_->height()

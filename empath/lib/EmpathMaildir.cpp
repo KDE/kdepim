@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -208,11 +210,13 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
         newFilename += ":2," + statusFlags;
     else
         newFilename.replace(QRegExp(":2,.*"), ":2," + statusFlags);
+
+    QString oldName = path_ + "/cur/" + filename;
+    QString newName = path_ + "/cur/" + newFilename;
     
-    bool retval =
-        d.rename(path_ + "/cur/" + filename, path_ + "/cur/" + newFilename);
+    bool renameOK = QDir().rename(oldName, newName);
     
-    if (!retval)
+    if (!renameOK)
         empath->s_infoMessage(i18n("Couldn't mark message") +
            " [" + id + "] with flags " + statusFlags);
  
@@ -220,12 +224,12 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
 
     if (f == 0) {
         empathDebug("Cannot access my folder !");
-        return retval;
+        return renameOK;
     }
 
     f->update();
    
-    return retval;
+    return renameOK;
 }
 
     QCString
@@ -310,44 +314,37 @@ EmpathMaildir::_markNewMailAsSeen()
 EmpathMaildir::_markAsSeen(const QString & name)
 {
     QString oldName = path_ + "/new/" + name;
+    QString newName = path_ + "/cur/" + name;
 
-    QString newName = path_ + "/cur/" + name + ":2,";
-            
-    if (::rename(oldName.latin1(), newName.latin1()) != 0)
-        perror("rename");
+    if (!QDir().rename(oldName, newName)) {
+        empathDebug("Couldn't rename `" + oldName + "' to `" + newName + "'");
+    }
 }
 
     void
 EmpathMaildir::_clearTmp()
 {
     QDate now = QDate::currentDate();
-    QDateTime aTime;
     
-    QDir d(path_ + "/tmp/");
+    QDir tmpDir(
+        path_ + "/tmp/",
+        QString::null,
+        QDir::Unsorted,
+        QDir::Files | QDir::NoSymLinks | QDir::Writable);
     
-    if (d.count() == 0) {
-        empathDebug("Can't clear tmp !");
-        return;
-    }
-    
-    d.setFilter(QDir::Files | QDir::NoSymLinks | QDir::Writable);
-    
-    QFileInfoListIterator it(*(d.entryInfoList()));
+    QFileInfoListIterator it(*(tmpDir.entryInfoList()));
     
     for (; it.current(); ++it) {
         
-        aTime = it.current()->lastRead();
-        
-        if (aTime.daysTo(now) > 2) {
+        if (it.current()->lastRead().daysTo(now) > 2) {
             
-            empathDebug("Deleting \"" +
-                QString(it.current()->filePath()) + "\"");
-
-            d.remove(it.current()->filePath(), false);
+            if (!tmpDir.remove(it.current()->filePath(), true)) {
+                empathDebug("Couldn't delete " + it.current()->filePath());
+            }
         }
+        
+        kapp->processEvents();
     }
-
-    kapp->processEvents();
 }
 
     bool
@@ -429,17 +426,20 @@ EmpathMaildir::_write(RMM::RMessage & msg)
         return QString::null;
     }
 
-    QString linkTarget(path_ + "/new/" + canonName + ":2," + flags);
+    QString linkName(canonName + ":2," + flags);
+
+    QString linkPath(path_ + "/new/" + linkName);
     
-    if (::link(path.latin1(), linkTarget.latin1()) != 0) {
-        empathDebug("Couldn't successfully link file - giving up");
+    if (::link(QFile::encodeName(path), QFile::encodeName(linkPath)) != 0) {
+        empathDebug("Couldn't successfully link `" + path + "' to `" +
+            linkPath + "' - giving up");
         perror("link");
         f.close();
         f.remove();
         return QString::null;
     }
     
-    _markAsSeen(canonName);
+    _markAsSeen(linkName);
     
     return canonName;
 }
@@ -571,6 +571,8 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
             f->index()->insert(s, ir);
             f->itemCome(s);
         }
+
+        kapp->processEvents();
     }
 }
 

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,6 +29,7 @@ enum SendPolicy            { SendNow, SendLater };
 enum SavePolicy            { Forever, ThisSession, Never };
 
 enum ActionType {
+    NoAction,
     RetrieveMessage,
     WriteMessage,
     MoveMessage,

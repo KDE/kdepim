@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,7 +64,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
     headerViewWidget_ =
         new EmpathHeaderViewWidget(this, "headerViewWidget");
     
-    messageWidget_ = new EmpathMessageHTMLWidget(this, "messageWidget");
+    messageWidget_ = new EmpathMessageHTMLWidget(this);
     
     QObject::connect(
         headerViewWidget_,  SIGNAL(clipClicked()),

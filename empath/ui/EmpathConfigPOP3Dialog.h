@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,14 +30,14 @@
 // Qt includes
 #include <qdialog.h>
 #include <qpushbutton.h>
+#include <qspinbox.h>
+#include <qlineedit.h>
+#include <qlabel.h>
 
 // Local includes
-#include "EmpathDefines.h"
 #include "EmpathURL.h"
 
-class EmpathMailboxPOP3;
-class EmpathConfigPOP3Widget;
-class EmpathMailbox;
+class EmpathPasswordEditWidget;
 
 /**
  * Configure a pop3 mailbox.
@@ -46,12 +48,8 @@ class EmpathConfigPOP3Dialog : public QDialog
 
     public:
         
-        static void create(const EmpathURL &, QWidget * = 0);
-
+        EmpathConfigPOP3Dialog(const EmpathURL &, QWidget * = 0);
         ~EmpathConfigPOP3Dialog();
-        
-        void closeEvent(QCloseEvent * e)
-        { e->accept(); if (parent() == 0) delete this; }
         
     protected slots:
 
@@ -61,20 +59,20 @@ class EmpathConfigPOP3Dialog : public QDialog
 
     private:
 
-        EmpathConfigPOP3Dialog(const EmpathURL &, QWidget * = 0);
-        
         void saveData();
         void loadData();
 
         EmpathURL url_;
 
-        EmpathConfigPOP3Widget * settingsWidget_;
-
         QPushButton * pb_OK_;
         QPushButton * pb_Cancel_;
         QPushButton * pb_Help_;
 
-        static bool exists_;
+        QLineEdit   * le_uname_;
+        QLineEdit   * le_inServer_;
+        QSpinBox    * sb_inServerPort_;
+        
+        EmpathPasswordEditWidget * epew_pass_;
 };
 
 #endif

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -58,11 +60,11 @@ void checkDir(QString path)
     
     if (!d.cd(path)) {
         if(d.mkdir(path)) {
-            chmod(path, S_IRUSR|S_IWUSR|S_IXUSR);
-            cout << "created dir: " << path << endl;
+            chmod(path.ascii(), S_IRUSR|S_IWUSR|S_IXUSR);
+            cout << "created dir: " << path.ascii() << endl;
         }
         else {
-            cerr << "Can't create missing directory \"" << path << "\"" << endl;
+            cerr << "Can't create missing directory \"" << path.ascii() << "\"" << endl;
             exit(1);
         }
     }
@@ -99,7 +101,7 @@ int main(int argc, char * argv[])
     QFileInfo fi(mboxPath);
 
     if(fi.isDir()) {
-        cerr << "\"" << mboxPath << "\" should be a file, not a directory!" << endl;
+        cerr << "\"" << mboxPath.ascii() << "\" should be a file, not a directory!" << endl;
         exit(1);
     }
     
@@ -200,7 +202,7 @@ writeMessage(const QString & s)
     }
 
     if (!f.open(IO_WriteOnly)) {
-        cerr << "Couldn't open mail file (" << _path << ") for writing." << endl;
+        cerr << "Couldn't open mail file (" << _path.ascii() << ") for writing." << endl;
         return false;
     }
 

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,19 +31,14 @@
 #include "EmpathMailboxPOP3.h"
 #include "EmpathConfigPOP3Widget.h"
 #include "EmpathConfigPOP3Server.h"
-#include "EmpathConfigPOP3Logging.h"
 #include "Empath.h"
 
 EmpathConfigPOP3Widget::EmpathConfigPOP3Widget
     (const EmpathURL & url, QWidget * parent)
-    :   KTabCtl(parent, "ConfigPOP3Widget"),
+    :   QWidget(parent, "ConfigPOP3Widget"),
         url_(url)
 {
     serverWidget_   = new EmpathConfigPOP3Server(url_, this);
-    loggingWidget_  = new EmpathConfigPOP3Logging(url, this);
-    
-    addTab(serverWidget_,   i18n("Server"));
-    addTab(loggingWidget_,  i18n("Logging"));
     
     loadData();
 };
@@ -67,7 +64,6 @@ EmpathConfigPOP3Widget::saveData()
     EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
 
     serverWidget_->saveData();
-    loggingWidget_->saveData();
     m->saveConfig();
 }
 
@@ -87,7 +83,6 @@ EmpathConfigPOP3Widget::loadData()
     EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
 
     m->loadConfig();
-    serverWidget_->loadData();
     loggingWidget_->loadData();
 }
 

@@ -9,7 +9,7 @@ empath_SOURCES = main.cpp
 
 empath_LDADD = \
 	./ui/libempathui.a ./lib/libempath.a ./rmm/librmm.a \
-	$(LIB_KIO) -lkhtml $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE)
+	$(LIB_KIO) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE)
 
 empath_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 

@@ -15,12 +15,8 @@ EmpathAttachmentListItem.cpp \
 EmpathComposeSettingsDialog.cpp \
 EmpathComposeWidget.cpp \
 EmpathComposeWindow.cpp \
-EmpathConfigIMAP4Dialog.cpp \
-EmpathConfigMaildirDialog.cpp \
 EmpathConfigPOP3Dialog.cpp \
-EmpathConfigPOP3Logging.cpp \
-EmpathConfigPOP3Server.cpp \
-EmpathConfigPOP3Widget.cpp \
+EmpathConfigIMAP4Dialog.cpp \
 EmpathDisplaySettingsDialog.cpp \
 EmpathEnvelopeWidget.cpp \
 EmpathFilterActionDialog.cpp \

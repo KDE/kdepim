@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,66 +23,33 @@
 // System includes
 #include <sys/stat.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <stdio.h>
 
 // KDE includes
-#include <kapp.h>
-#include <kglobal.h>
-#include <kstddirs.h>
-#include <kconfig.h>
-#include <kstartparams.h>
+#include <kuniqueapp.h>
 
 // Local includes
 #include "Empath.h"
-#include "EmpathDefines.h"
 #include "EmpathUI.h"
-
-void empathMain(int, char **);
 
     int
 main(int argc, char ** argv)
 {
     // Don't do anything if we're being run as root.
     if (getuid() == 0 || geteuid() == 0) {
-        cerr << "DO NOT RUN GUI APPS AS ROOT !" << endl;
+        fprintf(stderr, "DO NOT RUN GUI APPS AS ROOT !\n");
         return 1;
     }    
 
+    // Pick a sensible umask for everything Empath does.
     int prev_umask = umask(077);
     
-    KStartParams opts(argc, argv);
-
-    if (opts.check("--help", "-h", true)) {
-        cerr    << "usage: empath --help    gives you this message"     << endl
-                << "              --version prints version information" << endl;
-        return 0;
-    }
+//    if (!KUniqueApplication::start(argc, argv, "empath"))
+//        exit(0);
     
-    if (opts.check("--version", "-v", true)) {
-        cerr << "Empath version " << EMPATH_VERSION_STRING.latin1() << endl;
-        return 0;
-    }
+//    KUniqueApplication app(argc, argv, "empath");
+    KApplication app(argc, argv, "empath");
     
-    empathMain(argc, argv);
-
-    umask(prev_umask);
-    
-    return 0;
-}
-
-    void
-empathMain(int argc, char ** argv)
-{
-    KApplication * app = new KApplication(argc, argv, "empath");
-    
-    // Don't do dollar expansion by default.
-    // Possible security hole.
-    KGlobal::config()->setDollarExpansion(false);    
-    
-    KGlobal::dirs()->addResourceType("indices", "share/apps/empath/indices");
-    KGlobal::dirs()->addResourceType("cache",   "share/apps/empath/cache");
-
-
     // Create the kernel.
     Empath::start();
     
@@ -88,18 +57,24 @@ empathMain(int argc, char ** argv)
     EmpathUI * ui = new EmpathUI;
 
     // Attempt to get the UI up and running quickly.
-    app->processEvents();
+    app.processEvents();
 
     // Initialise the kernel.
     empath->init();
     
+    empathDebug("Entering event loop");
     // Enter the event loop.
-    app->exec();
+    int retval = app.exec();
     
     delete ui;
     ui = 0;
     
     empath->shutdown();
+
+    // Restore umask.
+    umask(prev_umask);
+
+    return retval;
 }
 
 // vim:ts=4:sw=4:tw=78

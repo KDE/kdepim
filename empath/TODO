@@ -18,11 +18,13 @@ Highest priority first.
 
 * Provide an external interface that allows triggering a mail check,
   retrieving a message, sending, etc. Will use DCOP, I think.
-
-* Make printing work. HTML view will do it itself, though a little weirdly.
-  Will there be a general KDE printing i/f ? Do I make stuff ps first ?
+  Update: In progress. See lib/EmpathInterface.(cpp|h)
 
 * Plug memory leaks.
+  Update: Shouldn't be many existing now. Use of KSharedPtr in librmm
+  (by Wilco) and other such developments have virtually eradicated
+  memory management issues.
+
 
 * Release !
 

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -291,6 +293,7 @@ class Empath : public QObject
         // Async methods.
         
         void createFolder(const EmpathURL &, QString extraInfo = QString::null);
+        void removeFolder(const EmpathURL &, QString extraInfo = QString::null);
 
         void saveMessage(const EmpathURL &, QWidget *);
         
@@ -394,7 +397,7 @@ class Empath : public QObject
         /**
          * @internal
          */
-        void s_saveNameReady(const EmpathURL & url, QString path);
+//        void s_saveNameReady(const EmpathURL & url, QString path);
 
         /**
          * @short We want to show a folder's contents
@@ -408,7 +411,7 @@ class Empath : public QObject
         /**
          * @internal
          */
-        void s_messageReadyForSave(bool, const EmpathURL &, QString, QString);
+//        void s_messageReadyForSave(bool, const EmpathURL &, QString);
         
     signals:
 
@@ -461,7 +464,7 @@ class Empath : public QObject
          * All the info about the message is kept in the composeform.
          * Usually connected to a slot in the UI module.
          */
-        void newComposer(const EmpathComposer::Form &);
+        void newComposer(EmpathComposer::Form);
        /**
          * Signals that the settings should be provided for
          * review. In other words, bring up the settings dialog.
@@ -486,6 +489,8 @@ class Empath : public QObject
         void infoMessage(const QString &);
         
     private:
+
+        void _queueJob(const EmpathURL & mailboxURL, EmpathJobInfo &);
 
         EmpathURL inbox_, outbox_, sent_, drafts_, trash_;
     

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
 
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -157,7 +159,7 @@ EmpathComposer::bugReport()
         " KDE Version: "    + KDE_VERSION_STRING + "\n"
         " Qt Version: "     + QT_VERSION_STR + "\n");
 
-    composeForm.body = 
+    QString body =
     "- " +
     i18n("What were you trying to do when the problem occured ?") +
     "\n\n\n\n" +
@@ -173,6 +175,7 @@ EmpathComposer::bugReport()
     "- " +
     i18n("If you saw an error message, please try to reproduce it here.");
 
+    composeForm.body = body.local8Bit();
     _initVisibleHeaders(composeForm);
     emit(composeFormComplete(composeForm));
 }
@@ -180,7 +183,7 @@ EmpathComposer::bugReport()
     void
 EmpathComposer::s_jobComplete(EmpathJobInfo ji)
 {
-    if (!ji.success() || strcmp(ji.xinfo().left(8), "Composer") != 0)
+    if (!ji.success() || ji.xinfo().left(8) != "Composer")
         return;
 
     RMM::RMessage * m(empath->message(ji.from(), ji.xinfo()));

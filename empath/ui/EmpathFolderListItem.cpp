@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,6 +38,7 @@
 // Local includes
 #include "EmpathConfig.h"
 #include "EmpathFolderListItem.h"
+#include "EmpathIndex.h"
 #include "EmpathFolder.h"
 #include "EmpathMailbox.h"
 #include "EmpathDefines.h"
@@ -62,7 +65,6 @@ EmpathFolderListItem::EmpathFolderListItem(
     for (; it != l.end(); it++)
         if (*it == url_.asString())
             setOpen(true);
-
 
     EmpathMailbox * m(empath->mailbox(url_));
     
@@ -104,7 +106,7 @@ EmpathFolderListItem::EmpathFolderListItem(
     EmpathFolder * f(empath->folder(url_));
     
     if (f == 0) {
-        empathDebug("Can't find the folder !!!!");
+        empathDebug("Can't find my folder !");
         return;
     }
 
@@ -117,16 +119,19 @@ EmpathFolderListItem::EmpathFolderListItem(
         f,      SLOT(s_update()));
     
     QString s = url_.folderPath();
+
     if (s.right(1) == "/")
         s = s.remove(s.length(), 1);
+
     s = s.right(s.length() - s.findRev("/") - 1);
     
     setText(0, s);
     setPixmap(0, empathIcon(f->pixmapName()));
     
-    if (!f->isContainer())
+    if (!f->isContainer()) {
         setText(1, "...");
         setText(2, "...");
+    }
 }
     
 EmpathFolderListItem::~EmpathFolderListItem()
@@ -136,33 +141,16 @@ EmpathFolderListItem::~EmpathFolderListItem()
     QString
 EmpathFolderListItem::key(int column, bool) const
 {
-    if (column != 0 || !url_.isFolder())
-        return text(column);
+    QString k;
 
-    QString s(url_.folderPath());
+    if (column != 0 || !url_.isFolder())    k = text(column);
+    else if (url_ == empath->inbox())       k = '0';
+    else if (url_ == empath->outbox())      k = '1';
+    else if (url_ == empath->sent())        k = '2';
+    else if (url_ == empath->drafts())      k = '3';
+    else if (url_ == empath->trash())       k = '4';
     
-    KConfig * c(KGlobal::config());
-        
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_FOLDERS);    
-
-    if (s == c->readEntry(FOLDER_INBOX))
-        return "0";
-        
-    if (s == c->readEntry(FOLDER_OUTBOX))
-        return "1";
-        
-    if (s == c->readEntry(FOLDER_SENT))
-        return "2";
-        
-    if (s == c->readEntry(FOLDER_DRAFTS))
-        return "3";
-        
-    if (s == c->readEntry(FOLDER_TRASH))
-        return "4";
-    
-    return text(column);
+    return k;
 }
 
     void
@@ -179,7 +167,7 @@ EmpathFolderListItem::setup()
 }
 
     void
-EmpathFolderListItem::s_setCount(Q_UINT32 unread, Q_UINT32 read)
+EmpathFolderListItem::s_setCount(unsigned int unread, unsigned int read)
 {
     setText(1, QString().setNum(unread));
     setText(2, QString().setNum(read));
@@ -191,6 +179,35 @@ EmpathFolderListItem::setOpen(bool o)
     emit(opened());
     QListViewItem::setOpen(o);
 }
+
+    void
+EmpathFolderListItem::init()
+{
+    if (depth() > 0) {
+
+        EmpathFolder * f(empath->folder(url_));
+        
+        if (f == 0) {
+            empathDebug("Can't find my folder !");
+            return;
+        }
+
+        setText(1, QString().setNum(f->index()->countUnread()));
+        setText(2, QString().setNum(f->index()->count()));
+
+    } else {
+
+        EmpathMailbox * m(empath->mailbox(url_));
+
+        if (m == 0) {
+            empathDebug("Can't find my mailbox !");
+            return;
+        }
+
+        setText(1, QString().setNum(m->unreadMessageCount()));
+        setText(2, QString().setNum(m->messageCount()));
+    }
+} 
 
     void
 EmpathFolderListItem::s_update()

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
 
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -90,7 +92,7 @@ REnvelope::~REnvelope()
 REnvelope::_parse()
 {
     const char * c = strRep_.data();
-    const char * end = (char *)(c + strlen(c));
+    const char * end = static_cast<const char *>(c + strlen(c));
     char * r = new char[1024]; // rfc821 -> max length 1000 ? Can't remember.
     char * rstart = r;
 
@@ -250,171 +252,171 @@ REnvelope::get(HeaderType h)
 
     RText
 REnvelope::approved()
-{ return *(RText *)get(HeaderApproved); }
+{ return *static_cast<RText *>(get(HeaderApproved)); }
 
     RAddressList 
 REnvelope::bcc()
-{ return *(RAddressList *)get(HeaderBcc); }
+{ return *static_cast<RAddressList *>(get(HeaderBcc)); }
 
     RMailboxList
 REnvelope::cc()
-{ return *(RMailboxList *)get(HeaderCc); }
+{ return *static_cast<RMailboxList *>(get(HeaderCc)); }
 
     RText 
 REnvelope::comments()
-{ return *(RText *)get(HeaderComments); }
+{ return *static_cast<RText *>(get(HeaderComments)); }
 
     RText 
 REnvelope::contentDescription()
-{ return *(RText *)get(HeaderContentDescription); }
+{ return *static_cast<RText *>(get(HeaderContentDescription)); }
 
     RDispositionType 
 REnvelope::contentDisposition()
-{ return *(RDispositionType *)(HeaderContentDisposition); }
+{ return *static_cast<RDispositionType *>(get(HeaderContentDisposition)); }
 
     RMessageID 
 REnvelope::contentID()
-{ return *(RMessageID *)get(HeaderContentID); }
+{ return *static_cast<RMessageID *>(get(HeaderContentID)); }
 
     RText 
 REnvelope::contentMD5()
-{ return *(RText *)get(HeaderContentMD5); }
+{ return *static_cast<RText *>(get(HeaderContentMD5)); }
 
     RContentType 
 REnvelope::contentType()
-{ return *(RContentType *)get(HeaderContentType); }
+{ return *static_cast<RContentType *>(get(HeaderContentType)); }
 
     RText 
 REnvelope::control()
-{ return *(RText *)get(HeaderControl); }
+{ return *static_cast<RText *>(get(HeaderControl)); }
 
     RCte 
 REnvelope::contentTransferEncoding()
-{ return *(RCte *)get(HeaderContentTransferEncoding); }
+{ return *static_cast<RCte *>(get(HeaderContentTransferEncoding)); }
 
     RDateTime 
 REnvelope::date()
-{ return *(RDateTime *)get(HeaderDate); }
+{ return *static_cast<RDateTime *>(get(HeaderDate)); }
 
     RText 
 REnvelope::distribution()
-{ return *(RText *)get(HeaderDistribution); }
+{ return *static_cast<RText *>(get(HeaderDistribution)); }
 
     RText 
 REnvelope::encrypted()
-{ return *(RText *)get(HeaderEncrypted); }
+{ return *static_cast<RText *>(get(HeaderEncrypted)); }
 
     RDateTime 
 REnvelope::expires()
-{ return *(RDateTime *)get(HeaderExpires); }
+{ return *static_cast<RDateTime *>(get(HeaderExpires)); }
 
     RText 
 REnvelope::followupTo()
-{ return *(RText *)get(HeaderFollowupTo); }
+{ return *static_cast<RText *>(get(HeaderFollowupTo)); }
 
     RMailboxList 
 REnvelope::from()
-{ return *(RMailboxList *)get(HeaderFrom); }
+{ return *static_cast<RMailboxList *>(get(HeaderFrom)); }
 
     RText 
 REnvelope::inReplyTo()
-{ return *(RText *)get(HeaderInReplyTo); }
+{ return *static_cast<RText *>(get(HeaderInReplyTo)); }
 
     RText 
 REnvelope::keywords()
-{ return *(RText *)get(HeaderKeywords); }
+{ return *static_cast<RText *>(get(HeaderKeywords)); }
 
     RText 
 REnvelope::lines()
-{ return *(RText *)get(HeaderLines); }
+{ return *static_cast<RText *>(get(HeaderLines)); }
 
     RMessageID 
 REnvelope::messageID()
-{ return *(RMessageID *)get(HeaderMessageID); }
+{ return *static_cast<RMessageID *>(get(HeaderMessageID)); }
 
     RText 
 REnvelope::mimeVersion()
-{ return *(RText *)get(HeaderMimeVersion); }
+{ return *static_cast<RText *>(get(HeaderMimeVersion)); }
 
     RText 
 REnvelope::newsgroups()
-{ return *(RText *)get(HeaderNewsgroups); }
+{ return *static_cast<RText *>(get(HeaderNewsgroups)); }
 
     RText 
 REnvelope::organization()
-{ return *(RText *)get(HeaderOrganization); }
+{ return *static_cast<RText *>(get(HeaderOrganization)); }
 
     RText 
 REnvelope::path()
-{ return *(RText *)get(HeaderPath); }
+{ return *static_cast<RText *>(get(HeaderPath)); }
 
     RText 
 REnvelope::received()
-{ return *(RText *)get(HeaderReceived); }
+{ return *static_cast<RText *>(get(HeaderReceived)); }
 
     RText 
 REnvelope::references()
-{ return *(RText *)get(HeaderReferences); }
+{ return *static_cast<RText *>(get(HeaderReferences)); }
 
     RAddressList 
 REnvelope::replyTo()
-{ return *(RAddressList *)get(HeaderReplyTo); }
+{ return *static_cast<RAddressList *>(get(HeaderReplyTo)); }
 
     RAddressList 
 REnvelope::resentBcc()
-{ return *(RAddressList *)get(HeaderResentBcc); }
+{ return *static_cast<RAddressList *>(get(HeaderResentBcc)); }
 
     RAddressList 
 REnvelope::resentCc()
-{ return *(RAddressList *)get(HeaderResentCc); }
+{ return *static_cast<RAddressList *>(get(HeaderResentCc)); }
 
     RDateTime 
 REnvelope::resentDate()
-{ return *(RDateTime *)get(HeaderResentDate); }
+{ return *static_cast<RDateTime *>(get(HeaderResentDate)); }
 
     RMailboxList 
 REnvelope::resentFrom()
-{ return *(RMailboxList *)get(HeaderResentFrom); }
+{ return *static_cast<RMailboxList *>(get(HeaderResentFrom)); }
 
     RMessageID 
 REnvelope::resentMessageID()
-{ return *(RMessageID *)get(HeaderResentMessageID); }
+{ return *static_cast<RMessageID *>(get(HeaderResentMessageID)); }
 
     RAddressList 
 REnvelope::resentReplyTo()
-{ return *(RAddressList *)get(HeaderResentReplyTo); }
+{ return *static_cast<RAddressList *>(get(HeaderResentReplyTo)); }
 
     RMailbox 
 REnvelope::resentSender()
-{ return *(RMailbox *)get(HeaderResentSender); }
+{ return *static_cast<RMailbox *>(get(HeaderResentSender)); }
 
     RAddressList 
 REnvelope::resentTo()
-{ return *(RAddressList *)get(HeaderResentTo); }
+{ return *static_cast<RAddressList *>(get(HeaderResentTo)); }
 
     RText 
 REnvelope::returnPath()
-{ return *(RText *)get(HeaderReturnPath); }
+{ return *static_cast<RText *>(get(HeaderReturnPath)); }
 
     RMailbox 
 REnvelope::sender()
-{ return *(RMailbox *)get(HeaderSender); }
+{ return *static_cast<RMailbox *>(get(HeaderSender)); }
 
     RText 
 REnvelope::subject()
-{ return *(RText *)get(HeaderSubject); }
+{ return *static_cast<RText *>(get(HeaderSubject)); }
 
     RText 
 REnvelope::summary()
-{ return *(RText *)get(HeaderSummary); }
+{ return *static_cast<RText *>(get(HeaderSummary)); }
 
     RAddressList 
 REnvelope::to()
-{ return *(RAddressList *)get(HeaderTo); }
+{ return *static_cast<RAddressList *>(get(HeaderTo)); }
 
     RText 
 REnvelope::xref()
-{ return *(RText *)get(HeaderXref); }
+{ return *static_cast<RText *>(get(HeaderXref)); }
 
     RMailbox
 REnvelope::firstSender()

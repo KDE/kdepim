@@ -2,16 +2,7 @@
 
 #include "EmpathDefines.h"
 
-const char * EmpathAboutText =
-    "<p>Empath -- Mail client</p>"
-    "<p>Version 1.0beta1</p>"
-    "<p>Maintainer: Rik Hemsley &lt;rik@kde.org&gt;</p>"
-    "<p>Contributors:"
-    "<ul>"
-    "<li>Wilco Greven</li>"
-    "<li>Dirk A. Mueller</li>"
-    "</ul>"
-    "</p>";
+extern QString EmpathAboutText;
 
 void
 EmpathMainWindow::_setupMenuBar()
@@ -146,7 +137,7 @@ EmpathMainWindow::_setupMenuBar()
         i18n("&Filters"),
         this, SLOT(s_setupFilters()));
     
-    helpMenu_ = helpMenu(i18n(EmpathAboutText));
+    helpMenu_ = helpMenu(EmpathAboutText);
     
     menu_->insertItem(i18n("&File"), fileMenu_);
     menu_->insertItem(i18n("&Edit"), editMenu_);

@@ -1,7 +1,9 @@
 /*
   RDatabase - A persistent QAsciiDict<QByteArray>.
   
-  Copyright (C) 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
  
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -109,6 +111,7 @@ Database::_loadIndex()
   
   indexFile_.reset();
   indexStream_ >> offset_;
+  indexStream_ >> unreadCount_;
 
   QString key;
   Q_UINT32 ofs;
@@ -117,6 +120,9 @@ Database::_loadIndex()
     indexStream_ >> key >> ofs;
     index_.insert(key, new Q_UINT32(ofs));
   }
+
+  if (index_.count() == 0)
+    unreadCount_ = 0;
 
   touched_ = QDateTime::currentDateTime();
   indexDirty_ = false;
@@ -131,6 +137,7 @@ Database::_saveIndex()
 
   indexFile_.reset();
   indexStream_ << offset_;
+  indexStream_ << unreadCount_;
 
   IndexIterator it(index_);
   
@@ -350,6 +357,7 @@ Database::reorganise()
 
   QDataStream istr(&indexf);
   istr << offset_;
+  istr << unreadCount_;
 
   QDataStream dstr(&dataf);
 

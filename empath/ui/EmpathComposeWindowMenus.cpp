@@ -1,19 +1,10 @@
 #include "EmpathEnum.h"
+#include "EmpathUIUtils.h"
 #include <kmenubar.h>
 
-const char * AboutText =
-    "<p>Empath -- Mail client</p>"
-    "<p>Version 1.0beta1</p>"
-    "<p>Maintainer: Rik Hemsley &lt;rik@kde.org&gt;</p>"
-    "<p>Contributors:"
-    "<ul>"
-    "<li>Wilco Greven</li>"
-    "<li>Dirk A. Mueller</li>"
-    "</ul>"
-    "</p>";
+extern QString EmpathAboutText;
 
-
-void
+    void
 EmpathComposeWindow::setupMenuBar()
 {
     fileMenu_       = new QPopupMenu;
@@ -97,7 +88,7 @@ EmpathComposeWindow::setupMenuBar()
     priorityMenu_->insertItem(i18n("Low"),      Low);
     priorityMenu_->insertItem(i18n("Lowest"),   Lowest);
     
-    helpMenu_ = helpMenu(i18n(AboutText));
+    helpMenu_ = helpMenu(EmpathAboutText);
     
     menuBar()->insertItem(i18n("&File"), fileMenu_);
     menuBar()->insertItem(i18n("&Edit"), editMenu_);

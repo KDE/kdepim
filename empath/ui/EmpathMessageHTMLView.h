@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,29 +29,15 @@
 
 // Qt includes
 #include <qpopupmenu.h>
-#include <qregexp.h>
-#include <qtextview.h>
+#include <qtextbrowser.h>
 
-// KDE includes
-#include <ktmainwindow.h>
-#include <kstdaccel.h>
-#include <khtml.h>
-
-// Local includes
-#include <RMM_Message.h>
-#include "EmpathDefines.h"
-#include "EmpathURL.h"
-
-class EmpathMessageHTMLWidget : public KHTMLWidget
+class EmpathMessageHTMLWidget : public QTextBrowser
 {
     Q_OBJECT
 
     public:
         
-        EmpathMessageHTMLWidget(
-                QWidget        * _parent    = 0,
-                const char    * _name        = 0);
-        
+        EmpathMessageHTMLWidget(QWidget *);
         ~EmpathMessageHTMLWidget();
         
         /**
@@ -57,12 +45,6 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
          */
         void toHTML(QString &);
         bool showText(const QString & s, bool markup = true);
-        virtual KHTMLWidget * createFrame(QWidget *, const char *)
-        {
-            // We don't want to create frames, do we ?
-            return 0;
-        }
-
         virtual QSize sizeHint() const;
         virtual QSize minimumSizeHint() const;
         
@@ -72,7 +54,6 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 
     private:
         
-        bool busy_;
         QPopupMenu popup_;
         QString QColorToHTML(const QColor &);
 };

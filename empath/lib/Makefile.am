@@ -6,6 +6,7 @@ noinst_LIBRARIES = libempath.a
 libempath_a_METASOURCES = AUTO
 
 libempath_a_SOURCES = \
+EmpathInterface.cpp \
 Empath.cpp \
 EmpathJobInfo.cpp \
 EmpathCachedMessage.cpp \
@@ -33,5 +34,4 @@ EmpathQuotedText.cpp \
 EmpathSecurityProcess.cpp \
 EmpathTask.cpp \
 EmpathURL.cpp \
-EmpathUtilities.cpp \
-md5.cpp
+EmpathUtilities.cpp

@@ -1,7 +1,8 @@
-/*
-    Empath - Mailer for KDE
+/* Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,12 +32,9 @@
 
 // KDE includes
 #include <klocale.h>
-#include <kcursor.h>
-#include <kapp.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kstddirs.h>
-#include <khtml.h>
 
 // Local includes
 #include "EmpathMessageHTMLView.h"
@@ -48,34 +46,20 @@
 #include <RMM_Enum.h>
 
 
-EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
-        QWidget     *   _parent,
-        const char  *   _name)
-    :   KHTMLWidget(_parent, _name),
-        busy_(false)
+EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(QWidget * parent)
+    :   QTextBrowser(parent)
 {
     setFrameStyle(QFrame::NoFrame);
-    begin();
-    QString baseColour = "ffffff";
-//        QColorToHTML(kapp->palette().color(QPalette::Normal, QColorGroup::Base));
-    QString textColour = "000000";
-//        QColorToHTML(kapp->palette().color(QPalette::Normal, QColorGroup::Text));
-
     QString welcomeText = i18n("Welcome to Empath");
 
-    QString imgPath = KGlobal::dirs()->findResource("appdata", "empath_logo.png");
+    QString imgPath =
+        KGlobal::dirs()->findResource("appdata", "empath_logo.png");
 
-    empathDebug("Logo is at `" + imgPath + "'");
+    setText("<center><img source=\"" + imgPath + "\"/>");
     
-    // Welcome message
-    write("<HTML><BODY BGCOLOR=\"#" + baseColour + "\"><CENTER><IMG SRC=\""
-        + imgPath + "\"><BR><TT><FONT SIZE=\"+2\" COLOR=\"#" + textColour
-        + "\">" + welcomeText + "</FONT></TT></CENTER></BODY></HTML>");
-    end();
-    
-    QObject::connect(
-        this, SIGNAL(popupMenu(QString, const QPoint &)),
-        this, SLOT(s_popupMenu(QString, const QPoint &)));
+//    QObject::connect(
+ //       this, SIGNAL(popupMenu(QString, const QPoint &)),
+  //      this, SLOT(s_popupMenu(QString, const QPoint &)));
 }
 
 EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
@@ -85,11 +69,6 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
     bool
 EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
 {
-    if (busy_) return false;
-    busy_ = true;
-
-    setCursor(waitCursor);
-    
     KConfig * c(KGlobal::config());
 
     using namespace EmpathConfig;
@@ -100,73 +79,37 @@ EmpathMessageHTMLWidget::showText(const QString & s, bool markup)
     
     QFont f = c->readFontEntry(UI_FIXED_FONT, &defaultFixed);
 
-    int fs = f.pointSize();
-    int fsizes[7] = { fs, fs, fs, fs, fs, fs, fs };
+    setFont(f, true);
+    setLinkColor(c->readColorEntry(UI_LINK, &DFLT_LINK));
+    setLinkUnderline(c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
 
-    setFixedFont(f.family());
-    setFontSizes(fsizes);
-    setStandardFont(KGlobal::generalFont().family());
-    setURLCursor(KCursor::handCursor());
-    setFocusPolicy(QWidget::StrongFocus);
-    setDefaultBGColor(
-        kapp->palette().color(QPalette::Normal, QColorGroup::Base));
-    setDefaultTextColors(
-        kapp->palette().color(QPalette::Normal, QColorGroup::Text),
-        c->readColorEntry(UI_LINK, &DFLT_LINK),
-        c->readColorEntry(UI_VLINK, &DFLT_VLINK));
-    setUnderlineLinks(c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
-
-    if (s.isEmpty()) {
-        write(
-            "<HTML><BODY BGCOLOR=" +
-            QColorToHTML(
-                kapp->palette().color(QPalette::Normal, QColorGroup::Base)) +
-            "><PRE>" +
-            i18n("This part is empty") +
-            "</PRE></BODY></HTML>");
-        setCursor(arrowCursor);
-        busy_ = false;
-        return true;
-    }
+    if (!s.isEmpty()) {
+       
+        if (markup) {
         
-    begin();
+            setTextFormat(Qt::RichText);
+            QString html(s);
+            toHTML(html);
+            setText(html);
 
-    if (markup) {
-        
-        QColor bgcol =
-            kapp->palette().color(QPalette::Normal, QColorGroup::Base);
+        } else {
+            
+            setTextFormat(Qt::PlainText);
+            setText(s);
+        }
 
-        QString bg = QColorToHTML(bgcol);
-
-        QString html(s);
-        
-        toHTML(html);
-        
-        write("<HTML><BODY BGCOLOR="+bg+"><PRE>"+html+"</PRE></BODY></HTML>");
-
-        QFile f("message.html");
-
-        f.open(IO_WriteOnly);
-
-        QTextStream t(&f);
-        t << html;
-        f.close();
-        
     } else {
-        
-        write("<HTML><BODY><PRE>" + s + "</PRE></BODY></HTML>");
+
+        setText(i18n("This part is empty"));
     }
     
-    setCursor(arrowCursor);
-    busy_ = false;
-    end();
     return true;
 }
 
     void
 EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
 {
-    QCString str(_str.latin1());
+    QCString str(_str.utf8());
 
     KConfig * config(KGlobal::config());
 
@@ -183,14 +126,9 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
     register char * buf = new char[32768]; // 32k buffer. Will be reused.
     QCString outStr;
     
-    if (!buf) { 
-        empathDebug("Couldn't allocate buffer");
-        return;
-    }
-
-    register char * pos = (char *)str.data();   // Index into source string.
-    char * start = pos;                         // Start of source string.
-    register char * end = start + str.length(); // End of source string.
+    register char * pos = const_cast<char *>(str.data()); // Index into source.
+    char * start = pos; // Start of source string.
+    char * end = start + str.length(); // End of source string.
     
     if (start == end) {
         delete [] buf;
@@ -210,7 +148,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
         // Check to see if we're approaching the end of the buffer.
         // If so, copy what we've done so far into outStr and start at
         // the beginning of the buffer again.
-        if ((bufpos - buf) > 32256) {
+        if ((bufpos - buf) > 32600) {
 
             *bufpos = '\0';
             outStr += buf;
@@ -224,13 +162,13 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                 
                 if (markDownQuotedLine) { // If this line was quoted.
                 
-                    memcpy(bufpos, "</FONT>", 7);
+                    memcpy(bufpos, "</font>", 7);
                     bufpos += 7;
                     markDownQuotedLine = false;
                 
                 }
                 
-                memcpy(bufpos, "<BR>\n", 5);
+                memcpy(bufpos, "<br/>\n", 6);
                 bufpos += 5;
                 
                 break;
@@ -257,7 +195,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                         )
                     )
                 {
-                    memcpy(bufpos, "<BR><HR><BR>\n", 13);
+                    memcpy(bufpos, "<br/><hr/><br/>\n", 16);
                     bufpos += 13;
                     
                     pos += 2;
@@ -279,7 +217,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (pos < end && (*pos == '>' || *pos == ' '))
                         if (*pos++ == '>') ++quoteDepth;
 
-                    memcpy(bufpos, "<FONT COLOR=\"#", 14);
+                    memcpy(bufpos, "<font color=\"#", 14);
                     bufpos += 14;
                     
                     if (quoteDepth % 2 == 0)
@@ -328,7 +266,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (x < 128 && *(pos + x) != ' ' && *(pos + x) != '\n')
                         ++x;
         
-                    memcpy(bufpos, "<A HREF=\"gopher://", 18);
+                    memcpy(bufpos, "<a href=\"gopher://", 18);
                     bufpos += 18;
                 
                     memcpy(bufpos, pos, x);
@@ -340,7 +278,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     memcpy(bufpos, pos, x); 
                     bufpos += x;
                 
-                    memcpy(bufpos, "</A>", 4);
+                    memcpy(bufpos, "</a>", 4);
                     bufpos += 4;
 
                     pos += x - 1; // -1 so that the last char is processed.
@@ -362,7 +300,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (x < 128 && *(pos + x) != ' ' && *(pos + x) != '\n')
                         ++x;
         
-                    memcpy(bufpos, "<A HREF=\"ftp://", 15);
+                    memcpy(bufpos, "<a href=\"ftp://", 15);
                     bufpos += 15;
                     
                     memcpy(bufpos, pos, x);
@@ -374,7 +312,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     memcpy(bufpos, pos, x); 
                     bufpos += x;
                     
-                    memcpy(bufpos, "</A>", 4);
+                    memcpy(bufpos, "</a>", 4);
                     bufpos += 4;
 
                     pos += x - 1; // -1 so that the last char is processed.
@@ -396,7 +334,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (x < 128 && *(pos + x) != ' ' && *(pos + x) != '\n')
                         ++x;
         
-                    memcpy(bufpos, "<A HREF=\"http://", 16);
+                    memcpy(bufpos, "<a href=\"http://", 16);
                     bufpos += 16;
                     
                     memcpy(bufpos, pos, x);
@@ -408,7 +346,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     memcpy(bufpos, pos, x); 
                     bufpos += x;
                     
-                    memcpy(bufpos, "</A>", 4);
+                    memcpy(bufpos, "</a>", 4);
                     bufpos += 4;
 
                     pos += x - 1; // -1 so that the last char is processed.
@@ -422,7 +360,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     while (x < 128 && *(pos + x) != ' ' && *(pos + x) != '\n')
                         ++x;
         
-                    memcpy(bufpos, "<A HREF=\"https://", 17);
+                    memcpy(bufpos, "<a href=\"https://", 17);
                     bufpos += 17;
                     
                     memcpy(bufpos, pos, x);
@@ -434,7 +372,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                     memcpy(bufpos, pos, x); 
                     bufpos += x;
                     
-                    memcpy(bufpos, "</A>", 4);
+                    memcpy(bufpos, "</a>", 4);
                     bufpos += 4;
 
                     pos += x - 1; // -1 so that the last char is processed.
@@ -511,7 +449,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                 bufpos -= (pos - startAddress);
 
                 // Now replace from the cursor with <A HREF...
-                memcpy(bufpos, "<A HREF=\"empath://mailto:", 25);
+                memcpy(bufpos, "<a href=\"empath://mailto:", 25);
                 bufpos += 25;
 
                 // Now add the start address after the markup
@@ -535,7 +473,7 @@ EmpathMessageHTMLWidget::toHTML(QString & _str) // This is black magic.
                 bufpos += endAddress - pos;
 
                 // Add the end of the markup.
-                memcpy(bufpos, "</A>", 4);
+                memcpy(bufpos, "</a>", 4);
                 bufpos += 4;
 
                 // Change the cursor in the source string to avoid the address.
@@ -594,7 +532,7 @@ EmpathMessageHTMLWidget::QColorToHTML(const QColor & c)
     s.sprintf("%02X%02X%02X", c.red(), c.green(), c.blue());
     return s;
 }
-        
+
     QSize
 EmpathMessageHTMLWidget::sizeHint() const
 {

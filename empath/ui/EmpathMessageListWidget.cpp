@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -227,7 +229,8 @@ EmpathMessageListWidget::_threadItem(EmpathIndexRecord & rec)
     EmpathURL
 EmpathMessageListWidget::firstSelectedMessage()
 {
-    EmpathURL u("orphaned");
+    EmpathURL u;
+
     if (currentItem() == 0) return u;
     
     EmpathMessageListItem * item =
@@ -695,7 +698,7 @@ EmpathMessageListWidget::s_startDrag(const QList<QListViewItem> & items)
             static_cast<EmpathMessageListItem *>(it.current());
 
         EmpathURL messageURL(url_.mailboxName(), url_.folderPath(), i->id());
-        uriList.append(messageURL.asString());
+        uriList.append(messageURL.asString().utf8());
         ++it;
     }
 

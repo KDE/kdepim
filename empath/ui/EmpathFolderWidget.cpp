@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,6 +29,7 @@
 #include <qstringlist.h>
 
 // KDE includes
+#include <kapp.h>
 #include <klocale.h>
 #include <klineeditdlg.h>
 #include <kmessagebox.h>
@@ -147,15 +150,15 @@ EmpathFolderWidget::s_update()
     EmpathMailboxListIterator mit(empath->mailboxList());
 
     for (; mit.current(); ++mit)
-        _addMailbox(mit.current());
+        if (mit.current()->type() != EmpathMailbox::POP3)
+            _addMailbox(mit.current());
 
     QListIterator<EmpathFolderListItem> it(itemList_);
-    
-    for (; it.current(); ++it)
-        if (!it.current()->isTagged()) {
-            itemList_.remove(it.current());
-            QListView::removeItem((QListViewItem *)(it.current()));
-        }
+
+    for (; it.current(); ++it) {
+        it.current()->init();
+        kapp->processEvents();
+    }
 }
 
     void
@@ -174,13 +177,11 @@ EmpathFolderWidget::_addMailbox(EmpathMailbox * mailbox)
 
     if (found != 0) {
         
-        found->tag(true);
         newItem = found;
         
     } else {
     
         newItem = new EmpathFolderListItem(this, mailbox->url());
-        newItem->tag(true);
         
         QObject::connect(newItem, SIGNAL(opened()), SLOT(s_openChanged()));
             
@@ -208,13 +209,11 @@ EmpathFolderWidget::_addChildren(
 
     if (found != 0) {
         
-        found->tag(true);
         newItem = found;
 
     } else {
     
         newItem = new EmpathFolderListItem(parent, item->url());
-        newItem->tag(true);
     
         QObject::connect(newItem, SIGNAL(opened()), SLOT(s_openChanged()));
 
@@ -396,7 +395,7 @@ EmpathFolderWidget::s_startDrag(const QList<QListViewItem> & items)
              
     QStrList uriList;
 
-    uriList.append(i->url().asString());
+    uriList.append(i->url().asString().utf8());
     
     QUriDrag * u = new QUriDrag(uriList, this);
     empathDebug("Drag folder: " + i->url().asString());

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -54,8 +56,11 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 {
     index_ = new EmpathIndex(url_);
 	
-    QObject::connect(this, SIGNAL(countUpdated(unsigned int, unsigned int)),
-        empath->mailbox(url_), SLOT(s_countUpdated(unsigned int, unsigned int)));
+    QObject::connect(
+        this,
+        SIGNAL(countUpdated(unsigned int, unsigned int)),
+        empath->mailbox(url_),
+        SLOT(s_countUpdated(unsigned int, unsigned int)));
  
     if      (url_ == empath->inbox())   pixmapName_ = "folder-inbox";
     else if (url_ == empath->outbox())  pixmapName_ = "folder-outbox";
@@ -98,9 +103,18 @@ EmpathFolder::update()
         return;
     }
     
+    unsigned int oldUnread = index_->countUnread();
+    unsigned int oldRead = index_->count();
+
     m->sync(url_);
     
-    emit(countUpdated(index_->countUnread(), index_->count()));
+    unsigned int unread = index_->countUnread();
+    unsigned int read = index_->count();
+
+    if ((oldUnread != unread) || (oldRead != read)) {
+        empathDebug("Count changed");
+        emit(countUpdated(index_->countUnread(), index_->count()));
+    }
 }
 
     EmpathFolder *

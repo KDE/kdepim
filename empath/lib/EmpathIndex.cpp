@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,8 +42,6 @@
 
 EmpathIndex::EmpathIndex()
     :   dbf_(0),
-        count_(0),
-        unreadCount_(0),
         initialised_(false)
 {
     mtime_ = QDateTime::currentDateTime();
@@ -50,8 +50,6 @@ EmpathIndex::EmpathIndex()
 EmpathIndex::EmpathIndex(const EmpathURL & folder)
     :   folder_(folder),
         dbf_(0),
-        count_(0),
-        unreadCount_(0),
         initialised_(false)
 {
     QString resDir =
@@ -124,7 +122,7 @@ EmpathIndex::record(const QString & key)
     Q_UINT32
 EmpathIndex::countUnread() const
 {
-    return unreadCount_;
+    return dbf_->unreadCount();
 }
 
      Q_UINT32
@@ -161,8 +159,6 @@ EmpathIndex::_close()
     
     delete dbf_;
     dbf_ = 0;
-    
-    count_ = unreadCount_ = 0;
 }
 
     bool
@@ -175,8 +171,6 @@ EmpathIndex::_open()
 
     dbf_ = new RDB::Database(filename_);
     
-    count_ = unreadCount_ = 0;
-
     mtime_ = dbf_->lastModified();
     return true;
 }
@@ -223,10 +217,8 @@ EmpathIndex::insert(const QString & key, EmpathIndexRecord & rec)
         return false;
     }
 
-    ++count_;
-    
     if (!(rec.status() & RMM::Read))
-        ++unreadCount_;
+        dbf_->increaseUnreadCount();
     
     mtime_ = QDateTime::currentDateTime();
     return true;
@@ -244,6 +236,8 @@ EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
         empathDebug("Key is empty !");
         return false;
     }
+    
+    EmpathIndexRecord r = record(key);
 
     QByteArray a;
     QDataStream s(a, IO_WriteOnly);
@@ -257,6 +251,9 @@ EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
         return false;
     }
 
+    if (!r.isNull() && !(r.status() & RMM::Read))
+        dbf_->decreaseUnreadCount();
+
     mtime_ = QDateTime::currentDateTime();
     return true;
 }
@@ -268,14 +265,15 @@ EmpathIndex::remove(const QString & key)
         empathDebug("Index not open!");
         return false;
     }
+    
+    EmpathIndexRecord r = record(key);
 
     bool ok = dbf_->remove(key);
     
     if (ok) {
-        --count_;
-        // FIXME
-     //   if (!(status & RMM::Read))
-     //       --unreadCount_;
+
+        if (!r.isNull() && !(r.status() & RMM::Read))
+            dbf_->decreaseUnreadCount();
         
         mtime_ = QDateTime::currentDateTime();
     
@@ -297,8 +295,6 @@ EmpathIndex::clear()
     
     dbf_->clear();
 
-    count_ = unreadCount_ = 0;
-    
     mtime_ = QDateTime::currentDateTime();
 }
 

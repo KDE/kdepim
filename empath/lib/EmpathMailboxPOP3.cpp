@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -71,6 +73,7 @@ EmpathMailboxPOP3::~EmpathMailboxPOP3()
     void
 EmpathMailboxPOP3::init()
 {
+    empathDebug("");
     loadConfig();
     
     QObject::connect(
@@ -94,8 +97,7 @@ EmpathMailboxPOP3::init()
     
     EmpathFolder * folder_inbox = new EmpathFolder(url);
     folderList_.insert(url.folderPath(), folder_inbox);
-    
-    emit(updateFolderLists());
+    empathDebug("done");
 }
 
     bool
@@ -131,7 +133,7 @@ EmpathMailboxPOP3::_nextCommand()
     
     ASSERT(job != 0);
     empathDebug("Doing `" + command + "'");
-    job->get(command);
+    job->get(command.ascii());
 }
 
     void
@@ -312,7 +314,7 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
 {
     empathDebug("data == `" + QString(data) + "'");
     
-    QString s(data);
+    QCString s(data);
     if (s.isEmpty()) {
         empathDebug("Data is empty !");
         return;
@@ -342,8 +344,8 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
             
                 EmpathPOPIndexEntry * e =
                     new EmpathPOPIndexEntry(
-                        s.left(i).toInt(),
-                        url_.mailboxName() + ":" + s.mid(i + 1));
+                        QString(s).left(i).toInt(),
+                        url_.mailboxName() + ":" + QString(s).mid(i + 1));
                 index_.append(e);
             }
             break;

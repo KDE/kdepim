@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,6 +30,7 @@
 // KDE includes
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <klocale.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
@@ -41,6 +44,5 @@ QPixmap empathIcon(const QString & name)
 {
     return KGlobal::iconLoader()->loadIcon(name);
 }
-
 
 // vim:ts=4:sw=4:tw=78

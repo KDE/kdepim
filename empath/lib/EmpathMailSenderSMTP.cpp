@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -90,7 +92,7 @@ EmpathMailSenderSMTP::sendOne(RMM::RMessage & m, const QString & id)
         '/' +
         sender + ',' + recipient;
     
-    job_->put(putStr, 0, false, false, 0);
+    job_->put(putStr.ascii(), 0, false, false, 0);
 }
 
     void

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -285,10 +287,10 @@ EmpathComposeSettingsDialog::loadData()
         c->readNumEntry(C_SEND_POLICY, EmpathMailSender::SendLater);
 
     le_extra_->setText(c->readEntry(C_EXTRA_HEADERS));
-    le_reply_->setText(c->readEntry(C_PHRASE_REPLY_SENDER, i18n(DFLT_REPLY)));
-    le_replyAll_->setText(c->readEntry(C_PHRASE_REPLY_ALL, i18n(DFLT_REPLY_ALL)));
+    le_reply_->setText(c->readEntry(C_PHRASE_REPLY_SENDER, i18n(DFLT_REPLY.ascii())));
+    le_replyAll_->setText(c->readEntry(C_PHRASE_REPLY_ALL, i18n(DFLT_REPLY_ALL.ascii())));
     
-    le_forward_->setText(c->readEntry(C_PHRASE_FORWARD, i18n(DFLT_FORWARD)));
+    le_forward_->setText(c->readEntry(C_PHRASE_FORWARD, i18n(DFLT_FORWARD.ascii())));
 
     cb_quote_->setChecked   (c->readBoolEntry(C_AUTO_QUOTE,   true));
     cb_addSig_->setChecked  (c->readBoolEntry(C_ADD_SIG,      true));

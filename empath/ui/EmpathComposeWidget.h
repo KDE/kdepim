@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,7 +64,7 @@ class EmpathComposeWidget : public QWidget
          * Standard ctor
          */
         EmpathComposeWidget(
-            const EmpathComposer::Form & composeForm,
+            EmpathComposer::Form composeForm,
             QWidget * parent = 0, const char * name = 0);
 
         /**
@@ -74,7 +76,7 @@ class EmpathComposeWidget : public QWidget
          * Return a composeform when the user wants to send the 
          * message.
          */
-        EmpathComposer::Form & composeForm();
+        EmpathComposer::Form composeForm();
         
         /**
          * Test if there are any attachments for this message.

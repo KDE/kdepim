@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -83,12 +85,12 @@ EmpathHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
         RMM::RHeader * h(e.get(s));
         if (h == 0) continue;
             
-        headerList_.append(i18n(h->headerName()) + ":");
+        headerList_.append(h->headerName() + ":");
     
         if (RMM::headerTypesTable[h->headerType()] == RMM::DateTime) {
             RMM::RDateTime * date = (RMM::RDateTime *)(h->headerBody());
             headerList_.append(
-                KGlobal::locale()->formatDateTime(date->qdt()));
+                KGlobal::locale()->formatDateTime(date->qdt()).ascii());
         } else
             headerList_.append(h->headerBody()->asString());
     }

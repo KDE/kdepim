@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -55,9 +57,25 @@
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathConfigPOP3Dialog.h"
 
+QString EmpathAboutText;
+
 EmpathUI::EmpathUI()
     : QObject((QObject *)0L, "EmpathUI")
 {
+    // %1 == Version number.
+    // %2+ == Names of contributors
+    QString aboutTemplate = i18n(
+        "<p>Empath -- Mail client for KDE</p>"
+        "<p>Version: %1</p>"
+        "<p>Program design and code:<ul><li>%2</li><li>%3</li></ul></p>"
+        "<p>Graphics:<ul><li>%4</li></ul></p>");
+
+    EmpathAboutText =
+        aboutTemplate.arg("Under Development")
+            .arg("Rik Hemsley (rikkus)")
+            .arg("Wilco Greven")
+            .arg("kraftw");
+
     // If no mailboxes are configured, then show the setup wizard.
 
     KConfig * c(KGlobal::config());
@@ -86,7 +104,7 @@ EmpathUI::~EmpathUI()
 }
 
     void    
-EmpathUI::s_newComposer(const EmpathComposer::Form & composeForm)
+EmpathUI::s_newComposer(EmpathComposer::Form composeForm)
 {
     (new EmpathComposeWindow(composeForm))->show();
 }
@@ -184,7 +202,7 @@ EmpathUI::s_getSaveName(const EmpathURL & url, QWidget * parent)
     if (saveFilePath.isEmpty())
         return;
    
-    empath->s_saveNameReady(url, saveFilePath);
+//    empath->s_saveNameReady(url, saveFilePath);
 }
 
     void
@@ -199,12 +217,11 @@ EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
  
     switch (mailbox->type()) {
 
-        case EmpathMailbox::Maildir:
-            EmpathConfigMaildirDialog::create(url, w);
-            break;
-
         case EmpathMailbox::POP3:
-            EmpathConfigPOP3Dialog::create(url, w);
+            {
+                EmpathConfigPOP3Dialog d(url, w);
+                d.exec();
+            }
             break;
 
         case EmpathMailbox::IMAP4:
@@ -229,8 +246,8 @@ EmpathUI::_connectUp()
         this,   SLOT(s_infoMessage(const QString &)));
 
     QObject::connect(
-        empath, SIGNAL(newComposer(const EmpathComposer::Form &)),
-        this,   SLOT(s_newComposer(const EmpathComposer::Form &)));
+        empath, SIGNAL(newComposer(EmpathComposer::Form)),
+        this,   SLOT(s_newComposer(EmpathComposer::Form)));
     
     QObject::connect(
         empath, SIGNAL(configureMailbox(const EmpathURL &, QWidget *)),

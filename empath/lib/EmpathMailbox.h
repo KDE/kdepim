@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -110,8 +112,8 @@ class EmpathMailbox : public QObject
     
     public:
 
-        void        setID(Q_UINT32 id)  { id_ = id; }
-        Q_UINT32    id() const          { return id_; }
+        void        setID(unsigned int id)  { id_ = id; }
+        unsigned int    id() const          { return id_; }
         /**
          * Check if the folder with the given path exists.
          */
@@ -131,7 +133,7 @@ class EmpathMailbox : public QObject
         /**
          * Set the timer interval for this box.
          */
-        void setAutoCheckInterval(Q_UINT32);
+        void setAutoCheckInterval(unsigned int);
         /**
          * Find out whether this mailbox uses a timer.
          */
@@ -139,7 +141,7 @@ class EmpathMailbox : public QObject
         /**
          * Report the timer interval for this box.
          */
-        Q_UINT32 autoCheckInterval() const { return autoCheckInterval_; }
+        unsigned int autoCheckInterval() const { return autoCheckInterval_; }
         /**
          * Get the name of this box.
          */
@@ -156,12 +158,12 @@ class EmpathMailbox : public QObject
          * Get the count of messages contained within all folders
          * owned by this box.
          */
-        Q_UINT32 messageCount() const;
+        unsigned int messageCount() const;
         /**
          * Get the count of unread messages contained within all folders
          * owned by this box.
          */
-        Q_UINT32 unreadMessageCount() const;
+        unsigned int unreadMessageCount() const;
         /**
          * Report the type of this mailbox.
          */
@@ -181,7 +183,7 @@ class EmpathMailbox : public QObject
         /**
          * Count the number of new mails ready.
          */
-        Q_UINT32    newMails()      const { return newMessagesCount_; }
+        unsigned int    newMails()      const { return newMessagesCount_; }
 
     signals:
 
@@ -202,20 +204,21 @@ class EmpathMailbox : public QObject
 
         EmpathIndex * index_;
 
-        EmpathURL   url_;
+        EmpathURL url_;
 
         Type type_;
         QString typeString_;
 
-        Q_UINT32    newMessagesCount_;
+        unsigned int newMessagesCount_;
 
-        bool        autoCheck_;
-        Q_UINT32    autoCheckInterval_;
+        bool autoCheck_;
+        unsigned int autoCheckInterval_;
         
         QTimer      timer_;
         QString     pixmapName_;
-        Q_UINT32    id_;
-        Q_UINT32    seq_;
+
+        unsigned int id_;
+        unsigned int seq_;
 
     private:
 

@@ -44,22 +44,10 @@
 #include "Empath.h"
 #include <RMM_Message.h>
 
-/*
-EmpathComposeWindow::EmpathComposeWindow()
-    : KTMainWindow()
-{
-    composeWidget_    =
-        new EmpathComposeWidget(this, "composeWidget");
-    
-    _init();
-}
-*/
-
-EmpathComposeWindow::EmpathComposeWindow(const EmpathComposer::Form & f)
+EmpathComposeWindow::EmpathComposeWindow(EmpathComposer::Form f)
     :    KTMainWindow()
 {
-    composeWidget_    =
-        new EmpathComposeWidget(f, this, "composeWidget");
+    composeWidget_ = new EmpathComposeWidget(f, this, "composeWidget");
     
     _init();
 }
@@ -189,7 +177,7 @@ EmpathComposeWindow::setupStatusBar()
     void
 EmpathComposeWindow::s_fileSendMessage()
 {
-    EmpathComposer::Form & f = composeWidget_->composeForm();
+    EmpathComposer::Form f = composeWidget_->composeForm();
     
     if (!f.visibleHeaders.has(RMM::HeaderTo) &&
         !f.invisibleHeaders.has(RMM::HeaderTo)) {

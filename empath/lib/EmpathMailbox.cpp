@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -58,7 +60,7 @@ EmpathMailbox::setAutoCheck(bool yn)
 }
 
     void
-EmpathMailbox::setAutoCheckInterval(Q_UINT32 i)
+EmpathMailbox::setAutoCheckInterval(unsigned int i)
 {
     autoCheckInterval_ = i;
 
@@ -76,10 +78,10 @@ EmpathMailbox::setName(const QString & s)
     emit(rename(this, oldName));
 }
 
-    Q_UINT32
+    unsigned int
 EmpathMailbox::messageCount() const
 {
-    Q_UINT32 c = 0;
+    unsigned int c = 0;
     
     EmpathFolderListIterator it(folderList_);
     
@@ -89,10 +91,10 @@ EmpathMailbox::messageCount() const
     return c;
 }
 
-    Q_UINT32
+    unsigned int
 EmpathMailbox::unreadMessageCount() const
 {
-    Q_UINT32 c = 0;
+    unsigned int c = 0;
     
     EmpathFolderListIterator it(folderList_);
     
@@ -103,7 +105,7 @@ EmpathMailbox::unreadMessageCount() const
 }
 
     void
-EmpathMailbox::s_countUpdated(Q_UINT32, Q_UINT32)
+EmpathMailbox::s_countUpdated(unsigned int, unsigned int)
 {
     emit(countUpdated(unreadMessageCount(), messageCount()));
 }
@@ -127,26 +129,33 @@ EmpathMailbox::folder(const EmpathURL & url)
     void
 EmpathMailbox::queueJob(EmpathJobInfo & jobInfo)
 {
+    empathDebug("Queuing a new job");
+
+    switch(jobInfo.type()) {
+        case RetrieveMessage:   empathDebug("Type: RetrieveMessage"); break;
+        case CopyMessage:       empathDebug("Type: CopyMessage"); break;
+        case WriteMessage:      empathDebug("Type: WriteMessage"); break;
+        case MoveMessage:       empathDebug("Type: MoveMessage"); break;
+        case RemoveMessage:     empathDebug("Type: RemoveMessage"); break;
+        case MarkMessage:       empathDebug("Type: MarkMessage"); break;
+        case IgnoreMessage:     empathDebug("Type: IgnoreMessage"); break;
+        case ForwardMessage:    empathDebug("Type: ForwardMessage"); break;
+        case CreateFolder:      empathDebug("Type: CreateFolder"); break;
+        case RemoveFolder:      empathDebug("Type: RemoveFolder"); break;
+        default: empathDebug("Unknown type"); break;
+    }
+
+    empathDebug("From: " + jobInfo.from().asString());
+    empathDebug("To: " + jobInfo.to().asString());
+
+
     _enqueue(jobInfo);
 }
 
     void
 EmpathMailbox::_enqueue(EmpathJobInfo & jobInfo)
 {
-    if (jobInfo.type() != CopyMessage &&
-        jobInfo.type() != MoveMessage) {
-        
-        queue_.enqueue(new EmpathJobInfo(jobInfo));
-    
-    } else {
-    
-        // Copy / move jobs are handled differently as they are done in 2 parts.
-        EmpathJobInfo * job = new EmpathJobInfo(jobInfo);
-        job->setType(RetrieveMessage);
-        job->setSubType(jobInfo.type());
-        queue_.enqueue(job);
-    }
-    
+    queue_.enqueue(new EmpathJobInfo(jobInfo));
     _runQueue();
 }
 

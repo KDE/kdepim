@@ -1,7 +1,9 @@
 /*
   RDatabase - A persistent QAsciiDict<QByteArray>.
   
-  Copyright (C) 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
  
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -127,6 +129,10 @@ class Database
 
     QDateTime lastModified() const;
 
+    void increaseUnreadCount()  { ++unreadCount_; }
+    void decreaseUnreadCount()  { --unreadCount_; }
+    unsigned int unreadCount()  { return unreadCount_; }
+
   private:
 
     // Disabled default ctor, copy ctor and xxref.
@@ -158,6 +164,8 @@ class Database
     QDataStream dataStream_;
 
     QDateTime touched_;
+
+    unsigned int unreadCount_;
 };
 
 } // End namespace

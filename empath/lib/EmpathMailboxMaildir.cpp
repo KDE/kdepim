@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -146,7 +148,7 @@ EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
 
                 EmpathMaildir * m = _box(jobInfo.from());
                 
-                if ((m == 0) || (jobInfo.IDList().count() == 0)) {
+                if (m == 0) {
                     
                     QStringList::ConstIterator it(jobInfo.IDList().begin());
                     
@@ -157,7 +159,7 @@ EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
                     
                     return;
                 }
-                
+
                 jobInfo.setSuccessMap(m->removeMessage(jobInfo.IDList()));
 
                 jobInfo.done(true);
@@ -326,6 +328,8 @@ EmpathMailboxMaildir::loadConfig()
     _recursiveReadFolders(path_);
     _setupDefaultFolders();
     
+    emit(updateFolderLists());
+
     // Initialise all maildir objects.
 
     EmpathTask * t = new EmpathTask(i18n("Reading folders"));
@@ -407,9 +411,6 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
         f->setContainer(true);
     else
         boxList_.append(new EmpathMaildir(path_, url));
-    
-    emit(updateFolderLists());
-    kapp->processEvents();
 }
 
     void

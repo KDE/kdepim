@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -53,20 +55,6 @@ EmpathConfigPOP3Server::EmpathConfigPOP3Server
     le_uname_           = new QLineEdit(this);
     epew_pass_          = new EmpathPasswordEditWidget(QString::null, this);
 
-    // Layout
-    
-    QGridLayout * layout =
-        new QGridLayout(this, 4, 2, dialogSpace, dialogSpace);
-
-    layout->addWidget(l_inServer,       0, 0);
-    layout->addWidget(l_inServerPort,   1, 0);
-    layout->addWidget(l_uname,          2, 0);
-    layout->addWidget(l_pass,           3, 0);
-    
-    layout->addWidget(le_inServer_,     0, 1);
-    layout->addWidget(sb_inServerPort_, 1, 1);
-    layout->addWidget(le_uname_,        2, 1);
-    layout->addWidget(epew_pass_,       3, 1);
 }
 
 EmpathConfigPOP3Server::~EmpathConfigPOP3Server()

@@ -1,7 +1,9 @@
 /*
     Empath - Mailer for KDE
     
-    Copyright (C) 1998, 1999 Rik Hemsley rik@kde.org
+    Copyright 1999, 2000
+        Rik Hemsley <rik@kde.org>
+        Wilco Greven <j.w.greven@student.utwente.nl>
     
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,6 +42,7 @@
 #include <kglobal.h>
 #include <kconfig.h>
 #include <klocale.h>
+#include <kstddirs.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -54,15 +57,12 @@
 #include "EmpathTask.h"
 
 Empath * Empath::EMPATH = 0;
-bool Empath::started_ = false;
 
     void
 Empath::start()
 {
-    if (!started_) {
-        started_ = true;
+    if (!empath)
         (void)new Empath;
-    }
 }
         
     void
@@ -82,12 +82,21 @@ Empath::Empath()
         seq_(0)
 {
     EMPATH = this;
+
+    // Don't do dollar expansion by default.
+    // Possible security hole.
+    KGlobal::config()->setDollarExpansion(false);    
+
+    KGlobal::dirs()->addResourceType("indices", "share/apps/empath/indices");
+    KGlobal::dirs()->addResourceType("cache",   "share/apps/empath/cache");
+
     updateOutgoingServer(); // Must initialise the pointer.
     
     composer_ = new EmpathComposer;
+
     QObject::connect(
-        composer_, SIGNAL(composeFormComplete(const EmpathComposer::Form &)),
-        SIGNAL(newComposer(const EmpathComposer::Form &)));
+        composer_, SIGNAL(composeFormComplete(EmpathComposer::Form)),
+        SIGNAL(newComposer(EmpathComposer::Form)));
 }
 
     void
@@ -203,6 +212,7 @@ Empath::finishedWithMessage(const EmpathURL & url, const QString & xinfo)
     }
 
     if (!m->referencedBy(xinfo)) {
+        empathDebug("xinfo == `" + xinfo + "'");
         empathDebug("Hey, you don't OWN this message ! It's staying cached !");
         return;
     }
@@ -289,6 +299,7 @@ Empath::cacheMessage
     }
 }
 
+#if 0
     void
 Empath::s_saveNameReady(const EmpathURL & url, QString name)
 {
@@ -297,16 +308,15 @@ Empath::s_saveNameReady(const EmpathURL & url, QString name)
     if (m == 0)
         return;
 
-    EmpathJobInfo j(RetrieveMessage, url, name, "save");
+    EmpathJobInfo j(RetrieveMessage, url, "save:" + name);
     m->queueJob(j);
 
 }
 
     void
-Empath::s_messageReadyForSave(
-    bool status, const EmpathURL & url, QString name, QString xinfo)
+Empath::s_messageReadyForSave(bool status, const EmpathURL & url, QString xinfo)
 {
-    if (xinfo != "save")
+    if (xinfo.left(5) != "save:")
         return;
     
     if (!status) {
@@ -366,85 +376,53 @@ Empath::s_messageReadyForSave(
     QString okMessage("Message saved to %1 OK");
     s_infoMessage(okMessage.arg(name));
 }
+#endif
 
     void
-Empath::copy(
-    const EmpathURL & from,
-    const EmpathURL & to,
-    QString extraInfo)
+Empath::copy(const EmpathURL & from, const EmpathURL & to, QString extraInfo)
 {
-    EmpathMailbox * m = mailbox(from);
+    EmpathJobInfo job(CopyMessage, from, to, extraInfo);
 
-    if (m == 0)
-        return;
+    EmpathJobInfo partOne(RetrieveMessage, from, extraInfo);
 
-    EmpathJobInfo ji(CopyMessage, from, to, QString::null, extraInfo);
-    
-    m->queueJob(ji);
+    partOne.setOriginal(job);
+ 
+    _queueJob(from, partOne);
 }
 
     void
-Empath::move(
-    const EmpathURL & from,
-    const EmpathURL & to,
-    QString extraInfo)
+Empath::move(const EmpathURL & from, const EmpathURL & to, QString extraInfo)
 {
-    EmpathMailbox * m = mailbox(from);
+    EmpathJobInfo job(MoveMessage, from, to, extraInfo);
 
-    if (m == 0)
-        return;
+    EmpathJobInfo partOne(RetrieveMessage, from, extraInfo);
 
-    EmpathJobInfo ji(MoveMessage, from, to, QString::null, extraInfo);
-    
-    m->queueJob(ji);
+    partOne.setOriginal(job);
+ 
+    _queueJob(from, partOne);
 }
 
     void
-Empath::retrieve(
-    const EmpathURL & url,
-    QString extraInfo)
+Empath::retrieve(const EmpathURL & url, QString extraInfo)
 {
-    EmpathMailbox * m = mailbox(url);
-
-    if (m == 0)
-        return;
-
-    EmpathJobInfo ji(RetrieveMessage, url, QString::null, extraInfo);
-    
-    m->queueJob(ji);
+    EmpathJobInfo job(RetrieveMessage, url, extraInfo);
+    _queueJob(url, job);
 }
 
     void
-Empath::write(
-    const EmpathURL & folder,
-    RMM::RMessage & msg,
-    QString extraInfo)
+Empath::write(const EmpathURL & folder, RMM::RMessage & msg, QString extraInfo)
 {
-    EmpathMailbox * m = mailbox(folder);
-
-    if (m == 0)
-        return;
-
-    EmpathJobInfo ji(folder, EmpathURL(), msg, QString::null, extraInfo);
-    
-    m->queueJob(ji);
+    EmpathJobInfo job(WriteMessage, folder, msg, extraInfo);
+    _queueJob(folder, job);
 }
 
     void
-Empath::remove(
-    const EmpathURL & url,
-    QString extraInfo = QString::null)
+Empath::remove(const EmpathURL & url, QString extraInfo)
 {
-    EmpathMailbox * m = mailbox(url);
+    ActionType t = url.isMessage() ? RemoveMessage : RemoveFolder;
 
-    if (m == 0)
-        return;
-
-    EmpathJobInfo ji(
-        RemoveMessage, url, QStringList(url.messageID()),
-        QString::null, extraInfo);
-    
-    m->queueJob(ji);
+    EmpathJobInfo job(t, url, extraInfo);
+    _queueJob(url, job);
 }
 
     void
@@ -452,15 +430,9 @@ Empath::remove(
     const EmpathURL & folder,
     const QStringList & list,
     QString extraInfo)
-{
-    EmpathMailbox * m = mailbox(folder);
-
-    if (m == 0)
-        return;
-
-    EmpathJobInfo ji(RemoveMessage, folder, list, QString::null, extraInfo);
-    
-    m->queueJob(ji);
+{   
+    EmpathJobInfo job(RemoveMessage, folder, list, extraInfo);
+    _queueJob(folder, job);
 }
 
     void 
@@ -469,15 +441,8 @@ Empath::mark(
     RMM::MessageStatus status,
     QString extraInfo)
 {
-    EmpathMailbox * m = mailbox(url);
-
-    if (m == 0)
-        return;
-
-    EmpathJobInfo ji(
-        MarkMessage, url, QStringList(), status, QString::null, extraInfo);
-    
-    m->queueJob(ji);
+    EmpathJobInfo job(MarkMessage, url, status, extraInfo);
+    _queueJob(url, job);
 }
 
     void    
@@ -487,34 +452,77 @@ Empath::mark(
     RMM::MessageStatus status,
     QString extraInfo)
 {
-    EmpathMailbox * m = mailbox(url);
-
-    if (m == 0)
-        return;
-
-    EmpathJobInfo ji(
-        MarkMessage, url, list, status, QString::null, extraInfo);
-    
-    m->queueJob(ji);
+    EmpathJobInfo job(MarkMessage, url, list, status, extraInfo);
+    _queueJob(url, job);
 }
 
     void
 Empath::createFolder(const EmpathURL & url, QString extraInfo)
 {
-    EmpathMailbox * m = mailbox(url);
-    
-    if (m == 0)
-        return;
+    EmpathJobInfo job(CreateFolder, url, extraInfo);
+    _queueJob(url, job);
+}
 
-    EmpathJobInfo ji(CreateFolder, url, QString::null, extraInfo);
-
-    m->queueJob(ji);
+    void
+Empath::removeFolder(const EmpathURL & url, QString extraInfo)
+{
+    EmpathJobInfo job(RemoveFolder, url, extraInfo);
+    _queueJob(url, job);
 }
 
     void
 Empath::jobFinished(EmpathJobInfo ji)
 {
-    emit(jobComplete(ji));
+    ActionType t = ji.nextActionRequired();
+
+    if (t == NoAction) {
+
+        emit(jobComplete(ji));
+
+    } else if (t == WriteMessage) {
+
+        if (!ji.success()) {
+            emit(jobComplete(ji));
+            return;
+        }
+
+        EmpathJobInfo original(ji.original());
+
+        RMM::RMessage * m =
+            message(original.from(), original.xinfo());
+
+        if (!m) {
+            empathDebug("Can't get message data");
+            return;
+        }
+        
+        EmpathJobInfo writeIt(WriteMessage, original.to(), *m);
+
+        writeIt.setOriginal(original);
+
+        delete m;
+        m = 0;
+
+        EmpathMailbox * mbx = mailbox(original.to());
+        
+        if (mbx != 0) {
+            mbx->queueJob(writeIt);
+        }
+
+    } else if (t == RemoveMessage) {
+
+        EmpathJobInfo original(ji.original());
+
+        EmpathJobInfo removeIt(RemoveMessage, original.from());
+
+        removeIt.setOriginal(original);
+
+        EmpathMailbox * mbx = mailbox(original.from());
+        
+        if (mbx != 0) {
+            mbx->queueJob(removeIt);
+        }
+    }
 }
 
 void Empath::send(RMM::RMessage & m)     { mailSender_->send(m);     }
@@ -526,7 +534,7 @@ void Empath::filter(const EmpathURL & m) { filterList_.filter(m);    }
 void Empath::s_setup(SetupType t, QWidget * parent)
 { emit(setup(t, parent)); }
 
-void Empath::s_about(QWidget * parent)         { emit(about(parent));          }
+void Empath::s_about(QWidget * parent) { emit(about(parent)); }
 
 void Empath::s_newTask(EmpathTask * t) { emit(newTask(t)); }
 
@@ -601,5 +609,18 @@ Empath::drafts() const
     EmpathURL
 Empath::trash() const
 { return trash_; }
+
+    void
+Empath::_queueJob(const EmpathURL & mailboxURL, EmpathJobInfo & ji)
+{
+    EmpathMailbox * m = mailbox(mailboxURL);
+    
+    if (m == 0) {
+        empathDebug("Can't find mailbox");
+        return;
+    }
+
+    m->queueJob(ji);
+}
 
 // vim:ts=4:sw=4:tw=78
