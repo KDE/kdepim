@@ -95,7 +95,7 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(QWidget * parent)
 /////////////////////////////////////////////////////////////////////////////
 
 
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
     QHBoxLayout * layout0 = new QHBoxLayout(layout);
 

@@ -94,7 +94,7 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
 
     // Layout
 
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
     QHBoxLayout * layout0 = new QHBoxLayout(layout);
     layout0->addWidget(rb_moveFolder_);

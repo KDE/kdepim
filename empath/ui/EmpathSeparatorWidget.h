@@ -27,8 +27,8 @@
 #include <qlabel.h>
 #include <qframe.h>
 
-// Local includes
-#include "EmpathUIUtils.h"
+// KDE includes
+#include <kdialog.h>
 
 /**
  * @short Dialog separator widget
@@ -45,7 +45,7 @@ class EmpathSeparatorWidget : public QLabel
         {
             setFrameStyle(QFrame::HLine | QFrame::Sunken);
             setLineWidth(1);
-            setFixedHeight(dialogSpace);
+            setFixedHeight(KDialog::spacingHint());
         }
 };
 

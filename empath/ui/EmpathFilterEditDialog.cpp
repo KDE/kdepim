@@ -48,7 +48,7 @@
 
 EmpathFilterEditDialog::EmpathFilterEditDialog
     (EmpathFilter * filter, QWidget * parent)
-    :   QDialog(parent, "FilterEditDialog", true),
+    :   KDialog(parent, "FilterEditDialog"),
         filter_(filter)
 {
     setCaption(i18n("Edit Filters"));
@@ -90,7 +90,7 @@ EmpathFilterEditDialog::EmpathFilterEditDialog
     
     buttonBox->layout();
 
-    QVBoxLayout * layout        = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout        = new QVBoxLayout(this, spacingHint());
     QHBoxLayout * nameLayout    = new QHBoxLayout(layout);
     layout->addWidget(new EmpathSeparatorWidget(this));
     QHBoxLayout * arrivesLayout = new QHBoxLayout(layout);

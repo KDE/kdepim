@@ -61,7 +61,7 @@ EmpathFolderChooserDialog::EmpathFolderChooserDialog(QWidget * parent)
     QObject::connect(pb_cancel, SIGNAL(clicked()), SLOT(s_cancel()));
     QObject::connect(pb_help,   SIGNAL(clicked()), SLOT(s_help()));
 
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
     layout->addWidget(folderWidget_);
     layout->addStretch(10);

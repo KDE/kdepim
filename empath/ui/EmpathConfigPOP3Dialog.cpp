@@ -67,9 +67,9 @@ EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog
     
     buttonBox->layout();
 
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
-    QGridLayout * layout1 = new QGridLayout(layout, 4, 2, dialogSpace);
+    QGridLayout * layout1 = new QGridLayout(layout, 4, 2, spacingHint());
 
     layout1->addWidget(l_inServer,       0, 0);
     layout1->addWidget(l_inServerPort,   1, 0);

@@ -35,11 +35,13 @@
 #include <qpushbutton.h>
 #include <qlineedit.h>
 
+// Qt includes
+#include <kdialog.h>
 
 class EmpathFilter;
 class EmpathFolderChooserWidget;
 
-class EmpathFilterEditDialog : public QDialog
+class EmpathFilterEditDialog : public KDialog
 {
     Q_OBJECT
 

@@ -35,6 +35,7 @@
 #include <kmessagebox.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kiconloader.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
@@ -44,10 +45,6 @@
 #include "EmpathFolderWidget.h"
 #include "EmpathMailboxList.h"
 #include "EmpathFolderList.h"
-
-#include "EmpathMailboxMaildir.h"
-#include "EmpathMailboxPOP3.h"
-#include "EmpathMailboxIMAP4.h"
 
 EmpathFolderWidget::EmpathFolderWidget(QWidget * parent)
     :   EmpathListView(parent, "FolderWidget")
@@ -395,7 +392,7 @@ EmpathFolderWidget::s_startDrag(const QList<QListViewItem> & items)
     empathDebug("Drag folder: " + i->url().asString());
     CHECK_PTR(u);
 
-    u->setPixmap(empathIcon("folder-normal"));
+    u->setPixmap(BarIcon("folder-normal"));
 
     u->drag();
 }

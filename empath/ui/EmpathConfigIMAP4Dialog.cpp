@@ -65,7 +65,7 @@ EmpathConfigIMAP4Dialog::EmpathConfigIMAP4Dialog
     pb_Cancel_  = buttonBox->addButton(i18n("&Cancel"));
     pb_Help_    = buttonBox->addButton(i18n("&Help"));    
 
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
     QLabel * l_notImp  =
         new QLabel(i18n("Sorry not implemented yet"), this, "l_notImp");

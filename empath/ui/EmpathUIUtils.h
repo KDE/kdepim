@@ -31,9 +31,6 @@
 #include <qiconset.h>
 #include <klocale.h>
 
-const int dialogSpace = 6;
-
-QPixmap empathMimeIcon(const QString & name);
 QPixmap empathIcon(const QString & name);
 QIconSet empathIconSet(const QString & name);
 

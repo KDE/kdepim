@@ -57,7 +57,7 @@ EmpathConfigMaildirDialog::create(const EmpathURL & url, QWidget * parent)
         
 EmpathConfigMaildirDialog::EmpathConfigMaildirDialog
         (const EmpathURL & url, QWidget * parent)
-    :   QDialog(parent, "EmpathConfigMaildirDialog", true),
+    :   KDialog(parent, "EmpathConfigMaildirDialog", true),
         url_(url),
         applied_(false)
 {
@@ -108,7 +108,7 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog
     QObject::connect(pb_cancel_,    SIGNAL(clicked()),  SLOT(s_cancel()));
     QObject::connect(pb_help_,      SIGNAL(clicked()),  SLOT(s_help()));
  
-    QVBoxLayout * v = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * v = new QVBoxLayout(this, spacingHint());
     
     QHBoxLayout * b = new QHBoxLayout(v);
     b->addWidget(cb_mailCheckInterval_);

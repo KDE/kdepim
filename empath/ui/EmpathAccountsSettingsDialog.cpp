@@ -88,7 +88,7 @@ EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(QWidget * parent)
     buttonBox_->layout();
 
     // Layout
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
     QHBoxLayout * topLayout = new QHBoxLayout(layout);
     
     topLayout->addWidget(lv_accts_);

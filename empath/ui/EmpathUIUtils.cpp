@@ -35,11 +35,6 @@
 // Local includes
 #include "EmpathUIUtils.h"
 
-QPixmap empathMimeIcon(const QString & name)
-{
-    return KGlobal::iconLoader()->loadIcon(name);
-}
-
 QPixmap empathIcon(const QString & name)
 {
     return KGlobal::iconLoader()->loadIcon(name);

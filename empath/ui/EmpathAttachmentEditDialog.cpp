@@ -164,7 +164,7 @@ EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
     
     // Layouts
     
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
     QGridLayout * nameDescriptionLayout = new QGridLayout(layout);
 

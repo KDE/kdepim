@@ -211,8 +211,6 @@ EmpathMailboxMaildir::loadConfig()
     
     QTime endTime = QTime::currentTime();
 
-    empathDebug("Total time to create folder and maildir objects: " + QString::number(startTime.msecsTo(endTime)));
-    
     emit(updateFolderLists());
 
     _recursiveReadFolders(path_);
@@ -240,7 +238,8 @@ EmpathMailboxMaildir::loadConfig()
 
     t->done();
     
-    emit(syncFolderLists());
+    // Is this now needed ?
+//    emit(syncFolderLists());
 }
 
     void

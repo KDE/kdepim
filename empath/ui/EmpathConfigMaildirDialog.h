@@ -28,33 +28,25 @@
 #define EMPATHCONFIGMAILDIRDIALOG_H
 
 // Qt includes
-#include <qdialog.h>
-#include <qwidget.h>
-#include <qlabel.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qradiobutton.h>
 #include <qcheckbox.h>
-#include <qlistbox.h>
-#include <qbuttongroup.h>
 #include <qspinbox.h>
 
 // KDE includes
 #include <kbuttonbox.h>
+#include <kdialog.h>
 
 // Maildir includes
-#include "EmpathDefines.h"
 #include "EmpathURL.h"
 
-class EmpathDirSelectWidget;
 class EmpathMailboxMaildir;
-class RikGroupBox;
 
 /**
  * Configure a local mailbox.
  * Perhaps this should die and be replaced ?
  */
-class EmpathConfigMaildirDialog : public QDialog
+class EmpathConfigMaildirDialog : public KDialog
 {
     Q_OBJECT
 

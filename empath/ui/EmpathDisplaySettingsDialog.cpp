@@ -103,7 +103,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
 
     // Layouts
     
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
     QHBoxLayout * layout2 = new QHBoxLayout(layout);
     layout2->addWidget(cb_timer_);

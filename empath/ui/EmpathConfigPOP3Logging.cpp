@@ -31,6 +31,7 @@
 
 // KDE includes
 #include <klocale.h>
+#include <kdialog.h>
 
 // Local includes
 #include "Empath.h"
@@ -70,7 +71,7 @@ EmpathConfigPOP3Logging::EmpathConfigPOP3Logging
     
     // Layout
     
-    QVBoxLayout * topLevelLayout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * topLevelLayout = new QVBoxLayout(this, KDialog::spacingHint());
 
     QHBoxLayout * layout0 = new QHBoxLayout(topLevelLayout);
     layout0->addWidget(cb_logConversation_);

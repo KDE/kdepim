@@ -109,7 +109,7 @@ EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(QWidget * parent)
 
     // Layouts
     
-    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+    QVBoxLayout * layout = new QVBoxLayout(this, spacingHint());
 
     QGridLayout * layout0 = new QGridLayout(layout);
 
