@@ -17,17 +17,17 @@
 
 <authorgroup>
 <author>
-	<firstname>Daniel</firstname>
-	<surname>Naber</surname>
+<firstname>Daniel</firstname>
+<surname>Naber</surname>
 </author>
 <author>
-	<firstname>David</firstname>
-	<surname>Rugge</surname>
+<firstname>David</firstname>
+<surname>Rugge</surname>
 </author>
 </authorgroup>
 
 <date>14/02/2001</date>
-<releaseinfo>1.2.0</releaseinfo>
+<releaseinfo>1.02.00</releaseinfo>
 
 <copyright>
 <year>1999</year>

@@ -84,10 +84,11 @@
 <legalnotice>&FDLNotice;</legalnotice>
 
 <date>16/12/2000</date>
-<releaseinfo>0.3.2</releaseinfo>
+<releaseinfo>0.03.02</releaseinfo>
 
-
-<abstract><para>&knode; is an easy-to-use newsreader.</para></abstract>
+<abstract>
+<para>&knode; is an easy-to-use newsreader.</para>
+</abstract>
 
 <keywordset>
 <keyword>KDE</keyword>
