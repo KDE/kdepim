@@ -110,8 +110,12 @@ void KFolderTreeItem::setUnreadCount( int aUnread )
   mUnread = aUnread;
   
   QString unread = QString::null;
-  if (mUnread == 0) unread = "-";
-  else unread.setNum(mUnread);
+  if (mUnread == 0)
+    unread = "- ";
+  else {
+    unread.setNum(mUnread);
+    unread += " ";
+  }
 
   setText( static_cast<KFolderTree*>(listView())->unreadIndex(), 
       unread );
@@ -125,8 +129,12 @@ void KFolderTreeItem::setTotalCount( int aTotal )
   mTotal = aTotal;
 
   QString total = QString::null;
-  if (mTotal == 0) total = "-";
-  else total.setNum(mTotal);
+  if (mTotal == 0)
+    total = "- ";
+  else {
+    total.setNum(mTotal);
+    total += " ";
+  }
 
   setText( static_cast<KFolderTree*>(listView())->totalIndex(), 
       total );
