@@ -36,6 +36,7 @@
 #include "EmpathAttachmentListItem.h"
 #include "EmpathUIUtils.h"
 #include "EmpathDefines.h"
+#include <RMM_Enum.h>
 
 EmpathAttachmentListItem::EmpathAttachmentListItem(
         QListView * parent,
@@ -43,7 +44,17 @@ EmpathAttachmentListItem::EmpathAttachmentListItem(
     :    QListViewItem(parent),
         spec_(s)
 {
-    setText(0, spec_.description());
+    setPixmap(0, empathIcon("mime-" + RMM::mimeTypeToIconName(
+                RMM::mimeTypeStr2Enum(spec_.type().ascii()),
+                RMM::mimeSubTypeStr2Enum(spec_.subType().ascii()))));
+
+    setText(0, spec_.filename());
+    setText(1, spec_.type());
+    setText(2, spec_.subType());
+    setText(3, spec_.charset());
+    setText(4, "TODO");
+//    setText(4, spec_.encoding());
+    setText(5, spec_.description());
 }
 
 EmpathAttachmentListItem::~EmpathAttachmentListItem()    
@@ -74,7 +85,18 @@ EmpathAttachmentListItem::key(int, bool) const
 EmpathAttachmentListItem::setSpec(const EmpathAttachmentSpec & s)
 {
     spec_ = s;
-    setText(0, spec_.description());
+
+    setPixmap(0, empathIcon("mime-" + RMM::mimeTypeToIconName(
+                RMM::mimeTypeStr2Enum(spec_.type().ascii()),
+                RMM::mimeSubTypeStr2Enum(spec_.subType().ascii()))));
+
+    setText(0, spec_.filename());
+    setText(1, spec_.type());
+    setText(2, spec_.subType());
+    setText(3, spec_.charset());
+    setText(4, "TODO");
+//    setText(4, spec_.encoding());
+    setText(5, spec_.description());
 }
 
 // vim:ts=4:sw=4:tw=78

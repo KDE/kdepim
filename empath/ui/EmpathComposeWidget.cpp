@@ -56,14 +56,16 @@ EmpathComposeWidget::EmpathComposeWidget(
         QWidget(parent, name),
         composeForm_(composeForm)
 {
-    QSplitter * splitter = new QSplitter(Vertical, this, "splitter");
+    splitter_ = new QSplitter(Vertical, this, "splitter");
  
     envelopeWidget_ = 
             new EmpathEnvelopeWidget(composeForm_.visibleHeaders, this, "envelopeWidget");
     editorWidget_ = 
-            new QMultiLineEdit(splitter, "editorWidget");
+            new QMultiLineEdit(splitter_, "editorWidget");
     attachmentWidget_ = 
-            new EmpathAttachmentListWidget(splitter, "attachmentWidget");
+            new EmpathAttachmentListWidget(splitter_, "attachmentWidget");
+    
+    splitter_->setResizeMode(attachmentWidget_, QSplitter::FollowSizeHint);
     
     KConfig * c = KGlobal::config();
    
@@ -74,10 +76,12 @@ EmpathComposeWidget::EmpathComposeWidget(
     // If the user doesn't want us to wrap, we'll wrap text dynamically
     // in the editor anyway to make editing easier. We must not wrap the
     // actual text we send though.
+    // Update: We decided that it's better to not wrap text at all if the
+    // user doesn't want to. Therefore we set NoWrap.
 
     c->setGroup(EmpathConfig::GROUP_COMPOSE);
     if (!c->readBoolEntry(EmpathConfig::C_WRAP_LINES, true))
-        editorWidget_->setWordWrap(QMultiLineEdit::DynamicWrap);
+        editorWidget_->setWordWrap(QMultiLineEdit::NoWrap);
     else {
         editorWidget_->setWordWrap(QMultiLineEdit::FixedColumnWrap);
         editorWidget_->setWrapColumnOrWidth(
@@ -93,14 +97,13 @@ EmpathComposeWidget::EmpathComposeWidget(
     QVBoxLayout * layout    = new QVBoxLayout(this, 4);
 
     layout->addWidget(envelopeWidget_,  0);
-    layout->addWidget(splitter,         1);
+    layout->addWidget(splitter_,        1);
 
     // set the behaviour of the splitter and its children.
     QValueList<int> sizes;
-    sizes.append(height());
-    sizes.append(0);
-    splitter->setSizes(sizes);
-    splitter->setResizeMode(attachmentWidget_, QSplitter::KeepSize);
+    sizes << height() << 0;
+    splitter_->setSizes(sizes);
+    splitter_->setResizeMode(attachmentWidget_, QSplitter::KeepSize);
 
     if (composeForm_.composeType == EmpathComposer::ComposeForward) 
         return;
@@ -197,6 +200,10 @@ EmpathComposeWidget::s_addAttachment()
 {
     empathDebug("addAttachment() called");
     attachmentWidget_->addAttachment();
+    QValueList<int> sizes;
+    sizes   <<  editorWidget_->height()
+            << attachmentWidget_->minimumSizeHint().height();
+    splitter_->setSizes(sizes);
 }
 
     void
@@ -211,6 +218,10 @@ EmpathComposeWidget::s_removeAttachment()
 {
     empathDebug("removeAttachment() called");
     attachmentWidget_->removeAttachment();
+    QValueList<int> sizes;
+    sizes   <<  editorWidget_->height()
+            << attachmentWidget_->minimumSizeHint().height();
+    splitter_->setSizes(sizes);
 }
 
     bool 
@@ -225,6 +236,18 @@ EmpathComposeWidget::haveSubject()
 {
     return true;
     // return envelopeWidget_->haveSubject(); 
+}
+
+    void
+EmpathComposeWidget::s_undo()
+{
+    editorWidget_->undo();
+}
+
+    void
+EmpathComposeWidget::s_redo()
+{
+    editorWidget_->redo();
 }
 
 // vim:ts=4:sw=4:tw=78

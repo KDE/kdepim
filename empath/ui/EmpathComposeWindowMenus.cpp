@@ -1,15 +1,26 @@
 #include "EmpathEnum.h"
 #include <kmenubar.h>
 
+const char * AboutText =
+    "<p>Empath -- Mail client</p>"
+    "<p>Version 1.0beta1</p>"
+    "<p>Maintainer: Rik Hemsley &lt;rik@kde.org&gt;</p>"
+    "<p>Contributors:"
+    "<ul>"
+    "<li>Wilco Greven</li>"
+    "<li>Dirk A. Mueller</li>"
+    "</ul>"
+    "</p>";
+
+
 void
 EmpathComposeWindow::setupMenuBar()
 {
-    fileMenu_       = new QPopupMenu();
-    editMenu_       = new QPopupMenu();
-    attachmentMenu_ = new QPopupMenu();
-    messageMenu_    = new QPopupMenu();
-    helpMenu_       = new QPopupMenu();
-    priorityMenu_   = new QPopupMenu();
+    fileMenu_       = new QPopupMenu;
+    editMenu_       = new QPopupMenu;
+    attachmentMenu_ = new QPopupMenu;
+    messageMenu_    = new QPopupMenu;
+    priorityMenu_   = new QPopupMenu;
 
     // File menu
     
@@ -25,15 +36,14 @@ EmpathComposeWindow::setupMenuBar()
 
     // Edit menu
     
-#if 0
     editMenu_->insertItem(i18n("&Undo"),
-        this, SLOT(s_editUndo()));
+        composeWidget_, SLOT(s_undo()));
     
     editMenu_->insertItem(i18n("&Redo"),
-        this, SLOT(s_editRedo()));
+        composeWidget_, SLOT(s_redo()));
     
     editMenu_->insertSeparator();
-#endif
+
     editMenu_->insertItem(empathIcon("cut"), i18n("Cu&t"),
         this, SLOT(s_editCut()));
     
@@ -87,18 +97,7 @@ EmpathComposeWindow::setupMenuBar()
     priorityMenu_->insertItem(i18n("Low"),      Low);
     priorityMenu_->insertItem(i18n("Lowest"),   Lowest);
     
-    helpMenu_->insertItem(i18n("&Contents"),
-        this, SLOT(s_help()));
-
-    helpMenu_->insertItem(
-        i18n("&About Empath"),
-        this, SLOT(s_aboutEmpath()));
-
-    helpMenu_->insertSeparator();
-    
-    helpMenu_->insertItem(
-        i18n("About &Qt"),
-        this, SLOT(s_aboutQt()));
+    helpMenu_ = helpMenu(i18n(AboutText));
     
     menuBar()->insertItem(i18n("&File"), fileMenu_);
     menuBar()->insertItem(i18n("&Edit"), editMenu_);

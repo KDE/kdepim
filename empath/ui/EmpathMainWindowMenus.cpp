@@ -16,20 +16,11 @@ const char * EmpathAboutText =
 void
 EmpathMainWindow::_setupMenuBar()
 {
-    fileMenu_        = new QPopupMenu;
-    CHECK_PTR(fileMenu_);
-
-    editMenu_        = new QPopupMenu;
-    CHECK_PTR(editMenu_);
-
-    folderMenu_        = new QPopupMenu;
-    CHECK_PTR(folderMenu_);
-
+    fileMenu_       = new QPopupMenu;
+    editMenu_       = new QPopupMenu;
+    folderMenu_     = new QPopupMenu;
     messageMenu_    = new QPopupMenu;
-    CHECK_PTR(messageMenu_);
-    
     optionsMenu_    = new QPopupMenu;
-    CHECK_PTR(optionsMenu_);
 
     // File menu
     

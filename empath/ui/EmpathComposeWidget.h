@@ -27,7 +27,6 @@
 
 // Qt includes
 #include <qwidget.h>
-#include <qsplitter.h>
 #include <qlistview.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -45,6 +44,7 @@
 #include <RMM_Message.h>
 
 class QMultiLineEdit;
+class QSplitter;
 
 class EmpathEnvelopeWidget;
 class EmpathAttachmentListWidget;
@@ -90,6 +90,8 @@ class EmpathComposeWidget : public QWidget
         
         void    s_editorDone(bool ok, QCString text);
     
+        void    s_undo();
+        void    s_redo();
         void    s_cut();
         void    s_copy();
         void    s_paste();
@@ -117,6 +119,8 @@ class EmpathComposeWidget : public QWidget
         QString         recipient_;
         
         int             maxSizeColOne_;
+
+        QSplitter * splitter_;
 };
 
 #endif

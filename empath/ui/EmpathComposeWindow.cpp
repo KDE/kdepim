@@ -372,18 +372,6 @@ EmpathComposeWindow::s_help()
 }
 
     void
-EmpathComposeWindow::s_aboutEmpath()
-{
-    empath->s_about(this);
-}
-
-    void
-EmpathComposeWindow::s_aboutQt()
-{
-    QMessageBox::aboutQt(this, "aboutQt");
-}
-
-    void
 EmpathComposeWindow::s_confirmDelivery(bool)
 {
     // STUB

@@ -40,9 +40,14 @@ EmpathAttachmentListWidget::EmpathAttachmentListWidget(
         const char * name)
     :    QListView(parent, name)
 {
-    empathDebug("ctor");
+    setAllColumnsShowFocus(true);
 
-    addColumn(i18n("Attachments"));
+    addColumn(i18n("Filename"));
+    addColumn(i18n("Type"));
+    addColumn(i18n("Subtype"));
+    addColumn(i18n("Character set"));
+    addColumn(i18n("Encoding"));
+    addColumn(i18n("Description"));
 }
 
 EmpathAttachmentListWidget::~EmpathAttachmentListWidget()

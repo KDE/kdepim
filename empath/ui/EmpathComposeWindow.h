@@ -80,8 +80,6 @@ class EmpathComposeWindow : public KTMainWindow
 
         // Help menu slots
         void s_help();
-        void s_aboutEmpath();
-        void s_aboutQt();
 
         void s_confirmDelivery  (bool);
         void s_confirmReading   (bool);

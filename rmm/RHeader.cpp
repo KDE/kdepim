@@ -246,7 +246,11 @@ RHeader::_newHeaderBody(HeaderType headerType)
     RHeaderBody *
 RHeader::_newHeaderBody(HeaderType headerType, RHeaderBody * headerBody)
 {    
+    if (headerBody == 0)
+        return _newHeaderBody(headerType);
+
     RHeaderBody * b;
+
     switch (headerTypesTable[headerType]) {
         case Address:           
             b = new RAddress(*(RAddress *)headerBody);                 break;

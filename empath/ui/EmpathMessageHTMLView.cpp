@@ -599,12 +599,14 @@ EmpathMessageHTMLWidget::QColorToHTML(const QColor & c)
 EmpathMessageHTMLWidget::sizeHint() const
 {
     return QSize(width(), 400);
+//    return QSize(docWidth(), docHeight());
 }
 
     QSize
 EmpathMessageHTMLWidget::minimumSizeHint() const
 {
     return QSize(0, 0);
+//    return QSize(docWidth(), docHeight());
 }
 
 // vim:ts=4:sw=4:tw=78
