@@ -213,7 +213,7 @@ void KNArticleManager::showHdrs(bool clear)
         ref=(art->idRef()!=0) ? g_roup->byId(art->idRef()) : 0;        
         art->setDisplayedReference(ref);
         if(ref)
-          ref->setVisibleFollowUps(true); 
+          ref->setVisibleFollowUps(true);
       }
 
     d_isableExpander=true;
@@ -224,6 +224,7 @@ void KNArticleManager::showHdrs(bool clear)
       art->setThreadMode(showThreads);
 
       if(showThreads) {
+        art->propagateThreadChangedDate();
 
         if( !art->listItem() && art->filterResult() ) {
 

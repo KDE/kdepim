@@ -526,11 +526,11 @@ void KNMainWindow::configChanged()
 
   QPalette p = palette();
   p.setColor(QColorGroup::Base, app->backgroundColor());
-  p.setColor(QColorGroup::Text, app->textColor());  
+  p.setColor(QColorGroup::Text, app->textColor());
   c_olView->setPalette(p);
-  c_olView->setAlternateBackground(app->backgroundColor());  
+  c_olView->setAlternateBackground(app->backgroundColor());
   h_drView->setPalette(p);
-  h_drView->setAlternateBackground(app->alternateBackgroundColor());  
+  h_drView->setAlternateBackground(app->alternateBackgroundColor());
 
   if (knGlobals.cfgManager->readNewsGeneral()->showScore()) {
     if (!h_drView->header()->isResizeEnabled(2)) {
@@ -551,7 +551,7 @@ void KNMainWindow::configChanged()
     h_drView->header()->setResizeEnabled(false,3);
   }
 
-  a_rtManager->updateListViewItems();  
+  a_rtManager->updateListViewItems();
 }
 
 
@@ -640,7 +640,7 @@ void KNMainWindow::initActions()
   items += i18n("By S&ender");
   items += i18n("By S&core");
   items += i18n("By &Lines");
-  items += i18n("By &Date");
+  items += i18n("By &Date");  
   a_ctArtSortHeaders->setItems(items);
   a_ctArtSortHeaders->setShortcutConfigurable(false);
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
@@ -841,8 +841,14 @@ void KNMainWindow::readOptions()
 
   int sortCol=conf->readNumEntry("sortCol",4);
   bool sortAsc=conf->readBoolEntry("sortAscending", false);
+  bool sortByThreadChangeDate=conf->readBoolEntry("sortByThreadChangeDate", false);
   h_drView->setColAsc(sortCol, sortAsc);
   h_drView->setSorting(sortCol, sortAsc);
+  h_drView->setSortByThreadChangeDate(sortByThreadChangeDate);
+  if(sortByThreadChangeDate)
+    h_drView->setColumnText(4, i18n("Date (thread changed)"));
+  else
+    h_drView->setColumnText(4, i18n("Date"));
   a_ctArtSortHeaders->setCurrentItem(sortCol);
 
   sortCol = conf->readNumEntry("account_sortCol", 0);
@@ -888,6 +894,7 @@ void KNMainWindow::saveOptions()
   // store sorting setup
   conf->writeEntry("sortCol", h_drView->sortColumn());
   conf->writeEntry("sortAscending", h_drView->ascending());
+  conf->writeEntry("sortByThreadChangeDate", h_drView->sortByThreadChangeDate());
   conf->writeEntry("account_sortCol", c_olView->sortColumn());
   conf->writeEntry("account_sortAscending", c_olView->ascending());
 

@@ -66,7 +66,7 @@ KNRemoteArticle::KNRemoteArticle(KNGroup *g)
  : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(0),
    c_olor(knGlobals.cfgManager->appearance()->unreadThreadColor()),
    pgp_signed(false),
-   u_nreadFups(0), n_ewFups(0)
+   u_nreadFups(0), n_ewFups(0), s_ubThreadChangeDate(0)
 {
   m_essageID.setParent(this);
   f_rom.setParent(this);
@@ -262,6 +262,25 @@ void KNRemoteArticle::setForceDefaultCS(bool b)
   }
   KNArticle::setForceDefaultCS(b);
   initListItem();
+}
+
+
+void KNRemoteArticle::propagateThreadChangedDate()
+{
+  KNRemoteArticle *ref=this;
+  KNGroup *g=static_cast<KNGroup*>(c_ol);
+  int idRef=i_dRef;
+
+  while (idRef!=0) {
+    ref=g->byId(idRef);
+    if(!ref)
+      return; // sh#t !!
+    idRef=ref->idRef();
+  }
+
+  if (date()->unixTime() > ref->date()->unixTime()) {
+    ref->setSubThreadChangeDate(date()->unixTime());
+  }
 }
 
 

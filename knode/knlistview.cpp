@@ -18,6 +18,7 @@
 #include <qheader.h>
 #include <qtimer.h>
 #include <qpainter.h>
+#include <klocale.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -69,7 +70,7 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
   }
 
   p->setPen(pen);
-      
+
   p->fillRect(0,0,width, height(), QBrush(base));
   
   if(column==0) {
@@ -126,7 +127,7 @@ int KNLVItemBase::width(const QFontMetrics &fm, const QListView *, int column)
       i++;
     }
   }
-  
+
   return ret;
 }
 
@@ -184,7 +185,8 @@ QString KNLVItemBase::shortString(QString text, int, int width, QFontMetrics fm)
 
 
 KNListView::KNListView(QWidget *parent, const char *name)
-  : KListView(parent,name), s_ortAsc(true), s_ortCol(-1), d_elayedCenter(-1), a_ctiveItem(0), k_eepSelection(false)
+  : KListView(parent,name), s_ortAsc(true), s_ortByThreadChangeDate(false), s_ortCol(-1),
+    d_elayedCenter(-1), a_ctiveItem(0), k_eepSelection(false)
 {
   connect(header(), SIGNAL(clicked(int)),
           this, SLOT(slotSortList(int)));
@@ -255,14 +257,14 @@ void KNListView::ensureItemVisibleWithMargin(const QListViewItem *i)
 {
   if (!i)
   	return;
-  	
+
  QListViewItem *parent = i->parent();
   while (parent) {
     if (!parent->isOpen())
       parent->setOpen(true);
     parent = parent->parent();
   }
-  	
+
   d_elayedCenter = -1;
   int y = itemPos(i);
   int h = i->height();
@@ -293,15 +295,22 @@ void KNListView::addAcceptableDropMimetype(const char *mimeType, bool outsideOk)
 
 void KNListView::slotSortList(int col)
 {
-  if(col==s_ortCol) s_ortAsc=!s_ortAsc;
-  else {
-    emit sortingChanged(col);
+  if(col==s_ortCol) {
+    s_ortAsc=!s_ortAsc;
+    if (col==4 && !s_ortAsc)
+      s_ortByThreadChangeDate = !s_ortByThreadChangeDate;
+  } else {
     s_ortCol=col;
+    emit sortingChanged(col);
   }
 
   setSorting(col, s_ortAsc);
-  
-  if(currentItem()!=0) ensureItemVisible(currentItem());  
+  if(currentItem()!=0) ensureItemVisible(currentItem());
+
+  if (s_ortByThreadChangeDate)
+    setColumnText(4, i18n("Date (thread changed)"));
+  else
+    setColumnText(4, i18n("Date"));
 }
 
 

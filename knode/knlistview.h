@@ -75,6 +75,8 @@ class KNListView : public KListView  {
     int sortColumn() const               { return s_ortCol; }
     bool ascending() const               { return s_ortAsc; }
     void setColAsc(int c, bool a)   { s_ortCol=c; s_ortAsc=a; }
+    bool sortByThreadChangeDate() const    { return s_ortByThreadChangeDate; }
+    void setSortByThreadChangeDate(bool b) { s_ortByThreadChangeDate = b; }
 
     void setActive(QListViewItem *item, bool activate);
     void clear();
@@ -106,7 +108,7 @@ class KNListView : public KListView  {
     virtual QDragObject* dragObject();
     bool acceptDrag(QDropEvent* event) const;
 
-    bool s_ortAsc;
+    bool s_ortAsc, s_ortByThreadChangeDate;
     int s_ortCol, d_elayedCenter;
     KNLVItemBase *a_ctiveItem;
     QMemArray<const char*> a_cceptableDropMimetypes;

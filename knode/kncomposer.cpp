@@ -206,7 +206,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //settings menu
   createStandardStatusBarAction();
   setStandardToolBarMenuEnabled(true);
-    
+
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());

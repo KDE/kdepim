@@ -46,8 +46,15 @@ QString KNHdrViewItem::key(int col, bool) const
     QString tmpString;
     return tmpString.sprintf("%08d",text(col).toInt());
   }
-  if (col==4) {               // date
-    return QString::number((uint)art->date()->unixTime()).rightJustify(15, '0');
+  if(col==4) {
+    time_t date = art->date()->unixTime();
+
+    if(static_cast<KNListView*>(listView())->sortByThreadChangeDate() &&
+       (static_cast<KNRemoteArticle*>(art)->subThreadChangeDate() > date)) {
+      date = static_cast<KNRemoteArticle*>(art)->subThreadChangeDate();
+    }
+
+    return QString::number((uint)date).rightJustify(15, '0');
   }
   return text(col);
 }

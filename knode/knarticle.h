@@ -29,7 +29,6 @@
 #include <kmime_newsarticle.h>
 #include <boolflags.h>
 
-
 #include "knjobdata.h"
 
 //forward declarations
@@ -177,6 +176,10 @@ class KNRemoteArticle : public KNArticle {
     void setPgpSigned(bool f) { pgp_signed = f; }
     bool isPgpSigned() const { return pgp_signed; }
 
+    time_t subThreadChangeDate() { return s_ubThreadChangeDate; }
+    void setSubThreadChangeDate(time_t date) { s_ubThreadChangeDate = date; }
+    // propagate the change date to the root article
+    void propagateThreadChangedDate();
 
   protected:
     // hardcoded headers
@@ -193,6 +196,8 @@ class KNRemoteArticle : public KNArticle {
     bool pgp_signed;                 // true if the user asks to check the pgp signature
     unsigned short u_nreadFups,      // number of the article's unread follow-ups
                    n_ewFups;         // number of the article's new follow-ups
+    time_t s_ubThreadChangeDate;     // the last time the sub-thread of this article changed
+                                     // i.e. when the last article arrived...
 
 }; // KNRemoteArticle
 
