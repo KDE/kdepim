@@ -317,6 +317,17 @@ void KNGroupBrowser::slotFilter(const QString &txt)
 
   bool isRegexp = filtertxt.contains(QRegExp("[^a-z0-9\\-.]"));
 
+  bool isAbbrev = filtertxt.contains(QRegExp("^(.\\.)+.$"));
+  if ( isAbbrev ) {
+          QRegExp regAbbrev( "([^.\\\\])" );
+          #include <kdebug.h>
+          QString blah = filtertxt.replace( QRegExp( "\\." ), "\\\\." );
+          kdDebug( 5003 ) << blah << endl;
+          kdDebug( 5003 ) << blah.replace( regAbbrev, QString( "%1.*" ).arg( regAbbrev.cap( 1 ) ) ) << endl;
+  }
+                  
+  kdDebug(5003) << "QRegExp = " << isAbbrev << endl;
+
   bool doIncrementalUpdate = (!isRegexp && incrementalFilter && (filtertxt.left(lastFilter.length())==lastFilter));
 
   if (doIncrementalUpdate) {
@@ -338,7 +349,9 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
       if ((notCheckSub||g->subscribed)&&
           (notCheckNew||g->newGroup)&&
-          (notCheckStr||(isRegexp? (reg.search(g->name,0) != -1):(g->name.find(filtertxt)!=-1))))
+          (notCheckStr||
+	   ((isRegexp? (reg.search(g->name,0) != -1):(g->name.find(filtertxt)!=-1))||
+	    (reg.search(g->name,0)))))
         matchList->append(g);
     }
   }
