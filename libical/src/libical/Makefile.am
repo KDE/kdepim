@@ -40,7 +40,9 @@ INCLUDES =			\
 
 libical_la_LDFLAGS = -version-info 0:0:0
 
+# Order is important!
 libical_la_SOURCES =		\
+	ical.h			\
 	icalrecur.c		\
 	icalrecur.h		\
 	icalattendee.h		\
@@ -90,8 +92,7 @@ libical_la_SOURCES =		\
 	sspm.h			\
 	vsnprintf.c		\
 	icallangbind.h		\
-	icallangbind.c		\
-	ical.h
+	icallangbind.c
 
 libicalincludedir = $(includedir)
 
