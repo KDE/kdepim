@@ -139,9 +139,10 @@ ConduitApp::ConduitApp(
 
 void ConduitApp::addAuthor(const char *name,
 	const char *task,
-	const char *email)
+	const char *email,
+	const char *web)
 {
-	fAbout->addAuthor(name,task,email);
+	fAbout->addAuthor(name,task,email,web);
 }
 
 // Next are helper functions, which vary considerably
@@ -422,9 +423,11 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 		fConduit->doTest(); 
 		break;
 	case BaseConduit::Error :
-	    kdError() << __FUNCTION__ << ": ConduitApp is in Error state: " <<
-		    fConduit->getExitCode() << "." << endl;
-	    return fConduit->getExitCode();
+		kdError() << __FUNCTION__ 
+			<< ": ConduitApp is in Error state: " 
+			<< (int) fConduit->getExitCode()
+			<< "." << endl;
+		return fConduit->getExitCode();
 	default :
 		kdWarning() << __FUNCTION__ << ": ConduitApp has state " 
 			<< (int) fMode 
@@ -440,6 +443,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.26  2001/04/29 00:27:28  stern
+// Added check for conduit being in error state; I think the exec algorithm should be cleaned up in future...
+//
 // Revision 1.25  2001/04/26 05:28:16  adridg
 // Make conduits use the right .po file
 //

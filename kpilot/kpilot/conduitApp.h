@@ -81,7 +81,8 @@ public:
 	*/
 	void addAuthor(const char *name,
 		const char *task,
-		const char *email=0L);
+		const char *email=0L,
+		const char *web=0L);
 
 	/**
 	* Add KCmdLineOptions to the conduit's application.
@@ -143,6 +144,9 @@ private:
 #endif
 
 // $Log$
+// Revision 1.15  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.14  2001/03/30 17:11:31  stern
 // Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
 //
