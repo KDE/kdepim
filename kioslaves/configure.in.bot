@@ -1,6 +1,6 @@
 if test -z "$SASL2_LIBS"; then
   echo ""
-  echo "cyrus-sasl 2 library is missing. The sieve ioslave will not be built, and imap4 will lack of a lot of authentication opportunities."
+  echo "cyrus-sasl 2 library is missing. The sieve ioslave will not be built, and imap4 will lack of a lot of authentication methods."
   echo ""
   all_tests=bad
 fi
