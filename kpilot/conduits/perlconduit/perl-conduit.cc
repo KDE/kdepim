@@ -53,7 +53,14 @@ const char *id_conduit_perl =
 	"$Id$";
 }
 
-
+/* From the cvs log mailing list:
+Am Dienstag, 13. April 2004 22:26 schrieb Adriaan de Groot:
+> On Tuesday 13 April 2004 20:53, Reinhold Kainhofer wrote:
+> > rename fPerl to my_perl to make it compile again...
+>
+> Note that the renaming is needed because perl 5.8 is a brain-dead abortion,
+> and the code works fine with perl 5.6.
+*/
 class PerlThread : public QThread
 {
 public:
