@@ -73,6 +73,8 @@ void KNServerInfo::readConf(KConfig *conf)
 
 Wallet* KNServerInfo::openWallet()
 {
+  if ( !Wallet::isEnabled() )
+	return 0;
   QString networkWallet = Wallet::NetworkWallet();
   Wallet* wallet = Wallet::openWallet(networkWallet);
   if ( !wallet ) {
