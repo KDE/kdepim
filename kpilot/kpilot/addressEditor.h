@@ -35,6 +35,7 @@
 
 class QLineEdit;
 class PilotAddress;
+struct AddressAppInfo;
 
 class AddressEditor : public KDialogBase 
 {
@@ -42,8 +43,9 @@ class AddressEditor : public KDialogBase
 
 
 public:
-	AddressEditor(PilotAddress* address, 
-		QWidget *parent=NULL, const char *name=NULL);
+	AddressEditor(PilotAddress *address,
+		const struct AddressAppInfo *appInfo,
+		QWidget *parent, const char *name=0L);
 	~AddressEditor();
 
  
@@ -68,18 +70,13 @@ private:
 	QLineEdit *fStateField;
 	QLineEdit *fCityField;
 	QLineEdit *fAddressField;
-	QLineEdit *fPhone5Field;
-	QLineEdit *fPhone4Field;
-	QLineEdit *fPhone3Field;
-	QLineEdit *fPhone2Field;
-	QLineEdit *fPhone1Field;
+	QLineEdit *fPhoneField[5];
 	QLineEdit *fCompanyField;
 	QLineEdit *fTitleField;
 	QLineEdit *fFirstNameField;
 	QLineEdit *fLastNameField;
-  // QButton *fCancelButton;
-  // QButton *fOkButton;
-  void initLayout();
+
+	void initLayout(const struct AddressAppInfo *);
   void fillFields();
 };
 #else
@@ -88,6 +85,9 @@ private:
 
 
 // $Log$
+// Revision 1.6  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.5  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

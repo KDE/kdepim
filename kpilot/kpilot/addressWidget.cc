@@ -464,7 +464,8 @@ AddressWidget::slotEditRecord()
 		return;
 	}
 
-	AddressEditor* editor = new AddressEditor(selectedRecord,this);
+	AddressEditor* editor = new AddressEditor(selectedRecord,
+		&fAddressAppInfo,this);
 	connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
 		this, SLOT(slotUpdateRecord(PilotAddress*)));
 	editor->show();
@@ -493,7 +494,8 @@ AddressWidget::slotCreateNewRecord()
 		return;
 	}
 
-	AddressEditor* editor = new AddressEditor(0L);
+	AddressEditor* editor = new AddressEditor(0L,
+		&fAddressAppInfo,this);
 	connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
 		this, SLOT(slotAddRecord(PilotAddress*)));
 	editor->show();
@@ -930,6 +932,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.29  2001/03/04 20:54:19  adridg
+// Minor simplification
+//
 // Revision 1.28  2001/03/04 11:22:12  adridg
 // In response to bug 21392, replaced fixed-length lookup table by a subclass
 // of QListBoxItem inserted into list box. This subclass carries data to
