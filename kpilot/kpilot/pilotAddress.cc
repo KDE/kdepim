@@ -29,7 +29,9 @@
 
 static const char *pilotadress_id="$Id$";
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <stdlib.h>
 #include <assert.h>
@@ -268,6 +270,9 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.17  2001/04/13 22:13:38  stern
+// Added setShownPhoneField method
+//
 // Revision 1.16  2001/04/11 16:45:03  stern
 // Fixed bug in copying an address
 //

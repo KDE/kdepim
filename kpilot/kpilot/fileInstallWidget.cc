@@ -30,24 +30,51 @@
 */
 static const char *fileinstallwidget_id="$Id$";
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <unistd.h>
+
+
+
+#ifndef QLISTBOX_H
 #include <qlistbox.h>
+#endif
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+#ifndef QLABEL_H
 #include <qlabel.h>
+#endif
+#ifndef QPUSHBT_H
 #include <qpushbt.h>
+#endif
+#ifndef QDRAGOBJECT_H
 #include <qdragobject.h>
+#endif
+#ifndef QLAYOUT_H
 #include <qlayout.h>
+#endif
 #ifndef QTOOLTIP_H
 #include <qtooltip.h>
 #endif
 
+#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
+#endif
 
+#ifndef _KPILOT_KPILOTLINK_H
 #include "kpilotlink.h"
+#endif
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+#ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
+#endif
+
+
 #include "fileInstallWidget.moc"
 
 FileInstallWidget::FileInstallWidget( QWidget* parent,
@@ -178,6 +205,9 @@ FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.16  2001/04/14 15:21:35  adridg
+// XML GUI and ToolTips
+//
 // Revision 1.15  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

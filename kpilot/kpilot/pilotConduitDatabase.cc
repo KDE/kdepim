@@ -22,12 +22,26 @@
 ** MA 02139, USA.
 */
 
-#include "pilotConduitDatabase.h"
-#include "statusMessages.h"
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#include <ksock.h>
+#endif
+
 #include <fcntl.h>
 #include <ctype.h>
+
+
+#ifndef _KSOCK_H
+#include <ksock.h>
+#endif
+
+
+
+#ifndef _KPILOT_PILOTCONDUITDATABASE_H
+#include "pilotConduitDatabase.h"
+#endif
+#ifndef _KPILOT_STATUSMESSAGES_H
+#include "statusMessages.h"
+#endif
 
 PilotConduitDatabase::PilotConduitDatabase() : PilotDatabase(),
       fDaemonSocket(0L)

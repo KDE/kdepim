@@ -26,17 +26,34 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <time.h>
 #include <iostream.h>
-#include <pi-dlp.h>
-#include <kmessagebox.h>
-#include <klocale.h>
-#include <kdebug.h>
 
+#ifndef _PILOT_DLP_H_
+#include <pi-dlp.h>
+#endif
+
+#ifndef _KMESSAGEBOX_H
+#include <kmessagebox.h>
+#endif
+#ifndef _KLOCALE_H
+#include <klocale.h>
+#endif
+#ifndef _KDEBUG_H
+#include <kdebug.h>
+#endif
+
+
+#ifndef _KPILOT_PILOTSERIALDATABASE_H
 #include "pilotSerialDatabase.h"
+#endif
+#ifndef _KPILOT_KPILOTLINK_H
 #include "kpilotlink.h"
+#endif
 
 static const char *pilotSerialDatabase_id =
 	"$Id$";
@@ -238,6 +255,9 @@ void PilotSerialDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.11  2001/03/27 23:54:43  stern
+// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
+//
 // Revision 1.10  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

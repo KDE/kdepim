@@ -29,19 +29,29 @@
 
 static const char *pilotlocaldatabase_id="$Id$";
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream.h>
 
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+#ifndef QFILE_H
 #include <qfile.h>
+#endif
 
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
 
 
+#ifndef _KPILOT_PILOTLOCALDATABASE_H
 #include "pilotLocalDatabase.h"
+#endif
 
 PilotLocalDatabase::PilotLocalDatabase(const QString& path, 
 	const QString& dbName) : PilotDatabase(), 
@@ -394,6 +404,9 @@ void PilotLocalDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.13  2001/03/29 21:41:49  stern
+// Added local database support in the command line for conduits
+//
 // Revision 1.12  2001/03/27 23:54:43  stern
 // Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
 //

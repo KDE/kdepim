@@ -27,7 +27,9 @@
 */
 
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #ifndef QFILE_H
 #include <qfile.h>
@@ -45,7 +47,10 @@
 #include "kpilotConfig.h"
 #endif
 
+#ifndef _VCAL_VCALBASE_H
 #include "vcalBase.h"
+#endif
+
 #include "vcc.h"
 
 VCalBaseConduit::VCalBaseConduit(BaseConduit::eConduitMode mode) :
@@ -552,6 +557,9 @@ void VCalBaseConduit::deleteVObject(PilotRecord *rec)
 }
 
 // $Log$
+// Revision 1.3  2001/04/01 17:32:06  adridg
+// Fiddling around with date properties
+//
 // Revision 1.2  2001/03/24 16:11:06  adridg
 // Fixup some date-to-vcs functions
 //

@@ -34,7 +34,9 @@
 // short lived, it shouldn't matter so much. -- PGB
 
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <sys/types.h>
 #include <signal.h>
@@ -101,6 +103,7 @@
 #include "conduitApp.h"
 #endif
 
+#include "vcc.h"
 
 static const char *id=
 	"$Id$";
@@ -1457,6 +1460,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.34  2001/04/03 09:55:13  adridg
+// Administrative, cleanup
+//
 // Revision 1.33  2001/04/01 17:32:05  adridg
 // Fiddling around with date properties
 //

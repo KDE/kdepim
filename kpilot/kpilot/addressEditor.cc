@@ -27,13 +27,27 @@
 */
 
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
+#ifndef QLINEEDIT_H
 #include <qlineedit.h>
+#endif
+#ifndef QLAYOUT_H
 #include <qlayout.h>
+#endif
+#ifndef QLABEL_H
 #include <qlabel.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+
+#ifndef _KPILOT_PILOTADDRESS_H
 #include "pilotAddress.h"
+#endif
+
 #include "addressEditor.moc"
 
 static const char *addressEditor_id =
@@ -223,6 +237,9 @@ void AddressEditor::initLayout(const struct AddressAppInfo *addressInfo)
 }
 
 // $Log$
+// Revision 1.6  2001/04/04 21:20:32  stern
+// Added support for category information and copy constructors
+//
 // Revision 1.5  2001/03/19 23:12:39  stern
 // Made changes necessary for upcoming abbrowser conduit.
 //

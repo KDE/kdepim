@@ -30,20 +30,38 @@ static const char *addresswidget_id="$Id$";
 
 
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <iostream.h>
 #include <string.h>
 #include <stdlib.h>
 
+#ifndef QLIST_H
 #include <qlist.h>
+#endif
+#ifndef QLISTBOX_H
 #include <qlistbox.h>
+#endif
+#ifndef QFILE_H
 #include <qfile.h>
+#endif
+#ifndef QPUSHBT_H
 #include <qpushbt.h>
+#endif
+#ifndef QTEXTSTREAM_H
 #include <qtextstream.h>
+#endif
+#ifndef QLAYOUT_H
 #include <qlayout.h>
+#endif
+#ifndef QLABEL_H
 #include <qlabel.h>
+#endif
+#ifndef QMULTILINEEDIT_H
 #include <qmultilineedit.h>
+#endif
 #ifndef QCOMBOBOX_H
 #include <qcombobox.h>
 #endif
@@ -51,17 +69,37 @@ static const char *addresswidget_id="$Id$";
 #include <qtooltip.h>
 #endif
 
+#ifndef _KAPP_H
 #include <kapp.h>
+#endif
+#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
+#endif
 
-#include "strToken.h"
-#include "addressEditor.h"
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+#ifndef _KPILOT_KPILOTOPTIONS_H
 #include "kpilotOptions.h"
+#endif
+#ifndef _KPILOT_LISTITEMS_H
 #include "listItems.h"
+#endif
+#ifndef _KPILOT_STRTOKEN_H
+#include "strToken.h"
+#endif
+#ifndef _KPILOT_ADDRESSEDITOR_H
+#include "addressEditor.h"
+#endif
+#ifndef _KPILOT_PILOTLOCALDATABASE_H
 #include "pilotLocalDatabase.h"
+#endif
 
 #include "addressWidget.moc"
 
@@ -140,10 +178,8 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
 #endif
 
 	return currentRecord;
-#ifdef DEBUG
 	/* NOTREACHED */
 	(void) addresswidget_id;
-#endif
 }
 
 void
@@ -949,6 +985,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.33  2001/04/14 15:21:35  adridg
+// XML GUI and ToolTips
+//
 // Revision 1.32  2001/03/24 15:59:22  adridg
 // Some populateCategories changes for bug #22112
 //

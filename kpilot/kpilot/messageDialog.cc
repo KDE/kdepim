@@ -31,8 +31,13 @@
 
 static const char *messagedialog_id="$Id$";
 
+#ifndef QDIALOG_H
 #include <qdialog.h>
+#endif
+#ifndef _KAPP_H
 #include <kapp.h>
+#endif
+
 #include "messageDialog.moc"
 
 MessageDialog::MessageDialog( QString title, QWidget* parent, const char* name, bool modal)
@@ -46,10 +51,8 @@ MessageDialog::MessageDialog( QString title, QWidget* parent, const char* name, 
     fMessage->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     fMessage->setAlignment(AlignBottom | AlignHCenter);
     kapp->processEvents();
-#ifdef DEBUG
 	/* NOTREACHED */
 	(void) messagedialog_id;
-#endif
     }
   
 void 
@@ -61,6 +64,9 @@ MessageDialog::setMessage(QString message)
     }
 
 // $Log$
+// Revision 1.9  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.8  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //

@@ -26,29 +26,56 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream.h>
 
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
+#ifndef QHBOX_H
 #include <qhbox.h>
+#endif
 
+#ifndef _KSIMPLECONFIG_H
 #include <ksimpleconfig.h>
+#endif
+#ifndef _KAPP_H
 #include <kapp.h>
+#endif
+#ifndef _KPROCESS_H
 #include <kprocess.h>
+#endif
+#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
+#endif
+#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+#ifndef _KUSERPROFILE_H
 #include <kuserprofile.h>
+#endif
+#ifndef _KSERVICE_H
 #include <kservice.h>
+#endif
+#ifndef _KSERVICETYPE_H
 #include <kservicetype.h>
+#endif
+
+#ifndef _KPILOT_KPILOTCONFIG_H
+#include "kpilotConfig.h"
+#endif
 
 #include "conduitSetup.moc"
 
-#include "kpilotConfig.h"
 
 static const char *conduitsetup_id="$Id$";
 
@@ -441,6 +468,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.21  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.20  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //

@@ -27,30 +27,61 @@
 */
 static const char *memowidget_id="$Id$";
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <time.h>
 #include <iostream.h>
 #include <pi-macros.h>
 #include <pi-dlp.h>
 
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
+#ifndef QLIST_H
 #include <qlist.h>
+#endif
+#ifndef QLISTBOX_H
 #include <qlistbox.h>
+#endif
+#ifndef QFILE_H
 #include <qfile.h>
-#include <qpushbt.h>
+#endif
+#ifndef QPUSHBUTTON_H
+#include <qpushbutton.h>
+#endif
+#ifndef QLAYOUT_H
 #include <qlayout.h>
+#endif
 #ifndef QTOOLTIP_H
 #include <qtooltip.h>
 #endif
 
+#ifndef _KAPP_H
 #include <kapp.h>
+#endif
+#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
+#endif
+#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
+#endif
 
+#ifndef _KPILOT_KPILOT_H
 #include "kpilot.h"
+#endif
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+#ifndef _KPILOT_LISTITEMS_H
 #include "listItems.h"
+#endif
+#ifndef _KPILOT_PILOTLOCALDATABASE_H
+#include "pilotLocalDatabase.h"
+#endif
+
+
 #include "memoWidget.moc"
 
 
@@ -183,6 +214,8 @@ MemoWidget::initialize()
 		populateCategories(fCatList,0L);
 		updateWidget();
 		return;
+		/* NOTREACHED */
+		(void) memowidget_id;
 	}
 
 	// Normal case: there is a database so we can read it
@@ -560,6 +593,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.29  2001/04/14 15:21:35  adridg
+// XML GUI and ToolTips
+//
 // Revision 1.28  2001/04/01 17:32:52  adridg
 // I really don't remember
 //

@@ -35,29 +35,59 @@
 
 static const char *gsetupdialog_id="$Id$";
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <iostream.h>
 
+#ifndef QFILEINF_H
 #include <qfileinf.h>
+#endif
+#ifndef QLABEL_H
 #include <qlabel.h>
+#endif
+#ifndef QPUSHBUTTON_H
 #include <qpushbutton.h>
+#endif
+#ifndef QLAYOUT_H
 #include <qlayout.h>
+#endif
+#ifndef QMULTILINEEDIT_H
 #include <qmultilineedit.h>
+#endif
 
+#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
+#endif
+#ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
+#ifndef _KAPP_H
 #include <kapp.h>
+#endif
+#ifndef _KLOCALE_H
 #include <klocale.h>
+#endif
+#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
+#endif
+#ifndef _KABOUTDATA_H
 #include <kaboutdata.h>
+#endif
+#ifndef _KABOUTAPPLICATION_H
 #include <kaboutapplication.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+
+#ifndef _KPILOT_KPILOTCONFIG_H
+#include "kpilotConfig.h"
+#endif
 
 #include "gsetupDialog.moc"
-#include "kpilotConfig.h"
  
-#define CONFIG	KPilotConfig::getConfig()
 
 
 //---------------------------------------------------
@@ -152,7 +182,7 @@ void setupDialog::commitChanges()
 	QListIterator<setupDialogPage> i(pages);
 	int r;
 
-	KConfig& config=CONFIG;
+	KConfig& config=KPilotConfig::getConfig();
 	config.setGroup(groupName());
 
 	r=0;
@@ -209,7 +239,7 @@ void setupDialog::cancelChanges()
 	FUNCTIONSETUP;
 	QListIterator<setupDialogPage> i(pages);
 
-	KConfig& config=CONFIG;
+	KConfig& config=KPilotConfig::getConfig();
 	config.setGroup(groupName());
 
 	for (i.toFirst(); i.current(); ++i)
@@ -432,6 +462,10 @@ setupInfoPage::setupInfoPage(setupDialog *parent,bool includeabout) :
 
 
 // $Log$
+// Revision 1.17  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.16  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

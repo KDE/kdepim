@@ -29,21 +29,43 @@
 static const char *conduitapp_id=
 	"$Id$";
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream.h>
-#include <kwin.h>
-#include <klocale.h>
-#include <kglobal.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <kapp.h>
-#include <kdebug.h>
-#include <dcopclient.h>
 
+
+#ifndef _KWIN_H
+#include <kwin.h>
+#endif
+#ifndef _KLOCALE_H
+#include <klocale.h>
+#endif
+#ifndef _KGLOBAL_H
+#include <kglobal.h>
+#endif
+#ifndef _KABOUTDATA_H
+#include <kaboutdata.h>
+#endif
+#ifndef _KCMDLINEARGS_H
+#include <kcmdlineargs.h>
+#endif
+#ifndef _KAPP_H
+#include <kapp.h>
+#endif
+#ifndef _KDEBUG_H
+#include <kdebug.h>
+#endif
+#ifndef _DCOPCLIENT_H
+#include <dcopclient.h>
+#endif
+
+#ifndef _KPILOT_CONDUITAPP_H
 #include "conduitApp.h"
+#endif
 
 
 // In KDE2 we use command line options in KDE2 style (!)
@@ -372,6 +394,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.22  2001/03/30 17:11:31  stern
+// Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
+//
 // Revision 1.21  2001/03/29 21:41:49  stern
 // Added local database support in the command line for conduits
 //

@@ -29,7 +29,9 @@
 */
 
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <string.h>
 
@@ -69,6 +71,9 @@ StrTokenizer::getNextField()
 
 
 // $Log$
+// Revision 1.6  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.5  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

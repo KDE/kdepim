@@ -31,7 +31,9 @@
 */
 
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <iostream.h>
 #include <stdlib.h>
@@ -41,30 +43,70 @@
 #include <pwd.h>
 #include <sys/types.h>
 
+#ifndef QLABEL_H
 #include <qlabel.h>
+#endif
+#ifndef QCHKBOX_H
 #include <qchkbox.h>
+#endif
+#ifndef QGRPBOX_H
 #include <qgrpbox.h>
+#endif
+#ifndef QBTTNGRP_H
 #include <qbttngrp.h>
+#endif
+#ifndef QVBUTTONGROUP_H
 #include <qvbuttongroup.h>
+#endif
+#ifndef QRADIOBT_H
 #include <qradiobt.h>
+#endif
+#ifndef QLINEEDIT_H
 #include <qlineedit.h>
+#endif
+#ifndef QCOMBOBOX_H
 #include <qcombobox.h>
+#endif
+#ifndef QCSTRING_H
 #include <qcstring.h>
+#endif
+#ifndef QLAYOUT_H
 #include <qlayout.h>
+#endif
 
 
+#ifndef _KLOCALE_H
 #include <klocale.h>
+#endif
+#ifndef _KAPP_H
 #include <kapp.h>
+#endif
+#ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
+#ifndef _KWIN_H
 #include <kwin.h>
+#endif
+#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
+#endif
+#ifndef _KGLOBAL_H
 #include <kglobal.h>
+#endif
+#ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
+#endif
+#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
 
 #ifndef STANDALONE
+#ifndef _KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
 #endif
 
 
@@ -717,6 +759,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.26  2001/04/11 21:33:06  adridg
+// Make version number consistent across KPilot applications
+//
 // Revision 1.25  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

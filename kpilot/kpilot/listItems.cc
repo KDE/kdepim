@@ -26,11 +26,26 @@
 /*
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#include <qstring.h>
-#include <qlistbox.h>
-#include "listItems.h"
+#endif
 
+
+
+#ifndef _QSTRING_H
+#include <qstring.h>
+#endif
+#ifndef _QLISTBOX_H
+#include <qlistbox.h>
+#endif
+
+
+
+#ifndef _KPILOT_LISTITEMS_H
+#include "listItems.h"
+#endif
+
+#ifdef DEBUG
 /* static */ int PilotListItem::crt = 0;
 /* static */ int PilotListItem::del = 0;
 /* static */ int PilotListItem::count = 0;
@@ -44,6 +59,7 @@
 		<< del
 		<< endl;
 }
+#endif
 
 PilotListItem::PilotListItem(const QString &text, 
 	int pilotid, 
@@ -51,21 +67,28 @@ PilotListItem::PilotListItem(const QString &text,
 	fid(pilotid), 
 	fr(r)
 {
+#ifdef DEBUG
 	crt++;
 	count++;
 	if (!(count & 0xff)) counts();
+#endif
 }
 
 PilotListItem::~PilotListItem()
 {
+#ifdef DEBUG
 	del++;
 	count++;
 	if (!(count & 0xff)) counts();
+#endif
 }
 
 
 
 // $Log$
+// Revision 1.3  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.2  2001/03/04 20:51:21  adridg
 // Removed spurious .moc file
 //

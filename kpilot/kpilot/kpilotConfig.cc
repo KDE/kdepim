@@ -26,14 +26,26 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
+#ifndef _KLOCALE_H
 #include <klocale.h>
+#endif
+#ifndef _KGLOBAL_H
 #include <kglobal.h>
+#endif
+#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
+#endif
+#ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
 
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
 
 
 static const char *kpilotconfig_id =
@@ -219,6 +231,9 @@ static QFont *thefont=0L;
 }
 
 // $Log$
+// Revision 1.3  2001/03/27 23:54:43  stern
+// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
+//
 // Revision 1.2  2001/02/25 12:39:15  adridg
 // Removed stupid crash from ::fixed()
 //

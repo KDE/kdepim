@@ -30,13 +30,22 @@
 */
 static const char *kpilotlink_id="$Id$";
 
-#include <config.h>
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
+#ifndef _PILOT_SOURCE_H_
 #include <pi-source.h>
+#endif
+#ifndef _PILOT_SOCKET_H_
 #include <pi-socket.h>
+#endif
+#ifndef _PILOT_DLP_H_
 #include <pi-dlp.h>
+#endif
+#ifndef _PILOT_FILE_H_
 #include <pi-file.h>
+#endif
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -44,25 +53,69 @@ static const char *kpilotlink_id="$Id$";
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream.h>
+
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
 
+#ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
+#ifndef _KLOCALE_H
 #include <klocale.h>
+#endif
+#ifndef _KSOCK_H
 #include <ksock.h>
+#endif
+#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
+#endif
+#ifndef _KPROCESS_H
 #include <kprocess.h>
+#endif
+#ifndef _KSTATUSBAR_H
 #include <kstatusbar.h>
+#endif
+#ifndef _KAPP_H
 #include <kapp.h>
+#endif
+#ifndef _KPROGRESS_H
 #include <kprogress.h>
+#endif
+#ifndef _KGLOBAL_H
 #include <kglobal.h>
+#endif
+#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
+#endif
+#ifndef _KSERVICE_H
 #include <kservice.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
 
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#include "kpilotlink.moc"
+#endif
+#ifndef _KPILOT_STATUSMESSAGES_H
 #include "statusMessages.h"
+#endif
+#ifndef _KPILOT_MESSAGEDIALOG_H
 #include "messageDialog.h"
+#endif
+
+#ifndef _KPILOT_PILOTDATABASE_H
+#include "pilotDatabase.h"
+#endif
+#ifndef _KPILOT_PILOTSERIALDATABASE_H
+#include "pilotSerialDatabase.h"
+#endif
+#ifndef _KPILOT_PILOTLOCALDATABASE_H
+#include "pilotLocalDatabase.h"
+#endif
+
+#include "kpilotlink.moc"
 
 KPilotLink* KPilotLink::fKPilotLink = 0L;
 
@@ -1661,6 +1714,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.41  2001/04/11 21:33:07  adridg
+// Make version number consistent across KPilot applications
+//
 // Revision 1.40  2001/03/27 11:10:39  leitner
 // ported to Tru64 unix: changed all stream.h to iostream.h, needed some
 // #ifdef DEBUG because qstringExpand etc. were not defined.

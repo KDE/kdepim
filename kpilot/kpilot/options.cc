@@ -30,9 +30,15 @@
 static const char *options_id="$Id$";
 
 #include <iostream.h>
+#ifndef _KCONFIG_H
 #include <kconfig.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #ifdef DEBUG
 // The daemon also has a debug level
@@ -146,6 +152,10 @@ const int fname = (int) options_id;
 
 
 // $Log$
+// Revision 1.12  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.11  2001/03/01 20:43:24  adridg
 // Some new (and harmless) debug functions
 //

@@ -33,18 +33,34 @@ static const char *fileinstaller_id =
 	"$Id$";
 
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <unistd.h>
 
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+#ifndef QSTRLIST_H
 #include <qstrlist.h>
+#endif
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
 
+#ifndef _KGLOBAL_H
 #include <kglobal.h>
+#endif
+#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
+#endif
+#ifndef _KURL_H
 #include <kurl.h>
+#endif
+#ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
+#endif
 
 #include "fileInstaller.moc"
 
@@ -158,6 +174,9 @@ const QStringList FileInstaller::fileNames() const
 
 
 // $Log$
+// Revision 1.2  2001/03/04 13:11:58  adridg
+// Actually use the fileInstaller object
+//
 // Revision 1.1  2001/03/01 20:41:11  adridg
 // Added class to factor out code in daemon and fileinstallwidget
 //

@@ -28,7 +28,9 @@
 */
 static const char *id="$Id$";
 
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 #include <time.h>
 
@@ -48,34 +50,88 @@ static const char *id="$Id$";
 #include <signal.h>
 #include <errno.h>
 
+#ifndef QDIR_H
 #include <qdir.h>
+#endif
+#ifndef QLIST_H
 #include <qlist.h>
+#endif
+#ifndef QCURSOR_H
 #include <qcursor.h>
+#endif
+#ifndef QDRAGOBJECT_H
 #include <qdragobject.h>
+#endif
 
+#ifndef _KUNIQUEAPP_H
 #include <kuniqueapp.h>
+#endif
+#ifndef _KABOUTDATA_H
 #include <kaboutdata.h>
+#endif
+#ifndef _KABOUTAPPLICATION_H
 #include <kaboutapplication.h>
+#endif
+#ifndef _KCMDLINEARGS_H
 #include <kcmdlineargs.h>
+#endif
+#ifndef _KWIN_H
 #include <kwin.h>
+#endif
+#ifndef _KSIMPLECONFIG_H
 #include <ksimpleconfig.h>
+#endif
+#ifndef _KURL_H
 #include <kurl.h>
+#endif
+#ifndef _KSOCK_H
 #include <ksock.h>
+#endif
+#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
+#endif
+#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
+#endif
+#ifndef _KPOPUPMENU_H
 #include <kpopupmenu.h>
+#endif
+#ifndef _KICONLOADER_H
 #include <kiconloader.h>
+#endif
+#ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
+#endif
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
+#ifndef _KPROCESS_H
 #include <kprocess.h>
+#endif
+#ifndef _DCOPCLIENT_H
 #include <dcopclient.h>
+#endif
 
+// These two are XPMs disguised as .h files
 #include "hotsync.h"
 #include "busysync.h"
+
+
+#ifndef _KPILOT_STATUSMESSAGES_H
 #include "statusMessages.h"
+#endif
+#ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
+#endif
+#ifndef _KPILOT_KPILOTLINK_H
 #include "kpilotlink.h"
+#endif
+#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
+#endif
+#ifndef _KPILOT_PILOTRECORD_H
+#include "pilotRecord.h"
+#endif
 
 #include "pilotDaemon.moc"
 
@@ -1300,6 +1356,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.36  2001/04/01 17:32:52  adridg
+// I really don't remember
+//
 // Revision 1.35  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
