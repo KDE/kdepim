@@ -58,8 +58,8 @@ rc_DATA = kaddressbookui.rc
 partdir = $(kde_datadir)/kaddressbook
 part_DATA = kaddressbook_part.rc
 
-data_DATA = zone.tab
-datadir = $(kde_datadir)/kaddressbook
+kabdata_DATA = zone.tab
+kabdatadir = $(kde_datadir)/kaddressbook
 
 messages: rc.cpp
 	$(EXTRACTRC) *.rc *.ui */*.ui >> rc.cpp

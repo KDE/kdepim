@@ -1,5 +1,5 @@
 kaddressbookicondir = $(kde_datadir)/kaddressbook/icons
-kaddressbookicon_ICON = AUTO                                                                                                                                         
+kaddressbookicon_ICON = AUTO
 
-data_DATA = world.jpg 
-datadir = $(kde_datadir)/kaddressbook/pics
+kabpics_DATA = world.jpg 
+kabpicsdir = $(kde_datadir)/kaddressbook/pics
