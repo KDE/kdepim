@@ -34,9 +34,6 @@ class GroupwareWizard : public QWidget
     GroupwareWizard( QWidget *parent, const char *name = 0 );
     ~GroupwareWizard();
 
-  public slots:
-    void setServerType( const QString& serverType );
-
   private:
     OverViewPage *mOverViewPage;
 };

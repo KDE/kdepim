@@ -39,8 +39,6 @@ GroupwareWizard::GroupwareWizard( QWidget *parent, const char *name )
 
   layout->addWidget( mOverViewPage );
 
-  connect( mOverViewPage, SIGNAL( serverTypeSelected( const QString& ) ),
-           this, SLOT( setServerType( const QString& ) ) );
   connect( mOverViewPage, SIGNAL( cancel() ),
            qApp, SLOT( quit() ) );
 
@@ -49,15 +47,6 @@ GroupwareWizard::GroupwareWizard( QWidget *parent, const char *name )
 
 GroupwareWizard::~GroupwareWizard()
 {
-}
-
-void GroupwareWizard::setServerType( const QString& serverType )
-{
-  if ( serverType.isEmpty() ) {
-    mOverViewPage->show();
-  } else {
-    mOverViewPage->show();
-  }
 }
 
 #include "groupwarewizard.moc"

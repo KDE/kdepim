@@ -24,8 +24,6 @@
 
 #include <qwidget.h>
 
-class QButtonGroup;
-
 class OverViewPage : public QWidget
 {
   Q_OBJECT
@@ -34,19 +32,13 @@ class OverViewPage : public QWidget
     OverViewPage( QWidget *parent, const char *name = 0 );
     ~OverViewPage();
 
-  public slots:
+  private slots:
     void showWizardEGroupware();
     void showWizardKolab();
+    void showWizardSlox();
 
   signals:
-    void serverTypeSelected( const QString &type );
     void cancel();
-
-  private:
-    void loadTypes();
-
-    QButtonGroup *mServerTypeGroup;
-    QStringList mIdentifiers;
 };
 
 #endif

@@ -28,8 +28,6 @@ int main( int argc, char **argv )
   GroupwareWizard wizard( 0 );
   app.setMainWidget( &wizard );
 
-  wizard.setServerType( serverType );
-
   wizard.show();
 
   app.exec();
