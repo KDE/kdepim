@@ -59,7 +59,6 @@ Depends: ${shlibs:Depends}
 Description: KDE PIM shell
  KDE PIM Shell application combining knode, kmail and korganizer
 
-
 Package: karm
 Section: utils
 Architecture: any
