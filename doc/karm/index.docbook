@@ -67,7 +67,7 @@ tracking hours to be billed to different clients or just to find out
 what percentage of your day is spent playing Doom or reading
 Slashdot.</para>
 
-<para>&karm; was written by Sirtaj Singh Kang. The word
+<para>&karm; was originally written by Sirtaj Singh Kang. The word
 <quote>karm</quote> means <quote>work</quote> in the author's native
 Punjabi.</para>
 
@@ -388,6 +388,9 @@ Program copyright 1997-2000 Sirtaj Singh Kang <email>taj@kde.org</email>.</para>
 <listitem><para>Jesper Pedersen <email>blackie@ifad.dk</email></para></listitem>
 <listitem><para>Kalle Dalheimer <email>kalle@kde.org</email></para></listitem>
 <listitem><para>Klar&auml;lvdalens Datakonsult AB</para></listitem>
+<listitem><para>Tomas Pospisek <email>tpo_deb@sourcepole.ch</email></para></listitem>
+<listitem><para>Gioele Barabucci <email>gioele@gioelebarabucci.com</email></para></listitem>
+<listitem><para>Jan Schaumann <email>jschauma@netmeister.org</email></para></listitem>
 </itemizedlist>
 
 <para>&karm; was inspired by Harald Tveit Alvestrand's very useful
