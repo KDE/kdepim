@@ -1,1 +1,15 @@
-DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
+dnl May want something slightly more sophisticated here,
+dnl since some older pilot-link installations forget to
+dnl include time.h and fail.
+AC_CHECK_HEADER(pi-file.h)
+AC_CHECK_LIB(pisock,pi_accept,[])
+
+if test "x$ac_cv_header_pi_file_h" != "xyes" ; then
+  DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
+else
+  if test "x$ac_cv_lib_pisock_pi_accept" != "xyes" ; then
+    DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
+  fi
+fi
+
+
