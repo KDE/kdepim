@@ -30,6 +30,7 @@
 
 #include <libkcal/incidence.h>
 #include <libkcal/icalformat.h>
+#include <libkcal/calendarlocal.h>
 
 #include "resourcecalendar.h"
 
@@ -149,28 +150,16 @@ namespace KCal {
     /** Notification function of IncidenceBase::Observer. */
     void incidenceUpdated( IncidenceBase *i ) { update( i ); }
     /** Append alarms of incidence in interval to list of alarms. */
-    void appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to );
 
-    /** Append alarms of recurring events in interval to list of alarms. */
-    void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to );
-   
   private:
     void init();
+    QStringList getIncidenceList( const QString& type );
 
-    QPtrList<Event> mEventList;              // lists of events.
-    QPtrList<Event> mRecursList;             // list of repeating events.
-
-    QPtrList<Todo> mTodoList;               // list of todo items.
-
-    QMap<QDate,Journal *> mJournalMap;
-  
-    QDate *mOldestDate;
-    QDate *mNewestDate;
+    KCal::Incidence* parseIncidence( const QString& str );
 
     QString mServer;
     ICalFormat mFormat;
+    CalendarLocal mCalendar;
     DCOPClient* mDCOPClient;
 };  
 

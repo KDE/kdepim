@@ -2,6 +2,7 @@
     This file is part of libkcal.
     Copyright (c) 1998 Preston Brown
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003 Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -67,12 +68,7 @@ void ResourceIMAP::writeConfig( KConfig* config )
 
 void ResourceIMAP::init()
 {
-  mOldestDate = 0L;
-  mNewestDate = 0L;
-
-  mRecursList.setAutoDelete(TRUE);
-  mTodoList.setAutoDelete(TRUE);
-  mEventList.setAutoDelete(TRUE);
+  kdDebug() << "ResourceIMAP::init()" << endl;
 
   mDCOPClient = new DCOPClient();
   mDCOPClient->attach();
@@ -80,11 +76,11 @@ void ResourceIMAP::init()
   // TODO: Make sure KMail is running!
 
   // attach to KMail
-  if( !mDCOPClient->connectDCOPSignal( "KMail", "KmailICalIface", "incidenceAdded(QString,QString)",
+  if( !mDCOPClient->connectDCOPSignal( "kmail", "KmailICalIface", "incidenceAdded(QString,QString)",
 				       "ResourceIMAP", "addIncidence(QString,QString)", true ) ) {
     kdError() << "DCOP connection to incidenceAdded failed" << endl;
   }
-  if( !mDCOPClient->connectDCOPSignal( "KMail", "KmailICalIface", "incidenceDeleted(QString,QString)",
+  if( !mDCOPClient->connectDCOPSignal( "kmail", "KmailICalIface", "incidenceDeleted(QString,QString)",
 				       "ResourceIMAP", "deleteIncidence(QString,QString)", true ) ) {
     kdError() << "DCOP connection to incidenceDeleted failed" << endl;
   }
@@ -94,27 +90,58 @@ void ResourceIMAP::init()
 ResourceIMAP::~ResourceIMAP()
 {
   close();
-  delete mNewestDate;
-  delete mOldestDate;
+  delete mDCOPClient;
+}
+
+QStringList ResourceIMAP::getIncidenceList( const QString& type )
+{
+  QByteArray data;
+  QDataStream arg(data, IO_WriteOnly);
+  arg << type;
+  QCString replyType = "QStringList";
+  QByteArray reply;
+  if( !mDCOPClient->call( "kmail", "KMailICalIface", "incidences(QString)",
+			  data, replyType, reply ) || replyType != "QStringList" ) {
+    kdError() << "DCOP error during incidences(QString)" << endl;
+  }
+  QStringList lst;
+  QDataStream ret(reply, IO_ReadOnly);
+  ret >> lst;
+  return lst;
 }
 
 bool ResourceIMAP::doOpen()
 {
   kdDebug(5800) << "Opening resource " << resourceName() << " on " << mServer << endl;
 
-  QByteArray data;
-  QDataStream arg(data, IO_WriteOnly);
-  arg << "Calendar";
-  QCString replyType;
-  QByteArray reply;
-  if( !mDCOPClient->call( "KMail", "KMailICalIface", "incidences(QString)",
-			  data, replyType, reply )) {
-    kdError() << "DCOP error during addIncicence(QString)" << endl;
+  QStringList lst = getIncidenceList( "Calendar" );
+  for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+    Incidence* i = parseIncidence( *it );
+    if( i ) {
+      if( i->type() == "Event" ) {
+	mCalendar.addEvent(static_cast<Event*>(i));
+	i->registerObserver( this );
+      } else {
+	kdDebug() << "Unknown incidence type " << i->type();
+	delete i;
+      }
+    }
   }
-  QStringList lst;
-  lst << reply;
-  kdDebug() << "Got incidences " << lst.join("\n") << endl;
-  // NYI: add list of icals to calendar
+  lst = getIncidenceList( "Task" );
+  for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+    Incidence* i = parseIncidence( *it );
+    if( i ) {
+      if( i->type() == "Todo" ) {
+	mCalendar.addTodo(static_cast<Todo*>(i));
+	i->registerObserver( this );
+      } else {
+	kdDebug() << "Unknown incidence type " << i->type();
+	delete i;
+      }
+    }
+  }
+  // TODO: complete this for other incidence types
+
   return true;
 }
 
@@ -130,20 +157,23 @@ bool ResourceIMAP::sync()
 void ResourceIMAP::addEvent(Event *anEvent)
 {
   kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
-  mEventList.append(anEvent);
+  mCalendar.addEvent(anEvent);
   anEvent->registerObserver( this );
   
   // call kmail ...
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
-  arg << "Calendar";
+  arg << QString::fromLatin1("Calendar");
   arg << anEvent->uid();
-  arg << mFormat.toString(anEvent);
-  if( !mDCOPClient->send( "KMail", "KMailICalIface", "addIncicence(QString,QString,QString)",
-				      data )) {
-    kdError() << "DCOP error during addIncicence(QString)" << endl;
-  }
 
+  // Kind of strange way to store the event
+  // but it seems to work, and should be compatible
+  // with kroupware_branch
+  arg << mFormat.createScheduleMessage(anEvent, Scheduler::Request);
+  if( !mDCOPClient->send( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
+				      data )) {
+    kdError() << "DCOP error during addIncidence(QString)" << endl;
+  }
   //setModified( true );
 }
 
@@ -151,19 +181,16 @@ void ResourceIMAP::addEvent(Event *anEvent)
 void ResourceIMAP::deleteEvent(Event *event)
 {
   kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
-  mEventList.findRef(event);
-  
   // call kmail ...
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
-  arg << "Calendar";
+  arg << QString::fromLatin1("Calendar");
   arg << event->uid();
-  if( !mDCOPClient->send( "KMail", "KMailICalIface", "deleteIncicence(QString,QString)",
+  if( !mDCOPClient->send( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
 				      data )) {
-    kdError() << "DCOP error during addIncicence(QString)" << endl;
+    kdError() << "DCOP error during deleteIncidence(QString)" << endl;
   }
-  
-  mEventList.remove();
+  mCalendar.deleteEvent(event);
 }
 
 
@@ -174,71 +201,36 @@ void ResourceIMAP::deleteEvent(Event *event)
 Event *ResourceIMAP::event( const QString &uid )
 {
   kdDebug(5800) << "ResourceIMAP::event(): " << uid << endl;
-  Event *e;
-  for (e = mEventList.first();e;e = mEventList.next())
-    if (e->uid() == uid) return e;
-  // not found
-  return 0;
+  return mCalendar.event(uid);
 }
 
 int ResourceIMAP::numEvents(const QDate &qd)
 {
-  Event *anEvent;
-  int count = 0;
-  int extraDays, i;
-
-  // first get the simple case from the dictionary.
-  for (anEvent=mEventList.first();anEvent;anEvent=mEventList.next()) {
-    if (qd == anEvent->dtStart().date()) count++;
-  }
-  // next, check for repeating events.  Even those that span multiple days...
-  for (anEvent = mRecursList.first(); anEvent; anEvent = mRecursList.next()) {
-    if (anEvent->isMultiDay()) {
-      extraDays = anEvent->dtStart().date().daysTo(anEvent->dtEnd().date());
-      //kdDebug(5800) << "multi day event w/" << extraDays << " days" << endl;
-      for (i = 0; i <= extraDays; i++) {
-        if (anEvent->recursOn(qd.addDays(i))) {
-          ++count;
-          break;
-        }
-      }
-    } else {
-      if (anEvent->recursOn(qd))
-        ++count;
-    }
-  }
-
-  return count;
+  return mCalendar.numEvents(qd);
 }
 
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
 QPtrList<Event> ResourceIMAP::rawEventsForDate(const QDate &qd, bool sorted)
 {
-  // Search non-recurring events
-  QPtrList<Event> eventList;
-  // Search recurring events
-  QPtrList<Event> eventListSorted;
-  return eventListSorted;
+  return mCalendar.rawEventsForDate( qd, sorted );
 }
 
 
 QPtrList<Event> ResourceIMAP::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
-   QPtrList<Event> matchList, *tmpList, tmpList2;
-  return matchList;
+  return mCalendar.rawEvents( start, end, inclusive );
 }
 
 QPtrList<Event> ResourceIMAP::rawEventsForDate(const QDateTime &qdt)
 {
-  return rawEventsForDate( qdt.date() );
+  return mCalendar.rawEventsForDate( qdt );
 }
 
 QPtrList<Event> ResourceIMAP::rawEvents()
 {
-  QPtrList<Event> eventList;
-  return eventList;
+  return mCalendar.rawEvents();
 }
 
 /***********************************************
@@ -247,22 +239,40 @@ QPtrList<Event> ResourceIMAP::rawEvents()
 
 void ResourceIMAP::addTodo(Todo *todo)
 {
-  mTodoList.append(todo);
+  mCalendar.addTodo(todo);
   todo->registerObserver( this );
 
   // call kmail ..
+  QByteArray data;
+  QDataStream arg(data, IO_WriteOnly);
+  arg << QString::fromLatin1("Task");
+  arg << todo->uid();
+
+  // Kind of strange way to store the event
+  // but it seems to work, and should be compatible
+  // with kroupware_branch
+  arg << mFormat.createScheduleMessage(todo, Scheduler::Request);
+  if( !mDCOPClient->send( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
+				      data )) {
+    kdError() << "DCOP error during addIncidence(QString)" << endl;
+  }
   
 //  setModified( true );
 }
 
 void ResourceIMAP::deleteTodo(Todo *todo)
 {
-  mTodoList.findRef(todo);
-
   // call kmail ...
-  
-  mTodoList.remove();
-
+  QByteArray data;
+  QDataStream arg(data, IO_WriteOnly);
+  arg << QString::fromLatin1("Task");
+  arg << todo->uid();
+  if( !mDCOPClient->send( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
+				      data )) {
+    kdError() << "DCOP error during deleteIncidence(QString)" << endl;
+  }
+  mCalendar.deleteTodo(todo);
+ 
 //  setModified( true );
 }
 
@@ -272,32 +282,17 @@ void ResourceIMAP::deleteTodo(Todo *todo)
 
 QPtrList<Todo> ResourceIMAP::rawTodos() const
 {
-  return mTodoList;
+  return mCalendar.rawTodos();
 }
 
 Todo *ResourceIMAP::todo( const QString &uid )
 {
-  Todo *aTodo;
-  for (aTodo = mTodoList.first(); aTodo;
-       aTodo = mTodoList.next())
-    if (aTodo->uid() == uid)
-      return aTodo;
-  // not found
-  return 0;
+  return mCalendar.todo(uid);
 }
 
 QPtrList<Todo> ResourceIMAP::todos( const QDate &date )
 {
-  QPtrList<Todo> todos;
-
-  Todo *aTodo;
-  for (aTodo = mTodoList.first();aTodo;aTodo = mTodoList.next()) {
-    if (aTodo->hasDueDate() && aTodo->dtDue().date() == date) {
-      todos.append(aTodo);
-    }
-  }
-
-  return todos;
+  return mCalendar.todos(date);
 }
 
 /***********************************************
@@ -307,8 +302,7 @@ QPtrList<Todo> ResourceIMAP::todos( const QDate &date )
 void ResourceIMAP::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-
-  mJournalMap.insert(journal->dtStart().date(),journal);
+  mCalendar.addJournal(journal);
   journal->registerObserver( this );
 
   // call kmail ...
@@ -318,36 +312,17 @@ void ResourceIMAP::addJournal(Journal *journal)
 
 Journal *ResourceIMAP::journal(const QDate &date)
 {
-  kdDebug(5800) << "ResourceIMAP::journal() " << date.toString() << endl;
-
-  QMap<QDate,Journal *>::ConstIterator it = mJournalMap.find(date);
-  if (it == mJournalMap.end()) return 0;
-  else {
-//    kdDebug(5800) << "  Found" << endl;
-    return *it;
-  }
+  return mCalendar.journal(date);
 }
 
 Journal *ResourceIMAP::journal(const QString &uid)
 {
-  QMap<QDate,Journal *>::ConstIterator it = mJournalMap.begin();
-  QMap<QDate,Journal *>::ConstIterator end = mJournalMap.end();
-  for(;it != end; ++it) {
-    if ((*it)->uid() == uid) return *it;
-  }
-  return 0;
+  return mCalendar.journal(uid);
 }
 
 QPtrList<Journal> ResourceIMAP::journals()
 {
-  QPtrList<Journal> list;
-
-  QMap<QDate,Journal *>::Iterator it;
-  for( it = mJournalMap.begin(); it != mJournalMap.end(); ++it ) {
-    list.append(*it);
-  }
-
-  return list;
+  return mCalendar.journals();
 }
 
 /***********************************************
@@ -356,66 +331,13 @@ QPtrList<Journal> ResourceIMAP::journals()
 
 Alarm::List ResourceIMAP::alarmsTo( const QDateTime &to )
 {
-  if( mOldestDate )
-    return alarms( *mOldestDate, to );
-  else
-    return alarms( QDateTime( QDate( 1900, 1, 1 ) ), to );
+  return mCalendar.alarmsTo(to);
 }
 
 Alarm::List ResourceIMAP::alarms( const QDateTime &from, const QDateTime &to )
 {
   kdDebug(5800) << "ResourceIMAP::alarms(" << from.toString() << " - " << to.toString() << ")\n";
-  Alarm::List alarms;
-
-//   // Check all non-recurring events.
-
-//   // Check all recurring events.
-
-//   // Check all todos.
-
-  return alarms;
-}
-
-void ResourceIMAP::appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                                  const QDateTime &from, const QDateTime &to )
-{
-  QPtrList<Alarm> alarmList = incidence->alarms();
-  Alarm *alarm;
-  for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
-//    kdDebug(5800) << "ResourceIMAP::appendAlarms() '" << incidence->summary()
-//                  << "': " << alarm->time().toString() << " - " << alarm->enabled() << endl;
-    if ( alarm->enabled() ) {
-      if ( alarm->time() >= from && alarm->time() <= to ) {
-        kdDebug(5800) << "ResourceIMAP::appendAlarms() '" << incidence->summary()
-                      << "': " << alarm->time().toString() << endl;
-        alarms.append( alarm );
-      }
-    }
-  }
-}
-
-void ResourceIMAP::appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
-                                  const QDateTime &from, const QDateTime &to )
-{
-  QPtrList<Alarm> alarmList = incidence->alarms();
-  Alarm *alarm;
-  QDateTime qdt;
-  for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
-    if (incidence->recursOn(from.date())) {
-      qdt.setTime(alarm->time().time());
-      qdt.setDate(from.date());
-    }
-    else qdt = alarm->time();
-    kdDebug(5800) << "ResourceIMAP::appendAlarms() '" << incidence->summary()
-                  << "': " << qdt.toString() << " - " << alarm->enabled() << endl;
-    if ( alarm->enabled() ) {
-//      kdDebug(5800) << "ResourceIMAP::appendAlarms() '" << incidence->summary()
-//                    << "': " << alarm->time().toString() << endl;
-      if ( qdt >= from && qdt <= to ) {
-        alarms.append( alarm );
-      }
-    }
-  }
+  return mCalendar.alarms( from, to );
 }
 
 /***********************************************
@@ -432,7 +354,11 @@ void ResourceIMAP::update(IncidenceBase *incidence)
   // need to verify with ical documentation.
 
   if ( incidence->type() == "Event" ) {
+    // Just get delete the event and add it again!
     Event *anEvent = static_cast<Event *>(incidence);
+    Event *newEvent = static_cast<Event *>(anEvent->clone());
+    deleteEvent( anEvent );
+    addEvent( newEvent );
 
    // the first thing we do is REMOVE all occurances of the event from
    // both the dictionary and the recurrence list.  Then we reinsert it.
@@ -446,10 +372,33 @@ void ResourceIMAP::update(IncidenceBase *incidence)
 
 }
 
+KCal::Incidence* ResourceIMAP::parseIncidence( const QString& str )
+{
+  KCal::ScheduleMessage *message = mFormat.parseScheduleMessage( &mCalendar,
+								 str );
+  if( message ) {
+    return dynamic_cast<KCal::Incidence*>( message->event() );
+  } else {
+    QString errorMessage;
+    if( mFormat.exception() ) {
+      errorMessage = mFormat.exception()->message();
+    }
+    kdDebug() << "ResourceIMAP::parseIncidence( " << str << ") Error parsing \""
+	      << str << "\""
+	      << "Message: " << errorMessage << endl;
+    return 0;
+  }
+}
 
 void ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 {
   kdDebug() << "ResourceIMAP::addIncidence( " << type << ", " << ical << " )" << endl;
+  if( type == "Calendar" ) {
+    Incidence* i = parseIncidence( ical );
+    if( i && i->type() == "Event" ) {
+      addEvent( static_cast<Event*>(i) );
+    }
+  }
 }
 
 void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
