@@ -1,5 +1,5 @@
 /*
- *   This file only: 
+ *   This file only:
  *     Copyright (C) 2003  Mark Bucciarelli <mark@hubcapconsutling.com>
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the 
+ *   with this program; if not, write to the
  *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330 
+ *      59 Temple Place - Suite 330
  *      Boston, MA  02111-1307  USA.
  *
  */
@@ -38,7 +38,7 @@
 #include "taskview.h"
 
 const int taskWidth = 40;
-const int timeWidth = 6; 
+const int timeWidth = 6;
 const int totalTimeWidth = 7;
 const int reportWidth = taskWidth + timeWidth;
 const int weekReportWidth = taskWidth + (7 * timeWidth) + totalTimeWidth;
@@ -84,7 +84,7 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
         sum += task->totalTime();
         printTask(task, retval, 0);
       }
-    } 
+    }
 
     // total
     buf.fill('-', reportWidth);
@@ -117,9 +117,9 @@ void TimeKard::printTask(Task *task, QString &s, int level)
   }
 }
 
-void TimeKard::printWeekTask(const Task *task, 
-    const QMap<QString,long>& taskdaytotals, 
-    QMap<QString,long>& daytotals, 
+void TimeKard::printWeekTask(const Task *task,
+    const QMap<QString,long>& taskdaytotals,
+    QMap<QString,long>& daytotals,
     const Week& week, const int level, QString& s)
 {
   QString buf;
@@ -141,7 +141,7 @@ void TimeKard::printWeekTask(const Task *task,
       s += QString::fromLatin1("%1")
         .arg(formatTime(taskdaytotals[daytaskkey]/60), timeWidth);
       weeksum += taskdaytotals[daytaskkey];  // in seconds
-      
+
       if (daytotals.contains(daykey))
         daytotals.replace(daykey, daytotals[daykey] + taskdaytotals[daytaskkey]);
       else
@@ -179,7 +179,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
   QString taskhdr, totalhdr;
   QString line, buf;
   long sum;
-  
+
   QValueList<Week>::iterator week;
   QValueList<HistoryEvent> events;
   QValueList<HistoryEvent>::iterator event;
@@ -237,7 +237,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
         .arg((*event).todoUid());
 
       if (taskdaytotals.contains(daytaskkey))
-        taskdaytotals.replace(daytaskkey, 
+        taskdaytotals.replace(daytaskkey,
             taskdaytotals[daytaskkey] + (*event).duration());
       else
         taskdaytotals.insert(daytaskkey, (*event).duration());
@@ -267,7 +267,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
       sum = 0;
       if (justThisTask)
       {
-        printWeekTask(taskview->current_item(), taskdaytotals, daytotals, 
+        printWeekTask(taskview->current_item(), taskdaytotals, daytotals,
             (*week), 0, retval);
       }
       else
@@ -277,7 +277,7 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
         {
           printWeekTask(task, taskdaytotals, daytotals, (*week), 0, retval);
         }
-      } 
+      }
       retval += line;
 
       // totals
@@ -317,8 +317,8 @@ Week::Week(QDate from)
   _start = from;
 }
 
-QDate Week::start() const 
-{ 
+QDate Week::start() const
+{
   return _start;
 }
 
@@ -329,8 +329,7 @@ QDate Week::end() const
 
 QString Week::name() const
 {
-  return QString(i18n("Week of %1"))
-    .arg(KGlobal::locale()->formatDate(start()));
+  return i18n("Week of %1").arg(KGlobal::locale()->formatDate(start()));
 }
 
 QValueList<Week> Week::weeksFromDateRange(const QDate& from, const QDate& to)
@@ -339,16 +338,16 @@ QValueList<Week> Week::weeksFromDateRange(const QDate& from, const QDate& to)
   QValueList<Week> weeks;
 
   // The QDate weekNumber() method always puts monday as the first day of the
-  // week.  
+  // week.
   //
   // Not that it matters here, but week 1 always includes the first Thursday
   // of the year.  For example, January 1, 2000 was a Saturday, so
-  // QDate(2000,1,1).weekNumber() returns 52.  
+  // QDate(2000,1,1).weekNumber() returns 52.
 
   // Since report always shows a full week, we generate a full week of dates,
   // even if from and to are the same date.  The week starts on the day
   // that is set in the locale settings.
-  start = from.addDays( 
+  start = from.addDays(
       -((7 - KGlobal::locale()->weekStartDay() + from.dayOfWeek()) % 7));
 
   for (QDate d = start; d <= to; d = d.addDays(7))
