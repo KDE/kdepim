@@ -39,8 +39,6 @@
 #include "dockwindow.h"
 #include "dockwindow.moc"
 
-const QString AUTOSTART_KEY("Autostart");
-
 AlarmDockWindow::AlarmDockWindow(AlarmGui& ad, QWidget *parent, const char *name)
   : KSystemTray(parent, name),
     alarmDaemon(ad),
@@ -60,7 +58,7 @@ AlarmDockWindow::AlarmDockWindow(AlarmGui& ad, QWidget *parent, const char *name
   // Read the GUI autostart status from the config file
   KConfig* config = kapp->config();
   config->setGroup("General");
-  bool autostartGui = config->readBoolEntry(AUTOSTART_KEY, true);
+  bool autostartGui = config->readBoolEntry("Autostart", true);
 
   // Set up the context menu
   alarmsEnabledId = contextMenu()->insertItem(i18n("Alarms Enabled"),
@@ -249,7 +247,7 @@ void AlarmDockWindow::setGuiAutostart(bool on)
 {
   KConfig* config = kapp->config();
   config->setGroup("General");
-  config->writeEntry(AUTOSTART_KEY, on);
+  config->writeEntry("Autostart", on);
   config->sync();
   contextMenu()->setItemChecked(autostartGuiId, on);
 }

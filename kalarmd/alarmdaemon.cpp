@@ -42,9 +42,6 @@
 #include "alarmdaemon.moc"
 
 
-// Config file key strings
-const QString AUTOSTART_KEY("Autostart");
-
 const int LOGIN_DELAY( 5 );
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
@@ -258,7 +255,7 @@ void AlarmDaemon::enableAutoStart(bool on)
 {
   KConfig* config = kapp->config();
   config->setGroup("General");
-  config->writeEntry(AUTOSTART_KEY, on);
+  config->writeEntry("Autostart", on);
   config->sync();
   notifyGui(CHANGE_STATUS);
 }

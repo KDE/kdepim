@@ -44,11 +44,6 @@
 #include "daemongui.moc"
 
 
-// Config file key strings
-const QString DEFAULT_CLIENT_KEY("Default Client");
-const QString AUTOSTART_KEY("Autostart");
-
-
 AlarmGui::AlarmGui(QObject *parent, const char *name)
   : QObject(parent, name),
     DCOPObject(name),
@@ -236,14 +231,14 @@ void AlarmGui::checkDefaultClient()
   // Read the default client application
   KConfig* config = kapp->config();
   config->setGroup("General");
-  mDefaultClient = config->readEntry(DEFAULT_CLIENT_KEY);
+  mDefaultClient = config->readEntry("Default Client");
 
   if (!getClientInfo(mDefaultClient))
   {
     // Default client isn't in the list of clients.
     // Replace it with the first client in the list.
     mDefaultClient = mClients.count() ? mClients.begin().key() : QString();
-    config->writeEntry(DEFAULT_CLIENT_KEY, mDefaultClient);
+    config->writeEntry("Default Client", mDefaultClient);
     config->sync();
   }
 }
@@ -257,7 +252,7 @@ void AlarmGui::setDefaultClient(int menuIndex)
       mDefaultClient = client.key();
       KConfig* config = kapp->config();
       config->setGroup("General");
-      config->writeEntry(DEFAULT_CLIENT_KEY, mDefaultClient);
+      config->writeEntry("Default Client", mDefaultClient);
       config->sync();
     }
   }

@@ -25,10 +25,6 @@
 
 #include "adconfigdatarw.h"
 
-// Config file key strings
-const QString AUTOSTART_KEY("Autostart");
-
-
 void ADConfigDataRW::readDaemonData(bool sessionStarting)
 {
   kdDebug() << "ADConfigDataRW::readDaemonData()" << endl;
