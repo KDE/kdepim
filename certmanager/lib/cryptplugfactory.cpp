@@ -143,7 +143,7 @@ const Kleo::CryptoBackend * Kleo::CryptPlugFactory::backendByName( const QString
 }
 
 Kleo::BackendConfigWidget * Kleo::CryptPlugFactory::configWidget( QWidget * parent, const char * name ) const {
-  return new Kleo::BackendConfigWidget( const_cast<Kleo::CryptPlugFactory*>( this ), parent, name );
+  return new Kleo::BackendConfigWidget( mSelf, parent, name );
 }
 
 KConfig* Kleo::CryptPlugFactory::configObject() const {
