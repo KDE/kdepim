@@ -170,11 +170,9 @@ int main(int argc, char *argv[])
   KonsoleKalendarVariables variables;
   KonsoleKalendarEpoch epochs;
 
-  CalendarResources calendarResource;	
-	
+
   variables.setExportType( NONE );
-  variables.setCalendarResources( &calendarResource );	
-	
+
   if ( args->isSet("verbose") ) {
      variables.setVerbose(true);
   }
@@ -429,43 +427,61 @@ int main(int argc, char *argv[])
   }
 
 
-  if ( args->isSet("file") ) {
+ if ( args->isSet("file") ) {
     calendarFile = true;
     option = args->getOption("file");
     variables.setCalendarFile( option );
+ }
 
+  
+  KonsoleKalendar *konsolekalendar = new KonsoleKalendar( variables );
+  
+  /*
+   * All modes need to know if the calendar file exists
+   * This must be done before we get to opening biz
+   */
+   
+  QFile fileExists( variables.getCalendarFile() );
+  bool exists = fileExists.exists();
+  fileExists.close();
+
+  if ( calendarFile && create ) {
+
+    kdDebug() << "main | createcalendar | check if calendar file already exists" << endl;
+
+    if( exists ) {
+      kdError() << i18n("Calendar ").local8Bit() << variables.getCalendarFile() << i18n(" already exists").local8Bit() << endl;
+      return(1);
+    }
+    if( konsolekalendar->createCalendar() ) {
+      cout << i18n("Calendar ").local8Bit() << variables.getCalendarFile().local8Bit() << i18n(" successfully created.").local8Bit() << endl;
+      return(0);
+    } else {
+      kdError() << i18n("Unable to create calendar: ").local8Bit() << variables.getCalendarFile() << endl;
+      return(1);
+    }
+   }
+
+
+  CalendarResources calendarResource;
+  variables.setCalendarResources( &calendarResource );
+
+   
+  /*
+   * File must be there when we open it;)
+   */
+   
+  if ( args->isSet("file") ) {
+    ResourceCalendar *defaultResource = new ResourceLocal( option );
+    
+    defaultResource->setResourceName( i18n("Default KOrganizer resource") );
+    variables.addCalendarResources( defaultResource );
+    
     kdDebug() << "main | parse options | using calendar at: (" << variables.getCalendarFile() << ")" << endl;
 
   } else {
-    /*KConfig cfg( locate( "config", "korganizerrc" ) );
-     *
-     * cfg.setGroup("General");
-     * KURL url( cfg.readPathEntry("Active Calendar") );
-     * if ( url.isLocalFile() )
-     * {
-     * KalendarFile = url.path();
-     *
-     * variables.setCalendarFile(KalendarFile);
-     *
-     * if( variables.isVerbose() ) {
-     *   cout << i18n("Using calendar file ").local8Bit() << variables.getCalendarFile().local8Bit() << endl;
-     * }
-     * } else {
-     *  kdError() << i18n("Remote calendar files are not supported yet").local8Bit() << endl;
-     *  return(1);
-     *}
-     */
-
-     /*
-      * If this ain't best way i'll make the bug report at once;) 
-      */
-
-     //variables.createCalendarResources();
-
-
-     	  
-     KConfig cfg( locateLocal( "config", "korganizerrc" ) );
 	  
+     KConfig cfg( locateLocal( "config", "korganizerrc" ) );
 	  
      bool success = variables.loadCalendarResources( &cfg );
 
@@ -592,7 +608,7 @@ int main(int argc, char *argv[])
    * And away we go with the real work...                                    *
    ***************************************************************************/
 
-  KonsoleKalendar *konsolekalendar = new KonsoleKalendar(variables);
+  
 
   /*
    * Set our application name for use in unique IDs and error messages,
@@ -602,39 +618,17 @@ int main(int argc, char *argv[])
   CalFormat::setApplication( progDisplay, prodId.arg( progDisplay).arg( progVersion ) );
 
   /*
-   * All modes need to know if the calendar file exists
-   */
-  QFile fileExists( variables.getCalendarFile() );
-  bool exists = fileExists.exists();
-  fileExists.close();
-
-  if ( calendarFile && create ) {
-
-    kdDebug() << "main | createcalendar | check if calendar file already exists" << endl;
-
-    if( exists ) {
-      kdError() << i18n("Calendar ").local8Bit() << variables.getCalendarFile() << i18n(" already exists").local8Bit() << endl;
-      return(1);
-    }
-    if( konsolekalendar->createCalendar() ) {
-      cout << i18n("Calendar ").local8Bit() << variables.getCalendarFile().local8Bit() << i18n(" successfully created.").local8Bit() << endl;
-      return(0);
-    } else {
-      kdError() << i18n("Unable to create calendar: ").local8Bit() << variables.getCalendarFile() << endl;
-      return(1);
-    }
-   }
-
-  /*
    * Calendar file must exist for all (non-create) modes.
+   * Do we really need this (Winterz??)
    */
-    kdDebug() << "main | modework | check if calendar file exists" << endl;
+    /*kdDebug() << "main | modework | check if calendar file exists" << endl;
     if( ! exists ) {
       kdError() << i18n("No such calendar: ").local8Bit() << variables.getCalendarFile() << endl;
       return(1);
     }
     kdDebug() << "main | modework | yes calendar file exists" << endl;
-
+    */
+    
   /*
    * Opens calendar file so we can use it;)
    * Because at this point we don't know what we'll
@@ -642,8 +636,10 @@ int main(int argc, char *argv[])
    *
    * Adds it to konsolekalendarvariables also..
    */
-  if( konsolekalendar->openCalendar() ) {
+  if( !variables.getCalendarResourceManager()->isEmpty() ) {
 
+    variables.setCalendar( (CalendarLocal *) variables.getCalendarResources() );
+  
     if( importFile ) {
       konsolekalendar->importCalendar();
     }

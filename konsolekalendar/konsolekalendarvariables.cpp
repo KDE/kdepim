@@ -32,8 +32,7 @@
 #include <stdio.h>
 
 
-#include <libkcal/calendarresources.h>
-#include <libkcal/resourcelocal.h>
+
 
 #include "konsolekalendarvariables.h"
 
@@ -250,31 +249,15 @@ bool KonsoleKalendarVariables::getFloating()
 }
 
 
-bool KonsoleKalendarVariables::createCalendarResources()
-{
- if ( m_resource ) {	
-   kdDebug() << "Creating calendar resources!" << endl;
-   m_resource = new CalendarResources();	 
-	 
- } else {
-   kdDebug() << "Cannot create another resource (Only one is supported)" << endl;
-   return false;		
-		
- }
-
-return true;
-}
-
-
-
 bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource )
 {
- if ( m_resource ) {	
-   
+ if ( m_resource ) {
+   // In current state we support only one calendar
+   // that's a fact and we have to live with that!
    kdDebug() << "Add to calendar resource!" << endl;
    CalendarResourceManager *manager = m_resource->resourceManager();	    
    manager->add( resource );
-	 
+	 manager->setStandardResource( resource );
  } else {
   kdDebug() << "Cannot add to calendar resources (Not created!)" << endl;
   return false;
@@ -282,8 +265,6 @@ bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource 
 
 return true;
 }
-
-
 
 void KonsoleKalendarVariables::setCalendarResources( CalendarResources *cal )
 {
@@ -295,6 +276,11 @@ CalendarResources *KonsoleKalendarVariables::getCalendarResources()
  return m_resource;	
 }
 
+
+CalendarResourceManager *KonsoleKalendarVariables::getCalendarResourceManager( )
+{
+  return m_resource->resourceManager();
+}
 
 bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
 {

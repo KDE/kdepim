@@ -26,6 +26,8 @@
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendarresources.h>
+#include <libkcal/resourcelocal.h>
+
 #include <libkcal/event.h>
 
 
@@ -135,11 +137,10 @@ class KonsoleKalendarVariables
    int getExportType();
 
    /**
-    * creates calendar resources
-    */ 
-   
-   bool createCalendarResources();
-   
+    * Add to Calendar Resources
+    */
+   CalendarResourceManager *getCalendarResourceManager();
+
    /**
     * Add to Calendar Resources 
     */
