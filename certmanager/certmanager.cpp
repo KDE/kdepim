@@ -58,6 +58,7 @@
 #include <kleo/keyfiltermanager.h>
 #include <kleo/hierarchicalkeylistjob.h>
 #include <kleo/refreshkeysjob.h>
+#include <kleo/cryptoconfig.h>
 
 #include <ui/progressdialog.h>
 #include <ui/progressbar.h>
@@ -380,7 +381,18 @@ void CertManager::slotConfigureGpgME() {
   Kleo::CryptoConfig* config = Kleo::CryptoBackendFactory::instance()->config();
   if ( config ) {
     Kleo::CryptoConfigDialog dlg( config );
-    dlg.exec();
+
+    int result = dlg.exec();
+
+    // Forget all data parsed from gpgconf, so that we show updated information
+    // when reopening the configuration dialog.
+    config->clear();
+
+    if ( result == QDialog::Accepted )
+    {
+      // Tell other apps (e.g. kmail) that the gpgconf data might have changed
+      kapp->dcopClient()->emitDCOPSignal( "KPIM::CryptoConfig", "changed()", QByteArray() );
+    }
   }
 }
 
