@@ -1547,6 +1547,10 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 
 	_saveAbChanges();
 	_stopAbbrowser(abAlreadyRunning);
+
+	fDatabase->resetSyncFlags();
+	KPILOT_DELETE(fDatabase);
+	emit syncDone(this);
 }
 
 void AbbrowserConduit::doTest()

@@ -24,7 +24,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 
@@ -853,6 +853,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.18  2001/09/24 22:40:27  adridg
+// Marginal extension of debugging info to track knotes-conduit bug
+//
 // Revision 1.17  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

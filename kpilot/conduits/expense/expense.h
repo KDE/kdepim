@@ -25,7 +25,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 
@@ -122,6 +122,9 @@ private:
 
 
 // $Log$
+// Revision 1.5  2001/12/02 22:03:07  adridg
+// Expense conduit finally works
+//
 // Revision 1.4  2001/11/25 22:03:44  adridg
 // Port expense conduit to new arch. Doesn't compile yet.
 //

@@ -25,7 +25,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 
@@ -477,6 +477,9 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.20  2001/12/18 07:40:49  adridg
+// Enable conduit's config & back out danimo's work
+//
 // Revision 1.19  2001/12/08 16:29:41  mlaurent
 // Fix compilation.
 // Dirk could you recreate a tarball for kde3.0beta1

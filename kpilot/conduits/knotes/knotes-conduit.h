@@ -24,7 +24,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 #ifndef _KPILOT_KNOTES_CONDUIT_H
@@ -183,6 +183,9 @@ private:
 #endif
 
 // $Log$
+// Revision 1.7  2001/03/09 09:46:14  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.6  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //
