@@ -23,8 +23,7 @@ abbrowser_LDADD = -lkab2 -lkimgio $(LIB_KFILE)
 noinst_HEADERS = abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
 
 messages:
-	$(XGETTEXT) -C -kI18N_NOOP -ki18n -x $(includedir)/kde.pot $(abbrowser_SOURCES) && \
-	mv messages.po ../po/abbrowser.pot
+	$(XGETTEXT) $(abbrowser_SOURCES) -o $(podir)/abbrowser.pot
 
 srcdoc:
 	$(mkinstalldirs) $(SRCDOC_DEST)
@@ -42,3 +41,4 @@ install-data-local:
 # remove ALL you have installed in install-data-local or install-exec-local
 uninstall-local:
 	-rm -f $(APPSDIR)/abbrowser.desktop
+
