@@ -184,7 +184,7 @@ void KNArticleManager::showHdrs(bool clear)
     v_iew->clear();
 
   knGlobals.top->setCursorBusy(true);
-  knGlobals.top->setStatusMsg(i18n(" Creating list..."));
+  knGlobals.setStatusMsg(i18n(" Creating list..."));
   knGlobals.top->secureProcessEvents();
 
   if(g_roup) {
@@ -317,7 +317,7 @@ void KNArticleManager::showHdrs(bool clear)
     knGlobals.top->articleView()->setArticle(0);
   }
 
-  knGlobals.top->setStatusMsg(QString::null);
+  knGlobals.setStatusMsg(QString::null);
   updateStatusString();
   knGlobals.top->setCursorBusy(false);
 }
@@ -992,25 +992,25 @@ void KNArticleManager::updateStatusString()
     if (g_roup->status()==KNGroup::moderated)
       name += i18n(" (moderated)");
 
-    knGlobals.top->setStatusMsg(i18n(" %1: %2 new , %3 displayed")
+    knGlobals.setStatusMsg(i18n(" %1: %2 new , %3 displayed")
                         .arg(name).arg(g_roup->newCount()).arg(displCnt),SB_GROUP);
 
     if(f_ilter)
-      knGlobals.top->setStatusMsg(i18n(" Filter: %1").arg(f_ilter->translatedName()), SB_FILTER);
+      knGlobals.setStatusMsg(i18n(" Filter: %1").arg(f_ilter->translatedName()), SB_FILTER);
     else
-      knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
+      knGlobals.setStatusMsg(QString::null, SB_FILTER);
   }
   else if(f_older) {
     if(f_ilter)
       displCnt=f_ilter->count();
     else
       displCnt=f_older->count();
-    knGlobals.top->setStatusMsg(i18n(" %1: %2 displayed")
+    knGlobals.setStatusMsg(i18n(" %1: %2 displayed")
       .arg(f_older->name()).arg(displCnt), SB_GROUP);
-    knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
+    knGlobals.setStatusMsg(QString::null, SB_FILTER);
   } else {
-    knGlobals.top->setStatusMsg(QString::null, SB_GROUP);
-    knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
+    knGlobals.setStatusMsg(QString::null, SB_GROUP);
+    knGlobals.setStatusMsg(QString::null, SB_FILTER);
   }
 }
 

@@ -18,6 +18,7 @@
 #define KNGLOBALS_H
 
 #include <kconfig.h>
+#include "resource.h"
 
 class KInstance;
 class KNConfigManager;
@@ -67,6 +68,11 @@ class KNGlobals {
     KNFolderManager       *folderManager();
     KNScoringManager      *scoringManager();
     KNMemoryManager       *memoryManager();
+
+    /** forwarded to top->setStatusMsg() if available */
+    void setStatusMsg(const QString& text = QString::null, int id = SB_MAIN);
+    /** forwarded to progressBar->setProgressBar() if available */
+    void setProgressBar(int value, const QString &text);
 
 private:
     KSharedConfig::Ptr c_onfig;

@@ -846,7 +846,7 @@ void KNGroup::scoreArticles(bool onlynew)
     kdDebug(5003) << "scoring " << newCount() << " articles" << endl;
     kdDebug(5003) << "(total " << length() << " article in group)" << endl;
     knGlobals.top->setCursorBusy(true);
-    knGlobals.top->setStatusMsg(i18n(" Scoring..."));
+    knGlobals.setStatusMsg(i18n(" Scoring..."));
 
     int defScore;
     KScoringManager *sm = knGlobals.scoringManager();
@@ -873,7 +873,7 @@ void KNGroup::scoreArticles(bool onlynew)
       sm->applyRules(sa);
     }
 
-    knGlobals.top->setStatusMsg(QString::null);
+    knGlobals.setStatusMsg(QString::null);
     knGlobals.top->setCursorBusy(false);
 
     //kdDebug(5003) << KNScorableArticle::notifyC->collection() << endl;
@@ -888,7 +888,7 @@ void KNGroup::reorganize()
   kdDebug(5003) << "KNGroup::reorganize()" << endl;
 
   knGlobals.top->setCursorBusy(true);
-  knGlobals.top->setStatusMsg(i18n(" Reorganizing headers..."));
+  knGlobals.setStatusMsg(i18n(" Reorganizing headers..."));
 
   for(int idx=0; idx<length(); idx++) {
     KNRemoteArticle *a = at(idx);
@@ -902,7 +902,7 @@ void KNGroup::reorganize()
   saveStaticData(length(), true);
   saveDynamicData(length(), true);
   knGlobals.top->headerView()->repaint();
-  knGlobals.top->setStatusMsg(QString::null);
+  knGlobals.setStatusMsg(QString::null);
   knGlobals.top->setCursorBusy(false);
 }
 

@@ -193,7 +193,7 @@ bool KNFolder::loadHdrs()
   int pos1=0, pos2=0, cnt=0, byteCount;
 
   knGlobals.top->setCursorBusy(true);
-  knGlobals.top->setStatusMsg(i18n(" Loading folder..."));
+  knGlobals.setStatusMsg(i18n(" Loading folder..."));
   knGlobals.top->secureProcessEvents();
 
   while(!i_ndexFile.atEnd()) {
@@ -281,7 +281,7 @@ bool KNFolder::loadHdrs()
       clear();
       closeFiles();
 
-      knGlobals.top->setStatusMsg(QString::null);
+      knGlobals.setStatusMsg(QString::null);
       knGlobals.top->setCursorBusy(false);
       return false;
     }
@@ -294,7 +294,7 @@ bool KNFolder::loadHdrs()
   c_ount=cnt;
   updateListItem();
 
-  knGlobals.top->setStatusMsg(QString::null);
+  knGlobals.setStatusMsg(QString::null);
   knGlobals.top->setCursorBusy(false);
 
   return true;

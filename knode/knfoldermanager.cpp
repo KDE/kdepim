@@ -302,7 +302,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
 
   if (file) {
     knGlobals.top->setCursorBusy(true);
-    knGlobals.top->setStatusMsg(i18n(" Importing articles..."));
+    knGlobals.setStatusMsg(i18n(" Importing articles..."));
     knGlobals.top->secureProcessEvents();
 
     if (!file->atEnd()) {                // search for the first article...
@@ -368,13 +368,13 @@ void KNFolderManager::importFromMBox(KNFolder *f)
       }
     }
 
-    knGlobals.top->setStatusMsg(i18n(" Storing articles..."));
+    knGlobals.setStatusMsg(i18n(" Storing articles..."));
     knGlobals.top->secureProcessEvents();
 
     if (!list.isEmpty())
       knGlobals.articleManager()->moveIntoFolder(list, f);
 
-    knGlobals.top->setStatusMsg(QString::null);
+    knGlobals.setStatusMsg(QString::null);
     knGlobals.top->setCursorBusy(false);
   }
 
@@ -399,7 +399,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
 
   if (file) {
     knGlobals.top->setCursorBusy(true);
-    knGlobals.top->setStatusMsg(i18n(" Exporting articles..."));
+    knGlobals.setStatusMsg(i18n(" Exporting articles..."));
     knGlobals.top->secureProcessEvents();
 
     QTextStream ts(file);
@@ -423,7 +423,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
         knGlobals.top->secureProcessEvents();
     }
 
-    knGlobals.top->setStatusMsg(QString::null);
+    knGlobals.setStatusMsg(QString::null);
     knGlobals.top->setCursorBusy(false);
   }
 }

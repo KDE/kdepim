@@ -27,6 +27,8 @@
 #include "knfoldermanager.h"
 #include "knscoring.h"
 #include "knmemorymanager.h"
+#include "knmainwidget.h"
+#include "knwidgets.h"
 
 KConfig* KNGlobals::config()
 {
@@ -90,4 +92,17 @@ KNMemoryManager* KNGlobals::memoryManager()
   if(!mMemManager)
     mMemManager = new KNMemoryManager();
   return mMemManager;
+}
+
+
+void KNGlobals::setStatusMsg(const QString &text, int id)
+{
+  if(top)
+    top->setStatusMsg(text, id);
+}
+
+void KNGlobals::setProgressBar(int value, const QString &text)
+{
+  if(progressBar)
+    progressBar->setProgressBar(value, text);
 }
