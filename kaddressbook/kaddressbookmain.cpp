@@ -97,9 +97,9 @@ void KAddressBookMain::readProperties(KConfig *)
 
 void KAddressBookMain::initActions()
 {
-  KStdAction::quit(this, SLOT(closeWithSave()), actionCollection());
+  KStdAction::quit( this, SLOT(close()), actionCollection() );
 
-  KStdAction::preferences( mWidget, SLOT( configure() ), actionCollection());
+  KStdAction::preferences( mWidget, SLOT( configure() ), actionCollection() );
   KStdAction::configureToolbars( this, SLOT( configureToolbars() ),
                                  actionCollection() );
   KStdAction::keyBindings(this, SLOT( configureKeys()), actionCollection() );
@@ -127,18 +127,25 @@ void KAddressBookMain::configureKeys()
   KKeyDialog::configureKeys(actionCollection(),xmlFile(),true,this);
 }
 
-void KAddressBookMain::closeWithSave()
+bool KAddressBookMain::queryClose()
 {
   if ( mActionManager->isModified() ) {
     QString text = i18n( "The address book was modified. Do you want to save your changes?" );
     int ret = KMessageBox::warningYesNoCancel( this, text, "",
                                               KStdGuiItem::yes(),
                                               KStdGuiItem::no(), "AskForSave" );
-    if ( ret == KMessageBox::Yes )
-      save();
-    else if ( ret == KMessageBox::Cancel )
-      return;
+    switch ( ret ) {
+      case KMessageBox::Yes:
+        mWidget->save();
+        break;
+      case KMessageBox::No:
+        return true;
+        break;
+      default: //cancel
+        return false;
+        break;
+    }
   }
 
-  close();
+  return true;
 }
