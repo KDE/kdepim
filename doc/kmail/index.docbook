@@ -31,7 +31,7 @@ don't want to miss are collected in the
 section.</para>
 	
 <para>Please mail any comments and additions to
-<ulink url="kmail@kde.org">kmail@kde.org</ulink>.</para>
+<email>kmail@kde.org</email>.</para>
 
 <para>This documentation was last updated for KMail version 1.1.45.</para>
 
@@ -82,7 +82,7 @@ drag it around with the mouse.</para></listitem>
 <para>KMail's homepage is at <ulink url="http://devel-home.kde.org/~kmail/">http://devel-home.kde.org/~kmail/</ulink>,
 an archive of the developer's mailing list is at <ulink url="http://lists.kde.org/?l=kde-kmail&amp;r=1&amp;w=2">lists.kde.org</ulink>.</para>
 
-<para>Bug reports and suggestions should go to <ulink url="mailto:kmail@kde.org">kmail@kde.org</ulink>.</para>
+<para>Bug reports and suggestions should go to <email>kmail@kde.org</email>.</para>
 
 <para>We hope you will enjoy KMail!</para>
 
@@ -418,7 +418,7 @@ the KDE frontend to the the ispell or aspell spelling checker.</para>
 <title>Message Folders</title>
 
 <para>Message Folders are used to organize your email messages. By default, all message folders are stored in 
-the directory <literal remap="tt">Mail</literal>, which is created in your home directory. When you first 
+the directory <filename>Mail</filename>, which is created in your home directory. When you first 
 start KMail the inbox, outbox, sent-mail, and trash folders are created. 
 These folders each have special functions:</para>
 
@@ -863,7 +863,7 @@ email client over to KMail. KMail stores its mail using the <emphasis remap="bf"
 one of the most widely used mailbox formats on UNIX
 systems. Mbox mailboxes store messages in one file, identifying where messages start and end with the
 FROM: header. For many Unix mailers, all you must do is move your mailboxes to
-<literal remap="tt">~/Mail</literal> (or make
+<filename>~/Mail</filename> (or make
  Mail a symbolic link to the folder containing you mailboxes) and launch KMail.  The mailboxes should now 
 show up correctly in KMail.</para>
 
@@ -876,7 +876,7 @@ formats.</para>
 <listitem>
 <para>Eudora uses the mbox format in its mail files. To use them with KMail, make sure that your Eudora mailboxes have 
 been compacted, then copy the .mbx files (Windows Eudora) or Eudora mailbox files (Mac Eudora) to your 
-<literal remap="tt">~/Mail</literal> directory. You don't need to copy the index files. 
+<filename>~/Mail</filename> directory. You don't need to copy the index files. 
 Once you start KMail, the mailboxes should appear in the Folders pane and the messages should be accessible in
 the Headers Pane.</para>
 <para>If messages do not appear in the Headers pane, your mailbox files may still contain Windows or Macintosh
@@ -889,7 +889,7 @@ command or a scripting language to change the Windows or Macintosh line feeds to
 <term>MMDF</term>
 <listitem>
 <para>This format is close enough to the mailbox format that KMail should be able to use these mailboxes if you
-just copy them to your <literal remap="tt">~/Mail</literal> directory. However, MMDF mailboxes have
+just copy them to your <filename>~/Mail</filename> directory. However, MMDF mailboxes have
 not been tested with KMail,
 so your results may vary.  If you can get this format to work with KMail, please let us know so we
 can include more specific directions in the next documentation release.</para>
@@ -934,7 +934,7 @@ mail folders before you use this script.</para>
 </para>
 <para>In Linux/KDE:
 <orderedlist><listitem>
-<para>Move previously saves file to correct <literal remap="tt">~/Mail</literal> folder</para>
+<para>Move previously saves file to correct <filename>~/Mail</filename> folder</para>
 </listitem>
 <listitem>
 <para>Rename file without .txt extension</para>
@@ -948,8 +948,8 @@ mail folders before you use this script.</para>
 <varlistentry>
 <term>Netscape Mail</term>
 <listitem>
-<para>Copy your Netscape Mailfiles from <literal remap="tt">~/nsmail/</literal> to
-<literal remap="tt">~/Mail</literal>
+<para>Copy your Netscape Mailfiles from <filename>~/nsmail/</filename> to
+<filename>~/Mail</filename>
 folder. The mailboxes will show up in KMail the next time you restart it.</para>
 </listitem>
 </varlistentry>
@@ -973,7 +973,7 @@ a text editor that lets you save the files in Unix format.</para>
 <para> Other mail programs probably do not work with KMail as they use
 proprietary mail formats that KMail cannot understand. However, there is no harm
 in trying! If the mailbox file looks similar to the mbox format, try copying the
-mailbox file (remember, the index file is not needed) to your <literal remap="tt">~/Mail</literal>
+mailbox file (remember, the index file is not needed) to your <filename>~/Mail</filename>
 directory and see what happens.  If you get mailboxes from your favorite mail
 client to work in KMail, please tell us how you did it so that we can include
 directions in a future revision of this documentation. </para>
@@ -1688,7 +1688,7 @@ Mailreader window</link>.
 <title>Common Questions and Answers</title>
 
 <para>This section contains the solution to common problems.
-Don't hesitate to mail <ulink url="kmail@kde.org">kmail@kde.org</ulink>
+Don't hesitate to mail <email>kmail@kde.org</email>
 if you think something is missing here.</para>
 
 <!-- todo: IMAP support? -->
@@ -1771,8 +1771,8 @@ on configuring sendmail for Dial-up connections</ulink>.</para>
 <!-- please keep in sync with the authors list on the webpage -->
 
 <para><itemizedlist>
-	<listitem><para>Stefan Taferner <ulink url="mailto:taferner@alpin.or.at">&lt;taferner@alpin.or.at&gt;</ulink></para></listitem>
-	<listitem><para>Markus Wuebben <ulink url="mailto:markus.wuebben@kde.org">&lt;markus.wuebben@kde.org&gt;</ulink></para></listitem>
+	<listitem><para>Stefan Taferner <email>taferner@alpin.or.at</email></para></listitem>
+	<listitem><para>Markus Wuebben <email>markus.wuebben@kde.org</email></para></listitem>
 </itemizedlist></para>
 
 </sect1>
@@ -1782,17 +1782,17 @@ on configuring sendmail for Dial-up connections</ulink>.</para>
 
 <para><itemizedlist>
 
-	<listitem><para>Waldo Bastian <ulink url="mailto:bastian@kde.org">&lt;bastian@kde.org&gt;</ulink></para></listitem>
-	<listitem><para>Andreas Gungl <ulink url="mailto:a.gungl@gmx.de">&lt;a.gungl@gmx.de&gt;</ulink></para></listitem>
-	<listitem><para>Lars Knoll <ulink url="mailto:knoll@mpi-hd.mpg.de">&lt;knoll@mpi-hd.mpg.de&gt;</ulink></para></listitem>
-	<listitem><para>J. Nick Koston <ulink url="mailto:bdraco@darkorb.net">&lt;bdraco@darkorb.net&gt;</ulink></para></listitem>
-	<listitem><para>Daniel Naber <ulink url="mailto:dnaber@mini.gt.owl.de">&lt;dnaber@mini.gt.owl.de&gt;</ulink></para></listitem>
-	<listitem><para>Sven Radej <ulink url="mailto:radej@kde.org">&lt;radej@kde.org&gt;</ulink></para></listitem>
-	<listitem><para>Espen Sand <ulink url="mailto:espen@kde.org">&lt;espen@kde.org&gt;</ulink></para></listitem>
-	<listitem><para>Don Sanders <ulink url="mailto:sanders@kde.org">&lt;sanders@kde.org&gt;</ulink> (Active maintainer)</para></listitem>
-	<listitem><para>George Staikos <ulink url="mailto:staikos@0wned.org">&lt;staikos@0wned.org&gt;</ulink></para></listitem>
-	<listitem><para>Mario Weilguni <ulink url="mailto:mweilguni@sime.com">&lt;mweilguni@sime.com&gt;</ulink></para></listitem>
-	<listitem><para>Robert D. Williams <ulink url="mailto:rwilliams@kde.org">&lt;rwilliams@kde.org&gt;</ulink></para></listitem>
+	<listitem><para>Waldo Bastian <email>bastian@kde.org</email></para></listitem>
+	<listitem><para>Andreas Gungl <email>a.gungl@gmx.de</email></para></listitem>
+	<listitem><para>Lars Knoll <email>knoll@mpi-hd.mpg.de</email></para></listitem>
+	<listitem><para>J. Nick Koston <email>bdraco@darkorb.net</email></para></listitem>
+	<listitem><para>Daniel Naber <email>dnaber@mini.gt.owl.de</email></para></listitem>
+	<listitem><para>Sven Radej <email>radej@kde.org</email></para></listitem>
+	<listitem><para>Espen Sand <email>espen@kde.org</email></para></listitem>
+	<listitem><para>Don Sanders <email>sanders@kde.org</email> (Active maintainer)</para></listitem>
+	<listitem><para>George Staikos <email>staikos@0wned.org</email></para></listitem>
+	<listitem><para>Mario Weilguni <email>mweilguni@sime.com</email></para></listitem>
+	<listitem><para>Robert D. Williams <email>rwilliams@kde.org</email></para></listitem>
 
 </itemizedlist></para>
 
@@ -1801,22 +1801,22 @@ on configuring sendmail for Dial-up connections</ulink>.</para>
 <sect1 id="documentation">
 <title>Documentation</title>
 
-	<para>Update for KMail 1.1 by Daniel Naber <ulink url="mailto:dnaber@mini.gt.owl.de">&lt;dnaber@mini.gt.owl.de&gt;</ulink>,
-		PGP part by Andreas Gungl <ulink url="mailto:a.gungl@gmx.de">&lt;a.gungl@gmx.de&gt;</ulink></para>
-	<para>KMail 1.0 documentation by David Rugge <ulink url="mailto:davidrugge@mindspring.com">&lt;davidrugge@mindspring.com&gt;</ulink></para>
-	<para>Original documentation by Markus Wuebben <ulink url="mailto:markus.wuebben@kde.org">&lt;markus.wuebben@kde.org&gt;</ulink>, 
-	Robert Williams <ulink url="mailto:rwilliams@kde.org">&lt;rwilliams@kde.org&gt;</ulink> (Editor)</para>
+	<para>Update for KMail 1.1 by Daniel Naber <email>dnaber@mini.gt.owl.de</email>,
+		PGP part by Andreas Gungl <email>a.gungl@gmx.de</email></para>
+	<para>KMail 1.0 documentation by David Rugge <email>davidrugge@mindspring.com</email></para>
+	<para>Original documentation by Markus Wuebben <email>markus.wuebben@kde.org</email>, 
+	Robert Williams <email>rwilliams@kde.org</email> (Editor)</para>
 	<para>Some of the KMail Questions and Answers were taken from the KMail section of the KDE FAQ.</para>
 
-	<para>Thanks to Michael Elkins <ulink url="mailto:me@cs.hmc.edu">&lt;me@cs.hmc.edu&gt;</ulink> for his
+	<para>Thanks to Michael Elkins <email>me@cs.hmc.edu</email> for his
 	excellent description of the different Unix mail formats in the Mutt documentation.</para>
 
 	<para>Thanks to</para>
 
 	<para><itemizedlist>
-		<listitem><para>Mendel Mobach <ulink url="mailto:mendel@mobach.nl">&lt;mendel@mobach.nl&gt;</ulink> (Netscape mail)</para></listitem>
-		<listitem><para>Ed Shapard <ulink url="shapard@bigfoot.com">&lt;mailto:shapard@bigfoot.com&gt;</ulink> (Pegasus Mail)</para></listitem>
-		<listitem><para>Ray Muir <ulink url="mailto:rjmuir@ibm.net">&lt;rjmuiribm.net&gt;</ulink> (Forte Agent)</para></listitem>
+		<listitem><para>Mendel Mobach <email>mendel@mobach.nl</email> (Netscape mail)</para></listitem>
+		<listitem><para>Ed Shapard <email>shapard@bigfoot.com</email> (Pegasus Mail)</para></listitem>
+		<listitem><para>Ray Muir <email>rjmuir@ibm.net</email> (Forte Agent)</para></listitem>
 	</itemizedlist></para>
 
 	<para>for providing directions on using other mail clients' mailboxes
