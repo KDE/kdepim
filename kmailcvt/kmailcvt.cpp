@@ -18,6 +18,7 @@
 #include "kmailcvt.h"
 #include <kaboutdialog.h>
 #include <klocale.h>
+#include <kapplication.h>
 #include <qgrid.h>
 #include <qlayout.h>
 

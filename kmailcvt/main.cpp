@@ -19,6 +19,7 @@
 #include <kaboutdata.h>
 #include <klocale.h>
 #include <dcopclient.h>
+#include <kapplication.h>
 
 #include <unistd.h>
 
