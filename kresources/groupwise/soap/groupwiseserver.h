@@ -69,7 +69,6 @@ class GroupwiseServer : public QObject
     bool login();
     bool logout();
 
-    bool readCalendar( KCal::ResourceCached * );
     bool addIncidence( KCal::Incidence *, KCal::ResourceCached * );
     bool changeIncidence( KCal::Incidence * );
     bool deleteIncidence( KCal::Incidence * );
@@ -79,8 +78,6 @@ class GroupwiseServer : public QObject
 
     QMap<QString, QString> addressBookList();
 
-    bool readAddressBooks( const QStringList &addrBookIds,
-      KABC::ResourceCached * );
     bool readAddressBooksSynchronous( const QStringList &addrBookIds,
       KABC::ResourceCached * );
 
@@ -104,9 +101,15 @@ class GroupwiseServer : public QObject
     int gSoapSendCallback( struct soap *soap, const char *s, size_t n );
     size_t gSoapReceiveCallback( struct soap *soap, char *s, size_t n );
 
+    void emitReadAddressBookTotalSize( int );
+    void emitReadAddressBookProcessedSize( int );
+
   signals:
     void readAddressBooksFinished();
     void readCalendarFinished();
+
+    void readAddressBookTotalSize( int );
+    void readAddressBookProcessedSize( int );
 
   protected:
     void dumpCalendarFolder( const std::string &id );
@@ -130,7 +133,6 @@ class GroupwiseServer : public QObject
     std::string mCalendarFolder;
     
     struct soap *mSoap;
-    KPIM::ThreadWeaver::Weaver *mWeaver;
 
     KExtendedSocket *m_sock;
 

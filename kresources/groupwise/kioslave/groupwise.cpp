@@ -267,6 +267,11 @@ void Groupwise::getAddressbook( const KURL &url )
 
     GroupwiseServer server( u, user, pass, 0 );
 
+    connect( &server, SIGNAL( readAddressBookTotalSize( int ) ),
+      SLOT( slotReadAddressBookTotalSize( int ) ) );
+    connect( &server, SIGNAL( readAddressBookProcessedSize( int ) ),
+      SLOT( slotReadAddressBookProcessedSize( int ) ) );
+
     kdDebug() << "Login" << endl;
     if ( !server.login() ) {
       errorMessage( i18n("Unable to login.") );
@@ -309,4 +314,17 @@ void Groupwise::debugMessage( const QString &msg )
   Q_UNUSED( msg );
 #endif
 }
+
+void Groupwise::slotReadAddressBookTotalSize( int size )
+{
+  totalSize( size );
+}
+
+void Groupwise::slotReadAddressBookProcessedSize( int size )
+{
+  kdDebug() << "Groupwise::processedSize(): " << size << endl;
+  processedSize( size );
+}
+
+#include "groupwise.moc"
 

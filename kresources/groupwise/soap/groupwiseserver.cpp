@@ -25,7 +25,6 @@
 
 #include <libkcal/calendar.h>
 #include <libkcal/incidence.h>
-#include <libkdepim/weaverlogger.h>
 
 #include <kabc/addressee.h>
 
@@ -227,12 +226,6 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
 {
   mSoap = new soap;
 
-#if 0
-  mWeaver = new KPIM::ThreadWeaver::Weaver( this );
-  KPIM::ThreadWeaver::WeaverThreadLogger *weaverLogger = new KPIM::ThreadWeaver::WeaverThreadLogger( this );
-  weaverLogger->attach( mWeaver );
-#endif
-
   kdDebug() << "GroupwiseServer(): URL: " << url << endl;
 
   soap_init( mSoap );
@@ -250,11 +243,6 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
 
 GroupwiseServer::~GroupwiseServer()
 {
-#if 0
-  delete mWeaver;
-  mWeaver = 0;
-#endif
-
   delete mSoap;
   mSoap = 0;
 }
@@ -574,27 +562,6 @@ QMap<QString, QString> GroupwiseServer::addressBookList()
   return map;
 }
 
-bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds,
-  KABC::ResourceCached *resource )
-{
-  if ( mSession.empty() ) {
-    kdError() << "GroupwiseServer::readAddressBooks(): no session." << endl;
-    return false;
-  }
-
-  ThreadedReadAddressBooksJob *job = new ThreadedReadAddressBooksJob( mSoap,
-    mUrl, mSession );
-  job->setAddressBookIds( addrBookIds );
-  job->setResource( resource );
-
-  connect( job, SIGNAL( done() ),
-           SIGNAL( readAddressBooksFinished() ) );
-
-  mWeaver->enqueue( job );
-
-  return true;
-}
-
 bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookIds,
   KABC::ResourceCached *resource )
 {
@@ -603,7 +570,7 @@ bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookId
     return false;
   }
 
-  ReadAddressBooksJob *job = new ReadAddressBooksJob( mSoap,
+  ReadAddressBooksJob *job = new ReadAddressBooksJob( this, mSoap,
     mUrl, mSession );
   job->setAddressBookIds( addrBookIds );
   job->setResource( resource );
@@ -847,28 +814,6 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
   return true;
 }
 
-bool GroupwiseServer::readCalendar( KCal::ResourceCached *resource )
-{
-  kdDebug() << "GroupwiseServer::readCalendar()" << endl;
-
-  if ( mSession.empty() ) {
-    kdError() << "GroupwiseServer::readCalendar(): no session." << endl;
-    return false;
-  }
-
-  ThreadedReadCalendarJob *job = new ThreadedReadCalendarJob( mSoap, mUrl,
-    mSession );
-  job->setCalendarFolder( &mCalendarFolder );
-  job->setResource( resource );
-
-  connect( job, SIGNAL( done() ),
-           SIGNAL( readCalendarFinished() ) );
-
-  mWeaver->enqueue( job );
-
-  return true;
-}
-
 bool GroupwiseServer::readCalendarSynchronous( KCal::ResourceCached *resource )
 {
   kdDebug() << "GroupwiseServer::readCalendar()" << endl;
@@ -1018,6 +963,16 @@ void GroupwiseServer::slotSslError()
   kdDebug() << "********************** SSL ERROR" << endl;
 
   mError = i18n("SSL Error");
+}
+
+void GroupwiseServer::emitReadAddressBookTotalSize( int s )
+{
+  emit readAddressBookTotalSize( s );
+}
+
+void GroupwiseServer::emitReadAddressBookProcessedSize( int s )
+{
+  emit readAddressBookProcessedSize( s );
 }
 
 #include "groupwiseserver.moc"

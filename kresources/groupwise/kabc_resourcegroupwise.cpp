@@ -173,6 +173,8 @@ bool ResourceGroupwise::asyncLoad()
            SLOT( slotJobResult( KIO::Job * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
+  connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+           SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading addressbook") );
@@ -279,6 +281,12 @@ void ResourceGroupwise::slotJobData( KIO::Job *, const QByteArray &data )
 //  kdDebug() << "ResourceGroupwise::slotJobData()" << endl;
 
   mJobData.append( data.data() );
+}
+
+void ResourceGroupwise::slotJobPercent( KIO::Job *, unsigned long percent )
+{
+  kdDebug() << "ResourceGroupwise::slotJobPercent() " << percent << endl;
+  if ( mProgress ) mProgress->setProgress( percent );
 }
 
 void ResourceGroupwise::loadFinished()

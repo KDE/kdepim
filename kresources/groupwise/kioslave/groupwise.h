@@ -22,8 +22,11 @@
 
 #include <kio/slavebase.h>
 
-class Groupwise : public KIO::SlaveBase
+#include <qobject.h>
+
+class Groupwise : public QObject, public KIO::SlaveBase
 {
+    Q_OBJECT
   public:
     void get( const KURL &url );
     Groupwise( const QCString &protocol, const QCString &pool,
@@ -38,6 +41,10 @@ class Groupwise : public KIO::SlaveBase
     void getAddressbook( const KURL &url );
 
     QString soapUrl( const KURL &url );
+
+  protected slots:
+    void slotReadAddressBookTotalSize( int );
+    void slotReadAddressBookProcessedSize( int );
 };
 
 #endif

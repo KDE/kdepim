@@ -29,6 +29,7 @@
 #include "contactconverter.h"
 #include "incidenceconverter.h"
 #include "soapH.h"
+#include "groupwiseserver.h"
 
 #include "gwjobs.h"
 
@@ -38,9 +39,9 @@ GWJob::GWJob( struct soap *soap, const QString &url,
 {
 }
 
-ReadAddressBooksJob::ReadAddressBooksJob( struct soap *soap, const QString &url,
-                                          const std::string &session )
-  : GWJob( soap, url, session )
+ReadAddressBooksJob::ReadAddressBooksJob( GroupwiseServer *server,
+  struct soap *soap, const QString &url, const std::string &session )
+  : GWJob( soap, url, session ), mServer( server )
 {
 }
 
@@ -96,17 +97,19 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
     return;
   }
 
-  kdDebug() << "TOCK" << endl;
-
   std::vector<class ns1__Item * > *items = itemsResponse.items->item;
   if ( items ) {
-    kdDebug() << "TOCK." << endl;
     ContactConverter converter( mSoap );
+
+    mServer->emitReadAddressBookTotalSize( items->size() );
+    int count = 0;
 
     std::vector<class ns1__Item * >::const_iterator it;
     for ( it = items->begin(); it != items->end(); ++it ) {
+#if 0
       kdDebug() << "ITEM: " << (*it)->name.c_str() << "(" << (*it)->id.c_str()
         << ")" << endl;
+#endif
       _ns1__getItemRequest itemRequest;
       itemRequest.id = (*it)->id;
       itemRequest.view = 0;
@@ -138,6 +141,8 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
         mResource->insertAddressee( addr );
         mResource->clearChange( addr );
       }
+
+      mServer->emitReadAddressBookProcessedSize( count++ );
     }
   }
 }
@@ -285,60 +290,4 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
       }
     }
   }
-}
-
-
-ThreadedReadCalendarJob::ThreadedReadCalendarJob( struct soap *soap,
-  const QString &url, const std::string &session )
-  : ReadCalendarJob( soap_copy( soap ), url, session )
-{
-  kdDebug() << "ThreadedReadCalendarJob()" << endl;
-
-  mSoap->header = new( SOAP_ENV__Header );
-}
-
-ThreadedReadCalendarJob::~ThreadedReadCalendarJob()
-{
-  soap_free( mSoap );
-  mSoap = 0;
-}
-
-void ThreadedReadCalendarJob::processEvent( KPIM::ThreadWeaver::Event *event )
-{
-  KPIM::ThreadWeaver::Job::processEvent( event );
-  if ( event->action() == KPIM::ThreadWeaver::Event::JobFinished )
-    deleteLater();
-}
-
-void ThreadedReadCalendarJob::run()
-{
-  ReadCalendarJob::run();
-}
-
-
-ThreadedReadAddressBooksJob::ThreadedReadAddressBooksJob( struct soap *soap,
-  const QString &url, const std::string &session )
-  : ReadAddressBooksJob( soap_copy( soap ), url, session )
-{
-  kdDebug() << "ThreadedReadAddressBooksJob()" << endl;
-
-  mSoap->header = new( SOAP_ENV__Header );
-}
-
-ThreadedReadAddressBooksJob::~ThreadedReadAddressBooksJob()
-{
-  soap_free( mSoap );
-  mSoap = 0;
-}
-
-void ThreadedReadAddressBooksJob::processEvent( KPIM::ThreadWeaver::Event *event )
-{
-  KPIM::ThreadWeaver::Job::processEvent( event );
-  if ( event->action() == KPIM::ThreadWeaver::Event::JobFinished )
-    deleteLater();
-}
-
-void ThreadedReadAddressBooksJob::run()
-{
-  ReadAddressBooksJob::run();
 }

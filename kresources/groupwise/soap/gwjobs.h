@@ -21,12 +21,10 @@
 #define GROUPWISE_JOBS_H
 
 #include <qobject.h>
-#include <qthread.h>
 
 #include <string>
 
 #include <kabc/addressee.h>
-#include <libkdepim/weaver.h>
 
 namespace KABC {
 class ResourceCached;
@@ -36,6 +34,8 @@ namespace KCal {
 class Calendar;
 class ResourceCached;
 }
+
+class GroupwiseServer;
 
 class GWJob
 {
@@ -51,7 +51,8 @@ class GWJob
 class ReadAddressBooksJob : public GWJob
 {
   public:
-    ReadAddressBooksJob( struct soap *soap, const QString &url,
+    ReadAddressBooksJob( GroupwiseServer *server, struct soap *soap,
+      const QString &url,
       const std::string &session );
 
     void setAddressBookIds( const QStringList& );
@@ -65,6 +66,7 @@ class ReadAddressBooksJob : public GWJob
     void readAddressBook( std::string& );
 
   private:
+    GroupwiseServer *mServer;
     QStringList mAddressBookIds;
     KABC::ResourceCached *mResource;
 };
@@ -91,34 +93,6 @@ class ReadCalendarJob : public GWJob
     std::string *mCalendarFolder;
     KCal::ResourceCached *mResource;
     KCal::Calendar *mCalendar;
-};
-
-class ThreadedReadCalendarJob : public KPIM::ThreadWeaver::Job,
-  public ReadCalendarJob
-{
-  public: 
-    ThreadedReadCalendarJob( struct soap *soap, const QString &url,
-      const std::string &session );
-    ~ThreadedReadCalendarJob();
-
-    virtual void processEvent( KPIM::ThreadWeaver::Event* );
-
-  protected:
-    void run();
-};
-
-class ThreadedReadAddressBooksJob : public KPIM::ThreadWeaver::Job,
-  public ReadAddressBooksJob
-{
-  public: 
-    ThreadedReadAddressBooksJob( struct soap *soap, const QString &url,
-      const std::string &session );
-    ~ThreadedReadAddressBooksJob();
-
-    virtual void processEvent( KPIM::ThreadWeaver::Event* );
-
-  protected:
-    void run();
 };
 
 #endif

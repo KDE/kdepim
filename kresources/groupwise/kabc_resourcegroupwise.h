@@ -71,6 +71,7 @@ class ResourceGroupwise : public ResourceCached
 
     void slotJobResult( KIO::Job * );
     void slotJobData( KIO::Job *, const QByteArray & );
+    void slotJobPercent( KIO::Job *job, unsigned long percent );
 
     void cancelLoad();
 
