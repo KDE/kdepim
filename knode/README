@@ -1,0 +1,29 @@
+KNode is a newsreader for the K Desktop Enviroment. 
+It is a pure online-reader, that is supposed to be used with a 
+local newsserver. I have only tested it with leafnode and inn, but it
+should work with every server, that supports the xover-command.
+KNode is currently alpha quality software, although it seems 
+to be quite stable. At the moment it does not have to much features, 
+but the basic functionality is implemented and seems to work fine.
+KNode is written in C++ using KDevelop, a new IDE for KDE 
+(thanx to the whole KDevelop-team for their excellent work).
+It is published under the GNU General Public License
+and comes without any warranty.
+
+Christian Thurner <thurne01@fsrz2.rz.uni-passau.de>
+
+
+IMPORTANT: Since Version 0.1.5 a file-format of KNode has changed.
+If you are upgrading from a Version before 0.1.5, you will have to
+convert your old files.
+This can be done by starting KNode in an xterm with the "-c" option
+followed by the number of the version you are upgrading from.
+This has to be done after the installation of the new version.
+
+Example: Upgrade from 0.1.1 to 0.1.6
+1. Install version 0.1.6 as described above.
+2. Open an xterm or kvt and type the following : knode -c 0.1.1
+3. Enjoy the new features of KNode ;-)
+
+
+

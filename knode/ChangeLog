@@ -1,0 +1,138 @@
+changes between 0.1.12 and 0.1.13
+- fixed the "wheelmouse-bug"
+- fixed a bug that produced doubled subjects
+- fixed some minor bugs
+- added "allow 8-bit characters in header" as an option
+- the whole keyboard stuff has been greatly improved:
+  Christian Gebauer has rewritten almost the whole hotkey
+  management, making it much more convinient to control
+  KNode with the keyboard.
+  The changes are:
+		+ a cursor has been added, that let's you scroll through
+		  the articles without selecting each of them
+		+ if you hit the return-key the article, the cursor currently
+		  points at is selected and displayed
+		+ the space-key jumps to the next unread article AND scrolls
+		  the article view if it's necessary
+- added two new functions :
+	+ watch thread (set score=100), hotkey 'W'
+	+ ignore thread (set score=0), hotkey 'I'
+- added a new standard-filter for watched threads (score=100)
+- added translations: german, italian, spanish
+
+
+changes between 0.1.11 and 0.1.12
+- fixed numerous bugs
+- fixed that annoying "Unknown charset"-bug
+- 8bit characters in the header of outgoing messages
+  are now encoded correctly (=?<chareset>?Q?<encoded word>?=)
+- added "Resort" to the Group-menu
+- added a new function : "Open article in own window" :
+    + Added an Option to the Article-menu
+    + A doubleclick on an article opens it in a new window
+    + If you click on a "reference-link" using the middle button, the
+      reference is opened in a new window. This behaviour is similar to
+      the "open link in new window"-function of a webbrowser.
+- added a "focus-indicator" marking the pane that currently
+  has got the focus
+- added support for the common commandline-arguments -h and -v
+  (patch by Christian Gebauer)
+- now KNode uses "X-Newsreader" for postings and "X-Mailer" for emails
+  (patch by Christian Gebauer)
+- finally some documentation has been added :-)
+
+
+changes between 0.1.10 and 0.1.11
+- fixed some minor bugs
+- nntp-authentication works now
+- an article can now be saved as a text-file
+- rewrite of the "FromLineParser"
+- fixed a bug in the expire-mechanism
+- fixed a bug concerning additional X-Headers
+- added "charset" to the pref-dialog (tab "post news")
+- added properties for groups : nicknames, group-specific settings
+  for name, email, reply-to and organization
+- the Message-View can display different charsets
+
+
+changes between 0.1.9 and 0.1.10
+- added support for servers that require athentication (EXPERIMENTAL !!)
+- fixed some bugs in the message view
+- fixed two bugs in the "FromLineParser"
+- now all hotkeys are disabled/enabled correctly
+- some changes in the pref-dialog
+- added support for custom X-Headers
+- added new option "show whole thread on expanding"
+- now all dialogs remember their size
+- added "next/prev group" to the "Goto-Menu"
+- the signature-file can now be choosen
+- a lot of minor changes and bugfixes
+
+
+changes between 0.1.8 and 0.1.9:
+- the read articles counter works correctly again
+- fixed a bug in the folder-manager, that made knode loose
+  saved articles
+- added "goto next/prev article"
+- added an option to use the same font in the message-view
+  and composer
+- added support for regular expressions in filtering
+- some minor changes and bugfixes
+
+
+changes between 0.1.7 and 0.1.8:
+- a lot of bugfixes
+- now the message-view handles links (http)
+- added support for cursor-keys (scrolling)
+- added wheelmouse-support (imwheel)
+- added support for the ~./.signature file
+- some other little improvements
+
+
+changes between 0.1.6 and 0.1.7:
+- added scoring support
+- added configurable key bindings
+- added article-navigation (next unread article, next unread thread)
+- added "expand all / collapse all"
+- added "download all"
+- added "-lz" to makefile.am (needed for libpng)
+- fixed some bugs in the message-view
+- fixed a bug in the pref-dialog
+- fixed a bug in the group-list : now the unread articles are
+  *really* counted correctly
+
+
+changes between 0.1.5 nad 0.1.6:
+- only one bugfix : now the unread articles are counted correctly again
+
+
+changes between 0.1.1 and 0.1.5 :
+- fixed a bug in the message view, that made KNode crash under
+	certain circumstances
+- fixed a bug in the nntp-client; knode now works with inn
+- the groups in the left-hand window are sorted alphabetically
+  now
+- changed the behavior of the clickable From-Header in the
+  message view; now the reply-To adress is used if present
+- added the item "mail reply" to the popup-menu in the
+  message list
+- improved the message list:
+    * new messages are displayed as bold
+    * threads with no unread articles get grey text
+    * threads with new messages are marked with a little
+      arrow
+- added printing-support
+- seleceted text in the message view is now copied into the
+	x-clipboard
+- the message list now remembers it's sorting
+- added customizable filters
+- added an "expire now" item to the group-menu
+- added "Fonts & Colors" to the preferences-dialog
+
+
+changes between 0.1 and 0.1.1 :
+- the menu-item "View->show Threads" behaves now like it should
+- the mailto- and references-links in the message view work now
+
+
+

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=knode -caption "%c" %i %m  
+Icon=knode
+Comment=
+Terminal=0
+Name=KNode
