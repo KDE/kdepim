@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>MALWidget</class>
 <author>Reinhold Kainhofer</author>
 <widget class="QWidget">
@@ -10,7 +10,7 @@
             <x>0</x>
             <y>0</y>
             <width>534</width>
-            <height>503</height>
+            <height>505</height>
         </rect>
     </property>
     <property name="caption">
@@ -156,10 +156,10 @@
                             <cstring>proxyType</cstring>
                         </property>
                         <property name="frameShape">
-                            <enum>NoFrame</enum>
+                            <enum>GroupBoxPanel</enum>
                         </property>
                         <property name="title">
-                            <string></string>
+                            <string>Proxy Type</string>
                         </property>
                         <hbox>
                             <property name="name">
@@ -188,6 +188,9 @@
                                 </property>
                                 <property name="text">
                                     <string>&amp;HTTP proxy</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+H</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">
@@ -237,18 +240,7 @@
                             <property name="spacing">
                                 <number>6</number>
                             </property>
-                            <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>TextLabel1</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Ser&amp;ver name:</string>
-                                </property>
-                                <property name="buddy" stdset="0">
-                                    <cstring>proxyServerName</cstring>
-                                </property>
-                            </widget>
-                            <spacer row="1" column="3">
+                            <spacer row="1" column="2">
                                 <property name="name">
                                     <cstring>Spacer2</cstring>
                                 </property>
@@ -265,12 +257,7 @@
                                     </size>
                                 </property>
                             </spacer>
-                            <widget class="KHistoryCombo" row="0" column="2" rowspan="1" colspan="2">
-                                <property name="name">
-                                    <cstring>proxyServerName</cstring>
-                                </property>
-                            </widget>
-                            <widget class="Line" row="2" column="0" rowspan="1" colspan="4">
+                            <widget class="Line" row="2" column="0" rowspan="1" colspan="3">
                                 <property name="name">
                                     <cstring>Line1</cstring>
                                 </property>
@@ -291,8 +278,62 @@
                                 <property name="text">
                                     <string>Custom &amp;port:</string>
                                 </property>
+                                <property name="accel">
+                                    <string>Alt+P</string>
+                                </property>
                             </widget>
-                            <widget class="KIntNumInput" row="1" column="1" rowspan="1" colspan="2">
+                            <widget class="QLabel" row="3" column="0">
+                                <property name="name">
+                                    <cstring>TextLabel2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;User name:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>proxyUserName</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>TextLabel1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Ser&amp;ver name:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>proxyServerName</cstring>
+                                </property>
+                            </widget>
+                            <widget class="KHistoryCombo" row="0" column="1" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>proxyServerName</cstring>
+                                </property>
+                            </widget>
+                            <widget class="KPasswordEdit" row="4" column="1" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>proxyPassword</cstring>
+                                </property>
+                                <property name="echoMode">
+                                    <enum>Normal</enum>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="4" column="0">
+                                <property name="name">
+                                    <cstring>TextLabel2_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Password:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>proxyPassword</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLineEdit" row="3" column="1" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>proxyUserName</cstring>
+                                </property>
+                            </widget>
+                            <widget class="KIntNumInput" row="1" column="1">
                                 <property name="name">
                                     <cstring>proxyCustomPort</cstring>
                                 </property>
@@ -308,63 +349,6 @@
                                 <property name="maxValue">
                                     <number>65535</number>
                                 </property>
-                            </widget>
-                            <widget class="QGroupBox" row="3" column="0" rowspan="1" colspan="4">
-                                <property name="name">
-                                    <cstring>GroupBox4</cstring>
-                                </property>
-                                <property name="frameShape">
-                                    <enum>NoFrame</enum>
-                                </property>
-                                <property name="title">
-                                    <string></string>
-                                </property>
-                                <grid>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <property name="margin">
-                                        <number>11</number>
-                                    </property>
-                                    <property name="spacing">
-                                        <number>6</number>
-                                    </property>
-                                    <widget class="QLabel" row="1" column="0">
-                                        <property name="name">
-                                            <cstring>TextLabel2_2</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;Password:</string>
-                                        </property>
-                                        <property name="buddy" stdset="0">
-                                            <cstring>proxyPassword</cstring>
-                                        </property>
-                                    </widget>
-                                    <widget class="KPasswordEdit" row="1" column="1">
-                                        <property name="name">
-                                            <cstring>proxyPassword</cstring>
-                                        </property>
-                                        <property name="echoMode">
-                                            <enum>Normal</enum>
-                                        </property>
-                                    </widget>
-                                    <widget class="QLineEdit" row="0" column="1">
-                                        <property name="name">
-                                            <cstring>proxyUserName</cstring>
-                                        </property>
-                                    </widget>
-                                    <widget class="QLabel" row="0" column="0">
-                                        <property name="name">
-                                            <cstring>TextLabel2</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;User name:</string>
-                                        </property>
-                                        <property name="buddy" stdset="0">
-                                            <cstring>proxyUserName</cstring>
-                                        </property>
-                                    </widget>
-                                </grid>
                             </widget>
                         </grid>
                     </widget>
@@ -543,6 +527,8 @@
         </widget>
     </grid>
 </widget>
+<customwidgets>
+</customwidgets>
 <connections>
     <connection>
         <sender>RadioButton8</sender>
@@ -586,18 +572,6 @@
         <receiver>malCustomPort</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
-    <connection>
-        <sender>RadioButton8_2_2</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>GroupBox4</receiver>
-        <slot>setDisabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>RadioButton8_2</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>GroupBox4</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
 </connections>
 <tabstops>
     <tabstop>tabWidget</tabstop>
@@ -606,9 +580,9 @@
 <includehints>
     <includehint>kcombobox.h</includehint>
     <includehint>klineedit.h</includehint>
-    <includehint>knuminput.h</includehint>
-    <includehint>knuminput.h</includehint>
     <includehint>kpassdlg.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>kcombobox.h</includehint>
