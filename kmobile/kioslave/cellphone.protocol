@@ -1,0 +1,18 @@
+[Protocol]
+exec=kio_mobile
+protocol=cellphone
+input=none
+output=filesystem
+# listing=Name
+listing=Name,Type,URL,MimeType
+reading=true
+source=true
+writing=true
+makedir=true
+deleting=true
+# linking=true
+# moving=true
+# mimetype=text/plain
+# determineMimetypeFromExtension=true
+DocPath=kioslave/mobile.html
+Icon=mobile_phone

@@ -27,7 +27,7 @@ protected:
   QString folderMimeType(int cap);
   QString entryMimeType(int cap);
 
-  void listRoot();
+  void listRoot(const KURL& url);
   void listTopDeviceDir(const QString &devName);
   void listEntries(const QString &devName,
 	const QString &resource, const QString &devPath,

@@ -21,8 +21,6 @@ using namespace KIO;
 #define KIO_MOBILE_DEBUG_AREA 7126
 #define PRINT_DEBUG kdDebug(KIO_MOBILE_DEBUG_AREA) << "kio_mobile: "
 
-// siehe: /mnt/hda2/home/cvs/kde20/kdebase/kdeprint/slave/kio_print.cpp
-
 extern "C" { int kdemain(int argc, char **argv); }
 
 /**
@@ -208,9 +206,9 @@ void KMobileProtocol::get(const KURL &url)
 /*
  * listRoot() - gives listing of all devices
  */
-void KMobileProtocol::listRoot()
+void KMobileProtocol::listRoot(const KURL& url)
 {
-  PRINT_DEBUG << __FUNCTION__ << endl;
+  PRINT_DEBUG << QString("########## listRoot(%1) for %2:/\n").arg(url.path()).arg(url.protocol());
 
   KIO::UDSEntry entry;
 
@@ -218,11 +216,26 @@ void KMobileProtocol::listRoot()
   unsigned int dirs = deviceNames.count();
   totalSize(dirs);
 
+  int classMask = KMobileDevice::Unclassified;
+  /* handle all possible protocols here and just add a <protocol>.protocol file */
+  if (url.protocol() == "cellphone")		// cellphone:/
+	classMask = KMobileDevice::Phone;
+  if (url.protocol() == "organizer" ||		// organizer:/
+      url.protocol() == "pda")			// pda:/
+	classMask = KMobileDevice::Organizer;
+  if (url.protocol() == "camera")		// camera:/
+	classMask = KMobileDevice::Camera;
+
   for (unsigned int i=0; i<dirs; i++) {
 
-	QString dirname = deviceNames[i];
-        createDirEntry(entry, dirname, "mobile:/"+dirname, 
-			KMOBILE_MIMETYPE_DEVICE_KONQUEROR(dirname));
+	QString devName = deviceNames[i];
+
+	if (classMask != KMobileDevice::Unclassified && 
+	    m_dev.classType(devName) != classMask)
+		continue;	
+
+        createDirEntry(entry, devName, "mobile:/"+devName, 
+			KMOBILE_MIMETYPE_DEVICE_KONQUEROR(devName));
         listEntry(entry, false);
 
 	processedSize(i+1);
@@ -276,7 +289,7 @@ QString KMobileProtocol::entryMimeType(int cap)
 
 void KMobileProtocol::listTopDeviceDir(const QString &devName)
 {
-  PRINT_DEBUG << __FUNCTION__ << endl;
+  PRINT_DEBUG << QString("listTopDeviceDir(%1)\n").arg(devName);
 
   KIO::UDSEntry entry;
   unsigned int caps = m_dev.capabilities(devName);
@@ -304,7 +317,7 @@ void KMobileProtocol::listEntries(const QString &devName,
 	const QString &resource, const QString &devPath,
 	const KMobileDevice::Capabilities devCaps)
 {
-  PRINT_DEBUG << __FUNCTION__ << endl;
+  PRINT_DEBUG << QString("listEntries(%1,%2,%3)\n").arg(devName).arg(resource).arg(devPath);
   switch (devCaps) {
     case KMobileDevice::hasAddressBook:	listAddressBook(devName, resource);
 					break;
@@ -324,7 +337,7 @@ void KMobileProtocol::listEntries(const QString &devName,
  */
 void KMobileProtocol::listAddressBook(const QString &devName, const QString &resource)
 {
-  PRINT_DEBUG << __FUNCTION__ << endl;
+  PRINT_DEBUG << QString("listAddressBook(%1)\n").arg(devName);
   
   KIO::UDSEntry entry;
 
@@ -389,7 +402,7 @@ int KMobileProtocol::getVCard( const QString &devName, QCString &result, QString
  */
 void KMobileProtocol::listCalendar( const QString &devName, const QString &resource)
 {
-  PRINT_DEBUG << __FUNCTION__ << endl;
+  PRINT_DEBUG << QString("listCalendar(%1)\n").arg(devName);
   
   KIO::UDSEntry entry;
 
@@ -428,7 +441,7 @@ int KMobileProtocol::getCalendar( const QString &devName, QCString &result, QStr
  */
 void KMobileProtocol::listNotes( const QString &devName, const QString &resource)
 {
-  PRINT_DEBUG << __FUNCTION__ << endl;
+  PRINT_DEBUG << QString("listNotes(%1)\n").arg(devName);
   
   KIO::UDSEntry entry;
 
@@ -478,7 +491,7 @@ int KMobileProtocol::getNote( const QString &devName, QCString &result, QString 
  */
 void KMobileProtocol::listFileStorage(const QString &devName, const QString &resource, const QString &devPath)
 {
-  PRINT_DEBUG << __FUNCTION__ << endl;
+  PRINT_DEBUG << QString("listFileStorage(%1,%2)\n").arg(devName).arg(devPath);
   
   /* TODO */
   error( KIO::ERR_DOES_NOT_EXIST, QString("/%1/%2/%3").arg(devName).arg(resource).arg(devPath) );
@@ -580,7 +593,7 @@ void KMobileProtocol::listDir(const KURL &url)
   }
 
   if (devName.isEmpty()) {
-	listRoot();
+	listRoot(url);
 	return;
   }
 
