@@ -1,66 +1,96 @@
+dnl Configure.in.in for KPilot.
+dnl
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl
+dnl This file is released under the terms of the Gnu General Public
+dnl Licence (GPL) Version 2.
+
+dnl
 dnl Check to see if pisock header and library are available
-
-
-dnl This will be (re)defined to whatever we need to get the
-dnl pilot-link library linked and working (if possible).
 dnl
-LIBPISOCK=""
-LIBPISOCK_PATH=""
 
-dnl A list of dirs to try for include files and the library
 dnl
-include_dirs="/usr/include /usr/include/libpisock /usr/local/include/libpisock /usr/local/include"
-
+dnl Questions and comments can be sent to groot@kde.org
+dnl
 
 AC_MSG_CHECKING(for pilot-link headers)
 
 
-dnl check for the headers first
+dnl Check for the headers first. The first test is the somewhat-
+dnl sophisticated one AC uses, and incorporates all the extra-includes
+dnl and whatnot stuff.
 dnl
 HAVE_PISOCK=0
+
+if [ -z "$kde_extra_includes" ] ; then
+	# do nothing to CPPFLAGS
+else
+	kpilot_save_cflags="$CPPFLAGS"
+	# they're passed in with no leading -I (??)
+	CPPFLAGS="$kpilot_save_cflags -I$kde_extra_includes"
+fi
 AC_CHECK_HEADER(pi-file.h,[HAVE_PISOCK=1
 	AC_MSG_RESULT(found)], )
 
-if test "$HAVE_PISOCK" = "0" ; then
-	for i in $include_dirs ; do
-		if test -r $i/pi-file.h; then
-			HAVE_PISOCK=1
-			LIBPISOCK_PATH="$i"
-			AC_MSG_RESULT(found)
-			break
-		fi
-	done
-fi
 
-dnl warn if no headers found
+dnl Warn if no headers found. Maybe this should be collected at the end
+dnl of the build as well, like other this-won't-be-built messages?
+dnl
+dnl If we do have the headers, try to link against the library. On some
+dnl platforms, notably Solaris, this requires some extra linkage against
+dnl -lsocket -lxnet. That leads us to some deeply nested AC_CHECK_LIB
+dnl calls, and NOTE the yuckiness when assigning values to LIBPISOCK.
 dnl
 if  test "$HAVE_PISOCK" = "0" ; then
+	AC_MSG_WARN($ac_cpp)
+	AC_MSG_WARN($CPPFLAGS)
 	AC_MSG_WARN([KPILOT: no pilot-link headers found.])
-fi
-
-if test "$HAVE_PISOCK" = "1" ; then
+else
 	HAVE_PISOCK=0
-	ac_save_cppflags="$CPPFLAGS"
-	for pisock_libs in "pisock" "socket" "xnet" "socket -lxnet" ; do
-		AC_CHECK_LIB("$pisock_libs",
+	if [ -z "$kde_extra_includes" ] ; then
+		# do nothing to CPPFLAGS
+	else
+		kpilot_save_cflags="$CPPFLAGS"
+		# they're passed in with no leading -I (??)
+		CPPFLAGS="$kpilot_save_cflags -L$kde_extra_libs"
+	fi
+	AC_CHECK_LIB(pisock,
+		pi_accept,
+		[LIBPISOCK="-lpisock"
+		HAVE_PISOCK=1
+		],
+		[
+		AC_CHECK_LIB(pisock,
 			pi_accept,
-			[LIBPISOCK="-l$pisock_libs"
+			[LIBPISOCK="-lpisock -lsocket"
 			HAVE_PISOCK=1
-			break
 			],
-			[])
-	done
-	CPPFLAGS="$ac_save_cppflags"
+			[
+			AC_CHECK_LIB(pisock,
+				pi_accept,
+				[LIBPISOCK="-lpisock -lsocket -lxnet"
+				HAVE_PISOCK=1
+				],
+				[],
+				[-lsocket -lxnet]
+				)
+			],
+			[-lsocket]
+			)
+		]
+		)
 fi
 
 if test "$HAVE_PISOCK" = "0" ; then
-  AC_MSG_WARN([KPILOT: pisock library not found])
-  DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
+	AC_MSG_WARN([KPILOT: pisock library not found])
+	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
 else
-  if test "$LIBPISOCK_PATH" = "" ; then
-	LIBPISOCK_PATH="/usr/include";
-  fi
-  AC_MSG_RESULT([found])
-  AC_SUBST(LIBPISOCK)
-  AC_SUBST(LIBPISOCK_PATH)
+	AC_MSG_RESULT([found])
+	AC_SUBST(LIBPISOCK)
+fi
+
+if [ -z "$kde_extra_includes" ] ; then
+	# do nothing to CPPFLAGS
+else
+	CPPFLAGS="$kpilot_save_cflags"
 fi
