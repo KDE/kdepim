@@ -543,7 +543,9 @@ void KPilotInstaller::initMenu()
 	// View actions
 
 	// Options actions
+#ifdef KDE_VERSION_MAJOR >= 3 && KDE_VERSION_MINOR > 1
 	createStandardStatusBarAction();
+#endif
         setStandardToolBarMenuEnabled(true);
     
 	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
