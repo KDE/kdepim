@@ -71,9 +71,9 @@ class KPilotDeviceLink::KPilotDeviceLinkPrivate
 {
 public:
 	static KPilotDeviceLinkPrivate*self() { if (!mThis) mThis = new KPilotDeviceLinkPrivate(); return mThis; }
-	bool canBind( QString device ) { kdDebug()<<"Bound devices: "<<mBoundDevices.join(", ").latin1()<<endl; return !mBoundDevices.contains( device ); }
-	void bindDevice( QString device ) { mBoundDevices.append( device ); }
-	void unbindDevice( QString device ) { mBoundDevices.remove( device ); }
+	bool canBind( QString device ) { FUNCTIONSETUP; DEBUGDAEMON<<"Bound devices: "<<mBoundDevices.join(", ").latin1()<<endl; return !mBoundDevices.contains( device ); }
+	void bindDevice( QString device ) { FUNCTIONSETUP; mBoundDevices.append( device ); DEBUGDAEMON<<"Bound devices: "<<mBoundDevices.join(", ").latin1()<<endl; }
+	void unbindDevice( QString device ) { FUNCTIONSETUP; mBoundDevices.remove( device ); DEBUGDAEMON<<"Bound devices: "<<mBoundDevices.join(", ").latin1()<<endl; }
 protected:
 	KPilotDeviceLinkPrivate() {}
 	~KPilotDeviceLinkPrivate() {}
@@ -145,6 +145,7 @@ void KPilotDeviceLink::close()
 		pi_close(fPilotMasterSocket);
 		::close(fPilotMasterSocket);
 	}
+	KPilotDeviceLinkPrivate::self()->unbindDevice( fRealPilotPath );
 	fPilotMasterSocket = (-1);
 	fCurrentPilotSocket = (-1);
 }
@@ -709,7 +710,6 @@ QString KPilotDeviceLink::statusString() const
 void KPilotDeviceLink::endOfSync()
 {
 	dlp_EndOfSync(pilotSocket(), 0);
-	KPilotDeviceLinkPrivate::self()->unbindDevice( fRealPilotPath );
 	KPILOT_DELETE(fPilotSysInfo);
 	KPILOT_DELETE(fPilotUser);
 }
