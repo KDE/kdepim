@@ -84,7 +84,6 @@ private:
   QMultiLineEdit*    fTextWidget;
   struct MemoAppInfo fMemoAppInfo;
   QList<PilotMemo>   fMemoList;
-  unsigned int       fLookupTable[1000]; // Used to index the listbox into the memolist
   QListBox *          fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
@@ -94,6 +93,10 @@ private:
 
 
 // $Log$
+// Revision 1.8  2001/02/07 14:21:45  brianj
+// Changed all include definitions for libpisock headers
+// to use include path, which is defined in Makefile.
+//
 // Revision 1.7  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

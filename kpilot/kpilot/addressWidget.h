@@ -98,7 +98,6 @@ private:
       QMultiLineEdit*       fTextWidget;
       struct AddressAppInfo fAddressAppInfo;
       QList<PilotAddress>   fAddressList;
-      unsigned int          fLookupTable[1000];
       QListBox*             fListBox;
 	QPushButton	*fEditButton,*fDeleteButton;
 
@@ -109,4 +108,7 @@ public:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.9  2001/02/06 08:05:19  adridg
+// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
+//
