@@ -104,7 +104,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
     mPatternsToDo.pop_front();
     if ( pat.isEmpty() )
       continue;
-    *mProcess << KProcess::quote( pat );
+    *mProcess << pat;
   }
 
   mProcess->setUseStatusFD( true );
