@@ -71,7 +71,7 @@ class ExchangeDownload : public QObject {
     void startDownload();
     void finishDownload();
 
-    void downloadFinished( ExchangeDownload* );
+    void finished( ExchangeDownload* );
 
   private:
     void handleAppointments( const QDomDocument &, bool recurrence );

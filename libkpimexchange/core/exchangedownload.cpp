@@ -71,6 +71,7 @@ using namespace KPIM;
 ExchangeDownload::ExchangeDownload( ExchangeAccount* account )
 {
   mAccount = account;
+  account->authenticate();
   mMode = Asynchronous;
   mDownloadsBusy = 0;
   mProgress = 0L;
@@ -351,7 +352,7 @@ void ExchangeDownload::decreaseDownloads()
       disconnect( mProgress, 0, this, 0 );
       mProgress->delayedDestruct();
     }
-    emit downloadFinished( this );
+    emit finished( this );
   }
 }
 
@@ -369,7 +370,7 @@ QPtrList<KCal::Event> ExchangeDownload::eventsForDate( KCal::Calendar* calendar,
   // kdDebug() << "Initiating download..." << endl;
   initiateDownload( qd, qd.addDays( 1 ), false );
 
-  connect(this, SIGNAL(downloadFinished( ExchangeDownload * )), 
+  connect(this, SIGNAL(finished( ExchangeDownload * )), 
 		  this, SLOT(slotDownloadFinished( ExchangeDownload *)));
   do {
     qApp->processEvents();
