@@ -174,16 +174,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
 KABCore::~KABCore()
 {
-  saveSettings();
-  KABPrefs::instance()->writeConfig();
-
-  QPtrList<KABC::Resource> resources = mAddressBook->resources();
-  QPtrListIterator<KABC::Resource> it( resources );
-  while ( it.current() ) {
-    it.current()->close();
-    ++it;
-  }
-
   mAddressBook->disconnect();
 
   mAddressBook = 0;
@@ -880,6 +870,21 @@ void KABCore::configurationChanged()
 {
   mExtensionManager->reconfigure();
   mViewManager->refreshView();
+}
+
+bool KABCore::queryClose()
+{
+  saveSettings();
+  KABPrefs::instance()->writeConfig();
+
+  QPtrList<KABC::Resource> resources = mAddressBook->resources();
+  QPtrListIterator<KABC::Resource> it( resources );
+  while ( it.current() ) {
+    it.current()->close();
+    ++it;
+  }
+
+  return true;
 }
 
 void KABCore::addressBookChanged()

@@ -127,6 +127,11 @@ void KAddressBookMain::readProperties( KConfig* )
 {
 }
 
+bool KAddressBookMain::queryClose()
+{
+  return mCore->queryClose();
+}
+
 void KAddressBookMain::initActions()
 {
   KStdAction::quit( this, SLOT( close() ), actionCollection() );

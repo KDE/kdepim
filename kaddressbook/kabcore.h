@@ -335,6 +335,8 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     void configurationChanged();
 
+    bool queryClose();
+
   private slots:
     void setJumpButtonBarVisible( bool visible );
     void setDetailsVisible( bool visible );

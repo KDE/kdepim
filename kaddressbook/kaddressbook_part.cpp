@@ -118,6 +118,8 @@ void KAddressbookPart::save()
 
 void KAddressbookPart::exit()
 {
+  mCore->queryClose();
+
   delete this;
 }
 

@@ -76,6 +76,8 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
      */
     void readProperties( KConfig* );
 
+    virtual bool queryClose();
+
   private slots:
     void configureKeyBindings();
     void configureToolbars();
