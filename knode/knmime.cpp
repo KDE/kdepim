@@ -1202,6 +1202,10 @@ int KNMimeContent::lineCount()
     ret+=h_ead.contains('\n');
   ret+=b_ody.contains('\n');
 
+  if(c_ontents && !c_ontents->isEmpty())
+    for(KNMimeContent *c=c_ontents->first(); c; c=c_ontents->next())
+      ret+=c->lineCount();
+
   return ret;
 }
 
