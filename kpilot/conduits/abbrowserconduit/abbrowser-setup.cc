@@ -104,8 +104,8 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		fConfig->readNumEntry(AbbrowserConduitFactory::streetType(),0));
 	fConfigWidget->fFax->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::faxType(),0));
-	fConfigWidget->fConflictStrategy->setCurrentItem(
-		fConfig->readNumEntry(AbbrowserConduitFactory::syncMode(),0));
+	fConfigWidget->fSyncMode->setCurrentItem(
+		fConfig->readNumEntry(AbbrowserConduitFactory::syncMode(),10));
 	fConfigWidget->fFirstTimeSync->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(),false));
 	fConfigWidget->fOtherPhone->setCurrentItem(
@@ -114,6 +114,9 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 
 // $Log$
+// Revision 1.6  2002/08/15 21:40:14  kainhofe
+// some more work in the addressbook conduit. Does not yet work
+//
 // Revision 1.5  2002/06/30 16:23:23  kainhofe
 // Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
 //

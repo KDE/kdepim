@@ -205,14 +205,14 @@ bool AbbrowserConduit::_loadAddressBook()
 bool AbbrowserConduit::_saveAddressBook()
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << "abChanged=" << abChanged << endl;
-	for(KABC::AddressBook::Iterator contactIter = aBook->begin(); contactIter != aBook->end(); ++contactIter)
-	{
-		DEBUGCONDUIT << "Adressee: " <<(*contactIter).realName() << ", uid=" <<(*contactIter).uid() << ", resource=" <<(*contactIter).resource() << endl;
-	}
-	DEBUGCONDUIT << fname << " --------------------------------------------"<<endl;
-#endif
+//#ifdef DEBUG
+//	DEBUGCONDUIT << "abChanged=" << abChanged << endl;
+//	for(KABC::AddressBook::Iterator contactIter = aBook->begin(); contactIter != aBook->end(); ++contactIter)
+//	{
+//		DEBUGCONDUIT << "Adressee: " <<(*contactIter).realName() << ", uid=" <<(*contactIter).uid() << ", resource=" <<(*contactIter).resource() << endl;
+//	}
+//	DEBUGCONDUIT << fname << " --------------------------------------------"<<endl;
+//#endif
 
 	if(!abChanged) return true;
 //	return(aBook) &&(aBook->saveAll());
@@ -1099,6 +1099,9 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress, KABC::Addressee & 
 	{
 		return false;
 	}
+	
+	if (piAddress.getCat()!=_getCat(abEntry.categories())) return false;
+
 
 	return true;
 }
@@ -1216,11 +1219,21 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	toAbEntry.removeEmail(toAbEntry.preferredEmail());
 	toAbEntry.insertEmail(fromPiAddr.getPhoneField(PilotAddress::eEmail));
 
-	_copyPhone(toAbEntry, toAbEntry.phoneNumber(KABC::PhoneNumber::Home), fromPiAddr.getPhoneField(PilotAddress::eHome));
-	_copyPhone(toAbEntry, toAbEntry.phoneNumber(KABC::PhoneNumber::Work), fromPiAddr.getPhoneField(PilotAddress::eWork));
-	_copyPhone(toAbEntry, toAbEntry.phoneNumber(KABC::PhoneNumber::Cell), fromPiAddr.getPhoneField(PilotAddress::eMobile));
-	_copyPhone(toAbEntry, getFax(toAbEntry), fromPiAddr.getPhoneField(PilotAddress::eFax));
-	_copyPhone(toAbEntry, toAbEntry.phoneNumber(KABC::PhoneNumber::Pager), fromPiAddr.getPhoneField(PilotAddress::ePager));
+	_copyPhone(toAbEntry, 
+		toAbEntry.phoneNumber(KABC::PhoneNumber::Home), 
+		fromPiAddr.getPhoneField(PilotAddress::eHome));
+	_copyPhone(toAbEntry, 
+		toAbEntry.phoneNumber(KABC::PhoneNumber::Work), 
+		fromPiAddr.getPhoneField(PilotAddress::eWork));
+	_copyPhone(toAbEntry, 
+		toAbEntry.phoneNumber(KABC::PhoneNumber::Cell), 
+		fromPiAddr.getPhoneField(PilotAddress::eMobile));
+	_copyPhone(toAbEntry, 
+		getFax(toAbEntry), 
+		fromPiAddr.getPhoneField(PilotAddress::eFax));
+	_copyPhone(toAbEntry, 
+		toAbEntry.phoneNumber(KABC::PhoneNumber::Pager), 
+		fromPiAddr.getPhoneField(PilotAddress::ePager));
 	setOtherField(toAbEntry, fromPiAddr.getPhoneField(PilotAddress::eOther));
 
 	KABC::Address homeAddress = getAddress(toAbEntry);
@@ -1248,7 +1261,7 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	if (0 < cat && cat <= 15) category = fAddressAppInfo.category.name[cat];
 	_setCategory(toAbEntry, category);
 
-//	showAddressee(toAbEntry);
+	showAddressee(toAbEntry);
 }
 
 
@@ -1269,7 +1282,9 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	pc, backup, palm ... entries of the according databases
 	mergeNeeded ... set to true, if the field needed to be merged
 	mergedStr ... contains the result if the field needed to be merged
-	return value ... true if the merge could be done. false if the entry could not be merged(e.g. use chose to add both records or no resolution at all.
+	return value ... true if the merge could be done. 
+	                 false if the entry could not be merged
+			 (e.g. user chose to add both records or no resolution at all)
 */
 int AbbrowserConduit::_conflict(const QString & entry, const QString & field, const QString & palm,
 	const QString & backup, const QString & pc, bool & mergeNeeded, QString & mergedStr)
@@ -1301,9 +1316,6 @@ int AbbrowserConduit::_conflict(const QString & entry, const QString & field, co
 	else
 	{
 		// only pc modified, so return that string, no conflict
-#ifdef DEBUG
-//		DEBUGCONDUIT<<fname<<": conflicting entries for "<<field<<" of "<<entry<<" are: palm="<<palm<<", backup="<<backup<<", pc="<<pc<<endl;
-#endif
 		if(palm == backup)
 		{
 			mergeNeeded = true;
@@ -1369,7 +1381,10 @@ int AbbrowserConduit::_smartMergePhone(KABC::Addressee & abEntry,
 	bool mergeNeeded = false;
 	QString mergedStr;
 
-	int res = _conflict(thisName, name, pilotAddress.getPhoneField(PalmFlag), backupAddress.getPhoneField(PalmFlag), phone.number(), mergeNeeded, mergedStr);
+	int res = _conflict(thisName, name, 
+		pilotAddress.getPhoneField(PalmFlag), 
+		backupAddress.getPhoneField(PalmFlag), 
+		phone.number(), mergeNeeded, mergedStr);
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
@@ -1390,7 +1405,10 @@ int AbbrowserConduit::_smartMergeEntry(QString abEntry,
 	QString mergedStr;
 	mergedString = QString();
 
-	int res = _conflict(thisName, name, pilotAddress.getField(PalmFlag), backupAddress.getField(PalmFlag), abEntry, mergeNeeded, mergedStr);
+	int res = _conflict(thisName, name, 
+		pilotAddress.getField(PalmFlag), 
+		backupAddress.getField(PalmFlag), 
+		abEntry, mergeNeeded, mergedStr);
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
@@ -1416,7 +1434,10 @@ int AbbrowserConduit::_smartMergeCategories(KABC::Addressee & abEntry,
 	QString mergedStr;
 	mergedString = QString();
 
-	int res = _conflict(thisName, name, pilotAddress.getCategoryLabel(), backupAddress.getCategoryLabel(), abAddressCat, mergeNeeded, mergedStr);
+	int res = _conflict(thisName, name, 
+		pilotAddress.getCategoryLabel(), 
+		backupAddress.getCategoryLabel(), 
+		abAddressCat, mergeNeeded, mergedStr);
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
@@ -1428,7 +1449,8 @@ int AbbrowserConduit::_smartMergeCategories(KABC::Addressee & abEntry,
 }
 
 
-void AbbrowserConduit::showAdresses(PilotAddress & pilotAddress, const PilotAddress & backupAddress, KABC::Addressee & abEntry)
+void AbbrowserConduit::showAdresses(PilotAddress & pilotAddress, 
+	const PilotAddress & backupAddress, KABC::Addressee & abEntry)
 {
 #ifdef DEBUG
 	DEBUGCONDUIT << "abEntry:" << endl;
@@ -1441,7 +1463,8 @@ void AbbrowserConduit::showAdresses(PilotAddress & pilotAddress, const PilotAddr
 #endif
 }
 
-int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAddress & backupAddress, KABC::Addressee & outAbEntry)
+int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, 
+	const PilotAddress & backupAddress, KABC::Addressee & outAbEntry)
 {
 	FUNCTIONSETUP;
 	fEntryResolution = getResolveConflictOption();
@@ -1452,54 +1475,75 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	QString mergedStr;
 	int res;
 
-	res = _smartMergeEntry(abEntry.familyName(), backupAddress, pilotAddress, (int) entryLastname, thisName, i18n("last name"), mergedStr);
+	res = _smartMergeEntry(abEntry.familyName(), backupAddress, pilotAddress, 
+		(int) entryLastname, thisName, i18n("last name"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.setFamilyName(mergedStr);
 
-	res = _smartMergeEntry(abEntry.givenName(), backupAddress, pilotAddress, (int) entryFirstname, thisName, i18n("first name"), mergedStr);
+	res = _smartMergeEntry(abEntry.givenName(), backupAddress, pilotAddress, 
+		(int) entryFirstname, thisName, i18n("first name"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.setGivenName(mergedStr);
 
-	res = _smartMergeEntry(abEntry.organization(), backupAddress, pilotAddress, (int) entryCompany, thisName, i18n("organization"), mergedStr);
+	res = _smartMergeEntry(abEntry.organization(), backupAddress, pilotAddress, 
+		(int) entryCompany, thisName, i18n("organization"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.setOrganization(mergedStr);
 
-	res = _smartMergeEntry(abEntry.title(), backupAddress, pilotAddress, (int) entryTitle, thisName, i18n("title"), mergedStr);
+	res = _smartMergeEntry(abEntry.title(), backupAddress, pilotAddress, 
+		(int) entryTitle, thisName, i18n("title"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.setTitle(mergedStr);
 
-	res = _smartMergeEntry(abEntry.note(), backupAddress, pilotAddress, (int) entryNote, thisName, i18n("note"), mergedStr);
+	res = _smartMergeEntry(abEntry.note(), backupAddress, pilotAddress, 
+		(int) entryNote, thisName, i18n("note"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.setNote(mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM1"), backupAddress, pilotAddress, entryCustom1, thisName, i18n("custom 1"), mergedStr);
+	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM1"), backupAddress, pilotAddress, 
+		entryCustom1, thisName, i18n("custom 1"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM1", mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM2"), backupAddress, pilotAddress, entryCustom2, thisName, i18n("custom 2"), mergedStr);
+	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM2"), backupAddress, pilotAddress, 
+		entryCustom2, thisName, i18n("custom 2"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM2", mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM3"), backupAddress, pilotAddress, entryCustom3, thisName, i18n("custom 3"), mergedStr);
+	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM3"), backupAddress, pilotAddress, 
+		entryCustom3, thisName, i18n("custom 3"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM3", mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM4"), backupAddress, pilotAddress, entryCustom4, thisName, i18n("custom 4"), mergedStr);
+	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM4"), backupAddress, pilotAddress, 
+		entryCustom4, thisName, i18n("custom 4"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM4", mergedStr);
 
-	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, PilotAddress::eWork, abEntry.phoneNumber(KABC::PhoneNumber::Work), thisName, i18n("work phone"));
+	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, 
+		PilotAddress::eWork, abEntry.phoneNumber(KABC::PhoneNumber::Work), 
+		thisName, i18n("work phone"));
 	if(res >= 0) return res;
-	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, PilotAddress::eHome, abEntry.phoneNumber(KABC::PhoneNumber::Home), thisName, i18n("home phone"));
+	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, 
+		PilotAddress::eHome, abEntry.phoneNumber(KABC::PhoneNumber::Home), 
+		thisName, i18n("home phone"));
 	if(res >= 0) return res;
-	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, PilotAddress::eMobile, abEntry.phoneNumber(KABC::PhoneNumber::Cell), thisName, i18n("mobile phone"));
+	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, 
+		PilotAddress::eMobile, abEntry.phoneNumber(KABC::PhoneNumber::Cell), 
+		thisName, i18n("mobile phone"));
 	if(res >= 0) return res;
-	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, PilotAddress::eFax, getFax(abEntry), thisName, i18n("fax"));
+	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, 
+		PilotAddress::eFax, getFax(abEntry), thisName, i18n("fax"));
 	if(res >= 0) return res;
-	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, PilotAddress::ePager, abEntry.phoneNumber(KABC::PhoneNumber::Pager), thisName, i18n("pager"));
+	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, 
+		PilotAddress::ePager, abEntry.phoneNumber(KABC::PhoneNumber::Pager), 
+		thisName, i18n("pager"));
 	if(res >= 0) return res;
 
-	res = _conflict(thisName, i18n("other"), pilotAddress.getPhoneField(PilotAddress::eOther), backupAddress.getPhoneField(PilotAddress::eOther), getOtherField(abEntry), mergeNeeded, mergedStr);
+	res = _conflict(thisName, i18n("other"), 
+		pilotAddress.getPhoneField(PilotAddress::eOther), 
+		backupAddress.getPhoneField(PilotAddress::eOther), 
+		getOtherField(abEntry), mergeNeeded, mergedStr);
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
@@ -1507,7 +1551,10 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 		setOtherField(abEntry, mergedStr);
 	}
 
-	res = _conflict(thisName, i18n("email"), pilotAddress.getPhoneField(PilotAddress::eEmail), backupAddress.getPhoneField(PilotAddress::eEmail), abEntry.preferredEmail(), mergeNeeded, mergedStr);
+	res = _conflict(thisName, i18n("email"), 
+		pilotAddress.getPhoneField(PilotAddress::eEmail), 
+		backupAddress.getPhoneField(PilotAddress::eEmail), 
+		abEntry.preferredEmail(), mergeNeeded, mergedStr);
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
@@ -1521,29 +1568,41 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 
 	KABC::Address abAddress = getAddress(abEntry);
 
-	res = _smartMergeEntry(abAddress.street(), backupAddress, pilotAddress, entryAddress, thisName, i18n("address"), mergedStr);
+	res = _smartMergeEntry(abAddress.street(), 
+		backupAddress, pilotAddress, entryAddress, 
+		thisName, i18n("address"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abAddress.setStreet(mergedStr);
 
-	res = _smartMergeEntry(abAddress.locality(), backupAddress, pilotAddress, entryCity, thisName, i18n("city"), mergedStr);
+	res = _smartMergeEntry(abAddress.locality(), 
+		backupAddress, pilotAddress, entryCity, 
+		thisName, i18n("city"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abAddress.setLocality(mergedStr);
 
-	res = _smartMergeEntry(abAddress.region(), backupAddress, pilotAddress, entryState, thisName, i18n("region"), mergedStr);
+	res = _smartMergeEntry(abAddress.region(), 
+		backupAddress, pilotAddress, entryState, 
+		thisName, i18n("region"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abAddress.setRegion(mergedStr);
 
-	res = _smartMergeEntry(abAddress.postalCode(), backupAddress, pilotAddress, entryZip, thisName, i18n("postal code"), mergedStr);
+	res = _smartMergeEntry(abAddress.postalCode(), 
+		backupAddress, pilotAddress, entryZip, 
+		thisName, i18n("postal code"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abAddress.setPostalCode(mergedStr);
 
-	res = _smartMergeEntry(abAddress.country(), backupAddress, pilotAddress, entryCountry, thisName, i18n("country"), mergedStr);
+	res = _smartMergeEntry(abAddress.country(), 
+		backupAddress, pilotAddress, entryCountry, 
+		thisName, i18n("country"), mergedStr);
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abAddress.setCountry(mergedStr);
 
 	abEntry.insertAddress(abAddress);
 
-	res = _smartMergeCategories(abEntry, backupAddress, pilotAddress, thisName, i18n("category"), mergedStr);
+	res = _smartMergeCategories(abEntry, 
+		backupAddress, pilotAddress, 
+		thisName, i18n("category"), mergedStr);
 	if(res >= 0) return res;
 
 	abEntry.insertCustom(appString, idString, QString::number(pilotAddress.id()));
@@ -1552,15 +1611,6 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	outPilotAddress = pilotAddress;
 	outAbEntry = abEntry;
 
-#ifdef DEBUG
-	DEBUGCONDUIT << "AFTER smart MERGE: PilotAddress:" << endl;
-	showPilotAddress(pilotAddress);
-	DEBUGCONDUIT << "AFTER smart MERGE: BackupAddress:" << endl;
-	showPilotAddress(backupAddress);
-	DEBUGCONDUIT << "AFTER smart MERGE: PCAddress:" << endl;
-	showAddressee(abEntry);
-	DEBUGCONDUIT << "____________________________________________________________" << endl;
-#endif
 	return CHANGED_BOTH;
 }
 
@@ -1643,7 +1693,8 @@ int AbbrowserConduit::_handleConflict(PilotAddress & pilotAddress, PilotAddress 
 		}
 		else
 		{
-			// This should never be called, since that would mean pilotAddress and backupAddress are equal, which we already checked!!!!
+			// This should never be called, since that would mean 
+			// pilotAddress and backupAddress are equal, which we already checked!!!!
 			return CHANGED_NONE;
 		}
 	}
@@ -1957,6 +2008,18 @@ void AbbrowserConduit::_checkDelete(PilotRecord* r, PilotRecord *s)
 
 
 // $Log$
+// Revision 1.54  2002/10/10 13:44:41  kainhofe
+// This fixes several bugs:
+// -) conflict resolution now also works if you chose ignore on the last sync
+// -) home/work phone/fax were mixed up
+// -) deleting an address in kaddressbook now also deletes the address from the handheld
+// -) variable renaming for consistent naming
+// -) fix a crash with an iterator being deleted and then incremented
+// -) Offering the value from the last sync in the conflict resolution dialog
+// -) Using an addressbook for several handhelds should work now
+// -) archived records are now synced to the PC, but not back to the handheld
+// -) If an addressee has a wrong pilotID, the pilotID is reset
+//
 // Revision 1.53  2002/10/05 13:59:29  kainhofe
 // duplication now works as conflict resolution. Removed the warning in the setup dialog.
 //
