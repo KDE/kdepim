@@ -33,23 +33,7 @@ KNServerInfo::~KNServerInfo()
 }
 
 
-
-void KNServerInfo::clear()
-{
-  t_ype=STnntp;
-  p_ort=119;
-  t_imeout=60;
-  h_old=300;
-  s_erver = QString::null;
-  
-  n_eedsLogon = false;
-  u_ser = QString::null;
-  p_ass = QString::null;
-}
-
-
-
-    
+   
 void KNServerInfo::readConf(KConfig *conf)
 {
   s_erver=conf->readEntry("server", "localhost");

@@ -29,8 +29,6 @@ class KNServerInfo {
     KNServerInfo();
     ~KNServerInfo();
 
-    void clear();
-
     void readConf(KConfig *conf);
     void saveConf(KConfig *conf);
 
