@@ -356,6 +356,8 @@ unsigned int Kleo::KeyRequester::allowedKeys() const {
 
 void Kleo::KeyRequester::setAllowedKeys( unsigned int keyUsage ) {
   mKeyUsage = keyUsage;
+  mOpenPGPBackend = 0;
+  mSMIMEBackend = 0;
 
   if ( mKeyUsage & KeySelectionDialog::OpenPGPKeys )
     mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
