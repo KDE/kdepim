@@ -376,6 +376,11 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		return;
 	}
 
+	if ( (!fFullBackup) && PilotDatabase::isResource(&info))
+	{
+		// Just skip resource DBs during an update hotsync.
+		return;
+	}
 
 	// Pretty sure all database names are latin1.
 	QString s = i18n("Backing up: %1")
@@ -452,7 +457,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 
 	QString fullBackupName = fBackupDir + databaseName;
 
-	if (info->flags & dlpDBFlagResource)
+	if (PilotDatabase::isResource(info))
 	{
 		fullBackupName.append(CSL1(".prc"));
 	}
