@@ -65,7 +65,7 @@ EmpathFolderWidget::EmpathFolderWidget(QWidget * parent)
     addColumn(i18n("Total"));
     
     setAllColumnsShowFocus(true);
-    setRootIsDecorated(true);
+    setRootIsDecorated(false);
     setSorting(0);
 
     dropItem = 0;
