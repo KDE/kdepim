@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>VCalWidget</class>
 <widget class="QWidget">
     <property name="name">
@@ -87,7 +87,7 @@
                                     <cstring>RadioButton9</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Fast sync if possible</string>
+                                    <string>Do a &amp;fast sync if possible</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>
@@ -106,7 +106,7 @@
                                     <cstring>RadioButton11</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Sync only Pilot items to PC (next sync only)</string>
+                                    <string>Sync only handheld items to PC (next sync only)</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton">
@@ -114,7 +114,7 @@
                                     <cstring>RadioButton12</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Sync only PC items to Pilot (next sync only)</string>
+                                    <string>Sync only PC items to handheld (next sync only)</string>
                                 </property>
                             </widget>
                         </vbox>
@@ -148,6 +148,12 @@
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
                     </spacer>
                 </grid>
             </widget>
@@ -162,62 +168,69 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QButtonGroup" row="0" column="0">
+                    <widget class="QButtonGroup" row="1" column="0">
                         <property name="name">
                             <cstring>conflictResolution</cstring>
                         </property>
                         <property name="title">
                             <string>Conflicting Items</string>
                         </property>
-                        <vbox>
+                        <widget class="QRadioButton">
                             <property name="name">
-                                <cstring>unnamed</cstring>
+                                <cstring>RadioButton3</cstring>
                             </property>
-                            <property name="margin">
-                                <number>11</number>
+                            <property name="geometry">
+                                <rect>
+                                    <x>11</x>
+                                    <y>64</y>
+                                    <width>434</width>
+                                    <height>17</height>
+                                </rect>
                             </property>
-                            <property name="spacing">
-                                <number>6</number>
+                            <property name="text">
+                                <string>&amp;Ask for every conflicting item</string>
                             </property>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>RadioButton1</cstring>
-                                </property>
-                                <property name="focusPolicy">
-                                    <enum>NoFocus</enum>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Pilot overrides desktop</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>RadioButton2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Desktop overrides Pilot</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>RadioButton3</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Ask for every conflicting item</string>
-                                </property>
-                            </widget>
-                        </vbox>
+                        </widget>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>RadioButton1</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>11</x>
+                                    <y>18</y>
+                                    <width>434</width>
+                                    <height>17</height>
+                                </rect>
+                            </property>
+                            <property name="focusPolicy">
+                                <enum>NoFocus</enum>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Handheld overrides desktop</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>RadioButton2</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>11</x>
+                                    <y>41</y>
+                                    <width>434</width>
+                                    <height>17</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Desktop overrides handheld</string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                        </widget>
                     </widget>
-                    <spacer row="1" column="0">
+                    <spacer row="2" column="0">
                         <property name="name">
                             <cstring>Spacer3</cstring>
                         </property>
@@ -227,7 +240,21 @@
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
                     </spacer>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>If you change the same entry on the PC and on the handheld, the conduit somehow needs to decide which of the two modifications is the correct one. Here you can select the default action if an event was modified on both sides. &lt;p&gt;Conflict resolution is not meant to resolve double-schedulling conflicts, e.g. if you have two meetings at the same time, the conduit will not warn you!&lt;/p&gt;</string>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
         </widget>
