@@ -2,7 +2,12 @@
 Encoding=UTF-8
 Type=Service
 Name=PalmOS Database Info
-Name[de]=PalmOS Datenbank Info
+Name[be]=Інфармацыя аб базе дадзеных PalmOS
+Name[da]=PalmOS database-info
+Name[es]=Info. de la base de datos de PalmOS
+Name[et]=PalmOS andmebaasi info
+Name[sl]=Informacije zbirke podatkov za PalmOS
+Name[sv]=PalmOS-databasinformation
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_palm
 MimeType=application/vnd.palm
