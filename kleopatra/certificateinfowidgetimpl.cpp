@@ -100,7 +100,7 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   ++it;
   while( it != info.userid.end() ) {
     if( (*it)[0] == '<' ) {
-      item = new QListViewItem( listView, item, i18n("EMail"), (*it).mid(1,(*it).length()-2));
+      item = new QListViewItem( listView, item, i18n("Email"), (*it).mid(1,(*it).length()-2));
     } else {
       item = new QListViewItem( listView, item, i18n("Aka"), (*it).stripWhiteSpace() );
     }

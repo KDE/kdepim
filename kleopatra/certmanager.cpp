@@ -328,7 +328,7 @@ void CertManager::importCertFromFile()
                  this, SLOT( slotGPGSMExited() ) );
         if( !gpgsmProc->start() ) { // NotifyOnExit, NoCommunication
                                     // are defaults
-            KMessageBox::error( this, i18n( "Couldn't start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
+            KMessageBox::error( this, i18n( "Unable to start GPGSM process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
             delete gpgsmProc;
             gpgsmProc = 0;
         }
