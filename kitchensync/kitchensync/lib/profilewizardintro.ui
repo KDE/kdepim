@@ -12,9 +12,6 @@
             <height>475</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>ProfileWizardIntro</string>
-    </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>

@@ -112,7 +112,6 @@ void DBRecordEditor::slotCancel()
 
 void DBRecordEditor::languageChange()
 {
-	setCaption( tr2i18n( "Form1" ) );
 	fRecordIndexLabel->setText( tr2i18n( "Record index:" ) );
 	fRecordIDLabel->setText( tr2i18n( "Record ID:" ) );
 	fRecordIndex->setText( tr2i18n( "1" ) );
