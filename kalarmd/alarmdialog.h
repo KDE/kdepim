@@ -22,12 +22,9 @@
 */
 #ifndef ALARMDIALOG_H
 #define ALARMDIALOG_H
-// $Id$
 //
 // Alarm dialog.
 //
-
-#include "compat.h"
 
 #include <kdialogbase.h>
 
@@ -42,7 +39,7 @@ class QSpinBox;
 class AlarmDialog : public KDialogBase {
     Q_OBJECT
   public:
-    AlarmDialog(QWidget *parent=0L, const char *name=0L);
+    AlarmDialog( QWidget *parent = 0, const char *name = 0 );
     virtual ~AlarmDialog();
 
     void appendEvent(Event *event);

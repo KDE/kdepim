@@ -28,8 +28,6 @@
 #include <libkcal/event.h>
 #include <libkcal/todo.h>
 
-#include "compat.h"
-
 #include "koeventviewer.h"
 #include "koeventviewer.moc"
 

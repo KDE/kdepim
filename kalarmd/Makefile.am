@@ -35,7 +35,8 @@ korgac_SOURCES = korgacmain.cpp alarmdialog.cpp \
 
 simplekalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 simplekalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
-simplekalarmd_SOURCES = simplekalarmd.cpp alarmdialog.cpp koeventviewer.cpp
+simplekalarmd_SOURCES = simplekalarmd.cpp alarmdialog.cpp koeventviewer.cpp  \
+  simplekalarmdmain.cpp
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	guiapp.h alarmgui.h alarmguiiface.h alarmdialog.h \

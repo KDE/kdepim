@@ -29,9 +29,6 @@
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <kcmdlineargs.h>
-#include <kaboutdata.h>
-#include <kuniqueapplication.h>
 #include <kiconloader.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
@@ -41,6 +38,7 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qfileinfo.h>
+#include <qapplication.h>
 
 using namespace KCal;
 
@@ -70,7 +68,7 @@ SimpleKalarmd::~SimpleKalarmd()
 
 void SimpleKalarmd::closeEvent( QCloseEvent * )
 {
-  kapp->quit();
+  qApp->quit();
 }
 
 void SimpleKalarmd::checkAlarms()
@@ -165,57 +163,6 @@ void SimpleKalarmd::checkCalendar( const QString &calFile )
   }
 
   cfg->writeEntry( calFile, to );
-}
-
-class MyApp : public KUniqueApplication
-{
-  public:
-    MyApp() : mClient( 0 ) {}
-
-    int newInstance()
-    {
-      // Check if we already have a running alarm daemon widget
-      if ( mClient ) return 0;
-
-//      KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-      mClient = new SimpleKalarmd;
-      mClient->show();
-
-      return 0;
-    }
-    
-  private:
-    SimpleKalarmd *mClient;
-};
-
-
-static const KCmdLineOptions options[] =
-{
-   { 0L, 0L, 0L }
-};
-
-int main( int argc, char **argv )
-{
-  KLocale::setMainCatalogue( "kalarmdgui" );
-  KAboutData aboutData( "simplekalarmd",
-      I18N_NOOP("Simple KOrganizer Alarm Daemon"),
-      "0.1", I18N_NOOP("Simple KOrganizer Alarm Daemon"),
-      KAboutData::License_GPL,
-      "(c) 2002 Cornelius Schumacher\n",
-      0, "http://pim.kde.org");
-  aboutData.addAuthor( "Cornelius Schumacher", I18N_NOOP("Maintainer"),
-                       "schumacher@kde.org");
-
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
-
-  if ( !MyApp::start() ) return 0;
-
-  MyApp app;
-
-  return app.exec();
 }
 
 #include "simplekalarmd.moc"
