@@ -1,3 +1,27 @@
+KPilot Developer's notes for january 20th 2001
+==============================================
+
+It's been a slightly sleepy time. Some rocky backporting has occurred,
+though, as KDE3-isms sneak into the codebase and break my compiles at
+home. At work, though, I've switched to KDE3 and it's really nice.
+Now if only I could release a version of KPilot that works before KDE3
+comes out and makes all this compatibility effort moot ...
+
+2002-01-15  Adriaan de Groot
+* conduits/vcalconduit/*
+  - Class Recurrence is the KDE3 name of class KORecurrence. Where the
+    libkcal API has changed, added #ifdefs to use the right one, and
+    #define Recurrence KORecurrence when compiling under KDE2.
+
+2002-01-16  David Bishop
+* *.ui
+  - Added <qt>'s to all tooltips, neatness fixes.
+2002-01-16  Adriaan de Groot
+* lib/options.{h,cc}
+  - Added support for both ostream and kdbgstream << QSize to avoid
+    plugin crashes when the plugin is compiled with different DEBUG_CERR
+    settings from libkpilot.
+
 KPilot Developer's notes for december 31st 2001
 ===============================================
 
