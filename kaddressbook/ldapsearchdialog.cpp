@@ -38,7 +38,7 @@
 
 inline static QString asUtf8( const QByteArray &val )
 {
-  return QString::fromUtf8( val.data(), val.size()-1 );
+  return QString::fromUtf8( val.data(), val.size() - 1 );
 }
 
 static QString join( const KABC::LdapAttrValue& lst, const QString& sep )

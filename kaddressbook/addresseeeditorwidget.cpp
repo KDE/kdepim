@@ -172,7 +172,7 @@ void AddresseeEditorWidget::setupTab1()
   mOrgEdit = new KLineEdit( tab1 );
   label->setBuddy( mOrgEdit );
   connect( mOrgEdit, SIGNAL( textChanged( const QString& ) ), 
-           SLOT( textChanged( const QString& ) ) );
+           SLOT( organizationTextChanged( const QString& ) ) );
   layout->addWidget( label, 2, 1 );
   layout->addWidget( mOrgEdit, 2, 2 );
   
@@ -499,6 +499,8 @@ void AddresseeEditorWidget::load()
       mFormattedNameType = NameEditDialog::ReverseNameWithComma;
     else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::ReverseName ) )
       mFormattedNameType = NameEditDialog::ReverseName;
+    else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::Organization ) )
+      mFormattedNameType = NameEditDialog::Organization;
     else
       mFormattedNameType = NameEditDialog::CustomName;
   }
@@ -643,6 +645,18 @@ void AddresseeEditorWidget::nameTextChanged( const QString &text )
       mAddressee.setSuffix( addr.suffix() );
     }
   }
+
+  nameBoxChanged();
+
+  emitModified();
+}
+
+void AddresseeEditorWidget::organizationTextChanged( const QString &text )
+{
+
+  AddresseeConfig config( mAddressee );
+  if ( config.automaticNameParsing() )
+    mAddressee.setOrganization( text );
 
   nameBoxChanged();
 

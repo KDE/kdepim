@@ -47,7 +47,7 @@
 NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
                                 bool readOnly, QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Edit Contact Name" ), Help | Ok | Cancel,
-                 Ok, parent, name, true )
+                 Ok, parent, name, true ), mAddressee( addr )
 {
   QWidget *page = plainPage();
   QGridLayout *layout = new QGridLayout( page );
@@ -229,6 +229,9 @@ QString NameEditDialog::formattedName( const KABC::Addressee &addr, int type )
     case ReverseName:
       name = addr.familyName() + " " + addr.givenName();
       break;
+    case Organization:
+      name = addr.organization();
+      break;
     default:
       name = "";
       break;
@@ -260,6 +263,7 @@ void NameEditDialog::updateTypeCombo()
   addr.setAdditionalName( mAdditionalNameEdit->text() );
   addr.setFamilyName( mFamilyNameEdit->text() );
   addr.setSuffix( mSuffixCombo->currentText() );
+  addr.setOrganization( mAddressee.organization() );
 
   int pos = mFormattedNameCombo->currentItem();
 
@@ -269,6 +273,7 @@ void NameEditDialog::updateTypeCombo()
   mFormattedNameCombo->insertItem( formattedName( addr, FullName ) );
   mFormattedNameCombo->insertItem( formattedName( addr, ReverseNameWithComma ) );
   mFormattedNameCombo->insertItem( formattedName( addr, ReverseName ) );
+  mFormattedNameCombo->insertItem( formattedName( addr, Organization ) );
 
   mFormattedNameCombo->setCurrentItem( pos );
 }

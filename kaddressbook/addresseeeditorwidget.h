@@ -96,6 +96,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     void dateChanged( QDate );
     void invalidDate();
     void nameTextChanged( const QString& );
+    void organizationTextChanged( const QString& );
     void nameBoxChanged();
     void nameButtonClicked();
     void categoryButtonClicked();

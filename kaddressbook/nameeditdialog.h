@@ -48,7 +48,8 @@ class NameEditDialog : public KDialogBase
       SimpleName,           // form: givenName familyName
       FullName,             // form: prefix givenName additionalName familyName suffix
       ReverseNameWithComma, // form: familyName, givenName
-      ReverseName           // form: familyName givenName
+      ReverseName,          // form: familyName givenName
+      Organization          // the organization name
     };
 
     NameEditDialog( const KABC::Addressee &addr, int type,
@@ -87,6 +88,7 @@ class NameEditDialog : public KDialogBase
     QCheckBox *mParseBox;
 
     AddresseeConfig mAddresseeConfig;
+    KABC::Addressee mAddressee;
     bool mChanged;
 };
 
