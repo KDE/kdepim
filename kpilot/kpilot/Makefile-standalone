@@ -28,10 +28,10 @@ CONFIG_LIBS=-lkdeui -lkfile -lkdecore -lqt
 TEST_DISTDIR=kpilotTest-0.2
 TEST_OBJS=options.o kpilotlink.o kpilotConfig.o \
 	pilotComponent.o logWidget.o \
-	hotSync.o main-test.o
+	hotSync.o interactiveSync.o main-test.o
 TEST_MOCS=kpilotlink.moc \
 	pilotComponent.moc logWidget.moc \
-	hotSync.moc
+	interactiveSync.moc hotSync.moc
 TEST_EXTRA=pilotUser.h
 TEST_LIBS=-lkdeui -lqt -lpisock
 
@@ -59,9 +59,10 @@ KPILOT_LIBS=-lkfile -lkdeui -lqt -lpisock
 DAEMON_DISTDIR=kpilotDaemon-4.2.9
 DAEMON_OBJS=options.o \
 	pilotDaemonDCOP_skel.o kpilotDCOP_stub.o \
-	pilotDaemon.o kpilotConfig.o kpilotlink.o hotSync.o \
+	pilotDaemon.o kpilotConfig.o kpilotlink.o hotSync.o interactiveSync.o \
 	fileInstaller.o
-DAEMON_MOCS=pilotDaemon.moc kpilotlink.moc hotSync.moc fileInstaller.moc
+DAEMON_MOCS=pilotDaemon.moc kpilotlink.moc hotSync.moc interactiveSync.moc \
+	fileInstaller.moc
 DAEMON_EXTRA=pilotDaemonDCOP.h kpilotDCOP.h pilotUser.h \
 	hotsync.h busysync.h
 DAEMON_LIBS=-lkfile -lkdeui -lqt -lpisock
