@@ -37,6 +37,9 @@ class KABPrefs : public KABPrefsBase
 
     static KABPrefs *instance();
 
+    void usrReadConfig();
+    void usrWriteConfig();
+
     void setLocationMapURL( const QString &locationMapURL )
     {
       if ( !isImmutable( QString::fromLatin1( "LocationMapURL" ) ) )
@@ -57,6 +60,11 @@ class KABPrefs : public KABPrefsBase
     QStringList locationMapURLs() const
     {
       return mLocationMapURLs;
+    }
+
+    QStringList customCategories() const
+    {
+      return mCustomCategories;
     }
     
     void setCategoryDefaults();

@@ -955,6 +955,8 @@ void KABCore::addressBookChanged()
   mSearchManager->reload();
   mViewManager->setSelected( QString::null, false );
   setContactSelected( QString::null );
+
+  updateCategories();
 }
 
 AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
@@ -1319,6 +1321,42 @@ KABC::Addressee KABCore::mergeContacts( const KABC::Addressee::List &list )
   return masterAddressee;
 }
 
+void KABCore::updateCategories()
+{
+  QStringList categories( allCategories() );
+  categories.sort();
+
+  QStringList customCategories( KABPrefs::instance()->customCategories() );
+  QStringList::ConstIterator it;
+  for ( it = customCategories.begin(); it != customCategories.end(); ++it ) {
+    if ( categories.find( *it ) == categories.end() ) {
+      categories.append( *it );
+    }
+  }
+
+  KABPrefs::instance()->mCustomCategories = categories;
+  KABPrefs::instance()->writeConfig();
+
+  if ( mCategoryEditDialog )
+    mCategoryEditDialog->reload();
+}
+
+QStringList KABCore::allCategories() const
+{
+  QStringList categories, allCategories;
+  QStringList::ConstIterator catIt;
+
+  KABC::AddressBook::ConstIterator it;
+  for ( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
+    categories = (*it).categories();
+    for ( catIt = categories.begin(); catIt != categories.end(); ++catIt )
+      if ( !allCategories.contains( *catIt ) )
+        allCategories.append( *catIt );
+  }
+
+  return allCategories;
+}
+
 void KABCore::setCategories()
 {
   // Show the category dialog
@@ -1329,9 +1367,6 @@ void KABCore::setCategories()
     connect( mCategorySelectDialog, SIGNAL( editCategories() ), SLOT( editCategories() ) );
   }
 
-  QStringList selected = mCategorySelectDialog->selectedCategories();
-  mCategorySelectDialog->setCategories();
-  mCategorySelectDialog->setSelected( selected );
   mCategorySelectDialog->show();
   mCategorySelectDialog->raise();
 }
@@ -1373,7 +1408,7 @@ void KABCore::editCategories()
   if ( mCategoryEditDialog == 0 ) {
     mCategoryEditDialog = new KPIM::CategoryEditDialog( KABPrefs::instance(), mWidget );
     connect( mCategoryEditDialog, SIGNAL( categoryConfigChanged() ),
-             SLOT( setCategories() ) );
+             mCategorySelectDialog, SLOT( updateCategoryConfig() ) );
   }
 
   mCategoryEditDialog->show();

@@ -355,6 +355,9 @@ class KABCore : public KAB::Core
 
     KABC::Addressee mergeContacts( const KABC::Addressee::List &list );
 
+    void updateCategories();
+    QStringList allCategories() const;
+
     AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
                                                         const char *name = 0 );
 

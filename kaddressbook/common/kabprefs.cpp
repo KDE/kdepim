@@ -60,7 +60,27 @@ KABPrefs *KABPrefs::instance()
 void KABPrefs::setCategoryDefaults()
 {
   mCustomCategories.clear();
-  
   mCustomCategories << i18n( "Business" ) << i18n( "Family" ) << i18n( "School" )
                     << i18n( "Customer" ) << i18n( "Friend" );
+}
+
+void KABPrefs::usrReadConfig()
+{
+  config()->setGroup( "General" );
+  mCustomCategories = config()->readListEntry( "Custom Categories" );
+  if ( mCustomCategories.isEmpty() )
+    setCategoryDefaults();
+
+  qDebug( "categories set" );
+
+  KPimPrefs::usrReadConfig();
+}
+
+
+void KABPrefs::usrWriteConfig()
+{
+  config()->setGroup( "General" );
+  config()->writeEntry( "Custom Categories", mCustomCategories );
+
+  KPimPrefs::usrWriteConfig();
 }

@@ -102,7 +102,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     void organizationTextChanged( const QString& );
     void nameBoxChanged();
     void nameButtonClicked();
-    void categoryButtonClicked();
+    void selectCategories();
     
     /**
       Called whenever the categories change in the categories dialog.
@@ -130,7 +130,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     bool mReadOnly;
 
     // GUI
-    KPIM::CategorySelectDialog *mCategoryDialog;
+    KPIM::CategorySelectDialog *mCategorySelectDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;
     QTabWidget *mTabWidget;
 

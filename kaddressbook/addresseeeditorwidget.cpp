@@ -74,7 +74,7 @@ AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension,
   kdDebug(5720) << "AddresseeEditorWidget()" << endl;
 
   initGUI();
-  mCategoryDialog = 0;
+  mCategorySelectDialog = 0;
   mCategoryEditDialog = 0;
 
   // Load the empty addressee as defaults
@@ -268,7 +268,7 @@ void AddresseeEditorWidget::setupTab1()
   
   // Categories
   mCategoryButton = new QPushButton( i18n( "Select Categories..." ), categoryBox );
-  connect( mCategoryButton, SIGNAL( clicked() ), SLOT( categoryButtonClicked() ) );
+  connect( mCategoryButton, SIGNAL( clicked() ), SLOT( selectCategories() ) );
 
   mCategoryEdit = new KLineEdit( categoryBox );
   mCategoryEdit->setReadOnly( true );
@@ -737,22 +737,20 @@ void AddresseeEditorWidget::nameButtonClicked()
   }
 }
 
-void AddresseeEditorWidget::categoryButtonClicked()
+void AddresseeEditorWidget::selectCategories()
 {
   // Show the category dialog
-  if ( mCategoryDialog == 0 ) {
-    mCategoryDialog = new KPIM::CategorySelectDialog( KABPrefs::instance(), this );
-    connect( mCategoryDialog, SIGNAL( categoriesSelected( const QStringList& ) ),
-             SLOT(categoriesSelected( const QStringList& ) ) );
-    connect( mCategoryDialog, SIGNAL( editCategories() ), SLOT( editCategories() ) );
+  if ( mCategorySelectDialog == 0 ) {
+    mCategorySelectDialog = new KPIM::CategorySelectDialog( KABPrefs::instance(), this );
+    connect( mCategorySelectDialog, SIGNAL( categoriesSelected( const QStringList& ) ),
+             this, SLOT( categoriesSelected( const QStringList& ) ) );
+    connect( mCategorySelectDialog, SIGNAL( editCategories() ),
+             this, SLOT( editCategories() ) );
   }
 
-  QStringList customCategories = QStringList::split( ",", mCategoryEdit->text() );
-
-  mCategoryDialog->setCategories( customCategories );
-  mCategoryDialog->setSelected( customCategories );
-  mCategoryDialog->show();
-  mCategoryDialog->raise();
+  mCategorySelectDialog->setSelected( QStringList::split( ",", mCategoryEdit->text() ) );
+  mCategorySelectDialog->show();
+  mCategorySelectDialog->raise();
 }
 
 void AddresseeEditorWidget::categoriesSelected( const QStringList &list )
@@ -765,9 +763,9 @@ void AddresseeEditorWidget::editCategories()
   if ( mCategoryEditDialog == 0 ) {
     mCategoryEditDialog = new KPIM::CategoryEditDialog( KABPrefs::instance(), this );
     connect( mCategoryEditDialog, SIGNAL( categoryConfigChanged() ),
-             SLOT( categoryButtonClicked() ) );
+             mCategorySelectDialog, SLOT( updateCategoryConfig() ) );
   }
-  
+
   mCategoryEditDialog->show();
   mCategoryEditDialog->raise();
 }
