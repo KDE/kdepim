@@ -29,10 +29,10 @@
 #include <kabc/addressbook.h>
 #include <klibloader.h>
 
-class ConfigureWidget;
 
 namespace KAB {
 class Core;
+class ConfigureWidget;
 
 class ExtensionWidget : public QWidget
 {
