@@ -37,6 +37,10 @@
 #include "task.h"
 #include "journal.h"
 
+#include <kio/observer.h>
+#include <kio/uiserver_stub.h>
+#include <kapplication.h>
+#include <dcopclient.h>
 #include <libkcal/icalformat.h>
 #include <libkdepim/kincidencechooser.h>
 #include <kabc/locknull.h>
@@ -45,7 +49,6 @@
 
 #include <qobject.h>
 #include <qtimer.h>
-#include <qprogressdialog.h>
 #include <qapplication.h>
 
 #include <assert.h>
@@ -154,19 +157,25 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
   const int nbMessages = 200; // read 200 mails at a time (see kabc resource)
 
-  // ### There should be a better way to associate a widget with a resource
-  KMainWindow* mw = KMainWindow::memberList ? KMainWindow::memberList->first() : 0;
-  QProgressDialog progress( mw, 0, true /*modal*/ );
   const QString labelTxt = mimetype == "application/x-vnd.kolab.task" ? i18n( "Loading tasks..." )
-                      : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
-                      : i18n( "Loading events..." );
-  progress.setLabelText( labelTxt );
-  progress.setTotalSteps( count );
+                           : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
+                           : i18n( "Loading events..." );
+  (void)::Observer::self(); // ensure kio_uiserver is running
+  UIServer_stub uiserver( "kio_uiserver", "UIServer" );
+  int progressId = 0;
+  if ( count > 200 ) {
+    progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
+    uiserver.totalFiles( progressId, count );
+    uiserver.infoMessage( progressId, labelTxt );
+    uiserver.transferring( progressId, labelTxt );
+  }
 
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
     QMap<Q_UINT32, QString> lst;
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
       kdError(5650) << "Communication problem in ResourceKolab::load()\n";
+      if ( progressId )
+        uiserver.jobFinished( progressId );
       return false;
     }
 
@@ -176,14 +185,19 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
       addIncidence( mimetype, it.data(), subResource, it.key() );
     }
     mSilent = silent;
+    if ( progressId ) {
+      uiserver.processedFiles( progressId, startIndex );
+      uiserver.percent( progressId, 100 * startIndex / count );
+    }
 
-    progress.setProgress( startIndex );
-    // Note that this is a case where processEvents is OK - we have a modal dialog,
-    // the only thing the user can do is cancel the dialog.
-    qApp->processEvents();
-    if ( progress.wasCanceled() )
-      return false;
+//    if ( progress.wasCanceled() ) {
+//      uiserver.jobFinished( progressId );
+//      return false;
+//    }
   }
+
+  if ( progressId )
+    uiserver.jobFinished( progressId );
   return true;
 }
 
@@ -367,7 +381,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
           mCalendar.timeZoneId() );
     } else {
       mimetype = incidenceInlineMimeType;
-      data = mFormat.createScheduleMessage( static_cast<KCal::Event *>(incidencebase), 
+      data = mFormat.createScheduleMessage( static_cast<KCal::Event *>(incidencebase),
           Scheduler::Request );
     }
   } else if ( type == "Todo" ) {
@@ -377,7 +391,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
           mCalendar.timeZoneId() );
     } else {
       mimetype = incidenceInlineMimeType;
-      data = mFormat.createScheduleMessage( static_cast<KCal::Todo *>(incidencebase), 
+      data = mFormat.createScheduleMessage( static_cast<KCal::Todo *>(incidencebase),
           Scheduler::Request );
     }
   } else if ( type == "Journal" ) {
@@ -387,7 +401,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
           mCalendar.timeZoneId() );
     } else {
       mimetype = incidenceInlineMimeType;
-      data = mFormat.createScheduleMessage( static_cast<KCal::Journal *>(incidencebase), 
+      data = mFormat.createScheduleMessage( static_cast<KCal::Journal *>(incidencebase),
           Scheduler::Request );
     }
   } else {
@@ -681,7 +695,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
       rc = false;
   } else {
     Incidence *inc = mFormat.fromString( data );
-    if ( !inc ) 
+    if ( !inc )
       rc = false;
     else
       addIncidence( inc, subResource, sernum );
