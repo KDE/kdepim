@@ -130,6 +130,12 @@ void CalendarResources::load()
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     (*it)->load();
+    Incidence::List incidences = (*it)->rawIncidences();
+    Incidence::List::Iterator incit;
+    for ( incit = incidences.begin(); incit != incidences.end(); ++incit ) {
+      (*incit)->registerObserver( this );
+      notifyIncidenceAdded( *incit );
+    }
   }
 
   mOpen = true;
@@ -164,7 +170,7 @@ void CalendarResources::save()
 {
   kdDebug(5800) << "CalendarResources::save()" << endl;
 
-  if ( mOpen ) {
+  if ( mOpen && isModified() ) {
     CalendarResourceManager::ActiveIterator it;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
       (*it)->save();
@@ -188,12 +194,16 @@ bool CalendarResources::isSaving()
 
 bool CalendarResources::addIncidence( Incidence *incidence )
 {
-  kdDebug(5800) << "CalendarResources::addIncidence" << endl;
+  kdDebug(5800) << "CalendarResources::addIncidence" << this << endl;
 
   ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
 
   if ( resource ) {
     if ( resource->addIncidence( incidence ) ) {
+      incidence->registerObserver( this );
+      notifyIncidenceAdded( incidence );
+      
+
       mResourceMap[ incidence ] = resource;
       setModified( true );
       return true;
@@ -218,6 +228,8 @@ bool CalendarResources::addEvent( Event *anEvent, ResourceCalendar *resource )
   }
   if ( validRes && resource->addEvent( anEvent ) ) {
     mResourceMap[anEvent] = resource;
+    anEvent->registerObserver( this );
+    notifyIncidenceAdded( anEvent );
     setModified( true );
     return true;
   }
@@ -277,6 +289,8 @@ bool CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
   }
   if ( validRes && resource->addTodo( todo ) ) {
     mResourceMap[todo] = resource;
+    todo->registerObserver( this );
+    notifyIncidenceAdded( todo );
     setModified( true );
     return true;
   }
@@ -517,6 +531,8 @@ bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
   }
   if ( validRes && resource->addJournal( journal ) ) {
     mResourceMap[journal] = resource;
+    journal->registerObserver( this );
+    notifyIncidenceAdded( journal );
     setModified( true );
     return true;
   }
@@ -586,11 +602,6 @@ Journal::List CalendarResources::journals()
   return result;
 }
 
-
-void CalendarResources::incidenceUpdated( IncidenceBase * )
-{
-  kdDebug(5800) << "CalendarResources::incidenceUpdated( IncidenceBase * ): Not yet implemented\n";
-}
 
 void CalendarResources::connectResource( ResourceCalendar *resource )
 {
@@ -672,6 +683,7 @@ bool CalendarResources::save( Ticket *ticket )
 
   kdDebug(5800) << "tick " << ticket->resource()->resourceName() << endl;
 
+	// @TODO: Check if the resource was changed at all. If not, don't save.
   if ( ticket->resource()->save() ) {
     releaseSaveTicket( ticket );
     return true;

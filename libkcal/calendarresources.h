@@ -249,12 +249,6 @@ class CalendarResources : public Calendar,
 
     void signalErrorMessage( const QString & );
 
-  protected:
-    /**
-      The observer interface. So far not implemented.
-    */
-    void incidenceUpdated( IncidenceBase * );
-
   public:
     /**
       Builds and then returns a list of all events that match for the

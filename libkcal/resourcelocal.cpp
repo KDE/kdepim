@@ -158,9 +158,7 @@ bool ResourceLocal::doLoad()
 
 bool ResourceLocal::doSave()
 {
-kdDebug()<<"ResourceLoadl::doSave"<<endl;
   bool success = mCalendar.save( mURL.path() );
-kdDebug()<<"ResourceLocal::doSave, success="<<success<<endl;
   d->mLastModified = readLastModified();
 
   return success;

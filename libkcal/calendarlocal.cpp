@@ -53,7 +53,7 @@ CalendarLocal::CalendarLocal( const QString &timeZoneId )
 void CalendarLocal::init()
 {
   mDeletedIncidences.setAutoDelete( true );
-	mFileName = QString::null;
+  mFileName = QString::null;
 }
 
 
@@ -64,28 +64,27 @@ CalendarLocal::~CalendarLocal()
 
 bool CalendarLocal::load( const QString &fileName )
 {
-	mFileName = fileName;
+  mFileName = fileName;
   FileStorage storage( this, fileName );
   return storage.load();
 }
 
 bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 {
-	// Save only if the calendar is either modified, or saved to a 
-	// different file than it was loaded from
-kdDebug()<<"CalendarLocal::save(), fileName="<<fileName<<", mFileName="<<mFileName<<", isModified="<<isModified()<<endl;
-	if ( mFileName != fileName || isModified() ) {
+  // Save only if the calendar is either modified, or saved to a 
+  // different file than it was loaded from
+  if ( mFileName != fileName || isModified() ) {
     FileStorage storage( this, fileName, format );
     return storage.save();
-	} else {
-		return true;
-	}
+  } else {
+    return true;
+  }
 }
 
 void CalendarLocal::close()
 {
   setObserversEnabled( false );
-	mFileName = QString::null;
+  mFileName = QString::null;
 
   deleteAllEvents();
   deleteAllTodos();
