@@ -1,5 +1,5 @@
 Source: kdepim-cvs
-Build-Depends: autoconf, kdelibs3-dev-cvs, debhelper, libpisock-dev, pilot-link,libjpeg62-dev, libpng2-dev, libqt2.1-dev, zlib1g-dev, xlib6g-dev
+Build-Depends: autoconf, kdelibs3-dev-cvs, debhelper, libpisock-dev, pilot-link,libjpeg62-dev, libpng2-dev, libqt2.1-dev, zlib1g-dev, xlib6g-dev, jade, docboook 
 Section: utils
 Priority: optional
 Maintainer: Stephan Kulow <coolo@kde.org>

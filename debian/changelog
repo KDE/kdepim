@@ -1,3 +1,9 @@
+kdepim-cvs (2.0-20000518-1.0) experimental; urgency=low
+ 
+  * More upstream fixes
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Thu, 16 May 2000 20:40:02 -0700
+
 kdepim-cvs (2.0-20000516-1.0) experimental; urgency=low
 
   * Initial Release.
