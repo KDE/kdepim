@@ -220,7 +220,7 @@ $(srcdir)/icalmime.c: icalderivedvalue.h icalderivedproperty.h icalderivedparame
 $(srcdir)/icalparameter.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icalparser.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icalproperty.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-$(srcdir)/icalrestriction.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+icalrestriction.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icaltime.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icalvalue.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 $(srcdir)/icalyacc.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
