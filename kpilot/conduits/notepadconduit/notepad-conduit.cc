@@ -31,15 +31,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifdef DEBUG
-#undef DEBUG
-#define DEBUG (1)
-#else
-#define DEBUG (1)
-#endif
-
-#define DEBUG (1)
-
 #include "options.h"
 #include "pilotUser.h"
 #include "pilotSerialDatabase.h"
