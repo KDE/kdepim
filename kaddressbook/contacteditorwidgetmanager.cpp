@@ -34,6 +34,7 @@
 #include "geowidget.h"
 #include "imagewidget.h"
 #include "soundwidget.h"
+#include "cryptowidget.h"
 
 #include "contacteditorwidget.h"
 #include "contacteditorwidgetmanager.h"
@@ -102,6 +103,7 @@ void ContactEditorWidgetManager::reload()
   mFactories.append( new SoundWidgetFactory );
   mFactories.append( new GeoWidgetFactory );
   mFactories.append( new CustomFieldsWidgetFactory );
+  mFactories.append( new CryptoWidgetFactory );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

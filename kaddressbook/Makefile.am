@@ -7,7 +7,9 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/features \
           -I$(top_srcdir)/kaddressbook/views \
           -I$(top_srcdir)/kaddressbook/printing \
+	  -I$(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme \
           -I$(top_srcdir) $(all_includes) 
+
 
 bin_PROGRAMS = kaddressbook
 
@@ -35,7 +37,7 @@ libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
     imagewidget.cpp incsearchwidget.cpp jumpbuttonbar.cpp kabcore.cpp kablock.cpp \
     kaddressbookiface.skel kaddressbookmain.cpp kaddressbookservice.cpp \
     kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
-    phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp \
+    phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp cryptowidget.cpp \
     viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
     viewconfigurewidget.cpp undo.cpp undocmds.cpp viewmanager.cpp \
     xxportmanager.cpp xxportselectdialog.cpp contacteditorwidgetmanager.cpp \
@@ -45,6 +47,7 @@ libkaddressbook_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la \
                             $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                             $(top_builddir)/libkdepim/libkdepim.la \
+                            $(top_builddir)/certmanager/lib/libkleopatra.la \
                             $(LIB_KABC) $(LIB_KHTML) libkabcommon.la -lkdeprint -lqui
 libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
                                    $(top_srcdir)/libkdepim/categoryeditdialog.h
@@ -57,7 +60,7 @@ noinst_HEADERS = \
     incsearchwidget.h jumpbuttonbar.h kablock.h kabprefs.h kaddressbook_part.h \
     kaddressbookmain.h kaddressbookservice.h kaddressbookview.h keywidget.h \
     ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
-    soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
+    soundwidget.h cryptowidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
     viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h xxportmanager.h \
     xxportselectdialog.h advancedcustomfields.h
 
