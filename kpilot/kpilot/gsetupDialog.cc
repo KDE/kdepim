@@ -23,7 +23,7 @@ static const char *id="$Id$";
 #include <qfileinf.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
-#include <qvbox.h>
+#include <qlayout.h>
 #include <qmultilineedit.h>
 
 #include <kmessagebox.h>
@@ -66,6 +66,10 @@ setupDialogPage::setupDialogPage(
 	(void) c;
 
 	return 0;
+#ifdef DEBUG
+	/* NOTREACHED */
+	(void) id;
+#endif
 }
 
 /* virtual */ int setupDialogPage::cancelChanges(KConfig& c)
@@ -334,61 +338,57 @@ setupInfoPage::setupInfoPage(setupDialog *parent,bool includeabout) :
 	FUNCTIONSETUP;
 
 
+	QString s;
 	QLabel *text;
 	KIconLoader *l=KGlobal::iconLoader();
-	QString s;
+	const KAboutData *p=KGlobal::instance()->aboutData();
+
+	QGridLayout *grid = new QGridLayout(this,4,4,SPACING);
+	grid->addColSpacing(0,SPACING);
+	grid->addColSpacing(4,SPACING);
+
 
 	text=new QLabel(this);
 	text->setPixmap(l->loadIcon(KGlobal::instance()->instanceName(),
 		KIcon::Desktop));
 	text->adjustSize();
-	text->move(10,10);
+	grid->addWidget(text,0,1);
 
-	// Now we use a QVBox to arrange all the
-	// text on the page so that it doesn't interfere with the icon.
-	// We use the about data for this application to fill in
-	// the text.
-	//
-	QVBox *frame=new QVBox(this,0L,0,false);
-	frame->setSpacing(10);
-	frame->move(10+text->width()+10,10);
 
-	const KAboutData *p=KGlobal::instance()->aboutData();
-
-	text=new QLabel(frame);
+	text=new QLabel(this);
 	s=p->programName();
 	s+=' ';
 	s+=p->version();
 	s+='\n';
 	s+=p->copyrightStatement();
 	text->setText(s);
+	grid->addMultiCellWidget(text,0,0,2,3);
 
-	text=new QLabel(frame);
+	text=new QLabel(this);
 	s=p->shortDescription();
 	text->setText(s);
+	grid->addMultiCellWidget(text,1,1,2,3);
 
-	text=new QLabel(frame);
+	text=new QLabel(this);
 	s=p->homepage();
 	s+='\n';
 	s+=i18n("Send bugs reports to ");
 	s+=p->bugAddress();
 	text->setText(s);
+	grid->addMultiCellWidget(text,2,2,2,3);
 
 	if (includeabout)
 	{
-		QHBox *hb=new QHBox(frame);
 		QPushButton *but=new QPushButton(i18n("More About ..."),
-			hb);
+			this);
 		connect(but, SIGNAL(clicked()),
 			this, SLOT(showAbout()));
 		but->adjustSize();
-		text=new QLabel(hb);
-		text->setText(" ");
-		text->adjustSize();
-		hb->setStretchFactor(text,100);
+		grid->addWidget(but,3,2);
 	}
 
-	frame->adjustSize();
+	grid->setRowStretch(4,100);
+	grid->setColStretch(3,100);
 }
 
 /* slot */ void setupInfoPage::showAbout()
