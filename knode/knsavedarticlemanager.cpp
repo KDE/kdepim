@@ -347,7 +347,7 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 
       if ((int)(thisPrefix.length()+thisLine.length()) > wrapAt-2) {
         int breakPos=findBreakPos(thisLine,wrapAt-thisPrefix.length()-2);
-        if (breakPos < thisLine.length()) {
+        if (breakPos < (int)thisLine.length()) {
           leftover = thisLine.right(thisLine.length()-breakPos-1);
           thisLine.truncate(breakPos);
         }
