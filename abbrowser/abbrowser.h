@@ -7,7 +7,9 @@
 
 #include <kapp.h>
 #include <kmainwindow.h>
- 
+
+#include "abbrowseriface.h"
+
 class ContactEntry;
 class ContactEntryList;
 class PabWidget;
@@ -20,7 +22,7 @@ class PabWidget;
  * @author Don Sanders <dsanders@kde.org>
  * @version 0.1
  */
-class Pab : public KMainWindow
+class Pab : public KMainWindow, virtual public AbBrowserIface
 {
 	Q_OBJECT
 public:

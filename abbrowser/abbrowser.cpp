@@ -20,7 +20,7 @@
 #include "browserwidget.h"
 #include "entry.h"
 
-Pab::Pab() : KMainWindow(0)
+Pab::Pab() : KMainWindow(0), DCOPObject("AbBrowserIface")
 {
   setCaption( i18n( "Address Book Browser" ));
   document = new ContactEntryList();
