@@ -82,12 +82,12 @@ protected slots:
 	/**
 	* This function is called to sync modified records from the Pilot to KOrganizer.
 	*/
-	void syncPalmRecToPC();
+	void slotPalmRecToPC();
 	/**
 	* This function goes the other way around: KOrganizer -> Pilot.
 	*/
-	void syncPCRecToPalm();
-	void syncDeletedIncidence();
+	void slotPCRecToPalm();
+	void slotDeletedIncidence();
 	void cleanup();
 
 

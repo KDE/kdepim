@@ -123,13 +123,13 @@ VCalConduitBase::~VCalConduitBase()
 
 
 	The sync process is as follows (for a fast sync):
-	1) syncPalmRecToPC goes through all records on Palm (just the modified one are necessary), find it
+	1) slotPalmRecToPC goes through all records on Palm (just the modified one are necessary), find it
 		in the backupDB. The following handles ([NMD],*)
 		a) if it doesn't exist and was not deleted, add it to the calendar and the backupDB
 		b) if it exists and was not deleted,
 			A) if it is unchanged in the calendar, just modify in the calendar
 		c) if it exists and was deleted, delete it from the calendar if necessary
-	2) syncEvent goes through all KCale::Events in the calendar (just modified, this is the modification
+	2) slotEvent goes through all KCale::Events in the calendar (just modified, this is the modification
 		time is later than the last sync time). This handles (-,N),(-,M)
 		a) if it does not have a pilotID, add it to the palm and backupDB, store the PalmID
 		b) if it has a valid pilotID, update the Palm record and the backup
@@ -197,13 +197,13 @@ there are two special cases: a full and a first sync.
 	case SyncAction::eCopyPCToHH:
 		// TODO: Clear the palm and backup database??? Or just add the new items ignore
 		// the Palm->PC side and leave the existing items on the palm?
-		QTimer::singleShot(0, this, SLOT(syncPCRecToPalm()));
+		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 		break;
 	case SyncAction::eCopyHHToPC:
 		// TODO: Clear the backup database and the calendar, update fP
 		//       or just add the palm items and leave the PC ones there????
 	default:
-		QTimer::singleShot(0, this, SLOT(syncPalmRecToPC()));
+		QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
 	}
 	return true;
 
@@ -316,7 +316,7 @@ error:
 
 
 
-void VCalConduitBase::syncPalmRecToPC()
+void VCalConduitBase::slotPalmRecToPC()
 {
 	FUNCTIONSETUP;
 
@@ -341,7 +341,7 @@ void VCalConduitBase::syncPalmRecToPC()
 		}
 		else
 		{
-			QTimer::singleShot(0 ,this,SLOT(syncPCRecToPalm()));
+			QTimer::singleShot(0 ,this,SLOT(slotPCRecToPalm()));
 			return;
 		}
 	}
@@ -393,11 +393,11 @@ void VCalConduitBase::syncPalmRecToPC()
 	KPILOT_DELETE(r);
 	KPILOT_DELETE(s);
 
-	QTimer::singleShot(0,this,SLOT(syncPalmRecToPC()));
+	QTimer::singleShot(0,this,SLOT(slotPalmRecToPC()));
 }
 
 
-void VCalConduitBase::syncPCRecToPalm()
+void VCalConduitBase::slotPCRecToPalm()
 {
 	FUNCTIONSETUP;
 	KCal::Incidence*e=0L;
@@ -412,7 +412,7 @@ void VCalConduitBase::syncPCRecToPalm()
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
 		}
-		QTimer::singleShot(0,this,SLOT(syncDeletedIncidence()));
+		QTimer::singleShot(0,this,SLOT(slotDeletedIncidence()));
 		return;
 	}
 
@@ -448,11 +448,11 @@ void VCalConduitBase::syncPCRecToPalm()
 #endif
 		addPalmRecord(e);
 	}
-	QTimer::singleShot(0, this, SLOT(syncPCRecToPalm()));
+	QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 }
 
 
-void VCalConduitBase::syncDeletedIncidence()
+void VCalConduitBase::slotDeletedIncidence()
 {
 	FUNCTIONSETUP;
 
@@ -487,7 +487,7 @@ void VCalConduitBase::syncDeletedIncidence()
 	}
 
 	KPILOT_DELETE(r);
-	QTimer::singleShot(0,this,SLOT(syncDeletedIncidence()));
+	QTimer::singleShot(0,this,SLOT(slotDeletedIncidence()));
 }
 
 
