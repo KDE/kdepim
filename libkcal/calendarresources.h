@@ -38,7 +38,8 @@ class CalFormat;
 /**
   This class provides a calendar composed of several calendar resources.
 */
-class CalendarResources : public Calendar, public KRES::ManagerListener<ResourceCalendar>
+class CalendarResources : public Calendar,
+                          public KRES::ManagerObserver<ResourceCalendar>
 {
     Q_OBJECT
   public:
@@ -218,6 +219,11 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
 
     bool beginChange( Incidence * );
     bool endChange( Incidence * );
+
+  signals:
+    void signalResourceAdded( ResourceCalendar * );
+    void signalResourceModified( ResourceCalendar * );
+    void signalResourceDeleted( ResourceCalendar * );
 
   protected:
     /**
