@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=NotePad
+Comment=This conduit backs up NotePad drawings to a local folder
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=conduit_notepad
