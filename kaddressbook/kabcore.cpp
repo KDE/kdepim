@@ -968,7 +968,7 @@ void KABCore::initActions()
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
-  mActionSave = new KAction( KStdGuiItem::save().text(), "filesave", CTRL+Key_S, this,
+  mActionSave = new KAction( KStdGuiItem::save(), CTRL+Key_S, this,
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
