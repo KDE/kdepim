@@ -15,6 +15,7 @@
 <!-- TODO: 
 * is it "message", "mail" or "email" ??? 
 * what is section / tab / ... ?
+* better markup instead of 'quote'
 -->
 
 <authorgroup>
@@ -977,7 +978,7 @@ if any).</para>
 <varlistentry>
 <term><guilabel>&lt;To or Cc&gt;</guilabel></term>
 <listitem>
-<para>Searches the "To" and "Cc" header fields of the message.</para>
+<para>Searches the <quote>To</quote> and <quote>Cc</quote> header fields of the message.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1013,7 +1014,8 @@ folder</guilabel>. Here's a list of all possible actions:</para>
 <varlistentry>
 <term><guilabel>move to folder</guilabel></term>
 <listitem>
-<para>This will move the message to another folder.</para>
+<para>This will move the message to another folder. You currently 
+cannot use <acronym>IMAP</acronym> folders as a target.</para>
 </listitem>
 </varlistentry>
 <!-- TODO: does not exist yet
@@ -3430,6 +3432,16 @@ server.</para></answer>
 <question><para>Does &kmail;'s address book support distribution lists?</para></question>
 <answer><para>No. As a workaround you can add several email address into one 
 address entry if you are using the <quote>traditional</quote> &kmail; address book.</para></answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>For some messages the value in the <guilabel>Date</guilabel> field
+is wrong, it shows <guilabel>Wed Dec 31 17:00:00 1969</guilabel>.</para></question>
+<answer><para>Probably the <quote>Date:</quote> header of these messages is broken,
+maybe it's missing the time zone information. For this case we've added
+a workaround to mimelib. In &kde; 2.2 mimelib is part of the kdenetwork
+package, you must make sure that &kde;'s mimelib is used and not a different
+one on your system.</para></answer>
 </qandaentry>
 
 <qandaentry>
