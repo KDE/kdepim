@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
         cout << "main.cpp::int main(int argc, char *argv[]) | Calendar file currently is " << variables.getCalendarFile() << endl;
       }
     } else {
-      cout << "Remote files are not supported yet." << endl;
+      cout << i18n("Remote files are not supported yet.") << endl;
     }
   }
 

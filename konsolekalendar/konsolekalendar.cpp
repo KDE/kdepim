@@ -21,6 +21,7 @@
 #include <qdatetime.h>
 
 #include <kdebug.h>
+#include <klocale.h>
 
 #include "calendarlocal.h"
 #include "calendar.h"
@@ -120,7 +121,7 @@ void KonsoleKalendar::showDate( QDate date )
       } else {      
         if(current.daysTo( date ) == 0) {
           if( m_variables.isVerbose() ) {
-            cout << "Today: " <<  isHappened(singleEvent) << endl;
+            cout << i18n("Today: ") <<  isHappened(singleEvent) << endl;
           }  
         
           if( isHappened(singleEvent) == false) {
@@ -129,7 +130,7 @@ void KonsoleKalendar::showDate( QDate date )
           }
         } else {
           if( m_variables.isVerbose() ){
-            cout << "not-Today: " <<  isHappened(singleEvent) << endl;
+            cout << i18n("Not today: ") <<  isHappened(singleEvent) << endl;
           }
     
           printEventTime( singleEvent );
@@ -210,19 +211,19 @@ bool KonsoleKalendar::isHappened( Event *event )
   sMinute = temp2.remove( 0, ( temp2.find(':', 0, false) + 1 ));
 
   if( m_variables.isVerbose() ) {
-    cout << "hours: " << sHour << " minutes: " << sMinute << endl;
+    cout << i18n("hours: ") << sHour << i18n(" minutes: ") << sMinute << endl;
   }
     
   hour = sHour.toInt();
   minute = sMinute.toInt();
     
   if( m_variables.isVerbose() ) {
-    cout << "hours: " << hour << " minutes: " << minute << endl;
+    cout << i18n("hours: ") << hour << i18n(" minutes: ") << minute << endl;
   }
     
   if( hour >= time.hour() && minute >= time.minute()) {
     if( m_variables.isVerbose() ) {
-      cout << "This is valid!";
+      cout << i18n("This is valid!");
     }
     return false;
   } 
