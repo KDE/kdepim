@@ -260,13 +260,19 @@ void OpenGroupware::slotUploadJobResult( KPIM::GroupwareJob *job )
     mIsShowingError = false;
   } else {
     kdDebug() << "Successfully uploaded data" << endl;
-  
     /* 
      * After the put the server might have expanded recurring events and will
      * also change the uids of the uploaded events. Remove them from the cache
      * and get the fresh delta and download. 
      */
-    doLoad();
+
+    if ( !mDownloadJob ) {
+      mDownloadJob = new KPIM::GroupwareDownloadJob( mAdaptor );
+      connect( mDownloadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
+          SLOT( slotDownloadJobResult( KPIM::GroupwareJob * ) ) );
+    } else {
+      kdWarning() << k_funcinfo << "Download still in progress. Can't happen. (TM)" << endl;
+    }
   }
 
   mDownloadJob = 0;
