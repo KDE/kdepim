@@ -21,6 +21,7 @@
 #ifndef KCAL_RESOURCEGROUPWARE_H
 #define KCAL_RESOURCEGROUPWARE_H
 
+#include <kurl.h>
 #include <libkdepim/progressmanager.h>
 
 #include <libkcal/resourcecached.h>
@@ -32,6 +33,7 @@
 
 namespace KIO {
   class Job;
+  class DeleteJob;
   class TransferJob;
   class DavJob;
 }
@@ -74,6 +76,8 @@ class OpenGroupware : public ResourceCached
     void init();
 
     bool confirmSave();
+    void doDeletions();
+
 
   protected slots:
     void loadFinished();
@@ -81,6 +85,7 @@ class OpenGroupware : public ResourceCached
     void slotListJobResult( KIO::Job * );
     void slotJobResult( KIO::Job * );
     void slotUploadJobResult( KIO::Job * );
+    void slotDeletionResult( KIO::Job *job );
     void slotJobData( KIO::Job *, const QByteArray & );
 
     void cancelLoad();
@@ -93,15 +98,20 @@ class OpenGroupware : public ResourceCached
 
     KIO::TransferJob *mDownloadJob;
     KIO::TransferJob *mUploadJob;
+    KIO::DeleteJob *mDeletionJob;
     KIO::DavJob *mListEventsJob;
     KPIM::ProgressItem *mProgress;
     KPIM::ProgressItem *mUploadProgress;
     QString mJobData;
 
-    QStringList mEventsForDownload;
+    QStringList mIncidencesForDownload;
     QStringList mIncidencesForUpload;
+    QStringList mIncidencesForDeletion;
+
+    QString mCurrentGetUrl;
 
     bool mIsShowingError;
+    KURL mBaseUrl;
 };
 
 }

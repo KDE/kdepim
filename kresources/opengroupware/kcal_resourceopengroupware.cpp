@@ -31,6 +31,8 @@
 #include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
 
+#include <assert.h>
+
 #include <qapplication.h>
 #include <qdatetime.h>
 #include <qptrlist.h>
@@ -92,6 +94,7 @@ void OpenGroupware::init()
   setType( "groupware" );
 
   enableChangeNotification();
+  idMapper().setIdentifier( identifier() );
 }
 
 OpenGroupwarePrefsBase *OpenGroupware::prefs()
@@ -155,30 +158,29 @@ bool OpenGroupware::doLoad()
   // FIXME: If folder list is empty retrieve it from server.
 
   mCalendar.close();
-
-#if 0
+  clearChanges();
+/*
   disableChangeNotification();
   loadCache();
+  idMapper().load();
   enableChangeNotification();
-#endif
+*/
   emit resourceChanged( this );
 
-  clearChanges();
+  mBaseUrl = KURL( prefs()->url() );
+  mBaseUrl.setUser( prefs()->user() );
+  mBaseUrl.setPass( prefs()->password() );
 
-  KURL url( prefs()->url() );
-  url.setUser( prefs()->user() );
-  url.setPass( prefs()->password() );
-
-  kdDebug() << "Download URL: " << url << endl;
+  kdDebug() << "Download URL: " << mBaseUrl << endl;
 
   mJobData = QString::null;
 
-  QDomDocument props = WebdavHandler::createAllPropsRequest();
+  QDomDocument props = WebdavHandler::createItemsAndVersionsPropsRequest();
 
-  kdDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
-  kdDebug(7000) << "props: " << props.toString() << endl;
+  //kdDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
+  //kdDebug(7000) << "props: " << props.toString() << endl;
 
-  mListEventsJob = KIO::davPropFind( url, props, "1", false );
+  mListEventsJob = KIO::davPropFind( mBaseUrl, props, "1", false );
 
   connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotListJobResult( KIO::Job * ) ) );
@@ -205,7 +207,7 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       mProgress = 0;
     }
   } else {
-    mEventsForDownload.clear();
+    mIncidencesForDownload.clear();
     QDomDocument doc = mListEventsJob->response();
 
 //    kdDebug(7000) << " Doc: " << doc.toString() << endl;
@@ -216,12 +218,12 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
     while ( i < c ) {
       QDomNode node = entries.item( i );
       QDomElement e = node.toElement();
-      mEventsForDownload << e.text();
+      mIncidencesForDownload << e.text();
       i++;
     }
 
     if ( mProgress ) {
-      mProgress->setTotalItems( mEventsForDownload.count() );
+      mProgress->setTotalItems( mIncidencesForDownload.count() );
       mProgress->setCompletedItems(1);
       mProgress->updateProgress();
     }
@@ -233,12 +235,14 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
 
 void OpenGroupware::downloadNextIncidence()
 {
-  if ( !mEventsForDownload.isEmpty() ) {
-    const QString entry = mEventsForDownload.front();
-    mEventsForDownload.pop_front();
+  if ( !mIncidencesForDownload.isEmpty() ) {
+    const QString entry = mIncidencesForDownload.front();
+    mIncidencesForDownload.pop_front();
     KURL url( entry );
-    url.setUser( prefs()->user() );
-    url.setPass( prefs()->password() );
+    url.setProtocol( "webdav" );
+    mCurrentGetUrl = url.url(); // why can't I ask the job?
+    url.setUser( mPrefs->user() );
+    url.setPass( mPrefs->password() );
     mDownloadJob = KIO::get( url, false, false );
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotJobResult( KIO::Job * ) ) );
@@ -249,12 +253,7 @@ void OpenGroupware::downloadNextIncidence()
     if ( mProgress ) mProgress->setComplete();
     mProgress = 0;
 
-    saveCache();
-    enableChangeNotification();
-    clearChanges();
-
-    emit resourceChanged( this );
-    emit resourceLoaded( this );
+    loadFinished();
   }
 }
 
@@ -301,14 +300,14 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
       for( it = incidences.begin(); it != incidences.end(); ++it ) {
 //        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
         Incidence *i = (*it)->clone();
-        //QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
-        QString remote = (*it)->uid();
-        QString local = idMapper().localId( remote );
+        const QString &remote = KURL( mCurrentGetUrl ).path();
+        const QString &local = idMapper().localId( remote );
         if ( local.isEmpty() ) {
           idMapper().setRemoteId( i->uid(), remote );
         } else {
           i->setUid( local );
         }
+        i->setCustomProperty( "KCalResourceOpengroupware", "storagelocation" , remote );
         addIncidence( i );
       }
     }
@@ -320,6 +319,7 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
   }
   mJobData = QString::null;
   mDownloadJob = 0;
+  mCurrentGetUrl = QString::null;
   downloadNextIncidence();
 }
 
@@ -332,6 +332,8 @@ void OpenGroupware::slotJobData( KIO::Job *, const QByteArray &data )
 
 void OpenGroupware::loadFinished()
 {
+  clearChanges();
+  idMapper().save();
   saveCache();
   enableChangeNotification();
 
@@ -355,22 +357,31 @@ bool OpenGroupware::doSave()
   mIncidencesForUpload.clear();
   ICalFormat format;
 
+  Incidence::List deleted = deletedIncidences();
+  for( it = deleted.begin(); it != deleted.end(); ++it ) {
+    kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+    KURL url( mBaseUrl );
+    url.setPath( (*it)->customProperty( "KCalResourceOpengroupware", "storagelocation" ) );
+    mIncidencesForDeletion << url.url();
+  }
+  
   Incidence::List added = addedIncidences();
   for( it = added.begin(); it != added.end(); ++it ) {
     mIncidencesForUpload << format.toICalString(*it);
   }
-
-  uploadNextIncidence();
-#if 0
+  // add the changed incidences as well
+  // TODO check if the version we based our change on is still current 
+  // on the server
   Incidence::List changed = changedIncidences();
   for( it = changed.begin(); it != changed.end(); ++it ) {
-    if ( mServer->changeIncidence( *it ) ) clearChange( *it );
+    mIncidencesForUpload << format.toICalString(*it);
   }
-  Incidence::List deleted = deletedIncidences();
-  for( it = deleted.begin(); it != deleted.end(); ++it ) {
-    if ( mServer->deleteIncidence( *it ) ) clearChange( *it );
-  }
-#endif
+
+  // the delete will trigger the uploads, once it is finished
+  if ( !mIncidencesForDeletion.isEmpty() )
+    doDeletions();
+  else
+    uploadNextIncidence();
 
   return true;
 }
@@ -378,9 +389,7 @@ bool OpenGroupware::doSave()
 void OpenGroupware::uploadNextIncidence()
 {
   if ( !mIncidencesForUpload.isEmpty() ) {
-    KURL url( prefs()->url() );
-    url.setUser( prefs()->user() );
-    url.setPass( prefs()->password() );
+    KURL url( mBaseUrl );
     url.setPath( url.path() + "/new.ics" );
     const QString inc = mIncidencesForUpload.front();
     kdDebug(7000) << "Uploading to: " << inc << endl;
@@ -445,6 +454,39 @@ void OpenGroupware::cancelSave()
   mUploadJob = 0;
   if ( mUploadProgress ) mUploadProgress->setComplete();
   mUploadProgress = 0;
+}
+
+void OpenGroupware::doDeletions()
+{
+  kdDebug(7000) << " URLs for deletion: " << mIncidencesForDeletion << endl;
+  mDeletionJob = KIO::del( mIncidencesForDeletion, false, false );
+  connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
+           this, SLOT( slotDeletionResult( KIO::Job* ) ) );
+}
+
+void OpenGroupware::slotDeletionResult( KIO::Job *job )
+{
+  if ( job->error() ) {
+    mIsShowingError = true;
+    loadError( job->errorString() );
+    mIsShowingError = false;
+    kdDebug(5006) << "slotDeletionResult failed " << endl;
+  } else {
+    kdDebug(5006) << "slotDeletionResult successfull " << endl;
+    
+    QStringList::Iterator it = mIncidencesForDeletion.begin();
+    for ( ; it != mIncidencesForDeletion.end(); ++it ) {
+      KURL url( *it );
+      const QString &remote = url.path();
+      const QString &local = idMapper().localId( remote );
+      if ( !local.isEmpty() ) {
+        Incidence *i = mCalendar.incidence( local  );
+        clearChange( i );
+      }
+    }
+    mIncidencesForDeletion.clear();
+    uploadNextIncidence();
+  }
 }
 
 #include "kcal_resourceopengroupware.moc"

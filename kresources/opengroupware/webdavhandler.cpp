@@ -66,6 +66,18 @@ QDomElement WebdavHandler::addSloxElement( QDomDocument &doc, QDomNode &node,
   return el;
 }
 
+QDomDocument WebdavHandler::createItemsAndVersionsPropsRequest()
+{
+  QDomDocument doc;
+  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
+  QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
+  WebdavHandler::addDavElement(  doc, prop, "getcontentlength");
+  WebdavHandler::addDavElement(  doc, prop, "getlastmodified" );
+  WebdavHandler::addDavElement(  doc, prop, "displayname" );
+  WebdavHandler::addDavElement(  doc, prop, "resourcetype" );
+  prop.appendChild( doc.createElementNS( "http://apache.org/dav/props/", "executable" ) );
+  return doc;
+}
 QDomDocument WebdavHandler::createAllPropsRequest()
 {
   QDomDocument doc;

@@ -38,7 +38,14 @@ class WebdavHandler
     static QDomElement addSloxElement( QDomDocument &, QDomNode &,
                                        const QString &tag,
                                        const QString &text = QString::null );
+    /** 
+     * Creates a request body which asks for the standard properties. Used as a stat.
+     * */
     static QDomDocument createAllPropsRequest();
+    /**
+     * Creates a request body which asks only for the file name and the sequence 
+     * number, which is what OGo uses to track revisions. */
+    static QDomDocument createItemsAndVersionsPropsRequest();
 };
 
 #endif
