@@ -547,7 +547,8 @@ void PilotLocalDatabase::openDatabase()
 
 	void *tmpBuffer;
 	pi_file *dbFile;
-	int size, attr, cat;
+	size_t size;
+	int attr, cat;
 	pi_uid_t id;
 
 	QString tempName = dbPathName();

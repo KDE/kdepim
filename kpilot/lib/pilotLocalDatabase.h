@@ -149,7 +149,7 @@ private:
 	struct DBInfo fDBInfo;
 	QString fPathName,fDBName;
 	char*       fAppInfo;
-	int         fAppLen;
+	size_t      fAppLen;
 	int         fNumRecords;
 	int         fCurrentRecord;
 	PilotRecord* fRecords[10000]; // Current max records in DB.. hope it's enough

@@ -67,7 +67,7 @@ void *PilotMemo::pack(void *buf, int *len)
 
 	QCString s = codec()->fromUnicode(fText);
 
-	unsigned use_length = *len;
+	unsigned int use_length = *len;
 
 	// It won't fit if the buffer is too small. This second test
 	// is because the encoded length in bytes may be longer (?)

@@ -135,7 +135,8 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 {
 	FUNCTIONSETUP;
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	int index, size, attr, category;
+	int index, attr, category;
+	size_t size;
 
 	if (isDBOpen() == false)
 	{
@@ -159,7 +160,8 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 {
 	FUNCTIONSETUP;
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	int size, attr, category;
+	size_t size;
+	int attr, category;
 	recordid_t id;
 
 	if (isDBOpen() == false)
@@ -178,7 +180,8 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 {
 	FUNCTIONSETUP;
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	int index, size, attr;
+	size_t size;
+	int index, attr;
 	recordid_t id;
 
 	if (isDBOpen() == false)
@@ -197,7 +200,8 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
 	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	int index, size, attr, category;
+	size_t size;
+	int index, attr, category;
 	recordid_t id;
 
 	if (isDBOpen() == false)
