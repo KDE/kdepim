@@ -1,7 +1,7 @@
 /* This file is part of KDE PIM
-   Copyright (C) 1999 Don Sanders <dsanders@kde.org>
+   Copyright (C) 1999 Don Sanders <sanders@kde.org>
 
-   License: GNU GPL
+   License: BSD
 */
 
 #ifndef CONTACTENTRY_H 

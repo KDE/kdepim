@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   KAboutData about("abbrowser", I18N_NOOP("Abbrowser"), 
                    "1.0", 
                    "Abbrowser --- KDE Address Book\n\n",
-		   KAboutData::License_GPL,
+		   KAboutData::License_BSD,
                    "(c) 1997-2000, The KDE PIM Team" );
 
   KCmdLineArgs::init(argc, argv, &about);

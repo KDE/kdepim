@@ -138,9 +138,12 @@ void Pab::readConfig()
   KConfig *config = kapp->config();
   int w, h;
   config->setGroup("Geometry");
-  QSize size = config->readSizeEntry("Browser");
-  if (size.isEmpty())
-    resize(size);
+   QString str = config->readEntry("Browser", "");
+   if (!str.isEmpty() && str.find(',')>=0)
+   {
+     sscanf(str,"%d,%d",&w,&h);
+     resize(w,h);
+   }
 }
 
 void Pab::saveConfig()
