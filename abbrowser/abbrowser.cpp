@@ -141,7 +141,7 @@ void Pab::readConfig()
    QString str = config->readEntry("Browser", "");
    if (!str.isEmpty() && str.find(',')>=0)
    {
-     sscanf(str,"%d,%d",&w,&h);
+     sscanf(str.local8Bit(),"%d,%d",&w,&h);
      resize(w,h);
    }
 }
