@@ -1,1 +1,15 @@
 DO_NOT_COMPILE="$DO_NOT_COMPILE kmobile"
+
+AC_CHECK_HEADERS(baudboy.h,,,
+[
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#define inline __inline__
+])
+AC_CHECK_HEADERS(lockdev.h)
+AC_CHECK_LIB(lockdev, dev_lock, [ LIB_LOCKDEV="-llockdev" ])
+dnl We don't need liblockdev if we have baudboy working
+if [[ -n "$HAVE_BAUDBOY_H" ]]; then
+  LIB_LOCKDEV=""
+fi

@@ -336,10 +336,46 @@ void KMobileDevice::special( const QByteArray & )
  * device locking/unlocking functions
  */
 
+#ifdef HAVE_BAUDBOY_H
+// Header shipped with newer RedHat distributions.
+// We have to use this here, because /var/lock is owned by root:lock
+// and no one is in this group. Only the binary /usr/sbin/lockdev is
+// owned by this group and has the setgid flag set. This binary is called
+// in ttylock etc ...
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <baudboy.h>
+# include <cstdlib>
+#else
+# ifdef HAVE_LOCKDEV_H
+// Library shipped with newer RedHat and Debian(?) distributions.
+// Use this if bauddev is not available.
+#  include <lockdev.h>
+#  include <sys/types.h>
+#  include <unistd.h>
+# else
+// If lockdev.h is also unavailable do locking
+// like described in the serial HOWTO.
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  include <unistd.h>
+#  include <qfile.h>
+#  include <signal.h>
+#  include <errno.h>
+# endif
+#endif
+
 #define DEVICE_LOCK_PATH_PREFIX "/var/lock/LCK.."
 
 bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
 {
+#ifdef HAVE_BAUDBOY_H
+  return ttylock(device.local8bit()) == EXIT_SUCCESS;
+#else
+# ifdef HAVE_LOCKDEV_H
+  return !dev_lock(device.local8bit());
+# else
   int pid = -1;
   QStringList all = QStringList::split('/', device);
   if (!all.count()) {
@@ -402,10 +438,18 @@ bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
   err_reason = QString::null;
 
   return true;
+# endif
+#endif
 }
 
 bool KMobileDevice::unlockDevice(const QString &device)
 {
+#ifdef HAVE_BAUDBOY_H
+  return ttyunlock(device.local8bit()) == EXIT_SUCCESS;
+#else
+# ifdef HAVE_LOCKDEV_H
+  return 0 <= dev_unlock(device.local8bit(), getpid());
+# else
   QStringList all = QStringList::split('/', device);
   if (!all.count()) return false;
   QString lockName = DEVICE_LOCK_PATH_PREFIX + all[all.count()-1];
@@ -413,6 +457,8 @@ bool KMobileDevice::unlockDevice(const QString &device)
   if (!file.exists())
 	return true;
   return file.remove();
+# endif
+#endif
 }
 
 #include "kmobiledevice.moc"
