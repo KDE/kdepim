@@ -1,0 +1,175 @@
+#include <dcopclient.h>
+#include <kapp.h>
+#include <kdebug.h>
+#include <krun.h>
+#include <qstringlist.h>
+#include <assert.h>
+#include <qdict.h>
+#include "contactentry.h"
+#include <unistd.h> // for usleep
+
+
+void output(const QStringList &strlist)
+    {
+    for (QStringList::ConstIterator iter = strlist.begin();
+	 iter != strlist.end();
+	 ++iter)
+	qDebug("\t%s",(*iter).latin1());
+    }
+
+
+int main(int argc, char *argv[])
+    {
+		  
+    //FUNCTIONSETUP;
+    KApplication app(argc, argv, "testAbbroserDCOP", false, false);
+
+    //app:
+    DCOPClient *dcopptr = app.dcopClient();
+    if (!dcopptr)
+	{
+	kdWarning() << "Can't get DCOP client."
+		    << endl;
+	return 1; 
+	}
+    //dcopptr->registerAs("testAbbrowserDCOP");
+    if (!dcopptr->attach())
+	{
+	kdWarning() << "Unable to attach to DCOP" << endl;
+	return 2;
+	}
+    
+    qDebug("Attached to DCOP server");
+
+    QByteArray sendData;
+    QByteArray replyData;
+    QCString replyTypeStr;
+    if (!dcopptr->call("abbrowser", "AbBrowserIface", "interfaces()",
+		       sendData, replyTypeStr, replyData))
+	{
+	// abbrowser not running, start it
+	KURL::List noargs;
+	KRun::run("abbrowser", noargs);
+
+	qDebug("Waiting to run abbrowser");
+	sleep(5000);
+	qDebug("Back from wait");
+	
+	if (!dcopptr->call("abbrowser", "AbBrowserIface", "interfaces()",
+			   sendData, replyTypeStr, replyData))
+	    {
+	    kdWarning() << "Unable to call abbrowser interfaces()" << endl;
+	    return 3;
+	    }
+	}
+    if (!dcopptr->call("abbrowser", "AbBrowserIface", "getKeys()",
+		       sendData, replyTypeStr, replyData))
+	{
+	kdWarning() << "Unable to call abbrowser getKeys()" << endl;
+	return 4;
+	}
+    assert(replyTypeStr == "QStringList");
+
+    QStringList keys;
+    QDataStream keyStream(replyData, IO_ReadOnly);
+    keyStream >> keys;
+    qDebug("abbrowser keys");
+    output(keys);
+
+    if (argc > 1)
+	{
+	ContactEntry testAddEntry;
+	testAddEntry.setNamePrefix("Dr.");
+	testAddEntry.setFirstName("John");
+	testAddEntry.setLastName("Doe");
+	testAddEntry.setName();
+	testAddEntry.setEmail("dow@nowhere.com");
+	testAddEntry.setJobTitle("Computer Scientist");
+	testAddEntry.setCustomField("KPilot_id", QString::number(5000));
+	testAddEntry.setFolder("Friends");
+	ContactEntry::Address *a = testAddEntry.getHomeAddress();
+	a->setStreet("100 No Where Ave.");
+	
+	QByteArray sendEntryData;
+	QDataStream sendEntryStream(sendEntryData, IO_WriteOnly);
+	sendEntryStream << testAddEntry;
+	
+	if (!dcopptr->call("abbrowser", "AbBrowserIface", "addEntry(ContactEntry)",
+			   sendEntryData, replyTypeStr, replyData))
+	    {
+	    kdWarning() << "Unable to call abbrowser addEntry" << endl;
+	    return 9;
+	    }
+	}
+    
+    if (!dcopptr->call("abbrowser", "AbBrowserIface", "getEntryDict()",
+		       sendData, replyTypeStr, replyData))
+	{
+	kdWarning() << "Unable to call abbrowser getEntryDict()" << endl;
+	return 5;
+	}
+    assert(replyTypeStr == "QDict<ContactEntry>");
+    
+    QDataStream dictStream(replyData, IO_ReadOnly);
+    QDict<ContactEntry> entries;
+    dictStream >> entries;
+
+    // deleting all doe's
+    qDebug("QDict<ContactEntry> count = %d", entries.count());
+    for (QDictIterator<ContactEntry> iter(entries);iter.current();++iter)
+	{
+	qDebug("entry %d = ", iter.currentKey().latin1());
+	//iter.current()->debug();
+	
+	ContactEntry *e = iter.current();
+	//qDebug("first name = %s", e->getFirstName().latin1());
+	//qDebug("last name = %s", e->getLastName().latin1());
+	//qDebug("middle name = %s", e->getMiddleName().latin1());
+	//qDebug("email = %s", e->getEmail().latin1());
+	if (e->getLastName() == "Doe")
+	    {
+	    if (argc == 1)
+		{
+		qDebug("Removing entry");
+		e->debug();
+		QByteArray sendRemoveKey;
+		QDataStream removeStream(sendRemoveKey, IO_WriteOnly);
+		removeStream << iter.currentKey();
+		if (!dcopptr->call("abbrowser", "AbBrowserIface",
+				   "removeEntry(QString)",
+				   sendRemoveKey, replyTypeStr, replyData))
+		    {
+		    kdWarning() << "Unable to call abbrowser removeEntry" << endl;
+		    return 9;
+		    }
+		}
+	    else
+		{
+		e->setFirstName("Sally");
+		e->setName();
+		QByteArray sendChangeName;
+		QDataStream changeStream(sendChangeName, IO_WriteOnly);
+		changeStream << iter.currentKey();
+		changeStream << *e;
+		if (!dcopptr->call("abbrowser", "AbBrowserIface",
+				   "changeEntry(QString, ContactEntry)",
+				   sendChangeName, replyTypeStr, replyData))
+		    {
+		    kdWarning() << "Unable to call abbrowser changeEntry" << endl;
+		    return 10;
+		    }
+		}
+	    }
+	}
+    
+    // save the changes
+    if (!dcopptr->call("abbrowser", "AbBrowserIface", "save()",
+		       sendData, replyTypeStr, replyData))
+	{
+	kdWarning() << "Unable to call abbrowser save()" << endl;
+	return 5;
+	}
+    
+    dcopptr->detach();
+    return 0;
+    }
