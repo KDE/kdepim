@@ -8,6 +8,7 @@
 #include <kparts/mainwindow.h>
 #include <kparts/part.h>
 
+class KAction;
 
 namespace Kaplan
 {
@@ -26,6 +27,8 @@ public:
   virtual void addPart(KParts::Part *part) = 0;
 
   virtual void showView(QWidget *view) = 0;
+
+  virtual void insertNewAction(KAction *action) = 0;
 
 };
 
