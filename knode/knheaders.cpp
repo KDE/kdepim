@@ -311,8 +311,11 @@ QCString KNHeaders::AddressField::as7BitString(bool incType)
 
   if(n_ame.isEmpty())
     ret+=e_mail;
-  else
-    ret+=KNMimeBase::encodeRFC2047String(n_ame, e_ncCS, true)+" <"+e_mail+">";
+  else {
+    ret+=KNMimeBase::encodeRFC2047String(n_ame, e_ncCS, true);
+    if (!e_mail.isEmpty())
+      ret += " <"+e_mail+">";
+  }
 
   return ret;
 }
@@ -377,8 +380,12 @@ QString KNHeaders::AddressField::asUnicodeString()
 {
   if(n_ame.isEmpty())
     return QString(e_mail);
-  else
-    return QString("%1 <%2>").arg(n_ame).arg(QString::fromLatin1(e_mail));
+  else {
+    QString s = n_ame;
+    if (!e_mail.isEmpty())
+      s += " <"+e_mail+">";
+    return s;
+  }
 }
 
 
