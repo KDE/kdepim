@@ -20,8 +20,8 @@
 </author>
 </authorgroup>
 
-<date>25/09/2000</date>
-<releaseinfo>1.01.95</releaseinfo>
+<date>08/10/2000</date>
+<releaseinfo>1.01.95.3</releaseinfo>
 
 <abstract>
 	
@@ -77,7 +77,7 @@ drag it around with the mouse.</para></listitem>
 <!-- TODO: add other tips for "invisible" features here -->
 
 </itemizedlist>
-<para>&kmail;'s homepage is at <ulink url="http://devel-home.kde.org/~kmail/">http://devel-home.kde.org/~kmail/</ulink>,
+<para>&kmail;'s homepage is at <ulink url="http://kmail.kde.org">http://kmail.kde.org</ulink>,
 an archive of the developer's mailing list is at <ulink url="http://lists.kde.org/?l=kde-kmail&amp;r=1&amp;w=2">lists.kde.org</ulink>.</para>
 
 <para>Please report bugs in &kmail; using <menuchoice><guimenu>Help</guimenu><guimenuitem>Report bug...</guimenuitem></menuchoice>.</para>
@@ -1009,7 +1009,7 @@ a text editor that lets you save the files in Unix format.</para>
 <varlistentry>
 <term>Microsoft Outlook, Lotus Notes, BeOS Mail files, cc: Mail, etc...</term>
 <listitem>
-<para>First you should have a look at <ulink url="http://devel-home.kde.org/~kmail/">&kmail;'s
+<para>First you should have a look at <ulink url="http://kmail.kde.org">&kmail;'s
 homepage</ulink> if there a tool to convert mails.</para>
 <para> Other mail programs probably do not work with &kmail; as they use
 proprietary mail formats that &kmail; cannot understand. However, there is no harm
@@ -1710,6 +1710,14 @@ by the receiver's mail client in order to work.</para>
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term>Set Encoding submenu</term>
+<listitem>
+<para>Set the charset encoding of this message. It will appear in the
+header of the outgoing mail.</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 </para>
 </sect2>
@@ -1875,21 +1883,6 @@ on exit</guilabel>. Maybe you want to select <guilabel>Empty trash on exit</guil
 too. This will remove all the messages in the trash folder whenever you exit &kmail;.</para></answer>
 </qandaentry>
 
-<!-- doesn't seem to be such a good idea, as a break will be in the content-type header?!
-<qandaentry>
- <question><para>I'm using a non-English language to write my mails but &kmail;
- fails to set the charset.</para></question>
- <answer><para>Open the configuration via 
- <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configuration...</guimenuitem></menuchoice>. 
- In the <guilabel>MIME Headers</guilabel> tab, press <guibutton>New</guibutton>. For 
- <guilabel>Name</guilabel>, enter <userinput>Content-Type</userinput> and for
- <guilabel>Value</guilabel> enter <userinput>text/plain; charset=ISO-8859-1</userinput>.
- Instead of <userinput>ISO-8859-1</userinput> use the encoding that fits your language.
- Your outgoing messages will now use this value in their headers.
- </para></answer>
-</qandaentry>
--->
-
 <qandaentry>
  <question><para>What should I know if I want to use PGP/GnuPG with &kmail;?</para></question>
  <answer><para>&kmail; provides a simple and easy to use interface for basic functions of these
@@ -1911,7 +1904,7 @@ menu under <menuchoice><guimenu>Settings</guimenu><guimenuitem>Spellchecker...</
  <answer><para>&kmail; 1.0.x: The unpatched version supports only PGP (version 2.x and 5.x). &kmail;
 will prefer version 5.x if both versions are installed. There is no
 way for the user to force &kmail; to use version 2.x in this case. There
-are patches for PGP6 and GnuPG support at <ulink url="http://devel-home.kde.org/~kmail/">&kmail;'s
+are patches for PGP6 and GnuPG support at <ulink url="http://kmail.kde.org">&kmail;'s
 homepage</ulink>. If the GnuPG patch is applied, and GnuPG <emphasis>and</emphasis> PGP are installed, &kmail;
 will prefer GnuPG. Here is no way to force &kmail; to use PGP.</para>
 <para>&kmail; 1.1.x: This has at least the improvements from the patches above.</para></answer>
@@ -2012,7 +2005,7 @@ on configuring sendmail for Dial-up connections</ulink>.</para></answer>
 
 	<listitem><para>Waldo Bastian <email>bastian@kde.org</email></para></listitem>
 	<listitem><para>Andreas Gungl <email>a.gungl@gmx.de</email></para></listitem>
-	<listitem><para>Michael Häckel <email>michael@haeckel.net</email></para></listitem>
+	<listitem><para>Michael Haeckel <email>michael@haeckel.net</email></para></listitem>
 	<listitem><para>Lars Knoll <email>knoll@mpi-hd.mpg.de</email></para></listitem>
 	<listitem><para>J. Nick Koston <email>bdraco@darkorb.net</email></para></listitem>
 	<listitem><para>Daniel Naber <email>dnaber@mini.gt.owl.de</email></para></listitem>
