@@ -555,8 +555,8 @@ void imapParser::parseAcl (parseString & result)
   parseOneWordC (result); // skip mailbox name
   int outlen = 1;
   // The result is user1 perm1 user2 perm2 etc. The caller will sort it out.
-  while ( outlen ) {
-    QCString word = parseOneWordC (result, false, &outlen);
+  while ( outlen && !result.isEmpty() ) {
+    QCString word = parseLiteralC (result, false, false, &outlen);
     lastResults.append (word);
   }
 }
