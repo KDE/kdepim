@@ -1,3 +1,5 @@
+if /bin/false ; then
+
 dnl Configure.in.in for the JPilotPlugin proxy conduit for KPilot.
 dnl
 dnl Copyright (C) 2000,2001 Adriaan de Groot
@@ -239,4 +241,6 @@ AC_SUBST(GTK_INCLUDE)
 CPPFLAGS="$kpilot_save_cflags"
 LDFLAGS="$kpilot_save_ldflags"
 unset kpilot_save_cflags
+fi
+
 unset kpilot_save_ldflags
