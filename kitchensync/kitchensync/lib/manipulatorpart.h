@@ -46,6 +46,8 @@
 #include <kdebug.h>
 
 #include <syncer.h>
+#include <error.h>
+#include <progress.h>
 //#include "ksync_mainwindow.h"
 #include "ksync_profile.h"
 
@@ -54,50 +56,98 @@ namespace KSync {
 
     enum SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
 
+    /**
+     * the ManipulatorPart is loaded into the KitchenSync
+     * Shell. Every ManipulatorPart can provide a KPart
+     * and a config dialog.
+     */
     class ManipulatorPart : public KParts::Part {
         Q_OBJECT
     public:
         ManipulatorPart(QObject *parent = 0, const char *name  = 0 );
-        virtual ~ManipulatorPart() {};
+        virtual ~ManipulatorPart();
 
-        KSyncMainWindow* core() { return m_window; };
-        KSyncMainWindow* core()const { return m_window; };
         // the Type this Part understands/ is able to interpret
-        virtual QString type()const {return QString::null; };
+        virtual QString type()const = 0;
 
-        virtual int progress()const { return 0; };
-        //virtual QString identifier()const { return QString::null; };
-        virtual QString name()const { return QString::null; };
 
-        virtual QString description()const { return QString::null; };
-        virtual QPixmap *pixmap() { return 0l; };
-        virtual QString iconName() const {return QString::null; };
+        /* progress made 0-100 */
+        virtual int syncProgress()const;
+        /* the sync status */
+        virtual int syncStatus()const;
 
-        virtual bool partIsVisible()const { return false; }
-        virtual bool configIsVisible()const { return true; }
 
-        virtual QWidget *configWidget(){ return 0l; };
+        virtual QString name()const = 0;
+        virtual QString description()const = 0;
+        virtual QPixmap *pixmap() = 0;
+        virtual QString iconName() const = 0;
+
+        virtual bool partIsVisible()const;
+        virtual bool configIsVisible()const;
+        virtual bool canSync()const;
+
+        virtual QWidget *configWidget();
 
         // take items
-        virtual void processEntry(const Syncee::PtrList&, Syncee::PtrList& ) {
-            kdDebug(5220) << "ProcessEntries " << name() << endl;
-        };
+        virtual void sync( const Syncee::PtrList& in, Syncee::PtrList& out );
+    protected:
+        KSyncMainWindow* core();
+        KSyncMainWindow* core()const;
+
+        /* during sync */
+        void progress( int );
+
+
+        void progress( const Progress& );
+        void error( const Error& );
+        void done();
     signals:
         // 0 - 100
-        void progress( int );
+        void sig_progress( ManipulatorPart*, int );
+        void sig_progress( ManipulatorPart*, const Progress& );
+        void sig_error( ManipulatorPart*, const Error& );
         // SYNC_START SYNC_SYNC SYNC_STOP
-        void syncStatus( int );
+        void sig_syncStatus( ManipulatorPart*, int );
+
+    protected:
+        /* ManipulatorPart* old,ManipulatorPart* ne */
+        void connectPartChange( const char* slot);
+
+        /* ManipulatorPart* part,const Progress& */
+        void connectPartProgress( const char* slot );
+
+        /* ManipulatorPart* part, const Error& */
+        void connectPartError( const char* slot );
+
+        /* const QString& udi,const Progress& */
+        void connectKonnectorProgress(const char* slot );
+
+        /* const QString& udi, const Error& */
+        void connectKonnectorError( const char* slot );
+
+        /* ManipulatorPart*,int status,int prog */
+        void connectSyncProgress( const char* slot );
+
+        /* const Profile& */
+        void connectProfileChanged( const char* slot );
+
+        /* const UDI& */
+        void connectKonnectorChanged( const char* slot );
+
+        /* const UDI&,Syncee::PtrList */
+        void connectKonnectorDownloaded( const char* slot );
+
+        /* connectStartSync */
+        void connectStartSync(const char* slot);
+
+        /* connectDoneSync */
+        void connectDoneSync(const char* slot);
     public slots:
-        virtual void startSync() { };
-        virtual void doneSync() { };
-        virtual void slotProgress(ManipulatorPart */*part*/, int /*syncStatus*/, int /*progress*/  ) {};
-        virtual void slotPartActivated( ManipulatorPart */*part*/ ) { };
-        virtual void slotSyncPartActivated( ManipulatorPart */*part*/ ) { };
-        virtual void slotConfigOk() { };
-        virtual void slotKonnectorChanged( const QString &/*udi*/ ) { };
-        virtual void slotProfileChanged( const Profile& ) { };
+        virtual void slotConfigOk();
     private:
         KSyncMainWindow *m_window;
+        int m_prog;
+        int m_stat;
     };
 };
 

@@ -4,7 +4,7 @@
 #include <klistview.h>
 #include <kpushbutton.h>
 
-#include <konnector.h>
+#include <konnectormanager.h>
 
 #include "konnectordialog.h"
 #include "konnectorprofilelistviewbase.h"

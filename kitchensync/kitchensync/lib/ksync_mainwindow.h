@@ -1,6 +1,6 @@
 /*
 † † † †This file is part of the OPIE Project
-† † † †Copyright (c)  2002 Holger Freyther <zecke@handhelds.org>
+† † † †Copyright (c)  2002,2003 Holger Freyther <zecke@handhelds.org>
 † †                   2002 Maximilian Reiﬂ <harlekin@handhelds.org>
 † † † † † †
 
@@ -53,11 +53,11 @@ class QWidgetStack;
 class KSelectAction;
 
 namespace KSync {
+    typedef QString UDI;
     class KonnectorManager;
     class SyncUi;
     class SyncAlgorithm;
-    // no idea why we have this window
-//    enum SyncStatus {SYNC_START=0, SYNC_SYNC, SYNC_STOP };
+
     enum KonnectorMode { KONNECTOR_ONLINE=0,  KONNECTOR_OFFLINE };
 
     class KSyncMainWindow : public KParts::MainWindow {
@@ -70,14 +70,18 @@ namespace KSync {
 
         KSyncSystemTray *tray();
         KonnectorManager*  konnector();
+
         QString  currentId()const;
         QMap<QString,QString> ids()const;
+
         Profile currentProfile()const;
         ProfileManager *profileManager()const;
         KonnectorProfile konnectorProfile() const;
         KonnectorProfileManager* konnectorManager() const;
+
         SyncUi* syncUi();
         SyncAlgorithm* syncAlgorithm();
+        const QPtrList<ManipulatorPart> parts()const;
 
 
     private:
@@ -91,31 +95,20 @@ namespace KSync {
         void loadUnloaded( const KonnectorProfile::ValueList& toLoad,
                            KonnectorProfile::ValueList& items );
 
-        //
-        PartBar *m_bar;
-        QHBox *m_lay;
-        QWidgetStack *m_stack;
-        // loaded parts
-        QPtrList<ManipulatorPart> m_parts;
-        ManPartService::ValueList m_partsLst;
-        KSyncSystemTray *m_tray;
-
-        KonnectorManager *m_konnector;
-        KonnectorProfileManager* m_konprof;
-        KSelectAction* m_konAct;
-        KSelectAction* m_profAct;
-        ProfileManager* m_prof;
-        SyncUi *m_syncUi;
-        SyncAlgorithm* m_syncAlg;
-        QString m_currentId;
-        // udi + Identify
-        QMap<QString, QString> m_ids;
 
     signals:
         void profileChanged(const Profile& oldProfile   );
         void konnectorChanged( const QString & );
         void konnectorChanged( const KonnectorProfile& oldProf );
-        void konnectorStateChanged( const QString &,  int mode );
+        void konnectorProgress( const UDI&, const Progress& );
+        void konnectorError( const UDI&, const Error& );
+        void konnectorDownloaded( const UDI&, Syncee::PtrList );
+        void partChanged( ManipulatorPart* newPart );
+        void partProgress( ManipulatorPart* part, const Progress& );
+        void partError( ManipulatorPart* part, const Error& );
+        void startSync();
+        void doneSync();
+
    private slots:
         void slotKonnectorProfile();
         void slotProfile();
@@ -134,11 +127,38 @@ namespace KSync {
         void slotConfigure();
         void slotActivated(ManipulatorPart *);
         void slotQuit();
+
+        /* slots for the KonnectorManager */
+    private slots:
         void slotSync(const QString &udi, Syncee::PtrList );
-        void slotStateChanged( const QString& udi,  bool connected );
-        void slotKonnectorError( const QString& udi,
-                                 int error,
-                                 const QString &id );
+        void slotKonnectorProg( const UDI&, const Progress& );
+        void slotKonnectorErr( const UDI&, const Error& );
+
+        /* slots for the ManipulatorParts */
+        void slotPartProg( ManipulatorPart*, int );
+        void slotPartProg( ManipulatorPart*, const Progress& );
+        void slotPartErr( ManipulatorPart*, const Error& );
+        void slotPartSyncStatus( ManipulatorPart*, int );
+
+    private:
+        PartBar *m_bar;
+        QHBox *m_lay;
+        QWidgetStack *m_stack;
+        // loaded parts
+        QPtrList<ManipulatorPart> m_parts;
+        ManPartService::ValueList m_partsLst;
+        KSyncSystemTray *m_tray;
+
+        KonnectorManager *m_konnector;
+        KonnectorProfileManager* m_konprof;
+        KSelectAction* m_konAct;
+        KSelectAction* m_profAct;
+        ProfileManager* m_prof;
+        SyncUi *m_syncUi;
+        SyncAlgorithm* m_syncAlg;
+        QString m_currentId;
+        // udi + Identify
+        QMap<QString, QString> m_ids;
     };
 };
 

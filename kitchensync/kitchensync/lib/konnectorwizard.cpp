@@ -4,7 +4,7 @@
 #include <klocale.h>
 #include <klineedit.h>
 
-#include <konnector.h>
+#include <konnectormanager.h>
 #include <configwidget.h>
 
 #include "konnectorwizard.h"
@@ -99,11 +99,11 @@ void KonnectorWizard::slotKonChanged( const QString& str) {
     Device dev = byString( str );
     if (m_free ) { // add
         // load the Konnector for getting a ConfigureWidget
-        QString udi = m_manager->registerKonnector( dev );
+        QString udi = m_manager->load( dev );
         if (udi.isEmpty() ) return;
         m_conf = m_manager->configWidget(udi, this, "config"); // never 0l
         insertPage(m_conf, i18n("Configure"), 1 );
-        m_manager->unregisterKonnector( udi );
+        m_manager->unload( udi );
     }
 }
 Device KonnectorWizard::byString( const QString& str )const {

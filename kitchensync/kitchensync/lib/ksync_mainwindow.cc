@@ -43,6 +43,7 @@
 #include <kstatusbar.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
+#include <kdebug.h>
 
 #include <kparts/componentfactory.h>
 #include <kpopupmenu.h>
@@ -52,7 +53,9 @@
 
 #include <kapabilities.h>
 #include <kdevice.h>
-#include <konnector.h>
+#include <konnectormanager.h>
+#include <error.h>
+#include <progress.h>
 
 #include "ksync_configpart.h"
 #include "ksync_configuredialog.h"
@@ -67,6 +70,23 @@
 
 using namespace KSync;
 
+namespace {
+    struct MainProgress {
+        static Error noKonnector();
+        static Error noPush();
+    };
+    Error MainProgress::noKonnector() {
+        return Error(i18n("There is no current Konnector") );
+    }
+    Error MainProgress::noPush() {
+        return Error(i18n("The current Konnector does not support pushing") );
+    }
+    kdbgstream operator<<( kdbgstream str, const Notify& no ) {
+        str << no.code() << " " << no.text();
+        return str;
+    }
+}
+
 KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   :
   KParts::MainWindow( widget, name, f ){
@@ -74,6 +94,7 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   m_konnector = 0;
   m_syncAlg = 0l;
   m_syncUi = 0l;
+
   initActions();
   setXMLFile("ksyncgui.rc");
   setInstance( KGlobal::instance() );
@@ -116,7 +137,6 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
 
 KSyncMainWindow::~KSyncMainWindow()
 {
-    kdDebug(5210) << "d'tor" << endl;
     m_konprof->save();
     m_prof->save();
     createGUI(0l );
@@ -179,24 +199,30 @@ void KSyncMainWindow::initPlugins()
 
 void KSyncMainWindow::addModPart(ManipulatorPart *part)
 {
-  static int id=1;
-  //m_parts.clear();
-  // diable it for testing
-  if( part->partIsVisible() )
-  {
-    int pos = -1;
-//    kdDebug(5210) << "before part insert \n"  ;
-    m_stack->addWidget( part->widget(), id );
-    /* overview is special for us ;) */
-    if( part->type() == QString::fromLatin1("Overview") ){
-      m_stack->raiseWidget(id );
-      pos = 0;
-    }
-    m_bar->insertItem( part, pos );
-  }
-  m_parts.append( part );
+    /* the usual signal and slots */
+    connect(part, SIGNAL(sig_progress(ManipulatorPart*, int ) ),
+            this, SLOT(slotPartProg(ManipulatorPart*, int ) ) );
+    connect(part, SIGNAL(sig_progress(ManipulatorPart*, const Progress& ) ),
+            this, SLOT(slotPartProg(ManipulatorPart*, const Progress& ) ) );
+    connect(part, SIGNAL(sig_error(ManipulatorPart*, const Error& ) ),
+            this, SLOT(slotPartErr(ManipulatorPart*, const Error& ) ) );
+    connect(part, SIGNAL(sig_syncStatus(ManipulatorPart*, int) ),
+            this, SLOT(slotPartSyncStatus( ManipulatorPart*, int ) ) );
 
-  id++;
+    static int id=1;
+    if( part->partIsVisible() )  {
+        int pos = -1;
+        m_stack->addWidget( part->widget(), id );
+
+        /* overview is special for us ;) */
+        if( part->type() == QString::fromLatin1("Overview") ){
+            m_stack->raiseWidget(id );
+            pos = 0;
+        }
+        m_bar->insertItem( part, pos );
+    }
+    m_parts.append( part );
+    id++;
 }
 
 void KSyncMainWindow::initSystray( void ) {
@@ -204,25 +230,30 @@ void KSyncMainWindow::initSystray( void ) {
     m_tray = new KSyncSystemTray( this, "KSyncSystemTray");
     KPopupMenu *popMenu = m_tray->getContextMenu();
     popMenu->insertSeparator();
-
 }
 /*
- * Get the curren konnector
+ * Get the current konnector
  * check if we can push
  * and then push
  */
 void KSyncMainWindow::slotSync(){
-    kdDebug(5210) << "Slot sync " << endl;
-
+    emit partProgress( 0, Progress(i18n("Trying to push sync") ) );
     KonnectorProfile prof = konnectorProfile();
-    if (prof.udi().isEmpty() ) return;
-
-    if (!prof.kapabilities().supportsPushSync() )
+    if (prof.udi().isEmpty() ) {
+        emit partError( 0, MainProgress::noKonnector() );
         return;
+    }
+
+    if (!prof.kapabilities().supportsPushSync() ) {
+        emit partError( 0, MainProgress::noPush() );
+        return;
+    }
+
     m_konnector->startSync( prof.udi() );
 }
 
 void KSyncMainWindow::slotBackup() {
+    emit partProgress(0, i18n("Starting to backup") );
     kdDebug(5210) << "Slot backup " << endl;
 
     QString path = KFileDialog::getSaveFileName(
@@ -243,10 +274,14 @@ void KSyncMainWindow::slotBackup() {
     }
 
     KonnectorProfile prof = konnectorProfile();
-    if (prof.udi().isEmpty() ) return;
-
-    if (!prof.kapabilities().supportsPushSync() )
+    if (prof.udi().isEmpty() ) {
+        emit partError(0, MainProgress::noKonnector() );
         return;
+    }
+
+/*    if (!prof.kapabilities().supportsPushSync() )
+        return;
+*/
     m_konnector->startBackup(prof.udi(), path);
 }
 
@@ -260,17 +295,22 @@ void KSyncMainWindow::slotRestore() {
       return;
 
     KonnectorProfile prof = konnectorProfile();
-    if (prof.udi().isEmpty() ) return;
-
-    if (!prof.kapabilities().supportsPushSync() )
+    if (prof.udi().isEmpty() ) {
+        emit partError(0, MainProgress::noKonnector() );
         return;
+    }
+
+/*    if (!prof.kapabilities().supportsPushSync() )
+        return;
+*/
     m_konnector->startRestore(prof.udi(), path);
 }
 
 void KSyncMainWindow::slotConfigure() {
+
     KonnectorDialog dlg(m_konprof->list() ,  m_konnector);
     /* clicked ok - now clean up*/
-    if ( dlg.exec() ) {
+    if ( dlg.exec() == QDialog::Accepted) {
         m_konprof->clear();
         KonnectorProfile::ValueList all = dlg.devices();
         removeDeleted(dlg.removed() );
@@ -290,7 +330,8 @@ void KSyncMainWindow::slotConfigure() {
 void KSyncMainWindow::removeDeleted( const KonnectorProfile::ValueList& list ) {
     KonnectorProfile::ValueList::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
-        m_konnector->unregisterKonnector( (*it).udi() );
+        emit partProgress(0, Progress(i18n("Going to unload %1").arg( (*it).name() ) ) );
+        m_konnector->unload( (*it).udi() );
     }
 }
 /*
@@ -305,12 +346,15 @@ void KSyncMainWindow::loadUnloaded( const KonnectorProfile::ValueList& list,
         itAll = all.find( (*itList) );
         /* found it */
         if ( itAll != all.end() )  {
-            QString udi =m_konnector->registerKonnector( (*itList).device() );
+            emit partProgress(0, Progress(i18n("Going to load %1").arg( (*itList).name() ) ) );
+            QString udi =m_konnector->load( (*itList).device() );
             if (!udi.isEmpty() ) {
                 KonnectorProfile prof = (*itList);
                 prof.setUdi( udi );
                 m_konnector->setCapabilities( udi, prof.kapabilities() );
                 m_konprof->add( prof );
+            }else{
+                emit partError( 0, Error(i18n("Could not load the Konnector") ) );
             }
             all.remove( itAll );
         }
@@ -328,7 +372,7 @@ void KSyncMainWindow::unloadLoaded( const KonnectorProfile::ValueList& list,
         itAll = all.find( (*itList) );
         /* found it */
         if ( itAll != all.end() )  {
-            m_konnector->unregisterKonnector( (*itList).udi() );
+            m_konnector->unload( (*itList).udi() );
             KonnectorProfile prof = (*itList);
             prof.setUdi( QString::null );
             m_konprof->add( prof );
@@ -337,9 +381,9 @@ void KSyncMainWindow::unloadLoaded( const KonnectorProfile::ValueList& list,
     }
 }
 void KSyncMainWindow::slotActivated(ManipulatorPart *part) {
-  m_stack->raiseWidget(part->widget() );
-
-  createGUI( part );
+    emit partChanged( part );
+    m_stack->raiseWidget(part->widget() );
+    createGUI( part );
 }
 
 void KSyncMainWindow::slotQuit() {
@@ -364,26 +408,25 @@ QMap<QString,QString> KSyncMainWindow::ids() const
 void KSyncMainWindow::initKonnector()
 {
 //    kdDebug(5210) << "init konnector" << endl;
-    m_konnector = new KonnectorManager(this,  "Konnector");
+    m_konnector = KonnectorManager::self();
 
-    connect(m_konnector,SIGNAL(wantsToSync(const QString&, Syncee::PtrList ) ),
+    connect(m_konnector,SIGNAL(sync(const QString&, Syncee::PtrList ) ),
             this, SLOT(slotSync( const QString&,  Syncee::PtrList) ) );
-
-    connect(m_konnector, SIGNAL(stateChanged(const QString&,  bool) ),
-            this,  SLOT(slotStateChanged(const QString&,  bool) ) );
-
-    connect(m_konnector, SIGNAL(konnectorError(const QString&,  int,  const QString& ) ),
-            this,  SLOT(slotKonnectorError( const QString&,  int, const QString&) ) );
-
+    connect(m_konnector, SIGNAL(progress(const UDI&, const Progress& ) ),
+            this, SLOT(slotKonnectorProg( const UDI&, const Progress&) ) );
+    connect(m_konnector, SIGNAL(error(const UDI&, const Error& ) ),
+            this, SLOT(slotKonnectorErr( const UDI&, const Error&) ) );
+    connect(m_konnector, SIGNAL(downloaded( const UDI&, Syncee::PtrList ) ),
+            this, SIGNAL(konnectorDownloaded(const UDI&, Syncee::PtrList) ) );
 }
 /*
  * we're now initializing the ordinary profiles
  */
 void KSyncMainWindow::initProfiles() {
-//    kdDebug(5210) << "Init profiles " << endl;
+    emit partProgress(0, Progress(i18n("Loading previously loaded Konnectors") ) );
     m_konprof = new KonnectorProfileManager();
-//    kdDebug(5210) << "About to Load" << endl;
     m_konprof->load();
+
     /* now load the wasLoaded() items */
     KonnectorProfile::ValueList list = m_konprof->list();
     KonnectorProfile::ValueList newL;
@@ -391,7 +434,8 @@ void KSyncMainWindow::initProfiles() {
     for (konIt= list.begin(); konIt != list.end(); ++konIt ) {
         KonnectorProfile prof = (*konIt);
         if ( (*konIt).wasLoaded() ) {
-            prof.setUdi( m_konnector->registerKonnector( prof.device() ) );
+            emit partProgress(0, Progress(i18n("Loading %1").arg( (*konIt).name() ) ) );
+            prof.setUdi( m_konnector->load( prof.device() ) );
             m_konnector->setCapabilities( prof.udi(), prof.kapabilities() );
         }
         newL.append( prof);
@@ -426,8 +470,9 @@ KonnectorProfileManager* KSyncMainWindow::konnectorManager() const {
 void KSyncMainWindow::slotSync( const QString &udi,
                                 Syncee::PtrList lis)
 {
+    emit startSync();
     Syncee::PtrList ret;
-    kdDebug(5210) << "Some data arrived Yeah baby" << endl;
+/*    kdDebug(5210) << "Some data arrived Yeah baby" << endl;
     kdDebug(5210) << "Lis got "  << lis.count() << "elements" << endl;
     Syncee *syncee=0;
     kdDebug(5210) << "Pointer address " << lis.at(0) << endl;
@@ -447,11 +492,11 @@ void KSyncMainWindow::slotSync( const QString &udi,
         // but this is rather brain dead
         QPtrListIterator<ManipulatorPart> it(m_parts);
         for ( ; it.current(); ++it ) {
-            it.current()->slotSyncPartActivated( part );
-            it.current()->slotProgress( part, SYNC_START,  0 );
+            //it.current()->slotSyncPartActivated( part );
+            //it.current()->slotProgress( part, SYNC_START,  0 );
         }
         qApp->processEvents(); // HACK make it asynchronus
-        part->processEntry( lis,  ret );
+        //part->processEntry( lis,  ret );
 
         kdDebug(5210 ) << "processed " << part->name() << endl;
         it.toFirst();
@@ -460,34 +505,11 @@ void KSyncMainWindow::slotSync( const QString &udi,
         }
         qApp->processEvents();
     }
+*/
     lis.setAutoDelete( TRUE );
-    lis.clear(); //there is a bug now we will leak but not crash :(
+    lis.clear();
     m_konnector->write( udi, ret );
 
-}
-/**
- * check if the state is from the current Konnector
- * if yes update the state
- */
-void KSyncMainWindow::slotStateChanged( const QString & /*udi*/,
-                                        bool connected )
-{
-    kdDebug(5210) << "State changed " << connected << endl;
-    if ( !connected )
-        statusBar()->message(i18n("Not connected") );
-    else
-        statusBar()->message(i18n("Connected") );
-    statusBar()->show();
-}
-
-/*
- * Show a KMessageBox
- */
-void KSyncMainWindow::slotKonnectorError( const QString& /*udi*/,
-                                          int error,
-                                          const QString& id )
-{
-  KMessageBox::error(this, i18n("Error number: ") + QString::number(error) + "\n" + i18n("Message: ") + id);
 }
 
 /*
@@ -504,10 +526,11 @@ void KSyncMainWindow::slotConfigProf() {
     }
 }
 void KSyncMainWindow::switchProfile( const Profile& prof ) {
-//    kdDebug() << "switch profile" << endl;
     m_bar->clear();
+
     m_parts.setAutoDelete( true );
     m_parts.clear();
+
     ManPartService::ValueList lst = prof.manParts();
     ManPartService::ValueList::Iterator it;
     for (it = lst.begin(); it != lst.end(); ++it ) {
@@ -516,7 +539,6 @@ void KSyncMainWindow::switchProfile( const Profile& prof ) {
     Profile oldprof = m_prof->currentProfile();
     m_prof->setCurrentProfile( oldprof );
     emit profileChanged( prof );
-
 }
 void KSyncMainWindow::addPart( const ManPartService& service ) {
     ManipulatorPart *part = KParts::ComponentFactory
@@ -529,7 +551,7 @@ void KSyncMainWindow::switchProfile( KonnectorProfile& prof ) {
     KonnectorProfile ole = m_konprof->current();
 
     if (prof.udi().isEmpty() ) {
-        QString udi =m_konnector->registerKonnector( prof.device() );
+        QString udi =m_konnector->load( prof.device() );
         prof.setUdi( udi );
         m_konnector->setCapabilities( udi, prof.kapabilities() );
     }
@@ -578,7 +600,6 @@ void KSyncMainWindow::slotProfile() {
     if (item == -1) item = 0; // for initialisation
     if ( m_prof->count() == 0 )  return;
 
-//    kdDebug() << "Changing profile " << item << endl;
     Profile cur = m_prof->profile( item );
 
     switchProfile( cur );
@@ -612,5 +633,30 @@ SyncAlgorithm* KSyncMainWindow::syncAlgorithm() {
 
     return m_syncAlg;
 }
-
+const QPtrList<ManipulatorPart> KSyncMainWindow::parts()const{
+    return m_parts;
+}
+void KSyncMainWindow::slotKonnectorProg( const UDI& udi, const Progress& prog) {
+    kdDebug(5210) << "KonnectorProgress: " << udi << " " << prog << endl;
+    emit konnectorProgress( udi, prog );
+}
+void KSyncMainWindow::slotKonnectorErr( const UDI& udi, const Error& prog) {
+    kdDebug(5210) << "KonnectorError : " << udi << " " << prog << endl;
+    emit konnectorError( udi, prog );
+}
+void KSyncMainWindow::slotPartProg( ManipulatorPart* part, int prog) {
+    kdDebug(5210) << "PartProg: " << part << " " << prog << endl;
+}
+void KSyncMainWindow::slotPartProg( ManipulatorPart* part, const Progress& prog) {
+    kdDebug(5210) << "PartProg: " << part << " " << prog << endl;
+    emit partProgress( part, prog );
+}
+void KSyncMainWindow::slotPartErr( ManipulatorPart* part, const Error& err) {
+    kdDebug(5210) << "PartError: " << part << " " << err << endl;
+    emit partError( part, err );
+}
+void KSyncMainWindow::slotPartSyncStatus( ManipulatorPart* part, int err) {
+    kdDebug(5210) << "SyncStatus: " << part << " " << err << endl;
+    // done() from ManipulatorPart now go on to the next ManipulatorPart...
+}
 #include "ksync_mainwindow.moc"

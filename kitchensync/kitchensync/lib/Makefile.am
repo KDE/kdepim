@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector $(all_includes)
+INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector2 $(all_includes)
 
 lib_LTLIBRARIES = libkitchensyncui.la
 
@@ -18,10 +18,11 @@ libkitchensyncui_la_SOURCES = partbar.cc manipulatorpart.cc \
     profilelistbase.ui profilewizardchooser.ui \
     profilewizardintro.ui profilecheckitem.cpp \
     profilewizardchooserimpl.cpp profilewizard.cpp \
-    profileitem.cpp profiledialog.cpp syncalgo.cpp
+    profileitem.cpp profiledialog.cpp syncalgo.cpp \
+    synchelper.cpp
     
 libkitchensyncui_la_LDFLAGS = $(all_libraries) -no-undefined 
-libkitchensyncui_la_LIBADD = $(LIB_KPARTS) $(top_builddir)/kitchensync/libkonnector/libkonnector.la
+libkitchensyncui_la_LIBADD = $(LIB_KPARTS) $(top_builddir)/kitchensync/libkonnector2/libkonnector.la
 
 ksyncincludedir = $(includedir)/kitchensync
 ksyncinclude_HEADERS = partbar.h manipulatorpart.h ksync_systemtray.h ksync_mainwindow.h ksync_profile.h

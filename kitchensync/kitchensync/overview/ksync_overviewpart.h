@@ -9,7 +9,7 @@
 namespace KSync {
 
   class OverviewWidget;
-  
+
   class OverviewPart : public ManipulatorPart {
    Q_OBJECT
   public:
@@ -18,23 +18,25 @@ namespace KSync {
 		 const QStringList & = QStringList() );
     virtual ~OverviewPart();
     static KAboutData *createAboutData();
-    QString type()const { return QString::fromLatin1("Overview"); };
-    int progress()const { return 0; };
-    QString name()const { return i18n("Overview" ); };
-    QString description()const { return i18n("This part is the main widget of KitchenSync"); };
+
+    QString type()const;
+    QString name()const;
+    QString description()const;
+    bool partIsVisible()const;
     QPixmap *pixmap();
-    bool partIsVisible()const { return true; };
-    bool configIsVisible()const { return false; };
+      QString iconName()const;
     QWidget* widget();
-//    QWidget* configWidget();
-public slots:
-      void startSync();
-      void slotProgress( ManipulatorPart* part, int syncStatus,  int progress );
-      void slotSyncPartActivated( ManipulatorPart* );
+
+  private slots:
+      void slotPartProgress( ManipulatorPart* part, const Progress& ) {
+
+      };
+      void slotPartError( ManipulatorPart*, const Error& ) {
+
+      }
   private:
     QPixmap m_pixmap;
-    OverviewWidget *m_widget;
-      //QWidget *m_config;
+      QWidget* m_widget;
   };
 };
 
