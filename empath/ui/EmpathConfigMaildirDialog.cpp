@@ -74,8 +74,6 @@ EmpathConfigMaildirDialog::EmpathConfigMaildirDialog
         return;
     }
 
-    EmpathMailboxMaildir * m = (EmpathMailboxMaildir *)mailbox;
-    
     cb_mailCheckInterval_ =
         new QCheckBox(i18n("Check for new mail at interval (in minutes):"),
                 this, "cb_mailCheckInterval");

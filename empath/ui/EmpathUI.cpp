@@ -26,8 +26,6 @@
 #include <qstring.h>
 #include <qwidgetlist.h>
 #include <qapplication.h>
-#include <qpngio.h>
-#include <qmessagebox.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -80,60 +78,62 @@ EmpathUI::s_newComposer(const EmpathComposer::Form & composeForm)
 }
 
     void
-EmpathUI::s_setupDisplay(QWidget * parent)
+EmpathUI::s_setup(Empath::SetupType t, QWidget * parent)
 {
-    EmpathDisplaySettingsDialog d(parent);
-    d.loadData();
-    d.exec();
-}
-    void
-EmpathUI::s_setupIdentity(QWidget * parent)
-{
-    EmpathIdentitySettingsDialog d(parent);
-    d.loadData();
-    d.exec();
-}
+    switch (t) {
 
-    void
-EmpathUI::s_setupSending(QWidget * parent)
-{
-    EmpathSendingSettingsDialog d(parent);
-    d.loadData();
-    d.exec();
-}
+        case Empath::SetupDisplay:
+            {
+                EmpathIdentitySettingsDialog d(parent);
+                d.loadData();
+                d.exec();
+            }
+            break;
+            
+        case Empath::SetupIdentity:
+            {
+                EmpathIdentitySettingsDialog d(parent);
+                d.loadData();
+                d.exec();
+            }
+            break;
+            
+        case Empath::SetupComposing:
+            {
+                EmpathComposeSettingsDialog d(parent);
+                d.loadData();
+                d.exec();
+            }
+            break;
+        
+        case Empath::SetupSending:
+            {
+                EmpathSendingSettingsDialog d(parent);
+                d.loadData();
+                d.exec();
+            }
+            break;
 
-    void
-EmpathUI::s_setupComposing(QWidget * parent)
-{
-    EmpathComposeSettingsDialog d(parent);
-    d.loadData();
-    d.exec();
-}
+        case Empath::SetupAccounts:
+            {
+                EmpathAccountsSettingsDialog d(parent);
+                d.loadData();
+                d.exec();
+            }
+            break;
 
-    void
-EmpathUI::s_setupAccounts(QWidget * parent)
-{
-    EmpathAccountsSettingsDialog d(parent);
-    d.loadData();
-    d.exec();
-}
+        case Empath::SetupFilters:
+            {
+                EmpathFilterManagerDialog d(parent);
+                d.loadData();
+                d.exec();
+            }
+            break;
 
-    void
-EmpathUI::s_setupFilters(QWidget * parent)
-{
-    EmpathFilterManagerDialog d(parent);
-    d.loadData();
-    d.exec();
-}
-
-    void
-EmpathUI::s_about(QWidget * parent)
-{
-    QMessageBox::information(
-        parent,
-        "Hey !",
-        i18n("Is it raining icepicks on your steel shore ?"),
-        i18n("Yes/No"));
+        default:
+            empathDebug("Setup what ?");
+            break;
+    }
 }
 
     void
@@ -217,36 +217,8 @@ EmpathUI::_connectUp()
         this,   SLOT(s_configureMailbox(const EmpathURL &, QWidget *)));
 
     QObject::connect(
-        empath, SIGNAL(setupDisplay(QWidget *)),
-        this,   SLOT(s_setupDisplay(QWidget *)));
-
-    QObject::connect(
-        empath, SIGNAL(setupIdentity(QWidget *)),
-        this,   SLOT(s_setupIdentity(QWidget *)));
-
-    QObject::connect(
-        empath, SIGNAL(setupSending(QWidget *)),
-        this,   SLOT(s_setupSending(QWidget *)));
-
-    QObject::connect(
-        empath, SIGNAL(setupComposing(QWidget *)),
-        this,   SLOT(s_setupComposing(QWidget *)));
-
-    QObject::connect(
-        empath, SIGNAL(setupAccounts(QWidget *)),
-        this,   SLOT(s_setupAccounts(QWidget *)));
-
-    QObject::connect(
-        empath, SIGNAL(setupFilters(QWidget *)),
-        this,   SLOT(s_setupFilters(QWidget *)));
-
-    QObject::connect(
-        empath, SIGNAL(about(QWidget *)),
-        this,   SLOT(s_about(QWidget *)));
-
-    QObject::connect(
-        empath, SIGNAL(bugReport()),
-        this,   SLOT(s_bugReport()));
+        empath, SIGNAL(setup(Empath::SetupType, QWidget *)),
+        this,   SLOT(s_setup(Empath::SetupType, QWidget *)));
 }
 
     void

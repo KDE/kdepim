@@ -18,6 +18,7 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include "EmpathDefines.h"
 #include "EmpathCachedMessage.h"
 
 EmpathCachedMessage::EmpathCachedMessage(RMM::RMessage * m, const QString & r)
@@ -51,4 +52,21 @@ EmpathCachedMessage::ref(const QString & r)
     references_.append(r);
 }
 
+    void
+EmpathCachedMessage::deref(const QString & r)
+{
+    QString notConst(r);
+    QStringList::Iterator firstRefByCaller = references_.find(notConst);
+    if (firstRefByCaller == references_.end()) {
+        empathDebug("Not dereferencing this - can't find ref by `" + r + "'");
+        return;
+    }
+    references_.remove(firstRefByCaller);
+}
+
+    bool
+EmpathCachedMessage::referencedBy(const QString & s)
+{
+    return (references_.contains(s) > 0);
+}
 

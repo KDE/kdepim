@@ -98,8 +98,92 @@ EmpathMaildir::sync(bool force)
     f->index()->setInitialised(true);
 }
 
+    QMap<QString, bool>
+EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
+{
+    QMap<QString, bool> successMap;
+    
+    EmpathTask * t = new EmpathTask (i18n("Marking messages"));
+    t->setMax(l.count());
+    
+    QStringList::ConstIterator it(l.begin());
+    
+    for (; it != l.end(); ++it) {
+        successMap[*it] = _mark(*it, msgStat);
+        t->doneOne();
+    }
+
+    t->done();
+    return successMap;
+}
+
+    QString
+EmpathMaildir::writeMessage(RMM::RMessage & m)
+{
+    return _write(m);
+}
+
+    RMM::RMessage *
+EmpathMaildir::message(const QString & id)
+{
+    QCString s = _messageData(id);
+    
+    if (s.isEmpty()) {
+        empathDebug("Couldn't load data for \"" + id + "\"");
+        return 0;
+    }
+    
+    RMM::RMessage * m = new RMM::RMessage(s);
+    CHECK_PTR(m);
+    return m;
+}
+
+    QMap<QString, bool>
+EmpathMaildir::removeMessage(const QStringList & l)
+{
+    QMap<QString, bool> successMap;
+
+    EmpathTask * t = new EmpathTask(i18n("Removing messages"));
+
+    t->setMax(l.count());
+
+    QStringList::ConstIterator it(l.begin());
+    
+    for (; it != l.end(); ++it) {
+        successMap[*it] = _removeMessage(*it);
+        t->doneOne();
+    }
+    
+    t->done();
+
+    return successMap;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS /////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
     bool
-EmpathMaildir::mark(const QString & id, RMM::MessageStatus msgStat)
+EmpathMaildir::_removeMessage(const QString & id)
+{
+    QDir d(path_ + "/cur/", id + "*");
+
+    if (d.count() != 1) return false;
+    
+    EmpathFolder * folder(empath->folder(url_));
+    
+    QFile f(path_ + "/cur/" + d[0]);    
+    
+    if (!f.remove())
+        return false;
+    
+    folder->index()->remove(id);
+
+    return true;
+}
+
+    bool
+EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
 {
     QDir d(path_ + "/cur/", id + "*");
  
@@ -143,92 +227,6 @@ EmpathMaildir::mark(const QString & id, RMM::MessageStatus msgStat)
    
     return retval;
 }
-
-    bool
-EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
-{
-    bool retval = true;
-    
-    EmpathTask * t = new EmpathTask (i18n("Marking messages"));
-    t->setMax(l.count());
-    
-    QStringList::ConstIterator it(l.begin());
-    
-    for (; it != l.end(); ++it) {
-        if (!mark(*it, msgStat))
-            retval = false;
-        t->doneOne();
-    }
-
-    t->done();
-    return retval;
-}
-
-    QString
-EmpathMaildir::writeMessage(RMM::RMessage & m)
-{
-    return _write(m);
-}
-
-    RMM::RMessage *
-EmpathMaildir::message(const QString & id)
-{
-    QCString s = _messageData(id);
-    
-    if (s.isEmpty()) {
-        empathDebug("Couldn't load data for \"" + id + "\"");
-        return 0;
-    }
-    
-    RMM::RMessage * m = new RMM::RMessage(s);
-    CHECK_PTR(m);
-    return m;
-}
-
-    bool
-EmpathMaildir::removeMessage(const QString & id)
-{
-    QDir d(path_ + "/cur/", id + "*");
-
-    if (d.count() != 1) return false;
-    
-    EmpathFolder * folder(empath->folder(url_));
-    
-    QFile f(path_ + "/cur/" + d[0]);    
-    
-    if (!f.remove())
-        return false;
-    
-    folder->index()->remove(id);
-
-    return true;
-}
-
-    bool
-EmpathMaildir::removeMessage(const QStringList & l)
-{
-    bool retval = true;
-
-    EmpathTask * t = new EmpathTask(i18n("Removing messages"));
-
-    t->setMax(l.count());
-
-    QStringList::ConstIterator it(l.begin());
-    
-    for (; it != l.end(); ++it) {
-        if (!removeMessage(*it))
-            retval = false;
-        t->doneOne();
-    }
-    
-    t->done();
-
-    return retval;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// PRIVATE METHODS /////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 
     QCString
 EmpathMaildir::_messageData(const QString & filename, bool isFullName)
@@ -485,10 +483,17 @@ EmpathMaildir::_touched(EmpathFolder * f)
     QFileInfo fiDir(path_ + "/cur/");
     
     if (fiDir.lastModified() > f->index()->lastModified()) {
-        empathDebug("Index file is older than Maildir");
+        empathDebug("Index file is older than Maildir/cur");
         return true;
     }
-
+    
+    fiDir = (path_ + "/new/");
+    
+    if (fiDir.lastModified() > f->index()->lastModified()) {
+        empathDebug("Index file is older than Maildir/new");
+        return true;
+    }
+ 
     return false;
 }
 

@@ -107,9 +107,9 @@ EmpathMailboxPOP3::alreadyHave()
 
     void
 EmpathMailboxPOP3::_enqueue(
-    EmpathPOPCommand::Type t, int i, QString ixinfo, QString xinfo)
+    EmpathPOPCommand::Type t, int i, EmpathJobInfo & ji)
 {
-    commandQueue_.enqueue(new EmpathPOPCommand(t, i, ixinfo, xinfo));
+    commandQueue_.enqueue(new EmpathPOPCommand(t, i, ji));
     
     if (commandQueue_.count() == 1)
         _nextCommand();
@@ -137,16 +137,68 @@ EmpathMailboxPOP3::_nextCommand()
     void
 EmpathMailboxPOP3::s_checkMail()
 {
-    _enqueue(EmpathPOPCommand::Index, -1, "all", "filter");
+    EmpathJobInfo ji;
+    _enqueue(EmpathPOPCommand::Index, -1, ji);
 }
 
-    QString
-EmpathMailboxPOP3::_write(
-    const EmpathURL & url, RMM::RMessage &, QString ixinfo, QString xinfo)
+    void
+EmpathMailboxPOP3::_runJob(EmpathJobInfo & jobInfo)
 {
-    empathDebug("This mailbox is READ ONLY !");
-    emit(writeComplete( false, url, ixinfo, xinfo));
-    return QString::null;
+    switch (jobInfo.type()) {
+
+        case RetrieveMessage:
+            {
+                QString inID = jobInfo.from().messageID();
+                
+                int messageIndex = inID.toInt();
+
+                _enqueue(EmpathPOPCommand::Get, messageIndex, jobInfo);
+
+            }
+            break;
+            
+        case WriteMessage:
+            {
+                empathDebug("This mailbox is READ ONLY !");
+                jobInfo.done(false);
+            }
+            break;
+
+        case MarkMessage:
+            {
+                jobInfo.done(false);
+            }
+            break;
+
+        case RemoveMessage:
+            {
+                // STUB
+                jobInfo.done(false);
+            }
+            break;
+
+        case CreateFolder:
+            {
+                jobInfo.done(false);
+            }
+            break;
+
+        case RemoveFolder:
+            {
+                jobInfo.done(false);
+            }
+            break;
+
+        case CopyMessage:
+        case MoveMessage:
+            empathDebug("Derived classes don't handle copy / move.");
+            empathDebug("The intelligence behind this is in EmpathMailbox.");
+            break;
+
+        default:
+            empathDebug("Invalid job info");
+            break;
+    }
 }
     
     bool
@@ -169,73 +221,7 @@ EmpathMailboxPOP3::path()
 {
     return url_;
 }
-    
-    void
-EmpathMailboxPOP3::_retrieve(
-    const EmpathURL &, const EmpathURL &, QString, QString)
-{
-    // STUB
-}
 
-    void
-EmpathMailboxPOP3::_retrieve(
-    const EmpathURL & url, QString ixinfo, QString xinfo)
-{
-    QString inID = url.messageID();
-    
-    int messageIndex;
-    
-    if (inID.find(url_.mailboxName() + ":") == 0) {
-    
-        bool found(false);
-        
-        EmpathPOPIndexIterator it(index_);
-        
-        for (; it.current(); ++it) {
-            
-            if (it.current()->id() == inID) {
-            
-                found = true;
-                messageIndex = it.current()->number();    
-                break;
-            }
-        }
-        
-        if (!found) {
-            empathDebug("Couldn't find reference to message with id \"" +
-                inID + " in index !!");
-            return;
-        }
-        
-    } else // 'LIST%d'
-        messageIndex = inID.mid(4).toInt();
-
-    _enqueue(EmpathPOPCommand::Get, messageIndex, ixinfo, xinfo);
-}
-
-    void
-EmpathMailboxPOP3::_removeMessage(
-    const EmpathURL & url, const QStringList & l, QString ixinfo, QString xinfo)
-{
-    // STUB
-    EmpathURL u(url);
-
-    QStringList::ConstIterator it(l.begin());
-    
-    for (; it != l.end(); ++it) {
-        u.setMessageID(*it);
-        _enqueue(EmpathPOPCommand::Remove, (*it).toInt(), ixinfo, xinfo);
-        emit (removeComplete(false, u, ixinfo, xinfo));
-    }
-}
-
-    void
-EmpathMailboxPOP3::_removeMessage(
-    const EmpathURL & url, QString ixinfo, QString xinfo)
-{
-    // STUB
-    emit (removeComplete(false, url, ixinfo, xinfo));
-}
     
 //////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// KIOJOB SLOTS /////////////////////////////////
@@ -263,6 +249,8 @@ EmpathMailboxPOP3::s_jobFinished(int id)
     switch (commandQueue_.head()->type()) {
             
         case EmpathPOPCommand::Stat:
+            // STUB
+            commandQueue_.head()->jobInfo().done(false);
             break;
         
         case EmpathPOPCommand::Index:
@@ -275,41 +263,31 @@ EmpathMailboxPOP3::s_jobFinished(int id)
                     messageURL.setMessageID(it.current()->id());
                     empath->filter(messageURL);
                 }
+
+                commandQueue_.head()->jobInfo().done(true);
             }
             break;
         
         case EmpathPOPCommand::Get:
             {
-                EmpathURL messageURL(url_);
-                messageURL.setMessageID(
-                    QString().setNum(commandQueue_.head()->messageNumber()));
-
                 RMM::RMessage * message = new RMM::RMessage(messageBuffer_);
+// FIXME
+// Duh... what to do here ?
+                // TODO: Convert this so that POP3 jobs contain JobInfo.
+#if 0
                 empath->cacheMessage(
                     messageURL,
                     message,
-                    commandQueue_.head()->xinfo());
+                    commandQueue_.head()->jobInfo().xinfo());
 
-                emit(retrieveComplete(
-                        true,
-                        messageURL,
-                        commandQueue_.head()->ixinfo(),
-                        commandQueue_.head()->xinfo()));
+                commandQueue_.head()->jobInfo().done(true);
+#endif
             }
             
             break;
         
         case EmpathPOPCommand::Remove:
-            {
-                EmpathURL messageURL(url_);
-                messageURL.setMessageID(
-                    QString().setNum(commandQueue_.head()->messageNumber()));
-                emit(removeComplete(
-                        true,
-                        messageURL,
-                        commandQueue_.head()->ixinfo(),
-                        commandQueue_.head()->xinfo()));
-            }
+            commandQueue_.head()->jobInfo().done(true);
             break;
         
         default:
@@ -384,44 +362,6 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////// ILLEGAL OPS /////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-
-    void
-EmpathMailboxPOP3::_createFolder(
-    const EmpathURL & url, QString ixinfo, QString xinfo)
-{
-    emit (createFolderComplete(false, url, ixinfo, xinfo));
-}
-
-    void
-EmpathMailboxPOP3::_removeFolder(const EmpathURL & url,
-    QString ixinfo, QString xinfo)
-{
-    emit (removeFolderComplete(false, url, ixinfo, xinfo));
-}
-    void
-EmpathMailboxPOP3::_mark(const EmpathURL & url, RMM::MessageStatus,
-    QString ixinfo, QString xinfo)
-{
-    emit (markComplete(false, url, ixinfo, xinfo));
-}
-
-    void
-EmpathMailboxPOP3::_mark(
-    const EmpathURL & url, const QStringList & l, RMM::MessageStatus,
-    QString ixinfo, QString xinfo)
-{
-    EmpathURL u(url);
-    
-    QStringList::ConstIterator it;
-    
-    for (it = l.begin(); it != l.end(); ++it) {
-        u.setMessageID(*it);
-        emit (markComplete(false, u, ixinfo, xinfo));
-    }
-}
 
 //////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// CONFIG ///////////////////////////////////
@@ -613,11 +553,10 @@ EmpathMailboxPOP3::setLogging(bool policy)
 //////////////////////////////////////////////////////////////////////////
 
 EmpathPOPCommand::EmpathPOPCommand(
-    EmpathPOPCommand::Type t, int n, QString ixinfo, QString xinfo)
+    EmpathPOPCommand::Type t, int n, EmpathJobInfo & ji)
     :   type_(t),
         msgNo_(n),
-        ixinfo_(ixinfo),
-        xinfo_(xinfo)
+        jobInfo_(ji)
 {
     switch (t) {
         
@@ -657,16 +596,10 @@ EmpathPOPCommand::messageNumber()
     return msgNo_;
 }
 
-    QString
-EmpathPOPCommand::ixinfo()
+    EmpathJobInfo
+EmpathPOPCommand::jobInfo()
 {
-    return ixinfo_;
-}
-
-    QString
-EmpathPOPCommand::xinfo()
-{
-    return xinfo_;
+    return jobInfo_;
 }
 
 //////////////////////////////////////////////////////////////////////////

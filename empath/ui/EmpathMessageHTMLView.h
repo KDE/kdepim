@@ -60,6 +60,7 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
         virtual KHTMLWidget * createFrame(QWidget *, const char *)
         {
             // We don't want to create frames, do we ?
+            return 0;
         }
 
         virtual QSize sizeHint() const;

@@ -31,16 +31,24 @@ static const int        EMPATH_VERSION_MAJOR    = 0;
 static const int        EMPATH_VERSION_MINOR    = 8;
 static const int        EMPATH_VERSION_RELEASE  = 1;
 
-#ifndef NDEBUG
-#include <iostream>
-# ifdef __GNUG__
-#  define empathDebug(a) cerr << className() << ":"   << __FUNCTION__ << " (" \
-                              << __LINE__    << "): " << QString((a)) << endl;
-# else
-#  define empathDebug(a) cerr << className() << ": " << QString((a)) << endl;
-# endif
+#if (!defined NDEBUG) && (defined __GNUG__)
+
+#   include <stdio.h>
+#   include <iostream.h>
+   
+#   define empathDebug(a) \
+        fprintf(stderr, "%s, line %d\n", __PRETTY_FUNCTION__, __LINE__); \
+        cerr << QString((a)) << endl;
+
+#   define eDebug(format, args) \
+        fprintf(stderr, "%s, line %d\n", __PRETTY_FUNCTION__, __LINE__); \
+        fprintf(stderr, format, ## args); \
+        fprintf(stderr, "\n");
+        
 #else
-# define empathDebug(a)
+        
+#       define empathDebug(a)
+
 #endif
 
 #endif // included this file

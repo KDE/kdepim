@@ -156,7 +156,7 @@ Asynchronous Operations
 
   Connect the following signal to a slot in your object:
   
-  empath->retrieveComplete(bool status, const EmpathURL & url, QString xinfo)
+  empath->jobComplete(EmpathJobInfo &)
 
   Ask Empath to retrieve the message:
 
@@ -166,8 +166,10 @@ Asynchronous Operations
   displays message, you'd probably use 'displayWidget:id' where 'id' is unique
   to your particular instance. See EmpathMessageViewWidget for an example.
 
-  When Empath calls the slot you connected to retrieveComplete(), ask for the
-  message data. You need the extraInfo string here to identify yourself.
+  When Empath calls the slot you connected to jobComplete(), check that
+  the `xinfo' string in the EmpathJobInfo object you are passed matches
+  that which you sent. Ask for the message data. You need the extraInfo
+  (`xinfo') string here to identify yourself.
 
   RMM::RMessage * m = empath->message(url, extraInfo);
 
@@ -183,7 +185,7 @@ Asynchronous Operations
   empath->remove(const EmpathURL &);
 
   If you don't care if the message is removed or not, simply don't connect
-  to, or ignore, the signal Empath::removeComplete(...).
+  to, or ignore, the signal Empath::jobComplete(...).
 
 -------------------------------------------------------------------------------
 Composing

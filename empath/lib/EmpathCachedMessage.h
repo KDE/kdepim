@@ -38,6 +38,11 @@ class EmpathCachedMessage
         unsigned int refCount() const;
 
         void ref(const QString &);
+        void deref(const QString &);
+
+        bool referencedBy(const QString &);
+        
+        const char * className() const { return "EmpathCachedMessage"; }
 
     private:
 

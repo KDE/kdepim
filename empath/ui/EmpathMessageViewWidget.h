@@ -36,6 +36,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathJobInfo.h"
 #include "EmpathURL.h"
 
 class EmpathMessageStructureWidget;
@@ -65,7 +66,7 @@ class EmpathMessageViewWidget : public QWidget
         
         void s_URLSelected(QString, int);
         void s_clipClicked();
-        void s_retrieveComplete(bool, const EmpathURL &, QString);
+        void s_jobComplete(EmpathJobInfo);
 
     private:
         

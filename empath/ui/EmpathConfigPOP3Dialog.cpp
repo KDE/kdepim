@@ -63,7 +63,6 @@ EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog
     settingsWidget_ = new EmpathConfigPOP3Widget(url_, this);
 
     QPushButton tempButton((QWidget *)0, "MI");
-    int h = tempButton.sizeHint().height();
     
     KButtonBox * buttonBox    = new KButtonBox(this);
 

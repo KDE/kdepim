@@ -405,27 +405,27 @@ EmpathMainWindow::_messageSelected()
 
     void
 EmpathMainWindow::s_setupDisplay()
-{ empath->s_setupDisplay(this); }
+{ empath->s_setup(Empath::SetupDisplay, this); }
 
         void
 EmpathMainWindow::s_setupIdentity()
-{ empath->s_setupIdentity(this); }
+{ empath->s_setup(Empath::SetupIdentity, this); }
 
         void
 EmpathMainWindow::s_setupComposing()
-{ empath->s_setupComposing(this); }
+{ empath->s_setup(Empath::SetupComposing, this); }
 
         void
 EmpathMainWindow::s_setupSending()
-{ empath->s_setupSending(this); }
+{ empath->s_setup(Empath::SetupSending, this); }
 
         void
 EmpathMainWindow::s_setupAccounts()
-{ empath->s_setupAccounts(this); }
+{ empath->s_setup(Empath::SetupAccounts, this); }
 
         void
 EmpathMainWindow::s_setupFilters()
-{ empath->s_setupFilters(this); }
+{ empath->s_setup(Empath::SetupFilters, this); }
 
 /////////////////////////////////////////////////////////////////////////////
 

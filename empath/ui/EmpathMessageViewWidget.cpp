@@ -72,8 +72,8 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
             SLOT(s_URLSelected(QString, int)));
 
     QObject::connect(
-        empath, SIGNAL(retrieveComplete(bool, const EmpathURL &, QString)),
-        this,   SLOT(s_retrieveComplete(bool, const EmpathURL &, QString)));
+        empath, SIGNAL(jobComplete(EmpathJobInfo)),
+        this,   SLOT(s_jobComplete(EmpathJobInfo)));
     
     QObject::connect(
         structureWidget_,    SIGNAL(partChanged(RMM::RBodyPart *)),
@@ -84,27 +84,27 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
 }
 
     void
-EmpathMessageViewWidget::s_retrieveComplete(
-    bool b, const EmpathURL & url, QString xinfo)
+EmpathMessageViewWidget::s_jobComplete(EmpathJobInfo ji)
 {
     empathDebug("My id is: `view" + QString().setNum(id_) + "'");
-    empathDebug("Given id: " + xinfo);
-    if ((b == false) || (xinfo != "view" + QString().setNum(id_)))
+
+    empathDebug("Given id: " + ji.xinfo());
+    if (!ji.success() || (ji.xinfo() != ("view" + QString().setNum(id_))))
         return;
 
-    url_ = url;
+    url_ = ji.from();
 
-    RMM::RMessage * m(empath->message(url_, xinfo));
+    RMM::RMessage * m(empath->message(ji.from(), ji.xinfo()));
     
     if (m == 0) {
         empathDebug("Couldn't get supposedly retrieved message from \"" +
-            url_.asString() + "\"");
+            ji.from().asString() + "\"");
         return;
     }
     
     RMM::RBodyPart message(m->decode());
 
-    empath->finishedWithMessage(url, xinfo);
+    empath->finishedWithMessage(ji.from(), ji.xinfo());
     
     structureWidget_->setMessage(message);
     

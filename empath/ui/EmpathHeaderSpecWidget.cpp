@@ -35,9 +35,7 @@
 #include <RMM_Enum.h>
 
 EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
-        RMM::RHeader & header,
-        QWidget * parent,
-        const char * name)
+    RMM::RHeader & header, QWidget * parent)
     :
         QHBox(parent, "HeaderSpecWidget"),
         header_(header)

@@ -35,11 +35,9 @@
 #include <qqueue.h>
 
 // Local includes
+#include "EmpathJobInfo.h"
 #include "EmpathMailbox.h"
-#include "md5.h"
 
-class EmpathConfig;
-class Empath;
 class KIOJob;
 
 /**
@@ -52,13 +50,12 @@ class EmpathPOPCommand
         
         enum Type { Stat, Index, Get, Remove };
 
-        EmpathPOPCommand(Type, int, QString, QString);
+        EmpathPOPCommand(Type, int, EmpathJobInfo &);
         ~EmpathPOPCommand(); 
         
         QString command();
         Type    type();
-        QString xinfo();
-        QString ixinfo();
+        EmpathJobInfo jobInfo();
         int messageNumber();
         
         const char * className() const { return "EmpathPOPCommand"; }
@@ -68,8 +65,7 @@ class EmpathPOPCommand
         QString     command_;
         Type        type_;
         int         msgNo_;
-        QString     ixinfo_;
-        QString     xinfo_;
+        EmpathJobInfo jobInfo_;
 };
 
 /**
@@ -181,7 +177,7 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         // Not connected to the server.
     
         void _enqueue(
-            EmpathPOPCommand::Type, int i, QString ixinfo, QString xinfo);
+            EmpathPOPCommand::Type, int i, EmpathJobInfo &);
         void _nextCommand();
     
         // Order dependency

@@ -202,6 +202,13 @@ Empath::finishedWithMessage(const EmpathURL & url, const QString & xinfo)
         return;
     }
 
+    if (!m->referencedBy(xinfo)) {
+        empathDebug("Hey, you don't OWN this message ! It's staying cached !");
+        return;
+    }
+
+    m->deref(xinfo);
+
     if (m->refCount() == 0) {
         empathDebug("Refcount has dropped to 0. Deleting.");
         cache_.remove(url.asString());
@@ -224,140 +231,6 @@ Empath::folder(const EmpathURL & url)
 
     return m->folder(url);
 }
-
-    void
-Empath::copy(const EmpathURL & from, const EmpathURL & to, QString xinfo)
-{
-    empathDebug("Copying " + from.asString() + " to " + to.asString());
-    EmpathMailbox * m_from = mailbox(from);
-    
-    if (m_from == 0) {
-        emit(copyComplete(false, from, to, xinfo));
-        return;
-    }
-
-    m_from->retrieve(from, to, "copy", xinfo);
-}
-
-    void
-Empath::move(const EmpathURL & from, const EmpathURL & to, QString xinfo)
-{
-    EmpathMailbox * m_from = mailbox(from);
-    
-    if (m_from == 0) {
-        emit(moveComplete(false, from, to, xinfo));
-        return;
-    }
-
-    m_from->retrieve(from, to, "move", xinfo);
-}
-
-    void
-Empath::retrieve(const EmpathURL & url, QString xinfo)
-{
-    EmpathMailbox * m = mailbox(url);
-    
-    if (m == 0) {
-        emit(retrieveComplete(false, url, xinfo));
-        return;
-    }
-
-    m->retrieve(url, QString::null, xinfo);
-}
-
-    EmpathURL
-Empath::write(const EmpathURL & url, RMM::RMessage & msg, QString xinfo)
-{
-    EmpathMailbox * m = mailbox(url);
-    
-    if (m == 0) {
-        emit(writeComplete(false, url, xinfo));
-        return EmpathURL();
-    }
-    return m->write(url, msg, QString::null, xinfo);
-}
-
-    void
-Empath::createFolder(const EmpathURL & url, QString xinfo)
-{
-    EmpathMailbox * m = mailbox(url);
-
-    if (m == 0) {
-        emit(createFolderComplete(false, url, xinfo));
-        return;
-    }
-
-    m->createFolder(url, QString::null, xinfo);
-}
-
-    void
-Empath::remove(const EmpathURL & url, QString xinfo)
-{
-    EmpathMailbox * m = mailbox(url);
-    
-    if (m == 0) {
-        emit(removeComplete(false, url, xinfo));
-        return;
-    }
-
-    m->remove(url, QString::null, xinfo);
-}
-
-    void
-Empath::remove(const EmpathURL & url, const QStringList & l, QString xinfo)
-{
-    EmpathMailbox * m = mailbox(url);
-
-    if (m == 0) {
-        emit(removeComplete(false, url, xinfo));
-        return;
-    }
-
-    return m->remove(url, l, QString::null, xinfo);
-}
-
-    void
-Empath::mark(const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
-{
-    empathDebug("mark() called");
-    
-    EmpathMailbox * m = mailbox(url);
-    
-    if (m == 0) {
-        emit(markComplete(false, url, xinfo));
-        return;
-    }
-
-    m->mark(url, s, QString::null, xinfo);
-}
-
-    void
-Empath::mark(
-    const EmpathURL & url,
-    const QStringList & l,
-    RMM::MessageStatus s,
-    QString xinfo)
-{
-    empathDebug("mark() called");
-
-    EmpathMailbox * m = mailbox(url);
-    
-    if (m == 0) {
-        emit(markComplete(false, url, xinfo));
-        return;
-    }
-
-    m->mark(url, l, s, QString::null, xinfo);
-}
-
-    EmpathTask *
-Empath::addTask(const QString & name)
-{
-    // TODO: Remove this. It's deprecated since we killed EmpathTaskTimer.
-    empathDebug("This is deprecated.");
-    return new EmpathTask(name);
-}
-
 
 // Private methods follow
 
@@ -417,121 +290,6 @@ Empath::cacheMessage
 }
 
     void
-Empath::s_retrieveComplete(
-    bool status,
-    const EmpathURL & from,
-    const EmpathURL & to,
-    QString ixinfo,
-    QString xinfo)
-{
-    EmpathMailbox * m = mailbox(to);
-
-    if (m == 0) {
-        if (ixinfo == "copy")
-            emit(copyComplete(false, from, to, xinfo));
-        else
-            emit(moveComplete(false, from, to, xinfo));
-    }
-
-    RMM::RMessage * msg = message(from, xinfo);
-
-    if (msg == 0) {
-        if (ixinfo == "copy")
-            emit(copyComplete(false, from, to, xinfo));
-        else
-            emit(moveComplete(false, from, to, xinfo));
-    }
-    
-    m->write(to, *msg, ixinfo, xinfo);
-}
-
-    void
-Empath::s_retrieveComplete(
-    bool status,
-    const EmpathURL & url,
-    QString ixinfo, 
-    QString xinfo)
-{
-    empathDebug("emitting retrieveComplete");
-    emit(retrieveComplete(status, url, xinfo));
-
-    if (xinfo == "save")
-        s_messageReadyForSave(status, url, ixinfo, xinfo);
-}
-
-    void
-Empath::s_moveComplete(
-    bool status,
-    const EmpathURL & from,
-    const EmpathURL & to,
-    QString /* ixinfo */,
-    QString xinfo)
-{
-    emit(moveComplete(status, from, to, xinfo));
-}
-
-    void
-Empath::s_copyComplete(
-    bool status,
-    const EmpathURL & from,
-    const EmpathURL & to,
-    QString /* ixinfo */,
-    QString xinfo)
-{
-    emit(copyComplete(status, from, to, xinfo));
-}
-
-    void
-Empath::s_removeComplete(
-    bool status,
-    const EmpathURL & url,
-    QString /* ixinfo */,
-    QString xinfo)
-{
-    emit(removeComplete(status, url, xinfo));
-}
-
-    void
-Empath::s_markComplete(
-    bool status,
-    const EmpathURL & url,
-    QString /* ixinfo */,
-    QString xinfo)
-{
-    emit(markComplete(status, url, xinfo));
-}
-
-    void
-Empath::s_writeComplete(
-    bool status,
-    const EmpathURL & url,
-    QString ixinfo,
-    QString xinfo)
-{    
-    emit(writeComplete(status, url, xinfo));
-}
-
-    void
-Empath::s_createFolderComplete(
-    bool status,
-    const EmpathURL & url,
-    QString /* ixinfo */,
-    QString xinfo) 
-{
-    emit(createFolderComplete(status, url, xinfo));
-}
-
-    void
-Empath::s_removeFolderComplete(
-    bool status,
-    const EmpathURL & url,
-    QString /* ixinfo */,
-    QString xinfo)
-{
-    emit(removeFolderComplete(status, url, xinfo));
-}
-
-    void
 Empath::s_saveNameReady(const EmpathURL & url, QString name)
 {
     EmpathMailbox * m = mailbox(url);
@@ -539,7 +297,8 @@ Empath::s_saveNameReady(const EmpathURL & url, QString name)
     if (m == 0)
         return;
 
-    m->retrieve(url, name, "save");
+    EmpathJobInfo j(RetrieveMessage, url, name, "save");
+    m->queueJob(j);
 
 }
 
@@ -608,6 +367,155 @@ Empath::s_messageReadyForSave(
     s_infoMessage(okMessage.arg(name));
 }
 
+    void
+Empath::copy(
+    const EmpathURL & from,
+    const EmpathURL & to,
+    QString extraInfo)
+{
+    EmpathMailbox * m = mailbox(from);
+
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(CopyMessage, from, to, QString::null, extraInfo);
+    
+    m->queueJob(ji);
+}
+
+    void
+Empath::move(
+    const EmpathURL & from,
+    const EmpathURL & to,
+    QString extraInfo)
+{
+    EmpathMailbox * m = mailbox(from);
+
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(MoveMessage, from, to, QString::null, extraInfo);
+    
+    m->queueJob(ji);
+}
+
+    void
+Empath::retrieve(
+    const EmpathURL & url,
+    QString extraInfo)
+{
+    EmpathMailbox * m = mailbox(url);
+
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(RetrieveMessage, url, QString::null, extraInfo);
+    
+    m->queueJob(ji);
+}
+
+    void
+Empath::write(
+    const EmpathURL & folder,
+    RMM::RMessage & msg,
+    QString extraInfo)
+{
+    EmpathMailbox * m = mailbox(folder);
+
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(folder, EmpathURL(), msg, QString::null, extraInfo);
+    
+    m->queueJob(ji);
+}
+
+    void
+Empath::remove(
+    const EmpathURL & url,
+    QString extraInfo = QString::null)
+{
+    EmpathMailbox * m = mailbox(url);
+
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(
+        RemoveMessage, url, QStringList(url.messageID()),
+        QString::null, extraInfo);
+    
+    m->queueJob(ji);
+}
+
+    void
+Empath::remove(
+    const EmpathURL & folder,
+    const QStringList & list,
+    QString extraInfo)
+{
+    EmpathMailbox * m = mailbox(folder);
+
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(RemoveMessage, folder, list, QString::null, extraInfo);
+    
+    m->queueJob(ji);
+}
+
+    void 
+Empath::mark(
+    const EmpathURL & url,
+    RMM::MessageStatus status,
+    QString extraInfo)
+{
+    EmpathMailbox * m = mailbox(url);
+
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(
+        MarkMessage, url, QStringList(), status, QString::null, extraInfo);
+    
+    m->queueJob(ji);
+}
+
+    void    
+Empath::mark(
+    const EmpathURL & url,
+    const QStringList & list,
+    RMM::MessageStatus status,
+    QString extraInfo)
+{
+    EmpathMailbox * m = mailbox(url);
+
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(
+        MarkMessage, url, list, status, QString::null, extraInfo);
+    
+    m->queueJob(ji);
+}
+
+    void
+Empath::createFolder(const EmpathURL & url, QString extraInfo)
+{
+    EmpathMailbox * m = mailbox(url);
+    
+    if (m == 0)
+        return;
+
+    EmpathJobInfo ji(CreateFolder, url, QString::null, extraInfo);
+
+    m->queueJob(ji);
+}
+
+    void
+Empath::jobFinished(EmpathJobInfo ji)
+{
+    emit(jobComplete(ji));
+}
 
 void Empath::send(RMM::RMessage & m)     { mailSender_->send(m);     }
 void Empath::queue(RMM::RMessage & m)    { mailSender_->queue(m);    }
@@ -615,12 +523,9 @@ void Empath::sendQueued()                { mailSender_->sendQueued();}
 void Empath::s_newMailArrived()          { emit(newMailArrived());   }
 void Empath::filter(const EmpathURL & m) { filterList_.filter(m);    }
 
-void Empath::s_setupDisplay(QWidget * parent)  { emit(setupDisplay(parent));   }
-void Empath::s_setupIdentity(QWidget * parent) { emit(setupIdentity(parent));  }
-void Empath::s_setupSending(QWidget * parent)  { emit(setupSending(parent));   }
-void Empath::s_setupComposing(QWidget * parent){ emit(setupComposing(parent)); }
-void Empath::s_setupAccounts(QWidget * parent) { emit(setupAccounts(parent));  }
-void Empath::s_setupFilters(QWidget * parent)  { emit(setupFilters(parent));   }
+void Empath::s_setup(SetupType t, QWidget * parent)
+{ emit(setup(t, parent)); }
+
 void Empath::s_about(QWidget * parent)         { emit(about(parent));          }
 
 void Empath::s_newTask(EmpathTask * t) { emit(newTask(t)); }

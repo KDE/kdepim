@@ -47,13 +47,7 @@ class EmpathUI : public QObject
         
     protected slots:
     
-        void s_setupDisplay     (QWidget *);
-        void s_setupIdentity    (QWidget *);
-        void s_setupSending     (QWidget *);
-        void s_setupComposing   (QWidget *);
-        void s_setupAccounts    (QWidget *);
-        void s_setupFilters     (QWidget *);
-        void s_about            (QWidget *);
+        void s_setup(Empath::SetupType, QWidget *);
         
         void s_configureMailbox(const EmpathURL &, QWidget *);
 

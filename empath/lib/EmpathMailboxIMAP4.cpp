@@ -109,15 +109,6 @@ EmpathMailboxIMAP4::password()
     return password_;
 }
 
-    QString
-EmpathMailboxIMAP4::_write(
-    const EmpathURL & url, RMM::RMessage &, QString xxinfo, QString xinfo)
-{
-    // STUB
-    emit (writeComplete(false, url, xxinfo, xinfo));
-    return QString::null;
-}
-
     bool
 EmpathMailboxIMAP4::newMail() const
 {
@@ -138,85 +129,9 @@ EmpathMailboxIMAP4::init()
 }
 
     void
-EmpathMailboxIMAP4::_retrieve(
-    const EmpathURL &, const EmpathURL &, QString, QString)
+EmpathMailboxIMAP4::_runJob(EmpathJobInfo &)
 {
     // STUB
-}
-
-    void
-EmpathMailboxIMAP4::_retrieve(
-    const EmpathURL & url, QString xxinfo, QString xinfo)
-{
-    // STUB
-    emit (retrieveComplete(false, url, xxinfo, xinfo));
-}
-
-    void
-EmpathMailboxIMAP4::_removeMessage(
-    const EmpathURL & url, QString xxinfo, QString xinfo)
-{
-    // STUB
-    emit (removeComplete(false, url, xxinfo, xinfo));
-}
-
-    void
-EmpathMailboxIMAP4::_createFolder(
-    const EmpathURL & url, QString xxinfo, QString xinfo)
-{
-    // STUB
-    emit (createFolderComplete(false, url, xxinfo, xinfo));
-}
-
-    void
-EmpathMailboxIMAP4::_removeFolder(
-    const EmpathURL & url, QString xxinfo, QString xinfo)
-{
-    // STUB
-    emit (removeFolderComplete(false, url, xxinfo, xinfo));
-}
-
-    void
-EmpathMailboxIMAP4::_mark(
-    const EmpathURL & url, RMM::MessageStatus, QString xxinfo, QString xinfo)
-{
-    // STUB
-    emit (markComplete(false, url, xxinfo, xinfo));
-}
-
-    void
-EmpathMailboxIMAP4::_mark(
-    const EmpathURL & url,
-    const QStringList & l,
-    RMM::MessageStatus,
-    QString xxinfo,
-    QString xinfo)
-{
-    // STUB
-    EmpathURL u(url);
-    
-    QStringList::ConstIterator it;
-    
-    for (it = l.begin(); it != l.end(); ++it) {
-        u.setMessageID(*it);
-        emit (markComplete(false, u, xxinfo, xinfo));
-    }
-}
-
-    void
-EmpathMailboxIMAP4::_removeMessage(
-    const EmpathURL & url, const QStringList & l, QString xxinfo, QString xinfo)
-{
-    // STUB
-    EmpathURL u(url);
-    
-    QStringList::ConstIterator it;
-    
-    for (it = l.begin(); it != l.end(); ++it) {
-        u.setMessageID(*it);
-        emit (removeComplete(false, u, xxinfo, xinfo));
-    }
-
 }
 
 // vim:ts=4:sw=4:tw=78

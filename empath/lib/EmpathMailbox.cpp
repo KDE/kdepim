@@ -125,118 +125,28 @@ EmpathMailbox::folder(const EmpathURL & url)
 }
 
     void
-EmpathMailbox::retrieve(const EmpathURL & url, QString xxinfo, QString xinfo)
+EmpathMailbox::queueJob(EmpathJobInfo & jobInfo)
 {
-    _enqueue(RetrieveMessage, url, xxinfo, xinfo);
+    _enqueue(jobInfo);
 }
 
     void
-EmpathMailbox::retrieve
-(const EmpathURL & from, const EmpathURL & to, QString xxinfo, QString xinfo)
+EmpathMailbox::_enqueue(EmpathJobInfo & jobInfo)
 {
-    _enqueue(from, to, xxinfo, xinfo);
-}
-
-    EmpathURL
-EmpathMailbox::write(
-   const EmpathURL & folder, RMM::RMessage & msg, QString xxinfo, QString xinfo)
-{
-    QString id = empath->generateUnique();
+    if (jobInfo.type() != CopyMessage &&
+        jobInfo.type() != MoveMessage) {
+        
+        queue_.enqueue(new EmpathJobInfo(jobInfo));
     
-    EmpathURL u(folder);
-    u.setMessageID(id);
+    } else {
     
-    _enqueue(u, msg, xxinfo, xinfo);
-    
-    return u;
-}
-    
-    void
-EmpathMailbox::remove(const EmpathURL & url, QString xxinfo, QString xinfo)
-{
-    _enqueue(
-        url.isMessage() ? RemoveMessage : RemoveFolder,
-        url, xxinfo, xinfo);
-}
-    
-    void
-EmpathMailbox::remove(
-    const EmpathURL & url, const QStringList & l, QString xxinfo, QString xinfo)
-{
-    EmpathURL u(url);
-    
-    QStringList::ConstIterator it;
-
-    for (it = l.begin(); it != l.end(); ++it) {
-        u.setMessageID(*it);
-        _enqueue(RemoveMessage, u, xxinfo, xinfo);
+        // Copy / move jobs are handled differently as they are done in 2 parts.
+        EmpathJobInfo * job = new EmpathJobInfo(jobInfo);
+        job->setType(RetrieveMessage);
+        job->setSubType(jobInfo.type());
+        queue_.enqueue(job);
     }
-}
     
-    void
-EmpathMailbox::createFolder(
-    const EmpathURL & url, QString xxinfo, QString xinfo)
-{
-    _enqueue(CreateFolder, url, xxinfo, xinfo);
-}
-    
-    void
-EmpathMailbox::mark(
-    const EmpathURL & url, RMM::MessageStatus s, QString xxinfo, QString xinfo)
-{
-    _enqueue(url, s, xxinfo, xinfo);
-}
-    
-    void
-EmpathMailbox::mark(
-    const EmpathURL & url,
-    const QStringList & l,
-    RMM::MessageStatus s,
-    QString xxinfo,
-    QString xinfo)
-{
-    EmpathURL u(url);
-    
-    QStringList::ConstIterator it;
-
-    for (it = l.begin(); it != l.end(); ++it) {
-        u.setMessageID(*it);
-        _enqueue(u, s, xxinfo, xinfo);
-    }
-}
-
-    void
-EmpathMailbox::_enqueue(
-    const EmpathURL & url, RMM::MessageStatus s, QString xxinfo, QString xinfo)
-{
-    _enqueue(new MarkAction(url, s, xxinfo, xinfo));
-}
-
-    void
-EmpathMailbox::_enqueue(
-    ActionType t, const EmpathURL & url, QString xxinfo, QString xinfo)
-{
-    _enqueue(new Action(t, url, xxinfo, xinfo));
-}
-
-    void
-EmpathMailbox::_enqueue(
-    const EmpathURL & url, RMM::RMessage & msg, QString xxinfo, QString xinfo)
-{
-    _enqueue(new WriteAction(url, msg, xxinfo, xinfo));
-}
-
-    void
-EmpathMailbox::_enqueue(
-    const EmpathURL & from, const EmpathURL & to, QString xxinfo, QString xinfo)
-{
-    _enqueue(new CopyAction(from, to, xxinfo, xinfo));
-}
-
-    void
-EmpathMailbox::_enqueue(Action * a)
-{
-    queue_.enqueue(a);
     _runQueue();
 }
 
@@ -244,44 +154,10 @@ EmpathMailbox::_enqueue(Action * a)
 EmpathMailbox::_runQueue()
 {
     while (queue_.count() != 0) {
-
-        Action * a = queue_.dequeue();
-
-        EmpathURL u = a->url();
-
-        switch (a->actionType())
-        {
-            case RetrieveMessage:
-                _retrieve(u, a->xxinfo(), a->xinfo());
-                break;
-            
-            case CopyMessage:
-                _retrieve(u, ((CopyAction *)a)->to(), a->xxinfo(), a->xinfo());
-                break;
-        
-            case MarkMessage:
-                _mark(u, ((MarkAction *)a)->status(), a->xxinfo(), a->xinfo());
-                break;
-        
-            case WriteMessage:
-                _write(u, ((WriteAction *)a)->msg(), a->xxinfo(), a->xinfo());
-                break;
-        
-            case RemoveMessage:
-                _removeMessage(u, a->xxinfo(), a->xinfo());
-                break;
-        
-            case CreateFolder:
-                _createFolder(u, a->xxinfo(), a->xinfo());
-                break;
-        
-            case RemoveFolder:
-                _removeFolder(u, a->xxinfo(), a->xinfo());
-                break;
-                
-            default:
-                break;
-        }
+        EmpathJobInfo * jobInfo = queue_.dequeue();
+        _runJob(*jobInfo);
+        delete jobInfo;
+        jobInfo = 0;
     }
 }
 
@@ -299,40 +175,6 @@ EmpathMailbox::_connectUp()
     QObject::connect(
         this,   SIGNAL(updateFolderLists()),
         empath, SLOT(s_updateFolderLists()));
-
-    QObject::connect(
-            this,
-            SIGNAL(retrieveComplete(bool, const EmpathURL &, const EmpathURL &,
-                    QString, QString)),
-            empath,
-            SLOT(s_retrieveComplete(bool, const EmpathURL &, const EmpathURL &,
-                    QString, QString)));
-
-    QObject::connect(
-        this,
-        SIGNAL(retrieveComplete(bool, const EmpathURL &,
-                QString, QString)),
-        empath,
-        SLOT(s_retrieveComplete(bool, const EmpathURL &,
-                QString, QString)));
-
-    QObject::connect(
-        this,
-        SIGNAL(removeComplete(bool, const EmpathURL &, QString, QString)),
-        empath, SLOT(
-        s_removeComplete(bool, const EmpathURL &, QString, QString)));
-
-    QObject::connect(
-        this,
-        SIGNAL(writeComplete(bool, const EmpathURL &, QString, QString)),
-        empath,
-        SLOT(s_writeComplete(bool, const EmpathURL &, QString, QString)));
-
-    QObject::connect(
-        this,
-        SIGNAL(markComplete(bool, const EmpathURL &, QString, QString)),
-        empath,
-        SLOT(s_markComplete(bool, const EmpathURL &, QString, QString)));
 }
 
 

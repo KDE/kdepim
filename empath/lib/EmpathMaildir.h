@@ -33,6 +33,7 @@
 #include <qtimer.h>
 #include <qobject.h>
 #include <qstringlist.h>
+#include <qmap.h>
 
 // Local includes
 #include "EmpathURL.h"
@@ -70,15 +71,13 @@ class EmpathMaildir : public QObject
         const EmpathURL & url() const       { return url_; }
         const QString & path() const        { return path_; }
         
-        bool mark(const QString &, RMM::MessageStatus);
-        bool mark(const QStringList &, RMM::MessageStatus);
+        QMap<QString, bool> mark(const QStringList &, RMM::MessageStatus);
         
         QString writeMessage(RMM::RMessage &);
         
         RMM::RMessage * message (const QString &);
         
-        bool removeMessage (const QString &);
-        bool removeMessage (const QStringList &);
+        QMap<QString, bool> removeMessage (const QStringList &);
         
         void sync(bool force = false);
         
@@ -88,6 +87,8 @@ class EmpathMaildir : public QObject
         
     private:
         
+        bool        _removeMessage(const QString & id);
+        bool        _mark(const QString & id, RMM::MessageStatus msgStat);
         QString     _write(RMM::RMessage &);
         QCString    _messageData(const QString &, bool isFullName = false);
         void        _markNewMailAsSeen();

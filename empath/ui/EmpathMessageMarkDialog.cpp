@@ -63,8 +63,6 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
             "in; you can select 'tagged messages' for\n"
             "some operations."));
     
-    int h = rb_tagged_->sizeHint().height();
-    
     rb_replied_    =
         new QRadioButton(i18n("Replied"), this, "rb_replied");
     

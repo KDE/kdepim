@@ -46,8 +46,8 @@ EmpathComposer::EmpathComposer()
 {
     empathDebug("ctor");
     QObject::connect(
-        empath, SIGNAL(retrieveComplete(bool, const EmpathURL &, QString)),
-        SLOT(s_retrieveComplete(bool, const EmpathURL &, QString)));
+        empath, SIGNAL(jobComplete(EmpathJobInfo &)),
+        SLOT(s_jobComplete(EmpathJobInfo &)));
 }
 
 EmpathComposer::~EmpathComposer()
@@ -178,22 +178,21 @@ EmpathComposer::bugReport()
 }
  
     void
-EmpathComposer::s_retrieveComplete(
-        bool status, const EmpathURL & url, QString xinfo)
+EmpathComposer::s_jobComplete(EmpathJobInfo & ji)
 {
-    if (!status || strcmp(xinfo.left(8), "Composer") != 0)
+    if (!ji.success() || strcmp(ji.xinfo().left(8), "Composer") != 0)
         return;
 
-    RMM::RMessage * m(empath->message(url, xinfo));
+    RMM::RMessage * m(empath->message(ji.from(), ji.xinfo()));
     
     if (m == 0) {
         empathDebug(
             "Couldn't get supposedly retrieved message `" +
-            url.asString() + "'");
+            ji.from().asString() + "'");
         return;
     }
  
-    int id = xinfo.remove(0, 10).toInt();
+    int id = ji.xinfo().remove(0, 10).toInt();
 
     switch (jobs_[id].composeType) {
 

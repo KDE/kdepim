@@ -34,6 +34,7 @@
 // Local includes
 #include "EmpathURL.h"
 #include "EmpathDefines.h"
+#include "EmpathJobInfo.h"
 #include "EmpathAttachmentSpec.h"
 #include <RMM_Envelope.h>
 #include <RMM_Message.h>
@@ -111,7 +112,7 @@ class EmpathComposer : public QObject
         
     protected slots:
 
-        void s_retrieveComplete(bool, const EmpathURL &, QString);
+        void s_jobComplete(EmpathJobInfo &);
    
     private:
         

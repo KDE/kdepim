@@ -31,6 +31,8 @@
 #include <klocale.h>
 
 // Local includes
+#include "EmpathUIUtils.h"
+#include "EmpathSeparatorWidget.h"
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathMailboxIMAP4.h"
  
@@ -61,8 +63,16 @@ EmpathConfigIMAP4Dialog::EmpathConfigIMAP4Dialog
     pb_Cancel_  = buttonBox->addButton(i18n("&Cancel"));
     pb_Help_    = buttonBox->addButton(i18n("&Help"));    
 
+    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+
     QLabel * l_notImp  =
         new QLabel(i18n("Sorry not implemented yet"), this, "l_notImp");
+
+    layout->addWidget(l_notImp);
+
+    layout->addWidget(new EmpathSeparatorWidget(this));
+
+    layout->addWidget(buttonBox);
 
     // Layouts
     fillInSavedData();
