@@ -43,17 +43,18 @@
 <copyright>
 <year>1999</year>
 <year>2000</year>
+<year>2001</year>
 <holder>Adriaan de Groot</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2000-12-09</date>
-<releaseinfo>4.00.00</releaseinfo>
+<date>2001-04-17</date>
+<releaseinfo>4.2.2</releaseinfo>
 
 <abstract>
 <para>
-&kpilot; 4.0.0
+&kpilot; 4.2.2
 is the KDE version of the Desktop HotSync software for 
 the &ThreeCom; &PalmPilot; and similar products.
 </para>
@@ -73,7 +74,7 @@ the &ThreeCom; &PalmPilot; and similar products.
 <title>Introduction</title>
 
 <para>
-&kpilot; 4.0.0
+&kpilot; 4.2.2
 is the latest version of the Desktop HotSync software for &UNIX;.
 After several releases and 
 many contributions from users &kpilot;, along with
@@ -128,6 +129,36 @@ and &kpilot; 4.x has become current.
 <itemizedlist>
 <listitem>
 <para>
+New in 4.2.2 -
+(There were versions 4.1.x and 4.2.1 for KDE 2, but we never
+updated the documentation to reflect this. These revision notes
+apply to the change between &kpilot; 4.0.0 and 4.2.2.)
+Many compilation and portability fixes were applied.
+Those changes do not affect the visible appearance of &kpilot;.
+What <emphasis>has</emphasis> changed is the GUI.
+We now use the KDE 2 XML GUI.
+This means that menu names have changed <emphasis>again</emphasis>
+but we feel it should be obvious where things have ended up.
+This has the advantage that you can now easily customize the toolbar
+and that the &kpilot; user interface behaves more like the rest of KDE 2.
+Tool tips (also called balloon help) have finally been added.
+</para>
+<para>
+There are two new external conduits: one for &kaddressbook; (and hence kab, the
+KDE 2 address book) and one for the expenses application on the &PalmPilot;.
+</para>
+<para>
+<emphasis>What's missing:</emphasis>
+The expense conduit is rather experimental as of 
+may 2001,
+but should improve vastly before the KDE 2.2 final release.
+The FastSync vs. HotSync is not fully functional yet.
+There have also been problems reported with the
+<application>KNotes</application> conduit.
+</para>
+</listitem>
+<listitem>
+<para>
 New in 4.0.0 -
 &kpilot; is now a KDE 2 application.
 A lot of work has gone into making the main
@@ -175,9 +206,9 @@ New configuration options
 and 
 <link linkend="dbspecial">Skip</link>
 have been added
-to avoid database corruption for some Handbase databases --
+to avoid database corruption for some Handbase databases &mdash;
 and possibly other products as well.
-The documentation for &kpilot; -- in english only -- has been
+The documentation for &kpilot; &mdash; in english only &mdash; has been
 vastly expanded.
 </para>
 </listitem>
@@ -310,21 +341,20 @@ data from your &PalmPilot; with the
 <title>Configuring &kpilot;</title>
 
 <para>  
-Once &kpilot; is installed it is rather easy to set up.  
+Once &kpilot; is installed it is easy to set up.  
 Run &kpilot; from either
 the panel menu or from the command prompt and it will prompt you with
 a dialog box asking you to configure it for the first time.  
 This configuration dialog can be requested later
 from the
 <menuchoice>
-<guimenu>File</guimenu> 
-<guimenuitem>Settings</guimenuitem>
+<guimenu>Settings</guimenu> 
+<guimenuitem>Configure &kpilot;</guimenuitem>
 </menuchoice>
 menu or by starting &kpilot;
 from the shell
 as follows:
-<screen width="40">
-<prompt>$ </prompt> <userinput>kpilot --setup</userinput>
+<screen width="40"><prompt>$ </prompt> <userinput>kpilot --setup</userinput>
 </screen>
 In addition, if you upgrade &kpilot; and some new configuration
 options require your attention, this setup dialog will reappear.
@@ -402,6 +432,8 @@ normal user!  This is done by doing a
 <replaceable>device</replaceable> is the correct serial port.
 See also the <link linkend="faq">FAQ</link>
 for more information about setting up the &PalmPilot; device.
+<emphasis>Handspring Visor / USB cradle users see the
+<link linkend="faq">FAQ</link> as well!</emphasis>
 </para>
 </listitem>
 </varlistentry>
@@ -468,13 +500,19 @@ However, by enabling this option the daemon will start up the &kpilot;
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Show Daemon in KPanel</guilabel></term>
+<term><guilabel>Show Daemon in &kicker;</guilabel></term>
 <listitem>
 <para>
 This option lets the daemon place a little HotSync icon 
-<!-- TODO: add the icon -->
+<guiicon>HotSync icon
+<inlinemediaobject>
+<imageobject><imagedata fileref="toolbar_hotsync.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</guiicon>.  
 in
-the KPanel. This icon has a menu that can be brought up with
+the &kicker; system tray. 
+This icon has a menu that can be brought up with
 the right mouse button, for performing a HotSync and the like.
 Without this option, the daemon is not visible to the user at all.
 </para>
@@ -500,7 +538,7 @@ such as <application>malsync</application>
 <para>
 For a fully visible &kpilot; installation, 
 enable <guilabel>Start KPilot at HotSync</guilabel>
-and <guilabel>Show Daemon in KPanel</guilabel>
+and <guilabel>Show Daemon in &kicker;</guilabel>
 while disabling <guilabel>Stop Daemon on exit</guilabel>.
 To make &kpilot; all but invisible,
 disable all the options except 
@@ -516,14 +554,14 @@ Address page
 
 <para>
 The address page contains settings specific to the
-<emphasis>built in</emphasis> address book.
+<emphasis>built in</emphasis> address book viewer.
 Note that this address book has nothing directly 
 to do with the KDE address book, your email address book,
 or anything else.
 Connections with those address books could be
 provided by conduits.
-(Right now there is <emphasis>no</emphasis>
-conduit for the address book, though.)
+The <application>kaddressbook</application> conduit
+can sync your &PalmPilot; with the KDE address book.
 </para>
 
 <screenshot>
@@ -548,6 +586,14 @@ to or from a text  file.
 These two fields
 determine the format the file is written in (for export)
 or must have (for import).
+You can list the fields of the address book, separated by commas.
+The names of fields are described
+<link linkend="addressfmt">below</link>.
+
+<tip>
+Noone really uses the <acronym>CSV</acronym> import and
+export for the address book, so leave it alone.
+</tip>
 </para>
 </listitem>
 </varlistentry>
@@ -653,7 +699,7 @@ the &PalmPilot; databases &kpilot; works with.
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Show secrets</guilabel></term>
+<term><guilabel>Show Secrets</guilabel></term>
 <listitem>
 <para>
 	In your &PalmPilot; you can mark some records
@@ -698,6 +744,12 @@ the &PalmPilot; databases &kpilot; works with.
 
 </variablelist>
 
+<warning>
+Changing the contents of the <guilabel>Backup Only</guilabel>
+or <guilabel>Skip</guilabel> fields, in particular removing
+the databases already listed there, can damage those databases
+when you perform a HotSync.
+</warning>
 
 </sect2>
 
@@ -751,8 +803,8 @@ most recent information and will overwrite the &PalmPilot;'s copy.
 <term><guilabel>Force first-time sync every time</guilabel></term>
 <listitem>
 <para>
-Under some circumstances -- you have many 
-<acronym>PC</acronym>s and many &PalmPilot;s --
+Under some circumstances &mdash; you have many 
+<acronym>PC</acronym>s and many &PalmPilot;s &mdash;
 you may want to perform a &quot;cleaner&quot; HotSync every time
 instead of the &quot;quick-and-dirty&quot; HotSync that
 &kpilot; does if you just have one &PalmPilot; and one <acronym>PC</acronym>.
@@ -808,10 +860,11 @@ This is a classic trade-off between speed and safety.
 The main window in &kpilot; just contains the &kpilot; logo.
 You can switch to one of the 
 <link linkend="builtin">builtin applications</link> by
-using the drop-down list on the toolbar.
+using the 
+<guimenu>View</guimenu> menu.
 </para>
 
-<screenshot>
+<screenshot id="main-app">
 <screeninfo>&kpilot; Main Window</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="main-app.png" format="PNG"/></imageobject>
@@ -825,20 +878,6 @@ The main window contains the application menu, which we will deal with here.
 </para>
 
 <variablelist id="menu-file">
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Settings</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-Brings up the <link linkend="general">configuration dialog</link>
-for &kpilot;.
-</para>
-</listitem>
-</varlistentry>
 
 
 
@@ -892,6 +931,10 @@ a HotSync is started.
 <para>
 Performs a full backup of your &PalmPilot;. This 
 is like a HotSync, but can take several minutes.
+<tip>
+The first thing you should do after starting &kpilot; for
+the first time is make a full backup.
+</tip>
 </para>
 </listitem>
 </varlistentry>
@@ -915,11 +958,11 @@ This copies all the data on your
 replacing whatever data was there.
 Use this if your &PalmPilot; suffers some catastrophe
 (or is replaced by a new one).
-<emphasis>
+<warning>
 Doing a restore will erase all data on the &PalmPilot;
 before restoring the information from your 
 <acronym>PC</acronym>!
-</emphasis>
+</warning>
 </para>
 </listitem>
 </varlistentry>
@@ -944,19 +987,42 @@ is enabled.
 </variablelist>
 
 
+<para>
+The <guimenu>View</guimenu> menu
+allows you to choose a database viewer
+or &kpilot;'s main page.
+</para>
 
 <variablelist>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>Conduits</guimenu>
-<guimenuitem>External</guimenuitem>
+<guimenu>View</guimenu>
+<guimenuitem>&kpilot;</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
-<action>Configures the external conduits</action>.
-This is explained <link linkend="conduits">below</link>.
+<action>Displays the &kpilot; logo page</action>.
+This puts &kpilot; in the state shown in
+the picture 
+<link linkend="main-app">above</link>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Memo Viewer</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+<action>Displays the internal memo viewer.</action>
+See <link linkend="memo-app">below</link> for more
+information on the memo viewer.
 </para>
 </listitem>
 </varlistentry>
@@ -965,26 +1031,40 @@ This is explained <link linkend="conduits">below</link>.
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>Conduits</guimenu>
-</menuchoice>:
+<guimenu>View</guimenu>
+<guimenuitem>Address Viewer</guimenuitem>
+</menuchoice>
 </term>
 <listitem>
 <para>
-The remainder of the <menuchoice>
-<guimenu>Conduits</guimenu>
-</menuchoice>
-menu lists the 
-<link linkend="builtin">builtin applications</link>, 
-just like the
-drop-down box in the toolbar does.
-Select one of these applications
-to switch to it.
+<action>Displays the internal address book viewer.</action>
+You can view and edit addresses with the address book viewer.
+See <link linkend="address-app">below</link> for more information.
 </para>
 </listitem>
 </varlistentry>
 
 
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>File Installer</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+<action>Displays the file installer.</action>
+You can drag files onto the file installer to install
+them on your &PalmPilot;.
+See <link linkend="installer-app">below</link> for more information.
+</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
+
+<!-- TODO: handle the settings dialog -->
 
 </sect1>
 
@@ -997,26 +1077,16 @@ Builtin Applications
 </title>
 
 <para>
-The builtin applications can be selected in two ways:
-either by selecting the application from the
+The builtin applications can be selected :
+by selecting the application from the
 <menuchoice><guimenu>Conduits</guimenu></menuchoice>
 menu, for example
 <menuchoice>
 <guimenu>Conduits</guimenu>
 <guimenuitem>Memo</guimenuitem>
-</menuchoice>,
-or by selecting the application from the drop-down list
-in &kpilot;'s toolbar.
+</menuchoice>.
 </para>
 
-<screenshot>
-<screeninfo>&kpilot; Toolbar</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="toolbar.png" format="PNG"/></imageobject>
-<textobject><phrase>The &kpilot; Toolbar</phrase></textobject>
-<caption><para>The &kpilot; Toolbar</para></caption>
-</mediaobject>
-</screenshot>
 
 <para>
 Selecting one of the builtin applications
@@ -1076,7 +1146,7 @@ until the next HotSync.
 The
 <guibutton>Import Memo</guibutton>
 button allows you to read a text file and
-add it -- as a memo -- to the &PalmPilot;.
+add it &mdash; as a memo &mdash; to the &PalmPilot;.
 Importing a memo does not take effect until
 the next HotSync.
 Note that if you import a memo and decide that
@@ -1219,8 +1289,8 @@ to interface your &PalmPilot; to any application imaginable.
 <para>
 Conduits can be set up by selecting
 <menuchoice>
-<guimenu>Conduits</guimenu>
-<guimenuitem>External</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Conduits</guimenuitem>
 </menuchoice>.
 This allows you to select which conduits 
 to run during a HotSync and to configure those conduits.
@@ -1238,6 +1308,7 @@ branches of the tree (from <guilabel>Available</guilabel>
 to <guilabel>Active</guilabel> and back again).
 Only those conduits listed under <guilabel>Active</guilabel>
 will actually run during a HotSync.
+Click on a conduit to configure it.
 </para>
 
 <sect2 id="popmail-cond">
@@ -1275,6 +1346,113 @@ and one for
 </mediaobject>
 </screenshot>
 
+<para>
+Depending on which send method you choose,
+different fields will be activated in the remainder of the
+tab, allowing you to enter the necessary information.
+</para>
+
+<screenshot>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-popmail-send-as.png" format="PNG"/></imageobject>
+<textobject><phrase>General mail configuration: who are you?</phrase></textobject>
+<caption><para>General mail configuration: who are you?</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+Your email address can be entered in the
+<guilabel>Email Address</guilabel> field.
+This is the email address that goes in the <quote>From:</quote>
+line in outgoing mail.
+If you enter a file name in the <guilabel>Signature File</guilabel>
+field then that file will be appended to each outgoing mail as
+a signature.
+</para>
+
+
+
+
+<screenshot>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-popmail-sendmail.png" format="PNG"/></imageobject>
+<textobject><phrase>Sendmail configuration</phrase></textobject>
+<caption><para>Sendmail configuration</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+The configuration of the
+<application><trademark>Sendmail</trademark></application> 
+method of sending is fairly straightforward.
+Check the path to your installation of 
+<application><trademark>Sendmail</trademark></application>,
+for example by typing
+<userinput><command>which sendmail</command></userinput>
+in a &konsole; window.
+The options to <application><trademark>Sendmail</trademark></application>
+should not need to be changed, but you can if you like.
+<warning>
+<application><trademark>Sendmail</trademark></application>
+is not provided with destination addresses on the command line,
+so you must specify the <userinput><option>-t</option></userinput>.
+If you are using a 
+non-<trademark><application>Sendmail</application></trademark>
+<acronym>MTA</acronym>
+like <application><trademark>Postfix</trademark></application>
+then the equivalent
+<quote>extract recipients from message headers</quote>
+option must be given.
+</warning>
+</para>
+
+
+<screenshot>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-popmail-smtp.png" format="PNG"/></imageobject>
+<textobject><phrase>SMTP setup</phrase></textobject>
+<caption><para>SMTP setup</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+To use <acronym>SMTP</acronym> sending you need to specify
+the name of the machine which runs your
+<acronym>SMTP</acronym> server, and the port number to
+connect to.
+The default port number of 25 is almost always correct.
+<note>
+&kpilot; does not use the <acronym>SMTP</acronym>
+configuration of the <acronym>SMTP</acronym> IOSlave.
+This may change in a future version of &kpilot;.
+</note>
+</para>
+
+
+<screenshot>
+<screeninfo>Setting up the Mail Conduit</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-popmail-kmail.png" format="PNG"/></imageobject>
+<textobject><phrase>&kmail; sending</phrase></textobject>
+<caption><para>&kmail; sending</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+When sending mail through &kmail;, &kpilot;
+automatically places it in your &kmail; outbox.
+&kmail; saves mail in the outbox until you request that
+those pieces of mail are <emphasis>really</emphasis> sent.
+Check the <guilabel>Send mail through &kmail; immediately</guilabel>
+to let the Mail Conduit tell &kmail; to send all mail from the
+outbox as soon as it it done HotSyncing.
+This has the side effect of also sending any other pieces of
+mail that may be in your outbox.
+</para>
+
 </sect3>
 
 <sect3 id="popmail-cond-recv">
@@ -1291,6 +1469,11 @@ and one for
 </screenshot>
 </sect3>
 
+<para>
+Depending on which send method you choose,
+different fields will be activated in the remainder of the
+tab, allowing you to enter the necessary information.
+</para>
 
 </sect2>
 
@@ -1371,6 +1554,16 @@ since there is only one configuration option.
 </sect2>
 
 
+<sect2 id="conduit-kaddressbook">
+<title>&kaddressbook; Conduit</title>
+
+<para>
+The &kaddressbook; conduit allows you to synchronize the
+&PalmPilot; address book with your 
+KDE address book.
+</para>
+
+</sect2>
 
 <sect2 id="conduit-null">
 <title>NULL conduit</title>
@@ -1685,7 +1878,9 @@ extra hardware.
 
 <para>
 Your linux kernel will need to support <acronym>IR</acronym> and the <acronym>IRCOMM</acronym> protocol.
-For stock RedHat systems, the following command should
+For stock 
+<!-- TM? -->RedHat 
+systems, the following command should
 setup <acronym>IR</acronym> support (as root):
 <screen width="40">
 <prompt># </prompt><userinput><command>modprobe</command> <option>ircomm</option></userinput>
@@ -1717,6 +1912,14 @@ Follow the instructions in the <filename>IR-HOWTO</filename> for assistance
 Once you've gotten this far, just make <filename>/dev/pilot</filename>
 point to <filename>/dev/ircomm0</filename>
 and you're ready!
+</para>
+
+<para>
+The IR-HOWTO and other useful information on using IR may
+be found at
+<ulink url="http://mobilix.org/howtos.html">http://mobilix.org/howtos.html</ulink>
+and
+<ulink url="http://mobilix.org/software/irda/">http://mobilix.org/software/irda/</ulink>.
 </para>
 </answer>
 </qandaentry>
@@ -1776,18 +1979,29 @@ Contributors:
 </listitem>
 <listitem><para>Preston Brown <email>pbrown@redhat.com</email></para>
 </listitem>
-<listitem><para>Conduits by: Herwin Jan Steehouwer,
+<listitem><para>VCal and Todo Conduits by: Herwin Jan Steehouwer,
 Kenneth Albanowski, Michael Kropfberger
 </para></listitem>
-<listitem><para>Patches by: Robert Ambrose, Scott Presnell,
-Dag Nygren, Chuck Robey, Jay Summet, Heiko Purnhagen,
-J&ouml;rg Habenicht
+<listitem><para>Popmail Conduit overhaul: Marko Gr&ouml;nroos
+</para></listitem>
+<listitem><para>&kaddressbook; Conduit: Greg Stern
+</para></listitem>
+<listitem><para>Patches by: 
+Robert Ambrose, 
+J&ouml;rg Habenicht,
+Philipp Hullmann,
+Dag Nygren, 
+Scott Presnell,
+Heiko Purnhagen,
+Chuck Robey 
+and
+Jay Summet 
 </para></listitem>
 </itemizedlist>
 </para>
 
 <para>
-Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
+Documentation copyright 2000,2001 Adriaan de Groot <email>adridg@cs.kun.nl</email>
 </para>
 
 &underFDL;
@@ -1798,6 +2012,9 @@ Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
 </book>
 <!-- 
      $Log$
+     Revision 1.10  2001/04/30 13:48:09  bischoff
+     Converted dates to ISO format
+
      Revision 1.9  2001/03/31 02:01:18  lauri
      CVS_SILENT converting to XML
 
