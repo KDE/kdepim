@@ -128,7 +128,7 @@ bool KABC::ResourceIMAP::loadResource( const QString& resource )
     return false;
   }
 
-  for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     KABC::Addressee addr = mConverter.parseVCard( *it );
     addr.setResource( this );
     addr.setChanged( false );
