@@ -200,6 +200,8 @@ bool ResourceRemote::doLoad()
     mCalendar.load( cacheFile() );
   }
 
+  emit resourceChanged( this );
+
   kdDebug() << "Download from: " << mDownloadUrl << endl;
 
   mDownloadJob = KIO::file_copy( mDownloadUrl, KURL( cacheFile() ), -1, true,

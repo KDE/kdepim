@@ -171,6 +171,8 @@ bool KCalResourceSlox::doLoad()
   mCalendar.load( cacheFile() );
   enableChangeNotification();
 
+  emit resourceChanged( this );
+
   clearChanges();
 
   QString p = KURL( mPrefs->url() ).protocol();

@@ -160,7 +160,10 @@ class ResourceCalendar : public KRES::Resource
 
   signals:
     /**
-      This signal is emitted when the data in the resource has changed.
+      This signal is emitted when the data in the resource has changed. The
+      resource has to make sure that this signal is emitted whenever any
+      pointers to incidences become invalid the resource has given to the
+      calling code before.
     */
     void resourceChanged( ResourceCalendar * );
 
