@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Comment=email message list
+Name=EmpathMessageListWidget
+ServiceTypes=KParts/ReadOnlyPart
+X-KDE-Library=libEmpathMessageListWidget
