@@ -1,21 +1,11 @@
 Highest priority first.
 
-* Make a general gdbm-like class from KSycoca stuff and use
-  this instead of gdbm.
+* Finish composition code - adding attachments etc.
 
-* Make forwarding work properly. If only one plain body part -> just
-  add some text stating this is forwarded, else attach as message/rfc822 ?
-  Update: Wilco is working on this.
+* Finish DnD - connect to relevant slots and test.
 
-* Drag and drop
-  Update: Wilco is working on this
+* Use open folder icons when appropriate.
 
-* Use open folder icons when appropriate ?
-
-* Nail down the parser (rmm). It's still buggy when creating message parts
-  yourself and trying to put them together. Sometimes a pure virtual method
-  gets called and I haven't tracked that down.
-  
 * kioslaves need to be worked in for POP (working on), IMAP, and possibly SMTP
   (where a kioslave would have to be written !)
   
@@ -23,17 +13,15 @@ Highest priority first.
 
 * Add (configurable) accelerator keys.
 
+* Go back to using templates for viewing messages instead of
+  EmpathHeaderViewWidget etc.
+
 * Provide an external interface that allows triggering a mail check,
   retrieving a message, sending, etc. Will use DCOP, I think.
 
 * Make printing work. HTML view will do it itself, though a little weirdly.
   Will there be a general KDE printing i/f ? Do I make stuff ps first ?
 
-* Make From: bit in header view widget active as HTML label - basically need
-  some way to be able to mail to or add to (non-existant) address book.
-  Update: This wasn't done due to KHTMLLabel crashing things. Can now
-  go try it.
-  
 * Plug memory leaks.
 
 * Release !
