@@ -229,7 +229,7 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
     return;
   }
 
-  KService::Ptr offer = KServiceTypeProfile::preferredService("text/plain", true);
+  KService::Ptr offer = KServiceTypeProfile::preferredService("text/plain", "Application");
   KURL u(fileName);
 
   if (offer)
