@@ -1,3 +1,5 @@
+#ifndef _NULL_NULL_CONDUIT_H
+#define _NULL_NULL_CONDUIT_H
 /* null-conduit.h			KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
@@ -20,37 +22,37 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef _NULL_NULL_CONDUIT_H
-#define _NULL_NULL_CONDUIT_H
-
-#ifndef _KPILOT_BASECONDUIT_H
-#include "baseConduit.h"
-#endif
+#include "plugin.h"
 
 class PilotRecord;
+class PilotDatabase;
 
-class NullConduit : public BaseConduit
+class NullConduit : public ConduitAction
 {
 public:
-  NullConduit(eConduitMode mode);
-  virtual ~NullConduit();
-  
-  virtual void doSync();
-  virtual QWidget* aboutAndSetup();
+	NullConduit(KPilotDeviceLink *,
+		const char *name=0L,
+		const QStringList &args = QStringList());
+	virtual ~NullConduit();
 
-  virtual const char* dbInfo() ; // { return NULL; }
+	virtual void exec();
+
+protected:
+	PilotDatabase *fDatabase;
 };
-#endif
 
 // $Log$
+// Revision 1.8  2001/04/01 17:31:11  adridg
+// --enable-final and #include fixes
+//
 // Revision 1.7  2001/03/09 09:46:14  adridg
 // Large-scale #include cleanup
 //
@@ -60,3 +62,4 @@ public:
 // Revision 1.5  2000/11/02 23:10:32  adridg
 // Added attach-to-database feature
 //
+#endif

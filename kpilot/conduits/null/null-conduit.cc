@@ -22,56 +22,16 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
-
-// Only include what we really need:
-// First UNIX system stuff, then std C++, 
-// then Qt, then KDE, then local includes.
-//
-//
-#include <iostream.h>
-
-#ifndef _KMESSAGEBOX_H
-#include <kmessagebox.h>
-#endif
-
-#ifndef _KCONFIG_H
-#include <kconfig.h>
-#endif
-
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
-
-
-#ifndef _KPILOT_CONDUITAPP_H
-#include "conduitApp.h"
-#endif
-
-#ifndef _KPILOT_KPILOTCONFIG_H
-#include "kpilotConfig.h"
-#endif
-
-#ifndef _NULL_NULL_CONDUIT_H
-#include "null-conduit.h"
-#endif
-
-#ifndef _NULL_SETUPDIALOG_H
-#include "setupDialog.h"
-#endif
-
-
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -80,102 +40,73 @@
 static const char *null_conduit_id=
 	"$Id$";
 
-
-// This is a generic main() function, all
-// conduits look basically the same,
-// except for the name of the conduit.
+// Only include what we really need:
+// First UNIX system stuff, then std C++,
+// then Qt, then KDE, then local includes.
 //
 //
-int main(int argc, char* argv[])
-{
-	ConduitApp a(argc,argv,"null-conduit",
-		I18N_NOOP("NULL Conduit"),
-		KPILOT_VERSION);
+#include <kconfig.h>
+#include <kdebug.h>
 
-	a.addAuthor("Adriaan de Groot",
-		I18N_NOOP("NULL Conduit author"),
-		"adridg@sci.kun.nl");
+#include "pilotSerialDatabase.h"
+#include "null-factory.h"
+#include "null-conduit.h"
 
-	NullConduit conduit(a.getMode());
-	a.setConduit(&conduit);
-	return a.exec();
-
-	/* NOTREACHED */
-	/* Avoid const char *id not used warnings */
-	(void) null_conduit_id;
-}
 
 // A conduit that does nothing has a very
 // simple constructor and destructor.
 //
 //
-NullConduit::NullConduit(eConduitMode mode)
-	: BaseConduit(mode)
+NullConduit::NullConduit(KPilotDeviceLink *d,
+	const char *n,
+	const QStringList &l) :
+	ConduitAction(d,n,l),
+	fDatabase(0L)
 {
 	FUNCTIONSETUP;
 
+	(void) null_conduit_id;
 }
 
 NullConduit::~NullConduit()
 {
 	FUNCTIONSETUP;
-
+	KPILOT_DELETE(fDatabase);
 }
 
-// doSync should add a line to the logfile
-// with the indicated text, but the 
-// addSyncLogEntry() doesn't work (not
-// in any other conduit, either).
-//
-// Just print the message to error.
-//
-//
-void
-NullConduit::doSync()
+void NullConduit::exec()
 {
 	FUNCTIONSETUP;
 
-	KConfig& config = KPilotConfig::getConfig();
-	config.setGroup(NullOptions::NullGroup);
+	if (!fConfig)
+	{
+		kdWarning() << k_funcinfo
+			<< ": No configuration set for NULL conduit."
+			<< endl;
+		emit syncDone(this);
+		return;
+	}
 
-	QString m=config.readEntry("Text");
-	addSyncLogMessage(m.latin1());
+	fConfig->setGroup(NullConduitFactory::group());
 
-	DEBUGCONDUIT << fname << ": Message from null-conduit:\n"
-		<< fname << ": " << m
+	QString m=fConfig->readEntry("Text");
+	addSyncLogEntry(m);
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Message from null-conduit: "
+		<< m
 		<< endl;
-}
+#endif
 
-// aboutAndSetup is pretty much the same
-// on all conduits as well.
-//
-//
-QWidget*
-NullConduit::aboutAndSetup()
-{
-	FUNCTIONSETUP;
-
-	return new NullOptions(0L);
-}
-
-const char *
-NullConduit::dbInfo()
-{
-	KConfig& config = KPilotConfig::getConfig(NullOptions::NullGroup);
-
-	QString m = config.readEntry("DB");
-	if (m.isNull())
-	{
-		return "<none>";
-	}
-	else
-	{
-		return m.ascii();
-	}
+	emit syncDone(this);
 }
 
 
 // $Log$
+// Revision 1.21  2001/04/26 19:19:26  adridg
+// [GUI] i18n updates and QToolTips
+//
 // Revision 1.20  2001/04/16 13:36:03  adridg
 // Removed --enable-final borkage
 //

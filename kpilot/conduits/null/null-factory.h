@@ -7,7 +7,7 @@
 ** This file defines the factory for the null-conduit plugin.
 ** It also defines the class for the behavior of the setup dialog.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -62,15 +62,17 @@ public:
 	virtual ~NullConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
+	static const char *group() { return fGroup; } ;
 
 protected:
-	virtual QObject* createObject( QObject* parent = 0, 
-		const char* name = 0, 
-		const char* classname = "QObject", 
+	virtual QObject* createObject( QObject* parent = 0,
+		const char* name = 0,
+		const char* classname = "QObject",
 		const QStringList &args = QStringList() );
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
+	static const char *fGroup;
 } ;
 
 extern "C"
@@ -81,6 +83,9 @@ void *init_libnullconduit();
 } ;
 
 // $Log$
+// Revision 1.2  2001/10/08 22:25:41  adridg
+// Moved to libkpilot and lib-based conduits
+//
 // Revision 1.1  2001/10/04 23:51:55  adridg
 // Nope. One more really final commit to get the alpha to build. Dirk, otherwise just remove the conduits/ subdir from kdepim/kpilot/Makefile.am
 //

@@ -51,6 +51,7 @@ void *init_libnullconduit()
 } ;
 
 
+/* static */ const char *NullConduitFactory::fGroup = "Null-conduit";
 KAboutData *NullConduitFactory::fAbout = 0L;
 NullConduitFactory::NullConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
@@ -150,7 +151,7 @@ NullWidgetSetup::~NullWidgetSetup()
 		<< endl;
 #endif
 
-	KConfigGroupSaver s(fConfig,"Null-conduit");
+	KConfigGroupSaver s(fConfig,NullConduitFactory::group());
 
 	fConfig->writeEntry("LogMessage",fConfigWidget->fLogMessage->text());
 	fConfig->writeEntry("Databases",fConfigWidget->fDatabases->text());
@@ -162,7 +163,7 @@ NullWidgetSetup::~NullWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,"Null-conduit");
+	KConfigGroupSaver s(fConfig,NullConduitFactory::group());
 
 	fConfigWidget->fLogMessage->setText(
 		fConfig->readEntry("LogMessage",i18n("KPilot was here!")));
@@ -183,6 +184,9 @@ NullWidgetSetup::~NullWidgetSetup()
 
 
 // $Log$
+// Revision 1.2  2001/10/08 22:25:41  adridg
+// Moved to libkpilot and lib-based conduits
+//
 // Revision 1.1  2001/10/04 23:51:55  adridg
 // Nope. One more really final commit to get the alpha to build. Dirk, otherwise just remove the conduits/ subdir from kdepim/kpilot/Makefile.am
 //
