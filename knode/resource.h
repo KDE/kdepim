@@ -24,13 +24,12 @@
 
 //========= KNode Version Information ============
 
-#define KNODE_VERSION "0.8.0"
+#define KNODE_VERSION "0.8.90"
 
 //================= StatusBar ====================
 
 #define SB_MAIN     4000005
 #define SB_GROUP      4000010
-#define SB_PROGR      4000020
 #define SB_FILTER   4000030
 
 
