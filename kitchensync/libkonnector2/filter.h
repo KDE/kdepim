@@ -74,7 +74,7 @@ namespace KSync {
  * A Filter can have multiple instances with different
  * Config Option set
  */
-class Filter : public QObject
+class KDE_EXPORT Filter : public QObject
 {
   public:
     typedef QValueList<Filter*> List;
