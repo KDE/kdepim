@@ -56,7 +56,7 @@ public slots:
 
   void slotConfigure();
   void slotConfigureToolbars();
-
+  void configureShortcuts();
   void slotReadConfig();
 
   virtual void show();

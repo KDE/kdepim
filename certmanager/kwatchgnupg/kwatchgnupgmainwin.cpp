@@ -47,6 +47,8 @@
 #include <kconfig.h>
 #include <kfiledialog.h>
 #include <kedittoolbar.h>
+#include <kkeydialog.h>
+
 #include <qtextedit.h>
 #include <qdir.h>
 #include <qeventloop.h>
@@ -66,7 +68,7 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name 
   mCentralWidget->setTextFormat( QTextEdit::LogText );
   setCentralWidget( mCentralWidget );
 
-  mWatcher = new KProcIO( QTextCodec::codecForMib( 106 /*utf8*/ ) );
+  mWatcher = new KProcIO( QTextCodec::codecForMib( 106 /*utf-8*/ ) );
   connect( mWatcher, SIGNAL( processExited(KProcess*) ),
 		   this, SLOT( slotWatcherExited() ) );
   connect( mWatcher, SIGNAL( readReady(KProcIO*) ),
@@ -100,7 +102,7 @@ void KWatchGnuPGMainWindow::createActions()
   (void)KStdAction::close( this, SLOT(close()), actionCollection() );
   (void)KStdAction::quit( this, SLOT(slotQuit()), actionCollection() );
   (void)KStdAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
-  ( void )KStdAction::keyBindings(guiFactory(), SLOT(configureShortcuts()), actionCollection());
+  ( void )KStdAction::keyBindings(this, SLOT(configureShortcuts()), actionCollection());
   ( void )KStdAction::configureToolbars(this, SLOT(slotConfigureToolbars()), actionCollection());
 
 #if 0
@@ -109,6 +111,11 @@ void KWatchGnuPGMainWindow::createActions()
 					 actionCollection(), "configure" );
 #endif
 
+}
+
+void KWatchGnuPGMainWindow::configureShortcuts()
+{
+  KKeyDialog::configure( actionCollection(), this );
 }
 
 void KWatchGnuPGMainWindow::slotConfigureToolbars()
