@@ -56,11 +56,11 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * 
                               &actionCollection, "account_properties");
   actSubscribe = new KAction(i18n("&Subscribe to Newsgroups..."),"grpdlg", 0, this, SLOT(slotSubscribe()),
                              &actionCollection, "account_subscribe");
-  actLoadHdrs = new KAction(i18n("&Get New Articles"), "dlall", 0, this, SLOT(slotLoadHdrs()),
+  actLoadHdrs = new KAction(i18n("&Get New Articles"), "mail_get", 0, this, SLOT(slotLoadHdrs()),
                             &actionCollection, "account_dnlHeaders");
   actDelete = new KAction(i18n("&Delete"), 0, this, SLOT(slotDelete()),
                           &actionCollection, "account_delete");
-  actPostNewArticle = new KAction(i18n("&Post new article"), "newmsg", Key_P , this, SLOT(slotPostNewArticle()),
+  actPostNewArticle = new KAction(i18n("&Post new article"), "filenew", Key_P , this, SLOT(slotPostNewArticle()),
                                   &actionCollection, "article_postNew");
   
   setCurrentAccount(0);

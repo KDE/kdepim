@@ -74,9 +74,9 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
                              &actionCollection, "group_allUnread");
   actPostReply = new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotReply()),
                              &actionCollection, "article_postReply");
-  actMailReply = new KAction(i18n("&Mail reply"),"remail", Key_A , this, SLOT(slotRemail()),
+  actMailReply = new KAction(i18n("&Mail reply"),"mail_reply", Key_A , this, SLOT(slotRemail()),
                              &actionCollection, "article_mailReply");
-  actForward = new KAction(i18n("&Forward"),"fwd", Key_F , this, SLOT(slotForward()),
+  actForward = new KAction(i18n("&Forward"),"mail_forward", Key_F , this, SLOT(slotForward()),
                            &actionCollection, "article_forward");
   actMarkRead = new KAction(i18n("M&ark as read"), Key_D , this, SLOT(slotMarkRead()),
                             &actionCollection, "article_read");
