@@ -1569,6 +1569,7 @@ bool KNRemoteArticle::removeHeader(const char *type)
 
 void KNRemoteArticle::initListItem()
 {
+  if(!i_tem) return;
   i_tem->setText(0, s_ubject.asUnicodeString());
 
   if(f_rom.hasName())

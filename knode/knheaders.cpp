@@ -569,7 +569,9 @@ void KNHeaders::To::addAddress(const AddressField &a)
     a_ddrList->setAutoDelete(true);
   }
 
-  a_ddrList->append(new AddressField(a));
+  AddressField *add=new AddressField(a);
+  add->setParent(p_arent);
+  a_ddrList->append(add);
 }
 
 
