@@ -168,7 +168,7 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
            .arg( "http://www.gnupg.org/download" );  // add #gnupg2 if you can make this a real link
   }
   msg += "<br/>";
-  msg += i18n( "For information on how to set it gpg-agent, see %1" )
+  msg += i18n( "For information on how to set up gpg-agent, see %1" )
          .arg( "http://kmail.kde.org/kmail-pgpmime-howto.html" ) + "<br/>";
   Kleo::PassphraseDialog dlg( msg, i18n("Passphrase Dialog") );
   if ( dlg.exec() != QDialog::Accepted ) {
