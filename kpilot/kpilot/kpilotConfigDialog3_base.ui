@@ -12,7 +12,7 @@ KPilot's settings.</comment>
             <x>0</x>
             <y>0</y>
             <width>593</width>
-            <height>316</height>
+            <height>319</height>
         </rect>
     </property>
     <property name="caption">
@@ -44,8 +44,14 @@ KPilot's settings.</comment>
                         <property name="name">
                             <cstring>fInternalEditors</cstring>
                         </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
                         <property name="text">
                             <string>Make internal viewers &amp;editable</string>
+                        </property>
+                       <property name="checked">
+                            <bool>true</bool>
                         </property>
                     </widget>
                     <widget class="QCheckBox">
