@@ -292,15 +292,10 @@ void KPilotInstaller::initComponents()
 	w = getManagingWidget()->addVBoxPage(a,QString::null, \
 		(pixfile.isEmpty() ? QPixmap() : QPixmap(pixfile))) ;
 
-	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/kpilot-hotsync.png"));
+	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/kpilot-bhotsync.png"));
 	fLogWidget = new LogWidget(w);
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
-
-
-/*	ADDICONPAGE(i18n("Calendar Viewer"),CSL1("kpilot/kpilot-calendar.png"));
-	addComponentPage(new DatebookWidget(w,defaultDBPath),
-		i18n("Calendar Viewer"));*/
 
 	ADDICONPAGE(i18n("Todo Viewer"),CSL1("kpilot/kpilot-todo.png"));
 	addComponentPage(new TodoWidget(w,defaultDBPath),

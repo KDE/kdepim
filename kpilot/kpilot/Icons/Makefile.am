@@ -10,7 +10,7 @@ KDE_ICON = kpilot kpilotDaemon
 
 kpilotdatadir = $(kde_datadir)/kpilot
 kpilotdata_DATA = kpilot-splash.png \
-	kpilot-hotsync.png \
+	kpilot-bhotsync.png \
 	kpilot-knotes.png \
 	kpilot-address.png \
 	kpilot-fileinstaller.png \
