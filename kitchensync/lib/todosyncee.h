@@ -21,6 +21,7 @@ namespace KSync {
         SyncEntry* clone();
         bool equals( SyncEntry* entry );
         QString timestamp();
+        bool mergeWith( SyncEntry* );
     private:
         KCal::Todo* mTodo;
     };

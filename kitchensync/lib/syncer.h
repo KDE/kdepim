@@ -171,6 +171,7 @@ class SyncEntry
     virtual bool mergeWith( SyncEntry* );
 
 
+
   private:
     int mState;
     int mSyncState;

@@ -1,9 +1,13 @@
+#include <kstaticdeleter.h>
+
 #include <calformat.h>
+
+#include <incidencetemplate.h>
 #include "todosyncee.h"
 
 
 using namespace KSync;
-
+using KCal::Todo;
 /* A test for the template
 void testIt() {
     TodoSyncee* syncee = new TodoSyncee();
@@ -55,6 +59,46 @@ bool TodoSyncEntry::equals(SyncEntry* entry ) {
     if (mTodo->lastModified() != todoEntry->todo()->lastModified() ) return false;
     return true;
 }
+/* merging hell! */
+namespace{
+    typedef MergeBase<Todo, TodoSyncee> MergeTodo;
+    static MergeTodo* mergeMap = 0l;
+    static KStaticDeleter<MergeTodo> deleter;
+
+    void mergeDue( Todo* const, const Todo* const );
+    void mergeStart( Todo* const, const Todo* const );
+    void mergeComp( Todo* const, const Todo* const );
+    void mergePer( Todo* const, const Todo* const );
+
+    MergeTodo* map() {
+        if (!mergeMap ) {
+            deleter.setObject( mergeMap, new MergeTodo );
+
+            mergeMap->add( TodoSyncee::DtDue, mergeDue );
+            mergeMap->add( TodoSyncee::StartDate, mergeStart );
+            mergeMap->add( TodoSyncee::Completed, mergeComp );
+            mergeMap->add( TodoSyncee::Percent, mergePer );
+        }
+        return mergeMap;
+    }
+
+}
+bool TodoSyncEntry::mergeWith( SyncEntry* entry ) {
+    if ( entry->name() != name() || !syncee() || !entry->syncee() )
+        return false;
+
+    TodoSyncEntry* toEn = static_cast<TodoSyncEntry*>(entry);
+    QBitArray da = toEn->syncee()->bitArray();
+    QBitArray hier = syncee()->bitArray();
+    for ( uint i = 0; i < da.count() && i < hier.count() ; i++ ) {
+        if (da[i] && !hier[i] ) {
+            map()->invoke(i, mTodo, toEn->mTodo );
+        }
+    }
+
+    return true;
+}
+
 /// Syncee
 TodoSyncee::TodoSyncee()
     : SyncTemplate<TodoSyncEntry>(TodoSyncee::Percent+1) { // Percent is the last item
@@ -73,5 +117,20 @@ Syncee* TodoSyncee::clone() {
     return temp;
 }
 QString TodoSyncee::newId() const {
-return KCal::CalFormat::createUniqueId();
+    return KCal::CalFormat::createUniqueId();
+}
+
+namespace {
+    void mergeDue( Todo* const dest, const Todo* const src) {
+        dest->setDtDue( src->dtDue() );
+    }
+    void mergeStart( Todo* const dest, const Todo* const src) {
+        dest->setHasStartDate( src->hasStartDate() );
+    }
+    void mergeComp( Todo* const dest, const Todo* const src) {
+        dest->setCompleted( src->isCompleted() );
+    }
+    void mergePer( Todo* const dest, const Todo* const src) {
+        dest->setPercentComplete( src->percentComplete() );
+    }
 }

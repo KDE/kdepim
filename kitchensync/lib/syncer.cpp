@@ -79,6 +79,7 @@ Syncee::Syncee(uint size) :
 {
     mSyncMode = MetaLess;
     mFirstSync = false;
+    mSupport.fill(true);
 }
 
 

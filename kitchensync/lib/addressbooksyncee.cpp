@@ -137,8 +137,28 @@ namespace {
     }
 }
 
-bool AddressBookSyncEntry::mergeWith( SyncEntry* ) {
-    return false;
+bool AddressBookSyncEntry::mergeWith( SyncEntry* ent) {
+    if ( ent->name() != name() || !ent->syncee() || !syncee() )
+        return false;
+
+    AddressBookSyncEntry* entry = static_cast<AddressBookSyncEntry*> (ent);
+    QBitArray hier = syncee()->bitArray();
+    QBitArray da   = entry->syncee()->bitArray();
+    MergeMap::Iterator it;
+    MergeMap* ma = map();
+    for (uint i = 0; i < da.count() && i < hier.count(); i++ ) {
+        /*
+         * If da supports [i] and this entry does
+         * not -> merge
+         */
+        if ( da[i] && !hier[i] ) {
+            it = ma->find( i );
+            if (it!= ma->end() )
+                (*it.data())(mAddressee,entry->mAddressee);
+        }
+    }
+
+    return true;
 }
 
 AddressBookSyncee::AddressBookSyncee()

@@ -14,6 +14,7 @@ namespace KSync {
             IncidenceTemplate<KCal::Event>( ev ) {
         };
         SyncEntry* clone();
+        bool mergeWith( SyncEntry* );
 
     };
     class EventSyncee : public SyncTemplate<EventSyncEntry> {
