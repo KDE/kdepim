@@ -37,6 +37,7 @@
 #include <keditcl.h>
 #include <kspell.h>
 
+#include "knappmanager.h"
 #include "kngroupmanager.h"
 #include "knsavedarticle.h"
 #include "kngroupselectdialog.h"
@@ -48,7 +49,9 @@
 
 
 
-KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)//, int textEnc)
+// firstEdit==true: place the cursor at the end of the article
+// n==0: eMail
+KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, KNNntpAccount *n)//, int textEnc)
     : KMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n),
       externalEdited(false), attChanged(false), externalEditor(0), editorTempfile(0)//, textCTE(textEnc)
 {
@@ -129,6 +132,22 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   
   setConfig();
 
+  int pos=0;
+  if (firstEdit) {    // now we try to place the cusor at the end of the quoted text
+    pos = -1;
+    for(int i=view->edit->numLines()-1; i>=0; i--)
+      if(view->edit->textLine(i).left(3) == "-- ") {
+        pos=i;
+        break;
+      }
+    if((pos!=-1) && (pos>0))
+      pos--;
+    else
+      pos = view->edit->numLines()-1;
+  }
+  view->edit->setCursorPosition(pos,0);
+  view->edit->setFocus();
+
   if (view->viewOpen)
     restoreWindowSize("composerAtt", this, QSize(535,450));  // optimized default for 800x600
   else
@@ -160,9 +179,11 @@ void KNComposer::setConfig()
 {
   view->edit->setWordWrap(QMultiLineEdit::FixedColumnWidth);
   view->edit->setWrapColumnOrWidth(lineLen);
-  QFont fnt=KGlobalSettings::generalFont();
-  if(useViewFnt) fnt.setFamily(fntFam);
-  view->edit->setFont(fnt);
+
+  if (knGlobals.appManager->useFonts())
+    view->edit->setFont(knGlobals.appManager->font(KNAppManager::composer));
+  else
+    view->edit->setFont(KGlobalSettings::generalFont());
 }
 
 
@@ -982,10 +1003,8 @@ void KNComposer::ComposerView::hideExternalNotification()
 
 
 bool KNComposer::appSig;
-bool KNComposer::useViewFnt;
 bool KNComposer::useExternalEditor;
 int KNComposer::lineLen;
-QString KNComposer::fntFam;
 QString KNComposer::externalEditorCommand;
 
 void KNComposer::readConfig()
@@ -994,11 +1013,8 @@ void KNComposer::readConfig()
   conf->setGroup("POSTNEWS");
   lineLen=conf->readNumEntry("maxLength", 72);
   appSig=conf->readBoolEntry("appSig", true);
-  useViewFnt=conf->readBoolEntry("useViewFont", false);
   useExternalEditor=conf->readBoolEntry("useExternalEditor",false);
   externalEditorCommand=conf->readEntry("externalEditor","kwrite %f");
-  conf->setGroup("FONTS-COLORS");
-  fntFam=conf->readEntry("family", "helvetica");
 }
 
 

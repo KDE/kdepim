@@ -93,21 +93,21 @@ void KNAppSettings::FontListItem::setFont(const QFont &font)
 
 void KNAppSettings::FontListItem::paint( QPainter *p )
 {
-  QFontMetrics fm = p->fontMetrics();
   QFont fnt = p->font();
-
   fnt.setWeight(QFont::Bold);
   p->setFont(fnt);
-  p->drawText(2, fm.ascent() + fm.leading()/2, fontInfo );
+  int fontInfoWidth = p->fontMetrics().width(fontInfo);
+  int h = p->fontMetrics().ascent() + p->fontMetrics().leading()/2;
+  p->drawText(2, h, fontInfo );
   fnt.setWeight(QFont::Normal);
   p->setFont(fnt);
-  p->drawText(12+fm.width(fontInfo), fm.ascent() + fm.leading()/2, text() );
+  p->drawText(5 + fontInfoWidth, h, text() );
 }
 
 
 int KNAppSettings::FontListItem::width(const QListBox *lb ) const
 {
-  return( lb->fontMetrics().width(fontInfo) + lb->fontMetrics().width(text()) + 12 );
+  return( lb->fontMetrics().width(fontInfo) + lb->fontMetrics().width(text()) + 20 );
 }
 
 
@@ -123,9 +123,11 @@ KNAppSettings::KNAppSettings(QWidget *p) : KNSettingsWidget(p)
   colorCB = new QCheckBox(i18n("Use custom colors"),this);
   cList = new QListBox(this);
   connect(cList, SIGNAL(selected(QListBoxItem*)),SLOT(slotColItemSelected(QListBoxItem*)));
+  connect(colorCB, SIGNAL(toggled(bool)),cList, SLOT(setEnabled(bool)));
   fontCB = new QCheckBox(i18n("Use custom fonts"),this);
   fList = new QListBox(this);
   connect(fList, SIGNAL(selected(QListBoxItem*)),SLOT(slotFontItemSelected(QListBoxItem*)));
+  connect(fontCB, SIGNAL(toggled(bool)),fList, SLOT(setEnabled(bool)));
 
   init();
 }
@@ -144,10 +146,12 @@ void KNAppSettings::init()
   longCB->setChecked(man->longGroupList());
 
   colorCB->setChecked(man->useColors());
+  cList->setEnabled(man->useColors());
   for (int i=0;i<man->colorCount();i++)
     cList->insertItem(new ColorListItem(man->colorName(i),man->color(i)));
 
   fontCB->setChecked(man->useFonts());
+  fList->setEnabled(man->useFonts());
   for (int i=0;i<man->fontCount();i++)
     fList->insertItem(new FontListItem(man->fontName(i),man->font(i)));
 }

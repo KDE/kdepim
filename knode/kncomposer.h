@@ -47,8 +47,10 @@ class KNComposer : public KMainWindow  {
   public:
     enum composerResult { CRsendNow, CRsendLater, CRdelAsk,
                           CRdel, CRsave, CRcancel };
-                          
-    KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n=0);
+
+    // firstEdit==true: place the cursor at the end of the article
+    // n==0: eMail
+    KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit=false, KNNntpAccount *n=0);
     ~KNComposer();
     static void readConfig();
 
@@ -113,9 +115,9 @@ class KNComposer : public KMainWindow  {
     KTempFile *editorTempfile;
     QList<KNAttachment> *delAttList;
 
-    static bool appSig, useViewFnt, useExternalEditor;
+    static bool appSig, useExternalEditor;
     static int lineLen;
-    static QString fntFam, externalEditorCommand;
+    static QString externalEditorCommand;
     
   protected slots:
     void slotDestinationChanged(const QString &t);

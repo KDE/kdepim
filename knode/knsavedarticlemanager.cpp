@@ -217,7 +217,7 @@ void KNSavedArticleManager::post(KNGroup *g)
   if(defaultUser->isValid()) {
     KNSavedArticle *art=newArticle(g->account());
     if(!art) return;
-    art->setDestination(g->name().utf8().copy());
+    art->setDestination(g->name().local8Bit().copy());
     openInComposer(art);
   }
   else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and a valid e-mail address first."));
@@ -228,7 +228,6 @@ void KNSavedArticleManager::post(KNGroup *g)
 void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 {
   QCString tmp, refs, introStr;
-  int start=0, found=0;
   bool asMail=(g==0);
   KNSavedArticle *art;
   KNMimeContent *text;
@@ -269,33 +268,13 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
   if(strncasecmp(a->subject(), "re:", 3)!=0) tmp="Re: "+a->subject();
   else tmp=a->subject().copy();
   art->setSubject(tmp);
-  
-  
-  introStr="";
-  while(found!=-1) {
-    found=intro.find('%',start);
-    if(found>-1) {
-      introStr+=intro.mid(start,found-start);
-      tmp=intro.mid(found+1,4); 
-      if(tmp=="NAME") {
-        introStr+=a->fromName();
-        start=found+5;
-      }   
-      else if(tmp=="DATE") {
-        introStr+=a->headerLine("Date");
-        start=found+5;
-      }
-      else if(tmp=="MSID") {
-        introStr+=a->headerLine("Message-ID");
-        start=found+5;
-      }
-      else {
-        introStr+='%';
-        start=found+1;
-      }
-    }   
-    else introStr+=intro.mid(start, intro.length());
-  }
+
+  introStr=intro.copy();                 // preparing attribution line...
+  introStr.replace(QRegExp("%NAME"),a->fromName());
+  introStr.replace(QRegExp("%EMAIL"),a->fromEmail());
+  introStr.replace(QRegExp("%DATE"),a->headerLine("Date"));
+  introStr.replace(QRegExp("%MSID"),a->headerLine("Message-ID"));
+
   art->addBodyLine(introStr);
   art->addBodyLine("");
   text=a->textContent();
@@ -306,7 +285,8 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
     tmp+=line;
     art->addBodyLine(tmp);
   }
-  openInComposer(art);    
+  art->addBodyLine("");
+  openInComposer(art,true);
 }
 
 
@@ -346,8 +326,7 @@ void KNSavedArticleManager::forward(KNArticle *a)
   
   art->addBodyLine("=======  Forwarded message (end)  =======");
   art->addBodyLine("");
-  art->addBodyLine("");
-  openInComposer(art);  
+  openInComposer(art);
 }
 
 
@@ -583,7 +562,7 @@ KNNntpAccount* KNSavedArticleManager::getAccount(KNSavedArticle *a)
 
 
 
-void KNSavedArticleManager::openInComposer(KNSavedArticle *a)
+void KNSavedArticleManager::openInComposer(KNSavedArticle *a, bool firstEdit)
 {
   if(!a->hasContent() && a->folder())
     if(!a->folder()->loadArticle(a)) {
@@ -599,7 +578,7 @@ void KNSavedArticleManager::openInComposer(KNSavedArticle *a)
       user = g->user();
   }
 
-  KNComposer *com=new KNComposer(a, user->getSignature(), acc);
+  KNComposer *com=new KNComposer(a, user->getSignature(), firstEdit, acc);
   com->show();
   connect(com, SIGNAL(composerDone(KNComposer*)),
     this, SLOT(slotComposerDone(KNComposer*)));

@@ -83,7 +83,7 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
   protected:
     KNSavedArticle* newArticle(KNNntpAccount *acc=0);
     KNNntpAccount* getAccount(KNSavedArticle *a);
-    void openInComposer(KNSavedArticle *a);
+    void openInComposer(KNSavedArticle *a, bool firstEdit=false);
     bool getComposerData(KNComposer *c);
     void showArticle(KNArticle *a, bool force=false);
     void showError(KNArticle *a, const QString &error);

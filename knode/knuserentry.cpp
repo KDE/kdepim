@@ -44,11 +44,10 @@ const QCString& KNUserEntry::getSignature()
     if(!s_igPath.isEmpty()) {
       KNFile sigFile(s_igPath); 
       if(sigFile.open(IO_ReadOnly)) {
-        s_igContents=sigFile.readLineWnewLine();
         while(!sigFile.atEnd())
           s_igContents += sigFile.readLineWnewLine();
-        }
-      else KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file!"));
+      } else
+        KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file!"));
     }
   } else
     s_igContents = s_igText;

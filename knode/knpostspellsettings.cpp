@@ -36,6 +36,7 @@ KNPostSpellSettings::KNPostSpellSettings(QWidget *parent)
 
 KNPostSpellSettings::~KNPostSpellSettings()
 {
+  spellConf->writeGlobalSettings();
 }
 
 
