@@ -26,7 +26,6 @@
 #include <qmessagebox.h>
 
 // KDE includes
-#include <kmsgbox.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
@@ -288,10 +287,10 @@ EmpathComposeWindow::s_fileSaveAs()
     if (!f.open(IO_WriteOnly)) {
         // Warn user file cannot be opened.
         empathDebug("Couldn't open file for writing");
-        KMsgBox::message(this, "Empath",
+        QMessageBox::information(this, "Empath",
             i18n("Sorry I can't write to that file. "
                 "Please try another filename."),
-            KMsgBox::EXCLAMATION, i18n("OK"));
+            i18n("OK"));
 
         return;
     }
@@ -413,10 +412,10 @@ EmpathComposeWindow::s_messageSaveAs()
     if (!f.open(IO_WriteOnly)) {
         // Warn user file cannot be opened.
         empathDebug("Couldn't open file for writing");
-        KMsgBox::message(this, "Empath",
+        QMessageBox::information(this, "Empath",
             i18n("Sorry I can't write to that file. "
                 "Please try another filename."),
-            KMsgBox::EXCLAMATION, i18n("OK"));
+            i18n("OK"));
 
         return;
     }
@@ -512,17 +511,17 @@ EmpathComposeWindow::bugReport()
     void
 EmpathComposeWindow::_askForRecipient()
 {
-    KMsgBox::message(this, "Empath",
+    QMessageBox::information(this, "Empath",
         i18n("Please specify at least one recipient"),
-        KMsgBox::EXCLAMATION, i18n("OK"));
+        i18n("OK"));
 }
 
     void
 EmpathComposeWindow::_askForSubject()
 {
-    KMsgBox::message(this, "Empath",
+    QMessageBox::information(this, "Empath",
         i18n("Please specify a subject"),
-        KMsgBox::EXCLAMATION, i18n("OK"));
+        i18n("OK"));
 }
 
 #include "EmpathComposeWindowMenus.cpp"

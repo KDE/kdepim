@@ -22,13 +22,11 @@
 # pragma implementation "EmpathAddressSelectionWidget.h"
 #endif
 
-#ifdef __GNUG__
-# pragma implementation ""
-#endif
+// Qt includes
+#include <qmessagebox.h> 
 
 // KDE includes
 #include <kiconloader.h>
-#include <kmsgbox.h>
 #include <klocale.h>
 
 // Local includes
@@ -110,7 +108,8 @@ EmpathAddressSelectionWidget::s_lostFocus()
 EmpathAddressSelectionWidget::s_browseClicked()
 {
     empathDebug("s_browseClicked() called");
-    KMsgBox::message(this, "Empath", i18n("Sorry, the addressbook isn't ready for use yet."), KMsgBox::EXCLAMATION, i18n("OK"));
+    QMessageBox::information(this, "Empath",
+        i18n("Sorry, the addressbook isn't ready for use yet."), i18n("OK"));
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -24,6 +24,7 @@
 
 // Qt includes
 #include <qheader.h>
+#include <qvaluelist.h>
 
 // KDE includes
 #include <kconfig.h>
@@ -41,11 +42,10 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
 {
     empathDebug("ctor");
 
-    hSplit = new KNewPanner(this, "hSplit", KNewPanner::Vertical);
-    
+    hSplit = new QSplitter(this, "hSplit");
     CHECK_PTR(hSplit);
     
-    vSplit = new KNewPanner(hSplit, "vSplit", KNewPanner::Horizontal);
+    vSplit = new QSplitter(Qt::Vertical, hSplit, "vSplit");
     CHECK_PTR(vSplit);
         
     messageListWidget_ =
@@ -60,6 +60,8 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
     leftSideWidget_ =
         new EmpathLeftSideWidget(messageListWidget_, hSplit, "leftSideWidget");
     CHECK_PTR(leftSideWidget_);
+    
+    hSplit->moveToFirst(leftSideWidget_);
 
     messageListWidget_->update();
     
@@ -68,17 +70,17 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name)
     
     messageListWidget_->setSignalUpdates(true);
     
-    vSplit->activate(messageListWidget_, messageViewWidget_);
-    hSplit->activate(leftSideWidget_, vSplit);
-    
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
-    vSplit->setSeparatorPos(
-        c->readNumEntry(EmpathConfig::KEY_MAIN_WIDGET_V_SEP, 30));
-
-    hSplit->setSeparatorPos(
-        c->readNumEntry(EmpathConfig::KEY_MAIN_WIDGET_H_SEP, 50));
+    QValueList<int> vSizes;
+    QValueList<int> hSizes;
+    
+    vSizes.append(c->readNumEntry(EmpathConfig::KEY_MAIN_WIDGET_V_SEP, 30));
+    hSizes.append(c->readNumEntry(EmpathConfig::KEY_MAIN_WIDGET_H_SEP, 50));
+    
+    vSplit->setSizes(vSizes);
+    hSplit->setSizes(hSizes);
 }
 
 EmpathMainWidget::~EmpathMainWidget()
@@ -89,9 +91,11 @@ EmpathMainWidget::~EmpathMainWidget()
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
     c->writeEntry(
-        EmpathConfig::KEY_MAIN_WIDGET_V_SEP, vSplit->separatorPos());
+        EmpathConfig::KEY_MAIN_WIDGET_V_SEP, vSplit->sizes()[0]);
+    
     c->writeEntry(
-        EmpathConfig::KEY_MAIN_WIDGET_H_SEP, hSplit->separatorPos());
+        EmpathConfig::KEY_MAIN_WIDGET_H_SEP, hSplit->sizes()[0]);
+    
     c->sync();
 }
 

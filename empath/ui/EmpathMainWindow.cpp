@@ -24,14 +24,13 @@
 
 // Qt includes
 #include <qapplication.h>
-#include <qmsgbox.h>
+#include <qmessagebox.h>
 #include <qwidgetlist.h>
 #include <qfile.h>
 
 // KDE includes
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <kmsgbox.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kapp.h>
@@ -318,7 +317,9 @@ EmpathMainWindow::s_messageSaveAs()
     if (!f.open(IO_WriteOnly)) {
         // Warn user file cannot be opened.
         empathDebug("Couldn't open file for writing");
-        KMsgBox::message(this, "Empath", i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
+        QMessageBox::information(this, "Empath",
+            i18n("Sorry I can't write to that file. "
+                "Please try another filename."), i18n("OK"));
         return;
     }
     empathDebug("Opened " + saveFilePath + " OK");
@@ -329,7 +330,9 @@ EmpathMainWindow::s_messageSaveAs()
 
     f.close();
         
-//    KMsgBox::message(this, "Empath", i18n("Message saved to") + QString(" ") + saveFilePath + QString(" ") + i18n("OK"), KMsgBox::INFORMATION, i18n("OK"));
+//  QMessageBox::information(this, "Empath",
+//  i18n("Message saved to") + " " + saveFilePath + " " + i18n("OK"),
+//  i18n("OK"));
 }
 
     void
@@ -365,7 +368,8 @@ EmpathMainWindow::s_messageMoveTo()
     RMM::RMessage * m(_getFirstSelectedMessage());
     
     if (m == 0) {
-        KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
+        QMessageBox::information(this, "Empath",
+            i18n("Please select a message first"), i18n("OK"));
         return;
     }
     
@@ -501,7 +505,8 @@ EmpathMainWindow::_messageSelected()
     RMM::RMessage * m(_getFirstSelectedMessage());
     
     if (m == 0) {
-        KMsgBox::message(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
+        QMessageBox::information(this, "Empath",
+            i18n("Please select a message first"), i18n("OK"));
         return false;
     }
     

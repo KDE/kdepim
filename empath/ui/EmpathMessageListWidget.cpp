@@ -27,6 +27,7 @@
 
 // Qt includes
 #include <qheader.h>
+#include <qmessagebox.h>
 #include <qstring.h>
 #include <qfile.h>
 #include <qdatetime.h>
@@ -34,7 +35,6 @@
 
 // KDE includes
 #include <klocale.h>
-#include <kmsgbox.h>
 #include <kfiledialog.h>
 #include <kiconloader.h>
 #include <kapp.h>
@@ -432,7 +432,9 @@ EmpathMessageListWidget::s_messageSaveAs()
     if (!f.open(IO_WriteOnly)) {
         // Warn user file cannot be opened.
         empathDebug("Couldn't open file for writing");
-        KMsgBox(this, "Empath", i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
+        QMessageBox::information(this, "Empath",
+            i18n("Sorry I can't write to that file. "
+                "Please try another filename."), i18n("OK"));
         return;
     }
     empathDebug("Opened " + saveFilePath + " OK");
@@ -461,7 +463,9 @@ EmpathMessageListWidget::s_messageSaveAs()
         
         if (f.writeBlock(outStr, outStr.length()) != (int)outStr.length()) {
             // Warn user file not written.
-            KMsgBox(this, "Empath", i18n("Sorry I couldn't write the file successfully. Please try another file."), KMsgBox::EXCLAMATION, i18n("OK"));
+            QMessageBox::information(this, "Empath",
+                i18n("Sorry I couldn't write the file successfully. "
+                    "Please try another file."), i18n("OK"));
             delete message; message = 0;
             return;
         }
@@ -470,7 +474,9 @@ EmpathMessageListWidget::s_messageSaveAs()
 
     f.close();
     
-    KMsgBox(this, "Empath", i18n("Message saved to") + QString(" ") + saveFilePath + QString(" ") + i18n("OK"), KMsgBox::INFORMATION, i18n("OK"));
+    QMessageBox::information(this, "Empath",
+        i18n("Message saved to") + " " + saveFilePath + " " + i18n("OK"),
+        i18n("OK"));
     delete message; message = 0;
 }
 

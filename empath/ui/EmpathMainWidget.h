@@ -27,11 +27,11 @@
 
 // Qt includes
 #include <qwidget.h>
+#include <qsplitter.h>
 
 // KDE includes
 #include <kapp.h>
 #include <kiconloader.h>
-#include <knewpanner.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -60,14 +60,14 @@ class EmpathMainWidget : public QWidget
 
     private:
 
-        KNewPanner                * vSplit;
-        KNewPanner                * hSplit;
+        QSplitter                  * vSplit;
+        QSplitter                  * hSplit;
         
-        EmpathLeftSideWidget    * leftSideWidget_;
+        EmpathLeftSideWidget       * leftSideWidget_;
         EmpathMessageListWidget    * messageListWidget_;
         EmpathMessageViewWidget    * messageViewWidget_;
 
-        Q_UINT32            horizPannerAbsSeparator;
+        Q_UINT32 horizPannerAbsSeparator;
 };
 
 #endif

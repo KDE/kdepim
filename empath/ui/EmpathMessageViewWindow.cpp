@@ -251,9 +251,10 @@ EmpathMessageViewWindow::s_messageSaveAs()
     if (!f.open(IO_WriteOnly)) {
         // Warn user file cannot be opened.
         empathDebug("Couldn't open file for writing");
-        KMsgBox(this, "Empath",
-    i18n("Sorry I can't write to that file. Please try another filename."),
-        KMsgBox::EXCLAMATION, i18n("OK"));
+        QMessageBox::information(this, "Empath",
+        i18n("Sorry I can't write to that file. "
+            "Please try another filename."),
+        i18n("OK"));
         return;
     }
     empathDebug("Opened " + saveFilePath + " OK");
@@ -314,11 +315,11 @@ EmpathMessageViewWindow::s_messageDelete()
 {
     empathDebug("s_messageDelete called");
     if (empath->remove(url_)) {
-        KMsgBox(this, "Empath",
-            i18n("Message Deleted"), KMsgBox::EXCLAMATION, i18n("OK"));
+        QMessageBox::information(this, "Empath",
+            i18n("Message Deleted"), i18n("OK"));
     } else {
-        KMsgBox(this, "Empath",
-            i18n("Couldn't delete message"), KMsgBox::EXCLAMATION, i18n("OK"));
+        QMessageBox::information(this, "Empath",
+            i18n("Couldn't delete message"), i18n("OK"));
     }
     s_fileClose();
 }

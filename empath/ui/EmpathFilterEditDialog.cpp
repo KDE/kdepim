@@ -22,10 +22,12 @@
 # pragma implementation "EmpathFilterEditDialog.h"
 #endif
 
+// Qt includes
+#include <qmessagebox.h>
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
-#include <kmsgbox.h>
 
 // Local includes
 #include "RikGroupBox.h"
@@ -231,9 +233,9 @@ EmpathFilterEditDialog::s_OK()
     
         if (it.current()->name() == le_name_->text()) {
 
-            KMsgBox::message(this, "Empath",
+            QMessageBox::information(this, "Empath",
                 i18n("You already have a filter with that name"),
-                KMsgBox::EXCLAMATION, i18n("OK"));
+                i18n("OK"));
 
             return;
         }

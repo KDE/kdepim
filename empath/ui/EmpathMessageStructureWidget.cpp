@@ -25,12 +25,12 @@
 // Qt includes
 #include <qfile.h>
 #include <qdatastream.h>
+#include <qmessagebox.h>
 
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
 #include <kfiledialog.h>
-#include <kmsgbox.h>
 
 // Local includes
 #include "EmpathMessageStructureWidget.h"
@@ -140,7 +140,9 @@ EmpathMessageStructureWidget::s_saveAs()
     if (!f.open(IO_WriteOnly)) {
         // Warn user file cannot be opened.
         empathDebug("Couldn't open file for writing");
-        KMsgBox(this, "Empath",i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
+        QMessageBox::information(this, "Empath",
+            i18n("Sorry I can't write to that file. "
+                "Please try another filename."), i18n("OK"));
         return;
     }
     empathDebug("Opened " + saveFilePath + " OK");
