@@ -298,6 +298,9 @@ void Kleo::DNAttributeOrderConfigWidget::slotRightButtonClicked() {
     left->moveItem( right ); // move new item immediately before old selected
   left->setSelected( true );
   enableDisableButtons( left );
+  d->navTB[Private::Right]->setEnabled( next );
+  if ( next )
+    next->setSelected( true );
   emit changed();
 }
 
