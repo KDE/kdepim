@@ -27,7 +27,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-static const char *hotsync_id =
+static const char *interactivesync_id =
 	"$Id$";
 
 #include "options.h"
@@ -75,7 +75,7 @@ InteractiveAction::InteractiveAction(KPilotDeviceLink * p,
 {
 	FUNCTIONSETUP;
 
-	(void) interactive_id;
+	(void) interactivesync_id;
 }
 
 InteractiveAction::~InteractiveAction()
@@ -605,6 +605,9 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible,
 
 
 // $Log$
+// Revision 1.3  2001/09/27 17:28:32  adridg
+// Conflict management
+//
 // Revision 1.2  2001/09/25 08:22:29  cschumac
 // Make it compile with Qt3.
 //
