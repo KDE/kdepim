@@ -1220,9 +1220,9 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
 void
 IMAP4Protocol::special (const QByteArray & aData)
 {
+  kdDebug(7116) << "IMAP4Protocol::special" << endl;
   if (!makeLogin()) return;
 
-  kdDebug(7116) << "IMAP4Protocol::special" << endl;
   QDataStream stream(aData, IO_ReadOnly);
 
   int tmp;
@@ -1249,6 +1249,12 @@ IMAP4Protocol::special (const QByteArray & aData)
   {
     // NOOP
     imapCommand *cmd = doCommand(imapCommand::clientNoop());
+    if (cmd->result () != "OK")
+    {
+      completeQueue.removeRef (cmd);
+      error (ERR_CONNECTION_BROKEN, myHost);
+      return;
+    }
     completeQueue.removeRef (cmd);
     finished();
     break;
@@ -1271,6 +1277,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     imapCommand *cmd = doCommand(imapCommand::clientUnsubscribe(aBox));
     if (cmd->result () != "OK")
     {
+      completeQueue.removeRef (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Unsubscribe of folder %1 "
                                     "failed. The server returned: %2")
             .arg(_url.prettyURL())
@@ -1291,6 +1298,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     imapCommand *cmd = doCommand(imapCommand::clientSubscribe(aBox));
     if (cmd->result () != "OK")
     {
+      completeQueue.removeRef (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Subscribe of folder %1 "
                                     "failed. The server returned: %2")
             .arg(_url.prettyURL())
@@ -1340,6 +1348,7 @@ IMAP4Protocol::special (const QByteArray & aData)
                                                "\\SEEN \\ANSWERED \\FLAGGED \\DRAFT"));
     if (cmd->result () != "OK")
     {
+      completeQueue.removeRef (cmd);
       error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
                                       "failed.").arg(_url.prettyURL()));
       return;
@@ -1351,6 +1360,7 @@ IMAP4Protocol::special (const QByteArray & aData)
                        clientStore (aSequence, "+FLAGS.SILENT", newFlags));
       if (cmd->result () != "OK")
       {
+        completeQueue.removeRef (cmd);
         error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
                                         "failed.").arg(_url.prettyURL()));
         return;
@@ -1632,10 +1642,9 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
 void
 IMAP4Protocol::slave_status ()
 {
-  kdDebug(7116) << "IMAP4::slave_status" << endl;
-//  KIO::TCPSlaveBase::slave_status();
-  slaveStatus (myHost, !(getState () == ISTATE_NO));
-//  slaveStatus(QString::null,false);
+  bool connected = (getState() != ISTATE_NO) && isConnectionValid();
+  kdDebug(7116) << "IMAP4::slave_status " << connected << endl;
+  slaveStatus ( connected ? myHost : QString::null, connected );
 }
 
 void
@@ -1838,6 +1847,7 @@ bool IMAP4Protocol::makeLogin ()
 
   kdDebug(7116) << "IMAP4::makeLogin - checking login" << endl;
   bool alreadyConnected = getState() == ISTATE_CONNECT;
+  kdDebug(7116) << "IMAP4::makeLogin - alreadyConnected " << alreadyConnected << endl;
   if (alreadyConnected || connectToHost (myHost.latin1(), myPort))
   {
 //      fcntl (m_iSock, F_SETFL, (fcntl (m_iSock, F_GETFL) | O_NDELAY));
@@ -1982,6 +1992,8 @@ bool IMAP4Protocol::makeLogin ()
       }
     }
     completeQueue.removeRef (cmd);
+  } else {
+    kdDebug(7116) << "makeLogin - NO login" << endl;
   }
 
   return getState() == ISTATE_LOGIN;
