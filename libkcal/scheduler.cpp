@@ -66,72 +66,29 @@ Scheduler::~Scheduler()
 
 bool Scheduler::acceptTransaction(Incidence *incidence,Method method,ScheduleMessage::Status status)
 {
-  if (method==Publish || method==Request) {
-    switch (status) {
-    case ScheduleMessage::PublishNew:
-      if (!mCalendar->getEvent(incidence->VUID())) {
-        mCalendar->addIncidence(incidence);
-        deleteTransaction(incidence);
-      }
-      return true;
-    case ScheduleMessage::Obsolete:
-      return true;
-    case ScheduleMessage::RequestNew:
-      mCalendar->addIncidence(incidence);
-      deleteTransaction(incidence);
-      return true;
+  kdDebug() << "Scheduler::acceptTransaction " << endl;
+  switch (method) {
+    case Publish:
+      return acceptPublish(incidence, status);
+    case Request:
+      return acceptRequest(incidence, status);
+    case Add:
+      return acceptAdd(incidence, status);
+    case Cancel:
+      return acceptCancel(incidence, status);
+    case Declinecounter:
+      return acceptDeclineCounter(incidence, status);
+//    case FreeBusy:
+//      return acceptFreeBusy(incidence, status);
+    case Reply:
+      return acceptReply(incidence, status);
+    case Refresh:
+      return acceptRefresh(incidence, status);
+    case Counter:
+      return acceptCounter(incidence, status);
     default:
+      deleteTransaction(incidence);
       return false;
-    }
-  }
-  else {
-    if (method==Reply) {
-      kdDebug(5800) << "Scheduler::acceptTransaction -REPLY-" << endl;
-      //get event in calendar
-      QPtrList<Event> eventList;
-      eventList=mCalendar->getEvents(incidence->dtStart().date(),incidence->dtStart().date(),false);
-      Event *ev;
-      for ( ev = eventList.first(); ev; ev = eventList.next() ) {
-        if (ev->VUID()==incidence->VUID()) {
-          //get matching attendee in calendar
-          kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
-          QPtrList<Attendee> attendeesIn = incidence->attendees();
-          QPtrList<Attendee> attendeesEv = ev->attendees();
-          Attendee *attIn;
-          Attendee *attEv;
-          for ( attIn = attendeesIn.first(); attIn; attIn = attendeesIn.next() ) {
-            for ( attEv = attendeesEv.first(); attEv; attEv = attendeesEv.next() ) {
-              if (attIn->email()==attEv->email()) {
-                //update attendee-info
-                kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
-                attEv->setRole(attIn->role());
-                attEv->setStatus(attIn->status());
-                attEv->setRSVP(attIn->RSVP());
-              }
-            }
-          }
-        }
-        deleteTransaction(incidence);
-        return true;
-      }
-    }
-    else {
-      if (method==Cancel) {
-        kdDebug(5800) << "Scheduler::acceptTransaction -Cancel-" << endl;
-        //get event in calendar
-        QPtrList<Event> eventList;
-        eventList=mCalendar->getEvents(incidence->dtStart().date(),incidence->dtStart().date(),false);
-        Event *ev;
-        for ( ev = eventList.first(); ev; ev = eventList.next() ) {
-          if (ev->VUID()==incidence->VUID()) {
-            //get matching attendee in calendar
-            kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
-            mCalendar->deleteEvent(ev);
-          }
-        }
-      }
-    }
-
   }
   deleteTransaction(incidence);
   return false;
@@ -165,3 +122,127 @@ bool Scheduler::deleteTransaction(Incidence *)
 {
   return true;
 }
+
+bool Scheduler::acceptPublish(Incidence *incidence,ScheduleMessage::Status status)
+{
+  switch (status) {
+    case ScheduleMessage::PublishNew:
+      if (!mCalendar->getEvent(incidence->VUID())) {
+        mCalendar->addIncidence(incidence);
+        deleteTransaction(incidence);
+      }
+      return true;
+    case ScheduleMessage::Obsolete:
+      return true;
+    default:
+      deleteTransaction(incidence);
+      return false;
+  }
+  deleteTransaction(incidence);
+  return false;
+}
+
+bool Scheduler::acceptRequest(Incidence *incidence,ScheduleMessage::Status status)
+{
+    switch (status) {
+    case ScheduleMessage::Obsolete:
+      return true;
+    case ScheduleMessage::RequestNew:
+      mCalendar->addIncidence(incidence);
+      deleteTransaction(incidence);
+      return true;
+    case ScheduleMessage::RequestUpdate:
+      Event *even;
+      even = mCalendar->getEvent(incidence->VUID());
+      if (even) {
+        mCalendar->deleteEvent(even);
+      }
+      mCalendar->addIncidence(incidence);
+      deleteTransaction(incidence);
+      return true;
+    default:
+      return false;
+    }
+  deleteTransaction(incidence);
+  return false;
+}
+
+bool Scheduler::acceptAdd(Incidence *incidence,ScheduleMessage::Status status)
+{
+  deleteTransaction(incidence);
+  return false;
+}
+
+bool Scheduler::acceptCancel(Incidence *incidence,ScheduleMessage::Status status)
+{
+  bool ret = false;
+  //get event in calendar
+  QPtrList<Event> eventList;
+  eventList=mCalendar->getEvents(incidence->dtStart().date(),incidence->dtStart().date(),false);
+  Event *ev;
+  for ( ev = eventList.first(); ev; ev = eventList.next() ) {
+    if (ev->VUID()==incidence->VUID()) {
+      //get matching attendee in calendar
+      kdDebug() << "Scheduler::acceptTransaction match found!" << endl;
+      mCalendar->deleteEvent(ev);
+      ret = true;
+    }
+  }
+  deleteTransaction(incidence);
+  return ret;
+}
+
+bool Scheduler::acceptDeclineCounter(Incidence *incidence,ScheduleMessage::Status status)
+{
+  deleteTransaction(incidence);
+  return false;
+}
+
+//bool Scheduler::acceptFreeBusy(Incidence *incidence,ScheduleMessage::Status status)
+//{
+//  deleteTransaction(incidence);
+//  return false;
+//}
+
+bool Scheduler::acceptReply(Incidence *incidence,ScheduleMessage::Status status)
+{
+  bool ret = false;
+  Event *ev = mCalendar->getEvent(incidence->VUID());
+  if (ev) {
+    //get matching attendee in calendar
+    kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
+    QPtrList<Attendee> attendeesIn = incidence->attendees();
+    QPtrList<Attendee> attendeesEv = ev->attendees();
+    Attendee *attIn;
+    Attendee *attEv;
+    for ( attIn = attendeesIn.first(); attIn; attIn = attendeesIn.next() ) {
+      for ( attEv = attendeesEv.first(); attEv; attEv = attendeesEv.next() ) {
+        if (attIn->email()==attEv->email()) {
+          //update attendee-info
+          kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
+          //attEv->setRole(attIn->role());
+          attEv->setStatus(attIn->status());
+          //attEv->setRSVP(attIn->RSVP());
+          ev->setRevision(ev->revision()+1);
+          ret = true;
+        }
+      }
+    }
+  }
+  deleteTransaction(incidence);
+  return ret;
+}
+
+bool Scheduler::acceptRefresh(Incidence *incidence,ScheduleMessage::Status status)
+{
+  // handled in korganizer's IncomingDialog
+  deleteTransaction(incidence);
+  return false;
+}
+
+bool Scheduler::acceptCounter(Incidence *incidence,ScheduleMessage::Status status)
+{
+  deleteTransaction(incidence);
+  return false;
+}
+

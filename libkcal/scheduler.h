@@ -109,6 +109,16 @@ class Scheduler {
 
   protected:
 
+    bool acceptPublish(Incidence *,ScheduleMessage::Status status);
+    bool acceptRequest(Incidence *,ScheduleMessage::Status status);
+    bool acceptAdd(Incidence *,ScheduleMessage::Status status);
+    bool acceptCancel(Incidence *,ScheduleMessage::Status status);
+    bool acceptDeclineCounter(Incidence *,ScheduleMessage::Status status);
+//    bool acceptFreeBusy(Incidence *,ScheduleMessage::Status status);
+    bool acceptReply(Incidence *,ScheduleMessage::Status status);
+    bool acceptRefresh(Incidence *,ScheduleMessage::Status status);
+    bool acceptCounter(Incidence *,ScheduleMessage::Status status);
+
     Calendar *mCalendar;
     ICalFormat *mFormat;
 };
