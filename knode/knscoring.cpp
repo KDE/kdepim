@@ -90,14 +90,12 @@ KNScorableGroup::~KNScorableGroup()
 //----------------------------------------------------------------------------
 
 KNScoringManager::KNScoringManager()
-  : c_onfDialog(0)
 {
 }
 
 
 KNScoringManager::~KNScoringManager()
 {
-  //delete c_onfDialog;
 }
 
 
@@ -119,19 +117,12 @@ QStringList KNScoringManager::getGroups() const
 
 void KNScoringManager::configure()
 {
-  c_onfDialog = KScoringEditor::createEditor(this);
-  //connect(c_onfDialog, SIGNAL(finished()), SLOT(slotDialogDone()));
-  KNHelper::restoreWindowSize("scoringRulesEditor", c_onfDialog, QSize(255,223));
-  c_onfDialog->show();
+  KScoringEditor *dlg = KScoringEditor::createEditor(this, knGlobals.topWidget);
+
+  if (dlg) {
+    dlg->show();
+    KWin::setActiveWindow(dlg->winId());
+  }
 }
-
-
-void KNScoringManager::slotDialogDone()
-{
-  KNHelper::saveWindowSize("scoringRulesEditor", c_onfDialog->size());
-  c_onfDialog->delayedDestruct();
-  c_onfDialog=0;
-}
-
 
 #include "knscoring.moc"

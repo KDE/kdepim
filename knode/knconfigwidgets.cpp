@@ -42,7 +42,6 @@
 #include <kspell.h>
 #include <klineedit.h>
 #include <kcombobox.h>
-#include <kseparator.h>
 
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"

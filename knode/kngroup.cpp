@@ -425,7 +425,6 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
     split.next();
     art->lines()->setNumberOfLines(split.string().toInt());
         
-
     // check if we have this article already in this group,
     // if so mark it as new (useful with leafnodes delay-body function)
     art2=byMessageId(art->messageID()->as7BitString(false));

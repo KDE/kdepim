@@ -67,12 +67,6 @@ public:
 
   void configure();
   bool canColors() { return true; }
-
-protected:
-  KDialogBase  *c_onfDialog;
-
-protected slots:
-  void slotDialogDone();
 };
 
 #endif
