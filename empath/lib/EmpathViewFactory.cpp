@@ -24,6 +24,8 @@
 # pragma implementation "EmpathViewFactory.h"
 #endif
 
+#include <stream.h>
+
 #include <qfile.h>
 #include <qtextstream.h>
 
