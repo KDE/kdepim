@@ -1,6 +1,6 @@
 .TH KALARMD 1
 .SH NAME
-kalarmd \- KDE alarm daemon
+kalarmd \- KAlarm alarm daemon
 .SH SYNOPSIS
 .B kalarmd
 .I [Qt-options] [KDE-options] [options]
@@ -10,8 +10,6 @@ runs in the background and handles displaying the events scheduled by
 \fBkalarm\fP.  You should normally not have to run this daemon manually.
 .SH PROGRAM OPTIONS
 .TP
-.B --login
-Application is being auto-started at KDE session start.
 .so kdeopt.man
 .SH SEE ALSO
 .B kalarm
