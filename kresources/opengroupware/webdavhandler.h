@@ -25,13 +25,18 @@
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qdom.h>
+#include <kurl.h>
 
 class WebdavHandler
 {
   public:
     WebdavHandler();
 
+    static KURL toDAV( const KURL& url );
 
+
+    static QDomElement addElement( QDomDocument &doc, QDomNode &node,
+                                   const QString &ns, const QString &tag );
     static QDomElement addElement( QDomDocument &, QDomNode &,
                                    const QString &tag );
     static QDomElement addDavElement( QDomDocument &, QDomNode &,

@@ -38,10 +38,29 @@ WebdavHandler::WebdavHandler()
 }
 
 
+KURL WebdavHandler::toDAV( const KURL& url ) {
+  KURL result( url );
+  if ( result.protocol() == "http" )
+    result.setProtocol( "webdav" );
+  else if ( result.protocol() == "https" )
+    result.setProtocol( "webdavs" );
+  return result;
+}
+
+
+
 QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
                                        const QString &tag )
 {
   QDomElement el = doc.createElement( tag );
+  node.appendChild( el );
+  return el;
+}
+
+QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
+                                       const QString &ns, const QString &tag )
+{
+  QDomElement el = doc.createElementNS( ns, tag );
   node.appendChild( el );
   return el;
 }
