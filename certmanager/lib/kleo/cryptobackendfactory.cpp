@@ -157,6 +157,7 @@ void Kleo::CryptoBackendFactory::setSMIMEBackend( const CryptoBackend* backend )
   const QString name = backend ? backend->name() : QString::null;
   KConfigGroup group( configObject(), "Backends" );
   group.writeEntry( "SMIME", name );
+  configObject()->sync();
   mSMIMEBackend = backend;
 }
 
@@ -164,6 +165,7 @@ void Kleo::CryptoBackendFactory::setOpenPGPBackend( const CryptoBackend* backend
   const QString name = backend ? backend->name() : QString::null;
   KConfigGroup group( configObject(), "Backends" );
   group.writeEntry( "OpenPGP", name );
+  configObject()->sync();
   mOpenPGPBackend = backend;
 }
 
