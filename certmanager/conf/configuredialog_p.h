@@ -57,6 +57,9 @@ public:
   virtual void save();
   virtual void defaults();
 
+private slots:
+  void slotChanged();
+
 private:
   Kleo::CryptoConfigEntry* configEntry();
 

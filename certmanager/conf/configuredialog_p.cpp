@@ -49,7 +49,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget 
   QVBoxLayout* lay = new QVBoxLayout( this );
   mWidget = new Kleo::DirectoryServicesWidget( configEntry(), this );
   lay->addWidget( mWidget );
-  connect( mWidget, SIGNAL( changed() ), this, SLOT( changed() ) );
+  connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
 }
 
 // Helper method for load/save/defaults. Implements runtime checks on the configuration option.
@@ -90,6 +90,12 @@ extern "C"
       new DirectoryServicesConfigurationPage( parent, "kgpgcertmanager_config_dirserv" );
     return page;
   }
+}
+
+// kdelibs-3.2 didn't have the changed signal in KCModule...
+void DirectoryServicesConfigurationPage::slotChanged()
+{
+  emit changed(true);
 }
 
 #include "configuredialog_p.moc"
