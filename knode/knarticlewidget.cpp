@@ -1509,9 +1509,6 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     }
   }
 
-  if (target.endsWith("/"))
-    target.truncate(target.length()-1);
-
   if((button==LeftButton)||(button==MidButton)) {
     KNGroup *g;
     KNRemoteArticle *a;
