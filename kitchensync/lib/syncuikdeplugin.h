@@ -1,6 +1,8 @@
 
-#ifndef SyncUIKDEPlugin
-#define SyncUIKDEPlugin
+// $Id:
+
+#ifndef SYNC_UI_KDE_PLUGIN_H
+#define SYNC_UI_KDE_PLUGIN_H
 
 #include <qwidget.h>
 

@@ -1,8 +1,10 @@
 // the actual implementation is from Cornelius Schumacher for now.
 
 
-#ifndef KitchenSync_StandardSync
-#define KitchenSync_StandardSync
+// $Id:
+
+#ifndef KSYNC_STANDARD_SYNC_H
+#define KSYNC_STANDARD_SYNC_H
 
 #include "syncalgorithm.h"
 

@@ -1,8 +1,8 @@
 
-#ifndef KitchenSync_SyncInterface
-#define KitchenSync_SyncInterface
+#ifndef KSYNC_SYNC_ALGORITHM_H
+#define KSYNC_SYNC_ALGORITHM_H
 
-// zeckes file
+// $Id
 
 namespace KSync {
 

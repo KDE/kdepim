@@ -1,6 +1,6 @@
 
-#ifndef kontainer_h
-#define kontainer_h
+#ifndef KONTAINER_H
+#define KONTAINER_H
 
 #include <qstring.h>
 #include <qvaluelist.h>
