@@ -111,8 +111,6 @@ class OpenGroupware : public ResourceCached
     QStringList mIncidencesForUpload;
     QStringList mIncidencesForDeletion;
 
-    QMap<QString, QString> mVersionsPendingDownload;
-
     QString mCurrentGetUrl;
 
     bool mIsShowingError;

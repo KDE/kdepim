@@ -170,7 +170,6 @@ bool OpenGroupware::doLoad()
   }
 
   mIncidencesForDownload.clear();
-  mVersionsPendingDownload.clear();
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
@@ -254,10 +253,10 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       if ( !localId.isNull() )
         i = mCalendar.incidence( localId );
       if ( !i ) {
-         kdDebug(7000) << "Not locally present, download: " << location << endl;
+         //kdDebug(7000) << "Not locally present, download: " << location << endl;
         download = true;
       } else {
-         kdDebug(7000) << "Locally present " << endl;
+         //kdDebug(7000) << "Locally present " << endl;
         /* locally present, let's check if it's newer than what we have */
         const QString &oldFingerprint = idMapper().fingerprint( i->uid() );
         if ( oldFingerprint != newFingerprint ) {
@@ -272,12 +271,11 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
             download = true;
           }
         } else {
-          kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
+          //kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
         }
       }
       if ( download ) {
         mIncidencesForDownload << entry;
-        mVersionsPendingDownload.insert( location, newFingerprint );
       }
     }
   }
@@ -303,7 +301,8 @@ void OpenGroupware::downloadNextIncidence()
     mJobData = QString::null;
 
     mDownloadJob = KIO::get( url, false, false );
-    mDownloadJob->addMetaData( "PropagateHTTPHeader", "true" );
+    mDownloadJob->addMetaData( "accept", "text/calendar" );
+    mDownloadJob->addMetaData( "PropagateHttpHeader", "true" );
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotJobResult( KIO::Job * ) ) );
     connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
@@ -339,9 +338,18 @@ void OpenGroupware::slotUploadJobResult( KIO::Job *job )
   uploadNextIncidence();
 }
 
+
+static const QString getEtagFromHeaders( const QString& headers )
+{
+  kdDebug(5006) << "HEADERS " << headers << endl;
+  int start = headers.find( "etag:" );
+  start += 6;
+  return headers.mid( start, headers.find( "\n", start ) - start );
+}
+
 void OpenGroupware::slotJobResult( KIO::Job *job )
 {
-//  kdDebug() << "OpenGroupware::slotJobResult(): " << endl;
+  kdDebug() << "OpenGroupware::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     mIsShowingError = true;
@@ -349,7 +357,7 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
     mIsShowingError = false;
   } else {
     const QString& headers = job->queryMetaData( "HTTP-Headers" );
-    kdDebug(7000) << "HEADERS: " << endl << headers << endl;
+    const QString& etag = getEtagFromHeaders( headers );
     CalendarLocal calendar;
     ICalFormat ical;
     if ( !ical.fromString( &calendar, mJobData ) ) {
@@ -367,15 +375,12 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
         } else {
           i->setUid( local );
         }
-        assert( mVersionsPendingDownload.contains( remote ) );
-        idMapper().setFingerprint( i->uid(), mVersionsPendingDownload[ remote ] );
-        // TODO verify the downloaded version matches
+        idMapper().setFingerprint( i->uid(), etag );
         i->setCustomProperty( "KCalResourceOpengroupware", "storagelocation" , remote );
         // if it's already there, we uploaded or changed it
         if ( !mCalendar.incidence( i->uid() ) ) {
           disableChangeNotification();
           addIncidence( i );
-          kdDebug(7000) << "Added incidence: " << i->uid() << endl;
           enableChangeNotification();
         }
         else
