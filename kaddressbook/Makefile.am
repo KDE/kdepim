@@ -7,6 +7,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/features \
           -I$(top_srcdir)/kaddressbook/views \
           -I$(top_srcdir)/kaddressbook/printing \
+          -I$(top_srcdir)/certmanager/lib \
           -I$(top_srcdir) $(GPGME_CFLAGS) $(all_includes)
 
 
