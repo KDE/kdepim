@@ -561,39 +561,52 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
     const QDate& to)
 {
   QValueList<HistoryEvent> retval;
+  QStringList processed;
   KCal::Event::List events;
   KCal::Event::List::iterator event;
+  QString duration;
 
   for(QDate d = from; d <= to; d = d.addDays(1))
   {
     events = _calendar.rawEventsForDate(d);
-    for (event = events.begin(); event != events.end(); event++)
+    for (event = events.begin(); event != events.end(); ++event)
     {
-      QString duration;
       
       // KArm events have the custom property X-KDE-Karm-duration
-      duration = (*event)->customProperty(kapp->instanceName(), 
-          QCString("duration"));
-      if ( ! duration.isNull() )
+      if (! processed.contains( (*event)->uid()))
       {
-        if ( (*event)->relatedTo()
-            &&  ! (*event)->relatedTo()->uid().isEmpty() )
+        // If an event spans multiple days, then we attribute the hours to the
+        // first day.  This is not ideal because it mis-reports the actual
+        // time spent, but it is the easiest way to avoid double counting for
+        // now.  (If an event spans two days, CalendarLocal::rawEventsForDate
+        // will return the same event on both days.)  This should be
+        // put in the documentation.
+        processed.append( (*event)->uid());
+
+        duration = (*event)->customProperty(kapp->instanceName(), 
+            QCString("duration"));
+        if ( ! duration.isNull() )
         {
-          retval.append(HistoryEvent(
-              (*event)->uid(),
-              (*event)->summary(), 
-              duration.toLong(),
-              (*event)->dtStart(),
-              (*event)->dtEnd(),
-              (*event)->relatedTo()->uid()
-              ));
+          if ( (*event)->relatedTo()
+              &&  ! (*event)->relatedTo()->uid().isEmpty() )
+          {
+            retval.append(HistoryEvent(
+                (*event)->uid(),
+                (*event)->summary(), 
+                duration.toLong(),
+                (*event)->dtStart(),
+                (*event)->dtEnd(),
+                (*event)->relatedTo()->uid()
+                ));
+          }
+          else
+            // Something is screwy with the ics file, as this KArm history event
+            // does not have a todo related to it.  Could have been deleted
+            // manually?  We'll continue with report on with report ...
+            kdDebug() << "KarmStorage::getHistory(): "
+              << "The event " << (*event)->uid() 
+              << " is not related to a todo.  Dropped." << endl;
         }
-        else
-          // Something is screwy with the ics file, as this KArm history event
-          // does not have a todo related to it.
-          kdDebug() << "KarmStorage::getHistory(): "
-            << "The event " << (*event)->uid() 
-            << " is not related to a todo.  Dropped." << endl;
       }
     }
   }
