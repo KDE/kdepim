@@ -1,12 +1,19 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-03-13  Adriaan de Groot
+* Stared at the screen for a while trying to think of how to test syncing
+  with my spare m100 without breaking my existing stuff from my m500.
+  And I realize that it means I need a second monitor and to run X dual-head.
+* Some minor rearrangements in the config dialog again.
+* Added configuration widget to perl conduit.
+
 2004-03-12  Adriaan de Groot
-* Received patches from Joern Ahrens and Sebastian Voitzsch for 
+* Received patches from Jörn Ahrens and Sebastian Voitzsch for
   various issues. Thanks guys! It's contributions like this that
   really inspire me to keep working on KPilot. Reinhold and I can't
   do everything by ourselves.
-* There will be tarballs of KPilot 4.4.2 soon; this will make it 
+* There will be tarballs of KPilot 4.4.2 soon; this will make it
   possible to get the bugfixes from Joern and Sebastian - and others -
   on your system now without waiting for another KDE release.
 

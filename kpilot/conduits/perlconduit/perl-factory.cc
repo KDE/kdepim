@@ -31,10 +31,12 @@
 #include <kconfig.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
+#include <qlineedit.h>
 
-#include "perl-conduit.h"
+#include "perl-conduit.h"     // Conduit action
+#include "perl-setup.h"
 #include "perl-factory.moc"
-
+#include "perlconduit.h"     // Settings class
 
 extern "C"
 {
@@ -44,6 +46,48 @@ void *init_conduit_perl()
 	return new PerlConduitFactory;
 }
 
+}
+
+class PerlConduitConfig : public ConduitConfigBase
+{
+public:
+	PerlConduitConfig(QWidget *parent=0L, const char *n=0L);
+	virtual void commit();
+	virtual void load();
+	static ConduitConfigBase *create(QWidget *p,const char *n)
+		{ return new PerlConduitConfig(p,n); } ;
+protected:
+	PerlWidget *fConfigWidget;
+} ;
+
+PerlConduitConfig::PerlConduitConfig(QWidget *p, const char *n) :
+	ConduitConfigBase(p,n),
+	fConfigWidget(new PerlWidget(p))
+{
+	FUNCTIONSETUP;
+	fConduitName = i18n("Perl");
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,PerlConduitFactory::about());
+	fWidget=fConfigWidget;
+	QObject::connect(fConfigWidget->fExpression,SIGNAL(textChanged(const QString&)),
+		this,SLOT(modified()));
+}
+
+/* virtual */ void PerlConduitConfig::commit()
+{
+	FUNCTIONSETUP;
+
+	PerlConduitSettings::setExpression( fConfigWidget->fExpression->text() );
+	PerlConduitSettings::self()->writeConfig();
+}
+
+/* virtual */ void PerlConduitConfig::load()
+{
+	FUNCTIONSETUP;
+	PerlConduitSettings::self()->readConfig();
+
+	fConfigWidget->fExpression->setText( PerlConduitSettings::expression() );
+
+	fModified=false;
 }
 
 KAboutData *PerlConduitFactory::fAbout = 0L;
@@ -86,6 +130,19 @@ PerlConduitFactory::~PerlConduitFactory()
 		<< c
 		<< endl;
 #endif
+
+	if (qstrcmp(c,"ConduitConfigBase")==0)
+	{
+		QWidget *w = dynamic_cast<QWidget *>(p);
+		if (w)
+		{
+			return new PerlConduitConfig(w);
+		}
+		else
+		{
+			return 0L;
+		}
+	}
 
 	if (qstrcmp(c,"SyncAction")==0)
 	{

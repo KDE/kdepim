@@ -162,6 +162,20 @@ KDE_CHECK_HEADER(kresources/factory.h,HAVE_KABC=1,
 AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
 ])
 
+AC_DEFUN(KPILOT_CHECK_PERL,[HAVE_PERL=0
+if perl -MExtUtils::Embed -e ccopts 2> /dev/null ; then
+	PERL_CFLAGS=`perl -MExtUtils::Embed -e ccopts 2> /dev/null`
+	PERL_LDFLAGS=`perl -MExtUtils::Embed -e ldopts 2> /dev/null`
+	HAVE_PERL=1
+else
+	PERL_CFLAGS=""
+	PERL_LDFLAGS=""
+fi
+AC_SUBST(PERL_CFLAGS)
+AC_SUBST(PERL_LDFLAGS)
+AM_CONDITIONAL(include_perl, test "$HAVE_PERL" = 1)
+])
+
 dnl ----------------------------------------------------------------------------
 dnl
 dnl                   actually call the checks
@@ -170,3 +184,4 @@ dnl ----------------------------------------------------------------------------
 
 KPILOT_CHECK_MAL
 KPILOT_CHECK_KABC
+KPILOT_CHECK_PERL

@@ -27,6 +27,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#ifdef DEBUG
+#undef DEBUG
+#define DEBUG (1)
+#else
+#define DEBUG (1)
+#endif
 
 #include "options.h"
 
@@ -37,7 +43,8 @@
 static const char *perl_conduit_id=
 	"$Id$";
 
-#include "perl-conduit.h"
+#include "perl-conduit.h"  // The Conduit action
+#include "perlconduit.h"   // The settings class
 
 #include <qthread.h>
 #include <qapplication.h>
@@ -51,10 +58,13 @@ public:
 	PerlThread(QObject *parent) : fParent(parent) { } ;
 	virtual void run();
 
+	QString result() const { return fResult; } ;
+
 protected:
 	QObject *fParent;
 	PerlInterpreter *fPerl;
 
+	QString fResult;
 } ;
 
 
@@ -99,6 +109,8 @@ PerlConduit::~PerlConduit()
 #ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Perl thread done." << endl;
 #endif
+		QString r;
+		addSyncLogEntry(i18n("Perl returned %1.").arg(fThread->result()));
 		delayDone();
 		return true;
 	}
@@ -120,11 +132,13 @@ void PerlThread::run()
 	perl_parse(fPerl, NULL, 3, const_cast<char **>(perl_args), NULL);
 	perl_run(fPerl);
 
-	eval_pv("$a=3; $a **=2; $a+=7;",TRUE);
+	eval_pv(PerlConduitSettings::expression().latin1(),TRUE);
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Thread woken with " << SvIV(get_sv("a",FALSE)) << endl;
 #endif
+
+	fResult.setNum(SvIV(get_sv("a",FALSE)));
 
 	perl_destruct(fPerl);
 	perl_free(fPerl);
