@@ -24,6 +24,7 @@
 #include "kcal_resourcefeatureplanconfig.h"
 
 #include "kde-features.h"
+#include "kde-features_parser.h"
 
 #include <qapplication.h>
 #include <qdatetime.h>
@@ -77,7 +78,9 @@ bool ResourceFeaturePlan::doLoad()
 
   mCalendar.close();
 
-  Features *features = Features::parseFile( mPrefs->filename() );
+  FeaturesParser parser;
+
+  Features *features = parser.parseFile( mPrefs->filename() );
 
   if ( !features ) {
     return false;

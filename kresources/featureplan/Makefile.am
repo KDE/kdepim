@@ -3,7 +3,8 @@ INCLUDES = -I$(top_srcdir) $(all_includes)
 lib_LTLIBRARIES = libkcal_resourcefeatureplan.la
 
 noinst_LTLIBRARIES = libfeatureplancommon.la
-libfeatureplancommon_la_SOURCES = kde-features.cpp prefs.kcfgc
+libfeatureplancommon_la_SOURCES = kde-features.cpp kde-features_parser.cpp \
+                                  prefs.kcfgc
 
 libkcal_resourcefeatureplan_la_SOURCES = kcal_resourcefeatureplan.cpp \
                                          kcal_resourcefeatureplanconfig.cpp 
@@ -25,15 +26,22 @@ kcal_resourcefeatureplan_la_COMPILE_FIRST = kde-features.h prefs.h
 kcal_servicedir = $(kde_servicesdir)/kresources/kcal
 kcal_service_DATA = kcal_resourcefeatureplan.desktop
 
-check_PROGRAMS = dumpfeaturelist
+check_PROGRAMS = dumpfeaturelist benchmarkfeaturelist
 
 dumpfeaturelist_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 dumpfeaturelist_LDADD   = libfeatureplancommon.la $(LIB_KDECORE)
 dumpfeaturelist_SOURCES = dumpfeaturelist.cpp
+dumpfeatuelist_COMPILE_FIRST = kde-features.h
 
-kde-features.h kde-features.cpp: $(srcdir)/kde-features.rng \
+benchmarkfeaturelist_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+benchmarkfeaturelist_LDADD   = libfeatureplancommon.la $(LIB_KDECORE)
+benchmarkfeaturelist_SOURCES = benchmarkfeaturelist.cpp
+benchmarkfeatuelist_COMPILE_FIRST = kde-features.h
+
+kde-features.h kde-features.cpp kde-features_parser.h kde-features_parser.cpp: $(srcdir)/kde-features.rng \
   $(top_builddir)/kode/kxml_compiler/kxml_compiler
-	$(top_builddir)/kode/kxml_compiler/kxml_compiler $(srcdir)/kde-features.rng
+	$(top_builddir)/kode/kxml_compiler/kxml_compiler \
+          --custom-parser $(srcdir)/kde-features.rng
 
 METASOURCES = AUTO
-DISTCLEANFILES = kde-features.h kde-features.cpp
+DISTCLEANFILES = kde-features.h kde-features.cpp kde-features_parser.h kde-features_parser.cpp

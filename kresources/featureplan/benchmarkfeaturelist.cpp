@@ -20,7 +20,7 @@
 */
 
 #include "kde-features.h"
-#include "kde-features_parser.h"
+#include "kde-features_parser.custom.h"
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -69,7 +69,8 @@ void displayCategory( const QValueList<Category *> categories )
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "dumpfeaturelist", "Dump XML feature list to stdout",
+  KAboutData aboutData( "benchmarkfeaturelist",
+                        "Benchmark for feature list XML parser",
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
@@ -84,19 +85,14 @@ int main( int argc, char **argv )
 
   QString filename = QFile::decodeName( args->arg( 0 ) );
 
-  FeaturesParser parser;
+  for( int i = 0; i < 1; ++i ) {
+    FeaturesParser parser;
 
-  Features *features = parser.parseFile( filename );
+    Features *features = parser.parseFile( filename );
 
-  if ( !features ) {
-    kdError() << "Parse error" << endl;
-  } else {
-    QValueList<Category *> categories = features->categoryList();
-    displayCategory( categories );
-  }
-
-  QString out = filename + ".out";
-  if ( !features->writeFile( out ) ) {
-    kdError() << "Write error" << endl;
+    if ( !features ) {
+      kdError() << "Parse error" << endl;
+      return 1;
+    }
   }
 }
