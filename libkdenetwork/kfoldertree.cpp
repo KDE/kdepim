@@ -29,7 +29,7 @@ QString KFolderTreeItem::key(int column, bool) const
   if ( column > 0 ) return text(column);
 
   // local root-folder
-  if ( !parent() && mProtocol == NONE )
+  if ( depth() == 0 && mProtocol == NONE )
     return "\t0";
 
   QString thiskey;
