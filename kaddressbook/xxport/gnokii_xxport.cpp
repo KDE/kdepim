@@ -123,6 +123,9 @@ static QString businit(void)
 	if (!gn_cfg_phone_load("", &state))
 		return i18n("Gnokii is not yet configured.");
 
+	// uncomment to debug all gnokii communication on stderr.
+	// gn_log_debug_mask = GN_LOG_T_STDERR;
+
 	gn_data_clear(&data);
 
 	aux = gn_cfg_get(gn_cfg_info, "global", "use_locking");
