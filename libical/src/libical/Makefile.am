@@ -42,60 +42,60 @@ libical_la_LDFLAGS = -version-info 0:0:0
 # Order is important!
 libical_la_SOURCES =		\
 	icalderivedparameter.c	\
-	icalderivedparameter.h	\
 	icalrecur.c		\
-	icalrecur.h		\
-	icalattendee.h		\
 	icalattendee.c		\
 	icalcomponent.c		\
-	icalcomponent.h		\
 	icalenums.c		\
-	icalenums.h		\
 	icalerror.c		\
-	icalerror.h		\
 	icallexer.c		\
 	icalmemory.c		\
-	icalmemory.h		\
 	icalmime.c		\
-	icalmime.h		\
 	icalparameter.c		\
-	icalparameter.h		\
-	icalparameterimpl.h	\
 	icalparser.c		\
-	icalparser.h		\
 	icalderivedproperty.c	\
-	icalderivedproperty.h	\
 	icalproperty.c		\
-	icalproperty.h		\
 	icalrestriction.c	\
-	icalrestriction.h	\
 	icaltime.c		\
-	icaltime.h		\
-	icalduration.h		\
 	icalduration.c		\
-	icalperiod.h		\
 	icalperiod.c		\
 	icaltypes.c		\
-	icaltypes.h		\
 	icalvalue.c		\
-	icalvalue.h		\
-	icalvalueimpl.h		\
 	icalderivedvalue.c	\
-	icalderivedvalue.h	\
-	icalyacc.h		\
 	icalyacc.c		\
 	pvl.c			\
-	pvl.h			\
 	sspm.c			\
-	sspm.h			\
 	vsnprintf.c		\
-	icallangbind.h		\
 	icallangbind.c
 
 #	icalyacc.y		
 #	icallexer.l		
 
-noinst_HEADERS =  ical.h 
+noinst_HEADERS =  ical.h \
+	icalderivedparameter.h	\
+	icalrecur.h		\
+	icalattendee.h		\
+	icalcomponent.h		\
+	icalenums.h		\
+	icalerror.h		\
+	icalmemory.h		\
+	icalmime.h		\
+	icalparameter.h		\
+	icalparameterimpl.h	\
+	icalparser.h		\
+	icalderivedproperty.h	\
+	icalproperty.h		\
+	icalrestriction.h	\
+	icaltime.h		\
+	icalduration.h		\
+	icalperiod.h		\
+	icaltypes.h		\
+	icalvalue.h		\
+	icalvalueimpl.h		\
+	icalderivedvalue.h	\
+	icalyacc.h		\
+	pvl.h			\
+	sspm.h			\
+	icallangbind.h
 
 # ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
 # is required to make the combined header ical.h properly
@@ -129,7 +129,7 @@ ical.h: $(COMBINEDHEADERS)
 	| egrep -v "#include.*\"ical"			\
 	| egrep -v "#include.*\"pvl\.h\"" > ical.h
 
-icallexer.c : icalyacc.h
+$(srcdir)/icallexer.c : icalyacc.h
 
 # parameters
 
