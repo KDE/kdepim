@@ -744,7 +744,7 @@ void VCalConduit::setStartEndTimes(PilotDateEntry*de, const KCal::Event *e)
 	de->setEventStart(ttm);
 	de->setEvent(e->doesFloat());
 
-	if (e->hasEndDate())
+	if (e->hasEndDate() && e->dtEnd().isValid())
 	{
 		ttm=writeTm(e->dtEnd());
 	}
@@ -986,7 +986,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 	// whether we have to recalc the end date depending on the duration and the recurrence type
 	bool needCalc=( (!endDate.isValid()) && (r->duration()>0));
 	// TODO: What if duration>0 and the date is valid???
-	if (r->duration()==0)
+	if (r->duration()<=0)
 	{
 		if (!endDate.isValid())
 		{
@@ -1166,6 +1166,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.61  2002/04/21 17:07:12  kainhofe
+// Fixed some memory leaks, old alarms and exceptions are deleted before new are added, Alarms are now correct
+//
 // Revision 1.60  2002/04/20 18:05:50  kainhofe
 // No duplicates any more in the calendar
 //
