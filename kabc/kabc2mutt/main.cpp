@@ -38,6 +38,7 @@ static KCmdLineOptions k2moptions[] =
 
 int main( int argc, char **argv )
 {
+    KApplication::disableAutoDcopRegistration();
     KCmdLineArgs::init( argc, argv, "kabc2mutt",
                         i18n( "kabc - mutt converter" ), "0.1" );
     KCmdLineArgs::addCmdLineOptions( k2moptions );
