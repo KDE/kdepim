@@ -223,6 +223,8 @@ void Kleo::KeyRequester::updateKeys() {
   QToolTip::add( mLabel, toolTipText );
 }
 
+#ifndef __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
+#define __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
 static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
@@ -232,6 +234,7 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
 
   KMessageBox::error( parent, msg, i18n( "Key Listing Failed" ) );
 }
+#endif // __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
 
 void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
   if ( !mSMIMEBackend && !mOpenPGPBackend )
