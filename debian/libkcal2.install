@@ -8,6 +8,10 @@ debian/tmp/usr/lib/kde3/kcal_remote.la
 debian/tmp/usr/lib/kde3/kcal_remote.so
 debian/tmp/usr/lib/kde3/libkcm_kcalendars.la
 debian/tmp/usr/lib/kde3/libkcm_kcalendars.so
+debian/tmp/usr/lib/kde3/resourcecalendarexchange.la
+debian/tmp/usr/lib/kde3/resourcecalendarexchange.so
+debian/tmp/usr/lib/kde3/resourcecalendarimap.la
+debian/tmp/usr/lib/kde3/resourcecalendarimap.so
 debian/tmp/usr/share/applnk/Settings/Components/kcalendars.desktop
 debian/tmp/usr/share/apps/kresources/calendar/exchange.desktop
 debian/tmp/usr/share/apps/kresources/calendar/imap.desktop
