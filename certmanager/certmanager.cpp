@@ -240,6 +240,10 @@ void CertManager::createActions() {
 			this, SLOT(newCertificate()),
 			actionCollection(), "file_new_certificate" );
 
+  connect( new KToggleAction( i18n("Hierarchical Key List"), 0,
+			      actionCollection(), "view_hierarchical" ),
+	   SIGNAL(toggled(bool)), SLOT(slotToggleHierarchicalView(bool)) );
+
 #ifdef NOT_IMPLEMENTED_ANYWAY
   mRevokeCertificateAction = new KAction( i18n("Revoke"), 0,
                                           this, SLOT(revokeCertificate()),
@@ -351,6 +355,10 @@ void CertManager::slotToggleRemote( int idx ) {
   mNextFindRemote = idx != 0;
 }
 
+void CertManager::slotToggleHierarchicalView( bool hier ) {
+  mKeyListView->setHierarchical( hier );
+  mKeyListView->setRootIsDecorated( hier );
+}
 
 void CertManager::connectJobToStatusBarProgress( Kleo::Job * job, const QString & initialText ) {
   assert( mProgressBar );

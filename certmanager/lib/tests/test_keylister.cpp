@@ -95,7 +95,8 @@ namespace {
 CertListView::CertListView( QWidget * parent, const char * name, WFlags f )
   : Kleo::KeyListView( new TestColumnStrategy(), 0, parent, name, f )
 {
-
+  setHierarchical( true );
+  setRootIsDecorated( true );
 }
 
 void CertListView::slotResult( const GpgME::KeyListResult & result ) {

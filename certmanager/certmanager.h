@@ -117,6 +117,7 @@ private slots:
     void slotStderr( KProcess*, char*, int );
 
     void slotToggleRemote(int idx);
+    void slotToggleHierarchicalView( bool );
 
     void slotViewCRLs();
 
