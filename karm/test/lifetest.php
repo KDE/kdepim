@@ -61,8 +61,10 @@ function simkey($s)
 {
   for ($i=0; $i<strlen($s); $i++)
   {
+    usleep(10000);            # this is heuristic, its need is related to X.org bug #2710
     if ($s[$i]=="/") system("xte 'key KP_Divide'");
     else system("xte 'key ".$s[$i]."'");
+    usleep(10000);            # this is heuristic, its need is related to X.org bug #2710
   }
 }
 
@@ -75,7 +77,12 @@ function keysim($s)
 function funkeysim($s, $count=1)
 // same as keysim, but interprets $s as function key name to be used by xte and expects a $count to indicate how often key is to be pressed
 {
-  for ($i=1; $i<=$count; $i++) system("xte 'key $s'", $rc);
+  for ($i=1; $i<=$count; $i++) 
+  {
+    usleep(100000);            # this is heuristic, its need is related to X.org bug #2710
+    $rc=exec("xte 'key $s'");
+    usleep(100000);            # this is heuristic, its need is related to X.org bug #2710
+  }
   return $rc;
 }
 
@@ -146,8 +153,8 @@ else
     sleep (1);
     funkeysim("Return");
     sleep (1);
+
     # 1. add a new task
-    # really, this once was impossible!
     funkeysim("Alt_L");
     funkeysim("Right",2);
     funkeysim("Down");
