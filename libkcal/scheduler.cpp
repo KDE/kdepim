@@ -157,46 +157,39 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
     // reply to this request is handled in korganizer's incomingdialog
     return true;
   } else {
-//    switch (status) {
-//    case ScheduleMessage::Obsolete: {
-      // why the same s "RequestUpdate?
-      Event *even = mCalendar->event(incidence->uid());
-      if (even) {
-	mCalendar->deleteEvent(even);
+    Event *even = mCalendar->event(incidence->uid());
+    if (even) {
+      if ( even->revision()<=inc->revision() ) {
+        if ( even->revision()==inc->revision() && 
+             even->lastModified()>inc->lastModified()) {
+          deleteTransaction(incidence);
+          return false;
+        }
+        mCalendar->deleteEvent(even);
       } else {
-	Todo *todo = mCalendar->todo(incidence->uid());
-	if (todo) {
-	  mCalendar->deleteTodo(todo);
-	}
+        deleteTransaction(incidence);
+        return false;
       }
-      mCalendar->addIncidence(inc);
-      deleteTransaction(incidence);
-      return true;
-/*    }
-    case ScheduleMessage::RequestNew:
-      mCalendar->addIncidence(inc);
-      deleteTransaction(incidence);
-      return true;
-    case ScheduleMessage::RequestUpdate: {
-      Event *even = mCalendar->event(incidence->uid());
-      if (even) {
-	mCalendar->deleteEvent(even);
-      } else {
-	Todo *todo = mCalendar->todo(incidence->uid());
-	if (todo) {
-	  mCalendar->deleteTodo(todo);
-	}
+    } else {
+      Todo *todo = mCalendar->todo(incidence->uid());
+      if (todo) {
+        if ( todo->revision()<=inc->revision() ) {
+          if ( todo->revision()==inc->revision() && 
+               todo->lastModified()>inc->lastModified()) {
+            deleteTransaction(incidence);
+            return false;
+          }
+          mCalendar->deleteTodo(todo);
+        } else {
+          deleteTransaction(incidence);
+          return false;
+        }
       }
-      mCalendar->addIncidence(inc);
-      deleteTransaction(incidence);
-      return true;
-    }
-    default:
-      return false;
     }
   }
+  mCalendar->addIncidence(inc);
   deleteTransaction(incidence);
-  return false;*/
+  return true;
 }
 
 bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status status)
