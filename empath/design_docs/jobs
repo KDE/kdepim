@@ -8,18 +8,8 @@ The class 'EmpathJob' is the base class for such an operation.
 If you know DP language, this is called a 'Command', 'Action' or
 'Transaction'.
 
-,-----------------------------.      ,-----------------------------------.
-|           Empath            |<>-->o|            JobScheduler           |
-|-----------------------------|      |-----------------------------------|
-| retrieve(url, NotifyObject) |      | newRetrieveJob(url, NotifyObject) |<>-.
-`-----------------------------'      | runQueue() o                      |   |
-                                     `------------.----------------------'   |
-                                                  .                          v
-                                                  .       ,-------------------.
-                                        ,-------------.   |        Job        |
-                                        | job->run() \|   |-------------------|
-                                        `-------------'   |       run()       |
-                                                          `-------------------'
+You can see a draft UML diagram showing how this works by looking
+at empath.eps (or empath.dia, if you have the program 'dia')
 
 From the user's perspective, the interface is extremely simple and
 easy to use.
