@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libicalvcal.la
+noinst_LTLIBRARIES = libicalvcal.la
 
 INCLUDES =			\
 	-I$(top_builddir)	\
@@ -16,9 +16,9 @@ libicalvcal_la_SOURCES =	\
 	vobject.c		\
 	vcaltmp.c
 
-libicalvcalincludedir = $(includedir)/libicalvcal
+#libicalvcalincludedir = $(includedir)/libicalvcal
 
-libicalvcalinclude_HEADERS =	\
+noinst_HEADERS =	\
 	icalvcal.h		\
 	port.h			\
 	vcc.h			\

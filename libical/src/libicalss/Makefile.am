@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libicalss.la
+noinst_LTLIBRARIES = libicalss.la
 
 YFLAGS =-d -v -p ss
 LFLAGS = -Pss 
@@ -51,7 +51,7 @@ icalss.h: $(COMBINEDHEADERS)
 	| egrep -v "#include.*\"pvl\.h\"" > icalss.h
 
 
-libicalssinclude_HEADERS = icalss.h
+noinst_HEADERS = icalss.h
 
 CONFIG_CLEAN_FILES = y.output
 
