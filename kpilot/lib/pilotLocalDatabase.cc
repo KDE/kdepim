@@ -87,7 +87,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 }
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
-	bool useDefaultPath, QObject *p, const char *n) :
+	QObject *p, const char *n) :
 	PilotDatabase(p,n),
 	fPathName(QString::null),
 	fDBName(dbName),
@@ -98,24 +98,18 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	fPendingRec(-1)
 {
 	FUNCTIONSETUP;
+	if (fPathBase && !fPathBase->isEmpty())
+	{
+		fPathName = *fPathBase;
+	}
+	else
+	{
+		fPathName = KGlobal::dirs()->saveLocation("data",
+			CSL1("kpilot/DBBackup/"));
+	}
+
 	fixupDBName();
 	openDatabase();
-
-	if (!isDBOpen() && useDefaultPath)
-	{
-		if (fPathBase && !fPathBase->isEmpty())
-		{
-			fPathName = *fPathBase;
-		}
-		else
-		{
-			fPathName = KGlobal::dirs()->saveLocation("data",
-				CSL1("kpilot/DBBackup/"));
-		}
-
-		fixupDBName();
-		openDatabase();
-	}
 }
 
 

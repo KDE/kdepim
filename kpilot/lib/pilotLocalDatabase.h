@@ -56,7 +56,7 @@ public:
 	PilotLocalDatabase( const QString& path,
 		const QString& name, bool useDefaultPath=true,
 		QObject *p=0L,const char *n=0L);
-	PilotLocalDatabase(const QString &name, bool useDefaultPath=true,
+	PilotLocalDatabase(const QString &name,
 		QObject *p=0L,const char *n=0L);
 
 
