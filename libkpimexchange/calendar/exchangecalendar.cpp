@@ -206,11 +206,13 @@ QPtrList<Event> ExchangeCalendar::rawEventsForDate(const QDate &qd, bool sorted)
   // kdDebug() << "Now is " << now.toString() << endl;
   // kdDebug() << "mDates: " << mDates << endl;
   // kdDebug() << "mDates->contains(qd) is " << mDates->contains( qd ) << endl;
-  if ( !mDates->contains( qd ) || (*mCacheDates)[qd].secsTo( now ) > mCachedSeconds ) {
-    kdDebug() << "Reading events for date " << qd.toString() << endl;
-    mClient->downloadSynchronous( mCache, qd, qd );
-    mDates->add( qd );
-    mCacheDates->insert( qd, now );
+  QDate start = QDate( qd.year(), qd.month(), 1 ); // First day of month
+  if ( !mDates->contains( start ) || (*mCacheDates)[start].secsTo( now ) > mCachedSeconds ) {
+    kdDebug() << "Reading events for month of " << start.toString() << endl;
+    QDate end = start.addMonths( 1 ).addDays( -1 ); // Last day of month
+    mClient->downloadSynchronous( mCache, start, end, true ); // Show progress dialog
+    mDates->add( start );
+    mCacheDates->insert( start, now );
   }
 
   // Events are safely in the cache now, return them from cache
