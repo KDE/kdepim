@@ -37,8 +37,10 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/attendee.h>
+#include <libkcal/incidence.h>
 
 #include <kmail/callback.h>
+#include <kmail/kmmessage.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -230,6 +232,10 @@ class Formatter : public KMail::Interface::BodyPartFormatter
     Result format( KMail::Interface::BodyPart *bodyPart,
                    KMail::HtmlWriter *writer ) const
     {
+      if ( !writer )
+        // Guard against crashes in createReply()
+        return Ok;
+
       const QString iCalendar = bodyPart->asText();
       if ( iCalendar.isEmpty() ) return AsIcon;
 
@@ -495,16 +501,27 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         incidence->addAttendee( newMyself );
     }
 
-    bool mail( const QString& message ) const
+    bool mail( Incidence* incidence, KMail::Callback& callback ) const
     {
-      kdDebug(5006) << "Mailing message:\n" << message << endl;
+      // This workaround is disabled for now
 #if 0
-      // TODO: Mail the thing
-      // TODO: Set From: correctly
-      KOMailClient mailer;
-      return mailer.mailOrganizer(incidence,messageText);
+      // This is ugly, but Outlook will only understand the reply if
+      // the From: header is the same as the To: header of the
+      // invitation message.
+      KConfigGroup options( KMKernel::config(), "Groupware" );
+      if( options.readBoolEntry( "LegacyMangleFromToHeaders", true ) )
+          msgNew->setFrom( callback.receiver() );
 #endif
-      return true;
+
+      ICalFormat format;
+      QString msg = format.createScheduleMessage( incidence,
+                                                  Scheduler::Reply );
+      QString subject;
+      if ( !incidence->summary().isEmpty() )
+        subject = i18n( "Answer: %1" ).arg( incidence->summary() );
+      else
+        subject = i18n( "Answer: Incidence with no summary" );
+      return callback.mailICal( incidence->organizer(), msg, subject );
     }
 
     bool handleAccept( const QString& iCal, KMail::Callback& callback ) const
@@ -530,8 +547,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
       setStatusOnMyself( incidence, Attendee::Accepted, callback.receiver() );
-      return mail( format.createScheduleMessage( incidence,
-                                                 Scheduler::Reply ) );
+      return mail( incidence, callback );
     }
 
     bool handleDecline( const QString& iCal, KMail::Callback& callback ) const
@@ -541,8 +557,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Incidence* incidence = icalToString( iCal, format );
       if( !incidence ) return false;
       setStatusOnMyself( incidence, Attendee::Declined, callback.receiver() );
-      return mail( format.createScheduleMessage( incidence,
-                                                 Scheduler::Reply ) );
+      return mail( incidence, callback );
     }
 
     bool handleClick( KMail::Interface::BodyPart *part,
