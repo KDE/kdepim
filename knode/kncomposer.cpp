@@ -119,7 +119,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   redo->setEnabled(false);
   connect(v_iew->e_dit, SIGNAL(redoAvailable(bool)), redo, SLOT(setEnabled(bool)));
 
-  KStdAction::cut(v_iew->e_dit, SLOT(cut()), actionCollection());
+  KAction *cut =KStdAction::cut(v_iew->e_dit, SLOT(cut()), actionCollection());
+
+  connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), cut , SLOT(setEnabled(bool)));
+
 
   KAction *copy = KStdAction::copy(v_iew->e_dit, SLOT(copy()), actionCollection());
   copy->setEnabled(false);
