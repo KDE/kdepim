@@ -203,7 +203,7 @@ void KNSavedArticleManager::post(KNNntpAccount *acc)
   if(knGlobals.appManager->defaultUser()->isValid()) {
     KNSavedArticle *art=newArticle(acc);
     if(!art) return;
-    openInComposer(art);
+    openInComposer(art,true);
   }
   else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and a valid e-mail address first."));
 }
@@ -217,7 +217,7 @@ void KNSavedArticleManager::post(KNGroup *g)
     KNSavedArticle *art=newArticle(g->account());
     if(!art) return;
     art->setDestination(g->name().local8Bit().copy());
-    openInComposer(art);
+    openInComposer(art,true);
   }
   else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and a valid e-mail address first."));
 }
@@ -400,7 +400,7 @@ void KNSavedArticleManager::forward(KNArticle *a)
   
   art->addBodyLine("=======  Forwarded message (end)  =======");
   art->addBodyLine("");
-  openInComposer(art);
+  openInComposer(art,true);
 }
 
 
@@ -847,7 +847,7 @@ void KNSavedArticleManager::mailToClicked(KNArticleWidget *aw)
   tmp=aw->article()->replyToEmail();
   if(tmp.isEmpty()) tmp=aw->article()->fromEmail();
   art->setDestination(tmp.copy());
-  openInComposer(art);
+  openInComposer(art,true);
 }
 
 

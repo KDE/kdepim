@@ -128,25 +128,16 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit, K
 
   //init data 
   initData();
-  if (appSig) slotAppendSig();
-  
+
   setConfig();
 
-  int pos=0;
-  if (firstEdit) {    // now we try to place the cusor at the end of the quoted text
-    pos = -1;
-    for(int i=view->edit->numLines()-1; i>=0; i--)
-      if(view->edit->textLine(i).left(3) == "-- ") {
-        pos=i;
-        break;
-      }
-    if((pos!=-1) && (pos>0))
-      pos--;
-    else
-      pos = view->edit->numLines()-1;
-  }
-  view->edit->setCursorPosition(pos,0);
+  if (firstEdit)    // now we place the cusor at the end of the quoted text
+    view->edit->setCursorPosition(view->edit->numLines()-1,0);
+  else
+    view->edit->setCursorPosition(0,0);
   view->edit->setFocus();
+
+  if (firstEdit && appSig) slotAppendSig();
 
   if (view->viewOpen)
     restoreWindowSize("composerAtt", this, QSize(535,450));  // optimized default for 800x600
@@ -367,11 +358,9 @@ void KNComposer::applyChanges()
   text->mimeInfo()->setCTEncoding(); //default encoding for textual contents
   text->mimeInfo()->setDecoded(true);
 
-  if(textChanged()) {
-    text->clearBody();
-    for(int i=0; i<view->edit->numLines(); i++)
-      text->addBodyLine(view->edit->textLine(i).local8Bit());
-  }
+  text->clearBody();
+  for(int i=0; i<view->edit->numLines(); i++)
+    text->addBodyLine(view->edit->textLine(i).local8Bit());
 }
 
 
@@ -593,23 +582,8 @@ void KNComposer::slotSpellcheck()
 
 void KNComposer::slotAppendSig()
 {
-  int pos=-1, cnt=0;
-  if(!s_ignature.isEmpty()) {
-    for(int i=view->edit->numLines()-1; i>=0; i--) {
-      cnt++;
-      if(view->edit->textLine(i).left(3) == "-- ") {
-        pos=i;
-        break;
-      }
-    }
-          
-    if(pos!=-1)
-      for(int i=0; i<cnt; i++) view->edit->removeLine(pos);
-    
-    view->edit->insertLine("-- ");
-    view->edit->insertLine(s_ignature);
-    view->edit->setModified(true);    
-  }
+  view->edit->append(s_ignature);
+  view->edit->setModified(true);
 }
 
 
