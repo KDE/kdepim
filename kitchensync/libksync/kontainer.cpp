@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2002 Holger Freyther <freyther@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -22,41 +22,9 @@
 #include "kontainer.h"
 
 Kontainer::Kontainer(const QString& first,  const QString& second)
-{
-    m_first = first;
-    m_second = second;
-}
-
-Kontainer::Kontainer( const Kontainer &tain )
-{
-    (*this) = tain;
-}
+    : QPair<QString, QString>( first, second )
+{}
 
 Kontainer::~Kontainer()
-{
-}
+{}
 
-QString Kontainer::first() const
-{
-    return m_first;
-}
-
-QString Kontainer::second() const
-{
-    return m_second;
-}
-
-Kontainer &Kontainer::operator=( const Kontainer &con )
-{
-    m_first = con.m_first;
-    m_second = con.m_second;
-    return *this;
-}
-
-bool operator== ( const Kontainer &a ,  const Kontainer &b )
-{
-    if ( a.first() == b.first() &&  a.second() == b.second() )
-        return true;
-
-    return false;
-}

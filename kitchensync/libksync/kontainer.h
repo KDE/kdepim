@@ -21,33 +21,26 @@
 #ifndef KONTAINER_H
 #define KONTAINER_H
 
-#include <qstring.h>
+#include <qpair.h>
 #include <qvaluelist.h>
+#include <qstring.h>
 
-class Kontainer
+class Kontainer : public QPair<QString, QString>
 {
   public:
-    /**
-      Convinience typedef
-    */
-    typedef QValueList<Kontainer> ValueList;
+  /**
+     Convinience typedef
+  */
+  typedef QValueList<Kontainer> ValueList;
 
-    friend bool operator== ( const Kontainer &a ,  const Kontainer &b );
-    Kontainer(const QString& = QString::null,
-              const QString& = QString::null );
-    Kontainer(const Kontainer & );
+  Kontainer(const QString& = QString::null,
+            const QString& = QString::null );
+  ~Kontainer();
+    
 
-    ~Kontainer();
-
-    QString first()const;
-    QString second()const;
-    Kontainer &operator=( const Kontainer& );
-
-  private:
-    class KontainerPrivate;
-    KontainerPrivate *d;
-    QString m_first;
-    QString m_second;
+private:
+  class KontainerPrivate;
+  KontainerPrivate *d;
 };
 
 #endif
