@@ -58,7 +58,6 @@ KVcfPlugin::KVcfPlugin(QObject *parent, const char *name,
     item = addItemInfo(group, "Name", i18n("Name"), QVariant::String);
     item = addItemInfo(group, "Email", i18n("Email"), QVariant::String);
     item = addItemInfo(group, "Telephone", i18n("Telephone"), QVariant::String);
-
 }
 
 
@@ -105,7 +104,7 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
             myptr = linebuf + 3;
             strlcpy(buf_name, myptr, sizeof( buf_name ));
         } else if (memcmp(linebuf, id_email, 15) == 0) {
-            // we have a name
+            // we have an email
             myptr = linebuf + 15;
             strlcpy(buf_email, myptr, sizeof( buf_email ));
         }
@@ -120,7 +119,7 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     KFileMetaInfoGroup group = appendGroup(info, "Technical");
 
     if (strlen(buf_name) > 0)
-        appendItem(group, "Name", buf_name);
+        appendItem(group, "Name", QString::fromUtf8(buf_name));
 
     if (strlen(buf_email) > 0)
         appendItem(group, "Email", buf_email);
