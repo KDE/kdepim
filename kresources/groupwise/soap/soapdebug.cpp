@@ -1,42 +1,78 @@
 #include "groupwiseserver.h"
 
+#include <kaboutdata.h>
+#include <kapplication.h>
+#include <kcmdlineargs.h>
+#include <kconfig.h>
+#include <kdebug.h>
+
 #include <iostream>
 
-using namespace std;
-
-int main()
+static const KCmdLineOptions options[] =
 {
-  // FIXME: Get from commandline
-  std::string user;
-  std::string pass;
-  const char *url = 0;
+  { "s", 0, 0 },
+  { "server <hostname>", I18N_NOOP("Server"), 0 },
+  { "u", 0, 0 },
+  { "user <string>", I18N_NOOP("User"), 0 },
+  { "p", 0, 0 },
+  { "password <string>", I18N_NOOP("Password"), 0 },
+  KCmdLineLastOption
+};
 
-    GroupwiseServer server( url, user.c_str(), pass.c_str() );
+int main( int argc, char **argv )
+{
+  KAboutData aboutData( "soapdebug", I18N_NOOP("Groupwise Soap Debug"), "0.1" );
+  aboutData.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
 
-//  char* url = "";
+  KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineArgs::addCmdLineOptions( options );
 
-    if ( !server.login() ) {
-      cerr << "Unable to login to server " << url << endl;
-    }
+  KApplication app;
+
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+  QString user = args->getOption( "user" );
+  QString pass = args->getOption( "password" );
+  QString url = args->getOption( "server" );
+
+  if ( user.isEmpty() ) {
+    kdError() << "Need user." << endl;
+    return 1; 
+  }
+  if ( pass.isEmpty() ) {
+    kdError() << "Need password." << endl;
+    return 1; 
+  }
+  if ( url.isEmpty() ) {
+    kdError() << "Need server." << endl;
+    return 1; 
+  }
+
+  GroupwiseServer server( url, user, pass, 0 );
+
+  if ( !server.login() ) {
+    kdError() << "Unable to login to server " << url << endl;
+    return 1;
+  }
 
 #if 0
-    server.dumpData();
+  server.dumpData();
 #endif
 
 #if 0
-    server.getCategoryList();
+  server.getCategoryList();
 #endif
 
 #if 1
-    server.dumpFolderList();
+  server.dumpFolderList();
 #endif
 
 #if 0    
-    server.getDelta();
+  server.getDelta();
 #endif
-    
-    server.logout();
 
-    return 0;
+  server.logout();
+
+  return 0;
 }
 
