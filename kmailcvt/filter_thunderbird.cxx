@@ -48,35 +48,59 @@ void FilterThunderbird::import(FilterInfo *info)
    * We ask the user to choose Evolution's root directory. 
    * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
    */
-  QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
-  info->setOverall(0);
-
-  /** Recursive import of the MailArchives */
-  QDir dir(mailDir);
-  QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
-  int currentDir = 1, numSubDirs = rootSubDirs.size();
-  for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
-    importDirContents(info, dir.filePath(*filename), *filename, QString::null);
-    info->setOverall((int) ((float) currentDir / numSubDirs * 100));
+  QString thunderDir = QDir::homeDirPath() + "/.thunderbird/"; 
+  QDir d( thunderDir );
+  if ( !d.exists() ) {
+    thunderDir = QDir::homeDirPath();
   }
+
+  KFileDialog *kfd;
+  kfd = new KFileDialog( thunderDir, "", 0, "kfiledialog", true );
+  kfd->setMode(KFile::Directory | KFile::LocalOnly); 
+  kfd->exec();
+  QString mailDir  = kfd->selectedFile();
+
+   if (mailDir.isEmpty()) {
+    info->alert(i18n("No directory selected."));
+  }
+  /** 
+   * If the user only select homedir no import needed because 
+   * there should be no files and we shurely import wrong files.
+   */
+  else if ( mailDir == QDir::homeDirPath() || mailDir == (QDir::homeDirPath() + "/")) { 
+    info->addLog(i18n("No files found for import."));
+  }
+  else {
+    info->setOverall(0);
   
-  /** import last but not least all archives from the root-dir */
-  QDir importDir (mailDir);
-  QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
-  for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
-    QString temp_mailfile = *mailFile;
-    if (temp_mailfile.endsWith(".msf")) {}
-    else {
-        info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
-        importMBox(info, mailDir + "/" + temp_mailfile , temp_mailfile, QString::null);
+    /** Recursive import of the MailArchives */
+    QDir dir(mailDir);
+    QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
+    int currentDir = 1, numSubDirs = rootSubDirs.size();
+    for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+      importDirContents(info, dir.filePath(*filename), *filename, QString::null);
+      info->setOverall((int) ((float) currentDir / numSubDirs * 100));
+    }
+    
+    /** import last but not least all archives from the root-dir */
+    QDir importDir (mailDir);
+    QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
+    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+      QString temp_mailfile = *mailFile;
+      if (temp_mailfile.endsWith(".msf")) {}
+      else {
+          info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
+          importMBox(info, mailDir + "/" + temp_mailfile , temp_mailfile, QString::null);
+      }
+    }
+    
+    info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+    if(count_duplicates > 0) {
+      info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
   }
-  
-  info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
   info->setCurrent(100);
-  if(count_duplicates > 0) {
-     info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
-  }
+  info->setOverall(100);
 }
 
 /**
