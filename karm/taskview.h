@@ -70,14 +70,17 @@ class TaskView : public KListView
     long count();
 
     /** Return list of start/stop events for given date range. */
-    QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to)
-      const;
+    QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to) const;
 
     /** Schedule that we should save very soon */
     void scheduleSave();
 
     /** Return preferences user selected on settings dialog. **/
     Preferences *preferences();
+
+    /** Add a task to view and storage. */
+    QString addTask( const QString& taskame, long total, long session, const DesktopList& desktops, 
+                     Task* parent = 0 );
 
   public slots:
     /** Save to persistent storage. */

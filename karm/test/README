@@ -1,6 +1,8 @@
 This directory holds automated tests for karm.
 
-WARNING: The framework is not complete, and there are some major issues:
+It's in very rough shape.  Basically, I consider it usable only by me.
+
+Here are some of the issues:
 
   (1) The tests require KDE to be running in English.
 
@@ -26,7 +28,7 @@ WARNING: The framework is not complete, and there are some major issues:
       You have to monitor the progress and press Control-C if you think a
       script is hung.
 
-  (5) No attempt is made to check for install script interpreters.
+  (5) No attempt is made to check for installed script interpreters.
 
       In addition to required interpreters (Python 2.2, for example), the bash
       scripts use xte, which on Debian is in the xautomation package.
@@ -36,15 +38,24 @@ WARNING: The framework is not complete, and there are some major issues:
 
   (6) I have only tested this with Bash on GNU/Linux.
 
+  (7) runscripts fails when run from "make check"  (The Python scripts, run on
+      their own from this directory, do pass.)
 
-Some notes on how runscripts.cpp works:
+  (8) When a test fails, it is really hard to figure out why.  There is too
+      much stuff mixed together on the console output, and the tests
+      themselves do not give much info when they fail.
+
+That having been said, I find it so useful that I will keep working on this so
+it should get better shortly.
+
+Some notes on runscripts.cpp:
 
   Parses this directory for script files (Python, Perl and Bash).  It
   identifies a script file by the extension.
   
   It runs any script files it finds.  Within each script type, it runs the
-  scripts in alphabetical order.  However, scripts that start with a double
-  underscore are skipped.
+  scripts in alphabetical order.  Scripts that start with a double underscore
+  are skipped.
 
   When a script fails runscripts stops.
 
@@ -52,4 +63,4 @@ Some notes on how runscripts.cpp works:
 
 --
 Mark Bucciarelli <mark@hubcapconsulting.com>
-December 5, 2004
+December 6, 2004

@@ -18,7 +18,7 @@ try:
 
   # add todo to ics file with python
   todo = "test1"
-  __karmutil.addtodo( testfile, todo )
+  uid = __karmutil.addtodo( testfile, todo )
 
   # wait a bit to make sure karm gets time to reload file.
   time.sleep( 2 )
@@ -27,7 +27,7 @@ try:
   cmd = "dcop %s KarmDCOPIface hastodo %s" % ( dcopid, todo )
   ( stdin, stdout ) = os.popen2( cmd )
   result = stdout.readline().strip()
-  __karmutil.test( "1", result)
+  __karmutil.test( uid, result)
 
   # kill karm
   os.popen2( "killall karm" )

@@ -24,6 +24,22 @@ END:VTODO
 '''
 class KarmTestError( Exception ): pass
 
+def dcopid():
+  '''Return dcop id of first karm instance found in output of dcop command.'''
+
+  id, n = "", 0
+  while not id and n < 1000:
+    stdin, stdout = os.popen2( "dcop" )
+    l = stdout.readline()
+    while l and not id:
+      if l.startswith( "karm" ): id = l.strip()
+      else: l = stdout.readline()
+    stdin.close()
+    stdout.close()
+    n += 1
+
+  return id
+
 def kill_then_start_karm( filename, delete_file = True ):
   '''Kill any running karm instances, start karm, and return (dcop_id, pid) tuple.'''
 
@@ -36,16 +52,7 @@ def kill_then_start_karm( filename, delete_file = True ):
 
   pid = os.spawnlp( os.P_NOWAIT, "karm", "karm", _filename )
 
-  id, n = "", 0
-  while not id and n < 1000:
-    stdin, stdout = os.popen2( "dcop" )
-    l = stdout.readline()
-    while l and not id:
-      if l.startswith( "karm" ): id = l
-      else: l = stdout.readline()
-    stdin.close()
-    stdout.close()
-    n += 1
+  id = dcopid()
 
   if not id:
       raise KarmTestError( "No karm instance found.  Is the DISPLAY env. var set?" )
@@ -61,7 +68,7 @@ def kill_then_start_karm( filename, delete_file = True ):
     else: f.close()
 
   # strip trailing newline from dcop id
-  return id.strip(), pid
+  return id, pid
 
 def test( goal, actual ):
   '''Raise exception if goal != actual.'''
@@ -72,7 +79,8 @@ def test( goal, actual ):
 def addtodo( filename, todoname ):
   '''Open ical file and add todo to bottom.'''
   created = modified = current_time_in_ical_format()
-  todo = TODO_TEMPLATE % ( created, created, uid(), modified, todoname )
+  uid = new_uid()
+  todo = TODO_TEMPLATE % ( created, created, uid, modified, todoname )
 
   _filename = os.path.expanduser( filename )
 
@@ -91,9 +99,11 @@ def addtodo( filename, todoname ):
   f.write( "END:VCALENDAR" )
   f.close()
 
+  return uid
+
 def current_time_in_ical_format():
   '''Example: 20041205T162914Z'''
   return time.strftime( "%Y%m%dT%H%M%SZ", time.gmtime() )
 
-def uid():
+def new_uid():
   return "karmtest-%s" % time.time()

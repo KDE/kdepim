@@ -40,7 +40,8 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
 
     // DCOP
     QString version() const;
-    int hastodo( const QString &storage ) const;
+    QString hastodo( const QString &storage ) const;
+    QString addtodo( const QString &storage );
 
   protected slots:
     void keyBindings();
@@ -68,7 +69,7 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
 
   private:
     void makeMenus();
-    int _hastodo( Task* task, const QString &taskname ) const;
+    QString _hastodo( Task* task, const QString &taskname ) const;
 
     KDialogBase *dialog;
     KAction* actionStart;

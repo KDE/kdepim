@@ -467,52 +467,57 @@ void TaskView::newTask(QString caption, Task *parent)
   EditTaskDialog *dialog = new EditTaskDialog(caption, false);
   long total, totalDiff, session, sessionDiff;
   DesktopList desktopList;
-  Task *task;
 
   int result = dialog->exec();
-  if (result == QDialog::Accepted) {
-    QString taskName = i18n("Unnamed Task");
-    if (!dialog->taskName().isEmpty()) {
-      taskName = dialog->taskName();
-    }
+  if ( result == QDialog::Accepted ) {
+    QString taskName = i18n( "Unnamed Task" );
+    if ( !dialog->taskName().isEmpty()) taskName = dialog->taskName();
 
     total = totalDiff = session = sessionDiff = 0;
-    dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList);
+    dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList );
 
     // If all available desktops are checked, disable auto tracking,
     // since it makes no sense to track for every desktop.
-    if (desktopList.size() == (unsigned int)_desktopTracker->desktopCount())
+    if ( desktopList.size() == ( unsigned int ) _desktopTracker->desktopCount() )
       desktopList.clear();
 
-    if ( parent == 0 )
+    QString uid = addTask( taskName, total, session, desktopList, parent );
+    if ( uid.isNull() )
     {
-      task = new Task( taskName, total, session, desktopList, this );
-      task->setUid( _storage->addTask( task, 0 ) );
-    }
-    else
-    {
-      task = new Task( taskName, total, session, desktopList, parent );
-      task->setUid( _storage->addTask( task, parent ) );
-    }
-
-    if ( !task->uid().isNull() )
-    {
-      _desktopTracker->registerForDesktops( task, desktopList );
-
-      setCurrentItem( task );
-      setSelected( task, true );
-
-      save();
-    }
-    else
-    {
-      delete task;
       KMessageBox::error( 0, i18n(
             "Error storing new task. Your changes were not saved." ) );
     }
+
+    delete dialog;
+  }
+}
+
+QString TaskView::addTask
+( const QString& taskname, long total, long session, const DesktopList& desktops, Task* parent )
+{
+  Task *task;
+
+  if ( parent ) task = new Task( taskname, total, session, desktops, parent );
+  else          task = new Task( taskname, total, session, desktops, this );
+
+  task->setUid( _storage->addTask( task, parent ) );
+
+  if ( ! task->uid().isNull() )
+  {
+    _desktopTracker->registerForDesktops( task, desktops );
+
+    setCurrentItem( task );
+
+    setSelected( task, true );
+
+    save();
+  }
+  else
+  {
+    delete task;
   }
 
-  delete dialog;
+  return task->uid();
 }
 
 void TaskView::newSubTask()

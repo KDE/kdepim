@@ -56,8 +56,11 @@ int main( int argc, char *argv[] )
   MainWindow *mainWindow;
   if ( args->count() > 0 ) 
   {
-    // TODO: check for malicious input.
     QString icsfile = QString::fromLocal8Bit( args->arg( 0 ) );
+    if ( ! icsfile.startsWith( "/" ) )
+    {
+      icsfile = KCmdLineArgs::cwd() + "/" + icsfile;
+    }
     mainWindow = new MainWindow( icsfile );
   }
   else

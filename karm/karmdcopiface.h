@@ -31,7 +31,11 @@ class KarmDCOPIface : virtual public DCOPObject
   /** Return karm version. */
   virtual QString version() const = 0;
 
-  virtual int hastodo( const QString& taskname ) const = 0;
+  /** Returns UID if todo found, empty string otherwise. */
+  virtual QString hastodo( const QString& taskname ) const = 0;
+
+  /** Add a top-level todo.  Returns UID of new To-do.  */
+  virtual QString addtodo( const QString& todoname ) = 0;
 };
 
 #endif // KARM_DCOP_IFAC_H

@@ -442,12 +442,12 @@ QString MainWindow::version() const
   return KARM_VERSION;
 }
 
-int MainWindow::hastodo( const QString &taskname ) const
+QString MainWindow::hastodo( const QString &taskname ) const
 {
-  int rval = 0;
+  QString rval = "";
 
   Task* task = _taskView->first_child();
-  while ( !rval && task )
+  while ( rval.isEmpty() && task )
   {
     rval = _hastodo( task, taskname );
     task = task->nextSibling();
@@ -456,25 +456,29 @@ int MainWindow::hastodo( const QString &taskname ) const
   return rval;
 }
 
-int MainWindow::_hastodo( Task* task, const QString &taskname ) const
+QString MainWindow::_hastodo( Task* task, const QString &taskname ) const
 {
-  int rval = 0;
-
+  QString rval = "";
   if ( task->name() == taskname ) 
   {
-    rval = 1;
+    rval = task->uid();
   }
   else
   {
     Task* nexttask = task->firstChild();
-    while ( !rval && nexttask )
+    while ( rval.isEmpty() && nexttask )
     {
       rval = _hastodo( nexttask, taskname );
       nexttask = nexttask->nextSibling();
     }
   }
-
   return rval;
+}
+
+QString MainWindow::addtodo( const QString& taskname ) 
+{
+  DesktopList desktopList;
+  return _taskView->addTask( taskname, 0, 0, desktopList );
 }
 
 #include "mainwindow.moc"
