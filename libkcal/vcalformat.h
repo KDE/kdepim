@@ -67,7 +67,7 @@ class VCalFormat : public CalFormat {
     /** cut, copy, and paste operations follow. */
     bool copyEvent(Event *);
     /** pastes the event and returns a pointer to the new event pasted. */
-    Event *pasteEvent(const QDate *, const QTime *newTime = 0L);
+    Event *pasteEvent(const QDate &, const QTime *newTime = 0L);
     
   protected:
     /** translates a VObject of the TODO type into a Event */
@@ -86,6 +86,9 @@ class VCalFormat : public CalFormat {
     /** takes a string in the format YYYYMMDDTHHMMSS and returns a 
      * valid QDateTime. */
     QDateTime ISOToQDateTime(const QString & dtStr);
+    /** takes a string in the format YYYYMMDD and returns a 
+     * valid QDate. */
+    QDate ISOToQDate(const QString & dtStr);
     /** takes a vCalendar tree of VObjects, and puts all of them that have
      * the "event" property into the dictionary, todos in the todo-list, etc. */
     void populate(VObject *vcal);

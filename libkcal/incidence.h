@@ -27,6 +27,7 @@
 #include <qdatetime.h>
 #include <qobject.h>
 #include <qstringlist.h>
+#include <qvaluelist.h>
 
 #include "attendee.h"
 #include "recurrence.h"
@@ -37,6 +38,8 @@ namespace KCal {
 class Event;
 class Todo;
 class Journal;
+
+typedef QValueList<QDate> DateList;
 
 /**
   This class provides the base class common to all calendar components.
@@ -203,9 +206,9 @@ class Incidence : public QObject
     void removeRelation(Incidence *);
 
     /** returns the list of dates which are exceptions to the recurrence rule */
-    QDateList exDates() const;
+    DateList exDates() const;
     /** sets the list of dates which are exceptions to the recurrence rule */
-    void setExDates(const QDateList &_exDates);
+    void setExDates(const DateList &_exDates);
     void setExDates(const char *dates);
     /** Add a date to the list of exceptions of the recurrence rule. */
     void addExDate(const QDate &date);
@@ -304,7 +307,7 @@ class Incidence : public QObject
     Incidence *mRelatedTo;
     QString mRelatedToVUID;
     QPtrList<Incidence> mRelations;
-    QDateList mExDates;
+    DateList mExDates;
     QStringList mAttachments;
     QStringList mResources;
 

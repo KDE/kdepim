@@ -69,7 +69,7 @@ class ICalFormat : public CalFormat {
     /** cut, copy, and paste operations follow. */
     bool copyEvent(Event *);
     /** pastes the event and returns a pointer to the new event pasted. */
-    Event *pasteEvent(const QDate *, const QTime *newTime = 0L);
+    Event *pasteEvent(const QDate &, const QTime *newTime = 0L);
     
     /** Create a scheduling message for event \a e using method \m */
     QString createScheduleMessage(Incidence *e,Scheduler::Method m);

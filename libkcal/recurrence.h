@@ -26,8 +26,6 @@
 #include <qbitarray.h>
 #include <qptrlist.h>
 
-#include "qdatelist.h"
-
 namespace KCal {
 
 class Incidence;

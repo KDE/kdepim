@@ -30,7 +30,6 @@
 #include <kdebug.h>
 
 #include "vcaldrag.h"
-#include "qdatelist.h"
 #include "vcalformat.h"
 #include "icalformat.h"
 #include "exceptions.h"

@@ -39,7 +39,6 @@
 #include "vobject.h"
 
 #include "vcaldrag.h"
-#include "qdatelist.h"
 #include "calendar.h"
 
 #include "vcalformat.h"
@@ -303,8 +302,7 @@ bool VCalFormat::copyEvent(Event *selectedEv)
   return TRUE;
 }
 
-Event *VCalFormat::pasteEvent(const QDate *newDate,
-				const QTime *newTime)
+Event *VCalFormat::pasteEvent(const QDate &newDate, const QTime *newTime)
 {
   VObject *vcal, *curVO, *curVOProp;
   VObjectIterator i;
@@ -355,11 +353,11 @@ Event *VCalFormat::pasteEvent(const QDate *newDate,
 	anEvent->dtStart().date().dayOfYear();
 
       if (newTime)
-	anEvent->setDtStart(QDateTime(*newDate, *newTime));
+	anEvent->setDtStart(QDateTime(newDate, *newTime));
       else
-	anEvent->setDtStart(QDateTime(*newDate, anEvent->dtStart().time()));
+	anEvent->setDtStart(QDateTime(newDate, anEvent->dtStart().time()));
 
-      anEvent->setDtEnd(QDateTime(newDate->addDays(daysOffset),
+      anEvent->setDtEnd(QDateTime(newDate.addDays(daysOffset),
 				  anEvent->dtEnd().time()));
       mCalendar->addEvent(anEvent);
     } else {
@@ -700,13 +698,12 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   } // event repeats
 
   // exceptions to recurrence
-  QDateList dateList(FALSE);
-  dateList = anEvent->exDates();
-  QDate *tmpDate;
-  QString tmpStr2 = "";
+  DateList dateList = anEvent->exDates();
+  DateList::ConstIterator it;
+  QString tmpStr2;
 
-  for (tmpDate = dateList.first(); tmpDate; tmpDate = dateList.next()) {
-    tmpStr = qDateToISO(*tmpDate) + ";";
+  for (it = dateList.begin(); it != dateList.end(); ++it) {
+    tmpStr = qDateToISO(*it) + ";";
     tmpStr2 += tmpStr;
   }
   if (!tmpStr2.isEmpty()) {
@@ -1045,12 +1042,11 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
 
 Event* VCalFormat::VEventToEvent(VObject *vevent)
 {
-  Event *anEvent;
   VObject *vo;
   VObjectIterator voi;
   char *s;
 
-  anEvent = new Event;
+  Event *anEvent = new Event;
 
   // creation date
   if ((vo = isAPropertyOf(vevent, VCDCreatedProp)) != 0) {
@@ -1386,7 +1382,12 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 
   // recurrence exceptions
   if ((vo = isAPropertyOf(vevent, VCExDateProp)) != 0) {
-    anEvent->setExDates(s = fakeCString(vObjectUStringZValue(vo)));
+    s = fakeCString(vObjectUStringZValue(vo));
+    QStringList exDates = QStringList::split(",",s);
+    QStringList::ConstIterator it;
+    for(it = exDates.begin(); it != exDates.end(); ++it ) {
+      anEvent->addExDate(ISOToQDate(*it));
+    }
     deleteStr(s);
   }
 
@@ -1614,6 +1615,17 @@ QDateTime VCalFormat::ISOToQDateTime(const QString & dtStr)
   if (dtStr.at(dtStr.length()-1) == 'Z')
     tmpDT = tmpDT.addSecs(60*mCalendar->getTimeZone());
   return tmpDT;
+}
+
+QDate VCalFormat::ISOToQDate(const QString &dateStr)
+{
+  int year, month, day;
+
+  year = dateStr.left(4).toInt();
+  month = dateStr.mid(4,2).toInt();
+  day = dateStr.mid(6,2).toInt();
+  
+  return(QDate(year, month, day));
 }
 
 // take a raw vcalendar (i.e. from a file on disk, clipboard, etc. etc.

@@ -38,7 +38,6 @@ extern "C" {
   #include <icalrestriction.h>
 }
 
-#include "qdatelist.h"
 #include "calendar.h"
 #include "journal.h"
 #include "icalformat.h"
@@ -308,11 +307,12 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     icalcomponent_add_property(parent,writeRecurrenceRule(recur));
   }
 
-// TODO: exdates
-  QDateList dateList = incidence->exDates();
-  for(QDate *date = dateList.first(); date; date = dateList.next()) {
+  // recurrence excpetion dates
+  DateList dateList = incidence->exDates();
+  DateList::ConstIterator exIt;
+  for(exIt = dateList.begin(); exIt != dateList.end(); ++exIt) {
     icalcomponent_add_property(parent,icalproperty_new_exdate(
-        writeICalDate(*date)));
+        writeICalDate(*exIt)));
   }
 
   // alarms

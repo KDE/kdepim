@@ -27,7 +27,6 @@
 #include <klocale.h>
 
 #include "vcaldrag.h"
-#include "qdatelist.h"
 #include "vcalformat.h"
 #include "icalformat.h"
 #include "exceptions.h"
@@ -168,7 +167,7 @@ bool Calendar::copyEvent(Event *selectedEv)
   return mDndFormat->copyEvent(selectedEv);
 }
 
-Event *Calendar::pasteEvent(const QDate *newDate,const QTime *newTime)
+Event *Calendar::pasteEvent(const QDate &newDate,const QTime *newTime)
 {
   return mDndFormat->pasteEvent(newDate,newTime);
 }

@@ -46,7 +46,6 @@ Incidence::Incidence() :
   mSummary = "";
   mDescription = "";
 
-  mExDates.setAutoDelete(true);
   mAlarms.setAutoDelete(true);
 }
 
@@ -383,35 +382,10 @@ bool Incidence::recursOn(const QDate &qd) const
   else return false;
 }
 
-void Incidence::setExDates(const QDateList &exDates)
+void Incidence::setExDates(const DateList &exDates)
 {
   if (mReadOnly) return;
-  mExDates.clear();
   mExDates = exDates;
-
-  recurrence()->setRecurExDatesCount(mExDates.count());
-
-  emit eventUpdated(this);
-}
-
-void Incidence::setExDates(const char *dates)
-{
-  if (mReadOnly) return;
-  mExDates.clear();
-  QString tmpStr = dates;
-  int index = 0;
-  int index2 = 0;
-
-  while ((index2 = tmpStr.find(',', index)) != -1) {
-    QDate *tmpDate = new QDate;
-    *tmpDate = strToDate(tmpStr.mid(index, (index2-index)));
-
-    mExDates.append(tmpDate);
-    index = index2 + 1;
-  }
-  QDate *tmpDate = new QDate;
-  *tmpDate = strToDate(tmpStr.mid(index, (tmpStr.length()-index)));
-  mExDates.inSort(tmpDate);
 
   recurrence()->setRecurExDatesCount(mExDates.count());
 
@@ -421,33 +395,28 @@ void Incidence::setExDates(const char *dates)
 void Incidence::addExDate(const QDate &date)
 {
   if (mReadOnly) return;
-  QDate *addDate = new QDate(date);
-  mExDates.inSort(addDate);
+  mExDates.append(date);
 
   recurrence()->setRecurExDatesCount(mExDates.count());
 
   emit eventUpdated(this);
 }
 
-QDateList Incidence::exDates() const
+DateList Incidence::exDates() const
 {
   return mExDates;
 }
 
-bool Incidence::isException(const QDate &qd) const
+bool Incidence::isException(const QDate &date) const
 {
-  QDateList tmpList(FALSE); // we want a shallow copy
-
-  tmpList = mExDates;
-
-  QDate *datePtr;
-  for (datePtr = tmpList.first(); datePtr;
-       datePtr = tmpList.next()) {
-    if (qd == *datePtr) {
-      return TRUE;
+  DateList::ConstIterator it;
+  for( it = mExDates.begin(); it != mExDates.end(); ++it ) {
+    if ( (*it) == date ) {
+      return true;
     }
   }
-  return FALSE;
+
+  return false;
 }
 
 void Incidence::setAttachments(const QStringList &attachments)
@@ -533,7 +502,6 @@ QStringList Incidence::secrecyList()
 }
 
 
-
 void Incidence::setPilotId(int id)
 {
   if (mReadOnly) return;
@@ -557,6 +525,7 @@ int Incidence::syncStatus() const
 {
   return mSyncStatus;
 }
+
 
 const QPtrList<Alarm> &Incidence::alarms() const
 {
@@ -602,17 +571,6 @@ bool Incidence::isAlarmEnabled() const
 Recurrence *Incidence::recurrence() const
 {
   return mRecurrence;
-}
-
-QDate Incidence::strToDate(const QString &dateStr)
-{
-
-  int year, month, day;
-
-  year = dateStr.left(4).toInt();
-  month = dateStr.mid(4,2).toInt();
-  day = dateStr.mid(6,2).toInt();
-  return(QDate(year, month, day));
 }
 
 void Incidence::setDuration(int seconds)

@@ -73,7 +73,7 @@ class CalFormat {
     /** cut, copy, and paste operations follow. */
     virtual bool copyEvent(Event *) = 0;
     /** pastes the event and returns a pointer to the new event pasted. */
-    virtual Event *pasteEvent(const QDate *, const QTime *newTime = 0L) = 0;
+    virtual Event *pasteEvent(const QDate &, const QTime *newTime = 0L) = 0;
     
     /** /deprecated */
     void showDialogs(bool);

@@ -91,7 +91,7 @@ class Calendar : public QObject {
     /** copy event to clipboard */
     bool copyEvent(Event *);
     /** pastes the event and returns a pointer to the new event pasted. */
-    Event *pasteEvent(const QDate *, const QTime *newTime = 0L);
+    Event *pasteEvent(const QDate &, const QTime *newTime = 0L);
   
     /** set the owner of the calendar.  Should be owner's full name. */
     const QString &getOwner() const;

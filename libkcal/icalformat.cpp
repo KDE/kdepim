@@ -37,7 +37,6 @@ extern "C" {
   #include <icalrestriction.h>
 }
 
-#include "qdatelist.h"
 #include "calendar.h"
 #include "journal.h"
 
@@ -313,7 +312,7 @@ bool ICalFormat::copyEvent(Event */*selectedEv*/)
 #endif
 }
 
-Event *ICalFormat::pasteEvent(const QDate */*newDate*/,const QTime */*newTime*/)
+Event *ICalFormat::pasteEvent(const QDate &/*newDate*/,const QTime */*newTime*/)
 {
   return 0;
 #if 0
