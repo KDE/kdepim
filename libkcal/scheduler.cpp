@@ -185,7 +185,7 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
   if( newIncBase->type() == "FreeBusy" ) {
     return acceptFreeBusy( newIncBase, method );
   }
-  
+
   bool res = false;
   kdDebug(5800) << "Scheduler::acceptPublish, status="
             << ScheduleMessage::statusName( status ) << endl;
@@ -299,7 +299,6 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
           //update attendee-info
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
           attEv->setStatus(attIn->status());
-          attEv->setRSVP(false);
           ret = true;
         }
       }
