@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>679</width>
-            <height>493</height>
+            <width>532</width>
+            <height>452</height>
         </rect>
     </property>
     <property name="caption">
@@ -19,81 +19,38 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLabel" row="0" column="1">
+        <widget class="QLabel" row="0" column="0" rowspan="3" colspan="1">
             <property name="name">
-                <cstring>txt_welcome</cstring>
+                <cstring>px_introSidebar</cstring>
             </property>
             <property name="sizePolicy">
                 <sizepolicy>
-                    <hsizetype>1</hsizetype>
-                    <vsizetype>5</vsizetype>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                 </sizepolicy>
             </property>
-            <property name="text">
-                <string>&lt;h3&gt;Welcome to KMailCVT - The KMail &amp; KAddressBook Import Filters&lt;/h3&gt;</string>
+            <property name="minimumSize">
+                <size>
+                    <width>170</width>
+                    <height>430</height>
+                </size>
+            </property>
+            <property name="frameShape">
+                <enum>Panel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="scaledContents">
+                <bool>true</bool>
+            </property>
+            <property name="indent">
+                <number>0</number>
             </property>
         </widget>
-        <widget class="QLayoutWidget" row="0" column="0" rowspan="4" colspan="1">
-            <property name="name">
-                <cstring>layout1</cstring>
-            </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>px_introSidebar</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>0</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>170</width>
-                            <height>430</height>
-                        </size>
-                    </property>
-                    <property name="frameShape">
-                        <enum>Panel</enum>
-                    </property>
-                    <property name="frameShadow">
-                        <enum>Sunken</enum>
-                    </property>
-                    <property name="scaledContents">
-                        <bool>true</bool>
-                    </property>
-                    <property name="indent">
-                        <number>0</number>
-                    </property>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>spacer1</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>21</height>
-                        </size>
-                    </property>
-                </spacer>
-            </vbox>
-        </widget>
-        <widget class="QComboBox" row="2" column="1">
+        <widget class="QComboBox" row="1" column="1">
             <property name="name">
                 <cstring>_filters</cstring>
             </property>
@@ -106,15 +63,7 @@
                 </sizepolicy>
             </property>
         </widget>
-        <widget class="QTextEdit" row="3" column="1">
-            <property name="name">
-                <cstring>_desc</cstring>
-            </property>
-            <property name="readOnly">
-                <bool>true</bool>
-            </property>
-        </widget>
-        <widget class="QLabel" row="1" column="1">
+        <widget class="QLabel" row="0" column="1">
             <property name="name">
                 <cstring>TextLabel6</cstring>
             </property>
@@ -127,10 +76,12 @@
                 </sizepolicy>
             </property>
             <property name="text">
-                <string>&lt;P&gt; This program will help you import your email and address books from your previous email and address book programs. &lt;/P&gt;
-&lt;P&gt; Emails will be imported into KMail, contacts into KAddressBook. &lt;/P&gt;
-&lt;BR&gt;
-&lt;P&gt; Please select the program you would like to import from, then click 'Next'. &lt;/P&gt;</string>
+                <string>&lt;b&gt;Welcome to KMailCVT - The KMail &amp; KAddressBook Import Filters&lt;/b&gt;
+&lt;br&gt;
+This program will help you import your email and address books from your previous email and address book programs.&lt;br&gt;&lt;br&gt;
+Emails will be imported into KMail, contacts into KAddressBook.
+&lt;br&gt;&lt;br&gt;
+ Please select the program you would like to import from, then click 'Next'.</string>
             </property>
             <property name="textFormat">
                 <enum>RichText</enum>
@@ -141,6 +92,14 @@
             <property name="vAlign" stdset="0">
             </property>
             <property name="wordwrap" stdset="0">
+            </property>
+        </widget>
+        <widget class="QTextEdit" row="2" column="1">
+            <property name="name">
+                <cstring>_desc</cstring>
+            </property>
+            <property name="readOnly">
+                <bool>true</bool>
             </property>
         </widget>
     </grid>

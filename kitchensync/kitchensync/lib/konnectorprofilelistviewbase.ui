@@ -10,8 +10,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>546</width>
-            <height>468</height>
+            <width>429</width>
+            <height>303</height>
         </rect>
     </property>
     <property name="caption">
@@ -27,166 +27,86 @@
         <property name="spacing">
             <number>6</number>
         </property>
-        <widget class="QLayoutWidget" row="0" column="0">
+        <widget class="KListView" row="2" column="0" rowspan="4" colspan="1">
             <property name="name">
-                <cstring>Layout2</cstring>
+                <cstring>lstView</cstring>
             </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>0</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
-                </property>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>lblIntro</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Below you see the created Konnector Profiles.
-They are either activated or deactivated. A Konnector Profile stores the configuration of a Device ( Palm PDA, iPAQs ). 
-If you want to use a new Device you need to create a new Profile. Do this by hitting the Add Button and follow the wizard.
-
-Please send me a better text!</string>
-                    </property>
-                    <property name="textFormat">
-                        <enum>RichText</enum>
-                    </property>
-                    <property name="alignment">
-                        <set>WordBreak|AlignTop</set>
-                    </property>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>Spacer1</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Fixed</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>31</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="KListView">
-                    <property name="name">
-                        <cstring>lstView</cstring>
-                    </property>
-                </widget>
-            </vbox>
         </widget>
-        <widget class="QLayoutWidget" row="0" column="1">
+        <widget class="KPushButton" row="4" column="1">
             <property name="name">
-                <cstring>layout11</cstring>
+                <cstring>btnRemove</cstring>
             </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <spacer>
-                    <property name="name">
-                        <cstring>Spacer6</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Fixed</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>20</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QLayoutWidget">
-                    <property name="name">
-                        <cstring>layout10</cstring>
-                    </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <spacer>
-                            <property name="name">
-                                <cstring>Spacer4</cstring>
-                            </property>
-                            <property name="orientation">
-                                <enum>Vertical</enum>
-                            </property>
-                            <property name="sizeType">
-                                <enum>Fixed</enum>
-                            </property>
-                            <property name="sizeHint">
-                                <size>
-                                    <width>20</width>
-                                    <height>175</height>
-                                </size>
-                            </property>
-                        </spacer>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>layout5</cstring>
-                            </property>
-                            <vbox>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <widget class="KPushButton">
-                                    <property name="name">
-                                        <cstring>btnAdd</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>&amp;Add</string>
-                                    </property>
-                                </widget>
-                                <widget class="KPushButton">
-                                    <property name="name">
-                                        <cstring>btnEdit</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>&amp;Edit</string>
-                                    </property>
-                                </widget>
-                                <widget class="KPushButton">
-                                    <property name="name">
-                                        <cstring>btnRemove</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>&amp;Remove</string>
-                                    </property>
-                                </widget>
-                            </vbox>
-                        </widget>
-                        <spacer>
-                            <property name="name">
-                                <cstring>Spacer5</cstring>
-                            </property>
-                            <property name="orientation">
-                                <enum>Vertical</enum>
-                            </property>
-                            <property name="sizeType">
-                                <enum>Expanding</enum>
-                            </property>
-                            <property name="sizeHint">
-                                <size>
-                                    <width>16</width>
-                                    <height>95</height>
-                                </size>
-                            </property>
-                        </spacer>
-                    </vbox>
-                </widget>
-            </hbox>
+            <property name="text">
+                <string>&amp;Remove</string>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="2" column="1">
+            <property name="name">
+                <cstring>btnAdd</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Add</string>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="3" column="1">
+            <property name="name">
+                <cstring>btnEdit</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Edit</string>
+            </property>
+        </widget>
+        <spacer row="5" column="1">
+            <property name="name">
+                <cstring>Spacer5</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>16</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <spacer row="1" column="0">
+            <property name="name">
+                <cstring>spacer49</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Fixed</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>21</width>
+                    <height>21</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>lblIntro</cstring>
+            </property>
+            <property name="text">
+                <string>&lt;b&gt;&lt;u&gt;Konnector profiles&lt;/u&gt;&lt;/b&gt;&lt;br&gt;
+
+A Konnector profile stores the configuration of a device ( Palm PDA, iPAQs ). The list below shows your currently configured profiles and their status.
+
+To use the Konnector simply create a new profile for each device.</string>
+            </property>
+            <property name="textFormat">
+                <enum>RichText</enum>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignTop</set>
+            </property>
         </widget>
     </grid>
 </widget>
