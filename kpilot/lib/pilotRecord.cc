@@ -110,6 +110,21 @@ PilotRecord & PilotRecord::operator = (PilotRecord & orig)
 	return *this;
 }
 
+recordid_t PilotRecord::getID() const
+{
+	return id();
+}
+
+void PilotRecord::makeDeleted()
+{
+	setDeleted(true);
+}
+
+void PilotRecord::makeSecret()
+{
+	setSecret(true);
+}
+
 void PilotRecord::setData(const char *data, int len)
 {
 	FUNCTIONSETUP;
