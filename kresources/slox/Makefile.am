@@ -9,7 +9,7 @@ libkslox_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la \
                       $(top_builddir)/libkdepim/libkdepim.la
 
 libkcal_slox_la_SOURCES = kcalresourceslox.cpp kcalresourcesloxconfig.cpp \
-                          kcalsloxprefs.kcfgc confirmsavedialog.cpp
+                          kcalsloxprefs.kcfgc
 libkcal_slox_la_LDFLAGS = $(all_libraries)
 libkcal_slox_la_LIBADD  = libkslox.la $(top_builddir)/libkcal/libkcal.la
 

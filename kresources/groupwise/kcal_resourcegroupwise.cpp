@@ -24,12 +24,11 @@
 #include "kcal_groupwiseprefsbase.h"
 #include "kcal_resourcegroupwiseconfig.h"
 
-#include "confirmsavedialog.h"
-
 #include "soap/groupwiseserver.h"
 
 #include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
+#include <libkcal/confirmsavedialog.h>
 
 #include <qapplication.h>
 #include <qdatetime.h>

@@ -43,6 +43,7 @@
 #include <libkcal/todo.h>
 #include <libkcal/journal.h>
 #include <libkcal/filestorage.h>
+#include <libkcal/confirmsavedialog.h>
 
 #include <kabc/locknull.h>
 #include <kabc/stdaddressbook.h>
@@ -52,7 +53,6 @@
 #include "webdavhandler.h"
 #include "kcalsloxprefs.h"
 #include "sloxaccounts.h"
-#include "confirmsavedialog.h"
 
 #include "kcalresourceslox.h"
 
