@@ -315,9 +315,11 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'h' :  
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'
-          regExp="^https?://[^\\s<>()\"|,]+";
+          regExp="^https?://[^\\s<>()\"|]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
+              matchLen--;
+            else if (text[idx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
@@ -331,9 +333,11 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'w' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'
-          regExp="^www\\.[^\\s<>()\"|,]+\\.[^\\s<>()\"|,]+";
+          regExp="^www\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
+              matchLen--;
+            else if (text[idx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
             result+=QString::fromLatin1("<a href=\"http://") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
@@ -347,18 +351,22 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'f' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'
-          regExp="^ftp://[^\\s<>()\"|,]+";
+          regExp="^ftp://[^\\s<>()\"|]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
+              matchLen--;
+            else if (text[idx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
             break;
           }
-          regExp="^ftp\\.[^\\s<>()\"|,]+\\.[^\\s<>()\"|,]+";
+          regExp="^ftp\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
+              matchLen--;
+            else if (text[idx+matchLen-1]==',')   // remove trailing comma
               matchLen--;
             result+=QString::fromLatin1("<a href=\"ftp://") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
