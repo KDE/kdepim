@@ -25,7 +25,8 @@ Q_OBJECT
   virtual QByteArray retrFile(const QString &path );
   virtual KSyncEntry* retrEntry(const QString &path);
   virtual QString metaId()const;
-  virtual QIconSet iconSet() const { return QIconSet(); };
+  virtual QIconSet iconSet() const;
+    virtual QString iconName()const;
   virtual QString id()const { return QString::fromLatin1("Opie-1"); };
  public slots:
   virtual void slotWrite(const QString &, const QByteArray & ) ;

@@ -53,6 +53,7 @@ public:
     virtual QByteArray retrFile(const QString &path ) = 0;
     virtual KSyncEntry* retrEntry( const QString &path ) = 0;
     virtual QIconSet iconSet()const = 0;
+    virtual QString  iconName()const =0;
     virtual QString id()const = 0;
     virtual QString metaId()const = 0;
     //virtual QString metaId()const = 0;

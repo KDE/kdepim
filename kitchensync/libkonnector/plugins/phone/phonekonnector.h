@@ -26,6 +26,7 @@ Q_OBJECT
   virtual KSyncEntry* retrEntry(const QString &path);
   virtual QString metaId()const;
   virtual QIconSet iconSet() const { return QIconSet(); };
+  virtual QString iconName()const { return QString::null; }; // FIXME
   virtual QString id()const { return QString::fromLatin1("Phone-1"); };
  
  public slots:

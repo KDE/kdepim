@@ -55,7 +55,7 @@ namespace KitchenSync {
     class ManipulatorPart : public KParts::Part {
         Q_OBJECT
     public:
-        ManipulatorPart(QWidget *parent = 0, const char *name  = 0 );
+        ManipulatorPart(QObject *parent = 0, const char *name  = 0 );
         virtual ~ManipulatorPart() {};
 
         KSyncMainWindow* core() { return m_window; };
@@ -85,6 +85,8 @@ namespace KitchenSync {
         // SYNC_START SYNC_SYNC SYNC_STOP
         void syncStatus( int );
     public slots:
+        virtual void startSync() { };
+        virtual void doneSync() { };
         virtual void slotProgress(ManipulatorPart */*part*/, int /*syncStatus*/, int /*progress*/  ) {};
         virtual void slotPartActivated( ManipulatorPart */*part*/ ) { };
         virtual void slotSyncPartActivated( ManipulatorPart */*part*/ ) { };

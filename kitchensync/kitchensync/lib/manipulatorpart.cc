@@ -43,7 +43,7 @@
 
 using namespace KitchenSync;
 
-ManipulatorPart::ManipulatorPart(QWidget *parent, const char *name )
+ManipulatorPart::ManipulatorPart(QObject *parent, const char *name )
   : KParts::Part(parent, name )
 {
     kdDebug() << "M_Window " << endl;
@@ -52,7 +52,10 @@ ManipulatorPart::ManipulatorPart(QWidget *parent, const char *name )
     if ( parent && parent->inherits("KitchenSync::KSyncMainWindow") ) {
         kdDebug() << "Cast " << endl;
         m_window = static_cast<KSyncMainWindow*>(parent);
-    }
+    }else{
+        kdDebug() << "Can not cast " << endl;
+        kdDebug() << "Parent " << parent->className() << endl;
+    };
 }
 
 #include "manipulatorpart.moc"

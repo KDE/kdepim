@@ -2,9 +2,10 @@
 #ifndef KitchenSync_SyncReturn
 #define KitchenSync_SyncReturn
 
+#include <ksyncentry.h>
 #include <qptrlist.h>
 
-#include "ksyncentry.h"
+//#include "ksyncentry.h"
 #include "konnector.h"
 
 namespace KitchenSync {

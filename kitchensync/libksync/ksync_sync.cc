@@ -2,6 +2,7 @@
 #include <kdebug.h>
 
 #include "plugins/kalendar/sync.h"
+#include "plugins/addressbook/sync.h"
 
 #include "ksync_sync.h"
 
@@ -35,6 +36,9 @@ kdDebug() << "SyncManager" << endl;
                 if ( entry1->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
                     SyncKalendar cal(this, "cal");
                     return cal.sync( mode,  entry1,  entry2 );
+                }else if ( entry1->type() == QString::fromLatin1("KAddressbookSyncEntry") ) {
+                    SyncAddressbook adr(this, "adr");
+                    return adr.sync(mode,  entry1,  entry2 );
                 }
             }
         }

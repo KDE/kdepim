@@ -145,6 +145,7 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
             our.append(  (KAlendarSyncEntry*) entry );
             //out.append(  entry->clone() );
             entry2 = (KAlendarSyncEntry*) entry->clone() ; //not cloning
+            break;
         }
     }
     if (entry2 == 0 )
@@ -160,6 +161,8 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
     KSyncEntry::List two;
     two.append( met );
     SyncReturn ret =  manager.sync( SYNC_INTERACTIVE,  one, two );
+    delete entry2;
+    delete met;
     QDateTime time = QDateTime::currentDateTime();
     // write back if meta
     two = ret.synced();
@@ -221,6 +224,7 @@ KAlendarSyncEntry* OrganizerPart::meta()
 
     Profile prof = core()->currentProfile();
     Kapabilities cap = prof.caps();
+    // meta data
     if ( cap.isMetaSyncingEnabled() ) {
         entry->setSyncMode( KSyncEntry::SYNC_META );
         m_conf->setGroup( prof.name() );

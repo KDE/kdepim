@@ -54,7 +54,7 @@
             </widget>
             <widget class="QCheckBox">
                 <property name="name">
-                    <cstring>ckbEvolution</cstring>
+                    <cstring>ckbEvo</cstring>
                 </property>
                 <property name="text">
                     <string>Synchronize with Ximina Evolution</string>
@@ -127,7 +127,7 @@
 </widget>
 <connections>
     <connection>
-        <sender>ckbEvolution</sender>
+        <sender>ckbEvo</sender>
         <signal>toggled(bool)</signal>
         <receiver>AddressBookConfig</receiver>
         <slot>slotEvolution(bool)</slot>
@@ -145,25 +145,25 @@
         <slot>slotBrowse()</slot>
     </connection>
     <connection>
-        <sender>ckbEvolution</sender>
+        <sender>ckbEvo</sender>
         <signal>toggled(bool)</signal>
         <receiver>btnBrowse</receiver>
         <slot>setDisabled(bool)</slot>
     </connection>
     <connection>
-        <sender>ckbEvolution</sender>
+        <sender>ckbEvo</sender>
         <signal>toggled(bool)</signal>
         <receiver>lblPath</receiver>
         <slot>setDisabled(bool)</slot>
     </connection>
     <connection>
-        <sender>ckbEvolution</sender>
+        <sender>ckbEvo</sender>
         <signal>toggled(bool)</signal>
         <receiver>lnePath</receiver>
         <slot>setDisabled(bool)</slot>
     </connection>
     <connection>
-        <sender>ckbEvolution</sender>
+        <sender>ckbEvo</sender>
         <signal>toggled(bool)</signal>
         <receiver>phbDefault</receiver>
         <slot>setDisabled(bool)</slot>

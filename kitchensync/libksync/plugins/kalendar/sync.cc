@@ -163,6 +163,7 @@ void SyncKalendar::syncMetaEvent( KAlendarSyncEntry* entry1,  KAlendarSyncEntry 
                 found = true;
                 m_entry->calendar()->addEvent( (KCal::Event*) dummy->clone() );
                 blackIds1 << dummy->uid();
+                blackIds1 << dummy2->uid();
                 mod2.remove( dummy2 );
                 delete dummy2;
                 break;

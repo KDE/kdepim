@@ -1,15 +1,17 @@
 #include <qobject.h>
 #include <qwidget.h>
 
+#include <kaboutdata.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kgenericfactory.h>
+#include <kparts/genericfactory.h>
 #include <kparts/componentfactory.h>
 
+#include <ksync_mainwindow.h>
 #include "overviewwidget.h"
 #include "ksync_overviewpart.h"
 
-typedef KGenericFactory< KitchenSync::OverviewPart> OverviewPartFactory;
+typedef KParts::GenericFactory< KitchenSync::OverviewPart> OverviewPartFactory;
 K_EXPORT_COMPONENT_FACTORY( liboverviewpart, OverviewPartFactory );
 
 using namespace KitchenSync ;
@@ -17,10 +19,13 @@ using namespace KitchenSync ;
 OverviewPart::OverviewPart(QWidget *parent, const char *name,
 			   QObject *par, const char *na,const QStringList & )
   : KitchenSync::ManipulatorPart( parent, name ) {
-  // setInstance(OverviewPartFactory::instance() );
+//  setInstance(OverviewPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("kcmsystem", KIcon::Desktop, 48 );
   m_widget=0;
-  m_config = 0;
+//  m_config = 0;
+}
+KAboutData *OverviewPart::createAboutData() {
+    return new KAboutData("KSyncOverviewPart",  I18N_NOOP("Sync Overview Part"), "0.0" );
 }
 
 OverviewPart::~OverviewPart() {
@@ -36,13 +41,19 @@ QWidget* OverviewPart::widget() {
   }
   return m_widget;
 }
-
-QWidget* OverviewPart::configWidget() {
-  // if(m_config == 0 ){
-    m_config = new QWidget();
-    m_config->setBackgroundColor( Qt::red );
-    //}
-  return m_config;
+void OverviewPart::startSync()
+{
+    m_widget->clearProgress(core()->currentProfile(),  core()->konnector(), core()->currentId() );
 };
+void OverviewPart::slotProgress(ManipulatorPart* , int syncStatus,  int)
+{
+    if (syncStatus == SYNC_DONE)
+        m_widget->currentDone();
+};
+void OverviewPart::slotSyncPartActivated( ManipulatorPart* part)
+{
+    m_widget->addProgress(part);
+};
+
 
 #include "ksync_overviewpart.moc"

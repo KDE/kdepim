@@ -7,6 +7,10 @@
 #include <koperations.h>
 #include <kgenericfactory.h>
 #include <kdebug.h>
+#include <kiconloader.h>
+#include <kstandarddirs.h>
+#include <kglobal.h>
+#include <klocale.h>
 
 #include "opiesocket.h"
 #include "opiekonnector.h"
@@ -57,7 +61,18 @@ QString OpiePlugin::udi()const
   return d->udi;
 }
 
-
+QIconSet OpiePlugin::iconSet()const
+{
+    kdDebug() << "iconSet" << endl;
+    QPixmap logo;
+    logo.load( locate("appdata",  "pics/opie_logo.png" ) );
+    return QIconSet( logo );
+}
+QString OpiePlugin::iconName()const
+{
+    kdDebug() << "icon Name from Opie" << endl;
+    return QString::fromLatin1("pics/opie_logo.png");
+};
 Kapabilities OpiePlugin::capabilities( )
 {
   // create the capabilities Apply

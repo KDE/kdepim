@@ -1,3 +1,3 @@
 #SUBDIRS = test
 
-SUBDIRS = kalendar 
+SUBDIRS = kalendar addressbook

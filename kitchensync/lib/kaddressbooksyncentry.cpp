@@ -100,6 +100,8 @@ bool KAddressbookSyncEntry::equals(KSyncEntry *other )
 KSyncEntry* KAddressbookSyncEntry::clone()
 {
   KAddressbookSyncEntry *entry = new KAddressbookSyncEntry();
+  entry->setSyncMode( syncMode() );
+  entry->setFirstSync( firstSync()  );
   entry->m_name = m_name;
   entry->m_oldId = m_oldId;
   entry->m_time = m_time;

@@ -285,6 +285,13 @@ QIconSet Konnector::iconSet(const QString& udi )const
 
     return plugin->iconSet();
 }
+QString Konnector::iconName( const QString& udi)const
+{
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if (plugin == 0l )
+        return QString::null;
+    return plugin->iconName();
+}
 QString Konnector::id(const QString& udi )const
 {
     KonnectorPlugin *plugin = pluginByUDI( udi );

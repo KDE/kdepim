@@ -86,7 +86,9 @@ KAddressbookSyncEntry* AddressBook::toKDE( const QString &fileName )
 			adr.insertPhoneNumber( businessFaxNum );
 			adr.insertPhoneNumber( businessMobile );
 			adr.insertPhoneNumber( businessPager  );
-			adr.insertEmail( el.attribute("Emails"), true ); // prefered
+                        QString email = el.attribute("Emails");
+                        if (!email.isEmpty() )
+                            adr.insertEmail( email, true ); // prefered
 
 			KABC::PhoneNumber homePhoneNum( el.attribute("HomePhone"),
 							KABC::PhoneNumber::Home );

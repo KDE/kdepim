@@ -82,6 +82,7 @@ namespace KitchenSync {
         QMap<QString, QString> m_ids;
         Profile m_profile; //  QValueList if we support more than opie
     signals:
+        void profileChanged(const Profile& oldProfile   );
         void konnectorChanged( const QString & );
         void konnectorStateChanged( const QString &,  int mode );
    private slots:

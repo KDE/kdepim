@@ -33,7 +33,7 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
         setName( "overviewWidget" );
     //setCaption( i18n( "KitchenSync - Overview" ) );
 
-    QBoxLayout *box = new QVBoxLayout( this );
+    box = new QVBoxLayout( this );
 
     QHBox *topBox = new QHBox( this );
     topBox->setSpacing( 200 );
@@ -50,6 +50,7 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     nameField->setAlignment( int( QLabel::WordBreak | QLabel::AlignTop ) );
 
     QPixmap logo;
+    kdDebug() << "Locate " << locate("appdata", "pics/opie_logo") << endl;
     logo.load(locate ("appdata", "pics/opie_logo.png" ) );
 
     deviceLogo = new QLabel( topBox, "deviceLogo" );
@@ -81,9 +82,10 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     box->addWidget( topBox );
     box->addWidget( Line );
     box->addWidget( sv );
+    m_svView=0;
 }
 
-
+// this will crash but it's deprecated
 void OverviewWidget::showList(QPtrList<ManipulatorPart> list) {
 
     QVBox* progressLayout = new QVBox( sv->viewport() );
@@ -99,16 +101,40 @@ void OverviewWidget::showList(QPtrList<ManipulatorPart> list) {
         sv->addChild(test);
     }
 }
-
-void OverviewWidget::setDeviceName(QString name) {
+void OverviewWidget::clearProgress(const Profile& prof,  Konnector* con,  const QString& id){
+    m_progress.setAutoDelete( true );
+    setDeviceName( con->id( id ) );
+    setNameField( prof.name() );
+    QPixmap pix;
+    kdDebug() << con->iconName(id ) << endl;
+    kdDebug() << "Clear Progress " << locate("appdata",  con->iconName(id) ) << endl;
+    QStringList list = KGlobal::dirs()->findDirs("data", "kitchensync" );
+    setLogo( con->iconSet(id).pixmap()   );
+    if (m_svView == 0 ) {
+        m_svView = new QVBox( sv->viewport() );
+        //box->addWidget( m_svView );
+        sv->addChild(m_svView);
+    }
+}
+void OverviewWidget::addProgress( ManipulatorPart* part ){
+    kdDebug() << "OverviewWidget add Progress" << endl;
+    current = new NewProgress( *part->pixmap(), part->name(), sv->viewport() );
+    //m_svView->addWidget( current );
+    sv->addChild( current );
+    m_progress.append( current );
+}
+void OverviewWidget::currentDone(){
+    //current->setStatusLabel( 1 );
+}
+void OverviewWidget::setDeviceName(const QString &name) {
     deviceName->setText( i18n("<h2> %1 </h2>").arg(name) );
 }
 
-void OverviewWidget::setNameField(QString name) {
+void OverviewWidget::setNameField(const QString &name) {
     nameField->setText( i18n("<b> %1 <b>").arg(name) );
 }
 
-void OverviewWidget::setLogo(QPixmap image0) {
+void OverviewWidget::setLogo(const QPixmap &image0) {
     deviceLogo->setPixmap( image0 );
 }
 
@@ -132,11 +158,11 @@ NewProgress::NewProgress( QPixmap &icon,
     statusLabel->setGeometry( QRect ( 450, 0, 20, 20) );
 }
 
-void NewProgress::setProgressItemPix(QPixmap image) {
+void NewProgress::setProgressItemPix(const QPixmap &image) {
     progressItemPix->setPixmap( image );
 }
 
-void NewProgress::setProgressLabel(QString text) {
+void NewProgress::setProgressLabel(const QString &text) {
     progressLabel->setText( i18n(text) );
 }
 
@@ -154,7 +180,6 @@ void NewProgress::setStatusLabel(int status) {
 void NewProgress::timerEvent(QTimerEvent *) {
     progressItemPix->setMovie(KGlobal::iconLoader()->loadMovie("image", KIcon::NoGroup, 32));
 }
-
 NewProgress::~NewProgress() {
 }
 

@@ -136,6 +136,7 @@ public:
     QIconSet iconSet(const QString& udi )const;
     QString id(const QString& udi )const;
     QString metaId( const QString& udi )const;
+    QString iconName(const QString& udi )const;
 public slots:
     /**
      * this will write a List of KSyncEntry

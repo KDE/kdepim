@@ -27,6 +27,7 @@
 */
 
 
+#include <qapplication.h>
 #include <qvbox.h>
 #include <qptrlist.h>
 #include <qwidgetstack.h>
@@ -172,7 +173,8 @@ void KSyncMainWindow::slotSync()
     kdDebug(5210) << "slotSync " << endl;
     if (m_currentId.isEmpty() ) {
         kdDebug(5210) << "Current Id empty" << endl;
-        return; // QMessageBox
+        //KMessageBox::
+        return; // KMessageBox
     }
     if (!m_profile.caps().supportsPushSync() ) {
         kdDebug(5210) << "Can not push" << endl;
@@ -281,6 +283,8 @@ void KSyncMainWindow::initKonnector()
 }
 // do we need to change the Konnector first?
 // raise overview and then pipe informations
+// when switching to KSyncee/KSyncEntry we will make
+// it asynchronus
 void KSyncMainWindow::slotSync( const QString &udi,
                                 KSyncEntry::List lis)
 {
@@ -295,6 +299,10 @@ void KSyncMainWindow::slotSync( const QString &udi,
     ManipulatorPart* part=0l;
     ManipulatorPart* po=0l;
     for ( part = m_parts.first(); part != 0; part = m_parts.next() ) {
+        part->startSync();
+    }
+    qApp->processEvents();
+    for ( part = m_parts.first(); part != 0; part = m_parts.next() ) {
     // part is the activated part
         // rather inefficent can QSignal be more direct? Request first?
         // but this is rather brain dead
@@ -303,12 +311,15 @@ void KSyncMainWindow::slotSync( const QString &udi,
             it.current()->slotSyncPartActivated( part );
             it.current()->slotProgress( part, SYNC_START,  0 );
         }
+        qApp->processEvents(); // HACK make it asynchronus
         part->processEntry( lis,  ret );
+
         kdDebug(5210 ) << "processed " << part->name() << endl;
         it.toFirst();
         for ( ; it.current(); ++it ) {
             it.current()->slotProgress( part, SYNC_DONE,  0 );
         }
+        qApp->processEvents();
     }
     lis.setAutoDelete( TRUE );
     lis.clear(); //there is a bug now we will leak but not crash :(
