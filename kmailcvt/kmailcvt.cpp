@@ -139,7 +139,7 @@ KAboutDialog dlg(this,"KmailCvt2");
            email="kmailcvt@hum.org",
            url="http://www.hum.org/kmailcvt.html",
            work=i18n("\n"
-                "Converts various import formats to KMail and K Addressbook  \n"
+                "Converts various import formats to KMail and KAddressbook\n"
                 "Currently supported formats:\n\n"
                 );
            work+=imports->getFilters();
