@@ -28,9 +28,8 @@ ICALSCRIPTS = $(top_srcdir)/scripts
 
 lib_LTLIBRARIES = libical.la
 
-YFLAGS = -d -v -t -pical_yy
-LFLAGS = -Pical_yy
-LEX_OUTPUT_ROOT = lex.ical_yy
+AM_YFLAGS = -d -v -t -pical_yy
+AM_LFLAGS = -Pical_yy
 
 INCLUDES =			\
 	-I$(top_builddir)	\
@@ -42,7 +41,6 @@ libical_la_LDFLAGS = -version-info 0:0:0
 
 # Order is important!
 libical_la_SOURCES =		\
-	dummy.c			\
 	icalderivedparameter.c	\
 	icalderivedparameter.h	\
 	icalrecur.c		\
@@ -125,20 +123,6 @@ COMBINEDHEADERS =					\
 	$(srcdir)/icalmime.h 		\
 	$(srcdir)/icallangbind.h	
 
-BUILT_SOURCES =			\
-	ical.h			\
-	icalderivedparameter.c	\
-	icalderivedparameter.h	\
-	icalderivedproperty.c	\
-	icalderivedproperty.h	\
-	icalrestriction.c	\
-	icalderivedvalue.c	\
-	icalderivedvalue.h
-
-dummy.c: $(COMBINEDHEADERS)
-	echo > dummy.c
-
-
 ical.h: $(COMBINEDHEADERS)
 	cat $(COMBINEDHEADERS)				\
 	| egrep -v "#include.*\"ical"			\
@@ -208,12 +192,8 @@ icalderivedvalue.c: $(VALUEDEPS) icalderivedvalue.h
 	$(PERL)  -I$(ICALSCRIPTS) $(ICALSCRIPTS)/mkderivedvalues.pl \
 		-i $(srcdir)/icalderivedvalue.c.in -c $(DESIGNDATA)/value-types.csv > icalderivedvalue.c
 
-
-
 # housekeeping
 CONFIG_CLEAN_FILES = y.output
-
-CLEANFILES += $(BUILT_SOURCES)
 
 EXTRA_DIST =			\
 	icalderivedparameter.c.in \
@@ -226,4 +206,21 @@ EXTRA_DIST =			\
 	icalversion.h.in	\
 	icallexer.c		\
 	icalyacc.c
+
+$(srcdir)/icalattendee.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalcomponent.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalderivedparameter.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalderivedproperty.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalderivedvalue.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalduration.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icallangbind.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icallexer.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalmime.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalparameter.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalparser.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalproperty.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalrestriction.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icaltime.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalvalue.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
+$(srcdir)/icalyacc.c: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 

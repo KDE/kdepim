@@ -1,7 +1,7 @@
 
 noinst_PROGRAMS = copycluster regression parser storage stow recur testmime testvcal process testclassify
 
-LDADD =  ../libicalss/.libs/libicalss.a ../libicalvcal/.libs/libicalvcal.a ../libical/.libs/libical.a 
+LDADD =  ../libicalss/libicalss.la ../libicalvcal/libicalvcal.la ../libical/libical.la 
 
 INCLUDES = 				\
        -I. 				\

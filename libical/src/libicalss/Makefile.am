@@ -1,8 +1,13 @@
+
 lib_LTLIBRARIES = libicalss.la
 
-YFLAGS =-d -v -p ss
-LFLAGS = -Pss 
+AM_YFLAGS =-d -v -p ss
+AM_LFLAGS = -Pss
 LEX_OUTPUT_ROOT = lex.ss
+
+# just to get it built
+$(srcdir)/icalgauge.c: icalssyacc.h
+$(srcdir)/icalsslexer.c: icalssyacc.h 
 
 INCLUDES =			\
 	-I$(top_builddir)	\
@@ -17,23 +22,16 @@ libicalss_la_LDFLAGS = -version-info 0:0:0
 libicalss_la_SOURCES =		\
 	icalclassify.c		\
 	icalgauge.c		\
-	icalgaugeimpl.h		\
 	icaldirset.c		\
-	icaldirsetimpl.h	\
 	icalfileset.c		\
-	icalfilesetimpl.h	\
 	icalset.c		\
-	icalssyacc.h		\
 	icalssyacc.y		\
 	icalsslexer.l		\
 	icalspanlist.c		\
 	icalmessage.c		\
 	icalcstpclient.c        \
-	icalcstpclient.h        \
 	icalcstpserver.c        \
-	icalcstpserver.h 	\
-	icalcstp.c		\
-	icalss.h
+	icalcstp.c		
 
 libicalssincludedir = $(includedir)
 
@@ -50,15 +48,13 @@ COMBINEDHEADERS = \
 	$(srcdir)/icalcstpclient.h \
 	$(srcdir)/icalcstpserver.h
 
-
 icalss.h: $(COMBINEDHEADERS) icalssyacc.c
 	cat $(COMBINEDHEADERS) | egrep -v "#include.*\"ical" \
 	| egrep -v "#include.*\"pvl\.h\"" > icalss.h
 
-
 libicalssinclude_HEADERS = icalss.h
 
-CONFIG_CLEAN_FILES = y.output
+CLEANFILES = y.output icalss.h icalssyacc.c icalssyacc.h
 
-EXTRA_DIST =			\
-	$(COMBINEDHEADERS)	\
+EXTRA_DIST = $(COMBINEDHEADERS)
+

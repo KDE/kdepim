@@ -1,4 +1,6 @@
 
+KDE_OPTIONS = foreign
+
 EXTRA_DIST = \
 	ChangeLog \
 	README \
