@@ -1,3 +1,21 @@
+KPilot Developer's notes for may 14th 2001
+==========================================
+
+Not a lot of movement on the coding front for me [ade]; I
+did remember mothers' day though. Changes relevant to KPilot:
+
+* abbrowser has moved into kdebase, so the abbrowser conduit will
+  now be available to everyone, not just those that also compile
+  all of kdepim.
+
+2001-05-08  Marko Gronroos
+
+* conduits/popmail/*
+  Totally revamped the mail conduits with a new, well designed
+  setup. This solves most of the smtp and sendmail problems
+  we've been having.
+
+
 KPilot Developer's notes for may 7th 2001
 =========================================
 
