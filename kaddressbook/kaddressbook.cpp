@@ -229,7 +229,6 @@ void KAddressBook::slotEditorDestroyed( const QString &uid )
 
 void KAddressBook::save()
 {
-//  mDistEditor->manager()->save(); need cornelius help
   KABC::StdAddressBook *b = dynamic_cast<KABC::StdAddressBook*>(mDocument);
   if (!b || !b->save())
   {
@@ -256,7 +255,7 @@ void KAddressBook::writeConfig()
 KAddressBook::~KAddressBook()
 {
   if (mDistEditor)
-      delete mDistEditor; // save distribution lists
+      delete mDistEditor;
 
   writeConfig();
 

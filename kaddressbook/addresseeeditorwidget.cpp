@@ -129,6 +129,7 @@ void AddresseeEditorWidget::setupTab1()
            SLOT( nameTextChanged(const QString & )));
   connect( button, SIGNAL( clicked()), this, SLOT( nameButtonClicked()));
   mParseBox = new QCheckBox( i18n( "Parse name automatically" ), tab1 );
+  connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( parseNameChanged() ) );
   nameLayout->addWidget( mNameEdit );
   nameLayout->addWidget( mParseBox );
   nameLayout->setStretchFactor( mNameEdit, 1 );
@@ -490,10 +491,6 @@ void AddresseeEditorWidget::save()
         ++addressIter)
     mAddressee.insertAddress(*addressIter);
 
-  KConfig *config = kapp->config();
-  config->setGroup( "General" );
-  config->writeEntry( "AutomaticNameParsing", mParseBox->isChecked() );
-
   mDirty = false;
 }
 
@@ -618,6 +615,13 @@ void AddresseeEditorWidget::emitModified()
 void AddresseeEditorWidget::dateChanged(QDate)
 {
   emitModified();
+}
+
+void AddresseeEditorWidget::parseNameChanged()
+{
+  KConfig *config = kapp->config();
+  config->setGroup( "General" );
+  config->writeEntry( "AutomaticNameParsing", mParseBox->isChecked() );
 }
 
 #include "addresseeeditorwidget.moc"
