@@ -42,23 +42,30 @@
 using namespace KCal;
 
 
-extern "C"
+ResourceIMAP::ResourceIMAP( const QString &server )
+  : ResourceCalendar( 0 ),
+    ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
+    mServer( server ),
+    mSilent( false )
 {
-  void *init_kcal_imap()
-  {
-    return new KRES::PluginFactory<ResourceIMAP,ResourceIMAPConfig>();
-  }
+  init();
 }
-
 
 ResourceIMAP::ResourceIMAP( const KConfig* config )
   : ResourceCalendar( config ),
     ResourceIMAPBase::ResourceIMAPShared( "ResourceIMAP-libkcal" ),
     mSilent( false )
 {
+  init();
+
   if ( config ) {
     mServer = config->readEntry( "Servername" );
   }
+}
+
+void ResourceIMAP::init()
+{
+  setType( "imap" );
 }
 
 void ResourceIMAP::writeConfig( KConfig* config )

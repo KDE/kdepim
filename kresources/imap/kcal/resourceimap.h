@@ -46,6 +46,7 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
   Q_OBJECT
 
   public:
+    ResourceIMAP( const QString &server );
     ResourceIMAP( const KConfig * );
     virtual ~ResourceIMAP();
 
