@@ -32,7 +32,7 @@
 Mark - 3.2
 --------------------------
 
-  * 2003-09-03: Timecard report.
+X * 2003-09-03: Timecard report.
 
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
@@ -46,7 +46,7 @@ X * 2003-09-18: Remove "Active: " from systray tooltip text.
 
   * 2003-09-23: Auto-save should write events.
   
-  * 2003-09-23: When opening storage file, filter on ics files (see ko).
+X * 2003-09-23: When opening storage file, filter on ics files.
 
   * 2003-09-03: Replace all string concatenations with .arg (for i18n).
     
