@@ -219,7 +219,7 @@ int KSSLSocket::verifyCertificate()
 
 	_IPmatchesCN = d->kssl->peerInfo().certMatchesAddress();
 
-	if (!_IPmatchesCN)
+	if (!_IPmatchesCN && (metaData("ssl_militant") == "TRUE") )
 	{
 		ksvl << KSSLCertificate::InvalidHost;
 	}
@@ -289,7 +289,8 @@ int KSSLSocket::verifyCertificate()
 			permacache = d->cc->isPermanent(pc);
 		}
 
-		if (!_IPmatchesCN && cp == KSSLCertificateCache::Accept)
+		if (!_IPmatchesCN && (metaData("ssl_militant") == "TRUE") 
+ 		    && cp == KSSLCertificateCache::Accept)
 		{
 			cp = KSSLCertificateCache::Prompt;
 		}

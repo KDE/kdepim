@@ -260,7 +260,6 @@ bool GroupwiseServer::login()
 
   ns1__PlainText pt;
 
-//  soap_init( mSoap );
   pt.username = mUser.utf8();
   pt.password = conv.qStringToString( mPassword );
   loginReq.auth = &pt;
@@ -268,8 +267,6 @@ bool GroupwiseServer::login()
   mSoap->passwd = strdup( mPassword.utf8() );
 
   mSession = "";
-
-//  cout << "Login" << endl;
 
   kdDebug() << "GroupwiseServer::login() URL: " << mUrl << endl;
 
@@ -282,8 +279,6 @@ bool GroupwiseServer::login()
     soap_print_fault( mSoap, stderr );
     return false;
   }
-
-//  std::cout << "Session ID: " << loginResp.session.c_str() << std::endl;
 
   mSession = loginResp.session;
   mSoap->header = new( SOAP_ENV__Header );
