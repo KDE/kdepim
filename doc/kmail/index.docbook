@@ -1865,7 +1865,7 @@ Mailreader window</link>.
  Do <emphasis>not</emphasis> let procmail sort the mail to <filename class="directory">~/Mail</filename>,
  but to some other directory which you then access by &kmail; as a <guilabel>Local Mailbox</guilabel>.
  I.e. you have to add another account in the <guilabel>Network</guilabel> tab of the
- Configuration dialog.</para></answer>
+ Configuration dialog. Also see the FAQ about lockfiles.</para></answer>
 </qandaentry>
 
 <qandaentry>
