@@ -33,16 +33,16 @@ class FileStorage : public CalStorage
     FileStorage( Calendar *, const QString &fileName = QString::null,
                   CalFormat *format = 0 );
     virtual ~FileStorage();
-  
+
     void setFileName( const QString &mFileName );
-    QString fileName();
-  
+    QString fileName()const;
+
     /**
       FileStorage takes ownership of format object.
     */
     void setSaveFormat( CalFormat * );
-    CalFormat *saveFormat();
-  
+    CalFormat *saveFormat()const;
+
     bool open();
     bool load();
     bool save();

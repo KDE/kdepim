@@ -33,16 +33,16 @@ class Period
     Period( const QDateTime &start, const QDateTime &end );
     Period( const QDateTime &start, const Duration &duration );
 
-    QDateTime start();
-    QDateTime end();
+    QDateTime start()const;
+    QDateTime end()const;
     Duration duration();
 
-    bool hasDuration();
+    bool hasDuration()const;
 
   private:
     QDateTime mStart;
     QDateTime mEnd;
-    
+
     bool mHasDuration;
 };
 

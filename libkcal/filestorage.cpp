@@ -53,7 +53,7 @@ void FileStorage::setFileName( const QString &fileName )
   mFileName = fileName;
 }
 
-QString FileStorage::fileName()
+QString FileStorage::fileName()const
 {
   return mFileName;
 }
@@ -65,7 +65,7 @@ void FileStorage::setSaveFormat( CalFormat *format )
   mSaveFormat = format;
 }
 
-CalFormat *FileStorage::saveFormat()
+CalFormat *FileStorage::saveFormat()const
 {
   return mSaveFormat;
 }
@@ -130,7 +130,7 @@ bool FileStorage::save()
   }
 
   if ( success ) calendar()->setModified( false );
-  
+
   return success;
 }
 

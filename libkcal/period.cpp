@@ -44,12 +44,12 @@ Period::Period( const QDateTime &start, const Duration &duration )
   mHasDuration = true;
 }
 
-QDateTime Period::start()
+QDateTime Period::start() const
 {
   return mStart;
 }
 
-QDateTime Period::end()
+QDateTime Period::end()const
 {
   return mEnd;
 }
@@ -59,7 +59,7 @@ Duration Period::duration()
   return Duration( mStart, mEnd );
 }
 
-bool Period::hasDuration()
+bool Period::hasDuration()const
 {
   return mHasDuration;
 }
