@@ -142,6 +142,15 @@ void PIMSyncAlg::addEntry( Syncee* in, Syncee* out, SyncEntry* add ) {
     }
     out->addEntry( add->clone() );
 }
+/*
+ * Ok we are either modified
+ * or removed
+ * Now go through each item and look for one with the
+ * same uid
+ * If found check if it was Modified or Removed too
+ * If yes check if they're equal otherwise
+ * we need to deconflict
+ */
 void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                         Syncee* target,
                         bool over ) {
@@ -151,39 +160,47 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
     /* for all modified and deleted*/
     for ( entry = entries.first(); entry; entry = entries.next() ) {
         other = target->findEntry( entry->id()  );
-        if (other ) { // exists should always do
+        if (other ) { // exists, should always do
 	    kdDebug() << "Entry 1 " << entry->name() << endl;
 	    kdDebug() << "Entry 2 " << other->name() << endl;
-            /* not equal */
-            if (!entry->equals(other ) ) {
-                /* just override it */
-		kdDebug() << "Not equals " << endl;
-                if (over && (other->state() != SyncEntry::Removed) ) {
-		    kdDebug() << "override" << endl;
-                    target->replaceEntry(other,  entry->clone() );
-                /* test if modified or removed and deconflict */
-                }else{
-		    /* both changed */
-                    if (( other->wasRemoved() || other->wasModified() )&&
-			(entry->wasRemoved() || entry->wasModified() ) ) {
-		        kdDebug() << "Other was modified or Removed" << endl;
-                        SyncEntry *result =deconflict(entry, other);
-                        if (result == entry) {
-                            target->replaceEntry(other, entry->clone() );
-                        }
-                    }
-		    /* other changed but not we so do not bother anymore */
-		    else if( (other->wasRemoved() || other->wasModified() ) &&
-		              (entry->state() == SyncEntry::Undefined ) ) {
-			      kdDebug() << "other changed " << endl;
-		    }
-                    /* not changed but why the heck it's not equal then? */
-                    else {
-		        kdDebug() << "Other did not change so we did?" << endl;
-                        target->replaceEntry(other,  entry->clone() );
-                    }
-                }
+
+            /* entry modified and other unchanged */
+            if(entry->wasModified() && other->state()== SyncEntry::Undefined ) {
+                kdDebug() << "Modified and unchanged " << endl;
+                target->replaceEntry( other, entry->clone() );
             }
+            /* entry removed and other unchanged or removed too */
+            else if ( entry->wasRemoved() &&
+                       ( other->wasRemoved() || other->state() == SyncEntry::Undefined ) ) {
+                kdDebug() << "Removed and either removed or unchanged too " << endl;
+                target->replaceEntry( other, entry->clone() );
+            }
+            /* entry was removed and other changed */
+            else if ( entry->wasRemoved() &&
+                other->wasModified() ) {
+                kdDebug() << "Entry wasRemoved and other wasModified override is "
+                          << over << endl;
+                if (!over)
+                    SyncEntry *result = deconflict(entry,other);
+                if (result == entry || over) {
+                    target->replaceEntry(other,entry->clone() );
+                }
+
+            }else if ( entry->wasModified() && other->wasModified() ) {
+                kdDebug() << "Both where modified override" << over<< endl;
+                kdDebug() << "Entry1 timestamp " << entry->timestamp() << endl;
+                kdDebug() << "Entry2 timestamp " << other->timestamp() << endl;
+                kdDebug() << "Equals " << entry->equals( other ) << endl;
+
+                if (!over )
+                    SyncEntry *result = deconflict(entry,other);
+
+                if (result == entry || over) {
+                    target->replaceEntry(other,entry->clone() );
+                }
+
+            }
+
         }else {
 	    kdDebug() << "added " << endl;
             addEntry(syncee, target, entry);

@@ -134,6 +134,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 			adr.insertCustom("opie", "Profession", el.attribute("Profession") );
 			adr.insertCustom("opie", "Assistant", el.attribute("Assistant") );
 			adr.insertCustom("opie", "Manager", el.attribute("Manager") );
+                        adr.setRevision( QDateTime::currentDateTime() );
                         KSync::AddressBookSyncEntry* entry = new KSync::AddressBookSyncEntry( adr );
 			syncee->addEntry ( entry );
 		    }

@@ -22,6 +22,8 @@ MetaAddress::~MetaAddress()
 KSync::AddressBookSyncee* MetaAddress::doMeta(KSync::AddressBookSyncee* newE,
                                               KSync::AddressBookSyncee* old )
 {
+    kdDebug() << "Doing meta for Addressbook " << endl;
+    kdDebug() << "------------" << endl;
     KSync::AddressBookSyncEntry* entryNew;
     KSync::AddressBookSyncEntry* entryOld;
     KABC::Addressee oldAb;
@@ -78,7 +80,7 @@ KSync::AddressBookSyncee* MetaAddress::doMeta(KSync::AddressBookSyncee* newE,
 namespace{
 
     bool test( const KABC::Addressee& ad1,  const KABC::Addressee& ad2 ) {
-        kdDebug() << "ad1 " << ad1.givenName() << endl;
+        kdDebug() << "Test ad1 " << ad1.realName() << endl;
         bool ret = false;
         if ( ( !ad1.givenName().isEmpty() && !ad2.givenName().isEmpty() ) && ad1.givenName() != ad2.givenName() ) {
             kdDebug() << "Given Name mismatch" << endl;
@@ -239,6 +241,7 @@ namespace{
         if ( (!ad1.note().isEmpty() && !ad2.note().isEmpty() ) && ad1.note() != ad2.note() )
              return true;
 
+        kdDebug() << "Returned unchanged aye? " << endl;
         return ret;
     }
 };

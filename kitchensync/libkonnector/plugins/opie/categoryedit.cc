@@ -60,7 +60,7 @@ int CategoryEdit::addCategory( const QString &appName,  const QString &name,  in
         kdDebug() << "need to generate one " << endl;
         // code from tt
         //generate uid
-        int id = -1 * (int) ::time(NULL );
+        id = -1 * (int) ::time(NULL );
         while ( ids.contains( id ) ){
             id += -1;
             if ( id > 0 )
