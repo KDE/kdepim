@@ -4,7 +4,7 @@
   right: 0px;
   width: 430px;
   height: 131px;
-  background-image: url(top-right-kontact.png);
+  background-image: url(top-right-kmail.png);
 }
 
 #title {
@@ -16,14 +16,10 @@
 }
 
 #boxCenter {
-  background-image: url(box-center-kontact.png);
+  background-image: url(box-center-kmail.png);
   background-repeat: no-repeat;
   background-color: #dfe7f3;
   background-position: bottom right;
-}
-
-#subtext {
-  font-style: italic;
 }
 
 /* vim:set sw=2 et nocindent smartindent: */
