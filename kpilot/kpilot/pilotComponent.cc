@@ -30,7 +30,7 @@
 
 
 #include "options.h"
-#include <sys/time.h>
+#include <time.h>
 #include <stream.h>
 #include <pi-appinfo.h>
 #include <qwidget.h>
@@ -185,4 +185,7 @@ CategoryAll:
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.7  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//
