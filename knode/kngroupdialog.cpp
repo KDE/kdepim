@@ -39,9 +39,9 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
 {
   rightLabel->setText(i18n("Current changes:"));
   subView=new QListView(page);
-  subView->addColumn(i18n("subscribe to"));
+  subView->addColumn(i18n("Subscribe To"));
   unsubView=new QListView(page);
-  unsubView->addColumn(i18n("unsubscribe from"));
+  unsubView->addColumn(i18n("Unsubscribe From"));
 
   QVBoxLayout *protL=new QVBoxLayout(3);
   listL->addLayout(protL, 1,2);

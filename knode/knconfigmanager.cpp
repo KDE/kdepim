@@ -135,7 +135,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   w_idgets.append(new KNConfig::SmtpAccountWidget(frame));
 
   // Appearance
-  frame = addHBoxPage(QString(" ")+i18n("Appearance"), i18n("Customize visual appearance"), BarIcon("appearance"));
+  frame = addHBoxPage(QString(" ")+i18n("Appearance"), i18n("Customize Visual Appearance"), BarIcon("appearance"));
   w_idgets.append(new KNConfig::AppearanceWidget(m->appearance(), frame));
 
   // Read News / General
@@ -147,7 +147,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Read News / Navigation
   list.clear();
   list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Navigation");
-  frame = addHBoxPage(list, i18n("Customize keyboard navigation"), BarIcon("move"));
+  frame = addHBoxPage(list, i18n("Customize Keyboard Navigation"), BarIcon("move"));
   w_idgets.append(new KNConfig::ReadNewsNavigationWidget(m->readNewsNavigation(), frame));
 
   // Read News / Scores
@@ -165,13 +165,13 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Read News / Headers
   list.clear();
   list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Headers");
-  frame = addHBoxPage(list, i18n("Customize displayed article headers"), BarIcon("text_block"));
+  frame = addHBoxPage(list, i18n("Customize Displayed Article Headers"), BarIcon("text_block"));
   w_idgets.append(new KNConfig::DisplayedHeadersWidget(m->displayedHeaders(), frame));
 
   // Read News / Viewer
   list.clear();
   list << QString(" ")+i18n("Reading News") << QString(" ")+i18n("Viewer");
-  frame = addHBoxPage(list, i18n("Customize article viewer behavior"), BarIcon("contents"));
+  frame = addHBoxPage(list, i18n("Customize Article Viewer Behavior"), BarIcon("contents"));
   w_idgets.append(new KNConfig::ReadNewsViewerWidget(m->readNewsViewer(), frame));
 
   // Post News / Technical
@@ -183,13 +183,13 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   // Post News / Composer
   list.clear();
   list << QString(" ")+i18n("Posting News") << QString(" ")+i18n("Composer");
-  frame = addHBoxPage(list, i18n("Customize composer behavior"), BarIcon("signature"));
+  frame = addHBoxPage(list, i18n("Customize Composer Behavior"), BarIcon("signature"));
   w_idgets.append(new KNConfig::PostNewsComposerWidget(m->postNewsComposer(), frame));
 
   // Post News / Spelling
   list.clear();
   list << QString(" ")+i18n("Posting News") << QString(" ")+i18n("Spelling");
-  frame = addHBoxPage(list, i18n("Spell checker behavior"), BarIcon("spellcheck"));
+  frame = addHBoxPage(list, i18n("Spell Checker Behavior"), BarIcon("spellcheck"));
   w_idgets.append(new KNConfig::PostNewsSpellingWidget(frame));
 
   // Privacy
@@ -198,7 +198,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   w_idgets.append(new KNConfig::PrivacyWidget(frame));
 
   // Cleanup
-  frame = addHBoxPage(QString(" ")+i18n("Cleanup"),i18n("Preserving disk space"), BarIcon("wizard"));
+  frame = addHBoxPage(QString(" ")+i18n("Cleanup"),i18n("Preserving Disk Space"), BarIcon("wizard"));
   w_idgets.append(new KNConfig::CleanupWidget(m->cleanup(), frame));
 
   /*/ Cache

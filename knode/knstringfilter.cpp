@@ -106,8 +106,8 @@ KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent
   : QGroupBox(title, parent)
 {
   fType=new QComboBox(this);
-  fType->insertItem(i18n("does contain"));
-  fType->insertItem(i18n("does NOT contain"));
+  fType->insertItem(i18n("Does Contain"));
+  fType->insertItem(i18n("Does NOT Contain"));
   
   fString=new KLineEdit(this);
   

@@ -604,7 +604,7 @@ void KNMainWindow::initActions()
                               SLOT(slotGrpExpire()), actionCollection(), "group_expire");
   a_ctGrpReorganize         = new KAction(i18n("Re&organize Group"), 0, this,
                               SLOT(slotGrpReorganize()), actionCollection(), "group_reorg");
-  a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe from Group"), "news_unsubscribe", 0, this,
+  a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe From Group"), "news_unsubscribe", 0, this,
                               SLOT(slotGrpUnsubscribe()), actionCollection(), "group_unsubscribe");
   a_ctGrpSetAllRead         = new KAction(i18n("Mark All as &Read"), "goto", 0, this,
                               SLOT(slotGrpSetAllRead()), actionCollection(), "group_allRead");

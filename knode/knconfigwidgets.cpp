@@ -267,7 +267,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  d_elBtn=new QPushButton(i18n("&Delete...A"), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 
@@ -1109,7 +1109,7 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   b_rowser->insertItem("Opera");
   b_rowser->insertItem("Other");
   connect(b_rowser, SIGNAL(activated(int)), SLOT(slotBrowserTypeChanged(int)));
-  l1=new QLabel(b_rowser, i18n("Open &links with"), bgb);
+  l1=new QLabel(b_rowser, i18n("Open &links with:"), bgb);
   b_rowserCommand = new KLineEdit(bgb);
   c_hooseBrowser= new QPushButton(i18n("Choo&se..."),bgb);
   connect(c_hooseBrowser, SIGNAL(clicked()), SLOT(slotChooseBrowser()));
@@ -1230,7 +1230,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  d_elBtn=new QPushButton(i18n("&Delete..."), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 
@@ -1415,20 +1415,20 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   QVBoxLayout *ngbL = new QVBoxLayout(ngb, 8, 5);
   ngbL->setAutoAdd(true);
   ngbL->addSpacing(fontMetrics().lineSpacing()-4);
-  n_ameCB[0]=new QCheckBox(i18n("&large"), ngb);
-  n_ameCB[1]=new QCheckBox(i18n("&bold"), ngb);
-  n_ameCB[2]=new QCheckBox(i18n("&italic"), ngb);
-  n_ameCB[3]=new QCheckBox(i18n("&underlined"), ngb);
+  n_ameCB[0]=new QCheckBox(i18n("&Large"), ngb);
+  n_ameCB[1]=new QCheckBox(i18n("&Bold"), ngb);
+  n_ameCB[2]=new QCheckBox(i18n("&Italic"), ngb);
+  n_ameCB[3]=new QCheckBox(i18n("&Underlined"), ngb);
   topL->addWidget(ngb,1,0);
 
   QGroupBox *vgb=new QGroupBox(i18n("Value"), page);
   QVBoxLayout *vgbL = new QVBoxLayout(vgb, 8, 5);
   vgbL->setAutoAdd(true);
   vgbL->addSpacing(fontMetrics().lineSpacing()-4);
-  v_alueCB[0]=new QCheckBox(i18n("l&arge"), vgb);
-  v_alueCB[1]=new QCheckBox(i18n("bol&d"), vgb);
-  v_alueCB[2]=new QCheckBox(i18n("i&talic"), vgb);
-  v_alueCB[3]=new QCheckBox(i18n("u&nderlined"), vgb);
+  v_alueCB[0]=new QCheckBox(i18n("L&arge"), vgb);
+  v_alueCB[1]=new QCheckBox(i18n("Bol&d"), vgb);
+  v_alueCB[2]=new QCheckBox(i18n("I&talic"), vgb);
+  v_alueCB[3]=new QCheckBox(i18n("U&nderlined"), vgb);
   topL->addWidget(vgb,1,1);
 
   topL->setColStretch(0,1);
@@ -1553,7 +1553,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn,1,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  d_elBtn=new QPushButton(i18n("&Delete..."), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn,2,1);
 
@@ -2225,19 +2225,19 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
 
   g_roupDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
   g_roupDays->setSuffix(i18n(" days"));
-  g_roupDaysL=new QLabel(g_roupDays,i18n("&Purge groups every"), groupsB);
+  g_roupDaysL=new QLabel(g_roupDays,i18n("&Purge groups every:"), groupsB);
   groupsL->addWidget(g_roupDaysL,2,0);
   groupsL->addWidget(g_roupDays,2,1,Qt::AlignRight);
 
   r_eadDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
   r_eadDays->setSuffix(i18n(" days"));
-  r_eadDaysL=new QLabel(r_eadDays, i18n("&Keep read articles"), groupsB);
+  r_eadDaysL=new QLabel(r_eadDays, i18n("&Keep read articles:"), groupsB);
   groupsL->addWidget(r_eadDaysL,3,0);
   groupsL->addWidget(r_eadDays,3,1,Qt::AlignRight);
 
   u_nreadDays=new KIntSpinBox(0, 99999, 1, 0, 10, groupsB);
   u_nreadDays->setSuffix(i18n(" days"));
-  u_nreadDaysL=new QLabel(u_nreadDays, i18n("Keep u&nread articles"), groupsB);
+  u_nreadDaysL=new QLabel(u_nreadDays, i18n("Keep u&nread articles:"), groupsB);
   groupsL->addWidget(u_nreadDaysL,4,0);
   groupsL->addWidget(u_nreadDays,4,1,Qt::AlignRight);
 
@@ -2263,7 +2263,7 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
 
   f_olderDays=new KIntSpinBox(0, 99999, 1, 0, 10, foldersB);
   f_olderDays->setSuffix(i18n(" days"));
-  f_olderDaysL=new QLabel(f_olderDays,i18n("P&urge folders every"), foldersB);
+  f_olderDaysL=new QLabel(f_olderDays,i18n("P&urge folders every:"), foldersB);
   foldersL->addWidget(f_olderDaysL,2,0);
   foldersL->addWidget(f_olderDays,2,1,Qt::AlignRight);
 

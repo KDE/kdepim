@@ -98,10 +98,10 @@ KNStatusFilterWidget::KNStatusFilterWidget(QWidget *parent) :
   QButtonGroup(0, parent)
 {
   setFrameStyle(NoFrame);
-  enR=new QCheckBox(i18n("Is read"), this);
-  enN=new QCheckBox(i18n("Is new"), this);
-  enUS=new QCheckBox(i18n("Has unread followups"), this);
-  enNS=new QCheckBox(i18n("Has new followups"), this);
+  enR=new QCheckBox(i18n("Is read:"), this);
+  enN=new QCheckBox(i18n("Is new:"), this);
+  enUS=new QCheckBox(i18n("Has unread followups:"), this);
+  enNS=new QCheckBox(i18n("Has new followups:"), this);
   
   rCom=new TFCombo(this);
   nCom=new TFCombo(this);
@@ -199,8 +199,8 @@ void KNStatusFilterWidget::slotEnabled(int c)
 
 KNStatusFilterWidget::TFCombo::TFCombo(QWidget *parent) : QComboBox(parent)
 {
-  insertItem(i18n("true"));
-  insertItem(i18n("false"));
+  insertItem(i18n("True"));
+  insertItem(i18n("False"));
 }
 
 
