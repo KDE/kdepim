@@ -31,6 +31,8 @@ OrganizerPart::OrganizerPart(QWidget *parent, const char *name,
 {
   setInstance(OrganizerPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("korganizer", KIcon::Desktop, 48 );
+
+  kdDebug() << "OragnizerPart" << endl;
 }
 OrganizerPart::~OrganizerPart()
 {

@@ -17,8 +17,8 @@
 
 */
 
-#ifndef KSYNC_KONNECTOR_MANAGER_H
-#define KSYNC_KONNECTOR_MANAGER_H
+#ifndef KSYNC_KONNECTORMANAGER_H
+#define KSYNC_KONNECTORMANAGER_H
 
 #include <qobject.h>
 #include <qstring.h>
@@ -30,110 +30,113 @@
 #include "error.h"
 #include "progress.h"
 
-namespace KSync {
-    typedef QString UDI;
-    class Kapabilities;
-    class ConfigWidget;
-    class KonnectorPlugin;
-    class KonnectorInfo;
+namespace KSync
+{
 
-    class KonnectorManager : public QObject {
-        Q_OBJECT
-        friend class KStaticDeleter<KonnectorManager>;
-    public:
-        static KonnectorManager* self();
-        Device::ValueList query( );
-        UDI load( const Device& device );
-        UDI load( const QString& deviceName );
-        bool unload( const UDI& udi );
+typedef QString UDI;
+class Kapabilities;
+class ConfigWidget;
+class KonnectorPlugin;
+class KonnectorInfo;
 
-        Kapabilities capabilities( const UDI& udi )const;
-        void setCapabilities( const UDI& udi,  const Kapabilities& cap );
+class KonnectorManager : public QObject
+{
+    Q_OBJECT
+    friend class KStaticDeleter<KonnectorManager>;
+  public:
+    static KonnectorManager *self();
 
-        ConfigWidget* configWidget( const UDI& udi,
-                                    QWidget* parent,
-                                    const char* name );
-        ConfigWidget* configWidget( const UDI& udi,
-                                    const Kapabilities&,
-                                    QWidget* parent, const char* name );
+    Device::ValueList query();
+    UDI load( const Device& device );
+    UDI load( const QString& deviceName );
+    bool unload( const UDI& udi );
 
-        /**
-         * resource to be downloaded
-         * on sync
-         */
-        void add( const UDI&, const QString& resource );
-        void remove( const UDI&, const QString& res );
-        QStringList resources( const UDI& )const;
+    Kapabilities capabilities( const UDI &udi ) const;
+    void setCapabilities( const UDI &udi, const Kapabilities& cap );
 
-        /**
-         * download a file if possible and emits a signal
-         */
-        void download( const UDI&,  const QString& resource );
+    ConfigWidget* configWidget( const UDI& udi,
+                                QWidget* parent,
+                                const char* name );
+    ConfigWidget* configWidget( const UDI& udi,
+                                const Kapabilities&,
+                                QWidget* parent, const char* name );
 
-        bool isConnected( const UDI& )const;
-        bool connectDevice( const UDI& );
-        bool disconnectDevice( const UDI& );
+    /**
+     * resource to be downloaded
+     * on sync
+     */
+    void add( const UDI&, const QString& resource );
+    void remove( const UDI&, const QString& res );
+    QStringList resources( const UDI& ) const;
 
-        bool startSync(const UDI& );
+    /**
+     * download a file if possible and emits a signal
+     */
+    void download( const UDI&, const QString& resource );
 
-        bool startBackup( const UDI&,  const QString& path );
-        bool startRestore( const UDI&,  const QString& path );
+    bool isConnected( const UDI& ) const;
+    bool connectDevice( const UDI& );
+    bool disconnectDevice( const UDI& );
 
-        KonnectorInfo info( const UDI& )const;
+    bool startSync( const UDI& );
 
-        bool autoLoadFilter()const;
+    bool startBackup( const UDI&, const QString& path );
+    bool startRestore( const UDI&, const QString& path );
 
-        /**
-         * Set whether or not to load
-         * Filters automatically
-         */
-        void setAutoLoadFilter( bool = true );
+    KonnectorInfo info( const UDI& ) const;
 
-        /**
-         * adds a custom filter
-         * a custom filter overwrites
-         * automatic loaded filters
-         */
-        void add( Filter* filter );
-        void deleteFilter( Filter* filter );
-        const Filter::PtrList filters();
+    bool autoLoadFilter() const;
 
-    public slots:
-        void write( const QString&, const Syncee::PtrList& );
+    /**
+     * Set whether or not to load
+     * Filters automatically
+     */
+    void setAutoLoadFilter( bool = true );
 
-    signals:
-        void sync( const QString&,  Syncee::PtrList );
-        void progress( const UDI&, const Progress& );
-        void error( const UDI&,  const   Error& );
-        void downloaded( const UDI&, Syncee::PtrList );
+    /**
+     * adds a custom filter
+     * a custom filter overwrites
+     * automatic loaded filters
+     */
+    void add( Filter* filter );
+    void deleteFilter( Filter* filter );
+    const Filter::PtrList filters();
 
-    private slots:
-        void slotSync( const UDI&, Syncee::PtrList );
-        void slotProgress( const UDI&, const Progress& );
-        void slotError( const UDI&, const Error& );
-        void slotDownloaded( const UDI&, Syncee::PtrList );
+  public slots:
+    void write( const QString&, const Syncee::PtrList& );
 
-    private:
-        void filter( Syncee::PtrList unknown, Syncee::PtrList& real );
+  signals:
+    void sync( const QString&,  Syncee::PtrList );
+    void progress( const UDI&, const Progress& );
+    void error( const UDI&,  const   Error& );
+    void downloaded( const UDI&, Syncee::PtrList );
 
-        KonnectorManager();
-        ~KonnectorManager();
-        Device::ValueList allDevices();
-        Device parseDevice( const QString& path );
-        Device find( const QString& deviceName );
-        KonnectorPlugin* pluginByUDI( const UDI& )const;
-        UDI newUDI()const;
-        Syncee::PtrList findUnknown( Syncee::PtrList& );
-        static KonnectorManager* m_self;
-        Filter::PtrList m_filter;
-        Filter::PtrList m_filAdded;
-        bool m_auto;
+  private slots:
+    void slotSync( const UDI&, Syncee::PtrList );
+    void slotProgress( const UDI&, const Progress& );
+    void slotError( const UDI&, const Error& );
+    void slotDownloaded( const UDI&, Syncee::PtrList );
 
-        class Private;
-        Private *d;
-    };
+  private:
+    void filter( Syncee::PtrList unknown, Syncee::PtrList& real );
 
+    KonnectorManager();
+    ~KonnectorManager();
+    Device::ValueList allDevices();
+    Device parseDevice( const QString& path );
+    Device find( const QString& deviceName );
+    KonnectorPlugin* pluginByUDI( const UDI& ) const;
+    UDI newUDI() const;
+    Syncee::PtrList findUnknown( Syncee::PtrList& );
+    static KonnectorManager* m_self;
+    Filter::PtrList m_filter;
+    Filter::PtrList m_filAdded;
+    bool m_auto;
+
+    class Private;
+    Private *d;
 };
 
+}
 
 #endif
