@@ -128,7 +128,21 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
 
   bool success = true;
 
-  if (icalcomponent_isa(calendar) != ICAL_VCALENDAR_COMPONENT) {
+  if (icalcomponent_isa(calendar) == ICAL_XROOT_COMPONENT) {
+    icalcomponent *comp;
+    for ( comp = icalcomponent_get_first_component(calendar, ICAL_VCALENDAR_COMPONENT);
+          comp != 0; comp = icalcomponent_get_next_component(calendar, ICAL_VCALENDAR_COMPONENT) ) {
+      // put all objects into their proper places
+      if ( !mImpl->populate( cal, comp ) ) {
+        kdDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
+        if ( !exception() ) {
+          setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
+        }
+        success = false;
+      } else
+        mLoadedProductId = mImpl->loadedProductId();
+    }
+  } else if (icalcomponent_isa(calendar) != ICAL_VCALENDAR_COMPONENT) {
     kdDebug(5800) << "ICalFormat::load(): No VCALENDAR component found" << endl;
     setException(new ErrorFormat(ErrorFormat::NoCalendar));
     success = false;
