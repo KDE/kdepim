@@ -45,9 +45,13 @@ static const char *kpilotconfigdialog_id =
 #include <qlineedit.h>
 #include <qtabwidget.h>
 #include <qspinbox.h>
+#include <qfile.h>
 
 #include <kmessagebox.h>
 #include <kcharsets.h>
+#include <kstandarddirs.h>
+#include <kglobal.h>
+#include <kio/job.h>
 
 #include "kpilotConfig.h"
 #include "kpilotSettings.h"
@@ -451,11 +455,34 @@ void StartExitConfigPage::load()
 	unmodified();
 }
 
+
 /* virtual */ void StartExitConfigPage::commit()
 {
 	FUNCTIONSETUP;
 
+	QString autostart = KGlobalSettings::autostartPath();
+	QString desktopfile = CSL1("kpilotdaemon.desktop");
+	QString desktopcategory = CSL1("kde/");
+	QString location = KGlobal::dirs()->findResource("xdgdata-apps",desktopcategory + desktopfile);
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Autostart=" << autostart << endl;
+	DEBUGDAEMON << fname << ": desktop=" << desktopfile << endl;
+	DEBUGDAEMON << fname << ": location=" << location << endl;
+#endif
+	
 	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
+	if (KPilotSettings::startDaemonAtLogin())
+	{
+		if (!location.isEmpty())
+		{
+			KIO::symlink(location,autostart+desktopfile,true);
+		}
+	}
+	else
+	{
+		QFile::remove(autostart+desktopfile);
+	}
 	KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
 	KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
 	KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());
