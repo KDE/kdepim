@@ -98,6 +98,7 @@ void GroupwareUploadJob::uploadItem()
   if ( mChangedItems.isEmpty() ) {
     uploadNewItem();
   } else {
+    kdDebug(5800)<<"We still have "<<mAddedItems.count()<<" changed items to upload"<<endl;
     GroupwareUploadItem *item = mChangedItems.front();
     if ( !item ) {
       mChangedItems.pop_front();
@@ -113,6 +114,7 @@ void GroupwareUploadJob::uploadItem()
     }
     KURL url( mBaseUrl );
     url.setPath( remote );
+    adaptor()->setUserPassword( url );
     mUploadJob = adaptor()->createUploadJob( url, item );
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
       SLOT( slotUploadJobResult( KIO::Job * ) ) );
@@ -153,6 +155,7 @@ void GroupwareUploadJob::uploadNewItem()
 {
   kdDebug(5800)<<"GroupwareUploadJob::uploadNewItem()"<<endl;
   if ( !mAddedItems.isEmpty() ) {
+    kdDebug(5800)<<"We still have "<<mAddedItems.count()<<" new items to upload"<<endl;
     GroupwareUploadItem *item = mAddedItems.front();
     if ( !item ) {
       delete mAddedItems.front();
@@ -163,6 +166,7 @@ void GroupwareUploadJob::uploadNewItem()
     QString uid = item->uid();
     
     KURL url( adaptor()->folderLister()->writeDestinationId() );
+    adaptor()->setUserPassword( url );
     adaptor()->adaptUploadUrl( url );
     kdDebug(5800) << "Put new URL: " << url.url() << endl;
     
@@ -178,6 +182,7 @@ void GroupwareUploadJob::uploadNewItem()
       SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
       SLOT( cancelSave() ) );
   } else {
+    kdDebug(5800)<<"We are finished uploading all items. Setting progress to completed."<<endl;
     if ( mUploadProgress ) {
       mUploadProgress->setComplete();
       mUploadProgress = 0;
@@ -193,6 +198,7 @@ void GroupwareUploadJob::slotUploadNewJobResult( KIO::Job *job )
   if ( !trfjob ) return;
 
   if ( job->error() ) {
+kdDebug(7000) << "   error!!!, string="<<job->errorString()<<endl;
     error( job->errorString() );
   } else {
 //     TODO: Don't update the etag, but instead let the download job download that new
