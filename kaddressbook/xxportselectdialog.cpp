@@ -75,7 +75,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
 
   int count = mCore->selectedUIDs().count();
   mUseSelection->setEnabled( count != 0 );
-  mUseSelection->setChecked( count  > 1 );
+  mUseSelection->setChecked( count  > 0 );
 
   mSortTypeCombo->insertItem( i18n( "Ascending" ) );
   mSortTypeCombo->insertItem( i18n( "Descending" ) );
