@@ -947,19 +947,23 @@ static void queueConduits(ActionQueue *fSyncStack,
 		goto launch;
 	}
 
-	// changing the PC or using a different Palm Desktop app causes a full sync
-	// Use gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
-	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
-	usr = pilotLink->getPilotUser();
-	pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
-	if (pcchanged && KPilotSettings::fullSyncOnPCChange())
+	// Except when the user has requested a Restore, in which case she knows she doesn't
+	// want to sync with a blank palm and then back up the result over her stored backup files,
+	// do a Full Sync when changing the PC or using a different Palm Desktop app.
+	if (fNextSyncType != SyncAction::eRestore)
 	{
-		fNextSyncType = SyncAction::eFullSync;
+		// Use gethostid to determine , since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
+		// as PC_ID, so using JPilot and KPilot is the same as using two different PCs
+		usr = pilotLink->getPilotUser();
+		pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
+		if (pcchanged && KPilotSettings::fullSyncOnPCChange() )
+		{
+			fNextSyncType = SyncAction::eFullSync;
+		}
 	}
 
 	// Normal case: regular sync.
 	fSyncStack->queueInit(true);
-
 
 	conduits = KPilotSettings::installedConduits() ;
 
