@@ -34,9 +34,7 @@
 #include <config.h>
 #endif
 
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qtextview.h>
+#include "crlview.h"
 
 #include <klocale.h>
 #include <kprocess.h>
@@ -44,8 +42,10 @@
 #include <kpushbutton.h>
 #include <kstdguiitem.h>
 
-#include "crlview.h"
-#include "crlview.moc"
+#include <qlayout.h>
+#include <qlabel.h>
+#include <qtextview.h>
+#include <qfontmetrics.h>
 
 CRLView::CRLView( QWidget* parent, const char* name, bool modal )
   : QDialog( parent, name, modal ), _process(0)
@@ -72,6 +72,9 @@ CRLView::CRLView( QWidget* parent, const char* name, bool modal )
 	   this, SLOT( slotUpdateView() ) );
   connect( _closeButton, SIGNAL( clicked() ),
 	   this, SLOT( close() ) );
+
+  resize( _textView->fontMetrics().width( 'M' ) * 80,
+	  _textView->fontMetrics().lineSpacing() * 25 );
 }
 
 CRLView::~CRLView()
@@ -111,3 +114,5 @@ void CRLView::slotProcessExited()
     KMessageBox::error( this, i18n( "The GpgSM process ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
   }
 }
+
+#include "crlview.moc"
