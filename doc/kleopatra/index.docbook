@@ -170,16 +170,16 @@ top, and a statusbar at the bottom.</para>
 
 <para>Each line in the key list corresponds to one certificate,
 identified by the so-called <guilabel>Subject &dn;</guilabel>. &dn; is
-an acronyn for <quote>Distinguished Name</quote>, a hierarchical
-identifier, much like a filesystem path with a funny syntax, that is
+an acronym for <quote>Distinguished Name</quote>, a hierarchical
+identifier, much like a filesystem path with an unusual syntax, that is
 supposed to globally uniquely identify a given certificate.</para>
 
 <para>To be valid, and thus usable, (public) keys need to be signed by
 a &ca; (Certification Authority). These signatures are called
 certificates, but usually the terms <quote>certificate</quote> and
-<quote>(public) key</quote> are used interchangably, and we will not
+<quote>(public) key</quote> are used interchangeably, and we will not
 distinguish between them in this manual either, except when explicitly
-noted. The name of the &ca; which issued the certificate (it's &dn;)
+noted. The name of the &ca; which issued the certificate (its &dn;)
 is shown in the <guilabel>Issuer DN</guilabel> column.</para>
 
 <para>&ca;s must in turn be signed by other &ca;s to be valid. Of
@@ -198,7 +198,7 @@ linkend="view-hierarchical-key-list"/>.</para>
 
 <para>You can see the details of any certificate by double-clicking it
 or using <xref linkend="view-certificate-details"/>. This opens a
-dialog that shows the most common properties of the certificate, it's
+dialog that shows the most common properties of the certificate, its
 certificate chain (&ie; the chain of issuers up to the root-&ca;), and
 a dump of all information the backend is able to extract from the
 certificate.</para>
@@ -252,7 +252,7 @@ list of supported file formats.</para>
 
 <para>If you did not <link linkend="functions-newkey">create your
 keypair with &gpgsm;</link>, you also need to manually import the
-public, as well as the secret, key from the PKCS#12 file you got from
+public key (as well as the secret key) from the PKCS#12 file you got from
 the &ca;. You can do this on the command line with <link
 linkend="commandline-option-import-certificate"><userinput><command>kleopatra
 &commandline-option-import-certificate;
@@ -548,7 +548,7 @@ linkend="view-hierarchical-key-list"/> is on.)</para>
 <para><action>Collapses all list items in the certificate list
 view,</action> &ie; hides all but the top-level items.</para>
 
-<para>You can still expand and collapse each indivitual item by
+<para>You can still expand and collapse each individual item by
 itself, of course.</para>
 </listitem>
 </varlistentry>
@@ -803,7 +803,7 @@ linkend="file-import-certificates"/>.</para>
 <para>&kleopatra;'s configure dialog can be accessed via <xref
 linkend="settings-configure-kleopatra"/>.</para>
 
-<para>Each of its pages is decribed in the sections below.</para>
+<para>Each of its pages is described in the sections below.</para>
 
 <sect1 id="configuration-directory-services"><title>Configuring Directory Services</title>
 
@@ -1092,7 +1092,7 @@ C=DE
       </para>
 
       <table id="table-key-filters-appearance">
-	<title>Key Filter Configuration Keys Defining Display
+	<title>Key-Filter Configuration Keys Defining Display
 	Properties</title>
 	<tgroup cols="3">
 	  <colspec colnum="2" align="center"/>
@@ -1173,7 +1173,7 @@ C=DE
       </table>
 
       <table id="table-key-filters-criteria">
-	<title>Key Filter Configuration Keys Defining Filter Criteria</title>
+	<title>Key-Filter Configuration Keys Defining Filter Criteria</title>
 	<tgroup cols="3">
 	  <colspec colnum="2" align="center"/>
 	  <thead>
