@@ -41,7 +41,7 @@ void filter_ldif::import(filterInfo *info) {
 
    _file=KFileDialog::getOpenFileName(dir,"*.ldif *.LDIF *.Ldif",parent);
    if (_file.length()==0) {
-     info->alert(name(),i18n("No Addressbook choosen"));
+     info->alert(name(),i18n("No Addressbook chosen"));
      return;
    }
 	 strcpy(file,_file.latin1());	//lukas: FIXME no strcpy nor .latin1() for filenames!!!
@@ -57,7 +57,7 @@ void filter_ldif::import(filterInfo *info) {
 
    info->current(100.0);
    info->overall(100.0);
-   info->current(i18n("Done converting .LDIF address file to Kab"));
+   info->current(i18n("Finished converting .LDIF address file to Kab"));
 }
 
 

@@ -45,7 +45,7 @@ QWidget *parent=info->parent();
 FILE   *F;
 
    if (!kabStart(info)) { 
-     info->alert(name(),i18n("Unable to open K Addressbook"));
+     info->alert(name(),i18n("Unable to open KAddressbook"));
    }
 
    sprintf(dir,getenv("HOME"));
@@ -110,7 +110,7 @@ FILE   *F;
      }
 
    kabStop(info);
-   info->current(i18n("Done converting Eudora Light addresses to Kab"));
+   info->current(i18n("Finished converting Eudora Light addresses to Kab"));
    fclose(F);
    info->overall(100.0);
 }

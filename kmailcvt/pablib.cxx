@@ -28,7 +28,7 @@ pab::pab(const char *_pabfile,filter *_f,filterInfo *_info)
   f=_f;
   info=_info;
   in=fopen(pabfile,"rb");
-  cap=i18n("Import MS-Exchange Personal Addressbook (.PAB)");
+  cap=i18n("Import MS Exchange Personal Addressbook (.PAB)");
 }
 
 

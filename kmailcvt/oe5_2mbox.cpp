@@ -73,7 +73,7 @@ char s[1024];
       break;
       case OE_NOTOEBOX :
         {QString msg;
-           msg=i18n("%1 is not an OE5 mailbox").arg(folderIn);
+           msg=i18n("%1 is not an Outlook Express 5 mailbox").arg(folderIn);
            info->alert(CAP,msg);
         }
       break;
@@ -86,7 +86,7 @@ char s[1024];
     }
   }
   else {QString msg;
-    msg=i18n("%1 mails read, %2 were new kmail folder").arg(mails).arg(added);
+    msg=i18n("%1 mails read, %2 were new KMail folders").arg(mails).arg(added);
     info->log(msg);
   }
 
@@ -157,7 +157,7 @@ static float perc=0.0;
           f=fopen(s,"rb");
           if (f==NULL) {QString msg;
             msg.sprintf(" ('%s')",s);
-            msg=i18n("FATAL: Cannot open just made TEMP file for reading")+msg;
+            msg=i18n("FATAL: Unable to open for reading the TEMP file that was just created")+msg;
             INFO->alert(CAP,msg);
             status=-1;
           }

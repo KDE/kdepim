@@ -52,12 +52,12 @@ void filter_pmail::import(filterInfo *info)
 
    msg = i18n("Select the Pegasus-Mail directory on your system.\n\n"
               "This import filter will import your folders, but not\n"
-              "the folder structure. But you'll probably only do\n"
-              "this one time ;-).\n\n"
+              "the folder structure. But you will probably only do\n"
+              "this one time.\n\n"
               "NOTE: Kmailcvt creates folders with the prefix 'pmail-'.\n"
-              "If this causes trouble to you (you've got kmail folders\n"
-              "with that prefix) cancel this import function (next dialog\n"
-              "will let you do that) and rename the existing kmail\n"
+              "If this causes problems for you (you have KMail folders\n"
+              "with that prefix), cancel this import function (the next dialog\n"
+              "will allow you to do that) and rename the existing KMail\n"
               "folders."
              );
    info->alert(CAP,msg);

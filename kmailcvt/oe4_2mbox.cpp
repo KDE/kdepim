@@ -86,7 +86,7 @@ char s[1024];
     }
   }
   else {QString msg;
-    msg=i18n("%n mail read, %1 were new kmail folder", "%n mails read, %1 were new kmail folder", mails).arg(added);
+    msg=i18n("%n mail read, %1 were new KMail folders", "%n mails read, %1 were new KMail folders", mails).arg(added);
     info->log(msg);
   }
 
@@ -157,7 +157,7 @@ static float perc=0.0;
           f=fopen(s,"rb");
           if (f==NULL) {QString msg;
             msg.sprintf(" ('%s')",s);
-            msg=i18n("FATAL: Cannot open just made TEMP file for reading")+msg;
+            msg=i18n("FATAL: Unable to open for reading the TEMP file that was just created")+msg;
             INFO->alert(CAP,msg);
             status=-1;
           }
