@@ -32,29 +32,23 @@ public:
   void import(FilterInfo *info);	
 
 protected:
-  /** updates currentFile and the overall progress bar */
-  void nextFile();
   /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-  void processFiles(const char *mask,  void(FilterPMail::* workFunc)(const char*) );
-  /** counts all files with mask (e.g. '*.cnm') in in a directory */
-  int countFiles(const char *mask);
+  void processFiles(QString mask,  void(FilterPMail::* workFunc)(QString) );
   /** this function imports one *.CNM message */
-  void importNewMessage(const char *file);
+  void importNewMessage(QString file);
   /** this function imports one mail folder file (*.PMM) */
-  void importMailFolder(const char *file);
+  void importMailFolder(QString file);
   /** imports a 'unix' format mail folder (*.MBX) */
-  void importUnixMailFolder(const char *file);
+  void importUnixMailFolder(QString file);
 private:
   /** the working directory */
-  QString dir;
+  QDir dir;
   /**  */
   FilterInfo * inf;
   /** which file (of totalFiles) is now in the work? */
   int currentFile;
   /** total number of files that get imported */
   int totalFiles;
-  /** Our parent widget */
-  QWidget * par;
 };
 
 #endif

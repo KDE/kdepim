@@ -24,6 +24,8 @@
 #include <kfiledialog.h>
 #include <qregexp.h>
 #include <ktempfile.h>
+#include <qfileinfo.h>
+#include <kdebug.h>
 
 #include "filter_pmail.hxx"
 
@@ -52,113 +54,65 @@ FilterPMail::~FilterPMail()
 
 void FilterPMail::import(FilterInfo *info)
 {
-   QString  chosen;
-
    inf = info;
-   par = info->parent();
 
    // Select directory from where I have to import files
-   chosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),par);
-   if (chosen.isEmpty()) { return; } // No directory choosen here!
-   dir = chosen;
+   QString chosenDir=KFileDialog::getExistingDirectory(QDir::homeDirPath(),info->parent());
+   if (chosenDir.isEmpty()) {
+      info->alert(i18n("No directory selected"));
+      return;
+   }
 
    // Count total number of files to be processed
    info->log(i18n("Counting files..."));
-   totalFiles = countFiles(".cnm");
-   totalFiles += countFiles(".pmm");
-   totalFiles += countFiles(".mbx");
-
-   //msg=i18n("Searching for distribution lists ('.pml')...");
-   //info->log(msg);
-   //totalFiles += countFiles(chosen, "*.pml");
+   dir.setPath (chosenDir);
+   QStringList files = dir.entryList("*.cnm; *.pmm; *.mbx", QDir::Files, QDir::Name);
+   totalFiles = files.count();
+   kdDebug() << "Count is " << totalFiles << endl;
 
    info->log(i18n("Importing new mail files ('.cnm')..."));
-   processFiles(".cnm", &FilterPMail::importNewMessage);
+   processFiles("*.cnm", &FilterPMail::importNewMessage);
    info->log(i18n("Importing mail folders ('.pmm')..."));
-   processFiles(".pmm", &FilterPMail::importMailFolder);
+   processFiles("*.pmm", &FilterPMail::importMailFolder);
    info->log(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
-   processFiles(".mbx", &FilterPMail::importUnixMailFolder);
+   processFiles("*.mbx", &FilterPMail::importUnixMailFolder);
 }
-
-
-/** counts all files with mask (e.g. '*.cnm') in
-in a directory */
-int FilterPMail::countFiles(const char *mask)
-{
-   DIR *d;
-   struct dirent *entry;
-   d = opendir(QFile::encodeName(dir));
-   int n = 0;
-
-   entry=readdir(d);
-   while (entry!=NULL) {
-      char *file=entry->d_name;
-      if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],mask)==0)
-         n++;
-      entry=readdir(d);
-   }
-   closedir(d);
-
-   return n;
-}
-
-
-/** updates currentFile and the progress bar */
-void FilterPMail::nextFile()
-{
-   currentFile++;
-   inf->overall( 100 * currentFile / totalFiles );
-}
-
 
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
-void FilterPMail::processFiles(const char *mask, void(FilterPMail::* workFunc)(const char*) )
+void FilterPMail::processFiles(QString mask, void(FilterPMail::* workFunc)(QString) )
 {
-   DIR *d;
-   struct dirent *entry;
-   d = opendir(QFile::encodeName(dir));
+   QStringList files = dir.entryList(mask, QDir::Files, QDir::Name);
+   kdDebug() << "Mask is " << mask << " count is " << files.count() << endl;
+   for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
+      // Notify current file
+      QFileInfo mailfileinfo(*mailFile);
+      inf->from(mailfileinfo.fileName());
 
-   entry=readdir(d);
-   while (entry!=NULL) {
-      char *file=entry->d_name;
-      if (strlen(file)>4 && strcasecmp(&file[strlen(file)-4],mask)==0) {
+      // Clear the other fields
+      inf->to(QString::null);
+      inf->current(QString::null);
+      inf->current(-1);
 
-         // Notify current file
-         inf->from(file);
-
-         // Clear the other fields
-         inf->to(QString::null);
-         inf->current(QString::null);
-         inf->current(-1);
-
-         // combine dir and filename into a path
-         QString path = dir;
-         path.append("/");
-         path.append(file);
-
-         // call worker function, increase progressbar
-         (this->*workFunc)(QFile::encodeName(path));
-         nextFile();
-      }
-      entry=readdir(d);
+      // call worker function, increase progressbar
+      inf->log(i18n("Importing %1").arg(*mailFile));
+      (this->*workFunc)(dir.filePath(*mailFile));
+      currentFile++;
+      inf->overall( 100 * currentFile / totalFiles );
    }
-   closedir(d);
 }
 
 
 /** this function imports one *.CNM message */
-void FilterPMail::importNewMessage(const char *file)
+void FilterPMail::importNewMessage(QString file)
 {
-   const char* destFolder = "PMail-New Messages";
-
-   inf->to(QString(destFolder));
-
+   QString destFolder("PMail-New Messages");
+   inf->to(destFolder);
    addMessage(inf, destFolder, file);
 }
 
 
 /** this function imports one mail folder file (*.PMM) */
-void FilterPMail::importMailFolder(const char *file)
+void FilterPMail::importMailFolder(QString file)
 {
    struct {
       char folder[86];
@@ -201,7 +155,7 @@ void FilterPMail::importMailFolder(const char *file)
    // 04dc60 0d 0a 1a
 
    // open the message
-   f = fopen(file, "rb");
+   f = fopen(QFile::encodeName(file), "rb");
 
    // Get folder name
    fread(&pmm_head, sizeof(pmm_head), 1, f);
@@ -257,7 +211,7 @@ void FilterPMail::importMailFolder(const char *file)
 
 
 /** imports a 'unix' format mail folder (*.MBX) */
-void FilterPMail::importUnixMailFolder(const char *file)
+void FilterPMail::importUnixMailFolder(QString file)
 {
    #define MAX_LINE 4096
    #define MSG_SEPERATOR_START "From "
