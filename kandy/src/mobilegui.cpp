@@ -490,9 +490,9 @@ void MobileGui::mergePhonebooks()
       } else {
         // Merge mobileEntrys
         // This alters the mobile and kab lists. Perhaps we should reflect this in the GUI.
-        QString text = "<b>Kab Entry:</b><br>";
+        QString text = "<b>" + i18n("Kab Entry:") + "</b><br>";
         text += "  " + kabEntry->mName + " " + kabEntry->mPhone + "<br>";
-        text += "<b>Mobile Entry:</b><br>";
+        text += "<b>" + i18n("Mobile Entry:") + "</b><br>";
         text += "  " + mobileEntry->mName + " " + mobileEntry->mPhone;
       
         QMessageBox *msg = new QMessageBox(i18n("Conflicting Entries"),text,
