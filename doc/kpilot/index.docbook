@@ -8,11 +8,11 @@
 
 <!-- TODO:
 
-	Make HotSync consistent
 	Add link to IR-HOWTO
 	Check all commands
 	Fixup all the dubious trademark things, marked in the
 		docbook source with "TM?" in a comment.
+	Fix american / english spelling
 -->
 
 <book lang="&language;">
@@ -183,7 +183,7 @@ vastly expanded.
 <listitem>
 <para>
 New in 3.1.13 -
-You can now sync - experimentally - with &UNIX; style mailboxes.
+You can now HotSync - experimentally - with &UNIX; style mailboxes.
 The popmail conduit will read a standard mailbox and copy it to the &PalmPilot;.
 The &GUI; has been improved and some issues with various 
 <acronym>OS</acronym> distributions
@@ -352,14 +352,14 @@ or the toolbar icon
 </inlinemediaobject>
 </guiicon>.  
 When you do,
-the status bar will ask you to press the hot-sync button on the
+the status bar will ask you to press the HotSync button on the
 cradle.  
 Assuming everything is set up properly you should see the
 &PalmPilot; begin to sync and a message box telling you what databases are
 being backed up.  This will back up your entire &PalmPilot; into your local
 directory.  
 Note that this may take a little while, however a normal
-hot-sync is significantly faster.
+HotSync is significantly faster.
 </para>
 
 <sect2 id="general">
@@ -430,7 +430,7 @@ check to see if this name matches the one on the &PalmPilot;.  If they do
 not, you are asked to pick which you will use.  If you pick the local
 name, the &PalmPilot; will be changed to match.  This is also used to store
 the information synced from the &PalmPilot;.  For example, if I were to
-hot-sync my &PalmPilot; on your machine, it would store the data into a
+HotSync my &PalmPilot; on your machine, it would store the data into a
 subdirectory named <filename>pilone</filename>.
 </para>
 </listitem>
@@ -441,7 +441,7 @@ subdirectory named <filename>pilone</filename>.
 
 
 <varlistentry><term><guilabel>Start
-Hot-Sync Daemon at login</guilabel></term>
+HotSync Daemon at login</guilabel></term>
 <listitem>
 <para>
  By
@@ -452,15 +452,15 @@ needed if the daemon is docked in the panel.
 </listitem>
 </varlistentry>
 
-<varlistentry><term><guilabel>Start KPilot at Hot-Sync</guilabel></term>
+<varlistentry><term><guilabel>Start KPilot at HotSync</guilabel></term>
 <listitem>
 <para>
 When the
-hot-sync button is pressed on the cradle (assuming the daemon is
+HotSync button is pressed on the cradle (assuming the daemon is
 running) &kpilot; can sync without actually starting up the 
 &GUI;. 
 However, by enabling this option the daemon will start up the &kpilot;
-&GUI; when the hot-sync begins.
+&GUI; when the HotSync begins.
 </para>
 </listitem>
 </varlistentry>
@@ -469,9 +469,11 @@ However, by enabling this option the daemon will start up the &kpilot;
 <term><guilabel>Show Daemon in KPanel</guilabel></term>
 <listitem>
 <para>
-This option lets the daemon place a little hot sync icon in
+This option lets the daemon place a little HotSync icon 
+<!-- TODO: add the icon -->
+in
 the KPanel. This icon has a menu that can be brought up with
-the right mouse button, for performing hot syncs and the like.
+the right mouse button, for performing a HotSync and the like.
 Without this option, the daemon is not visible to the user at all.
 </para>
 </listitem>
@@ -495,7 +497,7 @@ such as <application>malsync</application>
 
 <para>
 For a fully visible &kpilot; installation, 
-enable <guilabel>Start KPilot at Hot-Sync</guilabel>
+enable <guilabel>Start KPilot at HotSync</guilabel>
 and <guilabel>Show Daemon in KPanel</guilabel>
 while disabling <guilabel>Stop Daemon on exit</guilabel>.
 To make &kpilot; all but invisible,
@@ -704,7 +706,7 @@ Sync page
 
 <para>
 The sync page contains preferences relevant to
-the Hot-Sync operation on your &PalmPilot;. 
+the HotSync operation on your &PalmPilot;. 
 </para>
 
 <screenshot>
@@ -725,7 +727,7 @@ the Hot-Sync operation on your &PalmPilot;.
 When
 this is enabled any files dropped into the file install (either the
 icon docked on the panel or into the file installer in &kpilot;)
-will be installed on the &PalmPilot; during the next hot-sync.
+will be installed on the &PalmPilot; during the next HotSync.
 </para>
 </listitem>
 </varlistentry>
@@ -749,8 +751,8 @@ most recent information and will overwrite the &PalmPilot;'s copy.
 <para>
 Under some circumstances -- you have many 
 <acronym>PC</acronym>s and many &PalmPilot;s --
-you may want to perform a &quot;cleaner&quot; hot-sync every time
-instead of the &quot;quick-and-dirty&quot; hot-sync that
+you may want to perform a &quot;cleaner&quot; HotSync every time
+instead of the &quot;quick-and-dirty&quot; HotSync that
 &kpilot; does if you just have one &PalmPilot; and one <acronym>PC</acronym>.
 Just <emphasis>when</emphasis> you want to enable this 
 option is a matter of personal preference.
@@ -776,11 +778,11 @@ you can disable such a backup here.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Prefer Fast-Sync to Hot-Sync</guilabel></term>
+<term><guilabel>Prefer FastSync to HotSync</guilabel></term>
 <listitem>
 <para>
-While a hot-sync is faster than a full backup,
-a fast-sync is faster still than a hot-sync and
+While a HotSync is faster than a full backup,
+a FastSync is faster still than a HotSync and
 synchronises only those databases that have conduits.
 This means that any database without a conduit is
 not backed up and not synchronised.
@@ -842,15 +844,15 @@ for &kpilot;.
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Hot-Sync</guimenuitem>
+<guimenuitem>HotSync</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
-Starts a Hot-Sync. You should press the
-Hot-Sync button on your &PalmPilot;'s cradle.
+Starts a HotSync. You should press the
+HotSync button on your &PalmPilot;'s cradle.
 <emphasis>Note:</emphasis>
-it is not possible to cancel a Hot-Sync once
+it is not possible to cancel a HotSync once
 the request has been made.
 </para>
 </listitem>
@@ -861,14 +863,14 @@ the request has been made.
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Fast-Sync</guimenuitem>
+<guimenuitem>FastSync</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
 (not available with all installations)
-Starts a fast-sync in the same way that 
-a hot-sync is started.
+Starts a FastSync in the same way that 
+a HotSync is started.
 </para>
 </listitem>
 </varlistentry>
@@ -887,7 +889,7 @@ a hot-sync is started.
 <listitem>
 <para>
 Performs a full backup of your &PalmPilot;. This 
-is like a hot-sync, but can take several minutes.
+is like a HotSync, but can take several minutes.
 </para>
 </listitem>
 </varlistentry>
@@ -1020,7 +1022,7 @@ will cause that application to appear in &kpilot;'s main
 window.
 Any changes you make to the &PalmPilot; databases with
 the builtin applications (such as deleting a memo)
-do not take effect on the &PalmPilot; until the next hot-sync.
+do not take effect on the &PalmPilot; until the next HotSync.
 </para>
 
 <sect2 id="memo-app">
@@ -1030,7 +1032,7 @@ do not take effect on the &PalmPilot; until the next hot-sync.
 <para>
     The memo application allows you to view the memos on your &PalmPilot;,
       export them to text files, import new ones to be installed the next 
-      time you hot-sync, or edit existing ones.
+      time you HotSync, or edit existing ones.
 </para>
 
 <screenshot>
@@ -1065,7 +1067,7 @@ you to give a filename; the memo
 is written to that file.
 Take care not to overwrite existing files with this action.
 Deleting a memo does not affect the &PalmPilot;
-until the next hot-sync.
+until the next HotSync.
 </para>
 
 <para>
@@ -1074,10 +1076,10 @@ The
 button allows you to read a text file and
 add it -- as a memo -- to the &PalmPilot;.
 Importing a memo does not take effect until
-the next hot-sync.
+the next HotSync.
 Note that if you import a memo and decide that
 you do not want to have it on the &PalmPilot;
-you must perform a hot-sync (copying the memo
+you must perform a HotSync (copying the memo
 to the &PalmPilot;) and then delete the memo
 from the &PalmPilot;. It is not possible to
 delete newly-added memos from the builtin memo application.
@@ -1163,7 +1165,7 @@ files into the file list area
 or just hit the
 <guibutton>Add File</guibutton> button to add a file if you are not.  
 These files will
-be installed on your &PalmPilot; during the next hot sync if 
+be installed on your &PalmPilot; during the next HotSync if 
 <guilabel>Sync Files</guilabel>
 is checked in the 
 <link linkend="configuring-kpilot">settings dialog</link>.  
@@ -1180,12 +1182,12 @@ file is kept, so you can even drag and drop &URL;s from
 </tip>
 
 <para>
-Also, if you are using the Hot-Sync Daemon you may drag and
+Also, if you are using the HotSync Daemon you may drag and
 drop files or &URL;s 
 onto the docked icon on the tool bar.  Provided
 <guilabel>Sync Files</guilabel> is checked in the 
 <link linkend="general">settings dialog</link> they
-will be installed the next time you hot-sync.
+will be installed the next time you HotSync.
 </para>
 
 
@@ -1219,7 +1221,7 @@ Conduits can be set up by selecting
 <guimenuitem>External</guimenuitem>
 </menuchoice>.
 This allows you to select which conduits 
-to run during a hot sync and to configure those conduits.
+to run during a HotSync and to configure those conduits.
 A window similar to the following will be displayed:
 <screenshot>
 <screeninfo>The Conduit Setup Dialog</screeninfo>
@@ -1233,7 +1235,7 @@ You can drag-and-drop conduits between the two
 branches of the tree (from <guilabel>Available</guilabel>
 to <guilabel>Active</guilabel> and back again).
 Only those conduits listed under <guilabel>Active</guilabel>
-will actually run during a hot-sync.
+will actually run during a HotSync.
 </para>
 
 <sect2 id="popmail-cond">
@@ -1635,11 +1637,11 @@ conduit for &Netscape; <application>Calendar</application>.
 
 <sect1 id="hotsync">
 <title>
-Special Hotsync Questions
+Special HotSync Questions
 </title>
 
 <para>
-This section lists questions about hotsync methods that differ
+This section lists questions about HotSync methods that differ
 from the <quote>usual</quote> direct serial link method.
 </para>
 
@@ -1648,13 +1650,13 @@ from the <quote>usual</quote> direct serial link method.
 <qandaentry>
 <question>
 <para>
-How do I do an infrared (<acronym>IR</acronym>) hotsync?
+How do I do an infrared (<acronym>IR</acronym>) HotSync?
 </para>
 </question>
 <answer>
 <para>
 First of all your &PalmPilot; has to actually support 
-<acronym>IR</acronym> hotsyncs.
+<acronym>IR</acronym> HotSyncs.
 This can be achieved through various means:
 <!-- TM? -->PalmOS 3.3 
 and higher include support for it;
@@ -1671,8 +1673,8 @@ web pages for more information.
 </para>
 
 <para>
-Assuming your &PalmPilot; now has <acronym>PC</acronym> hotsync support and it
-is setup to do <acronym>IR</acronym> hotsyncs (in the hotsync preferences on the &PalmPilot;),
+Assuming your &PalmPilot; now has <acronym>PC</acronym> HotSync support and it
+is setup to do <acronym>IR</acronym> HotSyncs (in the HotSync preferences on the &PalmPilot;),
 we can turn our attention to the <acronym>PC</acronym> you will be syncing with.
 It needs an <acronym>IR</acronym> port. 
 For laptops, this is trivial, desktop <acronym>PCs</acronym> may require some
@@ -1721,7 +1723,7 @@ and you're ready!
 
 <qandaentry>
 <question>
-<para>Can I do a hot sync with my (<acronym>USB</acronym>) 
+<para>Can I do a HotSync with my (<acronym>USB</acronym>) 
 <!-- TM? -->Handspring Visor?
 </para>
 </question>
@@ -1736,7 +1738,7 @@ to the <acronym>USB</acronym> device and everything will work fine.
 </qandaentry>
 
 <qandaentry>
-<question><para>Is there any support for remote hot syncs?</para>
+<question><para>Is there any support for remote HotSyncs?</para>
 </question>
 <answer>
 <para>
@@ -1794,6 +1796,9 @@ Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
 </book>
 <!-- 
      $Log$
+     Revision 1.3  2000/12/13 15:33:40  adridg
+     Moved to newer DTDs and entities
+
      Revision 1.2  2000/12/11 23:46:10  adridg
      Adapted to standards
 
