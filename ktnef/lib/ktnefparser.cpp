@@ -30,6 +30,7 @@
 #include <qvariant.h>
 #include <kdebug.h>
 #include <kmimetype.h>
+#include <ksavefile.h>
 
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
@@ -398,24 +399,30 @@ bool KTNEFParser::extractAttachmentTo(KTNEFAttach *att, const QString& dirname)
 		return false;
 	if (!d->device_->at(att->offset()))
 		return false;
-	QFile	outfile(filename);
-	if (!outfile.open(IO_WriteOnly)) return false;
+	KSaveFile saveFile( filename );
+	QFile *outfile = saveFile.file();
+	if ( !outfile )
+		return false;
 
 	Q_UINT32	len = att->size(), sz(16384);
 	int		n(0);
 	char		*buf = new char[sz];
-	bool		done(false);
-	while (len > 0)
+	bool		ok(true);
+	while (ok && len > 0)
 	{
 		n = d->device_->readBlock(buf,QMIN(sz,len));
-		if (n < 0) goto end;
-		len -= n;
-		if (outfile.writeBlock(buf,n) != n) goto end;
+		if (n < 0)
+			ok = false;
+		else
+		{
+			len -= n;
+			if (outfile->writeBlock(buf,n) != n)
+				ok = false;
+		}
 	}
-	done = true;
+	delete [] buf;
 
-end:	outfile.close();
-	return done;
+	return ok;
 }
 
 bool KTNEFParser::extractAll()
