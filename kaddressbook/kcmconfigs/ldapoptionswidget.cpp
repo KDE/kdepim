@@ -75,6 +75,8 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
   initGUI();
 
   mHostListView->setSorting( -1 );
+  mHostListView->setAllColumnsShowFocus( true );
+  mHostListView->setFullWidth( true );
   mHostListView->addColumn( QString::null );
   mHostListView->header()->hide();
 
