@@ -10,8 +10,6 @@
         <default>false</default>
     </entry>
 
-    <!-- remainder are for internal use only -->
-
     <entry name="MemoIds"  type="IntList">
         <label>list of the synced MemoDB records</label>
         <default></default>
