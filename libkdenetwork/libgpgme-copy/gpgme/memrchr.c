@@ -30,10 +30,19 @@ memrchr (const void *block, int c, size_t size)
   unsigned char *p;
   unsigned char l;
 
-  l = c;
-  p = ((unsigned char *)block) + size;
+  /* Deal with signed weird sizes and zero size */
+  if (size < 1) return 0;
 
-  for ( ; p != block; p --)
+  l = c;
+
+  /* If size is 1, you want to look at the single byte pointed to
+     by *block ; if size is 2, you want to look at *block and *(block+1).
+     Hence, add (size-1), not size. */
+  p = ((unsigned char *)block) + (size - 1) ;
+
+  /* Must examine *block as well, so instead loop on the size, not
+     on a pointer comparison. */
+  for ( ; size>0 ; size --, p --)
     if (*p == c)
       return p;
   return 0;
