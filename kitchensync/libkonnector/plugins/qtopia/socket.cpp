@@ -248,6 +248,11 @@ void QtopiaSocket::write( Syncee::PtrList list) {
     QTextStream stream( d->socket );
     stream << "call QPE/System stopSync()" << endl;
     d->isSyncing = false;
+
+    /*
+     * now we need that it's not first sync
+     */
+    d->first = false;
 }
 /*
  * write back some Operations later ;)
