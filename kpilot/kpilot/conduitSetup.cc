@@ -510,7 +510,7 @@ void CConduitSetup::writeInstalledConduits()
 				text(CONDUIT_NAME));
 
 			KMessageBox::error(this, tmpMessage,
-				i18n("Conduit Error."));
+				i18n("Conduit Error"));
 		}
 		else if (strcmp(dbName, "<none>") == 0)
 		{
@@ -614,6 +614,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.34  2002/07/20 22:08:19  mhunter
+// Hot-Sync -> HotSync
+//
 // Revision 1.33  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"
