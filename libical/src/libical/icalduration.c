@@ -253,7 +253,7 @@ char* icaldurationtype_as_ical_string(struct icaldurationtype d)
 	    
 	}
     } else {
-	icalmemory_append_string(&buf, &buf_ptr, &buf_size, "PTS0");
+	icalmemory_append_string(&buf, &buf_ptr, &buf_size, "PT0S");
     }
  
     output_line = icalmemory_tmp_copy(buf);
