@@ -1,3 +1,28 @@
+KPilot Developer's notes for the beginning of april 2002
+========================================================
+
+2002-04-09  Adriaan de Groot
+* Did some minor debugging in setting flags for the conduits.
+
+2002-04-07  Adriaan de Groot
+* There are now two real branches of development for KPilot. KDE_3_0_BRANCH
+  gets bugfixes to the existing code, while HEAD gets new features. I imagine
+  I'll merge BRANCH back to HEAD sometime when I feel that the main bugs
+  are out (like next week, I hope). I'll be showing where patches go until
+  we merge again.
+* Added a message (no i18n) showing KPilot and pilot-link versions.
+* Still need a workaround for dlp_addSyncLogEntry() for pilot-link 0.10.1
+  [BRANCH - should go in HEAD as well]
+* Fixed Makefile.am bug in popmailconduit. [BRANCH]
+- --test mode wasn't working with kpilotTest (when running conduits) [BRANCH]
+
+2002-04-06  Adriaan de Groot
+* Applied patch to avoid crash with undefined symbol. I forget who sent
+  it in, though. Thanks to you, anonymous! Wrote a script to catch this 
+  kind of situation in the future.
+
+
+
 KPilot Developer's notes for sometime in march 2002
 ===================================================
 
