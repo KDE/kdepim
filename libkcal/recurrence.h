@@ -427,7 +427,7 @@ class Recurrence
     int rFreq;                           // frequency of period
 
     // one of the following must be specified
-    int rDuration;                       // num times to recur (inc. first occurrence), -1 = infinite
+    int rDuration;                       // num times to recur (inc. first occurrence), -1 = infinite, 0 means end date is set
     QDateTime rEndDateTime;              // date/time at which to end recurrence
     mutable QDateTime mCachedEndDT;      // calculated end date/time for duration > 0
                                          // (calculation can be significant for some recurrences)
