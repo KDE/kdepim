@@ -1,9 +1,7 @@
 /*
-    configuredialog_p.h
+    appearanceconfigpage.h
 
-    This file is part of kleopatra
-    Copyright (C) 2000 Espen Sand, espen@kde.org
-    Copyright (C) 2001-2002 Marc Mutz <mutz@kde.org>
+    This file is part of kleopatra, the KDE key manager
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
@@ -31,27 +29,22 @@
     your version.
 */
 
-// configuredialog_p.h: classes internal to ConfigureDialog
-// see configuredialog.h for details.
-
-#ifndef _CONFIGURE_DIALOG_PRIVATE_H_
-#define _CONFIGURE_DIALOG_PRIVATE_H_
+#ifndef _APPEARANCE_CONFIGURE_PAGE_H_
+#define _APPEARANCE_CONFIGURE_PAGE_H_
 
 #include <kcmodule.h>
 
 namespace Kleo {
-  class CryptoConfig;
-  class CryptoConfigEntry;
-  class DirectoryServicesWidget;
+  class AppearanceConfigWidget;
 }
 
 /**
- * DirectoryServicesConfigurationPage
+ * "Appearance" configuration page for kleopatra's configuration dialog
  */
-class DirectoryServicesConfigurationPage : public KCModule {
+class AppearanceConfigurationPage : public KCModule {
   Q_OBJECT
 public:
-  DirectoryServicesConfigurationPage( QWidget * parent=0, const char * name=0 );
+  AppearanceConfigurationPage( QWidget * parent=0, const char * name=0 );
 
   virtual void load();
   virtual void save();
@@ -61,10 +54,8 @@ private slots:
   void slotChanged();
 
 private:
-  Kleo::CryptoConfigEntry* configEntry();
+ Kleo::AppearanceConfigWidget* mWidget;
 
-  Kleo::DirectoryServicesWidget* mWidget;
-  Kleo::CryptoConfig* mConfig;
 };
 
-#endif // _CONFIGURE_DIALOG_PRIVATE_H_
+#endif // _APPEARANCE_CONFIGURE_DIALOG_PRIVATE_H_

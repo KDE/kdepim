@@ -1,5 +1,5 @@
 /*
-    configuredialog_p.cpp
+    dirservconfigpage.cpp
 
     This file is part of kleopatra
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -29,7 +29,7 @@
     your version.
 */
 
-#include "configuredialog_p.h"
+#include "dirservconfigpage.h"
 #include <qlayout.h>
 #include "directoryserviceswidget.h"
 #include <cryptplugfactory.h>
@@ -183,4 +183,4 @@ void DirectoryServicesConfigurationPage::slotChanged()
   emit changed(true);
 }
 
-#include "configuredialog_p.moc"
+#include "dirservconfigpage.moc"

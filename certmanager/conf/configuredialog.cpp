@@ -32,7 +32,8 @@
 */
 
 #include "configuredialog.h"
-#include "configuredialog_p.h"
+#include "dirservconfigpage.h"
+#include "appearanceconfigpage.h"
 #include <klocale.h>
 #include <kwin.h>
 #include <qlayout.h>
@@ -47,6 +48,7 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal 
   showButton( User1, true );
 
   addModule ( "kleopatra_config_dirserv", false );
+  addModule ( "kleopatra_config_appear", false );
 
   // We store the size of the dialog on hide, because otherwise
   // the KCMultiDialog starts with the size of the first kcm, not
