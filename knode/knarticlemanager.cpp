@@ -47,6 +47,7 @@
 #include "knarticlefilter.h"
 #include "knhdrviewitem.h"
 #include "knnetaccess.h"
+#include "knpgp.h"
 
 
 QString KNSaveHelper::lastPath;
@@ -332,6 +333,27 @@ void KNArticleManager::showHdrs(bool clear)
   updateStatusString();
   knGlobals.top->setCursorBusy(false);
 }
+
+
+void KNArticleManager::verifyPGPSignature(KNArticle* a)
+{
+  //create a PGP object and check if the posting is signed
+  KNPgp pgp;
+  pgp.setMessage(a->body());
+  if (!pgp.isSigned()) {
+    KMessageBox::sorry(knGlobals.topWidget,i18n("Cannot find a signature in this message!"));
+    return;
+  }
+  kdDebug(5003) << "KNArticleFactory::createVerify() found signed article, check it now" << endl;
+  if (pgp.goodSignature()) {
+    QString signer = pgp.signedBy();
+    QString key = pgp.signedByKey();
+    KMessageBox::sorry(knGlobals.topWidget,i18n("The signature is valid.\nThe message was signed by %1.").arg(signer));
+  }
+  else {
+    KMessageBox::error(knGlobals.topWidget,i18n("This signature is invalid!"));
+  }
+}                                                                                                                                    
 
 
 void KNArticleManager::updateViewForCollection(KNArticleCollection *c)

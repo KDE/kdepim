@@ -55,6 +55,9 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knstringsplitter.cpp \
                   utilities.cpp \
                   \
+                  knpgp.cpp \
+                  knpgpbase.cpp \
+                  \
                   knlistbox.cpp \
                   knlistview.cpp \
                   knfocuswidget.cpp \
@@ -114,6 +117,9 @@ noinst_HEADERS =  knconfigmanager.h \
                   \
                   knstringsplitter.h \
                   utilities.h \
+                  \
+                  knpgp.h \
+                  knpgpbase.h \
                   \
                   knlistbox.h \
                   knlistview.h \

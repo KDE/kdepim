@@ -38,6 +38,7 @@ KNConfigManager::KNConfigManager(QObject *p, const char *n) : QObject(p, n), d_i
   p_ostNewsTechnical  = new KNConfig::PostNewsTechnical();
   p_ostNewsCompose    = new KNConfig::PostNewsComposer();
   c_leanup            = new KNConfig::Cleanup();
+  p_rivacy            = new KNConfig::Privacy();
 }
 
 
@@ -50,6 +51,7 @@ KNConfigManager::~KNConfigManager()
   delete p_ostNewsTechnical;
   delete p_ostNewsCompose;
   delete c_leanup;
+  delete p_rivacy;
 }
 
 
@@ -150,6 +152,11 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   list << QString(" ")+i18n("Posting News") << QString(" ")+i18n("Spelling");
   frame = addHBoxPage(list, i18n("Spell checker behavior"), BarIcon("spellcheck"));
   w_idgets.append(new KNConfig::PostNewsSpellingWidget(frame));
+
+  // Privacy
+  frame = addHBoxPage(QString(" ")+i18n("Signing/Verifying"),
+                      i18n("Protect your privacy by signing and verifying postings"), BarIcon("password"));
+  w_idgets.append(new KNConfig::PrivacyWidget(m->privacy(),frame));
 
   // Cleanup
   frame = addHBoxPage(QString(" ")+i18n("Cleanup"),i18n("Preserving disk space"), BarIcon("wizard"));

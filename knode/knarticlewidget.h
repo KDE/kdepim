@@ -106,6 +106,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
             *a_ctRemail,
             *a_ctForward,
             *a_ctCancel,
+            *a_ctVerify,
             *a_ctSupersede;
     KToggleAction *a_ctToggleFullHdrs, *a_ctToggleRot13;
     KSelectAction *a_ctSetCharset;
@@ -119,6 +120,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void slotForward();
     void slotCancel();
     void slotSupersede();
+    void slotVerify();
     void slotToggleFullHdrs();
     void slotToggleRot13();
     void slotSetCharset(const QString&);

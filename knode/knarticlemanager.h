@@ -96,6 +96,9 @@ class KNArticleManager : public QObject {
     void setFolder(KNFolder *f);
     KNArticleCollection* collection();
 
+    //pgp signature check
+    void verifyPGPSignature(KNArticle* a);
+
     //article handling - RemoteArticles
     void setAllRead(bool r=true);
     void setRead(KNRemoteArticle::List *l, bool r=true);

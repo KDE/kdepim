@@ -106,6 +106,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotCancel()), a_ctions, "article_cancel");
   a_ctSupersede         = new KAction(i18n("S&upersede..."), 0 , this,
                           SLOT(slotSupersede()), a_ctions, "article_supersede");
+  a_ctVerify            = new KAction(i18n("&Verify PGP Signature"), 0, this,
+                          SLOT(slotVerify()), a_ctions, "article_verify");
   a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &all headers"), "text_block", 0 , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
@@ -474,6 +476,7 @@ void KNArticleWidget::showBlankPage()
   a_ctForward->setEnabled(false);
   a_ctCancel->setEnabled(false);
   a_ctSupersede->setEnabled(false);
+  a_ctVerify->setEnabled(false);
   a_ctToggleFullHdrs->setEnabled(false);
   a_ctToggleRot13->setEnabled(false);
   a_ctSetCharset->setEnabled(false);
@@ -502,6 +505,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctForward->setEnabled(false);
   a_ctCancel->setEnabled(false);
   a_ctSupersede->setEnabled(false);
+  a_ctVerify->setEnabled(false);
   a_ctToggleFullHdrs->setEnabled(false);
   a_ctToggleRot13->setEnabled(false);
   a_ctSetCharset->setEnabled(false);
@@ -849,11 +853,11 @@ void KNArticleWidget::createHtmlPage()
   a_ctReply->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctRemail->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctForward->setEnabled(true);
- 	a_ctCancel->setEnabled( (knGlobals.folManager->currentFolder()!=knGlobals.folManager->outbox())
- 	                         && (knGlobals.folManager->currentFolder()!=knGlobals.folManager->drafts()));
- 	a_ctSupersede->setEnabled( (knGlobals.folManager->currentFolder()!=knGlobals.folManager->outbox())
- 	                            && (knGlobals.folManager->currentFolder()!=knGlobals.folManager->drafts()));
- 	                          	
+  a_ctCancel->setEnabled( (knGlobals.folManager->currentFolder()!=knGlobals.folManager->outbox())
+                           && (knGlobals.folManager->currentFolder()!=knGlobals.folManager->drafts()));
+  a_ctSupersede->setEnabled( (knGlobals.folManager->currentFolder()!=knGlobals.folManager->outbox())
+                              && (knGlobals.folManager->currentFolder()!=knGlobals.folManager->drafts()));
+  a_ctVerify->setEnabled(true);
   a_ctToggleFullHdrs->setEnabled(true);
   a_ctToggleRot13->setEnabled(true);
   a_ctSetCharset->setEnabled(true);
@@ -1138,6 +1142,12 @@ void KNArticleWidget::slotTimeout()
 
   knGlobals.artManager->setRead(&l, true);
 }
+
+
+void KNArticleWidget::slotVerify()
+{
+  knGlobals.artManager->verifyPGPSignature(a_rticle);
+}                                                                                                                                    
 
 
 //--------------------------------------------------------------------------------------

@@ -16,7 +16,10 @@
 
 #include "knconfig.h"
 
+#include <stdlib.h>
+
 #include <qfile.h>
+#include <qfileinfo.h>
 #include <qtextstream.h>
 
 #include <kglobal.h>
@@ -718,7 +721,7 @@ KNConfig::PostNewsTechnical::~PostNewsTechnical()
 
 void KNConfig::PostNewsTechnical::save()
 {
-  kdDebug(5003) << "KNConfig::PostNewsTechnical::saveAndNotify(" << endl;
+  kdDebug(5003) << "KNConfig::PostNewsTechnical::save()" << endl;
 
   KConfig *conf=KGlobal::config();
   conf->setGroup("POSTNEWS");
@@ -859,6 +862,62 @@ void KNConfig::PostNewsComposer::save()
   conf->writeEntry("Intro", i_ntro);
   conf->writeEntry("externalEditor", e_xternalEditor);
 
+}
+
+//==============================================================================================================
+
+
+KNConfig::Privacy::Privacy()
+  : v_ersions ( QStringList() << "GnuPG 1.x" << "PGP 2.6.x" << "PGP 5" << "PGP 6" ),
+    e_ncodings ( QStringList() << "Text" )
+{
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("PRIVACY");
+
+  v_ersion = conf->readNumEntry("pgpVersion",GPG1);
+  k_eeppasswd = conf->readBoolEntry("keepPassword",false);
+  k_eyserv = conf->readEntry("keyserver");
+  e_ncoding = conf->readNumEntry("encoding",0);
+  p_rogpath = conf->readEntry("progPath");
+  if (p_rogpath.isEmpty())
+    p_rogpath = defaultProg(v_ersion);
+}
+
+
+KNConfig::Privacy::~Privacy()
+{
+}
+
+
+// overrides KNConfig::Base::save()
+void KNConfig::Privacy::save()
+{
+  kdDebug(5003) << "KNConfig::Privacy::save()" << endl;
+  KConfig *conf = KGlobal::config();
+  conf->setGroup("PRIVACY");
+
+  conf->writeEntry("pgpVersion",v_ersion);
+  conf->writeEntry("keepPassword",k_eeppasswd);
+  conf->writeEntry("keyserver",k_eyserv);
+  conf->writeEntry("encoding",e_ncoding);
+  conf->writeEntry("progPath",p_rogpath);
+}
+
+
+QString KNConfig::Privacy::defaultProg(int version)
+{
+  QString pgp;
+  if (version == GPG1) pgp = "/gpg";
+  else pgp = "/pgp";
+
+  QStringList pSearchPaths=QStringList::split(':',QString::fromLocal8Bit(getenv("PATH")));
+
+  for (QStringList::Iterator it = pSearchPaths.begin(); it != pSearchPaths.end(); ++it ) {
+    if (QFileInfo((*it)+pgp).isExecutable())
+      return (*it)+pgp;
+  }
+
+  return QString::null;
 }
 
 

@@ -15,6 +15,7 @@
   <Menu noMerge="1" name="view"><text>&amp;View</text>
     <Action name="view_showAllHdrs"/>
     <Action name="view_rot13"/>
+    <Action name="article_verify"/>
     <Action name="set_charset"/>
   </Menu>
   <Menu name="article"><text>&amp;Article</text>

@@ -123,6 +123,7 @@ class KNComposer : public KMainWindow  {
     void slotInsertFile();
     void slotInsertFileBoxed();
     void slotAttachFile();
+    void slotSignArticle();
     void slotRemoveAttachment();
     void slotAttachmentProperties();
     void slotUndoRewrap();

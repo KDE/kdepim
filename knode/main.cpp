@@ -45,6 +45,7 @@ int main(int argc, char* argv[])
   aboutData.addAuthor("Christian Thurner",I18N_NOOP("Maintainer"),"cthurner@freepage.de");
   aboutData.addAuthor("Christian Gebauer",0,"gebauer@bigfoot.com");
   aboutData.addAuthor("Dirk Mueller",0,"mueller@kde.org");
+  aboutData.addAuthor("Mathias Waack",0,"mathias@atoll-net.de");
   aboutData.addCredit("Stephan Johach",0,"lucardus@onlinehome.de");
   aboutData.addCredit("Matthias Kalle Dalheimer",0,"kalle@kde.org");
 

@@ -34,6 +34,7 @@
 #include <kedittoolbar.h>
 #include <kio/netaccess.h>
 #include <kfiledialog.h>
+#include <kdebug.h>
 
 #include "kngroupmanager.h"
 #include "kngroupselectdialog.h"
@@ -46,7 +47,7 @@
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"
-
+#include "knpgp.h"
 
 
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit)
@@ -93,7 +94,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   types.append(i18n("&News Article"));
   types.append(i18n("E-&Mail"));
   types.append(i18n("News &Article && E-Mail"));
-  a_ctSetType = new KSelectAction(i18n("&Type"), 0, actionCollection(), "set_type");
+  a_ctSetType = new KSelectAction(i18n("Message &Type"), 0, actionCollection(), "set_type");
   a_ctSetType->setItems(types);
   connect(a_ctSetType, SIGNAL(activated(int)),
     this, SLOT(slotSetType(int)));
@@ -145,6 +146,9 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
+
+  new KAction(i18n("Sign Article with &PGP"), 0, this, SLOT(slotSignArticle()),
+                  actionCollection(), "sign_article");
 
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
                                     SLOT(slotRemoveAttachment()), actionCollection(), "remove_attachment");
@@ -756,6 +760,22 @@ void KNComposer::slotRemoveAttachment()
 
     a_ttChanged=true;
   }
+}
+
+void KNComposer::slotSignArticle()
+{
+  QString text = v_iew->e_dit->text();
+  KNPgp pgp;
+  pgp.setMessage(text);
+  //kdDebug(5003) << "message text is " << endl << text << endl;
+  //KNHeaders::From *from = article()->from
+  pgp.setUser(article()->from()->email());
+  kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
+  if (!pgp.sign())
+    KMessageBox::error(this,i18n("Sorry, couldn't sign this message!\n%1").arg(pgp.lastErrorMsg()));
+  //kdDebug(5003) << "signed message: " << endl << pgp.message() << endl;
+  v_iew->e_dit->setText( pgp.message() );
+  v_iew->e_dit->setModified(true);
 }
 
 
