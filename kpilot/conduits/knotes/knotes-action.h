@@ -80,9 +80,6 @@ protected:
 
 	void resetIndexes();
 
-	static const char * const noteIdsKey;
-	static const char * const memoIdsKey;
-
 protected slots:
 	void process();
 

@@ -83,7 +83,7 @@ NoteAndMemo NoteAndMemo::findNote(const QValueList<NoteAndMemo> &l ,KNoteID_pt n
 {
 	FUNCTIONSETUP;
 
-	for (QValueList<NoteAndMemo>::ConstIterator it =l.begin();
+	for (QValueList<NoteAndMemo>::ConstIterator it = l.begin();
 		it != l.end();
 		++it)
 	{
@@ -93,7 +93,7 @@ NoteAndMemo NoteAndMemo::findNote(const QValueList<NoteAndMemo> &l ,KNoteID_pt n
 	return NoteAndMemo();
 }
 
-NoteAndMemo NoteAndMemo::findMemo(const QValueList<NoteAndMemo> &l ,int memo)
+NoteAndMemo NoteAndMemo::findMemo(const QValueList<NoteAndMemo> &l , int memo)
 {
 	FUNCTIONSETUP;
 
@@ -114,7 +114,6 @@ public:
 		fDCOP(0L),
 		fKNotes(0L),
 		fTimer(0L),
-		// fDatabase(0L),
 		fCounter(0)
 	{ } ;
 	~KNotesActionPrivate()
@@ -160,9 +159,6 @@ public:
 	bool fDeleteNoteForMemo;
 } ;
 
-
-/* static */ const char * const KNotesAction::noteIdsKey="KNoteIds";
-/* static */ const char * const KNotesAction::memoIdsKey="MemoIds";
 
 
 KNotesAction::KNotesAction(KPilotDeviceLink *o,
@@ -241,6 +237,7 @@ void KNotesAction::resetIndexes()
 	FUNCTIONSETUP;
 
 	fP->fCounter = 0;
+	fP->fRecordIndex = 0;
 	fP->fIndex = fP->fNotes.begin();
 }
 
@@ -264,9 +261,9 @@ void KNotesAction::listNotes()
 		i++;
 	}
 
-	
+
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": " 
+	DEBUGCONDUIT << fname << ": "
 		<< "Sync direction: " << getSyncDirection() << endl;
 #endif
 	delayDone();
@@ -283,14 +280,14 @@ void KNotesAction::listNotes()
 	switch(fStatus)
 	{
 	case Init:
+		resetIndexes();
 		getAppInfo();
 		getConfigInfo();
-		fStatus=ModifiedNotesToPilot;
+		fStatus = ModifiedNotesToPilot;
 		// TODO: Handle all varieties of special syncs
 		if (SyncAction::eCopyHHToPC == getSyncDirection())
 		{
 			fStatus = MemosToKNotes;
-			fP->fRecordIndex = 0;
 		}
 		break;
 	case ModifiedNotesToPilot :
@@ -383,8 +380,6 @@ void KNotesAction::getAppInfo()
 	PilotDatabase::listAppInfo(&memoInfo.category);
 
 	resetIndexes();
-
-	addSyncLogEntry(i18n("[KNotes conduit: "));
 }
 
 
@@ -512,7 +507,7 @@ bool KNotesAction::syncMemoToKNotes()
 	FUNCTIONSETUP;
 
 	PilotRecord *rec = 0L;
-	
+
 	if (SyncAction::eCopyHHToPC == getSyncDirection())
 	{
 		rec = fDatabase->readRecordByIndex(fP->fRecordIndex);
@@ -522,7 +517,7 @@ bool KNotesAction::syncMemoToKNotes()
 	{
 		rec = fDatabase->readNextModifiedRec();
 	}
-	
+
 	if (!rec)
 	{
 		if (fP->fCounter)
@@ -594,7 +589,7 @@ bool KNotesAction::syncMemoToKNotes()
 			uint c = fP->fIdList.remove(m);
 			if (!c)
 			{
-				kdWarning() << k_funcinfo 
+				kdWarning() << k_funcinfo
 					<< ": Tried to remove valid note "
 					   "and failed."
 					<< endl;
@@ -674,8 +669,6 @@ void KNotesAction::cleanupMemos()
 	fStatus=Done;
 	fDatabase->cleanup();
 	fDatabase->resetSyncFlags();
-
-	addSyncLogEntry(CSL1("]\n"));
 }
 
 
@@ -687,6 +680,13 @@ void KNotesAction::cleanupMemos()
 	case NewNotesToPilot :
 		return CSL1("NewNotesToPilot key=%1")
 			.arg(fP->fIndex.key());
+	case ModifiedNotesToPilot :
+		return CSL1("ModifiedNotesToPilot key=%1")
+			.arg(fP->fIndex.key());
+	case MemosToKNotes :
+		return CSL1("MemosToKNotes rec=%1")
+			.arg(fP->fRecordIndex);
+	case Cleanup : return CSL1("Cleanup");
 	case Done :
 		return CSL1("Done");
 	default :
