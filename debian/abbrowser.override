@@ -1,1 +1,2 @@
+abbrowser: menu-item-contains-unknown-tag kderemove /usr/lib/menu/abbrowser:7
 abbrowser: binary-without-manpage abbrowser

@@ -1,3 +1,4 @@
+kpilot: menu-item-contains-unknown-tag kderemove /usr/lib/menu/kpilot:7
 kpilot: binary-without-manpage conduitKNotes
 kpilot: binary-without-manpage kpilot
 kpilot: binary-without-manpage kpilotDaemon

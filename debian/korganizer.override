@@ -1,3 +1,4 @@
+korganizer: menu-item-contains-unknown-tag kderemove /usr/lib/menu/korganizer:7
 korganizer: binary-without-manpage alarmd
 korganizer: binary-without-manpage ical2vcal
 korganizer: binary-without-manpage korganizer
