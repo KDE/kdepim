@@ -22,6 +22,12 @@ class QPushButton;
 class QRadioButton;
 class QButtonGroup;
 
+// A standard dialog page with all the
+// settings used when sending mail, both
+// with SMTP and sendmail (in future via KMail
+// as well?)
+//
+//
 class PopMailSendPage : public setupDialogPage
 {
 	Q_OBJECT
@@ -31,12 +37,27 @@ public:
 	virtual int commitChanges(KConfig *);
 
 public slots:
+	/**
+	* Called to browse for a signature file.
+	*/
 	void browseSignature();
+	/**
+	* Called when the user changes the mode
+	* through the radio buttons. This enables /
+	* disables the relevant fields.
+	*/
+	void toggleMode();
 
 public:
 	void setMode(PopMailConduit::SendMode m);
+	PopMailConduit::SendMode getMode() const { return fMode; };
 
 private:
+	PopMailConduit::SendMode fMode;
+
+	QButtonGroup *sendGroup;
+	QRadioButton *fNoSend,*fSendmail,*fSMTP;
+
 	QLineEdit* fEmailFrom;
 	QLineEdit *fHeaders;
 	QLineEdit* fSignature;
@@ -47,37 +68,36 @@ private:
 	QLineEdit* fSMTPPort;
 } ;
 
-class PopMailUNIXPage : public setupDialogPage
-{
-	Q_OBJECT
-
-public:
-	PopMailUNIXPage(setupDialog *,KConfig *);
-	virtual int commitChanges(KConfig *);
-	virtual void setEnabled(bool);
-
-public slots:
-	void browseMailbox();
-
-private:
-	QLineEdit *fMailbox;
-	QPushButton *fMailboxBrowse;
-} ;
-
+// A standard dialog page used when receiving
+// mail, both via POP and via UNIX mailboxes
+// (and in future from KMail?)
+//
+//
 class PopMailReceivePage : public setupDialogPage
 {
 	Q_OBJECT
 
 public:
-	PopMailReceivePage(setupDialog *parent,KConfig *);
+	PopMailReceivePage(setupDialog *,KConfig *);
 	virtual int commitChanges(KConfig *);
 
-	virtual void setEnabled(bool);
-
 public slots:
+	void browseMailbox();
 	void togglePopPass();
+	void toggleMode();
+
+public:
+	void setMode(PopMailConduit::RetrievalMode m);
+	PopMailConduit::RetrievalMode getMode() const { return fMode; };
 
 private:
+	QButtonGroup *methodGroup;
+	QRadioButton *fNoReceive;
+	QRadioButton *fReceivePOP,*fReceiveUNIX;
+
+	QLineEdit *fMailbox;
+	QPushButton *fMailboxBrowse;
+
 	QLineEdit* fPopServer;
 	QLineEdit* fPopPort;
 	QLineEdit* fPopUser;
@@ -85,60 +105,17 @@ private:
 	QCheckBox* fSyncIncoming;
 	QLineEdit *fPopPass;
 	QCheckBox *fStorePass;
+
+	PopMailConduit::RetrievalMode fMode;
 } ;
 
-/* class PopMailPasswordPage : public setupDialogPage
-{
-	Q_OBJECT;
 
-public:
-	PopMailPasswordPage(setupDialog *parent,KConfig *);
-        virtual int commitChanges(KConfig *);
-
-public slots:
-	void togglePopPass();
-
-private:
-	QCheckBox* fStorePass;
-	QLineEdit* fPopPass;
-} ;
-
-*/
-
-// Now methods for both send and receive
-//
-//
-class PopMailGeneralPage : public setupDialogPage
-{
-	Q_OBJECT;
-
-public:
-	PopMailGeneralPage(setupDialog *parent,KConfig *);
-        virtual int commitChanges(KConfig *);
-
-
-private:
-
-	QButtonGroup *methodGroup;
-	QRadioButton *fNoMethod;
-	QRadioButton *fPOPMethod,*fUNIXMethod;
-
-	QButtonGroup *sendGroup;
-	QRadioButton *fNoSend,*fSendmail,*fSMTP;
-
-	void setReceiveMethod(PopMailConduit::RetrievalMode);
-	void setSendMethod(PopMailConduit::SendMode);
-
-public:
-	PopMailConduit::SendMode getSendMethod() const;
-	PopMailConduit::RetrievalMode getReceiveMethod() const;
-} ;
 
 class PopMailOptions : public setupDialog
 {
 	Q_OBJECT
 
-friend class PopMailConduit;
+friend class PopMailConduit;	// For getting the PopGroup
 public:
 	PopMailOptions(QWidget *parent=0L);
 	~PopMailOptions();
@@ -146,22 +123,8 @@ public:
 protected:
 	static const QString PopGroup;
 
-public slots:
-	void modeChangeReceive();
-	void modeChangeSend();
-
 protected:
 	virtual void setupWidget();
-
-	// Remember the different pages because there
-	// is some interaction between the general page
-	// and the others.
-	//
-	//
-	PopMailGeneralPage *pgeneral;
-	PopMailSendPage *psend; 
-	PopMailUNIXPage *punix;
-	PopMailReceivePage *ppop;
-};
+} ;
 
 #endif

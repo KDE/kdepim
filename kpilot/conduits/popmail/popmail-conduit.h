@@ -39,8 +39,12 @@ public:
 	static const char *version();
 
 
-	typedef enum RetrievalMode { NONE=0, POP=1, UNIXMailbox=2 } ;
-	typedef enum SendMode { SEND_NONE=0,
+	typedef enum RetrievalMode { 
+		RECV_NONE=0, 
+		RECV_POP=1, 
+		RECV_UNIX=2 } ;
+	typedef enum SendMode { 
+		SEND_NONE=0,
 		SEND_SENDMAIL=7,
 		SEND_SMTP=12
 		} ;

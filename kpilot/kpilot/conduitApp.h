@@ -20,14 +20,11 @@
 #include "options.h"
 #include "baseConduit.h"
 
-#ifdef KDE2
 class KAboutData;
 class KCmdLineOptions;
 class KCmdLineArgs;
-#endif
 
 
-#ifdef KDE2
 class ConduitApp
 {
 public:
@@ -47,7 +44,7 @@ public:
 		char **argv,
 		const char *rAppName,
 		const char *conduitName,
-		const char *version);
+		const char *version=0L);
 
 	/**
 	* Attaches a particular conduit to the application.
@@ -110,30 +107,5 @@ private:
 	int &fArgc;
 	char **fArgv;
 } ;
-#else
-// class ConduitApp : protected KApplication
-// {
-//   Q_OBJECT
-// 
-// public:
-// 	ConduitApp(int& argc, 
-// 		char** argv, 
-// 		const QCString& rAppName,
-// 		const char *banner);
-// 
-//   void setConduit(BaseConduit* conduit);
-//   void quit() { KApplication::quit(); }
-//   int exec();
-// 
-//   BaseConduit::eConduitMode getMode() { return fMode; }
-// 
-// protected:
-// 	BaseConduit::eConduitMode handleOptions(const char *,int&,char**);
-// 
-// private:
-//   BaseConduit* fConduit;
-//   BaseConduit::eConduitMode fMode;
-// };
-#endif
 
 #endif

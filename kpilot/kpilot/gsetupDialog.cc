@@ -256,6 +256,7 @@ int setupDialog::addPage(setupDialogPage *p)
 	FUNCTIONSETUP;
 
 	if (filename.isNull()) return QueryNull;
+	if (filename.length()<1) return QueryNull;
 
 	if (debug_level & UI_TEDIOUS)
 	{
@@ -278,7 +279,7 @@ int setupDialog::addPage(setupDialogPage *p)
 
 		int rc=KMessageBox::questionYesNo(parent,
 			msg,
-			filelabel);
+			i18n("Missing file?"));
 		
 		if (debug_level)
 		{

@@ -42,6 +42,10 @@ protected:
   int timeZone;
   VObject *fCalendar;
 
+private:
+	void getCalendar();
+
+	QString calName;
 };
 
 #endif

@@ -356,11 +356,11 @@ int PopMailConduit::retrieveIncoming(int mode)
 	FUNCTIONSETUP;
 	int count=0;
 
-	if (mode==POP)
+	if (mode==RECV_POP)
 	{
 		count=doPopQuery();
 	}
-	if (mode==UNIXMailbox)
+	if (mode==RECV_UNIX)
 	{
 		count=doUnixStyle();
 	}

@@ -25,6 +25,9 @@
 #undef KDE2
 #endif
 
+#ifdef KDE2
+#include <klocale.h>
+#endif
 
 extern int debug_level;
 extern const char *tabs;

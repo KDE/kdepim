@@ -57,6 +57,7 @@ static KCmdLineOptions conduitoptions[] =
 		"with this conduit"), 0L },
 	{ "hotsync", I18N_NOOP("HotSync the databases associated "
 		"with this conduit"), 0L },
+	{ "debug <level>", I18N_NOOP("Set debugging level"), "0" },
 	{ 0,0,0 }
 } ;
 #else
@@ -107,10 +108,12 @@ ConduitApp::ConduitApp(
 		I18N_NOOP("Project Leader"),
 		"pilone@slac.com",
 		"http://www.slac.com/pilone/kpilot_home/");
+#if 0
 	fAbout->addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
 		"adridg@cs.kun.nl",
 		"http://www.cs.kun.nl/~adridg/kpilot/");                        
+#endif
 }
 #else
 // The constructor for KDE1 places more burden on the
@@ -174,13 +177,19 @@ void ConduitApp::addOptions(KCmdLineOptions *p)
 
 KCmdLineArgs *ConduitApp::getOptions()
 {
+	KCmdLineArgs *p;
+
 	if (!fCmd)
 	{
 		addOptions(0L);
 	}
 	KApplication::addCmdLineOptions();
 
-	return KCmdLineArgs::parsedArgs();
+	p=KCmdLineArgs::parsedArgs();
+
+	debug_level = atoi(p->getOption("debug"));
+
+	return p;
 }
 #else
 

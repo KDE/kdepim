@@ -31,7 +31,7 @@ class BaseConduit : public QObject
   Q_OBJECT
 
 public:
-  enum eConduitMode { Error, HotSync, Setup, Backup, DBInfo };
+  enum eConduitMode { None, Error, HotSync, Setup, Backup, DBInfo };
 
   /**
    * The mode that this conduit should be running in will be passed to the

@@ -39,7 +39,8 @@
 // the modules are that make up a binary distribution.
 //
 //
-static char *id="$Id$";
+static const char *id=
+	"$Id$";
 
 
 // This is a generic main() function, all
@@ -49,17 +50,19 @@ static char *id="$Id$";
 //
 int main(int argc, char* argv[])
 {
+#ifdef KDE2
+	ConduitApp a(argc,argv,"null-conduit",
+		I18N_NOOP("NULL Conduit"),
+		"4.0b");
+#else
 	ConduitApp a(argc, argv, "null-conduit",
 		"\t\tNull-Conduit -- A conduit for KPilot\n"
 		"Copyright (C) 2000 Adriaan de Groot");
+#endif
 
-	if (a.getMode() != BaseConduit::Error)
-	{
-		NullConduit conduit(a.getMode());
-		a.setConduit(&conduit);
-		return a.exec();
-	}
-	return 1;
+	NullConduit conduit(a.getMode());
+	a.setConduit(&conduit);
+	return a.exec();
 }
 
 // A conduit that does nothing has a very
@@ -118,6 +121,10 @@ NullConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.6  2000/08/28 12:22:03  pilone
+// 	KDE 2.0 Cleanup patches.  Start of adding conduits as kpilot
+// services.
+//
 // Revision 1.5  2000/07/27 23:07:16  pilone
 // 	Ported the conduits.  They build.  Don't know if they work, but they
 // build.

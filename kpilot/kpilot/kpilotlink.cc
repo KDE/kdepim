@@ -1297,11 +1297,18 @@ void KPilotLink::checkPilotUser()
 
 KConfig *KPilotLink::getConfig(const QString &s)
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
 
-  KConfig* config = new KConfig(KGlobal::dirs()->findResource("config", "kpilotrc"));
-  if (!s.isNull()) config->setGroup(s);
-  return config;
+	/**
+	* This causes a crash if no instance has been created
+	* yet. A standard KDE error message reports this fact.
+	* It is a grave programming error, so we will let that
+	* stand.
+	*/
+	KConfig* config = new KConfig(KGlobal::dirs()->
+		findResource("config", "kpilotrc"));
+	if (!s.isNull()) config->setGroup(s);
+	return config;
 }
 
 PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)

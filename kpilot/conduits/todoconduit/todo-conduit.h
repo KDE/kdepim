@@ -38,6 +38,17 @@ protected:
   int timeZone;
   VObject *fCalendar;
 
+private:
+	/**
+	* Get the calendar file from whereever. This
+	* has moved to a separate function because
+	* any (translated) error messages it produces
+	* require a KApplication object, which is only
+	* created when exec() is called.
+	*/
+	void getCalendar();
+
+	QString calName;
 };
 
 #endif

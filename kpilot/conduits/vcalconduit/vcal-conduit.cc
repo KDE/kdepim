@@ -19,7 +19,8 @@
 #include <qmsgbox.h>
 
 #include <kconfig.h>
-#include <kapp.h>
+/* #include <kapp.h> */
+#include <kdebug.h>
 
 #include "kpilotlink.h"
 #include "pilotDatabase.h"
@@ -31,28 +32,19 @@
 #include "conduitApp.h"
 #include "kpilot.h"
 
-static char *id="$Id$";
+static const char *id=
+	"$Id$";
 
 
 // globals
 bool first = TRUE;
 
-FILE *logfile;
-
 int main(int argc, char* argv[])
 {
-#ifndef NO_DEBUG
-  QString fileName;
-  fileName += tmpnam(0L);
-  fileName += "-vcalconduit.log";
-  logfile = fopen(fileName.latin1(), "w+");
-  fprintf(logfile, "vcalconduit log file opened for writing\n");
-  fflush(logfile);
-#else
-  logfile = fopen("/dev/null", "w+");
-#endif
   ConduitApp a(argc, argv, "vcal_conduit",
-  	"\t\tvcal_conduit -- A conduit for KPilot\n");
+  	"Calendar / Organizer conduit",
+	"4.0");
+  a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
   VCalConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec();
@@ -61,24 +53,11 @@ int main(int argc, char* argv[])
 VCalConduit::VCalConduit(eConduitMode mode)
   : BaseConduit(mode)
 {
-  fCalendar = 0L;
-  KConfig* config = KPilotLink::getConfig(VCalSetup::VCalGroup);
-  QString calName = config->readEntry("CalFile");
-  first = config->readBoolEntry("FirstTime", TRUE);
+	FUNCTIONSETUP;
 
-  if ((fMode == BaseConduit::HotSync) || (fMode == BaseConduit::Backup)) {
-    fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
-
-    if(fCalendar == 0L) {
-      QString message;
-      message.sprintf("The VCalConduit could not open the file %s.\n "
-		      "Please configure the conduit with the correct filename and try again",calName.latin1());
-      QMessageBox::critical(0, "KPilot vCalendar Conduit Fatal Error",
-			    message.latin1());                                                 
-      exit(-1);
-    }
-  }
+	fCalendar = 0L;
 }
+
 
 VCalConduit::~VCalConduit()
 {
@@ -86,9 +65,6 @@ VCalConduit::~VCalConduit()
     cleanVObject(fCalendar);
     cleanStrTbl();
   }
-  fprintf(logfile,"---------------------------\n");
-  fflush(logfile);
-  fclose(logfile);
 }
 
 /* static */ const char *VCalConduit::version()
@@ -96,11 +72,46 @@ VCalConduit::~VCalConduit()
 	return "VCal Conduit v2.0";
 }
 
+void VCalConduit::getCalendar()
+{
+	FUNCTIONSETUP;
+
+	if (fCalendar)
+	{
+		kdDebug() << fname
+			<< ": Already have a calendar file."
+			<< endl;
+		return;
+	}
+
+	KConfig* config = KPilotLink::getConfig(VCalSetup::VCalGroup);
+	QString calName = config->readEntry("CalFile");
+	first = config->readBoolEntry("FirstTime", TRUE);
+
+	if ((fMode == BaseConduit::HotSync) || 
+		(fMode == BaseConduit::Backup)) 
+	{
+		fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
+
+		if(fCalendar == 0L) 
+		{
+			QString message(i18n(
+				"The VCalConduit could not open the file `%1'. "
+				"Please configure the conduit with the correct "
+				"filename and try again."));
+			KMessageBox::error(0, "vCalendar Conduit Fatal Error",
+			    message.arg(calName));                                                 
+			exit(-1);
+		}
+	}
+}
+
 void VCalConduit::doBackup()
 {
   PilotRecord* rec;
   int index = 0;
   
+	getCalendar();
   rec = readRecordByIndex(index++);
   
   // Get ALL entries from Pilot
@@ -114,33 +125,30 @@ void VCalConduit::doBackup()
     rec = readRecordByIndex(index++);
   }
   // save the vCalendar
-  fflush(logfile);
   saveVCal();
 }
 
 void VCalConduit::doSync()
 {
+	FUNCTIONSETUP;
+
    PilotRecord* rec;
 
+	getCalendar();
    rec = readNextModifiedRecord();
 
    // get only MODIFIED entries from Pilot, compared with the above (doBackup),
    // which gets ALL entries
    while (rec) {
-     fflush(logfile);
      if(rec->getAttrib() & dlpRecAttrDeleted) {
-       fprintf(logfile,"found deleted pilot rec, marking corresponding vobject for deletion\n");
-       fflush(logfile);
        deleteVObject(rec);
      } else {
        bool pilotRecModified = (rec->getAttrib() & dlpRecAttrDirty);
        if (pilotRecModified) {
-	 fprintf(logfile,"found modified / dirty record on pilot, updating corresponding vobject\n");
-	 fflush(logfile);
 	 updateVObject(rec);
        } else {
-	 fprintf(logfile,"weird! we asked for a modified record and got one that wasn't.\n");
-	 fflush(logfile);
+		kdDebug() << fname
+			<< "weird! we asked for a modified record and got one that wasn't.\n";
        }
      }
      
@@ -151,11 +159,7 @@ void VCalConduit::doSync()
    // now, all the stuff that was modified/new on the pilot should be
    // added to the vCalendar.  We now need to add stuff to the pilot
    // that is modified/new in the vCalendar (the opposite).	  
-   fprintf(logfile,"doing local sync\n");
-   fflush(logfile);
    doLocalSync();
-   fprintf(logfile,"local sync finished\n");
-   fflush(logfile);
    
    // now we save the vCalendar.
    saveVCal();
@@ -170,7 +174,8 @@ void VCalConduit::doSync()
  */
 void VCalConduit::updateVObject(PilotRecord *rec)
 {
-  fflush(logfile);
+	FUNCTIONSETUP;
+
   VObject *vevent;
   VObject *vo;
   QDateTime todaysDate = QDateTime::currentDateTime();
@@ -180,7 +185,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   
   vevent = findEntryInCalendar(rec->getID());
   if (!vevent) {
-    fflush(logfile);
     // no event was found, so we need to add one with some initial info
     vevent = addProp(fCalendar, VCEventProp);
     
@@ -199,8 +203,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
     addPropValue(vevent, VCRelatedToProp, "0");
     addPropValue(vevent, KPilotIdProp, numStr.setNum(dateEntry.getID()).latin1());
     addPropValue(vevent, KPilotStatusProp, "0");
-    fprintf(logfile,"the pilot record didn't exist as a vobject, new vobject created\n");
-    fflush(logfile);
   }
   
   // determine whether the vobject has been modified since the last sync
@@ -208,9 +210,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   bool vcalRecModified = (atol(fakeCString(vObjectUStringZValue(vo))) == 1);
   
   if (vcalRecModified) {
-    fprintf(logfile,"damn! the vobject has been modified on both the pilot and desktop\n");
-    fprintf(logfile,"skipping pilot update, desktop overrides...\n");
-    fflush(logfile);
     // we don't want to modify the vobject with pilot info, because it has
     // already been  modified on the desktop.  The VObject's modified state
     // overrides the PilotRec's modified state.
@@ -233,21 +232,31 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 		       dateEntry.getEventStart().tm_hour,
 		       dateEntry.getEventStart().tm_min,
 		       dateEntry.getEventStart().tm_sec);
-    if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
-    else 
-      addPropValue(vevent, VCDTstartProp, dateString.latin1());
+	if (vo)
+	{
+		setVObjectUStringZValue_(vo, 
+			fakeUnicode(dateString.latin1(), 0));
+	}
+	else 
+	{
+		addPropValue(vevent, VCDTstartProp, dateString.latin1());
+	}
   } else {
     // the event floats
     dateString.sprintf("%.4d%.2d%.2dT000000",
 		       1900 + dateEntry.getEventStart().tm_year,
 		       dateEntry.getEventStart().tm_mon + 1,
 		       dateEntry.getEventStart().tm_mday);
-    if (vo)
-      setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
-    else
-      addPropValue(vevent, VCDTstartProp, dateString.latin1());
-  }
+	if (vo)
+	{
+		setVObjectUStringZValue_(vo, 
+			fakeUnicode(dateString.latin1(), 0));
+	}
+	else
+	{
+		addPropValue(vevent, VCDTstartProp, dateString.latin1());
+	}
+}
   
   // END TIME //
   vo = isAPropertyOf(vevent, VCDTendProp);
@@ -255,8 +264,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   bool multiDay = (dateEntry.getRepeatType() == repeatDaily);
 
   if (multiDay) {
-    fprintf(logfile,"found a pilot event with is a single day repeater\n");
-    fflush(logfile);
   }
 
   QDateTime endDT;
@@ -298,16 +305,21 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 
 
   if (vo)
+  {
     setVObjectUStringZValue_(vo, fakeUnicode(dateString.latin1(), 0));
-  else if (!dateEntry.getEvent() || multiDay)
-    // we don't want to add it if it isn't there already, or if the
-    // event isn't multiday/floating.
-    // it is deprecated to have both DTSTART and DTEND set to 000000 for
-    // their times.
-    addPropValue(vevent, VCDTendProp, dateString.latin1());
+  }
+  else 
+  {
+	// we don't want to add it if it isn't there already, or if the
+	// event isn't multiday/floating.
+	// it is deprecated to have both DTSTART and DTEND set to 000000 for
+	// their times.
+	if (!dateEntry.getEvent() || multiDay)
+	{
+		addPropValue(vevent, VCDTendProp, dateString.latin1());
+	}
+  }
 
-  fprintf(logfile,"got to point after times are entered\n");
-  fflush(logfile);
   
   // ALARM(s) //
   vo = isAPropertyOf(vevent, VCDAlarmProp);
@@ -321,12 +333,17 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 			  dateEntry.getEventStart().tm_sec));
 
     int advanceUnits = dateEntry.getAdvanceUnits();
-    if (advanceUnits == advMinutes)
-      advanceUnits = 1;
-    else if (advanceUnits == advHours)
-      advanceUnits = 60;
-    else if (advanceUnits == advDays)
-      advanceUnits = 60*24;
+	switch(advanceUnits)
+	{
+	case advMinutes : advanceUnits = 1; break;
+	case advHours : advanceUnits = 60; break;
+	case advDays : advanceUnits = 60*24; break;
+	default :
+		kdDebug() << fname << ": Unknown advance units "
+			<< advanceUnits
+			<< endl;
+		advanceUnits=1;
+	}
 
     alarmDT = alarmDT.addSecs(60*advanceUnits*-(dateEntry.getAdvance()));
 
@@ -349,11 +366,11 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 
   } else {
     if (vo)
+      {
       addProp(vo, KPilotSkipProp);
+      }
   }
    
-  fprintf(logfile,"got to point after alarm is entered\n");
-  fflush(logfile);
 
   // RECURRENCE(S) //
   vo = isAPropertyOf(vevent, VCRRuleProp);
@@ -408,7 +425,8 @@ void VCalConduit::updateVObject(PilotRecord *rec)
       tmpStr.sprintf("YD%i ",dateEntry.getRepeatFrequency());
       break;
     case repeatNone:
-      fprintf(logfile,"argh! we think it repeats, but dateEntry has repeatNone!");
+      kdDebug() << fname << ": argh! we think it repeats, "
+      	<< "but dateEntry has repeatNone!\n";
       break;
     default:
       break;
@@ -428,8 +446,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
       addProp(vo, KPilotSkipProp);
   }
 
-  fprintf(logfile,"successfully entered recurrence rules, if any\n");
-  fflush(logfile);
 
   // EXCEPTION(S) //
   vo = isAPropertyOf(vevent, VCExDateProp);
@@ -449,8 +465,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
       addProp(vo, KPilotSkipProp);
   }
 
-  fprintf(logfile,"successfully entered exceptions, if any\n");
-  fflush(logfile);
 
   // SUMMARY //
   vo = isAPropertyOf(vevent, VCSummaryProp);
@@ -466,8 +480,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
       addPropValue(vevent, VCSummaryProp, tmpStr.latin1());
   }
 
-  fprintf(logfile,"successfully entered summary\n");
-  fflush(logfile);
   
   // DESCRIPTION (NOTE) //
   vo = isAPropertyOf(vevent, VCDescriptionProp);
@@ -486,9 +498,6 @@ void VCalConduit::updateVObject(PilotRecord *rec)
       addProp(vo, KPilotSkipProp);
   }
 
-  fprintf(logfile,"successfully entered attached note (description), if any\n");
-  fflush(logfile);
-
   // CLASS (SECRECY) //
   vo = isAPropertyOf(vevent, VCClassProp);
   (rec->getAttrib() & dlpRecAttrSecret) ?
@@ -503,15 +512,11 @@ void VCalConduit::updateVObject(PilotRecord *rec)
   // TURN OFF MODIFIED
   if (vo) {
     int voStatus = atol(fakeCString(vObjectUStringZValue(vo)));
-    if (voStatus != 0)
-      fprintf(logfile,"in updateVObject there was a vobject with status %d!\n",
-	      voStatus);
     setVObjectUStringZValue_(vo, fakeUnicode("0", 0));
   } else
+  {
     addPropValue(vevent, KPilotStatusProp, "0");
-  
-  fprintf(logfile,"finished updating/creating vobject\n");
-  fflush(logfile);
+	}
 }
 
 /*
@@ -529,8 +534,6 @@ void VCalConduit::deleteVObject(PilotRecord *rec)
   // user has also deleted it already in the vCalendar, and we can
   // safely do nothing.
   if (delvo) {
-    fprintf(logfile,"found the pilot event %ld in vcalendar, marking w/KPilotSkipProp...\n", rec->getID());
-    fflush(logfile);
     // we now use the additional 'KPilotSkip' property, instead of a special
     // value for KPilotStatusProp.
     addProp(delvo, KPilotSkipProp);
@@ -647,26 +650,16 @@ void VCalConduit::doLocalSync()
 	  // but we were never informed! bad pilot. naughty pilot.
 	  ASSERT(pRec);
 	  if (!pRec) {
-	    fprintf(logfile,"record somehow got deleted off pilot, we weren't told.\n");
-	    fflush(logfile);
 	  }
 	  
 	  if (!pRec) {
 	    dateEntry = new PilotDateEntry();
 	    id = 0;
-	    fprintf(logfile,"Created new pilot entry, and correcting vcalendar.\n");
-	    fflush(logfile);
 	  } else {
-	    fprintf(logfile, "retrieving old pilot entry for updating...");
-	    fflush(logfile);
 	    dateEntry = new PilotDateEntry(pRec);
-	    fprintf(logfile,"retrieved\n");
-	    fflush(logfile);
 	  }
 	} else {
 	  dateEntry = new PilotDateEntry();
-	  fprintf(logfile,"Created new pilot entry\n");
-	  fflush(logfile);
 	}
 	
 	// START TIME //
@@ -786,10 +779,6 @@ void VCalConduit::doLocalSync()
 	  dateEntry->setRepeatFrequency(1);
 	  dateEntry->setRepeatEnd(dateEntry->getEventEnd());
 	  struct tm thing = dateEntry->getEventEnd();
-	  fprintf(logfile,"set single-day recurrence: ");
-	  fprintf(logfile, "year: %d, month: %d, day: %d\n",thing.tm_year + 1900, 
-		  thing.tm_mon + 1, thing.tm_mday);
-	  fflush(logfile);
 	}
 
 	// the following block of code is adapted from calobject.cpp
@@ -1051,12 +1040,8 @@ void VCalConduit::doLocalSync()
 	  tmpStr = "0"; // no longer a modified event.
 	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
 
-	  fprintf(logfile,"wrote and updated vobject/pilot event\n");
-	  fflush(logfile);
 
 	} else {
-	  fprintf(logfile,"error! writeRecord returned a pilotID <= 0!\n");
-	  fflush(logfile);
 	}
       }
     }
@@ -1080,16 +1065,12 @@ void VCalConduit::doLocalSync()
   QList<int> deletedList;
   deletedList.setAutoDelete(TRUE);
   
-  fprintf(logfile,"dealing with deleted entries from vcalendar, if there are any\n");
-  fflush(logfile);
   
   //  Get all entries from Pilot
   while ((rec = readRecordByIndex(index++)) != 0) {
     dateEntry = new PilotDateEntry(rec); // convert to date structure
     vevent = findEntryInCalendar(rec->getID());
     if (vevent == 0L) {
-      fprintf(logfile,"found event in pilot which can't be found in vcalendar\n");
-      fflush(logfile);
 
       if (first == FALSE) {
 		// add event to list of pilot events to delete
@@ -1159,8 +1140,6 @@ void VCalConduit::doLocalSync()
 
 		for (int *j = deletedList.first(); j; j = deletedList.next()) 
 		{
-			fprintf(logfile,"deleting record %i\n",*j);
-			fflush(logfile);
 			rec = readRecordById(*j);
 			rec->setAttrib(~dlpRecAttrDeleted);
 			writeRecord(rec);

@@ -17,6 +17,7 @@ static const char *id="$Id$";
 #include <qpushbt.h>
 #include <qchkbox.h>
 #include <qlined.h>
+#include <qlayout.h>
 #include <kapp.h>
 #include <klocale.h>
 #include <kfiledialog.h>
@@ -74,27 +75,30 @@ TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig *config) :
 {
 	FUNCTIONSETUP;
 
+	QGridLayout *grid=new QGridLayout(this,2,3,SPACING);
+
   QLabel* currentLabel;
 
 
   currentLabel = new QLabel(i18n("Calendar File:"),
 			    this);
   currentLabel->adjustSize();
-  currentLabel->move(10, 10);
   
   fCalendarFile = new QLineEdit(this);
   fCalendarFile->setText(config->readEntry("CalFile", ""));
   fCalendarFile->resize(200, fCalendarFile->height());
-  fCalendarFile->move(RIGHT(currentLabel), currentLabel->y()-4);
 
   fBrowseButton = new QPushButton(i18n("Browse"), this);
   fBrowseButton->adjustSize();
-  fBrowseButton->move(RIGHT(fCalendarFile), fCalendarFile->y());
   connect(fBrowseButton, SIGNAL(clicked()), this, SLOT(slotBrowse()));
   
+	grid->addWidget(currentLabel,0,0);
+	grid->addWidget(fCalendarFile,0,1);
+	grid->addWidget(fBrowseButton,0,2);
+
   fPromptYesNo = new QCheckBox(i18n("&Prompt before changing data."), this);
   fPromptYesNo->adjustSize();
   fPromptYesNo->setChecked(config->readBoolEntry("FirstTime", TRUE));
-  fPromptYesNo->move(fCalendarFile->x(), BELOW(fCalendarFile));
 
+	grid->addWidget(fPromptYesNo,1,1);
 }

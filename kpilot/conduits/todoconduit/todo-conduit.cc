@@ -13,9 +13,11 @@
 #include <qdir.h>
 #include <qdatetm.h>
 #include <qstring.h>
-#include <kapp.h>
 #include <qmsgbox.h>
+#include <kapp.h>
+#include <kmessagebox.h>
 #include <kconfig.h>
+#include <kdebug.h>
 
 #include "kpilotlink.h"
 #include "pilotDatabase.h"
@@ -31,18 +33,12 @@
 // globals
 bool first = TRUE;
 
-FILE *logfile;
-
 int main(int argc, char* argv[])
 {
-  QString fileName;
-  fileName += tmpnam(0L);
-  fileName += "-todoconduit.log";
-  logfile = fopen(fileName.latin1(), "w+");
-  fprintf(logfile, "todoconduit log file opened for writing\n");
-  fflush(logfile);
   ConduitApp a(argc, argv, "todo_conduit",
-  	"\t\ttodo_conduit -- A conduit for KPilot\n");
+  	"ToDo-list conduit",
+	"4.0");
+  a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
   TodoConduit conduit(a.getMode());
   a.setConduit(&conduit);
   return a.exec();
@@ -52,26 +48,11 @@ int main(int argc, char* argv[])
 TodoConduit::TodoConduit(eConduitMode mode)
   : BaseConduit(mode)
 {
-  fCalendar = 0L;
-  KConfig* config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+	FUNCTIONSETUP;
 
-  QString calName = config->readEntry("CalFile");
-  first = config->readBoolEntry("FirstTime", TRUE);
-
-  if ((fMode == BaseConduit::HotSync) || (fMode == BaseConduit::Backup)) {
-    fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
-
-    if (fCalendar == 0L) {
-      QString message;
-      message.sprintf("The TodoConduit could not open the file %s.\n "
-		      "Please configure the conduit with the correct "
-		      "filename and try again",calName.latin1());
-      QMessageBox::critical(0, "KPilot Todo Conduit Fatal Error",
-			    message.latin1());
-      exit(-1);
-    }
-  }
+	fCalendar = 0L;
 }
+
 
 TodoConduit::~TodoConduit()
 {
@@ -79,22 +60,59 @@ TodoConduit::~TodoConduit()
     cleanVObject(fCalendar);
     cleanStrTbl();
   }
-  fprintf(logfile,"---------------------------\n");
-  fflush(logfile);
-  fclose(logfile);
-
 }
 
 
 /* static */ const char *TodoConduit::version()
 {
-	return "ToDo Conduit v2.0";
+	return "ToDo Conduit v4.0";
+}
+
+void TodoConduit::getCalendar()
+{
+	FUNCTIONSETUP;
+
+	KConfig* config = KPilotLink::getConfig(TodoSetup::TodoGroup);
+
+	calName = config->readEntry("CalFile");
+	first = config->readBoolEntry("FirstTime", TRUE);
+
+	delete config;
+
+	if ((fMode == BaseConduit::HotSync) || 
+		(fMode == BaseConduit::Backup)) 
+	{
+		fCalendar = Parse_MIME_FromFileName((char*)calName.latin1());
+
+		if (fCalendar == 0L) 
+		{
+			QString message(i18n(
+				"The TodoConduit could not open "
+				"the file `%1'. Please configure "
+				"the conduit with the correct "
+				"filename and try again."));
+			KMessageBox::error(0,
+				message.arg(calName),
+				i18n("Todo Conduit Fatal Error"));
+			exit(-1);
+		}
+	}
+	else
+	{
+		kdDebug() << fname
+			<< ": Called in mode "
+			<< (int) fMode
+			<< " where it makes no sense."
+			<< endl;
+	}
 }
 
 void TodoConduit::doBackup()
 {
    PilotRecord* rec;
    int index = 0;
+
+	getCalendar();
 
    rec = readRecordByIndex(index++);
 
@@ -109,22 +127,20 @@ void TodoConduit::doBackup()
      rec = readRecordByIndex(index++);
    }
    // save the todoendar
-   fprintf(logfile,"saving the calendar, doBackup() finished\n");
-   fflush(logfile);
    saveTodo();
 }
 
 void TodoConduit::doSync()
 {
+	FUNCTIONSETUP;
    PilotRecord* rec;
 
+	getCalendar();
    rec = readNextModifiedRecord();
 
    // get only MODIFIED entries from Pilot, compared with the above (doBackup),
    // which gets ALL entries
    while (rec) {
-     fprintf(logfile, "got another record in doSync\n");
-     fflush(logfile);
      if(rec->getAttrib() & dlpRecAttrDeleted)
        //	 recordDeleted(rec);
        deleteVObject(rec);
@@ -133,8 +149,10 @@ void TodoConduit::doSync()
        if (pilotRecModified)
 	 updateVObject(rec);
        else {
-	 fprintf(logfile,"weird! we asked for a modified record and got one that wasn't.\n");
-	 fflush(logfile);
+		kdDebug() << fname
+			<< ": Asked for a modified record and got "
+			   "an unmodified one."
+			<< endl;
        }
      }
 	 
@@ -145,15 +163,9 @@ void TodoConduit::doSync()
    // now, all the stuff that was modified/new on the pilot should be
    // added to the todoendar.  We now need to add stuff to the pilot
    // that is modified/new in the todoendar (the opposite).	  
-   fprintf(logfile,"starting local sync\n");
-   fflush(logfile);
    doLocalSync();
-   fprintf(logfile,"local sync finished\n");
-   fflush(logfile);
 
    // now we save the todoendar.
-   fprintf(logfile,"saving the calendar, doSync() finished\n");
-   fflush(logfile);
    saveTodo();
 }
 
@@ -166,8 +178,6 @@ void TodoConduit::doSync()
  */
 void TodoConduit::updateVObject(PilotRecord *rec)
 {
-  fprintf(logfile,"updating / creating a VObject\n");
-  fflush(logfile);
   VObject *vtodo;
   VObject *vo;
   QDateTime todaysDate = QDateTime::currentDateTime();
@@ -177,12 +187,8 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   
   vtodo=findEntryInCalendar(rec->getID());
   if (!vtodo) {
-    fprintf(logfile,"it isn't in the todo list, it's a new pilot event.\n");
-    fflush(logfile);
     // no event was found, so we need to add one with some initial info
     vtodo = addProp(fCalendar, VCTodoProp);
-    fprintf(logfile,"got here 1\n");
-    fflush(logfile);
 
     dateString.sprintf("%.2d%.2d%.2dT%.2d%.2d%.2d",
 			todaysDate.date().year(), todaysDate.date().month(),
@@ -198,11 +204,6 @@ void TodoConduit::updateVObject(PilotRecord *rec)
     addPropValue(vtodo, KPilotIdProp, numStr.setNum(todoEntry.getID()).latin1());
     addPropValue(vtodo, KPilotStatusProp, "0");
 
-    fprintf(logfile,"created initial VObject\n");    
-    fflush(logfile);
-  } else {
-    fprintf(logfile,"it is an existing VObject in the todo list.\n");
-    fflush(logfile);
   }
 
   // determine whether the vobject has been modified since the last sync
@@ -211,12 +212,7 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   if (vo)
     todoRecModified = (atol(fakeCString(vObjectUStringZValue(vo))) == 1);
   
-  fprintf(logfile,"todoRecModified = %d\n",todoRecModified);
-  fflush(logfile);
   if (todoRecModified) {
-    fprintf(logfile,"damn! the vobject has been modified on both the pilot and desktop\n");
-    fprintf(logfile,"skipping pilot update, desktop overrides...\n");
-    fflush(logfile);
     // we don't want to modify the vobject with pilot info, because it has
     // already been  modified on the desktop.  The VObject's modified state
     // overrides the PilotRec's modified state.
@@ -298,15 +294,10 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   if (vo) {
     int voStatus = atol(fakeCString(vObjectUStringZValue(vo)));
     if (voStatus != 0)
-      fprintf(logfile,"in updateVObject there was a vobject with status %d!\n",
-	      voStatus);
     setVObjectUStringZValue_(vo, fakeUnicode("0", 0));
   } else
     addPropValue(vtodo, KPilotStatusProp, "0");
   
-  fprintf(logfile,"finished updateVObject\n");
-  fflush(logfile);
-
 }
 
 /*
@@ -316,9 +307,6 @@ void TodoConduit::updateVObject(PilotRecord *rec)
 void TodoConduit::deleteVObject(PilotRecord *rec)
 {
   VObject *delvo;
-  
-  fprintf(logfile,"actually Deleting a record.\n");
-  fflush(logfile);
   
   delvo = findEntryInCalendar(rec->getID());
   // if the entry was found, it is still in the todo list.  We need to
@@ -350,6 +338,8 @@ void TodoConduit::saveTodo()
 
 void TodoConduit::doLocalSync()
 {
+	FUNCTIONSETUP;
+
   VObjectIterator i;
   VObject *vtodo = 0L;
   VObject *vo;
@@ -394,16 +384,11 @@ void TodoConduit::doLocalSync()
     vo = isAPropertyOf(vtodo, KPilotStatusProp);
     
     if (vo && (strcmp(vObjectName(vtodo), VCTodoProp) == 0)) {
-      fprintf(logfile, "doLocalSync() working on a new vTodo\n");
-      fflush(logfile);
-      
       status = 0;
       status = atoi(s = fakeCString(vObjectUStringZValue(vo)));
       deleteStr(s);
       
       if (status == 1) {
-	fprintf(logfile,"found an event with status == 1, updating...\n");
-	fflush(logfile);
 	// the event has been modified, need to write it to the pilot
 	// After using the writeRecord method, be sure and put the returned id
 	// back into the todo entry!
@@ -421,14 +406,9 @@ void TodoConduit::doLocalSync()
 	  // if this fails, somehow the record got deleted from the pilot
 	  // but we were never informed! bad pilot. naughty pilot.
 	  ASSERT(pRec);
-	  fprintf(logfile,"the event is not new to pilot, found in pilot as ptr %p\n",
-		  pRec);
-	  fflush(logfile);
 	  
 	  todoEntry = new PilotTodoEntry(pRec);
 	} else {
-	  fprintf(logfile,"the event is new.\n");
-	  fflush(logfile);
 	  todoEntry = new PilotTodoEntry();
 	}
 	
@@ -492,8 +472,6 @@ void TodoConduit::doLocalSync()
 	pRec=todoEntry->pack();
 	pRec->setAttrib(todoEntry->getAttrib() & ~dlpRecAttrDirty);
 	id = writeRecord(pRec);
-	fprintf(logfile,"wrote it to database, id is %ld\n",id);
-	fflush(logfile);
 	delete(todoEntry);
 	delete(pRec);
 	deleteStr(s2);
@@ -511,8 +489,9 @@ void TodoConduit::doLocalSync()
 	  tmpStr = "0"; // no longer a modified event.
 	  setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
 	} else {
-	  fprintf(logfile,"error! writeRecord returned a pilotID <= 0!\n");
-	  fflush(logfile);
+		kdDebug() << fname
+			<< "error! writeRecord returned a pilotID <= 0!"
+			<< endl;
 	}
        }
      }
@@ -575,8 +554,6 @@ void TodoConduit::doLocalSync()
    }
 
    for (int *j = deletedList.first(); j; j = deletedList.next()) {
-     fprintf(logfile,"deleting record %i\n",*j);
-     fflush(logfile);
      rec = readRecordById(*j);
      rec->setAttrib(~dlpRecAttrDeleted);
      writeRecord(rec);
