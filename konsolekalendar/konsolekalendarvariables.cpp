@@ -134,24 +134,32 @@ QTime KonsoleKalendarVariables::parseTime( QString str )
 {
 	int strpos = 0;
 	int startpos = 0;
-	int nums[ 4 ];
-	unsigned int len = 0;
-	
-	printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d\r\n", str.length());
-	
+	unsigned int hours;
+	unsigned int mins;
 	
 	// Time is much simpler task than date.
+
+	// TODO
+	// CHECK THIS REALLY OUT!
+	// User can add any times he/she like
 	
-	while( (len < 4) )
+	hours = findNumber( str, strpos, startpos );
+	strpos ++;
+	mins = findNumber( str, strpos, startpos );
+
+	if( hours > 23 )
 	{
-	
-		printf("2##!");
-		// get to start position
-		// 
-		nums[ len ++ ] = findNumber( str, strpos, startpos );
-		printf("Jes: %d",nums[len - 1]);			       
-			    
+		hours = 0;
 	}
+	
+	if( mins > 59 )
+	{	
+		mins = 0;
+	}
+	       
+	// printf("%d:%d\r\n",hours, mins);
+	
+	return QTime( hours, mins, 0, 0);
 	
 }
 
