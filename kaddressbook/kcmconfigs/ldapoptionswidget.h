@@ -27,6 +27,7 @@
 #include <qwidget.h>
 
 class KListView;
+class QListViewItem;
 class QPushButton;
 
 class LDAPOptionsWidget : public QWidget

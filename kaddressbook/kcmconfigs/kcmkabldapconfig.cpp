@@ -3,16 +3,9 @@
 #include <qlayout.h>
 
 #include <kaboutdata.h>
-#include <kconfig.h>
-#include <kdialog.h>
-#include <kglobal.h>
-#include <kiconloader.h>
-#include <kjanuswidget.h>
-#include <klistview.h>
 #include <klocale.h>
 
 #include "ldapoptionswidget.h"
-#include "kabprefs.h"
 
 #include "kcmkabldapconfig.h"
 

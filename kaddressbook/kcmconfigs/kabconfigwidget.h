@@ -21,31 +21,33 @@
     without including the source code for Qt in the source distribution.
 */                                                                      
 
-#ifndef KCMKABCONFIG_H
-#define KCMKABCONFIG_H
+#ifndef KABCONFIGWIDGET_H
+#define KABCONFIGWIDGET_H
 
-#include <kcmodule.h>
+#include <qwidget.h>
 
-class KABConfigWidget;
-class KAboutData;
+class QCheckBox;
 
-class KCMKabConfig : public KCModule
+class KABConfigWidget : public QWidget
 {
   Q_OBJECT
-
+  
   public:
-    KCMKabConfig( QWidget *parent = 0, const char *name = 0 );
-
-    virtual void load();
-    virtual void save();
-    virtual void defaults();
-    virtual const KAboutData* aboutData() const;
+    KABConfigWidget( QWidget *parent, const char *name = 0 );
+    
+    void restoreSettings();
+    void saveSettings();
+    void defaults();
 
   signals:
     void changed( bool );
 
+  public slots:
+    void modified();
+
   private:
-    KABConfigWidget *mConfigWidget;
+    QCheckBox *mNameParsing;
+    QCheckBox *mViewsSingleClickBox;
 };
 
 #endif
