@@ -92,7 +92,8 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
     // Recurrence damn I feared to do that
     QString type = e.attribute("rtype");
     int freq = e.attribute("rfreq").toInt();
-    bool hasEnd = e.attribute("rhasenddate");
+    bool hasEnd = e.attribute("rhasenddate").toInt();
+    kdDebug() << "HasEndDate: " << hasEnd << endl;
 
     KCal::Recurrence *rec = event->recurrence();
     start = e.attribute("created");

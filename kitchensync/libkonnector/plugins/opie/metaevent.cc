@@ -50,6 +50,12 @@ namespace {
             kdDebug() << "Old " << se->categories().join(";") << endl;
             return true;
         }
+        if ( fi->doesFloat() != se->doesFloat() ) {
+            kdDebug() << "Float " << endl;
+            kdDebug() << "New " << fi->doesFloat() << endl;
+            kdDebug() << "Old " << se->doesFloat() << endl;
+            return true;
+        }
         if ( fi->dtStart() != se->dtStart() ) {
             kdDebug() << "Date Start " << endl;
             kdDebug() << "New " << fi->dtStart().toString() << endl;
@@ -66,12 +72,6 @@ namespace {
             kdDebug() << "Description mismatch " << endl;
             kdDebug() << "New " << fi->description() << endl;
             kdDebug() << "Old " << se->description() << endl;
-            return true;
-        }
-        if ( fi->doesFloat() != se->doesFloat() ) {
-            kdDebug() << "Float " << endl;
-            kdDebug() << "New " << fi->doesFloat() << endl;
-            kdDebug() << "Old " << se->doesFloat() << endl;
             return true;
         }
         KCal::Recurrence *fiRec = fi->recurrence();
@@ -109,6 +109,8 @@ namespace {
                         kdDebug() << "End Date mismatched" << endl;
                         kdDebug() << "New " << fiRec->endDate().toString() << endl;
                         kdDebug() << "Old " << seRec->endDate().toString() << endl;
+                        kdDebug() << "Dura New: " << fiRec->duration() << endl;
+                        kdDebug() << "Dura Old: " << seRec->duration()  << endl;
                         return true;
                     }
                 }
@@ -118,7 +120,7 @@ namespace {
                     kdDebug() << "Old " << seRec->frequency() << endl;
                     return true;
                 }
-                if ( fiRec->recurStart() != seRec->recurStart() ) {
+                if ( fiRec->recurStart().date() != seRec->recurStart().date() ) {
                     kdDebug() << "Recur start " << endl;
                     kdDebug() << "New " << fiRec->recurStart().toString() << endl;
                     kdDebug() << "Old " << seRec->recurStart().toString() << endl;
@@ -128,7 +130,7 @@ namespace {
                 kdDebug() << "Does not recur" << endl;
             }
         }else{
-            kdDebug() << "Else "<< endl;
+            kdDebug() << "Else  recurrance mismatch"<< endl;
             return true;
         }
         kdDebug() << "Return  " << ret << endl;
