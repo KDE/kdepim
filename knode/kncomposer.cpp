@@ -21,6 +21,9 @@
 #include <qapplication.h>
 #include <kspelldlg.h>
 
+#include "addressesdialog.h"
+using KPIM::AddressesDialog;
+
 #include <kaccel.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
@@ -1336,13 +1339,30 @@ void KNComposer::slotGroupsChanged(const QString &t)
 
 void KNComposer::slotToBtnClicked()
 {
-  KABC::Addressee a = KABC::AddresseeDialog::getAddressee( this );
-  if ( a.isEmpty() ) return;
+  AddressesDialog dlg( this );
+  QString txt;
+  QString to = v_iew->t_o->text();
 
-  QString to=v_iew->t_o->text();
-  if(!to.isEmpty()) to+=", ";
-  to+=a.fullEmail();
+#if 0
+  QStringList lst;
+
+
+  txt = mEdtTo->text().stripWhiteSpace();
+  if ( !txt.isEmpty() ) {
+      lst = KMMessage::splitEmailAddrList( txt );
+      dlg.setSelectedTo( lst );
+  }
+
+  dlg.setRecentAddresses( RecentAddresses::self()->kabcAddresses() );
+#endif
+  if (dlg.exec()==QDialog::Rejected) return;
+
+  if(!to.isEmpty())
+      to+=", ";
+  to+=dlg.to().join(", ");
+
   v_iew->t_o->setText(to);
+
 }
 
 

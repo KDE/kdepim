@@ -1,5 +1,5 @@
 KDE_CXXFLAGS = $(USE_THREADS)
-INCLUDES= -I$(top_srcdir)/libkdenetwork $(all_includes)
+INCLUDES= -I$(top_srcdir)/libkdenetwork $(all_includes) -I$(top_srcdir)/libkdepim
 SUBDIRS = pics filters
 
 bin_PROGRAMS = knode
@@ -126,7 +126,7 @@ noinst_HEADERS =  knconfigmanager.h \
                   knglobals.h 
 
 knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-knode_LDADD   = -lkdeprint $(top_builddir)/libkdenetwork/libkdenetwork.la -lkspell -lkabc $(LIB_KFILE) $(LIBRESOLV)
+knode_LDADD   = -lkdeprint $(top_builddir)/libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la -lkspell -lkabc $(LIB_KFILE) $(LIBRESOLV)
 knode_METASOURCES = AUTO
 
 appsdir = $(kde_appsdir)/Internet
