@@ -662,7 +662,7 @@ void kio_sieveProtocol::get(const KURL& url)
 		  // ...read data...
 		  // Only read as much as we need, otherwise we slurp in the OK that
 		  // operationSuccessful() is expecting below.
-		  QByteArray dat( kMin( total_len - recv_len, 64 * 1024 ) );
+		  QByteArray dat( kMin( total_len - recv_len, ssize_t(64 * 1024 )) );
 		  ssize_t this_recv_len = read( dat.data(), dat.size() );
 
 		  if ( this_recv_len < 1 && !isConnectionValid() ) {
