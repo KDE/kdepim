@@ -280,7 +280,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @param incidence is a pointer to the Incidence to insert.
 
-       @return true on success, false on error.
+       @return true if the Incidence was successfully inserted; false otherwise.
     */
     bool addIncidence( Incidence *incidence );
 
@@ -290,7 +290,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @param incidence is a pointer to the Incidence to insert.
        @param resource is a pointer to the ResourceCalendar to be added to.
 
-       @return true on success, false on error.
+       @return true if the Incidence was successfully inserted; false otherwise.
     */
     bool addIncidence( Incidence *incidence, ResourceCalendar *resource );
 
@@ -315,7 +315,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @param event is a pointer to the Event to insert.
 
-       @return true on success, false on error.
+       @return true if the Event was successfully inserted; false otherwise.
 
        @note In most cases use
        addIncidence( Incidence *incidence ) instead.
@@ -328,7 +328,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @param event is a pointer to the Event to insert.
        @param resource is a pointer to the ResourceCalendar to be added to.
 
-       @return true on success, false on error.
+       @return true if the Event was successfully inserted; false otherwise.
 
        @note In most cases use
        addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
@@ -339,6 +339,8 @@ class LIBKCAL_EXPORT CalendarResources :
        Remove an Event from the Calendar.
 
        @param event is a pointer to the Event to remove.
+
+       @return true if the Event was successfully removed; false otherwise.
 
        @note In most cases use
        deleteIncidence( Incidence *incidence) instead.
@@ -415,7 +417,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @param todo is a pointer to the Todo to insert.
 
-       @return true on success, false on error.
+       @return true if the Todo was successfully inserted; false otherwise.
 
        @note In most cases use
        addIncidence( Incidence *incidence ) instead.
@@ -428,7 +430,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @param todo is a pointer to the Todo to insert.
        @param resource is a pointer to the ResourceCalendar to be added to.
 
-       @return true on success, false on error.
+       @return true if the Todo was successfully inserted; false otherwise.
 
        @note In most cases use
        addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
@@ -439,6 +441,8 @@ class LIBKCAL_EXPORT CalendarResources :
        Remove an Todo from the Calendar.
 
        @param todo is a pointer to the Todo to remove.
+
+       @return true if the Todo was successfully removed; false otherwise.
 
        @note In most cases use
        deleteIncidence( Incidence *incidence ) instead.
@@ -457,15 +461,13 @@ class LIBKCAL_EXPORT CalendarResources :
                          SortDirection sortDirection = SortDirectionAscending );
 
     /**
-       Return an unfiltered list of all Todos which are in-progress
-       on the specifed date.  A Todo in-progress is one which is
-       not completed, and whose starting date <= @a date <= due date.
+       Return an unfiltered list of all Todos which are due on the specified
+       date.
 
-       @param date request unfiltered Todos in-progress on this QDate.
+       @param date request unfiltered Todos due on this QDate.
 
-       @return the list of unfiltered Todos in-progress on the specified date.
+       @return the list of unfiltered Todos due on the specified date.
     */
-    //TODO: rewrite rawTodosForDate() according to the description above
     Todo::List rawTodosForDate( const QDate &date );
 
     /**
@@ -485,7 +487,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @param journal is a pointer to the Journal to insert.
 
-       @return true on success, false on error.
+       @return true if the Journal was successfully inserted; false otherwise.
 
        @note In most cases use
        addIncidence( Incidence *incidence ) instead.
@@ -498,7 +500,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @param journal is a pointer to the Journal to insert.
        @param resource is a pointer to the ResourceCalendar to be added to.
 
-       @return true on success, false on error.
+       @return true if the Journal was successfully inserted; false otherwise.
 
        @note In most cases use
        addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
@@ -509,6 +511,8 @@ class LIBKCAL_EXPORT CalendarResources :
        Remove a Journal from the Calendar.
 
        @param journal is a pointer to the Journal to remove.
+
+       @return true if the Journal was successfully removed; false otherwise.
 
        @note In most cases use
        deleteIncidence( Incidence *incidence ) instead.
