@@ -125,16 +125,16 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 			for(uint i=0; i < categories.count(); i++ ){
 			  adr.insertCategory(m_edit->categoryById(categories[i], "Contacts"  ) );
 			}
-                        adr.insertCustom("opie", "Department",  el.attribute("Department") );
+                        adr.insertCustom("KADDRESSBOOK", "X-Department",  el.attribute("Department") );
 			adr.insertCustom("opie", "HomeWebPage", el.attribute("HomeWebPage") );
-			adr.insertCustom("opie", "Spouse", el.attribute("Spouse") );
+			adr.insertCustom("KADDRESSBOOK", "X-SpouseName", el.attribute("Spouse") );
 			adr.insertCustom("opie", "Gender", el.attribute("Gender") );
-			adr.insertCustom("opie", "Anniversary", el.attribute("Anniversary") );
+			adr.insertCustom("KADDRESSBOOK", "X-Anniversary", el.attribute("Anniversary") );
 			adr.insertCustom("opie", "Children", el.attribute("Children") );
-			adr.insertCustom("opie", "Office", el.attribute("Office") );
-			adr.insertCustom("opie", "Profession", el.attribute("Profession") );
-			adr.insertCustom("opie", "Assistant", el.attribute("Assistant") );
-			adr.insertCustom("opie", "Manager", el.attribute("Manager") );
+			adr.insertCustom("KADDRESSBOOK", "X-Office", el.attribute("Office") );
+			adr.insertCustom("KADDRESSBOOK", "X-Profession", el.attribute("Profession") );
+			adr.insertCustom("KADDRESSBOOK", "X-AssistantsName", el.attribute("Assistant") );
+			adr.insertCustom("KADDRESSBOOK", "X-ManagersName", el.attribute("Manager") );
                         adr.setRevision( QDateTime::currentDateTime() );
                         KSync::AddressBookSyncEntry* entry = new KSync::AddressBookSyncEntry( adr );
 			syncee->addEntry ( entry );
@@ -182,7 +182,7 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
                 sortStr = ab.formattedName();
             *stream << "FileAs=\"" << escape(sortStr) << "\" ";
             *stream << "JobTitle=\"" << escape(ab.role()) << "\" ";
-            *stream << "Department=\"" << escape(ab.custom( "opie", "Department" )) << "\" ";
+            *stream << "Department=\"" << escape(ab.custom( "KADDRESSBOOK", "X-Department" )) << "\" ";
             *stream << "Company=\"" << escape(ab.organization()) << "\" ";
 
             KABC::PhoneNumber businessPhoneNum = ab.phoneNumber(KABC::PhoneNumber::Work );
@@ -214,10 +214,10 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
             *stream << "BusinessCountry=\"" << escape( business.country() ) << "\" ";
             *stream << "BusinessState=\"" << escape( business.region() ) << "\" ";
             //stream << "BusinessPager=\"" << << "\" ";
-            *stream << "Office=\"" << escape( ab.custom( "opie",  "Office" ) ) << "\" ";
-            *stream << "Profession=\"" << escape( ab.custom( "opie",  "Profession" ) ) << "\" ";
-            *stream << "Assistant=\"" << escape( ab.custom( "opie",  "Assistant") ) << "\" ";
-            *stream << "Manager=\"" << escape( ab.custom( "opie",  "Manager" ) ) << "\" ";
+            *stream << "Office=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-Office" ) ) << "\" ";
+            *stream << "Profession=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-Profession" ) ) << "\" ";
+            *stream << "Assistant=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-AssistantsName") ) << "\" ";
+            *stream << "Manager=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-ManagersName" ) ) << "\" ";
 
             KABC::Address home = ab.address( KABC::Address::Home );
             *stream << "HomeStreet=\"" << escape( home.street() ) << "\" ";
@@ -227,10 +227,10 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
             *stream << "HomeCountry=\"" << escape( home.country() ) << "\" ";
 
             *stream << "HomeWebPage=\"" << escape( ab.custom( "opie", "HomeWebPage" ) ) << "\" ";
-            *stream << "Spouse=\"" << escape( ab.custom( "opie",  "Spouse") ) << "\" ";
+            *stream << "Spouse=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-SpousesName") ) << "\" ";
             *stream << "Gender=\"" << escape( ab.custom( "opie",  "Gender") ) << "\" ";
             *stream << "Birthday=\"" << escape( ab.birthday().date().toString("dd.MM.yyyy") ) << "\" ";
-            *stream << "Anniversary=\"" << escape( ab.custom( "opie",  "Anniversary" ) ) << "\" ";
+            *stream << "Anniversary=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-Anniversary" ) ) << "\" ";
             *stream << "Nickname=\"" << escape( ab.nickName() ) << "\" ";
             *stream << "Children=\"" << escape( ab.custom("opie", "Children" ) ) << "\" ";
             *stream << "Notes=\"" << escape( ab.note() ) << "\" ";
