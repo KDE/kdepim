@@ -38,54 +38,127 @@ class Incidence;
 class Alarm : public CustomProperties
 {
   public:
-    enum Type { Display, Procedure, Email, Audio };
+    enum Type { Invalid, Display, Procedure, Email, Audio };
     typedef QValueList<Alarm *> List;
 
-    /** Constructs a new alarm with variables initialized to "sane" values. */
-    Alarm(Incidence *parent);
+    /** Construct a new alarm with variables initialized to "sane" values. */
+    explicit Alarm(Incidence *parent);
     /** Destruct Alarm object. */
     ~Alarm();
 
-    /** return the type of the alarm */
+    /** Compare this alarm with another one. */
+    bool operator==(const Alarm &) const;
+    bool operator!=(const Alarm &a) const   { return !operator==(a); }
+
+    /** Set the type of the alarm.
+        If the specified type is different from the current type of the alarm,
+        the alarm's type-specific properties are initialised to null.
+        @param type type of alarm.
+     */
+    void setType(Type type);
+    /** Return the type of the alarm */
     Type type() const;
 
-    /** set the event to have this file as the noise for the alarm. */
-    void setAudioFile(const QString &audioAlarmFile);
-    /** return the name of the audio file for the alarm */
+    /** Set the alarm to be a display alarm.
+        @param text text to display when the alarm is triggered.
+     */
+    void setDisplayAlarm(const QString &text);
+    /** Set the text to be displayed when the alarm is triggered.
+        Ignored if the alarm is not a display alarm.
+     */
+    void setText(const QString &text);
+    /** Return the text string that displays when the alarm is triggered. */
+    QString text() const;
+
+    /** Set the alarm to be an audio alarm.
+        @param audioFile optional file to play when the alarm is triggered.
+     */
+    void setAudioAlarm(const QString &audioFile = QString::null);
+    /** Set the file to play when the audio alarm is triggered.
+        Ignored if the alarm is not an audio alarm.
+     */
+    void setAudioFile(const QString &audioFile);
+    /** Return the name of the audio file for the alarm.
+        @return The audio file for the alarm, or QString::null if not an audio alarm.
+     */
     QString audioFile() const;
 
-    /** set this program to run when an alarm is triggered */
-    void setProgramFile(const QString &programAlarmFile);
-    /** return the name of the program to run when an alarm is triggered */
+    /** Set the alarm to be a procedure alarm.
+        @param programFile program to execute when the alarm is triggered.
+        @param arguments arguments to supply to programFile.
+     */
+    void setProcedureAlarm(const QString &programFile, const QString &arguments = QString::null);
+    /** Set the program file to execute when the alarm is triggered.
+        Ignored if the alarm is not a procedure alarm.
+     */
+    void setProgramFile(const QString &programFile);
+    /** Return the name of the program file to execute when the alarm is triggered.
+        @return the program file name, or QString::null if not a procedure alarm.
+     */
     QString programFile() const;
+    /** Set the arguments to the program to execute when the alarm is triggered.
+        Ignored if the alarm is not a procedure alarm.
+     */
+    void setProgramArguments(const QString &arguments);
+    /** Return the arguments to the program to run when the alarm is triggered.
+        @return the program arguments, or QString::null if not a procedure alarm.
+     */
+    QString programArguments() const;
 
-    /** send mail to this address when an alarm goes off */
+    /** Set the alarm to be an email alarm.
+        @param subject subject line of email.
+        @param text body of email.
+        @param addressees email addresses of recipient(s).
+        @param attachments optional names of files to attach to the email.
+     */
+    void setEmailAlarm(const QString &subject, const QString &text, const QValueList<Person> &addressees,
+                       const QStringList &attachments = QStringList());
+
+    /** Send mail to this address when the alarm is triggered.
+        Ignored if the alarm is not an email alarm.
+     */
     void setMailAddress(const Person &mailAlarmAddress);
-    /** send mail to these addresses when an alarm goes off */
+    /** Send mail to these addresses when the alarm is triggered.
+        Ignored if the alarm is not an email alarm.
+     */
     void setMailAddresses(const QValueList<Person> &mailAlarmAddresses);
-    /** add this address to the list of addresses to send mail to when an alarm goes off */
+    /** Add this address to the list of addresses to send mail to when the alarm is triggered.
+        Ignored if the alarm is not an email alarm.
+     */
     void addMailAddress(const Person &mailAlarmAddress);
     /** return the addresses to send mail to when an alarm goes off */
     QValueList<Person> mailAddresses() const;
 
-    /** set the subject line of the mail */
+    /** Set the subject line of the mail.
+        Ignored if the alarm is not an email alarm.
+     */
     void setMailSubject(const QString &mailAlarmSubject);
     /** return the subject line of the mail  */
     QString mailSubject() const;
 
-    /** attach this filename to the email */
+    /** Attach this filename to the email.
+        Ignored if the alarm is not an email alarm.
+     */
     void setMailAttachment(const QString &mailAttachFile);
-    /** attach these filenames to the email */
+    /** Attach these filenames to the email.
+        Ignored if the alarm is not an email alarm.
+     */
     void setMailAttachments(const QStringList &mailAttachFiles);
-    /** add this filename to the list of files to attach to the email */
+    /** Add this filename to the list of files to attach to the email.
+        Ignored if the alarm is not an email alarm.
+     */
     void addMailAttachment(const QString &mailAttachFile);
     /** return the filenames to attach to the email */
     QStringList mailAttachments() const;
 
-    /** set the text to display when an alarm goes off */
-    void setText(const QString &alarmText);
-    /** return the text string that displays when an alarm goes off */
-    QString text() const;
+    /** Set the email body text.
+        Ignored if the alarm is not an email alarm.
+     */
+    void setMailText(const QString &text);
+    /** Return the email body text.
+        @return the body text, or QString::null if not an email alarm.
+     */
+    QString mailText() const;
 
     /** set the time to trigger an alarm */
     void setTime(const QDateTime &alarmTime);
@@ -95,13 +168,17 @@ class Alarm : public CustomProperties
     bool hasTime() const;
 
     /** Set offset of alarm in time relative to the start of the event. */
-    void setOffset( const Duration & );
+    void setOffset(const Duration &);
     /** Return offset of alarm in time relative to the start of the event. */
     Duration offset() const;
 
-    /** set the interval between snoozes for the alarm */
+    /** Set the interval between snoozes for the alarm.
+        @param snoozeTime the time in minutes between snoozes.
+     */
     void setSnoozeTime(int alarmSnoozeTime);
-    /** get how long the alarm snooze interval is */
+    /** Get how long the alarm snooze interval is.
+        @return the number of minutes between snoozes.
+     */
     int snoozeTime() const;
 
     /** set how many times an alarm is to repeat itself (w/snoozes) */
@@ -124,27 +201,24 @@ class Alarm : public CustomProperties
     Incidence *parent() const  { return mParent; }
 
   private:
-    QString mAudioAlarmFile;     // url/filename of sound to play
-    QString mProgramAlarmFile;   // filename of program to run
-    QStringList mMailAttachFiles;           // filenames to attach to email
-    QValueList<Person> mMailAlarmAddresses; // who to mail for reminder
-    QString mMailAlarmSubject;   // subject of email
-    QString mAlarmText;          // text to display/mail for alarm
+    Incidence *mParent;          // the incidence which this alarm belongs to
+    Type mType;                  // type of alarm
+    QString mDescription;        // text to display/email body/procedure arguments
+    QString mFile;               // procedure program to run/optional audio file to play
+    QStringList mMailAttachFiles;      // filenames to attach to email
+    QValueList<Person> mMailAddresses; // who to mail for reminder
+    QString mMailSubject;        // subject of email
 
     int mAlarmSnoozeTime;        // number of minutes after alarm to
                                  // snooze before ringing again
     int mAlarmRepeatCount;       // number of times for alarm to repeat
                                  // after the initial time
+
+    QDateTime mAlarmTime;        // time at which to trigger the alarm
+    Duration mOffset;            // time relative to incidence DTSTART to trigger the alarm
+    bool mHasTime;               // use mAlarmTime, not mOffset
     bool mAlarmEnabled;
-
-    QDateTime mAlarmTime;        // time at which to display the alarm
-    bool mHasTime;
-    Duration mOffset;
-
-    Incidence *mParent;
 };
-
-bool operator==( const Alarm&, const Alarm& );
 
 }
 

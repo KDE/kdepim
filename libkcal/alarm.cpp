@@ -29,139 +29,265 @@
 using namespace KCal;
 
 Alarm::Alarm(Incidence *parent)
+ : mParent(parent),
+   mType(Invalid),
+   mDescription(""),    // to make operator==() not fail
+   mFile(""),           // to make operator==() not fail
+   mMailSubject(""),    // to make operator==() not fail
+   mAlarmSnoozeTime(5),
+   mAlarmRepeatCount(0),
+   mHasTime(false),
+   mAlarmEnabled(false)
 {
-  mParent = parent;
-
-  mAlarmSnoozeTime = 5;
-  mAlarmRepeatCount = 0;
-  mAlarmEnabled = false;
-  mProgramAlarmFile = ""; // to make the comparison not fail
-  mAudioAlarmFile = ""; // to make the comparison not fail
-
-  mHasTime = false;
 }
 
 Alarm::~Alarm()
 {
 }
 
-bool KCal::operator==( const Alarm& a1, const Alarm& a2 )
+bool Alarm::operator==( const Alarm& rhs ) const
 {
-    return ( a1.audioFile() == a2.audioFile() &&
-             a1.programFile() == a2.programFile() &&
-             a1.mailAttachments() == a2.mailAttachments() &&
-             a1.mailAddresses() == a2.mailAddresses() &&
-             a1.mailSubject() == a2.mailSubject() &&
-             a1.text() == a2.text() &&
-             a1.snoozeTime() == a2.snoozeTime() &&
-             a1.repeatCount() == a2.repeatCount() &&
-             a1.enabled() == a2.enabled() &&
-             a1.hasTime() == a2.hasTime() &&
-             a1.offset() == a2.offset() );
+  if ( mType != rhs.mType ||
+       mAlarmSnoozeTime != rhs.mAlarmSnoozeTime ||
+       mAlarmRepeatCount != rhs.mAlarmRepeatCount ||
+       mAlarmEnabled != rhs.mAlarmEnabled ||
+       mHasTime != rhs.mHasTime)
+    return false;
+
+  if (mHasTime) {
+    if (mAlarmTime != rhs.mAlarmTime)
+      return false;
+  } else {
+    if (mOffset != rhs.mOffset)
+      return false;
+  }
+
+  switch (mType) {
+    case Display:
+      return mDescription == rhs.mDescription;
+
+    case Email:
+      return mDescription == rhs.mDescription &&
+             mMailAttachFiles == rhs.mMailAttachFiles &&
+             mMailAddresses == rhs.mMailAddresses &&
+             mMailSubject == rhs.mMailSubject;
+
+    case Procedure:
+      return mFile == rhs.mFile &&
+             mDescription == rhs.mDescription;
+
+    case Audio:
+      return mFile == rhs.mFile;
+
+    case Invalid:
+      break;
+  }
+  return false;
 }
 
+void Alarm::setType(Alarm::Type type)
+{
+  if (type == mType)
+    return;
+
+  switch (type) {
+    case Display:
+      mDescription = "";
+      break;
+    case Procedure:
+      mFile = mDescription = "";
+      break;
+    case Audio:
+      mFile = "";
+      break;
+    case Email:
+      mMailSubject = mDescription = "";
+      mMailAddresses.clear();
+      mMailAttachFiles.clear();
+      break;
+    case Invalid:
+      break;
+    default:
+      return;
+  }
+  mType = type;
+  mParent->updated();
+}
 
 Alarm::Type Alarm::type() const
 {
-  if (!mProgramAlarmFile.isEmpty())
-    return Procedure;
-  if (!mAudioAlarmFile.isEmpty())
-    return Audio;
-  if (mMailAlarmAddresses.count() > 0)
-    return Email;
-  return Display;
+  return mType;
 }
 
-void Alarm::setAudioFile(const QString &audioAlarmFile)
+void Alarm::setAudioAlarm(const QString &audioFile)
 {
-  mAudioAlarmFile = audioAlarmFile;
+  mType = Audio;
+  mFile = audioFile;
   mParent->updated();
+}
+
+void Alarm::setAudioFile(const QString &audioFile)
+{
+  if (mType == Audio) {
+    mFile = audioFile;
+    mParent->updated();
+  }
 }
 
 QString Alarm::audioFile() const
 {
-  return mAudioAlarmFile;
+  return (mType == Audio) ? mFile : QString::null;
 }
 
-void Alarm::setProgramFile(const QString &programAlarmFile)
+void Alarm::setProcedureAlarm(const QString &programFile, const QString &arguments)
 {
-  mProgramAlarmFile = programAlarmFile;
+  mType = Procedure;
+  mFile = programFile;
+  mDescription = arguments;
   mParent->updated();
+}
+
+void Alarm::setProgramFile(const QString &programFile)
+{
+  if (mType == Procedure) {
+    mFile = programFile;
+    mParent->updated();
+  }
 }
 
 QString Alarm::programFile() const
 {
-  return mProgramAlarmFile;
+  return (mType == Procedure) ? mFile : QString::null;
 }
 
-void Alarm::setMailAddress(const Person &mailAlarmAddress)
+void Alarm::setProgramArguments(const QString &arguments)
 {
-  mMailAlarmAddresses.clear();
-  mMailAlarmAddresses += mailAlarmAddress;
+  if (mType == Procedure) {
+    mDescription = arguments;
+    mParent->updated();
+  }
+}
+
+QString Alarm::programArguments() const
+{
+  return (mType == Procedure) ? mDescription : QString::null;
+}
+
+void Alarm::setEmailAlarm(const QString &subject, const QString &text,
+                          const QValueList<Person> &addressees, const QStringList &attachments)
+{
+  mType = Email;
+  mMailSubject = subject;
+  mDescription = text;
+  mMailAddresses = addressees;
+  mMailAttachFiles = attachments;
   mParent->updated();
 }
 
-void Alarm::setMailAddresses(const QValueList<Person> &mailAlarmAddresses)
+void Alarm::setMailAddress(const Person &mailAddress)
 {
-  mMailAlarmAddresses = mailAlarmAddresses;
-  mParent->updated();
+  if (mType == Email) {
+    mMailAddresses.clear();
+    mMailAddresses += mailAddress;
+    mParent->updated();
+  }
 }
 
-void Alarm::addMailAddress(const Person &mailAlarmAddress)
+void Alarm::setMailAddresses(const QValueList<Person> &mailAddresses)
 {
-  mMailAlarmAddresses += mailAlarmAddress;
-  mParent->updated();
+  if (mType == Email) {
+    mMailAddresses = mailAddresses;
+    mParent->updated();
+  }
+}
+
+void Alarm::addMailAddress(const Person &mailAddress)
+{
+  if (mType == Email) {
+    mMailAddresses += mailAddress;
+    mParent->updated();
+  }
 }
 
 QValueList<Person> Alarm::mailAddresses() const
 {
-  return mMailAlarmAddresses;
+  return (mType == Email) ? mMailAddresses : QValueList<Person>();
 }
 
 void Alarm::setMailSubject(const QString &mailAlarmSubject)
 {
-  mMailAlarmSubject = mailAlarmSubject;
-  mParent->updated();
+  if (mType == Email) {
+    mMailSubject = mailAlarmSubject;
+    mParent->updated();
+  }
 }
 
 QString Alarm::mailSubject() const
 {
-  return mMailAlarmSubject;
+  return (mType == Email) ? mMailSubject : QString::null;
 }
 
 void Alarm::setMailAttachment(const QString &mailAttachFile)
 {
-  mMailAttachFiles.clear();
-  mMailAttachFiles += mailAttachFile;
-  mParent->updated();
+  if (mType == Email) {
+    mMailAttachFiles.clear();
+    mMailAttachFiles += mailAttachFile;
+    mParent->updated();
+  }
 }
 
 void Alarm::setMailAttachments(const QStringList &mailAttachFiles)
 {
-  mMailAttachFiles = mailAttachFiles;
-  mParent->updated();
+  if (mType == Email) {
+    mMailAttachFiles = mailAttachFiles;
+    mParent->updated();
+  }
 }
 
 void Alarm::addMailAttachment(const QString &mailAttachFile)
 {
-  mMailAttachFiles += mailAttachFile;
-  mParent->updated();
+  if (mType == Email) {
+    mMailAttachFiles += mailAttachFile;
+    mParent->updated();
+  }
 }
 
 QStringList Alarm::mailAttachments() const
 {
-  return mMailAttachFiles;
+  return (mType == Email) ? mMailAttachFiles : QStringList();
 }
 
-void Alarm::setText(const QString &alarmText)
+void Alarm::setMailText(const QString &text)
 {
-  mAlarmText = alarmText;
+  if (mType == Email) {
+    mDescription = text;
+    mParent->updated();
+  }
+}
+
+QString Alarm::mailText() const
+{
+  return (mType == Email) ? mDescription : QString::null;
+}
+
+void Alarm::setDisplayAlarm(const QString &text)
+{
+  mType = Display;
+  mDescription = text;
   mParent->updated();
+}
+
+void Alarm::setText(const QString &text)
+{
+  if (mType == Display) {
+    mDescription = text;
+    mParent->updated();
+  }
 }
 
 QString Alarm::text() const
 {
-  return mAlarmText;
+  return (mType == Display) ? mDescription : QString::null;
 }
 
 void Alarm::setTime(const QDateTime &alarmTime)
@@ -174,7 +300,8 @@ void Alarm::setTime(const QDateTime &alarmTime)
 
 QDateTime Alarm::time() const
 {
-  if ( hasTime() ) return mAlarmTime;
+  if ( hasTime() )
+    return mAlarmTime;
   else
   {
     if (mParent->type()=="Todo") {
@@ -218,12 +345,7 @@ int Alarm::repeatCount() const
 
 void Alarm::toggleAlarm()
 {
-  if (mAlarmEnabled) {
-    mAlarmEnabled = false;
-  } else {
-    mAlarmEnabled = true;
-  }
-
+  mAlarmEnabled = !mAlarmEnabled;
   mParent->updated();
 }
 
@@ -242,7 +364,6 @@ void Alarm::setOffset( const Duration &offset )
 {
   mOffset = offset;
   mHasTime = false;
-
   mParent->updated();
 }
 
