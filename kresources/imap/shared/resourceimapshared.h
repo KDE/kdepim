@@ -25,6 +25,7 @@
 
 class QCString;
 class QString;
+class QStringList;
 
 namespace ResourceIMAPBase {
   class KMailConnection;
