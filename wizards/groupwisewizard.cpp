@@ -23,7 +23,7 @@
 
 #include "kresources/groupwise/kabc_groupwiseprefs.h"
 #include "kresources/groupwise/kabc_resourcegroupwise.h"
-#include "kresources/groupwise/kcal_groupwiseprefs.h"
+#include "kresources/groupwise/kcal_groupwiseprefsbase.h"
 #include "kresources/groupwise/kcal_resourcegroupwise.h"
 
 #include <libkcal/resourcecalendar.h>
@@ -36,6 +36,16 @@
 #include <qlayout.h>
 #include <qspinbox.h>
 
+QString serverUrl()
+{
+  QString url;
+  if ( GroupwiseConfig::self()->useHttps() ) url = "https";
+  else url = "http";
+  url += "://" + GroupwiseConfig::self()->host() + ":" +
+    QString::number( GroupwiseConfig::self()->port() ) + "/soap/";
+  return url;
+}
+
 class CreateGroupwiseKcalResource : public KConfigPropagator::Change
 {
   public:
@@ -46,17 +56,13 @@ class CreateGroupwiseKcalResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "CREATE KCAL GROUPWISE" << endl;
-    
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
 
-      kdDebug() << "TICK" << endl;
-
       KCal::ResourceGroupwise *r = new KCal::ResourceGroupwise();
+
       r->setResourceName( i18n("GroupWise") );
-      r->prefs()->setHost( GroupwiseConfig::self()->host() );
-      r->prefs()->setPort( GroupwiseConfig::self()->port() );
+      r->prefs()->setUrl( serverUrl() );
       r->prefs()->setUser( GroupwiseConfig::self()->user() );
       r->prefs()->setPassword( GroupwiseConfig::self()->password() );
       r->setSavePolicy( KCal::ResourceCached::SaveDelayed );
@@ -64,12 +70,8 @@ class CreateGroupwiseKcalResource : public KConfigPropagator::Change
       r->setReloadInterval( 20 );
       m.add( r );
 
-      kdDebug() << "TICK." << endl;
-
       m.writeConfig();
 
-      kdDebug() << "TICK.." << endl;
-      
       GroupwiseConfig::self()->setKcalResource( r->identifier() );
     }
 };
@@ -91,8 +93,7 @@ class UpdateGroupwiseKcalResource : public KConfigPropagator::Change
       for ( it = m.begin(); it != m.end(); ++it ) {
         if ( (*it)->identifier() == GroupwiseConfig::kcalResource() ) {
           KCal::ResourceGroupwise *r = static_cast<KCal::ResourceGroupwise *>( *it );
-          r->prefs()->setHost( GroupwiseConfig::self()->host() );
-          r->prefs()->setPort( GroupwiseConfig::self()->port() );
+          r->prefs()->setUrl( serverUrl() );
           r->prefs()->setUser( GroupwiseConfig::self()->user() );
           r->prefs()->setPassword( GroupwiseConfig::self()->password() );
           r->setSavePolicy( KCal::ResourceCached::SaveDelayed );
@@ -117,15 +118,11 @@ class CreateGroupwiseKabcResource : public KConfigPropagator::Change
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
 
-      KURL url;
-      url.setProtocol( "http" );
-      url.setHost( GroupwiseConfig::self()->host() );
-      url.setPort( GroupwiseConfig::self()->port() );
-      url.setPath( "/soap/" );
+      QString url = serverUrl();
       QString user( GroupwiseConfig::self()->user() );
       QString password( GroupwiseConfig::self()->password() );
 
-      KABC::ResourceGroupwise *r = new KABC::ResourceGroupwise( url.url(), user,
+      KABC::ResourceGroupwise *r = new KABC::ResourceGroupwise( url, user,
                                                                 password,
                                                                 QStringList(),
                                                                 QString::null );
@@ -154,8 +151,7 @@ class UpdateGroupwiseKabcResource : public KConfigPropagator::Change
       for ( it = m.begin(); it != m.end(); ++it ) {
         if ( (*it)->identifier() == GroupwiseConfig::kabcResource() ) {
           KABC::ResourceGroupwise *r = static_cast<KABC::ResourceGroupwise *>( *it );
-          r->prefs()->setHost( GroupwiseConfig::self()->host() );
-          r->prefs()->setPort( GroupwiseConfig::self()->port() );
+          r->prefs()->setUrl( serverUrl() );
           r->prefs()->setUser( GroupwiseConfig::self()->user() );
           r->prefs()->setPassword( GroupwiseConfig::self()->password() );
         }
@@ -199,8 +195,9 @@ class GroupwisePropagator : public KConfigPropagator
         changes.append( new CreateGroupwiseKcalResource );
       } else {
         if ( (*it)->identifier() == GroupwiseConfig::kcalResource() ) {
-          KCal::GroupwisePrefs *prefs = static_cast<KCal::ResourceGroupwise *>( *it )->prefs();
-          if ( prefs->host() != GroupwiseConfig::self()->host() ||
+          KCal::GroupwisePrefsBase *prefs =
+            static_cast<KCal::ResourceGroupwise *>( *it )->prefs();
+          if ( prefs->url() != serverUrl() ||
                prefs->port() != GroupwiseConfig::self()->port() ||
                prefs->user() != GroupwiseConfig::user() ||
                prefs->password() != GroupwiseConfig::password() ) {
@@ -220,8 +217,7 @@ class GroupwisePropagator : public KConfigPropagator
       } else {
         if ( (*it2)->identifier() == GroupwiseConfig::kabcResource() ) {
           KABC::GroupwisePrefs *prefs = static_cast<KABC::ResourceGroupwise *>( *it2 )->prefs();
-          if ( prefs->host() != GroupwiseConfig::self()->host() ||
-               prefs->port() != GroupwiseConfig::self()->port() ||
+          if ( prefs->url() != serverUrl() ||
                prefs->user() != GroupwiseConfig::user() ||
                prefs->password() != GroupwiseConfig::password() ) {
             changes.append( new UpdateGroupwiseKabcResource );
