@@ -25,8 +25,8 @@ libconduit_a_SOURCES = baseConduit.cc conduitApp.cc \
 	messageDialog.cc gsetupDialog.cc \
 	kpilotlink.cc options.cc
 
-kpilot_LDFLAGS = @all_libraries@ -L/usr/local/lib
-kpilotDaemon_LDFLAGS = @all_libraries@ -L/usr/local/lib
+kpilot_LDFLAGS = @all_libraries@ -L/usr/local/lib $(KDE_RPATH)
+kpilotDaemon_LDFLAGS = @all_libraries@ -L/usr/local/lib $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
