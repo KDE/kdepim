@@ -114,10 +114,12 @@ void Karm::load()
 
     if (level == 1) {
       task = new Task(name, minutes, 0, this);
+      emit( sessionTimeChanged( 0, minutes ) );
     }
     else {
       Task *parent = stack.top();
       task = new Task(name, minutes, 0, parent);
+      emit( sessionTimeChanged( 0, minutes ) );
       setRootIsDecorated(true);
       parent->setOpen(true);
     }
@@ -127,8 +129,6 @@ void Karm::load()
 
   setSelected(firstChild(), true);
   setCurrentItem(firstChild());
-
-  emit( sessionTimeChanged() );
 }
 
 bool Karm::parseLine(QString line, long *time, QString *name, int *level)
@@ -238,10 +238,17 @@ void Karm::stopAllTimers()
 
 void Karm::resetSessionTimeForAllTasks()
 {
-    typedef ListViewIterator<Karm, Task> AllIter;
-    std::for_each( AllIter( this ), AllIter(), std::mem_fun( &Task::resetSessionTime ) );
-
-    emit( sessionTimeChanged() );
+  QListViewItemIterator item( firstChild());
+  for ( ; item.current(); ++item ) {
+    Task * task = (Task *) item.current();
+    long sessionTime = task->sessionTime();
+    long totalTime   = task->totalTime();
+		long newTotal = totalTime - sessionTime;
+		long totalDiff = totalTime - newTotal;
+    task->setSessionTime(0);
+    task->setTotalTime( newTotal );
+		sessionTimeChanged( -sessionTime, -totalDiff );
+  }
 }
 
 void Karm::stopTimer(Task *item)
@@ -284,8 +291,6 @@ void Karm::changeTimer(QListViewItem *)
 void Karm::minuteUpdate()
 {
   addTimeToActiveTasks(1);
-  if (activeTasks.count() != 0)
-    emit(timerTick());
 }
 
 void Karm::addTimeToActiveTasks(int minutes)
@@ -295,10 +300,10 @@ void Karm::addTimeToActiveTasks(int minutes)
     QListViewItem *item = task;
     while (item) {
       ((Task *) item)->incrementTime(minutes);
+      emit( sessionTimeChanged( minutes, minutes ) );
       item = item->parent();
     }
   }
-  // Does not need to emit( sessionTimeChanged() ) because all calling routines emit it instead.
 }
 
 void Karm::newTask()
@@ -328,7 +333,7 @@ void Karm::newTask(QString caption, QListViewItem *parent)
     updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
     setCurrentItem(task);
     setSelected(task, true);
-    emit( sessionTimeChanged() );
+    emit( sessionTimeChanged( sessionDiff, totalDiff ) );
   }
   delete dialog;
 }
@@ -371,7 +376,7 @@ void Karm::editTask()
     task->setSessionTime( session );
 
     if( sessionDiff || totalDiff ) {
-      emit sessionTimeChanged();
+      emit sessionTimeChanged( sessionDiff, totalDiff );
     }
 
     // Update the parents for this task.
@@ -388,6 +393,7 @@ void Karm::updateParents( QListViewItem* task, long totalDiff, long sessionDiff 
     parrentTask->setTotalTime(parrentTask->totalTime()+totalDiff);
     parrentTask->setSessionTime(parrentTask->sessionTime()+sessionDiff);
     item = item->parent();
+    sessionTimeChanged( sessionDiff, totalDiff );
   }
 }
 
@@ -443,7 +449,7 @@ void Karm::deleteTask()
     if (!anyChilds) {
       setRootIsDecorated(false);
     }
-    emit( sessionTimeChanged() );
+    emit( sessionTimeChanged( -sessionTime, -totalTime ) );
   }
 }
 
@@ -459,7 +465,6 @@ void Karm::stopChildCounters(Task *item)
 void Karm::extractTime(int minutes)
 {
   addTimeToActiveTasks(-minutes);
-  emit(sessionTimeChanged());
 }
 
 void Karm::autoSaveChanged(bool on)

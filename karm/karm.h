@@ -74,8 +74,7 @@ protected slots:
     void minuteUpdate();
 
 signals:
-    void sessionTimeChanged();
-    void timerTick();
+    void sessionTimeChanged( long, long );
     void updateButtons();
     void timerActive();
     void timerInactive();

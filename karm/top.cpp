@@ -64,10 +64,9 @@ KarmWindow::KarmWindow()
   _watcher->updateMenus();
 
   // connections
-  connect( _karm, SIGNAL( sessionTimeChanged() ),                 this, SLOT( updateTime() ) );
+  connect( _karm, SIGNAL( sessionTimeChanged( long, long ) ),     this, SLOT( updateTime( long, long ) ) );
   connect( _karm, SIGNAL( selectionChanged  ( QListViewItem * )), this, SLOT(slotSelectionChanged()));
   connect( _karm, SIGNAL( updateButtons() ),                      this, SLOT(slotSelectionChanged()));
-  connect( _karm, SIGNAL( timerTick()),                           this, SLOT(updateTime()));
 
   _preferences->load();
   loadGeometry();
@@ -140,13 +139,10 @@ void KarmWindow::hideOnClose( bool hide )
  * Calculate the sum of the session time and the total time for all leaf tasks and put it in the statusbar.
  */
 
-void KarmWindow::updateTime()
+void KarmWindow::updateTime( long sessionDiff, long totalDiff )
 {
-  typedef ListViewIterator<Karm, Task> AllIter;
-  using std::accumulate;
-
-  _totalSum   = accumulate( AllIter( _karm ), AllIter(), 0, addTaskTotalTime );
-  _sessionSum = accumulate( AllIter( _karm ), AllIter(), 0, addTaskSessionTime );
+  _sessionSum += sessionDiff;
+  _totalSum   += totalDiff;
 
   updateStatusBar();
 }
@@ -182,7 +178,6 @@ void KarmWindow::keyBindings()
 void KarmWindow::resetSessionTime()
 {
   _karm->resetSessionTimeForAllTasks();
-  updateTime();
 }
 
 

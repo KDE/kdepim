@@ -39,7 +39,7 @@ private:
   protected slots:
     void keyBindings();
     void resetSessionTime(); 
-    void updateTime();
+    void updateTime( long, long );
     void updateStatusBar();
     void save();
     void quit();
