@@ -14,7 +14,7 @@ SUBDIRS = Icons
 ### database record types into a library.
 
 noinst_PROGRAMS = kpilotTest kpilotConfig
-### noinst_LTLIBRARIES = libkhexedit_shared.la
+noinst_LTLIBRARIES = libkhexedit_shared.la
 bin_PROGRAMS = kpilot kpilotDaemon
 
 METASOURCES = AUTO
@@ -33,7 +33,7 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ### Non-automake variables
 ###
 
-### libkhexedit_shared_la_SOURCES = hexbuffer.cc hexclipboard.cc hexdrag.cc hexerror.cc hexviewwidget.cc hexprinter.cc conversion.cc hexviewwidget.cc
+libkhexedit_shared_la_SOURCES = hexbuffer.cc hexclipboard.cc hexdrag.cc hexerror.cc hexviewwidget.cc hexprinter.cc conversion.cc hexviewwidget.cc
 
 
 kpilot_SOURCES	= \
@@ -44,7 +44,7 @@ kpilot_SOURCES	= \
 	dbSelectionDialog.cc dbSelection_base.ui \
 	pilotComponent.cc logWidget.cc memoWidget.cc \
 	addressWidget.cc addressEditor.cc \
-	dbviewerWidget.cc dbFlagsEditor.cc dbFlagsEditor_base.ui\
+	dbviewerWidget.cc dbFlagsEditor.cc dbFlagsEditor_base.ui dbRecordEditor.cc dbAppInfoEditor.cc \
 	datebookWidget.cc \
 	todoWidget.cc todoEditor.cc \
 	fileInstaller.cc fileInstallWidget.cc \
@@ -72,7 +72,7 @@ kpilotConfig_SOURCES = kpilotConfig.cc \
 	listCat.cc main-config.cc
 
 
-## libkhexedit_shared_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+libkhexedit_shared_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
@@ -80,9 +80,9 @@ kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-### libkhexedit_shared_la_LIBADD = -lkdeprint
-kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
-### kpilot_LDADD		= $(LIB_KFILE) -lkdeprint $(PISOCK_LIB) ../lib/libkpilot.la libkhexedit_shared.la
+libkhexedit_shared_la_LIBADD = -lkdeprint
+### kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
+kpilot_LDADD		= $(LIB_KFILE) -lkdeprint $(PISOCK_LIB) ../lib/libkpilot.la libkhexedit_shared.la
 kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotConfig_LDADD      = $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la

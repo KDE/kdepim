@@ -37,6 +37,7 @@ class KPushButton;
 class KComboBox;
 class PilotLocalDatabase;
 class PilotRecord;
+class KListView;
 //class CHexViewWidget;
 
 class GenericDBWidget : public PilotComponent
@@ -60,10 +61,12 @@ protected slots:
 	void reset();
 	void slotAddRecord();
 	void slotEditRecord();
+	bool slotEditRecord(QListViewItem*);
 	void slotDeleteRecord();
 	void slotShowAppInfo();
 	void slotShowDBInfo();
 	void enableWidgets(bool enable);
+	void writeRecord(PilotRecord*r);
 
 private:
 	KListBox*fDBList;

@@ -53,9 +53,17 @@
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 #include "dbFlagsEditor.h"
+#include "dbRecordEditor.h"
+#include "dbAppInfoEditor.h"
 #include "kpilotConfig.h"
 
-//#include "hexviewwidget.h"
+#include "hexviewwidget.h"
+#include "hexbuffer.h"
+
+
+
+
+
 
 GenericDBWidget::GenericDBWidget(QWidget *parent, const QString &dbpath) :
 	PilotComponent(parent,"component_generic",dbpath), fDB(0L)
@@ -132,6 +140,8 @@ void GenericDBWidget::setupWidget()
 		this, SLOT(slotEditRecord()));
 	connect(fDeleteRecord,  SIGNAL(clicked()),
 		this, SLOT(slotDeleteRecord()));
+	connect(fRecordList, SIGNAL(executed(QListViewItem*)),
+		this, SLOT(slotEditRecord(QListViewItem*)));
 
 }
 
@@ -255,9 +265,6 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 	display.append(i18n("Backed up: %1<BR>").arg(ttime.toString()));
 
 	fDBInfo->setText(display);
-//	pi_file_close(pf);
-// TODO
-
 }
 
 void GenericDBWidget::slotDBType(int mode)
@@ -294,51 +301,85 @@ void GenericDBWidget::reset()
 void GenericDBWidget::slotAddRecord()
 {
 	FUNCTIONSETUP;
-// TODO:	if (editDlg->exec()) markDBDirty(getCurrentDB());
-	KMessageBox::information(this, i18n("slotAddRecord on DB %1").arg(getCurrentDB()));
+	PilotRecord*rec=new PilotRecord(0L, 0, 0, 0, 0);
+	PilotListViewItem*item=new PilotListViewItem(fRecordList,
+		QString::number(-1), QString::number(rec->getLen()),
+		QString::number(rec->getID()), QString::null,
+		rec->getID(), rec);
+	if (slotEditRecord(item))
+	{
+		fRecList.append(rec);
+	}
+	else
+	{
+		KPILOT_DELETE(item);
+		KPILOT_DELETE(rec);
+	}
 }
 
-void GenericDBWidget::slotEditRecord()
+bool GenericDBWidget::slotEditRecord(QListViewItem*item)
 {
 	FUNCTIONSETUP;
-// TODO:	if (editDlg->exec()) markDBDirty(getCurrentDB());
-/*		unsigned char*appBlock=new unsigned char[0xFFFF];
-		int len=fDB->readAppBlock(appBlock, 0xFFFF);
-		//CHexBuffer*fBuff=new CHexBuffer();
-		CHexBuffer*fBuff=fHexEdit->hexBuffer();
-		fBuff->assign((char*)appBlock, len);
-		fHexEdit->setBuffer(fBuff);
-		DEBUGKPILOT<<"fBuff.size="<<fBuff->size()<<endl;
-		DEBUGKPILOT<<"fBuff.count="<<fBuff->count()<<endl;
-		DEBUGKPILOT<<"len of appBlock="<<len<<endl;*/
-	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(fRecordList->selectedItem());
+	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(item);
 	if (currRecItem)
 	{
 		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
-//		KDialogBase*dlg=new KDialogBase()
-		// TODO: Showw the record edit dialog
+		int nr=currRecItem->text(0).toInt();
+		DBRecordEditor*dlg=new DBRecordEditor(rec, nr, this);
+		if (dlg->exec())
+		{
+			currRecItem->setText(1, QString::number(rec->getLen()));
+			currRecItem->setText(2, QString::number(rec->getID()));
+			fRecordList->triggerUpdate();
+			writeRecord(rec);
+			KPILOT_DELETE(dlg);
+			return true;
+		}
+		KPILOT_DELETE(dlg);
 	}
 	else
 	{
 		// Either nothing selected, or some error occured...
 		KMessageBox::information(this, i18n("You must select a record for editing."), i18n("No record selected"), i18n("Do not show this message again"));
 	}
-	KMessageBox::information(this, i18n("slotEditRecord on DB %1").arg(getCurrentDB()));
+	return false;
+}
+void GenericDBWidget::slotEditRecord()
+{
+	slotEditRecord(fRecordList->selectedItem());
 }
 
 void GenericDBWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
-// TODO:	if (ReallyDelete) markDBDirty(getCurrentDB());
-	KMessageBox::information(this, i18n("slotDeleteRecord on DB %1").arg(getCurrentDB()));
+	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(fRecordList->selectedItem());
+	if (currRecItem && (KMessageBox::questionYesNo(this, i18n("<qt>Do you really want to delete the selected record? This cannot be undone.<br><br>Delete record?<qt>"), i18n("Deleting record"))==KMessageBox::Yes) )
+	{
+		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
+		rec->makeDeleted();
+		writeRecord(rec);
+		// fRecordList->triggerUpdate();
+	}
+	KPILOT_DELETE(currRecItem);
 }
 
 void GenericDBWidget::slotShowAppInfo()
 {
 	FUNCTIONSETUP;
 	if (!fDB) return;
-// TODO:	if (editDlg->exec()) markDBDirty(getCurrentDB());
-	KMessageBox::information(this, i18n("slotShowApppInfo on DB %1").arg(getCurrentDB()));
+	unsigned char*appBlock=new unsigned char[0xFFFF];
+	int len=fDB->readAppBlock(appBlock, 0xFFFF);
+	DBAppInfoEditor*dlg=new DBAppInfoEditor(appBlock, &len, this);
+	if (dlg->exec())
+	{
+		fDB->writeAppBlock(appBlock, len);
+
+		KPilotConfigSettings&c=KPilotConfig::getConfig();
+		c.setDatabaseGroup().addAppBlockChangedDatabase(getCurrentDB());
+		c.sync();
+	}
+	KPILOT_DELETE(dlg);
+	KPILOT_DELETE(appBlock);
 }
 
 void GenericDBWidget::slotShowDBInfo()
@@ -365,7 +406,7 @@ void GenericDBWidget::slotShowDBInfo()
 
 void GenericDBWidget::enableWidgets(bool enable)
 {
-	FUNCTIONSETUP;
+	//FUNCTIONSETUP;
 	fDBInfoButton->setEnabled(enable);
 	fAppInfoButton->setEnabled(enable);
 	fRecordList->setEnabled(enable);
@@ -373,5 +414,19 @@ void GenericDBWidget::enableWidgets(bool enable)
 	fEditRecord->setEnabled(enable);
 	fDeleteRecord->setEnabled(enable);
 }
+
+void GenericDBWidget::writeRecord(PilotRecord*r)
+{
+	// FUNCTIONSETUP;
+	if (fDB && r)
+	{
+		fDB->writeRecord(r);
+		markDBDirty(getCurrentDB());
+	}
+}
+
+
+
+
 
 #include "dbviewerWidget.moc"
