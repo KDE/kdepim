@@ -179,7 +179,7 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
 
 static void showChainListError( QWidget * parent, const GpgME::Error & err, const char * subject ) {
   assert( err );
-  const QString msg = i18n("<qt><p>An error occured while fetching "
+  const QString msg = i18n("<qt><p>An error occurred while fetching "
 			   "the certificate <b>%1</b> from the backend:</p>"
 			   "<p><b>%2</b></p></qt>")
     .arg( subject ? QString::fromUtf8( subject ) : QString::null,

@@ -669,7 +669,7 @@ void CertManager::slotViewCRLs() {
 
 static void showDeleteError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
-  const QString msg = i18n("<qt><p>An error occured while trying to delete "
+  const QString msg = i18n("<qt><p>An error occurred while trying to delete "
 			   "the certificates:</p>"
 			   "<p><b>%1</b></p></qt>")
     .arg( QString::fromLocal8Bit( err.asString() ) );
@@ -692,10 +692,10 @@ void CertManager::slotDeleteCertificate() {
     job->slotCancel();
   else
     KMessageBox::error( this,
-			i18n("<qt><p>An error occured while trying to delete "
+			i18n("<qt><p>An error occurred while trying to delete "
 			     "the certificate:</p>"
 			     "<p><b>%1</b><p></qt>",
-			     "<qt><p>An error occured while trying to delete "
+			     "<qt><p>An error occurred while trying to delete "
 			     "the certificates:</p>"
 			     "<p><b>%1</b><p></qt>", keys.size() )
 			.arg( i18n("Operation not supported by the backend.") ),
@@ -764,7 +764,7 @@ void CertManager::slotExportCertificate() {
 
 static void showCertificateExportError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
-  const QString msg = i18n("<qt><p>An error occured while trying to export "
+  const QString msg = i18n("<qt><p>An error occurred while trying to export "
 			   "the certificate:</p>"
 			   "<p><b>%1</b></p></qt>")
     .arg( QString::fromLocal8Bit( err.asString() ) );
@@ -858,7 +858,7 @@ void CertManager::slotExportSecretKey() {
 
 static void showSecretKeyExportError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
-  const QString msg = i18n("<qt><p>An error occured while trying to export "
+  const QString msg = i18n("<qt><p>An error occurred while trying to export "
 			   "the secret key:</p>"
 			   "<p><b>%1</b></p></qt>")
     .arg( QString::fromLocal8Bit( err.asString() ) );
