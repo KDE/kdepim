@@ -30,12 +30,11 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <klibloader.h>
 #include "vcal-factorybase.h"
-#include "vcal-factory.h"
 
 class KInstance;
 class KAboutData;
+class VCalConduitSettings;
 
 class VCalConduitFactory : public VCalConduitFactoryBase
 {

@@ -29,9 +29,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "plugin.h"
 #include "vcal-setup.h"
-#include "todo-factory.h"
 
 class ToDoWidgetSetup : public VCalWidgetSetupBase
 {
@@ -39,7 +37,7 @@ public:
 	ToDoWidgetSetup(QWidget *,const char *);
 	virtual ~ToDoWidgetSetup();
 
-	virtual VCalConduitSettings*config() { return ToDoConduitFactory::config(); }
+	virtual VCalConduitSettings*config();
 	static ConduitConfigBase *create(QWidget *, const char *);
 } ;
 

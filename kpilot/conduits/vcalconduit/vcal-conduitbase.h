@@ -30,8 +30,6 @@
 */
 
 #include <plugin.h>
-#include <options.h>
-
 
 
 namespace KCal
@@ -44,6 +42,7 @@ class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
 class PilotAppCategory;
+class VCalConduitSettings;
 
 
 class VCalConduitPrivateBase

@@ -29,17 +29,13 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <plugin.h>
-
 #include <libkcal/event.h>
-#include <libkcal/calendarlocal.h>
-#include "vcal-factory.h"
 #include "vcal-conduitbase.h"
-#include <pilotDateEntry.h>
 
 class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
+class PilotDateEntry;
 
 
 class VCalConduitPrivate : public VCalConduitPrivateBase
@@ -80,10 +76,10 @@ protected:
 	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::Calendar *fCalendar);
 
 
-	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) { if (r) return new PilotDateEntry(r);  else return new PilotDateEntry();};
-	virtual KCal::Incidence*newIncidence() { return new KCal::Event; };
+	virtual PilotAppCategory*newPilotEntry(PilotRecord*r);
+	virtual KCal::Incidence*newIncidence();
 	virtual const QString getTitle(PilotAppCategory*de);
-	virtual VCalConduitSettings *config() { return VCalConduitFactory::config(); }
+	virtual VCalConduitSettings *config();
 
 protected:
 	virtual PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);

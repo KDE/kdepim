@@ -29,6 +29,8 @@
 
 #include "options.h"
 #include "vcal-conduit.moc"
+#include <pilotDateEntry.h>
+#include "vcal-factory.h"
 
 extern "C"
 {
@@ -731,4 +733,19 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 	}
 	dateEntry->setExceptionCount(excount);
 	dateEntry->setExceptions(ex_List);
+}
+
+PilotAppCategory*VCalConduit::newPilotEntry(PilotRecord*r) 
+{
+  if (r) return new PilotDateEntry(r);
+	else return new PilotDateEntry();
+}
+
+KCal::Incidence*VCalConduit::newIncidence() 
+{
+  return new KCal::Event;
+}
+
+VCalConduitSettings *VCalConduit::config() {
+  return VCalConduitFactory::config();
 }

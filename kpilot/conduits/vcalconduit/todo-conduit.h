@@ -33,18 +33,14 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <plugin.h>
-#include <kconfig.h>
-
 #include <libkcal/todo.h>
-#include <libkcal/calendarlocal.h>
 #include <pilotTodoEntry.h>
-#include "todo-factory.h"
 #include "vcal-conduitbase.h"
 
 class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
+class PilotTodoEntry;
 
 class TodoConduitPrivate : public VCalConduitPrivateBase
 {
@@ -99,7 +95,7 @@ protected:
 	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
 
 	virtual void preRecord(PilotRecord*r);
-	virtual VCalConduitSettings *config() { return ToDoConduitFactory::config(); }
+	virtual VCalConduitSettings *config();
 
 protected:
 

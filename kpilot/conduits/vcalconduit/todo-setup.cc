@@ -32,6 +32,7 @@
 #include <qtabwidget.h>
 #include <qbuttongroup.h>
 
+#include "korganizerConduit.h"
 #include "todo-factory.h"
 #include "todo-setup.h"
 
@@ -57,4 +58,8 @@ ToDoWidgetSetup::~ToDoWidgetSetup()
 	return new ToDoWidgetSetup(w,n);
 }
 
+VCalConduitSettings*ToDoWidgetSetup::config() 
+{
+  return ToDoConduitFactory::config(); 
+}
 

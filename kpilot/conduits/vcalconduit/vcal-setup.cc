@@ -38,6 +38,7 @@
 #include <kconfig.h>
 #include <kurlrequester.h>
 
+#include "korganizerConduit.h"
 #include "vcal-factory.h"
 #include "vcal-setup.h"
 #include "vcalconduitSettings.h"
@@ -55,3 +56,4 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 {
 	return new VCalWidgetSetup(w,n);
 }
+VCalConduitSettings*VCalWidgetSetup::config() { return VCalConduitFactory::config(); }

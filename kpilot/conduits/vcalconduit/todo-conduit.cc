@@ -55,6 +55,7 @@
 
 #include "todo-conduit.moc"
 #include "vcalconduitSettings.h"
+#include "todo-factory.h"
 
 // define conduit versions, one for the version when categories were synced for the first time, and the current version number
 #define CONDUIT_VERSION_CATEGORYSYNC 10
@@ -459,4 +460,9 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 			e->setCategories(cats);
 		}
 	}
+}
+
+VCalConduitSettings *TodoConduit::config()
+{ 
+  return ToDoConduitFactory::config(); 
 }

@@ -29,9 +29,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "plugin.h"
-#include "vcal-factorybase.h"
-#include "vcal-factory.h"
 #include "vcal-setupbase.h"
 
 class VCalWidget;
@@ -43,7 +40,7 @@ public:
 	VCalWidgetSetup(QWidget *, const char *);
 	static ConduitConfigBase *create(QWidget *, const char *);
 protected:
-	virtual VCalConduitSettings*config() { return VCalConduitFactory::config(); }
+	virtual VCalConduitSettings*config();
 } ;
 
 #endif
