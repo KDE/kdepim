@@ -73,6 +73,8 @@ void Query::call( const QString &server, const QString &method,
            this, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
   connect( job, SIGNAL( result( KIO::Job * ) ),
            this, SLOT( slotResult( KIO::Job * ) ) );
+
+  m_pendingJobs.append( job );
 }
 
 void Query::slotData( KIO::Job *, const QByteArray &data )
@@ -84,6 +86,8 @@ void Query::slotData( KIO::Job *, const QByteArray &data )
 
 void Query::slotResult( KIO::Job *job )
 {
+  m_pendingJobs.remove( job );
+
   if ( job->error() != 0 )
   {
     emit fault( job->error(), job->errorString(), m_id );
@@ -291,6 +295,13 @@ QVariant Query::demarshal( const QDomElement &elem ) const
 Query::Query( const QVariant &id, QObject *parent, const char *name )
   : QObject( parent, name ), m_id( id )
 {}
+
+Query::~Query()
+{
+  QValueList<KIO::Job*>::Iterator it;
+  for ( it = m_pendingJobs.begin(); it != m_pendingJobs.end(); ++it )
+    (*it)->kill();
+}
 
 Server::Server( const KURL &url, QObject *parent, const char *name )
     : QObject( parent, name )

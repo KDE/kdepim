@@ -64,9 +64,12 @@ namespace KXMLRPC
       QVariant demarshal( const QDomElement &e ) const;
 
       Query( const QVariant &id, QObject *parent = 0, const char *name = 0 );
+      ~Query();
 
       QByteArray m_buffer;
       QVariant m_id;
+
+      QValueList<KIO::Job*> m_pendingJobs;
   };
 
   class Server : public QObject
