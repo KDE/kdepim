@@ -65,8 +65,8 @@ KTNEFView::KTNEFView(QWidget *parent, const char *name)
 	: KListView(parent,name)
 {
 	attachments_.setAutoDelete(false);
-	addColumn("File name");
-	addColumn("File type");
+	addColumn("File Name");
+	addColumn("File Type");
 	addColumn("Size");
 	setFrameStyle(QFrame::WinPanel|QFrame::Sunken);
 	setLineWidth(1);
