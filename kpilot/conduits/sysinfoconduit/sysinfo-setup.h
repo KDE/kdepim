@@ -46,7 +46,6 @@ protected:
 
 class SysInfoWidgetSetup : public ConduitConfig
 {
-Q_OBJECT
 public:
 	SysInfoWidgetSetup(QWidget *,const char *,const QStringList &);
 	virtual ~SysInfoWidgetSetup();

@@ -123,7 +123,7 @@ const QString SysInfoConduit::defaultpage = QString("KPilot System Information P
 "#endifdebug#-->\n"
 "\n"
 "------------------------------------------------------------\n"
-"Page created <!--#date#--> by the SysInfo conduit of KPilot.\n"
+"Page created <!--#date#--> by the KPilot System Information conduit.\n"
 "");
 
 
@@ -158,7 +158,7 @@ SysInfoConduit::SysInfoConduit(KPilotDeviceLink * o,
 #ifdef DEBUG
 	DEBUGCONDUIT<<SysInfo_conduit_id<<endl;
 #endif
-	fConduitName=i18n("SysInfo");
+	fConduitName=i18n("System Information");
 }
 
 

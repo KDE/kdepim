@@ -40,7 +40,7 @@
 #include "sysinfo-setup_dialog.h"
 
 #include "sysinfo-factory.h"
-#include "sysinfo-setup.moc"
+#include "sysinfo-setup.h"
 
 typedef struct { const char *name; const char *key; } sysinfoEntry_t;
 
@@ -106,7 +106,7 @@ SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
 		this,SLOT(modified()));
 	QObject::connect(fConfigWidget->fOutputType,SIGNAL(clicked(int)),
 		this,SLOT(modified()));
-	fConduitName=i18n("SysInfo");
+	fConduitName=i18n("System Information");
 }
 
 void SysInfoWidgetConfig::commit(KConfig *fConfig)
@@ -134,6 +134,7 @@ void SysInfoWidgetConfig::commit(KConfig *fConfig)
 		i=i->nextSibling();
 		ci = dynamic_cast<QCheckListItem *>(i);
 	}
+	unmodified();
 }
 
 void SysInfoWidgetConfig::load(KConfig *fConfig)
@@ -159,6 +160,7 @@ void SysInfoWidgetConfig::load(KConfig *fConfig)
 #endif
 		p++;
 	}
+	unmodified();
 }
 
 /* virtual */ bool SysInfoWidgetConfig::isModified() const
@@ -193,7 +195,7 @@ SysInfoWidgetSetup::SysInfoWidgetSetup(QWidget *w, const char *n,
 	FUNCTIONSETUP;
 
 	fConfigBase = new SysInfoWidgetConfig(widget(),"ConfigWidget");
-	fConduitName = i18n("SysInfo");
+	fConduitName = i18n("System Information");
 }
 
 SysInfoWidgetSetup::~SysInfoWidgetSetup()
