@@ -14,50 +14,44 @@
 
 /* Library Includes */
 #include <kdialogbase.h>
-#include <qstrlist.h>
 
 class QPushButton;
 class QListBox;
 class QLabel;
 
-class
-CConduitSetup : public KDialogBase
+#define ENABLE_CMD_CS
+
+class QListViewItem;
+class KProcess;
+class ListCategorizer;
+
+class CConduitSetup : public KDialogBase
 {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  CConduitSetup(QWidget *parent=0, char *name=0);
+	CConduitSetup(QWidget *parent, const char * name = 0);
 	virtual ~CConduitSetup();
-  
-private:
-  QLabel *label1;
-  QLabel *label2;
-  QListBox *fInstalledConduits;
-  // QLabel *label3;
-  QPushButton *fRemoveConduit;
-  QPushButton *fDoneButton;
-  QPushButton *fCancelButton;
-  QListBox *fAvailableConduits;
-  QPushButton *fInstallConduit;
-  QPushButton *fSetupConduit;
-  QStringList     fInstalledConduitNames;
-  QStringList     fAvailableConduitNames;
-  KProcess     fSetupConduitProcess;
 
-  void fillLists();
-  // Removes any installed items that aren't available
-  void cleanupLists(const QStringList* available, QStringList* installed);
-  void checkButtons() ;
 
 protected:
-public slots:
-  void slotInstallConduit();
-  void slotUninstallConduit();
-  void slotSelectAvailable();
-  void slotSelectInstalled();
-  void slotSetupConduit();
+	QString findExecPath(const QListViewItem *) const;
+	void writeInstalledConduits();
+	void fillLists();
+
 protected slots:
-  void slotOk();
-  void slotCancel();
-};
+	void conduitExecuted(QListViewItem *);
+	void setupDone(KProcess *);
+	void slotOk();
+	void slotCancel();
+
+private:
+	void warnNoExec(const QListViewItem *);
+	void warnSetupRunning();
+
+	ListCategorizer *categories;
+	QListViewItem *active,*available;
+	KProcess *conduitSetup;
+	QStringList conduitPaths;
+} ;
 #endif

@@ -1102,6 +1102,9 @@ static char authorsbuf[256]={0};
 static KCmdLineOptions kpilotoptions[] =
 {
 	{ "setup", I18N_NOOP("Setup the Pilot device and other parameters"),0L },
+#ifdef ENABLE_CMD_CS
+	{ "cs", I18N_NOOP("Run conduit setup"),0L },
+#endif
 	{ "debug <level>", I18N_NOOP("Set debug level to <level> (try 1023)"),"0" },
 	{ 0,0,0 }
 } ;
@@ -1148,6 +1151,9 @@ int main(int argc, char** argv)
 
 	debug_level=atoi(p->getOption("debug"));
 	if (p->isSet("setup")) { run_mode='s'; } 
+#ifdef ENABLE_CMD_CS
+	if (p->isSet("cs")) { run_mode='c'; }
+#endif
 
 	KApplication a(true,true);
 
@@ -1157,6 +1163,15 @@ int main(int argc, char** argv)
 	{
 		run_mode='s';
 	}
+
+#ifdef ENABLE_CMD_CS
+	if (run_mode=='c')
+	{
+		CConduitSetup *cs = new CConduitSetup(0L);
+		cs->show();
+		exit(2);
+	}
+#endif
 
 	if (run_mode=='s')
 	{

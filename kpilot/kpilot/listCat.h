@@ -1,0 +1,183 @@
+/* This file might be part of the KDE libraries, if I can convice 
+   enough people that it is generally useful.
+   Copyright (C) 2000 Adriaan de Groot <adridg@cs.kun.nl>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public
+   License version 2 as published by the Free Software Foundation.
+ 
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+ 
+   You should have received a copy of the GNU Library General Public License
+   along with this library; see the file COPYING.LIB.  If not, write to
+   the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.
+*/
+
+#ifndef LISTCAT_H
+#define LISTCAT_H
+
+#include <klistview.h>
+
+/**
+ * This Widget extends KListView for a particular purpose:
+ * sorting some items into some bins. This can be useful
+ * for putting items in an enabled / disabled state, or
+ * into categories, or configuring toolbars (putting
+ * icons onto toolbars).
+ *
+ * You can use all of the standard KListView signals and
+ * slots. You may in particular want to change the names
+ * of the columns, for example:
+ * <PRE>
+ * ListCategorizer *lc = new ListCategorizer(this,colors);
+ * lc->setColumnText(0,i18n("Colour"));
+ * lc->setColumnText(1,i18n("HTML"));
+ * QListViewItem *stdKDE = lc->addCategory(i18n("Standard KDE"));
+ * (void) new QListViewItem(stdKDE,i18n("red"),"#FF0000");
+ * <PRE>
+ * to set sensible column headers for a list of colours 
+ * and their HTML equivalents (although why you would want
+ * to categorize colours is beyond me).
+ *
+ * @version $Id:$
+ */
+class ListCategorizer : public KListView
+{
+	Q_OBJECT
+	
+public:
+	/**
+	 * Constructor.
+	 *
+	 * This creates a new empty ListCategorizer with
+	 * @ref startOpen set to false. The parameters
+	 * @p parent and @p name are the usual Qt ones.
+	 */
+	ListCategorizer(QWidget *parent,
+		const char *name = 0);
+	/**
+	 * Constructor.
+	 *
+	 * This creates a ListCategorizer with the given @p categories
+	 * already inserted. In addition, this constructor lets you
+	 * specify whether or not @ref startOpen is set.
+	 */
+	ListCategorizer(const QStringList& categories,
+		bool startOpen,
+		QWidget *parent, 
+		const char *name = 0);
+
+	/**
+	 * Add a list of categories to the ListCategorizer.
+	 * All the categories are added without descriptions;
+	 * use @addCategory on a per-category basis for that.
+	 */
+	void addCategories(const QStringList&);
+	/**
+	 * Add a category with name @p name and optional
+	 * @p description. This can be useful if you want
+	 * either a description for the category or want to
+	 * refer to this category in the future without 
+	 * using @ref findCategory().
+	 *
+	 * @ret the QListViewItem created for the category
+	 */
+	QListViewItem *addCategory(const QString& name, 
+		const QString& description = QString::null);
+	/**
+	 * Returns the list of names of the categories in
+	 * the ListCategorizer.
+	 */
+	QStringList categories() const 
+	{ 
+		return listSiblings(firstChild()); 
+	} ;
+
+	/**
+	 * Add a single item to the category named @p category,
+	 * with name @p name and description set to @p description.
+	 * This might be a convenience function, but it's probably
+	 * more convenient to just use @ref QListViewItem's
+	 * constructor. That way you can also hide more data in
+	 * the remaining columns.
+	 */
+	QListViewItem *addItem(const QString& category,
+		const QString& name,
+		const QString& description = QString::null);
+	/**
+	 * Returns the list of strings in column @p column under
+	 * category @p category. You can do this to get, for example
+	 * the names of all the items categorized under a given
+	 * category, or, more usefully, set @p column to something
+	 * other that 0 (name) or 1 (description) to return the
+	 * @ref QStringList hidden in the non-visible columns.
+	 */
+	QStringList items(const QString& category,int column=0) const
+	{
+		return listSiblings(findCategory(category),column);
+	}
+
+	/**
+	 * Given a category @categoryName return the @ref QListViewItem
+	 * that represents that category. Probably a useless function,
+	 * since just remembering the pointer @ref addCategory gives
+	 * you is faster and uses hardly any memory.
+	 */
+	QListViewItem *findCategory(const QString& categoryName) const;
+	/**
+	 * Return the list of strings in column @column of all siblings
+	 * of the given item @p p. If you remembered a pointer to a 
+	 * category, you can use
+	 * <PRE>
+	 * QStringList l = lc->listSiblings(stdKDE->firstChild(),2);
+	 * <PRE>
+	 * to get the list of strings in hidden column 2 under
+	 * the category you remembered.
+	 */
+	QStringList listSiblings(const QListViewItem *p,int column=0) const;
+
+	/**
+	 * @return whether new categories are inserted in an
+	 * open state or not.
+	 *
+	 * @see setStartOpen
+	 */
+	bool startOpen() const { return fStartOpen; } ;
+	/**
+	 * Enable categories being inserted in an open state.
+	 * It is disabled by default but may be set from the
+	 * constructor.
+	 */
+	void setStartOpen(bool b) { fStartOpen=b; } ;
+
+protected:
+	/**
+	 * Reimplemented to prevent categories from being dragged.
+	 */
+	virtual bool acceptDrag (QDropEvent* event) const;
+	/**
+	 * Reimplemented to prevent categories from being dragged.
+	 */
+	virtual void startDrag();
+	/**
+	 * Reimplemented to prevent categories from being dragged.
+	 */
+	virtual void contentsDropEvent (QDropEvent*);
+
+
+
+private:
+	/**
+	 * Call several @ref KListView functions to set up useful
+	 * behavior for this particular class.
+	 */
+	void setupWidget();
+
+	bool fStartOpen:1;
+} ;
+
+#endif
