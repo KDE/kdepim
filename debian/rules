@@ -6,6 +6,8 @@
 # This is the debhelper compatability version to use.
 export DH_COMPAT=3
 
+tmp = $(shell pwd)/debian/korganizer
+
 build: build-stamp
 
 -include debian/debiandirs
@@ -41,12 +43,11 @@ binary-arch: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs -a
-	$(MAKE) install DESTDIR=`pwd`/debian/korganizer/
-	cp debian/*.override debian/korganizer/usr/share/lintian/overrides/
-	for i in `ls debian/korganizer/usr/share/lintian/overrides/`; do \
-	  mv debian/korganizer/usr/share/lintian/overrides/$$i debian/korganizer/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
+	$(MAKE) install DESTDIR=$(tmp)/
+	cp debian/*.override $(tmp)/usr/share/lintian/overrides/
+	for i in `ls $(tmp)/usr/share/lintian/overrides/`; do \
+	  mv $(tmp)/usr/share/lintian/overrides/$$i $(tmp)/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
 	done
-	perl -w admin/debianrules cleanup
 	for i in `find debian/ -type l -name "common"`; do \
 		rm $$i ;\
 		ln -s ../common $$i ;\
