@@ -1525,6 +1525,7 @@ incoming messages.</para>
 </listitem>
 </varlistentry>
 
+<!-- (mmutz) discontinued
 <varlistentry>
 <term>
 <menuchoice>
@@ -1538,21 +1539,29 @@ message is successfully delivered to its destination mail server. This has to be
 also supported from the receiver's side in order to work.</para>
 </listitem>
 </varlistentry>
+-->
 
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Options</guimenu>
-<guimenuitem>Confirm Read</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>If you choose this option, you request a confirmation email once your
-message is downloaded and read by its recipient. This has to be supported and
-enabled by the receiver's email client in order to work.
-<!-- TODO: kmail... --></para>
-</listitem>
-</varlistentry>
+	<varlistentry id="composer-options-request-mdn">
+	  <term>
+	    <menuchoice>
+	      <guimenu>Options</guimenu>
+	      <guimenuitem>Request Disposition Notification</guimenuitem>
+	    </menuchoice>
+	  </term>
+	  <listitem>
+	    <para>
+	      If you choose this option, you request a confirmation
+	      email once your message is downloaded and read by its
+	      recipient. This has to be supported and enabled by the
+	      receiver's email client in order to work.
+	    </para>
+	    <para>
+	      See <xref linkend="configure-security-reading-mdns"/>
+	      for background information and ways to customize the
+	      read receipts that &kmail; itself sends.
+	    </para>
+	  </listitem>
+	</varlistentry>
 
 <varlistentry id="composer-options-sign-message">
 <term>
@@ -1589,7 +1598,7 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
 </term>
 <listitem>
 <para>This entry will only be visible if you have installed at least one
-<link linkend="configure-security-plugins">crypto plugin</link>. It allows
+<link linkend="configure-security-crypto-backends">crypto plugin</link>. It allows
 you to choose which plugin you want to use for encryption/signing or if
 you want to use the built-in OpenPGP encryption/signing.</para>
 </listitem>
@@ -1660,7 +1669,7 @@ key to your message.</para>
 </listitem>
 </varlistentry>
 
-<varlistentry>
+<varlistentry id="composer-attach-attach-my-public-key">
 <term>
 <menuchoice>
 <guimenu>Attach</guimenu>

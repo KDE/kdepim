@@ -16,10 +16,20 @@
 <email>davidrugge@mediaone.net</email>
 </address></affiliation>
 </author>
+      <author>
+	<firstname>Marc</firstname>
+	<surname>Mutz</surname>
+	<affiliation>
+	  <orgname>Klar&auml;lvdalens Datakonsult AB</orgname>
+	  <address>
+	    <email>mutz@kde.org</email>
+	  </address>
+	</affiliation>
+      </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2002-10-03</date>
-<releaseinfo>1.5</releaseinfo>
+<date>2004-07-02</date>
+<releaseinfo>1.7</releaseinfo>
 </chapterinfo>
 
 <title>Configure &kmail;</title>
@@ -142,6 +152,154 @@ User</userinput> into the <guilabel>Your name</guilabel> field and
 address</guilabel> field.</para>
 </sect2>
 
+    <sect2 id="configure-identity-cryptography">
+      <title>
+	Cryptography
+      </title>
+
+      <para>
+	The <guilabel>Cryptography</guilabel> tab allows you to
+	specify &openpgp; and &smime; keys associated with this
+	identity, as well as choosing the preferred (cryptographic)
+	message format to use.
+      </para>
+
+      <variablelist>
+
+	<varlistentry id="configure-identity-cryptography-openpgp-sign">
+	  <term>
+	    <guilabel>OpenPGP signing key</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can select the key to be used when
+	      &openpgp;-signing messages written with this identity in
+	      effect.
+	    </para>
+	    <para>
+	      For brevity, only the short key id of selected keys is
+	      shown. Hovering with the mouse over the key list will
+	      show more information in a tooltip.
+	    </para>
+	    <para>
+	      To clear the label press the
+	      <guibutton>Clear</guibutton> button.
+	    </para>
+	    <para>
+	      To change the selected key, press the
+	      <guibutton>Change...</guibutton> button. A dialog
+	      listing all secret &openpgp; keys will be shown allowing
+	      you to select the one to use.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	
+	<varlistentry id="configure-identity-cryptography-openpgp-encrypt">
+	  <term>
+	    <guilabel>OpenPGP encryption key</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can select the key to &openpgp;-encrypt
+	      messages to when this identity and <xref
+	      linkend="configure-security-composing-encrypt-to-self"/>
+	      are in effect. This key is also used for the <xref
+	      linkend="composer-attach-attach-my-public-key"/>
+	      function of the <link
+	      linkend="the-composer-window">Composer</link>.
+	    </para>
+	    <para>
+	      To change the selected key, press the
+	      <guibutton>Change...</guibutton> button. A dialog
+	      listing all &openpgp; keys found in your keyring will be
+	      shown allowing you to select the one to use.
+	    </para>
+	    <para>
+	      You can clear the list of keys and get more information
+	      about them in the same way as described for <xref
+	      linkend="configure-identity-cryptography-openpgp-sign"/>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	
+	<varlistentry id="configure-identity-cryptography-smime-sign">
+	  <term>
+	    <guilabel>S/MIME signing certificate</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can select the certificate to be used when
+	      &smime;-signing messages written with this identity in
+	      effect.
+	    </para>
+	    <para>
+	      To change the selected certificate, press the
+	      <guibutton>Change...</guibutton> button. A dialog
+	      listing all secret &smime; signing certificates will be
+	      shown allowing you to select the one to use.
+	    </para>
+	    <para>
+	      You can clear the list of certificates and get more
+	      information about them in the same way as described for
+	      <xref linkend="configure-identity-cryptography-openpgp-sign"/>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	
+	<varlistentry id="configure-identity-cryptography-smime-encrypt">
+	  <term>
+	    <guilabel>S/MIME encryption certificate</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can select the certificate to &smime;-encrypt
+	      messages to when this identity and <xref
+	      linkend="configure-security-composing-encrypt-to-self"/>
+	      are in effect.
+	    </para>
+	    <para>
+	      To change the selected certificate, press the
+	      <guibutton>Change...</guibutton> button. A dialog
+	      listing all &smime; encryption certificates found in
+	      your local keybox will be shown allowing you to select
+	      the one to use.
+	    </para>
+	    <para>
+	      You can clear the list of certificates and get more
+	      information about them in the same way as described for
+	      <xref linkend="configure-identity-cryptography-openpgp-sign"/>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-identity-cryptography-preferred-format">
+	  <term>
+	    <guilabel>Preferred crypto message format</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Here you can choose which cryptographic message format
+	      to use by default with this identity.
+	    </para>
+	    <para>
+	      You can either select any of the four formats supported
+	      by &kmail; or leave the option at the recommended
+	      default setting of <guilabel>Any</guilabel>, which will
+	      choose a suitable format based on the recipients of the
+	      message, or might even go so far as to create two copies
+	      of the message, one &smime; signed and/or encrypted, the
+	      other &openpgp; signed and/or encrypted.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+    </sect2>
+
 <sect2 id="configure-identity-advanced">
 <title><guilabel>Advanced</guilabel></title>
 
@@ -181,32 +339,6 @@ should be sent to. Note that a BCC is only send to this address, when
 is activated while composing a message. If you want to send a BCC regardless 
 of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 <guilabel>Composer</guilabel> page.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>OpenPGP key</guilabel></term>
-<listitem>
-<para>Select here the <application>OpenPGP</application>
-key that should be used to (digitally) sign messages when this
-identity is used. When you click on the <guilabel>Change...</guilabel>
-button, a key selection dialog comes up where you can select the key
-to use from the list of secret keys found. If you do not have an
-<application>OpenPGP</application> key or do not know what that is, you
-do not need to worry about this setting.</para>
-
-<note><para>The selected key will also be used as the recipient when
-you check <link linkend="configure-security-composing-encrypt-to-self">
-<guilabel>Always encrypt to self</guilabel></link> on the <link
-linkend="configure-security-composing"><guilabel>Composing</guilabel> tab</link>
-of the <link linkend="configure-security">
-<guilabel>Security</guilabel> page</link>.</para></note>
-
-<note><para>You might need to configure your
-<application>OpenPGP</application> environment first, to make the key
-selection dialog work. You can do this on the <link
-linkend="configure-security"> <guilabel>Security</guilabel>
-page</link>.</para></note>
 </listitem>
 </varlistentry>
 
@@ -263,9 +395,9 @@ tab</link> of the <link linkend="configure-network">
 to be appended to each message sent using this identity.</para>
 
 <note><para>This type of signature has nothing to do with the
-(digital) signatures for which you can select the to-be-used key on
-the <link linkend="configure-identity-advanced">Advanced
-tab</link>. It is just bad wording to call this a signature, but since
+(digital) signatures for which you can select the keys to use on
+the <link linkend="configure-identity-cryptography">Cryptography</link>
+tab. It is just bad wording to call this a signature, but since
 the term is already used everywhere else, we keep this notation. Just
 keep in mind that these signatures and digital signatures are two
 completely different things.</para></note>
@@ -518,34 +650,97 @@ one of the offered profiles will override your current layout settings.</para></
 
 </sect1>
 
-<sect1 id="configure-composer">
-<title>Composer Page</title>
+  <sect1 id="configure-composer">
+    <title>
+      Composer Page
+    </title>
 
-<sect2 id="configure-composer-general">
-<title>General</title>
+    <sect2 id="configure-composer-general">
+      <title>
+	General
+      </title>
 
-<para><guilabel>Automatically append signature</guilabel> lets you toggle
-whether to automatically include your signature as defined in the 
-<link linkend="setting-your-identity">identity page</link>.</para>
+      <variablelist>
+	<varlistentry id="configure-composer-general-append-signature">
+	  <term>
+	    <guilabel>Automatically append signature</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, your signature as defined in the <link
+	      linkend="configure-identity-signature">identity
+	      page</link> is automatically included at the end of the
+	      mail.  <!-- otherwise...? -->
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-smart-quoting">
+	  <term>
+	    <guilabel>Use smart quoting</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will break long lines but will try
+	      to keep the correct quoting (&eg; the <quote>&gt;
+	      </quote> will always be at the start of the line).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-auto-request-mdns">
+	  <term>
+	    <guilabel>Automatically request message disposition notifications</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, <xref
+	      linkend="composer-options-request-mdn"/> will default to
+	      <emphasis>on</emphasis>. Check this option only if you
+	      know what you are doing. &mdn;s are considered a
+	      nuisance (or are simply ignored) by a lot of people. It
+	      is better to decide to request them on a
+	      message-by-message basis.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-word-wrap">
+	  <term>
+	    <guilabel>Word wrap at column</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Lets you turn word wrapping on and off in the composer
+	      window and lets you set the column at which words will
+	      be wrapped (you probably should not need to change the
+	      default value, which is <literal>78</literal>).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry id="configure-composer-general-external-editor">
+	  <term>
+	    <guilabel>External Editor</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If you do not like the Composer you can use a different
+	      editor. Note that the composer window will still open
+	      and the external editor will open as soon as you type
+	      just one character in the body of the message. If you're
+	      done, save the text and exit the editor. The text will
+	      now appear in the composer window, where you can send
+	      it. Note that your editor may not return immediately,
+	      you have to use &eg;
+	      <userinput>
+		<command>
+		  gvim <option>-f</option> <varname>%f</varname>
+		</command>
+	      </userinput> for <application>gvim</application>.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
 
-<para><guilabel>Use smart quoting</guilabel> will break long lines but will try
-to keep the correct quoting (&eg; the <quote>&gt; </quote> will always be at the
-start of the line).</para>
+    </sect2>
 
-<para><guilabel>Word wrap at column</guilabel> lets you turn word wrapping on
-and off in the composer window and lets you set the column
-at which words will be wrapped (you probably should not need to change
-the default value, which is <userinput>78</userinput>).</para>
-
-<para>If you do not like the Composer you can use a
-different editor. Note that the composer window will still open and
-the external editor will open as soon as you type just one character in the body
-of the message. If you're done, save the text and exit the editor. The text will
-now appear in the composer window, where you can send
-it. Note that your editor may not return immediately, you have to
-use &eg; <userinput>gvim -f %f</userinput> for <application>gvim</application>.</para>
-
-</sect2>
 
 <sect2 id="configure-composer-phrases">
 <title>Phrases</title>
@@ -842,13 +1037,13 @@ is only useful for advanced users.</para>
 	  <listitem>
 	    <para>
 	      If checked, automatically imports any attachments
-	      containing OpenPGP keys into your local keyring, and any
-	      attachments containing S/MIME keys into your local key
+	      containing &openpgp; keys into your local keyring, and any
+	      attachments containing &smime; keys into your local key
 	      box.
 	    </para>
 	    <note>
 	      <para>
-		Verifying S/MIME signatures always involves importing
+		Verifying &smime; signatures always involves importing
 		the contained certificates. This option thus does not
 		affect this. It is also unrelated to &gpg;'s
 		auto-key-retrieve feature, where &gpg; will try to
@@ -972,7 +1167,7 @@ is only useful for advanced users.</para>
 	    <para>
 	      Also called <quote>opportunistic encryption</quote>. If
 	      checked, &kmail; will try to match recipients to
-	      (OpenPGP or S/MIME) keys even when you did
+	      (&openpgp; or &smime;) keys even when you did
 	      <emphasis>not</emphasis> specifically request
 	      encryption. If usable keys are found for all recipients,
 	      &kmail; will ask whether or not you want to encrypt the
@@ -1006,15 +1201,193 @@ is only useful for advanced users.</para>
 
     </sect2>
 
-<sect2 id="configure-security-plugins">
-<title>Crypto Plugins</title>
+    <sect2 id="configure-security-warnings">
+      <title>
+	Warnings
+      </title>
 
-<para>For now, please refer to the homepage of the 
-<ulink url="http://www.gnupg.org/aegypten/">&Auml;gypten project</ulink>.</para>
+      <para>
+	On this tab you can switch security-relavant warnings on and
+	off.
+      </para>
 
-</sect2>
+      <variablelist>
 
-</sect1>
+	<varlistentry id="configure-security-warnings-warn-send-unsigned">
+	  <term>
+	    <guilabel>Warn when trying to send unsigned messages</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will show a warning if for whatever
+	      reason a message would be sent without being digitally
+	      signed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-warnings-warn-send-unencrypted">
+	  <term>
+	    <guilabel>Warn when trying to send unencrypted messages</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will show a warning if for whatever
+	      reason a message would be sent without being encrypted.
+	    </para>
+	    <note>
+	      <para>
+		While it is common to sign all outgoing messages,
+		encrypting them is not. So unless your company has a
+		policy of never sending any unencrypted messages, it
+		might be a good idea to keep this option switched off
+		and rely on <link
+		linkend="configure-security-composing-opportunistic-encryption">opportunistic
+		encryption</link> to alert you if you
+		<emphasis>could</emphasis> send encrypted messages,
+		but did not request it.
+	      </para>
+	    </note>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-warnings-warn-receiver-email-not-in-cert">
+	  <term>
+	    <guilabel>Warn if receiver's email address is not in certificate</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will emit a warning if an &smime;
+	      certifciate or &openpgp; key will be used for a recipient
+	      whose email address is not listed in the email addresses
+	      stored in the certificate.
+	    </para>
+	    <para>
+	      Situations in which this warning will trigger include
+	      when configuring your per-identity &openpgp; keys or
+	      &smime; certificates, when encrypting, and when verifying
+	      signatures, if the signature was made with a certificate
+	      that does not include the email address of the sender.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-warnings-warn-near-expire">
+	  <term>
+	    <guilabel>Warn if certificates/keys expire soon</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      If checked, &kmail; will warn when an &smime; certificate
+	      or &openpgp; key is used which will expire soon.
+	    </para>
+	    <para>
+	      The period in which to warn before key/certificate
+	      expiration can then be configured separately for signing
+	      and encryption keys, as well as (in the case of &smime;),
+	      for end-user certificates, intermediate
+	      <acronym>CA</acronym> certificates and root
+	      certificates.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="configure-security-warnings-reenable-all-warnings">
+	  <term>
+	    <guilabel>Re-Enable All &quot;Don&apos;t Ask Again&quot; Warnings</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+	      Apart from the main warnings described above, there are
+	      more warning and information messages, which contain an
+	      option to not show them again. If you would like to
+	      re-enable them after choosing not to show them again,
+	      you can achieve this by pressing this button.<!--
+	      --><footnote>
+		<para>
+		  This will re-enable <emphasis>all</emphasis> such
+		  warnings for &kmail;. It does not make much sense to
+		  allow more fine-grained selection of which warnings
+		  to show since you can just check the option to
+		  suppress them again when they next show up.
+		</para>
+	      </footnote>
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+    </sect2>
+
+    <sect2 id="configure-security-smime-validation">
+      <title>
+	&smime; Validation
+      </title>
+
+      <para>
+	This tab contains selected entries from &gpgsm;'s <link
+	linkend="configure-security-crypto-backends-configure">dynamic
+	backend configuration dialog</link>. Please refer
+	to the &gpgsm; manual for a description of these options.
+      </para>
+    </sect2>
+
+    <sect2 id="configure-security-crypto-backends">
+      <title>
+	Crypto Backends
+      </title>
+
+      <para>
+	On this tab you can configure which crypto backends are to be
+	used for &openpgp; and &smime; cryptographic operations (such
+	as signing and encrypting).
+      </para>
+
+      <para>
+	On the right-hand side, you see a list of available
+	backends. Below each backend entry, you can see what protocols
+	(&openpgp; and/or &smime;) the backend supports. If a protocol
+	is not listed, the backend does not support it. If it is
+	listed, but greyed out, the backend supports the protocol, but
+	some required programs were not found, or other errors
+	occurred during initialization. If you press
+	<guibutton>Rescan</guibutton>, a dialog box will appear that
+	lists reasons for the initialization failure.
+      </para>
+
+      <para id="configure-security-crypto-backends-configure">
+	To configure a backend, select it in the list of available
+	backends and press <guibutton>Configure...</guibutton>. The
+	per-backend configuration dialog is dynamically created from
+	the information returned by the backend. It may therefore
+	change if you update the backend applications, although
+	&kmail; itself is unchanged. If the
+	<guibutton>Configure...</guibutton> button is disabled, the
+	backend does not support a backend configuration dialog.
+      </para>
+
+      <para>
+	Please refer to the manuals of the applications underlying
+	each backend for a description of the options presented in the
+	backend configuration dialogs.
+      </para>
+
+      <para>
+	In front of each backend's protocol entries, you can see a
+	checkbox, with which you select which backend is to be used
+	for a given protocol. These checkboxes are exclusive per
+	protocol, meaning that if you select a backend to perform
+	&openpgp; operations, any previously selected &openpgp;
+	implementation will be unselected, but the &smime; backend
+	selection will be unchanged. If no backend is selected for a
+	given protocol, that protocol is effectively disabled for use
+	in &kmail;.
+      </para>
+
+    </sect2>
+
+  </sect1> <!-- configure-security -->
 
 <sect1 id="configure-folders">
 <title>Folders Page</title>

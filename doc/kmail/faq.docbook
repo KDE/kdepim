@@ -89,7 +89,7 @@ please sign the key locally with <userinput><command>gpg</command>
 <listitem>
 <para>&kmail; cannot encrypt and sign attachments if you are using
 the built-in OpenPGP support. For encrypted and signed attachments you need
-to have <link linkend="configure-security-plugins">crypto 
+to have <link linkend="configure-security-crypto-backends">crypto 
 plugins</link> installed and configured.</para>
 </listitem>
 <listitem>

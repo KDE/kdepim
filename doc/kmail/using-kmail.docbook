@@ -218,7 +218,7 @@ Folder</guimenuitem></menuchoice>.
 linkend="pgp-encrypt-your-messages">encrypted</link>
 or <link linkend="pgp-sign-your-messages">digitally signed</link> message, select the
 <guiicon>Sign Message</guiicon> or <guiicon>Encrypt 
-Message</guiicon> icons in the toolbar. Moreover you can select the protocol that should be used to sign and/or encrypt the message. Depending on the
+Message</guiicon> icons in the toolbar. Moreover you can select the format that should be used to sign and/or encrypt the message. Depending on the
 installed encryption programs you can choose between:
 </para>
 
@@ -226,40 +226,40 @@ installed encryption programs you can choose between:
 <varlistentry>
 <term><guilabel>Any</guilabel></term>
 <listitem>
-<para>KMail will use a protocol which is understood by all recipients of the
-message. The prefered protocol of the recipients can be specified in the
+<para>KMail will use a format which is understood by all recipients of the
+message. The prefered format of the recipients can be specified in the
 KDE Address Book.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Inline OpenPGP (deprecated)</guilabel></term>
 <listitem>
-<para>This protocol is outdated. If you use this protocol then only the
+<para>This format is outdated. If you use this format then only the
 message text will be signed and/or encrypted. <emphasis>Attachments will 
 neither be signed nor encrypted.</emphasis> HTML messages can't be signed
-with this protocol. You should only use this protocol
+with this format. You should only use this format
 if necessary, i.e. if you send messages to users of email clients that cannot
-handle the more advanced protocols.</para></listitem>
+handle the more advanced formats.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>PGP/MIME</guilabel></term>
 <listitem>
-<para>This protocol is the successor of the inline OpenPGP protocol. If you
-use this protocol then the message text and all attachments will be signed
-and/or encrypted (at least by default). It's the recommended protocol if you
+<para>This format is the successor of the inline OpenPGP format. If you
+use this format then the message text and all attachments will be signed
+and/or encrypted (at least by default). It's the recommended format if you
 use OpenPGP.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>S/MIME</guilabel></term>
 <listitem>
-<para>This protocol is an alternative protocol to PGP/MIME. If you
-use this protocol then the message text and all attachments will be signed
-and/or encrypted (at least by default). This protocol is mostly used by
+<para>This format is an alternative format to PGP/MIME. If you
+use this format then the message text and all attachments will be signed
+and/or encrypted (at least by default). This format is mostly used by
 corporations.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>S/MIME opaque</guilabel></term>
 <listitem>
-<para>This protocol is a variant of the S/MIME protocol. It should only be
+<para>This format is a variant of the S/MIME format. It should only be
 used if necessary.</para></listitem>
 </varlistentry>
 </variablelist>
@@ -1253,7 +1253,7 @@ also check out the <link linkend="pgp-faq">&FAQ; item about
 <!-- note: this is partly copied above: -->
 <warning><para>Attachments will not be encrypted if you are using 
 the built-in OpenPGP support: to encrypt attachments, you have to install
-and configure <link linkend="configure-security-plugins">encryption plugins</link>;
+and configure <link linkend="configure-security-crypto-backends">encryption plugins</link>;
 then, you can decide for each attachment whether it should be encrypted or not.
 </para></warning>
 
