@@ -42,7 +42,7 @@ class KPilotUser
     KPilotUser() { }
     KPilotUser(const PilotUser* user) { fUser = *user; }
     
-    PilotUser* operator&() { return &fUser; }
+    PilotUser *pilotUser() { return &fUser; }
       
     /**
      * Ensures the names are properly terminated.  Needed incase we
@@ -81,6 +81,9 @@ class KPilotUser
 
 
 // $Log$
+// Revision 1.6  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.5  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
