@@ -1018,7 +1018,8 @@ void KNArticleWidget::slotPrint()
           yPos+=fm.lineSpacing();
       }
       else
-        ++it;
+        dh=++it;
+
     }
 
     yPos+=fm.lineSpacing()+10;
