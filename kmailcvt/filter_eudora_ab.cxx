@@ -112,7 +112,7 @@ void FilterEudoraAb::import(FilterInfo *info)
 void FilterEudoraAb::convert(QFile& f,FilterInfo *info)
 {
   QCString line(LINELEN+1);
-  int  e;
+  int e, i;
   int LINE=0;
   while(f.readLine(line.data(),LINELEN)) { LINES+=1; }
   f.reset();
@@ -120,6 +120,9 @@ void FilterEudoraAb::convert(QFile& f,FilterInfo *info)
 
     LINE+=1;
     info->current(100 * LINE / LINES );
+
+    for(i=0;line[i]!='\n' && line[i]!='\0';i++);
+    line[i]='\0'; // Strip newline
 
     if (line.left(5) == "alias") {
       QString k = key(line); 
