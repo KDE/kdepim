@@ -11,6 +11,6 @@ servicedir = $(kde_servicesdir)
 kde_module_LTLIBRARIES = libJPilotAPI.la 
 
 libJPilotAPI_la_SOURCES = libplugin.c APIEmulation.c
-libJPilotAPI_la_LDFLAGS = $(KDE_RPATH) -L../../../lib -Wl,-export-dynamic
+libJPilotAPI_la_LDFLAGS = $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
 libJPilotAPI_la_LIBADD = -lc -lgtk -lgdk
 

@@ -121,7 +121,7 @@ int get_next_unique_pc_id(unsigned int *next_unique_id);
 
 int jpilot_logf(int level, char *format, ...);
 int jp_logf(int level, char *format, ...);
-/* FIXME: Need a policy.  Should all symbols avaliable to
+/* FIXME: Need a policy.  Should all symbols available to
  * plugins start with jp or jpilot?
  */
 /*#define jp_logf jpilot_logf*/
