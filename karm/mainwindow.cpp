@@ -118,6 +118,16 @@ void MainWindow::save()
   saveGeometry();
 }
 
+void MainWindow::exportcsvHistory()
+{
+  kdDebug(5970) << i18n("Exporting History to disk.") << endl;
+  QString err=_taskView->exportcsvHistory();
+  if (err.isEmpty()) statusBar()->message(i18n("Successfully exported History to csv-file"),1807);
+  else KMessageBox::error(this, err);
+  saveGeometry();
+  
+}
+
 void MainWindow::quit()
 {
   kapp->quit();
@@ -296,7 +306,7 @@ void MainWindow::makeMenus()
       _taskView, SLOT(exportcsvFile()), actionCollection(),
       "export_csvfile");
   new KAction( i18n("Export &History to CSV File..."), 0,
-      _taskView, SLOT(exportcsvHistory()), actionCollection(),
+      this, SLOT(exportcsvHistory()), actionCollection(),
       "export_csvhistory");
   /*
   new KAction( i18n("Import E&vents"), 0,

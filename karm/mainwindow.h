@@ -43,6 +43,7 @@ class MainWindow : public KMainWindow
     void updateTime( long, long );
     void updateStatusBar();
     void save();
+    void exportcsvHistory();
     void quit();
     void print();
     void slotSelectionChanged();

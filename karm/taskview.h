@@ -107,7 +107,7 @@ class TaskView : public KListView
     void exportcsvFile();
 
     /** Export comma-separated values format for task history. */
-    void exportcsvHistory();
+    QString exportcsvHistory();
 
     /** Calls newTask with caption "New Sub Task". */
     void newSubTask();

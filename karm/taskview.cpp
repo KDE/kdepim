@@ -235,18 +235,19 @@ void TaskView::exportcsvFile()
   }
 }
 
-void TaskView::exportcsvHistory()
+QString TaskView::exportcsvHistory()
 {
   kdDebug(5970) << "TaskView::exportcsvHistory()" << endl;
-
+  QString err;
+  
   CSVExportDialog dialog( ReportCriteria::CSVHistoryExport, this );
   if ( current_item() && current_item()->isRoot() )
     dialog.enableTasksToExportQuestion();
 
   if ( dialog.exec() ) {
-    QString err = _storage->report( this, dialog.reportCriteria() );
-    if ( !err.isEmpty() ) KMessageBox::error( this, err );
+    err = _storage->report( this, dialog.reportCriteria() );
   }
+  return err;
 }
 
 void TaskView::scheduleSave()
