@@ -95,11 +95,13 @@ done
 
 if test "$HAVE_MAL" = "0" ; then
 	AC_MSG_WARN([KPILOT: MAL library not found. AvantGo conduit will not be compiled.])
+	AC_MSG_WARN([KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/])
 fi
 
 else
 if test "$HAVE_MAL" = "0" ; then
 	AC_MSG_WARN([KPILOT: MAL headers not found. AvantGo conduit will not be compiled.])
+	AC_MSG_WARN([KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/])
 fi
 	
 fi
