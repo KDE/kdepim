@@ -378,40 +378,75 @@ KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
   return mCalendar.rawTodosForDate( date );
 }
 
-bool ResourceKolab::addJournal( KCal::Journal* )
+bool ResourceKolab::addJournal( KCal::Journal* journal )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return false;
+  return addJournal( journal, QString::null, 0 );
 }
+
 void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
                                 Q_UINT32 sernum )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  KCal::Journal* journal = Journal::xmlToJournal( xml );
+  Q_ASSERT( journal );
+  if( journal && !mUidMap.contains( journal->uid() ) )
+    addJournal( journal, subresource, sernum );
 }
+
 bool ResourceKolab::addJournal( KCal::Journal* journal,
                                 const QString& subresource, Q_UINT32 sernum )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  journal->registerObserver( this );
+
+  // Find out if this journal was previously stored in KMail
+  bool newJournal = subresource.isEmpty();
+  mCalendar.addJournal( journal );
+
+  QString resource =
+    newJournal ? findWritableResource( mJournalSubResources ) : subresource;
+
+  if ( !mSilent ) {
+    QString xml = Journal::journalToXML( journal );
+    kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
+
+    if( !kmailUpdate( resource, sernum, xml, journalAttachmentMimeType,
+                      journal->uid() ) ) {
+      kdError(5500) << "Communication problem in ResourceKolab::addJournal()\n";
+      return false;
+    }
+  }
+
+  if ( !resource.isEmpty() && sernum != 0 ) {
+    mUidMap[ journal->uid() ] = StorageReference( resource, sernum );
+    return true;
+  }
+
   return false;
 }
-void ResourceKolab::deleteJournal( KCal::Journal* )
+
+void ResourceKolab::deleteJournal( KCal::Journal* journal )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
+  const QString uid = journal->uid();
+  if( !mUidMap.contains( uid ) ) return; // Odd
+  if ( !mSilent )
+    kmailDeleteIncidence( mUidMap[ uid ].resource(),
+                          mUidMap[ uid ].serialNumber() );
+  mUidMap.remove( uid );
+  mCalendar.deleteJournal( journal );
 }
-KCal::Journal* ResourceKolab::journal( const QDate& )
+
+KCal::Journal* ResourceKolab::journal( const QDate& date )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return 0;
+  return mCalendar.journal( date );
 }
+
 KCal::Journal* ResourceKolab::journal( const QString& uid )
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return 0;
+  return mCalendar.journal(uid);
 }
+
 KCal::Journal::List ResourceKolab::journals()
 {
-  kdDebug() << "NYI: " << k_funcinfo << endl;
-  return KCal::Journal::List();
+  return mCalendar.journals();
 }
 
 KCal::Alarm::List ResourceKolab::alarms( const QDateTime& from,
