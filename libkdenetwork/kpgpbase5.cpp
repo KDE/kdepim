@@ -388,7 +388,14 @@ Base5::secretKeys( const QStringList & patterns )
   int exitStatus = 0;
 
   status = 0;
-  exitStatus = run( "pgpk -ll", 0, true );
+  QCString cmd = "pgpk -ll";
+  for ( QStringList::ConstIterator it = patterns.begin();
+        it != patterns.end(); ++it ) {
+    cmd += " ";
+    cmd += KProcess::quote( *it ).local8Bit();
+  }
+  status = 0;
+  exitStatus = run( cmd, 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
