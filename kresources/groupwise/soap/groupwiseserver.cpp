@@ -33,6 +33,7 @@
 
 #include "contactconverter.h"
 #include "incidenceconverter.h"
+#include "kcal_resourcegroupwise.h"
 #include "soapH.h"
 
 #include "groupwiseserver.h"
@@ -561,11 +562,12 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
   return true;
 }
 
-bool GroupwiseServer::readCalendar( KCal::Calendar *calendar )
+bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGroupwise *resource )
 {
   ReadCalendarJob *job = new ReadCalendarJob( mUrl, mSession, 0 );
   job->setCalendar( calendar );
   job->setCalendarFolder( &mCalendarFolder );
+  job->setResource( resource );
 
   connect( job, SIGNAL( done() ),
            this, SIGNAL( readCalendarFinished() ) );

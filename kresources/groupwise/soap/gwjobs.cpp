@@ -18,18 +18,16 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#include <kabc/addressee.h>
+#include <kdebug.h>
 #include <libkcal/calendar.h>
 #include <libkcal/incidence.h>
-
-#include <kabc/addressee.h>
-
-#include <kdebug.h>
 
 #include <qtimer.h>
 
 #include "contactconverter.h"
 #include "incidenceconverter.h"
-
+#include "kcal_resourcegroupwise.h"
 #include "soapH.h"
 
 #include "gwjobs.h"
@@ -147,6 +145,11 @@ void ReadCalendarJob::setCalendarFolder( std::string *calendarFolder )
   mCalendarFolder = calendarFolder;
 }
 
+void ReadCalendarJob::setResource( KCal::ResourceGroupwise *resource )
+{
+  mResource = resource;
+}
+
 void ReadCalendarJob::run()
 {
   mSoap->header->ns1__session = mSession;
@@ -217,9 +220,22 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
           i = conv.convertFromTask( t );
         }
       }
+
       if ( i ) {
-        i->setCustomProperty( "GWRESOURCE", "CONTAINER",
-                              conv.stringToQString( id ) );
+        i->setCustomProperty( "GWRESOURCE", "CONTAINER", conv.stringToQString( id ) );
+
+        QString remoteUid = conv.stringToQString( (*it)->id );
+        KCal::Incidence *oldIncidence = mResource->event( mResource->localUid( remoteUid ) );
+        if ( !oldIncidence )
+          oldIncidence = mResource->todo( mResource->localUid( remoteUid ) );
+
+        if ( !oldIncidence ) { // new incidence
+          mResource->setRemoteUid( i->uid(), remoteUid );
+        } else {
+          i->setUid( oldIncidence->uid() );
+          mCalendar->deleteIncidence( oldIncidence );
+        }
+
         mCalendar->addIncidence( i );
       }
     }

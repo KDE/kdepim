@@ -136,18 +136,21 @@ bool ResourceGroupwise::doLoad()
     return false;
   }
 
-  disableChangeNotification();
-
   mCalendar.close();
+
+  disableChangeNotification();
+  loadCache();
+
   clearChanges();
 
-  mServer->readCalendar( &mCalendar );
+  mServer->readCalendar( &mCalendar, this );
 
   return true;
 }
 
 void ResourceGroupwise::loadFinished()
 {
+  saveCache();
   enableChangeNotification();
 
   emit resourceLoaded( this );
@@ -156,6 +159,8 @@ void ResourceGroupwise::loadFinished()
 
 bool ResourceGroupwise::doSave()
 {
+  saveCache();
+
   if ( !hasChanges() ) return true;
   
   if ( !confirmSave() ) return false;

@@ -31,6 +31,7 @@
 
 namespace KCal {
 class Calendar;
+class ResourceGroupwise;
 }
 
 class GWJob : public KPIM::ThreadWeaver::Job
@@ -81,6 +82,9 @@ class ReadCalendarJob : public GWJob
     void setCalendar( KCal::Calendar* );
     void setCalendarFolder( std::string* );
 
+    // we need the resource here for doing uid mapping
+    void setResource( KCal::ResourceGroupwise* );
+
   protected:
     void run();
     void readCalendarFolder( const std::string &id );
@@ -88,6 +92,7 @@ class ReadCalendarJob : public GWJob
   private:
     KCal::Calendar *mCalendar;
     std::string *mCalendarFolder;
+    KCal::ResourceGroupwise *mResource;
 };
 
 #endif

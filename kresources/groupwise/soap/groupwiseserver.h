@@ -34,6 +34,7 @@
 namespace KCal {
 class Calendar;
 class Incidence;
+class ResourceGroupwise;
 }
 
 struct soap;
@@ -56,7 +57,7 @@ class GroupwiseServer : public QObject
     bool login();
     bool logout();
 
-    bool readCalendar( KCal::Calendar * );
+    bool readCalendar( KCal::Calendar*, KCal::ResourceGroupwise* );
     bool addIncidence( KCal::Incidence * );
     bool changeIncidence( KCal::Incidence * );
     bool deleteIncidence( KCal::Incidence * );
