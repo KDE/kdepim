@@ -35,7 +35,9 @@ class KNNntpClient : public KNProtocolClient  {
 
   	virtual void processJob();				 // examines the job and calls the suitable handling method
 	
-  	void doListGroups();
+  	void doLoadGroups();
+  	void doFetchGroups();
+  	void doCheckNewGroups();
   	void doFetchNewHeaders();
   	void doFetchArticle();
   	void doPostArticle();

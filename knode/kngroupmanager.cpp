@@ -44,8 +44,153 @@
 #include "kngroupmanager.h"
 
 
+//=================================================================================
+
+// helper classes for the group selection dialog (getting the server's grouplist,
+// getting recently created groups)
+
+
+KNGroupInfo::KNGroupInfo()
+{
+}
+
+
+KNGroupInfo::KNGroupInfo(const char *n_ame, const char *d_escription, bool n_ewGroup, bool s_ubscribed)
+  : name(n_ame), description(d_escription), newGroup(n_ewGroup), subscribed(s_ubscribed)
+{
+}
+
+
+KNGroupInfo::~KNGroupInfo()
+{
+}
+
+
+bool KNGroupInfo::operator== (const KNGroupInfo &gi2)
+{
+  return (name == gi2.name);
+}
+
+
+bool KNGroupInfo::KNGroupInfo::operator< (const KNGroupInfo &gi2)
+{
+  return (name < gi2.name);
+}
+
+
+//===============================================================================
+
+
+KNGroupListData::KNGroupListData()
+{
+  groups = new QSortedList<KNGroupInfo>;
+  groups->setAutoDelete(true);
+}
+
+
+
+KNGroupListData::~KNGroupListData()
+{
+  delete groups;
+}
+
+
+
+bool KNGroupListData::readIn()
+{
+	KNFile f(path+"groups");
+  QCString line,name;
+  int sepPos;
+
+  if(f.open(IO_ReadOnly)) {
+    while(!f.atEnd()) {
+      line = f.readLine();
+      sepPos = line.find(' ');
+
+      if (sepPos==-1) {        // no description
+
+        if (subscribed.contains(line)) {
+          subscribed.remove(line);    // group names are unique, we wont find it again anyway...
+          groups->append(new KNGroupInfo(line,"",false,true));
+        } else {
+          groups->append(new KNGroupInfo(line,"",false,false));
+        }
+
+      } else {
+        name = line.left(sepPos);
+
+        if (subscribed.contains(name)) {
+          subscribed.remove(name);    // group names are unique, we wont find it again anyway...
+          groups->append(new KNGroupInfo(name,line.right(line.length()-sepPos-1),false,true));
+        } else {
+          groups->append(new KNGroupInfo(name,line.right(line.length()-sepPos-1),false,false));
+        }
+
+      }
+    }
+
+    f.close();
+    return true;
+  }	else {
+    qWarning("unable to open %s, reason %d", f.name().latin1(), f.status());
+    return false;
+  }
+}
+
+
+
+bool KNGroupListData::writeOut()
+{
+  QFile f(path+"groups");
+  QCString temp;
+
+  if(f.open(IO_WriteOnly)) {
+   	for (KNGroupInfo *i=groups->first(); i; i=groups->next()) {
+   	  temp = i->name + " " + i->description + "\n";
+      f.writeBlock(temp.data(),temp.length());
+    }					
+    f.close();
+    return true;
+	} else {
+    qWarning("unable to open %s, reason %d", f.name().latin1(), f.status());
+    return false;
+  }	
+}
+
+
+
+// merge in new groups, we want to preserve the "subscribed"-flag
+// of the loaded groups and the "new"-flag of the new groups.
+void KNGroupListData::merge(QSortedList<KNGroupInfo>* newGroups)
+{
+  bool subscribed;
+
+  for (KNGroupInfo *i=newGroups->first(); i; i=newGroups->next()) {
+    if (groups->find(i)>=0) {
+      subscribed = groups->current()->subscribed;
+      groups->remove();   // avoid duplicates
+    } else
+      subscribed = false;
+    groups->append(new KNGroupInfo(i->name,i->description,true,subscribed));
+  }		
+
+  groups->sort();
+}
+
+
+QSortedList<KNGroupInfo>* KNGroupListData::extractList()
+{
+  QSortedList<KNGroupInfo>* temp = groups;
+  groups = 0;
+  return temp;
+}
+
+
+//===============================================================================
+
+
 KNGroupManager::KNGroupManager(KNFetchArticleManager *a, QObject * parent, const char * name)
-  : QObject(parent,name), aManager(a), gDialog(0)
+  : QObject(parent,name), aManager(a)
 {
 	gList=new QList<KNGroup>;
 	gList->setAutoDelete(true);
@@ -71,7 +216,6 @@ KNGroupManager::KNGroupManager(KNFetchArticleManager *a, QObject * parent, const
 KNGroupManager::~KNGroupManager()
 {
 	delete gList;
-	delete gDialog;
 }
 
 
@@ -130,8 +274,6 @@ void KNGroupManager::syncGroups()
 void KNGroupManager::loadGroups(KNNntpAccount *a)
 { 	
 	KNGroup *group;
-	KNUserEntry *usr=0;
-	QString fName;
 	
 	QString dir(a->path());
 	if (dir == QString::null)
@@ -140,40 +282,23 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
 	 	
 	QStringList entries(d.entryList("*.grpinfo"));
 	for(QStringList::Iterator it=entries.begin(); it != entries.end(); it++) {
-	  fName=dir+(*it);
-		KSimpleConfig info(fName);
-		/*if(tmp.isEmpty()) {
-			tmp=info.deleteEntry("name", false);
-			info.writeEntry("groupname", tmp);
-			qDebug("Group info-file converted");
-			info.sync();
-		}*/
-		group=new KNGroup(a);
-		group->setGroupname(info.readEntry("groupname").utf8());
-		group->setName(info.readEntry("name"));
-		group->setCount(info.readNumEntry("count",0));
-		group->setReadCount(info.readNumEntry("read",0));
-		group->setLastNr(info.readNumEntry("lastMsg",0));
-		if(!usr) usr=new KNUserEntry();
-		usr->load(&info);
-		if(!usr->isEmpty()) {
-			qDebug("alternative user");
-			group->setUser(usr);
-			usr=0;
-		}
-		gList->append(group);
-	  KNCollectionViewItem *cvit=new KNCollectionViewItem(a->listItem());
-	  cvit->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTgroup));
-	  group->setListItem(cvit);
-	  group->updateListItem();
-	}
-	
-	delete usr;
+    group=new KNGroup(a);
+    if (group->readInfo(dir+(*it))) {
+      gList->append(group);
+      KNCollectionViewItem *cvit=new KNCollectionViewItem(a->listItem());
+      cvit->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTgroup));
+      group->setListItem(cvit);
+      group->updateListItem();
+    } else {
+      delete group;
+      qDebug("Unable to load %s!",(*it).local8Bit().data());
+    }	
+  }
 }
 
 
 
-void KNGroupManager::getSubscribed(KNNntpAccount *a, QStrList *l)
+void KNGroupManager::getSubscribed(KNNntpAccount *a, QStrList* l)
 {
 	l->clear();
 	for(KNGroup *var=gList->first(); var; var=gList->next()) {
@@ -232,48 +357,43 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 
 void KNGroupManager::showGroupDialog(KNNntpAccount *a)
 {
-	KNGroup *g=0;
-	QString dir(a->path());
+	KNGroupDialog* gDialog=new KNGroupDialog(knGlobals.top, a);	
 	
-	if(dir==QString::null)
-		return;
+	connect(gDialog, SIGNAL(loadList(KNNntpAccount*)), this, SLOT(slotLoadGroupList(KNNntpAccount*)));
+	connect(gDialog, SIGNAL(fetchList(KNNntpAccount*)), this, SLOT(slotFetchGroupList(KNNntpAccount*)));
+	connect(gDialog, SIGNAL(checkNew(KNNntpAccount*,QDate)), this, SLOT(slotCheckForNewGroups(KNNntpAccount*,QDate)));
+	connect(this, SIGNAL(newListReady(KNGroupListData*)), gDialog, SLOT(slotReceiveList(KNGroupListData*)));
 		
-	if(!QFileInfo(dir+"groups").exists()) {
-		if (KMessageBox::Yes==KMessageBox::questionYesNo(0,i18n("You don't have any groups for this account.\nFetch now?")))
-	 	 	slotDialogNewList(a);
-	 	else return;
-	}
-		
-	gDialog=new KNGroupDialog(knGlobals.top, a);
-	connect(gDialog, SIGNAL(newList(KNNntpAccount*)), this, SLOT(slotDialogNewList(KNNntpAccount*)));
-	
 	if(gDialog->exec()) {
 	  QStrList lst;
+  	KNGroup *g=0;
+  	
 	  gDialog->toUnsubscribe(&lst);
 	  for(char *var=lst.first(); var; var=lst.next()) {
 	    if((g=group(var, a)))
 	      unsubscribeGroup(g);
 	  }
 	
-	  gDialog->toSubscribe(&lst);
-	  for(char *var=lst.first(); var; var=lst.next()) {
+	  QSortedList<KNGroupInfo> lst2;
+	  gDialog->toSubscribe(&lst2);
+	  for(KNGroupInfo *var=lst2.first(); var; var=lst2.next()) {
       subscribeGroup(var, a);
     }
   }	
 		
 	delete gDialog;
-	gDialog=0;	
 }
 
 
 
-void KNGroupManager::subscribeGroup(const QCString &gName, KNNntpAccount *a)
+void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
 {
 	KNGroup *grp;
 	KNCollectionViewItem *it;
 		
 	grp=new KNGroup(a);
-	grp->setGroupname(gName);
+	grp->setGroupname(gi->name);
+	grp->setDescription(gi->description);	
 	grp->saveInfo();
 	gList->append(grp);
 	it=new KNCollectionViewItem(a->listItem());
@@ -423,59 +543,103 @@ void KNGroupManager::checkAll(KNNntpAccount *a)
 
 void KNGroupManager::jobDone(KNJobData *j)
 {
-	KNGroup *group=0;
-	QStrList *groups=0;
-	
-	if(j->canceled()){
-		delete j;
-		return;
+	if((j->type()==KNJobData::JTLoadGroups)||(j->type()==KNJobData::JTFetchGroups)||(j->type()==KNJobData::JTCheckNewGroups)) {
+    KNGroupListData *d=static_cast<KNGroupListData*>(j->data());	
+
+    if (!j->canceled()) {
+      if (j->success()) {
+        if ((j->type()==KNJobData::JTFetchGroups)||(j->type()==KNJobData::JTCheckNewGroups)) {
+          // update the descriptions of the subscribed groups
+	        for(KNGroup *var=gList->first(); var; var=gList->next()) {
+          	if(var->account()==j->account()) {
+          	  for (KNGroupInfo* inf = d->groups->first(); inf; inf=d->groups->next())
+          	    if (inf->name == var->groupname()) {
+          	      var->setDescription(inf->description.copy());
+          	      break;
+          	    }          		
+            }
+          }
+        }
+        emit(newListReady(d));
+      } else {
+     		KMessageBox::error(0, j->errorString());
+     		emit(newListReady(0));
+     	}
+    } else
+      emit(newListReady(0));
+
+ 	  delete d; 	
+ 	
+	} else {               //KNJobData::JTfetchNewHeaders
+		KNGroup *group=static_cast<KNGroup*>(j->data());
+		
+    if (!j->canceled()) {
+      if (j->success()) {
+        if(group->newCount()>0) {
+				  group->updateListItem();
+				  group->saveInfo();
+        }
+      } else
+     		KMessageBox::error(0, j->errorString());
+    }     		
+    if(group==c_urrentGroup) aManager->showHdrs(false);     		
 	}
 	
-	if(j->success()) {
-		if(j->type()==KNJobData::JTlistGroups) {			
-			groups=(QStrList*)j->data();
-			QString dir(((KNNntpAccount*)j->account())->path());
-			if (dir != QString::null) {
-				QFile f(dir+"groups");		
-			  if(f.open(IO_WriteOnly)) {
-		     	for (char *str=groups->first(); str; str=groups->next()) {
-		     	  f.writeBlock(str,strlen(str));
-		     	  f.putch('\n');
-		     	}					
-					f.close();
-				  if(gDialog) gDialog->newList();				
-				}
-				else displayInternalFileError();
-			}			
-		}
-		else if(j->type()==KNJobData::JTfetchNewHeaders) {
-			group=(KNGroup*)j->data();
-			if(group->newCount()>0) {
-				group->updateListItem();
-				group->saveInfo();
-				if(group==c_urrentGroup) aManager->showHdrs(false);
-			}
-		}
-	}
-	else {
-		if(group) {
-			if(group==c_urrentGroup) aManager->showHdrs();
-		}
-		KMessageBox::error(0, j->errorString());
-	}
-	delete j;	
+  delete j;
 }
 
 
-
-void KNGroupManager::slotDialogNewList(KNNntpAccount *a)
+// load group list from disk (if this fails: ask user if we should fetch the list)
+void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
 {
-	QStrList *groups=new QStrList();
-	groups->setAutoDelete(true);
-	KNJobData *job=new KNJobData(KNJobData::JTlistGroups, a, groups);
-	knGlobals.netAccess->addJob(job);
+	KNGroupListData *d = new KNGroupListData();
+	d->path = a->path();
+			
+	if(!QFileInfo(d->path+"groups").exists()) {
+		if (KMessageBox::Yes==KMessageBox::questionYesNo(0,i18n("You don´t have any groups for this account.\nDo you want to fetch a current list?"))) {
+		  delete d;
+	 	 	slotFetchGroupList(a);
+	 	 	return;
+	 	}	else {
+	 	  emit(newListReady(d));
+	 	  delete d;
+      return;
+    }
+	}
+				
+  getSubscribed(a,&(d->subscribed));
+  d->getDescriptions = a->fetchDescriptions();
+
+  KNJobData *job=new KNJobData(KNJobData::JTLoadGroups, a, d);
+  knGlobals.netAccess->addJob(job);
 }
 
+
+// fetch group list from server
+void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
+{
+	KNGroupListData *d = new KNGroupListData();
+	d->path = a->path();	
+	getSubscribed(a,&(d->subscribed));
+  d->getDescriptions = a->fetchDescriptions();
+
+  KNJobData *job=new KNJobData(KNJobData::JTFetchGroups, a, d);
+  knGlobals.netAccess->addJob(job);
+}
+
+
+// check for new groups (created after the given date)
+void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
+{
+	KNGroupListData *d = new KNGroupListData();
+  d->path = a->path();	
+	getSubscribed(a,&(d->subscribed));
+  d->getDescriptions = a->fetchDescriptions();
+	d->fetchSince = date;
+	
+  KNJobData *job=new KNJobData(KNJobData::JTCheckNewGroups, a, d);
+  knGlobals.netAccess->addJob(job);
+}
 
 
 void KNGroupManager::slotUnsubscribe()

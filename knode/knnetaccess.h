@@ -45,6 +45,8 @@ class KNNetAccess : public QObject  {
 		const KActionCollection& actions()    { return actionCollection; }	
 		
 		void addJob(KNJobData *job);
+		void stopJobsNntp(int type);         // type==0 => all jobs
+		void stopJobsSmtp(int type);         // type==0 => all jobs		
 
 	protected:
 		void triggerAsyncThread(int pipeFd);     // passes a signal through the ipc-pipe to the net-thread

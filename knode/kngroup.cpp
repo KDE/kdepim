@@ -35,14 +35,10 @@
 
 #define SORT_DEPTH 5
 
-KNGroup::KNGroup(KNCollection *p) : KNArticleCollection(p)
+KNGroup::KNGroup(KNCollection *p)
+  : KNArticleCollection(p), n_ewCount(0), r_eadCount(0),
+    l_astNr(0), m_axFetch(0), u_ser(0), l_ocked(false)
 {
-	n_ewCount=0;
-	r_eadCount=0;
-	l_astNr=0;
-	m_axFetch=0;
-	u_ser=0;
-	l_ocked=false;
 }
 
 
@@ -80,6 +76,38 @@ void KNGroup::updateListItem()
 
 
 
+bool KNGroup::readInfo(const QString &confPath)
+{
+  KSimpleConfig info(confPath);
+
+  /*if(tmp.isEmpty()) {
+    tmp=info.deleteEntry("name", false);
+    info.writeEntry("groupname", tmp);
+    qDebug("Group info-file converted");
+    info.sync();
+  }*/
+	
+  g_roupname = info.readEntry("groupname").local8Bit();
+  d_escription = info.readEntry("description").local8Bit();
+  n_ame = info.readEntry("name");
+  c_ount = info.readNumEntry("count",0);
+  r_eadCount = info.readNumEntry("read",0);
+  l_astNr = info.readNumEntry("lastMsg",0);
+
+  u_ser=new KNUserEntry();
+  u_ser->load(&info);
+  if(!u_ser->isEmpty()) {
+	  qDebug("using alternative user for %s",g_roupname.data());
+	} else {
+	  delete u_ser;
+	  u_ser=0;
+  }
+	
+  return (!g_roupname.isEmpty());
+}
+
+
+
 void KNGroup::saveInfo()
 {
 	QString dir(path());
@@ -88,6 +116,7 @@ void KNGroup::saveInfo()
 		KSimpleConfig info(dir+QString(g_roupname)+".grpinfo");
 	
 		info.writeEntry("groupname", QString(g_roupname));
+		info.writeEntry("description", QString(d_escription));
 		info.writeEntry("lastMsg", l_astNr);
 		info.writeEntry("count", c_ount);
 		info.writeEntry("read", r_eadCount);

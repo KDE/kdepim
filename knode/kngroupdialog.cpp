@@ -13,22 +13,31 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <klocale.h> //i18n
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qstrlist.h>
+#include <qbuttongroup.h>
+#include <qradiobutton.h>
+#include <qlineedit.h>
+#include <qcheckbox.h>
+
+#include <kglobal.h>
+#include <kdatepik.h>
+#include <klocale.h>
 
 #include "utilities.h"
+#include "kngroupmanager.h"
+#include "knnntpaccount.h"
 #include "kngroupdialog.h"
 
 
 KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
-  KNGroupBrowser(parent, a)
+  KNGroupBrowser(parent, i18n("Subscribe to Newsgroups"),a, User1 | User2, true, i18n("New &List"), i18n("New &Groups") )
 {
-  newListBtn=new QPushButton(i18n("New list"), this);
-  btnL->insertWidget(2, newListBtn);
-
   rightLabel->setText(i18n("Current changes:"));
-  subView=new QListView(this);
+  subView=new QListView(page);
   subView->addColumn(i18n("subscribe to"));
-  unsubView=new QListView(this);
+  unsubView=new QListView(page);
   unsubView->addColumn(i18n("unsubscribe from"));
 
   QVBoxLayout *protL=new QVBoxLayout(3);
@@ -48,7 +57,6 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
 
   connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
   connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
-  connect(newListBtn, SIGNAL(clicked()), this, SLOT(slotNewListBtn()));
 
   restoreWindowSize("groupDlg", this, sizeHint());
 }
@@ -95,23 +103,24 @@ void KNGroupDialog::itemChangedState(CheckItem *it, bool s)
 
 
 
-void KNGroupDialog::updateItemState(CheckItem *it, bool isSub)
+void KNGroupDialog::updateItemState(CheckItem *it)
 {
-  it->setChecked( (isSub && !itemInListView(unsubView, it->text(0))) ||
-                  (!isSub && itemInListView(subView, it->text(0)))  );
+  it->setChecked( (it->info->subscribed && !itemInListView(unsubView, it->text(0))) ||
+                  (!it->info->subscribed && itemInListView(subView, it->text(0))) );
 
-  if(isSub && it->pixmap(0)==0)
-    it->setPixmap(0, pmGroup);
+  if((it->info->subscribed || it->info->newGroup) && it->pixmap(0)==0)
+    it->setPixmap(0, (it->info->newGroup)? pmNew:pmGroup);
 }
 
 
 
-void KNGroupDialog::toSubscribe(QStrList *l)
+void KNGroupDialog::toSubscribe(QSortedList<KNGroupInfo> *l)
 {
   l->clear();
-  QListViewItemIterator it(subView);
-  for(; it.current(); ++it)
-    l->append(it.current()->text(0).latin1());
+
+  for (KNGroupInfo *i=allList->first(); i; i=allList->next())
+    if (itemInListView(subView, i->name))
+      l->append(i);
 }
 
 
@@ -230,12 +239,66 @@ void KNGroupDialog::slotArrowBtn2()
 }
 
 
-
-void KNGroupDialog::slotNewListBtn()
+// new list
+void KNGroupDialog::slotUser1()
 {
-  emit newList(a_ccount);
+  leftLabel->setText(i18n("Downloading groups..."));
+  enableButton(User1,false);
+  enableButton(User2,false);
+  emit(fetchList(a_ccount));
 }
 
+
+// new groups
+void KNGroupDialog::slotUser2()
+{
+  QDate lastDate = a_ccount->lastNewFetch();
+  KDialogBase *dlg = new KDialogBase( this, 0L, true, i18n("New Groups"), Ok | Cancel, Ok);
+
+  QButtonGroup *btnGrp = new QButtonGroup(i18n("Check for new groups:"),dlg);
+  dlg->setMainWidget(btnGrp);
+  QGridLayout *topL = new QGridLayout(btnGrp,4,2,25,10);
+
+  QRadioButton *takeLast = new QRadioButton( i18n("created since last check:"), btnGrp );
+  topL->addMultiCellWidget(takeLast, 0, 0, 0, 1);
+
+  QLabel *l = new QLabel(KGlobal::locale()->formatDate(lastDate, false),btnGrp);
+  topL->addWidget(l, 1, 1, Qt::AlignLeft);
+
+  connect(takeLast, SIGNAL(toggled(bool)), l, SLOT(setEnabled(bool)));
+
+  QRadioButton *takeCustom = new QRadioButton( i18n("created since this date:"), btnGrp );
+  topL->addMultiCellWidget(takeCustom, 2, 2, 0, 1);
+
+  KDatePicker *dateSel = new KDatePicker(btnGrp, lastDate);
+  dateSel->setMinimumSize(dateSel->sizeHint());
+  topL->addWidget(dateSel, 3, 1, Qt::AlignLeft);
+
+  connect(takeCustom, SIGNAL(toggled(bool)), dateSel, SLOT(setEnabled(bool)));
+
+  takeLast->setChecked(true);
+  dateSel->setEnabled(false);
+
+  topL->addColSpacing(0,30);
+  dlg->disableResize();
+
+  if (dlg->exec()) {
+    if (takeCustom->isChecked())
+      lastDate = dateSel->getDate();
+    a_ccount->setLastNewFetch(QDate::currentDate());
+    a_ccount->saveInfo();
+    leftLabel->setText(i18n("Checking for new groups..."));
+    enableButton(User1,false);
+    enableButton(User2,false);
+    filterEdit->clear();
+    subCB->setChecked(false);
+    newCB->setChecked(true);
+    emit(checkNew(a_ccount,lastDate));
+    slotRefilter();
+  }
+
+  delete dlg;
+}
 
 
 //--------------------------------

@@ -64,6 +64,13 @@ void KNFolder::updateListItem()
 
 
 
+bool KNFolder::readInfo(const QString &confPath)
+{
+  return true;
+}
+
+
+
 void KNFolder::saveInfo()
 {
 	QString dir(path());

@@ -206,7 +206,7 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *a, QWidget *parent, cons
 	  acc(a)
 {
   QFrame* page=plainPage();
-  QGridLayout *topL=new QGridLayout(page, 9, 3, 5);
+  QGridLayout *topL=new QGridLayout(page, 10, 3, 5);
 
   QLabel *l=new QLabel(i18n("Name:"),page);	
   topL->addWidget(l, 0,0);	
@@ -244,22 +244,26 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *a, QWidget *parent, cons
   l = new QLabel(i18n("secs"),page);
   topL->addWidget(l,4,2);
 
+  f_etchDes=new QCheckBox(i18n("&Fetch group descriptions"), page);
+  f_etchDes->setChecked(acc->fetchDescriptions());
+  topL->addMultiCellWidget(f_etchDes, 5,5, 0,3);
+
   authCB=new QCheckBox(i18n("Server requires &authentication"), page);
   connect(authCB, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
-  topL->addMultiCellWidget(authCB, 5,5, 0,3);
+  topL->addMultiCellWidget(authCB, 6,6, 0,3);
 
   l=new QLabel(i18n("User:"), page);
-  topL->addWidget(l, 6,0);
+  topL->addWidget(l, 7,0);
   u_ser=new QLineEdit(page);
   u_ser->setText(acc->user());
-  topL->addMultiCellWidget(u_ser, 6,6, 1,2);
+  topL->addMultiCellWidget(u_ser, 7,7, 1,2);
 	
   l=new QLabel(i18n("Password:"), page);
-  topL->addWidget(l, 7,0);
+  topL->addWidget(l, 8,0);
   p_ass=new QLineEdit(page);
   p_ass->setEchoMode(QLineEdit::Password);
   p_ass->setText(acc->pass());		
-  topL->addMultiCellWidget(p_ass, 7,7, 1,2);
+  topL->addMultiCellWidget(p_ass, 8,8, 1,2);
 
   slotAuthChecked(acc->needsLogon());
 
@@ -287,8 +291,9 @@ void KNAccNewsConfDialog::slotOk()
 	acc->setName(n_ame->text());
 	acc->setServer(s_erver->text().local8Bit());
 	acc->setPort(p_ort->text().toInt());
-	acc->setHold(h_old->value());
+	acc->setHold(h_old->value());	
 	acc->setTimeout(t_imeout->value());
+	acc->setFetchDescriptions(f_etchDes->isChecked());
 	acc->setNeedsLogon(authCB->isChecked());
 	acc->setUser(u_ser->text().local8Bit());
 	acc->setPass(p_ass->text().local8Bit());
@@ -300,8 +305,8 @@ void KNAccNewsConfDialog::slotOk()
 void KNAccNewsConfDialog::slotAuthChecked(bool b)
 {
   authCB->setChecked(b);
-	u_ser->setEnabled(b);
-	p_ass->setEnabled(b);
+  u_ser->setEnabled(b);
+  p_ass->setEnabled(b);
 }
 
 

@@ -124,6 +124,55 @@ void KNNetAccess::addJob(KNJobData *job)
 			startJobNntp();
 	}
 }
+		
+
+
+// type==0 => all jobs
+void KNNetAccess::stopJobsNntp(int type)
+{
+  if ((currentNntpJob) && ((type==0)||(currentNntpJob->type()==type))) {       // stop active job
+		currentNntpJob->cancel();
+		triggerAsyncThread(nntpOutPipe[1]);
+	}
+		
+	KNJobData *tmp;                          // kill waiting jobs
+	KNJobData *start = nntpJobQueue.head();	
+	do {
+	  if (!nntpJobQueue.isEmpty()) {
+      tmp=nntpJobQueue.dequeue();
+      if ((type==0)||(tmp->type()==type)) {
+        tmp->cancel();
+        knGlobals.top->jobDone(tmp);
+      } else
+        nntpJobQueue.enqueue(tmp);
+    }
+	}	while(!nntpJobQueue.isEmpty() && (start != nntpJobQueue.head()));	
+}
+
+
+
+// type==0 => all jobs
+void KNNetAccess::stopJobsSmtp(int type)
+{
+  if ((currentSmtpJob) && ((type==0)||(currentSmtpJob->type()==type))) {       // stop active job
+		currentSmtpJob->cancel();
+		triggerAsyncThread(smtpOutPipe[1]);
+	}
+		
+	KNJobData *tmp;                          // kill waiting jobs
+	KNJobData *start = smtpJobQueue.head();	
+	do {
+	  if (!smtpJobQueue.isEmpty()) {
+      tmp=smtpJobQueue.dequeue();
+      if ((type==0)||(tmp->type()==type)) {
+        tmp->cancel();
+        knGlobals.top->jobDone(tmp);
+      } else
+        smtpJobQueue.enqueue(tmp);
+    }
+	}	while(!smtpJobQueue.isEmpty() && (start != smtpJobQueue.head()));
+}
+
 
 
 // passes a signal through the ipc-pipe to the net-thread
@@ -134,6 +183,7 @@ void KNNetAccess::triggerAsyncThread(int pipeFd)
 	// qDebug("KNNetAccess::triggerAsyncThread() : sending signal to net thread"); // too verbose
 	write(pipeFd, &signal, sizeof(int));
 }
+
 
 
 void KNNetAccess::startJobNntp()
@@ -244,22 +294,34 @@ void KNNetAccess::slotThreadSignal(int i)
     		threadDoneNntp();
      	break;
     	case KNProtocolClient::TSconnect:
-    		knGlobals.top->setStatusMsg(i18n(" Connecting to server ..."));
+    		knGlobals.top->setStatusMsg(i18n(" Connecting to server..."));
   	 	break;
-    	case KNProtocolClient::TSdownloadGrouplist:
-    		knGlobals.top->setStatusMsg(i18n(" Downloading grouplist ..."));
+    	case KNProtocolClient::TSloadGrouplist:
+    		knGlobals.top->setStatusMsg(i18n(" Loading group list from disk..."));
     	break;
+    	case KNProtocolClient::TSwriteGrouplist:
+     	  knGlobals.top->setStatusMsg(i18n(" Writing group list to disk..."));
+    	break;
+    	case KNProtocolClient::TSdownloadGrouplist:
+    		knGlobals.top->setStatusMsg(i18n(" Downloading group list..."));
+    	break;
+    	case KNProtocolClient::TSdownloadNewGroups:
+    		knGlobals.top->setStatusMsg(i18n(" Looking for new groups..."));
+    	break;    	
+    	case KNProtocolClient::TSdownloadDesc:
+    		knGlobals.top->setStatusMsg(i18n(" Downloading group descriptions..."));
+    	break;    	
   		case KNProtocolClient::TSdownloadNew:
-  			knGlobals.top->setStatusMsg(i18n(" Downloading new headers ..."));
+  			knGlobals.top->setStatusMsg(i18n(" Downloading new headers..."));
   		break;
   		case KNProtocolClient::TSsortNew:
-  			knGlobals.top->setStatusMsg(i18n(" Sorting ..."));
+  			knGlobals.top->setStatusMsg(i18n(" Sorting..."));
   		break;
     	case KNProtocolClient::TSdownloadArticle:
-		  	knGlobals.top->setStatusMsg(i18n(" Downloading article ..."));
+		  	knGlobals.top->setStatusMsg(i18n(" Downloading article..."));
   		break;
 	  	case KNProtocolClient::TSsendArticle:
-  			knGlobals.top->setStatusMsg(i18n(" Sending article ..."));
+  			knGlobals.top->setStatusMsg(i18n(" Sending article..."));
   		break;
   		case KNProtocolClient::TSjobStarted:
       	knGlobals.progressBar->setProgressBar(10, i18n("0 Bytes"));
@@ -279,12 +341,12 @@ void KNNetAccess::slotThreadSignal(int i)
 	  		threadDoneSmtp();
 		  break;
   		case KNProtocolClient::TSconnect:
-  		  unshownMsg = i18n(" Connecting to server ...");
+  		  unshownMsg = i18n(" Connecting to server...");
  		   	if (!currentNntpJob)
   		    knGlobals.top->setStatusMsg(unshownMsg);
 	  	break;
     	case KNProtocolClient::TSsendMail:
-    	  unshownMsg = i18n(" Sending mail ...");
+    	  unshownMsg = i18n(" Sending mail...");
  		   	if (!currentNntpJob)
   		    knGlobals.top->setStatusMsg(unshownMsg);
   		break;
@@ -312,33 +374,8 @@ void KNNetAccess::slotThreadSignal(int i)
 
 void KNNetAccess::slotCancelAllJobs()
 {
-	KNJobData *tmp;	
-	
-	// ** nntp ***********************************************
-	
-	if (currentNntpJob) {                // stop active job
-		currentNntpJob->cancel();
-		triggerAsyncThread(nntpOutPipe[1]);
-	}
-		
-	while(!nntpJobQueue.isEmpty()) {     // kill all waiting jobs
-	  tmp=nntpJobQueue.dequeue();
-		tmp->cancel();
-		knGlobals.top->jobDone(tmp);
-	}	
-	
-	// ** smtp ***********************************************	
-			
-  if (currentSmtpJob) {        // stop active job
-		currentSmtpJob->cancel();
-		triggerAsyncThread(smtpOutPipe[1]);
-	}
-		
-	while(!smtpJobQueue.isEmpty()) {     // kill all waiting jobs
-	  tmp=smtpJobQueue.dequeue();
-		tmp->cancel();
-		knGlobals.top->jobDone(tmp);
-	}
+  stopJobsNntp(0);
+  stopJobsSmtp(0);
 }
 
 

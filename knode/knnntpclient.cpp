@@ -22,8 +22,10 @@
 #include "knsavedarticle.h"
 #include "knfetcharticle.h"
 #include "kngroup.h"
+#include "kngroupmanager.h"
 #include "knjobdata.h"
 #include "knnntpclient.h"
+
 
 KNNntpClient::KNNntpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent, const char *name)
 : KNProtocolClient(NfdPipeIn,NfdPipeOut,parent,name)
@@ -38,9 +40,15 @@ KNNntpClient::~KNNntpClient()
 void KNNntpClient::processJob()
 {
 	switch (job->type()) {
-		case KNJobData::JTlistGroups :
-			doListGroups();
+		case KNJobData::JTLoadGroups :
+			doLoadGroups();
 			break;
+		case KNJobData::JTFetchGroups :
+			doFetchGroups();
+			break;			
+		case KNJobData::JTCheckNewGroups :
+			doCheckNewGroups();
+			break;			
 		case KNJobData::JTfetchNewHeaders :
 			doFetchNewHeaders();
 			break;
@@ -56,53 +64,217 @@ void KNNntpClient::processJob()
 }
 	
 
-void KNNntpClient::doListGroups()
+void KNNntpClient::doLoadGroups()
 {
-	QStrList *target=(QStrList*)job->data();
-	char *s;
-	//QStrList tmpList;
-	
-	sendSignal(TSdownloadGrouplist);
-	errorPrefix = i18n("The grouplist could not be retrieved.\nThe following error occured:\n");
-	
-	progressValue = 100;
-	predictedLines = 30000;     // rule of thumb ;-)
-	
-	if (!sendCommandWCheck("LIST",215))       // 215 list of newsgroups follows
-		return;
-			
-	if (!getMsg(*target))
-		return;
-		
-  progressValue = 1000;		
-  sendSignal(TSprogressUpdate);
-	
+  KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
+  sendSignal(TSloadGrouplist);
 
-	char *line=target->first();	
-	while (line) {
-		s = strchr(line,' ');
-		if(!s) {
-			qDebug("retrieved broken group-line - ignoring !!");
-			if (line==target->getLast()) {     // if it's the last, after remove() the
-				target->remove();                // next to last line would get current.
-				line = 0L;
-			} else {
-				target->remove();
-				line = target->current();
-			}
-		} else {
-			s[0] = 0;    // cut string
-			line = target->next();
-		}
+  if (!target->readIn())
+    job->setErrorString(i18n("Unable to read the group list file"));
+}
+
+
+void KNNntpClient::doFetchGroups()
+{
+  KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
+	
+  sendSignal(TSdownloadGrouplist);
+  errorPrefix = i18n("The group list could not be retrieved.\nThe following error occured:\n");
+	
+  progressValue = 100;
+  predictedLines = 30000;     // rule of thumb ;-)
+	
+  if (!sendCommandWCheck("LIST",215))       // 215 list of newsgroups follows
+    return;
+  	
+  char *s, *line;
+  QStrList tmpList;
+	
+  while (getNextLine()) {
+    line = getCurrentLine();
+    if (line[0]=='.') {
+      if (line[1]=='.')
+        line++;        // collapse double period into one
+      else
+        break;        // message complete
+    }
+    s = strchr(line,' ');
+    if(!s)
+      qDebug("retrieved broken group-line - ignoring");
+    else {
+      s[0] = 0;    // cut string
+      tmpList.append(line);
+    }
+    doneLines++;
+	}
+  if (!job->success() || job->canceled())
+    return;     // stopped...
+
+	if (target->getDescriptions) {
+	  errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
+    progressValue = 100;
+    doneLines = 0;
+    predictedLines = tmpList.count();
+
+    sendSignal(TSdownloadDesc);
+    sendSignal(TSprogressUpdate);
+
+    if (!sendCommandWCheck("LIST NEWSGROUPS",215))       // 215 informations follows
+      return;	
+
+    while (getNextLine()) {
+      line = getCurrentLine();
+      if (line[0]=='.') {
+        if (line[1]=='.')
+          line++;        // collapse double period into one
+        else
+          break;        // message complete
+      }
+      s = line;
+      while (*s != '\0' && *s != '\t' && *s != ' ') s++;
+      if (*s == '\0') {
+        qDebug("retrieved broken group-description - ignoring");
+      } else {
+        s[0] = 0;         // terminate groupname
+        s++;
+        while (*s == ' ' || *s == '\t') s++;    // go on to the description
+
+        if (target->subscribed.contains(line)) {
+          target->subscribed.remove(line);    // group names are unique, we wont find it again anyway...
+          target->groups->append(new KNGroupInfo(line,s,false,true));
+        } else {
+          target->groups->append(new KNGroupInfo(line,s,false,false));
+        }
+
+        tmpList.remove(line);
+      }
+      doneLines++;
+    }
+    if (!job->success() || job->canceled())
+      return;     // stopped...
 	}
 	
-	target->sort();
+  // now add all remaining groups in tmpList (those without description)
+		
+	while ((line=tmpList.getFirst())) {
+
+    if (target->subscribed.contains(line)) {
+      target->subscribed.remove(line);    // group names are unique, we wont find it again anyway...
+      target->groups->append(new KNGroupInfo(line,"",false,true));
+    } else {
+      target->groups->append(new KNGroupInfo(line,"",false,false));
+    }
+
+    tmpList.removeFirst();
+  }
+
+  target->groups->sort();
+
+  sendSignal(TSwriteGrouplist);
+  if (!target->writeOut())
+    job->setErrorString(i18n("Unable to write the group list file"));
+
+}
+
+
+void KNNntpClient::doCheckNewGroups()
+{
+  KNGroupListData *target = static_cast<KNGroupListData *>(job->data());
+	
+  sendSignal(TSdownloadNewGroups);
+  errorPrefix = i18n("New groups could not be retrieved.\nThe following error occured:\n");
+	
+  progressValue = 100;
+  predictedLines = 30;     // rule of thumb ;-)
+	
+  QCString cmd;
+  cmd.sprintf("NEWGROUPS %.2d%.2d%.2d 000000",target->fetchSince.year()%100,target->fetchSince.month(),target->fetchSince.day());
+  if (!sendCommandWCheck(cmd,231))      // 231 list of new newsgroups follows
+    return;
+
+  QStrList tmpList;			
+  char *s, *line;
+
+  while (getNextLine()) {
+    line = getCurrentLine();
+    if (line[0]=='.') {
+      if (line[1]=='.')
+        line++;        // collapse double period into one
+      else
+        break;        // message complete
+    }
+    s = strchr(line,' ');
+    if(!s)
+      qDebug("retrieved broken group-line - ignoring");
+    else {
+      s[0] = 0;    // cut string
+      tmpList.append(line);
+    }
+    doneLines++;
+	}
+	if (!job->success() || job->canceled())
+    return;     // stopped...
+
+	QSortedList<KNGroupInfo> tempList;
+	tempList.setAutoDelete(true);
+	
+	if (target->getDescriptions) {
+	  errorPrefix = i18n("The group descriptions could not be retrieved.\nThe following error occured:\n");
+    progressValue = 100;
+    doneLines = 0;
+    predictedLines = tmpList.count()*3;
+
+    sendSignal(TSdownloadDesc);
+    sendSignal(TSprogressUpdate);
+
+    cmd = "LIST NEWSGROUPS ";
+    QStrList desList;
+    char *s;
+
+    for (char *group=tmpList.first(); group; group=tmpList.next()) {
+      if (!sendCommandWCheck(cmd+group,215))       // 215 informations follows
+        return;
+      desList.clear();
+      if (!getMsg(desList))
+        return;
+
+      if (desList.count()>0) {        // group has a description
+        s = desList.first();
+        while (*s != '\0' && *s != '\t' && *s != ' ') s++;
+        if (*s == '\0') {
+          qDebug("retrieved broken group-description - ignoring");
+          tempList.append(new KNGroupInfo(group,"",true));
+        } else {
+          while (*s == ' ' || *s == '\t') s++;    // go on to the description
+          tempList.append(new KNGroupInfo(group,s,true));
+        }
+      } else {
+        tempList.append(new KNGroupInfo(group,"",true));
+      }
+    }
+  } else {    // don't fetch descriptions...
+    for (char *group=tmpList.first(); group; group=tmpList.next())
+      tempList.append(new KNGroupInfo(group,"",true));
+  }
+
+  sendSignal(TSloadGrouplist);
+
+  if (!target->readIn()) {
+    job->setErrorString(i18n("Unable to read the group list file"));
+    return;
+  }
+  target->merge(&tempList);
+  sendSignal(TSwriteGrouplist);
+  if (!target->writeOut()) {
+    job->setErrorString(i18n("Unable to write the group list file"));
+    return;
+  }
 }
 
 
 void KNNntpClient::doFetchNewHeaders()
 {
-	KNGroup* target=(KNGroup*)job->data();
+	KNGroup* target=static_cast<KNGroup*>(job->data());
 	char* s;
 	int first, last, oldlast, toFetch;
 	QCString cmd;
@@ -180,7 +352,7 @@ void KNNntpClient::doFetchNewHeaders()
 
 void KNNntpClient::doFetchArticle()
 {
-	KNFetchArticle *target=(KNFetchArticle*)job->data();
+	KNFetchArticle *target = static_cast<KNFetchArticle*>(job->data());
 	
 	sendSignal(TSdownloadArticle);
 	errorPrefix = i18n("Article could not been retrieved.\nThe following error occured:\n");
@@ -206,7 +378,7 @@ void KNNntpClient::doFetchArticle()
 
 void KNNntpClient::doPostArticle()
 {
-	KNSavedArticle *art =(KNSavedArticle*)job->data();
+	KNSavedArticle *art = static_cast<KNSavedArticle*>(job->data());
 	
 	sendSignal(TSsendArticle);	
 	

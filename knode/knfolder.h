@@ -34,7 +34,10 @@ class KNFolder : public KNArticleCollection  {
 		~KNFolder();
 		
 		void updateListItem();
+		
+		bool readInfo(const QString &confPath);
 		void saveInfo();
+		
 		void syncDynamicData(bool force=false);							
 		bool loadHdrs();
 		bool loadArticle(KNSavedArticle *a);

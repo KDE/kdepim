@@ -20,16 +20,61 @@
 #define KNGROUPMANAGER_H
 
 #include <qlist.h>
+#include <qstrlist.h>
+#include <qdatetime.h>
+#include <qsortedlist.h>
 
 #include <kaction.h>
 
 class KNGroup;
 class KNFetchArticleManager;
 class KNJobData;
-class KNGroupDialog;
 class KNPurgeProgressDialog;
 class KNNntpAccount;
 class KNServerInfo;
+
+
+//=================================================================================
+
+// helper classes for the group selection dialog
+// contains info about a newsgroup (name, description)
+
+class KNGroupInfo {
+
+  public:
+    KNGroupInfo();
+    KNGroupInfo(const char *n_ame, const char *d_escription, bool n_ewGroup=false, bool s_ubscribed=false );
+    ~KNGroupInfo();
+
+    QCString name,description;
+    bool newGroup, subscribed;
+
+    bool operator== (const KNGroupInfo &gi2);
+    bool operator< (const KNGroupInfo &gi2);
+};
+
+
+class KNGroupListData {
+
+  public:
+    KNGroupListData();
+    ~KNGroupListData();
+
+    bool readIn();
+    bool writeOut();
+    void merge(QSortedList<KNGroupInfo>* newGroups);
+
+    QSortedList<KNGroupInfo>* extractList();
+
+    QStrList subscribed;
+    QString path;
+    QSortedList<KNGroupInfo> *groups;
+    QDate fetchSince;
+    bool getDescriptions;
+
+};
+
+//===============================================================================
 
 
 class KNGroupManager : public QObject {
@@ -44,10 +89,10 @@ class KNGroupManager : public QObject {
 		
 		void readConfig();		
 	 	void loadGroups(KNNntpAccount *a);
-	 	void getSubscribed(KNNntpAccount *a, QStrList *l);
+    void getSubscribed(KNNntpAccount *a, QStrList* l);
 	  void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);	 	
 	 	void showGroupDialog(KNNntpAccount *a);
-	  void subscribeGroup(const QCString &gName, KNNntpAccount *a);
+	  void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
 		void unsubscribeGroup(KNGroup *g=0);
 		void showGroupProperties(KNGroup *g=0);
 		void checkGroupForNewHeaders(KNGroup *g=0);
@@ -69,13 +114,14 @@ class KNGroupManager : public QObject {
 	  void jobDone(KNJobData *j);			
 	
 	public slots:
-		void slotDialogNewList(KNNntpAccount *a);
+	  void slotLoadGroupList(KNNntpAccount *a);      // load group list from disk (if this fails: ask user if we should fetch the list)
+    void slotFetchGroupList(KNNntpAccount *a);     // fetch group list from server
+    void slotCheckForNewGroups(KNNntpAccount *a, QDate date);    // check for new groups (created after the given date)
 		
 	protected:
 		QList<KNGroup>  *gList;
 		KNGroup *c_urrentGroup;
 		KNFetchArticleManager *aManager;
-		KNGroupDialog *gDialog;				
 		int defaultMaxFetch;
 		bool a_utoCheck;
 		KAction *actProperties, *actLoadHdrs, *actExpire, *actResort, *actUnsubscribe;
@@ -87,6 +133,9 @@ class KNGroupManager : public QObject {
  	  void slotExpire() 		                { expireGroupNow(); }
  	  void slotResort() 		                { resortGroup(); }
  	  void slotUnsubscribe();	
+ 	
+ 	signals:
+ 	  void newListReady(KNGroupListData* d);
  	  	
 };
 

@@ -20,18 +20,21 @@
 #define KNGROUPBROWSER_H
 
 #include <qlistview.h>
-#include <qdialog.h>
-#include <qlineedit.h>
+#include <qsortedlist.h>
 #include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qstrlist.h>
-#include <qlayout.h>
-#include <qlabel.h>
 
+#include <kdialogbase.h>
+
+class QLineEdit;
+class QCheckBox;
+class QLayout;
+class QLabel;
 
 class KNNntpAccount;
+class KNGroupInfo;
+class KNGroupListData;
 
-class KNGroupBrowser : public QDialog {
+class KNGroupBrowser : public KDialogBase {
 
   Q_OBJECT
 
@@ -39,48 +42,57 @@ class KNGroupBrowser : public QDialog {
     class CheckItem : public QCheckListItem {
 
       public:
-        CheckItem(QListView *v, const QString &t, KNGroupBrowser *b);
-        CheckItem(QListViewItem *i, const QString &t, KNGroupBrowser *b);
+        CheckItem(QListView *v, const KNGroupInfo *gi, KNGroupBrowser *b);
+        CheckItem(QListViewItem *i, const KNGroupInfo *gi, KNGroupBrowser *b);
         ~CheckItem();
         void setChecked(bool c);
+
+        const KNGroupInfo *info;
 
       protected:
         void stateChange(bool s);
         KNGroupBrowser *browser;
     };
 
-    KNGroupBrowser(QWidget *parent, KNNntpAccount *a);
+    KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a, int buttons=0,
+                   bool newCBact=false, const QString &user1=QString::null, const QString &user2=QString::null);
     ~KNGroupBrowser();
 
     KNNntpAccount* account()      { return a_ccount; }
     virtual void itemChangedState(CheckItem *it, bool s)=0;
 
+  public slots:
+    void slotReceiveList(KNGroupListData* d);
+
+  signals:
+    void loadList(KNNntpAccount *a);
+
   protected:
-    virtual void updateItemState(CheckItem *it, bool isSub)=0;
+    virtual void updateItemState(CheckItem *it)=0;
     void changeItemState(const QString &text, bool s);
     bool itemInListView(QListView *view, const QString &text);
     void removeListItem(QListView *view, const QString &text);
     void createListItems(QListViewItem *parent=0);
 
+    QWidget *page;
     QListView *groupView;
     QLineEdit *filterEdit;
-    QCheckBox *subCB;
-    QPushButton   *helpBtn,*cancelBtn,
-                  *okBtn, *arrowBtn1,
-                  *arrowBtn2;
-    QPixmap pmRight, pmLeft, pmGroup;
-    QHBoxLayout *btnL;
+    QCheckBox *subCB, *newCB;
+    QPushButton  *arrowBtn1, *arrowBtn2;
+    QPixmap pmGroup, pmNew,
+            pmRight, pmLeft;
     QGridLayout *listL;
-    QLabel *rightLabel;
+    QLabel *leftLabel, *rightLabel;
 
     KNNntpAccount *a_ccount;
-    QStrList *allList, *subList, *matchList, *listPtr;
+    QSortedList<KNGroupInfo> *allList, *matchList;
 
   protected slots:
     void slotLoadList();
     void slotItemExpand(QListViewItem *it);
     void slotFilter(const QString &txt);
-    void slotSubCBClicked();
+    void slotRefilter();
+
 };
 
 

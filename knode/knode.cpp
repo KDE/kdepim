@@ -669,7 +669,9 @@ void KNodeApp::jobDone(KNJobData *j)
 	//qDebug("KNodeApp::jobDone() : job received"); too verbose
 
 	switch(j->type()) {
-		case KNJobData::JTlistGroups:
+		case KNJobData::JTLoadGroups:
+		case KNJobData::JTFetchGroups:
+		case KNJobData::JTCheckNewGroups:
 		case KNJobData::JTfetchNewHeaders:
  			qDebug("KNodeApp::jobDone() : job sent to GManager");
 			GManager->jobDone(j);

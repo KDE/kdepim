@@ -23,13 +23,10 @@
 #include "knjobdata.h"
 
 
+// the assingment of a_ccount may cause race conditions, check again.... (CG)
 KNJobData::KNJobData(jobType t, KNServerInfo *a, void *d)
+ : t_ype(t), d_ata(d), a_ccount(a), c_anceled(false)
 {
-	t_ype=t;
-	a_ccount=a;   // this may cause race conditions, check again.... (CG)
-	d_ata=d;
-	c_anceled=false;
-	
 	if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(true);
 	else if(t_ype==JTfetchArticle) ((KNFetchArticle*)d_ata)->setLocked(true);
 	else if(t_ype==JTpostArticle || t_ype==JTmail) ((KNSavedArticle*)d_ata)->setLocked(true);
@@ -39,8 +36,7 @@ KNJobData::KNJobData(jobType t, KNServerInfo *a, void *d)
 
 KNJobData::~KNJobData()
 {
-	if(t_ype==JTlistGroups) delete (QStrList*)d_ata;
-	else if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(false);
+	if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(false);
 	else if(t_ype==JTfetchArticle) ((KNFetchArticle*)d_ata)->setLocked(false);
 	else if(t_ype==JTpostArticle || t_ype==JTmail) ((KNSavedArticle*)d_ata)->setLocked(false);
 }

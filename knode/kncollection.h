@@ -35,6 +35,10 @@ class KNCollection {
 		virtual ~KNCollection();
 		virtual void updateListItem();
 		
+		// trys to read information, returns false if it fails to do so
+    virtual bool readInfo(const QString &confPath)=0;
+    virtual void saveInfo()=0;		
+		
 		//get
 		virtual collectionType type()=0;
 		virtual QString path()=0;

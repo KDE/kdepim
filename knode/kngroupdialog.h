@@ -28,15 +28,14 @@ class KNGroupDialog : public KNGroupBrowser {
     KNGroupDialog(QWidget *parent, KNNntpAccount *a);
     ~KNGroupDialog();
 
-    void itemChangedState(CheckItem *it, bool s);
-    void toSubscribe(QStrList *l);
+    void toSubscribe(QSortedList<KNGroupInfo> *l);
     void toUnsubscribe(QStrList *l);
-    void newList()  { slotLoadList(); }
 
   protected:
     enum arrowDirection { right, left };
     enum arrowButton { btn1, btn2 };
-    void updateItemState(CheckItem *it, bool isSub);
+    void updateItemState(CheckItem *it);
+    void itemChangedState(CheckItem *it, bool s);
     void setButtonDirection(arrowButton b, arrowDirection d);
     QPushButton *newListBtn;
     QListView *subView, *unsubView;
@@ -46,59 +45,12 @@ class KNGroupDialog : public KNGroupBrowser {
     void slotItemSelected(QListViewItem *it);
     void slotArrowBtn1();
     void slotArrowBtn2();
-    void slotNewListBtn();
+    void slotUser1();    // new list
+    void slotUser2();    // new groups
 
   signals:
-    void newList(KNNntpAccount *a);
+    void fetchList(KNNntpAccount *a);
+    void checkNew(KNNntpAccount *a,QDate date);
 };
 
-
-
-
-/*#include <qsemimodal.h>
-
-class QStrList;
-class QPushButton;
-
-class KNGroupListWidget;
-class KNNntpAccount;
-
-class KNGroupDialog : public QSemiModal  {
-	
-	friend class KNGroupManager;
-
-	Q_OBJECT
-
-	public:
-		KNGroupDialog(KNNntpAccount *a, QWidget *parent=0);
-		~KNGroupDialog();
-		
-		QStrList* sub()						{ return mSub; }
-		QStrList* unsub()					{ return mUnsub; }		
-			
-	protected:
-		QPushButton *ok, *cancel, *newList, *help;
-		KNGroupListWidget *glw;
-		QStrList *mActive, *mSub, *mUnsub;
-			
-	protected slots:
-
-		void slotItemSelected(const QString &text);
-		void slotHelp();
-		void slotOk();
-		void slotCancel();
-		void slotNewList();
-			
-	signals:
-		void dialogDone(bool);
-		void getNewList(KNNntpAccount*);
-};*/
-
 #endif
-
-
-
-
-
-
-

@@ -29,10 +29,10 @@ class KNGroupSelectDialog : public KNGroupBrowser {
 		~KNGroupSelectDialog();
 		
 		QCString selectedGroups();
-		void itemChangedState(CheckItem *it, bool s);
+ 		void itemChangedState(CheckItem *it, bool s);
 		
 	protected:
-	  void updateItemState(CheckItem *it, bool isSub);
+	  void updateItemState(CheckItem *it);
 	  QListView *selView;
 	
 	protected slots:
@@ -42,42 +42,6 @@ class KNGroupSelectDialog : public KNGroupBrowser {
 	  	  		
 };
 
-/*#include <qdialog.h>
-
-class QListBox;
-class QPushButton;
-class QGroupBox;
-
-class KNGroupListWidget;
-
-class KNGroupSelectDialog : public QDialog  {
-	
-	Q_OBJECT
-
-	public:
-		KNGroupSelectDialog(KNNntpAccount *a, QCString &groups, QWidget *parent=0);
-		~KNGroupSelectDialog();
-		
-		QCString& selectedGroups();
-		
-		
-	protected:
-		void resizeEvent(QResizeEvent *e);
- 	  void addToSelected(const QString& text);
-	
-	  QGroupBox *gb1, *gb2;	  	
-		QPushButton *ok, *cancel, *help, *add, *del;
-		QListBox *lb;
-		KNGroupListWidget *glw;
-		QCString selGroups;
-	
-	protected slots:
-		
-		void slotAddBtn();				
-		void slotRemoveBtn();			
-		void slotAdd(const QString &text);
-		void slotRemove(int i);
-};*/
 
 #endif
 

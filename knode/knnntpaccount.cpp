@@ -23,7 +23,7 @@
 
 
 KNNntpAccount::KNNntpAccount()
-  : KNCollection(0), KNServerInfo(), u_nsentCount(0)
+  : KNCollection(0), KNServerInfo(), u_nsentCount(0), f_etchDescriptions(true)
 {
 }
 
@@ -42,6 +42,9 @@ bool KNNntpAccount::readInfo(const QString &confPath)
 
   n_ame = conf.readEntry("name");
   u_nsentCount = conf.readNumEntry("unsentCnt", 0);
+  f_etchDescriptions = conf.readBoolEntry("fetchDescriptions", true);
+  QDateTime dt = conf.readDateTimeEntry("lastNewFetch");
+  l_astNewFetch = dt.date();
 
   KNServerInfo::readConf(&conf);
   return true;
@@ -50,6 +53,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   else
     return true;
 }
+
 
 
 void KNNntpAccount::saveInfo()
@@ -62,6 +66,8 @@ void KNNntpAccount::saveInfo()
 	
 	conf.writeEntry("name", n_ame);
 	conf.writeEntry("unsentCnt", u_nsentCount);
+	conf.writeEntry("fetchDescriptions", f_etchDescriptions);
+	conf.writeEntry("lastNewFetch", QDateTime(l_astNewFetch));
 	KNServerInfo::saveConf(&conf);      // save not KNNntpAccount specific settings
 }
 

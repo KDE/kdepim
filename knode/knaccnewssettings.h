@@ -81,7 +81,7 @@ class KNAccNewsConfDialog : public KDialogBase  {
   protected:
     QLineEdit *n_ame, *s_erver, *u_ser, *p_ass, *p_ort;
     QSpinBox *h_old, *t_imeout;
-    QCheckBox *authCB;
+    QCheckBox *f_etchDes, *authCB;
     KNNntpAccount* acc;
 		
   protected slots:

@@ -30,8 +30,7 @@ class KNArticleCollection : public KNCollection {
 	public:
 		KNArticleCollection(KNCollection *p=0);
 		~KNArticleCollection();
-				
-		virtual void saveInfo()=0;
+		
 		bool resize(int s=0);
 		bool append(KNArticle *a);
 		void clearList();

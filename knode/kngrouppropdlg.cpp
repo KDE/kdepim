@@ -40,6 +40,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   QWidget *page = addPage(i18n("&General"));
   QGridLayout *pageL=new QGridLayout(page,  4, 2, 5,5);
 
+  // nickname
  	QLabel *l=new QLabel(i18n("Nickname:"), page);
  	pageL->addWidget(l,0,0);
 	nick=new QLineEdit(page);
@@ -47,9 +48,25 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
 	  nick->setText(grp->name());
 	pageL->addWidget(nick,0,1);
 	
-	QGroupBox *gb=new QGroupBox(i18n("Statistics"), page);
-	pageL->addMultiCellWidget(gb,2,2,0,2);
-	QGridLayout *grpL=new QGridLayout(gb, 5,2, 20,10);
+	// group name & description
+	QGroupBox *gb=new QGroupBox(i18n("Description"), page);
+	pageL->addMultiCellWidget(gb,1,1,0,1);
+	QGridLayout *grpL=new QGridLayout(gb, 2, 2, 20, 10);
+	
+	l=new QLabel(i18n("Name:"), gb);
+	grpL->addWidget(l,0,0);
+  l=new QLabel(group->groupname(),gb);
+  grpL->addWidget(l,0,1);
+	
+  l=new QLabel(i18n("Description:"), gb);
+  grpL->addWidget(l,1,0);
+  l=new QLabel(grp->description(),gb);
+  grpL->addWidget(l,1,1);
+	
+  // statistics
+	gb=new QGroupBox(i18n("Statistics"), page);
+	pageL->addMultiCellWidget(gb,2,2,0,1);
+	grpL=new QGridLayout(gb, 5, 2, 20, 10);
 	
 	l=new QLabel(i18n("Articles:"), gb);
 	grpL->addWidget(l,0,0);
@@ -76,6 +93,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   l=new QLabel(QString::number(grp->statThrWithNew()),gb);
   grpL->addWidget(l,4,1);	
 		
+  pageL->setRowStretch(3,2);
 	pageL->activate();
 
   // Specfic Identity tab =========================================	
@@ -84,7 +102,6 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
 		
 	if (grp->user())
 	  uw->setData(grp->user());
-	
 	
   restoreWindowSize("groupPropDLG", this, sizeHint());
 }

@@ -131,7 +131,7 @@ void KNProtocolClient::waitForWork()
     if (job) {
     // 	qDebug("KNProtocolClient::waitForWork(): got job");  too verbose
 
-      if (!account.isEqual(job->account())) {     // server changed
+      if (job->net()&&!account.isEqual(job->account())) {     // server changed
       	account.copy(job->account());
       	if (isConnected())
 				  closeConnection();
@@ -146,11 +146,15 @@ void KNProtocolClient::waitForWork()
       doneLines = 0;
       byteCount = 0;
 
-      if (!isConnected())
-				openConnection();
+      if (!job->net())    // job needs no net access
+ 				processJob();
+ 			else {
+        if (!isConnected())
+	  			openConnection();
 
-      if (isConnected())         // connection is ready
-				processJob();
+        if (isConnected())         // connection is ready
+			  	processJob();
+			}
 			errorPrefix = "";
 				
       clearPipe();

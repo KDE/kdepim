@@ -34,10 +34,10 @@ class KNProtocolClient : public QObject  {
   Q_OBJECT
 
   public:
-  	enum threadSignal	{ TSworkDone=0, TSjobStarted=1, TSconnect=2,
-  	                    TSdownloadGrouplist=3, TSdownloadNew=4, TSsortNew=5,
-  	                    TSdownloadArticle=6, TSsendArticle=7, TSsendMail=8,
-  	                    TSprogressUpdate=9 };
+  	enum threadSignal	{ TSworkDone=0, TSjobStarted=1, TSconnect=2, TSloadGrouplist=3,
+  	                    TSwriteGrouplist=4, TSdownloadGrouplist=5, TSdownloadNew=6,
+  	                    TSsortNew=7, TSdownloadArticle=8, TSsendArticle=9, TSsendMail=10,
+  	                    TSprogressUpdate=11, TSdownloadDesc=12, TSdownloadNewGroups=13 };
 
   	KNProtocolClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
 	  ~KNProtocolClient();
@@ -76,7 +76,7 @@ class KNProtocolClient : public QObject  {
     KNJobData *job;
     KNServerInfo account;
     QString errorPrefix;     // handleErrors() adds this string to the error message
-    int progressValue,predictedLines;
+    int progressValue, predictedLines, doneLines;
 
   private:
 
@@ -92,8 +92,7 @@ class KNProtocolClient : public QObject  {
     const unsigned int inputSize;
     int fdPipeIn,fdPipeOut;      //IPC-Pipes to/from async thread
     int tcpSocket;
-    int byteCount,doneLines;     // bytes in&out for the current connection
-
+    int byteCount;     // bytes in&out for the current connection
 };
 
 #endif

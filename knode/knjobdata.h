@@ -26,24 +26,26 @@ class KNJobData {
 	
 	public:
 		
-		enum jobType {	JTlistGroups,
+		enum jobType {	JTLoadGroups,
+                    JTFetchGroups,
+		                JTCheckNewGroups,
 										JTfetchNewHeaders,
 										JTfetchArticle,
 										JTpostArticle,
-										JTmail };
-										
+										JTmail };										
 		
 		KNJobData(jobType t, KNServerInfo *a, void *d);
 		~KNJobData();
 		
-		jobType type() const { return t_ype; }
+		jobType type() const                  { return t_ype; }
 		
-		KNServerInfo* account()	const { return a_ccount; }
-		void* data() const 	{ return d_ata; }
+		bool net() const                      { return (t_ype!=JTLoadGroups); }
+		KNServerInfo* account()	const         { return a_ccount; }
+		void* data() const 	                  { return d_ata; }
 		
-		const QString& errorString() const { return e_rrorString; }
-		bool success() const { return e_rrorString.isEmpty(); }
-		bool canceled()	const { return c_anceled; }
+		const QString& errorString() const    { return e_rrorString; }
+		bool success() const                  { return e_rrorString.isEmpty(); }
+		bool canceled()	const                 { return c_anceled; }
 		
 		void setErrorString(const QString& s)	{ e_rrorString=s; }
 		void cancel()	{ c_anceled=true; }

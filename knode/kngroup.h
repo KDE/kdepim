@@ -35,7 +35,10 @@ class KNGroup : public KNArticleCollection  {
 		~KNGroup();
 		
 		void updateListItem();
-		void saveInfo();
+		
+    bool readInfo(const QString &confPath);
+    void saveInfo();
+
 		void showProperties();
 		bool loadHdrs();
 	  void insortNewHeaders(QStrList *hdrs);
@@ -58,6 +61,7 @@ class KNGroup : public KNArticleCollection  {
 		int maxFetch() 	                    { return m_axFetch; }
 		const QString& name();
 		const QCString& groupname()  				{ return g_roupname; }
+		const QCString& description()  			{ return d_escription; }
 		KNUserEntry* user()									{ return u_ser; }
 		bool hasName()											{ return (!n_ame.isEmpty()); }
 		int statThrWithNew();
@@ -66,6 +70,7 @@ class KNGroup : public KNArticleCollection  {
 		
 		//set
 		void setGroupname(const QCString &s)	{ g_roupname=s; }
+		void setDescription(const QCString &s){ d_escription=s; }		
 		void setNewCount(int i)								{ n_ewCount=i; }
 		void incNewCount(int i=1)           	{ n_ewCount+=i; }
 		void decNewCount(int i=1)           	{	n_ewCount-=i; }
@@ -82,7 +87,7 @@ class KNGroup : public KNArticleCollection  {
 		int findRef(KNFetchArticle *a, int from, int to, bool reverse=false);
 				
 		int n_ewCount, r_eadCount, l_astNr, m_axFetch;
-		QCString g_roupname;
+		QCString g_roupname, d_escription;
 		KNUserEntry *u_ser;
 		bool l_ocked;
 		

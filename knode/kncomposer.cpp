@@ -21,6 +21,7 @@
 #include <qvgroupbox.h>
 #include <qheader.h>
 #include <qvbox.h>
+#include <qcheckbox.h>
 
 #include <ktempfile.h>
 #include <klocale.h>
@@ -37,10 +38,12 @@
 #include <keditcl.h>
 #include <kspell.h>
 
+#include "kngroupmanager.h"
 #include "knsavedarticle.h"
 #include "kngroupselectdialog.h"
 #include "knstringsplitter.h"
 #include "utilities.h"
+#include "knglobals.h"
 #include "kncomposer.h"
 
 
@@ -367,6 +370,10 @@ void KNComposer::slotDestButtonClicked()
 		
 	if(!a_rticle->isMail()) {
 		gsdlg=new KNGroupSelectDialog(this, nntp, d_estination);
+	
+		connect(gsdlg, SIGNAL(loadList(KNNntpAccount*)), knGlobals.gManager, SLOT(slotLoadGroupList(KNNntpAccount*)));		
+    connect(knGlobals.gManager, SIGNAL(newListReady(KNGroupListData*)), gsdlg, SLOT(slotReceiveList(KNGroupListData*)));
+		
 		if(gsdlg->exec()) {
 	 		d_estination=gsdlg->selectedGroups();
 	 		view->dest->setText(d_estination);
