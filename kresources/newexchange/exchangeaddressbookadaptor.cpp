@@ -41,7 +41,7 @@ ExchangeAddressBookUploadItem::ExchangeAddressBookUploadItem( AddressBookAdaptor
   }
 }
 
-KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &/*baseurl*/ )
 {
 kdDebug()<<"ExchangeAddressBookUploadItem::createUploadJob"<<endl;
   Q_ASSERT( adaptor );
