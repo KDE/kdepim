@@ -1362,13 +1362,13 @@ external tools to detect spam messages. It will try to automatically find
 out which of those tools are installed on your box. It will show you the 
 result of the search for each tool. You can mark the tools which you want 
 to be used by &kmail; to detect spam. Marking tools which were not found is 
-possible but not recommended. Of course you can close the wizard, install 
-a tool, and restart the wizard again.
+not possible because the appropriate checkboxes are disabled. Of course you 
+can close the wizard, install a tool, and restart the wizard again.
 </para>
 
 <para>If you have marked at least one tool you're able to select some actions 
 to be done in &kmail; with regard to spam messages. To let &kmail; detect spam 
-messages you definitely should mark the <guilabel>Pipe messages through the 
+messages you definitely should mark the <guilabel>Classify messages using the
 anti spam tools</guilabel> option. If you want messages detected as 
 spam to be moved into a certain folder, please select the appropriate folder and 
 mark the <guilabel>Move detected spam messages to the selected folder</guilabel> 
@@ -1376,8 +1376,8 @@ option.
 </para>
 
 <para>If you want to be able to manually mark messages as spam or non-spam 
-(ham) you should check the <guilabel>Classify messages manually as spam / 
-not spam</guilabel> option. Note that you can seemingly achieve the same 
+(ham) you should check the <guilabel>Classify messages manually as spam</guilabel> 
+option. Note that you can seemingly achieve the same 
 result when you only change the status of the appropriate messages. 
 But if any of the tools you selected support bayesian filtering 
 (&ie; a method to detect spam based on statistical analysis of the 
