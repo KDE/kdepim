@@ -173,6 +173,8 @@ protected:
 
   virtual bool addIncidence( const QString& type, const QString& ical );
   virtual void deleteIncidence( const QString& type, const QString& uid );
+  virtual void deleteIncidence( const QString& type, const QString& uid,
+                                bool silence );
   virtual void slotRefresh( const QString& type );
 
   virtual void doClose();
@@ -180,6 +182,7 @@ protected:
 private:
   void init();
 
+  bool loadResource( const QString& type, const QString& folder );
   bool loadAllEvents();
   bool loadAllTasks();
   bool loadAllJournals();
