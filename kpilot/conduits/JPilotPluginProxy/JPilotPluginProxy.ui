@@ -196,7 +196,7 @@
                                 </property>
                                 <property stdset="1">
                                     <name>text</name>
-                                    <string>JPilog plugin directories:</string>
+                                    <string>JPilot plugin directories:</string>
                                 </property>
                             </widget>
                             <widget>

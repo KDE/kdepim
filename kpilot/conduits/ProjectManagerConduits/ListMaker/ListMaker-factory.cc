@@ -60,7 +60,7 @@ ListMakerConduitFactory::ListMakerConduitFactory(QObject *p, const char *n) :
 	fAbout->addAuthor("Dan Pilone", I18N_NOOP("Original Author of KPilot and the VCal conduit"));
 	fAbout->addAuthor("Preston Brown", I18N_NOOP("Original Author of the VCal conduit"));
 	fAbout->addAuthor("Herwin-Jan Steehouwer", I18N_NOOP("Original Author of the VCal conduit"));
-	fAbout->addAuthor("Adriaan de Groot", I18N_NOOP("Maintainer or KPilot"), "groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Adriaan de Groot", I18N_NOOP("Maintainer of KPilot"), "groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot");
 	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Original author and maintainer of this conduit"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
 }
 
@@ -69,6 +69,9 @@ ListMakerConduitFactory::ListMakerConduitFactory(QObject *p, const char *n) :
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:42  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.4  2002/04/07 11:56:19  reinhold
 // Last version before moving to KDE CVS
 //

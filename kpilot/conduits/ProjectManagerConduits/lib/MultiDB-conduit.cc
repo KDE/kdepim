@@ -136,7 +136,7 @@ void MultiDBConduit::syncNextDB() {
 		#endif
 		// TODO: write out a real KPilot error message to be included in the log
 		kdWarning() << k_funcinfo << ": Couldn't initialize the database "<<dbinfo.name<<endl;
-		emit logError(i18n("Couldn't initialize the database ")+dbinfo.name);
+		emit logError(i18n("Unable to initialize the database ")+dbinfo.name);
 		QTimer::singleShot(0, this, SLOT(syncNextDB()));
 		return;
 	}
@@ -186,9 +186,9 @@ bool MultiDBConduit::GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo) {
 			if (syncinfo->syncaction!=st_ask) return true;
 		}
 		// the dialog was cancelled, so display a message box...
-		if (KMessageBox::warningContinueCancel (0, i18n("You did not select any "
+		if (KMessageBox::warningContinueCancel (0, i18n("You did not select a "
 				"sync method for the database. If you continue, the database will be "
-				"skipped during this sync, if you cancel, you will get back to the "
+				"skipped during this sync. If you cancel, you will be returned to the "
 				"previous dialog."),
 				i18n("&Continue"), KStdGuiItem::cont(), "noEmptySyncSettingWarning") ) {
 			return false;
@@ -258,6 +258,9 @@ bool MultiDBConduit::GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo) {
 }
 
 // $Log$
+// Revision 1.2  2002/04/07 20:19:48  cschumac
+// Compile fixes.
+//
 // Revision 1.1  2002/04/07 12:09:42  kainhofe
 // Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
 //

@@ -138,10 +138,10 @@ void JPilotProxyWidgetSetup::slotConfigureConduit(QListViewItem*item) {
 	if (plg->hasGui()) {
 		// TODO: configure the plugin
 		KMessageBox::sorry(this, i18n("Configuring JPilot plugins has not yet been implemented. "
-			"This would mean embedding a GtkWidget inside a KDE Dialogbox, so that the whole message "
-			"loop of the modal dialogbox needs to be rewritten (see QGtkApplication)"));
+			"This would mean embedding a GtkWidget inside a KDE dialog box, so that the whole message "
+			"loop of the modal dialog box needs to be rewritten (see QGtkApplication)"));
 	} else {
-		KMessageBox::sorry(this, i18n("This JPilot plugin does not have any configuration dialog"));
+		KMessageBox::sorry(this, i18n("This JPilot plugin does not have a configuration dialog"));
 	}
 }
 
@@ -229,6 +229,9 @@ void JPilotProxyWidgetSetup::slotUpdatePluginPath(const QString &newpath) {
 
 
 // $Log$
+// Revision 1.2  2002/04/07 20:19:48  cschumac
+// Compile fixes.
+//
 // Revision 1.1  2002/04/07 11:17:54  kainhofe
 // First Version of the JPilotPlugin Proxy conduit. it can be activated, but loading a plugin or syncing a plugin crashes the palm (if no plugin is explicitely enabled, this conduit can be enabled and it won't crash KPIlot). A lot of work needs to be done, see the TODO
 //

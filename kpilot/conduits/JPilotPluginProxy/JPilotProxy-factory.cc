@@ -81,7 +81,7 @@ JPilotProxyConduitFactory::JPilotProxyConduitFactory(QObject *p, const char *n) 
 		KAboutData::License_GPL,
 		"(C) 2002, Reinhold F. Kainhofer");
 	fAbout->addAuthor("Dan Pilone", I18N_NOOP("Original Author of KPilot"));
-	fAbout->addAuthor("Adriaan de Groot", I18N_NOOP("Maintainer or KPilot"), "groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Adriaan de Groot", I18N_NOOP("Maintainer of KPilot"), "groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot");
 	fAbout->addAuthor("Judd Montgomery", I18N_NOOP("Author of JPilot"), 	"judd@engineer.com", "http://www.jpilot.org/");
 	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Original author and maintainer of this conduit"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
 }
@@ -225,6 +225,10 @@ int JPilotProxyConduitFactory::loadPlugins(KConfig*fC) {
 }
 
 // $Log$
+// Revision 1.2  2002/04/07 18:31:09  kainhofe
+// The JPilot plugin API is now sourced out to the libJPilotAPI library, which is loaded
+// as a global library. So most plugins can at least be loaded now.
+//
 // Revision 1.1  2002/04/07 11:17:54  kainhofe
 // First Version of the JPilotPlugin Proxy conduit. it can be activated, but loading a plugin or syncing a plugin crashes the palm (if no plugin is explicitely enabled, this conduit can be enabled and it won't crash KPIlot). A lot of work needs to be done, see the TODO
 //
