@@ -46,7 +46,7 @@ fi
 
 
 # Get the list of global Menu entries.
-GMENU=`cat "$1"/subdirs | sed -e s+@topdir@+$TOPDIR+ | tr -d '\n'`
+GMENU=`cat "$1"/subdirs | tr -d '\n'`
 
 PMENU=`grep '<!-- pmenu' "$WRKDIR/index.html" | sed -e 's+.*pmenu *++' -e 's+ *-->++' | awk '{ c=split($0,a,"/"); for (j=1; j<=c; j++) { printf " / <a href=\""; if (j==c) { printf("."); } for (k=j; k<c; k++) { printf "../"; } if (j<c) { printf("../html/"); } printf "\">%s</a>\n" , a[j]; } }' | tr -d '\n'`
 
@@ -54,7 +54,6 @@ PMENU=`grep '<!-- pmenu' "$WRKDIR/index.html" | sed -e 's+.*pmenu *++' -e 's+ *-
 # on HTML_HEADER (ie. header.html) containing the <!-- menu --> comment.  
 for i in "$WRKDIR"/*.html 
 do 
-	sed -e "s+<!-- menu -->+$MENU+" -e "s+<!-- gmenu -->+$GMENU+" -e "s+<!-- pmenu.*-->+$PMENU+" < "$i" > "$i.new" 
-	mv "$i.new" "$i" 
+	sed -e "s+<!-- menu -->+$MENU+" -e "s+<!-- gmenu -->+$GMENU+" -e "s+<!-- pmenu.*-->+$PMENU+" < "$i"  | sed -e "s+@topdir@+$TOPDIR+g" > "$i.new" && mv "$i.new" "$i" 
 done
 

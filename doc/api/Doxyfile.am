@@ -126,15 +126,23 @@ apidox-am-toplevel-yes:
 	doxygen Doxyfile; \
 	rm -f Doxyfile
 	@true > $(top_builddir)/apidocs/subdirs
-	@if test -n '$(SUBDIRS)' ; then \
+	@$(MAKE) apidox-am-tree PARENT="" PARENTINDENT=""
+	@sort $(top_builddir)/apidocs/subdirs | sed -e 's+<!--.*-->++' > $(top_builddir)/apidocs/subdirs_ && mv $(top_builddir)/apidocs/subdirs_ $(top_builddir)/apidocs/subdirs
+	@sh $(top_srcdir)/doc/api/doxyndex.sh $(top_builddir)/apidocs .
+
+
+apidox-am-tree:
+	if test -n '$(SUBDIRS)' ; then \
 		list='$(SUBDIRS)' ; \
 		for subdir in $$list ; do \
-			if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
-				echo "<li><a href=\"@topdir@/$$subdir/html\">$$subdir</a></li>" ; \
+			if test "x$$subdir" != "x."; then \
+				if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
+					echo "<li><!-- $(PARENT)/$$subdir -->$(PARENTINDENT)<a href=\"@topdir@$(PARENT)/$$subdir/html\">$$subdir</a></li>" >> $(top_builddir)/apidocs/subdirs ; \
+					(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) apidox-am-tree PARENT="$(PARENT)/$$subdir" PARENTINDENT='\&nbsp;\&nbsp;$(PARENTINDENT)' ) || exit 1; \
+				fi ; \
 			fi ; \
-		done | sort >> $(top_builddir)/apidocs/subdirs ; \
+		done ; \
 	fi
-	@sh $(top_srcdir)/doc/api/doxyndex.sh $(top_builddir)/apidocs .
 
 .PHONY: apidox-am-yes apidox-am-no install-data-local install-apidox install-apidox uninstall-local uninstall-apidox uninstall-apidox apidox apidox-am-toplevel-no apidox-am-toplevel-yes
 
