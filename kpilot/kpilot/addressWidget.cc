@@ -85,38 +85,6 @@ AddressWidget::~AddressWidget()
     	FUNCTIONSETUP;
 }
 
-void AddressWidget::setupCategories()
-{
-	FUNCTIONSETUP;
-	int i;
-
-	// Fill up the categories list box with
-	// the categories defined by the user. 
-	// These presumably are in the language 
-	// the user uses, so no translation is necessary.
-	//
-	//
-	for(i = 0; i < 15; i++)
-	{
-		if(strlen(fAddressAppInfo.category.name[i]))
-		{
-#ifdef DEBUG
-			if (debug_level & UI_MINOR)
-			{
-				kdDebug() << fname << 
-				": Adding category: " << 
-				fAddressAppInfo.category.name[i] << 
-				" with ID: " << 
-				(int)fAddressAppInfo.category.ID[i] << 
-				endl;
-			}
-#endif
-			fCatList->insertItem(
-				fAddressAppInfo.category.name[i]);
-		}
-	}
-}
-
 int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
 {
 	FUNCTIONSETUP;
@@ -951,6 +919,15 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.31  2001/03/19 23:12:39  stern
+// Made changes necessary for upcoming abbrowser conduit.
+//
+// Mainly, I added two public methods to PilotAddress that allow for easier
+// setting and getting of phone fields.
+//
+// I also have added some documentation throughout as I have tried to figure
+// out how everything works.
+//
 // Revision 1.30  2001/03/11 10:50:38  adridg
 // Make address editor reflect real field names
 //

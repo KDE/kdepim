@@ -160,6 +160,20 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 			}
 		}
 
+		if (!(currentCatID < fCatList->count()))
+		{
+			currentCatID=0;
+			while((info->name[currentCatID][0]) &&
+				(currentCatID < fCatList->count()))
+			{
+				if (selectedCategory ==
+					QString::fromLatin1(info->name[currentCatID]))
+				{
+					break;
+				}
+			}
+		}
+
 		if (currentCatID < fCatList->count())
 		{
 			DEBUGKPILOT << fname << 
@@ -173,6 +187,32 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 			kdWarning() << __FUNCTION__ 
 				<< ": Selected category didn't match "
 				"any name!\n" ;
+			kdWarning() << __FUNCTION__
+				<< ": Number of listed categories "
+				<< fCatList->count()
+				<< endl;
+			kdWarning() << __FUNCTION__
+				<< ": Selected category ("
+				<< selectedCategory
+				<< ") expands to "
+				<< qstringExpansion(selectedCategory)
+				<< endl;
+			kdWarning() << __FUNCTION__
+				<< ": Categories expand to "
+				<< endl;
+			currentCatID=0;
+			while((info->name[currentCatID][0]) &&
+				(currentCatID < fCatList->count()))
+			{
+				kdWarning() << __FUNCTION__
+					<< ": Category ["
+					<< currentCatID
+					<< "] = "
+					<< charExpansion(info->name[currentCatID])
+					<< endl;
+				currentCatID++;
+			}
+
 			currentCatID=-1;
 		}
 	}
@@ -200,20 +240,16 @@ void PilotComponent::populateCategories(QComboBox *c,
 	//
 	for(i = 0; i < 15; i++)
 	{
-		if(strlen(info->name[i]))
+		if(info->name[i][0])
 		{
-#ifdef DEBUG
-			if (debug_level & UI_MINOR)
-			{
-				kdDebug() << fname
+			DEBUGKPILOT << fname
 				<< ": Adding category: "
 				<< info->name[i]
 				<< " with ID: " 
 				<< (int)info->ID[i] 
 				<< endl;
-			}
-#endif
-			c->insertItem(info->name[i]);
+
+			c->insertItem(QString::fromLatin1(info->name[i]));
 		}
 	}
 
@@ -223,6 +259,9 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.12  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.11  2001/03/04 21:27:07  adridg
 // Note to self: compile first, commit after
 //

@@ -74,7 +74,7 @@ MemoWidget::MemoWidget( QWidget* parent, const QString& path) :
 	setupWidget();
 	initialize();
 	fMemoList.setAutoDelete(true);
-	fTextWidget->setFont(KPilotConfig::fixed());
+	// fTextWidget->setFont(KPilotConfig::fixed());
 	slotUpdateButtons();
 }
 
@@ -257,6 +257,7 @@ MemoWidget::setupWidget()
 	grid->addWidget(label,0,2);
 
 	fTextWidget = new QMultiLineEdit(this, "textArea");
+	fTextWidget->setWordWrap(QMultiLineEdit::WidgetWidth);
 	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
 	connect(fTextWidget, SIGNAL(textChanged()), 
 		this, SLOT(slotTextChanged()));
@@ -542,6 +543,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.26  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.25  2001/03/04 13:11:49  adridg
 // More response to bug 21392
 //

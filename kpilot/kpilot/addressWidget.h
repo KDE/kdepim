@@ -89,11 +89,6 @@ private:
       void writeAddress(PilotAddress* which,PilotDatabase *db=0L);
 
 	/**
-	* setupCategories extracts the category names
-	* from a structure and fills up the list box.
-	*/
-	void setupCategories();
-	/**
 	* getAllAddresses reads the database and places all
 	* the addresses from the database in the list
 	* in memory --- not the list on the screen.
@@ -119,6 +114,15 @@ public:
 
 
 // $Log$
+// Revision 1.13  2001/03/19 23:12:39  stern
+// Made changes necessary for upcoming abbrowser conduit.
+//
+// Mainly, I added two public methods to PilotAddress that allow for easier
+// setting and getting of phone fields.
+//
+// I also have added some documentation throughout as I have tried to figure
+// out how everything works.
+//
 // Revision 1.12  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
