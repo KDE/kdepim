@@ -1,0 +1,12 @@
+# check for lockdev, optionally used to lock serial device
+AH_TEMPLATE(HAVE_LOCKDEV)
+AC_CHECK_HEADERS(lockdev.h, HAVE_LOCKDEV_H=1, HAVE_LOCKDEV_H=)
+AC_SUBST(HAVE_LOCKDEV_H)
+# we check for dev_unlock since kmobile checks dev_lock, caches it
+# and the variables are fucked up then... *sigh*
+if test -n "$HAVE_LOCKDEV_H"; then
+	AC_CHECK_LIB(lockdev, dev_unlock,
+	[KANDY_LIBLOCKDEV="-llockdev $KANDY_LIBLOCKDEV"
+AC_DEFINE(HAVE_LOCKDEV)], , $KANDY_LIBLOCKDEV)
+fi
+AC_SUBST(KANDY_LIBLOCKDEV)

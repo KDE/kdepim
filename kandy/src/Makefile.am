@@ -3,7 +3,7 @@ bin_PROGRAMS = kandy kandy_client
 INCLUDES = -I$(top_srcdir) $(all_includes)
 
 kandy_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-kandy_LDADD   = $(LIB_KFILE) -lkabc $(top_builddir)/libkdepim/libkdepim.la
+kandy_LDADD   = $(KANDY_LIBLOCKDEV) $(LIB_KFILE) -lkabc $(top_builddir)/libkdepim/libkdepim.la
 kandy_SOURCES =	main.cpp kandy.cpp \
                 cmdpropertiesdialog_base.ui cmdpropertiesdialog.cpp \
                 kandyview.cpp \

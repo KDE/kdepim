@@ -264,19 +264,28 @@ void Modem::flush()
   }
 }
 
+#ifdef HAVE_LOCKDEV
+#include <lockdev.h>
+#endif
 
 bool Modem::lockDevice()
 {
+  if ( is_locked )
+    return true;
+
+#ifdef HAVE_LOCKDEV
+  is_locked = !dev_lock( (*prefs).serialDevice().local8Bit() );
+  if (!is_locked)
+      emit errorMessage( i18n( "Unable to lock device '%1'." ).arg(
+                             (*prefs).serialDevice() ));
+  return is_locked;
+#else
   ssize_t count;
   pid_t pid;
   int lfd;
   struct passwd *pw;
   QStringList pathList;
   QString fileName, content;
-
-
-  if ( is_locked )
-    return true;
 
   pathList = QStringList::split( "/", (*prefs).serialDevice() );
   fileName = (*prefs).lockDirectory() + "/LCK.." + pathList.last();
@@ -337,17 +346,22 @@ bool Modem::lockDevice()
   is_locked = true;
 
   return true;
+#endif
 }
 
 
 void Modem::unlockDevice()
 {
+#ifdef HAVE_LOCKDEV
+  dev_unlock( (*prefs).serialDevice().local8Bit(), getpid() );
+#else
   if ( is_locked ) {
     QStringList pathList = QStringList::split( "/", (*prefs).serialDevice() );
 
     QFile::remove( (*prefs).lockDirectory() + "/LCK.." + pathList.last() );
     is_locked = false;
   }
+#endif
 }
 
 
