@@ -2,6 +2,7 @@ Inner Version|							| KDE VERSION
 -------------+--------------------------------------------------+-------------------
 0.5	     |  Re-Organization		[System is here]        |   CVS 
 0.6	     |  Adding and changing	[Now in progress]       |   CVS
-0.7	     |  Deleting   		                        |   CVS
-0.8	     |  Man, info, dockbook..  				|   3.2	
+0.7	     |  Deleting   		                        |   3.1.x
+0.8	     |  Man, info, dockbook..  				|   3.1.x	
+0.8.1	     |  HTML export 					|   3.1.x
 1.0	     |  Everything working now				|   3.2.x
