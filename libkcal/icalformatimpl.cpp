@@ -1290,8 +1290,8 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
         break;
 
       default:
-        kdDebug(5800) << "ICALFormat::readIncidence(): Unknown property: " << kind
-                  << endl;
+//        kdDebug(5800) << "ICalFormatImpl::readIncidence(): Unknown property: "
+//                      << kind << endl;
       break;
     }
     p = icalcomponent_get_next_property(vfreebusy,ICAL_ANY_PROPERTY);
