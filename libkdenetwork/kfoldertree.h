@@ -50,6 +50,7 @@ struct KPaintInfo {
   int dateCol;
   int sizeCol;
   bool showCryptoIcons;
+  bool showAttachmentIcon;
 };
 
 //==========================================================================
