@@ -874,10 +874,10 @@ void KNComposer::slotSignArticle()
   }
   else {
     KMessageBox::sorry( this, i18n("You haven't configured your prefered "
-                                   "signing key yet.\n\n"
+                                   "signing key yet.\n"
                                    "Please specify it either in the global "
-                                   "identity configuration\n"
-                                   "or in the account properties or in the "
+                                   "identity configuration, "
+                                   "in the account properties or in the "
                                    "group properties!") );
   }
 }
