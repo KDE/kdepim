@@ -587,7 +587,6 @@ void KNArticleWidget::createHtmlPage()
   if(f_ullHdrs) {
     KNStringSplitter split;
     split.init(a_rticle->head(), "\n");
-    kdDebug(5003) << a_rticle->head() << endl;
 		QString temp;
     int pos;
     bool splitOk=split.first();

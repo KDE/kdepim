@@ -129,7 +129,6 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   //-------------------------------- </GUI> ------------------------------------
 
 
-
   //-------------------------------- <CORE> ------------------------------------
 
   //Network
@@ -255,6 +254,22 @@ void KNodeView::readOptions()
     }
   }
 
+  lst = conf->readIntListEntry("Hdr_Order");
+  if (lst.count()==7) {
+    QValueList<int>::Iterator it = lst.begin();
+
+    QHeader *h=c_olView->header();
+    for (int i=0; i<3; i++) {
+      h->moveSection(i,(*it));
+      ++it;
+    }
+
+    h=h_drView->header();
+    for (int i=0; i<4; i++) {
+      h->moveSection(i,(*it));
+      ++it;
+    }
+  }
 
   int sortCol=conf->readNumEntry("sortCol",3);
   bool sortAsc=conf->readBoolEntry("sortAscending", false);
@@ -287,6 +302,7 @@ void KNodeView::saveOptions()
     conf->writeEntry("Horz_SepPos",sizes());
   }
 
+  // store section sizes
   QValueList<int> lst;
   QHeader *h=c_olView->header();
   for (int i=0; i<3; i++)
@@ -297,6 +313,18 @@ void KNodeView::saveOptions()
     lst << h->sectionSize(i);
   conf->writeEntry("Hdrs_Size", lst);
 
+  // store section order
+  lst.clear();
+  h=c_olView->header();
+  for (int i=0; i<3; i++)
+    lst << h->mapToIndex(i);
+
+  h=h_drView->header();
+  for (int i=0; i<4; i++)
+    lst << h->mapToIndex(i);
+  conf->writeEntry("Hdr_Order", lst);
+
+  // store sorting setup
   conf->writeEntry("sortCol", h_drView->sortColumn());
   conf->writeEntry("sortAscending", h_drView->ascending());
   conf->writeEntry("account_sortCol", c_olView->sortColumn());

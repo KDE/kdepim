@@ -184,7 +184,7 @@ KNListView::KNListView(QWidget *parent, const char *name)
   connect(header(), SIGNAL(sizeChange(int,int,int)),
           this, SLOT(slotSizeChanged(int,int,int)));
 
-  header()->setMovingEnabled(false);
+  header()->setMovingEnabled(true);
   setFrameStyle(NoFrame);
   setSelectionMode(QListView::Extended);
 }
@@ -227,8 +227,10 @@ void KNListView::clear()
 }
 
 
-void KNListView::slotSortList(int col)
-{         
+void KNListView::slotSortList(int section)
+{
+  int col = header()->mapToIndex(section);
+
   if(col==sCol) sAsc=!sAsc;
   else {
     emit sortingChanged(col);
