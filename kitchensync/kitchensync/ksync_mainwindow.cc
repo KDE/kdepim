@@ -40,5 +40,25 @@ void KSyncMainWindow::initActions()
 {
   (void)new KAction( i18n("Synchronize" ), 0, this, SLOT( slotSync() ),
 		     actionCollection(), "sync" );
+  (void)new KAction( i18n("Backup"), 0, this, SLOT( slotBackup() ),
+		     actionCollection(), "backup" );
+  (void)new KAction( i18n("Restore"), 0, this, SLOT (slotRestore() ),
+		     actionCollection(), "restore" );
+  (void)new KAction( i18n("Configure Kitchensync") , 0, this, SLOT (slotConfigure() ),
+		     actionCollection(), "configure" );
 }
+
+void KSyncMainWindow::slotSync() {
+}
+
+void KSyncMainWindow::slotBackup() {
+}
+
+void KSyncMainWindow::slotRestore() {
+}
+
+void KSyncMainWindow::slotConfigure() {
+}
+
+
 //#include "ksync_mainwindow.moc"

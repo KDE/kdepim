@@ -5,7 +5,14 @@
 	<Merge/>
 	<Action name="sync"/>
 	<Separator/>
+	<Action name="backup"/>
+ 	<Action name="restore"/>
+        <Separator/>
 	<Action name="quit"/>
+  </Menu>
+  <Menu name="settings"><text>&amp;Settings</text>
+	<Action name="configure"/>
+	<Seperator/>
   </Menu>
 </MenuBar>
 <ToolBar name="mainToolBar"><text>Main</text>

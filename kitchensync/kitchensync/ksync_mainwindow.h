@@ -18,5 +18,13 @@ namespace KitchenSync {
       virtual void initActions();
       PartBar *m_bar;
       QHBox *m_lay;
-    };
+      
+    private slots:
+      void slotSync();
+      void slotBackup();
+      void slotRestore();
+      void slotConfigure();
+  };
+
+  
 };
