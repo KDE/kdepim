@@ -1981,10 +1981,12 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 // TODO: does no PRODID really matter?
 //    mParent->setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
 //    return false;
+    mLoadedProductId = "";
     mCalendarVersion = 0;
   } else {
     prodid = icalproperty_get_prodid(p);
     kdDebug(5800) << "VCALENDAR prodid: '" << prodid << "'" << endl;
+    mLoadedProductId = prodid;
     mCalendarVersion = CalFormat::calendarVersion(prodid);
   }
 

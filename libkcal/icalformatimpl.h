@@ -64,6 +64,8 @@ class ICalFormatImpl {
     void readIncidence(icalcomponent *parent,Incidence *incidence);
     void readRecurrenceRule(icalproperty *rrule,Incidence *event);
     void readAlarm(icalcomponent *alarm,Incidence *incidence);
+    /** Return the PRODID string loaded from calendar file */
+    const QString &loadedProductId()  { return mLoadedProductId; }
 
     icaltimetype writeICalDate(const QDate &);
     QDate readICalDate(icaltimetype);
@@ -81,7 +83,8 @@ class ICalFormatImpl {
     ICalFormat *mParent;
     Calendar *mCalendar;
 
-    int mCalendarVersion;       // determines backward compatibility mode on read
+    QString mLoadedProductId;         // PRODID string loaded from calendar file
+    int mCalendarVersion;             // determines backward compatibility mode on read
 
     QPtrList<Event> mEventsRelate;           // events with relations
     QPtrList<Todo> mTodosRelate;             // todos with relations

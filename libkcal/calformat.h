@@ -80,10 +80,12 @@ class CalFormat {
     static void setApplication(const QString& app, const QString& productID);
     /** Return the application name used in unique IDs and error messages */
     static const QString& application()  { return mApplication; }
-    /** Return the PRODID string for calendar files */
+    /** Return the PRODID string to write into calendar files */
     static const QString& productId()  { return mProductId; }
     /** Return the KDE calendar format version indicated by a PRODID property */
     static int calendarVersion(const char* prodId);
+    /** Return the PRODID string loaded from calendar file */
+    const QString &loadedProductId()  { return mLoadedProductId; }
 
     /** Create a unique id string. */
     static QString createUniqueId();
@@ -94,14 +96,17 @@ class CalFormat {
     */
     void setException(ErrorFormat *error);
 
+  protected:
+    QString mLoadedProductId;         // PRODID string loaded from calendar file
+
   private:
-    QPtrList<Event> mEventsRelate;           // events with relations
-    QPtrList<Event> mTodosRelate;            // todos with relations
+    QPtrList<Event> mEventsRelate;    // events with relations
+    QPtrList<Event> mTodosRelate;     // todos with relations
 
     ErrorFormat *mException;
 
-    static QString mApplication;   // name of application for unique ID strings
-    static QString mProductId;     // PRODID string for calendar file
+    static QString mApplication;      // name of application for unique ID strings
+    static QString mProductId;        // PRODID string to write to calendar files
 };
 
 }

@@ -134,7 +134,7 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
 bool VCalFormat::fromString( Calendar *calendar, const QString &text )
 {
   // TODO: Factor out VCalFormat::fromString()
-  
+
   return false;
 }
 
@@ -1386,7 +1386,7 @@ QDate VCalFormat::ISOToQDate(const QString &dateStr)
   year = dateStr.left(4).toInt();
   month = dateStr.mid(4,2).toInt();
   day = dateStr.mid(6,2).toInt();
-  
+
   return(QDate(year, month, day));
 }
 
@@ -1416,6 +1416,7 @@ void VCalFormat::populate(VObject *vcal)
     if (strcmp(productId().local8Bit(), s) != 0)
       kdDebug() << "This vCalendar file was not created by KOrganizer "
                    "or any other product we support. Loading anyway..." << endl;
+    mLoadedProductId = s;
     deleteStr(s);
   }
 
@@ -1492,7 +1493,7 @@ void VCalFormat::populate(VObject *vcal)
       	if ( !anEvent->dtStart().isValid() || !anEvent->dtEnd().isValid() ) {
 	  kdDebug() << "VCalFormat::populate(): Event has invalid dates."
 	            << endl;
-	} else { 
+	} else {
           mCalendar->addEvent(anEvent);
       	}
       } else {
