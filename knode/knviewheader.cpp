@@ -100,6 +100,7 @@ void KNViewHeader::loadAll()
   KSimpleConfig headerConf(fname,true);
   QStringList headers = headerConf.groupList();
   headers.remove("<default>");
+  headers.sort();
   
   KNViewHeader *h;
   QValueList<int> flags;
@@ -141,9 +142,13 @@ void KNViewHeader::saveAll()
   
   QValueList<int> flags;
   int idx=0;
+  QString group;
   
   for( QListIterator<KNViewHeader> it(instances); it.current(); ++it ) {
-    headerConf.setGroup(QString::number(idx++));
+    group.setNum(idx++);
+    while (group.length()<3)
+      group.prepend("0");
+    headerConf.setGroup(group);
     headerConf.writeEntry("Name",(*it)->n_ame);
     headerConf.writeEntry("Translate_Name",(*it)->translateName);
     headerConf.writeEntry("Header",(*it)->h_eader);
@@ -196,7 +201,7 @@ void KNViewHeader::up(KNViewHeader *h)
   if(idx!=-1) {
     instances.take(idx);
     instances.insert(idx-1, h);
-    kdDebug(5003) << "KNViewHeader::up() : item moved up" << endl;
+    //kdDebug(5003) << "KNViewHeader::up() : item moved up" << endl;
   }
   else kdDebug(5003) << "KNViewHeader::up() : item not found in list" << endl;
 }
@@ -209,7 +214,7 @@ void KNViewHeader::down(KNViewHeader *h)
   if(idx!=-1) {
     instances.take(idx);
     instances.insert(idx+1, h);
-    kdDebug(5003) << "KNViewHeader::up() : item moved down" << endl;
+    //kdDebug(5003) << "KNViewHeader::up() : item moved down" << endl;
   }
   else kdDebug(5003) << "KNViewHeader::up() : item not found in list" << endl;
 }
