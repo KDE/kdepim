@@ -1,6 +1,6 @@
 Network Working Group                                          C. Daboo
 Internet Draft: SIEVE Include Extension
-Document: draft-daboo-sieve-include-00.txt                   April 2003
+Document: draft-daboo-sieve-include-01.txt                 October 2003
 
                         SIEVE Include Extension
     
@@ -55,28 +55,10 @@ Copyright Notice
 
 
 
-Daboo                   Expires October 2003                   [Page 1]
-Internet Draft            SIEVE Include Extension            April 2003
+Daboo                    Expires April 2004                    [Page 1]
+Internet Draft           SIEVE Include Extension           October 2003
 
-                           Table of Contents
-     1  Abstract  . . . . . . . . . . . . . . . . . . . . . . . . . .  2
-     2  Conventions Used in This Document  . . . . . . . . . . . . . . 2
-     3  Change History  . . . . . . . . . . . . . . . . . . . . . . .  2
-     4  Open Issues: . . . . . . . . . . . . . . . . . . . . . . . . . 2
-     5  Introduction and Overview . . . . . . . . . . . . . . . . . .  2
-     6  SIEVE Include Extension  . . . . . . . . . . . . . . . . . . . 3
-       6.1  General Considerations  . . . . . . . . . . . . . . . . .  3
-       6.2  Control Structure Include  . . . . . . . . . . . . . . . . 3
-       6.3  Control Structure Return  . . . . . . . . . . . . . . . .  6
-     7  Security Considerations  . . . . . . . . . . . . . . . . . . . 6
-     8  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  6
-       8.1  include registration . . . . . . . . . . . . . . . . . . . 6
-     9  Normative References  . . . . . . . . . . . . . . . . . . . .  7
-    10  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 7
-    11  Author's Address  . . . . . . . . . . . . . . . . . . . . . .  7
-    12  Full Copyright Statement . . . . . . . . . . . . . . . . . . . 7
-    
-1 Abstract
+    Abstract
     
     The SIEVE [SIEVE] "include" extension permits users to include one
     SIEVE script inside another.  This can make managing large scripts
@@ -85,24 +67,35 @@ Internet Draft            SIEVE Include Extension            April 2003
     personal scripts or site-wide scripts provided by the local SIEVE
     implementation.
     
-2 Conventions Used in This Document
+Change History (to be removed prior to publication as an RFC)
     
-    Conventions for notations are as in [SIEVE] section 1.1, including
-    use of [KEYWORDS].
-    
-3 Change History
-    
-    Initial Document
-    
-    
-4 Open Issues:
-    
-    1   Should we allow URIs to point to scripts to include?
-    2   Should we allow string lists as argument to include?
-    3   How should non-exist include scripts be handled?
-    4   Interaction with variables?
+    Changes from -00 to -01:
+    1   Added IPR boiler plate.
+    2   Re-ordered sections at start to conform to RFC style.
+    3   Moved recursion comment into General Considerations section.
+    4   Switched to using optional parameter to indicate personal vs
+        global.
+    5   Explicitly state that an error occurs when a missing script is
+        included.
         
-5 Introduction and Overview
+        
+                           Table of Contents
+     1  Introduction and Overview . . . . . . . . . . . . . . . . . .  2
+     2  Conventions Used in This Document  . . . . . . . . . . . . . . 2
+     3  SIEVE Include Extension . . . . . . . . . . . . . . . . . . .  3
+       3.1  General Considerations . . . . . . . . . . . . . . . . . . 3
+       3.2  Control Structure Include . . . . . . . . . . . . . . . .  3
+       3.3  Control Structure Return . . . . . . . . . . . . . . . . . 6
+     4  Security Considerations . . . . . . . . . . . . . . . . . . .  7
+     5  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 7
+       5.1  include registration  . . . . . . . . . . . . . . . . . .  7
+     6  Normative References . . . . . . . . . . . . . . . . . . . . . 7
+     7  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  7
+     8  Author's Address . . . . . . . . . . . . . . . . . . . . . . . 8
+     9  Intellectual Property Rights Statement  . . . . . . . . . . .  8
+    10  Full Copyright Statement . . . . . . . . . . . . . . . . . . . 8
+        
+1 Introduction and Overview
     
     Its convenient to be able to break SIEVE scripts down into smaller
     components which can be reused in a variety of different
@@ -110,19 +103,26 @@ Internet Draft            SIEVE Include Extension            April 2003
     and a special 'vacation' script, the later being activated when the
     user goes on vacation.  In that case the default actions should
     continue to be run, but a vacation command should be executed first.
-
-
-Daboo                   Expires October 2003                   [Page 2]
-Internet Draft            SIEVE Include Extension            April 2003
-
     One option is to edit the default script to add or remove the
     vacation command as needed.  Another is to have a vacation script
     that simply has a vacation command and then includes the default
     script.
     
-6 SIEVE Include Extension
+
+
+
+
+Daboo                    Expires April 2004                    [Page 2]
+Internet Draft           SIEVE Include Extension           October 2003
+
+2 Conventions Used in This Document
     
-6.1 General Considerations
+    Conventions for notations are as in [SIEVE] section 1.1, including
+    use of [KEYWORDS].
+    
+3 SIEVE Include Extension
+    
+3.1 General Considerations
     
     SIEVE implementations that implement the "include" and "return"
     control structures described below have an identifier of "include"
@@ -143,35 +143,54 @@ Internet Draft            SIEVE Include Extension            April 2003
     SIEVE script, an implicit "keep" action MUST be executed to prevent
     loss of any messages.
     
+    SIEVE implementations MUST ensure that recursive includes are not
+    possible. i.e. if script "A" includes script "B", and script "B"
+    includes script "A" an error MUST be generated either when the
+    script is uploaded to the SIEVE repository, or when the script is
+    executed.  If such an error is detected whilst processing a SIEVE
+    script, an implicit "keep" action MUST be executed to prevent loss
+    of any messages.
     
-6.2 Control Structure Include
+    SIEVE implementations MUST handle missing scripts being referenced
+    via an includes in an existing script.  An error MUST be generated
+    when a missing included script is descovered during execution.  If
+    such an error is detected an implicit "keep" action MUST be executed
+    to prevent loss of any messages.
     
-        Syntax: include <value: string>
+3.2 Control Structure Include
     
-    The "include" control structure includes a single string argument
-    representing the name of the script to include in the main script at
-    that point.
+        Syntax: include [LOCATION] <value: string>
     
-    The script name contains one of two prefixes:
+    The "include" control structure includes an optional parameter, and
+    a single string argument representing the name of the script to
+    include in the main script at that point.
     
-        "/personal/"
+
+
+
+
+Daboo                    Expires April 2004                    [Page 3]
+Internet Draft           SIEVE Include Extension           October 2003
+
+    [LOCATION] is an optional parameter that has one of two values:
+    
+   Syntax:
+   	  ":personal"
+	/ ":global"
+
+   If the [LOCATION] parameter is not present, the location defaults to :personal.
+    
+    The location has the following meanings:
+    
+        :personal
             Indicates that the named script is stored in the user's own
             personal (private) SIEVE repository.
             
-        "/global/"
+        :global
             Indicates that the named script is stored in a site-wide
             SIEVE repository, accessible to all users of the SIEVE
             system.
     
-    The second component of the name represents an implementation
-    dependent script name.
-    
-
-
-
-Daboo                   Expires October 2003                   [Page 3]
-Internet Draft            SIEVE Include Extension            April 2003
-
     The included script MUST be a valid SIEVE script, including having
     necessary "require" statements for all optional capabilities used by
     the script.  The scope of a "require" statement in an included
@@ -191,22 +210,35 @@ Internet Draft            SIEVE Include Extension            April 2003
     
     Examples:
     
-    In the example below, script content is indicated by a '|' as the
+    In the examples below, script content is indicated by a '|' as the
     first non-space character on a line for clarity.  The '|' characters
     are not part of the script itself.
     
     The user has four scripts stored in their personal repository:
     
+
+
+
+
+
+
+
+
+
+
+Daboo                    Expires April 2004                    [Page 4]
+Internet Draft           SIEVE Include Extension           October 2003
+
         "default"
 
         This is the default active script that includes several others.
             
 		|   require ["include"];
 	    |   
-		|   include "/personal/always_allow";
-		|   include "/global/spam_tests";
-		|   include "/personal/my_spam_tests";
-		|   include "/personal/mailing_lists";
+		|   include :personal "always_allow";
+		|   include :global "spam_tests";
+		|   include :personal "my_spam_tests";
+		|   include :personal "mailing_lists";
             
         "always_allow"
 
@@ -223,12 +255,6 @@ Internet Draft            SIEVE Include Extension            April 2003
 		|   	keep;
 		|   }
             
-
-
-
-Daboo                   Expires October 2003                   [Page 4]
-Internet Draft            SIEVE Include Extension            April 2003
-
         "my_spam_tests"
 
         This script does some user-specific spam tests to catch spam
@@ -245,6 +271,21 @@ Internet Draft            SIEVE Include Extension            April 2003
 		|   	reject;
 		|   }
             
+
+
+
+
+
+
+
+
+
+
+
+
+Daboo                    Expires April 2004                    [Page 5]
+Internet Draft           SIEVE Include Extension           October 2003
+
         "mailing_lists"
 
         This script looks for messages from different mailing lists and
@@ -280,12 +321,6 @@ Internet Draft            SIEVE Include Extension            April 2003
     The "include" control structure may appear anywhere in the script
     where a control structure is legal.
     
-
-
-
-Daboo                   Expires October 2003                   [Page 5]
-Internet Draft            SIEVE Include Extension            April 2003
-
     Example:
     
 		|   require ["include"];
@@ -296,26 +331,23 @@ Internet Draft            SIEVE Include Extension            April 2003
 		|       include "my_reject_script";
 		|   }
     
-6.3 Control Structure Return
+3.3 Control Structure Return
     
         Syntax: return
     
     The "return" control structure stops processing of the currently
     included script only and returns processing control to the script
     which includes it.  If used in the main script (i.e. not in an
+
+
+Daboo                    Expires April 2004                    [Page 6]
+Internet Draft           SIEVE Include Extension           October 2003
+
     included script), it has the same effect as the "stop" control
     structure, including the appropriate "keep" action if no other
     actions have been executed up to that point.
     
-7 Security Considerations
-    
-    SIEVE implementations MUST ensure that recursive includes are not
-    possible. i.e. if script "A" includes script "B", and script "B"
-    includes script "A" an error MUST be generated either when the
-    script is uploaded to the SIEVE repository, or when the script is
-    executed.  If such an error is detected whilst processing a SIEVE
-    script, an implicit "keep" action MUST be executed to prevent loss
-    of any messages.
+4 Security Considerations
     
     SIEVE implementations MUST ensure adequate security for the global
     script repository to prevent unauthorized changes to global scripts.
@@ -325,12 +357,12 @@ Internet Draft            SIEVE Include Extension            April 2003
     and these issues are discussed in [SIEVE].
     
     
-8 IANA Considerations
+5 IANA Considerations
     
     The following template specifies the IANA registration of the Sieve
     extension specified in this document:
     
-8.1 include registration
+5.1 include registration
     
     To: iana@iana.org
     Subject: Registration of new Sieve extension
@@ -338,27 +370,22 @@ Internet Draft            SIEVE Include Extension            April 2003
     Capability name: include
     Capability keyword: include
     Capability arguments: N/A
-
-
-Daboo                   Expires October 2003                   [Page 6]
-Internet Draft            SIEVE Include Extension            April 2003
-
     Standards Track/IESG-approved experimental RFC number: this RFC
     Person and email address to contact for further information:
 
       Cyrus Daboo
       Cyrusoft International, Inc.
-      Suite 780, 5001 Baum Blvd.
+      5001 Baum Blvd., Suite 780,
       Pittsburgh, PA 15213
       U.S.A.
 
-      Email: daboo@cyrusoft.com
+      <mailto:daboo@cyrusoft.com>
 
     This information should be added to the list of sieve extensions
     given on http://www.iana.org/assignments/sieve-extensions.
     
     
-9 Normative References
+6 Normative References
     
     [KEYWORDS] Bradner, S., "Key words for use in RFCs to Indicate
     Requirement Levels", RFC 2119, March 1997.
@@ -367,24 +394,46 @@ Internet Draft            SIEVE Include Extension            April 2003
     January 2001.
     
     
-10 Acknowledgments
+
+
+
+Daboo                    Expires April 2004                    [Page 7]
+Internet Draft           SIEVE Include Extension           October 2003
+
+7 Acknowledgments
     
-    Thanks to Ken Murchison and Rob Siemborski for comments and
-    suggestions.
+    Thanks to Ken Murchison, Rob Siemborski, Alexey Melnikov, Marc Mutz
+    and Kjetil Torgrim Homme for comments and corrections.
     
     
-    
-11 Author's Address
+8 Author's Address
     
     Cyrus Daboo
     Cyrusoft International, Inc.
-    Suite 780, 5001 Baum Blvd.
+    5001 Baum Blvd., Suite 780,
     Pittsburgh, PA 15213
     U.S.A.
 
-    Email: daboo@cyrusoft.com
+    <mailto:daboo@cyrusoft.com>
     
-12 Full Copyright Statement
+9 Intellectual Property Rights Statement
+    
+    The IETF takes no position regarding the validity or scope of any
+    intellectual property or other rights that might be claimed to
+    pertain to the implementation or use of the technology described in
+    this document or the extent to which any license under such rights
+    might or might not be available; neither does it represent that it
+    has made any effort to identify any such rights.  Information on the
+    IETF's procedures with respect to rights in standards-track and
+    standards-related documentation can be found in BCP-11.  Copies of
+    claims of rights made available for publication and any assurances
+    of licenses to be made available, or the result of an attempt made
+    to obtain a general license or permission for the use of such
+    proprietary rights by implementors or users of this specification
+    can be obtained from the IETF Secretariat.
+    
+    
+10 Full Copyright Statement
     
     Copyright (C) The Internet Society 2003.  All Rights Reserved.
     
@@ -395,11 +444,6 @@ Internet Draft            SIEVE Include Extension            April 2003
     kind, provided that the above copyright notice and this paragraph
     are included on all such copies and derivative works.  However, this
     document itself may not be modified in any way, such as by removing
-
-
-Daboo                   Expires October 2003                   [Page 7]
-Internet Draft            SIEVE Include Extension            April 2003
-
     the copyright notice or references to the Internet Society or other
     Internet organizations, except as needed for the purpose of
     developing Internet standards in which case the procedures for
@@ -407,6 +451,12 @@ Internet Draft            SIEVE Include Extension            April 2003
     followed, or as required to translate it into languages other than
     English.
     
+
+
+
+Daboo                    Expires April 2004                    [Page 8]
+Internet Draft           SIEVE Include Extension           October 2003
+
     The limited permissions granted above are perpetual and will not be
     revoked by the Internet Society or its successors or assigns.
     
@@ -454,4 +504,11 @@ Internet Draft            SIEVE Include Extension            April 2003
 
 
 
-Daboo                   Expires October 2003                   [Page 8]
+
+
+
+
+
+
+
+Daboo                    Expires April 2004                    [Page 9]
