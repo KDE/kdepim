@@ -162,8 +162,8 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
     KSyncEntry::List two;
     two.append( met );
     SyncReturn ret =  manager.sync( SYNC_INTERACTIVE,  one, two );
-    delete entry2;
-    delete met;
+    // delete entry2;
+    //delete met;
     QDateTime time = QDateTime::currentDateTime();
     // write back if meta
     two = ret.synced();
@@ -182,12 +182,26 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
     Kapabilities cap = prof.caps();
     KCal::ICalFormat *form = new KCal::ICalFormat();
     if ( cap.isMetaSyncingEnabled() ) {
+        // TEST to avoid a crash
+        KCal::CalendarLocal *cal2 = new KCal::CalendarLocal();
+        QPtrList<KCal::Event> events;
+        KCal::Event *eve1;
+        for ( eve1 = events.first(); eve1 != 0; eve1 = events.next() ) {
+            cal2->addEvent( (KCal::Event*) eve1->clone() );
+        }
+        QPtrList<KCal::Todo> todos;
+        QPtrListIterator<KCal::Todo> it1( todos );
+        for ( ; it.current(); ++it ) {
+            cal2->addTodo( (KCal::Todo*) (it.current()->clone()) );
+        }
+        //
         m_conf->setGroup( prof.name() );
         m_conf->writeEntry("time", time );
         QString metaPath = m_conf->readEntry("metaPath" );
-        calendar->calendar()->save( QDir::homeDirPath() + "/.kitchensync/meta/"+ metaPath + "/cal.vcf",  form);
+        cal2->save( QDir::homeDirPath() + "/.kitchensync/meta/"+ metaPath + "/cal.vcf");
         kdDebug() << "Dumping Opie " << endl;
         kdDebug() << "Sync mode == " << entry2->syncMode() << " first sync = " << entry2->firstSync() << endl;
+        delete cal2;
     }
     KURL url(m_path );
     QString newPath;
@@ -196,7 +210,9 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
     }else{
         newPath = url.path();
     }
-    calendar->calendar()->save( newPath, form );
+    delete form;
+    form = new KCal::ICalFormat();
+    calendar->calendar()->save( newPath , form );
     delete form;
     out.append( calendar );
 }
