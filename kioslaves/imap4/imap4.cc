@@ -572,7 +572,7 @@ IMAP4Protocol::listDir (const KURL & _url)
     }
   }
   if ( !selectInfo.alert().isNull() ) {
-    warning( i18n( "Message from %1: %2" ).arg( myHost ).arg( selectInfo.alert() ) );
+    warning( i18n( "Message from %1 while processing '%2': %3" ).arg( myHost, myBox, selectInfo.alert() ) );
     selectInfo.setAlert( 0 );
   }
 
