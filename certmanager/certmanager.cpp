@@ -218,7 +218,7 @@ void CertManager::createActions() {
 			actionCollection(), "view_stop_operations" );
   action->setEnabled( false );
 
-  (void)   new KAction( i18n("New Certificate..."), "filenew", 0,
+  (void)   new KAction( i18n("New Key Pair..."), "filenew", 0,
 			this, SLOT(newCertificate()),
 			actionCollection(), "file_new_certificate" );
 
@@ -249,11 +249,11 @@ void CertManager::createActions() {
 					  actionCollection(), "file_import_crls" );
   connectEnableOperationSignal( this, mImportCRLFromFileAction );
 
-  mExportCertificateAction = new KAction( i18n("Export Certificate..."), "export", 0,
+  mExportCertificateAction = new KAction( i18n("Export Certificates..."), "export", 0,
 					  this, SLOT(slotExportCertificate()),
 					  actionCollection(), "file_export_certificate" );
 
-  mExportSecretKeyAction = new KAction( i18n("Export Secret Keys..."), "export", 0,
+  mExportSecretKeyAction = new KAction( i18n("Export Secret Key..."), "export", 0,
                                         this, SLOT(slotExportSecretKey()),
                                         actionCollection(), "file_export_secret_keys" );
   connectEnableOperationSignal( this, mExportSecretKeyAction );
@@ -346,6 +346,7 @@ void CertManager::disconnectJobFromStatusBarProgress( const GpgME::Error & err )
 }
 
 void CertManager::updateStatusBarLabels() {
+  mKeyListView->flushKeys();
   mStatusLabel->setText( i18n( "%n Key.",
 			       "%n Keys.", mKeyListView->childCount() ) );
 }
@@ -826,6 +827,7 @@ void CertManager::slotViewDetails()
 
 void CertManager::slotSelectionChanged()
 {
+  mKeyListView->flushKeys();
   bool b = mKeyListView->hasSelection();
   mExportCertificateAction->setEnabled( b );
   mExportSecretKeyAction->setEnabled( b );
