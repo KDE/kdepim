@@ -204,6 +204,8 @@ void Kleo::KeyListView::slotRefreshKey( const GpgME::Key & key ) {
       item->setKey ( key );
       return;
     }
+  // none found -> add it
+  slotAddKey( key );
 }
 
 // slots for the emission of covariant signals:
