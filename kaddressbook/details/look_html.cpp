@@ -99,14 +99,22 @@ void KABHtmlView::setAddressee( const KABC::Addressee &addr )
   KABC::Address::List addresses = addr.addresses();
   KABC::Address::List::ConstIterator addrIt;
   for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
-    QString formattedAddress = (*addrIt).formattedAddress().stripWhiteSpace();
-    formattedAddress = formattedAddress.replace( '\n', "<br>" );
+    if ( (*addrIt).label().isEmpty() ) {
+      QString formattedAddress = (*addrIt).formattedAddress().stripWhiteSpace();
+      formattedAddress = formattedAddress.replace( '\n', "<br>" );
 
-    dynamicPart += QString(
-      "<tr><td align=\"right\"><b>%1</b></td>"
-      "<td align=\"left\">%2</td></tr>" )
-      .arg( KABC::Address::typeLabel( (*addrIt).type() ) )
-      .arg( formattedAddress );
+      dynamicPart += QString(
+        "<tr><td align=\"right\"><b>%1</b></td>"
+        "<td align=\"left\">%2</td></tr>" )
+        .arg( KABC::Address::typeLabel( (*addrIt).type() ) )
+        .arg( formattedAddress );
+    } else {
+      dynamicPart += QString(
+        "<tr><td align=\"right\"><b>%1</b></td>"
+        "<td align=\"left\">%2</td></tr>" )
+        .arg( KABC::Address::typeLabel( (*addrIt).type() ) )
+        .arg( (*addrIt).label().replace( '\n', "<br>" ) );
+    }
   }
 
   QString notes;
@@ -116,7 +124,7 @@ void KABHtmlView::setAddressee( const KABC::Addressee &addr )
       "<tr>"
       "<td align=\"right\" valign=\"top\"><b>%1:</b></td>" // note label
       "<td align=\"left\">%2</td>"          // note
-      "</tr>" ).arg( i18n( "Notes" ) ).arg( addr.note() );
+      "</tr>" ).arg( i18n( "Notes" ) ).arg( addr.note().replace( '\n', "<br>" ) );
   }
 
   QString strAddr = QString::fromLatin1(
