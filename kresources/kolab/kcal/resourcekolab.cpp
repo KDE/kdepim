@@ -135,8 +135,11 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   kdDebug() << "Kolab resource: got " << lst.count() << " in "
                 << subResource << " of type " << mimetype << endl;
 
+  const bool silent = mSilent;
+  mSilent = true;
   for( QMap<Q_UINT32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it )
     addIncidence( mimetype, it.data(), subResource, it.key() );
+  mSilent = silent;
 
   return true;
 }
