@@ -32,11 +32,11 @@ echo "You must have XAutomation installed to run this."
 echo "You must have your code changes to karm installed (make install)."
 echo 
 echo "Is that okay (y/n)"
-read answer
+if [ x$1 != "x--batch" ]; then read answer; fi
 if [ x$answer != x ]; then echo "Test not run because user aborted" >&2; exit 2; fi
 
 # 1. call this program in the background
-if [ x$1 != xbackgrounding ]; then ./karmtest.sh backgrounding $@ & exit; fi
+if [ x$1 != xbackgrounding ]; then $0 backgrounding $@ & exit; fi
 
 # 1. test if Xautomation is useable
 xte 'key Return'
@@ -95,6 +95,7 @@ xte 'key Right'
 xte 'key Down'
 sleep 1
 xte 'key Return'
+sleep 1
 xte 'str exampl'
 xte 'str e 1'
 xte 'key Return'
