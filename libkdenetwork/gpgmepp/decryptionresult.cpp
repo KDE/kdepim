@@ -70,7 +70,7 @@ const GpgME::DecryptionResult & GpgME::DecryptionResult::operator=( const Decryp
   if ( other.d )
     other.d->ref();
   if ( this->d )
-    this->d->ref();
+    this->d->unref();
 
   return *this;
 }

@@ -109,7 +109,7 @@ const GpgME::VerificationResult & GpgME::VerificationResult::operator=( const Ve
   if ( other.d )
     other.d->ref();
   if ( this->d )
-    this->d->ref();
+    this->d->unref();
   this->d = other.d;
 
   return *this;

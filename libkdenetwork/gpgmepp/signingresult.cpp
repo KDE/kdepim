@@ -90,7 +90,7 @@ const GpgME::SigningResult & GpgME::SigningResult::operator=( const SigningResul
   if ( other.d )
     other.d->ref();
   if ( this->d )
-    this->d->ref();
+    this->d->unref();
   this->d = other.d;
 
   return *this;

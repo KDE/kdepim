@@ -78,7 +78,7 @@ const GpgME::EncryptionResult & GpgME::EncryptionResult::operator=( const Encryp
   if ( other.d )
     other.d->ref();
   if ( this->d )
-    this->d->ref();
+    this->d->unref();
   this->d = other.d;
 
   return *this;

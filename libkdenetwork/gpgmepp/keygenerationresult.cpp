@@ -70,7 +70,7 @@ const GpgME::KeyGenerationResult & GpgME::KeyGenerationResult::operator=( const 
   if ( other.d )
     other.d->ref();
   if ( this->d )
-    this->d->ref();
+    this->d->unref();
 
   return *this;
 }

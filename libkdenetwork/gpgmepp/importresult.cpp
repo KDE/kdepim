@@ -82,7 +82,7 @@ const GpgME::ImportResult & GpgME::ImportResult::operator=( const ImportResult &
   if ( other.d )
     other.d->ref();
   if ( this->d )
-    this->d->ref();
+    this->d->unref();
   this->d = other.d;
 
   return *this;

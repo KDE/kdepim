@@ -61,7 +61,7 @@ const GpgME::KeyListResult & GpgME::KeyListResult::operator=( const KeyListResul
   if ( other.d )
     other.d->ref();
   if ( this->d )
-    this->d->ref();
+    this->d->unref();
 
   return *this;
 }
