@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>03/12/2000</date>
+<date>05/12/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -916,9 +916,9 @@ email client over to &kmail;. &kmail; stores its mail using the <emphasis remap=
 one of the most widely used mailbox formats on UNIX
 systems. Mbox mailboxes store messages in one file, identifying where messages start and end with the
 FROM: header. For many Unix mailers, all you must do is move your mailboxes to
-<filename>~/Mail</filename> (or make
- Mail a symbolic link to the folder containing you mailboxes) and launch &kmail;.  The mailboxes should now 
-show up correctly in &kmail;.</para>
+<filename class="directory">~/Mail</filename> (or make <filename>Mail</filename> a symbolic link to the folder containing you mailboxes), 
+make sure they are writeable by your user, and launch &kmail;. The mailboxes should now show up 
+correctly in &kmail;.</para>
 
 <para>If your old mailboxes are not in mbox format, see below for instructions on importing some other common
 formats.</para>
@@ -1001,9 +1001,9 @@ mail folders before you use this script.</para>
 <varlistentry>
 <term>Netscape Mail</term>
 <listitem>
-<para>Copy your Netscape Mailfiles from <filename>~/nsmail/</filename> to
-<filename>~/Mail</filename>
-folder. The mailboxes will show up in &kmail; the next time you restart it.</para>
+<para>Copy your Netscape mail files from <filename>~/nsmail/</filename> to
+<filename class="directory">~/Mail</filename> and make sure they are writeable (only by your user, of course).
+The mailboxes will show up in &kmail; the next time you restart it.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
