@@ -86,6 +86,14 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mNameParsing = new QCheckBox( i18n( "Automatic name parsing for new addressees" ), groupBox, "mparse" );
   boxLayout->addWidget( mNameParsing );
 
+  mTradeAsFamilyName = new QCheckBox( i18n( "Trade single name component as family name" ), groupBox, "mtrade" );
+  boxLayout->addWidget( mTradeAsFamilyName );
+/**
+  TODO: show the checkbox when we can compile agains kdelibs from HEAD, atm it 
+        doesn't work and would just confuse the users ;)
+*/
+  mTradeAsFamilyName->hide();
+
   QBoxLayout *editorLayout = new QHBoxLayout( boxLayout, KDialog::spacingHint() );
   
   QLabel *label = new QLabel( i18n( "Addressee Editor Type:" ), groupBox );
@@ -144,6 +152,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   connect( mNameParsing, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
+  connect( mTradeAsFamilyName, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mFaxHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mExtensionView, SIGNAL( selectionChanged( QListViewItem* ) ),
@@ -185,6 +194,10 @@ void KABConfigWidget::restoreSettings()
 
   restoreExtensionSettings();
 
+  KConfig config( "kabcrc", false, false );
+  config.setGroup( "General" );
+  mTradeAsFamilyName->setChecked( config.readBoolEntry( "TradeAsFamilyName", true ) );
+
   blockSignals( blocked );
 
   emit changed( false );
@@ -201,6 +214,10 @@ void KABConfigWidget::saveSettings()
 
   saveExtensionSettings();
   KABPrefs::instance()->writeConfig();
+
+  KConfig config( "kabcrc", false, false );
+  config.setGroup( "General" );
+  config.writeEntry( "TradeAsFamilyName", mTradeAsFamilyName->isChecked() );
 
   emit changed( false );
 }

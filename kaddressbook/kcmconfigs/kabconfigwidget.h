@@ -66,6 +66,7 @@ class KABConfigWidget : public QWidget
 
     QCheckBox *mNameParsing;
     QCheckBox *mViewsSingleClickBox;
+    QCheckBox *mTradeAsFamilyName;
     QComboBox *mEditorCombo;
     QPushButton *mConfigureButton;
     QLineEdit *mPhoneHook;
