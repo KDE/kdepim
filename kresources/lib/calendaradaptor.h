@@ -91,7 +91,7 @@ class KDE_EXPORT CalendarAdaptor : public KPIM::GroupwareDataAdaptor
   public slots:
     /** newLocalId is the new id that was (randomly) assigned to the item */
     virtual void calendarItemDownloaded( KCal::Incidence *inc,
-           const QString &newLocalId, const QString &remoteId,
+           const QString &newLocalId, const KURL &remoteId,
            const QString &fingerprint, const QString &storagelocation );
 
   protected:

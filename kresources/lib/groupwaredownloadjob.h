@@ -62,21 +62,23 @@ class GroupwareDownloadJob : public GroupwareJob
     void slotDownloadItemResult( KIO::Job * );
     void slotDownloadItemData( KIO::Job *, const QByteArray & );
     
-    void slotItemToDownload( const QString &remoteURL,
+    void slotItemToDownload( const KURL &remoteURL,
                              KPIM::FolderLister::ContentType type );
-    void slotItemOnServer( const QString &remoteURL );
-    void slotItemDownloaded( const QString &localID, const QString &remoteURL,
+    void slotItemOnServer( const KURL &remoteURL );
+    void slotItemDownloaded( const QString &localID, const KURL &remoteURL,
                              const QString &fingerprint );
-    void slotItemDownloadError( const QString &remoteURL, const QString &error );
+    void slotItemDownloadError( const KURL &remoteURL, const QString &error );
 
   private:
-    QStringList mFoldersForDownload;
-    QStringList mCurrentlyOnServer;
+    KURL::List mFoldersForDownload;
+    /** mCurrentlyOnServer is the list of pathes of all items on the server.
+        These pathes don't contain the server name! */
+    KURL::List mCurrentlyOnServer;
 
-    QMap<QString,KPIM::FolderLister::ContentType> mItemsForDownload;
-    QMap<QString,KPIM::FolderLister::ContentType> mItemsDownloading;
-    QMap<QString,KPIM::FolderLister::ContentType> mItemsDownloaded;
-    QMap<QString,KPIM::FolderLister::ContentType> mItemsDownloadError;
+    QMap<KURL,KPIM::FolderLister::ContentType> mItemsForDownload;
+    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloading;
+    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloaded;
+    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloadError;
 
     KPIM::ProgressItem *mProgress;
 

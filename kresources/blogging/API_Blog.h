@@ -146,9 +146,9 @@ class APIBlog : public QObject
     void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email );
     void folderInfoRetrieved( const QString &id, const QString &name );
 
-    void itemOnServer( const QString &remoteURL );
+    void itemOnServer( const KURL &remoteURL );
     void itemDownloaded( KCal::Incidence *j, const QString &localID,
-                         const QString &remoteURL, const QString &fingerprint,
+                         const KURL &remoteURL, const QString &fingerprint,
                          const QString &storageLocation );
     
 

@@ -98,12 +98,12 @@ void AddressBookAdaptor::addItem( KABC::Addressee addr )
 }
 
 void AddressBookAdaptor::addressbookItemDownloaded( KABC::Addressee addr,
-    const QString &newLocalId, const QString &remoteId, const QString &fingerprint,
+    const QString &newLocalId, const KURL &remoteId, const QString &fingerprint,
     const QString &storagelocation )
 {
   // remove the currently existing item from the cache
   deleteItem( newLocalId );
-  QString localId = idMapper()->localId( remoteId );
+  QString localId = idMapper()->localId( remoteId.path() );
   if ( !localId.isEmpty() ) deleteItem( localId );
   
   // add the new item

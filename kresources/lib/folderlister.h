@@ -85,7 +85,7 @@ class KDE_EXPORT FolderLister : public QObject
     void setAdaptor( KPIM::GroupwareDataAdaptor *adaptor );
     GroupwareDataAdaptor* adaptor() const { return mAdaptor; }
 
-    QStringList activeFolderIds() const;
+    KURL::List activeFolderIds() const;
     bool isActive( const QString &id ) const;
 
     void setWriteDestinationId( KPIM::FolderLister::ContentType type, const QString &dest );
@@ -102,7 +102,7 @@ class KDE_EXPORT FolderLister : public QObject
     void slotListJobResult( KIO::Job * );
     /** Adds the folder with the given url and display name to the folder
      *  tree (if is has an appropriate type) */
-    virtual void processFolderResult( const QString &href,
+    virtual void processFolderResult( const KURL &href,
                                       const QString &displayName,
                                       KPIM::FolderLister::ContentType  type );
     /** Retrieve information about the folder u. If it has sub-folders, it
@@ -135,8 +135,8 @@ class KDE_EXPORT FolderLister : public QObject
 
   protected:
     Type mType;
-    QStringList mUrls;
-    QStringList mProcessedUrls;
+    KURL::List mUrls;
+    QStringList mProcessedPathes;
     Entry::List mFolders;
     GroupwareDataAdaptor *mAdaptor;
   private:

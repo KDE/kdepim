@@ -156,8 +156,6 @@ kdDebug() << "Person=" << KPIM::FolderLister::Contact << ", "
 
   kdDebug(7000) << "doc: " << doc.toString() << endl;
   KURL authURL = url;
-  authURL.setUser(adaptor->user());
-  authURL.setPass(adaptor->password());
   KIO::DavJob *job = KIO::davPropFind( authURL, doc, "0", false );
   return job;
 }
@@ -209,7 +207,7 @@ kdDebug()<<"ExchangeGlobals::interpretListItemsJob"<<endl;
     if ( e.isNull() )
       continue;
 
-    const QString &entry = e.namedItem("href").toElement().text();
+    const KURL &entry( e.namedItem("href").toElement().text() );
     QDomElement propstat = e.namedItem("propstat").toElement();
     if ( propstat.isNull() )
       continue;
@@ -246,9 +244,8 @@ kdDebug() << "ExchangeGlobals::interpretCalendarDownloadItemsJob(): QDomDocument
   KCal::Incidence::List::Iterator it = incidences.begin();
   for ( ; it != incidences.end(); ++it ) {
     QString fpr = (*it)->customProperty( "KDEPIM-Exchange-Resource", "fingerprint" );
-    QString href = (*it)->customProperty( "KDEPIM-Exchange-Resource", "href" );
-    KURL u( href );
-    adaptor->calendarItemDownloaded( (*it), (*it)->uid(), u.path(), fpr, u.prettyURL() );
+    KURL href( (*it)->customProperty( "KDEPIM-Exchange-Resource", "href" ) );
+    adaptor->calendarItemDownloaded( (*it), (*it)->uid(), href, fpr, href.prettyURL() );
     res = true;
   }
   return res;
@@ -270,9 +267,8 @@ kdDebug() << "ExchangeGlobals::interpretAddressBookDownloadItemsJob(): QDomDocum
   KABC::Addressee::List::Iterator it = addressees.begin();
   for ( ; it != addressees.end(); ++it ) {
     QString fpr = (*it).custom( "KDEPIM-Exchange-Resource", "fingerprint" );
-    QString href = (*it).custom( "KDEPIM-Exchange-Resource", "href" );
-    KURL u( href );
-    adaptor->addressbookItemDownloaded( (*it), (*it).uid(), u.path(), fpr, u.prettyURL() );
+    KURL href( (*it).custom( "KDEPIM-Exchange-Resource", "href" ) );
+    adaptor->addressbookItemDownloaded( (*it), (*it).uid(), href, fpr, href.prettyURL() );
     res = true;
   }
   return res;

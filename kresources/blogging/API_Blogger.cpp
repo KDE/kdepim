@@ -235,11 +235,11 @@ bool APIBlogger::interpretDownloadItemsJob( KIO::Job *job )
         KCal::Journal *j = journalFromPosting( &posting );
 //         dumpBlog( &posting );
         kdDebug() << "Emitting itemOnServer( posting.postID()="<<posting.postID() << "); " << endl;
-        emit itemOnServer( posting.postID() );
+        emit itemOnServer( KURL( posting.postID() ) );
         kdDebug() << "Emitting itemDownloaded( j=" << j << ", uid=" << j->uid()
                   << ", postID=" << posting.postID() << ", fpr="
                   << posting.fingerprint() << "); " << endl;
-        emit itemDownloaded( j, j->uid(), posting.postID(),
+        emit itemDownloaded( j, j->uid(), KURL( posting.postID() ),
                              posting.fingerprint(), posting.postID() );
       } else {
         kdDebug() << "readPostingFromMap failed! " << endl;

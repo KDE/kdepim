@@ -261,7 +261,7 @@ Q_OBJECT
     virtual KIO::TransferJob *createDownloadJob( const KURL &,
                                           FolderLister::ContentType ) = 0;
     /** Creates the KIO::TransferJob for downloading a list of items items. */
-    virtual KIO::TransferJob *createDownloadJob( const QMap<QString,FolderLister::ContentType> & ) { return 0; }
+    virtual KIO::TransferJob *createDownloadJob( const QMap<KURL,FolderLister::ContentType> & ) { return 0; }
     /** Create the job to remove the deletedItems from the server. The base
         URL of the server is passed as uploadurl.  */
     virtual KIO::Job *createRemoveJob( const KURL &,
@@ -302,7 +302,7 @@ Q_OBJECT
     virtual bool interpretUploadJob( KIO::Job *job, const QString &/*jobData*/ );
     virtual bool interpretUploadNewJob( KIO::Job *job, const QString &/*jobData*/ );
 
-    virtual void processDownloadListItem(  const QString &entry,
+    virtual void processDownloadListItem(  const KURL &entry,
         const QString &newFingerprint, KPIM::FolderLister::ContentType type );
     /** Return the default file name for a new item. */
     virtual QString defaultNewItemName( GroupwareUploadItem * )
@@ -326,22 +326,23 @@ Q_OBJECT
 
 
   signals:
-    void folderInfoRetrieved( const QString &href, const QString &name,
+    void folderInfoRetrieved( const KURL &href, const QString &name,
                                      KPIM::FolderLister::ContentType );
     void folderSubitemRetrieved( const KURL &, bool isFolder );
 
-    void itemToDownload( const QString &remoteURL, KPIM::FolderLister::ContentType type );
-    void itemOnServer( const QString &remoteURL );
+    void itemToDownload( const KURL &remoteURL, KPIM::FolderLister::ContentType type );
+    /** passed the whole remote url (including hostname) to the receiver */
+    void itemOnServer( const KURL &remoteURL );
     
-    void itemDownloaded( const QString &localID, const QString &remoteURL,
+    void itemDownloaded( const QString &localID, const KURL &remoteURL,
                          const QString &fingerprint );
-    void itemDeleted( const QString &localID, const QString &remoteURL );
-    void itemUploaded( const QString &localID, const QString &remoteURL );
-    void itemUploadedNew( const QString &localID, const QString &remoteURL );
+    void itemDeleted( const QString &localID, const KURL &remoteURL );
+    void itemUploaded( const QString &localID, const KURL &remoteURL );
+    void itemUploadedNew( const QString &localID, const KURL &remoteURL );
 
-    void itemDownloadError( const QString &remoteURL, const QString &error );
-    void itemDeletionError( const QString &remoteURL, const QString &error );
-    void itemUploadError( const QString &remoteURL, const QString &error );
+    void itemDownloadError( const KURL &remoteURL, const QString &error );
+    void itemDeletionError( const KURL &remoteURL, const QString &error );
+    void itemUploadError( const KURL &remoteURL, const QString &error );
     void itemUploadNewError( const QString &localID, const QString &error );
 
   private:

@@ -113,13 +113,13 @@ void CalendarAdaptor::addItem( KCal::Incidence *i)
 
 
 void CalendarAdaptor::calendarItemDownloaded( KCal::Incidence *inc,
-    const QString &newLocalId, const QString &remoteId, const QString &fingerprint,
+    const QString &newLocalId, const KURL &remoteId, const QString &fingerprint,
     const QString &storagelocation )
 {
-kdDebug() << "CalendarAdaptor::calendarItemDownloaded, inc=" << inc->summary() << ", local=" << newLocalId << ", remote=" << remoteId << ", fpr=" << fingerprint << ", storagelocation="<< storagelocation << endl;
+kdDebug() << "CalendarAdaptor::calendarItemDownloaded, inc=" << inc->summary() << ", local=" << newLocalId << ", remote=" << remoteId.url() << ", fpr=" << fingerprint << ", storagelocation="<< storagelocation << endl;
   // remove the currently existing item from the cache
   deleteItem( newLocalId );
-  QString localId = idMapper()->localId( remoteId );
+  QString localId = idMapper()->localId( remoteId.path() );
   if ( !localId.isEmpty() ) deleteItem( localId );
   
   // add the new item

@@ -56,8 +56,6 @@ kdDebug()<<"ExchangeCalendarUploadItem::createUploadJob, adaptor="<<adaptor<<", 
   if ( !adaptor ) return 0;
   KURL upUrl( url() );
   adaptor->adaptUploadUrl( upUrl );
-  upUrl.setUser(adaptor->user());
-  upUrl.setPass(adaptor->password());
   kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
  
   KIO::DavJob *job = KIO::davPropPatch( upUrl, mDavData, false );
@@ -133,17 +131,17 @@ bool ExchangeCalendarAdaptor::interpretUploadJob( KIO::Job *job, const QString &
 
   if ( davjob ) {
     if ( error ) {
-      emit itemUploadError( davjob->url().url(), err );
+      emit itemUploadError( davjob->url(), err );
       return false;
     } else {
       QDomDocument doc( davjob->response() );
       // TODO: extract the href and the items that got a 404. If there's
       // something important among them, issue the "usual" not-all-settings-uploaded
       // warning to the user.
-      KURL url( davjob->url() );
+      
       // We don't know the local id here (and we don't want to extract it from
       // the idMapper, that's the task of the receiver
-      emit itemUploaded( uidFromJob( job ), url.url() );
+      emit itemUploaded( uidFromJob( job ), davjob->url() );
     }
     return true;
   } else {
@@ -161,17 +159,17 @@ bool ExchangeCalendarAdaptor::interpretUploadNewJob( KIO::Job *job, const QStrin
 
   if ( davjob ) {
     if ( error ) {
-      emit itemUploadNewError( davjob->url().url(), err );
+      emit itemUploadNewError( idMapper()->localId( davjob->url().path() ), err );
       return false;
     } else {
       QDomDocument doc( davjob->response() );
       // TODO: extract the href and the items that got a 404. If there's
       // something important among them, issue the "usual" not-all-settings-uploaded
       // warning to the user.
-      KURL url( davjob->url() );
+
       // We don't know the local id here (and we don't want to extract it from
       // the idMapper, that's the task of the receiver
-      emit itemUploadedNew( uidFromJob( job ), url.url() );
+      emit itemUploadedNew( uidFromJob( job ), davjob->url() );
     }
     return true;
   } else {

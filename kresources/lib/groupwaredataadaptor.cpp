@@ -152,14 +152,13 @@ kdDebug()<<"GroupwareDataAdaptor::createUploadNewJob, url=" << url.url() << endl
   } else return 0;
 }
 
-void GroupwareDataAdaptor::processDownloadListItem( const QString &entry,
+void GroupwareDataAdaptor::processDownloadListItem( const KURL &entry,
         const QString &newFingerprint, KPIM::FolderLister::ContentType type )
 {
   bool download = false;
-  KURL url ( entry );
-  const QString &location = url.path();
+  const QString &location = entry.path();
 
-  emit itemOnServer( location );
+  emit itemOnServer( entry );
   // if not locally present, download
   const QString &localId = idMapper()->localId( location );
   kdDebug(5800) << "Looking up remote: " << location
@@ -202,9 +201,10 @@ bool GroupwareDataAdaptor::interpretRemoveJob( KIO::Job *job, const QString &/*j
     KURL::List urls( deljob->urls() );
     for ( KURL::List::Iterator it = urls.begin(); it != urls.end(); ++it ) {
       if ( error ) {
-        emit itemDeletionError( (*it).url(), err );
+        emit itemDeletionError( *it, err );
       } else {
-        emit itemDeleted( QString::null, (*it).url() );
+        // FIXME: Don't use QString::null here
+        emit itemDeleted( QString::null, *it );
       }
     }
     return true;
@@ -224,11 +224,11 @@ bool GroupwareDataAdaptor::interpretUploadJob( KIO::Job *job, const QString &/*j
   if ( trfjob ) {
     KURL url( trfjob->url() );
     if ( error ) {
-      emit itemUploadError( url.url(), err );
+      emit itemUploadError( url, err );
     } else {
       // We don't know the local id here (and we don't want to extract it from
       // the idMapper, that's the task of the receiver
-      emit itemUploaded( uidFromJob( job ), url.url() );
+      emit itemUploaded( uidFromJob( job ), url );
     }
     return true;
   } else {
@@ -247,11 +247,11 @@ bool GroupwareDataAdaptor::interpretUploadNewJob( KIO::Job *job, const QString &
   if ( trfjob ) {
     KURL url( trfjob->url() );
     if ( error ) {
-      emit itemUploadNewError( url.url(), err );
+      emit itemUploadNewError( idMapper()->localId( url.path() ), err );
     } else {
       // We don't know the local id here (and we don't want to extract it from
       // the idMapper, that's the task of the receiver
-      emit itemUploadedNew( uidFromJob( job ), url.url() );
+      emit itemUploadedNew( uidFromJob( job ), url );
     }
     return true;
   } else {

@@ -94,12 +94,12 @@ class GroupwareUploadJob : public GroupwareJob
     void slotUploadNewJobResult( KIO::Job *job );
     void slotUploadNewJobData( KIO::Job *, const QByteArray & );
 
-    void slotItemDeleted( const QString &localID, const QString &remoteURL );
-    void slotItemUploaded( const QString &localID, const QString &remoteURL );
-    void slotItemUploadedNew( const QString &localID, const QString &remoteURL );
+    void slotItemDeleted( const QString &localID, const KURL &remoteURL );
+    void slotItemUploaded( const QString &localID, const KURL &remoteURL );
+    void slotItemUploadedNew( const QString &localID, const KURL &remoteURL );
 
-    void slotItemDeleteError( const QString &remoteURL, const QString &error );
-    void slotItemUploadError( const QString &remoteURL, const QString &error  );
+    void slotItemDeleteError( const KURL &remoteURL, const QString &error );
+    void slotItemUploadError( const KURL &remoteURL, const QString &error  );
     void slotItemUploadNewError( const QString &localID, const QString &error );
 
     void uploadCompleted();

@@ -59,14 +59,14 @@ void GroupwareDownloadJob::run()
 
   mItemsForDownload.clear();
   mCurrentlyOnServer.clear();
-  connect( adaptor(), SIGNAL( itemToDownload( const QString &, KPIM::FolderLister::ContentType ) ),
-           SLOT( slotItemToDownload( const QString &, KPIM::FolderLister::ContentType ) ) );
-  connect( adaptor(), SIGNAL( itemOnServer( const QString & ) ),
-           SLOT( slotItemOnServer( const QString & ) ) );
-  connect( adaptor(), SIGNAL( itemDownloaded( const QString &, const QString &, const QString & ) ),
-           SLOT( slotItemDownloaded( const QString &, const QString &, const QString & ) ) );
-  connect( adaptor(), SIGNAL( itemDownloadError( const QString &, const QString & ) ),
-           SLOT( slotItemDownloadError( const QString &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemToDownload( const KURL &, KPIM::FolderLister::ContentType ) ),
+           SLOT( slotItemToDownload( const KURL &, KPIM::FolderLister::ContentType ) ) );
+  connect( adaptor(), SIGNAL( itemOnServer( const KURL & ) ),
+           SLOT( slotItemOnServer( const KURL & ) ) );
+  connect( adaptor(), SIGNAL( itemDownloaded( const QString &, const KURL &, const QString & ) ),
+           SLOT( slotItemDownloaded( const QString &, const KURL &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemDownloadError( const KURL &, const QString & ) ),
+           SLOT( slotItemDownloadError( const KURL &, const QString & ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(),
@@ -144,9 +144,9 @@ void GroupwareDownloadJob::slotListItemsResult( KIO::Job *job )
 void GroupwareDownloadJob::deleteIncidencesGoneFromServer()
 {
   QMap<QString, QString> remoteIds( adaptor()->idMapper()->remoteIdMap() );
-  QStringList::ConstIterator it = mCurrentlyOnServer.begin();
+  KURL::List::ConstIterator it = mCurrentlyOnServer.begin();
   while ( it != mCurrentlyOnServer.end() ) {
-    remoteIds.remove( (*it) );
+    remoteIds.remove( (*it).path() );
     ++it;
   }
   QMap<QString, QString>::ConstIterator it2;
@@ -176,17 +176,16 @@ void GroupwareDownloadJob::downloadItem()
       mItemsForDownload.clear();
     } else {
       // Download the first item of the list
-      QMap<QString,KPIM::FolderLister::ContentType>::Iterator it = mItemsForDownload.begin();
-      const QString href( it.key() );
+      QMap<KURL,KPIM::FolderLister::ContentType>::Iterator it = mItemsForDownload.begin();
+      KURL href( it.key() );
       KPIM::FolderLister::ContentType ctype = it.data();
       mItemsDownloading.insert( it.key(), it.data() );
       mItemsForDownload.remove( it.key() );
  
-      KURL url( href );
-      adaptor()->adaptDownloadUrl( url );
+      adaptor()->adaptDownloadUrl( href );
       mDownloadItemsData = QString::null;
 
-      mDownloadJob = adaptor()->createDownloadJob( url, ctype );
+      mDownloadJob = adaptor()->createDownloadJob( href, ctype );
     }
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotDownloadItemResult( KIO::Job * ) ) );
@@ -225,27 +224,29 @@ void GroupwareDownloadJob::slotDownloadItemData( KIO::Job *, const QByteArray &d
   mDownloadItemsData.append( data.data() );
 }
 
-void GroupwareDownloadJob::slotItemToDownload( const QString &remoteURL,
+void GroupwareDownloadJob::slotItemToDownload( const KURL &remoteURL,
                          KPIM::FolderLister::ContentType type )
 {
-  if ( !mItemsForDownload.contains( remoteURL ) &&
-       !mItemsDownloading.contains( remoteURL ) && 
-       !mItemsDownloaded.contains( remoteURL ) ) {
-    mItemsForDownload.insert( remoteURL, type );
+  KURL url( remoteURL );
+  adaptor()->adaptDownloadUrl( url );
+  if ( !mItemsForDownload.contains( url ) &&
+       !mItemsDownloading.contains( url ) &&
+       !mItemsDownloaded.contains( url ) ) {
+    mItemsForDownload.insert( url, type );
   }
 }
 
 
-void GroupwareDownloadJob::slotItemOnServer( const QString &remoteURL )
+void GroupwareDownloadJob::slotItemOnServer( const KURL &remoteURL )
 {
-kdDebug()<<"GroupwareDownloadJob::slotItemOnServer( " << remoteURL << ")" << endl;
+kdDebug()<<"GroupwareDownloadJob::slotItemOnServer( " << remoteURL.url() << ")" << endl;
   if ( !mCurrentlyOnServer.contains( remoteURL ) ) {
     mCurrentlyOnServer.append( remoteURL );
   }
 }
 
 
-void GroupwareDownloadJob::slotItemDownloadError( const QString &remoteURL, const QString &/*error*/ )
+void GroupwareDownloadJob::slotItemDownloadError( const KURL &remoteURL, const QString &/*error*/ )
 {
   // TODO: Error handling!
   if ( mItemsDownloading.contains( remoteURL ) ) {
@@ -257,9 +258,9 @@ void GroupwareDownloadJob::slotItemDownloadError( const QString &remoteURL, cons
 
 
 void GroupwareDownloadJob::slotItemDownloaded( const QString &localID,
-         const QString &remoteURL, const QString &fingerprint )
+         const KURL &remoteURL, const QString &fingerprint )
 {
-kdDebug()<<"GroupwareDownloadJob::slotItemDownloaded( " << localID << ", " << remoteURL << ", " << fingerprint << ")" << endl;
+kdDebug()<<"GroupwareDownloadJob::slotItemDownloaded( " << localID << ", " << remoteURL.url() << ", " << fingerprint << ")" << endl;
   if ( mItemsForDownload.contains( remoteURL ) ) {
     mItemsDownloaded[ remoteURL ] = mItemsForDownload[ remoteURL ];
     mItemsForDownload.remove( remoteURL );
@@ -271,7 +272,7 @@ kdDebug()<<"GroupwareDownloadJob::slotItemDownloaded( " << localID << ", " << re
   if ( !mItemsDownloaded.contains( remoteURL ) ) {
     mItemsDownloaded[ remoteURL ] = KPIM::FolderLister::Unknown;
   }
-  adaptor()->idMapper()->setRemoteId( localID, remoteURL );
+  adaptor()->idMapper()->setRemoteId( localID, remoteURL.path() );
   adaptor()->idMapper()->setFingerprint( localID, fingerprint );
 }
 

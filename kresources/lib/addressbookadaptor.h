@@ -80,7 +80,7 @@ class KDE_EXPORT AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
     virtual KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
                      KPIM::GroupwareUploadItem::UploadType type );
     virtual void addressbookItemDownloaded( KABC::Addressee addr,
-                const QString &newLocalId, const QString &remoteId,
+                const QString &newLocalId, const KURL &remoteId,
                 const QString &fingerprint, const QString &storagelocation );
     
   private:

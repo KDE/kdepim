@@ -203,7 +203,7 @@ bool GroupDavGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor
     if ( e.isNull() )
       continue;
 
-    const QString &entry = e.namedItem("href").toElement().text();
+    const KURL &entry( e.namedItem("href").toElement().text() );
     QDomElement propstat = e.namedItem("propstat").toElement();
     if ( propstat.isNull() )
       continue;
@@ -245,11 +245,11 @@ kdDebug(5800) << jobData << endl;
     KCal::Incidence *inc = (raw.front())->clone();
     if ( !inc ) return false;
     KIO::SimpleJob *sjob = dynamic_cast<KIO::SimpleJob *>(job);
-    QString remoteId( QString::null );
-    if ( sjob ) remoteId = sjob->url().path();
+    KURL remoteId;
+    if ( sjob ) remoteId = sjob->url();
     QString fingerprint = extractFingerprint( job, jobData );
     adaptor->calendarItemDownloaded( inc, inc->uid(), remoteId, fingerprint,
-                                     sjob->url().prettyURL() );
+                                     remoteId.prettyURL() );
     return true;
   } else {
     kdError() << "Unable to parse iCalendar" << endl;
@@ -276,11 +276,11 @@ kdDebug(5800) << jobData << endl;
   KABC::Addressee a = addrs.first();
 
   KIO::SimpleJob *sjob = dynamic_cast<KIO::SimpleJob*>(job);
-  QString remoteId( QString::null );
-  if ( sjob ) remoteId = sjob->url().path();
+  KURL remoteId;
+  if ( sjob ) remoteId = sjob->url();
   QString fingerprint = extractFingerprint( job, jobData );
   adaptor->addressbookItemDownloaded( a, a.uid(), remoteId, fingerprint,
-                                      sjob->url().prettyURL() );
+                                      remoteId.prettyURL() );
   return true;
 }
 
