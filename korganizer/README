@@ -15,6 +15,7 @@ QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
     - Correctly save category colors (#54913).
     - Don't show todos more than once in what's next view.
     - Include todos in print output of month view (#53291).
+    - Don't restrict maximum size of search dialog (#54912).
 
 * Official 3.1 release (January 2003)
 
