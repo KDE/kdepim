@@ -20,6 +20,7 @@
 
 #include <qcstring.h>
 #include <qstrlist.h>
+#include <qregexp.h>
 
 #include <VCardAdrParam.h>
 #include <VCardAgentParam.h>
@@ -122,6 +123,10 @@ ContentLine::~ContentLine()
 ContentLine::_parse()
 {
 	vDebug("parse");
+	
+	// Unqote newlines
+	strRep_ = strRep_.replace( QRegExp( "\\\\n" ), "\n" );
+	
 	int split = strRep_.find(':');
 	
 	if (split == -1) { // invalid content line
@@ -230,21 +235,36 @@ ContentLine::_assemble()
 {
 	vDebug("Assemble - my name is \"" + name_ + "\"");
 	strRep_.truncate(0);
+
+	QCString line;
 	
 	if (!group_.isEmpty())
-		strRep_ += group_ + '.';
+		line += group_ + '.';
 	
-	strRep_ += name_;
+	line += name_;
 
 	vDebug("Adding parameters");
 	ParamListIterator it(paramList_);
 	
 	for (; it.current(); ++it)
-		strRep_ += ";" + it.current()->asString();
+		line += ";" + it.current()->asString();
 	
 	vDebug("Adding value");
 	if (value_ != 0)
-		strRep_ += ":" + value_->asString();
+		line += ":" + value_->asString();
+                
+	// Quote newlines
+	line = line.replace( QRegExp( "\n" ), "\\n" );
+		
+	// Fold lines longer than 72 chars
+	const int maxLen = 72;
+	uint cursor = 0;
+	while( line.length() > ( cursor + 1 ) * maxLen ) {
+		strRep_ += line.mid( cursor * maxLen, maxLen );
+		strRep_ += "\r\n ";
+		++cursor;
+	}
+	strRep_ += line.mid( cursor * maxLen );
 }
 
 	void

@@ -293,6 +293,8 @@ VCARD::EntityNameToEntityType(const QCString & s)
 				t = EntityName;
 			else if (s == "NICKNAME")
 				t = EntityNickname;
+			else if (s == "NOTE")
+				t = EntityNote;
 			break;
 
 		case 'O':

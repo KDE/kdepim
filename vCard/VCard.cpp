@@ -156,7 +156,7 @@ VCard::_parse()
 		++it;
 
 		while (
-			it.current()			&&
+			it.current()		&&
 			it.current()[0] == ' '	&&
 			strlen(it.current()) != 1)
 		{
