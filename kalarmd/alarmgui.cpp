@@ -210,7 +210,7 @@ void AlarmGui::handleEvent(const QString& calendarURL, const QString& eventID)
 
 void AlarmGui::registerWithDaemon()
 {
-  kdDebug(5900)<<"AlarmGui::registerWithDaemon()\n";
+  kdDebug(5900) << "AlarmGui::registerWithDaemon()" << endl;
   AlarmDaemonIface_stub s( DAEMON_APP_NAME, DAEMON_DCOP_OBJECT );
   s.registerGui(kapp->aboutData()->appName(), DCOP_OBJECT_NAME);
 }
@@ -223,7 +223,8 @@ void AlarmGui::readDaemonConfig()
   KSimpleConfig kalarmdConfig(mDaemonDataFile, true);
   kalarmdConfig.setGroup("General");
   mAutostartDaemon = kalarmdConfig.readBoolEntry("Autostart", true);
-  kdDebug(5900)<<"AlarmGui::readDaemonConfig(): "<<mDaemonDataFile<<" auto="<<(int)mAutostartDaemon<<endl;
+  kdDebug(5900) << "AlarmGui::readDaemonConfig(): " << mDaemonDataFile
+                << " auto=" << (int)mAutostartDaemon << endl;
 }
 
 /*

@@ -1,0 +1,15 @@
+[Desktop Entry]
+Exec=kcmshell alarmdaemonctrl
+Icon=kalarm
+Type=Application
+DocPath=kcontrol/alarmdaemonctrl.html
+
+X-KDE-ModuleType=Library
+X-KDE-Library=alarmdaemonctrl
+X-KDE-FactoryName=alarmdaemonctrl
+
+Name=Alarm Daemon
+
+Comment=Alarm Daemon Settings
+
+Keywords=Alarm Daemon,kalarmd,KAlarm,KOrganizer

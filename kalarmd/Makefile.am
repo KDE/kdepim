@@ -1,37 +1,45 @@
 INCLUDES= -I$(top_srcdir) $(all_includes)
 
-# This does not work, because configure generates a $(LINK) as command in the
-# Makefile, which is not defined.
-#
 lib_LTLIBRARIES = libkalarmd.la
 
 libkalarmd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 libkalarmd_la_LIBADD  = $(LIB_KDECORE)
-libkalarmd_la_SOURCES =  alarmdaemoniface.stub dummy.cpp
+libkalarmd_la_SOURCES =  alarmdaemoniface.stub alarmguiiface.stub dummy.cpp
 
 DISTCLEANFILES = dummy.cpp
 
 dummy.cpp:
 	touch dummy.cpp
 
+
 bin_PROGRAMS = kalarmd kalarmdgui
+
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
+kalarmd_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
 kalarmd_SOURCES = alarmdaemon.cpp main.cpp alarmapp.cpp \
         adcalendarbase.cpp adcalendar.cpp adconfigdatabase.cpp calclient.cpp \
         adconfigdatarw.cpp \
-        alarmdaemoniface.skel alarmdaemoniface.stub \
-        alarmguiiface.stub
+        alarmdaemoniface.skel
 
 kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
+kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
 kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp \
 	dockwindow.cpp \
 	koeventviewer.cpp alarmgui.cpp adconfigdatabase.cpp \
         calclient.cpp \
         adcalendarbase.cpp adcalendar_gui.cpp \
-        alarmdaemoniface.stub \
-        alarmguiiface.skel alarmguiiface.stub
+        alarmguiiface.skel
+
+
+kde_module_LTLIBRARIES = libkcm_alarmdaemonctrl.la
+
+libkcm_alarmdaemonctrl_la_SOURCES = alarmdaemonctrl.cpp
+libkcm_alarmdaemonctrl_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
+libkcm_alarmdaemonctrl_la_LIBADD = $(LIB_KDEUI)
+
+alarmdaemonctrl_DATA = alarmdaemonctrl.desktop
+alarmdaemonctrldir = $(kde_appsdir)/Settings/System
+
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	guiapp.h alarmgui.h alarmguiiface.h alarmdialog.h \

@@ -196,19 +196,23 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
       // Remove any previous calendars which were not in the client data file
       for (ADCalendarBase *cal = mCalendars.first();  cal;  )
       {
+        kdDebug(5900) << "tick..." << endl;
         if (cal->appName() == client)
         {
           if (newCalendars.find(cal->urlString()) == -1) {
             deletedCalendars = true;
             mCalendars.remove();
             cal = mCalendars.current();
+            continue;
           }
-          else
-            cal = mCalendars.next();
         }
+        cal = mCalendars.next();
       }
     }
   }
+
+  kdDebug(5900) << "ADConfigDataBase::readConfigData() done" << endl;
+
   return writeNewClients ? newClients : QString::null;
 }
 

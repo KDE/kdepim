@@ -91,7 +91,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
       explicit GuiInfo(const QCString &dcopObj) : dcopObject(dcopObj) { }
       QCString  dcopObject;     // DCOP object name
     };
-    typedef QMap<QString, GuiInfo> GuiMap;  // maps GUI client names against their data
+    typedef QMap<QCString, GuiInfo> GuiMap;  // maps GUI client names against their data
 
     void        enableCal_(const QString& urlString, bool enable);
     void        addCal_(const QCString& appname, const QString& urlString, bool msgCal);

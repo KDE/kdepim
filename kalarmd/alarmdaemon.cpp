@@ -409,6 +409,8 @@ kdDebug(5900)<<"Notification type="<<client.notificationType<<": "<<calendar->ap
       kdDebug(5900) << "AlarmDaemon::notifyEvent(): unknown client" << endl;
     else
     {
+      kdDebug() << "  appName: " << calendar->appName() << endl;
+    
       if (client.waitForRegistration)
       {
         // Don't start the client application if the session manager is still
@@ -607,17 +609,14 @@ void AlarmDaemon::notifyGui(AlarmGuiChangeType change, const QString& calendarUR
 
   for (GuiMap::ConstIterator g = mGuis.begin();  g != mGuis.end();  ++g)
   {
-    const QString& dcopObject = g.data().dcopObject;
+    QCString dcopObject = g.data().dcopObject;
     if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(g.key())))
     {
       kdDebug(5900)<<"AlarmDaemon::notifyGui() sending:" << g.key()<<" ->" << dcopObject <<endl;
-      QByteArray data;
-      QDataStream arg(data, IO_WriteOnly);
-      arg << change << calendarURL << appName;
-      if (!kapp->dcopClient()->send(static_cast<const char*>(g.key()),
-                                    static_cast<const char*>( dcopObject),
-                                    "alarmDaemonUpdate(int,QString,QCString)",
-                                    data))
+
+      AlarmGuiIface_stub stub( g.key(), dcopObject );
+      stub.alarmDaemonUpdate( change, calendarURL, appName );
+      if ( !stub.ok() )
         kdDebug(5900) << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;
     }
   }
