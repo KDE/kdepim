@@ -84,3 +84,4 @@ KNotesWidgetSetup::~KNotesWidgetSetup()
 	fConfigWidget->fDeleteNoteForMemo->setChecked(
 		fConfig->readBoolEntry(KNotesConduitFactory::matchDeletes,false));
 }
+

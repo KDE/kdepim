@@ -66,12 +66,14 @@ protected:
 
 public slots:
 	void copyCompleted();
-
+	void setEnabled(bool);
+	
 signals:
 	void filesChanged();
 private:
 	QString fDirName;
 	int fPendingCopies;
+	bool enabled;
 } ;
 
 #else

@@ -37,6 +37,7 @@
 #endif
 
 class QMultiLineEdit;
+class QPushButton;
 
 class KPilotInstaller;
 class FileInstaller;
@@ -47,10 +48,11 @@ Q_OBJECT
 
 public:
 	FileInstallWidget(QWidget* parent, const QString& dbPath);
-	~FileInstallWidget() { }
+	virtual ~FileInstallWidget();
 
 	// Pilot Component Methods:
 	void initialize();
+	virtual bool preHotSync(QString &);
 	void postHotSync();
 
 
@@ -72,6 +74,7 @@ private:
 
 	KPilotInstaller* fKPilotInstaller;
 	FileInstaller *fInstaller;
+	QPushButton *clearButton,*addButton;
 
 protected slots:
 	void slotClearButton();

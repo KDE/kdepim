@@ -29,7 +29,7 @@
 */
 
 
-#include <options.h>
+#include "options.h"
 
 // Only include what we really need:
 // First UNIX system stuff, then std C++,
@@ -205,6 +205,7 @@ ExpenseConduit::~ExpenseConduit()
 /* virtual */ bool ExpenseConduit::exec()
 {
 	FUNCTIONSETUP;
+	DEBUGCONDUIT<<expense_id<<endl;
 
 	if (!fConfig)
 	{

@@ -18,23 +18,19 @@
 */
 
 
-
-#include <plugin.h>
-
 #include <qmap.h>
-#include <qlist.h>
 
-#include <kapplication.h>
-#include <qdict.h>
-
-#include <pilotAddress.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+
+#include <pilotAddress.h>
+#include <plugin.h>
+
+
 
 #define SYNCNONE 0
 #define SYNCMOD 1
 #define SYNCDEL 3
-
 
 #define SYNC_FULL 1
 #define SYNC_FAST 0
@@ -48,13 +44,8 @@
 #define CHANGED_NORES 0x200
 #define CHANGED_DUPLICATE CHANGED_ADD|CHANGED_NORES|CHANGED_BOTH
 
-//#define ADD_BOTH CHANGED_BOTH|CHANGED_ADD
 
 using namespace KABC;
-
-//class DCOPClient;
-class PilotLocalDatabase;
-class PilotSerialDatabase;
 
 class AbbrowserConduit : public ConduitAction
 {

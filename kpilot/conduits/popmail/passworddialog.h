@@ -39,7 +39,7 @@
 #endif
 
 #include <qdialog.h>
-#include <qlined.h>
+#include <qlineedit.h>
 
 class PasswordDialog : public QDialog
 {

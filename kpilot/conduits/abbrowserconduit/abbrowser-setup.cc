@@ -27,18 +27,16 @@
 */
 
 #include "options.h"
+#include "abbrowser-setup.moc"
 
 #include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
 
-#include <kapplication.h>
 #include <kconfig.h>
 
 #include "kaddressbookConduit.h"
-
 #include "abbrowser-factory.h"
-#include "abbrowser-setup.moc"
 
 
 AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n,

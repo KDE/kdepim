@@ -27,21 +27,13 @@
 */
 
 #include "options.h"
+#include "abbrowser-factory.moc"
 
-#include <kapplication.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
 
-#include <dcopclient.h>
-
-#include <time.h> // Needed by pilot-link include
-
-#include <pi-memo.h>
-
 #include "abbrowser-conduit.h"
 #include "abbrowser-setup.h"
-
-#include "abbrowser-factory.moc"
 
 
 extern "C"
@@ -154,3 +146,4 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 
 	return 0L;
 }
+

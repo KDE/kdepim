@@ -45,14 +45,14 @@ static const char *passworddialog_id="$Id$";
 #include <string.h>
 #include <stdio.h>
 
-#include <qapp.h>
-#include <qpushbt.h>
+#include <qapplication.h>
+#include <qpushbutton.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qdialog.h>
 #include <qaccel.h>
-#include <qmsgbox.h>
-#include <qchkbox.h>
+#include <qmessagebox.h>
+#include <qcheckbox.h>
 
 #include "passworddialog.h"
 #include "passworddialog.moc"

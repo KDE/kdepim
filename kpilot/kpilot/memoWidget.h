@@ -68,8 +68,9 @@ public:
 	virtual ~MemoWidget();
   
 	// Pilot Component Methods:
-	void initialize();
-	void postHotSync();
+	/* virtual */ void initialize();
+	/* virtual */ bool preHotSync(QString &);
+	/* virtual */ void postHotSync();
 
 	// Added by David Bishop, please move to correct location!
 	bool saveAsXML(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
@@ -83,7 +84,9 @@ protected:
 	void initializeCategories(PilotDatabase *);
 	void initializeMemos(PilotDatabase *);
 
-
+	// TODO: Ugh, I have no idea if this fix is in BRANCH as well.
+	void saveChangedMemo();
+  
 public slots:
 	/**
 	* Called whenever the selected memo changes in order to:
@@ -94,7 +97,7 @@ public slots:
 	*/
 	void slotShowMemo(int);
 	void slotUpdateButtons();
-	void slotTextChanged();
+	// void slotTextChanged();
 	void slotImportMemo();
 	void slotExportMemo();
 	void slotDeleteMemo(); // Delets the currently selected memo(s)
@@ -112,6 +115,8 @@ private:
 	QListBox*		fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
+	
+	int lastSelectedMemo;
 };
 
 

@@ -138,7 +138,7 @@ public:
 
 KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	const char *n, const QStringList &a) :
-	ConduitAction(o,n,a),
+	ConduitAction(o,!n ? "knotes-conduit" : n,a),
 	fP(new KNotesActionPrivate)
 {
 	FUNCTIONSETUP;
@@ -245,6 +245,12 @@ void KNotesAction::listNotes()
 
 /* slot */ void KNotesAction::process()
 {
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname 
+		<< ": Now in state " << fStatus << endl;
+#endif
+
 	switch(fStatus)
 	{
 	case Init:

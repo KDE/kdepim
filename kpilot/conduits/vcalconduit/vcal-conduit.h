@@ -31,21 +31,16 @@
 
 #include <plugin.h>
 
-#include <event.h>
-#include <calendarlocal.h>
+#include <libkcal/event.h>
+#include <libkcal/calendarlocal.h>
 #include "vcal-factory.h"
 #include "vcal-conduitbase.h"
 #include <pilotDateEntry.h>
-//#include <pilotRecord.h>
 
 class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
-//class PilotAppCategory;
-//class PilotDateEntry: public PilotAppCategory;
-//class VCalConduitFactory;
 
-//class VCalConduitPrivateBase;
 
 class VCalConduitPrivate : public VCalConduitPrivateBase
 {

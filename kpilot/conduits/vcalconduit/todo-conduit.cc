@@ -44,8 +44,8 @@ static const char *TodoConduit_id = "$Id$";
 #include <pilotUser.h>
 #include <kconfig.h>
 
-#include <calendarlocal.h>
-#include <todo.h>
+#include <libkcal/calendarlocal.h>
+#include <libkcal/todo.h>
 
 
 /*

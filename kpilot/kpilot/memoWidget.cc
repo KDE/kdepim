@@ -33,6 +33,7 @@ static const char *memowidget_id =
 #endif
 
 #include <time.h>
+
 #include <pi-macros.h>
 #include <pi-dlp.h>
 
@@ -66,6 +67,8 @@ static const char *memowidget_id =
 #ifndef QLABEL_H
 #include <qlabel.h>
 #endif
+#include <qtextcodec.h>
+
 #ifndef _KAPP_H
 #include <kapplication.h>
 #endif
@@ -107,7 +110,8 @@ static const char *memowidget_id =
 MemoWidget::MemoWidget(QWidget * parent,
 	const QString & path) :
 	PilotComponent(parent, "component_memo", path),
-	fTextWidget(0L)
+	fTextWidget(0L),
+	lastSelectedMemo(-1)
 {
 	FUNCTIONSETUP;
 
@@ -117,8 +121,10 @@ MemoWidget::MemoWidget(QWidget * parent,
 	fMemoList.setAutoDelete(true);
 	slotUpdateButtons();
 
+#if 0
 	connect(fTextWidget, SIGNAL(textChanged()),
 		this, SLOT(slotTextChanged()));
+#endif
 
 	/* NOTREACHED */
 	(void) memowidget_id;
@@ -127,7 +133,7 @@ MemoWidget::MemoWidget(QWidget * parent,
 MemoWidget::~MemoWidget()
 {
 	FUNCTIONSETUP;
-
+	saveChangedMemo();
 }
 
 
@@ -414,10 +420,6 @@ void MemoWidget::slotDeleteMemo()
 		return;
 	}
 
-	// QADE: Apparently a PilotMemo is not some kind of PilotRecord,
-	// so the PilotRecord methods don't work on it.
-	//
-	//
 	selectedMemo->makeDeleted();
 	writeMemo(selectedMemo);
 	fMemoList.remove(selectedMemo);
@@ -488,6 +490,8 @@ void MemoWidget::updateWidget()
 	fTextWidget->clear();
 
 	slotUpdateButtons();
+
+	lastSelectedMemo=-1;
 }
 
 void MemoWidget::slotShowMemo(int which)
@@ -529,35 +533,32 @@ void MemoWidget::writeMemo(PilotMemo * which)
 	delete memoDB;
 }
 
-void MemoWidget::slotTextChanged()
+void MemoWidget::saveChangedMemo()
 {
 	FUNCTIONSETUP;
+	
+	if (-1 == lastSelectedMemo) return;
+	if (!fTextWidget->isModified()) return;
 
-	if (fListBox->currentItem() == -1)
-	{
-		kdWarning() << k_funcinfo
-			<< ": slotTextChanged with no memo selected!" << endl;
-		return;
-	}
-
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Saving changed memo " << lastSelectedMemo << endl;
+#endif
+	
 	PilotListItem *p =
-		(PilotListItem *) fListBox->item(fListBox->currentItem());
+		(PilotListItem *) fListBox->item(lastSelectedMemo);
 	PilotMemo *currentMemo = (PilotMemo *) p->rec();
 
-	if (fListBox->currentItem() >= 0)
-	{
-		if (currentMemo->id() == 0x0)
-		{
-			KMessageBox::error(0L,
-				i18n
-				("New memo cannot be edited until\nHotSynced with pilot."),
-				i18n("HotSync Required"));
-			slotShowMemo(fListBox->currentItem());
-			return;
-		}
-		currentMemo->setText(fTextWidget->text());
-		writeMemo(currentMemo);
-	}
+	currentMemo->setText(PilotAppCategory::codec()->
+		fromUnicode(fTextWidget->text()));
+	writeMemo(currentMemo);
+}
+
+/* virtual */ bool MemoWidget::preHotSync(QString &)
+{
+	FUNCTIONSETUP;
+	saveChangedMemo();
+	return true;
 }
 
 void MemoWidget::slotImportMemo()

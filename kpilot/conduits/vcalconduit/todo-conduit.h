@@ -36,8 +36,8 @@
 #include <plugin.h>
 #include <kconfig.h>
 
-#include <todo.h>
-#include <calendarlocal.h>
+#include <libkcal/todo.h>
+#include <libkcal/calendarlocal.h>
 #include <pilotTodoEntry.h>
 #include "todo-factory.h"
 #include "vcal-conduitbase.h"

@@ -511,6 +511,8 @@ void CConduitSetup::writeInstalledConduits()
 				"author to correct it.").arg(p->
 				text(CONDUIT_NAME));
 
+			// Might not be correct in a caption,
+			// but this file is deprecated anyway.
 			KMessageBox::error(this, tmpMessage,
 				i18n("Conduit Error."));
 		}

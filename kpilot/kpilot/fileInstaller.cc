@@ -64,7 +64,8 @@ static const char *fileinstaller_id =
 
 #include "fileInstaller.moc"
 
-FileInstaller::FileInstaller()
+FileInstaller::FileInstaller() :
+	enabled(true)
 {
 	FUNCTIONSETUP;
 
@@ -122,6 +123,8 @@ void FileInstaller::addFiles(QStrList & fileList)
 {
 	FUNCTIONSETUP;
 
+	if (!enabled) return;
+	
 	unsigned int i = 0;
 	unsigned int succ = 0;
 
@@ -142,6 +145,8 @@ void FileInstaller::addFiles(QStringList & fileList)
 {
 	FUNCTIONSETUP;
 
+	if (!enabled) return;
+	
 	unsigned int i = 0;
 	unsigned int succ = 0;
 
@@ -162,6 +167,8 @@ void FileInstaller::addFile(const QString & file)
 {
 	FUNCTIONSETUP;
 
+	if (!enabled) return;
+	
 	if (runCopy(file))
 	{
 		emit(filesChanged());
@@ -183,5 +190,10 @@ const QStringList FileInstaller::fileNames() const
 		QDir::NoSymLinks | QDir::Readable);
 }
 
+/* slot */ void FileInstaller::setEnabled(bool b)
+{
+	FUNCTIONSETUP;
+	enabled=b;
+}
 
 

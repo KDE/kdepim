@@ -434,7 +434,7 @@ nextFile:
 	if (openConduit() < 0)
 	{
 		kdWarning() << k_funcinfo
-			<< ": Restore apparently cancelled." << endl;
+			<< ": Restore apparently canceled." << endl;
 		fStatus = Done;
 		emit syncDone(this);
 

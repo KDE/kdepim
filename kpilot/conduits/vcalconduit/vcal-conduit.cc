@@ -38,8 +38,7 @@ static const char *vcalconduit_id = "$Id$";
 #include <pilotUser.h>
 #include <kconfig.h>
 
-#include <calendarlocal.h>
-//#include <event.h>
+#include <libkcal/calendarlocal.h>
 
 
 /*
