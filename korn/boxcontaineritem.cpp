@@ -195,15 +195,15 @@ void BoxContainerItem::fillKPopupMenu( KPopupMenu* popupMenu, KActionCollection*
 {
 	/*popupMenu->insertItem( i18n( "&Configure" ), this, SLOT( slotConfigure() ) );
 	popupMenu->insertItem( i18n( "&Recheck" ), this, SLOT( slotRecheck() ) );
-	popupMenu->insertItem( i18n( "R&eset counter" ), this, SLOT( slotReset() ) );
-	popupMenu->insertItem( i18n( "&View emails" ), this, SLOT( slotView() ) );
-	popupMenu->insertItem( i18n( "R&un command" ), this, SLOT( slotRunCommand() ) );*/
+	popupMenu->insertItem( i18n( "R&eset Counter" ), this, SLOT( slotReset() ) );
+	popupMenu->insertItem( i18n( "&View Emails" ), this, SLOT( slotView() ) );
+	popupMenu->insertItem( i18n( "R&un Command" ), this, SLOT( slotRunCommand() ) );*/
 	
 	(new KAction( i18n("&Configure"),     KShortcut(), this, SLOT( slotConfigure()  ), actions ))->plug( popupMenu );
 	(new KAction( i18n("&Recheck"),       KShortcut(), this, SLOT( slotRecheck()    ), actions ))->plug( popupMenu );
-	(new KAction( i18n("R&eset counter"), KShortcut(), this, SLOT( slotReset()      ), actions ))->plug( popupMenu );
-	(new KAction( i18n("&View emails"),   KShortcut(), this, SLOT( slotView()       ), actions ))->plug( popupMenu );
-	(new KAction( i18n("R&un command"),   KShortcut(), this, SLOT( slotRunCommand() ), actions ))->plug( popupMenu );
+	(new KAction( i18n("R&eset Counter"), KShortcut(), this, SLOT( slotReset()      ), actions ))->plug( popupMenu );
+	(new KAction( i18n("&View Emails"),   KShortcut(), this, SLOT( slotView()       ), actions ))->plug( popupMenu );
+	(new KAction( i18n("R&un Command"),   KShortcut(), this, SLOT( slotRunCommand() ), actions ))->plug( popupMenu );
 	popupMenu->insertSeparator();
 	KStdAction::help(      this, SLOT( help()      ), actions )->plug( popupMenu );
 	KStdAction::reportBug( this, SLOT( reportBug() ), actions )->plug( popupMenu );

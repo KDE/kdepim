@@ -254,7 +254,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addMultiCellLayout( homePageLayout, 8, 8, 3, 6 );
 
   QHBoxLayout *blogLayout = new QHBoxLayout( 0, 11, 7 );
-  label = new QLabel( i18n("Blog Feed:"), tab1 );
+  label = new QLabel( i18n("Blog feed:"), tab1 );
   blogLayout->addWidget( label );
   mBlogEdit = new KLineEdit( tab1 );
   blogLayout->addWidget( mBlogEdit );

@@ -58,7 +58,7 @@ void KornShell::optionDlg()
 		return;
 	}
 	
-	_configDialog = new KDialogBase( 0, "Configuration Dialog", false, i18n( "Korn configuration" ),
+	_configDialog = new KDialogBase( 0, "Configuration Dialog", false, i18n( "Korn Configuration" ),
 					 KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply, KDialogBase::Ok, true );
 	
 	KornCfgImpl *widget = new KornCfgImpl( _configDialog, "Configuration widget" );

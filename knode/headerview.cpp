@@ -73,7 +73,7 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   mPopup = new KPopupMenu( this );
   mPopup->insertTitle( i18n("View Columns") );
   mPopup->setCheckable( true );
-  mPopup->insertItem( i18n("Line count"),  KPaintInfo::COL_SIZE );
+  mPopup->insertItem( i18n("Line Count"),  KPaintInfo::COL_SIZE );
   mPopup->insertItem( i18n("Score"), KPaintInfo::COL_SCORE );
 
   connect( mPopup, SIGNAL(activated(int)), this, SLOT(toggleColumn(int)) );
