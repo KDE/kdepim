@@ -60,8 +60,6 @@ KTNEFMain::KTNEFMain(QWidget *parent, const char *name)
 	setupActions();
 	setupStatusbar();
 
-	setAutoSaveSettings( "MainWindow" );
-
 	setupTNEF();
 
 	KGlobal::config()->setGroup("Settings");
@@ -75,6 +73,7 @@ KTNEFMain::KTNEFMain(QWidget *parent, const char *name)
 	if (!handler_) handler_ = new KFileOpenWithHandler();
 
 	resize(430,350);
+	setAutoSaveSettings( "MainWindow" );
 }
 
 KTNEFMain::~KTNEFMain()
@@ -112,8 +111,8 @@ void KTNEFMain::setupActions()
 	// Option menu
 	new KAction(i18n("Default Folder..."), QString("folder_open"), 0, this, SLOT(optionDefaultDir()), actionCollection(), "options_default_dir");
 
-	KStdAction::showToolbar(this, SLOT(slotShowToolbar()), actionCollection());
-	KStdAction::showStatusbar(this, SLOT(slotShowStatusbar()), actionCollection());
+	createStandardStatusBarAction();
+	setStandardToolBarMenuEnabled(true);
 	KStdAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection());
 
 	createGUI();
@@ -347,23 +346,6 @@ void KTNEFMain::slotNewToolbarConfig()
 {
 	createGUI();
 	applyMainWindowSettings( KGlobal::config(), QString::fromLatin1("MainWindow") );
-}
-
-void KTNEFMain::slotShowToolbar()
-{
-	if (toolBar()->isVisible())
-		toolBar()->hide();
-	else
-		toolBar()->show();
-}
-
-void KTNEFMain::slotShowStatusbar()
-{
-	if (statusBar()->isVisible())
-		statusBar()->hide();
-	else
-		statusBar()->show();
-	setSettingsDirty();
 }
 
 void KTNEFMain::slotShowMessageProperties()

@@ -203,9 +203,9 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctSpellCheck = KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection());
 
   //settings menu
-  a_ctShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
-  a_ctShowStatusbar = KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
-
+  createStandardStatusBarAction();
+  setStandardToolBarMenuEnabled(true);
+    
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
@@ -271,8 +271,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   conf->setGroup("composerWindow_options");
   resize(535,450);    // default optimized for 800x600
   applyMainWindowSettings(conf);
-  a_ctShowToolbar->setChecked(!toolBar()->isHidden());
-  a_ctShowStatusbar->setChecked(!statusBar()->isHidden());
 
   // starting the external editor
   if(knGlobals.cfgManager->postNewsComposer()->useExternalEditor())
@@ -1113,25 +1111,6 @@ void KNComposer::slotSpellcheck()
   connect(s_pellChecker, SIGNAL(corrected (const QString &, const QString &, unsigned int)),
           v_iew->e_dit, SLOT(corrected (const QString &, const QString &, unsigned int)));
 }
-
-
-void KNComposer::slotToggleToolBar()
-{
-  if(toolBar()->isVisible())
-    toolBar()->hide();
-  else
-    toolBar()->show();
-}
-
-
-void KNComposer::slotToggleStatusBar()
-{
-  if (statusBar()->isVisible())
-    statusBar()->hide();
-  else
-    statusBar()->show();
-}
-
 
 void KNComposer::slotUpdateStatusBar()
 {

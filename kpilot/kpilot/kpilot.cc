@@ -543,9 +543,9 @@ void KPilotInstaller::initMenu()
 	// View actions
 
 	// Options actions
-	m_toolbarAction =
-		KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
-		actionCollection());
+	createStandardStatusBarAction();
+        setStandardToolBarMenuEnabled(true);
+    
 	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
 	p = KStdAction::configureToolbars(this, SLOT(optionsConfigureKeys()),
@@ -654,24 +654,6 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		p->initialize();
 	}
 }
-
-
-void KPilotInstaller::optionsShowToolbar()
-{
-	FUNCTIONSETUP;
-	if (m_toolbarAction->isChecked())
-	{
-		toolBar()->show();
-	}
-	else
-	{
-		toolBar()->hide();
-	}
-
-	kapp->processEvents();
-	resizeEvent(0);
-}
-
 
 void KPilotInstaller::optionsConfigureKeys()
 {

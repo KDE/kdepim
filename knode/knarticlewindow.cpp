@@ -104,7 +104,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
 
   // settings menu
-  a_ctShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
+  setStandardToolBarMenuEnabled(true);
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
@@ -121,7 +121,6 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   conf->setGroup("articleWindow_options");
   resize(500,400);    // default optimized for 800x600
   applyMainWindowSettings(conf);
-  a_ctShowToolbar->setChecked(!toolBar()->isHidden());
 }
 
 
@@ -137,15 +136,6 @@ KNArticleWindow::~KNArticleWindow()
 void KNArticleWindow::slotFileClose()
 {
   close();
-}
-
-
-void KNArticleWindow::slotToggleToolBar()
-{
-  if(toolBar()->isVisible())
-    toolBar()->hide();
-  else
-    toolBar()->show();
 }
 
 

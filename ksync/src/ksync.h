@@ -33,7 +33,6 @@ class KSync : public KMainWindow
     /** construtor of KSyncApp, calls all init functions to create the application.
      */
     KSync(QWidget* parent=0, const char* name=0);
-    ~KSync();
 
     /** opens a file specified by commandline option
      */
@@ -114,12 +113,6 @@ class KSync : public KMainWindow
     /** paste the clipboard into the document
      */
     void slotEditPaste();
-    /** toggles the toolbar
-     */
-    void slotViewToolBar();
-    /** toggles the statusbar
-     */
-    void slotViewStatusBar();
     /** changes the statusbar contents for the standard label permanently, used to indicate current actions.
      * @param text the text that is displayed in the statusbar
      */
@@ -148,8 +141,6 @@ class KSync : public KMainWindow
     KAction* editCut;
     KAction* editCopy;
     KAction* editPaste;
-    KToggleAction* viewToolBar;
-    KToggleAction* viewStatusBar;
 };
  
 #endif // KSYNC_H

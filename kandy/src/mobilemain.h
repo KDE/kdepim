@@ -8,8 +8,6 @@
 #include <kapplication.h>
 #include <kmainwindow.h>
 
-class KToggleAction;
-
 class CommandScheduler;
 
 /**
@@ -70,8 +68,6 @@ class MobileMain : public KMainWindow
 
   private slots:
     void showTerminal();
-    void optionsShowToolbar();
-    void optionsShowStatusbar();
     void optionsConfigureKeys();
     void optionsConfigureToolbars();
     void optionsPreferences();
@@ -87,9 +83,6 @@ class MobileMain : public KMainWindow
 
   private:
     MobileGui *mView;
-
-    KToggleAction *m_toolbarAction;
-    KToggleAction *m_statusbarAction;
 };
 
 #endif // MOBILEMAIN_H

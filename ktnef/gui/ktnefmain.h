@@ -48,8 +48,6 @@ protected slots:
 	void extractAllFiles();
 	void slotEditToolbars();
 	void slotNewToolbarConfig();
-	void slotShowToolbar();
-	void slotShowStatusbar();
 	void slotShowMessageProperties();
 
 	void viewSelectionChanged();

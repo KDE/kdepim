@@ -34,11 +34,7 @@ KSync::KSync(QWidget* , const char* name):KMainWindow(0, name)
   editCut->setEnabled(false);
   editCopy->setEnabled(false);
   editPaste->setEnabled(false);
-}
-
-KSync::~KSync()
-{
-
+  setAutoSaveSettings();
 }
 
 void KSync::initActions()
@@ -55,9 +51,9 @@ void KSync::initActions()
   editCut = KStdAction::cut(this, SLOT(slotEditCut()), actionCollection());
   editCopy = KStdAction::copy(this, SLOT(slotEditCopy()), actionCollection());
   editPaste = KStdAction::paste(this, SLOT(slotEditPaste()), actionCollection());
-  viewToolBar = KStdAction::showToolbar(this, SLOT(slotViewToolBar()), actionCollection());
-  viewStatusBar = KStdAction::showStatusbar(this, SLOT(slotViewStatusBar()), actionCollection());
-
+  createStandardStatusBarAction();
+  setStandardToolBarMenuEnabled(true);
+    
   fileNewWindow->setStatusText(i18n("Opens a new application window"));
   fileNew->setStatusText(i18n("Creates a new document"));
   fileOpen->setStatusText(i18n("Opens an existing document"));
@@ -70,8 +66,6 @@ void KSync::initActions()
   editCut->setStatusText(i18n("Cuts the selected section and puts it to the clipboard"));
   editCopy->setStatusText(i18n("Copies the selected section to the clipboard"));
   editPaste->setStatusText(i18n("Pastes the clipboard contents to actual position"));
-  viewToolBar->setStatusText(i18n("Enables/disables the toolbar"));
-  viewStatusBar->setStatusText(i18n("Enables/disables the statusbar"));
 
   // use the absolute path to your ksyncui.rc file for testing purpose in createGUI();
   createGUI();
@@ -104,10 +98,6 @@ void KSync::openDocumentFile(const KURL& url)
 void KSync::saveOptions()
 {	
   config->setGroup("General Options");
-  config->writeEntry("Geometry", size());
-  config->writeEntry("Show Toolbar", viewToolBar->isChecked());
-  config->writeEntry("Show Statusbar",viewStatusBar->isChecked());
-  config->writeEntry("ToolBarPos", (int) toolBar("mainToolBar")->barPos());
   fileOpenRecent->saveEntries(config,"Recent Files");
 
   mView->writeConfig(config);
@@ -118,30 +108,8 @@ void KSync::readOptions()
 {
   config->setGroup("General Options");
 
-  // bar status settings
-  bool bViewToolbar = config->readBoolEntry("Show Toolbar", true);
-  viewToolBar->setChecked(bViewToolbar);
-  slotViewToolBar();
-
-  bool bViewStatusbar = config->readBoolEntry("Show Statusbar", true);
-  viewStatusBar->setChecked(bViewStatusbar);
-  slotViewStatusBar();
-
-
-  // bar position settings
-  KToolBar::BarPosition toolBarPos;
-  toolBarPos=(KToolBar::BarPosition) config->readNumEntry("ToolBarPos", KToolBar::Top);
-  toolBar("mainToolBar")->setBarPos(toolBarPos);
-	
   // initialize the recent file list
   fileOpenRecent->loadEntries(config,"Recent Files");
-
-  QSize size=config->readSizeEntry("Geometry");
-  if(!size.isEmpty())
-  {
-    resize(size);
-  }
-
   mView->readConfig(config);
 }
 
@@ -372,39 +340,6 @@ void KSync::slotEditPaste()
 
   slotStatusMsg(i18n("Ready."));
 }
-
-void KSync::slotViewToolBar()
-{
-  slotStatusMsg(i18n("Toggling toolbar..."));
-
-  if(!viewToolBar->isChecked())
-  {
-    toolBar("mainToolBar")->hide();
-  }
-  else
-  {
-    toolBar("mainToolBar")->show();
-  }		
-
-  slotStatusMsg(i18n("Ready."));
-}
-
-void KSync::slotViewStatusBar()
-{
-  slotStatusMsg(i18n("Toggle the statusbar..."));
-
-  if(!viewStatusBar->isChecked())
-  {
-    statusBar()->hide();
-  }
-  else
-  {
-    statusBar()->show();
-  }
-
-  slotStatusMsg(i18n("Ready."));
-}
-
 
 void KSync::slotStatusMsg(const QString &text)
 {

@@ -12,8 +12,6 @@
 
 class QPrinter;
 
-class KToggleAction;
-
 class KandyPrefsDialog;
 
 /**
@@ -84,8 +82,6 @@ class Kandy : public KMainWindow
     void fileSave();
     void fileSaveAs();
     void filePrint();
-    void optionsShowToolbar();
-    void optionsShowStatusbar();
     void optionsConfigureKeys();
     void optionsConfigureToolbars();
     void optionsPreferences();
@@ -108,8 +104,6 @@ class Kandy : public KMainWindow
 
     QPrinter   *mPrinter;
 
-    KToggleAction *mToolbarAction;
-    KToggleAction *mStatusbarAction;
     KAction *mConnectAction;
     KAction *mDisconnectAction;
     

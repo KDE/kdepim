@@ -34,7 +34,6 @@
 class QPopupMenu;
 class QComboBox;
 class KAction;
-class KToggleAction;
 class KProgress;
 class KJanusWidget;
 
@@ -116,7 +115,6 @@ public slots:
 	* These are slots for the standard Configure ...
 	* actions and not interesting.
 	*/
-	void optionsShowToolbar();
 	void optionsConfigureKeys();
 	void optionsConfigureToolbars();
 
@@ -174,12 +172,6 @@ private:
 
 	FileInstallWidget *fFileInstallWidget;
 	LogWidget *fLogWidget;
-
-	/**
-	 * toggle action from Options menu
-	 */
-	KToggleAction  *m_toolbarAction;
-	KToggleAction  *m_statusbarAction;
 
 	// Used to track if dialog is visible - needed for new DCOP calls
 	bool fConfigureConduitDialogInUse;

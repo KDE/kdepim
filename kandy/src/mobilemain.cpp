@@ -56,9 +56,9 @@ void MobileMain::setupActions()
   new KAction(i18n("Terminal"),0,this,SLOT(showTerminal()),
               actionCollection(),"show_terminal");
 
-  m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
-  m_statusbarAction = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
-
+  createStandardStatusBarAction();
+  setStandardToolBarMenuEnabled(true);
+   
   KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
   KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
@@ -117,27 +117,6 @@ void MobileMain::dropEvent(QDropEvent *event)
         load(url);
     }
 */
-}
-
-
-void MobileMain::optionsShowToolbar()
-{
-    // this is all very cut and paste code for showing/hiding the
-    // toolbar
-    if (m_toolbarAction->isChecked())
-        toolBar()->show();
-    else
-        toolBar()->hide();
-}
-
-void MobileMain::optionsShowStatusbar()
-{
-    // this is all very cut and paste code for showing/hiding the
-    // statusbar
-    if (m_statusbarAction->isChecked())
-        statusBar()->show();
-    else
-        statusBar()->hide();
 }
 
 void MobileMain::optionsConfigureKeys()

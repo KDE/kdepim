@@ -108,7 +108,7 @@ class KNComposer : public KMainWindow  {
                   *a_ctRemoveAttachment,
                   *a_ctAttachmentProperties,
                   *a_ctSetCharsetKeyb;
-    KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar,*a_ctPGPsign,
+    KToggleAction *a_ctPGPsign,
                   *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap;
     KSelectAction *a_ctSetCharset;
 
@@ -131,8 +131,6 @@ class KNComposer : public KMainWindow  {
     void slotUndoRewrap();
     void slotExternalEditor();
     void slotSpellcheck();
-    void slotToggleToolBar();
-    void slotToggleStatusBar();
     void slotUpdateStatusBar();
     void slotUpdateCursorPos();
     void slotConfKeys();

@@ -62,9 +62,6 @@ Kandy::Kandy(CommandScheduler *scheduler)
 
   statusBar()->insertItem(i18n(" Disconnected "),0,0,true);
 
-  // and a status bar
-  statusBar()->show();
-
   setAutoSaveSettings();
 
   // allow the view to change the statusbar and caption
@@ -116,9 +113,9 @@ void Kandy::setupActions()
 //  KStdAction::print(this, SLOT(filePrint()), actionCollection());
   KStdAction::quit(this, SLOT(close()), actionCollection());
 
-  mToolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
-  mStatusbarAction = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
-
+  createStandardStatusBarAction();
+  setStandardToolBarMenuEnabled(true);
+    
   KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
   KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
@@ -225,26 +222,6 @@ void Kandy::filePrint()
         // and send the result to the printer
         p.end();
     }
-}
-
-void Kandy::optionsShowToolbar()
-{
-    // this is all very cut and paste code for showing/hiding the
-    // toolbar
-    if (mToolbarAction->isChecked())
-        toolBar()->show();
-    else
-        toolBar()->hide();
-}
-
-void Kandy::optionsShowStatusbar()
-{
-    // this is all very cut and paste code for showing/hiding the
-    // statusbar
-    if (mStatusbarAction->isChecked())
-        statusBar()->show();
-    else
-        statusBar()->hide();
 }
 
 void Kandy::optionsConfigureKeys()

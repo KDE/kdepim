@@ -19,7 +19,6 @@
 
 #include <kmainwindow.h>
 
-class KToggleAction;
 class KNArticle;
 class KNArticleWidget;
 class KNArticleCollection;
@@ -42,12 +41,10 @@ class KNArticleWindow : public KMainWindow  {
   protected:
     KAccel *a_ccel;
     KNArticleWidget *artW;
-    KToggleAction *a_ctShowToolbar;
     static QPtrList<KNArticleWindow> instances;
 
   protected slots:
     void slotFileClose();
-    void slotToggleToolBar();
     void slotConfKeys();
     void slotConfToolbar();
     void slotNewToolbarConfig();

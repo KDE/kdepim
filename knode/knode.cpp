@@ -719,8 +719,9 @@ void KNMainWindow::initActions()
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
 
-  a_ctWinToggleToolbar       = KStdAction::showToolbar(this, SLOT(slotWinToggleToolbar()), actionCollection());
-  a_ctWinToggleStatusbar     = KStdAction::showStatusbar(this, SLOT(slotWinToggleStatusbar()), actionCollection());
+  createStandardStatusBarAction();
+  setStandardToolBarMenuEnabled(true);
+    
   a_ctToggleGroupView        = new KToggleAction(i18n("Show &Group View"), CTRL+Key_G, this,
                                SLOT(slotToggleGroupView()), actionCollection(), "settings_show_groupView");
   a_ctToggleHeaderView       = new KToggleAction(i18n("Show &Header View"), CTRL+Key_H, this,
@@ -851,8 +852,6 @@ void KNMainWindow::readOptions()
 
   resize(787,478);  // default optimized for 800x600
   applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
-  a_ctWinToggleToolbar->setChecked(!toolBar()->isHidden());
-  a_ctWinToggleStatusbar->setChecked(!statusBar()->isHidden());
 
   // restore dock configuration
   manager()->readConfig(KGlobal::config(),"dock_configuration");
@@ -2181,25 +2180,6 @@ void KNMainWindow::slotFetchArticleWithID()
   KNHelper::saveWindowSize("fetchArticleWithID",dlg->size());
   delete dlg;
 }
-
-
-void KNMainWindow::slotWinToggleToolbar()
-{
-  if(toolBar()->isVisible())
-    toolBar()->hide();
-  else
-    toolBar()->show();
-}
-
-
-void KNMainWindow::slotWinToggleStatusbar()
-{
-  if (statusBar()->isVisible())
-    statusBar()->hide();
-  else
-    statusBar()->show();
-}
-
 
 void KNMainWindow::slotToggleGroupView()
 {

@@ -256,9 +256,7 @@ class KNMainWindow : public KDockMainWindow
     KAction *a_ctFetchArticleWithID;
 
     // settings menu
-    KToggleAction *a_ctWinToggleToolbar,
-                  *a_ctWinToggleStatusbar,
-                  *a_ctToggleGroupView,
+    KToggleAction *a_ctToggleGroupView,
                   *a_ctToggleHeaderView,
                   *a_ctToggleArticleViewer;
     KAction *a_ctSwitchToGroupView,
@@ -334,8 +332,6 @@ class KNMainWindow : public KDockMainWindow
 
     void slotFetchArticleWithID();
 
-    void slotWinToggleToolbar();
-    void slotWinToggleStatusbar();
     void slotToggleGroupView();
     void slotToggleHeaderView();
     void slotToggleArticleViewer();
