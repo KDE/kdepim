@@ -83,7 +83,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
   _totalLA = new QLabel( i18n("&Total:"), page, "time" );
   lay3->addWidget( _totalLA, 0, 0 );
 
-	_totalTW = new KTimeWidget( page, "_totalTW" );
+	_totalTW = new KArmTimeWidget( page, "_totalTW" );
 	lay3->addWidget( _totalTW, 0, 1 );
   _totalLA->setBuddy( _totalTW );
 	
@@ -92,7 +92,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
   _sessionLA = new QLabel( i18n("&Session time:"), page, "session time" );
   lay3->addWidget( _sessionLA, 1, 0 );
 
-	_sessionTW = new KTimeWidget( page, "_sessionTW" );
+	_sessionTW = new KArmTimeWidget( page, "_sessionTW" );
   lay3->addWidget( _sessionTW, 1, 1 );
   _sessionLA->setBuddy( _sessionTW );
 
@@ -115,7 +115,7 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
 
 	lay4->addSpacing(5);
 	
-	_diffTW = new KTimeWidget( page, "_sessionAddTW" );
+	_diffTW = new KArmTimeWidget( page, "_sessionAddTW" );
 	lay4->addWidget( _diffTW );
 
   KIconLoader loader;

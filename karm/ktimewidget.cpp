@@ -59,7 +59,7 @@ protected:
 
 
 
-KTimeWidget::KTimeWidget(  QWidget* parent, const char* name ) : QWidget(parent, name)
+KArmTimeWidget::KArmTimeWidget(  QWidget* parent, const char* name ) : QWidget(parent, name)
 {
 	QHBoxLayout *layout = new QHBoxLayout(this);
 
@@ -90,7 +90,7 @@ KTimeWidget::KTimeWidget(  QWidget* parent, const char* name ) : QWidget(parent,
 	setFocusProxy( _hourLE );
 }
 
-void KTimeWidget::setTime( int hour, int minute )
+void KArmTimeWidget::setTime( int hour, int minute )
 {
 	QString dummy;
 
@@ -104,7 +104,7 @@ void KTimeWidget::setTime( int hour, int minute )
 	_minuteLE->setText( dummy );
 }
 
-long KTimeWidget::time() const
+long KArmTimeWidget::time() const
 {
 	bool ok;
 	int h, m;
