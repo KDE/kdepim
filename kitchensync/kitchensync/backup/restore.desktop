@@ -8,6 +8,7 @@ Name[nl]=Konnector-herstel
 Name[sl]=Povrnitev Konnectorja
 Name[sv]=Konnector återställning
 Name[ta]=இணைப்பானைத் திரும்பப் பெறுதல் 
+Name[xx]=xxKonnector Restorexx
 Icon=
 ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_restore

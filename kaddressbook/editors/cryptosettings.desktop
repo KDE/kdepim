@@ -9,5 +9,6 @@ Name[nl]=Versleutelingsinstellingen
 Name[sl]=Lastnosti šifriranja
 Name[sv]=Krypteringsinställningar
 Name[ta]= மறைக்குறிக்கு சலுகைகள்
+Name[xx]=xxCrypto Preferencesxx
 Type=Service
 ServiceTypes=KAddressBook/ContactEditorWidget

@@ -8,6 +8,7 @@ Name[nl]=Gegevensweergave
 Name[sl]=Pregledovalnik podatkov
 Name[sv]=Datavisning
 Name[ta]=தரவு பார்வையாளர்
+Name[xx]=xxData Viewerxx
 Icon=
 ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_viewer
