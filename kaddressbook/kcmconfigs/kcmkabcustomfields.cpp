@@ -292,7 +292,7 @@ void KCMKabCustomFields::initGUI()
                          "  Elements ('<i>Widgets</i>') to store your own values"
                          " into the address book. Proceed as described below:</p>"
                          "<ol>"
-                         "<li>Click on '<i>Open with Qt Designer</i>'"
+                         "<li>Click on '<i>Edit with Qt Designer</i>'"
                          "<li>In the dialog, select '<i>Widget</i>', then click <i>OK</i>"
                          "<li>Add your widgets to the form"
                          "<li>Save the file in the directory proposed by Qt Designer"
