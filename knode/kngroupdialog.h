@@ -43,6 +43,8 @@ class KNGroupDialog : public KNGroupBrowser {
 
   protected slots:
     void slotItemSelected(QListViewItem *it);
+    void slotItemDoubleClicked(QListViewItem *it);   // double click checks/unchecks item
+    void slotSelectionChanged();                     // deactivates the button when a root item is selected
     void slotArrowBtn1();
     void slotArrowBtn2();
     void slotUser1();    // new list

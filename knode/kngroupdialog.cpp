@@ -51,6 +51,10 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
 
   connect(groupView, SIGNAL(selectionChanged(QListViewItem*)),
     this, SLOT(slotItemSelected(QListViewItem*)));
+  connect(groupView, SIGNAL(doubleClicked(QListViewItem*)),
+    this, SLOT(slotItemDoubleClicked(QListViewItem*)));
+  connect(groupView, SIGNAL(selectionChanged()),
+    this, SLOT(slotSelectionChanged()));
   connect(subView, SIGNAL(selectionChanged(QListViewItem*)),
     this, SLOT(slotItemSelected(QListViewItem*)));
   connect(unsubView, SIGNAL(selectionChanged(QListViewItem*)),
@@ -201,19 +205,38 @@ void KNGroupDialog::slotItemSelected(QListViewItem *it)
 
 
 
+void KNGroupDialog::slotItemDoubleClicked(QListViewItem *it)
+{
+  if (it) static_cast<CheckItem*>(it)->setOn(!static_cast<CheckItem*>(it)->isOn());
+}
+
+
+
+void KNGroupDialog::slotSelectionChanged()
+{
+  if (!groupView->selectedItem())
+    arrowBtn1->setEnabled(false);
+}
+
+
+
 void KNGroupDialog::slotArrowBtn1()
 {
   QListViewItem *it=0;
 
   if(dir1==right) {
     it=groupView->selectedItem();
-    new QListViewItem(subView, it->text(0));
-    (static_cast<CheckItem*>(it))->setChecked(true);
+    if (it) {
+      new QListViewItem(subView, it->text(0));
+      (static_cast<CheckItem*>(it))->setChecked(true);
+    }
   }
   else {
     it=subView->selectedItem();
-    changeItemState(it->text(0), false);
-    delete it;
+    if (it) {
+      changeItemState(it->text(0), false);
+      delete it;
+    }
   }
 
   arrowBtn1->setEnabled(false);
@@ -227,13 +250,17 @@ void KNGroupDialog::slotArrowBtn2()
 
   if(dir2==right) {
     it=groupView->selectedItem();
-    new QListViewItem(unsubView, it->text(0));
-    (static_cast<CheckItem*>(it))->setChecked(false);
+    if (it) {
+      new QListViewItem(unsubView, it->text(0));
+      (static_cast<CheckItem*>(it))->setChecked(false);
+    }
   }
   else {
     it=unsubView->selectedItem();
-    changeItemState(it->text(0), true);
-    delete it;
+    if (it) {
+      changeItemState(it->text(0), true);
+      delete it;
+    }
   }
 
   arrowBtn2->setEnabled(false);
