@@ -23,7 +23,7 @@ INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitc
 libopiekonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
 libopiekonnector_la_LIBDADD = ../../libkonnector.la ../../../libksyncentries.la
 libopiekonnector_la_LDFLAGS = $(all_libraries)  -module
-libopiekonnector_la_SOURCES = opiekonnector.cpp opiesocket.cpp opiecategories.cpp opiehelper.cpp todo.cc categoryedit.cc helper.cc
+libopiekonnector_la_SOURCES = opiekonnector.cpp opiesocket.cpp opiecategories.cpp opiehelper.cpp todo.cc categoryedit.cc helper.cc addressbook.cc
 
 opiedatadir = $(kde_datadir)/kitchensync
 opiedata_DATA = opie.desktop
