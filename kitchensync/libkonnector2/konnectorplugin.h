@@ -31,7 +31,6 @@
 
 #include "stderror.h"
 #include "stdprogress.h"
-#include "koperations.h"
 
 namespace KSync {
 
@@ -134,17 +133,11 @@ class Konnector : public QObject
     void progress( const Progress & );
     void error( const Error & );
 
-    //virtual QString metaId() const = 0;
-
-//  public:
-//    virtual void slotWrite( const QString &, const QByteArray & ) = 0;
-
   protected:
     /**
       Write data contained in list of Syncee object back to device.
     */
     virtual void write(Syncee::PtrList ) = 0;
-//    virtual void slotWrite(KOperations::ValueList ) = 0;
 
   signals:
     /**
