@@ -1,0 +1,55 @@
+<appendix id="installation"> 
+<title>Installation</title> 
+
+<sect1 id="getting-knode"> 
+<title>Where do I get &knode;?</title> 
+
+&install.intro.documentation;
+
+</sect1> 
+
+<sect1 id="requirements"> 
+<title>
+Requirements</title> 
+<anchor id="anc-requirements"/> 
+
+<para>If you want to successfully install &knode;, you need a &kde;
+3.x. If, in addition, you want to use &knode; as an offline
+newsreader, you need a local news server, &eg; <ulink
+url="http://www.leafnode.org"><application>leafnode</application></ulink>.</para>
+</sect1> 
+
+<sect1 id="compilation">
+<title>Compile and install</title>
+
+<para>&knode; is part of the package kdenetwork of &kde; 3.x and is
+installed together with it if you have chosen to install the
+kdenetwork package. So in general, there is no need for a user
+to compile the sources of &knode;.</para>
+
+&install.compile.documentation;
+
+</sect1>
+
+<sect1 id="update-installation">
+<title>Notes about updating an older version of &knode;</title>
+
+<para>This section contains notes about what to take care of when
+installing a newer version of &knode; with an older version already
+installed.</para>
+
+<sect2 id="update-file-changes">
+<title>Changes in configuration files and folders</title>
+
+<para>Since version 0.2 the format of the configuration files and the
+saved articles has changed. An update is not readily
+possible. Unfortunately, your old configuration files can not be
+imported.</para>
+
+<para>If you update from a version >= 0.4 the local folders will
+automatically be converted into the new format. You can't use this
+data with an older version of &knode; any more!</para>
+</sect2>
+
+</sect1>
+</appendix> 

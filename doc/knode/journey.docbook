@@ -1,0 +1,530 @@
+<!-- <?xml version="1.0" ?> 
+<!DOCTYPE chapter PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd"> -->
+
+<chapter id="knode-journey"> 
+<title>A journey in the World of Newsgroups</title> 
+
+<anchor id="anc-knode-journey"/> 
+
+<para>This chapter is supposed to glance over the World of Newsgroups
+and their<quote> inhabitants</quote> . Someone who never dared to go
+there will encounter some strange customs, wich may give you a feeling
+of being a lonely alien without backup. But stay calm, it is not like
+this. The Usenet is a meeting place for all kinds of normal and
+not-so-normal folks. It is here where they are distributing a lot of
+information but also gossip and other stuff.</para>
+
+<tip> 
+<para>References to more detailed and qualified essays on the Usenet
+can be found at <link linkend="knode-more-info">More
+Resources</link></para>
+</tip> 
+
+<sect1 id="about-news"> 
+<title>What are ...</title> 
+<anchor id="anc-about-news"/>
+
+<sect2> 
+<title>... online-readers?</title> 
+
+<para>An online-reader connects to a newsserver and gives you acces to
+its content. &knode; is an online-reader. You are reading your News
+and publishing your own <glossterm>articles</glossterm>, while the
+online-reader stays connected.</para>
+
+</sect2> 
+
+<sect2> 
+<title>... offline-readers?</title> 
+
+<para>An offline-reader connects to the Server and fetches only the
+headers of new articles. Then the connection is closed and you can
+offline mark the articles, you are really interested in. When you
+connent the next time, the offline-reader fetches the articles you
+marked and sends the articles you have written offline.</para>
+
+<para>There is no connection while you are reading or writing
+articles.</para>
+
+</sect2> 
+
+<sect2> 
+<title>... newsgroups?</title> 
+
+<para>You can look at newsgroups as public bulletin boards and forums,
+where evereybody is allowed to participate. Articles you have
+published in a newsgroup can be read by everybody subscribed to this
+newsgroup. And normally everybody is allowed to publish her articles
+in a newsgroup.</para>
+
+</sect2> 
+
+<sect2>
+<title>... news?</title> 
+
+<para>News are articles published in a newsgroup.</para> 
+
+</sect2> 
+
+<sect2> 
+<title>... threads?</title> 
+
+<para>A thread describes a discussion of one topic in a
+newsgroup.</para>
+
+</sect2> 
+</sect1> 
+
+<sect1 id="nettiquette"> 
+<title>Online Manners</title> 
+
+<anchor id="anc-nettiquette"/> 
+
+<para>There are lot of different people meeting and talking in
+newsgroups. It is seen as some kind of courtesy to obey some rules of
+manner, some basics are listed here.</para>
+
+<orderedlist> 
+<listitem> 
+<para>Before you ask questions be sure you read the newsgroups
+<acronym>FAQ</acronym> (Frequently Asked Questions) and didn't find
+the anwser.</para>
+</listitem> 
+<listitem> 
+<para>If you take part in a discussion, be aware the fact, everybody
+can read the anwser. Say nothing you wouldn't say to the others when
+you were facing them. Avoid insults.</para>
+</listitem> 
+<listitem> 
+<para>Try to avoid crossposting. Do not ask a question in more than
+one newsgroup when you don't know which is the right one. Ask in one
+newsgroup. If it is wrong, you are told which is right one.</para>
+</listitem> 
+<listitem> 
+<para>Formulate your articles accurately. Nobody likes to read an
+article with lots of typos, even with content worth a Pulitzer. Think
+of your articles as letters. Your letter speaks for you, it represents
+you. Somebody reading your article will draw conclusions about you
+from it, wrong or right.</para>
+</listitem> 
+<listitem> 
+<para>Remember, nobody sees your grin when you are writing an ironical
+sentence. It may be funny for you, but it can be very serious for the
+one reading it. It is very difficult to include emotions in an
+article.</para>
+</listitem> 
+<listitem> 
+<para>The most important rule: Use your common sense when you are
+anwsering or publishing an article.</para>
+</listitem> 
+</orderedlist> 
+
+</sect1> 
+
+<sect1 id="usenet-slang"> 
+<title>The Usenet language</title> 
+<anchor id="anc-usenet-slang"/> 
+
+<para>You won't be surprised about English beeing the main language on
+the Usenet. There are special trees with German (de.*), French (fr.*)
+and many other languages. If you are unable to determine the main
+language of a newsgroup, the only possibility is careful listenening
+or a possible explanation in the description of the group in the
+grouplist.</para>
+
+<para>In addition over the time the Usenet developed his own language,
+but happily it is easy to learn.</para>
+
+<sect2> 
+<title> 
+<acronym>RTFM</acronym> and other typos</title> 
+
+<para>When you read news, after some time you will read some strange
+combinations of letters. For example you can get a reply like:</para>
+
+<para>RTFM</para> 
+
+<para>Nothing else. Strange but absolutely intended. To solve the
+riddle: Those, most of the time, are shortcuts, acronyms. It is easier
+to drop some letters, than writing the same sentence over and over
+again.</para>
+
+<para>But what is the meaning of <acronym>RTFM</acronym>? The writer
+demands you, to read the manual, documentation or
+<acronym>FAQ</acronym> before asking questions in the
+newsgroup. Clearer: (R)ead (T)he (F)ucking
+(M)anual. <acronym>BTW</acronym> an advice you should adopt.</para>
+
+<para>Wait, what is <acronym>BTW</acronym> now? Another often seen
+acronym which means (B)y (T)he (W)ay. It is easy when you know
+it. Now, for you not to be continously speculating over acronyms there
+is table at he end of this section, containing the most often used
+aconyms. ;-)</para>
+
+<para>This table does not try to be complete and bases on a list from
+Martin Imlau.</para>
+
+<table>
+<title>
+Acronyms on Usenet</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>
+Acronym</entry>
+<entry>
+Meaning</entry>
+</row>
+</thead>
+<!--TRANSLATORS: Write the translation in the second column in brackets! -->
+<tbody>
+<row>
+<entry>
+&lt;g&gt;</entry>
+<entry>
+grins</entry>
+</row>
+<row>
+<entry>
+<acronym>
+AAMOF</acronym>
+</entry>
+<entry>
+As a matter of fact</entry>
+</row>
+<row>
+<entry>
+<acronym>
+ACK</acronym>
+</entry>
+<entry>
+Acknowledge</entry>
+</row>
+<row>
+<entry>
+<acronym>
+AFAIK</acronym>
+</entry>
+<entry>
+As far as I know</entry>
+</row>
+<row>
+<entry>
+<acronym>
+AFAIR</acronym>
+</entry>
+<entry>
+As far as I remember</entry>
+</row>
+<row>
+<entry>
+<acronym>
+AWGTHTGTTA</acronym>
+</entry>
+<entry>
+Are we going to have to go through this again?</entry>
+</row>
+<row>
+<entry>
+<acronym>
+ASAP</acronym>
+</entry>
+<entry>
+As soon as possible</entry>
+</row>
+<row>
+<entry>
+<acronym>
+BFN</acronym>
+</entry>
+<entry>
+Bye for now!</entry>
+</row>
+<row>
+<entry>
+<acronym>
+BTW</acronym>
+</entry>
+<entry>
+By the way</entry>
+</row>
+<row>
+<entry>
+<acronym>
+BYKT</acronym>
+</entry>
+<entry>
+But you knew that</entry>
+</row>
+<row>
+<entry>
+<acronym>
+CMIIW</acronym>
+</entry>
+<entry>
+Correct me if I'm wrong</entry>
+</row>
+<row>
+<entry>
+<acronym>
+CU</acronym>
+</entry>
+<entry>
+See you!</entry>
+</row>
+<row>
+<entry>
+<acronym>
+CU2</acronym>
+</entry>
+<entry>
+See you too!</entry>
+</row>
+<row>
+<entry>
+<acronym>
+CYL</acronym>
+</entry>
+<entry>
+See you later!</entry>
+</row>
+<row>
+<entry>
+<acronym>
+DAU</acronym>
+</entry>
+<entry>
+German abbreviation for the silliest user you can imagine (DÂÃÂÂ¼mmster anzunehmender User)</entry>
+</row>
+<row>
+<entry>
+<acronym>
+EOD</acronym>
+</entry>
+<entry>
+End of discussion</entry>
+</row>
+<row>
+<entry>
+<acronym>
+ESOSL</acronym>
+</entry>
+<entry>
+Endless snorts of stupid laughter</entry>
+</row>
+<row>
+<entry>
+<acronym>
+FYI</acronym>
+</entry>
+<entry>
+For your information</entry>
+</row>
+<row>
+<entry>
+<acronym>
+GOK</acronym>
+</entry>
+<entry>
+God only knows</entry>
+</row>
+<row>
+<entry>
+<acronym>
+HAND</acronym>
+</entry>
+<entry>
+Have a nice day!</entry>
+</row>
+<row>
+<entry>
+<acronym>
+HTH</acronym>
+</entry>
+<entry>
+Hope that helps</entry>
+</row>
+<row>
+<entry>
+<acronym>
+HSIK</acronym>
+</entry>
+<entry>
+How should I know?</entry>
+</row>
+<row>
+<entry>
+<acronym>
+IAE</acronym>
+</entry>
+<entry>
+In any event</entry>
+</row>
+<row>
+<entry>
+<acronym>
+IANAL</acronym>
+</entry>
+<entry>
+I am not a lawyer</entry>
+</row>
+<row>
+<entry>
+<acronym>
+IIRC</acronym>
+</entry>
+<entry>
+If I remember correctly</entry>
+</row>
+<row>
+<entry>
+<acronym>
+IMCO</acronym>
+</entry>
+<entry>
+In my considered opinion</entry>
+</row>
+<row>
+<entry>
+<acronym>
+IMHO</acronym>
+</entry>
+<entry>
+In my humble opinion</entry>
+</row>
+<row>
+<entry>
+<acronym>
+IMNSHO</acronym>
+</entry>
+<entry>
+In my not so humble opinion</entry>
+</row>
+<row>
+<entry>
+<acronym>
+INPO</acronym>
+</entry>
+<entry>
+In no particular order</entry>
+</row>
+<row>
+<entry>
+<acronym>
+IOW</acronym>
+</entry>
+<entry>
+In other words</entry>
+</row>
+<row>
+<entry>
+<acronym>
+LMAO</acronym>
+</entry>
+<entry>
+Laughing my ass off</entry>
+</row>
+<row>
+<entry>
+<acronym>
+LOL</acronym>
+</entry>
+<entry>
+Laughing out loud</entry>
+</row>
+<row>
+<entry>
+<acronym>
+NAK</acronym>
+</entry>
+<entry>
+Not acknowledged</entry>
+</row>
+<row>
+<entry>
+<acronym>
+NBD</acronym>
+</entry>
+<entry>
+No big deal</entry>
+</row>
+<row>
+<entry>
+<acronym>
+NFW</acronym>
+</entry>
+<entry>
+No fucking way</entry>
+</row>
+<row>
+<entry>
+<acronym>
+ROTFL</acronym>
+</entry>
+<entry>
+Rolling on the floor, laughing</entry>
+</row>
+<row>
+<entry>
+<acronym>
+RTFM</acronym>
+</entry>
+<entry>
+Read the fucking manual</entry>
+</row>
+<row>
+<entry>
+<acronym>
+SCNR</acronym>
+</entry>
+<entry>
+Sorry, could not resist</entry>
+</row>
+<row>
+<entry>
+<acronym>
+TIA</acronym>
+</entry>
+<entry>
+Thanks in advance</entry>
+</row> 
+</tbody> 
+</tgroup> 
+</table> 
+</sect2> 
+
+<sect2> 
+<title>Smile!</title> 
+
+<para>Again such a strange thing. What is this ;-) meant to be? Turn
+your head so the left side of your Screen is on top. Got it? You spot
+the smile with a wink? This is a so called emoticon. Emoticons are an
+often used possibility to express mimic. One thing missing in
+conversation on the Usenet. (But there is a susbstitute, remember?
+;-)</para>
+
+<para>It is very diffcult to express emotions in emails or news. Your
+joking comment can be very serious for the recipient and can lead to
+unmeant reactions or conflicts (flames). So use emoticons to express
+your intention.</para>
+
+<para>There are a lots of emoticons, which express a great variety of
+emotions. You will see, the interpretation is easy if you turn your
+head and think of a face.</para>
+
+</sect2> 
+
+<sect2> 
+<title>PLONK!</title> 
+
+<para>This PLONK! looks like some comic-sound, doesn't it? And that is
+exactly what it is used for. The one who reads it knows he was just
+added to the killfile of a newsreader. Normally this means the
+recipient of the PLONK! ticked off the sender. The PLONK! plays back
+the sound of the recipients name hitting the ground in the
+<glossterm>killfile</glossterm>. The sender turned his back to the
+recipient.</para>
+</sect2> 
+</sect1> 
+
+</chapter> 
