@@ -25,4 +25,4 @@ X-KDE-Library=kcal_kolab
 Type=Service
 ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
-X-KDE-ResourceType=imap
+X-KDE-ResourceType=kolab
