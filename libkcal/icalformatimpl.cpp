@@ -395,8 +395,10 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
   icalcomponent_add_property(vtodo,
       icalproperty_new_percentcomplete(todo->percentComplete()));
 
-  icalcomponent_add_property(vtodo,
-      icalproperty_new_recurrenceid( writeICalDateTime( todo->dtDue())));
+  if( todo->doesRecur() ) {
+    icalcomponent_add_property(vtodo,
+        icalproperty_new_recurrenceid( writeICalDateTime( todo->dtDue())));
+  }
 
   return vtodo;
 }
