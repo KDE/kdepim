@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 {
   ConduitApp a(argc, argv, "vcal_conduit",
   	"Calendar / Organizer conduit",
-	"4.0b2");
+	KPILOT_VERSION);
   a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
 	a.addAuthor("Adriaan de Groot",I18N_NOOP("Maintainer"));
   VCalConduit conduit(a.getMode());
@@ -1825,6 +1825,9 @@ int VCalConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.25  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.24  2001/02/05 19:16:28  adridg
 // Removing calls to exit() from internal functions
 //

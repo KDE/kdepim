@@ -62,7 +62,7 @@
 //
 //
 static const char *expense_id =
-	"$Id:$";
+	"$Id$";
 
 
 // This is a generic main() function, all
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 {
 	ConduitApp a(argc,argv,"conduitExpense",
 		I18N_NOOP("Expense Conduit"),
-		"4.0b2");
+		KPILOT_VERSION);
 
 	a.addAuthor("Adriaan de Groot",
 		"Expense Conduit author",
@@ -145,4 +145,7 @@ ExpenseConduit::doTest()
 	(void) expense_id;
 }
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/03/04 21:45:30  adridg
+// New expense conduit, non-functional but it compiles
+//

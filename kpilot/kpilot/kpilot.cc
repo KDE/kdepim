@@ -1142,7 +1142,7 @@ KPilotInstaller::slotSyncDone(KProcess*)
     }
   else 
   {
-    return "KPilot v4.0.1";
+    return "KPilot v" KPILOT_VERSION;
     }
 }
 
@@ -1181,7 +1181,7 @@ int main(int argc, char** argv)
 	FUNCTIONSETUP;
 
         KAboutData about("kpilot", I18N_NOOP("KPilot"),
-                         "4.0b2",
+                         KPILOT_VERSION,
                          "KPilot - Hot-sync software for unix\n\n",
                          KAboutData::License_GPL,
                          "(c) 1998-2000, Dan Pilone");
@@ -1295,6 +1295,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.42  2001/03/04 22:22:29  adridg
+// DCOP cooperation between daemon & kpilot for d&d file install
+//
 // Revision 1.41  2001/03/02 13:07:18  adridg
 // Completed switch to KAction
 //

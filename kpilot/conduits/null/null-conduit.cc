@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 {
 	ConduitApp a(argc,argv,"null-conduit",
 		I18N_NOOP("NULL Conduit"),
-		"4.0b");
+		KPILOT_VERSION);
 
 	a.addAuthor("Adriaan de Groot",
 		"NULL Conduit author",
@@ -152,6 +152,9 @@ NullConduit::dbInfo()
 
 
 // $Log$
+// Revision 1.15  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.14  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //

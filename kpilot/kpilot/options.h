@@ -65,9 +65,17 @@
 //
 #undef TEST_DEBUG
 
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+
+#ifndef _KLOCALE_H
 #include <klocale.h>
+#endif
+
+#ifndef _KDEBUG_H
 #include <kdebug.h>
+#endif
 
 
 // KPilot will move towards the *standard* way of doing
@@ -83,6 +91,8 @@
 #define DEBUGDAEMON	kdDebug(DAEMON_AREA)
 #define DEBUGCONDUIT	kdDebug(CONDUIT_AREA)
 
+
+#define KPILOT_VERSION	"4.1b1"
 
 #ifdef DEBUG
 // KPilot contains two kinds of debugging messages:
@@ -210,6 +220,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.21  2001/03/01 20:43:24  adridg
+// Some new (and harmless) debug functions
+//
 // Revision 1.20  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

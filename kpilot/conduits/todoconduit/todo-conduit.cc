@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 {
   ConduitApp a(argc, argv, "todo_conduit",
   	"ToDo-list conduit",
-	"4.0");
+	KPILOT_VERSION);
   a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
   TodoConduit conduit(a.getMode());
   a.setConduit(&conduit);
@@ -694,6 +694,9 @@ int TodoConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.13  2001/03/04 13:46:49  adridg
+// struct tm woes
+//
 // Revision 1.12  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

@@ -1610,7 +1610,7 @@ int main(int argc, char* argv[])
 {
 	ConduitApp a(argc,argv,"popmail-conduit",
 		I18N_NOOP("POP Mail Conduit"),
-		"4.0b");
+		KPILOT_VERSION);
 	a.addAuthor("Michael Kropfberger","POP3 code");
 	a.addAuthor("Adriaan de Groot","KDE2 port");
 
@@ -1623,6 +1623,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.16  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.15  2001/02/09 15:59:28  habenich
 // replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
 //

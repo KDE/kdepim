@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 {
 	ConduitApp a(argc,argv,"knotes",
 		I18N_NOOP("KNotes Conduit"),
-		"4.0b2");
+		KPILOT_VERSION);
 
 	a.addAuthor("Adriaan de Groot",
 		"KNotes Conduit author",
@@ -815,6 +815,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.13  2001/02/26 22:13:26  adridg
+// Removed misleading comments
+//
 // Revision 1.12  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
