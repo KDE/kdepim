@@ -140,8 +140,16 @@ void Debugger::configureKonnector()
   if ( !k ) {
     KMessageBox::sorry( m_widget, i18n("Konnector isn't loaded" ) );
   } else {
-    ConfigWidget *configWidget = k->configWidget( m_widget );
-    configWidget->show();
+    KDialog *dialog = new KDialog( m_widget );
+    ConfigWidget *configWidget = k->configWidget( dialog );
+    if ( !configWidget ) {
+      KMessageBox::sorry( m_widget,
+                          i18n("No configuration widget available.") );
+    } else {
+      QVBoxLayout *dialogLayout = new QVBoxLayout( dialog );
+      dialogLayout->addWidget( configWidget );
+      dialog->show();
+    }
   }
 }
 
@@ -152,12 +160,17 @@ Konnector *Debugger::currentKonnector()
   KonnectorProfile::ValueList konnectors =
       core()->konnectorProfileManager()->list();
 
-  KonnectorProfile::ValueList::ConstIterator it;
+  KonnectorProfile::ValueList::Iterator it;
   for( it = konnectors.begin(); it != konnectors.end(); ++it ) {
     if ( konnectorName == (*it).name() ) break;
   }
 
   if ( it == konnectors.end() ) return 0;
+
+  if ( !(*it).konnector() ) {
+    Konnector *k = core()->konnectorManager()->load( (*it).device() );
+    return k;
+  }
 
   return (*it).konnector();
 }
