@@ -390,6 +390,11 @@ void KABCore::setCategories()
   if ( !dlg.exec() )
     return;
 
+  bool merge = false;
+  QString msg = i18n( "Merge with existing categories?" );
+  if ( KMessageBox::questionYesNo( this, msg ) == KMessageBox::Yes )
+    merge = true;
+
   QStringList categories = dlg.selectedCategories();
 
   QStringList uids = mViewManager->selectedUids();
@@ -397,7 +402,18 @@ void KABCore::setCategories()
   for ( it = uids.begin(); it != uids.end(); ++it ) {
     KABC::Addressee addr = mAddressBook->findByUid( *it );
     if ( !addr.isEmpty() ) {
-      addr.setCategories( categories );
+      if ( !merge )
+        addr.setCategories( categories );
+      else {
+        QStringList addrCategories = addr.categories();
+        QStringList::Iterator catIt;
+        for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
+          if ( !addrCategories.contains( *catIt ) )
+            addrCategories.append( *catIt );
+        }
+        addr.setCategories( addrCategories );
+      }
+
       mAddressBook->insertAddressee( addr );
     }
   }
