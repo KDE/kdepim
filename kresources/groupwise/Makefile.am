@@ -1,4 +1,4 @@
-SUBDIRS = soap
+SUBDIRS = soap kioslave
 
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkdepim $(all_includes)
 
