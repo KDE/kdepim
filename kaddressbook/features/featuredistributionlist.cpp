@@ -147,6 +147,7 @@ void FeatureDistributionList::updateGUI()
     mPbEntryRemove->setEnabled( false );
     mLvAddressees->setEnabled( false );
     mLvAddressees->clear();
+    mCbListSelect->setEnabled( false );
     return;
   } else {
     mPbListRename->setEnabled( true );
@@ -157,6 +158,7 @@ void FeatureDistributionList::updateGUI()
     for( it = entries.begin(); it != entries.end(); ++it ) {
       new KABC::EntryItem( this, mLvAddressees, (*it).addressee, (*it).email );
     }
+    mCbListSelect->setEnabled( true );
   }
 
   KABC::EntryItem *entryItem = static_cast<KABC::EntryItem *>( mLvAddressees->selectedItem() );
