@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+#include <utime.h>
 
 #include"dropdlg.h"
 
@@ -114,6 +115,10 @@ int KUnixDrop::doCount()
 {
 
 	_info->refresh();
+	
+	struct utimbuf prev_time; //Stores current actime and modtime
+	prev_time.actime = _info->lastRead().toTime_t();
+	prev_time.modtime = _info->lastModified().toTime_t();
 
 	if (  !_info->exists() ){
 		return 0;
@@ -196,6 +201,11 @@ int KUnixDrop::doCount()
 
 	mbox.close();
 	//kdDebug() << count << " messages" << endl;
+	
+	//Setting back previous time; this way, other applications can see if there is
+	//new mail by looking to atime; it is not desturbed by korn.
+	utime( QFile::encodeName( _info->filePath() ), &prev_time );
+	
 	return count;
 }
 
